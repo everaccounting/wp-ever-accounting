@@ -54,109 +54,99 @@ function eaccounting_get_currency( $currency, $output = OBJECT, $filter = 'raw' 
 }
 
 /**
- * Add or update a new currency to the database.
+ *  Insert or update a currency.
  *
- * @param array|object|Currency $currency_data An array, object, or currency object of data arguments.
+ * @param array|object|Currency $currency_arr An array, object, or currency object of data arguments.
  *
  * @return Currency|WP_Error The currency object or WP_Error otherwise.
  * @global wpdb $wpdb WordPress database abstraction object.
  * @since 1.1.0
  */
-function eaccounting_insert_currency( $currency_data ) {
+function eaccounting_insert_currency( $currency_arr ) {
 	global $wpdb;
-	if ( $currency_data instanceof Currency ) {
-		$currency_data = $currency_data->to_array();
-	} elseif ( $currency_data instanceof stdClass ) {
-		$currency_data = get_object_vars( $currency_data );
+
+	if ( $currency_arr instanceof Currency ) {
+		$currency_arr = $currency_arr->to_array();
+	} elseif ( $currency_arr instanceof stdClass ) {
+		$currency_arr = get_object_vars( $currency_arr );
 	}
 
 	$defaults = array(
 		'name'               => '',
 		'code'               => '',
-		'rate'               => '',
-		'precision'          => '',
+		'rate'               => 1,
+		'number'             => '',
+		'precision'          => 2,
+		'subunit'            => 100,
 		'symbol'             => '',
-		'subunit'            => '',
-		'position'           => '',
-		'decimal_separator'  => '',
-		'thousand_separator' => '',
-		'enabled'            => true,
+		'position'           => 'before',
+		'decimal_separator'  => '.',
+		'thousand_separator' => ',',
 		'date_created'       => '',
 	);
 
 	// Are we updating or creating?
-	$id      = null;
-	$update  = false;
-	$changes = $currency_data;
-	if ( ! empty( $currency_data['id'] ) ) {
-		$update = true;
-		$id     = absint( $currency_data['id'] );
-		$before = eaccounting_get_currency( $id );
+	$id          = null;
+	$update      = false;
+	$data_before = array();
+	if ( ! empty( $item_data['id'] ) ) {
+		$update      = true;
+		$id          = absint( $item_data['id'] );
+		$data_before = eaccounting_get_currency( $id, ARRAY_A );
 
-		if ( is_null( $before ) ) {
-			return new WP_Error( 'invalid_currency_id', __( 'Invalid currency id to update.' ) );
+		if ( is_null( $data_before ) ) {
+			return new WP_Error( 'invalid_currency_id', __( 'Invalid currency id to update.', 'wp-ever-accounting' ) );
 		}
-		// Store changes value.
-		$changes = array_diff_assoc( $currency_data, $before->to_array() );
 
 		// Merge old and new fields with new fields overwriting old ones.
-		$currency_data = array_merge( $before->to_array(), $currency_data );
+		$currency_arr = array_merge( $data_before, $currency_arr );
+		$data_before  = $data_before->to_array();
 	}
 
-	$data_arr = wp_parse_args( $currency_data, $defaults );
-	$data_arr = eaccounting_sanitize_currency( $data_arr, 'db' );
-	var_dump( $data_arr );
+	$item_data = wp_parse_args( $currency_arr, $defaults );
+	$data_arr  = eaccounting_sanitize_currency( $currency_arr, 'db' );
+
+	// Check required
 	if ( empty( $data_arr['code'] ) ) {
 		return new WP_Error( 'invalid_currency_code', esc_html__( 'Currency code is required', 'wp-ever-accounting' ) );
 	}
 
 	if ( empty( $data_arr['rate'] ) ) {
-		return new WP_Error( 'invalid_currency_rate', esc_html__( 'Currency rate is required', 'wp-ever-accounting' ) );
-	}
-
-	// Merge with default;
-	$iso      = eaccounting_get_data( 'currencies' );
-	$data_arr = array_merge( $data_arr, $iso[ $data_arr['code'] ] );
-
-	if ( ! $update && eaccounting_get_currency( $data_arr['code'] ) ) {
-		return new WP_Error( 'existing_currency_code', __( 'Sorry, that currency code already exists!', 'wp-ever-accounting' ) );
-	}
-
-	if ( empty( $data_arr['name'] ) ) {
-		return new WP_Error( 'invalid_currency_name', esc_html__( 'Currency name is required', 'wp-ever-accounting' ) );
+		return new WP_Error( 'invalid_currency_rate', esc_html__( 'Currency rate id is required', 'wp-ever-accounting' ) );
 	}
 
 	if ( empty( $data_arr['symbol'] ) ) {
 		return new WP_Error( 'invalid_currency_symbol', esc_html__( 'Currency symbol is required', 'wp-ever-accounting' ) );
 	}
+
+	if ( empty( $data_arr['position'] ) ) {
+		return new WP_Error( 'invalid_currency_position', esc_html__( 'Currency position is required', 'wp-ever-accounting' ) );
+	}
+
+	if ( empty( $data_arr['decimal_separator'] ) ) {
+		return new WP_Error( 'invalid_currency_decimal_separator', esc_html__( 'Currency decimal separator is required', 'wp-ever-accounting' ) );
+	}
+
+	if ( empty( $data_arr['thousand_separator'] ) ) {
+		return new WP_Error( 'invalid_currency_thousand_separator', esc_html__( 'Currency thousand separator is required', 'wp-ever-accounting' ) );
+	}
+
 	if ( empty( $data_arr['date_created'] ) || '0000-00-00 00:00:00' === $data_arr['date_created'] ) {
 		$data_arr['date_created'] = current_time( 'mysql' );
 	}
 
-	// Compute fields.
-	$name               = $data_arr['name'];
-	$code               = $data_arr['code'];
-	$rate               = $data_arr['rate'];
-	$precision          = $data_arr['precision'];
-	$symbol             = $data_arr['symbol'];
-	$position           = $data_arr['position'];
-	$decimal_separator  = $data_arr['decimal_separator'];
-	$thousand_separator = $data_arr['thousand_separator'];
-	$enabled            = (int) $data_arr['enabled'];
-	$date_created       = $data_arr['date_created'];
-	$data               = compact( 'name', 'code', 'rate', 'precision', 'symbol', 'position', 'decimal_separator', 'thousand_separator', 'enabled', 'date_created' );
+	$fields = array_keys( $defaults );
+	$data   = wp_array_slice_assoc( $data_arr, $fields );
 
 	/**
 	 * Filters currency data before it is inserted into the database.
 	 *
-	 * @param array $data Currency data to be inserted.
-	 * @param array $data_arr Sanitized currency data.
-	 * @param array $currency_data Currency data as originally passed to the function.
+	 * @param array $data Data to be inserted.
+	 * @param array $data_arr Sanitized data.
 	 *
 	 * @since 1.2.1
-	 *
 	 */
-	$data = apply_filters( 'eaccounting_insert_currency_data', $data, $data_arr, $currency_data );
+	$data = apply_filters( 'eaccounting_insert_currency', $data, $data_arr );
 
 	$data  = wp_unslash( $data );
 	$where = array( 'id' => $id );
@@ -164,19 +154,19 @@ function eaccounting_insert_currency( $currency_data ) {
 	if ( $update ) {
 
 		/**
-		 * Fires immediately before an existing currency is updated in the database.
+		 * Fires immediately before an existing currency item is updated in the database.
 		 *
 		 * @param int $id Currency id.
 		 * @param array $data Currency data to be inserted.
 		 * @param array $changes Currency data to be updated.
-		 * @param array $data_arr Sanitized currency data.
+		 * @param array $data_arr Sanitized currency item data.
+		 * @param array $data_before Currency previous data.
 		 *
 		 * @since 1.2.1
-		 *
 		 */
-		do_action( 'eaccounting_pre_update_currency', $id, $data, $changes, $data_arr );
-		if ( false === $wpdb->update( $wpdb->prefix . 'ea_currencies', $data, $where ) ) {
-			new WP_Error( 'db_update_error', __( 'Could not update currency in the database.' ), $wpdb->last_error );
+		do_action( 'eaccounting_pre_update_currency', $id, $data, $data_arr, $data_before );
+		if ( false === $wpdb->update( $wpdb->prefix . 'ea_currencies', $data, $where, $data_before ) ) {
+			new WP_Error( 'db_update_error', __( 'Could not update currency in the database.', 'wp-ever-accounting' ), $wpdb->last_error );
 		}
 
 		/**
@@ -185,12 +175,12 @@ function eaccounting_insert_currency( $currency_data ) {
 		 * @param int $id Currency id.
 		 * @param array $data Currency data to be inserted.
 		 * @param array $changes Currency data to be updated.
-		 * @param array $data_arr Sanitized currency data.
+		 * @param array $data_arr Sanitized Currency data.
+		 * @param array $data_before Currency previous data.
 		 *
 		 * @since 1.2.1
-		 *
 		 */
-		do_action( 'eaccounting_update_currency', $id, $data, $changes, $data_arr );
+		do_action( 'eaccounting_update_currency', $id, $data, $data_arr, $data_before );
 	} else {
 
 		/**
@@ -198,15 +188,14 @@ function eaccounting_insert_currency( $currency_data ) {
 		 *
 		 * @param array $data Currency data to be inserted.
 		 * @param string $data_arr Sanitized currency data.
-		 * @param array $currency_data Currency data as originally passed to the function.
+		 * @param array $item_data Currency data as originally passed to the function.
 		 *
 		 * @since 1.2.1
-		 *
 		 */
-		do_action( 'eaccounting_pre_insert_currency', $data, $data_arr, $currency_data );
+		do_action( 'eaccounting_pre_insert_currency', $data, $data_arr, $item_data );
 
 		if ( false === $wpdb->insert( $wpdb->prefix . 'ea_currencies', $data ) ) {
-			new WP_Error( 'db_insert_error', __( 'Could not insert currency into the database.' ), $wpdb->last_error );
+			new WP_Error( 'db_insert_error', __( 'Could not insert currency into the database.', 'wp-ever-accounting' ), $wpdb->last_error );
 		}
 
 		$id = (int) $wpdb->insert_id;
@@ -217,31 +206,30 @@ function eaccounting_insert_currency( $currency_data ) {
 		 * @param int $id Currency id.
 		 * @param array $data Currency has been inserted.
 		 * @param array $data_arr Sanitized currency data.
-		 * @param array $currency_data Currency data as originally passed to the function.
+		 * @param array $item_data Currency data as originally passed to the function.
 		 *
 		 * @since 1.2.1
-		 *
 		 */
-		do_action( 'eaccounting_insert_currency', $id, $data, $data_arr, $currency_data );
+		do_action( 'eaccounting_insert_currency', $id, $data, $data_arr, $item_data );
 	}
 
 	// Clear cache.
-	eaccounting_delete_cache( 'ea_currencies', $id );
+	wp_cache_delete( $id, 'ea_currencies' );
+	wp_cache_set( 'last_changed', microtime(), 'ea_currencies' );
 
 	// Get new currency object.
 	$currency = eaccounting_get_currency( $id );
 
 	/**
-	 * Fires once an currency has been saved.
+	 * Fires once a currency has been saved.
 	 *
 	 * @param int $id Currency id.
 	 * @param Currency $currency Currency object.
 	 * @param bool $update Whether this is an existing currency being updated.
 	 *
 	 * @since 1.2.1
-	 *
 	 */
-	do_action( 'eaccounting_saved_currency', $id, $currency, $update );
+	do_action( 'eaccounting_saved_currency', $id, $currency, $update, $data_arr, $data_before );
 
 	return $currency;
 }
@@ -249,17 +237,16 @@ function eaccounting_insert_currency( $currency_data ) {
 /**
  * Delete a currency.
  *
- * @param int|string $currency_id Note id.
+ * @param int $currency_id Currency id.
  *
- * @return Currency |false|null Note data on success, false or null on failure.
+ * @return Currency |false|null Currency data on success, false or null on failure.
  * @since 1.1.0
- *
  */
 function eaccounting_delete_currency( $currency_id ) {
 	global $wpdb;
 
 	$currency = eaccounting_get_currency( $currency_id );
-	if ( ! $currency->exists() ) {
+	if ( ! $currency || ! $currency->exists() ) {
 		return false;
 	}
 
@@ -267,10 +254,9 @@ function eaccounting_delete_currency( $currency_id ) {
 	 * Filters whether a currency delete should take place.
 	 *
 	 * @param bool|null $delete Whether to go forward with deletion.
-	 * @param Currency $currency currency object.
+	 * @param Currency $currency contact object.
 	 *
 	 * @since 1.2.1
-	 *
 	 */
 	$check = apply_filters( 'eaccounting_pre_delete_currency', null, $currency );
 	if ( null !== $check ) {
@@ -278,15 +264,14 @@ function eaccounting_delete_currency( $currency_id ) {
 	}
 
 	/**
-	 * Fires before currency is deleted.
+	 * Fires before a currency is deleted.
 	 *
-	 * @param int $currency_id Currency id.
-	 * @param Currency $currency Currency object.
+	 * @param int $currency_id Contact id.
+	 * @param Currency $currency currency object.
 	 *
 	 * @since 1.2.1
 	 *
 	 * @see eaccounting_delete_currency()
-	 *
 	 */
 	do_action( 'eaccounting_before_delete_currency', $currency_id, $currency );
 
@@ -295,18 +280,18 @@ function eaccounting_delete_currency( $currency_id ) {
 		return false;
 	}
 
-	eaccounting_delete_cache( 'ea_currencies', $currency_id );
+	wp_cache_delete( $currency_id, 'ea_currencies' );
+	wp_cache_set( 'last_changed', microtime(), 'ea_currencies' );
 
 	/**
-	 * Fires after currency is deleted.
+	 * Fires after a currency is deleted.
 	 *
-	 * @param int $currency_id currency id.
-	 * @param Currency $currency currency object.
+	 * @param int $currency_id contact id.
+	 * @param Currency $currency contact object.
 	 *
 	 * @since 1.2.1
 	 *
 	 * @see eaccounting_delete_currency()
-	 *
 	 */
 	do_action( 'eaccounting_delete_currency', $currency_id, $currency );
 
