@@ -55,19 +55,19 @@ function eaccounting_get_note( $note, $output = OBJECT, $filter = 'raw' ) {
 /**
  *  Insert or update a note.
  *
- * @param array|object|Note $note_data An array, object, or note object of data arguments.
+ * @param array|object|Note $note_arr An array, object, or note object of data arguments.
  *
  * @return Note|WP_Error The note object or WP_Error otherwise.
  * @global wpdb $wpdb WordPress database abstraction object.
  * @since 1.1.0
  */
-function eaccounting_insert_note( $note_data ) {
+function eaccounting_insert_note( $note_arr ) {
 	global $wpdb;
 	$user_id = get_current_user_id();
-	if ( $note_data instanceof Note ) {
-		$note_data = $note_data->to_array();
-	} elseif ( $note_data instanceof stdClass ) {
-		$note_data = get_object_vars( $note_data );
+	if ( $note_arr instanceof Note ) {
+		$note_arr = $note_arr->to_array();
+	} elseif ( $note_arr instanceof stdClass ) {
+		$note_arr = get_object_vars( $note_arr );
 	}
 
 	$defaults = array(
@@ -93,12 +93,12 @@ function eaccounting_insert_note( $note_data ) {
 		}
 
 		// Merge old and new fields with new fields overwriting old ones.
-		$note_data   = array_merge( $data_before, $note_data );
+		$note_arr   = array_merge( $data_before, $note_arr );
 		$data_before = $data_before->to_array();
 	}
 
-	$item_data = wp_parse_args( $note_data, $defaults );
-	$data_arr  = eaccounting_sanitize_note( $note_data, 'db' );
+	$item_data = wp_parse_args( $note_arr, $defaults );
+	$data_arr  = eaccounting_sanitize_note( $note_arr, 'db' );
 
 	// Check required
 	if ( empty( $data_arr['parent_id'] ) ) {
@@ -139,17 +139,17 @@ function eaccounting_insert_note( $note_data ) {
 		/**
 		 * Fires immediately before an existing note item is updated in the database.
 		 *
-		 * @param int $id Invoice item id.
-		 * @param array $data Invoice item data to be inserted.
-		 * @param array $changes Invoice item data to be updated.
-		 * @param array $data_arr Sanitized invoice item data.
-		 * @param array $data_before Invoice item previous data.
+		 * @param int $id Note id.
+		 * @param array $data Note data to be inserted.
+		 * @param array $changes Note data to be updated.
+		 * @param array $data_arr Sanitized note item data.
+		 * @param array $data_before Note previous data.
 		 *
 		 * @since 1.2.1
 		 */
-		do_action( 'eaccounting_pre_update_invoice_item', $id, $data, $data_arr, $data_before );
-		if ( false === $wpdb->update( $wpdb->prefix . 'ea_invoice_items', $data, $where, $data_before ) ) {
-			new WP_Error( 'db_update_error', __( 'Could not update invoice item in the database.' ), $wpdb->last_error );
+		do_action( 'eaccounting_pre_update_note', $id, $data, $data_arr, $data_before );
+		if ( false === $wpdb->update( $wpdb->prefix . 'ea_notes', $data, $where, $data_before ) ) {
+			new WP_Error( 'db_update_error', __( 'Could not update note in the database.' ), $wpdb->last_error );
 		}
 
 		/**
@@ -169,9 +169,9 @@ function eaccounting_insert_note( $note_data ) {
 		/**
 		 * Fires immediately before an existing note is inserted in the database.
 		 *
-		 * @param array $data Invoice item data to be inserted.
-		 * @param string $data_arr Sanitized Invoice item data.
-		 * @param array $item_data Invoice item data as originally passed to the function.
+		 * @param array $data Note data to be inserted.
+		 * @param string $data_arr Sanitized note item data.
+		 * @param array $item_data Note item data as originally passed to the function.
 		 *
 		 * @since 1.2.1
 		 */
@@ -188,7 +188,7 @@ function eaccounting_insert_note( $note_data ) {
 		 *
 		 * @param int $id Note id.
 		 * @param array $data Note has been inserted.
-		 * @param array $data_arr Sanitized Note data.
+		 * @param array $data_arr Sanitized note data.
 		 * @param array $item_data Note data as originally passed to the function.
 		 *
 		 * @since 1.2.1
@@ -212,7 +212,7 @@ function eaccounting_insert_note( $note_data ) {
 	 *
 	 * @since 1.2.1
 	 */
-	do_action( 'eaccounting_saved_invoice_item', $id, $note, $update, $data_arr, $data_before );
+	do_action( 'eaccounting_saved_note', $id, $note, $update, $data_arr, $data_before );
 
 	return $note;
 }

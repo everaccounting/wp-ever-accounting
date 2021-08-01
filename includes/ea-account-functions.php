@@ -57,6 +57,7 @@ function eaccounting_get_account( $account, $output = OBJECT, $filter = 'raw' ) 
 
 	return $_account->filter( $filter );
 }
+
 /**
  * Add or update a new account to the database.
  *
