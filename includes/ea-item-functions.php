@@ -240,9 +240,9 @@ function eaccounting_insert_item( $item_arr ) {
 }
 
 /**
- * Delete an item.
+ * Delete a item.
  *
- * @param int $item_id Item ID
+ * @param int $item_id Item id.
  *
  * @return Item |false|null Item data on success, false or null on failure.
  * @since 1.1.0
@@ -259,7 +259,7 @@ function eaccounting_delete_item( $item_id ) {
 	 * Filters whether an item delete should take place.
 	 *
 	 * @param bool|null $delete Whether to go forward with deletion.
-	 * @param Item $item item object.
+	 * @param Item $item contact object.
 	 *
 	 * @since 1.2.1
 	 */
@@ -272,7 +272,7 @@ function eaccounting_delete_item( $item_id ) {
 	 * Fires before an item is deleted.
 	 *
 	 * @param int $item_id Item id.
-	 * @param Item $item Item object.
+	 * @param Item $item item object.
 	 *
 	 * @since 1.2.1
 	 *
@@ -291,8 +291,8 @@ function eaccounting_delete_item( $item_id ) {
 	/**
 	 * Fires after an item is deleted.
 	 *
-	 * @param int $item_id item id.
-	 * @param Item $item item object.
+	 * @param int $item_id contact id.
+	 * @param Item $item contact object.
 	 *
 	 * @since 1.2.1
 	 *
