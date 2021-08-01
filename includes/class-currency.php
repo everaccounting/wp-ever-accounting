@@ -9,6 +9,8 @@
 
 namespace EverAccounting;
 
+use EverAccounting\Abstracts\Data;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -19,7 +21,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @property string $name
  */
-class Currency {
+class Currency extends Data {
 	/**
 	 * Currency id.
 	 *
@@ -29,68 +31,34 @@ class Currency {
 	public $id = null;
 
 	/**
-	 * Currency friendly name.
+	 * Currency data container.
+	 *
+	 * @since 1.2.1
+	 * @var array
+	 */
+	public $data = array(
+		'name'               => '',
+		'code'               => '',
+		'rate'               => 1,
+		'number'             => '',
+		'precision'          => 2,
+		'subunit'            => 100,
+		'symbol'             => '',
+		'position'           => 'before',
+		'decimal_separator'  => '.',
+		'thousand_separator' => ',',
+		'date_created'       => null,
+	);
+
+	/**
+	 * Stores the currency object's sanitization level.
+	 *
+	 * Does not correspond to a DB field.
 	 *
 	 * @since 1.2.1
 	 * @var string
 	 */
-	public $name = '';
-
-	/**
-	 * Currency ISO code.
-	 *
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $code = '';
-
-	/**
-	 * Currency Rate
-	 *
-	 * @since 1.2.1
-	 * @var int
-	 */
-	public $rate = 1;
-
-	/**
-	 * Currency precision.
-	 *
-	 * @since 1.2.1
-	 * @var int
-	 */
-	public $precision = 2;
-
-	/**
-	 * Currency Decimal separator.
-	 *
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $decimal_separator = '.';
-
-	/**
-	 * Thousand separator.
-	 *
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $thousand_separator = '.';
-
-	/**
-	 * Item status
-	 *
-	 * @since 1.2.1
-	 * @var bool
-	 */
-	public $enabled = true;
-
-	/**
-	 * Currency created date.
-	 *
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $date_created = '0000-00-00 00:00:00';
+	public $filter;
 
 	/**
 	 * Return only the main currency fields
@@ -156,77 +124,11 @@ class Currency {
 	}
 
 	/**
-	 * Magic method for checking the existence of a certain field.
-	 *
-	 * @param string $key Item field to check if set.
-	 *
-	 * @return bool Whether the given Item field is set.
-	 * @since 1.2.1
-	 */
-	public function __isset( $key ) {
-		if ( isset( $this->$key ) ) {
-			return true;
-		}
-
-		return false;
-	}
-
-	/**
-	 * Magic method for setting Item fields.
-	 *
-	 * This method does not update custom fields in the database.
-	 *
-	 * @param string $key Item key.
-	 * @param mixed $value Item value.
-	 *
-	 * @since 1.2.1
-	 */
-	public function __set( $key, $value ) {
-		if ( is_callable( array( $this, 'set_' . $key ) ) ) {
-			$this->$key( $value );
-		} else {
-			$this->$key = $value;
-		}
-	}
-
-	/**
-	 * Magic method for accessing custom fields.
-	 *
-	 * @param string $key item field to retrieve.
-	 *
-	 * @return mixed Value of the given item field (if set).
-	 * @since 1.2.1
-	 */
-	public function __get( $key ) {
-
-		if ( is_callable( array( $this, 'get_' . $key ) ) ) {
-			$value = $this->$key();
-		} else {
-			$value = $this->$key;
-		}
-
-		return $value;
-	}
-
-	/**
-	 * Magic method for unsetting a certain field.
-	 *
-	 * @param string $key item key to unset.
-	 *
-	 * @since 1.2.1
-	 */
-	public function __unset( $key ) {
-		if ( isset( $this->$key ) ) {
-			unset( $this->$key );
-		}
-	}
-
-	/**
-	 * Filter category object based on context.
+	 * Filter currency object based on context.
 	 *
 	 * @param string $filter Filter.
 	 *
-	 * @return Category|Object
+	 * @return Currency|Object
 	 * @since 1.2.1
 	 */
 	public function filter( $filter ) {
@@ -235,50 +137,10 @@ class Currency {
 		}
 
 		if ( 'raw' === $filter ) {
-			return self::load( $this->id );
+			return self::get_data_by( $this->id );
 		}
 
-		if ( 'raw' === $filter ) {
-			return self::get_instance( $this->id );
-		}
-
-		return eaccounting_sanitize_currency( $this, $filter );
+		return new self( eaccounting_sanitize_currency( (object) $this->to_array(), $filter ) );
 	}
 
-	/**
-	 * Determine whether a property or meta key is set
-	 *
-	 * Consults the users and currency_meta tables.
-	 *
-	 * @param string $key Property
-	 *
-	 * @return bool
-	 * @since 1.2.1
-	 *
-	 */
-	public function has_prop( $key ) {
-		return $this->__isset( $key );
-	}
-
-	/**
-	 * Determine whether the currency exists in the database.
-	 *
-	 * @return bool True if currency exists in the database, false if not.
-	 * @since 1.2.1
-	 *
-	 */
-	public function exists() {
-		return ! empty( $this->id );
-	}
-
-	/**
-	 * Return an array representation.
-	 *
-	 * @return array Array representation.
-	 * @since 1.2.1
-	 *
-	 */
-	public function to_array() {
-		return get_object_vars( $this );
-	}
 }

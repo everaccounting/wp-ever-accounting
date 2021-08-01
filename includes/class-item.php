@@ -9,6 +9,8 @@
 
 namespace EverAccounting;
 
+use EverAccounting\Abstracts\Data;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -18,8 +20,21 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 1.2.1
  *
+ * @property string $name
+ * @property string $sku
+ * @property string $description
+ * @property float $sale_price
+ * @property float $purchase_price
+ * @property float $quantity
+ * @property int $category_id
+ * @property float $sales_tax
+ * @property int $purchase_tax
+ * @property float $thumbnail_id
+ * @property boolean $enabled
+ * @property int $creator_id
+ * @property string $date_created
  */
-class Item {
+class Item extends Data {
 	/**
 	 * Item id.
 	 *
@@ -29,110 +44,26 @@ class Item {
 	public $id = null;
 
 	/**
-	 * Name of the item.
+	 * Item data container.
 	 *
 	 * @since 1.2.1
-	 * @var string
+	 * @var array
 	 */
-	public $name = '';
-
-	/**
-	 * Item SKU
-	 *
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $sku = '';
-
-	/**
-	 * Item description
-	 *
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $description = '';
-
-
-	/**
-	 * Item sale price.
-	 *
-	 * @since 1.2.1
-	 * @var float
-	 */
-	public $sale_price = 0.00;
-
-
-	/**
-	 * Item purchase price
-	 *
-	 * @since 1.2.1
-	 * @var float
-	 */
-	public $purchase_price = 0.00;
-
-	/**
-	 * Item stock quantity
-	 *
-	 * @since 1.2.1
-	 * @var int
-	 */
-	public $quantity = 0;
-
-	/**
-	 * Item category id
-	 *
-	 * @since 1.2.1
-	 * @var int
-	 */
-	public $category_id = 0;
-
-	/**
-	 * Item sales tax
-	 *
-	 * @since 1.2.1
-	 * @var float
-	 */
-	public $sales_tax = 0.00;
-
-	/**
-	 * Item purchase tax
-	 *
-	 * @since 1.2.1
-	 * @var float
-	 */
-	public $purchase_tax = 0.00;
-
-	/**
-	 * Item thumbnail id.
-	 *
-	 * @since 1.2.1
-	 * @var null
-	 */
-	public $thumbnail_id = null;
-
-	/**
-	 * Item status
-	 *
-	 * @since 1.2.1
-	 * @var bool
-	 */
-	public $enabled = true;
-
-	/**
-	 * Item creator user id.
-	 *
-	 * @since 1.2.1
-	 * @var int
-	 */
-	public $creator_id = 0;
-
-	/**
-	 * Item created date.
-	 *
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $date_created = '0000-00-00 00:00:00';
+	public $data = array(
+		'name'           => '',
+		'sku'            => '',
+		'thumbnail_id'   => null,
+		'description'    => '',
+		'sale_price'     => 0.0000,
+		'purchase_price' => 0.0000,
+		'quantity'       => 1,
+		'category_id'    => null,
+		'sales_tax'      => null,
+		'purchase_tax'   => null,
+		'enabled'        => 1,
+		'creator_id'     => null,
+		'date_created'   => null,
+	);
 
 	/**
 	 * Stores the item object's sanitization level.
@@ -195,72 +126,6 @@ class Item {
 	}
 
 	/**
-	 * Magic method for checking the existence of a certain field.
-	 *
-	 * @param string $key Item field to check if set.
-	 *
-	 * @return bool Whether the given Item field is set.
-	 * @since 1.2.1
-	 */
-	public function __isset( $key ) {
-		if ( isset( $this->$key ) ) {
-			return true;
-		}
-
-		return false;
-	}
-
-	/**
-	 * Magic method for setting Item fields.
-	 *
-	 * This method does not update custom fields in the database.
-	 *
-	 * @param string $key Item key.
-	 * @param mixed $value Item value.
-	 *
-	 * @since 1.2.1
-	 */
-	public function __set( $key, $value ) {
-		if ( is_callable( array( $this, 'set_' . $key ) ) ) {
-			$this->$key( $value );
-		} else {
-			$this->$key = $value;
-		}
-	}
-
-	/**
-	 * Magic method for accessing custom fields.
-	 *
-	 * @param string $key item field to retrieve.
-	 *
-	 * @return mixed Value of the given item field (if set).
-	 * @since 1.2.1
-	 */
-	public function __get( $key ) {
-
-		if ( is_callable( array( $this, 'get_' . $key ) ) ) {
-			$value = $this->$key();
-		} else {
-			$value = $this->$key;
-		}
-
-		return $value;
-	}
-
-	/**
-	 * Magic method for unsetting a certain field.
-	 *
-	 * @param string $key item key to unset.
-	 *
-	 * @since 1.2.1
-	 */
-	public function __unset( $key ) {
-		if ( isset( $this->$key ) ) {
-			unset( $this->$key );
-		}
-	}
-
-	/**
 	 * Filter item object based on context.
 	 *
 	 * @param string $filter Filter.
@@ -277,38 +142,6 @@ class Item {
 			return self::get_instance( $this->id );
 		}
 
-		return eaccounting_sanitize_item( $this, $filter );
-	}
-
-	/**
-	 * Determine whether a property or meta key is set
-	 *
-	 * @param string $key Property
-	 *
-	 * @return bool
-	 * @since 1.2.1
-	 */
-	public function has_prop( string $key ) {
-		return $this->__isset( $key );
-	}
-
-	/**
-	 * Determine whether the item exists in the database.
-	 *
-	 * @return bool True if item exists in the database, false if not.
-	 * @since 1.2.1
-	 */
-	public function exists() {
-		return ! empty( $this->id );
-	}
-
-	/**
-	 * Return an array representation.
-	 *
-	 * @return array Array representation.
-	 * @since 1.2.1
-	 */
-	public function to_array() {
-		return get_object_vars( $this );
+		return new self( eaccounting_sanitize_item( (object) $this->to_array(), $filter ) );
 	}
 }

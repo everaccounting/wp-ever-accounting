@@ -9,6 +9,8 @@
 
 namespace EverAccounting;
 
+use EverAccounting\Abstracts\Data;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -19,7 +21,7 @@ defined( 'ABSPATH' ) || exit;
  * @since 1.2.1
  *
  */
-class Category {
+class Category extends Data {
 	/**
 	 * Category id.
 	 *
@@ -29,53 +31,28 @@ class Category {
 	public $id = null;
 
 	/**
-	 * Category name.
+	 * Category data container.
+	 *
+	 * @since 1.2.1
+	 * @var array
+	 */
+	public $data = array(
+		'name'         => '',
+		'type'         => '',
+		'color'        => '',
+		'enabled'      => 1,
+		'date_created' => null,
+	);
+
+	/**
+	 * Stores the category object's sanitization level.
+	 *
+	 * Does not correspond to a DB field.
 	 *
 	 * @since 1.2.1
 	 * @var string
 	 */
-	public $name = '';
-
-	/**
-	 * Category type.
-	 *
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $type = '';
-
-	/**
-	 * Category color.
-	 *
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $color = '';
-
-	/**
-	 * Item status.
-	 *
-	 * @since 1.2.1
-	 * @var bool
-	 */
-	public $enabled = true;
-
-	/**
-	 * Item creator user id.
-	 *
-	 * @since 1.2.1
-	 * @var int
-	 */
-	public $creator_id = 0;
-
-	/**
-	 * Item created date.
-	 *
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $date_created = '0000-00-00 00:00:00';
-
+	public $filter;
 
 	/**
 	 * Retrieve Category instance.
@@ -128,72 +105,6 @@ class Category {
 	}
 
 	/**
-	 * Magic method for checking the existence of a certain field.
-	 *
-	 * @param string $key Category field to check if set.
-	 *
-	 * @return bool Whether the given Category field is set.
-	 * @since 1.2.1
-	 */
-	public function __isset( $key ) {
-		if ( isset( $this->$key ) ) {
-			return true;
-		}
-
-		return false;
-	}
-
-	/**
-	 * Magic method for setting category fields.
-	 *
-	 * This method does not update custom fields in the database.
-	 *
-	 * @param string $key Category key.
-	 * @param mixed $value Category value.
-	 *
-	 * @since 1.2.1
-	 */
-	public function __set( $key, $value ) {
-		if ( is_callable( array( $this, 'set_' . $key ) ) ) {
-			$this->$key( $value );
-		} else {
-			$this->$key = $value;
-		}
-	}
-
-	/**
-	 * Magic method for accessing custom fields.
-	 *
-	 * @param string $key Category field to retrieve.
-	 *
-	 * @return mixed Value of the given Category field (if set).
-	 * @since 1.2.1
-	 */
-	public function __get( $key ) {
-
-		if ( is_callable( array( $this, 'get_' . $key ) ) ) {
-			$value = $this->$key();
-		} else {
-			$value = $this->$key;
-		}
-
-		return $value;
-	}
-
-	/**
-	 * Magic method for unsetting a certain field.
-	 *
-	 * @param string $key Category key to unset.
-	 *
-	 * @since 1.2.1
-	 */
-	public function __unset( $key ) {
-		if ( isset( $this->$key ) ) {
-			unset( $this->$key );
-		}
-	}
-
-	/**
 	 * Filter category object based on context.
 	 *
 	 * @param string $filter Filter.
@@ -210,40 +121,6 @@ class Category {
 			return self::get_instance( $this->id );
 		}
 
-		return eaccounting_sanitize_category( $this, $filter );
-	}
-
-	/**
-	 * Determine whether a property or meta key is set
-	 *
-	 * Consults the categories.
-	 *
-	 * @param string $key Property
-	 *
-	 * @return bool
-	 * @since 1.2.1
-	 */
-	public function has_prop( string $key ) {
-		return $this->__isset( $key );
-	}
-
-	/**
-	 * Determine whether the category exists in the database.
-	 *
-	 * @return bool True if category exists in the database, false if not.
-	 * @since 1.2.1
-	 */
-	public function exists() {
-		return ! empty( $this->id );
-	}
-
-	/**
-	 * Return an array representation.
-	 *
-	 * @return array Array representation.
-	 * @since 1.2.1
-	 */
-	public function to_array() {
-		return get_object_vars( $this );
+		return new self( eaccounting_sanitize_category( (object) $this->to_array(), $filter ) );
 	}
 }

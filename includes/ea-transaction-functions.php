@@ -8,8 +8,8 @@
  * @package EverAccounting
  */
 
-use EverAccounting\Models\Payment;
-use EverAccounting\Models\Revenue;
+use EverAccounting\Transaction;
+use EverAccounting\Transfer;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -27,27 +27,44 @@ function eaccounting_get_transaction_types() {
 
 	return apply_filters( 'eaccounting_transaction_types', $types );
 }
-
 /**
- * Get a single payment.
+ * Retrieves transaction data given a transaction id or transaction object.
  *
- * @param $payment
+ * @param int|object|Transaction $transaction transaction to retrieve
+ * @param string $output The required return type. One of OBJECT, ARRAY_A, or ARRAY_N.Default OBJECT.
+ * @param string $filter Type of filter to apply. Accepts 'raw', 'edit', 'db', or 'display'. Default 'raw'.
  *
- * @return Payment|null
+ * @return Transaction|array|null
  * @since 1.1.0
- *
  */
-function eaccounting_get_payment( $payment ) {
-	if ( empty( $payment ) ) {
+function eaccounting_get_transaction( $transaction, $output = OBJECT, $filter = 'raw' ) {
+	if ( empty( $transaction ) ) {
 		return null;
 	}
-	try {
-		$result = new EverAccounting\Models\Payment( $payment );
 
-		return $result->exists() ? $result : null;
-	} catch ( \Exception $e ) {
+	if ( $transaction instanceof Transaction ) {
+		$_transaction = $transaction;
+	} elseif ( is_object( $transaction ) ) {
+		$_transaction = new Transaction( $transaction );
+	} else {
+		$_transaction = Transaction::get_instance( $transaction );
+	}
+
+	if ( ! $_transaction ) {
 		return null;
 	}
+
+	$_transaction = $_transaction->filter( $filter );
+
+	if ( ARRAY_A === $output ) {
+		return $_transaction->to_array();
+	}
+
+	if ( ARRAY_N === $output ) {
+		return array_values( $_transaction->to_array() );
+	}
+
+	return $_transaction->filter( $filter );
 }
 
 
@@ -264,80 +281,43 @@ function eaccounting_get_revenues( $args = array() ) {
 }
 
 /**
- * Get transfer.
+ * Retrieves transfer data given a transfer id or transfer object.
  *
- * @param $transfer
+ * @param int|object|Transfer $transfer transfer to retrieve
+ * @param string $output The required return type. One of OBJECT, ARRAY_A, or ARRAY_N.Default OBJECT.
+ * @param string $filter Type of filter to apply. Accepts 'raw', 'edit', 'db', or 'display'. Default 'raw'.
  *
- * @return \EverAccounting\Models\Transfer|null
+ * @return Transfer|array|null
  * @since 1.1.0
- *
  */
-function eaccounting_get_transfer( $transfer ) {
+function eaccounting_get_transfer( $transfer, $output = OBJECT, $filter = 'raw' ) {
 	if ( empty( $transfer ) ) {
 		return null;
 	}
-	try {
-		$result = new EverAccounting\Models\Transfer( $transfer );
 
-		return $result->exists() ? $result : null;
-	} catch ( \Exception $e ) {
+	if ( $transfer instanceof Transfer ) {
+		$_transfer = $transfer;
+	} elseif ( is_object( $transfer ) ) {
+		$_transfer = new Transfer( $transfer );
+	} else {
+		$_transfer = Transfer::get_instance( $transfer );
+	}
+
+	if ( ! $_transfer ) {
 		return null;
 	}
-}
 
-/**
- * Create new transfer programmatically.
- *
- * Returns a new transfer object on success.
- *
- * @param array $args {
- *                               An array of elements that make up an transfer to update or insert.
- *
- * @type int $id ID of the transfer. If equal to something other than 0,
- *                               the post with that ID will be updated. Default 0.
- * @type int $from_account_id ID of the source account from where transfer is initiating.
- *                               default null.
- * @type int $to_account_id ID of the target account where the transferred amount will be
- *                               deposited. default null.
- * @type string $amount Amount of the money that will be transferred. default 0.
- * @type string $date Date of the transfer. default null.
- * @type string $payment_method Payment method used in transfer. default null.
- * @type string $reference Reference used in transfer. Default empty.
- * @type string $description Description of the transfer. Default empty.
- *
- * }
- *
- * @return \EverAccounting\Models\Transfer|\WP_Error|\bool
- * @since 1.1.0
- *
- */
-function eaccounting_insert_transfer( $args, $wp_error = true ) {
-	// Ensure that we have data.
-	if ( empty( $args ) ) {
-		return false;
+	$_transfer = $_transfer->filter( $filter );
+
+	if ( ARRAY_A === $output ) {
+		return $_transfer->to_array();
 	}
 
-	try {
-		// The id will be provided when updating an item.
-		$args = wp_parse_args( $args, array( 'id' => null ) );
-
-		if ( $args['from_account_id'] == $args['to_account_id'] ) { //phpcs:ignore
-			throw new \Exception( __( "Source and Destination account can't be same.", 'wp-ever-accounting' ) );
-		}
-
-		// Retrieve the transfer.
-		$item = new \EverAccounting\Models\Transfer( $args['id'] );
-
-		// Load new data.
-		$item->set_props( $args );
-
-		// Save the item
-		$item->save();
-
-		return $item;
-	} catch ( \Exception $e ) {
-		return $wp_error ? new WP_Error( 'insert_transfer', $e->getMessage(), array( 'status' => $e->getCode() ) ) : 0;
+	if ( ARRAY_N === $output ) {
+		return array_values( $_transfer->to_array() );
 	}
+
+	return $_transfer->filter( $filter );
 }
 
 /**

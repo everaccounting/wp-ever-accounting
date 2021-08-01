@@ -26,15 +26,16 @@ add_filter( 'eaccounting_pre_item_description', 'sanitize_textarea_field' );
 add_filter( 'eaccounting_edit_item_enabled', 'eaccounting_string_to_bool' );
 
 /**
- * Main function for returning item.
+ * Retrieves item data given a item id or item object.
  *
  * @param int|object|Item $item item to retrieve
- * @param string $filter Optional. Type of filter to apply. Accepts 'raw', 'edit', 'db', or 'display'. Default 'raw'.
+ * @param string $output The required return type. One of OBJECT, ARRAY_A, or ARRAY_N. Default OBJECT.
+ * @param string $filter Type of filter to apply. Accepts 'raw', 'edit', 'db', or 'display'. Default 'raw'.
  *
- * @return Item|null
+ * @return Item|array|null
  * @since 1.1.0
  */
-function eaccounting_get_item( $item, $filter = 'raw' ) {
+function eaccounting_get_item( $item, $output = OBJECT, $filter = 'raw' ) {
 	if ( empty( $item ) ) {
 		return null;
 	}
@@ -51,15 +52,24 @@ function eaccounting_get_item( $item, $filter = 'raw' ) {
 		return null;
 	}
 
+	$_item = $_item->filter( $filter );
+
+	if ( ARRAY_A === $output ) {
+		return $_item->to_array();
+	}
+
+	if ( ARRAY_N === $output ) {
+		return array_values( $_item->to_array() );
+	}
+
 	return $_item->filter( $filter );
 }
-
 /**
- *  Create new item programmatically.
+ *  Insert or update a item.
  *
- * @param array|object|Item $item_data An array, object, or Item object of data arguments.
+ * @param array|object|Item $item_data An array, object, or item object of data arguments.
  *
- * @return Item|WP_Error The Item object or WP_Error otherwise.
+ * @return Item|WP_Error The item object or WP_Error otherwise.
  * @global wpdb $wpdb WordPress database abstraction object.
  * @since 1.1.0
  */
@@ -89,26 +99,25 @@ function eaccounting_insert_item( $item_data ) {
 	);
 
 	// Are we updating or creating?
-	$id      = null;
-	$update  = false;
-	$changes = $item_data;
+	$id          = null;
+	$update      = false;
+	$data_before = array();
 	if ( ! empty( $item_data['id'] ) ) {
-		$update = true;
-		$id     = absint( $item_data['id'] );
-		$before = eaccounting_get_item( $id );
+		$update      = true;
+		$id          = absint( $item_data['id'] );
+		$data_before = eaccounting_get_item( $id );
 
-		if ( is_null( $before ) ) {
+		if ( is_null( $data_before ) ) {
 			return new WP_Error( 'invalid_item_id', __( 'Invalid item id to update.' ) );
 		}
-		// Store changes value.
-		$changes = array_diff_assoc( $item_data, $before->to_array() );
 
 		// Merge old and new fields with new fields overwriting old ones.
-		$item_data = array_merge( $before->to_array(), $item_data );
+		$item_data   = array_merge( $data_before->to_array(), $item_data );
+		$data_before = $data_before->to_array();
 	}
 
-	$data_arr = wp_parse_args( $item_data, $defaults );
-	$data_arr = eaccounting_sanitize_item( $data_arr, 'db' );
+	$item_data = wp_parse_args( $item_data, $defaults );
+	$data_arr  = eaccounting_sanitize_note( $item_data, 'db' );
 
 	if ( empty( $data_arr['name'] ) ) {
 		return new WP_Error( 'invalid_item_name', esc_html__( 'Item name is required', 'wp-ever-accounting' ) );
@@ -118,21 +127,8 @@ function eaccounting_insert_item( $item_data ) {
 		$data_arr['date_created'] = current_time( 'mysql' );
 	}
 
-	// Compute fields.
-	$name           = $data_arr['name'];
-	$sku            = $data_arr['sku'];
-	$description    = $data_arr['description'];
-	$sale_price     = $data_arr['sale_price'];
-	$purchase_price = $data_arr['purchase_price'];
-	$quantity       = $data_arr['quantity'];
-	$category_id    = $data_arr['category_id'];
-	$sales_tax      = $data_arr['sales_tax'];
-	$purchase_tax   = $data_arr['purchase_tax'];
-	$thumbnail_id   = (int) $data_arr['thumbnail_id'];
-	$enabled        = (int) $data_arr['enabled'];
-	$creator_id     = (int) $data_arr['creator_id'];
-	$date_created   = $data_arr['date_created'];
-	$data           = compact( 'name', 'sku', 'description', 'sale_price', 'purchase_price', 'quantity', 'category_id', 'sales_tax', 'purchase_tax', 'thumbnail_id', 'enabled', 'creator_id', 'date_created' );
+	$fields = array_keys( $defaults );
+	$data   = wp_array_slice_assoc( $data_arr, $fields );
 
 	/**
 	 * Filters item data before it is inserted into the database.
@@ -157,11 +153,12 @@ function eaccounting_insert_item( $item_data ) {
 		 * @param array $data Item data to be inserted.
 		 * @param array $changes Item data to be updated.
 		 * @param array $data_arr Sanitized item data.
+		 * @param array $data_before Invoice item previous data.
 		 *
 		 * @since 1.2.1
 		 */
-		do_action( 'eaccounting_pre_update_item', $id, $data, $changes, $data_arr );
-		if ( false === $wpdb->update( $wpdb->prefix . 'ea_items', $data, $where ) ) {
+		do_action( 'eaccounting_pre_update_item', $id, $data, $data_arr, $data_before );
+		if ( false === $wpdb->update( $wpdb->prefix . 'ea_items', $data, $where, $data_before ) ) {
 			new WP_Error( 'db_update_error', __( 'Could not update item in the database.' ), $wpdb->last_error );
 		}
 
@@ -172,17 +169,17 @@ function eaccounting_insert_item( $item_data ) {
 		 * @param array $data Item data to be inserted.
 		 * @param array $changes Item data to be updated.
 		 * @param array $data_arr Sanitized item data.
+		 * @param array $data_before Item previous data.
 		 *
 		 * @since 1.2.1
 		 */
-		do_action( 'eaccounting_update_item', $id, $data, $changes, $data_arr );
+		do_action( 'eaccounting_update_item', $id, $data, $data_arr, $data_before );
 	} else {
-
 		/**
 		 * Fires immediately before an existing item is inserted in the database.
 		 *
-		 * @param array $data Item data to be inserted.
-		 * @param string $data_arr Sanitized item data.
+		 * @param array $data Item item data to be inserted.
+		 * @param string $data_arr Sanitized item item data.
 		 * @param array $item_data Item data as originally passed to the function.
 		 *
 		 * @since 1.2.1
@@ -190,7 +187,7 @@ function eaccounting_insert_item( $item_data ) {
 		do_action( 'eaccounting_pre_insert_item', $data, $data_arr, $item_data );
 
 		if ( false === $wpdb->insert( $wpdb->prefix . 'ea_items', $data ) ) {
-			new WP_Error( 'db_insert_error', __( 'Could not insert item into the database.' ), $wpdb->last_error );
+			new WP_Error( 'db_insert_error', __( 'Could not insert note into the database.' ), $wpdb->last_error );
 		}
 
 		$id = (int) $wpdb->insert_id;

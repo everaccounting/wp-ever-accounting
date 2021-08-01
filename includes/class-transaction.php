@@ -9,6 +9,8 @@
 
 namespace EverAccounting;
 
+use EverAccounting\Abstracts\Data;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -19,7 +21,7 @@ defined( 'ABSPATH' ) || exit;
  * @since 1.2.1
  *
  */
-class Transaction {
+class Transaction extends Data {
 	/**
 	 * Transaction id.
 	 *
@@ -29,128 +31,31 @@ class Transaction {
 	public $id = null;
 
 	/**
-	 *
-	 *
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $type = '';
-	/**
-	 *
+	 * Transaction data container.
 	 *
 	 * @since 1.2.1
-	 * @var string
+	 * @var array
 	 */
-	public $payment_date = '0000-00-00 00:00:00';
-	/**
-	 *
-	 *
-	 * @since 1.2.1
-	 * @var float
-	 */
-	public $amount = 0.00;
-	/**
-	 *
-	 *
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $currency_code = '';
-	/**
-	 *
-	 *
-	 * @since 1.2.1
-	 * @var int
-	 */
-	public $currency_rate = 1;
-	/**
-	 *
-	 *
-	 * @since 1.2.1
-	 * @var null
-	 */
-	public $account_id = null;
-	/**
-	 *
-	 *
-	 * @since 1.2.1
-	 * @var null
-	 */
-	public $document_id = null;
-	/**
-	 *
-	 *
-	 * @since 1.2.1
-	 * @var null
-	 */
-	public $contact_id = null;
-	/**
-	 *
-	 *
-	 * @since 1.2.1
-	 * @var null
-	 */
-	public $category_id = null;
-	/**
-	 *
-	 *
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $description = '';
-	/**
-	 *
-	 *
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $payment_method = '';
-	/**
-	 *
-	 *
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $reference = '';
-	/**
-	 *
-	 *
-	 * @since 1.2.1
-	 * @var null
-	 */
-	public $attachment_id = null;
-	/**
-	 *
-	 *
-	 * @since 1.2.1
-	 * @var null
-	 */
-	public $parent_id = null;
-
-	/**
-	 *
-	 *
-	 * @since 1.2.1
-	 * @var int
-	 */
-	public $reconciled = 0;
-
-	/**
-	 * Transaction creator user id.
-	 *
-	 * @since 1.2.1
-	 * @var int
-	 */
-	public $creator_id = 0;
-
-	/**
-	 * Transaction created date.
-	 *
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $date_created = '0000-00-00 00:00:00';
-
+	public $data = array(
+		'type'           => 'income',
+		'type_id'        => null,
+		'payment_date'   => null,
+		'amount'         => 0.00,
+		'currency_code'  => '', // protected
+		'currency_rate'  => 0.00, // protected
+		'account_id'     => null,
+		'document_id'    => null,
+		'contact_id'     => null,
+		'category_id'    => null,
+		'description'    => '',
+		'payment_method' => '',
+		'reference'      => '',
+		'attachment_id'  => null,
+		'parent_id'      => 0,
+		'reconciled'     => 0,
+		'creator_id'     => null,
+		'date_created'   => null,
+	);
 	/**
 	 * Stores the transaction object's sanitization level.
 	 *
@@ -162,131 +67,39 @@ class Transaction {
 	public $filter;
 
 	/**
-	 * Magic method for checking the existence of a certain field.
+	 * Retrieve Transaction instance.
 	 *
-	 * @param string $key Transaction field to check if set.
+	 * @param int $transaction_id Transaction id.
 	 *
-	 * @return bool Whether the given Transaction field is set.
+	 * @return Transaction|false Transaction object, false otherwise.
 	 * @since 1.2.1
+	 *
+	 * @global \wpdb $wpdb WordPress database abstraction object.
+	 *
 	 */
-	public function __isset( $key ) {
-		if ( isset( $this->data->$key ) ) {
-			return true;
+	public static function get_instance( $transaction_id ) {
+		global $wpdb;
+
+		$transaction_id = (int) $transaction_id;
+		if ( ! $transaction_id ) {
+			return false;
 		}
 
-		return metadata_exists( 'transaction', $this->id, $key );
-	}
+		$_item = wp_cache_get( $transaction_id, 'ea_transactions' );
 
-	/**
-	 * Magic method for setting transaction fields.
-	 *
-	 * This method does not update custom fields in the database.
-	 *
-	 * @param string $key Transaction key.
-	 * @param mixed $value Transaction value.
-	 *
-	 * @since 1.2.1
-	 */
-	public function __set( $key, $value ) {
-		if ( is_callable( array( $this, 'set_' . $key ) ) ) {
-			$this->$key( $value );
-		} else {
-			$this->data->$key = $value;
-		}
-	}
+		if ( ! $_item ) {
+			$_item = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}ea_transactions WHERE id = %d LIMIT 1", $transaction_id ) );
 
-	/**
-	 * Magic method for accessing custom fields.
-	 *
-	 * @param string $key Transaction field to retrieve.
-	 *
-	 * @return mixed Value of the given Transaction field (if set).
-	 * @since 1.2.1
-	 */
-	public function __get( $key ) {
+			if ( ! $_item ) {
+				return false;
+			}
 
-		if ( is_callable( array( $this, 'get_' . $key ) ) ) {
-			$value = $this->$key();
-		} elseif ( isset( $this->data->$key ) ) {
-			$value = $this->data->$key;
-		} else {
-			$value = $this->get_meta( $key, true );
+			$_item = eaccounting_sanitize_transaction( $_item, 'raw' );
+			wp_cache_add( $_item->id, $_item, 'ea_transactions' );
+		} elseif ( empty( $_item->filter ) ) {
+			$_item = eaccounting_sanitize_transaction( $_item, 'raw' );
 		}
 
-		return $value;
-	}
-
-	/**
-	 * Magic method for unsetting a certain field.
-	 *
-	 * @param string $key Transaction key to unset.
-	 *
-	 * @since 1.2.1
-	 */
-	public function __unset( $key ) {
-		if ( isset( $this->data->$key ) ) {
-			unset( $this->data->$key );
-		}
-	}
-
-	/**
-	 * Get meta data.
-	 *
-	 * @param string $meta_key Meta key
-	 * @param boolean $single Single
-	 *
-	 * @return array|false|mixed
-	 * @since 1.2.1
-	 */
-	protected function get_meta( string $meta_key = '', bool $single = true ) {
-		return get_metadata( 'transaction', $this->id, $meta_key, $single );
-	}
-
-	/**
-	 * Update meta value.
-	 *
-	 * @param string $meta_key Meta key
-	 * @param string $meta_value Meta value
-	 * @param string $prev_value Previous value
-	 *
-	 * @return bool|int
-	 * @since 1.2.1
-	 */
-	protected function update_meta( string $meta_key, string $meta_value, string $prev_value = '' ) {
-		return update_metadata( 'transaction', $this->id, $meta_key, $meta_value, $prev_value );
-	}
-
-	/**
-	 * Determine whether a property or meta key is set
-	 *
-	 * Consults the transactions and transaction_meta tables.
-	 *
-	 * @param string $key Property
-	 *
-	 * @return bool
-	 * @since 1.2.1
-	 */
-	public function has_prop( string $key ) {
-		return $this->__isset( $key );
-	}
-
-	/**
-	 * Determine whether the transaction exists in the database.
-	 *
-	 * @return bool True if transaction exists in the database, false if not.
-	 * @since 1.2.1
-	 */
-	public function exists() {
-		return ! empty( $this->id );
-	}
-
-	/**
-	 * Return an array representation.
-	 *
-	 * @return array Array representation.
-	 * @since 1.2.1
-	 */
-	public function to_array() {
-		return get_object_vars( $this->data );
+		return new Transaction( $_item );
 	}
 }

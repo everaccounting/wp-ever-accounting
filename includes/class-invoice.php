@@ -9,6 +9,7 @@
 
 namespace EverAccounting;
 
+use EverAccounting\Abstracts\Data;
 use EverAccounting\Abstracts\MetaData;
 
 defined( 'ABSPATH' ) || exit;
@@ -20,8 +21,36 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 1.2.1
  *
+ * @property string $document_number
+ * @property string $type
+ * @property string $order_number
+ * @property string $status
+ * @property string $issue_date
+ * @property string $due_date
+ * @property string $payment_date
+ * @property int $category_id
+ * @property int $contact_id
+ * @property string $address
+ * @property string $currency_code
+ * @property float $currency_rate
+ * @property float $discount
+ * @property string $discount_type
+ * @property float $subtotal
+ * @property float $total_tax
+ * @property float $total_discount
+ * @property float $total_fees
+ * @property float $total_shipping
+ * @property float $total
+ * @property boolean $tax_inclusive
+ * @property string $note
+ * @property string $terms
+ * @property int $attachment_id
+ * @property string $key
+ * @property int $parent_id
+ * @property int $creator_id
+ * @property string $date_created
  */
-class Invoice extends MetaData {
+class Invoice extends Data {
 	/**
 	 * Invoice id.
 	 *
@@ -31,198 +60,52 @@ class Invoice extends MetaData {
 	public $id = null;
 
 	/**
-	 *
-	 *
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $document_number = '';
-	/**
-	 *
+	 * Invoice data container.
 	 *
 	 * @since 1.2.1
-	 * @var string
+	 * @var array
 	 */
-	public $type = '';
-	/**
-	 *
-	 *
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $order_number = '';
-	/**
-	 *
-	 *
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $status = '';
-	/**
-	 *
-	 *
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $issue_date = '0000-00-00 00:00:00';
-	/**
-	 *
-	 *
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $due_date = '0000-00-00 00:00:00';
-	/**
-	 *
-	 *
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $payment_date = '0000-00-00 00:00:00';
-	/**
-	 *
-	 *
-	 * @since 1.2.1
-	 * @var null
-	 */
-	public $category_id = null;
-	/**
-	 *
-	 *
-	 * @since 1.2.1
-	 * @var null
-	 */
-	public $contact_id = null;
-	/**
-	 *
-	 *
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $address = '';
-	/**
-	 *
-	 *
-	 * @since 1.2.1
-	 * @var float
-	 */
-	public $discount = 0.00;
-	/**
-	 *
-	 *
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $discount_type = 'fixed';
-	/**
-	 *
-	 *
-	 * @since 1.2.1
-	 * @var float
-	 */
-	public $subtotal = 0.00;
-	/**
-	 *
-	 *
-	 * @since 1.2.1
-	 * @var float
-	 */
-	public $total_tax = 0.00;
-	/**
-	 *
-	 *
-	 * @since 1.2.1
-	 * @var float
-	 */
-	public $total_discount = 0.00;
-	/**
-	 *
-	 *
-	 * @since 1.2.1
-	 * @var float
-	 */
-	public $total_fees = 0.00;
-	/**
-	 *
-	 *
-	 * @since 1.2.1
-	 * @var float
-	 */
-	public $total_shipping = 0.00;
-	/**
-	 *
-	 *
-	 * @since 1.2.1
-	 * @var float
-	 */
-	public $total = 0.00;
-	/**
-	 *
-	 *
-	 * @since 1.2.1
-	 * @var int
-	 */
-	public $tax_inclusive = 0;
-	/**
-	 *
-	 *
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $note = '';
-	/**
-	 *
-	 *
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $terms = '';
-
-	/**
-	 *
-	 *
-	 * @since 1.2.1
-	 * @var null
-	 */
-	public $attachment_id = null;
-	/**
-	 *
-	 *
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $currency_code = '';
-	/**
-	 *
-	 *
-	 * @since 1.2.1
-	 * @var int
-	 */
-	public $currency_rate = 1;
-
-	/**
-	 *
-	 *
-	 * @since 1.2.1
-	 * @var null
-	 */
-	public $parent_id = null;
-
-	/**
-	 * Transaction creator user id.
-	 *
-	 * @since 1.2.1
-	 * @var int
-	 */
-	public $creator_id = 0;
-
-	/**
-	 * Invoice created date.
-	 *
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $date_created = '0000-00-00 00:00:00';
+	public $data = array(
+		'document_number' => '',
+		'type'            => '',
+		'order_number'    => '',
+		'status'          => 'draft',
+		'issue_date'      => null,
+		'due_date'        => null,
+		'payment_date'    => null,
+		'category_id'     => null,
+		'contact_id'      => null,
+		'address'         => array(
+			'name'       => '',
+			'company'    => '',
+			'street'     => '',
+			'city'       => '',
+			'state'      => '',
+			'postcode'   => '',
+			'country'    => '',
+			'email'      => '',
+			'phone'      => '',
+			'vat_number' => '',
+		),
+		'discount'        => 0.00,
+		'discount_type'   => 'percentage',
+		'subtotal'        => 0.00,
+		'total_tax'       => 0.00,
+		'total_discount'  => 0.00,
+		'total_fees'      => 0.00,
+		'total_shipping'  => 0.00,
+		'total'           => 0.00,
+		'tax_inclusive'   => 1,
+		'note'            => '',
+		'terms'           => '',
+		'attachment_id'   => null,
+		'currency_code'   => null,
+		'currency_rate'   => 1,
+		'key'             => null,
+		'parent_id'       => null,
+		'creator_id'      => null,
+		'date_created'    => null,
+	);
 
 	/**
 	 * Stores the transaction object's sanitization level.
@@ -293,83 +176,12 @@ class Invoice extends MetaData {
 	}
 
 	/**
-	 * Magic method for checking the existence of a certain field.
-	 *
-	 * @param string $key Account field to check if set.
-	 *
-	 * @return bool Whether the given Account field is set.
-	 * @since 1.2.1
-	 */
-	public function __isset( $key ) {
-		if ( isset( $this->$key ) ) {
-			return true;
-		}
-
-		return false;
-	}
-
-	/**
-	 * Magic method for setting invoice fields.
-	 *
-	 * This method does not update custom fields in the database.
-	 *
-	 * @param string $key Account key.
-	 * @param mixed $value Account value.
-	 *
-	 * @since 1.2.1
-	 */
-	public function __set( $key, $value ) {
-		if ( is_callable( array( $this, 'set_' . $key ) ) ) {
-			$this->$key( $value );
-		} else {
-			$this->$key = $value;
-		}
-	}
-
-	/**
-	 * Magic method for accessing custom fields.
-	 *
-	 * @param string $key Account field to retrieve.
-	 *
-	 * @return mixed Value of the given Account field (if set).
-	 * @since 1.2.1
-	 */
-	public function __get( $key ) {
-		$value = '';
-		if ( method_exists( $this, 'get_' . $key ) ) {
-			eaccounting_doing_it_wrong( __FUNCTION__, sprintf( __( 'Object data such as "%s" should not be accessed directly. Use getters and setters.', 'wp-ever-accounting' ), $key ), '1.1.0' );
-			$value = $this->{'get_' . $key}();
-		} else if ( property_exists( $this, $key ) && is_callable( array( $this, $key ) ) ) {
-			$value = $this->$key;
-		} else if ( $this->meta_exists( $key ) ) {
-			$value = $this->get_meta( $key );
-			$value = eaccounting_sanitize_contact_field( $key, $value, $this->id, $this->filter );
-		}
-
-		return $value;
-	}
-
-	/**
-	 * Magic method for unsetting a certain field.
-	 *
-	 * @param string $key Account key to unset.
-	 *
-	 * @since 1.2.1
-	 */
-	public function __unset( $key ) {
-		if ( isset( $this->$key ) ) {
-			unset( $this->$key );
-		}
-	}
-
-	/**
 	 * Filter invoice object based on context.
 	 *
 	 * @param string $filter Filter.
 	 *
-	 * @return Account|Object
+	 * @return Invoice|Object
 	 * @since 1.2.1
-	 *
 	 */
 	public function filter( $filter ) {
 		if ( $this->filter === $filter ) {
@@ -380,41 +192,6 @@ class Invoice extends MetaData {
 			return self::get_instance( $this->id );
 		}
 
-		return eaccounting_sanitize_invoice( $this, $filter );
+		return new self( eaccounting_sanitize_invoice( (object) $this->to_array(), $filter ) );
 	}
-
-	/**
-	 * Determine whether a property or meta key is set
-	 *
-	 * Consults the invoices.
-	 *
-	 * @param string $key Property
-	 *
-	 * @return bool
-	 * @since 1.2.1
-	 */
-	public function has_prop( string $key ) {
-		return $this->__isset( $key );
-	}
-
-	/**
-	 * Determine whether the invoice exists in the database.
-	 *
-	 * @return bool True if invoice exists in the database, false if not.
-	 * @since 1.2.1
-	 */
-	public function exists() {
-		return ! empty( $this->id );
-	}
-
-	/**
-	 * Return an array representation.
-	 *
-	 * @return array Array representation.
-	 * @since 1.2.1
-	 */
-	public function to_array() {
-		return get_object_vars( $this );
-	}
-
 }

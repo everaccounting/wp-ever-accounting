@@ -36,23 +36,41 @@ function eaccounting_get_category_types() {
 /**
  * Retrieves category data given a category id or category object.
  *
- * @param int|array|object|Category $category category to retrieve
- * @param string $filter Optional. Type of filter to apply. Accepts 'raw', 'edit', 'db', or 'display'. Default 'raw'.
+ * @param int|object|Category $category category to retrieve
+ * @param string $output The required return type. One of OBJECT, ARRAY_A, or ARRAY_N.Default OBJECT.
+ * @param string $filter Type of filter to apply. Accepts 'raw', 'edit', 'db', or 'display'. Default 'raw'.
  *
- * @return array|Category|null
+ * @return Category|array|null
  * @since 1.1.0
  */
-function eaccounting_get_category( $category, $filter = 'raw' ) {
+function eaccounting_get_category( $category, $output = OBJECT, $filter = 'raw' ) {
 	if ( empty( $category ) ) {
 		return null;
 	}
 
-	$category = new Category( $category );
-	if ( ! $category->exists() ) {
+	if ( $category instanceof Category ) {
+		$_category = $category;
+	} elseif ( is_object( $category ) ) {
+		$_category = new Category( $category );
+	} else {
+		$_category = Category::get_instance( $category );
+	}
+
+	if ( ! $_category ) {
 		return null;
 	}
 
-	return $category->filter( $filter );
+	$_category = $_category->filter( $filter );
+
+	if ( ARRAY_A === $output ) {
+		return $_category->to_array();
+	}
+
+	if ( ARRAY_N === $output ) {
+		return array_values( $_category->to_array() );
+	}
+
+	return $_category->filter( $filter );
 }
 
 /**

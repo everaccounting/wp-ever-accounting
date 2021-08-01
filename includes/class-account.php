@@ -9,6 +9,8 @@
 
 namespace EverAccounting;
 
+use EverAccounting\Abstracts\Data;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -18,8 +20,19 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 1.2.1
  *
+ * @property string $currency_code
+ * @property string $name
+ * @property string $number
+ * @property float $opening_balance
+ * @property string $bank_name
+ * @property string $bank_phone
+ * @property string $bank_address
+ * @property int $thumbnail_id
+ * @property boolean $enabled
+ * @property int $creator_id
+ * @property string $date_created
  */
-class Account {
+class Account extends Data {
 	/**
 	 * Account id.
 	 *
@@ -28,87 +41,35 @@ class Account {
 	 */
 	public $id = null;
 
+	/**
+	 * Account data container.
+	 *
+	 * @since 1.2.1
+	 * @var array
+	 */
+	public $data = array(
+		'name'            => '',
+		'number'          => '',
+		'currency_code'   => '',
+		'opening_balance' => 0.0000,
+		'bank_name'       => null,
+		'bank_phone'      => null,
+		'bank_address'    => null,
+		'thumbnail_id'    => null,
+		'enabled'         => 1,
+		'creator_id'      => null,
+		'date_created'    => null,
+	);
 
 	/**
-	 * Account name
+	 * Stores the account object's sanitization level.
+	 *
+	 * Does not correspond to a DB field.
 	 *
 	 * @since 1.2.1
 	 * @var string
 	 */
-	public $name = '';
-	/**
-	 * Account number.
-	 *
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $number = '';
-	/**
-	 * Account opening balance.
-	 *
-	 * @since 1.2.1
-	 * @var float
-	 */
-	public $opening_balance = 0.00;
-	/**
-	 * Account currency code.
-	 *
-	 * @since 1.2.1
-	 * @var float
-	 */
-	public $currency_code = 0.00;
-	/**
-	 * Account bank name.
-	 *
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $bank_name = '';
-	/**
-	 * Account bank phone.
-	 *
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $bank_phone = '';
-	/**
-	 * Account Address.
-	 *
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $bank_address = '';
-	/**
-	 * Account thumbnail id.
-	 *
-	 * @since 1.2.1
-	 * @var null
-	 */
-	public $thumbnail_id = null;
-
-	/**
-	 * Account status
-	 *
-	 * @since 1.2.1
-	 * @var bool
-	 */
-	public $enabled = true;
-
-	/**
-	 * Account creator user id.
-	 *
-	 * @since 1.2.1
-	 * @var int
-	 */
-	public $creator_id = 0;
-
-	/**
-	 * Account created date.
-	 *
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $date_created = '0000-00-00 00:00:00';
+	public $filter;
 
 	/**
 	 * Retrieve Account instance.
@@ -161,79 +122,12 @@ class Account {
 	}
 
 	/**
-	 * Magic method for checking the existence of a certain field.
-	 *
-	 * @param string $key Account field to check if set.
-	 *
-	 * @return bool Whether the given Account field is set.
-	 * @since 1.2.1
-	 */
-	public function __isset( $key ) {
-		if ( isset( $this->$key ) ) {
-			return true;
-		}
-
-		return false;
-	}
-
-	/**
-	 * Magic method for setting account fields.
-	 *
-	 * This method does not update custom fields in the database.
-	 *
-	 * @param string $key Account key.
-	 * @param mixed $value Account value.
-	 *
-	 * @since 1.2.1
-	 */
-	public function __set( $key, $value ) {
-		if ( is_callable( array( $this, 'set_' . $key ) ) ) {
-			$this->$key( $value );
-		} else {
-			$this->$key = $value;
-		}
-	}
-
-	/**
-	 * Magic method for accessing custom fields.
-	 *
-	 * @param string $key Account field to retrieve.
-	 *
-	 * @return mixed Value of the given Account field (if set).
-	 * @since 1.2.1
-	 */
-	public function __get( $key ) {
-
-		if ( is_callable( array( $this, 'get_' . $key ) ) ) {
-			$value = $this->$key();
-		} else {
-			$value = $this->$key;
-		}
-
-		return $value;
-	}
-
-	/**
-	 * Magic method for unsetting a certain field.
-	 *
-	 * @param string $key Account key to unset.
-	 *
-	 * @since 1.2.1
-	 */
-	public function __unset( $key ) {
-		if ( isset( $this->$key ) ) {
-			unset( $this->$key );
-		}
-	}
-
-	/**
 	 * Filter account object based on context.
 	 *
 	 * @param string $filter Filter.
 	 *
 	 * @return Account|Object
 	 * @since 1.2.1
-	 *
 	 */
 	public function filter( $filter ) {
 		if ( $this->filter === $filter ) {
@@ -244,43 +138,8 @@ class Account {
 			return self::get_instance( $this->id );
 		}
 
-		return eaccounting_sanitize_account( $this, $filter );
+		return new self( eaccounting_sanitize_account( (object) $this->to_array(), $filter ) );
 	}
-
-	/**
-	 * Determine whether a property or meta key is set
-	 *
-	 * Consults the accounts.
-	 *
-	 * @param string $key Property
-	 *
-	 * @return bool
-	 * @since 1.2.1
-	 */
-	public function has_prop( string $key ) {
-		return $this->__isset( $key );
-	}
-
-	/**
-	 * Determine whether the account exists in the database.
-	 *
-	 * @return bool True if account exists in the database, false if not.
-	 * @since 1.2.1
-	 */
-	public function exists() {
-		return ! empty( $this->id );
-	}
-
-	/**
-	 * Return an array representation.
-	 *
-	 * @return array Array representation.
-	 * @since 1.2.1
-	 */
-	public function to_array() {
-		return get_object_vars( $this );
-	}
-
 
 	/**
 	 * Get account balance

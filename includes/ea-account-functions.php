@@ -21,25 +21,42 @@ add_filter( 'eaccounting_edit_account_enabled', 'eaccounting_string_to_bool', 10
 /**
  * Retrieves account data given a account id or account object.
  *
- * @param int|array|object|Account $account account to retrieve
- * @param string $filter Optional. Type of filter to apply. Accepts 'raw', 'edit', 'db', or 'display'. Default 'raw'.
+ * @param int|object|Account $account account to retrieve
+ * @param string $output The required return type. One of OBJECT, ARRAY_A, or ARRAY_N.Default OBJECT.
+ * @param string $filter Type of filter to apply. Accepts 'raw', 'edit', 'db', or 'display'. Default 'raw'.
  *
- * @return array|Account|null
+ * @return Account|array|null
  * @since 1.1.0
  */
-function eaccounting_get_account( $account, $filter = 'raw' ) {
+function eaccounting_get_account( $account, $output = OBJECT, $filter = 'raw' ) {
 	if ( empty( $account ) ) {
 		return null;
 	}
 
-	$account = new Account( $account );
-	if ( ! $account->exists() ) {
+	if ( $account instanceof Account ) {
+		$_account = $account;
+	} elseif ( is_object( $account ) ) {
+		$_account = new Account( $account );
+	} else {
+		$_account = Account::get_instance( $account );
+	}
+
+	if ( ! $_account ) {
 		return null;
 	}
 
-	return $account->filter( $filter );
-}
+	$_account = $_account->filter( $filter );
 
+	if ( ARRAY_A === $output ) {
+		return $_account->to_array();
+	}
+
+	if ( ARRAY_N === $output ) {
+		return array_values( $_account->to_array() );
+	}
+
+	return $_account->filter( $filter );
+}
 /**
  * Add or update a new account to the database.
  *

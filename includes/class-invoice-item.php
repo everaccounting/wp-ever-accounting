@@ -9,6 +9,8 @@
 
 namespace EverAccounting;
 
+use EverAccounting\Abstracts\Data;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -17,9 +19,21 @@ defined( 'ABSPATH' ) || exit;
  * @package EverAccounting
  *
  * @since 1.2.1
- *
+ * @property int $invoice_id
+ * @property int $item_id
+ * @property string $item_name
+ * @property float $price
+ * @property float $quantity
+ * @property float $subtotal
+ * @property float $tax_rate
+ * @property float $discount
+ * @property float $tax
+ * @property float $total
+ * @property string $currency_code
+ * @property string $extra
+ * @property string $date_created
  */
-class Invoice_Item {
+class Invoice_Item extends Data {
 	/**
 	 * Invoice Item id.
 	 *
@@ -29,108 +43,31 @@ class Invoice_Item {
 	public $id = null;
 
 	/**
-	 *
-	 *
-	 * @since 1.2.1
-	 * @var null
-	 */
-	public $document_id = null;
-
-	/**
-	 *
+	 * Invoice Item data container.
 	 *
 	 * @since 1.2.1
-	 * @var null
+	 * @var array
 	 */
-	public $item_id = null;
-
-	/**
-	 *
-	 *
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $item_name = '';
-
-	/**
-	 *
-	 *
-	 * @since 1.2.1
-	 * @var float
-	 */
-	public $price = 0.00;
-
-	/**
-	 *
-	 *
-	 * @since 1.2.1
-	 * @var int
-	 */
-	public $quantity = 1;
-
-	/**
-	 *
-	 *
-	 * @since 1.2.1
-	 * @var float
-	 */
-	public $subtotal = 0.00;
-
-	/**
-	 *
-	 *
-	 * @since 1.2.1
-	 * @var int
-	 */
-	public $tax_rate = 0;
-
-	/**
-	 *
-	 *
-	 * @since 1.2.1
-	 * @var float
-	 */
-	public $discount = 0.00;
-
-	/**
-	 *
-	 *
-	 * @since 1.2.1
-	 * @var float
-	 */
-	public $tax = 0.00;
-
-	/**
-	 *
-	 *
-	 * @since 1.2.1
-	 * @var float
-	 */
-	public $total = 0.00;
-
-	/**
-	 *
-	 *
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $currency_code = '';
-
-	/**
-	 *
-	 *
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $extra = '';
-
-	/**
-	 * Invoice item date.
-	 *
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $date_created = '0000-00-00 00:00:00';
+	public $data = array(
+		'invoice_id'    => null,
+		'item_id'       => null,
+		'item_name'     => '',
+		'price'         => 0.00,
+		'quantity'      => 1,
+		'subtotal'      => 0.00,
+		'tax_rate'      => 0.00,
+		'discount'      => 0.00,
+		'tax'           => 0.00,
+		'total'         => 0.00,
+		'currency_code' => '',
+		'extra'         => array(
+			'shipping'     => 0.00,
+			'shipping_tax' => 0.00,
+			'fees'         => 0.00,
+			'fees_tax'     => 0.00,
+		),
+		'date_created'  => null,
+	);
 
 	/**
 	 * Stores the invoice item object's sanitization level.
@@ -147,7 +84,7 @@ class Invoice_Item {
 	 *
 	 * @param int $item_id Item id.
 	 *
-	 * @return Item|false Item object, false otherwise.
+	 * @return Invoice_Item|false Item object, false otherwise.
 	 * @since 1.2.1
 	 *
 	 * @global \wpdb $wpdb WordPress database abstraction object.
@@ -169,14 +106,11 @@ class Invoice_Item {
 			if ( ! $_item ) {
 				return false;
 			}
-
 			$_item = eaccounting_sanitize_invoice_item( $_item, 'raw' );
 			wp_cache_add( $_item->id, $_item, 'ea_invoice_items' );
-		} elseif ( empty( $_item->filter ) ) {
-			$_item = eaccounting_sanitize_invoice_item( $_item, 'raw' );
 		}
 
-		return new Item( $_item );
+		return new self( $_item );
 	}
 
 	/**
@@ -186,75 +120,9 @@ class Invoice_Item {
 	 *
 	 * @since 1.2.1
 	 */
-	public function __construct( $item ) {
+	public function __construct( $item = null ) {
 		foreach ( get_object_vars( $item ) as $key => $value ) {
 			$this->$key = $value;
-		}
-	}
-
-	/**
-	 * Magic method for checking the existence of a certain field.
-	 *
-	 * @param string $key Item field to check if set.
-	 *
-	 * @return bool Whether the given Item field is set.
-	 * @since 1.2.1
-	 */
-	public function __isset( $key ) {
-		if ( isset( $this->$key ) ) {
-			return true;
-		}
-
-		return false;
-	}
-
-	/**
-	 * Magic method for setting Item fields.
-	 *
-	 * This method does not update custom fields in the database.
-	 *
-	 * @param string $key Item key.
-	 * @param mixed $value Item value.
-	 *
-	 * @since 1.2.1
-	 */
-	public function __set( $key, $value ) {
-		if ( is_callable( array( $this, 'set_' . $key ) ) ) {
-			$this->$key( $value );
-		} else {
-			$this->$key = $value;
-		}
-	}
-
-	/**
-	 * Magic method for accessing custom fields.
-	 *
-	 * @param string $key item field to retrieve.
-	 *
-	 * @return mixed Value of the given item field (if set).
-	 * @since 1.2.1
-	 */
-	public function __get( $key ) {
-
-		if ( is_callable( array( $this, 'get_' . $key ) ) ) {
-			$value = $this->$key();
-		} else {
-			$value = $this->$key;
-		}
-
-		return $value;
-	}
-
-	/**
-	 * Magic method for unsetting a certain field.
-	 *
-	 * @param string $key item key to unset.
-	 *
-	 * @since 1.2.1
-	 */
-	public function __unset( $key ) {
-		if ( isset( $this->$key ) ) {
-			unset( $this->$key );
 		}
 	}
 
@@ -263,7 +131,7 @@ class Invoice_Item {
 	 *
 	 * @param string $filter Filter.
 	 *
-	 * @return Item|Object
+	 * @return Invoice_Item|Object
 	 * @since 1.2.1
 	 */
 	public function filter( $filter ) {
@@ -275,38 +143,6 @@ class Invoice_Item {
 			return self::get_instance( $this->id );
 		}
 
-		return eaccounting_sanitize_invoice_item( $this, $filter );
-	}
-
-	/**
-	 * Determine whether a property or meta key is set
-	 *
-	 * @param string $key Property
-	 *
-	 * @return bool
-	 * @since 1.2.1
-	 */
-	public function has_prop( string $key ) {
-		return $this->__isset( $key );
-	}
-
-	/**
-	 * Determine whether the item exists in the database.
-	 *
-	 * @return bool True if item exists in the database, false if not.
-	 * @since 1.2.1
-	 */
-	public function exists() {
-		return ! empty( $this->id );
-	}
-
-	/**
-	 * Return an array representation.
-	 *
-	 * @return array Array representation.
-	 * @since 1.2.1
-	 */
-	public function to_array() {
-		return get_object_vars( $this );
+		return new self( eaccounting_sanitize_invoice_item( (object) $this->to_array(), $filter ) );
 	}
 }

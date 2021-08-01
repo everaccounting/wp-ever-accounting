@@ -28,17 +28,17 @@ function eaccounting_get_contact_types() {
 	);
 }
 
-
 /**
- * Main function for returning contact.
+ * Retrieves contact data given a contact id or contact object.
  *
  * @param int|object|Contact $contact contact to retrieve
- * @param string $filter Optional. Type of filter to apply. Accepts 'raw', 'edit', 'db', or 'display'. Default 'raw'.
+ * @param string $output The required return type. One of OBJECT, ARRAY_A, or ARRAY_N.Default OBJECT.
+ * @param string $filter Type of filter to apply. Accepts 'raw', 'edit', 'db', or 'display'. Default 'raw'.
  *
- * @return Contact|null
+ * @return Contact|array|null
  * @since 1.1.0
  */
-function eaccounting_get_contact( $contact, $filter = 'raw' ) {
+function eaccounting_get_contact( $contact, $output = OBJECT, $filter = 'raw' ) {
 	if ( empty( $contact ) ) {
 		return null;
 	}
@@ -53,6 +53,16 @@ function eaccounting_get_contact( $contact, $filter = 'raw' ) {
 
 	if ( ! $_contact ) {
 		return null;
+	}
+
+	$_contact = $_contact->filter( $filter );
+
+	if ( ARRAY_A === $output ) {
+		return $_contact->to_array();
+	}
+
+	if ( ARRAY_N === $output ) {
+		return array_values( $_contact->to_array() );
 	}
 
 	return $_contact->filter( $filter );

@@ -1,37 +1,56 @@
 <?php
 /**
- * EverCurrencying Currency Functions.
+ * EverAccounting Currency Functions.
  *
  * Currency related functions.
  *
  * @since   1.1.0
- * @package EverCurrencying
+ * @package EverAccounting
  */
 
 use EverAccounting\Currency;
 
 defined( 'ABSPATH' ) || exit();
-
 /**
  * Retrieves currency data given a currency id or currency object.
  *
- * @param int|array|object|Currency $currency currency to retrieve
- * @param string $filter Optional. Type of filter to apply. Accepts 'raw', 'edit', 'db', or 'display'. Default 'raw'.
+ * @param int|object|Currency $currency currency to retrieve
+ * @param string $output The required return type. One of OBJECT, ARRAY_A, or ARRAY_N.Default OBJECT.
+ * @param string $filter Type of filter to apply. Accepts 'raw', 'edit', 'db', or 'display'. Default 'raw'.
  *
- * @return array|Currency|null
+ * @return Currency|array|null
  * @since 1.1.0
  */
-function eaccounting_get_currency( $currency, $filter = 'raw' ) {
+function eaccounting_get_currency( $currency, $output = OBJECT, $filter = 'raw' ) {
 	if ( empty( $currency ) ) {
 		return null;
 	}
 
-	$currency = new Currency( $currency );
-	if ( ! $currency->exists() ) {
+	if ( $currency instanceof Currency ) {
+		$_currency = $currency;
+	} elseif ( is_object( $currency ) ) {
+		$_currency = new Currency( $currency );
+	} elseif ( is_numeric( $currency ) ) {
+		$_currency = Currency::get_data_by( $currency );
+	} else {
+		$_currency = Currency::get_data_by( $currency, 'code' );
+	}
+
+	if ( ! $_currency ) {
 		return null;
 	}
 
-	return $currency->filter( $filter );
+	$_currency = $_currency->filter( $filter );
+
+	if ( ARRAY_A === $output ) {
+		return $_currency->to_array();
+	}
+
+	if ( ARRAY_N === $output ) {
+		return array_values( $_currency->to_array() );
+	}
+
+	return $_currency->filter( $filter );
 }
 
 /**
@@ -86,7 +105,7 @@ function eaccounting_insert_currency( $currency_data ) {
 
 	$data_arr = wp_parse_args( $currency_data, $defaults );
 	$data_arr = eaccounting_sanitize_currency( $data_arr, 'db' );
-	var_dump($data_arr);
+	var_dump( $data_arr );
 	if ( empty( $data_arr['code'] ) ) {
 		return new WP_Error( 'invalid_currency_code', esc_html__( 'Currency code is required', 'wp-ever-accounting' ) );
 	}
@@ -100,7 +119,7 @@ function eaccounting_insert_currency( $currency_data ) {
 	$data_arr = array_merge( $data_arr, $iso[ $data_arr['code'] ] );
 
 	if ( ! $update && eaccounting_get_currency( $data_arr['code'] ) ) {
-		return new WP_Error( 'existing_currency_code', __( 'Sorry, that currency code already exists!', 'wp-ever-accounting'  ) );
+		return new WP_Error( 'existing_currency_code', __( 'Sorry, that currency code already exists!', 'wp-ever-accounting' ) );
 	}
 
 	if ( empty( $data_arr['name'] ) ) {
@@ -321,9 +340,9 @@ function eaccounting_get_currencies( $args = array() ) {
 		)
 	);
 
-	$qv         = apply_filters( 'eaccounting_get_currencies_args', $args );
+	$qv           = apply_filters( 'eaccounting_get_currencies_args', $args );
 	$table        = $wpdb->prefix . 'ea_currencies';
-	$columns      = [ 'name', 'code', 'symbol', 'enabled', 'date_created'];
+	$columns      = [ 'name', 'code', 'symbol', 'enabled', 'date_created' ];
 	$qv['fields'] = wp_parse_list( $qv['fields'] );
 	foreach ( $qv['fields'] as $index => $field ) {
 		if ( ! in_array( $field, $columns, true ) ) {

@@ -9,6 +9,7 @@
 
 namespace EverAccounting;
 
+use EverAccounting\Abstracts\Data;
 use EverAccounting\Abstracts\MetaData;
 
 defined( 'ABSPATH' ) || exit;
@@ -20,8 +21,27 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 1.2.1
  *
+ * @property int $user_id
+ * @property string $name
+ * @property string $company
+ * @property string $email
+ * @property string $phone
+ * @property string $website
+ * @property string $vat_number
+ * @property string $birth_date
+ * @property string $street
+ * @property string $city
+ * @property string $state
+ * @property string $postcode
+ * @property string $country
+ * @property string $type
+ * @property string $currency_code
+ * @property string $thumbnail_id
+ * @property boolean $enabled
+ * @property int $creator_id
+ * @property string $date_created
  */
-class Contact extends MetaData {
+class Contact extends Data {
 	/**
 	 * Contact id.
 	 *
@@ -31,157 +51,32 @@ class Contact extends MetaData {
 	public $id = null;
 
 	/**
-	 * Contact WP user ID.
+	 * Contact data container.
 	 *
 	 * @since 1.2.1
-	 * @var null
+	 * @var array
 	 */
-	public $user_id = null;
-
-	/**
-	 * Contact name.
-	 *
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $name = '';
-
-	/**
-	 * Contact company.
-	 *
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $company = '';
-
-	/**
-	 * Contact email.
-	 *
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $email = '';
-
-	/**
-	 * Contact phone.
-	 *
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $phone = '';
-
-	/**
-	 * Contact website.
-	 *
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $website = '';
-
-	/**
-	 * Contact birthdate
-	 *
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $birth_date = '';
-
-	/**
-	 * Contact vat number.
-	 *
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $vat_number = '';
-
-	/**
-	 * Contact vat number.
-	 *
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $street = '';
-
-	/**
-	 * Contact street.
-	 *
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $city = '';
-
-	/**
-	 * Contact city.
-	 *
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $state = '';
-
-	/**
-	 * Contact postcode.
-	 *
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $postcode = '';
-
-	/**
-	 * Contact country.
-	 *
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $country = '';
-
-	/**
-	 * Contact currency code.
-	 *
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $currency_code = '';
-
-	/**
-	 * Contact type.
-	 *
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $type = '';
-
-
-	/**
-	 * Contact thumbnail id.
-	 *
-	 * @since 1.2.1
-	 * @var null
-	 */
-	public $thumbnail_id = null;
-
-	/**
-	 * Contact status
-	 *
-	 * @since 1.2.1
-	 * @var bool
-	 */
-	public $enabled = true;
-
-	/**
-	 * Contact creator user id.
-	 *
-	 * @since 1.2.1
-	 * @var int
-	 */
-	public $creator_id = 0;
-
-	/**
-	 * Contact created date.
-	 *
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $date_created = '0000-00-00 00:00:00';
+	public $data = array(
+		'user_id'       => null,
+		'name'          => '',
+		'company'       => '',
+		'email'         => '',
+		'phone'         => '',
+		'birth_date'    => '',
+		'street'        => '',
+		'city'          => '',
+		'state'         => '',
+		'postcode'      => '',
+		'country'       => '',
+		'website'       => '',
+		'vat_number'    => '',
+		'currency_code' => '',
+		'type'          => 'contact',
+		'thumbnail_id'  => null,
+		'enabled'       => 1,
+		'creator_id'    => null,
+		'date_created'  => null,
+	);
 
 	/**
 	 * Stores the contact object's sanitization level.

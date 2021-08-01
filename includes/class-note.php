@@ -9,6 +9,8 @@
 
 namespace EverAccounting;
 
+use EverAccounting\Abstracts\Data;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -17,8 +19,14 @@ defined( 'ABSPATH' ) || exit;
  * @package EverAccounting
  *
  * @since 1.2.1
+ * @property int $parent_id
+ * @property string $type
+ * @property string $note
+ * @property string $extra
+ * @property int $creator_id
+ * @property string $date_created
  */
-class Note {
+class Note extends Data {
 	/**
 	 * Note id.
 	 *
@@ -28,53 +36,29 @@ class Note {
 	public $id = null;
 
 	/**
-	 * Note parent id.
+	 * Note data container.
 	 *
 	 * @since 1.2.1
-	 * @var int
+	 * @var array
 	 */
-	public $parent_id = 0;
+	public $data = array(
+		'parent_id'    => null,
+		'type'         => '',
+		'note'         => '',
+		'extra'        => '',
+		'creator_id'   => '',
+		'date_created' => null,
+	);
 
 	/**
-	 * Note type.
+	 * Stores the note object's sanitization level.
+	 *
+	 * Does not correspond to a DB field.
 	 *
 	 * @since 1.2.1
 	 * @var string
 	 */
-	public $type = '';
-
-	/**
-	 * Note content.
-	 *
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $content = '';
-
-	/**
-	 * Note extra data.
-	 *
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $extra = '';
-
-	/**
-	 * Note creator user id.
-	 *
-	 * @since 1.2.1
-	 * @var int
-	 */
-	public $creator_id = 0;
-
-	/**
-	 * Note created date.
-	 *
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $date_created = '0000-00-00 00:00:00';
-
+	public $filter;
 
 	/**
 	 * Retrieve Note instance.
@@ -127,77 +111,11 @@ class Note {
 	}
 
 	/**
-	 * Magic method for checking the existence of a certain field.
-	 *
-	 * @param string $key Note field to check if set.
-	 *
-	 * @return bool Whether the given Note field is set.
-	 * @since 1.2.1
-	 */
-	public function __isset( $key ) {
-		if ( isset( $this->$key ) ) {
-			return true;
-		}
-
-		return false;
-	}
-
-	/**
-	 * Magic method for setting Note fields.
-	 *
-	 * This method does not update custom fields in the database.
-	 *
-	 * @param string $key Note key.
-	 * @param mixed $value Note value.
-	 *
-	 * @since 1.2.1
-	 */
-	public function __set( $key, $value ) {
-		if ( is_callable( array( $this, 'set_' . $key ) ) ) {
-			$this->$key( $value );
-		} else {
-			$this->$key = $value;
-		}
-	}
-
-	/**
-	 * Magic method for accessing custom fields.
-	 *
-	 * @param string $key item field to retrieve.
-	 *
-	 * @return mixed Value of the given item field (if set).
-	 * @since 1.2.1
-	 */
-	public function __get( $key ) {
-
-		if ( is_callable( array( $this, 'get_' . $key ) ) ) {
-			$value = $this->$key();
-		} else {
-			$value = $this->$key;
-		}
-
-		return $value;
-	}
-
-	/**
-	 * Magic method for unsetting a certain field.
-	 *
-	 * @param string $key item key to unset.
-	 *
-	 * @since 1.2.1
-	 */
-	public function __unset( $key ) {
-		if ( isset( $this->$key ) ) {
-			unset( $this->$key );
-		}
-	}
-
-	/**
-	 * Filter item object based on context.
+	 * Filter note object based on context.
 	 *
 	 * @param string $filter Filter.
 	 *
-	 * @return Item|Object
+	 * @return Note|Object
 	 * @since 1.2.1
 	 */
 	public function filter( $filter ) {
@@ -209,38 +127,6 @@ class Note {
 			return self::get_instance( $this->id );
 		}
 
-		return eaccounting_sanitize_item( $this, $filter );
-	}
-
-	/**
-	 * Determine whether a property or meta key is set
-	 *
-	 * @param string $key Property
-	 *
-	 * @return bool
-	 * @since 1.2.1
-	 */
-	public function has_prop( string $key ) {
-		return $this->__isset( $key );
-	}
-
-	/**
-	 * Determine whether the item exists in the database.
-	 *
-	 * @return bool True if item exists in the database, false if not.
-	 * @since 1.2.1
-	 */
-	public function exists() {
-		return ! empty( $this->id );
-	}
-
-	/**
-	 * Return an array representation.
-	 *
-	 * @return array Array representation.
-	 * @since 1.2.1
-	 */
-	public function to_array() {
-		return get_object_vars( $this );
+		return new self( eaccounting_sanitize_note( (object) $this->to_array(), $filter ) );
 	}
 }
