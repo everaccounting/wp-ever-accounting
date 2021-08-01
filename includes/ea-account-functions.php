@@ -96,7 +96,7 @@ function eaccounting_insert_account( $account_arr ) {
 		'thumbnail_id'    => '',
 		'enabled'         => true,
 		'creator_id'      => $user_id,
-		'date_created'    => '',
+		'date_created'    => null,
 	);
 
 	// Are we updating or creating?

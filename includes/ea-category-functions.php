@@ -121,7 +121,7 @@ function eaccounting_insert_category( $category_arr ) {
 		'type'         => '',
 		'color'        => '',
 		'enabled'      => true,
-		'date_created' => '',
+		'date_created' => null,
 	);
 
 	// Are we updating or creating?

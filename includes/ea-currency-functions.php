@@ -82,7 +82,7 @@ function eaccounting_insert_currency( $currency_arr ) {
 		'position'           => 'before',
 		'decimal_separator'  => '.',
 		'thousand_separator' => ',',
-		'date_created'       => '',
+		'date_created'       => null,
 	);
 
 	// Are we updating or creating?
