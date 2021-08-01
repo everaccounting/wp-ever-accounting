@@ -100,20 +100,20 @@ function eaccounting_get_category_by_name( $name, $type ) {
 }
 
 /**
- * Add or update a new category to the database.
+ *  Insert or update a category.
  *
- * @param array|object|Category $category_data An array, object, or Category object of data arguments.
+ * @param array|object|Category $category_arr An array, object, or category object of data arguments.
  *
- * @return Category|WP_Error The Category object or WP_Error otherwise.
+ * @return Category|WP_Error The category object or WP_Error otherwise.
  * @global wpdb $wpdb WordPress database abstraction object.
  * @since 1.1.0
  */
-function eaccounting_insert_category( $category_data ) {
+function eaccounting_insert_category( $category_arr ) {
 	global $wpdb;
-	if ( $category_data instanceof Category ) {
-		$category_data = $category_data->to_array();
-	} elseif ( $category_data instanceof stdClass ) {
-		$category_data = get_object_vars( $category_data );
+	if ( $category_arr instanceof Category ) {
+		$category_arr = $category_arr->to_array();
+	} elseif ( $category_arr instanceof stdClass ) {
+		$category_arr = get_object_vars( $category_arr );
 	}
 
 	$defaults = array(
@@ -125,61 +125,51 @@ function eaccounting_insert_category( $category_data ) {
 	);
 
 	// Are we updating or creating?
-	$id      = null;
-	$update  = false;
-	$changes = $category_data;
-	if ( ! empty( $category_data['id'] ) ) {
-		$update = true;
-		$id     = absint( $category_data['id'] );
-		$before = eaccounting_get_category( $id );
+	$id          = null;
+	$update      = false;
+	$data_before = array();
+	if ( ! empty( $item_data['id'] ) ) {
+		$update      = true;
+		$id          = absint( $item_data['id'] );
+		$data_before = eaccounting_get_category( $id, ARRAY_A );
 
-		if ( is_null( $before ) ) {
-			return new WP_Error( 'invalid_category_id', __( 'Invalid category id to update.' ) );
+		if ( is_null( $data_before ) ) {
+			return new WP_Error( 'invalid_category_id', __( 'Invalid category id to update.', 'wp-ever-accounting' ) );
 		}
-		// Store changes value.
-		$changes = array_diff_assoc( $category_data, $before->to_array() );
 
 		// Merge old and new fields with new fields overwriting old ones.
-		$category_data = array_merge( $before->to_array(), $category_data );
+		$category_arr = array_merge( $data_before, $category_arr );
+		$data_before  = $data_before->to_array();
 	}
 
-	$data_arr = wp_parse_args( $category_data, $defaults );
-	$data_arr = eaccounting_sanitize_category( $data_arr, 'db' );
+	$item_data = wp_parse_args( $category_arr, $defaults );
+	$data_arr  = eaccounting_sanitize_category( $category_arr, 'db' );
 
+	// Check required
 	if ( empty( $data_arr['name'] ) ) {
 		return new WP_Error( 'invalid_category_name', esc_html__( 'Category name is required', 'wp-ever-accounting' ) );
 	}
 
 	if ( empty( $data_arr['type'] ) ) {
-		return new WP_Error( 'invalid_category_type', esc_html__( 'Category type is required', 'wp-ever-accounting' ) );
-	}
-
-	if ( empty( $data_arr['color'] ) ) {
-		$data_arr['color'] = eaccounting_get_random_color();
+		return new WP_Error( 'invalid_category_type', esc_html__( 'Category type id is required', 'wp-ever-accounting' ) );
 	}
 
 	if ( empty( $data_arr['date_created'] ) || '0000-00-00 00:00:00' === $data_arr['date_created'] ) {
 		$data_arr['date_created'] = current_time( 'mysql' );
 	}
 
-	// Compute fields.
-	$name         = $data_arr['name'];
-	$type         = $data_arr['type'];
-	$color        = $data_arr['color'];
-	$enabled      = (int) $data_arr['enabled'];
-	$date_created = $data_arr['date_created'];
-	$data         = compact( 'name', 'type', 'color', 'enabled', 'date_created' );
+	$fields = array_keys( $defaults );
+	$data   = wp_array_slice_assoc( $data_arr, $fields );
 
 	/**
 	 * Filters category data before it is inserted into the database.
 	 *
-	 * @param array $data Category data to be inserted.
-	 * @param array $data_arr Sanitized category data.
-	 * @param array $category_data Category data as originally passed to the function.
+	 * @param array $data Data to be inserted.
+	 * @param array $data_arr Sanitized data.
 	 *
 	 * @since 1.2.1
 	 */
-	$data = apply_filters( 'eaccounting_insert_category_data', $data, $data_arr, $category_data );
+	$data = apply_filters( 'eaccounting_insert_category', $data, $data_arr );
 
 	$data  = wp_unslash( $data );
 	$where = array( 'id' => $id );
@@ -187,18 +177,19 @@ function eaccounting_insert_category( $category_data ) {
 	if ( $update ) {
 
 		/**
-		 * Fires immediately before an existing category is updated in the database.
+		 * Fires immediately before an existing category item is updated in the database.
 		 *
 		 * @param int $id Category id.
 		 * @param array $data Category data to be inserted.
 		 * @param array $changes Category data to be updated.
-		 * @param array $data_arr Sanitized category data.
+		 * @param array $data_arr Sanitized category item data.
+		 * @param array $data_before Category previous data.
 		 *
 		 * @since 1.2.1
 		 */
-		do_action( 'eaccounting_pre_update_category', $id, $data, $changes, $data_arr );
-		if ( false === $wpdb->update( $wpdb->prefix . 'ea_categories', $data, $where ) ) {
-			new WP_Error( 'db_update_error', __( 'Could not update category in the database.' ), $wpdb->last_error );
+		do_action( 'eaccounting_pre_update_category', $id, $data, $data_arr, $data_before );
+		if ( false === $wpdb->update( $wpdb->prefix . 'ea_categories', $data, $where, $data_before ) ) {
+			new WP_Error( 'db_update_error', __( 'Could not update category in the database.', 'wp-ever-accounting' ), $wpdb->last_error );
 		}
 
 		/**
@@ -207,26 +198,27 @@ function eaccounting_insert_category( $category_data ) {
 		 * @param int $id Category id.
 		 * @param array $data Category data to be inserted.
 		 * @param array $changes Category data to be updated.
-		 * @param array $data_arr Sanitized category data.
+		 * @param array $data_arr Sanitized Category data.
+		 * @param array $data_before Category previous data.
 		 *
 		 * @since 1.2.1
 		 */
-		do_action( 'eaccounting_update_category', $id, $data, $changes, $data_arr );
+		do_action( 'eaccounting_update_category', $id, $data, $data_arr, $data_before );
 	} else {
 
 		/**
 		 * Fires immediately before an existing category is inserted in the database.
 		 *
 		 * @param array $data Category data to be inserted.
-		 * @param string $data_arr Sanitized category data.
-		 * @param array $category_data Category data as originally passed to the function.
+		 * @param string $data_arr Sanitized category item data.
+		 * @param array $item_data Category data as originally passed to the function.
 		 *
 		 * @since 1.2.1
 		 */
-		do_action( 'eaccounting_pre_insert_category', $data, $data_arr, $category_data );
+		do_action( 'eaccounting_pre_insert_category', $data, $data_arr, $item_data );
 
 		if ( false === $wpdb->insert( $wpdb->prefix . 'ea_categories', $data ) ) {
-			new WP_Error( 'db_insert_error', __( 'Could not insert category into the database.' ), $wpdb->last_error );
+			new WP_Error( 'db_insert_error', __( 'Could not insert category into the database.', 'wp-ever-accounting' ), $wpdb->last_error );
 		}
 
 		$id = (int) $wpdb->insert_id;
@@ -237,21 +229,22 @@ function eaccounting_insert_category( $category_data ) {
 		 * @param int $id Category id.
 		 * @param array $data Category has been inserted.
 		 * @param array $data_arr Sanitized category data.
-		 * @param array $category_data Category data as originally passed to the function.
+		 * @param array $item_data Category data as originally passed to the function.
 		 *
 		 * @since 1.2.1
 		 */
-		do_action( 'eaccounting_insert_category', $id, $data, $data_arr, $category_data );
+		do_action( 'eaccounting_insert_category', $id, $data, $data_arr, $item_data );
 	}
 
 	// Clear cache.
-	eaccounting_delete_cache( 'ea_categories', $id );
+	wp_cache_delete( $id, 'ea_categories' );
+	wp_cache_set( 'last_changed', microtime(), 'ea_categories' );
 
 	// Get new category object.
 	$category = eaccounting_get_category( $id );
 
 	/**
-	 * Fires once an category has been saved.
+	 * Fires once a category has been saved.
 	 *
 	 * @param int $id Category id.
 	 * @param Category $category Category object.
@@ -259,7 +252,7 @@ function eaccounting_insert_category( $category_data ) {
 	 *
 	 * @since 1.2.1
 	 */
-	do_action( 'eaccounting_saved_category', $id, $data_arr, $update );
+	do_action( 'eaccounting_saved_category', $id, $category, $update, $data_arr, $data_before );
 
 	return $category;
 }
