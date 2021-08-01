@@ -13,6 +13,16 @@ use EverAccounting\Transfer;
 
 defined( 'ABSPATH' ) || exit;
 
+// Sanitization and escaping filters
+add_filter( 'eaccounting_pre_transaction_amount', 'floatval' );
+add_filter( 'eaccounting_pre_transaction_currency_rate', 'floatval' );
+add_filter( 'eaccounting_pre_transaction_type', 'eaccounting_sanitize_transaction_type' );
+add_filter( 'eaccounting_pre_transaction_payment_method', 'eaccounting_sanitize_payment_method' );
+add_filter( 'eaccounting_pre_transaction_reconciled', 'intval' );
+add_filter( 'eaccounting_pre_transaction_description', 'sanitize_textarea_field' );
+add_filter( 'eaccounting_pre_transaction_reference', 'sanitize_text_field' );
+add_filter( 'eaccounting_pre_transaction_date_created', 'sanitize_textarea_field' );
+
 /**
  * Get Transaction Types
  *
@@ -21,8 +31,9 @@ defined( 'ABSPATH' ) || exit;
  */
 function eaccounting_get_transaction_types() {
 	$types = array(
-		'income'  => __( 'Income', 'wp-ever-accounting' ),
-		'expense' => __( 'Expense', 'wp-ever-accounting' ),
+		'income'   => __( 'Income', 'wp-ever-accounting' ),
+		'expense'  => __( 'Expense', 'wp-ever-accounting' ),
+		'transfer' => __( 'Transfer', 'wp-ever-accounting' ),
 	);
 
 	return apply_filters( 'eaccounting_transaction_types', $types );
@@ -88,7 +99,6 @@ function eaccounting_insert_transaction( $transaction_arr ) {
 
 	$defaults = array(
 		'type'           => 'income',
-		'type_id'        => null,
 		'payment_date'   => null,
 		'amount'         => 0.00,
 		'currency_code'  => '',
@@ -508,8 +518,8 @@ function eaccounting_insert_transfer( $transfer_arr ) {
 		}
 
 		// Merge old and new fields with new fields overwriting old ones.
-		$transfer_arr   = array_merge( $data_before, $transfer_arr );
-		$data_before = $data_before->to_array();
+		$transfer_arr = array_merge( $data_before, $transfer_arr );
+		$data_before  = $data_before->to_array();
 	}
 
 	$item_data = wp_parse_args( $transfer_arr, $defaults );
@@ -1213,7 +1223,6 @@ function eaccounting_get_total_upcoming_profit() {
 
 	return $upcoming < 0 ? 0 : $upcoming;
 }
-
 
 
 /**

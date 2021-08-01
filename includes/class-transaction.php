@@ -38,7 +38,6 @@ class Transaction extends Data {
 	 */
 	public $data = array(
 		'type'           => 'income',
-		'type_id'        => null,
 		'payment_date'   => null,
 		'amount'         => 0.00,
 		'currency_code'  => '', // protected
@@ -56,6 +55,7 @@ class Transaction extends Data {
 		'creator_id'     => null,
 		'date_created'   => null,
 	);
+
 	/**
 	 * Stores the transaction object's sanitization level.
 	 *
@@ -65,6 +65,22 @@ class Transaction extends Data {
 	 * @var string
 	 */
 	public $filter;
+
+	/**
+	 * Meta table.
+	 *
+	 * @since 1.2.1
+	 * @var string
+	 */
+	protected $meta_table = 'ea_transactionmeta';
+
+	/**
+	 * Meta table object id field.
+	 *
+	 * @since 1.2.1
+	 * @var string
+	 */
+	protected $meta_object_id_field = 'transaction_id';
 
 	/**
 	 * Retrieve Transaction instance.
@@ -102,4 +118,38 @@ class Transaction extends Data {
 
 		return new Transaction( $_item );
 	}
+
+	/**
+	 * Contact constructor.
+	 *
+	 * @param object $transaction
+	 *
+	 * @since 1.2.1
+	 */
+	public function __construct( $transaction = null ) {
+		foreach ( get_object_vars( $transaction ) as $key => $value ) {
+			$this->$key = $value;
+		}
+	}
+
+	/**
+	 * Filter transaction object based on context.
+	 *
+	 * @param string $filter Filter.
+	 *
+	 * @return Transaction|Object
+	 * @since 1.2.1
+	 */
+	public function filter( $filter ) {
+		if ( $this->filter === $filter ) {
+			return $this;
+		}
+
+		if ( 'raw' === $filter ) {
+			return self::get_instance( $this->id );
+		}
+
+		return new self( eaccounting_sanitize_transaction( (object) $this->to_array(), $filter ) );
+	}
+
 }

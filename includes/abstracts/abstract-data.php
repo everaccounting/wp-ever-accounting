@@ -2,16 +2,15 @@
 
 namespace EverAccounting\Abstracts;
 
-class Data {
+class Data extends MetaData {
 
 	/**
-	 *
+	 * Data container.
 	 *
 	 * @since 1.2.1
 	 * @var array
 	 */
 	public $data = array();
-
 
 	/**
 	 * Magic method for setting account fields.
@@ -49,6 +48,8 @@ class Data {
 			$value = $this->$key;
 		} else if ( array_key_exists( $key, $this->data ) ) {
 			$value = $this->data[ $key ];
+		} else if ( $this->meta_exists( $key ) ) {
+			$value = 'Meta';
 		}
 
 		return $value;
@@ -63,6 +64,8 @@ class Data {
 	 * @since 1.2.1
 	 */
 	public function __isset( $key ) {
+		$this->maybe_read_meta_data();
+
 		if ( property_exists( $this, $key ) && is_callable( array( $this, $key ) ) && isset( $this->$key ) ) {
 			return true;
 		}
@@ -118,12 +121,20 @@ class Data {
 	 * @since 1.2.1
 	 */
 	public function to_array() {
-		return array_merge(
-			array(
-				'id' => $this->id,
-
-			),
+		$data = array_merge(
+			array( 'id' => $this->id ),
 			$this->data
 		);
+
+		if ( $this->meta_table ) {
+			$this->maybe_read_meta_data();
+			$data = array_merge(
+				$data,
+				array( 'meta_data' => $this->meta_data )
+			);
+		}
+
+		return $data;
 	}
+
 }
