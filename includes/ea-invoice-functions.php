@@ -497,6 +497,70 @@ function eaccounting_get_invoice_item( $invoice_item, $output = OBJECT, $filter 
 }
 
 /**
+ * Delete an invoice_item.
+ *
+ * @param int $invoice_item_id Invoice_Item id.
+ *
+ * @return Invoice_Item |false|null Invoice_Item data on success, false or null on failure.
+ * @since 1.1.0
+ */
+function eaccounting_delete_invoice_item( $invoice_item_id ) {
+	global $wpdb;
+
+	$invoice_item = eaccounting_get_invoice_item( $invoice_item_id );
+	if ( ! $invoice_item || ! $invoice_item->exists() ) {
+		return false;
+	}
+
+	/**
+	 * Filters whether an invoice_item delete should take place.
+	 *
+	 * @param bool|null $delete Whether to go forward with deletion.
+	 * @param Invoice_Item $invoice_item invoice item object.
+	 *
+	 * @since 1.2.1
+	 */
+	$check = apply_filters( 'eaccounting_pre_delete_invoice_item', null, $invoice_item );
+	if ( null !== $check ) {
+		return $check;
+	}
+
+	/**
+	 * Fires before an invoice item is deleted.
+	 *
+	 * @param int $invoice_item_id Contact id.
+	 * @param Invoice_Item $invoice_item invoice_item object.
+	 *
+	 * @since 1.2.1
+	 *
+	 * @see eaccounting_delete_invoice_item()
+	 */
+	do_action( 'eaccounting_before_delete_invoice_item', $invoice_item_id, $invoice_item );
+
+	$result = $wpdb->delete( $wpdb->prefix . 'ea_invoice_items', array( 'id' => $invoice_item_id ) );
+	if ( ! $result ) {
+		return false;
+	}
+
+	wp_cache_delete( $invoice_item_id, 'ea_invoice_items' );
+	wp_cache_set( 'last_changed', microtime(), 'ea_invoice_items' );
+
+	/**
+	 * Fires after an invoice item is deleted.
+	 *
+	 * @param int $invoice_item_id invoice item id.
+	 * @param Invoice_Item $invoice_item invoice item object.
+	 *
+	 * @since 1.2.1
+	 *
+	 * @see eaccounting_delete_invoice_item()
+	 */
+	do_action( 'eaccounting_delete_invoice_item', $invoice_item_id, $invoice_item );
+
+	return $invoice_item;
+}
+
+/**
  * Sanitizes every invoice item field.
  *
  * If the context is 'raw', then the account object or array will get minimal
