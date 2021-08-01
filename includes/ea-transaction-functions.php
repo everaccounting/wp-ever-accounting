@@ -270,7 +270,7 @@ function eaccounting_delete_transaction( $transaction_id ) {
 	}
 
 	/**
-	 * Filters whether an transaction delete should take place.
+	 * Filters whether a transaction delete should take place.
 	 *
 	 * @param bool|null $delete Whether to go forward with deletion.
 	 * @param Transaction $transaction contact object.
@@ -283,7 +283,7 @@ function eaccounting_delete_transaction( $transaction_id ) {
 	}
 
 	/**
-	 * Fires before an transaction is deleted.
+	 * Fires before a transaction is deleted.
 	 *
 	 * @param int $transaction_id Contact id.
 	 * @param Transaction $transaction transaction object.
@@ -303,10 +303,10 @@ function eaccounting_delete_transaction( $transaction_id ) {
 	wp_cache_set( 'last_changed', microtime(), 'ea_transactions' );
 
 	/**
-	 * Fires after an transaction is deleted.
+	 * Fires after a transaction is deleted.
 	 *
-	 * @param int $transaction_id contact id.
-	 * @param Transaction $transaction contact object.
+	 * @param int $transaction_id transaction id.
+	 * @param Transaction $transaction transaction object.
 	 *
 	 * @since 1.2.1
 	 *
