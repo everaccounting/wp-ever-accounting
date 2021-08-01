@@ -304,118 +304,6 @@ function eaccounting_delete_item( $item_id ) {
 }
 
 /**
- * Sanitizes every item field.
- *
- * If the context is 'raw', then the item object or array will get minimal
- * sanitization of the integer fields.
- *
- * @param object|array $item The item object or array
- * @param string $context Optional. How to sanitize post fields. Accepts 'raw', 'edit', 'db', 'display'. Default 'display'.
- *
- * @return object|Item|array The now sanitized item object or array
- * @see eaccounting_sanitize_item_field()
- *
- * @since 1.2.1
- */
-function eaccounting_sanitize_item( $item, $context = 'raw' ) {
-	if ( is_object( $item ) ) {
-		// Check if post already filtered for this context.
-		if ( isset( $item->filter ) && $context == $item->filter ) {
-			return $item;
-		}
-		if ( ! isset( $item->id ) ) {
-			$item->id = 0;
-		}
-		foreach ( array_keys( get_object_vars( $item ) ) as $field ) {
-			$item->$field = eaccounting_sanitize_item_field( $field, $item->$field, $item->id, $context );
-		}
-		$item->filter = $context;
-	} elseif ( is_array( $item ) ) {
-		// Check if post already filtered for this context.
-		if ( isset( $item['filter'] ) && $context == $item['filter'] ) { //phpcs:ignore
-			return $item;
-		}
-		if ( ! isset( $item['id'] ) ) {
-			$item['id'] = 0;
-		}
-		foreach ( array_keys( $item ) as $field ) {
-			$item[ $field ] = eaccounting_sanitize_item_field( $field, $item[ $field ], $item['id'], $context );
-		}
-		$item['filter'] = $context;
-	}
-
-	return $item;
-}
-
-/**
- * Sanitizes a item field based on context.
- *
- * Possible context values are:  'raw', 'edit', 'db', 'display'.
- *
- * @param string $field The item Object field name.
- * @param mixed $value The item Object value.
- * @param int $item_id Item id.
- * @param string $context Optional. How to sanitize the field. Possible values are 'raw', 'edit','db', 'display'. Default 'display'.
- *
- * @return mixed Sanitized value.
- * @since 1.2.1
- */
-function eaccounting_sanitize_item_field( $field, $value, $item_id, $context ) {
-	if ( false !== strpos( $field, '_id' ) || $field === 'id' ) { //phpcs:ignore
-		$value = absint( $value );
-	}
-
-	$context = strtolower( $context );
-
-	if ( 'raw' === $context ) {
-		return $value;
-	}
-
-	if ( 'edit' === $context ) {
-
-		/**
-		 * Filters an item field to edit before it is sanitized.
-		 *
-		 * @param mixed $value Value of the item field.
-		 * @param int $item_id Item id.
-		 *
-		 * @since 1.2.1
-		 */
-		$value = apply_filters( "eaccounting_edit_item_{$field}", $value, $item_id );
-
-	} elseif ( 'db' === $context ) {
-
-		/**
-		 * Filters a item field value before it is sanitized.
-		 *
-		 * @param mixed $value Value of the item field.
-		 * @param int $item_id Item id.
-		 *
-		 * @since 1.2.1
-		 */
-		$value = apply_filters( "eaccounting_pre_item_{$field}", $value, $item_id );
-
-	} else {
-		// Use display filters by default.
-
-		/**
-		 * Filters the item field sanitized for display.
-		 *
-		 * The dynamic portion of the filter name, `$field`, refers to the item field name.
-		 *
-		 * @param mixed $value Value of the item field.
-		 * @param int $item_id item id.
-		 * @param string $context Context to retrieve the item field value.
-		 *
-		 * @since 1.2.1
-		 */
-		$value = apply_filters( "eaccounting_item_{$field}", $value, $item_id, $context );
-	}
-
-	return $value;
-}
-
-/**
  * Retrieves an array of the items matching the given criteria.
  *
  * @param array $args Arguments to retrieve items.
@@ -443,4 +331,118 @@ function eaccounting_get_items( $args = array() ) {
 
 
 	return $query->get_results();
+}
+
+/**
+ * Sanitizes every item field.
+ *
+ * If the context is 'raw', then the item object or array will get minimal
+ * sanitization of the integer fields.
+ *
+ * @param object|array $item The item object or array
+ * @param string       $context Optional. How to sanitize post fields. Accepts 'raw', 'edit', 'db', 'display'. Default 'display'.
+ *
+ * @return object|Item|array The now sanitized item object or array
+ * @see eaccounting_sanitize_item_field()
+ *
+ * @since 1.2.1
+ */
+function eaccounting_sanitize_item( $item, $context = 'raw' ) {
+	if ( is_object( $item ) ) {
+		// Check if post already filtered for this context.
+		if ( isset( $item->filter ) && $context === $item->filter ) {
+			return $item;
+		}
+		if ( ! isset( $item->id ) ) {
+			$item->id = 0;
+		}
+
+		foreach ( array_keys( get_object_vars( $item ) ) as $field ) {
+			$item->$field = eaccounting_sanitize_item_field( $field, $item->$field, $item->id, $context );
+		}
+		$item->filter = $context;
+	} elseif ( is_array( $item ) ) {
+		// Check if post already filtered for this context.
+		if ( isset( $item['filter'] ) && $context === $item['filter'] ) {
+			return $item;
+		}
+		if ( ! isset( $item['id'] ) ) {
+			$item['id'] = 0;
+		}
+		foreach ( array_keys( $item ) as $field ) {
+			$item[ $field ] = eaccounting_sanitize_item_field( $field, $item[ $field ], $item['id'], $context );
+		}
+		$item['filter'] = $context;
+	}
+
+	return $item;
+}
+
+/**
+ * Sanitizes item field based on context.
+ *
+ * Possible context values are:  'raw', 'edit', 'db', 'display'.
+ *
+ * @param string $field The item Object field name.
+ * @param mixed  $value The item Object value.
+ * @param int    $item_id item id.
+ * @param string $context Optional. How to sanitize the field. Possible values are 'raw', 'edit','db', 'display'. Default 'display'.
+ *
+ * @return mixed Sanitized value.
+ * @since 1.2.1
+ */
+function eaccounting_sanitize_item_field( $field, $value, $item_id, $context ) {
+	if ( false !== strpos( $field, '_id' ) || $field === 'id' ) {//phpcs:ignore
+		$value = absint( $value );
+	}
+
+	$context = strtolower( $context );
+
+	if ( 'raw' === $context ) {
+		if ( $field === 'extra' ) {//phpcs:ignore
+			$value = maybe_unserialize( $value );
+		}
+
+		return $value;
+	}
+
+	if ( 'edit' === $context ) {
+
+		/**
+		 * Filters item field to edit before it is sanitized.
+		 *
+		 * @param mixed $value Value of the item field.
+		 * @param int $item_id Item id.
+		 *
+		 * @since 1.2.1
+		 */
+		$value = apply_filters( "eaccounting_edit_item_{$field}", $value, $item_id );
+
+	} elseif ( 'db' === $context ) {
+
+		/**
+		 * Filters item field value before it is sanitized.
+		 *
+		 * @param mixed $value Value of the item field.
+		 * @param int $item_id Item id.
+		 *
+		 * @since 1.2.1
+		 */
+		$value = apply_filters( "eaccounting_pre_item_{$field}", $value, $item_id );
+	} else {
+		// Use display filters by default.
+
+		/**
+		 * Filters the item field sanitized for display.
+		 *
+		 * @param mixed $value Value of the item field.
+		 * @param int $item_id Item id.
+		 * @param string $context Context to retrieve the item field value.
+		 *
+		 * @since 1.2.1
+		 */
+		$value = apply_filters( "eaccounting_item_{$field}", $value, $item_id, $context );
+	}
+
+	return $value;
 }
