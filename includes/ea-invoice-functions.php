@@ -29,8 +29,8 @@ add_filter( 'eaccounting_pre_invoice_item_extra', 'maybe_serialize' );
  * Retrieves invoice data given a invoice id or invoice object.
  *
  * @param int|object|Invoice $invoice invoice to retrieve
- * @param string $output The required return type. One of OBJECT, ARRAY_A, or ARRAY_N.Default OBJECT.
- * @param string $filter Type of filter to apply. Accepts 'raw', 'edit', 'db', or 'display'. Default 'raw'.
+ * @param string             $output The required return type. One of OBJECT, ARRAY_A, or ARRAY_N.Default OBJECT.
+ * @param string             $filter Type of filter to apply. Accepts 'raw', 'edit', 'db', or 'display'. Default 'raw'.
  *
  * @return Invoice|array|null
  * @since 1.1.0
@@ -129,20 +129,19 @@ function eaccounting_insert_invoice( $invoice_data ) {
 	$data_arr = wp_parse_args( $invoice_data, $defaults );
 	$data_arr = eaccounting_sanitize_account( $data_arr, 'db' );
 
-//	var_dump( $data_arr );
+	// var_dump( $data_arr );
 
-
-//	if ( empty( $data_arr['currency_rate'] ) ) {
-//		return new WP_Error( 'invalid_invoice_currency_rate', esc_html__( 'Currency rate is required', 'wp-ever-accounting' ) );
-//	}
-//
-//	if ( empty( $data_arr['currency_code'] ) ) {
-//		return new WP_Error( 'invalid_invoice_currency_code', esc_html__( 'Currency code is required', 'wp-ever-accounting' ) );
-//	}
-//
-//	if ( empty( $data_arr['date_created'] ) || '0000-00-00 00:00:00' === $data_arr['date_created'] ) {
-//		$data_arr['date_created'] = current_time( 'mysql' );
-//	}
+	// if ( empty( $data_arr['currency_rate'] ) ) {
+	// return new WP_Error( 'invalid_invoice_currency_rate', esc_html__( 'Currency rate is required', 'wp-ever-accounting' ) );
+	// }
+	//
+	// if ( empty( $data_arr['currency_code'] ) ) {
+	// return new WP_Error( 'invalid_invoice_currency_code', esc_html__( 'Currency code is required', 'wp-ever-accounting' ) );
+	// }
+	//
+	// if ( empty( $data_arr['date_created'] ) || '0000-00-00 00:00:00' === $data_arr['date_created'] ) {
+	// $data_arr['date_created'] = current_time( 'mysql' );
+	// }
 
 	// validate required items.
 
@@ -164,13 +163,12 @@ function eaccounting_insert_invoice( $invoice_data ) {
  * sanitization of the integer fields.
  *
  * @param object|array $invoice The account object or array
- * @param string $context Optional. How to sanitize post fields. Accepts 'raw', 'edit', 'db', 'display'. Default 'display'.
+ * @param string       $context Optional. How to sanitize post fields. Accepts 'raw', 'edit', 'db', 'display'. Default 'display'.
  *
  * @return object|Invoice|array The now sanitized account object or array
  * @see eaccounting_sanitize_invoice_field()
  *
  * @since 1.2.1
- *
  */
 function eaccounting_sanitize_invoice( $invoice, $context = 'raw' ) {
 	if ( is_object( $invoice ) ) {
@@ -208,13 +206,12 @@ function eaccounting_sanitize_invoice( $invoice, $context = 'raw' ) {
  * Possible context values are:  'raw', 'edit', 'db', 'display'.
  *
  * @param string $field The account Object field name.
- * @param mixed $value The account Object value.
- * @param int $invoice_id Account id.
+ * @param mixed  $value The account Object value.
+ * @param int    $invoice_id Account id.
  * @param string $context Optional. How to sanitize the field. Possible values are 'raw', 'edit','db', 'display'. Default 'display'.
  *
  * @return mixed Sanitized value.
  * @since 1.2.1
- *
  */
 function eaccounting_sanitize_invoice_field( $field, $value, $invoice_id, $context ) {
 	if ( false !== strpos( $field, '_id' ) || $field === 'id' ) {
@@ -236,7 +233,6 @@ function eaccounting_sanitize_invoice_field( $field, $value, $invoice_id, $conte
 		 * @param int $invoice_id Account id.
 		 *
 		 * @since 1.2.1
-		 *
 		 */
 		$value = apply_filters( "eaccounting_edit_invoice_{$field}", $value, $invoice_id );
 
@@ -249,7 +245,6 @@ function eaccounting_sanitize_invoice_field( $field, $value, $invoice_id, $conte
 		 * @param int $invoice_id Account id.
 		 *
 		 * @since 1.2.1
-		 *
 		 */
 
 		$value = apply_filters( "eaccounting_pre_invoice_{$field}", $value, $invoice_id );
@@ -267,7 +262,6 @@ function eaccounting_sanitize_invoice_field( $field, $value, $invoice_id, $conte
 		 * @param string $context Context to retrieve the account field value.
 		 *
 		 * @since 1.2.1
-		 *
 		 */
 		$value = apply_filters( "eaccounting_invoice_{$field}", $value, $invoice_id, $context );
 	}
@@ -454,14 +448,12 @@ function eaccounting_insert_invoice_item( $invoice_item_arr ) {
 	return $invoice_item;
 }
 
-
-
 /**
  * Retrieves invoice item data given a invoice id or invoice object.
  *
  * @param int|object|Invoice_Item $invoice_item invoice item to retrieve
- * @param string $output The required return type. One of OBJECT, ARRAY_A, or ARRAY_N.Default OBJECT.
- * @param string $filter Type of filter to apply. Accepts 'raw', 'edit', 'db', or 'display'. Default 'raw'.
+ * @param string                  $output The required return type. One of OBJECT, ARRAY_A, or ARRAY_N.Default OBJECT.
+ * @param string                  $filter Type of filter to apply. Accepts 'raw', 'edit', 'db', or 'display'. Default 'raw'.
  *
  * @return Invoice_Item|array|null
  * @since 1.1.0
@@ -563,22 +555,21 @@ function eaccounting_delete_invoice_item( $invoice_item_id ) {
 /**
  * Sanitizes every invoice item field.
  *
- * If the context is 'raw', then the account object or array will get minimal
+ * If the context is 'raw', then the invoice item object or array will get minimal
  * sanitization of the integer fields.
  *
  * @param object|array $invoice_item The invoice item object or array
- * @param string $context Optional. How to sanitize post fields. Accepts 'raw', 'edit', 'db', 'display'. Default 'display'.
+ * @param string       $context Optional. How to sanitize post fields. Accepts 'raw', 'edit', 'db', 'display'. Default 'display'.
  *
- * @return object|Invoice_Item|array The now sanitized account object or array
- * @see eaccounting_sanitize_invoice_field()
+ * @return object|Invoice_Item|array The now sanitized invoice_item object or array
+ * @see eaccounting_sanitize_invoice_item_field()
  *
  * @since 1.2.1
- *
  */
 function eaccounting_sanitize_invoice_item( $invoice_item, $context = 'raw' ) {
 	if ( is_object( $invoice_item ) ) {
 		// Check if post already filtered for this context.
-		if ( isset( $invoice_item->filter ) && $context == $invoice_item->filter ) {
+		if ( isset( $invoice_item->filter ) && $context === $invoice_item->filter ) {
 			return $invoice_item;
 		}
 		if ( ! isset( $invoice_item->id ) ) {
@@ -591,7 +582,7 @@ function eaccounting_sanitize_invoice_item( $invoice_item, $context = 'raw' ) {
 		$invoice_item->filter = $context;
 	} elseif ( is_array( $invoice_item ) ) {
 		// Check if post already filtered for this context.
-		if ( isset( $invoice_item['filter'] ) && $context == $invoice_item['filter'] ) {
+		if ( isset( $invoice_item['filter'] ) && $context === $invoice_item['filter'] ) {
 			return $invoice_item;
 		}
 		if ( ! isset( $invoice_item['id'] ) ) {
@@ -607,75 +598,71 @@ function eaccounting_sanitize_invoice_item( $invoice_item, $context = 'raw' ) {
 }
 
 /**
- * Sanitizes an invoice item field based on context.
+ * Sanitizes invoice_item field based on context.
  *
  * Possible context values are:  'raw', 'edit', 'db', 'display'.
  *
- * @param string $field The invoice item Object field name.
- * @param mixed $value The invoice item Object value.
- * @param int $invoice_item_id invoice item id.
+ * @param string $field The invoice_item Object field name.
+ * @param mixed  $value The invoice_item Object value.
+ * @param int    $invoice_item_id invoice_item id.
  * @param string $context Optional. How to sanitize the field. Possible values are 'raw', 'edit','db', 'display'. Default 'display'.
  *
  * @return mixed Sanitized value.
  * @since 1.2.1
- *
  */
 function eaccounting_sanitize_invoice_item_field( $field, $value, $invoice_item_id, $context ) {
-	if ( false !== strpos( $field, '_id' ) || $field === 'id' ) {
+	if ( false !== strpos( $field, '_id' ) || $field === 'id' ) { // phpcs:ignore
 		$value = absint( $value );
 	}
 
 	$context = strtolower( $context );
 
 	if ( 'raw' === $context ) {
-		if ( $field === 'extra' ) {
+		if ( $field === 'extra' ) { // phpcs:ignore
 			$value = maybe_unserialize( $value );
 		}
+
 		return $value;
 	}
 
 	if ( 'edit' === $context ) {
 
 		/**
-		 * Filters an account field to edit before it is sanitized.
+		 * Filters invoice item field to edit before it is sanitized.
 		 *
-		 * @param mixed $value Value of the account field.
-		 * @param int $invoice_item_id Account id.
+		 * @param mixed $value Value of the invoice item field.
+		 * @param int $invoice_item_id Invoice Item id.
 		 *
 		 * @since 1.2.1
-		 *
 		 */
 		$value = apply_filters( "eaccounting_edit_invoice_item_{$field}", $value, $invoice_item_id );
 
 	} elseif ( 'db' === $context ) {
 
 		/**
-		 * Filters a account field value before it is sanitized.
+		 * Filters invoice item field value before it is sanitized.
 		 *
-		 * @param mixed $value Value of the account field.
-		 * @param int $invoice_item_id Account id.
+		 * @param mixed $value Value of the invoice item field.
+		 * @param int $invoice_item_id Invoice Item id.
 		 *
 		 * @since 1.2.1
-		 *
 		 */
 		$value = apply_filters( "eaccounting_pre_invoice_item_{$field}", $value, $invoice_item_id );
 	} else {
 		// Use display filters by default.
 
 		/**
-		 * Filters the account field sanitized for display.
+		 * Filters the invoice_item field sanitized for display.
 		 *
-		 * The dynamic portion of the filter name, `$field`, refers to the account field name.
-		 *
-		 * @param mixed $value Value of the account field.
-		 * @param int $invoice_item_id account id.
-		 * @param string $context Context to retrieve the account field value.
+		 * @param mixed $value Value of the invoice item field.
+		 * @param int $invoice_item_id Invoice Item id.
+		 * @param string $context Context to retrieve the invoice item field value.
 		 *
 		 * @since 1.2.1
-		 *
 		 */
 		$value = apply_filters( "eaccounting_invoice_item_{$field}", $value, $invoice_item_id, $context );
 	}
 
 	return $value;
 }
+
