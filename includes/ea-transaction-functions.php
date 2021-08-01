@@ -318,120 +318,6 @@ function eaccounting_delete_transaction( $transaction_id ) {
 }
 
 /**
- * Sanitizes every transaction field.
- *
- * If the context is 'raw', then the transaction object or array will get minimal
- * sanitization of the integer fields.
- *
- * @param object|array $transaction The invoice item object or array
- * @param string       $context Optional. How to sanitize post fields. Accepts 'raw', 'edit', 'db', 'display'. Default 'display'.
- *
- * @return object|Transaction|array The now sanitized transaction object or array
- * @see eaccounting_sanitize_transaction_field()
- *
- * @since 1.2.1
- */
-function eaccounting_sanitize_transaction( $transaction, $context = 'raw' ) {
-	if ( is_object( $transaction ) ) {
-		// Check if post already filtered for this context.
-		if ( isset( $transaction->filter ) && $context == $transaction->filter ) {
-			return $transaction;
-		}
-		if ( ! isset( $transaction->id ) ) {
-			$transaction->id = 0;
-		}
-
-		foreach ( array_keys( get_object_vars( $transaction ) ) as $field ) {
-			$transaction->$field = eaccounting_sanitize_transaction_field( $field, $transaction->$field, $transaction->id, $context );
-		}
-		$transaction->filter = $context;
-	} elseif ( is_array( $transaction ) ) {
-		// Check if post already filtered for this context.
-		if ( isset( $transaction['filter'] ) && $context == $transaction['filter'] ) {
-			return $transaction;
-		}
-		if ( ! isset( $transaction['id'] ) ) {
-			$transaction['id'] = 0;
-		}
-		foreach ( array_keys( $transaction ) as $field ) {
-			$transaction[ $field ] = eaccounting_sanitize_transaction_field( $field, $transaction[ $field ], $transaction['id'], $context );
-		}
-		$transaction['filter'] = $context;
-	}
-
-	return $transaction;
-}
-
-/**
- * Sanitizes transaction field based on context.
- *
- * Possible context values are:  'raw', 'edit', 'db', 'display'.
- *
- * @param string $field The transaction Object field name.
- * @param mixed  $value The transaction Object value.
- * @param int    $transaction_id transaction id.
- * @param string $context Optional. How to sanitize the field. Possible values are 'raw', 'edit','db', 'display'. Default 'display'.
- *
- * @return mixed Sanitized value.
- * @since 1.2.1
- */
-function eaccounting_sanitize_transaction_field( $field, $value, $transaction_id, $context ) {
-	if ( false !== strpos( $field, '_id' ) || $field === 'id' ) {
-		$value = absint( $value );
-	}
-
-	$context = strtolower( $context );
-
-	if ( 'raw' === $context ) {
-		if ( $field === 'extra' ) {
-			$value = maybe_unserialize( $value );
-		}
-
-		return $value;
-	}
-
-	if ( 'edit' === $context ) {
-
-		/**
-		 * Filters transaction field to edit before it is sanitized.
-		 *
-		 * @param mixed $value Value of the transaction field.
-		 * @param int $transaction_id Transaction id.
-		 *
-		 * @since 1.2.1
-		 */
-		$value = apply_filters( "eaccounting_edit_transaction_{$field}", $value, $transaction_id );
-
-	} elseif ( 'db' === $context ) {
-
-		/**
-		 * Filters transaction field value before it is sanitized.
-		 *
-		 * @param mixed $value Value of the transaction field.
-		 * @param int $transaction_id Transaction id.
-		 *
-		 * @since 1.2.1
-		 */
-		$value = apply_filters( "eaccounting_pre_transaction_{$field}", $value, $transaction_id );
-	} else {
-		// Use display filters by default.
-
-		/**
-		 * Filters the transaction field sanitized for display.
-		 *
-		 * @param mixed $value Value of the transaction field.
-		 * @param int $transaction_id Transaction id.
-		 * @param string $context Context to retrieve the account field value.
-		 *
-		 * @since 1.2.1
-		 */
-		$value = apply_filters( "eaccounting_transaction_{$field}", $value, $transaction_id, $context );
-	}
-
-	return $value;
-}
-
-/**
  * Retrieves transfer data given a transfer id or transfer object.
  *
  * @param int|object|Transfer $transfer transfer to retrieve
@@ -1217,6 +1103,120 @@ function eaccounting_get_total_upcoming_profit() {
 	return $upcoming < 0 ? 0 : $upcoming;
 }
 
+/**
+ * Sanitizes every transaction field.
+ *
+ * If the context is 'raw', then the transaction object or array will get minimal
+ * sanitization of the integer fields.
+ *
+ * @param object|array $transaction The invoice item object or array
+ * @param string $context Optional. How to sanitize post fields. Accepts 'raw', 'edit', 'db', 'display'. Default 'display'.
+ *
+ * @return object|Transaction|array The now sanitized transaction object or array
+ * @see eaccounting_sanitize_transaction_field()
+ *
+ * @since 1.2.1
+ *
+ */
+function eaccounting_sanitize_transaction( $transaction, $context = 'raw' ) {
+	if ( is_object( $transaction ) ) {
+		// Check if post already filtered for this context.
+		if ( isset( $transaction->filter ) && $context === $transaction->filter ) {
+			return $transaction;
+		}
+		if ( ! isset( $transaction->id ) ) {
+			$transaction->id = 0;
+		}
+
+		foreach ( array_keys( get_object_vars( $transaction ) ) as $field ) {
+			$transaction->$field = eaccounting_sanitize_transaction_field( $field, $transaction->$field, $transaction->id, $context );
+		}
+		$transaction->filter = $context;
+	} elseif ( is_array( $transaction ) ) {
+		// Check if post already filtered for this context.
+		if ( isset( $transaction['filter'] ) && $context === $transaction['filter'] ) {
+			return $transaction;
+		}
+		if ( ! isset( $transaction['id'] ) ) {
+			$transaction['id'] = 0;
+		}
+		foreach ( array_keys( $transaction ) as $field ) {
+			$transaction[ $field ] = eaccounting_sanitize_transaction_field( $field, $transaction[ $field ], $transaction['id'], $context );
+		}
+		$transaction['filter'] = $context;
+	}
+
+	return $transaction;
+}
+
+/**
+ * Sanitizes transaction field based on context.
+ *
+ * Possible context values are:  'raw', 'edit', 'db', 'display'.
+ *
+ * @param string $field The transaction Object field name.
+ * @param mixed  $value The transaction Object value.
+ * @param int    $transaction_id transaction id.
+ * @param string $context Optional. How to sanitize the field. Possible values are 'raw', 'edit','db', 'display'. Default 'display'.
+ *
+ * @return mixed Sanitized value.
+ * @since 1.2.1
+ */
+function eaccounting_sanitize_transaction_field( $field, $value, $transaction_id, $context ) {
+	if ( false !== strpos( $field, '_id' ) || $field === 'id' ) { //phpcs:ignore
+		$value = absint( $value );
+	}
+
+	$context = strtolower( $context );
+
+	if ( 'raw' === $context ) {
+		if ( $field === 'extra' ) { //phpcs:ignore
+			$value = maybe_unserialize( $value );
+		}
+
+		return $value;
+	}
+
+	if ( 'edit' === $context ) {
+
+		/**
+		 * Filters transaction field to edit before it is sanitized.
+		 *
+		 * @param mixed $value Value of the transaction field.
+		 * @param int $transaction_id Transaction id.
+		 *
+		 * @since 1.2.1
+		 */
+		$value = apply_filters( "eaccounting_edit_transaction_{$field}", $value, $transaction_id );
+
+	} elseif ( 'db' === $context ) {
+
+		/**
+		 * Filters transaction field value before it is sanitized.
+		 *
+		 * @param mixed $value Value of the transaction field.
+		 * @param int $transaction_id Transaction id.
+		 *
+		 * @since 1.2.1
+		 */
+		$value = apply_filters( "eaccounting_pre_transaction_{$field}", $value, $transaction_id );
+	} else {
+		// Use display filters by default.
+
+		/**
+		 * Filters the transaction field sanitized for display.
+		 *
+		 * @param mixed $value Value of the transaction field.
+		 * @param int $transaction_id Transaction id.
+		 * @param string $context Context to retrieve the account field value.
+		 *
+		 * @since 1.2.1
+		 */
+		$value = apply_filters( "eaccounting_transaction_{$field}", $value, $transaction_id, $context );
+	}
+
+	return $value;
+}
 
 
 /**
