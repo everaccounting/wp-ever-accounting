@@ -15,8 +15,8 @@ defined( 'ABSPATH' ) || exit();
  * Retrieves currency data given a currency id or currency object.
  *
  * @param int|object|Currency $currency currency to retrieve
- * @param string $output The required return type. One of OBJECT, ARRAY_A, or ARRAY_N.Default OBJECT.
- * @param string $filter Type of filter to apply. Accepts 'raw', 'edit', 'db', or 'display'. Default 'raw'.
+ * @param string              $output The required return type. One of OBJECT, ARRAY_A, or ARRAY_N.Default OBJECT.
+ * @param string              $filter Type of filter to apply. Accepts 'raw', 'edit', 'db', or 'display'. Default 'raw'.
  *
  * @return Currency|array|null
  * @since 1.1.0
@@ -154,12 +154,12 @@ function eaccounting_insert_currency( $currency_arr ) {
 	if ( $update ) {
 
 		/**
-		 * Fires immediately before an existing currency item is updated in the database.
+		 * Fires immediately before an existing currency is updated in the database.
 		 *
 		 * @param int $id Currency id.
 		 * @param array $data Currency data to be inserted.
 		 * @param array $changes Currency data to be updated.
-		 * @param array $data_arr Sanitized currency item data.
+		 * @param array $data_arr Sanitized currency data.
 		 * @param array $data_before Currency previous data.
 		 *
 		 * @since 1.2.1
@@ -305,8 +305,6 @@ function eaccounting_delete_currency( $currency_id ) {
  *
  * @return array|int|null
  * @since 1.1.0
- *
- *
  */
 function eaccounting_get_currencies( $args = array() ) {
 	global $wpdb;
@@ -339,27 +337,27 @@ function eaccounting_get_currencies( $args = array() ) {
 
 	if ( ! empty( $qv['include'] ) ) {
 		$include = implode( ',', wp_parse_id_list( $qv['include'] ) );
-		$where   .= " AND $table.`id` IN ($include)";
+		$where  .= " AND $table.`id` IN ($include)";
 	} elseif ( ! empty( $qv['exclude'] ) ) {
 		$exclude = implode( ',', wp_parse_id_list( $qv['exclude'] ) );
-		$where   .= " AND $table.`id` NOT IN ($exclude)";
+		$where  .= " AND $table.`id` NOT IN ($exclude)";
 	}
 
 	if ( ! empty( $qv['status'] ) && ! in_array( $qv['status'], array( 'all', 'any' ), true ) ) {
 		$status = eaccounting_string_to_bool( $qv['status'] );
 		$status = eaccounting_bool_to_number( $status );
-		$where  .= " AND $table.`enabled` = ('$status')";
+		$where .= " AND $table.`enabled` = ('$status')";
 	}
 
 	if ( ! empty( $qv['date_created'] ) && is_array( $qv['date_created'] ) ) {
 		$date_created_query = new \WP_Date_Query( $qv['date_created'], "{$table}.date_created" );
-		$where              .= $date_created_query->get_sql();
+		$where             .= $date_created_query->get_sql();
 	}
 
 	$search_cols = array( 'name', 'code' );
 	if ( ! empty( $qv['search'] ) ) {
 		$searches = array();
-		$where    .= ' AND (';
+		$where   .= ' AND (';
 		foreach ( $search_cols as $col ) {
 			$searches[] = $wpdb->prepare( $col . ' LIKE %s', '%' . $wpdb->esc_like( $qv['search'] ) . '%' );
 		}
@@ -456,70 +454,67 @@ function eaccounting_sanitize_currency( $currency, $context = 'raw' ) {
 }
 
 /**
- * Sanitizes a currency field based on context.
+ * Sanitizes currency field based on context.
  *
  * Possible context values are:  'raw', 'edit', 'db', 'display'.
  *
  * @param string $field The currency Object field name.
- * @param mixed $value The currency Object value.
- * @param int $currency_id Currency id.
+ * @param mixed  $value The currency Object value.
+ * @param int    $currency_id currency id.
  * @param string $context Optional. How to sanitize the field. Possible values are 'raw', 'edit','db', 'display'. Default 'display'.
  *
  * @return mixed Sanitized value.
  * @since 1.2.1
- *
  */
 function eaccounting_sanitize_currency_field( $field, $value, $currency_id, $context ) {
-	if ( false !== strpos( $field, '_id' ) || $field === 'id' ) {
+	if ( false !== strpos( $field, '_id' ) || $field === 'id' ) { //phpcs:ignore
 		$value = absint( $value );
 	}
 
 	$context = strtolower( $context );
 
 	if ( 'raw' === $context ) {
+		if ( $field === 'extra' ) {//phpcs:ignore
+			$value = maybe_unserialize( $value );
+		}
+
 		return $value;
 	}
 
 	if ( 'edit' === $context ) {
 
 		/**
-		 * Filters an currency field to edit before it is sanitized.
+		 * Filters currency field to edit before it is sanitized.
 		 *
 		 * @param mixed $value Value of the currency field.
 		 * @param int $currency_id Currency id.
 		 *
 		 * @since 1.2.1
-		 *
 		 */
 		$value = apply_filters( "eaccounting_edit_currency_{$field}", $value, $currency_id );
 
 	} elseif ( 'db' === $context ) {
 
 		/**
-		 * Filters a currency field value before it is sanitized.
+		 * Filters currency field value before it is sanitized.
 		 *
 		 * @param mixed $value Value of the currency field.
 		 * @param int $currency_id Currency id.
 		 *
 		 * @since 1.2.1
-		 *
 		 */
 		$value = apply_filters( "eaccounting_pre_currency_{$field}", $value, $currency_id );
-
 	} else {
 		// Use display filters by default.
 
 		/**
 		 * Filters the currency field sanitized for display.
 		 *
-		 * The dynamic portion of the filter name, `$field`, refers to the currency field name.
-		 *
 		 * @param mixed $value Value of the currency field.
-		 * @param int $currency_id currency id.
+		 * @param int $currency_id Currency id.
 		 * @param string $context Context to retrieve the currency field value.
 		 *
 		 * @since 1.2.1
-		 *
 		 */
 		$value = apply_filters( "eaccounting_currency_{$field}", $value, $currency_id, $context );
 	}
@@ -530,11 +525,10 @@ function eaccounting_sanitize_currency_field( $field, $value, $currency_id, $con
 /**
  * Check if currency code is a valid one.
  *
- * @param $code
+ * @param string $code Currency Code
  *
  * @return string
  * @since 1.1.0
- *
  */
 function eaccounting_sanitize_currency_code( $code ) {
 	$codes = eaccounting_get_data( 'currencies' );
