@@ -258,26 +258,26 @@ function eaccounting_insert_category( $category_arr ) {
 }
 
 /**
- * Delete an category.
+ * Delete a category.
  *
  * @param int $category_id Category id.
  *
- * @return Category|false|null Note data on success, false or null on failure.
+ * @return Category |false|null Category data on success, false or null on failure.
  * @since 1.1.0
  */
 function eaccounting_delete_category( $category_id ) {
 	global $wpdb;
 
 	$category = eaccounting_get_category( $category_id );
-	if ( ! $category->exists() ) {
+	if ( ! $category || ! $category->exists() ) {
 		return false;
 	}
 
 	/**
-	 * Filters whether an category delete should take place.
+	 * Filters whether a category delete should take place.
 	 *
 	 * @param bool|null $delete Whether to go forward with deletion.
-	 * @param Category $category category object.
+	 * @param Category $category contact object.
 	 *
 	 * @since 1.2.1
 	 */
@@ -287,10 +287,10 @@ function eaccounting_delete_category( $category_id ) {
 	}
 
 	/**
-	 * Fires before an category is deleted.
+	 * Fires before a category is deleted.
 	 *
 	 * @param int $category_id Category id.
-	 * @param Category $category Category object.
+	 * @param Category $category category object.
 	 *
 	 * @since 1.2.1
 	 *
@@ -303,13 +303,14 @@ function eaccounting_delete_category( $category_id ) {
 		return false;
 	}
 
-	eaccounting_delete_cache( 'ea_categories', $category_id );
+	wp_cache_delete( $category_id, 'ea_categories' );
+	wp_cache_set( 'last_changed', microtime(), 'ea_categories' );
 
 	/**
-	 * Fires after an category is deleted.
+	 * Fires after a category is deleted.
 	 *
-	 * @param int $category_id category id.
-	 * @param Category $category category object.
+	 * @param int $category_id contact id.
+	 * @param Category $category contact object.
 	 *
 	 * @since 1.2.1
 	 *
