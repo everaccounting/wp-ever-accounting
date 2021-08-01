@@ -32,8 +32,8 @@ function eaccounting_get_transaction_types() {
  * Retrieves transaction data given a transaction id or transaction object.
  *
  * @param int|object|Transaction $transaction transaction to retrieve
- * @param string $output The required return type. One of OBJECT, ARRAY_A, or ARRAY_N.Default OBJECT.
- * @param string $filter Type of filter to apply. Accepts 'raw', 'edit', 'db', or 'display'. Default 'raw'.
+ * @param string                 $output The required return type. One of OBJECT, ARRAY_A, or ARRAY_N.Default OBJECT.
+ * @param string                 $filter Type of filter to apply. Accepts 'raw', 'edit', 'db', or 'display'. Default 'raw'.
  *
  * @return Transaction|array|null
  * @since 1.1.0
@@ -91,8 +91,8 @@ function eaccounting_insert_transaction( $transaction_arr ) {
 		'type_id'        => null,
 		'payment_date'   => null,
 		'amount'         => 0.00,
-		'currency_code'  => '',
-		'currency_rate'  => 0.00,
+		'currency_code'  => '', // protected
+		'currency_rate'  => 0.00, // protected
 		'account_id'     => null,
 		'document_id'    => null,
 		'contact_id'     => null,
@@ -117,7 +117,7 @@ function eaccounting_insert_transaction( $transaction_arr ) {
 		$data_before = eaccounting_get_transaction( $id, ARRAY_A );
 
 		if ( is_null( $data_before ) ) {
-			return new WP_Error( 'invalid_transaction_id', __( 'Invalid transaction id to update.' ) );
+			return new WP_Error( 'invalid_transaction_id', __( 'Invalid transaction id to update.', 'wp-ever-accounting' ) );
 		}
 
 		// Merge old and new fields with new fields overwriting old ones.
@@ -125,12 +125,28 @@ function eaccounting_insert_transaction( $transaction_arr ) {
 		$data_before     = $data_before->to_array();
 	}
 
-	$transaction_arr = wp_parse_args( $transaction_arr, $defaults );
-	$data_arr        = eaccounting_sanitize_transaction( $transaction_arr, 'db' );
+	$item_data = wp_parse_args( $transaction_arr, $defaults );
+	$data_arr  = eaccounting_sanitize_transaction( $transaction_arr, 'db' );
 
 	// Check required
 	if ( empty( $data_arr['type'] ) ) {
 		return new WP_Error( 'invalid_transaction_type', esc_html__( 'Transaction type is required', 'wp-ever-accounting' ) );
+	}
+
+	if ( empty( $data_arr['payment_date'] ) ) {
+		return new WP_Error( 'invalid_transaction_payment_date', esc_html__( 'Transaction payment date id is required', 'wp-ever-accounting' ) );
+	}
+
+	if ( empty( $data_arr['account_id'] ) ) {
+		return new WP_Error( 'invalid_transaction_account_id', esc_html__( 'Transaction account id is required', 'wp-ever-accounting' ) );
+	}
+
+	if ( empty( $data_arr['category_id'] ) ) {
+		return new WP_Error( 'invalid_transaction_category_id', esc_html__( 'Transaction category id is required', 'wp-ever-accounting' ) );
+	}
+
+	if ( empty( $data_arr['payment_method'] ) ) {
+		return new WP_Error( 'invalid_transaction_payment_method', esc_html__( 'Transaction payment method id is required', 'wp-ever-accounting' ) );
 	}
 
 	if ( empty( $data_arr['date_created'] ) || '0000-00-00 00:00:00' === $data_arr['date_created'] ) {
@@ -153,32 +169,31 @@ function eaccounting_insert_transaction( $transaction_arr ) {
 	$data  = wp_unslash( $data );
 	$where = array( 'id' => $id );
 
-
 	if ( $update ) {
 
 		/**
-		 * Fires immediately before an existing transaction is updated in the database.
+		 * Fires immediately before an existing transaction item is updated in the database.
 		 *
 		 * @param int $id Transaction id.
 		 * @param array $data Transaction data to be inserted.
 		 * @param array $changes Transaction data to be updated.
-		 * @param array $data_arr Sanitized transaction data.
+		 * @param array $data_arr Sanitized transaction item data.
 		 * @param array $data_before Transaction previous data.
 		 *
 		 * @since 1.2.1
 		 */
-		do_action( 'eaccounting_pre_update_transactions', $id, $data, $data_arr, $data_before );
+		do_action( 'eaccounting_pre_update_transaction', $id, $data, $data_arr, $data_before );
 		if ( false === $wpdb->update( $wpdb->prefix . 'ea_transactions', $data, $where, $data_before ) ) {
-			new WP_Error( 'db_update_error', __( 'Could not update transaction in the database.' ), $wpdb->last_error );
+			new WP_Error( 'db_update_error', __( 'Could not update transaction in the database.', 'wp-ever-accounting' ), $wpdb->last_error );
 		}
 
 		/**
 		 * Fires immediately after an existing transaction is updated in the database.
 		 *
 		 * @param int $id Transaction id.
-		 * @param array $data Transaction to be inserted.
-		 * @param array $changes Transaction to be updated.
-		 * @param array $data_arr Sanitized transaction data.
+		 * @param array $data Transaction data to be inserted.
+		 * @param array $changes Transaction data to be updated.
+		 * @param array $data_arr Sanitized Transaction data.
 		 * @param array $data_before Transaction previous data.
 		 *
 		 * @since 1.2.1
@@ -191,14 +206,14 @@ function eaccounting_insert_transaction( $transaction_arr ) {
 		 *
 		 * @param array $data Transaction data to be inserted.
 		 * @param string $data_arr Sanitized transaction item data.
-		 * @param array $item_data Transaction data as originally passed to the function.
+		 * @param array $item_data Transaction item data as originally passed to the function.
 		 *
 		 * @since 1.2.1
 		 */
 		do_action( 'eaccounting_pre_insert_transaction', $data, $data_arr, $item_data );
 
 		if ( false === $wpdb->insert( $wpdb->prefix . 'ea_transactions', $data ) ) {
-			new WP_Error( 'db_insert_error', __( 'Could not insert transaction into the database.' ), $wpdb->last_error );
+			new WP_Error( 'db_insert_error', __( 'Could not insert transaction into the database.', 'wp-ever-accounting' ), $wpdb->last_error );
 		}
 
 		$id = (int) $wpdb->insert_id;
@@ -220,7 +235,7 @@ function eaccounting_insert_transaction( $transaction_arr ) {
 	wp_cache_delete( $id, 'ea_transactions' );
 	wp_cache_set( 'last_changed', microtime(), 'ea_transactions' );
 
-	// Get new item object.
+	// Get new transaction object.
 	$transaction = eaccounting_get_transaction( $id );
 
 	/**
@@ -309,13 +324,12 @@ function eaccounting_delete_transaction( $transaction_id ) {
  * sanitization of the integer fields.
  *
  * @param object|array $transaction The invoice item object or array
- * @param string $context Optional. How to sanitize post fields. Accepts 'raw', 'edit', 'db', 'display'. Default 'display'.
+ * @param string       $context Optional. How to sanitize post fields. Accepts 'raw', 'edit', 'db', 'display'. Default 'display'.
  *
  * @return object|Transaction|array The now sanitized transaction object or array
  * @see eaccounting_sanitize_transaction_field()
  *
  * @since 1.2.1
- *
  */
 function eaccounting_sanitize_transaction( $transaction, $context = 'raw' ) {
 	if ( is_object( $transaction ) ) {
@@ -354,13 +368,12 @@ function eaccounting_sanitize_transaction( $transaction, $context = 'raw' ) {
  * Possible context values are:  'raw', 'edit', 'db', 'display'.
  *
  * @param string $field The transaction Object field name.
- * @param mixed $value The transaction Object value.
- * @param int $transaction_id transaction id.
+ * @param mixed  $value The transaction Object value.
+ * @param int    $transaction_id transaction id.
  * @param string $context Optional. How to sanitize the field. Possible values are 'raw', 'edit','db', 'display'. Default 'display'.
  *
  * @return mixed Sanitized value.
  * @since 1.2.1
- *
  */
 function eaccounting_sanitize_transaction_field( $field, $value, $transaction_id, $context ) {
 	if ( false !== strpos( $field, '_id' ) || $field === 'id' ) {
@@ -386,7 +399,6 @@ function eaccounting_sanitize_transaction_field( $field, $value, $transaction_id
 		 * @param int $transaction_id Transaction id.
 		 *
 		 * @since 1.2.1
-		 *
 		 */
 		$value = apply_filters( "eaccounting_edit_transaction_{$field}", $value, $transaction_id );
 
@@ -399,7 +411,6 @@ function eaccounting_sanitize_transaction_field( $field, $value, $transaction_id
 		 * @param int $transaction_id Transaction id.
 		 *
 		 * @since 1.2.1
-		 *
 		 */
 		$value = apply_filters( "eaccounting_pre_transaction_{$field}", $value, $transaction_id );
 	} else {
@@ -413,7 +424,6 @@ function eaccounting_sanitize_transaction_field( $field, $value, $transaction_id
 		 * @param string $context Context to retrieve the account field value.
 		 *
 		 * @since 1.2.1
-		 *
 		 */
 		$value = apply_filters( "eaccounting_transaction_{$field}", $value, $transaction_id, $context );
 	}
@@ -425,8 +435,8 @@ function eaccounting_sanitize_transaction_field( $field, $value, $transaction_id
  * Retrieves transfer data given a transfer id or transfer object.
  *
  * @param int|object|Transfer $transfer transfer to retrieve
- * @param string $output The required return type. One of OBJECT, ARRAY_A, or ARRAY_N.Default OBJECT.
- * @param string $filter Type of filter to apply. Accepts 'raw', 'edit', 'db', or 'display'. Default 'raw'.
+ * @param string              $output The required return type. One of OBJECT, ARRAY_A, or ARRAY_N.Default OBJECT.
+ * @param string              $filter Type of filter to apply. Accepts 'raw', 'edit', 'db', or 'display'. Default 'raw'.
  *
  * @return Transfer|array|null
  * @since 1.1.0
@@ -508,8 +518,8 @@ function eaccounting_insert_transfer( $transfer_arr ) {
 		}
 
 		// Merge old and new fields with new fields overwriting old ones.
-		$transfer_arr   = array_merge( $data_before, $transfer_arr );
-		$data_before = $data_before->to_array();
+		$transfer_arr = array_merge( $data_before, $transfer_arr );
+		$data_before  = $data_before->to_array();
 	}
 
 	$item_data = wp_parse_args( $transfer_arr, $defaults );
@@ -543,7 +553,6 @@ function eaccounting_insert_transfer( $transfer_arr ) {
 
 	$data  = wp_unslash( $data );
 	$where = array( 'id' => $id );
-
 
 	if ( $update ) {
 
@@ -711,11 +720,9 @@ function eaccounting_delete_transfer( $transfer_id ) {
  *
  * @return array|int
  * @since 1.1.0
- *
- *
  */
 function eaccounting_get_transfers( $args = array() ) {
-	//Prepare args.
+	// Prepare args.
 	$args = wp_parse_args(
 		$args,
 		array(
@@ -747,33 +754,33 @@ function eaccounting_get_transfers( $args = array() ) {
 
 	if ( ! empty( $qv['include'] ) ) {
 		$include = implode( ',', wp_parse_id_list( $qv['include'] ) );
-		$where   .= " AND $table.`id` IN ($include)";
+		$where  .= " AND $table.`id` IN ($include)";
 	} elseif ( ! empty( $qv['exclude'] ) ) {
 		$exclude = implode( ',', wp_parse_id_list( $qv['exclude'] ) );
-		$where   .= " AND $table.`id` NOT IN ($exclude)";
+		$where  .= " AND $table.`id` NOT IN ($exclude)";
 	}
 
 	if ( ! empty( $qv['from_account_id'] ) ) {
 		$from_account_in = implode( ',', wp_parse_id_list( $qv['from_account_id'] ) );
-		$where           .= " AND expense.`account_id` IN ($from_account_in)";
+		$where          .= " AND expense.`account_id` IN ($from_account_in)";
 	}
 
 	if ( ! empty( $qv['to_account_id'] ) ) {
 		$to_account_in = implode( ',', wp_parse_id_list( $qv['to_account_id'] ) );
-		$where         .= " AND income.`account_id` IN ($to_account_in)";
+		$where        .= " AND income.`account_id` IN ($to_account_in)";
 	}
 
-	$join = " LEFT JOIN {$wpdb->prefix}ea_transactions expense ON (expense.id = ea_transfers.expense_id) ";
+	$join  = " LEFT JOIN {$wpdb->prefix}ea_transactions expense ON (expense.id = ea_transfers.expense_id) ";
 	$join .= " LEFT JOIN {$wpdb->prefix}ea_transactions income ON (income.id = ea_transfers.income_id) ";
 
 	if ( ! empty( $qv['date_created'] ) && is_array( $qv['date_created'] ) ) {
 		$date_created_query = new \WP_Date_Query( $qv['date_created'], "{$table}.date_created" );
-		$where              .= $date_created_query->get_sql();
+		$where             .= $date_created_query->get_sql();
 	}
 
 	if ( ! empty( $qv['payment_date'] ) && is_array( $qv['payment_date'] ) ) {
 		$date_created_query = new \WP_Date_Query( $qv['payment_date'], 'expense.payment_date' );
-		$where              .= $date_created_query->get_sql();
+		$where             .= $date_created_query->get_sql();
 	}
 
 	$order   = isset( $qv['order'] ) ? strtoupper( $qv['order'] ) : 'ASC';
@@ -834,7 +841,6 @@ function eaccounting_get_transfers( $args = array() ) {
  *
  * @return array|Payment[]|Revenue[]|int
  * @since 1.0.
- *
  */
 function eaccounting_get_transactions( $args = array() ) {
 	// Prepare args.
@@ -869,16 +875,16 @@ function eaccounting_get_transactions( $args = array() ) {
 	$where  = 'WHERE 1=1';
 	if ( ! empty( $qv['include'] ) ) {
 		$include = implode( ',', wp_parse_id_list( $qv['include'] ) );
-		$where   .= " AND $table.`id` IN ($include)";
+		$where  .= " AND $table.`id` IN ($include)";
 	} elseif ( ! empty( $qv['exclude'] ) ) {
 		$exclude = implode( ',', wp_parse_id_list( $qv['exclude'] ) );
-		$where   .= " AND $table.`id` NOT IN ($exclude)";
+		$where  .= " AND $table.`id` NOT IN ($exclude)";
 	}
-	//search
+	// search
 	$search_cols = array( 'description', 'reference' );
 	if ( ! empty( $qv['search'] ) ) {
 		$searches = array();
-		$where    .= ' AND (';
+		$where   .= ' AND (';
 		foreach ( $search_cols as $col ) {
 			$searches[] = $wpdb->prepare( $col . ' LIKE %s', '%' . $wpdb->esc_like( $qv['search'] ) . '%' );
 		}
@@ -887,64 +893,64 @@ function eaccounting_get_transactions( $args = array() ) {
 	}
 
 	if ( ! empty( $qv['type'] ) ) {
-		$types = implode( "','", wp_parse_list( $qv['type'] ) );
+		$types  = implode( "','", wp_parse_list( $qv['type'] ) );
 		$where .= " AND $table.`type` IN ('$types')";
 	}
 
 	if ( ! empty( $qv['currency_code'] ) ) {
 		$currency_code = implode( "','", wp_parse_list( $qv['currency_code'] ) );
-		$where         .= " AND $table.`currency_code` IN ('$currency_code')";
+		$where        .= " AND $table.`currency_code` IN ('$currency_code')";
 	}
 
 	if ( ! empty( $qv['payment_method'] ) ) {
 		$payment_method = implode( "','", wp_parse_list( $qv['payment_method'] ) );
-		$where          .= " AND $table.`payment_method` IN ('$payment_method')";
+		$where         .= " AND $table.`payment_method` IN ('$payment_method')";
 	}
 
 	if ( ! empty( $qv['account_id'] ) ) {
 		$account_id = implode( ',', wp_parse_id_list( $qv['account_id'] ) );
-		$where      .= " AND $table.`account_id` IN ($account_id)";
+		$where     .= " AND $table.`account_id` IN ($account_id)";
 	}
 
 	if ( ! empty( $qv['document_id'] ) ) {
 		$document_id = implode( ',', wp_parse_id_list( $qv['document_id'] ) );
-		$where       .= " AND $table.`document_id` IN ($document_id)";
+		$where      .= " AND $table.`document_id` IN ($document_id)";
 	}
 
 	if ( ! empty( $qv['category_id'] ) ) {
 		$category_in = implode( ',', wp_parse_id_list( $qv['category_id'] ) );
-		$where       .= " AND $table.`category_id` IN ($category_in)";
+		$where      .= " AND $table.`category_id` IN ($category_in)";
 	}
 
 	if ( ! empty( $qv['contact_id'] ) ) {
 		$contact_id = implode( ',', wp_parse_id_list( $qv['contact_id'] ) );
-		$where      .= " AND $table.`contact_id` IN ($contact_id)";
+		$where     .= " AND $table.`contact_id` IN ($contact_id)";
 	}
 
 	if ( ! empty( $qv['parent_id'] ) ) {
 		$parent_id = implode( ',', wp_parse_id_list( $qv['parent_id'] ) );
-		$where     .= " AND $table.`parent_id` IN ($parent_id)";
+		$where    .= " AND $table.`parent_id` IN ($parent_id)";
 	}
 
 	if ( ! empty( $qv['date_created'] ) && is_array( $qv['date_created'] ) ) {
 		$date_created_query = new \WP_Date_Query( $qv['date_created'], "{$table}.date_created" );
-		$where              .= $date_created_query->get_sql();
+		$where             .= $date_created_query->get_sql();
 	}
 
-//	if ( ! empty( $qv['payment_date'] ) && is_array( $qv['payment_date'] ) ) {
-//		$date_created_query = new \WP_Date_Query( $qv['payment_date'], "{$table}.payment_date" );
-//		$where             .= $date_created_query->get_sql();
-//	}
+	// if ( ! empty( $qv['payment_date'] ) && is_array( $qv['payment_date'] ) ) {
+	// $date_created_query = new \WP_Date_Query( $qv['payment_date'], "{$table}.payment_date" );
+	// $where             .= $date_created_query->get_sql();
+	// }
 
 	if ( ! empty( $qv['payment_date'] ) && is_array( $qv['payment_date'] ) ) {
 		$before = $qv['payment_date']['before'];
 		$after  = $qv['payment_date']['after'];
-		$where  .= " AND $table.`payment_date` BETWEEN '$before' AND '$after'";
+		$where .= " AND $table.`payment_date` BETWEEN '$before' AND '$after'";
 	}
 
 	if ( ! empty( $qv['creator_id'] ) ) {
 		$creator_id = implode( ',', wp_parse_id_list( $qv['creator_id'] ) );
-		$where      .= " AND $table.`creator_id` IN ($creator_id)";
+		$where     .= " AND $table.`creator_id` IN ($creator_id)";
 	}
 
 	if ( true === $qv['transfer'] ) {
@@ -1022,7 +1028,6 @@ function eaccounting_get_transactions( $args = array() ) {
  *
  * @return float
  * @since 1.1.0
- *
  */
 function eaccounting_get_total_income( $year = null ) {
 	global $wpdb;
@@ -1032,7 +1037,7 @@ function eaccounting_get_total_income( $year = null ) {
 		if ( absint( $year ) ) {
 			$financial_start = eaccounting_get_financial_start( $year );
 			$financial_end   = eaccounting_get_financial_end( $year );
-			$where           .= $wpdb->prepare( 'AND ( payment_date between %s AND %s )', $financial_start, $financial_end );
+			$where          .= $wpdb->prepare( 'AND ( payment_date between %s AND %s )', $financial_start, $financial_end );
 		}
 
 		$sql          = $wpdb->prepare(
@@ -1061,7 +1066,6 @@ function eaccounting_get_total_income( $year = null ) {
  *
  * @return float
  * @since 1.1.0
- *
  */
 function eaccounting_get_total_expense( $year = null ) {
 	global $wpdb;
@@ -1071,7 +1075,7 @@ function eaccounting_get_total_expense( $year = null ) {
 		if ( absint( $year ) ) {
 			$financial_start = eaccounting_get_financial_start( $year );
 			$financial_end   = eaccounting_get_financial_end( $year );
-			$where           .= $wpdb->prepare( 'AND ( payment_date between %s AND %s )', $financial_start, $financial_end );
+			$where          .= $wpdb->prepare( 'AND ( payment_date between %s AND %s )', $financial_start, $financial_end );
 		}
 
 		$sql           = $wpdb->prepare(
@@ -1100,7 +1104,6 @@ function eaccounting_get_total_expense( $year = null ) {
  *
  * @return float
  * @since 1.1.0
- *
  */
 function eaccounting_get_total_profit( $year = null ) {
 	$total_income  = (float) eaccounting_get_total_income( $year );
@@ -1223,13 +1226,12 @@ function eaccounting_get_total_upcoming_profit() {
  * sanitization of the integer fields.
  *
  * @param object|array $transfer The invoice item object or array
- * @param string $context Optional. How to sanitize post fields. Accepts 'raw', 'edit', 'db', 'display'. Default 'display'.
+ * @param string       $context Optional. How to sanitize post fields. Accepts 'raw', 'edit', 'db', 'display'. Default 'display'.
  *
  * @return object|Transfer|array The now sanitized transfer object or array
  * @see eaccounting_sanitize_transfer_field()
  *
  * @since 1.2.1
- *
  */
 function eaccounting_sanitize_transfer( $transfer, $context = 'raw' ) {
 	if ( is_object( $transfer ) ) {
@@ -1268,13 +1270,12 @@ function eaccounting_sanitize_transfer( $transfer, $context = 'raw' ) {
  * Possible context values are:  'raw', 'edit', 'db', 'display'.
  *
  * @param string $field The transfer Object field name.
- * @param mixed $value The transfer Object value.
- * @param int $transfer_id transfer id.
+ * @param mixed  $value The transfer Object value.
+ * @param int    $transfer_id transfer id.
  * @param string $context Optional. How to sanitize the field. Possible values are 'raw', 'edit','db', 'display'. Default 'display'.
  *
  * @return mixed Sanitized value.
  * @since 1.2.1
- *
  */
 function eaccounting_sanitize_transfer_field( $field, $value, $transfer_id, $context ) {
 	if ( false !== strpos( $field, '_id' ) || $field === 'id' ) {
@@ -1300,7 +1301,6 @@ function eaccounting_sanitize_transfer_field( $field, $value, $transfer_id, $con
 		 * @param int $transfer_id Transfer id.
 		 *
 		 * @since 1.2.1
-		 *
 		 */
 		$value = apply_filters( "eaccounting_edit_transfer_{$field}", $value, $transfer_id );
 
@@ -1313,7 +1313,6 @@ function eaccounting_sanitize_transfer_field( $field, $value, $transfer_id, $con
 		 * @param int $transfer_id Transfer id.
 		 *
 		 * @since 1.2.1
-		 *
 		 */
 		$value = apply_filters( "eaccounting_pre_transfer_{$field}", $value, $transfer_id );
 	} else {
@@ -1327,7 +1326,6 @@ function eaccounting_sanitize_transfer_field( $field, $value, $transfer_id, $con
 		 * @param string $context Context to retrieve the account field value.
 		 *
 		 * @since 1.2.1
-		 *
 		 */
 		$value = apply_filters( "eaccounting_transfer_{$field}", $value, $transfer_id, $context );
 	}
