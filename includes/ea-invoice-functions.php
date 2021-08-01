@@ -275,17 +275,25 @@ function eaccounting_sanitize_invoice_field( $field, $value, $invoice_id, $conte
 	return $value;
 }
 
-function eaccounting_insert_invoice_item( $item_data ) {
+/**
+ *  Insert or update a invoice_item.
+ *
+ * @param array|object|Invoice_Item $invoice_item_arr An array, object, or invoice_item object of data arguments.
+ *
+ * @return Invoice_Item|WP_Error The invoice_item object or WP_Error otherwise.
+ * @global wpdb $wpdb WordPress database abstraction object.
+ * @since 1.1.0
+ */
+function eaccounting_insert_invoice_item( $invoice_item_arr ) {
 	global $wpdb;
-	$user_id = get_current_user_id();
-	if ( $item_data instanceof Invoice_Item ) {
-		$item_data = $item_data->to_array();
-	} elseif ( $item_data instanceof stdClass ) {
-		$item_data = get_object_vars( $item_data );
+	if ( $invoice_item_arr instanceof Invoice_Item ) {
+		$invoice_item_arr = $invoice_item_arr->to_array();
+	} elseif ( $invoice_item_arr instanceof stdClass ) {
+		$invoice_item_arr = get_object_vars( $invoice_item_arr );
 	}
 
-	$defaults = [
-		'invoice_id'    => null,
+	$defaults = array(
+		'document_id'   => null,
 		'item_id'       => null,
 		'item_name'     => '',
 		'price'         => 0.00,
@@ -303,7 +311,7 @@ function eaccounting_insert_invoice_item( $item_data ) {
 			'fees_tax'     => 0.00,
 		),
 		'date_created'  => null,
-	];
+	);
 
 	// Are we updating or creating?
 	$id          = null;
@@ -312,82 +320,77 @@ function eaccounting_insert_invoice_item( $item_data ) {
 	if ( ! empty( $item_data['id'] ) ) {
 		$update      = true;
 		$id          = absint( $item_data['id'] );
-		$data_before = eaccounting_get_invoice_item( $id );
+		$data_before = eaccounting_get_invoice_item( $id, ARRAY_A );
 
 		if ( is_null( $data_before ) ) {
-			return new WP_Error( 'invalid_invoice_item_id', __( 'Invalid invoice item id to update.' ) );
+			return new WP_Error( 'invalid_invoice_item_id', __( 'Invalid invoice item id to update.', 'wp-ever-accounting' ) );
 		}
 
 		// Merge old and new fields with new fields overwriting old ones.
-		$item_data   = array_merge( $data_before->to_array(), $item_data );
-		$data_before = $data_before->to_array();
-	}
-	$item_data = wp_parse_args( $item_data, $defaults );
-	$data_arr  = eaccounting_sanitize_invoice_item( $item_data, 'db' );
-
-	if ( empty( $data_arr['invoice_id'] ) ) {
-		return new WP_Error( 'invalid_invoice_item_invoice_id', esc_html__( 'Invoice id is required', 'wp-ever-accounting' ) );
+		$invoice_item_arr = array_merge( $data_before, $invoice_item_arr );
+		$data_before      = $data_before->to_array();
 	}
 
+	$item_data = wp_parse_args( $invoice_item_arr, $defaults );
+	$data_arr  = eaccounting_sanitize_invoice_item( $invoice_item_arr, 'db' );
+
+	// Check required
 	if ( empty( $data_arr['item_id'] ) ) {
-		return new WP_Error( 'invalid_invoice_item_item_id', esc_html__( 'Invoice item id is required', 'wp-ever-accounting' ) );
-	}
-
-	if ( empty( $data_arr['currency_code'] ) ) {
-		return new WP_Error( 'invalid_invoice_item_item_name', esc_html__( 'Item currency is required', 'wp-ever-accounting' ) );
+		return new WP_Error( 'invalid_invoice_item_item_id', esc_html__( 'Invoice Item item id is required', 'wp-ever-accounting' ) );
 	}
 
 	if ( empty( $data_arr['item_name'] ) ) {
-		return new WP_Error( 'invalid_invoice_item_item_name', esc_html__( 'Item name is required', 'wp-ever-accounting' ) );
+		return new WP_Error( 'invalid_invoice_item_item_name', esc_html__( 'Invoice Item item name is required', 'wp-ever-accounting' ) );
+	}
+
+	if ( empty( $data_arr['document_id'] ) ) {
+		return new WP_Error( 'invalid_invoice_item_document_id', esc_html__( 'Invoice Item document id is required', 'wp-ever-accounting' ) );
+	}
+
+	if ( empty( $data_arr['currency_code'] ) ) {
+		return new WP_Error( 'invalid_invoice_item_currency_code', esc_html__( 'Invoice Item currency code is required', 'wp-ever-accounting' ) );
 	}
 
 	if ( empty( $data_arr['date_created'] ) || '0000-00-00 00:00:00' === $data_arr['date_created'] ) {
 		$data_arr['date_created'] = current_time( 'mysql' );
 	}
 
-	$subtotal         = (float) $data_arr['price'] * (float) $data_arr['quantity'];
-	$discount         = (float) $data_arr['discount'];
-	$subtotal_for_tax = $subtotal - $discount;
-	$tax_rate         = ( (float) $data_arr['tax_rate'] / 100 );
-	$total_tax        = eaccounting_calculate_tax( $subtotal_for_tax, $tax_rate );
-
-	if ( 'tax_subtotal_rounding' !== eaccounting()->settings->get( 'tax_subtotal_rounding', 'tax_subtotal_rounding' ) ) {
-		$total_tax = eaccounting_format_decimal( $total_tax, 2 );
-	}
-
-	if ( eaccounting_prices_include_tax() ) {
-		$subtotal -= $total_tax;
-	}
-
-	$total = $subtotal - $discount + $total_tax;
-	if ( $total < 0 ) {
-		$total = 0;
-	}
-	$data_arr['subtotal'] = $subtotal;
-	$data_arr['tax']      = $total_tax;
-	$data_arr['total']    = $total;
-
 	$fields = array_keys( $defaults );
 	$data   = wp_array_slice_assoc( $data_arr, $fields );
 
 	/**
-	 * Filters invoice item data before it is inserted into the database.
+	 * Filters invoice_item data before it is inserted into the database.
 	 *
 	 * @param array $data Data to be inserted.
 	 * @param array $data_arr Sanitized data.
 	 *
 	 * @since 1.2.1
 	 */
-	$data = apply_filters( 'eaccounting_insert_item_data', $data, $data_arr );
+	$data = apply_filters( 'eaccounting_insert_invoice_item', $data, $data_arr );
 
 	$data  = wp_unslash( $data );
 	$where = array( 'id' => $id );
 
-
 	if ( $update ) {
 
 		/**
-		 * Fires immediately before an existing invoice item is updated in the database.
+		 * Fires immediately before an existing invoice_item item is updated in the database.
+		 *
+		 * @param int $id Invoice item id.
+		 * @param array $data Invoice item data to be inserted.
+		 * @param array $changes Invoice item data to be updated.
+		 * @param array $data_arr Sanitized invoice_item item data.
+		 * @param array $data_before Invoice item previous data.
+		 *
+		 * @since 1.2.1
+		 */
+		do_action( 'eaccounting_pre_update_invoice_item', $id, $data, $data_arr, $data_before );
+		if ( false === $wpdb->update( $wpdb->prefix . 'ea_invoice_items', $data, $where, $data_before ) ) {
+			new WP_Error( 'db_update_error', __( 'Could not update invoice_item in the database.', 'wp-ever-accounting' ), $wpdb->last_error );
+		}
+
+		/**
+		 * Fires immediately after an existing invoice_item is updated in the database.
 		 *
 		 * @param int $id Invoice item id.
 		 * @param array $data Invoice item data to be inserted.
@@ -397,30 +400,14 @@ function eaccounting_insert_invoice_item( $item_data ) {
 		 *
 		 * @since 1.2.1
 		 */
-		do_action( 'eaccounting_pre_update_invoice_item', $id, $data, $data_arr, $data_before );
-		if ( false === $wpdb->update( $wpdb->prefix . 'ea_invoice_items', $data, $where, $data_before ) ) {
-			new WP_Error( 'db_update_error', __( 'Could not update invoice item in the database.' ), $wpdb->last_error );
-		}
-
-		/**
-		 * Fires immediately after an existing Invoice item is updated in the database.
-		 *
-		 * @param int $id Invoice item id.
-		 * @param array $data Invoice item data to be inserted.
-		 * @param array $changes Invoice item data to be updated.
-		 * @param array $data_arr Sanitized Invoice item data.
-		 * @param array $data_before Invoice item previous data.
-		 *
-		 * @since 1.2.1
-		 */
 		do_action( 'eaccounting_update_invoice_item', $id, $data, $data_arr, $data_before );
 	} else {
 
 		/**
-		 * Fires immediately before an existing Invoice item is inserted in the database.
+		 * Fires immediately before an existing invoice_item is inserted in the database.
 		 *
 		 * @param array $data Invoice item data to be inserted.
-		 * @param string $data_arr Sanitized Invoice item data.
+		 * @param string $data_arr Sanitized invoice item data.
 		 * @param array $item_data Invoice item data as originally passed to the function.
 		 *
 		 * @since 1.2.1
@@ -428,18 +415,18 @@ function eaccounting_insert_invoice_item( $item_data ) {
 		do_action( 'eaccounting_pre_insert_invoice_item', $data, $data_arr, $item_data );
 
 		if ( false === $wpdb->insert( $wpdb->prefix . 'ea_invoice_items', $data ) ) {
-			new WP_Error( 'db_insert_error', __( 'Could not insert invoice item into the database.' ), $wpdb->last_error );
+			new WP_Error( 'db_insert_error', __( 'Could not insert invoice_item into the database.', 'wp-ever-accounting' ), $wpdb->last_error );
 		}
 
 		$id = (int) $wpdb->insert_id;
 
 		/**
-		 * Fires immediately after an existing item is inserted in the database.
+		 * Fires immediately after an existing invoice_item is inserted in the database.
 		 *
-		 * @param int $id Item id.
-		 * @param array $data Item has been inserted.
-		 * @param array $data_arr Sanitized item data.
-		 * @param array $item_data Item data as originally passed to the function.
+		 * @param int $id Invoice item id.
+		 * @param array $data Invoice item has been inserted.
+		 * @param array $data_arr Sanitized invoice item data.
+		 * @param array $item_data Invoice item data as originally passed to the function.
 		 *
 		 * @since 1.2.1
 		 */
@@ -451,21 +438,22 @@ function eaccounting_insert_invoice_item( $item_data ) {
 	wp_cache_set( 'last_changed', microtime(), 'ea_invoice_items' );
 
 	// Get new item object.
-	$item = eaccounting_get_invoice_item( $id );
+	$invoice_item = eaccounting_get_invoice_item( $id );
 
 	/**
-	 * Fires once an item has been saved.
+	 * Fires once an invoice_item has been saved.
 	 *
-	 * @param int $id Item id.
-	 * @param Invoice_Item $item Item object.
-	 * @param bool $update Whether this is an existing item being updated.
+	 * @param int $id Invoice_Item id.
+	 * @param Invoice_Item $invoice_item Invoice_Item object.
+	 * @param bool $update Whether this is an existing invoice item being updated.
 	 *
 	 * @since 1.2.1
 	 */
-	do_action( 'eaccounting_saved_invoice_item', $id, $item, $update, $data_arr, $data_before );
+	do_action( 'eaccounting_saved_invoice_item', $id, $invoice_item, $update, $data_arr, $data_before );
 
-	return $item;
+	return $invoice_item;
 }
+
 
 
 /**
