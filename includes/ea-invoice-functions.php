@@ -299,7 +299,7 @@ function eaccounting_sanitize_invoice( $invoice, $context = 'raw' ) {
 		$invoice->filter = $context;
 	} elseif ( is_array( $invoice ) ) {
 		// Check if post already filtered for this context.
-		if ( isset( $invoice['filter'] ) && $context == $invoice['filter'] ) {
+		if ( isset( $invoice['filter'] ) && $context == $invoice['filter'] ) { //phpcs:ignore
 			return $invoice;
 		}
 		if ( ! isset( $invoice['id'] ) ) {
@@ -310,6 +310,69 @@ function eaccounting_sanitize_invoice( $invoice, $context = 'raw' ) {
 		}
 		$invoice['filter'] = $context;
 	}
+
+	return $invoice;
+}
+/**
+ * Delete a invoice.
+ *
+ * @param int $invoice_id Invoice id.
+ *
+ * @return Invoice |false|null Invoice data on success, false or null on failure.
+ * @since 1.1.0
+ */
+function eaccounting_delete_invoice( $invoice_id ) {
+	global $wpdb;
+
+	$invoice = eaccounting_get_invoice( $invoice_id );
+	if ( ! $invoice || ! $invoice->exists() ) {
+		return false;
+	}
+
+	/**
+	 * Filters whether an invoice delete should take place.
+	 *
+	 * @param bool|null $delete Whether to go forward with deletion.
+	 * @param Invoice $invoice contact object.
+	 *
+	 * @since 1.2.1
+	 */
+	$check = apply_filters( 'eaccounting_pre_delete_invoice', null, $invoice );
+	if ( null !== $check ) {
+		return $check;
+	}
+
+	/**
+	 * Fires before an invoice is deleted.
+	 *
+	 * @param int $invoice_id invoice id.
+	 * @param Invoice $invoice invoice object.
+	 *
+	 * @since 1.2.1
+	 *
+	 * @see eaccounting_delete_invoice()
+	 */
+	do_action( 'eaccounting_before_delete_invoice', $invoice_id, $invoice );
+
+	$result = $wpdb->delete( $wpdb->prefix . 'ea_invoices', array( 'id' => $invoice_id ) );
+	if ( ! $result ) {
+		return false;
+	}
+
+	wp_cache_delete( $invoice_id, 'ea_invoices' );
+	wp_cache_set( 'last_changed', microtime(), 'ea_invoices' );
+
+	/**
+	 * Fires after an invoice is deleted.
+	 *
+	 * @param int $invoice_id invoice id.
+	 * @param Invoice $invoice invoice object.
+	 *
+	 * @since 1.2.1
+	 *
+	 * @see eaccounting_delete_invoice()
+	 */
+	do_action( 'eaccounting_delete_invoice', $invoice_id, $invoice );
 
 	return $invoice;
 }
