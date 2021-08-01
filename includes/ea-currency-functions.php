@@ -417,30 +417,30 @@ function eaccounting_get_currencies( $args = array() ) {
  * sanitization of the integer fields.
  *
  * @param object|array $currency The currency object or array
- * @param string $context Optional. How to sanitize currency fields. Accepts 'raw', 'edit', 'db', 'display'. Default 'display'.
+ * @param string       $context Optional. How to sanitize post fields. Accepts 'raw', 'edit', 'db', 'display'. Default 'display'.
  *
  * @return object|Currency|array The now sanitized currency object or array
  * @see eaccounting_sanitize_currency_field()
  *
  * @since 1.2.1
- *
  */
 function eaccounting_sanitize_currency( $currency, $context = 'raw' ) {
 	if ( is_object( $currency ) ) {
 		// Check if post already filtered for this context.
-		if ( isset( $currency->filter ) && $context == $currency->filter ) {
+		if ( isset( $currency->filter ) && $context === $currency->filter ) {
 			return $currency;
 		}
 		if ( ! isset( $currency->id ) ) {
 			$currency->id = 0;
 		}
+
 		foreach ( array_keys( get_object_vars( $currency ) ) as $field ) {
 			$currency->$field = eaccounting_sanitize_currency_field( $field, $currency->$field, $currency->id, $context );
 		}
 		$currency->filter = $context;
 	} elseif ( is_array( $currency ) ) {
 		// Check if post already filtered for this context.
-		if ( isset( $currency['filter'] ) && $context == $currency['filter'] ) {
+		if ( isset( $currency['filter'] ) && $context === $currency['filter'] ) {
 			return $currency;
 		}
 		if ( ! isset( $currency['id'] ) ) {
