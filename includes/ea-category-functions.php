@@ -328,7 +328,7 @@ function eaccounting_delete_category( $category_id ) {
  * sanitization of the integer fields.
  *
  * @param object|array $category The category object or array
- * @param string $context Optional. How to sanitize post fields. Accepts 'raw', 'edit', 'db', 'display'. Default 'display'.
+ * @param string       $context Optional. How to sanitize post fields. Accepts 'raw', 'edit', 'db', 'display'. Default 'display'.
  *
  * @return object|Category|array The now sanitized category object or array
  * @see eaccounting_sanitize_category_field()
@@ -338,19 +338,20 @@ function eaccounting_delete_category( $category_id ) {
 function eaccounting_sanitize_category( $category, $context = 'raw' ) {
 	if ( is_object( $category ) ) {
 		// Check if post already filtered for this context.
-		if ( isset( $category->filter ) && $context == $category->filter ) {
+		if ( isset( $category->filter ) && $context === $category->filter ) {
 			return $category;
 		}
 		if ( ! isset( $category->id ) ) {
 			$category->id = 0;
 		}
+
 		foreach ( array_keys( get_object_vars( $category ) ) as $field ) {
 			$category->$field = eaccounting_sanitize_category_field( $field, $category->$field, $category->id, $context );
 		}
 		$category->filter = $context;
 	} elseif ( is_array( $category ) ) {
 		// Check if post already filtered for this context.
-		if ( isset( $category['filter'] ) && $context == $category['filter'] ) { //phpcs:ignore
+		if ( isset( $category['filter'] ) && $context === $category['filter'] ) {
 			return $category;
 		}
 		if ( ! isset( $category['id'] ) ) {
@@ -366,13 +367,13 @@ function eaccounting_sanitize_category( $category, $context = 'raw' ) {
 }
 
 /**
- * Sanitizes a category field based on context.
+ * Sanitizes category field based on context.
  *
  * Possible context values are:  'raw', 'edit', 'db', 'display'.
  *
  * @param string $field The category Object field name.
- * @param mixed $value The category Object value.
- * @param int $category_id Category id.
+ * @param mixed  $value The category Object value.
+ * @param int    $category_id category id.
  * @param string $context Optional. How to sanitize the field. Possible values are 'raw', 'edit','db', 'display'. Default 'display'.
  *
  * @return mixed Sanitized value.
@@ -386,13 +387,17 @@ function eaccounting_sanitize_category_field( $field, $value, $category_id, $con
 	$context = strtolower( $context );
 
 	if ( 'raw' === $context ) {
+		if ( $field === 'extra' ) { //phpcs:ignore
+			$value = maybe_unserialize( $value );
+		}
+
 		return $value;
 	}
 
 	if ( 'edit' === $context ) {
 
 		/**
-		 * Filters an category field to edit before it is sanitized.
+		 * Filters category field to edit before it is sanitized.
 		 *
 		 * @param mixed $value Value of the category field.
 		 * @param int $category_id Category id.
@@ -404,7 +409,7 @@ function eaccounting_sanitize_category_field( $field, $value, $category_id, $con
 	} elseif ( 'db' === $context ) {
 
 		/**
-		 * Filters a category field value before it is sanitized.
+		 * Filters category field value before it is sanitized.
 		 *
 		 * @param mixed $value Value of the category field.
 		 * @param int $category_id Category id.
@@ -412,17 +417,14 @@ function eaccounting_sanitize_category_field( $field, $value, $category_id, $con
 		 * @since 1.2.1
 		 */
 		$value = apply_filters( "eaccounting_pre_category_{$field}", $value, $category_id );
-
 	} else {
 		// Use display filters by default.
 
 		/**
 		 * Filters the category field sanitized for display.
 		 *
-		 * The dynamic portion of the filter name, `$field`, refers to the category field name.
-		 *
 		 * @param mixed $value Value of the category field.
-		 * @param int $category_id category id.
+		 * @param int $category_id Category id.
 		 * @param string $context Context to retrieve the category field value.
 		 *
 		 * @since 1.2.1
@@ -432,6 +434,7 @@ function eaccounting_sanitize_category_field( $field, $value, $category_id, $con
 
 	return $value;
 }
+
 
 
 /**
