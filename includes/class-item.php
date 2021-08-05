@@ -44,26 +44,111 @@ class Item extends Data {
 	public $id = null;
 
 	/**
-	 * Item data container.
+	 * Name of the item.
 	 *
 	 * @since 1.2.1
-	 * @var array
+	 * @var string
 	 */
-	public $data = array(
-		'name'           => '',
-		'sku'            => '',
-		'thumbnail_id'   => null,
-		'description'    => '',
-		'sale_price'     => 0.0000,
-		'purchase_price' => 0.0000,
-		'quantity'       => 1,
-		'category_id'    => null,
-		'sales_tax'      => null,
-		'purchase_tax'   => null,
-		'enabled'        => 1,
-		'creator_id'     => null,
-		'date_created'   => null,
-	);
+	public $name = '';
+
+	/**
+	 * Item SKU
+	 *
+	 * @since 1.2.1
+	 * @var string
+	 */
+	public $sku = '';
+
+	/**
+	 * Item description
+	 *
+	 * @since 1.2.1
+	 * @var string
+	 */
+	public $description = '';
+
+
+	/**
+	 * Item sale price.
+	 *
+	 * @since 1.2.1
+	 * @var float
+	 */
+	public $sale_price = 0.00;
+
+
+	/**
+	 * Item purchase price
+	 *
+	 * @since 1.2.1
+	 * @var float
+	 */
+	public $purchase_price = 0.00;
+
+	/**
+	 * Item stock quantity
+	 *
+	 * @since 1.2.1
+	 * @var int
+	 */
+	public $quantity = 0;
+
+	/**
+	 * Item category id
+	 *
+	 * @since 1.2.1
+	 * @var int
+	 */
+	public $category_id = 0;
+
+	/**
+	 * Item sales tax
+	 *
+	 * @since 1.2.1
+	 * @var float
+	 */
+	public $sales_tax = 0.00;
+
+	/**
+	 * Item purchase tax
+	 *
+	 * @since 1.2.1
+	 * @var float
+	 */
+	public $purchase_tax = 0.00;
+
+	/**
+	 * Item thumbnail id.
+	 *
+	 * @since 1.2.1
+	 * @var null
+	 */
+	public $thumbnail_id = null;
+
+	/**
+	 * Item status
+	 *
+	 * @since 1.2.1
+	 * @var bool
+	 */
+	public $enabled = true;
+
+	/**
+	 * Item creator user id.
+	 *
+	 * @since 1.2.1
+	 * @var int
+	 */
+	public $creator_id = 0;
+
+	/**
+	 * Item created date.
+	 *
+	 * @since 1.2.1
+	 * @var string
+	 */
+	public $date_created = '0000-00-00 00:00:00';
+
 
 	/**
 	 * Retrieve Item instance.
@@ -92,18 +177,14 @@ class Item extends Data {
 			if ( ! $_item ) {
 				return false;
 			}
-
 			$_item = eaccounting_sanitize_item( $_item, 'raw' );
 			wp_cache_add( $_item->id, $_item, 'ea_items' );
 		} elseif ( empty( $_item->filter ) ) {
 			$_item = eaccounting_sanitize_item( $_item, 'raw' );
 		}
 
-		$item = new Item;
-		$item->set_props( $_item );
-		$item->object_read = true;
 
-		return $item;
+		return new self( $_item );
 	}
 
 	/**
@@ -113,9 +194,30 @@ class Item extends Data {
 	 *
 	 * @since 1.2.1
 	 */
-	public function __construct( $item = null ) {
-		parent::__construct();
-
+	public function __construct( $item ) {
+		foreach ( get_object_vars( $item ) as $key => $value ) {
+			$this->$key = $value;
+		}
 	}
 
+
+	/**
+	 * Filter the object based on context.
+	 *
+	 * @param string $context Filter.
+	 *
+	 * @return Note|Object
+	 * @since 1.2.1
+	 */
+	public function filter( $context ) {
+		if ( $this->context === $context ) {
+			return $this;
+		}
+
+		if ( 'raw' === $context ) {
+			return self::get_instance( $this->id );
+		}
+
+		return eaccounting_sanitize_item( $this, $context );
+	}
 }

@@ -106,15 +106,14 @@ function eaccounting_insert_item( $item_data ) {
 	if ( ! empty( $item_data['id'] ) ) {
 		$update      = true;
 		$id          = absint( $item_data['id'] );
-		$data_before = eaccounting_get_item( $id );
+		$data_before = eaccounting_get_item( $id, ARRAY_A );
 
 		if ( is_null( $data_before ) ) {
 			return new WP_Error( 'invalid_item_id', __( 'Invalid item id to update.' ) );
 		}
 
 		// Merge old and new fields with new fields overwriting old ones.
-		$item_data   = array_merge( $data_before->to_array(), $item_data );
-		$data_before = $data_before->to_array();
+		$item_data   = array_merge( $data_before, $item_data );
 	}
 
 	$item_data = wp_parse_args( $item_data, $defaults );
@@ -128,7 +127,7 @@ function eaccounting_insert_item( $item_data ) {
 		$data_arr['date_created'] = current_time( 'mysql' );
 	}
 
-	$fields = array_keys( $defaults );
+	$fields = [ 'name', 'sku', 'thumbnail_id', 'description', 'sale_price', 'purchase_price', 'quantity', 'category_id', 'sales_tax', 'purchase_tax', 'enabled', 'creator_id', 'date_created'];
 	$data   = wp_array_slice_assoc( $data_arr, $fields );
 
 	/**
@@ -306,14 +305,20 @@ function eaccounting_delete_item( $item_id ) {
  * @since 1.2.1
  */
 function eaccounting_sanitize_item( $item, $context = 'raw' ) {
-	if ( $item instanceof Item ) {
-		$item = $item->get_data();
-	} elseif ( is_object( $item ) ) {
-		$item = get_object_vars( $item );
-	}
-
-	if ( is_array( $item ) ) {
+	if ( is_object( $item ) ) {
 		// Check if post already filtered for this context.
+		if ( isset( $item->context ) && $context == $item->context ) {
+			return $item;
+		}
+		if ( ! isset( $item->id ) ) {
+			$item->id = 0;
+		}
+		foreach ( array_keys( get_object_vars( $item ) ) as $field ) {
+			$item->$field = eaccounting_sanitize_item_field( $field, $item->$field, $item->id, $context );
+		}
+		$item->context = $context;
+	} elseif ( is_array( $item ) ) {
+		// Check if post already context for this context.
 		if ( isset( $item['context'] ) && $context == $item['context'] ) { //phpcs:ignore
 			return $item;
 		}

@@ -43,41 +43,108 @@ class Invoice_Item extends Data {
 	public $id = null;
 
 	/**
-	 * Invoice Item data container.
+	 *
 	 *
 	 * @since 1.2.1
-	 * @var array
+	 * @var null
 	 */
-	public $data = array(
-		'invoice_id'    => null,
-		'item_id'       => null,
-		'item_name'     => '',
-		'price'         => 0.00,
-		'quantity'      => 1,
-		'subtotal'      => 0.00,
-		'tax_rate'      => 0.00,
-		'discount'      => 0.00,
-		'tax'           => 0.00,
-		'total'         => 0.00,
-		'currency_code' => '',
-		'extra'         => array(
-			'shipping'     => 0.00,
-			'shipping_tax' => 0.00,
-			'fees'         => 0.00,
-			'fees_tax'     => 0.00,
-		),
-		'date_created'  => null,
-	);
+	public $document_id = null;
 
 	/**
-	 * Stores the invoice item object's sanitization level.
 	 *
-	 * Does not correspond to a DB field.
+	 *
+	 * @since 1.2.1
+	 * @var null
+	 */
+	public $item_id = null;
+
+	/**
+	 *
 	 *
 	 * @since 1.2.1
 	 * @var string
 	 */
-	public $filter;
+	public $item_name = '';
+
+	/**
+	 *
+	 *
+	 * @since 1.2.1
+	 * @var float
+	 */
+	public $price = 0.00;
+
+	/**
+	 *
+	 *
+	 * @since 1.2.1
+	 * @var int
+	 */
+	public $quantity = 1;
+
+	/**
+	 *
+	 *
+	 * @since 1.2.1
+	 * @var float
+	 */
+	public $subtotal = 0.00;
+
+	/**
+	 *
+	 *
+	 * @since 1.2.1
+	 * @var int
+	 */
+	public $tax_rate = 0;
+
+	/**
+	 *
+	 *
+	 * @since 1.2.1
+	 * @var float
+	 */
+	public $discount = 0.00;
+
+	/**
+	 *
+	 *
+	 * @since 1.2.1
+	 * @var float
+	 */
+	public $tax = 0.00;
+
+	/**
+	 *
+	 *
+	 * @since 1.2.1
+	 * @var float
+	 */
+	public $total = 0.00;
+
+	/**
+	 *
+	 *
+	 * @since 1.2.1
+	 * @var string
+	 */
+	public $currency_code = '';
+
+	/**
+	 *
+	 *
+	 * @since 1.2.1
+	 * @var string
+	 */
+	public $extra = '';
+
+	/**
+	 * Invoice item date.
+	 *
+	 * @since 1.2.1
+	 * @var string
+	 */
+	public $date_created = '0000-00-00 00:00:00';
 
 	/**
 	 * Retrieve Item instance.
@@ -129,20 +196,20 @@ class Invoice_Item extends Data {
 	/**
 	 * Filter item object based on context.
 	 *
-	 * @param string $filter Filter.
+	 * @param string $context Context.
 	 *
 	 * @return Invoice_Item|Object
 	 * @since 1.2.1
 	 */
-	public function filter( $filter ) {
-		if ( $this->filter === $filter ) {
+	public function filter( $context ) {
+		if ( $this->context === $context ) {
 			return $this;
 		}
 
-		if ( 'raw' === $filter ) {
+		if ( 'raw' === $context ) {
 			return self::get_instance( $this->id );
 		}
 
-		return new self( eaccounting_sanitize_invoice_item( (object) $this->to_array(), $filter ) );
+		return eaccounting_sanitize_invoice_item( $this, $context );
 	}
 }

@@ -526,7 +526,7 @@ function eaccounting_get_invoice_item( $invoice_item, $output = OBJECT, $filter 
 		return array_values( $_invoice_item->to_array() );
 	}
 
-	return $_invoice_item->filter( $filter );
+	return $_invoice_item;
 }
 
 /**
