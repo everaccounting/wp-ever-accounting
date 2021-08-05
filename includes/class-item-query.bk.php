@@ -1,6 +1,6 @@
 <?php
 /**
- * Contact Query class.
+ * Item Query class.
  * @since   1.2.1
  * @package   EverAccounting
  */
@@ -8,18 +8,10 @@
 namespace EverAccounting;
 
 /**
- * Contact Query class.
- * @since   1.2.1
- * @package   EverAccounting
- */
-
-namespace EverAccounting;
-
-/**
- * Class Contact_Query
+ * Class Item_Query
  * @package EverAccounting
  */
-class Contact_Query_BK_BK {
+class Item_Query_BK {
 	/**
 	 * SQL string used to perform database query.
 	 *
@@ -82,7 +74,7 @@ class Contact_Query_BK_BK {
 	 * @since 1.2.1
 	 * @var string
 	 */
-	const TABLE_NAME = 'ea_contacts';
+	const TABLE_NAME = 'ea_items';
 
 	/**
 	 * Table name with prefix.
@@ -104,6 +96,15 @@ class Contact_Query_BK_BK {
 	 */
 	public function __construct( $query = '' ) {
 		$this->query_var_defaults = array(
+			'category_id'            => array(),
+			'category__in'           => array(),
+			'category__not_in'       => array(),
+			'sale_price_min'         => '',
+			'sale_price_max'         => '',
+			'sale_price_between'     => '',
+			'purchase_price_min'     => '',
+			'purchase_price_max'     => '',
+			'purchase_price_between' => '',
 			'include'                => array(),
 			'exclude'                => array(),
 			'search'                 => '',
@@ -179,12 +180,12 @@ class Contact_Query_BK_BK {
 		/**
 		 * Fires after term query vars have been parsed.
 		 *
-		 * @param Contact_Query $this Current instance of Query.
+		 * @param Item_Query $this Current instance of Query.
 		 *
 		 * @since 1.2.1
 		 *
 		 */
-		do_action( 'eaccounting_parse_contact_query', $this );
+		do_action( 'eaccounting_parse_item_query', $this );
 	}
 
 	/**
@@ -206,7 +207,7 @@ class Contact_Query_BK_BK {
 		 * @since 1.2.1
 		 *
 		 */
-		$qv = apply_filters( 'eaccounting_get_contacts_args', $args );
+		$qv = apply_filters( 'eaccounting_get_items_args', $args );
 
 		// Setup table.
 		$this->table = $wpdb->prefix . self::TABLE_NAME;
@@ -245,6 +246,49 @@ class Contact_Query_BK_BK {
 			$this->sql_clauses['where'] .= " AND $this->table.id NOT IN ($ids)";
 		}
 
+		if ( ! empty( $qv['sale_price_min'] ) ) {
+			$this->sql_clauses['where'] .= $wpdb->prepare( " AND sale_price_min >= (%f)", (float) $qv['sale_price_min'] );
+		}
+
+		if ( ! empty( $qv['sale_price_max'] ) ) {
+			$this->sql_clauses['where'] .= $wpdb->prepare( " AND sale_price <= (%f)", (float) $qv['sale_price_max'] );
+		}
+
+		if ( ! empty( $qv['sale_price_between'] ) && is_array( $qv['sale_price_between'] ) ) {
+			$min                        = min( $qv['sale_price_between'] );
+			$max                        = max( $qv['sale_price_between'] );
+			$this->sql_clauses['where'] .= $wpdb->prepare( " AND sale_price >= (%f) AND sale_price <= (%f) ", (float) $min, (float) $max );
+		}
+
+		if ( ! empty( $qv['purchase_price_min'] ) ) {
+			$this->sql_clauses['where'] .= $wpdb->prepare( " AND purchase_price_min >= (%f)", (float) $qv['purchase_price_min'] );
+		}
+
+		if ( ! empty( $qv['purchase_price_max'] ) ) {
+			$this->sql_clauses['where'] .= $wpdb->prepare( " AND purchase_price <= (%f)", (float) $qv['purchase_price_max'] );
+		}
+
+		if ( ! empty( $qv['purchase_price_between'] ) && is_array( $qv['purchase_price_between'] ) ) {
+			$min                        = min( $qv['purchase_price_between'] );
+			$max                        = max( $qv['purchase_price_between'] );
+			$this->sql_clauses['where'] .= $wpdb->prepare( " AND purchase_price >= (%f) AND purchase_price <= (%f) ", (float) $min, (float) $max );
+		}
+
+		if ( ! empty( $qv['category_id'] ) ) {
+			$category_in                = implode( ',', wp_parse_id_list( $qv['category_id'] ) );
+			$this->sql_clauses['where'] .= " AND $this->table.`category_id` IN ($category_in)";
+		}
+
+		if ( ! empty( $qv['category__in'] ) ) {
+			$category_in                = implode( ',', wp_parse_id_list( $qv['category__in'] ) );
+			$this->sql_clauses['where'] .= " AND $this->table.`category_id` IN ($category_in)";
+		}
+
+		if ( ! empty( $qv['category__not_in'] ) ) {
+			$category_not_in            = implode( ',', wp_parse_id_list( $qv['category__not_in'] ) );
+			$this->sql_clauses['where'] .= " AND $this->table.`category_id` NOT IN ($category_not_in)";
+		}
+
 		// Search
 		$search         = '';
 		$search_columns = array( 'name', 'number', 'bank_name', 'bank_phone', 'bank_address' );
@@ -271,17 +315,17 @@ class Contact_Query_BK_BK {
 			}
 
 			/**
-			 * Filters the columns to search in a Contact_Query search.
+			 * Filters the columns to search in a Item_Query search.
 			 *
 			 *
 			 * @param string[] $search_columns Array of column names to be searched.
 			 * @param string $search Text being searched.
-			 * @param Contact_Query $query The current Contact_Query instance.
+			 * @param Item_Query $query The current Item_Query instance.
 			 *
 			 * @since 1.2.1
 			 *
 			 */
-			$search_columns = apply_filters( 'eaccounting_contact_search_columns', $search_columns, $search, $this );
+			$search_columns = apply_filters( 'eaccounting_item_search_columns', $search_columns, $search, $this );
 
 			$this->sql_clauses['where'] .= $this->get_search_sql( $search, $search_columns, $wild );
 		}
@@ -350,9 +394,9 @@ class Contact_Query_BK_BK {
 		}
 
 		$key          = md5( serialize( wp_array_slice_assoc( $this->query_vars, array_keys( $this->query_var_defaults ) ) ) );
-		$last_changed = wp_cache_get_last_changed( 'ea_contacts' );
-		$cache_key    = "ea_contacts:$key:$last_changed";
-		$cache        = wp_cache_get( $cache_key, 'ea_contacts' );
+		$last_changed = wp_cache_get_last_changed( 'ea_items' );
+		$cache_key    = "ea_items:$key:$last_changed";
+		$cache        = wp_cache_get( $cache_key, 'ea_items' );
 
 		if ( false !== $cache ) {
 			$this->results = $cache->results;
@@ -361,46 +405,47 @@ class Contact_Query_BK_BK {
 			return $this->results;
 		}
 
+		echo 'NO CACHW';
 		// Prepare out query.
 		$this->prepare_query();
 
 		/**
-		 * Fires after the Contact_Query has been parsed, and before
+		 * Fires after the Item_Query has been parsed, and before
 		 * the query is executed.
 		 *
-		 * The passed Contact_Query object contains SQL parts formed
+		 * The passed Item_Query object contains SQL parts formed
 		 * from parsing the given query.
 		 *
-		 * @param Contact_Query $query Current instance of Contact_Query (passed by reference).
+		 * @param Item_Query $query Current instance of Item_Query (passed by reference).
 		 *
 		 * @since 1.2.1
 		 *
 		 */
-		do_action_ref_array( 'eaccounting_pre_contact_query', array( &$this ) );
+		do_action_ref_array( 'eaccounting_pre_item_query', array( &$this ) );
 
 		if ( empty( $this->results ) ) {
 			$this->request = "SELECT {$this->sql_clauses['fields']} {$this->sql_clauses['from']} {$this->sql_clauses['join']} {$this->sql_clauses['where']} {$this->sql_clauses['groupby']} {$this->sql_clauses['having']} {$this->sql_clauses['orderby']} {$this->sql_clauses['limit']}";
 
 			if ( is_array( $this->query_vars['fields'] ) || 'all' === $this->query_vars['fields'] ) {
 				$results       = $wpdb->get_results( $this->request );
-				$this->results = ! empty( $results ) ? array_map( 'eaccounting_get_contact', $results ) : [];
+				$this->results = ! empty( $results ) ? array_map( 'eaccounting_get_item', $results ) : [];
 			} else {
 				$this->results = $wpdb->get_col( $this->request );
 			}
 
 			if ( ! $this->query_vars['no_found_rows'] ) {
 				/**
-				 * Filters SELECT FOUND_ROWS() query for the current Contact_Query instance.
+				 * Filters SELECT FOUND_ROWS() query for the current Item_Query instance.
 				 *
-				 * @param string $sql The SELECT FOUND_ROWS() query for the current Contact_Query.
-				 * @param Contact_Query $query The current Contact_Query instance.
+				 * @param string $sql The SELECT FOUND_ROWS() query for the current Item_Query.
+				 * @param Item_Query $query The current Item_Query instance.
 				 *
 				 * @global \wpdb $wpdb WordPress database abstraction object.
 				 *
 				 * @since 1.2.1
 				 *
 				 */
-				$count_query = apply_filters( 'eaccounting_count_contacts_query', 'SELECT FOUND_ROWS()', $this );
+				$count_query = apply_filters( 'eaccounting_count_items_query', 'SELECT FOUND_ROWS()', $this );
 				$this->total = (int) $wpdb->get_var( $count_query );
 			}
 		}
@@ -410,7 +455,7 @@ class Contact_Query_BK_BK {
 		$cache->total   = $this->total;
 
 
-		wp_cache_add( $cache_key, $cache, 'ea_contacts' );
+		wp_cache_add( $cache_key, $cache, 'ea_items' );
 
 		return $this->results;
 	}

@@ -94,7 +94,7 @@ class Item_Query {
 	 *
 	 * @since 1.2.1
 	 */
-	public function __construct( $query = '' ) {
+	public function __construct( $query = null ) {
 		$this->query_var_defaults = array(
 			'category_id'            => array(),
 			'category__in'           => array(),
@@ -118,8 +118,9 @@ class Item_Query {
 			'fields'                 => 'all',
 		);
 
-		if ( ! empty( $query ) ) {
-			$this->query( $query );
+		if ( ! is_null( $query ) ) {
+			$this->prepare_query( $query );
+			$this->query();
 		}
 
 	}
@@ -154,40 +155,6 @@ class Item_Query {
 		$this->query_vars[ $query_var ] = $value;
 	}
 
-
-	/**
-	 * Parse arguments passed to the query with default query parameters.
-	 *
-	 * @param string|array $query Query arguments.
-	 *
-	 * @since 1.2.1
-	 *
-	 */
-	public function parse_query( $query = '' ) {
-		if ( empty( $query ) ) {
-			$query = $this->query_vars;
-		}
-
-		$query = wp_parse_args( $query, $this->query_var_defaults );
-
-		// Parse args.
-		$query['number']        = absint( $query['number'] );
-		$query['offset']        = absint( $query['offset'] );
-		$query['no_found_rows'] = (bool) $query['no_found_rows'];
-
-		$this->query_vars = $query;
-
-		/**
-		 * Fires after term query vars have been parsed.
-		 *
-		 * @param Item_Query $this Current instance of Query.
-		 *
-		 * @since 1.2.1
-		 *
-		 */
-		do_action( 'eaccounting_parse_item_query', $this );
-	}
-
 	/**
 	 * Prepare the query variables.
 	 *
@@ -195,9 +162,35 @@ class Item_Query {
 	 *
 	 * @since 1.2.1
 	 */
-	public function prepare_query() {
+	public function prepare_query( $query = null ) {
 		global $wpdb;
-		$args = &$this->query_vars;
+		if ( empty( $this->query_vars ) || ! empty( $query ) ) {
+			$this->query_vars = (array) wp_parse_args( $query, $this->query_var_defaults );
+		}
+
+		$this->table = $wpdb->prefix . self::TABLE_NAME;
+		$qv          =& $this->query_vars;
+
+		// Parse args.
+		if ( ! empty( $qv['fields'] ) && 'all' !== $qv['fields'] ) {
+			$qv['fields'] = array_unique( wp_parse_list( $qv['fields'] ) );
+		}
+		$qv['number']        = absint( $qv['number'] );
+		$qv['offset']        = absint( $qv['offset'] );
+		$qv['paged']         = absint( $qv['paged'] );
+		$qv['no_found_rows'] = (bool) $qv['no_found_rows'];
+
+
+		/**
+		 * Fires after the main query vars have been parsed.
+		 *
+		 * @param self $query The query instance (passed by reference).
+		 *
+		 * @since 1.2.1
+		 *
+		 */
+		do_action_ref_array( 'eaccounting_parse_item_query', array( &$this ) );
+
 
 		/**
 		 * Filters the query arguments.
@@ -207,96 +200,94 @@ class Item_Query {
 		 * @since 1.2.1
 		 *
 		 */
-		$qv = apply_filters( 'eaccounting_get_items_args', $args );
+		$qv = apply_filters( 'eaccounting_get_items_args', $qv );
 
-		// Setup table.
-		$this->table = $wpdb->prefix . self::TABLE_NAME;
+		// Alias.
+		$query_fields  = &$this->sql_clauses['fields'];
+		$query_from    = &$this->sql_clauses['from'];
+		$query_where   = &$this->sql_clauses['where'];
+		$query_join    = &$this->sql_clauses['join'];
+		$query_orderby = &$this->sql_clauses['orderby'];
+		$query_limit   = &$this->sql_clauses['limit'];
 
 		// Fields setup.
 		if ( is_array( $qv['fields'] ) ) {
-			$qv['fields'] = array_unique( $qv['fields'] );
-
-			$fields = array();
-			foreach ( $qv['fields'] as $field ) {
-				$field    = 'id' === $field ? 'id' : sanitize_key( $field );
-				$fields[] = "$this->table.$field";
-			}
-			$this->sql_clauses['fields'] .= implode( ',', $fields );
+			$query_fields .= implode( ',', $qv['fields'] );
 		} elseif ( 'all' === $qv['fields'] ) {
-			$this->sql_clauses['fields'] .= "$this->table.* ";
+			$query_fields .= "$this->table.* ";
 		} else {
-			$this->sql_clauses['fields'] .= "$this->table.id";
+			$query_fields .= "$this->table.id";
 		}
 
-		if ( false === $args['no_found_rows'] ) {
-			$this->sql_clauses['fields'] = 'SQL_CALC_FOUND_ROWS ' . $this->sql_clauses['fields'];
+		if ( false === $qv['no_found_rows'] ) {
+			$query_fields = 'SQL_CALC_FOUND_ROWS ' . $query_fields;
 		}
 
-		$this->sql_clauses['from']  .= "FROM $this->table";
-		$this->sql_clauses['where'] .= 'WHERE 1=1';
+		// Query from.
+		$query_from = "FROM $this->table";
 
-
-		// Where
+		// Query where.
+		$query_where = 'WHERE 1=1';
 		if ( ! empty( $qv['include'] ) ) {
 			// Sanitized earlier.
-			$ids                        = implode( ',', wp_parse_id_list( $qv['include'] ) );
-			$this->sql_clauses['where'] .= " AND $this->table.id IN ($ids)";
+			$ids         = implode( ',', wp_parse_id_list( $qv['include'] ) );
+			$query_where .= " AND $this->table.id IN ($ids)";
 		} elseif ( ! empty( $qv['exclude'] ) ) {
-			$ids                        = implode( ',', wp_parse_id_list( $qv['exclude'] ) );
-			$this->sql_clauses['where'] .= " AND $this->table.id NOT IN ($ids)";
+			$ids         = implode( ',', wp_parse_id_list( $qv['exclude'] ) );
+			$query_where .= " AND $this->table.id NOT IN ($ids)";
 		}
 
 		if ( ! empty( $qv['sale_price_min'] ) ) {
-			$this->sql_clauses['where'] .= $wpdb->prepare( " AND sale_price_min >= (%f)", (float) $qv['sale_price_min'] );
+			$query_where .= $wpdb->prepare( " AND sale_price_min >= (%f)", (float) $qv['sale_price_min'] );
 		}
 
 		if ( ! empty( $qv['sale_price_max'] ) ) {
-			$this->sql_clauses['where'] .= $wpdb->prepare( " AND sale_price <= (%f)", (float) $qv['sale_price_max'] );
+			$query_where .= $wpdb->prepare( " AND sale_price <= (%f)", (float) $qv['sale_price_max'] );
 		}
 
 		if ( ! empty( $qv['sale_price_between'] ) && is_array( $qv['sale_price_between'] ) ) {
-			$min                        = min( $qv['sale_price_between'] );
-			$max                        = max( $qv['sale_price_between'] );
-			$this->sql_clauses['where'] .= $wpdb->prepare( " AND sale_price >= (%f) AND sale_price <= (%f) ", (float) $min, (float) $max );
+			$min         = min( $qv['sale_price_between'] );
+			$max         = max( $qv['sale_price_between'] );
+			$query_where .= $wpdb->prepare( " AND sale_price >= (%f) AND sale_price <= (%f) ", (float) $min, (float) $max );
 		}
 
 		if ( ! empty( $qv['purchase_price_min'] ) ) {
-			$this->sql_clauses['where'] .= $wpdb->prepare( " AND purchase_price_min >= (%f)", (float) $qv['purchase_price_min'] );
+			$query_where .= $wpdb->prepare( " AND purchase_price_min >= (%f)", (float) $qv['purchase_price_min'] );
 		}
 
 		if ( ! empty( $qv['purchase_price_max'] ) ) {
-			$this->sql_clauses['where'] .= $wpdb->prepare( " AND purchase_price <= (%f)", (float) $qv['purchase_price_max'] );
+			$query_where .= $wpdb->prepare( " AND purchase_price <= (%f)", (float) $qv['purchase_price_max'] );
 		}
 
 		if ( ! empty( $qv['purchase_price_between'] ) && is_array( $qv['purchase_price_between'] ) ) {
-			$min                        = min( $qv['purchase_price_between'] );
-			$max                        = max( $qv['purchase_price_between'] );
-			$this->sql_clauses['where'] .= $wpdb->prepare( " AND purchase_price >= (%f) AND purchase_price <= (%f) ", (float) $min, (float) $max );
+			$min         = min( $qv['purchase_price_between'] );
+			$max         = max( $qv['purchase_price_between'] );
+			$query_where .= $wpdb->prepare( " AND purchase_price >= (%f) AND purchase_price <= (%f) ", (float) $min, (float) $max );
 		}
 
 		if ( ! empty( $qv['category_id'] ) ) {
-			$category_in                = implode( ',', wp_parse_id_list( $qv['category_id'] ) );
-			$this->sql_clauses['where'] .= " AND $this->table.`category_id` IN ($category_in)";
+			$category_in = implode( ',', wp_parse_id_list( $qv['category_id'] ) );
+			$query_where .= " AND $this->table.`category_id` IN ($category_in)";
 		}
 
 		if ( ! empty( $qv['category__in'] ) ) {
-			$category_in                = implode( ',', wp_parse_id_list( $qv['category__in'] ) );
-			$this->sql_clauses['where'] .= " AND $this->table.`category_id` IN ($category_in)";
+			$category_in = implode( ',', wp_parse_id_list( $qv['category__in'] ) );
+			$query_where .= " AND $this->table.`category_id` IN ($category_in)";
 		}
 
 		if ( ! empty( $qv['category__not_in'] ) ) {
-			$category_not_in            = implode( ',', wp_parse_id_list( $qv['category__not_in'] ) );
-			$this->sql_clauses['where'] .= " AND $this->table.`category_id` NOT IN ($category_not_in)";
+			$category_not_in = implode( ',', wp_parse_id_list( $qv['category__not_in'] ) );
+			$query_where     .= " AND $this->table.`category_id` NOT IN ($category_not_in)";
 		}
 
 		// Search
 		$search         = '';
 		$search_columns = array( 'name', 'number', 'bank_name', 'bank_phone', 'bank_address' );
-		if ( ! empty( $args['search'] ) ) {
-			$search = trim( $args['search'] );
+		if ( ! empty( $qv['search'] ) ) {
+			$search = trim( $qv['search'] );
 		}
-		if ( ! empty( $args['search_columns'] ) ) {
-			$search_columns = array_intersect( $args['search_columns'], $search_columns );
+		if ( ! empty( $qv['search_columns'] ) ) {
+			$search_columns = array_intersect( $qv['search_columns'], $search_columns );
 		}
 		if ( ! empty( $search ) ) {
 			$leading_wild  = ( ltrim( $search, '*' ) != $search );
@@ -327,17 +318,16 @@ class Item_Query {
 			 */
 			$search_columns = apply_filters( 'eaccounting_item_search_columns', $search_columns, $search, $this );
 
-			$this->sql_clauses['where'] .= $this->get_search_sql( $search, $search_columns, $wild );
+			$query_where .= $this->get_search_sql( $search, $search_columns, $wild );
 		}
 
-
 		// Order
-		$order = $this->parse_order( $args['order'] );
-		if ( is_array( $args['orderby'] ) ) {
-			$ordersby = $args['orderby'];
+		$order = $this->parse_order( $qv['order'] );
+		if ( is_array( $qv['orderby'] ) ) {
+			$ordersby = $qv['orderby'];
 		} else {
 			// 'orderby' values may be a comma- or space-separated list.
-			$ordersby = preg_split( '/[,\s]+/', $args['orderby'] );
+			$ordersby = preg_split( '/[,\s]+/', $qv['orderby'] );
 		}
 		$orderby_array = array();
 		foreach ( $ordersby as $_key => $_value ) {
@@ -368,32 +358,46 @@ class Item_Query {
 		if ( empty( $orderby_array ) ) {
 			$orderby_array[] = "id $order";
 		}
-		$this->sql_clauses['orderby'] = 'ORDER BY ' . implode( ', ', $orderby_array );
+
+		$query_orderby .= 'ORDER BY ' . implode( ', ', $orderby_array );
+
 
 		// Limit.
-		if ( isset( $args['number'] ) && $args['number'] > 0 ) {
-			if ( $args['offset'] ) {
-				$this->sql_clauses['limit'] = $wpdb->prepare( 'LIMIT %d, %d', $args['offset'], $args['number'] );
+		if ( isset( $qv['number'] ) && $qv['number'] > 0 ) {
+			if ( $qv['offset'] ) {
+				$query_limit .= $wpdb->prepare( 'LIMIT %d, %d', $qv['offset'], $qv['number'] );
 			} else {
-				$this->sql_clauses['limit'] = $wpdb->prepare( 'LIMIT %d, %d', $args['number'] * ( $args['paged'] - 1 ), $args['number'] );
+				$query_limit .= $wpdb->prepare( 'LIMIT %d, %d', $qv['number'] * ( $qv['paged'] - 1 ), $qv['number'] );
 			}
 		}
 	}
 
 	/**
-	 * Run the query and retrieves the results.
+	 * Execute the query, with the current variables.
 	 *
-	 * @param string $query
+	 * @since 1.2.1
 	 *
-	 * @return array|object|null
+	 * @global \wpdb $wpdb WordPress database abstraction object.
 	 */
-	public function query( $query = '' ) {
+	public function query() {
 		global $wpdb;
-		if ( ! empty( $query ) ) {
-			$this->parse_query( $query );
-		}
+		$qv =& $this->query_vars;
 
-		$key          = md5( serialize( wp_array_slice_assoc( $this->query_vars, array_keys( $this->query_var_defaults ) ) ) );
+		/**
+		 * Filters all query clauses at once, for convenience.
+		 *
+		 * Covers the WHERE, GROUP BY, JOIN, ORDER BY,
+		 * fields (SELECT), and LIMITS clauses.
+		 *
+		 * @param string[] $clauses Associative array of the clauses for the query.
+		 * @param Item_Query $query The Item_Query instance (passed by reference).
+		 *
+		 * @since 1.2.1
+		 *
+		 */
+		$clauses = (array) apply_filters_ref_array( 'eaccounting_item_query_clauses', array( $this->sql_clauses, &$this ) );
+
+		$key          = md5( serialize( wp_array_slice_assoc( $this->query_vars, array_keys( $this->query_var_defaults ) ) ) . $this->request );
 		$last_changed = wp_cache_get_last_changed( 'ea_items' );
 		$cache_key    = "ea_items:$key:$last_changed";
 		$cache        = wp_cache_get( $cache_key, 'ea_items' );
@@ -405,30 +409,25 @@ class Item_Query {
 			return $this->results;
 		}
 
-		echo 'NO CACHW';
-		// Prepare out query.
-		$this->prepare_query();
-
 		/**
-		 * Fires after the Item_Query has been parsed, and before
-		 * the query is executed.
+		 * Filters the query array before the query takes place.
 		 *
-		 * The passed Item_Query object contains SQL parts formed
-		 * from parsing the given query.
+		 * Return a non-null value to bypass WordPress' default user queries.
 		 *
-		 * @param Item_Query $query Current instance of Item_Query (passed by reference).
+		 * @param array|null $results Return an array of user data to short-circuit the query
+		 *                               or null to allow its normal queries.
+		 * @param Item_Query $query The Item_Query instance (passed by reference).
 		 *
 		 * @since 1.2.1
 		 *
 		 */
-		do_action_ref_array( 'eaccounting_pre_item_query', array( &$this ) );
+		$this->results = apply_filters_ref_array( 'eaccounting_pre_item_query', array( null, &$this ) );
 
-		if ( empty( $this->results ) ) {
-			$this->request = "SELECT {$this->sql_clauses['fields']} {$this->sql_clauses['from']} {$this->sql_clauses['join']} {$this->sql_clauses['where']} {$this->sql_clauses['groupby']} {$this->sql_clauses['having']} {$this->sql_clauses['orderby']} {$this->sql_clauses['limit']}";
+		if ( null === $this->results ) {
+			$this->request = "SELECT {$clauses['fields']} {$clauses['from']} {$clauses['join']} {$clauses['where']} {$clauses['groupby']} {$clauses['having']} {$clauses['orderby']} {$clauses['limit']}";
 
-			if ( is_array( $this->query_vars['fields'] ) || 'all' === $this->query_vars['fields'] ) {
-				$results       = $wpdb->get_results( $this->request );
-				$this->results = ! empty( $results ) ? array_map( 'eaccounting_get_item', $results ) : [];
+			if ( is_array( $qv['fields'] ) || 'all' === $qv['fields'] ) {
+				$this->results = $wpdb->get_results( $this->request );
 			} else {
 				$this->results = $wpdb->get_col( $this->request );
 			}
@@ -448,6 +447,24 @@ class Item_Query {
 				$count_query = apply_filters( 'eaccounting_count_items_query', 'SELECT FOUND_ROWS()', $this );
 				$this->total = (int) $wpdb->get_var( $count_query );
 			}
+
+			/**
+			 * Filters the raw item results array.
+			 *
+			 * @param Item[] $items Array of items objects.
+			 * @param Item_Query $query The Item_Query instance (passed by reference).
+			 *
+			 * @since 1.2.1
+			 *
+			 */
+			$this->results = apply_filters_ref_array( 'eaccounting_items_results', array( $this->results, &$this ) );
+
+			if ( 'all' === $qv['fields'] ) {
+				foreach ( $this->results as $key => $item ) {
+					wp_cache_add( $item->id, $item, 'ea_items' );
+					$this->results[ $key ] = eaccounting_get_item( $item );
+				}
+			}
 		}
 
 		$cache          = new \StdClass;
@@ -459,7 +476,6 @@ class Item_Query {
 
 		return $this->results;
 	}
-
 
 	/**
 	 * Used internally to generate an SQL string for searching across multiple columns
@@ -493,7 +509,6 @@ class Item_Query {
 		return ' AND (' . implode( ' OR ', $searches ) . ')';
 	}
 
-
 	/**
 	 * Parse and sanitize 'orderby' keys passed to the query.
 	 *
@@ -519,7 +534,7 @@ class Item_Query {
 			$_orderby = 'id';
 		} elseif ( 'category_id' === $orderby ) {
 			$this->sql_clauses['join'] .= " LEFT JOIN (
-				SELECT category_name,
+				SELECT id, name category_name
 				FROM {$wpdb->prefix}ea_categories
 				WHERE type='item'
 			) category ON ({$this->table}.category_id = category.id)

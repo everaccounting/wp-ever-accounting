@@ -66,16 +66,6 @@ class Item extends Data {
 	);
 
 	/**
-	 * Stores the item object's sanitization level.
-	 *
-	 * Does not correspond to a DB field.
-	 *
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $filter;
-
-	/**
 	 * Retrieve Item instance.
 	 *
 	 * @param int $item_id Item id.
@@ -109,39 +99,23 @@ class Item extends Data {
 			$_item = eaccounting_sanitize_item( $_item, 'raw' );
 		}
 
-		return new Item( $_item );
+		$item = new Item;
+		$item->set_props( $_item );
+		$item->object_read = true;
+
+		return $item;
 	}
 
 	/**
 	 * Item constructor.
 	 *
-	 * @param $item
+	 * @param array|object $item Item Object or array data
 	 *
 	 * @since 1.2.1
 	 */
-	public function __construct( $item ) {
-		foreach ( get_object_vars( $item ) as $key => $value ) {
-			$this->$key = $value;
-		}
+	public function __construct( $item = null ) {
+		parent::__construct();
+
 	}
 
-	/**
-	 * Filter item object based on context.
-	 *
-	 * @param string $filter Filter.
-	 *
-	 * @return Item|Object
-	 * @since 1.2.1
-	 */
-	public function filter( $filter ) {
-		if ( $this->filter === $filter ) {
-			return $this;
-		}
-
-		if ( 'raw' === $filter ) {
-			return self::get_instance( $this->id );
-		}
-
-		return new self( eaccounting_sanitize_item( (object) $this->to_array(), $filter ) );
-	}
 }

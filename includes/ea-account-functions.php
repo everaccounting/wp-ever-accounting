@@ -13,10 +13,10 @@ use EverAccounting\Account;
 defined( 'ABSPATH' ) || exit;
 
 // Sanitization and escaping filters
-add_filter( 'eaccounting_pre_account_opening_balance', 'eaccounting_format_decimal' );
-add_filter( 'eaccounting_pre_account_enabled', 'eaccounting_bool_to_number', 10, 1 );
+add_filter( 'eaccounting_pre_account_opening_balance', 'floatval' );
+//add_filter( 'eaccounting_pre_account_enabled', 'eaccounting_bool_to_number', 10, 1 );
 add_filter( 'eaccounting_edit_account_opening_balance', 'eaccounting_format_decimal' );
-add_filter( 'eaccounting_edit_account_enabled', 'eaccounting_string_to_bool', 10, 1 );
+//add_filter( 'eaccounting_edit_account_enabled', 'eaccounting_string_to_bool', 10, 1 );
 
 /**
  * Retrieves account data given a account id or account object.
@@ -45,7 +45,7 @@ function eaccounting_get_account( $account, $output = OBJECT, $filter = 'raw' ) 
 		return null;
 	}
 
-	$_account = $_account->filter( $filter );
+//	$_account = $_account->filter( $filter );
 
 	if ( ARRAY_A === $output ) {
 		return $_account->to_array();
@@ -55,7 +55,8 @@ function eaccounting_get_account( $account, $output = OBJECT, $filter = 'raw' ) 
 		return array_values( $_account->to_array() );
 	}
 
-	return $_account->filter( $filter );
+//	return $_account->filter( $filter );
+	return $_account;
 }
 
 /**
@@ -329,7 +330,7 @@ function eaccounting_delete_account( $account_id ) {
 function eaccounting_sanitize_account( $account, $context = 'raw' ) {
 	if ( is_object( $account ) ) {
 		// Check if post already filtered for this context.
-		if ( isset( $account->filter ) && $context == $account->filter ) {
+		if ( isset( $account->context ) && $context == $account->context ) {
 			return $account;
 		}
 		if ( ! isset( $account->id ) ) {
@@ -338,10 +339,10 @@ function eaccounting_sanitize_account( $account, $context = 'raw' ) {
 		foreach ( array_keys( get_object_vars( $account ) ) as $field ) {
 			$account->$field = eaccounting_sanitize_account_field( $field, $account->$field, $account->id, $context );
 		}
-		$account->filter = $context;
+		$account->context = $context;
 	} elseif ( is_array( $account ) ) {
-		// Check if post already filtered for this context.
-		if ( isset( $account['filter'] ) && $context == $account['filter'] ) {
+		// Check if post already context for this context.
+		if ( isset( $account['context'] ) && $context == $account['context'] ) {
 			return $account;
 		}
 		if ( ! isset( $account['id'] ) ) {
@@ -350,7 +351,7 @@ function eaccounting_sanitize_account( $account, $context = 'raw' ) {
 		foreach ( array_keys( $account ) as $field ) {
 			$account[ $field ] = eaccounting_sanitize_account_field( $field, $account[ $field ], $account['id'], $context );
 		}
-		$account['filter'] = $context;
+		$account['context'] = $context;
 	}
 
 	return $account;

@@ -121,30 +121,62 @@ function eaccounting_insert_transaction( $transaction_arr ) {
 	$id          = null;
 	$update      = false;
 	$data_before = array();
-	if ( ! empty( $item_data['id'] ) ) {
+	if ( ! empty( $transaction_arr['id'] ) ) {
 		$update      = true;
-		$id          = absint( $item_data['id'] );
-		$data_before = eaccounting_get_transaction( $id, ARRAY_A );
+		$id          = absint( $transaction_arr['id'] );
+		$data_before = eaccounting_get_transaction( $id );
 
 		if ( is_null( $data_before ) ) {
 			return new WP_Error( 'invalid_transaction_id', __( 'Invalid transaction id to update.' ) );
 		}
 
+		$data_before = $data_before->to_array();
 		// Merge old and new fields with new fields overwriting old ones.
 		$transaction_arr = array_merge( $data_before, $transaction_arr );
-		$data_before     = $data_before->to_array();
 	}
 
 	$transaction_arr = wp_parse_args( $transaction_arr, $defaults );
 	$data_arr        = eaccounting_sanitize_transaction( $transaction_arr, 'db' );
 
 	// Check required
+	if ( empty( $data_arr['account_id'] ) ) {
+		return new WP_Error( 'empty_transaction_account_id', esc_html__( 'Transaction associated account is required', 'wp-ever-accounting' ) );
+	}
+
+	if ( empty( $data_arr['payment_date'] ) ) {
+		return new WP_Error( 'empty_transaction_payment_date', esc_html__( 'Transaction payment date is required', 'wp-ever-accounting' ) );
+	}
+
 	if ( empty( $data_arr['type'] ) ) {
-		return new WP_Error( 'invalid_transaction_type', esc_html__( 'Transaction type is required', 'wp-ever-accounting' ) );
+		return new WP_Error( 'empty_transaction_type', esc_html__( 'Transaction type is required', 'wp-ever-accounting' ) );
+	}
+
+	if ( empty( $data_arr['payment_method'] ) ) {
+		return new WP_Error( 'empty_transaction_payment_method', esc_html__( 'Transaction payment method is required', 'wp-ever-accounting' ) );
 	}
 
 	if ( empty( $data_arr['date_created'] ) || '0000-00-00 00:00:00' === $data_arr['date_created'] ) {
 		$data_arr['date_created'] = current_time( 'mysql' );
+	}
+
+	if ( empty( $data_arr['creator_id'] ) ) {
+		$data_arr['creator_id'] = $user_id;
+	}
+
+	//If account id is changed have to update the transaction currency rate and code.
+	$changed_data = array_diff_assoc( $data_arr, $data_before );
+	if ( ! empty( $changed_data['account_id'] ) ) {
+		$account = eaccounting_get_account( $changed_data['account_id'] );
+		if ( ! $account || empty( $account->currency_code ) ) {
+			return new WP_Error( 'invalid_transaction_account_id', esc_html__( 'Transaction associated account does not exist', 'wp-ever-accounting' ) );
+		}
+		$currency = eaccounting_get_currency( $account->currency_code );
+		if ( ! $currency || empty( $currency->rate ) ) {
+			return new WP_Error( 'invalid_transaction_account_currency', esc_html__( 'Transaction associated account currency does not exist', 'wp-ever-accounting' ) );
+		}
+
+		$data_arr['currency_code'] = $account->currency_code;
+		$data_arr['currency_rate'] = $currency->rate;
 	}
 
 	$fields = array_keys( $defaults );
@@ -228,10 +260,17 @@ function eaccounting_insert_transaction( $transaction_arr ) {
 
 	// Clear cache.
 	wp_cache_delete( $id, 'ea_transactions' );
+	wp_cache_delete( $id, 'ea_transactionmeta' );
 	wp_cache_set( 'last_changed', microtime(), 'ea_transactions' );
 
 	// Get new item object.
 	$transaction = eaccounting_get_transaction( $id );
+	$meta_input  = ! empty( $data_arr['meta_input'] ) && is_array( $data_arr['meta_input'] ) ? $data_arr['meta_input'] : [];
+	if ( ! empty( $meta_input ) ) {
+		foreach ( $meta_input as $field => $value ) {
+			update_metadata( 'transaction', $id, $field, $value );
+		}
+	}
 
 	/**
 	 * Fires once a transaction has been saved.
@@ -1023,205 +1062,6 @@ function eaccounting_get_transactions( $args = array() ) {
 	}
 
 	return $results;
-}
-
-/**
- * Get total income.
- *
- * @param null $year
- *
- * @return float
- * @since 1.1.0
- *
- */
-function eaccounting_get_total_income( $year = null ) {
-	global $wpdb;
-	$total_income = wp_cache_get( 'total_income_' . $year, 'ea_transactions' );
-	if ( false === $total_income ) {
-		$where = '';
-		if ( absint( $year ) ) {
-			$financial_start = eaccounting_get_financial_start( $year );
-			$financial_end   = eaccounting_get_financial_end( $year );
-			$where           .= $wpdb->prepare( 'AND ( payment_date between %s AND %s )', $financial_start, $financial_end );
-		}
-
-		$sql          = $wpdb->prepare(
-			" SELECT Sum(amount) amount,currency_code,currency_rate
-				FROM   {$wpdb->prefix}ea_transactions
-				WHERE 1=1 $where AND type = %s AND category_id NOT IN (SELECT id FROM   {$wpdb->prefix}ea_categories WHERE  type = 'other')
-				GROUP  BY currency_code, currency_rate
-			",
-			'income'
-		);
-		$results      = $wpdb->get_results( $sql );
-		$total_income = 0;
-		foreach ( $results as $result ) {
-			$total_income += eaccounting_price_to_default( $result->amount, $result->currency_code, $result->currency_rate );
-		}
-		wp_cache_add( 'total_income_' . $year, $total_income, 'ea_transactions' );
-	}
-
-	return $total_income;
-}
-
-/**
- * Get total expense.
- *
- * @param null $year
- *
- * @return float
- * @since 1.1.0
- *
- */
-function eaccounting_get_total_expense( $year = null ) {
-	global $wpdb;
-	$total_expense = wp_cache_get( 'total_expense_' . $year, 'ea_transactions' );
-	if ( false === $total_expense ) {
-		$where = '';
-		if ( absint( $year ) ) {
-			$financial_start = eaccounting_get_financial_start( $year );
-			$financial_end   = eaccounting_get_financial_end( $year );
-			$where           .= $wpdb->prepare( 'AND ( payment_date between %s AND %s )', $financial_start, $financial_end );
-		}
-
-		$sql           = $wpdb->prepare(
-			" SELECT Sum(amount) amount,currency_code,currency_rate
-				FROM   {$wpdb->prefix}ea_transactions
-				WHERE 1=1 $where AND type = %s AND category_id NOT IN (SELECT id FROM   {$wpdb->prefix}ea_categories WHERE  type = 'other')
-				GROUP  BY currency_code, currency_rate
-			",
-			'expense'
-		);
-		$results       = $wpdb->get_results( $sql );
-		$total_expense = 0;
-		foreach ( $results as $result ) {
-			$total_expense += eaccounting_price_to_default( $result->amount, $result->currency_code, $result->currency_rate );
-		}
-		wp_cache_add( 'total_expense_' . $year, $total_expense, 'ea_transactions' );
-	}
-
-	return $total_expense;
-}
-
-/**
- * Get total profit.
- *
- * @param null $year
- *
- * @return float
- * @since 1.1.0
- *
- */
-function eaccounting_get_total_profit( $year = null ) {
-	$total_income  = (float) eaccounting_get_total_income( $year );
-	$total_expense = (float) eaccounting_get_total_expense( $year );
-	$profit        = $total_income - $total_expense;
-
-	return $profit < 0 ? 0 : $profit;
-}
-
-/**
- * Get total receivable.
- *
- * @return false|float|int|mixed|string
- * @since 1.1.0
- */
-function eaccounting_get_total_receivable() {
-	global $wpdb;
-	$total_receivable = wp_cache_get( 'total_receivable', 'ea_transactions' );
-	if ( false === $total_receivable ) {
-		$total_receivable = 0;
-		$invoices_sql     = $wpdb->prepare(
-			"
-			SELECT SUM(total) amount, currency_code, currency_rate  FROM   {$wpdb->prefix}ea_documents
-			WHERE  status NOT IN ( 'draft', 'cancelled', 'refunded' )
-			AND `status` <> 'paid'  AND type = %s GROUP BY currency_code, currency_rate
-			",
-			'invoice'
-		);
-		$invoices         = $wpdb->get_results( $invoices_sql );
-		foreach ( $invoices as $invoice ) {
-			$total_receivable += eaccounting_price_to_default( $invoice->amount, $invoice->currency_code, $invoice->currency_rate );
-		}
-		$sql     = $wpdb->prepare(
-			"
-		  SELECT Sum(amount) amount, currency_code, currency_rate
-		  FROM   {$wpdb->prefix}ea_transactions
-		  WHERE  type = %s
-				 AND document_id IN (SELECT id FROM   {$wpdb->prefix}ea_documents WHERE  status NOT IN ( 'draft', 'cancelled', 'refunded' )
-				 AND `status` <> 'paid'
-				 AND type = 'invoice')
-		  GROUP  BY currency_code,currency_rate
-		  ",
-			'income'
-		);
-		$results = $wpdb->get_results( $sql );
-		foreach ( $results as $result ) {
-			$total_receivable -= eaccounting_price_to_default( $result->amount, $result->currency_code, $result->currency_rate );
-		}
-		wp_cache_add( 'total_receivable', $total_receivable, 'ea_transactions' );
-	}
-
-	return $total_receivable;
-}
-
-/**
- * Get total payable.
- *
- * @return float
- * @since 1.1.0
- */
-function eaccounting_get_total_payable() {
-	global $wpdb;
-	$total_payable = wp_cache_get( 'total_payable', 'ea_transactions' );
-	if ( false === $total_payable ) {
-		$total_payable = 0;
-		$bills_sql     = $wpdb->prepare(
-			"
-			SELECT SUM(total) amount, currency_code, currency_rate  FROM   {$wpdb->prefix}ea_documents
-			WHERE  status NOT IN ( 'draft', 'cancelled', 'refunded' )
-			AND `status` <> 'paid'  AND type = %s GROUP BY currency_code, currency_rate
-			",
-			'bill'
-		);
-		$bills         = $wpdb->get_results( $bills_sql );
-		foreach ( $bills as $bill ) {
-			$total_payable += eaccounting_price_to_default( $bill->amount, $bill->currency_code, $bill->currency_rate );
-		}
-		$sql     = $wpdb->prepare(
-			"
-		  SELECT Sum(amount) amount, currency_code, currency_rate
-		  FROM   {$wpdb->prefix}ea_transactions
-		  WHERE  type = %s
-				 AND document_id IN (SELECT id FROM   {$wpdb->prefix}ea_documents WHERE  status NOT IN ( 'draft', 'cancelled', 'refunded' )
-				 AND `status` <> 'paid'
-				 AND type = 'bill')
-		  GROUP  BY currency_code,currency_rate
-		  ",
-			'expense'
-		);
-		$results = $wpdb->get_results( $sql );
-		foreach ( $results as $result ) {
-			$total_payable -= eaccounting_price_to_default( $result->amount, $result->currency_code, $result->currency_rate );
-		}
-		wp_cache_add( 'total_payable', $total_payable, 'ea_transactions' );
-	}
-
-	return $total_payable;
-}
-
-/**
- * Get total upcoming profit
- *
- * @return float
- * @since 1.1.0
- */
-function eaccounting_get_total_upcoming_profit() {
-	$total_payable    = (float) eaccounting_get_total_payable();
-	$total_receivable = (float) eaccounting_get_total_receivable();
-	$upcoming         = $total_receivable - $total_payable;
-
-	return $upcoming < 0 ? 0 : $upcoming;
 }
 
 

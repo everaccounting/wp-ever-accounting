@@ -79,13 +79,13 @@ function eaccounting_insert_invoice( $invoice_data ) {
 		'document_number' => '',
 		'type'            => '',
 		'order_number'    => '',
-		'status'          => '',
+		'status'          => 'draft',
 		'issue_date'      => '',
 		'due_date'        => '',
 		'payment_date'    => '',
 		'category_id'     => '',
 		'contact_id'      => '',
-		'address'         => '',
+		'address'         => array(),
 		'currency_code'   => '',
 		'currency_rate'   => '',
 		'discount'        => 0.00,
@@ -109,7 +109,6 @@ function eaccounting_insert_invoice( $invoice_data ) {
 	// Are we updating or creating?
 	$id      = null;
 	$update  = false;
-	$changes = $invoice_data;
 	if ( ! empty( $invoice_data['id'] ) ) {
 		$update = true;
 		$id     = absint( $invoice_data['id'] );
@@ -119,17 +118,35 @@ function eaccounting_insert_invoice( $invoice_data ) {
 			return new WP_Error( 'invalid_invoice_id', __( 'Invalid invoice id to update.' ) );
 		}
 
+		$before = $before->to_array();
+
 		// Store changes value.
-		$changes = array_diff_assoc( $invoice_data, $before->to_array() );
+		$changes = array_diff_assoc( wp_array_slice_assoc( $invoice_data, array_keys( $defaults ) ), $before );
+
+		// Handle changes. When currency, customer get changed need to update the data.
+		if ( ! empty( $changes['currency_code'] ) ) {
+			$currency = eaccounting_get_currency( $changes['currency_code'] );
+			if ( ! $currency || empty( $currency->rate ) ) {
+				return new WP_Error( 'invalid_transaction_account_currency', esc_html__( 'Transaction associated account currency does not exist', 'wp-ever-accounting' ) );
+			}
+			$invoice_data['currency_rate'] = $currency->rate;
+		}
+		var_dump($changes['contact_id']);
+		if ( ! empty( $changes['contact_id'] ) ) {
+			$contact = eaccounting_get_contact( (int) $changes['contact_id'] );
+			var_dump($contact);
+		}
+
 
 		// Merge old and new fields with new fields overwriting old ones.
-		$invoice_data = array_merge( $before->to_array(), $invoice_data );
+		$invoice_data = array_merge( $before, $invoice_data );
 	}
 
 	$data_arr = wp_parse_args( $invoice_data, $defaults );
 	$data_arr = eaccounting_sanitize_account( $data_arr, 'db' );
 
-//	var_dump( $data_arr );
+
+	var_dump( $data_arr );
 
 
 //	if ( empty( $data_arr['currency_rate'] ) ) {
@@ -224,6 +241,10 @@ function eaccounting_sanitize_invoice_field( $field, $value, $invoice_id, $conte
 	$context = strtolower( $context );
 
 	if ( 'raw' === $context ) {
+		if ( $field === 'address' ) {
+			$value = maybe_unserialize( $value );
+		}
+
 		return $value;
 	}
 
@@ -579,6 +600,7 @@ function eaccounting_sanitize_invoice_item_field( $field, $value, $invoice_item_
 		if ( $field === 'extra' ) {
 			$value = maybe_unserialize( $value );
 		}
+
 		return $value;
 	}
 

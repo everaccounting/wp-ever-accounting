@@ -105,6 +105,7 @@ class Note extends Data {
 	 * @since 1.2.1
 	 */
 	public function __construct( $note ) {
+		parent::__construct();
 		foreach ( get_object_vars( $note ) as $key => $value ) {
 			$this->$key = $value;
 		}

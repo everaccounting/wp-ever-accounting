@@ -10,7 +10,6 @@
 namespace EverAccounting;
 
 use EverAccounting\Abstracts\Data;
-use EverAccounting\Abstracts\MetaData;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -49,6 +48,8 @@ defined( 'ABSPATH' ) || exit;
  * @property int $parent_id
  * @property int $creator_id
  * @property string $date_created
+ *
+ * @property Invoice_Item[] $items
  */
 class Invoice extends Data {
 	/**
@@ -118,12 +119,12 @@ class Invoice extends Data {
 	public $filter;
 
 	/**
-	 * Meta type.
+	 * Invoice Items
 	 *
 	 * @since 1.2.1
-	 * @var string
+	 * @var Invoice_Item[]
 	 */
-	protected $meta_type = 'invoice';
+	protected $items = null;
 
 	/**
 	 * Retrieve Invoice instance.
@@ -163,7 +164,7 @@ class Invoice extends Data {
 	}
 
 	/**
-	 * Account constructor.
+	 * Invoice constructor.
 	 *
 	 * @param $invoice
 	 *
@@ -194,4 +195,80 @@ class Invoice extends Data {
 
 		return new self( eaccounting_sanitize_invoice( (object) $this->to_array(), $filter ) );
 	}
+
+	/**
+	 * Gets a address prop.
+	 *
+	 * @param string $prop Name of prop to get.
+	 *
+	 * @return mixed
+	 * @since  1.1.0
+	 *
+	 */
+	public function get_address_prop( $prop ) {
+		$value = null;
+
+		if ( array_key_exists( $prop, $this->data['address'] ) ) {
+			$value = eaccounting_sanitize_invoice_field( "address_$prop", $this->data['address'][ $prop ], $this->id, $this->filter );
+		}
+
+		return $value;
+	}
+
+	/**
+	 * Read meta data if null.
+	 *
+	 * @since 1.1.0
+	 */
+	public function maybe_read_items() {
+		if ( ! is_null( $this->items ) ) {
+			return;
+		}
+		$this->read_items();
+	}
+
+	/**
+	 * Read items from the database.
+	 *
+	 * @param bool $force_read True to force a new DB read (and update cache).
+	 *
+	 * @since 1.1.0
+	 *
+	 */
+	public function read_items( $force_read = false ) {
+		global $wpdb;
+		// Reset meta data.
+		$this->items = array();
+
+		// Maybe abort early.
+		if ( ! $this->exists() ) {
+			return;
+		}
+
+		// Only read from cache if the cache key is set.
+		$raw_data = false;
+		if ( ! $force_read ) {
+			//$raw_data = wp_cache_get( $this->id, "ea_{$this->meta_type}meta" );
+		}
+
+		if ( false === $raw_data ) {
+			$raw_data = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT *
+				FROM {$wpdb->prefix}ea_invoice_items
+				WHERE invoice_id = %d
+				ORDER BY id",
+					(int) $this->id
+				)
+			);
+		}
+
+		$this->items = array_map( 'eaccounting_get_invoice_item', $raw_data );
+
+//		wp_cache_add( $this->id, $raw_meta_data, "ea_{$this->meta_type}meta" );
+//		$this->set_meta_data( $raw_meta_data );
+//		$this->meta_hash = md5( serialize( $this->meta_data ) );
+	}
+
+
 }

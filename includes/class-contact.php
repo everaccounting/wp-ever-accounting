@@ -41,7 +41,7 @@ defined( 'ABSPATH' ) || exit;
  * @property int $creator_id
  * @property string $date_created
  */
-class Contact extends Data {
+class Contact extends MetaData {
 	/**
 	 * Contact id.
 	 *

@@ -1,8 +1,17 @@
 <?php
+/**
+ * Item Query class.
+ * @since   1.2.1
+ * @package   EverAccounting
+ */
 
 namespace EverAccounting;
 
-class Transaction_Query {
+/**
+ * Class Item_Query
+ * @package EverAccounting
+ */
+class Item_Query_BK_BK {
 	/**
 	 * SQL string used to perform database query.
 	 *
@@ -45,7 +54,7 @@ class Transaction_Query {
 	public $query_var_defaults;
 
 	/**
-	 * Queried items.
+	 * List of items located by the query.
 	 *
 	 * @since 1.2.1
 	 * @var array
@@ -62,11 +71,10 @@ class Transaction_Query {
 
 	/**
 	 * Table name without prefix.
-	 *
 	 * @since 1.2.1
 	 * @var string
 	 */
-	const TABLE_NAME = 'ea_transactions';
+	const TABLE_NAME = 'ea_items';
 
 	/**
 	 * Table name with prefix.
@@ -79,7 +87,7 @@ class Transaction_Query {
 	/**
 	 * Constructor.
 	 *
-	 * Sets up the query, if parameter is not empty.
+	 * Sets up the Item query, if parameter is not empty.
 	 *
 	 * @param string|array $query Query string or array of vars.
 	 *
@@ -88,33 +96,26 @@ class Transaction_Query {
 	 */
 	public function __construct( $query = null ) {
 		$this->query_var_defaults = array(
-			'account_id'       => '',
-			'account__in'      => '',
-			'account__not_in'  => '',
-			'document_id'      => '',
-			'category_id'      => '',
-			'category__in'     => '',
-			'category__not_in' => '',
-			'contact_id'       => '',
-			'contact__in'      => '',
-			'contact__not_in'  => '',
-			'parent_id'        => '',
-			'payment_method'   => '',
-			'currency_code'    => '',
-			'amount_min'       => '',
-			'amount_max'       => '',
-			'amount_bwteen'    => '',
-			'include'          => array(),
-			'exclude'          => array(),
-			'search'           => '',
-			'search_columns'   => array(),
-			'orderby'          => 'payment_date',
-			'order'            => 'ASC',
-			'offset'           => '',
-			'number'           => 20,
-			'paged'            => 1,
-			'no_found_rows'    => false,
-			'fields'           => 'all',
+			'category_id'            => array(),
+			'category__in'           => array(),
+			'category__not_in'       => array(),
+			'sale_price_min'         => '',
+			'sale_price_max'         => '',
+			'sale_price_between'     => '',
+			'purchase_price_min'     => '',
+			'purchase_price_max'     => '',
+			'purchase_price_between' => '',
+			'include'                => array(),
+			'exclude'                => array(),
+			'search'                 => '',
+			'search_columns'         => array(),
+			'orderby'                => 'name',
+			'order'                  => 'ASC',
+			'offset'                 => '',
+			'number'                 => 20,
+			'paged'                  => 1,
+			'no_found_rows'          => false,
+			'fields'                 => 'all',
 		);
 
 		if ( ! is_null( $query ) ) {
@@ -176,7 +177,7 @@ class Transaction_Query {
 		$query['no_found_rows'] = (bool) $query['no_found_rows'];
 
 		if ( ! empty( $query['fields'] ) && 'all' !== $query['fields'] ) {
-			$query['fields'] = wp_parse_list( $query['fields'] );
+			$query['fields'] = array_unique( wp_parse_list( $query['fields'] ) );
 		}
 
 		/**
@@ -187,7 +188,7 @@ class Transaction_Query {
 		 * @since 1.2.1
 		 *
 		 */
-		$this->query_vars = apply_filters( 'eaccounting_get_transactions_args', $query );
+		$this->query_vars = apply_filters( 'eaccounting_get_items_args', $query );
 	}
 
 	/**
@@ -198,9 +199,9 @@ class Transaction_Query {
 	public function query() {
 		global $wpdb;
 		$key          = md5( serialize( wp_array_slice_assoc( $this->query_vars, array_keys( $this->query_var_defaults ) ) ) );
-		$last_changed = wp_cache_get_last_changed( 'ea_transactions' );
-		$cache_key    = "ea_transactions:$key:$last_changed";
-		$cache        = wp_cache_get( $cache_key, 'ea_transactions' );
+		$last_changed = wp_cache_get_last_changed( 'ea_items' );
+		$cache_key    = "ea_items:$key:$last_changed";
+		$cache        = wp_cache_get( $cache_key, 'ea_items' );
 
 		if ( false !== $cache ) {
 			$this->results = $cache->results;
@@ -242,7 +243,7 @@ class Transaction_Query {
 				 * @since 1.2.1
 				 *
 				 */
-				$count_query = apply_filters( 'eaccounting_count_transactions_query', 'SELECT FOUND_ROWS()', $this );
+				$count_query = apply_filters( 'eaccounting_count_items_query', 'SELECT FOUND_ROWS()', $this );
 
 				$this->total = (int) $wpdb->get_var( $count_query );
 			}
@@ -253,7 +254,7 @@ class Transaction_Query {
 		$cache->total   = $this->total;
 
 
-		wp_cache_add( $cache_key, $cache, 'ea_transactions' );
+		wp_cache_add( $cache_key, $cache, 'ea_items' );
 
 		return $this->results;
 	}
@@ -261,14 +262,44 @@ class Transaction_Query {
 	/**
 	 * Prepares the query fields.
 	 *
-	 * @param array $qv Query vars.
-	 * @param string $table Table name.
-	 *
-	 * @since 1.0.19
+	 * @since 1.2.1
 	 *
 	 */
-	protected function prepare_query_fields( &$qv, $table ) {
+	protected function prepare_query_fields() {
+		$qv = &$this->query_vars;
+		// Fields setup.
+		if ( is_array( $qv['fields'] ) ) {
+			$this->sql_clauses['fields'] .= implode( ',', $qv['fields'] );
+		} elseif ( 'all' === $qv['fields'] ) {
+			$this->sql_clauses['fields'] .= "$this->table.* ";
+		} else {
+			$this->sql_clauses['fields'] .= "$this->table.id";
+		}
+
+		if ( false === $qv['no_found_rows'] ) {
+			$this->sql_clauses['fields'] = 'SQL_CALC_FOUND_ROWS ' . $this->sql_clauses['fields'];
+		}
+	}
+
+	/**
+	 * Prepares the query where.
+	 *
+	 * @since 1.2.1
+	 *
+	 */
+	protected function prepare_query_where() {
 
 	}
+
+	/**
+	 * Prepares the query order.
+	 *
+	 * @since 1.2.1
+	 *
+	 */
+	protected function prepare_query_order() {
+
+	}
+
 
 }

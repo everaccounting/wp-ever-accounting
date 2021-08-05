@@ -67,12 +67,12 @@ class Transaction extends Data {
 	public $filter;
 
 	/**
-	 * Meta table.
+	 * Meta type.
 	 *
 	 * @since 1.2.1
 	 * @var string
 	 */
-	protected $meta_table = 'ea_transactionmeta';
+	protected $meta_type = 'transaction';
 
 	/**
 	 * Meta table object id field.

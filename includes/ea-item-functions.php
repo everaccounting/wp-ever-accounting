@@ -30,12 +30,12 @@ add_filter( 'eaccounting_edit_item_enabled', 'eaccounting_string_to_bool' );
  *
  * @param int|object|Item $item item to retrieve
  * @param string $output The required return type. One of OBJECT, ARRAY_A, or ARRAY_N. Default OBJECT.
- * @param string $filter Type of filter to apply. Accepts 'raw', 'edit', 'db', or 'display'. Default 'raw'.
+ * @param string $context Type of context to apply. Accepts 'raw', 'edit', 'db', or 'display'. Default 'raw'.
  *
  * @return Item|array|null
  * @since 1.1.0
  */
-function eaccounting_get_item( $item, $output = OBJECT, $filter = 'raw' ) {
+function eaccounting_get_item( $item, $output = OBJECT, $context = 'raw' ) {
 	if ( empty( $item ) ) {
 		return null;
 	}
@@ -52,7 +52,7 @@ function eaccounting_get_item( $item, $output = OBJECT, $filter = 'raw' ) {
 		return null;
 	}
 
-	$_item = $_item->filter( $filter );
+	$_item = eaccounting_sanitize_item( $_item, $context );
 
 	if ( ARRAY_A === $output ) {
 		return $_item->to_array();
@@ -62,8 +62,9 @@ function eaccounting_get_item( $item, $output = OBJECT, $filter = 'raw' ) {
 		return array_values( $_item->to_array() );
 	}
 
-	return $_item->filter( $filter );
+	return $_item;
 }
+
 /**
  *  Insert or update a item.
  *
@@ -305,21 +306,15 @@ function eaccounting_delete_item( $item_id ) {
  * @since 1.2.1
  */
 function eaccounting_sanitize_item( $item, $context = 'raw' ) {
-	if ( is_object( $item ) ) {
+	if ( $item instanceof Item ) {
+		$item = $item->get_data();
+	} elseif ( is_object( $item ) ) {
+		$item = get_object_vars( $item );
+	}
+
+	if ( is_array( $item ) ) {
 		// Check if post already filtered for this context.
-		if ( isset( $item->filter ) && $context == $item->filter ) {
-			return $item;
-		}
-		if ( ! isset( $item->id ) ) {
-			$item->id = 0;
-		}
-		foreach ( array_keys( get_object_vars( $item ) ) as $field ) {
-			$item->$field = eaccounting_sanitize_item_field( $field, $item->$field, $item->id, $context );
-		}
-		$item->filter = $context;
-	} elseif ( is_array( $item ) ) {
-		// Check if post already filtered for this context.
-		if ( isset( $item['filter'] ) && $context == $item['filter'] ) { //phpcs:ignore
+		if ( isset( $item['context'] ) && $context == $item['context'] ) { //phpcs:ignore
 			return $item;
 		}
 		if ( ! isset( $item['id'] ) ) {
@@ -328,7 +323,7 @@ function eaccounting_sanitize_item( $item, $context = 'raw' ) {
 		foreach ( array_keys( $item ) as $field ) {
 			$item[ $field ] = eaccounting_sanitize_item_field( $field, $item[ $field ], $item['id'], $context );
 		}
-		$item['filter'] = $context;
+		$item['context'] = $context;
 	}
 
 	return $item;
