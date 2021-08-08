@@ -50,31 +50,31 @@ class Contact extends MetaData {
 	 * @var array
 	 */
 	public $data = array(
-		'user_id'          => null,
-		'name'             => '',
-		'company'          => '',
-		'email'            => '',
-		'phone'            => '',
-		'birth_date'       => '',
-		'street'           => '',
-		'city'             => '',
-		'state'            => '',
-		'postcode'         => '',
-		'country'          => '',
-		'website'          => '',
-		'vat_number'       => '',
-		'currency_code'    => '',
-		'type'             => 'contact',
-		'thumbnail_id'     => null,
-		'enabled'          => 1,
-		'creator_id'       => null,
-		'date_created'     => null,
+		'user_id'       => null,
+		'name'          => '',
+		'company'       => '',
+		'email'         => '',
+		'phone'         => '',
+		'birth_date'    => '',
+		'street'        => '',
+		'city'          => '',
+		'state'         => '',
+		'postcode'      => '',
+		'country'       => '',
+		'website'       => '',
+		'vat_number'    => '',
+		'currency_code' => '',
+		'type'          => 'contact',
+		'thumbnail_id'  => null,
+		'enabled'       => 1,
+		'creator_id'    => null,
+		'date_created'  => null,
 
-		//meta
-//		'total_paid'       => 0.00,
-//		'total_due'        => 0.00,
-//		'total_payable'    => 0.00,
-//		'total_receivable' => 0.00,
+		// meta
+	// 'total_paid'       => 0.00,
+	// 'total_due'        => 0.00,
+	// 'total_payable'    => 0.00,
+	// 'total_receivable' => 0.00,
 	);
 
 	/**
@@ -123,15 +123,14 @@ class Contact extends MetaData {
 	 * Retrieve the object from database instance.
 	 *
 	 * @param int|string $contact_id Object id.
-	 * @param string $field Database field.
+	 * @param string     $field Database field.
 	 *
 	 * @return object|false Object, false otherwise.
 	 * @since 1.2.1
 	 *
 	 * @global \wpdb $wpdb WordPress database abstraction object.
-	 *
 	 */
-	static function get_raw( $contact_id, $field = 'id' ) {
+	public static function get_raw( $contact_id, $field = 'id' ) {
 		global $wpdb;
 		if ( 'id' === $field ) {
 			$contact_id = (int) $contact_id;
@@ -153,7 +152,7 @@ class Contact extends MetaData {
 					break;
 			}
 
-			$contact = $wpdb->get_row( $sql );
+			$contact = $wpdb->get_row( $sql ); //phpcs:ignore
 
 			if ( ! $contact ) {
 				return false;
@@ -222,7 +221,7 @@ class Contact extends MetaData {
 		$this->set_id( $wpdb->insert_id );
 
 		/**
-		 * Fires immediately after an contact is inserted in the database.
+		 * Fires immediately after a contact is inserted in the database.
 		 *
 		 * @param int $contact_id contact id.
 		 * @param array $data contact has been inserted.
@@ -234,7 +233,7 @@ class Contact extends MetaData {
 		do_action( 'eaccounting_insert_contact', $this->id, $data, $data_arr, $this );
 
 		/**
-		 * Fires immediately after an contact is inserted in the database.
+		 * Fires immediately after a contact is inserted in the database.
 		 *
 		 * The dynamic portion of the hook name, `$this->type`, refers to
 		 * the type of contact.
@@ -332,7 +331,6 @@ class Contact extends MetaData {
 		 */
 		do_action( "eaccounting_pre_update_contact_{$this->type}", $this->get_id(), $this->to_array(), $changes, $this );
 
-
 		return true;
 	}
 
@@ -367,6 +365,7 @@ class Contact extends MetaData {
 			'date_created'  => '%s',
 		);
 
+		// Check if the contact name exist or not
 		if ( empty( $this->get_prop( 'name' ) ) ) {
 			return new \WP_Error( 'invalid_contact_name', esc_html__( 'Contact name is required', 'wp-ever-accounting' ) );
 		}
@@ -404,7 +403,6 @@ class Contact extends MetaData {
 		 * @param Contact $contact Contact object.
 		 *
 		 * @since 1.2.1
-		 *
 		 */
 		do_action( 'eaccounting_saved_contact', $this->get_id(), $this );
 
@@ -418,7 +416,6 @@ class Contact extends MetaData {
 		 * @param Contact $contact Contact object.
 		 *
 		 * @since 1.2.1
-		 *
 		 */
 		do_action( "eaccounting_saved_contact_{$this->type}", $this->get_id(), $this );
 
@@ -462,7 +459,6 @@ class Contact extends MetaData {
 		 * @param Contact $contact Contact object.
 		 *
 		 * @since 1.2.1
-		 *
 		 */
 		do_action( 'eaccounting_pre_delete_contact', $this->get_id(), $data, $this );
 
@@ -478,7 +474,6 @@ class Contact extends MetaData {
 		 * @param array $data Contact data array.
 		 *
 		 * @since 1.2.1
-		 *
 		 */
 		do_action( 'eaccounting_delete_contact', $this->get_id(), $data );
 
@@ -505,10 +500,9 @@ class Contact extends MetaData {
 	/**
 	 * Set wp user id.
 	 *
-	 * @param $id
+	 * @param int $id User ID
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_user_id( $id ) {
 		$this->set_prop( 'user_id', absint( $id ) );
@@ -517,10 +511,9 @@ class Contact extends MetaData {
 	/**
 	 * Set contact name.
 	 *
-	 * @param $name
+	 * @param string $name Name
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_name( $name ) {
 		$this->set_prop( 'name', eaccounting_clean( $name ) );
@@ -529,10 +522,9 @@ class Contact extends MetaData {
 	/**
 	 * Set contact company.
 	 *
-	 * @param $company
+	 * @param string $company Company Name
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_company( $company ) {
 		$this->set_prop( 'company', eaccounting_clean( $company ) );
@@ -544,7 +536,6 @@ class Contact extends MetaData {
 	 * @param string $value Email.
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_email( $value ) {
 		if ( $value && is_email( $value ) ) {
@@ -555,10 +546,9 @@ class Contact extends MetaData {
 	/**
 	 * Set contact's phone.
 	 *
-	 * @param $value
+	 * @param string $value Phone Number
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_phone( $value ) {
 		$this->set_prop( 'phone', eaccounting_clean( $value ) );
@@ -566,12 +556,11 @@ class Contact extends MetaData {
 
 
 	/**
-	 * Set contact's birth date.
+	 * Set contact's birth-date.
 	 *
-	 * @param $date
+	 * @param string $date Birth-date
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_birth_date( $date ) {
 		$this->set_date_prop( 'birth_date', $date, 'Y-m-d' );
@@ -580,10 +569,9 @@ class Contact extends MetaData {
 	/**
 	 * Set contact's website.
 	 *
-	 * @param $value
+	 * @param string $value website
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_website( $value ) {
 		$this->set_prop( 'website', esc_url( $value ) );
@@ -592,10 +580,9 @@ class Contact extends MetaData {
 	/**
 	 * Set contact's street.
 	 *
-	 * @param $value
+	 * @param string $value Street
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_street( $value ) {
 		$this->set_prop( 'street', sanitize_text_field( $value ) );
@@ -604,10 +591,9 @@ class Contact extends MetaData {
 	/**
 	 * Set contact's city.
 	 *
-	 * @param $city
+	 * @param string $city City
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_city( $city ) {
 		$this->set_prop( 'city', sanitize_text_field( $city ) );
@@ -616,10 +602,9 @@ class Contact extends MetaData {
 	/**
 	 * Set contact's state.
 	 *
-	 * @param $state
+	 * @param string $state State
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_state( $state ) {
 		$this->set_prop( 'state', sanitize_text_field( $state ) );
@@ -628,10 +613,9 @@ class Contact extends MetaData {
 	/**
 	 * Set contact's postcode.
 	 *
-	 * @param $postcode
+	 * @param string $postcode Postcode
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_postcode( $postcode ) {
 		$this->set_prop( 'postcode', sanitize_text_field( $postcode ) );
@@ -640,10 +624,9 @@ class Contact extends MetaData {
 	/**
 	 * Set contact country.
 	 *
-	 * @param $country
+	 * @param string $country Country
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_country( $country ) {
 		if ( array_key_exists( $country, eaccounting_get_countries() ) ) {
@@ -654,10 +637,9 @@ class Contact extends MetaData {
 	/**
 	 * Set contact's tax_number.
 	 *
-	 * @param $value
+	 * @param string $value vat-number
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_vat_number( $value ) {
 		$this->set_prop( 'vat_number', eaccounting_clean( $value ) );
@@ -666,10 +648,9 @@ class Contact extends MetaData {
 	/**
 	 * Set contact's currency_code.
 	 *
-	 * @param $value
+	 * @param string $value currency_code
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_currency_code( $value ) {
 		if ( eaccounting_get_currency( $value ) ) {
@@ -680,10 +661,9 @@ class Contact extends MetaData {
 	/**
 	 * Set contact type.
 	 *
-	 * @param $type
+	 * @param string $type Contact type
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_type( $type ) {
 		if ( array_key_exists( $type, eaccounting_get_contact_types() ) ) {
@@ -694,10 +674,9 @@ class Contact extends MetaData {
 	/**
 	 * Set avatar id
 	 *
-	 * @param int $thumbnail_id
+	 * @param int $thumbnail_id Thumbnail id
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public function set_thumbnail_id( $thumbnail_id ) {
 		$this->set_prop( 'thumbnail_id', absint( $thumbnail_id ) );
@@ -706,10 +685,9 @@ class Contact extends MetaData {
 	/**
 	 * Set object status.
 	 *
-	 * @param int $enabled
+	 * @param int $enabled Contact enabled
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_enabled( $enabled ) {
 		$this->set_prop( 'enabled', (int) $enabled );
@@ -722,7 +700,6 @@ class Contact extends MetaData {
 	 * @param int $creator_id Creator id
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_creator_id( $creator_id = null ) {
 		if ( null === $creator_id ) {
@@ -734,10 +711,9 @@ class Contact extends MetaData {
 	/**
 	 * Set object created date.
 	 *
-	 * @param string
+	 * @param string $date Created date
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_date_created( $date = null ) {
 		if ( null === $date ) {
