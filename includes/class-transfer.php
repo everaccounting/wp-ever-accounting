@@ -15,6 +15,7 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Class Transfer
+ *
  * @package EverAccounting
  *
  * @property string $payment_date
@@ -88,16 +89,15 @@ class Transfer extends Data {
 	/**
 	 * Retrieve the object from database instance.
 	 *
-	 * @param int $transfer_id Object id.
+	 * @param int    $transfer_id Object id.
 	 * @param string $field Database field.
 	 *
 	 * @return object|false Object, false otherwise.
 	 * @since 1.2.1
 	 *
 	 * @global \wpdb $wpdb WordPress database abstraction object.
-	 *
 	 */
-	static function get_raw( $transfer_id, $field = 'id' ) {
+	public static function get_raw( $transfer_id, $field = 'id' ) {
 		global $wpdb;
 
 		$transfer_id = (int) $transfer_id;
@@ -108,7 +108,9 @@ class Transfer extends Data {
 		$transfer = wp_cache_get( $transfer_id, 'ea_transfers' );
 
 		if ( ! $transfer ) {
-			$transfer = $wpdb->get_row( $wpdb->prepare( "SELECT transfer.*,
+			$transfer = $wpdb->get_row(
+				$wpdb->prepare(
+					"SELECT transfer.*,
 					       income.account_id  to_account_id,
 					       expense.amount,
 					       expense.currency_code,
@@ -125,7 +127,10 @@ class Transfer extends Data {
 					       INNER JOIN {$wpdb->prefix}ea_transactions income
 					               ON ( income.id = transfer.income_id )
 					WHERE  transfer.id = %d
-					LIMIT  1", $transfer_id ) );
+					LIMIT  1",
+					$transfer_id
+				)
+			);
 
 			if ( ! $transfer ) {
 				return false;
@@ -155,41 +160,47 @@ class Transfer extends Data {
 		$format   = wp_array_slice_assoc( $fields, array_keys( $data ) );
 		$data     = wp_unslash( $data );
 
-		$expense  = array([
-			'type'           => 'transfer',
-			'payment_date'   => $this->payment_date,
-			'amount'         => $this->amount,
-			'currency_code'  => $this->from_currency_code, // protected
-			'currency_rate'  => $this->from_currency_rate, // protected
-			'account_id'     => $this->from_account_id,
-			'description'    => $this->description,
-			'payment_method' => $this->payment_method,
-			'reference'      => $this->reference,
-			'creator_id'     => $this->creator_id,
-			'date_created'   => $this->date_created,
-		]);
+		$expense = array(
+			[
+				'type'           => 'transfer',
+				'payment_date'   => $this->payment_date,
+				'amount'         => $this->amount,
+				'currency_code'  => $this->from_currency_code, // protected
+				'currency_rate'  => $this->from_currency_rate, // protected
+				'account_id'     => $this->from_account_id,
+				'description'    => $this->description,
+				'payment_method' => $this->payment_method,
+				'reference'      => $this->reference,
+				'creator_id'     => $this->creator_id,
+				'date_created'   => $this->date_created,
+			],
+		);
 
 		$amount = $this->amount;
 		if ( $this->from_currency_code !== $this->to_currency_code ) {
-			$amount           = eaccounting_price_convert( $amount, $this->from_currency_code, $this->to_currency_code, $this->from_currency_rate, $this->to_currency_rate );
+			$amount = eaccounting_price_convert( $amount, $this->from_currency_code, $this->to_currency_code, $this->from_currency_rate, $this->to_currency_rate );
 		}
 
-		$income  = array([
-			'type'           => 'transfer',
-			'payment_date'   => $this->payment_date,
-			'amount'         => $amount,
-			'currency_code'  => $this->to_currency_code, // protected
-			'currency_rate'  => $this->to_currency_rate, // protected
-			'account_id'     => $this->from_account_id,
-			'description'    => $this->description,
-			'payment_method' => $this->payment_method,
-			'reference'      => $this->reference,
-			'creator_id'     => $this->creator_id,
-			'date_created'   => $this->date_created,
-		]);
+		$income = array(
+			[
+				'type'           => 'transfer',
+				'payment_date'   => $this->payment_date,
+				'amount'         => $amount,
+				'currency_code'  => $this->to_currency_code, // protected
+				'currency_rate'  => $this->to_currency_rate, // protected
+				'account_id'     => $this->from_account_id,
+				'description'    => $this->description,
+				'payment_method' => $this->payment_method,
+				'reference'      => $this->reference,
+				'creator_id'     => $this->creator_id,
+				'date_created'   => $this->date_created,
+			],
+		);
 
-		var_dump($expense);
-		var_dump($income);
+		var_dump( $expense );
+		var_dump( $income );
+
+		return true;
 	}
 
 	/**
@@ -206,6 +217,7 @@ class Transfer extends Data {
 	 */
 	protected function update( $fields ) {
 
+		return true;
 	}
 
 	/**
@@ -289,12 +301,13 @@ class Transfer extends Data {
 		$wpdb->query( 'START TRANSACTION' );
 
 		if ( $this->exists() ) {
-			$is_error = $this->update($fields);
+			$is_error = $this->update( $fields );
 		} else {
-			$is_error = $this->insert($fields);
+			$is_error = $this->insert( $fields );
 		}
 
 		$wpdb->query( 'ROLLBACK' );
+		return true;
 
 	}
 
@@ -335,7 +348,6 @@ class Transfer extends Data {
 		 * @param Transfer $transfer Transfer object.
 		 *
 		 * @since 1.2.1
-		 *
 		 */
 		do_action( 'eaccounting_pre_delete_transfer', $this->get_id(), $data, $this );
 
@@ -362,7 +374,6 @@ class Transfer extends Data {
 		 * @param Transfer $transfer Transfer object.
 		 *
 		 * @since 1.2.1
-		 *
 		 */
 		do_action( 'eaccounting_delete_transfer', $this->get_id(), $data );
 
@@ -370,7 +381,7 @@ class Transfer extends Data {
 		wp_cache_delete( $this->get_id(), 'ea_transfers' );
 		wp_cache_delete( $this->expense_id, 'ea_transactions' );
 		wp_cache_delete( $this->income_id, 'ea_transactions' );
-		//todo delete transaction metadata.
+		// todo delete transaction metadata.
 		wp_cache_set( 'last_changed', microtime(), 'ea_transactions' );
 		wp_cache_set( 'last_changed', microtime(), 'ea_transactionmeta' );
 		wp_cache_set( 'last_changed', microtime(), 'ea_transfers' );
@@ -389,10 +400,9 @@ class Transfer extends Data {
 	/**
 	 * Set date.
 	 *
-	 * @param string $payment_date
+	 * @param string $payment_date Payment date
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_payment_date( $payment_date ) {
 		$this->set_date_prop( 'payment_date', eaccounting_clean( $payment_date ) );
@@ -401,10 +411,9 @@ class Transfer extends Data {
 	/**
 	 * Set from account id.
 	 *
-	 * @param $account_id
+	 * @param int $account_id From account id
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_from_account_id( $account_id ) {
 		$this->set_prop( 'from_account_id', absint( $account_id ) );
@@ -413,10 +422,9 @@ class Transfer extends Data {
 	/**
 	 * Set amount.
 	 *
-	 * @param string $amount
+	 * @param string $amount Amount
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_amount( $amount ) {
 		$this->set_prop( 'amount', (float) $amount );
@@ -425,10 +433,9 @@ class Transfer extends Data {
 	/**
 	 * Set default amount.
 	 *
-	 * @param string $amount
+	 * @param string $amount Amount
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_default_amount( $amount ) {
 		$this->set_prop( 'default_amount', (float) $amount );
@@ -437,10 +444,9 @@ class Transfer extends Data {
 	/**
 	 * Set currency code.
 	 *
-	 * @param $value
+	 * @param string $value Currency code
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_currency_code( $value ) {
 		$this->set_prop( 'currency_code', eaccounting_sanitize_currency_code( $value ) );
@@ -449,10 +455,9 @@ class Transfer extends Data {
 	/**
 	 * Set currency rate.
 	 *
-	 * @param $value
+	 * @param float $value Currency rate
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_currency_rate( $value ) {
 		$this->set_prop( 'currency_rate', (float) $value );
@@ -462,10 +467,9 @@ class Transfer extends Data {
 	/**
 	 * Set to account id.
 	 *
-	 * @param int $account_id
+	 * @param int $account_id To account id
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_to_account_id( $account_id ) {
 		$this->set_prop( 'to_account_id', absint( $account_id ) );
@@ -477,7 +481,6 @@ class Transfer extends Data {
 	 * @param int $value income_id.
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_income_id( $value ) {
 		$this->set_prop( 'income_id', absint( $value ) );
@@ -489,7 +492,6 @@ class Transfer extends Data {
 	 * @param int $value expense_id.
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_expense_id( $value ) {
 		$this->set_prop( 'expense_id', absint( $value ) );
@@ -498,10 +500,9 @@ class Transfer extends Data {
 	/**
 	 * Set payment method.
 	 *
-	 * @param string $payment_method
+	 * @param string $payment_method Payment method
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_payment_method( $payment_method ) {
 		$this->set_prop( 'payment_method', eaccounting_clean( $payment_method ) );
@@ -510,10 +511,9 @@ class Transfer extends Data {
 	/**
 	 * Set reference.
 	 *
-	 * @param $value
+	 * @param string $value Reference
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_reference( $value ) {
 		$this->set_prop( 'reference', eaccounting_clean( $value ) );
@@ -522,10 +522,9 @@ class Transfer extends Data {
 	/**
 	 * Set description.
 	 *
-	 * @param $value
+	 * @param string $value Transfer description
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_description( $value ) {
 		$this->set_prop( 'description', eaccounting_clean( $value ) );
@@ -537,7 +536,6 @@ class Transfer extends Data {
 	 * @param int $creator_id Creator id
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_creator_id( $creator_id = null ) {
 		if ( null === $creator_id ) {
@@ -549,10 +547,9 @@ class Transfer extends Data {
 	/**
 	 * Set object created date.
 	 *
-	 * @param string
+	 * @param string $date Creation date
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_date_created( $date = null ) {
 		if ( null === $date ) {
