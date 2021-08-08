@@ -93,7 +93,7 @@ class Contact extends MetaData {
 	 *
 	 * @since 1.1.0
 	 */
-	public function __construct( $contact ) {
+	public function __construct( $contact = 0 ) {
 		parent::__construct();
 		if ( $contact instanceof self ) {
 			$this->set_id( $contact->get_id() );
@@ -215,7 +215,7 @@ class Contact extends MetaData {
 		do_action( "eaccounting_pre_insert_contact_{$this->type}", $data, $data_arr, $this );
 
 		if ( false === $wpdb->insert( $wpdb->prefix . 'ea_contacts', $data, $format ) ) {
-			return new \WP_Error( 'eaccounting_contact_db_insert_error', __( 'Could not insert contact into the database.', 'wp-ever-accounting' ), $wpdb->last_error );
+			return new \WP_Error( 'db_insert_error', __( 'Could not insert contact into the database.', 'wp-ever-accounting' ), $wpdb->last_error );
 		}
 
 		$this->set_id( $wpdb->insert_id );
@@ -301,7 +301,7 @@ class Contact extends MetaData {
 		do_action( "eaccounting_pre_update_contact_{$this->type}", $this->get_id(), $this->to_array(), $changes, $this );
 
 		if ( false === $wpdb->update( $wpdb->prefix . 'ea_contacts', $data, [ 'id' => $this->get_id() ], $format, [ 'id' => '%d' ] ) ) {
-			return new \WP_Error( 'eaccounting_contact_db_update_error', __( 'Could not update contact in the database.', 'wp-ever-accounting' ), $wpdb->last_error );
+			return new \WP_Error( 'db_update_error', __( 'Could not update contact in the database.', 'wp-ever-accounting' ), $wpdb->last_error );
 		}
 
 		/**

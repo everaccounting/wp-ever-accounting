@@ -151,3 +151,8 @@ function eaccounting_sanitize_currency_code( $code ) {
 
 	return $code;
 }
+
+
+function eaccounting_get_currency_iso_codes(){
+	return eaccounting_get_data('currencies');
+}

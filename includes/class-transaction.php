@@ -183,7 +183,7 @@ class Transaction extends MetaData {
 		do_action( "eaccounting_pre_insert_transaction_{$this->type}", $data, $data_arr, $this );
 
 		if ( false === $wpdb->insert( $wpdb->prefix . 'ea_transactions', $data ) ) {
-			return new \WP_Error( 'eaccounting_transaction_db_insert_error', __( 'Could not insert transaction into the database.', 'wp-ever-accounting' ), $wpdb->last_error );
+			return new \WP_Error( 'db_insert_error', __( 'Could not insert transaction into the database.', 'wp-ever-accounting' ), $wpdb->last_error );
 		}
 
 		$this->set_id( $wpdb->insert_id );
@@ -272,7 +272,7 @@ class Transaction extends MetaData {
 		do_action( "eaccounting_pre_update_transactions_{$this->type}", $this->get_id(), $this->to_array(), $changes, $this );
 
 		if ( false === $wpdb->update( $wpdb->prefix . 'ea_transactions', $data, [ 'id' => $this->get_id() ] ) ) {
-			return new \WP_Error( 'eaccounting_transaction_db_update_error', __( 'Could not update transaction in the database.', 'wp-ever-accounting' ), $wpdb->last_error );
+			return new \WP_Error( 'db_update_error', __( 'Could not update transaction in the database.', 'wp-ever-accounting' ), $wpdb->last_error );
 		}
 
 		/**

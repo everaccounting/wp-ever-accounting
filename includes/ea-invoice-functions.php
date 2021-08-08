@@ -115,7 +115,7 @@ function eaccounting_insert_invoice( $invoice_data ) {
 		$before = eaccounting_get_invoice( $id );
 
 		if ( is_null( $before ) ) {
-			return new WP_Error( 'invalid_invoice_id', __( 'Invalid invoice id to update.' ) );
+			return new WP_Error( 'invalid_invoice_id', __( 'Invalid invoice id to update.', 'wp-ever-accounting' ) );
 		}
 
 		$before = $before->to_array();
@@ -336,7 +336,7 @@ function eaccounting_insert_invoice_item( $item_data ) {
 		$data_before = eaccounting_get_invoice_item( $id );
 
 		if ( is_null( $data_before ) ) {
-			return new WP_Error( 'invalid_invoice_item_id', __( 'Invalid invoice item id to update.' ) );
+			return new WP_Error( 'invalid_invoice_item_id', __( 'Invalid invoice item id to update.', 'wp-ever-accounting' ) );
 		}
 
 		// Merge old and new fields with new fields overwriting old ones.
@@ -420,7 +420,7 @@ function eaccounting_insert_invoice_item( $item_data ) {
 		 */
 		do_action( 'eaccounting_pre_update_invoice_item', $id, $data, $data_arr, $data_before );
 		if ( false === $wpdb->update( $wpdb->prefix . 'ea_invoice_items', $data, $where, $data_before ) ) {
-			new WP_Error( 'db_update_error', __( 'Could not update invoice item in the database.' ), $wpdb->last_error );
+			new WP_Error( 'db_update_error', __( 'Could not update invoice item in the database.', 'wp-ever-accounting' ), $wpdb->last_error );
 		}
 
 		/**
@@ -449,7 +449,7 @@ function eaccounting_insert_invoice_item( $item_data ) {
 		do_action( 'eaccounting_pre_insert_invoice_item', $data, $data_arr, $item_data );
 
 		if ( false === $wpdb->insert( $wpdb->prefix . 'ea_invoice_items', $data ) ) {
-			new WP_Error( 'db_insert_error', __( 'Could not insert invoice item into the database.' ), $wpdb->last_error );
+			new WP_Error( 'db_insert_error', __( 'Could not insert invoice item into the database.', 'wp-ever-accounting' ), $wpdb->last_error );
 		}
 
 		$id = (int) $wpdb->insert_id;

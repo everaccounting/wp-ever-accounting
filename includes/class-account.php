@@ -157,7 +157,7 @@ class Account extends Data {
 		do_action( 'eaccounting_pre_insert_account', $data, $data_arr, $this );
 
 		if ( false === $wpdb->insert( $wpdb->prefix . 'ea_accounts', $data, $format ) ) {
-			return new \WP_Error( 'eaccounting_account_db_insert_error', __( 'Could not insert account into the database.', 'wp-ever-accounting' ), $wpdb->last_error );
+			return new \WP_Error( 'db_insert_error', __( 'Could not insert account into the database.', 'wp-ever-accounting' ), $wpdb->last_error );
 		}
 
 		$this->set_id( $wpdb->insert_id );
@@ -213,7 +213,7 @@ class Account extends Data {
 		do_action( 'eaccounting_pre_update_account', $this->get_id(), $this->to_array(), $changes, $this );
 
 		if ( false === $wpdb->update( $wpdb->prefix . 'ea_accounts', $data, [ 'id' => $this->get_id() ], $format, [ 'id' => '%d' ] ) ) {
-			return new \WP_Error( 'eaccounting_account_db_update_error', __( 'Could not update account in the database.', 'wp-ever-accounting' ), $wpdb->last_error );
+			return new \WP_Error( 'db_update_error', __( 'Could not update account in the database.', 'wp-ever-accounting' ), $wpdb->last_error );
 		}
 
 		/**

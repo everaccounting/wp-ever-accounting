@@ -177,7 +177,7 @@ class Currency extends Data {
 		do_action( 'eaccounting_pre_update_currency', $this->get_id(), $this->to_array(), $changes, $this );
 
 		if ( false === $wpdb->update( $wpdb->prefix . 'ea_currencies', $data, [ 'id' => $this->get_id() ], $format, [ 'id' => '%d' ] ) ) {
-			return new \WP_Error( 'eaccounting_currency_db_update_error', __( 'Could not update currency in the database.', 'wp-ever-accounting' ), $wpdb->last_error );
+			return new \WP_Error( 'db_update_error', __( 'Could not update currency in the database.', 'wp-ever-accounting' ), $wpdb->last_error );
 		}
 
 		/**
@@ -231,7 +231,7 @@ class Currency extends Data {
 		do_action( 'eaccounting_pre_insert_currency', $data, $data_arr, $this );
 
 		if ( false === $wpdb->insert( $wpdb->prefix . 'ea_currencies', $data, $format ) ) {
-			return new \WP_Error( 'eaccounting_currency_db_insert_error', __( 'Could not insert currency into the database.', 'wp-ever-accounting' ), $wpdb->last_error );
+			return new \WP_Error( 'db_insert_error', __( 'Could not insert currency into the database.', 'wp-ever-accounting' ), $wpdb->last_error );
 		}
 
 		$this->set_id( $wpdb->insert_id );

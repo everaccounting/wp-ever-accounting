@@ -154,7 +154,7 @@ class Note extends Data {
 		do_action( 'eaccounting_pre_insert_note', $data, $data_arr, $this );
 
 		if ( false === $wpdb->insert( $wpdb->prefix . 'ea_notes', $data, $format ) ) {
-			return new \WP_Error( 'eaccounting_note_db_insert_error', __( 'Could not insert note into the database.', 'wp-ever-accounting' ), $wpdb->last_error );
+			return new \WP_Error( 'db_insert_error', __( 'Could not insert note into the database.', 'wp-ever-accounting' ), $wpdb->last_error );
 		}
 
 		$this->set_id( $wpdb->insert_id );
@@ -210,7 +210,7 @@ class Note extends Data {
 		do_action( 'eaccounting_pre_update_note', $this->get_id(), $this->to_array(), $changes, $this );
 
 		if ( false === $wpdb->update( $wpdb->prefix . 'ea_notes', $data, [ 'id' => $this->get_id() ], $format, [ 'id' => '%d' ] ) ) {
-			return new \WP_Error( 'eaccounting_note_db_update_error', __( 'Could not update note in the database.', 'wp-ever-accounting' ), $wpdb->last_error );
+			return new \WP_Error( 'db_update_error', __( 'Could not update note in the database.', 'wp-ever-accounting' ), $wpdb->last_error );
 		}
 
 		/**

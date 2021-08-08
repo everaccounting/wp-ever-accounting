@@ -144,7 +144,7 @@ class Category extends Data {
 		do_action( 'eaccounting_pre_insert_category', $data, $data_arr, $this );
 
 		if ( false === $wpdb->insert( $wpdb->prefix . 'ea_categories', $data, $format ) ) {
-			return new \WP_Error( 'eaccounting_category_db_insert_error', __( 'Could not insert category into the database.', 'wp-ever-accounting' ), $wpdb->last_error );
+			return new \WP_Error( 'db_insert_error', __( 'Could not insert category into the database.', 'wp-ever-accounting' ), $wpdb->last_error );
 		}
 
 		$this->set_id( $wpdb->insert_id );
@@ -200,7 +200,7 @@ class Category extends Data {
 		do_action( 'eaccounting_pre_update_category', $this->get_id(), $this->to_array(), $changes, $this );
 
 		if ( false === $wpdb->update( $wpdb->prefix . 'ea_categories', $data, [ 'id' => $this->get_id() ], $format, [ 'id' => '%d' ] ) ) {
-			return new \WP_Error( 'eaccounting_category_db_update_error', __( 'Could not update category in the database.', 'wp-ever-accounting' ), $wpdb->last_error );
+			return new \WP_Error( 'db_update_error', __( 'Could not update category in the database.', 'wp-ever-accounting' ), $wpdb->last_error );
 		}
 
 		/**

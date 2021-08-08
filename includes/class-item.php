@@ -169,7 +169,7 @@ class Item extends Data {
 		do_action( 'eaccounting_pre_insert_item', $data, $data_arr, $this );
 
 		if ( false === $wpdb->insert( $wpdb->prefix . 'ea_items', $data, $format ) ) {
-			return new \WP_Error( 'eaccounting_item_db_insert_error', __( 'Could not insert item into the database.', 'wp-ever-accounting' ), $wpdb->last_error );
+			return new \WP_Error( 'db_insert_error', __( 'Could not insert item into the database.', 'wp-ever-accounting' ), $wpdb->last_error );
 		}
 
 		$this->set_id( $wpdb->insert_id );
@@ -225,7 +225,7 @@ class Item extends Data {
 		do_action( 'eaccounting_pre_update_item', $this->get_id(), $this->to_array(), $changes, $this );
 
 		if ( false === $wpdb->update( $wpdb->prefix . 'ea_items', $data, [ 'id' => $this->get_id() ], $format, [ 'id' => '%d' ] ) ) {
-			return new \WP_Error( 'eaccounting_item_db_update_error', __( 'Could not update item in the database.', 'wp-ever-accounting' ), $wpdb->last_error );
+			return new \WP_Error( 'db_update_error', __( 'Could not update item in the database.', 'wp-ever-accounting' ), $wpdb->last_error );
 		}
 
 		/**

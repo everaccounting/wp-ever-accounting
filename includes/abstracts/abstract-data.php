@@ -155,7 +155,6 @@ abstract class Data {
 	 * @return mixed|null
 	 */
 	public function __get( $key ) {
-
 		// Check if we have a helper method for that.
 		if ( method_exists( $this, 'get_' . $key ) ) {
 			return call_user_func( array( $this, 'get_' . $key ) );
@@ -384,11 +383,29 @@ abstract class Data {
 	/**
 	 * Change data to JSON format.
 	 *
-	 * @since  1.1.0
 	 * @return string Data in JSON format.
+	 * @since  1.1.0
 	 */
 	public function __toString() {
 		return wp_json_encode( $this->to_array() );
+	}
+
+	/**
+	 * Makes private/protected methods readable for backward compatibility.
+	 *
+	 * @param string $name Method to call.
+	 * @param array $arguments Arguments to pass when calling.
+	 *
+	 * @return mixed|false Return value of the callback, false otherwise.
+	 * @since 1.2.1
+	 *
+	 */
+	public function __call( $name, $arguments ) {
+		if ( substr( $name, 0, 3 ) === 'get' ) {
+			return $this->get_prop( ltrim( $name, 'get_' ) );
+		}
+
+		return false;
 	}
 
 	/**

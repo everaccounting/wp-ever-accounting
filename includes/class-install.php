@@ -779,6 +779,7 @@ class Install {
 			$wp_roles->add_cap( 'administrator', 'ea_manage_options' );
 			$wp_roles->add_cap( 'administrator', 'ea_import' );
 			$wp_roles->add_cap( 'administrator', 'ea_export' );
+			$wp_roles->add_cap( 'administrator', 'ea_manage_contact' );
 			$wp_roles->add_cap( 'administrator', 'ea_manage_customer' );
 			$wp_roles->add_cap( 'administrator', 'ea_manage_vendor' );
 			$wp_roles->add_cap( 'administrator', 'ea_manage_account' );

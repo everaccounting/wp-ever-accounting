@@ -7,7 +7,7 @@
  * @package     EverAccounting
  */
 
-namespace EverAccounting\Abstracts;
+namespace EverAccounting\REST;
 
 defined( 'ABSPATH' ) || die();
 
@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || die();
  *
  * @package EverAccounting\Abstracts
  */
-abstract class Controller extends \WP_REST_Controller {
+class REST_Controller extends \WP_REST_Controller {
 	/**
 	 * Endpoint namespace.
 	 *
@@ -36,9 +36,9 @@ abstract class Controller extends \WP_REST_Controller {
 	/**
 	 * Get normalized rest base.
 	 *
-	 * @since 1.1.0
-	 * 
 	 * @return string
+	 * @since 1.1.0
+	 *
 	 */
 	protected function get_normalized_rest_base() {
 		return preg_replace( '/\(.*\)\//i', '', $this->rest_base );
@@ -83,9 +83,9 @@ abstract class Controller extends \WP_REST_Controller {
 	/**
 	 * Bulk create items.
 	 *
-	 * @param array            $items   Array of items to create.
+	 * @param array $items Array of items to create.
 	 * @param \WP_REST_Request $request Full details about the request.
-	 * @param \WP_REST_Server  $wp_rest_server
+	 * @param \WP_REST_Server $wp_rest_server
 	 *
 	 * @return array
 	 */
@@ -142,9 +142,9 @@ abstract class Controller extends \WP_REST_Controller {
 	/**
 	 * Bulk update items.
 	 *
-	 * @param array            $items   Array of items to update.
+	 * @param array $items Array of items to update.
 	 * @param \WP_REST_Request $request Full details about the request.
-	 * @param \WP_REST_Server  $wp_rest_server
+	 * @param \WP_REST_Server $wp_rest_server
 	 *
 	 * @return array
 	 */
@@ -194,7 +194,7 @@ abstract class Controller extends \WP_REST_Controller {
 	/**
 	 * Bulk delete items.
 	 *
-	 * @param array           $items Array of items to delete.
+	 * @param array $items Array of items to delete.
 	 * @param \WP_REST_Server $wp_rest_server
 	 *
 	 * @return array
@@ -270,9 +270,9 @@ abstract class Controller extends \WP_REST_Controller {
 	/**
 	 * Get the batch schema, conforming to JSON Schema.
 	 *
-	 * @since 1.1.0
-	 * 
 	 * @return array
+	 * @since 1.1.0
+	 *
 	 */
 	public function get_public_batch_schema() {
 		return array(
@@ -313,9 +313,9 @@ abstract class Controller extends \WP_REST_Controller {
 	 *
 	 * i.e Schema fields.
 	 *
-	 * @since 1.1.0
-	 * 
 	 * @return array
+	 * @since 1.1.0
+	 *
 	 */
 	protected function get_schema_properties() {
 
@@ -336,12 +336,12 @@ abstract class Controller extends \WP_REST_Controller {
 	/**
 	 * Filters fields by context.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @param string|null context view, edit or embed
 	 * @param array $fields Array of fields
 	 *
 	 * @return array
+	 * @since 1.1.0
+	 *
 	 */
 	protected function filter_response_fields_by_context( $fields, $context ) {
 
@@ -362,12 +362,12 @@ abstract class Controller extends \WP_REST_Controller {
 	/**
 	 * Filters fields by an array of requested fields.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @param array $requested array of requested fields.
-	 * @param array $fields    Array of available fields
+	 * @param array $fields Array of available fields
 	 *
 	 * @return array
+	 * @since 1.1.0
+	 *
 	 */
 	protected function filter_response_fields_by_array( $fields, $requested ) {
 
@@ -415,11 +415,11 @@ abstract class Controller extends \WP_REST_Controller {
 	 * Included fields are based on item schema and `_fields=` request argument.
 	 * Copied from WordPress 5.3 to support old versions.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return array Fields to be included in the response.
+	 * @since 1.1.0
+	 *
 	 */
 	public function get_fields_for_response( $request ) {
 
@@ -446,12 +446,12 @@ abstract class Controller extends \WP_REST_Controller {
 	 *
 	 * Included fields are based on the `_fields` request argument.
 	 *
-	 * @since 1.1.0
-	 *
-	 * @param array $data   Fields to include in the response.
+	 * @param array $data Fields to include in the response.
 	 * @param array $fields Requested fields.
 	 *
 	 * @return array Fields to be included in the response.
+	 * @since 1.1.0
+	 *
 	 */
 	public function limit_object_to_requested_fields( $data, $fields, $prefix = '' ) {
 
@@ -493,14 +493,14 @@ abstract class Controller extends \WP_REST_Controller {
 	 *
 	 * Copied from WordPress 5.3 to support old versions.
 	 *
-	 * @since 1.1.0
-	 *
-	 * @see   rest_is_field_included()
-	 *
-	 * @param array  $fields An array of string fields supported by the endpoint.
-	 * @param string $field  A field to test for inclusion in the response body.
+	 * @param array $fields An array of string fields supported by the endpoint.
+	 * @param string $field A field to test for inclusion in the response body.
 	 *
 	 * @return bool Whether to include the field or not.
+	 * @see   rest_is_field_included()
+	 *
+	 * @since 1.1.0
+	 *
 	 */
 	public function is_field_included( $field, $fields ) {
 		if ( in_array( $field, $fields, true ) ) {
@@ -532,5 +532,23 @@ abstract class Controller extends \WP_REST_Controller {
 	 */
 	protected function filter_writable_props( $schema ) {
 		return empty( $schema['readonly'] );
+	}
+
+	/**
+	 * Convert date to RFC format
+	 *
+	 * @param string|null $date Date. Default null.
+	 *
+	 * @return string|null ISO8601/RFC3339 formatted datetime.
+	 * @since 1.2.1
+	 *
+	 */
+	protected function prepare_date_response( $date = null ) {
+		// Use the date if passed.
+		if ( ! empty( $date ) || '0000-00-00 00:00:00' !== $date ) {
+			return mysql_to_rfc3339( $date );
+		}
+
+		return null;
 	}
 }

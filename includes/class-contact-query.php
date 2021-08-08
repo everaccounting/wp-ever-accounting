@@ -200,7 +200,7 @@ class Contact_Query {
 		$query_join    = &$this->sql_clauses['join'];
 		$query_orderby = &$this->sql_clauses['orderby'];
 		$query_limit   = &$this->sql_clauses['limit'];
-
+		error_log(print_r($qv, true ));
 		// Fields setup.
 		if ( is_array( $qv['fields'] ) ) {
 			$query_fields .= implode( ',', $qv['fields'] );
@@ -419,7 +419,10 @@ class Contact_Query {
 			if ( 'all' === $qv['fields'] ) {
 				foreach ( $this->results as $key => $row ) {
 					wp_cache_add( $row->id, $row, 'ea_contacts' );
-					$this->results[ $key ] = $row;
+					$contact = new Contact;
+					$contact->set_props( $row );
+					$contact->set_object_read( true );
+					$this->results[ $key ] = $contact;
 				}
 			}
 		}
