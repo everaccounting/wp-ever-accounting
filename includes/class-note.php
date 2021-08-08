@@ -87,16 +87,15 @@ class Note extends Data {
 	/**
 	 * Retrieve the note from database instance.
 	 *
-	 * @param int $note_id Note id.
+	 * @param int    $note_id Note id.
 	 * @param string $field Database field.
 	 *
 	 * @return object|false Object, false otherwise.
 	 * @since 1.2.1
 	 *
 	 * @global \wpdb $wpdb WordPress database abstraction object.
-	 *
 	 */
-	static function get_raw( $note_id, $field = 'id' ) {
+	public static function get_raw( $note_id, $field = 'id' ) {
 		global $wpdb;
 
 		$note_id = (int) $note_id;
@@ -120,7 +119,7 @@ class Note extends Data {
 	}
 
 	/**
-	 *  Insert an note in the database.
+	 *  Insert a note in the database.
 	 *
 	 * This method is not meant to call publicly instead call save
 	 * which will conditionally decide which method to call.
@@ -245,10 +244,12 @@ class Note extends Data {
 			'date_created' => '%s',
 		);
 
+		// Check if the note type exists or not
 		if ( empty( $this->get_prop( 'type' ) ) ) {
 			return new \WP_Error( 'invalid_note_type', esc_html__( 'Note type is required', 'wp-ever-accounting' ) );
 		}
 
+		// Check if note parent_id exists or not
 		if ( empty( $this->get_prop( 'parent_id' ) ) ) {
 			return new \WP_Error( 'invalid_note_parent_id', esc_html__( 'Note parent id is required', 'wp-ever-accounting' ) );
 		}
@@ -271,7 +272,6 @@ class Note extends Data {
 			return $is_error;
 		}
 
-
 		$this->apply_changes();
 
 		// Clear cache.
@@ -285,7 +285,6 @@ class Note extends Data {
 		 * @param Note $note Note object.
 		 *
 		 * @since 1.2.1
-		 *
 		 */
 		do_action( 'eaccounting_saved_note', $this->get_id(), $this );
 
@@ -329,7 +328,6 @@ class Note extends Data {
 		 * @param Item $item Note object.
 		 *
 		 * @since 1.2.1
-		 *
 		 */
 		do_action( 'eaccounting_pre_delete_note', $this->get_id(), $data, $this );
 
@@ -345,7 +343,6 @@ class Note extends Data {
 		 * @param array $data Item data array.
 		 *
 		 * @since 1.2.1
-		 *
 		 */
 		do_action( 'eaccounting_delete_note', $this->get_id(), $data );
 
@@ -368,48 +365,44 @@ class Note extends Data {
 	*/
 
 	/**
-	 * set the id.
+	 * set the parent id.
 	 *
-	 * @param int $parent_id .
+	 * @param int $parent_id Parent id.
 	 *
 	 * @since  1.1.0
-	 *
 	 */
 	public function set_parent_id( $parent_id ) {
 		$this->set_prop( 'parent_id', absint( $parent_id ) );
 	}
 
 	/**
-	 * set the id.
+	 * set the note type.
 	 *
-	 * @param string $type .
+	 * @param string $type Note type.
 	 *
 	 * @since  1.1.0
-	 *
 	 */
 	public function set_type( $type ) {
 		$this->set_prop( 'type', eaccounting_clean( $type ) );
 	}
 
 	/**
-	 * set the note.
+	 * set the note content.
 	 *
-	 * @param string $note .
+	 * @param string $note Note content.
 	 *
 	 * @since  1.1.0
-	 *
 	 */
 	public function set_content( $note ) {
 		$this->set_prop( 'content', eaccounting_sanitize_textarea( $note ) );
 	}
 
 	/**
-	 * set the note.
+	 * set the note extra.
 	 *
-	 * @param string $extra .
+	 * @param string $extra Note extra.
 	 *
 	 * @since  1.1.0
-	 *
 	 */
 	public function set_extra( $extra ) {
 		$this->set_prop( 'extra', maybe_unserialize( $extra ) );
@@ -421,9 +414,22 @@ class Note extends Data {
 	 * @param int $creator_id Creator id
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_creator_id( $creator_id = null ) {
 		$this->set_prop( 'creator_id', absint( $creator_id ) );
+	}
+
+	/**
+	 * Set object created date.
+	 *
+	 * @param string $date Created date
+	 *
+	 * @since 1.0.2
+	 */
+	public function set_date_created( $date = null ) {
+		if ( null === $date ) {
+			$date = current_time( 'mysql' );
+		}
+		$this->set_date_prop( 'date_created', $date );
 	}
 }
