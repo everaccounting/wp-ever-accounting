@@ -285,11 +285,11 @@ function eaccounting_price_convert( $amount, $from, $to = null, $from_rate = nul
 
 	if ( is_null( $from_rate ) ) {
 		$from      = eaccounting_get_currency( $from );
-		$from_rate = $from->get_rate();
+		$from_rate = $from->rate;
 	}
 	if ( is_null( $to_rate ) ) {
 		$to      = eaccounting_get_currency( $to );
-		$to_rate = $to->get_rate();
+		$to_rate = $to->rate;
 	}
 
 	if ( $from !== $default ) {

@@ -499,7 +499,7 @@ class Install {
 		  	`currency_code` varchar(3) NOT NULL DEFAULT 'USD',
 		  	`currency_rate` double(15,8) NOT NULL DEFAULT 1,
             `account_id` INT(11) NOT NULL,
-            `document_id` INT(11) DEFAULT NULL,
+            `invoice_id` INT(11) DEFAULT NULL,
 		  	`contact_id` INT(11) DEFAULT NULL,
 		  	`category_id` INT(11) NOT NULL,
 		  	`description` text,
@@ -516,7 +516,7 @@ class Install {
 		    KEY `currency_rate` (`currency_rate`),
 		    KEY `type` (`type`),
 		    KEY `account_id` (`account_id`),
-		    KEY `document_id` (`document_id`),
+		    KEY `invoice_id` (`invoice_id`),
 		    KEY `category_id` (`category_id`),
 		    KEY `contact_id` (`contact_id`)
             ) $collate",
@@ -584,9 +584,9 @@ class Install {
 		    UNIQUE KEY (`document_number`)
             ) $collate",
 
-			"CREATE TABLE {$wpdb->prefix}ea_document_items(
+			"CREATE TABLE {$wpdb->prefix}ea_invoice_items(
             `id` bigINT(20) NOT NULL AUTO_INCREMENT,
-  			`document_id` INT(11) DEFAULT NULL,
+  			`invoice_id` INT(11) DEFAULT NULL,
   			`item_id` INT(11) DEFAULT NULL,
   			`item_name` VARCHAR(191) NOT NULL,
   			`price` double(15,4) NOT NULL,
@@ -600,7 +600,7 @@ class Install {
   			`extra` longtext DEFAULT NULL,
 		    `date_created` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
 		    PRIMARY KEY (`id`),
-		    KEY `document_id` (`document_id`),
+		    KEY `invoice_id` (`invoice_id`),
 		    KEY `item_id` (`item_id`)
             ) $collate",
 

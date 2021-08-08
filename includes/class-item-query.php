@@ -238,7 +238,7 @@ class Item_Query {
 		}
 
 		if ( ! empty( $qv['sale_price_min'] ) ) {
-			$query_where .= $wpdb->prepare( " AND sale_price_min >= (%f)", (float) $qv['sale_price_min'] );
+			$query_where .= $wpdb->prepare( " AND sale_price >= (%f)", (float) $qv['sale_price_min'] );
 		}
 
 		if ( ! empty( $qv['sale_price_max'] ) ) {
@@ -252,7 +252,7 @@ class Item_Query {
 		}
 
 		if ( ! empty( $qv['purchase_price_min'] ) ) {
-			$query_where .= $wpdb->prepare( " AND purchase_price_min >= (%f)", (float) $qv['purchase_price_min'] );
+			$query_where .= $wpdb->prepare( " AND purchase_price >= (%f)", (float) $qv['purchase_price_min'] );
 		}
 
 		if ( ! empty( $qv['purchase_price_max'] ) ) {
@@ -460,9 +460,12 @@ class Item_Query {
 			$this->results = apply_filters_ref_array( 'eaccounting_items_results', array( $this->results, &$this ) );
 
 			if ( 'all' === $qv['fields'] ) {
-				foreach ( $this->results as $key => $item ) {
-					wp_cache_add( $item->id, $item, 'ea_items' );
-					$this->results[ $key ] = eaccounting_get_item( $item );
+				foreach ( $this->results as $key => $row ) {
+					wp_cache_add( $row->id, $row, 'ea_items' );
+					$item = new Item();
+					$item->set_props( $row );
+					$item->set_object_read( true );
+					$this->results[ $key ] = $item;
 				}
 			}
 		}

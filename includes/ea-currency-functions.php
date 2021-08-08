@@ -11,36 +11,30 @@
 use EverAccounting\Currency;
 
 defined( 'ABSPATH' ) || exit();
+
 /**
  * Retrieves currency data given a currency id or currency object.
  *
  * @param int|object|Currency $currency currency to retrieve
- * @param string $output The required return type. One of OBJECT, ARRAY_A, or ARRAY_N.Default OBJECT.
- * @param string $filter Type of filter to apply. Accepts 'raw', 'edit', 'db', or 'display'. Default 'raw'.
+ * @param string $output The required return type. One of OBJECT, ARRAY_A, or ARRAY_N. Default OBJECT.
  *
  * @return Currency|array|null
  * @since 1.1.0
  */
-function eaccounting_get_currency( $currency, $output = OBJECT, $filter = 'raw' ) {
+function eaccounting_get_currency( $currency, $output = OBJECT ) {
 	if ( empty( $currency ) ) {
 		return null;
 	}
 
 	if ( $currency instanceof Currency ) {
 		$_currency = $currency;
-	} elseif ( is_object( $currency ) ) {
-		$_currency = new Currency( $currency );
-	} elseif ( is_numeric( $currency ) ) {
-		$_currency = Currency::get_data_by( $currency );
 	} else {
-		$_currency = Currency::get_data_by( $currency, 'code' );
+		$_currency = new Currency( $currency );
 	}
 
-	if ( ! $_currency ) {
+	if ( $_currency->exists() ) {
 		return null;
 	}
-
-	$_currency = $_currency->filter( $filter );
 
 	if ( ARRAY_A === $output ) {
 		return $_currency->to_array();
@@ -50,496 +44,93 @@ function eaccounting_get_currency( $currency, $output = OBJECT, $filter = 'raw' 
 		return array_values( $_currency->to_array() );
 	}
 
-	return $_currency->filter( $filter );
+	return $_currency;
 }
 
 /**
- * Add or update a new currency to the database.
+ *  Insert or update a currency.
  *
- * @param array|object|Currency $currency_data An array, object, or currency object of data arguments.
+ * @param array|object|Currency $data An array, object, or currency object of data arguments.
  *
  * @return Currency|WP_Error The currency object or WP_Error otherwise.
  * @global wpdb $wpdb WordPress database abstraction object.
  * @since 1.1.0
  */
-function eaccounting_insert_currency( $currency_data ) {
-	global $wpdb;
-	if ( $currency_data instanceof Currency ) {
-		$currency_data = $currency_data->to_array();
-	} elseif ( $currency_data instanceof stdClass ) {
-		$currency_data = get_object_vars( $currency_data );
+function eaccounting_insert_currency( $data ) {
+	if ( $data instanceof Currency ) {
+		$data = $data->to_array();
+	} elseif ( is_object( $data ) ) {
+		$data = get_object_vars( $data );
 	}
 
-	$defaults = array(
-		'name'               => '',
-		'code'               => '',
-		'rate'               => '',
-		'precision'          => '',
-		'symbol'             => '',
-		'subunit'            => '',
-		'position'           => '',
-		'decimal_separator'  => '',
-		'thousand_separator' => '',
-		'enabled'            => true,
-		'date_created'       => '',
-	);
-
-	// Are we updating or creating?
-	$id      = null;
-	$update  = false;
-	$changes = $currency_data;
-	if ( ! empty( $currency_data['id'] ) ) {
-		$update = true;
-		$id     = absint( $currency_data['id'] );
-		$before = eaccounting_get_currency( $id );
-
-		if ( is_null( $before ) ) {
-			return new WP_Error( 'invalid_currency_id', __( 'Invalid currency id to update.' ) );
-		}
-		// Store changes value.
-		$changes = array_diff_assoc( $currency_data, $before->to_array() );
-
-		// Merge old and new fields with new fields overwriting old ones.
-		$currency_data = array_merge( $before->to_array(), $currency_data );
+	if ( empty( $data ) || ! is_array( $data ) ) {
+		return new WP_Error( 'invalid_currency_data', __( 'Currency could not be saved.', 'wp-ever-accounting' ) );
 	}
 
-	$data_arr = wp_parse_args( $currency_data, $defaults );
-	$data_arr = eaccounting_sanitize_currency( $data_arr, 'db' );
-	var_dump( $data_arr );
-	if ( empty( $data_arr['code'] ) ) {
-		return new WP_Error( 'invalid_currency_code', esc_html__( 'Currency code is required', 'wp-ever-accounting' ) );
+	$data = wp_parse_args( $data, array( 'id' => null ) );
+	$currency = new Currency( (int) $data['id'] );
+	$currency->set_props( $data );
+	$is_error = $currency->save();
+	if ( is_wp_error( $is_error ) ) {
+		return $is_error;
 	}
-
-	if ( empty( $data_arr['rate'] ) ) {
-		return new WP_Error( 'invalid_currency_rate', esc_html__( 'Currency rate is required', 'wp-ever-accounting' ) );
-	}
-
-	// Merge with default;
-	$iso      = eaccounting_get_data( 'currencies' );
-	$data_arr = array_merge( $data_arr, $iso[ $data_arr['code'] ] );
-
-	if ( ! $update && eaccounting_get_currency( $data_arr['code'] ) ) {
-		return new WP_Error( 'existing_currency_code', __( 'Sorry, that currency code already exists!', 'wp-ever-accounting' ) );
-	}
-
-	if ( empty( $data_arr['name'] ) ) {
-		return new WP_Error( 'invalid_currency_name', esc_html__( 'Currency name is required', 'wp-ever-accounting' ) );
-	}
-
-	if ( empty( $data_arr['symbol'] ) ) {
-		return new WP_Error( 'invalid_currency_symbol', esc_html__( 'Currency symbol is required', 'wp-ever-accounting' ) );
-	}
-	if ( empty( $data_arr['date_created'] ) || '0000-00-00 00:00:00' === $data_arr['date_created'] ) {
-		$data_arr['date_created'] = current_time( 'mysql' );
-	}
-
-	// Compute fields.
-	$name               = $data_arr['name'];
-	$code               = $data_arr['code'];
-	$rate               = $data_arr['rate'];
-	$precision          = $data_arr['precision'];
-	$symbol             = $data_arr['symbol'];
-	$position           = $data_arr['position'];
-	$decimal_separator  = $data_arr['decimal_separator'];
-	$thousand_separator = $data_arr['thousand_separator'];
-	$enabled            = (int) $data_arr['enabled'];
-	$date_created       = $data_arr['date_created'];
-	$data               = compact( 'name', 'code', 'rate', 'precision', 'symbol', 'position', 'decimal_separator', 'thousand_separator', 'enabled', 'date_created' );
-
-	/**
-	 * Filters currency data before it is inserted into the database.
-	 *
-	 * @param array $data Currency data to be inserted.
-	 * @param array $data_arr Sanitized currency data.
-	 * @param array $currency_data Currency data as originally passed to the function.
-	 *
-	 * @since 1.2.1
-	 *
-	 */
-	$data = apply_filters( 'eaccounting_insert_currency_data', $data, $data_arr, $currency_data );
-
-	$data  = wp_unslash( $data );
-	$where = array( 'id' => $id );
-
-	if ( $update ) {
-
-		/**
-		 * Fires immediately before an existing currency is updated in the database.
-		 *
-		 * @param int $id Currency id.
-		 * @param array $data Currency data to be inserted.
-		 * @param array $changes Currency data to be updated.
-		 * @param array $data_arr Sanitized currency data.
-		 *
-		 * @since 1.2.1
-		 *
-		 */
-		do_action( 'eaccounting_pre_update_currency', $id, $data, $changes, $data_arr );
-		if ( false === $wpdb->update( $wpdb->prefix . 'ea_currencies', $data, $where ) ) {
-			new WP_Error( 'db_update_error', __( 'Could not update currency in the database.' ), $wpdb->last_error );
-		}
-
-		/**
-		 * Fires immediately after an existing currency is updated in the database.
-		 *
-		 * @param int $id Currency id.
-		 * @param array $data Currency data to be inserted.
-		 * @param array $changes Currency data to be updated.
-		 * @param array $data_arr Sanitized currency data.
-		 *
-		 * @since 1.2.1
-		 *
-		 */
-		do_action( 'eaccounting_update_currency', $id, $data, $changes, $data_arr );
-	} else {
-
-		/**
-		 * Fires immediately before an existing currency is inserted in the database.
-		 *
-		 * @param array $data Currency data to be inserted.
-		 * @param string $data_arr Sanitized currency data.
-		 * @param array $currency_data Currency data as originally passed to the function.
-		 *
-		 * @since 1.2.1
-		 *
-		 */
-		do_action( 'eaccounting_pre_insert_currency', $data, $data_arr, $currency_data );
-
-		if ( false === $wpdb->insert( $wpdb->prefix . 'ea_currencies', $data ) ) {
-			new WP_Error( 'db_insert_error', __( 'Could not insert currency into the database.' ), $wpdb->last_error );
-		}
-
-		$id = (int) $wpdb->insert_id;
-
-		/**
-		 * Fires immediately after an existing currency is inserted in the database.
-		 *
-		 * @param int $id Currency id.
-		 * @param array $data Currency has been inserted.
-		 * @param array $data_arr Sanitized currency data.
-		 * @param array $currency_data Currency data as originally passed to the function.
-		 *
-		 * @since 1.2.1
-		 *
-		 */
-		do_action( 'eaccounting_insert_currency', $id, $data, $data_arr, $currency_data );
-	}
-
-	// Clear cache.
-	eaccounting_delete_cache( 'ea_currencies', $id );
-
-	// Get new currency object.
-	$currency = eaccounting_get_currency( $id );
-
-	/**
-	 * Fires once an currency has been saved.
-	 *
-	 * @param int $id Currency id.
-	 * @param Currency $currency Currency object.
-	 * @param bool $update Whether this is an existing currency being updated.
-	 *
-	 * @since 1.2.1
-	 *
-	 */
-	do_action( 'eaccounting_saved_currency', $id, $currency, $update );
 
 	return $currency;
 }
 
 /**
- * Delete a currency.
+ * Delete an currency.
  *
- * @param int|string $currency_id Note id.
+ * @param int $currency_id Currency ID
  *
- * @return Currency |false|null Note data on success, false or null on failure.
+ * @return array|false Currency array data on success, false on failure.
  * @since 1.1.0
- *
  */
 function eaccounting_delete_currency( $currency_id ) {
-	global $wpdb;
+	if ( $currency_id instanceof Currency ) {
+		$currency_id = $currency_id->get_id();
+	}
 
-	$currency = eaccounting_get_currency( $currency_id );
+	if ( empty( $currency_id ) ) {
+		return false;
+	}
+
+	$currency = new Currency( (int) $currency_id );
 	if ( ! $currency->exists() ) {
 		return false;
 	}
 
-	/**
-	 * Filters whether a currency delete should take place.
-	 *
-	 * @param bool|null $delete Whether to go forward with deletion.
-	 * @param Currency $currency currency object.
-	 *
-	 * @since 1.2.1
-	 *
-	 */
-	$check = apply_filters( 'eaccounting_pre_delete_currency', null, $currency );
-	if ( null !== $check ) {
-		return $check;
-	}
-
-	/**
-	 * Fires before currency is deleted.
-	 *
-	 * @param int $currency_id Currency id.
-	 * @param Currency $currency Currency object.
-	 *
-	 * @since 1.2.1
-	 *
-	 * @see eaccounting_delete_currency()
-	 *
-	 */
-	do_action( 'eaccounting_before_delete_currency', $currency_id, $currency );
-
-	$result = $wpdb->delete( $wpdb->prefix . 'ea_currencies', array( 'id' => $currency_id ) );
-	if ( ! $result ) {
-		return false;
-	}
-
-	eaccounting_delete_cache( 'ea_currencies', $currency_id );
-
-	/**
-	 * Fires after currency is deleted.
-	 *
-	 * @param int $currency_id currency id.
-	 * @param Currency $currency currency object.
-	 *
-	 * @since 1.2.1
-	 *
-	 * @see eaccounting_delete_currency()
-	 *
-	 */
-	do_action( 'eaccounting_delete_currency', $currency_id, $currency );
-
-	return $currency;
+	return $currency->delete();
 }
 
 /**
- * Get currency items.
+ * Retrieves an array of the currencies matching the given criteria.
  *
- * @param array $args
+ * @param array $args Arguments to retrieve currencies.
  *
- * @return array|int|null
+ * @return Currency[]|int Array of currency objects or count.
  * @since 1.1.0
- *
  *
  */
 function eaccounting_get_currencies( $args = array() ) {
-	global $wpdb;
-	$args = wp_parse_args(
-		$args,
-		array(
-			'search'      => '',
-			'fields'      => '*',
-			'orderby'     => 'name',
-			'order'       => 'ASC',
-			'number'      => - 1,
-			'offset'      => 0,
-			'paged'       => 1,
-			'return'      => 'objects',
-			'count_total' => false,
-		)
+	$defaults = array(
+		'number'        => 20,
+		'orderby'       => 'name',
+		'order'         => 'DESC',
+		'include'       => array(),
+		'exclude'       => array(),
+		'no_found_rows' => false,
+		'count_total'   => false,
 	);
 
-	$qv           = apply_filters( 'eaccounting_get_currencies_args', $args );
-	$table        = $wpdb->prefix . 'ea_currencies';
-	$columns      = [ 'name', 'code', 'symbol', 'enabled', 'date_created' ];
-	$qv['fields'] = wp_parse_list( $qv['fields'] );
-	foreach ( $qv['fields'] as $index => $field ) {
-		if ( ! in_array( $field, $columns, true ) ) {
-			unset( $qv['fields'][ $index ] );
-		}
-	}
-	$fields = is_array( $qv['fields'] ) && ! empty( $qv['fields'] ) ? implode( ',', $qv['fields'] ) : '*';
-	$where  = 'WHERE 1=1';
-
-	if ( ! empty( $qv['include'] ) ) {
-		$include = implode( ',', wp_parse_id_list( $qv['include'] ) );
-		$where   .= " AND $table.`id` IN ($include)";
-	} elseif ( ! empty( $qv['exclude'] ) ) {
-		$exclude = implode( ',', wp_parse_id_list( $qv['exclude'] ) );
-		$where   .= " AND $table.`id` NOT IN ($exclude)";
+	$parsed_args = wp_parse_args( $args, $defaults );
+	$query       = new \EverAccounting\Currency_Query( $parsed_args );
+	if ( true === $parsed_args['count_total'] ) {
+		return $query->get_total();
 	}
 
-	if ( ! empty( $qv['status'] ) && ! in_array( $qv['status'], array( 'all', 'any' ), true ) ) {
-		$status = eaccounting_string_to_bool( $qv['status'] );
-		$status = eaccounting_bool_to_number( $status );
-		$where  .= " AND $table.`enabled` = ('$status')";
-	}
 
-	if ( ! empty( $qv['date_created'] ) && is_array( $qv['date_created'] ) ) {
-		$date_created_query = new \WP_Date_Query( $qv['date_created'], "{$table}.date_created" );
-		$where              .= $date_created_query->get_sql();
-	}
-
-	$search_cols = array( 'name', 'code' );
-	if ( ! empty( $qv['search'] ) ) {
-		$searches = array();
-		$where    .= ' AND (';
-		foreach ( $search_cols as $col ) {
-			$searches[] = $wpdb->prepare( $col . ' LIKE %s', '%' . $wpdb->esc_like( $qv['search'] ) . '%' );
-		}
-		$where .= implode( ' OR ', $searches );
-		$where .= ')';
-	}
-
-	$order   = isset( $qv['order'] ) ? strtoupper( $qv['order'] ) : 'ASC';
-	$orderby = isset( $qv['orderby'] ) && in_array( $qv['orderby'], $columns, true ) ? eaccounting_clean( $qv['orderby'] ) : "{$table}.id";
-
-	$limit = '';
-	if ( isset( $qv['number'] ) && $qv['number'] > 0 ) {
-		if ( $qv['offset'] ) {
-			$limit = $wpdb->prepare( 'LIMIT %d, %d', $qv['offset'], $qv['number'] );
-		} else {
-			$limit = $wpdb->prepare( 'LIMIT %d, %d', $qv['number'] * ( $qv['paged'] - 1 ), $qv['number'] );
-		}
-	}
-
-	$select      = "SELECT {$fields}";
-	$from        = "FROM {$wpdb->prefix}$table $table";
-	$orderby     = "ORDER BY {$orderby} {$order}";
-	$count_total = true === $qv['count_total'];
-	$clauses     = compact( 'select', 'from', 'where', 'orderby', 'limit' );
-	$cache_key   = 'query:' . md5( serialize( $qv ) ) . ':' . wp_cache_get_last_changed( 'ea_currencies' );
-	$results     = wp_cache_get( $cache_key, 'ea_currencies' );
-	if ( false === $results ) {
-		if ( $count_total ) {
-			$results = (int) $wpdb->get_var( "SELECT COUNT(id) $from $where" );
-			wp_cache_set( $cache_key, $results, 'ea_currencies' );
-		} else {
-			$results = $wpdb->get_results( implode( ' ', $clauses ) );
-			if ( in_array( $fields, array( 'all', '*' ), true ) ) {
-				foreach ( $results as $key => $item ) {
-					wp_cache_set( $item->id, $item, 'ea_currencies' );
-					wp_cache_set( $item->name . '-' . $item->type, $item, 'ea_currencies' );
-				}
-			}
-			wp_cache_set( $cache_key, $results, 'ea_currencies' );
-		}
-	}
-
-	if ( 'objects' === $qv['return'] && true !== $qv['count_total'] ) {
-		$results = array_map( 'eaccounting_get_currency', $results );
-	}
-
-	return $results;
-}
-
-
-/**
- * Sanitizes every currency field.
- *
- * If the context is 'raw', then the currency object or array will get minimal
- * sanitization of the integer fields.
- *
- * @param object|array $currency The currency object or array
- * @param string $context Optional. How to sanitize currency fields. Accepts 'raw', 'edit', 'db', 'display'. Default 'display'.
- *
- * @return object|Currency|array The now sanitized currency object or array
- * @see eaccounting_sanitize_currency_field()
- *
- * @since 1.2.1
- *
- */
-function eaccounting_sanitize_currency( $currency, $context = 'raw' ) {
-	if ( is_object( $currency ) ) {
-		// Check if post already filtered for this context.
-		if ( isset( $currency->filter ) && $context == $currency->filter ) {
-			return $currency;
-		}
-		if ( ! isset( $currency->id ) ) {
-			$currency->id = 0;
-		}
-		foreach ( array_keys( get_object_vars( $currency ) ) as $field ) {
-			$currency->$field = eaccounting_sanitize_currency_field( $field, $currency->$field, $currency->id, $context );
-		}
-		$currency->filter = $context;
-	} elseif ( is_array( $currency ) ) {
-		// Check if post already filtered for this context.
-		if ( isset( $currency['filter'] ) && $context == $currency['filter'] ) {
-			return $currency;
-		}
-		if ( ! isset( $currency['id'] ) ) {
-			$currency['id'] = 0;
-		}
-		foreach ( array_keys( $currency ) as $field ) {
-			$currency[ $field ] = eaccounting_sanitize_currency_field( $field, $currency[ $field ], $currency['id'], $context );
-		}
-		$currency['filter'] = $context;
-	}
-
-	return $currency;
-}
-
-/**
- * Sanitizes a currency field based on context.
- *
- * Possible context values are:  'raw', 'edit', 'db', 'display'.
- *
- * @param string $field The currency Object field name.
- * @param mixed $value The currency Object value.
- * @param int $currency_id Currency id.
- * @param string $context Optional. How to sanitize the field. Possible values are 'raw', 'edit','db', 'display'. Default 'display'.
- *
- * @return mixed Sanitized value.
- * @since 1.2.1
- *
- */
-function eaccounting_sanitize_currency_field( $field, $value, $currency_id, $context ) {
-	if ( false !== strpos( $field, '_id' ) || $field === 'id' ) {
-		$value = absint( $value );
-	}
-
-	$context = strtolower( $context );
-
-	if ( 'raw' === $context ) {
-		return $value;
-	}
-
-	if ( 'edit' === $context ) {
-
-		/**
-		 * Filters an currency field to edit before it is sanitized.
-		 *
-		 * @param mixed $value Value of the currency field.
-		 * @param int $currency_id Currency id.
-		 *
-		 * @since 1.2.1
-		 *
-		 */
-		$value = apply_filters( "eaccounting_edit_currency_{$field}", $value, $currency_id );
-
-	} elseif ( 'db' === $context ) {
-
-		/**
-		 * Filters a currency field value before it is sanitized.
-		 *
-		 * @param mixed $value Value of the currency field.
-		 * @param int $currency_id Currency id.
-		 *
-		 * @since 1.2.1
-		 *
-		 */
-		$value = apply_filters( "eaccounting_pre_currency_{$field}", $value, $currency_id );
-
-	} else {
-		// Use display filters by default.
-
-		/**
-		 * Filters the currency field sanitized for display.
-		 *
-		 * The dynamic portion of the filter name, `$field`, refers to the currency field name.
-		 *
-		 * @param mixed $value Value of the currency field.
-		 * @param int $currency_id currency id.
-		 * @param string $context Context to retrieve the currency field value.
-		 *
-		 * @since 1.2.1
-		 *
-		 */
-		$value = apply_filters( "eaccounting_currency_{$field}", $value, $currency_id, $context );
-	}
-
-	return $value;
+	return $query->get_results();
 }
 
 /**

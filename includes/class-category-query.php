@@ -1,6 +1,6 @@
 <?php
 /**
- * Account Query class.
+ * Category Query class.
  * @since   1.2.1
  * @package   EverAccounting
  */
@@ -8,10 +8,10 @@
 namespace EverAccounting;
 
 /**
- * Class Account_Query
+ * Class Category_Query
  * @package EverAccounting
  */
-class Account_Query {
+class Category_Query {
 	/**
 	 * SQL string used to perform database query.
 	 *
@@ -54,7 +54,7 @@ class Account_Query {
 	public $query_var_defaults;
 
 	/**
-	 * List of accounts located by the query.
+	 * List of categories located by the query.
 	 *
 	 * @since 1.2.1
 	 * @var array
@@ -62,7 +62,7 @@ class Account_Query {
 	public $results = [];
 
 	/**
-	 * The number of accounts found for the current query.
+	 * The number of categories found for the current query.
 	 *
 	 * @since 1.2.1
 	 * @var int
@@ -74,7 +74,7 @@ class Account_Query {
 	 * @since 1.2.1
 	 * @var string
 	 */
-	const TABLE_NAME = 'ea_accounts';
+	const TABLE_NAME = 'ea_categories';
 
 	/**
 	 * Table name with prefix.
@@ -87,7 +87,7 @@ class Account_Query {
 	/**
 	 * Constructor.
 	 *
-	 * Sets up the account query, if parameter is not empty.
+	 * Sets up the Category query, if parameter is not empty.
 	 *
 	 * @param string|array $query Query string or array of vars.
 	 *
@@ -96,23 +96,17 @@ class Account_Query {
 	 */
 	public function __construct( $query = null ) {
 		$this->query_var_defaults = array(
-			'balance_min'             => '',
-			'balance_max'             => '',
-			'balance_between'         => '',
-			'opening_balance_min'     => '',
-			'opening_balance_max'     => '',
-			'opening_balance_between' => '',
-			'include'                 => array(),
-			'exclude'                 => array(),
-			'search'                  => '',
-			'search_columns'          => array(),
-			'orderby'                 => 'name',
-			'order'                   => 'ASC',
-			'offset'                  => '',
-			'number'                  => 20,
-			'paged'                   => 1,
-			'no_found_rows'           => false,
-			'fields'                  => 'all',
+			'include'        => array(),
+			'exclude'        => array(),
+			'search'         => '',
+			'search_columns' => array(),
+			'orderby'        => 'name',
+			'order'          => 'ASC',
+			'offset'         => '',
+			'number'         => 20,
+			'paged'          => 1,
+			'no_found_rows'  => false,
+			'fields'         => 'all',
 		);
 
 		if ( ! is_null( $query ) ) {
@@ -186,7 +180,7 @@ class Account_Query {
 		 * @since 1.2.1
 		 *
 		 */
-		do_action_ref_array( 'eaccounting_parse_account_query', array( &$this ) );
+		do_action_ref_array( 'eaccounting_parse_category_query', array( &$this ) );
 
 
 		/**
@@ -197,7 +191,7 @@ class Account_Query {
 		 * @since 1.2.1
 		 *
 		 */
-		$qv = apply_filters( 'eaccounting_get_accounts_args', $qv );
+		$qv = apply_filters( 'eaccounting_get_categories_args', $qv );
 
 		// Alias.
 		$query_fields  = &$this->sql_clauses['fields'];
@@ -234,31 +228,9 @@ class Account_Query {
 			$query_where .= " AND $this->table.id NOT IN ($ids)";
 		}
 
-		if ( $qv['orderby'] === 'balance' || ! empty( $qv['balance_min'] ) || empty( $qv['balance_max'] ) || ! empty( $qv['balance_between'] ) ) {
-			$query_join .= " LEFT OUTER JOIN (
-				SELECT account_id, SUM(CASE WHEN type='income' then amount WHEN type='expense' then - amount END) balance, currency_code code
-				FROM {$wpdb->prefix}ea_transactions
-				group by account_id, currency_code
-			) transactions ON ({$this->table}.id = transactions.account_id)
-			";
-		}
-		if ( ! empty( $qv['balance_min'] ) ) {
-			$query_where .= $wpdb->prepare( " AND transactions >= (%f)", (float) $qv['balance_min'] );
-		}
-
-		if ( ! empty( $qv['balance_max'] ) ) {
-			$query_where .= $wpdb->prepare( " AND transactions <= (%f)", (float) $qv['balance_max'] );
-		}
-
-		if ( ! empty( $qv['balance_between'] ) && is_array( $qv['balance_between'] ) ) {
-			$min                        = min( $qv['balance_between'] );
-			$max                        = max( $qv['balance_between'] );
-			$query_where .= $wpdb->prepare( " AND transactions >= (%f) AND transactions <= (%f) ", (float) $min, (float) $max );
-		}
-
 		// Search
 		$search         = '';
-		$search_columns = array( 'name', 'number', 'bank_name', 'bank_phone', 'bank_address' );
+		$search_columns = array( 'name' );
 		if ( ! empty( $qv['search'] ) ) {
 			$search = trim( $qv['search'] );
 		}
@@ -282,21 +254,20 @@ class Account_Query {
 			}
 
 			/**
-			 * Filters the columns to search in a Account_Query search.
+			 * Filters the columns to search in a Category_Query search.
 			 *
 			 *
 			 * @param string[] $search_columns Array of column names to be searched.
 			 * @param string $search Text being searched.
-			 * @param Account_Query $query The current Account_Query instance.
+			 * @param Category_Query $query The current Category_Query instance.
 			 *
 			 * @since 1.2.1
 			 *
 			 */
-			$search_columns = apply_filters( 'eaccounting_account_search_columns', $search_columns, $search, $this );
+			$search_columns = apply_filters( 'eaccounting_category_search_columns', $search_columns, $search, $this );
 
-			$this->sql_clauses['where'] .= $this->get_search_sql( $search, $search_columns, $wild );
+			$query_where .= $this->get_search_sql( $search, $search_columns, $wild );
 		}
-
 
 		// Order
 		$order = $this->parse_order( $qv['order'] );
@@ -367,17 +338,17 @@ class Account_Query {
 		 * fields (SELECT), and LIMITS clauses.
 		 *
 		 * @param string[] $clauses Associative array of the clauses for the query.
-		 * @param Account_Query $query The Account_Query instance (passed by reference).
+		 * @param Category_Query $query The Category_Query instance (passed by reference).
 		 *
 		 * @since 1.2.1
 		 *
 		 */
-		$clauses = (array) apply_filters_ref_array( 'eaccounting_account_query_clauses', array( $this->sql_clauses, &$this ) );
+		$clauses = (array) apply_filters_ref_array( 'eaccounting_category_query_clauses', array( $this->sql_clauses, &$this ) );
 
 		$key          = md5( serialize( wp_array_slice_assoc( $this->query_vars, array_keys( $this->query_var_defaults ) ) ) . $this->request );
-		$last_changed = wp_cache_get_last_changed( 'ea_accounts' );
-		$cache_key    = "ea_accounts:$key:$last_changed";
-		$cache        = wp_cache_get( $cache_key, 'ea_accounts' );
+		$last_changed = wp_cache_get_last_changed( 'ea_categories' );
+		$cache_key    = "ea_categories:$key:$last_changed";
+		$cache        = wp_cache_get( $cache_key, 'ea_categories' );
 
 		if ( false !== $cache ) {
 			$this->results = $cache->results;
@@ -393,12 +364,12 @@ class Account_Query {
 		 *
 		 * @param array|null $results Return an array of user data to short-circuit the query
 		 *                               or null to allow its normal queries.
-		 * @param Account_Query $query The Account_Query instance (passed by reference).
+		 * @param Category_Query $query The Category_Query instance (passed by reference).
 		 *
 		 * @since 1.2.1
 		 *
 		 */
-		$this->results = apply_filters_ref_array( 'eaccounting_pre_account_query', array( null, &$this ) );
+		$this->results = apply_filters_ref_array( 'eaccounting_pre_category_query', array( null, &$this ) );
 
 		if ( null === $this->results ) {
 			$this->request = "SELECT {$clauses['fields']} {$clauses['from']} {$clauses['join']} {$clauses['where']} {$clauses['groupby']} {$clauses['having']} {$clauses['orderby']} {$clauses['limit']}";
@@ -411,38 +382,35 @@ class Account_Query {
 
 			if ( ! $this->query_vars['no_found_rows'] ) {
 				/**
-				 * Filters SELECT FOUND_ROWS() query for the current Account_Query instance.
+				 * Filters SELECT FOUND_ROWS() query for the current Category_Query instance.
 				 *
-				 * @param string $sql The SELECT FOUND_ROWS() query for the current Account_Query.
-				 * @param Account_Query $query The current Account_Query instance.
+				 * @param string $sql The SELECT FOUND_ROWS() query for the current Category_Query.
+				 * @param Category_Query $query The current Category_Query instance.
 				 *
 				 * @global \wpdb $wpdb WordPress database abstraction object.
 				 *
 				 * @since 1.2.1
 				 *
 				 */
-				$count_query = apply_filters( 'eaccounting_count_accounts_query', 'SELECT FOUND_ROWS()', $this );
+				$count_query = apply_filters( 'eaccounting_count_categories_query', 'SELECT FOUND_ROWS()', $this );
 				$this->total = (int) $wpdb->get_var( $count_query );
 			}
 
 			/**
-			 * Filters the raw account results array.
+			 * Filters the raw category results array.
 			 *
-			 * @param Account[] $items Array of items objects.
-			 * @param Account_Query $query The Account_Query instance (passed by reference).
+			 * @param Category[] $categories Array of categories objects.
+			 * @param Category_Query $query The Category_Query instance (passed by reference).
 			 *
 			 * @since 1.2.1
 			 *
 			 */
-			$this->results = apply_filters_ref_array( 'eaccounting_accounts_results', array( $this->results, &$this ) );
+			$this->results = apply_filters_ref_array( 'eaccounting_categories_results', array( $this->results, &$this ) );
 
 			if ( 'all' === $qv['fields'] ) {
 				foreach ( $this->results as $key => $row ) {
-					wp_cache_add( $row->id, $row, 'ea_accounts' );
-					$account = new Account();
-					$account->set_props( $row );
-					$account->set_object_read( true );
-					$this->results[ $key ] = $account;
+					wp_cache_add( $row->id, $row, 'ea_categories' );
+					$this->results[ $key ] = $row;
 				}
 			}
 		}
@@ -452,7 +420,7 @@ class Account_Query {
 		$cache->total   = $this->total;
 
 
-		wp_cache_add( $cache_key, $cache, 'ea_accounts' );
+		wp_cache_add( $cache_key, $cache, 'ea_categories' );
 
 		return $this->results;
 	}
@@ -502,15 +470,7 @@ class Account_Query {
 	 */
 	protected function parse_orderby( $orderby ) {
 		$_orderby = '';
-		if ( in_array( $orderby, array(
-			'name',
-			'number',
-			'currency_code',
-			'bank_name',
-			'bank_phone',
-			'bank_address',
-			'balance',
-		), true ) ) {
+		if ( $orderby === 'name' ) {
 			$_orderby = $orderby;
 		} elseif ( 'id' === $orderby ) {
 			$_orderby = 'id';
@@ -545,7 +505,7 @@ class Account_Query {
 	}
 
 	/**
-	 * Return the list of accounts.
+	 * Return the list of categories.
 	 *
 	 * @return array Array of results.
 	 * @since 1.2.1
@@ -556,9 +516,9 @@ class Account_Query {
 	}
 
 	/**
-	 * Return the total number of accounts for the current query.
+	 * Return the total number of categories for the current query.
 	 *
-	 * @return int Number of total accounts.
+	 * @return int Number of total categories.
 	 * @since 1.2.1
 	 *
 	 */

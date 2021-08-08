@@ -33,18 +33,12 @@ defined( 'ABSPATH' ) || exit;
  * @property string $date_created
  */
 class Account extends Data {
-	/**
-	 * Account id.
-	 *
-	 * @since 1.2.1
-	 * @var int
-	 */
-	protected $id = null;
 
 	/**
-	 * Account data container.
+	 * Item Data array.
 	 *
-	 * @since 1.2.1
+	 * @since 1.1.0
+	 *
 	 * @var array
 	 */
 	protected $data = array(
@@ -62,17 +56,50 @@ class Account extends Data {
 	);
 
 	/**
-	 * Retrieve Account instance.
+	 * Account constructor.
 	 *
-	 * @param int $account_id Account id.
+	 * Get the account if ID is passed, otherwise the account is new and empty.
 	 *
-	 * @return Account|false Account object, false otherwise.
+	 * @param int|object|Account $account object to read.
+	 *
+	 * @since 1.1.0
+	 */
+	public function __construct( $account = 0 ) {
+		parent::__construct();
+		if ( $account instanceof self ) {
+			$this->set_id( $account->get_id() );
+		} elseif ( is_object( $account ) && ! empty( $account->id ) ) {
+			$this->set_id( $account->id );
+		} elseif ( is_array( $account ) && ! empty( $account['id'] ) ) {
+			$this->set_props( $account );
+		} elseif ( is_numeric( $account ) ) {
+			$this->set_id( $account );
+		} else {
+			$this->set_object_read( true );
+		}
+
+		$data = self::get_raw( $this->get_id() );
+		if ( $data ) {
+			$this->set_props( $data );
+			$this->set_object_read( true );
+		} else {
+			$this->set_id( 0 );
+		}
+	}
+
+	/**
+	 * Retrieve the object from database instance.
+	 *
+	 * @param int $account_id Object id.
+	 * @param string $field Database field.
+	 *
+	 * @return object|false Object, false otherwise.
 	 * @since 1.2.1
 	 *
 	 * @global \wpdb $wpdb WordPress database abstraction object.
 	 *
 	 */
-	public static function get_instance( $account_id ) {
+	static function get_raw( $account_id, $field = 'id' ) {
 		global $wpdb;
 
 		$account_id = (int) $account_id;
@@ -80,39 +107,416 @@ class Account extends Data {
 			return false;
 		}
 
-		$_account = wp_cache_get( $account_id, 'ea_accounts' );
+		$account = wp_cache_get( $account_id, 'ea_accounts' );
 
-		if ( ! $_account ) {
-			$_account = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}ea_accounts WHERE id = %d LIMIT 1", $account_id ) );
+		if ( ! $account ) {
+			$account = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}ea_accounts WHERE id = %d LIMIT 1", $account_id ) );
 
-			if ( ! $_account ) {
+			if ( ! $account ) {
 				return false;
 			}
 
-			$_account = eaccounting_sanitize_account( $_account, 'raw' );
-			wp_cache_add( $_account->id, $_account, 'ea_accounts' );
+			wp_cache_add( $account->id, $account, 'ea_accounts' );
 		}
 
-		$account = new Account;
-		$account->set_props( $_account );
-		$account->object_read = true;
-
-		return $account;
+		return apply_filters( 'eaccounting_account_raw_item', $account );
 	}
 
 	/**
-	 * Account constructor.
+	 *  Insert an account in the database.
 	 *
-	 * @param $account
+	 * This method is not meant to call publicly instead call save
+	 * which will conditionally decide which method to call.
 	 *
-	 * @since 1.2.1
+	 * @param array $fields An array of database fields and type.
+	 *
+	 * @return \WP_Error|true True on success, WP_Error on failure.
+	 * @global \wpdb $wpdb WordPress database abstraction object.
+	 * @since 1.1.0
 	 */
-	public function __construct( $account = null ) {
-		parent::__construct();
-		if ( is_object( $account ) ) {
-			$this->set_props( $account );
+	protected function insert( $fields ) {
+		global $wpdb;
+		$data_arr = $this->to_array();
+		$data     = wp_array_slice_assoc( $data_arr, array_keys( $fields ) );
+		$format   = wp_array_slice_assoc( $fields, array_keys( $data ) );
+		$data     = wp_unslash( $data );
+
+		// Bail if nothing to save
+		if ( empty( $data ) ) {
+			return true;
 		}
 
+		/**
+		 * Fires immediately before an account is inserted in the database.
+		 *
+		 * @param array $data Account data to be inserted.
+		 * @param string $data_arr Sanitized account data.
+		 * @param Account $account Account object.
+		 *
+		 * @since 1.2.1
+		 */
+		do_action( 'eaccounting_pre_insert_account', $data, $data_arr, $this );
+
+		if ( false === $wpdb->insert( $wpdb->prefix . 'ea_accounts', $data, $format ) ) {
+			return new \WP_Error( 'eaccounting_account_db_insert_error', __( 'Could not insert account into the database.', 'wp-ever-accounting' ), $wpdb->last_error );
+		}
+
+		$this->set_id( $wpdb->insert_id );
+
+		/**
+		 * Fires immediately after an account is inserted in the database.
+		 *
+		 * @param int $account_id Account id.
+		 * @param array $data Account data to be inserted.
+		 * @param string $data_arr Sanitized account data.
+		 * @param Account $account Account object.
+		 *
+		 * @since 1.2.1
+		 */
+		do_action( 'eaccounting_insert_account', $this->id, $data, $data_arr, $this );
+
+		return true;
+	}
+
+	/**
+	 *  Update an account in the database.
+	 *
+	 * This method is not meant to call publicly instead call save
+	 * which will conditionally decide which method to call.
+	 *
+	 * @param array $fields An array of database fields and type.
+	 *
+	 * @return \WP_Error|true True on success, WP_Error on failure.
+	 * @global \wpdb $wpdb WordPress database abstraction object.
+	 * @since 1.1.0
+	 */
+	protected function update( $fields ) {
+		global $wpdb;
+		$changes = $this->get_changes();
+		$data    = wp_array_slice_assoc( $changes, array_keys( $fields ) );
+		$format  = wp_array_slice_assoc( $fields, array_keys( $data ) );
+		$data    = wp_unslash( $data );
+		// Bail if nothing to save
+		if ( empty( $data ) ) {
+			return true;
+		}
+
+		/**
+		 * Fires immediately before an existing account is updated in the database.
+		 *
+		 * @param int $account_id Account id.
+		 * @param array $data Account data.
+		 * @param array $changes The data will be updated.
+		 * @param Account $account Account object.
+		 *
+		 * @since 1.2.1
+		 */
+		do_action( 'eaccounting_pre_update_account', $this->get_id(), $this->to_array(), $changes, $this );
+
+		if ( false === $wpdb->update( $wpdb->prefix . 'ea_accounts', $data, [ 'id' => $this->get_id() ], $format, [ 'id' => '%d' ] ) ) {
+			return new \WP_Error( 'eaccounting_account_db_update_error', __( 'Could not update account in the database.', 'wp-ever-accounting' ), $wpdb->last_error );
+		}
+
+		/**
+		 * Fires immediately after an existing account is updated in the database.
+		 *
+		 * @param int $account_id Account id.
+		 * @param array $data Account data.
+		 * @param array $changes The data will be updated.
+		 * @param Account $account Account object.
+		 *
+		 * @since 1.2.1
+		 */
+		do_action( 'eaccounting_pre_update_account', $this->get_id(), $this->to_array(), $changes, $this );
+
+		return true;
+	}
+
+	/**
+	 * Saves an account in the database.
+	 *
+	 * @return \WP_Error|int id on success, WP_Error on failure.
+	 * @since 1.1.0
+	 */
+	public function save() {
+		$user_id = get_current_user_id();
+		$fields  = array(
+			'id'              => '%d',
+			'currency_code'   => '%s',
+			'name'            => '%s',
+			'number'          => '%s',
+			'opening_balance' => '%.4f',
+			'bank_name'       => '%s',
+			'bank_phone'      => '%s',
+			'bank_address'    => '%s',
+			'thumbnail_id'    => '%d',
+			'enabled'         => '%d',
+			'creator_id'      => '%d',
+			'date_created'    => '%s',
+		);
+
+		if ( empty( $this->get_prop( 'name' ) ) ) {
+			return new \WP_Error( 'invalid_account_name', esc_html__( 'Account name is required', 'wp-ever-accounting' ) );
+		}
+
+		if ( empty( $this->get_prop( 'currency_code' ) ) ) {
+			return new \WP_Error( 'invalid_account_currency_code', esc_html__( 'Account currency is required', 'wp-ever-accounting' ) );
+		}
+
+		if ( empty( $this->get_prop( 'date_created' ) ) || '0000-00-00 00:00:00' === $this->get_prop( 'date_created' ) ) {
+			$this->set_date_prop( 'date_created', current_time( 'mysql' ) );
+		}
+
+		if ( empty( $this->get_prop( 'creator_id' ) ) ) {
+			$this->set_prop( 'creator_id', $user_id );
+		}
+
+		if ( $this->exists() ) {
+			$is_error = $this->update( $fields );
+		} else {
+			$is_error = $this->insert( $fields );
+		}
+
+		if ( is_wp_error( $is_error ) ) {
+			return $is_error;
+		}
+
+
+		$this->apply_changes();
+
+		// Clear cache.
+		wp_cache_delete( $this->get_id(), 'ea_accounts' );
+		wp_cache_set( 'last_changed', microtime(), 'ea_accounts' );
+
+		/**
+		 * Fires immediately after an account is inserted or updated in the database.
+		 *
+		 * @param int $account_id Account id.
+		 * @param Item $account Account object.
+		 *
+		 * @since 1.2.1
+		 *
+		 */
+		do_action( 'eaccounting_saved_account', $this->get_id(), $this );
+
+		return $this->get_id();
+	}
+
+
+	/**
+	 * Deletes the account from database.
+	 *
+	 * @return array|false true on success, false on failure.
+	 * @since 1.1.0
+	 */
+	public function delete() {
+		global $wpdb;
+		if ( ! $this->exists() ) {
+			return false;
+		}
+
+		$data = $this->to_array();
+
+		/**
+		 * Filters whether an account delete should take place.
+		 *
+		 * @param bool|null $delete Whether to go forward with deletion.
+		 * @param int $account_id Account id.
+		 * @param array $data Account data array.
+		 * @param Account $account Transaction object.
+		 *
+		 * @since 1.2.1
+		 */
+		$check = apply_filters( 'eaccounting_check_delete_account', null, $this->get_id(), $data, $this );
+		if ( null !== $check ) {
+			return $check;
+		}
+
+		/**
+		 * Fires before an account is deleted.
+		 *
+		 * @param int $account_id Account id.
+		 * @param array $data Account data array.
+		 * @param Account $account Account object.
+		 *
+		 * @since 1.2.1
+		 *
+		 */
+		do_action( 'eaccounting_pre_delete_account', $this->get_id(), $data, $this );
+
+		$result = $wpdb->delete( $wpdb->prefix . 'ea_accounts', array( 'id' => $this->get_id() ) );
+		if ( ! $result ) {
+			return false;
+		}
+
+		/**
+		 * Fires after an account is deleted.
+		 *
+		 * @param int $account_id Account id.
+		 * @param array $data Account data array.
+		 *
+		 * @since 1.2.1
+		 *
+		 */
+		do_action( 'eaccounting_delete_account', $this->get_id(), $data );
+
+		// Clear object.
+		wp_cache_delete( $this->get_id(), 'ea_accounts' );
+		wp_cache_set( 'last_changed', microtime(), 'ea_accounts' );
+		$this->set_id( 0 );
+		$this->set_defaults();
+
+		return $data;
+	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| Setters
+	|--------------------------------------------------------------------------
+	|
+	| Functions for setting item data. These should not update anything in the
+	| database itself and should only change what is stored in the class
+	| object.
+	*/
+
+	/**
+	 * Set account name.
+	 *
+	 * @param string $name Account name.
+	 *
+	 *
+	 * @since 1.1.0
+	 *
+	 */
+	public function set_name( $name ) {
+		$this->set_prop( 'name', eaccounting_clean( $name ) );
+	}
+
+	/**
+	 * Set the account number.
+	 *
+	 * @param string $number bank account number
+	 *
+	 * @since 1.1.0
+	 *
+	 */
+	public function set_number( $number ) {
+		$this->set_prop( 'number', eaccounting_clean( $number ) );
+	}
+
+	/**
+	 * Returns account opening balance.
+	 *
+	 * @param string $amount opening balance of the account.
+	 *
+	 * @since 1.1.0
+	 *
+	 */
+	public function set_opening_balance( $amount ) {
+		$this->set_prop( 'opening_balance', (float) $amount );
+	}
+
+	/**
+	 * Set account currency code.
+	 *
+	 * @param string $currency_code Bank currency code
+	 *
+	 * @since 1.1.0
+	 *
+	 */
+	public function set_currency_code( $currency_code ) {
+		$this->set_prop( 'currency_code', strtoupper( $currency_code ) );
+	}
+
+	/**
+	 * Set account bank name.
+	 *
+	 * @param string $bank_name name of the bank
+	 *
+	 * @since 1.1.0
+	 *
+	 */
+	public function set_bank_name( $bank_name ) {
+		$this->set_prop( 'bank_name', eaccounting_clean( $bank_name ) );
+	}
+
+	/**
+	 * Set account bank phone number.
+	 *
+	 * @param string $bank_phone Bank phone number.
+	 *
+	 * @since 1.1.0
+	 *
+	 */
+	public function set_bank_phone( $bank_phone ) {
+		$this->set_prop( 'bank_phone', eaccounting_clean( $bank_phone ) );
+	}
+
+	/**
+	 * Set account bank address.
+	 *
+	 * @param string $bank_address Bank physical address
+	 *
+	 * @since 1.1.0
+	 *
+	 */
+	public function set_bank_address( $bank_address ) {
+		$this->set_prop( 'bank_address', sanitize_textarea_field( $bank_address ) );
+	}
+
+	/**
+	 * Set object status.
+	 *
+	 * @param int $enabled
+	 *
+	 * @since 1.0.2
+	 *
+	 */
+	public function set_enabled( $enabled ) {
+		$this->set_prop( 'enabled', (int) $enabled );
+	}
+
+	/**
+	 * Set the thumbnail id.
+	 *
+	 * @param int $thumbnail_id
+	 *
+	 * @since 1.1.0
+	 *
+	 */
+	public function set_thumbnail_id( $thumbnail_id ) {
+		$this->set_prop( 'thumbnail_id', absint( $thumbnail_id ) );
+	}
+
+
+	/**
+	 * Set object creator id.
+	 *
+	 * @param int $creator_id Creator id
+	 *
+	 * @since 1.0.2
+	 *
+	 */
+	public function set_creator_id( $creator_id = null ) {
+		if ( null === $creator_id ) {
+			$creator_id = get_current_user_id();
+		}
+		$this->set_prop( 'creator_id', absint( $creator_id ) );
+	}
+
+	/**
+	 * Set object created date.
+	 *
+	 * @param string
+	 *
+	 * @since 1.0.2
+	 *
+	 */
+	public function set_date_created( $date = null ) {
+		if ( null === $date ) {
+			$date = current_time( 'mysql' );
+		}
+		$this->set_date_prop( 'date_created', $date );
 	}
 
 }

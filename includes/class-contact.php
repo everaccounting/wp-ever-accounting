@@ -42,13 +42,6 @@ defined( 'ABSPATH' ) || exit;
  * @property string $date_created
  */
 class Contact extends MetaData {
-	/**
-	 * Contact id.
-	 *
-	 * @since 1.2.1
-	 * @var int
-	 */
-	public $id = null;
 
 	/**
 	 * Contact data container.
@@ -57,231 +50,717 @@ class Contact extends MetaData {
 	 * @var array
 	 */
 	public $data = array(
-		'user_id'       => null,
-		'name'          => '',
-		'company'       => '',
-		'email'         => '',
-		'phone'         => '',
-		'birth_date'    => '',
-		'street'        => '',
-		'city'          => '',
-		'state'         => '',
-		'postcode'      => '',
-		'country'       => '',
-		'website'       => '',
-		'vat_number'    => '',
-		'currency_code' => '',
-		'type'          => 'contact',
-		'thumbnail_id'  => null,
-		'enabled'       => 1,
-		'creator_id'    => null,
-		'date_created'  => null,
-	);
+		'user_id'          => null,
+		'name'             => '',
+		'company'          => '',
+		'email'            => '',
+		'phone'            => '',
+		'birth_date'       => '',
+		'street'           => '',
+		'city'             => '',
+		'state'            => '',
+		'postcode'         => '',
+		'country'          => '',
+		'website'          => '',
+		'vat_number'       => '',
+		'currency_code'    => '',
+		'type'             => 'contact',
+		'thumbnail_id'     => null,
+		'enabled'          => 1,
+		'creator_id'       => null,
+		'date_created'     => null,
 
-	/**
-	 * Stores the contact object's sanitization level.
-	 *
-	 * Does not correspond to a DB field.
-	 *
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $filter;
+		//meta
+//		'total_paid'       => 0.00,
+//		'total_due'        => 0.00,
+//		'total_payable'    => 0.00,
+//		'total_receivable' => 0.00,
+	);
 
 	/**
 	 * Meta type.
 	 *
-	 * @since 1.2.1
 	 * @var string
 	 */
 	protected $meta_type = 'contact';
 
 	/**
-	 * Get contact by field
+	 * Contact constructor.
 	 *
-	 * @param int|string $value
-	 * @param string $field
-	 * @param string $type
+	 * Get the Contact if ID is passed, otherwise the contact is new and empty.
 	 *
-	 * @return object|false Raw currency object
-	 * @global \wpdb $wpdb WordPress database abstraction object.
+	 * @param int|object|Contact $contact object to read.
+	 *
+	 * @since 1.1.0
 	 */
-	public static function get_data_by( $value, $field = 'id' ) {
+	public function __construct( $contact ) {
+		parent::__construct();
+		if ( $contact instanceof self ) {
+			$this->set_id( $contact->get_id() );
+		} elseif ( is_object( $contact ) && ! empty( $contact->id ) ) {
+			$this->set_id( $contact->id );
+		} elseif ( is_array( $contact ) && ! empty( $contact['id'] ) ) {
+			$this->set_props( $contact );
+		} elseif ( is_numeric( $contact ) ) {
+			$this->set_id( $contact );
+		} else {
+			$this->set_object_read( true );
+		}
+
+		$data = self::get_raw( $this->get_id(), 'id' );
+
+		if ( $data ) {
+			$this->set_props( $data );
+			$this->set_object_read( true );
+		} else {
+			$this->set_id( 0 );
+			$this->set_defaults();
+		}
+	}
+
+
+	/**
+	 * Retrieve the object from database instance.
+	 *
+	 * @param int|string $contact_id Object id.
+	 * @param string $field Database field.
+	 *
+	 * @return object|false Object, false otherwise.
+	 * @since 1.2.1
+	 *
+	 * @global \wpdb $wpdb WordPress database abstraction object.
+	 *
+	 */
+	static function get_raw( $contact_id, $field = 'id' ) {
 		global $wpdb;
 		if ( 'id' === $field ) {
-			$value = (int) $value;
+			$contact_id = (int) $contact_id;
 		} else {
-			$value = trim( $value );
+			$contact_id = trim( $contact_id );
 		}
-		if ( ! $value ) {
+		if ( ! $contact_id ) {
 			return false;
 		}
-		switch ( $field ) {
-			case 'user_id':
-				$value    = (int) $value;
-				$db_field = 'user_id';
-				break;
-			case 'id':
-			default:
-				$db_field = 'id';
-				break;
-		}
 
-		$_item = wp_cache_get( "{$db_field}_{$value}", 'ea_contacts' );
+		$contact = wp_cache_get( $contact_id, 'ea_contacts' );
 
-		if ( ! $_item ) {
-			$_item = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}ea_contacts WHERE $db_field = %s LIMIT 1", $value ) );
+		if ( ! $contact ) {
 
-			if ( ! $_item ) {
+			switch ( $field ) {
+				case 'id':
+				default:
+					$sql = $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}ea_contacts WHERE id = %d LIMIT 1", $contact_id );
+					break;
+			}
+
+			$contact = $wpdb->get_row( $sql );
+
+			if ( ! $contact ) {
 				return false;
 			}
 
-			$_item = eaccounting_sanitize_contact( $_item, 'raw' );
-			wp_cache_add( $_item->id, $_item, 'ea_contacts' );
-			wp_cache_add( "{$_item->type}_id_{$_item->id}", $_item, 'ea_contacts' );
-			if ( ! empty( $_item->user_id ) ) {
-				wp_cache_add( "{$_item->type}_user_id_{$_item->user_id}", $_item, 'ea_contacts' );
-			}
-		} elseif ( empty( $_item->filter ) ) {
-			$_item = eaccounting_sanitize_contact( $_item, 'raw' );
+			wp_cache_add( $contact->id, $contact, 'ea_contacts' );
 		}
 
-		return new Contact( $_item );
+		return apply_filters( 'eaccounting_contact_result', $contact );
 	}
 
-	/**
-	 * Contact constructor.
-	 *
-	 * @param $contact
-	 *
-	 * @since 1.2.1
-	 */
-	public function __construct( $contact ) {
-		foreach ( get_object_vars( $contact ) as $key => $value ) {
-			$this->$key = $value;
-		}
-	}
 
 	/**
-	 * Magic method for checking the existence of a certain field.
+	 *  Insert a contact in the database.
 	 *
-	 * @param string $key Item field to check if set.
+	 * This method is not meant to call publicly instead call save
+	 * which will conditionally decide which method to call.
 	 *
-	 * @return bool Whether the given Item field is set.
-	 * @since 1.2.1
+	 * @param array $fields An array of database fields and type.
+	 *
+	 * @return \WP_Error|true True on success, WP_Error on failure.
+	 * @global \wpdb $wpdb WordPress database abstraction object.
+	 * @since 1.1.0
 	 */
-	public function __isset( $key ) {
-		if ( isset( $this->$key ) ) {
+	protected function insert( $fields ) {
+		global $wpdb;
+		$data_arr = $this->to_array();
+		$data     = wp_array_slice_assoc( $data_arr, array_keys( $fields ) );
+		$format   = wp_array_slice_assoc( $fields, array_keys( $data ) );
+		$data     = wp_unslash( $data );
+
+		// Bail if nothing to save
+		if ( empty( $data ) ) {
 			return true;
 		}
 
-		return false;
+		/**
+		 * Fires immediately before a contact is inserted in the database.
+		 *
+		 * @param array $data contact data to be inserted.
+		 * @param string $data_arr Sanitized contact data.
+		 * @param contact $contact contact object.
+		 *
+		 * @since 1.2.1
+		 */
+		do_action( 'eaccounting_pre_insert_contact', $data, $data_arr, $this );
+
+		/**
+		 * Fires immediately before a contact is inserted in the database.
+		 *
+		 * The dynamic portion of the hook name, `$this->type`, refers to
+		 * the type of contact.
+		 *
+		 * @param array $data contact data to be inserted.
+		 * @param string $data_arr Sanitized contact data.
+		 * @param contact $contact contact object.
+		 *
+		 * @since 1.2.1
+		 */
+		do_action( "eaccounting_pre_insert_contact_{$this->type}", $data, $data_arr, $this );
+
+		if ( false === $wpdb->insert( $wpdb->prefix . 'ea_contacts', $data, $format ) ) {
+			return new \WP_Error( 'eaccounting_contact_db_insert_error', __( 'Could not insert contact into the database.', 'wp-ever-accounting' ), $wpdb->last_error );
+		}
+
+		$this->set_id( $wpdb->insert_id );
+
+		/**
+		 * Fires immediately after an contact is inserted in the database.
+		 *
+		 * @param int $contact_id contact id.
+		 * @param array $data contact has been inserted.
+		 * @param array $data_arr Sanitized contact data.
+		 * @param contact $contact contact object.
+		 *
+		 * @since 1.2.1
+		 */
+		do_action( 'eaccounting_insert_contact', $this->id, $data, $data_arr, $this );
+
+		/**
+		 * Fires immediately after an contact is inserted in the database.
+		 *
+		 * The dynamic portion of the hook name, `$this->type`, refers to
+		 * the type of contact.
+		 *
+		 * @param int $contact_id contact id.
+		 * @param array $data contact has been inserted.
+		 * @param array $data_arr Sanitized contact data.
+		 * @param contact $contact contact object.
+		 *
+		 * @since 1.2.1
+		 */
+		do_action( "eaccounting_insert_contact_{$this->type}", $this->id, $data, $data_arr, $this );
+
+		return true;
 	}
 
 	/**
-	 * Magic method for setting Item fields.
+	 *  Update a contact in the database.
 	 *
-	 * This method does not update custom fields in the database.
+	 * This method is not meant to call publicly instead call save
+	 * which will conditionally decide which method to call.
 	 *
-	 * @param string $key Item key.
-	 * @param mixed $value Item value.
+	 * @param array $fields An array of database fields and type.
 	 *
-	 * @since 1.2.1
+	 * @return \WP_Error|true True on success, WP_Error on failure.
+	 * @global \wpdb $wpdb WordPress database abstraction object.
+	 * @since 1.1.0
 	 */
-	public function __set( $key, $value ) {
-		if ( is_callable( array( $this, 'set_' . $key ) ) ) {
-			$this->$key( $value );
+	protected function update( $fields ) {
+		global $wpdb;
+		$changes = $this->get_changes();
+		$data    = wp_array_slice_assoc( $changes, array_keys( $fields ) );
+		$format  = wp_array_slice_assoc( $fields, array_keys( $data ) );
+		$data    = wp_unslash( $data );
+		// Bail if nothing to save
+		if ( empty( $data ) ) {
+			return true;
+		}
+
+		/**
+		 * Fires immediately before an existing contact is updated in the database.
+		 *
+		 * @param int $contact_id contact id.
+		 * @param array $data contact data.
+		 * @param array $changes The data will be updated.
+		 * @param contact $contact contact object.
+		 *
+		 * @since 1.2.1
+		 */
+		do_action( 'eaccounting_pre_update_contact', $this->get_id(), $this->to_array(), $changes, $this );
+
+		/**
+		 * Fires immediately before an existing contact is updated in the database.
+		 *
+		 * The dynamic portion of the hook name, `$this->type`, refers to
+		 * the type of contact.
+		 *
+		 * @param int $contact_id contact id.
+		 * @param array $data contact data.
+		 * @param array $changes The data will be updated.
+		 * @param contact $contact contact object.
+		 *
+		 * @since 1.2.1
+		 */
+		do_action( "eaccounting_pre_update_contact_{$this->type}", $this->get_id(), $this->to_array(), $changes, $this );
+
+		if ( false === $wpdb->update( $wpdb->prefix . 'ea_contacts', $data, [ 'id' => $this->get_id() ], $format, [ 'id' => '%d' ] ) ) {
+			return new \WP_Error( 'eaccounting_contact_db_update_error', __( 'Could not update contact in the database.', 'wp-ever-accounting' ), $wpdb->last_error );
+		}
+
+		/**
+		 * Fires immediately after a existing contact is updated in the database.
+		 *
+		 * @param int $contact_id contact id.
+		 * @param array $data contact data.
+		 * @param array $changes The data will be updated.
+		 * @param contact $contact Transaction object.
+		 *
+		 * @since 1.2.1
+		 */
+		do_action( 'eaccounting_pre_update_contact', $this->get_id(), $this->to_array(), $changes, $this );
+
+		/**
+		 * Fires immediately after a existing contact is updated in the database.
+		 *
+		 * The dynamic portion of the hook name, `$this->type`, refers to
+		 * the type of contact.
+		 *
+		 * @param int $contact_id contact id.
+		 * @param array $data contact data.
+		 * @param array $changes The data will be updated.
+		 * @param contact $contact Transaction object.
+		 *
+		 * @since 1.2.1
+		 */
+		do_action( "eaccounting_pre_update_contact_{$this->type}", $this->get_id(), $this->to_array(), $changes, $this );
+
+
+		return true;
+	}
+
+	/**
+	 * Saves an object in the database.
+	 *
+	 * @return \WP_Error|int id on success, WP_Error on failure.
+	 * @since 1.1.0
+	 */
+	public function save() {
+		$user_id = get_current_user_id();
+		$fields  = array(
+			'id'            => '%d',
+			'user_id'       => '%d',
+			'name'          => '%s',
+			'company'       => '%s',
+			'email'         => '%s',
+			'phone'         => '%s',
+			'website'       => '%s',
+			'vat_number'    => '%s',
+			'birth_date'    => '%s',
+			'street'        => '%s',
+			'city'          => '%s',
+			'state'         => '%s',
+			'postcode'      => '%s',
+			'country'       => '%s',
+			'type'          => '%s',
+			'currency_code' => '%s',
+			'thumbnail_id'  => '%d',
+			'enabled'       => '%d',
+			'creator_id'    => '%d',
+			'date_created'  => '%s',
+		);
+
+		if ( empty( $this->get_prop( 'name' ) ) ) {
+			return new \WP_Error( 'invalid_contact_name', esc_html__( 'Contact name is required', 'wp-ever-accounting' ) );
+		}
+
+		if ( empty( $this->get_prop( 'date_created' ) ) || '0000-00-00 00:00:00' === $this->get_prop( 'date_created' ) ) {
+			$this->set_date_prop( 'date_created', current_time( 'mysql' ) );
+		}
+
+		if ( empty( $this->get_prop( 'creator_id' ) ) ) {
+			$this->set_prop( 'creator_id', $user_id );
+		}
+
+		if ( $this->exists() ) {
+			$is_error = $this->update( $fields );
 		} else {
-			$this->$key = $value;
+			$is_error = $this->insert( $fields );
+		}
+
+		if ( is_wp_error( $is_error ) ) {
+			return $is_error;
+		}
+
+		$this->save_meta_data();
+		$this->apply_changes();
+
+		// Clear cache.
+		wp_cache_delete( $this->get_id(), 'ea_contacts' );
+		wp_cache_delete( $this->get_id(), 'ea_contactmeta' );
+		wp_cache_set( 'last_changed', microtime(), 'ea_contacts' );
+
+		/**
+		 * Fires immediately after a contact is inserted or updated in the database.
+		 *
+		 * @param int $contact_id Contact id.
+		 * @param Contact $contact Contact object.
+		 *
+		 * @since 1.2.1
+		 *
+		 */
+		do_action( 'eaccounting_saved_contact', $this->get_id(), $this );
+
+		/**
+		 * Fires immediately after a contact is inserted or updated in the database.
+		 *
+		 * The dynamic portion of the hook name, `$this->type`, refers to
+		 * the type of contact.
+		 *
+		 * @param int $contact_id Contact id.
+		 * @param Contact $contact Contact object.
+		 *
+		 * @since 1.2.1
+		 *
+		 */
+		do_action( "eaccounting_saved_contact_{$this->type}", $this->get_id(), $this );
+
+		return $this->get_id();
+	}
+
+	/**
+	 * Deletes the object from database.
+	 *
+	 * @return array|false true on success, false on failure.
+	 * @since 1.1.0
+	 */
+	public function delete() {
+		global $wpdb;
+		if ( ! $this->exists() ) {
+			return false;
+		}
+
+		$data = $this->to_array();
+
+		/**
+		 * Filters whether an contact delete should take place.
+		 *
+		 * @param bool|null $delete Whether to go forward with deletion.
+		 * @param int $contact_id Contact id.
+		 * @param array $data Contact data array.
+		 * @param Contact $contact Transaction object.
+		 *
+		 * @since 1.2.1
+		 */
+		$check = apply_filters( 'eaccounting_check_delete_contact', null, $this->get_id(), $data, $this );
+		if ( null !== $check ) {
+			return $check;
+		}
+
+		/**
+		 * Fires before an contact is deleted.
+		 *
+		 * @param int $contact_id Contact id.
+		 * @param array $data Contact data array.
+		 * @param Contact $contact Contact object.
+		 *
+		 * @since 1.2.1
+		 *
+		 */
+		do_action( 'eaccounting_pre_delete_contact', $this->get_id(), $data, $this );
+
+		$result = $wpdb->delete( $wpdb->prefix . 'ea_contacts', array( 'id' => $this->get_id() ) );
+		if ( ! $result ) {
+			return false;
+		}
+
+		/**
+		 * Fires after an contact is deleted.
+		 *
+		 * @param int $contact_id Contact id.
+		 * @param array $data Contact data array.
+		 *
+		 * @since 1.2.1
+		 *
+		 */
+		do_action( 'eaccounting_delete_contact', $this->get_id(), $data );
+
+		// Clear object.
+		wp_cache_delete( $this->get_id(), 'ea_contacts' );
+		wp_cache_delete( $this->get_id(), 'ea_contactmeta' );
+		wp_cache_set( 'last_changed', microtime(), 'ea_contacts' );
+		$this->set_id( 0 );
+		$this->set_defaults();
+
+		return $data;
+	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| Setters
+	|--------------------------------------------------------------------------
+	|
+	| Functions for setting contact data. These should not update anything in the
+	| database itself and should only change what is stored in the class
+	| object.
+	*/
+
+	/**
+	 * Set wp user id.
+	 *
+	 * @param $id
+	 *
+	 * @since 1.0.2
+	 *
+	 */
+	public function set_user_id( $id ) {
+		$this->set_prop( 'user_id', absint( $id ) );
+	}
+
+	/**
+	 * Set contact name.
+	 *
+	 * @param $name
+	 *
+	 * @since 1.0.2
+	 *
+	 */
+	public function set_name( $name ) {
+		$this->set_prop( 'name', eaccounting_clean( $name ) );
+	}
+
+	/**
+	 * Set contact company.
+	 *
+	 * @param $company
+	 *
+	 * @since 1.0.2
+	 *
+	 */
+	public function set_company( $company ) {
+		$this->set_prop( 'company', eaccounting_clean( $company ) );
+	}
+
+	/**
+	 * Set contact's email.
+	 *
+	 * @param string $value Email.
+	 *
+	 * @since 1.0.2
+	 *
+	 */
+	public function set_email( $value ) {
+		if ( $value && is_email( $value ) ) {
+			$this->set_prop( 'email', sanitize_email( $value ) );
 		}
 	}
 
 	/**
-	 * Magic method for accessing custom fields.
+	 * Set contact's phone.
 	 *
-	 * @param string $key contact field to retrieve.
+	 * @param $value
 	 *
-	 * @return mixed Value of the given contact field (if set).
-	 * @since 1.2.1
+	 * @since 1.0.2
+	 *
 	 */
-	public function __get( $key ) {
-		$value = '';
-		if ( method_exists( $this, 'get_' . $key ) ) {
-			eaccounting_doing_it_wrong( __FUNCTION__, sprintf( __( 'Object data such as "%s" should not be accessed directly. Use getters and setters.', 'wp-ever-accounting' ), $key ), '1.1.0' );
-			$value = $this->{'get_' . $key}();
-		} else if ( property_exists( $this, $key ) && is_callable( array( $this, $key ) ) ) {
-			$value = $this->$key;
-		} else if ( $this->meta_exists( $key ) ) {
-			$value = $this->get_meta( $key );
-			$value = eaccounting_sanitize_contact_field( $key, $value, $this->id, $this->filter );
+	public function set_phone( $value ) {
+		$this->set_prop( 'phone', eaccounting_clean( $value ) );
+	}
+
+
+	/**
+	 * Set contact's birth date.
+	 *
+	 * @param $date
+	 *
+	 * @since 1.0.2
+	 *
+	 */
+	public function set_birth_date( $date ) {
+		$this->set_date_prop( 'birth_date', $date, 'Y-m-d' );
+	}
+
+	/**
+	 * Set contact's website.
+	 *
+	 * @param $value
+	 *
+	 * @since 1.0.2
+	 *
+	 */
+	public function set_website( $value ) {
+		$this->set_prop( 'website', esc_url( $value ) );
+	}
+
+	/**
+	 * Set contact's street.
+	 *
+	 * @param $value
+	 *
+	 * @since 1.0.2
+	 *
+	 */
+	public function set_street( $value ) {
+		$this->set_prop( 'street', sanitize_text_field( $value ) );
+	}
+
+	/**
+	 * Set contact's city.
+	 *
+	 * @param $city
+	 *
+	 * @since 1.0.2
+	 *
+	 */
+	public function set_city( $city ) {
+		$this->set_prop( 'city', sanitize_text_field( $city ) );
+	}
+
+	/**
+	 * Set contact's state.
+	 *
+	 * @param $state
+	 *
+	 * @since 1.0.2
+	 *
+	 */
+	public function set_state( $state ) {
+		$this->set_prop( 'state', sanitize_text_field( $state ) );
+	}
+
+	/**
+	 * Set contact's postcode.
+	 *
+	 * @param $postcode
+	 *
+	 * @since 1.0.2
+	 *
+	 */
+	public function set_postcode( $postcode ) {
+		$this->set_prop( 'postcode', sanitize_text_field( $postcode ) );
+	}
+
+	/**
+	 * Set contact country.
+	 *
+	 * @param $country
+	 *
+	 * @since 1.0.2
+	 *
+	 */
+	public function set_country( $country ) {
+		if ( array_key_exists( $country, eaccounting_get_countries() ) ) {
+			$this->set_prop( 'country', $country );
 		}
-
-		return $value;
 	}
 
 	/**
-	 * Magic method for unsetting a certain field.
+	 * Set contact's tax_number.
 	 *
-	 * @param string $key contact key to unset.
+	 * @param $value
 	 *
-	 * @since 1.2.1
+	 * @since 1.0.2
+	 *
 	 */
-	public function __unset( $key ) {
-		if ( isset( $this->$key ) ) {
-			unset( $this->$key );
+	public function set_vat_number( $value ) {
+		$this->set_prop( 'vat_number', eaccounting_clean( $value ) );
+	}
+
+	/**
+	 * Set contact's currency_code.
+	 *
+	 * @param $value
+	 *
+	 * @since 1.0.2
+	 *
+	 */
+	public function set_currency_code( $value ) {
+		if ( eaccounting_get_currency( $value ) ) {
+			$this->set_prop( 'currency_code', eaccounting_clean( $value ) );
 		}
 	}
 
 	/**
-	 * Filter contact object based on context.
+	 * Set contact type.
 	 *
-	 * @param string $filter Filter.
+	 * @param $type
 	 *
-	 * @return Contact|Object
-	 * @since 1.2.1
+	 * @since 1.0.2
+	 *
 	 */
-	public function filter( $filter ) {
-		if ( $this->filter === $filter ) {
-			return $this;
+	public function set_type( $type ) {
+		if ( array_key_exists( $type, eaccounting_get_contact_types() ) ) {
+			$this->set_prop( 'type', $type );
 		}
+	}
 
-		if ( 'raw' === $filter ) {
-			return self::get_data_by( $this->id );
+	/**
+	 * Set avatar id
+	 *
+	 * @param int $thumbnail_id
+	 *
+	 * @since 1.1.0
+	 *
+	 */
+	public function set_thumbnail_id( $thumbnail_id ) {
+		$this->set_prop( 'thumbnail_id', absint( $thumbnail_id ) );
+	}
+
+	/**
+	 * Set object status.
+	 *
+	 * @param int $enabled
+	 *
+	 * @since 1.0.2
+	 *
+	 */
+	public function set_enabled( $enabled ) {
+		$this->set_prop( 'enabled', (int) $enabled );
+	}
+
+
+	/**
+	 * Set object creator id.
+	 *
+	 * @param int $creator_id Creator id
+	 *
+	 * @since 1.0.2
+	 *
+	 */
+	public function set_creator_id( $creator_id = null ) {
+		if ( null === $creator_id ) {
+			$creator_id = get_current_user_id();
 		}
-
-		return eaccounting_sanitize_contact( $this, $filter );
+		$this->set_prop( 'creator_id', absint( $creator_id ) );
 	}
 
 	/**
-	 * Determine whether a property or meta key is set
+	 * Set object created date.
 	 *
-	 * @param string $key Property
+	 * @param string
 	 *
-	 * @return bool
-	 * @since 1.2.1
+	 * @since 1.0.2
+	 *
 	 */
-	public function has_prop( string $key ) {
-		return $this->__isset( $key );
+	public function set_date_created( $date = null ) {
+		if ( null === $date ) {
+			$date = current_time( 'mysql' );
+		}
+		$this->set_date_prop( 'date_created', $date );
 	}
 
 	/**
-	 * Determine whether the contact exists in the database.
+	 * Set paid.
 	 *
-	 * @return bool True if contact exists in the database, false if not.
-	 * @since 1.2.1
+	 * @param string $value paid amount.
 	 */
-	public function exists() {
-		return ! empty( $this->id );
+	public function set_total_paid( $value ) {
+		$this->update_meta_data( 'total_paid', (float) $value );
 	}
 
 	/**
-	 * Return an array representation.
+	 * Set due.
 	 *
-	 * @return array Array representation.
-	 * @since 1.2.1
+	 * @param string $value due amount.
 	 */
-	public function to_array() {
-		return get_object_vars( $this );
+	public function set_total_due( $value ) {
+		$this->update_meta_data( 'total_due', (float) $value );
 	}
-
 }
