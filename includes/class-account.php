@@ -90,16 +90,15 @@ class Account extends Data {
 	/**
 	 * Retrieve the object from database instance.
 	 *
-	 * @param int $account_id Object id.
+	 * @param int    $account_id Object id.
 	 * @param string $field Database field.
 	 *
 	 * @return object|false Object, false otherwise.
 	 * @since 1.2.1
 	 *
 	 * @global \wpdb $wpdb WordPress database abstraction object.
-	 *
 	 */
-	static function get_raw( $account_id, $field = 'id' ) {
+	public static function get_raw( $account_id, $field = 'id' ) {
 		global $wpdb;
 
 		$account_id = (int) $account_id;
@@ -255,10 +254,11 @@ class Account extends Data {
 			'date_created'    => '%s',
 		);
 
+		// check if the name is available or not
 		if ( empty( $this->get_prop( 'name' ) ) ) {
 			return new \WP_Error( 'invalid_account_name', esc_html__( 'Account name is required', 'wp-ever-accounting' ) );
 		}
-
+		// check if the currency code or not
 		if ( empty( $this->get_prop( 'currency_code' ) ) ) {
 			return new \WP_Error( 'invalid_account_currency_code', esc_html__( 'Account currency is required', 'wp-ever-accounting' ) );
 		}
@@ -281,7 +281,6 @@ class Account extends Data {
 			return $is_error;
 		}
 
-
 		$this->apply_changes();
 
 		// Clear cache.
@@ -295,7 +294,6 @@ class Account extends Data {
 		 * @param Item $account Account object.
 		 *
 		 * @since 1.2.1
-		 *
 		 */
 		do_action( 'eaccounting_saved_account', $this->get_id(), $this );
 
@@ -340,7 +338,6 @@ class Account extends Data {
 		 * @param Account $account Account object.
 		 *
 		 * @since 1.2.1
-		 *
 		 */
 		do_action( 'eaccounting_pre_delete_account', $this->get_id(), $data, $this );
 
@@ -356,7 +353,6 @@ class Account extends Data {
 		 * @param array $data Account data array.
 		 *
 		 * @since 1.2.1
-		 *
 		 */
 		do_action( 'eaccounting_delete_account', $this->get_id(), $data );
 
@@ -384,9 +380,7 @@ class Account extends Data {
 	 *
 	 * @param string $name Account name.
 	 *
-	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public function set_name( $name ) {
 		$this->set_prop( 'name', eaccounting_clean( $name ) );
@@ -398,7 +392,6 @@ class Account extends Data {
 	 * @param string $number bank account number
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public function set_number( $number ) {
 		$this->set_prop( 'number', eaccounting_clean( $number ) );
@@ -410,7 +403,6 @@ class Account extends Data {
 	 * @param string $amount opening balance of the account.
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public function set_opening_balance( $amount ) {
 		$this->set_prop( 'opening_balance', (float) $amount );
@@ -422,7 +414,6 @@ class Account extends Data {
 	 * @param string $currency_code Bank currency code
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public function set_currency_code( $currency_code ) {
 		$this->set_prop( 'currency_code', strtoupper( $currency_code ) );
@@ -434,7 +425,6 @@ class Account extends Data {
 	 * @param string $bank_name name of the bank
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public function set_bank_name( $bank_name ) {
 		$this->set_prop( 'bank_name', eaccounting_clean( $bank_name ) );
@@ -446,7 +436,6 @@ class Account extends Data {
 	 * @param string $bank_phone Bank phone number.
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public function set_bank_phone( $bank_phone ) {
 		$this->set_prop( 'bank_phone', eaccounting_clean( $bank_phone ) );
@@ -458,7 +447,6 @@ class Account extends Data {
 	 * @param string $bank_address Bank physical address
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public function set_bank_address( $bank_address ) {
 		$this->set_prop( 'bank_address', sanitize_textarea_field( $bank_address ) );
@@ -467,10 +455,9 @@ class Account extends Data {
 	/**
 	 * Set object status.
 	 *
-	 * @param int $enabled
+	 * @param int $enabled Account enabled or not
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_enabled( $enabled ) {
 		$this->set_prop( 'enabled', (int) $enabled );
@@ -479,10 +466,9 @@ class Account extends Data {
 	/**
 	 * Set the thumbnail id.
 	 *
-	 * @param int $thumbnail_id
+	 * @param int $thumbnail_id Thumbnail ID
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public function set_thumbnail_id( $thumbnail_id ) {
 		$this->set_prop( 'thumbnail_id', absint( $thumbnail_id ) );
@@ -495,7 +481,6 @@ class Account extends Data {
 	 * @param int $creator_id Creator id
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_creator_id( $creator_id = null ) {
 		if ( null === $creator_id ) {
@@ -507,10 +492,9 @@ class Account extends Data {
 	/**
 	 * Set object created date.
 	 *
-	 * @param string
+	 * @param string $date Created date
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_date_created( $date = null ) {
 		if ( null === $date ) {

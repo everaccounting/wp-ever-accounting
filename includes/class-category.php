@@ -84,9 +84,8 @@ class Category extends Data {
 	 * @since 1.2.1
 	 *
 	 * @global \wpdb $wpdb WordPress database abstraction object.
-	 *
 	 */
-	static function get_raw( $category_id, $field = 'id' ) {
+	public static function get_raw( $category_id, $field = 'id' ) {
 		global $wpdb;
 
 		$category_id = (int) $category_id;
@@ -226,7 +225,7 @@ class Category extends Data {
 	 * @since 1.1.0
 	 */
 	public function save() {
-		$fields  = array(
+		$fields = array(
 			'id'           => '%d',
 			'name'         => '%s',
 			'type'         => '%s',
@@ -235,10 +234,12 @@ class Category extends Data {
 			'date_created' => '%s',
 		);
 
+		// Check if category name exist or not
 		if ( empty( $this->get_prop( 'name' ) ) ) {
 			return new \WP_Error( 'invalid_category_name', esc_html__( 'Category name is required', 'wp-ever-accounting' ) );
 		}
 
+		// Check if category type exist or not
 		if ( empty( $this->get_prop( 'type' ) ) ) {
 			return new \WP_Error( 'invalid_category_type', esc_html__( 'Category type is required', 'wp-ever-accounting' ) );
 		}
@@ -257,7 +258,6 @@ class Category extends Data {
 			return $is_error;
 		}
 
-
 		$this->apply_changes();
 
 		// Clear cache.
@@ -271,7 +271,6 @@ class Category extends Data {
 		 * @param Item $category Item object.
 		 *
 		 * @since 1.2.1
-		 *
 		 */
 		do_action( 'eaccounting_saved_category', $this->get_id(), $this );
 
@@ -309,14 +308,13 @@ class Category extends Data {
 		}
 
 		/**
-		 * Fires before an category is deleted.
+		 * Fires before a category is deleted.
 		 *
 		 * @param int $category_id Category id.
 		 * @param array $data Category data array.
 		 * @param Category $category Category object.
 		 *
 		 * @since 1.2.1
-		 *
 		 */
 		do_action( 'eaccounting_pre_delete_category', $this->get_id(), $data, $this );
 
@@ -326,13 +324,12 @@ class Category extends Data {
 		}
 
 		/**
-		 * Fires after an category is deleted.
+		 * Fires after a category is deleted.
 		 *
 		 * @param int $category_id Category id.
 		 * @param array $data Category data array.
 		 *
 		 * @since 1.2.1
-		 *
 		 */
 		do_action( 'eaccounting_delete_category', $this->get_id(), $data );
 
@@ -358,10 +355,9 @@ class Category extends Data {
 	/**
 	 * Set the category name.
 	 *
-	 * @param $value
+	 * @param string $value Category Name
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_name( $value ) {
 		$this->set_prop( 'name', eaccounting_clean( $value ) );
@@ -370,10 +366,9 @@ class Category extends Data {
 	/**
 	 * Set the category type.
 	 *
-	 * @param $value
+	 * @param string $value Category type
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_type( $value ) {
 		if ( array_key_exists( $value, eaccounting_get_category_types() ) ) {
@@ -384,12 +379,36 @@ class Category extends Data {
 	/**
 	 * Set the category color.
 	 *
-	 * @param $value
+	 * @param string $value Category color
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_color( $value ) {
 		$this->set_prop( 'color', eaccounting_clean( $value ) );
+	}
+
+	/**
+	 * Set object status.
+	 *
+	 * @param int $enabled Category enabled or not
+	 *
+	 * @since 1.0.2
+	 */
+	public function set_enabled( $enabled ) {
+		$this->set_prop( 'enabled', (int) $enabled );
+	}
+
+	/**
+	 * Set object created date.
+	 *
+	 * @param string $date Created date
+	 *
+	 * @since 1.0.2
+	 */
+	public function set_date_created( $date = null ) {
+		if ( null === $date ) {
+			$date = current_time( 'mysql' );
+		}
+		$this->set_date_prop( 'date_created', $date );
 	}
 }
