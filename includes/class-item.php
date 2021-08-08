@@ -35,7 +35,7 @@ defined( 'ABSPATH' ) || exit;
  * @property int $creator_id
  * @property string $date_created
  */
-final class Item extends Data {
+class Item extends Data {
 	/**
 	 * Item data container.
 	 *
@@ -102,14 +102,13 @@ final class Item extends Data {
 	/**
 	 * Retrieve the object from database instance.
 	 *
-	 * @param int $item_id Item id.
+	 * @param int    $item_id Item id.
 	 * @param string $field Database field.
 	 *
 	 * @return object|false Object, false otherwise.
 	 * @since 1.2.1
 	 *
 	 * @global \wpdb $wpdb WordPress database abstraction object.
-	 *
 	 */
 	static function get_raw( $item_id, $field = 'id' ) {
 		global $wpdb;
@@ -269,8 +268,19 @@ final class Item extends Data {
 			'date_created'   => '%s',
 		);
 
+		// Check if item name exist or not
 		if ( empty( $this->get_prop( 'name' ) ) ) {
 			return new \WP_Error( 'invalid_item_name', esc_html__( 'Item name is required', 'wp-ever-accounting' ) );
+		}
+
+		// Check if the sale price exists or not
+		if ( empty( $this->get_prop( 'sale_price' ) ) ) {
+			return new \WP_Error( 'invalid_item_sale_price', esc_html__( 'Item sale price is required', 'wp-ever-accounting' ) );
+		}
+
+		// Check if the sale price exists or not
+		if ( empty( $this->get_prop( 'purchase_price' ) ) ) {
+			return new \WP_Error( 'invalid_item_purchase_price', esc_html__( 'Item purchase price is required', 'wp-ever-accounting' ) );
 		}
 
 		if ( empty( $this->get_prop( 'date_created' ) ) || '0000-00-00 00:00:00' === $this->get_prop( 'date_created' ) ) {
@@ -291,7 +301,6 @@ final class Item extends Data {
 			return $is_error;
 		}
 
-
 		$this->apply_changes();
 
 		// Clear cache.
@@ -305,7 +314,6 @@ final class Item extends Data {
 		 * @param Item $item Item object.
 		 *
 		 * @since 1.2.1
-		 *
 		 */
 		do_action( 'eaccounting_saved_item', $this->get_id(), $this );
 
@@ -349,7 +357,6 @@ final class Item extends Data {
 		 * @param Item $item Item object.
 		 *
 		 * @since 1.2.1
-		 *
 		 */
 		do_action( 'eaccounting_pre_delete_item', $this->get_id(), $data, $this );
 
@@ -365,7 +372,6 @@ final class Item extends Data {
 		 * @param array $data Item data array.
 		 *
 		 * @since 1.2.1
-		 *
 		 */
 		do_action( 'eaccounting_delete_item', $this->get_id(), $data );
 
@@ -389,36 +395,40 @@ final class Item extends Data {
 	*/
 
 	/**
+	 * Ser item name
+	 *
 	 * @param string $name Item name.
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public function set_name( $name ) {
 		$this->set_prop( 'name', eaccounting_clean( $name ) );
 	}
 
 	/**
+	 * Set item sku
+	 *
 	 * @param string $sku Item SKU
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public function set_sku( $sku ) {
 		$this->set_prop( 'sku', eaccounting_clean( $sku ) );
 	}
 
 	/**
+	 * Set item thumbnail id
 	 * @param int $thumbnail_id Thumbnail id.
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public function set_thumbnail_id( $thumbnail_id ) {
 		$this->set_prop( 'thumbnail_id', absint( $thumbnail_id ) );
 	}
 
 	/**
+	 * Set item descriptions
+	 *
 	 * @param string $description Item description.
 	 *
 	 * @since 1.1.0
@@ -428,6 +438,8 @@ final class Item extends Data {
 	}
 
 	/**
+	 * Set item sale price
+	 *
 	 * @param float $sale_price Sale price
 	 *
 	 * @since 1.1.0
@@ -437,36 +449,41 @@ final class Item extends Data {
 	}
 
 	/**
+	 * Set item purchase price
+	 *
 	 * @param float $purchase_price Purchase price.
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public function set_purchase_price( $purchase_price ) {
 		$this->set_prop( 'purchase_price', (float) $purchase_price );
 	}
 
 	/**
+	 * Set item quantity
+	 *
 	 * @param float $quantity Item quantity
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public function set_quantity( $quantity ) {
 		$this->set_prop( 'quantity', absint( $quantity ) );
 	}
 
 	/**
+	 * Set item category id
+	 *
 	 * @param int $category_id Item category id
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public function set_category_id( $category_id ) {
 		$this->set_prop( 'category_id', absint( $category_id ) );
 	}
 
 	/**
+	 * Set sale tax
+	 *
 	 * @param float $sales_tax Tax amount
 	 *
 	 * @since 1.1.0
@@ -476,6 +493,8 @@ final class Item extends Data {
 	}
 
 	/**
+	 * Set purchase tax
+	 *
 	 * @param float $purchase_tax Tax amount
 	 *
 	 * @since 1.1.0
@@ -487,10 +506,9 @@ final class Item extends Data {
 	/**
 	 * Set object status.
 	 *
-	 * @param int $enabled
+	 * @param int $enabled Enabled or not
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_enabled( $enabled ) {
 		$this->set_prop( 'enabled', (int) $enabled );
@@ -502,7 +520,6 @@ final class Item extends Data {
 	 * @param int $creator_id Creator id
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_creator_id( $creator_id = null ) {
 		if ( null === $creator_id ) {
@@ -514,10 +531,9 @@ final class Item extends Data {
 	/**
 	 * Set object created date.
 	 *
-	 * @param string
+	 * @param string $date Creation date
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_date_created( $date = null ) {
 		if ( null === $date ) {
