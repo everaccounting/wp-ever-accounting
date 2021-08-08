@@ -15,6 +15,7 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Core class used to implement the Currency object.
+ *
  * @package EverAccounting
  *
  * @since 1.2.1
@@ -83,7 +84,6 @@ class Currency extends Data {
 			$data = self::get_raw( $this->get_id(), 'id' );
 		}
 
-
 		if ( $data ) {
 			$this->set_props( $data );
 			$this->set_object_read( true );
@@ -97,15 +97,14 @@ class Currency extends Data {
 	 * Retrieve the object from database instance.
 	 *
 	 * @param int|string $id Object id.
-	 * @param string $field Database field.
+	 * @param string     $field Database field.
 	 *
 	 * @return object|false Object, false otherwise.
 	 * @since 1.2.1
 	 *
 	 * @global \wpdb $wpdb WordPress database abstraction object.
-	 *
 	 */
-	static function get_raw( $id, $field = 'id' ) {
+	public static function get_raw( $id, $field = 'id' ) {
 		global $wpdb;
 		if ( 'id' === $field ) {
 			$id = (int) $id;
@@ -130,14 +129,13 @@ class Currency extends Data {
 					break;
 			}
 
-			$currency = $wpdb->get_row( $sql );
+			$currency = $wpdb->get_row( $sql ); //phpcs:ignore
 
 			if ( ! $currency ) {
 				return false;
 			}
 
 			wp_cache_add( $currency->id, $currency, 'ea_currencies' );
-			wp_cache_add( $currency->code, $currency, 'ea_currencies' );
 		}
 
 		return apply_filters( 'eaccounting_currency_raw_item', $currency );
@@ -239,7 +237,7 @@ class Currency extends Data {
 		$this->set_id( $wpdb->insert_id );
 
 		/**
-		 * Fires immediately after an currency is inserted in the database.
+		 * Fires immediately after a currency is inserted in the database.
 		 *
 		 * @param int $currency_id Currency id.
 		 * @param array $data Currency has been inserted.
@@ -300,7 +298,6 @@ class Currency extends Data {
 		 * @param Currency $currency Currency object.
 		 *
 		 * @since 1.2.1
-		 *
 		 */
 		do_action( 'eaccounting_pre_delete_currency', $this->get_id(), $data, $this );
 
@@ -316,7 +313,6 @@ class Currency extends Data {
 		 * @param array $data Currency data array.
 		 *
 		 * @since 1.2.1
-		 *
 		 */
 		do_action( 'eaccounting_delete_currency', $this->get_id(), $data );
 
@@ -347,7 +343,6 @@ class Currency extends Data {
 	 * @param int $id ID.
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public function set_id( $id ) {
 		$this->id = eaccounting_clean( $id );
@@ -356,10 +351,9 @@ class Currency extends Data {
 	/**
 	 * Set the currency name.
 	 *
-	 * @param $value
+	 * @param string $value Currency Name
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_name( $value ) {
 		$this->set_prop( 'name', eaccounting_clean( $value ) );
@@ -368,10 +362,9 @@ class Currency extends Data {
 	/**
 	 * Set the code.
 	 *
-	 * @param $code
+	 * @param string $code Code
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_code( $code ) {
 		$code = eaccounting_sanitize_currency_code( $code );
@@ -383,22 +376,20 @@ class Currency extends Data {
 	/**
 	 * Set the rate.
 	 *
-	 * @param $value
+	 * @param float $value Rate
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_rate( $value ) {
 		$this->set_prop( 'rate', (float) $value );
 	}
 
 	/**
-	 * Set the code.
+	 * Set the number.
 	 *
-	 * @param $value
+	 * @param int $value number
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_number( $value ) {
 		$this->set_prop( 'number', (int) $value );
@@ -407,10 +398,9 @@ class Currency extends Data {
 	/**
 	 * Set precision.
 	 *
-	 * @param $value
+	 * @param int $value Precision
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_precision( $value ) {
 		$this->set_prop( 'precision', (int) $value );
@@ -419,10 +409,9 @@ class Currency extends Data {
 	/**
 	 * Set precision.
 	 *
-	 * @param $value
+	 * @param int $value Subunit
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_subunit( $value ) {
 		$this->set_prop( 'subunit', (int) $value );
@@ -431,10 +420,9 @@ class Currency extends Data {
 	/**
 	 * Set symbol.
 	 *
-	 * @param $value
+	 * @param string $value Symbol
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_symbol( $value ) {
 		$this->set_prop( 'symbol', eaccounting_clean( $value ) );
@@ -443,10 +431,9 @@ class Currency extends Data {
 	/**
 	 * Set symbol position.
 	 *
-	 * @param $value
+	 * @param string $value Position
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_position( $value ) {
 		if ( in_array( $value, array( 'before', 'after' ), true ) ) {
@@ -457,22 +444,20 @@ class Currency extends Data {
 	/**
 	 * Set decimal separator.
 	 *
-	 * @param $value
+	 * @param string $value Decimal Separator
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_decimal_separator( $value ) {
 		$this->set_prop( 'decimal_separator', eaccounting_clean( $value ) );
 	}
 
 	/**
-	 * Set thousand separator.
+	 * Set thousands separator.
 	 *
-	 * @param $value
+	 * @param string $value Thousand-Separator
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_thousand_separator( $value ) {
 		$this->set_prop( 'thousand_separator', eaccounting_clean( $value ) );
@@ -481,10 +466,9 @@ class Currency extends Data {
 	/**
 	 * Set object created date.
 	 *
-	 * @param string
+	 * @param string $date Creation date
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_date_created( $date = null ) {
 		if ( null === $date ) {
