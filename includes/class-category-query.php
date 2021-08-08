@@ -1,14 +1,16 @@
 <?php
 /**
  * Category Query class.
- * @since   1.2.1
+ *
  * @package   EverAccounting
+ * @since   1.2.1
  */
 
 namespace EverAccounting;
 
 /**
  * Class Category_Query
+ *
  * @package EverAccounting
  */
 class Category_Query {
@@ -71,6 +73,7 @@ class Category_Query {
 
 	/**
 	 * Table name without prefix.
+	 *
 	 * @since 1.2.1
 	 * @var string
 	 */
@@ -90,7 +93,6 @@ class Category_Query {
 	 * Sets up the Category query, if parameter is not empty.
 	 *
 	 * @param string|array $query Query string or array of vars.
-	 *
 	 *
 	 * @since 1.2.1
 	 */
@@ -123,7 +125,6 @@ class Category_Query {
 	 *
 	 * @return mixed
 	 * @since 1.2.1
-	 *
 	 */
 	public function get( $query_var ) {
 		if ( isset( $this->query_vars[ $query_var ] ) ) {
@@ -137,10 +138,9 @@ class Category_Query {
 	 * Set query variable.
 	 *
 	 * @param string $query_var Query variable key.
-	 * @param mixed $value Query variable value.
+	 * @param mixed  $value Query variable value.
 	 *
 	 * @since 1.2.1
-	 *
 	 */
 	public function set( $query_var, $value ) {
 		$this->query_vars[ $query_var ] = $value;
@@ -171,17 +171,14 @@ class Category_Query {
 		$qv['paged']         = absint( $qv['paged'] );
 		$qv['no_found_rows'] = (bool) $qv['no_found_rows'];
 
-
 		/**
 		 * Fires after the main query vars have been parsed.
 		 *
 		 * @param self $query The query instance (passed by reference).
 		 *
 		 * @since 1.2.1
-		 *
 		 */
 		do_action_ref_array( 'eaccounting_parse_category_query', array( &$this ) );
-
 
 		/**
 		 * Filters the query arguments.
@@ -189,7 +186,6 @@ class Category_Query {
 		 * @param array $args An array of arguments.
 		 *
 		 * @since 1.2.1
-		 *
 		 */
 		$qv = apply_filters( 'eaccounting_get_categories_args', $qv );
 
@@ -221,10 +217,10 @@ class Category_Query {
 		$query_where = 'WHERE 1=1';
 		if ( ! empty( $qv['include'] ) ) {
 			// Sanitized earlier.
-			$ids         = implode( ',', wp_parse_id_list( $qv['include'] ) );
+			$ids          = implode( ',', wp_parse_id_list( $qv['include'] ) );
 			$query_where .= " AND $this->table.id IN ($ids)";
 		} elseif ( ! empty( $qv['exclude'] ) ) {
-			$ids         = implode( ',', wp_parse_id_list( $qv['exclude'] ) );
+			$ids          = implode( ',', wp_parse_id_list( $qv['exclude'] ) );
 			$query_where .= " AND $this->table.id NOT IN ($ids)";
 		}
 
@@ -238,8 +234,8 @@ class Category_Query {
 			$search_columns = array_intersect( $qv['search_columns'], $search_columns );
 		}
 		if ( ! empty( $search ) ) {
-			$leading_wild  = ( ltrim( $search, '*' ) != $search );
-			$trailing_wild = ( rtrim( $search, '*' ) != $search );
+			$leading_wild  = ( ltrim( $search, '*' ) !== $search );
+			$trailing_wild = ( rtrim( $search, '*' ) !== $search );
 			if ( $leading_wild && $trailing_wild ) {
 				$wild = 'both';
 			} elseif ( $leading_wild ) {
@@ -256,13 +252,11 @@ class Category_Query {
 			/**
 			 * Filters the columns to search in a Category_Query search.
 			 *
-			 *
 			 * @param string[] $search_columns Array of column names to be searched.
 			 * @param string $search Text being searched.
 			 * @param Category_Query $query The current Category_Query instance.
 			 *
 			 * @since 1.2.1
-			 *
 			 */
 			$search_columns = apply_filters( 'eaccounting_category_search_columns', $search_columns, $search, $this );
 
@@ -309,7 +303,6 @@ class Category_Query {
 
 		$query_orderby .= 'ORDER BY ' . implode( ', ', $orderby_array );
 
-
 		// Limit.
 		if ( isset( $qv['number'] ) && $qv['number'] > 0 ) {
 			if ( $qv['offset'] ) {
@@ -341,11 +334,10 @@ class Category_Query {
 		 * @param Category_Query $query The Category_Query instance (passed by reference).
 		 *
 		 * @since 1.2.1
-		 *
 		 */
 		$clauses = (array) apply_filters_ref_array( 'eaccounting_category_query_clauses', array( $this->sql_clauses, &$this ) );
 
-		$key          = md5( serialize( wp_array_slice_assoc( $this->query_vars, array_keys( $this->query_var_defaults ) ) ) . $this->request );
+		$key          = md5( serialize( wp_array_slice_assoc( $this->query_vars, array_keys( $this->query_var_defaults ) ) ) . $this->request ); //phpcs:ignore
 		$last_changed = wp_cache_get_last_changed( 'ea_categories' );
 		$cache_key    = "ea_categories:$key:$last_changed";
 		$cache        = wp_cache_get( $cache_key, 'ea_categories' );
@@ -367,7 +359,6 @@ class Category_Query {
 		 * @param Category_Query $query The Category_Query instance (passed by reference).
 		 *
 		 * @since 1.2.1
-		 *
 		 */
 		$this->results = apply_filters_ref_array( 'eaccounting_pre_category_query', array( null, &$this ) );
 
@@ -375,9 +366,9 @@ class Category_Query {
 			$this->request = "SELECT {$clauses['fields']} {$clauses['from']} {$clauses['join']} {$clauses['where']} {$clauses['groupby']} {$clauses['having']} {$clauses['orderby']} {$clauses['limit']}";
 
 			if ( is_array( $qv['fields'] ) || 'all' === $qv['fields'] ) {
-				$this->results = $wpdb->get_results( $this->request );
+				$this->results = $wpdb->get_results( $this->request ); //phpcs:ignore
 			} else {
-				$this->results = $wpdb->get_col( $this->request );
+				$this->results = $wpdb->get_col( $this->request ); //phpcs:ignore
 			}
 
 			if ( ! $this->query_vars['no_found_rows'] ) {
@@ -390,10 +381,9 @@ class Category_Query {
 				 * @global \wpdb $wpdb WordPress database abstraction object.
 				 *
 				 * @since 1.2.1
-				 *
 				 */
 				$count_query = apply_filters( 'eaccounting_count_categories_query', 'SELECT FOUND_ROWS()', $this );
-				$this->total = (int) $wpdb->get_var( $count_query );
+				$this->total = (int) $wpdb->get_var( $count_query ); //phpcs:ignore
 			}
 
 			/**
@@ -403,7 +393,6 @@ class Category_Query {
 			 * @param Category_Query $query The Category_Query instance (passed by reference).
 			 *
 			 * @since 1.2.1
-			 *
 			 */
 			$this->results = apply_filters_ref_array( 'eaccounting_categories_results', array( $this->results, &$this ) );
 
@@ -415,10 +404,9 @@ class Category_Query {
 			}
 		}
 
-		$cache          = new \StdClass;
+		$cache          = new \StdClass();
 		$cache->results = $this->results;
 		$cache->total   = $this->total;
-
 
 		wp_cache_add( $cache_key, $cache, 'ea_categories' );
 
@@ -428,15 +416,14 @@ class Category_Query {
 	/**
 	 * Used internally to generate an SQL string for searching across multiple columns
 	 *
-	 * @param string $string
-	 * @param array $cols
-	 * @param bool $wild Whether to allow wildcard searches.
+	 * @param string $string Search query
+	 * @param array  $cols Column name
+	 * @param bool   $wild Whether to allow wildcard searches.
 	 *
 	 * @return string
 	 * @since 1.2.1
 	 *
 	 * @global \wpdb $wpdb WordPress database abstraction object.
-	 *
 	 */
 	protected function get_search_sql( $string, $cols, $wild = false ) {
 		global $wpdb;
@@ -448,9 +435,9 @@ class Category_Query {
 
 		foreach ( $cols as $col ) {
 			if ( 'id' === $col ) {
-				$searches[] = $wpdb->prepare( "$col = %s", $string );
+				$searches[] = $wpdb->prepare( "$col = %s", $string ); //phpcs:ignore
 			} else {
-				$searches[] = $wpdb->prepare( "$col LIKE %s", $like );
+				$searches[] = $wpdb->prepare( "$col LIKE %s", $like ); //phpcs:ignore
 			}
 		}
 
@@ -466,11 +453,10 @@ class Category_Query {
 	 * @since 1.2.1
 	 *
 	 * @global \wpdb $wpdb WordPress database abstraction object.
-	 *
 	 */
 	protected function parse_orderby( $orderby ) {
 		$_orderby = '';
-		if ( $orderby === 'name' ) {
+		if ( 'name' === $orderby ) {
 			$_orderby = $orderby;
 		} elseif ( 'id' === $orderby ) {
 			$_orderby = 'id';
@@ -490,7 +476,6 @@ class Category_Query {
 	 *
 	 * @return string The sanitized 'order' query variable.
 	 * @since 1.2.1
-	 *
 	 */
 	protected function parse_order( $order ) {
 		if ( ! is_string( $order ) || empty( $order ) ) {
@@ -509,7 +494,6 @@ class Category_Query {
 	 *
 	 * @return array Array of results.
 	 * @since 1.2.1
-	 *
 	 */
 	public function get_results() {
 		return $this->results;
@@ -520,7 +504,6 @@ class Category_Query {
 	 *
 	 * @return int Number of total categories.
 	 * @since 1.2.1
-	 *
 	 */
 	public function get_total() {
 		return $this->total;

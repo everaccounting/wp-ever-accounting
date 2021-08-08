@@ -33,7 +33,7 @@ function eaccounting_get_category_types() {
  * Retrieves category data given a category id or category object.
  *
  * @param int|object|Category $category category to retrieve
- * @param string $output The required return type. One of OBJECT, ARRAY_A, or ARRAY_N. Default OBJECT.
+ * @param string              $output The required return type. One of OBJECT, ARRAY_A, or ARRAY_N. Default OBJECT.
  *
  * @return Category|array|null
  * @since 1.1.0
@@ -84,7 +84,7 @@ function eaccounting_insert_category( $data ) {
 		return new WP_Error( 'invalid_category_data', __( 'Category could not be saved.', 'wp-ever-accounting' ) );
 	}
 
-	$data = wp_parse_args( $data, array( 'id' => null ) );
+	$data     = wp_parse_args( $data, array( 'id' => null ) );
 	$category = new Category( (int) $data['id'] );
 	$category->set_props( $data );
 	$is_error = $category->save();
@@ -121,13 +121,12 @@ function eaccounting_delete_category( $category_id ) {
 }
 
 /**
- * Retrieves an array of the categorys matching the given criteria.
+ * Retrieves an array of the categories matching the given criteria.
  *
- * @param array $args Arguments to retrieve categorys.
+ * @param array $args Arguments to retrieve categories.
  *
  * @return Category[]|int Array of category objects or count.
  * @since 1.1.0
- *
  */
 function eaccounting_get_categories( $args = array() ) {
 	$defaults = array(
@@ -145,7 +144,6 @@ function eaccounting_get_categories( $args = array() ) {
 	if ( true === $parsed_args['count_total'] ) {
 		return $query->get_total();
 	}
-
 
 	return $query->get_results();
 }

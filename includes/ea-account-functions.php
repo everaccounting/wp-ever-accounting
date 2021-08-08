@@ -13,7 +13,7 @@ use EverAccounting\Account;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Retrieves account data given a account id or account object.
+ * Retrieves account data given an account id or account object.
  *
  * @param int|object|Account $account account to retrieve
  * @param string             $output The required return type. One of OBJECT, ARRAY_A, or ARRAY_N. Default OBJECT.

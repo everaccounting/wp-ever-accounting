@@ -15,6 +15,7 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Class Transaction
+ *
  * @package EverAccounting
  *
  * @property string $type
@@ -100,14 +101,13 @@ class Transaction extends MetaData {
 	/**
 	 * Retrieve the Transaction from database instance.
 	 *
-	 * @param int $transaction_id Transaction id.
+	 * @param int    $transaction_id Transaction id.
 	 * @param string $field Database field.
 	 *
 	 * @return object|false Object, false otherwise.
 	 * @since 1.2.1
 	 *
 	 * @global \wpdb $wpdb WordPress database abstraction object.
-	 *
 	 */
 	public static function get_raw( $transaction_id, $field = 'id' ) {
 		global $wpdb;
@@ -153,8 +153,8 @@ class Transaction extends MetaData {
 
 		// Bail if nothing to save
 		if ( empty( $data ) ) {
-			return  true;
-			//return new \WP_Error( 'eaccounting_transaction_db_insert_error', __( 'Nothing to insert.', 'wp-ever-accounting' ) );
+			return true;
+			// return new \WP_Error( 'eaccounting_transaction_db_insert_error', __( 'Nothing to insert.', 'wp-ever-accounting' ) );
 		}
 
 		/**
@@ -240,8 +240,8 @@ class Transaction extends MetaData {
 
 		// Bail if nothing to save
 		if ( empty( $data ) ) {
-			return  true;
-			//return new \WP_Error( 'eaccounting_transaction_db_update_error', __( 'Nothing to update.', 'wp-ever-accounting' ) );
+			return true;
+			// return new \WP_Error( 'eaccounting_transaction_db_update_error', __( 'Nothing to update.', 'wp-ever-accounting' ) );
 		}
 
 		/**
@@ -271,7 +271,6 @@ class Transaction extends MetaData {
 		 */
 		do_action( "eaccounting_pre_update_transactions_{$this->type}", $this->get_id(), $this->to_array(), $changes, $this );
 
-
 		if ( false === $wpdb->update( $wpdb->prefix . 'ea_transactions', $data, [ 'id' => $this->get_id() ] ) ) {
 			return new \WP_Error( 'eaccounting_transaction_db_update_error', __( 'Could not update transaction in the database.', 'wp-ever-accounting' ), $wpdb->last_error );
 		}
@@ -287,7 +286,6 @@ class Transaction extends MetaData {
 		 * @since 1.2.1
 		 */
 		do_action( 'eaccounting_update_transaction', $this->get_id(), $this->to_array(), $changes, $this );
-
 
 		/**
 		 * Fires immediately after an existing transaction is updated in the database.
@@ -382,7 +380,6 @@ class Transaction extends MetaData {
 		 * @param Transaction $transaction Transaction object.
 		 *
 		 * @since 1.2.1
-		 *
 		 */
 		do_action( 'eaccounting_saved_transaction', $this->get_id(), $this );
 
@@ -396,7 +393,6 @@ class Transaction extends MetaData {
 		 * @param Transaction $transaction Transaction object.
 		 *
 		 * @since 1.2.1
-		 *
 		 */
 		do_action( "eaccounting_saved_transaction_{$this->type}", $this->get_id(), $this );
 
@@ -488,7 +484,6 @@ class Transaction extends MetaData {
 	 * @param string $value Email.
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_type( $value ) {
 		if ( array_key_exists( $value, eaccounting_get_transaction_types() ) ) {
@@ -502,7 +497,6 @@ class Transaction extends MetaData {
 	 * @param $value
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_payment_date( $value ) {
 		$this->set_date_prop( 'payment_date', $value, 'Y-m-d' );
@@ -514,7 +508,6 @@ class Transaction extends MetaData {
 	 * @param $value
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_amount( $value ) {
 		$this->set_prop( 'amount', (float) $value );
@@ -526,7 +519,6 @@ class Transaction extends MetaData {
 	 * @param $value
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_currency_code( $value ) {
 		$this->set_prop( 'currency_code', eaccounting_sanitize_currency_code( $value ) );
@@ -538,7 +530,6 @@ class Transaction extends MetaData {
 	 * @param $value
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_currency_rate( $value ) {
 		$this->set_prop( 'currency_rate', (float) $value );
@@ -550,7 +541,6 @@ class Transaction extends MetaData {
 	 * @param $value
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_account_id( $value ) {
 		$this->set_prop( 'account_id', absint( $value ) );
@@ -562,7 +552,6 @@ class Transaction extends MetaData {
 	 * @param $value
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_invoice_id( $value ) {
 		$this->set_prop( 'invoice_id', absint( $value ) );
@@ -574,7 +563,6 @@ class Transaction extends MetaData {
 	 * @param $value
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_contact_id( $value ) {
 		$this->set_prop( 'contact_id', absint( $value ) );
@@ -586,7 +574,6 @@ class Transaction extends MetaData {
 	 * @param $value
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_category_id( $value ) {
 		$this->set_prop( 'category_id', absint( $value ) );
@@ -598,7 +585,6 @@ class Transaction extends MetaData {
 	 * @param $value
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_description( $value ) {
 		$this->set_prop( 'description', eaccounting_clean( $value ) );
@@ -610,7 +596,6 @@ class Transaction extends MetaData {
 	 * @param $value
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_payment_method( $value ) {
 		if ( array_key_exists( $value, eaccounting_get_payment_methods() ) ) {
@@ -624,7 +609,6 @@ class Transaction extends MetaData {
 	 * @param $value
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_reference( $value ) {
 		$this->set_prop( 'reference', eaccounting_clean( $value ) );
@@ -636,7 +620,6 @@ class Transaction extends MetaData {
 	 * @param $value
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_attachment_id( $value ) {
 		$this->set_prop( 'attachment_id', intval( $value ) );
@@ -648,7 +631,6 @@ class Transaction extends MetaData {
 	 * @param $value
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_parent_id( $value ) {
 		$this->set_prop( 'parent_id', absint( $value ) );
@@ -660,7 +642,6 @@ class Transaction extends MetaData {
 	 * @param $value
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_reconciled( $value ) {
 		$this->set_prop( 'reconciled', absint( $value ) );
@@ -672,7 +653,6 @@ class Transaction extends MetaData {
 	 * @param int $creator_id Creator id
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_creator_id( $creator_id = null ) {
 		if ( null === $creator_id ) {
@@ -687,7 +667,6 @@ class Transaction extends MetaData {
 	 * @param string
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_date_created( $date = null ) {
 		if ( null === $date ) {
