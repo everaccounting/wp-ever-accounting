@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  * Retrieves account data given a account id or account object.
  *
  * @param int|object|Account $account account to retrieve
- * @param string $output The required return type. One of OBJECT, ARRAY_A, or ARRAY_N. Default OBJECT.
+ * @param string             $output The required return type. One of OBJECT, ARRAY_A, or ARRAY_N. Default OBJECT.
  *
  * @return Account|array|null
  * @since 1.1.0
@@ -48,7 +48,7 @@ function eaccounting_get_account( $account, $output = OBJECT ) {
 }
 
 /**
- *  Insert or update a account.
+ *  Insert or update an account.
  *
  * @param array|object|Account $data An array, object, or account object of data arguments.
  *
@@ -67,7 +67,7 @@ function eaccounting_insert_account( $data ) {
 		return new WP_Error( 'invalid_account_data', __( 'Account could not be saved.', 'wp-ever-accounting' ) );
 	}
 
-	$data = wp_parse_args( $data, array( 'id' => null ) );
+	$data    = wp_parse_args( $data, array( 'id' => null ) );
 	$account = new Account( (int) $data['id'] );
 	$account->set_props( $data );
 	$is_error = $account->save();
@@ -110,7 +110,6 @@ function eaccounting_delete_account( $account_id ) {
  *
  * @return Account[]|int Array of account objects or count.
  * @since 1.1.0
- *
  */
 function eaccounting_get_accounts( $args = array() ) {
 	$defaults = array(
@@ -128,7 +127,6 @@ function eaccounting_get_accounts( $args = array() ) {
 	if ( true === $parsed_args['count_total'] ) {
 		return $query->get_total();
 	}
-
 
 	return $query->get_results();
 }
