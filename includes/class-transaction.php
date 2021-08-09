@@ -65,6 +65,34 @@ class Transaction extends MetaData {
 	);
 
 	/**
+	 * A map of database fields to data types.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @var array
+	 */
+	protected $data_type = array(
+		'id'             => '%d',
+		'type'           => '%s',
+		'payment_date'   => '%s',
+		'amount'         => '%.4f',
+		'currency_code'  => '%s', // protected
+		'currency_rate'  => '%.8f', // protected
+		'account_id'     => '%d',
+		'document_id'    => '%d',
+		'contact_id'     => '%d',
+		'category_id'    => '%d',
+		'description'    => '%s',
+		'payment_method' => '%s',
+		'reference'      => '%s',
+		'attachment_id'  => '%d',
+		'parent_id'      => '%d',
+		'reconciled'     => '%d',
+		'creator_id'     => '%d',
+		'date_created'   => '%s',
+	);
+
+	/**
 	 * Meta type.
 	 *
 	 * @since 1.2.1
@@ -74,8 +102,14 @@ class Transaction extends MetaData {
 
 	/**
 	 * Transaction constructor.
+	 *
+	 * Get the note if id is passed, otherwise the note is new and empty.
+	 *
+	 * @param int|object|array|Transaction $transaction object to read.
+	 *
+	 * @since 1.1.0
 	 */
-	public function __construct( $transaction ) {
+	public function __construct( $transaction = 0 ) {
 		parent::__construct();
 		if ( $transaction instanceof self ) {
 			$this->set_id( $transaction->get_id() );
@@ -132,29 +166,27 @@ class Transaction extends MetaData {
 	}
 
 	/**
-	 *  Insert an object in the database.
+	 *  Insert an item in the database.
 	 *
 	 * This method is not meant to call publicly instead call save
 	 * which will conditionally decide which method to call.
 	 *
-	 * @param array|object $override An array or object of data arguments,
-	 * which will override the default arguments.
+	 * @param array $args An array of arguments for internal use case.
 	 *
-	 * @return true|\WP_Error True on success, WP_Error on failure.
+	 * @return \WP_Error|true True on success, WP_Error on failure.
 	 * @global \wpdb $wpdb WordPress database abstraction object.
 	 * @since 1.1.0
 	 */
-	protected function insert( $override = [] ) {
+	protected function insert( $args = [] ) {
 		global $wpdb;
-		$fields   = array_keys( $this->default_data );
 		$data_arr = $this->to_array();
-		$data     = wp_array_slice_assoc( array_merge( $data_arr, $override ), $fields );
+		$data     = wp_array_slice_assoc( $data_arr, array_keys( $this->data_type ) );
+		$format   = wp_array_slice_assoc( $this->data_type, array_keys( $data ) );
 		$data     = wp_unslash( $data );
 
 		// Bail if nothing to save
 		if ( empty( $data ) ) {
 			return true;
-			// return new \WP_Error( 'eaccounting_transaction_db_insert_error', __( 'Nothing to insert.', 'wp-ever-accounting' ) );
 		}
 
 		/**
@@ -182,7 +214,7 @@ class Transaction extends MetaData {
 		 */
 		do_action( "eaccounting_pre_insert_transaction_{$this->type}", $data, $data_arr, $this );
 
-		if ( false === $wpdb->insert( $wpdb->prefix . 'ea_transactions', $data ) ) {
+		if ( false === $wpdb->insert( $wpdb->prefix . 'ea_transactions', $data, $format ) ) {
 			return new \WP_Error( 'db_insert_error', __( 'Could not insert transaction into the database.', 'wp-ever-accounting' ), $wpdb->last_error );
 		}
 
@@ -224,24 +256,21 @@ class Transaction extends MetaData {
 	 * This method is not meant to call publicly instead call save
 	 * which will conditionally decide which method to call.
 	 *
-	 * @param array|object $override An array or object of data arguments,
-	 * which will override the default arguments.
+	 * @param array $args An array of arguments for internal use case.
 	 *
 	 * @return \WP_Error|true True on success, WP_Error on failure.
 	 * @global \wpdb $wpdb WordPress database abstraction object.
 	 * @since 1.1.0
 	 */
-	protected function update( $override = [] ) {
+	protected function update( $args = [] ) {
 		global $wpdb;
-		$fields  = array_keys( $this->default_data );
 		$changes = $this->get_changes();
-		$data    = wp_array_slice_assoc( array_merge( $changes, $override ), $fields );
+		$data    = wp_array_slice_assoc( $changes, array_keys( $this->data_type ) );
+		$format  = wp_array_slice_assoc( $this->data_type, array_keys( $data ) );
 		$data    = wp_unslash( $data );
-
 		// Bail if nothing to save
 		if ( empty( $data ) ) {
 			return true;
-			// return new \WP_Error( 'eaccounting_transaction_db_update_error', __( 'Nothing to update.', 'wp-ever-accounting' ) );
 		}
 
 		/**
@@ -271,7 +300,7 @@ class Transaction extends MetaData {
 		 */
 		do_action( "eaccounting_pre_update_transactions_{$this->type}", $this->get_id(), $this->to_array(), $changes, $this );
 
-		if ( false === $wpdb->update( $wpdb->prefix . 'ea_transactions', $data, [ 'id' => $this->get_id() ] ) ) {
+		if ( false === $wpdb->update( $wpdb->prefix . 'ea_transactions', $data, [ 'id' => $this->get_id() ], $format, ['id' => '%d'] ) ) {
 			return new \WP_Error( 'db_update_error', __( 'Could not update transaction in the database.', 'wp-ever-accounting' ), $wpdb->last_error );
 		}
 

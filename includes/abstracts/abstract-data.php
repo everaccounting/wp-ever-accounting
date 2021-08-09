@@ -390,23 +390,6 @@ abstract class Data {
 		return wp_json_encode( $this->to_array() );
 	}
 
-	/**
-	 * Makes private/protected methods readable for backward compatibility.
-	 *
-	 * @param string $name Method to call.
-	 * @param array $arguments Arguments to pass when calling.
-	 *
-	 * @return mixed|false Return value of the callback, false otherwise.
-	 * @since 1.2.1
-	 *
-	 */
-	public function __call( $name, $arguments ) {
-		if ( substr( $name, 0, 3 ) === 'get' ) {
-			return $this->get_prop( ltrim( $name, 'get_' ) );
-		}
-
-		return false;
-	}
 
 	/**
 	 * Retrieve the object from database instance.
@@ -428,13 +411,13 @@ abstract class Data {
 	 * This method is not meant to call publicly instead call save
 	 * which will conditionally decide which method to call.
 	 *
-	 * @param array $fields An array of database fields and type.
+	 * @param array $args An array of arguments for internal use case.
 	 *
 	 * @return \WP_Error|true True on success, WP_Error on failure.
 	 * @global \wpdb $wpdb WordPress database abstraction object.
 	 * @since 1.1.0
 	 */
-	abstract protected function insert( $fields );
+	abstract protected function insert( $args = array() );
 
 	/**
 	 *  Update an object in the database.
@@ -442,13 +425,13 @@ abstract class Data {
 	 * This method is not meant to call publicly instead call save
 	 * which will conditionally decide which method to call.
 	 *
-	 * @param array $fields An array of database fields and type.
+	 * @param array $args An array of arguments for internal use case.
 	 *
 	 * @return \WP_Error|true True on success, WP_Error on failure.
 	 * @global \wpdb $wpdb WordPress database abstraction object.
 	 * @since 1.1.0
 	 */
-	abstract protected function update( $fields );
+	abstract protected function update( $args = array() );
 
 	/**
 	 * Saves an object in the database.

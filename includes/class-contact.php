@@ -78,6 +78,36 @@ class Contact extends MetaData {
 	);
 
 	/**
+	 * A map of database fields to data types.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @var array
+	 */
+	protected $data_type = array(
+		'id'            => '%d',
+		'user_id'       => '%d',
+		'name'          => '%s',
+		'company'       => '%s',
+		'email'         => '%s',
+		'phone'         => '%s',
+		'website'       => '%s',
+		'vat_number'    => '%s',
+		'birth_date'    => '%s',
+		'street'        => '%s',
+		'city'          => '%s',
+		'state'         => '%s',
+		'postcode'      => '%s',
+		'country'       => '%s',
+		'type'          => '%s',
+		'currency_code' => '%s',
+		'thumbnail_id'  => '%d',
+		'enabled'       => '%d',
+		'creator_id'    => '%d',
+		'date_created'  => '%s',
+	);
+
+	/**
 	 * Meta type.
 	 *
 	 * @var string
@@ -171,17 +201,17 @@ class Contact extends MetaData {
 	 * This method is not meant to call publicly instead call save
 	 * which will conditionally decide which method to call.
 	 *
-	 * @param array $fields An array of database fields and type.
+	 * @param array $args An array of arguments for internal use case.
 	 *
 	 * @return \WP_Error|true True on success, WP_Error on failure.
 	 * @global \wpdb $wpdb WordPress database abstraction object.
 	 * @since 1.1.0
 	 */
-	protected function insert( $fields ) {
+	protected function insert( $args = array() ) {
 		global $wpdb;
 		$data_arr = $this->to_array();
-		$data     = wp_array_slice_assoc( $data_arr, array_keys( $fields ) );
-		$format   = wp_array_slice_assoc( $fields, array_keys( $data ) );
+		$data     = wp_array_slice_assoc( $data_arr, array_keys( $this->data_type ) );
+		$format   = wp_array_slice_assoc( $this->data_type, array_keys( $data ) );
 		$data     = wp_unslash( $data );
 
 		// Bail if nothing to save
@@ -256,17 +286,17 @@ class Contact extends MetaData {
 	 * This method is not meant to call publicly instead call save
 	 * which will conditionally decide which method to call.
 	 *
-	 * @param array $fields An array of database fields and type.
+	 * @param array $args An array of arguments for internal use case.
 	 *
 	 * @return \WP_Error|true True on success, WP_Error on failure.
 	 * @global \wpdb $wpdb WordPress database abstraction object.
 	 * @since 1.1.0
 	 */
-	protected function update( $fields ) {
+	protected function update( $args = array() ) {
 		global $wpdb;
 		$changes = $this->get_changes();
-		$data    = wp_array_slice_assoc( $changes, array_keys( $fields ) );
-		$format  = wp_array_slice_assoc( $fields, array_keys( $data ) );
+		$data    = wp_array_slice_assoc( $changes, array_keys( $this->data_type ) );
+		$format  = wp_array_slice_assoc( $this->data_type, array_keys( $data ) );
 		$data    = wp_unslash( $data );
 		// Bail if nothing to save
 		if ( empty( $data ) ) {
@@ -342,28 +372,6 @@ class Contact extends MetaData {
 	 */
 	public function save() {
 		$user_id = get_current_user_id();
-		$fields  = array(
-			'id'            => '%d',
-			'user_id'       => '%d',
-			'name'          => '%s',
-			'company'       => '%s',
-			'email'         => '%s',
-			'phone'         => '%s',
-			'website'       => '%s',
-			'vat_number'    => '%s',
-			'birth_date'    => '%s',
-			'street'        => '%s',
-			'city'          => '%s',
-			'state'         => '%s',
-			'postcode'      => '%s',
-			'country'       => '%s',
-			'type'          => '%s',
-			'currency_code' => '%s',
-			'thumbnail_id'  => '%d',
-			'enabled'       => '%d',
-			'creator_id'    => '%d',
-			'date_created'  => '%s',
-		);
 
 		// Check if the contact name exist or not
 		if ( empty( $this->get_prop( 'name' ) ) ) {
@@ -379,9 +387,9 @@ class Contact extends MetaData {
 		}
 
 		if ( $this->exists() ) {
-			$is_error = $this->update( $fields );
+			$is_error = $this->update();
 		} else {
-			$is_error = $this->insert( $fields );
+			$is_error = $this->insert();
 		}
 
 		if ( is_wp_error( $is_error ) ) {

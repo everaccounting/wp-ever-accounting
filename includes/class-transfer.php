@@ -55,6 +55,21 @@ class Transfer extends Data {
 	);
 
 	/**
+	 * A map of database fields to data types.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @var array
+	 */
+	protected $data_type = array(
+		'id'           => '%d',
+		'income_id'    => '%d',
+		'expense_id'   => '%d',
+		'creator_id'   => '%d',
+		'date_created' => '%s',
+	);
+
+	/**
 	 * Transfer constructor.
 	 *
 	 * Get the transfer if id is passed, otherwise the transfer is new and empty.
@@ -63,7 +78,7 @@ class Transfer extends Data {
 	 *
 	 * @since 1.1.0
 	 */
-	public function __construct( $transfer ) {
+	public function __construct( $transfer = 0 ) {
 		parent::__construct();
 		if ( $transfer instanceof self ) {
 			$this->set_id( $transfer->get_id() );
@@ -147,17 +162,17 @@ class Transfer extends Data {
 	 * This method is not meant to call publicly instead call save
 	 * which will conditionally decide which method to call.
 	 *
-	 * @param array $fields An array of database fields and type.
+	 * @param array $args An array of arguments for internal use case.
 	 *
 	 * @return \WP_Error|true True on success, WP_Error on failure.
 	 * @global \wpdb $wpdb WordPress database abstraction object.
 	 * @since 1.1.0
 	 */
-	protected function insert( $fields ) {
+	protected function insert( $args = array() ) {
 		global $wpdb;
 		$data_arr = $this->to_array();
-		$data     = wp_array_slice_assoc( $data_arr, array_keys( $fields ) );
-		$format   = wp_array_slice_assoc( $fields, array_keys( $data ) );
+		$data     = wp_array_slice_assoc( $data_arr, array_keys( $this->data_type ) );
+		$format   = wp_array_slice_assoc( $this->data_type, array_keys( $data ) );
 		$data     = wp_unslash( $data );
 
 		$expense = array(
@@ -209,13 +224,13 @@ class Transfer extends Data {
 	 * This method is not meant to call publicly instead call save
 	 * which will conditionally decide which method to call.
 	 *
-	 * @param array $fields An array of database fields and type.
+	 * @param array $args An array of arguments for internal use case.
 	 *
 	 * @return \WP_Error|true True on success, WP_Error on failure.
 	 * @global \wpdb $wpdb WordPress database abstraction object.
 	 * @since 1.1.0
 	 */
-	protected function update( $fields ) {
+	protected function update( $args = array() ) {
 
 		return true;
 	}

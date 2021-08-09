@@ -490,7 +490,10 @@ class Transaction_Query {
 			if ( 'all' === $qv['fields'] ) {
 				foreach ( $this->results as $key => $row ) {
 					wp_cache_add( $row->id, $row, 'ea_transactions' );
-					$this->results[ $key ] = $row;
+					$transaction = new Transaction;
+					$transaction->set_props( $row );
+					$transaction->set_object_read( true );
+					$this->results[ $key ] = $transaction;
 				}
 			}
 		}

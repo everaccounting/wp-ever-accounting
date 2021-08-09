@@ -52,13 +52,6 @@ defined( 'ABSPATH' ) || exit;
  * @property Invoice_Item[] $items
  */
 class Invoice extends Data {
-	/**
-	 * Invoice id.
-	 *
-	 * @since 1.2.1
-	 * @var int
-	 */
-	public $id = null;
 
 	/**
 	 * Invoice data container.
@@ -109,166 +102,42 @@ class Invoice extends Data {
 	);
 
 	/**
-	 * Stores the transaction object's sanitization level.
-	 *
-	 * Does not correspond to a DB field.
-	 *
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $filter;
-
-	/**
-	 * Invoice Items
-	 *
-	 * @since 1.2.1
-	 * @var Invoice_Item[]
-	 */
-	protected $items = null;
-
-	/**
-	 * Retrieve Invoice instance.
-	 *
-	 * @param int $invoice_id Invoice id.
-	 *
-	 * @return Invoice|false Invoice object, false otherwise.
-	 * @since 1.2.1
-	 *
-	 * @global \wpdb $wpdb WordPress database abstraction object.
-	 *
-	 */
-	public static function get_instance( $invoice_id ) {
-		global $wpdb;
-
-		$invoice_id = (int) $invoice_id;
-		if ( ! $invoice_id ) {
-			return false;
-		}
-
-		$_item = wp_cache_get( $invoice_id, 'ea_invoices' );
-
-		if ( ! $_item ) {
-			$_item = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}ea_invoices WHERE id = %d LIMIT 1", $invoice_id ) );
-
-			if ( ! $_item ) {
-				return false;
-			}
-
-			$_item = eaccounting_sanitize_invoice( $_item, 'raw' );
-			wp_cache_add( $_item->id, $_item, 'ea_invoices' );
-		} elseif ( empty( $_item->filter ) ) {
-			$_item = eaccounting_sanitize_invoice( $_item, 'raw' );
-		}
-
-		return new Invoice( $_item );
-	}
-
-	/**
-	 * Invoice constructor.
-	 *
-	 * @param $invoice
-	 *
-	 * @since 1.2.1
-	 */
-	public function __construct( $invoice ) {
-		foreach ( get_object_vars( $invoice ) as $key => $value ) {
-			$this->$key = $value;
-		}
-	}
-
-	/**
-	 * Filter invoice object based on context.
-	 *
-	 * @param string $filter Filter.
-	 *
-	 * @return Invoice|Object
-	 * @since 1.2.1
-	 */
-	public function filter( $filter ) {
-		if ( $this->filter === $filter ) {
-			return $this;
-		}
-
-		if ( 'raw' === $filter ) {
-			return self::get_instance( $this->id );
-		}
-
-		return new self( eaccounting_sanitize_invoice( (object) $this->to_array(), $filter ) );
-	}
-
-	/**
-	 * Gets a address prop.
-	 *
-	 * @param string $prop Name of prop to get.
-	 *
-	 * @return mixed
-	 * @since  1.1.0
-	 *
-	 */
-	public function get_address_prop( $prop ) {
-		$value = null;
-
-		if ( array_key_exists( $prop, $this->data['address'] ) ) {
-			$value = eaccounting_sanitize_invoice_field( "address_$prop", $this->data['address'][ $prop ], $this->id, $this->filter );
-		}
-
-		return $value;
-	}
-
-	/**
-	 * Read meta data if null.
-	 *
-	 * @since 1.1.0
-	 */
-	public function maybe_read_items() {
-		if ( ! is_null( $this->items ) ) {
-			return;
-		}
-		$this->read_items();
-	}
-
-	/**
-	 * Read items from the database.
-	 *
-	 * @param bool $force_read True to force a new DB read (and update cache).
+	 * A map of database fields to data types.
 	 *
 	 * @since 1.1.0
 	 *
+	 * @var array
 	 */
-	public function read_items( $force_read = false ) {
-		global $wpdb;
-		// Reset meta data.
-		$this->items = array();
-
-		// Maybe abort early.
-		if ( ! $this->exists() ) {
-			return;
-		}
-
-		// Only read from cache if the cache key is set.
-		$raw_data = false;
-		if ( ! $force_read ) {
-			//$raw_data = wp_cache_get( $this->id, "ea_{$this->meta_type}meta" );
-		}
-
-		if ( false === $raw_data ) {
-			$raw_data = $wpdb->get_results(
-				$wpdb->prepare(
-					"SELECT *
-				FROM {$wpdb->prefix}ea_invoice_items
-				WHERE invoice_id = %d
-				ORDER BY id",
-					(int) $this->id
-				)
-			);
-		}
-
-		$this->items = array_map( 'eaccounting_get_invoice_item', $raw_data );
-
-//		wp_cache_add( $this->id, $raw_meta_data, "ea_{$this->meta_type}meta" );
-//		$this->set_meta_data( $raw_meta_data );
-//		$this->meta_hash = md5( serialize( $this->meta_data ) );
-	}
-
+	protected $data_type = array(
+		'id'              => '%d',
+		'document_number' => '%s',
+		'type'            => '%s',
+		'order_number'    => '%s',
+		'status'          => '%s',
+		'issue_date'      => '%s',
+		'due_date'        => '%s',
+		'payment_date'    => '%s',
+		'category_id'     => '%d',
+		'contact_id'      => '%d',
+		'address'         => '%s',
+		'currency_code'   => '%s',
+		'currency_rate'   => '%.8f',
+		'discount'        => '%.4f',
+		'discount_type'   => '%s',
+		'subtotal'        => '%.4f',
+		'total_tax'       => '%.4f',
+		'total_discount'  => '%.4f',
+		'total_fees'      => '%.4f',
+		'total_shipping'  => '%.4f',
+		'total'           => '%.4f',
+		'tax_inclusive'   => '%d',
+		'note'            => '%s',
+		'terms'           => '%s',
+		'attachment_id'   => '%d',
+		'key'             => '%s',
+		'parent_id'       => '%d',
+		'creator_id'      => '%d',
+		'date_created'    => '%s',
+	);
 
 }

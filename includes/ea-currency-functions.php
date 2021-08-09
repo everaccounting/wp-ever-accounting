@@ -152,7 +152,11 @@ function eaccounting_sanitize_currency_code( $code ) {
 	return $code;
 }
 
-
+/**
+ * Get currency ISO codes.
+ * @since 1.2.1
+ * @return array
+ */
 function eaccounting_get_currency_iso_codes(){
 	return eaccounting_get_data('currencies');
 }

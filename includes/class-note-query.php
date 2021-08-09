@@ -419,7 +419,10 @@ class Note_Query {
 			if ( 'all' === $qv['fields'] ) {
 				foreach ( $this->results as $key => $row ) {
 					wp_cache_add( $row->id, $row, 'ea_notes' );
-					$this->results[ $key ] = $row;
+					$note = new Note();
+					$note->set_props( $row );
+					$note->set_object_read( true );
+					$this->results[ $key ] = $note;
 				}
 			}
 		}

@@ -410,7 +410,11 @@ class Currency_Query {
 			if ( 'all' === $qv['fields'] ) {
 				foreach ( $this->results as $key => $row ) {
 					wp_cache_add( $row->id, $row, 'ea_currencies' );
-					$this->results[ $key ] = $row;
+					wp_cache_add( $row->code, $row, 'ea_currencies' );
+					$currency = new Currency();
+					$currency->set_props( $row );
+					$currency->set_object_read( true );
+					$this->results[ $key ] = $currency;
 				}
 			}
 		}

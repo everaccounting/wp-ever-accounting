@@ -424,4 +424,13 @@ function eaccounting_update_1_2_1() {
 		unset( $option['id'] );
 		eaccounting_insert_currency( $option );
 	}
+
+	//update permissions
+	global $wp_roles;
+
+	if ( is_object( $wp_roles ) ) {
+		$wp_roles->add_cap( 'ea_manager', 'ea_manage_contact' );
+		$wp_roles->add_cap( 'ea_accountant', 'ea_manage_contact' );
+		$wp_roles->add_cap( 'administrator', 'ea_manage_contact' );
+	}
 }

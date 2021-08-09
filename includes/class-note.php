@@ -44,6 +44,23 @@ class Note extends Data {
 	);
 
 	/**
+	 * A map of database fields to data types.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @var array
+	 */
+	protected $data_type = array(
+		'id'           => '%d',
+		'parent_id'    => '%d',
+		'type'         => '%s',
+		'note'         => '%s',
+		'extra'        => '%s',
+		'creator_id'   => '%d',
+		'date_created' => '%s',
+	);
+
+	/**
 	 * Note constructor.
 	 *
 	 * Get the note if id is passed, otherwise the note is new and empty.
@@ -124,17 +141,17 @@ class Note extends Data {
 	 * This method is not meant to call publicly instead call save
 	 * which will conditionally decide which method to call.
 	 *
-	 * @param array $fields An array of database fields and type.
+	 * @param array $args An array of arguments for internal use case.
 	 *
 	 * @return \WP_Error|true True on success, WP_Error on failure.
 	 * @global \wpdb $wpdb WordPress database abstraction object.
 	 * @since 1.1.0
 	 */
-	protected function insert( $fields ) {
+	protected function insert( $args = array() ) {
 		global $wpdb;
 		$data_arr = $this->to_array();
-		$data     = wp_array_slice_assoc( $data_arr, array_keys( $fields ) );
-		$format   = wp_array_slice_assoc( $fields, array_keys( $data ) );
+		$data     = wp_array_slice_assoc( $data_arr, array_keys( $this->data_type ) );
+		$format   = wp_array_slice_assoc( $this->data_type, array_keys( $data ) );
 		$data     = wp_unslash( $data );
 
 		// Bail if nothing to save
@@ -180,17 +197,17 @@ class Note extends Data {
 	 * This method is not meant to call publicly instead call save
 	 * which will conditionally decide which method to call.
 	 *
-	 * @param array $fields An array of database fields and type.
+	 * @param array $args An array of arguments for internal use case.
 	 *
 	 * @return \WP_Error|true True on success, WP_Error on failure.
 	 * @global \wpdb $wpdb WordPress database abstraction object.
 	 * @since 1.1.0
 	 */
-	protected function update( $fields ) {
+	protected function update( $args = array() ) {
 		global $wpdb;
 		$changes = $this->get_changes();
-		$data    = wp_array_slice_assoc( $changes, array_keys( $fields ) );
-		$format  = wp_array_slice_assoc( $fields, array_keys( $data ) );
+		$data    = wp_array_slice_assoc( $changes, array_keys( $this->data_type ) );
+		$format  = wp_array_slice_assoc( $this->data_type, array_keys( $data ) );
 		$data    = wp_unslash( $data );
 		// Bail if nothing to save
 		if ( empty( $data ) ) {
@@ -224,6 +241,8 @@ class Note extends Data {
 		 * @since 1.2.1
 		 */
 		do_action( 'eaccounting_pre_update_note', $this->get_id(), $this->to_array(), $changes, $this );
+
+		return true;
 	}
 
 	/**
@@ -263,9 +282,9 @@ class Note extends Data {
 		}
 
 		if ( $this->exists() ) {
-			$is_error = $this->update( $fields );
+			$is_error = $this->update();
 		} else {
-			$is_error = $this->insert( $fields );
+			$is_error = $this->insert();
 		}
 
 		if ( is_wp_error( $is_error ) ) {

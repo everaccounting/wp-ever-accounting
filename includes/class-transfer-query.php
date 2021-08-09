@@ -414,7 +414,10 @@ class Transfer_Query {
 			if ( 'all' === $qv['fields'] ) {
 				foreach ( $this->results as $key => $row ) {
 					wp_cache_add( $row->id, $row, 'ea_transfers' );
-					$this->results[ $key ] = $row;
+					$transfer = new Transfer();
+					$transfer->set_props( $row );
+					$transfer->set_object_read( true );
+					$this->results[ $key ] = $transfer;
 				}
 			}
 		}

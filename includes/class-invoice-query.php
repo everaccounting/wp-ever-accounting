@@ -484,7 +484,10 @@ class Invoice_Query {
 			if ( 'all' === $qv['fields'] ) {
 				foreach ( $this->results as $key => $row ) {
 					wp_cache_add( $row->id, $row, 'ea_invoices' );
-					$this->results[ $key ] = $row;
+					$invoice = new Invoice();
+					$invoice->set_props( $row );
+					$invoice->set_object_read( true );
+					$this->results[ $key ] = $invoice;
 				}
 			}
 		}

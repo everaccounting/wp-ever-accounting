@@ -200,7 +200,6 @@ class Contact_Query {
 		$query_join    = &$this->sql_clauses['join'];
 		$query_orderby = &$this->sql_clauses['orderby'];
 		$query_limit   = &$this->sql_clauses['limit'];
-		error_log(print_r($qv, true ));
 		// Fields setup.
 		if ( is_array( $qv['fields'] ) ) {
 			$query_fields .= implode( ',', $qv['fields'] );

@@ -56,6 +56,28 @@ class Account extends Data {
 	);
 
 	/**
+	 * A map of database fields to data types.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @var array
+	 */
+	protected $data_type = array(
+		'id'              => '%d',
+		'currency_code'   => '%s',
+		'name'            => '%s',
+		'number'          => '%s',
+		'opening_balance' => '%.4f',
+		'bank_name'       => '%s',
+		'bank_phone'      => '%s',
+		'bank_address'    => '%s',
+		'thumbnail_id'    => '%d',
+		'enabled'         => '%d',
+		'creator_id'      => '%d',
+		'date_created'    => '%s',
+	);
+
+	/**
 	 * Account constructor.
 	 *
 	 * Get the account if ID is passed, otherwise the account is new and empty.
@@ -90,7 +112,7 @@ class Account extends Data {
 	/**
 	 * Retrieve the object from database instance.
 	 *
-	 * @param int    $account_id Object id.
+	 * @param int $account_id Object id.
 	 * @param string $field Database field.
 	 *
 	 * @return object|false Object, false otherwise.
@@ -127,17 +149,17 @@ class Account extends Data {
 	 * This method is not meant to call publicly instead call save
 	 * which will conditionally decide which method to call.
 	 *
-	 * @param array $fields An array of database fields and type.
+	 * @param array $args An array of arguments for internal use case.
 	 *
 	 * @return \WP_Error|true True on success, WP_Error on failure.
 	 * @global \wpdb $wpdb WordPress database abstraction object.
 	 * @since 1.1.0
 	 */
-	protected function insert( $fields ) {
+	protected function insert(  $args = array() ) {
 		global $wpdb;
 		$data_arr = $this->to_array();
-		$data     = wp_array_slice_assoc( $data_arr, array_keys( $fields ) );
-		$format   = wp_array_slice_assoc( $fields, array_keys( $data ) );
+		$data     = wp_array_slice_assoc( $data_arr, array_keys( $this->data_type ) );
+		$format   = wp_array_slice_assoc( $this->data_type, array_keys( $data ) );
 		$data     = wp_unslash( $data );
 
 		// Bail if nothing to save
@@ -183,17 +205,17 @@ class Account extends Data {
 	 * This method is not meant to call publicly instead call save
 	 * which will conditionally decide which method to call.
 	 *
-	 * @param array $fields An array of database fields and type.
+	 * @param array $args An array of arguments for internal use case.
 	 *
 	 * @return \WP_Error|true True on success, WP_Error on failure.
 	 * @global \wpdb $wpdb WordPress database abstraction object.
 	 * @since 1.1.0
 	 */
-	protected function update( $fields ) {
+	protected function update(  $args = array() ) {
 		global $wpdb;
 		$changes = $this->get_changes();
-		$data    = wp_array_slice_assoc( $changes, array_keys( $fields ) );
-		$format  = wp_array_slice_assoc( $fields, array_keys( $data ) );
+		$data    = wp_array_slice_assoc( $changes, array_keys( $this->data_type ) );
+		$format  = wp_array_slice_assoc( $this->data_type, array_keys( $data ) );
 		$data    = wp_unslash( $data );
 		// Bail if nothing to save
 		if ( empty( $data ) ) {
@@ -239,21 +261,6 @@ class Account extends Data {
 	 */
 	public function save() {
 		$user_id = get_current_user_id();
-		$fields  = array(
-			'id'              => '%d',
-			'currency_code'   => '%s',
-			'name'            => '%s',
-			'number'          => '%s',
-			'opening_balance' => '%.4f',
-			'bank_name'       => '%s',
-			'bank_phone'      => '%s',
-			'bank_address'    => '%s',
-			'thumbnail_id'    => '%d',
-			'enabled'         => '%d',
-			'creator_id'      => '%d',
-			'date_created'    => '%s',
-		);
-
 		// check if the name is available or not
 		if ( empty( $this->get_prop( 'name' ) ) ) {
 			return new \WP_Error( 'invalid_account_name', esc_html__( 'Account name is required', 'wp-ever-accounting' ) );
@@ -272,9 +279,9 @@ class Account extends Data {
 		}
 
 		if ( $this->exists() ) {
-			$is_error = $this->update( $fields );
+			$is_error = $this->update();
 		} else {
-			$is_error = $this->insert( $fields );
+			$is_error = $this->insert();
 		}
 
 		if ( is_wp_error( $is_error ) ) {
@@ -363,6 +370,143 @@ class Account extends Data {
 		$this->set_defaults();
 
 		return $data;
+	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| Getters
+	|--------------------------------------------------------------------------
+	|
+	| Functions for getting item data. Getter methods wont change anything unless
+	| just returning from the props.
+	|
+	*/
+	/**
+	 * Return the account name.
+	 *
+	 * @return string
+	 *
+	 * @since  1.1.0
+	 *
+	 */
+	public function get_name() {
+		return $this->get_prop( 'name' );
+	}
+
+	/**
+	 * Returns the account number.
+	 *
+	 *
+	 * @return mixed|null
+	 *
+	 * @since 1.1.0
+	 *
+	 */
+	public function get_number() {
+		return $this->get_prop( 'number' );
+	}
+
+	/**
+	 * Returns account opening balance.
+	 *
+	 * @return mixed|null
+	 *
+	 * @since 1.1.0
+	 *
+	 */
+	public function get_opening_balance() {
+		return $this->get_prop( 'opening_balance' );
+	}
+
+	/**
+	 * Returns account currency code.
+	 *
+	 * @return mixed|null
+	 *
+	 * @since 1.1.0
+	 *
+	 */
+	public function get_currency_code() {
+		return $this->get_prop( 'currency_code' );
+	}
+
+	/**
+	 * Return account bank name.
+	 *
+	 * @return mixed|null
+	 *
+	 * @since 1.1.0
+	 *
+	 */
+	public function get_bank_name() {
+		return $this->get_prop( 'bank_name' );
+	}
+
+	/**
+	 * Return account bank phone number.
+	 *
+	 * @return mixed|null
+	 *
+	 * @since 1.1.0
+	 *
+	 */
+	public function get_bank_phone() {
+		return $this->get_prop( 'bank_phone' );
+	}
+
+	/**
+	 * Return account bank address.
+	 *
+	 * @return mixed|null
+	 *
+	 * @since 1.1.0
+	 *
+	 */
+	public function get_bank_address() {
+		return $this->get_prop( 'bank_address' );
+	}
+
+	/**
+	 * Get the thumbnail id.
+	 *
+	 * @return int
+	 * @since 1.1.0
+	 *
+	 */
+	public function get_thumbnail_id() {
+		return $this->get_prop( 'thumbnail_id' );
+	}
+
+	/**
+	 * get object status
+	 *
+	 * @return bool
+	 * @since 1.0.2
+	 *
+	 */
+	public function get_enabled() {
+		return $this->get_prop( 'enabled' );
+	}
+
+	/**
+	 * Return object created by.
+	 *
+	 * @return mixed|null
+	 * @since 1.0.2
+	 */
+	public function get_creator_id() {
+		return $this->get_prop( 'creator_id' );
+	}
+
+	/**
+	 * Get object created date.
+	 *
+	 * @return string
+	 * @since 1.0.2
+	 *
+	 */
+	public function get_date_created() {
+		return $this->get_prop( 'date_created' );
 	}
 
 	/*

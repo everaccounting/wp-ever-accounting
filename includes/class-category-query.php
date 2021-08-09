@@ -399,7 +399,10 @@ class Category_Query {
 			if ( 'all' === $qv['fields'] ) {
 				foreach ( $this->results as $key => $row ) {
 					wp_cache_add( $row->id, $row, 'ea_categories' );
-					$this->results[ $key ] = $row;
+					$category = new Category();
+					$category->set_props( $row );
+					$category->set_object_read( true );
+					$this->results[ $key ] = $category;
 				}
 			}
 		}
