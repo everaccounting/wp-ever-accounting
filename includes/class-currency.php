@@ -113,7 +113,19 @@ class Currency extends Data {
 			$this->set_code( '' );
 		}
 	}
-
+	/*
+	|--------------------------------------------------------------------------
+	| CRUD methods
+	|--------------------------------------------------------------------------
+	|
+	| Methods which create, read, update and delete documents from the database.
+	| Written in abstract fashion so that the way documents are stored can be
+	| changed more easily in the future.
+	|
+	| A save method is included for convenience (chooses update or create based
+	| on if the order exists yet).
+	|
+	*/
 	/**
 	 * Retrieve the object from database instance.
 	 *
