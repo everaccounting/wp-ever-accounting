@@ -3,7 +3,7 @@
  * Options for plugin
  */
 
-namespace EverAccounting;
+namespace EverAccounting\Core;
 
 /**
  * Class Options

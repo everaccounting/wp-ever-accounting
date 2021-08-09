@@ -9,7 +9,7 @@
  * @package     EverAccounting
  */
 
-use EverAccounting\Models\Payment;
+use EverAccounting\Payment;
 
 defined( 'ABSPATH' ) || exit();
 

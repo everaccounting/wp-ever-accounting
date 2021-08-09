@@ -73,7 +73,7 @@ function eaccounting_get_financial_start( $year = null, $format = 'Y-m-d' ) {
 	$month           = ! empty( $setting[1] ) ? $setting[1] : '01';
 	$year            = empty( $year ) ? date( 'Y' ) : $year;
 
-	$financial_year = new \EverAccounting\DateTime();
+	$financial_year = new \EverAccounting\Core\DateTime();
 	$financial_year->setDate( $year, $month, $day );
 
 	return $financial_year->format( $format );
@@ -91,9 +91,9 @@ function eaccounting_get_financial_start( $year = null, $format = 'Y-m-d' ) {
  *
  */
 function eaccounting_get_financial_end( $year = null, $format = 'Y-m-d' ) {
-	$dt = new \EverAccounting\DateTime( eaccounting_get_financial_start( $year, 'Y-m-d' ) );
+	$dt = new \EverAccounting\Core\DateTime( eaccounting_get_financial_start( $year, 'Y-m-d' ) );
 	//  if ( $dt->copy()->addYear( 1 )->subDay( 1 )->getTimestamp() > strtotime(date_i18n('Y-m-d H:i')) ) {
-	//      $today = new \EverAccounting\DateTime( 'now' );
+	//      $today = new \EverAccounting\Core\DateTime( 'now' );
 	//      return $today->date( $format );
 	//  }
 	return $dt->addYear( 1 )->subDay( 1 )->date( $format );
@@ -112,13 +112,13 @@ function eaccounting_get_financial_end( $year = null, $format = 'Y-m-d' ) {
  *
  * @param mixed $amount
  *
- * @return \EverAccounting\Money|WP_Error
+ * @return \EverAccounting\Core\Money|WP_Error
  * @since 1.0.2
  *
  */
 function eaccounting_money( $amount, $code = 'USD', $convert = false ) {
 	try {
-		return new \EverAccounting\Money( $amount, $code, $convert );
+		return new \EverAccounting\Core\Money( $amount, $code, $convert );
 	} catch ( Exception $e ) {
 		return new \WP_Error( 'invalid_action', $e->getMessage() );
 	}

@@ -9,7 +9,7 @@
  * @package     EverAccounting
  */
 
-use EverAccounting\Models\Item;
+use EverAccounting\Item;
 
 defined( 'ABSPATH' ) || exit();
 

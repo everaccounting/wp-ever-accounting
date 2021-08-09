@@ -677,4 +677,67 @@ class Currency extends Data {
 		}
 		$this->set_date_prop( 'date_created', $date );
 	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| Additional methods
+	|--------------------------------------------------------------------------
+	|
+	| Does extra thing as helper functions.
+	|
+	*/
+
+	/**
+	 * getPrefix.
+	 *
+	 * @since 1.0.2
+	 *
+	 * @return string
+	 */
+	public function get_prefix() {
+		if ( ! $this->is_symbol_first() ) {
+			return '';
+		}
+
+		return $this->get_symbol();
+	}
+
+	/**
+	 * getSuffix.
+	 *
+	 * @since 1.0.2
+	 *
+	 * @return string
+	 */
+	public function get_suffix() {
+		if ( $this->is_symbol_first() ) {
+			return '';
+		}
+
+		return ' ' . $this->get_symbol();
+	}
+
+	/**
+	 * equals.
+	 *
+	 * @since 1.0.2
+	 *
+	 * @param Currency $currency
+	 *
+	 * @return bool
+	 */
+	public function equals( self $currency ) {
+		return $this->get_code() === $currency->get_code();
+	}
+
+	/**
+	 * is_symbol_first.
+	 *
+	 * @since 1.0.2
+	 *
+	 * @return bool
+	 */
+	public function is_symbol_first() {
+		return 'before' === $this->get_position();
+	}
 }

@@ -7,6 +7,8 @@
  * @version     1.1.0
  */
 
+namespace EverAccounting\Core;
+
 use EverAccounting\Models\Account;
 use EverAccounting\Models\Category;
 

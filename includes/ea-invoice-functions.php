@@ -34,7 +34,7 @@ function eaccounting_get_invoice( $invoice, $output = OBJECT ) {
 		$_invoice = new Invoice( $invoice );
 	}
 
-	if ( !$_invoice->exists() ) {
+	if ( ! $_invoice->exists() ) {
 		return null;
 	}
 
@@ -69,7 +69,7 @@ function eaccounting_insert_invoice( $data ) {
 		return new WP_Error( 'invalid_invoice_data', __( 'Invoice could not be saved.', 'wp-ever-accounting' ) );
 	}
 
-	$data = wp_parse_args( $data, array( 'id' => null ) );
+	$data    = wp_parse_args( $data, array( 'id' => null ) );
 	$invoice = new Invoice( (int) $data['id'] );
 	$invoice->set_props( $data );
 	$is_error = $invoice->save();
@@ -250,4 +250,38 @@ function eaccounting_delete_invoice_notes( $invoice_id ) {
 	wp_cache_set( 'last_changed', microtime(), 'ea_invoice_notes' );
 
 	return true;
+}
+
+
+/**
+ * @return mixed|void
+ */
+function eaccounting_get_bill_statuses() {
+	$statuses = array(
+		'draft'     => __( 'Draft', 'wp-ever-accounting' ),
+		'received'  => __( 'Received', 'wp-ever-accounting' ),
+		'partial'   => __( 'Partial', 'wp-ever-accounting' ),
+		'paid'      => __( 'Paid', 'wp-ever-accounting' ),
+		'overdue'   => __( 'Overdue', 'wp-ever-accounting' ),
+		'cancelled' => __( 'Cancelled', 'wp-ever-accounting' ),
+	);
+
+	return apply_filters( 'eaccounting_bill_statuses', $statuses );
+}
+
+/**
+ * @return mixed|void
+ */
+function eaccounting_get_invoice_statuses() {
+	$statuses = array(
+		'draft'     => __( 'Draft', 'wp-ever-accounting' ),
+		'pending'   => __( 'Pending', 'wp-ever-accounting' ),
+		'partial'   => __( 'Partial', 'wp-ever-accounting' ),
+		'paid'      => __( 'Paid', 'wp-ever-accounting' ),
+		'overdue'   => __( 'Overdue', 'wp-ever-accounting' ),
+		'cancelled' => __( 'Cancelled', 'wp-ever-accounting' ),
+		'refunded'  => __( 'Refunded', 'wp-ever-accounting' ),
+	);
+
+	return apply_filters( 'eaccounting_invoice_statuses', $statuses );
 }

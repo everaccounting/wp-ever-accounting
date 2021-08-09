@@ -6,9 +6,9 @@
  * @version        1.0.2
  */
 
-namespace EverAccounting;
+namespace EverAccounting\Core;
 
-use EverAccounting\Models\Currency;
+use EverAccounting\Currency;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -34,7 +34,7 @@ class Money {
 	/**
 	 * @since 1.0.2
 	 *
-	 * @var \EverAccounting\Models\Currency
+	 * @var \EverAccounting\Currency
 	 */
 	protected $currency;
 
@@ -50,7 +50,7 @@ class Money {
 	 * @throws \Exception
 	 */
 	public function __construct( $amount, $code, $convert = false ) {
-		$this->currency = new \EverAccounting\Models\Currency( $code );
+		$this->currency = new \EverAccounting\Currency( $code );
 		$this->amount   = $this->parseAmount( $amount, $convert );
 	}
 

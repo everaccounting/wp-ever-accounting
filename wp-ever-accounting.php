@@ -15,9 +15,9 @@
  * @package wp-ever-accounting
  */
 
-use EverAccounting\Logger;
-use EverAccounting\Options;
-use EverAccounting\Utilities;
+use EverAccounting\Core\Logger;
+use EverAccounting\Core\Options;
+use EverAccounting\Core\Utilities;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -190,23 +190,21 @@ final class EverAccounting {
 
 		// Core classes.
 		require_once EACCOUNTING_ABSPATH . '/includes/class-install.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/class-utilities.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/class-options.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/core/class-utilities.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/core/class-options.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/class-ajax.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/class-assets.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/class-rewrites.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/class-controller.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/core/class-rewrites.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/core/class-controller.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/class-compatibility.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/class-chart.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/class-collection.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/class-datetime.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/class-emails.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/class-inflector.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/class-license.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/class-logger.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/class-money.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/class-repositories.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/class-mailer.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/core/class-datetime.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/core/class-emails.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/core/class-inflector.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/core/class-license.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/core/class-logger.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/core/class-money.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/core/class-mailer.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/core-functions.php';
 
 		if ( is_admin() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {

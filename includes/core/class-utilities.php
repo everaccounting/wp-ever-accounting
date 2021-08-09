@@ -7,7 +7,7 @@
  * @package EverAccounting
  */
 
-namespace EverAccounting;
+namespace EverAccounting\Core;
 
 use EverAccounting\Utilities\Data;
 use EverAccounting\Utilities\Defaults;

@@ -7,7 +7,7 @@
  * @class       Rewrites
  */
 
-namespace EverAccounting;
+namespace EverAccounting\Core;
 
 defined( 'ABSPATH' ) || exit();
 

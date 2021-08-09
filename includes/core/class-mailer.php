@@ -1,6 +1,6 @@
 <?php
 
-namespace EverAccounting;
+namespace EverAccounting\Core;
 
 defined('ABSPATH') || exit;
 

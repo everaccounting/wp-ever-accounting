@@ -368,7 +368,7 @@ function eaccounting_format_decimal( $number, $decimals = 4, $trim_zeros = false
  *
  * @param string $time_string Time string.
  *
- * @return \EverAccounting\DateTime
+ * @return \EverAccounting\Core\DateTime
  * @throws Exception
  * @since  1.0.2
  *
@@ -389,7 +389,7 @@ function eaccounting_string_to_datetime( $time_string ) {
 		$timestamp = strtotime( get_gmt_from_date( gmdate( 'Y-m-d H:i:s', strtotime( $time_string ) ) ) );
 		date_default_timezone_set( $original_timezone );
 	}
-	$datetime = new \EverAccounting\DateTime( "@{$timestamp}", new DateTimeZone( 'UTC' ) );
+	$datetime = new \EverAccounting\Core\DateTime( "@{$timestamp}", new DateTimeZone( 'UTC' ) );
 
 	return $datetime;
 }

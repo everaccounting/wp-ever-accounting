@@ -177,7 +177,7 @@ class Transfer extends Resource_Model {
 	 *
 	 * @param string $context
 	 *
-	 * @return \EverAccounting\DateTime
+	 * @return \EverAccounting\Core\DateTime
 	 */
 	public function get_date( $context = 'edit' ) {
 		return $this->get_prop( 'date', $context );

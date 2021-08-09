@@ -1,9 +1,9 @@
 <?php
 
-namespace EverAccounting;
+namespace EverAccounting\Core;
 
 use EverAccounting\Abstracts\Singleton;
-use EverAccounting\Models\Invoice;
+use EverAccounting\Invoice;
 
 defined('ABSPATH') || exit;
 
