@@ -256,9 +256,9 @@ class Category extends Data {
 		}
 
 		if ( $this->exists() ) {
-			$is_error = $this->update( $fields );
+			$is_error = $this->update();
 		} else {
-			$is_error = $this->insert( $fields );
+			$is_error = $this->insert();
 		}
 
 		if ( is_wp_error( $is_error ) ) {
@@ -348,12 +348,13 @@ class Category extends Data {
 
 		return $data;
 	}
+
 	/*
 	|--------------------------------------------------------------------------
 	| Getters
 	|--------------------------------------------------------------------------
 	|
-	| Functions for getting item data. Getter methods wont change anything unless
+	| Functions for getting item data. Getter methods won't change anything unless
 	| just returning from the props.
 	|
 	*/
@@ -362,8 +363,6 @@ class Category extends Data {
 	 *
 	 * @return mixed|null
 	 * @since 1.0.2
-	 *
-	 *
 	 */
 	public function get_name() {
 		return $this->get_prop( 'name' );
@@ -374,8 +373,6 @@ class Category extends Data {
 	 *
 	 * @return mixed|null
 	 * @since 1.0.2
-	 *
-	 *
 	 */
 	public function get_type() {
 		return $this->get_prop( 'type' );
@@ -386,20 +383,16 @@ class Category extends Data {
 	 *
 	 * @return mixed|null
 	 * @since 1.0.2
-	 *
-	 *
 	 */
 	public function get_color() {
 		return $this->get_prop( 'color' );
 	}
-
 
 	/**
 	 * get object status
 	 *
 	 * @return bool
 	 * @since 1.0.2
-	 *
 	 */
 	public function get_enabled() {
 		return $this->get_prop( 'enabled' );
@@ -410,7 +403,6 @@ class Category extends Data {
 	 *
 	 * @return string
 	 * @since 1.0.2
-	 *
 	 */
 	public function get_date_created() {
 		return $this->get_prop( 'date_created' );

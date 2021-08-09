@@ -114,15 +114,6 @@ class Item extends Data {
 		}
 	}
 
-	/*
-	|--------------------------------------------------------------------------
-	| CRUD methods
-	|--------------------------------------------------------------------------
-	|
-	| Methods which create, read, update and delete items from the database.
-	|
-	*/
-
 	/**
 	 * Retrieve the object from database instance.
 	 *
@@ -134,7 +125,7 @@ class Item extends Data {
 	 *
 	 * @global \wpdb $wpdb WordPress database abstraction object.
 	 */
-	static function get_raw( $item_id, $field = 'id' ) {
+	public static function get_raw( $item_id, $field = 'id' ) {
 		global $wpdb;
 
 		$item_id = (int) $item_id;
@@ -214,7 +205,7 @@ class Item extends Data {
 	}
 
 	/**
-	 *  Update an object in the database.
+	 *  Update an item in the database.
 	 *
 	 * This method is not meant to call publicly instead call save
 	 * which will conditionally decide which method to call.
@@ -275,22 +266,6 @@ class Item extends Data {
 	 */
 	public function save() {
 		$user_id = get_current_user_id();
-		$fields  = array(
-			'id'             => '%d',
-			'name'           => '%s',
-			'sku'            => '%s',
-			'description'    => '%s',
-			'sale_price'     => '%.4f',
-			'purchase_price' => '%.4f',
-			'quantity'       => '%f',
-			'category_id'    => '%d',
-			'sales_tax'      => '%.4f',
-			'purchase_tax'   => '%.4f',
-			'thumbnail_id'   => '%d',
-			'enabled'        => '%d',
-			'creator_id'     => '%d',
-			'date_created'   => '%s',
-		);
 
 		// Check if item name exist or not
 		if ( empty( $this->get_prop( 'name' ) ) ) {
@@ -316,9 +291,9 @@ class Item extends Data {
 		}
 
 		if ( $this->exists() ) {
-			$is_error = $this->update( $fields );
+			$is_error = $this->update();
 		} else {
-			$is_error = $this->insert( $fields );
+			$is_error = $this->insert();
 		}
 
 		if ( is_wp_error( $is_error ) ) {
@@ -410,6 +385,151 @@ class Item extends Data {
 
 	/*
 	|--------------------------------------------------------------------------
+	| Getters
+	|--------------------------------------------------------------------------
+	|
+	| Functions for getting item data. Getter methods won't change anything unless
+	| just returning from the props.
+	|
+	*/
+
+	/**
+	 * Return item name
+	 *
+	 * @return mixed|null
+	 * @since 1.1.0
+	 */
+	public function get_name() {
+		return $this->get_prop( 'name' );
+	}
+
+	/**
+	 * Return item sku
+	 *
+	 * @return mixed|null
+	 * @since 1.1.0
+	 */
+	public function get_sku() {
+		return $this->get_prop( 'sku' );
+	}
+
+	/**
+	 * Return item thumbnail id
+	 *
+	 * @return mixed|null
+	 * @since 1.1.0
+	 */
+	public function get_thumbnail_id() {
+		return $this->get_prop( 'thumbnail_id' );
+	}
+
+	/**
+	 * Return item description
+	 *
+	 * @return mixed|null
+	 * @since 1.1.0
+	 */
+	public function get_description() {
+		return $this->get_prop( 'description' );
+	}
+
+	/**
+	 * Return item sale price
+	 *
+	 * @return mixed|null
+	 * @since 1.1.0
+	 */
+	public function get_sale_price() {
+		return $this->get_prop( 'sale_price' );
+	}
+
+	/**
+	 * Return item purchase price
+	 *
+	 * @return mixed|null
+	 * @since 1.1.0
+	 */
+	public function get_purchase_price() {
+		$price = $this->get_prop( 'purchase_price' );
+		if ( empty( $price ) ) {
+			$price = $this->get_sale_price();
+		}
+
+		return $price;
+	}
+
+	/**
+	 * Return item quantity
+	 *
+	 * @return mixed|null
+	 * @since 1.1.0
+	 */
+	public function get_quantity() {
+		return $this->get_prop( 'quantity' );
+	}
+
+	/**
+	 * Return item category_id
+	 *
+	 * @return mixed|null
+	 * @since 1.1.0
+	 */
+	public function get_category_id() {
+		return $this->get_prop( 'category_id' );
+	}
+
+	/**
+	 * Return item sales tax
+	 *
+	 * @return mixed|null
+	 * @since 1.1.0
+	 */
+	public function get_sales_tax() {
+		return $this->get_prop( 'sales_tax' );
+	}
+
+	/**
+	 * Return item purchase tax
+	 *
+	 * @return mixed|null
+	 * @since 1.1.0
+	 */
+	public function get_purchase_tax() {
+		return $this->get_prop( 'purchase_tax' );
+	}
+
+	/**
+	 * get object status
+	 *
+	 * @return bool
+	 * @since 1.0.2
+	 */
+	public function get_enabled() {
+		return $this->get_prop( 'enabled' );
+	}
+
+	/**
+	 * Return object created by.
+	 *
+	 * @return mixed|null
+	 * @since 1.0.2
+	 */
+	public function get_creator_id() {
+		return $this->get_prop( 'creator_id' );
+	}
+
+	/**
+	 * Get object created date.
+	 *
+	 * @return string
+	 * @since 1.0.2
+	 */
+	public function get_date_created() {
+		return $this->get_prop( 'date_created' );
+	}
+
+	/*
+	|--------------------------------------------------------------------------
 	| Setters
 	|--------------------------------------------------------------------------
 	|
@@ -442,6 +562,7 @@ class Item extends Data {
 
 	/**
 	 * Set item thumbnail id
+	 *
 	 * @param int $thumbnail_id Thumbnail id.
 	 *
 	 * @since 1.1.0
@@ -565,24 +686,4 @@ class Item extends Data {
 		}
 		$this->set_date_prop( 'date_created', $date );
 	}
-
-	/*
-	|--------------------------------------------------------------------------
-	| Getters
-	|--------------------------------------------------------------------------
-	|
-	| Functions for getting item data. Getter methods wont change anything unless
-	| just returning from the props.
-	|
-	*/
-
-
-	/*
-	|--------------------------------------------------------------------------
-	| Additional methods
-	|--------------------------------------------------------------------------
-	|
-	| Does extra thing as helper functions.
-	|
-	*/
 }

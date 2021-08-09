@@ -79,7 +79,7 @@ class Transaction extends MetaData {
 		'currency_code'  => '%s', // protected
 		'currency_rate'  => '%.8f', // protected
 		'account_id'     => '%d',
-		'document_id'    => '%d',
+		'invoice_id'     => '%d',
 		'contact_id'     => '%d',
 		'category_id'    => '%d',
 		'description'    => '%s',
@@ -221,7 +221,7 @@ class Transaction extends MetaData {
 		$this->set_id( $wpdb->insert_id );
 
 		/**
-		 * Fires immediately after an transaction is inserted in the database.
+		 * Fires immediately after a transaction is inserted in the database.
 		 *
 		 * @param int $id Transaction id.
 		 * @param array $data Transaction has been inserted.
@@ -233,7 +233,7 @@ class Transaction extends MetaData {
 		do_action( 'eaccounting_insert_transaction', $this->id, $data, $data_arr, $this );
 
 		/**
-		 * Fires immediately after an transaction is inserted in the database.
+		 * Fires immediately after a transaction is inserted in the database.
 		 *
 		 * The dynamic portion of the hook name, `$this->type`, refers to
 		 * the type of transaction.
@@ -251,7 +251,7 @@ class Transaction extends MetaData {
 	}
 
 	/**
-	 *  Update an object in the database.
+	 *  Update a transaction in the database.
 	 *
 	 * This method is not meant to call publicly instead call save
 	 * which will conditionally decide which method to call.
@@ -283,7 +283,7 @@ class Transaction extends MetaData {
 		 *
 		 * @since 1.2.1
 		 */
-		do_action( 'eaccounting_pre_update_transactions', $this->get_id(), $this->to_array(), $changes, $this );
+		do_action( 'eaccounting_pre_update_transaction', $this->get_id(), $this->to_array(), $changes, $this );
 
 		/**
 		 * Fires immediately before an existing transaction is updated in the database.
@@ -298,9 +298,9 @@ class Transaction extends MetaData {
 		 *
 		 * @since 1.2.1
 		 */
-		do_action( "eaccounting_pre_update_transactions_{$this->type}", $this->get_id(), $this->to_array(), $changes, $this );
+		do_action( "eaccounting_pre_update_transaction_{$this->type}", $this->get_id(), $this->to_array(), $changes, $this );
 
-		if ( false === $wpdb->update( $wpdb->prefix . 'ea_transactions', $data, [ 'id' => $this->get_id() ], $format, ['id' => '%d'] ) ) {
+		if ( false === $wpdb->update( $wpdb->prefix . 'ea_transactions', $data, [ 'id' => $this->get_id() ], $format, [ 'id' => '%d' ] ) ) {
 			return new \WP_Error( 'db_update_error', __( 'Could not update transaction in the database.', 'wp-ever-accounting' ), $wpdb->last_error );
 		}
 
@@ -356,7 +356,7 @@ class Transaction extends MetaData {
 			return new \WP_Error( 'empty_transaction_type', esc_html__( 'Transaction type is required', 'wp-ever-accounting' ) );
 		}
 
-		if ( empty( $this->get_prop( 'type' ) ) ) {
+		if ( empty( $this->get_prop( 'payment_method' ) ) ) {
 			return new \WP_Error( 'empty_transaction_payment_method', esc_html__( 'Transaction payment method is required', 'wp-ever-accounting' ) );
 		}
 
@@ -443,7 +443,7 @@ class Transaction extends MetaData {
 		$data = $this->to_array();
 
 		/**
-		 * Filters whether an transaction delete should take place.
+		 * Filters whether a transaction delete should take place.
 		 *
 		 * @param bool|null $delete Whether to go forward with deletion.
 		 * @param int $transaction_id Transaction id.
@@ -458,7 +458,7 @@ class Transaction extends MetaData {
 		}
 
 		/**
-		 * Fires before an transaction is deleted.
+		 * Fires before a transaction is deleted.
 		 *
 		 * @param int $transaction_id Transaction id.
 		 * @param array $data Transaction data array.
@@ -476,7 +476,7 @@ class Transaction extends MetaData {
 		}
 
 		/**
-		 * Fires after an transaction is deleted.
+		 * Fires after a transaction is deleted.
 		 *
 		 * @param int $transaction_id Transaction id.
 		 * @param array $data Transaction data array.
@@ -496,6 +496,187 @@ class Transaction extends MetaData {
 		return $data;
 	}
 
+	/*
+	|--------------------------------------------------------------------------
+	| Getters
+	|--------------------------------------------------------------------------
+	|
+	| Functions for getting item data. Getter methods won't change anything unless
+	| just returning from the props.
+	|
+	*/
+
+	/**
+	 * Transaction type.
+	 *
+	 * @return mixed|null
+	 * @since 1.0.2
+	 */
+	public function get_type() {
+		return $this->get_prop( 'type' );
+	}
+
+	/**
+	 * Paid at time.
+	 *
+	 * @return string
+	 * @since 1.0.2
+	 */
+	public function get_payment_date() {
+		$payment_date = $this->get_prop( 'payment_date' );
+
+		return $payment_date ? eaccounting_date( $payment_date, 'Y-m-d' ) : $payment_date;
+	}
+
+	/**
+	 * Transaction Amount.
+	 *
+	 * @return mixed|null
+	 * @since 1.0.2
+	 */
+	public function get_amount() {
+		return $this->get_prop( 'amount' );
+	}
+
+	/**
+	 * Get formatted amount.
+	 *
+	 * @return string
+	 * @since 1.0.2
+	 */
+	public function get_formatted_amount() {
+		return eaccounting_format_price( $this->get_amount(), $this->get_currency_code() );
+	}
+
+	/**
+	 * Currency code.
+	 *
+	 * @return mixed|null
+	 * @since 1.0.2
+	 */
+	public function get_currency_code() {
+		return $this->get_prop( 'currency_code' );
+	}
+
+	/**
+	 * Currency rate.
+	 *
+	 * @return mixed|null
+	 * @since 1.0.2
+	 */
+	public function get_currency_rate() {
+		return $this->get_prop( 'currency_rate' );
+	}
+
+	/**
+	 * Transaction from account id.
+	 *
+	 * @return mixed|null
+	 * @since 1.0.2
+	 */
+	public function get_account_id() {
+		return $this->get_prop( 'account_id' );
+	}
+
+	/**
+	 * Return document id
+	 *
+	 * @return mixed|null
+	 * @since 1.0.2
+	 */
+	public function get_invoice_id() {
+		return $this->get_prop( 'invoice_id' );
+	}
+
+	/**
+	 * Contact id.
+	 *
+	 * @return mixed|null
+	 * @since 1.0.2
+	 */
+	public function get_contact_id() {
+		return $this->get_prop( 'contact_id' );
+	}
+
+	/**
+	 * Category ID.
+	 *
+	 * @return mixed|null
+	 * @since 1.0.2
+	 */
+	public function get_category_id() {
+		return $this->get_prop( 'category_id' );
+	}
+
+	/**
+	 * Description.
+	 *
+	 * @return mixed|null
+	 * @since 1.0.2
+	 */
+	public function get_description() {
+		return $this->get_prop( 'description' );
+	}
+
+	/**
+	 * Transaction payment methods.
+	 *
+	 * @return mixed|null
+	 * @since 1.0.2
+	 */
+	public function get_payment_method() {
+		return $this->get_prop( 'payment_method' );
+	}
+
+	/**
+	 * Transaction reference.
+	 *
+	 * @return mixed|null
+	 * @since 1.0.2
+	 */
+	public function get_reference() {
+		return $this->get_prop( 'reference' );
+	}
+
+	/**
+	 * Get attachment url.
+	 *
+	 * @return mixed|null
+	 * @since 1.0.2
+	 */
+	public function get_attachment_id() {
+		return $this->get_prop( 'attachment_id' );
+	}
+
+	/**
+	 * Get associated parent payment id.
+	 *
+	 * @return mixed|null
+	 * @since 1.0.2
+	 */
+	public function get_parent_id() {
+		return $this->get_prop( 'parent_id' );
+	}
+
+	/**
+	 * Get if reconciled
+	 *
+	 * @return bool
+	 * @since 1.0.2
+	 */
+	public function get_reconciled() {
+		return (bool) $this->get_prop( 'reconciled' );
+	}
+
+	/**
+	 * Get object created date.
+	 *
+	 * @return string
+	 * @since 1.0.2
+	 */
+	public function get_date_created() {
+		return $this->get_prop( 'date_created' );
+	}
 
 	/*
 	|--------------------------------------------------------------------------
@@ -523,7 +704,7 @@ class Transaction extends MetaData {
 	/**
 	 * Set transaction paid.
 	 *
-	 * @param $value
+	 * @param string $value payment date
 	 *
 	 * @since 1.0.2
 	 */
@@ -534,7 +715,7 @@ class Transaction extends MetaData {
 	/**
 	 * Set transaction amount.
 	 *
-	 * @param $value
+	 * @param float $value Amount
 	 *
 	 * @since 1.0.2
 	 */
@@ -545,7 +726,7 @@ class Transaction extends MetaData {
 	/**
 	 * Set currency code.
 	 *
-	 * @param $value
+	 * @param string $value Currency code
 	 *
 	 * @since 1.0.2
 	 */
@@ -556,7 +737,7 @@ class Transaction extends MetaData {
 	/**
 	 * Set currency rate.
 	 *
-	 * @param $value
+	 * @param float $value currency rate
 	 *
 	 * @since 1.0.2
 	 */
@@ -567,7 +748,7 @@ class Transaction extends MetaData {
 	/**
 	 * Set account id.
 	 *
-	 * @param $value
+	 * @param int $value Account id
 	 *
 	 * @since 1.0.2
 	 */
@@ -578,7 +759,7 @@ class Transaction extends MetaData {
 	/**
 	 * Set invoice id.
 	 *
-	 * @param $value
+	 * @param int $value Invoice id
 	 *
 	 * @since 1.0.2
 	 */
@@ -589,7 +770,7 @@ class Transaction extends MetaData {
 	/**
 	 * Set contact id.
 	 *
-	 * @param $value
+	 * @param int $value Contact id
 	 *
 	 * @since 1.0.2
 	 */
@@ -600,7 +781,7 @@ class Transaction extends MetaData {
 	/**
 	 * Set category id.
 	 *
-	 * @param $value
+	 * @param int $value Category id
 	 *
 	 * @since 1.0.2
 	 */
@@ -611,7 +792,7 @@ class Transaction extends MetaData {
 	/**
 	 * Set description.
 	 *
-	 * @param $value
+	 * @param string $value Description
 	 *
 	 * @since 1.0.2
 	 */
@@ -622,7 +803,7 @@ class Transaction extends MetaData {
 	/**
 	 * Set payment method.
 	 *
-	 * @param $value
+	 * @param string $value Payment method
 	 *
 	 * @since 1.0.2
 	 */
@@ -635,7 +816,7 @@ class Transaction extends MetaData {
 	/**
 	 * Set reference.
 	 *
-	 * @param $value
+	 * @param string $value Reference
 	 *
 	 * @since 1.0.2
 	 */
@@ -646,18 +827,18 @@ class Transaction extends MetaData {
 	/**
 	 * Set attachment.
 	 *
-	 * @param $value
+	 * @param int $value Attachment id
 	 *
 	 * @since 1.0.2
 	 */
 	public function set_attachment_id( $value ) {
-		$this->set_prop( 'attachment_id', intval( $value ) );
+		$this->set_prop( 'attachment_id', absint( $value ) );
 	}
 
 	/**
 	 * Set parent id.
 	 *
-	 * @param $value
+	 * @param int $value Parent id
 	 *
 	 * @since 1.0.2
 	 */
@@ -668,7 +849,7 @@ class Transaction extends MetaData {
 	/**
 	 * Set if reconciled.
 	 *
-	 * @param $value
+	 * @param int $value Reconciled
 	 *
 	 * @since 1.0.2
 	 */
@@ -693,7 +874,7 @@ class Transaction extends MetaData {
 	/**
 	 * Set object created date.
 	 *
-	 * @param string
+	 * @param string $date Created Date
 	 *
 	 * @since 1.0.2
 	 */
@@ -703,6 +884,4 @@ class Transaction extends MetaData {
 		}
 		$this->set_date_prop( 'date_created', $date );
 	}
-
-
 }

@@ -112,7 +112,7 @@ class Account extends Data {
 	/**
 	 * Retrieve the object from database instance.
 	 *
-	 * @param int $account_id Object id.
+	 * @param int    $account_id Object id.
 	 * @param string $field Database field.
 	 *
 	 * @return object|false Object, false otherwise.
@@ -155,7 +155,7 @@ class Account extends Data {
 	 * @global \wpdb $wpdb WordPress database abstraction object.
 	 * @since 1.1.0
 	 */
-	protected function insert(  $args = array() ) {
+	protected function insert( $args = array() ) {
 		global $wpdb;
 		$data_arr = $this->to_array();
 		$data     = wp_array_slice_assoc( $data_arr, array_keys( $this->data_type ) );
@@ -211,7 +211,7 @@ class Account extends Data {
 	 * @global \wpdb $wpdb WordPress database abstraction object.
 	 * @since 1.1.0
 	 */
-	protected function update(  $args = array() ) {
+	protected function update( $args = array() ) {
 		global $wpdb;
 		$changes = $this->get_changes();
 		$data    = wp_array_slice_assoc( $changes, array_keys( $this->data_type ) );
@@ -377,7 +377,7 @@ class Account extends Data {
 	| Getters
 	|--------------------------------------------------------------------------
 	|
-	| Functions for getting item data. Getter methods wont change anything unless
+	| Functions for getting item data. Getter methods won't change anything unless
 	| just returning from the props.
 	|
 	*/
@@ -387,7 +387,6 @@ class Account extends Data {
 	 * @return string
 	 *
 	 * @since  1.1.0
-	 *
 	 */
 	public function get_name() {
 		return $this->get_prop( 'name' );
@@ -396,11 +395,9 @@ class Account extends Data {
 	/**
 	 * Returns the account number.
 	 *
-	 *
 	 * @return mixed|null
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public function get_number() {
 		return $this->get_prop( 'number' );
@@ -412,7 +409,6 @@ class Account extends Data {
 	 * @return mixed|null
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public function get_opening_balance() {
 		return $this->get_prop( 'opening_balance' );
@@ -424,7 +420,6 @@ class Account extends Data {
 	 * @return mixed|null
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public function get_currency_code() {
 		return $this->get_prop( 'currency_code' );
@@ -436,7 +431,6 @@ class Account extends Data {
 	 * @return mixed|null
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public function get_bank_name() {
 		return $this->get_prop( 'bank_name' );
@@ -448,7 +442,6 @@ class Account extends Data {
 	 * @return mixed|null
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public function get_bank_phone() {
 		return $this->get_prop( 'bank_phone' );
@@ -460,7 +453,6 @@ class Account extends Data {
 	 * @return mixed|null
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public function get_bank_address() {
 		return $this->get_prop( 'bank_address' );
@@ -471,7 +463,6 @@ class Account extends Data {
 	 *
 	 * @return int
 	 * @since 1.1.0
-	 *
 	 */
 	public function get_thumbnail_id() {
 		return $this->get_prop( 'thumbnail_id' );
@@ -482,7 +473,6 @@ class Account extends Data {
 	 *
 	 * @return bool
 	 * @since 1.0.2
-	 *
 	 */
 	public function get_enabled() {
 		return $this->get_prop( 'enabled' );
@@ -503,7 +493,6 @@ class Account extends Data {
 	 *
 	 * @return string
 	 * @since 1.0.2
-	 *
 	 */
 	public function get_date_created() {
 		return $this->get_prop( 'date_created' );

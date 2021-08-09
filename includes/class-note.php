@@ -253,16 +253,6 @@ class Note extends Data {
 	 */
 	public function save() {
 		$user_id = get_current_user_id();
-		$fields  = array(
-			'id'           => '%d',
-			'parent_id'    => '%d',
-			'type'         => '%s',
-			'content'      => '%s',
-			'extra'        => '%s',
-			'creator_id'   => '%d',
-			'date_created' => '%s',
-		);
-
 		// Check if the note type exists or not
 		if ( empty( $this->get_prop( 'type' ) ) ) {
 			return new \WP_Error( 'invalid_note_type', esc_html__( 'Note type is required', 'wp-ever-accounting' ) );
@@ -372,6 +362,76 @@ class Note extends Data {
 		$this->set_defaults();
 
 		return $data;
+	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| Getters
+	|--------------------------------------------------------------------------
+	|
+	| Functions for getting item data. Getter methods won't change anything unless
+	| just returning from the props.
+	|
+	*/
+
+	/**
+	 * Return the parent id.
+	 *
+	 * @return string
+	 * @since  1.1.0
+	 */
+	public function get_parent_id() {
+		return $this->get_prop( 'parent_id' );
+	}
+
+	/**
+	 * Return the type of parent
+	 *
+	 * @return string
+	 * @since  1.1.0
+	 */
+	public function get_type() {
+		return $this->get_prop( 'type' );
+	}
+
+	/**
+	 * Return the note.
+	 *
+	 * @return string
+	 * @since  1.1.0
+	 */
+	public function get_note() {
+		return $this->get_prop( 'note' );
+	}
+
+	/**
+	 * Return highlight.
+	 *
+	 * @return string
+	 * @since  1.1.0
+	 */
+	public function get_extra() {
+		return $this->get_prop( 'extra' );
+	}
+
+	/**
+	 * Return creator id.
+	 *
+	 * @return string
+	 * @since  1.1.0
+	 */
+	public function get_creator_id() {
+		return $this->get_prop( 'creator_id' );
+	}
+
+	/**
+	 * Get object created date.
+	 *
+	 * @return string
+	 * @since 1.0.2
+	 */
+	public function get_date_created() {
+		return $this->get_prop( 'date_created' );
 	}
 
 	/*

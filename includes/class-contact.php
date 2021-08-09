@@ -71,10 +71,10 @@ class Contact extends MetaData {
 		'date_created'  => null,
 
 		// meta
-	// 'total_paid'       => 0.00,
-	// 'total_due'        => 0.00,
-	// 'total_payable'    => 0.00,
-	// 'total_receivable' => 0.00,
+		// 'total_paid'       => 0.00,
+		// 'total_due'        => 0.00,
+		// 'total_payable'    => 0.00,
+		// 'total_receivable' => 0.00,
 	);
 
 	/**
@@ -460,7 +460,7 @@ class Contact extends MetaData {
 		}
 
 		/**
-		 * Fires before an contact is deleted.
+		 * Fires before a contact is deleted.
 		 *
 		 * @param int $contact_id Contact id.
 		 * @param array $data Contact data array.
@@ -493,6 +493,217 @@ class Contact extends MetaData {
 		$this->set_defaults();
 
 		return $data;
+	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| Getters
+	|--------------------------------------------------------------------------
+	|
+	| Functions for getting item data. Getter methods won't change anything unless
+	| just returning from the props.
+	|
+	*/
+	/**
+	 * Get contact's wp user ID.
+	 *
+	 * @return int|null
+	 * @since 1.0.2
+	 */
+	public function get_user_id() {
+		return $this->get_prop( 'user_id' );
+	}
+
+	/**
+	 * Get contact Name.
+	 *
+	 * @return string
+	 * @since 1.0.2
+	 */
+	public function get_name() {
+		return $this->get_prop( 'name' );
+	}
+
+	/**
+	 * Get contact company.
+	 *
+	 * @return string
+	 * @since 1.0.2
+	 */
+	public function get_company() {
+		return $this->get_prop( 'company' );
+	}
+
+	/**
+	 * Get contact's email.
+	 *
+	 * @return string
+	 * @since 1.0.2
+	 */
+	public function get_email() {
+		return $this->get_prop( 'email' );
+	}
+
+	/**
+	 * Get contact's phone number.
+	 *
+	 * @return string
+	 * @since 1.0.2
+	 */
+	public function get_phone() {
+		return $this->get_prop( 'phone' );
+	}
+
+	/**
+	 * Get contact's website number.
+	 *
+	 * @return string
+	 * @since 1.0.2
+	 */
+	public function get_website() {
+		return $this->get_prop( 'website' );
+	}
+
+	/**
+	 * Get contact's birth_date.
+	 *
+	 * @return string
+	 * @since 1.0.2
+	 */
+	public function get_birth_date() {
+		return $this->get_prop( 'birth_date' );
+	}
+
+	/**
+	 * Get contact's street.
+	 *
+	 * @return string
+	 * @since 1.0.2
+	 */
+	public function get_street() {
+		return $this->get_prop( 'street' );
+	}
+
+	/**
+	 * Get contact's city.
+	 *
+	 * @return string
+	 * @since 1.0.2
+	 */
+	public function get_city() {
+		return $this->get_prop( 'city' );
+	}
+
+	/**
+	 * Get contact's state.
+	 *
+	 * @return string
+	 * @since 1.0.2
+	 */
+	public function get_state() {
+		return $this->get_prop( 'state' );
+	}
+
+	/**
+	 * Get contact's postcode.
+	 *
+	 * @return string
+	 * @since 1.0.2
+	 */
+	public function get_postcode() {
+		return $this->get_prop( 'postcode' );
+	}
+
+	/**
+	 * Get contact's country.
+	 *
+	 * @return string
+	 * @since 1.0.2
+	 */
+	public function get_country() {
+		return $this->get_prop( 'country' );
+	}
+
+	/**
+	 * Get contact's country.
+	 *
+	 * @return string
+	 * @since 1.0.2
+	 */
+	public function get_country_nicename() {
+		$countries = eaccounting_get_countries();
+
+		return isset( $countries[ $this->get_country() ] ) ? $countries[ $this->get_country() ] : $this->get_country();
+	}
+
+	/**
+	 * Get contact's vat number.
+	 *
+	 * @return string
+	 * @since 1.0.2
+	 */
+	public function get_vat_number() {
+		return $this->get_prop( 'vat_number' );
+	}
+
+	/**
+	 * Get the currency code of the contact.
+	 *
+	 * @return string
+	 * @since 1.0.2
+	 */
+	public function get_currency_code() {
+		return $this->get_prop( 'currency_code' );
+	}
+
+	/**
+	 * Get the type of contact.
+	 *
+	 * @return string
+	 * @since 1.0.2
+	 */
+	public function get_type() {
+		return $this->get_prop( 'type' );
+	}
+
+	/**
+	 * Get thumbnail id
+	 *
+	 * @return int|null
+	 * @since 1.1.0
+	 */
+	public function get_thumbnail_id() {
+		return $this->get_prop( 'thumbnail_id' );
+	}
+
+	/**
+	 * get object status
+	 *
+	 * @return bool
+	 * @since 1.0.2
+	 */
+	public function get_enabled() {
+		return $this->get_prop( 'enabled' );
+	}
+
+	/**
+	 * Return object created by.
+	 *
+	 * @return mixed|null
+	 * @since 1.0.2
+	 */
+	public function get_creator_id() {
+		return $this->get_prop( 'creator_id' );
+	}
+
+	/**
+	 * Get object created date.
+	 *
+	 * @return string
+	 * @since 1.0.2
+	 */
+	public function get_date_created() {
+		return $this->get_prop( 'date_created' );
 	}
 
 	/*

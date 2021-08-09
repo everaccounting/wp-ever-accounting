@@ -275,11 +275,71 @@ class Currency extends Data {
 	/**
 	 * Saves an object in the database.
 	 *
-	 * @return \WP_Error|true True on success, WP_Error on failure.
+	 * @return \WP_Error|int True on success, WP_Error on failure.
 	 * @since 1.1.0
 	 */
 	public function save() {
-		// TODO: Implement save() method.
+		// check if the code is available or not
+		if ( empty( $this->get_prop( 'code' ) ) ) {
+			return new \WP_Error( 'invalid_currency_code', esc_html__( 'Currency code is required', 'wp-ever-accounting' ) );
+		}
+
+		// check if the currency rate is available or not
+		if ( empty( $this->get_prop( 'rate' ) ) ) {
+			return new \WP_Error( 'invalid_currency_rate', esc_html__( 'Currency rate is required', 'wp-ever-accounting' ) );
+		}
+
+		// check if the currency symbol is available or not
+		if ( empty( $this->get_prop( 'symbol' ) ) ) {
+			return new \WP_Error( 'invalid_currency_symbol', esc_html__( 'Currency symbol is required', 'wp-ever-accounting' ) );
+		}
+
+		// check if the currency position is available or not
+		if ( empty( $this->get_prop( 'position' ) ) ) {
+			return new \WP_Error( 'invalid_currency_position', esc_html__( 'Currency position is required', 'wp-ever-accounting' ) );
+		}
+
+		// check if the currency decimal_separator is available or not
+		if ( empty( $this->get_prop( 'decimal_separator' ) ) ) {
+			return new \WP_Error( 'invalid_currency_decimal_separator', esc_html__( 'Currency decimal separator is required', 'wp-ever-accounting' ) );
+		}
+
+		// check if the currency thousand_separator is available or not
+		if ( empty( $this->get_prop( 'thousand_separator' ) ) ) {
+			return new \WP_Error( 'invalid_currency_thousand_separator', esc_html__( 'Currency thousand separator is required', 'wp-ever-accounting' ) );
+		}
+
+		if ( empty( $this->get_prop( 'date_created' ) ) || '0000-00-00 00:00:00' === $this->get_prop( 'date_created' ) ) {
+			$this->set_date_prop( 'date_created', current_time( 'mysql' ) );
+		}
+
+		if ( $this->exists() ) {
+			$is_error = $this->update();
+		} else {
+			$is_error = $this->insert();
+		}
+
+		if ( is_wp_error( $is_error ) ) {
+			return $is_error;
+		}
+
+		$this->apply_changes();
+
+		// Clear cache.
+		wp_cache_delete( $this->get_id(), 'ea_currencies' );
+		wp_cache_set( 'last_changed', microtime(), 'ea_currencies' );
+
+		/**
+		 * Fires immediately after a currency is inserted or updated in the database.
+		 *
+		 * @param int $currency_id Currency id.
+		 * @param Item $currency Currency object.
+		 *
+		 * @since 1.2.1
+		 */
+		do_action( 'eaccounting_saved_currency', $this->get_id(), $this );
+
+		return $this->get_id();
 	}
 
 	/**
@@ -312,7 +372,7 @@ class Currency extends Data {
 		}
 
 		/**
-		 * Fires before an currency is deleted.
+		 * Fires before a currency is deleted.
 		 *
 		 * @param int $currency_id Currency id.
 		 * @param array $data Currency data array.
@@ -328,7 +388,7 @@ class Currency extends Data {
 		}
 
 		/**
-		 * Fires after an currency is deleted.
+		 * Fires after a currency is deleted.
 		 *
 		 * @param int $currency_id Currency id.
 		 * @param array $data Currency data array.
@@ -348,6 +408,126 @@ class Currency extends Data {
 
 	/*
 	|--------------------------------------------------------------------------
+	| Getters
+	|--------------------------------------------------------------------------
+	|
+	| Functions for getting item data. Getter methods won't change anything unless
+	| just returning from the props.
+	|
+	*/
+
+	/**
+	 * Get currency name.
+	 *
+	 * @return string
+	 * @since 1.0.2
+	 */
+	public function get_name() {
+		return $this->get_prop( 'name' );
+	}
+
+	/**
+	 * Get currency code.
+	 *
+	 * @return string
+	 * @since 1.0.2
+	 */
+	public function get_code() {
+		return $this->get_prop( 'code' );
+	}
+
+	/**
+	 * Get currency rate.
+	 *
+	 * @return string
+	 * @since 1.0.2
+	 */
+	public function get_rate() {
+		return $this->get_prop( 'rate' );
+	}
+
+	/**
+	 * Get currency number.
+	 *
+	 * @return string
+	 * @since 1.0.2
+	 */
+	public function get_number() {
+		return $this->get_prop( 'number' );
+	}
+
+	/**
+	 * Get number of decimal points.
+	 *
+	 * @return string
+	 * @since 1.0.2
+	 */
+	public function get_precision() {
+		return $this->get_prop( 'precision' );
+	}
+
+	/**
+	 * Get number of decimal points.
+	 *
+	 * @return string
+	 * @since 1.0.2
+	 */
+	public function get_subunit() {
+		return $this->get_prop( 'subunit' );
+	}
+
+	/**
+	 * Get currency symbol.
+	 *
+	 * @return string
+	 * @since 1.0.2
+	 */
+	public function get_symbol() {
+		return $this->get_prop( 'symbol' );
+	}
+
+	/**
+	 * Get symbol position.
+	 *
+	 * @return string
+	 * @since 1.0.2
+	 */
+	public function get_position() {
+		return $this->get_prop( 'position' );
+	}
+
+	/**
+	 * Get decimal separator.
+	 *
+	 * @return string
+	 * @since 1.0.2
+	 */
+	public function get_decimal_separator() {
+		return $this->get_prop( 'decimal_separator' );
+	}
+
+	/**
+	 * Get thousand_separator.
+	 *
+	 * @return string
+	 * @since 1.0.2
+	 */
+	public function get_thousand_separator() {
+		return $this->get_prop( 'thousand_separator' );
+	}
+
+	/**
+	 * Get object created date.
+	 *
+	 * @return string
+	 * @since 1.0.2
+	 */
+	public function get_date_created() {
+		return $this->get_prop( 'date_created' );
+	}
+
+	/*
+	|--------------------------------------------------------------------------
 	| Setters
 	|--------------------------------------------------------------------------
 	|
@@ -355,19 +535,6 @@ class Currency extends Data {
 	| database itself and should only change what is stored in the class
 	| object.
 	*/
-
-	/**
-	 * Overwrite base so it can accept string.
-	 *
-	 * Set ID.
-	 *
-	 * @param int $id ID.
-	 *
-	 * @since 1.1.0
-	 */
-	public function set_id( $id ) {
-		$this->id = eaccounting_clean( $id );
-	}
 
 	/**
 	 * Set the currency name.

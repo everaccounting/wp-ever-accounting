@@ -1,6 +1,6 @@
 <?php
 /**
- * Handle the Note object.
+ * Handle the Transfer object.
  *
  * @package     EverAccounting
  * @class       Note
@@ -70,6 +70,13 @@ class Transfer extends Data {
 	);
 
 	/**
+	 * Transfer category id
+	 *
+	 * @var int
+	 */
+	protected $category_id;
+
+	/**
 	 * Transfer constructor.
 	 *
 	 * Get the transfer if id is passed, otherwise the transfer is new and empty.
@@ -104,7 +111,7 @@ class Transfer extends Data {
 	/**
 	 * Retrieve the object from database instance.
 	 *
-	 * @param int    $transfer_id Object id.
+	 * @param int $transfer_id Object id.
 	 * @param string $field Database field.
 	 *
 	 * @return object|false Object, false otherwise.
@@ -322,6 +329,7 @@ class Transfer extends Data {
 		}
 
 		$wpdb->query( 'ROLLBACK' );
+
 		return true;
 
 	}
@@ -408,6 +416,166 @@ class Transfer extends Data {
 
 	/*
 	|--------------------------------------------------------------------------
+	| Getters
+	|--------------------------------------------------------------------------
+	|
+	| Functions for getting item data. Getter methods won't change anything unless
+	| just returning from the props.
+	|
+	*/
+
+	/**
+	 * Transaction payment date.
+	 *
+	 * @return \EverAccounting\DateTime
+	 * @since 1.0.2
+	 */
+	public function get_payment_date() {
+		return $this->get_prop( 'payment_date' );
+	}
+
+	/**
+	 * Transaction payment methods.
+	 *
+	 * @return mixed|null
+	 * @since 1.0.2
+	 */
+	public function get_from_account_id() {
+		return $this->get_prop( 'from_account_id' );
+	}
+
+	/**
+	 * Transaction payment methods.
+	 *
+	 * @return mixed|null
+	 * @since 1.0.2
+	 */
+	public function get_amount() {
+		return $this->get_prop( 'amount' );
+	}
+
+	/**
+	 * Transaction payment methods.
+	 *
+	 * @return mixed|null
+	 * @since 1.0.2
+	 */
+	public function get_to_account_id() {
+		return $this->get_prop( 'to_account_id' );
+	}
+
+	/**
+	 * Income ID.
+	 *
+	 * @return mixed|null
+	 * @since 1.0.2
+	 */
+	public function get_income_id() {
+		return $this->get_prop( 'income_id' );
+	}
+
+	/**
+	 * Expense ID.
+	 *
+	 * @return mixed|null
+	 * @since 1.0.2
+	 */
+	public function get_expense_id() {
+		return $this->get_prop( 'expense_id' );
+	}
+
+	/**
+	 * Transaction payment methods.
+	 *
+	 * @return mixed|null
+	 * @since 1.0.2
+	 */
+	public function get_payment_method() {
+		return $this->get_prop( 'payment_method' );
+	}
+
+	/**
+	 * Description.
+	 *
+	 * @return mixed|null
+	 * @since 1.0.2
+	 */
+	public function get_reference() {
+		return $this->get_prop( 'reference' );
+	}
+
+	/**
+	 * Description.
+	 *
+	 * @return mixed|null
+	 * @since 1.0.2
+	 */
+	public function get_description() {
+		return $this->get_prop( 'description' );
+	}
+
+	/**
+	 * Return object created by.
+	 *
+	 * @return mixed|null
+	 * @since 1.0.2
+	 */
+	public function get_creator_id() {
+		return $this->get_prop( 'creator_id' );
+	}
+
+	/**
+	 * Get object created date.
+	 *
+	 * @return string
+	 * @since 1.0.2
+	 */
+	public function get_date_created() {
+		return $this->get_prop( 'date_created' );
+	}
+
+	/**
+	 * Get default amount.
+	 *
+	 * @return float
+	 * @since 1.0.2
+	 */
+	public function get_default_amount() {
+		return $this->get_prop( 'default_amount' );
+	}
+
+	/**
+	 * get currency_code.
+	 *
+	 * @return string
+	 * @since 1.0.2
+	 */
+	public function get_currency_code() {
+		return $this->get_prop( 'currency_code' );
+	}
+
+	/**
+	 * get currency_rate.
+	 *
+	 * @return float
+	 * @since 1.0.2
+	 */
+	public function get_currency_rate() {
+		return $this->get_prop( 'currency_rate' );
+	}
+
+	/**
+	 * Get transfer category.
+	 *
+	 * @return integer
+	 * @since 1.1.0
+	 */
+	public function get_category_id() {
+		return absint( $this->category_id );
+	}
+
+	/*
+	|--------------------------------------------------------------------------
 	| Setters
 	|--------------------------------------------------------------------------
 	*/
@@ -444,40 +612,6 @@ class Transfer extends Data {
 	public function set_amount( $amount ) {
 		$this->set_prop( 'amount', (float) $amount );
 	}
-
-	/**
-	 * Set default amount.
-	 *
-	 * @param string $amount Amount
-	 *
-	 * @since 1.0.2
-	 */
-	public function set_default_amount( $amount ) {
-		$this->set_prop( 'default_amount', (float) $amount );
-	}
-
-	/**
-	 * Set currency code.
-	 *
-	 * @param string $value Currency code
-	 *
-	 * @since 1.0.2
-	 */
-	public function set_currency_code( $value ) {
-		$this->set_prop( 'currency_code', eaccounting_sanitize_currency_code( $value ) );
-	}
-
-	/**
-	 * Set currency rate.
-	 *
-	 * @param float $value Currency rate
-	 *
-	 * @since 1.0.2
-	 */
-	public function set_currency_rate( $value ) {
-		$this->set_prop( 'currency_rate', (float) $value );
-	}
-
 
 	/**
 	 * Set to account id.
@@ -571,5 +705,38 @@ class Transfer extends Data {
 			$date = current_time( 'mysql' );
 		}
 		$this->set_date_prop( 'date_created', $date );
+	}
+
+	/**
+	 * Set default amount.
+	 *
+	 * @param string $amount Amount
+	 *
+	 * @since 1.2.1
+	 */
+	public function set_default_amount( $amount ) {
+		$this->set_prop( 'default_amount', (float) $amount );
+	}
+
+	/**
+	 * Set currency code.
+	 *
+	 * @param string $value Currency code
+	 *
+	 * @since 1.2.1
+	 */
+	public function set_currency_code( $value ) {
+		$this->set_prop( 'currency_code', eaccounting_sanitize_currency_code( $value ) );
+	}
+
+	/**
+	 * Set currency rate.
+	 *
+	 * @param float $value Currency rate
+	 *
+	 * @since 1.2.1
+	 */
+	public function set_currency_rate( $value ) {
+		$this->set_prop( 'currency_rate', (float) $value );
 	}
 }
