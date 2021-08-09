@@ -681,7 +681,7 @@ class Contact extends MetaData {
 	/**
 	 * Get thumbnail id
 	 *
-	 * @return int|null
+	 * @return int
 	 * @since 1.1.0
 	 */
 	public function get_thumbnail_id() {
@@ -716,6 +716,24 @@ class Contact extends MetaData {
 	 */
 	public function get_date_created() {
 		return $this->get_prop( 'date_created' );
+	}
+
+	/**
+	 * Total amount paid by contact
+	 *
+	 * @return float
+	 */
+	public function get_total_paid() {
+		return (float) $this->get_meta( 'total_paid' );
+	}
+
+	/**
+	 * Total amount due by contact
+	 *
+	 * @return float
+	 */
+	public function get_total_due() {
+		return (float) $this->get_meta( 'total_due' );
 	}
 
 	/*
@@ -969,5 +987,45 @@ class Contact extends MetaData {
 	 */
 	public function set_total_due( $value ) {
 		$this->update_meta_data( 'total_due', (float) $value );
+	}
+
+
+	/*
+	|--------------------------------------------------------------------------
+	| Extra
+	|--------------------------------------------------------------------------
+	*/
+
+	/**
+	 * Return this customer's avatar.
+	 *
+	 *
+	 * @param array $args
+	 *
+	 * @return string
+	 */
+	public function get_avatar_url( $args = array() ) {
+		if ( ! empty( $this->get_thumbnail_id() ) && $url = wp_get_attachment_thumb_url( $this->get_thumbnail_id() ) ) { //phpcs:ignore
+			return $url;
+		}
+
+		return get_avatar_url( $this->get_email(), wp_parse_args( $args, array( 'size' => '100' ) ) );
+	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| Conditional
+	|--------------------------------------------------------------------------
+	*/
+
+	/**
+	 * Alias self::get_enabled()
+	 *
+	 * @since 1.0.2
+	 *
+	 * @return bool
+	 */
+	public function is_enabled() {
+		return eaccounting_string_to_bool( $this->get_prop( 'enabled' ) );
 	}
 }

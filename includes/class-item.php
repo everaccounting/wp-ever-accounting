@@ -700,4 +700,21 @@ class Item extends Data {
 		}
 		$this->set_date_prop( 'date_created', $date );
 	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| Conditional
+	|--------------------------------------------------------------------------
+	*/
+
+	/**
+	 * Alias self::get_enabled()
+	 *
+	 * @since 1.0.2
+	 *
+	 * @return bool
+	 */
+	public function is_enabled() {
+		return eaccounting_string_to_bool( $this->get_prop( 'enabled' ) );
+	}
 }

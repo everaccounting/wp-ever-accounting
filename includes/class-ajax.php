@@ -9,9 +9,8 @@
 
 namespace EverAccounting;
 
-use EverAccounting\Models\Bill;
-use EverAccounting\Models\Invoice;
-use EverAccounting\Models\Note;
+use EverAccounting\Invoice;
+use EverAccounting\Note;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -181,18 +180,18 @@ class Ajax {
 		$search = isset( $_REQUEST['search'] ) ? eaccounting_clean( $_REQUEST['search'] ) : '';
 		$page   = isset( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1;
 
-
-		wp_send_json_success(
-			eaccounting_get_categories(
-				array(
-					'search' => $search,
-					'type'   => 'expense',
-					'page'   => $page,
-					'return' => 'raw',
-					'status' => 'active',
-				)
+		$categories = eaccounting_get_categories(
+			array(
+				'search' => $search,
+				'type'   => 'expense',
+				'page'   => $page,
+				'status' => 'active',
 			)
 		);
+		$categories = array_map( function ($category){
+			return $category->to_array();
+		}, $categories );
+		wp_send_json_success( $categories );
 	}
 
 	/**
@@ -205,18 +204,18 @@ class Ajax {
 		$search = isset( $_REQUEST['search'] ) ? eaccounting_clean( $_REQUEST['search'] ) : '';
 		$page   = isset( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1;
 
-
-		wp_send_json_success(
-			eaccounting_get_categories(
-				array(
-					'search' => $search,
-					'type'   => 'income',
-					'page'   => $page,
-					'return' => 'raw',
-					'status' => 'active',
-				)
+		$categories = eaccounting_get_categories(
+			array(
+				'search' => $search,
+				'type'   => 'income',
+				'page'   => $page,
+				'status' => 'active',
 			)
 		);
+		$categories = array_map( function ($category){
+			return $category->to_array();
+		}, $categories );
+		wp_send_json_success( $categories );
 	}
 
 	/**
@@ -228,19 +227,18 @@ class Ajax {
 		self::verify_nonce( 'ea_categories' );
 		$search = isset( $_REQUEST['search'] ) ? eaccounting_clean( $_REQUEST['search'] ) : '';
 		$page   = isset( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1;
-
-
-		wp_send_json_success(
-			eaccounting_get_categories(
-				array(
-					'search' => $search,
-					'type'   => 'item',
-					'page'   => $page,
-					'return' => 'raw',
-					'status' => 'active',
-				)
+		$categories = eaccounting_get_categories(
+			array(
+				'search' => $search,
+				'type'   => 'item',
+				'page'   => $page,
+				'status' => 'active',
 			)
 		);
+		$categories = array_map( function ($category){
+			return $category->to_array();
+		}, $categories );
+		wp_send_json_success( $categories );
 	}
 
 	/**

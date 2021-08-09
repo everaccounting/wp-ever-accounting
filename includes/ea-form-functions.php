@@ -810,7 +810,6 @@ function eaccounting_category_dropdown( $field ) {
 	$modal_id    = ! empty( $field['modal_id'] ) ? '#' . $field['modal_id'] : '#ea-modal-add-income-category';
 	$categories = eaccounting_get_categories(
 		array(
-			'return'  => 'raw',
 			'include' => $include,
 			'type'    => $type,
 		)
@@ -819,7 +818,7 @@ function eaccounting_category_dropdown( $field ) {
 	$field      = wp_parse_args(
 		array(
 			'value'        => $include,
-			'options'      => wp_list_pluck( $categories, 'name', 'id' ),
+			'options'      => eaccounting_list_pluck( $categories, 'get_name', 'get_id' ),
 			'ajax'         => true,
 			'placeholder'  => __( 'Select Category', 'wp-ever-accounting' ),
 			'nonce_action' => 'ea_categories',

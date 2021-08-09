@@ -439,11 +439,21 @@ class Transfer extends Data {
 	/**
 	 * Transaction payment date.
 	 *
-	 * @return \EverAccounting\DateTime
+	 * @return string
 	 * @since 1.0.2
 	 */
 	public function get_payment_date() {
 		return $this->get_prop( 'payment_date' );
+	}
+
+	/**
+	 * Transaction payment date.
+	 *
+	 * @return string
+	 * @since 1.0.2
+	 */
+	public function get_date() {
+		return $this->get_payment_date();
 	}
 
 	/**

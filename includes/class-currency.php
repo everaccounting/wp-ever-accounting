@@ -130,7 +130,7 @@ class Currency extends Data {
 	 * Retrieve the object from database instance.
 	 *
 	 * @param int|string $id Object id.
-	 * @param string     $field Database field.
+	 * @param string $field Database field.
 	 *
 	 * @return object|false Object, false otherwise.
 	 * @since 1.2.1
@@ -169,6 +169,7 @@ class Currency extends Data {
 			}
 
 			wp_cache_add( $currency->id, $currency, 'ea_currencies' );
+			wp_cache_add( $currency->code, $currency, 'ea_currencies' );
 		}
 
 		return apply_filters( 'eaccounting_currency_raw_item', $currency );

@@ -154,7 +154,7 @@ class Account extends Data {
 			wp_cache_add( $account->id, $account, 'ea_accounts' );
 		}
 
-		return apply_filters( 'eaccounting_account_raw_item', $account );
+		return apply_filters( 'eaccounting_account_item', $account );
 	}
 
 	/**
@@ -648,6 +648,44 @@ class Account extends Data {
 			$date = current_time( 'mysql' );
 		}
 		$this->set_date_prop( 'date_created', $date );
+	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| Helper
+	|--------------------------------------------------------------------------
+	*/
+	/**
+	 * Return account current balance.
+	 *
+	 * @return mixed|null
+	 *
+	 * @since 1.1.0
+	 */
+	public function get_balance() {
+		$balance = $this->get_prop( 'bank_phone' );
+		if( is_null( $balance ) ){
+
+		}
+		return floatval( $balance );
+	}
+
+
+	/*
+	|--------------------------------------------------------------------------
+	| Conditional
+	|--------------------------------------------------------------------------
+	*/
+
+	/**
+	 * Alias self::get_enabled()
+	 *
+	 * @since 1.0.2
+	 *
+	 * @return bool
+	 */
+	public function is_enabled() {
+		return eaccounting_string_to_bool( $this->get_prop( 'enabled' ) );
 	}
 
 }
