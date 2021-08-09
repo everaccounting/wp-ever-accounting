@@ -32,7 +32,7 @@ function eaccounting_get_contact_types() {
  * Retrieves contact data given a contact id or contact object.
  *
  * @param int|object|Contact $contact contact to retrieve
- * @param string $output The required return type. One of OBJECT, ARRAY_A, or ARRAY_N. Default OBJECT.
+ * @param string             $output The required return type. One of OBJECT, ARRAY_A, or ARRAY_N. Default OBJECT.
  *
  * @return Contact|array|null
  * @since 1.1.0
@@ -47,7 +47,6 @@ function eaccounting_get_contact( $contact, $output = OBJECT ) {
 	} else {
 		$_contact = new Contact( $contact );
 	}
-
 
 	if ( ! $_contact->exists() ) {
 		return null;
@@ -84,7 +83,7 @@ function eaccounting_insert_contact( $data ) {
 		return new WP_Error( 'invalid_contact_data', __( 'Contact could not be saved.', 'wp-ever-accounting' ) );
 	}
 
-	$data = wp_parse_args( $data, array( 'id' => null ) );
+	$data    = wp_parse_args( $data, array( 'id' => null ) );
 	$contact = new Contact( (int) $data['id'] );
 	$contact->set_props( $data );
 	$is_error = $contact->save();
@@ -127,7 +126,6 @@ function eaccounting_delete_contact( $contact_id ) {
  *
  * @return Contact[]|int Array of contact objects or count.
  * @since 1.1.0
- *
  */
 function eaccounting_get_contacts( $args = array() ) {
 	$defaults = array(
@@ -145,7 +143,6 @@ function eaccounting_get_contacts( $args = array() ) {
 	if ( true === $parsed_args['count_total'] ) {
 		return $query->get_total();
 	}
-
 
 	return $query->get_results();
 }

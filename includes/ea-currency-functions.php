@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit();
  * Retrieves currency data given a currency id or currency object.
  *
  * @param int|object|Currency $currency currency to retrieve
- * @param string $output The required return type. One of OBJECT, ARRAY_A, or ARRAY_N. Default OBJECT.
+ * @param string              $output The required return type. One of OBJECT, ARRAY_A, or ARRAY_N. Default OBJECT.
  *
  * @return Currency|array|null
  * @since 1.1.0
@@ -32,7 +32,7 @@ function eaccounting_get_currency( $currency, $output = OBJECT ) {
 		$_currency = new Currency( $currency );
 	}
 
-	if ( !$_currency->exists() ) {
+	if ( ! $_currency->exists() ) {
 		return null;
 	}
 
@@ -67,7 +67,7 @@ function eaccounting_insert_currency( $data ) {
 		return new WP_Error( 'invalid_currency_data', __( 'Currency could not be saved.', 'wp-ever-accounting' ) );
 	}
 
-	$data = wp_parse_args( $data, array( 'id' => null ) );
+	$data     = wp_parse_args( $data, array( 'id' => null ) );
 	$currency = new Currency( (int) $data['id'] );
 	$currency->set_props( $data );
 	$is_error = $currency->save();
@@ -110,7 +110,6 @@ function eaccounting_delete_currency( $currency_id ) {
  *
  * @return Currency[]|int Array of currency objects or count.
  * @since 1.1.0
- *
  */
 function eaccounting_get_currencies( $args = array() ) {
 	$defaults = array(
@@ -129,7 +128,6 @@ function eaccounting_get_currencies( $args = array() ) {
 		return $query->get_total();
 	}
 
-
 	return $query->get_results();
 }
 
@@ -140,7 +138,6 @@ function eaccounting_get_currencies( $args = array() ) {
  *
  * @return string
  * @since 1.1.0
- *
  */
 function eaccounting_sanitize_currency_code( $code ) {
 	$codes = eaccounting_get_data( 'currencies' );
@@ -154,9 +151,10 @@ function eaccounting_sanitize_currency_code( $code ) {
 
 /**
  * Get currency ISO codes.
+ *
  * @since 1.2.1
  * @return array
  */
-function eaccounting_get_currency_iso_codes(){
-	return eaccounting_get_data('currencies');
+function eaccounting_get_currency_iso_codes() {
+	return eaccounting_get_data( 'currencies' );
 }

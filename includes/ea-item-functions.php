@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  * Retrieves item data given a item id or item object.
  *
  * @param int|object|Item $item item to retrieve
- * @param string $output The required return type. One of OBJECT, ARRAY_A, or ARRAY_N. Default OBJECT.
+ * @param string          $output The required return type. One of OBJECT, ARRAY_A, or ARRAY_N. Default OBJECT.
  *
  * @return Item|array|null
  * @since 1.1.0
@@ -32,7 +32,7 @@ function eaccounting_get_item( $item, $output = OBJECT ) {
 		$_item = new Item( $item );
 	}
 
-	if ( !$_item->exists() ) {
+	if ( ! $_item->exists() ) {
 		return null;
 	}
 
@@ -110,7 +110,6 @@ function eaccounting_delete_item( $item_id ) {
  *
  * @return Item[]|int Array of item objects or count.
  * @since 1.1.0
- *
  */
 function eaccounting_get_items( $args = array() ) {
 	$defaults = array(
@@ -128,7 +127,6 @@ function eaccounting_get_items( $args = array() ) {
 	if ( true === $parsed_args['count_total'] ) {
 		return $query->get_total();
 	}
-
 
 	return $query->get_results();
 }
