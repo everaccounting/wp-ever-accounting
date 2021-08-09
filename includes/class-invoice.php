@@ -181,6 +181,23 @@ class Invoice extends Data {
 
 	}
 
+	/**
+	 * Magic method for retrieving a property.
+	 *
+	 * @param $key
+	 *
+	 * @return mixed|null
+	 */
+	public function __get( $key ) {
+		if ( $key === 'items' ) {
+			$this->maybe_load_items();
+
+			return $this->items;
+		}
+
+		return parent::__get( $key );
+	}
+
 	/*
 	|--------------------------------------------------------------------------
 	| CRUD methods
@@ -555,6 +572,22 @@ class Invoice extends Data {
 		$this->set_defaults();
 
 		return $data;
+	}
+
+	/**
+	 * Conditionally load items.
+	 */
+	protected function maybe_load_items() {
+		if ( is_null( $this->items ) ) {
+			// Reset meta data.
+			$this->items = array();
+			// Maybe abort early.
+			if ( ! $this->exists() ) {
+				return;
+			}
+			$items = eaccounting_get_invoice_items( $this->id );
+			$this->items = $items;
+		}
 	}
 
 	/*

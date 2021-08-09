@@ -36,6 +36,17 @@ abstract class Data {
 	protected $data = array();
 
 	/**
+	 * Extra data for this object. Name value pairs (name + default value).
+	 * Used as a standard way for sub classes (like product types) to add
+	 * additional information to an inherited class. Anything that is not
+	 * core data may store here,
+	 *
+	 * @since 1.2.1
+	 * @var array
+	 */
+	protected $extra_data = array();
+
+	/**
 	 * Core data changes for this object.
 	 *
 	 * @since 1.1.0
@@ -248,12 +259,16 @@ abstract class Data {
 	 *
 	 */
 	protected function set_prop( $prop, $value ) {
-		if ( true === $this->object_read ) {
-			if ( $value != $this->data[ $prop ] || array_key_exists( $prop, $this->changes ) ) { //phpcs: ignore
-				$this->changes[ $prop ] = $value;
+		if ( array_key_exists( $prop, $this->data ) ) {
+			if ( true === $this->object_read ) {
+				if ( $value !== $this->data[ $prop ] || array_key_exists( $prop, $this->changes ) ) {
+					$this->changes[ $prop ] = $value;
+				}
+			} else {
+				$this->data[ $prop ] = $value;
 			}
-		} else {
-			$this->data[ $prop ] = $value;
+		} elseif ( array_key_exists( $prop, $this->extra_data ) ) {
+			$this->extra_data[ $prop ] = $value;
 		}
 	}
 
@@ -316,6 +331,8 @@ abstract class Data {
 
 		if ( array_key_exists( $prop, $this->data ) ) {
 			$value = array_key_exists( $prop, $this->changes ) ? $this->changes[ $prop ] : $this->data[ $prop ];
+		} elseif ( array_key_exists( $prop, $this->extra_data ) ) {
+			$value = $this->extra_data[ $prop ];
 		}
 
 		return $value;
@@ -378,6 +395,14 @@ abstract class Data {
 			$this->data,
 			$this->changes
 		);
+	}
+
+	/**
+	 * Alias self:to_array();
+	 * @return array
+	 */
+	public function get_data(){
+		return $this->to_array();
 	}
 
 	/**

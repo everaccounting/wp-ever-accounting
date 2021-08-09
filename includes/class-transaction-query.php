@@ -569,14 +569,14 @@ class Transaction_Query {
 			$this->sql_clauses['join'] .= " LEFT OUTER JOIN (
 				SELECT id, name as category_name
 				FROM {$wpdb->prefix}ea_categories
-			) categories ON ({$this->table}.category_id = ea_categories.id)
+			) categories ON ({$this->table}.category_id = categories.id)
 			";
 			$_orderby                  = 'category_name';
 		} elseif ( 'contact_id' === $orderby || 'contact' === $orderby ) {
 			$this->sql_clauses['join'] .= " LEFT OUTER JOIN (
 				SELECT id, name as contact_name
 				FROM {$wpdb->prefix}ea_contacts
-			) contacts ON ({$this->table}.contact_id = ea_contacts.id)
+			) contacts ON ({$this->table}.contact_id = contacts.id)
 			";
 			$_orderby                  = 'contact_name';
 		} elseif ( 'include' === $orderby && ! empty( $this->query_vars['include'] ) ) {

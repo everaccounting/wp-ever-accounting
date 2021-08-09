@@ -36,11 +36,22 @@ function eaccounting_get_vendor( $args ) {
 	return eaccounting_get_contact( $args );
 }
 
+function eaccounting_get_bills( $args = [] ) {
+	return eaccounting_get_invoices( array_merge( $args, [ 'type' => 'bill' ] ) );
+}
 
 function eaccounting_get_revenues( $args = [] ) {
 	return eaccounting_get_transactions( array_merge( $args, [ 'type' => 'income' ] ) );
 }
 
 function eaccounting_get_payments( $args = [] ) {
-	return eaccounting_get_contacts( array_merge( $args, [ 'type' => 'expense' ] ) );
+	return eaccounting_get_transactions( array_merge( $args, [ 'type' => 'expense' ] ) );
+}
+
+function eaccounting_delete_revenue( $id ) {
+	return eaccounting_delete_transaction( $id );
+}
+
+function eaccounting_delete_payment( $id ) {
+	return eaccounting_delete_transaction( $id );
 }

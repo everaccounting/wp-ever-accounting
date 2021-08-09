@@ -224,6 +224,11 @@ class Category_Query {
 			$query_where .= " AND $this->table.id NOT IN ($ids)";
 		}
 
+		if ( ! empty( $qv['type'] ) && $qv['type'] !== 'all' ) {
+			$types       = implode( "','", wp_parse_list( $qv['type'] ) );
+			$query_where .= " AND $this->table.`type` IN ('$types')";
+		}
+
 		// Search
 		$search         = '';
 		$search_columns = array( 'name' );
