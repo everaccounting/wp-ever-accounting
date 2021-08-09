@@ -554,7 +554,17 @@ class Transaction_Query {
 	protected function parse_orderby( $orderby ) {
 		global $wpdb;
 		$_orderby = '';
-		if ( $orderby === 'name' ) {
+		if ( in_array( $orderby, array(
+			'type',
+			'payment_date',
+			'currency_code',
+			'currency_rate',
+			'description',
+			'payment_method',
+			'reference',
+			'reconciled',
+			'date_created'
+		), true ) ) {
 			$_orderby = $orderby;
 		} elseif ( 'amount' === $orderby ) {
 			$_orderby = 't2.default_amount';

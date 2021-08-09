@@ -144,14 +144,14 @@ class Account extends Data {
 
 		$account = wp_cache_get( $account_id, 'ea_accounts' );
 
-		if ( ! $account ) {
+		if ( false === $account ) {
 			$account = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}ea_accounts WHERE id = %d LIMIT 1", $account_id ) );
 
 			if ( ! $account ) {
 				return false;
 			}
 
-			wp_cache_add( $account->id, $account, 'ea_accounts' );
+			wp_cache_add( $account_id, $account, 'ea_accounts' );
 		}
 
 		return apply_filters( 'eaccounting_account_item', $account );
