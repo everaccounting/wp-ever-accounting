@@ -32,7 +32,7 @@ function eaccounting_get_currency( $currency, $output = OBJECT ) {
 		$_currency = new Currency( $currency );
 	}
 
-	if ( $_currency->exists() ) {
+	if ( !$_currency->exists() ) {
 		return null;
 	}
 

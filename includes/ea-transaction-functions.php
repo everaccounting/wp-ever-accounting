@@ -49,7 +49,7 @@ function eaccounting_get_transaction( $transaction, $output = OBJECT ) {
 		$_transaction = new Transaction( $transaction );
 	}
 
-	if ( $_transaction->exists() ) {
+	if ( !$_transaction->exists() ) {
 		return null;
 	}
 
@@ -170,7 +170,7 @@ function eaccounting_get_transfer( $transfer, $output = OBJECT ) {
 		$_transfer = new Transfer( $transfer );
 	}
 
-	if ( $_transfer->exists() ) {
+	if ( !$_transfer->exists() ) {
 		return null;
 	}
 

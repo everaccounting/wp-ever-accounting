@@ -49,7 +49,7 @@ function eaccounting_get_category( $category, $output = OBJECT ) {
 		$_category = new Category( $category );
 	}
 
-	if ( $_category->exists() ) {
+	if ( !$_category->exists() ) {
 		return null;
 	}
 

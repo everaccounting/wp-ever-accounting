@@ -32,7 +32,7 @@ function eaccounting_get_note( $note, $output = OBJECT ) {
 		$_note = new Note( $note );
 	}
 
-	if ( $_note->exists() ) {
+	if ( !$_note->exists() ) {
 		return null;
 	}
 

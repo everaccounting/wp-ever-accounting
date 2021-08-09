@@ -32,7 +32,7 @@ function eaccounting_get_account( $account, $output = OBJECT ) {
 		$_account = new Account( $account );
 	}
 
-	if ( $_account->exists() ) {
+	if ( ! $_account->exists() ) {
 		return null;
 	}
 

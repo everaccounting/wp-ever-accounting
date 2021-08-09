@@ -32,7 +32,7 @@ function eaccounting_get_item( $item, $output = OBJECT ) {
 		$_item = new Item( $item );
 	}
 
-	if ( $_item->exists() ) {
+	if ( !$_item->exists() ) {
 		return null;
 	}
 
