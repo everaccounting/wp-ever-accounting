@@ -14,6 +14,9 @@ use EverAccounting\Contact_Query;
 
 defined( 'ABSPATH' ) || die();
 
+/**
+ * Contacts controller class
+ */
 class Contacts_Controller extends REST_Controller {
 	/**
 	 * Route base.
@@ -94,7 +97,6 @@ class Contacts_Controller extends REST_Controller {
 	 *
 	 * @return true|\WP_Error True if the request has read access, WP_Error object otherwise.
 	 * @since 1.2.1
-	 *
 	 */
 	public function get_items_permissions_check( $request ) {
 		if ( ! current_user_can( 'ea_manage_contact' ) ) {
@@ -115,7 +117,6 @@ class Contacts_Controller extends REST_Controller {
 	 *
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 * @since 1.2.1
-	 *
 	 */
 	public function get_items( $request ) {
 		// Ensure an include parameter is set in case the orderby is set to 'include'.
@@ -158,7 +159,7 @@ class Contacts_Controller extends REST_Controller {
 		$args['search']   = $request['search'];
 
 		// Filter the query arguments for a request.
-		$args = apply_filters( "eaccounting_rest_contact_query", $args, $request );
+		$args = apply_filters( 'eaccounting_rest_contact_query', $args, $request );
 
 		$contact_query = new Contact_Query( $args );
 		$query_result  = $contact_query->get_results();
@@ -218,7 +219,6 @@ class Contacts_Controller extends REST_Controller {
 	 *
 	 * @return true|\WP_Error True if the request has read access for the item, WP_Error object otherwise.
 	 * @since 1.2.1
-	 *
 	 */
 	public function get_item_permissions_check( $request ) {
 		$contact = eaccounting_get_contact( $request['id'] );
@@ -248,7 +248,6 @@ class Contacts_Controller extends REST_Controller {
 	 *
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 * @since 1.2.1
-	 *
 	 */
 	public function get_item( $request ) {
 		$contact = eaccounting_get_contact( $request['id'] );
@@ -272,7 +271,6 @@ class Contacts_Controller extends REST_Controller {
 	 *
 	 * @return true|\WP_Error True if the request has access to create items, WP_Error object otherwise.
 	 * @since 1.2.1
-	 *
 	 */
 	public function create_item_permissions_check( $request ) {
 		if ( ! empty( $request['id'] ) ) {
@@ -301,7 +299,6 @@ class Contacts_Controller extends REST_Controller {
 	 *
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 * @since 1.2.1
-	 *
 	 */
 	public function create_item( $request ) {
 		if ( ! empty( $request['id'] ) ) {
@@ -348,7 +345,6 @@ class Contacts_Controller extends REST_Controller {
 	 *
 	 * @return true|\WP_Error True if the request has access to update the item, WP_Error object otherwise.
 	 * @since 1.2.1
-	 *
 	 */
 	public function update_item_permissions_check( $request ) {
 		$contact = eaccounting_get_contact( $request['id'] );
@@ -378,7 +374,6 @@ class Contacts_Controller extends REST_Controller {
 	 *
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 * @since 1.2.1
-	 *
 	 */
 	public function update_item( $request ) {
 		$contact = eaccounting_get_contact( $request['id'] );
@@ -412,7 +407,6 @@ class Contacts_Controller extends REST_Controller {
 	 *
 	 * @return true|\WP_Error True if the request has access to delete the item, WP_Error object otherwise.
 	 * @since 1.2.1
-	 *
 	 */
 	public function delete_item_permissions_check( $request ) {
 		$contact = eaccounting_get_contact( $request['id'] );
@@ -442,7 +436,6 @@ class Contacts_Controller extends REST_Controller {
 	 *
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 * @since 1.2.1
-	 *
 	 */
 	public function delete_item( $request ) {
 		$contact = eaccounting_get_contact( $request['id'] );
@@ -467,12 +460,11 @@ class Contacts_Controller extends REST_Controller {
 	/**
 	 * Prepares a single contact output for response.
 	 *
-	 * @param Contact $contact Contact object.
+	 * @param Contact          $contact Contact object.
 	 * @param \WP_REST_Request $request Request object.
 	 *
 	 * @return \WP_REST_Response Response object.
 	 * @since 1.2.1
-	 *
 	 */
 	public function prepare_item_for_response( $contact, $request ) {
 		$data        = $contact->to_array();
@@ -505,7 +497,6 @@ class Contacts_Controller extends REST_Controller {
 	 *
 	 * @return array|\WP_Error Contact object or WP_Error.
 	 * @since 1.2.1
-	 *
 	 */
 	protected function prepare_item_for_database( $request ) {
 		$schema    = $this->get_item_schema();
@@ -535,7 +526,7 @@ class Contacts_Controller extends REST_Controller {
 	/**
 	 * Prepare links for the request.
 	 *
-	 * @param Contact $contact Object data.
+	 * @param Contact          $contact Object data.
 	 * @param \WP_REST_Request $request Request contact.
 	 *
 	 * @return array Links for the given contact.
@@ -556,7 +547,6 @@ class Contacts_Controller extends REST_Controller {
 	 *
 	 * @return array Item schema data.
 	 * @since 1.1.2
-	 *
 	 */
 	public function get_item_schema() {
 		$schema = array(
@@ -758,11 +748,9 @@ class Contacts_Controller extends REST_Controller {
 		/**
 		 * Filters the contact's schema.
 		 *
-		 *
 		 * @param array $schema Item schema data.
 		 *
 		 * @since 1.2.1
-		 *
 		 */
 		$schema = apply_filters( 'eaccounting_rest_contact_item_schema', $schema );
 
