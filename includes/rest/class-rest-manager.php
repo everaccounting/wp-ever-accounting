@@ -40,6 +40,7 @@ class REST_Manager extends Singleton {
 //				'\EverAccounting\REST\Categories_Controller',
 //				'\EverAccounting\REST\Currencies_Controller',
 //				'\EverAccounting\REST\Transfers_Controller',
+//				'\EverAccounting\REST\Transactions_Controller',
 //				'\EverAccounting\REST\Codes_Controller',
 //				'\EverAccounting\REST\Countries_Controller',
 //				'\EverAccounting\REST\Data_Controller',
