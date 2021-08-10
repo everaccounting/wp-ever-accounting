@@ -10,6 +10,7 @@
 namespace EverAccounting;
 
 use EverAccounting\Abstracts\Data;
+use EverAccounting\Traits\CurrencyTrait;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -33,7 +34,7 @@ defined( 'ABSPATH' ) || exit;
  * @property string $date_created
  */
 class Account extends Data {
-
+	use CurrencyTrait;
 	/**
 	 * Item Data array.
 	 *
