@@ -11,6 +11,7 @@ namespace EverAccounting;
 
 use EverAccounting\Abstracts\Data;
 use EverAccounting\Traits\CurrencyTrait;
+use EverAccounting\Traits\Attachment;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -35,6 +36,8 @@ defined( 'ABSPATH' ) || exit;
  */
 class Account extends Data {
 	use CurrencyTrait;
+	use Attachment;
+
 	/**
 	 * Item Data array.
 	 *
@@ -127,7 +130,7 @@ class Account extends Data {
 	/**
 	 * Retrieve the object from database instance.
 	 *
-	 * @param int    $account_id Object id.
+	 * @param int $account_id Object id.
 	 * @param string $field Database field.
 	 *
 	 * @return object|false Object, false otherwise.
@@ -665,9 +668,10 @@ class Account extends Data {
 	 */
 	public function get_balance() {
 		$balance = $this->get_prop( 'bank_phone' );
-		if( is_null( $balance ) ){
+		if ( is_null( $balance ) ) {
 
 		}
+
 		return floatval( $balance );
 	}
 
@@ -681,9 +685,9 @@ class Account extends Data {
 	/**
 	 * Alias self::get_enabled()
 	 *
+	 * @return bool
 	 * @since 1.0.2
 	 *
-	 * @return bool
 	 */
 	public function is_enabled() {
 		return eaccounting_string_to_bool( $this->get_prop( 'enabled' ) );
