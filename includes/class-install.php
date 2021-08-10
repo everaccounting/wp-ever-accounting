@@ -10,6 +10,9 @@ namespace EverAccounting;
 
 defined( 'ABSPATH' ) || exit();
 
+/**
+ * Main plugin Install class
+ */
 class Install {
 	/**
 	 * Updates and callbacks that need to be run per version.
@@ -42,7 +45,6 @@ class Install {
 	 *
 	 * @return void
 	 * @since 1.0.2
-	 *
 	 */
 	public static function check_version() {
 		// todo remove on later version.
@@ -183,7 +185,7 @@ class Install {
 		$tables         = self::get_tables();
 		$notices        = \EverAccounting\Admin\Notices::init();
 		foreach ( $tables as $table ) {
-			if ( ! $wpdb->get_var( "SHOW TABLES LIKE '$table'" ) ) {
+			if ( ! $wpdb->get_var( "SHOW TABLES LIKE '$table'" ) ) { //phpcs:ignore
 				$missing_tables[] = $table;
 			}
 		}
@@ -646,6 +648,7 @@ class Install {
 			`rate` double(15,8) NOT NULL,
 			`precision` varchar(2) DEFAULT NULL,
   			`symbol` varchar(5) DEFAULT NULL,
+  			`subunit` int(11) DEFAULT 100,
   			`position` ENUM ('before', 'after') DEFAULT 'before',
   			`decimal_separator` varchar(1) DEFAULT '.',
  			`thousand_separator` varchar(1) DEFAULT ',',
@@ -702,7 +705,7 @@ class Install {
 		$tables = self::get_tables();
 
 		foreach ( $tables as $table ) {
-			$wpdb->query( "DROP TABLE IF EXISTS {$table}" );
+			$wpdb->query( "DROP TABLE IF EXISTS {$table}" ); //phpcs:ignore
 		}
 	}
 
@@ -900,7 +903,6 @@ class Install {
 	 * @param string $callback Callback name.
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public static function run_update_callback( $callback ) {
 		include_once EACCOUNTING_ABSPATH . '/includes/ea-update-functions.php';
@@ -916,7 +918,6 @@ class Install {
 	 * @param string|null $version New version or null.
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public static function update_version( $version = null ) {
 		update_option( 'eaccounting_version', is_null( $version ) ? eaccounting()->version : $version );
@@ -938,6 +939,7 @@ class Install {
 
 	/**
 	 * Handle background updates.
+	 *
 	 * @since 1.1.0
 	 */
 	public static function background_updater() {
