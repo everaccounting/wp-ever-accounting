@@ -146,10 +146,10 @@ class Install {
 		set_transient( 'eaccounting_installing', 'yes', MINUTE_IN_SECONDS * 1 );
 		eaccounting_maybe_define_constant( 'EACCOUNTING_INSTALLING', true );
 		require_once dirname( __FILE__ ) . '/admin/class-notices.php';
-		require_once dirname( __FILE__ ) . '/class-settings.php';
+		require_once dirname( __FILE__ ) . '/admin/class-settings.php';
 
 		if ( ! eaccounting()->settings ) {
-			eaccounting()->settings = new \EverAccounting\Settings();
+			eaccounting()->settings = new \EverAccounting\Admin\Settings();
 		}
 
 		self::remove_admin_notices();
@@ -542,7 +542,7 @@ class Install {
 		    KEY `expense_id` (`expense_id`)
             ) $collate",
 
-			"CREATE TABLE {$wpdb->prefix}ea_documents(
+			"CREATE TABLE {$wpdb->prefix}ea_invoices(
             `id` bigINT(20) NOT NULL AUTO_INCREMENT,
             `document_number` VARCHAR(100) NOT NULL,
             `type` VARCHAR(60) NOT NULL,
