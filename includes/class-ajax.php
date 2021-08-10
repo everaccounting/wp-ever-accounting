@@ -188,7 +188,7 @@ class Ajax {
 				'status' => 'active',
 			)
 		);
-		$categories = array_map( function ($category){
+		$categories = array_map( function ( $category ) {
 			return $category->to_array();
 		}, $categories );
 		wp_send_json_success( $categories );
@@ -212,7 +212,7 @@ class Ajax {
 				'status' => 'active',
 			)
 		);
-		$categories = array_map( function ($category){
+		$categories = array_map( function ( $category ) {
 			return $category->to_array();
 		}, $categories );
 		wp_send_json_success( $categories );
@@ -225,8 +225,8 @@ class Ajax {
 	 */
 	public static function get_item_categories() {
 		self::verify_nonce( 'ea_categories' );
-		$search = isset( $_REQUEST['search'] ) ? eaccounting_clean( $_REQUEST['search'] ) : '';
-		$page   = isset( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1;
+		$search     = isset( $_REQUEST['search'] ) ? eaccounting_clean( $_REQUEST['search'] ) : '';
+		$page       = isset( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1;
 		$categories = eaccounting_get_categories(
 			array(
 				'search' => $search,
@@ -235,7 +235,7 @@ class Ajax {
 				'status' => 'active',
 			)
 		);
-		$categories = array_map( function ($category){
+		$categories = array_map( function ( $category ) {
 			return $category->to_array();
 		}, $categories );
 		wp_send_json_success( $categories );
@@ -499,8 +499,8 @@ class Ajax {
 	public static function edit_customer() {
 		self::verify_nonce( 'ea_edit_customer' );
 		self::check_permission( 'ea_manage_customer' );
-		$posted  = eaccounting_clean( $_REQUEST );
-		$created = eaccounting_insert_customer( $posted );
+		$posted['type'] = 'customer';
+		$created        = eaccounting_insert_contact( $posted );
 		if ( is_wp_error( $created ) || ! $created->exists() ) {
 			wp_send_json_error(
 				array(
@@ -846,9 +846,9 @@ class Ajax {
 	public static function edit_vendor() {
 		self::verify_nonce( 'ea_edit_vendor' );
 		self::check_permission( 'ea_manage_vendor' );
-		$posted = eaccounting_clean( wp_unslash( $_REQUEST ) );
-
-		$created = eaccounting_insert_vendor( $posted );
+		$posted         = eaccounting_clean( wp_unslash( $_REQUEST ) );
+		$posted['type'] = 'vendor';
+		$created        = eaccounting_insert_contact( $posted );
 		if ( is_wp_error( $created ) || ! $created->exists() ) {
 			wp_send_json_error(
 				array(
