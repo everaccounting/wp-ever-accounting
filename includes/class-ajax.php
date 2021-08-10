@@ -110,57 +110,57 @@ class Ajax {
 		}
 
 		$ajax_events = array(
-			//currency
+			// currency
 			'get_currencies',
 			'get_currency',
 			'get_currency_codes',
 			'edit_currency',
 
-			//category
+			// category
 			'get_expense_categories',
 			'get_income_categories',
 			'get_item_categories',
 			'edit_category',
 
-			//invoice
+			// invoice
 			'add_invoice_payment',
 			'add_invoice_note',
 			'invoice_recalculate',
 			'edit_invoice',
 
-			//revenue
+			// revenue
 			'edit_revenue',
 
-			//customer
+			// customer
 			'get_customers',
 			'edit_customer',
 
-			//bill
+			// bill
 			'add_bill_payment',
 			'add_bill_note',
 			'bill_recalculate',
 			'edit_bill',
 
-			//payment
+			// payment
 			'edit_payment',
 
-			//vendor
+			// vendor
 			'get_vendors',
 			'edit_vendor',
 
-			//account
+			// account
 			'get_account',
 			'get_accounts',
 			'get_account_currency',
 			'edit_account',
 
-			//transfer
+			// transfer
 			'edit_transfer',
 
-			//note
+			// note
 			'delete_note',
 
-			//item
+			// item
 			'get_items',
 			'edit_item',
 		);
@@ -188,9 +188,12 @@ class Ajax {
 				'status' => 'active',
 			)
 		);
-		$categories = array_map( function ( $category ) {
-			return $category->to_array();
-		}, $categories );
+		$categories = array_map(
+			function ( $category ) {
+				return $category->to_array();
+			},
+			$categories
+		);
 		wp_send_json_success( $categories );
 	}
 
@@ -212,9 +215,12 @@ class Ajax {
 				'status' => 'active',
 			)
 		);
-		$categories = array_map( function ( $category ) {
-			return $category->to_array();
-		}, $categories );
+		$categories = array_map(
+			function ( $category ) {
+				return $category->to_array();
+			},
+			$categories
+		);
 		wp_send_json_success( $categories );
 	}
 
@@ -235,9 +241,12 @@ class Ajax {
 				'status' => 'active',
 			)
 		);
-		$categories = array_map( function ( $category ) {
-			return $category->to_array();
-		}, $categories );
+		$categories = array_map(
+			function ( $category ) {
+				return $category->to_array();
+			},
+			$categories
+		);
 		wp_send_json_success( $categories );
 	}
 
@@ -317,6 +326,7 @@ class Ajax {
 
 	/**
 	 * Add invoice note.
+	 *
 	 * @since 1.1.0
 	 */
 	public static function add_invoice_note() {
@@ -476,17 +486,25 @@ class Ajax {
 		$search = isset( $_REQUEST['search'] ) ? eaccounting_clean( $_REQUEST['search'] ) : '';
 		$page   = isset( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1;
 
+		$customers = eaccounting_get_contacts(
+			array(
+				'search' => $search,
+				'type'   => 'customer',
+				'page'   => $page,
+				'status' => 'active',
 
-		wp_send_json_success(
-			eaccounting_get_customers(
-				array(
-					'search' => $search,
-					'page'   => $page,
-					'return' => 'raw',
-					'status' => 'active',
-				)
-			)
+			),
 		);
+
+		$customers = array_map(
+			function ( $customers ) {
+				return $customers->to_array();
+			},
+			$customers
+		);
+
+		wp_send_json_success( $customers );
+
 	}
 
 
@@ -694,6 +712,12 @@ class Ajax {
 			)
 		);
 
+		$currencies = array_map(
+			function ( $currencies ) {
+				return $currencies->to_array();
+			},
+			$currencies
+		);
 		wp_send_json_success( $currencies );
 	}
 
@@ -825,16 +849,23 @@ class Ajax {
 		$search = isset( $_REQUEST['search'] ) ? eaccounting_clean( $_REQUEST['search'] ) : '';
 		$page   = isset( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1;
 
-		wp_send_json_success(
-			eaccounting_get_vendors(
-				array(
-					'search' => $search,
-					'page'   => $page,
-					'return' => 'raw',
-					'status' => 'active',
-				)
+		$vendors = eaccounting_get_contacts(
+			array(
+				'search' => $search,
+				'type'   => 'vendor',
+				'page'   => $page,
+				'status' => 'active',
 			)
 		);
+
+		$vendors = array_map(
+			function ( $vendors ) {
+				return $vendors->to_array();
+			},
+			$vendors
+		);
+
+		wp_send_json_success( $vendors );
 	}
 
 	/**
@@ -904,20 +935,27 @@ class Ajax {
 	 */
 	public static function get_accounts() {
 		self::verify_nonce( 'ea_get_accounts' );
-		$search = isset( $_REQUEST['search'] ) ? eaccounting_clean( $_REQUEST['search'] ) : '';
-		$page   = isset( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1;
+		$search = filter_input( INPUT_POST, 'search', FILTER_DEFAULT );
+		$search = isset( $search ) ? eaccounting_clean( $search ) : '';
 
+		$page = filter_input( INPUT_POST, 'page', FILTER_DEFAULT );
+		$page = isset( $page ) ? absint( $page ) : 1;
 
-		wp_send_json_success(
-			eaccounting_get_accounts(
-				array(
-					'search' => $search,
-					'page'   => $page,
-					'return' => 'raw',
-					'status' => 'active',
-				)
+		$accounts = eaccounting_get_accounts(
+			array(
+				'search' => $search,
+				'page'   => $page,
+				'status' => 'active',
 			)
 		);
+
+		$accounts = array_map(
+			function ( $accounts ) {
+				return $accounts->to_array();
+			},
+			$accounts
+		);
+		wp_send_json_success( $accounts );
 	}
 
 	/**
@@ -1144,7 +1182,6 @@ class Ajax {
 	 * @param $action
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public static function verify_nonce( $action ) {
 		$nonce = '';

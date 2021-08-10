@@ -647,17 +647,17 @@ function eaccounting_customer_dropdown( $field ) {
 		)
 	);
 	$include  = ! empty( $field['value'] ) ? wp_parse_id_list( $field['value'] ) : array();
-	$contacts = eaccounting_get_customers(
+	$contacts = eaccounting_get_contacts(
 		array(
 			'include' => $include,
-			'fields'  => array( 'id', 'name' ),
-			'return'  => 'raw',
+			'type'    => 'customer',
 		)
 	);
 	$field    = wp_parse_args(
 		array(
 			'value'        => $include,
-			'options'      => wp_list_pluck( $contacts, 'name', 'id' ),
+			'options'      => eaccounting_list_pluck( $contacts, 'get_name', 'get_id' ),
+			'ajax'         => true,
 			'ajax_action'  => 'eaccounting_get_customers',
 			'nonce_action' => 'ea_get_customers',
 			'modal_id'     => '#ea-modal-add-customer',
@@ -688,8 +688,6 @@ function eaccounting_vendor_dropdown( $field ) {
 	$contacts = eaccounting_get_contacts(
 		array(
 			'include' => $include,
-			'fields'  => array( 'id', 'name' ),
-			'return'  => 'raw',
 			'type'    => 'vendor',
 		)
 	);
@@ -697,7 +695,7 @@ function eaccounting_vendor_dropdown( $field ) {
 	$field = wp_parse_args(
 		array(
 			'value'        => $include,
-			'options'      => wp_list_pluck( $contacts, 'name', 'id' ),
+			'options'      => eaccounting_list_pluck( $contacts, 'get_name', 'get_id' ),
 			'ajax_action'  => 'eaccounting_get_vendors',
 			'nonce_action' => 'ea_get_vendors',
 			'modal_id'     => '#ea-modal-add-vendor',
@@ -760,8 +758,6 @@ function eaccounting_account_dropdown( $field ) {
 	$result  = eaccounting_get_accounts(
 		array(
 			'include' => $include,
-			'fields'  => array( 'id', 'name', 'currency_code' ),
-			'return'  => 'raw',
 		)
 	);
 
