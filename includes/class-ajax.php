@@ -500,7 +500,8 @@ class Ajax {
 		self::verify_nonce( 'ea_edit_customer' );
 		self::check_permission( 'ea_manage_customer' );
 		$posted  = eaccounting_clean( $_REQUEST );
-		$created = eaccounting_insert_customer( $posted );
+		$posted['type'] = 'customer';
+		$created = eaccounting_insert_contact( $posted );
 		if ( is_wp_error( $created ) || ! $created->exists() ) {
 			wp_send_json_error(
 				array(
