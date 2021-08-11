@@ -542,7 +542,7 @@ class Install {
 		    KEY `expense_id` (`expense_id`)
             ) $collate",
 
-			"CREATE TABLE {$wpdb->prefix}ea_documents(
+			"CREATE TABLE {$wpdb->prefix}ea_invoices(
             `id` bigINT(20) NOT NULL AUTO_INCREMENT,
             `document_number` VARCHAR(100) NOT NULL,
             `type` VARCHAR(60) NOT NULL,
@@ -646,6 +646,7 @@ class Install {
 			`rate` double(15,8) NOT NULL,
 			`precision` varchar(2) DEFAULT NULL,
   			`symbol` varchar(5) DEFAULT NULL,
+  			`subunit` int(100) DEFAULT 100,
   			`position` ENUM ('before', 'after') DEFAULT 'before',
   			`decimal_separator` varchar(1) DEFAULT '.',
  			`thousand_separator` varchar(1) DEFAULT ',',
