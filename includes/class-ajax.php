@@ -847,8 +847,8 @@ class Ajax {
 		self::verify_nonce( 'ea_edit_vendor' );
 		self::check_permission( 'ea_manage_vendor' );
 		$posted = eaccounting_clean( wp_unslash( $_REQUEST ) );
-
-		$created = eaccounting_insert_vendor( $posted );
+		$posted['type'] = 'vendor';
+		$created = eaccounting_insert_contact( $posted );
 		if ( is_wp_error( $created ) || ! $created->exists() ) {
 			wp_send_json_error(
 				array(
