@@ -296,6 +296,7 @@ class Notices {
 	 */
 	public function tables_missing_notice() {
 		$missing_tables = get_option( 'eaccounting_schema_missing_tables' );
+		if( !empty( $missing_tables ) ){
 		?>
 		<div id="message" class="error ea-admin-notice">
 			<p>
@@ -314,6 +315,7 @@ class Notices {
 			</p>
 		</div>
 		<?php
+		}
 	}
 }
 
