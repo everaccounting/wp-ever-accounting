@@ -252,6 +252,13 @@ class Account_Query {
 			$query_where .= $wpdb->prepare( ' AND transactions >= (%f) AND transactions <= (%f) ', (float) $min, (float) $max );
 		}
 
+		// check status
+		if ( ! empty( $qv['status'] ) && ! in_array( $qv['status'], array( 'all', 'any' ), true ) ) {
+			$status       = eaccounting_string_to_bool( $qv['status'] );
+			$status       = eaccounting_bool_to_number( $status );
+			$query_where .= " AND $this->table.`enabled` = ('$status')";
+		}
+
 		// Search
 		$search         = '';
 		$search_columns = array( 'name', 'number', 'bank_name', 'bank_phone', 'bank_address' );
@@ -365,7 +372,7 @@ class Account_Query {
 		 */
 		$clauses = (array) apply_filters_ref_array( 'eaccounting_account_query_clauses', array( $this->sql_clauses, &$this ) );
 
-		$key          = md5( serialize( wp_array_slice_assoc( $this->query_vars, array_keys( $this->query_var_defaults ) ) ) . $this->request );
+		$key          = md5( serialize( wp_array_slice_assoc( $this->query_vars, array_keys( $this->query_var_defaults ) ) ) . $this->request ); //phpcs:ignore
 		$last_changed = wp_cache_get_last_changed( 'ea_accounts' );
 		$cache_key    = "ea_accounts:$key:$last_changed";
 		$cache        = wp_cache_get( $cache_key, 'ea_accounts' );

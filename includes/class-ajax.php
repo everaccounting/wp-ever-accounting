@@ -446,7 +446,7 @@ class Ajax {
 	public static function edit_revenue() {
 		self::verify_nonce( 'ea_edit_revenue' );
 		self::check_permission( 'ea_manage_revenue' );
-		$posted = eaccounting_clean( wp_unslash( $_REQUEST ) );
+		$posted         = eaccounting_clean( wp_unslash( $_REQUEST ) );
 		$posted['type'] = 'income';
 
 		$created = eaccounting_insert_transaction( $posted );
@@ -518,6 +518,7 @@ class Ajax {
 	public static function edit_customer() {
 		self::verify_nonce( 'ea_edit_customer' );
 		self::check_permission( 'ea_manage_customer' );
+		$posted         = eaccounting_clean( wp_unslash( $_REQUEST ) ); //phpcs:ignore
 		$posted['type'] = 'customer';
 		$created        = eaccounting_insert_contact( $posted );
 		if ( is_wp_error( $created ) || ! $created->exists() ) {

@@ -1,6 +1,7 @@
 <?php
 /**
  * Item Query class.
+ *
  * @since   1.2.1
  * @package   EverAccounting
  */
@@ -9,6 +10,7 @@ namespace EverAccounting;
 
 /**
  * Class Item_Query
+ *
  * @package EverAccounting
  */
 class Item_Query {
@@ -71,6 +73,7 @@ class Item_Query {
 
 	/**
 	 * Table name without prefix.
+	 *
 	 * @since 1.2.1
 	 * @var string
 	 */
@@ -90,7 +93,6 @@ class Item_Query {
 	 * Sets up the Item query, if parameter is not empty.
 	 *
 	 * @param string|array $query Query string or array of vars.
-	 *
 	 *
 	 * @since 1.2.1
 	 */
@@ -132,7 +134,6 @@ class Item_Query {
 	 *
 	 * @return mixed
 	 * @since 1.2.1
-	 *
 	 */
 	public function get( $query_var ) {
 		if ( isset( $this->query_vars[ $query_var ] ) ) {
@@ -149,7 +150,6 @@ class Item_Query {
 	 * @param mixed $value Query variable value.
 	 *
 	 * @since 1.2.1
-	 *
 	 */
 	public function set( $query_var, $value ) {
 		$this->query_vars[ $query_var ] = $value;
@@ -180,17 +180,14 @@ class Item_Query {
 		$qv['paged']         = absint( $qv['paged'] );
 		$qv['no_found_rows'] = (bool) $qv['no_found_rows'];
 
-
 		/**
 		 * Fires after the main query vars have been parsed.
 		 *
 		 * @param self $query The query instance (passed by reference).
 		 *
 		 * @since 1.2.1
-		 *
 		 */
 		do_action_ref_array( 'eaccounting_parse_item_query', array( &$this ) );
-
 
 		/**
 		 * Filters the query arguments.
@@ -198,7 +195,6 @@ class Item_Query {
 		 * @param array $args An array of arguments.
 		 *
 		 * @since 1.2.1
-		 *
 		 */
 		$qv = apply_filters( 'eaccounting_get_items_args', $qv );
 
@@ -238,31 +234,31 @@ class Item_Query {
 		}
 
 		if ( ! empty( $qv['sale_price_min'] ) ) {
-			$query_where .= $wpdb->prepare( " AND sale_price >= (%f)", (float) $qv['sale_price_min'] );
+			$query_where .= $wpdb->prepare( ' AND sale_price >= (%f)', (float) $qv['sale_price_min'] );
 		}
 
 		if ( ! empty( $qv['sale_price_max'] ) ) {
-			$query_where .= $wpdb->prepare( " AND sale_price <= (%f)", (float) $qv['sale_price_max'] );
+			$query_where .= $wpdb->prepare( ' AND sale_price <= (%f)', (float) $qv['sale_price_max'] );
 		}
 
 		if ( ! empty( $qv['sale_price_between'] ) && is_array( $qv['sale_price_between'] ) ) {
 			$min         = min( $qv['sale_price_between'] );
 			$max         = max( $qv['sale_price_between'] );
-			$query_where .= $wpdb->prepare( " AND sale_price >= (%f) AND sale_price <= (%f) ", (float) $min, (float) $max );
+			$query_where .= $wpdb->prepare( ' AND sale_price >= (%f) AND sale_price <= (%f) ', (float) $min, (float) $max );
 		}
 
 		if ( ! empty( $qv['purchase_price_min'] ) ) {
-			$query_where .= $wpdb->prepare( " AND purchase_price >= (%f)", (float) $qv['purchase_price_min'] );
+			$query_where .= $wpdb->prepare( ' AND purchase_price >= (%f)', (float) $qv['purchase_price_min'] );
 		}
 
 		if ( ! empty( $qv['purchase_price_max'] ) ) {
-			$query_where .= $wpdb->prepare( " AND purchase_price <= (%f)", (float) $qv['purchase_price_max'] );
+			$query_where .= $wpdb->prepare( ' AND purchase_price <= (%f)', (float) $qv['purchase_price_max'] );
 		}
 
 		if ( ! empty( $qv['purchase_price_between'] ) && is_array( $qv['purchase_price_between'] ) ) {
 			$min         = min( $qv['purchase_price_between'] );
 			$max         = max( $qv['purchase_price_between'] );
-			$query_where .= $wpdb->prepare( " AND purchase_price >= (%f) AND purchase_price <= (%f) ", (float) $min, (float) $max );
+			$query_where .= $wpdb->prepare( ' AND purchase_price >= (%f) AND purchase_price <= (%f) ', (float) $min, (float) $max );
 		}
 
 		if ( ! empty( $qv['category_id'] ) ) {
@@ -280,9 +276,16 @@ class Item_Query {
 			$query_where     .= " AND $this->table.`category_id` NOT IN ($category_not_in)";
 		}
 
+		// check status
+		if ( ! empty( $qv['status'] ) && ! in_array( $qv['status'], array( 'all', 'any' ), true ) ) {
+			$status      = eaccounting_string_to_bool( $qv['status'] );
+			$status      = eaccounting_bool_to_number( $status );
+			$query_where .= " AND $this->table.`enabled` = ('$status')";
+		}
+
 		// Search
 		$search         = '';
-		$search_columns = array( 'name', 'number', 'bank_name', 'bank_phone', 'bank_address' );
+		$search_columns = array( 'name', 'description', 'sale_price', 'purchase_price' );
 		if ( ! empty( $qv['search'] ) ) {
 			$search = trim( $qv['search'] );
 		}
@@ -290,8 +293,8 @@ class Item_Query {
 			$search_columns = array_intersect( $qv['search_columns'], $search_columns );
 		}
 		if ( ! empty( $search ) ) {
-			$leading_wild  = ( ltrim( $search, '*' ) != $search );
-			$trailing_wild = ( rtrim( $search, '*' ) != $search );
+			$leading_wild  = ( ltrim( $search, '*' ) != $search ); // phpcs:ignore
+			$trailing_wild = ( rtrim( $search, '*' ) != $search ); // phpcs:ignore
 			if ( $leading_wild && $trailing_wild ) {
 				$wild = 'both';
 			} elseif ( $leading_wild ) {
@@ -308,13 +311,11 @@ class Item_Query {
 			/**
 			 * Filters the columns to search in a Item_Query search.
 			 *
-			 *
 			 * @param string[] $search_columns Array of column names to be searched.
 			 * @param string $search Text being searched.
 			 * @param Item_Query $query The current Item_Query instance.
 			 *
 			 * @since 1.2.1
-			 *
 			 */
 			$search_columns = apply_filters( 'eaccounting_item_search_columns', $search_columns, $search, $this );
 
@@ -361,7 +362,6 @@ class Item_Query {
 
 		$query_orderby .= 'ORDER BY ' . implode( ', ', $orderby_array );
 
-
 		// Limit.
 		if ( isset( $qv['number'] ) && $qv['number'] > 0 ) {
 			if ( $qv['offset'] ) {
@@ -393,7 +393,6 @@ class Item_Query {
 		 * @param Item_Query $query The Item_Query instance (passed by reference).
 		 *
 		 * @since 1.2.1
-		 *
 		 */
 		$clauses = (array) apply_filters_ref_array( 'eaccounting_item_query_clauses', array( $this->sql_clauses, &$this ) );
 
@@ -419,7 +418,6 @@ class Item_Query {
 		 * @param Item_Query $query The Item_Query instance (passed by reference).
 		 *
 		 * @since 1.2.1
-		 *
 		 */
 		$this->results = apply_filters_ref_array( 'eaccounting_pre_item_query', array( null, &$this ) );
 
@@ -442,7 +440,6 @@ class Item_Query {
 				 * @global \wpdb $wpdb WordPress database abstraction object.
 				 *
 				 * @since 1.2.1
-				 *
 				 */
 				$count_query = apply_filters( 'eaccounting_count_items_query', 'SELECT FOUND_ROWS()', $this );
 				$this->total = (int) $wpdb->get_var( $count_query );
@@ -455,7 +452,6 @@ class Item_Query {
 			 * @param Item_Query $query The Item_Query instance (passed by reference).
 			 *
 			 * @since 1.2.1
-			 *
 			 */
 			$this->results = apply_filters_ref_array( 'eaccounting_items_results', array( $this->results, &$this ) );
 
@@ -470,10 +466,9 @@ class Item_Query {
 			}
 		}
 
-		$cache          = new \StdClass;
+		$cache          = new \StdClass();
 		$cache->results = $this->results;
 		$cache->total   = $this->total;
-
 
 		wp_cache_add( $cache_key, $cache, 'ea_items' );
 
@@ -491,7 +486,6 @@ class Item_Query {
 	 * @since 1.2.1
 	 *
 	 * @global \wpdb $wpdb WordPress database abstraction object.
-	 *
 	 */
 	protected function get_search_sql( $string, $cols, $wild = false ) {
 		global $wpdb;
@@ -521,17 +515,20 @@ class Item_Query {
 	 * @since 1.2.1
 	 *
 	 * @global \wpdb $wpdb WordPress database abstraction object.
-	 *
 	 */
 	protected function parse_orderby( $orderby ) {
 		global $wpdb;
 		$_orderby = '';
-		if ( in_array( $orderby, array(
-			'name',
-			'sku',
-			'sale_price',
-			'purchase_price',
-		), true ) ) {
+		if ( in_array(
+			$orderby,
+			array(
+				'name',
+				'sku',
+				'sale_price',
+				'purchase_price',
+			),
+			true
+		) ) {
 			$_orderby = $orderby;
 		} elseif ( 'id' === $orderby ) {
 			$_orderby = 'id';
@@ -559,7 +556,6 @@ class Item_Query {
 	 *
 	 * @return string The sanitized 'order' query variable.
 	 * @since 1.2.1
-	 *
 	 */
 	protected function parse_order( $order ) {
 		if ( ! is_string( $order ) || empty( $order ) ) {
@@ -578,7 +574,6 @@ class Item_Query {
 	 *
 	 * @return array Array of results.
 	 * @since 1.2.1
-	 *
 	 */
 	public function get_results() {
 		return $this->results;
@@ -589,7 +584,6 @@ class Item_Query {
 	 *
 	 * @return int Number of total items.
 	 * @since 1.2.1
-	 *
 	 */
 	public function get_total() {
 		return $this->total;

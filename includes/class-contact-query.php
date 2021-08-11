@@ -1,6 +1,7 @@
 <?php
 /**
  * Contact Query class.
+ *
  * @since   1.2.1
  * @package   EverAccounting
  */
@@ -9,6 +10,7 @@ namespace EverAccounting;
 
 /**
  * Class Contact_Query
+ *
  * @package EverAccounting
  */
 class Contact_Query {
@@ -71,6 +73,7 @@ class Contact_Query {
 
 	/**
 	 * Table name without prefix.
+	 *
 	 * @since 1.2.1
 	 * @var string
 	 */
@@ -90,7 +93,6 @@ class Contact_Query {
 	 * Sets up the Category query, if parameter is not empty.
 	 *
 	 * @param string|array $query Query string or array of vars.
-	 *
 	 *
 	 * @since 1.2.1
 	 */
@@ -123,7 +125,6 @@ class Contact_Query {
 	 *
 	 * @return mixed
 	 * @since 1.2.1
-	 *
 	 */
 	public function get( $query_var ) {
 		if ( isset( $this->query_vars[ $query_var ] ) ) {
@@ -137,10 +138,9 @@ class Contact_Query {
 	 * Set query variable.
 	 *
 	 * @param string $query_var Query variable key.
-	 * @param mixed $value Query variable value.
+	 * @param mixed  $value Query variable value.
 	 *
 	 * @since 1.2.1
-	 *
 	 */
 	public function set( $query_var, $value ) {
 		$this->query_vars[ $query_var ] = $value;
@@ -171,17 +171,14 @@ class Contact_Query {
 		$qv['paged']         = absint( $qv['paged'] );
 		$qv['no_found_rows'] = (bool) $qv['no_found_rows'];
 
-
 		/**
 		 * Fires after the main query vars have been parsed.
 		 *
 		 * @param self $query The query instance (passed by reference).
 		 *
 		 * @since 1.2.1
-		 *
 		 */
 		do_action_ref_array( 'eaccounting_parse_contact_query', array( &$this ) );
-
 
 		/**
 		 * Filters the query arguments.
@@ -189,7 +186,6 @@ class Contact_Query {
 		 * @param array $args An array of arguments.
 		 *
 		 * @since 1.2.1
-		 *
 		 */
 		$qv = apply_filters( 'eaccounting_get_contacts_args', $qv );
 
@@ -220,21 +216,27 @@ class Contact_Query {
 		$query_where = 'WHERE 1=1';
 		if ( ! empty( $qv['include'] ) ) {
 			// Sanitized earlier.
-			$ids         = implode( ',', wp_parse_id_list( $qv['include'] ) );
+			$ids          = implode( ',', wp_parse_id_list( $qv['include'] ) );
 			$query_where .= " AND $this->table.id IN ($ids)";
 		} elseif ( ! empty( $qv['exclude'] ) ) {
-			$ids         = implode( ',', wp_parse_id_list( $qv['exclude'] ) );
+			$ids          = implode( ',', wp_parse_id_list( $qv['exclude'] ) );
 			$query_where .= " AND $this->table.id NOT IN ($ids)";
 		}
-		if ( ! empty( $qv['type'] ) && $qv['type'] !== 'all' ) {
-			$types       = implode( "','", wp_parse_list( $qv['type'] ) );
+		if ( ! empty( $qv['type'] ) && 'all' !== $qv['type'] ) {
+			$types        = implode( "','", wp_parse_list( $qv['type'] ) );
 			$query_where .= " AND $this->table.`type` IN ('$types')";
 		}
 		if ( ! empty( $qv['country'] ) ) {
-			$country     = implode( "','", wp_parse_list( $qv['country'] ) );
+			$country      = implode( "','", wp_parse_list( $qv['country'] ) );
 			$query_where .= " AND $this->table.`country` IN ('$country')";
 		}
 
+		// check status
+		if ( ! empty( $qv['status'] ) && ! in_array( $qv['status'], array( 'all', 'any' ), true ) ) {
+			$status       = eaccounting_string_to_bool( $qv['status'] );
+			$status       = eaccounting_bool_to_number( $status );
+			$query_where .= " AND $this->table.`enabled` = ('$status')";
+		}
 
 		// Search
 		$search         = '';
@@ -264,13 +266,11 @@ class Contact_Query {
 			/**
 			 * Filters the columns to search in a Contact_Query search.
 			 *
-			 *
 			 * @param string[] $search_columns Array of column names to be searched.
 			 * @param string $search Text being searched.
 			 * @param Contact_Query $query The current Contact_Query instance.
 			 *
 			 * @since 1.2.1
-			 *
 			 */
 			$search_columns = apply_filters( 'eaccounting_contact_search_columns', $search_columns, $search, $this );
 
@@ -317,7 +317,6 @@ class Contact_Query {
 
 		$query_orderby .= 'ORDER BY ' . implode( ', ', $orderby_array );
 
-
 		// Limit.
 		if ( isset( $qv['number'] ) && $qv['number'] > 0 ) {
 			if ( $qv['offset'] ) {
@@ -349,7 +348,6 @@ class Contact_Query {
 		 * @param Contact_Query $query The Contact_Query instance (passed by reference).
 		 *
 		 * @since 1.2.1
-		 *
 		 */
 		$clauses = (array) apply_filters_ref_array( 'eaccounting_contact_query_clauses', array( $this->sql_clauses, &$this ) );
 
@@ -375,7 +373,6 @@ class Contact_Query {
 		 * @param Contact_Query $query The Contact_Query instance (passed by reference).
 		 *
 		 * @since 1.2.1
-		 *
 		 */
 		$this->results = apply_filters_ref_array( 'eaccounting_pre_contact_query', array( null, &$this ) );
 
@@ -398,7 +395,6 @@ class Contact_Query {
 				 * @global \wpdb $wpdb WordPress database abstraction object.
 				 *
 				 * @since 1.2.1
-				 *
 				 */
 				$count_query = apply_filters( 'eaccounting_count_contacts_query', 'SELECT FOUND_ROWS()', $this );
 				$this->total = (int) $wpdb->get_var( $count_query );
@@ -411,14 +407,13 @@ class Contact_Query {
 			 * @param Contact_Query $query The Contact_Query instance (passed by reference).
 			 *
 			 * @since 1.2.1
-			 *
 			 */
 			$this->results = apply_filters_ref_array( 'eaccounting_contacts_results', array( $this->results, &$this ) );
 
 			if ( 'all' === $qv['fields'] ) {
 				foreach ( $this->results as $key => $row ) {
 					wp_cache_add( $row->id, $row, 'ea_contacts' );
-					$contact = new Contact;
+					$contact = new Contact();
 					$contact->set_props( $row );
 					$contact->set_object_read( true );
 					$this->results[ $key ] = $contact;
@@ -426,10 +421,9 @@ class Contact_Query {
 			}
 		}
 
-		$cache          = new \StdClass;
+		$cache          = new \StdClass();
 		$cache->results = $this->results;
 		$cache->total   = $this->total;
-
 
 		wp_cache_add( $cache_key, $cache, 'ea_contacts' );
 
@@ -440,14 +434,13 @@ class Contact_Query {
 	 * Used internally to generate an SQL string for searching across multiple columns
 	 *
 	 * @param string $string
-	 * @param array $cols
-	 * @param bool $wild Whether to allow wildcard searches.
+	 * @param array  $cols
+	 * @param bool   $wild Whether to allow wildcard searches.
 	 *
 	 * @return string
 	 * @since 1.2.1
 	 *
 	 * @global \wpdb $wpdb WordPress database abstraction object.
-	 *
 	 */
 	protected function get_search_sql( $string, $cols, $wild = false ) {
 		global $wpdb;
@@ -477,7 +470,6 @@ class Contact_Query {
 	 * @since 1.2.1
 	 *
 	 * @global \wpdb $wpdb WordPress database abstraction object.
-	 *
 	 */
 	protected function parse_orderby( $orderby ) {
 		$_orderby = '';
@@ -499,7 +491,6 @@ class Contact_Query {
 	 *
 	 * @return string The sanitized 'order' query variable.
 	 * @since 1.2.1
-	 *
 	 */
 	protected function parse_order( $order ) {
 		if ( ! is_string( $order ) || empty( $order ) ) {
@@ -518,7 +509,6 @@ class Contact_Query {
 	 *
 	 * @return array Array of results.
 	 * @since 1.2.1
-	 *
 	 */
 	public function get_results() {
 		return $this->results;
@@ -529,7 +519,6 @@ class Contact_Query {
 	 *
 	 * @return int Number of total contacts.
 	 * @since 1.2.1
-	 *
 	 */
 	public function get_total() {
 		return $this->total;
