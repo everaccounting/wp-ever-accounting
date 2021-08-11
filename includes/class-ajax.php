@@ -492,9 +492,8 @@ class Ajax {
 				'search' => $search,
 				'type'   => 'customer',
 				'page'   => $page,
-				'status' => 'active',
-
-			),
+				'status' => 'active'
+			)
 		);
 
 		$customers = array_map(
