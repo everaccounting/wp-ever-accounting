@@ -12,8 +12,8 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Notices Class
- * @package EverAccounting\Admin
  *
+ * @package EverAccounting\Admin
  */
 class Notices {
 	/**
@@ -46,7 +46,8 @@ class Notices {
 
 	/**
 	 * Init function
-     * @since 1.0.2.
+	 *
+	 * @since 1.0.2.
 	 */
 	public static function init() {
 		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof \EverAccounting\Admin\Notices ) ) {
@@ -59,7 +60,8 @@ class Notices {
 
 	/**
 	 * Notices constructor.
-     * @since 1.0.2
+	 *
+	 * @since 1.0.2
 	 */
 	public function __construct() {
 		$this->notices = get_option( 'eaccounting_notices', array() );
@@ -73,11 +75,11 @@ class Notices {
 	/**
 	 * Add Notice.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @param string $message
 	 * @param string $type
 	 * @param array  $args
+	 *
+	 * @since 1.1.0
 	 */
 	public function add_notice( $message, $type = 'success', $args = array() ) {
 		$args                  = wp_parse_args(
@@ -102,10 +104,10 @@ class Notices {
 	/**
 	 * Add success message.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @param string $message
 	 * @param array  $args
+	 *
+	 * @since 1.1.0
 	 */
 	public function add_success( $message, $args = array() ) {
 		$this->add_notice( $message, 'success', $args );
@@ -114,10 +116,10 @@ class Notices {
 	/**
 	 * Add error message.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @param string $message
 	 * @param array  $args
+	 *
+	 * @since 1.1.0
 	 */
 	public function add_error( $message, $args = array() ) {
 		$this->add_notice( $message, 'error', $args );
@@ -126,10 +128,10 @@ class Notices {
 	/**
 	 * Add warning message.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @param string $message
 	 * @param array  $args
+	 *
+	 * @since 1.1.0
 	 */
 	public function add_warning( $message, $args = array() ) {
 		$this->add_notice( $message, 'warning', $args );
@@ -138,10 +140,10 @@ class Notices {
 	/**
 	 * Add info message.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @param string $message
 	 * @param array  $args
+	 *
+	 * @since 1.1.0
 	 */
 	public function add_info( $message, $args = array() ) {
 		$this->add_notice( $message, 'info', $args );
@@ -150,9 +152,9 @@ class Notices {
 	/**
 	 * Add core notice.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @param $id
+	 *
+	 * @since 1.1.0
 	 */
 	public function add_core_notice( $id ) {
 		if ( array_key_exists( $id, $this->core_notices ) ) {
@@ -188,9 +190,9 @@ class Notices {
 	/**
 	 * Remove notice.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @param $id
+	 *
+	 * @since 1.1.0
 	 */
 	public function remove_notice( $id ) {
 		if ( array_key_exists( $id, $this->notices ) ) {
@@ -233,8 +235,8 @@ class Notices {
 
 	/**
 	 * Output any stored custom notices.
-     *
-     * @since 1.1.0
+	 *
+	 * @since 1.1.0
 	 */
 	public function output_custom_notices() {
 		if ( ! empty( $this->notices ) ) {
@@ -269,8 +271,8 @@ class Notices {
 
 	/**
 	 * If we have just installed, show a message with the install pages button.
-     *
-     * @since 1.1.0
+	 *
+	 * @since 1.1.0
 	 */
 	public function install_notice() {
 		?>
@@ -291,28 +293,30 @@ class Notices {
 
 	/**
 	 * Notice about base tables missing.
-     *
-     * @since 1.1.0
+	 *
+	 * @since 1.1.0
 	 */
 	public function tables_missing_notice() {
 		$missing_tables = get_option( 'eaccounting_schema_missing_tables' );
-		?>
-		<div id="message" class="error ea-admin-notice">
-			<p>
-				<strong><?php esc_html_e( 'Database tables missing', 'wp-ever-accounting' ); ?></strong>
-			</p>
-			<p>
-				<?php
-				echo wp_kses_post(
-					sprintf(
-					/* translators: %1$s table names */
-						__( 'One or more tables required for Ever Accounting to function are missing, some features may not work as expected. Missing tables: %1$s.', 'wp-ever-accounting' ),
-						esc_html( implode( ', ', $missing_tables ) )
-					)
-				);
-				?>
-			</p>
-		</div>
+		if ( ! empty( $missing_tables ) ) {
+			?>
+			<div id="message" class="error ea-admin-notice">
+				<p>
+					<strong><?php esc_html_e( 'Database tables missing', 'wp-ever-accounting' ); ?></strong>
+				</p>
+				<p>
+					<?php
+					echo wp_kses_post(
+						sprintf(
+						/* translators: %1$s table names */
+							__( 'One or more tables required for Ever Accounting to function are missing, some features may not work as expected. Missing tables: %1$s.', 'wp-ever-accounting' ),
+							esc_html( implode( ', ', $missing_tables ) )
+						)
+					);
+					?>
+				</p>
+			</div>
+		<?php } ?>
 		<?php
 	}
 }
@@ -320,8 +324,8 @@ class Notices {
 /**
  * wrapper for admin notice.
  *
- * @since 1.1.0
  * @return \EverAccounting\Admin\Notices|null
+ * @since 1.1.0
  */
 function eaccounting_admin_notices() {
 	return \EverAccounting\Admin\Notices::init();
