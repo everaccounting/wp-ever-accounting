@@ -224,9 +224,15 @@ class Category_Query {
 			$query_where .= " AND $this->table.id NOT IN ($ids)";
 		}
 
-		if ( ! empty( $qv['type'] ) && $qv['type'] !== 'all' ) {
-			$types       = implode( "','", wp_parse_list( $qv['type'] ) );
+		if ( ! empty( $qv['type'] ) && 'all' !== $qv['type'] ) {
+			$types        = implode( "','", wp_parse_list( $qv['type'] ) );
 			$query_where .= " AND $this->table.`type` IN ('$types')";
+		}
+
+		if ( ! empty( $qv['status'] ) && ! in_array( $qv['status'], array( 'all', 'any' ), true ) ) {
+			$status       = eaccounting_string_to_bool( $qv['status'] );
+			$status       = eaccounting_bool_to_number( $status );
+			$query_where .= " AND $this->table.`enabled` = ('$status')";
 		}
 
 		// Search
