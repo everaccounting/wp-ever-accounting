@@ -14,13 +14,12 @@ defined( 'ABSPATH' ) || exit();
  * Return the html selected attribute if stringfied $value is found in array of stringified $options
  * or if stringified $value is the same as scalar stringified $options.
  *
- * @since 1.0.2
- *
  * @param string|int|array $options Options to go through when looking for value.
  *
- * @param string|int       $value   Value to find within options.
+ * @param string|int $value Value to find within options.
  *
  * @return string
+ * @since 1.0.2
  */
 function eaccounting_selected( $value, $options ) {
 	if ( is_array( $options ) ) {
@@ -35,13 +34,12 @@ function eaccounting_selected( $value, $options ) {
 /**
  * Display help tip.
  *
- * @since  1.0.2
+ * @param bool $allow_html Allow sanitized HTML if true or escape.
  *
- * @param bool   $allow_html Allow sanitized HTML if true or escape.
- *
- * @param string $tip        Help tip text.
+ * @param string $tip Help tip text.
  *
  * @return string
+ * @since  1.0.2
  */
 function eaccounting_help_tip( $tip, $allow_html = false ) {
 	if ( $allow_html ) {
@@ -56,10 +54,10 @@ function eaccounting_help_tip( $tip, $allow_html = false ) {
 /**
  * Output a hidden input box.
  *
- * @since 1.0.2
- *
  * @param array|string $field
- * @param mixed  ...$args    Optional further parameters.
+ * @param mixed ...$args Optional further parameters.
+ *
+ * @since 1.0.2
  */
 function eaccounting_hidden_input( $field, ...$args ) {
 	if ( is_string( $field ) ) {
@@ -78,9 +76,9 @@ function eaccounting_hidden_input( $field, ...$args ) {
 /**
  * Output a text input box.
  *
- * @since 1.0.2
- *
  * @param array $field
+ *
+ * @since 1.0.2
  */
 function eaccounting_text_input( $field = array() ) {
 	$field = (array) wp_parse_args(
@@ -111,7 +109,7 @@ function eaccounting_text_input( $field = array() ) {
 	$field['attr']['required'] = ( true == $field['required'] ) ? ' required ' : '';
 	$field['attr']['readonly'] = ( true == $field['readonly'] ) ? ' readonly ' : '';
 	$field['attr']['disabled'] = ( true == $field['disabled'] ) ? ' disabled ' : '';
-	$field['wrapper_class']   .= ( true == $field['required'] ) ? ' required ' : '';
+	$field['wrapper_class']    .= ( true == $field['required'] ) ? ' required ' : '';
 	$data_type                 = empty( $field['data_type'] ) ? '' : $field['data_type'];
 
 	switch ( $data_type ) {
@@ -130,7 +128,7 @@ function eaccounting_text_input( $field = array() ) {
 			break;
 		case 'url':
 			$field['class'] .= ' ea-input-url';
-			$field['value']  = esc_url( $field['value'] );
+			$field['value'] = esc_url( $field['value'] );
 			break;
 		default:
 			break;
@@ -180,9 +178,9 @@ function eaccounting_text_input( $field = array() ) {
 /**
  * Output a text input box.
  *
- * @since 1.0.2
- *
  * @param array $field
+ *
+ * @since 1.0.2
  */
 function eaccounting_textarea( $field ) {
 	$field                     = (array) wp_parse_args(
@@ -213,7 +211,7 @@ function eaccounting_textarea( $field ) {
 	$field['attr']['disabled'] = ( true == $field['disabled'] ) ? ' disabled ' : '';
 	$field['attr']['rows']     = $field['rows'];
 	$field['attr']['cols']     = $field['cols'];
-	$field['wrapper_class']   .= ( true == $field['required'] ) ? ' required ' : '';
+	$field['wrapper_class']    .= ( true == $field['required'] ) ? ' required ' : '';
 
 	// Custom attribute handling
 	$attributes = eaccounting_implode_html_attributes( $field['attr'] );
@@ -250,9 +248,9 @@ function eaccounting_textarea( $field ) {
 /**
  * Output a radio input box.
  *
- * @since 1.0.2
- *
  * @param array $field
+ *
+ * @since 1.0.2
  */
 function eaccounting_wp_radio( $field ) {
 	$field = (array) wp_parse_args(
@@ -315,9 +313,9 @@ function eaccounting_wp_radio( $field ) {
 /**
  * Output a checkbox input box.
  *
- * @since 1.0.2
- *
  * @param array $field
+ *
+ * @since 1.0.2
  */
 function eaccounting_checkbox( $field ) {
 	$field = (array) wp_parse_args(
@@ -374,9 +372,9 @@ function eaccounting_checkbox( $field ) {
 /**
  * Output a select input box.
  *
- * @since 1.0.2
- *
  * @param array $field Data about the field to render.
+ *
+ * @since 1.0.2
  */
 function eaccounting_select( $field ) {
 	$field = (array) wp_parse_args(
@@ -401,9 +399,9 @@ function eaccounting_select( $field ) {
 		)
 	);
 	static $instance = 1;
-	$field['id']                  = empty( $field['id'] ) ? $field['name'].'-'.$instance : $field['id'];
+	$field['id']                  = empty( $field['id'] ) ? $field['name'] . '-' . $instance : $field['id'];
 	$field['value']               = empty( $field['value'] ) ? $field['default'] : $field['value'];
-	$field['wrapper_class']      .= ( true == $field['required'] ) ? ' required ' : '';
+	$field['wrapper_class']       .= ( true == $field['required'] ) ? ' required ' : '';
 	$field['attr']['required']    = ( true == $field['required'] ) ? ' required ' : '';
 	$field['attr']['readonly']    = ( true == $field['readonly'] ) ? ' readonly ' : '';
 	$field['attr']['disabled']    = ( true == $field['disabled'] ) ? ' disabled ' : '';
@@ -448,6 +446,7 @@ function eaccounting_select( $field ) {
  * File input field.
  *
  * @param $field
+ *
  * @since 1.1.0
  */
 function eaccounting_file_input( $field ) {
@@ -488,23 +487,23 @@ function eaccounting_file_input( $field ) {
 		);
 	}
 	?>
-		<div class="ea-attachment <?php echo ! empty( $id ) ? 'has--image' : ''; ?>">
-			<div class="ea-attachment__preview">
-				<a class="ea-attachment__link" href="<?php echo esc_attr( $link ); ?>">
-					<img class="ea-attachment__image" src="<?php echo esc_attr( $src ); ?>" alt="<?php echo esc_attr( $name ); ?>">
-				</a>
-			</div>
-			<button type="button" class="button-link ea-attachment__remove"><?php _e( 'Remove', 'wp-ever-accounting' ); ?></button>
-			<button type="button" class="button-secondary ea-attachment__upload" data-allowed-types="<?php echo esc_js( $field['allowed-types'] ); ?>"><?php _e( 'Upload', 'wp-ever-accounting' ); ?></button>
-			<?php
-			echo sprintf(
-				'<input type="hidden" name="%s" class="ea-attachment__input" id="%s" value="%s"/>',
-				esc_attr( $field['name'] ),
-				esc_attr( $field['id'] ),
-				absint( $id )
-			);
-			?>
-		</div>
+    <div class="ea-attachment <?php echo ! empty( $id ) ? 'has--image' : ''; ?>">
+        <div class="ea-attachment__preview">
+            <a class="ea-attachment__link" href="<?php echo esc_attr( $link ); ?>">
+                <img class="ea-attachment__image" src="<?php echo esc_attr( $src ); ?>" alt="<?php echo esc_attr( $name ); ?>">
+            </a>
+        </div>
+        <button type="button" class="button-link ea-attachment__remove"><?php _e( 'Remove', 'wp-ever-accounting' ); ?></button>
+        <button type="button" class="button-secondary ea-attachment__upload" data-allowed-types="<?php echo esc_js( $field['allowed-types'] ); ?>"><?php _e( 'Upload', 'wp-ever-accounting' ); ?></button>
+		<?php
+		echo sprintf(
+			'<input type="hidden" name="%s" class="ea-attachment__input" id="%s" value="%s"/>',
+			esc_attr( $field['name'] ),
+			esc_attr( $field['id'] ),
+			absint( $id )
+		);
+		?>
+    </div>
 	<?php
 
 	if ( ! empty( $field['label'] ) ) {
@@ -516,9 +515,9 @@ function eaccounting_file_input( $field ) {
 /**
  * Output a toggle field
  *
- * @since 1.0.2
- *
  * @param array $field Data about the field to render.
+ *
+ * @since 1.0.2
  */
 
 function eaccounting_toggle( $field ) {
@@ -589,12 +588,12 @@ function eaccounting_toggle( $field ) {
 /**
  * Select field wrapper for ajax select 2 and new item creatable.
  *
- * @since 1.0.2
- *
  * @param array $field field properties.
+ *
+ * @since 1.0.2
  */
 function eaccounting_select2( $field ) {
-	$field           = (array) wp_parse_args(
+	$field          = (array) wp_parse_args(
 		$field,
 		array(
 			'class'        => '',
@@ -633,9 +632,9 @@ function eaccounting_select2( $field ) {
 /**
  * Get customer dropdown.
  *
- * @since 1.1.0
- *
  * @param $field
+ *
+ * @since 1.1.0
  */
 function eaccounting_customer_dropdown( $field ) {
 	$field    = wp_parse_args(
@@ -648,17 +647,17 @@ function eaccounting_customer_dropdown( $field ) {
 		)
 	);
 	$include  = ! empty( $field['value'] ) ? wp_parse_id_list( $field['value'] ) : array();
-	$contacts = eaccounting_get_customers(
+	$contacts = eaccounting_get_contacts(
 		array(
 			'include' => $include,
-			'fields'  => array( 'id', 'name' ),
-			'return'  => 'raw',
+			'type'    => 'customer',
 		)
 	);
 	$field    = wp_parse_args(
 		array(
 			'value'        => $include,
-			'options'      => wp_list_pluck( $contacts, 'name', 'id' ),
+			'options'      => eaccounting_list_pluck( $contacts, 'get_name', 'get_id' ),
+			'ajax'         => true,
 			'ajax_action'  => 'eaccounting_get_customers',
 			'nonce_action' => 'ea_get_customers',
 			'modal_id'     => '#ea-modal-add-customer',
@@ -671,9 +670,9 @@ function eaccounting_customer_dropdown( $field ) {
 /**
  * Get vendor dropdown.
  *
- * @since 1.1.0
- *
  * @param $field
+ *
+ * @since 1.1.0
  */
 function eaccounting_vendor_dropdown( $field ) {
 	$field    = wp_parse_args(
@@ -686,18 +685,17 @@ function eaccounting_vendor_dropdown( $field ) {
 		)
 	);
 	$include  = ! empty( $field['value'] ) ? wp_parse_id_list( $field['value'] ) : array();
-	$contacts = eaccounting_get_vendors(
+	$contacts = eaccounting_get_contacts(
 		array(
 			'include' => $include,
-			'fields'  => array( 'id', 'name' ),
-			'return'  => 'raw',
+			'type'    => 'vendor',
 		)
 	);
 
 	$field = wp_parse_args(
 		array(
 			'value'        => $include,
-			'options'      => wp_list_pluck( $contacts, 'name', 'id' ),
+			'options'      => eaccounting_list_pluck( $contacts, 'get_name', 'get_id' ),
 			'ajax_action'  => 'eaccounting_get_vendors',
 			'nonce_action' => 'ea_get_vendors',
 			'modal_id'     => '#ea-modal-add-vendor',
@@ -710,9 +708,9 @@ function eaccounting_vendor_dropdown( $field ) {
 /***
  * Dropdown field for selecting contacts.
  *
- * @since 1.0.2
- *
  * @param array $field
+ *
+ * @since 1.0.2
  */
 function eaccounting_contact_dropdown( $field ) {
 	$type       = ! empty( $field['type'] ) && array_key_exists( $field['type'], eaccounting_get_contact_types() ) ? eaccounting_clean( $field['type'] ) : false;
@@ -742,9 +740,9 @@ function eaccounting_contact_dropdown( $field ) {
 /***
  * Dropdown field for selecting account.
  *
- * @since 1.0.2
- *
  * @param array $field
+ *
+ * @since 1.0.2
  */
 function eaccounting_account_dropdown( $field ) {
 	$field   = wp_parse_args(
@@ -760,8 +758,6 @@ function eaccounting_account_dropdown( $field ) {
 	$result  = eaccounting_get_accounts(
 		array(
 			'include' => $include,
-			'fields'  => array( 'id', 'name', 'currency_code' ),
-			'return'  => 'raw',
 		)
 	);
 
@@ -775,7 +771,7 @@ function eaccounting_account_dropdown( $field ) {
 			'value'        => $include,
 			'options'      => $options,
 			'placeholder'  => __( 'Select Account', 'wp-ever-accounting' ),
-			'map'          => 'return {text: option.name + " (" + option.currency_code +")"  , id:option.id}',
+			'map'          => 'return {text: option.name + " (" + option.currency_code +")",id:option.id}',
 			'ajax_action'  => 'eaccounting_get_accounts',
 			'nonce_action' => 'ea_get_accounts',
 			'modal_id'     => '#ea-modal-add-account',
@@ -789,9 +785,9 @@ function eaccounting_account_dropdown( $field ) {
 /***
  * Dropdown field for selecting category.
  *
- * @since 1.0.2
- *
  * @param array $field
+ *
+ * @since 1.0.2
  */
 function eaccounting_category_dropdown( $field ) {
 	$field       = wp_parse_args(
@@ -808,14 +804,14 @@ function eaccounting_category_dropdown( $field ) {
 	$include     = ! empty( $field['value'] ) ? wp_parse_id_list( $field['value'] ) : false;
 	$ajax_action = ! empty( $field['ajax_action'] ) ? $field['ajax_action'] : 'eaccounting_get_income_categories';
 	$modal_id    = ! empty( $field['modal_id'] ) ? '#' . $field['modal_id'] : '#ea-modal-add-income-category';
-	$categories = eaccounting_get_categories(
+	$categories  = eaccounting_get_categories(
 		array(
 			'include' => $include,
 			'type'    => $type,
 		)
 	);
 
-	$field      = wp_parse_args(
+	$field = wp_parse_args(
 		array(
 			'value'        => $include,
 			'options'      => eaccounting_list_pluck( $categories, 'get_name', 'get_id' ),
@@ -823,7 +819,7 @@ function eaccounting_category_dropdown( $field ) {
 			'placeholder'  => __( 'Select Category', 'wp-ever-accounting' ),
 			'nonce_action' => 'ea_categories',
 			'ajax_action'  => $ajax_action, // Specify for the use case
-			'modal_id'     => $modal_id, //Specify for the use case
+			'modal_id'     => $modal_id, // Specify for the use case
 		),
 		$field
 	);
@@ -834,11 +830,10 @@ function eaccounting_category_dropdown( $field ) {
 /**
  * Dropdown field for selecting currency.
  *
- * @since 1.0.2
- *
  * @param array $field
  *
  * @return void
+ * @since 1.0.2
  */
 function eaccounting_currency_dropdown( $field ) {
 	$field         = wp_parse_args(
@@ -856,7 +851,7 @@ function eaccounting_currency_dropdown( $field ) {
 	$results       = eaccounting_get_currencies(
 		array(
 			'return' => 'raw',
-			'number' => -1,
+			'number' => - 1,
 		)
 	);
 	$options       = array();
@@ -885,22 +880,21 @@ function eaccounting_currency_dropdown( $field ) {
 /**
  * Dropdown field for selecting currency.
  *
- * @since 1.0.2
- *
  * @param array $field
  *
  * @return void
+ * @since 1.0.2
  */
 function eaccounting_item_dropdown( $field ) {
 	$field = wp_parse_args(
 		$field,
 		array(
-			'value'       => '',
-			'creatable'   => true,
+			'value'     => '',
+			'creatable' => true,
 		)
 	);
 
-	$items   = ! empty( $field['value'] ) ? wp_parse_id_list( $field['value'] ) : array();
+	$items = ! empty( $field['value'] ) ? wp_parse_id_list( $field['value'] ) : array();
 
 	$options = array();
 	if ( ! empty( $items ) ) {
@@ -914,8 +908,8 @@ function eaccounting_item_dropdown( $field ) {
 	$field = wp_parse_args(
 		$field,
 		array(
-			'value' => $items,
-			'options' => wp_list_pluck( $options, 'name', 'id' ),
+			'value'        => $items,
+			'options'      => wp_list_pluck( $options, 'name', 'id' ),
 			'placeholder'  => __( 'Select Item', 'wp-ever-accounting' ),
 			'modal_id'     => '#ea-modal-add-item',
 			'ajax'         => true,
@@ -931,11 +925,10 @@ function eaccounting_item_dropdown( $field ) {
 /**
  * Dropdown field for selecting payment method.
  *
- * @since 1.0.2
- *
  * @param array $field
  *
  * @return void
+ * @since 1.0.2
  */
 function eaccounting_payment_method_dropdown( $field ) {
 	$default = '';
@@ -958,11 +951,10 @@ function eaccounting_payment_method_dropdown( $field ) {
 /**
  * Dropdown field for selecting country.
  *
- * @since 1.0.2
- *
  * @param array $field
  *
  * @return void
+ * @since 1.0.2
  */
 function eaccounting_country_dropdown( $field ) {
 	$default = eaccounting()->settings->get( 'company_country' );
@@ -981,9 +973,9 @@ function eaccounting_country_dropdown( $field ) {
 /**
  * echo date range field.
  *
- * @since 1.0.2
- *
  * @param $field
+ *
+ * @since 1.0.2
  */
 function eaccounting_input_date_range( $field ) {
 	$field       = (array) wp_parse_args(

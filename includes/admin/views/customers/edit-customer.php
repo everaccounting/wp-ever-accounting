@@ -14,41 +14,41 @@
 defined( 'ABSPATH' ) || exit();
 
 try {
-	$customer = new \EverAccounting\Customer( $customer_id );
+	$customer = new \EverAccounting\Contact( $customer_id );
 } catch ( Exception $e ) {
-	wp_redirect( admin_url( 'admin.php?page=ea-sales&tab=customers' ) );
+	wp_safe_redirect( admin_url( 'admin.php?page=ea-sales&tab=customers' ) );
 }
 $title = $customer->exists() ? __( 'Update Customer', 'wp-ever-accounting' ) : __( 'Add Customer', 'wp-ever-accounting' );
 ?>
 <div class="ea-title-section">
-	<div>
-		<h1 class="wp-heading-inline"><?php esc_html_e( 'Customers', 'wp-ever-accounting' ); ?></h1>
+    <div>
+        <h1 class="wp-heading-inline"><?php esc_html_e( 'Customers', 'wp-ever-accounting' ); ?></h1>
 		<?php if ( $customer->exists() ) : ?>
-			<a href="<?php echo esc_url( add_query_arg( array( 'tab' => 'customers', 'page' => 'ea-sales', 'action' => 'add' ), admin_url( 'admin.php' ) ) );//phpcs:ignore ?>" class="page-title-action">
+            <a href="<?php echo esc_url( add_query_arg( array( 'tab' => 'customers', 'page' => 'ea-sales', 'action' => 'add' ), admin_url( 'admin.php' ) ) );//phpcs:ignore ?>" class="page-title-action">
 				<?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?>
-			</a>
+            </a>
 		<?php else : ?>
-			<a href="<?php echo remove_query_arg( array( 'action', 'id' ) ); ?>" class="page-title-action"><?php esc_html_e( 'View All', 'wp-ever-accounting' ); ?></a>
+            <a href="<?php echo remove_query_arg( array( 'action', 'id' ) ); ?>" class="page-title-action"><?php esc_html_e( 'View All', 'wp-ever-accounting' ); ?></a>
 		<?php endif; ?>
-	</div>
+    </div>
 </div>
 <hr class="wp-header-end">
 
 <form id="ea-customer-form" method="post" enctype="multipart/form-data">
-	<div class="ea-card">
-		<div class="ea-card__header">
-			<h3 class="ea-card__title"><?php echo esc_html( $title ); ?></h3>
+    <div class="ea-card">
+        <div class="ea-card__header">
+            <h3 class="ea-card__title"><?php echo esc_html( $title ); ?></h3>
 			<?php if ( $customer->exists() ) : ?>
-			<div>
-				<a href="<?php echo esc_url( add_query_arg( 'action', 'view' ) ); ?>" class="button-secondary">
-					<?php esc_html_e( 'View Customer', 'wp-ever-accounting' ); ?>
-				</a>
-			</div>
-			<?php endif;?>
-		</div>
-		<div class="ea-card__body">
-			<div class="ea-card__inside">
-				<div class="ea-row">
+                <div>
+                    <a href="<?php echo esc_url( add_query_arg( 'action', 'view' ) ); ?>" class="button-secondary">
+						<?php esc_html_e( 'View Customer', 'wp-ever-accounting' ); ?>
+                    </a>
+                </div>
+			<?php endif; ?>
+        </div>
+        <div class="ea-card__body">
+            <div class="ea-card__inside">
+                <div class="ea-row">
 					<?php
 					eaccounting_text_input(
 						array(
@@ -194,13 +194,13 @@ $title = $customer->exists() ? __( 'Update Customer', 'wp-ever-accounting' ) : _
 						)
 					);
 					?>
-				</div>
-			</div>
-		</div>
-		<div class="ea-card__footer">
+                </div>
+            </div>
+        </div>
+        <div class="ea-card__footer">
 			<?php wp_nonce_field( 'ea_edit_customer' ); ?>
 			<?php submit_button( __( 'Submit', 'wp-ever-accounting' ), 'primary', 'submit' ); ?>
-		</div>
+        </div>
 
-	</div>
+    </div>
 </form>

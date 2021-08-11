@@ -10,6 +10,7 @@
 namespace EverAccounting;
 
 use EverAccounting\Abstracts\MetaData;
+use EverAccounting\Traits\CurrencyTrait;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -37,6 +38,7 @@ defined( 'ABSPATH' ) || exit;
  * @property string $date_created
  */
 class Transaction extends MetaData {
+	use CurrencyTrait;
 	/**
 	 * Item Data array.
 	 *
