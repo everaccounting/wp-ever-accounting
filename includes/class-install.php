@@ -86,6 +86,7 @@ class Install {
 		$row_meta = array(
 			'docs' => '<a href="' . esc_url( apply_filters( 'eaccounting_docs_url', 'https://wpeveraccounting.com/docs/' ) ) . '" aria-label="' . esc_attr__( 'View documentation', 'wp-ever-accounting' ) . '">' . esc_html__( 'Docs', 'wp-ever-accounting' ) . '</a>',
 		);
+
 		return array_merge( $links, $row_meta );
 	}
 
@@ -146,10 +147,10 @@ class Install {
 		set_transient( 'eaccounting_installing', 'yes', MINUTE_IN_SECONDS * 1 );
 		eaccounting_maybe_define_constant( 'EACCOUNTING_INSTALLING', true );
 		require_once dirname( __FILE__ ) . '/admin/class-notices.php';
-		require_once dirname( __FILE__ ) . '/class-settings.php';
+		require_once dirname( __FILE__ ) . '/admin/class-settings.php';
 
 		if ( ! eaccounting()->settings ) {
-			eaccounting()->settings = new \EverAccounting\Settings();
+			eaccounting()->settings = new \EverAccounting\Admin\Settings();
 		}
 
 		self::remove_admin_notices();
@@ -542,7 +543,7 @@ class Install {
 		    KEY `expense_id` (`expense_id`)
             ) $collate",
 
-			"CREATE TABLE {$wpdb->prefix}ea_documents(
+			"CREATE TABLE {$wpdb->prefix}ea_invoices(
             `id` bigINT(20) NOT NULL AUTO_INCREMENT,
             `document_number` VARCHAR(100) NOT NULL,
             `type` VARCHAR(60) NOT NULL,
@@ -645,6 +646,7 @@ class Install {
 			`code` varchar(3) NOT NULL,
 			`rate` double(15,8) NOT NULL,
 			`precision` varchar(2) DEFAULT NULL,
+			`subunit` int(11) DEFAULT 100,
   			`symbol` varchar(5) DEFAULT NULL,
   			`position` ENUM ('before', 'after') DEFAULT 'before',
   			`decimal_separator` varchar(1) DEFAULT '.',
