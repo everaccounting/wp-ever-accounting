@@ -1,7 +1,6 @@
 <?php
 /**
  * Invoice Query class.
- *
  * @since   1.2.1
  * @package   EverAccounting
  */
@@ -10,7 +9,6 @@ namespace EverAccounting;
 
 /**
  * Class Invoice_Query
- *
  * @package EverAccounting
  */
 class Invoice_Query {
@@ -73,7 +71,6 @@ class Invoice_Query {
 
 	/**
 	 * Table name without prefix.
-	 *
 	 * @since 1.2.1
 	 * @var string
 	 */
@@ -93,6 +90,7 @@ class Invoice_Query {
 	 * Sets up the Category query, if parameter is not empty.
 	 *
 	 * @param string|array $query Query string or array of vars.
+	 *
 	 *
 	 * @since 1.2.1
 	 */
@@ -125,6 +123,7 @@ class Invoice_Query {
 	 *
 	 * @return mixed
 	 * @since 1.2.1
+	 *
 	 */
 	public function get( $query_var ) {
 		if ( isset( $this->query_vars[ $query_var ] ) ) {
@@ -138,9 +137,10 @@ class Invoice_Query {
 	 * Set query variable.
 	 *
 	 * @param string $query_var Query variable key.
-	 * @param mixed  $value Query variable value.
+	 * @param mixed $value Query variable value.
 	 *
 	 * @since 1.2.1
+	 *
 	 */
 	public function set( $query_var, $value ) {
 		$this->query_vars[ $query_var ] = $value;
@@ -171,14 +171,17 @@ class Invoice_Query {
 		$qv['paged']         = absint( $qv['paged'] );
 		$qv['no_found_rows'] = (bool) $qv['no_found_rows'];
 
+
 		/**
 		 * Fires after the main query vars have been parsed.
 		 *
 		 * @param self $query The query instance (passed by reference).
 		 *
 		 * @since 1.2.1
+		 *
 		 */
 		do_action_ref_array( 'eaccounting_parse_invoice_query', array( &$this ) );
+
 
 		/**
 		 * Filters the query arguments.
@@ -186,6 +189,7 @@ class Invoice_Query {
 		 * @param array $args An array of arguments.
 		 *
 		 * @since 1.2.1
+		 *
 		 */
 		$qv = apply_filters( 'eaccounting_get_invoices_args', $qv );
 
@@ -217,85 +221,85 @@ class Invoice_Query {
 		$query_where = 'WHERE 1=1';
 		if ( ! empty( $qv['include'] ) ) {
 			// Sanitized earlier.
-			$ids          = implode( ',', wp_parse_id_list( $qv['include'] ) );
+			$ids         = implode( ',', wp_parse_id_list( $qv['include'] ) );
 			$query_where .= " AND $this->table.id IN ($ids)";
 		} elseif ( ! empty( $qv['exclude'] ) ) {
-			$ids          = implode( ',', wp_parse_id_list( $qv['exclude'] ) );
+			$ids         = implode( ',', wp_parse_id_list( $qv['exclude'] ) );
 			$query_where .= " AND $this->table.id NOT IN ($ids)";
 		}
 
 		if ( ! empty( $qv['type'] ) && $qv['type'] !== 'all' ) {
-			$types        = implode( "','", wp_parse_list( $qv['type'] ) );
+			$types       = implode( "','", wp_parse_list( $qv['type'] ) );
 			$query_where .= " AND $this->table.`type` IN ('$types')";
 		}
 
 		if ( ! empty( $qv['currency_code'] ) ) {
 			$currency_code = implode( "','", wp_parse_list( $qv['currency_code'] ) );
-			$query_where  .= " AND $this->table.`currency_code` IN ('$currency_code')";
+			$query_where   .= " AND $this->table.`currency_code` IN ('$currency_code')";
 		}
 
 		if ( ! empty( $qv['payment_method'] ) ) {
 			$payment_method = implode( "','", wp_parse_list( $qv['payment_method'] ) );
-			$query_where   .= " AND $this->table.`payment_method` IN ('$payment_method')";
+			$query_where    .= " AND $this->table.`payment_method` IN ('$payment_method')";
 		}
 
 		if ( ! empty( $qv['account_id'] ) ) {
-			$account_id   = implode( ',', wp_parse_id_list( $qv['account_id'] ) );
+			$account_id  = implode( ',', wp_parse_id_list( $qv['account_id'] ) );
 			$query_where .= " AND $this->table.`account_id` IN ($account_id)";
 		}
 
 		if ( ! empty( $qv['account__in'] ) ) {
-			$account_in   = implode( ',', wp_parse_id_list( $qv['account__in'] ) );
+			$account_in  = implode( ',', wp_parse_id_list( $qv['account__in'] ) );
 			$query_where .= " AND $this->table.`account_id` IN ($account_in)";
 		}
 
 		if ( ! empty( $qv['account__not_in'] ) ) {
 			$account_not_in = implode( ',', wp_parse_id_list( $qv['account__not_in'] ) );
-			$query_where   .= " AND $this->table.`account_id` NOT IN ($account_not_in)";
+			$query_where    .= " AND $this->table.`account_id` NOT IN ($account_not_in)";
 		}
 
 		if ( ! empty( $qv['document_id'] ) ) {
-			$document_id  = implode( ',', wp_parse_id_list( $qv['document_id'] ) );
+			$document_id = implode( ',', wp_parse_id_list( $qv['document_id'] ) );
 			$query_where .= " AND $this->table.`document_id` IN ($document_id)";
 		}
 
 		if ( ! empty( $qv['category_id'] ) ) {
-			$category_in  = implode( ',', wp_parse_id_list( $qv['category_id'] ) );
+			$category_in = implode( ',', wp_parse_id_list( $qv['category_id'] ) );
 			$query_where .= " AND $this->table.`category_id` IN ($category_in)";
 		}
 
 		if ( ! empty( $qv['category__in'] ) ) {
-			$category_in  = implode( ',', wp_parse_id_list( $qv['category__in'] ) );
+			$category_in = implode( ',', wp_parse_id_list( $qv['category__in'] ) );
 			$query_where .= " AND $this->table.`contact_id` IN ($category_in)";
 		}
 
 		if ( ! empty( $qv['category__not_in'] ) ) {
 			$category_not_in = implode( ',', wp_parse_id_list( $qv['category__not_in'] ) );
-			$query_where    .= " AND $this->table.`contact_id` NOT IN ($category_not_in)";
+			$query_where     .= " AND $this->table.`contact_id` NOT IN ($category_not_in)";
 		}
 
 		if ( ! empty( $qv['contact_id'] ) ) {
-			$contact_id   = implode( ',', wp_parse_id_list( $qv['contact_id'] ) );
+			$contact_id  = implode( ',', wp_parse_id_list( $qv['contact_id'] ) );
 			$query_where .= " AND $this->table.`contact_id` IN ($contact_id)";
 		}
 
 		if ( ! empty( $qv['parent_id'] ) ) {
-			$parent_id    = implode( ',', wp_parse_id_list( $qv['parent_id'] ) );
+			$parent_id   = implode( ',', wp_parse_id_list( $qv['parent_id'] ) );
 			$query_where .= " AND $this->table.`parent_id` IN ($parent_id)";
 		}
 
 		if ( ! empty( $qv['amount_min'] ) ) {
-			$query_where .= $wpdb->prepare( ' AND default_amount >= (%f)', (float) $qv['amount_min'] );
+			$query_where .= $wpdb->prepare( " AND default_amount >= (%f)", (float) $qv['amount_min'] );
 		}
 
 		if ( ! empty( $qv['amount_max'] ) ) {
-			$query_where .= $wpdb->prepare( ' AND default_amount <= (%f)', (float) $qv['amount_max'] );
+			$query_where .= $wpdb->prepare( " AND default_amount <= (%f)", (float) $qv['amount_max'] );
 		}
 
 		if ( ! empty( $qv['amount_between'] ) && is_array( $qv['amount_between'] ) ) {
-			$min          = min( $qv['amount_between'] );
-			$max          = max( $qv['amount_between'] );
-			$query_where .= $wpdb->prepare( ' AND default_amount >= (%f) AND default_amount <= (%f) ', (float) $min, (float) $max );
+			$min         = min( $qv['amount_between'] );
+			$max         = max( $qv['amount_between'] );
+			$query_where .= $wpdb->prepare( " AND default_amount >= (%f) AND default_amount <= (%f) ", (float) $min, (float) $max );
 		}
 
 		// Search
@@ -326,11 +330,13 @@ class Invoice_Query {
 			/**
 			 * Filters the columns to search in a Invoice_Query search.
 			 *
+			 *
 			 * @param string[] $search_columns Array of column names to be searched.
 			 * @param string $search Text being searched.
 			 * @param Invoice_Query $query The current Invoice_Query instance.
 			 *
 			 * @since 1.2.1
+			 *
 			 */
 			$search_columns = apply_filters( 'eaccounting_invoice_search_columns', $search_columns, $search, $this );
 
@@ -377,6 +383,7 @@ class Invoice_Query {
 
 		$query_orderby .= 'ORDER BY ' . implode( ', ', $orderby_array );
 
+
 		// Limit.
 		if ( isset( $qv['number'] ) && $qv['number'] > 0 ) {
 			if ( $qv['offset'] ) {
@@ -408,6 +415,7 @@ class Invoice_Query {
 		 * @param Invoice_Query $query The Invoice_Query instance (passed by reference).
 		 *
 		 * @since 1.2.1
+		 *
 		 */
 		$clauses = (array) apply_filters_ref_array( 'eaccounting_invoice_query_clauses', array( $this->sql_clauses, &$this ) );
 
@@ -433,6 +441,7 @@ class Invoice_Query {
 		 * @param Invoice_Query $query The Invoice_Query instance (passed by reference).
 		 *
 		 * @since 1.2.1
+		 *
 		 */
 		$this->results = apply_filters_ref_array( 'eaccounting_pre_invoice_query', array( null, &$this ) );
 
@@ -455,6 +464,7 @@ class Invoice_Query {
 				 * @global \wpdb $wpdb WordPress database abstraction object.
 				 *
 				 * @since 1.2.1
+				 *
 				 */
 				$count_query = apply_filters( 'eaccounting_count_invoices_query', 'SELECT FOUND_ROWS()', $this );
 				$this->total = (int) $wpdb->get_var( $count_query );
@@ -467,6 +477,7 @@ class Invoice_Query {
 			 * @param Invoice_Query $query The Invoice_Query instance (passed by reference).
 			 *
 			 * @since 1.2.1
+			 *
 			 */
 			$this->results = apply_filters_ref_array( 'eaccounting_invoices_results', array( $this->results, &$this ) );
 
@@ -481,9 +492,10 @@ class Invoice_Query {
 			}
 		}
 
-		$cache          = new \StdClass();
+		$cache          = new \StdClass;
 		$cache->results = $this->results;
 		$cache->total   = $this->total;
+
 
 		wp_cache_add( $cache_key, $cache, 'ea_invoices' );
 
@@ -494,13 +506,14 @@ class Invoice_Query {
 	 * Used internally to generate an SQL string for searching across multiple columns
 	 *
 	 * @param string $string
-	 * @param array  $cols
-	 * @param bool   $wild Whether to allow wildcard searches.
+	 * @param array $cols
+	 * @param bool $wild Whether to allow wildcard searches.
 	 *
 	 * @return string
 	 * @since 1.2.1
 	 *
 	 * @global \wpdb $wpdb WordPress database abstraction object.
+	 *
 	 */
 	protected function get_search_sql( $string, $cols, $wild = false ) {
 		global $wpdb;
@@ -530,25 +543,22 @@ class Invoice_Query {
 	 * @since 1.2.1
 	 *
 	 * @global \wpdb $wpdb WordPress database abstraction object.
+	 *
 	 */
 	protected function parse_orderby( $orderby ) {
 		global $wpdb;
 		$_orderby = '';
-		if ( in_array(
-			$orderby,
-			array(
-				'type',
-				'payment_date',
-				'currency_code',
-				'currency_rate',
-				'description',
-				'payment_method',
-				'reference',
-				'reconciled',
-				'date_created',
-			),
-			true
-		) ) {
+		if ( in_array( $orderby, array(
+			'type',
+			'payment_date',
+			'currency_code',
+			'currency_rate',
+			'description',
+			'payment_method',
+			'reference',
+			'reconciled',
+			'date_created'
+		), true ) ) {
 			$_orderby = $orderby;
 		} elseif ( $orderby === 'amount' ) {
 			$_orderby = 'default_amount';
@@ -558,21 +568,21 @@ class Invoice_Query {
 				FROM {$wpdb->prefix}ea_accounts
 			) accounts ON ({$this->table}.account_id = accounts.id)
 			";
-			$_orderby                   = 'account_name';
+			$_orderby                  = 'account_name';
 		} elseif ( 'category_id' === $orderby || 'category' === $orderby ) {
 			$this->sql_clauses['join'] .= " LEFT OUTER JOIN (
 				SELECT id, name as category_name
 				FROM {$wpdb->prefix}ea_categories
 			) categories ON ({$this->table}.category_id = ea_categories.id)
 			";
-			$_orderby                   = 'category_name';
+			$_orderby                  = 'category_name';
 		} elseif ( 'contact_id' === $orderby || 'contact' === $orderby ) {
 			$this->sql_clauses['join'] .= " LEFT OUTER JOIN (
 				SELECT id, name as contact_name
 				FROM {$wpdb->prefix}ea_contacts
 			) contacts ON ({$this->table}.contact_id = ea_contacts.id)
 			";
-			$_orderby                   = 'contact_name';
+			$_orderby                  = 'contact_name';
 		} elseif ( 'include' === $orderby && ! empty( $this->query_vars['include'] ) ) {
 			$include     = wp_parse_id_list( $this->query_vars['include'] );
 			$include_sql = implode( ',', $include );
@@ -589,6 +599,7 @@ class Invoice_Query {
 	 *
 	 * @return string The sanitized 'order' query variable.
 	 * @since 1.2.1
+	 *
 	 */
 	protected function parse_order( $order ) {
 		if ( ! is_string( $order ) || empty( $order ) ) {
@@ -607,6 +618,7 @@ class Invoice_Query {
 	 *
 	 * @return array Array of results.
 	 * @since 1.2.1
+	 *
 	 */
 	public function get_results() {
 		return $this->results;
@@ -617,6 +629,7 @@ class Invoice_Query {
 	 *
 	 * @return int Number of total invoices.
 	 * @since 1.2.1
+	 *
 	 */
 	public function get_total() {
 		return $this->total;
