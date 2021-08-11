@@ -5,7 +5,7 @@
 
 namespace EverAccounting\Traits;
 
-use EverAccounting\Currency;
+use EverAccounting\Models\Currency;
 
 defined( 'ABSPATH' ) || exit;
 

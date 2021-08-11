@@ -10,9 +10,6 @@ namespace EverAccounting;
 
 defined( 'ABSPATH' ) || exit();
 
-/**
- * Main plugin Install class
- */
 class Install {
 	/**
 	 * Updates and callbacks that need to be run per version.
@@ -45,6 +42,7 @@ class Install {
 	 *
 	 * @return void
 	 * @since 1.0.2
+	 *
 	 */
 	public static function check_version() {
 		// todo remove on later version.
@@ -148,10 +146,10 @@ class Install {
 		set_transient( 'eaccounting_installing', 'yes', MINUTE_IN_SECONDS * 1 );
 		eaccounting_maybe_define_constant( 'EACCOUNTING_INSTALLING', true );
 		require_once dirname( __FILE__ ) . '/admin/class-notices.php';
-		require_once dirname( __FILE__ ) . '/admin/class-settings.php';
+		require_once dirname( __FILE__ ) . '/class-settings.php';
 
 		if ( ! eaccounting()->settings ) {
-			eaccounting()->settings = new \EverAccounting\Admin\Settings();
+			eaccounting()->settings = new \EverAccounting\Settings();
 		}
 
 		self::remove_admin_notices();
@@ -185,7 +183,7 @@ class Install {
 		$tables         = self::get_tables();
 		$notices        = \EverAccounting\Admin\Notices::init();
 		foreach ( $tables as $table ) {
-			if ( ! $wpdb->get_var( "SHOW TABLES LIKE '$table'" ) ) { //phpcs:ignore
+			if ( ! $wpdb->get_var( "SHOW TABLES LIKE '$table'" ) ) {
 				$missing_tables[] = $table;
 			}
 		}
@@ -544,7 +542,7 @@ class Install {
 		    KEY `expense_id` (`expense_id`)
             ) $collate",
 
-			"CREATE TABLE {$wpdb->prefix}ea_invoices(
+			"CREATE TABLE {$wpdb->prefix}ea_documents(
             `id` bigINT(20) NOT NULL AUTO_INCREMENT,
             `document_number` VARCHAR(100) NOT NULL,
             `type` VARCHAR(60) NOT NULL,
@@ -648,7 +646,6 @@ class Install {
 			`rate` double(15,8) NOT NULL,
 			`precision` varchar(2) DEFAULT NULL,
   			`symbol` varchar(5) DEFAULT NULL,
-  			`subunit` int(11) DEFAULT 100,
   			`position` ENUM ('before', 'after') DEFAULT 'before',
   			`decimal_separator` varchar(1) DEFAULT '.',
  			`thousand_separator` varchar(1) DEFAULT ',',
@@ -705,7 +702,7 @@ class Install {
 		$tables = self::get_tables();
 
 		foreach ( $tables as $table ) {
-			$wpdb->query( "DROP TABLE IF EXISTS {$table}" ); //phpcs:ignore
+			$wpdb->query( "DROP TABLE IF EXISTS {$table}" );
 		}
 	}
 
@@ -903,6 +900,7 @@ class Install {
 	 * @param string $callback Callback name.
 	 *
 	 * @since 1.0.2
+	 *
 	 */
 	public static function run_update_callback( $callback ) {
 		include_once EACCOUNTING_ABSPATH . '/includes/ea-update-functions.php';
@@ -918,6 +916,7 @@ class Install {
 	 * @param string|null $version New version or null.
 	 *
 	 * @since 1.1.0
+	 *
 	 */
 	public static function update_version( $version = null ) {
 		update_option( 'eaccounting_version', is_null( $version ) ? eaccounting()->version : $version );
@@ -939,7 +938,6 @@ class Install {
 
 	/**
 	 * Handle background updates.
-	 *
 	 * @since 1.1.0
 	 */
 	public static function background_updater() {
