@@ -473,20 +473,23 @@ class Ajax {
 	 */
 	public static function get_customers() {
 		self::verify_nonce( 'ea_get_customers' );
-		$search = isset( $_REQUEST['search'] ) ? eaccounting_clean( $_REQUEST['search'] ) : '';
-		$page   = isset( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1;
+		$search = filter_input( INPUT_POST,'search', FILTER_DEFAULT);
+		$search = isset( $search ) ? eaccounting_clean( $search ) : '';
+		$page = filter_input( INPUT_POST,'page', FILTER_DEFAULT);
+		$page   = isset( $page ) ? absint( $page ) : 1;
 
-
-		wp_send_json_success(
-			eaccounting_get_customers(
-				array(
-					'search' => $search,
-					'page'   => $page,
-					'return' => 'raw',
-					'status' => 'active',
-				)
+		$customers = eaccounting_get_contacts(
+			array(
+				'search' => $search,
+				'type' => 'customer',
+				'page' => $page,
+				'status' => 'active',
 			)
 		);
+		$customers = array_map( function ( $customers ){
+			return $customers->to_array();
+		}, $customers );
+		wp_send_json_success( $customers );
 	}
 
 
