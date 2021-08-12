@@ -905,20 +905,22 @@ class Ajax {
 	 */
 	public static function get_accounts() {
 		self::verify_nonce( 'ea_get_accounts' );
-		$search = isset( $_REQUEST['search'] ) ? eaccounting_clean( $_REQUEST['search'] ) : '';
-		$page   = isset( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1;
+		$search = filter_input( INPUT_POST,'search', FILTER_DEFAULT );
+		$search = isset( $search ) ? eaccounting_clean( $search ) : '';
+		$page = filter_input( INPUT_POST, 'page', FILTER_VALIDATE_INT );
+		$page   = isset( $page ) ? absint( $page ) : 1;
 
-
-		wp_send_json_success(
-			eaccounting_get_accounts(
-				array(
-					'search' => $search,
-					'page'   => $page,
-					'return' => 'raw',
-					'status' => 'active',
-				)
+		$accounts = eaccounting_get_accounts(
+			array(
+				'search' => $search,
+				'page' => $page,
+				'status' => 'active',
 			)
 		);
+		$accounts = array_map( function ($accounts){
+			return $accounts->to_array();
+		}, $accounts );
+		wp_send_json_success( $accounts );
 	}
 
 	/**
