@@ -282,7 +282,7 @@ class Item_Query {
 
 		// Search
 		$search         = '';
-		$search_columns = array( 'name', 'number', 'bank_name', 'bank_phone', 'bank_address' );
+		$search_columns = array( 'name', 'description' );
 		if ( ! empty( $qv['search'] ) ) {
 			$search = trim( $qv['search'] );
 		}
@@ -396,7 +396,6 @@ class Item_Query {
 		 *
 		 */
 		$clauses = (array) apply_filters_ref_array( 'eaccounting_item_query_clauses', array( $this->sql_clauses, &$this ) );
-
 		$key          = md5( serialize( wp_array_slice_assoc( $this->query_vars, array_keys( $this->query_var_defaults ) ) ) . $this->request );
 		$last_changed = wp_cache_get_last_changed( 'ea_items' );
 		$cache_key    = "ea_items:$key:$last_changed";
