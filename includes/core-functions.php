@@ -359,12 +359,12 @@ function eaccounting_maybe_define_constant( $name, $value ) {
  *
  * @param mixed $items
  *
- * @return \EverAccounting\Collection
+ * @return \EverAccounting\Core\Collection
  * @since 1.0.2
  *
  */
 function eaccounting_collect( $items ) {
-	return new \EverAccounting\Collection( $items );
+	return new \EverAccounting\Core\Collection( $items );
 }
 
 

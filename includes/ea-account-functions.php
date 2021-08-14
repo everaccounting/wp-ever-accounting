@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  * Retrieves account data given an account id or account object.
  *
  * @param int|object|Account $account account to retrieve
- * @param string             $output The required return type. One of OBJECT, ARRAY_A, or ARRAY_N. Default OBJECT.
+ * @param string $output The required return type. One of OBJECT, ARRAY_A, or ARRAY_N. Default OBJECT.
  *
  * @return Account|array|null
  * @since 1.1.0
@@ -129,4 +129,32 @@ function eaccounting_get_accounts( $args = array() ) {
 	}
 
 	return $query->get_results();
+}
+
+
+/**
+ * Get currency of the account.
+ *
+ * @param int| Account $account Account object.
+ *
+ * @return \EverAccounting\Currency
+ */
+function eaccounting_get_account_currency( $account ) {
+	if ( empty( $account ) ) {
+		return null;
+	}
+
+	if ( $account instanceof Account ) {
+		$_account = $account;
+	} else {
+		$_account = new Account( $account );
+	}
+
+	if ( ! $_account ) {
+		$_account         = new Account();
+		$default_currency = eaccounting_get_default_currency();
+		$_account->set_currency_code( $default_currency );
+	}
+
+	return new \EverAccounting\Currency( $_account->get_currency_code() );
 }
