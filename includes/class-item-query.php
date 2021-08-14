@@ -280,6 +280,12 @@ class Item_Query {
 			$query_where     .= " AND $this->table.`category_id` NOT IN ($category_not_in)";
 		}
 
+		if ( ! empty( $qv['status'] ) && ! in_array( $qv['status'], array( 'all', 'any' ), true ) ) {
+			$status = eaccounting_string_to_bool( $qv['status'] );
+			$status = eaccounting_bool_to_number( $status );
+			$query_where .= " AND $this->table.`enabled` = ('$status')";
+		}
+
 		// Search
 		$search         = '';
 		$search_columns = array( 'name', 'number', 'bank_name', 'bank_phone', 'bank_address' );

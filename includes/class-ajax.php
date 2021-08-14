@@ -1072,19 +1072,23 @@ class Ajax {
 	 */
 	public static function get_items() {
 		self::verify_nonce( 'ea_get_items' );
-		self::check_permission( 'manage_eaccounting' );
+		self::check_permission( 'ea_manage_item' );
 
-		$search = isset( $_REQUEST['search'] ) ? eaccounting_clean( $_REQUEST['search'] ) : '';
-
-		wp_send_json_success(
-			eaccounting_get_items(
-				array(
-					'search' => $search,
-					'return' => 'raw',
-					'status' => 'active',
-				)
+		$search = filter_input( INPUT_POST, 'search', FILTER_DEFAULT );
+		$search = isset( $search ) ? eaccounting_clean( $search ) : '';
+		$page = filter_input( INPUT_POST,'page', FILTER_VALIDATE_INT );
+		$page = isset( $page ) ? absint( $page ) : 1;
+		$items = eaccounting_get_items(
+			array(
+				'search' => $search,
+				'page' => $page,
+				'status' => 'active',
 			)
 		);
+		$items = array_map( function ( $items ){
+			return $items->to_array();
+		}, $items );
+		wp_send_json_success( $items );
 	}
 
 	/**
