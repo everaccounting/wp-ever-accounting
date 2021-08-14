@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 1.2.1
  *
- * @property string $document_number
+ * @property string $invoice
  * @property string $type
  * @property string $order_number
  * @property string $status
@@ -60,7 +60,7 @@ class Invoice extends Data {
 	 * @var array
 	 */
 	public $data = array(
-		'document_number' => '',
+		'invoice' => '',
 		'type'            => '',
 		'order_number'    => '',
 		'status'          => 'draft',
@@ -110,7 +110,7 @@ class Invoice extends Data {
 	 */
 	protected $data_type = array(
 		'id'              => '%d',
-		'document_number' => '%s',
+		'invoice' => '%s',
 		'type'            => '%s',
 		'order_number'    => '%s',
 		'status'          => '%s',
@@ -606,8 +606,8 @@ class Invoice extends Data {
 	 * @since  1.1.0
 	 *
 	 */
-	public function get_document_number() {
-		return $this->get_prop( 'document_number' );
+	public function get_invoice_number() {
+		return $this->get_prop( 'invoice' );
 	}
 
 	/**
@@ -1081,13 +1081,13 @@ class Invoice extends Data {
 	/**
 	 * set the number.
 	 *
-	 * @param string $document_number .
+	 * @param string $invoice .
 	 *
 	 * @since  1.1.0
 	 *
 	 */
-	public function set_document_number( $document_number ) {
-		$this->set_prop( 'document_number', eaccounting_clean( $document_number ) );
+	public function set_invoice_number( $invoice ) {
+		$this->set_prop( 'invoice', eaccounting_clean( $invoice ) );
 	}
 
 	/**

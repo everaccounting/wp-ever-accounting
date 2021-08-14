@@ -164,9 +164,8 @@ if( $revenue->exists() && 'income' !== $revenue->type ) {
 		</div>
 	</form>
 <?php
-$account = eaccounting_get_account( $revenue->account_id );
-$currency = $account ? eaccounting_get_currency( $account->currency_code ) : null;
-if( $account && $currency ) {
+$currency = eaccounting_get_account_currency( $revenue->account_id );
+if( $currency ) {
 	eaccounting_enqueue_js(
 		"
 	jQuery('#ea-revenue-form #amount').inputmask('decimal', {
