@@ -760,8 +760,6 @@ function eaccounting_account_dropdown( $field ) {
 	$result  = eaccounting_get_accounts(
 		array(
 			'include' => $include,
-			'fields'  => array( 'id', 'name', 'currency_code' ),
-			'return'  => 'raw',
 		)
 	);
 
