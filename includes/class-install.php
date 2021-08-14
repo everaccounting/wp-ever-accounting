@@ -146,10 +146,10 @@ class Install {
 		set_transient( 'eaccounting_installing', 'yes', MINUTE_IN_SECONDS * 1 );
 		eaccounting_maybe_define_constant( 'EACCOUNTING_INSTALLING', true );
 		require_once dirname( __FILE__ ) . '/admin/class-notices.php';
-		require_once dirname( __FILE__ ) . '/class-settings.php';
+		require_once dirname( __FILE__ ) . '/core/class-settings.php';
 
 		if ( ! eaccounting()->settings ) {
-			eaccounting()->settings = new \EverAccounting\Settings();
+			eaccounting()->settings = new \EverAccounting\Core\Settings();
 		}
 
 		self::remove_admin_notices();
