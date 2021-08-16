@@ -602,12 +602,12 @@ class Account extends Data {
 	/**
 	 * Set object status.
 	 *
-	 * @param int $enabled Account enabled or not
+	 * @param boolean $enabled Account enabled or not
 	 *
 	 * @since 1.0.2
 	 */
 	public function set_enabled( $enabled ) {
-		$this->set_prop( 'enabled', (int) $enabled );
+		$this->set_prop( 'enabled', eaccounting_bool_to_number( $enabled ) );
 	}
 
 	/**
