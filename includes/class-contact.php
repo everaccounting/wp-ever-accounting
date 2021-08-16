@@ -934,12 +934,12 @@ class Contact extends MetaData {
 	/**
 	 * Set object status.
 	 *
-	 * @param int $enabled Contact enabled
+	 * @param boolean $enabled Contact enabled
 	 *
 	 * @since 1.0.2
 	 */
 	public function set_enabled( $enabled ) {
-		$this->set_prop( 'enabled', (int) $enabled );
+		$this->set_prop( 'enabled', eaccounting_bool_to_number( $enabled ) );
 	}
 
 
