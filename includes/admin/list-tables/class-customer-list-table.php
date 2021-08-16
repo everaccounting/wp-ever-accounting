@@ -417,19 +417,21 @@ class EverAccounting_Customer_List_Table extends EverAccounting_List_Table {
 
 		$this->items = eaccounting_get_contacts( $args );
 
-		$this->active_count   = eaccounting_get_customers(
+		$this->active_count   = eaccounting_get_contacts(
 			array_merge(
 				$args,
 				array(
+				     'type' => 'customer',
 					'status'      => 'active',
 					'count_total' => true,
 				)
 			)
 		);
-		$this->inactive_count = eaccounting_get_customers(
+		$this->inactive_count = eaccounting_get_contacts(
 			array_merge(
 				$args,
 				array(
+					'type' => 'customer',
 					'status'      => 'inactive',
 					'count_total' => true,
 				)
