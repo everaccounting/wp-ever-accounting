@@ -692,7 +692,7 @@ function eaccounting_vendor_dropdown( $field ) {
 	$contacts = eaccounting_get_contacts(
 		array(
 			'include' => $include,
-            'type'   => $type
+            'type'    => $type
 		)
 	);
 
