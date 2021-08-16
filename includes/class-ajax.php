@@ -437,8 +437,9 @@ class Ajax {
 		self::verify_nonce( 'ea_edit_revenue' );
 		self::check_permission( 'ea_manage_revenue' );
 		$posted = eaccounting_clean( wp_unslash( $_REQUEST ) );
+		$posted['type'] = 'income';
 
-		$created = eaccounting_insert_revenue( $posted );
+		$created = eaccounting_insert_transaction( $posted );
 		if ( is_wp_error( $created ) || ! $created->exists() ) {
 			wp_send_json_error(
 				array(
