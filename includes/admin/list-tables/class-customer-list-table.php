@@ -312,7 +312,7 @@ class EverAccounting_Customer_List_Table extends EverAccounting_List_Table {
 		foreach ( $ids as $id ) {
 			switch ( $action ) {
 				case 'enable':
-					eaccounting_insert_customer(
+					eaccounting_insert_contact(
 						array(
 							'id'      => $id,
 							'enabled' => '1',
@@ -320,7 +320,7 @@ class EverAccounting_Customer_List_Table extends EverAccounting_List_Table {
 					);
 					break;
 				case 'disable':
-					eaccounting_insert_customer(
+					eaccounting_insert_contact(
 						array(
 							'id'      => $id,
 							'enabled' => '0',
@@ -328,7 +328,7 @@ class EverAccounting_Customer_List_Table extends EverAccounting_List_Table {
 					);
 					break;
 				case 'delete':
-					eaccounting_delete_customer( $id );
+					eaccounting_delete_contact( $id );
 					break;
 				default:
 					do_action( 'eaccounting_customers_do_bulk_action_' . $this->current_action(), $id );
