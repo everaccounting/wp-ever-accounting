@@ -396,18 +396,24 @@ class EverAccounting_Item_List_Table extends EverAccounting_List_Table {
 		$this->items = eaccounting_get_items( $args );
 
 		$this->active_count = eaccounting_get_items(
+		        array_merge(
+		            $args,
 			        array(
 				        'status' => 'active',
 				        'count_total' => true,
 			        )
+		        )
 
 		);
 
 		$this->inactive_count = eaccounting_get_items(
+			array_merge(
+				$args,
 				array(
 					'status'      => 'inactive',
 					'count_total' => true,
 				)
+			)
 		);
 
 		$this->total_count = $this->active_count + $this->inactive_count;
