@@ -9,7 +9,7 @@
  * @package     EverAccounting
  */
 
-use EverAccounting\Payment;
+use EverAccounting\Transaction;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -152,7 +152,7 @@ class EverAccounting_Payment_List_Table extends EverAccounting_List_Table {
 	/**
 	 * Renders the checkbox column in the revenues list table.
 	 *
-	 * @param Payment $payment The current object.
+	 * @param Transaction $payment The current object.
 	 *
 	 * @return string Displays a checkbox.
 	 * @since  1.0.2
@@ -167,7 +167,7 @@ class EverAccounting_Payment_List_Table extends EverAccounting_List_Table {
 	 *
 	 * @param string $column_name The name of the column
 	 *
-	 * @param Payment $payment
+	 * @param Transaction $payment
 	 *
 	 * @return string The column value.
 	 * @since 1.0.2
@@ -196,19 +196,19 @@ class EverAccounting_Payment_List_Table extends EverAccounting_List_Table {
 				$value = eaccounting_format_price( $payment->get_amount(), $payment->get_currency_code() );
 				break;
 			case 'account_id':
-				$account = eaccounting_get_account( $payment->get_account_id( 'edit' ) );
+				$account = eaccounting_get_account( $payment->get_account_id() );
 				$value   = $account ? sprintf( '<a href="%1$s">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page'       => 'ea-banking',
 																												 'tab'        => 'accounts',
 																												 'action'     => 'view',
-																												 'account_id' => $payment->get_account_id( 'edit' )
+																												 'account_id' => $payment->get_account_id()
 				) ) ), $account->get_name() ) : '&mdash;';// phpcs:ignore
 				break;
 			case 'category_id':
-				$category = eaccounting_get_category( $payment->get_category_id( 'edit' ) );
+				$category = eaccounting_get_category( $payment->get_category_id() );
 				$value    = $category ? $category->get_name() : '&mdash;';
 				break;
 			case 'contact_id':
-				$contact = eaccounting_get_vendor( $payment->get_contact_id( 'edit' ) );
+				$contact = eaccounting_get_vendor( $payment->get_contact_id() );
 				$value   = $contact ? sprintf( '<a href="%1$s">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page'      => 'ea-expenses',
 																												 'tab'       => 'vendors',
 																												 'action'    => 'view',
@@ -342,7 +342,7 @@ class EverAccounting_Payment_List_Table extends EverAccounting_List_Table {
 				case 'export_csv':
 					break;
 				case 'delete':
-					eaccounting_delete_payment( $id );
+					eaccounting_delete_transaction( $id );
 					break;
 				default:
 					do_action( 'eaccounting_payments_do_bulk_action_' . $this->current_action(), $id );
