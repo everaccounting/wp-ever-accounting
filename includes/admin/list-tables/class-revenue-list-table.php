@@ -9,7 +9,7 @@
  * @package     EverAccounting
  */
 
-use EverAccounting\Revenue;
+use EverAccounting\Transaction;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -150,7 +150,7 @@ class EverAccounting_Revenue_List_Table extends EverAccounting_List_Table {
 	/**
 	 * Renders the checkbox column in the revenues list table.
 	 *
-	 * @param Revenue $revenue The current object.
+	 * @param Transaction $revenue The current object.
 	 *
 	 * @return string Displays a checkbox.
 	 * @since  1.0.2
@@ -189,16 +189,16 @@ class EverAccounting_Revenue_List_Table extends EverAccounting_List_Table {
 				$value = eaccounting_format_price( $revenue->get_amount(), $revenue->get_currency_code() );
 				break;
 			case 'account_id':
-				$account = eaccounting_get_account( $revenue->get_account_id( 'edit' ) );
-				$value   = $account ? sprintf( '<a href="%1$s">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'accounts', 'action' => 'view', 'account_id' => $revenue->get_account_id( 'edit' ), ) ) ), $account->get_name() ) : '&mdash;';// phpcs:ignore
+				$account = eaccounting_get_account( $revenue->get_account_id() );
+				$value   = $account ? sprintf( '<a href="%1$s">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'accounts', 'action' => 'view', 'account_id' => $revenue->get_account_id(), ) ) ), $account->get_name() ) : '&mdash;';// phpcs:ignore
 				break;
 			case 'category_id':
-				$category = eaccounting_get_category( $revenue->get_category_id( 'edit' ) );
+				$category = eaccounting_get_category( $revenue->get_category_id() );
 				$value    = $category ? $category->get_name() : '&mdash;';
 				break;
 			case 'contact_id':
-				$contact = eaccounting_get_customer( $revenue->get_contact_id( 'edit' ) );
-				$value   = $contact ? sprintf( '<a href="%1$s">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'customers', 'action' => 'view', 'customer_id' => $revenue->get_contact_id( 'edit' ), ) ) ), $contact->get_name() ) : '&mdash;';// phpcs:ignore
+				$contact = eaccounting_get_contact( $revenue->get_contact_id() );
+				$value   = $contact ? sprintf( '<a href="%1$s">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'customers', 'action' => 'view', 'customer_id' => $revenue->get_contact_id(), ) ) ), $contact->get_name() ) : '&mdash;';// phpcs:ignore
 				break;
 			default:
 				return parent::column_default( $revenue, $column_name );
@@ -263,7 +263,7 @@ class EverAccounting_Revenue_List_Table extends EverAccounting_List_Table {
 
 				)
 			);
-			eaccounting_contact_dropdown(
+			eaccounting_customer_dropdown(
 				array(
 					'name'        => 'customer_id',
 					'value'       => $customer_id,
@@ -271,6 +271,7 @@ class EverAccounting_Revenue_List_Table extends EverAccounting_List_Table {
 					'placeholder' => __( 'Select Customer', 'wp-ever-accounting' ),
 					'type'        => 'customer',
 					'clearable'   => false,
+					'creatable'   => false,
 				)
 			);
 
@@ -392,6 +393,7 @@ class EverAccounting_Revenue_List_Table extends EverAccounting_List_Table {
 				'category_id' => $category_id,
 				'account_id'  => $account_id,
 				'contact_id'  => $customer_id,
+                'type'        => 'income',
 			)
 		);
 
@@ -403,9 +405,9 @@ class EverAccounting_Revenue_List_Table extends EverAccounting_List_Table {
 		}
 
 		$args        = apply_filters( 'eaccounting_revenue_table_query_args', $args, $this );
-		$this->items = eaccounting_get_revenues( $args );
+		$this->items = eaccounting_get_transactions( $args );
 
-		$this->total_count = eaccounting_get_revenues( array_merge( $args, array( 'count_total' => true ) ) );
+		$this->total_count = eaccounting_get_transactions( array_merge( $args, array( 'count_total' => true ) ) );
 
 		$this->set_pagination_args(
 			array(
