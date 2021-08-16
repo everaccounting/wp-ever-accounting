@@ -109,6 +109,7 @@ class Category_Query {
 			'paged'          => 1,
 			'no_found_rows'  => false,
 			'fields'         => 'all',
+			'status'         => 'all',
 		);
 
 		if ( ! is_null( $query ) ) {
@@ -229,6 +230,12 @@ class Category_Query {
 			$query_where .= " AND $this->table.`type` IN ('$types')";
 		}
 
+		if ( ! empty( $qv['status'] ) && ! in_array( $qv['status'], array( 'all', 'any' ), true ) ) {
+			$status = eaccounting_string_to_bool( $qv['status'] );
+			$status = eaccounting_bool_to_number( $status );
+			$query_where .= " AND $this->table.`enabled` = ('$status')";
+		}
+		
 		// Search
 		$search         = '';
 		$search_columns = array( 'name' );
