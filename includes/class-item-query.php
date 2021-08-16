@@ -116,6 +116,7 @@ class Item_Query {
 			'paged'                  => 1,
 			'no_found_rows'          => false,
 			'fields'                 => 'all',
+			'status'                 => 'all',
 		);
 
 		if ( ! is_null( $query ) ) {
