@@ -11,7 +11,7 @@
  * @package     EverAccounting
  */
 
-use EverAccounting\Models\Account;
+use EverAccounting\Account;
 
 defined( 'ABSPATH' ) || exit();
 

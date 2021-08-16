@@ -72,7 +72,7 @@ function eaccounting_reports_profit_loss_tab() {
 				);
 
 		$categories = wp_list_pluck( $transactions, 'name', 'category_id' );
-		$date       = new \EverAccounting\DateTime( $start );
+		$date       = new \EverAccounting\Core\DateTime( $start );
 		// Dates
 		for ( $j = 1; $j <= 12; $j ++ ) {
 			$dates[ $j ]                     = $date->format( 'F' );

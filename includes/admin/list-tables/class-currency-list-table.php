@@ -7,7 +7,7 @@
  * @package     EverAccounting
  */
 
-use EverAccounting\Models\Currency;
+use EverAccounting\Currency;
 
 defined( 'ABSPATH' ) || exit();
 

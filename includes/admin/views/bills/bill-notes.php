@@ -7,7 +7,7 @@
  * @var Bill $bill The item being used
  */
 
-use EverAccounting\Models\Bill;
+use EverAccounting\Bill;
 
 defined( 'ABSPATH' ) || exit();
 

@@ -334,7 +334,7 @@ class EverAccounting_Transaction_List_Table extends EverAccounting_List_Table {
 		}
 
 		$args                = apply_filters( 'eaccounting_transaction_table_query_args', $args, $this );
-		$this->items         = eaccounting_get_transactions( $args );
+		$this->items         = eaccounting_get_transactions( array_merge( $args, ['type' => 'income, expense']) );
 		$this->income_count  = eaccounting_get_transactions( array_merge( $args, array( 'type' => 'income', 'count_total' => true ) ) );
 		$this->expense_count = eaccounting_get_transactions( array_merge( $args, array( 'type' => 'expense', 'count_total' => true ) ) );
 		$this->total_count   = $this->income_count + $this->expense_count;

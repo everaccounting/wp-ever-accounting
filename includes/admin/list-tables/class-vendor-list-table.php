@@ -7,7 +7,7 @@
  * @package     EverAccounting
  */
 
-use EverAccounting\Models\Vendor;
+use EverAccounting\Vendor;
 
 defined( 'ABSPATH' ) || exit();
 

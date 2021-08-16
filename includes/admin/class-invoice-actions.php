@@ -12,7 +12,7 @@
 
 namespace EverAccounting\Admin;
 
-use EverAccounting\Models\Invoice;
+use EverAccounting\Invoice;
 
 defined( 'ABSPATH' ) || exit();
 

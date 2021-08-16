@@ -193,7 +193,7 @@ class Currencies extends Resource_Repository {
 	 * Get raw currencies.
 	 *
 	 * @since 1.1.0
-	 * @return \EverAccounting\Collection
+	 * @return \EverAccounting\Core\Collection
 	 */
 	public function get_currencies() {
 		$currencies = wp_cache_get( 'ea_currencies', 'ea_currencies' );
@@ -209,7 +209,7 @@ class Currencies extends Resource_Repository {
 	 * Get all the codes.
 	 *
 	 * @since 1.1.0
-	 * @return \EverAccounting\Collection
+	 * @return \EverAccounting\Core\Collection
 	 */
 	public function get_codes() {
 		return eaccounting_collect( array_values( eaccounting_get_currency_codes() ) );

@@ -2,7 +2,7 @@
 /**
  * Invoice items.
  *
- * @var $invoice \EverAccounting\Models\Invoice
+ * @var $invoice \EverAccounting\Invoice
  * @var $mode    string
  * @package EverAccounting\Admin
  */
@@ -46,7 +46,7 @@ $quantity_label = eaccounting()->settings->get( 'invoice_quantity_label', __( 'Q
 			<script type="text/template" id="ea-invoice-line-template">
 				<?php
 				$item_id = 9999;
-				$item    = new \EverAccounting\Models\Document_Item();
+				$item    = new \EverAccounting\Document_Item();
 				include __DIR__ . '/invoice-item.php';
 				?>
 			</script>

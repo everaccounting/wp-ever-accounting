@@ -220,6 +220,19 @@ class Account extends Resource_Model {
 		return $this->get_prop( 'thumbnail_id', $context );
 	}
 
+	/**
+	 * Get object created date.
+	 *
+	 * @since 1.0.2
+	 *
+	 * @param string $context
+	 *
+	 * @return string
+	 */
+	public function get_date_created( $context = 'edit' ) {
+		return $this->get_prop( 'date_created', $context );
+	}
+
 	/*
 	|--------------------------------------------------------------------------
 	| Setters

@@ -10,7 +10,7 @@
 defined( 'ABSPATH' ) || exit();
 $currency_code = isset( $_REQUEST['currency_code'] ) ? eaccounting_clean( $_REQUEST['currency_code'] ) : null;
 try {
-	$currency = new \EverAccounting\Models\Currency( $currency_code );
+	$currency = new \EverAccounting\Currency( $currency_code );
 } catch ( Exception $e ) {
 	wp_die( $e->getMessage() );
 }

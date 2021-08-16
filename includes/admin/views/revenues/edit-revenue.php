@@ -8,13 +8,14 @@
  * @subpackage  Admin/Views/Revenues
  * @package     EverAccounting
  */
+
 defined( 'ABSPATH' ) || exit();
 
 $revenue_id = isset( $_REQUEST['revenue_id'] ) ? absint( $_REQUEST['revenue_id'] ) : null;
-try {
-	$revenue = new \EverAccounting\Models\Revenue( $revenue_id );
-} catch ( Exception $e ) {
-	wp_die( $e->getMessage() );
+$revenue = new \EverAccounting\Transaction( $revenue_id );
+
+if( $revenue->exists() && 'income' !== $revenue->type ) {
+    wp_safe_redirect( eaccounting_admin_url( array('page' => 'ea-sales','tab'=>'revenues')))    ;
 }
 ?>
 	<div class="ea-title-section">
@@ -163,20 +164,23 @@ try {
 		</div>
 	</form>
 <?php
-eaccounting_enqueue_js(
-	"
+$currency = eaccounting_get_account_currency( $revenue->account_id );
+if( $currency ) {
+	eaccounting_enqueue_js(
+		"
 	jQuery('#ea-revenue-form #amount').inputmask('decimal', {
 			alias: 'numeric',
-			groupSeparator: '" . $revenue->get_currency_thousand_separator() . "',
+			groupSeparator: '" . $currency->get_thousand_separator . "',
 			autoGroup: true,
-			digits: '" . $revenue->get_currency_precision() . "',
-			radixPoint: '" . $revenue->get_currency_decimal_separator() . "',
+			digits: '" . $currency->get_precision . "',
+			radixPoint: '" . $currency->get_decimal_separator . "',
 			digitsOptional: false,
 			allowMinus: false,
-			prefix: '" . $revenue->get_currency_symbol() . "',
+			prefix: '" . $currency->get_symbol . "',
 			placeholder: '0.000',
 			rightAlign: 0,
 			autoUnmask: true
 		});
 "
-);
+	);
+}

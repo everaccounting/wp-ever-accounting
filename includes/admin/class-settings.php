@@ -687,13 +687,9 @@ class Settings {
 	 */
 	protected function get_currencies() {
 		$currencies = array();
-		if ( isset( $_GET['page'] ) && 'ea-settings' === $_GET['page'] ) {
-			$results      = eaccounting_get_currencies(
-					array(
-							'number' => - 1,
-							'return' => 'raw',
-					)
-			);
+        $page = filter_input(INPUT_GET,'page',FILTER_DEFAULT );
+		if ( isset( $page ) && 'ea-settings' === $page ) {
+			$results      = eaccounting_get_currencies();
 			$currencies[] = __( 'Select currencies', 'wp-ever-accounting' );
 			foreach ( $results as $result ) {
 				$currencies[ $result->code ] = $result->name . '(' . $result->symbol . ')';

@@ -107,16 +107,6 @@ class Item extends Resource_Model {
 	|
 	*/
 
-	/*
-	|--------------------------------------------------------------------------
-	| Getters
-	|--------------------------------------------------------------------------
-	|
-	| Functions for getting item data. Getter methods wont change anything unless
-	| just returning from the props.
-	|
-	*/
-
 	/**
 	 * @param string $context
 	 *

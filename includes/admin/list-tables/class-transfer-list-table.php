@@ -9,7 +9,7 @@
  * @package     EverAccounting
  */
 
-use EverAccounting\Models\Transfer;
+use EverAccounting\Transfer;
 
 defined( 'ABSPATH' ) || exit();
 

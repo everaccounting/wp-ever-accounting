@@ -7,286 +7,154 @@
  * @since   1.1.0
  * @package EverAccounting
  */
+
+use EverAccounting\Account;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Main function for returning account.
+ * Retrieves account data given an account id or account object.
  *
+ * @param int|object|Account $account account to retrieve
+ * @param string $output The required return type. One of OBJECT, ARRAY_A, or ARRAY_N. Default OBJECT.
+ *
+ * @return Account|array|null
  * @since 1.1.0
- *
- * @param $account
- *
- * @return EverAccounting\Models\Account|null
  */
-function eaccounting_get_account( $account ) {
+function eaccounting_get_account( $account, $output = OBJECT ) {
 	if ( empty( $account ) ) {
 		return null;
 	}
-	try {
-		$result = new EverAccounting\Models\Account( $account );
 
-		return $result->exists() ? $result : null;
-	} catch ( \Exception $e ) {
+	if ( $account instanceof Account ) {
+		$_account = $account;
+	} else {
+		$_account = new Account( $account );
+	}
+
+	if ( ! $_account->exists() ) {
 		return null;
 	}
+
+	if ( ARRAY_A === $output ) {
+		return $_account->to_array();
+	}
+
+	if ( ARRAY_N === $output ) {
+		return array_values( $_account->to_array() );
+	}
+
+	return $_account;
 }
 
 /**
+ *  Insert or update an account.
+ *
+ * @param array|object|Account $data An array, object, or account object of data arguments.
+ *
+ * @return Account|WP_Error The account object or WP_Error otherwise.
+ * @global wpdb $wpdb WordPress database abstraction object.
  * @since 1.1.0
- *
- * @param $account
- *
- * @return mixed|null
  */
-function eaccounting_get_account_currency_code( $account ) {
-	$exist = eaccounting_get_account( $account );
-	if ( $exist ) {
-		return $exist->get_currency_code();
+function eaccounting_insert_account( $data ) {
+	if ( $data instanceof Account ) {
+		$data = $data->to_array();
+	} elseif ( is_object( $data ) ) {
+		$data = get_object_vars( $data );
 	}
 
-	return null;
-}
-
-/**
- *  Create new account programmatically.
- *
- *  Returns a new account object on success.
- *
- * @since 1.1.0
- *
- * @param array $data            {
- *                               An array of elements that make up an account to update or insert.
- *
- * @type int    $id              The account ID. If equal to something other than 0,
- *                                         the account with that id will be updated. Default 0.
- *
- * @type string $name            The name of the account . Default empty.
- *
- * @type string $number          The number of account. Default empty.
- *
- * @type string $currency_code   The currency_code for the account.Default is empty.
- *
- * @type double $opening_balance The opening balance of the account. Default 0.0000.
- *
- * @type string $bank_name       The bank name for the account. Default null.
- *
- * @type string $bank_phone      The phone number of the bank on which the account is opened. Default null.
- *
- * @type string $bank_address    The address of the bank. Default null.
- *
- * @type int    $enabled         The status of the account. Default 1.
- *
- * @type int    $creator_id      The creator id for the account. Default is current user id of the WordPress.
- *
- * @type string $date_created    The date when the account is created. Default is current time.
- *
- *
- * }
- *
- * @return EverAccounting\Models\Account|\WP_Error|bool
- */
-function eaccounting_insert_account( $data, $wp_error = true ) {
-	global $wpdb;
-	// Ensure that we have data.
-	if ( empty( $data ) ) {
-		return false;
+	if ( empty( $data ) || ! is_array( $data ) ) {
+		return new WP_Error( 'invalid_account_data', __( 'Account could not be saved.', 'wp-ever-accounting' ) );
 	}
-	try {
-		// The  id will be provided when updating an item.
-		$data = wp_parse_args( $data, array( 'id' => null ) );
 
-		// Retrieve the account.
-		$item = new \EverAccounting\Models\Account( $data['id'] );
-
-		// Check if already account number exists for another user.
-		$number = !empty($data['number']) ? $data['number'] : $item->get_number();
-		$existing_account = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}ea_accounts WHERE number='$number'" );
-
-		if ( $existing_account ) {
-			$existing_id = $existing_account->id;
-		}
-		if ( ! empty( $existing_id ) && absint( $existing_id ) != $item->get_id() ) {
-			throw new \Exception( __( 'Duplicate account number.', 'wp-ever-accounting' ) );
-		}
-
-		// Load new data.
-		$item->set_props( $data );
-
-		// Save the item
-		$item->save();
-
-		return $item;
-	} catch ( \Exception $e ) {
-		return $wp_error ? new WP_Error( 'insert_account', $e->getMessage(), array( 'status' => $e->getCode() ) ) : 0;
+	$data    = wp_parse_args( $data, array( 'id' => null ) );
+	$account = new Account( (int) $data['id'] );
+	$account->set_props( $data );
+	$is_error = $account->save();
+	if ( is_wp_error( $is_error ) ) {
+		return $is_error;
 	}
+
+	return $account;
 }
 
 /**
  * Delete an account.
  *
+ * @param int $account_id Account ID
+ *
+ * @return array|false Account array data on success, false on failure.
  * @since 1.1.0
- *
- * @param $account_id
- *
- * @return bool
  */
 function eaccounting_delete_account( $account_id ) {
-	try {
-		$account = new EverAccounting\Models\Account( $account_id );
+	if ( $account_id instanceof Account ) {
+		$account_id = $account_id->get_id();
+	}
 
-		return $account->exists() ? $account->delete() : false;
-	} catch ( \Exception $e ) {
+	if ( empty( $account_id ) ) {
 		return false;
 	}
+
+	$account = new Account( (int) $account_id );
+	if ( ! $account->exists() ) {
+		return false;
+	}
+
+	return $account->delete();
 }
 
 /**
- * Get account items.
+ * Retrieves an array of the accounts matching the given criteria.
  *
+ * @param array $args Arguments to retrieve accounts.
+ *
+ * @return Account[]|int Array of account objects or count.
  * @since 1.1.0
- *
- * @param array $args            {
- *                               Optional. Arguments to retrieve accounts.
- *
- * @type string $name            The name of the account .
- *
- * @type string $number          The number of account.
- *
- * @type string $currency_code   The currency_code for the account.
- *
- * @type double $opening_balance The opening balance of the account.
- *
- * @type string $bank_name       The bank name for the account.
- *
- * @type string $bank_phone      The phone number of the bank on which the account is opened.
- *
- * @type string $bank_address    The address of the bank.
- *
- * @type int    $enabled         The status of the account.
- *
- * @type int    $creator_id      The creator id for the account.
- *
- * @type string $date_created    The date when the account is created.
- *
- *
- * }
- *
- * @return array|int
  */
 function eaccounting_get_accounts( $args = array() ) {
-	global $wpdb;
-	// Prepare args.
-	$args = wp_parse_args(
-		$args,
-		array(
-			'status'      => 'all',
-			'include'     => '',
-			'search'      => '',
-			'balance'     => false,
-			'fields'      => '*',
-			'orderby'     => 'id',
-			'order'       => 'ASC',
-			'number'      => 20,
-			'offset'      => 0,
-			'paged'       => 1,
-			'return'      => 'objects',
-			'count_total' => false,
-		)
+	$defaults = array(
+		'number'        => 20,
+		'orderby'       => 'name',
+		'order'         => 'DESC',
+		'include'       => array(),
+		'exclude'       => array(),
+		'no_found_rows' => false,
+		'count_total'   => false,
 	);
 
-	$qv           = apply_filters( 'eaccounting_get_accounts_args', $args );
-	$table        = \EverAccounting\Repositories\Accounts::TABLE;
-	$columns      = \EverAccounting\Repositories\Accounts::get_columns();
-	$qv['fields'] = wp_parse_list( $qv['fields'] );
-	foreach ( $qv['fields'] as $index => $field ) {
-		if ( ! in_array( $field, $columns, true ) ) {
-			unset( $qv['fields'][ $index ] );
-		}
-	}
-	$fields = is_array( $qv['fields'] ) && ! empty( $qv['fields'] ) ? implode( ',', $qv['fields'] ) : '*';
-	$where  = 'WHERE 1=1';
-
-	if ( ! empty( $qv['include'] ) ) {
-		$include = implode( ',', wp_parse_id_list( $qv['include'] ) );
-		$where  .= " AND $table.`id` IN ($include)";
-	} elseif ( ! empty( $qv['exclude'] ) ) {
-		$exclude = implode( ',', wp_parse_id_list( $qv['exclude'] ) );
-		$where  .= " AND $table.`id` NOT IN ($exclude)";
+	$parsed_args = wp_parse_args( $args, $defaults );
+	$query       = new \EverAccounting\Account_Query( $parsed_args );
+	if ( true === $parsed_args['count_total'] ) {
+		return $query->get_total();
 	}
 
-	if ( ! empty( $qv['status'] ) && ! in_array( $qv['status'], array( 'all', 'any' ), true ) ) {
-		$status = eaccounting_string_to_bool( $qv['status'] );
-		$status = eaccounting_bool_to_number( $status );
-		$where .= " AND $table.`enabled` = ('$status')";
-	}
-
-	$join = '';
-	if ( true === $qv['balance'] && ! $qv['count_total'] ) {
-		$sub_query = "
-		SELECT account_id, SUM(CASE WHEN ea_transactions.type='income' then amount WHEN ea_transactions.type='expense' then - amount END) as total from
-		{$wpdb->prefix}ea_transactions as ea_transactions LEFT JOIN {$wpdb->prefix}$table ea_accounts ON ea_accounts.id=ea_transactions.account_id GROUP BY account_id";
-		$join     .= " LEFT JOIN ($sub_query) as calculated ON calculated.account_id = {$table}.id";
-		$fields   .= " , ( {$table}.opening_balance + IFNULL( calculated.total, 0) ) as balance ";
-	}
-
-	// search.
-	$search_cols = array( 'name', 'number', 'currency_code', 'bank_name', 'bank_phone', 'bank_address' );
-	if ( ! empty( $qv['search'] ) ) {
-		$searches = array();
-		$where   .= ' AND (';
-		foreach ( $search_cols as $col ) {
-			$searches[] = $wpdb->prepare( $col . ' LIKE %s', '%' . $wpdb->esc_like( $qv['search'] ) . '%' );
-		}
-		$where .= implode( ' OR ', $searches );
-		$where .= ')';
-	}
-
-	if ( ! empty( $qv['due_date'] ) && is_array( $qv['due_date'] ) ) {
-		$date_created_query = new \WP_Date_Query( $qv['due_date'], "{$table}.due_date" );
-		$where             .= $date_created_query->get_sql();
-	}
-
-	$order   = isset( $qv['order'] ) ? strtoupper( $qv['order'] ) : 'ASC';
-	$orderby = isset( $qv['orderby'] ) && in_array( $qv['orderby'], $columns, true ) ? eaccounting_clean( $qv['orderby'] ) : "{$table}.id";
-
-	$limit = '';
-	if ( isset( $qv['number'] ) && $qv['number'] > 0 ) {
-		if ( $qv['offset'] ) {
-			$limit = $wpdb->prepare( 'LIMIT %d, %d', $qv['offset'], $qv['number'] );
-		} else {
-			$limit = $wpdb->prepare( 'LIMIT %d, %d', $qv['number'] * ( $qv['paged'] - 1 ), $qv['number'] );
-		}
-	}
-
-	$select      = "SELECT {$fields}";
-	$from        = "FROM {$wpdb->prefix}$table $table";
-	$orderby     = "ORDER BY {$orderby} {$order}";
-	$count_total = true === $qv['count_total'];
-	$clauses     = compact( 'select', 'from', 'join', 'where', 'orderby', 'limit' );
-	$cache_key   = 'query:' . md5( maybe_serialize( $qv ) ) . ':' . wp_cache_get_last_changed( 'ea_accounts' );
-	$results     = wp_cache_get( $cache_key, 'ea_accounts' );
-	if ( false === $results ) {
-		if ( $count_total ) {
-			$results = (int) $wpdb->get_var( "SELECT COUNT(id) $from $where" );
-			wp_cache_set( $cache_key, $results, 'ea_accounts' );
-		} else {
-			$results = $wpdb->get_results( implode( ' ', $clauses ) );
-			if ( in_array( $fields, array( 'all', '*' ), true ) ) {
-				foreach ( $results as $key => $item ) {
-					wp_cache_set( $item->id, $item, 'ea_accounts' );
-					if ( true === $qv['balance'] ) {
-						wp_cache_set( 'balance-' . $item->id, $item->balance, 'ea_accounts' );
-					}
-				}
-			}
-			wp_cache_set( $cache_key, $results, 'ea_accounts' );
-		}
-	}
-
-	if ( 'objects' === $qv['return'] && true !== $qv['count_total'] ) {
-		$results = array_map( 'eaccounting_get_account', $results );
-	}
-
-	return $results;
+	return $query->get_results();
 }
 
+
+/**
+ * Get currency of the account.
+ *
+ * @param int| Account $account Account object.
+ *
+ * @return \EverAccounting\Currency
+ */
+function eaccounting_get_account_currency( $account ) {
+	if ( empty( $account ) ) {
+		return null;
+	}
+
+	if ( $account instanceof Account ) {
+		$_account = $account;
+	} else {
+		$_account = new Account( $account );
+	}
+
+	if ( ! $_account ) {
+		$_account         = new Account();
+		$default_currency = eaccounting_get_default_currency();
+		$_account->set_currency_code( $default_currency );
+	}
+
+	return new \EverAccounting\Currency( $_account->get_currency_code() );
+}

@@ -7,7 +7,7 @@
  * @package     EverAccounting
  */
 
-use EverAccounting\Models\Category;
+use EverAccounting\Category;
 
 defined( 'ABSPATH' ) || exit();
 

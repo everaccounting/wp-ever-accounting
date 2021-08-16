@@ -10,8 +10,8 @@
 
 defined( 'ABSPATH' ) || exit();
 
-use EverAccounting\Models\Document_Item;
-use EverAccounting\Models\Bill;
+use EverAccounting\Document_Item;
+use EverAccounting\Bill;
 
 defined( 'ABSPATH' ) || exit;
 ?>

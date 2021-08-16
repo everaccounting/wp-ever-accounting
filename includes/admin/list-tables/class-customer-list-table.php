@@ -7,7 +7,7 @@
  * @package     EverAccounting
  */
 
-use EverAccounting\Models\Customer;
+use EverAccounting\Customer;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -415,7 +415,7 @@ class EverAccounting_Customer_List_Table extends EverAccounting_List_Table {
 
 		$args = apply_filters( 'eaccounting_customer_table_query_args', $args, $this );
 
-		$this->items = eaccounting_get_customers( $args );
+		$this->items = eaccounting_get_contacts( $args );
 
 		$this->active_count   = eaccounting_get_customers(
 			array_merge(

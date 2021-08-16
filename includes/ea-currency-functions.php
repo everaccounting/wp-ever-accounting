@@ -8,18 +8,127 @@
  * @package EverAccounting
  */
 
-use EverAccounting\Models\Currency;
+use EverAccounting\Currency;
 
 defined( 'ABSPATH' ) || exit();
 
 /**
- * Return all available currency codes.
+ * Retrieves currency data given a currency id or currency object.
  *
- * @return array
+ * @param int|object|Currency $currency currency to retrieve
+ * @param string              $output The required return type. One of OBJECT, ARRAY_A, or ARRAY_N. Default OBJECT.
+ *
+ * @return Currency|array|null
  * @since 1.1.0
  */
-function eaccounting_get_currency_codes() {
-	return eaccounting_get_data( 'currencies' );
+function eaccounting_get_currency( $currency, $output = OBJECT ) {
+	if ( empty( $currency ) ) {
+		return null;
+	}
+
+	if ( $currency instanceof Currency ) {
+		$_currency = $currency;
+	} else {
+		$_currency = new Currency( $currency );
+	}
+
+	if ( ! $_currency->exists() ) {
+		return null;
+	}
+
+	if ( ARRAY_A === $output ) {
+		return $_currency->to_array();
+	}
+
+	if ( ARRAY_N === $output ) {
+		return array_values( $_currency->to_array() );
+	}
+
+	return $_currency;
+}
+
+/**
+ *  Insert or update a currency.
+ *
+ * @param array|object|Currency $data An array, object, or currency object of data arguments.
+ *
+ * @return Currency|WP_Error The currency object or WP_Error otherwise.
+ * @global wpdb $wpdb WordPress database abstraction object.
+ * @since 1.1.0
+ */
+function eaccounting_insert_currency( $data ) {
+	if ( $data instanceof Currency ) {
+		$data = $data->to_array();
+	} elseif ( is_object( $data ) ) {
+		$data = get_object_vars( $data );
+	}
+
+	if ( empty( $data ) || ! is_array( $data ) ) {
+		return new WP_Error( 'invalid_currency_data', __( 'Currency could not be saved.', 'wp-ever-accounting' ) );
+	}
+
+	$data     = wp_parse_args( $data, array( 'id' => null ) );
+	$currency = new Currency( (int) $data['id'] );
+	$currency->set_props( $data );
+	$is_error = $currency->save();
+	if ( is_wp_error( $is_error ) ) {
+		return $is_error;
+	}
+
+	return $currency;
+}
+
+/**
+ * Delete an currency.
+ *
+ * @param int $currency_id Currency ID
+ *
+ * @return array|false Currency array data on success, false on failure.
+ * @since 1.1.0
+ */
+function eaccounting_delete_currency( $currency_id ) {
+	if ( $currency_id instanceof Currency ) {
+		$currency_id = $currency_id->get_id();
+	}
+
+	if ( empty( $currency_id ) ) {
+		return false;
+	}
+
+	$currency = new Currency( (int) $currency_id );
+	if ( ! $currency->exists() ) {
+		return false;
+	}
+
+	return $currency->delete();
+}
+
+/**
+ * Retrieves an array of the currencies matching the given criteria.
+ *
+ * @param array $args Arguments to retrieve currencies.
+ *
+ * @return Currency[]|int Array of currency objects or count.
+ * @since 1.1.0
+ */
+function eaccounting_get_currencies( $args = array() ) {
+	$defaults = array(
+		'number'        => 20,
+		'orderby'       => 'name',
+		'order'         => 'DESC',
+		'include'       => array(),
+		'exclude'       => array(),
+		'no_found_rows' => false,
+		'count_total'   => false,
+	);
+
+	$parsed_args = wp_parse_args( $args, $defaults );
+	$query       = new \EverAccounting\Currency_Query( $parsed_args );
+	if ( true === $parsed_args['count_total'] ) {
+		return $query->get_total();
+	}
+
+	return $query->get_results();
 }
 
 /**
@@ -29,10 +138,9 @@ function eaccounting_get_currency_codes() {
  *
  * @return string
  * @since 1.1.0
- *
  */
 function eaccounting_sanitize_currency_code( $code ) {
-	$codes = eaccounting_get_currency_codes();
+	$codes = eaccounting_get_data( 'currencies' );
 	$code  = strtoupper( $code );
 	if ( empty( $code ) || ! array_key_exists( $code, $codes ) ) {
 		return '';
@@ -42,237 +150,11 @@ function eaccounting_sanitize_currency_code( $code ) {
 }
 
 /**
- * Main function for returning currency.
+ * Get currency ISO codes.
  *
- * This function is little different from rest
- * Even if the currency in the database doest not
- * exist it will it populate with default data.
- *
- * Whenever need to check existence of the object
- * in database must check $currency->exist()
- *
- * @param object|string|int $currency
- *
- * @return EverAccounting\Models\Currency|null
- * @since 1.1.0
- *
+ * @since 1.2.1
+ * @return array
  */
-function eaccounting_get_currency( $currency ) {
-	if ( empty( $currency ) ) {
-		return null;
-	}
-	try {
-		$result = new EverAccounting\Models\Currency( $currency );
-
-		return $result;
-	} catch ( \Exception $e ) {
-		return null;
-	}
-}
-
-/**
- * @param $currency
- *
- * @return mixed|null
- * @since 1.1.0
- *
- */
-function eaccounting_get_currency_rate( $currency ) {
-	$exist = eaccounting_get_currency( $currency );
-	if ( $exist ) {
-		return $exist->get_rate();
-	}
-
-	return 1;
-}
-
-
-/**
- *  Create new currency programmatically.
- *
- *  Returns a new currency object on success.
- *
- * @param array $args {
- *                                  An array of elements that make up a currency to update or insert.
- *
- * @type int $id The currency ID. If equal to something other than 0,
- *                                         the currency with that id will be updated. Default 0.
- *
- * @type string $name The name of the currency . Default empty.
- *
- * @type string $code The code of currency. Default empty.
- *
- * @type double $rate The rate for the currency.Default is 1.
- *
- * @type double $precision The precision for the currency. Default 0.
- *
- * @type string $symbol The symbol for the currency. Default empty.
- *
- * @type string $position The position where the currency code will be set in amount. Default before.
- *
- * @type string $decimal_separator The decimal_separator for the currency code. Default ..
- *
- * @type string $thousand_separator The thousand_separator for the currency code. Default ,.
- *
- * @type int $enabled The status of the currency. Default 1.
- *
- * @type string $date_created The date when the currency is created. Default is current time.
- *
- *
- * }
- *
- * @return EverAccounting\Models\Currency|\WP_Error|bool
- * @since 1.1.0
- *
- */
-function eaccounting_insert_currency( $args, $wp_error = true ) {
-	// Ensure that we have data.
-	if ( empty( $args ) ) {
-		return false;
-	}
-	try {
-		// The  id will be provided when updating an item.
-		$args = wp_parse_args(
-			$args,
-			array(
-				'code' => null,
-			)
-		);
-		// Retrieve the currency.
-		$item = new \EverAccounting\Models\Currency( $args );
-
-		// Load new data.
-		$item->set_props( $args );
-
-		// Save the item
-		$item->save();
-
-		return $item;
-	} catch ( \Exception $e ) {
-		return $wp_error ? new WP_Error( 'insert_currency', $e->getMessage(), array( 'status' => $e->getCode() ) ) : 0;
-	}
-}
-
-/**
- * Delete a currency.
- *
- * @param $currency_code
- *
- * @return bool
- * @since 1.1.0
- *
- */
-function eaccounting_delete_currency( $currency_code ) {
-	try {
-		$currency = new EverAccounting\Models\Currency( $currency_code );
-
-		return $currency->exists() ? $currency->delete() : false;
-	} catch ( \Exception $e ) {
-		return false;
-	}
-}
-
-/**
- * Get currency items.
- *
- * @param array $args
- *
- * @return array|int|null
- * @since 1.1.0
- *
- *
- */
-function eaccounting_get_currencies( $args = array() ) {
-	$args = wp_parse_args(
-		$args,
-		array(
-			'search'      => '',
-			'fields'      => '*',
-			'orderby'     => 'name',
-			'order'       => 'ASC',
-			'number'      => - 1,
-			'offset'      => 0,
-			'paged'       => 1,
-			'return'      => 'objects',
-			'count_total' => false,
-		)
-	);
-
-	$qv = apply_filters( 'eaccounting_get_currencies_args', $args );
-	$option     = \EverAccounting\Repositories\Currencies::OPTION;
-	$columns    = \EverAccounting\Repositories\Currencies::get_columns();
-	$currencies = wp_cache_get( 'ea_currencies', 'ea_currencies' );
-
-	if ( false === $currencies ) {
-		$currencies = get_option( $option, array() );
-		wp_cache_add( 'ea_currencies', $currencies, 'ea_currencies' );
-	}
-	$currencies = eaccounting_collect( $currencies );
-
-	if ( ! empty( $qv['search'] ) ) {
-		$currencies = $currencies->filter(
-			function ( $item ) use ( $qv ) {
-				$search = implode( ' ', array( $item['name'], $item['code'], $item['symbol'] ) );
-				if ( false !== strpos( $search, $qv['search'] ) ) {
-					return $item;
-				}
-
-				return false;
-			}
-		);
-	}
-
-	if ( ! empty( $qv['include'] ) ) {
-		$includes = wp_parse_list( $qv['include'] );
-		foreach ( $includes as $include ) {
-			$currencies = $currencies->where_loose( 'code', $include );
-		}
-	}
-
-	$qv['fields'] = wp_parse_list( $qv['fields'] );
-	foreach ( $qv['fields'] as $index => $field ) {
-		if ( ! in_array( $field, $columns, true ) ) {
-			unset( $qv['fields'][ $index ] );
-		}
-	}
-
-	$fields        = is_array( $qv['fields'] ) && ! empty( $qv['fields'] ) ? $qv['fields'] : '*';
-	$qv['order']   = isset( $qv['order'] ) ? strtoupper( $qv['order'] ) : 'ASC';
-	$qv['orderby'] = in_array( $qv['orderby'], $columns, true ) ? $qv['orderby'] : 'name';
-
-	$qv['number'] = isset( $qv['number'] ) && $qv['number'] > 0 ? $qv['number'] : - 1;
-	$qv['offset'] = isset( $qv['offset'] ) ? $qv['offset'] : ( $qv['number'] * ( $qv['paged'] - 1 ) );
-	$count_total  = true === $qv['count_total'];
-	$currencies   = $currencies->sort(
-		function ( $a, $b ) use ( $qv ) {
-			if ( 'ASC' === $qv['order'] ) {
-				return $a[ $qv['orderby'] ] < $b[ $qv['orderby'] ];
-			}
-
-			return $a[ $qv['orderby'] ] > $b[ $qv['orderby'] ];
-		}
-	);
-
-	if ( $count_total ) {
-		return $currencies->count();
-	}
-
-	if ( $qv['number'] > 1 ) {
-		$currencies = $currencies->splice( $qv['offset'], $qv['number'] );
-	}
-
-	$results = $currencies->values()->all();
-
-	if ( 'objects' === $qv['return'] ) {
-		$results = array_map( 'eaccounting_get_currency', $results );
-	} else {
-		$results = array_map(
-			function ( $result ) {
-				return (object) $result;
-			},
-			$results
-		);
-	}
-
-	return $results;
+function eaccounting_get_currency_iso_codes() {
+	return eaccounting_get_data( 'currencies' );
 }
