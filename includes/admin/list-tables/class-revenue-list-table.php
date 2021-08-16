@@ -9,7 +9,7 @@
  * @package     EverAccounting
  */
 
-use EverAccounting\Revenue;
+use EverAccounting\Transaction;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -150,7 +150,7 @@ class EverAccounting_Revenue_List_Table extends EverAccounting_List_Table {
 	/**
 	 * Renders the checkbox column in the revenues list table.
 	 *
-	 * @param Revenue $revenue The current object.
+	 * @param Transaction $revenue The current object.
 	 *
 	 * @return string Displays a checkbox.
 	 * @since  1.0.2
@@ -327,7 +327,7 @@ class EverAccounting_Revenue_List_Table extends EverAccounting_List_Table {
 				case 'export_csv':
 					break;
 				case 'delete':
-					eaccounting_delete_revenue( $id );
+					eaccounting_delete_transaction( $id );
 					break;
 				default:
 					do_action( 'eaccounting_revenues_do_bulk_action_' . $this->current_action(), $id );
