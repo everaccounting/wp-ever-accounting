@@ -230,7 +230,7 @@ class Currency_Query {
 
 		// Search
 		$search         = '';
-		$search_columns = array( 'name' );
+		$search_columns = array( 'name', 'code' );
 		if ( ! empty( $qv['search'] ) ) {
 			$search = trim( $qv['search'] );
 		}
