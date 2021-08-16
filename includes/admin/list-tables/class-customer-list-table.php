@@ -421,7 +421,6 @@ class EverAccounting_Customer_List_Table extends EverAccounting_List_Table {
 			array_merge(
 				$args,
 				array(
-				     'type' => 'customer',
 					'status'      => 'active',
 					'count_total' => true,
 				)
@@ -431,7 +430,6 @@ class EverAccounting_Customer_List_Table extends EverAccounting_List_Table {
 			array_merge(
 				$args,
 				array(
-					'type' => 'customer',
 					'status'      => 'inactive',
 					'count_total' => true,
 				)
