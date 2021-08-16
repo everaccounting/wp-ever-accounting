@@ -1058,6 +1058,7 @@ class Invoice extends Data {
 		return $this->get_prop( 'creator_id' );
 	}
 
+
 	/**
 	 * Get object created date.
 	 *
@@ -1067,6 +1068,130 @@ class Invoice extends Data {
 	 */
 	public function get_date_created() {
 		return $this->get_prop( 'date_created' );
+	}
+
+	/**
+	 * Get invoice statuses
+	 *
+	 * @since 1.1.0
+	 * @return array
+	 */
+	public function get_statuses() {
+		if ( 'invoice' === $this->type ) {
+			return eaccounting_get_invoice_statuses();
+		} elseif ( 'bill' === $this->type ) {
+			return eaccounting_get_bill_statuses();
+		}
+		return apply_filters( 'eaccounting_custom_invoice_statues', array() );
+	}
+
+	/**
+	 * Get the next available number.
+	 *
+	 * @param Invoice $invoice Invoice
+	 *
+	 * @since 1.1.0
+	 * @return int
+	 */
+	public function get_next_number( &$invoice ) {
+		global $wpdb;
+		$max = (int) $wpdb->get_var( $wpdb->prepare( "select max(id) from {$wpdb->prefix}ea_invoices WHERE type=%s", $invoice->type ) );
+		return $max + 1;
+	}
+
+	/**
+	 * Get single item properties
+	 *
+	 * @param      int $item_id Item id
+	 *
+	 * @since 1.1.0
+	 * @return Invoice_Item|int
+	 */
+	public function get_item( $item_id ) {
+		$items = $this->get_items();
+		if ( empty( absint( $item_id ) ) ) {
+			return false;
+		}
+
+		foreach ( $items as $item ) {
+			if ( $item->get_id() === absint( $item_id ) ) {
+				return $item;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Get the invoice items.
+	 *
+	 * @return Invoice_Item[]
+	 * @since 1.1.0
+	 */
+	public function get_items() {
+		if ( $this->exists() && empty( $this->items ) ) {
+			$items      = eaccounting_get_invoice_items( $this->id );
+			$removables = array_keys( $this->items_to_delete );
+			foreach ( $items as $line_id => $item ) {
+				if ( ! in_array( $item->get_id(), $removables, true ) ) {
+					$this->items[ $line_id ] = $item;
+				}
+			}
+		}
+
+		return $this->items;
+	}
+
+	/**
+	 * Get payments.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @return Transaction[]
+	 */
+	public function get_payments() {
+		if ( $this->exists() ) {
+			return eaccounting_get_transactions(
+				array(
+					'invoice_id' => $this->get_id(),
+					'number'     => '-1',
+				)
+			);
+		}
+
+		return array();
+	}
+
+	/**
+	 * Get total due.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @return float|int
+	 */
+	public function get_total_due() {
+		$due = eaccounting_price( ( $this->get_total() - $this->get_total_paid() ), $this->get_currency_code(), true );
+		if ( eaccounting_price_to_default( $due, $this->get_currency_code(), $this->get_currency_rate() ) <= 0 ) {
+			$due = 0;
+		}
+
+		return $due;
+	}
+
+	/**
+	 * Get total paid
+	 *
+	 * @since 1.1.0
+	 *
+	 * @return float|int|string
+	 */
+	public function get_total_paid() {
+		$total_paid = 0;
+		foreach ( $this->get_payments() as $payment ) {
+			$total_paid += (float) eaccounting_price_convert( $payment->get_amount(), $payment->get_currency_code(), $this->get_currency_code(), $payment->get_currency_rate(), $this->get_currency_rate() );
+		}
+
+		return $total_paid;
 	}
 
 	/*
@@ -1553,5 +1678,375 @@ class Invoice extends Data {
 	public function set_key( $value ) {
 		$key = strtolower( eaccounting_clean( $value ) );
 		$this->set_prop( 'key', substr( $key, 0, 30 ) );
+	}
+
+	/**
+	 * Set the document items.
+	 *
+	 * @param array|Invoice_Item[] $items items.
+	 * @param bool $append If append or not
+	 *
+	 * @since 1.1.0
+	 *
+	 */
+	public function set_items( $items, $append = false ) {
+		// Ensure that we have an array.
+		if ( ! is_array( $items ) ) {
+			return;
+		}
+		// Remove existing items.
+		$old_items = $this->get_items();
+		$new_ids   = array();
+		foreach ( $items as $item ) {
+			$new_ids[] = $this->add_item( $item );
+		}
+
+		if ( ! $append ) {
+			$new_ids         = array_values( array_filter( $new_ids ) );
+			$old_item_ids    = array_keys( $old_items );
+			$remove_item_ids = array_diff( $old_item_ids, $new_ids );
+			foreach ( $remove_item_ids as $remove_item_id ) {
+				$this->items_to_delete[] = $old_items[ $remove_item_id ];
+				unset( $this->items[ $remove_item_id ] );
+			}
+		}
+	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| Conditionals
+	|--------------------------------------------------------------------------
+	|
+	| Checks if a condition is true or false.
+	|
+	*/
+	/**
+	 * Checks if the invoice has a given status.
+	 *
+	 * @param string $status Status
+	 *
+	 * @since 1.1.0
+	 *
+	 * @return bool
+	 */
+	public function is_status( $status ) {
+		return $this->get_status() === eaccounting_clean( $status );
+	}
+
+	/**
+	 * Checks if an order can be edited, specifically for use on the Edit Order screen.
+	 *
+	 * @return bool
+	 */
+	public function is_editable() {
+		return ! in_array( $this->get_status(), array( 'partial', 'paid' ), true );
+	}
+
+	/**
+	 * Returns if an order has been paid for based on the order status.
+	 *
+	 * @since 1.10
+	 * @return bool
+	 */
+	public function is_paid() {
+		return $this->is_status( 'paid' );
+	}
+
+	/**
+	 * Checks if the invoice is draft.
+	 *
+	 * @since 1.1.0
+	 * @return bool
+	 */
+	public function is_draft() {
+		return $this->is_status( 'draft' );
+	}
+
+	/**
+	 * Checks if the invoice is due.
+	 *
+	 * @since 1.1.0
+	 * @return bool
+	 */
+	public function is_due() {
+		$due_date = $this->get_due_date();
+
+		return empty( $due_date ) || $this->is_paid() ? false : strtotime( date_i18n( 'Y-m-d 23:59:00' ) ) > strtotime( date_i18n( 'Y-m-d 23:59:00', strtotime( $due_date ) ) ); //phpcs:ignore
+	}
+
+	/**
+	 * Check if tax inclusive or not.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @return mixed|null
+	 */
+	public function is_tax_inclusive() {
+		return ! empty( $this->get_tax_inclusive() );
+	}
+
+	/**
+	 * Get the type of discount.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @return bool
+	 */
+	public function is_fixed_discount() {
+		return 'percentage' !== $this->get_discount_type();
+	}
+
+	/**
+	 * Check if an key is valid.
+	 *
+	 * @param string $key Order key.
+	 *
+	 * @return bool
+	 */
+	public function is_key_valid( $key ) {
+		return $key === $this->get_key( 'edit' );
+	}
+
+	/**
+	 * Checks if an order needs payment, based on status and order total.
+	 *
+	 * @return bool
+	 */
+	public function needs_payment() {
+		return ! $this->is_status( 'paid' ) && $this->get_total() > 0;
+	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| Helper functions
+	|--------------------------------------------------------------------------
+	|
+	| Functions for helping. These should not update anything in the
+	| database itself and should only change what is stored in the class
+	| object.
+	*/
+
+	/**
+	 * Generate document number.
+	 *
+	 * @since 1.1.0
+	 * @return void
+	 */
+	public function maybe_set_invoice_number() {
+		if ( empty( $this->get_invoice_number() ) ) {
+			$number = $this->get_id();
+			if ( empty( $number ) ) {
+				$number = $this->get_next_number( $this );
+			}
+			$this->set_invoice_number( $this->generate_invoice_number( $number ) );
+		}
+	}
+
+	/**
+	 * Generate number.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param string $number Number
+	 *
+	 * @return string
+	 */
+	public function generate_invoice_number( $number ) {
+		$prefix           = eaccounting()->settings->get( 'invoice_prefix', 'INV-' );
+		$padd             = (int) eaccounting()->settings->get( 'invoice_digit', '5' );
+		$formatted_number = zeroise( absint( $number ), $padd );
+		$number           = apply_filters( 'eaccounting_generate_invoice_number', $prefix . $formatted_number );
+
+		return $number;
+	}
+
+	/**
+	 * Adds an item to the invoice.
+	 *
+	 * @param array $args Arguments
+	 *
+	 * @return bool
+	 */
+	public function add_item( $args ) {
+		$args = wp_parse_args(
+			$args,
+			array(
+				'item_id' => null,
+				'line_id' => null,
+			)
+		);
+
+		//check if we have item id or line_id
+		if ( empty( $args['item_id'] ) && empty( $args['line_id'] ) ) {
+			return false;
+		}
+
+		//first check if we get line id if so then its from database
+		$line_item = new Invoice_Item();
+		if ( $this->get_item( $args['line_id'] ) ) {
+			$line_item = $this->items[ $args['line_id'] ];
+		}
+
+		if ( ! empty( $args['item_id'] ) ) {
+			$product = new Item( $args['item_id'] );
+			if ( $product->exists() ) {
+				//convert the price from default to invoice currency.
+				$default_currency = eaccounting_get_default_currency();
+				$default          = array(
+					'item_id'       => $product->get_id(),
+					'item_name'     => $product->get_name(),
+					'price'         => $product->get_purchase_price(),
+					'currency_code' => $default_currency,
+					'quantity'      => 1,
+					'tax_rate'      => eaccounting_tax_enabled() ? $product->get_purchase_tax() : 0,
+				);
+
+				$args = wp_parse_args( $args, $default );
+			}
+		}
+
+		$line_item->set_props( $args );
+
+		if ( empty( $line_item->get_item_id() ) ) {
+			return false;
+		}
+
+		if ( $line_item->get_currency_code() && ( $line_item->get_currency_code() !== $this->get_currency_code() ) ) {
+			$converted = eaccounting_price_convert( $line_item->get_price(), $line_item->get_currency_code(), $this->get_currency_code() );
+			$line_item->set_price( $converted );
+		}
+
+		foreach ( $this->get_items()  as $key => $item ) {
+			if ( ! $line_item->get_id() && ( $item->get_item_id() === $line_item->get_item_id() ) ) {
+				$item->increment_quantity( $line_item->get_quantity() );
+				return $key;
+			}
+		}
+
+		$key                 = $line_item->exists() ? $line_item->get_id() : 'new:' . count( $this->items );
+		$this->items[ $key ] = $line_item;
+
+		return $key;
+	}
+
+	/**
+	 * Calculate total.
+	 *
+	 * @since 1.1.0
+	 * @throws \Exception If any
+	 */
+	public function calculate_totals() {
+		$subtotal       = 0;
+		$total_tax      = 0;
+		$total_discount = 0;
+		$total_fees     = 0;
+		$total_shipping = 0;
+		$discount_rate  = $this->get_discount();
+
+		// before calculating need to know subtotal so we can apply fixed discount
+		if ( $this->is_fixed_discount() ) {
+			$subtotal_discount = 0;
+			foreach ( $this->get_items() as $item ) {
+				$subtotal_discount += ( $item->get_price() * $item->get_quantity() );
+			}
+			if ( $subtotal_discount > 0 ) {
+				$discount_rate = ( ( $this->get_discount() * 100 ) / $subtotal_discount );
+			}
+		}
+
+		foreach ( $this->get_items() as $item ) {
+			$item_subtotal         = ( $item->get_price() * $item->get_quantity() );
+			$item_discount         = $item_subtotal * ( $discount_rate / 100 );
+			$item_subtotal_for_tax = $item_subtotal - $item_discount;
+			$item_tax_rate         = ( $item->get_tax_rate() / 100 );
+			$item_tax              = eaccounting_calculate_tax( $item_subtotal_for_tax, $item_tax_rate, $this->is_tax_inclusive() );
+			$item_shipping         = $item->get_shipping();
+			$item_shipping_tax     = $item->get_shipping_tax();
+			$item_fees             = $item->get_fees();
+			$item_fees_tax         = $item->get_fees_tax();
+			if ( 'tax_subtotal_rounding' !== eaccounting()->settings->get( 'tax_subtotal_rounding', 'tax_subtotal_rounding' ) ) {
+				$item_tax = eaccounting_format_decimal( $item_tax, 2 );
+			}
+			if ( $this->is_tax_inclusive() ) {
+				$item_subtotal -= $item_tax;
+			}
+			$item_total = $item_subtotal - $item_discount + $item_tax;
+			if ( $item_total < 0 ) {
+				$item_total = 0;
+			}
+
+			$item->set_subtotal( $item_subtotal );
+			$item->set_discount( $item_discount );
+			$item->set_tax( $item_tax );
+			$item->set_total( $item_total );
+
+			$subtotal       += $item->get_subtotal();
+			$total_tax      += $item->get_tax();
+			$total_tax      += ( $item_fees_tax + $item_shipping_tax );
+			$total_discount += $item->get_discount();
+			$total_shipping += $item_shipping;
+			$total_fees     += $item_fees;
+		}
+
+		$this->set_subtotal( $subtotal );
+		$this->set_total_tax( $total_tax );
+		$this->set_total_discount( $total_discount );
+		$this->set_total_shipping( $total_shipping );
+		$this->set_total_fees( $total_fees );
+		$total = $this->get_subtotal() - $this->get_total_discount() + $this->get_total_tax() + $this->get_total_fees() + $this->get_total_shipping();
+		$total = eaccounting_price( $total, $this->get_currency_code(), true );
+		if ( $total < 0 ) {
+			$total = 0;
+		}
+
+		$this->set_total( $total );
+		if ( ( ! empty( $this->get_total_paid() ) && $this->get_total_due() > 0 ) ) {
+			$this->set_status( 'partial' );
+		} elseif ( empty( $this->get_total_due() ) ) { // phpcs:ignore
+			$this->set_status( 'paid' );
+		} elseif ( $this->is_due() && 'pending' === $this->status ) {
+			$this->set_status( 'overdue' );
+		} elseif ( in_array( $this->get_status(), array( 'partial', 'paid' ), true ) ) {
+			$this->set_status( 'received' );
+		}
+
+		return array(
+			'subtotal'       => $this->get_subtotal(),
+			'total_tax'      => $this->get_total_tax(),
+			'total_shipping' => $this->get_total_shipping(),
+			'total_fees'     => $this->get_total_fees(),
+			'total_discount' => $this->get_total_discount(),
+			'total'          => $this->get_total(),
+		);
+	}
+
+	/**
+	 * Add invoice note.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param string $note Note
+	 *
+	 * @return Note|false|int|\WP_Error
+	 */
+	public function add_note( $note ) {
+		if ( ! $this->exists() ) {
+			return false;
+		}
+
+		$creator_id = 0;
+		// If this is an admin comment or it has been added by the user.
+		if ( is_user_logged_in() ) {
+			$creator_id = get_current_user_id();
+		}
+
+		return eaccounting_insert_note(
+			array(
+				'parent_id'  => $this->get_id(),
+				'type'       => $this->type,
+				'note'       => $note,
+				'creator_id' => $creator_id,
+			)
+		);
 	}
 }
