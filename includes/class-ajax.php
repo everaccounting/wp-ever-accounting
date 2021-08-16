@@ -374,6 +374,7 @@ class Ajax {
 							'invoice' => $invoice,
 						)
 					),
+					//'line'   => array_map( 'strval', $invoice->get_items() ),
 					'line'   => array_map( 'strval', $invoice->get_items() ),
 					'totals' => $totals,
 				)
@@ -396,6 +397,7 @@ class Ajax {
 
 		try {
 			$posted  = wp_parse_args( $posted, array( 'id' => null ) );
+			$posted['type'] = 'invoice';
 			$invoice = new Invoice( $posted['id'] );
 			$invoice->set_props( $posted );
 			$invoice->save();
@@ -419,7 +421,7 @@ class Ajax {
 			);
 			if ( empty( $posted['id'] ) ) {
 				$response['redirect'] = $redirect;
-				$invoice->add_note( sprintf( __( '%s added', 'wp-ever-accounting' ), $invoice->get_document_number() ) );
+				$invoice->add_note( sprintf( __( '%s added', 'wp-ever-accounting' ), $invoice->get_invoice_number() ) );
 			}
 			wp_send_json_success( $response );
 		} catch ( \Exception $e ) {

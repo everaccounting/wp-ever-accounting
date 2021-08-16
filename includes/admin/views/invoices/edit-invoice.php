@@ -64,7 +64,7 @@ $view_url = admin_url( 'admin.php' ) . '?page=ea-sales&tab=invoices&action=view&
 						'label'         => __( 'Customer', 'wp-ever-accounting' ),
 						'name'          => 'customer_id',
 						'placeholder'   => __( 'Select Customer', 'wp-ever-accounting' ),
-						'value'         => $invoice->get_customer_id(),
+						'value'         => $invoice->get_contact_id(),
 						'required'      => true,
 						'type'          => 'customer',
 						'creatable'     => true,

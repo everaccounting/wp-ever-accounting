@@ -32,13 +32,15 @@ $quantity_label = eaccounting()->settings->get( 'invoice_quantity_label', __( 'Q
 			</thead>
 			<tbody id="ea-document__line-items">
 			<?php
-			foreach ( $items as $item_id => $item ) {
-				do_action( 'eaccounting_before_invoice_item_html', $item_id, $item, $invoice );
+            if( is_array( $items ) && !empty( $items ) ) {
+	            foreach ( $items as $item_id => $item ) {
+		            do_action( 'eaccounting_before_invoice_item_html', $item_id, $item, $invoice );
 
-				include __DIR__ . '/invoice-item.php';
+		            include __DIR__ . '/invoice-item.php';
 
-				do_action( 'eaccounting_invoice_item_html', $item_id, $item, $invoice );
-			}
+		            do_action( 'eaccounting_invoice_item_html', $item_id, $item, $invoice );
+	            }
+            }
 			do_action( 'eaccounting_invoice_items_after_line_items', $invoice );
 			?>
 			</tbody>
@@ -46,7 +48,7 @@ $quantity_label = eaccounting()->settings->get( 'invoice_quantity_label', __( 'Q
 			<script type="text/template" id="ea-invoice-line-template">
 				<?php
 				$item_id = 9999;
-				$item    = new \EverAccounting\Document_Item();
+				$item    = new \EverAccounting\Invoice_Item();
 				include __DIR__ . '/invoice-item.php';
 				?>
 			</script>
