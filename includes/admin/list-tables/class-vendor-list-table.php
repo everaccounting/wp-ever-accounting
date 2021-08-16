@@ -408,15 +408,15 @@ class EverAccounting_Vendor_List_Table extends EverAccounting_List_Table {
 				'status'   => $status,
 				'orderby'  => eaccounting_clean( $orderby ),
 				'order'    => eaccounting_clean( $order ),
-				'type'     => 'customer',
+				'type'     => 'vendor',
 			)
 		);
 
 		$args = apply_filters( 'eaccounting_vendor_table_query_args', $args, $this );
 
-		$this->items = eaccounting_get_vendors( $args );
+		$this->items = eaccounting_get_contacts( $args );
 
-		$this->active_count = eaccounting_get_vendors(
+		$this->active_count = eaccounting_get_contacts(
 			array_merge(
 				$args,
 				array(
@@ -426,7 +426,7 @@ class EverAccounting_Vendor_List_Table extends EverAccounting_List_Table {
 			)
 		);
 
-		$this->inactive_count = eaccounting_get_vendors(
+		$this->inactive_count = eaccounting_get_contacts(
 			array_merge(
 				$args,
 				array(
