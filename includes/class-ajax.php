@@ -790,8 +790,8 @@ class Ajax {
 		self::verify_nonce( 'ea_edit_payment' );
 		self::check_permission( 'ea_manage_payment' );
 		$posted = eaccounting_clean( wp_unslash( $_REQUEST ) );
-
-		$created = eaccounting_insert_payment( $posted );
+		$posted['type'] = 'expense';
+		$created = eaccounting_insert_transaction( $posted );
 		if ( is_wp_error( $created ) || ! $created->exists() ) {
 			wp_send_json_error(
 				array(
