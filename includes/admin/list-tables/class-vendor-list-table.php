@@ -7,7 +7,7 @@
  * @package     EverAccounting
  */
 
-use EverAccounting\Vendor;
+use EverAccounting\Contact;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -311,7 +311,7 @@ class EverAccounting_Vendor_List_Table extends EverAccounting_List_Table {
 		foreach ( $ids as $id ) {
 			switch ( $action ) {
 				case 'enable':
-					eaccounting_insert_vendor(
+					eaccounting_insert_contact(
 						array(
 							'id'      => $id,
 							'enabled' => '1',
@@ -319,7 +319,7 @@ class EverAccounting_Vendor_List_Table extends EverAccounting_List_Table {
 					);
 					break;
 				case 'disable':
-					eaccounting_insert_vendor(
+					eaccounting_insert_contact(
 						array(
 							'id'      => $id,
 							'enabled' => '0',
@@ -327,7 +327,7 @@ class EverAccounting_Vendor_List_Table extends EverAccounting_List_Table {
 					);
 					break;
 				case 'delete':
-					eaccounting_delete_vendor( $id );
+					eaccounting_delete_contact( $id );
 					break;
 				default:
 					do_action( 'eaccounting_vendors_do_bulk_action_' . $this->current_action(), $id );
