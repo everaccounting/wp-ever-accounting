@@ -826,23 +826,19 @@ class Ajax {
 	 */
 	public static function get_vendors() {
 		self::verify_nonce( 'ea_get_vendors' );
-		$search = filter_input( INPUT_POST, 'search', FILTER_DEFAULT );
-		$search = isset( $search ) ? eaccounting_clean( $search ) : '';
-		$page   = filter_input( INPUT_POST, 'page', FILTER_VALIDATE_INT );
-		$page   = isset( $page ) ? absint( $page ) : 1;
+		$search = isset( $_REQUEST['search'] ) ? eaccounting_clean( $_REQUEST['search'] ) : '';
+		$page   = isset( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1;
 
-		$vendors = eaccounting_get_contacts(
-			array(
-				'search' => $search,
-				'type'   => 'vendor',
-				'page'   => $page,
-				'status' => 'active',
+		wp_send_json_success(
+			eaccounting_get_vendors(
+				array(
+					'search' => $search,
+					'page'   => $page,
+					'return' => 'raw',
+					'status' => 'active',
+				)
 			)
 		);
-		$vendors = array_map( function ( $vendors ) {
-			return $vendors->to_array();
-		}, $vendors );
-		wp_send_json_success( $vendors );
 	}
 
 	/**

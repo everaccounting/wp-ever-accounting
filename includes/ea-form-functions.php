@@ -681,25 +681,24 @@ function eaccounting_vendor_dropdown( $field ) {
 		$field,
 		array(
 			'value'       => '',
-			'type'        => '',
 			'ajax_action' => '',
 			'modal_id'    => '',
 			'creatable'   => true,
 		)
 	);
-	$type = ! empty( $field['type'] ) ? wp_parse_list( $field['type'] ) : array( 'vendor' );
 	$include  = ! empty( $field['value'] ) ? wp_parse_id_list( $field['value'] ) : array();
-	$contacts = eaccounting_get_contacts(
+	$contacts = eaccounting_get_vendors(
 		array(
 			'include' => $include,
-            'type'   => $type
+			'fields'  => array( 'id', 'name' ),
+			'return'  => 'raw',
 		)
 	);
 
 	$field = wp_parse_args(
 		array(
 			'value'        => $include,
-			'options'      => eaccounting_list_pluck( $contacts, 'get_name', 'get_id' ),
+			'options'      => wp_list_pluck( $contacts, 'name', 'id' ),
 			'ajax_action'  => 'eaccounting_get_vendors',
 			'nonce_action' => 'ea_get_vendors',
 			'modal_id'     => '#ea-modal-add-vendor',
