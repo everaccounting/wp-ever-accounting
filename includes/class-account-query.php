@@ -115,6 +115,7 @@ class Account_Query {
 			'paged'                   => 1,
 			'no_found_rows'           => false,
 			'fields'                  => 'all',
+			'status'                  =>    'all',
 		);
 
 		if ( ! is_null( $query ) ) {
@@ -250,6 +251,12 @@ class Account_Query {
 			$min          = min( $qv['balance_between'] );
 			$max          = max( $qv['balance_between'] );
 			$query_where .= $wpdb->prepare( ' AND transactions >= (%f) AND transactions <= (%f) ', (float) $min, (float) $max );
+		}
+
+		if ( ! empty( $qv['status'] ) && ! in_array( $qv['status'], array( 'all', 'any' ), true ) ) {
+			$status = eaccounting_string_to_bool( $qv['status'] );
+			$status = eaccounting_bool_to_number( $status );
+			$query_where .= " AND $this->table.`enabled` = ('$status')";
 		}
 
 		// Search
