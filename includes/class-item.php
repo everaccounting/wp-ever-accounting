@@ -665,12 +665,12 @@ class Item extends Data {
 	/**
 	 * Set object status.
 	 *
-	 * @param int $enabled Enabled or not
+	 * @param boolean $enabled Enabled or not
 	 *
 	 * @since 1.0.2
 	 */
 	public function set_enabled( $enabled ) {
-		$this->set_prop( 'enabled', (int) $enabled );
+		$this->set_prop( 'enabled', eaccounting_bool_to_number( $enabled ) );
 	}
 
 	/**
