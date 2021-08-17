@@ -53,7 +53,7 @@ class Items extends CSV_Exporter {
 			'orderby'  => 'id',
 			'order'    => 'ASC',
 			'return'   => 'objects',
-			'number'   => - 1,
+			'number'   => 0,
 		);
 		$args  = apply_filters( 'eaccounting_item_export_query_args', $args );
 		$items = eaccounting_get_items( $args );
@@ -70,7 +70,7 @@ class Items extends CSV_Exporter {
 	/**
 	 * Take a item and generate row data from it for export.
 	 *
-	 * @param \EverAccounting\Models\Item $item
+	 * @param \EverAccounting\Item $item Item
 	 *
 	 * @return array
 	 */
@@ -80,23 +80,23 @@ class Items extends CSV_Exporter {
 			$value = null;
 			switch ( $column ) {
 				case 'name':
-					$value = $item->get_name();
+					$value = $item->name;
 					break;
 				case 'category_name':
-					$category = eaccounting_get_category( $item->get_category_id() );
-					$value    = $category ? $category->get_name() : '';
+					$category = eaccounting_get_category( $item->category_id );
+					$value    = $category ? $category->name : '';
 					break;
 				case 'sale_price':
-					$value = $item->get_sale_price();
+					$value = $item->sale_price;
 					break;
 				case 'purchase_price':
-					$value = $item->get_purchase_price();
+					$value = $item->purchase_price;
 					break;
 				case 'sales_tax':
-					$value = $item->get_sales_tax();
+					$value = $item->sales_tax;
 					break;
 				case 'purchase_tax':
-					$value = $item->get_purchase_tax();
+					$value = $item->purchase_tax;
 					break;
 				default:
 					$value = apply_filters( 'eaccounting_item_csv_row_item', '', $column, $item, $this );
