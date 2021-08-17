@@ -53,10 +53,10 @@ class Vendors extends CSV_Exporter {
 			'order'    => 'ASC',
 			'type'     => 'vendor',
 			'return'   => 'objects',
-			'number'   => - 1,
+			'number'   => 0,
 		);
 		$args  = apply_filters( 'eaccounting_vendor_export_query_args', $args );
-		$items = eaccounting_get_vendors( $args );
+		$items = eaccounting_get_contacts( $args );
 		$rows  = array();
 
 		foreach ( $items as $item ) {
@@ -70,7 +70,7 @@ class Vendors extends CSV_Exporter {
 	/**
 	 * Take a vendor and generate row data from it for export.
 	 *
-	 * @param \EverAccounting\Models\Vendor $item
+	 * @param \EverAccounting\Contact $item Contact
 	 *
 	 * @return array
 	 */
