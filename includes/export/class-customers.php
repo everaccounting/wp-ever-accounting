@@ -55,19 +55,18 @@ class Customers extends CSV_Exporter {
 			'order'    => 'ASC',
 			'type'     => 'customer',
 			'return'   => 'objects',
-			'number'   => - 1,
+			'number'   => 0,
 		);
 
 		$args = apply_filters( 'eaccounting_customer_export_query_args', $args );
 
-		$items = eaccounting_get_customers( $args );
+		$items = eaccounting_get_contacts( $args );
 
 		$rows = array();
 
 		foreach ( $items as $item ) {
 			$rows[] = $this->generate_row_data( $item );
 		}
-
 
 		return $rows;
 	}
@@ -76,7 +75,7 @@ class Customers extends CSV_Exporter {
 	/**
 	 * Take a customer and generate row data from it for export.
 	 *
-	 * @param \EverAccounting\Models\Customer $item
+	 * @param \EverAccounting\Contact $item Contact
 	 *
 	 * @return array
 	 */
@@ -85,43 +84,43 @@ class Customers extends CSV_Exporter {
 		foreach ( $this->get_columns() as $column => $label ) {
 			switch ( $column ) {
 				case 'name':
-					$value = $item->get_name();
+					$value = $item->name;
 					break;
 				case 'company':
-					$value = $item->get_company();
+					$value = $item->company;
 					break;
 				case 'email':
-					$value = $item->get_email();
+					$value = $item->email;
 					break;
 				case 'phone':
-					$value = $item->get_phone();
+					$value = $item->phone;
 					break;
 				case 'birth_date':
-					$value = $item->get_birth_date();
+					$value = $item->birth_date;
 					break;
 				case 'street':
-					$value = $item->get_street();
+					$value = $item->street;
 					break;
 				case 'city':
-					$value = $item->get_city();
+					$value = $item->city;
 					break;
 				case 'state':
-					$value = $item->get_street();
+					$value = $item->street;
 					break;
 				case 'postcode':
-					$value = $item->get_postcode();
+					$value = $item->postcode;
 					break;
 				case 'country':
 					$value = $item->get_country_nicename();
 					break;
 				case 'website':
-					$value = $item->get_website();
+					$value = $item->website;
 					break;
 				case 'vat_number':
-					$value = $item->get_vat_number();
+					$value = $item->vat_number;
 					break;
 				case 'currency_code':
-					$value = $item->get_currency_code();
+					$value = $item->currency_code;
 					break;
 				default:
 					$value = apply_filters( 'eaccounting_customer_csv_row_item', '', $column, $item, $this );
