@@ -56,10 +56,10 @@ class Revenues extends CSV_Exporter {
 			'order'    => 'ASC',
 			'type'     => 'income',
 			'return'   => 'objects',
-			'number'   => - 1,
+			'number'   => 0,
 		);
 		$args  = apply_filters( 'eaccounting_revenue_export_query_args', $args );
-		$items = eaccounting_get_revenues( $args );
+		$items = eaccounting_get_transactions( $args );
 
 		$rows = array();
 		foreach ( $items as $item ) {
@@ -73,7 +73,7 @@ class Revenues extends CSV_Exporter {
 	/**
 	 * Take a revenue and generate row data from it for export.
 	 *
-	 * @param \EverAccounting\Models\Revenue $item
+	 * @param \EverAccounting\Transaction $item Transaction
 	 *
 	 * @return array
 	 */
@@ -83,40 +83,40 @@ class Revenues extends CSV_Exporter {
 			$value = null;
 			switch ( $column ) {
 				case 'payment_date':
-					$value = eaccounting_date( $item->get_payment_date() );
+					$value = eaccounting_date( $item->payment_date );
 					break;
 				case 'amount':
-					$value = $item->get_amount();
+					$value = $item->amount;
 					break;
 				case 'currency_code':
-					$value = $item->get_currency_code();
+					$value = $item->currency_code;
 					break;
 				case 'currency_rate':
-					$value = $item->get_currency_rate();
+					$value = $item->currency_rate;
 					break;
 				case 'account_name':
-					$account = eaccounting_get_account( $item->get_account_id() );
-					$value   = $account ? $account->get_name() : '';
+					$account = eaccounting_get_account( $item->account_id );
+					$value   = $account ? $account->name : '';
 					break;
 				case 'customer_name':
-					$customer = eaccounting_get_customer( $item->get_contact_id() );
-					$value    = $customer ? $customer->get_name() : '';
+					$customer = eaccounting_get_contact( $item->contact_id );
+					$value    = $customer ? $customer->name : '';
 					break;
 				case 'category_name':
-					$category = eaccounting_get_category( $item->get_category_id() );
-					$value    = $category ? $category->get_name() : '';
+					$category = eaccounting_get_category( $item->category_id );
+					$value    = $category ? $category->name : '';
 					break;
 				case 'description':
-					$value = $item->get_description();
+					$value = $item->description;
 					break;
 				case 'payment_method':
-					$value = $item->get_payment_method();
+					$value = $item->payment_method;
 					break;
 				case 'reference':
-					$value = $item->get_reference();
+					$value = $item->reference;
 					break;
 				case 'reconciled':
-					$value = $item->get_reconciled();
+					$value = $item->reconciled;
 					break;
 				default:
 					$value = apply_filters( 'eaccounting_revenue_csv_row_item', '', $column, $item, $this );
