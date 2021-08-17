@@ -48,17 +48,17 @@ class Categories extends CSV_Exporter {
 	 * @return array
 	 */
 	public function get_rows() {
-		$args              = array(
+		$args  = array(
 			'per_page' => $this->limit,
 			'page'     => $this->page,
 			'orderby'  => 'id',
 			'order'    => 'ASC',
 			'return'   => 'objects',
-			'number'      => -1,
+			'number'   => 0,
 		);
-		$args = apply_filters( 'eaccounting_category_export_query_args', $args );
+		$args  = apply_filters( 'eaccounting_category_export_query_args', $args );
 		$items = eaccounting_get_categories( $args );
-		$rows              = array();
+		$rows  = array();
 
 		foreach ( $items as $item ) {
 			$rows[] = $this->generate_row_data( $item );
@@ -71,7 +71,7 @@ class Categories extends CSV_Exporter {
 	/**
 	 * Take a category and generate row data from it for export.
 	 *
-	 * @param \EverAccounting\Models\Category $item
+	 * @param \EverAccounting\Category $item Category
 	 *
 	 * @return array
 	 */
@@ -81,13 +81,13 @@ class Categories extends CSV_Exporter {
 			$value = null;
 			switch ( $column ) {
 				case 'name':
-					$value = $item->get_name();
+					$value = $item->name;
 					break;
 				case 'type':
-					$value = $item->get_type();
+					$value = $item->type;
 					break;
 				case 'color':
-					$value = $item->get_color();
+					$value = $item->color;
 					break;
 
 				default:
