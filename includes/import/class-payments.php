@@ -10,7 +10,7 @@
 namespace EverAccounting\Import;
 
 use EverAccounting\Abstracts\CSV_Importer;
-use EverAccounting\Models\Currency;
+use EverAccounting\Currency;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -92,17 +92,16 @@ class Payments extends CSV_Importer {
 		$category    = ! empty( $category ) ? reset( $category ) : '';
 		$category_id = ! empty( $category ) ? $category->get_id() : '';
 
-		$currency = new Currency( array( 'code' => $data['currency_code'] ) );
+		$currency = new Currency( $data['currency_code'] );
 
 		$account               = eaccounting_get_accounts( array( 'search' => $data['account_name'], 'search_cols' => array( 'name' ) ) );
 		$account               = ! empty( $account ) ? reset( $account ) : '';
 		$account_id            = ! empty( $account ) ? $account->get_id() : '';
 		$account_currency_code = ! empty( $account ) ? $account->get_currency_code() : '';
 
-		$vendor    = ( '' != $data['vendor_name'] ) ? eaccounting_get_vendors( array( 'search' => $data['vendor_name'], 'search_cols' => array( 'name' ) ) ) : '';
+		$vendor    = ( '' != $data['vendor_name'] ) ? eaccounting_get_contacts( array( 'search' => $data['vendor_name'], 'search_cols' => array( 'name' ), 'type' => 'vendor' ) ) : '';
 		$vendor    = ! empty( $vendor ) ? reset( $vendor ) : '';
 		$vendor_id = ! empty( $vendor ) ? $vendor->get_id() : '';
-
 
 		if ( empty( $category_id ) ) {
 			return new \WP_Error( 'invalid_props', __( 'Category does not exist.', 'wp-ever-accounting' ) );
@@ -125,7 +124,7 @@ class Payments extends CSV_Importer {
 		$data['type']        = 'expense';
 		$data['contact_id']  = $vendor_id;
 
-		return eaccounting_insert_payment( $data );
+		return eaccounting_insert_transaction( $data );
 	}
 
 }
