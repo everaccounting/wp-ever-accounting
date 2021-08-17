@@ -52,7 +52,7 @@ class Accounts extends CSV_Exporter {
 			'orderby'  => 'id',
 			'order'    => 'ASC',
 			'return'   => 'objects',
-			'number'   => - 1,
+			'number'   => 0,
 		);
 		$args  = apply_filters( 'eaccounting_account_export_query_args', $args );
 		$items = eaccounting_get_accounts( $args );
@@ -69,7 +69,7 @@ class Accounts extends CSV_Exporter {
 	/**
 	 * Take a product and generate row data from it for export.
 	 *
-	 * @param \EverAccounting\Models\Account $item
+	 * @param \EverAccounting\Account $item Account
 	 *
 	 * @return array
 	 */
@@ -79,28 +79,28 @@ class Accounts extends CSV_Exporter {
 			$value = null;
 			switch ( $column ) {
 				case 'name':
-					$value = $item->get_name();
+					$value = $item->name;
 					break;
 				case 'number':
-					$value = $item->get_number();
+					$value = $item->number;
 					break;
 				case 'currency_code':
-					$value = $item->get_currency_code();
+					$value = $item->currency_code;
 					break;
 				case 'opening_balance':
-					$value = $item->get_opening_balance();
+					$value = $item->opening_balance;
 					break;
 				case 'bank_name':
-					$value = $item->get_bank_name();
+					$value = $item->bank_name;
 					break;
 				case 'bank_phone':
-					$value = $item->get_bank_phone();
+					$value = $item->bank_phone;
 					break;
 				case 'bank_address':
-					$value = $item->get_bank_address();
+					$value = $item->bank_address;
 					break;
 				case 'enabled':
-					$value = $item->get_enabled();
+					$value = $item->enabled;
 					break;
 				default:
 					$value = apply_filters( 'eaccounting_account_csv_row_item', '', $column, $item, $this );
