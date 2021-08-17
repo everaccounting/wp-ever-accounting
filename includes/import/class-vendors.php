@@ -77,6 +77,6 @@ class Vendors extends CSV_Importer {
 
 		$data['type'] = 'vendor';
 
-		return eaccounting_insert_vendor( $data );
+		return eaccounting_insert_contact( $data );
 	}
 }
