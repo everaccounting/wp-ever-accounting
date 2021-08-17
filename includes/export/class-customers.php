@@ -55,19 +55,18 @@ class Customers extends CSV_Exporter {
 			'order'    => 'ASC',
 			'type'     => 'customer',
 			'return'   => 'objects',
-			'number'   => - 1,
+			'number'   => 0,
 		);
 
 		$args = apply_filters( 'eaccounting_customer_export_query_args', $args );
 
-		$items = eaccounting_get_customers( $args );
+		$items = eaccounting_get_contacts( $args );
 
 		$rows = array();
 
 		foreach ( $items as $item ) {
 			$rows[] = $this->generate_row_data( $item );
 		}
-
 
 		return $rows;
 	}
@@ -76,7 +75,7 @@ class Customers extends CSV_Exporter {
 	/**
 	 * Take a customer and generate row data from it for export.
 	 *
-	 * @param \EverAccounting\Models\Customer $item
+	 * @param \EverAccounting\Contact $item Contact
 	 *
 	 * @return array
 	 */
