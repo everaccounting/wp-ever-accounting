@@ -90,8 +90,8 @@ function eaccounting_tools_system_info_report() {
 	$return .= 'Items:                            ' . number_format( eaccounting_get_items( array( 'count_total' => true ) ) ) . "\n";
 	$return .= 'Transactions:                     ' . number_format( eaccounting_get_transactions( array( 'count_total' => true ) ) ) . "\n";
 	$return .= 'Accounts:                         ' . number_format( eaccounting_get_accounts( array( 'count_total' => true ) ) ) . "\n";
-	$return .= 'Customers:                        ' . number_format( eaccounting_get_customers( array( 'count_total' => true ) ) ) . "\n";
-	$return .= 'Vendors:                          ' . number_format( eaccounting_get_vendors( array( 'count_total' => true ) ) ) . "\n";
+	$return .= 'Customers:                        ' . number_format( eaccounting_get_contacts( array( 'count_total' => true, 'type' => 'customer' ) ) ) . "\n";
+	$return .= 'Vendors:                          ' . number_format( eaccounting_get_contacts( array( 'count_total' => true, 'type' => 'vendor' ) ) ) . "\n";
 	$return .= 'Currencies:                       ' . number_format( eaccounting_get_currencies( array( 'count_total' => true ) ) ) . "\n";
 	$return .= 'Categories:                       ' . number_format( eaccounting_get_categories( array( 'count_total' => true ) ) ) . "\n";
 	$return .= 'Transfers:                        ' . number_format( eaccounting_get_transfers( array( 'count_total' => true ) ) ) . "\n";
