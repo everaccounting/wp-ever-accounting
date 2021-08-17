@@ -54,7 +54,7 @@ class Currencies extends CSV_Exporter {
 			'orderby'  => 'id',
 			'order'    => 'ASC',
 			'return'   => 'objects',
-			'number'   => - 1,
+			'number'   => 0,
 		);
 		$args  = apply_filters( 'eaccounting_currency_export_query_args', $args );
 		$items = eaccounting_get_currencies( $args );
@@ -71,7 +71,7 @@ class Currencies extends CSV_Exporter {
 	/**
 	 * Take a currency and generate row data from it for export.
 	 *
-	 * @param \EverAccounting\Models\Currency $item
+	 * @param \EverAccounting\Currency $item Currencies
 	 *
 	 * @return array
 	 */
@@ -81,31 +81,28 @@ class Currencies extends CSV_Exporter {
 			$value = null;
 			switch ( $column ) {
 				case 'name':
-					$value = $item->get_name();
+					$value = $item->name;
 					break;
 				case 'code':
-					$value = $item->get_code();
+					$value = $item->code;
 					break;
 				case 'rate':
-					$value = $item->get_rate();
+					$value = $item->rate;
 					break;
 				case 'precision':
-					$value = $item->get_precision();
+					$value = $item->precision;
 					break;
 				case 'symbol':
-					$value = $item->get_symbol();
+					$value = $item->symbol;
 					break;
 				case 'position':
-					$value = $item->get_position();
+					$value = $item->position;
 					break;
 				case 'decimal_separator':
-					$value = $item->get_decimal_separator();
+					$value = $item->decimal_separator;
 					break;
 				case 'thousand_separator':
-					$value = $item->get_thousand_separator();
-					break;
-				case 'enabled':
-					$value = $item->get_enabled();
+					$value = $item->thousand_separator;
 					break;
 				default:
 					$value = apply_filters( 'eaccounting_currency_csv_row_item', '', $column, $item, $this );
