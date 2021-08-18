@@ -477,8 +477,8 @@ class Note extends Data {
 	 *
 	 * @since  1.1.0
 	 */
-	public function set_content( $note ) {
-		$this->set_prop( 'content', eaccounting_sanitize_textarea( $note ) );
+	public function set_note( $note ) {
+		$this->set_prop( 'note', eaccounting_sanitize_textarea( $note ) );
 	}
 
 	/**

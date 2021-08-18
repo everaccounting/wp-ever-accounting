@@ -40,6 +40,7 @@ class REST_Manager extends Singleton {
 				'\EverAccounting\REST\Transactions_Controller',
 				'\EverAccounting\REST\Items_Controller',
 				'\EverAccounting\REST\Settings_Controller',
+				'\EverAccounting\REST\Notes_Controller',
 			)
 		);
 		foreach ( $rest_handlers as $controller ) {
