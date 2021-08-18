@@ -670,6 +670,27 @@ class Account extends Data {
 		return floatval( $balance );
 	}
 
+	/*
+	|--------------------------------------------------------------------------
+	| Extra
+	|--------------------------------------------------------------------------
+	*/
+
+	/**
+	 * Return this account's image.
+	 *
+	 * @param string $size Size of the image
+	 *
+	 * @return string
+	 * @since 1.0.2
+	 */
+	public function get_attachment_url( $size = 'thumbnail' ) {
+		if ( $this->get_thumbnail_id() ) {
+			return wp_get_attachment_image_url( $this->get_thumbnail_id(), $size );
+		}
+
+		return eaccounting()->plugin_url( '/dist/images/placeholder-logo.png' );
+	}
 
 	/*
 	|--------------------------------------------------------------------------
