@@ -172,8 +172,8 @@ class Currencies_Controller extends REST_Controller {
 			$currencies[] = $this->prepare_response_for_collection( $data );
 		}
 
-		$page      = (int) $currency_query->query_vars['paged'];
-		$max_pages = ceil( $query_total / (int) $currency_query->query_vars['number'] );
+		$page      = (int) $currency_query->get( 'paged' );
+		$max_pages = ceil( $query_total / (int) $currency_query->get( 'number' ) );
 
 		if ( $page > $max_pages && $query_total > 0 ) {
 			return new \WP_Error(
@@ -467,11 +467,19 @@ class Currencies_Controller extends REST_Controller {
 	 * @since 1.2.1
 	 */
 	public function prepare_item_for_response( $currency, $request ) {
-		$data        = $currency->to_array();
-		$format_date = array( 'date_created' );
-		// Format date values.
-		foreach ( $format_date as $key ) {
-			$data[ $key ] = $this->prepare_date_response( $data[ $key ] );
+		$data = [];
+
+		foreach ( array_keys( $this->get_schema_properties() ) as $key ) {
+			switch ( $key ) {
+				case 'date_created':
+					$value = $this->prepare_date_response( $currency->$key );
+					break;
+				default:
+					$value = $currency->$key;
+					break;
+			}
+
+			$data[ $key ] = $value;
 		}
 
 		$context  = ! empty( $request['context'] ) ? $request['context'] : 'view';
@@ -634,11 +642,6 @@ class Currencies_Controller extends REST_Controller {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 					'required'    => true,
-				),
-				'enabled'            => array(
-					'description' => __( 'Status of the currency.', 'wp-ever-accounting' ),
-					'type'        => 'boolean',
-					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'date_created'       => array(
 					'description' => __( 'Created date of the currency.', 'wp-ever-accounting' ),
