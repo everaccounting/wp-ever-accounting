@@ -172,8 +172,8 @@ class Notes_Controller extends REST_Controller {
 			$notes[] = $this->prepare_response_for_collection( $data );
 		}
 
-		$page      = (int) $note_query->query_vars['paged'];
-		$max_pages = ceil( $query_total / (int) $note_query->query_vars['number'] );
+		$page      = (int) $note_query->get('paged');
+		$max_pages = ceil( $query_total / (int) $note_query->get('number') );
 
 		if ( $page > $max_pages && $query_total > 0 ) {
 			return new \WP_Error(
@@ -467,11 +467,25 @@ class Notes_Controller extends REST_Controller {
 	 * @since 1.2.1
 	 */
 	public function prepare_item_for_response( $note, $request ) {
-		$data        = $note->to_array();
-		$format_date = array( 'date_created', 'birth_date' );
-		// Format date values.
-		foreach ( $format_date as $key ) {
-			$data[ $key ] = $this->prepare_date_response( $data[ $key ] );
+		$data = [];
+
+		foreach ( array_keys( $this->get_schema_properties() ) as $key ) {
+			switch ( $key ) {
+				case 'date_created':
+					$value = $this->prepare_date_response( $note->$key );
+					break;
+				case 'parent':
+					$value = eaccounting_get_invoice( $note->parent_id );
+					break;
+				case 'creator':
+					$value = null;
+					break;
+				default:
+					$value = $note->$key;
+					break;
+			}
+
+			$data[ $key ] = $value;
 		}
 
 		$context  = ! empty( $request['context'] ) ? $request['context'] : 'view';
@@ -507,6 +521,15 @@ class Notes_Controller extends REST_Controller {
 			$value = $request[ $key ];
 			if ( ! is_null( $value ) ) {
 				switch ( $key ) {
+					case 'parent':
+						if ( ! is_array( $value ) || empty( $value['id'] ) ) {
+							break;
+						}
+						$parent = eaccounting_get_invoice( $value['id'] );
+						if ( $parent ) {
+							$props['parent_id'] = $parent->id;
+						}
+						break;
 					default:
 						$props[ $key ] = $value;
 						break;
