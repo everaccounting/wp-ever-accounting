@@ -172,8 +172,8 @@ class Contacts_Controller extends REST_Controller {
 			$contacts[] = $this->prepare_response_for_collection( $data );
 		}
 
-		$page      = (int) $contact_query->query_vars['paged'];
-		$max_pages = ceil( $query_total / (int) $contact_query->query_vars['number'] );
+		$page      = (int) $contact_query->get( 'paged' );
+		$max_pages = ceil( $query_total / (int) $contact_query->get( 'number' ) );
 
 		if ( $page > $max_pages && $query_total > 0 ) {
 			return new \WP_Error(
@@ -467,11 +467,29 @@ class Contacts_Controller extends REST_Controller {
 	 * @since 1.2.1
 	 */
 	public function prepare_item_for_response( $contact, $request ) {
-		$data        = $contact->to_array();
-		$format_date = array( 'date_created', 'birth_date' );
-		// Format date values.
-		foreach ( $format_date as $key ) {
-			$data[ $key ] = $this->prepare_date_response( $data[ $key ] );
+		$data        = [];
+
+		foreach ( array_keys( $this->get_schema_properties() ) as $key ) {
+			switch ( $key ) {
+				case 'date_created':
+				case 'birth_date':
+					$value = $this->prepare_date_response( $contact->$key );
+					break;
+				case 'currency':
+					$value = eaccounting_get_currency( $contact->currency_code, ARRAY_A );
+					break;
+				case 'thumbnail':
+					$value = get_post( $contact->thumbnail_id, ARRAY_A );
+					break;
+				case 'enabled':
+					$value = eaccounting_string_to_bool( $contact->enabled );
+					break;
+				default:
+					$value = $contact->$key;
+					break;
+			}
+
+			$data[ $key ] = $value;
 		}
 
 		$context  = ! empty( $request['context'] ) ? $request['context'] : 'view';
@@ -507,6 +525,24 @@ class Contacts_Controller extends REST_Controller {
 			$value = $request[ $key ];
 			if ( ! is_null( $value ) ) {
 				switch ( $key ) {
+					case 'currency':
+						if ( ! is_array( $value ) || empty( $value['code'] ) ) {
+							break;
+						}
+						$currency = eaccounting_get_currency( $value['code'] );
+						if ( $currency ) {
+							$props['currency_code'] = $currency->code;
+						}
+						break;
+					case 'thumbnail':
+						if ( ! is_array( $value ) ) {
+							break;
+						}
+						$thumbnail = get_post( $value['id'] );
+						if ( $thumbnail ) {
+							$props['thumbnail_id'] = $thumbnail->ID;
+						}
+						break;
 					default:
 						$props[ $key ] = $value;
 						break;
@@ -668,20 +704,30 @@ class Contacts_Controller extends REST_Controller {
 					),
 				),
 				'currency'     => array(
-					'description' => __( 'Currency code for customer.', 'wp-ever-accounting' ),
+					'description' => __( 'Currency code for contact.', 'wp-ever-accounting' ),
 					'type'        => 'object',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'required'    => true,
 					'properties'  => array(
 						'code' => array(
+							'id'   => array(
+								'description' => __( 'Currency code ID.', 'wp-ever-accounting' ),
+								'type'        => 'integer',
+								'context'     => array( 'view', 'edit' ),
+								'readonly'    => true,
+							),
 							'description' => __( 'Currency code', 'wp-ever-accounting' ),
 							'type'        => 'string',
 							'context'     => array( 'embed', 'view', 'edit' ),
-							'enum'        => array_keys( eaccounting_get_global_currencies() ),
-							'arg_options' => array(
-								'sanitize_callback' => 'sanitize_text_field',
-							),
 						),
+					),
+				),
+				'type' => array(
+					'description' => __( 'Type of the contact.', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
 				'thumbnail'    => array(
