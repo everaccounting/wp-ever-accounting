@@ -172,8 +172,8 @@ class Transactions_Controller extends REST_Controller {
 			$transactions[] = $this->prepare_response_for_collection( $data );
 		}
 
-		$page      = (int) $transaction_query->query_vars['paged'];
-		$max_pages = ceil( $query_total / (int) $transaction_query->query_vars['number'] );
+		$page      = (int) $transaction_query->get( 'paged' );
+		$max_pages = ceil( $query_total / (int) $transaction_query->get( 'number' ) );
 
 		if ( $page > $max_pages && $query_total > 0 ) {
 			return new \WP_Error(
@@ -467,11 +467,40 @@ class Transactions_Controller extends REST_Controller {
 	 * @since 1.2.1
 	 */
 	public function prepare_item_for_response( $transaction, $request ) {
-		$data        = $transaction->to_array();
-		$format_date = array( 'date_created', 'birth_date' );
-		// Format date values.
-		foreach ( $format_date as $key ) {
-			$data[ $key ] = $this->prepare_date_response( $data[ $key ] );
+		$data = [];
+
+		foreach ( array_keys( $this->get_schema_properties() ) as $key ) {
+			switch ( $key ) {
+				case 'date_created':
+					$value = $this->prepare_date_response( $transaction->$key );
+					break;
+				case 'currency':
+					$value = eaccounting_get_currency( $transaction->currency_code, ARRAY_A );
+					break;
+				case 'account':
+					$value = eaccounting_get_account( $transaction->account_id, ARRAY_A );
+					break;
+				case 'contact':
+					$value = eaccounting_get_contact( $transaction->contact_id, ARRAY_A );
+					break;
+				case 'category':
+					$value = eaccounting_get_category( $transaction->category_id, ARRAY_A );
+					break;
+				case 'creator':
+					$value = null;
+					break;
+				case 'reconciled':
+					$value = eaccounting_string_to_bool( $transaction->reconciled );
+					break;
+				case 'attachment':
+					$value = get_post( $transaction->attachment_id, ARRAY_A );
+					break;
+				default:
+					$value = $transaction->$key;
+					break;
+			}
+
+			$data[ $key ] = $value;
 		}
 
 		$context  = ! empty( $request['context'] ) ? $request['context'] : 'view';
@@ -507,6 +536,53 @@ class Transactions_Controller extends REST_Controller {
 			$value = $request[ $key ];
 			if ( ! is_null( $value ) ) {
 				switch ( $key ) {
+					case 'currency':
+						if ( ! is_array( $value ) || empty( $value['code'] ) ) {
+							break;
+						}
+						$currency = eaccounting_get_currency( $value['code'] );
+						if ( $currency ) {
+							$props['currency_code'] = $currency->code;
+						}
+						break;
+					case 'account':
+						if ( ! is_array( $value ) || empty( $value ) ) {
+							break;
+						}
+						$account = eaccounting_get_account( $value['id'] );
+						if ( $account ) {
+							$props['account_id'] = $account->id;
+						}
+						break;
+					case 'contact':
+						if ( ! is_array( $value ) || empty( $value ) ) {
+							break;
+						}
+						$contact = eaccounting_get_contact( $value['id'] );
+						if ( $contact ) {
+							if ( 'income' === $props['type'] && 'customer' !== $contact->type ) {
+								break;
+							} elseif ( 'expense' === $props['type'] && 'vendor' !== $contact->type ) {
+								break;
+							}
+							$props['contact_id'] = $contact->id;
+						}
+						break;
+					case 'category':
+						if ( ! is_array( $value ) || empty( $value ) ) {
+							break;
+						}
+						$category = eaccounting_get_category( $value['id'] );
+						if ( $category ) {
+							if ( 'income' === $props['type'] && 'income' !== $category->type ) {
+								break;
+							} elseif ( 'expense' === $props['type'] && 'expense' !== $category->type ) {
+								break;
+							}
+							$props['category_id'] = $category->id;
+						}
+
+						break;
 					default:
 						$props[ $key ] = $value;
 						break;
@@ -614,20 +690,15 @@ class Transactions_Controller extends REST_Controller {
 							'type'        => 'string',
 							'context'     => array( 'embed', 'view' ),
 						),
-
+						'rate' => array(
+							'description' => __( 'Currency rate.', 'wp-ever-accounting' ),
+							'type'        => 'double',
+							'context'     => array( 'embed', 'view' ),
+						),
 					),
-				),
-				'currency_rate'    => array(
-					'description' => __( 'Currency rate of the transaction.', 'wp-ever-accounting' ),
-					'type'        => 'double',
-					'context'     => array( 'embed', 'view' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'doubleval',
-					),
-					'readonly'    => true,
 				),
 				'account'          => array(
-					'description' => __( 'Account id of the transaction.', 'wp-ever-accounting' ),
+					'description' => __( 'Account of the transaction.', 'wp-ever-accounting' ),
 					'type'        => 'object',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'required'    => true,
