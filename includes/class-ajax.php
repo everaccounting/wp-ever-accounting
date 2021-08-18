@@ -945,7 +945,10 @@ class Ajax {
 			);
 		}
 		$account = eaccounting_get_account( $account_id );
-		if ( empty( $account ) || is_wp_error( $account ) || empty( $account->get_currency()->exists() ) ) {
+		if ( $account->exists() ) {
+			$currency = eaccounting_get_currency( $account->currency_code );
+		}
+		if ( empty( $account ) || is_wp_error( $account ) || empty( $currency->exists() ) ) {
 			wp_send_json_error(
 				array(
 					'message' => __( 'Could not find the currency', 'wp-ever-accounting' ),
@@ -953,7 +956,7 @@ class Ajax {
 			);
 		}
 
-		wp_send_json_success( $account->get_currency()->get_data() );
+		wp_send_json_success( $currency->get_data() );
 	}
 
 
