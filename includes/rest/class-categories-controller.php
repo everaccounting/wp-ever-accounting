@@ -469,11 +469,25 @@ class Categories_Controller extends REST_Controller {
 	 * @since 1.2.1
 	 */
 	public function prepare_item_for_response( $category, $request ) {
-		$data        = $category->to_array();
-		$format_date = array( 'date_created' );
-		// Format date values.
-		foreach ( $format_date as $key ) {
-			$data[ $key ] = $this->prepare_date_response( $data[ $key ] );
+		$data = [];
+
+		foreach ( array_keys( $this->get_schema_properties() ) as $key ) {
+			switch ( $key ) {
+				case 'date_created':
+					$value = $this->prepare_date_response( $category->$key );
+					break;
+				case 'created':
+					$value = null;
+					break;
+				case 'enabled':
+					$value = eaccounting_string_to_bool( $category->enabled );
+					break;
+				default:
+					$value = $category->$key;
+					break;
+			}
+
+			$data[ $key ] = $value;
 		}
 
 		$context  = ! empty( $request['context'] ) ? $request['context'] : 'view';
