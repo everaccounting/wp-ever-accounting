@@ -172,8 +172,8 @@ class Items_Controller extends REST_Controller {
 			$items[] = $this->prepare_response_for_collection( $data );
 		}
 
-		$page      = (int) $item_query->query_vars['paged'];
-		$max_pages = ceil( $query_total / (int) $item_query->query_vars['number'] );
+		$page      = (int) $item_query->get( 'paged' );
+		$max_pages = ceil( $query_total / (int) $item_query->get( 'number' ) );
 
 		if ( $page > $max_pages && $query_total > 0 ) {
 			return new \WP_Error(
@@ -467,18 +467,29 @@ class Items_Controller extends REST_Controller {
 	 * @since 1.2.1
 	 */
 	public function prepare_item_for_response( $item, $request ) {
-		$data        = $item->to_array();
-		$format_date = array( 'date_created' );
-		// Format date values.
-		foreach ( $format_date as $key ) {
-			$data[ $key ] = $this->prepare_date_response( $data[ $key ] );
-		}
+		$data = [];
 
-		if ( ! empty( $data['category_id'] ) ) {
-			$data['category'] = eaccounting_rest_request( 'categories', [ 'id' => $data['category_id'] ] );
-		}
+		foreach ( array_keys( $this->get_schema_properties() ) as $key ) {
+			switch ( $key ) {
+				case 'date_created':
+					$value = $this->prepare_date_response( $item->$key );
+					break;
+				case 'category':
+					$value = eaccounting_get_category( $item->category_id, ARRAY_A );
+					break;
+				case 'creator':
+					$value = null;
+					break;
+				case 'enabled':
+					$value = eaccounting_string_to_bool( $item->enabled );
+					break;
+				default:
+					$value = $item->$key;
+					break;
+			}
 
-		unset( $data['category_id'] );
+			$data[ $key ] = $value;
+		}
 
 		$context  = ! empty( $request['context'] ) ? $request['context'] : 'view';
 		$data     = $this->add_additional_fields_to_object( $data, $request );
@@ -513,12 +524,22 @@ class Items_Controller extends REST_Controller {
 			$value = $request[ $key ];
 			if ( ! is_null( $value ) ) {
 				switch ( $key ) {
+					case 'category':
+						if ( ! is_array( $value ) ) {
+							break;
+						}
+						$category = eaccounting_get_category( $value['id'] );
+						if ( $category && 'item' === $category->type ) {
+							$props['category_id'] = $category->id;
+						}
+						break;
 					default:
 						$props[ $key ] = $value;
 						break;
 				}
 			}
 		}
+
 		/**
 		 * Filters item before it is inserted via the REST API.
 		 *
