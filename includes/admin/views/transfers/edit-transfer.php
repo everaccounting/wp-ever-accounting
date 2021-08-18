@@ -9,11 +9,8 @@
 defined( 'ABSPATH' ) || exit();
 
 $transfer_id = isset( $_REQUEST['transfer_id'] ) ? absint( $_REQUEST['transfer_id'] ) : null;
-try {
-	$transfer = new \EverAccounting\Transfer( $transfer_id );
-} catch ( Exception $e ) {
-	wp_die( $e->getMessage() );
-}
+$transfer = new \EverAccounting\Transfer( $transfer_id );
+$title = $transfer->exists() ? esc_html__( 'Update Transfer', 'wp-ever-accounting' ) : esc_html__( 'Add Transfer', 'wp-ever-accounting' );
 ?>
 <div class="ea-title-section">
 	<div>
@@ -32,7 +29,7 @@ try {
 <form id="ea-transfer-form" method="post" enctype="multipart/form-data">
 	<div class="ea-card">
 		<div class="ea-card__header">
-			<h3 class="ea-card__title"><?php echo $transfer->exists() ? __( 'Update Transfer', 'wp-ever-accounting' ) : __( 'Add Transfer', 'wp-ever-accounting' ); ?></h3>
+			<h3 class="ea-card__title"><?php echo $title; ?></h3>
 		</div>
 
 		<div class="ea-card__inside">
