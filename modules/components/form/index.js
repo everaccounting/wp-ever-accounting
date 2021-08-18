@@ -19,7 +19,7 @@ import './style.scss';
  * A form component to handle form state and provide input helper props.
  */
 class Form extends Component {
-	constructor( props ) {
+	constructor(props) {
 		super();
 
 		this.state = {
@@ -28,103 +28,101 @@ class Form extends Component {
 			touched: props.touched,
 		};
 
-		this.getInputProps = this.getInputProps.bind( this );
-		this.handleSubmit = this.handleSubmit.bind( this );
-		this.setTouched = this.setTouched.bind( this );
-		this.setValue = this.setValue.bind( this );
+		this.getInputProps = this.getInputProps.bind(this);
+		this.handleSubmit = this.handleSubmit.bind(this);
+		this.setTouched = this.setTouched.bind(this);
+		this.setValue = this.setValue.bind(this);
 	}
 
 	componentDidMount() {
 		this.validate();
 	}
 
-	UNSAFE_componentWillReceiveProps( nextProps ) {
-		if ( ! isShallowEqual( nextProps.initialValues, this.state.values ) ) {
-			this.setState( {
+	UNSAFE_componentWillReceiveProps(nextProps) {
+		if (!isShallowEqual(nextProps.initialValues, this.state.values)) {
+			this.setState({
 				...this.state,
 				values: { ...this.state.values, ...nextProps.initialValues },
-			} );
+			});
 		}
 	}
 
 	async isValidForm() {
 		await this.validate();
-		return ! (
-			this.state.errors && Object.keys( this.state.errors ).length
-		);
+		return !(this.state.errors && Object.keys(this.state.errors).length);
 	}
 
 	validate() {
 		const { values } = this.state;
-		const errors = this.props.validate( values );
-		this.setState( { errors } );
+		const errors = this.props.validate(values);
+		this.setState({ errors });
 	}
 
-	setValue( name, value ) {
+	setValue(name, value) {
 		this.setState(
-			( prevState ) => ( {
-				values: { ...prevState.values, [ name ]: value },
-			} ),
+			(prevState) => ({
+				values: { ...prevState.values, [name]: value },
+			}),
 			() => {
-				this.validate( () => {
+				this.validate(() => {
 					// onChangeCallback keeps track of validity, so needs to
 					// happen after setting the error state.
 					this.props.onChangeCallback(
 						{ name, value },
 						this.state.values,
-						! Object.keys( this.state.errors || {} ).length
+						!Object.keys(this.state.errors || {}).length
 					);
-				} );
+				});
 			}
 		);
 	}
 
-	setTouched( name, touched = true ) {
-		this.setState( ( prevState ) => ( {
-			touched: { ...prevState.touched, [ name ]: touched },
-		} ) );
+	setTouched(name, touched = true) {
+		this.setState((prevState) => ({
+			touched: { ...prevState.touched, [name]: touched },
+		}));
 	}
 
-	handleChange( name, value ) {
+	handleChange(name, value) {
 		const { values } = this.state;
 
 		// Handle native events.
-		if ( value && value.target ) {
-			if ( value.target.type === 'checkbox' ) {
-				this.setValue( name, ! values[ name ] );
+		if (value && value.target) {
+			if (value.target.type === 'checkbox') {
+				this.setValue(name, !values[name]);
 			} else {
-				this.setValue( name, value.target.value );
+				this.setValue(name, value.target.value);
 			}
 		} else {
-			this.setValue( name, value );
+			this.setValue(name, value);
 		}
 	}
 
-	handleBlur( name ) {
-		this.setTouched( name );
+	handleBlur(name) {
+		this.setTouched(name);
 	}
 
 	async handleSubmit() {
 		const { values } = this.state;
 		const touched = {};
-		Object.keys( values ).map( ( name ) => ( touched[ name ] = true ) );
-		this.setState( { touched } );
+		Object.keys(values).map((name) => (touched[name] = true));
+		this.setState({ touched });
 
-		if ( await this.isValidForm() ) {
-			this.props.onSubmitCallback( values );
+		if (await this.isValidForm()) {
+			this.props.onSubmitCallback(values);
 		}
 	}
 
-	getInputProps( name ) {
+	getInputProps(name) {
 		const { errors = {}, touched, values } = this.state;
 		return {
-			value: values[ name ] ?? '',
-			checked: Boolean( values[ name ] ),
-			selected: values[ name ],
-			onChange: ( value ) => this.handleChange( name, value ),
-			onBlur: () => this.handleBlur( name ),
-			className: touched[ name ] && errors[ name ] ? 'has-error' : null,
-			help: touched[ name ] ? errors[ name ] : null,
+			value: values[name] ?? '',
+			checked: Boolean(values[name]),
+			selected: values[name],
+			onChange: (value) => this.handleChange(name, value),
+			onBlur: () => this.handleBlur(name),
+			className: touched[name] && errors[name] ? 'has-error' : null,
+			help: touched[name] ? errors[name] : null,
 		};
 	}
 
@@ -138,14 +136,14 @@ class Form extends Component {
 			setValue: this.setValue,
 			handleSubmit: this.handleSubmit,
 			getInputProps: this.getInputProps,
-			isValidForm: ! Object.keys( errors ).length,
+			isValidForm: !Object.keys(errors).length,
 		};
 	}
 
 	render() {
-		const classes = classNames( 'ea-form', this.props.className );
-		const element = this.props.children( this.getStateAndHelpers() );
-		return <div className={ classes }>{ cloneElement( element ) }</div>;
+		const classes = classNames('ea-form', this.props.className);
+		const element = this.props.children(this.getStateAndHelpers());
+		return <div className={classes}>{cloneElement(element)}</div>;
 	}
 }
 

@@ -12,7 +12,7 @@ import PropTypes from 'prop-types';
  *
  * See https://medium.com/@Heydon/managing-heading-levels-in-design-systems-18be9a746fa3
  */
-const Level = createContext( 2 );
+const Level = createContext(2);
 
 /**
  * These components are used to frame out the page content for accessible heading hierarchy. Instead of defining fixed heading levels
@@ -22,13 +22,13 @@ const Level = createContext( 2 );
  * @param {Object} props -
  * @return {Object} -
  */
-export function H( props ) {
+export function H(props) {
 	return (
 		<Level.Consumer>
-			{ ( level ) => {
-				const Heading = 'h' + Math.min( level, 6 );
-				return <Heading { ...props } />;
-			} }
+			{(level) => {
+				const Heading = 'h' + Math.min(level, 6);
+				return <Heading {...props} />;
+			}}
 		</Level.Consumer>
 	);
 }
@@ -41,19 +41,19 @@ export function H( props ) {
  * @param {Node} props.children
  * @return {Object} -
  */
-export function Section( { component, children, ...props } ) {
+export function Section({ component, children, ...props }) {
 	const Component = component || 'div';
 	return (
 		<Level.Consumer>
-			{ ( level ) => (
-				<Level.Provider value={ level + 1 }>
-					{ component === false ? (
+			{(level) => (
+				<Level.Provider value={level + 1}>
+					{component === false ? (
 						children
 					) : (
-						<Component { ...props }>{ children }</Component>
-					) }
+						<Component {...props}>{children}</Component>
+					)}
 				</Level.Provider>
-			) }
+			)}
 		</Level.Consumer>
 	);
 }
@@ -63,11 +63,11 @@ Section.propTypes = {
 	 * The wrapper component for this section. Optional, defaults to `div`. If passed false, no wrapper is used. Additional props
 	 * passed to Section are passed on to the component.
 	 */
-	component: PropTypes.oneOfType( [
+	component: PropTypes.oneOfType([
 		PropTypes.func,
 		PropTypes.string,
 		PropTypes.bool,
-	] ),
+	]),
 	/**
 	 * The children inside this section, rendered in the `component`. This increases the context level for the next heading used.
 	 */

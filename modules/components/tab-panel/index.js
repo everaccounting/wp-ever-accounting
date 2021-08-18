@@ -13,19 +13,17 @@ import classNames from 'classnames';
  */
 import './style.scss';
 
-export default function TabPanel( props ) {
+export default function TabPanel(props) {
 	const { ClassName, tabs, ...restProps } = props;
 	return (
 		<Base
-			className={ classNames( ClassName, 'eaccounting_tab_panel' ) }
-			tabs={ tabs }
-			{ ...restProps }
+			className={classNames(ClassName, 'eaccounting_tab_panel')}
+			tabs={tabs}
+			{...restProps}
 		>
-			{ ( tab ) => (
-				<div style={ { marginBottom: '20px' } }>
-					{ tab.render( tab ) }
-				</div>
-			) }
+			{(tab) => (
+				<div style={{ marginBottom: '20px' }}>{tab.render(tab)}</div>
+			)}
 		</Base>
 	);
 }
@@ -35,12 +33,12 @@ TabPanel.propTypes = {
 	orientation: PropTypes.string,
 	onSelect: PropTypes.string,
 	tabs: PropTypes.arrayOf(
-		PropTypes.shape( {
+		PropTypes.shape({
 			name: PropTypes.string,
 			title: PropTypes.string,
 			className: PropTypes.string,
 			render: PropTypes.func,
-		} )
+		})
 	),
 	activeClass: PropTypes.string,
 	initialTabName: PropTypes.string,

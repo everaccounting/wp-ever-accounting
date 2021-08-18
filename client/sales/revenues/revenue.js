@@ -26,7 +26,7 @@ import {
 const entityName = 'revenues';
 
 // eslint-disable-next-line no-unused-vars
-function Revenue( props ) {
+function Revenue(props) {
 	const {
 		item,
 		payment_id,
@@ -36,78 +36,75 @@ function Revenue( props ) {
 		saveEntityRecord,
 	} = props;
 
-	const onSubmit = async ( form ) => {
-		const res = await saveEntityRecord( form );
-		console.log( res );
+	const onSubmit = async (form) => {
+		const res = await saveEntityRecord(form);
+		console.log(res);
 	};
 
 	return (
-		<Form initialValues={ { ...item } } onSubmitCallback={ onSubmit }>
-			{ ( {
+		<Form initialValues={{ ...item }} onSubmitCallback={onSubmit}>
+			{({
 				getInputProps,
 				isValidForm,
 				handleSubmit,
 				setValue,
 				values,
-			} ) => (
-				<Drawer onClickOutSide={ onClose } title={ __( 'Revenue' ) }>
+			}) => (
+				<Drawer onClickOutSide={onClose} title={__('Revenue')}>
 					<div className="eaccounting-drawer__body">
-						<Loading
-							loading={ isRequesting }
-							text={ __( 'Loading' ) }
-						>
+						<Loading loading={isRequesting} text={__('Loading')}>
 							<TextControl
-								label={ __( 'Amount' ) }
-								{ ...getInputProps( 'amount' ) }
-								before={ get( values, [ 'currency_code' ] ) }
-								onChange={ ( val ) =>
+								label={__('Amount')}
+								{...getInputProps('amount')}
+								before={get(values, ['currency_code'])}
+								onChange={(val) =>
 									setValue(
 										'amount',
-										val.replace( /[^0-9.]/g, '' )
+										val.replace(/[^0-9.]/g, '')
 									)
 								}
 							/>
 							<DatePicker
-								label={ __( 'Payment Date' ) }
+								label={__('Payment Date')}
 								date={
 									values &&
 									values.birth_date &&
 									values.birth_date
 								}
-								{ ...getInputProps( 'payment_date' ) }
+								{...getInputProps('payment_date')}
 							/>
 							<EntitySelect
-								label={ __( 'Account' ) }
+								label={__('Account')}
 								entityName="accounts"
-								{ ...getInputProps( 'account' ) }
+								{...getInputProps('account')}
 							/>
 							<EntitySelect
-								label={ __( 'Category' ) }
+								label={__('Category')}
 								entityName="incomeCategories"
-								{ ...getInputProps( 'category' ) }
+								{...getInputProps('category')}
 							/>
 							<EntitySelect
-								label={ __( 'Customer' ) }
+								label={__('Customer')}
 								entityName="customers"
-								{ ...getInputProps( 'customer' ) }
+								{...getInputProps('customer')}
 							/>
 							<SelectControl
-								label={ __( 'Payment Method' ) }
-								options={ Object.keys( PAYMENT_METHODS ).map(
-									( key ) => ( {
-										label: PAYMENT_METHODS[ key ],
+								label={__('Payment Method')}
+								options={Object.keys(PAYMENT_METHODS).map(
+									(key) => ({
+										label: PAYMENT_METHODS[key],
 										value: key,
-									} )
-								) }
-								{ ...getInputProps( 'payment_method' ) }
+									})
+								)}
+								{...getInputProps('payment_method')}
 							/>
 							<TextControl
-								label={ __( 'Reference' ) }
-								{ ...getInputProps( 'reference' ) }
+								label={__('Reference')}
+								{...getInputProps('reference')}
 							/>
 							<TextareaControl
-								label={ __( 'Description' ) }
-								{ ...getInputProps( 'description' ) }
+								label={__('Description')}
+								{...getInputProps('description')}
 							/>
 						</Loading>
 					</div>
@@ -117,25 +114,25 @@ function Revenue( props ) {
 								isPrimary
 								disabled={
 									isRequesting ||
-									! isValidForm ||
-									isSavingEntityRecord( payment_id )
+									!isValidForm ||
+									isSavingEntityRecord(payment_id)
 								}
-								onClick={ handleSubmit }
+								onClick={handleSubmit}
 							>
-								{ __( 'Submit' ) }
+								{__('Submit')}
 							</Button>
-							<Button isSecondary onClick={ onClose }>
-								{ __( 'Cancel' ) }
+							<Button isSecondary onClick={onClose}>
+								{__('Cancel')}
 							</Button>
 						</ButtonGroup>
 					</div>
 				</Drawer>
-			) }
+			)}
 		</Form>
 	);
 }
 
-const applyWithSelect = withSelect( ( select, props ) => {
+const applyWithSelect = withSelect((select, props) => {
 	const { payment_id = null } = props;
 
 	const {
@@ -143,25 +140,22 @@ const applyWithSelect = withSelect( ( select, props ) => {
 		isResolving,
 		getDefaultCurrency,
 		isSavingEntityRecord,
-	} = select( 'ea/core' );
+	} = select('ea/core');
 	return {
-		item: getEntityRecord( entityName, payment_id ),
-		isRequesting: isResolving( 'getEntityRecord', [
-			entityName,
-			payment_id,
-		] ),
-		isSavingEntityRecord: isSavingEntityRecord( entityName ),
+		item: getEntityRecord(entityName, payment_id),
+		isRequesting: isResolving('getEntityRecord', [entityName, payment_id]),
+		isSavingEntityRecord: isSavingEntityRecord(entityName),
 		defaultCurrency: getDefaultCurrency(),
 		payment_id,
 	};
-} );
+});
 
-const applyWithDispatch = withDispatch( ( dispatch ) => {
-	const { deleteEntityRecord, saveEntityRecord } = dispatch( 'ea/core' );
+const applyWithDispatch = withDispatch((dispatch) => {
+	const { deleteEntityRecord, saveEntityRecord } = dispatch('ea/core');
 	return {
-		deleteEntityRecord: ( id ) => deleteEntityRecord( entityName, id ),
-		saveEntityRecord: ( item ) => saveEntityRecord( entityName, item ),
+		deleteEntityRecord: (id) => deleteEntityRecord(entityName, id),
+		saveEntityRecord: (item) => saveEntityRecord(entityName, item),
 	};
-} );
+});
 
-export default compose( [ applyWithSelect, applyWithDispatch ] )( Revenue );
+export default compose([applyWithSelect, applyWithDispatch])(Revenue);

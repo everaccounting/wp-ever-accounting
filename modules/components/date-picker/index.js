@@ -28,45 +28,43 @@ import TextControl from '../text-control';
 import './style.scss';
 
 const dateValidationMessages = {
-	invalid: __( 'Invalid date' ),
-	future: __( 'Select a date in the past' ),
-	startAfterEnd: __( 'Start date must be before end date' ),
-	endBeforeStart: __( 'Start date must be before end date' ),
+	invalid: __('Invalid date'),
+	future: __('Select a date in the past'),
+	startAfterEnd: __('Start date must be before end date'),
+	endBeforeStart: __('Start date must be before end date'),
 };
 
 class DatePicker extends Component {
-	constructor( props ) {
-		super( props );
-		this.onDateChange = this.onDateChange.bind( this );
-		this.onInputChange = this.onInputChange.bind( this );
+	constructor(props) {
+		super(props);
+		this.onDateChange = this.onDateChange.bind(this);
+		this.onInputChange = this.onInputChange.bind(this);
 	}
 
-	handleKeyDown( isOpen, onToggle, { keyCode } ) {
-		if ( TAB === keyCode && isOpen ) {
+	handleKeyDown(isOpen, onToggle, { keyCode }) {
+		if (TAB === keyCode && isOpen) {
 			onToggle();
 		}
 	}
 
-	handleFocus( isOpen, onToggle ) {
-		if ( ! isOpen ) {
+	handleFocus(isOpen, onToggle) {
+		if (!isOpen) {
 			onToggle();
 		}
 	}
 
-	onDateChange( onToggle, dateString ) {
-		const date = !! dateString && moment( dateString );
+	onDateChange(onToggle, dateString) {
+		const date = !!dateString && moment(dateString);
 		const value =
-			!! dateString && !! date
-				? date.format( this.props.dateFormat )
-				: '';
-		this.props.onChange( value, date, null );
+			!!dateString && !!date ? date.format(this.props.dateFormat) : '';
+		this.props.onChange(value, date, null);
 		onToggle();
 	}
 
-	onInputChange( value ) {
-		const date = toMoment( value );
-		const error = !! date ? null : dateValidationMessages.invalid;
-		this.props.onChange( value, date, error );
+	onInputChange(value) {
+		const date = toMoment(value);
+		const error = !!date ? null : dateValidationMessages.invalid;
+		this.props.onChange(value, date, error);
 	}
 
 	render() {
@@ -80,56 +78,56 @@ class DatePicker extends Component {
 			isInvalidDate,
 		} = this.props;
 
-		const classes = classnames( 'ea-date-picker', className );
+		const classes = classnames('ea-date-picker', className);
 
-		const date = !! value && toMoment( value );
-		const text = date ? date.format( dateFormat ) : '';
+		const date = !!value && toMoment(value);
+		const text = date ? date.format(dateFormat) : '';
 		return (
 			<Dropdown
 				position="bottom center"
-				className={ classes }
-				focusOnMount={ false }
-				renderToggle={ ( { isOpen, onToggle } ) => (
+				className={classes}
+				focusOnMount={false}
+				renderToggle={({ isOpen, onToggle }) => (
 					<>
 						<TextControl
-							disabled={ disabled }
-							value={ text }
-							onChange={ this.onInputChange }
-							placeholder={ dateFormat.toLowerCase() }
-							label={ label }
-							error={ error }
-							onFocus={ partial(
+							disabled={disabled}
+							value={text}
+							onChange={this.onInputChange}
+							placeholder={dateFormat.toLowerCase()}
+							label={label}
+							error={error}
+							onFocus={partial(
 								this.handleFocus,
 								isOpen,
 								onToggle
-							) }
-							onKeyDown={ partial(
+							)}
+							onKeyDown={partial(
 								this.handleKeyDown,
 								isOpen,
 								onToggle
-							) }
+							)}
 						/>
-						{ error && (
+						{error && (
 							<Popover
 								className="woocommerce-calendar__input-error"
-								focusOnMount={ false }
+								focusOnMount={false}
 								position="bottom center"
 							>
-								{ error }
+								{error}
 							</Popover>
-						) }
+						)}
 					</>
-				) }
-				renderContent={ ( { onToggle } ) => (
+				)}
+				renderContent={({ onToggle }) => (
 					<div className="ea-calendar__react-dates is-core-datepicker">
 						<WpDatePicker
-							currentDate={ date }
+							currentDate={date}
 							className="ea-calendar"
-							onChange={ partial( this.onDateChange, onToggle ) }
-							isInvalidDate={ isInvalidDate }
+							onChange={partial(this.onDateChange, onToggle)}
+							isInvalidDate={isInvalidDate}
 						/>
 					</div>
-				) }
+				)}
 			/>
 		);
 	}
@@ -172,7 +170,7 @@ DatePicker.propTypes = {
 
 DatePicker.defaultProps = {
 	dateFormat: 'YYYY-MM-DD',
-	onChange: ( x ) => x,
+	onChange: (x) => x,
 };
 
 export default DatePicker;

@@ -9,28 +9,28 @@ import { lazy } from '@wordpress/element';
  */
 import { Tabs } from '@eaccounting/components';
 
-const Revenues = lazy( () => import( './revenues' ) );
-const Customers = lazy( () => import( './customers' ) );
+const Revenues = lazy(() => import('./revenues'));
+const Customers = lazy(() => import('./customers'));
 
-export default function ( props ) {
-	console.log( props );
-	const tabs = applyFilters( 'EACCOUNTING_SALES_TABS', [
+export default function (props) {
+	console.log(props);
+	const tabs = applyFilters('EACCOUNTING_SALES_TABS', [
 		{
 			key: 'revenues',
 			container: Revenues,
-			label: __( 'Revenues' ),
+			label: __('Revenues'),
 			capability: 'manage_options',
 		},
 		{
 			key: 'customers',
 			container: Customers,
-			label: __( 'Customers' ),
+			label: __('Customers'),
 			capability: 'manage_options',
 		},
-	] );
+	]);
 	return (
 		<>
-			<Tabs tabs={ tabs } { ...props } />
+			<Tabs tabs={tabs} {...props} />
 		</>
 	);
 }

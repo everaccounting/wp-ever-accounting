@@ -32,8 +32,8 @@ export const getPath = () => getHistory().location.pathname;
  */
 export const getPage = () => {
 	const search = getHistory().location.search;
-	if ( search.length ) {
-		const query = parse( search.substring( 1 ) ) || {};
+	if (search.length) {
+		const query = parse(search.substring(1)) || {};
 		const { page } = query;
 		return page;
 	}
@@ -46,10 +46,10 @@ export const getPage = () => {
  * @param {Object} path Path to resolve, default to current
  * @return {string} Screen name
  */
-export const getScreenFromPath = ( path = getPath() ) => {
+export const getScreenFromPath = (path = getPath()) => {
 	return path === '/'
 		? 'overview'
-		: path.replace( '/eaccounting', '' ).replace( '/', '' );
+		: path.replace('/eaccounting', '').replace('/', '');
 };
 
 /**
@@ -58,12 +58,12 @@ export const getScreenFromPath = ( path = getPath() ) => {
  * @param {string} queryString string value extracted from URL.
  * @return {Array} List of IDs converted to numbers.
  */
-export function getIdsFromQuery( queryString = '' ) {
+export function getIdsFromQuery(queryString = '') {
 	return uniq(
 		queryString
-			.split( ',' )
-			.map( ( id ) => parseInt( id, 10 ) )
-			.filter( Boolean )
+			.split(',')
+			.map((id) => parseInt(id, 10))
+			.filter(Boolean)
 	);
 }
 
@@ -72,8 +72,8 @@ export function getIdsFromQuery( queryString = '' ) {
  *
  * @return {number} List of IDs converted to numbers.
  */
-export function getIdFromQuery( key = 'id', query = getQuery() ) {
-	return parseInt( query[ key ] || 0, 10 );
+export function getIdFromQuery(key = 'id', query = getQuery()) {
+	return parseInt(query[key] || 0, 10);
 }
 
 /**
@@ -82,24 +82,24 @@ export function getIdFromQuery( key = 'id', query = getQuery() ) {
  * @param {Object} query Query object.
  * @return {Array} List of search words.
  */
-export function getSearchWords( query = navUtils.getQuery() ) {
-	if ( typeof query !== 'object' ) {
+export function getSearchWords(query = navUtils.getQuery()) {
+	if (typeof query !== 'object') {
 		throw new Error(
 			'Invalid parameter passed to getSearchWords, it expects an object or no parameters.'
 		);
 	}
 	const { search } = query;
-	if ( ! search ) {
+	if (!search) {
 		return [];
 	}
-	if ( typeof search !== 'string' ) {
+	if (typeof search !== 'string') {
 		throw new Error(
 			"Invalid 'search' type. getSearchWords expects query's 'search' property to be a string."
 		);
 	}
 	return search
-		.split( ',' )
-		.map( ( searchWord ) => searchWord.replace( '%2C', ',' ) );
+		.split(',')
+		.map((searchWord) => searchWord.replace('%2C', ','));
 }
 
 /**
@@ -117,13 +117,13 @@ export function generatePath(
 ) {
 	const page = getPage();
 	const args = { page };
-	if ( path !== '/' ) {
+	if (path !== '/') {
 		args.path = path;
 	}
 
 	return addQueryArgs(
 		'admin.php',
-		pickBy( { ...args, ...currentQuery, ...query }, identity )
+		pickBy({ ...args, ...currentQuery, ...query }, identity)
 	);
 }
 
@@ -134,8 +134,8 @@ export function generatePath(
  */
 export function getQuery() {
 	const search = getHistory().location.search;
-	if ( search.length ) {
-		return omit( parse( search.substring( 1 ) ) || {}, [ 'page', 'path' ] );
+	if (search.length) {
+		return omit(parse(search.substring(1)) || {}, ['page', 'path']);
 	}
 	return {};
 }
@@ -152,14 +152,14 @@ export function getQuery() {
 export function getTableQuery(
 	whitelists = {},
 	defaults = {},
-	filter = ( x ) => x,
+	filter = (x) => x,
 	query = getQuery()
 ) {
-	if ( isArray( whitelists ) ) {
-		whitelists = whitelists.reduce( ( acc, whitelist ) => {
+	if (isArray(whitelists)) {
+		whitelists = whitelists.reduce((acc, whitelist) => {
 			// eslint-disable-next-line no-unused-vars
-			return { ...acc, [ whitelist ]: ( x, query ) => x };
-		}, {} );
+			return { ...acc, [whitelist]: (x, query) => x };
+		}, {});
 	}
 
 	defaults = {
@@ -172,33 +172,30 @@ export function getTableQuery(
 
 	whitelists = {
 		...whitelists,
-		search: ( search, query ) => query.search || '',
-		paged: ( paged, query ) => parseInt( query.paged, 10 ) || 1,
-		orderby: ( orderby, query ) => query.orderby || defaults.orderby,
-		order: ( order, query ) =>
+		search: (search, query) => query.search || '',
+		paged: (paged, query) => parseInt(query.paged, 10) || 1,
+		orderby: (orderby, query) => query.orderby || defaults.orderby,
+		order: (order, query) =>
 			query.order === 'asc' ? 'asc' : defaults.order,
 	};
-	query = Object.keys( query ).reduce( ( acc, queryKey ) => {
-		if ( has( whitelists, [ queryKey ] ) ) {
-			const queryValue = whitelists[ queryKey ](
-				query[ queryKey ],
-				query
-			);
+	query = Object.keys(query).reduce((acc, queryKey) => {
+		if (has(whitelists, [queryKey])) {
+			const queryValue = whitelists[queryKey](query[queryKey], query);
 			if (
-				has( defaults, [ queryKey ] ) &&
-				isEqual( defaults[ queryKey ], queryValue )
+				has(defaults, [queryKey]) &&
+				isEqual(defaults[queryKey], queryValue)
 			) {
 				return acc;
 			}
 			acc = {
 				...acc,
-				[ queryKey ]: queryValue,
+				[queryKey]: queryValue,
 			};
 		}
 
 		return acc;
-	}, {} );
-	return filter( pickBy( query, identity ) );
+	}, {});
+	return filter(pickBy(query, identity));
 }
 
 /**
@@ -209,13 +206,13 @@ export function getTableQuery(
  * @param {string} query object of current query params (defaults to current querystring).
  * @return {Function} A callback which will update `param` to the passed value when called.
  */
-export function onQueryChange( param, path = getPath(), query = getQuery() ) {
-	switch ( param ) {
+export function onQueryChange(param, path = getPath(), query = getQuery()) {
+	switch (param) {
 		case 'sort':
-			return ( sort ) => updateQueryString( sort, path, query );
+			return (sort) => updateQueryString(sort, path, query);
 		default:
-			return ( value ) =>
-				updateQueryString( { [ param ]: value }, path, query );
+			return (value) =>
+				updateQueryString({ [param]: value }, path, query);
 	}
 }
 
@@ -231,8 +228,8 @@ export function updateQueryString(
 	path = getPath(),
 	currentQuery = getQuery()
 ) {
-	const newPath = generatePath( query, path, currentQuery );
-	getHistory().push( newPath );
+	const newPath = generatePath(query, path, currentQuery);
+	getHistory().push(newPath);
 }
 
 /**
@@ -241,8 +238,8 @@ export function updateQueryString(
  * @param {string | Array}key
  * @param {Object} query
  */
-export function removeQueryArgs( key, query = getQuery() ) {
-	return omit( query, Array.isArray( key ) ? key : [ key ] );
+export function removeQueryArgs(key, query = getQuery()) {
+	return omit(query, Array.isArray(key) ? key : [key]);
 }
 
 /**
@@ -251,39 +248,39 @@ export function removeQueryArgs( key, query = getQuery() ) {
  * @param {Function} listener Listener to add on history change.
  * @return {Function} Function to remove listeners.
  */
-export const addHistoryListener = ( listener ) => {
+export const addHistoryListener = (listener) => {
 	// Monkey patch pushState to allow trigger the pushstate event listener.
-	if ( window.wcNavigation && ! window.wcNavigation.historyPatched ) {
-		( ( history ) => {
+	if (window.wcNavigation && !window.wcNavigation.historyPatched) {
+		((history) => {
 			/* global CustomEvent */
 			const pushState = history.pushState;
 			const replaceState = history.replaceState;
-			history.pushState = function ( state ) {
-				const pushStateEvent = new CustomEvent( 'pushstate', {
+			history.pushState = function (state) {
+				const pushStateEvent = new CustomEvent('pushstate', {
 					state,
-				} );
-				window.dispatchEvent( pushStateEvent );
-				return pushState.apply( history, arguments );
+				});
+				window.dispatchEvent(pushStateEvent);
+				return pushState.apply(history, arguments);
 			};
-			history.replaceState = function ( state ) {
-				const replaceStateEvent = new CustomEvent( 'replacestate', {
+			history.replaceState = function (state) {
+				const replaceStateEvent = new CustomEvent('replacestate', {
 					state,
-				} );
-				window.dispatchEvent( replaceStateEvent );
-				return replaceState.apply( history, arguments );
+				});
+				window.dispatchEvent(replaceStateEvent);
+				return replaceState.apply(history, arguments);
 			};
 			window.wcNavigation.historyPatched = true;
-		} )( window.history );
+		})(window.history);
 	}
 	/*eslint-disable @wordpress/no-global-event-listener */
-	window.addEventListener( 'popstate', listener );
-	window.addEventListener( 'pushstate', listener );
-	window.addEventListener( 'replacestate', listener );
+	window.addEventListener('popstate', listener);
+	window.addEventListener('pushstate', listener);
+	window.addEventListener('replacestate', listener);
 
 	return () => {
-		window.removeEventListener( 'popstate', listener );
-		window.removeEventListener( 'pushstate', listener );
-		window.removeEventListener( 'replacestate', listener );
+		window.removeEventListener('popstate', listener);
+		window.removeEventListener('pushstate', listener);
+		window.removeEventListener('replacestate', listener);
 	};
 
 	/* eslint-enable @wordpress/no-global-event-listener */

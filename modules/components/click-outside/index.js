@@ -28,31 +28,31 @@ import isOutside from './is-outside';
  * @param {string} props.className - Class name for the wrapper
  * @param {requestCallback} props.onOutside - Callback when user clicks outside of the wrapper
  */
-function ClickOutside( props ) {
-	const containerRef = useRef( null );
+function ClickOutside(props) {
+	const containerRef = useRef(null);
 	const { children, onOutside, className } = props;
-	const outside = ( ev ) => {
-		console.log( ev );
-		if ( isOutside( ev, containerRef.current ) || ev.key === 'Escape' ) {
-			onOutside( ev );
+	const outside = (ev) => {
+		console.log(ev);
+		if (isOutside(ev, containerRef.current) || ev.key === 'Escape') {
+			onOutside(ev);
 		}
 	};
 
 	/*eslint-disable @wordpress/no-global-event-listener, react-hooks/exhaustive-deps */
-	useEffect( () => {
-		window.addEventListener( 'mousedown', outside );
-		window.addEventListener( 'keydown', outside );
+	useEffect(() => {
+		window.addEventListener('mousedown', outside);
+		window.addEventListener('keydown', outside);
 
 		return () => {
-			window.removeEventListener( 'mousedown', outside );
-			window.removeEventListener( 'keydown', outside );
+			window.removeEventListener('mousedown', outside);
+			window.removeEventListener('keydown', outside);
 		};
-	}, [] );
+	}, []);
 	/* eslint-enable @wordpress/no-global-event-listener, react-hooks/exhaustive-deps */
 
 	return (
-		<div className={ className } ref={ containerRef }>
-			{ children }
+		<div className={className} ref={containerRef}>
+			{children}
 		</div>
 	);
 }

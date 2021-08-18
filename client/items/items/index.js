@@ -1,7 +1,7 @@
 /**
  * WordPress dependencies
  */
-import { __, _x } from '@wordpress/i18n';
+import { __ } from '@wordpress/i18n';
 import { Button, ToggleControl, Notice, Spacer } from '@wordpress/components';
 import { withSelect, withDispatch } from '@wordpress/data';
 import { compose } from '@wordpress/compose';
@@ -33,19 +33,19 @@ import {
 
 const filters = {
 	status: {
-		title: __( 'Status' ),
+		title: __('Status'),
 		mixedString: '{{title}}Status{{/title}} {{rule /}} {{filter /}}',
 		input: {
 			component: 'SelectFilter',
 			options: [
 				{ label: '== Select ==', value: '' },
-				{ label: __( 'Enabled' ), value: 'enabled' },
-				{ label: __( 'Disabled' ), value: 'disabled' },
+				{ label: __('Enabled'), value: 'enabled' },
+				{ label: __('Disabled'), value: 'disabled' },
 			],
 		},
 	},
 	category: {
-		title: __( 'Category' ),
+		title: __('Category'),
 		mixedString: '{{title}}Category{{/title}} {{rule /}} {{filter /}}',
 		input: {
 			component: 'EntityFilter',
@@ -55,16 +55,16 @@ const filters = {
 		rules: [
 			{
 				value: '_in',
-				label: __( 'In' ),
+				label: __('In'),
 			},
 			{
 				value: '_not_in',
-				label: __( 'No In' ),
+				label: __('No In'),
 			},
 		],
 	},
 	sale_price: {
-		title: __( 'Sale Price' ),
+		title: __('Sale Price'),
 		mixedString: '{{title}}Sale Price{{/title}} {{rule /}} {{filter /}}',
 		input: {
 			component: 'NumberFilter',
@@ -72,20 +72,20 @@ const filters = {
 		rules: [
 			{
 				value: 'max',
-				label: __( 'Less Than' ),
+				label: __('Less Than'),
 			},
 			{
 				value: 'min',
-				label: __( 'More Than' ),
+				label: __('More Than'),
 			},
 			{
 				value: 'between',
-				label: __( 'Between' ),
+				label: __('Between'),
 			},
 		],
 	},
 	purchase_price: {
-		title: __( 'Purchase Price' ),
+		title: __('Purchase Price'),
 		mixedString:
 			'{{title}}Purchase Price{{/title}} {{rule /}} {{filter /}}',
 		input: {
@@ -94,21 +94,21 @@ const filters = {
 		rules: [
 			{
 				value: 'max',
-				label: __( 'Less Than' ),
+				label: __('Less Than'),
 			},
 			{
 				value: 'min',
-				label: __( 'More Than' ),
+				label: __('More Than'),
 			},
 			{
 				value: 'between',
-				label: __( 'Between' ),
+				label: __('Between'),
 			},
 		],
 	},
 };
 
-function Items( props ) {
+function Items(props) {
 	const {
 		query,
 		items,
@@ -121,69 +121,69 @@ function Items( props ) {
 		isSavingEntityRecord,
 	} = props;
 	const { search } = query;
-	const [ editingItem, setEditingItem ] = useState( false );
+	const [editingItem, setEditingItem] = useState(false);
 	return (
 		<>
-			<H className="wp-heading-inline">{ __( 'Items' ) }</H>
+			<H className="wp-heading-inline">{__('Items')}</H>
 			<Button
 				className="page-title-action"
 				isSecondary
-				onClick={ () => setEditingItem( {} ) }
+				onClick={() => setEditingItem({})}
 			>
-				{ __( 'Add Item' ) }
+				{__('Add Item')}
 			</Button>
 			<Button className="page-title-action" isSecondary>
-				{ __( 'import' ) }
+				{__('import')}
 			</Button>
 
-			{ editingItem && (
+			{editingItem && (
 				<ItemModal
-					item={ editingItem }
-					onClose={ () => setEditingItem( false ) }
-					onSave={ () => setEditingItem( false ) }
+					item={editingItem}
+					onClose={() => setEditingItem(false)}
+					onSave={() => setEditingItem(false)}
 				/>
-			) }
+			)}
 
-			{ ! isEmpty( fetchError ) && (
+			{!isEmpty(fetchError) && (
 				<>
-					<Notice isDismissible={ false } status="error">
-						<Text>{ fetchError.message }</Text>
+					<Notice isDismissible={false} status="error">
+						<Text>{fetchError.message}</Text>
 					</Notice>
-					<Spacer marginBottom={ 20 } />
+					<Spacer marginBottom={20} />
 				</>
-			) }
+			)}
 
 			<ListTable
-				query={ query }
-				isRequesting={ isRequesting }
-				rows={ items }
-				total={ total }
-				onQueryChange={ ( query ) =>
-					updateQueryString( query, '/items', {} )
+				query={query}
+				isRequesting={isRequesting}
+				rows={items}
+				total={total}
+				onQueryChange={(query) =>
+					updateQueryString(query, '/items', {})
 				}
-				bulkActions={ [
+				bulkActions={[
 					{
-						label: __( 'Delete' ),
-						value: __( 'delete' ),
+						label: __('Delete'),
+						value: __('delete'),
 					},
 					{
-						label: __( 'Enable' ),
-						value: __( 'enable' ),
+						label: __('Enable'),
+						value: __('enable'),
 					},
 					{
-						label: __( 'Disable' ),
-						value: __( 'disable' ),
+						label: __('Disable'),
+						value: __('disable'),
 					},
 					{
-						label: __( 'Export' ),
-						value: __( 'export' ),
+						label: __('Export'),
+						value: __('export'),
 					},
-				] }
-				onBulkAction={ ( action, selected ) => {
-					console.log( action, selected );
-				} }
-				filters={ filters }
-				columns={ [
+				]}
+				onBulkAction={(action, selected) => {
+					console.log(action, selected);
+				}}
+				filters={filters}
+				columns={[
 					{
 						type: 'selection',
 						property: 'id',
@@ -192,38 +192,38 @@ function Items( props ) {
 						property: '',
 						width: 50,
 						render: () => {
-							return <Gravatar size={ 36 } />;
+							return <Gravatar size={36} />;
 						},
 					},
 					{
-						label: __( 'Name' ),
+						label: __('Name'),
 						property: 'name',
 						isPrimary: true,
 						sortable: true,
-						render: ( row ) => {
-							const highlightWords = !! search ? [ search ] : '';
+						render: (row) => {
+							const highlightWords = !!search ? [search] : '';
 							return (
 								<Text
 									color="var(--wp-admin-theme-color)"
-									style={ {
+									style={{
 										cursor: 'pointer',
 										fontWeight: '600',
-									} }
-									highlightWords={ highlightWords }
-									onClick={ () => setEditingItem( row ) }
+									}}
+									highlightWords={highlightWords}
+									onClick={() => setEditingItem(row)}
 								>
-									{ row.name }
+									{row.name}
 								</Text>
 							);
 						},
 						actions: [
 							{
-								label: __( 'Edit' ),
-								onClick: ( row ) => setEditingItem( row ),
+								label: __('Edit'),
+								onClick: (row) => setEditingItem(row),
 							},
 							{
-								label: __( 'Delete' ),
-								onClick: ( row ) => {
+								label: __('Delete'),
+								onClick: (row) => {
 									if (
 										window.confirm(
 											__(
@@ -231,83 +231,84 @@ function Items( props ) {
 											)
 										)
 									) {
-										deleteEntityRecord( row.id );
+										deleteEntityRecord(row.id);
 									}
 								},
 							},
 						],
 					},
 					{
-						label: __( 'Sale price' ),
+						label: __('Sale price'),
 						property: 'sale_price',
 						sortable: true,
-						render: ( row ) => {
+						render: (row) => {
 							const { sale_price } = row;
 							return (
 								<Amount
-									amount={ sale_price }
-									currency={ defaultCurrency }
+									amount={sale_price}
+									currency={defaultCurrency}
 								/>
 							);
 						},
 					},
 					{
-						label: __( 'Purchase price' ),
+						label: __('Purchase price'),
 						property: 'purchase_price',
 						sortable: true,
-						render: ( row ) => {
+						render: (row) => {
 							const { purchase_price } = row;
 							return (
 								<Amount
-									amount={ purchase_price }
-									currency={ defaultCurrency }
+									amount={purchase_price}
+									currency={defaultCurrency}
 								/>
 							);
 						},
 					},
 					{
-						label: __( 'Category' ),
+						label: __('Category'),
 						property: 'category_id',
 						sortable: true,
-						render: ( row ) => {
+						render: (row) => {
 							return (
 								<Text>
-									{ get( row, [ 'category', 'name' ], '-' ) }
+									{get(row, ['category', 'name'], '-')}
 								</Text>
 							);
 						},
 					},
 					{
-						label: __( 'Enabled' ),
-						property: 'status',
+						label: __('Enabled'),
+						property: 'enabled',
 						sortable: true,
 						width: 150,
-						render: ( row ) => {
+						render: (row) => {
 							return (
 								<ToggleControl
-									disabled={ isSavingEntityRecord( row.id ) }
-									checked={ row.enabled }
-									onChange={ ( enabled ) =>
-										saveEntityRecord( {
+									disabled={isSavingEntityRecord(row.id)}
+									checked={row.enabled}
+									onChange={(enabled) =>
+										saveEntityRecord({
 											id: row.id,
 											enabled,
-										} )
+										})
 									}
 								/>
 							);
 						},
 					},
-				] }
+				]}
 			/>
 		</>
 	);
 }
 
-const applyWithSelect = withSelect( ( select, props ) => {
+const applyWithSelect = withSelect((select, props) => {
 	const { tab } = props.query;
-	const tableQuery = getTableQuery( [
-		...Object.keys( getActiveFiltersFromQuery( filters, props.query ) ),
-	] );
+	const tableQuery = getTableQuery([
+		...Object.keys(getActiveFiltersFromQuery(filters, props.query)),
+	]);
+
 	const {
 		getEntityRecords,
 		getTotalEntityRecords,
@@ -315,27 +316,24 @@ const applyWithSelect = withSelect( ( select, props ) => {
 		isResolving,
 		getDefaultCurrency,
 		isSavingEntityRecord,
-	} = select( 'ea/core' );
+	} = select('ea/core');
 	return {
-		items: getEntityRecords( 'items', tableQuery ),
-		total: getTotalEntityRecords( 'items', tableQuery ),
-		isRequesting: isResolving( 'getEntityRecords', [
-			'items',
-			tableQuery,
-		] ),
-		fetchError: getEntityFetchError( 'items', tableQuery ),
-		isSavingEntityRecord: isSavingEntityRecord( 'items' ),
+		items: getEntityRecords('items', tableQuery),
+		total: getTotalEntityRecords('items', tableQuery),
+		isRequesting: isResolving('getEntityRecords', ['items', tableQuery]),
+		fetchError: getEntityFetchError('items', tableQuery),
+		isSavingEntityRecord: isSavingEntityRecord('items'),
 		defaultCurrency: getDefaultCurrency(),
 		tab,
 	};
-} );
+});
 
-const applyWithDispatch = withDispatch( ( dispatch ) => {
-	const { deleteEntityRecord, saveEntityRecord } = dispatch( 'ea/core' );
+const applyWithDispatch = withDispatch((dispatch) => {
+	const { deleteEntityRecord, saveEntityRecord } = dispatch('ea/core');
 	return {
-		deleteEntityRecord: ( id ) => deleteEntityRecord( 'items', id ),
-		saveEntityRecord: ( item ) => saveEntityRecord( 'items', item ),
+		deleteEntityRecord: (id) => deleteEntityRecord('items', id),
+		saveEntityRecord: (item) => saveEntityRecord('items', item),
 	};
-} );
+});
 
-export default compose( [ applyWithSelect, applyWithDispatch ] )( Items );
+export default compose([applyWithSelect, applyWithDispatch])(Items);

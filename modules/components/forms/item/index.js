@@ -21,142 +21,144 @@ import TabPanel from '../../tab-panel';
 import { CORE_STORE_NAME } from '@eaccounting/data';
 import TextareaControl from '../../textarea-control';
 
-export default function ItemModal( props ) {
-	const { item = { id: undefined }, onSave = ( x ) => x, onClose } = props;
-	const { title = item.id ? __( 'Update Item' ) : __( 'Add Item' ) } = props;
-	const {
-		isSavingEntityRecord,
-		entityRecordSaveError,
-		defaultCurrency,
-	} = useSelect( ( select ) => {
-		const {
-			isSavingEntityRecord,
-			getEntityRecordSaveError,
-			getDefaultCurrency,
-		} = select( CORE_STORE_NAME );
-		return {
-			isSavingEntityRecord: isSavingEntityRecord( 'items', item.id ),
-			entityRecordSaveError: getEntityRecordSaveError( 'items', item.id ),
-			defaultCurrency: getDefaultCurrency(),
-		};
-	} );
+export default function ItemModal(props) {
+	const { item = { id: undefined }, onSave = (x) => x, onClose } = props;
+	const { title = item.id ? __('Update Item') : __('Add Item') } = props;
+	const { isSavingEntityRecord, entityRecordSaveError, defaultCurrency } =
+		useSelect((select) => {
+			const {
+				isSavingEntityRecord,
+				getEntityRecordSaveError,
+				getDefaultCurrency,
+			} = select(CORE_STORE_NAME);
+			return {
+				isSavingEntityRecord: isSavingEntityRecord('items'),
+				entityRecordSaveError: getEntityRecordSaveError(
+					'items',
+					item.id
+				),
+				defaultCurrency: getDefaultCurrency(),
+			};
+		});
 	const { code = 'USD' } = defaultCurrency;
-	const { saveEntityRecord, createNotice } = useDispatch( CORE_STORE_NAME );
+	const { saveEntityRecord, createNotice } = useDispatch(CORE_STORE_NAME);
 
-	const onSubmit = async ( item ) => {
-		const res = await saveEntityRecord( 'items', item );
-		if ( ! isSavingEntityRecord && res && res.id ) {
-			createNotice( 'success', __( 'Item saved successfully!' ) );
-			onSave( res );
+	const onSubmit = async (item) => {
+		const res = await saveEntityRecord('items', item);
+		if (!isSavingEntityRecord(item.id) && res && res.id) {
+			createNotice('success', __('Item saved successfully!'));
+			onSave(res);
 		}
 	};
 
-	const validate = ( values, errors = {} ) => {
-		if ( isEmpty( values.name ) ) {
-			errors.name = __( 'Name is required' );
+	const validate = (values, errors = {}) => {
+		console.log('validate', values);
+		if (isEmpty(values.name)) {
+			errors.name = __('Name is required');
 		}
-		if ( isEmpty( values.sell_price ) ) {
-			errors.sale_price = __( 'Sell price is required' );
+		if (isEmpty(values.sale_price)) {
+			errors.sale_price = __('Sale price is required');
 		}
-		return applyFilters(
-			'EACCOUNTING_VALIDATE_ITEM_PARAMS',
-			errors,
-			values
-		);
+		return applyFilters('EACCOUNTING_VALIDATE_ITEM_PARAMS', errors, values);
 	};
 
-	useEffect( () => {
+	useEffect(() => {
 		// eslint-disable-next-line no-unused-expressions
 		entityRecordSaveError &&
-			createNotice( 'error', entityRecordSaveError.message );
-	}, [ entityRecordSaveError ] );
-
+			createNotice('error', entityRecordSaveError.message);
+	}, [entityRecordSaveError]);
+	console.log(item);
 	return (
 		<>
-			<Modal title={ title } onClose={ onClose }>
+			<Modal title={title} onClose={onClose}>
 				<Form
-					initialValues={ {
+					initialValues={{
 						...item,
-					} }
-					onSubmitCallback={ onSubmit }
-					validate={ validate }
+					}}
+					onSubmitCallback={onSubmit}
+					validate={validate}
 				>
-					{ ( {
+					{({
 						getInputProps,
 						isValidForm,
 						handleSubmit,
 						setValue,
-					} ) => (
+						values,
+					}) => (
 						<>
+							{console.log(values)}
+							{console.log(isValidForm)}
+							{console.log(isSavingEntityRecord(item.id))}
 							<TextControl
 								required
-								label={ __( 'Name' ) }
-								{ ...getInputProps( 'name' ) }
+								label={__('Name')}
+								{...getInputProps('name')}
 							/>
 							<TextControl
 								required
-								before={ code }
-								label={ __( 'Sell Price' ) }
-								{ ...getInputProps( 'sell_price' ) }
-								onChange={ ( val ) =>
+								before={code}
+								label={__('Sale Price')}
+								{...getInputProps('sale_price')}
+								onChange={(val) =>
 									setValue(
-										'sell_price',
-										val.replace( /[^0-9.]/g, '' )
+										'sale_price',
+										val.replace(/[^0-9.]/g, '')
 									)
 								}
 							/>
 							<TextControl
-								before={ code }
-								label={ __( 'Purchase Price' ) }
-								{ ...getInputProps( 'purchase_price' ) }
-								onChange={ ( val ) =>
+								before={code}
+								label={__('Purchase Price')}
+								{...getInputProps('purchase_price')}
+								onChange={(val) =>
 									setValue(
 										'purchase_price',
-										val.replace( /[^0-9.]/g, '' )
+										val.replace(/[^0-9.]/g, '')
 									)
 								}
 							/>
 							<EntitySelect
 								required
-								label={ __( 'Category' ) }
-								entityName={ 'itemCategories' }
-								creatable={ true }
-								{ ...getInputProps( 'category' ) }
+								label={__('Category')}
+								entityName={'itemCategories'}
+								creatable={true}
+								{...getInputProps('category')}
 							/>
 							<TabPanel
-								tabs={ [
+								tabs={[
 									{
-										title: __( 'Details' ),
+										title: __('Details'),
 										name: 'details',
 										render: () => {
 											return (
 												<>
 													<TextareaControl
-														label={ __(
+														label={__(
 															'description'
-														) }
-														{ ...getInputProps(
+														)}
+														{...getInputProps(
 															'description'
-														) }
+														)}
 													/>
 												</>
 											);
 										},
 									},
-								] }
+								]}
 							/>
 							<Button
 								type="submit"
 								isPrimary
 								disabled={
-									! isValidForm || isSavingEntityRecord
+									!isValidForm ||
+									isSavingEntityRecord(item.id)
 								}
-								onClick={ handleSubmit }
+								onClick={handleSubmit}
 							>
-								{ __( 'Submit' ) }
+								{__('Submit')}
 							</Button>
 						</>
-					) }
+					)}
 				</Form>
 			</Modal>
 		</>

@@ -15,8 +15,8 @@ import './style.scss';
 
 export default class Loading extends Component {
 	// eslint-disable-next-line no-useless-constructor
-	constructor( props ) {
-		super( props );
+	constructor(props) {
+		super(props);
 	}
 
 	documentBody() {
@@ -25,22 +25,22 @@ export default class Loading extends Component {
 
 	disableScroll() {
 		const documentBody = this.documentBody();
-		if ( documentBody ) {
-			documentBody.style.setProperty( 'overflow', 'hidden' );
+		if (documentBody) {
+			documentBody.style.setProperty('overflow', 'hidden');
 		}
 	}
 
 	enableScroll() {
 		const documentBody = this.documentBody();
-		if ( documentBody ) {
-			documentBody.style.removeProperty( 'overflow' );
+		if (documentBody) {
+			documentBody.style.removeProperty('overflow');
 		}
 	}
 
 	getStyle() {
 		const { loading, fullscreen } = this.props;
 
-		if ( fullscreen ) {
+		if (fullscreen) {
 			this.disableScroll();
 			return {
 				position: 'fixed',
@@ -54,7 +54,7 @@ export default class Loading extends Component {
 
 		this.enableScroll();
 
-		if ( loading ) {
+		if (loading) {
 			return {
 				position: 'relative',
 				width: '100%',
@@ -67,10 +67,10 @@ export default class Loading extends Component {
 	render() {
 		const { loading, fullscreen, text } = this.props;
 		return (
-			<div style={ this.getStyle() }>
-				{ loading && (
+			<div style={this.getStyle()}>
+				{loading && (
 					<div
-						style={ {
+						style={{
 							display: 'block',
 							position: 'absolute',
 							zIndex: 657,
@@ -80,15 +80,15 @@ export default class Loading extends Component {
 							right: 0,
 							bottom: 0,
 							left: 0,
-						} }
+						}}
 					>
 						<div
-							className={ classNames( 'ea-loading-spinner', {
+							className={classNames('ea-loading-spinner', {
 								'is-full-screen': fullscreen,
-							} ) }
-							style={ {
+							})}
+							style={{
 								position: 'absolute',
-							} }
+							}}
 						>
 							<svg
 								className="loader"
@@ -103,14 +103,12 @@ export default class Loading extends Component {
 									r="12.5"
 								/>
 							</svg>
-							{ text && (
-								<p className="ea-loading-text">{ text }</p>
-							) }
+							{text && <p className="ea-loading-text">{text}</p>}
 						</div>
 					</div>
-				) }
+				)}
 
-				{ this.props.children }
+				{this.props.children}
 			</div>
 		);
 	}

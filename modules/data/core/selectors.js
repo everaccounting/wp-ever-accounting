@@ -16,59 +16,20 @@ import {
  * External dependencies
  */
 import { compact, find, get, isEmpty, set } from 'lodash';
-import { sprintf } from '@wordpress/i18n';
 import { getNormalizedCommaSeparable } from '../utils';
 import createSelector from 'rememo';
 
 /**
- * Get all entities.
- */
-export const getSchema = createRegistrySelector(
-	( select ) => ( state, name ) => {
-		state = state.entities.schemas;
-		const hasResolved = select( STORE_NAME ).hasFinishedResolution(
-			'getSchemas'
-		);
-		const schema = find( state, { name } );
-
-		if ( isEmpty( schema ) && hasResolved ) {
-			throw new Error(
-				sprintf(
-					'There is no route for the given schema name (%s) in the store',
-					name
-				)
-			);
-		}
-
-		return schema;
-	}
-);
-
-/**
- * Return all the entities in store.
+ * Returns the entity object given its name.
  *
- * @param state
- * @return {Array} An array of all entities.
+ * @param {Object} state Data state.
+ * @param {string} name  Entity name.
+ *
+ * @return {Object} Entity
  */
-export const getSchemas = createRegistrySelector( ( select ) => ( state ) => {
-	state = state.entities.schemas;
-	const hasResolved = select( STORE_NAME ).hasFinishedResolution(
-		'getSchemas'
-	);
-	if ( isEmpty( state ) ) {
-		if ( hasResolved ) {
-			throw new Error(
-				sprintf(
-					'There is no entities for the given namespace (%s) in the store',
-					'/ea/v1'
-				)
-			);
-		}
-		return [];
-	}
-
-	return state;
-} );
+export function getEntity(state, name) {
+	return find(state.entities.config, { name });
+}
 
 /**
  * Returns the Entity's records.
@@ -80,28 +41,28 @@ export const getSchemas = createRegistrySelector( ( select ) => ( state ) => {
  *
  * @return {?Array} Records.
  */
-export function getEntityRecord( state, name, key = '', query = {} ) {
-	const queriedState = get( state.entities.data, [ name, 'queriedData' ] );
-	if ( ! queriedState ) {
+export function getEntityRecord(state, name, key, query = {}) {
+	const queriedState = get(state.entities.data, [name, 'queriedData']);
+	if (!queriedState) {
 		return undefined;
 	}
 
-	if ( query === undefined ) {
+	if (query === undefined) {
 		// If expecting a complete item, validate that completeness.
-		if ( ! queriedState.itemIsComplete[ key ] ) {
+		if (!queriedState.itemIsComplete[key]) {
 			return undefined;
 		}
 
-		return queriedState.items[ key ];
+		return queriedState.items[key];
 	}
-	const item = queriedState.items[ key ];
-	if ( item && query._fields ) {
+	const item = queriedState.items[key];
+	if (item && query._fields) {
 		const filteredItem = {};
-		const fields = getNormalizedCommaSeparable( query._fields );
-		for ( let f = 0; f < fields.length; f++ ) {
-			const field = fields[ f ].split( '.' );
-			const value = get( item, field );
-			set( filteredItem, field, value );
+		const fields = getNormalizedCommaSeparable(query._fields);
+		for (let f = 0; f < fields.length; f++) {
+			const field = fields[f].split('.');
+			const value = get(item, field);
+			set(filteredItem, field, value);
 		}
 		return filteredItem;
 	}
@@ -118,17 +79,17 @@ export function getEntityRecord( state, name, key = '', query = {} ) {
  *
  * @return {?Array} Records.
  */
-export function getEntityRecords( state, name, query ) {
+export function getEntityRecords(state, name, query) {
 	// Queried data state is populated for all known entities. If this is not
 	// assigned for the given parameters, then it is known to not exist. Thus, a
 	// return value of an empty array is used instead of `null` (where `null` is
 	// otherwise used to represent an unknown state).
-	const queriedState = get( state.entities.data, [ name, 'queriedData' ] );
-	if ( ! queriedState ) {
+	const queriedState = get(state.entities.data, [name, 'queriedData']);
+	if (!queriedState) {
 		return EMPTY_ARRAY;
 	}
-	const items = getQueriedItems( queriedState, query );
-	if ( ! items ) {
+	const items = getQueriedItems(queriedState, query);
+	if (!items) {
 		return EMPTY_ARRAY;
 	}
 	return items;
@@ -154,11 +115,11 @@ export function getTotalEntityRecords(
 	// assigned for the given parameters, then it is known to not exist. Thus, a
 	// return value of an empty array is used instead of `null` (where `null` is
 	// otherwise used to represent an unknown state).
-	const queriedState = get( state.entities.data, [ name, 'queriedData' ] );
-	if ( ! queriedState ) {
+	const queriedState = get(state.entities.data, [name, 'queriedData']);
+	if (!queriedState) {
 		return defaults;
 	}
-	return getQueriedTotal( queriedState, query );
+	return getQueriedTotal(queriedState, query);
 }
 
 /**
@@ -171,18 +132,13 @@ export function getTotalEntityRecords(
  *
  * @return {Object} Error.
  */
-export function getEntityFetchError(
-	state,
-	name,
-	query = {},
-	recordId = null
-) {
-	const queriedState = get( state.entities.data, [
+export function getEntityFetchError(state, name, query = {}, recordId = null) {
+	const queriedState = get(state.entities.data, [
 		name,
 		'queriedData',
 		'errors',
-	] );
-	return getQueriedError( queriedState, { ...query, key: recordId } );
+	]);
+	return getQueriedError(queriedState, { ...query, key: recordId });
 }
 
 /**
@@ -193,11 +149,11 @@ export function getEntityFetchError(
  *
  * @return {Function} Whether the entity record is saving or not.
  */
-export function isSavingEntityRecord( state, name ) {
-	return ( recordId ) => {
+export function isSavingEntityRecord(state, name) {
+	return (recordId) => {
 		return get(
 			state,
-			[ 'entities', 'data', name, 'saving', recordId, 'pending' ],
+			['entities', 'data', name, 'saving', recordId, 'pending'],
 			false
 		);
 	};
@@ -212,10 +168,10 @@ export function isSavingEntityRecord( state, name ) {
  *
  * @return {boolean} Whether the entity record is deleting or not.
  */
-export function isDeletingEntityRecord( state, name, recordId ) {
+export function isDeletingEntityRecord(state, name, recordId) {
 	return get(
 		state.entities.data,
-		[ name, 'deleting', recordId, 'pending' ],
+		[name, 'deleting', recordId, 'pending'],
 		false
 	);
 }
@@ -229,8 +185,8 @@ export function isDeletingEntityRecord( state, name, recordId ) {
  *
  * @return {Object?} The entity record's save error.
  */
-export function getEntityRecordSaveError( state, name, recordId ) {
-	return get( state.entities.data, [ name, 'saving', recordId, 'error' ] );
+export function getEntityRecordSaveError(state, name, recordId) {
+	return get(state.entities.data, [name, 'saving', recordId, 'error']);
 }
 
 /**
@@ -242,8 +198,8 @@ export function getEntityRecordSaveError( state, name, recordId ) {
  *
  * @return {Object?} The entity record's save error.
  */
-export function getEntityRecordDeleteError( state, name, recordId ) {
-	return get( state.entities.data, [ name, 'deleting', recordId, 'error' ] );
+export function getEntityRecordDeleteError(state, name, recordId) {
+	return get(state.entities.data, [name, 'deleting', recordId, 'error']);
 }
 
 /**
@@ -257,24 +213,20 @@ export function getEntityRecordDeleteError( state, name, recordId ) {
  * @return {Array} Object with the entity's raw attributes.
  */
 export const getRawEntityRecord = createSelector(
-	( state, name, key ) => {
-		const record = getEntityRecord( state, name, key );
+	(state, name, key) => {
+		const record = getEntityRecord(state, name, key);
 		return (
 			record &&
-			Object.keys( record ).reduce( ( accumulator, _key ) => {
+			Object.keys(record).reduce((accumulator, _key) => {
 				// Because edits are the "raw" attribute values,
 				// we return those from record selectors to make rendering,
 				// comparisons, and joins with edits easier.
-				accumulator[ _key ] = get(
-					record[ _key ],
-					'raw',
-					record[ _key ]
-				);
+				accumulator[_key] = get(record[_key], 'raw', record[_key]);
 				return accumulator;
-			}, {} )
+			}, {})
 		);
 	},
-	( state ) => [ state.entities.data ]
+	(state) => [state.entities.data]
 );
 
 /**
@@ -287,9 +239,9 @@ export const getRawEntityRecord = createSelector(
  *
  * @return {boolean} Whether entity records have been received.
  */
-export function hasEntityRecords( state, name, query = {} ) {
-	const records = getEntityRecords( state, name, query );
-	return Array.isArray( records ) && ! isEmpty( records );
+export function hasEntityRecords(state, name, query = {}) {
+	const records = getEntityRecords(state, name, query);
+	return Array.isArray(records) && !isEmpty(records);
 }
 
 /**
@@ -300,38 +252,36 @@ export function hasEntityRecords( state, name, query = {} ) {
  * @type {*|(function(): *)}
  */
 export const getDirtyEntityRecords = createSelector(
-	( state ) => {
+	(state) => {
 		const {
 			entities: { data },
 		} = state;
 		const dirtyRecords = [];
-		Object.keys( data ).forEach( ( name ) => {
-			const primaryKeys = Object.keys(
-				data[ name ].edits
-			).filter( ( primaryKey ) =>
-				hasEditsForEntityRecord( state, name, primaryKey )
+		Object.keys(data).forEach((name) => {
+			const primaryKeys = Object.keys(data[name].edits).filter(
+				(primaryKey) => hasEditsForEntityRecord(state, name, primaryKey)
 			);
 
-			if ( primaryKeys.length ) {
-				const schema = getSchema( name );
-				primaryKeys.forEach( ( primaryKey ) => {
+			if (primaryKeys.length) {
+				const schema = getSchema(name);
+				primaryKeys.forEach((primaryKey) => {
 					const entityRecord = getEditedEntityRecord(
 						state,
 						name,
 						primaryKey
 					);
-					dirtyRecords.push( {
+					dirtyRecords.push({
 						// We avoid using primaryKey because it's transformed into a string
 						// when it's used as an object key.
-						key: entityRecord[ schema.primaryKey ],
+						key: entityRecord[schema.primaryKey],
 						name,
-					} );
-				} );
+					});
+				});
 			}
-		} );
+		});
 		return dirtyRecords;
 	},
-	( state ) => [ state.entities.data ]
+	(state) => [state.entities.data]
 );
 
 /**
@@ -343,8 +293,8 @@ export const getDirtyEntityRecords = createSelector(
  *
  * @return {Object?} The entity record's edits.
  */
-export function getEntityRecordEdits( state, name, recordId ) {
-	return get( state.entities.data, [ name, 'edits', recordId ] );
+export function getEntityRecordEdits(state, name, recordId) {
+	return get(state.entities.data, [name, 'edits', recordId]);
 }
 
 /**
@@ -361,20 +311,20 @@ export function getEntityRecordEdits( state, name, recordId ) {
  * @return {Object?} The entity record's non transient edits.
  */
 export const getEntityRecordNonTransientEdits = createSelector(
-	( state, name, recordId ) => {
-		const { transientEdits } = getSchema( name ) || {};
-		const edits = getEntityRecordEdits( state, name, recordId ) || {};
-		if ( ! transientEdits ) {
+	(state, name, recordId) => {
+		const { transientEdits } = getSchema(name) || {};
+		const edits = getEntityRecordEdits(state, name, recordId) || {};
+		if (!transientEdits) {
 			return edits;
 		}
-		return Object.keys( edits ).reduce( ( acc, key ) => {
-			if ( ! transientEdits[ key ] ) {
-				acc[ key ] = edits[ key ];
+		return Object.keys(edits).reduce((acc, key) => {
+			if (!transientEdits[key]) {
+				acc[key] = edits[key];
 			}
 			return acc;
-		}, {} );
+		}, {});
 	},
-	( state ) => [ state.entities.schemas, state.entities.data ]
+	(state) => [state.entities.entities, state.entities.data]
 );
 
 /**
@@ -387,10 +337,10 @@ export const getEntityRecordNonTransientEdits = createSelector(
  *
  * @return {boolean} Whether the entity record has edits or not.
  */
-export function hasEditsForEntityRecord( state, name, recordId ) {
+export function hasEditsForEntityRecord(state, name, recordId) {
 	return (
-		isSavingEntityRecord( state, name, recordId ) ||
-		Object.keys( getEntityRecordNonTransientEdits( state, name, recordId ) )
+		isSavingEntityRecord(state, name, recordId) ||
+		Object.keys(getEntityRecordNonTransientEdits(state, name, recordId))
 			.length > 0
 	);
 }
@@ -405,11 +355,11 @@ export function hasEditsForEntityRecord( state, name, recordId ) {
  * @return {Object?} The entity record, merged with its edits.
  */
 export const getEditedEntityRecord = createSelector(
-	( state, name, recordId ) => ( {
-		...getRawEntityRecord( state, name, recordId ),
-		...getEntityRecordEdits( state, name, recordId ),
-	} ),
-	( state ) => [ state.entities.data ]
+	(state, name, recordId) => ({
+		...getRawEntityRecord(state, name, recordId),
+		...getEntityRecordEdits(state, name, recordId),
+	}),
+	(state) => [state.entities.data]
 );
 
 /**
@@ -418,7 +368,7 @@ export const getEditedEntityRecord = createSelector(
  * @param {Object}   state  State param added by wp.data.
  * @return {*}  The value present in the settings state for the given name.
  */
-export function getOptions( state ) {
+export function getOptions(state) {
 	return state.settings;
 }
 
@@ -433,34 +383,35 @@ export function getOptions( state ) {
  * @return {*}  The value present in the settings state for the given name.
  */
 export const getOption = createRegistrySelector(
-	() => ( state, name, fallback = false, filter = ( val ) => val ) => {
-		const value = get( state.settings, [ name ] ) || fallback;
-		return filter( value, fallback );
-	}
+	() =>
+		(state, name, fallback = false, filter = (val) => val) => {
+			const value = get(state.settings, [name]) || fallback;
+			return filter(value, fallback);
+		}
 );
 
 /**
  * Get default currency
  */
-export const getDefaultCurrency = createRegistrySelector( ( select ) => () => {
-	const code = select( STORE_NAME ).getOption( 'default_currency', 'USD' );
-	if ( code ) {
-		return select( STORE_NAME ).getEntityRecord( 'currencies', code );
+export const getDefaultCurrency = createRegistrySelector((select) => () => {
+	const code = select(STORE_NAME).getOption('default_currency', 'USD');
+	if (code) {
+		return select(STORE_NAME).getEntityRecord('currencies', code);
 	}
 	return {};
-} );
+});
 
 /**
  * Get default currency
  */
-export const getDefaultAccount = createRegistrySelector( ( select ) => () => {
-	const accountId = select( STORE_NAME ).getOption( 'default_account' );
-	if ( accountId ) {
-		return select( STORE_NAME ).getEntityRecord( 'accounts', accountId );
+export const getDefaultAccount = createRegistrySelector((select) => () => {
+	const accountId = select(STORE_NAME).getOption('default_account');
+	if (accountId) {
+		return select(STORE_NAME).getEntityRecord('accounts', accountId);
 	}
 
 	return {};
-} );
+});
 
 /**
  * Returns whether the current user can perform the given action on the given
@@ -479,9 +430,9 @@ export const getDefaultAccount = createRegistrySelector( ( select ) => () => {
  * @return {boolean|undefined} Whether or not the user can perform the action,
  *                             or `undefined` if the OPTIONS request is still being made.
  */
-export function canUser( state, action, resource, id ) {
-	const key = compact( [ action, resource, id ] ).join( '/' );
-	return get( state, [ 'currentUser', 'permissions', key ] );
+export function canUser(state, action, resource, id) {
+	const key = compact([action, resource, id]).join('/');
+	return get(state, ['currentUser', 'permissions', key]);
 }
 
 /**
@@ -491,6 +442,6 @@ export function canUser( state, action, resource, id ) {
  *
  * @return {Object} Current user object.
  */
-export function getCurrentUser( state ) {
+export function getCurrentUser(state) {
 	return state.currentUser;
 }

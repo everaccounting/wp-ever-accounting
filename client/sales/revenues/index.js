@@ -30,11 +30,11 @@ import {
  */
 import Revenue from './revenue';
 
-const entityName = 'revenues';
+const entityName = 'transactions';
 
 const filters = {
 	status: {
-		title: __( 'Status' ),
+		title: __('Status'),
 		mixedString: '{{title}}Status{{/title}} {{rule /}} {{filter /}}',
 		input: {
 			component: 'SelectFilter',
@@ -58,17 +58,17 @@ const filters = {
 		rules: [
 			{
 				value: 'in',
-				label: __( 'In' ),
+				label: __('In'),
 			},
 			{
 				value: 'not_in',
-				label: __( 'No In' ),
+				label: __('No In'),
 			},
 		],
 		allowMultiple: true,
 	},
 	account: {
-		title: __( 'Account' ),
+		title: __('Account'),
 		mixedString: '{{title}}Account{{/title}} {{rule /}} {{filter /}}',
 		input: {
 			component: 'EntityFilter',
@@ -78,16 +78,16 @@ const filters = {
 		rules: [
 			{
 				value: '_in',
-				label: __( 'In' ),
+				label: __('In'),
 			},
 			{
 				value: '_not_in',
-				label: __( 'No In' ),
+				label: __('No In'),
 			},
 		],
 	},
 	payment_date: {
-		title: __( 'Payment Date' ),
+		title: __('Payment Date'),
 		mixedString: '{{title}}Payment Date{{/title}} {{rule /}} {{filter /}}',
 		input: {
 			component: 'DateFilter',
@@ -96,22 +96,22 @@ const filters = {
 			{
 				value: 'before',
 				/* translators: Sentence fragment, logical, "Before" refers to customers registered before a given date. Screenshot for context: https://cloudup.com/cCsm3GeXJbE */
-				label: _x( 'Before', 'date' ),
+				label: _x('Before', 'date'),
 			},
 			{
 				value: 'after',
 				/* translators: Sentence fragment, logical, "after" refers to customers registered after a given date. Screenshot for context: https://cloudup.com/cCsm3GeXJbE */
-				label: _x( 'After', 'date' ),
+				label: _x('After', 'date'),
 			},
 			{
 				value: 'between',
 				/* translators: Sentence fragment, logical, "Between" refers to average order value of a customer, between two given amounts. Screenshot for context: https://cloudup.com/cCsm3GeXJbE */
-				label: _x( 'Between', 'date' ),
+				label: _x('Between', 'date'),
 			},
 		],
 	},
 	amount: {
-		title: __( 'Amount' ),
+		title: __('Amount'),
 		mixedString: '{{title}}Amount{{/title}} {{rule /}} {{filter /}}',
 		input: {
 			component: 'NumberFilter',
@@ -119,21 +119,21 @@ const filters = {
 		rules: [
 			{
 				value: 'max',
-				label: __( 'Less Than' ),
+				label: __('Less Than'),
 			},
 			{
 				value: 'min',
-				label: __( 'More Than' ),
+				label: __('More Than'),
 			},
 			{
 				value: 'between',
-				label: __( 'Between' ),
+				label: __('Between'),
 			},
 		],
 	},
 };
 
-function Revenues( props ) {
+function Revenues(props) {
 	const {
 		tab,
 		query,
@@ -147,107 +147,105 @@ function Revenues( props ) {
 		isSavingEntityRecord,
 	} = props;
 	const { search, revenue_id } = query;
-	const [ editingItemId, setEditingItemId ] = useState( false );
+	const [editingItemId, setEditingItemId] = useState(false);
 	return (
 		<>
-			<H className="wp-heading-inline">{ __( 'Revenues' ) }</H>
+			<H className="wp-heading-inline">{__('Revenues')}</H>
 			<Button
 				className="page-title-action"
 				isSecondary
-				onClick={ () => setEditingItemId( null ) }
+				onClick={() => setEditingItemId(null)}
 			>
-				{ __( 'Add Revenue' ) }
+				{__('Add Revenue')}
 			</Button>
 
-			{ revenue_id && (
+			{revenue_id && (
 				<Revenue
-					payment_id={ revenue_id }
-					onClose={ () =>
-						updateQueryString( { revenue_id: undefined } )
-					}
+					payment_id={revenue_id}
+					onClose={() => updateQueryString({ revenue_id: undefined })}
 				/>
-			) }
+			)}
 
-			{ ! isEmpty( fetchError ) && (
+			{!isEmpty(fetchError) && (
 				<>
-					<Notice isDismissible={ false } status="error">
-						<Text>{ fetchError.message }</Text>
+					<Notice isDismissible={false} status="error">
+						<Text>{fetchError.message}</Text>
 					</Notice>
-					<Spacer marginBottom={ 20 } />
+					<Spacer marginBottom={20} />
 				</>
-			) }
+			)}
 
 			<ListTable
-				query={ query }
-				isRequesting={ isRequesting }
-				rows={ items }
-				total={ total }
-				onQueryChange={ ( query ) =>
-					updateQueryString( query, '/sales', {} )
+				query={query}
+				isRequesting={isRequesting}
+				rows={items}
+				total={total}
+				onQueryChange={(query) =>
+					updateQueryString(query, '/sales', {})
 				}
-				bulkActions={ [
+				bulkActions={[
 					{
-						label: __( 'Delete' ),
-						value: __( 'delete' ),
+						label: __('Delete'),
+						value: __('delete'),
 					},
 					{
-						label: __( 'Enable' ),
-						value: __( 'enable' ),
+						label: __('Enable'),
+						value: __('enable'),
 					},
 					{
-						label: __( 'Disable' ),
-						value: __( 'disable' ),
+						label: __('Disable'),
+						value: __('disable'),
 					},
 					{
-						label: __( 'Export' ),
-						value: __( 'export' ),
+						label: __('Export'),
+						value: __('export'),
 					},
-				] }
-				onBulkAction={ ( action, selected ) => {
-					console.log( action, selected );
-				} }
-				filters={ filters }
-				columns={ [
+				]}
+				onBulkAction={(action, selected) => {
+					console.log(action, selected);
+				}}
+				filters={filters}
+				columns={[
 					{
 						type: 'selection',
 						property: 'id',
 					},
 					{
-						label: __( 'Date' ),
+						label: __('Date'),
 						property: 'date',
 						isPrimary: true,
 						sortable: true,
-						render: ( row ) => {
-							const highlightWords = !! search ? [ search ] : '';
+						render: (row) => {
+							const highlightWords = !!search ? [search] : '';
 							return (
 								<Link
-									href={ generatePath(
+									href={generatePath(
 										{ tab, revenue_id: row.id },
 										'/sales',
 										{}
-									) }
+									)}
 								>
 									<Text
 										color="var(--wp-admin-theme-color)"
-										style={ {
+										style={{
 											cursor: 'pointer',
 											fontWeight: '600',
-										} }
-										highlightWords={ highlightWords }
+										}}
+										highlightWords={highlightWords}
 									>
-										<Date date={ row.payment_date } />
+										<Date date={row.payment_date} />
 									</Text>
 								</Link>
 							);
 						},
 						actions: [
 							{
-								label: __( 'Edit' ),
-								onClick: ( row ) => setEditingItemId( row ),
+								label: __('Edit'),
+								onClick: (row) => setEditingItemId(row),
 							},
 							{
-								label: __( 'Delete' ),
-								onClick: ( row ) => {
+								label: __('Delete'),
+								onClick: (row) => {
 									if (
 										window.confirm(
 											__(
@@ -255,90 +253,93 @@ function Revenues( props ) {
 											)
 										)
 									) {
-										deleteEntityRecord( row.id );
+										deleteEntityRecord(row.id);
 									}
 								},
 							},
 						],
 					},
 					{
-						label: __( 'Amount' ),
+						label: __('Amount'),
 						property: 'amount',
 						sortable: true,
-						render: ( row ) => {
+						render: (row) => {
 							const { amount, currency_code } = row;
 							return (
 								<Amount
-									amount={ amount }
-									currency={ currency_code }
+									amount={amount}
+									currency={currency_code}
 								/>
 							);
 						},
 					},
 					{
-						label: __( 'Account' ),
+						label: __('Account'),
 						property: 'account_id',
 						sortable: true,
-						render: ( row ) => {
+						render: (row) => {
 							const { account } = row;
 							return (
 								<>
-									{ account && account.name && (
-										<Text>{ account.name }</Text>
-									) }
+									{account && account.name && (
+										<Text>{account.name}</Text>
+									)}
 								</>
 							);
 						},
 					},
 					{
-						label: __( 'Category' ),
+						label: __('Category'),
 						property: 'category_id',
 						sortable: true,
-						render: ( row ) => {
+						render: (row) => {
 							const { category } = row;
 							return (
 								<>
-									{ category && category.name && (
-										<Text>{ category.name }</Text>
-									) }
+									{category && category.name && (
+										<Text>{category.name}</Text>
+									)}
 								</>
 							);
 						},
 					},
 					{
-						label: __( 'Vendor' ),
+						label: __('Vendor'),
 						property: 'vendor_id',
 						sortable: true,
-						render: ( row ) => {
+						render: (row) => {
 							const { vendor } = row;
 							return (
 								<>
-									{ vendor && vendor.name && (
-										<Text>{ vendor.name }</Text>
-									) }
+									{vendor && vendor.name && (
+										<Text>{vendor.name}</Text>
+									)}
 								</>
 							);
 						},
 					},
 					{
-						label: __( 'Reference' ),
+						label: __('Reference'),
 						property: 'reference',
 						sortable: true,
-						render: ( row ) => {
-							return <Text>{ row.reference }</Text>;
+						render: (row) => {
+							return <Text>{row.reference}</Text>;
 						},
 					},
-				] }
+				]}
 			/>
 		</>
 	);
 }
 
-const applyWithSelect = withSelect( ( select, props ) => {
+const applyWithSelect = withSelect((select, props) => {
 	const { tab } = props.query;
-	const tableQuery = getTableQuery( [
-		...Object.keys( getActiveFiltersFromQuery( filters, props.query ) ),
-	] );
+	const tableQuery = {
+		...getTableQuery([
+			...Object.keys(getActiveFiltersFromQuery(filters, props.query)),
+		]),
+		type: 'income',
+	};
 	const {
 		getEntityRecords,
 		getTotalEntityRecords,
@@ -346,27 +347,24 @@ const applyWithSelect = withSelect( ( select, props ) => {
 		isResolving,
 		getDefaultCurrency,
 		isSavingEntityRecord,
-	} = select( 'ea/core' );
+	} = select('ea/core');
 	return {
-		items: getEntityRecords( entityName, tableQuery ),
-		total: getTotalEntityRecords( entityName, tableQuery ),
-		isRequesting: isResolving( 'getEntityRecords', [
-			entityName,
-			tableQuery,
-		] ),
-		fetchError: getEntityFetchError( entityName, tableQuery ),
-		isSavingEntityRecord: isSavingEntityRecord( entityName ),
+		items: getEntityRecords(entityName, tableQuery),
+		total: getTotalEntityRecords(entityName, tableQuery),
+		isRequesting: isResolving('getEntityRecords', [entityName, tableQuery]),
+		fetchError: getEntityFetchError(entityName, tableQuery),
+		isSavingEntityRecord: isSavingEntityRecord(entityName),
 		defaultCurrency: getDefaultCurrency(),
 		tab,
 	};
-} );
+});
 
-const applyWithDispatch = withDispatch( ( dispatch ) => {
-	const { deleteEntityRecord, saveEntityRecord } = dispatch( 'ea/core' );
+const applyWithDispatch = withDispatch((dispatch) => {
+	const { deleteEntityRecord, saveEntityRecord } = dispatch('ea/core');
 	return {
-		deleteEntityRecord: ( id ) => deleteEntityRecord( entityName, id ),
-		saveEntityRecord: ( item ) => saveEntityRecord( entityName, item ),
+		deleteEntityRecord: (id) => deleteEntityRecord(entityName, id),
+		saveEntityRecord: (item) => saveEntityRecord(entityName, item),
 	};
-} );
+});
 
-export default compose( [ applyWithSelect, applyWithDispatch ] )( Revenues );
+export default compose([applyWithSelect, applyWithDispatch])(Revenues);

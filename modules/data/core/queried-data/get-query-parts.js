@@ -31,7 +31,7 @@ import { withWeakMapCache, getNormalizedCommaSeparable } from '../../utils';
  *
  * @return {WPQueriedDataQueryParts} Query parts.
  */
-export function getQueryParts( query = {} ) {
+export function getQueryParts(query = {}) {
 	/**
 	 * @type {WPQueriedDataQueryParts}
 	 */
@@ -44,25 +44,23 @@ export function getQueryParts( query = {} ) {
 	};
 
 	// Ensure stable key by sorting keys. Also more efficient for iterating.
-	const keys = Object.keys( query ).sort();
+	const keys = Object.keys(query).sort();
 
-	for ( let i = 0; i < keys.length; i++ ) {
-		const key = keys[ i ];
-		let value = query[ key ];
+	for (let i = 0; i < keys.length; i++) {
+		const key = keys[i];
+		let value = query[key];
 
-		switch ( key ) {
+		switch (key) {
 			case 'page':
-				parts[ key ] = Number( value );
+				parts[key] = Number(value);
 				break;
 
 			case 'per_page':
-				parts.perPage = Number( value );
+				parts.perPage = Number(value);
 				break;
 
 			case 'include':
-				parts.include = getNormalizedCommaSeparable( value ).map(
-					Number
-				);
+				parts.include = getNormalizedCommaSeparable(value).map(Number);
 				break;
 
 			default:
@@ -71,8 +69,8 @@ export function getQueryParts( query = {} ) {
 				// We're not able to ensure that because the server can decide to omit
 				// fields from the response even if we explicitely asked for it.
 				// Example: Asking for titles in posts without title support.
-				if ( key === '_fields' ) {
-					parts.fields = getNormalizedCommaSeparable( value );
+				if (key === '_fields') {
+					parts.fields = getNormalizedCommaSeparable(value);
 					// Make sure to normalize value for `stableKey`
 					value = parts.fields.join();
 				}
@@ -85,12 +83,12 @@ export function getQueryParts( query = {} ) {
 				// implementation for our use here, vs. iterating an object
 				// with only a single key.
 				parts.stableKey +=
-					( parts.stableKey ? '&' : '' ) +
-					addQueryArgs( '', { [ key ]: value } ).slice( 1 );
+					(parts.stableKey ? '&' : '') +
+					addQueryArgs('', { [key]: value }).slice(1);
 		}
 	}
 
 	return parts;
 }
 
-export default withWeakMapCache( getQueryParts );
+export default withWeakMapCache(getQueryParts);

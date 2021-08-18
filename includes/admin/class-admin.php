@@ -44,7 +44,7 @@ class Admin {
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/ea-admin-functions.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-notices.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-menu.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-settings.php';
+//		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-settings.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-exporter.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-importer.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-dashboard.php';

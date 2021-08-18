@@ -14,19 +14,19 @@ import { __ } from '@wordpress/i18n';
  * @param {Object} props properties
  * @return {Object} search box
  */
-function TableSearch( props ) {
+function TableSearch(props) {
 	const { isDisabled = false, onSearch } = props;
-	const [ search, setSearch ] = useState( '' );
+	const [search, setSearch] = useState('');
 
-	const handleSubmit = ( ev ) => {
+	const handleSubmit = (ev) => {
 		ev.preventDefault();
-		onSearch( search );
+		onSearch(search);
 	};
 
-	const handleChange = ( ev ) => {
-		setSearch( ev.target.value );
-		if ( ev.target.value === '' ) {
-			onSearch( '' );
+	const handleChange = (ev) => {
+		setSearch(ev.target.value);
+		if (ev.target.value === '') {
+			onSearch('');
 		}
 	};
 
@@ -35,16 +35,16 @@ function TableSearch( props ) {
 			<input
 				type="search"
 				name="s"
-				value={ search }
-				onChange={ handleChange }
-				disabled={ !! isDisabled }
+				value={search}
+				onChange={handleChange}
+				disabled={!!isDisabled}
 			/>
 			<input
 				type="submit"
 				className="button"
-				value={ __( 'Search' ) }
-				onClick={ handleSubmit }
-				disabled={ isDisabled || ! search }
+				value={__('Search')}
+				onClick={handleSubmit}
+				disabled={isDisabled || !search}
 			/>
 		</p>
 	);

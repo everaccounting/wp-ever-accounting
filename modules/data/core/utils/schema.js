@@ -34,35 +34,35 @@ import { DEFAULT_PRIMARY_KEY, STORE_NAME } from '../constants';
  * @param {*} value  The value being validated
  * @return {boolean}  True means the value is valid for the given type.
  */
-export const validateType = ( type, value ) => {
+export const validateType = (type, value) => {
 	let valid = false;
 	// account for type definitions that are an array of allowed types.
-	if ( isArray( type ) ) {
-		for ( const singleType of type ) {
-			valid = validateType( singleType, value );
-			if ( valid ) {
+	if (isArray(type)) {
+		for (const singleType of type) {
+			valid = validateType(singleType, value);
+			if (valid) {
 				break;
 			}
 		}
 		// return right away because we've determined the validity of the type.
 		return valid;
 	}
-	switch ( type ) {
+	switch (type) {
 		case 'integer':
-			valid = isInteger( value );
+			valid = isInteger(value);
 			break;
 		case 'number':
-			valid = isNumber( value );
+			valid = isNumber(value);
 			break;
 		case 'string':
-			valid = isString( value );
+			valid = isString(value);
 			break;
 		case 'object':
-			valid = isPlainObject( value );
+			valid = isPlainObject(value);
 			break;
 		case 'boolean':
 		case 'bool':
-			valid = isBoolean( value );
+			valid = isBoolean(value);
 			break;
 		case 'null':
 			valid = value === null;
@@ -77,13 +77,13 @@ export const validateType = ( type, value ) => {
  * @param {string} type
  * @return {*}  A value to use for the given type.
  */
-export const deriveDefaultValueForType = ( type ) => {
-	if ( isArray( type ) ) {
-		return type.indexOf( 'null' ) > -1
+export const deriveDefaultValueForType = (type) => {
+	if (isArray(type)) {
+		return type.indexOf('null') > -1
 			? null
-			: deriveDefaultValueForType( type[ 0 ] );
+			: deriveDefaultValueForType(type[0]);
 	}
-	switch ( type ) {
+	switch (type) {
 		case 'string':
 			return '';
 		case 'number':
@@ -109,11 +109,11 @@ export const deriveDefaultValueForType = ( type ) => {
  * @return {*} The default value for the field from the schema or if not
  * present in the schema, a derived default value from the schema type.
  */
-export const getDefaultValueForField = ( fieldName, schema ) => {
-	if ( schema[ fieldName ] ) {
-		return schema[ fieldName ].default
-			? schema[ fieldName ].default
-			: deriveDefaultValueForType( schema[ fieldName ].type );
+export const getDefaultValueForField = (fieldName, schema) => {
+	if (schema[fieldName]) {
+		return schema[fieldName].default
+			? schema[fieldName].default
+			: deriveDefaultValueForType(schema[fieldName].type);
 	}
 	return null;
 };
@@ -133,13 +133,9 @@ export const getDefaultValueForField = ( fieldName, schema ) => {
  * @param {Object} schema
  * not have a raw equivalent or is not a value object.
  */
-export const derivePreparedValueForField = (
-	fieldName,
-	fieldValue,
-	schema
-) => {
-	fieldValue = isPlainObject( fieldValue ) ? fieldValue : fieldValue;
-	return maybeConvertToValueObject( fieldName, fieldValue, schema );
+export const derivePreparedValueForField = (fieldName, fieldValue, schema) => {
+	fieldValue = isPlainObject(fieldValue) ? fieldValue : fieldValue;
+	return maybeConvertToValueObject(fieldName, fieldValue, schema);
 };
 
 /**
@@ -151,7 +147,7 @@ export const derivePreparedValueForField = (
  * @param {*} fieldValue
  * value is returned.
  */
-export const maybeConvertToValueObject = ( fieldName, fieldValue ) => {
+export const maybeConvertToValueObject = (fieldName, fieldValue) => {
 	return fieldValue;
 };
 
@@ -166,9 +162,9 @@ export const maybeConvertToValueObject = ( fieldName, fieldValue ) => {
  *
  * @return {{isError: boolean, isRequesting: boolean, params: {}, initialValue: {}, required: *[]}|{isError: boolean, isRequesting: boolean, params, initialValue: {}, required: string[]}}
  */
-export const getSchema = ( options ) => {
+export const getSchema = (options) => {
 	const { select, name } = options;
-	const { getSchema, isResolving } = select( STORE_NAME );
+	const { getSchema, isResolving } = select(STORE_NAME);
 	const response = {
 		name: '',
 		primaryKey: DEFAULT_PRIMARY_KEY,
@@ -181,22 +177,22 @@ export const getSchema = ( options ) => {
 	};
 
 	// eslint-disable-next-line @wordpress/no-unused-vars-before-return
-	const entity = getSchema( name ) || {};
-	if ( isResolving( 'getSchema', [ name ] ) ) {
+	const entity = getSchema(name) || {};
+	if (isResolving('getSchema', [name])) {
 		return { ...response, isRequesting: true };
 	}
 	const { properties = {} } = entity;
 	return {
 		...response,
 		...entity,
-		requiredParams: Object.keys( properties ).filter(
-			( key ) => properties[ key ] && !! properties[ key ].required
+		requiredParams: Object.keys(properties).filter(
+			(key) => properties[key] && !!properties[key].required
 		),
-		initialValue: Object.keys( properties ).reduce( ( acc, param ) => {
+		initialValue: Object.keys(properties).reduce((acc, param) => {
 			return {
 				...acc,
-				[ param ]: getDefaultValueForField( param, properties ),
+				[param]: getDefaultValueForField(param, properties),
 			};
-		}, {} ),
+		}, {}),
 	};
 };

@@ -20,37 +20,39 @@ import { isObject } from 'lodash';
  * @param {string|Object} props.currency
  * @return {Object} -
  */
-const Amount = ( { amount, currency } ) => {
-	const { AmountCurrency, isRequesting = true } = useSelect( ( select ) => {
-		const currency_code = isObject( currency ) ? currency.code : currency;
-		const { getEntityRecord, isResolving } = select( CORE_STORE_NAME );
+const Amount = ({ amount, currency }) => {
+	const { AmountCurrency, isRequesting = true } = useSelect((select) => {
+		const currency_code = isObject(currency) ? currency.code : currency;
+		const { getEntityRecord, isResolving } = select(CORE_STORE_NAME);
 		return {
-			AmountCurrency: getEntityRecord( 'currencies', currency_code ),
-			isRequesting: isResolving( 'getEntityRecord', [
+			AmountCurrency: getEntityRecord('currencies', currency_code),
+			isRequesting: isResolving('getEntityRecord', [
 				'currencies',
 				currency_code,
-			] ),
+			]),
 		};
-	} );
+	});
 
 	return (
-		<span className="ea-amount" data-amount={ amount }>
-			{ isRequesting || ! AmountCurrency
+		<span className="ea-amount" data-amount={amount}>
+			{isRequesting || !AmountCurrency
 				? '....'
-				: formatAmount( amount, AmountCurrency ) }
+				: formatAmount(amount, AmountCurrency)}
 		</span>
 	);
 };
 
 Amount.propTypes = {
 	// Amount to display
-	amount: PropTypes.string,
+	amount: PropTypes.PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 	// Currency code.
-	currency_code: PropTypes.string.isRequired,
+	currency_code: PropTypes.PropTypes.oneOfType([
+		PropTypes.string,
+		PropTypes.object,
+	]).isRequired,
 };
 
 Amount.defaultProps = {
-	screenReaderFormat: 'F j, Y',
 	currency_code: '',
 };
 

@@ -10,38 +10,38 @@ import PropTypes from 'prop-types';
 import { find, isEmpty, noop } from 'lodash';
 import { __ } from '@wordpress/i18n';
 
-function BulkActions( { selectedItems = [], actions, onAction } ) {
-	const [ action, setAction ] = useState( '' );
-	const placeholder = { value: '', label: __( 'Bulk Actions' ) };
-	if ( ! find( actions, placeholder ) ) {
-		actions.unshift( placeholder );
+function BulkActions({ selectedItems = [], actions, onAction }) {
+	const [action, setAction] = useState('');
+	const placeholder = { value: '', label: __('Bulk Actions') };
+	if (!find(actions, placeholder)) {
+		actions.unshift(placeholder);
 	}
 
-	const click = async ( e ) => {
+	const click = async (e) => {
 		e.preventDefault();
-		await onAction( action, selectedItems );
-		setAction( '' );
+		await onAction(action, selectedItems);
+		setAction('');
 	};
 
 	return (
 		<div className="alignleft actions bulkactions">
 			<SelectControl
 				className="select"
-				disabled={ isEmpty( selectedItems ) }
-				value={ action }
-				style={ {
+				disabled={isEmpty(selectedItems)}
+				value={action}
+				style={{
 					display: 'inline-block',
 					marginRight: '6px',
-				} }
-				onChange={ setAction }
-				options={ actions }
+				}}
+				onChange={setAction}
+				options={actions}
 			/>
 			<Button
 				className="button action"
-				disabled={ isEmpty( selectedItems ) || ! action }
-				onClick={ click }
+				disabled={isEmpty(selectedItems) || !action}
+				onClick={click}
 			>
-				{ __( 'Apply' ) }
+				{__('Apply')}
 			</Button>
 		</div>
 	);
@@ -49,10 +49,10 @@ function BulkActions( { selectedItems = [], actions, onAction } ) {
 
 BulkActions.propTypes = {
 	actions: PropTypes.arrayOf(
-		PropTypes.shape( {
+		PropTypes.shape({
 			label: PropTypes.string,
 			value: PropTypes.string,
-		} )
+		})
 	),
 	onAction: PropTypes.func,
 	selectedItems: PropTypes.array,

@@ -14,27 +14,24 @@ import { STORE_NAME } from '../constants';
  * This is a wrapper around @wordpress/core-data's getCurrentUser().
  */
 export const useUser = () => {
-	const userData = useSelect( ( select ) => {
-		const {
-			getCurrentUser,
-			hasStartedResolution,
-			hasFinishedResolution,
-		} = select( STORE_NAME );
+	const userData = useSelect((select) => {
+		const { getCurrentUser, hasStartedResolution, hasFinishedResolution } =
+			select(STORE_NAME);
 
 		return {
 			isRequesting:
-				hasStartedResolution( 'getCurrentUser' ) &&
-				! hasFinishedResolution( 'getCurrentUser' ),
+				hasStartedResolution('getCurrentUser') &&
+				!hasFinishedResolution('getCurrentUser'),
 			user: getCurrentUser(),
 			getCurrentUser,
 		};
-	} );
+	});
 
-	const currentUserCan = ( capability ) => {
-		return !! (
+	const currentUserCan = (capability) => {
+		return !!(
 			userData.user &&
 			userData.user &&
-			userData.user.capabilities[ capability ]
+			userData.user.capabilities[capability]
 		);
 	};
 

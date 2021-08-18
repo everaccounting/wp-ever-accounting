@@ -256,7 +256,7 @@ abstract class CSV_Exporter {
 	 */
 	protected function format_data( $data ) {
 		if ( ! is_scalar( $data ) ) {
-			if ( is_a( $data, '\EverAccounting\DateTime' ) ) {
+			if ( is_a( $data, '\EverAccounting\Core\DateTime' ) ) {
 				$data = $data->date( 'Y-m-d G:i:s' );
 			} else {
 				$data = ''; // Not supported.

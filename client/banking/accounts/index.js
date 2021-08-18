@@ -28,7 +28,7 @@ const entityName = 'accounts';
 
 const filters = {};
 
-function Accounts( props ) {
+function Accounts(props) {
 	const {
 		query,
 		items,
@@ -41,66 +41,66 @@ function Accounts( props ) {
 		isSavingEntityRecord,
 	} = props;
 	const { search } = query;
-	const [ editingItem, setEditingItem ] = useState( false );
+	const [editingItem, setEditingItem] = useState(false);
 	return (
 		<>
-			<H className="wp-heading-inline">{ __( 'Accounts' ) }</H>
+			<H className="wp-heading-inline">{__('Accounts')}</H>
 			<Button
 				className="page-title-action"
 				isSecondary
-				onClick={ () => setEditingItem( {} ) }
+				onClick={() => setEditingItem({})}
 			>
-				{ __( 'Add Account' ) }
+				{__('Add Account')}
 			</Button>
 
-			{ editingItem && (
+			{editingItem && (
 				<AccountModal
-					item={ editingItem }
-					onClose={ () => setEditingItem( false ) }
-					onSave={ () => setEditingItem( false ) }
+					item={editingItem}
+					onClose={() => setEditingItem(false)}
+					onSave={() => setEditingItem(false)}
 				/>
-			) }
+			)}
 
-			{ ! isEmpty( fetchError ) && (
+			{!isEmpty(fetchError) && (
 				<>
-					<Notice isDismissible={ false } status="error">
-						<Text>{ fetchError.message }</Text>
+					<Notice isDismissible={false} status="error">
+						<Text>{fetchError.message}</Text>
 					</Notice>
-					<Spacer marginBottom={ 20 } />
+					<Spacer marginBottom={20} />
 				</>
-			) }
+			)}
 
 			<ListTable
-				query={ query }
-				isRequesting={ isRequesting }
-				rows={ items }
-				total={ total }
-				onQueryChange={ ( query ) =>
-					updateQueryString( query, '/banking', {} )
+				query={query}
+				isRequesting={isRequesting}
+				rows={items}
+				total={total}
+				onQueryChange={(query) =>
+					updateQueryString(query, '/banking', {})
 				}
-				bulkActions={ [
+				bulkActions={[
 					{
-						label: __( 'Delete' ),
-						value: __( 'delete' ),
+						label: __('Delete'),
+						value: __('delete'),
 					},
 					{
-						label: __( 'Enable' ),
-						value: __( 'enable' ),
+						label: __('Enable'),
+						value: __('enable'),
 					},
 					{
-						label: __( 'Disable' ),
-						value: __( 'disable' ),
+						label: __('Disable'),
+						value: __('disable'),
 					},
 					{
-						label: __( 'Export' ),
-						value: __( 'export' ),
+						label: __('Export'),
+						value: __('export'),
 					},
-				] }
-				onBulkAction={ ( action, selected ) => {
-					console.log( action, selected );
-				} }
-				filters={ filters }
-				columns={ [
+				]}
+				onBulkAction={(action, selected) => {
+					console.log(action, selected);
+				}}
+				filters={filters}
+				columns={[
 					{
 						type: 'selection',
 						property: 'id',
@@ -109,38 +109,38 @@ function Accounts( props ) {
 						property: '',
 						width: 50,
 						render: () => {
-							return <Gravatar size={ 36 } />;
+							return <Gravatar size={36} />;
 						},
 					},
 					{
-						label: __( 'Name' ),
+						label: __('Name'),
 						property: 'name',
 						isPrimary: true,
 						sortable: true,
-						render: ( row ) => {
-							const highlightWords = !! search ? [ search ] : '';
+						render: (row) => {
+							const highlightWords = !!search ? [search] : '';
 							return (
 								<Text
 									color="var(--wp-admin-theme-color)"
-									style={ {
+									style={{
 										cursor: 'pointer',
 										fontWeight: '600',
-									} }
-									highlightWords={ highlightWords }
-									onClick={ () => setEditingItem( row ) }
+									}}
+									highlightWords={highlightWords}
+									onClick={() => setEditingItem(row)}
 								>
-									{ row.name }
+									{row.name}
 								</Text>
 							);
 						},
 						actions: [
 							{
-								label: __( 'Edit' ),
-								onClick: ( row ) => setEditingItem( row ),
+								label: __('Edit'),
+								onClick: (row) => setEditingItem(row),
 							},
 							{
-								label: __( 'Delete' ),
-								onClick: ( row ) => {
+								label: __('Delete'),
+								onClick: (row) => {
 									if (
 										window.confirm(
 											__(
@@ -148,79 +148,70 @@ function Accounts( props ) {
 											)
 										)
 									) {
-										deleteEntityRecord( row.id );
+										deleteEntityRecord(row.id);
 									}
 								},
 							},
 						],
 					},
 					{
-						label: __( 'Balance' ),
+						label: __('Balance'),
 						property: 'balance',
 						sortable: true,
-						render: ( row ) => {
+						render: (row) => {
 							const { balance, currency } = row;
 							return (
-								<Amount
-									amount={ balance }
-									currency={ currency }
-								/>
+								<Amount amount={balance} currency={currency} />
 							);
 						},
 					},
 					{
-						label: __( 'Acc. Number' ),
+						label: __('Acc. Number'),
 						property: 'number',
 						sortable: true,
-						render: ( row ) => {
-							return (
-								<Text>{ get( row, [ 'number' ], '-' ) }</Text>
-							);
+						render: (row) => {
+							return <Text>{get(row, ['number'], '-')}</Text>;
 						},
 					},
 					{
-						label: __( 'Bank Name' ),
+						label: __('Bank Name'),
 						property: 'bank_name',
 						sortable: true,
-						render: ( row ) => {
-							return (
-								<Text>
-									{ get( row, [ 'bank_name' ], '-' ) }
-								</Text>
-							);
+						render: (row) => {
+							return <Text>{get(row, ['bank_name'], '-')}</Text>;
 						},
 					},
 					{
-						label: __( 'Enabled' ),
+						label: __('Enabled'),
 						property: 'status',
 						sortable: true,
 						width: 150,
-						render: ( row ) => {
+						render: (row) => {
 							return (
 								<ToggleControl
-									disabled={ isSavingEntityRecord( row.id ) }
-									checked={ row.enabled }
-									onChange={ ( enabled ) =>
-										saveEntityRecord( {
+									disabled={isSavingEntityRecord(row.id)}
+									checked={row.enabled}
+									onChange={(enabled) =>
+										saveEntityRecord({
 											id: row.id,
 											enabled,
-										} )
+										})
 									}
 								/>
 							);
 						},
 					},
-				] }
+				]}
 			/>
 		</>
 	);
 }
 
-const applyWithSelect = withSelect( ( select, props ) => {
+const applyWithSelect = withSelect((select, props) => {
 	const { tab } = props.query;
-	const tableQuery = getTableQuery( [
-		...Object.keys( getActiveFiltersFromQuery( filters, props.query ) ),
-	] );
+	const tableQuery = getTableQuery([
+		...Object.keys(getActiveFiltersFromQuery(filters, props.query)),
+	]);
 	const {
 		getEntityRecords,
 		getTotalEntityRecords,
@@ -228,27 +219,24 @@ const applyWithSelect = withSelect( ( select, props ) => {
 		isResolving,
 		getDefaultCurrency,
 		isSavingEntityRecord,
-	} = select( 'ea/core' );
+	} = select('ea/core');
 	return {
-		items: getEntityRecords( entityName, tableQuery ),
-		total: getTotalEntityRecords( entityName, tableQuery ),
-		isRequesting: isResolving( 'getEntityRecords', [
-			entityName,
-			tableQuery,
-		] ),
-		fetchError: getEntityFetchError( entityName, tableQuery ),
-		isSavingEntityRecord: isSavingEntityRecord( entityName ),
+		items: getEntityRecords(entityName, tableQuery),
+		total: getTotalEntityRecords(entityName, tableQuery),
+		isRequesting: isResolving('getEntityRecords', [entityName, tableQuery]),
+		fetchError: getEntityFetchError(entityName, tableQuery),
+		isSavingEntityRecord: isSavingEntityRecord(entityName),
 		defaultCurrency: getDefaultCurrency(),
 		tab,
 	};
-} );
+});
 
-const applyWithDispatch = withDispatch( ( dispatch ) => {
-	const { deleteEntityRecord, saveEntityRecord } = dispatch( 'ea/core' );
+const applyWithDispatch = withDispatch((dispatch) => {
+	const { deleteEntityRecord, saveEntityRecord } = dispatch('ea/core');
 	return {
-		deleteEntityRecord: ( id ) => deleteEntityRecord( entityName, id ),
-		saveEntityRecord: ( item ) => saveEntityRecord( entityName, item ),
+		deleteEntityRecord: (id) => deleteEntityRecord(entityName, id),
+		saveEntityRecord: (item) => saveEntityRecord(entityName, item),
 	};
-} );
+});
 
-export default compose( [ applyWithSelect, applyWithDispatch ] )( Accounts );
+export default compose([applyWithSelect, applyWithDispatch])(Accounts);

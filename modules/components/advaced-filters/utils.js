@@ -3,11 +3,11 @@
  */
 import { isArray, isNumber, isString } from 'lodash';
 
-export const getInstanceNumber = ( key, instanceCounts = {} ) => {
-	if ( ! instanceCounts.hasOwnProperty( key ) ) {
-		instanceCounts[ key ] = 1;
+export const getInstanceNumber = (key, instanceCounts = {}) => {
+	if (!instanceCounts.hasOwnProperty(key)) {
+		instanceCounts[key] = 1;
 	}
-	return instanceCounts[ key ]++;
+	return instanceCounts[key]++;
 };
 
 /**
@@ -17,26 +17,26 @@ export const getInstanceNumber = ( key, instanceCounts = {} ) => {
  * @param {Array<string|Node>} components array of components
  *
  * @return {string} concatenated text content of all nodes
- */ export function textContent( components ) {
+ */ export function textContent(components) {
 	let text = '';
 
-	const toText = ( component ) => {
-		if ( isString( component ) || isNumber( component ) ) {
+	const toText = (component) => {
+		if (isString(component) || isNumber(component)) {
 			text += component;
-		} else if ( isArray( component ) ) {
-			component.forEach( toText );
-		} else if ( component && component.props ) {
+		} else if (isArray(component)) {
+			component.forEach(toText);
+		} else if (component && component.props) {
 			const { children } = component.props;
 
-			if ( isArray( children ) ) {
-				children.forEach( toText );
+			if (isArray(children)) {
+				children.forEach(toText);
 			} else {
-				toText( children );
+				toText(children);
 			}
 		}
 	};
 
-	toText( components );
+	toText(components);
 
 	return text;
 }

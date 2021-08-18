@@ -17,110 +17,107 @@ import { getDefaultOptionValue } from '@eaccounting/navigation';
  */
 import { textContent } from './utils';
 
-function SelectFilter( props ) {
+function SelectFilter(props) {
 	const { className, config, filter, onFilterChange } = props;
 	const { title, mixedString, rules = [], input = { options: [] } } = config;
-	const [ options, setOptions ] = useState( input.options );
+	const [options, setOptions] = useState(input.options);
 
-	if ( ! options && input.getOptions ) {
+	if (!options && input.getOptions) {
 		input
 			.getOptions()
-			.then( ( options ) => setOptions( options ) )
-			.then( ( returnedOptions ) => {
-				if ( ! filter.value ) {
+			.then((options) => setOptions(options))
+			.then((returnedOptions) => {
+				if (!filter.value) {
 					const value = getDefaultOptionValue(
 						config,
 						returnedOptions
 					);
-					onFilterChange( 'value', value );
+					onFilterChange('value', value);
 				}
-			} );
+			});
 	}
 
-	const getScreenReaderText = ( filter, config ) => {
-		if ( filter.value === '' ) {
+	const getScreenReaderText = (filter, config) => {
+		if (filter.value === '') {
 			return '';
 		}
 
-		const rule = find( rules, { value: filter.rule } ) || {};
-		const value =
-			find( config.input.options, { value: filter.value } ) || {};
+		const rule = find(rules, { value: filter.rule }) || {};
+		const value = find(config.input.options, { value: filter.value }) || {};
 		return textContent(
-			interpolateComponents( {
+			interpolateComponents({
 				mixedString,
 				components: {
-					filter: <Fragment>{ value.label }</Fragment>,
-					rule: <Fragment>{ rule.label }</Fragment>,
+					filter: <Fragment>{value.label}</Fragment>,
+					rule: <Fragment>{rule.label}</Fragment>,
 					title: <Fragment />,
 				},
-			} )
+			})
 		);
 	};
 
 	const { rule, value } = filter;
-	const children = interpolateComponents( {
+	const children = interpolateComponents({
 		mixedString,
 		components: {
 			title: (
 				<span
-					className={ classnames(
+					className={classnames(
 						className,
 						'ea-advanced-filters__label'
-					) }
+					)}
 				/>
 			),
 			rule: (
 				<div
-					className={ classnames(
+					className={classnames(
 						className,
 						'ea-advanced-filters__rule',
 						{
-							'display--none': isEmpty( rules ),
+							'display--none': isEmpty(rules),
 						}
-					) }
+					)}
 				>
 					<SelectControl
-						options={ rules }
-						value={ rule }
-						onChange={ partial( onFilterChange, 'rule' ) }
-						aria-label={ rule }
+						options={rules}
+						value={rule}
+						onChange={partial(onFilterChange, 'rule')}
+						aria-label={rule}
 					/>
 				</div>
 			),
 			filter: options ? (
 				<div
-					className={ classnames(
+					className={classnames(
 						className,
 						'ea-advanced-filters__input'
-					) }
+					)}
 				>
 					<SelectControl
-						options={ options }
-						value={ value }
-						onChange={ partial( onFilterChange, 'value' ) }
-						aria-label={ title }
+						options={options}
+						value={value}
+						onChange={partial(onFilterChange, 'value')}
+						aria-label={title}
 					/>
 				</div>
 			) : (
 				<Spinner />
 			),
 		},
-	} );
+	});
 
-	const screenReaderText = getScreenReaderText( filter, config );
+	const screenReaderText = getScreenReaderText(filter, config);
 
 	return (
 		<>
 			<fieldset className="ea-advanced-filters__line-item" tabIndex="0">
-				<legend className="screen-reader-text">{ title }</legend>
-				<div className="ea-advanced-filters__fieldset">
-					{ children }
-				</div>
-				{ screenReaderText && (
+				<legend className="screen-reader-text">{title}</legend>
+				<div className="ea-advanced-filters__fieldset">{children}</div>
+				{screenReaderText && (
 					<span className="screen-reader-text">
-						{ screenReaderText }
+						{screenReaderText}
 					</span>
-				) }
+				)}
 			</fieldset>
 		</>
 	);
@@ -128,21 +125,21 @@ function SelectFilter( props ) {
 
 SelectFilter.propTypes = {
 	// The configuration object for the single filter to be rendered.
-	config: PropTypes.shape( {
-		labels: PropTypes.shape( {
+	config: PropTypes.shape({
+		labels: PropTypes.shape({
 			rule: PropTypes.string,
 			title: PropTypes.string,
 			filter: PropTypes.string,
-		} ),
-		rules: PropTypes.arrayOf( PropTypes.object ),
+		}),
+		rules: PropTypes.arrayOf(PropTypes.object),
 		input: PropTypes.object,
-	} ).isRequired,
+	}).isRequired,
 	// The activeFilter handed down by AdvancedFilters.
-	filter: PropTypes.shape( {
+	filter: PropTypes.shape({
 		key: PropTypes.string,
 		rule: PropTypes.string,
 		value: PropTypes.string,
-	} ).isRequired,
+	}).isRequired,
 	// Function to be called on update.
 	onFilterChange: PropTypes.func.isRequired,
 };

@@ -17,7 +17,7 @@ import { normalizeColumns } from './utils';
 
 import './style.scss';
 
-function Table( props ) {
+function Table(props) {
 	const {
 		className,
 		rows = [],
@@ -28,53 +28,52 @@ function Table( props ) {
 	} = props;
 	const { orderby, order } = query;
 	const sort = { orderby, order };
-	const [ columns, setColumns ] = useState( [] );
+	const [columns, setColumns] = useState([]);
 
-	const handleSelectAll = ( isSelected ) => {
+	const handleSelectAll = (isSelected) => {
 		let selected = rows;
-		if ( ! isSelected ) {
+		if (!isSelected) {
 			selected = [];
 		}
-		dispatchEvent( 'onChangeSelected', selected );
+		dispatchEvent('onChangeSelected', selected);
 	};
 
-	useEffect( () => {
-		setColumns( normalizeColumns( props.columns ) );
-	}, [ props.columns, rows ] );
+	useEffect(() => {
+		setColumns(normalizeColumns(props.columns));
+	}, [props.columns, rows]);
 
-	const handleSelection = ( row, isSelected ) => {
+	const handleSelection = (row, isSelected) => {
 		const selectedRows = selected.slice();
-		const rowIndex = selectedRows.indexOf( row );
-		if ( isSelected !== undefined ) {
-			if ( isSelected ) {
+		const rowIndex = selectedRows.indexOf(row);
+		if (isSelected !== undefined) {
+			if (isSelected) {
 				// eslint-disable-next-line no-unused-expressions
-				rowIndex === -1 && selectedRows.push( row );
+				rowIndex === -1 && selectedRows.push(row);
 			} else {
 				// eslint-disable-next-line no-unused-expressions
-				rowIndex !== -1 && selectedRows.splice( rowIndex, 1 );
+				rowIndex !== -1 && selectedRows.splice(rowIndex, 1);
 			}
 		} else {
 			// eslint-disable-next-line no-unused-expressions
 			rowIndex === -1
-				? selectedRows.push( row )
-				: selectedRows.splice( rowIndex, 1 );
+				? selectedRows.push(row)
+				: selectedRows.splice(rowIndex, 1);
 		}
 
-		dispatchEvent( 'onChangeSelected', selectedRows );
+		dispatchEvent('onChangeSelected', selectedRows);
 	};
 
-	const handleSort = ( sort ) => {
-		dispatchEvent( 'onSort', sort );
+	const handleSort = (sort) => {
+		dispatchEvent('onSort', sort);
 	};
 
 	const isAllSelected =
-		( rows && rows.length !== 0 && rows.length === selected.length ) ===
-		true;
+		(rows && rows.length !== 0 && rows.length === selected.length) === true;
 
-	const dispatchEvent = ( name, ...args ) => {
-		const fn = props[ name ];
-		if ( fn ) {
-			fn( ...args );
+	const dispatchEvent = (name, ...args) => {
+		const fn = props[name];
+		if (fn) {
+			fn(...args);
 		}
 	};
 
@@ -89,39 +88,39 @@ function Table( props ) {
 	);
 
 	return (
-		<table className={ classes }>
+		<table className={classes}>
 			<thead>
 				<TableHeader
 					className="table-header"
-					columns={ columns }
-					sort={ sort }
-					onSort={ handleSort }
-					isAllSelected={ isAllSelected }
-					isRequesting={ isRequesting }
-					onSelectAll={ handleSelectAll }
+					columns={columns}
+					sort={sort}
+					onSort={handleSort}
+					isAllSelected={isAllSelected}
+					isRequesting={isRequesting}
+					onSelectAll={handleSelectAll}
 				/>
 			</thead>
 
 			<tbody>
 				<TableBody
-					rows={ rows }
-					columns={ columns }
-					isRequesting={ isRequesting }
-					selected={ selected }
-					saving={ saving }
-					onSelect={ handleSelection }
+					rows={rows}
+					columns={columns}
+					isRequesting={isRequesting}
+					selected={selected}
+					saving={saving}
+					onSelect={handleSelection}
 				/>
 			</tbody>
 
 			<tfoot>
 				<TableHeader
 					className="table-header"
-					columns={ columns }
-					sort={ sort }
-					setSort={ handleSort }
-					isAllSelected={ isAllSelected }
-					isRequesting={ isRequesting }
-					onSelectAll={ handleSelectAll }
+					columns={columns}
+					sort={sort}
+					setSort={handleSort}
+					isAllSelected={isAllSelected}
+					isRequesting={isRequesting}
+					onSelectAll={handleSelectAll}
 				/>
 			</tfoot>
 		</table>
@@ -133,7 +132,7 @@ Table.propTypes = {
 	className: PropTypes.string,
 	// An array of columns, as objects.
 	columns: PropTypes.arrayOf(
-		PropTypes.shape( {
+		PropTypes.shape({
 			//type of the column. If set to selection, the column will display checkbox
 			type: PropTypes.string,
 			//column label
@@ -153,25 +152,25 @@ Table.propTypes = {
 			// is the column primary
 			isPrimary: PropTypes.bool,
 			//alignment
-			align: PropTypes.oneOf( [ 'left', 'center', 'right' ] ),
+			align: PropTypes.oneOf(['left', 'center', 'right']),
 			//header alignment
-			headerAlign: PropTypes.oneOf( [ 'left', 'center', 'right' ] ),
+			headerAlign: PropTypes.oneOf(['left', 'center', 'right']),
 			//classname
 			className: PropTypes.string,
 
 			//column actions
 			actions: PropTypes.arrayOf(
-				PropTypes.shape( {
+				PropTypes.shape({
 					label: PropTypes.string,
 					onClick: PropTypes.func,
-				} )
+				})
 			),
-		} )
+		})
 	),
 	//on sort change
 	onSort: PropTypes.func,
 	//table data
-	rows: PropTypes.arrayOf( PropTypes.object ),
+	rows: PropTypes.arrayOf(PropTypes.object),
 	//Selected items
 	selected: PropTypes.array,
 	//Saving items

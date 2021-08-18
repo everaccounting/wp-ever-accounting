@@ -146,10 +146,10 @@ class Install {
 		set_transient( 'eaccounting_installing', 'yes', MINUTE_IN_SECONDS * 1 );
 		eaccounting_maybe_define_constant( 'EACCOUNTING_INSTALLING', true );
 		require_once dirname( __FILE__ ) . '/admin/class-notices.php';
-		require_once dirname( __FILE__ ) . '/class-settings.php';
+		require_once dirname( __FILE__ ) . '/core/class-settings.php';
 
 		if ( ! eaccounting()->settings ) {
-			eaccounting()->settings = new \EverAccounting\Settings();
+			eaccounting()->settings = new \EverAccounting\Core\Settings();
 		}
 
 		self::remove_admin_notices();
@@ -499,7 +499,7 @@ class Install {
 		  	`currency_code` varchar(3) NOT NULL DEFAULT 'USD',
 		  	`currency_rate` double(15,8) NOT NULL DEFAULT 1,
             `account_id` INT(11) NOT NULL,
-            `document_id` INT(11) DEFAULT NULL,
+            `invoice_id` INT(11) DEFAULT NULL,
 		  	`contact_id` INT(11) DEFAULT NULL,
 		  	`category_id` INT(11) NOT NULL,
 		  	`description` text,
@@ -516,10 +516,20 @@ class Install {
 		    KEY `currency_rate` (`currency_rate`),
 		    KEY `type` (`type`),
 		    KEY `account_id` (`account_id`),
-		    KEY `document_id` (`document_id`),
+		    KEY `invoice_id` (`invoice_id`),
 		    KEY `category_id` (`category_id`),
 		    KEY `contact_id` (`contact_id`)
             ) $collate",
+
+			"CREATE TABLE {$wpdb->prefix}ea_transactionmeta(
+			`meta_id` bigINT(20) NOT NULL AUTO_INCREMENT,
+			`transaction_id` bigint(20) unsigned NOT NULL default '0',
+			`meta_key` varchar(255) default NULL,
+			`meta_value` longtext,
+			 PRIMARY KEY (`meta_id`),
+		    KEY `transaction_id`(`transaction_id`),
+			KEY `meta_key` (meta_key($max_index_length))
+			) $collate",
 
 			"CREATE TABLE {$wpdb->prefix}ea_transfers(
             `id` bigINT(20) NOT NULL AUTO_INCREMENT,
@@ -532,7 +542,7 @@ class Install {
 		    KEY `expense_id` (`expense_id`)
             ) $collate",
 
-			"CREATE TABLE {$wpdb->prefix}ea_documents(
+			"CREATE TABLE {$wpdb->prefix}ea_invoices(
             `id` bigINT(20) NOT NULL AUTO_INCREMENT,
             `document_number` VARCHAR(100) NOT NULL,
             `type` VARCHAR(60) NOT NULL,
@@ -574,9 +584,9 @@ class Install {
 		    UNIQUE KEY (`document_number`)
             ) $collate",
 
-			"CREATE TABLE {$wpdb->prefix}ea_document_items(
+			"CREATE TABLE {$wpdb->prefix}ea_invoice_items(
             `id` bigINT(20) NOT NULL AUTO_INCREMENT,
-  			`document_id` INT(11) DEFAULT NULL,
+  			`invoice_id` INT(11) DEFAULT NULL,
   			`item_id` INT(11) DEFAULT NULL,
   			`item_name` VARCHAR(191) NOT NULL,
   			`price` double(15,4) NOT NULL,
@@ -590,7 +600,7 @@ class Install {
   			`extra` longtext DEFAULT NULL,
 		    `date_created` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
 		    PRIMARY KEY (`id`),
-		    KEY `document_id` (`document_id`),
+		    KEY `invoice_id` (`invoice_id`),
 		    KEY `item_id` (`item_id`)
             ) $collate",
 
@@ -598,7 +608,7 @@ class Install {
             `id` bigINT(20) NOT NULL AUTO_INCREMENT,
   			`parent_id` INT(11) NOT NULL,
   			`type` VARCHAR(20) NOT NULL,
-  			`note` TEXT DEFAULT NULL,
+  			`content` TEXT DEFAULT NULL,
   			`extra` longtext DEFAULT NULL,
   			`creator_id` INT(11) DEFAULT NULL,
 		    `date_created` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
@@ -627,6 +637,25 @@ class Install {
 		    KEY `purchase_price` (`purchase_price`),
 		    KEY `category_id` (`category_id`),
 		    KEY `quantity` (`quantity`)
+            ) $collate",
+
+			"CREATE TABLE {$wpdb->prefix}ea_currencies(
+            `id` bigint(20) NOT NULL AUTO_INCREMENT,
+			`name` varchar(100) NOT NULL,
+			`code` varchar(3) NOT NULL,
+			`rate` double(15,8) NOT NULL,
+			`precision` varchar(2) DEFAULT NULL,
+  			`symbol` varchar(5) DEFAULT NULL,
+  			`subunit` int(100) DEFAULT 100,
+  			`position` ENUM ('before', 'after') DEFAULT 'before',
+  			`decimal_separator` varchar(1) DEFAULT '.',
+ 			`thousand_separator` varchar(1) DEFAULT ',',
+			`enabled` tinyint(1) NOT NULL DEFAULT '1',
+	   		`date_created` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
+		    PRIMARY KEY (`id`),
+		    KEY `rate` (`rate`),
+		    KEY `code` (`code`),
+		    UNIQUE KEY (`name`, `code`)
             ) $collate",
 		);
 
@@ -702,6 +731,7 @@ class Install {
 			'Accountant',
 			array(
 				'manage_eaccounting' => true,
+				'ea_manage_transaction' => true,
 				'ea_manage_customer' => true,
 				'ea_manage_vendor'   => true,
 				'ea_manage_account'  => true,
@@ -723,6 +753,7 @@ class Install {
 			'Accounting Manager',
 			array(
 				'manage_eaccounting' => true,
+				'ea_manage_transaction' => true,
 				'ea_manage_report'   => true,
 				'ea_manage_options'  => true,
 				'ea_import'          => true,
@@ -747,10 +778,12 @@ class Install {
 
 		if ( is_object( $wp_roles ) ) {
 			$wp_roles->add_cap( 'administrator', 'manage_eaccounting' );
+			$wp_roles->add_cap( 'administrator', 'ea_manage_transaction' );
 			$wp_roles->add_cap( 'administrator', 'ea_manage_report' );
 			$wp_roles->add_cap( 'administrator', 'ea_manage_options' );
 			$wp_roles->add_cap( 'administrator', 'ea_import' );
 			$wp_roles->add_cap( 'administrator', 'ea_export' );
+			$wp_roles->add_cap( 'administrator', 'ea_manage_contact' );
 			$wp_roles->add_cap( 'administrator', 'ea_manage_customer' );
 			$wp_roles->add_cap( 'administrator', 'ea_manage_vendor' );
 			$wp_roles->add_cap( 'administrator', 'ea_manage_account' );

@@ -185,6 +185,37 @@ function eaccounting_date( $date, $format = '' ) {
 }
 
 /**
+ * Sanitize payment method.
+ *
+ * @param string $method Payment method to sanitize.
+ *
+ * @return string
+ */
+function eaccounting_sanitize_payment_method( $method ) {
+	if ( array_key_exists( $method, eaccounting_get_payment_methods() ) ) {
+		return $method;
+	}
+
+	return '';
+}
+
+/**
+ * Sanitize transaction type.
+ *
+ * @param string $type Payment method to sanitize.
+ *
+ * @return string
+ */
+function eaccounting_sanitize_transaction_type( $type ) {
+	if ( array_key_exists( $type, eaccounting_get_transaction_types() ) ) {
+		return $type;
+	}
+
+	return '';
+}
+
+
+/**
  * Array merge and sum function.
  *
  * Source:  https://gist.github.com/Nickology/f700e319cbafab5eaedc
@@ -337,7 +368,7 @@ function eaccounting_format_decimal( $number, $decimals = 4, $trim_zeros = false
  *
  * @param string $time_string Time string.
  *
- * @return \EverAccounting\DateTime
+ * @return \EverAccounting\Core\DateTime
  * @throws Exception
  * @since  1.0.2
  *
@@ -358,7 +389,7 @@ function eaccounting_string_to_datetime( $time_string ) {
 		$timestamp = strtotime( get_gmt_from_date( gmdate( 'Y-m-d H:i:s', strtotime( $time_string ) ) ) );
 		date_default_timezone_set( $original_timezone );
 	}
-	$datetime = new \EverAccounting\DateTime( "@{$timestamp}", new DateTimeZone( 'UTC' ) );
+	$datetime = new \EverAccounting\Core\DateTime( "@{$timestamp}", new DateTimeZone( 'UTC' ) );
 
 	return $datetime;
 }
@@ -623,72 +654,3 @@ function eaccounting_format_address( $address, $break = '<br>' ) {
 	return implode( $break, $full_address );
 }
 
-/**
- * Sanitize database field.
- *
- * @param array|object $fields database fields
- *
- * @return array|object
- */
-function eaccounting_sanitize_fields( $fields ) {
-	if ( is_object( $fields ) ) {
-		// Check if already filtered for this context.
-		if ( $fields->filter ) {
-			return $fields;
-		}
-
-		foreach ( array_keys( get_object_vars( $fields ) ) as $field ) {
-			$fields->$field = eaccounting_sanitize_field( $field, $fields->$field );
-		}
-		$fields->filter = true;
-	} elseif ( is_array( $fields ) ) {
-		// Check if already filtered for this context.
-		if ( isset( $fields['filter'] ) && true == $fields['filter'] ) {
-			return $fields;
-		}
-		foreach ( array_keys( $fields ) as $field ) {
-			$fields[ $field ] = eaccounting_sanitize_field( $field, $fields[ $field ] );
-		}
-		$fields['filter'] = true;
-	}
-
-	return $fields;
-}
-
-/**
- * Sanitize database field.
- *
- * @param string $field Database field.
- * @param mixed $value database value.
- *
- * @return int|mixed|string|void
- */
-function eaccounting_sanitize_field( $field, $value ) {
-	$int_type = false !== strpos( $field, '_id' ) || $field === 'id';
-	switch ( $field ) {
-		case 'transaction_type':
-			$value = array_key_exists( $value, eaccounting_get_transaction_types() ) ? $value : '';
-			break;
-		case 'payment_method':
-			$value = array_key_exists( $value, eaccounting_get_payment_methods() ) ? $value : '';
-			break;
-		case 'currency_rate':
-		case 'opening_balance':
-		case 'amount':
-			// Convert multiple dots to just one.
-			$number = preg_replace( '/\.(?![^.]+$)|[^0-9.-]/', '', eaccounting_clean( $value ) );
-			$value  = (float) preg_replace( '/[^0-9.-]/', '', $number );
-			break;
-		default:
-			$value = eaccounting_clean( $value );
-			break;
-	}
-
-	$value = apply_filters( 'eaccounting_pre_' . $field, $value );
-
-	if ( $int_type ) {
-		$value = (int) $value;
-	}
-
-	return $value;
-}

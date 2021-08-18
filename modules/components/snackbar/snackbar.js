@@ -23,15 +23,15 @@ const NOTICE_TIMEOUT = 3000;
  * @param {string|WPElement}     [message]  Message to announce.
  * @param {'polite'|'assertive'} politeness Politeness to announce.
  */
-function useSpokenMessage( message, politeness ) {
+function useSpokenMessage(message, politeness) {
 	const spokenMessage =
-		typeof message === 'string' ? message : renderToString( message );
+		typeof message === 'string' ? message : renderToString(message);
 
-	useEffect( () => {
-		if ( spokenMessage ) {
-			speak( spokenMessage, politeness );
+	useEffect(() => {
+		if (spokenMessage) {
+			speak(spokenMessage, politeness);
 		}
-	}, [ spokenMessage, politeness ] );
+	}, [spokenMessage, politeness]);
 }
 
 function Snackbar(
@@ -50,8 +50,8 @@ function Snackbar(
 ) {
 	onDismiss = onDismiss || noop;
 
-	function dismissMe( event ) {
-		if ( event && event.preventDefault ) {
+	function dismissMe(event) {
+		if (event && event.preventDefault) {
 			event.preventDefault();
 		}
 
@@ -59,44 +59,44 @@ function Snackbar(
 		onRemove();
 	}
 
-	useSpokenMessage( spokenMessage, politeness );
+	useSpokenMessage(spokenMessage, politeness);
 
 	// Only set up the timeout dismiss if we're not explicitly dismissing.
-	useEffect( () => {
-		const timeoutHandle = setTimeout( () => {
-			if ( ! explicitDismiss ) {
+	useEffect(() => {
+		const timeoutHandle = setTimeout(() => {
+			if (!explicitDismiss) {
 				onDismiss();
 				onRemove();
 			}
-		}, NOTICE_TIMEOUT );
+		}, NOTICE_TIMEOUT);
 
-		return () => clearTimeout( timeoutHandle );
-	}, [ onDismiss, onRemove ] );
+		return () => clearTimeout(timeoutHandle);
+	}, [onDismiss, onRemove]);
 
 	const classes = classnames(
 		className,
 		'ea-snackbar__notice',
-		`notice-${ status }`,
+		`notice-${status}`,
 		{
-			'ea-snackbar__explicit-dismiss': !! explicitDismiss,
-			'ea-snackbar__content-with-icon': !! icon,
+			'ea-snackbar__explicit-dismiss': !!explicitDismiss,
+			'ea-snackbar__content-with-icon': !!icon,
 		}
 	);
 
 	return (
 		// eslint-disable-next-line jsx-a11y/no-static-element-interactions
 		<div
-			ref={ ref }
-			className={ classes }
-			onClick={ ! explicitDismiss ? dismissMe : noop }
+			ref={ref}
+			className={classes}
+			onClick={!explicitDismiss ? dismissMe : noop}
 			tabIndex="0"
-			onKeyPress={ ! explicitDismiss ? dismissMe : noop }
-			aria-label={ ! explicitDismiss ? __( 'Dismiss this notice' ) : '' }
+			onKeyPress={!explicitDismiss ? dismissMe : noop}
+			aria-label={!explicitDismiss ? __('Dismiss this notice') : ''}
 		>
-			{ icon && <div className="ea-snackbar__icon">{ icon }</div> }
-			<div>{ children }</div>
+			{icon && <div className="ea-snackbar__icon">{icon}</div>}
+			<div>{children}</div>
 		</div>
 	);
 }
 
-export default forwardRef( Snackbar );
+export default forwardRef(Snackbar);

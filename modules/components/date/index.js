@@ -18,14 +18,12 @@ import { format as formatDate } from '@wordpress/date';
  * @param {string} props.visibleFormat
  * @return {Object} -
  */
-const Date = ( { date, machineFormat, screenReaderFormat, visibleFormat } ) => {
+const Date = ({ date, machineFormat, screenReaderFormat, visibleFormat }) => {
 	return (
-		<time dateTime={ formatDate( machineFormat, date ) }>
-			<span aria-hidden="true">
-				{ formatDate( visibleFormat, date ) }
-			</span>
+		<time dateTime={formatDate(machineFormat, date)}>
+			<span aria-hidden="true">{formatDate(visibleFormat, date)}</span>
 			<span className="screen-reader-text">
-				{ formatDate( screenReaderFormat, date ) }
+				{formatDate(screenReaderFormat, date)}
 			</span>
 		</time>
 	);
@@ -35,8 +33,7 @@ Date.propTypes = {
 	/**
 	 * Date to use in the component.
 	 */
-	date: PropTypes.oneOfType( [ PropTypes.string, PropTypes.object ] )
-		.isRequired,
+	date: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
 	/**
 	 * Date format used in the `datetime` prop of the `time` element.
 	 */

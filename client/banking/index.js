@@ -9,27 +9,27 @@ import { lazy } from '@wordpress/element';
  */
 import { Tabs } from '@eaccounting/components';
 
-const AccountsTab = lazy( () => import( './accounts' ) );
-const Transfers = lazy( () => import( './transfers' ) );
+const AccountsTab = lazy(() => import('./accounts'));
+const Transfers = lazy(() => import('./transfers'));
 
-export default function ( props ) {
-	const tabs = applyFilters( 'EACCOUNTING_BANKING_TABS', [
+export default function (props) {
+	const tabs = applyFilters('EACCOUNTING_BANKING_TABS', [
 		{
 			key: 'accounts',
 			container: AccountsTab,
-			label: __( 'Accounts' ),
+			label: __('Accounts'),
 			capability: 'manage_options',
 		},
 		{
 			key: 'transfers',
 			container: Transfers,
-			label: __( 'Transfers' ),
+			label: __('Transfers'),
 			capability: 'manage_options',
 		},
-	] );
+	]);
 	return (
 		<>
-			<Tabs tabs={ tabs } { ...props } />
+			<Tabs tabs={tabs} {...props} />
 		</>
 	);
 }

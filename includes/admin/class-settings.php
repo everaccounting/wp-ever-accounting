@@ -431,14 +431,14 @@ class Settings extends Singleton {
 					);
 
 					if ( ! in_array(
-						$args['type'],
-						array(
-							'checkbox',
-							'multicheck',
-							'radio',
-						),
-						true
-					) && ! empty( $tooltip ) ) {
+							$args['type'],
+							array(
+								'checkbox',
+								'multicheck',
+								'radio',
+							),
+							true
+						) && ! empty( $tooltip ) ) {
 						$args['title']     = sprintf( '%s<span class="ea-help-tip" title="%s"></span>', $args['title'], $tooltip );
 						$args['label_for'] = $args['id'];
 					}
@@ -505,12 +505,12 @@ class Settings extends Singleton {
 			case 'tel':
 				?>
 				<input name="eaccounting_settings[<?php echo esc_attr( $field['id'] ); ?>]"
-					   id="<?php echo esc_attr( $field['id'] ); ?>"
-					   type="<?php echo esc_attr( $field['type'] ); ?>"
-					   style="<?php echo esc_attr( $field['style'] ); ?>"
-					   value="<?php echo esc_attr( wp_unslash( $value ) ); ?>"
-					   class="<?php echo esc_attr( sprintf( '%s-text %s', $field['size'], $field['input_class'] ) ); ?>"
-						<?php echo implode( ' ', $attributes ); ?>/>
+				       id="<?php echo esc_attr( $field['id'] ); ?>"
+				       type="<?php echo esc_attr( $field['type'] ); ?>"
+				       style="<?php echo esc_attr( $field['style'] ); ?>"
+				       value="<?php echo esc_attr( wp_unslash( $value ) ); ?>"
+				       class="<?php echo esc_attr( sprintf( '%s-text %s', $field['size'], $field['input_class'] ) ); ?>"
+					<?php echo implode( ' ', $attributes ); ?>/>
 				<?php echo $description; ?>
 				<?php
 				break;
@@ -518,9 +518,9 @@ class Settings extends Singleton {
 				echo $description;
 				?>
 				<textarea name="eaccounting_settings[<?php echo esc_attr( $field['id'] ); ?>]"
-						  id="<?php echo esc_attr( $field['id'] ); ?>"
-						  style="<?php echo esc_attr( $field['style'] ); ?>"
-						  class="<?php echo esc_attr( sprintf( '%s-text %s', $field['size'], $field['input_class'] ) ); ?>"
+				          id="<?php echo esc_attr( $field['id'] ); ?>"
+				          style="<?php echo esc_attr( $field['style'] ); ?>"
+				          class="<?php echo esc_attr( sprintf( '%s-text %s', $field['size'], $field['input_class'] ) ); ?>"
 					<?php echo implode( ' ', $attributes ); ?>><?php echo esc_textarea( wp_unslash( $value ) ); ?></textarea>
 				<?php
 				break;
@@ -531,23 +531,23 @@ class Settings extends Singleton {
 				}
 				?>
 				<select
-						name="eaccounting_settings[<?php echo esc_attr( $field['id'] ); ?><?php echo ( 'multiselect' === $field['type'] ) ? '[]' : ''; ?>]"
-						id="<?php echo esc_attr( $field['id'] ); ?>"
-						style="<?php echo esc_attr( $field['style'] ); ?>"
-						class="<?php echo esc_attr( sprintf( '%s-text %s', $field['size'], $field['input_class'] ) ); ?>"
-						<?php echo implode( ' ', $attributes ); ?>
+					name="eaccounting_settings[<?php echo esc_attr( $field['id'] ); ?><?php echo ( 'multiselect' === $field['type'] ) ? '[]' : ''; ?>]"
+					id="<?php echo esc_attr( $field['id'] ); ?>"
+					style="<?php echo esc_attr( $field['style'] ); ?>"
+					class="<?php echo esc_attr( sprintf( '%s-text %s', $field['size'], $field['input_class'] ) ); ?>"
+					<?php echo implode( ' ', $attributes ); ?>
 				>
 					<?php
 					foreach ( $field['options'] as $key => $val ) {
 						?>
 						<option value="<?php echo esc_attr( $key ); ?>"
-								<?php
-								if ( is_array( $value ) ) {
-									selected( in_array( (string) $key, $value, true ), true );
-								} else {
-									selected( $value, (string) $key );
-								}
-								?>
+							<?php
+							if ( is_array( $value ) ) {
+								selected( in_array( (string) $key, $value, true ), true );
+							} else {
+								selected( $value, (string) $key );
+							}
+							?>
 						><?php echo esc_html( $val ); ?></option>
 						<?php
 					}
@@ -559,12 +559,12 @@ class Settings extends Singleton {
 				?>
 				<label for="<?php echo esc_attr( $field['id'] ); ?>">
 					<input
-							name="eaccounting_settings[<?php echo esc_attr( $field['id'] ); ?>]"
-							id="<?php echo esc_attr( $field['id'] ); ?>"
-							type="checkbox"
-							value="yes"
-							<?php checked( $value, 'yes' ); ?>
-							<?php echo implode( ' ', $attributes ); ?>
+						name="eaccounting_settings[<?php echo esc_attr( $field['id'] ); ?>]"
+						id="<?php echo esc_attr( $field['id'] ); ?>"
+						type="checkbox"
+						value="yes"
+						<?php checked( $value, 'yes' ); ?>
+						<?php echo implode( ' ', $attributes ); ?>
 					/> <?php echo $description; ?>
 				</label>
 				<?php
@@ -584,13 +584,13 @@ class Settings extends Singleton {
 							?>
 							<li>
 								<label><input
-											name="eaccounting_settings[<?php echo esc_attr( $field['id'] ); ?>][<?php echo esc_attr( $key ); ?>]"
-											value="yes"
-											type="<?php echo esc_attr( $type ); ?>"
-											style="<?php echo esc_attr( $field['style'] ); ?>"
-											class="<?php echo esc_attr( $field['class'] ); ?>"
-											<?php echo implode( ' ', $attributes ); ?>
-											<?php checked( 'yes', $checked ); ?>
+										name="eaccounting_settings[<?php echo esc_attr( $field['id'] ); ?>][<?php echo esc_attr( $key ); ?>]"
+										value="yes"
+										type="<?php echo esc_attr( $type ); ?>"
+										style="<?php echo esc_attr( $field['style'] ); ?>"
+										class="<?php echo esc_attr( $field['class'] ); ?>"
+										<?php echo implode( ' ', $attributes ); ?>
+										<?php checked( 'yes', $checked ); ?>
 									/> <?php echo esc_html( $option ); ?></label>zz
 							</li>
 							<?php
@@ -611,14 +611,14 @@ class Settings extends Singleton {
 				?>
 				<?php echo $description; ?>
 				<input name="eaccounting_settings[<?php echo esc_attr( $field['id'] ); ?>]"
-					   id="<?php echo esc_attr( $field['id'] ); ?>"
-					   type="text"
-					   style="<?php echo esc_attr( $field['style'] ); ?>"
-					   value="<?php echo esc_attr( wp_unslash( $value ) ); ?>"
-					   class="<?php echo esc_attr( sprintf( '%s-text %s', $field['size'], $field['input_class'] ) ); ?>"
-						<?php echo implode( ' ', $attributes ); ?>/>
+				       id="<?php echo esc_attr( $field['id'] ); ?>"
+				       type="text"
+				       style="<?php echo esc_attr( $field['style'] ); ?>"
+				       value="<?php echo esc_attr( wp_unslash( $value ) ); ?>"
+				       class="<?php echo esc_attr( sprintf( '%s-text %s', $field['size'], $field['input_class'] ) ); ?>"
+					<?php echo implode( ' ', $attributes ); ?>/>
 				<span>&nbsp;<button type="button"
-									class="ea_settings_upload_button button-secondary"><?php esc_html_e( 'Upload File', 'wp-ever-accounting' ); ?></button></span>
+				                    class="ea_settings_upload_button button-secondary"><?php esc_html_e( 'Upload File', 'wp-ever-accounting' ); ?></button></span>
 				<?php
 				break;
 
@@ -947,21 +947,21 @@ class Settings extends Singleton {
 		wp_nonce_field( sanitize_key( $field['id'] ) . '-nonce', sanitize_key( $field['id'] ) . '-nonce' );
 		?>
 		<input type="text" class="regular-text" id="eaccounting_settings[<?php echo esc_attr( $field['id'] ); ?>]"
-			   name="eaccounting_settings[<?php echo esc_attr( $field['id'] ); ?>]" value="<?php echo $value; ?>"/>
+		       name="eaccounting_settings[<?php echo esc_attr( $field['id'] ); ?>]" value="<?php echo $value; ?>"/>
 		<?php if ( ! empty( $field['description'] ) ) { ?>
 			<div class="description"><?php echo $field['description']; ?></div>
 		<?php } ?>
 
 		<?php if ( ! empty( $value ) && ( ( is_object( $license ) && 'valid' == $license->license ) || 'valid' == $license ) ) { ?>
 			<input type="button" class="button um_license_deactivate"
-				   id="<?php echo esc_attr( $field['id'] ); ?>_deactivate"
-				   value="<?php esc_attr_e( 'Clear License', 'wp-ever-accounting' ); ?>"/>
+			       id="<?php echo esc_attr( $field['id'] ); ?>_deactivate"
+			       value="<?php esc_attr_e( 'Clear License', 'wp-ever-accounting' ); ?>"/>
 		<?php } elseif ( empty( $value ) ) { ?>
 			<input type="submit" name="submit" id="submit" class="button button-primary"
-				   value="<?php esc_attr_e( 'Activate', 'wp-ever-accounting' ); ?>"/>
+			       value="<?php esc_attr_e( 'Activate', 'wp-ever-accounting' ); ?>"/>
 		<?php } else { ?>
 			<input type="submit" name="submit" id="submit" class="button button-primary"
-				   value="<?php esc_attr_e( 'Re-Activate', 'wp-ever-accounting' ); ?>"/>
+			       value="<?php esc_attr_e( 'Re-Activate', 'wp-ever-accounting' ); ?>"/>
 			<?php
 		}
 

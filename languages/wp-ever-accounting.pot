@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Ever Accounting 1.1.2\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/wp-ever-accounting\n"
-"POT-Creation-Date: 2021-07-19 12:24:01+00:00\n"
+"POT-Creation-Date: 2021-08-08 16:03:32+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -36,141 +36,126 @@ msgstr ""
 msgid "Every %d minutes"
 msgstr ""
 
-#: includes/abstracts/abstract-contacts-controller.php:41
+#: includes/abstracts/abstract-contacts-controller.php:25
 #: includes/admin/list-tables/class-customer-list-table.php:117
 #: includes/admin/list-tables/class-vendor-list-table.php:117
 msgid "Contact"
 msgstr ""
 
-#: includes/abstracts/abstract-contacts-controller.php:45
+#: includes/abstracts/abstract-contacts-controller.php:29
 msgid "Unique identifier for the contact."
 msgstr ""
 
-#: includes/abstracts/abstract-contacts-controller.php:54
+#: includes/abstracts/abstract-contacts-controller.php:38
 msgid "WP user ID."
 msgstr ""
 
-#: includes/abstracts/abstract-contacts-controller.php:64
+#: includes/abstracts/abstract-contacts-controller.php:48
 msgid "Name for the contact."
 msgstr ""
 
-#: includes/abstracts/abstract-contacts-controller.php:74
+#: includes/abstracts/abstract-contacts-controller.php:58
 msgid "Company for the contact."
 msgstr ""
 
-#: includes/abstracts/abstract-contacts-controller.php:84
+#: includes/abstracts/abstract-contacts-controller.php:68
 msgid "The email address for the contact."
 msgstr ""
 
-#: includes/abstracts/abstract-contacts-controller.php:92
+#: includes/abstracts/abstract-contacts-controller.php:76
 msgid "Phone number for the contact."
 msgstr ""
 
-#: includes/abstracts/abstract-contacts-controller.php:100
+#: includes/abstracts/abstract-contacts-controller.php:84
 msgid "website of the contact."
 msgstr ""
 
-#: includes/abstracts/abstract-contacts-controller.php:109
+#: includes/abstracts/abstract-contacts-controller.php:93
 msgid "Birth date"
 msgstr ""
 
-#: includes/abstracts/abstract-contacts-controller.php:118
+#: includes/abstracts/abstract-contacts-controller.php:102
 msgid "Vat number of the contact"
 msgstr ""
 
-#: includes/abstracts/abstract-contacts-controller.php:126
+#: includes/abstracts/abstract-contacts-controller.php:110
 msgid "Street Address of the contact."
 msgstr ""
 
-#: includes/abstracts/abstract-contacts-controller.php:134
-msgid "City Address of the contact."
-msgstr ""
-
-#: includes/abstracts/abstract-contacts-controller.php:142
+#: includes/abstracts/abstract-contacts-controller.php:118
 msgid "State Address of the contact."
 msgstr ""
 
-#: includes/abstracts/abstract-contacts-controller.php:150
+#: includes/abstracts/abstract-contacts-controller.php:126
 msgid "Postcode of the contact."
 msgstr ""
 
-#: includes/abstracts/abstract-contacts-controller.php:158
+#: includes/abstracts/abstract-contacts-controller.php:134
 msgid "Country of the contact."
 msgstr ""
 
-#: includes/abstracts/abstract-contacts-controller.php:166
+#: includes/abstracts/abstract-contacts-controller.php:142
 msgid "Currency code for customer."
 msgstr ""
 
-#: includes/abstracts/abstract-contacts-controller.php:172
+#: includes/abstracts/abstract-contacts-controller.php:148
 #: includes/models/class-currency.php:88
 msgid "Currency code"
 msgstr ""
 
-#: includes/abstracts/abstract-contacts-controller.php:183
+#: includes/abstracts/abstract-contacts-controller.php:159
 msgid "Thumbnail of the contact"
 msgstr ""
 
-#: includes/abstracts/abstract-contacts-controller.php:188
-#: includes/rest/class-items-controller.php:101
+#: includes/abstracts/abstract-contacts-controller.php:164
+#: includes/rest/class-items-controller.php:103
 msgid "Thumbnail ID."
 msgstr ""
 
-#: includes/abstracts/abstract-contacts-controller.php:196
-#: includes/rest/class-items-controller.php:109
+#: includes/abstracts/abstract-contacts-controller.php:172
+#: includes/rest/class-items-controller.php:111
 msgid "Thumbnail src."
 msgstr ""
 
-#: includes/abstracts/abstract-contacts-controller.php:206
-msgid "Total amount paid by the customer."
-msgstr ""
-
-#: includes/abstracts/abstract-contacts-controller.php:212
-msgid "Total amount due by the customer."
-msgstr ""
-
-#: includes/abstracts/abstract-contacts-controller.php:218
+#: includes/abstracts/abstract-contacts-controller.php:182
 msgid "Status of the contact."
 msgstr ""
 
-#: includes/abstracts/abstract-contacts-controller.php:223
+#: includes/abstracts/abstract-contacts-controller.php:187
 msgid "Creator of the contact."
 msgstr ""
 
-#: includes/abstracts/abstract-contacts-controller.php:228
-#: includes/abstracts/abstract-transactions-controller.php:248
-#: includes/rest/class-items-controller.php:211
+#: includes/abstracts/abstract-contacts-controller.php:192
+#: includes/abstracts/abstract-transactions-controller.php:264
 msgid "Creator ID."
 msgstr ""
 
-#: includes/abstracts/abstract-contacts-controller.php:234
-#: includes/abstracts/abstract-transactions-controller.php:253
-#: includes/rest/class-items-controller.php:219
+#: includes/abstracts/abstract-contacts-controller.php:198
+#: includes/abstracts/abstract-transactions-controller.php:269
 msgid "Creator name."
 msgstr ""
 
-#: includes/abstracts/abstract-contacts-controller.php:239
-#: includes/abstracts/abstract-transactions-controller.php:258
-#: includes/rest/class-items-controller.php:227
+#: includes/abstracts/abstract-contacts-controller.php:203
+#: includes/abstracts/abstract-transactions-controller.php:274
 msgid "Creator Email."
 msgstr ""
 
-#: includes/abstracts/abstract-contacts-controller.php:246
+#: includes/abstracts/abstract-contacts-controller.php:210
 msgid "Created date of the contact."
 msgstr ""
 
-#: includes/abstracts/abstract-contacts-controller.php:268
-#: includes/abstracts/abstract-entities-controller.php:658
-#: includes/rest/class-accounts-controller.php:215
+#: includes/abstracts/abstract-contacts-controller.php:233
+#: includes/abstracts/abstract-entities-controller.php:659
+#: includes/rest/class-accounts-controller.php:213
 #: includes/rest/class-bill-histories-controller.php:436
 #: includes/rest/class-bill-items-controller.php:509
 #: includes/rest/class-bills-controller.php:657
 #: includes/rest/class-categories-controller.php:143
-#: includes/rest/class-currencies-controller.php:353
+#: includes/rest/class-currencies-controller.php:191
 #: includes/rest/class-invoice-histories-controller.php:437
 #: includes/rest/class-invoice-items-controller.php:509
 #: includes/rest/class-invoices-controller.php:656
-#: includes/rest/class-items-controller.php:262
+#: includes/rest/class-items-controller.php:255
 #: includes/rest/class-transfers-controller.php:145
 msgid "Sort collection by object attribute."
 msgstr ""
@@ -180,19 +165,16 @@ msgid "Invalid file type. The importer supports CSV and TXT file formats."
 msgstr ""
 
 #: includes/abstracts/abstract-entities-controller.php:82
-#: includes/rest/class-currencies-controller.php:88
+#: includes/rest/class-codes-controller.php:57
 msgid "Unique identifier for the entity."
 msgstr ""
 
 #: includes/abstracts/abstract-entities-controller.php:118
 #: includes/abstracts/abstract-posts-controller.php:39
-#: includes/rest/class-currencies-controller.php:123
-#: includes/rest/class-settings-controller.php:92
 msgid "Sorry, you cannot list resources."
 msgstr ""
 
 #: includes/abstracts/abstract-entities-controller.php:133
-#: includes/rest/class-currencies-controller.php:169
 msgid "Sorry, you are not allowed to create resources."
 msgstr ""
 
@@ -244,39 +226,39 @@ msgstr ""
 msgid "The %s cannot be deleted."
 msgstr ""
 
-#: includes/abstracts/abstract-entities-controller.php:601
-#: includes/abstracts/abstracts-controller.php:549
+#: includes/abstracts/abstract-entities-controller.php:602
 msgid "Current page of the collection."
 msgstr ""
 
-#: includes/abstracts/abstract-entities-controller.php:609
+#: includes/abstracts/abstract-entities-controller.php:610
 msgid "Maximum number of items to be returned in result set."
 msgstr ""
 
-#: includes/abstracts/abstract-entities-controller.php:618
+#: includes/abstracts/abstract-entities-controller.php:619
 msgid "Limit results to those matching a string."
 msgstr ""
 
-#: includes/abstracts/abstract-entities-controller.php:624
+#: includes/abstracts/abstract-entities-controller.php:625
 msgid "Limit response to resources published after a given ISO8601 compliant date."
 msgstr ""
 
-#: includes/abstracts/abstract-entities-controller.php:630
+#: includes/abstracts/abstract-entities-controller.php:631
 msgid "Limit response to resources published before a given ISO8601 compliant date."
 msgstr ""
 
-#: includes/abstracts/abstract-entities-controller.php:636
+#: includes/abstracts/abstract-entities-controller.php:637
 msgid "Limit result set to specific ids."
 msgstr ""
 
-#: includes/abstracts/abstract-entities-controller.php:645
+#: includes/abstracts/abstract-entities-controller.php:646
 msgid "Offset the result set by a specific number of items."
 msgstr ""
 
-#: includes/abstracts/abstract-entities-controller.php:651
+#: includes/abstracts/abstract-entities-controller.php:652
 msgid "Order sort attribute ascending or descending."
 msgstr ""
 
+#: includes/abstracts/abstract-metadata.php:356
 #: includes/abstracts/abstract-resource-model.php:430
 #. translators: %s: $key Key to check
 msgid ""
@@ -301,145 +283,140 @@ msgstr ""
 msgid "Unserializing instances of this class is forbidden."
 msgstr ""
 
-#: includes/abstracts/abstract-transactions-controller.php:86
+#: includes/abstracts/abstract-transactions-controller.php:85
 msgid "Transaction"
 msgstr ""
 
-#: includes/abstracts/abstract-transactions-controller.php:90
+#: includes/abstracts/abstract-transactions-controller.php:89
 msgid "Unique identifier for the transaction."
 msgstr ""
 
-#: includes/abstracts/abstract-transactions-controller.php:99
+#: includes/abstracts/abstract-transactions-controller.php:98
 msgid "Payment Date of the transaction"
 msgstr ""
 
-#: includes/abstracts/abstract-transactions-controller.php:109
+#: includes/abstracts/abstract-transactions-controller.php:108
+#: includes/abstracts/abstract-transactions-controller.php:117
 msgid "Amount of the transaction"
 msgstr ""
 
-#: includes/abstracts/abstract-transactions-controller.php:118
-msgid "Currency code of the transaction."
+#: includes/abstracts/abstract-transactions-controller.php:123
+msgid "Currency code for transaction."
 msgstr ""
 
-#: includes/abstracts/abstract-transactions-controller.php:127
+#: includes/abstracts/abstract-transactions-controller.php:129
+msgid "Currency Code ID."
+msgstr ""
+
+#: includes/abstracts/abstract-transactions-controller.php:135
+#: includes/rest/class-accounts-controller.php:127
+#: includes/rest/class-bills-controller.php:474
+#: includes/rest/class-invoices-controller.php:473
+msgid "Currency code."
+msgstr ""
+
+#: includes/abstracts/abstract-transactions-controller.php:143
 msgid "Currency rate of the transaction."
 msgstr ""
 
-#: includes/abstracts/abstract-transactions-controller.php:136
+#: includes/abstracts/abstract-transactions-controller.php:152
 msgid "Account id of the transaction."
 msgstr ""
 
-#: includes/abstracts/abstract-transactions-controller.php:142
+#: includes/abstracts/abstract-transactions-controller.php:158
 msgid "Account ID."
 msgstr ""
 
-#: includes/abstracts/abstract-transactions-controller.php:150
+#: includes/abstracts/abstract-transactions-controller.php:166
 msgid "Account name."
 msgstr ""
 
-#: includes/abstracts/abstract-transactions-controller.php:161
+#: includes/abstracts/abstract-transactions-controller.php:177
 msgid "Invoice id of the transaction"
 msgstr ""
 
-#: includes/abstracts/abstract-transactions-controller.php:169
+#: includes/abstracts/abstract-transactions-controller.php:185
 msgid "Category of the transaction"
 msgstr ""
 
-#: includes/abstracts/abstract-transactions-controller.php:175
+#: includes/abstracts/abstract-transactions-controller.php:191
 #: includes/rest/class-bills-controller.php:499
 #: includes/rest/class-invoices-controller.php:498
-#: includes/rest/class-items-controller.php:163
+#: includes/rest/class-items-controller.php:165
 msgid "Category ID."
 msgstr ""
 
-#: includes/abstracts/abstract-transactions-controller.php:183
+#: includes/abstracts/abstract-transactions-controller.php:199
 #: includes/rest/class-bills-controller.php:505
 #: includes/rest/class-invoices-controller.php:504
-#: includes/rest/class-items-controller.php:171
+#: includes/rest/class-items-controller.php:173
 msgid "Category Type."
 msgstr ""
 
-#: includes/abstracts/abstract-transactions-controller.php:193
+#: includes/abstracts/abstract-transactions-controller.php:209
 msgid "Description of the transaction"
 msgstr ""
 
-#: includes/abstracts/abstract-transactions-controller.php:201
+#: includes/abstracts/abstract-transactions-controller.php:217
 msgid "Method of the payment"
 msgstr ""
 
-#: includes/abstracts/abstract-transactions-controller.php:211
+#: includes/abstracts/abstract-transactions-controller.php:227
 msgid "Reference of the transaction"
 msgstr ""
 
-#: includes/abstracts/abstract-transactions-controller.php:219
+#: includes/abstracts/abstract-transactions-controller.php:235
 msgid "Attachment url of the transaction"
 msgstr ""
 
-#: includes/abstracts/abstract-transactions-controller.php:224
+#: includes/abstracts/abstract-transactions-controller.php:240
 #: includes/rest/class-bills-controller.php:590
 #: includes/rest/class-invoices-controller.php:589
 msgid "Attachment ID."
 msgstr ""
 
-#: includes/abstracts/abstract-transactions-controller.php:230
+#: includes/abstracts/abstract-transactions-controller.php:246
 #: includes/rest/class-bills-controller.php:596
 #: includes/rest/class-invoices-controller.php:595
 msgid "Attachment src."
 msgstr ""
 
-#: includes/abstracts/abstract-transactions-controller.php:237
+#: includes/abstracts/abstract-transactions-controller.php:253
 msgid "Reconciliation of the transaction"
 msgstr ""
 
-#: includes/abstracts/abstract-transactions-controller.php:242
+#: includes/abstracts/abstract-transactions-controller.php:258
 msgid "Creator of the transactions"
 msgstr ""
 
-#: includes/abstracts/abstract-transactions-controller.php:265
+#: includes/abstracts/abstract-transactions-controller.php:281
 #: includes/rest/class-transfers-controller.php:119
 msgid "Created date of the transaction."
 msgstr ""
 
-#: includes/abstracts/abstract-transactions-controller.php:275
+#: includes/abstracts/abstract-transactions-controller.php:291
 msgid "Contact id of the transaction"
 msgstr ""
 
-#: includes/abstracts/abstract-transactions-controller.php:280
+#: includes/abstracts/abstract-transactions-controller.php:296
 #: includes/rest/class-bills-controller.php:521
 #: includes/rest/class-invoices-controller.php:520
 msgid "Contact ID."
 msgstr ""
 
-#: includes/abstracts/abstract-transactions-controller.php:288
+#: includes/abstracts/abstract-transactions-controller.php:304
 msgid "Contact name."
 msgstr ""
 
-#: includes/abstracts/abstract-transactions-controller.php:323
+#: includes/abstracts/abstract-transactions-controller.php:339
 msgid "Sort collection by transaction attribute."
 msgstr ""
 
-#: includes/abstracts/abstract-transactions-controller.php:336
+#: includes/abstracts/abstract-transactions-controller.php:352
 msgid "Limit results to those matching accounts."
 msgstr ""
 
-#: includes/abstracts/abstracts-controller.php:77
-#. translators: %s: items limit
-msgid "Unable to accept more than %s items for this request."
-msgstr ""
-
-#: includes/abstracts/abstracts-controller.php:284
-msgid "List of created resources."
-msgstr ""
-
-#: includes/abstracts/abstracts-controller.php:292
-msgid "List of updated resources."
-msgstr ""
-
-#: includes/abstracts/abstracts-controller.php:300
-msgid "List of delete resources."
-msgstr ""
-
-#: includes/admin/class-admin.php:163
+#: includes/admin/class-admin.php:159
 #. translators: %s page
 msgid "If you like %1$s please leave us a %2$s rating. A huge thanks in advance!"
 msgstr ""
@@ -448,15 +425,15 @@ msgstr ""
 msgid "Ever Accounting"
 msgstr ""
 
-#: includes/admin/class-admin.php:165
+#: includes/admin/class-admin.php:161
 msgid "five star"
 msgstr ""
 
-#: includes/admin/class-admin.php:165
+#: includes/admin/class-admin.php:161
 msgid "Thanks :)"
 msgstr ""
 
-#: includes/admin/class-admin.php:174
+#: includes/admin/class-admin.php:170
 msgid "Thank you for using with Ever Accounting."
 msgstr ""
 
@@ -533,7 +510,7 @@ msgstr ""
 #: includes/admin/reports/class-cashflow.php:200
 #: includes/admin/reports/class-cashflow.php:306
 #: includes/admin/reports/income-summary.php:145
-#: includes/ea-category-functions.php:22
+#: includes/ea-category-functions.php:24
 #: includes/ea-transaction-functions.php:24
 msgid "Income"
 msgstr ""
@@ -544,7 +521,7 @@ msgstr ""
 #: includes/admin/reports/class-cashflow.php:312
 #: includes/admin/reports/expense-summary.php:145
 #: includes/admin/reports/profit-loss.php:110
-#: includes/ea-category-functions.php:21
+#: includes/ea-category-functions.php:23
 #: includes/ea-transaction-functions.php:25
 msgid "Expense"
 msgstr ""
@@ -578,7 +555,6 @@ msgstr ""
 #: includes/admin/views/payments/edit-payment.php:53
 #: includes/admin/views/revenues/edit-revenue.php:48
 #: includes/admin/views/transfers/edit-transfer.php:82
-#: client/sales/revenues/revenues.js:57
 msgid "Date"
 msgstr ""
 
@@ -599,8 +575,8 @@ msgstr ""
 #: includes/admin/views/revenues/edit-revenue.php:93
 #: includes/admin/views/revenues/view-income.php:137
 #: includes/models/class-bill.php:73 includes/models/class-invoice.php:74
-#: includes/rest/class-categories-controller.php:73
-#: client/sales/revenues/revenues.js:119
+#: includes/rest/class-categories-controller.php:72
+#: packages/data/entities.js:28
 msgid "Category"
 msgstr ""
 
@@ -617,7 +593,6 @@ msgstr ""
 #: includes/admin/views/revenues/edit-revenue.php:70
 #: includes/admin/views/revenues/view-income.php:159
 #: includes/admin/views/transfers/edit-transfer.php:69
-#: client/sales/revenues/revenues.js:249
 msgid "Amount"
 msgstr ""
 
@@ -629,7 +604,7 @@ msgstr ""
 msgid "There is not accounts."
 msgstr ""
 
-#: includes/admin/class-dashboard.php:581 includes/admin/class-settings.php:147
+#: includes/admin/class-dashboard.php:581 includes/admin/class-settings.php:144
 #: includes/admin/list-tables/class-payment-list-table.php:104
 #: includes/admin/list-tables/class-revenue-list-table.php:104
 #: includes/admin/list-tables/class-transaction-list-table.php:109
@@ -643,8 +618,7 @@ msgstr ""
 #: includes/admin/views/reconciliations/edit-reconciliation.php:55
 #: includes/admin/views/revenues/edit-revenue.php:59
 #: includes/class-settings.php:167
-#: includes/rest/class-accounts-controller.php:75
-#: client/sales/revenues/revenues.js:204
+#: includes/rest/class-accounts-controller.php:74
 msgid "Account"
 msgstr ""
 
@@ -693,7 +667,7 @@ msgstr ""
 
 #: includes/admin/class-extensions.php:36
 #: includes/admin/class-extensions.php:37
-#: includes/admin/class-extensions.php:53 includes/admin/class-settings.php:303
+#: includes/admin/class-extensions.php:53 includes/admin/class-settings.php:300
 #: includes/admin/ea-admin-functions.php:29
 msgid "Extensions"
 msgstr ""
@@ -757,8 +731,8 @@ msgstr ""
 
 #: includes/admin/class-menu.php:67 includes/admin/class-menu.php:68
 #: includes/admin/ea-admin-functions.php:117
-#: includes/admin/ea-admin-functions.php:160
-#: includes/admin/ea-admin-functions.php:207 includes/class-assets.php:92
+#: includes/admin/ea-admin-functions.php:157
+#: includes/admin/ea-admin-functions.php:191 includes/class-assets.php:77
 msgid "Accounting"
 msgstr ""
 
@@ -768,7 +742,7 @@ msgid "Overview"
 msgstr ""
 
 #: includes/admin/class-menu.php:91 includes/admin/class-menu.php:92
-#: includes/admin/class-menu.php:211
+#: includes/admin/class-menu.php:206
 #: includes/admin/views/items/edit-item.php:25
 #: includes/admin/views/items/list-item.php:32
 #: includes/admin/views/reconciliations/reconciliations.php:17
@@ -776,7 +750,7 @@ msgid "Items"
 msgstr ""
 
 #: includes/admin/class-menu.php:105 includes/admin/class-menu.php:106
-#: includes/admin/class-menu.php:343
+#: includes/admin/class-menu.php:338
 #: includes/admin/reports/class-expenses.php:191
 #: includes/admin/reports/class-profits.php:171
 #: includes/admin/reports/class-sales.php:190 includes/class-install.php:246
@@ -784,7 +758,7 @@ msgid "Sales"
 msgstr ""
 
 #: includes/admin/class-menu.php:119 includes/admin/class-menu.php:120
-#: includes/admin/class-menu.php:344
+#: includes/admin/class-menu.php:339
 msgid "Expenses"
 msgstr ""
 
@@ -804,13 +778,13 @@ msgstr ""
 msgid "React"
 msgstr ""
 
-#: includes/admin/class-menu.php:227
+#: includes/admin/class-menu.php:222
 #: includes/admin/views/revenues/edit-revenue.php:22
 #: includes/admin/views/revenues/list-revenue.php:32
 msgid "Revenues"
 msgstr ""
 
-#: includes/admin/class-menu.php:230 includes/admin/class-settings.php:173
+#: includes/admin/class-menu.php:225 includes/admin/class-settings.php:170
 #: includes/admin/ea-admin-functions.php:65
 #: includes/admin/views/customers/view-customer.php:23
 #: includes/admin/views/invoices/edit-invoice.php:29
@@ -819,20 +793,20 @@ msgstr ""
 msgid "Invoices"
 msgstr ""
 
-#: includes/admin/class-menu.php:233
+#: includes/admin/class-menu.php:228
 #: includes/admin/views/customers/edit-customer.php:25
 #: includes/admin/views/customers/list-customer.php:32
 #: includes/admin/views/customers/view-customer.php:39
 msgid "Customers"
 msgstr ""
 
-#: includes/admin/class-menu.php:250
+#: includes/admin/class-menu.php:245
 #: includes/admin/views/payments/edit-payment.php:28
 #: includes/admin/views/payments/list-payment.php:32
 msgid "Payments"
 msgstr ""
 
-#: includes/admin/class-menu.php:253 includes/admin/class-settings.php:234
+#: includes/admin/class-menu.php:248 includes/admin/class-settings.php:231
 #: includes/admin/ea-admin-functions.php:66
 #: includes/admin/views/bills/edit-bill.php:28
 #: includes/admin/views/bills/list-bill.php:23
@@ -841,21 +815,22 @@ msgstr ""
 msgid "Bills"
 msgstr ""
 
-#: includes/admin/class-menu.php:256
+#: includes/admin/class-menu.php:251
 #: includes/admin/views/vendors/edit-vendor.php:29
 #: includes/admin/views/vendors/list-vendor.php:32
 #: includes/admin/views/vendors/view-vendor.php:41
 msgid "Vendors"
 msgstr ""
 
-#: includes/admin/class-menu.php:285
+#: includes/admin/class-menu.php:280
 #: includes/admin/views/accounts/edit-account.php:26
 #: includes/admin/views/accounts/list-account.php:34
 #: includes/admin/views/accounts/view-account.php:39
+#: packages/data/entities.js:35
 msgid "Accounts"
 msgstr ""
 
-#: includes/admin/class-menu.php:288
+#: includes/admin/class-menu.php:283
 #: includes/admin/views/accounts/view-account.php:22
 #: includes/admin/views/customers/view-customer.php:22
 #: includes/admin/views/reconciliations/edit-reconciliation.php:65
@@ -864,14 +839,14 @@ msgstr ""
 msgid "Transactions"
 msgstr ""
 
-#: includes/admin/class-menu.php:291
+#: includes/admin/class-menu.php:286
 #: includes/admin/views/accounts/view-account.php:23
 #: includes/admin/views/transfers/edit-transfer.php:20
 #: includes/admin/views/transfers/list-transfer.php:23
 msgid "Transfers"
 msgstr ""
 
-#: includes/admin/class-menu.php:309 includes/admin/tools/tools.php:54
+#: includes/admin/class-menu.php:304 includes/admin/tools/tools.php:54
 #: includes/admin/views/accounts/list-account.php:36
 #: includes/admin/views/categories/list-category.php:35
 #: includes/admin/views/currencies/list-currency.php:35
@@ -883,7 +858,7 @@ msgstr ""
 msgid "Import"
 msgstr ""
 
-#: includes/admin/class-menu.php:312 includes/admin/tools/tools.php:57
+#: includes/admin/class-menu.php:307 includes/admin/tools/tools.php:57
 #: includes/admin/tools/tools.php:94 includes/admin/tools/tools.php:108
 #: includes/admin/tools/tools.php:122 includes/admin/tools/tools.php:136
 #: includes/admin/tools/tools.php:150 includes/admin/tools/tools.php:164
@@ -898,26 +873,26 @@ msgstr ""
 msgid "Export"
 msgstr ""
 
-#: includes/admin/class-menu.php:314 includes/admin/tools/tools.php:59
+#: includes/admin/class-menu.php:309 includes/admin/tools/tools.php:59
 msgid "System Info"
 msgstr ""
 
-#: includes/admin/class-menu.php:345
+#: includes/admin/class-menu.php:340
 msgid "Profits"
 msgstr ""
 
-#: includes/admin/class-menu.php:346
+#: includes/admin/class-menu.php:341
 msgid "Cashflow"
 msgstr ""
 
-#: includes/admin/class-menu.php:591 includes/admin/class-settings.php:300
+#: includes/admin/class-menu.php:586 includes/admin/class-settings.php:297
 #: includes/admin/ea-admin-functions.php:27
 #: includes/admin/views/currencies/edit-currency.php:25
 #: includes/admin/views/currencies/list-currency.php:30
 msgid "Currencies"
 msgstr ""
 
-#: includes/admin/class-menu.php:592 includes/admin/class-settings.php:297
+#: includes/admin/class-menu.php:587 includes/admin/class-settings.php:294
 #: includes/admin/ea-admin-functions.php:28
 #: includes/admin/reports/class-expenses.php:268
 #: includes/admin/reports/class-profits.php:248
@@ -965,17 +940,17 @@ msgstr ""
 msgid "Best WordPress Accounting Plugin"
 msgstr ""
 
-#: includes/admin/class-settings.php:47 includes/admin/class-settings.php:50
+#: includes/admin/class-settings.php:44 includes/admin/class-settings.php:47
 #: includes/admin/ea-admin-functions.php:26
 #: includes/admin/ea-admin-functions.php:64
 msgid "General"
 msgstr ""
 
-#: includes/admin/class-settings.php:54 includes/class-settings.php:73
+#: includes/admin/class-settings.php:51 includes/class-settings.php:73
 msgid "Company Settings"
 msgstr ""
 
-#: includes/admin/class-settings.php:60
+#: includes/admin/class-settings.php:57
 #: includes/admin/list-tables/class-account-list-table.php:118
 #: includes/admin/list-tables/class-category-list-table.php:123
 #: includes/admin/list-tables/class-currency-list-table.php:111
@@ -999,11 +974,11 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
-#: includes/admin/class-settings.php:63 includes/class-settings.php:82
+#: includes/admin/class-settings.php:60 includes/class-settings.php:82
 msgid "XYZ Company"
 msgstr ""
 
-#: includes/admin/class-settings.php:67
+#: includes/admin/class-settings.php:64
 #: includes/admin/views/customers/edit-customer.php:86
 #: includes/admin/views/customers/view-customer.php:149
 #: includes/admin/views/js/modal-add-customer.php:44
@@ -1014,11 +989,11 @@ msgstr ""
 msgid "Email"
 msgstr ""
 
-#: includes/admin/class-settings.php:74 includes/class-settings.php:93
+#: includes/admin/class-settings.php:71 includes/class-settings.php:93
 msgid "Phone Number"
 msgstr ""
 
-#: includes/admin/class-settings.php:79
+#: includes/admin/class-settings.php:76
 #: includes/admin/views/customers/edit-customer.php:105
 #: includes/admin/views/customers/view-customer.php:153
 #: includes/admin/views/vendors/edit-vendor.php:109
@@ -1029,74 +1004,74 @@ msgstr ""
 msgid "VAT Number"
 msgstr ""
 
-#: includes/admin/class-settings.php:84
+#: includes/admin/class-settings.php:81
 #: includes/admin/views/customers/edit-customer.php:134
 #: includes/admin/views/vendors/edit-vendor.php:138
 #: includes/class-settings.php:103
 msgid "Street"
 msgstr ""
 
-#: includes/admin/class-settings.php:89
+#: includes/admin/class-settings.php:86
 #: includes/admin/views/customers/edit-customer.php:143
 #: includes/admin/views/vendors/edit-vendor.php:147
 #: includes/class-settings.php:108
 msgid "City"
 msgstr ""
 
-#: includes/admin/class-settings.php:94
+#: includes/admin/class-settings.php:91
 #: includes/admin/views/customers/edit-customer.php:152
 #: includes/admin/views/vendors/edit-vendor.php:156
 #: includes/class-settings.php:113
 msgid "State"
 msgstr ""
 
-#: includes/admin/class-settings.php:99
+#: includes/admin/class-settings.php:96
 #: includes/admin/views/customers/edit-customer.php:161
 #: includes/admin/views/vendors/edit-vendor.php:165
 #: includes/class-emails.php:48 includes/class-settings.php:118
 msgid "Postcode"
 msgstr ""
 
-#: includes/admin/class-settings.php:104 includes/admin/class-setup.php:262
+#: includes/admin/class-settings.php:101 includes/admin/class-setup.php:278
 #: includes/admin/views/customers/edit-customer.php:170
 #: includes/admin/views/vendors/edit-vendor.php:174
 #: includes/class-emails.php:49 includes/class-settings.php:123
 msgid "Country"
 msgstr ""
 
-#: includes/admin/class-settings.php:110 includes/class-settings.php:130
+#: includes/admin/class-settings.php:107 includes/class-settings.php:130
 msgid "Logo"
 msgstr ""
 
-#: includes/admin/class-settings.php:115 includes/class-settings.php:135
+#: includes/admin/class-settings.php:112 includes/class-settings.php:135
 msgid "General Settings"
 msgstr ""
 
-#: includes/admin/class-settings.php:121 includes/class-settings.php:141
+#: includes/admin/class-settings.php:118 includes/class-settings.php:141
 msgid "Financial Year Start"
 msgstr ""
 
-#: includes/admin/class-settings.php:122 includes/class-settings.php:142
+#: includes/admin/class-settings.php:119 includes/class-settings.php:142
 msgid "Enter the company financial start date."
 msgstr ""
 
-#: includes/admin/class-settings.php:129 includes/class-settings.php:149
+#: includes/admin/class-settings.php:126 includes/class-settings.php:149
 msgid "Enable taxes"
 msgstr ""
 
-#: includes/admin/class-settings.php:135 includes/class-settings.php:155
+#: includes/admin/class-settings.php:132 includes/class-settings.php:155
 msgid "Total Transactions"
 msgstr ""
 
-#: includes/admin/class-settings.php:141 includes/class-settings.php:161
+#: includes/admin/class-settings.php:138 includes/class-settings.php:161
 msgid "Default Settings"
 msgstr ""
 
-#: includes/admin/class-settings.php:149 includes/class-settings.php:169
+#: includes/admin/class-settings.php:146 includes/class-settings.php:169
 msgid "Default account will be used for automatic transactions."
 msgstr ""
 
-#: includes/admin/class-settings.php:155
+#: includes/admin/class-settings.php:152
 #: includes/admin/views/accounts/view-account.php:140
 #: includes/admin/views/bills/edit-bill.php:74
 #: includes/admin/views/customers/edit-customer.php:66
@@ -1108,16 +1083,17 @@ msgstr ""
 #: includes/admin/views/vendors/view-vendor.php:140
 #: includes/class-settings.php:175 includes/models/class-bill.php:72
 #: includes/models/class-invoice.php:73
-#: includes/rest/class-currencies-controller.php:243
+#: includes/rest/class-currencies-controller.php:75
+#: packages/data/entities.js:42
 msgid "Currency"
 msgstr ""
 
-#: includes/admin/class-settings.php:157 includes/admin/class-settings.php:166
+#: includes/admin/class-settings.php:154 includes/admin/class-settings.php:163
 #: includes/class-settings.php:177 includes/class-settings.php:186
 msgid "Default currency rate will update to 1."
 msgstr ""
 
-#: includes/admin/class-settings.php:163
+#: includes/admin/class-settings.php:160
 #: includes/admin/views/js/modal-bill-payment.php:48
 #: includes/admin/views/js/modal-invoice-payment.php:48
 #: includes/admin/views/payments/edit-payment.php:115
@@ -1130,80 +1106,80 @@ msgstr ""
 msgid "Payment Method"
 msgstr ""
 
-#: includes/admin/class-settings.php:177 includes/class-settings.php:194
+#: includes/admin/class-settings.php:174 includes/class-settings.php:194
 msgid "Invoice Prefix"
 msgstr ""
 
-#: includes/admin/class-settings.php:183 includes/class-settings.php:200
+#: includes/admin/class-settings.php:180 includes/class-settings.php:200
 msgid "Minimum Digits"
 msgstr ""
 
-#: includes/admin/class-settings.php:189 includes/class-settings.php:206
+#: includes/admin/class-settings.php:186 includes/class-settings.php:206
 msgid "Invoice Terms"
 msgstr ""
 
-#: includes/admin/class-settings.php:195 includes/class-settings.php:212
+#: includes/admin/class-settings.php:192 includes/class-settings.php:212
 msgid "Invoice Note"
 msgstr ""
 
-#: includes/admin/class-settings.php:201 includes/class-settings.php:218
+#: includes/admin/class-settings.php:198 includes/class-settings.php:218
 msgid "Invoice Due"
 msgstr ""
 
-#: includes/admin/class-settings.php:205 includes/admin/class-settings.php:266
+#: includes/admin/class-settings.php:202 includes/admin/class-settings.php:263
 #: includes/class-settings.php:222 includes/class-settings.php:280
 msgid "Due within 7 days"
 msgstr ""
 
-#: includes/admin/class-settings.php:206 includes/admin/class-settings.php:267
+#: includes/admin/class-settings.php:203 includes/admin/class-settings.php:264
 #: includes/class-settings.php:223 includes/class-settings.php:281
 msgid "Due within 15 days"
 msgstr ""
 
-#: includes/admin/class-settings.php:207 includes/admin/class-settings.php:268
+#: includes/admin/class-settings.php:204 includes/admin/class-settings.php:265
 #: includes/class-settings.php:224 includes/class-settings.php:282
 msgid "Due within 30 days"
 msgstr ""
 
-#: includes/admin/class-settings.php:208 includes/admin/class-settings.php:269
+#: includes/admin/class-settings.php:205 includes/admin/class-settings.php:266
 #: includes/class-settings.php:225 includes/class-settings.php:283
 msgid "Due within 45 days"
 msgstr ""
 
-#: includes/admin/class-settings.php:209 includes/admin/class-settings.php:270
+#: includes/admin/class-settings.php:206 includes/admin/class-settings.php:267
 #: includes/class-settings.php:226 includes/class-settings.php:284
 msgid "Due within 60 days"
 msgstr ""
 
-#: includes/admin/class-settings.php:210 includes/admin/class-settings.php:271
+#: includes/admin/class-settings.php:207 includes/admin/class-settings.php:268
 #: includes/class-settings.php:227 includes/class-settings.php:285
 msgid "Due within 90 days"
 msgstr ""
 
-#: includes/admin/class-settings.php:215 includes/admin/class-settings.php:276
+#: includes/admin/class-settings.php:212 includes/admin/class-settings.php:273
 #: includes/class-settings.php:232 includes/class-settings.php:290
 msgid "Item Label"
 msgstr ""
 
-#: includes/admin/class-settings.php:216 includes/admin/class-settings.php:277
+#: includes/admin/class-settings.php:213 includes/admin/class-settings.php:274
 #: includes/admin/views/bills/bill-items.php:13
 #: includes/admin/views/invoices/invoice-items.php:13
 #: includes/admin/views/js/modal-add-invoice-item.php:16
 #: includes/class-install.php:376 includes/class-install.php:382
 #: includes/class-settings.php:233 includes/class-settings.php:291
-#: includes/ea-category-functions.php:24
-#: includes/rest/class-items-controller.php:66 templates/bill/bill-items.php:15
+#: includes/ea-category-functions.php:26
+#: includes/rest/class-items-controller.php:68 templates/bill/bill-items.php:15
 #: templates/emails/invoice-details.php:27
 #: templates/invoice/invoice-items.php:15
 msgid "Item"
 msgstr ""
 
-#: includes/admin/class-settings.php:221 includes/admin/class-settings.php:282
+#: includes/admin/class-settings.php:218 includes/admin/class-settings.php:279
 #: includes/class-settings.php:238 includes/class-settings.php:296
 msgid "Price Label"
 msgstr ""
 
-#: includes/admin/class-settings.php:222 includes/admin/class-settings.php:283
+#: includes/admin/class-settings.php:219 includes/admin/class-settings.php:280
 #: includes/admin/views/reconciliations/reconciliations.php:25
 #: includes/class-install.php:377 includes/class-install.php:383
 #: includes/class-settings.php:239 includes/class-settings.php:297
@@ -1211,12 +1187,12 @@ msgstr ""
 msgid "Price"
 msgstr ""
 
-#: includes/admin/class-settings.php:227 includes/admin/class-settings.php:288
+#: includes/admin/class-settings.php:224 includes/admin/class-settings.php:285
 #: includes/class-settings.php:244 includes/class-settings.php:302
 msgid "Quantity Label"
 msgstr ""
 
-#: includes/admin/class-settings.php:228 includes/admin/class-settings.php:289
+#: includes/admin/class-settings.php:225 includes/admin/class-settings.php:286
 #: includes/admin/views/bills/bill-items.php:15
 #: includes/admin/views/invoices/invoice-items.php:15
 #: includes/admin/views/js/modal-add-invoice-item.php:17
@@ -1228,32 +1204,32 @@ msgstr ""
 msgid "Quantity"
 msgstr ""
 
-#: includes/admin/class-settings.php:238 includes/class-settings.php:252
+#: includes/admin/class-settings.php:235 includes/class-settings.php:252
 msgid "Bill Prefix"
 msgstr ""
 
-#: includes/admin/class-settings.php:244 includes/class-settings.php:258
+#: includes/admin/class-settings.php:241 includes/class-settings.php:258
 msgid "Bill Digits"
 msgstr ""
 
-#: includes/admin/class-settings.php:250 includes/class-settings.php:264
+#: includes/admin/class-settings.php:247 includes/class-settings.php:264
 msgid "Bill Terms & Conditions"
 msgstr ""
 
-#: includes/admin/class-settings.php:256 includes/class-settings.php:270
+#: includes/admin/class-settings.php:253 includes/class-settings.php:270
 msgid "Bill Note"
 msgstr ""
 
-#: includes/admin/class-settings.php:262 includes/class-settings.php:276
+#: includes/admin/class-settings.php:259 includes/class-settings.php:276
 msgid "Bill Due"
 msgstr ""
 
-#: includes/admin/class-settings.php:307
+#: includes/admin/class-settings.php:304
 #: includes/admin/ea-admin-functions.php:30
 msgid "Licenses"
 msgstr ""
 
-#: includes/admin/class-settings.php:314
+#: includes/admin/class-settings.php:311
 #: includes/admin/views/bills/bill-items.php:99
 #: includes/admin/views/bills/bill-items.php:108
 #: includes/admin/views/invoices/invoice-items.php:118
@@ -1266,71 +1242,69 @@ msgstr ""
 msgid "Tax"
 msgstr ""
 
-#: includes/admin/class-settings.php:318 includes/class-settings.php:318
+#: includes/admin/class-settings.php:315 includes/class-settings.php:318
 msgid "Rounding"
 msgstr ""
 
-#: includes/admin/class-settings.php:320 includes/class-settings.php:320
+#: includes/admin/class-settings.php:317 includes/class-settings.php:320
 msgid "Round tax at subtotal level, instead of rounding per tax rate."
 msgstr ""
 
-#: includes/admin/class-settings.php:324 includes/class-settings.php:324
+#: includes/admin/class-settings.php:321 includes/class-settings.php:324
 msgid "Prices entered with tax"
 msgstr ""
 
-#: includes/admin/class-settings.php:328 includes/class-settings.php:328
+#: includes/admin/class-settings.php:325 includes/class-settings.php:328
 msgid "Yes, I will enter prices inclusive of tax"
 msgstr ""
 
-#: includes/admin/class-settings.php:329 includes/class-settings.php:329
+#: includes/admin/class-settings.php:326 includes/class-settings.php:329
 msgid "No, I will enter prices exclusive of tax"
 msgstr ""
 
-#: includes/admin/class-settings.php:334 includes/class-settings.php:334
+#: includes/admin/class-settings.php:331 includes/class-settings.php:334
 msgid "Display tax totals\t"
 msgstr ""
 
-#: includes/admin/class-settings.php:338 includes/class-settings.php:338
+#: includes/admin/class-settings.php:335 includes/class-settings.php:338
 msgid "As a single total"
 msgstr ""
 
-#: includes/admin/class-settings.php:339 includes/class-settings.php:339
+#: includes/admin/class-settings.php:336 includes/class-settings.php:339
 msgid "As individual tax rates"
 msgstr ""
 
-#: includes/admin/class-settings.php:530 includes/class-settings.php:126
+#: includes/admin/class-settings.php:519 includes/class-settings.php:126
 #: includes/ea-form-functions.php:975
 msgid "Select Country"
 msgstr ""
 
-#: includes/admin/class-settings.php:621
+#: includes/admin/class-settings.php:610
 #: includes/admin/views/payments/edit-payment.php:152
 #: includes/admin/views/revenues/edit-revenue.php:138
 #: includes/class-settings.php:964
 msgid "Upload File"
 msgstr ""
 
-#: includes/admin/class-settings.php:655 includes/class-settings.php:466
+#: includes/admin/class-settings.php:644 includes/class-settings.php:466
 msgid "Select account"
 msgstr ""
 
-#: includes/admin/class-settings.php:683 includes/class-settings.php:494
+#: includes/admin/class-settings.php:672 includes/class-settings.php:494
 msgid "Select category"
 msgstr ""
 
-#: includes/admin/class-settings.php:708 includes/class-settings.php:519
+#: includes/admin/class-settings.php:697 includes/class-settings.php:519
 msgid "Select currencies"
 msgstr ""
 
-#: includes/admin/class-settings.php:733 includes/admin/class-settings.php:834
-#: includes/class-settings.php:1004
-#. translators: %s extension name
+#: includes/admin/class-settings.php:723 includes/admin/class-settings.php:833
 msgid ""
-"Your license key expired on %1$s. Please <a href=\"%2$s\" "
+"Your license key expired on %s. Please <a href=\"%s\" "
 "target=\"_blank\">renew your license key</a>."
 msgstr ""
 
-#: includes/admin/class-settings.php:745 includes/admin/class-settings.php:846
+#: includes/admin/class-settings.php:736 includes/admin/class-settings.php:846
 #: includes/class-settings.php:1014
 #. translators: %s extension name
 msgid ""
@@ -1338,7 +1312,7 @@ msgid ""
 "target=\"_blank\">contact support</a> for more information."
 msgstr ""
 
-#: includes/admin/class-settings.php:756 includes/admin/class-settings.php:857
+#: includes/admin/class-settings.php:748 includes/admin/class-settings.php:858
 #: includes/class-settings.php:1022
 #. translators: %s extension name
 msgid ""
@@ -1346,22 +1320,20 @@ msgid ""
 "page</a> and verify it."
 msgstr ""
 
-#: includes/admin/class-settings.php:768 includes/admin/class-settings.php:869
-#: includes/class-settings.php:1031
-#. translators: %s extension name
+#: includes/admin/class-settings.php:761 includes/admin/class-settings.php:871
 msgid ""
-"Your %1$s is not active for this URL. Please <a href=\"%2$s\" "
+"Your %s is not active for this URL. Please <a href=\"%s\" "
 "target=\"_blank\">visit your account page</a> to manage your license key "
 "URLs."
 msgstr ""
 
-#: includes/admin/class-settings.php:779 includes/admin/class-settings.php:880
+#: includes/admin/class-settings.php:773 includes/admin/class-settings.php:883
 #: includes/class-settings.php:1039
 #. translators: %s extension name
 msgid "This appears to be an invalid license key for %s."
 msgstr ""
 
-#: includes/admin/class-settings.php:787 includes/admin/class-settings.php:888
+#: includes/admin/class-settings.php:782 includes/admin/class-settings.php:892
 #: includes/class-settings.php:1045
 #. translators: %s extension name
 msgid ""
@@ -1369,71 +1341,68 @@ msgid ""
 "possible upgrades</a> now."
 msgstr ""
 
-#: includes/admin/class-settings.php:795 includes/admin/class-settings.php:896
+#: includes/admin/class-settings.php:791 includes/admin/class-settings.php:901
 #: includes/class-settings.php:1049
 msgid ""
 "The key you entered belongs to a bundle, please use the product specific "
 "license key."
 msgstr ""
 
-#: includes/admin/class-settings.php:802 includes/admin/class-settings.php:810
-#: includes/admin/class-settings.php:821 includes/class-settings.php:1053
+#: includes/admin/class-settings.php:799 includes/admin/class-settings.php:807
+#: includes/admin/class-settings.php:819 includes/class-settings.php:1053
 msgid "unknown_error"
 msgstr ""
 
-#: includes/admin/class-settings.php:803 includes/admin/class-settings.php:811
-#: includes/class-settings.php:1055
-#. translators: %s extension name
+#: includes/admin/class-settings.php:800 includes/admin/class-settings.php:808
 msgid ""
-"There was an error with this license key: %1$s. Please <a "
-"href=\"%2$s\">contact our support team</a>."
+"There was an error with this license key: %s. Please <a href=\"%s\">contact "
+"our support team</a>."
 msgstr ""
 
-#: includes/admin/class-settings.php:823
+#: includes/admin/class-settings.php:821
 msgid ""
-"There was an error with this license key: %1$s%2$s. Please <a "
-"href=\"%3$s\">contact our support team</a>."
+"There was an error with this license key: %s%s. Please <a "
+"href=\"%s\">contact our support team</a>."
 msgstr ""
 
-#: includes/admin/class-settings.php:910 includes/class-settings.php:1065
+#: includes/admin/class-settings.php:916 includes/class-settings.php:1065
 msgid "License key never expires."
 msgstr ""
 
-#: includes/admin/class-settings.php:917 includes/class-settings.php:1069
-#. translators: %s extension name
+#: includes/admin/class-settings.php:923
 msgid ""
-"Your license key expires soon! It expires on %1$s. <a href=\"%2$s\" "
+"Your license key expires soon! It expires on %s. <a href=\"%s\" "
 "target=\"_blank\">Renew your license key</a>."
 msgstr ""
 
-#: includes/admin/class-settings.php:927 includes/class-settings.php:1076
+#: includes/admin/class-settings.php:933 includes/class-settings.php:1076
 #. translators: %s extension name
 msgid "Your license key expires on %s."
 msgstr ""
 
-#: includes/admin/class-settings.php:942 includes/class-settings.php:1084
+#: includes/admin/class-settings.php:950 includes/class-settings.php:1084
 #. translators: %s extension name
 msgid "To receive updates, please enter your valid %s license key."
 msgstr ""
 
-#: includes/admin/class-settings.php:958
+#: includes/admin/class-settings.php:966
 msgid "Clear License"
 msgstr ""
 
-#: includes/admin/class-settings.php:961
+#: includes/admin/class-settings.php:969
 msgid "Activate"
 msgstr ""
 
-#: includes/admin/class-settings.php:964
+#: includes/admin/class-settings.php:972
 msgid "Re-Activate"
 msgstr ""
 
-#: includes/admin/class-settings.php:1065 includes/class-settings.php:1252
+#: includes/admin/class-settings.php:1069 includes/class-settings.php:1252
 msgid "Settings updated."
 msgstr ""
 
-#: includes/admin/class-settings.php:1076
-#: includes/admin/class-settings.php:1077 includes/class-install.php:68
+#: includes/admin/class-settings.php:1081
+#: includes/admin/class-settings.php:1082 includes/class-install.php:68
 msgid "Settings"
 msgstr ""
 
@@ -1441,87 +1410,100 @@ msgstr ""
 msgid "Ever Accounting - Settings"
 msgstr ""
 
-#: includes/admin/class-setup.php:80 includes/admin/class-setup.php:141
+#: includes/admin/class-setup.php:65
+msgid "Introduction"
+msgstr ""
+
+#: includes/admin/class-setup.php:70
+msgid "Company setup"
+msgstr ""
+
+#: includes/admin/class-setup.php:75
+msgid "Currency setup"
+msgstr ""
+
+#: includes/admin/class-setup.php:80 includes/admin/class-setup.php:467
+msgid "Finish!"
+msgstr ""
+
+#: includes/admin/class-setup.php:161
 msgid "Ever Accounting &rsaquo; Setup Wizard"
 msgstr ""
 
-#: includes/admin/class-setup.php:214
+#: includes/admin/class-setup.php:231
 msgid "Welcome!"
 msgstr ""
 
-#: includes/admin/class-setup.php:215
+#: includes/admin/class-setup.php:232
 msgid ""
 "Thank you for choosing WP Ever Accounting to manage your accounting! This "
 "quick setup wizard will help you configure the basic settings."
 msgstr ""
 
-#: includes/admin/class-setup.php:218
+#: includes/admin/class-setup.php:235
 msgid "Let's Go!"
 msgstr ""
 
-#: includes/admin/class-setup.php:230
+#: includes/admin/class-setup.php:246
 msgid "Company Setup"
 msgstr ""
 
-#: includes/admin/class-setup.php:236
+#: includes/admin/class-setup.php:252
 msgid "Company Name"
 msgstr ""
 
-#: includes/admin/class-setup.php:244
+#: includes/admin/class-setup.php:260
 msgid "Company Email"
 msgstr ""
 
-#: includes/admin/class-setup.php:255
+#: includes/admin/class-setup.php:271
 msgid "Company Address"
 msgstr ""
 
-#: includes/admin/class-setup.php:272 includes/admin/class-setup.php:409
+#: includes/admin/class-setup.php:288 includes/admin/class-setup.php:423
 msgid "Continue"
 msgstr ""
 
-#: includes/admin/class-setup.php:320
+#: includes/admin/class-setup.php:334
 msgid "Currency Setup"
 msgstr ""
 
-#: includes/admin/class-setup.php:321
+#: includes/admin/class-setup.php:335
 msgid ""
 "Default currency rate should be always 1 & additional currency rates should "
 "be equivalent of default currency. e.g. If USD is your default currency "
 "then USD rate is 1 & GBP rate will be 0.77"
 msgstr ""
 
-#: includes/admin/class-setup.php:326
+#: includes/admin/class-setup.php:340
 #: includes/admin/list-tables/class-currency-list-table.php:113
 msgid "Code"
 msgstr ""
 
-#: includes/admin/class-setup.php:327
+#: includes/admin/class-setup.php:341
 #: includes/admin/list-tables/class-currency-list-table.php:112
 msgid "Rate"
 msgstr ""
 
-#: includes/admin/class-setup.php:328
+#: includes/admin/class-setup.php:342
 msgid "Default"
 msgstr ""
 
-#: includes/admin/class-setup.php:339 includes/admin/class-setup.php:380
+#: includes/admin/class-setup.php:353 includes/admin/class-setup.php:394
 #: includes/admin/views/currencies/edit-currency.php:67
+#: packages/components/image-upload/index.js:32
 msgid "Select"
 msgstr ""
 
-#: includes/admin/class-setup.php:370
+#: includes/admin/class-setup.php:384
 msgid "Additional currency"
 msgstr ""
 
-#: includes/admin/class-setup.php:455
-msgid "Finish!"
-msgstr ""
-
-#: includes/admin/class-setup.php:456
+#: includes/admin/class-setup.php:468
 msgid "You are done with the basic setup of the plugin and ready to use."
 msgstr ""
 
-#: includes/admin/class-setup.php:458
+#: includes/admin/class-setup.php:470
 msgid "View Dashboard"
 msgstr ""
 
@@ -1529,11 +1511,11 @@ msgstr ""
 msgid "Taxes"
 msgstr ""
 
-#: includes/admin/ea-admin-functions.php:465
+#: includes/admin/ea-admin-functions.php:449
 msgid "- Do not import -"
 msgstr ""
 
-#: includes/admin/ea-admin-functions.php:468
+#: includes/admin/ea-admin-functions.php:452
 msgid "- Select field to preview data -"
 msgstr ""
 
@@ -1624,7 +1606,6 @@ msgstr ""
 #: includes/admin/list-tables/class-vendor-list-table.php:204
 #: includes/admin/views/bills/view-bill.php:34
 #: includes/admin/views/invoices/view-invoice.php:33
-#: client/sales/revenues/revenues.js:156
 msgid "Delete"
 msgstr ""
 
@@ -1661,7 +1642,7 @@ msgstr ""
 #: includes/admin/list-tables/class-account-list-table.php:226
 #: includes/admin/list-tables/class-category-list-table.php:220
 #: includes/admin/list-tables/class-customer-list-table.php:235
-#: includes/admin/list-tables/class-item-list-table.php:238
+#: includes/admin/list-tables/class-item-list-table.php:237
 #: includes/admin/list-tables/class-vendor-list-table.php:234
 #: includes/ea-form-functions.php:578
 msgid "No"
@@ -1670,7 +1651,7 @@ msgstr ""
 #: includes/admin/list-tables/class-account-list-table.php:226
 #: includes/admin/list-tables/class-category-list-table.php:220
 #: includes/admin/list-tables/class-customer-list-table.php:235
-#: includes/admin/list-tables/class-item-list-table.php:238
+#: includes/admin/list-tables/class-item-list-table.php:237
 #: includes/admin/list-tables/class-vendor-list-table.php:234
 #: includes/ea-form-functions.php:579
 msgid "Yes"
@@ -1683,7 +1664,7 @@ msgstr ""
 #: includes/admin/list-tables/class-account-list-table.php:333
 #: includes/admin/list-tables/class-category-list-table.php:329
 #: includes/admin/list-tables/class-customer-list-table.php:370
-#: includes/admin/list-tables/class-item-list-table.php:345
+#: includes/admin/list-tables/class-item-list-table.php:344
 #: includes/admin/list-tables/class-transaction-list-table.php:274
 #: includes/admin/list-tables/class-vendor-list-table.php:369
 msgid "All"
@@ -1692,7 +1673,7 @@ msgstr ""
 #: includes/admin/list-tables/class-account-list-table.php:334
 #: includes/admin/list-tables/class-category-list-table.php:330
 #: includes/admin/list-tables/class-customer-list-table.php:371
-#: includes/admin/list-tables/class-item-list-table.php:346
+#: includes/admin/list-tables/class-item-list-table.php:345
 #: includes/admin/list-tables/class-vendor-list-table.php:370
 msgid "Active"
 msgstr ""
@@ -1700,7 +1681,7 @@ msgstr ""
 #: includes/admin/list-tables/class-account-list-table.php:335
 #: includes/admin/list-tables/class-category-list-table.php:331
 #: includes/admin/list-tables/class-customer-list-table.php:372
-#: includes/admin/list-tables/class-item-list-table.php:347
+#: includes/admin/list-tables/class-item-list-table.php:346
 #: includes/admin/list-tables/class-vendor-list-table.php:371
 msgid "Inactive"
 msgstr ""
@@ -1739,7 +1720,8 @@ msgstr ""
 #: includes/admin/reports/expense-summary.php:49
 #: includes/admin/views/bills/edit-bill.php:63
 #: includes/admin/views/payments/edit-payment.php:89
-#: includes/ea-contact-functions.php:24 includes/models/class-bill.php:74
+#: includes/ea-contact-functions.bk.php:24 includes/ea-contact-functions.php:26
+#: includes/models/class-bill.php:74
 msgid "Vendor"
 msgstr ""
 
@@ -1758,7 +1740,6 @@ msgstr ""
 
 #: includes/admin/list-tables/class-bill-list-table.php:104
 #: includes/admin/list-tables/class-invoice-list-table.php:120
-#: client/sales/revenues/revenues.js:169
 msgid "Status"
 msgstr ""
 
@@ -1881,8 +1862,8 @@ msgstr ""
 #: includes/admin/reports/income-summary.php:49
 #: includes/admin/views/invoices/edit-invoice.php:64
 #: includes/admin/views/revenues/edit-revenue.php:81
-#: includes/ea-contact-functions.php:23 includes/models/class-invoice.php:75
-#: client/sales/revenues/revenues.js:134
+#: includes/ea-contact-functions.bk.php:23 includes/ea-contact-functions.php:25
+#: includes/models/class-invoice.php:75
 msgid "Customer"
 msgstr ""
 
@@ -1920,7 +1901,7 @@ msgstr ""
 msgid "Purchase Price"
 msgstr ""
 
-#: includes/admin/list-tables/class-item-list-table.php:255
+#: includes/admin/list-tables/class-item-list-table.php:254
 msgid "There is no items found."
 msgstr ""
 
@@ -1971,7 +1952,6 @@ msgstr ""
 #: includes/admin/views/payments/edit-payment.php:135
 #: includes/admin/views/revenues/edit-revenue.php:122
 #: includes/admin/views/transfers/edit-transfer.php:102
-#: client/sales/revenues/revenues.js:149
 msgid "Reference"
 msgstr ""
 
@@ -2577,6 +2557,7 @@ msgstr ""
 #: includes/admin/views/payments/list-payment.php:42
 #: includes/admin/views/revenues/list-revenue.php:42
 #: includes/admin/views/vendors/list-vendor.php:43
+#: packages/components/searchbox/index.js:40
 msgid "Search"
 msgstr ""
 
@@ -2911,16 +2892,10 @@ msgid "Symbol Position"
 msgstr ""
 
 #: includes/admin/views/currencies/edit-currency.php:117
-#: client/sales/revenues/revenues.js:234
-#. Sentence fragment, logical, "Before" refers to customers registered before a given date. Screenshot for context: https://cloudup.com/cCsm3GeXJbE
-msgctxt "date"
 msgid "Before"
 msgstr ""
 
 #: includes/admin/views/currencies/edit-currency.php:118
-#: client/sales/revenues/revenues.js:239
-#. Sentence fragment, logical, "after" refers to customers registered after a given date. Screenshot for context: https://cloudup.com/cCsm3GeXJbE
-msgctxt "date"
 msgid "After"
 msgstr ""
 
@@ -3276,7 +3251,6 @@ msgstr ""
 #: includes/admin/views/revenues/view-income.php:115
 #: includes/models/class-payment.php:66 templates/bill/bill-meta.php:35
 #: templates/invoice/invoice-meta.php:35
-#: client/sales/revenues/revenues.js:224
 msgid "Payment Date"
 msgstr ""
 
@@ -3396,6 +3370,22 @@ msgstr ""
 #: includes/admin/views/vendors/view-vendor.php:188
 #. translators: %s date and %s name
 msgid "The vendor was created at %1$s by %2$s"
+msgstr ""
+
+#: includes/class-account.php:161
+msgid "Could not insert account into the database."
+msgstr ""
+
+#: includes/class-account.php:217
+msgid "Could not update account in the database."
+msgstr ""
+
+#: includes/class-account.php:259
+msgid "Account name is required"
+msgstr ""
+
+#: includes/class-account.php:263
+msgid "Account currency is required"
 msgstr ""
 
 #: includes/class-ajax.php:265
@@ -3522,16 +3512,44 @@ msgstr ""
 msgid "Error: Cheatin&#8217; huh?."
 msgstr ""
 
-#: includes/class-assets.php:181
+#: includes/class-assets.php:168
 msgid "Could not find the uploaded file, please try again"
 msgstr ""
 
-#: includes/class-assets.php:182
+#: includes/class-assets.php:169
 msgid "  - Select field to preview data -"
 msgstr ""
 
-#: includes/class-assets.php:183
+#: includes/class-assets.php:170
 msgid "(Required)"
+msgstr ""
+
+#: includes/class-category.php:148
+msgid "Could not insert category into the database."
+msgstr ""
+
+#: includes/class-category.php:204
+msgid "Could not update category in the database."
+msgstr ""
+
+#: includes/class-category.php:239
+msgid "Category name is required"
+msgstr ""
+
+#: includes/class-category.php:243
+msgid "Category type is required"
+msgstr ""
+
+#: includes/class-contact.php:219 includes/ea-contact-functions.php:207
+msgid "Could not insert contact into the database."
+msgstr ""
+
+#: includes/class-contact.php:305 includes/ea-contact-functions.php:179
+msgid "Could not update contact in the database."
+msgstr ""
+
+#: includes/class-contact.php:371 includes/ea-contact-functions.php:128
+msgid "Contact name is required"
 msgstr ""
 
 #: includes/class-controller.php:99
@@ -3586,6 +3604,14 @@ msgstr ""
 msgid "Duplicate category."
 msgstr ""
 
+#: includes/class-currency.php:182
+msgid "Could not update currency in the database."
+msgstr ""
+
+#: includes/class-currency.php:236
+msgid "Could not insert currency into the database."
+msgstr ""
+
 #: includes/class-install.php:68
 msgid "View settings"
 msgstr ""
@@ -3614,16 +3640,29 @@ msgstr ""
 msgid "Deposit"
 msgstr ""
 
-#: includes/class-install.php:238 includes/ea-category-functions.php:23
+#: includes/class-install.php:238 includes/ea-category-functions.php:25
 msgid "Other"
 msgstr ""
 
 #: includes/class-install.php:257 includes/class-install.php:265
+#: includes/ea-transaction-functions.php:26
 #: includes/models/class-transfer.php:399
 #: includes/models/class-transfer.php:402
 #: includes/models/class-transfer.php:410
 #: includes/rest/class-transfers-controller.php:65
 msgid "Transfer"
+msgstr ""
+
+#: includes/class-item.php:173
+msgid "Could not insert item into the database."
+msgstr ""
+
+#: includes/class-item.php:229
+msgid "Could not update item in the database."
+msgstr ""
+
+#: includes/class-item.php:273 includes/ea-invoice-functions.php:362
+msgid "Item name is required"
 msgstr ""
 
 #: includes/class-license.php:186
@@ -3648,9 +3687,25 @@ msgstr ""
 msgid "Nonce verification failed"
 msgstr ""
 
-#: includes/class-money.php:447
+#: includes/class-money.php:448
 #. translators: %s amount %s currency
 msgid "Division by zero is not permitted amount %1$s currency %2$s"
+msgstr ""
+
+#: includes/class-note.php:158
+msgid "Could not insert note into the database."
+msgstr ""
+
+#: includes/class-note.php:214
+msgid "Could not update note in the database."
+msgstr ""
+
+#: includes/class-note.php:249
+msgid "Note type is required"
+msgstr ""
+
+#: includes/class-note.php:253
+msgid "Note parent id is required"
 msgstr ""
 
 #: includes/class-repositories.php:105
@@ -3668,6 +3723,35 @@ msgid ""
 "allowed."
 msgstr ""
 
+#: includes/class-settings.php:1004
+#. translators: %s extension name
+msgid ""
+"Your license key expired on %1$s. Please <a href=\"%2$s\" "
+"target=\"_blank\">renew your license key</a>."
+msgstr ""
+
+#: includes/class-settings.php:1031
+#. translators: %s extension name
+msgid ""
+"Your %1$s is not active for this URL. Please <a href=\"%2$s\" "
+"target=\"_blank\">visit your account page</a> to manage your license key "
+"URLs."
+msgstr ""
+
+#: includes/class-settings.php:1055
+#. translators: %s extension name
+msgid ""
+"There was an error with this license key: %1$s. Please <a "
+"href=\"%2$s\">contact our support team</a>."
+msgstr ""
+
+#: includes/class-settings.php:1069
+#. translators: %s extension name
+msgid ""
+"Your license key expires soon! It expires on %1$s. <a href=\"%2$s\" "
+"target=\"_blank\">Renew your license key</a>."
+msgstr ""
+
 #: includes/class-settings.php:1090
 msgid "Deactivate License"
 msgstr ""
@@ -3675,6 +3759,68 @@ msgstr ""
 #: includes/class-settings.php:1120
 #. translators: %s name of the callback
 msgid "The callback function used for the <strong>%s</strong> setting is missing."
+msgstr ""
+
+#: includes/class-transaction.php:186
+msgid "Could not insert transaction into the database."
+msgstr ""
+
+#: includes/class-transaction.php:276
+msgid "Could not update transaction in the database."
+msgstr ""
+
+#: includes/class-transaction.php:321
+msgid "Transaction associated account is required"
+msgstr ""
+
+#: includes/class-transaction.php:325
+msgid "Transaction payment date is required"
+msgstr ""
+
+#: includes/class-transaction.php:329
+msgid "Transaction type is required"
+msgstr ""
+
+#: includes/class-transaction.php:333
+msgid "Transaction payment method is required"
+msgstr ""
+
+#: includes/class-transaction.php:348
+msgid "Transaction associated account does not exist"
+msgstr ""
+
+#: includes/class-transaction.php:353 includes/class-transfer.php:263
+#: includes/class-transfer.php:276 includes/ea-invoice-functions.php:130
+msgid "Transaction associated account currency does not exist"
+msgstr ""
+
+#: includes/class-transfer.php:229
+msgid "Transfer amount is required"
+msgstr ""
+
+#: includes/class-transfer.php:233
+msgid "Transfer from account is required"
+msgstr ""
+
+#: includes/class-transfer.php:237
+msgid "Transfer to account is required"
+msgstr ""
+
+#: includes/class-transfer.php:241
+msgid "Transfer method is required"
+msgstr ""
+
+#: includes/class-transfer.php:258
+msgid "Transfer associated from account does not exist"
+msgstr ""
+
+#: includes/class-transfer.php:271
+msgid "Transfer associated to account does not exist"
+msgstr ""
+
+#: includes/core-functions.php:159 includes/core-functions.php:182
+#. translators: %s currency code
+msgid "invalid currency code %s"
 msgstr ""
 
 #: includes/core-functions.php:314
@@ -3689,6449 +3835,24 @@ msgstr ""
 msgid "Cheque"
 msgstr ""
 
-#: includes/core-functions.php:590
+#: includes/core-functions.php:593
 msgid "Unknown User"
 msgstr ""
 
-#: includes/data/continents.php:14
-msgid "Africa"
+#: includes/ea-account-functions.php:67
+msgid "Account could not be saved."
 msgstr ""
 
-#: includes/data/continents.php:77
-msgid "Antarctica"
+#: includes/ea-category-functions.php:84
+msgid "Category could not be saved."
 msgstr ""
 
-#: includes/data/continents.php:87
-msgid "Asia"
+#: includes/ea-contact-functions.php:115
+msgid "Invalid item id to update."
 msgstr ""
 
-#: includes/data/continents.php:145
-msgid "Europe"
-msgstr ""
-
-#: includes/data/continents.php:202
-msgid "North America"
-msgstr ""
-
-#: includes/data/continents.php:248
-msgid "Oceania"
-msgstr ""
-
-#: includes/data/continents.php:279
-msgid "South America"
-msgstr ""
-
-#: includes/data/states.php:15
-msgid "Bengo"
-msgstr ""
-
-#: includes/data/states.php:16
-msgid "Benguela"
-msgstr ""
-
-#: includes/data/states.php:17
-msgid "Bié"
-msgstr ""
-
-#: includes/data/states.php:18
-msgid "Cabinda"
-msgstr ""
-
-#: includes/data/states.php:19
-msgid "Cunene"
-msgstr ""
-
-#: includes/data/states.php:20
-msgid "Huambo"
-msgstr ""
-
-#: includes/data/states.php:21
-msgid "Huíla"
-msgstr ""
-
-#: includes/data/states.php:22
-msgid "Kuando Kubango"
-msgstr ""
-
-#: includes/data/states.php:23
-msgid "Kwanza-Norte"
-msgstr ""
-
-#: includes/data/states.php:24
-msgid "Kwanza-Sul"
-msgstr ""
-
-#: includes/data/states.php:25
-msgid "Luanda"
-msgstr ""
-
-#: includes/data/states.php:26
-msgid "Lunda-Norte"
-msgstr ""
-
-#: includes/data/states.php:27
-msgid "Lunda-Sul"
-msgstr ""
-
-#: includes/data/states.php:28
-msgid "Malanje"
-msgstr ""
-
-#: includes/data/states.php:29
-msgid "Moxico"
-msgstr ""
-
-#: includes/data/states.php:30
-msgid "Namibe"
-msgstr ""
-
-#: includes/data/states.php:31
-msgid "Uíge"
-msgstr ""
-
-#: includes/data/states.php:32
-msgid "Zaire"
-msgstr ""
-
-#: includes/data/states.php:35
-msgid "Ciudad Autónoma de Buenos Aires"
-msgstr ""
-
-#: includes/data/states.php:36
-msgid "Buenos Aires"
-msgstr ""
-
-#: includes/data/states.php:37
-msgid "Catamarca"
-msgstr ""
-
-#: includes/data/states.php:38
-msgid "Chaco"
-msgstr ""
-
-#: includes/data/states.php:39
-msgid "Chubut"
-msgstr ""
-
-#: includes/data/states.php:40 includes/data/states.php:437
-msgid "Córdoba"
-msgstr ""
-
-#: includes/data/states.php:41
-msgid "Corrientes"
-msgstr ""
-
-#: includes/data/states.php:42
-msgid "Entre Ríos"
-msgstr ""
-
-#: includes/data/states.php:43
-msgid "Formosa"
-msgstr ""
-
-#: includes/data/states.php:44
-msgid "Jujuy"
-msgstr ""
-
-#: includes/data/states.php:45
-msgid "La Pampa"
-msgstr ""
-
-#: includes/data/states.php:46 includes/data/states.php:446
-msgid "La Rioja"
-msgstr ""
-
-#: includes/data/states.php:47
-msgid "Mendoza"
-msgstr ""
-
-#: includes/data/states.php:48 includes/data/states.php:1305
-msgid "Misiones"
-msgstr ""
-
-#: includes/data/states.php:49
-msgid "Neuquén"
-msgstr ""
-
-#: includes/data/states.php:50
-msgid "Río Negro"
-msgstr ""
-
-#: includes/data/states.php:51
-msgid "Salta"
-msgstr ""
-
-#: includes/data/states.php:52 includes/data/states.php:327
-msgid "San Juan"
-msgstr ""
-
-#: includes/data/states.php:53
-msgid "San Luis"
-msgstr ""
-
-#: includes/data/states.php:54 includes/data/states.php:193
-msgid "Santa Cruz"
-msgstr ""
-
-#: includes/data/states.php:55
-msgid "Santa Fe"
-msgstr ""
-
-#: includes/data/states.php:56
-msgid "Santiago del Estero"
-msgstr ""
-
-#: includes/data/states.php:57
-msgid "Tierra del Fuego"
-msgstr ""
-
-#: includes/data/states.php:58
-msgid "Tucumán"
-msgstr ""
-
-#: includes/data/states.php:62
-msgid "Australian Capital Territory"
-msgstr ""
-
-#: includes/data/states.php:63
-msgid "New South Wales"
-msgstr ""
-
-#: includes/data/states.php:64
-msgid "Northern Territory"
-msgstr ""
-
-#: includes/data/states.php:65
-msgid "Queensland"
-msgstr ""
-
-#: includes/data/states.php:66
-msgid "South Australia"
-msgstr ""
-
-#: includes/data/states.php:67
-msgid "Tasmania"
-msgstr ""
-
-#: includes/data/states.php:68
-msgid "Victoria"
-msgstr ""
-
-#: includes/data/states.php:69
-msgid "Western Australia"
-msgstr ""
-
-#: includes/data/states.php:73
-msgid "Bagerhat"
-msgstr ""
-
-#: includes/data/states.php:74
-msgid "Bandarban"
-msgstr ""
-
-#: includes/data/states.php:75
-msgid "Barguna"
-msgstr ""
-
-#: includes/data/states.php:76
-msgid "Barishal"
-msgstr ""
-
-#: includes/data/states.php:77
-msgid "Bhola"
-msgstr ""
-
-#: includes/data/states.php:78
-msgid "Bogura"
-msgstr ""
-
-#: includes/data/states.php:79
-msgid "Brahmanbaria"
-msgstr ""
-
-#: includes/data/states.php:80
-msgid "Chandpur"
-msgstr ""
-
-#: includes/data/states.php:81
-msgid "Chattogram"
-msgstr ""
-
-#: includes/data/states.php:82
-msgid "Chuadanga"
-msgstr ""
-
-#: includes/data/states.php:83
-msgid "Cox's Bazar"
-msgstr ""
-
-#: includes/data/states.php:84
-msgid "Cumilla"
-msgstr ""
-
-#: includes/data/states.php:85
-msgid "Dhaka"
-msgstr ""
-
-#: includes/data/states.php:86
-msgid "Dinajpur"
-msgstr ""
-
-#: includes/data/states.php:87
-msgid "Faridpur "
-msgstr ""
-
-#: includes/data/states.php:88
-msgid "Feni"
-msgstr ""
-
-#: includes/data/states.php:89
-msgid "Gaibandha"
-msgstr ""
-
-#: includes/data/states.php:90
-msgid "Gazipur"
-msgstr ""
-
-#: includes/data/states.php:91
-msgid "Gopalganj"
-msgstr ""
-
-#: includes/data/states.php:92
-msgid "Habiganj"
-msgstr ""
-
-#: includes/data/states.php:93
-msgid "Jamalpur"
-msgstr ""
-
-#: includes/data/states.php:94
-msgid "Jashore"
-msgstr ""
-
-#: includes/data/states.php:95
-msgid "Jhalokati"
-msgstr ""
-
-#: includes/data/states.php:96
-msgid "Jhenaidah"
-msgstr ""
-
-#: includes/data/states.php:97
-msgid "Joypurhat"
-msgstr ""
-
-#: includes/data/states.php:98
-msgid "Khagrachhari"
-msgstr ""
-
-#: includes/data/states.php:99
-msgid "Khulna"
-msgstr ""
-
-#: includes/data/states.php:100
-msgid "Kishoreganj"
-msgstr ""
-
-#: includes/data/states.php:101
-msgid "Kurigram"
-msgstr ""
-
-#: includes/data/states.php:102
-msgid "Kushtia"
-msgstr ""
-
-#: includes/data/states.php:103
-msgid "Lakshmipur"
-msgstr ""
-
-#: includes/data/states.php:104
-msgid "Lalmonirhat"
-msgstr ""
-
-#: includes/data/states.php:105
-msgid "Madaripur"
-msgstr ""
-
-#: includes/data/states.php:106
-msgid "Magura"
-msgstr ""
-
-#: includes/data/states.php:107
-msgid "Manikganj "
-msgstr ""
-
-#: includes/data/states.php:108
-msgid "Meherpur"
-msgstr ""
-
-#: includes/data/states.php:109
-msgid "Moulvibazar"
-msgstr ""
-
-#: includes/data/states.php:110
-msgid "Munshiganj"
-msgstr ""
-
-#: includes/data/states.php:111
-msgid "Mymensingh"
-msgstr ""
-
-#: includes/data/states.php:112
-msgid "Naogaon"
-msgstr ""
-
-#: includes/data/states.php:113
-msgid "Narail"
-msgstr ""
-
-#: includes/data/states.php:114
-msgid "Narayanganj"
-msgstr ""
-
-#: includes/data/states.php:115
-msgid "Narsingdi"
-msgstr ""
-
-#: includes/data/states.php:116
-msgid "Natore"
-msgstr ""
-
-#: includes/data/states.php:117
-msgid "Nawabganj"
-msgstr ""
-
-#: includes/data/states.php:118
-msgid "Netrakona"
-msgstr ""
-
-#: includes/data/states.php:119
-msgid "Nilphamari"
-msgstr ""
-
-#: includes/data/states.php:120
-msgid "Noakhali"
-msgstr ""
-
-#: includes/data/states.php:121
-msgid "Pabna"
-msgstr ""
-
-#: includes/data/states.php:122
-msgid "Panchagarh"
-msgstr ""
-
-#: includes/data/states.php:123
-msgid "Patuakhali"
-msgstr ""
-
-#: includes/data/states.php:124
-msgid "Pirojpur"
-msgstr ""
-
-#: includes/data/states.php:125
-msgid "Rajbari"
-msgstr ""
-
-#: includes/data/states.php:126
-msgid "Rajshahi"
-msgstr ""
-
-#: includes/data/states.php:127
-msgid "Rangamati"
-msgstr ""
-
-#: includes/data/states.php:128
-msgid "Rangpur"
-msgstr ""
-
-#: includes/data/states.php:129
-msgid "Satkhira"
-msgstr ""
-
-#: includes/data/states.php:130
-msgid "Shariatpur"
-msgstr ""
-
-#: includes/data/states.php:131
-msgid "Sherpur"
-msgstr ""
-
-#: includes/data/states.php:132
-msgid "Sirajganj"
-msgstr ""
-
-#: includes/data/states.php:133
-msgid "Sunamganj"
-msgstr ""
-
-#: includes/data/states.php:134
-msgid "Sylhet"
-msgstr ""
-
-#: includes/data/states.php:135
-msgid "Tangail"
-msgstr ""
-
-#: includes/data/states.php:136
-msgid "Thakurgaon"
-msgstr ""
-
-#: includes/data/states.php:140
-msgid "Blagoevgrad"
-msgstr ""
-
-#: includes/data/states.php:141
-msgid "Burgas"
-msgstr ""
-
-#: includes/data/states.php:142
-msgid "Dobrich"
-msgstr ""
-
-#: includes/data/states.php:143
-msgid "Gabrovo"
-msgstr ""
-
-#: includes/data/states.php:144
-msgid "Haskovo"
-msgstr ""
-
-#: includes/data/states.php:145
-msgid "Kardzhali"
-msgstr ""
-
-#: includes/data/states.php:146
-msgid "Kyustendil"
-msgstr ""
-
-#: includes/data/states.php:147
-msgid "Lovech"
-msgstr ""
-
-#: includes/data/states.php:148 includes/data/states.php:1762
-msgid "Montana"
-msgstr ""
-
-#: includes/data/states.php:149
-msgid "Pazardzhik"
-msgstr ""
-
-#: includes/data/states.php:150
-msgid "Pernik"
-msgstr ""
-
-#: includes/data/states.php:151
-msgid "Pleven"
-msgstr ""
-
-#: includes/data/states.php:152
-msgid "Plovdiv"
-msgstr ""
-
-#: includes/data/states.php:153
-msgid "Razgrad"
-msgstr ""
-
-#: includes/data/states.php:154
-msgid "Ruse"
-msgstr ""
-
-#: includes/data/states.php:155
-msgid "Shumen"
-msgstr ""
-
-#: includes/data/states.php:156
-msgid "Silistra"
-msgstr ""
-
-#: includes/data/states.php:157
-msgid "Sliven"
-msgstr ""
-
-#: includes/data/states.php:158
-msgid "Smolyan"
-msgstr ""
-
-#: includes/data/states.php:159
-msgid "Sofia"
-msgstr ""
-
-#: includes/data/states.php:160
-msgid "Sofia-Grad"
-msgstr ""
-
-#: includes/data/states.php:161
-msgid "Stara Zagora"
-msgstr ""
-
-#: includes/data/states.php:162
-msgid "Targovishte"
-msgstr ""
-
-#: includes/data/states.php:163
-msgid "Varna"
-msgstr ""
-
-#: includes/data/states.php:164
-msgid "Veliko Tarnovo"
-msgstr ""
-
-#: includes/data/states.php:165
-msgid "Vidin"
-msgstr ""
-
-#: includes/data/states.php:166
-msgid "Vratsa"
-msgstr ""
-
-#: includes/data/states.php:167
-msgid "Yambol"
-msgstr ""
-
-#: includes/data/states.php:172
-msgid "Alibori"
-msgstr ""
-
-#: includes/data/states.php:173
-msgid "Atakora"
-msgstr ""
-
-#: includes/data/states.php:174
-msgid "Atlantique"
-msgstr ""
-
-#: includes/data/states.php:175
-msgid "Borgou"
-msgstr ""
-
-#: includes/data/states.php:176
-msgid "Collines"
-msgstr ""
-
-#: includes/data/states.php:177
-msgid "Kouffo"
-msgstr ""
-
-#: includes/data/states.php:178
-msgid "Donga"
-msgstr ""
-
-#: includes/data/states.php:179
-msgid "Littoral"
-msgstr ""
-
-#: includes/data/states.php:180
-msgid "Mono"
-msgstr ""
-
-#: includes/data/states.php:181
-msgid "Ouémé"
-msgstr ""
-
-#: includes/data/states.php:182 includes/data/states.php:1124
-msgid "Plateau"
-msgstr ""
-
-#: includes/data/states.php:183
-msgid "Zou"
-msgstr ""
-
-#: includes/data/states.php:186
-msgid "Chuquisaca"
-msgstr ""
-
-#: includes/data/states.php:187
-msgid "Beni"
-msgstr ""
-
-#: includes/data/states.php:188
-msgid "Cochabamba"
-msgstr ""
-
-#: includes/data/states.php:189
-msgid "La Paz"
-msgstr ""
-
-#: includes/data/states.php:190
-msgid "Oruro"
-msgstr ""
-
-#: includes/data/states.php:191
-msgid "Pando"
-msgstr ""
-
-#: includes/data/states.php:192
-msgid "Potosí"
-msgstr ""
-
-#: includes/data/states.php:194
-msgid "Tarija"
-msgstr ""
-
-#: includes/data/states.php:197
-msgid "Acre"
-msgstr ""
-
-#: includes/data/states.php:198
-msgid "Alagoas"
-msgstr ""
-
-#: includes/data/states.php:199
-msgid "Amapá"
-msgstr ""
-
-#: includes/data/states.php:200 includes/data/states.php:1170
-msgid "Amazonas"
-msgstr ""
-
-#: includes/data/states.php:201
-msgid "Bahia"
-msgstr ""
-
-#: includes/data/states.php:202
-msgid "Ceará"
-msgstr ""
-
-#: includes/data/states.php:203
-msgid "Distrito Federal"
-msgstr ""
-
-#: includes/data/states.php:204
-msgid "Espírito Santo"
-msgstr ""
-
-#: includes/data/states.php:205
-msgid "Goiás"
-msgstr ""
-
-#: includes/data/states.php:206
-msgid "Maranhão"
-msgstr ""
-
-#: includes/data/states.php:207
-msgid "Mato Grosso"
-msgstr ""
-
-#: includes/data/states.php:208
-msgid "Mato Grosso do Sul"
-msgstr ""
-
-#: includes/data/states.php:209
-msgid "Minas Gerais"
-msgstr ""
-
-#: includes/data/states.php:210
-msgid "Pará"
-msgstr ""
-
-#: includes/data/states.php:211
-msgid "Paraíba"
-msgstr ""
-
-#: includes/data/states.php:212
-msgid "Paraná"
-msgstr ""
-
-#: includes/data/states.php:213
-msgid "Pernambuco"
-msgstr ""
-
-#: includes/data/states.php:214
-msgid "Piauí"
-msgstr ""
-
-#: includes/data/states.php:215
-msgid "Rio de Janeiro"
-msgstr ""
-
-#: includes/data/states.php:216
-msgid "Rio Grande do Norte"
-msgstr ""
-
-#: includes/data/states.php:217
-msgid "Rio Grande do Sul"
-msgstr ""
-
-#: includes/data/states.php:218
-msgid "Rondônia"
-msgstr ""
-
-#: includes/data/states.php:219
-msgid "Roraima"
-msgstr ""
-
-#: includes/data/states.php:220
-msgid "Santa Catarina"
-msgstr ""
-
-#: includes/data/states.php:221
-msgid "São Paulo"
-msgstr ""
-
-#: includes/data/states.php:222
-msgid "Sergipe"
-msgstr ""
-
-#: includes/data/states.php:223
-msgid "Tocantins"
-msgstr ""
-
-#: includes/data/states.php:226
-msgid "Alberta"
-msgstr ""
-
-#: includes/data/states.php:227
-msgid "British Columbia"
-msgstr ""
-
-#: includes/data/states.php:228
-msgid "Manitoba"
-msgstr ""
-
-#: includes/data/states.php:229
-msgid "New Brunswick"
-msgstr ""
-
-#: includes/data/states.php:230
-msgid "Newfoundland and Labrador"
-msgstr ""
-
-#: includes/data/states.php:231
-msgid "Northwest Territories"
-msgstr ""
-
-#: includes/data/states.php:232
-msgid "Nova Scotia"
-msgstr ""
-
-#: includes/data/states.php:233
-msgid "Nunavut"
-msgstr ""
-
-#: includes/data/states.php:234
-msgid "Ontario"
-msgstr ""
-
-#: includes/data/states.php:235
-msgid "Prince Edward Island"
-msgstr ""
-
-#: includes/data/states.php:236
-msgid "Quebec"
-msgstr ""
-
-#: includes/data/states.php:237
-msgid "Saskatchewan"
-msgstr ""
-
-#: includes/data/states.php:238
-msgid "Yukon Territory"
-msgstr ""
-
-#: includes/data/states.php:241
-msgid "Aargau"
-msgstr ""
-
-#: includes/data/states.php:242
-msgid "Appenzell Ausserrhoden"
-msgstr ""
-
-#: includes/data/states.php:243
-msgid "Appenzell Innerrhoden"
-msgstr ""
-
-#: includes/data/states.php:244
-msgid "Basel-Landschaft"
-msgstr ""
-
-#: includes/data/states.php:245
-msgid "Basel-Stadt"
-msgstr ""
-
-#: includes/data/states.php:246
-msgid "Bern"
-msgstr ""
-
-#: includes/data/states.php:247
-msgid "Fribourg"
-msgstr ""
-
-#: includes/data/states.php:248
-msgid "Geneva"
-msgstr ""
-
-#: includes/data/states.php:249
-msgid "Glarus"
-msgstr ""
-
-#: includes/data/states.php:250
-msgid "Graubünden"
-msgstr ""
-
-#: includes/data/states.php:251
-msgid "Jura"
-msgstr ""
-
-#: includes/data/states.php:252
-msgid "Luzern"
-msgstr ""
-
-#: includes/data/states.php:253
-msgid "Neuchâtel"
-msgstr ""
-
-#: includes/data/states.php:254
-msgid "Nidwalden"
-msgstr ""
-
-#: includes/data/states.php:255
-msgid "Obwalden"
-msgstr ""
-
-#: includes/data/states.php:256
-msgid "Schaffhausen"
-msgstr ""
-
-#: includes/data/states.php:257
-msgid "Schwyz"
-msgstr ""
-
-#: includes/data/states.php:258
-msgid "Solothurn"
-msgstr ""
-
-#: includes/data/states.php:259
-msgid "St. Gallen"
-msgstr ""
-
-#: includes/data/states.php:260
-msgid "Thurgau"
-msgstr ""
-
-#: includes/data/states.php:261
-msgid "Ticino"
-msgstr ""
-
-#: includes/data/states.php:262
-msgid "Uri"
-msgstr ""
-
-#: includes/data/states.php:263
-msgid "Valais"
-msgstr ""
-
-#: includes/data/states.php:264
-msgid "Vaud"
-msgstr ""
-
-#: includes/data/states.php:265
-msgid "Zug"
-msgstr ""
-
-#: includes/data/states.php:266
-msgid "Zürich"
-msgstr ""
-
-#: includes/data/states.php:269
-msgid "Yunnan / 云南"
-msgstr ""
-
-#: includes/data/states.php:270
-msgid "Beijing / 北京"
-msgstr ""
-
-#: includes/data/states.php:271
-msgid "Tianjin / 天津"
-msgstr ""
-
-#: includes/data/states.php:272
-msgid "Hebei / 河北"
-msgstr ""
-
-#: includes/data/states.php:273
-msgid "Shanxi / 山西"
-msgstr ""
-
-#: includes/data/states.php:274
-msgid "Inner Mongolia / 內蒙古"
-msgstr ""
-
-#: includes/data/states.php:275
-msgid "Liaoning / 辽宁"
-msgstr ""
-
-#: includes/data/states.php:276
-msgid "Jilin / 吉林"
-msgstr ""
-
-#: includes/data/states.php:277
-msgid "Heilongjiang / 黑龙江"
-msgstr ""
-
-#: includes/data/states.php:278
-msgid "Shanghai / 上海"
-msgstr ""
-
-#: includes/data/states.php:279
-msgid "Jiangsu / 江苏"
-msgstr ""
-
-#: includes/data/states.php:280
-msgid "Zhejiang / 浙江"
-msgstr ""
-
-#: includes/data/states.php:281
-msgid "Anhui / 安徽"
-msgstr ""
-
-#: includes/data/states.php:282
-msgid "Fujian / 福建"
-msgstr ""
-
-#: includes/data/states.php:283
-msgid "Jiangxi / 江西"
-msgstr ""
-
-#: includes/data/states.php:284
-msgid "Shandong / 山东"
-msgstr ""
-
-#: includes/data/states.php:285
-msgid "Henan / 河南"
-msgstr ""
-
-#: includes/data/states.php:286
-msgid "Hubei / 湖北"
-msgstr ""
-
-#: includes/data/states.php:287
-msgid "Hunan / 湖南"
-msgstr ""
-
-#: includes/data/states.php:288
-msgid "Guangdong / 广东"
-msgstr ""
-
-#: includes/data/states.php:289
-msgid "Guangxi Zhuang / 广西壮族"
-msgstr ""
-
-#: includes/data/states.php:290
-msgid "Hainan / 海南"
-msgstr ""
-
-#: includes/data/states.php:291
-msgid "Chongqing / 重庆"
-msgstr ""
-
-#: includes/data/states.php:292
-msgid "Sichuan / 四川"
-msgstr ""
-
-#: includes/data/states.php:293
-msgid "Guizhou / 贵州"
-msgstr ""
-
-#: includes/data/states.php:294
-msgid "Shaanxi / 陕西"
-msgstr ""
-
-#: includes/data/states.php:295
-msgid "Gansu / 甘肃"
-msgstr ""
-
-#: includes/data/states.php:296
-msgid "Qinghai / 青海"
-msgstr ""
-
-#: includes/data/states.php:297
-msgid "Ningxia Hui / 宁夏"
-msgstr ""
-
-#: includes/data/states.php:298
-msgid "Macao / 澳门"
-msgstr ""
-
-#: includes/data/states.php:299
-msgid "Tibet / 西藏"
-msgstr ""
-
-#: includes/data/states.php:300
-msgid "Xinjiang / 新疆"
-msgstr ""
-
-#: includes/data/states.php:306
-msgid "Distrito Nacional"
-msgstr ""
-
-#: includes/data/states.php:307
-msgid "Azua"
-msgstr ""
-
-#: includes/data/states.php:308
-msgid "Baoruco"
-msgstr ""
-
-#: includes/data/states.php:309
-msgid "Barahona"
-msgstr ""
-
-#: includes/data/states.php:310
-msgid "Dajabón"
-msgstr ""
-
-#: includes/data/states.php:311
-msgid "Duarte"
-msgstr ""
-
-#: includes/data/states.php:312
-msgid "Elías Piña"
-msgstr ""
-
-#: includes/data/states.php:313
-msgid "El Seibo"
-msgstr ""
-
-#: includes/data/states.php:314
-msgid "Espaillat"
-msgstr ""
-
-#: includes/data/states.php:315
-msgid "Independencia"
-msgstr ""
-
-#: includes/data/states.php:316
-msgid "La Altagracia"
-msgstr ""
-
-#: includes/data/states.php:317
-msgid "La Romana"
-msgstr ""
-
-#: includes/data/states.php:318
-msgid "La Vega"
-msgstr ""
-
-#: includes/data/states.php:319
-msgid "María Trinidad Sánchez"
-msgstr ""
-
-#: includes/data/states.php:320
-msgid "Monte Cristi"
-msgstr ""
-
-#: includes/data/states.php:321
-msgid "Pedernales"
-msgstr ""
-
-#: includes/data/states.php:322
-msgid "Peravia"
-msgstr ""
-
-#: includes/data/states.php:323
-msgid "Puerto Plata"
-msgstr ""
-
-#: includes/data/states.php:324
-msgid "Hermanas Mirabal"
-msgstr ""
-
-#: includes/data/states.php:325
-msgid "Samaná"
-msgstr ""
-
-#: includes/data/states.php:326
-msgid "San Cristóbal"
-msgstr ""
-
-#: includes/data/states.php:328
-msgid "San Pedro de Macorís"
-msgstr ""
-
-#: includes/data/states.php:329
-msgid "Sánchez Ramírez"
-msgstr ""
-
-#: includes/data/states.php:330
-msgid "Santiago"
-msgstr ""
-
-#: includes/data/states.php:331
-msgid "Santiago Rodríguez"
-msgstr ""
-
-#: includes/data/states.php:332
-msgid "Valverde"
-msgstr ""
-
-#: includes/data/states.php:333
-msgid "Monseñor Nouel"
-msgstr ""
-
-#: includes/data/states.php:334
-msgid "Monte Plata"
-msgstr ""
-
-#: includes/data/states.php:335
-msgid "Hato Mayor"
-msgstr ""
-
-#: includes/data/states.php:336
-msgid "San José de Ocoa"
-msgstr ""
-
-#: includes/data/states.php:337
-msgid "Santo Domingo"
-msgstr ""
-
-#: includes/data/states.php:340
-msgid "Adrar"
-msgstr ""
-
-#: includes/data/states.php:341
-msgid "Chlef"
-msgstr ""
-
-#: includes/data/states.php:342
-msgid "Laghouat"
-msgstr ""
-
-#: includes/data/states.php:343
-msgid "Oum El Bouaghi"
-msgstr ""
-
-#: includes/data/states.php:344
-msgid "Batna"
-msgstr ""
-
-#: includes/data/states.php:345
-msgid "Béjaïa"
-msgstr ""
-
-#: includes/data/states.php:346
-msgid "Biskra"
-msgstr ""
-
-#: includes/data/states.php:347
-msgid "Béchar"
-msgstr ""
-
-#: includes/data/states.php:348
-msgid "Blida"
-msgstr ""
-
-#: includes/data/states.php:349
-msgid "Bouira"
-msgstr ""
-
-#: includes/data/states.php:350
-msgid "Tamanghasset"
-msgstr ""
-
-#: includes/data/states.php:351
-msgid "Tébessa"
-msgstr ""
-
-#: includes/data/states.php:352
-msgid "Tlemcen"
-msgstr ""
-
-#: includes/data/states.php:353
-msgid "Tiaret"
-msgstr ""
-
-#: includes/data/states.php:354
-msgid "Tizi Ouzou"
-msgstr ""
-
-#: includes/data/states.php:355
-msgid "Algiers"
-msgstr ""
-
-#: includes/data/states.php:356
-msgid "Djelfa"
-msgstr ""
-
-#: includes/data/states.php:357
-msgid "Jijel"
-msgstr ""
-
-#: includes/data/states.php:358
-msgid "Sétif"
-msgstr ""
-
-#: includes/data/states.php:359
-msgid "Saïda"
-msgstr ""
-
-#: includes/data/states.php:360
-msgid "Skikda"
-msgstr ""
-
-#: includes/data/states.php:361
-msgid "Sidi Bel Abbès"
-msgstr ""
-
-#: includes/data/states.php:362
-msgid "Annaba"
-msgstr ""
-
-#: includes/data/states.php:363
-msgid "Guelma"
-msgstr ""
-
-#: includes/data/states.php:364
-msgid "Constantine"
-msgstr ""
-
-#: includes/data/states.php:365
-msgid "Médéa"
-msgstr ""
-
-#: includes/data/states.php:366
-msgid "Mostaganem"
-msgstr ""
-
-#: includes/data/states.php:367
-msgid "M’Sila"
-msgstr ""
-
-#: includes/data/states.php:368
-msgid "Mascara"
-msgstr ""
-
-#: includes/data/states.php:369
-msgid "Ouargla"
-msgstr ""
-
-#: includes/data/states.php:370
-msgid "Oran"
-msgstr ""
-
-#: includes/data/states.php:371
-msgid "El Bayadh"
-msgstr ""
-
-#: includes/data/states.php:372
-msgid "Illizi"
-msgstr ""
-
-#: includes/data/states.php:373
-msgid "Bordj Bou Arréridj"
-msgstr ""
-
-#: includes/data/states.php:374
-msgid "Boumerdès"
-msgstr ""
-
-#: includes/data/states.php:375
-msgid "El Tarf"
-msgstr ""
-
-#: includes/data/states.php:376
-msgid "Tindouf"
-msgstr ""
-
-#: includes/data/states.php:377
-msgid "Tissemsilt"
-msgstr ""
-
-#: includes/data/states.php:378
-msgid "El Oued"
-msgstr ""
-
-#: includes/data/states.php:379
-msgid "Khenchela"
-msgstr ""
-
-#: includes/data/states.php:380
-msgid "Souk Ahras"
-msgstr ""
-
-#: includes/data/states.php:381
-msgid "Tipasa"
-msgstr ""
-
-#: includes/data/states.php:382
-msgid "Mila"
-msgstr ""
-
-#: includes/data/states.php:383
-msgid "Aïn Defla"
-msgstr ""
-
-#: includes/data/states.php:384
-msgid "Naama"
-msgstr ""
-
-#: includes/data/states.php:385
-msgid "Aïn Témouchent"
-msgstr ""
-
-#: includes/data/states.php:386
-msgid "Ghardaïa"
-msgstr ""
-
-#: includes/data/states.php:387
-msgid "Relizane"
-msgstr ""
-
-#: includes/data/states.php:391
-msgid "Alexandria"
-msgstr ""
-
-#: includes/data/states.php:392
-msgid "Aswan"
-msgstr ""
-
-#: includes/data/states.php:393
-msgid "Asyut"
-msgstr ""
-
-#: includes/data/states.php:394
-msgid "Red Sea"
-msgstr ""
-
-#: includes/data/states.php:395
-msgid "Beheira"
-msgstr ""
-
-#: includes/data/states.php:396
-msgid "Beni Suef"
-msgstr ""
-
-#: includes/data/states.php:397
-msgid "Cairo"
-msgstr ""
-
-#: includes/data/states.php:398
-msgid "Dakahlia"
-msgstr ""
-
-#: includes/data/states.php:399
-msgid "Damietta"
-msgstr ""
-
-#: includes/data/states.php:400
-msgid "Faiyum"
-msgstr ""
-
-#: includes/data/states.php:401
-msgid "Gharbia"
-msgstr ""
-
-#: includes/data/states.php:402
-msgid "Giza"
-msgstr ""
-
-#: includes/data/states.php:403
-msgid "Ismailia"
-msgstr ""
-
-#: includes/data/states.php:404
-msgid "South Sinai"
-msgstr ""
-
-#: includes/data/states.php:405
-msgid "Qalyubia"
-msgstr ""
-
-#: includes/data/states.php:406
-msgid "Kafr el-Sheikh"
-msgstr ""
-
-#: includes/data/states.php:407
-msgid "Qena"
-msgstr ""
-
-#: includes/data/states.php:408
-msgid "Luxor"
-msgstr ""
-
-#: includes/data/states.php:409
-msgid "Minya"
-msgstr ""
-
-#: includes/data/states.php:410
-msgid "Monufia"
-msgstr ""
-
-#: includes/data/states.php:411
-msgid "Matrouh"
-msgstr ""
-
-#: includes/data/states.php:412
-msgid "Port Said"
-msgstr ""
-
-#: includes/data/states.php:413
-msgid "Sohag"
-msgstr ""
-
-#: includes/data/states.php:414
-msgid "Al Sharqia"
-msgstr ""
-
-#: includes/data/states.php:415
-msgid "North Sinai"
-msgstr ""
-
-#: includes/data/states.php:416
-msgid "Suez"
-msgstr ""
-
-#: includes/data/states.php:417
-msgid "New Valley"
-msgstr ""
-
-#: includes/data/states.php:420
-msgid "A Coruña"
-msgstr ""
-
-#: includes/data/states.php:421
-msgid "Araba/Álava"
-msgstr ""
-
-#: includes/data/states.php:422
-msgid "Albacete"
-msgstr ""
-
-#: includes/data/states.php:423
-msgid "Alicante"
-msgstr ""
-
-#: includes/data/states.php:424
-msgid "Almería"
-msgstr ""
-
-#: includes/data/states.php:425
-msgid "Asturias"
-msgstr ""
-
-#: includes/data/states.php:426
-msgid "Ávila"
-msgstr ""
-
-#: includes/data/states.php:427
-msgid "Badajoz"
-msgstr ""
-
-#: includes/data/states.php:428
-msgid "Baleares"
-msgstr ""
-
-#: includes/data/states.php:429
-msgid "Barcelona"
-msgstr ""
-
-#: includes/data/states.php:430
-msgid "Burgos"
-msgstr ""
-
-#: includes/data/states.php:431
-msgid "Cáceres"
-msgstr ""
-
-#: includes/data/states.php:432
-msgid "Cádiz"
-msgstr ""
-
-#: includes/data/states.php:433
-msgid "Cantabria"
-msgstr ""
-
-#: includes/data/states.php:434
-msgid "Castellón"
-msgstr ""
-
-#: includes/data/states.php:435
-msgid "Ceuta"
-msgstr ""
-
-#: includes/data/states.php:436
-msgid "Ciudad Real"
-msgstr ""
-
-#: includes/data/states.php:438
-msgid "Cuenca"
-msgstr ""
-
-#: includes/data/states.php:439
-msgid "Girona"
-msgstr ""
-
-#: includes/data/states.php:440
-msgid "Granada"
-msgstr ""
-
-#: includes/data/states.php:441
-msgid "Guadalajara"
-msgstr ""
-
-#: includes/data/states.php:442
-msgid "Gipuzkoa"
-msgstr ""
-
-#: includes/data/states.php:443
-msgid "Huelva"
-msgstr ""
-
-#: includes/data/states.php:444
-msgid "Huesca"
-msgstr ""
-
-#: includes/data/states.php:445
-msgid "Jaén"
-msgstr ""
-
-#: includes/data/states.php:447
-msgid "Las Palmas"
-msgstr ""
-
-#: includes/data/states.php:448
-msgid "León"
-msgstr ""
-
-#: includes/data/states.php:449
-msgid "Lleida"
-msgstr ""
-
-#: includes/data/states.php:450
-msgid "Lugo"
-msgstr ""
-
-#: includes/data/states.php:451
-msgid "Madrid"
-msgstr ""
-
-#: includes/data/states.php:452
-msgid "Málaga"
-msgstr ""
-
-#: includes/data/states.php:453
-msgid "Melilla"
-msgstr ""
-
-#: includes/data/states.php:454
-msgid "Murcia"
-msgstr ""
-
-#: includes/data/states.php:455
-msgid "Navarra"
-msgstr ""
-
-#: includes/data/states.php:456
-msgid "Ourense"
-msgstr ""
-
-#: includes/data/states.php:457
-msgid "Palencia"
-msgstr ""
-
-#: includes/data/states.php:458
-msgid "Pontevedra"
-msgstr ""
-
-#: includes/data/states.php:459
-msgid "Salamanca"
-msgstr ""
-
-#: includes/data/states.php:460
-msgid "Santa Cruz de Tenerife"
-msgstr ""
-
-#: includes/data/states.php:461
-msgid "Segovia"
-msgstr ""
-
-#: includes/data/states.php:462
-msgid "Sevilla"
-msgstr ""
-
-#: includes/data/states.php:463
-msgid "Soria"
-msgstr ""
-
-#: includes/data/states.php:464
-msgid "Tarragona"
-msgstr ""
-
-#: includes/data/states.php:465
-msgid "Teruel"
-msgstr ""
-
-#: includes/data/states.php:466
-msgid "Toledo"
-msgstr ""
-
-#: includes/data/states.php:467
-msgid "Valencia"
-msgstr ""
-
-#: includes/data/states.php:468
-msgid "Valladolid"
-msgstr ""
-
-#: includes/data/states.php:469
-msgid "Biscay"
-msgstr ""
-
-#: includes/data/states.php:470
-msgid "Zamora"
-msgstr ""
-
-#: includes/data/states.php:471
-msgid "Zaragoza"
-msgstr ""
-
-#: includes/data/states.php:477
-msgid "Ahafo"
-msgstr ""
-
-#: includes/data/states.php:478
-msgid "Ashanti"
-msgstr ""
-
-#: includes/data/states.php:479
-msgid "Brong-Ahafo"
-msgstr ""
-
-#: includes/data/states.php:480
-msgid "Bono"
-msgstr ""
-
-#: includes/data/states.php:481
-msgid "Bono East"
-msgstr ""
-
-#: includes/data/states.php:482 includes/data/states.php:1308
-#: includes/data/states.php:1806
-msgid "Central"
-msgstr ""
-
-#: includes/data/states.php:483 includes/data/states.php:1807
-msgid "Eastern"
-msgstr ""
-
-#: includes/data/states.php:484
-msgid "Greater Accra"
-msgstr ""
-
-#: includes/data/states.php:485
-msgid "North East"
-msgstr ""
-
-#: includes/data/states.php:486 includes/data/states.php:1809
-msgid "Northern"
-msgstr ""
-
-#: includes/data/states.php:487
-msgid "Oti"
-msgstr ""
-
-#: includes/data/states.php:488
-msgid "Savannah"
-msgstr ""
-
-#: includes/data/states.php:489
-msgid "Upper East"
-msgstr ""
-
-#: includes/data/states.php:490
-msgid "Upper West"
-msgstr ""
-
-#: includes/data/states.php:491
-msgid "Volta"
-msgstr ""
-
-#: includes/data/states.php:492 includes/data/states.php:1805
-msgid "Western"
-msgstr ""
-
-#: includes/data/states.php:493
-msgid "Western North"
-msgstr ""
-
-#: includes/data/states.php:497
-msgid "Attica"
-msgstr ""
-
-#: includes/data/states.php:498
-msgid "East Macedonia and Thrace"
-msgstr ""
-
-#: includes/data/states.php:499
-msgid "Central Macedonia"
-msgstr ""
-
-#: includes/data/states.php:500
-msgid "West Macedonia"
-msgstr ""
-
-#: includes/data/states.php:501
-msgid "Epirus"
-msgstr ""
-
-#: includes/data/states.php:502
-msgid "Thessaly"
-msgstr ""
-
-#: includes/data/states.php:503
-msgid "Ionian Islands"
-msgstr ""
-
-#: includes/data/states.php:504
-msgid "West Greece"
-msgstr ""
-
-#: includes/data/states.php:505
-msgid "Central Greece"
-msgstr ""
-
-#: includes/data/states.php:506
-msgid "Peloponnese"
-msgstr ""
-
-#: includes/data/states.php:507
-msgid "North Aegean"
-msgstr ""
-
-#: includes/data/states.php:508
-msgid "South Aegean"
-msgstr ""
-
-#: includes/data/states.php:509
-msgid "Crete"
-msgstr ""
-
-#: includes/data/states.php:512
-msgid "Alta Verapaz"
-msgstr ""
-
-#: includes/data/states.php:513
-msgid "Baja Verapaz"
-msgstr ""
-
-#: includes/data/states.php:514
-msgid "Chimaltenango"
-msgstr ""
-
-#: includes/data/states.php:515
-msgid "Chiquimula"
-msgstr ""
-
-#: includes/data/states.php:516
-msgid "El Progreso"
-msgstr ""
-
-#: includes/data/states.php:517
-msgid "Escuintla"
-msgstr ""
-
-#: includes/data/states.php:518
-msgid "Guatemala"
-msgstr ""
-
-#: includes/data/states.php:519
-msgid "Huehuetenango"
-msgstr ""
-
-#: includes/data/states.php:520
-msgid "Izabal"
-msgstr ""
-
-#: includes/data/states.php:521
-msgid "Jalapa"
-msgstr ""
-
-#: includes/data/states.php:522
-msgid "Jutiapa"
-msgstr ""
-
-#: includes/data/states.php:523
-msgid "Petén"
-msgstr ""
-
-#: includes/data/states.php:524
-msgid "Quetzaltenango"
-msgstr ""
-
-#: includes/data/states.php:525
-msgid "Quiché"
-msgstr ""
-
-#: includes/data/states.php:526
-msgid "Retalhuleu"
-msgstr ""
-
-#: includes/data/states.php:527
-msgid "Sacatepéquez"
-msgstr ""
-
-#: includes/data/states.php:528
-msgid "San Marcos"
-msgstr ""
-
-#: includes/data/states.php:529
-msgid "Santa Rosa"
-msgstr ""
-
-#: includes/data/states.php:530
-msgid "Sololá"
-msgstr ""
-
-#: includes/data/states.php:531
-msgid "Suchitepéquez"
-msgstr ""
-
-#: includes/data/states.php:532
-msgid "Totonicapán"
-msgstr ""
-
-#: includes/data/states.php:533
-msgid "Zacapa"
-msgstr ""
-
-#: includes/data/states.php:536
-msgid "Hong Kong Island"
-msgstr ""
-
-#: includes/data/states.php:537
-msgid "Kowloon"
-msgstr ""
-
-#: includes/data/states.php:538
-msgid "New Territories"
-msgstr ""
-
-#: includes/data/states.php:541
-msgid "Bács-Kiskun"
-msgstr ""
-
-#: includes/data/states.php:542
-msgid "Békés"
-msgstr ""
-
-#: includes/data/states.php:543
-msgid "Baranya"
-msgstr ""
-
-#: includes/data/states.php:544
-msgid "Borsod-Abaúj-Zemplén"
-msgstr ""
-
-#: includes/data/states.php:545
-msgid "Budapest"
-msgstr ""
-
-#: includes/data/states.php:546
-msgid "Csongrád-Csanád"
-msgstr ""
-
-#: includes/data/states.php:547
-msgid "Fejér"
-msgstr ""
-
-#: includes/data/states.php:548
-msgid "Győr-Moson-Sopron"
-msgstr ""
-
-#: includes/data/states.php:549
-msgid "Hajdú-Bihar"
-msgstr ""
-
-#: includes/data/states.php:550
-msgid "Heves"
-msgstr ""
-
-#: includes/data/states.php:551
-msgid "Jász-Nagykun-Szolnok"
-msgstr ""
-
-#: includes/data/states.php:552
-msgid "Komárom-Esztergom"
-msgstr ""
-
-#: includes/data/states.php:553
-msgid "Nógrád"
-msgstr ""
-
-#: includes/data/states.php:554
-msgid "Pest"
-msgstr ""
-
-#: includes/data/states.php:555
-msgid "Somogy"
-msgstr ""
-
-#: includes/data/states.php:556
-msgid "Szabolcs-Szatmár-Bereg"
-msgstr ""
-
-#: includes/data/states.php:557
-msgid "Tolna"
-msgstr ""
-
-#: includes/data/states.php:558
-msgid "Vas"
-msgstr ""
-
-#: includes/data/states.php:559
-msgid "Veszprém"
-msgstr ""
-
-#: includes/data/states.php:560
-msgid "Zala"
-msgstr ""
-
-#: includes/data/states.php:563
-msgid "Daerah Istimewa Aceh"
-msgstr ""
-
-#: includes/data/states.php:564
-msgid "Sumatera Utara"
-msgstr ""
-
-#: includes/data/states.php:565
-msgid "Sumatera Barat"
-msgstr ""
-
-#: includes/data/states.php:566
-msgid "Riau"
-msgstr ""
-
-#: includes/data/states.php:567
-msgid "Kepulauan Riau"
-msgstr ""
-
-#: includes/data/states.php:568
-msgid "Jambi"
-msgstr ""
-
-#: includes/data/states.php:569
-msgid "Sumatera Selatan"
-msgstr ""
-
-#: includes/data/states.php:570
-msgid "Bangka Belitung"
-msgstr ""
-
-#: includes/data/states.php:571
-msgid "Bengkulu"
-msgstr ""
-
-#: includes/data/states.php:572
-msgid "Lampung"
-msgstr ""
-
-#: includes/data/states.php:573
-msgid "DKI Jakarta"
-msgstr ""
-
-#: includes/data/states.php:574
-msgid "Jawa Barat"
-msgstr ""
-
-#: includes/data/states.php:575
-msgid "Banten"
-msgstr ""
-
-#: includes/data/states.php:576
-msgid "Jawa Tengah"
-msgstr ""
-
-#: includes/data/states.php:577
-msgid "Jawa Timur"
-msgstr ""
-
-#: includes/data/states.php:578
-msgid "Daerah Istimewa Yogyakarta"
-msgstr ""
-
-#: includes/data/states.php:579
-msgid "Bali"
-msgstr ""
-
-#: includes/data/states.php:580
-msgid "Nusa Tenggara Barat"
-msgstr ""
-
-#: includes/data/states.php:581
-msgid "Nusa Tenggara Timur"
-msgstr ""
-
-#: includes/data/states.php:582
-msgid "Kalimantan Barat"
-msgstr ""
-
-#: includes/data/states.php:583
-msgid "Kalimantan Tengah"
-msgstr ""
-
-#: includes/data/states.php:584
-msgid "Kalimantan Timur"
-msgstr ""
-
-#: includes/data/states.php:585
-msgid "Kalimantan Selatan"
-msgstr ""
-
-#: includes/data/states.php:586
-msgid "Kalimantan Utara"
-msgstr ""
-
-#: includes/data/states.php:587
-msgid "Sulawesi Utara"
-msgstr ""
-
-#: includes/data/states.php:588
-msgid "Sulawesi Tengah"
-msgstr ""
-
-#: includes/data/states.php:589
-msgid "Sulawesi Tenggara"
-msgstr ""
-
-#: includes/data/states.php:590
-msgid "Sulawesi Barat"
-msgstr ""
-
-#: includes/data/states.php:591
-msgid "Sulawesi Selatan"
-msgstr ""
-
-#: includes/data/states.php:592
-msgid "Gorontalo"
-msgstr ""
-
-#: includes/data/states.php:593
-msgid "Maluku"
-msgstr ""
-
-#: includes/data/states.php:594
-msgid "Maluku Utara"
-msgstr ""
-
-#: includes/data/states.php:595
-msgid "Papua"
-msgstr ""
-
-#: includes/data/states.php:596
-msgid "Papua Barat"
-msgstr ""
-
-#: includes/data/states.php:599
-msgid "Carlow"
-msgstr ""
-
-#: includes/data/states.php:600
-msgid "Cavan"
-msgstr ""
-
-#: includes/data/states.php:601
-msgid "Clare"
-msgstr ""
-
-#: includes/data/states.php:602
-msgid "Cork"
-msgstr ""
-
-#: includes/data/states.php:603
-msgid "Donegal"
-msgstr ""
-
-#: includes/data/states.php:604
-msgid "Dublin"
-msgstr ""
-
-#: includes/data/states.php:605
-msgid "Galway"
-msgstr ""
-
-#: includes/data/states.php:606
-msgid "Kerry"
-msgstr ""
-
-#: includes/data/states.php:607
-msgid "Kildare"
-msgstr ""
-
-#: includes/data/states.php:608
-msgid "Kilkenny"
-msgstr ""
-
-#: includes/data/states.php:609
-msgid "Laois"
-msgstr ""
-
-#: includes/data/states.php:610
-msgid "Leitrim"
-msgstr ""
-
-#: includes/data/states.php:611
-msgid "Limerick"
-msgstr ""
-
-#: includes/data/states.php:612
-msgid "Longford"
-msgstr ""
-
-#: includes/data/states.php:613
-msgid "Louth"
-msgstr ""
-
-#: includes/data/states.php:614
-msgid "Mayo"
-msgstr ""
-
-#: includes/data/states.php:615
-msgid "Meath"
-msgstr ""
-
-#: includes/data/states.php:616
-msgid "Monaghan"
-msgstr ""
-
-#: includes/data/states.php:617
-msgid "Offaly"
-msgstr ""
-
-#: includes/data/states.php:618
-msgid "Roscommon"
-msgstr ""
-
-#: includes/data/states.php:619
-msgid "Sligo"
-msgstr ""
-
-#: includes/data/states.php:620
-msgid "Tipperary"
-msgstr ""
-
-#: includes/data/states.php:621
-msgid "Waterford"
-msgstr ""
-
-#: includes/data/states.php:622
-msgid "Westmeath"
-msgstr ""
-
-#: includes/data/states.php:623
-msgid "Wexford"
-msgstr ""
-
-#: includes/data/states.php:624
-msgid "Wicklow"
-msgstr ""
-
-#: includes/data/states.php:627
-msgid "Andhra Pradesh"
-msgstr ""
-
-#: includes/data/states.php:628
-msgid "Arunachal Pradesh"
-msgstr ""
-
-#: includes/data/states.php:629
-msgid "Assam"
-msgstr ""
-
-#: includes/data/states.php:630
-msgid "Bihar"
-msgstr ""
-
-#: includes/data/states.php:631
-msgid "Chhattisgarh"
-msgstr ""
-
-#: includes/data/states.php:632
-msgid "Goa"
-msgstr ""
-
-#: includes/data/states.php:633
-msgid "Gujarat"
-msgstr ""
-
-#: includes/data/states.php:634
-msgid "Haryana"
-msgstr ""
-
-#: includes/data/states.php:635
-msgid "Himachal Pradesh"
-msgstr ""
-
-#: includes/data/states.php:636
-msgid "Jammu and Kashmir"
-msgstr ""
-
-#: includes/data/states.php:637
-msgid "Jharkhand"
-msgstr ""
-
-#: includes/data/states.php:638
-msgid "Karnataka"
-msgstr ""
-
-#: includes/data/states.php:639
-msgid "Kerala"
-msgstr ""
-
-#: includes/data/states.php:640
-msgid "Ladakh"
-msgstr ""
-
-#: includes/data/states.php:641
-msgid "Madhya Pradesh"
-msgstr ""
-
-#: includes/data/states.php:642
-msgid "Maharashtra"
-msgstr ""
-
-#: includes/data/states.php:643
-msgid "Manipur"
-msgstr ""
-
-#: includes/data/states.php:644
-msgid "Meghalaya"
-msgstr ""
-
-#: includes/data/states.php:645
-msgid "Mizoram"
-msgstr ""
-
-#: includes/data/states.php:646
-msgid "Nagaland"
-msgstr ""
-
-#: includes/data/states.php:647
-msgid "Odisha"
-msgstr ""
-
-#: includes/data/states.php:648 includes/data/states.php:1290
-msgid "Punjab"
-msgstr ""
-
-#: includes/data/states.php:649
-msgid "Rajasthan"
-msgstr ""
-
-#: includes/data/states.php:650
-msgid "Sikkim"
-msgstr ""
-
-#: includes/data/states.php:651
-msgid "Tamil Nadu"
-msgstr ""
-
-#: includes/data/states.php:652
-msgid "Telangana"
-msgstr ""
-
-#: includes/data/states.php:653
-msgid "Tripura"
-msgstr ""
-
-#: includes/data/states.php:654
-msgid "Uttarakhand"
-msgstr ""
-
-#: includes/data/states.php:655
-msgid "Uttar Pradesh"
-msgstr ""
-
-#: includes/data/states.php:656
-msgid "West Bengal"
-msgstr ""
-
-#: includes/data/states.php:657
-msgid "Andaman and Nicobar Islands"
-msgstr ""
-
-#: includes/data/states.php:658
-msgid "Chandigarh"
-msgstr ""
-
-#: includes/data/states.php:659
-msgid "Dadra and Nagar Haveli"
-msgstr ""
-
-#: includes/data/states.php:660
-msgid "Daman and Diu"
-msgstr ""
-
-#: includes/data/states.php:661
-msgid "Delhi"
-msgstr ""
-
-#: includes/data/states.php:662
-msgid "Lakshadeep"
-msgstr ""
-
-#: includes/data/states.php:663
-msgid "Pondicherry (Puducherry)"
-msgstr ""
-
-#: includes/data/states.php:666
-msgid "Khuzestan  (خوزستان)"
-msgstr ""
-
-#: includes/data/states.php:667
-msgid "Tehran  (تهران)"
-msgstr ""
-
-#: includes/data/states.php:668
-msgid "Ilaam (ایلام)"
-msgstr ""
-
-#: includes/data/states.php:669
-msgid "Bushehr (بوشهر)"
-msgstr ""
-
-#: includes/data/states.php:670
-msgid "Ardabil (اردبیل)"
-msgstr ""
-
-#: includes/data/states.php:671
-msgid "Isfahan (اصفهان)"
-msgstr ""
-
-#: includes/data/states.php:672
-msgid "Yazd (یزد)"
-msgstr ""
-
-#: includes/data/states.php:673
-msgid "Kermanshah (کرمانشاه)"
-msgstr ""
-
-#: includes/data/states.php:674
-msgid "Kerman (کرمان)"
-msgstr ""
-
-#: includes/data/states.php:675
-msgid "Hamadan (همدان)"
-msgstr ""
-
-#: includes/data/states.php:676
-msgid "Ghazvin (قزوین)"
-msgstr ""
-
-#: includes/data/states.php:677
-msgid "Zanjan (زنجان)"
-msgstr ""
-
-#: includes/data/states.php:678
-msgid "Luristan (لرستان)"
-msgstr ""
-
-#: includes/data/states.php:679
-msgid "Alborz (البرز)"
-msgstr ""
-
-#: includes/data/states.php:680
-msgid "East Azarbaijan (آذربایجان شرقی)"
-msgstr ""
-
-#: includes/data/states.php:681
-msgid "West Azarbaijan (آذربایجان غربی)"
-msgstr ""
-
-#: includes/data/states.php:682
-msgid "Chaharmahal and Bakhtiari (چهارمحال و بختیاری)"
-msgstr ""
-
-#: includes/data/states.php:683
-msgid "South Khorasan (خراسان جنوبی)"
-msgstr ""
-
-#: includes/data/states.php:684
-msgid "Razavi Khorasan (خراسان رضوی)"
-msgstr ""
-
-#: includes/data/states.php:685
-msgid "North Khorasan (خراسان شمالی)"
-msgstr ""
-
-#: includes/data/states.php:686
-msgid "Semnan (سمنان)"
-msgstr ""
-
-#: includes/data/states.php:687
-msgid "Fars (فارس)"
-msgstr ""
-
-#: includes/data/states.php:688
-msgid "Qom (قم)"
-msgstr ""
-
-#: includes/data/states.php:689
-msgid "Kurdistan / کردستان)"
-msgstr ""
-
-#: includes/data/states.php:690
-msgid "Kohgiluyeh and BoyerAhmad (کهگیلوییه و بویراحمد)"
-msgstr ""
-
-#: includes/data/states.php:691
-msgid "Golestan (گلستان)"
-msgstr ""
-
-#: includes/data/states.php:692
-msgid "Gilan (گیلان)"
-msgstr ""
-
-#: includes/data/states.php:693
-msgid "Mazandaran (مازندران)"
-msgstr ""
-
-#: includes/data/states.php:694
-msgid "Markazi (مرکزی)"
-msgstr ""
-
-#: includes/data/states.php:695
-msgid "Hormozgan (هرمزگان)"
-msgstr ""
-
-#: includes/data/states.php:696
-msgid "Sistan and Baluchestan (سیستان و بلوچستان)"
-msgstr ""
-
-#: includes/data/states.php:700
-msgid "Agrigento"
-msgstr ""
-
-#: includes/data/states.php:701
-msgid "Alessandria"
-msgstr ""
-
-#: includes/data/states.php:702
-msgid "Ancona"
-msgstr ""
-
-#: includes/data/states.php:703
-msgid "Aosta"
-msgstr ""
-
-#: includes/data/states.php:704
-msgid "Arezzo"
-msgstr ""
-
-#: includes/data/states.php:705
-msgid "Ascoli Piceno"
-msgstr ""
-
-#: includes/data/states.php:706
-msgid "Asti"
-msgstr ""
-
-#: includes/data/states.php:707
-msgid "Avellino"
-msgstr ""
-
-#: includes/data/states.php:708
-msgid "Bari"
-msgstr ""
-
-#: includes/data/states.php:709
-msgid "Barletta-Andria-Trani"
-msgstr ""
-
-#: includes/data/states.php:710
-msgid "Belluno"
-msgstr ""
-
-#: includes/data/states.php:711
-msgid "Benevento"
-msgstr ""
-
-#: includes/data/states.php:712
-msgid "Bergamo"
-msgstr ""
-
-#: includes/data/states.php:713
-msgid "Biella"
-msgstr ""
-
-#: includes/data/states.php:714
-msgid "Bologna"
-msgstr ""
-
-#: includes/data/states.php:715
-msgid "Bolzano"
-msgstr ""
-
-#: includes/data/states.php:716
-msgid "Brescia"
-msgstr ""
-
-#: includes/data/states.php:717
-msgid "Brindisi"
-msgstr ""
-
-#: includes/data/states.php:718
-msgid "Cagliari"
-msgstr ""
-
-#: includes/data/states.php:719
-msgid "Caltanissetta"
-msgstr ""
-
-#: includes/data/states.php:720
-msgid "Campobasso"
-msgstr ""
-
-#: includes/data/states.php:721
-msgid "Caserta"
-msgstr ""
-
-#: includes/data/states.php:722
-msgid "Catania"
-msgstr ""
-
-#: includes/data/states.php:723
-msgid "Catanzaro"
-msgstr ""
-
-#: includes/data/states.php:724
-msgid "Chieti"
-msgstr ""
-
-#: includes/data/states.php:725
-msgid "Como"
-msgstr ""
-
-#: includes/data/states.php:726
-msgid "Cosenza"
-msgstr ""
-
-#: includes/data/states.php:727
-msgid "Cremona"
-msgstr ""
-
-#: includes/data/states.php:728
-msgid "Crotone"
-msgstr ""
-
-#: includes/data/states.php:729
-msgid "Cuneo"
-msgstr ""
-
-#: includes/data/states.php:730
-msgid "Enna"
-msgstr ""
-
-#: includes/data/states.php:731
-msgid "Fermo"
-msgstr ""
-
-#: includes/data/states.php:732
-msgid "Ferrara"
-msgstr ""
-
-#: includes/data/states.php:733
-msgid "Firenze"
-msgstr ""
-
-#: includes/data/states.php:734
-msgid "Foggia"
-msgstr ""
-
-#: includes/data/states.php:735
-msgid "Forlì-Cesena"
-msgstr ""
-
-#: includes/data/states.php:736
-msgid "Frosinone"
-msgstr ""
-
-#: includes/data/states.php:737
-msgid "Genova"
-msgstr ""
-
-#: includes/data/states.php:738
-msgid "Gorizia"
-msgstr ""
-
-#: includes/data/states.php:739
-msgid "Grosseto"
-msgstr ""
-
-#: includes/data/states.php:740
-msgid "Imperia"
-msgstr ""
-
-#: includes/data/states.php:741
-msgid "Isernia"
-msgstr ""
-
-#: includes/data/states.php:742
-msgid "La Spezia"
-msgstr ""
-
-#: includes/data/states.php:743
-msgid "L'Aquila"
-msgstr ""
-
-#: includes/data/states.php:744
-msgid "Latina"
-msgstr ""
-
-#: includes/data/states.php:745
-msgid "Lecce"
-msgstr ""
-
-#: includes/data/states.php:746
-msgid "Lecco"
-msgstr ""
-
-#: includes/data/states.php:747
-msgid "Livorno"
-msgstr ""
-
-#: includes/data/states.php:748
-msgid "Lodi"
-msgstr ""
-
-#: includes/data/states.php:749
-msgid "Lucca"
-msgstr ""
-
-#: includes/data/states.php:750
-msgid "Macerata"
-msgstr ""
-
-#: includes/data/states.php:751
-msgid "Mantova"
-msgstr ""
-
-#: includes/data/states.php:752
-msgid "Massa-Carrara"
-msgstr ""
-
-#: includes/data/states.php:753
-msgid "Matera"
-msgstr ""
-
-#: includes/data/states.php:754
-msgid "Messina"
-msgstr ""
-
-#: includes/data/states.php:755
-msgid "Milano"
-msgstr ""
-
-#: includes/data/states.php:756
-msgid "Modena"
-msgstr ""
-
-#: includes/data/states.php:757
-msgid "Monza e della Brianza"
-msgstr ""
-
-#: includes/data/states.php:758
-msgid "Napoli"
-msgstr ""
-
-#: includes/data/states.php:759
-msgid "Novara"
-msgstr ""
-
-#: includes/data/states.php:760
-msgid "Nuoro"
-msgstr ""
-
-#: includes/data/states.php:761
-msgid "Oristano"
-msgstr ""
-
-#: includes/data/states.php:762
-msgid "Padova"
-msgstr ""
-
-#: includes/data/states.php:763
-msgid "Palermo"
-msgstr ""
-
-#: includes/data/states.php:764
-msgid "Parma"
-msgstr ""
-
-#: includes/data/states.php:765
-msgid "Pavia"
-msgstr ""
-
-#: includes/data/states.php:766
-msgid "Perugia"
-msgstr ""
-
-#: includes/data/states.php:767
-msgid "Pesaro e Urbino"
-msgstr ""
-
-#: includes/data/states.php:768
-msgid "Pescara"
-msgstr ""
-
-#: includes/data/states.php:769
-msgid "Piacenza"
-msgstr ""
-
-#: includes/data/states.php:770
-msgid "Pisa"
-msgstr ""
-
-#: includes/data/states.php:771
-msgid "Pistoia"
-msgstr ""
-
-#: includes/data/states.php:772
-msgid "Pordenone"
-msgstr ""
-
-#: includes/data/states.php:773
-msgid "Potenza"
-msgstr ""
-
-#: includes/data/states.php:774
-msgid "Prato"
-msgstr ""
-
-#: includes/data/states.php:775
-msgid "Ragusa"
-msgstr ""
-
-#: includes/data/states.php:776
-msgid "Ravenna"
-msgstr ""
-
-#: includes/data/states.php:777
-msgid "Reggio Calabria"
-msgstr ""
-
-#: includes/data/states.php:778
-msgid "Reggio Emilia"
-msgstr ""
-
-#: includes/data/states.php:779
-msgid "Rieti"
-msgstr ""
-
-#: includes/data/states.php:780
-msgid "Rimini"
-msgstr ""
-
-#: includes/data/states.php:781
-msgid "Roma"
-msgstr ""
-
-#: includes/data/states.php:782
-msgid "Rovigo"
-msgstr ""
-
-#: includes/data/states.php:783
-msgid "Salerno"
-msgstr ""
-
-#: includes/data/states.php:784
-msgid "Sassari"
-msgstr ""
-
-#: includes/data/states.php:785
-msgid "Savona"
-msgstr ""
-
-#: includes/data/states.php:786
-msgid "Siena"
-msgstr ""
-
-#: includes/data/states.php:787
-msgid "Siracusa"
-msgstr ""
-
-#: includes/data/states.php:788
-msgid "Sondrio"
-msgstr ""
-
-#: includes/data/states.php:789
-msgid "Sud Sardegna"
-msgstr ""
-
-#: includes/data/states.php:790
-msgid "Taranto"
-msgstr ""
-
-#: includes/data/states.php:791
-msgid "Teramo"
-msgstr ""
-
-#: includes/data/states.php:792
-msgid "Terni"
-msgstr ""
-
-#: includes/data/states.php:793
-msgid "Torino"
-msgstr ""
-
-#: includes/data/states.php:794
-msgid "Trapani"
-msgstr ""
-
-#: includes/data/states.php:795
-msgid "Trento"
-msgstr ""
-
-#: includes/data/states.php:796
-msgid "Treviso"
-msgstr ""
-
-#: includes/data/states.php:797
-msgid "Trieste"
-msgstr ""
-
-#: includes/data/states.php:798
-msgid "Udine"
-msgstr ""
-
-#: includes/data/states.php:799
-msgid "Varese"
-msgstr ""
-
-#: includes/data/states.php:800
-msgid "Venezia"
-msgstr ""
-
-#: includes/data/states.php:801
-msgid "Verbano-Cusio-Ossola"
-msgstr ""
-
-#: includes/data/states.php:802
-msgid "Vercelli"
-msgstr ""
-
-#: includes/data/states.php:803
-msgid "Verona"
-msgstr ""
-
-#: includes/data/states.php:804
-msgid "Vibo Valentia"
-msgstr ""
-
-#: includes/data/states.php:805
-msgid "Vicenza"
-msgstr ""
-
-#: includes/data/states.php:806
-msgid "Viterbo"
-msgstr ""
-
-#: includes/data/states.php:811
-msgid "Kingston"
-msgstr ""
-
-#: includes/data/states.php:812
-msgid "Saint Andrew"
-msgstr ""
-
-#: includes/data/states.php:813
-msgid "Saint Thomas"
-msgstr ""
-
-#: includes/data/states.php:814
-msgid "Portland"
-msgstr ""
-
-#: includes/data/states.php:815
-msgid "Saint Mary"
-msgstr ""
-
-#: includes/data/states.php:816
-msgid "Saint Ann"
-msgstr ""
-
-#: includes/data/states.php:817
-msgid "Trelawny"
-msgstr ""
-
-#: includes/data/states.php:818
-msgid "Saint James"
-msgstr ""
-
-#: includes/data/states.php:819
-msgid "Hanover"
-msgstr ""
-
-#: includes/data/states.php:820
-msgid "Westmoreland"
-msgstr ""
-
-#: includes/data/states.php:821
-msgid "Saint Elizabeth"
-msgstr ""
-
-#: includes/data/states.php:822
-msgid "Manchester"
-msgstr ""
-
-#: includes/data/states.php:823
-msgid "Clarendon"
-msgstr ""
-
-#: includes/data/states.php:824
-msgid "Saint Catherine"
-msgstr ""
-
-#: includes/data/states.php:834
-msgid "Hokkaido"
-msgstr ""
-
-#: includes/data/states.php:835
-msgid "Aomori"
-msgstr ""
-
-#: includes/data/states.php:836
-msgid "Iwate"
-msgstr ""
-
-#: includes/data/states.php:837
-msgid "Miyagi"
-msgstr ""
-
-#: includes/data/states.php:838
-msgid "Akita"
-msgstr ""
-
-#: includes/data/states.php:839
-msgid "Yamagata"
-msgstr ""
-
-#: includes/data/states.php:840
-msgid "Fukushima"
-msgstr ""
-
-#: includes/data/states.php:841
-msgid "Ibaraki"
-msgstr ""
-
-#: includes/data/states.php:842
-msgid "Tochigi"
-msgstr ""
-
-#: includes/data/states.php:843
-msgid "Gunma"
-msgstr ""
-
-#: includes/data/states.php:844
-msgid "Saitama"
-msgstr ""
-
-#: includes/data/states.php:845
-msgid "Chiba"
-msgstr ""
-
-#: includes/data/states.php:846
-msgid "Tokyo"
-msgstr ""
-
-#: includes/data/states.php:847
-msgid "Kanagawa"
-msgstr ""
-
-#: includes/data/states.php:848
-msgid "Niigata"
-msgstr ""
-
-#: includes/data/states.php:849
-msgid "Toyama"
-msgstr ""
-
-#: includes/data/states.php:850
-msgid "Ishikawa"
-msgstr ""
-
-#: includes/data/states.php:851
-msgid "Fukui"
-msgstr ""
-
-#: includes/data/states.php:852
-msgid "Yamanashi"
-msgstr ""
-
-#: includes/data/states.php:853
-msgid "Nagano"
-msgstr ""
-
-#: includes/data/states.php:854
-msgid "Gifu"
-msgstr ""
-
-#: includes/data/states.php:855
-msgid "Shizuoka"
-msgstr ""
-
-#: includes/data/states.php:856
-msgid "Aichi"
-msgstr ""
-
-#: includes/data/states.php:857
-msgid "Mie"
-msgstr ""
-
-#: includes/data/states.php:858
-msgid "Shiga"
-msgstr ""
-
-#: includes/data/states.php:859
-msgid "Kyoto"
-msgstr ""
-
-#: includes/data/states.php:860
-msgid "Osaka"
-msgstr ""
-
-#: includes/data/states.php:861
-msgid "Hyogo"
-msgstr ""
-
-#: includes/data/states.php:862
-msgid "Nara"
-msgstr ""
-
-#: includes/data/states.php:863
-msgid "Wakayama"
-msgstr ""
-
-#: includes/data/states.php:864
-msgid "Tottori"
-msgstr ""
-
-#: includes/data/states.php:865
-msgid "Shimane"
-msgstr ""
-
-#: includes/data/states.php:866
-msgid "Okayama"
-msgstr ""
-
-#: includes/data/states.php:867
-msgid "Hiroshima"
-msgstr ""
-
-#: includes/data/states.php:868
-msgid "Yamaguchi"
-msgstr ""
-
-#: includes/data/states.php:869
-msgid "Tokushima"
-msgstr ""
-
-#: includes/data/states.php:870
-msgid "Kagawa"
-msgstr ""
-
-#: includes/data/states.php:871
-msgid "Ehime"
-msgstr ""
-
-#: includes/data/states.php:872
-msgid "Kochi"
-msgstr ""
-
-#: includes/data/states.php:873
-msgid "Fukuoka"
-msgstr ""
-
-#: includes/data/states.php:874
-msgid "Saga"
-msgstr ""
-
-#: includes/data/states.php:875
-msgid "Nagasaki"
-msgstr ""
-
-#: includes/data/states.php:876
-msgid "Kumamoto"
-msgstr ""
-
-#: includes/data/states.php:877
-msgid "Oita"
-msgstr ""
-
-#: includes/data/states.php:878
-msgid "Miyazaki"
-msgstr ""
-
-#: includes/data/states.php:879
-msgid "Kagoshima"
-msgstr ""
-
-#: includes/data/states.php:880
-msgid "Okinawa"
-msgstr ""
-
-#: includes/data/states.php:883
-msgid "Baringo"
-msgstr ""
-
-#: includes/data/states.php:884
-msgid "Bomet"
-msgstr ""
-
-#: includes/data/states.php:885
-msgid "Bungoma"
-msgstr ""
-
-#: includes/data/states.php:886 includes/data/states.php:1619
-msgid "Busia"
-msgstr ""
-
-#: includes/data/states.php:887
-msgid "Elgeyo-Marakwet"
-msgstr ""
-
-#: includes/data/states.php:888
-msgid "Embu"
-msgstr ""
-
-#: includes/data/states.php:889
-msgid "Garissa"
-msgstr ""
-
-#: includes/data/states.php:890
-msgid "Homa Bay"
-msgstr ""
-
-#: includes/data/states.php:891
-msgid "Isiolo"
-msgstr ""
-
-#: includes/data/states.php:892
-msgid "Kajiado"
-msgstr ""
-
-#: includes/data/states.php:893
-msgid "Kakamega"
-msgstr ""
-
-#: includes/data/states.php:894
-msgid "Kericho"
-msgstr ""
-
-#: includes/data/states.php:895
-msgid "Kiambu"
-msgstr ""
-
-#: includes/data/states.php:896
-msgid "Kilifi"
-msgstr ""
-
-#: includes/data/states.php:897
-msgid "Kirinyaga"
-msgstr ""
-
-#: includes/data/states.php:898
-msgid "Kisii"
-msgstr ""
-
-#: includes/data/states.php:899
-msgid "Kisumu"
-msgstr ""
-
-#: includes/data/states.php:900
-msgid "Kitui"
-msgstr ""
-
-#: includes/data/states.php:901
-msgid "Kwale"
-msgstr ""
-
-#: includes/data/states.php:902
-msgid "Laikipia"
-msgstr ""
-
-#: includes/data/states.php:903
-msgid "Lamu"
-msgstr ""
-
-#: includes/data/states.php:904
-msgid "Machakos"
-msgstr ""
-
-#: includes/data/states.php:905
-msgid "Makueni"
-msgstr ""
-
-#: includes/data/states.php:906
-msgid "Mandera"
-msgstr ""
-
-#: includes/data/states.php:907
-msgid "Marsabit"
-msgstr ""
-
-#: includes/data/states.php:908
-msgid "Meru"
-msgstr ""
-
-#: includes/data/states.php:909
-msgid "Migori"
-msgstr ""
-
-#: includes/data/states.php:910
-msgid "Mombasa"
-msgstr ""
-
-#: includes/data/states.php:911
-msgid "Murang’a"
-msgstr ""
-
-#: includes/data/states.php:912
-msgid "Nairobi County"
-msgstr ""
-
-#: includes/data/states.php:913
-msgid "Nakuru"
-msgstr ""
-
-#: includes/data/states.php:914
-msgid "Nandi"
-msgstr ""
-
-#: includes/data/states.php:915
-msgid "Narok"
-msgstr ""
-
-#: includes/data/states.php:916
-msgid "Nyamira"
-msgstr ""
-
-#: includes/data/states.php:917
-msgid "Nyandarua"
-msgstr ""
-
-#: includes/data/states.php:918
-msgid "Nyeri"
-msgstr ""
-
-#: includes/data/states.php:919
-msgid "Samburu"
-msgstr ""
-
-#: includes/data/states.php:920
-msgid "Siaya"
-msgstr ""
-
-#: includes/data/states.php:921
-msgid "Taita-Taveta"
-msgstr ""
-
-#: includes/data/states.php:922
-msgid "Tana River"
-msgstr ""
-
-#: includes/data/states.php:923
-msgid "Tharaka-Nithi"
-msgstr ""
-
-#: includes/data/states.php:924
-msgid "Trans Nzoia"
-msgstr ""
-
-#: includes/data/states.php:925
-msgid "Turkana"
-msgstr ""
-
-#: includes/data/states.php:926
-msgid "Uasin Gishu"
-msgstr ""
-
-#: includes/data/states.php:927
-msgid "Vihiga"
-msgstr ""
-
-#: includes/data/states.php:928
-msgid "Wajir"
-msgstr ""
-
-#: includes/data/states.php:929
-msgid "West Pokot"
-msgstr ""
-
-#: includes/data/states.php:934
-msgid "Attapeu"
-msgstr ""
-
-#: includes/data/states.php:935
-msgid "Bokeo"
-msgstr ""
-
-#: includes/data/states.php:936
-msgid "Bolikhamsai"
-msgstr ""
-
-#: includes/data/states.php:937
-msgid "Champasak"
-msgstr ""
-
-#: includes/data/states.php:938
-msgid "Houaphanh"
-msgstr ""
-
-#: includes/data/states.php:939
-msgid "Khammouane"
-msgstr ""
-
-#: includes/data/states.php:940
-msgid "Luang Namtha"
-msgstr ""
-
-#: includes/data/states.php:941
-msgid "Luang Prabang"
-msgstr ""
-
-#: includes/data/states.php:942
-msgid "Oudomxay"
-msgstr ""
-
-#: includes/data/states.php:943
-msgid "Phongsaly"
-msgstr ""
-
-#: includes/data/states.php:944
-msgid "Salavan"
-msgstr ""
-
-#: includes/data/states.php:945
-msgid "Savannakhet"
-msgstr ""
-
-#: includes/data/states.php:946
-msgid "Vientiane Province"
-msgstr ""
-
-#: includes/data/states.php:947
-msgid "Vientiane"
-msgstr ""
-
-#: includes/data/states.php:948
-msgid "Sainyabuli"
-msgstr ""
-
-#: includes/data/states.php:949
-msgid "Sekong"
-msgstr ""
-
-#: includes/data/states.php:950
-msgid "Xiangkhouang"
-msgstr ""
-
-#: includes/data/states.php:951
-msgid "Xaisomboun"
-msgstr ""
-
-#: includes/data/states.php:955
-msgid "Bomi"
-msgstr ""
-
-#: includes/data/states.php:956
-msgid "Bong"
-msgstr ""
-
-#: includes/data/states.php:957
-msgid "Gbarpolu"
-msgstr ""
-
-#: includes/data/states.php:958
-msgid "Grand Bassa"
-msgstr ""
-
-#: includes/data/states.php:959
-msgid "Grand Cape Mount"
-msgstr ""
-
-#: includes/data/states.php:960
-msgid "Grand Gedeh"
-msgstr ""
-
-#: includes/data/states.php:961
-msgid "Grand Kru"
-msgstr ""
-
-#: includes/data/states.php:962
-msgid "Lofa"
-msgstr ""
-
-#: includes/data/states.php:963
-msgid "Margibi"
-msgstr ""
-
-#: includes/data/states.php:964 includes/data/states.php:1756
-msgid "Maryland"
-msgstr ""
-
-#: includes/data/states.php:965
-msgid "Montserrado"
-msgstr ""
-
-#: includes/data/states.php:966
-msgid "Nimba"
-msgstr ""
-
-#: includes/data/states.php:967
-msgid "Rivercess"
-msgstr ""
-
-#: includes/data/states.php:968
-msgid "River Gee"
-msgstr ""
-
-#: includes/data/states.php:969
-msgid "Sinoe"
-msgstr ""
-
-#: includes/data/states.php:973
-msgid "Chișinău"
-msgstr ""
-
-#: includes/data/states.php:974
-msgid "Bălți"
-msgstr ""
-
-#: includes/data/states.php:975
-msgid "Anenii Noi"
-msgstr ""
-
-#: includes/data/states.php:976
-msgid "Basarabeasca"
-msgstr ""
-
-#: includes/data/states.php:977
-msgid "Briceni"
-msgstr ""
-
-#: includes/data/states.php:978
-msgid "Cahul"
-msgstr ""
-
-#: includes/data/states.php:979
-msgid "Cantemir"
-msgstr ""
-
-#: includes/data/states.php:980 includes/data/states.php:1329
-msgid "Călărași"
-msgstr ""
-
-#: includes/data/states.php:981
-msgid "Căușeni"
-msgstr ""
-
-#: includes/data/states.php:982
-msgid "Cimișlia"
-msgstr ""
-
-#: includes/data/states.php:983
-msgid "Criuleni"
-msgstr ""
-
-#: includes/data/states.php:984
-msgid "Dondușeni"
-msgstr ""
-
-#: includes/data/states.php:985
-msgid "Drochia"
-msgstr ""
-
-#: includes/data/states.php:986
-msgid "Dubăsari"
-msgstr ""
-
-#: includes/data/states.php:987
-msgid "Edineț"
-msgstr ""
-
-#: includes/data/states.php:988
-msgid "Fălești"
-msgstr ""
-
-#: includes/data/states.php:989
-msgid "Florești"
-msgstr ""
-
-#: includes/data/states.php:990
-msgid "UTA Găgăuzia"
-msgstr ""
-
-#: includes/data/states.php:991
-msgid "Glodeni"
-msgstr ""
-
-#: includes/data/states.php:992
-msgid "Hîncești"
-msgstr ""
-
-#: includes/data/states.php:993
-msgid "Ialoveni"
-msgstr ""
-
-#: includes/data/states.php:994
-msgid "Leova"
-msgstr ""
-
-#: includes/data/states.php:995
-msgid "Nisporeni"
-msgstr ""
-
-#: includes/data/states.php:996
-msgid "Ocnița"
-msgstr ""
-
-#: includes/data/states.php:997
-msgid "Orhei"
-msgstr ""
-
-#: includes/data/states.php:998
-msgid "Rezina"
-msgstr ""
-
-#: includes/data/states.php:999
-msgid "Rîșcani"
-msgstr ""
-
-#: includes/data/states.php:1000
-msgid "Sîngerei"
-msgstr ""
-
-#: includes/data/states.php:1001
-msgid "Soroca"
-msgstr ""
-
-#: includes/data/states.php:1002
-msgid "Strășeni"
-msgstr ""
-
-#: includes/data/states.php:1003
-msgid "Șoldănești"
-msgstr ""
-
-#: includes/data/states.php:1004
-msgid "Ștefan Vodă"
-msgstr ""
-
-#: includes/data/states.php:1005
-msgid "Taraclia"
-msgstr ""
-
-#: includes/data/states.php:1006
-msgid "Telenești"
-msgstr ""
-
-#: includes/data/states.php:1007
-msgid "Ungheni"
-msgstr ""
-
-#: includes/data/states.php:1012
-msgid "Ciudad de México"
-msgstr ""
-
-#: includes/data/states.php:1013
-msgid "Jalisco"
-msgstr ""
-
-#: includes/data/states.php:1014
-msgid "Nuevo León"
-msgstr ""
-
-#: includes/data/states.php:1015
-msgid "Aguascalientes"
-msgstr ""
-
-#: includes/data/states.php:1016
-msgid "Baja California"
-msgstr ""
-
-#: includes/data/states.php:1017
-msgid "Baja California Sur"
-msgstr ""
-
-#: includes/data/states.php:1018
-msgid "Campeche"
-msgstr ""
-
-#: includes/data/states.php:1019
-msgid "Chiapas"
-msgstr ""
-
-#: includes/data/states.php:1020
-msgid "Chihuahua"
-msgstr ""
-
-#: includes/data/states.php:1021
-msgid "Coahuila"
-msgstr ""
-
-#: includes/data/states.php:1022
-msgid "Colima"
-msgstr ""
-
-#: includes/data/states.php:1023
-msgid "Durango"
-msgstr ""
-
-#: includes/data/states.php:1024
-msgid "Guanajuato"
-msgstr ""
-
-#: includes/data/states.php:1025
-msgid "Guerrero"
-msgstr ""
-
-#: includes/data/states.php:1026
-msgid "Hidalgo"
-msgstr ""
-
-#: includes/data/states.php:1027
-msgid "Estado de México"
-msgstr ""
-
-#: includes/data/states.php:1028
-msgid "Michoacán"
-msgstr ""
-
-#: includes/data/states.php:1029
-msgid "Morelos"
-msgstr ""
-
-#: includes/data/states.php:1030
-msgid "Nayarit"
-msgstr ""
-
-#: includes/data/states.php:1031
-msgid "Oaxaca"
-msgstr ""
-
-#: includes/data/states.php:1032
-msgid "Puebla"
-msgstr ""
-
-#: includes/data/states.php:1033
-msgid "Querétaro"
-msgstr ""
-
-#: includes/data/states.php:1034
-msgid "Quintana Roo"
-msgstr ""
-
-#: includes/data/states.php:1035
-msgid "San Luis Potosí"
-msgstr ""
-
-#: includes/data/states.php:1036
-msgid "Sinaloa"
-msgstr ""
-
-#: includes/data/states.php:1037
-msgid "Sonora"
-msgstr ""
-
-#: includes/data/states.php:1038
-msgid "Tabasco"
-msgstr ""
-
-#: includes/data/states.php:1039
-msgid "Tamaulipas"
-msgstr ""
-
-#: includes/data/states.php:1040
-msgid "Tlaxcala"
-msgstr ""
-
-#: includes/data/states.php:1041
-msgid "Veracruz"
-msgstr ""
-
-#: includes/data/states.php:1042
-msgid "Yucatán"
-msgstr ""
-
-#: includes/data/states.php:1043
-msgid "Zacatecas"
-msgstr ""
-
-#: includes/data/states.php:1046
-msgid "Johor"
-msgstr ""
-
-#: includes/data/states.php:1047
-msgid "Kedah"
-msgstr ""
-
-#: includes/data/states.php:1048
-msgid "Kelantan"
-msgstr ""
-
-#: includes/data/states.php:1049
-msgid "Labuan"
-msgstr ""
-
-#: includes/data/states.php:1050
-msgid "Malacca (Melaka)"
-msgstr ""
-
-#: includes/data/states.php:1051
-msgid "Negeri Sembilan"
-msgstr ""
-
-#: includes/data/states.php:1052
-msgid "Pahang"
-msgstr ""
-
-#: includes/data/states.php:1053
-msgid "Penang (Pulau Pinang)"
-msgstr ""
-
-#: includes/data/states.php:1054
-msgid "Perak"
-msgstr ""
-
-#: includes/data/states.php:1055
-msgid "Perlis"
-msgstr ""
-
-#: includes/data/states.php:1056
-msgid "Sabah"
-msgstr ""
-
-#: includes/data/states.php:1057
-msgid "Sarawak"
-msgstr ""
-
-#: includes/data/states.php:1058
-msgid "Selangor"
-msgstr ""
-
-#: includes/data/states.php:1059
-msgid "Terengganu"
-msgstr ""
-
-#: includes/data/states.php:1060
-msgid "Putrajaya"
-msgstr ""
-
-#: includes/data/states.php:1061
-msgid "Kuala Lumpur"
-msgstr ""
-
-#: includes/data/states.php:1064
-msgid "Cabo Delgado"
-msgstr ""
-
-#: includes/data/states.php:1065
-msgid "Gaza"
-msgstr ""
-
-#: includes/data/states.php:1066
-msgid "Inhambane"
-msgstr ""
-
-#: includes/data/states.php:1067
-msgid "Manica"
-msgstr ""
-
-#: includes/data/states.php:1068
-msgid "Maputo Province"
-msgstr ""
-
-#: includes/data/states.php:1069
-msgid "Maputo"
-msgstr ""
-
-#: includes/data/states.php:1070
-msgid "Nampula"
-msgstr ""
-
-#: includes/data/states.php:1071
-msgid "Niassa"
-msgstr ""
-
-#: includes/data/states.php:1072
-msgid "Sofala"
-msgstr ""
-
-#: includes/data/states.php:1073
-msgid "Tete"
-msgstr ""
-
-#: includes/data/states.php:1074
-msgid "Zambézia"
-msgstr ""
-
-#: includes/data/states.php:1077
-msgid "Erongo"
-msgstr ""
-
-#: includes/data/states.php:1078
-msgid "Hardap"
-msgstr ""
-
-#: includes/data/states.php:1079
-msgid "Karas"
-msgstr ""
-
-#: includes/data/states.php:1080
-msgid "Kavango East"
-msgstr ""
-
-#: includes/data/states.php:1081
-msgid "Kavango West"
-msgstr ""
-
-#: includes/data/states.php:1082
-msgid "Khomas"
-msgstr ""
-
-#: includes/data/states.php:1083
-msgid "Kunene"
-msgstr ""
-
-#: includes/data/states.php:1084
-msgid "Ohangwena"
-msgstr ""
-
-#: includes/data/states.php:1085
-msgid "Omaheke"
-msgstr ""
-
-#: includes/data/states.php:1086
-msgid "Omusati"
-msgstr ""
-
-#: includes/data/states.php:1087
-msgid "Oshana"
-msgstr ""
-
-#: includes/data/states.php:1088
-msgid "Oshikoto"
-msgstr ""
-
-#: includes/data/states.php:1089
-msgid "Otjozondjupa"
-msgstr ""
-
-#: includes/data/states.php:1090
-msgid "Zambezi"
-msgstr ""
-
-#: includes/data/states.php:1093
-msgid "Abia"
-msgstr ""
-
-#: includes/data/states.php:1094
-msgid "Abuja"
-msgstr ""
-
-#: includes/data/states.php:1095
-msgid "Adamawa"
-msgstr ""
-
-#: includes/data/states.php:1096
-msgid "Akwa Ibom"
-msgstr ""
-
-#: includes/data/states.php:1097
-msgid "Anambra"
-msgstr ""
-
-#: includes/data/states.php:1098
-msgid "Bauchi"
-msgstr ""
-
-#: includes/data/states.php:1099
-msgid "Bayelsa"
-msgstr ""
-
-#: includes/data/states.php:1100
-msgid "Benue"
-msgstr ""
-
-#: includes/data/states.php:1101
-msgid "Borno"
-msgstr ""
-
-#: includes/data/states.php:1102
-msgid "Cross River"
-msgstr ""
-
-#: includes/data/states.php:1103
-msgid "Delta"
-msgstr ""
-
-#: includes/data/states.php:1104
-msgid "Ebonyi"
-msgstr ""
-
-#: includes/data/states.php:1105
-msgid "Edo"
-msgstr ""
-
-#: includes/data/states.php:1106
-msgid "Ekiti"
-msgstr ""
-
-#: includes/data/states.php:1107
-msgid "Enugu"
-msgstr ""
-
-#: includes/data/states.php:1108
-msgid "Gombe"
-msgstr ""
-
-#: includes/data/states.php:1109
-msgid "Imo"
-msgstr ""
-
-#: includes/data/states.php:1110
-msgid "Jigawa"
-msgstr ""
-
-#: includes/data/states.php:1111
-msgid "Kaduna"
-msgstr ""
-
-#: includes/data/states.php:1112
-msgid "Kano"
-msgstr ""
-
-#: includes/data/states.php:1113
-msgid "Katsina"
-msgstr ""
-
-#: includes/data/states.php:1114
-msgid "Kebbi"
-msgstr ""
-
-#: includes/data/states.php:1115
-msgid "Kogi"
-msgstr ""
-
-#: includes/data/states.php:1116
-msgid "Kwara"
-msgstr ""
-
-#: includes/data/states.php:1117
-msgid "Lagos"
-msgstr ""
-
-#: includes/data/states.php:1118
-msgid "Nasarawa"
-msgstr ""
-
-#: includes/data/states.php:1119
-msgid "Niger"
-msgstr ""
-
-#: includes/data/states.php:1120
-msgid "Ogun"
-msgstr ""
-
-#: includes/data/states.php:1121
-msgid "Ondo"
-msgstr ""
-
-#: includes/data/states.php:1122
-msgid "Osun"
-msgstr ""
-
-#: includes/data/states.php:1123
-msgid "Oyo"
-msgstr ""
-
-#: includes/data/states.php:1125
-msgid "Rivers"
-msgstr ""
-
-#: includes/data/states.php:1126
-msgid "Sokoto"
-msgstr ""
-
-#: includes/data/states.php:1127
-msgid "Taraba"
-msgstr ""
-
-#: includes/data/states.php:1128
-msgid "Yobe"
-msgstr ""
-
-#: includes/data/states.php:1129
-msgid "Zamfara"
-msgstr ""
-
-#: includes/data/states.php:1134
-msgid "Bagmati"
-msgstr ""
-
-#: includes/data/states.php:1135
-msgid "Bheri"
-msgstr ""
-
-#: includes/data/states.php:1136
-msgid "Dhaulagiri"
-msgstr ""
-
-#: includes/data/states.php:1137
-msgid "Gandaki"
-msgstr ""
-
-#: includes/data/states.php:1138
-msgid "Janakpur"
-msgstr ""
-
-#: includes/data/states.php:1139
-msgid "Karnali"
-msgstr ""
-
-#: includes/data/states.php:1140
-msgid "Koshi"
-msgstr ""
-
-#: includes/data/states.php:1141
-msgid "Lumbini"
-msgstr ""
-
-#: includes/data/states.php:1142
-msgid "Mahakali"
-msgstr ""
-
-#: includes/data/states.php:1143
-msgid "Mechi"
-msgstr ""
-
-#: includes/data/states.php:1144
-msgid "Narayani"
-msgstr ""
-
-#: includes/data/states.php:1145
-msgid "Rapti"
-msgstr ""
-
-#: includes/data/states.php:1146
-msgid "Sagarmatha"
-msgstr ""
-
-#: includes/data/states.php:1147
-msgid "Seti"
-msgstr ""
-
-#: includes/data/states.php:1150
-msgid "Northland"
-msgstr ""
-
-#: includes/data/states.php:1151
-msgid "Auckland"
-msgstr ""
-
-#: includes/data/states.php:1152
-msgid "Waikato"
-msgstr ""
-
-#: includes/data/states.php:1153
-msgid "Bay of Plenty"
-msgstr ""
-
-#: includes/data/states.php:1154
-msgid "Taranaki"
-msgstr ""
-
-#: includes/data/states.php:1155
-msgid "Gisborne"
-msgstr ""
-
-#: includes/data/states.php:1156
-msgid "Hawke’s Bay"
-msgstr ""
-
-#: includes/data/states.php:1157
-msgid "Manawatu-Wanganui"
-msgstr ""
-
-#: includes/data/states.php:1158
-msgid "Wellington"
-msgstr ""
-
-#: includes/data/states.php:1159
-msgid "Nelson"
-msgstr ""
-
-#: includes/data/states.php:1160
-msgid "Marlborough"
-msgstr ""
-
-#: includes/data/states.php:1161
-msgid "Tasman"
-msgstr ""
-
-#: includes/data/states.php:1162
-msgid "West Coast"
-msgstr ""
-
-#: includes/data/states.php:1163
-msgid "Canterbury"
-msgstr ""
-
-#: includes/data/states.php:1164
-msgid "Otago"
-msgstr ""
-
-#: includes/data/states.php:1165
-msgid "Southland"
-msgstr ""
-
-#: includes/data/states.php:1168
-msgid "El Callao"
-msgstr ""
-
-#: includes/data/states.php:1169
-msgid "Municipalidad Metropolitana de Lima"
-msgstr ""
-
-#: includes/data/states.php:1171
-msgid "Ancash"
-msgstr ""
-
-#: includes/data/states.php:1172
-msgid "Apurímac"
-msgstr ""
-
-#: includes/data/states.php:1173
-msgid "Arequipa"
-msgstr ""
-
-#: includes/data/states.php:1174
-msgid "Ayacucho"
-msgstr ""
-
-#: includes/data/states.php:1175
-msgid "Cajamarca"
-msgstr ""
-
-#: includes/data/states.php:1176
-msgid "Cusco"
-msgstr ""
-
-#: includes/data/states.php:1177
-msgid "Huancavelica"
-msgstr ""
-
-#: includes/data/states.php:1178
-msgid "Huánuco"
-msgstr ""
-
-#: includes/data/states.php:1179
-msgid "Ica"
-msgstr ""
-
-#: includes/data/states.php:1180
-msgid "Junín"
-msgstr ""
-
-#: includes/data/states.php:1181
-msgid "La Libertad"
-msgstr ""
-
-#: includes/data/states.php:1182
-msgid "Lambayeque"
-msgstr ""
-
-#: includes/data/states.php:1183
-msgid "Lima"
-msgstr ""
-
-#: includes/data/states.php:1184
-msgid "Loreto"
-msgstr ""
-
-#: includes/data/states.php:1185
-msgid "Madre de Dios"
-msgstr ""
-
-#: includes/data/states.php:1186
-msgid "Moquegua"
-msgstr ""
-
-#: includes/data/states.php:1187
-msgid "Pasco"
-msgstr ""
-
-#: includes/data/states.php:1188
-msgid "Piura"
-msgstr ""
-
-#: includes/data/states.php:1189
-msgid "Puno"
-msgstr ""
-
-#: includes/data/states.php:1190
-msgid "San Martín"
-msgstr ""
-
-#: includes/data/states.php:1191
-msgid "Tacna"
-msgstr ""
-
-#: includes/data/states.php:1192
-msgid "Tumbes"
-msgstr ""
-
-#: includes/data/states.php:1193
-msgid "Ucayali"
-msgstr ""
-
-#: includes/data/states.php:1200
-msgid "Abra"
-msgstr ""
-
-#: includes/data/states.php:1201
-msgid "Agusan del Norte"
-msgstr ""
-
-#: includes/data/states.php:1202
-msgid "Agusan del Sur"
-msgstr ""
-
-#: includes/data/states.php:1203
-msgid "Aklan"
-msgstr ""
-
-#: includes/data/states.php:1204
-msgid "Albay"
-msgstr ""
-
-#: includes/data/states.php:1205
-msgid "Antique"
-msgstr ""
-
-#: includes/data/states.php:1206
-msgid "Apayao"
-msgstr ""
-
-#: includes/data/states.php:1207
-msgid "Aurora"
-msgstr ""
-
-#: includes/data/states.php:1208
-msgid "Basilan"
-msgstr ""
-
-#: includes/data/states.php:1209
-msgid "Bataan"
-msgstr ""
-
-#: includes/data/states.php:1210
-msgid "Batanes"
-msgstr ""
-
-#: includes/data/states.php:1211
-msgid "Batangas"
-msgstr ""
-
-#: includes/data/states.php:1212
-msgid "Benguet"
-msgstr ""
-
-#: includes/data/states.php:1213
-msgid "Biliran"
-msgstr ""
-
-#: includes/data/states.php:1214
-msgid "Bohol"
-msgstr ""
-
-#: includes/data/states.php:1215
-msgid "Bukidnon"
-msgstr ""
-
-#: includes/data/states.php:1216
-msgid "Bulacan"
-msgstr ""
-
-#: includes/data/states.php:1217
-msgid "Cagayan"
-msgstr ""
-
-#: includes/data/states.php:1218
-msgid "Camarines Norte"
-msgstr ""
-
-#: includes/data/states.php:1219
-msgid "Camarines Sur"
-msgstr ""
-
-#: includes/data/states.php:1220
-msgid "Camiguin"
-msgstr ""
-
-#: includes/data/states.php:1221
-msgid "Capiz"
-msgstr ""
-
-#: includes/data/states.php:1222
-msgid "Catanduanes"
-msgstr ""
-
-#: includes/data/states.php:1223
-msgid "Cavite"
-msgstr ""
-
-#: includes/data/states.php:1224
-msgid "Cebu"
-msgstr ""
-
-#: includes/data/states.php:1225
-msgid "Compostela Valley"
-msgstr ""
-
-#: includes/data/states.php:1226
-msgid "Cotabato"
-msgstr ""
-
-#: includes/data/states.php:1227
-msgid "Davao del Norte"
-msgstr ""
-
-#: includes/data/states.php:1228
-msgid "Davao del Sur"
-msgstr ""
-
-#: includes/data/states.php:1229
-msgid "Davao Occidental"
-msgstr ""
-
-#: includes/data/states.php:1230
-msgid "Davao Oriental"
-msgstr ""
-
-#: includes/data/states.php:1231
-msgid "Dinagat Islands"
-msgstr ""
-
-#: includes/data/states.php:1232
-msgid "Eastern Samar"
-msgstr ""
-
-#: includes/data/states.php:1233
-msgid "Guimaras"
-msgstr ""
-
-#: includes/data/states.php:1234
-msgid "Ifugao"
-msgstr ""
-
-#: includes/data/states.php:1235
-msgid "Ilocos Norte"
-msgstr ""
-
-#: includes/data/states.php:1236
-msgid "Ilocos Sur"
-msgstr ""
-
-#: includes/data/states.php:1237
-msgid "Iloilo"
-msgstr ""
-
-#: includes/data/states.php:1238
-msgid "Isabela"
-msgstr ""
-
-#: includes/data/states.php:1239
-msgid "Kalinga"
-msgstr ""
-
-#: includes/data/states.php:1240
-msgid "La Union"
-msgstr ""
-
-#: includes/data/states.php:1241
-msgid "Laguna"
-msgstr ""
-
-#: includes/data/states.php:1242
-msgid "Lanao del Norte"
-msgstr ""
-
-#: includes/data/states.php:1243
-msgid "Lanao del Sur"
-msgstr ""
-
-#: includes/data/states.php:1244
-msgid "Leyte"
-msgstr ""
-
-#: includes/data/states.php:1245
-msgid "Maguindanao"
-msgstr ""
-
-#: includes/data/states.php:1246
-msgid "Marinduque"
-msgstr ""
-
-#: includes/data/states.php:1247
-msgid "Masbate"
-msgstr ""
-
-#: includes/data/states.php:1248
-msgid "Misamis Occidental"
-msgstr ""
-
-#: includes/data/states.php:1249
-msgid "Misamis Oriental"
-msgstr ""
-
-#: includes/data/states.php:1250
-msgid "Mountain Province"
-msgstr ""
-
-#: includes/data/states.php:1251
-msgid "Negros Occidental"
-msgstr ""
-
-#: includes/data/states.php:1252
-msgid "Negros Oriental"
-msgstr ""
-
-#: includes/data/states.php:1253
-msgid "Northern Samar"
-msgstr ""
-
-#: includes/data/states.php:1254
-msgid "Nueva Ecija"
-msgstr ""
-
-#: includes/data/states.php:1255
-msgid "Nueva Vizcaya"
-msgstr ""
-
-#: includes/data/states.php:1256
-msgid "Occidental Mindoro"
-msgstr ""
-
-#: includes/data/states.php:1257
-msgid "Oriental Mindoro"
-msgstr ""
-
-#: includes/data/states.php:1258
-msgid "Palawan"
-msgstr ""
-
-#: includes/data/states.php:1259
-msgid "Pampanga"
-msgstr ""
-
-#: includes/data/states.php:1260
-msgid "Pangasinan"
-msgstr ""
-
-#: includes/data/states.php:1261
-msgid "Quezon"
-msgstr ""
-
-#: includes/data/states.php:1262
-msgid "Quirino"
-msgstr ""
-
-#: includes/data/states.php:1263
-msgid "Rizal"
-msgstr ""
-
-#: includes/data/states.php:1264
-msgid "Romblon"
-msgstr ""
-
-#: includes/data/states.php:1265
-msgid "Samar"
-msgstr ""
-
-#: includes/data/states.php:1266
-msgid "Sarangani"
-msgstr ""
-
-#: includes/data/states.php:1267
-msgid "Siquijor"
-msgstr ""
-
-#: includes/data/states.php:1268
-msgid "Sorsogon"
-msgstr ""
-
-#: includes/data/states.php:1269
-msgid "South Cotabato"
-msgstr ""
-
-#: includes/data/states.php:1270
-msgid "Southern Leyte"
-msgstr ""
-
-#: includes/data/states.php:1271
-msgid "Sultan Kudarat"
-msgstr ""
-
-#: includes/data/states.php:1272
-msgid "Sulu"
-msgstr ""
-
-#: includes/data/states.php:1273
-msgid "Surigao del Norte"
-msgstr ""
-
-#: includes/data/states.php:1274
-msgid "Surigao del Sur"
-msgstr ""
-
-#: includes/data/states.php:1275
-msgid "Tarlac"
-msgstr ""
-
-#: includes/data/states.php:1276
-msgid "Tawi-Tawi"
-msgstr ""
-
-#: includes/data/states.php:1277
-msgid "Zambales"
-msgstr ""
-
-#: includes/data/states.php:1278
-msgid "Zamboanga del Norte"
-msgstr ""
-
-#: includes/data/states.php:1279
-msgid "Zamboanga del Sur"
-msgstr ""
-
-#: includes/data/states.php:1280
-msgid "Zamboanga Sibugay"
-msgstr ""
-
-#: includes/data/states.php:1281
-msgid "Metro Manila"
-msgstr ""
-
-#: includes/data/states.php:1284
-msgid "Azad Kashmir"
-msgstr ""
-
-#: includes/data/states.php:1285
-msgid "Balochistan"
-msgstr ""
-
-#: includes/data/states.php:1286
-msgid "FATA"
-msgstr ""
-
-#: includes/data/states.php:1287
-msgid "Gilgit Baltistan"
-msgstr ""
-
-#: includes/data/states.php:1288
-msgid "Islamabad Capital Territory"
-msgstr ""
-
-#: includes/data/states.php:1289
-msgid "Khyber Pakhtunkhwa"
-msgstr ""
-
-#: includes/data/states.php:1291
-msgid "Sindh"
-msgstr ""
-
-#: includes/data/states.php:1297
-msgid "Asunción"
-msgstr ""
-
-#: includes/data/states.php:1298
-msgid "Concepción"
-msgstr ""
-
-#: includes/data/states.php:1299
-msgid "San Pedro"
-msgstr ""
-
-#: includes/data/states.php:1300
-msgid "Cordillera"
-msgstr ""
-
-#: includes/data/states.php:1301
-msgid "Guairá"
-msgstr ""
-
-#: includes/data/states.php:1302
-msgid "Caaguazú"
-msgstr ""
-
-#: includes/data/states.php:1303
-msgid "Caazapá"
-msgstr ""
-
-#: includes/data/states.php:1304
-msgid "Itapúa"
-msgstr ""
-
-#: includes/data/states.php:1306
-msgid "Paraguarí"
-msgstr ""
-
-#: includes/data/states.php:1307
-msgid "Alto Paraná"
-msgstr ""
-
-#: includes/data/states.php:1309
-msgid "Ñeembucú"
-msgstr ""
-
-#: includes/data/states.php:1310
-msgid "Amambay"
-msgstr ""
-
-#: includes/data/states.php:1311
-msgid "Canindeyú"
-msgstr ""
-
-#: includes/data/states.php:1312
-msgid "Presidente Hayes"
-msgstr ""
-
-#: includes/data/states.php:1313
-msgid "Alto Paraguay"
-msgstr ""
-
-#: includes/data/states.php:1314
-msgid "Boquerón"
-msgstr ""
-
-#: includes/data/states.php:1318
-msgid "Alba"
-msgstr ""
-
-#: includes/data/states.php:1319
-msgid "Arad"
-msgstr ""
-
-#: includes/data/states.php:1320
-msgid "Argeș"
-msgstr ""
-
-#: includes/data/states.php:1321
-msgid "Bacău"
-msgstr ""
-
-#: includes/data/states.php:1322
-msgid "Bihor"
-msgstr ""
-
-#: includes/data/states.php:1323
-msgid "Bistrița-Năsăud"
-msgstr ""
-
-#: includes/data/states.php:1324
-msgid "Botoșani"
-msgstr ""
-
-#: includes/data/states.php:1325
-msgid "Brăila"
-msgstr ""
-
-#: includes/data/states.php:1326
-msgid "Brașov"
-msgstr ""
-
-#: includes/data/states.php:1327
-msgid "București"
-msgstr ""
-
-#: includes/data/states.php:1328
-msgid "Buzău"
-msgstr ""
-
-#: includes/data/states.php:1330
-msgid "Caraș-Severin"
-msgstr ""
-
-#: includes/data/states.php:1331
-msgid "Cluj"
-msgstr ""
-
-#: includes/data/states.php:1332
-msgid "Constanța"
-msgstr ""
-
-#: includes/data/states.php:1333
-msgid "Covasna"
-msgstr ""
-
-#: includes/data/states.php:1334
-msgid "Dâmbovița"
-msgstr ""
-
-#: includes/data/states.php:1335
-msgid "Dolj"
-msgstr ""
-
-#: includes/data/states.php:1336
-msgid "Galați"
-msgstr ""
-
-#: includes/data/states.php:1337
-msgid "Giurgiu"
-msgstr ""
-
-#: includes/data/states.php:1338
-msgid "Gorj"
-msgstr ""
-
-#: includes/data/states.php:1339
-msgid "Harghita"
-msgstr ""
-
-#: includes/data/states.php:1340
-msgid "Hunedoara"
-msgstr ""
-
-#: includes/data/states.php:1341
-msgid "Ialomița"
-msgstr ""
-
-#: includes/data/states.php:1342
-msgid "Iași"
-msgstr ""
-
-#: includes/data/states.php:1343
-msgid "Ilfov"
-msgstr ""
-
-#: includes/data/states.php:1344
-msgid "Maramureș"
-msgstr ""
-
-#: includes/data/states.php:1345
-msgid "Mehedinți"
-msgstr ""
-
-#: includes/data/states.php:1346
-msgid "Mureș"
-msgstr ""
-
-#: includes/data/states.php:1347
-msgid "Neamț"
-msgstr ""
-
-#: includes/data/states.php:1348
-msgid "Olt"
-msgstr ""
-
-#: includes/data/states.php:1349
-msgid "Prahova"
-msgstr ""
-
-#: includes/data/states.php:1350
-msgid "Sălaj"
-msgstr ""
-
-#: includes/data/states.php:1351
-msgid "Satu Mare"
-msgstr ""
-
-#: includes/data/states.php:1352
-msgid "Sibiu"
-msgstr ""
-
-#: includes/data/states.php:1353
-msgid "Suceava"
-msgstr ""
-
-#: includes/data/states.php:1354
-msgid "Teleorman"
-msgstr ""
-
-#: includes/data/states.php:1355
-msgid "Timiș"
-msgstr ""
-
-#: includes/data/states.php:1356
-msgid "Tulcea"
-msgstr ""
-
-#: includes/data/states.php:1357
-msgid "Vâlcea"
-msgstr ""
-
-#: includes/data/states.php:1358
-msgid "Vaslui"
-msgstr ""
-
-#: includes/data/states.php:1359
-msgid "Vrancea"
-msgstr ""
-
-#: includes/data/states.php:1365
-msgid "Amnat Charoen"
-msgstr ""
-
-#: includes/data/states.php:1366
-msgid "Ang Thong"
-msgstr ""
-
-#: includes/data/states.php:1367
-msgid "Ayutthaya"
-msgstr ""
-
-#: includes/data/states.php:1368
-msgid "Bangkok"
-msgstr ""
-
-#: includes/data/states.php:1369
-msgid "Bueng Kan"
-msgstr ""
-
-#: includes/data/states.php:1370
-msgid "Buri Ram"
-msgstr ""
-
-#: includes/data/states.php:1371
-msgid "Chachoengsao"
-msgstr ""
-
-#: includes/data/states.php:1372
-msgid "Chai Nat"
-msgstr ""
-
-#: includes/data/states.php:1373
-msgid "Chaiyaphum"
-msgstr ""
-
-#: includes/data/states.php:1374
-msgid "Chanthaburi"
-msgstr ""
-
-#: includes/data/states.php:1375
-msgid "Chiang Mai"
-msgstr ""
-
-#: includes/data/states.php:1376
-msgid "Chiang Rai"
-msgstr ""
-
-#: includes/data/states.php:1377
-msgid "Chonburi"
-msgstr ""
-
-#: includes/data/states.php:1378
-msgid "Chumphon"
-msgstr ""
-
-#: includes/data/states.php:1379
-msgid "Kalasin"
-msgstr ""
-
-#: includes/data/states.php:1380
-msgid "Kamphaeng Phet"
-msgstr ""
-
-#: includes/data/states.php:1381
-msgid "Kanchanaburi"
-msgstr ""
-
-#: includes/data/states.php:1382
-msgid "Khon Kaen"
-msgstr ""
-
-#: includes/data/states.php:1383
-msgid "Krabi"
-msgstr ""
-
-#: includes/data/states.php:1384
-msgid "Lampang"
-msgstr ""
-
-#: includes/data/states.php:1385
-msgid "Lamphun"
-msgstr ""
-
-#: includes/data/states.php:1386
-msgid "Loei"
-msgstr ""
-
-#: includes/data/states.php:1387
-msgid "Lopburi"
-msgstr ""
-
-#: includes/data/states.php:1388
-msgid "Mae Hong Son"
-msgstr ""
-
-#: includes/data/states.php:1389
-msgid "Maha Sarakham"
-msgstr ""
-
-#: includes/data/states.php:1390
-msgid "Mukdahan"
-msgstr ""
-
-#: includes/data/states.php:1391
-msgid "Nakhon Nayok"
-msgstr ""
-
-#: includes/data/states.php:1392
-msgid "Nakhon Pathom"
-msgstr ""
-
-#: includes/data/states.php:1393
-msgid "Nakhon Phanom"
-msgstr ""
-
-#: includes/data/states.php:1394
-msgid "Nakhon Ratchasima"
-msgstr ""
-
-#: includes/data/states.php:1395
-msgid "Nakhon Sawan"
-msgstr ""
-
-#: includes/data/states.php:1396
-msgid "Nakhon Si Thammarat"
-msgstr ""
-
-#: includes/data/states.php:1397
-msgid "Nan"
-msgstr ""
-
-#: includes/data/states.php:1398
-msgid "Narathiwat"
-msgstr ""
-
-#: includes/data/states.php:1399
-msgid "Nong Bua Lam Phu"
-msgstr ""
-
-#: includes/data/states.php:1400
-msgid "Nong Khai"
-msgstr ""
-
-#: includes/data/states.php:1401
-msgid "Nonthaburi"
-msgstr ""
-
-#: includes/data/states.php:1402
-msgid "Pathum Thani"
-msgstr ""
-
-#: includes/data/states.php:1403
-msgid "Pattani"
-msgstr ""
-
-#: includes/data/states.php:1404
-msgid "Phang Nga"
-msgstr ""
-
-#: includes/data/states.php:1405
-msgid "Phatthalung"
-msgstr ""
-
-#: includes/data/states.php:1406
-msgid "Phayao"
-msgstr ""
-
-#: includes/data/states.php:1407
-msgid "Phetchabun"
-msgstr ""
-
-#: includes/data/states.php:1408
-msgid "Phetchaburi"
-msgstr ""
-
-#: includes/data/states.php:1409
-msgid "Phichit"
-msgstr ""
-
-#: includes/data/states.php:1410
-msgid "Phitsanulok"
-msgstr ""
-
-#: includes/data/states.php:1411
-msgid "Phrae"
-msgstr ""
-
-#: includes/data/states.php:1412
-msgid "Phuket"
-msgstr ""
-
-#: includes/data/states.php:1413
-msgid "Prachin Buri"
-msgstr ""
-
-#: includes/data/states.php:1414
-msgid "Prachuap Khiri Khan"
-msgstr ""
-
-#: includes/data/states.php:1415
-msgid "Ranong"
-msgstr ""
-
-#: includes/data/states.php:1416
-msgid "Ratchaburi"
-msgstr ""
-
-#: includes/data/states.php:1417
-msgid "Rayong"
-msgstr ""
-
-#: includes/data/states.php:1418
-msgid "Roi Et"
-msgstr ""
-
-#: includes/data/states.php:1419
-msgid "Sa Kaeo"
-msgstr ""
-
-#: includes/data/states.php:1420
-msgid "Sakon Nakhon"
-msgstr ""
-
-#: includes/data/states.php:1421
-msgid "Samut Prakan"
-msgstr ""
-
-#: includes/data/states.php:1422
-msgid "Samut Sakhon"
-msgstr ""
-
-#: includes/data/states.php:1423
-msgid "Samut Songkhram"
-msgstr ""
-
-#: includes/data/states.php:1424
-msgid "Saraburi"
-msgstr ""
-
-#: includes/data/states.php:1425
-msgid "Satun"
-msgstr ""
-
-#: includes/data/states.php:1426
-msgid "Sing Buri"
-msgstr ""
-
-#: includes/data/states.php:1427
-msgid "Sisaket"
-msgstr ""
-
-#: includes/data/states.php:1428
-msgid "Songkhla"
-msgstr ""
-
-#: includes/data/states.php:1429
-msgid "Sukhothai"
-msgstr ""
-
-#: includes/data/states.php:1430
-msgid "Suphan Buri"
-msgstr ""
-
-#: includes/data/states.php:1431
-msgid "Surat Thani"
-msgstr ""
-
-#: includes/data/states.php:1432
-msgid "Surin"
-msgstr ""
-
-#: includes/data/states.php:1433
-msgid "Tak"
-msgstr ""
-
-#: includes/data/states.php:1434
-msgid "Trang"
-msgstr ""
-
-#: includes/data/states.php:1435
-msgid "Trat"
-msgstr ""
-
-#: includes/data/states.php:1436
-msgid "Ubon Ratchathani"
-msgstr ""
-
-#: includes/data/states.php:1437
-msgid "Udon Thani"
-msgstr ""
-
-#: includes/data/states.php:1438
-msgid "Uthai Thani"
-msgstr ""
-
-#: includes/data/states.php:1439
-msgid "Uttaradit"
-msgstr ""
-
-#: includes/data/states.php:1440
-msgid "Yala"
-msgstr ""
-
-#: includes/data/states.php:1441
-msgid "Yasothon"
-msgstr ""
-
-#: includes/data/states.php:1444
-msgid "Adana"
-msgstr ""
-
-#: includes/data/states.php:1445
-msgid "Adıyaman"
-msgstr ""
-
-#: includes/data/states.php:1446
-msgid "Afyon"
-msgstr ""
-
-#: includes/data/states.php:1447
-msgid "Ağrı"
-msgstr ""
-
-#: includes/data/states.php:1448
-msgid "Amasya"
-msgstr ""
-
-#: includes/data/states.php:1449
-msgid "Ankara"
-msgstr ""
-
-#: includes/data/states.php:1450
-msgid "Antalya"
-msgstr ""
-
-#: includes/data/states.php:1451
-msgid "Artvin"
-msgstr ""
-
-#: includes/data/states.php:1452
-msgid "Aydın"
-msgstr ""
-
-#: includes/data/states.php:1453
-msgid "Balıkesir"
-msgstr ""
-
-#: includes/data/states.php:1454
-msgid "Bilecik"
-msgstr ""
-
-#: includes/data/states.php:1455
-msgid "Bingöl"
-msgstr ""
-
-#: includes/data/states.php:1456
-msgid "Bitlis"
-msgstr ""
-
-#: includes/data/states.php:1457
-msgid "Bolu"
-msgstr ""
-
-#: includes/data/states.php:1458
-msgid "Burdur"
-msgstr ""
-
-#: includes/data/states.php:1459
-msgid "Bursa"
-msgstr ""
-
-#: includes/data/states.php:1460
-msgid "Çanakkale"
-msgstr ""
-
-#: includes/data/states.php:1461
-msgid "Çankırı"
-msgstr ""
-
-#: includes/data/states.php:1462
-msgid "Çorum"
-msgstr ""
-
-#: includes/data/states.php:1463
-msgid "Denizli"
-msgstr ""
-
-#: includes/data/states.php:1464
-msgid "Diyarbakır"
-msgstr ""
-
-#: includes/data/states.php:1465
-msgid "Edirne"
-msgstr ""
-
-#: includes/data/states.php:1466
-msgid "Elazığ"
-msgstr ""
-
-#: includes/data/states.php:1467
-msgid "Erzincan"
-msgstr ""
-
-#: includes/data/states.php:1468
-msgid "Erzurum"
-msgstr ""
-
-#: includes/data/states.php:1469
-msgid "Eskişehir"
-msgstr ""
-
-#: includes/data/states.php:1470
-msgid "Gaziantep"
-msgstr ""
-
-#: includes/data/states.php:1471
-msgid "Giresun"
-msgstr ""
-
-#: includes/data/states.php:1472
-msgid "Gümüşhane"
-msgstr ""
-
-#: includes/data/states.php:1473
-msgid "Hakkari"
-msgstr ""
-
-#: includes/data/states.php:1474
-msgid "Hatay"
-msgstr ""
-
-#: includes/data/states.php:1475
-msgid "Isparta"
-msgstr ""
-
-#: includes/data/states.php:1476
-msgid "İçel"
-msgstr ""
-
-#: includes/data/states.php:1477
-msgid "İstanbul"
-msgstr ""
-
-#: includes/data/states.php:1478
-msgid "İzmir"
-msgstr ""
-
-#: includes/data/states.php:1479
-msgid "Kars"
-msgstr ""
-
-#: includes/data/states.php:1480
-msgid "Kastamonu"
-msgstr ""
-
-#: includes/data/states.php:1481
-msgid "Kayseri"
-msgstr ""
-
-#: includes/data/states.php:1482
-msgid "Kırklareli"
-msgstr ""
-
-#: includes/data/states.php:1483
-msgid "Kırşehir"
-msgstr ""
-
-#: includes/data/states.php:1484
-msgid "Kocaeli"
-msgstr ""
-
-#: includes/data/states.php:1485
-msgid "Konya"
-msgstr ""
-
-#: includes/data/states.php:1486
-msgid "Kütahya"
-msgstr ""
-
-#: includes/data/states.php:1487
-msgid "Malatya"
-msgstr ""
-
-#: includes/data/states.php:1488
-msgid "Manisa"
-msgstr ""
-
-#: includes/data/states.php:1489
-msgid "Kahramanmaraş"
-msgstr ""
-
-#: includes/data/states.php:1490
-msgid "Mardin"
-msgstr ""
-
-#: includes/data/states.php:1491
-msgid "Muğla"
-msgstr ""
-
-#: includes/data/states.php:1492
-msgid "Muş"
-msgstr ""
-
-#: includes/data/states.php:1493
-msgid "Nevşehir"
-msgstr ""
-
-#: includes/data/states.php:1494
-msgid "Niğde"
-msgstr ""
-
-#: includes/data/states.php:1495
-msgid "Ordu"
-msgstr ""
-
-#: includes/data/states.php:1496
-msgid "Rize"
-msgstr ""
-
-#: includes/data/states.php:1497
-msgid "Sakarya"
-msgstr ""
-
-#: includes/data/states.php:1498
-msgid "Samsun"
-msgstr ""
-
-#: includes/data/states.php:1499
-msgid "Siirt"
-msgstr ""
-
-#: includes/data/states.php:1500
-msgid "Sinop"
-msgstr ""
-
-#: includes/data/states.php:1501
-msgid "Sivas"
-msgstr ""
-
-#: includes/data/states.php:1502
-msgid "Tekirdağ"
-msgstr ""
-
-#: includes/data/states.php:1503
-msgid "Tokat"
-msgstr ""
-
-#: includes/data/states.php:1504
-msgid "Trabzon"
-msgstr ""
-
-#: includes/data/states.php:1505
-msgid "Tunceli"
-msgstr ""
-
-#: includes/data/states.php:1506
-msgid "Şanlıurfa"
-msgstr ""
-
-#: includes/data/states.php:1507
-msgid "Uşak"
-msgstr ""
-
-#: includes/data/states.php:1508
-msgid "Van"
-msgstr ""
-
-#: includes/data/states.php:1509
-msgid "Yozgat"
-msgstr ""
-
-#: includes/data/states.php:1510
-msgid "Zonguldak"
-msgstr ""
-
-#: includes/data/states.php:1511
-msgid "Aksaray"
-msgstr ""
-
-#: includes/data/states.php:1512
-msgid "Bayburt"
-msgstr ""
-
-#: includes/data/states.php:1513
-msgid "Karaman"
-msgstr ""
-
-#: includes/data/states.php:1514
-msgid "Kırıkkale"
-msgstr ""
-
-#: includes/data/states.php:1515
-msgid "Batman"
-msgstr ""
-
-#: includes/data/states.php:1516
-msgid "Şırnak"
-msgstr ""
-
-#: includes/data/states.php:1517
-msgid "Bartın"
-msgstr ""
-
-#: includes/data/states.php:1518
-msgid "Ardahan"
-msgstr ""
-
-#: includes/data/states.php:1519
-msgid "Iğdır"
-msgstr ""
-
-#: includes/data/states.php:1520
-msgid "Yalova"
-msgstr ""
-
-#: includes/data/states.php:1521
-msgid "Karabük"
-msgstr ""
-
-#: includes/data/states.php:1522
-msgid "Kilis"
-msgstr ""
-
-#: includes/data/states.php:1523
-msgid "Osmaniye"
-msgstr ""
-
-#: includes/data/states.php:1524
-msgid "Düzce"
-msgstr ""
-
-#: includes/data/states.php:1527
-msgid "Arusha"
-msgstr ""
-
-#: includes/data/states.php:1528
-msgid "Dar es Salaam"
-msgstr ""
-
-#: includes/data/states.php:1529
-msgid "Dodoma"
-msgstr ""
-
-#: includes/data/states.php:1530
-msgid "Iringa"
-msgstr ""
-
-#: includes/data/states.php:1531
-msgid "Kagera"
-msgstr ""
-
-#: includes/data/states.php:1532
-msgid "Pemba North"
-msgstr ""
-
-#: includes/data/states.php:1533
-msgid "Zanzibar North"
-msgstr ""
-
-#: includes/data/states.php:1534
-msgid "Kigoma"
-msgstr ""
-
-#: includes/data/states.php:1535
-msgid "Kilimanjaro"
-msgstr ""
-
-#: includes/data/states.php:1536
-msgid "Pemba South"
-msgstr ""
-
-#: includes/data/states.php:1537
-msgid "Zanzibar South"
-msgstr ""
-
-#: includes/data/states.php:1538
-msgid "Lindi"
-msgstr ""
-
-#: includes/data/states.php:1539
-msgid "Mara"
-msgstr ""
-
-#: includes/data/states.php:1540
-msgid "Mbeya"
-msgstr ""
-
-#: includes/data/states.php:1541
-msgid "Zanzibar West"
-msgstr ""
-
-#: includes/data/states.php:1542
-msgid "Morogoro"
-msgstr ""
-
-#: includes/data/states.php:1543
-msgid "Mtwara"
-msgstr ""
-
-#: includes/data/states.php:1544
-msgid "Mwanza"
-msgstr ""
-
-#: includes/data/states.php:1545
-msgid "Coast"
-msgstr ""
-
-#: includes/data/states.php:1546
-msgid "Rukwa"
-msgstr ""
-
-#: includes/data/states.php:1547
-msgid "Ruvuma"
-msgstr ""
-
-#: includes/data/states.php:1548
-msgid "Shinyanga"
-msgstr ""
-
-#: includes/data/states.php:1549
-msgid "Singida"
-msgstr ""
-
-#: includes/data/states.php:1550
-msgid "Tabora"
-msgstr ""
-
-#: includes/data/states.php:1551
-msgid "Tanga"
-msgstr ""
-
-#: includes/data/states.php:1552
-msgid "Manyara"
-msgstr ""
-
-#: includes/data/states.php:1553
-msgid "Geita"
-msgstr ""
-
-#: includes/data/states.php:1554
-msgid "Katavi"
-msgstr ""
-
-#: includes/data/states.php:1555
-msgid "Njombe"
-msgstr ""
-
-#: includes/data/states.php:1556
-msgid "Simiyu"
-msgstr ""
-
-#: includes/data/states.php:1595
-msgid "Abim"
-msgstr ""
-
-#: includes/data/states.php:1596
-msgid "Adjumani"
-msgstr ""
-
-#: includes/data/states.php:1597
-msgid "Agago"
-msgstr ""
-
-#: includes/data/states.php:1598
-msgid "Alebtong"
-msgstr ""
-
-#: includes/data/states.php:1599
-msgid "Amolatar"
-msgstr ""
-
-#: includes/data/states.php:1600
-msgid "Amudat"
-msgstr ""
-
-#: includes/data/states.php:1601
-msgid "Amuria"
-msgstr ""
-
-#: includes/data/states.php:1602
-msgid "Amuru"
-msgstr ""
-
-#: includes/data/states.php:1603
-msgid "Apac"
-msgstr ""
-
-#: includes/data/states.php:1604
-msgid "Arua"
-msgstr ""
-
-#: includes/data/states.php:1605
-msgid "Budaka"
-msgstr ""
-
-#: includes/data/states.php:1606
-msgid "Bududa"
-msgstr ""
-
-#: includes/data/states.php:1607
-msgid "Bugiri"
-msgstr ""
-
-#: includes/data/states.php:1608
-msgid "Bugweri"
-msgstr ""
-
-#: includes/data/states.php:1609
-msgid "Buhweju"
-msgstr ""
-
-#: includes/data/states.php:1610
-msgid "Buikwe"
-msgstr ""
-
-#: includes/data/states.php:1611
-msgid "Bukedea"
-msgstr ""
-
-#: includes/data/states.php:1612
-msgid "Bukomansimbi"
-msgstr ""
-
-#: includes/data/states.php:1613
-msgid "Bukwa"
-msgstr ""
-
-#: includes/data/states.php:1614
-msgid "Bulambuli"
-msgstr ""
-
-#: includes/data/states.php:1615
-msgid "Buliisa"
-msgstr ""
-
-#: includes/data/states.php:1616
-msgid "Bundibugyo"
-msgstr ""
-
-#: includes/data/states.php:1617
-msgid "Bunyangabu"
-msgstr ""
-
-#: includes/data/states.php:1618
-msgid "Bushenyi"
-msgstr ""
-
-#: includes/data/states.php:1620
-msgid "Butaleja"
-msgstr ""
-
-#: includes/data/states.php:1621
-msgid "Butambala"
-msgstr ""
-
-#: includes/data/states.php:1622
-msgid "Butebo"
-msgstr ""
-
-#: includes/data/states.php:1623
-msgid "Buvuma"
-msgstr ""
-
-#: includes/data/states.php:1624
-msgid "Buyende"
-msgstr ""
-
-#: includes/data/states.php:1625
-msgid "Dokolo"
-msgstr ""
-
-#: includes/data/states.php:1626
-msgid "Gomba"
-msgstr ""
-
-#: includes/data/states.php:1627
-msgid "Gulu"
-msgstr ""
-
-#: includes/data/states.php:1628
-msgid "Hoima"
-msgstr ""
-
-#: includes/data/states.php:1629
-msgid "Ibanda"
-msgstr ""
-
-#: includes/data/states.php:1630
-msgid "Iganga"
-msgstr ""
-
-#: includes/data/states.php:1631
-msgid "Isingiro"
-msgstr ""
-
-#: includes/data/states.php:1632
-msgid "Jinja"
-msgstr ""
-
-#: includes/data/states.php:1633
-msgid "Kaabong"
-msgstr ""
-
-#: includes/data/states.php:1634
-msgid "Kabale"
-msgstr ""
-
-#: includes/data/states.php:1635
-msgid "Kabarole"
-msgstr ""
-
-#: includes/data/states.php:1636
-msgid "Kaberamaido"
-msgstr ""
-
-#: includes/data/states.php:1637
-msgid "Kagadi"
-msgstr ""
-
-#: includes/data/states.php:1638
-msgid "Kakumiro"
-msgstr ""
-
-#: includes/data/states.php:1639
-msgid "Kalangala"
-msgstr ""
-
-#: includes/data/states.php:1640
-msgid "Kaliro"
-msgstr ""
-
-#: includes/data/states.php:1641
-msgid "Kalungu"
-msgstr ""
-
-#: includes/data/states.php:1642
-msgid "Kampala"
-msgstr ""
-
-#: includes/data/states.php:1643
-msgid "Kamuli"
-msgstr ""
-
-#: includes/data/states.php:1644
-msgid "Kamwenge"
-msgstr ""
-
-#: includes/data/states.php:1645
-msgid "Kanungu"
-msgstr ""
-
-#: includes/data/states.php:1646
-msgid "Kapchorwa"
-msgstr ""
-
-#: includes/data/states.php:1647
-msgid "Kapelebyong"
-msgstr ""
-
-#: includes/data/states.php:1648
-msgid "Kasanda"
-msgstr ""
-
-#: includes/data/states.php:1649
-msgid "Kasese"
-msgstr ""
-
-#: includes/data/states.php:1650
-msgid "Katakwi"
-msgstr ""
-
-#: includes/data/states.php:1651
-msgid "Kayunga"
-msgstr ""
-
-#: includes/data/states.php:1652
-msgid "Kibaale"
-msgstr ""
-
-#: includes/data/states.php:1653
-msgid "Kiboga"
-msgstr ""
-
-#: includes/data/states.php:1654
-msgid "Kibuku"
-msgstr ""
-
-#: includes/data/states.php:1655
-msgid "Kikuube"
-msgstr ""
-
-#: includes/data/states.php:1656
-msgid "Kiruhura"
-msgstr ""
-
-#: includes/data/states.php:1657
-msgid "Kiryandongo"
-msgstr ""
-
-#: includes/data/states.php:1658
-msgid "Kisoro"
-msgstr ""
-
-#: includes/data/states.php:1659
-msgid "Kitgum"
-msgstr ""
-
-#: includes/data/states.php:1660
-msgid "Koboko"
-msgstr ""
-
-#: includes/data/states.php:1661
-msgid "Kole"
-msgstr ""
-
-#: includes/data/states.php:1662
-msgid "Kotido"
-msgstr ""
-
-#: includes/data/states.php:1663
-msgid "Kumi"
-msgstr ""
-
-#: includes/data/states.php:1664
-msgid "Kwania"
-msgstr ""
-
-#: includes/data/states.php:1665
-msgid "Kween"
-msgstr ""
-
-#: includes/data/states.php:1666
-msgid "Kyankwanzi"
-msgstr ""
-
-#: includes/data/states.php:1667
-msgid "Kyegegwa"
-msgstr ""
-
-#: includes/data/states.php:1668
-msgid "Kyenjojo"
-msgstr ""
-
-#: includes/data/states.php:1669
-msgid "Kyotera"
-msgstr ""
-
-#: includes/data/states.php:1670
-msgid "Lamwo"
-msgstr ""
-
-#: includes/data/states.php:1671
-msgid "Lira"
-msgstr ""
-
-#: includes/data/states.php:1672
-msgid "Luuka"
-msgstr ""
-
-#: includes/data/states.php:1673
-msgid "Luwero"
-msgstr ""
-
-#: includes/data/states.php:1674
-msgid "Lwengo"
-msgstr ""
-
-#: includes/data/states.php:1675
-msgid "Lyantonde"
-msgstr ""
-
-#: includes/data/states.php:1676
-msgid "Manafwa"
-msgstr ""
-
-#: includes/data/states.php:1677
-msgid "Maracha"
-msgstr ""
-
-#: includes/data/states.php:1678
-msgid "Masaka"
-msgstr ""
-
-#: includes/data/states.php:1679
-msgid "Masindi"
-msgstr ""
-
-#: includes/data/states.php:1680
-msgid "Mayuge"
-msgstr ""
-
-#: includes/data/states.php:1681
-msgid "Mbale"
-msgstr ""
-
-#: includes/data/states.php:1682
-msgid "Mbarara"
-msgstr ""
-
-#: includes/data/states.php:1683
-msgid "Mitooma"
-msgstr ""
-
-#: includes/data/states.php:1684
-msgid "Mityana"
-msgstr ""
-
-#: includes/data/states.php:1685
-msgid "Moroto"
-msgstr ""
-
-#: includes/data/states.php:1686
-msgid "Moyo"
-msgstr ""
-
-#: includes/data/states.php:1687
-msgid "Mpigi"
-msgstr ""
-
-#: includes/data/states.php:1688
-msgid "Mubende"
-msgstr ""
-
-#: includes/data/states.php:1689
-msgid "Mukono"
-msgstr ""
-
-#: includes/data/states.php:1690
-msgid "Nabilatuk"
-msgstr ""
-
-#: includes/data/states.php:1691
-msgid "Nakapiripirit"
-msgstr ""
-
-#: includes/data/states.php:1692
-msgid "Nakaseke"
-msgstr ""
-
-#: includes/data/states.php:1693
-msgid "Nakasongola"
-msgstr ""
-
-#: includes/data/states.php:1694
-msgid "Namayingo"
-msgstr ""
-
-#: includes/data/states.php:1695
-msgid "Namisindwa"
-msgstr ""
-
-#: includes/data/states.php:1696
-msgid "Namutumba"
-msgstr ""
-
-#: includes/data/states.php:1697
-msgid "Napak"
-msgstr ""
-
-#: includes/data/states.php:1698
-msgid "Nebbi"
-msgstr ""
-
-#: includes/data/states.php:1699
-msgid "Ngora"
-msgstr ""
-
-#: includes/data/states.php:1700
-msgid "Ntoroko"
-msgstr ""
-
-#: includes/data/states.php:1701
-msgid "Ntungamo"
-msgstr ""
-
-#: includes/data/states.php:1702
-msgid "Nwoya"
-msgstr ""
-
-#: includes/data/states.php:1703
-msgid "Omoro"
-msgstr ""
-
-#: includes/data/states.php:1704
-msgid "Otuke"
-msgstr ""
-
-#: includes/data/states.php:1705
-msgid "Oyam"
-msgstr ""
-
-#: includes/data/states.php:1706
-msgid "Pader"
-msgstr ""
-
-#: includes/data/states.php:1707
-msgid "Pakwach"
-msgstr ""
-
-#: includes/data/states.php:1708
-msgid "Pallisa"
-msgstr ""
-
-#: includes/data/states.php:1709
-msgid "Rakai"
-msgstr ""
-
-#: includes/data/states.php:1710
-msgid "Rubanda"
-msgstr ""
-
-#: includes/data/states.php:1711
-msgid "Rubirizi"
-msgstr ""
-
-#: includes/data/states.php:1712
-msgid "Rukiga"
-msgstr ""
-
-#: includes/data/states.php:1713
-msgid "Rukungiri"
-msgstr ""
-
-#: includes/data/states.php:1714
-msgid "Sembabule"
-msgstr ""
-
-#: includes/data/states.php:1715
-msgid "Serere"
-msgstr ""
-
-#: includes/data/states.php:1716
-msgid "Sheema"
-msgstr ""
-
-#: includes/data/states.php:1717
-msgid "Sironko"
-msgstr ""
-
-#: includes/data/states.php:1718
-msgid "Soroti"
-msgstr ""
-
-#: includes/data/states.php:1719
-msgid "Tororo"
-msgstr ""
-
-#: includes/data/states.php:1720
-msgid "Wakiso"
-msgstr ""
-
-#: includes/data/states.php:1721
-msgid "Yumbe"
-msgstr ""
-
-#: includes/data/states.php:1722
-msgid "Zombo"
-msgstr ""
-
-#: includes/data/states.php:1725
-msgid "Baker Island"
-msgstr ""
-
-#: includes/data/states.php:1726
-msgid "Howland Island"
-msgstr ""
-
-#: includes/data/states.php:1727
-msgid "Jarvis Island"
-msgstr ""
-
-#: includes/data/states.php:1728
-msgid "Johnston Atoll"
-msgstr ""
-
-#: includes/data/states.php:1729
-msgid "Kingman Reef"
-msgstr ""
-
-#: includes/data/states.php:1730
-msgid "Midway Atoll"
-msgstr ""
-
-#: includes/data/states.php:1731
-msgid "Navassa Island"
-msgstr ""
-
-#: includes/data/states.php:1732
-msgid "Palmyra Atoll"
-msgstr ""
-
-#: includes/data/states.php:1733
-msgid "Wake Island"
-msgstr ""
-
-#: includes/data/states.php:1736
-msgid "Alabama"
-msgstr ""
-
-#: includes/data/states.php:1737
-msgid "Alaska"
-msgstr ""
-
-#: includes/data/states.php:1738
-msgid "Arizona"
-msgstr ""
-
-#: includes/data/states.php:1739
-msgid "Arkansas"
-msgstr ""
-
-#: includes/data/states.php:1740
-msgid "California"
-msgstr ""
-
-#: includes/data/states.php:1741
-msgid "Colorado"
-msgstr ""
-
-#: includes/data/states.php:1742
-msgid "Connecticut"
-msgstr ""
-
-#: includes/data/states.php:1743
-msgid "Delaware"
-msgstr ""
-
-#: includes/data/states.php:1744
-msgid "District Of Columbia"
-msgstr ""
-
-#: includes/data/states.php:1745
-msgid "Florida"
-msgstr ""
-
-#: includes/data/states.php:1747
-msgid "Hawaii"
-msgstr ""
-
-#: includes/data/states.php:1748
-msgid "Idaho"
-msgstr ""
-
-#: includes/data/states.php:1749
-msgid "Illinois"
-msgstr ""
-
-#: includes/data/states.php:1750
-msgid "Indiana"
-msgstr ""
-
-#: includes/data/states.php:1751
-msgid "Iowa"
-msgstr ""
-
-#: includes/data/states.php:1752
-msgid "Kansas"
-msgstr ""
-
-#: includes/data/states.php:1753
-msgid "Kentucky"
-msgstr ""
-
-#: includes/data/states.php:1754
-msgid "Louisiana"
-msgstr ""
-
-#: includes/data/states.php:1755
-msgid "Maine"
-msgstr ""
-
-#: includes/data/states.php:1757
-msgid "Massachusetts"
-msgstr ""
-
-#: includes/data/states.php:1758
-msgid "Michigan"
-msgstr ""
-
-#: includes/data/states.php:1759
-msgid "Minnesota"
-msgstr ""
-
-#: includes/data/states.php:1760
-msgid "Mississippi"
-msgstr ""
-
-#: includes/data/states.php:1761
-msgid "Missouri"
-msgstr ""
-
-#: includes/data/states.php:1763
-msgid "Nebraska"
-msgstr ""
-
-#: includes/data/states.php:1764
-msgid "Nevada"
-msgstr ""
-
-#: includes/data/states.php:1765
-msgid "New Hampshire"
-msgstr ""
-
-#: includes/data/states.php:1766
-msgid "New Jersey"
-msgstr ""
-
-#: includes/data/states.php:1767
-msgid "New Mexico"
-msgstr ""
-
-#: includes/data/states.php:1768
-msgid "New York"
-msgstr ""
-
-#: includes/data/states.php:1769
-msgid "North Carolina"
-msgstr ""
-
-#: includes/data/states.php:1770
-msgid "North Dakota"
-msgstr ""
-
-#: includes/data/states.php:1771
-msgid "Ohio"
-msgstr ""
-
-#: includes/data/states.php:1772
-msgid "Oklahoma"
-msgstr ""
-
-#: includes/data/states.php:1773
-msgid "Oregon"
-msgstr ""
-
-#: includes/data/states.php:1774
-msgid "Pennsylvania"
-msgstr ""
-
-#: includes/data/states.php:1775
-msgid "Rhode Island"
-msgstr ""
-
-#: includes/data/states.php:1776
-msgid "South Carolina"
-msgstr ""
-
-#: includes/data/states.php:1777
-msgid "South Dakota"
-msgstr ""
-
-#: includes/data/states.php:1778
-msgid "Tennessee"
-msgstr ""
-
-#: includes/data/states.php:1779
-msgid "Texas"
-msgstr ""
-
-#: includes/data/states.php:1780
-msgid "Utah"
-msgstr ""
-
-#: includes/data/states.php:1781
-msgid "Vermont"
-msgstr ""
-
-#: includes/data/states.php:1782
-msgid "Virginia"
-msgstr ""
-
-#: includes/data/states.php:1783
-msgid "Washington"
-msgstr ""
-
-#: includes/data/states.php:1784
-msgid "West Virginia"
-msgstr ""
-
-#: includes/data/states.php:1785
-msgid "Wisconsin"
-msgstr ""
-
-#: includes/data/states.php:1786
-msgid "Wyoming"
-msgstr ""
-
-#: includes/data/states.php:1787
-msgid "Armed Forces (AA)"
-msgstr ""
-
-#: includes/data/states.php:1788
-msgid "Armed Forces (AE)"
-msgstr ""
-
-#: includes/data/states.php:1789
-msgid "Armed Forces (AP)"
-msgstr ""
-
-#: includes/data/states.php:1794
-msgid "Eastern Cape"
-msgstr ""
-
-#: includes/data/states.php:1795
-msgid "Free State"
-msgstr ""
-
-#: includes/data/states.php:1796
-msgid "Gauteng"
-msgstr ""
-
-#: includes/data/states.php:1797
-msgid "KwaZulu-Natal"
-msgstr ""
-
-#: includes/data/states.php:1798
-msgid "Limpopo"
-msgstr ""
-
-#: includes/data/states.php:1799
-msgid "Mpumalanga"
-msgstr ""
-
-#: includes/data/states.php:1800
-msgid "Northern Cape"
-msgstr ""
-
-#: includes/data/states.php:1801
-msgid "North West"
-msgstr ""
-
-#: includes/data/states.php:1802
-msgid "Western Cape"
-msgstr ""
-
-#: includes/data/states.php:1808
-msgid "Luapula"
-msgstr ""
-
-#: includes/data/states.php:1810
-msgid "North-Western"
-msgstr ""
-
-#: includes/data/states.php:1811
-msgid "Southern"
-msgstr ""
-
-#: includes/data/states.php:1812
-msgid "Copperbelt"
-msgstr ""
-
-#: includes/data/states.php:1813
-msgid "Lusaka"
-msgstr ""
-
-#: includes/data/states.php:1814
-msgid "Muchinga"
-msgstr ""
-
-#: includes/ea-account-functions.php:109
-msgid "Duplicate account number."
+#: includes/ea-currency-functions.php:67
+msgid "Currency could not be saved."
 msgstr ""
 
 #: includes/ea-document-functions.php:381
@@ -10178,144 +3899,176 @@ msgstr ""
 msgid "Date range"
 msgstr ""
 
-#: includes/ea-formatting-functions.php:501
+#: includes/ea-formatting-functions.php:537
 msgid "Zero"
 msgstr ""
 
-#: includes/ea-formatting-functions.php:502
+#: includes/ea-formatting-functions.php:538
 msgid "One"
 msgstr ""
 
-#: includes/ea-formatting-functions.php:503
+#: includes/ea-formatting-functions.php:539
 msgid "Two"
 msgstr ""
 
-#: includes/ea-formatting-functions.php:504
+#: includes/ea-formatting-functions.php:540
 msgid "Three"
 msgstr ""
 
-#: includes/ea-formatting-functions.php:505
+#: includes/ea-formatting-functions.php:541
 msgid "Four"
 msgstr ""
 
-#: includes/ea-formatting-functions.php:506
+#: includes/ea-formatting-functions.php:542
 msgid "Five"
 msgstr ""
 
-#: includes/ea-formatting-functions.php:507
+#: includes/ea-formatting-functions.php:543
 msgid "Six"
 msgstr ""
 
-#: includes/ea-formatting-functions.php:508
+#: includes/ea-formatting-functions.php:544
 msgid "Seven"
 msgstr ""
 
-#: includes/ea-formatting-functions.php:509
+#: includes/ea-formatting-functions.php:545
 msgid "Eight"
 msgstr ""
 
-#: includes/ea-formatting-functions.php:510
+#: includes/ea-formatting-functions.php:546
 msgid "Nine"
 msgstr ""
 
-#: includes/ea-formatting-functions.php:511
+#: includes/ea-formatting-functions.php:547
 msgid "Ten"
 msgstr ""
 
-#: includes/ea-formatting-functions.php:512
+#: includes/ea-formatting-functions.php:548
 msgid "Eleven"
 msgstr ""
 
-#: includes/ea-formatting-functions.php:513
+#: includes/ea-formatting-functions.php:549
 msgid "Twelve"
 msgstr ""
 
-#: includes/ea-formatting-functions.php:514
+#: includes/ea-formatting-functions.php:550
 msgid "Thirteen"
 msgstr ""
 
-#: includes/ea-formatting-functions.php:515
+#: includes/ea-formatting-functions.php:551
 msgid "Fourteen"
 msgstr ""
 
-#: includes/ea-formatting-functions.php:516
+#: includes/ea-formatting-functions.php:552
 msgid "Fifteen"
 msgstr ""
 
-#: includes/ea-formatting-functions.php:517
+#: includes/ea-formatting-functions.php:553
 msgid "Sixteen"
 msgstr ""
 
-#: includes/ea-formatting-functions.php:518
+#: includes/ea-formatting-functions.php:554
 msgid "Seventeen"
 msgstr ""
 
-#: includes/ea-formatting-functions.php:519
+#: includes/ea-formatting-functions.php:555
 msgid "Eighteen"
 msgstr ""
 
-#: includes/ea-formatting-functions.php:520
+#: includes/ea-formatting-functions.php:556
 msgid "Nineteen"
 msgstr ""
 
-#: includes/ea-formatting-functions.php:521
+#: includes/ea-formatting-functions.php:557
 msgid "Twenty"
 msgstr ""
 
-#: includes/ea-formatting-functions.php:522
+#: includes/ea-formatting-functions.php:558
 msgid "Thirty"
 msgstr ""
 
-#: includes/ea-formatting-functions.php:523
+#: includes/ea-formatting-functions.php:559
 msgid "Fourty"
 msgstr ""
 
-#: includes/ea-formatting-functions.php:524
+#: includes/ea-formatting-functions.php:560
 msgid "Fifty"
 msgstr ""
 
-#: includes/ea-formatting-functions.php:525
+#: includes/ea-formatting-functions.php:561
 msgid "Sixty"
 msgstr ""
 
-#: includes/ea-formatting-functions.php:526
+#: includes/ea-formatting-functions.php:562
 msgid "Seventy"
 msgstr ""
 
-#: includes/ea-formatting-functions.php:527
+#: includes/ea-formatting-functions.php:563
 msgid "Eighty"
 msgstr ""
 
-#: includes/ea-formatting-functions.php:528
+#: includes/ea-formatting-functions.php:564
 msgid "Ninety"
 msgstr ""
 
-#: includes/ea-formatting-functions.php:529
+#: includes/ea-formatting-functions.php:565
 msgid "Hundred"
 msgstr ""
 
-#: includes/ea-formatting-functions.php:530
+#: includes/ea-formatting-functions.php:566
 msgid "Thousand"
 msgstr ""
 
-#: includes/ea-formatting-functions.php:531
+#: includes/ea-formatting-functions.php:567
 msgid "Million"
 msgstr ""
 
-#: includes/ea-formatting-functions.php:532
+#: includes/ea-formatting-functions.php:568
 msgid "Billion"
 msgstr ""
 
-#: includes/ea-formatting-functions.php:533
+#: includes/ea-formatting-functions.php:569
 msgid "Trillion"
 msgstr ""
 
-#: includes/ea-formatting-functions.php:534
+#: includes/ea-formatting-functions.php:570
 msgid "Quadrillion"
 msgstr ""
 
-#: includes/ea-formatting-functions.php:535
+#: includes/ea-formatting-functions.php:571
 msgid "Quintillion"
+msgstr ""
+
+#: includes/ea-invoice-functions.php:118
+msgid "Invalid invoice id to update."
+msgstr ""
+
+#: includes/ea-invoice-functions.php:339
+msgid "Invalid invoice item id to update."
+msgstr ""
+
+#: includes/ea-invoice-functions.php:350
+msgid "Invoice id is required"
+msgstr ""
+
+#: includes/ea-invoice-functions.php:354
+msgid "Invoice item id is required"
+msgstr ""
+
+#: includes/ea-invoice-functions.php:358
+msgid "Item currency is required"
+msgstr ""
+
+#: includes/ea-invoice-functions.php:423
+msgid "Could not update invoice item in the database."
+msgstr ""
+
+#: includes/ea-invoice-functions.php:452
+msgid "Could not insert invoice item into the database."
+msgstr ""
+
+#: includes/ea-item-functions.php:67
+msgid "Item could not be saved."
 msgstr ""
 
 #: includes/ea-misc-functions.php:280
@@ -10366,13 +4119,21 @@ msgstr ""
 msgid "Custom"
 msgstr ""
 
+#: includes/ea-notes-functions.php:67
+msgid "Note could not be saved."
+msgstr ""
+
 #: includes/ea-template-functions.php:176
 #. Translators: %s file name
 msgid "Admin template %s does not exist"
 msgstr ""
 
-#: includes/ea-transaction-functions.php:325
-msgid "Source and Destination account can't be same."
+#: includes/ea-transaction-functions.php:84
+msgid "Transaction could not be saved."
+msgstr ""
+
+#: includes/ea-transaction-functions.php:205
+msgid "Transfer could not be saved."
 msgstr ""
 
 #: includes/import/class-accounts.php:73 includes/import/class-payments.php:79
@@ -10645,7 +4406,7 @@ msgstr ""
 msgid "Transfer data corrupted"
 msgstr ""
 
-#: includes/rest/class-accounts-controller.php:79
+#: includes/rest/class-accounts-controller.php:78
 #: includes/rest/class-bill-histories-controller.php:64
 #: includes/rest/class-bill-items-controller.php:64
 #: includes/rest/class-invoice-histories-controller.php:64
@@ -10654,57 +4415,52 @@ msgstr ""
 msgid "Unique identifier for the account."
 msgstr ""
 
-#: includes/rest/class-accounts-controller.php:88
+#: includes/rest/class-accounts-controller.php:87
 msgid "Name of the account."
 msgstr ""
 
-#: includes/rest/class-accounts-controller.php:97
+#: includes/rest/class-accounts-controller.php:96
 msgid "Number of the account."
 msgstr ""
 
-#: includes/rest/class-accounts-controller.php:106
+#: includes/rest/class-accounts-controller.php:105
 msgid "Opening balance of the account"
 msgstr ""
 
-#: includes/rest/class-accounts-controller.php:116
+#: includes/rest/class-accounts-controller.php:115
 msgid "Currency code of the account"
 msgstr ""
 
-#: includes/rest/class-accounts-controller.php:123
+#: includes/rest/class-accounts-controller.php:121
 #: includes/rest/class-bills-controller.php:468
 #: includes/rest/class-invoices-controller.php:467
 msgid "Currency code ID."
 msgstr ""
 
-#: includes/rest/class-accounts-controller.php:129
-#: includes/rest/class-bills-controller.php:474
-#: includes/rest/class-invoices-controller.php:473
-msgid "Currency code."
-msgstr ""
-
-#: includes/rest/class-accounts-controller.php:137
+#: includes/rest/class-accounts-controller.php:135
 msgid "Bank name of the account"
 msgstr ""
 
-#: includes/rest/class-accounts-controller.php:145
+#: includes/rest/class-accounts-controller.php:143
 msgid "Phone number of the bank"
 msgstr ""
 
-#: includes/rest/class-accounts-controller.php:153
+#: includes/rest/class-accounts-controller.php:151
 msgid "Address of the bank"
 msgstr ""
 
-#: includes/rest/class-accounts-controller.php:161
-#: includes/rest/class-categories-controller.php:113
-#: includes/rest/class-items-controller.php:199
+#: includes/rest/class-accounts-controller.php:159
+#: includes/rest/class-categories-controller.php:112
+#: includes/rest/class-currencies-controller.php:160
+#: includes/rest/class-items-controller.php:201
 msgid "Status of the item."
 msgstr ""
 
-#: includes/rest/class-accounts-controller.php:189
+#: includes/rest/class-accounts-controller.php:187
 #: includes/rest/class-bill-items-controller.php:483
-#: includes/rest/class-categories-controller.php:118
+#: includes/rest/class-categories-controller.php:117
 #: includes/rest/class-invoice-items-controller.php:484
-#: includes/rest/class-items-controller.php:237
+#: includes/rest/class-items-controller.php:229
 msgid "Created date of the account."
 msgstr ""
 
@@ -10787,13 +4543,13 @@ msgstr ""
 
 #: includes/rest/class-bill-items-controller.php:397
 #: includes/rest/class-invoice-items-controller.php:398
-#: includes/rest/class-items-controller.php:79
+#: includes/rest/class-items-controller.php:81
 msgid "Name of the item."
 msgstr ""
 
 #: includes/rest/class-bill-items-controller.php:406
 #: includes/rest/class-invoice-items-controller.php:407
-#: includes/rest/class-items-controller.php:88
+#: includes/rest/class-items-controller.php:90
 msgid "Sku of the item."
 msgstr ""
 
@@ -10938,109 +4694,117 @@ msgstr ""
 msgid "Created date of the bill."
 msgstr ""
 
-#: includes/rest/class-categories-controller.php:77
+#: includes/rest/class-categories-controller.php:76
 msgid "Unique identifier for the category."
 msgstr ""
 
-#: includes/rest/class-categories-controller.php:86
+#: includes/rest/class-categories-controller.php:85
 msgid "Name of the category."
 msgstr ""
 
-#: includes/rest/class-categories-controller.php:95
+#: includes/rest/class-categories-controller.php:94
 msgid "Type of the category."
 msgstr ""
 
-#: includes/rest/class-categories-controller.php:105
+#: includes/rest/class-categories-controller.php:104
 msgid "Color of the category."
 msgstr ""
 
-#: includes/rest/class-categories-controller.php:156
-msgid "."
-msgstr ""
-
-#: includes/rest/class-countries-controller.php:105
-msgid "ISO3166 alpha-2 country code."
-msgstr ""
-
-#: includes/rest/class-countries-controller.php:111
-msgid "Full name of country."
-msgstr ""
-
-#: includes/rest/class-currencies-controller.php:247
-msgid "Unique identifier for the currency."
-msgstr ""
-
-#: includes/rest/class-currencies-controller.php:256
-msgid "Name of the currency."
-msgstr ""
-
-#: includes/rest/class-currencies-controller.php:265
-msgid "Unique code for the currency."
-msgstr ""
-
-#: includes/rest/class-currencies-controller.php:274
-msgid "Current rate for the currency."
-msgstr ""
-
-#: includes/rest/class-currencies-controller.php:283
-#: includes/rest/class-currency-codes-controller.php:140
-msgid "Precision count."
-msgstr ""
-
-#: includes/rest/class-currencies-controller.php:291
-msgid "Currency Sumbol."
-msgstr ""
-
-#: includes/rest/class-currencies-controller.php:300
-msgid "Position."
-msgstr ""
-
-#: includes/rest/class-currencies-controller.php:310
-msgid "Decimal separator count."
-msgstr ""
-
-#: includes/rest/class-currencies-controller.php:319
-msgid "Thousand separator count."
-msgstr ""
-
-#: includes/rest/class-currencies-controller.php:328
-msgid "Created date of the currency."
-msgstr ""
-
-#: includes/rest/class-currency-codes-controller.php:58
+#: includes/rest/class-codes-controller.php:104
 msgid "There are no currencies matching these parameters."
 msgstr ""
 
-#: includes/rest/class-currency-codes-controller.php:122
+#: includes/rest/class-codes-controller.php:168
 msgid "ISO4217 currency code."
 msgstr ""
 
-#: includes/rest/class-currency-codes-controller.php:128
+#: includes/rest/class-codes-controller.php:174
 msgid "Full name of currency."
 msgstr ""
 
-#: includes/rest/class-currency-codes-controller.php:134
+#: includes/rest/class-codes-controller.php:180
 msgid "Currency symbol."
 msgstr ""
 
-#: includes/rest/class-currency-codes-controller.php:146
+#: includes/rest/class-codes-controller.php:186
+#: includes/rest/class-currencies-controller.php:115
+msgid "Precision count."
+msgstr ""
+
+#: includes/rest/class-codes-controller.php:192
 msgid "Subunit count."
 msgstr ""
 
-#: includes/rest/class-currency-codes-controller.php:152
+#: includes/rest/class-codes-controller.php:198
 msgid "Currency position."
 msgstr ""
 
-#: includes/rest/class-currency-codes-controller.php:158
+#: includes/rest/class-codes-controller.php:204
 msgid "Decimal separator."
 msgstr ""
 
-#: includes/rest/class-currency-codes-controller.php:164
+#: includes/rest/class-codes-controller.php:210
 msgid "Thousand separator."
 msgstr ""
 
-#: includes/rest/class-data-controller.php:73
-msgid "Please assign a data type"
+#: includes/rest/class-countries-controller.php:104
+msgid "ISO3166 alpha-2 country code."
+msgstr ""
+
+#: includes/rest/class-countries-controller.php:110
+msgid "Full name of country."
+msgstr ""
+
+#: includes/rest/class-currencies-controller.php:79
+msgid "Unique identifier for the currency."
+msgstr ""
+
+#: includes/rest/class-currencies-controller.php:88
+msgid "Name of the currency."
+msgstr ""
+
+#: includes/rest/class-currencies-controller.php:97
+msgid "Unique code for the currency."
+msgstr ""
+
+#: includes/rest/class-currencies-controller.php:106
+msgid "Current rate for the currency."
+msgstr ""
+
+#: includes/rest/class-currencies-controller.php:123
+msgid "Currency Sumbol."
+msgstr ""
+
+#: includes/rest/class-currencies-controller.php:132
+msgid "Position."
+msgstr ""
+
+#: includes/rest/class-currencies-controller.php:142
+msgid "Decimal separator count."
+msgstr ""
+
+#: includes/rest/class-currencies-controller.php:151
+msgid "Thousand separator count."
+msgstr ""
+
+#: includes/rest/class-currencies-controller.php:165
+msgid "Created date of the currency."
+msgstr ""
+
+#: includes/rest/class-data-controller.php:92
+msgid "List of countries."
+msgstr ""
+
+#: includes/rest/class-data-controller.php:96
+msgid "List of currencies."
+msgstr ""
+
+#: includes/rest/class-data-controller.php:166
+msgid "Data resource ID."
+msgstr ""
+
+#: includes/rest/class-data-controller.php:172
+msgid "Data resource description."
 msgstr ""
 
 #: includes/rest/class-invoice-histories-controller.php:365
@@ -11193,101 +4957,106 @@ msgstr ""
 msgid "Created date of the invoice."
 msgstr ""
 
-#: includes/rest/class-items-controller.php:70
+#: includes/rest/class-items-controller.php:72
 msgid "Unique identifier for the item."
 msgstr ""
 
-#: includes/rest/class-items-controller.php:96
+#: includes/rest/class-items-controller.php:98
 msgid "Thumbnail of the item"
 msgstr ""
 
-#: includes/rest/class-items-controller.php:119
+#: includes/rest/class-items-controller.php:121
 msgid "Description of the item."
 msgstr ""
 
-#: includes/rest/class-items-controller.php:127
+#: includes/rest/class-items-controller.php:129
 msgid "Sale price of the item"
 msgstr ""
 
-#: includes/rest/class-items-controller.php:137
+#: includes/rest/class-items-controller.php:139
 msgid "Purchase price of the item"
 msgstr ""
 
-#: includes/rest/class-items-controller.php:147
+#: includes/rest/class-items-controller.php:149
 msgid "Quantity of the item."
 msgstr ""
 
-#: includes/rest/class-items-controller.php:157
+#: includes/rest/class-items-controller.php:159
 msgid "Category of the item."
 msgstr ""
 
-#: includes/rest/class-items-controller.php:181
+#: includes/rest/class-items-controller.php:183
 msgid "Sales tax of the item."
 msgstr ""
 
-#: includes/rest/class-items-controller.php:190
+#: includes/rest/class-items-controller.php:192
 msgid "Purchase tax of the item."
 msgstr ""
 
-#: includes/rest/class-items-controller.php:204
-msgid "Creator of the item"
+#: includes/rest/class-rest-controller.php:77
+#. translators: %s: items limit
+msgid "Unable to accept more than %s items for this request."
 msgstr ""
 
-#: includes/rest/class-settings-controller.php:62
-msgid "Unique identifier for settings option."
+#: includes/rest/class-rest-controller.php:284
+msgid "List of created resources."
 msgstr ""
 
-#: includes/rest/class-settings-controller.php:131
-#: includes/rest/class-settings-controller.php:169
-#: includes/rest/class-settings-controller.php:202
-msgid "Invalid setting field."
+#: includes/rest/class-rest-controller.php:292
+msgid "List of updated resources."
 msgstr ""
 
-#: includes/rest/class-settings-controller.php:151
-msgid "Sorry, you cannot edit this resource."
+#: includes/rest/class-rest-controller.php:300
+msgid "List of delete resources."
 msgstr ""
 
-#: includes/rest/class-settings-controller.php:396
+#: includes/rest/class-setting-options-controller.php:42
+#: includes/rest/class-settings-controller.php:42
 msgid "A unique identifier for the setting."
 msgstr ""
 
-#: includes/rest/class-settings-controller.php:405
-msgid "An identifier for the field this setting belongs to tab."
+#: includes/rest/class-setting-options-controller.php:51
+#: includes/rest/class-settings-controller.php:51
+msgid "An identifier for the group this setting belongs to."
 msgstr ""
 
-#: includes/rest/class-settings-controller.php:414
-msgid "An identifier for the feild this setting belongs to section."
-msgstr ""
-
-#: includes/rest/class-settings-controller.php:423
+#: includes/rest/class-setting-options-controller.php:60
+#: includes/rest/class-settings-controller.php:60
 msgid "A human readable label for the setting used in interfaces."
 msgstr ""
 
-#: includes/rest/class-settings-controller.php:432
+#: includes/rest/class-setting-options-controller.php:69
+#: includes/rest/class-settings-controller.php:69
 msgid "A human readable description for the setting used in interfaces."
 msgstr ""
 
-#: includes/rest/class-settings-controller.php:441
+#: includes/rest/class-setting-options-controller.php:78
+#: includes/rest/class-settings-controller.php:78
 msgid "Setting value."
 msgstr ""
 
-#: includes/rest/class-settings-controller.php:446
+#: includes/rest/class-setting-options-controller.php:83
+#: includes/rest/class-settings-controller.php:83
 msgid "Default value for the setting."
 msgstr ""
 
-#: includes/rest/class-settings-controller.php:452
+#: includes/rest/class-setting-options-controller.php:89
+#: includes/rest/class-settings-controller.php:89
 msgid "Additional help text shown to the user about the setting."
 msgstr ""
 
-#: includes/rest/class-settings-controller.php:461
+#: includes/rest/class-setting-options-controller.php:98
+#: includes/rest/class-settings-controller.php:98
 msgid "Placeholder text to be displayed in text inputs."
 msgstr ""
 
-#: includes/rest/class-settings-controller.php:470
+#: includes/rest/class-setting-options-controller.php:107
+#: includes/rest/class-settings-controller.php:107
 msgid "Type of setting."
 msgstr ""
 
-#: includes/rest/class-settings-controller.php:492
+#: includes/rest/class-setting-options-controller.php:117
+#: includes/rest/class-settings-controller.php:117
 msgid ""
 "Array of options (key value pairs) for inputs such as select, multiselect, "
 "and radio buttons."
@@ -11363,7 +5132,7 @@ msgstr ""
 msgid "Cheatin&#8217; huh?"
 msgstr ""
 
-#: wp-ever-accounting.php:270
+#: wp-ever-accounting.php:271
 #. translators: 1: error message 2: file name and path 3: line number
 msgid "%1$s in %2$s on line %3$s"
 msgstr ""
@@ -11380,204 +5149,98 @@ msgstr ""
 msgid "everaccounting"
 msgstr ""
 
-#: includes/class-install.php:697
+#: includes/class-install.php:724
 msgctxt "User role"
 msgid "Accounting Manager"
 msgstr ""
 
-#: includes/class-install.php:698
+#: includes/class-install.php:725
 msgctxt "User role"
 msgid "Accountant"
 msgstr ""
 
-#: includes/data/states.php:1560
-msgctxt "district"
-msgid "Belgrade"
+#: packages/components/image-upload/index.js:105
+msgid "Add an image"
 msgstr ""
 
-#: includes/data/states.php:1561
-msgctxt "district"
-msgid "Bor"
+#: packages/components/image-upload/index.js:30
+msgid "Select or upload image"
 msgstr ""
 
-#: includes/data/states.php:1562
-msgctxt "district"
-msgid "Braničevo"
+#: packages/components/image-upload/index.js:87
+msgid "Remove image"
 msgstr ""
 
-#: includes/data/states.php:1563
-msgctxt "district"
-msgid "Central Banat"
+#: packages/components/list-table/bulk-actions.js:37
+msgid "Apply"
 msgstr ""
 
-#: includes/data/states.php:1564
-msgctxt "district"
-msgid "Danube"
+#: packages/components/list-table/bulk-actions.js:9
+msgid "Bulk Actions"
 msgstr ""
 
-#: includes/data/states.php:1565
-msgctxt "district"
-msgid "Jablanica"
+#: packages/components/list-table/table-filter.js:77
+msgid "Clear all filters"
 msgstr ""
 
-#: includes/data/states.php:1566
-msgctxt "district"
-msgid "Kolubara"
+#: packages/components/pagination/index.js:117
+msgid "%s item"
+msgid_plural "%s items"
+msgstr[0] ""
+msgstr[1] ""
+
+#: packages/components/pagination/index.js:45
+msgid "First page"
 msgstr ""
 
-#: includes/data/states.php:1567
-msgctxt "district"
-msgid "Mačva"
+#: packages/components/pagination/index.js:53
+msgid "Prev page"
 msgstr ""
 
-#: includes/data/states.php:1568
-msgctxt "district"
-msgid "Morava"
+#: packages/components/pagination/index.js:65
+msgid "Current Page"
 msgstr ""
 
-#: includes/data/states.php:1569
-msgctxt "district"
-msgid "Nišava"
+#: packages/components/pagination/index.js:70
+msgid "%d of %d"
 msgstr ""
 
-#: includes/data/states.php:1570
-msgctxt "district"
-msgid "North Bačka"
+#: packages/components/pagination/index.js:78
+msgid "Next page"
 msgstr ""
 
-#: includes/data/states.php:1571
-msgctxt "district"
-msgid "North Banat"
+#: packages/components/pagination/index.js:86
+msgid "Last page"
 msgstr ""
 
-#: includes/data/states.php:1572
-msgctxt "district"
-msgid "Pčinja"
+#: packages/components/select-control/currency.js:34
+msgid "No currency"
 msgstr ""
 
-#: includes/data/states.php:1573
-msgctxt "district"
-msgid "Pirot"
+#: packages/components/select-control/currency.js:35
+#: packages/components/select-control/customer.js:36
+#: packages/components/select-control/vendor.js:36
+msgid "Type to search"
 msgstr ""
 
-#: includes/data/states.php:1574
-msgctxt "district"
-msgid "Pomoravlje"
+#: packages/components/select-control/customer.js:35
+msgid "No customers"
 msgstr ""
 
-#: includes/data/states.php:1575
-msgctxt "district"
-msgid "Rasina"
+#: packages/components/select-control/vendor.js:35
+msgid "No vendors"
 msgstr ""
 
-#: includes/data/states.php:1576
-msgctxt "district"
-msgid "Raška"
+#: packages/components/table/body.js:36
+#: packages/components/table/header.js:49
+msgid "Select All"
 msgstr ""
 
-#: includes/data/states.php:1577
-msgctxt "district"
-msgid "South Bačka"
+#: packages/components/table/body.js:63
+msgid "No results"
 msgstr ""
 
-#: includes/data/states.php:1578
-msgctxt "district"
-msgid "South Banat"
-msgstr ""
-
-#: includes/data/states.php:1579
-msgctxt "district"
-msgid "Srem"
-msgstr ""
-
-#: includes/data/states.php:1580
-msgctxt "district"
-msgid "Šumadija"
-msgstr ""
-
-#: includes/data/states.php:1581
-msgctxt "district"
-msgid "Toplica"
-msgstr ""
-
-#: includes/data/states.php:1582
-msgctxt "district"
-msgid "West Bačka"
-msgstr ""
-
-#: includes/data/states.php:1583
-msgctxt "district"
-msgid "Zaječar"
-msgstr ""
-
-#: includes/data/states.php:1584
-msgctxt "district"
-msgid "Zlatibor"
-msgstr ""
-
-#: includes/data/states.php:1585
-msgctxt "district"
-msgid "Kosovo"
-msgstr ""
-
-#: includes/data/states.php:1586
-msgctxt "district"
-msgid "Peć"
-msgstr ""
-
-#: includes/data/states.php:1587
-msgctxt "district"
-msgid "Prizren"
-msgstr ""
-
-#: includes/data/states.php:1588
-msgctxt "district"
-msgid "Kosovska Mitrovica"
-msgstr ""
-
-#: includes/data/states.php:1589
-msgctxt "district"
-msgid "Kosovo-Pomoravlje"
-msgstr ""
-
-#: includes/data/states.php:1590
-msgctxt "district"
-msgid "Kosovo-Metohija"
-msgstr ""
-
-#: includes/data/states.php:1591
-msgctxt "district"
-msgid "Vojvodina"
-msgstr ""
-
-#: includes/data/states.php:1746
-msgctxt "US state of Georgia"
-msgid "Georgia"
-msgstr ""
-
-#: client/sales/revenues/revenues.js:157
-msgid "delete"
-msgstr ""
-
-#: client/sales/revenues/revenues.js:215
-msgid "In"
-msgstr ""
-
-#: client/sales/revenues/revenues.js:219
-msgid "No In"
-msgstr ""
-
-#: client/sales/revenues/revenues.js:258
-msgid "Less Than"
-msgstr ""
-
-#: client/sales/revenues/revenues.js:262
-msgid "More Than"
-msgstr ""
-
-#: client/sales/revenues/revenues.js:244
-#. Sentence fragment, logical, "Between" refers to average order value of a customer, between two given amounts. Screenshot for context: https://cloudup.com/cCsm3GeXJbE
-msgctxt "date"
-msgid "Between"
+#: packages/data/entities.js:21
+msgid "Products"
 msgstr ""
 

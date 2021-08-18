@@ -28,49 +28,44 @@ import './style.scss';
  * @param  {Object}   $0.children  Array of children to be rendered inside the notice list.
  * @return {Object}                The rendered notices list.
  */
-function SnackbarList( {
-	notices = [],
-	className,
-	children,
-	onRemove = noop,
-} ) {
+function SnackbarList({ notices = [], className, children, onRemove = noop }) {
 	const isReducedMotion = useReducedMotion();
-	const [ refMap ] = useState( () => new WeakMap() );
-	const transitions = useTransition( notices, ( notice ) => notice.id, {
+	const [refMap] = useState(() => new WeakMap());
+	const transitions = useTransition(notices, (notice) => notice.id, {
 		from: { opacity: 0, height: 0 },
-		enter: ( item ) => async ( next ) =>
-			await next( {
+		enter: (item) => async (next) =>
+			await next({
 				opacity: 1,
-				height: refMap.get( item ).offsetHeight,
-			} ),
-		leave: () => async ( next ) => {
-			await next( { opacity: 0 } );
-			await next( { height: 0 } );
+				height: refMap.get(item).offsetHeight,
+			}),
+		leave: () => async (next) => {
+			await next({ opacity: 0 });
+			await next({ height: 0 });
 		},
 		immediate: isReducedMotion,
-	} );
+	});
 
-	className = classnames( 'ea-snackbar__container', className );
-	const removeNotice = ( notice ) => () => onRemove( notice.id );
+	className = classnames('ea-snackbar__container', className);
+	const removeNotice = (notice) => () => onRemove(notice.id);
 
 	return (
-		<div className={ className }>
-			{ children }
-			{ transitions.map( ( { item: notice, key, props: style } ) => (
-				<animated.div key={ key } style={ style }>
+		<div className={className}>
+			{children}
+			{transitions.map(({ item: notice, key, props: style }) => (
+				<animated.div key={key} style={style}>
 					<div
 						className="ea-snackbar__notice-container"
-						ref={ ( ref ) => ref && refMap.set( notice, ref ) }
+						ref={(ref) => ref && refMap.set(notice, ref)}
 					>
 						<Snackbar
-							{ ...omit( notice, [ 'content' ] ) }
-							onRemove={ removeNotice( notice ) }
+							{...omit(notice, ['content'])}
+							onRemove={removeNotice(notice)}
 						>
-							{ notice.content }
+							{notice.content}
 						</Snackbar>
 					</div>
 				</animated.div>
-			) ) }
+			))}
 		</div>
 	);
 }

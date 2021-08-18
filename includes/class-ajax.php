@@ -9,9 +9,8 @@
 
 namespace EverAccounting;
 
-use EverAccounting\Models\Bill;
-use EverAccounting\Models\Invoice;
-use EverAccounting\Models\Note;
+use EverAccounting\Invoice;
+use EverAccounting\Note;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -181,18 +180,18 @@ class Ajax {
 		$search = isset( $_REQUEST['search'] ) ? eaccounting_clean( $_REQUEST['search'] ) : '';
 		$page   = isset( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1;
 
-
-		wp_send_json_success(
-			eaccounting_get_categories(
-				array(
-					'search' => $search,
-					'type'   => 'expense',
-					'page'   => $page,
-					'return' => 'raw',
-					'status' => 'active',
-				)
+		$categories = eaccounting_get_categories(
+			array(
+				'search' => $search,
+				'type'   => 'expense',
+				'page'   => $page,
+				'status' => 'active',
 			)
 		);
+		$categories = array_map( function ($category){
+			return $category->to_array();
+		}, $categories );
+		wp_send_json_success( $categories );
 	}
 
 	/**
@@ -205,18 +204,18 @@ class Ajax {
 		$search = isset( $_REQUEST['search'] ) ? eaccounting_clean( $_REQUEST['search'] ) : '';
 		$page   = isset( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1;
 
-
-		wp_send_json_success(
-			eaccounting_get_categories(
-				array(
-					'search' => $search,
-					'type'   => 'income',
-					'page'   => $page,
-					'return' => 'raw',
-					'status' => 'active',
-				)
+		$categories = eaccounting_get_categories(
+			array(
+				'search' => $search,
+				'type'   => 'income',
+				'page'   => $page,
+				'status' => 'active',
 			)
 		);
+		$categories = array_map( function ($category){
+			return $category->to_array();
+		}, $categories );
+		wp_send_json_success( $categories );
 	}
 
 	/**
@@ -228,19 +227,18 @@ class Ajax {
 		self::verify_nonce( 'ea_categories' );
 		$search = isset( $_REQUEST['search'] ) ? eaccounting_clean( $_REQUEST['search'] ) : '';
 		$page   = isset( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1;
-
-
-		wp_send_json_success(
-			eaccounting_get_categories(
-				array(
-					'search' => $search,
-					'type'   => 'item',
-					'page'   => $page,
-					'return' => 'raw',
-					'status' => 'active',
-				)
+		$categories = eaccounting_get_categories(
+			array(
+				'search' => $search,
+				'type'   => 'item',
+				'page'   => $page,
+				'status' => 'active',
 			)
 		);
+		$categories = array_map( function ($category){
+			return $category->to_array();
+		}, $categories );
+		wp_send_json_success( $categories );
 	}
 
 	/**
@@ -475,20 +473,23 @@ class Ajax {
 	 */
 	public static function get_customers() {
 		self::verify_nonce( 'ea_get_customers' );
-		$search = isset( $_REQUEST['search'] ) ? eaccounting_clean( $_REQUEST['search'] ) : '';
-		$page   = isset( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1;
+		$search = filter_input( INPUT_POST,'search', FILTER_DEFAULT);
+		$search = isset( $search ) ? eaccounting_clean( $search ) : '';
+		$page = filter_input( INPUT_POST,'page', FILTER_DEFAULT);
+		$page   = isset( $page ) ? absint( $page ) : 1;
 
-
-		wp_send_json_success(
-			eaccounting_get_customers(
-				array(
-					'search' => $search,
-					'page'   => $page,
-					'return' => 'raw',
-					'status' => 'active',
-				)
+		$customers = eaccounting_get_contacts(
+			array(
+				'search' => $search,
+				'type' => 'customer',
+				'page' => $page,
+				'status' => 'active',
 			)
 		);
+		$customers = array_map( function ( $customers ){
+			return $customers->to_array();
+		}, $customers );
+		wp_send_json_success( $customers );
 	}
 
 
@@ -502,7 +503,8 @@ class Ajax {
 		self::verify_nonce( 'ea_edit_customer' );
 		self::check_permission( 'ea_manage_customer' );
 		$posted  = eaccounting_clean( $_REQUEST );
-		$created = eaccounting_insert_customer( $posted );
+		$posted['type'] = 'customer';
+		$created = eaccounting_insert_contact( $posted );
 		if ( is_wp_error( $created ) || ! $created->exists() ) {
 			wp_send_json_error(
 				array(
@@ -849,8 +851,8 @@ class Ajax {
 		self::verify_nonce( 'ea_edit_vendor' );
 		self::check_permission( 'ea_manage_vendor' );
 		$posted = eaccounting_clean( wp_unslash( $_REQUEST ) );
-
-		$created = eaccounting_insert_vendor( $posted );
+		$posted['type'] = 'vendor';
+		$created = eaccounting_insert_contact( $posted );
 		if ( is_wp_error( $created ) || ! $created->exists() ) {
 			wp_send_json_error(
 				array(
@@ -906,20 +908,22 @@ class Ajax {
 	 */
 	public static function get_accounts() {
 		self::verify_nonce( 'ea_get_accounts' );
-		$search = isset( $_REQUEST['search'] ) ? eaccounting_clean( $_REQUEST['search'] ) : '';
-		$page   = isset( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1;
+		$search = filter_input( INPUT_POST,'search', FILTER_DEFAULT );
+		$search = isset( $search ) ? eaccounting_clean( $search ) : '';
+		$page = filter_input( INPUT_POST, 'page', FILTER_VALIDATE_INT );
+		$page   = isset( $page ) ? absint( $page ) : 1;
 
-
-		wp_send_json_success(
-			eaccounting_get_accounts(
-				array(
-					'search' => $search,
-					'page'   => $page,
-					'return' => 'raw',
-					'status' => 'active',
-				)
+		$accounts = eaccounting_get_accounts(
+			array(
+				'search' => $search,
+				'page' => $page,
+				'status' => 'active',
 			)
 		);
+		$accounts = array_map( function ($accounts){
+			return $accounts->to_array();
+		}, $accounts );
+		wp_send_json_success( $accounts );
 	}
 
 	/**
@@ -1073,19 +1077,23 @@ class Ajax {
 	 */
 	public static function get_items() {
 		self::verify_nonce( 'ea_get_items' );
-		self::check_permission( 'manage_eaccounting' );
+		self::check_permission( 'ea_manage_item' );
 
-		$search = isset( $_REQUEST['search'] ) ? eaccounting_clean( $_REQUEST['search'] ) : '';
-
-		wp_send_json_success(
-			eaccounting_get_items(
-				array(
-					'search' => $search,
-					'return' => 'raw',
-					'status' => 'active',
-				)
+		$search = filter_input( INPUT_POST, 'search', FILTER_DEFAULT );
+		$search = isset( $search ) ? eaccounting_clean( $search ) : '';
+		$page = filter_input( INPUT_POST,'page', FILTER_VALIDATE_INT );
+		$page = isset( $page ) ? absint( $page ) : 1;
+		$items = eaccounting_get_items(
+			array(
+				'search' => $search,
+				'page' => $page,
+				'status' => 'active',
 			)
 		);
+		$items = array_map( function ( $items ){
+			return $items->to_array();
+		}, $items );
+		wp_send_json_success( $items );
 	}
 
 	/**

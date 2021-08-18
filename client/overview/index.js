@@ -1,63 +1,116 @@
 /**
+ * WordPress dependencies
+ */
+import { render, forwardRef, useMemo } from '@wordpress/element';
+import domReady from '@wordpress/dom-ready';
+import { __ } from '@wordpress/i18n';
+
+/**
  * External dependencies
  */
-// eslint-disable-next-line no-unused-vars
+import { TextControl, EntitySelect } from '@eaccounting/components';
 /**
- * Internal dependencies
- */
-import { EntitySelect } from '@eaccounting/components';
-import { getQuery } from '@eaccounting/navigation';
-/**
- * WordPress dependencies
- */
-import { RichText, useBlockProps } from '@wordpress/block-editor';
-import { __ } from '@wordpress/i18n';
-/**
- * WordPress dependencies
+ * External dependencies
  */
 
-const autoConfigs = [
-	{
-		name: 'Autocomplete',
-		// The prefix that triggers this completer
-		triggerPrefix: '',
-		// The option data
-		options: [
-			{ value: '🍎', label: 'Apple', id: 1 },
-			{ value: '🍊', label: 'Orange', id: 2 },
-			{ value: '🍇', label: 'Grapes', id: 3 },
-		],
-		// Returns a label for an option like "🍊 Orange"
-		getOptionLabel: ( option ) => (
-			<span>
-				<span className="icon">{ option.value }</span> { option.label }
-			</span>
-		),
-		// Declares that options should be matched by their name or value
-		getOptionKeywords: ( option ) => [ option.label, option.value ],
-		// Declares that the Grapes option is disabled
-		getOptionCompletion: ( option ) => (
-			<abbr title={ option.label }>{ option.value }</abbr>
-		),
-	},
-];
+import { useForm, useField, splitFormProps } from 'react-form';
+import { useDispatch, useSelect } from '@wordpress/data';
 
-export default function Overview() {
-	const { account_id } = getQuery();
-	console.log( account_id );
+const InputField = forwardRef((props, ref) => {
+	const { component = 'input', ...otherProps } = props;
+	// Let's use splitFormProps to get form-specific props
+	const [field, fieldOptions, rest] = splitFormProps(otherProps);
+
+	// Use the useField hook with a field and field options
+	// to access field state
+	const {
+		meta: { error },
+		getInputProps,
+		setValue,
+	} = useField(field, fieldOptions);
+	// Build the field
+	const Comp = component;
 	return (
-		<>
+		<Comp
+			{...getInputProps({ ref, ...rest })}
+			onChange={setValue}
+			help={error}
+		/>
+	);
+});
+
+export default function Overview(props) {
+	const defaultValues = useSelect(
+		(select) => select('ea/core').getEntityRecord('items', 2),
+		[]
+	);
+
+	const { saveEntityRecord } = useDispatch('ea/core');
+
+	const {
+		Form,
+		meta: { isSubmitting, canSubmit },
+		reset,
+	} = useForm({
+		defaultValues,
+		validate: (values) => {
+			return false;
+		},
+		onSubmit: async (values) => {
+			await saveEntityRecord('items', values);
+			reset(true);
+		},
+		debugForm: true,
+	});
+
+	return (
+		<Form>
+			<InputField
+				required
+				label={__('Name')}
+				field="name"
+				component={TextControl}
+			/>
+			<InputField
+				required
+				label={__('Sale Price')}
+				field="sale_price"
+				component={TextControl}
+				filterValue={(val) => val.replace(/[^0-9.]/g, '')}
+			/>
+			<InputField
+				required
+				label={__('Purchase Price')}
+				field="purchase_price"
+				component={TextControl}
+				filterValue={(val) => val.replace(/[^0-9.]/g, '')}
+			/>
+			<EntitySelect entityName={'items'} label={__('Item')} />
 			<EntitySelect
-				entityName={ 'items' }
-				label={ 'Items' }
-				creatable={ true }
+				entityName={'incomeCategories'}
+				label={__('incomeCategories')}
 			/>
-			<RichText
-				autocompleters={ autoConfigs }
-				aria-label={ __( 'Button text' ) }
-				placeholder={ __( 'Add button text…' ) }
-				withoutInteractiveFormatting
+			<EntitySelect
+				entityName={'expenseCategories'}
+				label={__('expenseCategories')}
 			/>
-		</>
+			<EntitySelect
+				entityName={'itemCategories'}
+				label={__('itemCategories')}
+			/>
+			<EntitySelect entityName={'customers'} label={__('customers')} />
+			<EntitySelect entityName={'vendors'} label={__('vendors')} />
+			<EntitySelect entityName={'accounts'} label={__('accounts')} />
+
+			{isSubmitting ? (
+				'Submitting...'
+			) : (
+				<div>
+					<button type="submit" disabled={!canSubmit}>
+						Submit
+					</button>
+				</div>
+			)}
+		</Form>
 	);
 }

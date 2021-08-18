@@ -25,8 +25,8 @@ import {
 	vendors,
 } from './entities';
 
-const getEntityProps = ( entityName ) => {
-	switch ( entityName ) {
+const getEntityProps = (entityName) => {
+	switch (entityName) {
 		case 'customers':
 			return customers;
 		case 'vendors':
@@ -48,120 +48,120 @@ const getEntityProps = ( entityName ) => {
 	}
 };
 
-export default function EntitySelect( args ) {
+export default function EntitySelect(args) {
 	const {
 		entityName,
 		entity_id,
 		baseQuery = {},
 		creatable,
 		modal,
-		onChange = ( x ) => x,
+		onChange = (x) => x,
 		...props
 	} = {
 		...args,
-		...getEntityProps( args.entityName ),
+		...getEntityProps(args.entityName),
 	};
 	const ref = useRef();
-	const [ query, setQuery ] = useState( baseQuery );
-	const [ selected, setSelected ] = useState( [] );
-	const [ isModalOpen, setModalStatus ] = useState( false );
-	const entity_ids = entity_id && castArray( entity_id );
+	const [query, setQuery] = useState(baseQuery);
+	const [selected, setSelected] = useState([]);
+	const [isModalOpen, setModalStatus] = useState(false);
+	const entity_ids = entity_id && castArray(entity_id);
 	const selected_entities = useSelect(
-		( select ) => {
+		(select) => {
 			return (
-				! isEmpty( entity_ids ) &&
-				select( CORE_STORE_NAME ).getEntityRecords( entityName, {
+				!isEmpty(entity_ids) &&
+				select(CORE_STORE_NAME).getEntityRecords(entityName, {
 					include: entity_ids,
-				} )
+				})
 			);
 		},
-		[ entity_ids ]
+		[entity_ids]
 	);
-	const prevSelected = useRef( selected_entities ).current;
+	const prevSelected = useRef(selected_entities).current;
 	const options = useSelect(
-		( select ) =>
-			! isEmpty( entityName ) &&
-			select( CORE_STORE_NAME ).getEntityRecords( entityName, query ),
-		[ query ]
+		(select) =>
+			!isEmpty(entityName) &&
+			select(CORE_STORE_NAME).getEntityRecords(entityName, query),
+		[query]
 	);
 
 	const isLoading = useSelect(
-		( select ) => {
-			const { isResolving } = select( CORE_STORE_NAME );
+		(select) => {
+			const { isResolving } = select(CORE_STORE_NAME);
 			const include = {
 				include: entity_ids,
 			};
 			return (
-				isEmpty( entityName ) &&
-				( isResolving( 'getEntityRecords', [ entityName, query ] ) ||
-					isResolving( 'getEntityRecords', [ entityName, include ] ) )
+				!isEmpty(entityName) &&
+				(isResolving('getEntityRecords', [entityName, query]) ||
+					isResolving('getEntityRecords', [entityName, include]))
 			);
 		},
-		[ query ]
+		[query]
 	);
 
-	useEffect( () => {
-		if ( ! isEqual( selected_entities, prevSelected ) ) {
-			handleChange( selected_entities );
+	useEffect(() => {
+		if (!isEqual(selected_entities, prevSelected)) {
+			handleChange(selected_entities);
 		}
-	}, [ selected_entities ] );
+	}, [selected_entities]);
 
-	const handleChange = ( val ) => {
-		if ( ! isEqual( val, selected ) ) {
-			setSelected( val );
-			onChange( val );
+	const handleChange = (val) => {
+		if (!isEqual(val, selected)) {
+			setSelected(val);
+			onChange(val);
 		}
 	};
-	const onInputChange = ( search, { action } ) => {
-		if ( action === 'input-change' ) {
-			setQuery( ( query ) => ( { ...query, search } ) );
+	const onInputChange = (search, { action }) => {
+		if (action === 'input-change') {
+			setQuery((query) => ({ ...query, search }));
 		}
 	};
 
-	const onClick = ( e ) => {
+	const onClick = (e) => {
 		e.preventDefault();
 		e.stopPropagation();
 		ref.current.select.blur();
-		setModalStatus( ( open ) => ! open );
+		setModalStatus((open) => !open);
 	};
 
 	const AddButton = () => {
 		return (
 			<Button
 				className="ea-advance-select__add-new-entity"
-				onClick={ onClick }
+				onClick={onClick}
 			>
 				<Icon icon="plus" />
-				{ __( 'Add New' ) }
+				{__('Add New')}
 			</Button>
 		);
 	};
 
-	const handleCreate = async ( item ) => {
-		await ref.current.select.setValue( item );
-		setModalStatus( ( open ) => ! open );
+	const handleCreate = async (item) => {
+		await ref.current.select.setValue(item);
+		setModalStatus((open) => !open);
 	};
 
 	return (
 		<>
 			<SelectControl
-				setRef={ ref }
-				value={ selected }
-				options={ options }
-				onInputChange={ onInputChange }
-				isLoading={ isLoading }
-				onChange={ handleChange }
-				{ ...( !! creatable && { button: <AddButton /> } ) }
-				{ ...props }
+				setRef={ref}
+				value={selected}
+				options={options}
+				onInputChange={onInputChange}
+				isLoading={isLoading}
+				onChange={handleChange}
+				{...(!!creatable && { button: <AddButton /> })}
+				{...props}
 			/>
 
-			{ !! creatable &&
-				!! isModalOpen &&
-				!! modal &&
-				cloneElement( modal, {
-					onClose: () => setModalStatus( ( open ) => ! open ),
+			{!!creatable &&
+				!!isModalOpen &&
+				!!modal &&
+				cloneElement(modal, {
+					onClose: () => setModalStatus((open) => !open),
 					onSave: handleCreate,
-				} ) }
+				})}
 		</>
 	);
 }

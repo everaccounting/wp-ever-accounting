@@ -6,12 +6,12 @@
  * @listens click
  * @return {boolean}}
  */
-export default function isOutside( ev, containerRef ) {
-	if ( ! containerRef ) {
+export default function isOutside(ev, containerRef) {
+	if (!containerRef) {
 		return false;
 	}
 
-	if ( containerRef.contains( ev.target ) ) {
+	if (containerRef.contains(ev.target)) {
 		return false;
 	}
 

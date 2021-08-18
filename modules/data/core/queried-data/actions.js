@@ -12,10 +12,10 @@ import { castArray } from 'lodash';
  *
  * @return {Object} Action object.
  */
-export function receiveItems( items, primaryKey, edits = {} ) {
+export function receiveItems(items, primaryKey, edits = {}) {
 	return {
 		type: 'RECEIVE_ITEMS',
-		items: castArray( items ),
+		items: castArray(items),
 		primaryKey,
 		persistedEdits: edits,
 	};
@@ -31,9 +31,9 @@ export function receiveItems( items, primaryKey, edits = {} ) {
  * @param {?Object} edits Optional edits to reset.
  * @return {Object} Action object.
  */
-export function receiveQueriedItems( items, query = {}, primaryKey, edits ) {
+export function receiveQueriedItems(items, query = {}, primaryKey, edits) {
 	return {
-		...receiveItems( items, primaryKey, edits ),
+		...receiveItems(items, primaryKey, edits),
 		query,
 	};
 }
@@ -47,10 +47,10 @@ export function receiveQueriedItems( items, query = {}, primaryKey, edits ) {
  * @param {boolean}      invalidateCache  Controls whether we want to invalidate the cache.
  * @return {Object} Action object.
  */
-export function removeItems( name, records, invalidateCache = false ) {
+export function removeItems(name, records, invalidateCache = false) {
 	return {
 		type: 'REMOVE_ITEMS',
-		itemIds: castArray( records ),
+		itemIds: castArray(records),
 		name,
 		invalidateCache,
 	};
@@ -64,10 +64,10 @@ export function removeItems( name, records, invalidateCache = false ) {
  *
  * @return {Object} Action object.
  */
-export function receiveItemTotal( total, query = {} ) {
+export function receiveItemTotal(total, query = {}) {
 	return {
 		type: 'RECEIVE_TOTAL',
-		total: parseInt( total, 10 ),
+		total: parseInt(total, 10),
 		query,
 	};
 }
@@ -80,7 +80,7 @@ export function receiveItemTotal( total, query = {} ) {
  *
  * @return {Object} Action object.
  */
-export function receiveError( error, query = {} ) {
+export function receiveError(error, query = {}) {
 	return {
 		type: 'RECEIVE_ERROR',
 		error,

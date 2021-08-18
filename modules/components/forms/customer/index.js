@@ -21,54 +21,53 @@ import TabPanel from '../../tab-panel';
 import { CORE_STORE_NAME } from '@eaccounting/data';
 import DatePicker from '../../date-picker';
 
-export default function CustomerModal( props ) {
+export default function CustomerModal(props) {
 	const {
 		item = { id: undefined, country: '' },
-		onSave = ( x ) => x,
+		onSave = (x) => x,
 		onClose,
 	} = props;
-	const {
-		title = item.id ? __( 'Update Customer' ) : __( 'Add Customer' ),
-	} = props;
-	const {
-		isSavingEntityRecord,
-		entityRecordSaveError,
-		defaultCurrency,
-	} = useSelect( ( select ) => {
-		const {
-			isSavingEntityRecord,
-			getEntityRecordSaveError,
-			getDefaultCurrency,
-		} = select( CORE_STORE_NAME );
-		return {
-			isSavingEntityRecord: isSavingEntityRecord( 'customers', item.id ),
-			entityRecordSaveError: getEntityRecordSaveError(
-				'customers',
-				item.id
-			),
-			defaultCurrency: getDefaultCurrency(),
-		};
-	} );
+	const { title = item.id ? __('Update Customer') : __('Add Customer') } =
+		props;
+	const { isSavingEntityRecord, entityRecordSaveError, defaultCurrency } =
+		useSelect((select) => {
+			const {
+				isSavingEntityRecord,
+				getEntityRecordSaveError,
+				getDefaultCurrency,
+			} = select(CORE_STORE_NAME);
+			return {
+				isSavingEntityRecord: isSavingEntityRecord(
+					'customers',
+					item.id
+				),
+				entityRecordSaveError: getEntityRecordSaveError(
+					'customers',
+					item.id
+				),
+				defaultCurrency: getDefaultCurrency(),
+			};
+		});
 
-	const { saveEntityRecord, createNotice } = useDispatch( CORE_STORE_NAME );
+	const { saveEntityRecord, createNotice } = useDispatch(CORE_STORE_NAME);
 
-	const onSubmit = async ( item ) => {
-		const res = await saveEntityRecord( 'customers', {
+	const onSubmit = async (item) => {
+		const res = await saveEntityRecord('customers', {
 			...item,
-			country: get( item, [ 'country', 'value' ] ),
-		} );
-		if ( ! isSavingEntityRecord && res && res.id ) {
-			createNotice( 'success', __( 'Customer saved successfully!' ) );
-			onSave( res );
+			country: get(item, ['country', 'value']),
+		});
+		if (!isSavingEntityRecord && res && res.id) {
+			createNotice('success', __('Customer saved successfully!'));
+			onSave(res);
 		}
 	};
 
-	const validate = ( values, errors = {} ) => {
-		if ( isEmpty( values.name ) ) {
-			errors.name = __( 'Name is required' );
+	const validate = (values, errors = {}) => {
+		if (isEmpty(values.name)) {
+			errors.name = __('Name is required');
 		}
-		if ( isEmpty( values.currency ) ) {
-			errors.currency = __( 'Currency is required' );
+		if (isEmpty(values.currency)) {
+			errors.currency = __('Currency is required');
 		}
 		return applyFilters(
 			'EACCOUNTING_VALIDATE_CUSTOMER_PARAMS',
@@ -77,84 +76,75 @@ export default function CustomerModal( props ) {
 		);
 	};
 
-	useEffect( () => {
+	useEffect(() => {
 		// eslint-disable-next-line no-unused-expressions
 		entityRecordSaveError &&
-			createNotice( 'error', entityRecordSaveError.message );
-	}, [ entityRecordSaveError ] );
+			createNotice('error', entityRecordSaveError.message);
+	}, [entityRecordSaveError]);
 
 	return (
 		<>
-			<Modal title={ title } onClose={ onClose }>
+			<Modal title={title} onClose={onClose}>
 				<Form
-					initialValues={ {
+					initialValues={{
 						opening_balance: '0.00',
 						currency: defaultCurrency,
 						...item,
-					} }
-					onSubmitCallback={ onSubmit }
-					validate={ validate }
+					}}
+					onSubmitCallback={onSubmit}
+					validate={validate}
 				>
-					{ ( {
-						getInputProps,
-						isValidForm,
-						handleSubmit,
-						values,
-					} ) => (
+					{({ getInputProps, isValidForm, handleSubmit, values }) => (
 						<>
 							<TextControl
-								label={ __( 'Name' ) }
-								{ ...getInputProps( 'name' ) }
+								label={__('Name')}
+								{...getInputProps('name')}
 							/>
 							<EntitySelect
 								required
-								label={ __( 'Currency' ) }
-								entityName={ 'currencies' }
-								creatable={ true }
-								{ ...getInputProps( 'currency' ) }
+								label={__('Currency')}
+								entityName={'currencies'}
+								creatable={true}
+								{...getInputProps('currency')}
 							/>
 							<TabPanel
-								tabs={ [
+								tabs={[
 									{
-										title: __( 'Details' ),
+										title: __('Details'),
 										name: 'details',
 										render: () => {
 											return (
 												<>
 													<TextControl
-														label={ __( 'Email' ) }
+														label={__('Email')}
 														type="email"
-														{ ...getInputProps(
+														{...getInputProps(
 															'email'
-														) }
+														)}
 													/>
 													<TextControl
-														label={ __( 'Phone' ) }
-														{ ...getInputProps(
+														label={__('Phone')}
+														{...getInputProps(
 															'phone'
-														) }
+														)}
 													/>
 													<DatePicker
-														label={ __(
-															'Birth Date'
-														) }
+														label={__('Birth Date')}
 														date={
 															values &&
 															values.birth_date &&
 															values.birth_date
 														}
-														{ ...getInputProps(
+														{...getInputProps(
 															'birth_date'
-														) }
+														)}
 													/>
 													<TextControl
-														label={ __(
-															'Website'
-														) }
-														{ ...getInputProps(
+														label={__('Website')}
+														{...getInputProps(
 															'website'
-														) }
-														validate={ ( val ) =>
+														)}
+														validate={(val) =>
 															val.replace(
 																/[^0-9.]/g,
 																''
@@ -162,82 +152,76 @@ export default function CustomerModal( props ) {
 														}
 													/>
 													<TextControl
-														label={ __(
+														label={__(
 															'Company Name'
-														) }
-														{ ...getInputProps(
+														)}
+														{...getInputProps(
 															'company'
-														) }
+														)}
 													/>
 													<TextControl
-														label={ __( 'Vat' ) }
-														{ ...getInputProps(
+														label={__('Vat')}
+														{...getInputProps(
 															'vat_number'
-														) }
+														)}
 													/>
 												</>
 											);
 										},
 									},
 									{
-										title: __( 'Contact Details' ),
+										title: __('Contact Details'),
 										name: 'contact-details',
 										render: () => {
 											return (
 												<>
 													<TextControl
-														label={ __( 'Street' ) }
-														{ ...getInputProps(
+														label={__('Street')}
+														{...getInputProps(
 															'street'
-														) }
+														)}
 													/>
 													<TextControl
-														label={ __( 'City' ) }
-														{ ...getInputProps(
+														label={__('City')}
+														{...getInputProps(
 															'city'
-														) }
+														)}
 													/>
 													<TextControl
-														label={ __( 'State' ) }
-														{ ...getInputProps(
+														label={__('State')}
+														{...getInputProps(
 															'state'
-														) }
+														)}
 													/>
 													<TextControl
-														label={ __(
-															'Post Code'
-														) }
-														{ ...getInputProps(
+														label={__('Post Code')}
+														{...getInputProps(
 															'post_code'
-														) }
+														)}
 													/>
 													<EntitySelect
-														label={ __(
-															'Country'
-														) }
+														label={__('Country')}
 														type="countries"
-														{ ...getInputProps(
+														{...getInputProps(
 															'country'
-														) }
+														)}
 													/>
 												</>
 											);
 										},
 									},
-								] }
+								]}
 							/>
 							<Button
 								type="submit"
 								isPrimary
-								disabled={
-									! isValidForm || isSavingEntityRecord
-								}
-								onClick={ handleSubmit }
+								disabled={!isValidForm || isSavingEntityRecord}
+								onClick={handleSubmit}
 							>
-								{ __( 'Submit' ) }
+								{__('Submit')}
 							</Button>
 						</>
-					) }
+					)}
 				</Form>
 			</Modal>
 		</>

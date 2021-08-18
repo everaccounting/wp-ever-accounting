@@ -10,7 +10,7 @@ import SelectFilter from './select-filter';
  */
 import { Button, Icon } from '@wordpress/components';
 
-export default function FilterItem( props ) {
+export default function FilterItem(props) {
 	const { filter, config, onFilterChange, query, removeFilter } = props;
 	const { input } = config;
 	const componentMap = {
@@ -20,23 +20,23 @@ export default function FilterItem( props ) {
 		SelectFilter,
 	};
 
-	if ( ! componentMap.hasOwnProperty( input.component ) ) {
+	if (!componentMap.hasOwnProperty(input.component)) {
 		return;
 	}
-	const FilterComponent = componentMap[ input.component ];
+	const FilterComponent = componentMap[input.component];
 	return (
 		<li className="ea-advanced-filters__list-item">
 			<FilterComponent
 				className="ea-advanced-filters__fieldset-item"
-				config={ config }
-				filter={ filter }
-				onFilterChange={ onFilterChange }
-				query={ query }
+				config={config}
+				filter={filter}
+				onFilterChange={onFilterChange}
+				query={query}
 			/>
 
 			<Button
 				className="ea-advanced-filters__remove"
-				onClick={ removeFilter }
+				onClick={removeFilter}
 			>
 				<Icon icon="no-alt" />
 			</Button>

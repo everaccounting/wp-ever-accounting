@@ -10,7 +10,7 @@ defined( 'ABSPATH' ) || exit();
 
 $transfer_id = isset( $_REQUEST['transfer_id'] ) ? absint( $_REQUEST['transfer_id'] ) : null;
 try {
-	$transfer = new \EverAccounting\Models\Transfer( $transfer_id );
+	$transfer = new \EverAccounting\Transfer( $transfer_id );
 } catch ( Exception $e ) {
 	wp_die( $e->getMessage() );
 }

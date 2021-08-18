@@ -9,9 +9,7 @@
 
 namespace EverAccounting\REST;
 
-use EverAccounting\Abstracts\Controller;
 use EverAccounting\Admin\Settings;
-use function cli\err;
 
 defined( 'ABSPATH' ) || die();
 
@@ -20,7 +18,7 @@ defined( 'ABSPATH' ) || die();
  *
  * @package EverAccounting\REST
  */
-class SettingsController extends Controller {
+class Settings_Controller extends REST_Controller {
 	/**
 	 * Route base.
 	 *

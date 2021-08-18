@@ -7,7 +7,7 @@ import classNames from 'classnames';
  */
 import { __ } from '@wordpress/i18n';
 
-function TableHeader( props ) {
+function TableHeader(props) {
 	const {
 		className,
 		columns,
@@ -20,8 +20,8 @@ function TableHeader( props ) {
 	const { orderby, order } = sort;
 
 	return (
-		<tr className={ className }>
-			{ columns.map( ( column, index ) => {
+		<tr className={className}>
+			{columns.map((column, index) => {
 				const { type, columnKey, sortable, isPrimary } = column;
 				const Tag = type === 'selection' ? 'td' : 'th';
 				const colClasses = classNames(
@@ -31,52 +31,52 @@ function TableHeader( props ) {
 					column.columnKey,
 					{
 						'manage-column': true,
-						'column-primary': !! isPrimary,
+						'column-primary': !!isPrimary,
 						'column-cb': column.type === 'selection',
 						sortable,
-						[ 'column-' + column.columnKey ]: !! column.columnKey,
+						['column-' + column.columnKey]: !!column.columnKey,
 						asc: orderby === columnKey && order === 'asc',
 						desc:
-							( orderby === columnKey && order === 'desc' ) ||
+							(orderby === columnKey && order === 'desc') ||
 							orderby !== columnKey,
 					}
 				);
 				return (
 					<Tag
-						key={ index + columnKey }
-						colSpan={ column.colSpan }
-						rowSpan={ column.rowSpan }
+						key={index + columnKey}
+						colSpan={column.colSpan}
+						rowSpan={column.rowSpan}
 						scope="col"
-						className={ colClasses }
-						style={ { width: column.width } }
+						className={colClasses}
+						style={{ width: column.width }}
 					>
-						{ ( type === 'selection' && (
+						{(type === 'selection' && (
 							<>
-								{ /* eslint-disable-next-line jsx-a11y/label-has-for */ }
+								{/* eslint-disable-next-line jsx-a11y/label-has-for */}
 								<label className="screen-reader-text">
-									{ __( 'Select All' ) }
+									{__('Select All')}
 								</label>
 
 								<input
 									type="checkbox"
-									checked={ isAllSelected }
-									disabled={ !! isRequesting }
-									onChange={ ( ev ) =>
-										onSelectAll( ev.target.checked )
+									checked={isAllSelected}
+									disabled={!!isRequesting}
+									onChange={(ev) =>
+										onSelectAll(ev.target.checked)
 									}
 								/>
 							</>
-						) ) ||
-							( column.renderHeader &&
-								column.renderHeader( column ) ) ||
-							( sortable && (
+						)) ||
+							(column.renderHeader &&
+								column.renderHeader(column)) ||
+							(sortable && (
 								<>
-									{ /* eslint-disable-next-line jsx-a11y/anchor-is-valid */ }
+									{/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
 									<a
 										href="#"
-										onClick={ ( e ) => {
+										onClick={(e) => {
 											e.preventDefault();
-											onSort( {
+											onSort({
 												orderby: column.columnKey,
 												order:
 													orderby ===
@@ -84,18 +84,18 @@ function TableHeader( props ) {
 													order === 'desc'
 														? 'asc'
 														: 'desc',
-											} );
-										} }
+											});
+										}}
 									>
-										<span>{ column.label }</span>
+										<span>{column.label}</span>
 										<span className="sorting-indicator" />
 									</a>
 								</>
-							) ) ||
-							column.label }
+							)) ||
+							column.label}
 					</Tag>
 				);
-			} ) }
+			})}
 		</tr>
 	);
 }

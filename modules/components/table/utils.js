@@ -3,14 +3,14 @@
  */
 import { get } from 'lodash';
 
-const defaultRender = ( row, column ) => get( row, [ column.property ] );
+const defaultRender = (row, column) => get(row, [column.property]);
 
-export function normalizeColumns( columns ) {
-	return columns.map( ( column ) => {
+export function normalizeColumns(columns) {
+	return columns.map((column) => {
 		let { width } = column;
-		if ( width !== undefined ) {
-			width = parseInt( width, 10 );
-			if ( isNaN( width ) ) {
+		if (width !== undefined) {
+			width = parseInt(width, 10);
+			if (isNaN(width)) {
 				width = null;
 			}
 		}
@@ -38,5 +38,5 @@ export function normalizeColumns( columns ) {
 				actions: column.actions || [],
 			}
 		);
-	} );
+	});
 }

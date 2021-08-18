@@ -9,12 +9,12 @@
  * @var int $income_id
  */
 defined( 'ABSPATH' ) || exit();
-use EverAccounting\Models\Account;
-use EverAccounting\Models\Category;
-use EverAccounting\Models\Customer;
+use EverAccounting\Account;
+use EverAccounting\Category;
+use EverAccounting\Customer;
 wp_enqueue_script( 'ea-print' );
 try {
-	$income = new \EverAccounting\Models\Income( $income_id );
+	$income = new \EverAccounting\Income( $income_id );
 } catch ( Exception $e ) {
 	wp_die( $e->getMessage() );
 }

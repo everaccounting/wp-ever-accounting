@@ -25,18 +25,19 @@ import {
  */
 import { addQueryArgs } from '@wordpress/url';
 import { API_NAMESPACE } from '../site-data';
+import { getEntity } from './entities';
 
 /**
- * Returns an action object used in adding new schemas.
+ * Returns an action object used in adding new entities.
  *
- * @param {Array|Object} schema Schemas received.
+ * @param {Array|Object} schema Entities received.
  *
  * @return {Object} Action object.
  */
-export function receiveSchema( schema ) {
+export function receiveEntity(schema) {
 	return {
-		type: 'RECEIVE_SCHEMA',
-		schema: castArray( schema ),
+		type: 'RECEIVE_ENTITY',
+		schema: castArray(schema),
 	};
 }
 
@@ -60,10 +61,10 @@ export function receiveEntityRecords(
 	edits = {}
 ) {
 	let action;
-	if ( query ) {
-		action = receiveQueriedItems( records, query, primaryKey, edits );
+	if (query) {
+		action = receiveQueriedItems(records, query, primaryKey, edits);
 	} else {
-		action = receiveItems( records, primaryKey, edits );
+		action = receiveItems(records, primaryKey, edits);
 	}
 
 	return {
@@ -88,7 +89,7 @@ export function receiveTotalEntityRecords(
 	invalidateCache = false
 ) {
 	return {
-		...receiveItemTotal( total, query ),
+		...receiveItemTotal(total, query),
 		name,
 		invalidateCache,
 	};
@@ -102,9 +103,9 @@ export function receiveTotalEntityRecords(
  * @param {Object} query
  * @return {{query: ?Object, type: string, error: Object}} Receive error.
  */
-export function receiveEntityError( name, error, query ) {
+export function receiveEntityError(name, error, query) {
 	return {
-		...receiveError( error, query ),
+		...receiveError(error, query),
 		name,
 	};
 }
@@ -127,11 +128,12 @@ export function* deleteEntityRecord(
 	query,
 	{ __unstableFetch = null } = {}
 ) {
-	const schema = yield select( STORE_NAME, 'getSchema', name );
-	if ( ! schema ) {
-		throw `Could not find any schema named "${ name }" please check schema config`;
+	const entity = yield getEntity(name);
+
+	if (!entity) {
+		throw `Could not find any entity named "${name}" please check entity config`;
 	}
-	const { route } = schema;
+	const { route } = entity;
 	let deletedRecord = false;
 	let error;
 	yield {
@@ -141,10 +143,10 @@ export function* deleteEntityRecord(
 	};
 
 	try {
-		let path = `${ route }/${ recordId }`;
+		let path = `${route}/${recordId}`;
 
-		if ( query ) {
-			path = addQueryArgs( path, query );
+		if (query) {
+			path = addQueryArgs(path, query);
 		}
 
 		const options = {
@@ -152,14 +154,14 @@ export function* deleteEntityRecord(
 			method: 'DELETE',
 		};
 
-		if ( __unstableFetch ) {
-			deletedRecord = yield dispatch( __unstableFetch( options ) );
+		if (__unstableFetch) {
+			deletedRecord = yield dispatch(__unstableFetch(options));
 		} else {
-			deletedRecord = yield apiFetch( options );
+			deletedRecord = yield apiFetch(options);
 		}
 
-		yield removeItems( name, recordId, true );
-	} catch ( _error ) {
+		yield removeItems(name, recordId, true);
+	} catch (_error) {
 		error = _error;
 	}
 
@@ -181,17 +183,18 @@ export function* deleteEntityRecord(
  * @param {Object} customRequest  Internal use only. Function to call instead of `fetch()`.
  * Must return a control descriptor.
  */
-export function* saveEntityRecord( name, record, customRequest = null ) {
-	const schema = yield select( STORE_NAME, 'getSchema', name );
-	if ( ! schema ) {
-		throw `Could not find any schema named "${ name }" please check schema config`;
-	}
-	const { route, primaryKey } = schema;
+export function* saveEntityRecord(name, record, customRequest = null) {
+	const entity = yield getEntity(name);
 
-	const recordId = record[ primaryKey ];
-	const invalidateCache = ! isEmpty( recordId );
-	for ( const [ key, value ] of Object.entries( record ) ) {
-		if ( typeof value === 'function' ) {
+	if (!entity) {
+		throw `Could not find any entity named "${name}" please check entity config`;
+	}
+	const { route, primaryKey } = entity;
+
+	const recordId = record[primaryKey];
+	const invalidateCache = !isEmpty(recordId);
+	for (const [key, value] of Object.entries(record)) {
+		if (typeof value === 'function') {
 			const evaluatedValue = value(
 				yield select(
 					STORE_NAME,
@@ -204,11 +207,11 @@ export function* saveEntityRecord( name, record, customRequest = null ) {
 				name,
 				recordId,
 				{
-					[ key ]: evaluatedValue,
+					[key]: evaluatedValue,
 				},
 				{ undoIgnore: true }
 			);
-			record[ key ] = evaluatedValue;
+			record[key] = evaluatedValue;
 		}
 	}
 
@@ -221,17 +224,17 @@ export function* saveEntityRecord( name, record, customRequest = null ) {
 	let error;
 
 	try {
-		const path = `${ route }${ recordId ? '/' + recordId : '' }`;
+		const path = `${route}${recordId ? '/' + recordId : ''}`;
 		const edits = record;
 		const options = {
 			path,
 			method: recordId ? 'PUT' : 'POST',
 			data: edits,
 		};
-		if ( customRequest ) {
-			updatedRecord = yield awaitPromise( customRequest( options ) );
+		if (customRequest) {
+			updatedRecord = yield awaitPromise(customRequest(options));
 		} else {
-			updatedRecord = yield apiFetch( options );
+			updatedRecord = yield apiFetch(options);
 		}
 		yield receiveEntityRecords(
 			name,
@@ -241,7 +244,7 @@ export function* saveEntityRecord( name, record, customRequest = null ) {
 			invalidateCache,
 			edits
 		);
-	} catch ( _error ) {
+	} catch (_error) {
 		error = _error;
 	}
 	yield {
@@ -264,7 +267,7 @@ export function* saveEntityRecord( name, record, customRequest = null ) {
  *
  * @return {Object} Action object.
  */
-export function* editEntityRecord( name, recordId, edits ) {
+export function* editEntityRecord(name, recordId, edits) {
 	const record = yield select(
 		STORE_NAME,
 		'getRawEntityRecord',
@@ -303,7 +306,7 @@ export function* editEntityRecord( name, recordId, edits ) {
  * @param {Object} time
  * @return {{settings, time: Date, type: string, error: null}} Settings update action.
  */
-export function receiveSettings( settings, error = null, time = new Date() ) {
+export function receiveSettings(settings, error = null, time = new Date()) {
 	return {
 		type: 'RECEIVE_SETTINGS',
 		settings,
@@ -318,17 +321,17 @@ export function receiveSettings( settings, error = null, time = new Date() ) {
  * @param {Object} data
  * @return {Object}
  */
-export function* updateSettings( data ) {
+export function* updateSettings(data) {
 	try {
-		const settings = yield apiFetch( {
+		const settings = yield apiFetch({
 			path: API_NAMESPACE + '/settings',
 			method: 'POST',
 			data,
-		} );
-		yield receiveSettings( settings );
+		});
+		yield receiveSettings(settings);
 		return { success: true, ...settings };
-	} catch ( error ) {
-		yield receiveSettings( {}, error );
+	} catch (error) {
+		yield receiveSettings({}, error);
 		return { success: false, ...error };
 	}
 }
@@ -340,18 +343,18 @@ export function* updateSettings( data ) {
  * @param {string} value
  * @return {Object} Resolver.
  */
-export function* updateOption( id, value ) {
+export function* updateOption(id, value) {
 	try {
-		const settings = yield apiFetch( {
+		const settings = yield apiFetch({
 			path: API_NAMESPACE + '/settings/' + id,
 			method: 'PUT',
 			data: { id, value },
-		} );
+		});
 
-		yield receiveSettings( { settings: [ settings ] } );
+		yield receiveSettings({ settings: [settings] });
 		return { success: true, ...settings };
-	} catch ( error ) {
-		yield receiveSettings( {}, error );
+	} catch (error) {
+		yield receiveSettings({}, error);
 		return { success: false, ...error };
 	}
 }
@@ -363,7 +366,7 @@ export function* updateOption( id, value ) {
  *
  * @return {Object} Action object.
  */
-export function receiveCurrentUser( currentUser ) {
+export function receiveCurrentUser(currentUser) {
 	return {
 		type: 'RECEIVE_CURRENT_USER',
 		currentUser,
@@ -379,7 +382,7 @@ export function receiveCurrentUser( currentUser ) {
  *
  * @return {Object} Action object.
  */
-export function receiveUserPermission( key, isAllowed ) {
+export function receiveUserPermission(key, isAllowed) {
 	return {
 		type: 'RECEIVE_USER_PERMISSION',
 		key,
@@ -387,6 +390,6 @@ export function receiveUserPermission( key, isAllowed ) {
 	};
 }
 
-export function* createNotice( type, notice ) {
-	yield resolveDispatch( 'core/notices', 'createNotice', type, notice );
+export function* createNotice(type, notice) {
+	yield resolveDispatch('core/notices', 'createNotice', type, notice);
 }

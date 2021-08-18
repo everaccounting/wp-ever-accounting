@@ -18,7 +18,7 @@ import {
  * @param {Object} request
  * @return {{type: string, request: Object}} An action object
  */
-export function apiFetch( request ) {
+export function apiFetch(request) {
 	return {
 		type: 'FETCH_FROM_API',
 		request,
@@ -33,7 +33,7 @@ export function apiFetch( request ) {
  *
  * @return {Object} The control action descriptor.
  */
-export const apiFetchWithHeaders = ( options ) => {
+export const apiFetchWithHeaders = (options) => {
 	return {
 		type: 'API_FETCH_WITH_HEADERS',
 		options,
@@ -49,7 +49,7 @@ export const apiFetchWithHeaders = ( options ) => {
  * @return {{type: string, reducerKey: string, selectorName: string, args: *[]}}
  * Returns an action object.
  */
-export function select( reducerKey, selectorName, ...args ) {
+export function select(reducerKey, selectorName, ...args) {
 	return {
 		type: 'SELECT',
 		reducerKey,
@@ -66,7 +66,7 @@ export function select( reducerKey, selectorName, ...args ) {
  * @param {Array} args
  * @return {Object} An action object.
  */
-export function resolveSelect( reducerKey, selectorName, ...args ) {
+export function resolveSelect(reducerKey, selectorName, ...args) {
 	return {
 		type: 'RESOLVE_SELECT',
 		reducerKey,
@@ -84,7 +84,7 @@ export function resolveSelect( reducerKey, selectorName, ...args ) {
  * @return {{type: string, reducerKey: string, dispatchName: string, args: *[]}}
  * An action object
  */
-export function dispatch( reducerKey, dispatchName, ...args ) {
+export function dispatch(reducerKey, dispatchName, ...args) {
 	return {
 		type: 'DISPATCH',
 		reducerKey,
@@ -101,7 +101,7 @@ export function dispatch( reducerKey, dispatchName, ...args ) {
  * @param {Array} args
  * @return {Object} The action object.
  */
-export function resolveDispatch( reducerKey, dispatchName, ...args ) {
+export function resolveDispatch(reducerKey, dispatchName, ...args) {
 	return {
 		type: 'RESOLVE_DISPATCH',
 		reducerKey,
@@ -119,7 +119,7 @@ export function resolveDispatch( reducerKey, dispatchName, ...args ) {
  * @return {Object} The control descriptor.
  */
 
-export const awaitPromise = function ( promise ) {
+export const awaitPromise = function (promise) {
 	return {
 		type: 'AWAIT_PROMISE',
 		promise,
@@ -127,62 +127,62 @@ export const awaitPromise = function ( promise ) {
 };
 
 const controls = {
-	FETCH_FROM_API( { request } ) {
-		return wpFetch( request );
+	FETCH_FROM_API({ request }) {
+		return wpFetch(request);
 	},
-	SELECT( { reducerKey, selectorName, args } ) {
-		return selectData( reducerKey )[ selectorName ]( ...args );
+	SELECT({ reducerKey, selectorName, args }) {
+		return selectData(reducerKey)[selectorName](...args);
 	},
-	DISPATCH( { reducerKey, dispatchName, args } ) {
-		return dispatchData( reducerKey )[ dispatchName ]( ...args );
+	DISPATCH({ reducerKey, dispatchName, args }) {
+		return dispatchData(reducerKey)[dispatchName](...args);
 	},
-	async RESOLVE_DISPATCH( { reducerKey, dispatchName, args } ) {
-		return await dispatchData( reducerKey )[ dispatchName ]( ...args );
+	async RESOLVE_DISPATCH({ reducerKey, dispatchName, args }) {
+		return await dispatchData(reducerKey)[dispatchName](...args);
 	},
-	API_FETCH_WITH_HEADERS( { options } ) {
-		return new Promise( ( resolve, reject ) => {
-			wpFetch( { ...options, parse: false } )
-				.then( ( response ) => {
-					response.json().then( ( data ) => {
-						resolve( {
+	API_FETCH_WITH_HEADERS({ options }) {
+		return new Promise((resolve, reject) => {
+			wpFetch({ ...options, parse: false })
+				.then((response) => {
+					response.json().then((data) => {
+						resolve({
 							data,
 							headers: response.headers,
-						} );
-					} );
-				} )
-				.catch( ( error ) => {
-					error.json().then( ( json ) => {
-						reject( json );
-					} );
-				} );
-		} );
+						});
+					});
+				})
+				.catch((error) => {
+					error.json().then((json) => {
+						reject(json);
+					});
+				});
+		});
 	},
-	RESOLVE_SELECT( { reducerKey, selectorName, args } ) {
-		return new Promise( ( resolve ) => {
+	RESOLVE_SELECT({ reducerKey, selectorName, args }) {
+		return new Promise((resolve) => {
 			const hasFinished = () =>
-				selectData( 'core/data' ).hasFinishedResolution(
+				selectData('core/data').hasFinishedResolution(
 					reducerKey,
 					selectorName,
 					args
 				);
 			const getResult = () =>
-				selectData( reducerKey )[ selectorName ].apply( null, args );
+				selectData(reducerKey)[selectorName].apply(null, args);
 
 			// trigger the selector (to trigger the resolver)
 			const result = getResult();
-			if ( hasFinished() ) {
-				return resolve( result );
+			if (hasFinished()) {
+				return resolve(result);
 			}
 
-			const unsubscribe = subscribe( () => {
-				if ( hasFinished() ) {
+			const unsubscribe = subscribe(() => {
+				if (hasFinished()) {
 					unsubscribe();
-					resolve( getResult() );
+					resolve(getResult());
 				}
-			} );
-		} );
+			});
+		});
 	},
-	AWAIT_PROMISE: ( { promise } ) => promise,
+	AWAIT_PROMISE: ({ promise }) => promise,
 };
 
 export default controls;

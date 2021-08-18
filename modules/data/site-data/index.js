@@ -119,6 +119,6 @@ export const DATE_FORMAT = localizedData.date_format || 'Y-m-d';
  * @param {any} defaults Default data.
  * @return {any} Returns the requested data.
  */
-export const getSiteData = ( property, defaults = '' ) => {
-	return localizedData[ property ] || defaults;
+export const getSiteData = (property, defaults = '') => {
+	return localizedData[property] || defaults;
 };

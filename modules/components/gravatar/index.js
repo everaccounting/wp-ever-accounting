@@ -19,45 +19,43 @@ import md5 from 'md5';
  * @param {string} props.className
  * @return {Object} -
  */
-const Gravatar = ( { alt, title, size, user, className } ) => {
-	const classes = classnames( 'eaccounting-gravatar', className, {
-		'is-placeholder': ! user,
-	} );
+const Gravatar = ({ alt, title, size, user, className }) => {
+	const classes = classnames('eaccounting-gravatar', className, {
+		'is-placeholder': !user,
+	});
 
-	const getResizedImageURL = ( imageURL ) => {
-		const parsedURL = url.parse( imageURL );
-		const query = parse( parsedURL.query );
+	const getResizedImageURL = (imageURL) => {
+		const parsedURL = url.parse(imageURL);
+		const query = parse(parsedURL.query);
 
 		query.s = size;
 		query.d = 'mp';
 
-		parsedURL.search = stringify( query );
-		return url.format( parsedURL );
+		parsedURL.search = stringify(query);
+		return url.format(parsedURL);
 	};
 
-	const getAvatarURLFromEmail = ( email ) => {
-		return 'https://www.gravatar.com/avatar/' + md5( email );
+	const getAvatarURLFromEmail = (email) => {
+		return 'https://www.gravatar.com/avatar/' + md5(email);
 	};
 
-	const altText = alt || ( user && ( user.display_name || user.name ) ) || '';
+	const altText = alt || (user && (user.display_name || user.name)) || '';
 
 	let avatarURL = 'https://www.gravatar.com/avatar/0?s=' + size + '&d=mp';
-	if ( user ) {
+	if (user) {
 		avatarURL = getResizedImageURL(
-			isString( user )
-				? getAvatarURLFromEmail( user )
-				: user.avatar_URLs[ 96 ]
+			isString(user) ? getAvatarURLFromEmail(user) : user.avatar_URLs[96]
 		);
 	}
 
 	return (
 		<img
-			alt={ altText }
-			title={ title }
-			className={ classes }
-			src={ avatarURL }
-			width={ size }
-			height={ size }
+			alt={altText}
+			title={title}
+			className={classes}
+			src={avatarURL}
+			width={size}
+			height={size}
 		/>
 	);
 };
@@ -66,7 +64,7 @@ Gravatar.propTypes = {
 	/**
 	 * The address to hash for displaying a Gravatar. Can be an email address or WP-API user object.
 	 */
-	user: PropTypes.oneOfType( [ PropTypes.object, PropTypes.string ] ),
+	user: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
 	/**
 	 * Text to display as the image alt attribute.
 	 */

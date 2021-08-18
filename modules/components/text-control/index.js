@@ -15,7 +15,7 @@ import classnames from 'classnames';
  */
 import './style.scss';
 
-function TextControl( props ) {
+function TextControl(props) {
 	const {
 		label,
 		value,
@@ -29,34 +29,33 @@ function TextControl( props ) {
 		placeholder,
 		required,
 		isLoading,
-		validate = ( x ) => x,
 		...restProps
 	} = props;
 
-	const id = `inspector-ea-input-group-${ instanceId }`;
-	const onChangeValue = ( event ) => onChange( event.target.value );
+	const id = `inspector-ea-input-group-${instanceId}`;
+	const onChangeValue = (event) => onChange(event.target.value);
 
 	const describedby = [];
-	if ( help ) {
-		describedby.push( `${ id }__help` );
+	if (help) {
+		describedby.push(`${id}__help`);
 	}
-	if ( before ) {
-		describedby.push( `${ id }__before` );
+	if (before) {
+		describedby.push(`${id}__before`);
 	}
-	if ( after ) {
-		describedby.push( `${ id }__after` );
+	if (after) {
+		describedby.push(`${id}__after`);
 	}
 
 	const newPlaceholder =
-		! placeholder && !! label ? `Enter ${ label }` : placeholder;
+		!placeholder && !!label ? `Enter ${label}` : placeholder;
 
 	const wrapperClasses = classnames(
 		'ea-form-group',
 		'ea-text-field',
 		className,
 		{
-			required: !! required,
-			'is-loading': !! isLoading,
+			required: !!required,
+			'is-loading': !!isLoading,
 		}
 	);
 
@@ -64,50 +63,46 @@ function TextControl( props ) {
 		'ea-input-group__input',
 		'components-text-control__input',
 		{
-			'has--before': !! before,
-			'has--after': !! after,
+			'has--before': !!before,
+			'has--after': !!after,
 		}
 	);
 
 	return (
 		<BaseControl
-			label={ label }
-			id={ id }
-			help={ help }
-			className={ wrapperClasses }
+			label={label}
+			id={id}
+			help={help}
+			className={wrapperClasses}
 		>
 			<div className="ea-input-group">
-				{ before && (
+				{before && (
 					<span
-						id={ `${ id }__before` }
+						id={`${id}__before`}
 						className="ea-input-group__before"
 					>
-						{ before }
+						{before}
 					</span>
-				) }
+				)}
 
 				<input
-					className={ inputClasses }
-					type={ type }
-					id={ id }
-					value={ ( value && value ) || '' }
-					onChange={ onChangeValue }
-					required={ required }
+					className={inputClasses}
+					type={type}
+					id={id}
+					value={(value && value) || ''}
+					onChange={onChangeValue}
+					required={required}
 					autoComplete="off"
-					placeholder={ newPlaceholder }
-					aria-describedby={ describedby.join( ' ' ) }
-					onKeyPress={ ( e ) => validate( e.target.value ) }
-					{ ...restProps }
+					placeholder={newPlaceholder}
+					aria-describedby={describedby.join(' ')}
+					{...restProps}
 				/>
 
-				{ after && (
-					<span
-						id={ `${ id }__after` }
-						className="ea-input-group__after"
-					>
-						{ after }
+				{after && (
+					<span id={`${id}__after`} className="ea-input-group__after">
+						{after}
 					</span>
-				) }
+				)}
 			</div>
 		</BaseControl>
 	);
@@ -130,4 +125,4 @@ TextControl.propTypes = {
 	validate: PropTypes.func,
 };
 
-export default withInstanceId( TextControl );
+export default withInstanceId(TextControl);

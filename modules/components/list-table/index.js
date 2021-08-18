@@ -22,7 +22,7 @@ import './style.scss';
 import { Button, Icon } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 
-function ListTable( props ) {
+function ListTable(props) {
 	const {
 		className,
 		columns,
@@ -35,101 +35,98 @@ function ListTable( props ) {
 	} = props;
 
 	const { paged = 1, per_page = 20 } = query;
-	const [ selected, setSelected ] = useState( [] );
-	const [ isFilterActive, setFilterActive ] = useState( false );
-	const activeFilters = getActiveFiltersFromQuery( filters, query );
-	const classes = classnames( 'ea-list-table-wrapper', className );
+	const [selected, setSelected] = useState([]);
+	const [isFilterActive, setFilterActive] = useState(false);
+	const activeFilters = getActiveFiltersFromQuery(filters, query);
+	const classes = classnames('ea-list-table-wrapper', className);
 
-	const handleSearch = ( search ) => {
-		dispatchEvent( 'onSearch', search );
-		dispatchEvent( 'onQueryChange', { ...query, search, paged: 1 } );
+	const handleSearch = (search) => {
+		dispatchEvent('onSearch', search);
+		dispatchEvent('onQueryChange', { ...query, search, paged: 1 });
 	};
 
-	const handleSort = ( sort ) => {
-		dispatchEvent( 'onSort', sort );
-		dispatchEvent( 'onQueryChange', { ...query, ...sort, paged: 1 } );
+	const handleSort = (sort) => {
+		dispatchEvent('onSort', sort);
+		dispatchEvent('onQueryChange', { ...query, ...sort, paged: 1 });
 	};
 
-	const handlePagination = ( paged ) => {
-		dispatchEvent( 'onPageChange', paged );
-		dispatchEvent( 'onQueryChange', { ...query, paged } );
+	const handlePagination = (paged) => {
+		dispatchEvent('onPageChange', paged);
+		dispatchEvent('onQueryChange', { ...query, paged });
 	};
 
-	const handleBulkAction = ( action, selected ) => {
-		dispatchEvent( 'onBulkAction', action, selected );
-		setSelected( [] );
+	const handleBulkAction = (action, selected) => {
+		dispatchEvent('onBulkAction', action, selected);
+		setSelected([]);
 	};
 
-	const handleFilter = ( newFilters ) => {
-		dispatchEvent( 'onQueryChange', {
-			...omit( query, Object.keys( filters ) ),
+	const handleFilter = (newFilters) => {
+		dispatchEvent('onQueryChange', {
+			...omit(query, Object.keys(filters)),
 			...newFilters,
 			paged: 1,
-		} );
+		});
 	};
 
-	const dispatchEvent = ( name, ...args ) => {
-		const fn = props[ name ];
-		if ( fn ) {
-			fn( ...args );
+	const dispatchEvent = (name, ...args) => {
+		const fn = props[name];
+		if (fn) {
+			fn(...args);
 		}
 	};
 
 	return (
-		<div className={ classes }>
-			{ filters && ( ! isEmpty( activeFilters ) || isFilterActive ) && (
+		<div className={classes}>
+			{filters && (!isEmpty(activeFilters) || isFilterActive) && (
 				<AdvancedFilters
-					onUpdateFilter={ handleFilter }
-					filters={ filters }
-					query={ query }
-					isDisabled={ isRequesting }
+					onUpdateFilter={handleFilter}
+					filters={filters}
+					query={query}
+					isDisabled={isRequesting}
 				/>
-			) }
-			<TableSearch
-				isDisabled={ isRequesting }
-				onSearch={ handleSearch }
-			/>
+			)}
+			<TableSearch isDisabled={isRequesting} onSearch={handleSearch} />
 			<div className="tablenav top">
-				{ bulkActions && (
+				{bulkActions && (
 					<BulkActions
-						selectedItems={ selected }
-						actions={ bulkActions }
-						onAction={ handleBulkAction }
+						selectedItems={selected}
+						actions={bulkActions}
+						onAction={handleBulkAction}
 					/>
-				) }
+				)}
 
-				{ ! isEmpty( Object.keys( filters ) ) && (
+				{!isEmpty(Object.keys(filters)) && (
 					<Button
 						isSecondary
-						onClick={ () => setFilterActive( ! isFilterActive ) }
+						onClick={() => setFilterActive(!isFilterActive)}
 					>
 						<Icon icon="filter" />
-						{ __( 'Filter' ) }
+						{__('Filter')}
 					</Button>
-				) }
+				)}
 
 				<TableNav
-					onPageChange={ handlePagination }
-					total={ total }
-					paged={ paged }
-					per_page={ per_page }
+					onPageChange={handlePagination}
+					total={total}
+					paged={paged}
+					per_page={per_page}
 				/>
 			</div>
 			<Table
-				query={ query }
-				rows={ rows }
-				isRequesting={ isRequesting }
-				selected={ selected }
-				onChangeSelected={ setSelected }
-				columns={ columns }
-				onSort={ handleSort }
+				query={query}
+				rows={rows}
+				isRequesting={isRequesting}
+				selected={selected}
+				onChangeSelected={setSelected}
+				columns={columns}
+				onSort={handleSort}
 			/>
 			<div className="tablenav top">
 				<TableNav
-					onPageChange={ handlePagination }
-					total={ total }
-					paged={ paged }
-					per_page={ per_page }
+					onPageChange={handlePagination}
+					total={total}
+					paged={paged}
+					per_page={per_page}
 				/>
 			</div>
 		</div>

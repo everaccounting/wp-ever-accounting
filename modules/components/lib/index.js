@@ -16,17 +16,17 @@ import { isEmpty } from 'fast-glob/out/utils/string';
  * @param {string} portalWrapper
  * @return {Function} Element
  */
-export function getPortal( portalName, portalWrapper = 'wpbody' ) {
-	let portal = document.getElementById( portalName );
+export function getPortal(portalName, portalWrapper = 'wpbody') {
+	let portal = document.getElementById(portalName);
 
-	if ( portal === null ) {
-		const wrapper = document.getElementById( portalWrapper );
+	if (portal === null) {
+		const wrapper = document.getElementById(portalWrapper);
 
-		portal = document.createElement( 'div' );
+		portal = document.createElement('div');
 
-		if ( wrapper && wrapper.parentNode ) {
-			portal.setAttribute( 'id', portalName );
-			wrapper.parentNode.appendChild( portal );
+		if (wrapper && wrapper.parentNode) {
+			portal.setAttribute('id', portalName);
+			wrapper.parentNode.appendChild(portal);
 		}
 	}
 
@@ -44,48 +44,48 @@ export function getPortal( portalName, portalWrapper = 'wpbody' ) {
  * @param {number} decPoint
  * @param {string} thousandsSep
  */
-export const numberFormat = ( number, decimals, decPoint, thousandsSep ) => {
-	number = ( number + '' ).replace( /[^0-9+\-Ee.]/g, '' );
+export const numberFormat = (number, decimals, decPoint, thousandsSep) => {
+	number = (number + '').replace(/[^0-9+\-Ee.]/g, '');
 	// eslint-disable-next-line prefer-const
-	let n = ! isFinite( +number ) ? 0 : +number,
+	let n = !isFinite(+number) ? 0 : +number,
 		// eslint-disable-next-line prefer-const
-		prec = ! isFinite( +decimals ) ? 0 : Math.abs( decimals ),
+		prec = !isFinite(+decimals) ? 0 : Math.abs(decimals),
 		// eslint-disable-next-line prefer-const
 		sep = typeof thousandsSep === 'undefined' ? ',' : thousandsSep,
 		// eslint-disable-next-line prefer-const
 		dec = typeof decPoint === 'undefined' ? '.' : decPoint,
 		s = '',
 		// eslint-disable-next-line prefer-const
-		toFixedFix = function ( n, prec ) {
-			const k = Math.pow( 10, prec );
-			return '' + ( Math.round( n * k ) / k ).toFixed( prec );
+		toFixedFix = function (n, prec) {
+			const k = Math.pow(10, prec);
+			return '' + (Math.round(n * k) / k).toFixed(prec);
 		};
 	// Fix for IE parseFloat(0.55).toFixed(0) = 0;
-	s = ( prec ? toFixedFix( n, prec ) : '' + Math.round( n ) ).split( '.' );
-	if ( s[ 0 ].length > 3 ) {
-		s[ 0 ] = s[ 0 ].replace( /\B(?=(?:\d{3})+(?!\d))/g, sep );
+	s = (prec ? toFixedFix(n, prec) : '' + Math.round(n)).split('.');
+	if (s[0].length > 3) {
+		s[0] = s[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, sep);
 	}
-	if ( ( s[ 1 ] || '' ).length < prec ) {
-		s[ 1 ] = s[ 1 ] || '';
-		s[ 1 ] += new Array( prec - s[ 1 ].length + 1 ).join( '0' );
+	if ((s[1] || '').length < prec) {
+		s[1] = s[1] || '';
+		s[1] += new Array(prec - s[1].length + 1).join('0');
 	}
-	return s.join( dec );
+	return s.join(dec);
 };
 
-export function createNoticesFromResponse( response ) {
-	const { createErrorNotice } = dispatch( 'core/notices' );
+export function createNoticesFromResponse(response) {
+	const { createErrorNotice } = dispatch('core/notices');
 	if (
 		response &&
 		response.error_data &&
 		response.errors &&
-		Object.keys( response.errors ).length
+		Object.keys(response.errors).length
 	) {
 		// Loop over multi-error responses.
-		Object.keys( response.errors ).forEach( ( errorKey ) => {
-			createErrorNotice( response.errors[ errorKey ].join( ' ' ) );
-		} );
-	} else if ( response && response.message ) {
-		createErrorNotice( response.message );
+		Object.keys(response.errors).forEach((errorKey) => {
+			createErrorNotice(response.errors[errorKey].join(' '));
+		});
+	} else if (response && response.message) {
+		createErrorNotice(response.message);
 	}
 }
 
@@ -95,18 +95,18 @@ export function createNoticesFromResponse( response ) {
  * @param {string} str - date string
  * @return {Object|null} - Moment object representing given string
  */
-export function toMoment( str ) {
-	if ( isEmpty( str ) ) {
+export function toMoment(str) {
+	if (isEmpty(str)) {
 		return str;
 	}
-	if ( typeof str === 'string' ) {
-		const date = moment( str );
+	if (typeof str === 'string') {
+		const date = moment(str);
 		return date.isValid() ? date : null;
 	}
-	if ( moment.isMoment( str ) ) {
+	if (moment.isMoment(str)) {
 		return str.isValid() ? str : null;
 	}
-	throw new Error( 'toMoment requires a string to be passed as an argument' );
+	throw new Error('toMoment requires a string to be passed as an argument');
 }
 
 export const REACT_SELECT_PROPS = {
@@ -133,7 +133,7 @@ export const REACT_SELECT_PROPS = {
 	id: PropTypes.string,
 	inputValue: PropTypes.string,
 	inputId: PropTypes.string,
-	instanceId: PropTypes.oneOfType( [ PropTypes.number, PropTypes.string ] ),
+	instanceId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
 	isClearable: PropTypes.bool,
 	isDisabled: PropTypes.bool,
 	isLoading: PropTypes.bool,
@@ -145,8 +145,8 @@ export const REACT_SELECT_PROPS = {
 	minMenuHeight: PropTypes.number,
 	maxMenuHeight: PropTypes.number,
 	menuIsOpen: PropTypes.bool,
-	menuPlacement: PropTypes.oneOf( [ 'auto', 'bottom', 'top' ] ),
-	menuPosition: PropTypes.oneOf( [ 'absolute', 'fixed' ] ),
+	menuPlacement: PropTypes.oneOf(['auto', 'bottom', 'top']),
+	menuPosition: PropTypes.oneOf(['absolute', 'fixed']),
 	menuPortalTarget: PropTypes.element,
 	menuShouldBlockScroll: PropTypes.bool,
 	menuShouldScrollIntoView: PropTypes.bool,
@@ -167,7 +167,7 @@ export const REACT_SELECT_PROPS = {
 	pageSize: PropTypes.number,
 	placeholder: PropTypes.string,
 	screenReaderStatus: PropTypes.func,
-	styles: PropTypes.shape( {
+	styles: PropTypes.shape({
 		clearIndicator: PropTypes.func,
 		container: PropTypes.func,
 		control: PropTypes.func,
@@ -190,8 +190,8 @@ export const REACT_SELECT_PROPS = {
 		placeholder: PropTypes.func,
 		singleValue: PropTypes.func,
 		valueContainer: PropTypes.func,
-	} ),
+	}),
 	tabIndex: PropTypes.string,
 	tabSelectsValue: PropTypes.bool,
-	value: PropTypes.oneOfType( [ PropTypes.object, PropTypes.array ] ),
+	value: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
 };

@@ -10,14 +10,14 @@
  */
 defined( 'ABSPATH' ) || exit();
 
-use EverAccounting\Models\Account;
-use EverAccounting\Models\Category;
-use EverAccounting\Models\Vendor;
+use EverAccounting\Account;
+use EverAccounting\Category;
+use EverAccounting\Vendor;
 
 wp_enqueue_script( 'ea-print' );
 
 try {
-	$payment = new \EverAccounting\Models\Payment( $payment_id );
+	$payment = new \EverAccounting\Payment( $payment_id );
 } catch ( Exception $e ) {
 	wp_die( $e->getMessage() );
 }

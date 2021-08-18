@@ -19,55 +19,50 @@ import { SnackbarList } from '@eaccounting/components';
 // import Header from './header';
 import './style.scss';
 
-const getQuery = ( searchString ) => {
-	if ( ! searchString ) {
+const getQuery = (searchString) => {
+	if (!searchString) {
 		return {};
 	}
 
-	const search = searchString.substring( 1 );
-	return parse( search );
+	const search = searchString.substring(1);
+	return parse(search);
 };
 
 const DrawerSlot = () => {
 	return (
 		<Slot name="drawer">
-			{ ( fills ) => {
+			{(fills) => {
 				return fills.length > 0 ? (
 					<div className="eaccounting-drawer__wrapper is-open">
-						{ fills }
+						{fills}
 					</div>
 				) : (
-					<div className="eaccounting-drawer__wrapper">{ fills }</div>
+					<div className="eaccounting-drawer__wrapper">{fills}</div>
 				);
-			} }
+			}}
 		</Slot>
 	);
 };
 
-export const Layout = ( props ) => {
+export const Layout = (props) => {
 	const { location, isEmbedded = false } = props;
 	// eslint-disable-next-line no-unused-vars
-	const { removeNotice } = useDispatch( 'core/notices' );
+	const { removeNotice } = useDispatch('core/notices');
 	// eslint-disable-next-line no-unused-vars
-	const notices = useSelect( ( select ) =>
-		select( 'core/notices' ).getNotices()
-	);
-	const query = getQuery( location && location.search );
+	const notices = useSelect((select) => select('core/notices').getNotices());
+	const query = getQuery(location && location.search);
 	return (
 		<SlotFillProvider>
 			<div className="eaccounting-layout">
-				{ /*<Header isEmbedded={ isEmbedded } query={ query } />*/ }
-				{ ! isEmbedded && (
+				{/*<Header isEmbedded={ isEmbedded } query={ query } />*/}
+				{!isEmbedded && (
 					<div className="eaccounting-layout__main">
-						<Controller { ...props } query={ query } />
+						<Controller {...props} query={query} />
 					</div>
-				) }
-				{ notices && (
-					<SnackbarList
-						notices={ notices }
-						onRemove={ removeNotice }
-					/>
-				) }
+				)}
+				{notices && (
+					<SnackbarList notices={notices} onRemove={removeNotice} />
+				)}
 			</div>
 			<Popover.Slot />
 			<DrawerSlot />
@@ -82,28 +77,28 @@ export function App() {
 	const { currentUserCan } = useUser();
 	return (
 		<>
-			<Router history={ getHistory() }>
+			<Router history={getHistory()}>
 				<Switch>
-					{ getPages()
+					{getPages()
 						.filter(
-							( page ) =>
-								! page.capability ||
-								currentUserCan( page.capability )
+							(page) =>
+								!page.capability ||
+								currentUserCan(page.capability)
 						)
-						.map( ( page ) => {
+						.map((page) => {
 							return (
 								<Route
-									key={ page.path }
-									path={ page.path }
+									key={page.path}
+									path={page.path}
 									exact
-									render={ ( props ) => (
-										<Layout page={ page } { ...props } />
-									) }
+									render={(props) => (
+										<Layout page={page} {...props} />
+									)}
 								/>
 							);
-						} ) }
+						})}
 
-					<Redirect to={ generatePath( {}, '/overview' ) } />
+					<Redirect to={generatePath({}, '/overview')} />
 				</Switch>
 			</Router>
 		</>

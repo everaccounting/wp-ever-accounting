@@ -11,7 +11,7 @@
  */
 
 namespace EverAccounting\Admin;
-use EverAccounting\Models\Bill;
+use EverAccounting\Bill;
 
 defined( 'ABSPATH' ) || exit();
 

@@ -20,12 +20,12 @@ let _history;
  * @return {Object} React-router history object with `get location` modified.
  */
 function getHistory() {
-	if ( ! _history ) {
+	if (!_history) {
 		const path = document.location.pathname;
-		const browserHistory = createBrowserHistory( {
-			basename: path.substring( 0, path.lastIndexOf( '/' ) ),
-		} );
-		console.log( browserHistory );
+		const browserHistory = createBrowserHistory({
+			basename: path.substring(0, path.lastIndexOf('/')),
+		});
+		console.log(browserHistory);
 		_history = {
 			get length() {
 				return browserHistory.length;
@@ -35,7 +35,7 @@ function getHistory() {
 			},
 			get location() {
 				const { location } = browserHistory;
-				const query = parse( location.search.substring( 1 ) );
+				const query = parse(location.search.substring(1));
 				const pathname = query.path || '/';
 
 				return {
@@ -43,23 +43,22 @@ function getHistory() {
 					pathname,
 				};
 			},
-			createHref: ( ...args ) =>
-				browserHistory.createHref.apply( browserHistory, args ),
-			push: ( ...args ) =>
-				browserHistory.push.apply( browserHistory, args ),
-			replace: ( ...args ) =>
-				browserHistory.replace.apply( browserHistory, args ),
-			go: ( ...args ) => browserHistory.go.apply( browserHistory, args ),
-			goBack: ( ...args ) =>
-				browserHistory.goBack.apply( browserHistory, args ),
-			goForward: ( ...args ) =>
-				browserHistory.goForward.apply( browserHistory, args ),
-			block: ( ...args ) =>
-				browserHistory.block.apply( browserHistory, args ),
-			listen( listener ) {
-				return browserHistory.listen( () => {
-					listener( this.location, this.action );
-				} );
+			createHref: (...args) =>
+				browserHistory.createHref.apply(browserHistory, args),
+			push: (...args) => browserHistory.push.apply(browserHistory, args),
+			replace: (...args) =>
+				browserHistory.replace.apply(browserHistory, args),
+			go: (...args) => browserHistory.go.apply(browserHistory, args),
+			goBack: (...args) =>
+				browserHistory.goBack.apply(browserHistory, args),
+			goForward: (...args) =>
+				browserHistory.goForward.apply(browserHistory, args),
+			block: (...args) =>
+				browserHistory.block.apply(browserHistory, args),
+			listen(listener) {
+				return browserHistory.listen(() => {
+					listener(this.location, this.action);
+				});
 			},
 		};
 	}

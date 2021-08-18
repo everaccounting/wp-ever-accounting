@@ -8,199 +8,127 @@
  * @package EverAccounting
  */
 
+use \EverAccounting\Note;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Main function for returning note.
+ * Retrieves note data given a note id or note object.
  *
- * @param $item
+ * @param int|object|Note $note note to retrieve
+ * @param string $output The required return type. One of OBJECT, ARRAY_A, or ARRAY_N. Default OBJECT.
  *
- * @return EverAccounting\Models\Note|null
+ * @return Note|array|null
  * @since 1.1.0
- *
  */
-function eaccounting_get_note( $item ) {
-	if ( empty( $item ) ) {
+function eaccounting_get_note( $note, $output = OBJECT ) {
+	if ( empty( $note ) ) {
 		return null;
 	}
-	try {
-		$result = new EverAccounting\Models\Note( $item );
 
-		return $result->exists() ? $result : null;
-	} catch ( \Exception $e ) {
+	if ( $note instanceof Note ) {
+		$_note = $note;
+	} else {
+		$_note = new Note( $note );
+	}
+
+	if ( !$_note->exists() ) {
 		return null;
 	}
+
+	if ( ARRAY_A === $output ) {
+		return $_note->to_array();
+	}
+
+	if ( ARRAY_N === $output ) {
+		return array_values( $_note->to_array() );
+	}
+
+	return $_note;
 }
 
 /**
- * Insert note.
+ *  Insert or update a note.
  *
- * @param      $args
- * @param bool $wp_error
+ * @param array|object|Note $data An array, object, or note object of data arguments.
+ *
+ * @return Note|WP_Error The note object or WP_Error otherwise.
+ * @global wpdb $wpdb WordPress database abstraction object.
  * @since 1.1.0
- *
- * @return \EverAccounting\Models\Note|false|int|WP_Error
  */
-function eaccounting_insert_note( $args, $wp_error = true ) {
-	// Ensure that we have data.
-	if ( empty( $args ) ) {
-		return false;
+function eaccounting_insert_note( $data ) {
+	if ( $data instanceof Note ) {
+		$data = $data->to_array();
+	} elseif ( is_object( $data ) ) {
+		$data = get_object_vars( $data );
 	}
-	try {
-		// The  id will be provided when updating an item.
-		$args = wp_parse_args( $args, array( 'id' => null ) );
 
-		// Retrieve the item.
-		$item = new \EverAccounting\Models\Note( $args['id'] );
-
-		// Load new data.
-		$item->set_props( $args );
-
-		// Save the item
-		$item->save();
-
-		return $item;
-	} catch ( \Exception $e ) {
-		return $wp_error ? new WP_Error( $e->getMessage(), array( 'status' => $e->getCode() ) ) : 0;
+	if ( empty( $data ) || ! is_array( $data ) ) {
+		return new WP_Error( 'invalid_note_data', __( 'Note could not be saved.', 'wp-ever-accounting' ) );
 	}
+
+	$data = wp_parse_args( $data, array( 'id' => null ) );
+	$note = new Note( (int) $data['id'] );
+	$note->set_props( $data );
+	$is_error = $note->save();
+	if ( is_wp_error( $is_error ) ) {
+		return $is_error;
+	}
+
+	return $note;
 }
 
 /**
- * Delete an item.
+ * Delete an note.
  *
- * @param $note_id
+ * @param int $note_id Note ID
  *
- * @return bool
+ * @return array|false Note array data on success, false on failure.
  * @since 1.1.0
- *
  */
 function eaccounting_delete_note( $note_id ) {
-	try {
-		$item = new EverAccounting\Models\Note( $note_id );
+	if ( $note_id instanceof Note ) {
+		$note_id = $note_id->get_id();
+	}
 
-		return $item->exists() ? $item->delete() : false;
-	} catch ( \Exception $e ) {
+	if ( empty( $note_id ) ) {
 		return false;
 	}
+
+	$note = new Note( (int) $note_id );
+	if ( ! $note->exists() ) {
+		return false;
+	}
+
+	return $note->delete();
 }
 
 /**
- * @param array $args
+ * Retrieves an array of the notes matching the given criteria.
+ *
+ * @param array $args Arguments to retrieve notes.
+ *
+ * @return Note[]|int Array of note objects or count.
  * @since 1.1.0
  *
- * @return array|void
  */
 function eaccounting_get_notes( $args = array() ) {
-	// Prepare args.
-	$args = wp_parse_args(
-		$args,
-		array(
-			'include'     => '',
-			'parent_id'   => '',
-			'type'        => '',
-			'search'      => '',
-			'fields'      => '*',
-			'orderby'     => 'id',
-			'order'       => 'ASC',
-			'number'      => 20,
-			'offset'      => 0,
-			'paged'       => 1,
-			'return'      => 'objects',
-			'count_total' => false,
-		)
+	$defaults = array(
+		'number'        => 20,
+		'orderby'       => 'name',
+		'order'         => 'DESC',
+		'include'       => array(),
+		'exclude'       => array(),
+		'no_found_rows' => false,
+		'count_total'   => false,
 	);
 
-	global $wpdb;
-	$qv           = apply_filters( 'eaccounting_get_documents_args', $args );
-	$table        = \EverAccounting\Repositories\Notes::TABLE;
-	$columns      = \EverAccounting\Repositories\Notes::get_columns();
-	$qv['fields'] = wp_parse_list( $qv['fields'] );
-	foreach ( $qv['fields'] as $index => $field ) {
-		if ( ! in_array( $field, $columns, true ) ) {
-			unset( $qv['fields'][ $index ] );
-		}
-	}
-	$fields = is_array( $qv['fields'] ) && ! empty( $qv['fields'] ) ? implode( ',', $qv['fields'] ) : '*';
-	$where  = 'WHERE 1=1';
-
-	if ( ! empty( $qv['include'] ) ) {
-		$include = implode( ',', wp_parse_id_list( $qv['include'] ) );
-		$where  .= " AND $table.`id` IN ($include)";
-	} elseif ( ! empty( $qv['exclude'] ) ) {
-		$exclude = implode( ',', wp_parse_id_list( $qv['exclude'] ) );
-		$where  .= " AND $table.`id` NOT IN ($exclude)";
+	$parsed_args = wp_parse_args( $args, $defaults );
+	$query       = new \EverAccounting\Note_Query( $parsed_args );
+	if ( true === $parsed_args['count_total'] ) {
+		return $query->get_total();
 	}
 
-	//search
-	$search_cols = array( 'note', 'extra' );
-	if ( ! empty( $qv['search'] ) ) {
-		$searches = array();
-		$where    = ' AND (';
-		foreach ( $search_cols as $col ) {
-			$searches[] = $wpdb->prepare( $col . ' LIKE %s', '%' . $wpdb->esc_like( $qv['search'] ) . '%' );
-		}
-		$where .= implode( ' OR ', $searches );
-		$where .= ')';
-	}
 
-	if ( ! empty( $qv['type'] ) ) {
-		$types  = implode( "','", wp_parse_list( $qv['type'] ) );
-		$where .= " AND $table.`type` IN ('$types')";
-	}
-
-	if ( ! empty( $qv['parent_id'] ) ) {
-		$parent_id = implode( ',', wp_parse_id_list( $qv['parent_id'] ) );
-		$where    .= " AND $table.`parent_id` IN ($parent_id)";
-	}
-
-	if ( ! empty( $qv['date_created'] ) && is_array( $qv['date_created'] ) ) {
-		$date_created_query = new \WP_Date_Query( $qv['date_created'], "{$table}.date_created" );
-		$where             .= $date_created_query->get_sql();
-	}
-
-	if ( ! empty( $qv['creator_id'] ) ) {
-		$creator_id = implode( ',', wp_parse_id_list( $qv['creator_id'] ) );
-		$where     .= " AND $table.`creator_id` IN ($creator_id)";
-	}
-
-	$order   = isset( $qv['order'] ) ? strtoupper( $qv['order'] ) : 'ASC';
-	$orderby = isset( $qv['orderby'] ) && in_array( $qv['orderby'], $columns, true ) ? eaccounting_clean( $qv['orderby'] ) : "{$table}.id";
-
-	$limit = '';
-	if ( isset( $qv['number'] ) && $qv['number'] > 0 ) {
-		if ( $qv['offset'] ) {
-			$limit = $wpdb->prepare( 'LIMIT %d, %d', $qv['offset'], $qv['number'] );
-		} else {
-			$limit = $wpdb->prepare( 'LIMIT %d, %d', $qv['number'] * ( $qv['paged'] - 1 ), $qv['number'] );
-		}
-	}
-
-	$select      = "SELECT {$fields}";
-	$from        = "FROM {$wpdb->prefix}$table $table";
-	$orderby     = "ORDER BY {$orderby} {$order}";
-	$count_total = true === $qv['count_total'];
-	$cache_key   = 'query:' . md5( serialize( $qv ) ) . ':' . wp_cache_get_last_changed( 'ea_notes' );
-	$results     = wp_cache_get( $cache_key, 'ea_notes' );
-	$clauses     = compact( 'select', 'from', 'where', 'orderby', 'limit' );
-
-	if ( false === $results ) {
-		if ( $count_total ) {
-			$results = (int) $wpdb->get_var( "SELECT COUNT(id) $from $where" );
-			wp_cache_set( $cache_key, $results, 'ea_notes' );
-		} else {
-			$results = $wpdb->get_results( implode( ' ', $clauses ) );
-			if ( in_array( $fields, array( 'all', '*' ), true ) ) {
-				foreach ( $results as $key => $item ) {
-					wp_cache_set( $item->id, $item, 'ea_notes' );
-				}
-			}
-			wp_cache_set( $cache_key, $results, 'ea_notes' );
-		}
-	}
-
-	if ( 'objects' === $qv['return'] && true !== $qv['count_total'] ) {
-		$results = array_map('eaccounting_get_note', $results);
-	}
-
-	return $results;
+	return $query->get_results();
 }

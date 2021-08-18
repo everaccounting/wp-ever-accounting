@@ -9,20 +9,20 @@ import { lazy } from '@wordpress/element';
  */
 import { Tabs } from '@eaccounting/components';
 
-const Items = lazy( () => import( './items' ) );
+const Items = lazy(() => import('./items'));
 
-export default function ( props ) {
-	const tabs = applyFilters( 'EACCOUNTING_ITEMS_TABS', [
+export default function (props) {
+	const tabs = applyFilters('EACCOUNTING_ITEMS_TABS', [
 		{
 			key: 'items',
 			container: Items,
-			label: __( 'Items' ),
+			label: __('Items'),
 			capability: 'manage_options',
 		},
-	] );
+	]);
 	return (
 		<>
-			<Tabs tabs={ tabs } { ...props } />
+			<Tabs tabs={tabs} {...props} />
 		</>
 	);
 }

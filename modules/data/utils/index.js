@@ -11,10 +11,10 @@ import { isEqual, isObjectLike } from 'lodash';
  *
  * @return {?(string[])} Normalized field value.
  */
-export function getNormalizedCommaSeparable( value ) {
-	if ( typeof value === 'string' ) {
-		return value.split( ',' );
-	} else if ( Array.isArray( value ) ) {
+export function getNormalizedCommaSeparable(value) {
+	if (typeof value === 'string') {
+		return value.split(',');
+	} else if (Array.isArray(value)) {
 		return value;
 	}
 
@@ -31,33 +31,33 @@ export function getNormalizedCommaSeparable( value ) {
  *
  * @return {Object} Minimally modified merged item.
  */
-export function conservativeMapItem( item, nextItem ) {
+export function conservativeMapItem(item, nextItem) {
 	// Return next item in its entirety if there is no original item.
-	if ( ! item ) {
+	if (!item) {
 		return nextItem;
 	}
 
 	let hasChanges = false;
 	const result = {};
-	for ( const key in nextItem ) {
-		if ( isEqual( item[ key ], nextItem[ key ] ) ) {
-			result[ key ] = item[ key ];
+	for (const key in nextItem) {
+		if (isEqual(item[key], nextItem[key])) {
+			result[key] = item[key];
 		} else {
 			hasChanges = true;
-			result[ key ] = nextItem[ key ];
+			result[key] = nextItem[key];
 		}
 	}
 
-	if ( ! hasChanges ) {
+	if (!hasChanges) {
 		return item;
 	}
 
 	// Only at this point, backfill properties from the original item which
 	// weren't explicitly set into the result above. This is an optimization
 	// to allow `hasChanges` to return early.
-	for ( const key in item ) {
-		if ( ! result.hasOwnProperty( key ) ) {
-			result[ key ] = item[ key ];
+	for (const key in item) {
+		if (!result.hasOwnProperty(key)) {
+			result[key] = item[key];
 		}
 	}
 
@@ -73,12 +73,9 @@ export function conservativeMapItem( item, nextItem ) {
  *
  * @return {Function} Higher-order reducer.
  */
-export const ifMatchingAction = ( isMatch ) => ( reducer ) => (
-	state,
-	action
-) => {
-	if ( state === undefined || isMatch( action ) ) {
-		return reducer( state, action );
+export const ifMatchingAction = (isMatch) => (reducer) => (state, action) => {
+	if (state === undefined || isMatch(action)) {
+		return reducer(state, action);
 	}
 
 	return state;
@@ -92,29 +89,29 @@ export const ifMatchingAction = ( isMatch ) => ( reducer ) => (
  *
  * @return {Function} Higher-order reducer.
  */
-export const onSubKey = ( actionProperty ) => ( reducer ) => (
-	state = {},
-	action
-) => {
-	// Retrieve subkey from action. Do not track if undefined; useful for cases
-	// where reducer is scoped by action shape.
-	const key = action[ actionProperty ];
-	if ( key === undefined ) {
-		return state;
-	}
+export const onSubKey =
+	(actionProperty) =>
+	(reducer) =>
+	(state = {}, action) => {
+		// Retrieve subkey from action. Do not track if undefined; useful for cases
+		// where reducer is scoped by action shape.
+		const key = action[actionProperty];
+		if (key === undefined) {
+			return state;
+		}
 
-	// Avoid updating state if unchanged. Note that this also accounts for a
-	// reducer which returns undefined on a key which is not yet tracked.
-	const nextKeyState = reducer( state[ key ], action );
-	if ( nextKeyState === state[ key ] ) {
-		return state;
-	}
+		// Avoid updating state if unchanged. Note that this also accounts for a
+		// reducer which returns undefined on a key which is not yet tracked.
+		const nextKeyState = reducer(state[key], action);
+		if (nextKeyState === state[key]) {
+			return state;
+		}
 
-	return {
-		...state,
-		[ key ]: nextKeyState,
+		return {
+			...state,
+			[key]: nextKeyState,
+		};
 	};
-};
 
 /**
  * Higher-order reducer creator which substitutes the action object before
@@ -124,11 +121,8 @@ export const onSubKey = ( actionProperty ) => ( reducer ) => (
  *
  * @return {Function} Higher-order reducer.
  */
-export const replaceAction = ( replacer ) => ( reducer ) => (
-	state,
-	action
-) => {
-	return reducer( state, replacer( action ) );
+export const replaceAction = (replacer) => (reducer) => (state, action) => {
+	return reducer(state, replacer(action));
 };
 
 /**
@@ -140,21 +134,21 @@ export const replaceAction = ( replacer ) => ( reducer ) => (
  *
  * @return {Function} Enhanced caching function.
  */
-export function withWeakMapCache( fn ) {
+export function withWeakMapCache(fn) {
 	const cache = new WeakMap();
 
-	return ( key ) => {
+	return (key) => {
 		let value;
-		if ( cache.has( key ) ) {
-			value = cache.get( key );
+		if (cache.has(key)) {
+			value = cache.get(key);
 		} else {
-			value = fn( key );
+			value = fn(key);
 
 			// Can reach here if key is not valid for WeakMap, since `has`
 			// will return false for invalid key. Since `set` will throw,
 			// ensure that key is valid before setting into cache.
-			if ( isObjectLike( key ) ) {
-				cache.set( key, value );
+			if (isObjectLike(key)) {
+				cache.set(key, value);
 			}
 		}
 

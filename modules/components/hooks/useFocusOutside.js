@@ -13,7 +13,7 @@ import { useCallback, useEffect, useRef } from '@wordpress/element';
  *
  * @type {string[]}
  */
-const INPUT_BUTTON_TYPES = [ 'button', 'submit' ];
+const INPUT_BUTTON_TYPES = ['button', 'submit'];
 /* eslint-disable */
 /**
  * @typedef {HTMLButtonElement | HTMLLinkElement | HTMLInputElement} FocusNormalizedButton

@@ -34,23 +34,18 @@ class TextareaControl extends Component {
 			'ea-textarea-field',
 			className,
 			{
-				required: !! required,
-				'is-loading': !! isLoading,
+				required: !!required,
+				'is-loading': !!isLoading,
 			}
 		);
-		const id = `textarea-${ instanceId }`;
+		const id = `textarea-${instanceId}`;
 		return (
-			<BaseControl
-				id={ id }
-				label={ label }
-				help={ help }
-				className={ classes }
-			>
+			<BaseControl id={id} label={label} help={help} className={classes}>
 				<div className="ea-input-group">
 					<TextArea
-						value={ ( value && value ) || '' }
-						{ ...props }
-						required={ required }
+						value={(value && value) || ''}
+						{...props}
+						required={required}
 					/>
 				</div>
 			</BaseControl>
@@ -68,4 +63,4 @@ TextareaControl.propTypes = {
 	required: PropTypes.bool,
 };
 
-export default withInstanceId( TextareaControl );
+export default withInstanceId(TextareaControl);

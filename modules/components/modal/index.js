@@ -28,17 +28,17 @@ export default class Modal extends Component {
 	};
 
 	render() {
-		const classes = classNames( 'ea-modal' );
+		const classes = classNames('ea-modal');
 		const { onClose } = this.props;
 		return (
 			<Fragment>
 				<BaseElement
-					{ ...this.props }
-					className={ classes }
+					{...this.props}
+					className={classes}
 					overlayClassName="ea-modal-overlay"
-					onRequestClose={ onClose }
+					onRequestClose={onClose}
 				>
-					{ this.props.children }
+					{this.props.children}
 				</BaseElement>
 			</Fragment>
 		);
