@@ -37,15 +37,19 @@
     "classmap": []
   },
   "require-dev": {
-    "phpunit/phpunit": "^6.5",
-    "byteever/phpcs-composer": "dev-master"
+    "byteever/phpcs-composer": "dev-master",
+    "yoast/phpunit-polyfills": "^1.0"
   },
   "config": {
     "optimize-autoloader": true,
     "platform": {
       "php": "7.0"
     },
-    "sort-packages": true
+    "sort-packages": true,
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true,
+      "composer/installers": true
+    }
   },
   "scripts": {
     "pre-commit": [
