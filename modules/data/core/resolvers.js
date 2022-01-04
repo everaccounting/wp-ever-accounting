@@ -11,16 +11,7 @@ import { STORE_NAME } from './constants';
 /**
  * External dependencies
  */
-import {
-	compact,
-	get,
-	hasIn,
-	identity,
-	includes,
-	pickBy,
-	uniq,
-	isEmpty,
-} from 'lodash';
+import { compact, get, hasIn, identity, includes, pickBy, uniq } from 'lodash';
 import {
 	receiveEntityError,
 	receiveEntityRecords,

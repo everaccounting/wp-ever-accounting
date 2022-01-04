@@ -276,7 +276,7 @@ class Contacts_Controller extends REST_Controller {
 		if ( ! empty( $request['id'] ) ) {
 			return new \WP_Error(
 				'rest_contact_exists',
-				__( 'Cannot create existing contact.' ),
+				__( 'Cannot create existing contact.', 'wp-ever-accounting' ),
 				array( 'status' => 400 )
 			);
 		}
@@ -304,7 +304,7 @@ class Contacts_Controller extends REST_Controller {
 		if ( ! empty( $request['id'] ) ) {
 			return new \WP_Error(
 				'rest_contact_exists',
-				__( 'Cannot create existing contact.' ),
+				__( 'Cannot create existing contact.', 'wp-ever-accounting' ),
 				array( 'status' => 400 )
 			);
 		}

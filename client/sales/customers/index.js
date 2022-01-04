@@ -1,7 +1,7 @@
 /**
  * WordPress dependencies
  */
-import { __, _x } from '@wordpress/i18n';
+import { __ } from '@wordpress/i18n';
 import { Button, ToggleControl, Notice, Spacer } from '@wordpress/components';
 import { withSelect, withDispatch } from '@wordpress/data';
 import { compose } from '@wordpress/compose';
@@ -9,7 +9,7 @@ import { useState } from '@wordpress/element';
 /**
  * External dependencies
  */
-import { get, isEmpty } from 'lodash';
+import { isEmpty } from 'lodash';
 import {
 	Text,
 	H,
@@ -35,7 +35,6 @@ function Customers(props) {
 		total,
 		isRequesting,
 		fetchError,
-		defaultCurrency,
 		saveEntityRecord,
 		deleteEntityRecord,
 		isSavingEntityRecord,
@@ -142,6 +141,7 @@ function Customers(props) {
 								label: __('Delete'),
 								onClick: (row) => {
 									if (
+										// eslint-disable-next-line no-alert
 										window.confirm(
 											__(
 												'Do you really want to delete the item?'

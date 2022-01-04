@@ -278,7 +278,7 @@ class Categories_Controller extends REST_Controller {
 		if ( ! empty( $request['id'] ) ) {
 			return new \WP_Error(
 				'rest_category_exists',
-				__( 'Cannot create existing category.' ),
+				__( 'Cannot create existing category.', 'wp-ever-accounting' ),
 				array( 'status' => 400 )
 			);
 		}
@@ -306,7 +306,7 @@ class Categories_Controller extends REST_Controller {
 		if ( ! empty( $request['id'] ) ) {
 			return new \WP_Error(
 				'rest_category_exists',
-				__( 'Cannot create existing category.' ),
+				__( 'Cannot create existing category.', 'wp-ever-accounting' ),
 				array( 'status' => 400 )
 			);
 		}

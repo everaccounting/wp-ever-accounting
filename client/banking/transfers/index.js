@@ -1,7 +1,7 @@
 /**
  * WordPress dependencies
  */
-import { __, _x } from '@wordpress/i18n';
+import { __ } from '@wordpress/i18n';
 import { Button, ToggleControl, Notice, Spacer } from '@wordpress/components';
 import { withSelect, withDispatch } from '@wordpress/data';
 import { compose } from '@wordpress/compose';
@@ -217,6 +217,7 @@ function Transfers(props) {
 								label: __('Delete'),
 								onClick: (row) => {
 									if (
+										// eslint-disable-next-line no-alert
 										window.confirm(
 											__(
 												'Do you really want to delete the item?'

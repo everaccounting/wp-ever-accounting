@@ -6,22 +6,21 @@ import PropTypes from 'prop-types';
  * WordPress dependencies
  */
 import { BaseControl } from '@wordpress/components';
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { withInstanceId } from '@wordpress/compose';
+import { forwardRef } from '@wordpress/element';
 import classnames from 'classnames';
 
 /**
  * Internal dependencies
  */
 import './style.scss';
+import cuid from 'cuid';
 
-function TextControl(props) {
+const TextControl = forwardRef((props, ref) => {
 	const {
 		label,
 		value,
 		help,
 		className,
-		instanceId,
 		onChange,
 		before,
 		after,
@@ -31,8 +30,7 @@ function TextControl(props) {
 		isLoading,
 		...restProps
 	} = props;
-
-	const id = `inspector-ea-input-group-${instanceId}`;
+	const id = `inspector-ea-input-group-${cuid()}`;
 	const onChangeValue = (event) => onChange(event.target.value);
 
 	const describedby = [];
@@ -95,6 +93,7 @@ function TextControl(props) {
 					autoComplete="off"
 					placeholder={newPlaceholder}
 					aria-describedby={describedby.join(' ')}
+					ref={ref}
 					{...restProps}
 				/>
 
@@ -106,7 +105,7 @@ function TextControl(props) {
 			</div>
 		</BaseControl>
 	);
-}
+});
 
 TextControl.defaultProps = {
 	type: 'text',
@@ -125,4 +124,4 @@ TextControl.propTypes = {
 	validate: PropTypes.func,
 };
 
-export default withInstanceId(TextControl);
+export default TextControl;

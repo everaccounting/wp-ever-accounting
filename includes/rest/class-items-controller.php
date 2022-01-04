@@ -276,7 +276,7 @@ class Items_Controller extends REST_Controller {
 		if ( ! empty( $request['id'] ) ) {
 			return new \WP_Error(
 				'rest_item_exists',
-				__( 'Cannot create existing item.' ),
+				__( 'Cannot create existing item.', 'wp-ever-accounting' ),
 				array( 'status' => 400 )
 			);
 		}
@@ -304,7 +304,7 @@ class Items_Controller extends REST_Controller {
 		if ( ! empty( $request['id'] ) ) {
 			return new \WP_Error(
 				'rest_item_exists',
-				__( 'Cannot create existing item.' ),
+				__( 'Cannot create existing item.', 'wp-ever-accounting' ),
 				array( 'status' => 400 )
 			);
 		}

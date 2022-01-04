@@ -181,12 +181,18 @@ export function isDeletingEntityRecord(state, name, recordId) {
  *
  * @param {Object} state    State tree.
  * @param {string} name     Entity name.
- * @param {number} recordId Record ID.
  *
  * @return {Object?} The entity record's save error.
  */
-export function getEntityRecordSaveError(state, name, recordId) {
-	return get(state.entities.data, [name, 'saving', recordId, 'error']);
+export function getEntityRecordSaveError(state, name) {
+	return (recordId) => {
+		return get(
+			state.entities.data,
+			[name, 'saving', recordId, 'error'],
+			false
+		);
+	};
+	//return get(state.entities.data, [name, 'saving', recordId, 'error']);
 }
 
 /**
@@ -263,7 +269,7 @@ export const getDirtyEntityRecords = createSelector(
 			);
 
 			if (primaryKeys.length) {
-				const schema = getSchema(name);
+				const schema = getEntity(name);
 				primaryKeys.forEach((primaryKey) => {
 					const entityRecord = getEditedEntityRecord(
 						state,
@@ -312,7 +318,7 @@ export function getEntityRecordEdits(state, name, recordId) {
  */
 export const getEntityRecordNonTransientEdits = createSelector(
 	(state, name, recordId) => {
-		const { transientEdits } = getSchema(name) || {};
+		const { transientEdits } = getEntity(name) || {};
 		const edits = getEntityRecordEdits(state, name, recordId) || {};
 		if (!transientEdits) {
 			return edits;

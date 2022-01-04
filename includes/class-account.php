@@ -262,7 +262,7 @@ class Account extends Data {
 		 *
 		 * @since 1.2.1
 		 */
-		do_action( 'eaccounting_pre_update_account', $this->get_id(), $this->to_array(), $changes, $this );
+		do_action( 'eaccounting_update_account', $this->get_id(), $this->to_array(), $changes, $this );
 
 		return true;
 	}

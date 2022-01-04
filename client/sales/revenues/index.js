@@ -2,7 +2,7 @@
  * WordPress dependencies
  */
 import { __, _x } from '@wordpress/i18n';
-import { Button, ToggleControl, Notice, Spacer } from '@wordpress/components';
+import { Button, Notice, Spacer } from '@wordpress/components';
 import { withSelect, withDispatch } from '@wordpress/data';
 import { compose } from '@wordpress/compose';
 import { useState } from '@wordpress/element';
@@ -141,12 +141,10 @@ function Revenues(props) {
 		total,
 		isRequesting,
 		fetchError,
-		defaultCurrency,
-		saveEntityRecord,
 		deleteEntityRecord,
-		isSavingEntityRecord,
 	} = props;
 	const { search, revenue_id } = query;
+	// eslint-disable-next-line no-unused-vars
 	const [editingItemId, setEditingItemId] = useState(false);
 	return (
 		<>
@@ -247,6 +245,7 @@ function Revenues(props) {
 								label: __('Delete'),
 								onClick: (row) => {
 									if (
+										// eslint-disable-next-line no-alert
 										window.confirm(
 											__(
 												'Do you really want to delete the item?'

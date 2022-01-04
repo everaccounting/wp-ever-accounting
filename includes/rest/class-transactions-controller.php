@@ -304,7 +304,7 @@ class Transactions_Controller extends REST_Controller {
 		if ( ! empty( $request['id'] ) ) {
 			return new \WP_Error(
 				'rest_transaction_exists',
-				__( 'Cannot create existing transaction.' ),
+				__( 'Cannot create existing transaction.', 'wp-ever-accounting' ),
 				array( 'status' => 400 )
 			);
 		}

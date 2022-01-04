@@ -1,29 +1,35 @@
 /**
  * WordPress dependencies
  */
-import { Button } from '@wordpress/components';
-import { useSelect, useDispatch } from '@wordpress/data';
+// import { Button } from '@wordpress/components';
+// import { useSelect, useDispatch } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
-import { useEffect } from '@wordpress/element';
-import { applyFilters } from '@wordpress/hooks';
+// import { useEffect } from '@wordpress/element';
+// import { applyFilters } from '@wordpress/hooks';
 /**
  * External dependencies
  */
-import { isEmpty } from 'lodash';
+// import { isEmpty } from 'lodash';
+import { useForm, Controller } from 'react-hook-form';
 /**
  * Internal dependencies
  */
 import Modal from '../../modal';
-import Form from '../../form';
 import TextControl from '../../text-control';
+import { forwardRef, useMemo } from '@wordpress/element';
 import EntitySelect from '../../entity-select';
-import TabPanel from '../../tab-panel';
+import { useSelect } from '@wordpress/data';
 import { CORE_STORE_NAME } from '@eaccounting/data';
-import TextareaControl from '../../textarea-control';
+// import TabPanel from '../../tab-panel';
+// import { CORE_STORE_NAME } from '@eaccounting/data';
+// import TextareaControl from '../../textarea-control';
+// import InputControl from '../../input-control';
 
 export default function ItemModal(props) {
+	console.log(props);
 	const { item = { id: undefined }, onSave = (x) => x, onClose } = props;
 	const { title = item.id ? __('Update Item') : __('Add Item') } = props;
+
 	const { isSavingEntityRecord, entityRecordSaveError, defaultCurrency } =
 		useSelect((select) => {
 			const {
@@ -33,133 +39,63 @@ export default function ItemModal(props) {
 			} = select(CORE_STORE_NAME);
 			return {
 				isSavingEntityRecord: isSavingEntityRecord('items'),
-				entityRecordSaveError: getEntityRecordSaveError(
-					'items',
-					item.id
-				),
+				entityRecordSaveError: getEntityRecordSaveError('items'),
 				defaultCurrency: getDefaultCurrency(),
 			};
 		});
-	const { code = 'USD' } = defaultCurrency;
-	const { saveEntityRecord, createNotice } = useDispatch(CORE_STORE_NAME);
 
-	const onSubmit = async (item) => {
-		const res = await saveEntityRecord('items', item);
-		if (!isSavingEntityRecord(item.id) && res && res.id) {
-			createNotice('success', __('Item saved successfully!'));
-			onSave(res);
-		}
+	const {
+		handleSubmit,
+		control,
+		formState: { isValid },
+	} = useForm({
+		defaultValues: item,
+		mode: 'onChange',
+	});
+	const onSubmit = (data) => {
+		console.log(data);
 	};
 
-	const validate = (values, errors = {}) => {
-		console.log('validate', values);
-		if (isEmpty(values.name)) {
-			errors.name = __('Name is required');
-		}
-		if (isEmpty(values.sale_price)) {
-			errors.sale_price = __('Sale price is required');
-		}
-		return applyFilters('EACCOUNTING_VALIDATE_ITEM_PARAMS', errors, values);
-	};
+	console.log(defaultCurrency);
 
-	useEffect(() => {
-		// eslint-disable-next-line no-unused-expressions
-		entityRecordSaveError &&
-			createNotice('error', entityRecordSaveError.message);
-	}, [entityRecordSaveError]);
-	console.log(item);
 	return (
 		<>
 			<Modal title={title} onClose={onClose}>
-				<Form
-					initialValues={{
-						...item,
-					}}
-					onSubmitCallback={onSubmit}
-					validate={validate}
-				>
-					{({
-						getInputProps,
-						isValidForm,
-						handleSubmit,
-						setValue,
-						values,
-					}) => (
-						<>
-							{console.log(values)}
-							{console.log(isValidForm)}
-							{console.log(isSavingEntityRecord(item.id))}
+				<form onSubmit={handleSubmit(onSubmit)}>
+					<Controller
+						render={({ field }) => (
+							<TextControl label={__('Name')} {...field} />
+						)}
+						control={control}
+						name="name"
+					/>
+					<Controller
+						render={({ field }) => (
 							<TextControl
-								required
-								label={__('Name')}
-								{...getInputProps('name')}
-							/>
-							<TextControl
-								required
-								before={code}
+								before={defaultCurrency.code}
 								label={__('Sale Price')}
-								{...getInputProps('sale_price')}
-								onChange={(val) =>
-									setValue(
-										'sale_price',
-										val.replace(/[^0-9.]/g, '')
-									)
-								}
+								{...field}
 							/>
-							<TextControl
-								before={code}
-								label={__('Purchase Price')}
-								{...getInputProps('purchase_price')}
-								onChange={(val) =>
-									setValue(
-										'purchase_price',
-										val.replace(/[^0-9.]/g, '')
-									)
-								}
-							/>
+						)}
+						control={control}
+						name="sale_price"
+						rules={{ required: true }}
+					/>
+					<Controller
+						render={({ field }) => (
 							<EntitySelect
-								required
+								{...field}
+								creatable={true}
 								label={__('Category')}
 								entityName={'itemCategories'}
-								creatable={true}
-								{...getInputProps('category')}
 							/>
-							<TabPanel
-								tabs={[
-									{
-										title: __('Details'),
-										name: 'details',
-										render: () => {
-											return (
-												<>
-													<TextareaControl
-														label={__(
-															'description'
-														)}
-														{...getInputProps(
-															'description'
-														)}
-													/>
-												</>
-											);
-										},
-									},
-								]}
-							/>
-							<Button
-								type="submit"
-								isPrimary
-								disabled={
-									!isValidForm ||
-									isSavingEntityRecord(item.id)
-								}
-								onClick={handleSubmit}
-							>
-								{__('Submit')}
-							</Button>
-						</>
-					)}
-				</Form>
+						)}
+						control={control}
+						name="category"
+						rules={{ required: true }}
+					/>
+					<input type="submit" />
+				</form>
 			</Modal>
 		</>
 	);

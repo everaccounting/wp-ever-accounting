@@ -12,6 +12,7 @@ export { default as EntitySelect } from './entity-select';
 export { default as Form } from './form';
 export { default as Gravatar } from './gravatar';
 export { default as ImageUpload } from './image-upload';
+// export { default as InputControl } from './input-control';
 export { default as Link } from './link';
 export { default as ListTable } from './list-table'; //large size
 export { default as Loading } from './loading';

@@ -356,7 +356,7 @@ class Contact extends MetaData {
 		 *
 		 * @since 1.2.1
 		 */
-		do_action( 'eaccounting_pre_update_contact', $this->get_id(), $this->to_array(), $changes, $this );
+		do_action( 'eaccounting_update_contact', $this->get_id(), $this->to_array(), $changes, $this );
 
 		/**
 		 * Fires immediately after a existing contact is updated in the database.
@@ -371,7 +371,7 @@ class Contact extends MetaData {
 		 *
 		 * @since 1.2.1
 		 */
-		do_action( "eaccounting_pre_update_contact_{$this->type}", $this->get_id(), $this->to_array(), $changes, $this );
+		do_action( "eaccounting_update_contact_{$this->type}", $this->get_id(), $this->to_array(), $changes, $this );
 
 		return true;
 	}

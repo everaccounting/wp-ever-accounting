@@ -276,7 +276,7 @@ class Accounts_Controller extends REST_Controller {
 		if ( ! empty( $request['id'] ) ) {
 			return new \WP_Error(
 				'rest_account_exists',
-				__( 'Cannot create existing account.' ),
+				__( 'Cannot create existing account.', 'wp-ever-accounting' ),
 				array( 'status' => 400 )
 			);
 		}
@@ -304,7 +304,7 @@ class Accounts_Controller extends REST_Controller {
 		if ( ! empty( $request['id'] ) ) {
 			return new \WP_Error(
 				'rest_account_exists',
-				__( 'Cannot create existing account.' ),
+				__( 'Cannot create existing account.', 'wp-ever-accounting' ),
 				array( 'status' => 400 )
 			);
 		}

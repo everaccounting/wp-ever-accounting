@@ -8,10 +8,10 @@ import { applyFilters } from '@wordpress/hooks';
  * External dependencies
  */
 import { Loading } from '@eaccounting/components';
-import { getScreenFromPath, getHistory } from '@eaccounting/navigation';
+import { getHistory } from '@eaccounting/navigation';
 import { __ } from '@wordpress/i18n';
 import { parse, stringify } from 'qs';
-import { find, isEqual, last, omit } from 'lodash';
+import { last } from 'lodash';
 
 const Overview = lazy(() => import('../overview'));
 const Items = lazy(() => import('../items'));
@@ -104,7 +104,7 @@ export function updateLinkHref(item) {
 }
 
 // Update's eaccounting links in wp-admin menu
-window.wpNavMenuUrlUpdate = function (query) {
+window.wpNavMenuUrlUpdate = function () {
 	Array.from(document.querySelectorAll('#adminmenu a')).forEach((item) =>
 		updateLinkHref(item)
 	);

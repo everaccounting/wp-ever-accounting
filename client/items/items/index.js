@@ -225,6 +225,7 @@ function Items(props) {
 								label: __('Delete'),
 								onClick: (row) => {
 									if (
+										// eslint-disable-next-line no-alert
 										window.confirm(
 											__(
 												'Do you really want to delete the item?'

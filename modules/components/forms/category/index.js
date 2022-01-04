@@ -3,20 +3,18 @@
  */
 import { __ } from '@wordpress/i18n';
 import { Button } from '@wordpress/components';
-import { applyFilters } from '@wordpress/hooks';
-/**
- * External dependencies
- */
-import { isEmpty, trim } from 'lodash';
+import { useDispatch, useSelect } from '@wordpress/data';
 /**
  * Internal dependencies
  */
 import Modal from '../../modal';
-import Form from '../../form';
 import TextControl from '../../text-control';
-import { useDispatch, useSelect } from '@wordpress/data';
+
+/**
+ * External dependencies
+ */
+import { useForm, Controller } from 'react-hook-form';
 import { CORE_STORE_NAME } from '@eaccounting/data';
-import { useEffect } from '@wordpress/element';
 
 export default function CategoryModal(props) {
 	const {
@@ -33,74 +31,63 @@ export default function CategoryModal(props) {
 			const { isSavingEntityRecord, getEntityRecordSaveError } =
 				select(CORE_STORE_NAME);
 			return {
-				isSavingEntityRecord: isSavingEntityRecord(
-					'categories',
-					item.id
-				),
-				entityRecordSaveError: getEntityRecordSaveError(
-					'categories',
-					item.id
-				),
+				isSavingEntityRecord: isSavingEntityRecord('categories'),
+				entityRecordSaveError: getEntityRecordSaveError('categories'),
 			};
 		}
 	);
 
 	const { saveEntityRecord, createNotice } = useDispatch(CORE_STORE_NAME);
 
-	const validate = (values, errors = {}) => {
-		if (isEmpty(trim(values.name))) {
-			errors.name = __('Category Name is required');
-		}
-		if (isEmpty(trim(values.type))) {
-			errors.type = __('Category Type is required');
-		}
-		return applyFilters(
-			'EACCOUNTING_VALIDATE_CATEGORY_PARAMS',
-			errors,
-			values
-		);
-	};
+	const {
+		handleSubmit,
+		control,
+		formState: { isValid },
+	} = useForm({
+		defaultValues: item,
+		mode: 'onChange',
+	});
 
 	const onSubmit = async (item) => {
 		const res = await saveEntityRecord('categories', { ...item, type });
-		if (!isSavingEntityRecord && res && res.id) {
+		if (!isSavingEntityRecord(res.id) && res && res.id) {
 			createNotice('success', __('Category saved successfully!'));
 			onSave(res);
 		}
 	};
 
-	useEffect(() => {
-		// eslint-disable-next-line no-unused-expressions
-		entityRecordSaveError &&
-			createNotice('error', entityRecordSaveError.message);
-	}, [entityRecordSaveError]);
+	const validateName = (name) => {
+		console.log(name);
+		return name;
+	};
+
+	const saveError = entityRecordSaveError(item.id);
+	if (saveError && saveError.message) {
+		createNotice('error', entityRecordSaveError.message);
+	}
 
 	return (
 		<>
 			<Modal title={title} onClose={onClose}>
-				<Form
-					initialValues={{ ...item, type }}
-					onSubmitCallback={onSubmit}
-					validate={validate}
-				>
-					{({ getInputProps, isValidForm, handleSubmit }) => (
-						<>
-							<TextControl
-								required={true}
-								label={__('Name')}
-								{...getInputProps('name')}
-							/>
-							<Button
-								type="submit"
-								isPrimary
-								disabled={!isValidForm || isSavingEntityRecord}
-								onClick={handleSubmit}
-							>
-								{__('Submit')}
-							</Button>
-						</>
-					)}
-				</Form>
+				<form onSubmit={handleSubmit(onSubmit)}>
+					<Controller
+						render={({ field }) => (
+							<TextControl label={__('Name')} {...field} />
+						)}
+						control={control}
+						name="name"
+						rules={{ required: true, validate: validateName }}
+					/>
+
+					<Button
+						type="submit"
+						isPrimary
+						disabled={!isValid || isSavingEntityRecord(item.id)}
+						onClick={handleSubmit}
+					>
+						{__('Submit')}
+					</Button>
+				</form>
 			</Modal>
 		</>
 	);
