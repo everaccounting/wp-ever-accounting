@@ -9,7 +9,7 @@
  * Requires at least: 4.7.0
  * Tested up to: 5.7
  * Text Domain: wp-ever-accounting
- * Domain Path: /languages/
+ * Domain Path: i18n/languages
  * License: GPL2+
  *
  * @package wp-ever-accounting
@@ -285,7 +285,7 @@ final class EverAccounting {
 	public function localization_setup() {
 		$locale = ( get_locale() !== '' ) ? get_locale() : 'en_US';
 		load_textdomain( 'wp-ever-accounting', WP_LANG_DIR . '/plugins/wp-ever-accounting-' . $locale . '.mo' );
-		load_plugin_textdomain( 'wp-ever-accounting', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
+		load_plugin_textdomain( 'wp-ever-accounting', false, dirname( plugin_basename( __FILE__ ) ) . '/i18n/languages' );
 	}
 
 	/**

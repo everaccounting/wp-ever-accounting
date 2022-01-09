@@ -1,7 +1,7 @@
 /**
  * Determine if an event is outside of a wrapper.
  *
- * @param {Event} ev - Click event
+ * @param {Event}            ev           - Click event
  * @param {HTMLElement|null} containerRef - DOM node for the wrapper
  * @listens click
  * @return {boolean}}

@@ -31,3 +31,8 @@ Desktop.ini
 
 #Override
 !assets/js/vendor
+
+#Plugin specific
+assets
+@next
+
