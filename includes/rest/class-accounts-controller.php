@@ -173,7 +173,7 @@ class Accounts_Controller extends REST_Controller {
 			$accounts[] = $this->prepare_response_for_collection( $data );
 		}
 
-		$page      = (int) $account->query_vars['paged'];
+		$page      = (int) $account_query->get( 'paged' );
 		$max_pages = ceil( $query_total / (int) $account_query->get( 'number' ) );
 
 		if ( $page > $max_pages && $query_total > 0 ) {
@@ -525,10 +525,10 @@ class Accounts_Controller extends REST_Controller {
 			if ( ! is_null( $value ) ) {
 				switch ( $key ) {
 					case 'currency':
-						if ( !is_object( $value ) || empty( $value->code ) ){
+						if ( ! is_array( $value ) || empty( $value['code'] ) ) {
 							break;
 						}
-						$currency = eaccounting_get_currency( $value->code );
+						$currency = eaccounting_get_currency( $value['code'] );
 						if ( $currency ) {
 							$props['currency_code'] = $currency->code;
 						}
