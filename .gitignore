@@ -3,6 +3,7 @@ bower_components
 release
 vendor
 .idea
+.husky
 
 # Project Files
 dist

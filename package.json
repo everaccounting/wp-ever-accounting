@@ -26,7 +26,6 @@
     "@wordpress/icons": "^6.1.1",
     "chart.js": "2.9.3",
     "classnames": "^2.3.0",
-    "clean-webpack-plugin": "^4.0.0",
     "cuid": "^2.1.8",
     "equivalent-key-map": "^0.2.2",
     "inputmask": "^5.0.5",
@@ -38,15 +37,19 @@
     "select2": "~4.0"
   },
   "devDependencies": {
-    "@byteever/scripts": "file:../scripts",
+    "@babel/plugin-proposal-class-properties": "^7.16.7",
+    "@babel/plugin-transform-runtime": "^7.16.10",
+    "@byteever/scripts": "git+ssh://git@github.com/byteever/scripts.git",
+    "@wordpress/babel-plugin-makepot": "^4.2.0",
     "cross-env": "^7.0.3",
     "grunt-checktextdomain": "^1.0.1",
     "grunt-shell": "^3.0.1",
     "grunt-wp-i18n": "^1.0.3",
-    "husky": "^4.3.8",
+    "husky": "^7.0.4",
     "matchdep": "^2.0.0"
   },
   "scripts": {
+    "postinstall": "husky install",
     "start": "composer install && npm install && npm -s run watch",
     "prestart": "php ./bin/update-version.php",
     "watch": "cross-env NODE_ENV=develop byteever-scripts start",
