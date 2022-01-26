@@ -17,44 +17,38 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Contact class.
  */
-class Customer extends Contact {
+class Vendor extends Contact {
 	use Attachment;
 	use CurrencyTrait;
+
 	/**
 	 * This is the name of this object type.
 	 *
 	 * @since 1.1.0
 	 * @var string
 	 */
-	protected $object_type = 'customer';
+	protected $object_type = 'vendor';
 
 	/**
 	 * Contact constructor.
 	 *
-	 * @param int|customer|object|null $customer customer instance.
+	 * @param int|customer|object|null $vendor vendor instance.
 	 *
 	 * @since 1.0.0
 	 */
-	public function __construct( $customer = 0 ) {
+	public function __construct( $vendor = 0 ) {
 
-		$this->core_data['type']       = 'customer';
-		$this->set_total_due( 0 );
+		$this->core_data['type']       = 'vendor';
+		$this->set_total_paid( 0 );
 		$this->set_total_paid( 0 );
 
-		parent::__construct( $customer );
+		parent::__construct( $vendor );
 
-		if ( $this->type !== 'customer' ) {
+		if ( $this->type !== 'vendor' ) {
 			$this->set_id( 0 );
 			$this->set_defaults();
 		}
 	}
-
-	/*
-	|--------------------------------------------------------------------------
-	| Getters
-	|--------------------------------------------------------------------------
-	*/
-
 	/**
 	 * Get due amount.
 	 *
@@ -89,7 +83,7 @@ class Customer extends Contact {
 	 * @param string $value due amount.
 	 */
 	public function set_total_due( $value ) {
-		$this->update_meta( 'total_due', eaccounting_price( $value, null, true  ) );
+		$this->update_meta_data( 'total_due', eaccounting_price( $value, null, true ) );
 	}
 
 	/**
@@ -98,7 +92,7 @@ class Customer extends Contact {
 	 * @param string $value paid amount.
 	 */
 	public function set_total_paid( $value ) {
-		$this->update_meta( 'total_paid', eaccounting_price( $value, null, true ) );
+		$this->update_meta_data( 'total_paid', eaccounting_price( $value, null, true ) );
 	}
 
 	/*
@@ -108,57 +102,59 @@ class Customer extends Contact {
 	*/
 
 	/**
-	 * Get total paid by a customer.
+	 * Get total paid by a vendor.
 	 *
 	 * @since 1.1.0
 	 * @return float|int|string
 	 */
 	public function get_calculated_total_paid() {
 		global $wpdb;
-		$total = wp_cache_get( 'customer_total_total_paid_' . $this->get_id(), 'ea_customers' );
+		$total = wp_cache_get( 'vendor_total_total_paid_' . $this->get_id(), 'ea_vendors' );
 		if ( false === $total ) {
 			$total        = 0;
-			$transactions = $wpdb->get_results( $wpdb->prepare( "SELECT amount, currency_code, currency_rate FROM {$wpdb->prefix}ea_transactions WHERE type='income' AND contact_id=%d", $this->get_id() ) );
+			$transactions = $wpdb->get_results( $wpdb->prepare( "SELECT amount, currency_code, currency_rate FROM {$wpdb->prefix}ea_transactions WHERE type='expense' AND contact_id=%d", $this->get_id() ) );
 			foreach ( $transactions as $transaction ) {
 				$total += eaccounting_price_to_default( $transaction->amount, $transaction->currency_code, $transaction->currency_rate );
 			}
-			wp_cache_set( 'customer_total_total_paid_' . $this->get_id(), $total, 'ea_customers' );
+			wp_cache_set( 'vendor_total_total_paid_' . $this->get_id(), $total, 'ea_vendors' );
 		}
 
 		return $total;
 	}
 
 	/**
-	 * Get total paid by a customer.
+	 * Get total due by a vendor.
 	 *
 	 * @since 1.1.0
 	 * @return float|int|string
 	 */
 	public function get_calculated_total_due() {
 		global $wpdb;
-		$total = wp_cache_get( 'customer_total_total_due_' . $this->get_id(), 'ea_customers' );
+		$total = wp_cache_get( 'vendor_total_total_due_' . $this->get_id(), 'ea_vendors' );
 		if ( false === $total ) {
-			$invoices = $wpdb->get_results(
+			$bills = $wpdb->get_results(
 				$wpdb->prepare(
 					"SELECT id, total amount, currency_code, currency_rate  FROM   {$wpdb->prefix}ea_documents
 					   WHERE  status NOT IN ( 'draft', 'cancelled', 'paid' )
-					   AND type = 'invoice' AND contact_id=%d",
+					   AND type = 'bill' AND contact_id=%d",
 					$this->get_id()
 				)
 			);
+
 			$total = 0;
-			foreach ( $invoices as $invoice ) {
-				$total += eaccounting_price_to_default( $invoice->amount, $invoice->currency_code, $invoice->currency_rate );
+			foreach ( $bills as $bill ) {
+				$total += eaccounting_price_to_default( $bill->amount, $bill->currency_code, $bill->currency_rate );
 			}
+
 			if ( ! empty( $total ) ) {
-				$invoice_ids = implode( ',', wp_parse_id_list( wp_list_pluck( $invoices, 'id' ) ) );
-				$revenues    = $wpdb->get_results(
+				$bill_ids = implode( ',', wp_parse_id_list( wp_list_pluck( $bills, 'id' ) ) );
+				$revenues = $wpdb->get_results(
 					$wpdb->prepare(
 						"SELECT Sum(amount) amount, currency_code, currency_rate
 		  			   FROM   {$wpdb->prefix}ea_transactions
-		               WHERE  type = %s AND document_id IN ($invoice_ids)
+		               WHERE  type = %s AND document_id IN ($bill_ids)
 		  			   GROUP  BY currency_code,currency_rate",
-						'income'
+						'expense'
 					)
 				);
 
@@ -166,9 +162,10 @@ class Customer extends Contact {
 					$total -= eaccounting_price_to_default( $revenue->amount, $revenue->currency_code, $revenue->currency_rate );
 				}
 			}
-			wp_cache_set( 'customer_total_total_due_' . $this->get_id(), $total, 'ea_customers' );
+			wp_cache_set( 'vendor_total_total_due_' . $this->get_id(), $total, 'ea_vendors' );
 		}
 
 		return $total;
 	}
+
 }

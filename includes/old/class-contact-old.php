@@ -7,14 +7,14 @@
  * @class       Contact
  */
 
-namespace EverAccounting;
+namespace EverAccounting\Old;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
  * Contact class.
  */
-class Contact extends Data {
+class Contact_Old extends Data {
 	/**
 	 * This is the name of this object type.
 	 *
@@ -82,10 +82,7 @@ class Contact extends Data {
 	 * @since 1.1.3
 	 * @var array
 	 */
-	protected $meta_data = array(
-		'total_paid' => '',
-		'total_due' => ''
-	);
+	protected $meta_data = array();
 
 	/**
 	 * Contact constructor.
@@ -111,21 +108,6 @@ class Contact extends Data {
 		$this->read();
 	}
 
-	/**
-	 * Get contact's country.
-	 *
-	 * @since 1.0.2
-	 *
-	 * @param string $context
-	 *
-	 * @return string
-	 */
-	public function get_country_nicename( $context = 'edit' ) {
-		$countries = eaccounting_get_countries();
-
-		return isset( $countries[ $this->get_prop( 'country' ) ] ) ? $countries[ $this->get_prop( 'country' ) ] : $this->get_prop( 'country' );
-	}
-
 	/*
 	|--------------------------------------------------------------------------
 	| CRUD methods
@@ -141,10 +123,206 @@ class Contact extends Data {
 	*/
 
 	/**
+	 *  Create an item in the database.
+	 *
+	 * This method is not meant to call publicly instead call save
+	 * which will conditionally decide which method to call.
+	 *
+	 * @since 1.0.0
+	 * @return \WP_Error|true True on success, WP_Error on failure.
+	 * @global \wpdb $wpdb WordPress database abstraction object.
+	 */
+	protected function create() {
+		global $wpdb;
+
+		$data = wp_unslash( $this->get_core_data() );
+
+		/**
+		 * Fires immediately before a contact is inserted in the database.
+		 *
+		 * @param array $data Contact data to be inserted.
+		 * @param string $data_arr Sanitized contact data.
+		 * @param Contact $contact Contact object.
+		 *
+		 * @since 1.1.3
+		 */
+		do_action( 'eaccounting_pre_insert_' . $this->object_type, $data, $this->get_data(), $this );
+
+		if ( false === $wpdb->insert( $wpdb->prefix . $this->table, $data, array() ) ) {
+			return new \WP_Error( 'db_insert_error', __( 'Could not insert contact into the database.', 'text-domain' ), $wpdb->last_error );
+		}
+
+		$this->set_id( $wpdb->insert_id );
+		$this->update_meta_data();
+		$this->apply_changes();
+
+		return $this->exists();
+	}
+
+	/**
+	 * Retrieve the object from database instance.
+	 *
+	 * @since 1.1.3
+	 *
+	 * @return object|false Object, false otherwise.
+	 * @global \wpdb $wpdb WordPress database abstraction object.
+	 */
+	protected function read() {
+		global $wpdb;
+		$this->set_defaults();
+		// Bail early if no id is set.
+		if ( ! $this->get_id() ) {
+			return false;
+		}
+
+		$data = wp_cache_get( $this->get_id(), $this->cache_group );
+		if ( false === $data ) {
+			$data = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}{$this->table} WHERE id = %d LIMIT 1;", $this->get_id() ) ); // WPCS: cache ok, DB call ok.
+			wp_cache_add( $this->get_id(), $data, $this->cache_group );
+		}
+
+		if ( ! $data ) {
+			$this->set_id( 0 );
+
+			return false;
+		}
+
+		$this->set_props( $data );
+		$this->read_meta_data();
+		$this->set_object_read( true );
+		do_action( 'eaccounting_read_' . $this->object_type . '_item', $this->get_id(), $this );
+
+		return $data;
+	}
+
+	/**
+	 *  Update an object in the database.
+	 *
+	 * This method is not meant to call publicly instead call save
+	 * which will conditionally decide which method to call.
+	 *
+	 * @since 1.1.3
+	 * @return \WP_Error|true True on success, WP_Error on failure.
+	 * @global \wpdb $wpdb WordPress database abstraction object.
+	 */
+	protected function update() {
+		global $wpdb;
+		$changes = $this->get_changes();
+
+		// Bail if nothing to save
+		if ( empty( $changes ) ) {
+			return true;
+		}
+
+		/**
+		 * Fires immediately before an existing contact is updated in the database.
+		 *
+		 * @param int $id Contact id.
+		 * @param array $data Contact data.
+		 * @param array $changes The data will be updated.
+		 * @param Contact $contact Contact object.
+		 *
+		 * @since 1.0.0
+		 */
+		do_action( 'eaccounting_pre_update_' . $this->object_type, $this->get_id(), $this->get_data(), $changes, $this );
+
+
+		$this->date_updated = current_time( 'mysql' );
+		$data               = wp_unslash( $this->get_core_data() );
+		if ( false === $wpdb->update( $wpdb->prefix . $this->table, $data, [ 'id' => $this->get_id() ], array(), [ 'id' => '%d' ] ) ) {
+			return new \WP_Error( 'db_update_error', __( 'Could not update contact in the database.', 'text-domain' ), $wpdb->last_error );
+		}
+
+		$this->update_meta_data();
+
+		/**
+		 * Fires immediately after an existing contact is updated in the database.
+		 *
+		 * @param int $id Contact id.
+		 * @param array $data Contact data.
+		 * @param array $changes The data will be updated.
+		 * @param Contact $contact Contact object.
+		 *
+		 * @since 1.0.0
+		 */
+		do_action( 'eaccounting_update_' . $this->object_type, $this->get_id(), $this->get_data(), $changes, $this );
+
+
+		return true;
+	}
+
+	/**
+	 * Deletes the object from database.
+	 *
+	 * @param array $args Array of args to pass to the delete method.
+	 *
+	 * @since 1.1.3
+	 * @return array|false true on success, false on failure.
+	 */
+	public function delete( $args = array() ) {
+		if ( ! $this->exists() ) {
+			return false;
+		}
+		$data = $this->get_data();
+
+		/**
+		 * Filters whether a contact delete should take place.
+		 *
+		 * @param bool|null $delete Whether to go forward with deletion.
+		 * @param int $id Contact id.
+		 * @param array $data Contact data array.
+		 * @param Contact $contact Contact object.
+		 *
+		 * @since 1.0.0
+		 */
+		$check = apply_filters( 'eaccounting_check_delete_' . $this->object_type, null, $this->get_id(), $data, $this );
+		if ( null !== $check ) {
+			return $check;
+		}
+
+		/**
+		 * Fires before a contact is deleted.
+		 *
+		 * @param int $id Contact id.
+		 * @param array $data Contact data array.
+		 * @param Contact $contact Contact object.
+		 *
+		 * @since 1.0.0
+		 */
+		do_action( 'eaccounting_pre_delete_' . $this->object_type, $this->get_id(), $data, $this );
+
+		global $wpdb;
+
+		$wpdb->delete(
+			$wpdb->prefix . $this->table,
+			array(
+				'id' => $this->get_id(),
+			),
+			array( '%d' )
+		);
+
+		/**
+		 * Fires after a contact is deleted.
+		 *
+		 * @param int $id Contact id.
+		 * @param array $data Contact data array.
+		 *
+		 * @since 1.0.0
+		 */
+		do_action( 'eaccounting_delete_' . $this->object_type, $this->get_id(), $data );
+
+		wp_cache_delete( $this->get_id(), $this->cache_group );
+		wp_cache_set( 'last_changed', microtime(), $this->cache_group );
+		$this->set_defaults();
+
+		return $data;
+	}
+
+	/**
 	 * Saves an object in the database.
 	 *
-	 * @return \WP_Error|int id on success, WP_Error on failure.
 	 * @since 1.1.3
+	 * @return \WP_Error|int id on success, WP_Error on failure.
 	 */
 	public function save() {
 		// check if anything missing before save.
@@ -383,7 +561,7 @@ class Contact extends Data {
 	 *
 	 */
 	protected function set_type( $type ) {
-		if ( array_key_exists( $type, Contacts::get_types() ) ) {
+		if ( array_key_exists( $type, eaccounting_get_contact_types() ) ) {
 			$this->set_prop( 'type', $type );
 		}
 	}

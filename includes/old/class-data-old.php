@@ -10,14 +10,14 @@
  * @package     EverAccounting
  */
 
-namespace EverAccounting;
+namespace EverAccounting\Old;
 
 defined( 'ABSPATH' ) || exit();
 
 /**
  * Abstract Data Class.
  */
-abstract class Data {
+abstract class Data_Old {
 	/**
 	 * id for this object.
 	 *
@@ -86,22 +86,6 @@ abstract class Data {
 	protected $object_read = false;
 
 	/**
-	 * Table name.
-	 *
-	 * @since 1.0.0
-	 * @var string
-	 */
-	protected $table = '';
-
-	/**
-	 * Core table columns.
-	 *
-	 * @since 1.0.0
-	 * @var array
-	 */
-	protected $columns = array();
-
-	/**
 	 * Data constructor.
 	 *
 	 * @since 1.0.0
@@ -134,7 +118,6 @@ abstract class Data {
 	 */
 	public function __construct( $read = 0 ) {
 		$this->data         = array_merge( $this->core_data, $this->meta_data, $this->extra_data );
-		$this->columns      = array_keys( $this->core_data );
 		$this->default_data = $this->data;
 	}
 
@@ -158,7 +141,7 @@ abstract class Data {
 	public function __wakeup() {
 		try {
 			$this->__construct( absint( $this->id ) ); //phpcs:ignore
-		} catch ( \Exception $e ) {
+		} catch ( Exception $e ) {
 			$this->set_id( 0 );
 			$this->set_object_read( true );
 		}
@@ -271,17 +254,6 @@ abstract class Data {
 		return null;
 	}
 
-	/**
-	 * Alias self::get_enabled()
-	 *
-	 * @since 1.0.2
-	 *
-	 * @return bool
-	 */
-	public function is_enabled() {
-		return eaccounting_string_to_bool( $this->get_prop( 'enabled', 'edit' ) );
-	}
-
 	/*
 	|--------------------------------------------------------------------------
 	| Getters
@@ -290,45 +262,6 @@ abstract class Data {
 	| Methods for getting data from the bill object.
 	|
 	*/
-	/**
-	 * Get the table columns.
-	 *
-	 * @since 1.0.0
-	 * @return array
-	 */
-	public static function get_columns() {
-		return array_merge( [ 'id' ], ( new static() )->columns );
-	}
-
-	/**
-	 * Get the table name.
-	 *
-	 * @since 1.0.0
-	 * @return string
-	 */
-	public static function get_table_name() {
-		return ( new static() )->table;
-	}
-
-	/**
-	 * Get the meta type.
-	 *
-	 * @since 1.0.0
-	 * @return string
-	 */
-	public static function get_meta_type() {
-		return ( new static() )->meta_type;
-	}
-
-	/**
-	 * Get cache group.
-	 *
-	 * @since 1.0.0
-	 * @return string
-	 */
-	public static function get_cache_group() {
-		return ( new static() )->cache_group;
-	}
 
 	/**
 	 * Returns the unique ID for this object.
@@ -455,8 +388,6 @@ abstract class Data {
 	public function get_changes() {
 		return $this->changes;
 	}
-
-
 
 	/*
 	|--------------------------------------------------------------------------
@@ -586,17 +517,6 @@ abstract class Data {
 		$value = date_i18n( $format, $value );
 
 		$this->set_prop( $prop, $value );
-	}
-
-	/**
-	 * Set object status.
-	 *
-	 * @since 1.0.2
-	 *
-	 * @param int $enabled
-	 */
-	public function set_enabled( $enabled ) {
-		$this->set_prop( 'enabled', eaccounting_bool_to_number( $enabled ) );
 	}
 
 	/*
@@ -762,7 +682,7 @@ abstract class Data {
 		$updated       = array();
 		$changed_props = $this->get_changes();
 		foreach ( $this->get_meta_data_keys() as $meta_key ) {
-			if ( is_array( $changed_props ) && ( array_key_exists( $meta_key, $changed_props ) || ! metadata_exists( $this->meta_type, $this->get_id(), $meta_key ) ) ) {
+			if ( array_key_exists( $meta_key, $changed_props ) || ! metadata_exists( $this->meta_type, $this->get_id(), $meta_key ) ) {
 				$function = 'get_' . $meta_key;
 				if ( is_callable( array( $this, $function ) ) ) {
 					$value = $this->{$function}();
@@ -869,43 +789,7 @@ abstract class Data {
 	 * @return \WP_Error|true True on success, WP_Error on failure.
 	 * @global \wpdb $wpdb WordPress database abstraction object.
 	 */
-	 protected function create() {
-		 global $wpdb;
-
-		 $data = wp_unslash( $this->get_core_data() );
-
-		 /**
-		  * Fires immediately before an item is inserted in the database.
-		  *
-		  * @param array $data Data data to be inserted.
-		  * @param string $data_arr Sanitized item data.
-		  * @param Data $item Data object.
-		  *
-		  * @since 1.0.0
-		  */
-		 do_action( 'eaccounting_pre_insert_' . $this->object_type, $data, $this->get_data(), $this );
-
-		 if ( false === $wpdb->insert( $wpdb->prefix. $this->table, $data, array() ) ) {
-			return new \WP_Error( 'db_insert_error', __( 'Could not insert item into the database.', 'wp-ever-accounting' ), $wpdb->last_error );
-		 }
-
-		 $this->set_id( $wpdb->insert_id );
-		 $this->update_meta_data();
-		 $this->apply_changes();
-
-		 /**
-		  * Fires immediately after an item is inserted in the database.
-		  *
-		  * @param array $data Data data to be inserted.
-		  * @param string $data_arr Sanitized item data.
-		  * @param Data $item Data object.
-		  *
-		  * @since 1.0.0
-		  */
-		 do_action( 'eaccounting_insert_'. $this->object_type, $this->get_id(), $data, $this->get_data(), $this );
-
-		 return $this->exists();
-	 }
+	abstract protected function create();
 
 	/**
 	 * Retrieve the object from database instance.
@@ -915,32 +799,7 @@ abstract class Data {
 	 * @return object|false Object, false otherwise.
 	 * @global \wpdb $wpdb WordPress database abstraction object.
 	 */
-	protected function read() {
-		global $wpdb;
-		$this->set_defaults();
-		// Bail early if no id is set
-		if ( ! $this->get_id() ) {
-			return false;
-		}
-
-		$data = wp_cache_get( $this->get_id(), $this->cache_group );
-		if ( false === $data ) {
-			$data = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}{$this->table} WHERE id = %d LIMIT 1;", $this->get_id() ) ); // WPCS: cache ok, DB call ok.
-			wp_cache_add( $this->get_id(), $data, $this->cache_group );
-		}
-
-		if ( ! $data ) {
-			$this->set_id( 0 );
-			return  false;
-		}
-
-		$this->set_props ( $data );
-		$this->read_meta_data();
-		$this->set_object_read( true );
-		do_action( 'eaccounting_read_' . $this->object_type . '_item', $this->get_id(), $this );
-
-		return $data;
-	}
+	abstract protected function read();
 
 	/**
 	 *  Update an object in the database.
@@ -952,49 +811,7 @@ abstract class Data {
 	 * @return \WP_Error|true True on success, WP_Error on failure.
 	 * @global \wpdb $wpdb WordPress database abstraction object.
 	 */
-	protected function update() {
-		global $wpdb;
-		$changes = $this->get_changes();
-
-		// Bail if nothing to save
-		if ( empty( $changes ) ) {
-			return true;
-		}
-
-		/**
-		 * Fires immediately before an existing item is updated in the database.
-		 *
-		 * @param int $id Data id.
-		 * @param array $data Data data.
-		 * @param array $changes The data will be updated.
-		 * @param Data $item Data object.
-		 *
-		 * @since 1.0.0
-		 */
-		do_action( 'eaccounting_pre_update_' . $this->object_type, $this->get_id(), $this->get_data(), $changes, $this );
-
-		$this->date_updated = current_time( 'mysql' );
-		$data               = wp_unslash( $this->get_core_data() );
-		if ( false === $wpdb->update( $wpdb->prefix . $this->table, $data, [ 'id' => $this->get_id() ], array(), [ 'id' => '%d' ] ) ) {
-			return new \WP_Error( 'db_update_error', __( 'Could not update item in the database.', 'wp-ever-accounting' ), $wpdb->last_error );
-		}
-
-		$this->update_meta_data();
-
-		/**
-		 * Fires immediately after an existing item is updated in the database.
-		 *
-		 * @param int $id Data id.
-		 * @param array $data Data data.
-		 * @param array $changes The data will be updated.
-		 * @param Data $item Data object.
-		 *
-		 * @since 1.0.0
-		 */
-		do_action( 'eaccounting_update_' . $this->object_type, $this->get_id(), $this->get_data(), $changes, $this );
-
-		return true;
-	}
+	abstract protected function update();
 
 	/**
 	 * Deletes the object from database.
@@ -1004,65 +821,7 @@ abstract class Data {
 	 * @since 1.0.0
 	 * @return array|false true on success, false on failure.
 	 */
-	 public function delete( $args = array() ) {
-		 if ( ! $this->exists() ) {
-			 return false;
-		 }
-
-		 $data = $this->get_data();
-
-		 /**
-		  * Filters whether an item delete should take place.
-		  *
-		  * @param bool|null $delete Whether to go forward with deletion.
-		  * @param int $id Data id.
-		  * @param array $data Data data array.
-		  * @param Data $item Data object.
-		  *
-		  * @since 1.0.0
-		  */
-		 $check = apply_filters( 'eaccounting_check_delete_' . $this->object_type, null, $this->get_id(), $data, $this );
-		 if ( null !== $check ) {
-			 return $check;
-		 }
-
-		 /**
-		  * Fires before an item is deleted.
-		  *
-		  * @param int $id Data id.
-		  * @param array $data Data data array.
-		  * @param Data $item Data object.
-		  *
-		  * @since 1.0.0
-		  */
-		 do_action( 'eaccounting_pre_delete_'. $this->object_type, $this->get_id(), $data, $this );
-
-		 global $wpdb;
-
-		 $wpdb->delete(
-			 $wpdb->prefix . $this->table,
-			 array(
-				 'id' => $this->get_id(),
-			 ),
-			 array( '%d')
-		 );
-
-		 /**
-		  * Fires after a item is deleted.
-		  *
-		  * @param int $id Data id.
-		  * @param array $data Data data array.
-		  *
-		  * @since 1.0.0
-		  */
-		 do_action( 'eaccounting_delete_' . $this->object_type, $this->get_id(), $data );
-
-		 wp_cache_delete( $this->get_id(), $this->cache_group );
-		 wp_cache_set( 'last_changed', microtime(), $this->cache_group );
-		 $this->set_defaults();
-
-		 return $data;
-	 }
+	abstract public function delete( $args = array() );
 
 	/**
 	 * Saves an object in the database.

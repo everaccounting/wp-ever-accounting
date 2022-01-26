@@ -480,7 +480,7 @@ class Ajax {
 
 
 		wp_send_json_success(
-			eaccounting_get_customers(
+			Contacts::get_customers(
 				array(
 					'search' => $search,
 					'page'   => $page,
@@ -502,7 +502,7 @@ class Ajax {
 		self::verify_nonce( 'ea_edit_customer' );
 		self::check_permission( 'ea_manage_customer' );
 		$posted  = eaccounting_clean( $_REQUEST );
-		$created = eaccounting_insert_customer( $posted );
+		$created = Contacts::insert_customer( $posted );
 		if ( is_wp_error( $created ) || ! $created->exists() ) {
 			wp_send_json_error(
 				array(
@@ -828,7 +828,7 @@ class Ajax {
 		$page   = isset( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1;
 
 		wp_send_json_success(
-			eaccounting_get_vendors(
+			Contacts::get_vendors (
 				array(
 					'search' => $search,
 					'page'   => $page,
@@ -850,7 +850,7 @@ class Ajax {
 		self::check_permission( 'ea_manage_vendor' );
 		$posted = eaccounting_clean( wp_unslash( $_REQUEST ) );
 
-		$created = eaccounting_insert_vendor( $posted );
+		$created = Contacts::insert_vendor( $posted );
 		if ( is_wp_error( $created ) || ! $created->exists() ) {
 			wp_send_json_error(
 				array(
