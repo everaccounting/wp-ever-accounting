@@ -20,7 +20,7 @@ require_once EACCOUNTING_ABSPATH . '/includes/ea-file-functions.php';
 require_once EACCOUNTING_ABSPATH . '/includes/ea-currency-functions.php';
 require_once EACCOUNTING_ABSPATH . '/includes/ea-transaction-functions.php';
 require_once EACCOUNTING_ABSPATH . '/includes/ea-category-functions.php';
-require_once EACCOUNTING_ABSPATH . '/includes/ea-contact-functions.php';
+// require_once EACCOUNTING_ABSPATH . '/includes/ea-contact-functions.php';
 require_once EACCOUNTING_ABSPATH . '/includes/ea-notes-functions.php';
 require_once EACCOUNTING_ABSPATH . '/includes/ea-deprecated-functions.php';
 require_once EACCOUNTING_ABSPATH . '/includes/ea-item-functions.php';

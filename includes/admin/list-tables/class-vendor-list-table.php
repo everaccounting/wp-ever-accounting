@@ -7,7 +7,8 @@
  * @package     EverAccounting
  */
 
-use EverAccounting\Models\Vendor;
+use EverAccounting\Vendor;
+use EverAccounting\Contacts;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -203,25 +204,25 @@ class EverAccounting_Vendor_List_Table extends EverAccounting_List_Table {
 					'edit'   => sprintf( '<a href="%1$s">%2$s</a>', esc_url( $edit_url ), __( 'Edit', 'wp-ever-accounting' ) ),
 					'delete' => sprintf( '<a href="%1$s" class="del">%2$s</a>', esc_url( $del_url ), __( 'Delete', 'wp-ever-accounting' ) ),
 				);
-				$value    = '<a href="' . esc_url( $view_url ) . '"><strong>' . $vendor->get_name() . '</strong></a>';
+				$value    = '<a href="' . esc_url( $view_url ) . '"><strong>' . $vendor->get_prop('name') . '</strong></a>';
 				$value    .= '<br>';
-				$value    .= '<small class=meta>' . $vendor->get_company() . '</small>';
+				$value    .= '<small class=meta>' . $vendor->get_get_prop('company') . '</small>';
 				$value    .= $this->row_actions( $actions );
 				break;
 			case 'email':
-				if ( ! empty( $vendor->get_email() ) || ! empty( $vendor->get_phone() ) ) {
-					$value = ! empty( $vendor->get_email() ) ? '<a href="mailto:' . sanitize_email( $vendor->get_email() ) . '">' . sanitize_email( $vendor->get_email() ) . '</a><br>' : '';
-					$value .= ! empty( $vendor->get_phone() ) ? '<span class="contact_phone">' . $vendor->get_phone() . '</span>' : '';
+				if ( ! empty( $vendor->get_prop('email') ) || ! empty( $vendor->get_prop('phone') ) ) {
+					$value = ! empty( $vendor->get_prop('email') ) ? '<a href="mailto:' . sanitize_email( $vendor->get_prop('email') ) . '">' . sanitize_email( $vendor->get_prop('email') ) . '</a><br>' : '';
+					$value .= ! empty( $vendor->get_prop('phone') ) ? '<span class="contact_phone">' . $vendor->get_prop('phone') . '</span>' : '';
 				}
-				if ( empty( $vendor->get_email() ) && empty( $vendor->get_phone() ) ) {
+				if ( empty( $vendor->get_prop('email') ) && empty( $vendor->get_prop('phone') ) ) {
 					$value = '&mdash;';
 				}
 				break;
 			case 'street':
 				$value = eaccounting_format_address(
 					array(
-						'city'    => $vendor->get_city(),
-						'state'   => $vendor->get_state(),
+						'city'    => $vendor->get_prop('city'),
+						'state'   => $vendor->get_prop('state'),
 						'country' => $vendor->get_country_nicename(),
 					),
 					','
@@ -311,7 +312,7 @@ class EverAccounting_Vendor_List_Table extends EverAccounting_List_Table {
 		foreach ( $ids as $id ) {
 			switch ( $action ) {
 				case 'enable':
-					eaccounting_insert_vendor(
+					Contacts::insert_vendor(
 						array(
 							'id'      => $id,
 							'enabled' => '1',
@@ -319,7 +320,7 @@ class EverAccounting_Vendor_List_Table extends EverAccounting_List_Table {
 					);
 					break;
 				case 'disable':
-					eaccounting_insert_vendor(
+					Contacts::insert_vendor(
 						array(
 							'id'      => $id,
 							'enabled' => '0',
@@ -327,7 +328,7 @@ class EverAccounting_Vendor_List_Table extends EverAccounting_List_Table {
 					);
 					break;
 				case 'delete':
-					eaccounting_delete_vendor( $id );
+					Contacts::delete_vendor( $id );
 					break;
 				default:
 					do_action( 'eaccounting_vendors_do_bulk_action_' . $this->current_action(), $id );
@@ -408,32 +409,32 @@ class EverAccounting_Vendor_List_Table extends EverAccounting_List_Table {
 				'status'   => $status,
 				'orderby'  => eaccounting_clean( $orderby ),
 				'order'    => eaccounting_clean( $order ),
-				'type'     => 'customer',
+				'type'     => 'vendor',
 			)
 		);
 
 		$args = apply_filters( 'eaccounting_vendor_table_query_args', $args, $this );
 
-		$this->items = eaccounting_get_vendors( $args );
+		$this->items = Contacts::get_vendors( $args );
 
-		$this->active_count = eaccounting_get_vendors(
+		$this->active_count = Contacts::get_vendors(
 			array_merge(
 				$args,
 				array(
 					'status'      => 'active',
-					'count_total' => true,
 				)
-			)
+			),
+				true
 		);
 
-		$this->inactive_count = eaccounting_get_vendors(
+		$this->inactive_count = Contacts::get_vendors(
 			array_merge(
 				$args,
 				array(
 					'status'      => 'inactive',
-					'count_total' => true,
 				)
-			)
+			),
+				true
 		);
 
 		$this->total_count = $this->active_count + $this->inactive_count;
