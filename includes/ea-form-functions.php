@@ -808,10 +808,10 @@ function eaccounting_category_dropdown( $field ) {
 	$include     = ! empty( $field['value'] ) ? wp_parse_id_list( $field['value'] ) : false;
 	$ajax_action = ! empty( $field['ajax_action'] ) ? $field['ajax_action'] : 'eaccounting_get_income_categories';
 	$modal_id    = ! empty( $field['modal_id'] ) ? '#' . $field['modal_id'] : '#ea-modal-add-income-category';
-	$categories = eaccounting_get_categories(
+	$categories = \EverAccounting\Categories::get_categories(
 		array(
 			'return'  => 'raw',
-			'include' => $include,
+			'__in' => $include,
 			'type'    => $type,
 		)
 	);

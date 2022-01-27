@@ -56,7 +56,7 @@ class Items extends CSV_Exporter {
 			'number'   => - 1,
 		);
 		$args  = apply_filters( 'eaccounting_item_export_query_args', $args );
-		$items = eaccounting_get_items( $args );
+		$items = \EverAccounting\Items::get_items( $args );
 		$rows  = array();
 
 		foreach ( $items as $item ) {
@@ -70,7 +70,7 @@ class Items extends CSV_Exporter {
 	/**
 	 * Take a item and generate row data from it for export.
 	 *
-	 * @param \EverAccounting\Models\Item $item
+	 * @param \EverAccounting\Item $item
 	 *
 	 * @return array
 	 */

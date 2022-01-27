@@ -271,7 +271,7 @@ class EverAccounting_Category_List_Table extends EverAccounting_List_Table {
 		foreach ( $ids as $id ) {
 			switch ( $action ) {
 				case 'enable':
-					eaccounting_insert_category(
+					Categories::insert_category(
 						array(
 							'id'      => $id,
 							'enabled' => '1',
@@ -279,7 +279,7 @@ class EverAccounting_Category_List_Table extends EverAccounting_List_Table {
 					);
 					break;
 				case 'disable':
-					eaccounting_insert_category(
+					Categories::insert_category(
 						array(
 							'id'      => $id,
 							'enabled' => '0',
@@ -287,7 +287,7 @@ class EverAccounting_Category_List_Table extends EverAccounting_List_Table {
 					);
 					break;
 				case 'delete':
-					eaccounting_delete_category( $id );
+					Categories::delete_category( $id );
 					break;
 				default:
 					do_action( 'eaccounting_categories_do_bulk_action_' . $this->current_action(), $id );
@@ -374,26 +374,25 @@ class EverAccounting_Category_List_Table extends EverAccounting_List_Table {
 
 		$args = apply_filters( 'eaccounting_category_table_query_args', $args, $this );
 
-		$this->items = eaccounting_get_categories( $args );
+		$this->items = Categories::get_categories( $args );
 
-		$this->active_count = eaccounting_get_categories(
+		$this->active_count = Categories::get_categories(
 			array_merge(
 				$args,
 				array(
-					'count_total' => true,
 					'status'      => 'active',
 				)
-			)
+			),
+				true
 		);
 
-		$this->inactive_count = eaccounting_get_categories(
+		$this->inactive_count = Categories::get_categories(
 			array_merge(
 				$args,
 				array(
-					'count_total' => true,
 					'status'      => 'inactive',
 				)
-			)
+			), true
 		);
 
 		$this->total_count = $this->active_count + $this->inactive_count;

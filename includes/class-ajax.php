@@ -229,18 +229,18 @@ class Ajax {
 		$search = isset( $_REQUEST['search'] ) ? eaccounting_clean( $_REQUEST['search'] ) : '';
 		$page   = isset( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1;
 
-
 		wp_send_json_success(
 			Categories::get_categories(
 				array(
 					'search' => $search,
 					'type'   => 'item',
-					'page'   => $page,
+					'paged'   => $page,
 					'return' => 'raw',
 					'status' => 'active',
 				)
 			)
 		);
+
 	}
 
 	/**
@@ -1078,7 +1078,7 @@ class Ajax {
 		$search = isset( $_REQUEST['search'] ) ? eaccounting_clean( $_REQUEST['search'] ) : '';
 
 		wp_send_json_success(
-			eaccounting_get_items(
+			Items::get_items(
 				array(
 					'search' => $search,
 					'return' => 'raw',
@@ -1098,7 +1098,7 @@ class Ajax {
 		self::verify_nonce( 'ea_edit_item' );
 		self::check_permission( 'ea_manage_item' );
 		$posted  = eaccounting_clean( wp_unslash( $_REQUEST ) );
-		$created = eaccounting_insert_item( $posted );
+		$created = Items::insert_item( $posted );
 		if ( is_wp_error( $created ) ) {
 			wp_send_json_error(
 				array(

@@ -366,13 +366,13 @@ jQuery( function ( $ ) {
 		},
 		submit( e ) {
 			e.preventDefault();
-			category_form.block();
+			item_form.block();
 			const data = $( '#ea-item-form' ).serializeObject();
 			$.post( ajaxurl, data, function ( json ) {
 				$.eaccounting_redirect( json );
 			} ).always( function ( json ) {
 				$.eaccounting_notice( json );
-				category_form.unblock();
+				item_form.unblock();
 			} );
 		},
 	};
