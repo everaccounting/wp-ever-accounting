@@ -61,7 +61,7 @@ class Menu {
 		if ( current_user_can( 'manage_eaccounting' ) ) {
 			$menu[] = array( '', 'read', 'ea-separator', '', 'wp-menu-separator accounting' );
 		}
-		$icons = 'data:image/svg+xml;base64,' . base64_encode( file_get_contents( eaccounting()->plugin_path( 'assets/images/icon.svg' ) ) );
+		$icons = 'data:image/svg+xml;base64,' . base64_encode( file_get_contents( eaccounting()->plugin_path( 'dist/images/icon.svg' ) ) );
 
 		add_menu_page(
 			__( 'Accounting', 'wp-ever-accounting' ),

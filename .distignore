@@ -29,6 +29,8 @@ composer.lock
 /bin
 gulpfile.js
 gruntfile.js
+babel.config.js
+webpack.config.js
 
 #COMMON
 CONTRIBUTING.md
@@ -51,6 +53,7 @@ Thumbs.db
 .wordpress-org
 
 #Assets
+assets
 *.scss
 
 #Plugin Specific
