@@ -23,7 +23,7 @@ module.exports = {
 					to: 'js',
 				},
 				{
-					from: 'assets/js/vendor',
+					from: 'assets/vendors/common',
 					to: 'js',
 				},
 				{

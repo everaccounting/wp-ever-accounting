@@ -65,6 +65,7 @@ module.exports = function (grunt) {
 
 	// Register tasks.
 	grunt.registerTask('i18n', ['checktextdomain', 'makepot']);
+	grunt.registerTask('release', ['shell']);
 
 	grunt.util.linefeed = '\n';
 };
