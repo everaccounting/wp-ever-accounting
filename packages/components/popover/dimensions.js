@@ -7,8 +7,8 @@ const OFFSET_ARROW = 5;
 /**
  * @typedef DropdownPosition
  * @type
- * @property {number} left - Left offset
- * @property {number} top - Top offset
+ * @property {number} left    - Left offset
+ * @property {number} top     - Top offset
  * @property {number} [width] - Optional width
  */
 
@@ -16,17 +16,17 @@ const OFFSET_ARROW = 5;
  * @typedef PopoverPosition
  * @type
  * @property {number} parentWidth - Width of the parent
- * @property {number} left - Left offset
- * @property {number} width - Width
+ * @property {number} left        - Left offset
+ * @property {number} width       - Width
  */
 
 /**
  * Adjust the dropdown position based on the alignment.
  *
  * @param {number} toggleLeftPos - left position.
- * @param {number} toggleWidth - width of toggle button.
- * @param {number} popoverWidth - width of popover.
- * @param {string} align - alignment.
+ * @param {number} toggleWidth   - width of toggle button.
+ * @param {number} popoverWidth  - width of popover.
+ * @param {string} align         - alignment.
  */
 function adjustForAlignment( toggleLeftPos, toggleWidth, popoverWidth, align ) {
 	if ( align === 'right' ) {
@@ -43,11 +43,11 @@ function adjustForAlignment( toggleLeftPos, toggleWidth, popoverWidth, align ) {
 /**
  * This is left aligned by default. Adjust to fit the alignment and screen size
  *
- * @param {DropdownPosition|null} position - The position.
- * @param {TogglePosition|null} togglePosition - The toggle position.
- * @param {string} align - Popover alignment.
- * @param {HTMLElement|null} popoverRef - Our node.
- * @param {boolean} hasArrow - Show an arrow?
+ * @param {DropdownPosition|null} position       - The position.
+ * @param {TogglePosition|null}   togglePosition - The toggle position.
+ * @param {string}                align          - Popover alignment.
+ * @param {HTMLElement|null}      popoverRef     - Our node.
+ * @param {boolean}               hasArrow       - Show an arrow?
  */
 export function getAdjustedPosition(
 	position,
@@ -106,8 +106,8 @@ export function getPosition( togglePosition ) {
 /**
  * Adjust the arrow style.
  *
- * @param {Object} style - Style object.
- * @param {HTMLElement|null} ref - DOM node.
+ * @param {Object}           style - Style object.
+ * @param {HTMLElement|null} ref   - DOM node.
  */
 export function adjustArrowStyle( style, ref ) {
 	if ( ref ) {

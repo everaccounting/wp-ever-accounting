@@ -29,7 +29,7 @@ export function fetch( request ) {
  * Dispatched a control action for triggering an api fetch call with no parsing.
  * Typically this would be used in scenarios where headers are needed.
  *
- * @param {string} path  The path for the request.
+ * @param {string} path The path for the request.
  *
  * @return {Object} The control action descriptor.
  */
@@ -45,7 +45,7 @@ export const fetchFromAPIWithTotal = ( path ) => {
  *
  * @param {string} reducerKey
  * @param {string} selectorName
- * @param {*[]} args
+ * @param {*[]}    args
  * @return {{type: string, reducerKey: string, selectorName: string, args: *[]}}
  * Returns an action object.
  */
@@ -63,7 +63,7 @@ export function select( reducerKey, selectorName, ...args ) {
  *
  * @param {string} reducerKey
  * @param {string} selectorName
- * @param {Array} args
+ * @param {Array}  args
  * @return {Object} An action object.
  */
 export function resolveSelect( reducerKey, selectorName, ...args ) {
@@ -80,7 +80,7 @@ export function resolveSelect( reducerKey, selectorName, ...args ) {
  *
  * @param {string} reducerKey
  * @param {string} dispatchName
- * @param {*[]} args
+ * @param {*[]}    args
  * @return {{type: string, reducerKey: string, dispatchName: string, args: *[]}}
  * An action object
  */
@@ -98,7 +98,7 @@ export function dispatch( reducerKey, dispatchName, ...args ) {
  *
  * @param {string} reducerKey
  * @param {string} dispatchName
- * @param {Array} args
+ * @param {Array}  args
  * @return {Object} The action object.
  */
 export function resolveDispatch( reducerKey, dispatchName, ...args ) {
@@ -150,7 +150,7 @@ const customControls = {
 					selectorName,
 					args
 				);
-			console.log(hasFinished(), reducerKey, selectorName, args)
+			console.log( hasFinished(), reducerKey, selectorName, args );
 			const getResult = () =>
 				selectData( reducerKey )[ selectorName ].apply( null, args );
 

@@ -19,7 +19,7 @@ jQuery( function ( $ ) {
 		/**
 		 * Submit form.
 		 *
-		 * @param e
+		 * @param  e
 		 * @return {boolean}
 		 */
 		this.submit = function ( e ) {

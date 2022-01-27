@@ -56,9 +56,9 @@ class Assets {
 	public function admin_styles() {
 		$screen    = get_current_screen();
 		$screen_id = $screen ? $screen->id : '';
-		$this->register_style( 'ea-admin-styles', 'admin.min.css' );
-		$this->register_style( 'ea-release-styles', 'release.min.css' );
-		$this->register_style( 'jquery-ui-styles', 'jquery-ui.min.css' );
+		$this->register_style( 'ea-admin-styles', 'admin.css' );
+		$this->register_style( 'ea-release-styles', 'release.css' );
+		$this->register_style( 'jquery-ui-styles', 'jquery-ui.css' );
 		// Admin styles for Accounting pages only.
 		if ( in_array( $screen_id, eaccounting_get_screen_ids(), true ) ) {
 			wp_enqueue_style( 'ea-admin-styles' );
@@ -217,7 +217,7 @@ class Assets {
 		$version = eaccounting()->get_version();
 		wp_register_style(
 			'ea-public-styles',
-			eaccounting()->plugin_url() . '/dist/css/public.min.css',
+			eaccounting()->plugin_url() . '/dist/css/public.css',
 			array(
 				'common',
 				'buttons',

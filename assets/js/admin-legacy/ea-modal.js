@@ -28,8 +28,8 @@ jQuery( function ( $ ) {
 	/**
 	 * Initialize the Modal
 	 *
-	 * @param template
-	 * @param {Object} options [description]
+	 * @param          template
+	 * @param {Object} options  [description]
 	 */
 	$.ea_modal = function ( template, options ) {
 		const plugin = this;
@@ -124,13 +124,13 @@ jQuery( function ( $ ) {
 		this.keyboard_events = function ( e ) {
 			const button = e.keyCode || e.which;
 			// Enter key
-			if ( 13 === button && plugin.$modal.find( 'form' ).length ) {
+			if ( button === 13 && plugin.$modal.find( 'form' ).length ) {
 				e.preventDefault();
 				plugin.$modal.find( '[type="submit"]' ).trigger( 'click' );
 				return false;
 			}
 			// ESC key
-			if ( 27 === button ) {
+			if ( button === 27 ) {
 				plugin.close();
 			}
 		};

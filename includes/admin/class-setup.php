@@ -90,8 +90,8 @@ class Setup_Wizard {
 		$suffix  = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 		//$suffix  = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
-		wp_enqueue_style( 'ea-admin-styles', eaccounting()->plugin_url() . '/dist/css/admin.min.css', array(), $version );
-		wp_enqueue_style( 'ea-setup', eaccounting()->plugin_url() . '/dist/css/setup.min.css', array( 'install', 'common' ), $version );
+		wp_enqueue_style( 'ea-admin-styles', eaccounting()->plugin_url() . '/dist/css/admin.css', array(), $version );
+		wp_enqueue_style( 'ea-setup', eaccounting()->plugin_url() . '/dist/css/setup.css', array( 'install', 'common' ), $version );
 
 		// Add RTL support for admin styles.
 		wp_style_add_data( 'ea-setup', 'rtl', 'replace' );

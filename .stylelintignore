@@ -1,6 +1,7 @@
 vendor/
 node_modules/
 assets/images
+assets/css
 *.php
 *.map
 *.png

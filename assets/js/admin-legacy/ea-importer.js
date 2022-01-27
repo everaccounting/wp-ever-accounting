@@ -222,7 +222,7 @@ jQuery( function ( $ ) {
 					.parent()
 					.next()
 					.html( eaccounting_importer_i10n.select_field_to_preview );
-			} else if ( false !== plugin.sample[ index - 1 ] ) {
+			} else if ( plugin.sample[ index - 1 ] !== false ) {
 				$( this )
 					.parent()
 					.next()
