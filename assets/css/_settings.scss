@@ -1,0 +1,103 @@
+.ea-settings {
+
+	& *, & *::before, & *::after {
+		box-sizing: border-box
+	}
+
+	.nav-tab-wrapper {
+		margin-bottom: 0;
+	}
+
+	h3 {
+		margin: 0;
+	}
+	.ea_settings_upload_button {
+		@media only screen and (max-width: 768px) {
+			margin-top: 5px;
+		}
+	}
+	input[type=checkbox] {
+		@media only screen and (max-width: 782px) {
+			width: 20px;
+			height: 20px;
+		}
+		&:checked:before {
+			@media only screen and (max-width: 782px) {
+				width: 25px;
+				height: 25px;
+			}
+		}
+	}
+
+
+	/*
+	Emails Tab
+	*/
+	.ea-emails {
+		margin: 0;
+		position: relative;
+		table-layout: fixed;
+
+		td, th {
+			display: table-cell !important;
+			padding: 1em !important;
+			line-height: 1.75em;
+			vertical-align: middle;
+		}
+
+		td {
+
+		}
+
+		th.ea-emails-email {
+			width: 70%;
+		}
+
+		th.ea-emails-status,
+		th.ea-emails-manage {
+			width: 15%;
+		}
+
+		.email-status {
+			&.active {
+				color: $primary;
+			}
+		}
+	}
+
+	.email-tags {
+		padding: 10px;
+		background: #fff;
+	}
+
+	.form-table th{
+		position: relative;
+	}
+
+	.ea-help-tip {
+		position: absolute;
+		right: 0;
+		top: 50%;
+		font-size: 17px;
+		line-height: 17px;
+		margin: -7px 0 0 0;
+	}
+
+  .edd-license-data.license-expires-soon-notice{
+	color: #00a0d2;
+  }
+
+  .edd-license-data.edd-license-valid{
+	color: #5abc55;
+  }
+  .edd-license-data.edd-license-error,
+  .edd-license-data.edd-license-missing,
+  .edd-license-data.edd-license-invalid,
+  .edd-license-data.edd-license-site_inactive,
+  .edd-license-data.edd-license-expired,
+  .edd-license-data.edd-license-item_name_mismatch {
+	color: #e24e4e;
+  }
+
+}
+

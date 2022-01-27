@@ -1,0 +1,91 @@
+.select2-container {
+  box-sizing: border-box;
+
+  display: inline-block;
+  margin: 0;
+  position: relative;
+  vertical-align: middle;
+
+  &:focus, *:focus {
+	outline: none;
+	box-shadow: none;
+  }
+
+  @import "single";
+  @import "multiple";
+
+  &.select2-container--focus .select2-selection{
+	box-shadow: none;
+  }
+}
+
+@import "dropdown";
+
+.select2-close-mask {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  display: block;
+  position: fixed;
+  left: 0;
+  top: 0;
+  min-height: 100%;
+  min-width: 100%;
+  height: auto;
+  width: auto;
+  opacity: 0;
+  z-index: 99;
+
+  // styles required for IE to work
+
+  background-color: #fff;
+  filter: alpha(opacity=0);
+}
+
+.select2-hidden-accessible {
+  border: 0 !important;
+  clip: rect(0 0 0 0) !important;
+  -webkit-clip-path: inset(50%) !important;
+  clip-path: inset(50%) !important;
+  height: 1px !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+  position: absolute !important;
+  width: 1px !important;
+  white-space: nowrap !important;
+}
+
+@import "theme/default/layout";
+@import "theme/classic/layout";
+
+.ea-select2-footer {
+  display: block;
+  width: 100%;
+  text-decoration: none;
+  text-align: center;
+  border-top: 1px solid #dee2e6;
+  cursor: pointer;
+  color: #3c3f72;
+  font-weight: bold;
+  padding: 5px 0;
+  margin-bottom: 0;
+  transition: background-color 0.3s;
+
+  &:hover {
+	background-color: #007cba;
+	color: #fff;
+  }
+}
+
+
+.select2 span.new-item::after {
+  content: 'New';
+  position: absolute;
+  right: 20px;
+  background: green;
+  padding: 2px 5px;
+  line-height: 1;
+  vertical-align: middle;
+  color: #fff;
+  top: 7px;
+}
