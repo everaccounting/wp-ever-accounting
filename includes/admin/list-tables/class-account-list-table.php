@@ -9,7 +9,8 @@
  * @package     EverAccounting
  */
 
-use EverAccounting\Models\Account;
+use EverAccounting\Account;
+use EverAccounting\Accounts;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -192,7 +193,7 @@ class EverAccounting_Account_List_Table extends EverAccounting_List_Table {
 		switch ( $column_name ) {
 			case 'thumb':
 				$view_url  = eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'accounts', 'action' => 'view', 'account_id' => $account_id ) );// phpcs:ignore
-				$thumb_url = wp_get_attachment_thumb_url( $account->get_thumbnail_id() );
+				$thumb_url = wp_get_attachment_thumb_url( $account->get_prop( 'thumbnail_id' ) );
 				$thumb_url = empty( $thumb_url ) ? eaccounting()->plugin_url( '/dist/images/placeholder-logo.png' ) : $thumb_url;
 				$value     = '<a href="' . esc_url( $view_url ) . '"><img src="' . $thumb_url . '" height="36" width="36" alt="' . $account->get_name() . '"></a>';
 				break;
@@ -209,6 +210,7 @@ class EverAccounting_Account_List_Table extends EverAccounting_List_Table {
 					'edit'   => '<a href="' . $edit_url . '">' . __( 'Edit', 'wp-ever-accounting' ) . '</a>',
 					'delete' => '<a href="' . $del_url . '" class="del">' . __( 'Delete', 'wp-ever-accounting' ) . '</a>',
 				);
+
 				$value   = '<a href="' . esc_url( $view_url ) . '"><strong>' . $account->get_name() . '</strong></a>' . $this->row_actions( $actions );
 				break;
 			case 'balance':
@@ -218,7 +220,7 @@ class EverAccounting_Account_List_Table extends EverAccounting_List_Table {
 				$value = $account->get_number();
 				break;
 			case 'bank_name':
-				$value = ! empty( $account->get_bank_name() ) ? $account->get_bank_name() : '&mdash;';
+				$value = ! empty( $account->get_bank_name() ) ? $account->get_bank_name(): '&mdash;';
 				break;
 			case 'enabled':
 				$value = '<label class="ea-toggle">';
@@ -275,7 +277,7 @@ class EverAccounting_Account_List_Table extends EverAccounting_List_Table {
 		foreach ( $ids as $id ) {
 			switch ( $action ) {
 				case 'enable':
-					eaccounting_insert_account(
+					Accounts::insert_account(
 						array(
 							'id'      => $id,
 							'enabled' => '1',
@@ -283,7 +285,7 @@ class EverAccounting_Account_List_Table extends EverAccounting_List_Table {
 					);
 					break;
 				case 'disable':
-					eaccounting_insert_account(
+					Accounts::insert_account(
 						array(
 							'id'      => $id,
 							'enabled' => '0',
@@ -291,7 +293,7 @@ class EverAccounting_Account_List_Table extends EverAccounting_List_Table {
 					);
 					break;
 				case 'delete':
-					eaccounting_delete_account( $id );
+					Accounts::delete_account( $id );
 					break;
 				default:
 					do_action( 'eaccounting_accounts_do_bulk_action_' . $this->current_action(), $id );
@@ -382,26 +384,26 @@ class EverAccounting_Account_List_Table extends EverAccounting_List_Table {
 		);
 
 		$args        = apply_filters( 'eaccounting_account_table_query_args', $args, $this );
-		$this->items = eaccounting_get_accounts( array_merge( $args, array( 'balance' => true ) ) );
+		$this->items = Accounts::get_accounts( array_merge( $args, array( 'balance' => true ) ) );
 
-		$this->active_count = eaccounting_get_accounts(
+		$this->active_count = Accounts::get_accounts(
 			array_merge(
 				$args,
 				array(
 					'status'      => 'active',
-					'count_total' => true,
 				)
-			)
+			),
+				true
 		);
 
-		$this->inactive_count = eaccounting_get_accounts(
+		$this->inactive_count = Accounts::get_accounts(
 			array_merge(
 				$args,
 				array(
 					'status'      => 'inactive',
-					'count_total' => true,
 				)
-			)
+			),
+				true
 		);
 
 		$this->total_count = $this->active_count + $this->inactive_count;

@@ -11,7 +11,7 @@
 defined( 'ABSPATH' ) || exit();
 
 // Functions.
-require_once EACCOUNTING_ABSPATH . '/includes/ea-account-functions.php';
+// require_once EACCOUNTING_ABSPATH . '/includes/ea-account-functions.php';
 require_once EACCOUNTING_ABSPATH . '/includes/ea-misc-functions.php';
 require_once EACCOUNTING_ABSPATH . '/includes/ea-formatting-functions.php';
 require_once EACCOUNTING_ABSPATH . '/includes/ea-rest-functions.php';

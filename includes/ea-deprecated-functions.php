@@ -63,3 +63,23 @@ function eaccounting_get_vendors( $args = array() ) {
 function eaccounting_get_contacts( $args = array() ) {
 	return \EverAccounting\Contacts::get_contacts( $args );
 }
+
+function eaccounting_get_account( $account ) {
+	return \EverAccounting\Accounts::get_account( $account );
+}
+
+function eaccounting_get_account_currency_code( $account ) {
+	return \EverAccounting\Accounts::get_account_currency_code( $account );
+}
+
+function eaccounting_insert_account( $data, $wp_error = true ) {
+	return \EverAccounting\Accounts::insert_account( $data );
+}
+
+function eaccounting_delete_account( $account_id ) {
+	return \EverAccounting\Accounts::delete_account( $account_id );
+}
+
+function eaccounting_get_accounts( $args = array() ) {
+	return \EverAccounting\Accounts::get_accounts( $args = array(), true );
+}

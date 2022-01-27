@@ -888,7 +888,7 @@ class Ajax {
 		self::verify_nonce( 'ea_get_account' );
 		self::check_permission( 'manage_eaccounting' );
 		$id      = empty( $_REQUEST['id'] ) ? null : absint( $_REQUEST['id'] );
-		$account = eaccounting_get_account( $id );
+		$account = Accounts::get_account( $id );
 		if ( $account ) {
 			wp_send_json_success( $account->get_data() );
 			wp_die();
@@ -911,7 +911,7 @@ class Ajax {
 
 
 		wp_send_json_success(
-			eaccounting_get_accounts(
+			Accounts::get_accounts(
 				array(
 					'search' => $search,
 					'page'   => $page,
@@ -940,8 +940,8 @@ class Ajax {
 				)
 			);
 		}
-		$account = eaccounting_get_account( $account_id );
-		if ( empty( $account ) || is_wp_error( $account ) || empty( $account->get_currency()->exists() ) ) {
+		$account = Accounts::get_account( $account_id );
+		if ( empty( $account ) || is_wp_error( $account ) || empty( $account->get_prop('currency_code' )->exists() ) ) {
 			wp_send_json_error(
 				array(
 					'message' => __( 'Could not find the currency', 'wp-ever-accounting' ),
@@ -949,7 +949,7 @@ class Ajax {
 			);
 		}
 
-		wp_send_json_success( $account->get_currency()->get_data() );
+		wp_send_json_success( $account->get_prop( 'currency_code' )->get_data() );
 	}
 
 
@@ -963,7 +963,7 @@ class Ajax {
 		self::verify_nonce( 'ea_edit_account' );
 		self::check_permission( 'ea_manage_account' );
 		$posted  = eaccounting_clean( wp_unslash( $_REQUEST ) );
-		$created = eaccounting_insert_account( $posted );
+		$created = Accounts::insert_account( $posted );
 		if ( is_wp_error( $created ) ) {
 			wp_send_json_error(
 				array(
