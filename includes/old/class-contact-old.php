@@ -149,7 +149,7 @@ class Contact_Old extends Data {
 		do_action( 'eaccounting_pre_insert_' . $this->object_type, $data, $this->get_data(), $this );
 
 		if ( false === $wpdb->insert( $wpdb->prefix . $this->table, $data, array() ) ) {
-			return new \WP_Error( 'db_insert_error', __( 'Could not insert contact into the database.', 'text-domain' ), $wpdb->last_error );
+			return new \WP_Error( 'db_insert_error', __( 'Could not insert contact into the database.', 'wp-ever-accounting' ), $wpdb->last_error );
 		}
 
 		$this->set_id( $wpdb->insert_id );
@@ -230,7 +230,7 @@ class Contact_Old extends Data {
 		$this->date_updated = current_time( 'mysql' );
 		$data               = wp_unslash( $this->get_core_data() );
 		if ( false === $wpdb->update( $wpdb->prefix . $this->table, $data, [ 'id' => $this->get_id() ], array(), [ 'id' => '%d' ] ) ) {
-			return new \WP_Error( 'db_update_error', __( 'Could not update contact in the database.', 'text-domain' ), $wpdb->last_error );
+			return new \WP_Error( 'db_update_error', __( 'Could not update contact in the database.', 'wp-ever-accounting' ), $wpdb->last_error );
 		}
 
 		$this->update_meta_data();
@@ -331,10 +331,10 @@ class Contact_Old extends Data {
 		}
 
 		if ( empty( $this->name ) ) {
-			return new \WP_Error( 'missing_param', esc_html__( 'Contact name is required', 'text-domain' ) );
+			return new \WP_Error( 'missing_param', esc_html__( 'Contact name is required', 'wp-ever-accounting' ) );
 		}
 		if ( empty( $this->currency_code ) ) {
-			return new \WP_Error( 'missing_param', esc_html__( 'Currency code is required', 'text-domain' ) );
+			return new \WP_Error( 'missing_param', esc_html__( 'Currency code is required', 'wp-ever-accounting' ) );
 		}
 
 		if ( ! $this->exists() ) {

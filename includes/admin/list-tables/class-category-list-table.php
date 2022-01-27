@@ -7,6 +7,7 @@
  * @package     EverAccounting
  */
 
+use EverAccounting\Categories;
 use EverAccounting\Models\Category;
 
 defined( 'ABSPATH' ) || exit();
@@ -208,7 +209,7 @@ class EverAccounting_Category_List_Table extends EverAccounting_List_Table {
 				break;
 			case 'type':
 				$type  = $category->get_type();
-				$types = eaccounting_get_category_types();
+				$types = Categories::get_category_types();
 				$value = array_key_exists( $type, $types ) ? $types[ $type ] : ucfirst( $type );
 				break;
 			case 'color':

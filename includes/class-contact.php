@@ -153,10 +153,10 @@ class Contact extends Data {
 		}
 
 		if ( empty( $this->name ) ) {
-			return new \WP_Error( 'missing_param', esc_html__( 'Contact name is required', 'text-domain' ) );
+			return new \WP_Error( 'missing_param', esc_html__( 'Contact name is required', 'wp-ever-accounting' ) );
 		}
 		if ( empty( $this->currency_code ) ) {
-			return new \WP_Error( 'missing_param', esc_html__( 'Currency code is required', 'text-domain' ) );
+			return new \WP_Error( 'missing_param', esc_html__( 'Currency code is required', 'wp-ever-accounting' ) );
 		}
 
 		if ( ! $this->exists() ) {

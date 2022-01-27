@@ -83,3 +83,31 @@ function eaccounting_delete_account( $account_id ) {
 function eaccounting_get_accounts( $args = array() ) {
 	return \EverAccounting\Accounts::get_accounts( $args = array(), true );
 }
+
+function eaccounting_get_category_types() {
+	return \EverAccounting\Categories::get_category_types();
+}
+
+function eaccounting_get_category_type( $type ) {
+	return \EverAccounting\Categories::get_category_type( $type );
+}
+
+function eaccounting_get_category( $category ) {
+	return \EverAccounting\Categories::get_category( $category );
+}
+
+function eaccounting_get_category_by_name( $name, $type ) {
+	return \EverAccounting\Categories::get_category_by_name( $name, $type );
+}
+
+function eaccounting_insert_category( $data = array(), $wp_error = true ) {
+	return \EverAccounting\Categories::insert_category( $data = array() );
+}
+
+function eaccounting_delete_category( $category_id ) {
+	return \EverAccounting\Categories::delete_category( $category_id );
+}
+
+function eaccounting_get_categories( $args = array() ) {
+	return \EverAccounting\Categories::get_categories( $args = array(), true );
+}

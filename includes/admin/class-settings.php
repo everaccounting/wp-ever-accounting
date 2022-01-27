@@ -9,6 +9,8 @@
 
 namespace EverAccounting\Admin;
 
+use EverAccounting\Accounts;
+
 defined( 'ABSPATH' ) || exit();
 
 /**
@@ -635,7 +637,7 @@ class Settings {
 	protected function get_accounts() {
 		$accounts = array();
 		if ( isset( $_GET['page'] ) && 'ea-settings' === $_GET['page'] ) {
-			$results    = eaccounting_get_accounts(
+			$results    = Accounts::get_accounts(
 					array(
 							'number' => - 1,
 							'return' => 'raw',

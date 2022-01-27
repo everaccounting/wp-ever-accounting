@@ -183,7 +183,7 @@ class Ajax {
 
 
 		wp_send_json_success(
-			eaccounting_get_categories(
+			Categories::get_categories(
 				array(
 					'search' => $search,
 					'type'   => 'expense',
@@ -207,7 +207,7 @@ class Ajax {
 
 
 		wp_send_json_success(
-			eaccounting_get_categories(
+			Categories::get_categories(
 				array(
 					'search' => $search,
 					'type'   => 'income',
@@ -231,7 +231,7 @@ class Ajax {
 
 
 		wp_send_json_success(
-			eaccounting_get_categories(
+			Categories::get_categories(
 				array(
 					'search' => $search,
 					'type'   => 'item',
@@ -253,7 +253,7 @@ class Ajax {
 		self::verify_nonce( 'ea_edit_category' );
 		self::check_permission( 'ea_manage_category' );
 		$posted  = eaccounting_clean( wp_unslash( $_REQUEST ) );
-		$created = eaccounting_insert_category( $posted );
+		$created = Categories::insert_category( $posted );
 		if ( is_wp_error( $created ) ) {
 			wp_send_json_error(
 				array(
