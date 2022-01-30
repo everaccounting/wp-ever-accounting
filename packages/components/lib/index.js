@@ -1,9 +1,12 @@
+/**
+ * WordPress dependencies
+ */
 import { dispatch } from '@wordpress/data';
 
 /**
  * Get a portal node, or create it if it doesn't exist.
  *
- * @param {string} portalName DOM ID of the portal
+ * @param {string} portalName    DOM ID of the portal
  * @param {string} portalWrapper
  * @return {Function} Element
  */

@@ -6,8 +6,8 @@ jQuery( function ( $ ) {
 	/**
 	 * Mask amount field.
 	 *
-	 * @param input
-	 * @param currency
+	 * @param  input
+	 * @param  currency
 	 */
 	eaccounting.mask_amount = function ( input, currency ) {
 		currency = currency || {};
@@ -95,7 +95,7 @@ jQuery( function ( $ ) {
 	};
 
 	$.eaccounting_redirect = function ( url ) {
-		if ( 'object' === typeof url ) {
+		if ( typeof url === 'object' ) {
 			if ( 'data' in url ) {
 				url = url.data;
 			}
@@ -138,9 +138,9 @@ jQuery( function ( $ ) {
 	};
 
 	$.eaccounting_notice = function ( message, type, options ) {
-		if ( 'object' === typeof message ) {
+		if ( typeof message === 'object' ) {
 			if ( 'data' in message ) {
-				if ( message.success && true === message.success ) {
+				if ( message.success && message.success === true ) {
 					type = 'success';
 				} else {
 					type = 'error';

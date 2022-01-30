@@ -592,7 +592,10 @@ msgstr ""
 #: includes/admin/views/revenues/view-income.php:137
 #: includes/models/class-bill.php:73 includes/models/class-invoice.php:74
 #: includes/rest/class-categories-controller.php:72
+<<<<<<< HEAD:languages/wp-ever-accounting.pot
 #: packages/data/entities.js:28
+=======
+>>>>>>> feature/byteever-scripts:i18n/languages/wp-ever-accounting.pot
 msgid "Category"
 msgstr ""
 
@@ -922,29 +925,29 @@ msgstr ""
 msgid "Categories"
 msgstr ""
 
-#: includes/admin/class-notices.php:260
+#: includes/admin/class-notices.php:268
 msgid "Dismiss"
 msgstr ""
 
-#: includes/admin/class-notices.php:278
+#: includes/admin/class-notices.php:286
 msgid ""
 "<strong>Welcome to Ever Accounting</strong> &#8211; You&lsquo;re almost "
 "done :)"
 msgstr ""
 
-#: includes/admin/class-notices.php:281
+#: includes/admin/class-notices.php:289
 msgid "Run the Setup Wizard"
 msgstr ""
 
-#: includes/admin/class-notices.php:284
+#: includes/admin/class-notices.php:292
 msgid "Skip setup"
 msgstr ""
 
-#: includes/admin/class-notices.php:302
+#: includes/admin/class-notices.php:313
 msgid "Database tables missing"
 msgstr ""
 
-#: includes/admin/class-notices.php:309
+#: includes/admin/class-notices.php:320
 #. translators: %1$s table names
 msgid ""
 "One or more tables required for Ever Accounting to function are missing, "
@@ -1100,7 +1103,10 @@ msgstr ""
 #: includes/class-settings.php:175 includes/models/class-bill.php:72
 #: includes/models/class-invoice.php:73
 #: includes/rest/class-currencies-controller.php:75
+<<<<<<< HEAD:languages/wp-ever-accounting.pot
 #: packages/data/entities.js:42
+=======
+>>>>>>> feature/byteever-scripts:i18n/languages/wp-ever-accounting.pot
 msgid "Currency"
 msgstr ""
 
@@ -3541,6 +3547,7 @@ msgstr ""
 msgid "(Required)"
 msgstr ""
 
+<<<<<<< HEAD:languages/wp-ever-accounting.pot
 #: includes/class-contact.php:156 includes/old/class-contact-old.php:334
 msgid "Contact name is required"
 msgstr ""
@@ -3551,6 +3558,10 @@ msgstr ""
 
 #: includes/class-contacts.php:360
 msgid "Vendor could not be saved."
+=======
+#: includes/class-controller.php:99
+msgid "Duplicate account."
+>>>>>>> feature/byteever-scripts:i18n/languages/wp-ever-accounting.pot
 msgstr ""
 
 #: includes/class-controller.php:233
@@ -5007,6 +5018,7 @@ msgstr ""
 #: includes/class-install.php:698
 msgctxt "User role"
 msgid "Accountant"
+<<<<<<< HEAD:languages/wp-ever-accounting.pot
 msgstr ""
 
 #: packages/components/image-upload/index.js:105
@@ -5094,3 +5106,6 @@ msgstr ""
 msgid "Products"
 msgstr ""
 
+=======
+msgstr ""
+>>>>>>> feature/byteever-scripts:i18n/languages/wp-ever-accounting.pot

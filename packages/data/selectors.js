@@ -35,7 +35,7 @@ const EMPTY_ARRAY = [];
  *                                 include with request.
  * @return {Array} Authors list.
  */
-export function getUsers( state, query={} ) {
+export function getUsers( state, query = {} ) {
 	const path = addQueryArgs( '/wp/v2/users/?per_page=100', query );
 	return getUserQueryResults( state, path );
 }
@@ -71,7 +71,7 @@ export const getUserQueryResults = createSelector(
 /**
  * Returns the entity object given its kind and name.
  *
- * @param {Object} state   Data state.
+ * @param {Object} state Data state.
  * @param {string} name  Entity name.
  *
  * @return {Object} Entity
@@ -83,7 +83,7 @@ export function getEntity( state, name ) {
 /**
  * Returns whether the entities for the give kind are loaded.
  *
- * @param {Object} state   Data state.
+ * @param {Object} state Data state.
  * @param {string} name  Entity kind.
  *
  * @return {boolean} Whether the entities are loaded
@@ -104,7 +104,7 @@ export function getEntities( state, name ) {
  *
  * @return {Object?} Record.
  */
-export function getEntityRecord( state, name, key = '', query={} ) {
+export function getEntityRecord( state, name, key = '', query = {} ) {
 	const queriedState = get( state.entities.data, [ name, 'queriedData' ] );
 	if ( ! queriedState ) {
 		return undefined;
@@ -138,10 +138,10 @@ export function getEntityRecord( state, name, key = '', query={} ) {
  * Returns the entity's record object by key,
  * with its attributes mapped to their raw values.
  *
- * @param {Object} state  State tree.
- * @param {string} kind   Entity kind.
- * @param {string} name   Entity name.
- * @param {number} key    Record's key.
+ * @param {Object} state State tree.
+ * @param {string} kind  Entity kind.
+ * @param {string} name  Entity name.
+ * @param {number} key   Record's key.
  *
  * @return {Object?} Object with the entity's raw attributes.
  */
@@ -176,7 +176,7 @@ export const getRawEntityRecord = createSelector(
  *
  * @return {boolean} Whether entity records have been received.
  */
-export function hasEntityRecords( state, name, query={} ) {
+export function hasEntityRecords( state, name, query = {} ) {
 	return Array.isArray( getEntityRecords( state, name, query ) );
 }
 
@@ -189,7 +189,7 @@ export function hasEntityRecords( state, name, query={} ) {
  *
  * @return {?Array} Records.
  */
-export function getEntityRecords( state, name, query={} ) {
+export function getEntityRecords( state, name, query = {} ) {
 	// Queried data state is prepopulated for all known entities. If this is not
 	// assigned for the given parameters, then it is known to not exist. Thus, a
 	// return value of an empty array is used instead of `null` (where `null` is
@@ -210,7 +210,7 @@ export function getEntityRecords( state, name, query={} ) {
  *
  * @return {?Array} Records.
  */
-export function getEntityTotal( state, name, query={} ) {
+export function getEntityTotal( state, name, query = {} ) {
 	// Queried data state is prepopulated for all known entities. If this is not
 	// assigned for the given parameters, then it is known to not exist. Thus, a
 	// return value of an empty array is used instead of `null` (where `null` is
@@ -370,7 +370,5 @@ export function getLastEntityDeleteError( state, name, recordId ) {
  * @return {boolean} Returns true if the selector is currently requesting items.
  */
 export function isRequesting( state, selectorName, query = {} ) {
-	return (
-		select( STORE_KEY ).getIsResolving( selectorName, [ query ] )
-	);
+	return select( STORE_KEY ).getIsResolving( selectorName, [ query ] );
 }

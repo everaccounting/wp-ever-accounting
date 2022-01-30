@@ -1,3 +1,6 @@
+/**
+ * External dependencies
+ */
 import { has, get } from 'lodash';
 
 const defaultRender = ( row, column ) => get( row, [ column.property ] );

@@ -68,7 +68,7 @@ export function currentUser( state = {}, action ) {
  *  - Editing
  *  - Saving
  *
- * @param {Object} entityConfig  Entity config.
+ * @param {Object} entityConfig Entity config.
  *
  * @return {Function} Reducer.
  */
