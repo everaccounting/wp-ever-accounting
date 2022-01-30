@@ -111,3 +111,46 @@ function eaccounting_delete_category( $category_id ) {
 function eaccounting_get_categories( $args = array() ) {
 	return \EverAccounting\Categories::get_categories( $args = array(), true );
 }
+
+function eaccounting_get_transaction_types() {
+	return \EverAccounting\Transactions::get_transaction_types();
+}
+
+function eaccounting_get_payment( $payment ) {
+	return \EverAccounting\Transactions::get_payment( $payment );
+}
+
+function eaccounting_insert_payment( $args, $wp_error = true ) {
+	return \EverAccounting\Transactions::insert_payment( $args );
+}
+
+function eaccounting_delete_payment( $payment_id ) {
+	return \EverAccounting\Transactions::delete_revenue( $payment_id );
+}
+
+function eaccounting_get_payments( $args ) {
+	return \EverAccounting\Transactions::get_payments( $args );
+}
+
+function eaccounting_get_revenue( $revenue ) {
+	return \EverAccounting\Transactions::get_revenue( $revenue );
+}
+
+function eaccounting_insert_revenue( $args, $wp_error = true ) {
+	return \EverAccounting\Transactions::insert_revenue( $args );
+}
+
+function eaccounting_delete_revenue( $revenue_id ) {
+	return \EverAccounting\Transactions::delete_revenue( $revenue_id );
+}
+
+function eaccounting_get_revenues( $args ) {
+	return \EverAccounting\Transactions::get_revenues( $args );
+}
+
+function eaccounting_get_transactions( $args ) {
+	return \EverAccounting\Transactions::get_transactions( $args );
+}
+
+
+
