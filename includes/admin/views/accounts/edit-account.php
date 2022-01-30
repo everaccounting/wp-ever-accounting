@@ -14,7 +14,7 @@
 defined( 'ABSPATH' ) || exit();
 
 try {
-	$account = new \EverAccounting\Models\Account( $account_id );
+	$account = new \EverAccounting\Account( $account_id );
 } catch ( Exception $e ) {
 	wp_die( $e->getMessage() );
 }

@@ -13,7 +13,7 @@
 defined( 'ABSPATH' ) || exit();
 
 try {
-	$vendor = new \EverAccounting\Models\Vendor( $vendor_id );
+	$vendor = new \EverAccounting\Vendor( $vendor_id );
 } catch ( Exception $e ) {
 	wp_die( $e->getMessage() );
 }

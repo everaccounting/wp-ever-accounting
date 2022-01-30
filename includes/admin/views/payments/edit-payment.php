@@ -14,7 +14,7 @@
 defined( 'ABSPATH' ) || exit();
 
 try {
-	$payment = \EverAccounting\Transactions::get_payment( $payment_id );
+	$payment = new \EverAccounting\Payment( $payment_id );
 } catch ( Exception $e ) {
 	wp_die( $e->getMessage() );
 }
