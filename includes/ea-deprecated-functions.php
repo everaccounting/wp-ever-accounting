@@ -168,4 +168,26 @@ function eaccounting_get_notes( $args = array() ) {
 	return \EverAccounting\Notes::get_notes( $args = array(), false );
 }
 
+function eaccounting_get_currency_codes() {
+	return \EverAccounting\Currencies::get_currency_codes();
+}
 
+function eaccounting_sanitize_currency_code( $code ) {
+	return \EverAccounting\Currencies::sanitize_currency_code( $code );
+}
+
+function eaccounting_get_currency( $currency ) {
+	return \EverAccounting\Currencies::get_currency_by_code( $currency );
+}
+
+function eaccounting_get_currency_rate( $currency ) {
+	return \EverAccounting\Currencies::get_currency_rate( $currency );
+}
+
+function eaccounting_insert_currency( $args, $wp_error = true ) {
+	return \EverAccounting\Currencies::insert_currency( $args );
+}
+
+function eaccounting_get_currencies( $args = array() ) {
+	return \EverAccounting\Currencies::get_currencies( $args, false );
+}

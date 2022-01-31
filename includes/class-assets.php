@@ -194,8 +194,8 @@ class Assets {
 					'asset_url'  => eaccounting()->plugin_url( '/assets' ),
 					'dist_url'   => eaccounting()->plugin_url( '/dist' ),
 					'plugin_url' => eaccounting()->plugin_url(),
-					'currency'   => eaccounting_get_currency( $default_currency )->get_data(),
-					'currencies' => eaccounting_get_currencies(
+					'currency'   => \EverAccounting\Currencies::get_currency_by_code( $default_currency )->get_data(),
+					'currencies' => \EverAccounting\Currencies::get_currencies(
 						array(
 							'return' => 'raw',
 							'number' => - 1,

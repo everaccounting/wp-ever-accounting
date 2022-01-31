@@ -386,7 +386,7 @@ class EverAccounting_Item_List_Table extends EverAccounting_List_Table {
 				'order'    => eaccounting_clean( $order ),
 			)
 		);
-		eaccounting_get_currencies(
+		\EverAccounting\Currencies::get_currencies(
 			array(
 				'return' => 'raw',
 				'number' => '-1',

@@ -689,7 +689,7 @@ class Ajax {
 	 */
 	public static function get_currencies() {
 		self::verify_nonce( 'ea_get_currencies' );
-		$currencies = eaccounting_get_currencies(
+		$currencies = \EverAccounting\Currencies::get_currencies(
 			array(
 				'number' => - 1,
 				'return' => 'raw',
@@ -708,7 +708,7 @@ class Ajax {
 		self::verify_nonce( 'ea_get_currency' );
 		self::check_permission( 'manage_eaccounting' );
 		$posted = eaccounting_clean( wp_unslash( $_REQUEST ) );
-		$code   = ! empty( $posted['code'] ) ? $posted['code'] : false;
+		$code   = ! empty( $posted['id'] ) ? $posted['id'] : false;
 		if ( ! $code ) {
 			wp_send_json_error(
 				array(
@@ -716,7 +716,7 @@ class Ajax {
 				)
 			);
 		}
-		$currency = eaccounting_get_currency( $code );
+		$currency = \EverAccounting\Currencies::get_currency( $code );
 		if ( empty( $currency ) || is_wp_error( $currency ) ) {
 			wp_send_json_error(
 				array(
@@ -750,7 +750,7 @@ class Ajax {
 		self::verify_nonce( 'ea_edit_currency' );
 		self::check_permission( 'ea_manage_currency' );
 		$posted  = eaccounting_clean( wp_unslash( $_REQUEST ) );
-		$created = eaccounting_insert_currency( $posted );
+		$created = \EverAccounting\Currencies::insert_currency( $posted );
 		if ( is_wp_error( $created ) ) {
 			wp_send_json_error(
 				array(

@@ -7,7 +7,8 @@
  * @package     EverAccounting
  */
 
-use EverAccounting\Models\Currency;
+use EverAccounting\Currency;
+use EverAccounting\Currencies;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -151,7 +152,7 @@ class EverAccounting_Currency_List_Table extends EverAccounting_List_Table {
 	 *
 	 */
 	function column_cb( $currency ) {
-		return sprintf( '<input type="checkbox" name="currency_code[]" value="%s"/>', $currency->get_code() );
+		return sprintf( '<input type="checkbox" name="currency_id[]" value="%s"/>', $currency->get_id() );
 	}
 
 	/**
@@ -178,11 +179,12 @@ class EverAccounting_Currency_List_Table extends EverAccounting_List_Table {
 	 */
 	function column_default( $currency, $column_name ) {
 		$currency_code = $currency->get_code();
+		$currency_id = $currency->get_id();
 		switch ( $column_name ) {
 			case 'name':
 				$name     = $currency->get_name();
-				$edit_url = eaccounting_admin_url( array( 'page' => 'ea-settings', 'tab' => 'currencies', 'action' => 'edit', 'currency_code' => $currency_code, ) );// phpcs:ignore
-				$del_url  = eaccounting_admin_url( array( 'page' => 'ea-settings', 'tab' => 'currencies', 'action' => 'delete', 'currency_code' => $currency_code, '_wpnonce' => wp_create_nonce( 'currency-nonce' ), ) );// phpcs:ignore
+				$edit_url = eaccounting_admin_url( array( 'page' => 'ea-settings', 'tab' => 'currencies', 'action' => 'edit', 'currency_id' => $currency_id, ) );// phpcs:ignore
+				$del_url  = eaccounting_admin_url( array( 'page' => 'ea-settings', 'tab' => 'currencies', 'action' => 'delete', 'currency_id' => $currency_id, '_wpnonce' => wp_create_nonce( 'currency-nonce' ), ) );// phpcs:ignore
 				$actions  = array(
 					'edit'   => sprintf( '<a href="%1$s">%2$s</a>', esc_url( $edit_url ), __( 'Edit', 'wp-ever-accounting' ) ),
 					'delete' => sprintf( '<a href="%1$s" class="del">%2$s</a>', esc_url( $del_url ), __( 'Delete', 'wp-ever-accounting' ) ),
@@ -230,17 +232,17 @@ class EverAccounting_Currency_List_Table extends EverAccounting_List_Table {
 			return;
 		}
 
-		$codes = isset( $_GET['currency_code'] ) ? $_GET['currency_code'] : false;
-		$codes = wp_parse_list( $codes );
+		$ids = isset( $_GET['currency_id'] ) ? $_GET['currency_id'] : false;
+		$ids = wp_parse_id_list( $ids );
 
 		$action = $this->current_action();
-		foreach ( $codes as $code ) {
+		foreach ( $ids as $id ) {
 			switch ( $action ) {
 				case 'delete':
-					eaccounting_delete_currency( $code );
+					Currencies::delete_currency( $id );
 					break;
 				default:
-					do_action( 'eaccounting_currencies_do_bulk_action_' . $this->current_action(), $code );
+					do_action( 'eaccounting_currencies_do_bulk_action_' . $this->current_action(), $id );
 			}
 		}
 
@@ -248,7 +250,7 @@ class EverAccounting_Currency_List_Table extends EverAccounting_List_Table {
 			wp_safe_redirect(
 				remove_query_arg(
 					array(
-						'currency_code',
+						'currency_id',
 						'action',
 						'_wpnonce',
 						'_wp_http_referer',
@@ -290,8 +292,7 @@ class EverAccounting_Currency_List_Table extends EverAccounting_List_Table {
 			array(
 				'number'   => $per_page,
 				'offset'   => $per_page * ( $page - 1 ),
-				'per_page' => $per_page,
-				'page'     => $page,
+				'paged'     => $page,
 				'search'   => $search,
 				'status'   => $status,
 				'orderby'  => eaccounting_clean( $orderby ),
@@ -301,8 +302,8 @@ class EverAccounting_Currency_List_Table extends EverAccounting_List_Table {
 
 		$args = apply_filters( 'eaccounting_currency_table_query_args', $args, $this );
 
-		$this->items       = eaccounting_get_currencies( $args );
-		$total_items       = eaccounting_get_currencies( array_merge($args,array( 'count_total' => true )) );
+		$this->items       = Currencies::get_currencies( $args );
+		$total_items       = Currencies::get_currencies( $args,true );
 		$this->total_count = $total_items;
 
 		$this->set_pagination_args(
