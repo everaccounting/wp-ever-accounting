@@ -1038,9 +1038,8 @@ class Ajax {
 	public static function delete_note() {
 		self::verify_nonce( 'ea_delete_note' );
 		self::check_permission( 'ea_manage_invoice' );
-		$note    = new Note( $_REQUEST['id'] );
-		$note    = eaccounting_get_note( $note );
-		$deleted = eaccounting_delete_note( absint( $_REQUEST['id'] ) );
+		$note = Notes::get_note( $_REQUEST['id'] );
+		$deleted = Notes::delete_note( absint( $_REQUEST['id'] ) );
 		if ( ! $deleted ) {
 			wp_send_json_error(
 				array(
