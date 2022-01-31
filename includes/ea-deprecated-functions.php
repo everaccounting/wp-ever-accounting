@@ -152,5 +152,20 @@ function eaccounting_get_transactions( $args ) {
 	return \EverAccounting\Transactions::get_transactions( $args );
 }
 
+function eaccounting_get_note( $item ) {
+	return \EverAccounting\Notes::get_note( $item->get_id() );
+}
+
+function eaccounting_insert_note( $args, $wp_error = true ) {
+	return \EverAccounting\Notes::insert_note( $args );
+}
+
+function eaccounting_delete_note( $note_id ) {
+	return \EverAccounting\Notes::delete_note( $note_id );
+}
+
+function eaccounting_get_notes( $args = array() ) {
+	return \EverAccounting\Notes::get_notes( $args = array(), false );
+}
 
 
