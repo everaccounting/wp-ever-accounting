@@ -49,6 +49,69 @@ class Invoice extends Document {
 		return Documents::get_invoice_statuses();
 	}
 
+	/*
+	|--------------------------------------------------------------------------
+	| CRUD methods
+	|--------------------------------------------------------------------------
+	|
+	*/
+	/**
+	 * Generate document number.
+	 *
+	 * @since 1.1.0
+	 * @return void
+	 */
+	public function maybe_set_invoice_number() {
+		if( empty( $this->get_document_number() ) ) {
+			$number = $this->get_id();
+			if( empty( $number )) {
+				$number = Documents::get_next_number( $this );
+			}
+			$this->set_document_number( $this->generate_number( $number ) );
+		}
+	}
+
+	/**
+	 * Set the document key.
+	 *
+	 * @since 1.1.0
+	 */
+	public function maybe_set_key() {
+		$key = $this->get_key();
+		if ( empty( $key ) ) {
+			$this->set_key( $this->generate_key() );
+		}
+	}
+
+	/**
+	 * Generate key.
+	 *
+	 * @since 1.1.0
+	 * @return string
+	 */
+	public function generate_key() {
+		$key = 'ea-' . apply_filters( 'eaccounting_generate_invoice_key', 'invoice' . '-' . str_replace( '-', '', wp_generate_uuid4() ) );
+		return strtolower( sanitize_key( $key ) );
+	}
+
+
+	/**
+	 * Generate number
+	 *
+	 * @param string $number Number
+	 *
+	 * @return string
+	 * @since 1.1.0
+	*/
+	public function generate_number( $number ) {
+		$prefix           = eaccounting()->settings->get( 'invoice_prefix', 'INV-' );
+		$padd             = (int) eaccounting()->settings->get( 'invoice_digit', '5' );
+		$formatted_number = zeroise( absint( $number ), $padd );
+		$number           = apply_filters( 'eaccounting_generate_invoice_number', $prefix . $formatted_number );
+
+		return $number;
+	}
+
 	/**
 	 * Set the customer id
 	 *

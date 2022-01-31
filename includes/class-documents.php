@@ -22,6 +22,192 @@ class Documents {
 	public function __construct() {
 
 	}
+	/**
+	 * Main function for returning invoice.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param $invoice
+	 *
+	 * @return Invoice|null
+	 */
+	public static function get_invoice( $invoice ) {
+		if ( empty( $invoice ) ) {
+			return null;
+		}
+		try {
+			$result = new Invoice( $invoice );
+
+			return $result->exists() ? $result : null;
+		} catch ( \Exception $e ) {
+			return null;
+		}
+	}
+
+	/**
+	 *  Create new invoice programmatically.
+	 *  Returns a new invoice object on success.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param bool $wp_error
+	 * @param      $args
+	 *
+	 * @return Invoice|false|int|\WP_Error
+	 */
+	public static function insert_invoice( $args, $wp_error = true ) {
+		// Ensure we have data
+		if ( empty( $args ) ) {
+			return false;
+		}
+		try {
+			// The id will be provided when updating an item
+			$args = wp_parse_args( $args, array( 'id' => null ) );
+
+			// Retrieve the item
+			$item = new Invoice( $args['id'] );
+
+			// Load new data
+			$item->set_props( $args );
+
+			// Save the item
+			$item->save();
+
+			return $item;
+		} catch ( \Exception $e ) {
+			return $wp_error ? new \WP_Error( 'insert_item', $e->getMessage(), array( 'status' => $e->getCode() ) ) : 0;
+		}
+	}
+
+	/**
+	 * Delete an invoice.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param $invoice_id
+	 *
+	 * @return bool
+	 */
+	public static function delete_invoice( $invoice_id ) {
+		try {
+			$invoice = new Invoice( $invoice_id );
+
+			return $invoice->exists() ? $invoice->delete() : false;
+		} catch ( \Exception $e ) {
+			return false;
+		}
+	}
+
+	/**
+	 * Get all invoices
+	 *
+	 * @param array $args
+	 *
+	 * @return array|Invoice[]|int|
+	 * @since 1.1.0
+	 */
+	public static function get_invoices( $args = array() ) {
+		$args = array_merge( $args, array( 'type' => 'invoice' ) );
+		if ( isset( $args['customer_id'] ) ) {
+			$args['contact_id'] = $args['customer_id'];
+			unset( $args['customer_id'] );
+		}
+		return self::get_documents( $args );
+	}
+
+	/**
+	 * Main function for returning bill.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param $bill
+	 *
+	 * @return Bill|null
+	 */
+	public static function get_bill( $bill ) {
+		if ( empty( $bill ) ) {
+			return null;
+		}
+		try {
+			$result = new Bill( $bill );
+
+			return $result->exists() ? $result : null;
+		} catch ( \Exception $e ) {
+			return null;
+		}
+	}
+
+	/**
+	 *  Create new bill programmatically.
+	 *  Returns a new bill object on success.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param bool $wp_error
+	 * @param      $args
+	 *
+	 * @return Bill|false|int|\WP_Error
+	 */
+	public static function insert_bill( $args, $wp_error = true ) {
+		// Ensure that we have data.
+		if ( empty( $args ) ) {
+			return false;
+		}
+		try {
+			// The  id will be provided when updating an item.
+			$args = wp_parse_args( $args, array( 'id' => null ) );
+
+			// Retrieve the item.
+			$item = new Bill( $args['id'] );
+
+			// Load new data.
+			$item->set_props( $args );
+
+			// Save the item
+			$item->save();
+
+			return $item;
+		} catch ( \Exception $e ) {
+			return $wp_error ? new \WP_Error( 'insert_item', $e->getMessage(), array( 'status' => $e->getCode() ) ) : 0;
+		}
+	}
+
+	/**
+	 * Delete a bill.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param $bill_id
+	 *
+	 * @return bool
+	 */
+	public static function delete_bill( $bill_id ) {
+		try {
+			$bill = new Bill( $bill_id );
+
+			return $bill->exists() ? $bill->delete() : false;
+		} catch ( \Exception $e ) {
+			return false;
+		}
+	}
+
+	/**
+	 * Get all bill items
+	 *
+	 * @param array $args
+	 *
+	 * @return array|Invoice[]|int|
+	 * @since 1.1.0
+	 */
+	public static function get_bills( $args = array() ) {
+		$args = array_merge( $args, array( 'type' => 'bill' ) );
+		if ( isset( $args['vendor_id'] ) ) {
+			$args['contact_id'] = $args['vendor_id'];
+			unset( $args['vendor_id'] );
+		}
+		return self::get_documents( $args );
+	}
+
 
 	/**
 	 * Get document
@@ -114,7 +300,7 @@ class Documents {
 	 */
 	public static function delete_items( $item ) {
 		global $wpdb;
-		$wpdb->delete( $wpdb->prefix . Document_Items::TABLE, array( 'document_id' => $item->get_id() ) );
+		$wpdb->delete( $wpdb->prefix . Document_Item::get_table_name(), array( 'document_id' => $item->get_id() ) );
 		eaccounting_cache_set_last_changed( 'ea_document_items' );
 	}
 
@@ -128,7 +314,7 @@ class Documents {
 	public static function delete_notes( $item ) {
 		global $wpdb;
 		$wpdb->delete(
-			$wpdb->prefix . Notes::TABLE,
+			$wpdb->prefix . Note::get_table_name(),
 			array(
 				'parent_id' => $item->get_id(),
 				'type'      => $item->get_type(),

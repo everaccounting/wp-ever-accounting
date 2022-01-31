@@ -222,6 +222,12 @@ class Document extends Data {
 	| on if the order exists yet).
 	|
 	*/
+	public function delete( $args = array() ) {
+		Documents::delete_notes(  $this );
+		Documents::delete_items( $this );
+		Documents::delete_transactions( $this );
+		parent::delete( $args );
+	}
 
 	/**
 	 * Saves an object in the database.
