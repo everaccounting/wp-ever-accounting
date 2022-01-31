@@ -452,7 +452,10 @@ class Documents {
 	}
 
 	/**
+	 * Get bill statues
+	 *
 	 * @return mixed|void
+	 * @since 1.1.0
 	 */
 	public static function get_bill_statuses() {
 		$statuses = array(
@@ -468,7 +471,10 @@ class Documents {
 	}
 
 	/**
+	 * Get invoice statuses
+	 *
 	 * @return mixed|void
+	 * @since 1.1.0
 	 */
 	public static function get_invoice_statuses() {
 		$statuses = array(
@@ -483,12 +489,4 @@ class Documents {
 
 		return apply_filters( 'eaccounting_invoice_statuses', $statuses );
 	}
-
-
-
-
-
-
-
-
 }
