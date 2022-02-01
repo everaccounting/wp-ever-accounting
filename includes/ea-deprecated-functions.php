@@ -152,6 +152,30 @@ function eaccounting_get_transactions( $args ) {
 	return \EverAccounting\Transactions::get_transactions( $args );
 }
 
+function eaccounting_get_total_income( $year = null ) {
+	return \EverAccounting\Transactions::get_total_income( $year = null );
+}
+
+function eaccounting_get_total_expense( $year = null ) {
+	return \EverAccounting\Transactions::get_total_expense( $year = null );
+}
+
+function eaccounting_get_total_profit( $year = null ) {
+	return \EverAccounting\Transactions::get_total_profit( $year = null );
+}
+
+function eaccounting_get_total_receivable() {
+	return \EverAccounting\Transactions::get_total_receivable();
+}
+
+function eaccounting_get_total_payable() {
+	return \EverAccounting\Transactions::get_total_payable();
+}
+
+function eaccounting_get_total_upcoming_profit() {
+	return \EverAccounting\Transactions::get_total_upcoming_profit();
+}
+
 function eaccounting_get_note( $item ) {
 	return \EverAccounting\Notes::get_note( $item->get_id() );
 }

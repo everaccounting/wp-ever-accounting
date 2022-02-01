@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Currency class
-*/
+ */
 class Currency extends Data {
 	/**
 	 * This is the name of this object type.
@@ -70,7 +70,7 @@ class Currency extends Data {
 	/**
 	 * Currency constructor.
 	 *
-	 * @param int|currency|object|null $currency  currency instance.
+	 * @param int|currency|object|null $currency currency instance.
 	 *
 	 * @since 1.0.0
 	 */
@@ -82,6 +82,10 @@ class Currency extends Data {
 			$this->set_id( $currency );
 		} elseif ( $currency instanceof self ) {
 			$this->set_id( absint( $currency->get_id() ) );
+		} elseif ( is_string( $currency ) ) {
+			$this->set_code( $currency );
+		} elseif ( is_array( $currency ) && ! empty( $currency['code'] ) ) {
+			$this->set_code( $currency['code'] );
 		} elseif ( ! empty( $currency->ID ) ) {
 			$this->set_id( absint( $currency->ID ) );
 		} else {
@@ -152,9 +156,9 @@ class Currency extends Data {
 	/**
 	 * getPrefix.
 	 *
+	 * @return string
 	 * @since 1.0.2
 	 *
-	 * @return string
 	 */
 	public function get_prefix() {
 		if ( ! $this->is_symbol_first() ) {
@@ -167,9 +171,9 @@ class Currency extends Data {
 	/**
 	 * getSuffix.
 	 *
+	 * @return string
 	 * @since 1.0.2
 	 *
-	 * @return string
 	 */
 	public function get_suffix() {
 		if ( $this->is_symbol_first() ) {
@@ -182,11 +186,11 @@ class Currency extends Data {
 	/**
 	 * equals.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param Currency $currency
 	 *
 	 * @return bool
+	 * @since 1.0.2
+	 *
 	 */
 	public function equals( self $currency ) {
 		return $this->get_code( 'edit' ) === $currency->get_code( 'edit' );
@@ -195,9 +199,9 @@ class Currency extends Data {
 	/**
 	 * is_symbol_first.
 	 *
+	 * @return bool
 	 * @since 1.0.2
 	 *
-	 * @return bool
 	 */
 	public function is_symbol_first() {
 		return 'before' === $this->get_position( 'edit' );

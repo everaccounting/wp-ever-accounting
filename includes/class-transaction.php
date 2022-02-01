@@ -132,6 +132,16 @@ class Transaction extends Data {
 			}
 		}
 
+		if ( array_key_exists( 'account_id', $this->get_changes() ) || ! $this->exists() ) {
+			$account = new Account( $this->get_account_id() );
+			$this->set_currency_code( $account->get_currency_code() );
+		}
+
+		if ( array_key_exists( 'currency_code', $this->get_changes() ) || ! $this->exists() ) {
+			$currency = new Currency( $this->get_currency_code() );
+			$this->set_currency_rate( $currency->get_rate() );
+		}
+
 		if ( ! $this->exists() ) {
 			$is_error = $this->create();
 		} else {
@@ -151,9 +161,9 @@ class Transaction extends Data {
 		/**
 		 * Fires immediately after a contact is inserted or updated in the database.
 		 *
-		 * @param int $id Contact id.
-		 * @param array $data Contact data array.
-		 * @param Contact $contact Contact object.
+		 * @param int $id Transaction id.
+		 * @param array $data Transaction data array.
+		 * @param Transaction $transaction Transaction object.
 		 *
 		 * @since 1.0.0
 		 */
