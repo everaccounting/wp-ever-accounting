@@ -272,13 +272,13 @@ class Notes {
 		// Parse parent_id params
 		if ( ! empty( $args['parent_id'] ) ) {
 			$parent_id = implode( ',', wp_parse_id_list( $args['parent_id'] ) );
-			$where    .= " AND $table.`parent_id__in` IN ($parent_id)";
+			$where    .= " AND $table.`parent_id` IN ($parent_id)";
 		}
 
 		// Parse creator id params
 		if ( ! empty( $args['creator_id'] ) ) {
 			$creator_id = implode( ',', wp_parse_id_list( $args['creator_id'] ) );
-			$where      .=  " AND $table.`creator_id__in` IN ($creator_id)";
+			$where      .=  " AND $table.`creator_id` IN ($creator_id)";
 		}
 
 		// Parse currency code params

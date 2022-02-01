@@ -345,7 +345,7 @@ class EverAccounting_Invoice_List_Table extends EverAccounting_List_Table {
 				'number'      => $per_page,
 				'offset'      => $per_page * ( $page - 1 ),
 				'per_page'    => $per_page,
-				'page'        => $page,
+				'paged'        => $page,
 				'status'      => $status,
 				'search'      => $search,
 				'orderby'     => eaccounting_clean( $orderby ),

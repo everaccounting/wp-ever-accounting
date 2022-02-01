@@ -607,13 +607,13 @@ class Documents {
 		// Parse creator id params
 		if ( ! empty( $args['creator_id'] ) ) {
 			$creator_id = implode( ',', wp_parse_id_list( $args['creator_id'] ) );
-			$where      .=  " AND $table.`creator_id__in` IN ($creator_id)";
+			$where      .=  " AND $table.`creator_id` IN ($creator_id)";
 		}
 
 		// Parse customer_id params
-		if ( ! empty( $args['customer_id'] ) ) {
-			$customer_id = implode( ',', wp_parse_id_list( $args['customer_id'] ) );
-			$where      .= " AND $table.`contact_id__in` IN ($customer_id)";
+		if ( ! empty( $args['contact_id'] ) ) {
+			$customer_id = implode( ',', wp_parse_id_list( $args['contact_id'] ) );
+			$where      .= " AND $table.`contact_id` IN ($customer_id)";
 		}
 
 

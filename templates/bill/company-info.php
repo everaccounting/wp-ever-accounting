@@ -8,7 +8,7 @@
  * @version 1.1.0
  */
 
-use EverAccounting\Models\Bill;
+use EverAccounting\Bill;
 
 defined( 'ABSPATH' ) || exit;
 $company_details = array(

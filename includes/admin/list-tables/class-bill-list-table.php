@@ -7,7 +7,8 @@
  * @package     EverAccounting
  */
 
-use EverAccounting\Models\Bill;
+use EverAccounting\Bill;
+use EverAccounting\Documents;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -326,7 +327,7 @@ class EverAccounting_Bill_List_Table extends EverAccounting_List_Table {
 				'number'   => $per_page,
 				'offset'   => $per_page * ( $page - 1 ),
 				'per_page' => $per_page,
-				'page'     => $page,
+				'paged'     => $page,
 				'status'   => $status,
 				'search'   => $search,
 				'orderby'  => eaccounting_clean( $orderby ),
@@ -335,8 +336,8 @@ class EverAccounting_Bill_List_Table extends EverAccounting_List_Table {
 		);
 
 		$args              = apply_filters( 'eaccounting_bill_table_query_args', $args, $this );
-		$this->items       = eaccounting_get_bills( $args );
-		$this->total_count = eaccounting_get_bills( array_merge( $args, array( 'count_total' => true ) ) );
+		$this->items       = Documents::get_bills( $args );
+		$this->total_count = Documents::get_bills(  $args, true );
 		$this->set_pagination_args(
 			array(
 				'total_items' => $this->total_count,

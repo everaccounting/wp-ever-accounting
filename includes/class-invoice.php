@@ -71,12 +71,10 @@ class Invoice extends Document {
 	 *
 	 * @since  1.1.0
 	 *
-	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
-	 *
 	 * @return string
 	 */
-	public function get_invoice_number( $context = 'edit' ) {
-		return $this->get_prop( 'document_number', $context );
+	public function get_invoice_number() {
+		return $this->get_prop( 'document_number' );
 	}
 
 	/**
@@ -84,12 +82,10 @@ class Invoice extends Document {
 	 *
 	 * @since  1.1.0
 	 *
-	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
-	 *
 	 * @return string
 	 */
-	public function get_customer_id( $context = 'edit' ) {
-		return $this->get_prop( 'contact_id', $context );
+	public function get_customer_id() {
+		return $this->get_prop( 'contact_id' );
 	}
 	/*
 	|--------------------------------------------------------------------------

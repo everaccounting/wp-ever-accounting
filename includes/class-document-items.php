@@ -266,19 +266,19 @@ class Document_Items {
 		// Parse document_id params
 		if ( ! empty( $args['document_id'] ) ) {
 			$document_id = implode( ',', wp_parse_id_list( $args['document_id'] ) );
-			$where      .=  " AND $table.`document_id__in` IN ($document_id)";
+			$where      .=  " AND $table.`document_id` IN ($document_id)";
 		}
 
 		// Parse item_id params
 		if ( ! empty( $args['item_id'] ) ) {
 			$item_id = implode( ',', wp_parse_id_list( $args['item_id'] ) );
-			$where      .=  " AND $table.`item_id__in` IN ($item_id)";
+			$where      .=  " AND $table.`item_id` IN ($item_id)";
 		}
 
 		// Parse creator_id params
 		if ( ! empty( $args['creator_id'] ) ) {
 			$creator_id = implode( ',', wp_parse_id_list( $args['creator_id'] ) );
-			$where      .=  " AND $table.`creator_id__in` IN ($creator_id)";
+			$where      .=  " AND $table.`creator_id` IN ($creator_id)";
 		}
 
 		// Parse currency code params
