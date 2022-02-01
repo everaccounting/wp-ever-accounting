@@ -172,7 +172,6 @@ class EverAccounting_Payment_List_Table extends EverAccounting_List_Table {
 	 *
 	 */
 	function column_default( $payment, $column_name ) {
-		error_log( print_r( $payment,true));
 		$payment_id = $payment->get_id();
 		switch ( $column_name ) {
 			case 'date':

@@ -9,10 +9,6 @@
 
 namespace EverAccounting;
 
-use EverAccounting\Models\Bill;
-use EverAccounting\Models\Invoice;
-use EverAccounting\Models\Note;
-
 defined( 'ABSPATH' ) || exit();
 
 /**

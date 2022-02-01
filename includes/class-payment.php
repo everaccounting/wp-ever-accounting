@@ -31,8 +31,8 @@ class Payment extends Transaction {
 	 * @since 1.0.0
 	 */
 	public function __construct( $payment = 0 ) {
-		parent::__construct( $payment );
 		$this->core_data['type']       = 'expense';
+		parent::__construct( $payment );
 
 		if ( $this->type !== 'expense' ) {
 			$this->set_id( 0 );

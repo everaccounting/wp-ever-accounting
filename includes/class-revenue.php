@@ -31,8 +31,8 @@ class Revenue extends Transaction {
 	 * @since 1.0.0
 	 */
 	public function __construct( $revenue = 0 ) {
-		parent::__construct( $revenue );
 		$this->core_data['type']       = 'income';
+		parent::__construct( $revenue );
 
 		if ( $this->type !== 'income' ) {
 			$this->set_id( 0 );

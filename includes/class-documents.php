@@ -20,8 +20,78 @@ class Documents {
 	 * @return void
 	 */
 	public function __construct() {
+		// invoice
+		add_action( 'eaccounting_delete_revenue', array( __CLASS__, 'update_invoice_data' ), 10, 2 );
+		add_action( 'eaccounting_update_revenue', array( __CLASS__, 'update_invoice_data' ), 10, 2 );
+		add_action( 'eaccounting_daily_scheduled_events', array( __CLASS__, 'update_invoice_status' ) );
 
+		// bill
+		add_action( 'eaccounting_delete_payment', array( $this, 'update_bill_data' ), 10, 2 );
+		add_action( 'eaccounting_update_payment', array( $this, 'update_bill_data' ), 10, 2 );
+		add_action( 'eaccounting_daily_scheduled_events', array( $this, 'update_bill_status' ) );
 	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| Invoice
+	|--------------------------------------------------------------------------
+	|
+	| Handle side effect of inserting, update, deleting invoice
+	*/
+	public static function update_invoice_data( $payment_id, $revenue ) {
+		try {
+			if ( ! empty( $revenue->get_document_id() ) && $invoice = self::get_invoice( $revenue->get_document_id() ) ) { //phpcs:ignore
+				$invoice->save();
+			}
+		} catch ( \Exception  $e ) {
+
+		}
+	}
+
+	public static function update_invoice_status() {
+		global $wpdb;
+		$current_time = date_i18n( 'Y-m-d H:i:s' );
+		$invoice_ids  = $wpdb->get_col( $wpdb->prepare( "select id from {$wpdb->prefix}ea_documents where due_date != '' AND %s > due_date AND `type` ='invoice' AND status not in ('paid', 'cancelled', 'draft', 'overdue')", $current_time ) );
+		foreach ( $invoice_ids as $id ) {
+			$invoice = self::get_invoice( $id );
+			if ( $invoice ) {
+				$invoice->set_status( 'overdue' );
+				$invoice->save();
+			}
+		}
+	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| Bill
+	|--------------------------------------------------------------------------
+	|
+	| Handle side effect of inserting, update, deleting Bill
+	*/
+
+	public static function update_bill_data( $payment_id, $payment ) {
+		try {
+			if ( ! empty( $payment->get_document_id() ) && $bill = self::get_bill( $payment->get_document_id() ) ) { //phpcs:ignore
+				$bill->save();
+			}
+		} catch ( \Exception  $e ) {
+
+		}
+	}
+
+	public static function update_bill_status() {
+		global $wpdb;
+		$current_time = date_i18n( 'Y-m-d H:i:s' );
+		$bill_ids     = $wpdb->get_col( $wpdb->prepare( "select id from {$wpdb->prefix}ea_documents where due_date != '' AND %s > due_date AND `type` ='bill' AND status not in ('paid', 'cancelled', 'draft', 'overdue')", $current_time ) );
+		foreach ( $bill_ids as $id ) {
+			$bill = self::get_bill( $id );
+			if ( $bill ) {
+				$bill->set_status( 'overdue' );
+				$bill->save();
+			}
+		}
+	}
+
 	/**
 	 * Main function for returning invoice.
 	 *
@@ -106,13 +176,13 @@ class Documents {
 	 * @return array|Invoice[]|int|
 	 * @since 1.1.0
 	 */
-	public static function get_invoices( $args = array() ) {
+	public static function get_invoices( $args = array(), $count = false ) {
 		$args = array_merge( $args, array( 'type' => 'invoice' ) );
 		if ( isset( $args['customer_id'] ) ) {
 			$args['contact_id'] = $args['customer_id'];
 			unset( $args['customer_id'] );
 		}
-		return self::get_documents( $args );
+		return self::get_documents( $args, $count );
 	}
 
 	/**
@@ -199,13 +269,13 @@ class Documents {
 	 * @return array|Invoice[]|int|
 	 * @since 1.1.0
 	 */
-	public static function get_bills( $args = array() ) {
+	public static function get_bills( $args = array(), $count = false ) {
 		$args = array_merge( $args, array( 'type' => 'bill' ) );
 		if ( isset( $args['vendor_id'] ) ) {
 			$args['contact_id'] = $args['vendor_id'];
 			unset( $args['vendor_id'] );
 		}
-		return self::get_documents( $args );
+		return self::get_documents( $args, $count );
 	}
 
 
@@ -272,6 +342,7 @@ class Documents {
 		// Get from cache if available.
 		$cache_key = 'query:document-items' . md5( $document->get_id() ) . ':' . wp_cache_get_last_changed( 'ea_document_items' );
 		$items     = wp_cache_get( $cache_key, 'ea_document_items' );
+
 		if ( false === $items ) {
 			$items = $wpdb->get_results(
 				$wpdb->prepare( "SELECT * FROM {$wpdb->prefix}ea_document_items WHERE document_id = %d ORDER BY id;", $document->get_id() )
@@ -283,9 +354,10 @@ class Documents {
 				wp_cache_set( $cache_key, $items, 'ea_document_items' );
 			}
 		}
+
 		$results = array();
 		foreach ( $items as $item ) {
-			$results[ $item->id ] = new Document_Item( $item );
+			$results[ $item->id ] = new Document_Item( $item->id );
 		}
 
 		return $results;

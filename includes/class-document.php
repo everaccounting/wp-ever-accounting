@@ -9,6 +9,8 @@
 
 namespace EverAccounting;
 
+use EverAccounting\Models\Document_Item;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -504,6 +506,28 @@ class Document extends Data {
 			$this->repository->delete_items( $this );
 			$this->items = array();
 		}
+	}
+
+	/**
+	 * Get the invoice items.
+	 *
+	 * @since 1.1.0
+	 *
+	 *
+	 * @return Document_Item[]
+	 */
+	public function get_items() {
+		if ( $this->exists() && empty( $this->items ) ) {
+			$items      = Documents::get_items( $this );
+			$removables = array_keys( $this->items_to_delete );
+			foreach ( $items as $line_id => $item ) {
+				if ( ! in_array( $item->get_id(), $removables, true ) ) {
+					$this->items[ $line_id ] = $item;
+				}
+			}
+		}
+
+		return $this->items;
 	}
 
 	/**

@@ -7,7 +7,8 @@
  * @package     EverAccounting
  */
 
-use EverAccounting\Models\Invoice;
+use EverAccounting\Invoice;
+use EverAccounting\Documents;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -290,7 +291,7 @@ class EverAccounting_Invoice_List_Table extends EverAccounting_List_Table {
 					$invoice->save();
 					break;
 				case 'delete':
-					eaccounting_delete_invoice( $id );
+					Documents::delete_invoice( $id );
 					break;
 				default:
 					do_action( 'eaccounting_invoices_do_bulk_action_' . $this->current_action(), $id );
@@ -354,8 +355,8 @@ class EverAccounting_Invoice_List_Table extends EverAccounting_List_Table {
 		);
 
 		$args              = apply_filters( 'eaccounting_invoice_table_query_args', $args, $this );
-		$this->items       = eaccounting_get_invoices( $args );
-		$this->total_count = eaccounting_get_invoices( array_merge( $args, array( 'count_total' => true ) ) );
+		$this->items       = Documents::get_invoices( $args );
+		$this->total_count = Documents::get_invoices( $args, true );
 		$this->set_pagination_args(
 			array(
 				'total_items' => $this->total_count,

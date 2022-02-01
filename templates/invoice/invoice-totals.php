@@ -8,7 +8,7 @@
  * @version 1.1.0
  */
 
-use EverAccounting\Models\Invoice;
+use EverAccounting\Invoice;
 
 defined( 'ABSPATH' ) || exit;
 ?>
