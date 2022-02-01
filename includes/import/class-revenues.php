@@ -10,7 +10,7 @@
 namespace EverAccounting\Import;
 
 use EverAccounting\Abstracts\CSV_Importer;
-use EverAccounting\Models\Currency;
+use EverAccounting\Currency;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -88,12 +88,12 @@ class Revenues extends CSV_Importer {
 			return new \WP_Error( 'empty_prop', __( 'Empty Payment Method', 'wp-ever-accounting' ) );
 		}
 
-		$category    = eaccounting_get_categories( array( 'search' => $data['category_name'], 'search_cols' => array( 'name' ), 'type' => 'income' ) );
+		$category    = \EverAccounting\Categories::get_categories( array( 'search' => $data['category_name'], 'search_cols' => array( 'name' ), 'type' => 'income' ) );
 		$category_id = ! empty( $category ) ? $category[0]->get_id() : '';
 
 		$currency = new Currency( array( 'code' => $data['currency_code'] ) );
 
-		$account               = eaccounting_get_accounts( array( 'search' => $data['account_name'], 'search_cols' => array( 'name' ) ) );
+		$account               = \EverAccounting\Accounts::get_accounts( array( 'search' => $data['account_name'], 'search_cols' => array( 'name' ) ) );
 		$account_id            = ! empty( $account ) ? $account[0]->get_id() : '';
 		$account_currency_code = ! empty( $account ) ? $account[0]->get_currency_code() : '';
 
@@ -122,7 +122,7 @@ class Revenues extends CSV_Importer {
 		$data['type']        = 'income';
 		$data['contact_id']  = $customer_id;
 
-		return eaccounting_insert_revenue( $data );
+		return \EverAccounting\Transactions::insert_revenue( $data );
 	}
 
 }

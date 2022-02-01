@@ -118,35 +118,31 @@ class Documents {
 	 *  Create new invoice programmatically.
 	 *  Returns a new invoice object on success.
 	 *
+	 * @param  array|object $data Invoice Data
+	 *
+	 * @return Invoice|\WP_Error|bool
 	 * @since 1.1.0
-	 *
-	 * @param bool $wp_error
-	 * @param      $args
-	 *
-	 * @return Invoice|false|int|\WP_Error
 	 */
-	public static function insert_invoice( $args, $wp_error = true ) {
-		// Ensure we have data
-		if ( empty( $args ) ) {
-			return false;
+	public static function insert_invoice( $data ) {
+		if ( $data instanceof Invoice ) {
+			$data = $data->get_data();
+		} elseif ( is_object( $data ) ) {
+			$data = get_object_vars( $data );
 		}
-		try {
-			// The id will be provided when updating an item
-			$args = wp_parse_args( $args, array( 'id' => null ) );
 
-			// Retrieve the item
-			$item = new Invoice( $args['id'] );
-
-			// Load new data
-			$item->set_props( $args );
-
-			// Save the item
-			$item->save();
-
-			return $item;
-		} catch ( \Exception $e ) {
-			return $wp_error ? new \WP_Error( 'insert_item', $e->getMessage(), array( 'status' => $e->getCode() ) ) : 0;
+		if ( empty( $data ) || ! is_array( $data ) ) {
+			return new \WP_Error( 'invalid_data', __( 'Invoice could not be saved.', 'wp-ever-accounting' ) );
 		}
+
+		$data = wp_parse_args( $data, array( 'id' => null ) );
+		$invoice = new Invoice( $data['id'] );
+		$invoice->set_props( $data );
+		$is_error = $invoice->save();
+		if ( is_wp_error( $is_error ) ) {
+			return $is_error;
+		}
+
+		return $invoice;
 	}
 
 	/**
@@ -211,35 +207,31 @@ class Documents {
 	 *  Create new bill programmatically.
 	 *  Returns a new bill object on success.
 	 *
+	 * @param array|object     $data
+	 *
+	 * @return Bill|\WP_Error|boolean
 	 * @since 1.1.0
-	 *
-	 * @param bool $wp_error
-	 * @param      $args
-	 *
-	 * @return Bill|false|int|\WP_Error
 	 */
-	public static function insert_bill( $args, $wp_error = true ) {
-		// Ensure that we have data.
-		if ( empty( $args ) ) {
-			return false;
+	public static function insert_bill( $data ) {
+		if ( $data instanceof Bill ) {
+			$data = $data->get_data();
+		} elseif ( is_object( $data ) ) {
+			$data = get_object_vars( $data );
 		}
-		try {
-			// The  id will be provided when updating an item.
-			$args = wp_parse_args( $args, array( 'id' => null ) );
 
-			// Retrieve the item.
-			$item = new Bill( $args['id'] );
-
-			// Load new data.
-			$item->set_props( $args );
-
-			// Save the item
-			$item->save();
-
-			return $item;
-		} catch ( \Exception $e ) {
-			return $wp_error ? new \WP_Error( 'insert_item', $e->getMessage(), array( 'status' => $e->getCode() ) ) : 0;
+		if ( empty( $data ) || ! is_array( $data ) ) {
+			return new \WP_Error( 'invalid_data', __( 'Bill could not be saved.', 'wp-ever-accounting' ) );
 		}
+
+		$data = wp_parse_args( $data, array( 'id' => null ) );
+		$bill = new Bill( $data['id'] );
+		$bill->set_props( $data );
+		$is_error = $bill->save();
+		if ( is_wp_error( $is_error ) ) {
+			return $is_error;
+		}
+
+		return $bill;
 	}
 
 	/**

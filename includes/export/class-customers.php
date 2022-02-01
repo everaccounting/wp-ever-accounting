@@ -60,7 +60,7 @@ class Customers extends CSV_Exporter {
 
 		$args = apply_filters( 'eaccounting_customer_export_query_args', $args );
 
-		$items = eaccounting_get_customers( $args );
+		$items = \EverAccounting\Contacts::get_customers( $args );
 
 		$rows = array();
 

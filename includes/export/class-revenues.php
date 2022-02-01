@@ -59,7 +59,7 @@ class Revenues extends CSV_Exporter {
 			'number'   => - 1,
 		);
 		$args  = apply_filters( 'eaccounting_revenue_export_query_args', $args );
-		$items = eaccounting_get_revenues( $args );
+		$items = \EverAccounting\Transactions::get_revenues( $args );
 
 		$rows = array();
 		foreach ( $items as $item ) {

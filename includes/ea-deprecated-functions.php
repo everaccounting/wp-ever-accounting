@@ -221,7 +221,7 @@ function eaccounting_get_invoice( $invoice ) {
 }
 
 function eaccounting_insert_invoice( $args, $wp_error = true ) {
-	return \EverAccounting\Documents::insert_invoice( $args, $wp_error = true );
+	return \EverAccounting\Documents::insert_invoice( $args );
 }
 
 function eaccounting_delete_invoice( $invoice_id ) {
@@ -237,7 +237,7 @@ function eaccounting_get_bill( $bill ) {
 }
 
 function eaccounting_insert_bill( $args, $wp_error = true ) {
-	return \EverAccounting\Documents::insert_bill( $args, $wp_error = true );
+	return \EverAccounting\Documents::insert_bill( $args );
 }
 
 function eaccounting_delete_bill( $bill_id ) {

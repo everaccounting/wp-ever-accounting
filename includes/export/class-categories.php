@@ -57,7 +57,7 @@ class Categories extends CSV_Exporter {
 			'number'      => -1,
 		);
 		$args = apply_filters( 'eaccounting_category_export_query_args', $args );
-		$items = eaccounting_get_categories( $args );
+		$items = \EverAccounting\Categories::get_categories( $args );
 		$rows              = array();
 
 		foreach ( $items as $item ) {
