@@ -25,7 +25,7 @@ require_once EACCOUNTING_ABSPATH . '/includes/ea-file-functions.php';
 require_once EACCOUNTING_ABSPATH . '/includes/ea-deprecated-functions.php';
 // require_once EACCOUNTING_ABSPATH . '/includes/ea-item-functions.php';
 require_once EACCOUNTING_ABSPATH . '/includes/ea-tax-functions.php';
-require_once EACCOUNTING_ABSPATH . '/includes/ea-document-functions.php';
+//require_once EACCOUNTING_ABSPATH . '/includes/ea-document-functions.php';
 require_once EACCOUNTING_ABSPATH . '/includes/ea-template-functions.php';
 require_once EACCOUNTING_ABSPATH . '/includes/functions/deprecated.php';
 

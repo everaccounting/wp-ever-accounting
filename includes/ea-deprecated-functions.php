@@ -215,3 +215,47 @@ function eaccounting_insert_currency( $args, $wp_error = true ) {
 function eaccounting_get_currencies( $args = array() ) {
 	return \EverAccounting\Currencies::get_currencies( $args, false );
 }
+
+function eaccounting_get_invoice( $invoice ) {
+	return \EverAccounting\Documents::get_invoice( $invoice );
+}
+
+function eaccounting_insert_invoice( $args, $wp_error = true ) {
+	return \EverAccounting\Documents::insert_invoice( $args, $wp_error = true );
+}
+
+function eaccounting_delete_invoice( $invoice_id ) {
+	return \EverAccounting\Documents::delete_invoice( $invoice_id );
+}
+
+function eaccounting_get_invoices( $args = array() ) {
+	return \EverAccounting\Documents::get_invoices( $args, false );
+}
+
+function eaccounting_get_bill( $bill ) {
+	return \EverAccounting\Documents::get_bill( $bill );
+}
+
+function eaccounting_insert_bill( $args, $wp_error = true ) {
+	return \EverAccounting\Documents::insert_bill( $args, $wp_error = true );
+}
+
+function eaccounting_delete_bill( $bill_id ) {
+	return \EverAccounting\Documents::delete_bill( $bill_id );
+}
+
+function eaccounting_get_bills( $args = array() ) {
+	return \EverAccounting\Documents::get_bills( $args = array(),false );
+}
+
+function eaccounting_get_documents( $args = array() ) {
+	return \EverAccounting\Documents::get_documents( $args = array(), false );
+}
+
+function eaccounting_get_bill_statuses() {
+	return \EverAccounting\Documents::get_bill_statuses();
+}
+
+function eaccounting_get_invoice_statuses() {
+	return \EverAccounting\Documents::get_invoice_statuses();
+}
