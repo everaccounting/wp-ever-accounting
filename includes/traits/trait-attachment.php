@@ -66,6 +66,6 @@ trait Attachment {
 	 * @return string
 	 */
 	public function get_default_image_url() {
-		return eaccounting()->plugin_url( '/dist/images/placeholder.png' );
+		return eaccounting()->plugin_url( '/assets/dist/images/placeholder.png' );
 	}
 }

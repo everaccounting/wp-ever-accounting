@@ -9,6 +9,7 @@
  * @package     EverAccounting
  */
 
+use EverAccounting\Items;
 use EverAccounting\Models\Item;
 
 defined( 'ABSPATH' ) || exit();
@@ -193,7 +194,7 @@ class EverAccounting_Item_List_Table extends EverAccounting_List_Table {
 			case 'thumb':
 				$edit_url  = eaccounting_admin_url( array( 'page' => 'ea-items', 'tab' => 'items', 'action' => 'edit', 'item_id' => $item_id, ) );// phpcs:ignore
 				$thumb_url = wp_get_attachment_thumb_url( $item->get_thumbnail_id() );
-				$thumb_url = empty( $thumb_url ) ? eaccounting()->plugin_url( '/dist/images/placeholder.png' ) : $thumb_url;
+				$thumb_url = empty( $thumb_url ) ? eaccounting()->plugin_url( '/assets/dist/images/placeholder.png' ) : $thumb_url;
 				$value     = '<a href="' . esc_url( $edit_url ) . '"><img src="' . $thumb_url . '" height="36" width="36" alt="' . $item->get_name() . '"></a>';
 				break;
 			case 'name':
@@ -393,26 +394,26 @@ class EverAccounting_Item_List_Table extends EverAccounting_List_Table {
 		);
 
 		$args        = apply_filters( 'eaccounting_item_table_query_args', $args, $this );
-		$this->items = eaccounting_get_items( $args );
+		$this->items = Items::get_items( $args );
 
-		$this->active_count = eaccounting_get_items(
+		$this->active_count = Items::get_items(
 			array_merge(
 				$args,
 				array(
 					'status'      => 'active',
-					'count_total' => true,
 				)
-			)
+			),
+				true
 		);
 
-		$this->inactive_count = eaccounting_get_items(
+		$this->inactive_count = Items::get_items(
 			array_merge(
 				$args,
 				array(
 					'status'      => 'inactive',
-					'count_total' => true,
 				)
-			)
+			),
+			true
 		);
 
 		$this->total_count = $this->active_count + $this->inactive_count;

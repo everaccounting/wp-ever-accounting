@@ -112,7 +112,7 @@ const Pagination = ( props ) => {
 	return (
 		<div className={ classes }>
 			<span className="displaying-num">
-				{ !!isDisabled && !total && <Placeholder/> }
+				{ !! isDisabled && ! total && <Placeholder /> }
 				{ sprintf(
 					_n(
 						'%s item',

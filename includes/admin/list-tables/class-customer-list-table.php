@@ -7,7 +7,8 @@
  * @package     EverAccounting
  */
 
-use EverAccounting\Models\Customer;
+use EverAccounting\Contacts;
+use EverAccounting\Customer;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -203,26 +204,26 @@ class EverAccounting_Customer_List_Table extends EverAccounting_List_Table {
 					'delete' => sprintf( '<a href="%1$s" class="del">%2$s</a>', esc_url( $del_url ), __( 'Delete', 'wp-ever-accounting' ) ),
 				);
 
-				$value = '<a href="' . esc_url( $view_url ) . '"><strong>' . $customer->get_name() . '</strong></a>';
+				$value = '<a href="' . esc_url( $view_url ) . '"><strong>' . $customer->get_prop( 'name' ) . '</strong></a>';
 				$value .= '<br>';
-				$value .= '<small class=meta>' . $customer->get_company() . '</small>';
+				$value .= '<small class=meta>' . $customer->get_prop( 'company' ) . '</small>';
 				$value .= $this->row_actions( $actions );
 				break;
 
 			case 'email':
-				if ( ! empty( $customer->get_email() ) || ! empty( $customer->get_phone() ) ) {
-					$value = ! empty( $customer->get_email() ) ? '<a href="mailto:' . sanitize_email( $customer->get_email() ) . '">' . sanitize_email( $customer->get_email() ) . '</a><br>' : '';
-					$value .= ! empty( $customer->get_phone() ) ? '<span class="contact_phone">' . $customer->get_phone() . '</span>' : '';
+				if ( ! empty( $customer->get_prop( 'email' ) ) || ! empty( $customer->get_phone() ) ) {
+					$value = ! empty( $customer->get_prop('email') ) ? '<a href="mailto:' . sanitize_email( $customer->get_prop('email') ) . '">' . sanitize_email( $customer->get_prop('email') ) . '</a><br>' : '';
+					$value .= ! empty( $customer->get_prop('phone') ) ? '<span class="contact_phone">' . $customer->get_prop('phone') . '</span>' : '';
 				}
-				if ( empty( $customer->get_email() ) && empty( $customer->get_phone() ) ) {
+				if ( empty( $customer->get_prop( 'email') ) && empty( $customer->get_prop('phone') ) ) {
 					$value = '&mdash;';
 				}
 				break;
 			case 'street':
 				$value = eaccounting_format_address(
 					array(
-						'city'    => $customer->get_city(),
-						'state'   => $customer->get_state(),
+						'city'    => $customer->get_prop( 'city' ),
+						'state'   => $customer->get_prop( 'state' ),
 						'country' => $customer->get_country_nicename(),
 					),
 					','
@@ -312,7 +313,7 @@ class EverAccounting_Customer_List_Table extends EverAccounting_List_Table {
 		foreach ( $ids as $id ) {
 			switch ( $action ) {
 				case 'enable':
-					eaccounting_insert_customer(
+					Contacts::insert_customer(
 						array(
 							'id'      => $id,
 							'enabled' => '1',
@@ -320,7 +321,7 @@ class EverAccounting_Customer_List_Table extends EverAccounting_List_Table {
 					);
 					break;
 				case 'disable':
-					eaccounting_insert_customer(
+					Contacts::insert_customer(
 						array(
 							'id'      => $id,
 							'enabled' => '0',
@@ -328,7 +329,7 @@ class EverAccounting_Customer_List_Table extends EverAccounting_List_Table {
 					);
 					break;
 				case 'delete':
-					eaccounting_delete_customer( $id );
+					Contacts::delete_customer( $id );
 					break;
 				default:
 					do_action( 'eaccounting_customers_do_bulk_action_' . $this->current_action(), $id );
@@ -415,25 +416,25 @@ class EverAccounting_Customer_List_Table extends EverAccounting_List_Table {
 
 		$args = apply_filters( 'eaccounting_customer_table_query_args', $args, $this );
 
-		$this->items = eaccounting_get_customers( $args );
+		$this->items = Contacts::get_customers( $args );
 
-		$this->active_count   = eaccounting_get_customers(
+		$this->active_count   = Contacts::get_customers(
 			array_merge(
 				$args,
 				array(
 					'status'      => 'active',
-					'count_total' => true,
 				)
-			)
+			),
+				true
 		);
-		$this->inactive_count = eaccounting_get_customers(
+		$this->inactive_count = Contacts::get_customers(
 			array_merge(
 				$args,
 				array(
 					'status'      => 'inactive',
-					'count_total' => true,
 				)
-			)
+			),
+				true
 		);
 
 		$this->total_count = $this->active_count + $this->inactive_count;

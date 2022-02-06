@@ -172,7 +172,7 @@ class Category extends Resource_Model {
 	 * @param $value
 	 */
 	public function set_type( $value ) {
-		if ( array_key_exists( $value, eaccounting_get_category_types() ) ) {
+		if ( array_key_exists( $value, \EverAccounting\Categories::get_category_types() ) ) {
 			$this->set_prop( 'type', eaccounting_clean( $value ) );
 		}
 	}

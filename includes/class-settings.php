@@ -457,11 +457,11 @@ class Settings {
 	protected function get_accounts() {
 		$accounts = array();
 		if ( isset( $_GET['page'] ) && 'ea-settings' === $_GET['page'] ) {
-			$results    = eaccounting_get_accounts(
+			$results    = \EverAccounting\Accounts::get_accounts(
 				array(
-					'number' => - 1,
+					'per_page' => - 1,
 					'return' => 'raw',
-				)
+				), true
 			);
 			$accounts[] = __( 'Select account', 'wp-ever-accounting' );
 			foreach ( $results as $result ) {
@@ -484,12 +484,13 @@ class Settings {
 	protected function get_categories( $type = 'income' ) {
 		$categories = array();
 		if ( isset( $_GET['page'] ) && 'ea-settings' === $_GET['page'] ) {
-			$results      = eaccounting_get_categories(
+			$results      = \EverAccounting\Categories::get_categories(
 				array(
-					'number' => - 1,
+					'per_page' => - 1,
 					'type'   => $type,
 					'return' => 'raw',
-				)
+				),
+				true
 			);
 			$categories[] = __( 'Select category', 'wp-ever-accounting' );
 			$categories   = array_merge( $categories, wp_list_pluck( $results, 'name', 'id' ) );

@@ -26,7 +26,7 @@ export default class AsyncSelect extends Component {
 		placeholder: PropTypes.string,
 		searchable: PropTypes.bool,
 		isMulti: PropTypes.bool,
-		options: PropTypes.arrayOf(PropTypes.object),
+		options: PropTypes.arrayOf( PropTypes.object ),
 		disabledOption: PropTypes.object,
 		value: PropTypes.any,
 		onChange: PropTypes.func,
@@ -41,18 +41,17 @@ export default class AsyncSelect extends Component {
 		addIcon: PropTypes.string,
 	};
 
-	static defaultProps = {
-	};
+	static defaultProps = {};
 
-	constructor(props) {
-		super(props);
+	constructor( props ) {
+		super( props );
 		this.state = {
 			value: [],
 		};
 	}
 
-	onInputChange = value => {
-		return value.replace(/\W/g, '');
+	onInputChange = ( value ) => {
+		return value.replace( /\W/g, '' );
 	};
 
 	render() {
@@ -64,13 +63,23 @@ export default class AsyncSelect extends Component {
 			loadOptions,
 			...props
 		} = this.props;
-		const classes = classnames('ea-form-group', 'ea-select-field async', className, {
-			required: !!required,
-		});
+		const classes = classnames(
+			'ea-form-group',
+			'ea-select-field async',
+			className,
+			{
+				required: !! required,
+			}
+		);
 
 		const id = cuid();
 		return (
-			<BaseControl label={label} help={help} required={required} className={classes}>
+			<BaseControl
+				label={ label }
+				help={ help }
+				required={ required }
+				className={ classes }
+			>
 				<div className="ea-input-group">
 					<Async
 						// DropdownIndicator={false}
@@ -78,10 +87,10 @@ export default class AsyncSelect extends Component {
 						// openMenuOnClick={false}
 						classNamePrefix="ea-react-select"
 						className="ea-react-select"
-						id={id}
-						required={required}
-						loadOptions={loadOptions}
-						{...props}
+						id={ id }
+						required={ required }
+						loadOptions={ loadOptions }
+						{ ...props }
 					/>
 				</div>
 			</BaseControl>

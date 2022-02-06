@@ -9,6 +9,9 @@
 
 namespace EverAccounting\Admin;
 
+use EverAccounting\Accounts;
+use EverAccounting\Categories;
+
 defined( 'ABSPATH' ) || exit();
 
 /**
@@ -635,9 +638,9 @@ class Settings {
 	protected function get_accounts() {
 		$accounts = array();
 		if ( isset( $_GET['page'] ) && 'ea-settings' === $_GET['page'] ) {
-			$results    = eaccounting_get_accounts(
+			$results    = Accounts::get_accounts(
 					array(
-							'number' => - 1,
+							'per_page' => - 1,
 							'return' => 'raw',
 					)
 			);
@@ -662,9 +665,9 @@ class Settings {
 	protected function get_categories( $type = 'income' ) {
 		$categories = array();
 		if ( isset( $_GET['page'] ) && 'ea-settings' === $_GET['page'] ) {
-			$results      = eaccounting_get_categories(
+			$results      = Categories::get_categories(
 					array(
-							'number' => - 1,
+							'per_page' => - 1,
 							'type'   => $type,
 							'return' => 'raw',
 					)

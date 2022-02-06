@@ -21,88 +21,44 @@
   "engines": {
     "node": ">=12.0.0"
   },
-  "main": "index.js",
   "dependencies": {
-    "@automattic/color-studio": "^2.5.0",
-    "chart.js": "2.9.3",
-    "classnames": "^2.3.0",
-    "cuid": "^2.1.8",
+    "chart.js": "^3.7.0",
     "inputmask": "^5.0.5",
-    "moment": "2.22.2",
-    "react-select": "^4.3.0",
     "select2": "~4.0"
   },
   "devDependencies": {
-    "@babel/plugin-proposal-class-properties": "^7.13.0",
-    "@babel/plugin-transform-runtime": "^7.13.10",
-    "@byteever/eslint-plugin": "^1.0.0",
-    "@wordpress/babel-plugin-makepot": "^4.0.1",
-    "@wordpress/browserslist-config": "^3.0.1",
-    "@wordpress/components": "^12.0.8",
-    "@wordpress/custom-templated-path-webpack-plugin": "^2.0.1",
-    "@wordpress/dom-ready": "^2.12.1",
-    "@wordpress/element": "^2.19.1",
-    "@wordpress/i18n": "^3.18.0",
-    "@wordpress/scripts": "^13.0.3",
-    "browser-sync": "^2.26.14",
-    "browser-sync-webpack-plugin": "^2.3.0",
-    "caniuse-db": "^1.0.30001196",
-    "copy-webpack-plugin": "^6.4.1",
-    "cross-env": "^7.0.3",
-    "cssnano": "^4.1.10",
-    "eslint-loader": "^4.0.2",
-    "eslint-plugin-prettier": "^3.3.1",
-    "eslint-webpack-plugin": "^2.5.2",
-    "git-clone": "^0.1.0",
+    "@byteever/scripts": "git+ssh://git@github.com:byteever/scripts.git",
     "grunt-checktextdomain": "^1.0.1",
-    "grunt-contrib-clean": "^2.0.0",
-    "grunt-contrib-compress": "^2.0.0",
-    "grunt-contrib-copy": "^1.0.0",
+    "grunt-shell": "^3.0.1",
     "grunt-wp-i18n": "^1.0.3",
-    "grunt-wp-readme-to-markdown": "^2.0.1",
-    "husky": "^4.3.8",
-    "imagemin-webpack-plugin": "^2.4.2",
-    "lint-staged": "^10.5.4",
-    "matchdep": "^2.0.0",
-    "path": "^0.12.7",
-    "postcss-color-function": "^4.1.0",
-    "postcss-css-variables": "^0.17.0",
-    "postcss-editor-styles": "^0.3.0",
-    "precss": "^4.0.0",
-    "prettier": "^2.2.1",
-    "promptly": "^3.2.0",
-    "prop-types": "^15.7.2",
-    "replace-in-file": "^6.2.0",
-    "stylelint-webpack-plugin": "^2.1.1",
-    "webpack-fix-style-only-entries": "^0.4.0",
-    "webpack-rtl-plugin": "^2.0.0",
-    "webpackbar": "^5.0.0-3"
+    "husky": "^7.0.4",
+    "matchdep": "^2.0.0"
   },
   "scripts": {
     "start": "composer install && npm install && npm -s run watch",
     "prestart": "php ./bin/update-version.php",
-    "watch": "cross-env NODE_ENV=develop wp-scripts start",
-    "build": "cross-env NODE_ENV=production wp-scripts build  && npm run i18n",
-    "prerelease": "npm install && composer install --no-dev -o",
-    "release": "npm run build",
-    "postrelease": "grunt zip",
+    "watch": "byteever-scripts start",
+    "build": "byteever-scripts build",
+    "build:vendor": "cp -r ./node_modules/chart.js/dist/ ./assets/lib/chartjs",
+    "postbuild": "npm run -s i18n",
     "i18n": "npm run -s i18n:pot && npm run -s i18n:build",
     "i18n:pot": "grunt i18n",
-    "i18n:build": "php bin/combine-pot-files.php languages/wp-ever-accounting.po languages/wp-ever-accounting.pot",
+    "i18n:build": "php bin/combine-pot-files.php i18n/languages/wp-ever-accounting.po i18n/languages/wp-ever-accounting.pot",
     "lint": "npm run lint:js && npm run lint:css && npm run && npm run lint:php",
-    "lint:js": "wp-scripts lint-js  --fix",
-    "lint:css": "wp-scripts lint-style --fix",
+    "lint:js": "byteever-scripts lint-js  --fix",
+    "lint:css": "byteever-scripts lint-style --fix",
     "lint:php": "./vendor/bin/phpcs --standard=phpcs.xml $(git ls-files | grep .php$)",
     "lint:php-fix": "./vendor/bin/phpcbf --standard=phpcs.xml $(git ls-files | grep .php$)",
-    "check-engines": "wp-scripts check-engines",
-    "check-licenses": "wp-scripts check-licenses",
-    "format:js": "wp-scripts format-js",
-    "lint:md:docs": "wp-scripts lint-md-docs",
-    "lint:md:js": "wp-scripts lint-md-js",
-    "lint:pkg-json": "wp-scripts lint-pkg-json",
-    "packages-update": "wp-scripts packages-update",
-    "test:e2e": "wp-scripts test-e2e",
-    "test:unit": "wp-scripts test-unit-js",
+    "check-engines": "byteever-scripts check-engines",
+    "check-licenses": "byteever-scripts check-licenses",
+    "format": "byteever-scripts format",
+    "format:js": "byteever-scripts format-js",
+    "lint:md:docs": "byteever-scripts lint-md-docs",
+    "lint:md:js": "byteever-scripts lint-md-js",
+    "lint:pkg-json": "byteever-scripts lint-pkg-json",
+    "packages-update": "byteever-scripts packages-update",
+    "test:e2e": "byteever-scripts test-e2e",
+    "test:unit": "byteever-scripts test-unit-js",
     "create-extension": "node ./bin/create-extension.js"
   },
   "husky": {
@@ -121,8 +77,8 @@
       "stylelint --syntax=scss --fix"
     ],
     "*.{js,jsx}": [
-      "wp-scripts format-js",
-      "wp-scripts lint-js"
+      "byteever-scripts format-js",
+      "byteever-scripts lint-js"
     ],
     "*.js": [
       "eslint --fix"
@@ -135,11 +91,5 @@
     "license.txt",
     "wp-ever-accounting.php"
   ],
-  "browserslist": [
-    "extends @wordpress/browserslist-config"
-  ],
-  "eslintConfig": {
-    "extends": "@byteever/eslint-plugin/recommended"
-  },
-  "localhost": "http://accounting.test"
+  "devURL": "http://accounting.test"
 }

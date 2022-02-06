@@ -10,21 +10,6 @@
 
 defined( 'ABSPATH' ) || exit();
 
-/**
- * Get contact types.
- *
- * @since 1.1.0
- * @return array
- */
-function eaccounting_get_contact_types() {
-	return apply_filters(
-		'eaccounting_contact_types',
-		array(
-			'customer' => __( 'Customer', 'wp-ever-accounting' ),
-			'vendor'   => __( 'Vendor', 'wp-ever-accounting' ),
-		)
-	);
-}
 
 
 /**

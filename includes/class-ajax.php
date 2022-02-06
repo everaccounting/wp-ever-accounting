@@ -183,7 +183,7 @@ class Ajax {
 
 
 		wp_send_json_success(
-			eaccounting_get_categories(
+			Categories::get_categories(
 				array(
 					'search' => $search,
 					'type'   => 'expense',
@@ -207,7 +207,7 @@ class Ajax {
 
 
 		wp_send_json_success(
-			eaccounting_get_categories(
+			Categories::get_categories(
 				array(
 					'search' => $search,
 					'type'   => 'income',
@@ -229,18 +229,18 @@ class Ajax {
 		$search = isset( $_REQUEST['search'] ) ? eaccounting_clean( $_REQUEST['search'] ) : '';
 		$page   = isset( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1;
 
-
 		wp_send_json_success(
-			eaccounting_get_categories(
+			Categories::get_categories(
 				array(
 					'search' => $search,
 					'type'   => 'item',
-					'page'   => $page,
+					'paged'   => $page,
 					'return' => 'raw',
 					'status' => 'active',
 				)
 			)
 		);
+
 	}
 
 	/**
@@ -253,7 +253,7 @@ class Ajax {
 		self::verify_nonce( 'ea_edit_category' );
 		self::check_permission( 'ea_manage_category' );
 		$posted  = eaccounting_clean( wp_unslash( $_REQUEST ) );
-		$created = eaccounting_insert_category( $posted );
+		$created = Categories::insert_category( $posted );
 		if ( is_wp_error( $created ) ) {
 			wp_send_json_error(
 				array(
@@ -480,7 +480,7 @@ class Ajax {
 
 
 		wp_send_json_success(
-			eaccounting_get_customers(
+			Contacts::get_customers(
 				array(
 					'search' => $search,
 					'page'   => $page,
@@ -502,7 +502,7 @@ class Ajax {
 		self::verify_nonce( 'ea_edit_customer' );
 		self::check_permission( 'ea_manage_customer' );
 		$posted  = eaccounting_clean( $_REQUEST );
-		$created = eaccounting_insert_customer( $posted );
+		$created = Contacts::insert_customer( $posted );
 		if ( is_wp_error( $created ) || ! $created->exists() ) {
 			wp_send_json_error(
 				array(
@@ -828,7 +828,7 @@ class Ajax {
 		$page   = isset( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1;
 
 		wp_send_json_success(
-			eaccounting_get_vendors(
+			Contacts::get_vendors (
 				array(
 					'search' => $search,
 					'page'   => $page,
@@ -850,7 +850,7 @@ class Ajax {
 		self::check_permission( 'ea_manage_vendor' );
 		$posted = eaccounting_clean( wp_unslash( $_REQUEST ) );
 
-		$created = eaccounting_insert_vendor( $posted );
+		$created = Contacts::insert_vendor( $posted );
 		if ( is_wp_error( $created ) || ! $created->exists() ) {
 			wp_send_json_error(
 				array(
@@ -888,7 +888,7 @@ class Ajax {
 		self::verify_nonce( 'ea_get_account' );
 		self::check_permission( 'manage_eaccounting' );
 		$id      = empty( $_REQUEST['id'] ) ? null : absint( $_REQUEST['id'] );
-		$account = eaccounting_get_account( $id );
+		$account = Accounts::get_account( $id );
 		if ( $account ) {
 			wp_send_json_success( $account->get_data() );
 			wp_die();
@@ -911,7 +911,7 @@ class Ajax {
 
 
 		wp_send_json_success(
-			eaccounting_get_accounts(
+			Accounts::get_accounts(
 				array(
 					'search' => $search,
 					'page'   => $page,
@@ -940,8 +940,8 @@ class Ajax {
 				)
 			);
 		}
-		$account = eaccounting_get_account( $account_id );
-		if ( empty( $account ) || is_wp_error( $account ) || empty( $account->get_currency()->exists() ) ) {
+		$account = Accounts::get_account( $account_id );
+		if ( empty( $account ) || is_wp_error( $account ) || empty( $account->get_prop('currency_code' )->exists() ) ) {
 			wp_send_json_error(
 				array(
 					'message' => __( 'Could not find the currency', 'wp-ever-accounting' ),
@@ -949,7 +949,7 @@ class Ajax {
 			);
 		}
 
-		wp_send_json_success( $account->get_currency()->get_data() );
+		wp_send_json_success( $account->get_prop( 'currency_code' )->get_data() );
 	}
 
 
@@ -963,7 +963,7 @@ class Ajax {
 		self::verify_nonce( 'ea_edit_account' );
 		self::check_permission( 'ea_manage_account' );
 		$posted  = eaccounting_clean( wp_unslash( $_REQUEST ) );
-		$created = eaccounting_insert_account( $posted );
+		$created = Accounts::insert_account( $posted );
 		if ( is_wp_error( $created ) ) {
 			wp_send_json_error(
 				array(
@@ -1078,7 +1078,7 @@ class Ajax {
 		$search = isset( $_REQUEST['search'] ) ? eaccounting_clean( $_REQUEST['search'] ) : '';
 
 		wp_send_json_success(
-			eaccounting_get_items(
+			Items::get_items(
 				array(
 					'search' => $search,
 					'return' => 'raw',
@@ -1098,7 +1098,7 @@ class Ajax {
 		self::verify_nonce( 'ea_edit_item' );
 		self::check_permission( 'ea_manage_item' );
 		$posted  = eaccounting_clean( wp_unslash( $_REQUEST ) );
-		$created = eaccounting_insert_item( $posted );
+		$created = Items::insert_item( $posted );
 		if ( is_wp_error( $created ) ) {
 			wp_send_json_error(
 				array(
