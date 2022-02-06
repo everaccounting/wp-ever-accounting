@@ -28,22 +28,22 @@ class Controller {
 		add_action( 'eaccounting_delete_account', array( $this, 'delete_account_reference' ) );
 
 		// customers
-		add_action( 'eaccounting_delete_revenue', array( $this, 'update_customer_total_paid' ), 10, 2 );
-		add_action( 'eaccounting_insert_revenue', array( $this, 'update_customer_total_paid' ), 10, 2 );
-		add_action( 'eaccounting_update_revenue', array( $this, 'update_customer_total_paid' ), 10, 2 );
-		add_action( 'eaccounting_insert_invoice', array( $this, 'update_customer_total_paid' ), 10, 2 );
-		add_action( 'eaccounting_update_invoice', array( $this, 'update_customer_total_paid' ), 10, 2 );
-		add_action( 'eaccounting_delete_invoice', array( $this, 'update_customer_total_paid' ), 10, 2 );
-		add_action( 'eaccounting_delete_customer', array( $this, 'delete_customer_reference' ) );
-
-		// vendors
-		add_action( 'eaccounting_delete_payment', array( $this, 'update_vendor_total_paid' ), 10, 2 );
-		add_action( 'eaccounting_insert_payment', array( $this, 'update_vendor_total_paid' ), 10, 2 );
-		add_action( 'eaccounting_update_payment', array( $this, 'update_vendor_total_paid' ), 10, 2 );
-		add_action( 'eaccounting_insert_bill', array( $this, 'update_vendor_total_paid' ), 10, 2 );
-		add_action( 'eaccounting_update_bill', array( $this, 'update_vendor_total_paid' ), 10, 2 );
-		add_action( 'eaccounting_delete_bill', array( $this, 'update_vendor_total_paid' ), 10, 2 );
-		add_action( 'eaccounting_delete_vendor', array( $this, 'delete_vendor_reference' ) );
+//		add_action( 'eaccounting_delete_revenue', array( $this, 'update_customer_total_paid' ), 10, 2 );
+//		add_action( 'eaccounting_insert_revenue', array( $this, 'update_customer_total_paid' ), 10, 2 );
+//		add_action( 'eaccounting_update_revenue', array( $this, 'update_customer_total_paid' ), 10, 2 );
+//		add_action( 'eaccounting_insert_invoice', array( $this, 'update_customer_total_paid' ), 10, 2 );
+//		add_action( 'eaccounting_update_invoice', array( $this, 'update_customer_total_paid' ), 10, 2 );
+//		add_action( 'eaccounting_delete_invoice', array( $this, 'update_customer_total_paid' ), 10, 2 );
+//		add_action( 'eaccounting_delete_customer', array( $this, 'delete_customer_reference' ) );
+//
+//		// vendors
+//		add_action( 'eaccounting_delete_payment', array( $this, 'update_vendor_total_paid' ), 10, 2 );
+//		add_action( 'eaccounting_insert_payment', array( $this, 'update_vendor_total_paid' ), 10, 2 );
+//		add_action( 'eaccounting_update_payment', array( $this, 'update_vendor_total_paid' ), 10, 2 );
+//		add_action( 'eaccounting_insert_bill', array( $this, 'update_vendor_total_paid' ), 10, 2 );
+//		add_action( 'eaccounting_update_bill', array( $this, 'update_vendor_total_paid' ), 10, 2 );
+//		add_action( 'eaccounting_delete_bill', array( $this, 'update_vendor_total_paid' ), 10, 2 );
+//		add_action( 'eaccounting_delete_vendor', array( $this, 'delete_vendor_reference' ) );
 
 		// payments
 		add_action( 'eaccounting_validate_payment_data', array( $this, 'validate_payment_data' ), 10, 2 );

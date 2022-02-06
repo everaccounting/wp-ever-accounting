@@ -5,7 +5,7 @@
  * @package     EverAccounting
  * @subpackage  Admin/Js Templates
  * @since       1.0.2
- * @var \EverAccounting\Models\Invoice $invoice;
+ * @var \EverAccounting\Invoice $invoice;
  */
 defined( 'ABSPATH' ) || exit();
 ?>

@@ -14,7 +14,7 @@
 defined( 'ABSPATH' ) || exit();
 
 try {
-	$payment = new \EverAccounting\Models\Payment( $payment_id );
+	$payment = new \EverAccounting\Payment( $payment_id );
 } catch ( Exception $e ) {
 	wp_die( $e->getMessage() );
 }
@@ -180,20 +180,20 @@ $title    = $payment->exists() ? __( 'Update Payment', 'wp-ever-accounting' ) : 
 		</div>
 	</form>
 <?php
-eaccounting_enqueue_js(
-	"
-	jQuery('#ea-payment-form #amount').inputmask('decimal', {
-			alias: 'numeric',
-			groupSeparator: '" . $payment->get_currency_thousand_separator() . "',
-			autoGroup: true,
-			digits: '" . $payment->get_currency_precision() . "',
-			radixPoint: '" . $payment->get_currency_decimal_separator() . "',
-			digitsOptional: false,
-			allowMinus: false,
-			prefix: '" . $payment->get_currency_symbol() . "',
-			placeholder: '0.000',
-			rightAlign: 0,
-			autoUnmask: true
-		});
-"
-);
+//eaccounting_enqueue_js(
+//	"
+//	jQuery('#ea-payment-form #amount').inputmask('decimal', {
+//			alias: 'numeric',
+//			groupSeparator: '" . $payment->get_currency_thousand_separator() . "',
+//			autoGroup: true,
+//			digits: '" . $payment->get_currency_precision() . "',
+//			radixPoint: '" . $payment->get_currency_decimal_separator() . "',
+//			digitsOptional: false,
+//			allowMinus: false,
+//			prefix: '" . $payment->get_currency_symbol() . "',
+//			placeholder: '0.000',
+//			rightAlign: 0,
+//			autoUnmask: true
+//		});
+//"
+//);

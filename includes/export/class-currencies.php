@@ -57,7 +57,7 @@ class Currencies extends CSV_Exporter {
 			'number'   => - 1,
 		);
 		$args  = apply_filters( 'eaccounting_currency_export_query_args', $args );
-		$items = eaccounting_get_currencies( $args );
+		$items = \EverAccounting\Currencies::get_currencies( $args );
 		$rows  = array();
 
 		foreach ( $items as $item ) {

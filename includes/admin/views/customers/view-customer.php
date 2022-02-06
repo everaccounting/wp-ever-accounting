@@ -12,7 +12,7 @@
 
 defined( 'ABSPATH' ) || exit();
 
-$customer = eaccounting_get_customer( $customer_id );
+$customer = \EverAccounting\Contacts::get_customer( $customer_id );
 
 if ( empty( $customer ) || ! $customer->exists() ) {
 	wp_die( __( 'Sorry, Customer does not exist', 'wp-ever-accounting' ) );

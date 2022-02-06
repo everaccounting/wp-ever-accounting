@@ -9,7 +9,8 @@
  * @package     EverAccounting
  */
 
-use EverAccounting\Models\Transfer;
+use EverAccounting\Transfer;
+use EverAccounting\Transfers;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -321,9 +322,9 @@ class EverAccounting_Transfer_List_Table extends EverAccounting_List_Table {
 		}
 
 		$args        = apply_filters( 'eaccounting_transfer_table_query_args', $args, $this );
-		$this->items = eaccounting_get_transfers( $args );
+		$this->items = Transfers::get_transfers( $args );
 
-		$this->total_count = eaccounting_get_transfers( array_merge( $args, array( 'count_total' => true ) ) );
+		$this->total_count = Transfers::get_transfers(  $args, true );
 
 		$this->set_pagination_args(
 			array(

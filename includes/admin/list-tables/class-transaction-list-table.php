@@ -178,17 +178,17 @@ class EverAccounting_Transaction_List_Table extends EverAccounting_List_Table {
 				break;
 			case 'type':
 				$type  = $transaction->get_type();
-				$types = eaccounting_get_transaction_types();
+				$types = \EverAccounting\Transactions::get_transaction_types();
 				$value = array_key_exists( $type, $types ) ? $types[ $type ] : ucfirst( $type );
 				break;
 			case 'account_id':
-				$account = eaccounting_get_account( $transaction->get_account_id( 'edit' ) );
+				$account = \EverAccounting\Accounts::get_account( $transaction->get_account_id( 'edit' ) );
 				//$value   = $account ? $account->get_name() : '&mdash;';
 				$value = $account ? sprintf( '<a href="%1$s">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'accounts', 'action' => 'view', 'account_id' => $transaction->get_account_id() ) ) ), $account->get_name() ) : '&mdash;';// phpcs:ignore
 
 				break;
 			case 'category_id':
-				$category = eaccounting_get_category( $transaction->get_category_id( 'edit' ) );
+				$category = \EverAccounting\Categories::get_category( $transaction->get_category_id( 'edit' ) );
 				$value    = $category ? $category->get_name() : '&mdash;';
 				break;
 			case 'reference':
@@ -334,9 +334,9 @@ class EverAccounting_Transaction_List_Table extends EverAccounting_List_Table {
 		}
 
 		$args                = apply_filters( 'eaccounting_transaction_table_query_args', $args, $this );
-		$this->items         = eaccounting_get_transactions( $args );
-		$this->income_count  = eaccounting_get_transactions( array_merge( $args, array( 'type' => 'income', 'count_total' => true ) ) );
-		$this->expense_count = eaccounting_get_transactions( array_merge( $args, array( 'type' => 'expense', 'count_total' => true ) ) );
+		$this->items         = \EverAccounting\Transactions::get_transactions( $args );
+		$this->income_count  = \EverAccounting\Transactions::get_transactions( array_merge( $args, array( 'type' => 'income' ) ), true );
+		$this->expense_count = \EverAccounting\Transactions::get_transactions( array_merge( $args, array( 'type' => 'expense' ) ), true );
 		$this->total_count   = $this->income_count + $this->expense_count;
 
 		$type = isset( $_GET['type'] ) ? $_GET['type'] : 'any';

@@ -9,7 +9,7 @@
  * @package     EverAccounting
  */
 
-use EverAccounting\Models\Payment;
+use EverAccounting\Payment;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -184,6 +184,7 @@ class EverAccounting_Payment_List_Table extends EverAccounting_List_Table {
 				);
 
 				$value = '<a href="' . esc_url( $edit_url ) . '">' . esc_html( eaccounting_date( $payment->get_payment_date() ) ) . '</a>' . $this->row_actions( $actions );
+				//$value = '<a href="' . esc_url( $edit_url ) . '">' . esc_html( eaccounting_date( $payment->get_prop('payment_date') ) ) . '</a>' . $this->row_actions( $actions );
 				break;
 			case 'amount':
 				$value = eaccounting_format_price( $payment->get_amount(), $payment->get_currency_code() );
@@ -327,7 +328,7 @@ class EverAccounting_Payment_List_Table extends EverAccounting_List_Table {
 				case 'export_csv':
 					break;
 				case 'delete':
-					eaccounting_delete_payment( $id );
+					\EverAccounting\Transactions::delete_payment( $id );
 					break;
 				default:
 					do_action( 'eaccounting_payments_do_bulk_action_' . $this->current_action(), $id );
@@ -383,7 +384,7 @@ class EverAccounting_Payment_List_Table extends EverAccounting_List_Table {
 			$this->query_args,
 			array(
 				'per_page'    => $per_page,
-				'page'        => $page,
+				'paged'        => $page,
 				'number'      => $per_page,
 				'offset'      => $per_page * ( $page - 1 ),
 				'search'      => $search,
@@ -403,9 +404,9 @@ class EverAccounting_Payment_List_Table extends EverAccounting_List_Table {
 		}
 
 		$args        = apply_filters( 'eaccounting_payment_table_query_args', $args, $this );
-		$this->items = eaccounting_get_payments( $args );
+		$this->items = \EverAccounting\Transactions::get_payments( $args );
 
-		$this->total_count = eaccounting_get_payments( array_merge( $args, array( 'count_total' => true ) ) );
+		$this->total_count = \EverAccounting\Transactions::get_payments(  $args, true );
 
 		$this->set_pagination_args(
 			array(

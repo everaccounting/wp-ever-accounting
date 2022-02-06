@@ -822,14 +822,14 @@ abstract class Data {
 	 * @since  1.0.0
 	 * @return array of terms
 	 */
-	public function get_terms( $taxonomy, $fields = 'all' ) {
-		$terms = wp_get_object_terms( $this->get_id(), $taxonomy, array( 'fields' => $fields ) );
-		if ( false === $terms || is_wp_error( $terms ) ) {
-			return array();
-		}
-
-		return $terms;
-	}
+//	public function get_terms( $taxonomy, $fields = 'all' ) {
+//		$terms = wp_get_object_terms( $this->get_id(), $taxonomy, array( 'fields' => $fields ) );
+//		if ( false === $terms || is_wp_error( $terms ) ) {
+//			return array();
+//		}
+//
+//		return $terms;
+//	}
 
 	/**
 	 * Set terms for the object.
@@ -841,9 +841,9 @@ abstract class Data {
 	 * @since  1.0.0
 	 * @return array|false Term taxonomy IDs of the affected terms or WP_Error on failure.
 	 */
-	public function set_terms( $terms, $taxonomy, $append = false ) {
-		return wp_set_object_terms( $this->get_id(), $terms, $taxonomy, $append );
-	}
+//	public function set_terms( $terms, $taxonomy, $append = false ) {
+//		return wp_set_object_terms( $this->get_id(), $terms, $taxonomy, $append );
+//	}
 
 	/*
 	|--------------------------------------------------------------------------

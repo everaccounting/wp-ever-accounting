@@ -11,7 +11,8 @@
  */
 
 namespace EverAccounting\Admin;
-use EverAccounting\Models\Bill;
+use EverAccounting\Bill;
+use EverAccounting\Documents;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -31,7 +32,7 @@ class Bill_Actions {
 	public function bill_action() {
 		$action  = eaccounting_clean( wp_unslash( $_REQUEST['bill_action'] ) );
 		$bill_id = absint( wp_unslash( $_REQUEST['bill_id'] ) );
-		$bill    = eaccounting_get_bill( $bill_id );
+		$bill    = Documents::get_bill( $bill_id );
 
 		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'ea_bill_action' ) || ! current_user_can( 'ea_manage_bill' ) || ! $bill->exists() ) {
 			wp_die( __( 'no cheating!', 'wp-ever-accounting' ) );

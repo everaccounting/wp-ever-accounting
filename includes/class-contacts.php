@@ -567,7 +567,7 @@ class Contacts {
 		// Parse creator id params
 		if ( ! empty( $args['creator_id'] ) ) {
 			$creator_id = implode( ',', wp_parse_id_list( $args['creator_id'] ) );
-			$where      .=  " AND $table.`creator_id__in` IN ($creator_id)";
+			$where      .=  " AND $table.`creator_id` IN ($creator_id)";
 		}
 
 		// Parse type params

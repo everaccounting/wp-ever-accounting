@@ -328,7 +328,7 @@ class Setup_Wizard {
 			$options[ $code ] = sprintf( '%s (%s)', $props['code'], $props['symbol'] );
 		}
 
-		$currencies = eaccounting_get_currencies( array( 'return' => 'array' ) );
+		$currencies = \EverAccounting\Currencies::get_currencies( array( 'return' => 'array' ) );
 
 		?>
         <h1><?php _e( 'Currency Setup', 'wp-ever-accounting' ); ?></h1>
