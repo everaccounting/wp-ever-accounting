@@ -67,37 +67,38 @@ function TableBody( {
 
 	return (
 		<>
-			{ data && data.map( ( row, index ) => {
-				return (
-					<tr className={ `level-${ index }` } key={ index }>
-						{ columns.map( ( column, idx ) => {
-							if ( column.type === 'selection' ) {
-								return (
-									<CheckColumn
-										key={ idx }
-										row={ row }
-										column={ column }
-									/>
-								);
-							}
+			{ data &&
+				data.map( ( row, index ) => {
+					return (
+						<tr className={ `level-${ index }` } key={ index }>
+							{ columns.map( ( column, idx ) => {
+								if ( column.type === 'selection' ) {
+									return (
+										<CheckColumn
+											key={ idx }
+											row={ row }
+											column={ column }
+										/>
+									);
+								}
 
-							return (
-								<td
-									key={ idx }
-									className={ classNames( {
-										'check-column':
-											'selection' === column.type,
-										[ 'column-' +
-										column.columnKey ]: !! column.columnKey,
-									} ) }
-								>
-									{ column.render( row, column, index ) }
-								</td>
-							);
-						} ) }
-					</tr>
-				);
-			} ) }
+								return (
+									<td
+										key={ idx }
+										className={ classNames( {
+											'check-column':
+												'selection' === column.type,
+											[ 'column-' +
+											column.columnKey ]: !! column.columnKey,
+										} ) }
+									>
+										{ column.render( row, column, index ) }
+									</td>
+								);
+							} ) }
+						</tr>
+					);
+				} ) }
 		</>
 	);
 }

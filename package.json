@@ -22,27 +22,12 @@
     "node": ">=12.0.0"
   },
   "dependencies": {
-    "@automattic/color-studio": "^2.5.0",
-    "@wordpress/icons": "^6.1.1",
-    "chart.js": "2.9.3",
-    "classnames": "^2.3.0",
-    "cuid": "^2.1.8",
-    "equivalent-key-map": "^0.2.2",
+    "chart.js": "^3.7.0",
     "inputmask": "^5.0.5",
-    "moment": "2.22.2",
-    "postcss-color-function": "^4.1.0",
-    "precss": "^4.0.0",
-    "react-select": "^4.3.0",
-    "rememo": "^4.0.0",
     "select2": "~4.0"
   },
   "devDependencies": {
-    "@babel/plugin-proposal-class-properties": "^7.16.7",
-    "@babel/plugin-transform-runtime": "^7.16.10",
-    "@byteever/scripts": "file:../scripts",
-    "@wordpress/babel-plugin-makepot": "^4.2.0",
-    "copy-webpack-plugin": "^10.2.3",
-    "cross-env": "^7.0.3",
+    "@byteever/scripts": "git+ssh://git@github.com:byteever/scripts.git",
     "grunt-checktextdomain": "^1.0.1",
     "grunt-shell": "^3.0.1",
     "grunt-wp-i18n": "^1.0.3",
@@ -52,8 +37,9 @@
   "scripts": {
     "start": "composer install && npm install && npm -s run watch",
     "prestart": "php ./bin/update-version.php",
-    "watch": "cross-env NODE_ENV=develop byteever-scripts start",
-    "build": "cross-env NODE_ENV=production byteever-scripts build",
+    "watch": "byteever-scripts start",
+    "build": "byteever-scripts build",
+    "build:vendor": "cp -r ./node_modules/chart.js/dist/ ./assets/lib/chartjs",
     "postbuild": "npm run -s i18n",
     "i18n": "npm run -s i18n:pot && npm run -s i18n:build",
     "i18n:pot": "grunt i18n",
@@ -65,6 +51,7 @@
     "lint:php-fix": "./vendor/bin/phpcbf --standard=phpcs.xml $(git ls-files | grep .php$)",
     "check-engines": "byteever-scripts check-engines",
     "check-licenses": "byteever-scripts check-licenses",
+    "format": "byteever-scripts format",
     "format:js": "byteever-scripts format-js",
     "lint:md:docs": "byteever-scripts lint-md-docs",
     "lint:md:js": "byteever-scripts lint-md-js",
@@ -103,5 +90,6 @@
     "i18n/**/*.json",
     "license.txt",
     "wp-ever-accounting.php"
-  ]
+  ],
+  "devURL": "http://accounting.test"
 }
