@@ -1,26 +1,32 @@
 <?php
 /**
- * Items Rest Controller Class.
+ * Accounts Rest Controller Class.
  *
- * @since       1.1.2
- * @subpackage  REST
+ * @since       1.1.0
+ * @subpackage  Rest
  * @package     EverAccounting
  */
 
 namespace EverAccounting\REST;
 
-use EverAccounting\Item;
-use EverAccounting\Items;
+use EverAccounting\Account;
+use EverAccounting\Accounts;
 
 defined( 'ABSPATH' ) || die();
 
-class REST_Items_Controller extends REST_Controller {
+/**
+ * Class REST_Accounts_Controller
+ * @package EverAccounting\REST
+ */
+class REST_Accounts_Controller extends REST_Controller {
 	/**
 	 * Route base.
 	 *
+	 * @since 1.1.4
+	 *
 	 * @var string
 	 */
-	protected $rest_base = 'items';
+	protected $rest_base = 'accounts';
 
 	/**
 	 * Registers the routes for the objects of the controller.
@@ -94,7 +100,7 @@ class REST_Items_Controller extends REST_Controller {
 	 * @return true|\WP_Error True if the request has read access, WP_Error object otherwise.
 	 */
 	public function get_items_permissions_check( $request ) {
-		if ( ! current_user_can( 'ea_manage_item' ) ) {
+		if ( ! current_user_can( 'ea_manage_account' ) ) {
 			return new \WP_Error(
 				'rest_forbidden_context',
 				__( 'Sorry, you are not allowed to view the items.', 'wp-ever-accounting' ),
@@ -124,8 +130,8 @@ class REST_Items_Controller extends REST_Controller {
 		}
 
 		$args  = $request->get_params();
-		$items = Items::get_items( $args );
-		$total = Items::get_items( $args, true );
+		$items = Accounts::get_accounts( $args );
+		$total = Accounts::get_accounts( $args, true );
 
 		$results = array();
 		foreach ( $items as $item ) {
@@ -138,7 +144,7 @@ class REST_Items_Controller extends REST_Controller {
 
 		if ( $page > $max_pages && $total > 0 ) {
 			return new \WP_Error(
-				'rest_contact_invalid_page_number',
+				'rest_account_invalid_page_number',
 				__( 'The page number requested is larger than the number of pages available.', 'wp-ever-accounting' ),
 				array( 'status' => 400 )
 			);
@@ -180,7 +186,7 @@ class REST_Items_Controller extends REST_Controller {
 	 * @return true|\WP_Error True if the request has read access for the item, WP_Error object otherwise.
 	 */
 	public function get_item_permissions_check( $request ) {
-		$resource = Items::get_item( $request['id'] );
+		$resource = Accounts::get_account( $request['id'] );
 		if ( empty( $resource ) ) {
 			return new \WP_Error(
 				'rest_invalid_id',
@@ -189,7 +195,7 @@ class REST_Items_Controller extends REST_Controller {
 			);
 		}
 
-		if ( ! current_user_can( 'ea_manage_item' ) ) {
+		if ( ! current_user_can( 'ea_manage_account' ) ) {
 			return new \WP_Error(
 				'rest_forbidden_context',
 				__( 'Sorry, you are not allowed to edit the item.', 'wp-ever-accounting' ),
@@ -209,7 +215,7 @@ class REST_Items_Controller extends REST_Controller {
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function get_item( $request ) {
-		$item = Items::get_item( $request['id'] );
+		$item = Accounts::get_account( $request['id'] );
 		if ( empty( $item ) ) {
 			return new \WP_Error(
 				'rest_invalid_id',
@@ -240,7 +246,7 @@ class REST_Items_Controller extends REST_Controller {
 			);
 		}
 
-		if ( ! current_user_can( 'ea_manage_item' ) ) {
+		if ( ! current_user_can( 'ea_manage_account' ) ) {
 			return new \WP_Error(
 				'rest_cannot_create',
 				__( 'Sorry, you are not allowed to create item.', 'wp-ever-accounting' ),
@@ -262,8 +268,8 @@ class REST_Items_Controller extends REST_Controller {
 	public function create_item( $request ) {
 		if ( ! empty( $request['id'] ) ) {
 			return new \WP_Error(
-				'rest_item_exists',
-				__( 'Cannot create existing item.', 'wp-ever-accounting' ),
+				'rest_account_exists',
+				__( 'Cannot create existing account.', 'wp-ever-accounting' ),
 				array( 'status' => 400 )
 			);
 		}
@@ -274,7 +280,7 @@ class REST_Items_Controller extends REST_Controller {
 			return $props;
 		}
 
-		$item = Items::insert_item( wp_slash( (array) $props ) );
+		$item = Accounts::insert_account( wp_slash( (array) $props ) );
 
 		if ( is_wp_error( $item ) ) {
 
@@ -305,8 +311,8 @@ class REST_Items_Controller extends REST_Controller {
 	 * @return true|\WP_Error True if the request has access to update the item, WP_Error object otherwise.
 	 */
 	public function update_item_permissions_check( $request ) {
-		$item = Items::get_item( $request['id'] );
-		if ( empty( $item ) ) {
+		$account = Accounts::get_account( $request['id'] );
+		if ( empty( $account ) ) {
 			return new \WP_Error(
 				'rest_invalid_id',
 				__( 'Invalid ID.', 'wp-ever-accounting' ),
@@ -314,7 +320,7 @@ class REST_Items_Controller extends REST_Controller {
 			);
 		}
 
-		if ( ! current_user_can( 'ea_manage_item' ) ) {
+		if ( ! current_user_can( 'ea_manage_account' ) ) {
 			return new \WP_Error(
 				'rest_cannot_edit',
 				__( 'Sorry, you are not allowed to edit this item.', 'wp-ever-accounting' ),
@@ -334,7 +340,7 @@ class REST_Items_Controller extends REST_Controller {
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function update_item( $request ) {
-		$item  = Items::get_item( $request['id'] );
+		$item  = Accounts::get_account( $request['id'] );
 		$props = $this->prepare_item_for_database( $request );
 
 		if ( is_wp_error( $props ) ) {
@@ -367,7 +373,7 @@ class REST_Items_Controller extends REST_Controller {
 	 * @return true|\WP_Error True if the request has access to delete the item, WP_Error object otherwise.
 	 */
 	public function delete_item_permissions_check( $request ) {
-		$item = Items::get_item( $request['id'] );
+		$item = Accounts::get_account( $request['id'] );
 		if ( empty( $item ) ) {
 			return new \WP_Error(
 				'rest_invalid_id',
@@ -376,7 +382,7 @@ class REST_Items_Controller extends REST_Controller {
 			);
 		}
 
-		if ( ! current_user_can( 'ea_manage_item' ) ) {
+		if ( ! current_user_can( 'ea_manage_account' ) ) {
 			return new \WP_Error(
 				'rest_cannot_delete',
 				__( 'Sorry, you are not allowed to delete item.', 'wp-ever-accounting' ),
@@ -396,12 +402,12 @@ class REST_Items_Controller extends REST_Controller {
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function delete_item( $request ) {
-		$item = Items::get_item( $request['id'] );
+		$account = Accounts::get_account( $request['id'] );
 		$request->set_param( 'context', 'edit' );
-		$data = $this->prepare_item_for_response( $item, $request );
+		$data = $this->prepare_item_for_response( $account, $request );
 
-		if ( ! $item->delete() ) {
-			return new \WP_Error( 'rest_cannot_delete', __( 'The item cannot be deleted.', 'wp-ever-accounting' ), array( 'status' => 500 ) );
+		if ( ! $account->delete() ) {
+			return new \WP_Error( 'rest_cannot_delete', __( 'The account cannot be deleted.', 'wp-ever-accounting' ), array( 'status' => 500 ) );
 		}
 
 		$response = new \WP_REST_Response();
@@ -418,7 +424,7 @@ class REST_Items_Controller extends REST_Controller {
 	/**
 	 * Prepares a single item output for response.
 	 *
-	 * @param Item $item Item object.
+	 * @param Account $item Account object.
 	 * @param \WP_REST_Request $request Request object.
 	 *
 	 * @since 1.1.4
@@ -488,21 +494,21 @@ class REST_Items_Controller extends REST_Controller {
 	}
 
 	/**
-	 * Retrieves the items schema, conforming to JSON Schema.
+	 * Retrieves the items's schema, conforming to JSON Schema.
+	 *
+	 * @since 1.1.0
 	 *
 	 * @return array Item schema data.
-	 *
-	 * @since 1.1.1
 	 *
 	 */
 	public function get_item_schema() {
 		$schema = array(
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
-			'title'      => __( 'Item', 'wp-ever-accounting' ),
+			'title'      => __( 'Account', 'wp-ever-accounting' ),
 			'type'       => 'object',
 			'properties' => array(
-				'id'             => array(
-					'description' => __( 'Unique identifier for the item.', 'wp-ever-accounting' ),
+				'id'              => array(
+					'description' => __( 'Unique identifier for the account.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'embed', 'edit' ),
 					'readonly'    => true,
@@ -510,8 +516,8 @@ class REST_Items_Controller extends REST_Controller {
 						'sanitize_callback' => 'intval',
 					),
 				),
-				'name'           => array(
-					'description' => __( 'Name of the item.', 'wp-ever-accounting' ),
+				'name'            => array(
+					'description' => __( 'Name of the account.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
@@ -519,123 +525,75 @@ class REST_Items_Controller extends REST_Controller {
 					),
 					'required'    => true,
 				),
-				'sku'            => array(
-					'description' => __( 'Sku of the item.', 'wp-ever-accounting' ),
+				'number'          => array(
+					'description' => __( 'Number of the account.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
+					'required'    => true,
 				),
-				'thumbnail'      => array(
-					'description' => __( 'Thumbnail of the item', 'wp-ever-accounting' ),
+				'opening_balance' => array(
+					'description' => __( 'Opening balance of the account', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'context'     => array( 'embed', 'view' ),
+					'default'     => '0',
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_text_field',
+					),
+					'required'    => true,
+				),
+				'currency'        => array(
+					'description' => __( 'Currency code of the account', 'wp-ever-accounting' ),
 					'type'        => 'object',
-					'context'     => array( 'embed', 'view', 'edit' ),
+					'context'     => array( 'view', 'edit' ),
+					'required'    => true,
 					'properties'  => array(
-						'id'  => array(
-							'description' => __( 'Thumbnail ID.', 'wp-ever-accounting' ),
+						'id'   => array(
+							'description' => __( 'Currency code ID.', 'wp-ever-accounting' ),
 							'type'        => 'integer',
-							'context'     => array( 'embed', 'view', 'edit' ),
-							'arg_options' => array(
-								'sanitize_callback' => 'intval',
-							),
+							'context'     => array( 'view', 'edit' ),
+							'readonly'    => true,
 						),
-						'src' => array(
-							'description' => __( 'Thumbnail src.', 'wp-ever-accounting' ),
+						'code' => array(
+							'description' => __( 'Currency code.', 'wp-ever-accounting' ),
 							'type'        => 'string',
-							'context'     => array( 'embed', 'view' ),
-							'arg_options' => array(
-								'sanitize_callback' => 'esc_url_raw',
-							),
+							'context'     => array( 'view', 'edit' ),
 						),
+
 					),
 				),
-				'description'    => array(
-					'description' => __( 'Description of the item.', 'wp-ever-accounting' ),
+				'bank_name'       => array(
+					'description' => __( 'Bank name of the account', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_text_field',
+					),
+				),
+				'bank_phone'      => array(
+					'description' => __( 'Phone number of the bank', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_text_field',
+					),
+				),
+				'bank_address'    => array(
+					'description' => __( 'Address of the bank', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_textarea_field',
 					),
 				),
-				'sale_price'     => array(
-					'description' => __( 'Sale price of the item', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'context'     => array( 'embed', 'view', 'edit' ),
-					'default'     => '0',
-					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
-					),
-					'required'    => true,
-				),
-				'purchase_price' => array(
-					'description' => __( 'Purchase price of the item', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'context'     => array( 'embed', 'view', 'edit' ),
-					'default'     => '0',
-					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
-					),
-					'required'    => true,
-				),
-				'quantity'       => array(
-					'description' => __( 'Quantity of the item.', 'wp-ever-accounting' ),
-					'type'        => 'integer',
-					'context'     => array( 'embed', 'view', 'edit' ),
-					'default'     => '1',
-					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
-					),
-					'required'    => false,
-				),
-				'category'       => array(
-					'description' => __( 'Category of the item.', 'wp-ever-accounting' ),
-					'type'        => 'object',
-					'context'     => array( 'embed', 'view', 'edit' ),
-					'required'    => false,
-					'properties'  => array(
-						'id'   => array(
-							'description' => __( 'Category ID.', 'wp-ever-accounting' ),
-							'type'        => 'integer',
-							'context'     => array( 'embed', 'view', 'edit' ),
-							'arg_options' => array(
-								'sanitize_callback' => 'intval',
-							),
-						),
-						'type' => array(
-							'description' => __( 'Category Type.', 'wp-ever-accounting' ),
-							'type'        => 'string',
-							'context'     => array( 'embed', 'view', 'edit' ),
-							'arg_options' => array(
-								'sanitize_callback' => 'esc_url_raw',
-							),
-						),
-					),
-				),
-				'sales_tax'      => array(
-					'description' => __( 'Sales tax of the item.', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'context'     => array( 'embed', 'view', 'edit' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
-					),
-					'required'    => false,
-				),
-				'purchase_tax'   => array(
-					'description' => __( 'Purchase tax of the item.', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'context'     => array( 'embed', 'view', 'edit' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
-					),
-					'required'    => false,
-				),
-				'enabled'        => array(
+				'enabled'         => array(
 					'description' => __( 'Status of the item.', 'wp-ever-accounting' ),
 					'type'        => 'boolean',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
-//				'creator'        => array(
+//				'creator'         => array(
 //					'description' => __( 'Creator of the account', 'wp-ever-accounting' ),
 //					'type'        => 'object',
 //					'context'     => array( 'view', 'edit' ),
@@ -658,8 +616,8 @@ class REST_Items_Controller extends REST_Controller {
 //						),
 //					),
 //				),
-				'date_created'   => array(
-					'description' => __( 'Created date of the item.', 'wp-ever-accounting' ),
+				'date_created'    => array(
+					'description' => __( 'Created date of the account.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'format'      => 'date-time',
 					'context'     => array( 'view' ),
@@ -675,29 +633,30 @@ class REST_Items_Controller extends REST_Controller {
 	/**
 	 * Retrieves the query params for the items collection.
 	 *
+	 * @since 1.1.0
+	 *
 	 * @return array Collection parameters.
 	 *
-	 * @since 1.1.1
 	 */
-//	public function get_collection_params() {
-//		$query_params                       = parent::get_collection_params();
-//		$query_params['context']['default'] = 'view';
-//
-//		$query_params['orderby'] = array(
-//			'description'       => __( 'Sort collection by object attribute.', 'wp-ever-accounting' ),
-//			'type'              => 'string',
-//			'default'           => 'id',
-//			'enum'              => array(
-//				'name',
-//				'id',
-//				'quantity',
-//				'sale_price',
-//				'purchase_price',
-//				'enabled',
-//			),
-//			'validate_callback' => 'rest_validate_request_arg',
-//		);
-//
-//		return $query_params;
-//	}
+	public function get_collection_params() {
+		$query_params                       = parent::get_collection_params();
+		$query_params['context']['default'] = 'view';
+
+		$params['orderby'] = array(
+			'description'       => __( 'Sort collection by object attribute.', 'wp-ever-accounting' ),
+			'type'              => 'string',
+			'default'           => 'id',
+			'enum'              => array(
+				'name',
+				'id',
+				'number',
+				'opening_balance',
+				'bank_name',
+				'enabled',
+			),
+			'validate_callback' => 'rest_validate_request_arg',
+		);
+
+		return $query_params;
+	}
 }
