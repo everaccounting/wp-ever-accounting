@@ -142,6 +142,64 @@ class Transfer extends Data {
 	*/
 
 	/**
+	 * Retrieve the object from database instance.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return object|false Object, false otherwise.
+	 * @global \wpdb $wpdb WordPress database abstraction object.
+	 */
+	protected function read() {
+		global $wpdb;
+
+		$this->set_defaults();
+		// Bail early if no id is set
+		if ( ! $this->get_id() ) {
+			return false;
+		}
+
+		$data = wp_cache_get( $this->get_id(), $this->cache_group );
+
+		if ( false === $data ) {
+			$data = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}{$this->table} WHERE id = %d LIMIT 1;", $this->get_id() ) ); // WPCS: cache ok, DB call ok.
+			wp_cache_add( $this->get_id(), $data, $this->cache_group );
+		}
+
+		if ( ! $data ) {
+			$this->set_id( 0 );
+			return  false;
+		}
+
+
+		try {
+			$income = Transactions::get_revenue( $data->income_id );
+			$expense = Transactions::get_payment( $data->expense_id );
+			if ( $income ) {
+				$this->set_to_account_id( $income->get_account_id() );
+			}
+			if( $expense ) {
+				$this->set_from_account_id( $expense->get_account_id() );
+				$this->set_amount( $expense->get_amount() );
+				$this->set_date( $expense->get_payment_date() );
+				$this->set_payment_method( $expense->get_payment_method() );
+				$this->set_description( $expense->get_description() );
+				$this->set_reference( $expense->get_reference() );
+			}
+
+			$this->set_props ( $data );
+			$this->read_meta_data();
+			$this->set_object_read( true );
+			do_action( 'eaccounting_read_' . $this->object_type . '_item', $this->get_id(), $this );
+
+		} catch( \Exception $e ) {
+			throw new \Exception( $e->getMessage() );
+		}
+
+
+		return $data;
+	}
+
+	/**
 	 * Saves an object in the database.
 	 *
 	 * @return \WP_Error|int id on success, WP_Error on failure.

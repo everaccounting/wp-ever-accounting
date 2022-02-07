@@ -337,6 +337,19 @@ class Transfers {
 				foreach ( $results as $key => $row ) {
 					wp_cache_add( $row->id, $row, $cache_group );
 					$item = new Transfer();
+					$income = Transactions::get_revenue( $row->income_id );
+					$expense = Transactions::get_payment( $row->expense_id );
+					if ( $income ) {
+						$item->set_to_account_id( $income->get_account_id() );
+					}
+					if( $expense ) {
+						$item->set_from_account_id( $expense->get_account_id() );
+						$item->set_amount( $expense->get_amount() );
+						$item->set_date( $expense->get_payment_date() );
+						$item->set_payment_method( $expense->get_payment_method() );
+						$item->set_description( $expense->get_description() );
+						$item->set_reference( $expense->get_reference() );
+					}
 					$item->set_props( $row );
 					$item->set_object_read( true );
 					$results[ $key ] = $item;
@@ -348,6 +361,10 @@ class Transfers {
 			$cache->total   = $total;
 
 			wp_cache_add( $cache_key, $cache, $cache_group );
+		}
+
+		if ( 'objects' === $args['return'] && true !== $args['no_count'] ) {
+			$results = array_map( 'Self::get_transfer', $results );
 		}
 
 		return $count ? $total : $results;
