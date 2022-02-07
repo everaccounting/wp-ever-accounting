@@ -45,7 +45,8 @@ class Manager extends Singleton {
 //				'\EverAccounting\REST\Data_Controller',
 //				'\EverAccounting\REST\Items_Controller',
 			REST_Items_Controller::class,
-			REST_Accounts_Controller::class
+			REST_Accounts_Controller::class,
+			REST_Customers_Controller::class
 			)
 		);
 		foreach ( $rest_handlers as $controller ) {
