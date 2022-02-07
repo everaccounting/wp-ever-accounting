@@ -37,6 +37,7 @@ class Manager extends Singleton {
 				REST_Customers_Controller::class,
 				REST_Vendors_Controller::class,
 				REST_Categories_Controller::class,
+				REST_Currencies_Controller::class,
 			)
 		);
 		foreach ( $rest_handlers as $controller ) {
