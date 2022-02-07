@@ -1,6 +1,9 @@
 /**
  * External dependencies
  */
+/**
+ * WordPress dependencies
+ */
 import { useEffect, useRef } from '@wordpress/element';
 import { useSelect } from '@wordpress/data';
 

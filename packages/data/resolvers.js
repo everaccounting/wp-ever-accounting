@@ -3,9 +3,15 @@
  */
 import { uniq } from 'lodash';
 
+/**
+ * WordPress dependencies
+ */
 import { apiFetch } from '@wordpress/data-controls';
 import { addQueryArgs } from '@wordpress/url';
 
+/**
+ * Internal dependencies
+ */
 import {
 	receiveCurrentUser,
 	receiveEntityRecords,
@@ -14,7 +20,7 @@ import {
 } from './actions';
 import { fetchFromAPIWithTotal, select, resolveSelect } from './controls';
 import { STORE_KEY } from './constants';
-import {DEFAULT_ENTITY_KEY, getMethodName} from './entities';
+import { DEFAULT_ENTITY_KEY, getMethodName } from './entities';
 
 import { getNormalizedCommaSeparable } from './utils';
 
@@ -30,9 +36,9 @@ export function* getCurrentUser() {
  * Requests authors from the REST API.
  *
  * @param {Object|undefined} query Optional object of query parameters to
- *                                include with request.
+ *                                 include with request.
  */
-export function* getUsers( query={} ) {
+export function* getUsers( query = {} ) {
 	const path = addQueryArgs( '/wp/v2/users/?per_page=100', query );
 	const users = yield apiFetch( { path } );
 	yield receiveUserQuery( path, users );
@@ -46,7 +52,7 @@ export function* getUsers( query={} ) {
  * @param {Object|undefined} query Optional object of query parameters to
  *                                 include with request.
  */
-export function* getEntityRecord( name, key = '', query={} ) {
+export function* getEntityRecord( name, key = '', query = {} ) {
 	const entity = yield select( STORE_KEY, 'getEntity', name );
 	if ( ! entity ) {
 		return;
@@ -101,8 +107,8 @@ export function* getEntityRecord( name, key = '', query={} ) {
 /**
  * Requests the entity's records from the REST API.
  *
- * @param {string}  name   Entity name.
- * @param {Object?} query  Query Object.
+ * @param {string}  name  Entity name.
+ * @param {Object?} query Query Object.
  */
 export function* getEntityRecords( name, query = {} ) {
 	const entity = yield select( STORE_KEY, 'getEntity', name );
@@ -180,10 +186,14 @@ getEntityRecords.shouldInvalidate = ( action, name ) => {
  * Get entity total.
  *
  * @param {string} name
- * @param {object} query
- * @returns {number}
+ * @param {Object} query
+ * @return {number}
  */
 export function* getEntityTotal( name, query = {} ) {
 	yield resolveSelect( STORE_KEY, getMethodName( name, 'get', true ), query );
-	return yield select( STORE_KEY, getMethodName( name, 'getTotal', true ), query );
+	return yield select(
+		STORE_KEY,
+		getMethodName( name, 'getTotal', true ),
+		query
+	);
 }

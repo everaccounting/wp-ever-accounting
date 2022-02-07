@@ -1,3 +1,6 @@
+/**
+ * Internal dependencies
+ */
 import AsyncSelect from './async';
 import SelectControl from './control';
 import CustomerControl from './customer';

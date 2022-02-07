@@ -1,6 +1,5 @@
-assets/js/admin
-assets/js/admin
-packages
-assets/js/admin-legacy
-webpack.config.babel.js
+dist
+node_modules
+vendor
 tests
+assets/vendors

@@ -2,6 +2,9 @@
  * External dependencies
  */
 import { castArray, isEqual } from 'lodash';
+/**
+ * Internal dependencies
+ */
 import {
 	receiveItems,
 	receiveItemTotal,
@@ -10,10 +13,13 @@ import {
 } from './queried-data';
 import { select, dispatch } from './controls';
 import { STORE_KEY } from './constants';
+/**
+ * WordPress dependencies
+ */
 import { addQueryArgs } from '@wordpress/url';
 import { apiFetch } from '@wordpress/data-controls';
 import { DEFAULT_ENTITY_KEY } from './entities';
-import {createBatch} from "./batch";
+import { createBatch } from './batch';
 
 /**
  * Returns an action object used in signalling that authors have been received.
@@ -65,7 +71,7 @@ export function receiveUserPermission( key, isAllowed ) {
 /**
  * Returns an action object used in adding new entities.
  *
- * @param {Array} entities  Entities received.
+ * @param {Array} entities Entities received.
  *
  * @return {Object} Action object.
  */
@@ -198,10 +204,10 @@ export function* deleteEntityRecord(
  * Returns an action object that triggers an
  * edit to an entity record.
  *
- * @param {string} name     Name of the edited entity record.
- * @param {number} recordId Record ID of the edited entity record.
- * @param {Object} edits    The edits.
- * @param {Object} options  Options for the edit.
+ * @param {string}  name               Name of the edited entity record.
+ * @param {number}  recordId           Record ID of the edited entity record.
+ * @param {Object}  edits              The edits.
+ * @param {Object}  options            Options for the edit.
  * @param {boolean} options.undoIgnore Whether to ignore the edit in undo history or not.
  *
  * @return {Object} Action object.
@@ -263,12 +269,12 @@ export function* editEntityRecord( name, recordId, edits, options = {} ) {
 /**
  * Action triggered to save an entity record.
  *
- * @param {string}   name                       Name of the received entity.
- * @param {Object}   record                     Record to be saved.
- * @param {Object} __unstableFetch  Internal use only. Function to
- *                                              call instead of `apiFetch()`.
- *                                              Must return a control
- *                                              descriptor.
+ * @param {string} name            Name of the received entity.
+ * @param {Object} record          Record to be saved.
+ * @param {Object} __unstableFetch Internal use only. Function to
+ *                                 call instead of `apiFetch()`.
+ *                                 Must return a control
+ *                                 descriptor.
  */
 export function* saveEntityRecord( name, record, __unstableFetch = null ) {
 	const entity = yield select( STORE_KEY, 'getEntity', name );
@@ -397,7 +403,6 @@ export function* saveEditedEntityRecord( name, recordId, options ) {
 	return yield saveEntityRecord( name, record, options );
 }
 
-
 /**
  * Runs multiple core-data actions at the same time using one API request.
  *
@@ -433,14 +438,10 @@ export function* batchRequest( requests ) {
 		},
 		saveEditedEntityRecord( kind, name, recordId, options ) {
 			return batch.add( ( add ) =>
-				dispatch( STORE_KEY ).saveEditedEntityRecord(
-					name,
-					recordId,
-					{
-						...options,
-						__unstableFetch: add,
-					}
-				)
+				dispatch( STORE_KEY ).saveEditedEntityRecord( name, recordId, {
+					...options,
+					__unstableFetch: add,
+				} )
 			);
 		},
 		deleteEntityRecord( name, recordId, query, options ) {

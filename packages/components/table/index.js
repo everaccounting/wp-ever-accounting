@@ -8,7 +8,13 @@ import { normalizeColumns } from './utils';
 import './style.scss';
 
 function Table( props ) {
-	const { className, data = [], defaultSort = {}, isLoading, noResult } = props;
+	const {
+		className,
+		data = [],
+		defaultSort = {},
+		isLoading,
+		noResult,
+	} = props;
 	const [ columns, setColumns ] = useState( [] );
 	const [ sort, setSort ] = useState( defaultSort );
 	const [ selected, setSelected ] = useState( [] );
@@ -53,7 +59,8 @@ function Table( props ) {
 		dispatchEvent( 'onSortChange', sort );
 	};
 
-	const isAllSelected = data && data.length !== 0 && data.length === selected.length;
+	const isAllSelected =
+		data && data.length !== 0 && data.length === selected.length;
 
 	const dispatchEvent = ( name, ...args ) => {
 		const fn = props[ name ];

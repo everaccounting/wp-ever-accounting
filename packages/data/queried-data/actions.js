@@ -23,9 +23,9 @@ export function receiveItems( items, edits ) {
  * Returns an action object used in signalling that entity records have been
  * deleted and they need to be removed from entities state.
  *
- * @param {string}       name             Name of the removed entities.
- * @param {Array|number} records          Record IDs of the removed entities.
- * @param {boolean}      invalidateCache  Controls whether we want to invalidate the cache.
+ * @param {string}       name            Name of the removed entities.
+ * @param {Array|number} records         Record IDs of the removed entities.
+ * @param {boolean}      invalidateCache Controls whether we want to invalidate the cache.
  * @return {Object} Action object.
  */
 export function removeItems( name, records, invalidateCache = false ) {

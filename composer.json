@@ -37,8 +37,8 @@
     "classmap": []
   },
   "require-dev": {
-    "phpunit/phpunit": "^6.5",
-    "byteever/phpcs-composer": "dev-master"
+    "byteever/phpcs-composer": "dev-master",
+    "yoast/phpunit-polyfills": "^1.0"
   },
   "config": {
     "optimize-autoloader": true,

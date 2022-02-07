@@ -1,5 +1,8 @@
 'use strict';
 
+/**
+ * External dependencies
+ */
 const fs = require( 'fs-extra' );
 const path = require( 'path' );
 const promptly = require( 'promptly' );
@@ -166,9 +169,9 @@ const repo = 'git@github.com:everaccounting/eaccounting-addon.git';
 /**
  * Delete files
  *
- * @param {string} dir Directory path
- * @param {string} [file] Filename to delete (optional, deletes directory if undefined)
- * @param {Function} [cb] Callback
+ * @param {string}   dir    Directory path
+ * @param {string}   [file] Filename to delete (optional, deletes directory if undefined)
+ * @param {Function} [cb]   Callback
  * @return {Promise}
  */
 function deleteFile( dir, file, cb ) {
@@ -190,7 +193,7 @@ function deleteFile( dir, file, cb ) {
 			}
 		} );
 
-		if ( 'function' === typeof cb ) {
+		if ( typeof cb === 'function' ) {
 			cb.call( this );
 		}
 	} );
@@ -199,7 +202,7 @@ function deleteFile( dir, file, cb ) {
 /**
  * Delete directories
  *
- * @param {string} dir Directory
+ * @param {string}   dir  Directory
  * @param {Function} [cb] Callback
  * @return {Promise}
  */
@@ -230,7 +233,7 @@ function deleteDirectory( dir, cb ) {
 			} );
 		} );
 
-		if ( 'function' === typeof cb ) {
+		if ( typeof cb === 'function' ) {
 			cb.call( this );
 		}
 	} );
