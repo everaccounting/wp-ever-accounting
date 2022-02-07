@@ -64,7 +64,7 @@ class Transfer extends Data {
 		'payment_method'  => null,
 		'reference'       => null,
 		'description'     => null,
-		'creator_id'      => null,
+		'creator_id'      => '1',
 		'date_created'    => null,
 	];
 
@@ -140,6 +140,98 @@ class Transfer extends Data {
 	| on if the order exists yet).
 	|
 	*/
+	/**
+	 *  Create an item in the database.
+	 *
+	 * This method is not meant to call publicly instead call save
+	 * which will conditionally decide which method to call.
+	 *
+	 * @since 1.0.0
+	 * @return \WP_Error|true True on success, WP_Error on failure.
+	 * @global \wpdb $wpdb WordPress database abstraction object.
+	 */
+	protected function create() {
+		global $wpdb;
+
+		$data = wp_unslash( $this->get_core_data() );
+
+		/**
+		 * Fires immediately before an item is inserted in the database.
+		 *
+		 * @param array $data Data data to be inserted.
+		 * @param string $data_arr Sanitized item data.
+		 * @param Data $item Data object.
+		 *
+		 * @since 1.0.0
+		 */
+		do_action( 'eaccounting_pre_insert_' . $this->object_type, $data, $this->get_data(), $this );
+		$from_account = new Account( $data['from_account_id'] );
+		$to_account   = new Account( $data['to_account_id'] );
+
+		$expense = new Payment();
+		$expense->set_props(
+			array(
+				'account_id'     => $data['from_account_id'],
+				'payment_date'   => $data['date'],
+				'amount'         => $data['amount'],
+				'description'    => !empty( $data['description'] ) ? $data['description'] : '',
+				'category_id'    => $this->category_id,
+				'payment_method' => $data['payment_method'],
+				'reference'      => !empty($data['reference']) ? $data['reference']:'',
+			)
+		);
+		$expense->save();
+		$transfer_data['expense_id'] = $expense->get_id();
+		$amount = $data['amount'];
+
+		if ( $from_account->get_currency_code() !== $to_account->get_currency_code() ) {
+			$expense_currency = eaccounting_get_currency( $from_account->get_currency_code() );
+			$income_currency  = eaccounting_get_currency( $to_account->get_currency_code() );
+			$amount           = eaccounting_price_convert( $amount, $from_account->get_currency_code(), $to_account->get_currency_code(), $expense_currency->get_rate(), $income_currency->get_rate() );
+		}
+
+		$income = new Revenue();
+		$income->set_props(
+			array(
+				'account_id'     => $data['to_account_id'],
+				'payment_date'   => $data['date'],
+				'amount'         => $amount,
+				'description'    => !empty( $data['description'] ) ? $data['description'] : '',
+				'category_id'    => $this->category_id,
+				'payment_method' => $data['payment_method'],
+				'reference'      => !empty($data['reference']) ? $data['reference']:'',
+			)
+		);
+		$income->save();
+
+		$transfer_data['income_id'] = $income->get_id();
+		$transfer_data['date_created'] = $data['date_created'];
+
+
+
+		if ( false === $wpdb->insert( $wpdb->prefix. $this->table, $transfer_data, array() ) ) {
+			return new \WP_Error( 'db_insert_error', __( 'Could not insert item into the database.', 'wp-ever-accounting' ), $wpdb->last_error );
+		}
+
+		$this->set_id( $wpdb->insert_id );
+		$this->set_income_id( $income->get_id());
+		$this->set_expense_id( $expense->get_id());
+		$this->update_meta_data();
+		$this->apply_changes();
+
+		/**
+		 * Fires immediately after an item is inserted in the database.
+		 *
+		 * @param array $data Data data to be inserted.
+		 * @param string $data_arr Sanitized item data.
+		 * @param Data $item Data object.
+		 *
+		 * @since 1.0.0
+		 */
+		do_action( 'eaccounting_insert_'. $this->object_type, $this->get_id(), $data, $this->get_data(), $this );
+
+		return $this->exists();
+	}
 
 	/**
 	 * Retrieve the object from database instance.
@@ -197,6 +289,105 @@ class Transfer extends Data {
 
 
 		return $data;
+	}
+
+	/**
+	 *  Update an object in the database.
+	 *
+	 * This method is not meant to call publicly instead call save
+	 * which will conditionally decide which method to call.
+	 *
+	 * @since 1.0.0
+	 * @return \WP_Error|true True on success, WP_Error on failure.
+	 * @global \wpdb $wpdb WordPress database abstraction object.
+	 */
+	protected function update() {
+		global $wpdb;
+		$changes = $this->get_changes();
+
+		// Bail if nothing to save
+		if ( empty( $changes ) ) {
+			return true;
+		}
+
+		/**
+		 * Fires immediately before an existing item is updated in the database.
+		 *
+		 * @param int $id Data id.
+		 * @param array $data Data data.
+		 * @param array $changes The data will be updated.
+		 * @param Data $item Data object.
+		 *
+		 * @since 1.0.0
+		 */
+		do_action( 'eaccounting_pre_update_' . $this->object_type, $this->get_id(), $this->get_data(), $changes, $this );
+
+		$this->date_updated = current_time( 'mysql' );
+		$data               = wp_unslash( $this->get_core_data() );
+		$from_account = new Account( $data['from_account_id'] );
+		$to_account   = new Account( $data['to_account_id'] );
+
+		$expense = new Payment( $data['expense_id'] );
+		$expense->set_props(
+			array(
+				'account_id'     => $data['from_account_id'],
+				'payment_date'   => $data['date'],
+				'amount'         => $data['amount'],
+				'description'    => !empty( $data['description'] ) ? $data['description'] : '',
+				'category_id'    => $this->category_id,
+				'payment_method' => $data['payment_method'],
+				'reference'      => !empty($data['reference']) ? $data['reference']:'',
+			)
+		);
+		$expense->save();
+		$transfer_data['expense_id'] = $expense->get_id();
+		$amount = $data['amount'];
+
+		if ( $from_account->get_currency_code() !== $to_account->get_currency_code() ) {
+			$expense_currency = eaccounting_get_currency( $from_account->get_currency_code() );
+			$income_currency  = eaccounting_get_currency( $to_account->get_currency_code() );
+			$amount           = eaccounting_price_convert( $amount, $from_account->get_currency_code(), $to_account->get_currency_code(), $expense_currency->get_rate(), $income_currency->get_rate() );
+		}
+
+		$income = new Revenue( $data['income_id'] );
+		$income->set_props(
+			array(
+				'account_id'     => $data['to_account_id'],
+				'payment_date'   => $data['date'],
+				'amount'         => $amount,
+				'description'    => !empty( $data['description'] ) ? $data['description'] : '',
+				'category_id'    => $this->category_id,
+				'payment_method' => $data['payment_method'],
+				'reference'      => !empty($data['reference']) ? $data['reference']:'',
+			)
+		);
+		$income->save();
+
+		$transfer_data['income_id'] = $income->get_id();
+		$transfer_data['date_created'] = $data['date_created'];
+
+		if ( false === $wpdb->update( $wpdb->prefix . $this->table, $data, [ 'id' => $this->get_id() ], array(), [ 'id' => '%d' ] ) ) {
+			return new \WP_Error( 'db_update_error', __( 'Could not update item in the database.', 'wp-ever-accounting' ), $wpdb->last_error );
+		}
+		$this->set_income_id( $income->get_id());
+		$this->set_expense_id( $expense->get_id());
+		$this->update_meta_data();
+		$this->apply_changes();
+		$this->update_meta_data();
+
+		/**
+		 * Fires immediately after an existing item is updated in the database.
+		 *
+		 * @param int $id Data id.
+		 * @param array $data Data data.
+		 * @param array $changes The data will be updated.
+		 * @param Data $item Data object.
+		 *
+		 * @since 1.0.0
+		 */
+		do_action( 'eaccounting_update_' . $this->object_type, $this->get_id(), $this->get_data(), $changes, $this );
+
+		return true;
 	}
 
 	/**
