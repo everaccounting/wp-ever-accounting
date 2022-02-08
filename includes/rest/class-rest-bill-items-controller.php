@@ -1,6 +1,6 @@
 <?php
 /**
- * Invoice Items Rest Controller Class.
+ * Bill Items Rest Controller Class.
  *
  * @since       1.1.0
  * @subpackage  Rest
@@ -15,16 +15,16 @@ use EverAccounting\Document_Items;
 defined( 'ABSPATH' ) || die();
 
 /**
- * Class REST_Invoice_Items_Controller
+ * Class REST_Bill_Items_Controller
  * @package EverAccounting\REST
  */
-class REST_Invoice_Items_Controller extends REST_Controller {
+class REST_Bill_Items_Controller extends REST_Controller {
 	/**
 	 * Route base.
 	 *
 	 * @var string
 	 */
-	protected $rest_base = 'invoice_items';
+	protected $rest_base = 'bill_items';
 
 	/**
 	 * Register our routes.
@@ -73,15 +73,14 @@ class REST_Invoice_Items_Controller extends REST_Controller {
 	}
 
 	/**
-	 * Checks if a given request has access to read items.
+	 * Check whether a given request has permission to read accounts.
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.1.4
-	 * @return true|\WP_Error True if the request has read access, WP_Error object otherwise.
+	 * @return \WP_Error|boolean
 	 */
 	public function get_items_permissions_check( $request ) {
-		if ( ! current_user_can( 'ea_manage_invoice' ) ) {
+		if ( ! current_user_can( 'ea_manage_bill' ) ) {
 			return new \WP_Error(
 				'rest_forbidden_context',
 				__( 'Sorry, you are not allowed to view the items.', 'wp-ever-accounting' ),
@@ -125,7 +124,7 @@ class REST_Invoice_Items_Controller extends REST_Controller {
 
 		if ( $page > $max_pages && $total > 0 ) {
 			return new \WP_Error(
-				'rest_contact_invalid_page_number',
+				'rest_bill_item_invalid_page_number',
 				__( 'The page number requested is larger than the number of pages available.', 'wp-ever-accounting' ),
 				array( 'status' => 400 )
 			);
@@ -176,7 +175,7 @@ class REST_Invoice_Items_Controller extends REST_Controller {
 			);
 		}
 
-		if ( ! current_user_can( 'ea_manage_invoice' ) ) {
+		if ( ! current_user_can( 'ea_manage_bill' ) ) {
 			return new \WP_Error(
 				'rest_forbidden_context',
 				__( 'Sorry, you are not allowed to edit the item.', 'wp-ever-accounting' ),
@@ -210,6 +209,7 @@ class REST_Invoice_Items_Controller extends REST_Controller {
 		return rest_ensure_response( $data );
 	}
 
+
 	/**
 	 * Prepares a single item output for response.
 	 *
@@ -221,7 +221,7 @@ class REST_Invoice_Items_Controller extends REST_Controller {
 	 */
 	public function prepare_item_for_response( $item, $request ) {
 		$data        = $item->get_data();
-		$format_date = array( 'date_created', );
+		$format_date = array( 'date_created' );
 		// Format date values.
 		foreach ( $format_date as $key ) {
 			$data[ $key ] = $this->prepare_date_response( $data[ $key ] );
@@ -233,6 +233,33 @@ class REST_Invoice_Items_Controller extends REST_Controller {
 		$response->add_links( $this->prepare_links( $item, $request ) );
 
 		return $response;
+	}
+
+	/**
+	 * Prepares a single item for create or update.
+	 *
+	 * @param \WP_REST_Request $request Request object.
+	 *
+	 * @since 1.1.4
+	 * @return array|\WP_Error Item object or WP_Error.
+	 */
+	protected function prepare_item_for_database( $request ) {
+		$schema    = $this->get_item_schema();
+		$data_keys = array_keys( array_filter( $schema['properties'], array( $this, 'filter_writable_props' ) ) );
+		$props     = [];
+		// Handle all writable props.
+		foreach ( $data_keys as $key ) {
+			$value = $request[ $key ];
+			if ( ! is_null( $value ) ) {
+				switch ( $key ) {
+					default:
+						$props[ $key ] = $value;
+						break;
+				}
+			}
+		}
+
+		return $props;
 	}
 
 	/**
@@ -257,7 +284,6 @@ class REST_Invoice_Items_Controller extends REST_Controller {
 
 	/**
 	 * Retrieves the items's schema, conforming to JSON Schema.
-	 *
 	 * @since 1.0.2
 	 *
 	 * @return array Item schema data.
@@ -266,11 +292,11 @@ class REST_Invoice_Items_Controller extends REST_Controller {
 	public function get_item_schema() {
 		$schema = array(
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
-			'title'      => __( 'Invoice Items', 'wp-ever-accounting' ),
+			'title'      => __( 'Bill Items', 'wp-ever-accounting' ),
 			'type'       => 'object',
 			'properties' => array(
 				'id'           => array(
-					'description' => __( 'Unique identifier for the invoice item.', 'wp-ever-accounting' ),
+					'description' => __( 'Unique identifier for the bill item.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'embed', 'edit' ),
 					'readonly'    => true,
@@ -278,8 +304,8 @@ class REST_Invoice_Items_Controller extends REST_Controller {
 						'sanitize_callback' => 'intval',
 					),
 				),
-				'invoice_id'   => array(
-					'description' => __( 'Invoice id for the invoice item.', 'wp-ever-accounting' ),
+				'bill_id'      => array(
+					'description' => __( 'Invoice id for the bill item.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
@@ -288,7 +314,7 @@ class REST_Invoice_Items_Controller extends REST_Controller {
 					'readonly'    => true,
 				),
 				'item_id'      => array(
-					'description' => __( 'Item id for the invoice item.', 'wp-ever-accounting' ),
+					'description' => __( 'Item id for the bill item.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
@@ -351,6 +377,7 @@ class REST_Invoice_Items_Controller extends REST_Controller {
 					'arg_options' => array(
 						'sanitize_callback' => 'intval',
 					),
+					'readonly'    => true,
 					'properties'  => array(
 						'id'   => array(
 							'description' => __( 'Tax ID.', 'wp-ever-accounting' ),
@@ -365,10 +392,9 @@ class REST_Invoice_Items_Controller extends REST_Controller {
 							'readonly'    => true,
 						),
 					),
-					'readonly'    => true,
 				),
 				'tax_name'     => array(
-					'description' => __( 'Tax name of the invoice item', 'wp-ever-accounting' ),
+					'description' => __( 'Tax name of the bill item', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
@@ -377,7 +403,7 @@ class REST_Invoice_Items_Controller extends REST_Controller {
 					'readonly'    => true,
 				),
 				'tax_total'    => array(
-					'description' => __( 'Tax name of the invoice item', 'wp-ever-accounting' ),
+					'description' => __( 'Tax name of the bill item', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
@@ -386,7 +412,7 @@ class REST_Invoice_Items_Controller extends REST_Controller {
 					'readonly'    => true,
 				),
 				'date_created' => array(
-					'description' => __( 'Created date of the invoice item.', 'wp-ever-accounting' ),
+					'description' => __( 'Created date of the bill item.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'format'      => 'date-time',
 					'context'     => array( 'view' ),
