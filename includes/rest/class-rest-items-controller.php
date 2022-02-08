@@ -462,6 +462,11 @@ class REST_Items_Controller extends REST_Controller {
 						break;
 				}
 			}
+
+			// @todo need to implement callable features
+			if ( is_array( $value ) && isset( $value['id'] ) ) {
+				$props["{$key}_id"] = $request["{$key}"]['id'];
+			}
 		}
 
 		return $props;

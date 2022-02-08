@@ -467,10 +467,19 @@ class REST_Revenues_Controller extends REST_Controller {
 			$value = $request[ $key ];
 			if ( ! is_null( $value ) ) {
 				switch ( $key ) {
+					case 'currency':
+						if ( ! empty( $request['currency'] ) && isset( $request['currency']['code'] ) && is_callable( array( Revenue::class, 'set_currency_code' ) ) ) {
+							$props['currency_code'] = $request['currency']['code'];
+						}
+						break;
 					default:
 						$props[ $key ] = $value;
 						break;
 				}
+			}
+			// @todo need to implement callable features
+			if ( is_array( $value ) && isset( $value['id'] ) ) {
+				$props["{$key}_id"] = $request["{$key}"]['id'];
 			}
 		}
 
@@ -544,28 +553,25 @@ class REST_Revenues_Controller extends REST_Controller {
 					'context'     => array( 'embed', 'view' ),
 					'readonly'    => true,
 				),
-				'currency_code'         => array(
+				'currency'         => array(
 					'description' => __( 'Currency code for revenue.', 'wp-ever-accounting' ),
-					'type'        => 'string',
+					'type'        => 'object',
 					'context'     => array( 'embed', 'view' ),
 					'required'    => false,
-					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
+					'properties'  => array(
+						'id'   => array(
+							'description' => __( 'Currency Code ID.', 'wp-ever-accounting' ),
+							'type'        => 'string',
+							'context'     => array( 'embed', 'view' ),
+							'readonly'    => true,
+						),
+						'code' => array(
+							'description' => __( 'Currency code.', 'wp-ever-accounting' ),
+							'type'        => 'string',
+							'context'     => array( 'embed','view' ),
+						),
+
 					),
-//					'properties'  => array(
-//						'id'   => array(
-//							'description' => __( 'Currency Code ID.', 'wp-ever-accounting' ),
-//							'type'        => 'string',
-//							'context'     => array( 'embed', 'view' ),
-//							'readonly'    => true,
-//						),
-//						'code' => array(
-//							'description' => __( 'Currency code.', 'wp-ever-accounting' ),
-//							'type'        => 'string',
-//							'context'     => array( 'embed','view' ),
-//						),
-//
-//					),
 				),
 				'currency_rate'    => array(
 					'description' => __( 'Currency rate of the transaction.', 'wp-ever-accounting' ),
@@ -576,33 +582,30 @@ class REST_Revenues_Controller extends REST_Controller {
 					),
 					'readonly'    => true,
 				),
-				'account_id'          => array(
+				'account'          => array(
 					'description' => __( 'Account id of the transaction.', 'wp-ever-accounting' ),
-					'type'        => 'int',
+					'type'        => 'object',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'required'    => true,
-					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
+					'properties'  => array(
+						'id'   => array(
+							'description' => __( 'Account ID.', 'wp-ever-accounting' ),
+							'type'        => 'integer',
+							'context'     => array( 'view', 'edit' ),
+							'arg_options' => array(
+								'sanitize_callback' => 'absint',
+							),
+						),
+						'name' => array(
+							'description' => __( 'Account name.', 'wp-ever-accounting' ),
+							'type'        => 'string',
+							'context'     => array( 'view', 'edit' ),
+							'arg_options' => array(
+								'sanitize_callback' => 'sanitize_text_field',
+							),
+						),
+
 					),
-//					'properties'  => array(
-//						'id'   => array(
-//							'description' => __( 'Account ID.', 'wp-ever-accounting' ),
-//							'type'        => 'integer',
-//							'context'     => array( 'view', 'edit' ),
-//							'arg_options' => array(
-//								'sanitize_callback' => 'absint',
-//							),
-//						),
-//						'name' => array(
-//							'description' => __( 'Account name.', 'wp-ever-accounting' ),
-//							'type'        => 'string',
-//							'context'     => array( 'view', 'edit' ),
-//							'arg_options' => array(
-//								'sanitize_callback' => 'sanitize_text_field',
-//							),
-//						),
-//
-//					),
 				),
 				'document_id'      => array(
 					'description' => __( 'Invoice id of the transaction', 'wp-ever-accounting' ),
@@ -612,32 +615,29 @@ class REST_Revenues_Controller extends REST_Controller {
 						'sanitize_callback' => 'absint',
 					),
 				),
-				'category_id'         => array(
+				'category'         => array(
 					'description' => __( 'Category of the transaction', 'wp-ever-accounting' ),
-					'type'        => 'int',
+					'type'        => 'object',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'required'    => true,
-					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
+					'properties'  => array(
+						'id'   => array(
+							'description' => __( 'Category ID.', 'wp-ever-accounting' ),
+							'type'        => 'integer',
+							'context'     => array( 'view', 'edit' ),
+							'arg_options' => array(
+								'sanitize_callback' => 'absint',
+							),
+						),
+						'type' => array(
+							'description' => __( 'Category Type.', 'wp-ever-accounting' ),
+							'type'        => 'string',
+							'context'     => array( 'view', 'edit' ),
+							'arg_options' => array(
+								'sanitize_callback' => 'sanitize_text_field',
+							),
+						),
 					),
-//					'properties'  => array(
-//						'id'   => array(
-//							'description' => __( 'Category ID.', 'wp-ever-accounting' ),
-//							'type'        => 'integer',
-//							'context'     => array( 'view', 'edit' ),
-//							'arg_options' => array(
-//								'sanitize_callback' => 'absint',
-//							),
-//						),
-//						'type' => array(
-//							'description' => __( 'Category Type.', 'wp-ever-accounting' ),
-//							'type'        => 'string',
-//							'context'     => array( 'view', 'edit' ),
-//							'arg_options' => array(
-//								'sanitize_callback' => 'sanitize_text_field',
-//							),
-//						),
-//					),
 				),
 				'description'      => array(
 					'description' => __( 'Description of the transaction', 'wp-ever-accounting' ),
@@ -688,38 +688,50 @@ class REST_Revenues_Controller extends REST_Controller {
 					'type'        => 'boolean',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
-				'creator_id'          => array(
+				'creator'          => array(
 					'description' => __( 'Creator of the transactions', 'wp-ever-accounting' ),
-					'type'        => 'int',
+					'type'        => 'object',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
-					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
+					'properties'  => array(
+						'id'    => array(
+							'description' => __( 'Creator ID.', 'wp-ever-accounting' ),
+							'type'        => 'integer',
+							'context'     => array( 'view', 'edit' ),
+						),
+						'name'  => array(
+							'description' => __( 'Creator name.', 'wp-ever-accounting' ),
+							'type'        => 'string',
+							'context'     => array( 'view', 'edit' ),
+						),
+						'email' => array(
+							'description' => __( 'Creator Email.', 'wp-ever-accounting' ),
+							'type'        => 'string',
+							'context'     => array( 'view', 'edit' ),
+						),
 					),
-//					'properties'  => array(
-//						'id'    => array(
-//							'description' => __( 'Creator ID.', 'wp-ever-accounting' ),
-//							'type'        => 'integer',
-//							'context'     => array( 'view', 'edit' ),
-//						),
-//						'name'  => array(
-//							'description' => __( 'Creator name.', 'wp-ever-accounting' ),
-//							'type'        => 'string',
-//							'context'     => array( 'view', 'edit' ),
-//						),
-//						'email' => array(
-//							'description' => __( 'Creator Email.', 'wp-ever-accounting' ),
-//							'type'        => 'string',
-//							'context'     => array( 'view', 'edit' ),
-//						),
-//					),
 				),
-				'contact_id' => array(
+				'contact' => array(
 					'description' => __( 'Contact id of the transaction', 'wp-ever-accounting' ),
-					'type'        => 'integer',
+					'type'        => 'object',
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'absint',
+					'properties'  => array(
+						'id'   => array(
+							'description' => __( 'Contact ID.', 'wp-ever-accounting' ),
+							'type'        => 'integer',
+							'context'     => array( 'view', 'edit' ),
+							"arg_options" => array(
+								'sanitize_callback' => 'intval',
+							)
+						),
+						'name' => array(
+							'description' => __( 'Contact name.', 'wp-ever-accounting' ),
+							'type'        => 'string',
+							'context'     => array( 'view', 'edit' ),
+							"arg_options" => array(
+								'sanitize_callback' => 'sanitize_text_field',
+							)
+						),
 					),
 				),
 				'date_created'     => array(
