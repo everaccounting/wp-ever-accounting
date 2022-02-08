@@ -456,6 +456,31 @@ abstract class Data {
 		return $this->changes;
 	}
 
+	/**
+	 * Returns as pure array.
+	 * Does depth array casting.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return array
+	 */
+	public function to_array( $data = array() ) {
+		$output = array();
+		$value  = null;
+		foreach ( $data as $key => $value ) {
+			if ( is_array( $value ) ) {
+				$output[ $key ] = $this->to_array( $value );
+			} elseif ( is_object( $value ) && method_exists( $value, 'get_data' ) ) {
+				$output[ $key ] = $value->get_data();
+			} elseif ( is_object( $value ) ) {
+				$output[ $key ] = get_object_vars( $value );
+			} else {
+				$output[ $key ] = $value;
+			}
+		}
+
+		return $output;
+	}
 
 
 	/*

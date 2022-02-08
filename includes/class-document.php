@@ -139,6 +139,24 @@ class Document extends Data {
 
 		$this->read();
 	}
+
+	/**
+	 * Get all class data in array format.
+	 *
+	 * @since 3.0.0
+	 * @return array
+	 */
+	public function get_data() {
+		return $this->to_array( array_merge(
+				parent::get_data(),
+				array(
+					'items' => $this->get_items(),
+				)
+			)
+
+		);
+	}
+
 	/**
 	 * Get supported statuses
 	 *
@@ -347,6 +365,20 @@ class Document extends Data {
 	}
 
 	/**
+	 * set the completed at.
+	 *
+	 * @param string $payment_date .
+	 *
+	 * @since  1.1.0
+	 *
+	 */
+	public function set_payment_date( $payment_date ) {
+		if ( $payment_date && $this->is_paid() ) {
+			$this->set_date_prop( 'payment_date', $payment_date );
+		}
+	}
+
+	/**
 	 * set the status.
 	 *
 	 * @param string $status .
@@ -495,6 +527,17 @@ class Document extends Data {
 		if ( ! empty( $currency_rate ) ) {
 			$this->set_prop( 'currency_rate', eaccounting_format_decimal( $currency_rate, 7 ) );
 		}
+	}
+
+	/**
+	 * set the address.
+	 *
+	 * @param int $address .
+	 *
+	 * @since  1.1.0
+	 */
+	public function set_address( $address ) {
+		$this->set_prop( 'address', maybe_unserialize( $address ) );
 	}
 
 	/**
@@ -712,5 +755,4 @@ class Document extends Data {
 	public function needs_payment() {
 		return ! $this->is_status( 'paid' ) && $this->get_total() > 0;
 	}
-
 }

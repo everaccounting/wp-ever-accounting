@@ -159,7 +159,7 @@ class Invoice extends Document {
 		if ( $this->is_status( 'paid' ) && empty( $this->get_payment_date() ) ) {
 			$this->set_payment_date( time() );
 		} else {
-			$this->set_payment_date( '' );
+			$this->set_payment_date( $this->get_payment_date() );
 		}
 
 	}
@@ -169,7 +169,7 @@ class Invoice extends Document {
 	 *
 	 * @since  1.1.0
 	 *
-	 * @return \Exception|bool
+	 * @return \Exception|bool|\WP_Error
 	 */
 	public function save() {
 		$this->maybe_set_invoice_number();
