@@ -62,14 +62,14 @@ class Controller {
 		add_action( 'eaccounting_delete_currency', array( $this, 'delete_currency_reference' ), 10, 2 );
 
 		// bill
-		add_action( 'eaccounting_delete_payment', array( $this, 'update_bill_data' ), 10, 2 );
-		add_action( 'eaccounting_update_payment', array( $this, 'update_bill_data' ), 10, 2 );
-		add_action( 'eaccounting_daily_scheduled_events', array( $this, 'update_bill_status' ) );
+		//add_action( 'eaccounting_delete_payment', array( $this, 'update_bill_data' ), 10, 2 );
+		//add_action( 'eaccounting_update_payment', array( $this, 'update_bill_data' ), 10, 2 );
+		//add_action( 'eaccounting_daily_scheduled_events', array( $this, 'update_bill_status' ) );
 
 		// invoice
-		add_action( 'eaccounting_delete_revenue', array( $this, 'update_invoice_data' ), 10, 2 );
-		add_action( 'eaccounting_update_revenue', array( $this, 'update_invoice_data' ), 10, 2 );
-		add_action( 'eaccounting_daily_scheduled_events', array( $this, 'update_invoice_status' ) );
+		//add_action( 'eaccounting_delete_revenue', array( $this, 'update_invoice_data' ), 10, 2 );
+		//add_action( 'eaccounting_update_revenue', array( $this, 'update_invoice_data' ), 10, 2 );
+		//add_action( 'eaccounting_daily_scheduled_events', array( $this, 'update_invoice_status' ) );
 
 		// thumbnail
 		add_action( 'delete_attachment', array( $this, 'delete_attachment_reference' ) );

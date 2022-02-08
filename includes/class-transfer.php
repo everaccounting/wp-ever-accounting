@@ -321,13 +321,13 @@ class Transfer extends Data {
 		 * @since 1.0.0
 		 */
 		do_action( 'eaccounting_pre_update_' . $this->object_type, $this->get_id(), $this->get_data(), $changes, $this );
-
 		$this->date_updated = current_time( 'mysql' );
 		$data               = wp_unslash( $this->get_core_data() );
+
 		$from_account = new Account( $data['from_account_id'] );
 		$to_account   = new Account( $data['to_account_id'] );
 
-		$expense = new Payment( $data['expense_id'] );
+		$expense = new Payment( $data['expense_id']);
 		$expense->set_props(
 			array(
 				'account_id'     => $data['from_account_id'],
@@ -349,7 +349,7 @@ class Transfer extends Data {
 			$amount           = eaccounting_price_convert( $amount, $from_account->get_currency_code(), $to_account->get_currency_code(), $expense_currency->get_rate(), $income_currency->get_rate() );
 		}
 
-		$income = new Revenue( $data['income_id'] );
+		$income = new Revenue( $data['income_id']);
 		$income->set_props(
 			array(
 				'account_id'     => $data['to_account_id'],
@@ -366,21 +366,18 @@ class Transfer extends Data {
 		$transfer_data['income_id'] = $income->get_id();
 		$transfer_data['date_created'] = $data['date_created'];
 
-		if ( false === $wpdb->update( $wpdb->prefix . $this->table, $data, [ 'id' => $this->get_id() ], array(), [ 'id' => '%d' ] ) ) {
-			return new \WP_Error( 'db_update_error', __( 'Could not update item in the database.', 'wp-ever-accounting' ), $wpdb->last_error );
+		if( false === $wpdb->update( $wpdb->prefix . $this->table, $transfer_data, [ 'id' => $this->get_id() ] , array(), ['id' => '%d'])) {
+			return new \WP_Error( 'db_update_error', __( 'Could not update transfer in the database.', 'wp-ever-accounting' ), $wpdb->last_error );
 		}
-		$this->set_income_id( $income->get_id());
-		$this->set_expense_id( $expense->get_id());
-		$this->update_meta_data();
-		$this->apply_changes();
+
 		$this->update_meta_data();
 
 		/**
 		 * Fires immediately after an existing item is updated in the database.
 		 *
-		 * @param int $id Data id.
-		 * @param array $data Data data.
-		 * @param array $changes The data will be updated.
+		 * @param int $id Transfer id.
+		 * @param array $data Transfer data.
+		 * @param array $changes Transfer data will be updated.
 		 * @param Data $item Data object.
 		 *
 		 * @since 1.0.0
@@ -389,6 +386,90 @@ class Transfer extends Data {
 
 		return true;
 	}
+
+	/**
+	 * Deletes the object from database.
+	 *
+	 * @param array $args Array of args to pass to the delete method.
+	 *
+	 * @since 1.0.0
+	 * @return array|false true on success, false on failure.
+	 */
+	public function delete( $args = array() ) {
+		if ( ! $this->exists() ) {
+			return false;
+		}
+
+		$data = $this->get_data();
+
+		/**
+		 * Filters whether an item delete should take place.
+		 *
+		 * @param bool|null $delete Whether to go forward with deletion.
+		 * @param int $id Data id.
+		 * @param array $data Data data array.
+		 * @param Data $item Data object.
+		 *
+		 * @since 1.0.0
+		 */
+		$check = apply_filters( 'eaccounting_check_delete_' . $this->object_type, null, $this->get_id(), $data, $this );
+		if ( null !== $check ) {
+			return $check;
+		}
+
+		/**
+		 * Fires before an item is deleted.
+		 *
+		 * @param int $id Data id.
+		 * @param array $data Data data array.
+		 * @param Data $item Data object.
+		 *
+		 * @since 1.0.0
+		 */
+		do_action( 'eaccounting_pre_delete_'. $this->object_type, $this->get_id(), $data, $this );
+
+		global $wpdb;
+		$wpdb->delete(
+			$wpdb->prefix . 'ea_transactions',
+			array(
+				'id' => $this->get_income_id()
+			),
+			array( '%d' )
+		);
+
+		$wpdb->delete(
+			$wpdb->prefix . 'ea_transactions',
+			array(
+				'id' => $this->get_expense_id()
+			),
+			array( '%d' )
+		);
+
+		$wpdb->delete(
+			$wpdb->prefix . $this->table,
+			array(
+				'id' => $this->get_id(),
+			),
+			array( '%d')
+		);
+
+		/**
+		 * Fires after a item is deleted.
+		 *
+		 * @param int $id Data id.
+		 * @param array $data Data data array.
+		 *
+		 * @since 1.0.0
+		 */
+		do_action( 'eaccounting_delete_' . $this->object_type, $this->get_id(), $data );
+
+		wp_cache_delete( $this->get_id(), $this->cache_group );
+		wp_cache_set( 'last_changed', microtime(), $this->cache_group );
+		$this->set_defaults();
+
+		return $data;
+	}
+
 
 	/**
 	 * Saves an object in the database.
