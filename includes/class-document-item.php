@@ -112,6 +112,23 @@ class Document_Item extends Data {
 	}
 
 	/**
+	 * set the total.
+	 *
+	 * @param      $extra
+	 * @param bool $append
+	 *
+	 * @since  1.1.0
+	 *
+	 */
+	public function set_extra( $extra, $append = true ) {
+		$extra = eaccounting_clean( $extra );
+		if ( is_array( $extra ) ) {
+			$extra = $append ? array_merge( $this->data['extra'], $extra ) : $extra;
+			$this->set_prop( 'extra', eaccounting_clean( $extra ) );
+		}
+	}
+
+	/**
 	 * Calculate total.
 	 *
 	 * @since 1.1.0

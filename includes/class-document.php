@@ -94,7 +94,7 @@ class Document extends Data {
 		'currency_rate'   => 1,
 		'key'             => null,
 		'parent_id'       => null,
-		'creator_id'      => null,
+		'creator_id'      => '1',
 		'date_created'    => null,
 	];
 
@@ -243,10 +243,67 @@ class Document extends Data {
 	|
 	*/
 	public function delete( $args = array() ) {
+		if ( ! $this->exists() ) {
+			return false;
+		}
+
+		$data = $this->get_data();
+
+		/**
+		 * Filters whether an item delete should take place.
+		 *
+		 * @param bool|null $delete Whether to go forward with deletion.
+		 * @param int $id Data id.
+		 * @param array $data Data data array.
+		 * @param Data $item Data object.
+		 *
+		 * @since 1.0.0
+		 */
+		$check = apply_filters( 'eaccounting_check_delete_' . $this->object_type, null, $this->get_id(), $data, $this );
+		if ( null !== $check ) {
+			return $check;
+		}
+
+		/**
+		 * Fires before an item is deleted.
+		 *
+		 * @param int $id Data id.
+		 * @param array $data Data data array.
+		 * @param Data $item Data object.
+		 *
+		 * @since 1.0.0
+		 */
+		do_action( 'eaccounting_pre_delete_'. $this->object_type, $this->get_id(), $data, $this );
+
 		Documents::delete_notes(  $this );
 		Documents::delete_items( $this );
 		Documents::delete_transactions( $this );
-		parent::delete( $args );
+
+		global $wpdb;
+
+		$wpdb->delete(
+			$wpdb->prefix . $this->table,
+			array(
+				'id' => $this->get_id(),
+			),
+			array( '%d')
+		);
+
+		/**
+		 * Fires after a item is deleted.
+		 *
+		 * @param int $id Data id.
+		 * @param array $data Data data array.
+		 *
+		 * @since 1.0.0
+		 */
+		do_action( 'eaccounting_delete_' . $this->object_type, $this->get_id(), $data );
+
+		wp_cache_delete( $this->get_id(), $this->cache_group );
+		wp_cache_set( 'last_changed', microtime(), $this->cache_group );
+		$this->set_defaults();
+
+		return $data;
 	}
 
 	/**

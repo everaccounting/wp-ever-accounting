@@ -44,6 +44,7 @@ class Manager extends Singleton {
 				REST_Invoice_Items_Controller::class,
 				REST_Bill_Items_Controller::class,
 				REST_Invoices_Controller::class,
+				REST_Bills_Controller::class,
 			)
 		);
 		foreach ( $rest_handlers as $controller ) {

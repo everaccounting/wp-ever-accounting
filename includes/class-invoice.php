@@ -557,6 +557,8 @@ class Invoice extends Document {
 			$total_fees     += $item_fees;
 		}
 
+
+
 		$this->set_subtotal( $subtotal );
 		$this->set_total_tax( $total_tax );
 		$this->set_total_discount( $total_discount );

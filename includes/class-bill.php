@@ -151,7 +151,7 @@ class Bill extends Document {
 	/**
 	 * Save should create or update based on object existence.
 	 *
-	 * @return \Exception|bool
+	 * @return \Exception|bool|\WP_Error
 	 * @since  1.1.0
 	 *
 	 */
