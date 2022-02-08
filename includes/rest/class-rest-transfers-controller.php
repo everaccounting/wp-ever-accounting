@@ -32,7 +32,7 @@ class REST_Transfers_Controller extends REST_Controller {
 	/**
 	 * Registers the routes for the objects of the controller.
 	 *
-	 * @since 1.0.0
+	 * @since 1.1.4
 	 *
 	 * @see register_rest_route()
 	 */
@@ -67,7 +67,7 @@ class REST_Transfers_Controller extends REST_Controller {
 			array(
 				'args'   => array(
 					'id' => array(
-						'description' => __( 'Unique identifier for the item.', 'text-domain' ),
+						'description' => __( 'Unique identifier for the item.', 'wp-ever-accounting' ),
 					),
 				),
 				array(
@@ -97,14 +97,14 @@ class REST_Transfers_Controller extends REST_Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.0.0
+	 * @since 1.1.4
 	 * @return true|\WP_Error True if the request has read access, WP_Error object otherwise.
 	 */
 	public function get_items_permissions_check( $request ) {
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( 'ea_manage_transfer' ) ) {
 			return new \WP_Error(
 				'rest_forbidden_context',
-				__( 'Sorry, you are not allowed to view the items.', 'text-domain' ),
+				__( 'Sorry, you are not allowed to view the items.', 'wp-ever-accounting' ),
 				array( 'status' => rest_authorization_required_code() )
 			);
 		}
@@ -117,7 +117,7 @@ class REST_Transfers_Controller extends REST_Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.0.0
+	 * @since 1.1.4
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function get_items( $request ) {
@@ -125,7 +125,7 @@ class REST_Transfers_Controller extends REST_Controller {
 		if ( ! empty( $request['orderby'] ) && 'include' === $request['orderby'] && empty( $request['include'] ) ) {
 			return new \WP_Error(
 				'rest_orderby_include_missing_include',
-				__( 'You need to define an include parameter to order by include.', 'text-domain' ),
+				__( 'You need to define an include parameter to order by include.', 'wp-ever-accounting' ),
 				array( 'status' => 400 )
 			);
 		}
@@ -146,7 +146,7 @@ class REST_Transfers_Controller extends REST_Controller {
 		if ( $page > $max_pages && $total > 0 ) {
 			return new \WP_Error(
 				'rest_contact_invalid_page_number',
-				__( 'The page number requested is larger than the number of pages available.', 'text-domain' ),
+				__( 'The page number requested is larger than the number of pages available.', 'wp-ever-accounting' ),
 				array( 'status' => 400 )
 			);
 		}
@@ -183,7 +183,7 @@ class REST_Transfers_Controller extends REST_Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.0.0
+	 * @since 1.1.4
 	 * @return true|\WP_Error True if the request has read access for the item, WP_Error object otherwise.
 	 */
 	public function get_item_permissions_check( $request ) {
@@ -191,15 +191,15 @@ class REST_Transfers_Controller extends REST_Controller {
 		if ( empty( $resource ) ) {
 			return new \WP_Error(
 				'rest_invalid_id',
-				__( 'Invalid ID.', 'text-domain' ),
+				__( 'Invalid ID.', 'wp-ever-accounting' ),
 				array( 'status' => 404 )
 			);
 		}
 
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( 'ea_manage_transfer' ) ) {
 			return new \WP_Error(
 				'rest_forbidden_context',
-				__( 'Sorry, you are not allowed to edit the item.', 'text-domain' ),
+				__( 'Sorry, you are not allowed to edit the item.', 'wp-ever-accounting' ),
 				array( 'status' => rest_authorization_required_code() )
 			);
 		}
@@ -212,7 +212,7 @@ class REST_Transfers_Controller extends REST_Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.0.0
+	 * @since 1.1.4
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function get_item( $request ) {
@@ -220,7 +220,7 @@ class REST_Transfers_Controller extends REST_Controller {
 		if ( empty( $item ) ) {
 			return new \WP_Error(
 				'rest_invalid_id',
-				__( 'Invalid ID.', 'text-domain' ),
+				__( 'Invalid ID.', 'wp-ever-accounting' ),
 				array( 'status' => 404 )
 			);
 		}
@@ -235,22 +235,22 @@ class REST_Transfers_Controller extends REST_Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.0.0
+	 * @since 1.1.4
 	 * @return true|\WP_Error True if the request has access to create items, WP_Error object otherwise.
 	 */
 	public function create_item_permissions_check( $request ) {
 		if ( ! empty( $request['id'] ) ) {
 			return new \WP_Error(
 				'rest_item_exists',
-				__( 'Cannot create existing item.', 'text-domain' ),
+				__( 'Cannot create existing item.', 'wp-ever-accounting' ),
 				array( 'status' => 400 )
 			);
 		}
 
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( 'ea_manage_transfer' ) ) {
 			return new \WP_Error(
 				'rest_cannot_create',
-				__( 'Sorry, you are not allowed to create item.', 'text-domain' ),
+				__( 'Sorry, you are not allowed to create item.', 'wp-ever-accounting' ),
 				array( 'status' => rest_authorization_required_code() )
 			);
 		}
@@ -263,14 +263,14 @@ class REST_Transfers_Controller extends REST_Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.0.0
+	 * @since 1.1.4
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function create_item( $request ) {
 		if ( ! empty( $request['id'] ) ) {
 			return new \WP_Error(
 				'rest_transfer_exists',
-				__( 'Cannot create existing contact.', 'text-domain' ),
+				__( 'Cannot create existing transfer.', 'wp-ever-accounting' ),
 				array( 'status' => 400 )
 			);
 		}
@@ -308,7 +308,7 @@ class REST_Transfers_Controller extends REST_Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.0.0
+	 * @since 1.1.4
 	 * @return true|\WP_Error True if the request has access to update the item, WP_Error object otherwise.
 	 */
 	public function update_item_permissions_check( $request ) {
@@ -316,15 +316,15 @@ class REST_Transfers_Controller extends REST_Controller {
 		if ( empty( $transfer ) ) {
 			return new \WP_Error(
 				'rest_invalid_id',
-				__( 'Invalid ID.', 'text-domain' ),
+				__( 'Invalid ID.', 'wp-ever-accounting' ),
 				array( 'status' => 404 )
 			);
 		}
 
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( 'ea_manage_transfer' ) ) {
 			return new \WP_Error(
 				'rest_cannot_edit',
-				__( 'Sorry, you are not allowed to edit this item.', 'text-domain' ),
+				__( 'Sorry, you are not allowed to edit this item.', 'wp-ever-accounting' ),
 				array( 'status' => rest_authorization_required_code() )
 			);
 		}
@@ -337,7 +337,7 @@ class REST_Transfers_Controller extends REST_Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.0.0
+	 * @since 1.1.4
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function update_item( $request ) {
@@ -370,7 +370,7 @@ class REST_Transfers_Controller extends REST_Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.0.0
+	 * @since 1.1.4
 	 * @return true|\WP_Error True if the request has access to delete the item, WP_Error object otherwise.
 	 */
 	public function delete_item_permissions_check( $request ) {
@@ -378,15 +378,15 @@ class REST_Transfers_Controller extends REST_Controller {
 		if ( empty( $item ) ) {
 			return new \WP_Error(
 				'rest_invalid_id',
-				__( 'Invalid ID.', 'text-domain' ),
+				__( 'Invalid ID.', 'wp-ever-accounting' ),
 				array( 'status' => 404 )
 			);
 		}
 
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( 'ea_manage_transfer' ) ) {
 			return new \WP_Error(
 				'rest_cannot_delete',
-				__( 'Sorry, you are not allowed to delete item.', 'text-domain' ),
+				__( 'Sorry, you are not allowed to delete item.', 'wp-ever-accounting' ),
 				array( 'status' => rest_authorization_required_code() )
 			);
 		}
@@ -399,7 +399,7 @@ class REST_Transfers_Controller extends REST_Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.0.0
+	 * @since 1.1.4
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function delete_item( $request ) {
@@ -408,7 +408,7 @@ class REST_Transfers_Controller extends REST_Controller {
 		$data = $this->prepare_item_for_response( $transfer, $request );
 
 		if ( ! $transfer->delete() ) {
-			return new \WP_Error( 'rest_cannot_delete', __( 'The transfer cannot be deleted.', 'text-domain' ), array( 'status' => 500 ) );
+			return new \WP_Error( 'rest_cannot_delete', __( 'The transfer cannot be deleted.', 'wp-ever-accounting' ), array( 'status' => 500 ) );
 		}
 
 		$response = new \WP_REST_Response();
@@ -428,7 +428,7 @@ class REST_Transfers_Controller extends REST_Controller {
 	 * @param Transfer $item Transfer object.
 	 * @param \WP_REST_Request $request Request object.
 	 *
-	 * @since 1.0.0
+	 * @since 1.1.4
 	 * @return \WP_REST_Response Response object.
 	 */
 	public function prepare_item_for_response( $item, $request ) {
@@ -452,7 +452,7 @@ class REST_Transfers_Controller extends REST_Controller {
 	 *
 	 * @param \WP_REST_Request $request Request object.
 	 *
-	 * @since 1.0.0
+	 * @since 1.1.4
 	 * @return array|\WP_Error Item object or WP_Error.
 	 */
 	protected function prepare_item_for_database( $request ) {
@@ -486,7 +486,7 @@ class REST_Transfers_Controller extends REST_Controller {
 	 * @param Object $item Object data.
 	 * @param \WP_REST_Request $request Request object.
 	 *
-	 * @since 1.0.0
+	 * @since 1.1.4
 	 * @return array Links for the given item.
 	 */
 	protected function prepare_links( $item, $request ) {
