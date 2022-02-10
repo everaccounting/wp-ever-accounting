@@ -259,3 +259,23 @@ function eaccounting_get_bill_statuses() {
 function eaccounting_get_invoice_statuses() {
 	return \EverAccounting\Documents::get_invoice_statuses();
 }
+
+function eaccounting_get_item( $item ) {
+	return \EverAccounting\Items::get_item( $item->get_id() );
+}
+
+function eaccounting_get_item_by_sku( $sku ) {
+	return \EverAccounting\Items::get_item_by_sku( $sku );
+}
+
+function eaccounting_insert_item( $args, $wp_error = true ) {
+	return \EverAccounting\Items::insert_item( $args );
+}
+
+function eaccounting_delete_item( $item_id ) {
+	return \EverAccounting\Items::delete_item( $item_id );
+}
+
+function eaccounting_get_items( $args = array() ) {
+	return \EverAccounting\Items::get_items( $args = array(), false );
+}
