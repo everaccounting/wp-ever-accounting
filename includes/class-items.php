@@ -68,7 +68,7 @@ class Items {
 	 *
 	 * @return \EverAccounting\Item
 	 */
-	public static function eaccounting_get_item_by_sku( $sku ) {
+	public static function get_item_by_sku( $sku ) {
 		global $wpdb;
 		$sku = eaccounting_clean( $sku );
 		if ( empty( $sku ) ) {
