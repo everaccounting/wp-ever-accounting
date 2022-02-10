@@ -81,7 +81,7 @@ function eaccounting_delete_account( $account_id ) {
 }
 
 function eaccounting_get_accounts( $args = array() ) {
-	return \EverAccounting\Accounts::get_accounts( $args = array(), true );
+	return \EverAccounting\Accounts::get_accounts( $args = array(), false );
 }
 
 function eaccounting_get_category_types() {
@@ -109,7 +109,7 @@ function eaccounting_delete_category( $category_id ) {
 }
 
 function eaccounting_get_categories( $args = array() ) {
-	return \EverAccounting\Categories::get_categories( $args = array(), true );
+	return \EverAccounting\Categories::get_categories( $args = array(), false );
 }
 
 function eaccounting_get_transaction_types() {
