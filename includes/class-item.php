@@ -32,14 +32,6 @@ class Item extends Abstracts\Data {
 	protected $table = 'ea_items';
 
 	/**
-	 * Meta type.
-	 *
-	 * @since 1.1.0
-	 * @var string
-	 */
-	protected $meta_type = false;
-
-	/**
 	 * Cache group.
 	 *
 	 * @since 1.1.0
@@ -120,16 +112,15 @@ class Item extends Abstracts\Data {
 			$this->date_created = current_time( 'mysql' );
 		}
 
-		if ( empty( $this->name ) ) {
-			return new \WP_Error( 'missing_param', esc_html__( 'Item name is required', 'wp-ever-accounting' ) );
+		$requires = [ 'name', 'quantity', 'sale_price', 'purchase_price' ];
+		foreach ( $requires as $required ) {
+			if ( empty( $this->$required ) ) {
+				return new \WP_Error( 'missing_required_params', sprintf( __( 'Item %s is required.', 'wp-ever-accounting' ), $required ) );
+			}
 		}
 
-		if ( empty( $this->sale_price ) ) {
-			return new \WP_Error( 'missing_param', esc_html__( 'Item sale price is required', 'wp-ever-accounting' ) );
-		}
-
-		if ( empty( $this->purchase_price ) ) {
-			return new \WP_Error( 'missing_param', esc_html__( 'Item purchase price is required', 'wp-ever-accounting' ) );
+		if ( $this->sale_price === $this->purchase_price ) {
+			return new \WP_Error( 'duplicate_entry', __( 'Item sale price and purchase price can\'t be same.', 'wp-ever-accounting' ) );
 		}
 
 		if ( ! $this->exists() ) {
@@ -153,11 +144,11 @@ class Item extends Abstracts\Data {
 		 *
 		 * @param int $id Item id.
 		 * @param array $data Item data array.
-		 * @param Item $account Item object.
+		 * @param Item $item Item object.
 		 *
 		 * @since 1.0.0
 		 */
-		do_action( 'eaccounting_saved_' . $this->object_type, $this->get_id(), $this );
+		do_action( 'ever_accounting_saved_' . $this->object_type, $this->get_id(), $this );
 
 		return $this->get_id();
 	}

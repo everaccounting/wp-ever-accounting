@@ -144,7 +144,7 @@ class Categories {
 		$cache_key = "$name-$type";
 		$category  = wp_cache_get( $cache_key, 'ea_categories' );
 		if ( false === $category ) {
-			$category = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}ea_categories where `name`=%s AND `type`=%s", Formatting::eaccounting_clean( $name ), Formatting::eaccounting_clean( $type ) ) );
+			$category = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}ea_categories where `name`=%s AND `type`=%s", Formatting::clean( $name ), Formatting::clean( $type ) ) );
 			wp_cache_set( $cache_key, $category, 'ea_categories' );
 		}
 		if ( $category ) {

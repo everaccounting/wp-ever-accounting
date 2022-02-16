@@ -60,7 +60,7 @@ class Formatting {
 	 *
 	 * @return string|array
 	 */
-	public static function eaccounting_clean( $var ) {
+	public static function clean( $var ) {
 		if ( is_array( $var ) ) {
 			return array_map( 'eaccounting_clean', $var );
 		}

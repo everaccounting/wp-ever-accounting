@@ -10,6 +10,8 @@
 
 namespace Ever_Accounting;
 
+use Ever_Accounting\Helpers\Formatting;
+
 defined( 'ABSPATH' ) || exit;
 
 class Items {
@@ -33,7 +35,7 @@ class Items {
 	 *
 	 * @since 1.0.0
 	 */
-	public static function get_item( $id, $output = OBJECT ) {
+	public static function get( $id, $output = OBJECT ) {
 		if ( empty( $id ) ) {
 			return null;
 		}
@@ -68,21 +70,21 @@ class Items {
 	 *
 	 * @return \Ever_Accounting\Item
 	 */
-	public static function eaccounting_get_item_by_sku( $sku ) {
+	public static function get_by_sku( $sku ) {
 		global $wpdb;
-		$sku = eaccounting_clean( $sku );
+		$sku = Formatting::clean( $sku );
 		if ( empty( $sku ) ) {
 			return null;
 		}
 		$cache_key = "item-sku-$sku";
 		$item      = wp_cache_get( $cache_key, 'ea_items' );
 		if ( false === $item ) {
-			$item = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}ea_items where `sku`=%s", eaccounting_clean( $sku ) ) );
+			$item = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}ea_items where `sku`=%s", Formatting::clean( $sku ) ) );
 			wp_cache_set( $cache_key, $item, 'ea_items' );
 		}
 		if ( $item ) {
 			wp_cache_set( $item->id, $item, 'ea_items' );
-			return self::get_item( $item );
+			return self::get( $item );
 		}
 
 		return null;
@@ -96,7 +98,7 @@ class Items {
 	 * @since 1.1.0
 	 * @return object|\WP_Error
 	 */
-	public static function insert_item( $data ) {
+	public static function insert( $data ) {
 		if ( $data instanceof Item ) {
 			$data = $data->get_data();
 		} elseif ( is_object( $data ) ) {
@@ -126,7 +128,7 @@ class Items {
 	 * @since 1.1.0
 	 * @return object|bool
 	 */
-	public static function delete_item( $id ) {
+	public static function delete( $id ) {
 		if ( $id instanceof Item ) {
 			$id = $id->get_id();
 		}
@@ -151,13 +153,12 @@ class Items {
 	 * @since 1.0.0
 	 * @return int|object
 	 */
-	public static function get_items( $args = array(), $count = false ) {
+	public static function query( $args = array(), $count = false ) {
 		global $wpdb;
 		$results      = null;
 		$total        = 0;
 		$cache_group  = Item::get_cache_group();
 		$table        = $wpdb->prefix . Item::get_table_name();
-		$meta_table   = $wpdb->prefix . Item::get_meta_type();
 		$columns      = Item::get_columns();
 		$key          = md5( serialize( $args ) );
 		$last_changed = wp_cache_get_last_changed( $cache_group );
@@ -178,8 +179,6 @@ class Items {
 			'offset'     => '',
 			'per_page'   => 20,
 			'paged'      => 1,
-			'meta_key'   => '',
-			'meta_value' => '',
 			'no_count'   => false,
 			'fields'     => 'all',
 			'return'     => 'objects',
@@ -296,8 +295,8 @@ class Items {
 
 		// Parse status params
 		if ( ! empty( $args['status'] ) && ! in_array( $args['status'], array( 'all', 'any'), true ) ) {
-			$status = eaccounting_string_to_bool( $args['status'] );
-			$status = eaccounting_bool_to_number( $status );
+			$status = Formatting::string_to_bool( $args['status'] );
+			$status = Formatting::bool_to_number( $status );
 			$where .= " AND $table.`enabled` = ('$status')";
 		}
 
@@ -325,11 +324,8 @@ class Items {
 		$orderby = "$table.id";
 		if ( in_array( $args['orderby'], $columns, true ) ) {
 			$orderby = sprintf( '%s.%s', $table, $args['orderby'] );
-		} elseif ( 'meta_value_num' === $args['orderby'] && ! empty( $args['meta_key'] ) ) {
-			$orderby = "CAST($meta_table.meta_value AS SIGNED)";
-		} elseif ( 'meta_value' === $args['orderby'] && ! empty( $args['meta_key'] ) ) {
-			$orderby = "$meta_table.meta_value";
 		}
+
 		// Show the recent records first by default.
 		$order = 'DESC';
 		if ( 'ASC' === strtoupper( $args['order'] ) ) {
@@ -338,7 +334,7 @@ class Items {
 
 		$orderby = sprintf( 'ORDER BY %s %s', $orderby, $order );
 
-		//Parse meta param.
+		//Add all param.
 		if ( null === $results ) {
 			$request = "SELECT {$fields} {$from} {$join} WHERE 1=1 {$where} {$groupby} {$having} {$orderby} {$limit}";
 

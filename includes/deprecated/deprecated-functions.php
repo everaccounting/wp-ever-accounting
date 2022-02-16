@@ -8,6 +8,7 @@
 
 use Ever_Accounting\Currency;
 use Ever_Accounting\Category;
+use Ever_Accounting\Item;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -113,4 +114,80 @@ function eaccounting_get_category_type( $type ) {
 	_deprecated_function( __FUNCTION__, '1.1.4', '\Ever_Accounting\Categories::get_type()' );
 
 	return \Ever_Accounting\Categories::get_type( $type );
+}
+
+/**
+ * Main function for returning item.
+ *
+ * @param $item
+ *
+ * @return Item|null
+ * @since 1.1.0
+ * @deprecatd 1.1.4
+ */
+function eaccounting_get_item( $item ) {
+	_deprecated_function( __FUNCTION__, '1.1.4', '\Ever_Accounting\Items::get()' );
+
+	return \Ever_Accounting\Items::get( $item );
+}
+
+/**
+ * Get item by sku.
+ *
+ * @param $sku
+ *
+ * @return Item
+ * @since 1.1.0
+ * @deprecatd 1.1.4
+ */
+function eaccounting_get_item_by_sku( $sku ) {
+	_deprecated_function( __FUNCTION__, '1.1.4', '\Ever_Accounting\Items::get_by_sku()' );
+
+	return \Ever_Accounting\Items::get_by_sku( $sku );
+}
+
+/**
+ *  Create new item programmatically.
+ *
+ * @param array $args Arguments.
+ * @param \WP_Error $wp_error Either true or false
+ *
+ * @return Item|\WP_Error
+ * @since 1.1.0
+ * @deprecatd 1.1.4
+ */
+function eaccounting_insert_item( $args, $wp_error = true ) {
+	_deprecated_function( __FUNCTION__, '1.1.4', '\Ever_Accounting\Items::insert()' );
+
+	return \Ever_Accounting\Items::insert( $args );
+}
+
+/**
+ * Delete an item.
+ *
+ * @param $item_id
+ *
+ * @return bool
+ * @since 1.1.0
+ * @deprecatd 1.1.4
+ */
+function eaccounting_delete_item( $item_id ) {
+	_deprecated_function( __FUNCTION__, '1.1.4', '\Ever_Accounting\Items::delete()' );
+
+	return \Ever_Accounting\Items::delete( $item_id );
+}
+
+/**
+ * Get items.
+ *
+ * @param array $args
+ *
+ * @return array|int
+ * @since 1.1.0
+ * @deprecatd 1.1.4
+ */
+function eaccounting_get_items( $args = array() ) {
+	_deprecated_function( __FUNCTION__, '1.1.4', '\Ever_Accounting\Items::query()' );
+
+	return \Ever_Accounting\Items::query( $args );
 }
