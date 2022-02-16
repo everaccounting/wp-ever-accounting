@@ -10,6 +10,8 @@
 
 namespace Ever_Accounting;
 
+use Ever_Accounting\Helpers\Formatting;
+
 defined( 'ABSPATH' ) || exit;
 
 class Categories {
@@ -67,7 +69,7 @@ class Categories {
 	 * @return array
 	 * @since 1.1.0
 	 */
-	public static function get_category_types() {
+	public static function get_types() {
 		$types = array(
 			'expense' => __( 'Expense', 'wp-ever-accounting' ),
 			'income'  => __( 'Income', 'wp-ever-accounting' ),
@@ -87,8 +89,8 @@ class Categories {
 	 * @since 1.1.0
 	 *
 	 */
-	public static function get_category_type( $type ) {
-		$types = self::get_category_types();
+	public static function get_type( $type ) {
+		$types = self::get_types();
 
 		return array_key_exists( $type, $types ) ? $types[ $type ] : null;
 	}
@@ -142,7 +144,7 @@ class Categories {
 		$cache_key = "$name-$type";
 		$category  = wp_cache_get( $cache_key, 'ea_categories' );
 		if ( false === $category ) {
-			$category = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}ea_categories where `name`=%s AND `type`=%s", eaccounting_clean( $name ), eaccounting_clean( $type ) ) );
+			$category = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}ea_categories where `name`=%s AND `type`=%s", Formatting::eaccounting_clean( $name ), Formatting::eaccounting_clean( $type ) ) );
 			wp_cache_set( $cache_key, $category, 'ea_categories' );
 		}
 		if ( $category ) {
@@ -244,8 +246,6 @@ class Categories {
 			'offset'     => '',
 			'per_page'   => 20,
 			'paged'      => 1,
-			'meta_key'   => '',
-			'meta_value' => '',
 			'no_count'   => false,
 			'fields'     => 'all',
 			'return'     => 'objects',
@@ -395,7 +395,6 @@ class Categories {
 
 		$orderby = sprintf( 'ORDER BY %s %s', $orderby, $order );
 
-		//Parse meta param.
 		if ( null === $results ) {
 			$request = "SELECT {$fields} {$from} {$join} WHERE 1=1 {$where} {$groupby} {$having} {$orderby} {$limit}";
 

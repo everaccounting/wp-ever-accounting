@@ -104,11 +104,17 @@ class Category extends Abstracts\Data {
 			$this->date_created = current_time( 'mysql' );
 		}
 
-		if ( empty( $this->name ) ) {
-			return new \WP_Error( 'missing_param', esc_html__( 'Category name is required', 'wp-ever-accounting' ) );
+		$requires = [ 'name', 'type' ];
+		foreach ( $requires as $required ) {
+			if ( empty( $this->$required ) ) {
+				return new \WP_Error( 'missing_required_params', sprintf( __( 'Category %s is required.', 'wp-ever-accounting' ), $required ) );
+			}
 		}
-		if ( empty( $this->type ) ) {
-			return new \WP_Error( 'missing_param', esc_html__( 'Category type is required', 'wp-ever-accounting' ) );
+
+		$duplicate = Categories::get_by_name( $this->name, $this->object_type );
+
+		if ( $duplicate && $duplicate->exists() && $duplicate->get_id() !== $this->get_id() ) {
+			return new \WP_Error( 'duplicate_category', __( 'Category already exists', 'wp-ever-accounting' ) );
 		}
 
 		if ( ! $this->exists() ) {

@@ -1,17 +1,15 @@
 <?php
+namespace Ever_Accounting\Tests\Factories;
 
-class Account_Factory {
+class Category_Factory {
 	/**
 	 * Creates a currency in the tests DB.
 	 */
-	public static function create( $code = 'CAD', $rate = 1 ) {
-		return \Ever_Accounting\Currencies::insert( array(
-			'name'      => 'Canadian Dollar',
-			'code'      => 'CAD',
-			'rate'      => 1,
-			'position'  => 'before',
-			'precision' => 2,
-			'symbol'    => '$'
+	public static function create( $name = 'Test Category', $type = 'expense' ) {
+		return \Ever_Accounting\Categories::insert( array(
+			'name'  => $name,
+			'type'  => $type,
+			'color' => 'red',
 		) );
 	}
 

@@ -224,7 +224,7 @@ final class Plugin {
 		REST_Manager::init();
 
 		if( is_admin() ){
-			Admin\Admin_Manager::init()
+			Admin\Admin_Manager::init();
 		}
 
 

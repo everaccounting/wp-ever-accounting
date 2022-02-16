@@ -49,4 +49,22 @@ class Formatting {
 
 		return true === $bool ? 1 : 0;
 	}
+
+	/**
+	 * Clean variables using sanitize_text_field. Arrays are cleaned recursively.
+	 * Non-scalar values are ignored.
+	 *
+	 * @since 1.0.2
+	 *
+	 * @param string|array $var Data to sanitize.
+	 *
+	 * @return string|array
+	 */
+	public static function eaccounting_clean( $var ) {
+		if ( is_array( $var ) ) {
+			return array_map( 'eaccounting_clean', $var );
+		}
+
+		return is_scalar( $var ) ? sanitize_text_field( $var ) : $var;
+	}
 }
