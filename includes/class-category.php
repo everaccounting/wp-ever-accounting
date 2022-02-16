@@ -32,14 +32,6 @@ class Category extends Abstracts\Data {
 	protected $table = 'ea_categories';
 
 	/**
-	 * Meta type.
-	 *
-	 * @since 1.1.0
-	 * @var string
-	 */
-	protected $meta_type = false;
-
-	/**
 	 * Cache group.
 	 *
 	 * @since 1.1.0

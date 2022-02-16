@@ -247,7 +247,6 @@ class Currencies {
 		$total        = 0;
 		$cache_group  = Currency::get_cache_group();
 		$table        = $wpdb->prefix . Currency::get_table_name();
-		$meta_table   = $wpdb->prefix . Currency::get_meta_type();
 		$columns      = Currency::get_columns();
 		$key          = md5( serialize( $args ) );
 		$last_changed = wp_cache_get_last_changed( $cache_group );
@@ -415,11 +414,8 @@ class Currencies {
 		$orderby = "$table.id";
 		if ( in_array( $args['orderby'], $columns, true ) ) {
 			$orderby = sprintf( '%s.%s', $table, $args['orderby'] );
-		} elseif ( 'meta_value_num' === $args['orderby'] && ! empty( $args['meta_key'] ) ) {
-			$orderby = "CAST($meta_table.meta_value AS SIGNED)";
-		} elseif ( 'meta_value' === $args['orderby'] && ! empty( $args['meta_key'] ) ) {
-			$orderby = "$meta_table.meta_value";
 		}
+
 		// Show the recent records first by default.
 		$order = 'DESC';
 		if ( 'ASC' === strtoupper( $args['order'] ) ) {

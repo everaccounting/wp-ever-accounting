@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit();
  * @since 1.1.3
  * @package  Ever_Accounting\Tests
  */
-class CurrencyTest extends \WP_UnitTestCase {
+class Tests_Currency_Class extends \WP_UnitTestCase {
 
 	public function test_create_currency() {
 		$data = array(

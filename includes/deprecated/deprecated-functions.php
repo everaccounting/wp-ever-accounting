@@ -40,3 +40,4 @@ function eaccounting_delete_currency( $currency_code ) {
 
 	return \Ever_Accounting\Currencies::delete( $currency_code );
 }
+

@@ -8,6 +8,8 @@
  * @package   Ever_Accounting
  */
 
+namespace Ever_Accounting;
+
 defined( 'ABSPATH' ) || exit;
 
 class Categories {
@@ -99,7 +101,7 @@ class Categories {
 	 *
 	 * @since 1.0.0
 	 */
-	public static function get_category( $id, $output = OBJECT ) {
+	public static function get( $id, $output = OBJECT ) {
 		if ( empty( $id ) ) {
 			return null;
 		}
@@ -135,7 +137,7 @@ class Categories {
 	 * @since 1.1.0
 	 *
 	 */
-	public static  function get_category_by_name( $name, $type ) {
+	public static  function get_by_name( $name, $type ) {
 		global $wpdb;
 		$cache_key = "$name-$type";
 		$category  = wp_cache_get( $cache_key, 'ea_categories' );
@@ -146,7 +148,7 @@ class Categories {
 		if ( $category ) {
 			wp_cache_set( $category->id, $category, 'ea_categories' );
 
-			return self::get_category( $category );
+			return self::get( $category );
 		}
 
 		return null;
@@ -161,7 +163,7 @@ class Categories {
 	 * @since 1.1.0
 	 * @return object|\WP_Error
 	 */
-	public static function insert_category( $data ) {
+	public static function insert( $data ) {
 		if ( $data instanceof Category ) {
 			$data = $data->get_data();
 		} elseif ( is_object( $data ) ) {
@@ -191,7 +193,7 @@ class Categories {
 	 * @since 1.1.0
 	 * @return object|bool
 	 */
-	public static function delete_category( $id ) {
+	public static function delete( $id ) {
 		if ( $id instanceof Category ) {
 			$id = $id->get_id();
 		}
@@ -216,13 +218,12 @@ class Categories {
 	 * @since 1.0.0
 	 * @return int|object
 	 */
-	public static function get_categories( $args = array(), $count = false ) {
+	public static function query( $args = array(), $count = false ) {
 		global $wpdb;
 		$results      = null;
 		$total        = 0;
 		$cache_group  = Category::get_cache_group();
 		$table        = $wpdb->prefix . Category::get_table_name();
-		$meta_table   = $wpdb->prefix . Category::get_meta_type();
 		$columns      = Account::get_columns();
 		$key          = md5( serialize( $args ) );
 		$last_changed = wp_cache_get_last_changed( $cache_group );
@@ -384,11 +385,8 @@ class Categories {
 		$orderby = "$table.id";
 		if ( in_array( $args['orderby'], $columns, true ) ) {
 			$orderby = sprintf( '%s.%s', $table, $args['orderby'] );
-		} elseif ( 'meta_value_num' === $args['orderby'] && ! empty( $args['meta_key'] ) ) {
-			$orderby = "CAST($meta_table.meta_value AS SIGNED)";
-		} elseif ( 'meta_value' === $args['orderby'] && ! empty( $args['meta_key'] ) ) {
-			$orderby = "$meta_table.meta_value";
 		}
+
 		// Show the recent records first by default.
 		$order = 'DESC';
 		if ( 'ASC' === strtoupper( $args['order'] ) ) {
