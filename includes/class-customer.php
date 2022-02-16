@@ -9,6 +9,7 @@
 
 namespace Ever_Accounting;
 
+use Ever_Accounting\Helpers\Price;
 use Ever_Accounting\Traits\Attachment;
 use Ever_Accounting\Traits\CurrencyTrait;
 
@@ -18,8 +19,6 @@ defined( 'ABSPATH' ) || exit;
  * Contact class.
  */
 class Customer extends Contact {
-	use Attachment;
-	use CurrencyTrait;
 	/**
 	 * This is the name of this object type.
 	 *
@@ -89,7 +88,7 @@ class Customer extends Contact {
 	 * @param string $value due amount.
 	 */
 	public function set_total_due( $value ) {
-		$this->update_meta( 'total_due', eaccounting_price( $value, null, true  ) );
+		$this->update_meta( 'total_due', Price::price( $value, null, true  ) );
 	}
 
 	/**
@@ -98,7 +97,7 @@ class Customer extends Contact {
 	 * @param string $value paid amount.
 	 */
 	public function set_total_paid( $value ) {
-		$this->update_meta( 'total_paid', eaccounting_price( $value, null, true ) );
+		$this->update_meta( 'total_paid', Price::price( $value, null, true ) );
 	}
 
 	/*
@@ -120,7 +119,7 @@ class Customer extends Contact {
 			$total        = 0;
 			$transactions = $wpdb->get_results( $wpdb->prepare( "SELECT amount, currency_code, currency_rate FROM {$wpdb->prefix}ea_transactions WHERE type='income' AND contact_id=%d", $this->get_id() ) );
 			foreach ( $transactions as $transaction ) {
-				$total += eaccounting_price_to_default( $transaction->amount, $transaction->currency_code, $transaction->currency_rate );
+				$total += Price::price_to_default( $transaction->amount, $transaction->currency_code, $transaction->currency_rate );
 			}
 			wp_cache_set( 'customer_total_total_paid_' . $this->get_id(), $total, 'ea_customers' );
 		}
@@ -148,7 +147,7 @@ class Customer extends Contact {
 			);
 			$total = 0;
 			foreach ( $invoices as $invoice ) {
-				$total += eaccounting_price_to_default( $invoice->amount, $invoice->currency_code, $invoice->currency_rate );
+				$total += Price::price_to_default( $invoice->amount, $invoice->currency_code, $invoice->currency_rate );
 			}
 			if ( ! empty( $total ) ) {
 				$invoice_ids = implode( ',', wp_parse_id_list( wp_list_pluck( $invoices, 'id' ) ) );
@@ -163,7 +162,7 @@ class Customer extends Contact {
 				);
 
 				foreach ( $revenues as $revenue ) {
-					$total -= eaccounting_price_to_default( $revenue->amount, $revenue->currency_code, $revenue->currency_rate );
+					$total -= Price::price_to_default( $revenue->amount, $revenue->currency_code, $revenue->currency_rate );
 				}
 			}
 			wp_cache_set( 'customer_total_total_due_' . $this->get_id(), $total, 'ea_customers' );

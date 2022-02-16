@@ -1,4 +1,5 @@
 <?php
+namespace Ever_Accounting\Tests\Factories;
 
 class Currency_Factory {
 	/**
@@ -7,8 +8,8 @@ class Currency_Factory {
 	public static function create( $code = 'CAD', $rate = 1 ) {
 		return \Ever_Accounting\Currencies::insert( array(
 			'name'      => 'Canadian Dollar',
-			'code'      => 'CAD',
-			'rate'      => 1,
+			'code'      => $code,
+			'rate'      => $rate,
 			'position'  => 'before',
 			'precision' => 2,
 			'symbol'    => '$'

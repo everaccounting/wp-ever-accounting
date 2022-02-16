@@ -10,6 +10,8 @@
 
 namespace Ever_Accounting;
 
+use Ever_Accounting\Helpers\Formatting;
+
 defined( 'ABSPATH' ) || exit;
 
 class Contacts {
@@ -129,12 +131,12 @@ class Contacts {
 	/**
 	 * Get contact
 	 *
-	 * @param int $id Customer ID
+	 * @param int $id Contact ID
 	 * @param string $output The required return type. One of OBJECT, ARRAY_A, or ARRAY_N. Default OBJECT.
 	 *
 	 * @since 1.0.0
 	 */
-	public static function get_contact( $id, $output = OBJECT ) {
+	public static function get( $id, $output = OBJECT ) {
 		if ( empty( $id ) ) {
 			return null;
 		}
@@ -168,7 +170,7 @@ class Contacts {
 	 * @since 1.1.0
 	 * @retrun string
 	*/
-	public static function  get_contact_type( $type ) {
+	public static function get_type( $type ) {
 		$types = self::get_types();
 
 		return array_key_exists( $type, $types ) ? $types[ $type ] : null;
@@ -181,14 +183,14 @@ class Contacts {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @return \Ever_Accounting\Customer|null
+	 * @return \Ever_Accounting\Contact|null
 	 */
 	public static function get_customer( $customer ) {
 		if ( empty( $customer ) ) {
 			return null;
 		}
 		try {
-			$result = new Customer( $customer );
+			$result = new Contact( $customer );
 
 			return $result->exists() ? $result : null;
 		} catch ( \Exception $e ) {
@@ -202,7 +204,7 @@ class Contacts {
 	 * @param string $email Email
 	 *
 	 * @since 1.1.0
-	 * @return \Ever_Accounting\Customer
+	 * @return \Ever_Accounting\Contact
 	*/
 	public static function get_customer_by_email( $email ) {
 		global $wpdb;
@@ -210,15 +212,16 @@ class Contacts {
 		if ( empty( $email ) ) {
 			return null;
 		}
+
 		$cache_key = "customer-email-$email";
 		$customer = wp_cache_get( $cache_key, Contact::get_cache_group() );
+
 		if ( false === $customer ) {
-			$customer = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}ea_contacts where `email`=%s AND `type`='customer'", eaccounting_clean( $email ) ) );
+			$customer = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}ea_contacts where `email`=%s AND `type`='customer'", Formatting::clean( $email ) ) );
 			wp_cache_set( $cache_key, $customer, Contact::get_cache_group() );
 		}
 		if( $customer ) {
 			wp_cache_set( $cache_key, $customer, Contact::get_cache_group() );
-
 			return self::get_customer( $customer );
 		}
 
@@ -286,8 +289,8 @@ class Contacts {
 	 * @since 1.0.0
 	 * @return array|int
 	*/
-	public static function get_customers ( $args = array(), $count = false ) {
-		return self::get_contacts( array_merge( $args, array( 'type' => 'customer' ) ), $count );
+	public static function query_customers ( $args = array(), $count = false ) {
+		return self::query( array_merge( $args, array( 'type' => 'customer' ) ), $count );
 	}
 
 	/**
@@ -297,14 +300,14 @@ class Contacts {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @return \Ever_Accounting\Vendor|null
+	 * @return \Ever_Accounting\Contact|null
 	 */
 	public static function get_vendor( $vendor ) {
 		if ( empty( $vendor ) ) {
 			return null;
 		}
 		try {
-			$result = new Vendor( $vendor );
+			$result = new Contact( $vendor );
 
 			return $result->exists() ? $result : null;
 		} catch ( \Exception $e ) {
@@ -318,7 +321,7 @@ class Contacts {
 	 * @param string $email Email
 	 *
 	 * @since 1.1.0
-	 * @return \Ever_Accounting\Vendor
+	 * @return \Ever_Accounting\Contact
 	 */
 	public static function get_vendor_by_email( $email ) {
 		global $wpdb;
@@ -329,7 +332,7 @@ class Contacts {
 		$cache_key = "vendor-email-$email";
 		$vendor = wp_cache_get( $cache_key, Contact::get_cache_group() );
 		if ( false === $vendor ) {
-			$vendor = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}ea_contacts where `email`=%s AND `type`='vendor'", eaccounting_clean( $email ) ) );
+			$vendor = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}ea_contacts where `email`=%s AND `type`='vendor'", Formatting::clean( $email ) ) );
 			wp_cache_set( $cache_key, $vendor, Contact::get_cache_group() );
 		}
 		if( $vendor ) {
@@ -402,8 +405,8 @@ class Contacts {
 	 * @since 1.0.0
 	 * @return array|int
 	 */
-	public static function get_vendors ( $args = array(), $count = false ) {
-		return self::get_contacts( array_merge( $args, array( 'type' => 'vendor' ) ), $count );
+	public static function query_vendors ( $args = array(), $count = false ) {
+		return self::query( array_merge( $args, array( 'type' => 'vendor' ) ), $count );
 	}
 
 	/**
@@ -414,7 +417,7 @@ class Contacts {
 	 * @since 1.0.0
 	 * @return int|object
 	 */
-	public static function get_contacts( $args = array(), $count = false ) {
+	public static function query( $args = array(), $count = false ) {
 		global $wpdb;
 		$results      = null;
 		$total        = 0;
@@ -559,8 +562,8 @@ class Contacts {
 
 		// Parse status params
 		if ( ! empty( $args['status'] ) && ! in_array( $args['status'], array( 'all', 'any'), true ) ) {
-			$status = eaccounting_string_to_bool( $args['status'] );
-			$status = eaccounting_bool_to_number( $status );
+			$status = Formatting::string_to_bool( $args['status'] );
+			$status = Formatting::bool_to_number( $status );
 			$where .= " AND $table.`enabled` = ('$status')";
 		}
 
@@ -661,7 +664,7 @@ class Contacts {
 							$contact = self::get_vendor( $item );
 							break;
 						default:
-							$contact = apply_filters( 'eaccounting_get_contact_callback_' . $item->type, null, $item );
+							$contact = apply_filters( 'ever_accounting_get_contact_callback_' . $item->type, null, $item );
 					}
 
 					return $contact;

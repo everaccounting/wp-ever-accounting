@@ -10,6 +10,7 @@
 namespace Ever_Accounting\Tests;
 
 use Ever_Accounting\Currencies;
+use Ever_Accounting\Tests\Factories\Currency_Factory;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -146,7 +147,7 @@ class Tests_Currency_Class extends \WP_UnitTestCase {
 	}
 
 	public function test_delete_currency() {
-		$currency = \Currency_Factory::create();
+		$currency = Currency_Factory::create();
 		$this->assertNotEquals( 0, $currency->get_id() );
 		$this->assertNotFalse( Currencies::delete( $currency->get_id() ) );
 	}
@@ -170,11 +171,11 @@ class Tests_Currency_Class extends \WP_UnitTestCase {
 
 		$this->assertNotFalse( $currency->exists() );
 
-		\Currency_Factory::create( array(
+		Currency_Factory::create( array(
 			'code' => 'EUR',
 			'rate' => 1.12
 		) );
-		$currency = \Currency_Factory::create( array(
+		$currency = Currency_Factory::create( array(
 			'code' => 'EUR',
 			'rate' => 1.12
 		) );

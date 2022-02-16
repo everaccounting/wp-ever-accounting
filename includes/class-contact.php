@@ -59,7 +59,7 @@ class Contact extends Abstracts\Data  {
 		'name'          => '',
 		'company'       => '',
 		'email'         => '',
-		'phone'         => '',
+		'phone'         => 'null',
 		'website'       => '',
 		'birth_date'    => '',
 		'vat_number'    => '',
@@ -82,10 +82,10 @@ class Contact extends Abstracts\Data  {
 	 * @since 1.1.3
 	 * @var array
 	 */
-	protected $meta_data = array(
-		'total_paid' => '',
-		'total_due' => ''
-	);
+//	protected $meta_data = array(
+//		'total_paid' => '',
+//		'total_due' => ''
+//	);
 
 	/**
 	 * Contact constructor.
@@ -152,12 +152,26 @@ class Contact extends Abstracts\Data  {
 			$this->date_created = current_time( 'mysql' );
 		}
 
-		if ( empty( $this->name ) ) {
-			return new \WP_Error( 'missing_param', esc_html__( 'Contact name is required', 'wp-ever-accounting' ) );
+		$requires = [ 'name', 'currency_code', 'type' ];
+		foreach ( $requires as $required ) {
+			if ( empty( $this->$required ) ) {
+				return new \WP_Error( 'missing_required_params', sprintf( __( 'Contact %s is required.', 'wp-ever-accounting' ), $required ) );
+			}
 		}
-		if ( empty( $this->currency_code ) ) {
-			return new \WP_Error( 'missing_param', esc_html__( 'Currency code is required', 'wp-ever-accounting' ) );
+
+		//@todo need to check this
+		$duplicate_customer = Contacts::get_customer_by_email( $this->email );
+
+		if ( $duplicate_customer && $duplicate_customer->exists() && $duplicate_customer->get_id() !== $this->get_id() ) {
+			return new \WP_Error( 'duplicate_customer', __( 'Customer already exists', 'wp-ever-accounting' ) );
 		}
+
+		$duplicate_vendor = Contacts::get_vendor_by_email( $this->email );
+
+		if ( $duplicate_vendor && $duplicate_vendor->exists() && $duplicate_vendor->get_id() !== $this->get_id() ) {
+			return new \WP_Error( 'duplicate_vendor', __( 'Vendor already exists', 'wp-ever-accounting' ) );
+		}
+
 
 		if ( ! $this->exists() ) {
 			$is_error = $this->create();
@@ -184,7 +198,7 @@ class Contact extends Abstracts\Data  {
 		 *
 		 * @since 1.0.0
 		 */
-		do_action( 'eaccounting_saved_' . $this->object_type, $this->get_id(), $this );
+		do_action( 'ever_accounting_saved_' . $this->object_type, $this->get_id(), $this );
 
 		return $this->get_id();
 	}
@@ -200,164 +214,16 @@ class Contact extends Abstracts\Data  {
 	*/
 
 	/**
-	 * Set wp user id.
-	 *
-	 * @param $id
-	 *
-	 * @since 1.0.2
-	 *
-	 */
-	protected function set_user_id( $id ) {
-		$this->set_prop( 'user_id', absint( $id ) );
-	}
-
-	/**
-	 * Set contact name.
-	 *
-	 * @param $name
-	 *
-	 * @since 1.0.2
-	 *
-	 */
-	protected function set_name( $name ) {
-		$this->set_prop( 'name', eaccounting_clean( $name ) );
-	}
-
-	/**
-	 * Set contact company.
-	 *
-	 * @param $company
-	 *
-	 * @since 1.0.2
-	 *
-	 */
-	protected function set_company( $company ) {
-		$this->set_prop( 'company', eaccounting_clean( $company ) );
-	}
-
-	/**
-	 * Set contact's email.
-	 *
-	 * @param string $value Email.
-	 *
-	 * @since 1.0.2
-	 *
-	 */
-	protected function set_email( $value ) {
-		if ( $value && is_email( $value ) ) {
-			$this->set_prop( 'email', sanitize_email( $value ) );
-		}
-	}
-
-	/**
-	 * Set contact's phone.
-	 *
-	 * @param $value
-	 *
-	 * @since 1.0.2
-	 *
-	 */
-	protected function set_phone( $value ) {
-		$this->set_prop( 'phone', eaccounting_clean( $value ) );
-	}
-
-
-	/**
-	 * Set contact's birth date.
-	 *
-	 * @param $date
-	 *
-	 * @since 1.0.2
-	 *
-	 */
-	protected function set_birth_date( $date ) {
-		$this->set_date_prop( 'birth_date', $date );
-	}
-
-	/**
-	 * Set contact's website.
-	 *
-	 * @param $value
-	 *
-	 * @since 1.0.2
-	 *
-	 */
-	protected function set_website( $value ) {
-		$this->set_prop( 'website', esc_url( $value ) );
-	}
-
-	/**
-	 * Set contact's street.
-	 *
-	 * @param $value
-	 *
-	 * @since 1.0.2
-	 *
-	 */
-	protected function set_street( $value ) {
-		$this->set_prop( 'street', sanitize_text_field( $value ) );
-	}
-
-	/**
-	 * Set contact's city.
-	 *
-	 * @param $city
-	 *
-	 * @since 1.0.2
-	 *
-	 */
-	protected function set_city( $city ) {
-		$this->set_prop( 'city', sanitize_text_field( $city ) );
-	}
-
-	/**
-	 * Set contact's state.
-	 *
-	 * @param $state
-	 *
-	 * @since 1.0.2
-	 *
-	 */
-	protected function set_state( $state ) {
-		$this->set_prop( 'state', sanitize_text_field( $state ) );
-	}
-
-	/**
-	 * Set contact's postcode.
-	 *
-	 * @param $postcode
-	 *
-	 * @since 1.0.2
-	 *
-	 */
-	protected function set_postcode( $postcode ) {
-		$this->set_prop( 'postcode', sanitize_text_field( $postcode ) );
-	}
-
-	/**
 	 * Set contact country.
 	 *
 	 * @param $country
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	protected function set_country( $country ) {
-		if ( array_key_exists( $country, eaccounting_get_countries() ) ) {
+		if ( array_key_exists( $country, \Ever_Accounting\Helpers\Misc::get_countries() ) ) {
 			$this->set_prop( 'country', $country );
 		}
-	}
-
-	/**
-	 * Set contact's tax_number.
-	 *
-	 * @param $value
-	 *
-	 * @since 1.0.2
-	 *
-	 */
-	protected function set_vat_number( $value ) {
-		$this->set_prop( 'vat_number', eaccounting_clean( $value ) );
 	}
 
 	/**
@@ -366,11 +232,10 @@ class Contact extends Abstracts\Data  {
 	 * @param $value
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	protected function set_currency_code( $value ) {
-		if ( eaccounting_get_currency( $value ) ) {
-			$this->set_prop( 'currency_code', eaccounting_clean( $value ) );
+		if ( Currencies::get( $value ) ) {
+			$this->set_prop( 'currency_code', \Ever_Accounting\Helpers\Formatting::clean( $value ) );
 		}
 	}
 
@@ -380,7 +245,6 @@ class Contact extends Abstracts\Data  {
 	 * @param $type
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	protected function set_type( $type ) {
 		if ( array_key_exists( $type, Contacts::get_types() ) ) {
@@ -394,7 +258,6 @@ class Contact extends Abstracts\Data  {
 	 * @param int $thumbnail_id
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	protected function set_thumbnail_id( $thumbnail_id ) {
 		$this->set_prop( 'thumbnail_id', absint( $thumbnail_id ) );
