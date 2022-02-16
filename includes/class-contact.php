@@ -82,10 +82,10 @@ class Contact extends Abstracts\Data  {
 	 * @since 1.1.3
 	 * @var array
 	 */
-//	protected $meta_data = array(
-//		'total_paid' => '',
-//		'total_due' => ''
-//	);
+	protected $meta_data = array(
+		'total_paid' => '',
+		'total_due' => ''
+	);
 
 	/**
 	 * Contact constructor.
