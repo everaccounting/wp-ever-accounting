@@ -6,6 +6,7 @@
  * @version  1.1.0
  */
 
+use Ever_Accounting\Account;
 use Ever_Accounting\Currency;
 use Ever_Accounting\Category;
 use Ever_Accounting\Item;
@@ -191,3 +192,79 @@ function eaccounting_get_items( $args = array() ) {
 
 	return \Ever_Accounting\Items::query( $args );
 }
+
+/**
+ * Main function for returning account.
+ *
+ * @param array|int $account Account array or id.
+ *
+ * @return Account|null
+ * @since 1.1.0
+ * @deprecatd 1.1.4
+ */
+function eaccounting_get_account( $account ) {
+	_deprecated_function( __FUNCTION__, '1.1.4', '\Ever_Accounting\Accounts::get()' );
+
+	return \Ever_Accounting\Accounts::get( $account );
+}
+
+/**
+ * Get account currency code
+ *
+ * @param Account $account account object.
+ *
+ * @return mixed|null
+ * @since 1.1.0
+ * @deprecatd 1.1.4
+ */
+function eaccounting_get_account_currency_code( $account ) {
+	_deprecated_function( __FUNCTION__, '1.1.4', '\Ever_Accounting\Accounts::get_currency_code()' );
+
+	return \Ever_Accounting\Accounts::get_currency_code( $account );
+}
+
+/**
+ * Create new account programmatically.
+ *
+ * @param array $args
+ *
+ * @return Account| \WP_Error
+ * @since 1.1.0
+ * @deprecatd 1.1.4
+ */
+function eaccounting_insert_account( $data, $wp_error = true ) {
+	_deprecated_function( __FUNCTION__, '1.1.4', '\Ever_Accounting\Accounts::insert()' );
+
+	return \Ever_Accounting\Accounts::insert( $data );
+}
+
+/**
+ * Delete an account.
+ *
+ * @param $account_id
+ *
+ * @return bool
+ * @since 1.1.0
+ * @deprecatd 1.1.4
+ */
+function eaccounting_delete_account( $account_id ) {
+	_deprecated_function( __FUNCTION__, '1.1.4', '\Ever_Accounting\Accounts::delete()' );
+
+	return \Ever_Accounting\Accounts::delete( $account_id );
+}
+
+/**
+ * Get account items.
+ *
+ * @param array $args
+ *
+ * @return array|int
+ * @since 1.1.0
+ * @deprecatd 1.1.4
+ */
+function eaccounting_get_accounts( $args = array() ) {
+	_deprecated_function( __FUNCTION__, '1.1.4', '\Ever_Accounting\Accounts::query()' );
+
+	return \Ever_Accounting\Accounts::query( $args );
+}
+

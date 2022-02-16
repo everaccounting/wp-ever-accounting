@@ -49,7 +49,7 @@ class Account extends Abstracts\Data {
 	protected $core_data = [
 		'name'            => '',
 		'number'          => '',
-		'opening_balance' => '',
+		'opening_balance' => 0.0000,
 		'bank_name'       => '',
 		'bank_phone'      => '',
 		'bank_address'    => '',
@@ -147,16 +147,17 @@ class Account extends Abstracts\Data {
 			$this->date_created = current_time( 'mysql' );
 		}
 
-		if ( empty( $this->name ) ) {
-			return new \WP_Error( 'missing_param', esc_html__( 'Account name is required', 'wp-ever-accounting' ) );
+		$requires = [ 'name', 'number', 'currency_code' ];
+		foreach ( $requires as $required ) {
+			if ( empty( $this->$required ) ) {
+				return new \WP_Error( 'missing_required_params', sprintf( __( 'Account %s is required.', 'wp-ever-accounting' ), $required ) );
+			}
 		}
 
-		if ( empty( $this->number ) ) {
-			return new \WP_Error( 'missing_param', esc_html__( 'Account number is required', 'wp-ever-accounting' ) );
-		}
+		$duplicate = Accounts::get( $this->number );
 
-		if ( empty( $this->currency_code ) ) {
-			return new \WP_Error( 'missing_param', esc_html__( 'Currency code is required', 'wp-ever-accounting' ) );
+		if ( $duplicate && $duplicate->exists() && $duplicate->get_id() !== $this->get_id() ) {
+			return new \WP_Error( 'duplicate_account', __( 'Account already exists.', 'wp-ever-accounting' ) );
 		}
 
 		if ( ! $this->exists() ) {
@@ -184,7 +185,7 @@ class Account extends Abstracts\Data {
 		 *
 		 * @since 1.0.0
 		 */
-		do_action( 'eaccounting_saved_' . $this->object_type, $this->get_id(), $this );
+		do_action( 'ever_accounting_saved_' . $this->object_type, $this->get_id(), $this );
 
 		return $this->get_id();
 	}

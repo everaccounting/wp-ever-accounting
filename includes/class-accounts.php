@@ -10,6 +10,8 @@
 
 namespace Ever_Accounting;
 
+use \Ever_Accounting\Helpers\Formatting;
+
 defined( 'ABSPATH' ) || exit;
 
 class Accounts {
@@ -39,7 +41,7 @@ class Accounts {
 	 */
 	public static function validate_account_data( $data, $id ) {
 		global $wpdb;
-		if ( $id != (int) $wpdb->get_var( $wpdb->prepare( "SELECT id from {$wpdb->prefix}ea_accounts WHERE number='%s'", eaccounting_clean( $data['number'] ) ) ) ) { // @codingStandardsIgnoreLine
+		if ( $id != (int) $wpdb->get_var( $wpdb->prepare( "SELECT id from {$wpdb->prefix}ea_accounts WHERE number='%s'", Formatting::clean( $data['number'] ) ) ) ) { // @codingStandardsIgnoreLine
 			throw new \Exception( __( 'Duplicate account.', 'wp-ever-accounting' ) );
 		}
 
@@ -118,6 +120,27 @@ class Accounts {
 	}
 
 	/**
+	 * Get account by account_number
+	 *
+	 * @param string $number Account Number
+	 *
+	 * @since 1.1.4
+	 * @return Account|null
+	 */
+	public static function get_by_number( $number ) {
+		global $wpdb;
+		$account = wp_cache_get( $number, 'ea_accounts' );
+		if ( $account === false ) {
+			$account = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}ea_accounts WHERE number = %s",  Formatting::clean( $number ) ) );
+			wp_cache_set( $number, $account, 'ea_accounts' );
+		}
+
+		return new Account( $account );
+	}
+
+
+
+	/**
 	 * Insert account
 	 *
 	 * @param array|object $data Account Data
@@ -125,7 +148,7 @@ class Accounts {
 	 * @since 1.1.0
 	 * @return object|\WP_Error
 	 */
-	public static function insert_account( $data ) {
+	public static function insert( $data ) {
 		if ( $data instanceof Account ) {
 			$data = $data->get_data();
 		} elseif ( is_object( $data ) ) {
@@ -206,8 +229,6 @@ class Accounts {
 			'offset'     => '',
 			'per_page'   => 20,
 			'paged'      => 1,
-			'meta_key'   => '',
-			'meta_value' => '',
 			'no_count'   => false,
 			'fields'     => 'all',
 			'return'     => 'objects',
@@ -378,7 +399,7 @@ class Accounts {
 
 		$orderby = sprintf( 'ORDER BY %s %s', $orderby, $order );
 
-		//Parse meta param.
+		//Add all param.
 		if ( null === $results ) {
 			$request = "SELECT {$fields} {$from} {$join} WHERE 1=1 {$where} {$groupby} {$having} {$orderby} {$limit}";
 
