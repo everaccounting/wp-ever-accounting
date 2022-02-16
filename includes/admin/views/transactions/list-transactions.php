@@ -6,13 +6,13 @@
  *
  * @since       1.0.2
  * @subpackage  Admin/Views/Transactions
- * @package     EverAccounting
+ * @package     Ever_Accounting
  */
 
 defined( 'ABSPATH' ) || exit();
 
 include( EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-transaction-list-table.php' );
-$transactions_table = new EverAccounting_Transaction_List_Table();
+$transactions_table = new Ever_Accounting_Transaction_List_Table();
 $transactions_table->prepare_items();
 ?>
 <h1 class="wp-heading-inline"><?php _e( 'Transactions', 'wp-ever-accounting' ); ?></h1>

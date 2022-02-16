@@ -4,7 +4,7 @@
  *
  * @since       1.0.2
  * @subpackage  Admin/Settings
- * @package     EverAccounting
+ * @package     Ever_Accounting
  */
 
 // Exit if accessed directly

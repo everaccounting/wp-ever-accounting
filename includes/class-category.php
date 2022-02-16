@@ -3,18 +3,18 @@
  * Category data handler class.
  *
  * @version     1.0.2
- * @package     EverAccounting
+ * @package     Ever_Accounting
  * @class       Category
  */
 
-namespace EverAccounting;
+namespace Ever_Accounting;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
  * Category class.
  */
-class Category extends Data {
+class Category extends Abstracts\Data {
 	/**
 	 * This is the name of this object type.
 	 *

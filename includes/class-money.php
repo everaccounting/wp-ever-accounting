@@ -2,13 +2,13 @@
 /**
  * Handle the money object
  *
- * @package        EverAccounting
+ * @package        Ever_Accounting
  * @version        1.0.2
  */
 
-namespace EverAccounting;
+namespace Ever_Accounting;
 
-use EverAccounting\Models\Currency;
+use Ever_Accounting\Models\Currency;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  * Class Money
  *
  * @since   1.0.2
- * @package EverAccounting
+ * @package Ever_Accounting
  */
 class Money {
 	const ROUND_HALF_UP   = PHP_ROUND_HALF_UP;
@@ -34,7 +34,7 @@ class Money {
 	/**
 	 * @since 1.0.2
 	 *
-	 * @var \EverAccounting\Models\Currency
+	 * @var \Ever_Accounting\Models\Currency
 	 */
 	protected $currency;
 
@@ -50,7 +50,7 @@ class Money {
 	 * @throws \Exception
 	 */
 	public function __construct( $amount, $code, $convert = false ) {
-		$this->currency = new \EverAccounting\Currency( $code );
+		$this->currency = new \Ever_Accounting\Currency( $code );
 		$this->amount   = $this->parseAmount( $amount, $convert );
 	}
 

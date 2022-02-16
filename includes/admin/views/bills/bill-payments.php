@@ -3,11 +3,11 @@
  * Shows notes
  * Used in view bill page.
  *
- * @package EverAccounting\Admin
+ * @package Ever_Accounting\Admin
  * @var Bill $bill The item being used
  */
 
-use EverAccounting\Bill;
+use Ever_Accounting\Bill;
 
 defined( 'ABSPATH' ) || exit();
 

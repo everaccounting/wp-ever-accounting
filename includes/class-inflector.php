@@ -4,10 +4,10 @@
  *
  * @since   1.1.0
  *
- * @package EverAccounting
+ * @package Ever_Accounting
  */
 
-namespace EverAccounting;
+namespace Ever_Accounting;
 
 defined('ABSPATH') || exit;
 
@@ -16,7 +16,7 @@ defined('ABSPATH') || exit;
  *
  * @since   1.1.0
  *
- * @package EverAccounting
+ * @package Ever_Accounting
  */
 class Inflector {
 	static $plural = array(

@@ -6,13 +6,13 @@
  *
  * @since       1.0.2
  * @subpackage  Admin/Views/Customers
- * @package     EverAccounting
+ * @package     Ever_Accounting
  */
 
 defined( 'ABSPATH' ) || exit();
 
 include( EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-customer-list-table.php' );
-$customers_table = new EverAccounting_Customer_List_Table();
+$customers_table = new Ever_Accounting_Customer_List_Table();
 $customers_table->prepare_items();
 $add_url = eaccounting_admin_url(
 	array(

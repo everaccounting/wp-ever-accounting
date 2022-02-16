@@ -4,13 +4,13 @@
  *
  * @since       1.1.2
  * @subpackage  Rest
- * @package     EverAccounting
+ * @package     Ever_Accounting
  */
 
-namespace EverAccounting\REST;
+namespace Ever_Accounting\REST;
 
-use EverAccounting\Abstracts\Contacts_Controller;
-use EverAccounting\Models\Vendor;
+use Ever_Accounting\Abstracts\Contacts_Controller;
+use Ever_Accounting\Models\Vendor;
 
 defined( 'ABSPATH' ) || die();
 
@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || die();
  *
  * @since   1.1.2
  *
- * @package EverAccounting\REST
+ * @package Ever_Accounting\REST
  */
 class Vendors_Controller extends Contacts_Controller {
 	/**

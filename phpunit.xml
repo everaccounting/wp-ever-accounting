@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit
-	bootstrap="tests/bootstrap.php"
-	backupGlobals="false"
-	colors="true"
-	convertErrorsToExceptions="true"
-	convertNoticesToExceptions="true"
-	convertWarningsToExceptions="true"
-	verbose="true"
-	>
+		bootstrap="tests/php/bootstrap.php"
+		backupGlobals="false"
+		colors="true"
+		convertErrorsToExceptions="true"
+		convertNoticesToExceptions="true"
+		convertWarningsToExceptions="true"
+		verbose="true"
+>
 
 	<testsuites>
 		<testsuite name="WP Ever Accounting">
-			<directory prefix="tests-" suffix=".php">./tests</directory>
+			<directory prefix="tests-" suffix=".php">./tests/php</directory>
 		</testsuite>
 	</testsuites>
 	<filter>
@@ -19,21 +19,6 @@
 			<directory suffix=".php">./includes</directory>
 			<file>wp-ever-accounting.php</file>
 			<file>uninstall.php</file>
-			<exclude>
-				<directory suffix=".php">./tests/framework</directory>
-				<directory suffix=".php">./tests-legacy</directory>
-			</exclude>
 		</whitelist>
 	</filter>
-	<listeners>
-		<listener class="SpeedTrapListener" file="tests/framework/library/listener-loader.php" >
-		<arguments>
-			<array>
-				<element key="slowThreshold">
-					<integer>150</integer>
-				</element>
-			</array>
-		</arguments>
-		</listener>
-	</listeners>
 </phpunit>

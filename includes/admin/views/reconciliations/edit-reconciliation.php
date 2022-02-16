@@ -4,7 +4,7 @@
  *
  * @since       1.0.2
  * @subpackage  Admin/Banking/Reconciliations
- * @package     EverAccounting
+ * @package     Ever_Accounting
  */
 defined( 'ABSPATH' ) || exit();
 ?>

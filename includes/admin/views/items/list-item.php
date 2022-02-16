@@ -6,13 +6,13 @@
  *
  * @since       1.1.0
  * @subpackage  Admin/Items
- * @package     EverAccounting
+ * @package     Ever_Accounting
  */
 
 defined( 'ABSPATH' ) || exit();
 
 include( EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-item-list-table.php' );
-$items_table = new EverAccounting_Item_List_Table();
+$items_table = new Ever_Accounting_Item_List_Table();
 $items_table->prepare_items();
 $add_url = eaccounting_admin_url(
 	array(

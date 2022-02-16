@@ -4,18 +4,18 @@
  *
  * @since       1.0.2
  * @subpackage  Rest
- * @package     EverAccounting
+ * @package     Ever_Accounting
  */
 
-namespace EverAccounting\REST;
+namespace Ever_Accounting\REST;
 
-use EverAccounting\Abstracts\Controller;
+use Ever_Accounting\Abstracts\Controller;
 
 defined( 'ABSPATH' ) || die();
 
 /**
  * Class Setting_Options_Controller
- * @package EverAccounting\REST
+ * @package Ever_Accounting\REST
  */
 class Setting_Options_Controller extends Controller {
 

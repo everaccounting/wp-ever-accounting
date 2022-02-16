@@ -2,7 +2,7 @@
 /**
  * Admin Category Edit Page.
  *
- * @package     EverAccounting
+ * @package     Ever_Accounting
  * @subpackage  Admin/Settings/Categories
  * @since       1.0.2
  */
@@ -11,7 +11,7 @@
 defined( 'ABSPATH' ) || exit();
 $category_id = isset( $_REQUEST['category_id'] ) ? absint( $_REQUEST['category_id'] ) : null;
 try {
-	$category = new \EverAccounting\Category( $category_id );
+	$category = new \Ever_Accounting\Category( $category_id );
 } catch ( Exception $e ) {
 	wp_die( $e->getMessage() );
 }
@@ -59,7 +59,7 @@ $back_url = remove_query_arg( array( 'action', 'category_id' ) );
 						'label'         => __( 'Type', 'wp-ever-accounting' ),
 						'name'          => 'type',
 						'value'         => $category->get_type(),
-						'options'       => \EverAccounting\Categories::get_category_types(),
+						'options'       => \Ever_Accounting\Categories::get_category_types(),
 						'placeholder'   => __( 'Select Type', 'wp-ever-accounting' ),
 						'required'      => true,
 					)

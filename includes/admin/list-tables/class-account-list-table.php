@@ -5,24 +5,24 @@
  * Admin account list table, show all the account information.
  *
  * @since       1.0.2
- * @subpackage  EverAccounting\Admin\ListTables
- * @package     EverAccounting
+ * @subpackage  Ever_Accounting\Admin\ListTables
+ * @package     Ever_Accounting
  */
 
-use EverAccounting\Account;
-use EverAccounting\Accounts;
+use Ever_Accounting\Account;
+use Ever_Accounting\Accounts;
 
 defined( 'ABSPATH' ) || exit();
 
-if ( ! class_exists( '\EverAccounting_List_Table' ) ) {
+if ( ! class_exists( '\Ever_Accounting_List_Table' ) ) {
 	require_once dirname( __FILE__ ) . '/class-list-table.php';
 }
 
 /**
- * Class EverAccounting_Account_List_Table
+ * Class Ever_Accounting_Account_List_Table
  * @since 1.1.0
  */
-class EverAccounting_Account_List_Table extends EverAccounting_List_Table {
+class Ever_Accounting_Account_List_Table extends Ever_Accounting_List_Table {
 	/**
 	 * Default number of items to show per page
 	 *
@@ -376,7 +376,7 @@ class EverAccounting_Account_List_Table extends EverAccounting_List_Table {
 				'order'    => eaccounting_clean( $order ),
 			)
 		);
-		\EverAccounting\Currencies::get_currencies(
+		\Ever_Accounting\Currencies::get_currencies(
 			array(
 				'return' => 'raw',
 				'number' => '-1',

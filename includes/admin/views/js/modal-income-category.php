@@ -2,7 +2,7 @@
 /**
  * Add Category Modal.
  *
- * @package     EverAccounting
+ * @package     Ever_Accounting
  * @subpackage  Admin/Js Templates
  * @since       1.0.2
  */

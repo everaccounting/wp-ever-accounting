@@ -4,22 +4,22 @@
  *
  * Functions used for displaying invoice related pages.
  *
- * @author      EverAccounting
+ * @author      Ever_Accounting
  * @category    Admin
- * @package     EverAccounting\Admin
+ * @package     Ever_Accounting\Admin
  * @version     1.1.10
  */
 
-namespace EverAccounting\Admin;
+namespace Ever_Accounting\Admin;
 
-use EverAccounting\Invoice;
-use EverAccounting\Documents;
+use Ever_Accounting\Invoice;
+use Ever_Accounting\Documents;
 
 defined( 'ABSPATH' ) || exit();
 
 /**
  * Invoice_Actions class
- * @package EverAccounting\Admin
+ * @package Ever_Accounting\Admin
  *
  * @since 1.1.0
  */

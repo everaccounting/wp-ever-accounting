@@ -5,23 +5,23 @@
  * Admin payments list table, show all the incoming transactions.
  *
  * @since       1.0.2
- * @subpackage  EverAccounting\Admin\ListTables
- * @package     EverAccounting
+ * @subpackage  Ever_Accounting\Admin\ListTables
+ * @package     Ever_Accounting
  */
 
-use EverAccounting\Payment;
+use Ever_Accounting\Payment;
 
 defined( 'ABSPATH' ) || exit();
 
-if ( ! class_exists( '\EverAccounting_List_Table' ) ) {
+if ( ! class_exists( '\Ever_Accounting_List_Table' ) ) {
 	require_once dirname( __FILE__ ) . '/class-list-table.php';
 }
 
 /**
- * Class EverAccounting_Payment_List_Table
+ * Class Ever_Accounting_Payment_List_Table
  * @since 1.1.0
  */
-class EverAccounting_Payment_List_Table extends EverAccounting_List_Table {
+class Ever_Accounting_Payment_List_Table extends Ever_Accounting_List_Table {
 	/**
 	 * Default number of items to show per page
 	 *
@@ -328,7 +328,7 @@ class EverAccounting_Payment_List_Table extends EverAccounting_List_Table {
 				case 'export_csv':
 					break;
 				case 'delete':
-					\EverAccounting\Transactions::delete_payment( $id );
+					\Ever_Accounting\Transactions::delete_payment( $id );
 					break;
 				default:
 					do_action( 'eaccounting_payments_do_bulk_action_' . $this->current_action(), $id );
@@ -404,9 +404,9 @@ class EverAccounting_Payment_List_Table extends EverAccounting_List_Table {
 		}
 
 		$args        = apply_filters( 'eaccounting_payment_table_query_args', $args, $this );
-		$this->items = \EverAccounting\Transactions::get_payments( $args );
+		$this->items = \Ever_Accounting\Transactions::get_payments( $args );
 
-		$this->total_count = \EverAccounting\Transactions::get_payments(  $args, true );
+		$this->total_count = \Ever_Accounting\Transactions::get_payments(  $args, true );
 
 		$this->set_pagination_args(
 			array(

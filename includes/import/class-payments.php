@@ -4,13 +4,13 @@
  *
  * @since   1.0.2
  *
- * @package EverAccounting\Import
+ * @package Ever_Accounting\Import
  */
 
-namespace EverAccounting\Import;
+namespace Ever_Accounting\Import;
 
-use EverAccounting\Abstracts\CSV_Importer;
-use EverAccounting\Currency;
+use Ever_Accounting\Abstracts\CSV_Importer;
+use Ever_Accounting\Currency;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit();
  *
  * @since   1.0.2
  *
- * @package EverAccounting\Import
+ * @package Ever_Accounting\Import
  */
 class Payments extends CSV_Importer {
 	/**
@@ -88,18 +88,18 @@ class Payments extends CSV_Importer {
 			return new \WP_Error( 'empty_prop', __( 'Empty Payment Method', 'wp-ever-accounting' ) );
 		}
 
-		$category    = \EverAccounting\Categories::get_categories( array( 'search' => $data['category_name'], 'search_cols' => array( 'name' ), 'type' => 'expense' ) );
+		$category    = \Ever_Accounting\Categories::get_categories( array( 'search' => $data['category_name'], 'search_cols' => array( 'name' ), 'type' => 'expense' ) );
 		$category    = ! empty( $category ) ? reset( $category ) : '';
 		$category_id = ! empty( $category ) ? $category->get_id() : '';
 
 		$currency = new Currency( array( 'code' => $data['currency_code'] ) );
 
-		$account               = \EverAccounting\Accounts::get_accounts( array( 'search' => $data['account_name'], 'search_cols' => array( 'name' ) ) );
+		$account               = \Ever_Accounting\Accounts::get_accounts( array( 'search' => $data['account_name'], 'search_cols' => array( 'name' ) ) );
 		$account               = ! empty( $account ) ? reset( $account ) : '';
 		$account_id            = ! empty( $account ) ? $account->get_id() : '';
 		$account_currency_code = ! empty( $account ) ? $account->get_currency_code() : '';
 
-		$vendor    = ( '' != $data['vendor_name'] ) ? \EverAccounting\Contacts::get_vendors( array( 'search' => $data['vendor_name'], 'search_cols' => array( 'name' ) ) ) : '';
+		$vendor    = ( '' != $data['vendor_name'] ) ? \Ever_Accounting\Contacts::get_vendors( array( 'search' => $data['vendor_name'], 'search_cols' => array( 'name' ) ) ) : '';
 		$vendor    = ! empty( $vendor ) ? reset( $vendor ) : '';
 		$vendor_id = ! empty( $vendor ) ? $vendor->get_id() : '';
 
@@ -125,7 +125,7 @@ class Payments extends CSV_Importer {
 		$data['type']        = 'expense';
 		$data['contact_id']  = $vendor_id;
 
-		return \EverAccounting\Transactions::insert_payment( $data );
+		return \Ever_Accounting\Transactions::insert_payment( $data );
 	}
 
 }

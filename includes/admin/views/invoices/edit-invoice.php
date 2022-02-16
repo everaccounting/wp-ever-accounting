@@ -7,12 +7,12 @@
  *
  * @since       1.1.0
  * @subpackage  Admin/Views/Invoices
- * @package     EverAccounting
+ * @package     Ever_Accounting
  *
  * @var Invoice $invoice
  */
 
-use EverAccounting\Invoice;
+use Ever_Accounting\Invoice;
 
 defined( 'ABSPATH' ) || exit();
 

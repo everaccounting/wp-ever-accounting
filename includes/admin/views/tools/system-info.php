@@ -7,13 +7,13 @@
  *
  */
 
-use EverAccounting\Accounts;
-use EverAccounting\Categories;
-use EverAccounting\Contacts;
-use EverAccounting\Currencies;
-use EverAccounting\Items;
-use EverAccounting\Transactions;
-use EverAccounting\Transfers;
+use Ever_Accounting\Accounts;
+use Ever_Accounting\Categories;
+use Ever_Accounting\Contacts;
+use Ever_Accounting\Currencies;
+use Ever_Accounting\Items;
+use Ever_Accounting\Transactions;
+use Ever_Accounting\Transfers;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -59,7 +59,7 @@ function eaccounting_tools_system_info_report() {
 	$return .= 'Registered Post Statuses: ' . implode( ', ', get_post_stati() ) . "\n";
 
 	//
-	// EverAccounting
+	// Ever_Accounting
 	//
 
 	$settings     = eaccounting()->settings;
@@ -70,7 +70,7 @@ function eaccounting_tools_system_info_report() {
 	$tables = preg_replace( "/^{$wpdb->prefix}/", '', $tables );
 
 	// Configariotn settings.
-	$return .= "\n" . '-- EverAccounting Configuration' . "\n\n";
+	$return .= "\n" . '-- Ever_Accounting Configuration' . "\n\n";
 	$return .= 'Version:                          ' . eaccounting()->get_version() . "\n";
 	$return .= 'DB Version:                       ' . ( $db_version ? "$db_version\n" : "Unset\n" );
 	$return .= 'Install Date:                     ' . ( $install_date ? date_i18n( 'Y-m-d H:i:s', $install_date ) . "\n" : "Unset\n" );
@@ -87,7 +87,7 @@ function eaccounting_tools_system_info_report() {
 	// Misc Settings
 	$currency_code = eaccounting_get_option( 'default_currency' );
 	$currency      = eaccounting_get_currency( $currency_code );
-	$return        .= "\n" . '-- EverAccounting Settings' . "\n\n";
+	$return        .= "\n" . '-- Ever_Accounting Settings' . "\n\n";
 
 	$return .= 'Default currency:                  ' . $currency_code . "\n";
 	$return .= 'Default currency rate:             ' . ( ! empty( $currency ) ? $currency->get_rate() : "" ) . "\n";
@@ -95,7 +95,7 @@ function eaccounting_tools_system_info_report() {
 	$return .= 'Default Account:                   ' . eaccounting_get_option( 'default_account' ) . "\n";
 
 	// Object counts.
-	$return .= "\n" . '-- EverAccounting Object Counts' . "\n\n";
+	$return .= "\n" . '-- Ever_Accounting Object Counts' . "\n\n";
 	$return .= 'Items:                            ' . number_format( Items::get_items( array(), true ) ) . "\n";
 	$return .= 'Transactions:                     ' . number_format( Transactions::get_transactions( array(), true ) ) . "\n";
 	$return .= 'Accounts:                         ' . number_format( Accounts::get_accounts( array(), true ) ) . "\n";

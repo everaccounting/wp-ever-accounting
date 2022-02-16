@@ -3,11 +3,11 @@
  * Transaction data handler class.
  *
  * @version     1.0.2
- * @package     EverAccounting
+ * @package     Ever_Accounting
  * @class       Contact
  */
 
-namespace EverAccounting;
+namespace Ever_Accounting;
 
 defined( 'ABSPATH' ) || exit;
 

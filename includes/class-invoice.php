@@ -2,12 +2,12 @@
 /**
  * Handle the invoice object.
  *
- * @package     EverAccounting
+ * @package     Ever_Accounting
  * @class       Invoice
  * @version     1.1.0
  */
 
-namespace EverAccounting;
+namespace Ever_Accounting;
 
 use http\Exception;
 

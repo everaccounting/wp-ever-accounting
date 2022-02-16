@@ -4,19 +4,19 @@
  *
  * Extended by reports to show charts and stats in admin.
  *
- * @author      EverAccounting
+ * @author      Ever_Accounting
  * @category    Admin
- * @package     EverAccounting\Admin
+ * @package     Ever_Accounting\Admin
  * @version     1.1.0
  */
 
-namespace EverAccounting\Admin\Report;
+namespace Ever_Accounting\Admin\Report;
 
 defined( 'ABSPATH' ) || exit();
 
 /**
  * Sales Class
- * @package EverAccounting\Admin\Report
+ * @package Ever_Accounting\Admin\Report
  */
 class Sales extends Report {
 	/**

@@ -2,7 +2,7 @@
 /**
  * Admin Currency Edit Page.
  *
- * @package     EverAccounting
+ * @package     Ever_Accounting
  * @subpackage  Admin/Settings/Currencies
  * @since       1.0.2
  */
@@ -10,7 +10,7 @@
 defined( 'ABSPATH' ) || exit();
 $currency_id = isset( $_REQUEST['currency_id'] ) ? eaccounting_clean( $_REQUEST['currency_id'] ) : null;
 try {
-	$currency = new \EverAccounting\Currency( $currency_id );
+	$currency = new \Ever_Accounting\Currency( $currency_id );
 } catch ( Exception $e ) {
 	wp_die( $e->getMessage() );
 }

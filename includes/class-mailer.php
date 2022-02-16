@@ -1,6 +1,6 @@
 <?php
 
-namespace EverAccounting;
+namespace Ever_Accounting;
 
 defined('ABSPATH') || exit;
 
@@ -169,9 +169,9 @@ class Mailer {
 				'{site_title}'     => wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES ),
 				'{site_address}'   => $domain,
 				'{site_url}'       => $domain,
-				'{everaccounting}' => '<a href="https://wpeveraccounting.com">EverAccounting</a>',
-				'{eaccounting}'    => '<a href="https://wpeveraccounting.com">EverAccounting</a>',
-				'{EverAccounting}' => '<a href="https://wpeveraccounting.com">EverAccounting</a>',
+				'{everaccounting}' => '<a href="https://wpeveraccounting.com">Ever_Accounting</a>',
+				'{eaccounting}'    => '<a href="https://wpeveraccounting.com">Ever_Accounting</a>',
+				'{Ever_Accounting}' => '<a href="https://wpeveraccounting.com">Ever_Accounting</a>',
 			)
 		);
 

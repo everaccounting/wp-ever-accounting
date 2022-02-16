@@ -2,14 +2,14 @@
 /**
  * Shows an Invoice item
  *
- * @package EverAccounting\Admin
+ * @package Ever_Accounting\Admin
  * @var Invoice      $invoice The item being displayed
  * @var Document_Item $item    The item being displayed
  * @var int          $item_id The id of the item being displayed
  */
 
-use EverAccounting\Document_Item;
-use EverAccounting\Invoice;
+use Ever_Accounting\Document_Item;
+use Ever_Accounting\Invoice;
 
 defined( 'ABSPATH' ) || exit;
 ?>

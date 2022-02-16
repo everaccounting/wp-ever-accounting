@@ -4,13 +4,13 @@
  *
  * @since       1.0.2
  * @subpackage  Admin/Banking/Transfers
- * @package     EverAccounting
+ * @package     Ever_Accounting
  */
 
 defined( 'ABSPATH' ) || exit();
 
 include( EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-transfer-list-table.php' );
-$transfers_table = new EverAccounting_Transfer_List_Table();
+$transfers_table = new Ever_Accounting_Transfer_List_Table();
 $transfers_table->prepare_items();
 $add_url = eaccounting_admin_url(
 	array(

@@ -4,12 +4,12 @@
  *
  * @since   1.0.2
  *
- * @package EverAccounting\Export
+ * @package Ever_Accounting\Export
  */
 
-namespace EverAccounting\Export;
+namespace Ever_Accounting\Export;
 
-use EverAccounting\Abstracts\CSV_Exporter;
+use Ever_Accounting\Abstracts\CSV_Exporter;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit();
  *
  * @since   1.0.2
  *
- * @package EverAccounting\Export
+ * @package Ever_Accounting\Export
  */
 class Customers extends CSV_Exporter {
 
@@ -60,7 +60,7 @@ class Customers extends CSV_Exporter {
 
 		$args = apply_filters( 'eaccounting_customer_export_query_args', $args );
 
-		$items = \EverAccounting\Contacts::get_customers( $args );
+		$items = \Ever_Accounting\Contacts::get_customers( $args );
 
 		$rows = array();
 
@@ -76,7 +76,7 @@ class Customers extends CSV_Exporter {
 	/**
 	 * Take a customer and generate row data from it for export.
 	 *
-	 * @param \EverAccounting\Models\Customer $item
+	 * @param \Ever_Accounting\Models\Customer $item
 	 *
 	 * @return array
 	 */

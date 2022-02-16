@@ -3,18 +3,18 @@
  * Contact data handler class.
  *
  * @version     1.0.2
- * @package     EverAccounting
+ * @package     Ever_Accounting
  * @class       Contact
  */
 
-namespace EverAccounting;
+namespace Ever_Accounting;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
  * Contact class.
  */
-class Contact extends Data {
+class Contact extends Abstracts\Data  {
 	/**
 	 * This is the name of this object type.
 	 *

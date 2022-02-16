@@ -1,13 +1,13 @@
 <?php
 /**
- * EverAccounting Wrapper for PHP DateTime which adds support for gmt/utc offset when a timezone is absent.
+ * Ever_Accounting Wrapper for PHP DateTime which adds support for gmt/utc offset when a timezone is absent.
  *
  * @since   1.0.2
  *
- * @package EverAccounting
+ * @package Ever_Accounting
  */
 
-namespace EverAccounting;
+namespace Ever_Accounting;
 
 use DateTime as DT;
 
@@ -24,7 +24,7 @@ class DateTime extends DT {
 	 * timezones are used this will equal 0.
 	 *
 	 * @since   1.0.2
-	 * 
+	 *
 	 * @var integer
 	 */
 	protected $utc_offset = 0;
@@ -33,7 +33,7 @@ class DateTime extends DT {
 	 * Output an ISO 8601 date string in local (WordPress) timezone.
 	 *
 	 * @since  1.0.2
-	 * 
+	 *
 	 * @return string
 	 */
 	public function __toString() {
@@ -44,8 +44,8 @@ class DateTime extends DT {
 	 * Clone the current object.
 	 *
 	 * @since 1.0.2
-	 * 
-	 * @return \EverAccounting\DateTime
+	 *
+	 * @return \Ever_Accounting\DateTime
 	 */
 	public function copy() {
 		return clone $this;
@@ -66,7 +66,7 @@ class DateTime extends DT {
 	 * Get UTC offset if set, or default to the DateTime object's offset.
 	 *
 	 * @since   1.0.2
-	 * 
+	 *
 	 * @return int
 	 */
 	public function getOffset() {
@@ -221,7 +221,7 @@ class DateTime extends DT {
 	 * Return mysql date time.
 	 *
 	 * @since 1.0.2
-	 * 
+	 *
 	 * @return string date time
 	 */
 	public function date_mysql() {
@@ -232,7 +232,7 @@ class DateTime extends DT {
 	 * Get quarter
 	 *
 	 * @since 1.0.2
-	 * 
+	 *
 	 * @return int
 	 */
 	public function quarter() {
@@ -243,7 +243,7 @@ class DateTime extends DT {
 	 * Alias self::quarter()
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @return false|float
 	 */
 	public function get_quarter() {

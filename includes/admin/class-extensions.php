@@ -4,16 +4,16 @@
  *
  * @since       1.0.2
  * @subpackage  Admin/Tools
- * @package     EverAccounting
+ * @package     Ever_Accounting
  */
 
-namespace EverAccounting\Admin;
+namespace Ever_Accounting\Admin;
 
 defined( 'ABSPATH' ) || exit();
 
 /**
  * Class Admin
- * @package EverAccounting\Admin
+ * @package Ever_Accounting\Admin
  * @since   1.1.0
  */
 

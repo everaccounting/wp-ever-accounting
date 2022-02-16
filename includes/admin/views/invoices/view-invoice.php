@@ -7,12 +7,12 @@
  *
  * @since       1.1.0
  * @subpackage  Admin/Views/Invoices
- * @package     EverAccounting
+ * @package     Ever_Accounting
  *
  * @var Invoice $invoice
  */
 
-use EverAccounting\Invoice;
+use Ever_Accounting\Invoice;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -32,8 +32,8 @@ if ( ! in_array( $invoice->get_status( 'edit' ), array( 'paid', 'partial' ) ) ) 
 
 $invoice_actions['delete'] = __( 'Delete', 'wp-ever-accounting' );
 if ( $invoice->exists() ) {
-	add_meta_box( 'invoice_payments', __( 'Invoice Payments', 'wp-ever-accounting' ), array( '\EverAccounting\Admin\Invoice_Actions', 'invoice_payments' ), 'ea_invoice', 'side' );
-	add_meta_box( 'invoice_notes', __( 'Invoice Notes', 'wp-ever-accounting' ), array( '\EverAccounting\Admin\Invoice_Actions', 'invoice_notes' ), 'ea_invoice', 'side' );
+	add_meta_box( 'invoice_payments', __( 'Invoice Payments', 'wp-ever-accounting' ), array( '\Ever_Accounting\Admin\Invoice_Actions', 'invoice_payments' ), 'ea_invoice', 'side' );
+	add_meta_box( 'invoice_notes', __( 'Invoice Notes', 'wp-ever-accounting' ), array( '\Ever_Accounting\Admin\Invoice_Actions', 'invoice_notes' ), 'ea_invoice', 'side' );
 }
 /**
  * Fires after all built-in meta boxes have been added, contextually for the given object.

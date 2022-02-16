@@ -2,20 +2,20 @@
 /**
  * Handle export
  *
- * @package     EverAccounting
+ * @package     Ever_Accounting
  * @subpackage  Admin
  * @version     1.0.2
  */
 
-namespace EverAccounting\Admin;
+namespace Ever_Accounting\Admin;
 
-use EverAccounting\Ajax;
+use Ever_Accounting\Ajax;
 
 defined( 'ABSPATH' ) || exit();
 
 /**
  * Class Exporter
- * @package EverAccounting/Admin
+ * @package Ever_Accounting/Admin
 */
 class Exporter {
 
@@ -79,7 +79,7 @@ class Exporter {
 		}
 
 		/**
-		 * @var $exporter \EverAccounting\Abstracts\CSV_Exporter
+		 * @var $exporter \Ever_Accounting\Abstracts\CSV_Exporter
 		 */
 		$exporter = new $class();
 
@@ -165,7 +165,7 @@ class Exporter {
 
 			$class = $batch['class'];
 			/**
-			 * @var $class \EverAccounting\Abstracts\CSV_Exporter
+			 * @var $class \Ever_Accounting\Abstracts\CSV_Exporter
 			 */
 			$exporter = new $class();
 

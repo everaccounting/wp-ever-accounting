@@ -1,20 +1,18 @@
 <?php
 /**
- * EverAccounting  Rewrites Event Handlers.
+ * Ever_Accounting  Rewrites Event Handlers.
  *
  * @since       1.1.0
- * @package     EverAccounting
+ * @package     Ever_Accounting
  * @class       Rewrites
  */
-
-namespace EverAccounting;
 
 defined( 'ABSPATH' ) || exit();
 
 class Rewrites {
 
 	/**
-	 * EverAccounting_Rewrites constructor.
+	 * Ever_Accounting_Rewrites constructor.
 	 */
 	public function __construct() {
 		add_action( 'init', array( $this, 'add_rewrite_rules' ) );
@@ -68,4 +66,4 @@ class Rewrites {
 
 }
 
-new Rewrites();
+new Ever_Accounting_Rewrites();

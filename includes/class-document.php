@@ -3,13 +3,13 @@
  * Document data handler class.
  *
  * @version     1.0.2
- * @package     EverAccounting
+ * @package     Ever_Accounting
  * @class       Document
  */
 
-namespace EverAccounting;
+namespace Ever_Accounting;
 
-use EverAccounting\Models\Document_Item;
+use Ever_Accounting\Models\Document_Item;
 
 defined( 'ABSPATH' ) || exit;
 

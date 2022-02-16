@@ -2,12 +2,12 @@
 /**
  * Handle the Payment object.
  *
- * @package     EverAccounting
+ * @package     Ever_Accounting
  * @class       Revenue
  * @version     1.0.2
  */
 
-namespace EverAccounting;
+namespace Ever_Accounting;
 
 defined( 'ABSPATH' ) || exit;
 

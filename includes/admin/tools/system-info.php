@@ -51,7 +51,7 @@ function eaccounting_tools_system_info_report() {
 	$return .= 'Registered Post Statuses: ' . implode( ', ', get_post_stati() ) . "\n";
 
 	//
-	// EverAccounting
+	// Ever_Accounting
 	//
 
 	$settings      = eaccounting()->settings;
@@ -65,7 +65,7 @@ function eaccounting_tools_system_info_report() {
 	$tables = preg_replace( "/^{$wpdb->prefix}/", '', $tables );
 
 	// Configariotn settings.
-	$return .= "\n" . '-- EverAccounting Configuration' . "\n\n";
+	$return .= "\n" . '-- Ever_Accounting Configuration' . "\n\n";
 	$return .= 'Version:                          ' . eaccounting()->get_version() . "\n";
 	$return .= 'DB Version:                       ' . ( $db_version ? "$db_version\n" : "Unset\n" );
 	$return .= 'Install Date:                     ' . ( $install_date ? date( 'Y-m-d H:i:s' ) . "\n" : "Unset\n" );
@@ -78,15 +78,15 @@ function eaccounting_tools_system_info_report() {
 	$return .= 'Categories Table:                 ' . ( in_array( 'ea_categories', $tables, true ) ? 'True' . "\n" : "False\n" );
 
 	// Misc Settings
-	$return .= "\n" . '-- EverAccounting Misc Settings' . "\n\n";
+	$return .= "\n" . '-- Ever_Accounting Misc Settings' . "\n\n";
 
 	// Object counts.
-	$return .= "\n" . '-- EverAccounting Object Counts' . "\n\n";
-	$return .= 'Transactions:                     ' . number_format( \EverAccounting\Transactions\query()->count(), false ) . "\n";
-	$return .= 'Accounts:                         ' . number_format( \EverAccounting\Accounts\query()->count(), false ) . "\n";
-	$return .= 'Contacts:                         ' . number_format( \EverAccounting\Contacts\query()->count(), false ) . "\n";
-	$return .= 'Currencies:                       ' . number_format( \EverAccounting\Currencies\query()->count(), false ) . "\n";
-	$return .= 'Categories:                       ' . number_format( \EverAccounting\Categories\query()->count(), false ) . "\n";
+	$return .= "\n" . '-- Ever_Accounting Object Counts' . "\n\n";
+	$return .= 'Transactions:                     ' . number_format( \Ever_Accounting\Transactions\query()->count(), false ) . "\n";
+	$return .= 'Accounts:                         ' . number_format( \Ever_Accounting\Accounts\query()->count(), false ) . "\n";
+	$return .= 'Contacts:                         ' . number_format( \Ever_Accounting\Contacts\query()->count(), false ) . "\n";
+	$return .= 'Currencies:                       ' . number_format( \Ever_Accounting\Currencies\query()->count(), false ) . "\n";
+	$return .= 'Categories:                       ' . number_format( \Ever_Accounting\Categories\query()->count(), false ) . "\n";
 
 	// Get plugins that have an update
 	$updates = get_plugin_updates();

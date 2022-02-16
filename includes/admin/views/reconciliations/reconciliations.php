@@ -2,7 +2,7 @@
 /**
  * Admin Reconciliations Page.
  *
- * @package     EverAccounting
+ * @package     Ever_Accounting
  * @subpackage  Admin/Banking/Reconciliations
  * @since       1.0.2
  */
@@ -97,7 +97,7 @@ function eaccounting_banking_tab_reconciliations() {
 		</h1>
 		<?php
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/list-tables/list-table-reconciliations.php';
-		$reconciliations_table = new \EverAccounting\Admin\ListTables\List_Table_Transfers();
+		$reconciliations_table = new \Ever_Accounting\Admin\ListTables\List_Table_Transfers();
 		$reconciliations_table->prepare_items();
 		?>
 		<div class="wrap">

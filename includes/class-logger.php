@@ -2,17 +2,17 @@
 /**
  * Handles logging for the plugin.
  *
- * @package        EverAccounting
- * @class          EverAccounting_Logger
+ * @package        Ever_Accounting
+ * @class          Ever_Accounting_Logger
  * @version        1.0.2
  */
 
-namespace EverAccounting;
+namespace Ever_Accounting;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * EverAccounting_Logger class.
+ * Ever_Accounting_Logger class.
  */
 class Logger {
 
@@ -69,7 +69,7 @@ class Logger {
 	protected $cached_logs = array();
 
 	/**
-	 * EverAccounting_Logger constructor.
+	 * Ever_Accounting_Logger constructor.
 	 *
 	 * @since 1.0.2
 	 */

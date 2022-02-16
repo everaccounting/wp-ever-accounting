@@ -1,10 +1,10 @@
 <?php
 /**
- * EverAccounting REST Functions
+ * Ever_Accounting REST Functions
  *
  * Functions for REST specific things.
  *
- * @package EverAccounting\Functions
+ * @package Ever_Accounting\Functions
  * @version 1.1.0
  */
 defined( 'ABSPATH' ) || die();
@@ -17,21 +17,21 @@ defined( 'ABSPATH' ) || die();
  *
  * @since  1.1.0
  *
- * @param string|null|\EverAccounting\DateTime $date Date.
+ * @param string|null|\Ever_Accounting\DateTime $date Date.
  * @param bool                                 $utc  Send false to get local/offset time.
  *
  * @return string|null ISO8601/RFC3339 formatted datetime.
  */
 function eaccounting_rest_date_response( $date, $utc = true ) {
 	if ( is_numeric( $date ) ) {
-		$date = new \EverAccounting\DateTime( "@$date", new \DateTimeZone( 'UTC' ) );
+		$date = new \Ever_Accounting\DateTime( "@$date", new \DateTimeZone( 'UTC' ) );
 		$date->setTimezone( new DateTimeZone( eaccounting_timezone_string() ) );
 	} elseif ( is_string( $date ) ) {
-		$date = new \EverAccounting\DateTime( $date, new \DateTimeZone( 'UTC' ) );
+		$date = new \Ever_Accounting\DateTime( $date, new \DateTimeZone( 'UTC' ) );
 		$date->setTimezone( new DateTimeZone( eaccounting_timezone_string() ) );
 	}
 
-	if ( ! is_a( $date, '\EverAccounting\DateTime' ) ) {
+	if ( ! is_a( $date, '\Ever_Accounting\DateTime' ) ) {
 		return null;
 	}
 

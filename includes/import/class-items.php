@@ -4,12 +4,12 @@
  *
  * @since   1.1.0
  *
- * @package EverAccounting\Import
+ * @package Ever_Accounting\Import
  */
 
-namespace EverAccounting\Import;
+namespace Ever_Accounting\Import;
 
-use EverAccounting\Abstracts\CSV_Importer;
+use Ever_Accounting\Abstracts\CSV_Importer;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit();
  *
  * @since   1.1.0
  *
- * @package EverAccounting\Import
+ * @package Ever_Accounting\Import
  */
 class Items extends CSV_Importer {
 	/**
@@ -80,12 +80,12 @@ class Items extends CSV_Importer {
 			return new \WP_Error( 'empty_prop', __( 'Empty Purchase Price', 'wp-ever-accounting' ) );
 		}
 
-		$category    = \EverAccounting\Categories::get_categories( array( 'search' => $data['category_name'], 'type' => 'item' ) );
+		$category    = \Ever_Accounting\Categories::get_categories( array( 'search' => $data['category_name'], 'type' => 'item' ) );
 		$category    = ! empty( $category ) ? reset( $category ) : '';
 		$category_id = ! empty( $category ) ? $category->get_id() : '';
 
 		$data['category_id'] = $category_id;
 
-		return \EverAccounting\Items::insert_item( $data );
+		return \Ever_Accounting\Items::insert_item( $data );
 	}
 }

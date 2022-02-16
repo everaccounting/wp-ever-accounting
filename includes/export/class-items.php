@@ -4,12 +4,12 @@
  *
  * @since   1.1.0
  *
- * @package EverAccounting\Export
+ * @package Ever_Accounting\Export
  */
 
-namespace EverAccounting\Export;
+namespace Ever_Accounting\Export;
 
-use EverAccounting\Abstracts\CSV_Exporter;
+use Ever_Accounting\Abstracts\CSV_Exporter;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit();
  *
  * @since   1.1.0
  *
- * @package EverAccounting\Export
+ * @package Ever_Accounting\Export
  */
 class Items extends CSV_Exporter {
 
@@ -56,7 +56,7 @@ class Items extends CSV_Exporter {
 			'number'   => - 1,
 		);
 		$args  = apply_filters( 'eaccounting_item_export_query_args', $args );
-		$items = \EverAccounting\Items::get_items( $args );
+		$items = \Ever_Accounting\Items::get_items( $args );
 		$rows  = array();
 
 		foreach ( $items as $item ) {
@@ -70,7 +70,7 @@ class Items extends CSV_Exporter {
 	/**
 	 * Take a item and generate row data from it for export.
 	 *
-	 * @param \EverAccounting\Item $item
+	 * @param \Ever_Accounting\Item $item
 	 *
 	 * @return array
 	 */

@@ -3,14 +3,16 @@
  * Handles admin related menus.
  */
 
-namespace EverAccounting\Admin;
+namespace Ever_Accounting\Admin;
+
+use Ever_Accounting\Admin\Settings;
 
 defined( 'ABSPATH' ) || exit();
 
 /**
  * Class Menu
  *
- * @package EverAccounting\Admin
+ * @package Ever_Accounting\Admin
  */
 class Menu {
 
@@ -61,24 +63,32 @@ class Menu {
 		if ( current_user_can( 'manage_eaccounting' ) ) {
 			$menu[] = array( '', 'read', 'ea-separator', '', 'wp-menu-separator accounting' );
 		}
-		$icons = 'data:image/svg+xml;base64,' . base64_encode( file_get_contents( eaccounting()->plugin_path( 'assets/dist/images/icon.svg' ) ) );
-
+//		$icons = 'data:image/svg+xml;base64,' . base64_encode( file_get_contents( eaccounting()->plugin_path( 'assets/dist/images/icon.svg' ) ) );
+		$icons = ';';
 		add_menu_page(
-			__( 'Accounting', 'wp-ever-accounting' ),
-			__( 'Accounting', 'wp-ever-accounting' ),
-			'manage_eaccounting',
-			'eaccounting',
-			null,
-			$icons,
-			'54.5'
+				__( 'Accounting', 'wp-ever-accounting' ),
+				__( 'Accounting', 'wp-ever-accounting' ),
+				'manage_eaccounting',
+				'eaccounting',
+				null,
+				$icons,
+				'54.5'
 		);
 		add_submenu_page(
-			'eaccounting',
-			__( 'Overview', 'wp-ever-accounting' ),
-			__( 'Overview', 'wp-ever-accounting' ),
-			'manage_eaccounting',
-			'eaccounting',
-			array( $this, 'render_overview_page' )
+				'eaccounting',
+				__( 'Overview', 'wp-ever-accounting' ),
+				__( 'Overview', 'wp-ever-accounting' ),
+				'manage_eaccounting',
+				'eaccounting',
+				array( $this, 'render_overview_page' )
+		);
+		add_submenu_page(
+				'eaccounting',
+				__( 'Settings', 'wp-ever-accounting' ),
+				__( 'Settings', 'wp-ever-accounting' ),
+				'manage_eaccounting',
+				'eaccounting-settings',
+				array( Settings::class, 'output' )
 		);
 	}
 
@@ -87,12 +97,12 @@ class Menu {
 	 */
 	public function register_items_page() {
 		add_submenu_page(
-			'eaccounting',
-			__( 'Items', 'wp-ever-accounting' ),
-			__( 'Items', 'wp-ever-accounting' ),
-			'manage_eaccounting',
-			'ea-items',
-			array( $this, 'render_items_page' )
+				'eaccounting',
+				__( 'Items', 'wp-ever-accounting' ),
+				__( 'Items', 'wp-ever-accounting' ),
+				'manage_eaccounting',
+				'ea-items',
+				array( $this, 'render_items_page' )
 		);
 	}
 
@@ -101,12 +111,12 @@ class Menu {
 	 */
 	public function register_sales_page() {
 		add_submenu_page(
-			'eaccounting',
-			__( 'Sales', 'wp-ever-accounting' ),
-			__( 'Sales', 'wp-ever-accounting' ),
-			'manage_eaccounting',
-			'ea-sales',
-			array( $this, 'render_sales_page' )
+				'eaccounting',
+				__( 'Sales', 'wp-ever-accounting' ),
+				__( 'Sales', 'wp-ever-accounting' ),
+				'manage_eaccounting',
+				'ea-sales',
+				array( $this, 'render_sales_page' )
 		);
 	}
 
@@ -115,12 +125,12 @@ class Menu {
 	 */
 	public function register_expenses_page() {
 		add_submenu_page(
-			'eaccounting',
-			__( 'Expenses', 'wp-ever-accounting' ),
-			__( 'Expenses', 'wp-ever-accounting' ),
-			'manage_eaccounting',
-			'ea-expenses',
-			array( $this, 'render_expenses_page' )
+				'eaccounting',
+				__( 'Expenses', 'wp-ever-accounting' ),
+				__( 'Expenses', 'wp-ever-accounting' ),
+				'manage_eaccounting',
+				'ea-expenses',
+				array( $this, 'render_expenses_page' )
 		);
 	}
 
@@ -129,12 +139,12 @@ class Menu {
 	 */
 	public function register_banking_page() {
 		add_submenu_page(
-			'eaccounting',
-			__( 'Banking', 'wp-ever-accounting' ),
-			__( 'Banking', 'wp-ever-accounting' ),
-			'manage_eaccounting',
-			'ea-banking',
-			array( $this, 'render_banking_page' )
+				'eaccounting',
+				__( 'Banking', 'wp-ever-accounting' ),
+				__( 'Banking', 'wp-ever-accounting' ),
+				'manage_eaccounting',
+				'ea-banking',
+				array( $this, 'render_banking_page' )
 		);
 	}
 
@@ -143,12 +153,12 @@ class Menu {
 	 */
 	public function register_tools_page() {
 		add_submenu_page(
-			'eaccounting',
-			__( 'Tools', 'wp-ever-accounting' ),
-			__( 'Tools', 'wp-ever-accounting' ),
-			'manage_eaccounting',
-			'ea-tools',
-			array( $this, 'render_tools_page' )
+				'eaccounting',
+				__( 'Tools', 'wp-ever-accounting' ),
+				__( 'Tools', 'wp-ever-accounting' ),
+				'manage_eaccounting',
+				'ea-tools',
+				array( $this, 'render_tools_page' )
 		);
 	}
 
@@ -157,12 +167,12 @@ class Menu {
 	 */
 	public function register_reports_page() {
 		add_submenu_page(
-			'eaccounting',
-			__( 'Reports', 'wp-ever-accounting' ),
-			__( 'Reports', 'wp-ever-accounting' ),
-			'ea_manage_report',
-			'ea-reports',
-			array( $this, 'render_reports_page' )
+				'eaccounting',
+				__( 'Reports', 'wp-ever-accounting' ),
+				__( 'Reports', 'wp-ever-accounting' ),
+				'ea_manage_report',
+				'ea-reports',
+				array( $this, 'render_reports_page' )
 		);
 	}
 
@@ -171,18 +181,18 @@ class Menu {
 	 */
 	public function register_react_page() {
 		add_submenu_page(
-			'eaccounting',
-			__( 'React', 'wp-ever-accounting' ),
-			__( 'React', 'wp-ever-accounting' ),
-			'manage_eaccounting',
-			'ea-react',
-			function () {
-				?>
-				<div class="wrap">
-					<div id="ea-react"></div>
-				</div>
-				<?php
-			}
+				'eaccounting',
+				__( 'React', 'wp-ever-accounting' ),
+				__( 'React', 'wp-ever-accounting' ),
+				'manage_eaccounting',
+				'ea-react',
+				function () {
+					?>
+					<div class="wrap">
+						<div id="ea-react"></div>
+					</div>
+					<?php
+				}
 		);
 	}
 
@@ -256,13 +266,13 @@ class Menu {
 		$current_tab = ! empty( $_GET['tab'] ) && array_key_exists( $_GET['tab'], $tabs ) ? sanitize_title( $_GET['tab'] ) : $first_tab;
 		if ( empty( $_GET['tab'] ) ) {
 			wp_redirect(
-				add_query_arg(
-					array(
-						'page' => 'ea-expenses',
-						'tab'  => $current_tab,
-					),
-					admin_url( 'admin.php' )
-				)
+					add_query_arg(
+							array(
+									'page' => 'ea-expenses',
+									'tab'  => $current_tab,
+							),
+							admin_url( 'admin.php' )
+					)
 			);
 			exit();
 		}
@@ -314,13 +324,13 @@ class Menu {
 		$current_tab = ! empty( $_GET['tab'] ) && array_key_exists( $_GET['tab'], $tabs ) ? sanitize_title( $_GET['tab'] ) : $first_tab;
 		if ( empty( $_GET['tab'] ) ) {
 			wp_redirect(
-				add_query_arg(
-					array(
-						'page' => 'ea-tools',
-						'tab'  => $current_tab,
-					),
-					admin_url( 'admin.php' )
-				)
+					add_query_arg(
+							array(
+									'page' => 'ea-tools',
+									'tab'  => $current_tab,
+							),
+							admin_url( 'admin.php' )
+					)
 			);
 			exit();
 		}
@@ -335,10 +345,10 @@ class Menu {
 	 */
 	public function render_reports_page() {
 		$tabs = array(
-			'sales'    => __( 'Sales', 'wp-ever-accounting' ),
-			'expenses' => __( 'Expenses', 'wp-ever-accounting' ),
-			'profits'  => __( 'Profits', 'wp-ever-accounting' ),
-			'cashflow' => __( 'Cashflow', 'wp-ever-accounting' ),
+				'sales'    => __( 'Sales', 'wp-ever-accounting' ),
+				'expenses' => __( 'Expenses', 'wp-ever-accounting' ),
+				'profits'  => __( 'Profits', 'wp-ever-accounting' ),
+				'cashflow' => __( 'Cashflow', 'wp-ever-accounting' ),
 		);
 
 		$tabs = apply_filters( 'eaccounting_reports_tabs', $tabs );
@@ -542,7 +552,7 @@ class Menu {
 	 */
 	public function render_sales_report_tab() {
 		require_once dirname( __FILE__ ) . '/reports/class-sales.php';
-		$report = new \EverAccounting\Admin\Report\Sales();
+		$report = new \Ever_Accounting\Admin\Report\Sales();
 		$report->output();
 	}
 
@@ -553,7 +563,7 @@ class Menu {
 	 */
 	public function render_expenses_report_tab() {
 		require_once dirname( __FILE__ ) . '/reports/class-expenses.php';
-		$report = new \EverAccounting\Admin\Report\Expenses();
+		$report = new \Ever_Accounting\Admin\Report\Expenses();
 		$report->output();
 	}
 
@@ -564,7 +574,7 @@ class Menu {
 	 */
 	public function render_profits_report_tab() {
 		require_once dirname( __FILE__ ) . '/reports/class-profits.php';
-		$report = new \EverAccounting\Admin\Report\Profits();
+		$report = new \Ever_Accounting\Admin\Report\Profits();
 		$report->output();
 	}
 
@@ -575,7 +585,7 @@ class Menu {
 	 */
 	public function render_cashflow_report_tab() {
 		require_once dirname( __FILE__ ) . '/reports/class-cashflow.php';
-		$report = new \EverAccounting\Admin\Report\CashFlow();
+		$report = new \Ever_Accounting\Admin\Report\CashFlow();
 		$report->output();
 	}
 
@@ -585,6 +595,7 @@ class Menu {
 	public function add_setting_tabs( $tabs ) {
 		$tabs['currencies'] = __( 'Currencies', 'wp-ever-accounting' );
 		$tabs['categories'] = __( 'Categories', 'wp-ever-accounting' );
+
 		return $tabs;
 	}
 

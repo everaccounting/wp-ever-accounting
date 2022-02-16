@@ -5,10 +5,10 @@
  * Handle contact insert, update, delete & retrieve from database.
  *
  * @version   1.1.3
- * @package   EverAccounting
+ * @package   Ever_Accounting
  */
 
-namespace EverAccounting;
+namespace Ever_Accounting;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -44,7 +44,7 @@ class Contacts {
 	 * Update customer total paid
 	 *
 	 * @param int $transaction_id
-	 * @param \EverAccounting\Abstracts\Transaction $transaction
+	 * @param \Ever_Accounting\Abstracts\Transaction $transaction
 	 *
 	 * @since 1.1.0
 	 */
@@ -79,7 +79,7 @@ class Contacts {
 	 * Update vendor total paid
 	 *
 	 * @param int $transaction_id
-	 * @param \EverAccounting\Abstracts\Transaction $transaction
+	 * @param \Ever_Accounting\Abstracts\Transaction $transaction
 	 *
 	 * @since 1.1.0
 	 */
@@ -181,7 +181,7 @@ class Contacts {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @return \EverAccounting\Customer|null
+	 * @return \Ever_Accounting\Customer|null
 	 */
 	public static function get_customer( $customer ) {
 		if ( empty( $customer ) ) {
@@ -202,7 +202,7 @@ class Contacts {
 	 * @param string $email Email
 	 *
 	 * @since 1.1.0
-	 * @return \EverAccounting\Customer
+	 * @return \Ever_Accounting\Customer
 	*/
 	public static function get_customer_by_email( $email ) {
 		global $wpdb;
@@ -297,7 +297,7 @@ class Contacts {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @return \EverAccounting\Vendor|null
+	 * @return \Ever_Accounting\Vendor|null
 	 */
 	public static function get_vendor( $vendor ) {
 		if ( empty( $vendor ) ) {
@@ -318,7 +318,7 @@ class Contacts {
 	 * @param string $email Email
 	 *
 	 * @since 1.1.0
-	 * @return \EverAccounting\Vendor
+	 * @return \Ever_Accounting\Vendor
 	 */
 	public static function get_vendor_by_email( $email ) {
 		global $wpdb;

@@ -1,9 +1,9 @@
 <?php
 /**
- * EverAccounting Formatting Functions for formatting data.
+ * Ever_Accounting Formatting Functions for formatting data.
  *
  * @since   1.0.2
- * @package EverAccounting
+ * @package Ever_Accounting
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -133,7 +133,7 @@ function eaccounting_sanitize_tooltip( $var ) {
 
 
 /**
- * EverAccounting date format - Allows to change date format for everything.
+ * Ever_Accounting date format - Allows to change date format for everything.
  *
  * @since 1.0.2
  * @return string
@@ -143,7 +143,7 @@ function eaccounting_date_format() {
 }
 
 /**
- * EverAccounting Time Format - Allows to change time format for everything.
+ * Ever_Accounting Time Format - Allows to change time format for everything.
  *
  * @since 1.0.2
  * @return string
@@ -328,14 +328,14 @@ function eaccounting_format_decimal( $number, $decimals = 4, $trim_zeros = false
 }
 
 /**
- * Convert a date string to a EverAccounting_DateTime.
+ * Convert a date string to a Ever_Accounting_DateTime.
  *
  * @since  1.0.2
  *
  * @param string $time_string Time string.
  *
  * @throws Exception
- * @return \EverAccounting\DateTime
+ * @return \Ever_Accounting\DateTime
  */
 function eaccounting_string_to_datetime( $time_string ) {
 	// Strings are defined in local WP timezone. Convert to UTC.
@@ -353,7 +353,7 @@ function eaccounting_string_to_datetime( $time_string ) {
 		$timestamp = strtotime( get_gmt_from_date( gmdate( 'Y-m-d H:i:s', strtotime( $time_string ) ) ) );
 		date_default_timezone_set( $original_timezone );
 	}
-	$datetime = new \EverAccounting\DateTime( "@{$timestamp}", new DateTimeZone( 'UTC' ) );
+	$datetime = new \Ever_Accounting\DateTime( "@{$timestamp}", new DateTimeZone( 'UTC' ) );
 
 	return $datetime;
 }

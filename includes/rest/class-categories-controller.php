@@ -4,19 +4,19 @@
  *
  * @since       1.1.2
  * @subpackage  Rest
- * @package     EverAccounting
+ * @package     Ever_Accounting
  */
 
-namespace EverAccounting\REST;
+namespace Ever_Accounting\REST;
 
-use EverAccounting\Abstracts\Entities_Controller;
-use EverAccounting\Models\Category;
+use Ever_Accounting\Abstracts\Entities_Controller;
+use Ever_Accounting\Models\Category;
 
 defined( 'ABSPATH' ) || die();
 
 /**
  * Class Categories_Controller
- * @package EverAccounting\REST
+ * @package Ever_Accounting\REST
  */
 class Categories_Controller extends Entities_Controller {
 	/**

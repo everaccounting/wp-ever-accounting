@@ -105,7 +105,7 @@ function eaccounting_reports_expense_summary_tab() {
 		}
 
 		$categories = wp_list_pluck( $transactions, 'name', 'category_id' );
-		$date       = new \EverAccounting\DateTime( $start );
+		$date       = new \Ever_Accounting\DateTime( $start );
 		// Dates
 		for ( $j = 1; $j <= 12; $j ++ ) {
 			$dates[ $j ]                     = $date->format( 'F' );
@@ -134,7 +134,7 @@ function eaccounting_reports_expense_summary_tab() {
 				$totals[ $month ]['amount']                                += $transaction->amount;
 			}
 		}
-		$chart = new \EverAccounting\Chart();
+		$chart = new \Ever_Accounting\Chart();
 		$chart->type( 'line' )
 			  ->width( 0 )
 			  ->height( 300 )

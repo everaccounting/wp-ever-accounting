@@ -6,14 +6,14 @@
  *
  * @since       1.0.2
  * @subpackage  Admin/Views/Vendors
- * @package     EverAccounting
+ * @package     Ever_Accounting
  *
  * @var int $vendor_id
  */
 defined( 'ABSPATH' ) || exit();
 
 try {
-	$vendor = new \EverAccounting\Vendor( $vendor_id );
+	$vendor = new \Ever_Accounting\Vendor( $vendor_id );
 } catch ( Exception $e ) {
 	wp_die( $e->getMessage() );
 }

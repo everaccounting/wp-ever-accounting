@@ -6,7 +6,7 @@
  *
  * @since       1.0.2
  * @subpackage  Admin/Views/Customers
- * @package     EverAccounting
+ * @package     Ever_Accounting
  *
  * @var int $customer_id
  */
@@ -14,7 +14,7 @@
 defined( 'ABSPATH' ) || exit();
 
 try {
-	$customer = new \EverAccounting\Customer( $customer_id );
+	$customer = new \Ever_Accounting\Customer( $customer_id );
 } catch ( Exception $e ) {
 	wp_redirect( admin_url( 'admin.php?page=ea-sales&tab=customers' ) );
 }

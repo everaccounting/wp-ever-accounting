@@ -5,16 +5,16 @@
  * Handle currency insert, update, delete & retrieve from database.
  *
  * @version   1.1.3
- * @package   EverAccounting
+ * @package   Ever_Accounting
  */
 
-namespace EverAccounting;
+namespace Ever_Accounting;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
  * Currencies class
-*/
+ */
 class Currencies {
 	/**
 	 * Currencies construct.
@@ -26,7 +26,6 @@ class Currencies {
 		add_action( 'update_option_eaccounting_settings', array( __CLASS__, 'update_default_currency' ), 10, 2 );
 		add_action( 'eaccounting_delete_currency', array( __CLASS__, 'delete_currency_reference' ), 10, 2 );
 	}
-
 
 	/**
 	 * Update default currency.
@@ -80,11 +79,11 @@ class Currencies {
 	/**
 	 * Return all available currency codes.
 	 *
-	 * @return array
 	 * @since 1.1.0
+	 * @return array
 	 */
-	public static function get_currency_codes() {
-		return eaccounting_get_data( 'currencies' );
+	public static function get_codes() {
+		return require EVER_ACCOUNTING_DIR . '/i18n/currencies.php';
 	}
 
 	/**
@@ -92,13 +91,13 @@ class Currencies {
 	 *
 	 * @param $code
 	 *
-	 * @return string
 	 * @since 1.1.0
 	 *
+	 * @return string
 	 */
-	public static function sanitize_currency_code( $code ) {
-		$codes = self::get_currency_codes();
-		$code  = strtoupper( $code );
+	public static function sanitize_code( $code ) {
+		$codes = self::get_codes();
+		$code  = strtoupper( trim( $code ) );
 		if ( empty( $code ) || ! array_key_exists( $code, $codes ) ) {
 			return '';
 		}
@@ -107,22 +106,59 @@ class Currencies {
 	}
 
 	/**
+	 * @param $currency
+	 *
+	 * @since 1.1.0
+	 *
+	 * @return float
+	 */
+	public static function get_rate( $currency ) {
+		$exist = self::get( $currency->get_id() );
+		if ( $exist ) {
+			return $exist->get_rate();
+		}
+
+		return 1;
+	}
+
+	/**
+	 * Get currency by code
+	 *
+	 * @param string $code Currency code
+	 *
+	 * @since 1.1.3
+	 * @return Currency|null
+	 */
+	public static function get_by_code( $code ) {
+		global $wpdb;
+		$currency = wp_cache_get( $code, 'ea_currencies' );
+		if ( $currency === false ) {
+			$currency = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}ea_currencies WHERE code = %s", self::sanitize_code( $code ) ) );
+			wp_cache_set( $code, $currency, 'ea_currencies' );
+		}
+
+		return new Currency( $currency );
+	}
+
+	/**
 	 * Get currency
 	 *
-	 * @param int $id Currency ID
+	 * @param string $code Currency Code
 	 * @param string $output The required return type. One of OBJECT, ARRAY_A, or ARRAY_N. Default OBJECT.
 	 *
 	 * @since 1.0.0
 	 */
-	public static function get_currency( $id, $output = OBJECT ) {
-		if ( empty( $id ) ) {
+	public static function get( $code, $output = OBJECT ) {
+		if ( empty( $code ) ) {
 			return null;
 		}
 
-		if ( $id instanceof Currency ) {
-			$currency = $id;
+		if ( $code instanceof Currency ) {
+			$currency = $code;
+		} else if ( is_numeric( $code ) ) {
+			$currency = new Currency( $code );
 		} else {
-			$currency = new Currency( $id );
+			$currency = new Currency( self::get_by_code( $code ) );
 		}
 
 		if ( ! $currency->exists() ) {
@@ -141,48 +177,14 @@ class Currencies {
 	}
 
 	/**
-	 * Get currency by code
-	 *
-	 * @param string $code Currency code
-	 *
-	 * @return object|null
-	 * @since 1.1.3
-	*/
-	public static function get_currency_by_code( $code ) {
-		global $wpdb;
-		$query = $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}ea_currencies WHERE 1=1 AND code='%s'", $code );
-		$currency = $wpdb->get_results( $query );
-		if ( $currency ) {
-			return self::get_currency( $currency[0]->id );
-		}
-		return null;
-	}
-
-	/**
-	 * @param $currency
-	 *
-	 * @return mixed|null
-	 * @since 1.1.0
-	 *
-	 */
-	public static function get_currency_rate( $currency ) {
-		$exist = self::get_currency( $currency->get_id() );
-		if ( $exist ) {
-			return $exist->get_rate();
-		}
-
-		return 1;
-	}
-
-	/**
 	 * Insert currency
 	 *
 	 * @param array|object $data Currency Data
 	 *
 	 * @since 1.1.0
-	 * @return object|\WP_Error
+	 * @return Currency|\WP_Error
 	 */
-	public static function insert_currency( $data ) {
+	public static function insert( $data ) {
 		if ( $data instanceof Currency ) {
 			$data = $data->get_data();
 		} elseif ( is_object( $data ) ) {
@@ -192,8 +194,10 @@ class Currencies {
 		if ( empty( $data ) || ! is_array( $data ) ) {
 			return new \WP_Error( 'invalid_data', __( 'Currency could not be saved.', 'wp-ever-accounting' ) );
 		}
-
-		$data     = wp_parse_args( $data, array( 'id' => null ) );
+		$codes    = self::get_codes();
+		$data     = wp_parse_args( $data, array( 'id' => null, 'code' => '' ) );
+		$defaults = array_key_exists( $data['code'], $codes ) ? $codes[ $data['code'] ] : array();
+		$data     = wp_parse_args( $data, $defaults );
 		$currency = new Currency( (int) $data['id'] );
 		$currency->set_props( $data );
 		$is_error = $currency->save();
@@ -210,9 +214,9 @@ class Currencies {
 	 * @param int $id Currency ID
 	 *
 	 * @since 1.1.0
-	 * @return object|bool
+	 * @return array|false
 	 */
-	public static function delete_currency( $id ) {
+	public static function delete( $id ) {
 		if ( $id instanceof Currency ) {
 			$id = $id->get_id();
 		}
@@ -235,9 +239,9 @@ class Currencies {
 	 * @param array $args Search arguments
 	 *
 	 * @since 1.0.0
-	 * @return int|object
+	 * @return int|Currencies[]
 	 */
-	public static function get_currencies( $args = array(), $count = false ) {
+	public static function query( $args = array(), $count = false ) {
 		global $wpdb;
 		$results      = null;
 		$total        = 0;
@@ -257,19 +261,16 @@ class Currencies {
 		$limit        = '';
 
 		$args = (array) wp_parse_args( $args, array(
-			'orderby'    => 'name',
-			'order'      => 'ASC',
-			'search'     => '',
-			'balance'    => '',
-			'offset'     => '',
-			'per_page'   => 20,
-			'paged'      => 1,
-			'meta_key'   => '',
-			'meta_value' => '',
-			'no_count'   => false,
-			'fields'     => 'all',
-			'return'     => 'objects',
-
+			'orderby'  => 'name',
+			'order'    => 'ASC',
+			'search'   => '',
+			'balance'  => '',
+			'offset'   => '',
+			'per_page' => 20,
+			'paged'    => 1,
+			'no_count' => false,
+			'fields'   => 'all',
+			'return'   => 'objects',
 		) );
 
 		if ( false !== $cache ) {
@@ -279,7 +280,7 @@ class Currencies {
 		// Fields setup
 		if ( is_array( $args['fields'] ) ) {
 			$fields .= implode( ',', $args['fields'] );
-		} elseif( 'all' === $args['fields'] ) {
+		} elseif ( 'all' === $args['fields'] ) {
 			$fields .= "$table.* ";
 		} else {
 			$fields .= "$fields.id";
@@ -292,12 +293,20 @@ class Currencies {
 		// Query from.
 		$from = "FROM $table";
 
+		//Parse query args
+		if ( isset( $args['include'] ) ) {
+			$args['id__in'] = $args['include'];
+		}
+		if ( isset( $args['exclude'] ) ) {
+			$args['id__not_in'] = $args['exclude'];
+		}
+
 		// Parse arch params
 		if ( ! empty ( $args['search'] ) ) {
-			$allowed_fields = array( 'name',  'code', 'rate' );
-			$search_fields = ! empty( $args['search_field'] ) ? $args['search_field'] : $allowed_fields;
-			$search_fields = array_intersect( $search_fields, $allowed_fields );
-			$searches = array();
+			$allowed_fields = array( 'name', 'code', 'rate' );
+			$search_fields  = ! empty( $args['search_field'] ) ? $args['search_field'] : $allowed_fields;
+			$search_fields  = array_intersect( $search_fields, $allowed_fields );
+			$searches       = array();
 			foreach ( $search_fields as $field ) {
 				$searches[] = $wpdb->prepare( $field . ' LIKE %s', '%' . $wpdb->esc_like( $args['search'] ) . '%' );
 			}
@@ -311,12 +320,12 @@ class Currencies {
 			$args['date_to']   = $args['date'];
 		}
 
-		if ( !empty( $args['date_from'])) {
-			$date = get_gmt_from_date( gmdate( 'Y-m-d H:i:s', strtotime( $args['date_from'] . ' 00:00:00' ) ) );
+		if ( ! empty( $args['date_from'] ) ) {
+			$date  = get_gmt_from_date( gmdate( 'Y-m-d H:i:s', strtotime( $args['date_from'] . ' 00:00:00' ) ) );
 			$where .= $wpdb->prepare( " AND DATE($table.date_created) >= %s", $date );
 		}
 
-		if ( !empty( $args['date_to'])) {
+		if ( ! empty( $args['date_to'] ) ) {
 			$date  = get_gmt_from_date( gmdate( 'Y-m-d H:i:s', strtotime( $args['date_to'] . ' 23:59:59' ) ) );
 			$where .= $wpdb->prepare( " AND DATE($table.date_created) <= %s", $date );
 		}
@@ -363,6 +372,7 @@ class Currencies {
 				$not_ins[ $arg ] = $value;
 			}
 		}
+
 		if ( ! empty( $not_ins ) ) {
 			foreach ( $not_ins as $key => $value ) {
 				if ( empty( $value ) || ! is_array( $value ) ) {
@@ -381,16 +391,16 @@ class Currencies {
 		}
 
 		// Parse status params
-		if ( ! empty( $args['status'] ) && ! in_array( $args['status'], array( 'all', 'any'), true ) ) {
+		if ( ! empty( $args['status'] ) && ! in_array( $args['status'], array( 'all', 'any' ), true ) ) {
 			$status = eaccounting_string_to_bool( $args['status'] );
 			$status = eaccounting_bool_to_number( $status );
-			$where .= " AND $table.`enabled` = ('$status')";
+			$where  .= " AND $table.`enabled` = ('$status')";
 		}
 
 		// Parse creator id params
 		if ( ! empty( $args['creator_id'] ) ) {
 			$creator_id = implode( ',', wp_parse_id_list( $args['creator_id'] ) );
-			$where      .=  " AND $table.`creator_id` IN ($creator_id)";
+			$where      .= " AND $table.`creator_id` IN ($creator_id)";
 		}
 
 		//Parse pagination
@@ -435,6 +445,7 @@ class Currencies {
 			if ( 'all' === $args['fields'] ) {
 				foreach ( $results as $key => $row ) {
 					wp_cache_add( $row->id, $row, $cache_group );
+					wp_cache_add( $row->code, $row, $cache_group );
 					$item = new Currency();
 					$item->set_props( $row );
 					$item->set_object_read( true );
@@ -450,19 +461,9 @@ class Currencies {
 		}
 
 		if ( 'objects' === $args['return'] && true !== $args['no_count'] ) {
-			$results = array_map( 'self::get_currency', $results );
+			$results = array_map( array( __CLASS__, 'get' ), $results );
 		}
 
 		return $count ? $total : $results;
-	}
-
-	/**
-	 * Get all the codes.
-	 *
-	 * @since 1.1.0
-	 * @return \EverAccounting\Collection
-	 */
-	public static function get_codes() {
-		return eaccounting_collect( array_values( self::get_currency_codes() ) );
 	}
 }

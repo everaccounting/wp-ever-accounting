@@ -4,13 +4,13 @@
  *
  * @since       1.1.2
  * @subpackage  REST
- * @package     EverAccounting
+ * @package     Ever_Accounting
  */
 
-namespace EverAccounting\REST;
+namespace Ever_Accounting\REST;
 
-use EverAccounting\Abstracts\Entities_Controller;
-use EverAccounting\Models\Item;
+use Ever_Accounting\Abstracts\Entities_Controller;
+use Ever_Accounting\Models\Item;
 
 defined( 'ABSPATH' ) || die();
 

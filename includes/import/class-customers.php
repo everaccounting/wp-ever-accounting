@@ -4,12 +4,12 @@
  *
  * @since   1.0.2
  *
- * @package EverAccounting\Import
+ * @package Ever_Accounting\Import
  */
 
-namespace EverAccounting\Import;
+namespace Ever_Accounting\Import;
 
-use EverAccounting\Abstracts\CSV_Importer;
+use Ever_Accounting\Abstracts\CSV_Importer;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit();
  *
  * @since   1.0.2
  *
- * @package EverAccounting\Import
+ * @package Ever_Accounting\Import
  */
 class Customers extends CSV_Importer {
 	/**
@@ -77,6 +77,6 @@ class Customers extends CSV_Importer {
 
 		$data['type'] = 'customer';
 
-		return \EverAccounting\Contacts::insert_customer( $data );
+		return \Ever_Accounting\Contacts::insert_customer( $data );
 	}
 }

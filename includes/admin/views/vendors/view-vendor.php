@@ -6,13 +6,13 @@
  *
  * @since       1.0.2
  * @subpackage  Admin/Views/Vendors
- * @package     EverAccounting
+ * @package     Ever_Accounting
  * @var int $vendor_id
  */
 
 defined( 'ABSPATH' ) || exit();
 
-$vendor = \EverAccounting\Contacts::get_vendor( $vendor_id );
+$vendor = \Ever_Accounting\Contacts::get_vendor( $vendor_id );
 
 if ( empty( $vendor ) || ! $vendor->exists() ) {
 	wp_die( __( 'Sorry, Vendor does not exist', 'wp-ever-accounting' ) );

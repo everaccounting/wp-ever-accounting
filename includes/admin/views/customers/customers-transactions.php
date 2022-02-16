@@ -15,7 +15,7 @@ $args       = array(
 		'hide_bulk_options' => true,
 	),
 );
-$list_table = new EverAccounting_Revenue_List_Table( $args );
+$list_table = new Ever_Accounting_Revenue_List_Table( $args );
 $list_table->prepare_items();
 $list_table->views();
 $list_table->display();

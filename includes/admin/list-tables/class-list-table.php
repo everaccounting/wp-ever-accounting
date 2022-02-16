@@ -2,7 +2,7 @@
 /**
  * List tables.
  *
- * @package    EverAccounting
+ * @package    Ever_Accounting
  * @subpackage Abstracts
  * @version    1.0.2
  */
@@ -14,7 +14,7 @@ if ( ! class_exists( '\WP_List_Table' ) ) {
 	require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
 }
 
-abstract class EverAccounting_List_Table extends \WP_List_Table {
+abstract class Ever_Accounting_List_Table extends \WP_List_Table {
 	/**
 	 * Optional arguments to pass when preparing items.
 	 *

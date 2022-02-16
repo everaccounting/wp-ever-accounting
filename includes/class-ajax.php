@@ -1,13 +1,13 @@
 <?php
 /**
- * EverAccounting  AJAX Event Handlers.
+ * Ever_Accounting  AJAX Event Handlers.
  *
  * @since       1.0.2
- * @package     EverAccounting
+ * @package     Ever_Accounting
  * @class       Ajax
  */
 
-namespace EverAccounting;
+namespace Ever_Accounting;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -49,7 +49,7 @@ class Ajax {
 
 
 	/**
-	 * Send headers for EverAccounting Ajax Requests.
+	 * Send headers for Ever_Accounting Ajax Requests.
 	 *
 	 * @since 1.0.2
 	 */
@@ -67,7 +67,7 @@ class Ajax {
 	}
 
 	/**
-	 * Check for EverAccounting Ajax request and fire action.
+	 * Check for Ever_Accounting Ajax request and fire action.
 	 *
 	 * @since 1.0.2
 	 */
@@ -102,7 +102,7 @@ class Ajax {
 			add_action( 'wp_ajax_eaccounting_' . $ajax_event, array( __CLASS__, $ajax_event ) );
 			add_action( 'wp_ajax_nopriv_eaccounting_' . $ajax_event, array( __CLASS__, $ajax_event ) );
 
-			// EverAccounting AJAX can be used for frontend ajax requests.
+			// Ever_Accounting AJAX can be used for frontend ajax requests.
 			add_action( 'eaccounting_ajax_' . $ajax_event, array( __CLASS__, $ajax_event ) );
 		}
 
@@ -685,7 +685,7 @@ class Ajax {
 	 */
 	public static function get_currencies() {
 		self::verify_nonce( 'ea_get_currencies' );
-		$currencies = \EverAccounting\Currencies::get_currencies(
+		$currencies = \Ever_Accounting\Currencies::get_currencies(
 			array(
 				'number' => - 1,
 				'return' => 'raw',
@@ -712,7 +712,7 @@ class Ajax {
 				)
 			);
 		}
-		$currency = \EverAccounting\Currencies::get_currency( $code );
+		$currency = \Ever_Accounting\Currencies::get_currency( $code );
 		if ( empty( $currency ) || is_wp_error( $currency ) ) {
 			wp_send_json_error(
 				array(
@@ -746,7 +746,7 @@ class Ajax {
 		self::verify_nonce( 'ea_edit_currency' );
 		self::check_permission( 'ea_manage_currency' );
 		$posted  = eaccounting_clean( wp_unslash( $_REQUEST ) );
-		$created = \EverAccounting\Currencies::insert_currency( $posted );
+		$created = \Ever_Accounting\Currencies::insert_currency( $posted );
 		if ( is_wp_error( $created ) ) {
 			wp_send_json_error(
 				array(

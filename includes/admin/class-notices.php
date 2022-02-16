@@ -3,16 +3,16 @@
  * Display notices in admin
  *
  * @version 1.0.2
- * @package EverAccounting\Admin
+ * @package Ever_Accounting\Admin
  */
 
-namespace EverAccounting\Admin;
+namespace Ever_Accounting\Admin;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
  * Notices Class
- * @package EverAccounting\Admin
+ * @package Ever_Accounting\Admin
  *
  */
 class Notices {
@@ -49,7 +49,7 @@ class Notices {
 	 * @since 1.0.2.
 	 */
 	public static function init() {
-		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof \EverAccounting\Admin\Notices ) ) {
+		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof \Ever_Accounting\Admin\Notices ) ) {
 			self::$instance = new self();
 		}
 
@@ -225,7 +225,7 @@ class Notices {
 				'plugins',
 		);
 
-		// Notices should only show on EverAccounting screens, the main dashboard, and on the plugins screen.
+		// Notices should only show on Ever_Accounting screens, the main dashboard, and on the plugins screen.
 		if ( ! in_array( $screen_id, eaccounting_get_screen_ids(), true ) && ! in_array( $screen_id, $show_on_screens, true ) ) {
 			return;
 		}
@@ -332,10 +332,10 @@ class Notices {
  * wrapper for admin notice.
  *
  * @since 1.1.0
- * @return \EverAccounting\Admin\Notices|null
+ * @return \Ever_Accounting\Admin\Notices|null
  */
 function eaccounting_admin_notices() {
-	return \EverAccounting\Admin\Notices::init();
+	return \Ever_Accounting\Admin\Notices::init();
 }
 
 eaccounting_admin_notices();

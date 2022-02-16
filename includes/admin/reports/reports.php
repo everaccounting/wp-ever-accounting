@@ -4,7 +4,7 @@
  *
  * @since       1.0.2
  * @subpackage  Admin/Reports
- * @package     EverAccounting
+ * @package     Ever_Accounting
  */
 defined( 'ABSPATH' ) || exit();
 require_once dirname( __FILE__ ) . '/expense-summary.php';

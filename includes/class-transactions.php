@@ -5,10 +5,10 @@
  * Handle transaction insert, update, delete & retrieve from database.
  *
  * @version   1.1.3
- * @package   EverAccounting
+ * @package   Ever_Accounting
  */
 
-namespace EverAccounting;
+namespace Ever_Accounting;
 
 
 defined( 'ABSPATH' ) || exit;

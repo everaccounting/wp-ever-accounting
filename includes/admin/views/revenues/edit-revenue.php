@@ -6,13 +6,13 @@
  *
  * @since       1.0.2
  * @subpackage  Admin/Views/Revenues
- * @package     EverAccounting
+ * @package     Ever_Accounting
  */
 defined( 'ABSPATH' ) || exit();
 
 $revenue_id = isset( $_REQUEST['revenue_id'] ) ? absint( $_REQUEST['revenue_id'] ) : null;
 try {
-	$revenue = new \EverAccounting\Revenue( $revenue_id );
+	$revenue = new \Ever_Accounting\Revenue( $revenue_id );
 } catch ( Exception $e ) {
 	wp_die( $e->getMessage() );
 }

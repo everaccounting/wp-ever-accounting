@@ -3,18 +3,18 @@
  * Currency data handler class.
  *
  * @version     1.0.2
- * @package     EverAccounting
+ * @package     Ever_Accounting
  * @class       Currency
  */
 
-namespace EverAccounting;
+namespace Ever_Accounting;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
  * Currency class
  */
-class Currency extends Data {
+class Currency extends Abstracts\Data {
 	/**
 	 * This is the name of this object type.
 	 *
@@ -32,14 +32,6 @@ class Currency extends Data {
 	protected $table = 'ea_currencies';
 
 	/**
-	 * Meta type.
-	 *
-	 * @since 1.1.0
-	 * @var string
-	 */
-	protected $meta_type = false;
-
-	/**
 	 * Cache group.
 	 *
 	 * @since 1.1.0
@@ -54,8 +46,8 @@ class Currency extends Data {
 	 * @var array
 	 */
 	protected $core_data = [
+		'code'               => 'USD',
 		'name'               => '',
-		'code'               => '',
 		'rate'               => 1,
 		'number'             => '',
 		'precision'          => 2,
@@ -82,12 +74,8 @@ class Currency extends Data {
 			$this->set_id( $currency );
 		} elseif ( $currency instanceof self ) {
 			$this->set_id( absint( $currency->get_id() ) );
-		} elseif ( is_string( $currency ) ) {
-			$this->set_code( $currency );
-		} elseif ( is_array( $currency ) && ! empty( $currency['code'] ) ) {
-			$this->set_code( $currency['code'] );
-		} elseif ( ! empty( $currency->ID ) ) {
-			$this->set_id( absint( $currency->ID ) );
+		} elseif ( ! empty( $currency->id ) ) {
+			$this->set_id( absint( $currency->id ) );
 		} else {
 			$this->set_object_read( true );
 		}
@@ -95,11 +83,46 @@ class Currency extends Data {
 		$this->read();
 	}
 
+	/*
+	|--------------------------------------------------------------------------
+	| Setters
+	|--------------------------------------------------------------------------
+	|
+	| Functions for setting boll data. These should not update anything in the
+	| database itself and should only change what is stored in the class
+	| object.
+	|
+	*/
+
+	/**
+	 * Set Code.
+	 *
+	 * @param string $code Currency code.
+	 *
+	 * @since 1.0.0
+	 */
+	protected function set_code( $code ) {
+		$this->set_prop( 'code', Currencies::sanitize_code( $code ) );
+	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| CRUD methods
+	|--------------------------------------------------------------------------
+	|
+	| Methods which create, read, update and delete documents from the database.
+	| Written in abstract fashion so that the way documents are stored can be
+	| changed more easily in the future.
+	|
+	| A save method is included for convenience (chooses update or create based
+	| on if the order exists yet).
+	|
+	*/
 	/**
 	 * Saves an object in the database.
 	 *
-	 * @return \WP_Error|int id on success, WP_Error on failure.
 	 * @since 1.1.3
+	 * @return \WP_Error|int id on success, WP_Error on failure.
 	 */
 	public function save() {
 		// check if anything missing before save.
@@ -110,8 +133,14 @@ class Currency extends Data {
 		$requires = [ 'code', 'rate', 'symbol', 'position', 'decimal_separator', 'thousand_separator' ];
 		foreach ( $requires as $required ) {
 			if ( empty( $this->$required ) ) {
-				return new \WP_Error( 'missing_required_params', sprintf( __( ' %s is required', 'wp-ever-accounting' ), $required ) );
+				return new \WP_Error( 'missing_required_params', sprintf( __( 'Currency %s is required.', 'wp-ever-accounting' ), $required ) );
 			}
+		}
+
+		$duplicate = Currencies::get_by_code( $this->code );
+
+		if ( $duplicate && $duplicate->exists() && $duplicate->get_id() !== $this->get_id() ) {
+			return new \WP_Error( 'duplicate_currency', __( 'Currency already exists', 'wp-ever-accounting' ) );
 		}
 
 		if ( ! $this->exists() ) {
@@ -127,6 +156,7 @@ class Currency extends Data {
 		$this->apply_changes();
 
 		// Clear cache.
+		wp_cache_delete( $this->get_code(), $this->cache_group );
 		wp_cache_delete( $this->get_id(), $this->cache_group );
 		wp_cache_set( 'last_changed', microtime(), $this->cache_group );
 
@@ -139,7 +169,7 @@ class Currency extends Data {
 		 *
 		 * @since 1.0.0
 		 */
-		do_action( 'eaccounting_saved_' . $this->object_type, $this->get_id(), $this );
+		do_action( 'ever_accounting_saved_' . $this->object_type, $this->get_id(), $this );
 
 		return $this->get_id();
 	}
@@ -156,9 +186,9 @@ class Currency extends Data {
 	/**
 	 * getPrefix.
 	 *
-	 * @return string
 	 * @since 1.0.2
 	 *
+	 * @return string
 	 */
 	public function get_prefix() {
 		if ( ! $this->is_symbol_first() ) {
@@ -171,9 +201,9 @@ class Currency extends Data {
 	/**
 	 * getSuffix.
 	 *
-	 * @return string
 	 * @since 1.0.2
 	 *
+	 * @return string
 	 */
 	public function get_suffix() {
 		if ( $this->is_symbol_first() ) {
@@ -188,9 +218,9 @@ class Currency extends Data {
 	 *
 	 * @param Currency $currency
 	 *
-	 * @return bool
 	 * @since 1.0.2
 	 *
+	 * @return bool
 	 */
 	public function equals( self $currency ) {
 		return $this->get_code( 'edit' ) === $currency->get_code( 'edit' );
@@ -199,9 +229,9 @@ class Currency extends Data {
 	/**
 	 * is_symbol_first.
 	 *
-	 * @return bool
 	 * @since 1.0.2
 	 *
+	 * @return bool
 	 */
 	public function is_symbol_first() {
 		return 'before' === $this->get_position( 'edit' );

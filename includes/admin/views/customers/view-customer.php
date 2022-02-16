@@ -6,13 +6,13 @@
  *
  * @since       1.0.2
  * @subpackage  Admin/Views/Customers
- * @package     EverAccounting
+ * @package     Ever_Accounting
  * @var int $customer_id
  */
 
 defined( 'ABSPATH' ) || exit();
 
-$customer = \EverAccounting\Contacts::get_customer( $customer_id );
+$customer = \Ever_Accounting\Contacts::get_customer( $customer_id );
 
 if ( empty( $customer ) || ! $customer->exists() ) {
 	wp_die( __( 'Sorry, Customer does not exist', 'wp-ever-accounting' ) );

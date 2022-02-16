@@ -1,11 +1,11 @@
 <?php
 /**
- * EverAccounting Item Functions.
+ * Ever_Accounting Item Functions.
  *
  * All item related function of the plugin.
  *
  * @since   1.1.0
- * @package EverAccounting
+ * @package Ever_Accounting
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @param $item
  *
- * @return EverAccounting\Models\Item|null
+ * @return Ever_Accounting\Models\Item|null
  * @since 1.1.0
  *
  */
@@ -24,7 +24,7 @@ function eaccounting_get_item( $item ) {
 		return null;
 	}
 	try {
-		$result = new EverAccounting\Models\Item( $item );
+		$result = new Ever_Accounting\Models\Item( $item );
 
 		return $result->exists() ? $result : null;
 	} catch ( \Exception $e ) {
@@ -40,7 +40,7 @@ function eaccounting_get_item( $item ) {
  *
  * @param $sku
  *
- * @return \EverAccounting\Models\Item
+ * @return \Ever_Accounting\Models\Item
  */
 function eaccounting_get_item_by_sku( $sku ) {
 	global $wpdb;
@@ -84,7 +84,7 @@ function eaccounting_get_item_by_sku( $sku ) {
  * @type int $enabled The enabled of the item.
  * }
  *
- * @return EverAccounting\Models\Item|WP_Error|bool
+ * @return Ever_Accounting\Models\Item|WP_Error|bool
  * @since 1.1.0
  *
  */
@@ -98,7 +98,7 @@ function eaccounting_insert_item( $args, $wp_error = true ) {
 		$args = wp_parse_args( $args, array( 'id' => null ) );
 
 		// Retrieve the item.
-		$item = new \EverAccounting\Models\Item( $args['id'] );
+		$item = new \Ever_Accounting\Models\Item( $args['id'] );
 
 		// Load new data.
 		$item->set_props( $args );
@@ -123,7 +123,7 @@ function eaccounting_insert_item( $args, $wp_error = true ) {
  */
 function eaccounting_delete_item( $item_id ) {
 	try {
-		$item = new EverAccounting\Models\Item( $item_id );
+		$item = new Ever_Accounting\Models\Item( $item_id );
 
 		return $item->exists() ? $item->delete() : false;
 	} catch ( \Exception $e ) {
@@ -173,8 +173,8 @@ function eaccounting_get_items( $args = array() ) {
 	);
 	global $wpdb;
 	$qv           = apply_filters( 'eaccounting_get_items_args', $args );
-	$table        = \EverAccounting\Repositories\Items::TABLE;
-	$columns      = \EverAccounting\Repositories\Items::get_columns();
+	$table        = \Ever_Accounting\Repositories\Items::TABLE;
+	$columns      = \Ever_Accounting\Repositories\Items::get_columns();
 	$qv['fields'] = wp_parse_list( $qv['fields'] );
 	foreach ( $qv['fields'] as $index => $field ) {
 		if ( ! in_array( $field, $columns, true ) ) {

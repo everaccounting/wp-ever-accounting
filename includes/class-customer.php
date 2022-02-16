@@ -3,14 +3,14 @@
  * Contact data handler class.
  *
  * @version     1.0.2
- * @package     EverAccounting
+ * @package     Ever_Accounting
  * @class       Contact
  */
 
-namespace EverAccounting;
+namespace Ever_Accounting;
 
-use EverAccounting\Traits\Attachment;
-use EverAccounting\Traits\CurrencyTrait;
+use Ever_Accounting\Traits\Attachment;
+use Ever_Accounting\Traits\CurrencyTrait;
 
 defined( 'ABSPATH' ) || exit;
 

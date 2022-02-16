@@ -2,18 +2,18 @@
 /**
  * Overview of Main Registry Class.
  *
- * @package    EverAccounting
+ * @package    Ever_Accounting
  * @subpackage Abstracts
  * @since      1.0.2
  */
 
-namespace EverAccounting\Abstracts;
+namespace Ever_Accounting\Abstracts;
 
 defined( 'ABSPATH' ) || exit();
 
 /**
  * Class Registry
- * @package EverAccounting\Abstracts
+ * @package Ever_Accounting\Abstracts
  */
 abstract class Registry extends \ArrayObject {
 	/**

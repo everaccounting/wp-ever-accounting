@@ -6,10 +6,10 @@
  *
  * @since       1.0.2
  * @subpackage  Admin
- * @package     EverAccounting
+ * @package     Ever_Accounting
  */
 
-namespace EverAccounting\Admin;
+namespace Ever_Accounting\Admin;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit();
  *
  * @since   1.0.2
  *
- * @package EverAccounting\Admin
+ * @package Ever_Accounting\Admin
  */
 class Setup_Wizard {
 
@@ -328,7 +328,7 @@ class Setup_Wizard {
 			$options[ $code ] = sprintf( '%s (%s)', $props['code'], $props['symbol'] );
 		}
 
-		$currencies = \EverAccounting\Currencies::get_currencies( array( 'return' => 'array' ) );
+		$currencies = \Ever_Accounting\Currencies::get_currencies( array( 'return' => 'array' ) );
 
 		?>
         <h1><?php _e( 'Currency Setup', 'wp-ever-accounting' ); ?></h1>

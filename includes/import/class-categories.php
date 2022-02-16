@@ -4,12 +4,12 @@
  *
  * @since   1.0.2
  *
- * @package EverAccounting\Import
+ * @package Ever_Accounting\Import
  */
 
-namespace EverAccounting\Import;
+namespace Ever_Accounting\Import;
 
-use EverAccounting\Abstracts\CSV_Importer;
+use Ever_Accounting\Abstracts\CSV_Importer;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit();
  *
  * @since   1.0.2
  *
- * @package EverAccounting\Import
+ * @package Ever_Accounting\Import
  */
 class Categories extends CSV_Importer {
 	/**
@@ -71,14 +71,14 @@ class Categories extends CSV_Importer {
 			return new \WP_Error( 'empty_prop', __( 'Empty Type', 'wp-ever-accounting' ) );
 		}
 
-		$category_exists = \EverAccounting\Categories::get_categories( array( 'search' => $data['name'], 'type' => $data['type'] ) );
+		$category_exists = \Ever_Accounting\Categories::get_categories( array( 'search' => $data['name'], 'type' => $data['type'] ) );
 		$category_id     = ! empty( $category_exists ) ? $category_exists[0]->get_id() : '';
 
 		if ( ! empty( $category_id ) ) {
 			return new \WP_Error( 'invalid_props', __( 'Category already exists.', 'wp-ever-accounting' ) );
 		}
 
-		return \EverAccounting\Categories::insert_category( $data );
+		return \Ever_Accounting\Categories::insert_category( $data );
 	}
 
 }

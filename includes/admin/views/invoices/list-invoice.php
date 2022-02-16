@@ -6,14 +6,14 @@
  *
  * @since       1.1.0
  * @subpackage  Admin/Views/Invoices
- * @package     EverAccounting
+ * @package     Ever_Accounting
  */
 
 
 defined( 'ABSPATH' ) || exit();
 
 include( EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-invoice-list-table.php' );
-$invoice_table = new EverAccounting_Invoice_List_Table();
+$invoice_table = new Ever_Accounting_Invoice_List_Table();
 $invoice_table->prepare_items();
 $add_url = eaccounting_admin_url(
 	array(

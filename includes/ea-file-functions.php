@@ -1,11 +1,11 @@
 <?php
 /**
- * EverAccounting File Functions.
+ * Ever_Accounting File Functions.
  *
  * File related functions.
  *
  * @since   1.0.2
- * @package EverAccounting
+ * @package Ever_Accounting
  */
 
 defined( 'ABSPATH' ) || exit();

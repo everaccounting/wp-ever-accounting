@@ -5,10 +5,10 @@
  * Handle account insert, update, delete & retrieve from database.
  *
  * @version   1.1.3
- * @package   EverAccounting
+ * @package   Ever_Accounting
  */
 
-namespace EverAccounting;
+namespace Ever_Accounting;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -65,6 +65,24 @@ class Accounts {
 		}
 	}
 
+
+	/**
+	 * Get account currency code
+	 *
+	 * @param $account
+	 *
+	 * @since 1.1.0
+	 * @return mixed|null
+	 */
+	public static function get_currency_code( $account ) {
+		$exist = self::get( $account );
+		if ( $exist ) {
+			return $exist->get_prop( 'currency_code' );
+		}
+
+		return null;
+	}
+
 	/**
 	 * Get account
 	 *
@@ -73,7 +91,7 @@ class Accounts {
 	 *
 	 * @since 1.0.0
 	 */
-	public static function get_account( $id, $output = OBJECT ) {
+	public static function get( $id, $output = OBJECT ) {
 		if ( empty( $id ) ) {
 			return null;
 		}
@@ -97,23 +115,6 @@ class Accounts {
 		}
 
 		return $account;
-	}
-
-	/**
-	 * Get account currency code
-	 *
-	 * @param $account
-	 *
-	 * @since 1.1.0
-	 * @return mixed|null
-	 */
-	public static function get_account_currency_code( $account ) {
-		$exist = self::get_account( $account );
-		if ( $exist ) {
-			return $exist->get_prop( 'currency_code' );
-		}
-
-		return null;
 	}
 
 	/**
@@ -154,7 +155,7 @@ class Accounts {
 	 * @since 1.1.0
 	 * @return object|bool
 	 */
-	public static function delete_account( $id ) {
+	public static function delete( $id ) {
 		if ( $id instanceof Account ) {
 			$id = $id->get_id();
 		}
@@ -179,13 +180,12 @@ class Accounts {
 	 * @since 1.0.0
 	 * @return int|object
 	 */
-	public static function get_accounts( $args = array(), $count = false ) {
+	public static function query( $args = array(), $count = false ) {
 		global $wpdb;
 		$results      = null;
 		$total        = 0;
 		$cache_group  = Account::get_cache_group();
 		$table        = $wpdb->prefix . Account::get_table_name();
-		$meta_table   = $wpdb->prefix . Account::get_meta_type();
 		$columns      = Account::get_columns();
 		$key          = md5( serialize( $args ) );
 		$last_changed = wp_cache_get_last_changed( $cache_group );
@@ -369,10 +369,6 @@ class Accounts {
 		$orderby = "$table.id";
 		if ( in_array( $args['orderby'], $columns, true ) ) {
 			$orderby = sprintf( '%s.%s', $table, $args['orderby'] );
-		} elseif ( 'meta_value_num' === $args['orderby'] && ! empty( $args['meta_key'] ) ) {
-			$orderby = "CAST($meta_table.meta_value AS SIGNED)";
-		} elseif ( 'meta_value' === $args['orderby'] && ! empty( $args['meta_key'] ) ) {
-			$orderby = "$meta_table.meta_value";
 		}
 		// Show the recent records first by default.
 		$order = 'DESC';

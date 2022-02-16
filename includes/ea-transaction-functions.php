@@ -1,15 +1,15 @@
 <?php
 /**
- * EverAccounting Transaction functions.
+ * Ever_Accounting Transaction functions.
  *
  * Functions for all kind of transaction of the plugin.
  *
  * @since   1.1.0
- * @package EverAccounting
+ * @package Ever_Accounting
  */
 
-use EverAccounting\Models\Payment;
-use EverAccounting\Models\Revenue;
+use Ever_Accounting\Models\Payment;
+use Ever_Accounting\Models\Revenue;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -42,7 +42,7 @@ function eaccounting_get_payment( $payment ) {
 		return null;
 	}
 	try {
-		$result = new EverAccounting\Models\Payment( $payment );
+		$result = new Ever_Accounting\Models\Payment( $payment );
 
 		return $result->exists() ? $result : null;
 	} catch ( \Exception $e ) {
@@ -72,7 +72,7 @@ function eaccounting_get_payment( $payment ) {
  *
  * }
  *
- * @return EverAccounting\Models\Payment|\WP_Error|bool
+ * @return Ever_Accounting\Models\Payment|\WP_Error|bool
  * @since 1.1.0
  *
  */
@@ -111,7 +111,7 @@ function eaccounting_insert_payment( $args, $wp_error = true ) {
  */
 function eaccounting_delete_payment( $payment_id ) {
 	try {
-		$payment = new EverAccounting\Models\Payment( $payment_id );
+		$payment = new Ever_Accounting\Models\Payment( $payment_id );
 
 		return $payment->exists() ? $payment->delete() : false;
 	} catch ( \Exception $e ) {
@@ -161,7 +161,7 @@ function eaccounting_get_revenue( $revenue ) {
 		return null;
 	}
 	try {
-		$result = new EverAccounting\Models\Revenue( $revenue );
+		$result = new Ever_Accounting\Models\Revenue( $revenue );
 
 		return $result->exists() ? $result : null;
 	} catch ( \Exception $e ) {
@@ -190,7 +190,7 @@ function eaccounting_get_revenue( $revenue ) {
  *
  * }
  *
- * @return EverAccounting\Models\Revenue|\WP_Error|bool
+ * @return Ever_Accounting\Models\Revenue|\WP_Error|bool
  * @since 1.1.0
  *
  */
@@ -229,7 +229,7 @@ function eaccounting_insert_revenue( $args, $wp_error = true ) {
  */
 function eaccounting_delete_revenue( $revenue_id ) {
 	try {
-		$revenue = new EverAccounting\Models\Revenue( $revenue_id );
+		$revenue = new Ever_Accounting\Models\Revenue( $revenue_id );
 
 		return $revenue->exists() ? $revenue->delete() : false;
 	} catch ( \Exception $e ) {
@@ -268,7 +268,7 @@ function eaccounting_get_revenues( $args = array() ) {
  *
  * @param $transfer
  *
- * @return \EverAccounting\Models\Transfer|null
+ * @return \Ever_Accounting\Models\Transfer|null
  * @since 1.1.0
  *
  */
@@ -277,7 +277,7 @@ function eaccounting_get_transfer( $transfer ) {
 		return null;
 	}
 	try {
-		$result = new EverAccounting\Models\Transfer( $transfer );
+		$result = new Ever_Accounting\Models\Transfer( $transfer );
 
 		return $result->exists() ? $result : null;
 	} catch ( \Exception $e ) {
@@ -307,7 +307,7 @@ function eaccounting_get_transfer( $transfer ) {
  *
  * }
  *
- * @return \EverAccounting\Models\Transfer|\WP_Error|\bool
+ * @return \Ever_Accounting\Models\Transfer|\WP_Error|\bool
  * @since 1.1.0
  *
  */
@@ -326,7 +326,7 @@ function eaccounting_insert_transfer( $args, $wp_error = true ) {
 		}
 
 		// Retrieve the transfer.
-		$item = new \EverAccounting\Models\Transfer( $args['id'] );
+		$item = new \Ever_Accounting\Models\Transfer( $args['id'] );
 
 		// Load new data.
 		$item->set_props( $args );
@@ -351,7 +351,7 @@ function eaccounting_insert_transfer( $args, $wp_error = true ) {
  */
 function eaccounting_delete_transfer( $transfer_id ) {
 	try {
-		$transfer = new EverAccounting\Models\Transfer( $transfer_id );
+		$transfer = new Ever_Accounting\Models\Transfer( $transfer_id );
 
 		return $transfer->exists() ? $transfer->delete() : false;
 	} catch ( \Exception $e ) {
@@ -400,8 +400,8 @@ function eaccounting_get_transfers( $args = array() ) {
 	);
 	global $wpdb;
 	$qv           = apply_filters( 'eaccounting_get_transfers_args', $args );
-	$table        = \EverAccounting\Repositories\Transfers::TABLE;
-	$columns      = \EverAccounting\Repositories\Transfers::get_columns();
+	$table        = \Ever_Accounting\Repositories\Transfers::TABLE;
+	$columns      = \Ever_Accounting\Repositories\Transfers::get_columns();
 	$qv['fields'] = wp_parse_list( $qv['fields'] );
 	foreach ( $qv['fields'] as $index => $field ) {
 		if ( ! in_array( $field, $columns, true ) ) {
@@ -523,8 +523,8 @@ function eaccounting_get_transactions( $args = array() ) {
 	);
 	global $wpdb;
 	$qv           = apply_filters( 'eaccounting_get_transactions_args', $args );
-	$table        = \EverAccounting\Repositories\Transactions::TABLE;
-	$columns      = \EverAccounting\Repositories\Transactions::get_columns();
+	$table        = \Ever_Accounting\Repositories\Transactions::TABLE;
+	$columns      = \Ever_Accounting\Repositories\Transactions::get_columns();
 	$qv['fields'] = wp_parse_list( $qv['fields'] );
 	foreach ( $qv['fields'] as $index => $field ) {
 		if ( ! in_array( $field, $columns, true ) ) {

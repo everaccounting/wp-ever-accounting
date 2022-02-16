@@ -5,7 +5,7 @@
  * Tab: Export
  *
  *
- * @package     EverAccounting
+ * @package     Ever_Accounting
  * @subpackage  Admin/View/Tools
  * @since       1.0.2
  *

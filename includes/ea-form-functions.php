@@ -1,11 +1,11 @@
 <?php
 /**
- * EverAccounting Form Functions
+ * Ever_Accounting Form Functions
  *
  * General form functions available on both the front-end and admin.
  *
  * @since   1.0.2
- * @package EverAccounting
+ * @package Ever_Accounting
  */
 
 defined( 'ABSPATH' ) || exit();
@@ -808,7 +808,7 @@ function eaccounting_category_dropdown( $field ) {
 	$include     = ! empty( $field['value'] ) ? wp_parse_id_list( $field['value'] ) : false;
 	$ajax_action = ! empty( $field['ajax_action'] ) ? $field['ajax_action'] : 'eaccounting_get_income_categories';
 	$modal_id    = ! empty( $field['modal_id'] ) ? '#' . $field['modal_id'] : '#ea-modal-add-income-category';
-	$categories = \EverAccounting\Categories::get_categories(
+	$categories = \Ever_Accounting\Categories::get_categories(
 		array(
 			'return'  => 'raw',
 			'__in' => $include,

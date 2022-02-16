@@ -4,13 +4,13 @@
  *
  * @since   1.0.2
  *
- * @package EverAccounting\Import
+ * @package Ever_Accounting\Import
  */
 
-namespace EverAccounting\Import;
+namespace Ever_Accounting\Import;
 
-use EverAccounting\Abstracts\CSV_Importer;
-use EverAccounting\Models\Currency;
+use Ever_Accounting\Abstracts\CSV_Importer;
+use Ever_Accounting\Models\Currency;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit();
  *
  * @since   1.0.2
  *
- * @package EverAccounting\Import
+ * @package Ever_Accounting\Import
  */
 class Currencies extends CSV_Importer {
 	/**
@@ -81,6 +81,6 @@ class Currencies extends CSV_Importer {
 			return new \WP_Error( 'empty_prop', __( 'Currency already exists', 'wp-ever-accounting' ) );
 		}
 
-		return \EverAccounting\Currencies::insert_currency( $data );
+		return \Ever_Accounting\Currencies::insert_currency( $data );
 	}
 }

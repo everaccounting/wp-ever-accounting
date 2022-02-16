@@ -1,17 +1,17 @@
 <?php
 /**
- * Utilities class for EverAccounting.
+ * Utilities class for Ever_Accounting.
  *
  * @since   1.0.2
  *
- * @package EverAccounting
+ * @package Ever_Accounting
  */
 
-namespace EverAccounting;
+namespace Ever_Accounting;
 
-use EverAccounting\Utilities\Data;
-use EverAccounting\Utilities\Defaults;
-use EverAccounting\Utilities\Batch;
+use Ever_Accounting\Utilities\Data;
+use Ever_Accounting\Utilities\Defaults;
+use Ever_Accounting\Utilities\Batch;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit();
  * Class Utilities
  *
  * @since   1.0.2
- * @package EverAccounting
+ * @package Ever_Accounting
  */
 class Utilities {
 	/**

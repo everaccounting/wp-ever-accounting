@@ -3,10 +3,10 @@
  * Main Plugin Install Class.
  *
  * @since       1.0.2
- * @package     EverAccounting
+ * @package     Ever_Accounting
  */
 
-namespace EverAccounting;
+namespace Ever_Accounting;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -37,7 +37,7 @@ class Install {
 	}
 
 	/**
-	 * Check EverAccounting version and run the updater is required.
+	 * Check Ever_Accounting version and run the updater is required.
 	 * This check is done on all requests and runs if the versions do not match.
 	 *
 	 * @return void
@@ -127,7 +127,7 @@ class Install {
 	}
 
 	/**
-	 * Install EverAccounting.
+	 * Install Ever_Accounting.
 	 *
 	 * @return void
 	 * @since 1.0.2
@@ -149,7 +149,7 @@ class Install {
 		require_once dirname( __FILE__ ) . '/class-settings.php';
 
 		if ( ! eaccounting()->settings ) {
-			eaccounting()->settings = new \EverAccounting\Settings();
+			eaccounting()->settings = new \Ever_Accounting\Settings();
 		}
 
 		self::remove_admin_notices();
@@ -181,7 +181,7 @@ class Install {
 		global $wpdb;
 		$missing_tables = array();
 		$tables         = self::get_tables();
-		$notices        = \EverAccounting\Admin\Notices::init();
+		$notices        = \Ever_Accounting\Admin\Notices::init();
 		foreach ( $tables as $table ) {
 			if ( ! $wpdb->get_var( "SHOW TABLES LIKE '$table'" ) ) {
 				$missing_tables[] = $table;
@@ -657,11 +657,11 @@ class Install {
 	}
 
 	/**
-	 * Return a list of EverAccounting tables.
-	 * Used to make sure all EverAccounting tables are dropped when uninstalling the plugin
+	 * Return a list of Ever_Accounting tables.
+	 * Used to make sure all Ever_Accounting tables are dropped when uninstalling the plugin
 	 * in a single site or multi site environment.
 	 *
-	 * @return array EverAccounting tables.
+	 * @return array Ever_Accounting tables.
 	 */
 	public static function get_tables() {
 		global $wpdb;
@@ -686,7 +686,7 @@ class Install {
 	}
 
 	/**
-	 * Drop EverAccounting tables.
+	 * Drop Ever_Accounting tables.
 	 *
 	 * @return void
 	 */
@@ -788,7 +788,7 @@ class Install {
 	}
 
 	/**
-	 * Remove EverAccounting roles.
+	 * Remove Ever_Accounting roles.
 	 *
 	 * @return void
 	 * @since 1.0.2
@@ -832,7 +832,7 @@ class Install {
 	 */
 	private static function maybe_enable_setup_wizard() {
 		if ( apply_filters( 'eaccounting_enable_setup_wizard', true ) && self::is_new_install() ) {
-			// \EverAccounting\Admin\Admin_Notices::add_notice( 'install', true );
+			// \Ever_Accounting\Admin\Admin_Notices::add_notice( 'install', true );
 			set_transient( '_eaccounting_activation_redirect', 1, 30 );
 		}
 	}

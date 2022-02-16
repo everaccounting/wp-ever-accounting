@@ -2,18 +2,18 @@
 /**
  * Shows whats new.
  *
- * @package    EverAccounting
+ * @package    Ever_Accounting
  * @subpackage Admin
  * @version    1.1.0
  */
 
-namespace EverAccounting\Admin;
+namespace Ever_Accounting\Admin;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
  * Class Release
- * @package EverAccounting\Admin
+ * @package Ever_Accounting\Admin
  */
 class Release {
 

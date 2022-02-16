@@ -2,20 +2,20 @@
 /**
  * Handle the collection.
  *
- * @package     EverAccounting
+ * @package     Ever_Accounting
  * @class       Collection
  * @version     1.0.2
  */
 
-namespace EverAccounting;
+namespace Ever_Accounting;
 
-use EverAccounting\Interfaces\Arrayable;
+use Ever_Accounting\Interfaces\Arrayable;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
  * Class Collection
- * @package EverAccounting
+ * @package Ever_Accounting
 */
 
 class Collection implements Arrayable {

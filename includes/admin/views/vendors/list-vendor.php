@@ -6,13 +6,13 @@
  *
  * @since       1.0.2
  * @subpackage  Admin/View/Vendors
- * @package     EverAccounting
+ * @package     Ever_Accounting
  */
 
 defined( 'ABSPATH' ) || exit();
 
 include( EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-vendor-list-table.php' );
-$vendors_table = new EverAccounting_Vendor_List_Table();
+$vendors_table = new Ever_Accounting_Vendor_List_Table();
 $vendors_table->prepare_items();
 $add_url = eaccounting_admin_url(
 	array(

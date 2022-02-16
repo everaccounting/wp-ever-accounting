@@ -6,21 +6,21 @@
  * related to  the company
  *
  * @since       1.0.2
- * @subpackage  EverAccounting\Admin\ListTables
- * @package     EverAccounting
+ * @subpackage  Ever_Accounting\Admin\ListTables
+ * @package     Ever_Accounting
  */
 
 defined( 'ABSPATH' ) || exit();
 
-if ( ! class_exists( '\EverAccounting_List_Table' ) ) {
+if ( ! class_exists( '\Ever_Accounting_List_Table' ) ) {
 	require_once dirname( __FILE__ ) . '/class-list-table.php';
 }
 
 /**
- * Class EverAccounting_Transaction_List_Table
+ * Class Ever_Accounting_Transaction_List_Table
  * @since 1.1.0
  */
-class EverAccounting_Transaction_List_Table extends EverAccounting_List_Table {
+class Ever_Accounting_Transaction_List_Table extends Ever_Accounting_List_Table {
 	/**
 	 * Default number of items to show per page
 	 *
@@ -178,17 +178,17 @@ class EverAccounting_Transaction_List_Table extends EverAccounting_List_Table {
 				break;
 			case 'type':
 				$type  = $transaction->get_type();
-				$types = \EverAccounting\Transactions::get_transaction_types();
+				$types = \Ever_Accounting\Transactions::get_transaction_types();
 				$value = array_key_exists( $type, $types ) ? $types[ $type ] : ucfirst( $type );
 				break;
 			case 'account_id':
-				$account = \EverAccounting\Accounts::get_account( $transaction->get_account_id( 'edit' ) );
+				$account = \Ever_Accounting\Accounts::get_account( $transaction->get_account_id( 'edit' ) );
 				//$value   = $account ? $account->get_name() : '&mdash;';
 				$value = $account ? sprintf( '<a href="%1$s">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'accounts', 'action' => 'view', 'account_id' => $transaction->get_account_id() ) ) ), $account->get_name() ) : '&mdash;';// phpcs:ignore
 
 				break;
 			case 'category_id':
-				$category = \EverAccounting\Categories::get_category( $transaction->get_category_id( 'edit' ) );
+				$category = \Ever_Accounting\Categories::get_category( $transaction->get_category_id( 'edit' ) );
 				$value    = $category ? $category->get_name() : '&mdash;';
 				break;
 			case 'reference':
@@ -334,9 +334,9 @@ class EverAccounting_Transaction_List_Table extends EverAccounting_List_Table {
 		}
 
 		$args                = apply_filters( 'eaccounting_transaction_table_query_args', $args, $this );
-		$this->items         = \EverAccounting\Transactions::get_transactions( $args );
-		$this->income_count  = \EverAccounting\Transactions::get_transactions( array_merge( $args, array( 'type' => 'income' ) ), true );
-		$this->expense_count = \EverAccounting\Transactions::get_transactions( array_merge( $args, array( 'type' => 'expense' ) ), true );
+		$this->items         = \Ever_Accounting\Transactions::get_transactions( $args );
+		$this->income_count  = \Ever_Accounting\Transactions::get_transactions( array_merge( $args, array( 'type' => 'income' ) ), true );
+		$this->expense_count = \Ever_Accounting\Transactions::get_transactions( array_merge( $args, array( 'type' => 'expense' ) ), true );
 		$this->total_count   = $this->income_count + $this->expense_count;
 
 		$type = isset( $_GET['type'] ) ? $_GET['type'] : 'any';

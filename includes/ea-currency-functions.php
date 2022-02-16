@@ -1,14 +1,14 @@
 <?php
 /**
- * EverAccounting Currency Functions.
+ * Ever_Accounting Currency Functions.
  *
  * Currency related functions.
  *
  * @since   1.1.0
- * @package EverAccounting
+ * @package Ever_Accounting
  */
 
-use EverAccounting\Models\Currency;
+use Ever_Accounting\Models\Currency;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -53,7 +53,7 @@ function eaccounting_sanitize_currency_code( $code ) {
  *
  * @param object|string|int $currency
  *
- * @return EverAccounting\Models\Currency|null
+ * @return Ever_Accounting\Models\Currency|null
  * @since 1.1.0
  *
  */
@@ -62,7 +62,7 @@ function eaccounting_get_currency( $currency ) {
 		return null;
 	}
 	try {
-		$result = new EverAccounting\Models\Currency( $currency );
+		$result = new Ever_Accounting\Models\Currency( $currency );
 
 		return $result;
 	} catch ( \Exception $e ) {
@@ -121,7 +121,7 @@ function eaccounting_get_currency_rate( $currency ) {
  *
  * }
  *
- * @return EverAccounting\Models\Currency|\WP_Error|bool
+ * @return Ever_Accounting\Models\Currency|\WP_Error|bool
  * @since 1.1.0
  *
  */
@@ -139,7 +139,7 @@ function eaccounting_insert_currency( $args, $wp_error = true ) {
 			)
 		);
 		// Retrieve the currency.
-		$item = new \EverAccounting\Models\Currency( $args );
+		$item = new \Ever_Accounting\Models\Currency( $args );
 
 		// Load new data.
 		$item->set_props( $args );
@@ -164,7 +164,7 @@ function eaccounting_insert_currency( $args, $wp_error = true ) {
  */
 function eaccounting_delete_currency( $currency_code ) {
 	try {
-		$currency = new EverAccounting\Models\Currency( $currency_code );
+		$currency = new Ever_Accounting\Models\Currency( $currency_code );
 
 		return $currency->exists() ? $currency->delete() : false;
 	} catch ( \Exception $e ) {
@@ -199,8 +199,8 @@ function eaccounting_get_currencies( $args = array() ) {
 	);
 
 	$qv = apply_filters( 'eaccounting_get_currencies_args', $args );
-	$option     = \EverAccounting\Repositories\Currencies::OPTION;
-	$columns    = \EverAccounting\Repositories\Currencies::get_columns();
+	$option     = \Ever_Accounting\Repositories\Currencies::OPTION;
+	$columns    = \Ever_Accounting\Repositories\Currencies::get_columns();
 	$currencies = wp_cache_get( 'ea_currencies', 'ea_currencies' );
 
 	if ( false === $currencies ) {

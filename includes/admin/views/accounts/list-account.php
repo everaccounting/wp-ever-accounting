@@ -6,7 +6,7 @@
  *
  * @since       1.0.2
  * @subpackage  Admin/Views/Accounts
- * @package     EverAccounting
+ * @package     Ever_Accounting
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -27,7 +27,7 @@ $import_url = add_query_arg(
 	admin_url( 'admin.php' )
 );
 include( EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-account-list-table.php' );
-$accounts_table = new EverAccounting_Account_List_Table();
+$accounts_table = new Ever_Accounting_Account_List_Table();
 $accounts_table->prepare_items();
 ?>
 	<h1>

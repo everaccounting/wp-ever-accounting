@@ -1,6 +1,6 @@
 <?php
 
-use \EverAccounting\Query_Transaction;
+use \Ever_Accounting\Query_Transaction;
 
 function eaccounting_reports_profit_loss_tab() {
 	$year        = isset( $_REQUEST['year'] ) ? intval( $_REQUEST['year'] ) : date( 'Y' );
@@ -50,7 +50,7 @@ function eaccounting_reports_profit_loss_tab() {
 		global $wpdb;
 		$dates        = $totals = $expenses = $graph = $categories = array();
 		$start        = eaccounting_get_financial_start( $year );
-		$transactions = \EverAccounting\Transactions\query()
+		$transactions = \Ever_Accounting\Transactions\query()
 				->select( 'name, payment_date, currency_code, currency_rate, amount, ea_categories.id category_id' )
 				->where_raw( $wpdb->prepare( 'YEAR(payment_date) = %d', $year ) )
 				->where(
@@ -72,7 +72,7 @@ function eaccounting_reports_profit_loss_tab() {
 				);
 
 		$categories = wp_list_pluck( $transactions, 'name', 'category_id' );
-		$date       = new \EverAccounting\DateTime( $start );
+		$date       = new \Ever_Accounting\DateTime( $start );
 		// Dates
 		for ( $j = 1; $j <= 12; $j ++ ) {
 			$dates[ $j ]                     = $date->format( 'F' );
@@ -99,7 +99,7 @@ function eaccounting_reports_profit_loss_tab() {
 			$graph[ $month_year ]                                      += $transaction->amount;
 			$totals[ $month ]['amount']                                += $transaction->amount;
 		}
-		$chart = new \EverAccounting\Chart();
+		$chart = new \Ever_Accounting\Chart();
 		$chart->type( 'line' )
 			  ->width( 0 )
 			  ->height( 300 )

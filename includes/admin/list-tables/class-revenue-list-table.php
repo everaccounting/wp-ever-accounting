@@ -5,24 +5,24 @@
  * Admin revenues list table, show all the incoming transactions.
  *
  * @since       1.0.2
- * @subpackage  EverAccounting\Admin\ListTables
- * @package     EverAccounting
+ * @subpackage  Ever_Accounting\Admin\ListTables
+ * @package     Ever_Accounting
  */
 
-use EverAccounting\Revenue;
-use EverAccounting\Transactions;
+use Ever_Accounting\Revenue;
+use Ever_Accounting\Transactions;
 
 defined( 'ABSPATH' ) || exit();
 
-if ( ! class_exists( '\EverAccounting_List_Table' ) ) {
+if ( ! class_exists( '\Ever_Accounting_List_Table' ) ) {
 	require_once dirname( __FILE__ ) . '/class-list-table.php';
 }
 
 /**
- * Class EverAccounting_Revenue_List_Table
+ * Class Ever_Accounting_Revenue_List_Table
  * @since 1.1.0
  */
-class EverAccounting_Revenue_List_Table extends EverAccounting_List_Table {
+class Ever_Accounting_Revenue_List_Table extends Ever_Accounting_List_Table {
 	/**
 	 * Default number of items to show per page
 	 *

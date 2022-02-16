@@ -5,23 +5,23 @@
  * Admin notes list table, show all the note information.
  *
  * @since       1.1.0
- * @subpackage  EverAccounting\Admin\ListTables
- * @package     EverAccounting
+ * @subpackage  Ever_Accounting\Admin\ListTables
+ * @package     Ever_Accounting
  */
 
-use EverAccounting\Models\Note;
+use Ever_Accounting\Models\Note;
 
 defined( 'ABSPATH' ) || exit();
 
-if ( ! class_exists( '\EverAccounting_List_Table' ) ) {
+if ( ! class_exists( '\Ever_Accounting_List_Table' ) ) {
 	require_once dirname( __FILE__ ) . '/class-list-table.php';
 }
 
 /**
- * Class EverAccounting_Note_List_Table
+ * Class Ever_Accounting_Note_List_Table
  * @since 1.1.0
  */
-class EverAccounting_Note_List_Table extends EverAccounting_List_Table {
+class Ever_Accounting_Note_List_Table extends Ever_Accounting_List_Table {
 	/**
 	 * Default number of items to show per page
 	 *

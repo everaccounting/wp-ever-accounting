@@ -4,16 +4,16 @@
  *
  * @since       1.1.0
  * @subpackage  Rest
- * @package     EverAccounting
+ * @package     Ever_Accounting
  */
 
-namespace EverAccounting\REST;
+namespace Ever_Accounting\REST;
 
 defined( 'ABSPATH' ) || die();
 
 /**
  * Class Countries_Controller
- * @package EverAccounting\REST
+ * @package Ever_Accounting\REST
  */
 class Countries_Controller extends Data_Controller {
 	/**

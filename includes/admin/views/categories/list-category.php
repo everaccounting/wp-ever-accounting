@@ -4,13 +4,13 @@
  *
  * @since       1.0.2
  * @subpackage  Admin/Settings/Category
- * @package     EverAccounting
+ * @package     Ever_Accounting
  */
 
 defined( 'ABSPATH' ) || exit();
 
 include( EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-category-list-table.php' );
-$category_table = new EverAccounting_Category_List_Table();
+$category_table = new Ever_Accounting_Category_List_Table();
 $category_table->prepare_items();
 $add_url = eaccounting_admin_url(
 	array(

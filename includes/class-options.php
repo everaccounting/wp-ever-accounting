@@ -3,11 +3,11 @@
  * Options for plugin
  */
 
-namespace EverAccounting;
+namespace Ever_Accounting;
 
 /**
  * Class Options
- * @package EverAccounting
+ * @package Ever_Accounting
  */
 class Options {
 	/**

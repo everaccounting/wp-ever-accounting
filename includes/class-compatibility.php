@@ -2,18 +2,18 @@
 /**
  * Compatibility with other plugins of the plugin.
  *
- * @package     EverAccounting
+ * @package     Ever_Accounting
  * @subpackage  Classes
  * @version     1.1.0
  */
 
-namespace EverAccounting;
+namespace Ever_Accounting;
 
 defined( 'ABSPATH' ) || exit();
 
 /**
  * Class Compatibility
- * @package EverAccounting
+ * @package Ever_Accounting
  *
  * @since 1.1.0
  */

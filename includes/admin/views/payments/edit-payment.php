@@ -6,7 +6,7 @@
  *
  * @since       1.0.2
  * @subpackage  Admin/Views/Payments
- * @package     EverAccounting
+ * @package     Ever_Accounting
  *
  * @var int $payment_id
  */
@@ -14,7 +14,7 @@
 defined( 'ABSPATH' ) || exit();
 
 try {
-	$payment = new \EverAccounting\Payment( $payment_id );
+	$payment = new \Ever_Accounting\Payment( $payment_id );
 } catch ( Exception $e ) {
 	wp_die( $e->getMessage() );
 }

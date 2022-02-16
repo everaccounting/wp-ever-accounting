@@ -1,13 +1,13 @@
 <?php
 /**
- * EverAccounting Settings.
+ * Ever_Accounting Settings.
  *
  * @since       1.0.2
  * @subpackage  Classes
- * @package     EverAccounting
+ * @package     Ever_Accounting
  */
 
-namespace EverAccounting;
+namespace Ever_Accounting;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit();
  * Class Settings
  *
  * @since   1.0.2
- * @package EverAccounting\Admin
+ * @package Ever_Accounting\Admin
  */
 class Settings {
 	/**
@@ -457,7 +457,7 @@ class Settings {
 	protected function get_accounts() {
 		$accounts = array();
 		if ( isset( $_GET['page'] ) && 'ea-settings' === $_GET['page'] ) {
-			$results    = \EverAccounting\Accounts::get_accounts(
+			$results    = \Ever_Accounting\Accounts::get_accounts(
 				array(
 					'per_page' => - 1,
 					'return' => 'raw',
@@ -484,7 +484,7 @@ class Settings {
 	protected function get_categories( $type = 'income' ) {
 		$categories = array();
 		if ( isset( $_GET['page'] ) && 'ea-settings' === $_GET['page'] ) {
-			$results      = \EverAccounting\Categories::get_categories(
+			$results      = \Ever_Accounting\Categories::get_categories(
 				array(
 					'per_page' => - 1,
 					'type'   => $type,
@@ -511,7 +511,7 @@ class Settings {
 	protected function get_currencies() {
 		$currencies = array();
 		if ( isset( $_GET['page'] ) && 'ea-settings' === $_GET['page'] ) {
-			$results      = \EverAccounting\Currencies::get_currencies(
+			$results      = \Ever_Accounting\Currencies::get_currencies(
 				array(
 					'number' => - 1,
 					'return' => 'raw',
@@ -622,7 +622,7 @@ class Settings {
 	 *
 	 * @return void
 	 * @since 1.0.2
-	 * @global      $this ->options Array of all the EverAccounting Options
+	 * @global      $this ->options Array of all the Ever_Accounting Options
 	 *
 	 */
 	function checkbox_callback( $args ) {
@@ -647,7 +647,7 @@ class Settings {
 	 *
 	 * @return void
 	 * @since 1.0.2
-	 * @global      $this ->options Array of all the EverAccounting Options
+	 * @global      $this ->options Array of all the Ever_Accounting Options
 	 *
 	 */
 	function multicheck_callback( $args ) {
@@ -676,7 +676,7 @@ class Settings {
 	 *
 	 * @return void
 	 * @since 1.0.2
-	 * @global      $this ->options Array of all the EverAccounting Options
+	 * @global      $this ->options Array of all the Ever_Accounting Options
 	 *
 	 */
 	function radio_callback( $args ) {
@@ -710,7 +710,7 @@ class Settings {
 	 *
 	 * @return void
 	 * @since 1.0.2
-	 * @global      $this ->options Array of all the EverAccounting Options
+	 * @global      $this ->options Array of all the Ever_Accounting Options
 	 *
 	 */
 	function url_callback( $args ) {
@@ -749,7 +749,7 @@ class Settings {
 	 *
 	 * @return void
 	 * @since 1.0.2
-	 * @global      $this ->options Array of all the EverAccounting Options
+	 * @global      $this ->options Array of all the Ever_Accounting Options
 	 *
 	 */
 	function number_callback( $args ) {
@@ -791,7 +791,7 @@ class Settings {
 	 *
 	 * @return void
 	 * @since 1.0.2
-	 * @global      $this ->options Array of all the EverAccounting Options
+	 * @global      $this ->options Array of all the Ever_Accounting Options
 	 *
 	 */
 	function textarea_callback( $args ) {
@@ -831,7 +831,7 @@ class Settings {
 	 *
 	 * @return void
 	 * @since 1.0.2
-	 * @global      $this ->options Array of all the EverAccounting Options
+	 * @global      $this ->options Array of all the Ever_Accounting Options
 	 *
 	 */
 	function password_callback( $args ) {
@@ -870,7 +870,7 @@ class Settings {
 	 *
 	 * @return void
 	 * @since 1.0.2
-	 * @global      $this ->options Array of all the EverAccounting Options
+	 * @global      $this ->options Array of all the Ever_Accounting Options
 	 *
 	 */
 	function select_callback( $args ) {
@@ -908,7 +908,7 @@ class Settings {
 	 *
 	 * @param array $args Arguments passed by the setting
 	 *
-	 * @global        $this ->options Array of all the EverAccounting Options
+	 * @global        $this ->options Array of all the Ever_Accounting Options
 	 *
 	 * @global string $wp_version WordPress Version
 	 *

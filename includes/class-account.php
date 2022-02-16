@@ -3,18 +3,18 @@
  * Account data handler class.
  *
  * @version     1.0.2
- * @package     EverAccounting
+ * @package     Ever_Accounting
  * @class       Account
  */
 
-namespace EverAccounting;
+namespace Ever_Accounting;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
  * Account class.
  */
-class Account extends Data {
+class Account extends Abstracts\Data {
 	/**
 	 * This is the name of this object type.
 	 *
@@ -30,14 +30,6 @@ class Account extends Data {
 	 * @var string
 	 */
 	protected $table = 'ea_accounts';
-
-	/**
-	 * Meta type.
-	 *
-	 * @since 1.1.0
-	 * @var string
-	 */
-	protected $meta_type = false;
 
 	/**
 	 * Cache group.
@@ -73,7 +65,7 @@ class Account extends Data {
 	/**
 	 * Account constructor.
 	 *
-	 * @param int|account|object|null $account  account instance.
+	 * @param int|Account|object|null $account account instance.
 	 *
 	 * @since 1.0.0
 	 */
@@ -95,11 +87,11 @@ class Account extends Data {
 	}
 
 	/**
-	 * @since 1.1.0
+	 * Get balance.
+	 *
 	 * @since 1.0.2
 	 *
-	 * @param bool $format
-	 *
+	 * @since 1.1.0
 	 * @return float|string
 	 *
 	 */
@@ -113,15 +105,16 @@ class Account extends Data {
 		);
 		$balance           = $this->get_opening_balance() + $transaction_total;
 		$this->set_balance( $balance );
+
 		return $balance;
 	}
 
 	/**
 	 * Set balance.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @param $balance
+	 *
+	 * @since 1.1.0
 	 *
 	 */
 	protected function set_balance( $balance ) {
@@ -145,8 +138,8 @@ class Account extends Data {
 	/**
 	 * Saves an object in the database.
 	 *
-	 * @return \WP_Error|int id on success, WP_Error on failure.
 	 * @since 1.1.3
+	 * @return \WP_Error|int id on success, WP_Error on failure.
 	 */
 	public function save() {
 		// check if anything missing before save.
@@ -157,6 +150,11 @@ class Account extends Data {
 		if ( empty( $this->name ) ) {
 			return new \WP_Error( 'missing_param', esc_html__( 'Account name is required', 'wp-ever-accounting' ) );
 		}
+
+		if ( empty( $this->number ) ) {
+			return new \WP_Error( 'missing_param', esc_html__( 'Account number is required', 'wp-ever-accounting' ) );
+		}
+
 		if ( empty( $this->currency_code ) ) {
 			return new \WP_Error( 'missing_param', esc_html__( 'Currency code is required', 'wp-ever-accounting' ) );
 		}

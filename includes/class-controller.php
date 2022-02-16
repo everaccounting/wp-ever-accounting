@@ -2,13 +2,13 @@
 /**
  * Controller various actions of the plugin.
  *
- * @package     EverAccounting
+ * @package     Ever_Accounting
  * @subpackage  Classes
  * @version     1.1.0
  */
 
-use EverAccounting\Models\Account;
-use EverAccounting\Models\Category;
+use Ever_Accounting\Models\Account;
+use Ever_Accounting\Models\Category;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -133,7 +133,7 @@ class Controller {
 	 * Update customer total paid
 	 *
 	 * @param int $transaction_id
-	 * @param \EverAccounting\Abstracts\Transaction $transaction
+	 * @param \Ever_Accounting\Abstracts\Transaction $transaction
 	 *
 	 * @since 1.1.0
 	 */
@@ -178,7 +178,7 @@ class Controller {
 	 * Update vendor total paid
 	 *
 	 * @param int $transaction_id
-	 * @param \EverAccounting\Abstracts\Transaction $transaction
+	 * @param \Ever_Accounting\Abstracts\Transaction $transaction
 	 *
 	 * @since 1.1.0
 	 */

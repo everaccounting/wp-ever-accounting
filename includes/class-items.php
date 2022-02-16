@@ -5,10 +5,10 @@
  * Handle item insert, update, delete & retrieve from database.
  *
  * @version   1.1.3
- * @package   EverAccounting
+ * @package   Ever_Accounting
  */
 
-namespace EverAccounting;
+namespace Ever_Accounting;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -66,7 +66,7 @@ class Items {
 	 *
 	 * @param $sku
 	 *
-	 * @return \EverAccounting\Item
+	 * @return \Ever_Accounting\Item
 	 */
 	public static function eaccounting_get_item_by_sku( $sku ) {
 		global $wpdb;

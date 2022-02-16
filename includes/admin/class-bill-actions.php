@@ -4,21 +4,21 @@
  *
  * Functions used for displaying bill related pages.
  *
- * @author      EverAccounting
+ * @author      Ever_Accounting
  * @category    Admin
- * @package     EverAccounting\Admin
+ * @package     Ever_Accounting\Admin
  * @version     1.1.10
  */
 
-namespace EverAccounting\Admin;
-use EverAccounting\Bill;
-use EverAccounting\Documents;
+namespace Ever_Accounting\Admin;
+use Ever_Accounting\Bill;
+use Ever_Accounting\Documents;
 
 defined( 'ABSPATH' ) || exit();
 
 /**
  * Class Bill_Actions
- * @package EverAccounting\Admin
+ * @package Ever_Accounting\Admin
  */
 
 class Bill_Actions {

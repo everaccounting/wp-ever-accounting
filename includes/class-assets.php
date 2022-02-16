@@ -1,12 +1,12 @@
 <?php
 /**
- * Load EverAccounting assets.
+ * Load Ever_Accounting assets.
  *
  * @version     1.0.2
- * @package     EverAccounting
+ * @package     Ever_Accounting
  */
 
-namespace EverAccounting;
+namespace Ever_Accounting;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -193,8 +193,8 @@ class Assets {
 					'admin_url'  => admin_url(),
 					'asset_url'  => eaccounting()->plugin_url( '/assets/dist' ),
 					'plugin_url' => eaccounting()->plugin_url(),
-					'currency'   => \EverAccounting\Currencies::get_currency_by_code( $default_currency )->get_data(),
-					'currencies' => \EverAccounting\Currencies::get_currencies(
+					'currency'   => Currencies::get_currency_by_code( $default_currency )->get_data(),
+					'currencies' => Currencies::get_currencies(
 						array(
 							'return' => 'raw',
 							'number' => - 1,

@@ -4,10 +4,10 @@
  *
  * @since       1.1.0
  * @subpackage  Abstracts
- * @package     EverAccounting
+ * @package     Ever_Accounting
  */
 
-namespace EverAccounting\Abstracts;
+namespace Ever_Accounting\Abstracts;
 
 defined( 'ABSPATH' ) || die();
 
@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || die();
  *
  * @since   1.1.0
  *
- * @package EverAccounting\Abstracts
+ * @package Ever_Accounting\Abstracts
  */
 abstract class Controller extends \WP_REST_Controller {
 	/**
@@ -37,7 +37,7 @@ abstract class Controller extends \WP_REST_Controller {
 	 * Get normalized rest base.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @return string
 	 */
 	protected function get_normalized_rest_base() {
@@ -271,7 +271,7 @@ abstract class Controller extends \WP_REST_Controller {
 	 * Get the batch schema, conforming to JSON Schema.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @return array
 	 */
 	public function get_public_batch_schema() {
@@ -314,7 +314,7 @@ abstract class Controller extends \WP_REST_Controller {
 	 * i.e Schema fields.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @return array
 	 */
 	protected function get_schema_properties() {

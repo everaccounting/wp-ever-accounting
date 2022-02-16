@@ -9,20 +9,20 @@
  * @since 1.1.0
  */
 
-namespace EverAccounting;
+namespace Ever_Accounting;
 
-use EverAccounting\Abstracts\Resource_Model;
-use EverAccounting\Repositories\Accounts;
-use EverAccounting\Repositories\Categories;
-use EverAccounting\Repositories\Contacts;
-use EverAccounting\Repositories\Currencies;
-use EverAccounting\Repositories\Transactions;
-use EverAccounting\Repositories\Notes;
-use EverAccounting\Repositories\Document_Items;
-use EverAccounting\Repositories\Documents;
-use EverAccounting\Repositories\Items;
-use EverAccounting\Abstracts\Resource_Repository;
-use EverAccounting\Repositories\Transfers;
+use Ever_Accounting\Abstracts\Resource_Model;
+use Ever_Accounting\Repositories\Accounts;
+use Ever_Accounting\Repositories\Categories;
+use Ever_Accounting\Repositories\Contacts;
+use Ever_Accounting\Repositories\Currencies;
+use Ever_Accounting\Repositories\Transactions;
+use Ever_Accounting\Repositories\Notes;
+use Ever_Accounting\Repositories\Document_Items;
+use Ever_Accounting\Repositories\Documents;
+use Ever_Accounting\Repositories\Items;
+use Ever_Accounting\Abstracts\Resource_Repository;
+use Ever_Accounting\Repositories\Transfers;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -31,7 +31,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since   1.1.0
  *
- * @package EverAccounting\Repositories
+ * @package Ever_Accounting\Repositories
  */
 class Repositories {
 	/**

@@ -1,38 +1,38 @@
 <?php
 /**
- * EverAccounting Updates
+ * Ever_Accounting Updates
  *
  * Functions for updating data.
  *
- * @package EverAccounting/Functions
  * @version 1.0.2
+ * @package Ever_Accounting/Functions
  */
 
 defined( 'ABSPATH' ) || exit;
 
-function eaccounting_add_background_updater($action){
-	if( empty( $action ) ){
+function eaccounting_add_background_updater( $action ) {
+	if ( empty( $action ) ) {
 		return;
 	}
-	$updater = get_option( 'eaccounting_background_updater', array() );
+	$updater   = get_option( 'eaccounting_background_updater', array() );
 	$updater[] = $action;
-	update_option('eaccounting_background_updater', $updater);
+	update_option( 'eaccounting_background_updater', $updater );
 }
 
-function eaccounting_remove_background_updater($action){
-	if( empty( $action ) ){
+function eaccounting_remove_background_updater( $action ) {
+	if ( empty( $action ) ) {
 		return;
 	}
 	$updater = get_option( 'eaccounting_background_updater', array() );
-	if( in_array( $action, $updater) ){
-		unset( $updater[array_flip($updater)[$action]] );
-		update_option('eaccounting_background_updater', $updater);
+	if ( in_array( $action, $updater ) ) {
+		unset( $updater[ array_flip( $updater )[ $action ] ] );
+		update_option( 'eaccounting_background_updater', $updater );
 	}
 }
 
 function eaccounting_update_1_0_2() {
-	\EverAccounting\Install::create_tables();
-	\EverAccounting\Install::create_roles();
+	\Ever_Accounting\Lifecycle::create_tables();
+	\Ever_Accounting\Lifecycle::create_roles();
 
 	global $wpdb;
 	$prefix          = $wpdb->prefix;
@@ -369,23 +369,23 @@ function eaccounting_update_1_1_0() {
 		$wp_roles->add_cap( 'administrator', 'ea_manage_bill' );
 	}
 
-	\EverAccounting\Install::install();
+	\Ever_Accounting\Lifecycle::install();
 
 	//todo upload transaction files as attachment then update transaction table and delete attachment column
 	flush_rewrite_rules();
-	eaccounting_add_background_updater('eaccounting_update_attachments_1_1_0');
+	eaccounting_add_background_updater( 'eaccounting_update_attachments_1_1_0' );
 }
 
 function eaccounting_update_attachments_1_1_0() {
 	global $wpdb;
-	$prefix = $wpdb->prefix;
+	$prefix      = $wpdb->prefix;
 	$attachments = $wpdb->get_results( "SELECT id, attachment url from {$wpdb->prefix}ea_transactions WHERE attachment_id IS NULL AND attachment !='' limit 5" );
-	if( empty( $attachments ) ){
-		eaccounting_remove_background_updater('eaccounting_update_attachments_1_1_0');
+	if ( empty( $attachments ) ) {
+		eaccounting_remove_background_updater( 'eaccounting_update_attachments_1_1_0' );
 		$wpdb->query( "ALTER TABLE {$prefix}ea_transactions DROP COLUMN `attachment`;" );
 	}
 
-	$dir         = wp_get_upload_dir();
+	$dir = wp_get_upload_dir();
 
 	foreach ( $attachments as $attachment ) {
 		$path       = $attachment->url;
@@ -412,5 +412,23 @@ function eaccounting_update_attachments_1_1_0() {
 		if ( $attachment_id && is_numeric( $attachment_id ) ) {
 			$wpdb->update( "{$wpdb->prefix}ea_transactions", array( 'attachment_id' => $attachment_id ), array( 'id' => $attachment->id ) );
 		}
+	}
+}
+
+
+function eaccounting_update_1_1_4_database() {
+	global $wpdb;
+	$wpdb->query( "UPDATE {$wpdb->options} SET option_name = REPLACE(option_name, 'eaccounting_', 'ever_accounting') WHERE option_name LIKE 'eaccounting_%'" );
+	$wpdb->query( "ALTER TABLE {$wpdb->prefix}ea_contact_meta CHANGE `contact_id` `ea_contact_id` bigint(20) unsigned NOT NULL DEFAULT '0';" );
+	$wpdb->query( "ALTER TABLE {$wpdb->prefix}ea_contact_meta ADD INDEX `ea_contact_id` (`ea_contact_id`);" );
+	//drop old table
+	$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}ea_contact_meta;" );
+}
+
+function ever_accounting_update_1_1_4_currencies() {
+	$currencies = get_option( 'eaccounting_currencies' );
+	foreach ( $currencies as $currency ) {
+		unset( $currency['id'] );
+		\Ever_Accounting\Currencies::insert_currency( $currency );
 	}
 }

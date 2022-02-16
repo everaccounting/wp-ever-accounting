@@ -6,14 +6,14 @@
  *
  * @since       1.1.0
  * @subpackage  Admin/Views/Items
- * @package     EverAccounting
+ * @package     Ever_Accounting
  * @var int $item_id
  */
 
 defined( 'ABSPATH' ) || exit();
 
 try {
-	$item = new \EverAccounting\Item( $item_id );
+	$item = new \Ever_Accounting\Item( $item_id );
 } catch ( Exception $e ) {
 	wp_die( $e->getMessage() );
 }

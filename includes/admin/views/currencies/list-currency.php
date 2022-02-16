@@ -4,13 +4,13 @@
  *
  * @since       1.0.2
  * @subpackage  Admin/Settings/Currency
- * @package     EverAccounting
+ * @package     Ever_Accounting
  */
 
 defined( 'ABSPATH' ) || exit();
 
 include( EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-currency-list-table.php' );
-$currency_table = new EverAccounting_Currency_List_Table();
+$currency_table = new Ever_Accounting_Currency_List_Table();
 $currency_table->prepare_items();
 $add_url = eaccounting_admin_url(
 	array(

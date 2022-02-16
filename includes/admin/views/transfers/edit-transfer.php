@@ -4,13 +4,13 @@
  *
  * @since       1.0.2
  * @subpackage  Admin/Banking/Transfers
- * @package     EverAccounting
+ * @package     Ever_Accounting
  */
 defined( 'ABSPATH' ) || exit();
 
 $transfer_id = isset( $_REQUEST['transfer_id'] ) ? absint( $_REQUEST['transfer_id'] ) : null;
 try {
-	$transfer = \EverAccounting\Transfers::get_transfer( $transfer_id );
+	$transfer = \Ever_Accounting\Transfers::get_transfer( $transfer_id );
 } catch ( Exception $e ) {
 	wp_die( $e->getMessage() );
 }

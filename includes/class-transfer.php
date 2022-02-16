@@ -3,18 +3,18 @@
  * Transfer data handler class.
  *
  * @version     1.0.2
- * @package     EverAccounting
+ * @package     Ever_Accounting
  * @class       Transfer
  */
 
-namespace EverAccounting;
+namespace Ever_Accounting;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
  * Transfer class.
  */
-class Transfer extends Data {
+class Transfer extends Abstracts\Data  {
 	/**
 	 * This is the name of this object type.
 	 *

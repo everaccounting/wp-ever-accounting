@@ -1,11 +1,11 @@
 <?php
 /**
- * EverAccounting Template functions.
+ * Ever_Accounting Template functions.
  *
  * Functions related to templates.
  *
  * @since   1.1.0
- * @package EverAccounting
+ * @package Ever_Accounting
  */
 
 defined( 'ABSPATH' ) || exit();

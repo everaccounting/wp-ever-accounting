@@ -1,11 +1,11 @@
 <?php
 /**
- * EverAccounting Contact Functions.
+ * Ever_Accounting Contact Functions.
  *
  * Contact related functions.
  *
  * @since   1.1.0
- * @package EverAccounting
+ * @package Ever_Accounting
  */
 
 defined( 'ABSPATH' ) || exit();
@@ -35,14 +35,14 @@ function eaccounting_get_contact_type( $type ) {
  *
  * @since 1.1.0
  *
- * @return \EverAccounting\Models\Customer|null
+ * @return \Ever_Accounting\Models\Customer|null
  */
 function eaccounting_get_customer( $customer ) {
 	if ( empty( $customer ) ) {
 		return null;
 	}
 	try {
-		$result = new EverAccounting\Models\Customer( $customer );
+		$result = new Ever_Accounting\Models\Customer( $customer );
 
 		return $result->exists() ? $result : null;
 	} catch ( \Exception $e ) {
@@ -57,7 +57,7 @@ function eaccounting_get_customer( $customer ) {
  *
  * @since 1.1.0
  *
- * @return \EverAccounting\Models\Customer
+ * @return \Ever_Accounting\Models\Customer
  */
 function eaccounting_get_customer_by_email( $email ) {
 	global $wpdb;
@@ -109,7 +109,7 @@ function eaccounting_get_customer_by_email( $email ) {
  *
  * @since 1.1.0
  *
- * @return EverAccounting\Models\Customer|\WP_Error|bool
+ * @return Ever_Accounting\Models\Customer|\WP_Error|bool
  */
 function eaccounting_insert_customer( $args, $wp_error = true ) {
 	// Ensure that we have data.
@@ -121,7 +121,7 @@ function eaccounting_insert_customer( $args, $wp_error = true ) {
 		$args = wp_parse_args( $args, array( 'id' => null ) );
 
 		// Retrieve the customer.
-		$item = new \EverAccounting\Models\Customer( $args['id'] );
+		$item = new \Ever_Accounting\Models\Customer( $args['id'] );
 
 		// Load new data.
 		$item->set_props( $args );
@@ -146,7 +146,7 @@ function eaccounting_insert_customer( $args, $wp_error = true ) {
  */
 function eaccounting_delete_customer( $customer_id ) {
 	try {
-		$customer = new EverAccounting\Models\Customer( $customer_id );
+		$customer = new Ever_Accounting\Models\Customer( $customer_id );
 
 		return $customer->exists() ? $customer->delete() : false;
 	} catch ( \Exception $e ) {
@@ -190,14 +190,14 @@ function eaccounting_get_customers( $args = array() ) {
  *
  * @since 1.1.0
  *
- * @return \EverAccounting\Models\Vendor|null
+ * @return \Ever_Accounting\Models\Vendor|null
  */
 function eaccounting_get_vendor( $vendor ) {
 	if ( empty( $vendor ) ) {
 		return null;
 	}
 	try {
-		$result = new EverAccounting\Models\Vendor( $vendor );
+		$result = new Ever_Accounting\Models\Vendor( $vendor );
 
 		return $result->exists() ? $result : null;
 	} catch ( \Exception $e ) {
@@ -212,7 +212,7 @@ function eaccounting_get_vendor( $vendor ) {
  *
  * @since 1.1.0
  *
- * @return \EverAccounting\Models\Vendor
+ * @return \Ever_Accounting\Models\Vendor
  */
 function eaccounting_get_vendor_by_email( $email ) {
 	global $wpdb;
@@ -265,7 +265,7 @@ function eaccounting_get_vendor_by_email( $email ) {
  *
  * @since 1.1.0
  *
- * @return EverAccounting\Models\Vendor|\WP_Error|bool
+ * @return Ever_Accounting\Models\Vendor|\WP_Error|bool
  */
 function eaccounting_insert_vendor( $args, $wp_error = true ) {
 	// Ensure that we have data.
@@ -277,7 +277,7 @@ function eaccounting_insert_vendor( $args, $wp_error = true ) {
 		$args = wp_parse_args( $args, array( 'id' => null ) );
 
 		// Retrieve the vendor.
-		$item = new \EverAccounting\Models\Vendor( $args['id'] );
+		$item = new \Ever_Accounting\Models\Vendor( $args['id'] );
 
 		// Load new data.
 		$item->set_props( $args );
@@ -302,7 +302,7 @@ function eaccounting_insert_vendor( $args, $wp_error = true ) {
  */
 function eaccounting_delete_vendor( $vendor_id ) {
 	try {
-		$vendor = new EverAccounting\Models\Vendor( $vendor_id );
+		$vendor = new Ever_Accounting\Models\Vendor( $vendor_id );
 
 		return $vendor->exists() ? $vendor->delete() : false;
 	} catch ( \Exception $e ) {
@@ -388,8 +388,8 @@ function eaccounting_get_contacts( $args = array() ) {
 	);
 	global $wpdb;
 	$qv         = apply_filters( 'eaccounting_get_contact_args', $args );
-	$table      = \EverAccounting\Repositories\Contacts::TABLE;
-	$columns    = \EverAccounting\Repositories\Contacts::get_columns();
+	$table      = \Ever_Accounting\Repositories\Contacts::TABLE;
+	$columns    = \Ever_Accounting\Repositories\Contacts::get_columns();
 	$meta_query = new WP_Meta_Query();
 	$meta_query->parse_query_vars( $qv );
 	$qv['fields'] = wp_parse_list( $qv['fields'] );

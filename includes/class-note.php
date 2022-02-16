@@ -3,18 +3,18 @@
  * Note data handler class.
  *
  * @version     1.0.2
- * @package     EverAccounting
+ * @package     Ever_Accounting
  * @class       Account
  */
 
-namespace EverAccounting;
+namespace Ever_Accounting;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
  * Note Class
 */
-class Note extends Data {
+class Note extends Abstracts\Data  {
 	/**
 	 * This is the name of this object type.
 	 *

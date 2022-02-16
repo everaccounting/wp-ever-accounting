@@ -4,18 +4,18 @@
  *
  * @since       1.1.0
  * @subpackage  Rest
- * @package     EverAccounting
+ * @package     Ever_Accounting
  */
 
-namespace EverAccounting\REST;
+namespace Ever_Accounting\REST;
 
-use EverAccounting\Abstracts\Controller;
+use Ever_Accounting\Abstracts\Controller;
 
 defined( 'ABSPATH' ) || die();
 
 /**
  * Class Bill_Items_Controller
- * @package EverAccounting\REST
+ * @package Ever_Accounting\REST
  */
 class Bill_Items_Controller extends Controller {
 	/**
@@ -175,8 +175,8 @@ class Bill_Items_Controller extends Controller {
 			'offset'   => $request['offset'],
 		);
 
-		$results  = \EverAccounting\Accounts\query( $args )->get_results( OBJECT, '\EverAccounting\Accounts\get' );
-		$total    = \EverAccounting\Accounts\query( $args )->count();
+		$results  = \Ever_Accounting\Accounts\query( $args )->get_results( OBJECT, '\Ever_Accounting\Accounts\get' );
+		$total    = \Ever_Accounting\Accounts\query( $args )->count();
 		$response = array();
 		foreach ( $results as $item ) {
 			$data       = $this->prepare_item_for_response( $item, $request );
@@ -274,7 +274,7 @@ class Bill_Items_Controller extends Controller {
 		}
 
 		$request->set_param( 'context', 'view' );
-		$item     = \EverAccounting\Accounts\get( $item_id );
+		$item     = \Ever_Accounting\Accounts\get( $item_id );
 		$response = $this->prepare_item_for_response( $item, $request );
 
 		return rest_ensure_response( $response );
@@ -319,7 +319,7 @@ class Bill_Items_Controller extends Controller {
 	 * @since 1.0.2
 	 *
 	 * @param \WP_REST_Request                 $request
-	 * @param \EverAccounting\Accounts\Account $item
+	 * @param \Ever_Accounting\Accounts\Account $item
 	 *
 	 * @return mixed|\WP_Error|\WP_REST_Response
 	 *

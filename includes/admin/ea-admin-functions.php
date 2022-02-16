@@ -1,10 +1,10 @@
 <?php
 /**
- * EverAccounting Admin Functions.
+ * Ever_Accounting Admin Functions.
  *
  * @since      1.0.2
  * @subpackage Admin
- * @package    EverAccounting
+ * @package    Ever_Accounting
  */
 
 defined( 'ABSPATH' ) || exit();
@@ -108,7 +108,7 @@ function eaccounting_get_settings_tab_sections( $tab = false ) {
 
 
 /**
- * Get all EverAccounting screen ids.
+ * Get all Ever_Accounting screen ids.
  *
  * @return array
  * @since  1.0.2
@@ -172,7 +172,7 @@ function eaccounting_is_admin_page( $page = '' ) {
 
 
 /**
- * Generates an EverAccounting admin URL based on the given type.
+ * Generates an Ever_Accounting admin URL based on the given type.
  *
  * @param array $query_args Optional. Query arguments to append to the admin URL. Default empty array.
  *
@@ -204,7 +204,7 @@ function eaccounting_admin_url( $query_args = array(), $page = null ) {
 	$url = add_query_arg( $admin_query_args, admin_url( 'admin.php' ) );
 
 	/**
-	 * Filters the EverAccounting admin URL.
+	 * Filters the Ever_Accounting admin URL.
 	 *
 	 * @param array $query_args Query arguments originally passed to eaccounting_admin_url().
 	 *

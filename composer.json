@@ -22,19 +22,17 @@
       "type": "git"
     }
   ],
-  "require": {
-	"composer/installers": "^1.9.0",
-	"php": ">=5.6|>=7.0"
-  },
+  "require": {},
   "autoload": {
     "psr-4": {
     },
-    "classmap": ["includes/"],
-    "files": [
-    ]
+    "classmap": [],
+    "files": []
   },
   "autoload-dev": {
-    "classmap": []
+    "classmap": [
+	  "tests/php/factories/"
+	]
   },
   "require-dev": {
     "byteever/phpcs-composer": "dev-master",

@@ -4,23 +4,23 @@
  *
  * @since       1.0.2
  * @subpackage  Admin/ListTables
- * @package     EverAccounting
+ * @package     Ever_Accounting
  */
 
-use EverAccounting\Contacts;
-use EverAccounting\Customer;
+use Ever_Accounting\Contacts;
+use Ever_Accounting\Customer;
 
 defined( 'ABSPATH' ) || exit();
 
-if ( ! class_exists( '\EverAccounting_List_Table' ) ) {
+if ( ! class_exists( '\Ever_Accounting_List_Table' ) ) {
 	require_once dirname( __FILE__ ) . '/class-list-table.php';
 }
 
 /**
- * Class EverAccounting_Customer_List_Table
+ * Class Ever_Accounting_Customer_List_Table
  * @since 1.1.0
  */
-class EverAccounting_Customer_List_Table extends EverAccounting_List_Table {
+class Ever_Accounting_Customer_List_Table extends Ever_Accounting_List_Table {
 	/**
 	 * Default number of items to show per page
 	 *

@@ -8,10 +8,10 @@
  *
  * @since       1.0.2
  * @subpackage  Admin/Views/Accounts
- * @package     EverAccounting
+ * @package     Ever_Accounting
  */
 
-use EverAccounting\Models\Account;
+use Ever_Accounting\Models\Account;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -26,7 +26,7 @@ $args = array(
 	),
 );
 
-$list_table = new EverAccounting_Transfer_List_Table( $args );
+$list_table = new Ever_Accounting_Transfer_List_Table( $args );
 $list_table->prepare_items();
 $list_table->views();
 $list_table->display();

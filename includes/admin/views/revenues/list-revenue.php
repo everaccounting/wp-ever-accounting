@@ -6,13 +6,13 @@
  *
  * @since       1.0.2
  * @subpackage  Admin/Views/Revenues
- * @package     EverAccounting
+ * @package     Ever_Accounting
  */
 
 defined( 'ABSPATH' ) || exit();
 
 include( EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-revenue-list-table.php' );
-$revenues_table = new EverAccounting_Revenue_List_Table();
+$revenues_table = new Ever_Accounting_Revenue_List_Table();
 $revenues_table->prepare_items();
 $add_url = eaccounting_admin_url(
 	array(

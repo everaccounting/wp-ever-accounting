@@ -30,7 +30,7 @@ if ( defined( 'EACCOUNTING_REMOVE_ALL_DATA' ) && true === EACCOUNTING_REMOVE_ALL
 	\EverAccounting\Install::drop_tables();
 
 	// Delete options.
-	$wpdb->query( "DELETE FROM $wpdb->options WHERE option_name LIKE 'eaccounting\_%';" );
+	$wpdb->query( "DELETE FROM $wpdb->options WHERE option_name LIKE 'ever_accounting\_%';" );
 
 	// Clear any cached data that has been removed.
 	wp_cache_flush();

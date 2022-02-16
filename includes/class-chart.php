@@ -3,15 +3,15 @@
  * This class handles building pretty report graphs
  *
  * @since       1.0.2
- * @package     EverAccounting
+ * @package     Ever_Accounting
  */
 
-namespace EverAccounting;
+namespace Ever_Accounting;
 
 defined( 'ABSPATH' ) || exit();
 
 /**
- * EverAccounting_Graph Class
+ * Ever_Accounting_Graph Class
  *
  * @since 1.0.2
  */

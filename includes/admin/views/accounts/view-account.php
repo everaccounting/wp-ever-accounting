@@ -6,13 +6,13 @@
  *
  * @since       1.0.2
  * @subpackage  Admin/Views/Accounts
- * @package     EverAccounting
+ * @package     Ever_Accounting
  * @var int $account_id
  */
 
 defined( 'ABSPATH' ) || exit();
 
-$account = \EverAccounting\Accounts::get_account( $account_id );
+$account = \Ever_Accounting\Accounts::get_account( $account_id );
 
 if ( empty( $account ) || ! $account->exists() ) {
 	wp_die( __( 'Sorry, Account does not exist', 'wp-ever-accounting' ) );

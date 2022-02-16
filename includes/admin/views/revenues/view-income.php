@@ -4,17 +4,17 @@
  *
  * @since       1.1.0
  * @subpackage  Admin/Sales/Income
- * @package     EverAccounting
+ * @package     Ever_Accounting
  *
  * @var int $income_id
  */
 defined( 'ABSPATH' ) || exit();
-use EverAccounting\Models\Account;
-use EverAccounting\Models\Category;
-use EverAccounting\Models\Customer;
+use Ever_Accounting\Models\Account;
+use Ever_Accounting\Models\Category;
+use Ever_Accounting\Models\Customer;
 wp_enqueue_script( 'ea-print' );
 try {
-	$income = new \EverAccounting\Models\Income( $income_id );
+	$income = new \Ever_Accounting\Models\Income( $income_id );
 } catch ( Exception $e ) {
 	wp_die( $e->getMessage() );
 }

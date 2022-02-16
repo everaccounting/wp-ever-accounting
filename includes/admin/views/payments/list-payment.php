@@ -6,13 +6,13 @@
  *
  * @since       1.0.2
  * @subpackage  Admin/Views/Payments
- * @package     EverAccounting
+ * @package     Ever_Accounting
  */
 
 defined( 'ABSPATH' ) || exit();
 
 include( EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-payment-list-table.php' );
-$payments_table = new EverAccounting_Payment_List_Table();
+$payments_table = new Ever_Accounting_Payment_List_Table();
 $payments_table->prepare_items();
 $add_url = eaccounting_admin_url(
 	array(

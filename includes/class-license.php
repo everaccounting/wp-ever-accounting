@@ -2,12 +2,12 @@
 /**
  * Handles License for the plugin.
  *
- * @package        EverAccounting
+ * @package        Ever_Accounting
  * @class          License
  * @version        1.0.2
  */
 
-namespace EverAccounting;
+namespace Ever_Accounting;
 
 defined( 'ABSPATH' ) || exit;
 
