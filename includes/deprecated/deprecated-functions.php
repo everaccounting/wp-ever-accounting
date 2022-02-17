@@ -268,3 +268,201 @@ function eaccounting_get_accounts( $args = array() ) {
 	return \Ever_Accounting\Accounts::query( $args );
 }
 
+/**
+ * Get contact types.
+ *
+ * @return array
+ * @since 1.1.0
+ * @deprecatd 1.1.4
+ */
+function eaccounting_get_contact_types() {
+	_deprecated_function( __FUNCTION__, '1.1.4', '\Ever_Accounting\Contacts::get_types()' );
+
+	return \Ever_Accounting\Contacts::get_types();
+}
+
+/**
+ * Get the contact type label of a specific type.
+ *
+ * @param $type
+ *
+ * @return string
+ * @since 1.1.0
+ * @deprecatd 1.1.4
+ */
+function eaccounting_get_contact_type( $type ) {
+	_deprecated_function( __FUNCTION__, '1.1.4', '\Ever_Accounting\Contacts::get_type()' );
+
+	return \Ever_Accounting\Contacts::get_type( $type );
+}
+
+/**
+ * Get customer.
+ *
+ * @param $customer
+ *
+ * @return \Ever_Accounting\Customer|null
+ * @since 1.1.0
+ * @deprecatd 1.1.4
+ */
+function eaccounting_get_customer( $customer ) {
+	_deprecated_function( __FUNCTION__, '1.1.4', '\Ever_Accounting\Contacts::get_customer()' );
+
+	return \Ever_Accounting\Contacts::get_customer( $customer );
+}
+
+/**
+ * Get customer by email.
+ *
+ * @param $email
+ *
+ * @return \Ever_Accounting\Customer
+ * @since 1.1.0
+ * @deprecatd 1.1.4
+ */
+function eaccounting_get_customer_by_email( $email ) {
+	_deprecated_function( __FUNCTION__, '1.1.4', '\Ever_Accounting\Contacts::get_customer_by_email()' );
+
+	return \Ever_Accounting\Contacts::get_customer_by_email( $email );
+}
+
+/**
+ *  Create new customer programmatically.
+ *
+ *  Returns a new customer object on success.
+ *
+ * @param array $args
+ * @param bool $wp_error
+ *
+ * @return \Ever_Accounting\Customer|\WP_Error|bool
+ * @since 1.1.0
+ * @deprecatd 1.1.4
+ */
+function eaccounting_insert_customer( $args, $wp_error = true ) {
+	_deprecated_function( __FUNCTION__, '1.1.4', '\Ever_Accounting\Contacts::insert_customer()' );
+
+	return \Ever_Accounting\Contacts::insert_customer( $args );
+}
+
+/**
+ * Delete a customer.
+ *
+ * @param $customer_id
+ *
+ * @return bool
+ * @since 1.1.0
+ * @deprecatd 1.1.4
+ */
+function eaccounting_delete_customer( $customer_id ) {
+	_deprecated_function( __FUNCTION__, '1.1.4', '\Ever_Accounting\Contacts::delete_customer()' );
+
+	return \Ever_Accounting\Contacts::delete_customer( $customer_id );
+}
+
+/**
+ * Get customers items.
+ *
+ * @param array $args
+ *
+ * @return array|int
+ * @since 1.1.0
+ * @deprecatd 1.1.4
+ */
+function eaccounting_get_customers( $args = array() ) {
+	_deprecated_function( __FUNCTION__, '1.1.4', '\Ever_Accounting\Contacts::query_customers()' );
+
+	return \Ever_Accounting\Contacts::query_customers( $args, false );
+}
+
+/**
+ * Get vendor.
+ *
+ * @param $vendor
+ *
+ * @return \Ever_Accounting\Vendor|null
+ * @since 1.1.0
+ * @deprecatd 1.1.4
+ */
+function eaccounting_get_vendor( $vendor ) {
+	_deprecated_function( __FUNCTION__, '1.1.4', '\Ever_Accounting\Contacts::get_vendor()' );
+
+	return \Ever_Accounting\Contacts::get_vendor( $vendor );
+}
+
+/**
+ * Get vendor by email.
+ *
+ * @param $email
+ *
+ * @return \Ever_Accounting\Vendor
+ * @since 1.1.0
+ * @deprecatd 1.1.4
+ */
+function eaccounting_get_vendor_by_email( $email ) {
+	_deprecated_function( __FUNCTION__, '1.1.4', '\Ever_Accounting\Contacts::get_vendor_by_email()' );
+
+	return \Ever_Accounting\Contacts::get_vendor_by_email( $email );
+}
+
+/**
+ *  Create new vendor programmatically.
+ *
+ *  Returns a new vendor object on success.
+ *
+ * @param array $args
+ * @param bool $wp_error
+ *
+ * @return Ever_Accounting\Vendor|\WP_Error|bool
+ * @since 1.1.0
+ * @deprecatd 1.1.4
+ */
+function eaccounting_insert_vendor( $args, $wp_error = true ) {
+	_deprecated_function( __FUNCTION__, '1.1.4', '\Ever_Accounting\Contacts::insert_vendor()' );
+
+	return \Ever_Accounting\Contacts::insert_vendor( $args );
+}
+
+/**
+ * Delete a vendor.
+ *
+ * @param $vendor_id
+ *
+ * @return bool
+ * @since 1.1.0
+ * @deprecatd 1.1.4
+ */
+function eaccounting_delete_vendor( $vendor_id ) {
+	_deprecated_function( __FUNCTION__, '1.1.4', '\Ever_Accounting\Contacts::delete_vendor()' );
+
+	return \Ever_Accounting\Contacts::delete_vendor( $vendor_id );
+}
+
+/**
+ * Get vendors items.
+ *
+ * @param array $args
+ *
+ * @return array|int
+ * @since 1.1.0
+ * @deprecatd 1.1.4
+ */
+function eaccounting_get_vendors( $args = array() ) {
+	_deprecated_function( __FUNCTION__, '1.1.4', '\Ever_Accounting\Contacts::query_vendors()' );
+
+	return \Ever_Accounting\Contacts::query_vendors( $args, false );
+}
+
+/**
+ * Get contact items.
+ *
+ * @param array $args
+ *
+ * @return array|int
+ * @since 1.1.0
+ * @deprecatd 1.1.4
+ */
+function eaccounting_get_contacts( $args = array() ) {
+	_deprecated_function( __FUNCTION__, '1.1.4', '\Ever_Accounting\Contacts::query()' );
+
+	return \Ever_Accounting\Contacts::query( $args, false );
+}

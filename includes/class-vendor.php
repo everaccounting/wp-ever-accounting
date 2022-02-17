@@ -19,8 +19,9 @@ defined( 'ABSPATH' ) || exit;
  * Contact class.
  */
 class Vendor extends Contact {
-	use Attachment;
-	use CurrencyTrait;
+	//@todo need to implement attachment and currency trait
+//	use Attachment;
+//	use CurrencyTrait;
 
 	/**
 	 * This is the name of this object type.

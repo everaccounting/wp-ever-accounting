@@ -183,14 +183,14 @@ class Contacts {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @return \Ever_Accounting\Contact|null
+	 * @return \Ever_Accounting\Customer|null
 	 */
 	public static function get_customer( $customer ) {
 		if ( empty( $customer ) ) {
 			return null;
 		}
 		try {
-			$result = new Contact( $customer );
+			$result = new Customer( $customer );
 
 			return $result->exists() ? $result : null;
 		} catch ( \Exception $e ) {
@@ -204,7 +204,7 @@ class Contacts {
 	 * @param string $email Email
 	 *
 	 * @since 1.1.0
-	 * @return \Ever_Accounting\Contact
+	 * @return \Ever_Accounting\Customer
 	*/
 	public static function get_customer_by_email( $email ) {
 		global $wpdb;
@@ -300,14 +300,14 @@ class Contacts {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @return \Ever_Accounting\Contact|null
+	 * @return \Ever_Accounting\Vendor|null
 	 */
 	public static function get_vendor( $vendor ) {
 		if ( empty( $vendor ) ) {
 			return null;
 		}
 		try {
-			$result = new Contact( $vendor );
+			$result = new Vendor( $vendor );
 
 			return $result->exists() ? $result : null;
 		} catch ( \Exception $e ) {
@@ -321,7 +321,7 @@ class Contacts {
 	 * @param string $email Email
 	 *
 	 * @since 1.1.0
-	 * @return \Ever_Accounting\Contact
+	 * @return \Ever_Accounting\Vendor
 	 */
 	public static function get_vendor_by_email( $email ) {
 		global $wpdb;

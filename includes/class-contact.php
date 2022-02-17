@@ -159,20 +159,6 @@ class Contact extends Abstracts\Data  {
 			}
 		}
 
-		//@todo need to check this
-		$duplicate_customer = Contacts::get_customer_by_email( $this->email );
-
-		if ( $duplicate_customer && $duplicate_customer->exists() && $duplicate_customer->get_id() !== $this->get_id() ) {
-			return new \WP_Error( 'duplicate_customer', __( 'Customer already exists', 'wp-ever-accounting' ) );
-		}
-
-		$duplicate_vendor = Contacts::get_vendor_by_email( $this->email );
-
-		if ( $duplicate_vendor && $duplicate_vendor->exists() && $duplicate_vendor->get_id() !== $this->get_id() ) {
-			return new \WP_Error( 'duplicate_vendor', __( 'Vendor already exists', 'wp-ever-accounting' ) );
-		}
-
-
 		if ( ! $this->exists() ) {
 			$is_error = $this->create();
 		} else {

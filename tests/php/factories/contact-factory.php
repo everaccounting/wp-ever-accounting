@@ -19,7 +19,7 @@ class Contact_Factory {
 			'fax'           => '609-377-7111',
 			'address'       => '3167  Whiteman Street',
 			'website'       => 'http://john.com',
-			'tax_number'    => '3738 24315 73209',
+			'vat_number'    => '3738 24315 73209',
 			'creator_id'    => '',
 			'date_created'  => '',
 		) );
@@ -39,7 +39,7 @@ class Contact_Factory {
 			'fax'           => '609-377-7111',
 			'address'       => '3167  Whiteman Street',
 			'website'       => 'http://john.com',
-			'tax_number'    => '3738 24315 73209',
+			'vat_number'    => '3738 24315 73209',
 			'creator_id'    => '',
 			'date_created'  => '',
 		) );

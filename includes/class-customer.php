@@ -88,7 +88,7 @@ class Customer extends Contact {
 	 * @param string $value due amount.
 	 */
 	public function set_total_due( $value ) {
-		$this->update_meta( 'total_due', Price::price( $value, null, true  ) );
+		$this->update_meta( 'total_due', Price::price( $value, null, true ) );
 	}
 
 	/**
