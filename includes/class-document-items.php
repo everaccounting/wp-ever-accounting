@@ -31,7 +31,7 @@ class Document_Items {
 	 *
 	 * @since 1.0.0
 	 */
-	public static function get_document_item( $id, $output = OBJECT ) {
+	public static function get( $id, $output = OBJECT ) {
 		if ( empty( $id ) ) {
 			return null;
 		}
@@ -65,7 +65,7 @@ class Document_Items {
 	 * @since 1.1.0
 	 * @return object|\WP_Error
 	 */
-	public static function insert_document_item( $data ) {
+	public static function insert( $data ) {
 		if ( $data instanceof Document_Item ) {
 			$data = $data->get_data();
 		} elseif ( is_object( $data ) ) {
@@ -95,7 +95,7 @@ class Document_Items {
 	 * @since 1.1.0
 	 * @return object|bool
 	 */
-	public static function delete_document_item( $id ) {
+	public static function delete( $id ) {
 		if ( $id instanceof Document_Item ) {
 			$id = $id->get_id();
 		}
@@ -120,13 +120,12 @@ class Document_Items {
 	 * @since 1.0.0
 	 * @return int|object
 	 */
-	public static function get_document_items( $args = array(), $count = false ) {
+	public static function query( $args = array(), $count = false ) {
 		global $wpdb;
 		$results      = null;
 		$total        = 0;
 		$cache_group  = Document_Item::get_cache_group();
 		$table        = $wpdb->prefix . Document_Item::get_table_name();
-		$meta_table   = $wpdb->prefix . Document_Item::get_meta_type();
 		$columns      = Document_Item::get_columns();
 		$key          = md5( serialize( $args ) );
 		$last_changed = wp_cache_get_last_changed( $cache_group );
@@ -147,8 +146,6 @@ class Document_Items {
 			'offset'     => '',
 			'per_page'   => 20,
 			'paged'      => 1,
-			'meta_key'   => '',
-			'meta_value' => '',
 			'no_count'   => false,
 			'fields'     => 'all',
 			'return'     => 'objects',
@@ -299,11 +296,8 @@ class Document_Items {
 		$orderby = "$table.id";
 		if ( in_array( $args['orderby'], $columns, true ) ) {
 			$orderby = sprintf( '%s.%s', $table, $args['orderby'] );
-		} elseif ( 'meta_value_num' === $args['orderby'] && ! empty( $args['meta_key'] ) ) {
-			$orderby = "CAST($meta_table.meta_value AS SIGNED)";
-		} elseif ( 'meta_value' === $args['orderby'] && ! empty( $args['meta_key'] ) ) {
-			$orderby = "$meta_table.meta_value";
 		}
+
 		// Show the recent records first by default.
 		$order = 'DESC';
 		if ( 'ASC' === strtoupper( $args['order'] ) ) {
@@ -344,7 +338,7 @@ class Document_Items {
 		}
 
 		if( 'objects' === $args['return'] && true !== $args['no_count'] ) {
-			$results = array_map( 'self::get_document_item', $results );
+			$results = array_map( 'self::get', $results );
 		}
 
 		return $count ? $total : $results;

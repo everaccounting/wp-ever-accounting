@@ -87,4 +87,31 @@ class Formatting {
 
 		return (int) preg_replace( '/[^0-9]/', '', $number );
 	}
+
+	/**
+	 * Get only numbers from the string.
+	 *
+	 * @param      $number
+	 *
+	 * @param int  $decimals
+	 * @param bool $trim_zeros
+	 *
+	 * @return int|float|null
+	 * @since 1.0.2
+	 */
+	public static function format_decimal( $number, $decimals = 4, $trim_zeros = false ) {
+
+		// Convert multiple dots to just one.
+		$number = preg_replace( '/\.(?![^.]+$)|[^0-9.-]/', '', eaccounting_clean( $number ) );
+
+		if ( is_numeric( $decimals ) ) {
+			$number = number_format( floatval( $number ), $decimals, '.', '' );
+		}
+
+		if ( $trim_zeros && strstr( $number, '.' ) ) {
+			$number = rtrim( rtrim( $number, '0' ), '.' );
+		}
+
+		return $number;
+	}
 }

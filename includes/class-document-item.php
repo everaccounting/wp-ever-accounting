@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Document Item class.
  */
-class Document_Item extends Data {
+class Document_Item extends Abstracts\Data {
 	/**
 	 * This is the name of this object type.
 	 *
@@ -31,14 +31,6 @@ class Document_Item extends Data {
 	 * @var string
 	 */
 	protected $table = 'ea_document_items';
-
-	/**
-	 * Meta type.
-	 *
-	 * @since 1.1.0
-	 * @var string
-	 */
-	protected $meta_type = false;
 
 	/**
 	 * Cache group.
@@ -121,12 +113,12 @@ class Document_Item extends Data {
 		$discount         = $this->get_discount();
 		$subtotal_for_tax = $subtotal - $discount;
 		$tax_rate         = ( $this->get_tax_rate() / 100 );
-		$total_tax        = eaccounting_calculate_tax( $subtotal_for_tax, $tax_rate );
+		$total_tax        = \Ever_Accounting\Helpers\Tax::calculate_tax( $subtotal_for_tax, $tax_rate );
 
 		if ( 'tax_subtotal_rounding' !== eaccounting()->settings->get( 'tax_subtotal_rounding', 'tax_subtotal_rounding' ) ) {
-			$total_tax = eaccounting_format_decimal( $total_tax, 2 );
+			$total_tax = \Ever_Accounting\Helpers\Formatting::format_decimal( $total_tax, 2 );
 		}
-		if ( eaccounting_prices_include_tax() ) {
+		if ( \Ever_Accounting\Helpers\Tax::prices_include_tax() ) {
 			$subtotal -= $total_tax;
 		}
 		$total = $subtotal - $discount + $total_tax;
@@ -152,7 +144,7 @@ class Document_Item extends Data {
 			$this->date_created = current_time( 'mysql' );
 		}
 
-		$requires = ['item_id','item_name','document_id','currency_code'];
+		$requires = [ 'item_id', 'item_name', 'document_id', 'currency_code' ];
 
 		foreach ( $requires as $required ) {
 			if ( empty( $this->$required ) ) {
