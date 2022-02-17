@@ -32,14 +32,6 @@ class Transfer extends Abstracts\Data  {
 	protected $table = 'ea_transfers';
 
 	/**
-	 * Meta type.
-	 *
-	 * @since 1.1.0
-	 * @var string
-	 */
-	protected $meta_type = false;
-
-	/**
 	 * Cache group.
 	 *
 	 * @since 1.1.0
@@ -165,7 +157,7 @@ class Transfer extends Abstracts\Data  {
 			throw new \Exception( __( 'Transfer from and to account can not be same.', 'wp-ever-accounting' ) );
 		}
 
-		$this->maybe_set_transfer_category();
+		$this->maybe_set_category();
 
 		if ( ! $this->exists() ) {
 			$is_error = $this->create();
@@ -205,7 +197,7 @@ class Transfer extends Abstracts\Data  {
 	 * @return string
 	 */
 	public function get_formatted_amount() {
-		return eaccounting_format_price( $this->get_amount(), $this->get_currency_code() );
+		return \Ever_Accounting\Helpers\Price::format_price( $this->get_amount(), $this->get_currency_code() );
 	}
 
 	/**
@@ -215,7 +207,7 @@ class Transfer extends Abstracts\Data  {
 	 *
 	 * @throws \Exception
 	 */
-	protected function maybe_set_transfer_category() {
+	protected function maybe_set_category() {
 		global $wpdb;
 		$cache_key   = md5( 'other' . __( 'Transfer', 'wp-ever-accounting' ) );
 		$category_id = wp_cache_get( $cache_key, 'ea_categories' );

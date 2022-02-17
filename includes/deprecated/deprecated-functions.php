@@ -466,3 +466,304 @@ function eaccounting_get_contacts( $args = array() ) {
 
 	return \Ever_Accounting\Contacts::query( $args, false );
 }
+
+/**
+ * Get Transaction Types
+ *
+ * @return array
+ * @since 1.1.0
+ * @deprecatd 1.1.4
+ */
+function eaccounting_get_transaction_types() {
+	_deprecated_function( __FUNCTION__, '1.1.4', '\Ever_Accounting\Transactions::get_types()' );
+
+	return \Ever_Accounting\Transactions::get_types();
+}
+
+/**
+ * Get a single payment.
+ *
+ * @param $payment
+ *
+ * @return \Ever_Accounting\Payment|null
+ * @since 1.1.0
+ * @deprecatd 1.1.4
+ */
+function eaccounting_get_payment( $payment ) {
+	_deprecated_function( __FUNCTION__, '1.1.4', '\Ever_Accounting\Transactions::get_payment()' );
+
+	return \Ever_Accounting\Transactions::get_payment( $payment );
+}
+
+/**
+ *  Create new payment programmatically.
+ *
+ *  Returns a new payment object on success.
+ *
+ * @param array $args
+ * @param bool $wp_error
+ *
+ * @return Ever_Accounting\Payment|\WP_Error|bool
+ * @since 1.1.0
+ * @deprecatd 1.1.4
+ */
+function eaccounting_insert_payment( $args, $wp_error = true ) {
+	_deprecated_function( __FUNCTION__, '1.1.4', '\Ever_Accounting\Transactions::insert_payment()' );
+
+	return \Ever_Accounting\Transactions::insert_payment( $args );
+}
+
+/**
+ * Delete a payment.
+ *
+ * @param $payment_id
+ *
+ * @return bool
+ * @since 1.1.0
+ * @deprecatd 1.1.4
+ */
+function eaccounting_delete_payment( $payment_id ) {
+	_deprecated_function( __FUNCTION__, '1.1.4', '\Ever_Accounting\Transactions::delete_payment()' );
+
+	return \Ever_Accounting\Transactions::delete_payment( $payment_id );
+}
+
+/**
+ * Get payment items.
+ *
+ * @param array $args
+ *
+ * @return array|int
+ * @since 1.1.0
+ * @deprecatd 1.1.4
+ */
+function eaccounting_get_payments( $args = array() ) {
+	_deprecated_function( __FUNCTION__, '1.1.4', '\Ever_Accounting\Transactions::query_payments()' );
+
+	return \Ever_Accounting\Transactions::query_payments( $args, false );
+}
+
+/**
+ * Get revenue.
+ *
+ * @param $revenue
+ *
+ * @return \Ever_Accounting\Revenue|null
+ * @since 1.1.0
+ * @deprecatd 1.1.4
+ */
+function eaccounting_get_revenue( $revenue ) {
+	_deprecated_function( __FUNCTION__, '1.1.4', '\Ever_Accounting\Transactions::get_revenue()' );
+
+	return \Ever_Accounting\Transactions::get_revenue( $revenue );
+}
+
+/**
+ *  Create new revenue programmatically.
+ *
+ *  Returns a new revenue object on success.
+ *
+ * @param array $args
+ * @param bool $wp_error
+ *
+ * @return Ever_Accounting\Revenue|\WP_Error|bool
+ * @since 1.1.0
+ * @deprecatd 1.1.4
+ */
+function eaccounting_insert_revenue( $args, $wp_error = true ) {
+	_deprecated_function( __FUNCTION__, '1.1.4', '\Ever_Accounting\Transactions::insert_revenue()' );
+
+	return \Ever_Accounting\Transactions::insert_revenue( $args );
+}
+
+/**
+ * Delete a revenue.
+ *
+ * @param $revenue_id
+ *
+ * @return bool
+ * @since 1.1.0
+ * @deprecatd 1.1.4
+ */
+function eaccounting_delete_revenue( $revenue_id ) {
+	_deprecated_function( __FUNCTION__, '1.1.4', '\Ever_Accounting\Transactions::delete_revenue()' );
+
+	return \Ever_Accounting\Transactions::delete_revenue( $revenue_id );
+}
+
+/**
+ * Get revenues items.
+ *
+ * @param array $args
+ *
+ * @return array|int
+ * @since 1.1.0
+ * @deprecatd 1.1.4
+ */
+function eaccounting_get_revenues( $args = array() ) {
+	_deprecated_function( __FUNCTION__, '1.1.4', '\Ever_Accounting\Transactions::query_revenues()' );
+
+	return \Ever_Accounting\Transactions::query_revenues( $args, false );
+}
+
+/**
+ * Get transfer.
+ *
+ * @param $transfer
+ *
+ * @return \Ever_Accounting\Transfer|null
+ * @since 1.1.0
+ * @deprecatd 1.1.4
+ */
+function eaccounting_get_transfer( $transfer ) {
+	_deprecated_function( __FUNCTION__, '1.1.4', '\Ever_Accounting\Transfers::get()' );
+
+	return \Ever_Accounting\Transfers::get( $transfer );
+}
+
+/**
+ * Create new transfer programmatically.
+ *
+ * Returns a new transfer object on success.
+ *
+ * @param array $args
+ * @param bool $wp_error
+ *
+ * @return \Ever_Accounting\Transfer|\WP_Error|bool
+ * @since 1.1.0
+ * @deprecatd 1.1.4
+ */
+function eaccounting_insert_transfer( $args, $wp_error = true ) {
+	_deprecated_function( __FUNCTION__, '1.1.4', '\Ever_Accounting\Transfers::insert()' );
+
+	return \Ever_Accounting\Transfers::insert( $args );
+}
+
+/**
+ * Delete a transfer.
+ *
+ * @param $transfer_id
+ *
+ * @return bool
+ * @since 1.1.0
+ * @deprecatd 1.1.4
+ */
+function eaccounting_delete_transfer( $transfer_id ) {
+	_deprecated_function( __FUNCTION__, '1.1.4', '\Ever_Accounting\Transfers::delete()' );
+
+	return \Ever_Accounting\Transfers::delete( $transfer_id );
+}
+
+/**
+ * Get transfers.
+ *
+ * @param array $args
+ *
+ * @return array|int
+ * @since 1.1.0
+ * @deprecatd 1.1.4
+ */
+function eaccounting_get_transfers( $args = array() ) {
+	_deprecated_function( __FUNCTION__, '1.1.4', '\Ever_Accounting\Transfers::query()' );
+
+	return \Ever_Accounting\Transfers::query( $args, false );
+}
+
+/**
+ * Get transaction items.
+ *
+ * @param array $args
+ *
+ * @return array|\Ever_Accounting\Payment|\Ever_Accounting\Revenue|int
+ * @since 1.1.0
+ * @deprecatd 1.1.4
+ */
+function eaccounting_get_transactions( $args = array() ) {
+	_deprecated_function( __FUNCTION__, '1.1.4', '\Ever_Accounting\Transactions::query()' );
+
+	return \Ever_Accounting\Transactions::query( $args, false );
+}
+
+/**
+ * Get total income.
+ *
+ * @param null $year
+ *
+ * @return float
+ * @since 1.1.0
+ * @deprecatd 1.1.4
+ */
+function eaccounting_get_total_income( $year = null ) {
+	_deprecated_function( __FUNCTION__, '1.1.4', '\Ever_Accounting\Transactions::get_total_income()' );
+
+	return \Ever_Accounting\Transactions::get_total_income( $year );
+}
+
+/**
+ * Get total expense.
+ *
+ * @param null $year
+ *
+ * @return float
+ * @since 1.1.0
+ * @deprecatd 1.1.4
+ */
+function eaccounting_get_total_expense( $year = null ) {
+	_deprecated_function( __FUNCTION__, '1.1.4', '\Ever_Accounting\Transactions::get_total_expense()' );
+
+	return \Ever_Accounting\Transactions::get_total_expense( $year );
+}
+
+/**
+ * Get total profit.
+ *
+ * @param null $year
+ *
+ * @return float
+ * @since 1.1.0
+ * @deprecatd 1.1.4
+ */
+function eaccounting_get_total_profit( $year = null ) {
+	_deprecated_function( __FUNCTION__, '1.1.4', '\Ever_Accounting\Transactions::get_total_profit()' );
+
+	return \Ever_Accounting\Transactions::get_total_profit( $year );
+}
+
+/**
+ * Get total receivable.
+ *
+ * @return false|float|int|mixed|string
+ * @since 1.1.0
+ * @deprecatd 1.1.4
+ */
+function eaccounting_get_total_receivable() {
+	_deprecated_function( __FUNCTION__, '1.1.4', '\Ever_Accounting\Transactions::get_total_receivable()' );
+
+	return \Ever_Accounting\Transactions::get_total_receivable();
+}
+
+/**
+ * Get total payable.
+ *
+ * @return float
+ * @since 1.1.0
+ * @deprecatd 1.1.4
+ */
+function eaccounting_get_total_payable() {
+	_deprecated_function( __FUNCTION__, '1.1.4', '\Ever_Accounting\Transactions::get_total_payable()' );
+
+	return \Ever_Accounting\Transactions::get_total_payable();
+}
+
+/**
+ * Get total upcoming profit
+ *
+ * @return float
+ * @since 1.1.0
+ * @deprecatd 1.1.4
+ */
+function eaccounting_get_total_upcoming_profit() {
+	_deprecated_function( __FUNCTION__, '1.1.4', '\Ever_Accounting\Transactions::get_total_upcoming_profit()' );
+
+	return \Ever_Accounting\Transactions::get_total_upcoming_profit();
+}

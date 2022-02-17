@@ -32,7 +32,7 @@ class Transfers {
 	 *
 	 * @since 1.0.0
 	 */
-	public static function get_transfer( $id, $output = OBJECT ) {
+	public static function get( $id, $output = OBJECT ) {
 		if ( empty( $id ) ) {
 			return null;
 		}
@@ -66,7 +66,7 @@ class Transfers {
 	 * @since 1.1.0
 	 * @return object|\WP_Error
 	 */
-	public static function insert_transfer( $data ) {
+	public static function insert( $data ) {
 		if ( $data instanceof Transfer ) {
 			$data = $data->get_data();
 		} elseif ( is_object( $data ) ) {
@@ -100,7 +100,7 @@ class Transfers {
 	 * @since 1.1.0
 	 * @return object|bool
 	 */
-	public static function delete_transfer( $id ) {
+	public static function delete( $id ) {
 		if ( $id instanceof Transfer ) {
 			$id = $id->get_id();
 		}
@@ -125,7 +125,7 @@ class Transfers {
 	 * @since 1.0.0
 	 * @return int|object
 	 */
-	public static function get_transfers( $args = array(), $count = false ) {
+	public static function query( $args = array(), $count = false ) {
 		global $wpdb;
 		$results      = null;
 		$total        = 0;
@@ -152,8 +152,6 @@ class Transfers {
 			'offset'     => '',
 			'per_page'   => 20,
 			'paged'      => 1,
-			'meta_key'   => '',
-			'meta_value' => '',
 			'no_count'   => false,
 			'fields'     => 'all',
 			'return'     => 'objects',
@@ -294,11 +292,8 @@ class Transfers {
 		$orderby = "$table.id";
 		if ( in_array( $args['orderby'], $columns, true ) ) {
 			$orderby = sprintf( '%s.%s', $table, $args['orderby'] );
-		} elseif ( 'meta_value_num' === $args['orderby'] && ! empty( $args['meta_key'] ) ) {
-			$orderby = "CAST($meta_table.meta_value AS SIGNED)";
-		} elseif ( 'meta_value' === $args['orderby'] && ! empty( $args['meta_key'] ) ) {
-			$orderby = "$meta_table.meta_value";
 		}
+
 		// Show the recent records first by default.
 		$order = 'DESC';
 		if ( 'ASC' === strtoupper( $args['order'] ) ) {
@@ -306,19 +301,6 @@ class Transfers {
 		}
 
 		$orderby = sprintf( 'ORDER BY %s %s', $orderby, $order );
-
-		//Parse meta param.
-		$meta_query = new \WP_Meta_Query();
-		$meta_query->parse_query_vars( $args );
-		if ( ! empty( $meta_query->queries ) ) {
-			$meta_clauses = $meta_query->get_sql( str_replace( $wpdb->prefix, '', $meta_table ), $table, 'id' );
-			$from         .= $meta_clauses['join'];
-			$where        .= $meta_clauses['where'];
-
-			if ( $meta_query->has_or_relation() ) {
-				$fields = 'DISTINCT ' . $fields;
-			}
-		}
 
 		if ( null === $results ) {
 			$request = "SELECT {$fields} {$from} {$join} WHERE 1=1 {$where} {$groupby} {$having} {$orderby} {$limit}";

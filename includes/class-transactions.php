@@ -49,7 +49,7 @@ class Transactions {
 			throw new \Exception( 'empty_prop', __( 'Payment method is required.', 'wp-ever-accounting' ) );
 		}
 
-		$category = Categories::get_category( $data['category_id'] );
+		$category = Categories::get( $data['category_id'] );
 		if ( empty( $category ) || ! in_array( $category->get_type(), array( 'expense', 'other' ), true ) ) {
 			throw new \Exception( __( 'A valid payment category is required.', 'wp-ever-accounting' ) );
 		}
@@ -59,12 +59,12 @@ class Transactions {
 			throw new \Exception( __( 'Vendor is not valid.', 'wp-ever-accounting' ) );
 		}
 
-		$account = Accounts::get_account( $data['account_id'] );
+		$account = Accounts::get( $data['account_id'] );
 		if ( ! empty( $data['account_id'] ) && empty( $account ) ) {
 			throw new \Exception( __( 'Account is not valid.', 'wp-ever-accounting' ) );
 		}
 
-		if ( empty( eaccounting_sanitize_number( $data['amount'] ) ) ) {
+		if ( empty( \Ever_Accounting\Helpers\Formatting::sanitize_number( $data['amount'] ) ) ) {
 			throw new \Exception( 'empty_prop', __( 'Payment amount is required.', 'wp-ever-accounting' ) );
 		}
 	}
@@ -89,12 +89,12 @@ class Transactions {
 			throw new \Exception( 'empty_prop', __( 'Payment method is required.', 'wp-ever-accounting' ) );
 		}
 
-		$category = Categories::get_category( $data['category_id'] );
+		$category = Categories::get( $data['category_id'] );
 		if ( empty( $category ) || ! in_array( $category->get_type(), array( 'income', 'other' ), true ) ) {
 			throw new \Exception( 'empty_prop', __( 'A valid income category is required.', 'wp-ever-accounting' ) );
 		}
 
-		$account = Accounts::get_account( $data['account_id'] );
+		$account = Accounts::get( $data['account_id'] );
 		if ( empty( $account ) ) {
 			throw new \Exception( 'empty_prop', __( 'Account is required.', 'wp-ever-accounting' ) );
 		}
@@ -104,7 +104,7 @@ class Transactions {
 			throw new \Exception( 'empty_prop', __( 'Customer is not valid.', 'wp-ever-accounting' ) );
 		}
 
-		if ( empty( eaccounting_sanitize_number( $data['amount'] ) ) ) {
+		if ( empty( \Ever_Accounting\Helpers\Formatting::sanitize_number( $data['amount'] ) ) ) {
 			throw new \Exception( 'empty_prop', __( 'Revenue amount is required.', 'wp-ever-accounting' ) );
 		}
 	}
@@ -115,9 +115,9 @@ class Transactions {
 	 * @since 1.1.3
 	 * @return array
 	 */
-	public static function get_transaction_types() {
+	public static function get_types() {
 		return apply_filters(
-			'eaccounting_transaction_types',
+			'ever_accounting_transaction_types',
 			array(
 				'income'  => __( 'Income', 'wp-ever-accounting' ),
 				'expense' => __( 'Expense', 'wp-ever-accounting' ),
@@ -157,8 +157,6 @@ class Transactions {
 		}
 
 		return $payment;
-
-
 	}
 
 	/**
@@ -222,8 +220,8 @@ class Transactions {
 	 * @return array|int
 	 * @since 1.1.0
 	*/
-	public static function get_payments( $args = array(), $count = false ) {
-		return self::get_transactions( array_merge( $args, array( 'type' => 'expense' ) ), $count );
+	public static function query_payments( $args = array(), $count = false ) {
+		return self::query( array_merge( $args, array( 'type' => 'expense' ) ), $count );
 	}
 
 	/**
@@ -323,8 +321,8 @@ class Transactions {
 	 * @return array|int
 	 * @since 1.1.0
 	 */
-	public static function get_revenues( $args = array(), $count = false ) {
-		return self::get_transactions( array_merge( $args, array( 'type' => 'income' ) ), $count );
+	public static function query_revenues( $args = array(), $count = false ) {
+		return self::query( array_merge( $args, array( 'type' => 'income' ) ), $count );
 	}
 
 
@@ -336,7 +334,7 @@ class Transactions {
 	 *
 	 * @since 1.0.0
 	 */
-	public static function get_transaction( $id, $output = OBJECT ) {
+	public static function get( $id, $output = OBJECT ) {
 		if ( empty( $id ) ) {
 			return null;
 		}
@@ -370,7 +368,7 @@ class Transactions {
 	 * @since 1.0.0
 	 * @return int|object
 	 */
-	public static function get_transactions( $args = array(), $count = false ) {
+	public static function query( $args = array(), $count = false ) {
 		global $wpdb;
 		$results      = null;
 		$total        = 0;
@@ -397,12 +395,10 @@ class Transactions {
 			'offset'     => '',
 			'per_page'   => 20,
 			'paged'      => 1,
-			'meta_key'   => '',
-			'meta_value' => '',
 			'no_count'   => false,
 			'fields'     => 'all',
 			'return'     => 'objects',
-			'transfer'   => true,
+			'transfer'   => false,
 		) );
 
 		if ( false !== $cache ) {
@@ -589,11 +585,8 @@ class Transactions {
 		$orderby = "$table.id";
 		if ( in_array( $args['orderby'], $columns, true ) ) {
 			$orderby = sprintf( '%s.%s', $table, $args['orderby'] );
-		} elseif ( 'meta_value_num' === $args['orderby'] && ! empty( $args['meta_key'] ) ) {
-			$orderby = "CAST($meta_table.meta_value AS SIGNED)";
-		} elseif ( 'meta_value' === $args['orderby'] && ! empty( $args['meta_key'] ) ) {
-			$orderby = "$meta_table.meta_value";
 		}
+
 		// Show the recent records first by default.
 		$order = 'DESC';
 		if ( 'ASC' === strtoupper( $args['order'] ) ) {
@@ -601,19 +594,6 @@ class Transactions {
 		}
 
 		$orderby = sprintf( 'ORDER BY %s %s', $orderby, $order );
-
-		//Parse meta param.
-		$meta_query = new \WP_Meta_Query();
-		$meta_query->parse_query_vars( $args );
-		if ( ! empty( $meta_query->queries ) ) {
-			$meta_clauses = $meta_query->get_sql( str_replace( $wpdb->prefix, '', $meta_table ), $table, 'id' );
-			$from         .= $meta_clauses['join'];
-			$where        .= $meta_clauses['where'];
-
-			if ( $meta_query->has_or_relation() ) {
-				$fields = 'DISTINCT ' . $fields;
-			}
-		}
 
 		if ( null === $results ) {
 			$request = "SELECT {$fields} {$from} {$join} WHERE 1=1 {$where} {$groupby} {$having} {$orderby} {$limit}";
@@ -662,8 +642,8 @@ class Transactions {
 		if ( false === $total_income ) {
 			$where = '';
 			if ( absint( $year ) ) {
-				$financial_start = eaccounting_get_financial_start( $year );
-				$financial_end   = eaccounting_get_financial_end( $year );
+				$financial_start = ever_accounting_get_financial_start( $year );
+				$financial_end   = ever_accounting_get_financial_end( $year );
 				$where           .= $wpdb->prepare( 'AND ( payment_date between %s AND %s )', $financial_start, $financial_end );
 			}
 
@@ -678,7 +658,7 @@ class Transactions {
 			$results      = $wpdb->get_results( $sql );
 			$total_income = 0;
 			foreach ( $results as $result ) {
-				$total_income += eaccounting_price_to_default( $result->amount, $result->currency_code, $result->currency_rate );
+				$total_income += \Ever_Accounting\Helpers\Price::price_to_default( $result->amount, $result->currency_code, $result->currency_rate );
 			}
 			wp_cache_add( 'total_income_' . $year, $total_income, 'ea_transactions' );
 		}
@@ -700,8 +680,8 @@ class Transactions {
 		if ( false === $total_expense ) {
 			$where = '';
 			if ( absint( $year ) ) {
-				$financial_start = eaccounting_get_financial_start( $year );
-				$financial_end   = eaccounting_get_financial_end( $year );
+				$financial_start = ever_accounting_get_financial_start( $year );
+				$financial_end   = ever_accounting_get_financial_end( $year );
 				$where           .= $wpdb->prepare( 'AND ( payment_date between %s AND %s )', $financial_start, $financial_end );
 			}
 
@@ -716,7 +696,7 @@ class Transactions {
 			$results       = $wpdb->get_results( $sql );
 			$total_expense = 0;
 			foreach ( $results as $result ) {
-				$total_expense += eaccounting_price_to_default( $result->amount, $result->currency_code, $result->currency_rate );
+				$total_expense += \Ever_Accounting\Helpers\Price::price_to_default( $result->amount, $result->currency_code, $result->currency_rate );
 			}
 			wp_cache_add( 'total_expense_' . $year, $total_expense, 'ea_transactions' );
 		}
@@ -761,7 +741,7 @@ class Transactions {
 			);
 			$invoices         = $wpdb->get_results( $invoices_sql );
 			foreach ( $invoices as $invoice ) {
-				$total_receivable += eaccounting_price_to_default( $invoice->amount, $invoice->currency_code, $invoice->currency_rate );
+				$total_receivable += \Ever_Accounting\Helpers\Price::price_to_default( $invoice->amount, $invoice->currency_code, $invoice->currency_rate );
 			}
 			$sql     = $wpdb->prepare(
 				"
@@ -777,7 +757,7 @@ class Transactions {
 			);
 			$results = $wpdb->get_results( $sql );
 			foreach ( $results as $result ) {
-				$total_receivable -= eaccounting_price_to_default( $result->amount, $result->currency_code, $result->currency_rate );
+				$total_receivable -= \Ever_Accounting\Helpers\Price::price_to_default( $result->amount, $result->currency_code, $result->currency_rate );
 			}
 			wp_cache_add( 'total_receivable', $total_receivable, 'ea_transactions' );
 		}
@@ -806,7 +786,7 @@ class Transactions {
 			);
 			$bills         = $wpdb->get_results( $bills_sql );
 			foreach ( $bills as $bill ) {
-				$total_payable += eaccounting_price_to_default( $bill->amount, $bill->currency_code, $bill->currency_rate );
+				$total_payable += \Ever_Accounting\Helpers\Price::price_to_default( $bill->amount, $bill->currency_code, $bill->currency_rate );
 			}
 			$sql     = $wpdb->prepare(
 				"
@@ -822,7 +802,7 @@ class Transactions {
 			);
 			$results = $wpdb->get_results( $sql );
 			foreach ( $results as $result ) {
-				$total_payable -= eaccounting_price_to_default( $result->amount, $result->currency_code, $result->currency_rate );
+				$total_payable -= \Ever_Accounting\Helpers\Price::price_to_default( $result->amount, $result->currency_code, $result->currency_rate );
 			}
 			wp_cache_add( 'total_payable', $total_payable, 'ea_transactions' );
 		}

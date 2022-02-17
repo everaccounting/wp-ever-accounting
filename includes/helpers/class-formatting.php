@@ -67,4 +67,24 @@ class Formatting {
 
 		return is_scalar( $var ) ? sanitize_text_field( $var ) : $var;
 	}
+
+	/**
+	 * Get only numbers from the string.
+	 *
+	 * @param string $number Number
+	 * @param bool $allow_decimal
+	 *
+	 * @return int|float|null
+	 * @since 1.0.2
+	 */
+	public static function sanitize_number( $number, $allow_decimal = true ) {
+		// Convert multiple dots to just one.
+		$number = preg_replace( '/\.(?![^.]+$)|[^0-9.-]/', '', eaccounting_clean( $number ) );
+
+		if ( $allow_decimal ) {
+			return (float) preg_replace( '/[^0-9.-]/', '', $number );
+		}
+
+		return (int) preg_replace( '/[^0-9]/', '', $number );
+	}
 }

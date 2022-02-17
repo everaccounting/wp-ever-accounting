@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Transaction class.
  */
-class Transaction extends Data {
+class Transaction extends Abstracts\Data {
 	/**
 	 * This is the name of this object type.
 	 *
@@ -30,14 +30,6 @@ class Transaction extends Data {
 	 * @var string
 	 */
 	protected $table = 'ea_transactions';
-
-	/**
-	 * Meta type.
-	 *
-	 * @since 1.1.0
-	 * @var string
-	 */
-	protected $meta_type = false;
 
 	/**
 	 * Cache group.
