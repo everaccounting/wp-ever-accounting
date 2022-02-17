@@ -32,13 +32,6 @@ class Note extends Abstracts\Data  {
 	protected $table = 'ea_notes';
 
 	/**
-	 * Meta type.
-	 *
-	 * @since 1.1.0
-	 * @var string
-	 */
-	protected $meta_type = false;
-	/**
 	 * Cache group.
 	 *
 	 * @since 1.1.0
@@ -115,7 +108,7 @@ class Note extends Abstracts\Data  {
 		$requires = [ 'parent_id', 'type', 'note' ];
 		foreach ( $requires as $required ) {
 			if ( empty( $this->$required ) ) {
-				return new \WP_Error( 'missing_required_param', sprintf( __( '%s is required', 'wp-ever-accounting' ), $required ) );
+				return new \WP_Error( 'missing_required_param', sprintf( __( 'Note %s is required.', 'wp-ever-accounting' ), $required ) );
 			}
 		}
 
@@ -140,11 +133,11 @@ class Note extends Abstracts\Data  {
 		 *
 		 * @param int $id Note id.
 		 * @param array $data Note data array.
-		 * @param Account $note Note object.
+		 * @param Note $note Note object.
 		 *
 		 * @since 1.0.0
 		 */
-		do_action( 'eaccounting_saved_' . $this->object_type, $this->get_id(), $this );
+		do_action( 'ever_accounting_saved_' . $this->object_type, $this->get_id(), $this );
 
 		return $this->get_id();
 	}

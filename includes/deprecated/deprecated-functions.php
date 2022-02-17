@@ -767,3 +767,61 @@ function eaccounting_get_total_upcoming_profit() {
 
 	return \Ever_Accounting\Transactions::get_total_upcoming_profit();
 }
+
+/**
+ * Main function for returning note.
+ *
+ * @param $item
+ *
+ * @return \Ever_Accounting\Note|null
+ * @since 1.1.0
+ * @deprecatd 1.1.4
+ */
+function eaccounting_get_note( $item ) {
+	_deprecated_function( __FUNCTION__, '1.1.4', '\Ever_Accounting\Notes::get()' );
+
+	return \Ever_Accounting\Notes::get( $item );
+}
+
+/**
+ * Insert note.
+ *
+ * @param      $args
+ * @param bool $wp_error
+ * @since 1.1.0
+ * @deprecatd 1.1.4
+ * @return \Ever_Accounting\Note|false|int|WP_Error
+ */
+function eaccounting_insert_note( $args, $wp_error = true ) {
+	_deprecated_function( __FUNCTION__, '1.1.4', '\Ever_Accounting\Notes::insert()' );
+
+	return \Ever_Accounting\Notes::insert( $args );
+}
+
+/**
+ * Delete an item.
+ *
+ * @param $note_id
+ *
+ * @return bool
+ * @since 1.1.0
+ * @deprecatd 1.1.4
+ */
+function eaccounting_delete_note( $note_id ) {
+	_deprecated_function( __FUNCTION__, '1.1.4', '\Ever_Accounting\Notes::delete()' );
+
+	return \Ever_Accounting\Notes::delete( $note_id );
+}
+
+/**
+ * @param array $args
+ *
+ * @return array|void
+ * @since 1.1.0
+ * @deprecatd 1.1.4
+ */
+function eaccounting_get_notes( $args = array() ) {
+	_deprecated_function( __FUNCTION__, '1.1.4', '\Ever_Accounting\Notes::query()' );
+
+	return \Ever_Accounting\Notes::query( $args );
+}
