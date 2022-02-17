@@ -120,7 +120,7 @@ class Transaction extends Abstracts\Data {
 
 		foreach ( $requires as $required ) {
 			if ( empty( $this->$required ) ) {
-				return new \WP_Error( 'missing_required_param', sprintf( __( '%s is required', 'wp-ever-accounting' ), $required ) );
+				return new \WP_Error( 'missing_required_param', sprintf( __( 'Transaction %s is required', 'wp-ever-accounting' ), $required ) );
 			}
 		}
 
@@ -132,6 +132,20 @@ class Transaction extends Abstracts\Data {
 		if ( array_key_exists( 'currency_code', $this->get_changes() ) || ! $this->exists() ) {
 			$currency = new Currency( $this->get_currency_code() );
 			$this->set_currency_rate( $currency->get_rate() );
+		}
+
+		if ( 'income' == $this->core_data['type'] ) {
+			$category = \Ever_Accounting\Categories::get( $this->get_category_id() );
+			if ( ! in_array( $category->get_type(), array( 'income', 'other' ) ) ) {
+				return new \WP_Error( 'category_type_miss_match', sprintf( __( 'Transaction type and category type does not match.', 'wp-ever-accounting' ), $required ) );
+			}
+		}
+
+		if ( 'expense' == $this->core_data['type'] ) {
+			$category = new Category( $this->get_category_id() );
+			if ( ! in_array( $category->get_type(), array( 'expense', 'other' ) ) ) {
+				return new \WP_Error( 'category_type_miss_match', sprintf( __( 'Transaction type and category type does not match.', 'wp-ever-accounting' ), $required ) );
+			}
 		}
 
 		if ( ! $this->exists() ) {
@@ -173,7 +187,7 @@ class Transaction extends Abstracts\Data {
 	 *
 	 */
 	protected function set_type( $type ) {
-		if ( array_key_exists( $type, Transactions::get_transaction_types() ) ) {
+		if ( array_key_exists( $type, Transactions::get_types() ) ) {
 			$this->set_prop( 'type', $type );
 		}
 	}

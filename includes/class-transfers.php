@@ -85,6 +85,7 @@ class Transfers {
 		$transfer = new Transfer( (int) $data['id'] );
 		$transfer->set_props( $data );
 		$is_error = $transfer->save();
+
 		if ( is_wp_error( $is_error ) ) {
 			return $is_error;
 		}
