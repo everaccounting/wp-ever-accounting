@@ -20,7 +20,7 @@ use Ever_Accounting\Tests\Factories\Revenue_Factory;
  * @since 1.1.3
  * @package  Ever_Accounting\Tests
  */
-class Tests_Payment_Class extends \WP_UnitTestCase {
+class Tests_Revenue_Class extends \WP_UnitTestCase {
 	public function test_create_revenue() {
 		$category = Category_Factory::create( 'Income Category', 'income' );
 		$account  = Account_Factory::create();
