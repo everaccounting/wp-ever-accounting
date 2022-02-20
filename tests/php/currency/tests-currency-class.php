@@ -171,14 +171,9 @@ class Tests_Currency_Class extends \WP_UnitTestCase {
 
 		$this->assertNotFalse( $currency->exists() );
 
-		Currency_Factory::create( array(
-			'code' => 'EUR',
-			'rate' => 1.12
-		) );
-		$currency = Currency_Factory::create( array(
-			'code' => 'EUR',
-			'rate' => 1.12
-		) );
+		Currency_Factory::create('EUR', '1.12');
+
+		$currency = Currency_Factory::create('EUR', '1.12');
 
 		$this->assertEquals( 'Currency already exists', $currency->get_error_message() );
 	}
