@@ -1,6 +1,6 @@
-module.exports = function ( grunt ) {
+module.exports = function (grunt) {
 	'use strict';
-	grunt.initConfig( {
+	grunt.initConfig({
 		// Check textdomain errors.
 		checktextdomain: {
 			options: {
@@ -21,8 +21,8 @@ module.exports = function ( grunt ) {
 					'_n:1,2,4d',
 					'_nx:1,2,4c,5d',
 					'_n_noop:1,2,3d',
-					'_nx_noop:1,2,3c,4d',
-				],
+					'_nx_noop:1,2,3c,4d'
+				]
 			},
 			files: {
 				src: [
@@ -30,49 +30,42 @@ module.exports = function ( grunt ) {
 					'!node_modules/**',
 					'!tests/**',
 					'!vendor/**',
-					'!bin/**',
+					'!bin/**'
 				],
-				expand: true,
-			},
+				expand: true
+			}
 		},
 
 		makepot: {
 			target: {
 				options: {
 					domainPath: 'i18n/languages',
-					exclude: [ '.git/*', 'bin/*', 'node_modules/*', 'tests/*' ],
+					exclude: ['.git/*', 'bin/*', 'node_modules/*', 'tests/*'],
 					mainFile: 'wp-ever-accounting.php',
 					potFilename: 'wp-ever-accounting.pot',
 					potHeaders: {
 						poedit: true,
-						'x-poedit-keywordslist': true,
+						'x-poedit-keywordslist': true
 					},
 					type: 'wp-plugin',
-					updateTimestamp: true,
-				},
-			},
+					updateTimestamp: true
+				}
+			}
 		},
 
 		// Verify build
 		shell: {
-			command: [
-				'rm -rf @next',
-				'npm install',
-				'npm run build',
-				'composer install --no-dev',
-				'rsync -rc --exclude-from="./.distignore" "." "./@next/" --delete --delete-excluded',
-				'echo ',
-				'echo === NOW COMPARE WITH ORG/GIT VERSION===',
-			].join( ' && ' ),
-		},
-	} );
+			command: ['rm -rf @next', 'npm install', 'npm run build', 'composer install --no-dev', 'rsync -rc --exclude-from="./.distignore" "." "./@next/" --delete --delete-excluded', 'echo ', 'echo === NOW COMPARE WITH ORG/GIT VERSION==='].join(' && ')
+		}
+
+	});
 
 	// Saves having to declare each dependency
-	require( 'matchdep' ).filterDev( 'grunt-*' ).forEach( grunt.loadNpmTasks );
+	require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
 	// Register tasks.
-	grunt.registerTask( 'i18n', [ 'checktextdomain', 'makepot' ] );
-	grunt.registerTask( 'release', [ 'shell' ] );
+	grunt.registerTask('i18n', ['checktextdomain', 'makepot']);
+	grunt.registerTask('release', ['shell']);
 
 	grunt.util.linefeed = '\n';
 };

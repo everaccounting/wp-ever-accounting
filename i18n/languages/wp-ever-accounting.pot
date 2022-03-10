@@ -5,7 +5,11 @@ msgstr ""
 "Project-Id-Version: Ever Accounting 1.1.2\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/wp-ever-accounting\n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2022-02-06 13:07:40+00:00\n"
+=======
+"POT-Creation-Date: 2022-01-27 04:48:25+00:00\n"
+>>>>>>> feature/byteever-scripts
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -799,7 +803,11 @@ msgstr ""
 msgid "Revenues"
 msgstr ""
 
+<<<<<<< HEAD
 #: includes/admin/class-menu.php:225 includes/admin/class-settings.php:173
+=======
+#: includes/admin/class-menu.php:225 includes/admin/class-settings.php:170
+>>>>>>> feature/byteever-scripts
 #: includes/admin/ea-admin-functions.php:65
 #: includes/admin/views/customers/view-customer.php:23
 #: includes/admin/views/invoices/edit-invoice.php:29
@@ -821,7 +829,11 @@ msgstr ""
 msgid "Payments"
 msgstr ""
 
+<<<<<<< HEAD
 #: includes/admin/class-menu.php:248 includes/admin/class-settings.php:234
+=======
+#: includes/admin/class-menu.php:248 includes/admin/class-settings.php:231
+>>>>>>> feature/byteever-scripts
 #: includes/admin/ea-admin-functions.php:66
 #: includes/admin/views/bills/edit-bill.php:28
 #: includes/admin/views/bills/list-bill.php:23
@@ -899,14 +911,22 @@ msgstr ""
 msgid "Cashflow"
 msgstr ""
 
+<<<<<<< HEAD
 #: includes/admin/class-menu.php:586 includes/admin/class-settings.php:300
+=======
+#: includes/admin/class-menu.php:586 includes/admin/class-settings.php:297
+>>>>>>> feature/byteever-scripts
 #: includes/admin/ea-admin-functions.php:27
 #: includes/admin/views/currencies/edit-currency.php:25
 #: includes/admin/views/currencies/list-currency.php:30
 msgid "Currencies"
 msgstr ""
 
+<<<<<<< HEAD
 #: includes/admin/class-menu.php:587 includes/admin/class-settings.php:297
+=======
+#: includes/admin/class-menu.php:587 includes/admin/class-settings.php:294
+>>>>>>> feature/byteever-scripts
 #: includes/admin/ea-admin-functions.php:28
 #: includes/admin/reports/class-expenses.php:268
 #: includes/admin/reports/class-profits.php:248
@@ -1178,9 +1198,15 @@ msgstr ""
 #: includes/admin/views/bills/bill-items.php:13
 #: includes/admin/views/invoices/invoice-items.php:13
 #: includes/admin/views/js/modal-add-invoice-item.php:16
+<<<<<<< HEAD
 #: includes/class-categories.php:75 includes/class-install.php:376
 #: includes/class-install.php:382 includes/class-settings.php:233
 #: includes/class-settings.php:291 includes/ea-category-functions.php:24
+=======
+#: includes/class-install.php:376 includes/class-install.php:382
+#: includes/class-settings.php:233 includes/class-settings.php:291
+#: includes/ea-category-functions.php:24
+>>>>>>> feature/byteever-scripts
 #: includes/rest/class-items-controller.php:68 templates/bill/bill-items.php:15
 #: templates/emails/invoice-details.php:27
 #: templates/invoice/invoice-items.php:15
@@ -3526,6 +3552,7 @@ msgstr ""
 
 #: includes/class-assets.php:168
 msgid "Could not find the uploaded file, please try again"
+<<<<<<< HEAD
 msgstr ""
 
 #: includes/class-assets.php:169
@@ -3569,6 +3596,22 @@ msgstr ""
 msgid "Vendor could not be saved."
 msgstr ""
 
+=======
+msgstr ""
+
+#: includes/class-assets.php:169
+msgid "  - Select field to preview data -"
+msgstr ""
+
+#: includes/class-assets.php:170
+msgid "(Required)"
+msgstr ""
+
+#: includes/class-controller.php:99
+msgid "Duplicate account."
+msgstr ""
+
+>>>>>>> feature/byteever-scripts
 #: includes/class-controller.php:233
 msgid "Payment date is required."
 msgstr ""
@@ -3613,12 +3656,17 @@ msgstr ""
 msgid "Revenue amount is required."
 msgstr ""
 
+<<<<<<< HEAD
 #: includes/class-data.php:889
 msgid "Could not insert item into the database."
 msgstr ""
 
 #: includes/class-data.php:979
 msgid "Could not update item in the database."
+=======
+#: includes/class-controller.php:342
+msgid "Duplicate category."
+>>>>>>> feature/byteever-scripts
 msgstr ""
 
 #: includes/class-install.php:68
@@ -3649,6 +3697,13 @@ msgstr ""
 msgid "Deposit"
 msgstr ""
 
+<<<<<<< HEAD
+=======
+#: includes/class-install.php:238 includes/ea-category-functions.php:23
+msgid "Other"
+msgstr ""
+
+>>>>>>> feature/byteever-scripts
 #: includes/class-install.php:257 includes/class-install.php:265
 #: includes/models/class-transfer.php:399
 #: includes/models/class-transfer.php:402
