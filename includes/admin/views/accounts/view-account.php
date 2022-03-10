@@ -12,7 +12,7 @@
 
 defined( 'ABSPATH' ) || exit();
 
-$account = eaccounting_get_account( $account_id );
+$account = \EverAccounting\Accounts::get_account( $account_id );
 
 if ( empty( $account ) || ! $account->exists() ) {
 	wp_die( __( 'Sorry, Account does not exist', 'wp-ever-accounting' ) );

@@ -81,12 +81,12 @@ class Accounts extends CSV_Importer {
 			return new \WP_Error( 'empty_prop', __( 'Empty Currency Code', 'wp-ever-accounting' ) );
 		}
 
-		$currency = new \EverAccounting\Models\Currency( array( 'code' => $data['currency_code'] ) );
+		$currency = new \EverAccounting\Currency( array( 'code' => $data['currency_code'] ) );
 
 		if ( ! $currency->exists() ) {
 			return new \WP_Error( 'invalid_prop', __( 'Currency with provided code does not not exist.', 'wp-ever-accounting' ) );
 		}
 
-		return eaccounting_insert_account( $data );
+		return \EverAccounting\Accounts::insert_account( $data );
 	}
 }

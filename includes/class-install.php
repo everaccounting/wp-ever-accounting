@@ -452,6 +452,26 @@ class Install {
 		    UNIQUE KEY (`name`, `type`)
             ) $collate",
 
+			"CREATE TABLE {$wpdb->prefix}ea_currencies(
+            `id` bigint(20) NOT NULL AUTO_INCREMENT,
+			`name` varchar(100) NOT NULL,
+			`code` varchar(3) NOT NULL,
+			`rate` double(15,8) NOT NULL,
+			`number` varchar(100) DEFAULT NULL,
+			`precision` varchar(2) DEFAULT NULL,
+			`subunit` varchar(100) DEFAULT NULL,
+  			`symbol` varchar(5) DEFAULT NULL,
+  			`position` ENUM ('before', 'after') DEFAULT 'before',
+  			`decimal_separator` varchar(1) DEFAULT '.',
+ 			`thousand_separator` varchar(1) DEFAULT ',',
+			`enabled` tinyint(1) NOT NULL DEFAULT '1',
+	   		`date_created` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
+		    PRIMARY KEY (`id`),
+		    KEY `rate` (`rate`),
+		    KEY `code` (`code`),
+		    UNIQUE KEY (`name`, `code`)
+            ) $collate",
+
 			"CREATE TABLE {$wpdb->prefix}ea_contacts(
             `id` bigINT(20) NOT NULL AUTO_INCREMENT,
             `user_id` INT(11) DEFAULT NULL,
@@ -649,6 +669,7 @@ class Install {
 		$tables = array(
 			"{$wpdb->prefix}ea_accounts",
 			"{$wpdb->prefix}ea_categories",
+			"{$wpdb->prefix}ea_currencies",
 			"{$wpdb->prefix}ea_contacts",
 			"{$wpdb->prefix}ea_contactmeta",
 			"{$wpdb->prefix}ea_transactions",

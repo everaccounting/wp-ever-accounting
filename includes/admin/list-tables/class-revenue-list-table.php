@@ -9,7 +9,8 @@
  * @package     EverAccounting
  */
 
-use EverAccounting\Models\Revenue;
+use EverAccounting\Revenue;
+use EverAccounting\Transactions;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -327,7 +328,7 @@ class EverAccounting_Revenue_List_Table extends EverAccounting_List_Table {
 				case 'export_csv':
 					break;
 				case 'delete':
-					eaccounting_delete_revenue( $id );
+					Transactions::delete_revenue( $id );
 					break;
 				default:
 					do_action( 'eaccounting_revenues_do_bulk_action_' . $this->current_action(), $id );
@@ -403,9 +404,9 @@ class EverAccounting_Revenue_List_Table extends EverAccounting_List_Table {
 		}
 
 		$args        = apply_filters( 'eaccounting_revenue_table_query_args', $args, $this );
-		$this->items = eaccounting_get_revenues( $args );
+		$this->items = Transactions::get_revenues( $args );
 
-		$this->total_count = eaccounting_get_revenues( array_merge( $args, array( 'count_total' => true ) ) );
+		$this->total_count = Transactions::get_revenues(  $args, true );
 
 		$this->set_pagination_args(
 			array(

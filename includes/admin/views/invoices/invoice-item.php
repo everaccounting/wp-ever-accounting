@@ -8,8 +8,8 @@
  * @var int          $item_id The id of the item being displayed
  */
 
-use EverAccounting\Models\Document_Item;
-use EverAccounting\Models\Invoice;
+use EverAccounting\Document_Item;
+use EverAccounting\Invoice;
 
 defined( 'ABSPATH' ) || exit;
 ?>

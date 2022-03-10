@@ -7,11 +7,12 @@
  * @var Bill $bill The item being used
  */
 
-use EverAccounting\Models\Bill;
+use EverAccounting\Bill;
+use EverAccounting\Notes;
 
 defined( 'ABSPATH' ) || exit();
 
-$notes = eaccounting_get_notes(
+$notes = Notes::get_notes(
 	array(
 		'number'    => - 1,
 		'parent_id' => $bill->get_id(),

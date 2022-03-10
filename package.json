@@ -4,92 +4,104 @@
   "version": "1.1.2",
   "description": "The Best WordPress Accounting Plugin ever made!",
   "author": {
-    "name": "Sultan Nasir Uddin",
-    "email": "sultan@byteever.com",
-    "url": "https://www.byteever.com"
+	"name": "Sultan Nasir Uddin",
+	"email": "sultan@byteever.com",
+	"url": "https://www.byteever.com"
   },
   "license": "GPL-2.0-or-later",
   "keywords": [],
   "homepage": "https://www.wpeveraccounting.com",
   "repository": {
-    "type": "git",
-    "url": "git+https://github.com/everaccounting/wp-ever-accounting.git"
+	"type": "git",
+	"url": "git+https://github.com/everaccounting/wp-ever-accounting.git"
   },
   "bugs": {
-    "url": "https://github.com/everaccounting/wp-ever-accounting/issues"
+	"url": "https://github.com/everaccounting/wp-ever-accounting/issues"
   },
   "engines": {
-    "node": ">=12.0.0"
+	"node": ">=12.0.0"
   },
   "dependencies": {
-    "chart.js": "^3.7.0",
-    "inputmask": "^5.0.5",
-    "select2": "~4.0"
+	"@automattic/color-studio": "^2.5.0",
+	"@wordpress/icons": "^6.1.1",
+	"chart.js": "2.9.3",
+	"classnames": "^2.3.0",
+	"cuid": "^2.1.8",
+	"equivalent-key-map": "^0.2.2",
+	"inputmask": "^5.0.5",
+	"moment": "2.22.2",
+	"postcss-color-function": "^4.1.0",
+	"precss": "^4.0.0",
+	"react-select": "^4.3.0",
+	"rememo": "^4.0.0",
+	"select2": "~4.0"
   },
   "devDependencies": {
-    "@byteever/scripts": "git+ssh://git@github.com:byteever/scripts.git",
-    "grunt-checktextdomain": "^1.0.1",
-    "grunt-shell": "^3.0.1",
-    "grunt-wp-i18n": "^1.0.3",
-    "husky": "^7.0.4",
-    "matchdep": "^2.0.0"
+	"@babel/plugin-proposal-class-properties": "^7.16.7",
+	"@babel/plugin-transform-runtime": "^7.16.10",
+	"@byteever/scripts": "git+ssh://git@github.com/byteever/scripts.git",
+	"@wordpress/babel-plugin-makepot": "^4.2.0",
+	"cross-env": "^7.0.3",
+	"grunt-checktextdomain": "^1.0.1",
+	"grunt-shell": "^3.0.1",
+	"grunt-wp-i18n": "^1.0.3",
+	"husky": "^7.0.4",
+	"matchdep": "^2.0.0"
   },
   "scripts": {
-    "start": "composer install && npm install && npm -s run watch",
-    "prestart": "php ./bin/update-version.php",
-    "watch": "byteever-scripts start",
-    "build": "byteever-scripts build",
-    "build:vendor": "cp -r ./node_modules/chart.js/dist/ ./assets/lib/chartjs",
-    "postbuild": "npm run -s i18n",
-    "i18n": "npm run -s i18n:pot && npm run -s i18n:build",
-    "i18n:pot": "grunt i18n",
-    "i18n:build": "php bin/combine-pot-files.php i18n/languages/wp-ever-accounting.po i18n/languages/wp-ever-accounting.pot",
-    "lint": "npm run lint:js && npm run lint:css && npm run && npm run lint:php",
-    "lint:js": "byteever-scripts lint-js  --fix",
-    "lint:css": "byteever-scripts lint-style --fix",
-    "lint:php": "./vendor/bin/phpcs --standard=phpcs.xml $(git ls-files | grep .php$)",
-    "lint:php-fix": "./vendor/bin/phpcbf --standard=phpcs.xml $(git ls-files | grep .php$)",
-    "check-engines": "byteever-scripts check-engines",
-    "check-licenses": "byteever-scripts check-licenses",
-    "format": "byteever-scripts format",
-    "format:js": "byteever-scripts format-js",
-    "lint:md:docs": "byteever-scripts lint-md-docs",
-    "lint:md:js": "byteever-scripts lint-md-js",
-    "lint:pkg-json": "byteever-scripts lint-pkg-json",
-    "packages-update": "byteever-scripts packages-update",
-    "test:e2e": "byteever-scripts test-e2e",
-    "test:unit": "byteever-scripts test-unit-js",
-    "create-extension": "node ./bin/create-extension.js"
+	"postinstall": "husky install",
+	"start": "composer install && npm install && npm -s run watch",
+	"prestart": "php ./bin/update-version.php",
+	"watch": "cross-env NODE_ENV=develop byteever-scripts start",
+	"build": "cross-env NODE_ENV=production byteever-scripts build",
+	"postbuild": "npm run -s i18n",
+	"i18n": "npm run -s i18n:pot && npm run -s i18n:build",
+	"i18n:pot": "grunt i18n",
+	"i18n:build": "php bin/combine-pot-files.php i18n/languages/wp-ever-accounting.po i18n/languages/wp-ever-accounting.pot",
+	"lint": "npm run lint:js && npm run lint:css && npm run && npm run lint:php",
+	"lint:js": "byteever-scripts lint-js  --fix",
+	"lint:css": "byteever-scripts lint-style --fix",
+	"lint:php": "./vendor/bin/phpcs --standard=phpcs.xml $(git ls-files | grep .php$)",
+	"lint:php-fix": "./vendor/bin/phpcbf --standard=phpcs.xml $(git ls-files | grep .php$)",
+	"check-engines": "byteever-scripts check-engines",
+	"check-licenses": "byteever-scripts check-licenses",
+	"format:js": "byteever-scripts format-js",
+	"lint:md:docs": "byteever-scripts lint-md-docs",
+	"lint:md:js": "byteever-scripts lint-md-js",
+	"lint:pkg-json": "byteever-scripts lint-pkg-json",
+	"packages-update": "byteever-scripts packages-update",
+	"test:e2e": "byteever-scripts test-e2e",
+	"test:unit": "byteever-scripts test-unit-js",
+	"create-extension": "node ./bin/create-extension.js"
   },
   "husky": {
-    "hooks": {
-      "post-merge": "./bin/post-merge.sh",
-      "pre-commit": "lint-staged",
-      "pre-push": "./bin/pre-push.sh"
-    }
+	"hooks": {
+	  "post-merge": "./bin/post-merge.sh",
+	  "pre-commit": "lint-staged",
+	  "pre-push": "./bin/pre-push.sh"
+	}
   },
   "lint-staged": {
-    "*.php": [
-      "php -d display_errors=1 -l",
-      "./vendor/bin/phpcs --extensions=php --warning-severity=8 -s"
-    ],
-    "*.scss": [
-      "stylelint --syntax=scss --fix"
-    ],
-    "*.{js,jsx}": [
-      "byteever-scripts format-js",
-      "byteever-scripts lint-js"
-    ],
-    "*.js": [
-      "eslint --fix"
-    ]
+	"*.php": [
+	  "php -d display_errors=1 -l",
+	  "./vendor/bin/phpcs --extensions=php --warning-severity=8 -s"
+	],
+	"*.scss": [
+	  "stylelint --syntax=scss --fix"
+	],
+	"*.{js,jsx}": [
+	  "byteever-scripts format-js",
+	  "byteever-scripts lint-js"
+	],
+	"*.js": [
+	  "eslint --fix"
+	]
   },
   "files": [
-    "assets/**/*.{js,scss,php}",
-    "includes/**/*.php",
-    "i18n/**/*.json",
-    "license.txt",
-    "wp-ever-accounting.php"
-  ],
-  "devURL": "http://accounting.test"
+	"assets/**/*.{js,scss,php}",
+	"includes/**/*.php",
+	"i18n/**/*.json",
+	"license.txt",
+	"wp-ever-accounting.php"
+  ]
 }

@@ -55,7 +55,7 @@ class Accounts extends CSV_Exporter {
 			'number'   => - 1,
 		);
 		$args  = apply_filters( 'eaccounting_account_export_query_args', $args );
-		$items = eaccounting_get_accounts( $args );
+		$items = \EverAccounting\Accounts::get_accounts( $args );
 		$rows  = array();
 
 		foreach ( $items as $item ) {

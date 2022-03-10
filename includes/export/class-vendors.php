@@ -56,7 +56,7 @@ class Vendors extends CSV_Exporter {
 			'number'   => - 1,
 		);
 		$args  = apply_filters( 'eaccounting_vendor_export_query_args', $args );
-		$items = eaccounting_get_vendors( $args );
+		$items = \EverAccounting\Contacts::get_vendors( $args );
 		$rows  = array();
 
 		foreach ( $items as $item ) {

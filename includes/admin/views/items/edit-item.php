@@ -13,7 +13,7 @@
 defined( 'ABSPATH' ) || exit();
 
 try {
-	$item = new \EverAccounting\Models\Item( $item_id );
+	$item = new \EverAccounting\Item( $item_id );
 } catch ( Exception $e ) {
 	wp_die( $e->getMessage() );
 }

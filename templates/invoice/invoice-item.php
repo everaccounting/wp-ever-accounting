@@ -9,8 +9,8 @@
  * @var $item Document_Item
  * @version 1.1.0
  */
-use EverAccounting\Models\Invoice;
-use EverAccounting\Models\Document_Item;
+use EverAccounting\Invoice;
+use EverAccounting\Document_Item;
 
 defined( 'ABSPATH' ) || exit;
 ?>

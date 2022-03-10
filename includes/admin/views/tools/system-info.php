@@ -10,7 +10,10 @@
 use EverAccounting\Accounts;
 use EverAccounting\Categories;
 use EverAccounting\Contacts;
+use EverAccounting\Currencies;
 use EverAccounting\Items;
+use EverAccounting\Transactions;
+use EverAccounting\Transfers;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -94,13 +97,13 @@ function eaccounting_tools_system_info_report() {
 	// Object counts.
 	$return .= "\n" . '-- EverAccounting Object Counts' . "\n\n";
 	$return .= 'Items:                            ' . number_format( Items::get_items( array(), true ) ) . "\n";
-	$return .= 'Transactions:                     ' . number_format( eaccounting_get_transactions( array( 'count_total' => true ) ) ) . "\n";
+	$return .= 'Transactions:                     ' . number_format( Transactions::get_transactions( array(), true ) ) . "\n";
 	$return .= 'Accounts:                         ' . number_format( Accounts::get_accounts( array(), true ) ) . "\n";
 	$return .= 'Customers:                        ' . number_format( Contacts::get_customers( array(), true ) ) . "\n";
 	$return .= 'Vendors:                          ' . number_format( Contacts::get_vendors( array(), true ) ) . "\n";
-	$return .= 'Currencies:                       ' . number_format( eaccounting_get_currencies( array( 'count_total' => true ) ) ) . "\n";
+	$return .= 'Currencies:                       ' . number_format( Currencies::get_currencies( array(), true ) ) . "\n";
 	$return .= 'Categories:                       ' . number_format( Categories::get_categories( array(), true ) ) . "\n";
-	$return .= 'Transfers:                        ' . number_format( eaccounting_get_transfers( array( 'count_total' => true ) ) ) . "\n";
+	$return .= 'Transfers:                        ' . number_format( Transfers::get_transfers( array(), true ) ) . "\n";
 	$return .= 'Invoices:                         ' . number_format( eaccounting_get_invoices( array( 'count_total' => true ) ) ) . "\n";
 	$return .= 'Bills:                            ' . number_format( eaccounting_get_bills( array( 'count_total' => true ) ) ) . "\n";
 

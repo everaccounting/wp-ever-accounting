@@ -691,7 +691,7 @@ class Settings {
 	protected function get_currencies() {
 		$currencies = array();
 		if ( isset( $_GET['page'] ) && 'ea-settings' === $_GET['page'] ) {
-			$results      = eaccounting_get_currencies(
+			$results      = \EverAccounting\Currencies::get_currencies(
 					array(
 							'number' => - 1,
 							'return' => 'raw',

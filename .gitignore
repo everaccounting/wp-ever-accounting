@@ -32,6 +32,7 @@ Desktop.ini
 
 #Override
 assets/dist
+!assets/js/vendor
 
 #Plugin specific
 assets

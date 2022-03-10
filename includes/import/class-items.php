@@ -80,12 +80,12 @@ class Items extends CSV_Importer {
 			return new \WP_Error( 'empty_prop', __( 'Empty Purchase Price', 'wp-ever-accounting' ) );
 		}
 
-		$category    = eaccounting_get_categories( array( 'search' => $data['category_name'], 'type' => 'item' ) );
+		$category    = \EverAccounting\Categories::get_categories( array( 'search' => $data['category_name'], 'type' => 'item' ) );
 		$category    = ! empty( $category ) ? reset( $category ) : '';
 		$category_id = ! empty( $category ) ? $category->get_id() : '';
 
 		$data['category_id'] = $category_id;
 
-		return eaccounting_insert_item( $data );
+		return \EverAccounting\Items::insert_item( $data );
 	}
 }

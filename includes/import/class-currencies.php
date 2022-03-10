@@ -81,6 +81,6 @@ class Currencies extends CSV_Importer {
 			return new \WP_Error( 'empty_prop', __( 'Currency already exists', 'wp-ever-accounting' ) );
 		}
 
-		return eaccounting_insert_currency( $data );
+		return \EverAccounting\Currencies::insert_currency( $data );
 	}
 }

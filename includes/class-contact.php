@@ -72,7 +72,7 @@ class Contact extends Data {
 		'type'          => 'contact',
 		'thumbnail_id'  => null,
 		'enabled'       => 1,
-		'creator_id'    => null,
+		'creator_id'    => 1,
 		'date_created'  => null,
 	];
 

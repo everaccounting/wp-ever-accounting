@@ -9,6 +9,8 @@
 
 namespace EverAccounting\Admin;
 
+use EverAccounting\Transactions;
+
 defined( 'ABSPATH' ) || exit();
 
 /**
@@ -57,8 +59,8 @@ class Dashboard {
 	 * @since 1.1.0
 	 */
 	public static function render_total_income_widget() {
-		$total_income     = eaccounting_get_total_income( self::get_dashboard_income_year() );
-		$total_receivable = eaccounting_get_total_receivable();
+		$total_income     = Transactions::get_total_profit( self::get_dashboard_income_year() );
+		$total_receivable = Transactions::get_total_receivable();
 		?>
 		<div class="ea-widget-card">
 			<div class="ea-widget-card__icon">
@@ -84,8 +86,8 @@ class Dashboard {
 	 * @since 1.1.0
 	 */
 	public static function render_total_expense_widget() {
-		$total_expense = eaccounting_get_total_expense( self::get_dashboard_income_year() );
-		$total_payable = eaccounting_get_total_payable();
+		$total_expense = Transactions::get_total_expense( self::get_dashboard_income_year() );
+		$total_payable = Transactions::get_total_payable();
 		?>
 		<div class="ea-widget-card alert">
 			<div class="ea-widget-card__icon">
@@ -111,8 +113,8 @@ class Dashboard {
 	 * @since 1.1.0
 	 */
 	public static function render_total_profit_widget() {
-		$total_profit   = eaccounting_get_total_profit( self::get_dashboard_income_year() );
-		$total_upcoming = eaccounting_get_total_upcoming_profit();
+		$total_profit   = Transactions::get_total_profit( self::get_dashboard_income_year() );
+		$total_upcoming = Transactions::get_total_upcoming_profit();
 		?>
 		<div class="ea-widget-card success">
 			<div class="ea-widget-card__icon">
@@ -434,7 +436,7 @@ class Dashboard {
 		</script>
 		<?php
 	}
-	
+
 	/**
 	 * Render latest income
 	 * @since 1.1.0

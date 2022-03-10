@@ -8,7 +8,7 @@
  * @version 1.1.0
  */
 
-use EverAccounting\Models\Bill;
+use EverAccounting\Bill;
 
 $countries = eaccounting_get_countries();
 defined( 'ABSPATH' ) || exit;

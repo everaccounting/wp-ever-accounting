@@ -50,7 +50,7 @@ class Money {
 	 * @throws \Exception
 	 */
 	public function __construct( $amount, $code, $convert = false ) {
-		$this->currency = new \EverAccounting\Models\Currency( $code );
+		$this->currency = new \EverAccounting\Currency( $code );
 		$this->amount   = $this->parseAmount( $amount, $convert );
 	}
 

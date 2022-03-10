@@ -12,7 +12,7 @@
 
 defined( 'ABSPATH' ) || exit();
 
-$vendor = eaccounting_get_vendor( $vendor_id );
+$vendor = \EverAccounting\Contacts::get_vendor( $vendor_id );
 
 if ( empty( $vendor ) || ! $vendor->exists() ) {
 	wp_die( __( 'Sorry, Vendor does not exist', 'wp-ever-accounting' ) );

@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit();
 
 $revenue_id = isset( $_REQUEST['revenue_id'] ) ? absint( $_REQUEST['revenue_id'] ) : null;
 try {
-	$revenue = new \EverAccounting\Models\Revenue( $revenue_id );
+	$revenue = new \EverAccounting\Revenue( $revenue_id );
 } catch ( Exception $e ) {
 	wp_die( $e->getMessage() );
 }
@@ -163,20 +163,20 @@ try {
 		</div>
 	</form>
 <?php
-eaccounting_enqueue_js(
-	"
-	jQuery('#ea-revenue-form #amount').inputmask('decimal', {
-			alias: 'numeric',
-			groupSeparator: '" . $revenue->get_currency_thousand_separator() . "',
-			autoGroup: true,
-			digits: '" . $revenue->get_currency_precision() . "',
-			radixPoint: '" . $revenue->get_currency_decimal_separator() . "',
-			digitsOptional: false,
-			allowMinus: false,
-			prefix: '" . $revenue->get_currency_symbol() . "',
-			placeholder: '0.000',
-			rightAlign: 0,
-			autoUnmask: true
-		});
-"
-);
+//eaccounting_enqueue_js(
+//	"
+//	jQuery('#ea-revenue-form #amount').inputmask('decimal', {
+//			alias: 'numeric',
+//			groupSeparator: '" . $revenue->get_currency_thousand_separator() . "',
+//			autoGroup: true,
+//			digits: '" . $revenue->get_currency_precision() . "',
+//			radixPoint: '" . $revenue->get_currency_decimal_separator() . "',
+//			digitsOptional: false,
+//			allowMinus: false,
+//			prefix: '" . $revenue->get_currency_symbol() . "',
+//			placeholder: '0.000',
+//			rightAlign: 0,
+//			autoUnmask: true
+//		});
+//"
+//);

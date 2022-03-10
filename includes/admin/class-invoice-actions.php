@@ -12,7 +12,8 @@
 
 namespace EverAccounting\Admin;
 
-use EverAccounting\Models\Invoice;
+use EverAccounting\Invoice;
+use EverAccounting\Documents;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -38,7 +39,7 @@ class Invoice_Actions {
 	public function invoice_action() {
 		$action     = eaccounting_clean( wp_unslash( $_REQUEST['invoice_action'] ) );
 		$invoice_id = absint( wp_unslash( $_REQUEST['invoice_id'] ) );
-		$invoice    = eaccounting_get_invoice( $invoice_id );
+		$invoice    = Documents::get_invoice( $invoice_id );
 
 		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'ea_invoice_action' ) || ! current_user_can( 'ea_manage_invoice' ) || ! $invoice->exists() ) {
 			wp_die( __( 'no cheating!', 'wp-ever-accounting' ) );
@@ -52,6 +53,7 @@ class Invoice_Actions {
 			),
 			admin_url( 'admin.php' )
 		);
+
 		switch ( $action ) {
 			case 'status_pending':
 				try {

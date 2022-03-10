@@ -456,6 +456,31 @@ abstract class Data {
 		return $this->changes;
 	}
 
+	/**
+	 * Returns as pure array.
+	 * Does depth array casting.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return array
+	 */
+	public function to_array( $data = array() ) {
+		$output = array();
+		$value  = null;
+		foreach ( $data as $key => $value ) {
+			if ( is_array( $value ) ) {
+				$output[ $key ] = $this->to_array( $value );
+			} elseif ( is_object( $value ) && method_exists( $value, 'get_data' ) ) {
+				$output[ $key ] = $value->get_data();
+			} elseif ( is_object( $value ) ) {
+				$output[ $key ] = get_object_vars( $value );
+			} else {
+				$output[ $key ] = $value;
+			}
+		}
+
+		return $output;
+	}
 
 
 	/*
@@ -822,14 +847,14 @@ abstract class Data {
 	 * @since  1.0.0
 	 * @return array of terms
 	 */
-	public function get_terms( $taxonomy, $fields = 'all' ) {
-		$terms = wp_get_object_terms( $this->get_id(), $taxonomy, array( 'fields' => $fields ) );
-		if ( false === $terms || is_wp_error( $terms ) ) {
-			return array();
-		}
-
-		return $terms;
-	}
+//	public function get_terms( $taxonomy, $fields = 'all' ) {
+//		$terms = wp_get_object_terms( $this->get_id(), $taxonomy, array( 'fields' => $fields ) );
+//		if ( false === $terms || is_wp_error( $terms ) ) {
+//			return array();
+//		}
+//
+//		return $terms;
+//	}
 
 	/**
 	 * Set terms for the object.
@@ -841,9 +866,9 @@ abstract class Data {
 	 * @since  1.0.0
 	 * @return array|false Term taxonomy IDs of the affected terms or WP_Error on failure.
 	 */
-	public function set_terms( $terms, $taxonomy, $append = false ) {
-		return wp_set_object_terms( $this->get_id(), $terms, $taxonomy, $append );
-	}
+//	public function set_terms( $terms, $taxonomy, $append = false ) {
+//		return wp_set_object_terms( $this->get_id(), $terms, $taxonomy, $append );
+//	}
 
 	/*
 	|--------------------------------------------------------------------------

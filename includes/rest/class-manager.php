@@ -32,18 +32,19 @@ class Manager extends Singleton {
 		$rest_handlers = apply_filters(
 			'eaccounting_rest_controllers',
 			array(
-				'\EverAccounting\REST\Accounts_Controller',
-				'\EverAccounting\REST\Customers_Controller',
-				'\EverAccounting\REST\Vendors_Controller',
-				'\EverAccounting\REST\Payments_Controller',
-				'\EverAccounting\REST\Revenues_Controller',
-				'\EverAccounting\REST\Categories_Controller',
-				'\EverAccounting\REST\Currencies_Controller',
-				'\EverAccounting\REST\Transfers_Controller',
-				'\EverAccounting\REST\Codes_Controller',
-				'\EverAccounting\REST\Countries_Controller',
-				'\EverAccounting\REST\Data_Controller',
-				'\EverAccounting\REST\Items_Controller',
+				REST_Items_Controller::class,
+				REST_Accounts_Controller::class,
+				REST_Customers_Controller::class,
+				REST_Vendors_Controller::class,
+				REST_Categories_Controller::class,
+				REST_Currencies_Controller::class,
+				REST_Revenues_Controller::class,
+				REST_Payments_Controller::class,
+				REST_Transfers_Controller::class,
+				REST_Invoice_Items_Controller::class,
+				REST_Bill_Items_Controller::class,
+				REST_Invoices_Controller::class,
+				REST_Bills_Controller::class,
 			)
 		);
 		foreach ( $rest_handlers as $controller ) {

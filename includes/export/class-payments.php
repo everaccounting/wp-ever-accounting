@@ -59,7 +59,7 @@ class Payments extends CSV_Exporter {
 			'number'   => - 1,
 		);
 		$args  = apply_filters( 'eaccounting_payment_export_query_args', $args );
-		$items = eaccounting_get_payments( $args );
+		$items = \EverAccounting\Transactions::get_payments( $args );
 
 		$rows = array();
 		foreach ( $items as $item ) {

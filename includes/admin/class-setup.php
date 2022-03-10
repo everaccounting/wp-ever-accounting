@@ -90,6 +90,7 @@ class Setup_Wizard {
 		$suffix  = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 		//$suffix  = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
+
 		wp_enqueue_style( 'ea-admin-styles', eaccounting()->plugin_url() . '/assets/dist/css/admin.css', array(), $version );
 		wp_enqueue_style( 'ea-setup', eaccounting()->plugin_url() . '/assets/dist/css/setup.css', array( 'install', 'common' ), $version );
 
@@ -328,7 +329,7 @@ class Setup_Wizard {
 			$options[ $code ] = sprintf( '%s (%s)', $props['code'], $props['symbol'] );
 		}
 
-		$currencies = eaccounting_get_currencies( array( 'return' => 'array' ) );
+		$currencies = \EverAccounting\Currencies::get_currencies( array( 'return' => 'array' ) );
 
 		?>
         <h1><?php _e( 'Currency Setup', 'wp-ever-accounting' ); ?></h1>

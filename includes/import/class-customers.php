@@ -77,6 +77,6 @@ class Customers extends CSV_Importer {
 
 		$data['type'] = 'customer';
 
-		return eaccounting_insert_customer( $data );
+		return \EverAccounting\Contacts::insert_customer( $data );
 	}
 }

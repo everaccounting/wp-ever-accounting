@@ -7,7 +7,7 @@
  * @var Invoice $invoice The item being used
  */
 
-use EverAccounting\Models\Invoice;
+use EverAccounting\Invoice;
 
 defined( 'ABSPATH' ) || exit();
 
