@@ -9,7 +9,6 @@
 
 namespace Ever_Accounting;
 
-
 use Ever_Accounting\REST\REST_Manager;
 
 defined( 'ABSPATH' ) || exit();
@@ -143,6 +142,11 @@ final class Plugin {
 
 		// Init the plugin after WordPress inits.
 		add_action( 'init', array( $this, 'init' ), 0 );
+
+		// load the template
+		add_action( 'ever_accounting_body', array( 'Ever_Accounting\Helpers\Template', 'render_body' ) );
+		add_action( 'ever_accounting_public_before_invoice', array( 'Ever_Accounting\Helpers\Template', 'public_invoice_actions' ) );
+		add_action( 'ever_accounting_public_before_bill', array( 'Ever_Accounting\Helpers\Template', 'public_bill_actions' ) );
 	}
 
 	/**

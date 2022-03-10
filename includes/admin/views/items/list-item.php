@@ -11,10 +11,10 @@
 
 defined( 'ABSPATH' ) || exit();
 
-include( EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-item-list-table.php' );
+include( dirname( EVER_ACCOUNTING_FILE ) . '/includes/admin/list-tables/class-item-list-table.php' );
 $items_table = new Ever_Accounting_Item_List_Table();
 $items_table->prepare_items();
-$add_url = eaccounting_admin_url(
+$add_url = ever_accounting_admin_url(
 	array(
 		'page'   => 'ea-items',
 		'tab'    => 'items',
@@ -48,10 +48,10 @@ $import_url = add_query_arg(
 </form>
 <?php do_action( 'eaccounting_items_table_bottom' ); ?>
 <?php
-eaccounting_enqueue_js(
+ever_accounting_enqueue_js(
 		"
 	jQuery('.item-status').on('change', function(e){
-		jQuery.post('" . eaccounting()->ajax_url() . "', {
+		jQuery.post('" . ever_accounting_ajax_url() . "', {
 			action:'eaccounting_edit_item',
 			id: $(this).data('id'),
 			enabled: $(this).is(':checked'),

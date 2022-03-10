@@ -16,17 +16,17 @@ defined( 'ABSPATH' ) || exit;
 	<meta name="robots" content="noindex,nofollow">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta charset="<?php bloginfo( 'charset' ); ?>">
-	<?php do_action( 'eaccounting_head' ); ?>
+	<?php do_action( 'ever_accounting_head' ); ?>
 </head>
 
 <body class="wp-core-ui eaccounting">
 <?php eaccounting_get_template( 'global/header.php' ); ?>
 
-<?php do_action( 'eaccounting_before_body' ); ?>
+<?php do_action( 'ever_accounting_before_body' ); ?>
 <div class="ea-container">
-	<?php do_action( 'eaccounting_body' ); ?>
+	<?php do_action( 'ever_accounting_body' ); ?>
 </div>
-<?php do_action( 'eaccounting_after_body' ); ?>
+<?php do_action( 'ever_accounting_after_body' ); ?>
 
 <?php eaccounting_get_template( 'global/footer.php' ); ?>
 </body>

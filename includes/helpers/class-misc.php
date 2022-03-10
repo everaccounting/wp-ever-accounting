@@ -266,4 +266,14 @@ class Misc {
 
 		return apply_filters( 'ever_accounting_countries', $countries );
 	}
+
+	/**
+	 * Generate a random color
+	 *
+	 * @return string
+	 * @since 1.0.2
+	 */
+	public static function get_random_color() {
+		return '#' . str_pad( dechex( random_int( 0, 0xFFFFFF ) ), 6, '0', STR_PAD_LEFT );
+	}
 }

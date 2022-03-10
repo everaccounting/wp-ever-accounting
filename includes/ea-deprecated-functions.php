@@ -17,7 +17,7 @@ function eaccounting_get_global_currencies() {
 }
 
 function eaccounting_get_contact_type( $type ) {
-	return \Ever_Accounting\Contacts::get_contact_type( $type );
+	return \Ever_Accounting\Contacts::get_type( $type );
 }
 
 function eaccounting_get_customer( $customer ) {
@@ -37,7 +37,7 @@ function eaccounting_delete_customer( $customer_id ) {
 }
 
 function eaccounting_get_customers( $args = array() ) {
-	return \Ever_Accounting\Contacts::get_customers( $args, false );
+	return \Ever_Accounting\Contacts::query( array( 'type' => 'customer' ), false );
 }
 
 function eaccounting_get_vendor( $vendor ) {
@@ -57,63 +57,63 @@ function eaccounting_delete_vendor( $vendor_id ) {
 }
 
 function eaccounting_get_vendors( $args = array() ) {
-	return \Ever_Accounting\Contacts::get_vendors( $args );
+	return \Ever_Accounting\Contacts::query( array( 'type' => 'customer' ), false );
 }
 
 function eaccounting_get_contacts( $args = array() ) {
-	return \Ever_Accounting\Contacts::get_contacts( $args );
+	return \Ever_Accounting\Contacts::get( $args, false );
 }
 
 function eaccounting_get_account( $account ) {
-	return \Ever_Accounting\Accounts::get_account( $account );
+	return \Ever_Accounting\Accounts::get( $account );
 }
 
 function eaccounting_get_account_currency_code( $account ) {
-	return \Ever_Accounting\Accounts::get_account_currency_code( $account );
+	return \Ever_Accounting\Accounts::get_currency_code( $account );
 }
 
 function eaccounting_insert_account( $data, $wp_error = true ) {
-	return \Ever_Accounting\Accounts::insert_account( $data );
+	return \Ever_Accounting\Accounts::insert( $data );
 }
 
 function eaccounting_delete_account( $account_id ) {
-	return \Ever_Accounting\Accounts::delete_account( $account_id );
+	return \Ever_Accounting\Accounts::delete( $account_id );
 }
 
 function eaccounting_get_accounts( $args = array() ) {
-	return \Ever_Accounting\Accounts::get_accounts( $args = array(), true );
+	return \Ever_Accounting\Accounts::query( $args = array(), true );
 }
 
 function eaccounting_get_category_types() {
-	return \Ever_Accounting\Categories::get_category_types();
+	return \Ever_Accounting\Categories::get_types();
 }
 
 function eaccounting_get_category_type( $type ) {
-	return \Ever_Accounting\Categories::get_category_type( $type );
+	return \Ever_Accounting\Categories::get_type( $type );
 }
 
 function eaccounting_get_category( $category ) {
-	return \Ever_Accounting\Categories::get_category( $category );
+	return \Ever_Accounting\Categories::get( $category );
 }
 
 function eaccounting_get_category_by_name( $name, $type ) {
-	return \Ever_Accounting\Categories::get_category_by_name( $name, $type );
+	return \Ever_Accounting\Categories::get_by_name( $name, $type );
 }
 
 function eaccounting_insert_category( $data = array(), $wp_error = true ) {
-	return \Ever_Accounting\Categories::insert_category( $data = array() );
+	return \Ever_Accounting\Categories::insert( $data = array() );
 }
 
 function eaccounting_delete_category( $category_id ) {
-	return \Ever_Accounting\Categories::delete_category( $category_id );
+	return \Ever_Accounting\Categories::delete( $category_id );
 }
 
 function eaccounting_get_categories( $args = array() ) {
-	return \Ever_Accounting\Categories::get_categories( $args = array(), true );
+	return \Ever_Accounting\Categories::query( $args = array(), true );
 }
 
 function eaccounting_get_transaction_types() {
-	return \Ever_Accounting\Transactions::get_transaction_types();
+	return \Ever_Accounting\Transactions::get_types();
 }
 
 function eaccounting_get_payment( $payment ) {
@@ -129,7 +129,7 @@ function eaccounting_delete_payment( $payment_id ) {
 }
 
 function eaccounting_get_payments( $args ) {
-	return \Ever_Accounting\Transactions::get_payments( $args );
+	return \Ever_Accounting\Transactions::query( array( 'type' => 'expense' ), false );
 }
 
 function eaccounting_get_revenue( $revenue ) {
@@ -145,11 +145,11 @@ function eaccounting_delete_revenue( $revenue_id ) {
 }
 
 function eaccounting_get_revenues( $args ) {
-	return \Ever_Accounting\Transactions::get_revenues( $args );
+	return \Ever_Accounting\Transactions::query( array( 'type' => 'income' ), false );
 }
 
 function eaccounting_get_transactions( $args ) {
-	return \Ever_Accounting\Transactions::get_transactions( $args );
+	return \Ever_Accounting\Transactions::query( $args, false );
 }
 
 function eaccounting_get_total_income( $year = null ) {
@@ -177,43 +177,43 @@ function eaccounting_get_total_upcoming_profit() {
 }
 
 function eaccounting_get_note( $item ) {
-	return \Ever_Accounting\Notes::get_note( $item->get_id() );
+	return \Ever_Accounting\Notes::get( $item->get_id() );
 }
 
 function eaccounting_insert_note( $args, $wp_error = true ) {
-	return \Ever_Accounting\Notes::insert_note( $args );
+	return \Ever_Accounting\Notes::insert( $args );
 }
 
 function eaccounting_delete_note( $note_id ) {
-	return \Ever_Accounting\Notes::delete_note( $note_id );
+	return \Ever_Accounting\Notes::delete( $note_id );
 }
 
 function eaccounting_get_notes( $args = array() ) {
-	return \Ever_Accounting\Notes::get_notes( $args = array(), false );
+	return \Ever_Accounting\Notes::query( $args = array(), false );
 }
 
 function eaccounting_get_currency_codes() {
-	return \Ever_Accounting\Currencies::get_currency_codes();
+	return \Ever_Accounting\Currencies::get_codes();
 }
 
 function eaccounting_sanitize_currency_code( $code ) {
-	return \Ever_Accounting\Currencies::sanitize_currency_code( $code );
+	return \Ever_Accounting\Currencies::sanitize_code( $code );
 }
 
 function eaccounting_get_currency( $currency ) {
-	return \Ever_Accounting\Currencies::get_currency_by_code( $currency );
+	return \Ever_Accounting\Currencies::get_by_code( $currency );
 }
 
 function eaccounting_get_currency_rate( $currency ) {
-	return \Ever_Accounting\Currencies::get_currency_rate( $currency );
+	return \Ever_Accounting\Currencies::get_rate( $currency );
 }
 
 function eaccounting_insert_currency( $args, $wp_error = true ) {
-	return \Ever_Accounting\Currencies::insert_currency( $args );
+	return \Ever_Accounting\Currencies::insert( $args );
 }
 
 function eaccounting_get_currencies( $args = array() ) {
-	return \Ever_Accounting\Currencies::get_currencies( $args, false );
+	return \Ever_Accounting\Currencies::query( $args, false );
 }
 
 function eaccounting_get_invoice( $invoice ) {

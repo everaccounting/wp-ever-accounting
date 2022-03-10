@@ -29,7 +29,7 @@ class Admin_Manager {
 		add_action( 'admin_init', array( __CLASS__, 'admin_redirects' ) );
 		add_action( 'admin_init', array( __CLASS__, 'buffer' ), 1 );
 		add_filter( 'admin_body_class', array( __CLASS__, 'admin_body_class' ) );
-		add_action( 'admin_footer', 'eaccounting_print_js', 25 );
+		add_action( 'admin_footer', 'ever_accounting_print_js', 25 );
 		add_action( 'admin_footer', array( __CLASS__, 'load_js_templates' ) );
 		add_filter( 'admin_footer_text', array( __CLASS__, 'admin_footer_text' ), 1 );
 	}
@@ -41,16 +41,16 @@ class Admin_Manager {
 	 * @return void
 	 */
 	public static function includes() {
-		require_once EACCOUNTING_ABSPATH . '/includes/admin/ea-admin-functions.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-notices.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-menu.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-settings.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-exporter.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-importer.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-dashboard.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-invoice-actions.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-bill-actions.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-extensions.php';
+		require_once dirname( __FILE__ ). '/ea-admin-functions.php';
+		require_once dirname( __FILE__ ). '/class-notices.php';
+		require_once dirname( __FILE__ ). '/class-menu.php';
+		require_once dirname( __FILE__ ). '/class-settings.php';
+		require_once dirname( __FILE__ ). '/class-exporter.php';
+		require_once dirname( __FILE__ ). '/class-importer.php';
+		require_once dirname( __FILE__ ). '/class-dashboard.php';
+		require_once dirname( __FILE__ ). '/class-invoice-actions.php';
+		require_once dirname( __FILE__ ). '/class-bill-actions.php';
+		require_once dirname( __FILE__ ). '/class-extensions.php';
 
 		// Setup/welcome.
 		$page = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_STRING );
@@ -142,11 +142,11 @@ class Admin_Manager {
 	 * @return string
 	 */
 	public static function admin_footer_text( $footer_text ) {
-		if ( ! current_user_can( 'manage_options' ) || ! function_exists( 'eaccounting_get_screen_ids' ) ) {
+		if ( ! current_user_can( 'manage_options' ) || ! function_exists( 'ever_accounting_get_screen_ids' ) ) {
 			return $footer_text;
 		}
 		$current_screen = get_current_screen();
-		$ea_pages       = eaccounting_get_screen_ids();
+		$ea_pages       = ever_accounting_get_screen_ids();
 
 		// Set only EA pages.
 		$ea_pages = array_diff( $ea_pages, array( 'profile', 'user-edit' ) );
@@ -161,9 +161,9 @@ class Admin_Manager {
 					sprintf( '<strong>%s</strong>', esc_html__( 'Ever Accounting', 'wp-ever-accounting' ) ),
 					'<a href="https://wordpress.org/support/plugin/wp-ever-accounting/reviews?rate=5#new-post" target="_blank" class="ea-rating-link" aria-label="' . esc_attr__( 'five star', 'wp-ever-accounting' ) . '" data-rated="' . esc_attr__( 'Thanks :)', 'wp-ever-accounting' ) . '">&#9733;&#9733;&#9733;&#9733;&#9733;</a>'
 				);
-				eaccounting_enqueue_js(
+				ever_accounting_enqueue_js(
 					"jQuery( 'a.ea-rating-link' ).click( function() {
-						jQuery.post( '" . eaccounting()->ajax_url() . "', { action: 'eaccounting_rated' } );
+						jQuery.post( '" . ever_accounting_ajax_url() . "', { action: 'eaccounting_rated' } );
 						jQuery( this ).parent().text( jQuery( this ).data( 'rated' ) );
 					});"
 				);
@@ -184,16 +184,16 @@ class Admin_Manager {
 		$screen    = get_current_screen();
 		$screen_id = $screen ? $screen->id : '';
 		$action    = filter_input( INPUT_GET, 'action', FILTER_SANITIZE_STRING );
-		if ( in_array( $screen_id, eaccounting_get_screen_ids(), true ) && in_array( $action, array( 'add', 'edit' ), true ) ) {
-			eaccounting_get_admin_template( 'js/modal-add-account' );
-			eaccounting_get_admin_template( 'js/modal-add-currency' );
-			eaccounting_get_admin_template( 'js/modal-add-income-category' );
-			eaccounting_get_admin_template( 'js/modal-add-expense-category' );
-			eaccounting_get_admin_template( 'js/modal-add-item-category' );
-			eaccounting_get_admin_template( 'js/modal-add-customer' );
-			eaccounting_get_admin_template( 'js/modal-add-vendor' );
-			eaccounting_get_admin_template( 'js/modal-add-invoice-item' );
-			eaccounting_get_admin_template( 'js/modal-add-item' );
+		if ( in_array( $screen_id, ever_accounting_get_screen_ids(), true ) && in_array( $action, array( 'add', 'edit' ), true ) ) {
+			\Ever_Accounting\Helpers\Template::get_admin_template( 'js/modal-add-account' );
+			\Ever_Accounting\Helpers\Template::get_admin_template( 'js/modal-add-currency' );
+			\Ever_Accounting\Helpers\Template::get_admin_template( 'js/modal-add-income-category' );
+			\Ever_Accounting\Helpers\Template::get_admin_template( 'js/modal-add-expense-category' );
+			\Ever_Accounting\Helpers\Template::get_admin_template( 'js/modal-add-item-category' );
+			\Ever_Accounting\Helpers\Template::get_admin_template( 'js/modal-add-customer' );
+			\Ever_Accounting\Helpers\Template::get_admin_template( 'js/modal-add-vendor' );
+			\Ever_Accounting\Helpers\Template::get_admin_template( 'js/modal-add-invoice-item' );
+			\Ever_Accounting\Helpers\Template::get_admin_template( 'js/modal-add-item' );
 		}
 	}
 }

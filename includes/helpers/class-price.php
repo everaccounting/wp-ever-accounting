@@ -47,7 +47,7 @@ class Price {
 	 * @return string
 	 */
 	public static function get_default_currency() {
-		$currency = eaccounting()->settings->get( 'default_currency', 'USD' );
+		$currency = ever_accounting_get_option( 'default_currency', 'USD' );
 
 		return apply_filters( 'ever_accounting_default_currency', $currency );
 	}

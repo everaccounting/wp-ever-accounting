@@ -60,7 +60,7 @@ class Assets {
 		self::register_style( 'ea-release-styles', 'css/release.css' );
 		self::register_style( 'jquery-ui-styles', 'css/jquery-ui.css' );
 		// Admin styles for Accounting pages only.
-		if ( in_array( $screen_id, eaccounting_get_screen_ids(), true ) ) {
+		if ( in_array( $screen_id, ever_accounting_get_screen_ids(), true ) ) {
 			wp_enqueue_style( 'ea-admin-styles' );
 			wp_enqueue_style( 'jquery-ui-styles' );
 		}
@@ -118,7 +118,7 @@ class Assets {
 		self::register_script( 'ea-admin', 'js/ea-admin.js', array( 'jquery' ), false );
 
 		// Admin scripts for Accounting pages only.
-		if ( in_array( $screen_id, eaccounting_get_screen_ids(), true ) ) {
+		if ( in_array( $screen_id, ever_accounting_get_screen_ids(), true ) ) {
 			// Globally needed scripts.
 			wp_enqueue_script( 'jquery-ui-datepicker' );
 			wp_enqueue_script( 'jquery-ui-tooltip' );

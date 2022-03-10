@@ -47,7 +47,7 @@ class Dashboard {
      * @since 1.1.0
 	*/
 	public static function get_dashboard_income_year() {
-		if ( 'yes' === eaccounting_get_option( 'dashboard_transactions_limit' ) ) {
+		if ( 'yes' === ever_accounting_get_option( 'dashboard_transactions_limit' ) ) {
 			return date_i18n( 'Y' );
 		}
 
@@ -69,12 +69,12 @@ class Dashboard {
 			<div class="ea-widget-card__content">
 				<div class="ea-widget-card__primary">
 					<span class="ea-widget-card__title"><?php esc_html_e( 'Total Sales', 'wp-ever-accounting' ); ?></span>
-					<span class="ea-widget-card__amount"><?php echo eaccounting_format_price( $total_income ); ?></span>
+					<span class="ea-widget-card__amount"><?php echo \Ever_Accounting\Helpers\Price::format_price( $total_income ); ?></span>
 				</div>
 
 				<div class="ea-widget-card__secondary">
 					<span class="ea-widget-card__title"><?php esc_html_e( 'Receivable', 'wp-ever-accounting' ); ?></span>
-					<span class="ea-widget-card__amount"><?php echo eaccounting_format_price( $total_receivable ); ?></span>
+					<span class="ea-widget-card__amount"><?php echo \Ever_Accounting\Helpers\Price::format_price( $total_receivable ); ?></span>
 				</div>
 			</div>
 		</div>
@@ -96,12 +96,12 @@ class Dashboard {
 			<div class="ea-widget-card__content">
 				<div class="ea-widget-card__primary">
 					<span class="ea-widget-card__title"><?php esc_html_e( 'Total Expenses', 'wp-ever-accounting' ); ?></span>
-					<span class="ea-widget-card__amount"><?php echo eaccounting_format_price( $total_expense ); ?></span>
+					<span class="ea-widget-card__amount"><?php echo \Ever_Accounting\Helpers\Price::format_price( $total_expense ); ?></span>
 				</div>
 
 				<div class="ea-widget-card__secondary">
 					<span class="ea-widget-card__title"><?php esc_html_e( 'Payable', 'wp-ever-accounting' ); ?></span>
-					<span class="ea-widget-card__amount"><?php echo eaccounting_format_price( $total_payable ); ?></span>
+					<span class="ea-widget-card__amount"><?php echo \Ever_Accounting\Helpers\Price::format_price( $total_payable ); ?></span>
 				</div>
 			</div>
 		</div>
@@ -123,12 +123,12 @@ class Dashboard {
 			<div class="ea-widget-card__content">
 				<div class="ea-widget-card__primary">
 					<span class="ea-widget-card__title"><?php esc_html_e( 'Total Profit', 'wp-ever-accounting' ); ?></span>
-					<span class="ea-widget-card__amount"><?php echo eaccounting_format_price( $total_profit ); ?></span>
+					<span class="ea-widget-card__amount"><?php echo \Ever_Accounting\Helpers\Price::format_price( $total_profit ); ?></span>
 				</div>
 
 				<div class="ea-widget-card__secondary">
 					<span class="ea-widget-card__title"><?php esc_html_e( 'Upcoming', 'wp-ever-accounting' ); ?></span>
-					<span class="ea-widget-card__amount"><?php echo eaccounting_format_price( $total_upcoming ); ?></span>
+					<span class="ea-widget-card__amount"><?php echo \Ever_Accounting\Helpers\Price::format_price( $total_upcoming ); ?></span>
 				</div>
 			</div>
 		</div>
@@ -272,7 +272,7 @@ class Dashboard {
 		$results    = $wpdb->get_results( $sql );
 		$data       = array();
 		foreach ( $results as $result ) {
-			$amount = eaccounting_price_to_default( $result->amount, $result->currency_code, $result->currency_rate );
+			$amount = \Ever_Accounting\Helpers\Price::price_to_default( $result->amount, $result->currency_code, $result->currency_rate );
 			if ( isset( $data[ $result->category ] ) ) {
 				$data[ $result->category_id ]['amount'] = (int) ( $data[ $result->category ]['amount'] + $amount );
 			} else {
@@ -283,7 +283,7 @@ class Dashboard {
 				);
 			}
 		}
-		$data  = eaccounting_collect( $data )->sort(
+		$data  = ever_accounting_collect( $data )->sort(
 			function ( $a, $b ) {
 				return $b['amount'] > $a['amount'];
 			}
@@ -294,7 +294,7 @@ class Dashboard {
 		$chart->push(
 			array(
 				'name'   => __( 'Others', 'wp-ever-accounting' ),
-				'color'  => eaccounting_get_random_color(),
+				'color'  => \Ever_Accounting\Helpers\Misc::get_random_color(),
 				'amount' => (int) $total,
 			)
 		);
@@ -366,7 +366,7 @@ class Dashboard {
 		$results    = $wpdb->get_results( $sql );
 		$data       = array();
 		foreach ( $results as $result ) {
-			$amount = eaccounting_price_to_default( $result->amount, $result->currency_code, $result->currency_rate );
+			$amount = \Ever_Accounting\Helpers\Price::price_to_default( $result->amount, $result->currency_code, $result->currency_rate );
 			if ( isset( $data[ $result->category ] ) ) {
 				$data[ $result->category_id ]['amount'] = (int) ( $data[ $result->category ]['amount'] + $amount );
 			} else {
@@ -377,7 +377,7 @@ class Dashboard {
 				);
 			}
 		}
-		$data  = eaccounting_collect( $data )->sort(
+		$data  = ever_accounting_collect( $data )->sort(
 			function ( $a, $b ) {
 				return $b['amount'] > $a['amount'];
 			}
@@ -388,7 +388,7 @@ class Dashboard {
 		$chart->push(
 			array(
 				'name'   => __( 'Others', 'wp-ever-accounting' ),
-				'color'  => eaccounting_get_random_color(),
+				'color'  => \Ever_Accounting\Helpers\Misc::get_random_color(),
 				'amount' => (int) $total,
 			)
 		);
@@ -481,7 +481,7 @@ class Dashboard {
 				<tr>
 					<td><?php echo esc_html( $income->payment_date ); ?></td>
 					<td><?php echo esc_html( $income->name ); ?></td>
-					<td><?php echo eaccounting_format_price( $income->amount, $income->currency_code ); ?></td>
+					<td><?php echo \Ever_Accounting\Helpers\Price::format_price( $income->amount, $income->currency_code ); ?></td>
 				</tr>
 			<?php endforeach; ?>
 			</tbody>
@@ -533,7 +533,7 @@ class Dashboard {
 				<tr>
 					<td><?php echo esc_html( $expense->payment_date ); ?></td>
 					<td><?php echo esc_html( $expense->name ); ?></td>
-					<td><?php echo eaccounting_format_price( $expense->amount, $expense->currency_code ); ?></td>
+					<td><?php echo \Ever_Accounting\Helpers\Price::format_price( $expense->amount, $expense->currency_code ); ?></td>
 				</tr>
 			<?php endforeach; ?>
 			</tbody>
@@ -563,7 +563,7 @@ class Dashboard {
 
 		foreach ( $accounts as $key => $account ) {
 			$total            = $account->balance + $account->opening_balance;
-			$account->balance = eaccounting_format_price( $total, $account->currency_code );
+			$account->balance = \Ever_Accounting\Helpers\Price::format_price( $total, $account->currency_code );
 			$accounts[ $key ] = $account;
 		}
 

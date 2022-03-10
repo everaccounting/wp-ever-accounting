@@ -113,7 +113,7 @@ function eaccounting_get_settings_tab_sections( $tab = false ) {
  * @return array
  * @since  1.0.2
  */
-function eaccounting_get_screen_ids() {
+function ever_accounting_get_screen_ids() {
 	$eaccounting_screen_id = sanitize_title( __( 'Accounting', 'wp-ever-accounting' ) );
 
 	$screen_ids = array(
@@ -149,7 +149,7 @@ function eaccounting_is_admin_page( $page = '' ) {
 	}
 
 	if ( empty( $page ) && isset( $_GET['page'] ) ) {
-		$page = eaccounting_clean( $_GET['page'] );
+		$page = \Ever_Accounting\Helpers\Formatting::clean( $_GET['page'] );
 	} else {
 		$ret = false;
 	}
@@ -159,7 +159,7 @@ function eaccounting_is_admin_page( $page = '' ) {
 		'toplevel_page_',
 		'accounting_page_',
 		$eaccounting_screen_id . '_page_'
-	), '', eaccounting_get_screen_ids() );
+	), '', ever_accounting_get_screen_ids() );
 
 	if ( ! empty( $page ) && in_array( $page, $pages ) ) {
 		$ret = true;
@@ -182,9 +182,9 @@ function eaccounting_is_admin_page( $page = '' ) {
  * @since 1.0.2
  *
  */
-function eaccounting_admin_url( $query_args = array(), $page = null ) {
+function ever_accounting_admin_url( $query_args = array(), $page = null ) {
 	if ( null === $page ) {
-		$page = isset( $_GET['page'] ) ? eaccounting_clean( $_GET['page'] ) : '';
+		$page = isset( $_GET['page'] ) ? \Ever_Accounting\Helpers\Formatting::clean( $_GET['page'] ) : '';
 	}
 
 	// When translate the page name becomes different so use translated
@@ -193,7 +193,7 @@ function eaccounting_admin_url( $query_args = array(), $page = null ) {
 		'toplevel_page_',
 		'accounting_page_',
 		$eaccounting_screen_id . '_page_'
-	), '', eaccounting_get_screen_ids() );
+	), '', ever_accounting_get_screen_ids() );
 
 	if ( ! in_array( $page, $whitelist, true ) ) {
 		$page = '';
@@ -231,7 +231,7 @@ function eaccounting_admin_url( $query_args = array(), $page = null ) {
  */
 function eaccounting_get_active_tab( $tabs, $default = null ) {
 	if ( isset( $_GET['tab'] ) && array_key_exists( $_GET['tab'], $tabs ) ) {
-		$active_tab = eaccounting_clean( $_GET['tab'] );
+		$active_tab = \Ever_Accounting\Helpers\Formatting::clean( $_GET['tab'] );
 	} elseif ( ! empty( $default ) ) {
 		$active_tab = $default;
 	} else {
@@ -291,7 +291,7 @@ function eaccounting_navigation_tabs( $tabs, $active_tab, $query_args = array(),
  *
  */
 function eaccounting_get_current_tab( $tab = 'tab' ) {
-	return ( isset( $tab ) ) ? eaccounting_clean( $tab ) : '';
+	return ( isset( $tab ) ) ? \Ever_Accounting\Helpers\Formatting::clean( $tab ) : '';
 }
 
 /**

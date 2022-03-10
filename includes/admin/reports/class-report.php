@@ -52,7 +52,7 @@ class Report {
 			$year = date_i18n( 'Y' );
 		}
 
-		return eaccounting_get_financial_start( intval( $year ) );
+		return ever_accounting_get_financial_start( intval( $year ) );
 	}
 
 	/**
@@ -70,7 +70,7 @@ class Report {
 			$year = date_i18n( 'Y' );
 		}
 
-		return eaccounting_get_financial_end( intval( $year ) );
+		return ever_accounting_get_financial_end( intval( $year ) );
 	}
 
 

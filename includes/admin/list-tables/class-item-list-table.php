@@ -10,7 +10,6 @@
  */
 
 use Ever_Accounting\Items;
-use Ever_Accounting\Models\Item;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -167,7 +166,7 @@ class Ever_Accounting_Item_List_Table extends Ever_Accounting_List_Table {
 	/**
 	 * Renders the checkbox column in the items list table.
 	 *
-	 * @param Item $item The current item object.
+	 * @param \Ever_Accounting\Item $item The current item object.
 	 *
 	 * @return string Displays a checkbox.
 	 * @since  1.1.0
@@ -180,9 +179,8 @@ class Ever_Accounting_Item_List_Table extends Ever_Accounting_List_Table {
 	/**
 	 * This function renders most of the columns in the list table.
 	 *
-	 * @param Item $column_name The name of the column
-	 *
-	 * @param Item $item
+	 * @param string                $column_name The name of the column
+	 * @param \Ever_Accounting\Item $item Item object.
 	 *
 	 * @return string The column value.
 	 * @since 1.1.0
@@ -192,17 +190,17 @@ class Ever_Accounting_Item_List_Table extends Ever_Accounting_List_Table {
 		$item_id = $item->get_id();
 		switch ( $column_name ) {
 			case 'thumb':
-				$edit_url  = eaccounting_admin_url( array( 'page' => 'ea-items', 'tab' => 'items', 'action' => 'edit', 'item_id' => $item_id, ) );// phpcs:ignore
+				$edit_url  = ever_accounting_admin_url( array( 'page' => 'ea-items', 'tab' => 'items', 'action' => 'edit', 'item_id' => $item_id, ) );// phpcs:ignore
 				$thumb_url = wp_get_attachment_thumb_url( $item->get_thumbnail_id() );
-				$thumb_url = empty( $thumb_url ) ? eaccounting()->plugin_url( '/assets/dist/images/placeholder.png' ) : $thumb_url;
+				$thumb_url = empty( $thumb_url ) ? ever_accounting_plugin_url( '/assets/dist/images/placeholder.png' ) : $thumb_url;
 				$value     = '<a href="' . esc_url( $edit_url ) . '"><img src="' . $thumb_url . '" height="36" width="36" alt="' . $item->get_name() . '"></a>';
 				break;
 			case 'name':
-				$edit_url = eaccounting_admin_url( array( 'page' => 'ea-items', 'tab' => 'items', 'action' => 'edit', 'item_id' => $item_id, ) );// phpcs:ignore
+				$edit_url = ever_accounting_admin_url( array( 'page' => 'ea-items', 'tab' => 'items', 'action' => 'edit', 'item_id' => $item_id, ) );// phpcs:ignore
 				$nonce    = wp_create_nonce( 'item-nonce' );
 				$actions  = array(
 					'id'     => 'ID: ' . $item_id,
-					'edit'   => '<a href="' . eaccounting_admin_url(
+					'edit'   => '<a href="' . ever_accounting_admin_url(
 							array(
 								'page'    => 'ea-items',
 								'tab'     => 'items',
@@ -210,7 +208,7 @@ class Ever_Accounting_Item_List_Table extends Ever_Accounting_List_Table {
 								'item_id' => $item_id,
 							)
 						) . '">' . __( 'Edit', 'wp-ever-accounting' ) . '</a>',
-					'delete' => '<a href="' . eaccounting_admin_url(
+					'delete' => '<a href="' . ever_accounting_admin_url(
 							array(
 								'page'     => 'ea-items',
 								'tab'      => 'items',
@@ -223,13 +221,13 @@ class Ever_Accounting_Item_List_Table extends Ever_Accounting_List_Table {
 				$value    = '<a href="' . esc_url( $edit_url ) . '"><strong>' . $item->get_name() . '</strong></a>' . $this->row_actions( $actions );
 				break;
 			case 'sale_price':
-				$value = eaccounting_price( $item->get_sale_price() );
+				$value = \Ever_Accounting\Helpers\Price::price( $item->get_sale_price() );
 				break;
 			case 'purchase_price':
-				$value = eaccounting_price( $item->get_purchase_price() );
+				$value = \Ever_Accounting\Helpers\Price::price( $item->get_purchase_price() );
 				break;
 			case 'category_id':
-				$category = eaccounting_get_category( $item->get_category_id() );
+				$category = \Ever_Accounting\Categories::get( $item->get_category_id() );
 				$value    = $category ? $category->get_name() : '&mdash;';
 				break;
 			case 'enabled':
@@ -242,7 +240,7 @@ class Ever_Accounting_Item_List_Table extends Ever_Accounting_List_Table {
 				return parent::column_default( $item, $column_name );
 		}
 
-		return apply_filters( 'eaccounting_item_list_table_' . $column_name, $value, $item );
+		return apply_filters( 'ever_accounting_item_list_table_' . $column_name, $value, $item );
 	}
 
 	/**
@@ -287,7 +285,7 @@ class Ever_Accounting_Item_List_Table extends Ever_Accounting_List_Table {
 		foreach ( $ids as $id ) {
 			switch ( $action ) {
 				case 'enable':
-					eaccounting_insert_item(
+					\Ever_Accounting\Items::insert(
 						array(
 							'id'      => $id,
 							'enabled' => '1',
@@ -295,7 +293,7 @@ class Ever_Accounting_Item_List_Table extends Ever_Accounting_List_Table {
 					);
 					break;
 				case 'disable':
-					eaccounting_insert_item(
+					\Ever_Accounting\Items::insert(
 						array(
 							'id'      => $id,
 							'enabled' => '0',
@@ -303,10 +301,10 @@ class Ever_Accounting_Item_List_Table extends Ever_Accounting_List_Table {
 					);
 					break;
 				case 'delete':
-					eaccounting_delete_item( $id );
+					\Ever_Accounting\Items::delete( $id );
 					break;
 				default:
-					do_action( 'eaccounting_items_do_bulk_action_' . $this->current_action(), $id );
+					do_action( 'ever_accounting_items_do_bulk_action_' . $this->current_action(), $id );
 			}
 		}
 
@@ -335,7 +333,7 @@ class Ever_Accounting_Item_List_Table extends Ever_Accounting_List_Table {
 	 * @since 1.1.0
 	 */
 	public function get_views() {
-		$base           = eaccounting_admin_url();
+		$base           = ever_accounting_admin_url();
 		$current        = isset( $_GET['status'] ) ? $_GET['status'] : '';
 		$total_count    = '&nbsp;<span class="count">(' . $this->total_count . ')</span>';
 		$active_count   = '&nbsp;<span class="count">(' . $this->active_count . ')</span>';
@@ -382,11 +380,11 @@ class Ever_Accounting_Item_List_Table extends Ever_Accounting_List_Table {
 				'page'     => $page,
 				'status'   => $status,
 				'search'   => $search,
-				'orderby'  => eaccounting_clean( $orderby ),
-				'order'    => eaccounting_clean( $order ),
+				'orderby'  => \Ever_Accounting\Helpers\Formatting::clean( $orderby ),
+				'order'    => \Ever_Accounting\Helpers\Formatting::clean( $order ),
 			)
 		);
-		\Ever_Accounting\Currencies::get_currencies(
+		\Ever_Accounting\Currencies::query(
 			array(
 				'return' => 'raw',
 				'number' => '-1',
@@ -394,9 +392,9 @@ class Ever_Accounting_Item_List_Table extends Ever_Accounting_List_Table {
 		);
 
 		$args        = apply_filters( 'eaccounting_item_table_query_args', $args, $this );
-		$this->items = Items::get_items( $args );
+		$this->items = Items::query( $args );
 
-		$this->active_count = Items::get_items(
+		$this->active_count = Items::query(
 			array_merge(
 				$args,
 				array(
@@ -406,7 +404,7 @@ class Ever_Accounting_Item_List_Table extends Ever_Accounting_List_Table {
 				true
 		);
 
-		$this->inactive_count = Items::get_items(
+		$this->inactive_count = Items::query(
 			array_merge(
 				$args,
 				array(

@@ -10,6 +10,10 @@
  * @var int $item_id
  */
 
+use \Ever_Accounting\Helpers\Form;
+use \Ever_Accounting\Helpers\Tax;
+use \Ever_Accounting\Helpers\Price;
+
 defined( 'ABSPATH' ) || exit();
 
 try {
@@ -47,7 +51,7 @@ $title = $item->exists() ? __( 'Update Item', 'wp-ever-accounting' ) : __( 'Add 
 
 				<div class="ea-row">
 					<?php
-					eaccounting_text_input(
+					Form::text_input(
 						array(
 							'wrapper_class' => 'ea-col-6',
 							'label'         => __( 'Name', 'wp-ever-accounting' ),
@@ -58,7 +62,7 @@ $title = $item->exists() ? __( 'Update Item', 'wp-ever-accounting' ) : __( 'Add 
 							'required'      => true,
 						)
 					);
-					eaccounting_category_dropdown(
+					Form::category_dropdown(
 						array(
 							'wrapper_class' => 'ea-col-6',
 							'label'         => __( 'Category', 'wp-ever-accounting' ),
@@ -81,7 +85,7 @@ $title = $item->exists() ? __( 'Update Item', 'wp-ever-accounting' ) : __( 'Add 
 					//						'required'      => true,
 					//					)
 					//				);
-					eaccounting_text_input(
+					Form::text_input(
 						array(
 							'wrapper_class' => 'ea-col-6',
 							'label'         => __( 'Sale price', 'wp-ever-accounting' ),
@@ -91,7 +95,7 @@ $title = $item->exists() ? __( 'Update Item', 'wp-ever-accounting' ) : __( 'Add 
 							'required'      => true,
 						)
 					);
-					eaccounting_text_input(
+					Form::text_input(
 						array(
 							'wrapper_class' => 'ea-col-6',
 							'label'         => __( 'Purchase price', 'wp-ever-accounting' ),
@@ -101,8 +105,8 @@ $title = $item->exists() ? __( 'Update Item', 'wp-ever-accounting' ) : __( 'Add 
 							'required'      => true,
 						)
 					);
-					if ( eaccounting_tax_enabled() ) :
-						eaccounting_text_input(
+					if ( Tax::tax_enabled() ) :
+						Form::text_input(
 							array(
 								'wrapper_class' => 'ea-col-6',
 								'label'         => __( 'Sales Tax (%)', 'wp-ever-accounting' ),
@@ -118,7 +122,7 @@ $title = $item->exists() ? __( 'Update Item', 'wp-ever-accounting' ) : __( 'Add 
 							)
 						);
 
-						eaccounting_text_input(
+						Form::text_input(
 							array(
 								'wrapper_class' => 'ea-col-6',
 								'label'         => __( 'Purchase Tax (%)', 'wp-ever-accounting' ),
@@ -134,7 +138,7 @@ $title = $item->exists() ? __( 'Update Item', 'wp-ever-accounting' ) : __( 'Add 
 							)
 						);
 					endif;
-					eaccounting_textarea(
+					Form::textarea(
 						array(
 							'label'         => __( 'Description', 'wp-ever-accounting' ),
 							'name'          => 'description',
@@ -145,7 +149,7 @@ $title = $item->exists() ? __( 'Update Item', 'wp-ever-accounting' ) : __( 'Add 
 						)
 					);
 
-					eaccounting_file_input(
+					Form::file_input(
 						array(
 							'label'         => __( 'Product Image', 'wp-ever-accounting' ),
 							'name'          => 'thumbnail_id',
@@ -157,14 +161,14 @@ $title = $item->exists() ? __( 'Update Item', 'wp-ever-accounting' ) : __( 'Add 
 						)
 					);
 
-					eaccounting_hidden_input(
+					Form::hidden_input(
 						array(
 							'name'  => 'id',
 							'value' => $item->get_id(),
 						)
 					);
 
-					eaccounting_hidden_input(
+					Form::hidden_input(
 						array(
 							'name'  => 'action',
 							'value' => 'eaccounting_edit_item',
@@ -185,9 +189,9 @@ $title = $item->exists() ? __( 'Update Item', 'wp-ever-accounting' ) : __( 'Add 
 		</div>
 	</form>
 <?php
-$code     = eaccounting_get_default_currency();
-$currency = eaccounting_get_currency( $code );
-eaccounting_enqueue_js(
+$code     = Price::get_default_currency();
+$currency = \Ever_Accounting\Currencies::get( $code );
+ever_accounting_enqueue_js(
 	"
 	jQuery('#ea-item-form #purchase_price, #ea-item-form #sale_price').inputmask('decimal', {
 			alias: 'numeric',

@@ -226,7 +226,7 @@ class Notices {
 		);
 
 		// Notices should only show on Ever_Accounting screens, the main dashboard, and on the plugins screen.
-		if ( ! in_array( $screen_id, eaccounting_get_screen_ids(), true ) && ! in_array( $screen_id, $show_on_screens, true ) ) {
+		if ( ! in_array( $screen_id, ever_accounting_get_screen_ids(), true ) && ! in_array( $screen_id, $show_on_screens, true ) ) {
 			return;
 		}
 		foreach ( array_keys( $notices ) as $notice ) {

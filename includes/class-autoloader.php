@@ -42,7 +42,6 @@ class Autoloader {
 		$file_name     = 'class-' . str_replace( '_', '-', $class_name ) . '.php';
 		$relative_path = str_replace( array( $namespace, '\\', $matches['class_name'] ), array( '', DIRECTORY_SEPARATOR, $file_name ), $class );
 		$file          = trailingslashit( $include_path ) . strtolower( $relative_path );
-
 		// if the file exists, require it.
 		if ( file_exists( $file ) ) {
 			require $file;

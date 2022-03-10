@@ -104,7 +104,7 @@ class CashFlow extends Report {
 			if ( ! isset( $income[ $result->date ] ) ) {
 				$income[ $result->date ] = 0;
 			}
-			$amount                   = eaccounting_price_to_default( $result->amount, $result->currency_code, $result->currency_rate );
+			$amount                   = \Ever_Accounting\Helpers\Price::price_to_default( $result->amount, $result->currency_code, $result->currency_rate );
 			$income[ $result->date ] += $amount;
 		}
 
@@ -129,7 +129,7 @@ class CashFlow extends Report {
 			if ( ! isset( $expense[ $result->date ] ) ) {
 				$expense[ $result->date ] = 0;
 			}
-			$amount                    = eaccounting_price_to_default( $result->amount, $result->currency_code, $result->currency_rate );
+			$amount                    = \Ever_Accounting\Helpers\Price::price_to_default( $result->amount, $result->currency_code, $result->currency_rate );
 			$expense[ $result->date ] += $amount;
 		}
 

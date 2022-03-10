@@ -114,4 +114,108 @@ class Formatting {
 
 		return $number;
 	}
+
+	/**
+	 * Sanitize a string destined to be a tooltip.
+	 *
+	 * Tooltips are encoded with htmlspecialchars to prevent XSS. Should not be used in conjunction with esc_attr()
+	 *
+	 * @param string $var Data to sanitize.
+	 *
+	 * @return string
+	 * @since  1.0.2
+	 */
+	public static function sanitize_tooltip( $var ) {
+		return htmlspecialchars(
+			wp_kses(
+				html_entity_decode( $var ),
+				array(
+					'br'     => array(),
+					'em'     => array(),
+					'strong' => array(),
+					'small'  => array(),
+					'span'   => array(),
+					'ul'     => array(),
+					'li'     => array(),
+					'ol'     => array(),
+					'p'      => array(),
+				)
+			)
+		);
+	}
+
+	/**
+	 * Implode and escape HTML attributes for output.
+	 *
+	 * @param array $raw_attributes Attribute name value pairs.
+	 *
+	 * @return string
+	 * @since 1.0.2
+	 */
+	public static function implode_html_attributes( $raw_attributes ) {
+		$attributes     = array();
+		$raw_attributes = array_filter( $raw_attributes );
+		foreach ( $raw_attributes as $name => $value ) {
+			$attributes[] = esc_attr( $name ) . '="' . esc_attr( trim( $value ) ) . '"';
+		}
+
+		return implode( ' ', $attributes );
+	}
+
+	/**
+	 * Display help tip.
+	 *
+	 * @param bool   $allow_html Allow sanitized HTML if true or escape.
+	 *
+	 * @param string $tip        Help tip text.
+	 *
+	 * @return string
+	 * @since  1.0.2
+	 */
+	public static function help_tip( $tip, $allow_html = false ) {
+		if ( $allow_html ) {
+			$tip = self::sanitize_tooltip( $tip );
+		} else {
+			$tip = esc_attr( $tip );
+		}
+
+		return '<span class="ea-help-tip" title="' . $tip . '"></span>';
+	}
+
+	/**
+	 * EverAccounting date format - Allows to change date format for everything.
+	 *
+	 * @return string
+	 * @since 1.0.2
+	 */
+	public static function date_format() {
+		return apply_filters( 'eaccounting_date_format', ever_accounting_get_option( 'date_format', 'Y-m-d' ) );
+	}
+
+	/**
+	 * Format a date for output.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param string $format
+	 * @param        $date
+	 *
+	 * @return string
+	 */
+	public static function date( $date, $format = '' ) {
+
+		if ( empty( $date ) || '0000-00-00 00:00:00' === $date || '0000-00-00' === $date ) {
+			return '';
+		}
+
+		if ( ! $format ) {
+			$format = self::date_format();
+		}
+
+		if ( ! is_numeric( $date ) ) {
+			$date = strtotime( $date );
+		}
+
+		return date_i18n( $format, $date );
+	}
 }
