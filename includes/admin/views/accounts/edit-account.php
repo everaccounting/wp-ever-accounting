@@ -11,6 +11,10 @@
  * @var int $account_id
  */
 
+use Ever_Accounting\Helpers\Form;
+use Ever_Accounting\Helpers\Formatting;
+use Ever_Accounting\Helpers\Misc;
+
 defined( 'ABSPATH' ) || exit();
 
 try {
@@ -52,7 +56,7 @@ $title = $account->exists() ? __( 'Update Account', 'wp-ever-accounting' ) : __(
 
 					<div class="ea-row">
 						<?php
-						eaccounting_text_input(
+						Form::text_input(
 							array(
 								'wrapper_class' => 'ea-col-6',
 								'label'         => __( 'Account Name', 'wp-ever-accounting' ),
@@ -62,7 +66,7 @@ $title = $account->exists() ? __( 'Update Account', 'wp-ever-accounting' ) : __(
 								'placeholder'   => __( 'Enter account name', 'wp-ever-accounting' ),
 							)
 						);
-						eaccounting_text_input(
+						Form::text_input(
 							array(
 								'wrapper_class' => 'ea-col-6',
 								'label'         => __( 'Account Number', 'wp-ever-accounting' ),
@@ -72,7 +76,7 @@ $title = $account->exists() ? __( 'Update Account', 'wp-ever-accounting' ) : __(
 								'placeholder'   => __( 'Enter account number', 'wp-ever-accounting' ),
 							)
 						);
-						eaccounting_currency_dropdown(
+						Form::currency_dropdown(
 							array(
 								'wrapper_class' => 'ea-col-6',
 								'label'         => __( 'Account Currency', 'wp-ever-accounting' ),
@@ -82,7 +86,7 @@ $title = $account->exists() ? __( 'Update Account', 'wp-ever-accounting' ) : __(
 								'creatable'     => true,
 							)
 						);
-						eaccounting_text_input(
+						Form::text_input(
 							array(
 								'wrapper_class' => 'ea-col-6',
 								'label'         => __( 'Opening Balance', 'wp-ever-accounting' ),
@@ -91,7 +95,7 @@ $title = $account->exists() ? __( 'Update Account', 'wp-ever-accounting' ) : __(
 								'default'       => '0.00',
 							)
 						);
-						eaccounting_text_input(
+						Form::text_input(
 							array(
 								'wrapper_class' => 'ea-col-6',
 								'label'         => __( 'Bank Name', 'wp-ever-accounting' ),
@@ -100,7 +104,7 @@ $title = $account->exists() ? __( 'Update Account', 'wp-ever-accounting' ) : __(
 								'placeholder'   => __( 'Enter bank name', 'wp-ever-accounting' ),
 							)
 						);
-						eaccounting_text_input(
+						Form::text_input(
 							array(
 								'wrapper_class' => 'ea-col-6',
 								'label'         => __( 'Bank Phone', 'wp-ever-accounting' ),
@@ -109,7 +113,7 @@ $title = $account->exists() ? __( 'Update Account', 'wp-ever-accounting' ) : __(
 								'placeholder'   => __( 'Enter bank phone', 'wp-ever-accounting' ),
 							)
 						);
-						eaccounting_textarea(
+						Form::textarea(
 							array(
 								'wrapper_class' => 'ea-col-6',
 								'label'         => __( 'Bank Address', 'wp-ever-accounting' ),
@@ -118,7 +122,7 @@ $title = $account->exists() ? __( 'Update Account', 'wp-ever-accounting' ) : __(
 								'placeholder'   => __( 'Enter bank address', 'wp-ever-accounting' ),
 							)
 						);
-						eaccounting_file_input(
+						Form::file_input(
 							array(
 								'wrapper_class' => 'ea-col-6',
 								'label'         => __( 'Photo', 'wp-ever-accounting' ),
@@ -127,16 +131,16 @@ $title = $account->exists() ? __( 'Update Account', 'wp-ever-accounting' ) : __(
 								'value'         => $account->get_thumbnail_id(),
 							)
 						);
-						eaccounting_hidden_input(
+						Form::hidden_input(
 							array(
 								'name'  => 'id',
 								'value' => $account->get_id(),
 							)
 						);
-						eaccounting_hidden_input(
+						Form::hidden_input(
 							array(
 								'name'  => 'action',
-								'value' => 'eaccounting_edit_account',
+								'value' => 'ever_accounting_edit_account',
 							)
 						);
 						?>
@@ -158,8 +162,8 @@ $title = $account->exists() ? __( 'Update Account', 'wp-ever-accounting' ) : __(
 						echo sprintf(
 						/* translators: %s date and %s name */
 							esc_html__( 'The account was created at %1$s by %2$s', 'wp-ever-accounting' ),
-							eaccounting_date( $account->get_date_created(), 'F m, Y H:i a' ),
-							eaccounting_get_full_name( $account->get_creator_id() )
+							Formatting::date( $account->get_date_created(), 'F m, Y H:i a' ),
+							Misc::get_full_name( $account->get_creator_id() )
 						);
 						?>
 					</p>
@@ -170,7 +174,7 @@ $title = $account->exists() ? __( 'Update Account', 'wp-ever-accounting' ) : __(
 		</div>
 	</form>
 <?php
-eaccounting_enqueue_js(
+ever_accounting_enqueue_js(
 	"
 	jQuery('#ea-account-form #opening_balance').inputmask('decimal', {
 			alias: 'numeric',

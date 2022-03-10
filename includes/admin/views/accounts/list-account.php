@@ -26,7 +26,7 @@ $import_url = add_query_arg(
 	),
 	admin_url( 'admin.php' )
 );
-include( EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-account-list-table.php' );
+include( dirname( EVER_ACCOUNTING_FILE ) . '/includes/admin/list-tables/class-account-list-table.php' );
 $accounts_table = new Ever_Accounting_Account_List_Table();
 $accounts_table->prepare_items();
 ?>
@@ -35,7 +35,7 @@ $accounts_table->prepare_items();
 		<a href="<?php echo esc_url( $add_url ); ?>" class="page-title-action"><?php _e( 'Add New', 'wp-ever-accounting' ); ?></a>
 		<a class="page-title-action" href=" <?php echo esc_url( $import_url ); ?>"><?php _e( 'Import', 'wp-ever-accounting' ); ?></a>
 	</h1>
-	<?php do_action( 'eaccounting_accounts_table_top' ); ?>
+	<?php do_action( 'ever_accounting_accounts_table_top' ); ?>
 	<form method="get" id="ea-accounts-table" action="<?php echo admin_url( 'admin.php' ); ?>">
 		<?php $accounts_table->views();?>
 		<?php $accounts_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'ea-accounts' ); ?>
@@ -44,13 +44,13 @@ $accounts_table->prepare_items();
 		<input type="hidden" name="page" value="ea-banking"/>
 		<input type="hidden" name="tab" value="accounts"/>
 	</form>
-	<?php do_action( 'eaccounting_accounts_table_bottom' ); ?>
+	<?php do_action( 'ever_accounting_accounts_table_bottom' ); ?>
 
 <?php
-eaccounting_enqueue_js(
+ever_accounting_enqueue_js(
 		"
 	jQuery('.account-status').on('change', function(e){
-		jQuery.post('" . eaccounting()->ajax_url() . "', {
+		jQuery.post('" . ever_accounting_ajax_url() . "', {
 			action:'eaccounting_edit_account',
 			id: $(this).data('id'),
 			enabled: $(this).is(':checked'),

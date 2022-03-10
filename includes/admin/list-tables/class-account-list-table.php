@@ -11,6 +11,8 @@
 
 use Ever_Accounting\Account;
 use Ever_Accounting\Accounts;
+use Ever_Accounting\Helpers\Formatting;
+use Ever_Accounting\Helpers\Price;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -100,7 +102,7 @@ class Ever_Accounting_Account_List_Table extends Ever_Accounting_List_Table {
 			<p class="ea-empty-table__message">
 				<?php echo esc_html__( 'Create unlimited bank and cash accounts and track their opening and current balances. You can use it with any currencies that you want. Ever Accounting will take care of the currency.', 'wp-ever-accounting' ); ?>
 			</p>
-			<a href="<?php echo esc_url( eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'accounts', 'action' => 'edit', ) ) ); //phpcs:ignore?>" class="button-primary ea-empty-table__cta"><?php _e( 'Add Account', 'wp-ever-accounting' ); ?></a>
+			<a href="<?php echo esc_url( ever_accounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'accounts', 'action' => 'edit', ) ) ); //phpcs:ignore?>" class="button-primary ea-empty-table__cta"><?php _e( 'Add Account', 'wp-ever-accounting' ); ?></a>
 			<a href="https://wpeveraccounting.com/docs/general/how-to-add-accounts/?utm_source=listtable&utm_medium=link&utm_campaign=admin" class="button-secondary ea-empty-table__cta" target="_blank"><?php _e( 'Learn More', 'wp-ever-accounting' ); ?></a>
 		</div>
 		<?php
@@ -192,17 +194,17 @@ class Ever_Accounting_Account_List_Table extends Ever_Accounting_List_Table {
 		$account_id = $account->get_id();
 		switch ( $column_name ) {
 			case 'thumb':
-				$view_url  = eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'accounts', 'action' => 'view', 'account_id' => $account_id ) );// phpcs:ignore
+				$view_url  = ever_accounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'accounts', 'action' => 'view', 'account_id' => $account_id ) );// phpcs:ignore
 				$thumb_url = wp_get_attachment_thumb_url( $account->get_prop( 'thumbnail_id' ) );
-				$thumb_url = empty( $thumb_url ) ? eaccounting()->plugin_url( '/assets/dist/images/placeholder-logo.png' ) : $thumb_url;
+				$thumb_url = empty( $thumb_url ) ? ever_accounting_plugin_url( '/assets/dist/images/placeholder-logo.png' ) : $thumb_url;
 				$value     = '<a href="' . esc_url( $view_url ) . '"><img src="' . $thumb_url . '" height="36" width="36" alt="' . $account->get_name() . '"></a>';
 				break;
 
 			case 'name':
 				$nonce    = wp_create_nonce( 'account-nonce' );
-				$view_url = eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'accounts', 'action' => 'view', 'account_id' => $account_id ) );// phpcs:ignore
-				$edit_url = eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'accounts', 'action' => 'edit', 'account_id' => $account_id ) );// phpcs:ignore
-				$del_url  = eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'accounts', 'action' => 'delete', 'account_id' => $account_id, '_wpnonce' => $nonce ) );// phpcs:ignore
+				$view_url = ever_accounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'accounts', 'action' => 'view', 'account_id' => $account_id ) );// phpcs:ignore
+				$edit_url = ever_accounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'accounts', 'action' => 'edit', 'account_id' => $account_id ) );// phpcs:ignore
+				$del_url  = ever_accounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'accounts', 'action' => 'delete', 'account_id' => $account_id, '_wpnonce' => $nonce ) );// phpcs:ignore
 
 				$actions = array(
 					'id'     => 'ID: ' . $account_id,
@@ -214,7 +216,7 @@ class Ever_Accounting_Account_List_Table extends Ever_Accounting_List_Table {
 				$value   = '<a href="' . esc_url( $view_url ) . '"><strong>' . $account->get_name() . '</strong></a>' . $this->row_actions( $actions );
 				break;
 			case 'balance':
-				$value = eaccounting_format_price( $account->get_balance(), $account->get_currency_code() );
+				$value = Price::format_price( $account->get_balance(), $account->get_currency_code() );
 				break;
 			case 'number':
 				$value = $account->get_number();
@@ -277,7 +279,7 @@ class Ever_Accounting_Account_List_Table extends Ever_Accounting_List_Table {
 		foreach ( $ids as $id ) {
 			switch ( $action ) {
 				case 'enable':
-					Accounts::insert_account(
+					Accounts::insert(
 						array(
 							'id'      => $id,
 							'enabled' => '1',
@@ -285,7 +287,7 @@ class Ever_Accounting_Account_List_Table extends Ever_Accounting_List_Table {
 					);
 					break;
 				case 'disable':
-					Accounts::insert_account(
+					Accounts::insert(
 						array(
 							'id'      => $id,
 							'enabled' => '0',
@@ -293,10 +295,10 @@ class Ever_Accounting_Account_List_Table extends Ever_Accounting_List_Table {
 					);
 					break;
 				case 'delete':
-					Accounts::delete_account( $id );
+					Accounts::delete( $id );
 					break;
 				default:
-					do_action( 'eaccounting_accounts_do_bulk_action_' . $this->current_action(), $id );
+					do_action( 'ever_accounting_accounts_do_bulk_action_' . $this->current_action(), $id );
 			}
 		}
 
@@ -325,7 +327,7 @@ class Ever_Accounting_Account_List_Table extends Ever_Accounting_List_Table {
 	 * @since 1.0.2
 	 */
 	public function get_views() {
-		$base           = eaccounting_admin_url( array( 'tab' => 'accounts' ) );
+		$base           = ever_accounting_admin_url( array( 'tab' => 'accounts' ) );
 		$current        = isset( $_GET['status'] ) ? $_GET['status'] : '';
 		$total_count    = '&nbsp;<span class="count">(' . $this->total_count . ')</span>';
 		$active_count   = '&nbsp;<span class="count">(' . $this->active_count . ')</span>';
@@ -372,21 +374,21 @@ class Ever_Accounting_Account_List_Table extends Ever_Accounting_List_Table {
 				'page'     => $page,
 				'status'   => $status,
 				'search'   => $search,
-				'orderby'  => eaccounting_clean( $orderby ),
-				'order'    => eaccounting_clean( $order ),
+				'orderby'  => Formatting::clean( $orderby ),
+				'order'    => Formatting::clean( $order ),
 			)
 		);
-		\Ever_Accounting\Currencies::get_currencies(
+		\Ever_Accounting\Currencies::query(
 			array(
 				'return' => 'raw',
 				'number' => '-1',
 			)
 		);
 
-		$args        = apply_filters( 'eaccounting_account_table_query_args', $args, $this );
-		$this->items = Accounts::get_accounts( array_merge( $args, array( 'balance' => true ) ) );
+		$args        = apply_filters( 'ever_accounting_account_table_query_args', $args, $this );
+		$this->items = Accounts::query( array_merge( $args, array( 'balance' => true ) ) );
 
-		$this->active_count = Accounts::get_accounts(
+		$this->active_count = Accounts::query(
 			array_merge(
 				$args,
 				array(
@@ -396,7 +398,7 @@ class Ever_Accounting_Account_List_Table extends Ever_Accounting_List_Table {
 				true
 		);
 
-		$this->inactive_count = Accounts::get_accounts(
+		$this->inactive_count = Accounts::query(
 			array_merge(
 				$args,
 				array(

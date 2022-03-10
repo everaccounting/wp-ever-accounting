@@ -10,9 +10,13 @@
  * @var int $account_id
  */
 
+use Ever_Accounting\Helpers\Formatting;
+use Ever_Accounting\Helpers\Misc;
+use Ever_Accounting\Helpers\Price;
+
 defined( 'ABSPATH' ) || exit();
 
-$account = \Ever_Accounting\Accounts::get_account( $account_id );
+$account = \Ever_Accounting\Accounts::get( $account_id );
 
 if ( empty( $account ) || ! $account->exists() ) {
 	wp_die( __( 'Sorry, Account does not exist', 'wp-ever-accounting' ) );
@@ -25,7 +29,7 @@ $sections        = array(
 $sections        = apply_filters( 'eaccounting_account_sections', $sections );
 $first_section   = current( array_keys( $sections ) );
 $current_section = ! empty( $_GET['section'] ) && array_key_exists( $_GET['section'], $sections ) ? sanitize_title( $_GET['section'] ) : $first_section;
-$edit_url        = eaccounting_admin_url(
+$edit_url        = ever_accounting_admin_url(
 	array(
 		'page'       => 'ea-banking',
 		'tab'        => 'accounts',
@@ -55,7 +59,7 @@ $edit_url        = eaccounting_admin_url(
 					<div class="ea-widget-card__content">
 						<div class="ea-widget-card__primary">
 							<span class="ea-widget-card__title"><?php esc_html_e( 'Current Balance', 'wp-ever-accounting' ); ?></span>
-							<span class="ea-widget-card__amount"><?php echo eaccounting_format_price( $account->get_balance(), $account->get_currency_code() ); ?></span>
+							<span class="ea-widget-card__amount"><?php echo Price::format_price( $account->get_balance(), $account->get_currency_code() ); ?></span>
 						</div>
 					</div>
 				</div><!--.ea-widget-card-->
@@ -71,7 +75,7 @@ $edit_url        = eaccounting_admin_url(
 					<div class="ea-widget-card__content">
 						<div class="ea-widget-card__primary">
 							<span class="ea-widget-card__title"><?php esc_html_e( 'Opening Balance', 'wp-ever-accounting' ); ?></span>
-							<span class="ea-widget-card__amount"><?php echo eaccounting_format_price( $account->get_opening_balance(), $account->get_currency_code() ); ?></span>
+							<span class="ea-widget-card__amount"><?php echo Price::format_price( $account->get_opening_balance(), $account->get_currency_code() ); ?></span>
 						</div>
 					</div>
 				</div><!--.ea-widget-card-->
@@ -83,7 +87,7 @@ $edit_url        = eaccounting_admin_url(
 			<nav class="ea-card__nav">
 				<?php foreach ( $sections as $section_id => $section_title ) : ?>
 					<?php
-					$url = eaccounting_admin_url(
+					$url = ever_accounting_admin_url(
 						array(
 							'tab'        => 'accounts',
 							'action'     => 'view',
@@ -105,7 +109,7 @@ $edit_url        = eaccounting_admin_url(
 						include dirname( __FILE__ ) . '/accounts-' . sanitize_file_name( $current_section ) . '.php';
 						break;
 					default:
-						do_action( 'eaccounting_account_section_' . $current_section, $account );
+						do_action( 'ever_accounting_account_section_' . $current_section, $account );
 						break;
 				}
 				?>
@@ -160,8 +164,8 @@ $edit_url        = eaccounting_admin_url(
 					echo sprintf(
 					/* translators: %s date and %s name */
 						esc_html__( 'The account was created at %1$s by %2$s', 'wp-ever-accounting' ),
-						eaccounting_date( $account->get_date_created(), 'F m, Y H:i a' ),
-						eaccounting_get_full_name( $account->get_creator_id() )
+						Formatting::date( $account->get_date_created(), 'F m, Y H:i a' ),
+						Misc::get_full_name( $account->get_creator_id() )
 					);
 					?>
 				</p>
@@ -172,7 +176,7 @@ $edit_url        = eaccounting_admin_url(
 
 </div>
 <?php
-eaccounting_enqueue_js(
+ever_accounting_enqueue_js(
 	"
 	jQuery('.del').on('click',function(e){
 		if(confirm('Are you sure you want to delete?')){

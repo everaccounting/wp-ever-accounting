@@ -355,8 +355,8 @@ class Accounts {
 
 		// Parse status params
 		if ( ! empty( $args['status'] ) && ! in_array( $args['status'], array( 'all', 'any'), true ) ) {
-			$status = eaccounting_string_to_bool( $args['status'] );
-			$status = eaccounting_bool_to_number( $status );
+			$status = Formatting::string_to_bool( $args['status'] );
+			$status = Formatting::bool_to_number( $status );
 			$where .= " AND $table.`enabled` = ('$status')";
 		}
 
