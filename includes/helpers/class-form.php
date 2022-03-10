@@ -941,22 +941,22 @@ class Form {
 	 *
 	 * @return void
 	 */
-	function eaccounting_payment_method_dropdown( $field ) {
+	public static function payment_method_dropdown( $field ) {
 		$default = '';
 		if ( ! isset( $field['default'] ) ) {
-			$default = eaccounting()->settings->get( 'default_payment_method' );
+			$default = ever_accounting_get_option( 'default_payment_method' );
 		}
 
 		$field = wp_parse_args(
 			array(
 				'placeholder' => __( 'Select payment method', 'wp-ever-accounting' ),
 				'default'     => $default,
-				'options'     => eaccounting_get_payment_methods(),
+				'options'     => Price::get_payment_methods(),
 			),
 			$field
 		);
 
-		eaccounting_select2( apply_filters( 'eaccounting_payment_method_dropdown', $field ) );
+		self::select2( apply_filters( 'ever_accounting_payment_method_dropdown', $field ) );
 	}
 
 	/**

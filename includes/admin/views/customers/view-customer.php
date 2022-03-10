@@ -25,7 +25,7 @@ $sections        = array(
 $sections        = apply_filters( 'eaccounting_customer_sections', $sections );
 $first_section   = current( array_keys( $sections ) );
 $current_section = ! empty( $_GET['section'] ) && array_key_exists( $_GET['section'], $sections ) ? sanitize_title( $_GET['section'] ) : $first_section;
-$edit_url        = eaccounting_admin_url(
+$edit_url        = ever_accounting_admin_url(
 	array(
 		'page'        => 'ea-sales',
 		'tab'         => 'customers',
@@ -56,7 +56,7 @@ $edit_url        = eaccounting_admin_url(
 						<div class="ea-widget-card__content">
 							<div class="ea-widget-card__primary">
 								<span class="ea-widget-card__title"><?php esc_html_e( 'Total Paid', 'wp-ever-accounting' ); ?></span>
-								<span class="ea-widget-card__amount"><?php echo eaccounting_format_price( $customer->get_total_paid(), $customer->get_currency_code() ); ?></span>
+								<span class="ea-widget-card__amount"><?php echo \Ever_Accounting\Helpers\Price::format_price( $customer->get_total_paid(), $customer->get_currency_code() ); ?></span>
 							</div>
 						</div>
 					</div><!--.ea-widget-card-->
@@ -72,7 +72,7 @@ $edit_url        = eaccounting_admin_url(
 						<div class="ea-widget-card__content">
 							<div class="ea-widget-card__primary">
 								<span class="ea-widget-card__title"><?php esc_html_e( 'Total Due', 'wp-ever-accounting' ); ?></span>
-								<span class="ea-widget-card__amount"><?php echo eaccounting_format_price( $customer->get_total_due(), $customer->get_currency_code() ); ?></span>
+								<span class="ea-widget-card__amount"><?php echo \Ever_Accounting\Helpers\Price::format_price( $customer->get_total_due(), $customer->get_currency_code() ); ?></span>
 							</div>
 						</div>
 					</div><!--.ea-widget-card-->
@@ -84,7 +84,7 @@ $edit_url        = eaccounting_admin_url(
 				<nav class="ea-card__nav">
 					<?php foreach ( $sections as $section_id => $section_title ) : ?>
 						<?php
-						$url = eaccounting_admin_url(
+						$url = ever_accounting_admin_url(
 							array(
 								'tab'         => 'customers',
 								'action'      => 'view',
@@ -106,7 +106,7 @@ $edit_url        = eaccounting_admin_url(
 							include dirname( __FILE__ ) . '/customers-' . sanitize_file_name( $current_section ) . '.php';
 							break;
 						default:
-							do_action( 'eaccounting_customer_section_' . $current_section, $customer );
+							do_action( 'ever_accounting_customer_section_' . $current_section, $customer );
 							break;
 					}
 					?>
@@ -139,7 +139,7 @@ $edit_url        = eaccounting_admin_url(
 					</div>
 					<div class="ea-list-group__item">
 						<div class="ea-list-group__title"><?php esc_html_e( 'Birthdate', 'wp-ever-accounting' ); ?></div>
-						<div class="ea-list-group__text"><?php echo ! empty( $customer->get_birth_date() ) ? eaccounting_date( $customer->get_birth_date() ) : '&mdash;'; ?></div>
+						<div class="ea-list-group__text"><?php echo ! empty( $customer->get_birth_date() ) ? \Ever_Accounting\Helpers\Formatting::date( $customer->get_birth_date() ) : '&mdash;'; ?></div>
 					</div>
 					<div class="ea-list-group__item">
 						<div class="ea-list-group__title"><?php esc_html_e( 'Phone', 'wp-ever-accounting' ); ?></div>
@@ -161,7 +161,7 @@ $edit_url        = eaccounting_admin_url(
 						<div class="ea-list-group__title"><?php esc_html_e( 'Address', 'wp-ever-accounting' ); ?></div>
 						<div class="ea-list-group__text">
 							<?php
-							$address = eaccounting_format_address(
+							$address = \Ever_Accounting\Helpers\Formatting::format_address(
 								array(
 									'street'   => $customer->get_street(),
 									'city'     => $customer->get_city(),
@@ -183,8 +183,8 @@ $edit_url        = eaccounting_admin_url(
 						echo sprintf(
 						/* translators: %s date and %s name */
 							esc_html__( 'The customer was created at %1$s by %2$s', 'wp-ever-accounting' ),
-							eaccounting_date( $customer->get_date_created(), 'F m, Y H:i a' ),
-							eaccounting_get_full_name( $customer->get_creator_id() )
+							\Ever_Accounting\Helpers\Formatting::date( $customer->get_date_created(), 'F m, Y H:i a' ),
+								\Ever_Accounting\Helpers\Misc::get_full_name( $customer->get_creator_id() )
 						);
 						?>
 					</p>
@@ -195,7 +195,7 @@ $edit_url        = eaccounting_admin_url(
 
 	</div>
 <?php
-eaccounting_enqueue_js(
+ever_accounting_enqueue_js(
 	"
 	jQuery('.del').on('click',function(e){
 		if(confirm('Are you sure you want to delete?')){

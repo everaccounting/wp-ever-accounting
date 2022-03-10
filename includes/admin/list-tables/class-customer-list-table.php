@@ -9,6 +9,8 @@
 
 use Ever_Accounting\Contacts;
 use Ever_Accounting\Customer;
+use Ever_Accounting\Helpers\Formatting;
+use Ever_Accounting\Helpers\Price;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -98,7 +100,7 @@ class Ever_Accounting_Customer_List_Table extends Ever_Accounting_List_Table {
 			<p class="ea-empty-table__message">
 				<?php echo esc_html__( 'Create customers to assign revenues, and later you can filter the transactions you made with them. You can store the name, address, email, phone number, etc. of a customer.', 'wp-ever-accounting' ); ?>
 			</p>
-			<a href="<?php echo esc_url( eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'customers', 'action' => 'edit', ) ) ); //phpcs:ignore?>" class="button-primary ea-empty-table__cta"><?php _e( 'Add Customer', 'wp-ever-accounting' ); ?></a>
+			<a href="<?php echo esc_url( ever_accounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'customers', 'action' => 'edit', ) ) ); //phpcs:ignore?>" class="button-primary ea-empty-table__cta"><?php _e( 'Add Customer', 'wp-ever-accounting' ); ?></a>
 			<a href="https://wpeveraccounting.com/docs/general/add-customers/?utm_source=listtable&utm_medium=link&utm_campaign=admin" class="button-secondary ea-empty-table__cta" target="_blank"><?php _e( 'Learn More', 'wp-ever-accounting' ); ?></a>
 		</div>
 		<?php
@@ -191,13 +193,13 @@ class Ever_Accounting_Customer_List_Table extends Ever_Accounting_List_Table {
 		$customer_id = $customer->get_id();
 		switch ( $column_name ) {
 			case 'thumb':
-				$view_url = eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'customers', 'action' => 'view', 'customer_id' => $customer_id, ) );// phpcs:ignore
+				$view_url = ever_accounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'customers', 'action' => 'view', 'customer_id' => $customer_id, ) );// phpcs:ignore
 				$value    = '<a href="' . esc_url( $view_url ) . '"><img src="' . $customer->get_avatar_url() . '" height="36" width="36" alt="' . $customer->get_name() . '"></a>';
 				break;
 			case 'name':
-				$view_url = eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'customers', 'action' => 'view', 'customer_id' => $customer_id, ) );// phpcs:ignore
-				$edit_url = eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'customers', 'action' => 'edit', 'customer_id' => $customer_id, ) );// phpcs:ignore
-				$del_url  = eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'customers', 'action' => 'delete', 'customer_id' => $customer_id, '_wpnonce' => wp_create_nonce( 'customer-nonce' ), ) );// phpcs:ignore
+				$view_url = ever_accounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'customers', 'action' => 'view', 'customer_id' => $customer_id, ) );// phpcs:ignore
+				$edit_url = ever_accounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'customers', 'action' => 'edit', 'customer_id' => $customer_id, ) );// phpcs:ignore
+				$del_url  = ever_accounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'customers', 'action' => 'delete', 'customer_id' => $customer_id, '_wpnonce' => wp_create_nonce( 'customer-nonce' ), ) );// phpcs:ignore
 				$actions  = array(
 					'view'   => sprintf( '<a href="%1$s">%2$s</a>', esc_url( $view_url ), __( 'View', 'wp-ever-accounting' ) ),
 					'edit'   => sprintf( '<a href="%1$s">%2$s</a>', esc_url( $edit_url ), __( 'Edit', 'wp-ever-accounting' ) ),
@@ -220,7 +222,7 @@ class Ever_Accounting_Customer_List_Table extends Ever_Accounting_List_Table {
 				}
 				break;
 			case 'street':
-				$value = eaccounting_format_address(
+				$value = Formatting::format_address(
 					array(
 						'city'    => $customer->get_prop( 'city' ),
 						'state'   => $customer->get_prop( 'state' ),
@@ -237,20 +239,20 @@ class Ever_Accounting_Customer_List_Table extends Ever_Accounting_List_Table {
 				$value .= '</label>';
 				break;
 			case 'due':
-				$value = eaccounting_format_price( $customer->get_total_due() );
+				$value = Price::format_price( $customer->get_total_due() );
 				break;
 			case 'paid':
-				$value = eaccounting_format_price( $customer->get_total_paid() );
+				$value = Price::format_price( $customer->get_total_paid() );
 				break;
 			case 'actions':
-				$edit_url = eaccounting_admin_url(
+				$edit_url = ever_accounting_admin_url(
 					array(
 						'tab'         => 'customers',
 						'action'      => 'edit',
 						'customer_id' => $customer_id,
 					)
 				);
-				$del_url  = eaccounting_admin_url(
+				$del_url  = ever_accounting_admin_url(
 					array(
 						'tab'         => 'customers',
 						'action'      => 'delete',
@@ -268,7 +270,7 @@ class Ever_Accounting_Customer_List_Table extends Ever_Accounting_List_Table {
 				return parent::column_default( $customer, $column_name );
 		}
 
-		return apply_filters( 'eaccounting_customer_list_table_' . $column_name, $value, $customer );
+		return apply_filters( 'ever_accounting_customer_list_table_' . $column_name, $value, $customer );
 	}
 
 	/**
@@ -361,7 +363,7 @@ class Ever_Accounting_Customer_List_Table extends Ever_Accounting_List_Table {
 	 * @since 1.0.2
 	 */
 	public function get_views() {
-		$base           = eaccounting_admin_url( array( 'tab' => 'customers' ) );
+		$base           = ever_accounting_admin_url( array( 'tab' => 'customers' ) );
 		$current        = isset( $_GET['status'] ) ? $_GET['status'] : '';
 		$total_count    = '&nbsp;<span class="count">(' . $this->total_count . ')</span>';
 		$active_count   = '&nbsp;<span class="count">(' . $this->active_count . ')</span>';
@@ -408,17 +410,17 @@ class Ever_Accounting_Customer_List_Table extends Ever_Accounting_List_Table {
 				'page'     => $page,
 				'search'   => $search,
 				'status'   => $status,
-				'orderby'  => eaccounting_clean( $orderby ),
-				'order'    => eaccounting_clean( $order ),
+				'orderby'  => Formatting::clean( $orderby ),
+				'order'    => Formatting::clean( $order ),
 				'type'     => 'customer',
 			)
 		);
 
 		$args = apply_filters( 'eaccounting_customer_table_query_args', $args, $this );
 
-		$this->items = Contacts::get_customers( $args );
+		$this->items = Contacts::query( $args );
 
-		$this->active_count   = Contacts::get_customers(
+			$this->active_count   = Contacts::query(
 			array_merge(
 				$args,
 				array(
@@ -427,7 +429,7 @@ class Ever_Accounting_Customer_List_Table extends Ever_Accounting_List_Table {
 			),
 				true
 		);
-		$this->inactive_count = Contacts::get_customers(
+		$this->inactive_count = Contacts::query(
 			array_merge(
 				$args,
 				array(

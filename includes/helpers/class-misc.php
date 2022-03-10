@@ -276,4 +276,29 @@ class Misc {
 	public static function get_random_color() {
 		return '#' . str_pad( dechex( random_int( 0, 0xFFFFFF ) ), 6, '0', STR_PAD_LEFT );
 	}
+
+	/**
+	 * Get user full name.
+	 *
+	 * @param int|string $user_id User ID.
+	 *
+	 * @return string|void
+	 * @since 1.1.0
+	 */
+	public static function get_full_name( $user_id ) {
+		$unknown = __( 'Unknown User', 'wp-ever-accounting' );
+		if ( empty( $user_id ) ) {
+			return $unknown;
+		}
+		$user = get_userdata( absint( $user_id ) );
+		if ( empty( $user ) ) {
+			return $unknown;
+		}
+		$name = array_filter( array( $user->first_name, $user->last_name ) );
+		if ( empty( $name ) ) {
+			return empty( $user->display_name ) ? $unknown : $user->display_name;
+		}
+
+		return implode( ' ', $name );
+	}
 }

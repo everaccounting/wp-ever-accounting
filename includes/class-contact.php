@@ -121,7 +121,7 @@ class Contact extends Abstracts\Data  {
 	 * @return string
 	 */
 	public function get_country_nicename( $context = 'edit' ) {
-		$countries = eaccounting_get_countries();
+		$countries = \Ever_Accounting\Helpers\Misc::get_countries();
 
 		return isset( $countries[ $this->get_prop( 'country' ) ] ) ? $countries[ $this->get_prop( 'country' ) ] : $this->get_prop( 'country' );
 	}

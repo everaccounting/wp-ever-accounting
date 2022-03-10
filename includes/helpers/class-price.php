@@ -215,4 +215,21 @@ class Price {
 
 		return self::price_from_default( $amount, $to, $to_rate );
 	}
+
+	/**
+	 * Get payment methods.
+	 *
+	 * @return array
+	 * @since 1.0.2
+	 */
+	public static function get_payment_methods() {
+		return apply_filters(
+			'ever_accounting_payment_methods',
+			array(
+				'cash'          => __( 'Cash', 'wp-ever-accounting' ),
+				'bank_transfer' => __( 'Bank Transfer', 'wp-ever-accounting' ),
+				'check'         => __( 'Cheque', 'wp-ever-accounting' ),
+			)
+		);
+	}
 }

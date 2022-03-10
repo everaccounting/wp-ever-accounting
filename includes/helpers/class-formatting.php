@@ -218,4 +218,37 @@ class Formatting {
 
 		return date_i18n( $format, $date );
 	}
+
+	/**
+	 * Format address.
+	 *
+	 * @param array $address Address params.
+	 * @param string $break Break.
+	 *
+	 * @return string
+	 * @since 1.1.0
+	*/
+	public static function format_address( $address, $break = '<br>' ) {
+		$address   = wp_parse_args(
+			$address,
+			array(
+				'street'   => '',
+				'city'     => '',
+				'state'    => '',
+				'postcode' => '',
+				'country'  => '',
+			)
+		);
+		$countries = Misc::get_countries();
+		if ( ! empty( $address['country'] ) && isset( $countries[ $address['country'] ] ) ) {
+			$address['country'] = $countries[ $address['country'] ];
+		}
+
+		$line_1       = $address['street'];
+		$line_2       = implode( ' ', array_filter( array( $address['city'], $address['state'], $address['postcode'] ) ) );
+		$line_3       = $address['country'];
+		$full_address = array_filter( array( $line_1, $line_2, $line_3 ) );
+
+		return implode( $break, $full_address );
+	}
 }

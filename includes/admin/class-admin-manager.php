@@ -125,7 +125,7 @@ class Admin_Manager {
 	 * @return string
 	 */
 	public static function admin_body_class( $classes ) {
-		if ( eaccounting_is_admin_page() ) {
+		if ( ever_accounting_is_admin_page() ) {
 			$classes .= ' eaccounting ';
 		}
 

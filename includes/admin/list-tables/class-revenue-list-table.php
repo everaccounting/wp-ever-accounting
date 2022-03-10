@@ -11,6 +11,9 @@
 
 use Ever_Accounting\Revenue;
 use Ever_Accounting\Transactions;
+use Ever_Accounting\Helpers\Form;
+use Ever_Accounting\Helpers\Formatting;
+use Ever_Accounting\Helpers\Price;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -85,7 +88,7 @@ class Ever_Accounting_Revenue_List_Table extends Ever_Accounting_List_Table {
 			<p class="ea-empty-table__message">
 				<?php echo esc_html__( 'Create and manage your business incomes in any currency you want, so your finances are always accurate and healthy. Know what and when to get paid.', 'wp-ever-accounting' ); ?>
 			</p>
-			<a href="<?php echo esc_url( eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'revenues', 'action' => 'edit', ) ) );//phpcs:ignore?>" class="button-primary ea-empty-table__cta"><?php _e( 'Add Revenue', 'wp-ever-accounting' ); ?></a>
+			<a href="<?php echo esc_url( ever_accounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'revenues', 'action' => 'edit', ) ) );//phpcs:ignore?>" class="button-primary ea-empty-table__cta"><?php _e( 'Add Revenue', 'wp-ever-accounting' ); ?></a>
 			<a href="https://wpeveraccounting.com/docs/general/add-revenues/?utm_source=listtable&utm_medium=link&utm_campaign=admin" class="button-secondary ea-empty-table__cta" target="_blank"><?php _e( 'Learn More', 'wp-ever-accounting' ); ?></a>
 		</div>
 		<?php
@@ -176,36 +179,36 @@ class Ever_Accounting_Revenue_List_Table extends Ever_Accounting_List_Table {
 		$revenue_id = $revenue->get_id();
 		switch ( $column_name ) {
 			case 'date':
-				$edit_url = eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'revenues', 'action' => 'edit', 'revenue_id' => $revenue_id, ), 'admin.php' );// phpcs:ignore
-				$del_url  = eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'revenues', 'action' => 'delete', 'revenue_id' => $revenue_id, '_wpnonce' => wp_create_nonce( 'revenue-nonce' ), ), 'admin.php' );// phpcs:ignore
+				$edit_url = ever_accounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'revenues', 'action' => 'edit', 'revenue_id' => $revenue_id, ), 'admin.php' );// phpcs:ignore
+				$del_url  = ever_accounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'revenues', 'action' => 'delete', 'revenue_id' => $revenue_id, '_wpnonce' => wp_create_nonce( 'revenue-nonce' ), ), 'admin.php' );// phpcs:ignore
 
 				$actions = array(
 					'edit'   => '<a href="' . $edit_url . '">' . __( 'Edit', 'wp-ever-accounting' ) . '</a>',
 					'delete' => '<a href="' . $del_url . '" class="del">' . __( 'Delete', 'wp-ever-accounting' ) . '</a>',
 				);
 
-				$value = '<a href="' . esc_url( $edit_url ) . '">' . esc_html( eaccounting_date( $revenue->get_payment_date() ) ) . '</a>' . $this->row_actions( $actions );
+				$value = '<a href="' . esc_url( $edit_url ) . '">' . esc_html( Formatting::date( $revenue->get_payment_date() ) ) . '</a>' . $this->row_actions( $actions );
 				break;
 			case 'amount':
-				$value = eaccounting_format_price( $revenue->get_amount(), $revenue->get_currency_code() );
+				$value = Price::format_price( $revenue->get_amount(), $revenue->get_currency_code() );
 				break;
 			case 'account_id':
-				$account = eaccounting_get_account( $revenue->get_account_id( 'edit' ) );
-				$value   = $account ? sprintf( '<a href="%1$s">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'accounts', 'action' => 'view', 'account_id' => $revenue->get_account_id( 'edit' ), ) ) ), $account->get_name() ) : '&mdash;';// phpcs:ignore
+				$account = \Ever_Accounting\Accounts::get( $revenue->get_account_id( 'edit' ) );
+				$value   = $account ? sprintf( '<a href="%1$s">%2$s</a>', esc_url( ever_accounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'accounts', 'action' => 'view', 'account_id' => $revenue->get_account_id( 'edit' ), ) ) ), $account->get_name() ) : '&mdash;';// phpcs:ignore
 				break;
 			case 'category_id':
-				$category = eaccounting_get_category( $revenue->get_category_id( 'edit' ) );
+				$category = \Ever_Accounting\Categories::get( $revenue->get_category_id( 'edit' ) );
 				$value    = $category ? $category->get_name() : '&mdash;';
 				break;
 			case 'contact_id':
-				$contact = eaccounting_get_customer( $revenue->get_contact_id( 'edit' ) );
-				$value   = $contact ? sprintf( '<a href="%1$s">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'customers', 'action' => 'view', 'customer_id' => $revenue->get_contact_id( 'edit' ), ) ) ), $contact->get_name() ) : '&mdash;';// phpcs:ignore
+				$contact = \Ever_Accounting\Contacts::get( $revenue->get_contact_id( 'edit' ) );
+				$value   = $contact ? sprintf( '<a href="%1$s">%2$s</a>', esc_url( ever_accounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'customers', 'action' => 'view', 'customer_id' => $revenue->get_contact_id( 'edit' ), ) ) ), $contact->get_name() ) : '&mdash;';// phpcs:ignore
 				break;
 			default:
 				return parent::column_default( $revenue, $column_name );
 		}
 
-		return apply_filters( 'eaccounting_revenue_list_table_' . $column_name, $value, $revenue );
+		return apply_filters( 'ever_accounting_revenue_list_table_' . $column_name, $value, $revenue );
 	}
 
 	/**
@@ -234,16 +237,16 @@ class Ever_Accounting_Revenue_List_Table extends Ever_Accounting_List_Table {
 			$month       = isset( $_GET['month'] ) ? eaccounting_clean( $_GET['month'] ) : '';
 			echo '<div class="alignleft actions ea-table-filter">';
 
-			eaccounting_select2(
+			Form::select2(
 				array(
 					'placeholder' => __( 'Select Month', 'wp-ever-accounting' ),
 					'name'        => 'month',
-					'options'     => eaccounting_get_months(),
+					'options'     => ever_accounting_get_months(),
 					'value'       => $month,
 				)
 			);
 
-			eaccounting_account_dropdown(
+			Form::account_dropdown(
 				array(
 					'name'      => 'account_id',
 					'value'     => $account_id,
@@ -253,7 +256,7 @@ class Ever_Accounting_Revenue_List_Table extends Ever_Accounting_List_Table {
 				)
 			);
 
-			eaccounting_category_dropdown(
+			Form::category_dropdown(
 				array(
 					'name'      => 'category_id',
 					'value'     => $category_id,
@@ -264,7 +267,7 @@ class Ever_Accounting_Revenue_List_Table extends Ever_Accounting_List_Table {
 
 				)
 			);
-			eaccounting_contact_dropdown(
+			Form::contact_dropdown(
 				array(
 					'name'        => 'customer_id',
 					'value'       => $customer_id,
@@ -275,7 +278,7 @@ class Ever_Accounting_Revenue_List_Table extends Ever_Accounting_List_Table {
 				)
 			);
 
-			eaccounting_hidden_input(
+			Form::hidden_input(
 				array(
 					'name'  => 'filter',
 					'value' => 'true',
@@ -388,8 +391,8 @@ class Ever_Accounting_Revenue_List_Table extends Ever_Accounting_List_Table {
 				'number'      => $per_page,
 				'offset'      => $per_page * ( $page - 1 ),
 				'search'      => $search,
-				'orderby'     => eaccounting_clean( $orderby ),
-				'order'       => eaccounting_clean( $order ),
+				'orderby'     => Formatting::clean( $orderby ),
+				'order'       => Formatting::clean( $order ),
 				'category_id' => $category_id,
 				'account_id'  => $account_id,
 				'contact_id'  => $customer_id,
@@ -404,9 +407,9 @@ class Ever_Accounting_Revenue_List_Table extends Ever_Accounting_List_Table {
 		}
 
 		$args        = apply_filters( 'eaccounting_revenue_table_query_args', $args, $this );
-		$this->items = Transactions::get_revenues( $args );
+		$this->items = Transactions::query_revenues( $args );
 
-		$this->total_count = Transactions::get_revenues(  $args, true );
+		$this->total_count = Transactions::query_revenues(  $args, true );
 
 		$this->set_pagination_args(
 			array(

@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit();
  * @return array
  * @since 1.1.0
  */
-function eaccounting_get_settings_tabs() {
+function ever_accounting_get_settings_tabs() {
 	static $tabs = false;
 
 	if ( false !== $tabs ) {
@@ -31,15 +31,15 @@ function eaccounting_get_settings_tabs() {
 		//'advanced'   => __( 'Advanced', 'wp-ever-accounting' ),
 	);
 
-	if ( ! has_filter( 'eaccounting_settings_sections_extensions' ) ) {
+	if ( ! has_filter( 'ever_ccounting_settings_sections_extensions' ) ) {
 		unset( $tabs['extensions'] );
 	}
 
-	if ( ! has_filter( 'eaccounting_settings_licenses' ) ) {
+	if ( ! has_filter( 'ever_accounting_settings_licenses' ) ) {
 		unset( $tabs['licenses'] );
 	}
 
-	return apply_filters( 'eaccounting_settings_tabs', $tabs );
+	return apply_filters( 'ever_accounting_settings_tabs', $tabs );
 }
 
 
@@ -50,7 +50,7 @@ function eaccounting_get_settings_tabs() {
  * @return array Array of tabs and sections
  * @since  1.1.0
  */
-function eaccounting_get_settings_sections() {
+function ever_accounting_get_settings_sections() {
 	static $sections = false;
 
 	if ( false !== $sections ) {
@@ -59,7 +59,7 @@ function eaccounting_get_settings_sections() {
 
 	$sections = array(
 		'general'    => apply_filters(
-			'eaccounting_settings_sections_general',
+			'ever_accounting_settings_sections_general',
 			array(
 				'main'     => __( 'General', 'wp-ever-accounting' ),
 				'invoices' => __( 'Invoices', 'wp-ever-accounting' ),
@@ -67,20 +67,20 @@ function eaccounting_get_settings_sections() {
 			)
 		),
 		'extensions' => apply_filters(
-			'eaccounting_settings_sections_extensions',
+			'ever_accounting_settings_sections_extensions',
 			array()
 		),
 		'licenses'   => apply_filters(
-			'eaccounting_settings_sections_licenses',
+			'ever_accounting_settings_sections_licenses',
 			array()
 		),
 	);
 
-	if ( eaccounting_tax_enabled() ) {
+	if ( \Ever_Accounting\Helpers\Tax::tax_enabled() ) {
 		$sections['general']['taxes'] = __( 'Taxes', 'wp-ever-accounting' );
 	}
 
-	$sections = apply_filters( 'eaccounting_settings_sections', $sections );
+	$sections = apply_filters( 'ever_accounting_settings_sections', $sections );
 
 	return $sections;
 }
@@ -94,9 +94,9 @@ function eaccounting_get_settings_sections() {
  * @since 1.1.0
  *
  */
-function eaccounting_get_settings_tab_sections( $tab = false ) {
+function ever_accounting_get_settings_tab_sections( $tab = false ) {
 	$tabs     = array();
-	$sections = eaccounting_get_settings_sections();
+	$sections = ever_accounting_get_settings_sections();
 	if ( $tab && ! empty( $sections[ $tab ] ) ) {
 		$tabs = $sections[ $tab ];
 	} elseif ( $tab ) {
@@ -143,7 +143,7 @@ function ever_accounting_get_screen_ids() {
  * @since 1.0.2
  *
  */
-function eaccounting_is_admin_page( $page = '' ) {
+function ever_accounting_is_admin_page( $page = '' ) {
 	if ( ! is_admin() || ! did_action( 'wp_loaded' ) ) {
 		$ret = false;
 	}
@@ -229,7 +229,7 @@ function ever_accounting_admin_url( $query_args = array(), $page = null ) {
  * @since 1.0.2
  *
  */
-function eaccounting_get_active_tab( $tabs, $default = null ) {
+function ever_accounting_get_active_tab( $tabs, $default = null ) {
 	if ( isset( $_GET['tab'] ) && array_key_exists( $_GET['tab'], $tabs ) ) {
 		$active_tab = \Ever_Accounting\Helpers\Formatting::clean( $_GET['tab'] );
 	} elseif ( ! empty( $default ) ) {
@@ -256,18 +256,18 @@ function eaccounting_get_active_tab( $tabs, $default = null ) {
  * @since 1.1.0 add $tab argument.
  *
  */
-function eaccounting_navigation_tabs( $tabs, $active_tab, $query_args = array(), $tab = 'tab' ) {
+function ever_accounting_navigation_tabs( $tabs, $active_tab, $query_args = array(), $tab = 'tab' ) {
 	$tabs = (array) $tabs;
 
 	if ( empty( $tabs ) ) {
 		return;
 	}
 
-	$tabs = apply_filters( 'eaccounting_navigation_tabs', $tabs, $active_tab, $query_args );
+	$tabs = apply_filters( 'ever_accounting_navigation_tabs', $tabs, $active_tab, $query_args );
 
 	foreach ( $tabs as $tab_id => $tab_name ) {
 		$args    = wp_parse_args( $query_args, array( $tab => $tab_id ) );
-		$tab_url = eaccounting_admin_url( $args );
+		$tab_url = ever_accounting_admin_url( $args );
 		printf(
 			'<a href="%1$s" alt="%2$s" class="%3$s">%4$s</a>',
 			esc_url( $tab_url ),
@@ -277,7 +277,7 @@ function eaccounting_navigation_tabs( $tabs, $active_tab, $query_args = array(),
 		);
 	}
 
-	do_action( 'eaccounting_after_navigation_tabs', $tabs, $active_tab, $query_args );
+	do_action( 'ever_accounting_after_navigation_tabs', $tabs, $active_tab, $query_args );
 }
 
 /**
@@ -290,7 +290,7 @@ function eaccounting_navigation_tabs( $tabs, $active_tab, $query_args = array(),
  * @since 1.1.0 add $tab argument.
  *
  */
-function eaccounting_get_current_tab( $tab = 'tab' ) {
+function ever_accounting_get_current_tab( $tab = 'tab' ) {
 	return ( isset( $tab ) ) ? \Ever_Accounting\Helpers\Formatting::clean( $tab ) : '';
 }
 
@@ -307,8 +307,8 @@ function eaccounting_get_current_tab( $tab = 'tab' ) {
  * @since  1.0.2
  *
  */
-function eaccounting_accounts_set_screen_option( $status, $option, $value ) {
-	if ( in_array( $option, array( 'eaccounting_edit_accounts_per_page' ), true ) ) {
+function ever_accounting_accounts_set_screen_option( $status, $option, $value ) {
+	if ( in_array( $option, array( 'ever_accounting_edit_accounts_per_page' ), true ) ) {
 		return $value;
 	}
 
@@ -316,7 +316,7 @@ function eaccounting_accounts_set_screen_option( $status, $option, $value ) {
 
 }
 
-add_filter( 'set-screen-option', 'eaccounting_accounts_set_screen_option', 10, 3 );
+add_filter( 'set-screen-option', 'ever_accounting_accounts_set_screen_option', 10, 3 );
 
 
 /**
@@ -328,7 +328,7 @@ add_filter( 'set-screen-option', 'eaccounting_accounts_set_screen_option', 10, 3
  * @since 1.0.2
  *
  */
-function eaccounting_get_io_headers( $type ) {
+function ever_accounting_get_io_headers( $type ) {
 	$headers = array();
 	switch ( $type ) {
 		case 'customer':
@@ -424,7 +424,7 @@ function eaccounting_get_io_headers( $type ) {
 			break;
 	}
 
-	return apply_filters( 'eaccounting_get_io_headers_' . $type, $headers );
+	return apply_filters( 'ever_accounting_get_io_headers_' . $type, $headers );
 }
 
 /**
@@ -435,8 +435,8 @@ function eaccounting_get_io_headers( $type ) {
  * @since 1.0.2
  *
  */
-function eaccounting_do_import_fields( $type ) {
-	$fields = eaccounting_get_io_headers( $type );
+function ever_accounting_do_import_fields( $type ) {
+	$fields = ever_accounting_get_io_headers( $type );
 
 	if ( ! empty( $fields ) ) {
 
@@ -465,7 +465,7 @@ function eaccounting_do_import_fields( $type ) {
  * @global array $wp_meta_boxes
  *
  */
-function eaccounting_do_meta_boxes( $screen, $context, $object ) {
+function ever_accounting_do_meta_boxes( $screen, $context, $object ) {
 	global $wp_meta_boxes;
 	if ( empty( $screen ) ) {
 		$screen = get_current_screen();
@@ -508,7 +508,7 @@ function eaccounting_do_meta_boxes( $screen, $context, $object ) {
  * @return array
  * @since 1.1.0
  */
-function eaccounting_get_report_years() {
+function ever_accounting_get_report_years() {
 	$years = range( date( 'Y' ), ( date( 'Y' ) - 10 ), 1 );
 
 	return array_combine( array_values( $years ), $years );
@@ -520,7 +520,7 @@ function eaccounting_get_report_years() {
  * return array
  * @since 1.1.2
  */
-function eaccounting_get_months() {
+function ever_accounting_get_months() {
 	$months = array(
 		'January',
 		'February',

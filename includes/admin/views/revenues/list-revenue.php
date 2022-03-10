@@ -11,10 +11,10 @@
 
 defined( 'ABSPATH' ) || exit();
 
-include( EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-revenue-list-table.php' );
+include( dirname( EVER_ACCOUNTING_FILE ) . '/includes/admin/list-tables/class-revenue-list-table.php' );
 $revenues_table = new Ever_Accounting_Revenue_List_Table();
 $revenues_table->prepare_items();
-$add_url = eaccounting_admin_url(
+$add_url = ever_accounting_admin_url(
 	array(
 		'page'   => 'ea-sales',
 		'tab'    => 'revenues',
@@ -45,9 +45,9 @@ $import_url = add_query_arg(
 	<input type="hidden" name="page" value="ea-sales"/>
 	<input type="hidden" name="tab" value="revenues"/>
 </form>
-<?php do_action( 'eaccounting_revenues_table_bottom' ); ?>
+<?php do_action( 'ever_accounting_revenues_table_bottom' ); ?>
 <?php
-eaccounting_enqueue_js(
+ever_accounting_enqueue_js(
 		"
 	jQuery('.del').on('click',function(e){
 		if(confirm('Are you sure you want to delete?')){
