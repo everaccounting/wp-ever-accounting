@@ -9,6 +9,8 @@
 
 use Ever_Accounting\Vendor;
 use Ever_Accounting\Contacts;
+use Ever_Accounting\Helpers\Formatting;
+use Ever_Accounting\Helpers\Price;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -98,7 +100,7 @@ class Ever_Accounting_Vendor_List_Table extends Ever_Accounting_List_Table {
 			<p class="ea-empty-table__message">
 				<?php echo esc_html__( 'Create vendors to assign payments, and later you can filter the transactions you made with them. You can store the name, address, email, phone number, etc. of a vendor.', 'wp-ever-accounting' ); ?>
 			</p>
-			<a href="<?php echo esc_url( eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'vendors', 'action' => 'edit', ) ) ); //phpcs:ignore?>" class="button-primary ea-empty-table__cta"><?php _e( 'Add Vendors', 'wp-ever-accounting' ); ?></a>
+			<a href="<?php echo esc_url( ever_accounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'vendors', 'action' => 'edit', ) ) ); //phpcs:ignore?>" class="button-primary ea-empty-table__cta"><?php _e( 'Add Vendors', 'wp-ever-accounting' ); ?></a>
 			<a href="https://wpeveraccounting.com/docs/general/add-vendors/?utm_source=listtable&utm_medium=link&utm_campaign=admin" class="button-secondary ea-empty-table__cta" target="_blank"><?php _e( 'Learn More', 'wp-ever-accounting' ); ?></a>
 		</div>
 		<?php
@@ -192,13 +194,13 @@ class Ever_Accounting_Vendor_List_Table extends Ever_Accounting_List_Table {
 
 		switch ( $column_name ) {
 			case 'thumb':
-				$view_url = eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'vendors', 'action' => 'view', 'vendor_id' => $vendor_id, ) );// phpcs:ignore
+				$view_url = ever_accounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'vendors', 'action' => 'view', 'vendor_id' => $vendor_id, ) );// phpcs:ignore
 				$value    = '<a href="' . esc_url( $view_url ) . '"><img src="' . $vendor->get_avatar_url() . '" height="36" width="36" alt="' . $vendor->get_name() . '"></a>';
 				break;
 			case 'name':
-				$view_url = eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'vendors', 'action' => 'view', 'vendor_id' => $vendor_id, ) );// phpcs:ignore
-				$edit_url = eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'vendors', 'action' => 'edit', 'vendor_id' => $vendor_id, ) );// phpcs:ignore
-				$del_url  = eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'vendors', 'action' => 'delete', 'vendor_id' => $vendor_id, '_wpnonce' => wp_create_nonce( 'vendor-nonce' ), ) );// phpcs:ignore
+				$view_url = ever_accounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'vendors', 'action' => 'view', 'vendor_id' => $vendor_id, ) );// phpcs:ignore
+				$edit_url = ever_accounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'vendors', 'action' => 'edit', 'vendor_id' => $vendor_id, ) );// phpcs:ignore
+				$del_url  = ever_accounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'vendors', 'action' => 'delete', 'vendor_id' => $vendor_id, '_wpnonce' => wp_create_nonce( 'vendor-nonce' ), ) );// phpcs:ignore
 				$actions  = array(
 					'view'   => sprintf( '<a href="%1$s">%2$s</a>', esc_url( $view_url ), __( 'View', 'wp-ever-accounting' ) ),
 					'edit'   => sprintf( '<a href="%1$s">%2$s</a>', esc_url( $edit_url ), __( 'Edit', 'wp-ever-accounting' ) ),
@@ -219,7 +221,7 @@ class Ever_Accounting_Vendor_List_Table extends Ever_Accounting_List_Table {
 				}
 				break;
 			case 'street':
-				$value = eaccounting_format_address(
+				$value = Formatting::format_address(
 					array(
 						'city'    => $vendor->get_prop('city'),
 						'state'   => $vendor->get_prop('state'),
@@ -236,14 +238,14 @@ class Ever_Accounting_Vendor_List_Table extends Ever_Accounting_List_Table {
 				$value .= '</label>';
 				break;
 			case 'actions':
-				$edit_url = eaccounting_admin_url(
+				$edit_url = ever_accounting_admin_url(
 					array(
 						'tab'       => 'vendors',
 						'action'    => 'edit',
 						'vendor_id' => $vendor_id,
 					)
 				);
-				$del_url  = eaccounting_admin_url(
+				$del_url  = ever_accounting_admin_url(
 					array(
 						'tab'       => 'vendors',
 						'action'    => 'delete',
@@ -258,16 +260,16 @@ class Ever_Accounting_Vendor_List_Table extends Ever_Accounting_List_Table {
 				$value    = $this->row_actions( $actions );
 				break;
 			case 'due':
-				$value = eaccounting_format_price( $vendor->get_total_due() );
+				$value = Price::format_price( $vendor->get_total_due() );
 				break;
 			case 'paid':
-				$value = eaccounting_format_price( $vendor->get_total_paid() );
+				$value = Price::format_price( $vendor->get_total_paid() );
 				break;
 			default:
 				return parent::column_default( $vendor, $column_name );
 		}
 
-		return apply_filters( 'eaccounting_vendor_list_table_' . $column_name, $value, $vendor );
+		return apply_filters( 'ever_accounting_vendor_list_table_' . $column_name, $value, $vendor );
 	}
 
 	/**
@@ -360,7 +362,7 @@ class Ever_Accounting_Vendor_List_Table extends Ever_Accounting_List_Table {
 	 * @since 1.1.0
 	 */
 	public function get_views() {
-		$base           = eaccounting_admin_url( array( 'tab' => 'vendors' ) );
+		$base           = ever_accounting_admin_url( array( 'tab' => 'vendors' ) );
 		$current        = isset( $_GET['status'] ) ? $_GET['status'] : '';
 		$total_count    = '&nbsp;<span class="count">(' . $this->total_count . ')</span>';
 		$active_count   = '&nbsp;<span class="count">(' . $this->active_count . ')</span>';
@@ -407,17 +409,17 @@ class Ever_Accounting_Vendor_List_Table extends Ever_Accounting_List_Table {
 				'page'     => $page,
 				'search'   => $search,
 				'status'   => $status,
-				'orderby'  => eaccounting_clean( $orderby ),
-				'order'    => eaccounting_clean( $order ),
+				'orderby'  => Formatting::clean( $orderby ),
+				'order'    => Formatting::clean( $order ),
 				'type'     => 'vendor',
 			)
 		);
 
-		$args = apply_filters( 'eaccounting_vendor_table_query_args', $args, $this );
+		$args = apply_filters( 'ever_accounting_vendor_table_query_args', $args, $this );
 
-		$this->items = Contacts::get_vendors( $args );
+		$this->items = Contacts::query_vendors( $args );
 
-		$this->active_count = Contacts::get_vendors(
+		$this->active_count = Contacts::query_vendors(
 			array_merge(
 				$args,
 				array(
@@ -427,7 +429,7 @@ class Ever_Accounting_Vendor_List_Table extends Ever_Accounting_List_Table {
 				true
 		);
 
-		$this->inactive_count = Contacts::get_vendors(
+		$this->inactive_count = Contacts::query_vendors(
 			array_merge(
 				$args,
 				array(

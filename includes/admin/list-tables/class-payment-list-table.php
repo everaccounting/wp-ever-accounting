@@ -10,6 +10,9 @@
  */
 
 use Ever_Accounting\Payment;
+use Ever_Accounting\Helpers\Formatting;
+use Ever_Accounting\Helpers\Price;
+use Ever_Accounting\Helpers\Form;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -84,7 +87,7 @@ class Ever_Accounting_Payment_List_Table extends Ever_Accounting_List_Table {
 			<p class="ea-empty-table__message">
 				<?php echo esc_html__( 'Create and manage your business expenses in any currency you want, so your finances are always accurate and healthy. Know what and when to pay.', 'wp-ever-accounting' ); ?>
 			</p>
-			<a href="<?php echo esc_url( eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'payments', 'action' => 'edit', ) ) ); //phpcs:ignore?>" class="button-primary ea-empty-table__cta"><?php _e( 'Add Payment', 'wp-ever-accounting' ); ?></a>
+			<a href="<?php echo esc_url( ever_accounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'payments', 'action' => 'edit', ) ) ); //phpcs:ignore?>" class="button-primary ea-empty-table__cta"><?php _e( 'Add Payment', 'wp-ever-accounting' ); ?></a>
 			<a href="https://wpeveraccounting.com/docs/general/add-payments/?utm_source=listtable&utm_medium=link&utm_campaign=admin" class="button-secondary ea-empty-table__cta" target="_blank"><?php _e( 'Learn More', 'wp-ever-accounting' ); ?></a>
 		</div>
 		<?php
@@ -175,37 +178,37 @@ class Ever_Accounting_Payment_List_Table extends Ever_Accounting_List_Table {
 		$payment_id = $payment->get_id();
 		switch ( $column_name ) {
 			case 'date':
-				$edit_url = eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'payments', 'action' => 'edit', 'payment_id' => $payment_id, ), 'admin.php' );// phpcs:ignore
-				$del_url  = eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'payments', 'action' => 'delete', 'payment_id' => $payment_id, '_wpnonce' => wp_create_nonce( 'payment-nonce' ), ), 'admin.php' );// phpcs:ignore
+				$edit_url = ever_accounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'payments', 'action' => 'edit', 'payment_id' => $payment_id, ), 'admin.php' );// phpcs:ignore
+				$del_url  = ever_accounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'payments', 'action' => 'delete', 'payment_id' => $payment_id, '_wpnonce' => wp_create_nonce( 'payment-nonce' ), ), 'admin.php' );// phpcs:ignore
 
 				$actions = array(
 					'edit'   => '<a href="' . $edit_url . '">' . __( 'Edit', 'wp-ever-accounting' ) . '</a>',
 					'delete' => '<a href="' . $del_url . '" class="del">' . __( 'Delete', 'wp-ever-accounting' ) . '</a>',
 				);
 
-				$value = '<a href="' . esc_url( $edit_url ) . '">' . esc_html( eaccounting_date( $payment->get_payment_date() ) ) . '</a>' . $this->row_actions( $actions );
+				$value = '<a href="' . esc_url( $edit_url ) . '">' . esc_html( Formatting::date( $payment->get_payment_date() ) ) . '</a>' . $this->row_actions( $actions );
 				//$value = '<a href="' . esc_url( $edit_url ) . '">' . esc_html( eaccounting_date( $payment->get_prop('payment_date') ) ) . '</a>' . $this->row_actions( $actions );
 				break;
 			case 'amount':
-				$value = eaccounting_format_price( $payment->get_amount(), $payment->get_currency_code() );
+				$value = Price::format_price( $payment->get_amount(), $payment->get_currency_code() );
 				break;
 			case 'account_id':
-				$account = eaccounting_get_account( $payment->get_account_id( 'edit' ) );
-				$value   = $account ? sprintf( '<a href="%1$s">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'accounts', 'action' => 'view', 'account_id' => $payment->get_account_id( 'edit' ) ) ) ), $account->get_name() ) : '&mdash;';// phpcs:ignore
+				$account = \Ever_Accounting\Accounts::get( $payment->get_account_id( 'edit' ) );
+				$value   = $account ? sprintf( '<a href="%1$s">%2$s</a>', esc_url( ever_accounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'accounts', 'action' => 'view', 'account_id' => $payment->get_account_id( 'edit' ) ) ) ), $account->get_name() ) : '&mdash;';// phpcs:ignore
 				break;
 			case 'category_id':
-				$category = eaccounting_get_category( $payment->get_category_id( 'edit' ) );
+				$category = \Ever_Accounting\Categories::get( $payment->get_category_id( 'edit' ) );
 				$value    = $category ? $category->get_name() : '&mdash;';
 				break;
 			case 'contact_id':
-				$contact = eaccounting_get_vendor( $payment->get_contact_id( 'edit' ) );
-				$value   = $contact ? sprintf( '<a href="%1$s">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'vendors', 'action' => 'view', 'vendor_id' => $payment->get_contact_id( 'edit' ) ) ) ), $contact->get_name() ) : '&mdash;';// phpcs:ignore
+				$contact = \Ever_Accounting\Contacts::get_vendor( $payment->get_contact_id( 'edit' ) );
+				$value   = $contact ? sprintf( '<a href="%1$s">%2$s</a>', esc_url( ever_accounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'vendors', 'action' => 'view', 'vendor_id' => $payment->get_contact_id( 'edit' ) ) ) ), $contact->get_name() ) : '&mdash;';// phpcs:ignore
 				break;
 			default:
 				return parent::column_default( $payment, $column_name );
 		}
 
-		return apply_filters( 'eaccounting_payment_list_table_' . $column_name, $value, $payment );
+		return apply_filters( 'ever_accounting_payment_list_table_' . $column_name, $value, $payment );
 	}
 
 	/**
@@ -234,16 +237,16 @@ class Ever_Accounting_Payment_List_Table extends Ever_Accounting_List_Table {
 			$month       = isset( $_GET['month'] ) ? eaccounting_clean( $_GET['month'] ) : '';
 			echo '<div class="alignleft actions ea-table-filter">';
 
-			eaccounting_select2(
+			Form::select2(
 				array(
 					'placeholder' => __( 'Select Month', 'wp-ever-accounting' ),
 					'name'        => 'month',
-					'options'     => eaccounting_get_months(),
+					'options'     => ever_accounting_get_months(),
 					'value'       => $month,
 				)
 			);
 
-			eaccounting_account_dropdown(
+			Form::account_dropdown(
 				array(
 					'name'      => 'account_id',
 					'value'     => $account_id,
@@ -253,18 +256,18 @@ class Ever_Accounting_Payment_List_Table extends Ever_Accounting_List_Table {
 				)
 			);
 
-			eaccounting_category_dropdown(
+			Form::category_dropdown(
 				array(
 					'name'        => 'category_id',
 					'value'       => $category_id,
 					'default'     => '',
 					'type'        => 'expense',
-					'ajax_action' => 'eaccounting_get_expense_categories',
+					'ajax_action' => 'ever_accounting_get_expense_categories',
 					'creatable'   => false,
 					'clearable'   => false,
 				)
 			);
-			eaccounting_contact_dropdown(
+			Form::contact_dropdown(
 				array(
 					'name'        => 'vendor_id',
 					'value'       => $vendor_id,
@@ -275,7 +278,7 @@ class Ever_Accounting_Payment_List_Table extends Ever_Accounting_List_Table {
 					'clearable'   => false,
 				)
 			);
-			eaccounting_hidden_input(
+			Form::hidden_input(
 				array(
 					'name'  => 'filter',
 					'value' => 'true',
@@ -376,7 +379,7 @@ class Ever_Accounting_Payment_List_Table extends Ever_Accounting_List_Table {
 		$category_id = ! empty( $_GET['category_id'] ) ? absint( $_GET['category_id'] ) : '';
 		$account_id  = ! empty( $_GET['account_id'] ) ? absint( $_GET['account_id'] ) : '';
 		$vendor_id   = ! empty( $_GET['vendor_id'] ) ? absint( $_GET['vendor_id'] ) : '';
-		$month       = ! empty( $_GET['month'] ) ? eaccounting_clean( $_GET['month'] ) : '';
+		$month       = ! empty( $_GET['month'] ) ? Formatting::clean( $_GET['month'] ) : '';
 
 		$per_page = $this->per_page;
 
@@ -388,8 +391,8 @@ class Ever_Accounting_Payment_List_Table extends Ever_Accounting_List_Table {
 				'number'      => $per_page,
 				'offset'      => $per_page * ( $page - 1 ),
 				'search'      => $search,
-				'orderby'     => eaccounting_clean( $orderby ),
-				'order'       => eaccounting_clean( $order ),
+				'orderby'     => Formatting::clean( $orderby ),
+				'order'       => Formatting::clean( $order ),
 				'category_id' => $category_id,
 				'account_id'  => $account_id,
 				'contact_id'  => $vendor_id,
@@ -404,9 +407,9 @@ class Ever_Accounting_Payment_List_Table extends Ever_Accounting_List_Table {
 		}
 
 		$args        = apply_filters( 'eaccounting_payment_table_query_args', $args, $this );
-		$this->items = \Ever_Accounting\Transactions::get_payments( $args );
+		$this->items = \Ever_Accounting\Transactions::query_payments( $args );
 
-		$this->total_count = \Ever_Accounting\Transactions::get_payments(  $args, true );
+		$this->total_count = \Ever_Accounting\Transactions::query_payments(  $args, true );
 
 		$this->set_pagination_args(
 			array(

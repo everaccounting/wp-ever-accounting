@@ -10,6 +10,9 @@
  *
  * @var int $vendor_id
  */
+
+use Ever_Accounting\Helpers\Form;
+
 defined( 'ABSPATH' ) || exit();
 
 try {
@@ -54,7 +57,7 @@ $title = $vendor->exists() ? __( 'Update Vendor', 'wp-ever-accounting' ) : __( '
 			<div class="ea-card__inside">
 				<div class="ea-row">
 					<?php
-					eaccounting_text_input(
+					Form::text_input(
 						array(
 							'wrapper_class' => 'ea-col-6',
 							'label'         => __( 'Name', 'wp-ever-accounting' ),
@@ -65,7 +68,7 @@ $title = $vendor->exists() ? __( 'Update Vendor', 'wp-ever-accounting' ) : __( '
 						)
 					);
 
-					eaccounting_currency_dropdown(
+					Form::currency_dropdown(
 						array(
 							'wrapper_class' => 'ea-col-6',
 							'label'         => __( 'Currency', 'wp-ever-accounting' ),
@@ -75,7 +78,7 @@ $title = $vendor->exists() ? __( 'Update Vendor', 'wp-ever-accounting' ) : __( '
 							'creatable'     => true,
 						)
 					);
-					eaccounting_text_input(
+					Form::text_input(
 						array(
 							'wrapper_class' => 'ea-col-6',
 							'label'         => __( 'Company', 'wp-ever-accounting' ),
@@ -84,7 +87,7 @@ $title = $vendor->exists() ? __( 'Update Vendor', 'wp-ever-accounting' ) : __( '
 							'required'      => false,
 						)
 					);
-					eaccounting_text_input(
+					Form::text_input(
 						array(
 							'wrapper_class' => 'ea-col-6',
 							'label'         => __( 'Email', 'wp-ever-accounting' ),
@@ -94,7 +97,7 @@ $title = $vendor->exists() ? __( 'Update Vendor', 'wp-ever-accounting' ) : __( '
 							'value'         => $vendor->get_email(),
 						)
 					);
-					eaccounting_text_input(
+					Form::text_input(
 						array(
 							'wrapper_class' => 'ea-col-6',
 							'label'         => __( 'Phone', 'wp-ever-accounting' ),
@@ -103,7 +106,7 @@ $title = $vendor->exists() ? __( 'Update Vendor', 'wp-ever-accounting' ) : __( '
 							'value'         => $vendor->get_phone(),
 						)
 					);
-					eaccounting_text_input(
+					Form::text_input(
 						array(
 							'wrapper_class' => 'ea-col-6',
 							'label'         => __( 'VAT Number', 'wp-ever-accounting' ),
@@ -112,7 +115,7 @@ $title = $vendor->exists() ? __( 'Update Vendor', 'wp-ever-accounting' ) : __( '
 							'value'         => $vendor->get_vat_number(),
 						)
 					);
-					eaccounting_text_input(
+					Form::text_input(
 						array(
 							'wrapper_class' => 'ea-col-6',
 							'label'         => __( 'Website', 'wp-ever-accounting' ),
@@ -122,7 +125,7 @@ $title = $vendor->exists() ? __( 'Update Vendor', 'wp-ever-accounting' ) : __( '
 							'value'         => $vendor->get_website(),
 						)
 					);
-					eaccounting_text_input(
+					Form::text_input(
 						array(
 							'wrapper_class' => 'ea-col-6',
 							'label'         => __( 'Birth Date', 'wp-ever-accounting' ),
@@ -132,7 +135,7 @@ $title = $vendor->exists() ? __( 'Update Vendor', 'wp-ever-accounting' ) : __( '
 							'value'         => $vendor->get_birth_date() ? $vendor->get_birth_date() : null,
 						)
 					);
-					eaccounting_text_input(
+					Form::text_input(
 						array(
 							'wrapper_class' => 'ea-col-6',
 							'label'         => __( 'Street', 'wp-ever-accounting' ),
@@ -141,7 +144,7 @@ $title = $vendor->exists() ? __( 'Update Vendor', 'wp-ever-accounting' ) : __( '
 							'value'         => $vendor->get_street(),
 						)
 					);
-					eaccounting_text_input(
+					Form::text_input(
 						array(
 							'wrapper_class' => 'ea-col-6',
 							'label'         => __( 'City', 'wp-ever-accounting' ),
@@ -150,7 +153,7 @@ $title = $vendor->exists() ? __( 'Update Vendor', 'wp-ever-accounting' ) : __( '
 							'value'         => $vendor->get_city(),
 						)
 					);
-					eaccounting_text_input(
+					Form::text_input(
 						array(
 							'wrapper_class' => 'ea-col-6',
 							'label'         => __( 'State', 'wp-ever-accounting' ),
@@ -159,7 +162,7 @@ $title = $vendor->exists() ? __( 'Update Vendor', 'wp-ever-accounting' ) : __( '
 							'value'         => $vendor->get_state(),
 						)
 					);
-					eaccounting_text_input(
+					Form::text_input(
 						array(
 							'wrapper_class' => 'ea-col-6',
 							'label'         => __( 'Postcode', 'wp-ever-accounting' ),
@@ -168,7 +171,7 @@ $title = $vendor->exists() ? __( 'Update Vendor', 'wp-ever-accounting' ) : __( '
 							'value'         => $vendor->get_postcode(),
 						)
 					);
-					eaccounting_country_dropdown(
+					Form::country_dropdown(
 						array(
 							'wrapper_class' => 'ea-col-6',
 							'label'         => __( 'Country', 'wp-ever-accounting' ),
@@ -176,7 +179,7 @@ $title = $vendor->exists() ? __( 'Update Vendor', 'wp-ever-accounting' ) : __( '
 							'value'         => $vendor->get_country(),
 						)
 					);
-					eaccounting_file_input(
+					Form::file_input(
 						array(
 							'wrapper_class' => 'ea-col-6',
 							'label'         => __( 'Photo', 'wp-ever-accounting' ),
@@ -185,22 +188,22 @@ $title = $vendor->exists() ? __( 'Update Vendor', 'wp-ever-accounting' ) : __( '
 							'value'         => $vendor->get_thumbnail_id(),
 						)
 					);
-					eaccounting_hidden_input(
+					Form::hidden_input(
 						array(
 							'name'  => 'id',
 							'value' => $vendor->get_id(),
 						)
 					);
-					eaccounting_hidden_input(
+					Form::hidden_input(
 						array(
 							'name'  => 'type',
 							'value' => 'vendor',
 						)
 					);
-					eaccounting_hidden_input(
+					Form::hidden_input(
 						array(
 							'name'  => 'action',
-							'value' => 'eaccounting_edit_vendor',
+							'value' => 'ever_accounting_edit_vendor',
 						)
 					);
 					?>

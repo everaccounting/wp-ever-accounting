@@ -11,10 +11,10 @@
 
 defined( 'ABSPATH' ) || exit();
 
-include( EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-payment-list-table.php' );
+include( dirname( EVER_ACCOUNTING_FILE ) . '/includes/admin/list-tables/class-payment-list-table.php' );
 $payments_table = new Ever_Accounting_Payment_List_Table();
 $payments_table->prepare_items();
-$add_url = eaccounting_admin_url(
+$add_url = ever_accounting_admin_url(
 	array(
 		'page'   => 'ea-expenses',
 		'tab'    => 'payments',
@@ -36,7 +36,7 @@ $import_url = add_query_arg(
 <a class="page-title-action" href="<?php echo esc_url( $import_url ); ?>">
 		<?php esc_html_e( 'Import', 'wp-ever-accounting' ); ?>
 </a>
-<?php do_action( 'eaccounting_payments_table_top' ); ?>
+<?php do_action( 'ever_accounting_payments_table_top' ); ?>
 <form id="ea-payments-table" method="get" action="<?php echo admin_url( 'admin.php' ); ?>">
 	<?php
 	$payments_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'ea-payments' );
@@ -45,9 +45,9 @@ $import_url = add_query_arg(
 	<input type="hidden" name="page" value="ea-expenses"/>
 	<input type="hidden" name="tab" value="payments"/>
 </form>
-<?php do_action( 'eaccounting_payments_table_bottom' ); ?>
+<?php do_action( 'ever_accounting_payments_table_bottom' ); ?>
 <?php
-eaccounting_enqueue_js(
+ever_accounting_enqueue_js(
 		"
 	jQuery('.del').on('click',function(e){
 		if(confirm('Are you sure you want to delete?')){

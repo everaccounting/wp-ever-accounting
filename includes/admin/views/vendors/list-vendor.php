@@ -11,10 +11,10 @@
 
 defined( 'ABSPATH' ) || exit();
 
-include( EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-vendor-list-table.php' );
+include( dirname( EVER_ACCOUNTING_FILE )  . '/includes/admin/list-tables/class-vendor-list-table.php' );
 $vendors_table = new Ever_Accounting_Vendor_List_Table();
 $vendors_table->prepare_items();
-$add_url = eaccounting_admin_url(
+$add_url = ever_accounting_admin_url(
 	array(
 		'page'   => 'ea-expenses',
 		'tab'    => 'vendors',
@@ -46,12 +46,12 @@ $import_url = add_query_arg(
 		<input type="hidden" name="page" value="ea-expenses"/>
 		<input type="hidden" name="tab" value="vendors"/>
 	</form>
-<?php do_action( 'eaccounting_vendors_table_bottom' ); ?>
+<?php do_action( 'ever_accounting_vendors_table_bottom' ); ?>
 <?php
-eaccounting_enqueue_js(
+ever_accounting_enqueue_js(
 		"
 	jQuery('.vendor-status').on('change', function(e){
-		jQuery.post('" . eaccounting()->ajax_url() . "', {
+		jQuery.post('" . ever_accounting_ajax_url() . "', {
 			action:'eaccounting_edit_vendor',
 			id: $(this).data('id'),
 			enabled: $(this).is(':checked'),

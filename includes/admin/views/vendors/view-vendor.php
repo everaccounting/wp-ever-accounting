@@ -10,6 +10,10 @@
  * @var int $vendor_id
  */
 
+use Ever_Accounting\Helpers\Formatting;
+use Ever_Accounting\Helpers\Misc;
+use Ever_Accounting\Helpers\Price;
+
 defined( 'ABSPATH' ) || exit();
 
 $vendor = \Ever_Accounting\Contacts::get_vendor( $vendor_id );
@@ -26,7 +30,7 @@ $sections = array(
 $sections        = apply_filters( 'eaccounting_vendor_sections', $sections );
 $first_section   = current( array_keys( $sections ) );
 $current_section = ! empty( $_GET['section'] ) && array_key_exists( $_GET['section'], $sections ) ? sanitize_title( $_GET['section'] ) : $first_section;
-$edit_url        = eaccounting_admin_url(
+$edit_url        = ever_accounting_admin_url(
 	array(
 		'page'      => 'ea-expenses',
 		'tab'       => 'vendors',
@@ -58,7 +62,7 @@ $edit_url        = eaccounting_admin_url(
 						<div class="ea-widget-card__content">
 							<div class="ea-widget-card__primary">
 								<span class="ea-widget-card__title"><?php esc_html_e( 'Total Paid', 'wp-ever-accounting' ); ?></span>
-								<span class="ea-widget-card__amount"><?php echo eaccounting_format_price( $vendor->get_total_paid(), $vendor->get_currency_code() ); ?></span>
+								<span class="ea-widget-card__amount"><?php echo Price::format_price( $vendor->get_total_paid(), $vendor->get_currency_code() ); ?></span>
 							</div>
 						</div>
 					</div><!--.ea-widget-card-->
@@ -74,7 +78,7 @@ $edit_url        = eaccounting_admin_url(
 						<div class="ea-widget-card__content">
 							<div class="ea-widget-card__primary">
 								<span class="ea-widget-card__title"><?php esc_html_e( 'Total Due', 'wp-ever-accounting' ); ?></span>
-								<span class="ea-widget-card__amount"><?php echo eaccounting_format_price( $vendor->get_total_due(), $vendor->get_currency_code() ); ?></span>
+								<span class="ea-widget-card__amount"><?php echo Price::format_price( $vendor->get_total_due(), $vendor->get_currency_code() ); ?></span>
 							</div>
 						</div>
 					</div><!--.ea-widget-card-->
@@ -87,7 +91,7 @@ $edit_url        = eaccounting_admin_url(
 				<nav class="ea-card__nav">
 					<?php foreach ( $sections as $section_id => $section_title ) : ?>
 						<?php
-						$url = eaccounting_admin_url(
+						$url = ever_accounting_admin_url(
 							array(
 								'tab'       => 'vendors',
 								'action'    => 'view',
@@ -109,7 +113,7 @@ $edit_url        = eaccounting_admin_url(
 							include dirname( __FILE__ ) . '/vendors-' . sanitize_file_name( $current_section ) . '.php';
 							break;
 						default:
-							do_action( 'eaccounting_vendor_section_' . $current_section, $vendor );
+							do_action( 'ever_accounting_vendor_section_' . $current_section, $vendor );
 							break;
 					}
 					?>
@@ -142,7 +146,7 @@ $edit_url        = eaccounting_admin_url(
 					</div>
 					<div class="ea-list-group__item">
 						<div class="ea-list-group__title"><?php esc_html_e( 'Birthdate', 'wp-ever-accounting' ); ?></div>
-						<div class="ea-list-group__text"><?php echo ! empty( $vendor->get_birth_date() ) ? eaccounting_date( $vendor->get_birth_date() ) : '&mdash;'; ?></div>
+						<div class="ea-list-group__text"><?php echo ! empty( $vendor->get_birth_date() ) ? Formatting::date( $vendor->get_birth_date() ) : '&mdash;'; ?></div>
 					</div>
 					<div class="ea-list-group__item">
 						<div class="ea-list-group__title"><?php esc_html_e( 'Phone', 'wp-ever-accounting' ); ?></div>
@@ -164,7 +168,7 @@ $edit_url        = eaccounting_admin_url(
 						<div class="ea-list-group__title"><?php esc_html_e( 'Address', 'wp-ever-accounting' ); ?></div>
 						<div class="ea-list-group__text">
 							<?php
-							$address = eaccounting_format_address(
+							$address = Formatting::format_address(
 								array(
 									'street'   => $vendor->get_street(),
 									'city'     => $vendor->get_city(),
@@ -186,8 +190,8 @@ $edit_url        = eaccounting_admin_url(
 						echo sprintf(
 						/* translators: %s date and %s name */
 							esc_html__( 'The vendor was created at %1$s by %2$s', 'wp-ever-accounting' ),
-							eaccounting_date( $vendor->get_date_created(), 'F m, Y H:i a' ),
-							eaccounting_get_full_name( $vendor->get_creator_id() )
+							Formatting::date( $vendor->get_date_created(), 'F m, Y H:i a' ),
+							Misc::get_full_name( $vendor->get_creator_id() )
 						);
 						?>
 					</p>
@@ -198,7 +202,7 @@ $edit_url        = eaccounting_admin_url(
 
 	</div>
 <?php
-eaccounting_enqueue_js(
+ever_accounting_enqueue_js(
 	"
 	jQuery('.del').on('click',function(e){
 		if(confirm('Are you sure you want to delete?')){

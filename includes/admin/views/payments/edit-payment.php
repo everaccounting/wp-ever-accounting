@@ -11,6 +11,8 @@
  * @var int $payment_id
  */
 
+use Ever_Accounting\Helpers\Form;
+
 defined( 'ABSPATH' ) || exit();
 
 try {
@@ -47,7 +49,7 @@ $title    = $payment->exists() ? __( 'Update Payment', 'wp-ever-accounting' ) : 
 
 				<div class="ea-row">
 					<?php
-					eaccounting_text_input(
+					Form::text_input(
 						array(
 							'wrapper_class' => 'ea-col-6',
 							'label'         => __( 'Date', 'wp-ever-accounting' ),
@@ -59,7 +61,7 @@ $title    = $payment->exists() ? __( 'Update Payment', 'wp-ever-accounting' ) : 
 						)
 					);
 
-					eaccounting_account_dropdown(
+					Form::account_dropdown(
 						array(
 							'wrapper_class' => 'ea-col-6',
 							'label'         => __( 'Account', 'wp-ever-accounting' ),
@@ -71,7 +73,7 @@ $title    = $payment->exists() ? __( 'Update Payment', 'wp-ever-accounting' ) : 
 						)
 					);
 
-					eaccounting_text_input(
+					Form::text_input(
 						array(
 							'label'         => __( 'Amount', 'wp-ever-accounting' ),
 							'name'          => 'amount',
@@ -83,7 +85,7 @@ $title    = $payment->exists() ? __( 'Update Payment', 'wp-ever-accounting' ) : 
 						)
 					);
 
-					eaccounting_vendor_dropdown(
+					Form::vendor_dropdown(
 						array(
 							'wrapper_class' => 'ea-col-6',
 							'label'         => __( 'Vendor', 'wp-ever-accounting' ),
@@ -96,7 +98,7 @@ $title    = $payment->exists() ? __( 'Update Payment', 'wp-ever-accounting' ) : 
 						)
 					);
 
-					eaccounting_category_dropdown(
+					Form::category_dropdown(
 						array(
 							'wrapper_class' => 'ea-col-6',
 							'label'         => __( 'Category', 'wp-ever-accounting' ),
@@ -105,12 +107,12 @@ $title    = $payment->exists() ? __( 'Update Payment', 'wp-ever-accounting' ) : 
 							'required'      => true,
 							'type'          => 'expense',
 							'creatable'     => true,
-							'ajax_action'   => 'eaccounting_get_expense_categories',
+							'ajax_action'   => 'ever_accounting_get_expense_categories',
 							'modal_id'      => 'ea-modal-add-expense-category',
 						)
 					);
 
-					eaccounting_payment_method_dropdown(
+					Form::payment_method_dropdown(
 						array(
 							'label'         => __( 'Payment Method', 'wp-ever-accounting' ),
 							'name'          => 'payment_method',
@@ -119,7 +121,7 @@ $title    = $payment->exists() ? __( 'Update Payment', 'wp-ever-accounting' ) : 
 							'value'         => $payment->get_payment_method(),
 						)
 					);
-					eaccounting_textarea(
+					Form::textarea(
 						array(
 							'label'         => __( 'Description', 'wp-ever-accounting' ),
 							'name'          => 'description',
@@ -130,7 +132,7 @@ $title    = $payment->exists() ? __( 'Update Payment', 'wp-ever-accounting' ) : 
 						)
 					);
 
-					eaccounting_text_input(
+					Form::text_input(
 						array(
 							'label'         => __( 'Reference', 'wp-ever-accounting' ),
 							'name'          => 'reference',
@@ -141,7 +143,7 @@ $title    = $payment->exists() ? __( 'Update Payment', 'wp-ever-accounting' ) : 
 						)
 					);
 
-					eaccounting_file_input(
+					Form::file_input(
 						array(
 							'label'         => __( 'Attachments', 'wp-ever-accounting' ),
 							'name'          => 'attachment_id',
@@ -152,17 +154,17 @@ $title    = $payment->exists() ? __( 'Update Payment', 'wp-ever-accounting' ) : 
 							'placeholder'   => __( 'Upload File', 'wp-ever-accounting' ),
 						)
 					);
-					eaccounting_hidden_input(
+					Form::hidden_input(
 						array(
 							'name'  => 'id',
 							'value' => $payment->get_id(),
 						)
 					);
 
-					eaccounting_hidden_input(
+					Form::hidden_input(
 						array(
 							'name'  => 'action',
-							'value' => 'eaccounting_edit_payment',
+							'value' => 'ever_accounting_edit_payment',
 						)
 					);
 
