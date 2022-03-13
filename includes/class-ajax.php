@@ -37,8 +37,8 @@ class Ajax {
 	public static function define_ajax() {
 		// phpcs:disable
 		if ( ! empty( $_GET['ea-ajax'] ) ) {
-			eaccounting_maybe_define_constant( 'DOING_AJAX', true );
-			eaccounting_maybe_define_constant( 'EACCOUNTING_DOING_AJAX', true );
+			ever_accounting_maybe_define_constant( 'DOING_AJAX', true );
+			ever_accounting_maybe_define_constant( 'EACCOUNTING_DOING_AJAX', true );
 			if ( ! WP_DEBUG || ( WP_DEBUG && ! WP_DEBUG_DISPLAY ) ) {
 				@ini_set( 'display_errors', 0 ); // Turn off display_errors during AJAX events to prevent malformed JSON.
 			}

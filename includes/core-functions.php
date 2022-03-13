@@ -203,3 +203,18 @@ function ever_accounting_doing_it_wrong( $function, $message, $version ) {
 	}
 
 }
+
+/**
+ * Define a constant if it is not already defined.
+ *
+ * @since 1.0.2
+ *
+ * @param mixed  $value Value.
+ *
+ * @param string $name  Constant name.
+ */
+function ever_accounting_maybe_define_constant( $name, $value ) {
+	if ( ! defined( $name ) ) {
+		define( $name, $value );
+	}
+}
