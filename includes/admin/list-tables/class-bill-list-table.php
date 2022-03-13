@@ -9,6 +9,8 @@
 
 use Ever_Accounting\Bill;
 use Ever_Accounting\Documents;
+use Ever_Accounting\Helpers\Formatting;
+use Ever_Accounting\Helpers\Price;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -82,7 +84,7 @@ class Ever_Accounting_Bill_List_Table extends Ever_Accounting_List_Table {
 			<p class="ea-empty-table__message">
 				<?php echo esc_html__( 'Create and manage bills so your finances are always accurate and healthy. Print and share bill with your vendor. Bill also support tax calculation & discount.', 'wp-ever-accounting' ); ?>
 			</p>
-			<a href="<?php echo esc_url( eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'bills', 'action' => 'edit', ) ) ); //phpcs:ignore ?>" class="button-primary ea-empty-table__cta"><?php _e( 'Add Bills', 'wp-ever-accounting' ); ?></a>
+			<a href="<?php echo esc_url( ever_accounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'bills', 'action' => 'edit', ) ) ); //phpcs:ignore ?>" class="button-primary ea-empty-table__cta"><?php _e( 'Add Bills', 'wp-ever-accounting' ); ?></a>
 			<a href="https://wpeveraccounting.com/docs/general/add-bills/?utm_source=listtable&utm_medium=link&utm_campaign=admin" class="button-secondary ea-empty-table__cta" target="_blank"><?php _e( 'Learn More', 'wp-ever-accounting' ); ?></a>
 		</div>
 		<?php
@@ -178,9 +180,9 @@ class Ever_Accounting_Bill_List_Table extends Ever_Accounting_List_Table {
 			case 'bill_number':
 				$bill_number = $bill->get_bill_number();
 				$nonce       = wp_create_nonce( 'bill-nonce' );
-				$view_url    = eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'bills', 'action' => 'view', 'bill_id' => $bill_id ) );// phpcs:ignore
-				$edit_url    = eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'bills', 'action' => 'edit', 'bill_id' => $bill_id ) );// phpcs:ignore
-				$del_url     = eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'bills', 'action' => 'delete', 'bill_id' => $bill_id, '_wpnonce' => $nonce ) );// phpcs:ignore
+				$view_url    = ever_accounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'bills', 'action' => 'view', 'bill_id' => $bill_id ) );// phpcs:ignore
+				$edit_url    = ever_accounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'bills', 'action' => 'edit', 'bill_id' => $bill_id ) );// phpcs:ignore
+				$del_url     = ever_accounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'bills', 'action' => 'delete', 'bill_id' => $bill_id, '_wpnonce' => $nonce ) );// phpcs:ignore
 
 				$actions          = array();
 				$actions['view']  = '<a href="' . $view_url . '">' . __( 'View', 'wp-ever-accounting' ) . '</a>';
@@ -193,19 +195,19 @@ class Ever_Accounting_Bill_List_Table extends Ever_Accounting_List_Table {
 				$value = '<a href="' . esc_url( $view_url ) . '">' . $bill_number . '</a>' . $this->row_actions( $actions );
 				break;
 			case 'total':
-				$value = eaccounting_price( $bill->get_total(), $bill->get_currency_code() );
+				$value = Price::price( $bill->get_total(), $bill->get_currency_code() );
 				break;
 			case 'name':
 				$value = esc_html( $bill->get_name() );
 				if ( ! empty( $bill->get_contact_id() ) ) {
-					$value = sprintf( '<a href="%1$s">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'vendors', 'action' => 'view', 'vendor_id' => $bill->get_contact_id() ) ) ), $bill->get_name() );// phpcs:ignore
+					$value = sprintf( '<a href="%1$s">%2$s</a>', esc_url( ever_accounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'vendors', 'action' => 'view', 'vendor_id' => $bill->get_contact_id() ) ) ), $bill->get_name() );// phpcs:ignore
 				}
 				break;
 			case 'issue_date':
-				$value = eaccounting_date( $bill->get_issue_date(), 'Y-m-d' );
+				$value = Formatting::date( $bill->get_issue_date(), 'Y-m-d' );
 				break;
 			case 'due_date':
-				$value = eaccounting_date( $bill->get_due_date(), 'Y-m-d' );
+				$value = Formatting::date( $bill->get_due_date(), 'Y-m-d' );
 				break;
 			case 'status':
 				$value = sprintf( '<div class="ea-document__status %s"><span>%s</span></div>', $bill->get_status(), $bill->get_status_nicename() );
@@ -214,7 +216,7 @@ class Ever_Accounting_Bill_List_Table extends Ever_Accounting_List_Table {
 				return parent::column_default( $bill, $column_name );
 		}
 
-		return apply_filters( 'eaccounting_bill_list_table_' . $column_name, $value, $bill );
+		return apply_filters( 'ever_accounting_bill_list_table_' . $column_name, $value, $bill );
 	}
 
 	/**
@@ -274,10 +276,10 @@ class Ever_Accounting_Bill_List_Table extends Ever_Accounting_List_Table {
 					$bill->save();
 					break;
 				case 'delete':
-					eaccounting_delete_bill( $id );
+					Documents::delete_bill( $id );
 					break;
 				default:
-					do_action( 'eaccounting_bills_do_bulk_action_' . $this->current_action(), $id );
+					do_action( 'ever_accounting_bills_do_bulk_action_' . $this->current_action(), $id );
 			}
 		}
 
@@ -330,14 +332,14 @@ class Ever_Accounting_Bill_List_Table extends Ever_Accounting_List_Table {
 				'paged'     => $page,
 				'status'   => $status,
 				'search'   => $search,
-				'orderby'  => eaccounting_clean( $orderby ),
-				'order'    => eaccounting_clean( $order ),
+				'orderby'  => Formatting::clean( $orderby ),
+				'order'    => Formatting::clean( $order ),
 			)
 		);
 
-		$args              = apply_filters( 'eaccounting_bill_table_query_args', $args, $this );
-		$this->items       = Documents::get_bills( $args );
-		$this->total_count = Documents::get_bills(  $args, true );
+		$args              = apply_filters( 'ever_accounting_bill_table_query_args', $args, $this );
+		$this->items       = Documents::query( $args );
+		$this->total_count = Documents::query(  $args, true );
 		$this->set_pagination_args(
 			array(
 				'total_items' => $this->total_count,

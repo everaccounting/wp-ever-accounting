@@ -8,13 +8,15 @@
  * @version 1.1.0
  */
 
-use EverAccounting\Invoice;
+use Ever_Accounting\Invoice;
+use Ever_Accounting\Helpers\Template;
+use Ever_Accounting\Helpers\Tax;
 
 defined( 'ABSPATH' ) || exit;
 $items          = $invoice->get_items();
-$item_label     = eaccounting()->settings->get( 'invoice_item_label', __( 'Item', 'wp-ever-accounting' ) );
-$price_label    = eaccounting()->settings->get( 'invoice_price_label', __( 'Unit Price', 'wp-ever-accounting' ) );
-$quantity_label = eaccounting()->settings->get( 'invoice_quantity_label', __( 'Quantity', 'wp-ever-accounting' ) );
+$item_label     = ever_accounting_get_option( 'invoice_item_label', __( 'Item', 'wp-ever-accounting' ) );
+$price_label    = ever_accounting_get_option( 'invoice_price_label', __( 'Unit Price', 'wp-ever-accounting' ) );
+$quantity_label = ever_accounting_get_option( 'invoice_quantity_label', __( 'Quantity', 'wp-ever-accounting' ) );
 ?>
 <div class="ea-document__items-wrapper">
 	<div class="ea-document__items-top">
@@ -22,10 +24,10 @@ $quantity_label = eaccounting()->settings->get( 'invoice_quantity_label', __( 'Q
 			<thead>
 			<tr>
 				<th class="ea-document__line-name" colspan="2"><?php echo esc_html( $item_label ); ?></th>
-				<?php do_action( 'eaccounting_invoice_items_headers', $invoice ); ?>
+				<?php do_action( 'ever_accounting_invoice_items_headers', $invoice ); ?>
 				<th class="ea-document__line-price"><?php echo esc_html( $price_label ); ?></th>
 				<th class="ea-document__line-quantity"><?php echo esc_html( $quantity_label ); ?></th>
-				<?php if ( eaccounting_tax_enabled() ) : ?>
+				<?php if ( Tax::tax_enabled() ) : ?>
 					<th class="ea-document__line-tax"><?php esc_html_e( 'Tax(%)', 'wp-ever-accounting' ); ?></th>
 				<?php endif; ?>
 				<th class="ea-document__line-subtotal"><?php esc_html_e( 'Subtotal', 'wp-ever-accounting' ); ?></th>
@@ -34,9 +36,9 @@ $quantity_label = eaccounting()->settings->get( 'invoice_quantity_label', __( 'Q
 			<tbody id="ea-document__line-items">
 			<?php
 			foreach ( $items as $item_id => $item ) {
-				do_action( 'eaccounting_before_invoice_item_html', $item_id, $item, $invoice );
+				do_action( 'ever_accounting_before_invoice_item_html', $item_id, $item, $invoice );
 
-				eaccounting_get_template(
+				Template::get_template(
 					'invoice/invoice-item.php',
 					array(
 						'invoice' => $invoice,
@@ -45,15 +47,15 @@ $quantity_label = eaccounting()->settings->get( 'invoice_quantity_label', __( 'Q
 					)
 				);
 
-				do_action( 'eaccounting_invoice_item_html', $item_id, $item, $invoice );
+				do_action( 'ever_accounting_invoice_item_html', $item_id, $item, $invoice );
 			}
-			do_action( 'eaccounting_invoice_items_after_line_items', $invoice );
+			do_action( 'ever_accounting_invoice_items_after_line_items', $invoice );
 			?>
 			</tbody>
 
 		</table>
 	</div>
 
-	<?php eaccounting_get_template( 'invoice/invoice-totals.php', array( 'invoice' => $invoice ) ); ?>
+	<?php Template::get_template( 'invoice/invoice-totals.php', array( 'invoice' => $invoice ) ); ?>
 
 </div>

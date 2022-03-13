@@ -13,14 +13,17 @@
  */
 
 use Ever_Accounting\Bill;
+use Ever_Accounting\Helpers\Form;
+use Ever_Accounting\Helpers\Formatting;
+use Ever_Accounting\Helpers\Template;
 
 defined( 'ABSPATH' ) || exit();
 
 $bill->maybe_set_bill_number();
 $title    = $bill->exists() ? __( 'Update Bill', 'wp-ever-accounting' ) : __( 'Add Bill', 'wp-ever-accounting' );
-$note     = eaccounting()->settings->get( 'bill_note' );
-$terms    = eaccounting()->settings->get( 'bill_terms' );
-$due      = eaccounting()->settings->get( 'bill_due', 15 );
+$note     = ever_accounting_get_option( 'bill_note' );
+$terms    = ever_accounting_get_option( 'bill_terms' );
+$due      = ever_accounting_get_option( 'bill_due', 15 );
 $due_date = date_i18n( 'Y-m-d', strtotime( "+ $due days", current_time( 'timestamp' ) ) );//phpcs:ignore
 ?>
 <div class="ea-row">
@@ -57,7 +60,7 @@ $due_date = date_i18n( 'Y-m-d', strtotime( "+ $due days", current_time( 'timesta
 
 			<div class="ea-row">
 				<?php
-				eaccounting_vendor_dropdown(
+				Form::vendor_dropdown(
 					array(
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Vendor', 'wp-ever-accounting' ),
@@ -68,7 +71,7 @@ $due_date = date_i18n( 'Y-m-d', strtotime( "+ $due days", current_time( 'timesta
 						'creatable'     => true,
 					)
 				);
-				eaccounting_currency_dropdown(
+				Form::currency_dropdown(
 					array(
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Currency', 'wp-ever-accounting' ),
@@ -79,29 +82,29 @@ $due_date = date_i18n( 'Y-m-d', strtotime( "+ $due days", current_time( 'timesta
 					)
 				);
 
-				eaccounting_text_input(
+				Form::text_input(
 					array(
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Bill Date', 'wp-ever-accounting' ),
 						'name'          => 'issue_date',
-						'value'         => $bill->get_issue_date() ? eaccounting_date( $bill->get_issue_date(), 'Y-m-d' ) : date_i18n( 'Y-m-d' ),
+						'value'         => $bill->get_issue_date() ? Formatting::date( $bill->get_issue_date(), 'Y-m-d' ) : date_i18n( 'Y-m-d' ),
 						'required'      => true,
 						'data_type'     => 'date',
 					)
 				);
 
-				eaccounting_text_input(
+				Form::text_input(
 					array(
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Due Date', 'wp-ever-accounting' ),
 						'name'          => 'due_date',
-						'value'         => $bill->get_due_date() ? eaccounting_date( $bill->get_due_date(), 'Y-m-d' ) : $due_date,
+						'value'         => $bill->get_due_date() ? Formatting::date( $bill->get_due_date(), 'Y-m-d' ) : $due_date,
 						'required'      => true,
 						'data_type'     => 'date',
 					)
 				);
 
-				eaccounting_text_input(
+				Form::text_input(
 					array(
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Bill Number', 'wp-ever-accounting' ),
@@ -111,7 +114,7 @@ $due_date = date_i18n( 'Y-m-d', strtotime( "+ $due days", current_time( 'timesta
 					)
 				);
 
-				eaccounting_text_input(
+				Form::text_input(
 					array(
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Order Number', 'wp-ever-accounting' ),
@@ -121,7 +124,7 @@ $due_date = date_i18n( 'Y-m-d', strtotime( "+ $due days", current_time( 'timesta
 					)
 				);
 
-				eaccounting_category_dropdown(
+				Form::category_dropdown(
 					array(
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Category', 'wp-ever-accounting' ),
@@ -130,7 +133,7 @@ $due_date = date_i18n( 'Y-m-d', strtotime( "+ $due days", current_time( 'timesta
 						'required'      => true,
 						'type'          => 'expense',
 						'creatable'     => true,
-						'ajax_action'   => 'eaccounting_get_expense_categories',
+						'ajax_action'   => 'ever_accounting_get_expense_categories',
 						'modal_id'      => 'ea-modal-add-expense-category',
 					)
 				);
@@ -139,7 +142,7 @@ $due_date = date_i18n( 'Y-m-d', strtotime( "+ $due days", current_time( 'timesta
 			</div>
 
 			<?php
-			eaccounting_get_admin_template(
+			Template::get_admin_template(
 				'bills/bill-items',
 				array(
 					'bill' => $bill,
@@ -149,7 +152,7 @@ $due_date = date_i18n( 'Y-m-d', strtotime( "+ $due days", current_time( 'timesta
 
 			<div class="ea-row ea-mt-20">
 				<?php
-				eaccounting_textarea(
+				Form::textarea(
 					array(
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Note', 'wp-ever-accounting' ),
@@ -158,7 +161,7 @@ $due_date = date_i18n( 'Y-m-d', strtotime( "+ $due days", current_time( 'timesta
 						'required'      => false,
 					)
 				);
-				eaccounting_textarea(
+				FOrm::textarea(
 					array(
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Terms & Conditions', 'wp-ever-accounting' ),
@@ -178,10 +181,10 @@ $due_date = date_i18n( 'Y-m-d', strtotime( "+ $due days", current_time( 'timesta
 		</div>
 	</div>
 
-	<?php eaccounting_hidden_input( 'id', $bill->get_id() ); ?>
-	<?php eaccounting_hidden_input( 'discount', $bill->get_discount() ); ?>
-	<?php eaccounting_hidden_input( 'discount_type', $bill->get_discount_type() ); ?>
-	<?php eaccounting_hidden_input( 'action', 'eaccounting_edit_bill' ); ?>
+	<?php Form::hidden_input( 'id', $bill->get_id() ); ?>
+	<?php Form::hidden_input( 'discount', $bill->get_discount() ); ?>
+	<?php Form::hidden_input( 'discount_type', $bill->get_discount_type() ); ?>
+	<?php Form::hidden_input( 'action', 'ever_accounting_edit_bill' ); ?>
 	<?php wp_nonce_field( 'ea_edit_bill' ); ?>
 </form>
 
@@ -189,7 +192,7 @@ $due_date = date_i18n( 'Y-m-d', strtotime( "+ $due days", current_time( 'timesta
 <script type="text/template" id="ea-modal-add-discount" data-title="<?php esc_html_e( 'Add Discount', 'wp-ever-accounting' ); ?>">
 	<form action="" method="post">
 		<?php
-		eaccounting_text_input(
+		Form::text_input(
 			array(
 				'label'    => __( 'Discount Amount', 'wp-ever-accounting' ),
 				'name'     => 'discount',
@@ -202,7 +205,7 @@ $due_date = date_i18n( 'Y-m-d', strtotime( "+ $due days", current_time( 'timesta
 				),
 			)
 		);
-		eaccounting_select(
+		Form::select(
 			array(
 				'label'    => __( 'Discount Type', 'wp-ever-accounting' ),
 				'name'     => 'discount_type',

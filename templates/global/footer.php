@@ -9,8 +9,10 @@
  * @since 1.1.0
  */
 
+use Ever_Accounting\Helpers\Misc;
+
 defined( 'ABSPATH' ) || exit;
-$host = eaccounting_get_site_name();
+$host = Misc::get_site_name();
 ?>
 </div><!--/ea-body-->
 <footer class="ea-footer ea-noprint">

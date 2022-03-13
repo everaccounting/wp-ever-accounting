@@ -9,6 +9,11 @@
 
 namespace Ever_Accounting;
 
+use Ever_Accounting\Helpers\Formatting;
+use Ever_Accounting\Helpers\Price;
+use Ever_Accounting\Helpers\Tax;
+use Ever_Accounting\Helpers\Template;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -102,10 +107,10 @@ class Bill extends Document {
 	 *
 	 */
 	public function generate_number( $number ) {
-		$prefix           = eaccounting()->settings->get( 'bill_prefix', 'BILL-' );
-		$padd             = (int) eaccounting()->settings->get( 'bill_digit', '5' );
+		$prefix           = ever_accounting_get_option( 'bill_prefix', 'BILL-' );
+		$padd             = (int) ever_accounting_get_option( 'bill_digit', '5' );
 		$formatted_number = zeroise( absint( $number ), $padd );
-		$number           = apply_filters( 'eaccounting_generate_bill_number', $prefix . $formatted_number );
+		$number           = apply_filters( 'ever_accounting_generate_bill_number', $prefix . $formatted_number );
 
 		return $number;
 	}
@@ -129,7 +134,7 @@ class Bill extends Document {
 	 * @since 1.1.0
 	 */
 	public function generate_key() {
-		$key = 'ea-' . apply_filters( 'eaccounting_generate_bill_key', 'bill' . '-' . str_replace( '-', '', wp_generate_uuid4() ) );
+		$key = 'ea-' . apply_filters( 'ever_accounting_generate_bill_key', 'bill' . '-' . str_replace( '-', '', wp_generate_uuid4() ) );
 
 		return strtolower( sanitize_key( $key ) );
 	}
@@ -247,14 +252,14 @@ class Bill extends Document {
 			$product = new Item( $args['item_id'] );
 			if ( $product->exists() ) {
 				//convert the price from default to bill currency.
-				$default_currency = eaccounting_get_default_currency();
+				$default_currency = Price::get_default_currency();
 				$default          = array(
 					'item_id'       => $product->get_id(),
 					'item_name'     => $product->get_name(),
 					'price'         => $product->get_purchase_price(),
 					'currency_code' => $default_currency,
 					'quantity'      => 1,
-					'tax_rate'      => eaccounting_tax_enabled() ? $product->get_purchase_tax() : 0,
+					'tax_rate'      => Tax::tax_enabled() ? $product->get_purchase_tax() : 0,
 				);
 
 				$args = wp_parse_args( $args, $default );
@@ -267,7 +272,7 @@ class Bill extends Document {
 		}
 
 		if ( $line_item->get_currency_code() && ( $line_item->get_currency_code() !== $this->get_currency_code() ) ) {
-			$converted = eaccounting_price_convert( $line_item->get_price(), $line_item->get_currency_code(), $this->get_currency_code() );
+			$converted = Price::price_convert( $line_item->get_price(), $line_item->get_currency_code(), $this->get_currency_code() );
 			$line_item->set_price( $converted );
 		}
 
@@ -303,7 +308,7 @@ class Bill extends Document {
 			return array();
 		}
 
-		return Notes::get_notes(
+		return Notes::query(
 			array_merge(
 				$args,
 				array(
@@ -334,7 +339,7 @@ class Bill extends Document {
 			$creator_id = get_current_user_id();
 		}
 
-		return Notes::insert_note(
+		return Notes::insert(
 			array(
 				'parent_id'  => $this->get_id(),
 				'type'       => 'bill',
@@ -399,10 +404,10 @@ class Bill extends Document {
 			);
 		}
 
-		$amount           = (float) eaccounting_sanitize_number( $args['amount'], true );
-		$account          = Accounts::get_account( $args['account_id'] );
-		$currency         = Currencies::get_currency_by_code( $account->get_currency_code() );
-		$converted_amount = eaccounting_price_convert( $amount, $this->get_currency_code(), $currency->get_code(), $this->get_currency_rate(), $currency->get_rate() );
+		$amount           = (float) Formatting::sanitize_number( $args['amount'], true );
+		$account          = Accounts::get( $args['account_id'] );
+		$currency         = Currencies::get_by_code( $account->get_currency_code() );
+		$converted_amount = Price::price_convert( $amount, $this->get_currency_code(), $currency->get_code(), $this->get_currency_rate(), $currency->get_rate() );
 		$expense          = new Payment();
 		$expense->set_props(
 			array(
@@ -412,17 +417,17 @@ class Bill extends Document {
 				'amount'         => $converted_amount,
 				'category_id'    => $this->get_category_id(),
 				'vendor_id'      => $this->get_contact_id(),
-				'payment_method' => eaccounting_clean( $args['payment_method'] ),
-				'description'    => eaccounting_clean( $args['description'] ),
+				'payment_method' => Formatting::clean( $args['payment_method'] ),
+				'description'    => Formatting::clean( $args['description'] ),
 				'reference'      => sprintf( __( 'Bill Payment #%d', 'wp-ever-accounting' ), $this->get_id() ),//phpcs:ignore
 			)
 		);
 
 		$expense->save();
-		$methods = eaccounting_get_payment_methods();
+		$methods = Price::get_payment_methods();
 		$method  = $methods[ $expense->get_payment_method() ];
 		/* translators: %s amount */
-		$this->add_note( sprintf( __( 'Paid %1$s by %2$s', 'wp-ever-accounting' ), eaccounting_price( $args['amount'], $this->get_currency_code() ), $method ) );
+		$this->add_note( sprintf( __( 'Paid %1$s by %2$s', 'wp-ever-accounting' ), Price::price( $args['amount'], $this->get_currency_code() ), $method ) );
 		$this->save();
 
 		return true;
@@ -436,10 +441,11 @@ class Bill extends Document {
 	 */
 	public function get_payments() {
 		if ( $this->exists() ) {
-			return Transactions::get_payments(
+			return Transactions::query(
 				array(
 					'document_id' => $this->get_id(),
 					'number'      => '-1',
+					'type'        => 'expense'
 				)
 			);
 		}
@@ -460,11 +466,11 @@ class Bill extends Document {
 	 *
 	 */
 	public function get_total_due() {
-		$due = eaccounting_price( ( $this->get_total() - $this->get_total_paid() ), $this->get_currency_code(), true );
-		if ( eaccounting_price_to_default($due, $this->get_currency_code(), $this->get_currency_rate()) < 0 ) {
+		$due = Price::price( ( $this->get_total() - $this->get_total_paid() ), $this->get_currency_code(), true );
+		if ( Price::price_to_default($due, $this->get_currency_code(), $this->get_currency_rate()) < 0 ) {
 			$due = 0;
 		}
-		error_log( $due );
+
 
 		return $due;
 	}
@@ -479,7 +485,7 @@ class Bill extends Document {
 	public function get_total_paid() {
 		$total_paid = 0;
 		foreach ( $this->get_payments() as $payment ) {
-			$total_paid += (float) eaccounting_price_convert( $payment->get_amount(), $payment->get_currency_code(), $this->get_currency_code(), $payment->get_currency_rate(), $this->get_currency_rate() );
+			$total_paid += (float) Price::price_convert( $payment->get_amount(), $payment->get_currency_code(), $this->get_currency_code(), $payment->get_currency_rate(), $this->get_currency_rate() );
 		}
 
 		return $total_paid;
@@ -515,13 +521,13 @@ class Bill extends Document {
 			$item_discount         = $item_subtotal * ( $discount_rate / 100 );
 			$item_subtotal_for_tax = $item_subtotal - $item_discount;
 			$item_tax_rate         = ( $item->get_tax_rate() / 100 );
-			$item_tax              = eaccounting_calculate_tax( $item_subtotal_for_tax, $item_tax_rate, $this->is_tax_inclusive() );
+			$item_tax              = Tax::calculate_tax( $item_subtotal_for_tax, $item_tax_rate, $this->is_tax_inclusive() );
 			$item_shipping         = $item->get_shipping();
 			$item_shipping_tax     = $item->get_shipping_tax();
 			$item_fees             = $item->get_fees();
 			$item_fees_tax         = $item->get_fees_tax();
-			if ( 'tax_subtotal_rounding' !== eaccounting()->settings->get( 'tax_subtotal_rounding', 'tax_subtotal_rounding' ) ) {
-				$item_tax = eaccounting_format_decimal( $item_tax, 2 );
+			if ( 'tax_subtotal_rounding' !== ever_accounting_get_option( 'tax_subtotal_rounding', 'tax_subtotal_rounding' ) ) {
+				$item_tax = Formatting::format_decimal( $item_tax, 2 );
 			}
 			if ( $this->is_tax_inclusive() ) {
 				$item_subtotal -= $item_tax;
@@ -548,7 +554,7 @@ class Bill extends Document {
 		$this->set_total_shipping( $total_shipping );
 		$this->set_total_fees( $total_fees );
 		$total = $this->get_subtotal() - $this->get_total_discount() + $this->get_total_tax() + $this->get_total_fees() + $this->get_total_shipping();
-		$total = eaccounting_price( $total, $this->get_currency_code(), true );
+		$total = Price::price( $total, $this->get_currency_code(), true );
 		if ( $total < 0 ) {
 			$total = 0;
 		}
@@ -592,8 +598,8 @@ class Bill extends Document {
 		}
 
 		try {
-			$default_account = eaccounting()->settings->get( 'default_account' );
-			$payment_method  = eaccounting()->settings->get( 'default_payment_method', 'cash' );
+			$default_account = ever_accounting_get_option( 'default_account' );
+			$payment_method  = ever_accounting_get_option( 'default_payment_method', 'cash' );
 			if ( empty( $default_account ) ) {
 				throw new \Exception( __( 'Default account is not set bill status was not changed', 'wp-ever-accounting' ) );
 			}
@@ -636,7 +642,7 @@ class Bill extends Document {
 					sprintf(
 					/* translators: %s amount */
 						__( 'Removed %s payment', 'wp-ever-accounting' ),
-						eaccounting_price( $this->get_total_paid(), $this->get_currency_code() )
+						Price::price( $this->get_total_paid(), $this->get_currency_code() )
 					)
 				);
 			}
@@ -661,7 +667,7 @@ class Bill extends Document {
 		$this->status_transition = false;
 		if ( $status_transition ) {
 			try {
-				do_action( 'eaccounting_bill_status_' . $status_transition['to'], $this->get_id(), $this );
+				do_action( 'ever_accounting_bill_status_' . $status_transition['to'], $this->get_id(), $this );
 
 				if ( $status_transition['from'] !== $status_transition['to'] ) {
 					/* translators: 1: old order status 2: new order status */
@@ -670,15 +676,15 @@ class Bill extends Document {
 					// Note the transition occurred.
 					$this->add_note( $transition_note );
 
-					do_action( 'eaccounting_bill_status_' . $status_transition['from'] . '_to_' . $status_transition['to'], $this->get_id(), $this );
-					do_action( 'eaccounting_bill_status_changed', $this->get_id(), $status_transition['from'], $status_transition['to'], $this );
+					do_action( 'ever_accounting_bill_status_' . $status_transition['from'] . '_to_' . $status_transition['to'], $this->get_id(), $this );
+					do_action( 'ever_accounting_bill_status_changed', $this->get_id(), $status_transition['from'], $status_transition['to'], $this );
 
 					// Work out if this was for a payment, and trigger a payment_status hook instead.
 					if (
 						in_array( $status_transition['from'], array( 'cancelled', 'pending', 'viewed', 'approved', 'overdue', 'unpaid' ), true )
 						&& in_array( $status_transition['to'], array( 'paid', 'partial' ), true )
 					) {
-						do_action( 'eaccounting_bill_payment_status_changed', $this, $status_transition );
+						do_action( 'ever_accounting_bill_payment_status_changed', $this, $status_transition );
 					}
 				}
 			} catch ( \Exception $e ) {
@@ -712,7 +718,7 @@ class Bill extends Document {
 	 * @since 1.1.0
 	 */
 	public function get_url() {
-		$base = eaccounting_get_parmalink_base();
+		$base = Template::get_parmalink_base();
 		$url  = site_url( $base );
 		$url  = untrailingslashit( $url ) . '/bill/' . $this->get_id() . '/' . $this->get_key();
 

@@ -8,7 +8,7 @@
  * @version 1.1.0
  */
 
-use EverAccounting\Bill;
+use Ever_Accounting\Bill;
 defined( 'ABSPATH' ) || exit;
 ?>
 

@@ -144,7 +144,7 @@ class Document_Item extends Abstracts\Data {
 			$this->date_created = current_time( 'mysql' );
 		}
 
-		$requires = [ 'item_id', 'item_name', 'document_id', 'currency_code' ];
+		$requires = [ 'document_id', 'item_id', 'item_name', 'document_id', 'currency_code' ];
 
 		foreach ( $requires as $required ) {
 			if ( empty( $this->$required ) ) {
@@ -178,7 +178,7 @@ class Document_Item extends Abstracts\Data {
 		 *
 		 * @since 1.0.0
 		 */
-		do_action( 'eaccounting_saved_' . $this->object_type, $this->get_id(), $this );
+		do_action( 'ever_accounting_saved_' . $this->object_type, $this->get_id(), $this );
 
 		return $this->get_id();
 	}

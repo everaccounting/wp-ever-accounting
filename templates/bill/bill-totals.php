@@ -8,7 +8,9 @@
  * @version 1.1.0
  */
 
-use EverAccounting\Bill;
+use Ever_Accounting\Bill;
+use Ever_Accounting\Helpers\Price;
+use Ever_Accounting\Helpers\Tax;
 
 defined( 'ABSPATH' ) || exit;
 ?>
@@ -18,7 +20,7 @@ defined( 'ABSPATH' ) || exit;
 			<td class="label"><?php esc_html_e( 'Items Subtotal:', 'wp-ever-accounting' ); ?></td>
 			<td width="1%"></td>
 			<td class="total">
-				<?php echo eaccounting_price( $bill->get_subtotal(), $bill->get_currency_code() ); ?>
+				<?php echo Price::price( $bill->get_subtotal(), $bill->get_currency_code() ); ?>
 			</td>
 		</tr>
 
@@ -26,17 +28,17 @@ defined( 'ABSPATH' ) || exit;
 			<td class="label"><?php esc_html_e( 'Discount:', 'wp-ever-accounting' ); ?></td>
 			<td width="1%"></td>
 			<td class="total">-
-				<?php echo eaccounting_price( $bill->get_total_discount(), $bill->get_currency_code() ); ?>
+				<?php echo Price::price( $bill->get_total_discount(), $bill->get_currency_code() ); ?>
 			</td>
 		</tr>
 
-		<?php if ( eaccounting_tax_enabled() ) : ?>
-			<?php if ( 'total' === eaccounting()->settings->get( 'tax_display_totals', 'total' ) ) : ?>
+		<?php if ( Tax::tax_enabled() ) : ?>
+			<?php if ( 'total' === ever_accounting_get_option( 'tax_display_totals', 'total' ) ) : ?>
 				<tr>
 					<td class="label"><?php esc_html_e( 'Tax', 'wp-ever-accounting' ); ?>:</td>
 					<td width="1%"></td>
 					<td class="total">
-						<?php echo eaccounting_price( $bill->get_total_tax(), $bill->get_currency_code() ); ?>
+						<?php echo Price::price( $bill->get_total_tax(), $bill->get_currency_code() ); ?>
 					</td>
 				</tr>
 			<?php else : ?>
@@ -45,7 +47,7 @@ defined( 'ABSPATH' ) || exit;
 						<td class="label"><?php echo esc_html( __( 'Tax', 'wp-ever-accounting' ) . '(' . number_format_i18n( $tax['rate'] ) . '%)' ); ?>:</td>
 						<td width="1%"></td>
 						<td class="total">
-							<?php echo eaccounting_price( $tax['amount'], $bill->get_currency_code() ); ?>
+							<?php echo Price::price( $tax['amount'], $bill->get_currency_code() ); ?>
 						</td>
 					</tr>
 				<?php endforeach; ?>
@@ -55,14 +57,14 @@ defined( 'ABSPATH' ) || exit;
 			<td class="label"><?php esc_html_e( 'Total', 'wp-ever-accounting' ); ?>:</td>
 			<td width="1%"></td>
 			<td class="total">
-				<?php echo eaccounting_price( $bill->get_total(), $bill->get_currency_code() ); ?>
+				<?php echo Price::price( $bill->get_total(), $bill->get_currency_code() ); ?>
 			</td>
 		</tr>
 		<tr>
 			<td class="label"><?php esc_html_e( 'Paid', 'wp-ever-accounting' ); ?>:</td>
 			<td width="1%"></td>
 			<td class="total">
-				<?php echo eaccounting_price( $bill->get_total_paid(), $bill->get_currency_code() ); ?>
+				<?php echo Price::price( $bill->get_total_paid(), $bill->get_currency_code() ); ?>
 			</td>
 		</tr>
 		<?php if ( $bill->exists() && ! empty( $bill->get_total_due() ) ) : ?>
@@ -70,7 +72,7 @@ defined( 'ABSPATH' ) || exit;
 				<td class="label"><?php esc_html_e( 'Due', 'wp-ever-accounting' ); ?>:</td>
 				<td width="1%"></td>
 				<td class="total">
-					<?php echo eaccounting_price( abs( $bill->get_total_due() ), $bill->get_currency_code() ); ?>
+					<?php echo Price::price( abs( $bill->get_total_due() ), $bill->get_currency_code() ); ?>
 				</td>
 			</tr>
 		<?php endif; ?>

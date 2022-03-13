@@ -8,9 +8,9 @@
  * @version 1.1.0
  */
 
-use EverAccounting\Invoice;
+use Ever_Accounting\Invoice;
 
-$countries = eaccounting_get_countries();
+$countries = \Ever_Accounting\Helpers\Misc::get_countries();
 defined( 'ABSPATH' ) || exit;
 ?>
 <address class="ea-document__billing-info">

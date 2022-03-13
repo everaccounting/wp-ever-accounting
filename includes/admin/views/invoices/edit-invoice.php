@@ -12,16 +12,18 @@
  * @var Invoice $invoice
  */
 
+use Ever_Accounting\Helpers\Form;
+use Ever_Accounting\Helpers\Formatting;
 use Ever_Accounting\Invoice;
 
 defined( 'ABSPATH' ) || exit();
 
-$due      = eaccounting()->settings->get( 'invoice_due', 15 );
+$due      = ever_accounting_get_option( 'invoice_due', 15 );
 $due_date = date_i18n( 'Y-m-d', strtotime( "+ $due days", current_time( 'timestamp' ) ) );//phpcs:ignore
 $invoice->maybe_set_invoice_number();
 $title    = $invoice->exists() ? __( 'Update Invoice', 'wp-ever-accounting' ) : __( 'Add Invoice', 'wp-ever-accounting' );
-$note     = eaccounting()->settings->get( 'invoice_note' );
-$terms    = eaccounting()->settings->get( 'invoice_terms' );
+$note     = ever_accounting_get_option( 'invoice_note' );
+$terms    = ever_accounting_get_option( 'invoice_terms' );
 $view_url = admin_url( 'admin.php' ) . '?page=ea-sales&tab=invoices&action=view&invoice_id=' . $invoice->get_id();
 ?>
 <div class="ea-row">
@@ -58,7 +60,7 @@ $view_url = admin_url( 'admin.php' ) . '?page=ea-sales&tab=invoices&action=view&
 		<div class="ea-card__inside">
 			<div class="ea-row">
 				<?php
-				eaccounting_customer_dropdown(
+				Form::customer_dropdown(
 					array(
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Customer', 'wp-ever-accounting' ),
@@ -70,7 +72,7 @@ $view_url = admin_url( 'admin.php' ) . '?page=ea-sales&tab=invoices&action=view&
 						'creatable'     => true,
 					)
 				);
-				eaccounting_currency_dropdown(
+				Form::currency_dropdown(
 					array(
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Currency', 'wp-ever-accounting' ),
@@ -81,29 +83,29 @@ $view_url = admin_url( 'admin.php' ) . '?page=ea-sales&tab=invoices&action=view&
 					)
 				);
 
-				eaccounting_text_input(
+				Form::text_input(
 					array(
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Invoice Date', 'wp-ever-accounting' ),
 						'name'          => 'issue_date',
-						'value'         => $invoice->get_issue_date() ? eaccounting_date( $invoice->get_issue_date(), 'Y-m-d' ) : date_i18n( 'Y-m-d' ),
+						'value'         => $invoice->get_issue_date() ? Formatting::date( $invoice->get_issue_date(), 'Y-m-d' ) : date_i18n( 'Y-m-d' ),
 						'required'      => true,
 						'data_type'     => 'date',
 					)
 				);
 
-				eaccounting_text_input(
+				Form::text_input(
 					array(
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Due Date', 'wp-ever-accounting' ),
 						'name'          => 'due_date',
-						'value'         => $invoice->get_due_date() ? eaccounting_date( $invoice->get_due_date(), 'Y-m-d' ) : $due_date,
+						'value'         => $invoice->get_due_date() ? Formatting::date( $invoice->get_due_date(), 'Y-m-d' ) : $due_date,
 						'required'      => true,
 						'data_type'     => 'date',
 					)
 				);
 
-				eaccounting_text_input(
+				Form::text_input(
 					array(
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Invoice Number', 'wp-ever-accounting' ),
@@ -113,7 +115,7 @@ $view_url = admin_url( 'admin.php' ) . '?page=ea-sales&tab=invoices&action=view&
 					)
 				);
 
-				eaccounting_text_input(
+				Form::text_input(
 					array(
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Order Number', 'wp-ever-accounting' ),
@@ -123,7 +125,7 @@ $view_url = admin_url( 'admin.php' ) . '?page=ea-sales&tab=invoices&action=view&
 					)
 				);
 
-				eaccounting_category_dropdown(
+				Form::category_dropdown(
 					array(
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Category', 'wp-ever-accounting' ),
@@ -132,12 +134,12 @@ $view_url = admin_url( 'admin.php' ) . '?page=ea-sales&tab=invoices&action=view&
 						'required'      => true,
 						'type'          => 'income',
 						'creatable'     => true,
-						'ajax_action'   => 'eaccounting_get_income_categories',
+						'ajax_action'   => 'ever_accounting_get_income_categories',
 						'modal_id'      => 'ea-modal-add-income-category',
 					)
 				);
 
-				eaccounting_get_admin_template(
+				\Ever_Accounting\Helpers\Template::get_admin_template(
 					'invoices/invoice-items',
 					array(
 						'invoice' => $invoice,
@@ -147,7 +149,7 @@ $view_url = admin_url( 'admin.php' ) . '?page=ea-sales&tab=invoices&action=view&
 			</div>
 			<div class="ea-row ea-mt-20">
 				<?php
-				eaccounting_textarea(
+				Form::textarea(
 					array(
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Note', 'wp-ever-accounting' ),
@@ -156,7 +158,7 @@ $view_url = admin_url( 'admin.php' ) . '?page=ea-sales&tab=invoices&action=view&
 						'required'      => false,
 					)
 				);
-				eaccounting_textarea(
+				Form::textarea(
 					array(
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Terms & Conditions', 'wp-ever-accounting' ),
@@ -173,17 +175,17 @@ $view_url = admin_url( 'admin.php' ) . '?page=ea-sales&tab=invoices&action=view&
 			<?php submit_button( __( 'Submit', 'wp-ever-accounting' ), 'primary', 'submit' ); ?>
 		</div>
 	</div>
-	<?php eaccounting_hidden_input( 'id', $invoice->get_id() ); ?>
-	<?php eaccounting_hidden_input( 'discount', $invoice->get_discount() ); ?>
-	<?php eaccounting_hidden_input( 'discount_type', $invoice->get_discount_type() ); ?>
-	<?php eaccounting_hidden_input( 'action', 'eaccounting_edit_invoice' ); ?>
+	<?php Form::hidden_input( 'id', $invoice->get_id() ); ?>
+	<?php Form::hidden_input( 'discount', $invoice->get_discount() ); ?>
+	<?php Form::hidden_input( 'discount_type', $invoice->get_discount_type() ); ?>
+	<?php Form::hidden_input( 'action', 'ever_accounting_edit_invoice' ); ?>
 	<?php wp_nonce_field( 'ea_edit_invoice' ); ?>
 </form>
 
 <script type="text/template" id="ea-modal-add-discount" data-title="<?php esc_html_e( 'Add Discount', 'wp-ever-accounting' ); ?>">
 	<form action="" method="post">
 		<?php
-		eaccounting_text_input(
+		Form::text_input(
 			array(
 				'label'    => __( 'Discount Amount', 'wp-ever-accounting' ),
 				'name'     => 'discount',
@@ -196,7 +198,7 @@ $view_url = admin_url( 'admin.php' ) . '?page=ea-sales&tab=invoices&action=view&
 				),
 			)
 		);
-		eaccounting_select(
+		Form::select(
 			array(
 				'label'    => __( 'Discount Type', 'wp-ever-accounting' ),
 				'name'     => 'discount_type',

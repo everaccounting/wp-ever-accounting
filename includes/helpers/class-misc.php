@@ -301,4 +301,16 @@ class Misc {
 
 		return implode( ' ', $name );
 	}
+
+	/**
+	 * Get site name
+	 *
+	 * @return string
+	 * @since 1.1.0
+	*/
+	public static function get_site_name() {
+		$parts = wp_parse_url( site_url() );
+
+		return $parts['host'];
+	}
 }

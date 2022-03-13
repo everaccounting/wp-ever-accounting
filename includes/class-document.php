@@ -9,14 +9,15 @@
 
 namespace Ever_Accounting;
 
-use Ever_Accounting\Models\Document_Item;
+use Ever_Accounting\Helpers\Formatting;
+use Ever_Accounting\Helpers\Tax;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
  * Document class.
  */
-class Document extends Data {
+class Document extends Abstracts\Data {
 	/**
 	 * This is the name of this object type.
 	 *
@@ -32,14 +33,6 @@ class Document extends Data {
 	 * @var string
 	 */
 	protected $table = 'ea_documents';
-
-	/**
-	 * Meta type.
-	 *
-	 * @since 1.1.0
-	 * @var string
-	 */
-	protected $meta_type = false;
 
 	/**
 	 * Cache group.
@@ -277,7 +270,7 @@ class Document extends Data {
 		 *
 		 * @since 1.0.0
 		 */
-		do_action( 'eaccounting_saved_' . $this->object_type, $this->get_id(), $this );
+		do_action( 'ever_accounting_saved_' . $this->object_type, $this->get_id(), $this );
 
 		return $this->get_id();
 	}
@@ -340,7 +333,7 @@ class Document extends Data {
 	 */
 	public function get_tax_inclusive() {
 		if ( ! $this->exists() ) {
-			return eaccounting_prices_include_tax();
+			return Tax::prices_include_tax();
 		}
 
 		return $this->get_prop( 'tax_inclusive' );
@@ -401,7 +394,7 @@ class Document extends Data {
 	 *
 	 */
 	public function set_subtotal( $subtotal ) {
-		$this->set_prop( 'subtotal', eaccounting_format_decimal( $subtotal, 4 ) );
+		$this->set_prop( 'subtotal', Formatting::format_decimal( $subtotal, 4 ) );
 	}
 
 	/**
@@ -413,7 +406,7 @@ class Document extends Data {
 	 *
 	 */
 	public function set_total_tax( $tax ) {
-		$this->set_prop( 'total_tax', eaccounting_format_decimal( $tax, 4 ) );
+		$this->set_prop( 'total_tax', Formatting::format_decimal( $tax, 4 ) );
 	}
 
 	/**
@@ -425,7 +418,7 @@ class Document extends Data {
 	 *
 	 */
 	public function set_total_discount( $discount ) {
-		$this->set_prop( 'total_discount', eaccounting_format_decimal( $discount, 4 ) );
+		$this->set_prop( 'total_discount', Formatting::format_decimal( $discount, 4 ) );
 	}
 
 	/**
@@ -437,7 +430,7 @@ class Document extends Data {
 	 *
 	 */
 	public function set_total_fees( $fees ) {
-		$this->set_prop( 'total_fees', eaccounting_format_decimal( $fees, 4 ) );
+		$this->set_prop( 'total_fees', Formatting::format_decimal( $fees, 4 ) );
 	}
 
 	/**
@@ -449,7 +442,7 @@ class Document extends Data {
 	 *
 	 */
 	public function set_total_shipping( $shipping ) {
-		$this->set_prop( 'total_shipping', eaccounting_format_decimal( $shipping, 4 ) );
+		$this->set_prop( 'total_shipping', Formatting::format_decimal( $shipping, 4 ) );
 	}
 
 	/**
@@ -461,7 +454,7 @@ class Document extends Data {
 	 *
 	 */
 	public function set_total( $total ) {
-		$this->set_prop( 'total', eaccounting_format_decimal( $total, 4 ) );
+		$this->set_prop( 'total', Formatting::format_decimal( $total, 4 ) );
 	}
 
 	/**
@@ -473,12 +466,12 @@ class Document extends Data {
 	 *
 	 */
 	public function set_currency_code( $currency_code ) {
-		if ( eaccounting_sanitize_currency_code( $currency_code ) ) {
-			$this->set_prop( 'currency_code', eaccounting_clean( $currency_code ) );
+		if ( \Ever_Accounting\Currencies::sanitize_code( $currency_code ) ) {
+			$this->set_prop( 'currency_code', Formatting::clean( $currency_code ) );
 		}
 
 		if ( $this->get_currency_code() && ( ! $this->exists() || array_key_exists( 'currency_code', $this->changes ) ) ) {
-			$currency = eaccounting_get_currency( $this->get_currency_code() );
+			$currency = \Ever_Accounting\Currencies::get( $this->get_currency_code() );
 			$this->set_currency_rate( $currency->get_rate() );
 		}
 	}
@@ -493,7 +486,7 @@ class Document extends Data {
 	 */
 	public function set_currency_rate( $currency_rate ) {
 		if ( ! empty( $currency_rate ) ) {
-			$this->set_prop( 'currency_rate', eaccounting_format_decimal( $currency_rate, 7 ) );
+			$this->set_prop( 'currency_rate', Formatting::format_decimal( $currency_rate, 7 ) );
 		}
 	}
 
@@ -627,7 +620,7 @@ class Document extends Data {
 	 * @return bool
 	 */
 	public function is_status( $status ) {
-		return $this->get_status() === eaccounting_clean( $status );
+		return $this->get_status() === Formatting::clean( $status );
 	}
 
 	/**

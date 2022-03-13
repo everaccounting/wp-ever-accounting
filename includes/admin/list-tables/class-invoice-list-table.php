@@ -7,6 +7,8 @@
  * @package     Ever_Accounting
  */
 
+use Ever_Accounting\Helpers\Formatting;
+use Ever_Accounting\Helpers\Price;
 use Ever_Accounting\Invoice;
 use Ever_Accounting\Documents;
 
@@ -98,7 +100,7 @@ class Ever_Accounting_Invoice_List_Table extends Ever_Accounting_List_Table {
             <p class="ea-empty-table__message">
 				<?php echo esc_html__( 'Create professional invoices for your customers in their currency. Print and share invoice with easily. Invoice also support tax calculation & discount.', 'wp-ever-accounting' ); ?>
             </p>
-            <a href="<?php echo esc_url( eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'invoices', 'action' => 'edit', ) ) ); //phpcs:ignore ?>" class="button-primary ea-empty-table__cta"><?php _e( 'Add Invoices', 'wp-ever-accounting' ); ?></a>
+            <a href="<?php echo esc_url( ever_accounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'invoices', 'action' => 'edit', ) ) ); //phpcs:ignore ?>" class="button-primary ea-empty-table__cta"><?php _e( 'Add Invoices', 'wp-ever-accounting' ); ?></a>
             <a href="https://wpeveraccounting.com/docs/general/add-invoice/?utm_source=listtable&utm_medium=link&utm_campaign=admin" class="button-secondary ea-empty-table__cta" target="_blank"><?php _e( 'Learn More', 'wp-ever-accounting' ); ?></a>
         </div>
 		<?php
@@ -195,9 +197,9 @@ class Ever_Accounting_Invoice_List_Table extends Ever_Accounting_List_Table {
 				$invoice_number = $invoice->get_invoice_number();
 
 				$nonce    = wp_create_nonce( 'invoice-nonce' );
-				$view_url = eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'invoices', 'action' => 'view', 'invoice_id' => $invoice_id, ) );// phpcs:ignore
-				$edit_url = eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'invoices', 'action' => 'edit', 'invoice_id' => $invoice_id, ) );// phpcs:ignore
-				$del_url  = eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'invoices', 'action' => 'delete', 'invoice_id' => $invoice_id, '_wpnonce' => $nonce, ) );// phpcs:ignore
+				$view_url = ever_accounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'invoices', 'action' => 'view', 'invoice_id' => $invoice_id, ) );// phpcs:ignore
+				$edit_url = ever_accounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'invoices', 'action' => 'edit', 'invoice_id' => $invoice_id, ) );// phpcs:ignore
+				$del_url  = ever_accounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'invoices', 'action' => 'delete', 'invoice_id' => $invoice_id, '_wpnonce' => $nonce, ) );// phpcs:ignore
 
 				$actions          = array();
 				$actions['view']  = '<a href="' . $view_url . '">' . __( 'View', 'wp-ever-accounting' ) . '</a>';
@@ -210,19 +212,19 @@ class Ever_Accounting_Invoice_List_Table extends Ever_Accounting_List_Table {
 				$value = '<a href="' . esc_url( $view_url ) . '">' . $invoice_number . '</a>' . $this->row_actions( $actions );
 				break;
 			case 'total':
-				$value = eaccounting_price( $invoice->get_total(), $invoice->get_currency_code() );
+				$value = Price::price( $invoice->get_total(), $invoice->get_currency_code() );
 				break;
 			case 'name':
 				$value = esc_html( $invoice->get_name() );
 				if ( ! empty( $invoice->get_contact_id() ) ) {
-					$value = sprintf( '<a href="%1$s">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'customers', 'action' => 'view', 'customer_id' => $invoice->get_contact_id() ) ) ), $invoice->get_name() );// phpcs:ignore
+					$value = sprintf( '<a href="%1$s">%2$s</a>', esc_url( ever_accounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'customers', 'action' => 'view', 'customer_id' => $invoice->get_contact_id() ) ) ), $invoice->get_name() );// phpcs:ignore
 				}
 				break;
 			case 'issue_date':
-				$value = eaccounting_date( $invoice->get_issue_date(), 'Y-m-d' );
+				$value = Formatting::date( $invoice->get_issue_date(), 'Y-m-d' );
 				break;
 			case 'due_date':
-				$value = eaccounting_date( $invoice->get_due_date(), 'Y-m-d' );
+				$value = Formatting::date( $invoice->get_due_date(), 'Y-m-d' );
 				break;
 			case 'status':
 				$value = sprintf( '<div class="ea-document__status %s"><span>%s</span></div>', $invoice->get_status(), $invoice->get_status_nicename() );
@@ -231,7 +233,7 @@ class Ever_Accounting_Invoice_List_Table extends Ever_Accounting_List_Table {
 				return parent::column_default( $invoice, $column_name );
 		}
 
-		return apply_filters( 'eaccounting_invoice_list_table_' . $column_name, $value, $invoice );
+		return apply_filters( 'ever_accounting_invoice_list_table_' . $column_name, $value, $invoice );
 	}
 
 	/**
@@ -294,7 +296,7 @@ class Ever_Accounting_Invoice_List_Table extends Ever_Accounting_List_Table {
 					Documents::delete_invoice( $id );
 					break;
 				default:
-					do_action( 'eaccounting_invoices_do_bulk_action_' . $this->current_action(), $id );
+					do_action( 'ever_accounting_invoices_do_bulk_action_' . $this->current_action(), $id );
 			}
 		}
 
@@ -348,15 +350,15 @@ class Ever_Accounting_Invoice_List_Table extends Ever_Accounting_List_Table {
 				'paged'        => $page,
 				'status'      => $status,
 				'search'      => $search,
-				'orderby'     => eaccounting_clean( $orderby ),
-				'order'       => eaccounting_clean( $order ),
+				'orderby'     => Formatting::clean( $orderby ),
+				'order'       => Formatting::clean( $order ),
 				'customer_id' => $customer_id,
 			)
 		);
 
-		$args              = apply_filters( 'eaccounting_invoice_table_query_args', $args, $this );
-		$this->items       = Documents::get_invoices( $args );
-		$this->total_count = Documents::get_invoices( $args, true );
+		$args              = apply_filters( 'ever_accounting_invoice_table_query_args', $args, $this );
+		$this->items       = Documents::query( $args );
+		$this->total_count = Documents::query( $args, true );
 		$this->set_pagination_args(
 			array(
 				'total_items' => $this->total_count,

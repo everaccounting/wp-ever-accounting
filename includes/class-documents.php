@@ -279,7 +279,7 @@ class Documents {
 	 *
 	 * @since 1.0.0
 	 */
-	public static function get_document( $id, $output = OBJECT ) {
+	public static function get( $id, $output = OBJECT ) {
 		if ( empty( $id ) ) {
 			return null;
 		}
@@ -406,7 +406,7 @@ class Documents {
 	 *
 	 * @return int|object
 	 */
-	public static function get_documents( $args = array(), $count = false) {
+	public static function query( $args = array(), $count = false) {
 		global $wpdb;
 		$results      = null;
 		$total        = 0;
@@ -717,7 +717,7 @@ class Documents {
 			'cancelled' => __( 'Cancelled', 'wp-ever-accounting' ),
 		);
 
-		return apply_filters( 'eaccounting_bill_statuses', $statuses );
+		return apply_filters( 'ever_accounting_bill_statuses', $statuses );
 	}
 
 	/**
@@ -737,6 +737,6 @@ class Documents {
 			'refunded'  => __( 'Refunded', 'wp-ever-accounting' ),
 		);
 
-		return apply_filters( 'eaccounting_invoice_statuses', $statuses );
+		return apply_filters( 'ever_accounting_invoice_statuses', $statuses );
 	}
 }

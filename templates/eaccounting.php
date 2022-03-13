@@ -7,6 +7,8 @@
  * @version 1.1.0
  */
 
+use Ever_Accounting\Helpers\Template;
+
 defined( 'ABSPATH' ) || exit;
 ?>
 <!DOCTYPE html>
@@ -20,7 +22,7 @@ defined( 'ABSPATH' ) || exit;
 </head>
 
 <body class="wp-core-ui eaccounting">
-<?php eaccounting_get_template( 'global/header.php' ); ?>
+<?php Template::get_template( 'global/header.php' ); ?>
 
 <?php do_action( 'ever_accounting_before_body' ); ?>
 <div class="ea-container">
@@ -28,7 +30,7 @@ defined( 'ABSPATH' ) || exit;
 </div>
 <?php do_action( 'ever_accounting_after_body' ); ?>
 
-<?php eaccounting_get_template( 'global/footer.php' ); ?>
+<?php Template::get_template( 'global/footer.php' ); ?>
 </body>
 
 </html>

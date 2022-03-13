@@ -7,11 +7,12 @@
  * @var Invoice $invoice The item being used
  */
 
+use Ever_Accounting\Helpers\Formatting;
 use Ever_Accounting\Invoice;
 
 defined( 'ABSPATH' ) || exit();
 
-$notes = eaccounting_get_notes(
+$notes = \Ever_Accounting\Notes::query(
 	array(
 		'number'    => - 1,
 		'parent_id' => $invoice->get_id(),
@@ -39,8 +40,8 @@ $notes = eaccounting_get_notes(
 								echo sprintf(
 								/* translators: %s note creator user */
 									esc_html__( 'added on %1$s at %2$s', 'wp-ever-accounting' ),
-									eaccounting_date( $note->get_date_created(), 'F m, Y' ),
-									eaccounting_date( $note->get_date_created(), 'H:i a' )
+									Formatting::date( $note->get_date_created(), 'F m, Y' ),
+									Formatting::date( $note->get_date_created(), 'H:i a' )
 								);
 								?>
 							</abbr>

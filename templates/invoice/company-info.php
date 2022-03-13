@@ -8,20 +8,22 @@
  * @version 1.1.0
  */
 
-use EverAccounting\Invoice;
+use Ever_Accounting\Invoice;
+use Ever_Accounting\Helpers\Misc;
 
 defined( 'ABSPATH' ) || exit;
+
 $company_details = array(
-	'logo'       => eaccounting()->settings->get( 'company_logo', eaccounting()->plugin_url( '/dist/images/document-logo.png' ) ),
-	'name'       => eaccounting()->settings->get( 'company_name' ),
-	'street'     => eaccounting()->settings->get( 'company_address' ),
-	'city'       => eaccounting()->settings->get( 'company_city' ),
-	'state'      => eaccounting()->settings->get( 'company_state' ),
-	'postcode'   => eaccounting()->settings->get( 'company_postcode' ),
-	'country'    => eaccounting()->settings->get( 'company_country' ),
-	'vat_number' => eaccounting()->settings->get( 'company_vat_number' ),
+	'logo'       => ever_accounting_get_option( 'company_logo', ever_accounting_plugin_url( '/assets/dist/images/document-logo.png' ) ),
+	'name'       => ever_accounting_get_option( 'company_name' ),
+	'street'     => ever_accounting_get_option( 'company_address' ),
+	'city'       => ever_accounting_get_option( 'company_city' ),
+	'state'      => ever_accounting_get_option( 'company_state' ),
+	'postcode'   => ever_accounting_get_option( 'company_postcode' ),
+	'country'    => ever_accounting_get_option( 'company_country' ),
+	'vat_number' => ever_accounting_get_option( 'company_vat_number' ),
 );
-$countries       = eaccounting_get_countries();
+$countries       = Misc::get_countries();
 ?>
 <div class="ea-document__logo">
 	<img src="<?php echo esc_url( $company_details['logo'] ); ?>" alt="<?php echo esc_html( $company_details['name'] ); ?>">

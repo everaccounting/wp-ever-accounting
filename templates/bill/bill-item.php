@@ -9,8 +9,11 @@
  * @var $item Document_Item
  * @version 1.1.0
  */
-use EverAccounting\Bill;
-use EverAccounting\Document_Item;
+
+use Ever_Accounting\Bill;
+use Ever_Accounting\Document_Item;
+use Ever_Accounting\Helpers\Price;
+use Ever_Accounting\Helpers\Tax;
 
 defined( 'ABSPATH' ) || exit;
 ?>
@@ -21,11 +24,11 @@ defined( 'ABSPATH' ) || exit;
 			<?php echo esc_html( $item->get_item_name( 'view' ) ); ?>
 		</div>
 	</td>
-	<?php do_action( 'eaccounting_bill_item_values', $item_id, $item, $bill ); ?>
+	<?php do_action( 'ever_accounting_bill_item_values', $item_id, $item, $bill ); ?>
 
 	<td class="ea-document__line-price" width="1%" data-value="<?php echo $item->get_price(); ?>">
 		<div class="view">
-			<?php echo esc_html( eaccounting_price( $item->get_price(), $bill->get_currency_code() ) ); ?>
+			<?php echo esc_html( Price::price( $item->get_price(), $bill->get_currency_code() ) ); ?>
 		</div>
 	</td>
 
@@ -34,17 +37,17 @@ defined( 'ABSPATH' ) || exit;
 			<?php echo '<small class="times">&times;</small> ' . esc_html( $item->get_quantity() ); ?>
 		</div>
 	</td>
-	<?php if ( eaccounting_tax_enabled() ) : ?>
+	<?php if ( Tax::tax_enabled() ) : ?>
 		<td class="ea-document__line-tax" width="1%">
 			<div class="view">
-				<abbr title="<?php echo esc_html( eaccounting_price( $item->get_tax(), $bill->get_currency_code() ) ); ?>"><?php echo esc_html( number_format($item->get_tax_rate(), 2) ); ?><small>%</small></abbr>
+				<abbr title="<?php echo esc_html( Price::price( $item->get_tax(), $bill->get_currency_code() ) ); ?>"><?php echo esc_html( number_format($item->get_tax_rate(), 2) ); ?><small>%</small></abbr>
 			</div>
 		</td>
 	<?php endif; ?>
 
 	<td class="ea-document__line-subtotal" width="1%">
 		<div class="view">
-			<span class="line_item_subtotal"><?php echo esc_html( eaccounting_format_price( $item->get_subtotal(), $bill->get_currency_code() ) ); ?></span>
+			<span class="line_item_subtotal"><?php echo esc_html( Price::format_price( $item->get_subtotal(), $bill->get_currency_code() ) ); ?></span>
 		</div>
 	</td>
 

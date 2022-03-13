@@ -12,6 +12,8 @@
 
 namespace Ever_Accounting\Admin;
 
+use Ever_Accounting\Helpers\Formatting;
+use Ever_Accounting\Helpers\Template;
 use Ever_Accounting\Invoice;
 use Ever_Accounting\Documents;
 
@@ -28,7 +30,7 @@ class Invoice_Actions {
 	 * Invoice_Actions constructor.
 	 */
 	public function __construct() {
-		add_action( 'admin_post_eaccounting_invoice_action', array( $this, 'invoice_action' ) );
+		add_action( 'admin_post_ever_accounting_invoice_action', array( $this, 'invoice_action' ) );
 	}
 
 	/**
@@ -37,7 +39,7 @@ class Invoice_Actions {
 	 * @since 1.1.0
 	 */
 	public function invoice_action() {
-		$action     = eaccounting_clean( wp_unslash( $_REQUEST['invoice_action'] ) );
+		$action     = Formatting::clean( wp_unslash( $_REQUEST['invoice_action'] ) );
 		$invoice_id = absint( wp_unslash( $_REQUEST['invoice_id'] ) );
 		$invoice    = Documents::get_invoice( $invoice_id );
 
@@ -80,8 +82,8 @@ class Invoice_Actions {
 				break;
 		}
 
-		if ( ! did_action( 'eaccounting_invoice_action_' . sanitize_title( $action ) ) ) {
-			do_action( 'eaccounting_invoice_action_' . sanitize_title( $action ), $invoice, $redirect_url );
+		if ( ! did_action( 'ever_accounting_invoice_action_' . sanitize_title( $action ) ) ) {
+			do_action( 'ever_accounting_invoice_action_' . sanitize_title( $action ), $invoice, $redirect_url );
 		}
 		wp_redirect( $redirect_url ); //phpcs:ignore
 		exit();
@@ -106,7 +108,7 @@ class Invoice_Actions {
 			wp_die( __( 'Sorry, Invoice does not exist', 'wp-ever-accounting' ) );
 		}
 
-		eaccounting_get_admin_template(
+		Template::get_admin_template(
 			'invoices/view-invoice',
 			array(
 				'invoice' => $invoice,
@@ -129,7 +131,7 @@ class Invoice_Actions {
 		} catch ( \Exception $e ) {
 			wp_die( $e->getMessage() );
 		}
-		eaccounting_get_admin_template(
+		Template::get_admin_template(
 			'invoices/edit-invoice',
 			array(
 				'invoice' => $invoice,
@@ -152,7 +154,7 @@ class Invoice_Actions {
 		if ( ! $invoice->exists() ) {
 			return;
 		}
-		eaccounting_get_admin_template( 'invoices/invoice-notes', array( 'invoice' => $invoice ) );
+		Template::get_admin_template( 'invoices/invoice-notes', array( 'invoice' => $invoice ) );
 	}
 
 	/**
@@ -167,7 +169,7 @@ class Invoice_Actions {
 		if ( ! $invoice->exists() ) {
 			return;
 		}
-		eaccounting_get_admin_template( 'invoices/invoice-payments', array( 'invoice' => $invoice ) );
+		Template::get_admin_template( 'invoices/invoice-payments', array( 'invoice' => $invoice ) );
 	}
 }
 

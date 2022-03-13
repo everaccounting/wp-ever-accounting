@@ -7,6 +7,7 @@
  * @var Invoice $invoice The item being used
  */
 
+use Ever_Accounting\Helpers\Price;
 use Ever_Accounting\Invoice;
 
 defined( 'ABSPATH' ) || exit();
@@ -34,8 +35,8 @@ $payments = $invoice->get_payments();
 						</a>
 					</td>
 					<td>
-						<abbr title="<?php echo esc_attr( eaccounting_price( $payment->get_amount(), $payment->get_currency_code() ) ); ?>">
-							<?php echo esc_html( eaccounting_price( eaccounting_price_convert( $payment->get_amount(), $payment->get_currency_code(), $invoice->get_currency_code(), $payment->get_currency_rate(), $invoice->get_currency_rate() ), $invoice->get_currency_code() ) ); ?>
+						<abbr title="<?php echo esc_attr( Price::price( $payment->get_amount(), $payment->get_currency_code() ) ); ?>">
+							<?php echo esc_html( Price::price( Price::price_convert( $payment->get_amount(), $payment->get_currency_code(), $invoice->get_currency_code(), $payment->get_currency_rate(), $invoice->get_currency_rate() ), $invoice->get_currency_code() ) ); ?>
 						</abbr>
 					</td>
 				</tr>

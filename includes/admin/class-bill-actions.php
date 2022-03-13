@@ -13,6 +13,8 @@
 namespace Ever_Accounting\Admin;
 use Ever_Accounting\Bill;
 use Ever_Accounting\Documents;
+use Ever_Accounting\Helpers\Formatting;
+use Ever_Accounting\Helpers\Template;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -26,11 +28,11 @@ class Bill_Actions {
 	 * Bill_Actions constructor.
 	 */
 	public function __construct() {
-		add_action( 'admin_post_eaccounting_bill_action', array( $this, 'bill_action' ) );
+		add_action( 'admin_post_ever_accounting_bill_action', array( $this, 'bill_action' ) );
 	}
 
 	public function bill_action() {
-		$action  = eaccounting_clean( wp_unslash( $_REQUEST['bill_action'] ) );
+		$action  = Formatting::clean( wp_unslash( $_REQUEST['bill_action'] ) );
 		$bill_id = absint( wp_unslash( $_REQUEST['bill_id'] ) );
 		$bill    = Documents::get_bill( $bill_id );
 
@@ -69,8 +71,8 @@ class Bill_Actions {
 				break;
 		}
 
-		if ( ! did_action( 'eaccounting_bill_action_' . sanitize_title( $action ) ) ) {
-			do_action( 'eaccounting_bill_action_' . sanitize_title( $action ), $bill, $redirect_url );
+		if ( ! did_action( 'ever_accounting_bill_action_' . sanitize_title( $action ) ) ) {
+			do_action( 'ever_accounting_bill_action_' . sanitize_title( $action ), $bill, $redirect_url );
 		}
 
 		wp_redirect( $redirect_url ); //phpcs:ignore
@@ -96,7 +98,7 @@ class Bill_Actions {
 			wp_die( __( 'Sorry, Bill does not exist', 'wp-ever-accounting' ) );
 		}
 
-		eaccounting_get_admin_template(
+		Template::get_admin_template(
 			'bills/view-bill',
 			array(
 				'bill'   => $bill,
@@ -119,7 +121,7 @@ class Bill_Actions {
 		} catch ( \Exception $e ) {
 			wp_die( $e->getMessage() );
 		}
-		eaccounting_get_admin_template(
+		Template::get_admin_template(
 			'bills/edit-bill',
 			array(
 				'bill'   => $bill,
@@ -142,7 +144,7 @@ class Bill_Actions {
 		if ( ! $bill->exists() ) {
 			return;
 		}
-		eaccounting_get_admin_template( 'bills/bill-notes', array( 'bill' => $bill ) );
+		Template::get_admin_template( 'bills/bill-notes', array( 'bill' => $bill ) );
 	}
 
 	/**
@@ -157,7 +159,7 @@ class Bill_Actions {
 		if ( ! $bill->exists() ) {
 			return;
 		}
-		eaccounting_get_admin_template( 'bills/bill-payments', array( 'bill' => $bill ) );
+		Template::get_admin_template( 'bills/bill-payments', array( 'bill' => $bill ) );
 	}
 }
 

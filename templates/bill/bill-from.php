@@ -8,10 +8,12 @@
  * @version 1.1.0
  */
 
-use EverAccounting\Bill;
+use Ever_Accounting\Bill;
+use Ever_Accounting\Helpers\Misc;
 
-$countries = eaccounting_get_countries();
 defined( 'ABSPATH' ) || exit;
+
+$countries = Misc::get_countries();
 ?>
 <address class="ea-document__billing-info">
 	<span class="ea-document__billing-name"><?php echo esc_html( $bill->get_name() ); ?></span>

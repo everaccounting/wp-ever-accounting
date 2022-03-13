@@ -13,11 +13,12 @@
  */
 
 use Ever_Accounting\Bill;
+use Ever_Accounting\Helpers\Template;
 
 defined( 'ABSPATH' ) || exit();
 
 $bill_actions = apply_filters(
-	'eaccounting_bill_actions',
+	'ever_accounting_bill_actions',
 	array(
 		'status_cancelled' => __( 'Mark as Cancelled', 'wp-ever-accounting' ),
 	)
@@ -88,7 +89,7 @@ do_action( 'add_meta_boxes_ea_bill', $bill );
 													wp_nonce_url(
 														add_query_arg(
 															array(
-																'action'      => 'eaccounting_bill_action',
+																'action'      => 'ever_accounting_bill_action',
 																'bill_action' => $action,
 																'bill_id'     => $bill->get_id(),
 															),
@@ -120,19 +121,19 @@ do_action( 'add_meta_boxes_ea_bill', $bill );
 						</div>
 
 						<div class="ea-card__inside">
-							<?php eaccounting_get_template( 'bill/bill.php', array( 'bill' => $bill ) ); ?>
+							<?php Template::get_template( 'bill/bill.php', array( 'bill' => $bill ) ); ?>
 						</div>
 
 					</div>
 
-					<?php eaccounting_do_meta_boxes( 'ea_bill', 'advanced', $bill ); ?>
+					<?php ever_accounting_do_meta_boxes( 'ea_bill', 'advanced', $bill ); ?>
 				</div><!--/post-body-content-->
 				<div id="postbox-container-1" class="postbox-container">
-					<?php eaccounting_do_meta_boxes( 'ea_bill', 'side', $bill ); ?>
+					<?php ever_accounting_do_meta_boxes( 'ea_bill', 'side', $bill ); ?>
 				</div><!--/postbox-container-->
 
 				<div id="postbox-container-2" class="postbox-container">
-					<?php eaccounting_do_meta_boxes( 'ea_bill', 'normal', $bill ); ?>
+					<?php ever_accounting_do_meta_boxes( 'ea_bill', 'normal', $bill ); ?>
 				</div><!--/postbox-container-->
 
 			</div><!--/post-body-->
@@ -140,5 +141,5 @@ do_action( 'add_meta_boxes_ea_bill', $bill );
 	</div><!--/ea-bill-->
 <?php
 if ( $bill->needs_payment() ) {
-	eaccounting_get_admin_template( 'js/modal-bill-payment', array( 'bill' => $bill ) );
+	Template::get_admin_template( 'js/modal-bill-payment', array( 'bill' => $bill ) );
 }

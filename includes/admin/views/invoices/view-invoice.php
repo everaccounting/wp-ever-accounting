@@ -12,12 +12,13 @@
  * @var Invoice $invoice
  */
 
+use Ever_Accounting\Helpers\Template;
 use Ever_Accounting\Invoice;
 
 defined( 'ABSPATH' ) || exit();
 
 $invoice_actions = apply_filters(
-	'eaccounting_invoice_actions',
+	'ever_accounting_invoice_actions',
 	array(
 		'status_cancelled' => __( 'Mark Cancelled', 'wp-ever-accounting' ),
 	)
@@ -82,14 +83,14 @@ do_action( 'add_meta_boxes_ea_invoice', $invoice );
 										<a class="button-secondary" href="<?php echo esc_url( $invoice->get_url() ); ?>" target="_blank"><span class="dashicons dashicons-printer"></span> <?php esc_html_e( 'Print', 'wp-ever-accounting' ); ?></a>
 										<ul class="ea-dropdown-menu">
 											<?php
-											do_action('eaccounting_before_invoice_actions', $invoice );
+											do_action('ever_accounting_before_invoice_actions', $invoice );
 											foreach ( $invoice_actions as $action => $title ) {
 												echo sprintf(
 													'<li><a href="%s">%s</a></li>',
 													wp_nonce_url(
 														add_query_arg(
 															array(
-																'action'         => 'eaccounting_invoice_action',
+																'action'         => 'ever_accounting_invoice_action',
 																'invoice_action' => $action,
 																'invoice_id'     => $invoice->get_id(),
 															),
@@ -100,7 +101,7 @@ do_action( 'add_meta_boxes_ea_invoice', $invoice );
 													esc_html( $title )
 												);
 											}
-											do_action('eaccounting_after_invoice_actions', $invoice );
+											do_action('ever_accounting_after_invoice_actions', $invoice );
 											?>
 										</ul>
 									</div>
@@ -122,19 +123,19 @@ do_action( 'add_meta_boxes_ea_invoice', $invoice );
 						</div>
 
 						<div class="ea-card__inside">
-							<?php eaccounting_get_template( 'invoice/invoice.php', array( 'invoice' => $invoice ) ); ?>
+							<?php Template::get_template( 'invoice/invoice.php', array( 'invoice' => $invoice ) ); ?>
 						</div>
 
 					</div>
 
-					<?php eaccounting_do_meta_boxes( 'ea_invoice', 'advanced', $invoice ); ?>
+					<?php ever_accounting_do_meta_boxes( 'ea_invoice', 'advanced', $invoice ); ?>
 				</div><!--/post-body-content-->
 				<div id="postbox-container-1" class="postbox-container">
-					<?php eaccounting_do_meta_boxes( 'ea_invoice', 'side', $invoice ); ?>
+					<?php ever_accounting_do_meta_boxes( 'ea_invoice', 'side', $invoice ); ?>
 				</div><!--/postbox-container-->
 
 				<div id="postbox-container-2" class="postbox-container">
-					<?php eaccounting_do_meta_boxes( 'ea_invoice', 'normal', $invoice ); ?>
+					<?php ever_accounting_do_meta_boxes( 'ea_invoice', 'normal', $invoice ); ?>
 				</div><!--/postbox-container-->
 
 			</div><!--/post-body-->
@@ -143,5 +144,5 @@ do_action( 'add_meta_boxes_ea_invoice', $invoice );
 
 <?php
 if ( ! $invoice->is_status( 'paid' ) ) {
-	eaccounting_get_admin_template( 'js/modal-invoice-payment', array( 'invoice' => $invoice ) );
+	Template::get_admin_template( 'js/modal-invoice-payment', array( 'invoice' => $invoice ) );
 }

@@ -8,6 +8,7 @@
  */
 
 use Ever_Accounting\Bill;
+use Ever_Accounting\Helpers\Price;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -34,8 +35,8 @@ $payments = $bill->get_payments();
 						</a>
 					</td>
 					<td>
-						<abbr title="<?php echo esc_attr( eaccounting_price( $payment->get_amount(), $payment->get_currency_code() ) ); ?>">
-							<?php echo esc_html( eaccounting_price( eaccounting_price_convert( $payment->get_amount(), $payment->get_currency_code(), $bill->get_currency_code(), $payment->get_currency_rate(), $bill->get_currency_rate() ), $bill->get_currency_code() ) ); ?>
+						<abbr title="<?php echo esc_attr( Price::price( $payment->get_amount(), $payment->get_currency_code() ) ); ?>">
+							<?php echo esc_html( Price::price( Price::price_convert( $payment->get_amount(), $payment->get_currency_code(), $bill->get_currency_code(), $payment->get_currency_rate(), $bill->get_currency_rate() ), $bill->get_currency_code() ) ); ?>
 						</abbr>
 					</td>
 				</tr>

@@ -9,24 +9,26 @@
  * @var string $key
  */
 
+use Ever_Accounting\Helpers\Template;
+
 defined( 'ABSPATH' ) || exit();
 
 if ( empty( $key ) || empty( $invoice_id ) ) {
-	eaccounting_get_template( 'unauthorized.php' );
+	Template::get_template( 'unauthorized.php' );
 	exit();
 }
-$invoice = eaccounting_get_invoice( $invoice_id );
+$invoice = Ever_Accounting\Documents::get_invoice( $invoice_id );
 if ( empty( $invoice ) || ! $invoice->is_key_valid( $key ) ) {
-	eaccounting_get_template( 'unauthorized.php' );
+	Template::get_template( 'unauthorized.php' );
 	exit();
 }
 ?>
 
 
-<?php do_action( 'eaccounting_public_before_invoice', $invoice ); ?>
+<?php do_action( 'ever_accounting_public_before_invoice', $invoice ); ?>
 <div class="ea-card">
 	<div class="ea-card__inside">
-		<?php eaccounting_get_template( 'invoice/invoice.php', array( 'invoice' => $invoice ) ); ?>
+		<?php Template::get_template( 'invoice/invoice.php', array( 'invoice' => $invoice ) ); ?>
 	</div>
 </div>
-<?php do_action( 'eaccounting_public_after_invoice', $invoice ); ?>
+<?php do_action( 'ever_accounting_public_after_invoice', $invoice ); ?>

@@ -8,13 +8,15 @@
  * @version 1.1.0
  */
 
-use EverAccounting\Bill;
+use Ever_Accounting\Bill;
+use Ever_Accounting\Helpers\Tax;
+use Ever_Accounting\Helpers\Template;
 
 defined( 'ABSPATH' ) || exit;
 $items          = $bill->get_items();
-$item_label     = eaccounting()->settings->get( 'bill_item_label', __( 'Item', 'wp-ever-accounting' ) );
-$price_label    = eaccounting()->settings->get( 'bill_price_label', __( 'Unit Price', 'wp-ever-accounting' ) );
-$quantity_label = eaccounting()->settings->get( 'bill_quantity_label', __( 'Quantity', 'wp-ever-accounting' ) );
+$item_label     = ever_accounting_get_option( 'bill_item_label', __( 'Item', 'wp-ever-accounting' ) );
+$price_label    = ever_accounting_get_option( 'bill_price_label', __( 'Unit Price', 'wp-ever-accounting' ) );
+$quantity_label = ever_accounting_get_option( 'bill_quantity_label', __( 'Quantity', 'wp-ever-accounting' ) );
 ?>
 <div class="ea-document__items-wrapper">
 	<div class="ea-document__items-top">
@@ -25,7 +27,7 @@ $quantity_label = eaccounting()->settings->get( 'bill_quantity_label', __( 'Quan
 				<?php do_action( 'eaccounting_bill_items_headers', $bill ); ?>
 				<th class="ea-document__line-price"><?php echo esc_html( $price_label ); ?></th>
 				<th class="ea-document__line-quantity"><?php echo esc_html( $quantity_label ); ?></th>
-				<?php if ( eaccounting_tax_enabled() ) : ?>
+				<?php if ( Tax::tax_enabled() ) : ?>
 					<th class="ea-document__line-tax"><?php esc_html_e( 'Tax(%)', 'wp-ever-accounting' ); ?></th>
 				<?php endif; ?>
 				<th class="ea-document__line-subtotal"><?php esc_html_e( 'Subtotal', 'wp-ever-accounting' ); ?></th>
@@ -36,7 +38,7 @@ $quantity_label = eaccounting()->settings->get( 'bill_quantity_label', __( 'Quan
 			foreach ( $items as $item_id => $item ) {
 				do_action( 'eaccounting_before_bill_item_html', $item_id, $item, $bill );
 
-				eaccounting_get_template(
+				Template::get_template(
 					'bill/bill-item.php',
 					array(
 						'bill'    => $bill,
@@ -45,14 +47,14 @@ $quantity_label = eaccounting()->settings->get( 'bill_quantity_label', __( 'Quan
 					)
 				);
 
-				do_action( 'eaccounting_bill_item_html', $item_id, $item, $bill );
+				do_action( 'ever_accounting_bill_item_html', $item_id, $item, $bill );
 			}
-			do_action( 'eaccounting_bill_items_after_line_items', $bill );
+			do_action( 'ever_accounting_bill_items_after_line_items', $bill );
 			?>
 			</tbody>
 
 		</table>
 	</div>
-	<?php eaccounting_get_template( 'bill/bill-totals.php', array( 'bill' => $bill ) ); ?>
+	<?php Template::get_template( 'bill/bill-totals.php', array( 'bill' => $bill ) ); ?>
 
 </div>

@@ -8,11 +8,12 @@
  */
 
 use Ever_Accounting\Bill;
+use Ever_Accounting\Helpers\Formatting;
 use Ever_Accounting\Notes;
 
 defined( 'ABSPATH' ) || exit();
 
-$notes = Notes::get_notes(
+$notes = Notes::query(
 	array(
 		'number'    => - 1,
 		'parent_id' => $bill->get_id(),
@@ -40,8 +41,8 @@ $notes = Notes::get_notes(
 								echo sprintf(
 								/* translators: %s note creator user */
 									esc_html__( 'added on %1$s at %2$s', 'wp-ever-accounting' ),
-									eaccounting_date( $note->get_date_created(), 'F m, Y' ),
-									eaccounting_date( $note->get_date_created(), 'H:i a' )
+									Formatting::date( $note->get_date_created(), 'F m, Y' ),
+									Formatting::date( $note->get_date_created(), 'H:i a' )
 								);
 								?>
 							</abbr>
@@ -62,7 +63,7 @@ $notes = Notes::get_notes(
 			</p>
 
 			<button type="submit" class="add_document_note button"><?php _e( 'Add', 'wp-ever-accounting' ); ?></button>
-			<input type="hidden" name="action" value="eaccounting_add_bill_note">
+			<input type="hidden" name="action" value="ever_accounting_add_bill_note">
 			<input type="hidden" name="bill_id" value="<?php echo esc_attr( $bill->get_id() ); ?>">
 			<?php wp_nonce_field( 'ea_add_bill_note', 'nonce' ); ?>
 		</form>

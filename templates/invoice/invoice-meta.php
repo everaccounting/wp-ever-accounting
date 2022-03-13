@@ -8,7 +8,8 @@
  * @version 1.1.0
  */
 
-use EverAccounting\Invoice;
+use Ever_Accounting\Invoice;
+use Ever_Accounting\Helpers\Formatting;
 
 defined( 'ABSPATH' ) || exit;
 ?>
@@ -24,16 +25,16 @@ defined( 'ABSPATH' ) || exit;
 	<tr>
 		<th><?php esc_html_e( 'Issue Date', 'wp-ever-accounting' ); ?></th>
 		<td>:</td>
-		<td><?php echo empty( $invoice->get_issue_date() ) ? '&mdash;' : eaccounting_date( $invoice->get_issue_date(), 'M j, Y' ); ?></td>
+		<td><?php echo empty( $invoice->get_issue_date() ) ? '&mdash;' : Formatting::date( $invoice->get_issue_date(), 'M j, Y' ); ?></td>
 	</tr>
 	<tr>
 		<th><?php esc_html_e( 'Due Date', 'wp-ever-accounting' ); ?></th>
 		<td>:</td>
-		<td><?php echo empty( $invoice->get_due_date() ) ? '&mdash;' : eaccounting_date( $invoice->get_due_date(), 'M j, Y' ); ?></td>
+		<td><?php echo empty( $invoice->get_due_date() ) ? '&mdash;' : Formatting::date( $invoice->get_due_date(), 'M j, Y' ); ?></td>
 	</tr>
 	<tr>
 		<th><?php esc_html_e( 'Payment Date', 'wp-ever-accounting' ); ?></th>
 		<td>:</td>
-		<td><?php echo empty( $invoice->get_payment_date() ) ? '&mdash;' : eaccounting_date( $invoice->get_payment_date(), 'M j, Y' ); ?></td>
+		<td><?php echo empty( $invoice->get_payment_date() ) ? '&mdash;' : Formatting::date( $invoice->get_payment_date(), 'M j, Y' ); ?></td>
 	</tr>
 </table>
