@@ -6,11 +6,14 @@
  *
  * @author      Ever_Accounting
  * @category    Admin
- * @package     Ever_Accounting\Admin
+ * @package     Ever_Accounting\Admin\Report
  * @version     1.1.0
  */
 
 namespace Ever_Accounting\Admin\Report;
+
+use Ever_Accounting\Helpers\Form;
+use Ever_Accounting\Helpers\Price;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -104,7 +107,7 @@ class CashFlow extends Report {
 			if ( ! isset( $income[ $result->date ] ) ) {
 				$income[ $result->date ] = 0;
 			}
-			$amount                   = \Ever_Accounting\Helpers\Price::price_to_default( $result->amount, $result->currency_code, $result->currency_rate );
+			$amount                   = Price::price_to_default( $result->amount, $result->currency_code, $result->currency_rate );
 			$income[ $result->date ] += $amount;
 		}
 
@@ -129,7 +132,7 @@ class CashFlow extends Report {
 			if ( ! isset( $expense[ $result->date ] ) ) {
 				$expense[ $result->date ] = 0;
 			}
-			$amount                    = \Ever_Accounting\Helpers\Price::price_to_default( $result->amount, $result->currency_code, $result->currency_rate );
+			$amount                    = Price::price_to_default( $result->amount, $result->currency_code, $result->currency_rate );
 			$expense[ $result->date ] += $amount;
 		}
 
@@ -162,11 +165,11 @@ class CashFlow extends Report {
 					<form action="<?php echo admin_url( 'admin.php?page=ea-reports' ); ?>>" method="get">
 						<?php esc_html_e( 'Filter', 'wp-ever-accounting' ); ?>
 						<?php
-						eaccounting_select2(
+						Form::select2(
 							array(
 								'placeholder' => __( 'Year', 'wp-ever-accounting' ),
 								'name'        => 'year',
-								'options'     => eaccounting_get_report_years(),
+								'options'     => ever_accounting_get_report_years(),
 								'value'       => $year,
 							)
 						);
@@ -305,13 +308,13 @@ class CashFlow extends Report {
 								<tr>
 									<th><?php _e( 'Income', 'wp-ever-accounting' ); ?></th>
 									<?php foreach ( $report['incomes'] as $income ) : ?>
-										<td><?php echo eaccounting_format_price( $income ); ?></td>
+										<td><?php echo Price::format_price( $income ); ?></td>
 									<?php endforeach; ?>
 								</tr>
 								<tr>
 									<th><?php _e( 'Expense', 'wp-ever-accounting' ); ?></th>
 									<?php foreach ( $report['expenses'] as $expense ) : ?>
-										<td><?php echo eaccounting_format_price( $expense ); ?></td>
+										<td><?php echo Price::format_price( $expense ); ?></td>
 									<?php endforeach; ?>
 								</tr>
 							<?php else : ?>
@@ -329,7 +332,7 @@ class CashFlow extends Report {
 								<tr>
 									<th><?php _e( 'Profit', 'wp-ever-accounting' ); ?></th>
 									<?php foreach ( $report['profits'] as $profit ) : ?>
-										<th class="align-right"><?php echo eaccounting_format_price( $profit ); ?></th>
+										<th class="align-right"><?php echo Price::format_price( $profit ); ?></th>
 									<?php endforeach; ?>
 								</tr>
 								</tfoot>

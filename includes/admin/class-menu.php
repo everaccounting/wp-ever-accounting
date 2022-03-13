@@ -551,6 +551,7 @@ class Menu {
 	 * @since 1.0.2
 	 */
 	public function render_sales_report_tab() {
+		include_once dirname( __FILE__ ). '/reports/class-report.php';
 		require_once dirname( __FILE__ ) . '/reports/class-sales.php';
 		$report = new \Ever_Accounting\Admin\Report\Sales();
 		$report->output();
@@ -562,6 +563,7 @@ class Menu {
 	 * @since 1.0.2
 	 */
 	public function render_expenses_report_tab() {
+		include_once dirname( __FILE__ ). '/reports/class-report.php';
 		require_once dirname( __FILE__ ) . '/reports/class-expenses.php';
 		$report = new \Ever_Accounting\Admin\Report\Expenses();
 		$report->output();
@@ -573,6 +575,7 @@ class Menu {
 	 * @since 1.0.2
 	 */
 	public function render_profits_report_tab() {
+		include_once dirname( __FILE__ ). '/reports/class-report.php';
 		require_once dirname( __FILE__ ) . '/reports/class-profits.php';
 		$report = new \Ever_Accounting\Admin\Report\Profits();
 		$report->output();
@@ -584,6 +587,7 @@ class Menu {
 	 * @since 1.0.2
 	 */
 	public function render_cashflow_report_tab() {
+		include_once dirname( __FILE__ ). '/reports/class-report.php';
 		require_once dirname( __FILE__ ) . '/reports/class-cashflow.php';
 		$report = new \Ever_Accounting\Admin\Report\CashFlow();
 		$report->output();

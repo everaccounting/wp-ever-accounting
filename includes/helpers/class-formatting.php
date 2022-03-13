@@ -102,7 +102,7 @@ class Formatting {
 	public static function format_decimal( $number, $decimals = 4, $trim_zeros = false ) {
 
 		// Convert multiple dots to just one.
-		$number = preg_replace( '/\.(?![^.]+$)|[^0-9.-]/', '', eaccounting_clean( $number ) );
+		$number = preg_replace( '/\.(?![^.]+$)|[^0-9.-]/', '', self::clean( $number ) );
 
 		if ( is_numeric( $decimals ) ) {
 			$number = number_format( floatval( $number ), $decimals, '.', '' );

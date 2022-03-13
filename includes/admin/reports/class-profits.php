@@ -6,11 +6,15 @@
  *
  * @author      Ever_Accounting
  * @category    Admin
- * @package     Ever_Accounting\Admin
+ * @package     Ever_Accounting\Admin\Report
  * @version     1.1.0
  */
 
 namespace Ever_Accounting\Admin\Report;
+
+use Ever_Accounting\Helpers\Form;
+use Ever_Accounting\Helpers\Formatting;
+use Ever_Accounting\Helpers\Price;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -71,9 +75,9 @@ class Profits extends Report {
 				}
 
 				foreach ( $results as $result ) {
-					$amount      = eaccounting_price_to_default( $result->amount, $result->currency_code, $result->currency_rate );
+					$amount      = Price::price_to_default( $result->amount, $result->currency_code, $result->currency_rate );
 					$category_id = $result->category_id;
-					$amount      = (float) eaccounting_format_decimal( $amount );
+					$amount      = (float) Formatting::format_decimal( $amount );
 					$date        = $result->date;
 					if ( 'income' === $result->type ) {
 						$report['data']['totals'][ $date ]                   += $amount;
@@ -118,15 +122,15 @@ class Profits extends Report {
 					<form action="<?php echo admin_url( 'admin.php?page=ea-reports' ); ?>>" method="get">
 						<?php esc_html_e( 'Filter', 'wp-ever-accounting' ); ?>
 						<?php
-						eaccounting_select2(
+						Form::select2(
 							array(
 								'placeholder' => __( 'Year', 'wp-ever-accounting' ),
 								'name'        => 'year',
-								'options'     => eaccounting_get_report_years(),
+								'options'     => ever_accounting_get_report_years(),
 								'value'       => $year,
 							)
 						);
-						eaccounting_account_dropdown(
+						Form::account_dropdown(
 							array(
 								'name'        => 'account_id',
 								'placeholder' => __( 'Select Account', 'wp-ever-accounting' ),
@@ -134,7 +138,7 @@ class Profits extends Report {
 								'value'       => $account_id,
 							)
 						);
-						eaccounting_payment_method_dropdown(
+						Form::payment_method_dropdown(
 							array(
 								'name'    => 'payment_method',
 								'value'   => $payment_method,
@@ -258,7 +262,7 @@ class Profits extends Report {
 									<tr>
 										<td><?php echo $report['categories'][ $category_id ]; ?></td>
 										<?php foreach ( $sales as $amount ) : ?>
-											<td><?php echo eaccounting_format_price( $amount ); ?></td>
+											<td><?php echo Price::format_price( $amount ); ?></td>
 										<?php endforeach; ?>
 									</tr>
 								<?php endforeach; ?>
@@ -277,7 +281,7 @@ class Profits extends Report {
 								<tr>
 									<th><?php _e( 'Total', 'wp-ever-accounting' ); ?></th>
 									<?php foreach ( $report['data']['totals'] as $total ) : ?>
-										<th class="align-right"><?php echo eaccounting_format_price( $total ); ?></th>
+										<th class="align-right"><?php echo Price::format_price( $total ); ?></th>
 									<?php endforeach; ?>
 								</tr>
 								</tfoot>
