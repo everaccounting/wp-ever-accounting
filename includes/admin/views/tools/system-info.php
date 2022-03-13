@@ -11,13 +11,14 @@ use Ever_Accounting\Accounts;
 use Ever_Accounting\Categories;
 use Ever_Accounting\Contacts;
 use Ever_Accounting\Currencies;
+use Ever_Accounting\Documents;
 use Ever_Accounting\Items;
 use Ever_Accounting\Transactions;
 use Ever_Accounting\Transfers;
 
 defined( 'ABSPATH' ) || exit();
 
-function eaccounting_tools_system_info_report() {
+function ever_accounting_tools_system_info_report() {
 
 	global $wpdb;
 
@@ -62,7 +63,7 @@ function eaccounting_tools_system_info_report() {
 	// Ever_Accounting
 	//
 
-	$settings     = eaccounting()->settings;
+	$settings     = get_option( 'ever_accounting_settings', array() );
 	$db_version   = get_option( 'eaccounting_version' );
 	$install_date = get_option( 'eaccounting_install_date' );
 	global $wpdb;
@@ -71,10 +72,10 @@ function eaccounting_tools_system_info_report() {
 
 	// Configariotn settings.
 	$return .= "\n" . '-- Ever_Accounting Configuration' . "\n\n";
-	$return .= 'Version:                          ' . eaccounting()->get_version() . "\n";
+	$return .= 'Version:                          ' . get_option('ever_accounting_version') . "\n";
 	$return .= 'DB Version:                       ' . ( $db_version ? "$db_version\n" : "Unset\n" );
 	$return .= 'Install Date:                     ' . ( $install_date ? date_i18n( 'Y-m-d H:i:s', $install_date ) . "\n" : "Unset\n" );
-	$return .= 'Debug Mode:                       ' . ( $settings->get( 'debug_mode', false ) ? 'True' . "\n" : "False\n" );
+	$return .= 'Debug Mode:                       ' . ( ever_accounting_get_option( 'debug_mode', false ) ? 'True' . "\n" : "False\n" );
 	$return .= 'Transactions Table:               ' . ( in_array( 'ea_transactions', $tables, true ) ? 'True' . "\n" : "False\n" );
 	$return .= 'Contacts Table:                   ' . ( in_array( 'ea_contacts', $tables, true ) ? 'True' . "\n" : "False\n" );
 	$return .= 'Contactmeta Table:                ' . ( in_array( 'ea_contactmeta', $tables, true ) ? 'True' . "\n" : "False\n" );
@@ -85,27 +86,28 @@ function eaccounting_tools_system_info_report() {
 	$return .= 'Items Table:                      ' . ( in_array( 'ea_items', $tables, true ) ? 'True' . "\n" : "False\n" );
 
 	// Misc Settings
-	$currency_code = eaccounting_get_option( 'default_currency' );
-	$currency      = eaccounting_get_currency( $currency_code );
+	$currency_code = ever_accounting_get_option( 'default_currency' );
+	$currency      = \Ever_Accounting\Currencies::get( $currency_code );
 	$return        .= "\n" . '-- Ever_Accounting Settings' . "\n\n";
 
 	$return .= 'Default currency:                  ' . $currency_code . "\n";
 	$return .= 'Default currency rate:             ' . ( ! empty( $currency ) ? $currency->get_rate() : "" ) . "\n";
-	$return .= 'Default payment method:            ' . eaccounting_get_option( 'default_payment_method' ) . "\n";
-	$return .= 'Default Account:                   ' . eaccounting_get_option( 'default_account' ) . "\n";
+	$return .= 'Default payment method:            ' . ever_accounting_get_option( 'default_payment_method' ) . "\n";
+	$return .= 'Default Account:                   ' . ever_accounting_get_option( 'default_account' ) . "\n";
 
 	// Object counts.
 	$return .= "\n" . '-- Ever_Accounting Object Counts' . "\n\n";
-	$return .= 'Items:                            ' . number_format( Items::get_items( array(), true ) ) . "\n";
-	$return .= 'Transactions:                     ' . number_format( Transactions::get_transactions( array(), true ) ) . "\n";
-	$return .= 'Accounts:                         ' . number_format( Accounts::get_accounts( array(), true ) ) . "\n";
-	$return .= 'Customers:                        ' . number_format( Contacts::get_customers( array(), true ) ) . "\n";
-	$return .= 'Vendors:                          ' . number_format( Contacts::get_vendors( array(), true ) ) . "\n";
-	$return .= 'Currencies:                       ' . number_format( Currencies::get_currencies( array(), true ) ) . "\n";
-	$return .= 'Categories:                       ' . number_format( Categories::get_categories( array(), true ) ) . "\n";
-	$return .= 'Transfers:                        ' . number_format( Transfers::get_transfers( array(), true ) ) . "\n";
-	$return .= 'Invoices:                         ' . number_format( eaccounting_get_invoices( array( 'count_total' => true ) ) ) . "\n";
-	$return .= 'Bills:                            ' . number_format( eaccounting_get_bills( array( 'count_total' => true ) ) ) . "\n";
+	$return .= 'Items:                            ' . number_format( Items::query( array(), true ) ) . "\n";
+	$return .= 'Transactions:                     ' . number_format( Transactions::query( array(), true ) ) . "\n";
+	$return .= 'Accounts:                         ' . number_format( Accounts::query( array(), true ) ) . "\n";
+	$return .= 'Customers:                        ' . number_format( Contacts::query( array(), true ) ) . "\n";
+	$return .= 'Vendors:                          ' . number_format( Contacts::query( array(), true ) ) . "\n";
+	$return .= 'Currencies:                       ' . number_format( Currencies::query( array(), true ) ) . "\n";
+	$return .= 'Categories:                       ' . number_format( Categories::query( array(), true ) ) . "\n";
+	$return .= 'Transfers:                        ' . number_format( Transfers::query( array(), true ) ) . "\n";
+	//@todo need to update this after the invoice and bills
+//	$return .= 'Invoices:                         ' . number_format( Documents::query( array(), true ) )  . "\n";
+//	$return .= 'Bills:                            ' . number_format( Documents::query( array(), true  ) ) . "\n";
 
 	// Get plugins that have an update
 	$updates = get_plugin_updates();

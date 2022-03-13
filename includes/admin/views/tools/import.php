@@ -24,7 +24,7 @@ defined( 'ABSPATH' ) || exit();
 		  data-nonce="<?php echo wp_create_nonce( 'import-customers_importer_nonce' ); ?>">
 		<p>
 			<?php
-			echo wp_kses_post( sprintf( __( 'Import customers from CSV file. Download a <a href="%s"> sample </a> file to learn how to format the CSV file.', 'wp-ever-accounting' ), eaccounting()->plugin_url( '/sample-data/import/customers.csv' ) ) );
+			echo wp_kses_post( sprintf( __( 'Import customers from CSV file. Download a <a href="%s"> sample </a> file to learn how to format the CSV file.', 'wp-ever-accounting' ), ever_accounting_plugin_url( '/sample-data/import/customers.csv' ) ) );
 			?>
 		</p>
 
@@ -47,7 +47,7 @@ defined( 'ABSPATH' ) || exit();
 				</tr>
 				</thead>
 				<tbody>
-				<?php eaccounting_do_import_fields( 'customer' ); ?>
+				<?php ever_accounting_do_import_fields( 'customer' ); ?>
 				</tbody>
 			</table>
 
@@ -68,7 +68,7 @@ defined( 'ABSPATH' ) || exit();
 			  data-nonce="<?php echo wp_create_nonce( 'import-vendors_importer_nonce' ); ?>">
 			<p>
 				<?php
-				echo wp_kses_post( sprintf( __( 'Import vendors from CSV file. Download a <a href="%s"> sample </a> file to learn how to format the CSV file.', 'wp-ever-accounting' ), eaccounting()->plugin_url( '/sample-data/import/vendors.csv' ) ) );
+				echo wp_kses_post( sprintf( __( 'Import vendors from CSV file. Download a <a href="%s"> sample </a> file to learn how to format the CSV file.', 'wp-ever-accounting' ), ever_accounting_plugin_url( '/sample-data/import/vendors.csv' ) ) );
 				?>
 			</p>
 
@@ -91,7 +91,7 @@ defined( 'ABSPATH' ) || exit();
 					</tr>
 					</thead>
 					<tbody>
-					<?php eaccounting_do_import_fields( 'vendor' ); ?>
+					<?php ever_accounting_do_import_fields( 'vendor' ); ?>
 					</tbody>
 				</table>
 
@@ -112,7 +112,7 @@ defined( 'ABSPATH' ) || exit();
 			  data-nonce="<?php echo wp_create_nonce( 'import-accounts_importer_nonce' ); ?>">
 			<p>
 				<?php
-				echo wp_kses_post( sprintf( __( 'Import accounts from CSV file. Download a <a href="%s"> sample </a> file to learn how to format the CSV file.', 'wp-ever-accounting' ), eaccounting()->plugin_url( '/sample-data/import/accounts.csv' ) ) );
+				echo wp_kses_post( sprintf( __( 'Import accounts from CSV file. Download a <a href="%s"> sample </a> file to learn how to format the CSV file.', 'wp-ever-accounting' ), ever_accounting_plugin_url( '/sample-data/import/accounts.csv' ) ) );
 				?>
 			</p>
 
@@ -135,7 +135,7 @@ defined( 'ABSPATH' ) || exit();
 					</tr>
 					</thead>
 					<tbody>
-					<?php eaccounting_do_import_fields( 'account' ); ?>
+					<?php ever_accounting_do_import_fields( 'account' ); ?>
 					</tbody>
 				</table>
 
@@ -156,7 +156,7 @@ defined( 'ABSPATH' ) || exit();
 			  data-nonce="<?php echo wp_create_nonce( 'import-items_importer_nonce' ); ?>">
 			<p>
 				<?php
-				echo wp_kses_post( sprintf( __( 'Import items from CSV file. Download a <a href="%s"> sample </a> file to learn how to format the CSV file.', 'wp-ever-accounting' ), eaccounting()->plugin_url( '/sample-data/import/items.csv' ) ) );
+				echo wp_kses_post( sprintf( __( 'Import items from CSV file. Download a <a href="%s"> sample </a> file to learn how to format the CSV file.', 'wp-ever-accounting' ), ever_accounting_plugin_url( '/sample-data/import/items.csv' ) ) );
 				?>
 			</p>
 
@@ -179,7 +179,7 @@ defined( 'ABSPATH' ) || exit();
 					</tr>
 					</thead>
 					<tbody>
-					<?php eaccounting_do_import_fields( 'item' ); ?>
+					<?php ever_accounting_do_import_fields( 'item' ); ?>
 					</tbody>
 				</table>
 
@@ -200,7 +200,7 @@ defined( 'ABSPATH' ) || exit();
 			  data-nonce="<?php echo wp_create_nonce( 'import-revenues_importer_nonce' ); ?>">
 			<p>
 				<?php
-				echo wp_kses_post( sprintf( __( 'Import revenues from CSV file. Download a <a href="%s"> sample </a> file to learn how to format the CSV file.', 'wp-ever-accounting' ), eaccounting()->plugin_url( '/sample-data/import/revenues.csv' ) ) );
+				echo wp_kses_post( sprintf( __( 'Import revenues from CSV file. Download a <a href="%s"> sample </a> file to learn how to format the CSV file.', 'wp-ever-accounting' ), ever_accounting_plugin_url( '/sample-data/import/revenues.csv' ) ) );
 				?>
 			</p>
 
@@ -223,7 +223,7 @@ defined( 'ABSPATH' ) || exit();
 					</tr>
 					</thead>
 					<tbody>
-					<?php eaccounting_do_import_fields( 'revenue' ); ?>
+					<?php ever_accounting_do_import_fields( 'revenue' ); ?>
 					</tbody>
 				</table>
 
@@ -248,7 +248,7 @@ defined( 'ABSPATH' ) || exit();
 				echo wp_kses_post(
 					sprintf(
 						__( 'Import payments from CSV file. Download a <a href="%s"> sample </a> file to learn how to format the CSV file.', 'wp-ever-accounting' ),
-						eaccounting()->plugin_url( '/sample-data/import/payments.csv' )
+						ever_accounting_plugin_url( '/sample-data/import/payments.csv' )
 					)
 				);
 				?>
@@ -273,7 +273,7 @@ defined( 'ABSPATH' ) || exit();
 					</tr>
 					</thead>
 					<tbody>
-					<?php eaccounting_do_import_fields( 'payment' ); ?>
+					<?php ever_accounting_do_import_fields( 'payment' ); ?>
 					</tbody>
 				</table>
 
@@ -298,7 +298,7 @@ defined( 'ABSPATH' ) || exit();
 				echo wp_kses_post(
 					sprintf(
 						__( 'Import currencies from CSV file. Download a <a href="%s"> sample </a> file to learn how to format the CSV file.', 'wp-ever-accounting' ),
-						eaccounting()->plugin_url( '/sample-data/import/currencies.csv' )
+						ever_accounting_plugin_url( '/sample-data/import/currencies.csv' )
 					)
 				);
 				?>
@@ -323,7 +323,7 @@ defined( 'ABSPATH' ) || exit();
 					</tr>
 					</thead>
 					<tbody>
-					<?php eaccounting_do_import_fields( 'currency' ); ?>
+					<?php ever_accounting_do_import_fields( 'currency' ); ?>
 					</tbody>
 				</table>
 
@@ -347,7 +347,7 @@ defined( 'ABSPATH' ) || exit();
 				echo wp_kses_post(
 					sprintf(
 						__( 'Import categories from CSV file. Download a <a href="%s"> sample </a> file to learn how to format the CSV file.', 'wp-ever-accounting' ),
-						eaccounting()->plugin_url( '/sample-data/import/categories.csv' )
+						ever_accounting_plugin_url( '/sample-data/import/categories.csv' )
 					)
 				);
 				?>
@@ -372,7 +372,7 @@ defined( 'ABSPATH' ) || exit();
 					</tr>
 					</thead>
 					<tbody>
-					<?php eaccounting_do_import_fields( 'category' ); ?>
+					<?php ever_accounting_do_import_fields( 'category' ); ?>
 					</tbody>
 				</table>
 

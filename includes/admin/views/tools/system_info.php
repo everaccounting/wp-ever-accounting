@@ -17,7 +17,7 @@ if ( ! current_user_can( 'manage_eaccounting' ) ) {
 	return;
 }
 
-$action_url = eaccounting_admin_url( array( 'tab' => 'system_info' ) );
+$action_url = ever_accounting_admin_url( array( 'tab' => 'system_info' ) );
 ?>
 	<form action="<?php echo esc_url( $action_url ); ?>" method="post" dir="ltr">
 		<textarea readonly="readonly"
@@ -25,7 +25,7 @@ $action_url = eaccounting_admin_url( array( 'tab' => 'system_info' ) );
 				  id="ea-system-info-textarea"
 				  name="ea-sysinfo"
 				  title="<?php esc_attr_e( 'To copy the system info, click below then press Ctrl + C (PC) or Cmd + C (Mac).', 'wp-ever-accounting' ); ?>">
-			<?php echo eaccounting_tools_system_info_report(); ?>
+			<?php echo ever_accounting_tools_system_info_report(); ?>
 		</textarea>
 	</form>
 <?php
