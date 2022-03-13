@@ -206,26 +206,26 @@ class Ever_Accounting_Customer_List_Table extends Ever_Accounting_List_Table {
 					'delete' => sprintf( '<a href="%1$s" class="del">%2$s</a>', esc_url( $del_url ), __( 'Delete', 'wp-ever-accounting' ) ),
 				);
 
-				$value = '<a href="' . esc_url( $view_url ) . '"><strong>' . $customer->get_prop( 'name' ) . '</strong></a>';
+				$value = '<a href="' . esc_url( $view_url ) . '"><strong>' . $customer->get_name() . '</strong></a>';
 				$value .= '<br>';
-				$value .= '<small class=meta>' . $customer->get_prop( 'company' ) . '</small>';
+				$value .= '<small class=meta>' . $customer->get_company() . '</small>';
 				$value .= $this->row_actions( $actions );
 				break;
 
 			case 'email':
-				if ( ! empty( $customer->get_prop( 'email' ) ) || ! empty( $customer->get_phone() ) ) {
-					$value = ! empty( $customer->get_prop('email') ) ? '<a href="mailto:' . sanitize_email( $customer->get_prop('email') ) . '">' . sanitize_email( $customer->get_prop('email') ) . '</a><br>' : '';
-					$value .= ! empty( $customer->get_prop('phone') ) ? '<span class="contact_phone">' . $customer->get_prop('phone') . '</span>' : '';
+				if ( ! empty( $customer->get_email() ) || ! empty( $customer->get_phone() ) ) {
+					$value = ! empty( $customer->get_email() ) ? '<a href="mailto:' . sanitize_email( $customer->get_email() ) . '">' . sanitize_email( $customer->get_email() ) . '</a><br>' : '';
+					$value .= ! empty( $customer->get_phone() ) ? '<span class="contact_phone">' . $customer->get_phone() . '</span>' : '';
 				}
-				if ( empty( $customer->get_prop( 'email') ) && empty( $customer->get_prop('phone') ) ) {
+				if ( empty( $customer->get_email() ) && empty( $customer->get_phone() ) ) {
 					$value = '&mdash;';
 				}
 				break;
 			case 'street':
 				$value = Formatting::format_address(
 					array(
-						'city'    => $customer->get_prop( 'city' ),
-						'state'   => $customer->get_prop( 'state' ),
+						'city'    => $customer->get_city(),
+						'state'   => $customer->get_state(),
 						'country' => $customer->get_country_nicename(),
 					),
 					','

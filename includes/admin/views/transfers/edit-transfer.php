@@ -6,11 +6,15 @@
  * @subpackage  Admin/Banking/Transfers
  * @package     Ever_Accounting
  */
+
+use Ever_Accounting\Helpers\Form;
+use Ever_Accounting\Helpers\Formatting;
+
 defined( 'ABSPATH' ) || exit();
 
 $transfer_id = isset( $_REQUEST['transfer_id'] ) ? absint( $_REQUEST['transfer_id'] ) : null;
 try {
-	$transfer = \Ever_Accounting\Transfers::get_transfer( $transfer_id );
+	$transfer = \Ever_Accounting\Transfers::get( $transfer_id );
 } catch ( Exception $e ) {
 	wp_die( $e->getMessage() );
 }
@@ -39,7 +43,7 @@ try {
 
 			<div class="ea-row">
 				<?php
-				eaccounting_account_dropdown(
+				Form::account_dropdown(
 					array(
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'From Account', 'wp-ever-accounting' ),
@@ -51,7 +55,7 @@ try {
 					)
 				);
 
-				eaccounting_account_dropdown(
+				Form::account_dropdown(
 					array(
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'To Account', 'wp-ever-accounting' ),
@@ -64,7 +68,7 @@ try {
 					)
 				);
 
-				eaccounting_text_input(
+				Form::text_input(
 					array(
 						'label'         => __( 'Amount', 'wp-ever-accounting' ),
 						'name'          => 'amount',
@@ -76,18 +80,18 @@ try {
 					)
 				);
 
-				eaccounting_text_input(
+				Form::text_input(
 					array(
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Date', 'wp-ever-accounting' ),
 						'name'          => 'date',
 						'placeholder'   => __( 'Enter date', 'wp-ever-accounting' ),
 						'data_type'     => 'date',
-						'value'         => $transfer->get_date() ? eaccounting_date( $transfer->get_date(), 'Y-m-d' ) : null,
+						'value'         => $transfer->get_date() ? Formatting::date( $transfer->get_date(), 'Y-m-d' ) : null,
 						'required'      => true,
 					)
 				);
-				eaccounting_payment_method_dropdown(
+				Form::payment_method_dropdown(
 					array(
 						'label'         => __( 'Payment Method', 'wp-ever-accounting' ),
 						'name'          => 'payment_method',
@@ -97,7 +101,7 @@ try {
 						'value'         => $transfer->get_payment_method(),
 					)
 				);
-				eaccounting_text_input(
+				Form::text_input(
 					array(
 						'label'         => __( 'Reference', 'wp-ever-accounting' ),
 						'name'          => 'reference',
@@ -107,7 +111,7 @@ try {
 						'placeholder'   => __( 'Enter reference', 'wp-ever-accounting' ),
 					)
 				);
-				eaccounting_textarea(
+				Form::textarea(
 					array(
 						'label'         => __( 'Description', 'wp-ever-accounting' ),
 						'name'          => 'description',
@@ -118,16 +122,16 @@ try {
 					)
 				);
 
-				eaccounting_hidden_input(
+				Form::hidden_input(
 					array(
 						'name'  => 'id',
 						'value' => $transfer->get_id(),
 					)
 				);
-				eaccounting_hidden_input(
+				Form::hidden_input(
 					array(
 						'name'  => 'action',
-						'value' => 'eaccounting_edit_transfer',
+						'value' => 'ever_accounting_edit_transfer',
 					)
 				);
 				?>

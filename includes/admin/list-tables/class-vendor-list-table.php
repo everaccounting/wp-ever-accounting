@@ -206,25 +206,25 @@ class Ever_Accounting_Vendor_List_Table extends Ever_Accounting_List_Table {
 					'edit'   => sprintf( '<a href="%1$s">%2$s</a>', esc_url( $edit_url ), __( 'Edit', 'wp-ever-accounting' ) ),
 					'delete' => sprintf( '<a href="%1$s" class="del">%2$s</a>', esc_url( $del_url ), __( 'Delete', 'wp-ever-accounting' ) ),
 				);
-				$value    = '<a href="' . esc_url( $view_url ) . '"><strong>' . $vendor->get_prop('name') . '</strong></a>';
+				$value    = '<a href="' . esc_url( $view_url ) . '"><strong>' . $vendor->get_name() . '</strong></a>';
 				$value    .= '<br>';
-				$value    .= '<small class=meta>' . $vendor->get_get_prop('company') . '</small>';
+				$value    .= '<small class=meta>' . $vendor->get_company() . '</small>';
 				$value    .= $this->row_actions( $actions );
 				break;
 			case 'email':
-				if ( ! empty( $vendor->get_prop('email') ) || ! empty( $vendor->get_prop('phone') ) ) {
-					$value = ! empty( $vendor->get_prop('email') ) ? '<a href="mailto:' . sanitize_email( $vendor->get_prop('email') ) . '">' . sanitize_email( $vendor->get_prop('email') ) . '</a><br>' : '';
-					$value .= ! empty( $vendor->get_prop('phone') ) ? '<span class="contact_phone">' . $vendor->get_prop('phone') . '</span>' : '';
+				if ( ! empty( $vendor->get_email() ) || ! empty( $vendor->get_phone() ) ) {
+					$value = ! empty( $vendor->get_email() ) ? '<a href="mailto:' . sanitize_email( $vendor->get_email() ) . '">' . sanitize_email( $vendor->get_email() ) . '</a><br>' : '';
+					$value .= ! empty( $vendor->get_phone() ) ? '<span class="contact_phone">' . $vendor->get_phone() . '</span>' : '';
 				}
-				if ( empty( $vendor->get_prop('email') ) && empty( $vendor->get_prop('phone') ) ) {
+				if ( empty( $vendor->get_email() ) && empty( $vendor->get_phone() ) ) {
 					$value = '&mdash;';
 				}
 				break;
 			case 'street':
 				$value = Formatting::format_address(
 					array(
-						'city'    => $vendor->get_prop('city'),
-						'state'   => $vendor->get_prop('state'),
+						'city'    => $vendor->get_city(),
+						'state'   => $vendor->get_state(),
 						'country' => $vendor->get_country_nicename(),
 					),
 					','

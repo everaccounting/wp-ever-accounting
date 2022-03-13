@@ -268,7 +268,7 @@ class Transfer extends Abstracts\Data  {
 				$this->set_reference( $expense->get_reference() );
 			}
 
-			$this->set_props ( $data );
+			$this->set_props( $data );
 			$this->read_meta_data();
 			$this->set_object_read( true );
 			do_action( 'ever_accounting_read_' . $this->object_type . '_item', $this->get_id(), $this );

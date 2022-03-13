@@ -10,6 +10,9 @@
  * @package     Ever_Accounting
  */
 
+use Ever_Accounting\Helpers\Formatting;
+use Ever_Accounting\Helpers\Price;
+
 defined( 'ABSPATH' ) || exit();
 
 if ( ! class_exists( '\Ever_Accounting_List_Table' ) ) {
@@ -161,7 +164,7 @@ class Ever_Accounting_Transaction_List_Table extends Ever_Accounting_List_Table 
 				$value  = sprintf(
 					'<a href="%1$s">%2$s</a>',
 					esc_url(
-						eaccounting_admin_url(
+						ever_accounting_admin_url(
 							array(
 								'action' => 'edit',
 								'page'   => $page,
@@ -174,21 +177,21 @@ class Ever_Accounting_Transaction_List_Table extends Ever_Accounting_List_Table 
 				);
 				break;
 			case 'amount':
-				$value = eaccounting_price( $transaction->get_amount(), $transaction->get_currency_code() );
+				$value = Price::price( $transaction->get_amount(), $transaction->get_currency_code() );
 				break;
 			case 'type':
 				$type  = $transaction->get_type();
-				$types = \Ever_Accounting\Transactions::get_transaction_types();
+				$types = \Ever_Accounting\Transactions::get_types();
 				$value = array_key_exists( $type, $types ) ? $types[ $type ] : ucfirst( $type );
 				break;
 			case 'account_id':
-				$account = \Ever_Accounting\Accounts::get_account( $transaction->get_account_id( 'edit' ) );
+				$account = \Ever_Accounting\Accounts::get( $transaction->get_account_id( 'edit' ) );
 				//$value   = $account ? $account->get_name() : '&mdash;';
-				$value = $account ? sprintf( '<a href="%1$s">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'accounts', 'action' => 'view', 'account_id' => $transaction->get_account_id() ) ) ), $account->get_name() ) : '&mdash;';// phpcs:ignore
+				$value = $account ? sprintf( '<a href="%1$s">%2$s</a>', esc_url( ever_accounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'accounts', 'action' => 'view', 'account_id' => $transaction->get_account_id() ) ) ), $account->get_name() ) : '&mdash;';// phpcs:ignore
 
 				break;
 			case 'category_id':
-				$category = \Ever_Accounting\Categories::get_category( $transaction->get_category_id( 'edit' ) );
+				$category = \Ever_Accounting\Categories::get( $transaction->get_category_id( 'edit' ) );
 				$value    = $category ? $category->get_name() : '&mdash;';
 				break;
 			case 'reference':
@@ -198,7 +201,7 @@ class Ever_Accounting_Transaction_List_Table extends Ever_Accounting_List_Table 
 				return parent::column_default( $transaction, $column_name );
 		}
 
-		return apply_filters( 'eaccounting_transaction_list_table_' . $column_name, $value, $transaction );
+		return apply_filters( 'ever_accounting_transaction_list_table_' . $column_name, $value, $transaction );
 	}
 
 	/**
@@ -222,8 +225,8 @@ class Ever_Accounting_Transaction_List_Table extends Ever_Accounting_List_Table 
 	public function extra_tablenav( $which ) {
 		if ( 'stop' === $which ) {
 			$account_id = isset( $_GET['account_id'] ) ? absint( $_GET['account_id'] ) : '';
-			$start_date = isset( $_GET['start_date'] ) ? eaccounting_clean( $_GET['start_date'] ) : '';
-			$end_date   = isset( $_GET['end_date'] ) ? eaccounting_clean( $_GET['end_date'] ) : '';
+			$start_date = isset( $_GET['start_date'] ) ? Formatting::clean( $_GET['start_date'] ) : '';
+			$end_date   = isset( $_GET['end_date'] ) ? Formatting::clean( $_GET['end_date'] ) : '';
 			echo '<div class="alignleft actions ea-table-filter">';
 			submit_button( __( 'Filter', 'wp-ever-accounting' ), 'action', false, false );
 			echo "\n";
@@ -264,7 +267,7 @@ class Ever_Accounting_Transaction_List_Table extends Ever_Accounting_List_Table 
 	 * @since 1.0.2
 	 */
 	public function get_views() {
-		$base          = eaccounting_admin_url();
+		$base          = ever_accounting_admin_url();
 		$current       = isset( $_GET['type'] ) ? $_GET['type'] : '';
 		$total_count   = '&nbsp;<span class="count">(' . $this->total_count . ')</span>';
 		$income_count  = '&nbsp;<span class="count">(' . $this->income_count . ')</span>';
@@ -300,8 +303,8 @@ class Ever_Accounting_Transaction_List_Table extends Ever_Accounting_List_Table 
 		$order   = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
 		$orderby = isset( $_GET['orderby'] ) ? $_GET['orderby'] : 'id';
 
-		$start_date  = ! empty( $_GET['start_date'] ) ? eaccounting_clean( $_GET['start_date'] ) : '';
-		$end_date    = ! empty( $_GET['end_date'] ) ? eaccounting_clean( $_GET['end_date'] ) : '';
+		$start_date  = ! empty( $_GET['start_date'] ) ? Formatting::clean( $_GET['start_date'] ) : '';
+		$end_date    = ! empty( $_GET['end_date'] ) ? Formatting::clean( $_GET['end_date'] ) : '';
 		$category_id = ! empty( $_GET['category_id'] ) ? absint( $_GET['category_id'] ) : '';
 		$account_id  = ! empty( $_GET['account_id'] ) ? absint( $_GET['account_id'] ) : '';
 		$customer_id = ! empty( $_GET['customer_id'] ) ? absint( $_GET['customer_id'] ) : '';
@@ -318,8 +321,8 @@ class Ever_Accounting_Transaction_List_Table extends Ever_Accounting_List_Table 
 				'number'      => $per_page,
 				'offset'      => $per_page * ( $page - 1 ),
 				'search'      => $search,
-				'orderby'     => eaccounting_clean( $orderby ),
-				'order'       => eaccounting_clean( $order ),
+				'orderby'     => Formatting::clean( $orderby ),
+				'order'       => Formatting::clean( $order ),
 				'category_id' => $category_id,
 				'account_id'  => $account_id,
 				'contact_id'  => $customer_id,
@@ -333,10 +336,10 @@ class Ever_Accounting_Transaction_List_Table extends Ever_Accounting_List_Table 
 			);
 		}
 
-		$args                = apply_filters( 'eaccounting_transaction_table_query_args', $args, $this );
-		$this->items         = \Ever_Accounting\Transactions::get_transactions( $args );
-		$this->income_count  = \Ever_Accounting\Transactions::get_transactions( array_merge( $args, array( 'type' => 'income' ) ), true );
-		$this->expense_count = \Ever_Accounting\Transactions::get_transactions( array_merge( $args, array( 'type' => 'expense' ) ), true );
+		$args                = apply_filters( 'ever_accounting_transaction_table_query_args', $args, $this );
+		$this->items         = \Ever_Accounting\Transactions::query( $args );
+		$this->income_count  = \Ever_Accounting\Transactions::query( array_merge( $args, array( 'type' => 'income' ) ), true );
+		$this->expense_count = \Ever_Accounting\Transactions::query( array_merge( $args, array( 'type' => 'expense' ) ), true );
 		$this->total_count   = $this->income_count + $this->expense_count;
 
 		$type = isset( $_GET['type'] ) ? $_GET['type'] : 'any';

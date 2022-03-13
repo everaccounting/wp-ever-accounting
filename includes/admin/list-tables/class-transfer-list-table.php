@@ -9,6 +9,8 @@
  * @package     Ever_Accounting
  */
 
+use Ever_Accounting\Helpers\Formatting;
+use Ever_Accounting\Helpers\Price;
 use Ever_Accounting\Transfer;
 use Ever_Accounting\Transfers;
 
@@ -86,7 +88,7 @@ class Ever_Accounting_Transfer_List_Table extends Ever_Accounting_List_Table {
 			<p class="ea-empty-table__message">
 				<?php echo esc_html__( 'Add deposits to and transfers between accounts and keep the balance of your bank accounts active regardless of currency. The transferred amount will automatically adjust to the account currency.', 'wp-ever-accounting' ); ?>
 			</p>
-			<a href="<?php echo esc_url( eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'transfers', 'action' => 'edit', ) ) ); //phpcs:ignore ?>" class="button-primary ea-empty-table__cta"><?php _e( 'Add Transfers', 'wp-ever-accounting' ); ?></a>
+			<a href="<?php echo esc_url( ever_accounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'transfers', 'action' => 'edit', ) ) ); //phpcs:ignore ?>" class="button-primary ea-empty-table__cta"><?php _e( 'Add Transfers', 'wp-ever-accounting' ); ?></a>
 			<a href="https://wpeveraccounting.com/docs/general/add-transfers/?utm_source=listtable&utm_medium=link&utm_campaign=admin" class="button-secondary ea-empty-table__cta" target="_blank"><?php _e( 'Learn More', 'wp-ever-accounting' ); ?></a>
 		</div>
 		<?php
@@ -173,32 +175,33 @@ class Ever_Accounting_Transfer_List_Table extends Ever_Accounting_List_Table {
 	 */
 	function column_default( $transfer, $column_name ) {
 		$transfer_id = $transfer->get_id();
+		$transfer = Transfers::get( $transfer_id );
 		switch ( $column_name ) {
 			case 'date':
-				$edit_url = eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'transfers', 'action' => 'edit', 'transfer_id' => $transfer_id, ) );// phpcs:ignore
-				$del_url  = eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'transfers', 'action' => 'delete', 'transfer_id' => $transfer_id, '_wpnonce' => wp_create_nonce( 'transfer-nonce' ), ) );// phpcs:ignore
+				$edit_url = ever_accounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'transfers', 'action' => 'edit', 'transfer_id' => $transfer_id, ) );// phpcs:ignore
+				$del_url  = ever_accounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'transfers', 'action' => 'delete', 'transfer_id' => $transfer_id, '_wpnonce' => wp_create_nonce( 'transfer-nonce' ), ) );// phpcs:ignore
 
 				$actions = array(
 					'edit'   => '<a href="' . $edit_url . '">' . __( 'Edit', 'wp-ever-accounting' ) . '</a>',
 					'delete' => '<a href="' . $del_url . '" class="del">' . __( 'Delete', 'wp-ever-accounting' ) . '</a>',
 				);
-				$value   = sprintf( '<a href="%1$s">%2$s</a>', esc_url( $edit_url ), esc_html( eaccounting_date( $transfer->get_date() ) ) ) . $this->row_actions( $actions );
+				$value   = sprintf( '<a href="%1$s">%2$s</a>', esc_url( $edit_url ), esc_html( Formatting::date( $transfer->get_date() ) ) ) . $this->row_actions( $actions );
 				break;
 			case 'amount':
-				$account = eaccounting_get_account( $transfer->get_from_account_id( 'edit' ) );
+				$account = \Ever_Accounting\Accounts::get( $transfer->get_from_account_id( 'edit' ) );
 				$value   = '&mdash;';
 				if ( $account ) {
-					$value = eaccounting_price( $transfer->get_amount(), $account->get_currency_code() );
+					$value = Price::price( $transfer->get_amount(), $account->get_currency_code() );
 				}
 				break;
 			case 'from_account_id':
-				$account = eaccounting_get_account( $transfer->get_from_account_id( 'edit' ) );
-				$value   = $account ? sprintf( '<a href="%1$s">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'accounts', 'action' => 'view', 'account_id' => $transfer->get_from_account_id() ) ) ), $account->get_name() ) : '&mdash;';// phpcs:ignore
+				$account = \Ever_Accounting\Accounts::get( $transfer->get_from_account_id( 'edit' ) );
+				$value   = $account ? sprintf( '<a href="%1$s">%2$s</a>', esc_url( ever_accounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'accounts', 'action' => 'view', 'account_id' => $transfer->get_from_account_id() ) ) ), $account->get_name() ) : '&mdash;';// phpcs:ignore
 
 				break;
 			case 'to_account_id':
-				$account = eaccounting_get_account( $transfer->get_to_account_id( 'edit' ) );
-				$value   = $account ? sprintf( '<a href="%1$s">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'accounts', 'action' => 'view', 'account_id' => $transfer->get_to_account_id() ) ) ), $account->get_name() ) : '&mdash;';// phpcs:ignore
+				$account = \Ever_Accounting\Accounts::get( $transfer->get_to_account_id( 'edit' ) );
+				$value   = $account ? sprintf( '<a href="%1$s">%2$s</a>', esc_url( ever_accounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'accounts', 'action' => 'view', 'account_id' => $transfer->get_to_account_id() ) ) ), $account->get_name() ) : '&mdash;';// phpcs:ignore
 				break;
 			case 'reference':
 				$value = ! empty( $transfer->get_reference() ) ? $transfer->get_reference() : '&mdash;';
@@ -207,7 +210,7 @@ class Ever_Accounting_Transfer_List_Table extends Ever_Accounting_List_Table {
 				return parent::column_default( $transfer, $column_name );
 		}
 
-		return apply_filters( 'eaccounting_transfer_list_table_' . $column_name, $value, $transfer );
+		return apply_filters( 'ever_accounting_transfer_list_table_' . $column_name, $value, $transfer );
 	}
 
 	/**
@@ -252,10 +255,10 @@ class Ever_Accounting_Transfer_List_Table extends Ever_Accounting_List_Table {
 		foreach ( $ids as $id ) {
 			switch ( $action ) {
 				case 'delete':
-					eaccounting_delete_transfer( $id );
+					Transfers::delete( $id );
 					break;
 				default:
-					do_action( 'eaccounting_transfers_do_bulk_action_' . $this->current_action(), $id );
+					do_action( 'ever_accounting_transfers_do_bulk_action_' . $this->current_action(), $id );
 			}
 		}
 
@@ -308,8 +311,8 @@ class Ever_Accounting_Transfer_List_Table extends Ever_Accounting_List_Table {
 				'number'   => $per_page,
 				'offset'   => $per_page * ( $page - 1 ),
 				'search'   => $search,
-				'orderby'  => eaccounting_clean( $orderby ),
-				'order'    => eaccounting_clean( $order ),
+				'orderby'  => Formatting::clean( $orderby ),
+				'order'    => Formatting::clean( $order ),
 				'from_id'  => $from_id,
 			)
 		);
@@ -322,9 +325,9 @@ class Ever_Accounting_Transfer_List_Table extends Ever_Accounting_List_Table {
 		}
 
 		$args        = apply_filters( 'eaccounting_transfer_table_query_args', $args, $this );
-		$this->items = Transfers::get_transfers( $args );
+		$this->items = Transfers::query( $args );
 
-		$this->total_count = Transfers::get_transfers(  $args, true );
+		$this->total_count = Transfers::query(  $args, true );
 
 		$this->set_pagination_args(
 			array(
