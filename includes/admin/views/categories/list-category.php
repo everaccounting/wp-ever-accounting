@@ -9,17 +9,17 @@
 
 defined( 'ABSPATH' ) || exit();
 
-include( EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-category-list-table.php' );
+include( dirname( EVER_ACCOUNTING_FILE ) . '/includes/admin/list-tables/class-category-list-table.php' );
 $category_table = new Ever_Accounting_Category_List_Table();
 $category_table->prepare_items();
-$add_url = eaccounting_admin_url(
+$add_url = ever_accounting_admin_url(
 	array(
 		'page'   => 'ea-settings',
 		'tab'    => 'categories',
 		'action' => 'add'
 	)
 );
-$import_url = eaccounting_admin_url(
+$import_url = ever_accounting_admin_url(
 	array(
 		'page' => 'ea-tools',
 		'tab' => 'import'
@@ -44,13 +44,13 @@ $import_url = eaccounting_admin_url(
 	<input type="hidden" name="page" value="ea-settings"/>
 	<input type="hidden" name="tab" value="categories"/>
 </form>
-<?php do_action( 'eaccounting_categories_table_bottom' ); ?>
+<?php do_action( 'ever_accounting_categories_table_bottom' ); ?>
 <?php
-eaccounting_enqueue_js(
+ever_accounting_enqueue_js(
 		"
 	jQuery('.category-status').on('change', function(e){
-		jQuery.post('" . eaccounting()->ajax_url() . "', {
-			action:'eaccounting_edit_category',
+		jQuery.post('" . ever_accounting_ajax_url() . "', {
+			action:'ever_accounting_edit_category',
 			id: $(this).data('id'),
 			enabled: $(this).is(':checked'),
 			nonce: '" . wp_create_nonce( 'ea_edit_category' ) . "',

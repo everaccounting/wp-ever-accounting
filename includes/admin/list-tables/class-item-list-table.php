@@ -99,7 +99,7 @@ class Ever_Accounting_Item_List_Table extends Ever_Accounting_List_Table {
 			<p class="ea-empty-table__message">
 				<?php echo esc_html__( 'Use items as products or services. You can use items when creating invoices and bills to have the price, tax etc fields.', 'wp-ever-accounting' ); ?>
 			</p>
-			<a href="<?php echo esc_url( eaccounting_admin_url( array( 'page' => 'ea-items', 'tab' => 'items', 'action' => 'edit', ) ) ); //phpcs:ignore?>" class="button-primary ea-empty-table__cta"><?php _e( 'Add Item', 'wp-ever-accounting' ); ?></a>
+			<a href="<?php echo esc_url( ever_accounting_admin_url( array( 'page' => 'ea-items', 'tab' => 'items', 'action' => 'edit', ) ) ); //phpcs:ignore?>" class="button-primary ea-empty-table__cta"><?php _e( 'Add Item', 'wp-ever-accounting' ); ?></a>
 			<a href="https://wpeveraccounting.com/docs/general/how-to-add-items/?utm_source=listtable&utm_medium=link&utm_campaign=admin" class="button-secondary ea-empty-table__cta" target="_blank"><?php _e( 'Learn More', 'wp-ever-accounting' ); ?></a>
 		</div>
 		<?php

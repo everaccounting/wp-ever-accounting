@@ -8,7 +8,8 @@
  */
 
 use Ever_Accounting\Categories;
-use Ever_Accounting\Models\Category;
+use Ever_Accounting\Category;
+use Ever_Accounting\Helpers\Formatting;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -106,7 +107,7 @@ class Ever_Accounting_Category_List_Table extends Ever_Accounting_List_Table {
 			<p class="ea-empty-table__message">
 				<?php echo esc_html__( 'Create categories for incomes, expenses, and see how your business\'s flow at a glance. Track which category is your business is spending most as well is making money.', 'wp-ever-accounting' ); ?>
 			</p>
-			<a href="<?php echo esc_url( eaccounting_admin_url( array( 'page' => 'ea-settings', 'tab' => 'categories', 'action' => 'edit' ) ) ); ?>" class="button-primary ea-empty-table__cta"><?php _e( 'Add Categories', 'wp-ever-accounting' ); ?></a>
+			<a href="<?php echo esc_url( ever_accounting_admin_url( array( 'page' => 'ea-settings', 'tab' => 'categories', 'action' => 'edit' ) ) ); ?>" class="button-primary ea-empty-table__cta"><?php _e( 'Add Categories', 'wp-ever-accounting' ); ?></a>
 			<a href="https://wpeveraccounting.com/docs/general/how-to-add-categories/?utm_source=listtable&utm_medium=link&utm_campaign=admin" class="button-secondary ea-empty-table__cta" target="_blank"><?php _e( 'Learn More', 'wp-ever-accounting' ); ?></a>
 		</div>
 		<?php
@@ -199,8 +200,8 @@ class Ever_Accounting_Category_List_Table extends Ever_Accounting_List_Table {
 		switch ( $column_name ) {
 			case 'name':
 				$name     = $category->get_name();
-				$edit_url = eaccounting_admin_url( array( 'page' => 'ea-settings', 'tab' => 'categories', 'action' => 'edit', 'category_id' => $category_id, ) );// phpcs:ignore
-				$del_url  = eaccounting_admin_url( array( 'page' => 'ea-settings', 'tab' => 'categories', 'action' => 'delete', 'category_id' => $category_id, '_wpnonce' => wp_create_nonce( 'category-nonce' ), ) );// phpcs:ignore
+				$edit_url = ever_accounting_admin_url( array( 'page' => 'ea-settings', 'tab' => 'categories', 'action' => 'edit', 'category_id' => $category_id, ) );// phpcs:ignore
+				$del_url  = ever_accounting_admin_url( array( 'page' => 'ea-settings', 'tab' => 'categories', 'action' => 'delete', 'category_id' => $category_id, '_wpnonce' => wp_create_nonce( 'category-nonce' ), ) );// phpcs:ignore
 				$actions  = array(
 					'edit'   => sprintf( '<a href="%1$s">%2$s</a>', esc_url( $edit_url ), __( 'Edit', 'wp-ever-accounting' ) ),
 					'delete' => sprintf( '<a href="%1$s" class="del">%2$s</a>', esc_url( $del_url ), __( 'Delete', 'wp-ever-accounting' ) ),
@@ -209,7 +210,7 @@ class Ever_Accounting_Category_List_Table extends Ever_Accounting_List_Table {
 				break;
 			case 'type':
 				$type  = $category->get_type();
-				$types = Categories::get_category_types();
+				$types = Categories::get_types();
 				$value = array_key_exists( $type, $types ) ? $types[ $type ] : ucfirst( $type );
 				break;
 			case 'color':
@@ -225,7 +226,7 @@ class Ever_Accounting_Category_List_Table extends Ever_Accounting_List_Table {
 				return parent::column_default( $category, $column_name );
 		}
 
-		return apply_filters( 'eaccounting_category_list_table_' . $column_name, $value, $category );
+		return apply_filters( 'ever_accounting_category_list_table_' . $column_name, $value, $category );
 	}
 
 	/**
@@ -271,7 +272,7 @@ class Ever_Accounting_Category_List_Table extends Ever_Accounting_List_Table {
 		foreach ( $ids as $id ) {
 			switch ( $action ) {
 				case 'enable':
-					Categories::insert_category(
+					Categories::insert(
 						array(
 							'id'      => $id,
 							'enabled' => '1',
@@ -279,7 +280,7 @@ class Ever_Accounting_Category_List_Table extends Ever_Accounting_List_Table {
 					);
 					break;
 				case 'disable':
-					Categories::insert_category(
+					Categories::insert(
 						array(
 							'id'      => $id,
 							'enabled' => '0',
@@ -287,10 +288,10 @@ class Ever_Accounting_Category_List_Table extends Ever_Accounting_List_Table {
 					);
 					break;
 				case 'delete':
-					Categories::delete_category( $id );
+					Categories::delete( $id );
 					break;
 				default:
-					do_action( 'eaccounting_categories_do_bulk_action_' . $this->current_action(), $id );
+					do_action( 'ever_accounting_categories_do_bulk_action_' . $this->current_action(), $id );
 			}
 		}
 
@@ -320,7 +321,7 @@ class Ever_Accounting_Category_List_Table extends Ever_Accounting_List_Table {
 	 * @since  1.0.2
 	 */
 	public function get_views() {
-		$base           = eaccounting_admin_url( array( 'tab' => 'categories' ) );
+		$base           = ever_accounting_admin_url( array( 'tab' => 'categories' ) );
 		$current        = isset( $_GET['status'] ) ? $_GET['status'] : '';
 		$total_count    = '&nbsp;<span class="count">(' . $this->total_count . ')</span>';
 		$active_count   = '&nbsp;<span class="count">(' . $this->active_count . ')</span>';
@@ -367,16 +368,16 @@ class Ever_Accounting_Category_List_Table extends Ever_Accounting_List_Table {
 				'page'     => $page,
 				'search'   => $search,
 				'status'   => $status,
-				'orderby'  => eaccounting_clean( $orderby ),
-				'order'    => eaccounting_clean( $order ),
+				'orderby'  => Formatting::clean( $orderby ),
+				'order'    => Formatting::clean( $order ),
 			)
 		);
 
-		$args = apply_filters( 'eaccounting_category_table_query_args', $args, $this );
+		$args = apply_filters( 'ever_accounting_category_table_query_args', $args, $this );
 
-		$this->items = Categories::get_categories( $args );
+		$this->items = Categories::query( $args );
 
-		$this->active_count = Categories::get_categories(
+		$this->active_count = Categories::query(
 			array_merge(
 				$args,
 				array(
@@ -386,7 +387,7 @@ class Ever_Accounting_Category_List_Table extends Ever_Accounting_List_Table {
 				true
 		);
 
-		$this->inactive_count = Categories::get_categories(
+		$this->inactive_count = Categories::query(
 			array_merge(
 				$args,
 				array(

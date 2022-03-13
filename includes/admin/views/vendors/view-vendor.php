@@ -131,7 +131,7 @@ $edit_url        = ever_accounting_admin_url(
 
 				<div class="ea-card__inside">
 					<div class="ea-avatar ea-center-block">
-						<img src="<?php echo esc_url( $vendor->get_avatar_url() ); ?>" alt="<?php echo esc_html( $vendor->get_name() ); ?>">
+						<img src="<?php echo esc_url( $vendor->get_attachment_url() ); ?>" alt="<?php echo esc_html( $vendor->get_name() ); ?>">
 					</div>
 				</div>
 

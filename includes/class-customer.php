@@ -10,7 +10,6 @@
 namespace Ever_Accounting;
 
 use Ever_Accounting\Helpers\Price;
-use Ever_Accounting\Traits\Attachment;
 use Ever_Accounting\Traits\CurrencyTrait;
 
 defined( 'ABSPATH' ) || exit;

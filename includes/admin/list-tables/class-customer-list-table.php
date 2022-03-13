@@ -194,7 +194,7 @@ class Ever_Accounting_Customer_List_Table extends Ever_Accounting_List_Table {
 		switch ( $column_name ) {
 			case 'thumb':
 				$view_url = ever_accounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'customers', 'action' => 'view', 'customer_id' => $customer_id, ) );// phpcs:ignore
-				$value    = '<a href="' . esc_url( $view_url ) . '"><img src="' . $customer->get_avatar_url() . '" height="36" width="36" alt="' . $customer->get_name() . '"></a>';
+				$value    = '<a href="' . esc_url( $view_url ) . '"><img src="' . $customer->get_attachment_url() . '" height="36" width="36" alt="' . $customer->get_name() . '"></a>';
 				break;
 			case 'name':
 				$view_url = ever_accounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'customers', 'action' => 'view', 'customer_id' => $customer_id, ) );// phpcs:ignore

@@ -195,7 +195,7 @@ class Ever_Accounting_Vendor_List_Table extends Ever_Accounting_List_Table {
 		switch ( $column_name ) {
 			case 'thumb':
 				$view_url = ever_accounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'vendors', 'action' => 'view', 'vendor_id' => $vendor_id, ) );// phpcs:ignore
-				$value    = '<a href="' . esc_url( $view_url ) . '"><img src="' . $vendor->get_avatar_url() . '" height="36" width="36" alt="' . $vendor->get_name() . '"></a>';
+				$value    = '<a href="' . esc_url( $view_url ) . '"><img src="' . $vendor->get_attachment_url() . '" height="36" width="36" alt="' . $vendor->get_name() . '"></a>';
 				break;
 			case 'name':
 				$view_url = ever_accounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'vendors', 'action' => 'view', 'vendor_id' => $vendor_id, ) );// phpcs:ignore

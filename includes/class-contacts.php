@@ -46,7 +46,7 @@ class Contacts {
 	 * Update customer total paid
 	 *
 	 * @param int $transaction_id
-	 * @param \Ever_Accounting\Abstracts\Transaction $transaction
+	 * @param \Ever_Accounting\Transaction $transaction
 	 *
 	 * @since 1.1.0
 	 */

@@ -7,14 +7,18 @@
  * @since       1.0.2
  */
 
+use \Ever_Accounting\Helpers\Form;
+use \Ever_Accounting\Helpers\Formatting;
+
 defined( 'ABSPATH' ) || exit();
-$currency_id = isset( $_REQUEST['currency_id'] ) ? eaccounting_clean( $_REQUEST['currency_id'] ) : null;
+
+$currency_id = isset( $_REQUEST['currency_id'] ) ? Formatting::clean( $_REQUEST['currency_id'] ) : null;
 try {
 	$currency = new \Ever_Accounting\Currency( $currency_id );
 } catch ( Exception $e ) {
 	wp_die( $e->getMessage() );
 }
-$currencies = eaccounting_get_global_currencies();
+$currencies = \Ever_Accounting\Currencies::get_codes();
 $options    = array();
 foreach ( $currencies as $code => $props ) {
 	$options[ $code ] = sprintf( '%s (%s)', $props['code'], $props['symbol'] );
@@ -58,17 +62,17 @@ foreach ( $currencies as $code => $props ) {
 
 			<div class="ea-row">
 				<?php
-				eaccounting_select2(
+				Form::select2(
 					array(
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Currency Code', 'wp-ever-accounting' ),
 						'name'          => 'code',
-						'value'         => $currency->get_code( 'edit' ),
+						'value'         => $currency->get_code(),
 						'options'       => array( '' => __( 'Select', 'wp-ever-accounting' ) ) + $options,
 						'required'      => true,
 					)
 				);
-				eaccounting_text_input(
+				Form::text_input(
 					array(
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Name', 'wp-ever-accounting' ),
@@ -78,41 +82,41 @@ foreach ( $currencies as $code => $props ) {
 						'required'      => true,
 					)
 				);
-				eaccounting_text_input(
+				Form::text_input(
 					array(
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Currency Rate', 'wp-ever-accounting' ),
 						'name'          => 'rate',
 						'tooltip'       => __( 'For better precision use full conversion rate. Like 1 USD = 1.2635835 CAD', 'wp-ever-accounting'),
-						'value'         => $currency->get_rate( 'edit' ),
+						'value'         => $currency->get_rate(),
 						'required'      => true,
 					)
 				);
-				eaccounting_text_input(
+				Form::text_input(
 					array(
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Precision', 'wp-ever-accounting' ),
 						'name'          => 'precision',
 						'type'          => 'number',
-						'value'         => $currency->get_precision( 'edit' ),
+						'value'         => $currency->get_precision(),
 						'required'      => true,
 					)
 				);
-				eaccounting_text_input(
+				Form::text_input(
 					array(
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Symbol', 'wp-ever-accounting' ),
 						'name'          => 'symbol',
-						'value'         => $currency->get_symbol( 'edit' ),
+						'value'         => $currency->get_symbol(),
 						'required'      => true,
 					)
 				);
-				eaccounting_select2(
+				Form::select2(
 					array(
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Symbol Position', 'wp-ever-accounting' ),
 						'name'          => 'position',
-						'value'         => $currency->get_position( 'edit' ),
+						'value'         => $currency->get_position(),
 						'options'       => array(
 							'before' => __( 'Before', 'wp-ever-accounting' ),
 							'after'  => __( 'After', 'wp-ever-accounting' ),
@@ -120,35 +124,35 @@ foreach ( $currencies as $code => $props ) {
 						'required'      => true,
 					)
 				);
-				eaccounting_text_input(
+				Form::text_input(
 					array(
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Decimal Separator', 'wp-ever-accounting' ),
 						'name'          => 'decimal_separator',
-						'value'         => $currency->get_decimal_separator( 'edit' ),
+						'value'         => $currency->get_decimal_separator(),
 						'required'      => true,
 					)
 				);
-				eaccounting_text_input(
+				Form::text_input(
 					array(
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Thousands Separator', 'wp-ever-accounting' ),
 						'name'          => 'thousand_separator',
-						'value'         => $currency->get_thousand_separator( 'edit' ),
+						'value'         => $currency->get_thousand_separator(),
 						'required'      => true,
 					)
 				);
-				eaccounting_hidden_input(
+				Form::hidden_input(
 					array(
 						'name'  => 'id',
 						'value' => $currency->get_id(),
 					)
 				);
 
-				eaccounting_hidden_input(
+				Form::hidden_input(
 					array(
 						'name'  => 'action',
-						'value' => 'eaccounting_edit_currency',
+						'value' => 'ever_accounting_edit_currency',
 					)
 				);
 
