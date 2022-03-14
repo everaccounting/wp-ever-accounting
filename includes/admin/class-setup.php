@@ -11,6 +11,9 @@
 
 namespace Ever_Accounting\Admin;
 
+use Ever_Accounting\Helpers\Form;
+use Ever_Accounting\Helpers\Formatting;
+
 defined( 'ABSPATH' ) || exit();
 
 /**
@@ -83,21 +86,21 @@ class Setup_Wizard {
 			),
 		);
 
-		$this->steps = apply_filters( 'eaccounting_setup_wizard_steps', $default_steps );
+		$this->steps = apply_filters( 'ever_accounting_setup_wizard_steps', $default_steps );
 		$this->step  = isset( $_GET['step'] ) ? sanitize_key( $_GET['step'] ) : current( array_keys( $this->steps ) ); // WPCS: CSRF ok, input var ok.
 
-		$version = eaccounting()->get_version();
+		$version = EVER_ACCOUNTING_VERSION;
 		$suffix  = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 		//$suffix  = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
-		wp_enqueue_style( 'ea-admin-styles', eaccounting()->plugin_url() . '/assets/dist/css/admin.css', array(), $version );
-		wp_enqueue_style( 'ea-setup', eaccounting()->plugin_url() . '/assets/dist/css/setup.css', array( 'install', 'common' ), $version );
+		wp_enqueue_style( 'ea-admin-styles', ever_accounting_plugin_url() . '/assets/dist/css/admin.css', array(), $version );
+		wp_enqueue_style( 'ea-setup', ever_accounting_plugin_url() . '/assets/dist/css/setup.css', array( 'install', 'common' ), $version );
 
 		// Add RTL support for admin styles.
 		wp_style_add_data( 'ea-setup', 'rtl', 'replace' );
-		wp_register_script( 'jquery-select2', eaccounting()->plugin_url( '/assets/dist/js/select2.full' . $suffix . '.js' ), array( 'jquery' ), $version );
-		wp_enqueue_script( 'ea-select2', eaccounting()->plugin_url( '/assets/dist/js/ea-select2' . $suffix . '.js' ), array( 'jquery', 'jquery-select2' ), $version );
-		wp_enqueue_script( 'ea-setup', eaccounting()->plugin_url( '/assets/dist/js/ea-setup' . $suffix . '.js' ), array( 'jquery', 'ea-select2' ), $version );
+		wp_register_script( 'jquery-select2', ever_accounting_plugin_url( '/assets/dist/js/select2.full' . $suffix . '.js' ), array( 'jquery' ), $version );
+		wp_enqueue_script( 'ea-select2', ever_accounting_plugin_url( '/assets/dist/js/ea-select2' . $suffix . '.js' ), array( 'jquery', 'jquery-select2' ), $version );
+		wp_enqueue_script( 'ea-setup', ever_accounting_plugin_url( '/assets/dist/js/ea-setup' . $suffix . '.js' ), array( 'jquery', 'ea-select2' ), $version );
 
 		// @codingStandardsIgnoreStart
 		if ( ! empty( $_POST['save_step'] ) && isset( $this->steps[ $this->step ]['handler'] ) ) {
@@ -163,7 +166,7 @@ class Setup_Wizard {
 			<?php do_action( 'admin_print_styles' ); ?>
         </head>
         <body class="ea-setup wp-core-ui <?php echo esc_attr( 'ea-setup-step__' . $this->step ); ?> <?php echo esc_attr( $wp_version_class ); ?>">
-        <h1 class="ea-logo"><a href="https://wpeveraccounting.com/" target="_blank"><img src="<?php echo esc_url( eaccounting()->plugin_url( '/assets/dist/images/logo.svg' ) ); ?>" alt="<?php esc_attr_e( 'Ever Accounting', 'wp-ever-accounting' ); ?>"/></a></h1>
+        <h1 class="ea-logo"><a href="https://wpeveraccounting.com/" target="_blank"><img src="<?php echo esc_url( ever_accounting_plugin_url( '/assets/dist/images/logo.svg' ) ); ?>" alt="<?php esc_attr_e( 'Ever Accounting', 'wp-ever-accounting' ); ?>"/></a></h1>
 		<?php
 	}
 
@@ -173,7 +176,7 @@ class Setup_Wizard {
 	public function setup_wizard_footer() {
 		$current_step = $this->step;
 		?>
-		<?php do_action( 'eaccounting_setup_footer' ); ?>
+		<?php do_action( 'ever_accounting_setup_footer' ); ?>
         </body>
         </html>
 		<?php
@@ -247,33 +250,33 @@ class Setup_Wizard {
         <form method="post">
 			<?php
 
-			eaccounting_text_input(
+			Form::text_input(
 				array(
 					'label'    => __( 'Company Name', 'wp-ever-accounting' ),
 					'name'     => 'company_name',
 					'required' => true,
-					'value'    => eaccounting()->settings->get( 'company_name' ),
+					'value'    => ever_accounting_get_option( 'company_name' ),
 				)
 			);
-			eaccounting_text_input(
+			Form::text_input(
 				array(
 					'label'    => __( 'Company Email', 'wp-ever-accounting' ),
 					'name'     => 'company_email',
 					'default'  => get_option( 'admin_email' ),
 					'required' => true,
 					'type'     => 'email',
-					'value'    => eaccounting()->settings->get( 'company_email' ),
+					'value'    => ever_accounting_get_option( 'company_email' ),
 				)
 			);
 
-			eaccounting_textarea(
+			Form::textarea(
 				array(
 					'label' => __( 'Company Address', 'wp-ever-accounting' ),
 					'name'  => 'company_address',
-					'value' => eaccounting()->settings->get( 'company_address' ),
+					'value' => ever_accounting_get_option( 'company_address' ),
 				)
 			);
-			eaccounting_country_dropdown(
+			Form::country_dropdown(
 				array(
 					'label'    => __( 'Country', 'wp-ever-accounting' ),
 					'name'     => 'company_country',
@@ -301,16 +304,16 @@ class Setup_Wizard {
 		check_admin_referer( 'company-setup' );
 
 		if ( ! empty( $_REQUEST['company_name'] ) ) {
-			eaccounting_update_option( 'company_name', eaccounting_clean( $_REQUEST['company_name'] ) );
+			ever_accounting_update_option( 'company_name', Formatting::clean( $_REQUEST['company_name'] ) );
 		}
 		if ( ! empty( $_REQUEST['company_email'] ) ) {
-			eaccounting_update_option( 'company_email', eaccounting_clean( $_REQUEST['company_email'] ) );
+			ever_accounting_update_option( 'company_email', Formatting::clean( $_REQUEST['company_email'] ) );
 		}
 		if ( ! empty( $_REQUEST['company_address'] ) ) {
-			eaccounting_update_option( 'company_address', eaccounting_clean( $_REQUEST['company_address'] ) );
+			ever_accounting_update_option( 'company_address', Formatting::clean( $_REQUEST['company_address'] ) );
 		}
 		if ( ! empty( $_REQUEST['company_country'] ) ) {
-			eaccounting_update_option( 'company_country', eaccounting_clean( $_REQUEST['company_country'] ) );
+			ever_accounting_update_option( 'company_country', Formatting::clean( $_REQUEST['company_country'] ) );
 		}
 
 		wp_redirect( esc_url_raw( $this->get_next_step_link() ) );
@@ -322,13 +325,13 @@ class Setup_Wizard {
 	 * @since 1.0.2
 	 */
 	public function currency_settings() {
-		$codes   = eaccounting_get_global_currencies();
+		$codes   = \Ever_Accounting\Currencies::get_codes();
 		$options = array();
 		foreach ( $codes as $code => $props ) {
 			$options[ $code ] = sprintf( '%s (%s)', $props['code'], $props['symbol'] );
 		}
 
-		$currencies = \Ever_Accounting\Currencies::get_currencies( array( 'return' => 'array' ) );
+		$currencies = \Ever_Accounting\Currencies::query( array( 'return' => 'array' ) );
 
 		?>
         <h1><?php _e( 'Currency Setup', 'wp-ever-accounting' ); ?></h1>
@@ -347,7 +350,7 @@ class Setup_Wizard {
                     <tr>
                         <td>
 							<?php
-							eaccounting_select2(
+							Form::select2(
 								array(
 									'name'     => "code[$id]",
 									'options'  => [ '' => __( 'Select', 'wp-ever-accounting' ) ] + $options,
@@ -361,10 +364,10 @@ class Setup_Wizard {
 
                         <td>
 							<?php
-							eaccounting_text_input(
+							Form::text_input(
 								array(
 									'name'     => "rate[$id]",
-									'value'    => eaccounting_format_decimal( $currency->rate ),
+									'value'    => Formatting::format_decimal( $currency->rate ),
 									'required' => true,
 									'id'       => "$id-rate",
 								)
@@ -388,7 +391,7 @@ class Setup_Wizard {
                 <tr>
                     <td>
 						<?php
-						eaccounting_select2(
+						Form::select2(
 							array(
 								'name'    => 'code[custom]',
 								'options' => [ '' => __( 'Select', 'wp-ever-accounting' ) ] + $options,
@@ -400,7 +403,7 @@ class Setup_Wizard {
 
                     <td>
 						<?php
-						eaccounting_text_input(
+						Form::text_input(
 							array(
 								'name'  => 'rate[custom]',
 								'value' => '',
@@ -435,22 +438,22 @@ class Setup_Wizard {
 	public function currency_settings_save() {
 		check_admin_referer( 'currency_settings' );
 		$new_currency = false;
-		$default      = eaccounting_clean( $_REQUEST['default'] );
+		$default      = Formatting::clean( $_REQUEST['default'] );
 		if ( ! empty( $_REQUEST['code']['custom'] ) && ! empty( $_REQUEST['rate']['custom'] ) ) {
-			$new_currency = eaccounting_insert_currency(
+			$new_currency = \Ever_Accounting\Currencies::insert(
 				array(
-					'code' => eaccounting_clean( $_REQUEST['code']['custom'] ),
-					'rate' => eaccounting_clean( $_REQUEST['rate']['custom'] ),
+					'code' => Formatting::clean( $_REQUEST['code']['custom'] ),
+					'rate' => Formatting::clean( $_REQUEST['rate']['custom'] ),
 				)
 			);
 		}
 
-		$currency = eaccounting_get_currency( $default );
+		$currency = \Ever_Accounting\Currencies::get( $default );
 
 		if ( ! empty( $currency ) && $currency->exists() ) {
-			eaccounting_update_option( 'default_currency', $currency->get_code() );
+			ever_accounting_update_option( 'default_currency', $currency->get_code() );
 		} elseif ( 'custom' == $default && $new_currency->exists() ) {
-			eaccounting_update_option( 'default_currency', $new_currency->get_code() );
+			ever_accounting_update_option( 'default_currency', $new_currency->get_code() );
 		}
 
 		update_option( 'ea_setup_wizard_complete', 'yes' );

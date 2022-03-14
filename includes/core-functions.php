@@ -34,6 +34,18 @@ function ever_accounting_get_option( $key = '', $default = false ) {
 }
 
 /**
+ * Update option.
+ *
+ * @param $key
+ * @param $value
+ *
+ * @since 1.1.0
+ */
+function ever_accounting_update_option( $key, $value ) {
+	return update_option( $key, $value );
+}
+
+/**
  * Get financial Start
  *
  * @since 1.0.2
