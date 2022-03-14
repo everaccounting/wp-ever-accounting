@@ -10,6 +10,7 @@
 namespace Ever_Accounting\Admin;
 
 use Ever_Accounting\Ajax;
+use Ever_Accounting\Helpers\Formatting;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -22,7 +23,7 @@ class Importer {
 	 * Importer constructor.
 	 */
 	public function __construct() {
-		add_action( 'wp_ajax_eaccounting_do_ajax_import', array( __CLASS__, 'do_ajax_import' ) );
+		add_action( 'wp_ajax_ever_accounting_do_ajax_import', array( __CLASS__, 'do_ajax_import' ) );
 	}
 
 	/**
@@ -39,17 +40,17 @@ class Importer {
 			);
 		}
 		$params = array(
-			'delimiter'       => ! empty( $_REQUEST['delimiter'] ) ? eaccounting_clean( wp_unslash( $_REQUEST['delimiter'] ) ) : ',',
+			'delimiter'       => ! empty( $_REQUEST['delimiter'] ) ? Formatting::clean( wp_unslash( $_REQUEST['delimiter'] ) ) : ',',
 			'position'        => isset( $_REQUEST['position'] ) ? absint( $_REQUEST['position'] ) : 0,
 			'mapping'         => isset( $_REQUEST['mapping'] ) ? (array) wp_unslash( $_REQUEST['mapping'] ) : array(),
 			'update_existing' => isset( $_REQUEST['update_existing'] ) ? (bool) $_REQUEST['update_existing'] : false,
-			'limit'           => apply_filters( 'eaccounting_import_batch_size', 30 ),
+			'limit'           => apply_filters( 'ever_accounting_import_batch_size', 30 ),
 			'parse'           => true,
 		);
 
-		$step = isset( $_REQUEST['step'] ) ? eaccounting_clean( $_REQUEST['step'] ) : '';
+		$step = isset( $_REQUEST['step'] ) ? Formatting::clean( $_REQUEST['step'] ) : '';
 		$type = sanitize_key( $_REQUEST['type'] );
-		$file = ! empty( $_REQUEST['file'] ) ? eaccounting_clean( wp_unslash( $_REQUEST['file'] ) ) : '';
+		$file = ! empty( $_REQUEST['file'] ) ? Formatting::clean( wp_unslash( $_REQUEST['file'] ) ) : '';
 
 		// verify nonce
 		Ajax::verify_nonce( "{$type}_importer_nonce" );

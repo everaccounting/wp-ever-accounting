@@ -62,7 +62,7 @@ $notes = \Ever_Accounting\Notes::query(
 			</p>
 
 			<button type="submit" class="add_document_note button"><?php _e( 'Add', 'wp-ever-accounting' ); ?></button>
-			<input type="hidden" name="action" value="eaccounting_add_invoice_note">
+			<input type="hidden" name="action" value="ever_accounting_add_invoice_note">
 			<input type="hidden" name="invoice_id" value="<?php echo esc_attr( $invoice->get_id() ); ?>">
 			<?php wp_nonce_field( 'ea_add_invoice_note', 'nonce' ); ?>
 		</form>

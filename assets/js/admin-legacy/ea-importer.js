@@ -7,7 +7,7 @@ jQuery( function ( $ ) {
 		this.$top = $( '.ea-importer-top', this.$form );
 		this.$bottom = $( '.ea-importer-bottom', this.$form );
 		this.options = $.extend( this.defaults, options );
-		this.action = 'eaccounting_do_ajax_import';
+		this.action = 'ever_accounting_do_ajax_import';
 		this.nonce = this.$form.data( 'nonce' );
 		this.type = this.$form.data( 'type' );
 		this.sample = {};

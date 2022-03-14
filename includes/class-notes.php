@@ -319,7 +319,7 @@ class Notes {
 				$total = (int) $wpdb->get_var( "SELECT FOUND_ROWS()" );
 			}
 
-			if ( 'all' === $args['fields'] ) {
+			if ( 'all' === $args['fields'] && 'objects' === $args['return'] ) {
 				foreach ( $results as $key => $row ) {
 					wp_cache_add( $row->id, $row, $cache_group );
 					$item = new Note();
@@ -334,10 +334,6 @@ class Notes {
 			$cache->total   = $total;
 
 			wp_cache_add( $cache_key, $cache, $cache_group );
-		}
-
-		if ( 'objects' === $args['return'] && true !== $args['no_count'] ) {
-			$results = array_map( 'self::get_note', $results );
 		}
 
 		return $count ? $total : $results;
