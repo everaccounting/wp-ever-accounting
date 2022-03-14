@@ -10,19 +10,19 @@ defined( 'ABSPATH' ) || exit;
 
 	<div class="ea-clearfix">
 		<div class="ea-row">
-			<?php eaccounting_do_meta_boxes( 'ea-overview', 'top', null ); ?>
+			<?php ever_accounting_do_meta_boxes( 'ea-overview', 'top', null ); ?>
 		</div>
 	</div>
 
 	<div class="ea-clearfix">
 		<div class="ea-row">
-			<?php eaccounting_do_meta_boxes( 'ea-overview', 'middle', null ); ?>
+			<?php ever_accounting_do_meta_boxes( 'ea-overview', 'middle', null ); ?>
 		</div>
 	</div>
 
 	<div class="ea-clearfix">
 		<div class="ea-row">
-			<?php eaccounting_do_meta_boxes( 'ea-overview', 'advanced', null ); ?>
+			<?php ever_accounting_do_meta_boxes( 'ea-overview', 'advanced', null ); ?>
 		</div>
 	</div>
 

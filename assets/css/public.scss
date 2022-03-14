@@ -1,0 +1,148 @@
+/**
+ * Imports
+ */
+@import "mixins";
+@import "variables";
+@import "fonts";
+@import "grids";
+@import "card";
+@import "document";
+@import "utility";
+
+/*------------------------------------------------------------------------------
+  Overwrite
+------------------------------------------------------------------------------*/
+
+.ea-card__inside {
+	@media only screen and (min-width: 768px) {
+		padding: 20px 50px;
+	}
+}
+
+[class*=ea-] {
+	box-sizing: border-box;
+	//color: #314e73;
+}
+
+.ea-columns{
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 8px 0;
+	margin: 0;
+	min-height: 25px;
+	//@include clearfix();
+}
+
+/*------------------------------------------------------------------------------
+  Header
+------------------------------------------------------------------------------*/
+.ea-header{
+	padding-top: 15px;
+	padding-bottom: 15px;
+}
+.ea-brand{
+	max-width: 300px;
+	max-height: 70px;
+	overflow: hidden;
+	img{
+		display: block;
+		max-width: 100%;
+		height: auto;
+		width: auto;
+	}
+}
+
+.ea-body{
+	padding-bottom: 90px;
+}
+
+/*------------------------------------------------------------------------------
+  Footer
+------------------------------------------------------------------------------*/
+.ea-footer{
+	bottom: 0;
+	margin-bottom: 0;
+	border-width: 1px 0 0;
+	position: fixed;
+	right: 0;
+	left: 0;
+	z-index: 1030;
+	background: #fff;
+	padding: 15px;
+	width: 100%;
+	height: 50px;
+	border-top: 1px solid #e4e5e7;
+	p{
+		margin: 0;
+		padding: 0;
+		text-align: center;
+	}
+}
+
+/*------------------------------------------------------------------------------
+  Document
+------------------------------------------------------------------------------*/
+.ea-document{
+	&__logo{
+		display: none;
+	}
+	&__number {
+		font-weight: 600;
+	}
+	&__items{
+		th {
+			background: #415164;
+			color: #ffffff;
+		}
+	}
+	&__data-row{
+		background: none;
+	}
+	&__total-items {
+		border: none;
+		margin-bottom: 0;
+		td {
+			border: none;
+		}
+	}
+	&__note-label {
+		margin-bottom: 0;
+	}
+}
+
+/*------------------------------------------------------------------------------
+  Restricted
+------------------------------------------------------------------------------*/
+.ea-restricted{
+	text-align: center;
+	color: #F04124;
+	border: 2px solid #F04124;
+	h3{
+		color: inherit;
+	}
+}
+
+/*------------------------------------------------------------------------------
+  MISC
+------------------------------------------------------------------------------*/
+@media print{
+	html, body {
+		height: 99%;
+	}
+	.ea-noprint{
+		display:none;
+	}
+	.ea-card{
+		border: none;
+	}
+	.ea-document__logo{
+		display: block;
+	}
+	.ea-document__items th{
+		color: #fff;
+	}
+
+}
+
+

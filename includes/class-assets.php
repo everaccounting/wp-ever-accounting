@@ -26,8 +26,8 @@ class Assets {
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_styles' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_scripts' ) );
 
-		add_action( 'eaccounting_head', array( $this, 'eaccounting_styles' ) );
-		add_action( 'eaccounting_footer', array( $this, 'eaccounting_scripts' ) );
+		add_action( 'ever_accounting_head', array( $this, 'eaccounting_styles' ) );
+		add_action( 'ever_accounting_footer', array( $this, 'eaccounting_scripts' ) );
 	}
 
 	/**
@@ -137,7 +137,7 @@ class Assets {
 				'ea-select',
 				'eaccounting_select_i10n',
 				array(
-					'ajaxurl' => eaccounting()->ajax_url(),
+					'ajaxurl' => ever_accounting_ajax_url(),
 				)
 			);
 
@@ -145,8 +145,8 @@ class Assets {
 				'ea-form',
 				'eaccounting_form_i10n',
 				array(
-					'ajaxurl'           => eaccounting()->ajax_url(),
-					'global_currencies' => eaccounting_get_global_currencies(),
+					'ajaxurl'           => ever_accounting_ajax_url(),
+					'global_currencies' => \Ever_Accounting\Currencies::get_codes(),
 					'nonce'             => array(
 						'get_account'  => wp_create_nonce( 'ea_get_account' ),
 						'get_currency' => wp_create_nonce( 'ea_get_currency' ),
@@ -155,12 +155,12 @@ class Assets {
 			);
 			// Export page.
 			$tab = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_STRING );
-			if ( eaccounting_is_admin_page( 'ea-tools' ) && 'export' === $tab ) {
+			if ( ever_accounting_is_admin_page( 'ea-tools' ) && 'export' === $tab ) {
 				wp_enqueue_script( 'ea-exporter' );
 			}
 
 			// Import page.
-			if ( eaccounting_is_admin_page( 'ea-tools' ) && 'import' === $tab ) {
+			if ( ever_accounting_is_admin_page( 'ea-tools' ) && 'import' === $tab ) {
 				wp_localize_script(
 					'ea-importer',
 					'eaccounting_importer_i10n',
@@ -174,27 +174,27 @@ class Assets {
 			}
 
 			// settings page
-			if ( eaccounting_is_admin_page( 'ea-settings' ) ) {
+			if ( ever_accounting_is_admin_page( 'ea-settings' ) ) {
 				wp_enqueue_media();
 				wp_enqueue_script( 'ea-settings' );
 			}
 
 			// report page
-			if ( eaccounting_is_admin_page( 'ea-reports' ) ) {
+			if ( ever_accounting_is_admin_page( 'ea-reports' ) ) {
 				wp_enqueue_script( 'chartjs' );
 			}
 
-			$default_currency = eaccounting()->settings->get( 'default_currency', 'USD' );
+			$default_currency = ever_accounting_get_option( 'default_currency', 'USD' );
 			wp_localize_script(
 				'ea-admin',
 				'eaccountingi10n',
 				array(
 					'site_url'   => site_url(),
 					'admin_url'  => admin_url(),
-					'asset_url'  => eaccounting()->plugin_url( '/assets/dist' ),
-					'plugin_url' => eaccounting()->plugin_url(),
-					'currency'   => Currencies::get_currency_by_code( $default_currency )->get_data(),
-					'currencies' => Currencies::get_currencies(
+					'asset_url'  => ever_accounting_plugin_url( '/assets/dist' ),
+					'plugin_url' => ever_accounting_plugin_url(),
+					'currency'   => Currencies::get_by_code( $default_currency )->get_data(),
+					'currencies' => Currencies::query(
 						array(
 							'return' => 'raw',
 							'number' => - 1,
@@ -226,9 +226,9 @@ class Assets {
 	 * @param bool $has_rtl support RTL?
 	 */
 	public static function register_style( $style_handle, $style_path, $dependencies = array(), $has_rtl = true ) {
-		$style_asset_path = untrailingslashit( plugin_dir_path( EACCOUNTING_PLUGIN_FILE ) ) . '/assets/dist/' . ltrim( substr_replace( $style_path, '.asset.php', - strlen( '.css' ) ), '/' );
-		$style_asset_url  = untrailingslashit( plugin_dir_url( EACCOUNTING_PLUGIN_FILE ) ) . '/assets/dist/' . ltrim( $style_path, '/' );
-		$version          = EACCOUNTING_VERSION;
+		$style_asset_path = untrailingslashit( plugin_dir_path( EVER_ACCOUNTING_FILE ) ) . '/assets/dist/' . ltrim( substr_replace( $style_path, '.asset.php', - strlen( '.css' ) ), '/' );
+		$style_asset_url  = untrailingslashit( plugin_dir_url( EVER_ACCOUNTING_FILE ) ) . '/assets/dist/' . ltrim( $style_path, '/' );
+		$version          = EVER_ACCOUNTING_VERSION;
 		if ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) {
 			$version = time();
 		}
@@ -261,9 +261,9 @@ class Assets {
 	 * @return bool
 	 */
 	public static function register_script( $script_handle, $script_path, $dependencies = array(), $has_i18n = false ) {
-		$script_asset_path = untrailingslashit( plugin_dir_path( EACCOUNTING_PLUGIN_FILE ) ) . '/assets/dist/' . ltrim( substr_replace( $script_path, '.asset.php', - strlen( '.js' ) ), '/' );
-		$script_asset_url  = untrailingslashit( plugin_dir_url( EACCOUNTING_PLUGIN_FILE ) ) . '/assets/dist/' . ltrim( $script_path, '/' );
-		$version           = EACCOUNTING_VERSION;
+		$script_asset_path = untrailingslashit( plugin_dir_path( EVER_ACCOUNTING_FILE ) ) . '/assets/dist/' . ltrim( substr_replace( $script_path, '.asset.php', - strlen( '.js' ) ), '/' );
+		$script_asset_url  = untrailingslashit( plugin_dir_url( EVER_ACCOUNTING_FILE ) ) . '/assets/dist/' . ltrim( $script_path, '/' );
+		$version           = EVER_ACCOUNTING_VERSION;
 		if ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) {
 			$version = time();
 		}

@@ -1,0 +1,130 @@
+.settings_page_ea-release{
+	#wpcontent {
+		padding: 0;
+	}
+	.wrap {
+		padding-left: 20px;
+	}
+	.ea-title-section {
+		background: #ffffff;
+		text-align: center;
+		padding: 10px 0;
+		margin-bottom: 20px;
+		box-shadow: 0 2px 0 #efefef, 0 2px 2px #ececec;
+	}
+	.ea-container {
+		display: flex;
+		-webkit-box-align: center;
+		align-items: center;
+		-webkit-box-pack: justify;
+		justify-content: space-between;
+		flex-wrap: wrap;
+		box-sizing: border-box;
+		width: 100%;
+		@media only screen and (min-width: 1024px) {
+			padding-left: 20px;
+			padding-right: 20px;
+		}
+	}
+
+}
+.ea-release {
+	&_logo {
+		img {
+			max-width: 100%;
+			@media only screen and (max-width: 520px) {
+				width: 209px;
+			}
+			@media only screen and (max-width: 420px) {
+				width: 165px;
+				height: 35px;
+			}
+			@media only screen and (max-width: 380px) {
+				width: 132px;
+				height: 30px;
+			}
+			@media only screen and (max-width: 360px) {
+				width: 120px;
+				height: 30px;
+			}
+		}
+	}
+	&_tag {
+		h2 {
+			@media only screen and (max-width: 420px) {
+				font-size: 1em;
+			}
+		}
+	}
+	&__dashboard {
+		max-width: 100%;
+		width: 380px;
+		height: 125px;
+		@media only screen and (max-width: 768px){
+			width: 100%;
+			height: 100%;
+		}
+	}
+	#post-body-content {
+		.ea-card__inside {
+			margin: 0;
+		}
+	}
+	.ea-card{
+		&__header {
+			min-height: 15px;
+			h3,h4 {
+				margin: 0;
+			}
+		}
+		&__list-section{
+			list-style: none;
+			margin: 0;
+			padding: 0;
+
+			&__item{
+				padding: 0;
+				background: #fff;
+				border: 0;
+				display: flex;
+				font-weight: 400;
+				margin: 0;
+				min-height: 46px;
+				position: relative;
+				text-align: left;
+				width: 100%;
+				align-items: center;
+				justify-content: space-between;
+				user-select: auto;
+				border-top: 1px solid rgba(0, 0, 0, 0.125);
+				&:first-child{
+					border-top: 0;
+				}
+			}
+		}
+	}
+	.tag {
+		color: #fff;
+		padding: 8px 5px 8px 5px;
+		font-size: .8em;
+		line-height: .5em;
+		text-align: center;
+	}
+	.fix {
+		background: #dc3232;
+		width: 25px;
+	}
+	.enhance {
+		background: #5b9dd9;
+	}
+	.new {
+		background: #94d95b;
+		width: 40px;
+	}
+	.read-more{
+
+	}
+
+
+
+}
