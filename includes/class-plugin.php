@@ -125,6 +125,8 @@ final class Plugin {
 		include_once __DIR__ . '/libraries/wp-async-request.php';
 		include_once __DIR__ . '/libraries/wp-background-process.php';
 		include_once __DIR__ . '/class-lifecycle.php';
+		include_once __DIR__ . '/class-assets.php';
+		include_once __DIR__ . '/class-ajax.php';
 		include_once __DIR__ . '/admin/class-menu.php';
 		include_once __DIR__ . '/admin/class-settings.php';
 	}

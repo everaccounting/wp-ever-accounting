@@ -38,7 +38,7 @@ class Customers extends CSV_Exporter {
 	 * @since  1.0.2
 	 */
 	public function get_columns() {
-		return eaccounting_get_io_headers( 'customer' );
+		return ever_accounting_get_io_headers( 'customer' );
 	}
 
 	/**
@@ -58,9 +58,9 @@ class Customers extends CSV_Exporter {
 			'number'   => - 1,
 		);
 
-		$args = apply_filters( 'eaccounting_customer_export_query_args', $args );
+		$args = apply_filters( 'ever_accounting_customer_export_query_args', $args );
 
-		$items = \Ever_Accounting\Contacts::get_customers( $args );
+		$items = \Ever_Accounting\Contacts::query( $args );
 
 		$rows = array();
 
@@ -76,7 +76,7 @@ class Customers extends CSV_Exporter {
 	/**
 	 * Take a customer and generate row data from it for export.
 	 *
-	 * @param \Ever_Accounting\Models\Customer $item
+	 * @param \Ever_Accounting\Customer $item
 	 *
 	 * @return array
 	 */
@@ -124,7 +124,7 @@ class Customers extends CSV_Exporter {
 					$value = $item->get_currency_code();
 					break;
 				default:
-					$value = apply_filters( 'eaccounting_customer_csv_row_item', '', $column, $item, $this );
+					$value = apply_filters( 'ever_accounting_customer_csv_row_item', '', $column, $item, $this );
 			}
 
 			$props[ $column ] = $value;

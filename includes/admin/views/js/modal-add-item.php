@@ -6,12 +6,16 @@
  * @subpackage  Admin/Js Templates
  * @package     Ever_Accounting
  */
+
+use Ever_Accounting\Helpers\Form;
+use Ever_Accounting\Helpers\Price;
+
 defined( 'ABSPATH' ) || exit();
 ?>
 <script type="text/template" id="ea-modal-add-item" data-title="<?php esc_html_e( 'Add Item', 'wp-ever-accounting' ); ?>">
 	<form id="ea-modal-item-form" action="" method="post">
 		<?php
-		eaccounting_text_input(
+		Form::text_input(
 			array(
 				'wrapper_class' => 'ea-col-6',
 				'label'         => __( 'Name', 'wp-ever-accounting' ),
@@ -22,7 +26,7 @@ defined( 'ABSPATH' ) || exit();
 			)
 		);
 
-		eaccounting_text_input(
+		Form::text_input(
 			array(
 				'wrapper_class' => 'ea-col-6',
 				'label'         => __( 'Sale price', 'wp-ever-accounting' ),
@@ -32,7 +36,7 @@ defined( 'ABSPATH' ) || exit();
 			)
 		);
 
-		eaccounting_text_input(
+		Form::text_input(
 			array(
 				'wrapper_class' => 'ea-col-6',
 				'label'         => __( 'Purchase price', 'wp-ever-accounting' ),
@@ -42,7 +46,7 @@ defined( 'ABSPATH' ) || exit();
 			)
 		);
 
-		eaccounting_category_dropdown(
+		Form::category_dropdown(
 			array(
 				'wrapper_class' => 'ea-col-6',
 				'label'         => __( 'Category', 'wp-ever-accounting' ),
@@ -50,14 +54,14 @@ defined( 'ABSPATH' ) || exit();
 				'required'      => false,
 				'type'          => 'item',
 				'creatable'     => false,
-				'ajax_action'   => 'eaccounting_get_item_categories',
+				'ajax_action'   => 'ever_accounting_get_item_categories',
 			)
 		);
 
-		eaccounting_hidden_input(
+		Form::hidden_input(
 			array(
 				'name'  => 'action',
-				'value' => 'eaccounting_edit_item',
+				'value' => 'ever_accounting_edit_item',
 			)
 		);
 

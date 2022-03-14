@@ -11,7 +11,7 @@
 
 defined( 'ABSPATH' ) || exit();
 
-include( EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-transaction-list-table.php' );
+include( dirname( EVER_ACCOUNTING_FILE ) . '/includes/admin/list-tables/class-transaction-list-table.php' );
 $transactions_table = new Ever_Accounting_Transaction_List_Table();
 $transactions_table->prepare_items();
 ?>

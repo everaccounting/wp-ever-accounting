@@ -23,7 +23,7 @@ class Exporter {
 	 * Exporter constructor.
 	 */
 	public function __construct() {
-		add_action( 'wp_ajax_eaccounting_do_ajax_export', array( __CLASS__, 'do_ajax_export' ) );
+		add_action( 'wp_ajax_ever_accounting_do_ajax_export', array( __CLASS__, 'do_ajax_export' ) );
 		add_action( 'admin_init', array( __CLASS__, 'handle_csv_download' ) );
 	}
 
@@ -96,10 +96,10 @@ class Exporter {
 		$exporter->process_step( $step );
 
 		$query_args = apply_filters(
-			'eaccounting_export_get_ajax_query_args',
+			'ever_accounting_export_get_ajax_query_args',
 			array(
 				'nonce'    => wp_create_nonce( 'ea-download-file' ),
-				'action'   => 'eaccounting_download_export_file',
+				'action'   => 'ever_accounting_download_export_file',
 				'filename' => $exporter->get_filename(),
 				'page'     => 'ea-tools',
 				'export'   => $type,
@@ -116,7 +116,7 @@ class Exporter {
 					'message'    => sprintf( __( 'Total %d items exported', 'wp-ever-accounting' ), $total ),
 					'url'        => add_query_arg(
 						$query_args,
-						eaccounting_admin_url(
+						ever_accounting_admin_url(
 							array(
 								'page' => 'ea-tools',
 								'tab'  => 'export',
@@ -143,7 +143,7 @@ class Exporter {
 	 * @since 1.0.2
 	 */
 	public static function handle_csv_download() {
-		if ( isset( $_GET['action'], $_GET['nonce'] ) && wp_verify_nonce( wp_unslash( $_GET['nonce'] ), 'ea-download-file' ) && 'eaccounting_download_export_file' === wp_unslash( $_GET['action'] ) ) {
+		if ( isset( $_GET['action'], $_GET['nonce'] ) && wp_verify_nonce( wp_unslash( $_GET['nonce'] ), 'ea-download-file' ) && 'ever_accounting_download_export_file' === wp_unslash( $_GET['action'] ) ) {
 
 			if ( empty( $_REQUEST['export'] ) || false === $batch = eaccounting()->utils->batch->get( $_REQUEST['export'] ) ) {
 				wp_die(

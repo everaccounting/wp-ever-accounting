@@ -864,10 +864,12 @@ class Form {
 				'number' => -1,
 			)
 		);
+		//error_log( print_r( $results,true));
 		$options       = array();
 		foreach ( $results as $item ) {
 			$options[ $item->code ] = $item->name . '(' . $item->symbol . ')';
 		}
+		//error_log( print_r( $options,true));
 		$field = wp_parse_args(
 			array(
 				'value'        => $currency_code,
@@ -882,6 +884,7 @@ class Form {
 			),
 			$field
 		);
+		//error_log( print_r( $field,true));
 
 		self::select2( apply_filters( 'ever_accounting_currency_dropdown', $field ) );
 	}

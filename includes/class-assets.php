@@ -58,7 +58,7 @@ class Assets {
 		$screen_id = $screen ? $screen->id : '';
 		self::register_style( 'ea-admin-styles', 'css/admin.css' );
 		self::register_style( 'ea-release-styles', 'css/release.css' );
-		self::register_style( 'jquery-ui-styles', 'css/jquery-ui.css' );
+		self::register_style( 'jquery-ui-styles', 'css/jquery-ui/jquery-ui.css' );
 		// Admin styles for Accounting pages only.
 		if ( in_array( $screen_id, ever_accounting_get_screen_ids(), true ) ) {
 			wp_enqueue_style( 'ea-admin-styles' );
@@ -76,7 +76,7 @@ class Assets {
 		$screen_id             = $screen ? $screen->id : '';
 		$eaccounting_screen_id = sanitize_title( __( 'Accounting', 'wp-ever-accounting' ) );
 		// 3rd parties.
-		self::register_script( 'jquery-blockui', 'js/jquery.blockUI.js', array( 'jquery' ), false );
+		self::register_script( 'jquery-blockui', 'js/jquery.blockUI.min.js', array( 'jquery' ), false );
 		self::register_script( 'jquery-select2', 'js/select2.full.js', array( 'jquery' ), false );
 		self::register_script( 'jquery-inputmask', 'js/jquery.inputmask.js', array( 'jquery' ), false );
 		self::register_script( 'chartjs', 'js/chart.bundle.js', array(), false );

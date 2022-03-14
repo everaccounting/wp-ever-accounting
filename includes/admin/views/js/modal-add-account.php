@@ -6,12 +6,15 @@
  * @subpackage  Admin/Js Templates
  * @package     Ever_Accounting
  */
+
+use Ever_Accounting\Helpers\Form;
+
 defined( 'ABSPATH' ) || exit();
 ?>
 <script type="text/template" id="ea-modal-add-account" data-title="<?php esc_html_e( 'Add Account', 'wp-ever-accounting' ); ?>">
 	<form id="ea-modal-account-form" action="" method="post">
 		<?php
-		eaccounting_text_input(
+		Form::text_input(
 			array(
 				'label'    => __( 'Account Name', 'wp-ever-accounting' ),
 				'name'     => 'name',
@@ -19,7 +22,7 @@ defined( 'ABSPATH' ) || exit();
 				'required' => true,
 			)
 		);
-		eaccounting_text_input(
+		Form::text_input(
 			array(
 				'label'    => __( 'Account Number', 'wp-ever-accounting' ),
 				'name'     => 'number',
@@ -28,7 +31,7 @@ defined( 'ABSPATH' ) || exit();
 			)
 		);
 
-		eaccounting_currency_dropdown(
+		Form::currency_dropdown(
 			array(
 				'label'       => __( 'Account Currency', 'wp-ever-accounting' ),
 				'name'        => 'currency_code',
@@ -41,7 +44,7 @@ defined( 'ABSPATH' ) || exit();
 			)
 		);
 
-		eaccounting_text_input(
+		Form::text_input(
 			array(
 				'label'    => __( 'Opening Balance', 'wp-ever-accounting' ),
 				'name'     => 'opening_balance',
@@ -50,10 +53,10 @@ defined( 'ABSPATH' ) || exit();
 				'required' => true,
 			)
 		);
-		eaccounting_hidden_input(
+		Form::hidden_input(
 			array(
 				'name'  => 'action',
-				'value' => 'eaccounting_edit_account',
+				'value' => 'ever_accounting_edit_account',
 			)
 		);
 

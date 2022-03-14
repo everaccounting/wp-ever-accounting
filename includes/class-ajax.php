@@ -9,6 +9,9 @@
 
 namespace Ever_Accounting;
 
+use Ever_Accounting\Helpers\Formatting;
+use Ever_Accounting\Helpers\Template;
+
 defined( 'ABSPATH' ) || exit();
 
 /**
@@ -38,7 +41,7 @@ class Ajax {
 		// phpcs:disable
 		if ( ! empty( $_GET['ea-ajax'] ) ) {
 			ever_accounting_maybe_define_constant( 'DOING_AJAX', true );
-			ever_accounting_maybe_define_constant( 'EACCOUNTING_DOING_AJAX', true );
+			ever_accounting_maybe_define_constant( 'EVER_ACCOUNTING_DOING_AJAX', true );
 			if ( ! WP_DEBUG || ( WP_DEBUG && ! WP_DEBUG_DISPLAY ) ) {
 				@ini_set( 'display_errors', 0 ); // Turn off display_errors during AJAX events to prevent malformed JSON.
 			}
@@ -62,7 +65,7 @@ class Ajax {
 			status_header( 200 );
 		} elseif ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
 			headers_sent( $file, $line );
-			trigger_error( "eaccounting_ajax_headers cannot set headers - headers already sent by {$file} on line {$line}", E_USER_NOTICE ); // @codingStandardsIgnoreLine
+			trigger_error( "ever_accounting_ajax_headers cannot set headers - headers already sent by {$file} on line {$line}", E_USER_NOTICE ); // @codingStandardsIgnoreLine
 		}
 	}
 
@@ -84,7 +87,7 @@ class Ajax {
 		if ( $action ) {
 			self::ajax_headers();
 			$action = sanitize_text_field( $action );
-			do_action( 'eaccounting_ajax_' . $action );
+			do_action( 'ever_accounting_ajax_' . $action );
 			wp_die();
 		}
 		// phpcs:enable
@@ -99,11 +102,11 @@ class Ajax {
 		$ajax_events_nopriv = array();
 
 		foreach ( $ajax_events_nopriv as $ajax_event ) {
-			add_action( 'wp_ajax_eaccounting_' . $ajax_event, array( __CLASS__, $ajax_event ) );
-			add_action( 'wp_ajax_nopriv_eaccounting_' . $ajax_event, array( __CLASS__, $ajax_event ) );
+			add_action( 'wp_ajax_ever_accounting_' . $ajax_event, array( __CLASS__, $ajax_event ) );
+			add_action( 'wp_ajax_nopriv_ever_accounting_' . $ajax_event, array( __CLASS__, $ajax_event ) );
 
 			// Ever_Accounting AJAX can be used for frontend ajax requests.
-			add_action( 'eaccounting_ajax_' . $ajax_event, array( __CLASS__, $ajax_event ) );
+			add_action( 'ever_accounting_ajax_' . $ajax_event, array( __CLASS__, $ajax_event ) );
 		}
 
 		$ajax_events = array(
@@ -163,7 +166,7 @@ class Ajax {
 		);
 
 		foreach ( $ajax_events as $ajax_event ) {
-			add_action( 'wp_ajax_eaccounting_' . $ajax_event, array( __CLASS__, $ajax_event ) );
+			add_action( 'wp_ajax_ever_accounting_' . $ajax_event, array( __CLASS__, $ajax_event ) );
 		}
 	}
 
@@ -174,12 +177,12 @@ class Ajax {
 	 */
 	public static function get_expense_categories() {
 		self::verify_nonce( 'ea_categories' );
-		$search = isset( $_REQUEST['search'] ) ? eaccounting_clean( $_REQUEST['search'] ) : '';
+		$search = isset( $_REQUEST['search'] ) ? Formatting::clean( $_REQUEST['search'] ) : '';
 		$page   = isset( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1;
 
 
 		wp_send_json_success(
-			Categories::get_categories(
+			Categories::query(
 				array(
 					'search' => $search,
 					'type'   => 'expense',
@@ -198,12 +201,12 @@ class Ajax {
 	 */
 	public static function get_income_categories() {
 		self::verify_nonce( 'ea_categories' );
-		$search = isset( $_REQUEST['search'] ) ? eaccounting_clean( $_REQUEST['search'] ) : '';
+		$search = isset( $_REQUEST['search'] ) ? Formatting::clean( $_REQUEST['search'] ) : '';
 		$page   = isset( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1;
 
 
 		wp_send_json_success(
-			Categories::get_categories(
+			Categories::query(
 				array(
 					'search' => $search,
 					'type'   => 'income',
@@ -222,11 +225,11 @@ class Ajax {
 	 */
 	public static function get_item_categories() {
 		self::verify_nonce( 'ea_categories' );
-		$search = isset( $_REQUEST['search'] ) ? eaccounting_clean( $_REQUEST['search'] ) : '';
+		$search = isset( $_REQUEST['search'] ) ? Formatting::clean( $_REQUEST['search'] ) : '';
 		$page   = isset( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1;
 
 		wp_send_json_success(
-			Categories::get_categories(
+			Categories::query(
 				array(
 					'search' => $search,
 					'type'   => 'item',
@@ -248,8 +251,8 @@ class Ajax {
 	public static function edit_category() {
 		self::verify_nonce( 'ea_edit_category' );
 		self::check_permission( 'ea_manage_category' );
-		$posted  = eaccounting_clean( wp_unslash( $_REQUEST ) );
-		$created = Categories::insert_category( $posted );
+		$posted  = Formatting::clean( wp_unslash( $_REQUEST ) );
+		$created = Categories::insert( $posted );
 		if ( is_wp_error( $created ) ) {
 			wp_send_json_error(
 				array(
@@ -263,7 +266,7 @@ class Ajax {
 		$redirect = '';
 		if ( ! $update ) {
 			$message  = __( 'Category created successfully!', 'wp-ever-accounting' );
-			$redirect = remove_query_arg( array( 'action' ), eaccounting_clean( $_REQUEST['_wp_http_referer'] ) );
+			$redirect = remove_query_arg( array( 'action' ), Formatting::clean( $_REQUEST['_wp_http_referer'] ) );
 		}
 		wp_send_json_success(
 			array(
@@ -285,7 +288,7 @@ class Ajax {
 	public static function add_invoice_payment() {
 		self::verify_nonce( 'ea_add_invoice_payment' );
 		self::check_permission( 'ea_manage_invoice' );
-		$posted = eaccounting_clean( wp_unslash( $_REQUEST ) );
+		$posted = Formatting::clean( wp_unslash( $_REQUEST ) );
 
 		try {
 			$invoice = new Invoice( $posted['invoice_id'] );
@@ -321,7 +324,7 @@ class Ajax {
 		self::verify_nonce( 'ea_add_invoice_note' );
 		self::check_permission( 'ea_manage_invoice' );
 		$invoice_id    = absint( $_REQUEST['invoice_id'] );
-		$note          = eaccounting_clean( $_REQUEST['note'] );
+		$note          = Formatting::clean( $_REQUEST['note'] );
 		$customer_note = isset( $_REQUEST['type'] ) && 'customer' === $_REQUEST['type'] ? true : false;
 		if ( empty( $note ) ) {
 			wp_send_json_error(
@@ -333,7 +336,7 @@ class Ajax {
 		try {
 			$invoice = new Invoice( $invoice_id );
 			$invoice->add_note( $note );
-			$notes = eaccounting_get_admin_template_html( 'invoices/invoice-notes', array( 'invoice' => $invoice ) );
+			$notes = Template::get_admin_template_html( 'invoices/invoice-notes', array( 'invoice' => $invoice ) );
 			wp_send_json_success(
 				array(
 					'message' => __( 'Note Added.', 'wp-ever-accounting' ),
@@ -358,7 +361,7 @@ class Ajax {
 	public static function invoice_recalculate() {
 		self::verify_nonce( 'ea_edit_invoice' );
 		self::check_permission( 'ea_manage_invoice' );
-		$posted = eaccounting_clean( wp_unslash( $_REQUEST ) );
+		$posted = Formatting::clean( wp_unslash( $_REQUEST ) );
 		try {
 			$posted  = wp_parse_args( $posted, array( 'id' => null ) );
 			$invoice = new Invoice( $posted['id'] );
@@ -366,7 +369,7 @@ class Ajax {
 			$totals = $invoice->calculate_totals();
 			wp_send_json_success(
 				array(
-					'html'   => eaccounting_get_admin_template_html(
+					'html'   => Template::get_admin_template_html(
 						'invoices/invoice-items',
 						array(
 							'invoice' => $invoice,
@@ -390,7 +393,7 @@ class Ajax {
 	public static function edit_invoice() {
 		self::verify_nonce( 'ea_edit_invoice' );
 		self::check_permission( 'ea_manage_invoice' );
-		$posted = eaccounting_clean( wp_unslash( $_REQUEST ) );
+		$posted = Formatting::clean( wp_unslash( $_REQUEST ) );
 
 		try {
 			$posted  = wp_parse_args( $posted, array( 'id' => null ) );
@@ -403,10 +406,10 @@ class Ajax {
 					'action'     => 'view',
 					'invoice_id' => $invoice->get_id(),
 				),
-				eaccounting_clean( $_REQUEST['_wp_http_referer'] )
+				Formatting::clean( $_REQUEST['_wp_http_referer'] )
 			);
 			$response = array(
-				'items'    => eaccounting_get_admin_template_html(
+				'items'    => Template::get_admin_template_html(
 					'invoices/invoice-items',
 					array(
 						'invoice' => $invoice,
@@ -434,9 +437,9 @@ class Ajax {
 	public static function edit_revenue() {
 		self::verify_nonce( 'ea_edit_revenue' );
 		self::check_permission( 'ea_manage_revenue' );
-		$posted = eaccounting_clean( wp_unslash( $_REQUEST ) );
+		$posted = Formatting::clean( wp_unslash( $_REQUEST ) );
 
-		$created = eaccounting_insert_revenue( $posted );
+		$created = \Ever_Accounting\Transactions::insert_revenue( $posted );
 		if ( is_wp_error( $created ) || ! $created->exists() ) {
 			wp_send_json_error(
 				array(
@@ -450,7 +453,7 @@ class Ajax {
 		$redirect = '';
 		if ( ! $update ) {
 			$message  = __( 'Revenue created successfully!', 'wp-ever-accounting' );
-			$redirect = remove_query_arg( array( 'action' ), eaccounting_clean( $_REQUEST['_wp_http_referer'] ) );
+			$redirect = remove_query_arg( array( 'action' ), Formatting::clean( $_REQUEST['_wp_http_referer'] ) );
 		}
 
 		wp_send_json_success(
@@ -471,17 +474,18 @@ class Ajax {
 	 */
 	public static function get_customers() {
 		self::verify_nonce( 'ea_get_customers' );
-		$search = isset( $_REQUEST['search'] ) ? eaccounting_clean( $_REQUEST['search'] ) : '';
+		$search = isset( $_REQUEST['search'] ) ? Formatting::clean( $_REQUEST['search'] ) : '';
 		$page   = isset( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1;
 
 
 		wp_send_json_success(
-			Contacts::get_customers(
+			Contacts::query(
 				array(
 					'search' => $search,
 					'page'   => $page,
 					'return' => 'raw',
 					'status' => 'active',
+					'type'   => 'customer'
 				)
 			)
 		);
@@ -497,7 +501,7 @@ class Ajax {
 	public static function edit_customer() {
 		self::verify_nonce( 'ea_edit_customer' );
 		self::check_permission( 'ea_manage_customer' );
-		$posted  = eaccounting_clean( $_REQUEST );
+		$posted  = Formatting::clean( $_REQUEST );
 		$created = Contacts::insert_customer( $posted );
 		if ( is_wp_error( $created ) || ! $created->exists() ) {
 			wp_send_json_error(
@@ -512,7 +516,7 @@ class Ajax {
 		$redirect = '';
 		if ( ! $update ) {
 			$message  = __( 'Customer created successfully!', 'wp-ever-accounting' );
-			$redirect = remove_query_arg( array( 'action' ), eaccounting_clean( $_REQUEST['_wp_http_referer'] ) );
+			$redirect = remove_query_arg( array( 'action' ), Formatting::clean( $_REQUEST['_wp_http_referer'] ) );
 		}
 
 		wp_send_json_success(
@@ -535,7 +539,7 @@ class Ajax {
 	public static function add_bill_payment() {
 		self::verify_nonce( 'ea_add_bill_payment' );
 		self::check_permission( 'ea_manage_bill' );
-		$posted = eaccounting_clean( wp_unslash( $_REQUEST ) );
+		$posted = Formatting::clean( wp_unslash( $_REQUEST ) );
 
 		try {
 			$bill = new Bill( $posted['bill_id'] );
@@ -572,7 +576,7 @@ class Ajax {
 		self::verify_nonce( 'ea_add_bill_note' );
 		self::check_permission( 'ea_manage_bill' );
 		$bill_id       = absint( $_REQUEST['bill_id'] );
-		$note          = eaccounting_clean( $_REQUEST['note'] );
+		$note          = Formatting::clean( $_REQUEST['note'] );
 		$customer_note = isset( $_REQUEST['type'] ) && 'customer' === $_REQUEST['type'];
 		if ( empty( $note ) ) {
 			wp_send_json_error(
@@ -584,7 +588,7 @@ class Ajax {
 		try {
 			$bill = new Bill( $bill_id );
 			$bill->add_note( $note );
-			$notes = eaccounting_get_admin_template_html( 'bills/bill-notes', array( 'bill' => $bill ) );
+			$notes = Template::get_admin_template_html( 'bills/bill-notes', array( 'bill' => $bill ) );
 			wp_send_json_success(
 				array(
 					'message' => __( 'Note Added.', 'wp-ever-accounting' ),
@@ -609,7 +613,7 @@ class Ajax {
 	public static function bill_recalculate() {
 		self::verify_nonce( 'ea_edit_bill' );
 		self::check_permission( 'ea_manage_bill' );
-		$posted = eaccounting_clean( wp_unslash( $_REQUEST ) );
+		$posted = Formatting::clean( wp_unslash( $_REQUEST ) );
 		try {
 			$posted = wp_parse_args( $posted, array( 'id' => null ) );
 			$bill   = new Bill( $posted['id'] );
@@ -617,7 +621,7 @@ class Ajax {
 			$totals = $bill->calculate_totals();
 			wp_send_json_success(
 				array(
-					'html'   => eaccounting_get_admin_template_html(
+					'html'   => Template::get_admin_template_html(
 						'bills/bill-items',
 						array(
 							'bill' => $bill,
@@ -643,7 +647,7 @@ class Ajax {
 	public static function edit_bill() {
 		self::verify_nonce( 'ea_edit_bill' );
 		self::check_permission( 'ea_manage_bill' );
-		$posted = eaccounting_clean( wp_unslash( $_REQUEST ) );
+		$posted = Formatting::clean( wp_unslash( $_REQUEST ) );
 
 		try {
 			$posted = wp_parse_args( $posted, array( 'id' => null ) );
@@ -655,11 +659,11 @@ class Ajax {
 					'action'  => 'view',
 					'bill_id' => $bill->get_id(),
 				),
-				eaccounting_clean( $_REQUEST['_wp_http_referer'] )
+				Formatting::clean( $_REQUEST['_wp_http_referer'] )
 			);
 
 			$response = array(
-				'items'    => eaccounting_get_admin_template_html(
+				'items'    => Template::get_admin_template_html(
 					'bills/bill-items',
 					array(
 						'bill' => $bill,
@@ -685,7 +689,7 @@ class Ajax {
 	 */
 	public static function get_currencies() {
 		self::verify_nonce( 'ea_get_currencies' );
-		$currencies = \Ever_Accounting\Currencies::get_currencies(
+		$currencies = \Ever_Accounting\Currencies::query(
 			array(
 				'number' => - 1,
 				'return' => 'raw',
@@ -703,7 +707,7 @@ class Ajax {
 	public static function get_currency() {
 		self::verify_nonce( 'ea_get_currency' );
 		self::check_permission( 'manage_eaccounting' );
-		$posted = eaccounting_clean( wp_unslash( $_REQUEST ) );
+		$posted = Formatting::clean( wp_unslash( $_REQUEST ) );
 		$code   = ! empty( $posted['id'] ) ? $posted['id'] : false;
 		if ( ! $code ) {
 			wp_send_json_error(
@@ -712,7 +716,7 @@ class Ajax {
 				)
 			);
 		}
-		$currency = \Ever_Accounting\Currencies::get_currency( $code );
+		$currency = \Ever_Accounting\Currencies::get( $code );
 		if ( empty( $currency ) || is_wp_error( $currency ) ) {
 			wp_send_json_error(
 				array(
@@ -732,7 +736,7 @@ class Ajax {
 	public static function get_currency_codes() {
 		self::verify_nonce( 'ea_get_currency_codes' );
 		self::check_permission( 'manage_eaccounting' );
-		$currencies = eaccounting_get_global_currencies();
+		$currencies = \Ever_Accounting\Currencies::get_codes();
 		wp_send_json_success( $currencies );
 	}
 
@@ -745,8 +749,8 @@ class Ajax {
 	public static function edit_currency() {
 		self::verify_nonce( 'ea_edit_currency' );
 		self::check_permission( 'ea_manage_currency' );
-		$posted  = eaccounting_clean( wp_unslash( $_REQUEST ) );
-		$created = \Ever_Accounting\Currencies::insert_currency( $posted );
+		$posted  = Formatting::clean( wp_unslash( $_REQUEST ) );
+		$created = \Ever_Accounting\Currencies::insert( $posted );
 		if ( is_wp_error( $created ) ) {
 			wp_send_json_error(
 				array(
@@ -760,7 +764,7 @@ class Ajax {
 		$redirect = '';
 		if ( ! $update ) {
 			$message  = __( 'Currency created successfully!', 'wp-ever-accounting' );
-			$redirect = remove_query_arg( array( 'action' ), eaccounting_clean( $_REQUEST['_wp_http_referer'] ) );
+			$redirect = remove_query_arg( array( 'action' ), Formatting::clean( $_REQUEST['_wp_http_referer'] ) );
 		}
 
 		wp_send_json_success(
@@ -783,9 +787,9 @@ class Ajax {
 	public static function edit_payment() {
 		self::verify_nonce( 'ea_edit_payment' );
 		self::check_permission( 'ea_manage_payment' );
-		$posted = eaccounting_clean( wp_unslash( $_REQUEST ) );
+		$posted = Formatting::clean( wp_unslash( $_REQUEST ) );
 
-		$created = eaccounting_insert_payment( $posted );
+		$created = \Ever_Accounting\Transactions::insert_payment( $posted );
 		if ( is_wp_error( $created ) || ! $created->exists() ) {
 			wp_send_json_error(
 				array(
@@ -799,7 +803,7 @@ class Ajax {
 		$redirect = '';
 		if ( ! $update ) {
 			$message  = __( 'Payment created successfully!', 'wp-ever-accounting' );
-			$redirect = remove_query_arg( array( 'action' ), eaccounting_clean( $_REQUEST['_wp_http_referer'] ) );
+			$redirect = remove_query_arg( array( 'action' ), Formatting::clean( $_REQUEST['_wp_http_referer'] ) );
 		}
 
 		wp_send_json_success(
@@ -820,16 +824,17 @@ class Ajax {
 	 */
 	public static function get_vendors() {
 		self::verify_nonce( 'ea_get_vendors' );
-		$search = isset( $_REQUEST['search'] ) ? eaccounting_clean( $_REQUEST['search'] ) : '';
+		$search = isset( $_REQUEST['search'] ) ? Formatting::clean( $_REQUEST['search'] ) : '';
 		$page   = isset( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1;
 
 		wp_send_json_success(
-			Contacts::get_vendors (
+			Contacts::query (
 				array(
 					'search' => $search,
 					'page'   => $page,
 					'return' => 'raw',
 					'status' => 'active',
+					'type'   => 'vendor'
 				)
 			)
 		);
@@ -844,7 +849,7 @@ class Ajax {
 	public static function edit_vendor() {
 		self::verify_nonce( 'ea_edit_vendor' );
 		self::check_permission( 'ea_manage_vendor' );
-		$posted = eaccounting_clean( wp_unslash( $_REQUEST ) );
+		$posted = Formatting::clean( wp_unslash( $_REQUEST ) );
 
 		$created = Contacts::insert_vendor( $posted );
 		if ( is_wp_error( $created ) || ! $created->exists() ) {
@@ -860,7 +865,7 @@ class Ajax {
 		$redirect = '';
 		if ( ! $update ) {
 			$message  = __( 'Vendor created successfully!', 'wp-ever-accounting' );
-			$redirect = remove_query_arg( array( 'action' ), eaccounting_clean( $_REQUEST['_wp_http_referer'] ) );
+			$redirect = remove_query_arg( array( 'action' ), Formatting::clean( $_REQUEST['_wp_http_referer'] ) );
 		}
 
 		wp_send_json_success(
@@ -884,7 +889,7 @@ class Ajax {
 		self::verify_nonce( 'ea_get_account' );
 		self::check_permission( 'manage_eaccounting' );
 		$id      = empty( $_REQUEST['id'] ) ? null : absint( $_REQUEST['id'] );
-		$account = Accounts::get_account( $id );
+		$account = Accounts::get( $id );
 		if ( $account ) {
 			wp_send_json_success( $account->get_data() );
 			wp_die();
@@ -902,12 +907,12 @@ class Ajax {
 	 */
 	public static function get_accounts() {
 		self::verify_nonce( 'ea_get_accounts' );
-		$search = isset( $_REQUEST['search'] ) ? eaccounting_clean( $_REQUEST['search'] ) : '';
+		$search = isset( $_REQUEST['search'] ) ? Formatting::clean( $_REQUEST['search'] ) : '';
 		$page   = isset( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1;
 
 
 		wp_send_json_success(
-			Accounts::get_accounts(
+			Accounts::query(
 				array(
 					'search' => $search,
 					'page'   => $page,
@@ -926,7 +931,7 @@ class Ajax {
 	public static function get_account_currency() {
 		self::verify_nonce( 'ea_get_currency' );
 		self::check_permission( 'manage_eaccounting' );
-		$posted     = eaccounting_clean( wp_unslash( $_REQUEST ) );
+		$posted     = Formatting::clean( wp_unslash( $_REQUEST ) );
 		$account_id = ! empty( $posted['account_id'] ) ? $posted['account_id'] : false;
 
 		if ( ! $account_id ) {
@@ -936,7 +941,7 @@ class Ajax {
 				)
 			);
 		}
-		$account = Accounts::get_account( $account_id );
+		$account = Accounts::get( $account_id );
 		if ( empty( $account ) || is_wp_error( $account ) || empty( $account->get_prop('currency_code' )->exists() ) ) {
 			wp_send_json_error(
 				array(
@@ -958,8 +963,8 @@ class Ajax {
 	public static function edit_account() {
 		self::verify_nonce( 'ea_edit_account' );
 		self::check_permission( 'ea_manage_account' );
-		$posted  = eaccounting_clean( wp_unslash( $_REQUEST ) );
-		$created = Accounts::insert_account( $posted );
+		$posted  = Formatting::clean( wp_unslash( $_REQUEST ) );
+		$created = Accounts::insert( $posted );
 		if ( is_wp_error( $created ) ) {
 			wp_send_json_error(
 				array(
@@ -973,7 +978,7 @@ class Ajax {
 		$redirect = '';
 		if ( ! $update ) {
 			$message  = __( 'Account created successfully!', 'wp-ever-accounting' );
-			$redirect = remove_query_arg( array( 'action' ), eaccounting_clean( $_REQUEST['_wp_http_referer'] ) );
+			$redirect = remove_query_arg( array( 'action' ), Formatting::clean( $_REQUEST['_wp_http_referer'] ) );
 		}
 
 		wp_send_json_success(
@@ -996,8 +1001,8 @@ class Ajax {
 	public static function edit_transfer() {
 		self::verify_nonce( 'ea_edit_transfer' );
 		self::check_permission( 'ea_manage_transfer' );
-		$posted  = eaccounting_clean( wp_unslash( $_REQUEST ) );
-		$created = eaccounting_insert_transfer( $posted );
+		$posted  = Formatting::clean( wp_unslash( $_REQUEST ) );
+		$created = \Ever_Accounting\Transfers::insert( $posted );
 		if ( is_wp_error( $created ) || ! $created->exists() ) {
 			wp_send_json_error(
 				array(
@@ -1011,7 +1016,7 @@ class Ajax {
 		$redirect = '';
 		if ( ! $update ) {
 			$message  = __( 'Transfer created successfully!', 'wp-ever-accounting' );
-			$redirect = remove_query_arg( array( 'action' ), eaccounting_clean( $_REQUEST['_wp_http_referer'] ) );
+			$redirect = remove_query_arg( array( 'action' ), Formatting::clean( $_REQUEST['_wp_http_referer'] ) );
 		}
 
 		wp_send_json_success(
@@ -1034,8 +1039,8 @@ class Ajax {
 	public static function delete_note() {
 		self::verify_nonce( 'ea_delete_note' );
 		self::check_permission( 'ea_manage_invoice' );
-		$note = Notes::get_note( $_REQUEST['id'] );
-		$deleted = Notes::delete_note( absint( $_REQUEST['id'] ) );
+		$note = Notes::get( $_REQUEST['id'] );
+		$deleted = Notes::delete( absint( $_REQUEST['id'] ) );
 		if ( ! $deleted ) {
 			wp_send_json_error(
 				array(
@@ -1046,11 +1051,11 @@ class Ajax {
 		if ( 'invoice' === $note->get_type() ) {
 			$invoice_id = $note->get_parent_id();
 			$invoice    = new Invoice( $invoice_id );
-			$notes      = eaccounting_get_admin_template_html( 'invoices/invoice-notes', array( 'invoice' => $invoice ) );
+			$notes      = Template::get_admin_template_html( 'invoices/invoice-notes', array( 'invoice' => $invoice ) );
 		} elseif ( 'bill' === $note->get_type() ) {
 			$bill_id = $note->get_parent_id();
 			$bill    = new Bill( $bill_id );
-			$notes   = eaccounting_get_admin_template_html( 'bills/bill-notes', array( 'bill' => $bill ) );
+			$notes   = Template::get_admin_template_html( 'bills/bill-notes', array( 'bill' => $bill ) );
 		}
 
 		wp_send_json_success(
@@ -1070,10 +1075,10 @@ class Ajax {
 		self::verify_nonce( 'ea_get_items' );
 		self::check_permission( 'manage_eaccounting' );
 
-		$search = isset( $_REQUEST['search'] ) ? eaccounting_clean( $_REQUEST['search'] ) : '';
+		$search = isset( $_REQUEST['search'] ) ? Formatting::clean( $_REQUEST['search'] ) : '';
 
 		wp_send_json_success(
-			Items::get_items(
+			Items::query(
 				array(
 					'search' => $search,
 					'return' => 'raw',
@@ -1092,8 +1097,8 @@ class Ajax {
 	public static function edit_item() {
 		self::verify_nonce( 'ea_edit_item' );
 		self::check_permission( 'ea_manage_item' );
-		$posted  = eaccounting_clean( wp_unslash( $_REQUEST ) );
-		$created = Items::insert_item( $posted );
+		$posted  = Formatting::clean( wp_unslash( $_REQUEST ) );
+		$created = Items::insert( $posted );
 		if ( is_wp_error( $created ) ) {
 			wp_send_json_error(
 				array(
@@ -1107,7 +1112,7 @@ class Ajax {
 		$redirect = '';
 		if ( ! $update ) {
 			$message  = __( 'Item created successfully!', 'wp-ever-accounting' );
-			$redirect = remove_query_arg( array( 'action' ), eaccounting_clean( $_REQUEST['_wp_http_referer'] ) );
+			$redirect = remove_query_arg( array( 'action' ), Formatting::clean( $_REQUEST['_wp_http_referer'] ) );
 		}
 		wp_send_json_success(
 			array(

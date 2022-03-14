@@ -11,7 +11,7 @@ jQuery( function ( $ ) {
 		this.$form = $( form );
 		this.$submit_btn = $( 'input[type="submit"]', this.$form );
 		this.options = $.extend( this.defaults, options );
-		this.action = 'eaccounting_do_ajax_export';
+		this.action = 'ever_accounting_do_ajax_export';
 		this.nonce = this.$form.data( 'nonce' );
 		this.type = this.$form.data( 'type' );
 		const plugin = this;

@@ -6,12 +6,15 @@
  * @subpackage  Admin/Js Templates
  * @package     Ever_Accounting
  */
+
+use Ever_Accounting\Helpers\Form;
+
 defined( 'ABSPATH' ) || exit();
 ?>
 <script type="text/template" id="ea-modal-add-customer" data-title="<?php esc_html_e( 'Add Customer', 'wp-ever-accounting' ); ?>">
 	<form action="" method="post" >
 		<?php
-		eaccounting_text_input(
+		Form::text_input(
 				array(
 						'label'    => __( 'Name', 'wp-ever-accounting' ),
 						'name'     => 'name',
@@ -19,7 +22,7 @@ defined( 'ABSPATH' ) || exit();
 						'required' => true,
 				)
 		);
-		eaccounting_currency_dropdown(
+		Form::currency_dropdown(
 				array(
 						'label'       => __( 'Currency', 'wp-ever-accounting' ),
 						'name'        => 'currency_code',
@@ -31,7 +34,7 @@ defined( 'ABSPATH' ) || exit();
 						'required' => true,
 				)
 		);
-		eaccounting_text_input(
+		Form::text_input(
 				array(
 						'label'    => __( 'Company', 'wp-ever-accounting' ),
 						'name'     => 'company',
@@ -39,7 +42,7 @@ defined( 'ABSPATH' ) || exit();
 						'required' => false,
 				)
 		);
-		eaccounting_text_input(
+		Form::text_input(
 				array(
 						'label'    => __( 'Email', 'wp-ever-accounting' ),
 						'name'     => 'email',
@@ -48,7 +51,7 @@ defined( 'ABSPATH' ) || exit();
 						'required' => false,
 				)
 		);
-		eaccounting_text_input(
+		Form::text_input(
 				array(
 						'label'    => __( 'Phone', 'wp-ever-accounting' ),
 						'name'     => 'phone',
@@ -56,10 +59,10 @@ defined( 'ABSPATH' ) || exit();
 						'required' => false,
 				)
 		);
-		eaccounting_hidden_input(
+		Form::hidden_input(
 				array(
 						'name'  => 'action',
-						'value' => 'eaccounting_edit_customer',
+						'value' => 'ever_accounting_edit_customer',
 				)
 		);
 		wp_nonce_field( 'ea_edit_customer' );

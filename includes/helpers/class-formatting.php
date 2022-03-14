@@ -62,7 +62,7 @@ class Formatting {
 	 */
 	public static function clean( $var ) {
 		if ( is_array( $var ) ) {
-			return array_map( 'eaccounting_clean', $var );
+			return array_map( 'self::clean', $var );
 		}
 
 		return is_scalar( $var ) ? sanitize_text_field( $var ) : $var;

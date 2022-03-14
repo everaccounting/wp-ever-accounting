@@ -6,8 +6,11 @@
  * @subpackage  Admin/Js Templates
  * @package     Ever_Accounting
  */
+
+use Ever_Accounting\Helpers\Form;
+
 defined( 'ABSPATH' ) || exit();
-$currencies = eaccounting_get_global_currencies();
+$currencies = \Ever_Accounting\Currencies::get_codes();
 $options    = array();
 foreach ( $currencies as $code => $props ) {
 	$options[ $code ] = sprintf( '%s (%s)', $props['code'], $props['symbol'] );
@@ -19,7 +22,7 @@ $options = array_merge( array( '' => __( 'Select Currency', 'wp-ever-accounting'
 		<form action="" method="post">
 			<div class="ea-row">
 				<?php
-				eaccounting_select(
+				Form::select(
 					array(
 						'wrapper_class' => 'ea-col-12',
 						'label'         => __( 'Currency Code', 'wp-ever-accounting' ),
@@ -30,7 +33,7 @@ $options = array_merge( array( '' => __( 'Select Currency', 'wp-ever-accounting'
 						'required'      => true,
 					)
 				);
-				eaccounting_text_input(
+				Form::text_input(
 					array(
 						'wrapper_class' => 'ea-col-12',
 						'label'         => __( 'Currency Rate', 'wp-ever-accounting' ),
@@ -39,10 +42,10 @@ $options = array_merge( array( '' => __( 'Select Currency', 'wp-ever-accounting'
 						'required'      => true,
 					)
 				);
-				eaccounting_hidden_input(
+				Form::hidden_input(
 					array(
 						'name'  => 'action',
-						'value' => 'eaccounting_edit_currency',
+						'value' => 'ever_accounting_edit_currency',
 					)
 				);
 				wp_nonce_field( 'ea_edit_currency' );

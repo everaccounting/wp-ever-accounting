@@ -6,6 +6,10 @@
  * @subpackage  Admin/Js Templates
  * @since       1.0.2
  */
+
+use Ever_Accounting\Helpers\Form;
+use Ever_Accounting\Helpers\Misc;
+
 defined( 'ABSPATH' ) || exit();
 ?>
 <script type="text/template" id="tmpl-ea-modal-add-category">
@@ -24,7 +28,7 @@ defined( 'ABSPATH' ) || exit();
 					<article>
 						<div class="ea-row">
 							<?php
-							eaccounting_text_input(
+							Form::text_input(
 								array(
 									'wrapper_class' => 'ea-col-12',
 									'label'         => __( 'Category Name', 'wp-ever-accounting' ),
@@ -33,26 +37,26 @@ defined( 'ABSPATH' ) || exit();
 									'required'      => true,
 								)
 							);
-							eaccounting_text_input(
+							Form::text_input(
 								array(
 									'wrapper_class' => 'ea-col-12',
 									'label'         => __( 'Color', 'wp-ever-accounting' ),
 									'name'          => 'color',
 									'data_type'     => 'color',
-									'value'         => eaccounting_get_random_color(),
+									'value'         => Misc::get_random_color(),
 									'required'      => true,
 								)
 							);
-							eaccounting_hidden_input(
+							Form::hidden_input(
 								array(
 									'name'  => 'type',
 									'value' => 'income',
 								)
 							);
-							eaccounting_hidden_input(
+							Form::hidden_input(
 								array(
 									'name'  => 'action',
-									'value' => 'eaccounting_edit_category',
+									'value' => 'ever_accounting_edit_category',
 								)
 							);
 							wp_nonce_field( 'ea_edit_category' );

@@ -52,7 +52,7 @@ ever_accounting_enqueue_js(
 		"
 	jQuery('.item-status').on('change', function(e){
 		jQuery.post('" . ever_accounting_ajax_url() . "', {
-			action:'eaccounting_edit_item',
+			action:'ever_accounting_edit_item',
 			id: $(this).data('id'),
 			enabled: $(this).is(':checked'),
 			nonce: '" . wp_create_nonce( 'ea_edit_item' ) . "',

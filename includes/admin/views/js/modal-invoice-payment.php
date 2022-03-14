@@ -7,12 +7,16 @@
  * @since       1.0.2
  * @var \Ever_Accounting\Invoice $invoice;
  */
+
+use Ever_Accounting\Helpers\Form;
+use Ever_Accounting\Helpers\Price;
+
 defined( 'ABSPATH' ) || exit();
 ?>
 <script type="text/template" id="ea-modal-add-invoice-payment" data-title="<?php esc_html_e( 'Add Payment', 'wp-ever-accounting' ); ?>">
 	<form action="" method="post">
 		<?php
-		eaccounting_text_input(
+		Form::text_input(
 			array(
 				'label'       => __( 'Date', 'wp-ever-accounting' ),
 				'name'        => 'date',
@@ -22,7 +26,7 @@ defined( 'ABSPATH' ) || exit();
 				'required'    => true,
 			)
 		);
-		eaccounting_text_input(
+		Form::text_input(
 			array(
 				'label'       => __( 'Amount', 'wp-ever-accounting' ),
 				'name'        => 'amount',
@@ -31,10 +35,10 @@ defined( 'ABSPATH' ) || exit();
 				'required'    => true,
 				'placeholder' => __( 'Enter Amount', 'wp-ever-accounting' ),
 				/* translators: %s amount */
-				'desc'        => sprintf( __( 'Total amount due:%s', 'wp-ever-accounting' ), eaccounting_price( $invoice->get_total_due(), $invoice->get_currency_code() ) ),
+				'desc'        => sprintf( __( 'Total amount due:%s', 'wp-ever-accounting' ), Price::price( $invoice->get_total_due(), $invoice->get_currency_code() ) ),
 			)
 		);
-		eaccounting_account_dropdown(
+		Form::account_dropdown(
 			array(
 				'label'       => __( 'Account', 'wp-ever-accounting' ),
 				'name'        => 'account_id',
@@ -43,7 +47,7 @@ defined( 'ABSPATH' ) || exit();
 				'required'    => true,
 			)
 		);
-		eaccounting_payment_method_dropdown(
+		Form::payment_method_dropdown(
 			array(
 				'label'    => __( 'Payment Method', 'wp-ever-accounting' ),
 				'name'     => 'payment_method',
@@ -51,7 +55,7 @@ defined( 'ABSPATH' ) || exit();
 				'value'    => '',
 			)
 		);
-		eaccounting_textarea(
+		Form::textarea(
 			array(
 				'label'       => __( 'Description', 'wp-ever-accounting' ),
 				'name'        => 'description',
@@ -60,17 +64,17 @@ defined( 'ABSPATH' ) || exit();
 				'placeholder' => __( 'Enter description', 'wp-ever-accounting' ),
 			)
 		);
-		eaccounting_hidden_input(
+		Form::hidden_input(
 			array(
 				'name'  => 'invoice_id',
 				'value' => $invoice->get_id(),
 			)
 		);
 
-		eaccounting_hidden_input(
+		Form::hidden_input(
 			array(
 				'name'  => 'action',
-				'value' => 'eaccounting_add_invoice_payment',
+				'value' => 'ever_accounting_add_invoice_payment',
 			)
 		);
 		wp_nonce_field( 'ea_add_invoice_payment' );

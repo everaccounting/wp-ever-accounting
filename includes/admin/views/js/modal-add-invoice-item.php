@@ -6,6 +6,9 @@
  * @subpackage  Admin/Js Templates
  * @package     Ever_Accounting
  */
+
+use Ever_Accounting\Helpers\Form;
+
 defined( 'ABSPATH' ) || exit();
 ?>
 <script type="text/template" id="modal-add-line-item" data-title="<?php esc_html_e( 'Add Line Item', 'wp-ever-accounting' ); ?>">
@@ -21,7 +24,7 @@ defined( 'ABSPATH' ) || exit();
 			<tr>
 				<td style="width: 90%;">
 					<?php
-					eaccounting_item_dropdown(
+					Form::item_dropdown(
 						array(
 							'wrapper_class' => 'ea-col-9',
 							'name'          => 'line_items[1][item_id]',
@@ -36,7 +39,7 @@ defined( 'ABSPATH' ) || exit();
 				</td>
 				<td style="width: 10%;">
 					<?php
-					eaccounting_text_input(
+					Form::text_input(
 						array(
 							'name'     => 'line_items[1][quantity]',
 							'value'    => '1',

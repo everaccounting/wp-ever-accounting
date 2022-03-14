@@ -171,7 +171,7 @@ $title = $item->exists() ? __( 'Update Item', 'wp-ever-accounting' ) : __( 'Add 
 					Form::hidden_input(
 						array(
 							'name'  => 'action',
-							'value' => 'eaccounting_edit_item',
+							'value' => 'ever_accounting_edit_item',
 						)
 					);
 
