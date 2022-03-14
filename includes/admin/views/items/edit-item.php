@@ -71,7 +71,7 @@ $title = $item->exists() ? __( 'Update Item', 'wp-ever-accounting' ) : __( 'Add 
 							'required'      => false,
 							'type'          => 'item',
 							'creatable'     => true,
-							'ajax_action'   => 'eaccounting_get_item_categories',
+							'ajax_action'   => 'ever_accounting_get_item_categories',
 							'modal_id'      => 'ea-modal-add-item-category',
 						)
 					);

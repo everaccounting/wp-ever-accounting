@@ -362,8 +362,8 @@ class Categories {
 
 		// Parse status params
 		if ( ! empty( $args['status'] ) && ! in_array( $args['status'], array( 'all', 'any'), true ) ) {
-			$status = eaccounting_string_to_bool( $args['status'] );
-			$status = eaccounting_bool_to_number( $status );
+			$status = Formatting::string_to_bool( $args['status'] );
+			$status = Formatting::bool_to_number( $status );
 			$where .= " AND $table.`enabled` = ('$status')";
 		}
 
@@ -408,7 +408,7 @@ class Categories {
 				$total = (int) $wpdb->get_var( "SELECT FOUND_ROWS()" );
 			}
 
-			if ( 'all' === $args['fields'] ) {
+			if ( 'all' === $args['fields'] && 'objects' === $args['return'] ) {
 				foreach ( $results as $key => $row ) {
 					wp_cache_add( $row->id, $row, $cache_group );
 					$item = new Category();

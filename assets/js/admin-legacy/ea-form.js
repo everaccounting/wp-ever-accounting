@@ -628,7 +628,7 @@ jQuery( function ( $ ) {
 			const data = $.extend(
 				{},
 				$( '#ea-invoice-form' ).serializeObject(),
-				{ action: 'eaccounting_invoice_recalculate' }
+				{ action: 'ever_accounting_invoice_recalculate' }
 			);
 			$.post( ajaxurl, data, function ( json ) {
 				if ( json.success ) {

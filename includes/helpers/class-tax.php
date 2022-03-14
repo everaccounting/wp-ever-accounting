@@ -32,7 +32,7 @@ class Tax {
 	 * @since 1.1.4
 	 */
 	public static function prices_include_tax() {
-		return eaccounting_tax_enabled() && apply_filters( 'ever_accounting_prices_include_tax', ever_accounting_get_option( 'prices_include_tax' ) === 'yes' );
+		return self::tax_enabled() && apply_filters( 'ever_accounting_prices_include_tax', ever_accounting_get_option( 'prices_include_tax' ) === 'yes' );
 	}
 
 	/**

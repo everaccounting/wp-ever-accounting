@@ -632,6 +632,7 @@ class Form {
 		if ( ! empty( $field['clearable'] ) ) {
 			$field['attr']['data-allow-clear'] = true;
 		}
+
 		self::select( $field );
 	}
 

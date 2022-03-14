@@ -413,7 +413,7 @@ class Accounts {
 				$total = (int) $wpdb->get_var( "SELECT FOUND_ROWS()" );
 			}
 
-			if ( 'all' === $args['fields'] ) {
+			if ( 'all' === $args['fields'] && 'objects' === $args['return'] ) {
 				foreach ( $results as $key => $row ) {
 					wp_cache_add( $row->id, $row, $cache_group );
 					$item = new Account();

@@ -236,9 +236,11 @@ class Ajax {
 					'paged'   => $page,
 					'return' => 'raw',
 					'status' => 'active',
+					'per_page' => 20
 				)
 			)
 		);
+
 
 	}
 
@@ -399,6 +401,7 @@ class Ajax {
 			$posted  = wp_parse_args( $posted, array( 'id' => null ) );
 			$invoice = new Invoice( $posted['id'] );
 			$invoice->set_props( $posted );
+			error_log(print_r( $posted,true));
 			$invoice->save();
 
 			$redirect = add_query_arg(

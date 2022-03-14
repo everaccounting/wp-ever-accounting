@@ -52,7 +52,7 @@ ever_accounting_enqueue_js(
 		"
 	jQuery('.vendor-status').on('change', function(e){
 		jQuery.post('" . ever_accounting_ajax_url() . "', {
-			action:'eaccounting_edit_vendor',
+			action:'ever_accounting_edit_vendor',
 			id: $(this).data('id'),
 			enabled: $(this).is(':checked'),
 			nonce: '" . wp_create_nonce( 'ea_edit_vendor' ) . "',
