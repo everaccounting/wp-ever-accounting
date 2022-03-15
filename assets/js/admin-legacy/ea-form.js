@@ -544,7 +544,7 @@ jQuery( function ( $ ) {
 			const note_id = note.data( 'noteid' );
 
 			const data = {
-				action: 'eaccounting_delete_note',
+				action: 'ever_accounting_delete_note',
 				id: note_id,
 				nonce,
 			};

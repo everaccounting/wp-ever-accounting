@@ -399,10 +399,7 @@ class Ajax {
 
 		try {
 			$posted  = wp_parse_args( $posted, array( 'id' => null ) );
-			$invoice = new Invoice( $posted['id'] );
-			$invoice->set_props( $posted );
-			error_log(print_r( $posted,true));
-			$invoice->save();
+			$invoice = Documents::insert_invoice( $posted );
 
 			$redirect = add_query_arg(
 				array(

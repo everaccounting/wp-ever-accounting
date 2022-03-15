@@ -78,7 +78,7 @@ class Invoice extends Document {
 	 * @return string
 	 */
 	public function get_invoice_number() {
-		return $this->get_prop( 'document_number' );
+		return $this->get_document_number();
 	}
 
 	/**
@@ -89,7 +89,7 @@ class Invoice extends Document {
 	 * @return string
 	 */
 	public function get_customer_id() {
-		return $this->get_prop( 'contact_id' );
+		return $this->get_contact_id();
 	}
 	/*
 	|--------------------------------------------------------------------------
@@ -106,7 +106,7 @@ class Invoice extends Document {
 	public function maybe_set_invoice_number() {
 		if( empty( $this->get_document_number() ) ) {
 			$number = $this->get_id();
-			if( empty( $number )) {
+			if ( empty( $number ) ) {
 				$number = Documents::get_next_number( $this );
 			}
 			$this->set_document_number( $this->generate_number( $number ) );
