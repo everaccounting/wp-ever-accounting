@@ -1,160 +1,138 @@
 /**
  * External dependencies
  */
-/**
- * WordPress dependencies
- */
-import { cloneElement, Component } from '@wordpress/element';
-import { noop } from 'lodash';
 import PropTypes from 'prop-types';
+import { Formik, Form as FormikForm, Field as FormikField, withFormik } from 'formik';
+import { get, mapValues } from 'lodash';
 
 /**
- * A form component to handle form state and provide input helper props.
+ * Internal dependencies
  */
-class Form extends Component {
-	constructor( props ) {
-		super();
+import toast from '../toast';
+import Field from './field';
 
-		this.state = {
-			values: props.initialValues || {},
-			errors: props.errors || {},
-			touched: props.touched,
-		};
-
-		this.getInputProps = this.getInputProps.bind( this );
-		this.handleSubmit = this.handleSubmit.bind( this );
-		this.setTouched = this.setTouched.bind( this );
-		this.setValue = this.setValue.bind( this );
-	}
-
-	componentDidMount() {
-		this.validate();
-	}
-
-	async isValidForm() {
-		await this.validate();
-		return ! (
-			this.state.errors && Object.keys( this.state.errors ).length
-		);
-	}
-
-	validate() {
-		const { values } = this.state;
-		const errors = this.props.validate( values );
-		this.setState( { errors } );
-	}
-
-	setValue( name, value ) {
-		this.setState(
-			( prevState ) => ( {
-				values: { ...prevState.values, [ name ]: value },
-			} ),
-			this.validate
-		);
-	}
-
-	setTouched( name, touched = true ) {
-		this.setState( ( prevState ) => ( {
-			touched: { ...prevState.touched, [ name ]: touched },
-		} ) );
-	}
-
-	handleChange( name, value ) {
-		const { values } = this.state;
-
-		// Handle native events.
-		if ( value.target ) {
-			if ( value.target.type === 'checkbox' ) {
-				this.setValue( name, ! values[ name ] );
-			} else {
-				this.setValue( name, value.target.value );
-			}
-		} else {
-			this.setValue( name, value );
-		}
-	}
-
-	handleBlur( name ) {
-		this.setTouched( name );
-	}
-
-	async handleSubmit() {
-		const { values } = this.state;
-		const touched = {};
-		Object.keys( values ).map( ( name ) => ( touched[ name ] = true ) );
-		this.setState( { touched } );
-
-		if ( await this.isValidForm() ) {
-			this.props.onSubmitCallback( values );
-		}
-	}
-
-	getInputProps( name ) {
-		const { errors = {}, touched, values } = this.state;
-
-		return {
-			value: values[ name ],
-			checked: Boolean( values[ name ] ),
-			selected: values[ name ],
-			onChange: ( value ) => this.handleChange( name, value ),
-			onBlur: () => this.handleBlur( name ),
-			className: touched[ name ] && errors[ name ] ? 'has-error' : null,
-			help: touched[ name ] ? errors[ name ] : null,
-		};
-	}
-
-	getStateAndHelpers() {
-		const { values, errors = {}, touched } = this.state;
-
-		return {
-			values,
-			errors,
-			touched,
-			setTouched: this.setTouched,
-			setValue: this.setValue,
-			handleSubmit: this.handleSubmit,
-			getInputProps: this.getInputProps,
-			isValidForm: ! Object.keys( errors ).length,
-		};
-	}
-
-	render() {
-		const element = this.props.children( this.getStateAndHelpers() );
-		return cloneElement( element );
-	}
-}
-
-Form.propTypes = {
-	/**
-	 * A renderable component in which to pass this component's state and helpers.
-	 * Generally a number of input or other form elements.
-	 */
-	children: PropTypes.any,
-	/**
-	 * Object of all initial errors to store in state.
-	 */
-	errors: PropTypes.object,
-	/**
-	 * Object key:value pair list of all initial field values.
-	 */
-	initialValues: PropTypes.object.isRequired,
-	/**
-	 * Function to call when a form is submitted with valid fields.
-	 */
-	onSubmitCallback: PropTypes.func,
-	/**
-	 * A function that is passed a list of all values and
-	 * should return an `errors` object with error response.
-	 */
+const propTypes = {
 	validate: PropTypes.func,
+	validations: PropTypes.object,
+	validateOnBlur: PropTypes.bool,
 };
 
-Form.defaultProps = {
-	errors: {},
-	initialValues: {},
-	onSubmitCallback: noop,
-	touched: {},
-	validate: noop,
+const defaultProps = {
+	validate: undefined,
+	validations: undefined,
+	validateOnBlur: false,
 };
+
+const Form = ( {
+	validate,
+	validations,
+	initialValues = {},
+	...otherProps
+} ) => (
+	<Formik
+		initialValues={ initialValues }
+		{ ...otherProps }
+		validate={ ( values ) => {
+			if ( validate ) {
+				return validate( values );
+			}
+			if ( validations ) {
+				return generateErrors( values, validations );
+			}
+			return {};
+		} }
+	/>
+);
+
+Form.Element = ( props ) => <FormikForm noValidate { ...props } />;
+
+Form.Field = mapValues(
+	Field,
+	( FieldComponent ) => ( { name, validate, ...props } ) => (
+		<FormikField name={ name } validate={ validate }>
+			{ ( { field, form: { touched, errors, setFieldValue } } ) => (
+				<FieldComponent
+					{ ...field }
+					name={ name }
+					error={ get( touched, name ) && get( errors, name ) }
+					onChange={ ( value ) => setFieldValue( name, value ) }
+					{ ...props }
+				/>
+			) }
+		</FormikField>
+	)
+);
+
+Form.initialValues = ( data, getFieldValues ) =>
+	getFieldValues( ( key, defaultValue = '' ) => {
+		const value = get( data, key );
+		return value === undefined || value === null ? defaultValue : value;
+	} );
+
+Form.handleAPIError = ( error, form ) => {
+	if ( error.data.fields ) {
+		form.setErrors( error.data.fields );
+	} else {
+		toast.error( error );
+	}
+};
+
+Form.is = {
+	match: ( testFn, message = '' ) => ( value, fieldValues ) =>
+		! testFn( value, fieldValues ) && message,
+
+	required: () => ( value ) =>
+		isNilOrEmptyString( value ) && 'This field is required',
+
+	minLength: ( min ) => ( value ) =>
+		!! value &&
+		value.length < min &&
+		`Must be at least ${ min } characters`,
+
+	maxLength: ( max ) => ( value ) =>
+		!! value && value.length > max && `Must be at most ${ max } characters`,
+
+	notEmptyArray: () => ( value ) =>
+		Array.isArray( value ) &&
+		value.length === 0 &&
+		'Please add at least one item',
+
+	email: () => ( value ) =>
+		!! value && ! /.+@.+\..+/.test( value ) && 'Must be a valid email',
+
+	url: () => ( value ) =>
+		!! value &&
+		// eslint-disable-next-line no-useless-escape
+		! /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/.test(
+			value
+		) &&
+		'Must be a valid URL',
+};
+
+const isNilOrEmptyString = ( value ) =>
+	value === undefined || value === null || value === '';
+const generateErrors = ( fieldValues, fieldValidators ) => {
+	const errors = {};
+
+	Object.entries( fieldValidators ).forEach(
+		( [ fieldName, validators ] ) => {
+			[ validators ].flat().forEach( ( validator ) => {
+				const errorMessage = validator(
+					fieldValues[ fieldName ],
+					fieldValues
+				);
+				if ( errorMessage && ! errors[ fieldName ] ) {
+					errors[ fieldName ] = errorMessage;
+				}
+			} );
+		}
+	);
+	return errors;
+};
+
+Form.propTypes = propTypes;
+Form.defaultProps = defaultProps;
+Form.generateErrors = generateErrors;
+Form.withFormik = withFormik;
 
 export default Form;

@@ -11,7 +11,7 @@
 defined( 'ABSPATH' ) || exit();
 
 // Functions.
-require_once EVER_ACCOUNTING_DIR . '/includes/deprecated/deprecated-functions.php';
+require_once EACCOUNTING_PATH . '/includes/deprecated/deprecated-functions.php';
 
 /**
  * Get an option

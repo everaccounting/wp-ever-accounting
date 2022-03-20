@@ -5,7 +5,7 @@
  * @package EverAccounting
  */
 
-$package_json = file_get_contents( 'package.json' );
+$package_json = file_get_contents( '../package.json' );
 $package      = json_decode( $package_json );
 
 /**

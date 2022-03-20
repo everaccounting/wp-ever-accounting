@@ -23,15 +23,15 @@ class Admin_Manager {
 	 * @since   1.0.2
 	 * @return void
 	 */
-	public static function init() {
+	public function __construct() {
 		add_action( 'init', array( __CLASS__, 'includes' ) );
-		add_action( 'current_screen', array( __CLASS__, 'conditional_includes' ) );
-		add_action( 'admin_init', array( __CLASS__, 'admin_redirects' ) );
+//		add_action( 'current_screen', array( __CLASS__, 'conditional_includes' ) );
+//		add_action( 'admin_init', array( __CLASS__, 'admin_redirects' ) );
 		add_action( 'admin_init', array( __CLASS__, 'buffer' ), 1 );
-		add_filter( 'admin_body_class', array( __CLASS__, 'admin_body_class' ) );
-		add_action( 'admin_footer', 'ever_accounting_print_js', 25 );
-		add_action( 'admin_footer', array( __CLASS__, 'load_js_templates' ) );
-		add_filter( 'admin_footer_text', array( __CLASS__, 'admin_footer_text' ), 1 );
+//		add_filter( 'admin_body_class', array( __CLASS__, 'admin_body_class' ) );
+//		add_action( 'admin_footer', 'eaccounting_print_js', 25 );
+//		add_action( 'admin_footer', array( __CLASS__, 'load_js_templates' ) );
+//		add_filter( 'admin_footer_text', array( __CLASS__, 'admin_footer_text' ), 1 );
 	}
 
 	/**

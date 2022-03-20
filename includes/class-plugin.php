@@ -2,7 +2,6 @@
 /**
  * Main plugin file.
  *
- * @version  1.0.0
  * @since    1.0.0
  * @package  Ever_Accounting
  */
@@ -104,13 +103,13 @@ final class Plugin {
 	 * @return void
 	 */
 	protected function define_constants() {
-		$file = EVER_ACCOUNTING_FILE;
-		define( 'EVER_ACCOUNTING_VERSION', $this->version );
-		define( 'EVER_ACCOUNTING_NAME', $this->name );
-		define( 'EVER_ACCOUNTING_SLUG', $this->slug );
-		define( 'EVER_ACCOUNTING_BASENAME', plugin_basename( $file ) );
-		define( 'EVER_ACCOUNTING_DIR', untrailingslashit( plugin_dir_path( $file ) ) );
-		define( 'EVER_ACCOUNTING_URL', untrailingslashit( plugin_dir_url( $file ) ) );
+		$file = EACCOUNTING_FILE;
+		define( 'EACCOUNTING_VERSION', $this->version );
+		define( 'EACCOUNTING_NAME', $this->name );
+		define( 'EACCOUNTING_SLUG', $this->slug );
+		define( 'EACCOUNTING_BASENAME', plugin_basename( $file ) );
+		define( 'EACCOUNTING_PATH', untrailingslashit( plugin_dir_path( $file ) ) );
+		define( 'EACCOUNTING_URL', untrailingslashit( plugin_dir_url( $file ) ) );
 	}
 
 	/**
@@ -121,12 +120,11 @@ final class Plugin {
 	 */
 	protected function includes() {
 		include_once __DIR__ . '/class-autoloader.php';
-		include_once __DIR__ . '/core-functions.php';
 		include_once __DIR__ . '/libraries/wp-async-request.php';
 		include_once __DIR__ . '/libraries/wp-background-process.php';
-		include_once __DIR__ . '/class-lifecycle.php';
-		include_once __DIR__ . '/admin/class-menu.php';
-		include_once __DIR__ . '/admin/class-settings.php';
+		include_once __DIR__ . '/core-functions.php';
+//		include_once __DIR__ . '/form-functions.php';
+//		include_once __DIR__ . '/formatting-functions.php';
 	}
 
 	/**
@@ -136,17 +134,12 @@ final class Plugin {
 	 * @return void
 	 */
 	protected function register_hooks() {
-		register_activation_hook( EVER_ACCOUNTING_FILE, array( $this, 'install' ) );
-		add_filter( 'plugin_action_links_' . EVER_ACCOUNTING_BASENAME, array( $this, 'action_links' ) );
+		register_activation_hook( EACCOUNTING_FILE, array( $this, 'install' ) );
+		add_filter( 'plugin_action_links_' . EACCOUNTING_BASENAME, array( $this, 'action_links' ) );
 		add_filter( 'plugin_row_meta', array( $this, 'plugin_row_meta' ), 10, 4 );
 
 		// Init the plugin after WordPress inits.
 		add_action( 'init', array( $this, 'init' ), 0 );
-
-		// load the template
-		add_action( 'ever_accounting_body', array( 'Ever_Accounting\Helpers\Template', 'render_body' ) );
-		add_action( 'ever_accounting_public_before_invoice', array( 'Ever_Accounting\Helpers\Template', 'public_invoice_actions' ) );
-		add_action( 'ever_accounting_public_before_bill', array( 'Ever_Accounting\Helpers\Template', 'public_bill_actions' ) );
 	}
 
 	/**
@@ -184,7 +177,7 @@ final class Plugin {
 	 * @return string[] An array of the plugin's metadata.
 	 */
 	public function plugin_row_meta( $links, $file ) {
-		if ( EVER_ACCOUNTING_BASENAME !== $file ) {
+		if ( EACCOUNTING_BASENAME !== $file ) {
 			return $links;
 		}
 
@@ -208,7 +201,7 @@ final class Plugin {
 	public function localization_setup() {
 		$locale = ( get_locale() !== '' ) ? get_locale() : 'en_US';
 		load_textdomain( 'wp-ever-accounting', WP_LANG_DIR . '/plugins/wp-ever-accounting-' . $locale . '.mo' );
-		load_plugin_textdomain( 'wp-ever-accounting', false, dirname( EVER_ACCOUNTING_BASENAME ) . '/languages' );
+		load_plugin_textdomain( 'wp-ever-accounting', false, dirname( EACCOUNTING_BASENAME ) . '/languages' );
 	}
 
 	/**
@@ -218,21 +211,26 @@ final class Plugin {
 	 * @return void
 	 */
 	public function init() {
-		do_action( 'wp_ever_accounting_before_init' );
+		do_action( 'ever_accounting_before_init' );
 
 		// Set up localisation.
 		$this->localization_setup();
 		$this->queue();
 
-		Lifecycle::init();
-		REST_Manager::init();
+//		Frontend_Scripts::init();
+//		Admin_Manager::init();
 
-		if( is_admin() ){
-			Admin\Admin_Manager::init();
+//		Lifecycle::init();
+		REST_Manager::init();
+//
+		if ( is_admin() ) {
+			new Admin\Admin_Manager();
 		}
 
+		Scripts::init();
 
-		do_action( 'wp_ever_accounting_init' );
+
+		do_action( 'ever_accounting_init' );
 	}
 
 	/**
@@ -245,87 +243,6 @@ final class Plugin {
 		return Queue::instance();
 	}
 
-	/**
-	 * Registers a script according to `wp_register_script`, additionally loading the translations for the file.
-	 *
-	 * @param string $handle Name of the script. Should be unique.
-	 * @param string $relative_url Relative file path from dist directory.
-	 * @param array $deps Optional. An array of registered script handles this script depends on. Default empty array.
-	 * @param bool $has_i18n Optional. Whether to add a script translation call to this file. Default 'true'.
-	 *
-	 * @since 1.1.3
-	 */
-	public static function register_script( $handle, $relative_url = null, $deps = array(), $has_i18n = false ) {
-		$file      = basename( $relative_url );
-		$filename  = pathinfo( $file, PATHINFO_FILENAME );
-		$version   = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? time() : EVER_ACCOUNTING_VERSION;
-		$file_path = EVER_ACCOUNTING_DIR . '/assets/' . str_replace( $file, "$filename.asset.php", '/dist/' . $relative_url );
-		$file_url  = EVER_ACCOUNTING_URL . '/dist/' . ltrim( $relative_url, '/' );
-
-		if ( file_exists( $file_path ) ) {
-			$asset   = require $file_path;
-			$deps    = isset( $asset['dependencies'] ) ? array_merge( $asset['dependencies'], $deps ) : $deps;
-			$version = ! empty( $asset['version'] ) ? $asset['version'] : $version;
-		}
-
-		wp_register_script( $handle, $file_url, $deps, $version, true );
-
-		if ( $has_i18n && function_exists( 'wp_set_script_translations' ) ) {
-			wp_set_script_translations( $handle, 'wp-ever-accounting', plugin_basename( untrailingslashit( EVER_ACCOUNTING_DIR ) ) . '/i18n/languages/' );
-		}
-
-		return $handle;
-	}
-
-	/**
-	 * Register style.
-	 *
-	 * @param string $handle style handler.
-	 * @param string $relative_url Relative file path from dist directory.
-	 * @param array $deps style dependencies.
-	 * @param bool $has_rtl support RTL.
-	 *
-	 * @since 1.1.3
-	 */
-	public static function register_style( $handle, $relative_url, $deps = array(), $has_rtl = true ) {
-		$file      = basename( $relative_url );
-		$filename  = pathinfo( $file, PATHINFO_FILENAME );
-		$version   = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? time() : EVER_ACCOUNTING_VERSION;
-		$file_path = EVER_ACCOUNTING_DIR . '/assets/' . str_replace( $file, "$filename.asset.php", '/dist/' . $relative_url );
-		$file_url  = EVER_ACCOUNTING_URL . '/dist/' . ltrim( $relative_url, '/' );
-
-		if ( file_exists( $file_path ) ) {
-			$asset   = require $file_path;
-			$version = ! empty( $asset['version'] ) ? $asset['version'] : $version;
-		}
-
-		wp_register_style( $handle, $file_url, $deps, $version );
-
-		if ( $has_rtl && function_exists( 'wp_style_add_data' ) ) {
-			wp_style_add_data( $handle, 'rtl', 'replace' );
-		}
-
-		return $handle;
-	}
-
-	/**
-	 * Log messages.
-	 *
-	 * @param mixed $message Log message.
-	 *
-	 * @since 1.1.3
-	 */
-	public static function log( $message ) {
-		if ( ! defined( 'WP_DEBUG' ) || ! WP_DEBUG ) {
-			return;
-		}
-
-		if ( ! is_string( $message ) ) {
-			$message = var_export( $message, true ); //@codingStandardsIgnoreLine
-		}
-
-		error_log( $message ); //@codingStandardsIgnoreLine
-	}
 
 	/**
 	 * Register the relations.
@@ -339,5 +256,9 @@ final class Plugin {
 			'invoice_note',
 		);
 //		$this->set( 'relations', apply_filters( 'ever_accounting_relations', $relations ) );
+	}
+
+	public function ajax_url() {
+		return admin_url( 'admin-ajax.php' );
 	}
 }

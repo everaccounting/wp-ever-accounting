@@ -28,7 +28,7 @@
 defined( 'ABSPATH' ) || exit;
 
 // Define plugin constants.
-define( 'EVER_ACCOUNTING_FILE', __FILE__ );
+define( 'EACCOUNTING_FILE', __FILE__ );
 
 // Include the main plugin class.
 require_once __DIR__ . '/includes/class-plugin.php';
@@ -39,9 +39,9 @@ require_once __DIR__ . '/includes/class-plugin.php';
  * @since  1.1.3
  * @return Ever_Accounting\Plugin
  */
-function ever_accounting() {
+function eaccounting() {
 	return Ever_Accounting\Plugin::instance();
 }
 
 // Kick off the plugin.
-$GLOBALS['ever_accounting'] = ever_accounting();
+$GLOBALS['eaccounting'] = eaccounting();

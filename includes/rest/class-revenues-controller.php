@@ -4,13 +4,13 @@
  *
  * @since       1.1.2
  * @subpackage  Rest
- * @package     Ever_Accounting
+ * @package     EverAccounting
  */
 
-namespace Ever_Accounting\REST;
+namespace EverAccounting\REST;
 
-use Ever_Accounting\Abstracts\Transactions_Controller;
-use Ever_Accounting\Models\Revenue;
+use EverAccounting\Abstracts\Transactions_Controller;
+use EverAccounting\Models\Revenue;
 
 defined( 'ABSPATH' ) || die();
 
@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || die();
  *
  * @since   1.1.2
  *
- * @package Ever_Accounting\REST
+ * @package EverAccounting\REST
  */
 class Revenues_Controller extends Transactions_Controller {
 	/**

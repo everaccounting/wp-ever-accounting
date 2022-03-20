@@ -83,7 +83,7 @@ class Currencies {
 	 * @return array
 	 */
 	public static function get_codes() {
-		return require EVER_ACCOUNTING_DIR . '/i18n/currencies.php';
+		return require EACCOUNTING_PATH . '/i18n/currencies.php';
 	}
 
 	/**
