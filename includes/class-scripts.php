@@ -61,21 +61,21 @@ class Scripts {
 	 */
 	public static function register_admin_scripts() {
 		$scripts = array(
-			'ea-components' => array(
-				'src' => 'js/components.js',
-			),
-			'ea-navigation' => array(
-				'src' => 'js/navigation.js',
-			),
-			'ea-data'       => array(
-				'src' => 'js/data.js',
-			),
-			'ea-api'       => array(
-				'src' => 'js/api.js',
-			),
+//			'ea-components' => array(
+//				'src' => 'js/components.js',
+//			),
+//			'ea-navigation' => array(
+//				'src' => 'js/navigation.js',
+//			),
+//			'ea-data'       => array(
+//				'src' => 'js/data.js',
+//			),
+//			'ea-api'       => array(
+//				'src' => 'js/api.js',
+//			),
 			'ea-app'        => array(
 				'src'  => 'js/app.js',
-				'deps' => array( 'wp-edit-post', 'ea-api' ),
+				'deps' => array(),
 			),
 		);
 
@@ -86,27 +86,29 @@ class Scripts {
 			),
 		);
 
-		foreach ( $scripts as $name => $props ) {
-			$props = wp_parse_args( $props, array(
-				'deps'      => array(),
-				'has_i18n'  => true,
-				'in_footer' => true,
-			) );
-			self::register_script( $name, $props['src'], $props['deps'], $props['has_i18n'], $props['in_footer'] );
-		}
+//		foreach ( $scripts as $name => $props ) {
+//			$props = wp_parse_args( $props, array(
+//				'deps'      => array(),
+//				'has_i18n'  => true,
+//				'in_footer' => true,
+//			) );
+//			self::register_script( $name, $props['src'], $props['deps'], $props['has_i18n'], $props['in_footer'] );
+//		}
+//
+//		foreach ( $styles as $name => $props ) {
+//			$props = wp_parse_args( $props, array(
+//				'deps'    => array(),
+//				'has_rtl' => true,
+//				'media'   => 'all',
+//			) );
+//			self::register_style( $name, $props['src'], $props['deps'], $props['has_rtl'], $props['media'] );
+//		}
 
-		foreach ( $styles as $name => $props ) {
-			$props = wp_parse_args( $props, array(
-				'deps'    => array(),
-				'has_rtl' => true,
-				'media'   => 'all',
-			) );
-			self::register_style( $name, $props['src'], $props['deps'], $props['has_rtl'], $props['media'] );
-		}
-
-		wp_enqueue_script( 'ea-app' );
-		wp_localize_script( 'ea-app', 'eaccounting_i18n', self::get_localized_data() );
-		wp_enqueue_style( 'ea-components' );
+		wp_enqueue_script( 'ea-vue', plugins_url( 'assets/dist/js/vue.js', __DIR__ ), array(), '1.0.0', true );
+		wp_enqueue_script( 'ea-components', plugins_url( 'assets/dist/js/components.js', __DIR__ ), array(), '1.0.0', true );
+		wp_enqueue_script( 'ea-app', plugins_url( 'assets/dist/js/app.js', __DIR__ ), array( 'ea-vue', 'ea-components' ), '1.0.0', true );
+//		wp_localize_script( 'ea-app', 'eaccounting_i18n', self::get_localized_data() );
+//		wp_enqueue_style( 'ea-components' );
 	}
 
 	/**

@@ -7,7 +7,7 @@ defined( 'ABSPATH' ) || exit;
 ?>
 <div class="wrap eaccounting ea-overview">
 	<h1><?php esc_html_e( 'Overview', 'wp-ever-accounting' ); ?></h1>
-	<div id="eaccounting-root"></div>
+	<div id="app"></div>
 <!--	<div class="ea-clearfix">-->
 <!--		<div class="ea-row">-->
 <!--			--><?php //eaccounting_do_meta_boxes( 'ea-overview', 'top', null ); ?>
