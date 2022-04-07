@@ -180,6 +180,20 @@ function eaccounting_export_tab() {
 		</div>
 	</div>
 
+	<div class="ea-form-card">
+		<div class="ea-card ea-form-card__header is-compact">
+			<h3 class="ea-form-card__header-title"><?php _e( 'Export Users', 'wp-ever-accounting' ); ?></h3>
+		</div>
+
+		<div class="ea-card">
+			<form method="post" class="ea-exporter ea-batch" data-type="export-users"
+				  data-nonce="<?php echo wp_create_nonce( 'export-users_exporter_nonce' ); ?>">
+				<p><?php esc_html_e( 'Export users from this site as CSV file. Exported file can be imported as customer or vendor on this site or  other site.', 'wp-ever-accounting' ); ?></p>
+				<?php submit_button( esc_html__( 'Export', 'wp-ever-accounting' ), 'secondary', null, true ); ?>
+			</form>
+		</div>
+	</div>
+
 	<?php
 }
 
