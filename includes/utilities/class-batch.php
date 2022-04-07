@@ -112,6 +112,15 @@ class Batch extends Registry {
 		);
 
 		$this->add_item(
+			'export-users',
+			array(
+				'class' => '\EverAccounting\Export\Users',
+				'file'  => EACCOUNTING_ABSPATH . '/includes/export/class-users.php',
+
+			)
+		);
+
+		$this->add_item(
 			'import-customers',
 			array(
 				'class' => '\EverAccounting\Import\Customers',
