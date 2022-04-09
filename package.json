@@ -28,7 +28,7 @@
     "classnames": "^2.3.0",
     "cuid": "^2.1.8",
     "inputmask": "^5.0.5",
-    "moment": "2.22.2",
+    "moment": "2.29.2",
     "react-select": "^4.3.0",
     "select2": "~4.0"
   },
