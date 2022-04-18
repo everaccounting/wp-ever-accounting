@@ -70,7 +70,7 @@ function ever_accounting_tools_system_info_report() {
 	$tables = $wpdb->get_col( "SHOW TABLES LIKE '{$wpdb->prefix}ea_%'" );
 	$tables = preg_replace( "/^{$wpdb->prefix}/", '', $tables );
 
-	// Configariotn settings.
+	// Configuration settings.
 	$return .= "\n" . '-- Ever_Accounting Configuration' . "\n\n";
 	$return .= 'Version:                          ' . get_option('ever_accounting_version') . "\n";
 	$return .= 'DB Version:                       ' . ( $db_version ? "$db_version\n" : "Unset\n" );
@@ -93,7 +93,7 @@ function ever_accounting_tools_system_info_report() {
 	$return .= 'Default currency:                  ' . $currency_code . "\n";
 	$return .= 'Default currency rate:             ' . ( ! empty( $currency ) ? $currency->get_rate() : "" ) . "\n";
 	$return .= 'Default payment method:            ' . ever_accounting_get_option( 'default_payment_method' ) . "\n";
-	$return .= 'Default Account:                   ' . ever_accounting_get_option( 'default_account' ) . "\n";
+	$return .= 'Default Account:                   ' . \Ever_Accounting\Accounts::get( ever_accounting_get_option( 'default_account' ) )->get_name() . "\n";
 
 	// Object counts.
 	$return .= "\n" . '-- Ever_Accounting Object Counts' . "\n\n";
@@ -106,8 +106,8 @@ function ever_accounting_tools_system_info_report() {
 	$return .= 'Categories:                       ' . number_format( Categories::query( array(), true ) ) . "\n";
 	$return .= 'Transfers:                        ' . number_format( Transfers::query( array(), true ) ) . "\n";
 	//@todo need to update this after the invoice and bills
-//	$return .= 'Invoices:                         ' . number_format( Documents::query( array(), true ) )  . "\n";
-//	$return .= 'Bills:                            ' . number_format( Documents::query( array(), true  ) ) . "\n";
+	$return .= 'Invoices:                         ' . number_format( Documents::query_invoices( array(), true ) )  . "\n";
+	$return .= 'Bills:                            ' . number_format( Documents::query_bills( array(), true  ) ) . "\n";
 
 	// Get plugins that have an update
 	$updates = get_plugin_updates();

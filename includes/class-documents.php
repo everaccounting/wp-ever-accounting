@@ -172,13 +172,13 @@ class Documents {
 	 * @return array|Invoice[]|int|
 	 * @since 1.1.0
 	 */
-	public static function get_invoices( $args = array(), $count = false ) {
+	public static function query_invoices( $args = array(), $count = false ) {
 		$args = array_merge( $args, array( 'type' => 'invoice' ) );
 		if ( isset( $args['customer_id'] ) ) {
 			$args['contact_id'] = $args['customer_id'];
 			unset( $args['customer_id'] );
 		}
-		return self::get_documents( $args, $count );
+		return self::query( $args, $count );
 	}
 
 	/**
@@ -261,13 +261,13 @@ class Documents {
 	 * @return array|Invoice[]|int|
 	 * @since 1.1.0
 	 */
-	public static function get_bills( $args = array(), $count = false ) {
+	public static function query_bills( $args = array(), $count = false ) {
 		$args = array_merge( $args, array( 'type' => 'bill' ) );
 		if ( isset( $args['vendor_id'] ) ) {
 			$args['contact_id'] = $args['vendor_id'];
 			unset( $args['vendor_id'] );
 		}
-		return self::get_documents( $args, $count );
+		return self::query( $args, $count );
 	}
 
 
