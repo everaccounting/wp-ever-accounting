@@ -234,7 +234,7 @@ class Ever_Accounting_Payment_List_Table extends Ever_Accounting_List_Table {
 			$account_id  = isset( $_GET['account_id'] ) ? absint( $_GET['account_id'] ) : '';
 			$category_id = isset( $_GET['category_id'] ) ? absint( $_GET['category_id'] ) : '';
 			$vendor_id   = isset( $_GET['vendor_id'] ) ? absint( $_GET['vendor_id'] ) : '';
-			$month       = isset( $_GET['month'] ) ? eaccounting_clean( $_GET['month'] ) : '';
+			$month       = isset( $_GET['month'] ) ? \Ever_Accounting\Helpers\Formatting::clean( $_GET['month'] ) : '';
 			echo '<div class="alignleft actions ea-table-filter">';
 
 			Form::select2(

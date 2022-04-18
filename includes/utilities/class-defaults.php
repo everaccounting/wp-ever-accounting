@@ -5,7 +5,7 @@
  * @since 1.0.2
  */
 
-namespace EverAccounting\Utilities;
+namespace Ever_Accounting\Utilities;
 
 defined( 'ABSPATH' ) || exit();
 

@@ -61,9 +61,9 @@ class Utilities {
 	 * @since  1.0.2
 	 */
 	public function includes() {
-		require_once EACCOUNTING_ABSPATH . '/includes/utilities/class-data.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/utilities/class-batch.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/utilities/class-defaults.php';
+		require_once dirname( EVER_ACCOUNTING_FILE ) . '/includes/utilities/class-data.php';
+		require_once dirname( EVER_ACCOUNTING_FILE ) . '/includes/utilities/class-batch.php';
+		require_once dirname( EVER_ACCOUNTING_FILE ) . '/includes/utilities/class-defaults.php';
 	}
 
 	/**

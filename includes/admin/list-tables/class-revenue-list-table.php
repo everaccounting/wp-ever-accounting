@@ -234,7 +234,7 @@ class Ever_Accounting_Revenue_List_Table extends Ever_Accounting_List_Table {
 			$account_id  = isset( $_GET['account_id'] ) ? absint( $_GET['account_id'] ) : '';
 			$category_id = isset( $_GET['category_id'] ) ? absint( $_GET['category_id'] ) : '';
 			$customer_id = isset( $_GET['customer_id'] ) ? absint( $_GET['customer_id'] ) : '';
-			$month       = isset( $_GET['month'] ) ? eaccounting_clean( $_GET['month'] ) : '';
+			$month       = isset( $_GET['month'] ) ? \Ever_Accounting\Helpers\Formatting::clean( $_GET['month'] ) : '';
 			echo '<div class="alignleft actions ea-table-filter">';
 
 			Form::select2(
@@ -376,7 +376,7 @@ class Ever_Accounting_Revenue_List_Table extends Ever_Accounting_List_Table {
 		$order   = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
 		$orderby = isset( $_GET['orderby'] ) ? $_GET['orderby'] : 'id';
 
-		$month       = ! empty( $_GET['month'] ) ? eaccounting_clean( $_GET['month'] ) : '';
+		$month       = ! empty( $_GET['month'] ) ? \Ever_Accounting\Helpers\Formatting::clean( $_GET['month'] ) : '';
 		$category_id = ! empty( $_GET['category_id'] ) ? absint( $_GET['category_id'] ) : '';
 		$account_id  = ! empty( $_GET['account_id'] ) ? absint( $_GET['account_id'] ) : '';
 		$customer_id = ! empty( $_GET['customer_id'] ) ? absint( $_GET['customer_id'] ) : '';

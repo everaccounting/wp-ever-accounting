@@ -547,7 +547,7 @@ abstract class CSV_Importer {
 	 *
 	 */
 	public function parse_text_field( $value ) {
-		return eaccounting_clean( $this->unescape_data( $value ) );
+		return \Ever_Accounting\Helpers\Formatting::clean( $this->unescape_data( $value ) );
 	}
 
 	/**

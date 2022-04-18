@@ -325,8 +325,8 @@ class Ever_Accounting_Note_List_Table extends Ever_Accounting_List_Table {
 				'page'     => $page,
 				'status'   => $status,
 				'search'   => $search,
-				'orderby'  => eaccounting_clean( $orderby ),
-				'order'    => eaccounting_clean( $order ),
+				'orderby'  => \Ever_Accounting\Helpers\Formatting::clean( $orderby ),
+				'order'    => \Ever_Accounting\Helpers\Formatting::clean( $order ),
 			)
 		);
 

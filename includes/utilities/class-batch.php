@@ -31,7 +31,7 @@ class Batch extends Registry {
 
 		$this->includes();
 		$this->register_items();
-		do_action( 'eaccounting_batch_process_init', $this );
+		do_action( 'ever_accounting_batch_process_init', $this );
 	}
 
 	/**

@@ -36,7 +36,7 @@ class Vendors extends CSV_Exporter {
 	 * @since  1.0.2
 	 */
 	public function get_columns() {
-		return eaccounting_get_io_headers( 'vendor' );
+		return ever_accounting_get_io_headers( 'vendor' );
 	}
 
 	/**
@@ -55,8 +55,8 @@ class Vendors extends CSV_Exporter {
 			'return'   => 'objects',
 			'number'   => - 1,
 		);
-		$args  = apply_filters( 'eaccounting_vendor_export_query_args', $args );
-		$items = \Ever_Accounting\Contacts::get_vendors( $args );
+		$args  = apply_filters( 'ever_accounting_vendor_export_query_args', $args );
+		$items = \Ever_Accounting\Contacts::query_vendors( $args );
 		$rows  = array();
 
 		foreach ( $items as $item ) {
@@ -70,7 +70,7 @@ class Vendors extends CSV_Exporter {
 	/**
 	 * Take a vendor and generate row data from it for export.
 	 *
-	 * @param \Ever_Accounting\Models\Vendor $item
+	 * @param \Ever_Accounting\Vendor $item Vendor Items.
 	 *
 	 * @return array
 	 */
@@ -119,7 +119,7 @@ class Vendors extends CSV_Exporter {
 					$value = $item->get_currency_code();
 					break;
 				default:
-					$value = apply_filters( 'eaccounting_vendor_csv_row_item', '', $column, $item, $this );
+					$value = apply_filters( 'ever_accounting_vendor_csv_row_item', '', $column, $item, $this );
 			}
 
 			$props[ $column ] = $value;

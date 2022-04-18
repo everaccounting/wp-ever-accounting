@@ -11,6 +11,7 @@ namespace Ever_Accounting\Admin;
 
 use Ever_Accounting\Ajax;
 use Ever_Accounting\Helpers\Formatting;
+use Ever_Accounting\Utilities;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -54,8 +55,9 @@ class Importer {
 
 		// verify nonce
 		Ajax::verify_nonce( "{$type}_importer_nonce" );
+		$utils = new Utilities();
 
-		if ( empty( $type ) || false === $batch = eaccounting()->utils->batch->get( $type ) ) {
+		if ( empty( $type ) || false === $batch = $utils->batch->get( $type ) ) {
 			wp_send_json_error(
 				array(
 					'message' => sprintf( __( '%s is an invalid import type.', 'wp-ever-accounting' ), esc_html( $type ) ),

@@ -45,7 +45,9 @@ class Exporter {
 
 		Ajax::verify_nonce( "{$type}_exporter_nonce" );
 
-		if ( empty( $type ) || false === $batch = eaccounting()->utils->batch->get( $type ) ) {
+		$utils = new \Ever_Accounting\Utilities();
+
+		if ( empty( $type ) || false === $batch = $utils->batch->get( $type ) ) {
 			wp_send_json_error(
 				array(
 					'message' => sprintf( __( '%s is an invalid export type.', 'wp-ever-accounting' ), esc_html( $type ) ),
@@ -144,8 +146,8 @@ class Exporter {
 	 */
 	public static function handle_csv_download() {
 		if ( isset( $_GET['action'], $_GET['nonce'] ) && wp_verify_nonce( wp_unslash( $_GET['nonce'] ), 'ea-download-file' ) && 'ever_accounting_download_export_file' === wp_unslash( $_GET['action'] ) ) {
-
-			if ( empty( $_REQUEST['export'] ) || false === $batch = eaccounting()->utils->batch->get( $_REQUEST['export'] ) ) {
+			$utils = new \Ever_Accounting\Utilities();
+			if ( empty( $_REQUEST['export'] ) || false === $batch = $utils->batch->get( $_REQUEST['export'] ) ) {
 				wp_die(
 					__( 'Invalid export type.', 'wp-ever-accounting' ),
 					__( 'Error', 'wp-ever-accounting' ),

@@ -79,7 +79,7 @@ class Formatting {
 	 */
 	public static function sanitize_number( $number, $allow_decimal = true ) {
 		// Convert multiple dots to just one.
-		$number = preg_replace( '/\.(?![^.]+$)|[^0-9.-]/', '', eaccounting_clean( $number ) );
+		$number = preg_replace( '/\.(?![^.]+$)|[^0-9.-]/', '', self::clean( $number ) );
 
 		if ( $allow_decimal ) {
 			return (float) preg_replace( '/[^0-9.-]/', '', $number );
@@ -189,7 +189,7 @@ class Formatting {
 	 * @since 1.0.2
 	 */
 	public static function date_format() {
-		return apply_filters( 'eaccounting_date_format', ever_accounting_get_option( 'date_format', 'Y-m-d' ) );
+		return apply_filters( 'ever_accounting_date_format', ever_accounting_get_option( 'date_format', 'Y-m-d' ) );
 	}
 
 	/**
