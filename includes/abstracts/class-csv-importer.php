@@ -194,7 +194,7 @@ abstract class CSV_Importer {
 	 * @since  1.0.2
 	 */
 	public function can_import() {
-		return (bool) current_user_can( apply_filters( 'eaccounting_import_capability', $this->capability ) );
+		return (bool) current_user_can( apply_filters( 'ever_accounting_import_capability', $this->capability ) );
 	}
 
 	/**
@@ -205,7 +205,7 @@ abstract class CSV_Importer {
 	 */
 	protected function read_file() {
 		$valid_filetypes = apply_filters(
-			'eaccounting_import_csv_filetypes',
+			'ever_accounting_import_csv_filetypes',
 			array(
 				'csv' => 'text/csv',
 				'txt' => 'text/plain',
@@ -569,7 +569,7 @@ abstract class CSV_Importer {
 		}
 
 		// Don't return explicit true or false for empty fields or values like 'notify'.
-		return eaccounting_clean( $value );
+		return \Ever_Accounting\Helpers\Formatting::clean( $value );
 	}
 
 	/**
@@ -675,9 +675,9 @@ abstract class CSV_Importer {
 	 *
 	 */
 	public function parse_country_field( $country ) {
-		$country = eaccounting_clean( $country );
+		$country = \Ever_Accounting\Helpers\Formatting::clean( $country );
 
-		return array_key_exists( $country, eaccounting_get_countries() ) ? $country : '';
+		return array_key_exists( $country, \Ever_Accounting\Helpers\Misc::get_countries() ) ? $country : '';
 	}
 
 	/**
@@ -690,8 +690,8 @@ abstract class CSV_Importer {
 	 *
 	 */
 	public function parse_currency_code_field( $currency ) {
-		$currency = eaccounting_clean( $currency );
-		$exist    = eaccounting_get_currency( $currency );
+		$currency = \Ever_Accounting\Helpers\Formatting::clean( $currency );
+		$exist    = \Ever_Accounting\Currencies::get( $currency );
 
 		return $exist->get_id() ? $currency : '';
 	}

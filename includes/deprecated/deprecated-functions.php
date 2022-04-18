@@ -825,3 +825,96 @@ function eaccounting_get_notes( $args = array() ) {
 
 	return \Ever_Accounting\Notes::query( $args );
 }
+
+/**
+ * Get import export headers.
+ *
+ * @param $type
+ *
+ * @return mixed|void
+ * @since 1.0.2
+ * @deprecatd 1.1.4
+ */
+function eaccounting_get_io_headers( $type ) {
+	_deprecated_function( __FUNCTION__, '1.1.4', 'ever_accounting_get_io_headers()' );
+
+	return ever_accounting_get_io_headers( $type );
+}
+
+/**
+ * Main function for returning currency.
+ *
+ * This function is little different from rest
+ * Even if the currency in the database doest not
+ * exist it will it populate with default data.
+ *
+ * Whenever need to check existence of the object
+ * in database must check $currency->exist()
+ *
+ * @param object|string|int $currency
+ *
+ * @return Ever_Accounting\Currency|null
+ * @since 1.1.0
+ * @deprecatd 1.1.4
+ */
+function eaccounting_get_currency( $currency ) {
+	_deprecated_function( __FUNCTION__, '1.1.4', '\Ever_Accounting\Currencies::get()' );
+
+	return \Ever_Accounting\Currencies::get( $currency );
+}
+
+/**
+ * Return all available currency codes.
+ *
+ * @return array
+ * @since 1.1.0
+ * @deprecatd 1.1.4
+ */
+function eaccounting_get_currency_codes() {
+	_deprecated_function( __FUNCTION__, '1.1.4', '\Ever_Accounting\Currencies::get_codes()' );
+
+	return \Ever_Accounting\Currencies::get_codes();
+}
+
+/**
+ * Check if currency code is a valid one.
+ *
+ * @param string $code Currency code.
+ *
+ * @return string
+ * @since 1.1.0
+ * @deprecatd 1.1.4
+ */
+function eaccounting_sanitize_currency_code( $code ) {
+	_deprecated_function( __FUNCTION__, '1.1.4', '\Ever_Accounting\Currencies::sanitize_code()' );
+
+	return \Ever_Accounting\Currencies::sanitize_code( $code );
+}
+
+/**
+ * @param $currency
+ *
+ * @return mixed|null
+ * @since 1.1.0
+ * @deprecatd 1.1.4
+ */
+function eaccounting_get_currency_rate( $currency ) {
+	_deprecated_function( __FUNCTION__, '1.1.4', '\Ever_Accounting\Currencies::get_rate()' );
+
+	return \Ever_Accounting\Currencies::get_rate( $currency );
+}
+
+/**
+ * Get currency items.
+ *
+ * @param array $args
+ *
+ * @return array|int|null
+ * @since 1.1.0
+ * @deprecatd 1.1.4
+ */
+function eaccounting_get_currencies( $args = array() ) {
+	_deprecated_function( __FUNCTION__, '1.1.4', '\Ever_Accounting\Currencies::query()' );
+
+	return \Ever_Accounting\Currencies::query( $args, false );
+}

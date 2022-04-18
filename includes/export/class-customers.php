@@ -50,7 +50,7 @@ class Customers extends CSV_Exporter {
 	public function get_rows() {
 		$args = array(
 			'per_page' => $this->limit,
-			'page'     => $this->page,
+			'paged'     => $this->page,
 			'orderby'  => 'id',
 			'order'    => 'ASC',
 			'type'     => 'customer',
@@ -76,7 +76,7 @@ class Customers extends CSV_Exporter {
 	/**
 	 * Take a customer and generate row data from it for export.
 	 *
-	 * @param \Ever_Accounting\Customer $item
+	 * @param \Ever_Accounting\Customer $item Customer object.
 	 *
 	 * @return array
 	 */

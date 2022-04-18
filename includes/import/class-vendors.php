@@ -29,7 +29,7 @@ class Vendors extends CSV_Importer {
 	 * @since 1.0.2
 	 */
 	protected function get_headers() {
-		return eaccounting_get_io_headers( 'vendor' );
+		return ever_accounting_get_io_headers( 'vendor' );
 	}
 
 

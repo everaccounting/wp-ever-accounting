@@ -39,7 +39,7 @@ class Items extends CSV_Exporter {
 	 * @since  1.0.2
 	 */
 	public function get_columns() {
-		return eaccounting_get_io_headers( 'item' );
+		return ever_accounting_get_io_headers( 'item' );
 	}
 
 	/**
@@ -49,14 +49,14 @@ class Items extends CSV_Exporter {
 	public function get_rows() {
 		$args  = array(
 			'per_page' => $this->limit,
-			'page'     => $this->page,
+			'paged'     => $this->page,
 			'orderby'  => 'id',
 			'order'    => 'ASC',
 			'return'   => 'objects',
 			'number'   => - 1,
 		);
-		$args  = apply_filters( 'eaccounting_item_export_query_args', $args );
-		$items = \Ever_Accounting\Items::get_items( $args );
+		$args  = apply_filters( 'ever_accounting_item_export_query_args', $args );
+		$items = \Ever_Accounting\Items::query( $args );
 		$rows  = array();
 
 		foreach ( $items as $item ) {
@@ -70,7 +70,7 @@ class Items extends CSV_Exporter {
 	/**
 	 * Take a item and generate row data from it for export.
 	 *
-	 * @param \Ever_Accounting\Item $item
+	 * @param \Ever_Accounting\Item $item Item object.
 	 *
 	 * @return array
 	 */
@@ -83,7 +83,7 @@ class Items extends CSV_Exporter {
 					$value = $item->get_name();
 					break;
 				case 'category_name':
-					$category = eaccounting_get_category( $item->get_category_id() );
+					$category = \Ever_Accounting\Categories::get( $item->get_category_id() );
 					$value    = $category ? $category->get_name() : '';
 					break;
 				case 'sale_price':
@@ -99,7 +99,7 @@ class Items extends CSV_Exporter {
 					$value = $item->get_purchase_tax();
 					break;
 				default:
-					$value = apply_filters( 'eaccounting_item_csv_row_item', '', $column, $item, $this );
+					$value = apply_filters( 'ever_accounting_item_csv_row_item', '', $column, $item, $this );
 			}
 
 			$props[ $column ] = $value;

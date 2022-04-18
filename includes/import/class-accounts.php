@@ -29,7 +29,7 @@ class Accounts extends CSV_Importer {
 	 * @since 1.0.2
 	 */
 	protected function get_headers() {
-		return eaccounting_get_io_headers( 'account' );
+		return ever_accounting_get_io_headers( 'account' );
 	}
 
 
@@ -87,6 +87,6 @@ class Accounts extends CSV_Importer {
 			return new \WP_Error( 'invalid_prop', __( 'Currency with provided code does not not exist.', 'wp-ever-accounting' ) );
 		}
 
-		return \Ever_Accounting\Accounts::insert_account( $data );
+		return \Ever_Accounting\Accounts::insert( $data );
 	}
 }

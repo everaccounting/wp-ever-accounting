@@ -38,7 +38,7 @@ class Categories extends CSV_Exporter {
 	 * @return array
 	 */
 	public function get_columns() {
-		return eaccounting_get_io_headers( 'category' );
+		return ever_accounting_get_io_headers( 'category' );
 	}
 
 	/**
@@ -50,14 +50,14 @@ class Categories extends CSV_Exporter {
 	public function get_rows() {
 		$args              = array(
 			'per_page' => $this->limit,
-			'page'     => $this->page,
+			'paged'     => $this->page,
 			'orderby'  => 'id',
 			'order'    => 'ASC',
 			'return'   => 'objects',
 			'number'      => -1,
 		);
-		$args = apply_filters( 'eaccounting_category_export_query_args', $args );
-		$items = \Ever_Accounting\Categories::get_categories( $args );
+		$args = apply_filters( 'ever_accounting_category_export_query_args', $args );
+		$items = \Ever_Accounting\Categories::r( $args );
 		$rows              = array();
 
 		foreach ( $items as $item ) {
@@ -71,7 +71,7 @@ class Categories extends CSV_Exporter {
 	/**
 	 * Take a category and generate row data from it for export.
 	 *
-	 * @param \Ever_Accounting\Models\Category $item
+	 * @param \Ever_Accounting\Category $item Category object.
 	 *
 	 * @return array
 	 */
@@ -91,7 +91,7 @@ class Categories extends CSV_Exporter {
 					break;
 
 				default:
-					$value = apply_filters( 'eaccounting_category_csv_row_item', '', $column, $item, $this );
+					$value = apply_filters( 'ever_accounting_category_csv_row_item', '', $column, $item, $this );
 			}
 
 			$props[ $column ] = $value;

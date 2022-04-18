@@ -38,7 +38,7 @@ class Accounts extends CSV_Exporter {
 	 * @since  1.0.2
 	 */
 	public function get_columns() {
-		return eaccounting_get_io_headers( 'account' );
+		return ever_accounting_get_io_headers( 'account' );
 	}
 
 	/**
@@ -48,14 +48,14 @@ class Accounts extends CSV_Exporter {
 	public function get_rows() {
 		$args  = array(
 			'per_page' => $this->limit,
-			'page'     => $this->page,
+			'paged'     => $this->page,
 			'orderby'  => 'id',
 			'order'    => 'ASC',
 			'return'   => 'objects',
 			'number'   => - 1,
 		);
-		$args  = apply_filters( 'eaccounting_account_export_query_args', $args );
-		$items = \Ever_Accounting\Accounts::get_accounts( $args );
+		$args  = apply_filters( 'ever_accounting_account_export_query_args', $args );
+		$items = \Ever_Accounting\Accounts::query( $args );
 		$rows  = array();
 
 		foreach ( $items as $item ) {
@@ -69,7 +69,7 @@ class Accounts extends CSV_Exporter {
 	/**
 	 * Take a product and generate row data from it for export.
 	 *
-	 * @param \Ever_Accounting\Models\Account $item
+	 * @param object \Ever_Accounting\Account $item Account object.
 	 *
 	 * @return array
 	 */
@@ -103,7 +103,7 @@ class Accounts extends CSV_Exporter {
 					$value = $item->get_enabled();
 					break;
 				default:
-					$value = apply_filters( 'eaccounting_account_csv_row_item', '', $column, $item, $this );
+					$value = apply_filters( 'ever_accounting_account_csv_row_item', '', $column, $item, $this );
 			}
 
 			$props[ $column ] = $value;

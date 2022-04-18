@@ -30,7 +30,7 @@ class Payments extends CSV_Importer {
 	 * @since 1.0.2
 	 */
 	protected function get_headers() {
-		return eaccounting_get_io_headers( 'payment' );
+		return ever_accounting_get_io_headers( 'payment' );
 	}
 
 	/**
@@ -88,18 +88,18 @@ class Payments extends CSV_Importer {
 			return new \WP_Error( 'empty_prop', __( 'Empty Payment Method', 'wp-ever-accounting' ) );
 		}
 
-		$category    = \Ever_Accounting\Categories::get_categories( array( 'search' => $data['category_name'], 'search_cols' => array( 'name' ), 'type' => 'expense' ) );
+		$category    = \Ever_Accounting\Categories::query( array( 'search' => $data['category_name'], 'search_cols' => array( 'name' ), 'type' => 'expense' ) );
 		$category    = ! empty( $category ) ? reset( $category ) : '';
 		$category_id = ! empty( $category ) ? $category->get_id() : '';
 
 		$currency = new Currency( array( 'code' => $data['currency_code'] ) );
 
-		$account               = \Ever_Accounting\Accounts::get_accounts( array( 'search' => $data['account_name'], 'search_cols' => array( 'name' ) ) );
+		$account               = \Ever_Accounting\Accounts::query( array( 'search' => $data['account_name'], 'search_cols' => array( 'name' ) ) );
 		$account               = ! empty( $account ) ? reset( $account ) : '';
 		$account_id            = ! empty( $account ) ? $account->get_id() : '';
 		$account_currency_code = ! empty( $account ) ? $account->get_currency_code() : '';
 
-		$vendor    = ( '' != $data['vendor_name'] ) ? \Ever_Accounting\Contacts::get_vendors( array( 'search' => $data['vendor_name'], 'search_cols' => array( 'name' ) ) ) : '';
+		$vendor    = ( '' != $data['vendor_name'] ) ? \Ever_Accounting\Contacts::query_vendors( array( 'search' => $data['vendor_name'], 'search_cols' => array( 'name' ) ) ) : '';
 		$vendor    = ! empty( $vendor ) ? reset( $vendor ) : '';
 		$vendor_id = ! empty( $vendor ) ? $vendor->get_id() : '';
 

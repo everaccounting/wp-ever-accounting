@@ -29,7 +29,7 @@ class Items extends CSV_Importer {
 	 * @since 1.0.2
 	 */
 	protected function get_headers() {
-		return eaccounting_get_io_headers( 'item' );
+		return ever_accounting_get_io_headers( 'item' );
 	}
 
 
@@ -80,12 +80,12 @@ class Items extends CSV_Importer {
 			return new \WP_Error( 'empty_prop', __( 'Empty Purchase Price', 'wp-ever-accounting' ) );
 		}
 
-		$category    = \Ever_Accounting\Categories::get_categories( array( 'search' => $data['category_name'], 'type' => 'item' ) );
+		$category    = \Ever_Accounting\Categories::query( array( 'search' => $data['category_name'], 'type' => 'item' ) );
 		$category    = ! empty( $category ) ? reset( $category ) : '';
 		$category_id = ! empty( $category ) ? $category->get_id() : '';
 
 		$data['category_id'] = $category_id;
 
-		return \Ever_Accounting\Items::insert_item( $data );
+		return \Ever_Accounting\Items::insert( $data );
 	}
 }

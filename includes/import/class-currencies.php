@@ -10,7 +10,7 @@
 namespace Ever_Accounting\Import;
 
 use Ever_Accounting\Abstracts\CSV_Importer;
-use Ever_Accounting\Models\Currency;
+use Ever_Accounting\Currency;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -30,7 +30,7 @@ class Currencies extends CSV_Importer {
 	 * @since 1.0.2
 	 */
 	protected function get_headers() {
-		return eaccounting_get_io_headers( 'currency' );
+		return ever_accounting_get_io_headers( 'currency' );
 	}
 
 	/**
@@ -81,6 +81,6 @@ class Currencies extends CSV_Importer {
 			return new \WP_Error( 'empty_prop', __( 'Currency already exists', 'wp-ever-accounting' ) );
 		}
 
-		return \Ever_Accounting\Currencies::insert_currency( $data );
+		return \Ever_Accounting\Currencies::insert( $data );
 	}
 }

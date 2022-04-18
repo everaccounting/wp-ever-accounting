@@ -249,7 +249,7 @@ function eaccounting_get_bills( $args = array() ) {
 }
 
 function eaccounting_get_documents( $args = array() ) {
-	return \Ever_Accounting\Documents::get_documents( $args = array(), false );
+	return \Ever_Accounting\Documents::query( $args = array(), false );
 }
 
 function eaccounting_get_bill_statuses() {

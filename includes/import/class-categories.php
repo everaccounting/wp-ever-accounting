@@ -29,7 +29,7 @@ class Categories extends CSV_Importer {
 	 * @since 1.0.2
 	 */
 	protected function get_headers() {
-		return eaccounting_get_io_headers( 'category' );
+		return ever_accounting_get_io_headers( 'category' );
 	}
 
 	/**
@@ -71,14 +71,14 @@ class Categories extends CSV_Importer {
 			return new \WP_Error( 'empty_prop', __( 'Empty Type', 'wp-ever-accounting' ) );
 		}
 
-		$category_exists = \Ever_Accounting\Categories::get_categories( array( 'search' => $data['name'], 'type' => $data['type'] ) );
+		$category_exists = \Ever_Accounting\Categories::query( array( 'search' => $data['name'], 'type' => $data['type'] ) );
 		$category_id     = ! empty( $category_exists ) ? $category_exists[0]->get_id() : '';
 
 		if ( ! empty( $category_id ) ) {
 			return new \WP_Error( 'invalid_props', __( 'Category already exists.', 'wp-ever-accounting' ) );
 		}
 
-		return \Ever_Accounting\Categories::insert_category( $data );
+		return \Ever_Accounting\Categories::insert( $data );
 	}
 
 }

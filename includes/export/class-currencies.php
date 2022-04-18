@@ -38,7 +38,7 @@ class Currencies extends CSV_Exporter {
 	 * @since  1.0.2
 	 */
 	public function get_columns() {
-		return eaccounting_get_io_headers( 'currency' );
+		return ever_accounting_get_io_headers( 'currency' );
 	}
 
 	/**
@@ -50,14 +50,14 @@ class Currencies extends CSV_Exporter {
 	public function get_rows() {
 		$args  = array(
 			'per_page' => $this->limit,
-			'page'     => $this->page,
+			'paged'     => $this->page,
 			'orderby'  => 'id',
 			'order'    => 'ASC',
 			'return'   => 'objects',
 			'number'   => - 1,
 		);
-		$args  = apply_filters( 'eaccounting_currency_export_query_args', $args );
-		$items = \Ever_Accounting\Currencies::get_currencies( $args );
+		$args  = apply_filters( 'ever_accounting_currency_export_query_args', $args );
+		$items = \Ever_Accounting\Currencies::query( $args );
 		$rows  = array();
 
 		foreach ( $items as $item ) {
@@ -71,7 +71,7 @@ class Currencies extends CSV_Exporter {
 	/**
 	 * Take a currency and generate row data from it for export.
 	 *
-	 * @param \Ever_Accounting\Models\Currency $item
+	 * @param \Ever_Accounting\Currency $item Currency object.
 	 *
 	 * @return array
 	 */
@@ -108,7 +108,7 @@ class Currencies extends CSV_Exporter {
 					$value = $item->get_enabled();
 					break;
 				default:
-					$value = apply_filters( 'eaccounting_currency_csv_row_item', '', $column, $item, $this );
+					$value = apply_filters( 'ever_accounting_currency_csv_row_item', '', $column, $item, $this );
 			}
 
 			$props[ $column ] = $value;
