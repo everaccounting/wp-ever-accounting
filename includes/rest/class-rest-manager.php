@@ -35,8 +35,8 @@ class REST_Manager {
 		$rest_handlers = apply_filters(
 			'ever_accounting_rest_controllers',
 			array(
-				Currencies_Controller::class
-//				'\Ever_Accounting\REST\Accounts_Controller',
+				Currencies_Controller::class,
+				Accounts_Controller::class,
 //				'\Ever_Accounting\REST\Customers_Controller',
 //				'\Ever_Accounting\REST\Vendors_Controller',
 //				'\Ever_Accounting\REST\Payments_Controller',
