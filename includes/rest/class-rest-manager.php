@@ -38,6 +38,7 @@ class REST_Manager {
 				Currencies_Controller::class,
 				Accounts_Controller::class,
 				Items_Controller::class,
+				Categories_Controller::class
 //				'\Ever_Accounting\REST\Customers_Controller',
 //				'\Ever_Accounting\REST\Vendors_Controller',
 //				'\Ever_Accounting\REST\Payments_Controller',
