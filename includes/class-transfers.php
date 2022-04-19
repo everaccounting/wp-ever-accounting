@@ -320,6 +320,25 @@ class Transfers {
 				foreach ( $results as $key => $row ) {
 					wp_cache_add( $row->id, $row, $cache_group );
 					$item = new Transfer();
+
+					$income_id       = $row->income_id;
+					$expense_id      = $row->expense_id;
+					$to_account_id   = \Ever_Accounting\Transactions::get( $income_id )->get_account_id();
+					$transfer_date   = \Ever_Accounting\Transactions::get( $income_id )->get_payment_date();
+					$amount          = \Ever_Accounting\Transactions::get( $income_id )->get_amount();
+					$from_account_id = \Ever_Accounting\Transactions::get( $expense_id )->get_account_id();
+					$payment_method  = \Ever_Accounting\Transactions::get( $expense_id )->get_payment_method();
+					$reference       = \Ever_Accounting\Transactions::get( $expense_id )->get_refernce();
+					$description     = \Ever_Accounting\Transactions::get( $expense_id )->get_description();
+
+					$row->to_account_id   = $to_account_id;
+					$row->date            = $transfer_date;
+					$row->from_account_id = $from_account_id;
+					$row->amount          = $amount;
+					$row->payment_method  = $payment_method;
+					$row->reference       = $reference;
+					$row->description     = $description;
+
 					$item->set_props( $row );
 					$item->set_object_read( true );
 					$results[ $key ] = $item;
