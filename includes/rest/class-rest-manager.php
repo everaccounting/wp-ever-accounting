@@ -43,6 +43,7 @@ class REST_Manager {
 				Vendors_Controller::class,
 				Payments_Controller::class,
 				Revenues_Controller::class,
+				Transfers_Controller::class,
 //				'\Ever_Accounting\REST\Customers_Controller',
 //				'\Ever_Accounting\REST\Vendors_Controller',
 //				'\Ever_Accounting\REST\Payments_Controller',
