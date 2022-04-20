@@ -762,7 +762,7 @@ jQuery( function ( $ ) {
 			const note_id = note.data( 'noteid' );
 
 			const data = {
-				action: 'eaccounting_delete_note',
+				action: 'ever_accounting_delete_note',
 				id: note_id,
 				nonce,
 			};
@@ -840,7 +840,7 @@ jQuery( function ( $ ) {
 		recalculate() {
 			bill_form.block();
 			const data = $.extend( {}, $( '#ea-bill-form' ).serializeObject(), {
-				action: 'eaccounting_bill_recalculate',
+				action: 'ever_accounting_bill_recalculate',
 			} );
 			$.post( ajaxurl, data, function ( json ) {
 				if ( json.success ) {
@@ -859,6 +859,7 @@ jQuery( function ( $ ) {
 			e.preventDefault();
 			bill_form.block();
 			const data = $( '#ea-bill-form' ).serializeObject();
+			//console.log(data);
 			$.post( ajaxurl, data, function ( json ) {
 				$.eaccounting_redirect( json );
 			} ).always( function ( json ) {

@@ -544,7 +544,7 @@ class Ajax {
 		try {
 			$bill = new Bill( $posted['bill_id'] );
 			if ( ! $bill->exists() ) {
-				throw new \Exception( __( 'Invalid Invoice Item', 'wp-ever-accounting' ) );
+				throw new \Exception( __( 'Invalid Bill Item', 'wp-ever-accounting' ) );
 			}
 			$bill->add_payment( $posted );
 			$bill->save();
@@ -577,7 +577,7 @@ class Ajax {
 		self::check_permission( 'ea_manage_bill' );
 		$bill_id       = absint( $_REQUEST['bill_id'] );
 		$note          = Formatting::clean( $_REQUEST['note'] );
-		$customer_note = isset( $_REQUEST['type'] ) && 'customer' === $_REQUEST['type'];
+		$customer_note = isset( $_REQUEST['type'] ) && 'vendor' === $_REQUEST['type'];
 		if ( empty( $note ) ) {
 			wp_send_json_error(
 				array(
@@ -648,12 +648,11 @@ class Ajax {
 		self::verify_nonce( 'ea_edit_bill' );
 		self::check_permission( 'ea_manage_bill' );
 		$posted = Formatting::clean( wp_unslash( $_REQUEST ) );
+		error_log( print_r( $posted,true));
 
 		try {
 			$posted = wp_parse_args( $posted, array( 'id' => null ) );
-			$bill   = new Bill( $posted['id'] );
-			$bill->set_props( $posted );
-			$bill->save();
+			$bill = Documents::insert_bill( $posted );
 			$redirect = add_query_arg(
 				array(
 					'action'  => 'view',

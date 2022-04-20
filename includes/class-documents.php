@@ -228,6 +228,8 @@ class Documents {
 		$data = wp_parse_args( $data, array( 'id' => null ) );
 		$bill = new Bill( $data['id'] );
 		$bill->set_props( $data );
+		$bill->set_contact_id( $data['vendor_id'] );
+		$bill->set_document_number( $data['bill_number'] );
 		$is_error = $bill->save();
 		if ( is_wp_error( $is_error ) ) {
 			return $is_error;

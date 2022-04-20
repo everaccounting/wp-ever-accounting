@@ -338,8 +338,8 @@ class Ever_Accounting_Bill_List_Table extends Ever_Accounting_List_Table {
 		);
 
 		$args              = apply_filters( 'ever_accounting_bill_table_query_args', $args, $this );
-		$this->items       = Documents::query( $args );
-		$this->total_count = Documents::query(  $args, true );
+		$this->items       = Documents::get_bills( $args );
+		$this->total_count = Documents::get_bills(  $args, true );
 		$this->set_pagination_args(
 			array(
 				'total_items' => $this->total_count,
