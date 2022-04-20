@@ -21,14 +21,14 @@ class Documents {
 	 */
 	public function __construct() {
 		// invoice
-		add_action( 'eaccounting_delete_revenue', array( __CLASS__, 'update_invoice_data' ), 10, 2 );
-		add_action( 'eaccounting_update_revenue', array( __CLASS__, 'update_invoice_data' ), 10, 2 );
-		add_action( 'eaccounting_daily_scheduled_events', array( __CLASS__, 'update_invoice_status' ) );
+		add_action( 'ever_accounting_delete_revenue', array( __CLASS__, 'update_invoice_data' ), 10, 2 );
+		add_action( 'ever_accounting_update_revenue', array( __CLASS__, 'update_invoice_data' ), 10, 2 );
+		add_action( 'ever_accounting_daily_scheduled_events', array( __CLASS__, 'update_invoice_status' ) );
 
 		// bill
-		add_action( 'eaccounting_delete_payment', array( $this, 'update_bill_data' ), 10, 2 );
-		add_action( 'eaccounting_update_payment', array( $this, 'update_bill_data' ), 10, 2 );
-		add_action( 'eaccounting_daily_scheduled_events', array( $this, 'update_bill_status' ) );
+		add_action( 'ever_accounting_delete_payment', array( $this, 'update_bill_data' ), 10, 2 );
+		add_action( 'ever_accounting_update_payment', array( $this, 'update_bill_data' ), 10, 2 );
+		add_action( 'ever_accounting_daily_scheduled_events', array( $this, 'update_bill_status' ) );
 	}
 
 	/*
@@ -137,6 +137,8 @@ class Documents {
 		$data = wp_parse_args( $data, array( 'id' => null ) );
 		$invoice = new Invoice( $data['id'] );
 		$invoice->set_props( $data );
+		$invoice->set_contact_id( $data['customer_id'] );
+		$invoice->set_document_number( $data['invoice_number'] );
 		$is_error = $invoice->save();
 		if ( is_wp_error( $is_error ) ) {
 			return $is_error;
@@ -226,6 +228,8 @@ class Documents {
 		$data = wp_parse_args( $data, array( 'id' => null ) );
 		$bill = new Bill( $data['id'] );
 		$bill->set_props( $data );
+		$bill->set_contact_id( $data['vendor_id'] );
+		$bill->set_document_number( $data['bill_number'] );
 		$is_error = $bill->save();
 		if ( is_wp_error( $is_error ) ) {
 			return $is_error;
@@ -365,7 +369,7 @@ class Documents {
 	public static function delete_items( $item ) {
 		global $wpdb;
 		$wpdb->delete( $wpdb->prefix . Document_Item::get_table_name(), array( 'document_id' => $item->get_id() ) );
-		eaccounting_cache_set_last_changed( 'ea_document_items' );
+		ever_accounting_cache_set_last_changed( 'ea_document_items' );
 	}
 
 	/**
@@ -384,7 +388,7 @@ class Documents {
 				'type'      => $item->get_type(),
 			)
 		);
-		eaccounting_cache_set_last_changed( 'ea_notes' );
+		ever_accounting_cache_set_last_changed( 'ea_notes' );
 	}
 
 	/**
@@ -394,7 +398,7 @@ class Documents {
 	public static function delete_transactions( $item ) {
 		global $wpdb;
 		$wpdb->delete( $wpdb->prefix . Transaction::get_table_name(), array( 'document_id' => $item->get_id() ) );
-		eaccounting_cache_set_last_changed( 'ea_transactions' );
+		ever_accounting_cache_set_last_changed( 'ea_transactions' );
 	}
 
 	/**
@@ -688,7 +692,7 @@ class Documents {
 							$document = self::get_bill( $item );
 							break;
 						default:
-							$document = apply_filters( 'eaccounting_get_documetn_callback_' . $item->type, null, $item );
+							$document = apply_filters( 'ever_accounting_get_document_callback_' . $item->type, null, $item );
 					}
 
 					return $document;

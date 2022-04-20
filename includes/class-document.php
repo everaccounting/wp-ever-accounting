@@ -142,68 +142,6 @@ class Document extends Abstracts\Data {
 		return array();
 	}
 
-
-	/*
-	|--------------------------------------------------------------------------
-	| Non CRUD getter & Setter
-	|--------------------------------------------------------------------------
-	|
-	*/
-
-	/**
-	 * Get invoice status nice name.
-	 *
-	 * @since 1.1.0
-	 *
-	 * @return mixed|string
-	 */
-	public function get_status_nicename() {
-		return isset( $this->get_statuses()[ $this->get_status() ] ) ? $this->get_statuses()[ $this->get_status() ] : $this->get_status();
-	}
-
-	public function get_formatted_address() {
-
-	}
-
-	/**
-	 * Get item ids.
-	 *
-	 * @since 1.1.0
-	 *
-	 * @return array
-	 */
-	public function get_item_ids() {
-		$ids = array();
-		foreach ( $this->get_items() as $item ) {
-			$ids[] = $item->get_id();
-		}
-
-		return array_filter( $ids );
-	}
-
-	/**
-	 * Get the invoice items.
-	 *
-	 * @since 1.1.0
-	 *
-	 * @return array
-	 */
-	public function get_taxes() {
-		$taxes = array();
-		if ( ! empty( $this->get_items() ) ) {
-			foreach ( $this->get_items() as $item ) {
-				$taxes[] = array(
-					'line_id' => $item->get_item_id(),
-					'rate'    => $item->get_tax_rate(),
-					'amount'  => $item->get_tax(),
-				);
-			}
-		}
-
-		return $taxes;
-	}
-
-
 	/*
 	|--------------------------------------------------------------------------
 	| CRUD methods
@@ -218,10 +156,67 @@ class Document extends Abstracts\Data {
 	|
 	*/
 	public function delete( $args = array() ) {
+		if ( ! $this->exists() ) {
+			return false;
+		}
+
+		$data = $this->get_data();
+
+		/**
+		 * Filters whether an item delete should take place.
+		 *
+		 * @param bool|null $delete Whether to go forward with deletion.
+		 * @param int $id Data id.
+		 * @param array $data Data data array.
+		 * @param Abstracts\Data $item Data object.
+		 *
+		 * @since 1.0.0
+		 */
+		$check = apply_filters( 'ever_accounting_check_delete_' . $this->object_type, null, $this->get_id(), $data, $this );
+		if ( null !== $check ) {
+			return $check;
+		}
+
+		/**
+		 * Fires before an item is deleted.
+		 *
+		 * @param int $id Data id.
+		 * @param array $data Data data array.
+		 * @param Abstracts\Data $item Data object.
+		 *
+		 * @since 1.0.0
+		 */
+		do_action( 'ever_accounting_pre_delete_'. $this->object_type, $this->get_id(), $data, $this );
+
 		Documents::delete_notes(  $this );
 		Documents::delete_items( $this );
 		Documents::delete_transactions( $this );
-		parent::delete( $args );
+
+		global $wpdb;
+
+		$wpdb->delete(
+			$wpdb->prefix . $this->table,
+			array(
+				'id' => $this->get_id(),
+			),
+			array( '%d')
+		);
+
+		/**
+		 * Fires after a item is deleted.
+		 *
+		 * @param int $id Data id.
+		 * @param array $data Data data array.
+		 *
+		 * @since 1.0.0
+		 */
+		do_action( 'ever_accounting_delete_' . $this->object_type, $this->get_id(), $data );
+
+		wp_cache_delete( $this->get_id(), $this->cache_group );
+		wp_cache_set( 'last_changed', microtime(), $this->cache_group );
+		$this->set_defaults();
+
+		return $data;
 	}
 
 	/**
@@ -266,7 +261,7 @@ class Document extends Abstracts\Data {
 		 *
 		 * @param int $id Document id.
 		 * @param array $data Document data array.
-		 * @param Contact $document Document object.
+		 * @param Document $document Document object.
 		 *
 		 * @since 1.0.0
 		 */
@@ -322,6 +317,12 @@ class Document extends Abstracts\Data {
 		}
 	}
 
+	/*
+	|--------------------------------------------------------------------------
+	| Getters
+	|--------------------------------------------------------------------------
+	*/
+
 	/**
 	 * Get tax inclusive or not.
 	 *
@@ -337,6 +338,25 @@ class Document extends Abstracts\Data {
 		}
 
 		return $this->get_prop( 'tax_inclusive' );
+	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| Setters
+	|--------------------------------------------------------------------------
+	*/
+
+	/**
+	 * set the completed at.
+	 *
+	 * @param string $payment_date .
+	 *
+	 * @since  1.1.0
+	 */
+	public function set_payment_date( $payment_date ) {
+		if ( $payment_date && $this->is_paid() ) {
+			$this->set_date_prop( 'payment_date', $payment_date );
+		}
 	}
 
 	/**
@@ -369,6 +389,30 @@ class Document extends Abstracts\Data {
 			'from' => $old_status,
 			'to'   => $status,
 		);
+	}
+
+	/**
+	 * set the category id.
+	 *
+	 * @param int $category_id .
+	 *
+	 * @since  1.1.0
+	 *
+	 */
+	public function set_category_id( $category_id ) {
+		$this->set_prop( 'category_id', absint( $category_id ) );
+	}
+
+	/**
+	 * set the customer_id.
+	 *
+	 * @param int $contact_id .
+	 *
+	 * @since  1.1.0
+	 *
+	 */
+	public function set_contact_id( $contact_id ) {
+		$this->set_prop( 'contact_id', absint( $contact_id ) );
 	}
 
 	/**
@@ -496,7 +540,7 @@ class Document extends Abstracts\Data {
 	 */
 	public function delete_items() {
 		if ( $this->exists() ) {
-			$this->repository->delete_items( $this );
+			Documents::delete_items( $this );
 			$this->items = array();
 		}
 	}
@@ -600,6 +644,66 @@ class Document extends Abstracts\Data {
 		// Unset and remove later.
 		$this->items_to_delete[] = $item;
 		unset( $this->items[ $item_id ] );
+	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| Non CRUD getter & Setter
+	|--------------------------------------------------------------------------
+	|
+	*/
+
+	/**
+	 * Get invoice status nice name.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @return mixed|string
+	 */
+	public function get_status_nicename() {
+		return isset( $this->get_statuses()[ $this->get_status() ] ) ? $this->get_statuses()[ $this->get_status() ] : $this->get_status();
+	}
+
+	public function get_formatted_address() {
+
+	}
+
+	/**
+	 * Get item ids.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @return array
+	 */
+	public function get_item_ids() {
+		$ids = array();
+		foreach ( $this->get_items() as $item ) {
+			$ids[] = $item->get_id();
+		}
+
+		return array_filter( $ids );
+	}
+
+	/**
+	 * Get the invoice items.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @return array
+	 */
+	public function get_taxes() {
+		$taxes = array();
+		if ( ! empty( $this->get_items() ) ) {
+			foreach ( $this->get_items() as $item ) {
+				$taxes[] = array(
+					'line_id' => $item->get_item_id(),
+					'rate'    => $item->get_tax_rate(),
+					'amount'  => $item->get_tax(),
+				);
+			}
+		}
+
+		return $taxes;
 	}
 
 	/*

@@ -68,7 +68,6 @@ class Bill extends Document {
 	 * Return the vendor id.
 	 *
 	 * @since  1.1.0
-	 *
 	 * @return string
 	 */
 	public function get_vendor_id() {
@@ -98,6 +97,29 @@ class Bill extends Document {
 	}
 
 	/**
+	 * Set the document key.
+	 *
+	 * @since 1.1.0
+	 */
+	public function maybe_set_key() {
+		$key = $this->get_key();
+		if ( empty( $key ) ) {
+			$this->set_key( $this->generate_key() );
+		}
+	}
+
+	/**
+	 * Generate key.
+	 *
+	 * @since 1.1.0
+	 * @return string
+	 */
+	public function generate_key() {
+		$key = 'ea-' . apply_filters( 'ever_accounting_generate_bill_key', 'bill' . '-' . str_replace( '-', '', wp_generate_uuid4() ) );
+		return strtolower( sanitize_key( $key ) );
+	}
+
+	/**
 	 * Generate number.
 	 *
 	 * @param $number
@@ -113,30 +135,6 @@ class Bill extends Document {
 		$number           = apply_filters( 'ever_accounting_generate_bill_number', $prefix . $formatted_number );
 
 		return $number;
-	}
-
-	/**
-	 * Set the document key.
-	 *
-	 * @since 1.1.0
-	 */
-	public function maybe_set_key() {
-		$key = $this->get_key();
-		if ( empty( $key ) ) {
-			$this->set_key( $this->generate_key() );
-		}
-	}
-
-	/**
-	 * Generate key.
-	 *
-	 * @return string
-	 * @since 1.1.0
-	 */
-	public function generate_key() {
-		$key = 'ea-' . apply_filters( 'ever_accounting_generate_bill_key', 'bill' . '-' . str_replace( '-', '', wp_generate_uuid4() ) );
-
-		return strtolower( sanitize_key( $key ) );
 	}
 
 	/**
@@ -387,24 +385,19 @@ class Bill extends Document {
 		}
 
 		if ( empty( $args['amount'] ) ) {
-			throw new \Exception(
-				__( 'Payment amount is required', 'wp-ever-accounting' )
-			);
+			throw new \Exception( __( 'Payment amount is required', 'wp-ever-accounting' ) );
 		}
 
 		if ( empty( $args['account_id'] ) ) {
-			throw new \Exception(
-				__( 'Payment account is required', 'wp-ever-accounting' )
-			);
+			throw new \Exception( __( 'Payment account is required', 'wp-ever-accounting' ) );
 		}
 
 		if ( empty( $args['payment_method'] ) ) {
-			throw new \Exception(
-				__( 'Payment method is required', 'wp-ever-accounting' )
-			);
+			throw new \Exception( __( 'Payment method is required', 'wp-ever-accounting' ) );
 		}
 
-		$amount           = (float) Formatting::sanitize_number( $args['amount'], true );
+		//$amount           = (float) Formatting::sanitize_number( $args['amount'], true );
+		$amount           = Price::price( $args['amount'], $this->get_currency_code(), true );
 		$account          = Accounts::get( $args['account_id'] );
 		$currency         = Currencies::get_by_code( $account->get_currency_code() );
 		$converted_amount = Price::price_convert( $amount, $this->get_currency_code(), $currency->get_code(), $this->get_currency_rate(), $currency->get_rate() );
@@ -703,7 +696,6 @@ class Bill extends Document {
 	 *
 	 * @return string
 	 * @since 1.1.0
-	 *
 	 */
 	public function get_admin_url( $action = 'view' ) {
 		$url = admin_url( 'admin.php?page=ea-expenses&tab=bills&bill_id=' . $this->get_id() );

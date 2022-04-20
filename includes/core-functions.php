@@ -230,3 +230,13 @@ function ever_accounting_maybe_define_constant( $name, $value ) {
 		define( $name, $value );
 	}
 }
+
+/**
+ * Sets the last changed time for cache group.
+ *
+ * @since 1.1.0
+ * @return void
+ */
+function ever_accounting_cache_set_last_changed( $group ) {
+	wp_cache_set( 'last_changed', microtime(), $group );
+}
