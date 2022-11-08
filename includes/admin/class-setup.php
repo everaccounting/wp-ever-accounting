@@ -96,9 +96,8 @@ class Setup_Wizard {
 		// Add RTL support for admin styles.
 		wp_style_add_data( 'ea-setup', 'rtl', 'replace' );
 		wp_register_script( 'jquery-select2', eaccounting()->plugin_url( '/dist/js/select2.full' . $suffix . '.js' ), array( 'jquery' ), $version );
-		wp_enqueue_script( 'ea-repeater', eaccounting()->plugin_url( '/dist/js/jquery.repeater' . $suffix . '.js' ), array( 'jquery' ), $version );
 		wp_enqueue_script( 'ea-select2', eaccounting()->plugin_url( '/dist/js/ea-select2' . $suffix . '.js' ), array( 'jquery', 'jquery-select2' ), $version );
-		wp_enqueue_script( 'ea-setup', eaccounting()->plugin_url( '/dist/js/ea-setup' . $suffix . '.js' ), array( 'jquery', 'ea-repeater', 'ea-select2' ), $version );
+		wp_enqueue_script( 'ea-setup', eaccounting()->plugin_url( '/dist/js/ea-setup' . $suffix . '.js' ), array( 'jquery', 'ea-select2' ), $version );
 
 		// @codingStandardsIgnoreStart
 		if ( ! empty( $_POST['save_step'] ) && isset( $this->steps[ $this->step ]['handler'] ) ) {

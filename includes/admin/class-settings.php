@@ -580,7 +580,7 @@ class Settings {
 											class="<?php echo esc_attr( $field['class'] ); ?>"
 											<?php echo implode( ' ', $attributes ) ?>
 											<?php checked( 'yes', $checked ); ?>
-									/> <?php echo esc_html( $option ); ?></label>zz
+									/> <?php echo esc_html( $option ); ?></label>
 							</li>
 							<?php
 						}

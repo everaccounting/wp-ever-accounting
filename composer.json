@@ -42,7 +42,11 @@
     "platform": {
       "php": "7.0"
     },
-    "sort-packages": true
+    "sort-packages": true,
+    "allow-plugins": {
+      "composer/installers": true,
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
   },
   "scripts": {
     "pre-commit": [

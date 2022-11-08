@@ -7,7 +7,7 @@
  * Author: everaccounting
  * Author URI: https://wpeveraccounting.com/
  * Requires at least: 4.7.0
- * Tested up to: 5.7
+ * Tested up to: 6.0.3
  * Text Domain: wp-ever-accounting
  * Domain Path: /languages/
  * License: GPL2+
