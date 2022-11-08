@@ -55,8 +55,8 @@
     "pre-commit": [
       "@phpcs"
     ],
-    "phpcs": "phpcs -s -p .",
-    "phpcbf": "phpcbf -p ."
+    "phpcs": "@php ./vendor/bin/phpcs --standard=phpcs.xml -s -v",
+    "phpcbf": "@php ./vendor/bin/phpcbf --standard=phpcs.xml -v"
   },
   "extra": {
     "scripts-description": {
