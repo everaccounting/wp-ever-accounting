@@ -17,6 +17,7 @@ if ( ! class_exists( '\EverAccounting_List_Table' ) ) {
 
 /**
  * Class EverAccounting_Bill_List_Table
+ *
  * @since 1.1.0
  */
 class EverAccounting_Bill_List_Table extends EverAccounting_List_Table {
@@ -154,7 +155,6 @@ class EverAccounting_Bill_List_Table extends EverAccounting_List_Table {
 	 *
 	 * @return string Displays a checkbox.
 	 * @since  1.1.0
-	 *
 	 */
 	function column_cb( $bill ) {
 		return sprintf( '<input type="checkbox" name="bill_id[]" value="%d"/>', $bill->get_id() );
@@ -165,11 +165,10 @@ class EverAccounting_Bill_List_Table extends EverAccounting_List_Table {
 	 *
 	 * @param string $column_name The name of the column
 	 *
-	 * @param Bill $bill
+	 * @param Bill   $bill
 	 *
 	 * @return string The column value.
 	 * @since 1.1.0
-	 *
 	 */
 	function column_default( $bill, $column_name ) {
 		$bill_id = $bill->get_id();
@@ -248,7 +247,7 @@ class EverAccounting_Bill_List_Table extends EverAccounting_List_Table {
 		}
 
 		$ids = array_map( 'absint', $ids );
-		$ids = array_filter(  $ids );
+		$ids = array_filter( $ids );
 
 		if ( empty( $ids ) ) {
 			return;

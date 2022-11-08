@@ -2,7 +2,7 @@
 
 namespace EverAccounting;
 
-defined('ABSPATH') || exit;
+defined( 'ABSPATH' ) || exit;
 
 class Mailer {
 	/**
@@ -74,7 +74,6 @@ class Mailer {
 	 * @since 1.1.0
 	 *
 	 * @param $placeholders
-	 *
 	 */
 	public function add_placeholders( $placeholders ) {
 		$this->placeholders = array_merge( $this->placeholders, $placeholders );
@@ -188,7 +187,6 @@ class Mailer {
 	 * @param string|null $content Content that will receive inline styles.
 	 *
 	 * @return string
-	 *
 	 */
 	public function style_inline( $content ) {
 		ob_start();

@@ -47,7 +47,6 @@ class EverAccounting_Transfer_List_Table extends EverAccounting_List_Table {
 	 * @see    WP_List_Table::__construct()
 	 *
 	 * @since  1.0.2
-	 *
 	 */
 	public function __construct( $args = array() ) {
 		$args = (array) wp_parse_args(
@@ -153,7 +152,6 @@ class EverAccounting_Transfer_List_Table extends EverAccounting_List_Table {
 	 *
 	 * @return string Displays a checkbox.
 	 * @since  1.0.2
-	 *
 	 */
 	function column_cb( $transfer ) {
 		return sprintf( '<input type="checkbox" name="transfer_id[]" value="%d"/>', $transfer->get_id() );
@@ -164,11 +162,10 @@ class EverAccounting_Transfer_List_Table extends EverAccounting_List_Table {
 	 *
 	 * @param Transfer $transfer
 	 *
-	 * @param string $column_name The name of the column
+	 * @param string   $column_name The name of the column
 	 *
 	 * @return string The column value.
 	 * @since 1.0.2
-	 *
 	 */
 	function column_default( $transfer, $column_name ) {
 		$transfer_id = $transfer->get_id();
@@ -241,7 +238,7 @@ class EverAccounting_Transfer_List_Table extends EverAccounting_List_Table {
 		}
 
 		$ids = array_map( 'absint', $ids );
-		$ids = array_filter(  $ids );
+		$ids = array_filter( $ids );
 
 		if ( empty( $ids ) ) {
 			return;

@@ -9,7 +9,7 @@
 
 namespace EverAccounting\Interfaces;
 
-defined('ABSPATH') || exit;
+defined( 'ABSPATH' ) || exit;
 
 interface Arrayable {
 	/**

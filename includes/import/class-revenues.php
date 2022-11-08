@@ -88,16 +88,32 @@ class Revenues extends CSV_Importer {
 			return new \WP_Error( 'empty_prop', __( 'Empty Payment Method', 'wp-ever-accounting' ) );
 		}
 
-		$category    = eaccounting_get_categories( array( 'search' => $data['category_name'], 'search_cols' => array( 'name' ), 'type' => 'income' ) );
+		$category    = eaccounting_get_categories(
+			array(
+				'search'      => $data['category_name'],
+				'search_cols' => array( 'name' ),
+				'type'        => 'income',
+			)
+		);
 		$category_id = ! empty( $category ) ? $category[0]->get_id() : '';
 
 		$currency = new Currency( array( 'code' => $data['currency_code'] ) );
 
-		$account               = eaccounting_get_accounts( array( 'search' => $data['account_name'], 'search_cols' => array( 'name' ) ) );
+		$account               = eaccounting_get_accounts(
+			array(
+				'search'      => $data['account_name'],
+				'search_cols' => array( 'name' ),
+			)
+		);
 		$account_id            = ! empty( $account ) ? $account[0]->get_id() : '';
 		$account_currency_code = ! empty( $account ) ? $account[0]->get_currency_code() : '';
 
-		$customer    = ( '' != $data['customer_name'] ) ? eaccounting_get_customers( array( 'search' => $data['customer_name'], 'search_cols' => array( 'name' ) ) ) : '';
+		$customer    = ( '' != $data['customer_name'] ) ? eaccounting_get_customers(
+			array(
+				'search'      => $data['customer_name'],
+				'search_cols' => array( 'name' ),
+			)
+		) : '';
 		$customer    = ! empty( $customer ) ? reset( $customer ) : '';
 		$customer_id = ! empty( $customer ) ? $customer->get_id() : '';
 

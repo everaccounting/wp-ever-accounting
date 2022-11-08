@@ -74,10 +74,10 @@ function eaccounting_reports_income_summary_tab() {
 	<div class="ea-card">
 		<?php
 		global $wpdb;
-		$dates = $totals = $incomes = $graph = $categories = array();
-		$start = eaccounting_get_financial_start( $year );
-		$end   = eaccounting_get_financial_end( $year );
-		$where = "category_id NOT IN ( SELECT id from {$wpdb->prefix}ea_categories WHERE type='other')";
+		$dates  = $totals = $incomes = $graph = $categories = array();
+		$start  = eaccounting_get_financial_start( $year );
+		$end    = eaccounting_get_financial_end( $year );
+		$where  = "category_id NOT IN ( SELECT id from {$wpdb->prefix}ea_categories WHERE type='other')";
 		$where .= $wpdb->prepare( ' AND (payment_date BETWEEN %s AND %s)', $start, $end );
 		if ( ! empty( $account_id ) ) {
 			$where .= $wpdb->prepare( ' AND account_id=%d', $account_id );
@@ -127,8 +127,8 @@ function eaccounting_reports_income_summary_tab() {
 
 		foreach ( $transactions as $transaction ) {
 			if ( isset( $incomes[ $transaction->category_id ] ) ) {
-				$month                                                    = date( 'F', strtotime( $transaction->payment_date ) );
-				$month_year                                               = date( 'F-Y', strtotime( $transaction->payment_date ) );
+				$month      = date( 'F', strtotime( $transaction->payment_date ) );
+				$month_year = date( 'F-Y', strtotime( $transaction->payment_date ) );
 				$incomes[ $transaction->category_id ][ $month ]['amount'] += $transaction->amount;
 				$graph[ $month_year ]                                     += $transaction->amount;
 				$totals[ $month ]['amount']                               += $transaction->amount;
@@ -140,17 +140,17 @@ function eaccounting_reports_income_summary_tab() {
 			  ->height( 300 )
 			  ->set_line_options()
 			  ->labels( array_values( $dates ) )
-			  ->dataset(
-				  array(
-					  'label'           => __( 'Income', 'wp-ever-accounting' ),
-					  'data'            => array_values( $graph ),
-					  'borderColor'     => '#3644ff',
-					  'backgroundColor' => '#3644ff',
-					  'borderWidth'     => 4,
-					  'pointStyle'      => 'line',
-					  'fill'            => false,
-				  )
-			  )
+			->dataset(
+				array(
+					'label'           => __( 'Income', 'wp-ever-accounting' ),
+					'data'            => array_values( $graph ),
+					'borderColor'     => '#3644ff',
+					'backgroundColor' => '#3644ff',
+					'borderWidth'     => 4,
+					'pointStyle'      => 'line',
+					'fill'            => false,
+				)
+			)
 		?>
 		<div class="ea-report-graph">
 			<?php $chart->render(); ?>

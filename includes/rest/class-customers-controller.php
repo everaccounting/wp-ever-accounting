@@ -26,9 +26,8 @@ class Customers_Controller extends Contacts_Controller {
 	 * Route base.
 	 *
 	 * @since 1.1.0
-	 * 
-	 * @var string
 	 *
+	 * @var string
 	 */
 	protected $rest_base = 'customers';
 
@@ -36,7 +35,7 @@ class Customers_Controller extends Contacts_Controller {
 	 * Entity model class.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @var string
 	 */
 	protected $entity_model = Customer::class;

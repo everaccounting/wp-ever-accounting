@@ -7,6 +7,7 @@ namespace EverAccounting;
 
 /**
  * Class Options
+ *
  * @package EverAccounting
  */
 class Options {
@@ -26,7 +27,7 @@ class Options {
 	/**
 	 * Get the value of a specific option
 	 *
-	 * @param mixed $default (optional)
+	 * @param mixed  $default (optional)
 	 *
 	 * @param string $key
 	 *
@@ -78,14 +79,13 @@ class Options {
 	/**
 	 * Sets an option (in memory).
 	 *
-	 * @param bool $save Optional. Whether to trigger saving the option or options. Default false.
+	 * @param bool  $save Optional. Whether to trigger saving the option or options. Default false.
 	 *
 	 * @param array $options An array of `key => value` setting pairs to set.
 	 *
 	 * @return bool If `$save` is not false, whether the options were saved successfully. True otherwise.
 	 * @since  1.0.2
 	 * @access public
-	 *
 	 */
 	public function set( $options, $save = false ) {
 		foreach ( $options as $option => $value ) {

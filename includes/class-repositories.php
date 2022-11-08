@@ -139,7 +139,6 @@ class Repositories {
 	 * @throws \Exception When validation fails.
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public static function load( $object_type ) {
 		return new Repositories( $object_type );
@@ -150,7 +149,6 @@ class Repositories {
 	 *
 	 * @return string
 	 * @since 1.1.0
-	 *
 	 */
 	public function get_repository_class() {
 		return $this->repository_class;
@@ -161,7 +159,6 @@ class Repositories {
 	 *
 	 * @return string
 	 * @since 1.1.0
-	 *
 	 */
 	public function get_object_type() {
 		return $this->object_type;
@@ -173,7 +170,6 @@ class Repositories {
 	 * @param Resource_Model $data model instance.
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public function read( &$data ) {
 		$this->instance->read( $data );
@@ -185,7 +181,6 @@ class Repositories {
 	 * @param Resource_Model $data model instance.
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public function insert( &$data ) {
 		$this->instance->insert( $data );
@@ -197,7 +192,6 @@ class Repositories {
 	 * @param Resource_Model $data model instance.
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public function update( &$data ) {
 		$this->instance->update( $data );
@@ -206,11 +200,9 @@ class Repositories {
 	/**
 	 * Delete an object using repository.
 	 *
-	 *
 	 * @param Resource_Model $data data instance.
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public function delete( &$data ) {
 		$this->instance->delete( $data );
@@ -225,7 +217,6 @@ class Repositories {
 	 *
 	 * @return mixed
 	 * @since 1.1.0
-	 *
 	 */
 	public function __call( $method, $parameters ) {
 		if ( is_callable( array( $this->instance, $method ) ) ) {

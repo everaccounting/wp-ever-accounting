@@ -246,7 +246,7 @@ function eaccounting_get_documents( $args = array() ) {
 		$where  .= " AND $table.`id` NOT IN ($exclude)";
 	}
 
-	//search
+	// search
 	$search_cols = array( 'document_number', 'order_number', 'address' );
 	if ( ! empty( $qv['search'] ) ) {
 		$searches = array();

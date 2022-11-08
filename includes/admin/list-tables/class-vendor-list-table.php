@@ -17,6 +17,7 @@ if ( ! class_exists( '\EverAccounting_List_Table' ) ) {
 
 /**
  * Class EverAccounting_Vendor_List_Table
+ *
  * @since 1.1.0
  */
 class EverAccounting_Vendor_List_Table extends EverAccounting_List_Table {
@@ -184,7 +185,6 @@ class EverAccounting_Vendor_List_Table extends EverAccounting_List_Table {
 	 *
 	 * @return string The column value.
 	 * @since 1.0.2
-	 *
 	 */
 	function column_default( $vendor, $column_name ) {
 		$vendor_id = $vendor->get_id();
@@ -204,13 +204,13 @@ class EverAccounting_Vendor_List_Table extends EverAccounting_List_Table {
 					'delete' => sprintf( '<a href="%1$s" class="del">%2$s</a>', esc_url( $del_url ), __( 'Delete', 'wp-ever-accounting' ) ),
 				);
 				$value    = '<a href="' . esc_url( $view_url ) . '"><strong>' . $vendor->get_name() . '</strong></a>';
-				$value    .= '<br>';
-				$value    .= '<small class=meta>' . $vendor->get_company() . '</small>';
-				$value    .= $this->row_actions( $actions );
+				$value   .= '<br>';
+				$value   .= '<small class=meta>' . $vendor->get_company() . '</small>';
+				$value   .= $this->row_actions( $actions );
 				break;
 			case 'email':
 				if ( ! empty( $vendor->get_email() ) || ! empty( $vendor->get_phone() ) ) {
-					$value = ! empty( $vendor->get_email() ) ? '<a href="mailto:' . sanitize_email( $vendor->get_email() ) . '">' . sanitize_email( $vendor->get_email() ) . '</a><br>' : '';
+					$value  = ! empty( $vendor->get_email() ) ? '<a href="mailto:' . sanitize_email( $vendor->get_email() ) . '">' . sanitize_email( $vendor->get_email() ) . '</a><br>' : '';
 					$value .= ! empty( $vendor->get_phone() ) ? '<span class="contact_phone">' . $vendor->get_phone() . '</span>' : '';
 				}
 				if ( empty( $vendor->get_email() ) && empty( $vendor->get_phone() ) ) {
@@ -229,7 +229,7 @@ class EverAccounting_Vendor_List_Table extends EverAccounting_List_Table {
 				$value = ( $value != '' ) ? $value : '&mdash;';
 				break;
 			case 'enabled':
-				$value = '<label class="ea-toggle">';
+				$value  = '<label class="ea-toggle">';
 				$value .= '<input type="checkbox" class="vendor-status" style="" value="true" data-id="' . $vendor->get_id() . '" ' . checked( $vendor->is_enabled(), true, false ) . '>';
 				$value .= '<span data-label-off="' . __( 'No', 'wp-ever-accounting' ) . '" data-label-on="' . __( 'Yes', 'wp-ever-accounting' ) . '" class="ea-toggle-slider"></span>';
 				$value .= '</label>';
@@ -301,7 +301,7 @@ class EverAccounting_Vendor_List_Table extends EverAccounting_List_Table {
 		}
 
 		$ids = array_map( 'absint', $ids );
-		$ids = array_filter(  $ids );
+		$ids = array_filter( $ids );
 
 		if ( empty( $ids ) ) {
 			return;

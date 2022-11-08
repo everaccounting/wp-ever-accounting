@@ -72,7 +72,7 @@ class Category extends Resource_Model {
 			$this->set_object_read( true );
 		}
 
-		//Load repository
+		// Load repository
 		$this->repository = Repositories::load( 'categories' );
 
 		if ( $this->get_id() > 0 ) {

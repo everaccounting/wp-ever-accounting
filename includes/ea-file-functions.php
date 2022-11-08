@@ -75,7 +75,7 @@ function eaccounting_protect_files( $force = false ) {
 
 		$htaccess = trailingslashit( $base_dir ) . '.htaccess';
 		if ( ! file_exists( $htaccess ) ) {
-			$rule = "Options -Indexes\n";
+			$rule  = "Options -Indexes\n";
 			$rule .= "deny from all\n";
 			$rule .= "<FilesMatch '\.(jpg|jpeg|png|pdf|doc|docx|xls)$'>\n";
 			$rule .= "Order Allow,Deny\n";

@@ -15,6 +15,7 @@ defined( 'ABSPATH' ) || exit();
 
 /**
  * Class Importer
+ *
  * @package EverAccounting/Admin
  */
 class Importer {

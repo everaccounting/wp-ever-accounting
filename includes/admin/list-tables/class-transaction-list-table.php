@@ -18,6 +18,7 @@ if ( ! class_exists( '\EverAccounting_List_Table' ) ) {
 
 /**
  * Class EverAccounting_Transaction_List_Table
+ *
  * @since 1.1.0
  */
 class EverAccounting_Transaction_List_Table extends EverAccounting_List_Table {
@@ -61,7 +62,6 @@ class EverAccounting_Transaction_List_Table extends EverAccounting_List_Table {
 	 * @see    WP_List_Table::__construct()
 	 *
 	 * @since  1.0.2
-	 *
 	 */
 	public function __construct( $args = array() ) {
 		$args = (array) wp_parse_args(
@@ -142,13 +142,12 @@ class EverAccounting_Transaction_List_Table extends EverAccounting_List_Table {
 	/**
 	 * This function renders most of the columns in the list table.
 	 *
-	 * @param string $column_name The name of the column
+	 * @param string      $column_name The name of the column
 	 *
 	 * @param  $transaction
 	 *
 	 * @return string The column value.
 	 * @since 1.0.2
-	 *
 	 */
 	function column_default( $transaction, $column_name ) {
 		switch ( $column_name ) {
@@ -183,7 +182,7 @@ class EverAccounting_Transaction_List_Table extends EverAccounting_List_Table {
 				break;
 			case 'account_id':
 				$account = eaccounting_get_account( $transaction->get_account_id( 'edit' ) );
-				//$value   = $account ? $account->get_name() : '&mdash;';
+				// $value   = $account ? $account->get_name() : '&mdash;';
 				$value = $account ? sprintf( '<a href="%1$s">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'accounts', 'action' => 'view', 'account_id' => $transaction->get_account_id() ) ) ), $account->get_name() ) : '&mdash;';// phpcs:ignore
 
 				break;
@@ -217,7 +216,6 @@ class EverAccounting_Transaction_List_Table extends EverAccounting_List_Table {
 	 * @param string $which
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function extra_tablenav( $which ) {
 		if ( 'stop' === $which ) {
@@ -335,8 +333,24 @@ class EverAccounting_Transaction_List_Table extends EverAccounting_List_Table {
 
 		$args                = apply_filters( 'eaccounting_transaction_table_query_args', $args, $this );
 		$this->items         = eaccounting_get_transactions( $args );
-		$this->income_count  = eaccounting_get_transactions( array_merge( $args, array( 'type' => 'income', 'count_total' => true ) ) );
-		$this->expense_count = eaccounting_get_transactions( array_merge( $args, array( 'type' => 'expense', 'count_total' => true ) ) );
+		$this->income_count  = eaccounting_get_transactions(
+			array_merge(
+				$args,
+				array(
+					'type'        => 'income',
+					'count_total' => true,
+				)
+			)
+		);
+		$this->expense_count = eaccounting_get_transactions(
+			array_merge(
+				$args,
+				array(
+					'type'        => 'expense',
+					'count_total' => true,
+				)
+			)
+		);
 		$this->total_count   = $this->income_count + $this->expense_count;
 
 		$type = isset( $_GET['type'] ) ? $_GET['type'] : 'any';
@@ -353,7 +367,6 @@ class EverAccounting_Transaction_List_Table extends EverAccounting_List_Table {
 				$total_items = $this->total_count;
 				break;
 		}
-
 
 		$this->set_pagination_args(
 			array(

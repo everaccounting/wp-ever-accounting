@@ -42,7 +42,7 @@ $title = $vendor->exists() ? __( 'Update Vendor', 'wp-ever-accounting' ) : __( '
 	<div class="ea-card">
 		<div class="ea-card__header">
 			<h3 class="ea-card__title"><?php echo $title; ?></h3>
-			<?php if ( $vendor->exists() ): ?>
+			<?php if ( $vendor->exists() ) : ?>
 				<div>
 					<a href="<?php echo esc_url( add_query_arg( 'action', 'view' ) ); ?>" class="button-secondary">
 						<?php esc_html_e( 'View Vendor', 'wp-ever-accounting' ); ?>

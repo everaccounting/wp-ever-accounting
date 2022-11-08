@@ -47,7 +47,7 @@ $quantity_label = eaccounting()->settings->get( 'bill_quantity_label', __( 'Quan
 				<?php
 				$item_id = 9999;
 				$item    = new \EverAccounting\Models\Document_Item();
-				include __DIR__ . '/bill-item.php';
+				require __DIR__ . '/bill-item.php';
 				?>
 			</script>
 			<script type="text/template" id="ea-bill-item-selector">
@@ -56,7 +56,7 @@ $quantity_label = eaccounting()->settings->get( 'bill_quantity_label', __( 'Quan
 					array(
 						'name'      => 'items[9999][item_id]',
 						'class'     => 'select-item',
-						'creatable' => true
+						'creatable' => true,
 					)
 				);
 				?>

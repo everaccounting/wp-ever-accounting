@@ -1,7 +1,6 @@
 <?php
 /**
  * Page: Overview page
- *
  */
 defined( 'ABSPATH' ) || exit;
 ?>

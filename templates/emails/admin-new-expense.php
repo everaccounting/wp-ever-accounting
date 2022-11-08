@@ -19,4 +19,4 @@ defined( 'ABSPATH' ) || exit;
 do_action( 'eaccounting_email_header', $email_heading, $email ); ?>
 
 <?php /* translators: %s: Customer billing full name */ ?>
-<p><?php printf( esc_html__( 'New expense added for the vendor %s:', 'wp-ever-accounting' ), $expense->get_vendor_name() );?></p>
+<p><?php printf( esc_html__( 'New expense added for the vendor %s:', 'wp-ever-accounting' ), $expense->get_vendor_name() ); ?></p>

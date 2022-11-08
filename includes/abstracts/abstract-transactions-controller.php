@@ -18,16 +18,14 @@ defined( 'ABSPATH' ) || die();
  *
  * @since   1.1.0
  * @package EverAccounting\Abstracts
- *
  */
 abstract class Transactions_Controller extends Entities_Controller {
 	/**
 	 * Route base.
 	 *
 	 * @since 1.1.0
-	 * 
-	 * @var string
 	 *
+	 * @var string
 	 */
 	protected $rest_base = 'transactions';
 
@@ -35,7 +33,7 @@ abstract class Transactions_Controller extends Entities_Controller {
 	 * Entity model class.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @var string
 	 */
 	protected $entity_model = Transactions::class;
@@ -73,9 +71,8 @@ abstract class Transactions_Controller extends Entities_Controller {
 	 * Retrieves the items's schema, conforming to JSON Schema.
 	 *
 	 * @since   1.1.0
-	 * 
-	 * @return array Item schema data.
 	 *
+	 * @return array Item schema data.
 	 */
 	public function get_item_schema() {
 		$schema = array(
@@ -92,7 +89,7 @@ abstract class Transactions_Controller extends Entities_Controller {
 						'sanitize_callback' => 'intval',
 					),
 				),
-				'payment_date'          => array(
+				'payment_date'     => array(
 					'description' => __( 'Payment Date of the transaction', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'format'      => 'date',
@@ -166,7 +163,7 @@ abstract class Transactions_Controller extends Entities_Controller {
 
 					),
 				),
-				'document_id'       => array(
+				'document_id'      => array(
 					'description' => __( 'Invoice id of the transaction', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -320,9 +317,8 @@ abstract class Transactions_Controller extends Entities_Controller {
 	 * Retrieves the query params for the items collection.
 	 *
 	 * @since   1.1.0
-	 * 
-	 * @return array Collection parameters.
 	 *
+	 * @return array Collection parameters.
 	 */
 	public function get_collection_params() {
 		$query_params = array_merge(

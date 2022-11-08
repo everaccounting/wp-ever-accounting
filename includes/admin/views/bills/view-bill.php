@@ -42,7 +42,6 @@ if ( $bill->exists() ) {
  * @param Bill $bill object.
  *
  * @since 1.1.0
- *
  */
 do_action( 'add_meta_boxes_ea_bill', $bill );
 ?>

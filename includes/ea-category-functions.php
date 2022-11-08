@@ -34,7 +34,6 @@ function eaccounting_get_category_types() {
  *
  * @return string
  * @since 1.1.0
- *
  */
 function eaccounting_get_category_type( $type ) {
 	$types = eaccounting_get_category_types();
@@ -49,7 +48,6 @@ function eaccounting_get_category_type( $type ) {
  *
  * @return null|EverAccounting\Models\Category
  * @since 1.1.0
- *
  */
 function eaccounting_get_category( $category ) {
 	if ( empty( $category ) ) {
@@ -72,7 +70,6 @@ function eaccounting_get_category( $category ) {
  *
  * @return \EverAccounting\Models\Category|null
  * @since 1.1.0
- *
  */
 function eaccounting_get_category_by_name( $name, $type ) {
 	global $wpdb;
@@ -94,7 +91,7 @@ function eaccounting_get_category_by_name( $name, $type ) {
 /**
  * Insert a category.
  *
- * @param bool $wp_error Whether to return false or WP_Error on failure.
+ * @param bool  $wp_error Whether to return false or WP_Error on failure.
  *
  * @param array $data {
  *                            An array of elements that make up an category to update or insert.
@@ -115,7 +112,6 @@ function eaccounting_get_category_by_name( $name, $type ) {
  *
  * @return int|\WP_Error|\EverAccounting\Models\Category|bool The value 0 or WP_Error on failure. The Category object on success.
  * @since 1.1.0
- *
  */
 function eaccounting_insert_category( $data = array(), $wp_error = true ) {
 	// Ensure that we have data.
@@ -133,7 +129,7 @@ function eaccounting_insert_category( $data = array(), $wp_error = true ) {
 		$item->set_props( $data );
 
 		// If no color set.
-		if( empty( $item->get_color() ) ){
+		if ( empty( $item->get_color() ) ) {
 			$item->set_color( eaccounting_get_random_color() );
 		}
 
@@ -152,7 +148,6 @@ function eaccounting_insert_category( $data = array(), $wp_error = true ) {
  *
  * @return bool
  * @since 1.1.0
- *
  */
 function eaccounting_delete_category( $category_id ) {
 	try {
@@ -171,7 +166,6 @@ function eaccounting_delete_category( $category_id ) {
  *
  * @return int|array|null
  * @since 1.1.0
- *
  */
 function eaccounting_get_categories( $args = array() ) {
 	global $wpdb;
@@ -209,32 +203,32 @@ function eaccounting_get_categories( $args = array() ) {
 
 	if ( ! empty( $qv['include'] ) ) {
 		$include = implode( ',', wp_parse_id_list( $qv['include'] ) );
-		$where   .= " AND $table.`id` IN ($include)";
+		$where  .= " AND $table.`id` IN ($include)";
 	} elseif ( ! empty( $qv['exclude'] ) ) {
 		$exclude = implode( ',', wp_parse_id_list( $qv['exclude'] ) );
-		$where   .= " AND $table.`id` NOT IN ($exclude)";
+		$where  .= " AND $table.`id` NOT IN ($exclude)";
 	}
 
 	if ( ! empty( $qv['type'] ) ) {
-		$types = implode( "','", wp_parse_list( $qv['type'] ) );
+		$types  = implode( "','", wp_parse_list( $qv['type'] ) );
 		$where .= " AND $table.`type` IN ('$types')";
 	}
 
 	if ( ! empty( $qv['status'] ) && ! in_array( $qv['status'], array( 'all', 'any' ), true ) ) {
 		$status = eaccounting_string_to_bool( $qv['status'] );
 		$status = eaccounting_bool_to_number( $status );
-		$where  .= " AND $table.`enabled` = ('$status')";
+		$where .= " AND $table.`enabled` = ('$status')";
 	}
 
 	if ( ! empty( $qv['date_created'] ) && is_array( $qv['date_created'] ) ) {
 		$date_created_query = new \WP_Date_Query( $qv['date_created'], "{$table}.date_created" );
-		$where              .= $date_created_query->get_sql();
+		$where             .= $date_created_query->get_sql();
 	}
 
 	$search_cols = array( 'name', 'type' );
 	if ( ! empty( $qv['search'] ) ) {
 		$searches = array();
-		$where    .= ' AND (';
+		$where   .= ' AND (';
 		foreach ( $search_cols as $col ) {
 			$searches[] = $wpdb->prepare( $col . ' LIKE %s', '%' . $wpdb->esc_like( $qv['search'] ) . '%' );
 		}
@@ -291,5 +285,4 @@ function eaccounting_get_categories( $args = array() ) {
  *
  * @return int|array|null
  * @since 1.1.0
- *
  */

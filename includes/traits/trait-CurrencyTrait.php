@@ -11,6 +11,7 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Trait CurrencyTrait
+ *
  * @package EverAccounting\Traits
  */
 trait CurrencyTrait {
@@ -156,11 +157,11 @@ trait CurrencyTrait {
 	 * @since 1.1.0
 	 *
 	 * @param      $code
-	 * @param null $rate
+	 * @param null   $rate
 	 * @param      $amount
 	 */
 	public function get_converted_amount( $amount, $code, $rate = null ) {
-		//todo complete
+		// todo complete
 	}
 
 }

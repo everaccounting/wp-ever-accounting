@@ -4,7 +4,6 @@
  *
  * @return string The compiled system info report.
  * @since 1.0.2
- *
  */
 defined( 'ABSPATH' ) || exit();
 
@@ -78,10 +77,10 @@ function eaccounting_tools_system_info_report() {
 	// Misc Settings
 	$currency_code = eaccounting_get_option( 'default_currency' );
 	$currency      = eaccounting_get_currency( $currency_code );
-	$return        .= "\n" . '-- EverAccounting Settings' . "\n\n";
+	$return       .= "\n" . '-- EverAccounting Settings' . "\n\n";
 
 	$return .= 'Default currency:                  ' . $currency_code . "\n";
-	$return .= 'Default currency rate:             ' . ( ! empty( $currency ) ? $currency->get_rate() : "" ) . "\n";
+	$return .= 'Default currency rate:             ' . ( ! empty( $currency ) ? $currency->get_rate() : '' ) . "\n";
 	$return .= 'Default payment method:            ' . eaccounting_get_option( 'default_payment_method' ) . "\n";
 	$return .= 'Default Account:                   ' . eaccounting_get_option( 'default_account' ) . "\n";
 
@@ -123,7 +122,7 @@ function eaccounting_tools_system_info_report() {
 			continue;
 		}
 
-		$update = ( array_key_exists( $plugin_path, $updates ) ) ? ' (needs update - ' . $updates[ $plugin_path ]->update->new_version . ')' : '';
+		$update  = ( array_key_exists( $plugin_path, $updates ) ) ? ' (needs update - ' . $updates[ $plugin_path ]->update->new_version . ')' : '';
 		$return .= $plugin['Name'] . ': ' . $plugin['Version'] . $update . "\n";
 	}
 
@@ -135,7 +134,7 @@ function eaccounting_tools_system_info_report() {
 			continue;
 		}
 
-		$update = ( array_key_exists( $plugin_path, $updates ) ) ? ' (needs update - ' . $updates[ $plugin_path ]->update->new_version . ')' : '';
+		$update  = ( array_key_exists( $plugin_path, $updates ) ) ? ' (needs update - ' . $updates[ $plugin_path ]->update->new_version . ')' : '';
 		$return .= $plugin['Name'] . ': ' . $plugin['Version'] . $update . "\n";
 	}
 
@@ -153,8 +152,8 @@ function eaccounting_tools_system_info_report() {
 				continue;
 			}
 
-			$update = ( array_key_exists( $plugin_path, $updates ) ) ? ' (needs update - ' . $updates[ $plugin_path ]->update->new_version . ')' : '';
-			$plugin = get_plugin_data( $plugin_path );
+			$update  = ( array_key_exists( $plugin_path, $updates ) ) ? ' (needs update - ' . $updates[ $plugin_path ]->update->new_version . ')' : '';
+			$plugin  = get_plugin_data( $plugin_path );
 			$return .= $plugin['Name'] . ': ' . $plugin['Version'] . $update . "\n";
 		}
 	}

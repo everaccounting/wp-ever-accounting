@@ -13,6 +13,7 @@ defined( 'ABSPATH' ) || exit();
 
 /**
  * Class Admin
+ *
  * @package EverAccounting\Admin
  * @since   1.1.0
  */
@@ -28,7 +29,6 @@ class Extensions {
 
 	/**
 	 * Registers the extensions page.
-	 *
 	 */
 	public function register_page() {
 		add_submenu_page(
@@ -72,7 +72,7 @@ class Extensions {
 	}
 
 	public function get_extensions() {
-		$cache = false;//get_transient( 'wpeveraccounting_extensions_feed' );
+		$cache = false;// get_transient( 'wpeveraccounting_extensions_feed' );
 
 		if ( false === $cache ) {
 			$url = 'https://wpeveraccounting.com/edd-api/products/';

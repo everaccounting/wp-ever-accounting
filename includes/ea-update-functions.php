@@ -10,23 +10,23 @@
 
 defined( 'ABSPATH' ) || exit;
 
-function eaccounting_add_background_updater($action){
-	if( empty( $action ) ){
+function eaccounting_add_background_updater( $action ) {
+	if ( empty( $action ) ) {
 		return;
 	}
-	$updater = get_option( 'eaccounting_background_updater', array() );
+	$updater   = get_option( 'eaccounting_background_updater', array() );
 	$updater[] = $action;
-	update_option('eaccounting_background_updater', $updater);
+	update_option( 'eaccounting_background_updater', $updater );
 }
 
-function eaccounting_remove_background_updater($action){
-	if( empty( $action ) ){
+function eaccounting_remove_background_updater( $action ) {
+	if ( empty( $action ) ) {
 		return;
 	}
 	$updater = get_option( 'eaccounting_background_updater', array() );
-	if( in_array( $action, $updater) ){
-		unset( $updater[array_flip($updater)[$action]] );
-		update_option('eaccounting_background_updater', $updater);
+	if ( in_array( $action, $updater ) ) {
+		unset( $updater[ array_flip( $updater )[ $action ] ] );
+		update_option( 'eaccounting_background_updater', $updater );
 	}
 }
 
@@ -307,11 +307,11 @@ function eaccounting_update_1_1_0() {
 	global $wpdb;
 	$prefix = $wpdb->prefix;
 
-	//todo update attachment files
+	// todo update attachment files
 	$wpdb->query( "ALTER TABLE {$prefix}ea_accounts ADD `thumbnail_id` INT(11) DEFAULT NULL AFTER `bank_address`;" );
 	$wpdb->query( "ALTER TABLE {$prefix}ea_categories ADD INDEX enabled (`enabled`);" );
 
-	//$wpdb->query( "ALTER TABLE {$prefix}ea_contacts CHANGE `attachment` `avatar_id` INT(11) DEFAULT NULL;" );
+	// $wpdb->query( "ALTER TABLE {$prefix}ea_contacts CHANGE `attachment` `avatar_id` INT(11) DEFAULT NULL;" );
 	$wpdb->query( "ALTER TABLE {$prefix}ea_contacts CHANGE `tax_number` `vat_number` VARCHAR(50) DEFAULT NULL;" );
 	$wpdb->query( "ALTER TABLE {$prefix}ea_contacts DROP COLUMN `fax`;" );
 	$wpdb->query( "ALTER TABLE {$prefix}ea_contacts DROP COLUMN `note`;" );
@@ -329,11 +329,11 @@ function eaccounting_update_1_1_0() {
 	$wpdb->query( "ALTER TABLE {$prefix}ea_transactions CHANGE `invoice_id` `document_id` INT(11) DEFAULT NULL;" );
 	$wpdb->query( "ALTER TABLE {$prefix}ea_transactions CHANGE `parent_id` `parent_id` INT(11) DEFAULT NULL;" );
 	$wpdb->query( "ALTER TABLE {$prefix}ea_transactions ADD `attachment_id` INT(11) DEFAULT NULL AFTER `reference`;" );
-	//$wpdb->query( "ALTER TABLE {$prefix}ea_transactions CHANGE `attachment` `attachment_id` INT(11) DEFAULT NULL;" );
+	// $wpdb->query( "ALTER TABLE {$prefix}ea_transactions CHANGE `attachment` `attachment_id` INT(11) DEFAULT NULL;" );
 	$wpdb->query( "ALTER TABLE {$prefix}ea_transactions ADD INDEX document_id (`document_id`);" );
 	$wpdb->query( "ALTER TABLE {$prefix}ea_transactions ADD INDEX category_id (`category_id`);" );
 
-	//update currency table to options
+	// update currency table to options
 	$currencies = $wpdb->get_results( "SELECT * FROM {$prefix}ea_currencies order by id asc" );
 
 	if ( is_array( $currencies ) && count( $currencies ) ) {
@@ -354,7 +354,7 @@ function eaccounting_update_1_1_0() {
 		}
 	}
 
-	//update permissions
+	// update permissions
 	global $wp_roles;
 
 	if ( is_object( $wp_roles ) ) {
@@ -371,21 +371,21 @@ function eaccounting_update_1_1_0() {
 
 	\EverAccounting\Install::install();
 
-	//todo upload transaction files as attachment then update transaction table and delete attachment column
+	// todo upload transaction files as attachment then update transaction table and delete attachment column
 	flush_rewrite_rules();
-	eaccounting_add_background_updater('eaccounting_update_attachments_1_1_0');
+	eaccounting_add_background_updater( 'eaccounting_update_attachments_1_1_0' );
 }
 
 function eaccounting_update_attachments_1_1_0() {
 	global $wpdb;
-	$prefix = $wpdb->prefix;
+	$prefix      = $wpdb->prefix;
 	$attachments = $wpdb->get_results( "SELECT id, attachment url from {$wpdb->prefix}ea_transactions WHERE attachment_id IS NULL AND attachment !='' limit 5" );
-	if( empty( $attachments ) ){
-		eaccounting_remove_background_updater('eaccounting_update_attachments_1_1_0');
+	if ( empty( $attachments ) ) {
+		eaccounting_remove_background_updater( 'eaccounting_update_attachments_1_1_0' );
 		$wpdb->query( "ALTER TABLE {$prefix}ea_transactions DROP COLUMN `attachment`;" );
 	}
 
-	$dir         = wp_get_upload_dir();
+	$dir = wp_get_upload_dir();
 
 	foreach ( $attachments as $attachment ) {
 		$path       = $attachment->url;

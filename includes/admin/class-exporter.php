@@ -15,8 +15,9 @@ defined( 'ABSPATH' ) || exit();
 
 /**
  * Class Exporter
+ *
  * @package EverAccounting/Admin
-*/
+ */
 class Exporter {
 
 	/**

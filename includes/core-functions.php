@@ -89,10 +89,10 @@ function eaccounting_get_financial_start( $year = null, $format = 'Y-m-d' ) {
  */
 function eaccounting_get_financial_end( $year = null, $format = 'Y-m-d' ) {
 	$dt = new \EverAccounting\DateTime( eaccounting_get_financial_start( $year, 'Y-m-d' ) );
-	//  if ( $dt->copy()->addYear( 1 )->subDay( 1 )->getTimestamp() > strtotime(date_i18n('Y-m-d H:i')) ) {
-	//      $today = new \EverAccounting\DateTime( 'now' );
-	//      return $today->date( $format );
-	//  }
+	// if ( $dt->copy()->addYear( 1 )->subDay( 1 )->getTimestamp() > strtotime(date_i18n('Y-m-d H:i')) ) {
+	// $today = new \EverAccounting\DateTime( 'now' );
+	// return $today->date( $format );
+	// }
 	return $dt->addYear( 1 )->subDay( 1 )->date( $format );
 }
 
@@ -212,7 +212,7 @@ function eaccounting_price( $amount, $code = null, $get_value = false ) {
  * @param string $amount
  *
  * @param string $to
- * @param string  $to_rate
+ * @param string $to_rate
  *
  * @return float|int|string
  */
@@ -268,9 +268,9 @@ function eaccounting_price_to_default( $amount, $from, $from_rate ) {
  * @since 1.1.0
  *
  * @param      $from
- * @param null $to
- * @param null $from_rate
- * @param null $to_rate
+ * @param null   $to
+ * @param null   $from_rate
+ * @param null   $to_rate
  * @param      $amount
  *
  * @return float|int|string
@@ -490,7 +490,7 @@ function eaccounting_cache_set_last_changed( $group ) {
  *
  * @param     $total
  * @param     $number
- * @param int $decimals
+ * @param int    $decimals
  * @since 1.1.0
  *
  * @return float
@@ -604,7 +604,7 @@ function eaccounting_get_full_name( $user_id ) {
  * @param $file
  * @param $item_name
  */
-function eaccounting_init_license( $file, $item_name ){
+function eaccounting_init_license( $file, $item_name ) {
 	if ( is_admin() && class_exists( '\EverAccounting\License' ) ) {
 		$license = new \EverAccounting\License( $file, $item_name );
 	}

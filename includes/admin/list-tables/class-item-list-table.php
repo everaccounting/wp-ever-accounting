@@ -19,6 +19,7 @@ if ( ! class_exists( '\EverAccounting_List_Table' ) ) {
 
 /**
  * Class EverAccounting_Item_List_Table
+ *
  * @since 1.1.0
  */
 class EverAccounting_Item_List_Table extends EverAccounting_List_Table {
@@ -170,7 +171,6 @@ class EverAccounting_Item_List_Table extends EverAccounting_List_Table {
 	 *
 	 * @return string Displays a checkbox.
 	 * @since  1.1.0
-	 *
 	 */
 	function column_cb( $item ) {
 		return sprintf( '<input type="checkbox" name="item_id[]" value="%d"/>', $item->get_id() );
@@ -185,7 +185,6 @@ class EverAccounting_Item_List_Table extends EverAccounting_List_Table {
 	 *
 	 * @return string The column value.
 	 * @since 1.1.0
-	 *
 	 */
 	function column_default( $item, $column_name ) {
 		$item_id = $item->get_id();
@@ -202,22 +201,22 @@ class EverAccounting_Item_List_Table extends EverAccounting_List_Table {
 				$actions  = array(
 					'id'     => 'ID: ' . $item_id,
 					'edit'   => '<a href="' . eaccounting_admin_url(
-							array(
-								'page'    => 'ea-items',
-								'tab'     => 'items',
-								'action'  => 'edit',
-								'item_id' => $item_id,
-							)
-						) . '">' . __( 'Edit', 'wp-ever-accounting' ) . '</a>',
+						array(
+							'page'    => 'ea-items',
+							'tab'     => 'items',
+							'action'  => 'edit',
+							'item_id' => $item_id,
+						)
+					) . '">' . __( 'Edit', 'wp-ever-accounting' ) . '</a>',
 					'delete' => '<a href="' . eaccounting_admin_url(
-							array(
-								'page'     => 'ea-items',
-								'tab'      => 'items',
-								'action'   => 'delete',
-								'item_id'  => $item_id,
-								'_wpnonce' => $nonce,
-							)
-						) . '" class="del">' . __( 'Delete', 'wp-ever-accounting' ) . '</a>',
+						array(
+							'page'     => 'ea-items',
+							'tab'      => 'items',
+							'action'   => 'delete',
+							'item_id'  => $item_id,
+							'_wpnonce' => $nonce,
+						)
+					) . '" class="del">' . __( 'Delete', 'wp-ever-accounting' ) . '</a>',
 				);
 				$value    = '<a href="' . esc_url( $edit_url ) . '"><strong>' . $item->get_name() . '</strong></a>' . $this->row_actions( $actions );
 				break;
@@ -232,7 +231,7 @@ class EverAccounting_Item_List_Table extends EverAccounting_List_Table {
 				$value    = $category ? $category->get_name() : '&mdash;';
 				break;
 			case 'enabled':
-				$value = '<label class="ea-toggle">';
+				$value  = '<label class="ea-toggle">';
 				$value .= '<input type="checkbox" class="item-status" style="" value="true" data-id="' . $item->get_id() . '" ' . checked( $item->is_enabled(), true, false ) . '>';
 				$value .= '<span data-label-off="' . __( 'No', 'wp-ever-accounting' ) . '" data-label-on="' . __( 'Yes', 'wp-ever-accounting' ) . '" class="ea-toggle-slider"></span>';
 				$value .= '</label>';
@@ -276,7 +275,7 @@ class EverAccounting_Item_List_Table extends EverAccounting_List_Table {
 		}
 
 		$ids = array_map( 'absint', $ids );
-		$ids = array_filter(  $ids );
+		$ids = array_filter( $ids );
 
 		if ( empty( $ids ) ) {
 			return;

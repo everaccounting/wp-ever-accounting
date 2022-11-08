@@ -9,20 +9,20 @@
 
 defined( 'ABSPATH' ) || exit();
 
-include( EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-category-list-table.php' );
+require EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-category-list-table.php';
 $category_table = new EverAccounting_Category_List_Table();
 $category_table->prepare_items();
-$add_url = eaccounting_admin_url(
+$add_url    = eaccounting_admin_url(
 	array(
 		'page'   => 'ea-settings',
 		'tab'    => 'categories',
-		'action' => 'add'
+		'action' => 'add',
 	)
 );
 $import_url = eaccounting_admin_url(
 	array(
 		'page' => 'ea-tools',
-		'tab' => 'import'
+		'tab'  => 'import',
 	),
 	admin_url( 'admin.php' )
 );
@@ -35,7 +35,7 @@ $import_url = eaccounting_admin_url(
 	<?php esc_html_e( 'Import', 'wp-ever-accounting' ); ?>
 </a>
 <?php do_action( 'eaccounting_categories_table_top' ); ?>
-<form id="ea-categories-table" method="get" action="<?php echo admin_url('admin.php'); ?>">
+<form id="ea-categories-table" method="get" action="<?php echo admin_url( 'admin.php' ); ?>">
 	<?php
 	$category_table->views();
 	$category_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'ea-categories' );
@@ -47,7 +47,7 @@ $import_url = eaccounting_admin_url(
 <?php do_action( 'eaccounting_categories_table_bottom' ); ?>
 <?php
 eaccounting_enqueue_js(
-		"
+	"
 	jQuery('.category-status').on('change', function(e){
 		jQuery.post('" . eaccounting()->ajax_url() . "', {
 			action:'eaccounting_edit_category',

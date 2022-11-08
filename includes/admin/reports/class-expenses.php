@@ -16,6 +16,7 @@ defined( 'ABSPATH' ) || exit();
 
 /**
  * Expenses Class
+ *
  * @package EverAccounting\Admin\Report
  */
 class Expenses extends Report {
@@ -31,13 +32,13 @@ class Expenses extends Report {
 		$this->maybe_clear_cache( $args );
 		if ( empty( $args['year'] ) ) {
 			echo '<p>';
-			esc_html_e( 'Please select a year to generate the report.','wp-ever-accounting' );
+			esc_html_e( 'Please select a year to generate the report.', 'wp-ever-accounting' );
 			echo '</p>';
 
 			return false;
 		}
 
-		$report = false; //$this->get_cache( $args );
+		$report = false; // $this->get_cache( $args );
 		if ( empty( $report ) ) {
 			$report            = array();
 			$start_date        = $this->get_start_date( $args['year'] );
@@ -85,7 +86,7 @@ class Expenses extends Report {
 				$report['categories'] = $categories;
 			}
 
-			//$this->set_cache( $args, $report );
+			// $this->set_cache( $args, $report );
 		}
 
 		return $report;
@@ -102,7 +103,7 @@ class Expenses extends Report {
 		$category_id    = empty( $_GET['category_id'] ) ? '' : intval( $_GET['category_id'] );
 		$account_id     = empty( $_GET['account_id'] ) ? '' : intval( $_GET['account_id'] );
 		$vendor_id      = empty( $_GET['vendor_id'] ) ? '' : intval( $_GET['vendor_id'] );
-		$payment_method = empty( $_GET['payment_method'] ) ? '' :  $_GET['payment_method'] ;
+		$payment_method = empty( $_GET['payment_method'] ) ? '' : $_GET['payment_method'];
 		$report         = $this->get_report(
 			array(
 				'year'           => $year,
@@ -146,11 +147,11 @@ class Expenses extends Report {
 						);
 						eaccounting_category_dropdown(
 							array(
-								'name'      => 'category_id',
-								'value'     => $category_id,
-								'type'      => 'expense',
-								'creatable' => false,
-								'ajax_action' => 'eaccounting_get_expense_categories'
+								'name'        => 'category_id',
+								'value'       => $category_id,
+								'type'        => 'expense',
+								'creatable'   => false,
+								'ajax_action' => 'eaccounting_get_expense_categories',
 							)
 						);
 						eaccounting_payment_method_dropdown(
@@ -307,13 +308,13 @@ class Expenses extends Report {
 				</div>
 
 				<div class="ea-card__footer">
-					<a class="button button-secondary" href="<?php echo wp_nonce_url( add_query_arg('refresh_report', 'yes'), 'refresh_report' ); ?>">
+					<a class="button button-secondary" href="<?php echo wp_nonce_url( add_query_arg( 'refresh_report', 'yes' ), 'refresh_report' ); ?>">
 						<?php esc_html_e( 'Reset Cache', 'wp-ever-accounting' ); ?>
 					</a>
 				</div>
 			<?php else : ?>
 				<div class="ea-card__inside">
-					<p><?php _e("Please select financial year.","wp-ever-accounting");?></p>
+					<p><?php _e( 'Please select financial year.', 'wp-ever-accounting' ); ?></p>
 				</div>
 			<?php endif; ?>
 		</div>

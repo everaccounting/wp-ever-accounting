@@ -44,7 +44,7 @@ $title = $customer->exists() ? __( 'Update Customer', 'wp-ever-accounting' ) : _
 					<?php esc_html_e( 'View Customer', 'wp-ever-accounting' ); ?>
 				</a>
 			</div>
-			<?php endif;?>
+			<?php endif; ?>
 		</div>
 		<div class="ea-card__body">
 			<div class="ea-card__inside">

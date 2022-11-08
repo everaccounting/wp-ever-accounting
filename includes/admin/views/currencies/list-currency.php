@@ -9,10 +9,10 @@
 
 defined( 'ABSPATH' ) || exit();
 
-include( EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-currency-list-table.php' );
+require EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-currency-list-table.php';
 $currency_table = new EverAccounting_Currency_List_Table();
 $currency_table->prepare_items();
-$add_url = eaccounting_admin_url(
+$add_url    = eaccounting_admin_url(
 	array(
 		'page'   => 'ea-settings',
 		'tab'    => 'currencies',
@@ -22,7 +22,7 @@ $add_url = eaccounting_admin_url(
 $import_url = eaccounting_admin_url(
 	array(
 		'page' => 'ea-tools',
-		'tab' => 'import'
+		'tab'  => 'import',
 	),
 	admin_url( 'admin.php' )
 );
@@ -35,7 +35,7 @@ $import_url = eaccounting_admin_url(
 	<?php esc_html_e( 'Import', 'wp-ever-accounting' ); ?>
 </a>
 <?php do_action( 'eaccounting_currencies_table_top' ); ?>
-	<form id="ea-currency-table" method="get" action="<?php echo admin_url('admin.php'); ?>">
+	<form id="ea-currency-table" method="get" action="<?php echo admin_url( 'admin.php' ); ?>">
 		<?php
 		$currency_table->views();
 		$currency_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'ea-currencies' );
@@ -47,7 +47,7 @@ $import_url = eaccounting_admin_url(
 <?php do_action( 'eaccounting_currencies_table_bottom' ); ?>
 <?php
 eaccounting_enqueue_js(
-		"
+	"
 	jQuery('.currency-status').on('change', function(e){
 		jQuery.post('" . eaccounting()->ajax_url() . "', {
 			action:'eaccounting_edit_currency',

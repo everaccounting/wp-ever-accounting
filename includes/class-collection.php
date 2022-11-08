@@ -15,8 +15,9 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Class Collection
+ *
  * @package EverAccounting
-*/
+ */
 
 class Collection implements Arrayable {
 	/**
@@ -47,11 +48,12 @@ class Collection implements Arrayable {
 
 	/**
 	 * Copy the collection
+	 *
 	 * @since 1.1.0
 	 * @return $this
 	 */
-	public function copy(){
-		return new static($this->items);
+	public function copy() {
+		return new static( $this->items );
 	}
 
 	/**

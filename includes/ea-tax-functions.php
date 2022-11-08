@@ -36,7 +36,7 @@ function eaccounting_prices_include_tax() {
  *
  * @param      $rate
  *
- * @param bool $inclusive
+ * @param bool   $inclusive
  *
  * @return float|int
  */

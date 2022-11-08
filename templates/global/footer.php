@@ -17,7 +17,7 @@ $host = eaccounting_get_site_name();
 	<div class="ea-container">
 		<p class="ea-copyright-info">
 			<?php echo date_i18n( 'Y' ); ?>
-			<?php echo sprintf(esc_html__('Copyright %s', 'wp-ever-accounting'), $host);?>
+			<?php echo sprintf( esc_html__( 'Copyright %s', 'wp-ever-accounting' ), $host ); ?>
 		</p>
 	</div>
 </footer>

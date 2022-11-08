@@ -11,12 +11,14 @@
  */
 
 namespace EverAccounting\Admin;
+
 use EverAccounting\Models\Bill;
 
 defined( 'ABSPATH' ) || exit();
 
 /**
  * Class Bill_Actions
+ *
  * @package EverAccounting\Admin
  */
 
@@ -82,7 +84,6 @@ class Bill_Actions {
 	 * @param $bill_id
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public static function view_bill( $bill_id = null ) {
 		try {
@@ -110,7 +111,6 @@ class Bill_Actions {
 	 * @param $bill_id
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public static function edit_bill( $bill_id = null ) {
 		try {
@@ -135,7 +135,6 @@ class Bill_Actions {
 	 * @param Bill $bill
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public static function bill_notes( $bill ) {
 		if ( ! $bill->exists() ) {
@@ -150,7 +149,6 @@ class Bill_Actions {
 	 * @param Bill $bill
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public static function bill_payments( $bill ) {
 		if ( ! $bill->exists() ) {

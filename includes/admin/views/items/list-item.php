@@ -11,10 +11,10 @@
 
 defined( 'ABSPATH' ) || exit();
 
-include( EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-item-list-table.php' );
+require EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-item-list-table.php';
 $items_table = new EverAccounting_Item_List_Table();
 $items_table->prepare_items();
-$add_url = eaccounting_admin_url(
+$add_url    = eaccounting_admin_url(
 	array(
 		'page'   => 'ea-items',
 		'tab'    => 'items',
@@ -22,11 +22,11 @@ $add_url = eaccounting_admin_url(
 	)
 );
 $import_url = add_query_arg(
-		array(
-				'page' => 'ea-tools',
-				'tab'  => 'import',
-		),
-		admin_url( 'admin.php' )
+	array(
+		'page' => 'ea-tools',
+		'tab'  => 'import',
+	),
+	admin_url( 'admin.php' )
 );
 ?>
 <h1 class="wp-heading-inline"><?php _e( 'Items', 'wp-ever-accounting' ); ?></h1>
@@ -37,7 +37,7 @@ $import_url = add_query_arg(
 	<?php esc_html_e( 'Import', 'wp-ever-accounting' ); ?>
 </a>
 <?php do_action( 'eaccounting_items_table_top' ); ?>
-<form id="ea-items-table" method="get" action="<?php echo admin_url('admin.php'); ?>">
+<form id="ea-items-table" method="get" action="<?php echo admin_url( 'admin.php' ); ?>">
 	<?php
 	$items_table->views();
 	$items_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'ea-items' );
@@ -49,7 +49,7 @@ $import_url = add_query_arg(
 <?php do_action( 'eaccounting_items_table_bottom' ); ?>
 <?php
 eaccounting_enqueue_js(
-		"
+	"
 	jQuery('.item-status').on('change', function(e){
 		jQuery.post('" . eaccounting()->ajax_url() . "', {
 			action:'eaccounting_edit_item',

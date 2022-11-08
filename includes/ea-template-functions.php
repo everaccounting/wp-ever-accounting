@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit();
 /**
  * Get template part.
  *
- * @param mixed $slug Template slug.
+ * @param mixed  $slug Template slug.
  * @param string $name Template name (default: '').
  */
 function eaccounting_get_template_part( $slug, $name = null ) {
@@ -95,7 +95,7 @@ function eaccounting_locate_template( $template_name, $template_path = '', $defa
  * Get other templates passing attributes and including the file.
  *
  * @param string $template_name Template name.
- * @param array $args Arguments. (default: array).
+ * @param array  $args Arguments. (default: array).
  * @param string $template_path Template path. (default: '').
  * @param string $default_path Default path. (default: '').
  */
@@ -136,7 +136,7 @@ function eaccounting_get_template( $template_name, $args = array(), $template_pa
  * @param string $default_path Default path. (default: '').
  *
  * @param string $template_name Template name.
- * @param array $args Arguments. (default: array).
+ * @param array  $args Arguments. (default: array).
  *
  * @return string
  * @see   eaccounting_get_template
@@ -157,8 +157,8 @@ function eaccounting_get_template_html( $template_name, $args = array(), $templa
  * since 1.0.2
  *
  * @param       $template_name
- * @param array $args
- * @param null $path
+ * @param array         $args
+ * @param null          $path
  */
 function eaccounting_get_admin_template( $template_name, $args = array(), $path = null ) {
 
@@ -183,13 +183,12 @@ function eaccounting_get_admin_template( $template_name, $args = array(), $path 
 /**
  * Render admin template.
  *
- * @param array $args
+ * @param array         $args
  *
  * @param       $template_name
  *
  * @return string
  * @since 1.0.0
- *
  */
 function eaccounting_get_admin_template_html( $template_name, $args = array() ) {
 	ob_start();

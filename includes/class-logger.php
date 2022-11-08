@@ -55,7 +55,6 @@ class Logger {
 	 * @since 1.0.2
 	 *
 	 * @var null
-	 *
 	 */
 	protected $handle = null;
 
@@ -103,10 +102,9 @@ class Logger {
 	 *                        'info': Informational messages.
 	 *                        'debug': Debug-level messages.
 	 * @param string $message Log message.
-	 * @param array $context Optional. Additional information for log handlers.
+	 * @param array  $context Optional. Additional information for log handlers.
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function log( $level, $message, $context = array() ) {
 		// format log entry
@@ -123,7 +121,6 @@ class Logger {
 	 * @param string $entry Log entry text.
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	protected function write_log( $entry ) {
 		if ( $this->open( $this->handle ) && is_resource( $this->handle ) ) {
@@ -139,7 +136,6 @@ class Logger {
 	 * @param string $entry Log entry text.
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	protected function cache_log( $entry ) {
 		$this->cached_logs[] = $entry;
@@ -149,7 +145,7 @@ class Logger {
 	 * Open log file for writing.
 	 *
 	 * @param resource|null $handle Log handle.
-	 * @param string $name Optional. Name of the log file.
+	 * @param string        $name Optional. Name of the log file.
 	 *
 	 * @since 1.0.2
 	 *
@@ -214,11 +210,10 @@ class Logger {
 	 * @since 1.0.2
 	 *
 	 * @return bool|string The log file path or false if path cannot be determined.
-	 *
 	 */
 	public static function get_log_file_path( $name ) {
 		$date_suffix = date( 'Y-m-d', time() );
-		$name = sanitize_file_name( implode( '-', array( $name, $date_suffix ) ) . '.log' );
+		$name        = sanitize_file_name( implode( '-', array( $name, $date_suffix ) ) . '.log' );
 
 		return trailingslashit( EACCOUNTING_LOG_DIR ) . $name;
 	}
@@ -311,10 +306,9 @@ class Logger {
 	 * System is unusable.
 	 *
 	 * @param string $message Message to log.
-	 * @param array $context Log context.
+	 * @param array  $context Log context.
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function log_emergency( $message, $context = array() ) {
 		$this->log( self::EMERGENCY, $message, $context );
@@ -327,10 +321,9 @@ class Logger {
 	 * Example: Entire website down, database unavailable, etc.
 	 *
 	 * @param string $message Message to log.
-	 * @param array $context Log context.
+	 * @param array  $context Log context.
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function log_alert( $message, $context = array() ) {
 		$this->log( self::ALERT, $message, $context );
@@ -343,10 +336,9 @@ class Logger {
 	 * Example: Application component unavailable, unexpected exception.
 	 *
 	 * @param string $message Message to log.
-	 * @param array $context Log context.
+	 * @param array  $context Log context.
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function log_critical( $message, $context = array() ) {
 		$this->log( self::CRITICAL, $message, $context );
@@ -359,10 +351,9 @@ class Logger {
 	 * and monitored.
 	 *
 	 * @param string $message Message to log.
-	 * @param array $context Log context.
+	 * @param array  $context Log context.
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function log_error( $message, $context = array() ) {
 		$this->log( self::ERROR, $message, $context );
@@ -377,10 +368,9 @@ class Logger {
 	 * necessarily wrong.
 	 *
 	 * @param string $message Message to log.
-	 * @param array $context Log context.
+	 * @param array  $context Log context.
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function log_warning( $message, $context = array() ) {
 		$this->log( self::WARNING, $message, $context );
@@ -392,10 +382,9 @@ class Logger {
 	 * Normal but significant events.
 	 *
 	 * @param string $message Message to log.
-	 * @param array $context Log context.
+	 * @param array  $context Log context.
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function log_notice( $message, $context = array() ) {
 		$this->log( self::NOTICE, $message, $context );
@@ -408,10 +397,9 @@ class Logger {
 	 * Example: User logs in, SQL logs.
 	 *
 	 * @param string $message Message to log.
-	 * @param array $context Log context.
+	 * @param array  $context Log context.
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function log_info( $message, $context = array() ) {
 		$this->log( self::INFO, $message, $context );
@@ -423,10 +411,9 @@ class Logger {
 	 * Detailed debug information.
 	 *
 	 * @param string $message Message to log.
-	 * @param array $context Log context.
+	 * @param array  $context Log context.
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function log_debug( $message, $context = array() ) {
 		$this->log( self::DEBUG, $message, $context );

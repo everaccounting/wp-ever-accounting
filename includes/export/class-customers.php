@@ -68,7 +68,6 @@ class Customers extends CSV_Exporter {
 			$rows[] = $this->generate_row_data( $item );
 		}
 
-
 		return $rows;
 	}
 

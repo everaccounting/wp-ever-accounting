@@ -26,7 +26,7 @@ $import_url = add_query_arg(
 	),
 	admin_url( 'admin.php' )
 );
-include( EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-account-list-table.php' );
+require EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-account-list-table.php';
 $accounts_table = new EverAccounting_Account_List_Table();
 $accounts_table->prepare_items();
 ?>
@@ -37,7 +37,7 @@ $accounts_table->prepare_items();
 	</h1>
 	<?php do_action( 'eaccounting_accounts_table_top' ); ?>
 	<form method="get" id="ea-accounts-table" action="<?php echo admin_url( 'admin.php' ); ?>">
-		<?php $accounts_table->views();?>
+		<?php $accounts_table->views(); ?>
 		<?php $accounts_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'ea-accounts' ); ?>
 		<?php $accounts_table->display(); ?>
 
@@ -48,7 +48,7 @@ $accounts_table->prepare_items();
 
 <?php
 eaccounting_enqueue_js(
-		"
+	"
 	jQuery('.account-status').on('change', function(e){
 		jQuery.post('" . eaccounting()->ajax_url() . "', {
 			action:'eaccounting_edit_account',

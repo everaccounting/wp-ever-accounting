@@ -41,7 +41,6 @@ if ( $invoice->exists() ) {
  * @param Invoice $invoice object.
  *
  * @since 1.1.0
- *
  */
 do_action( 'add_meta_boxes_ea_invoice', $invoice );
 ?>
@@ -82,7 +81,7 @@ do_action( 'add_meta_boxes_ea_invoice', $invoice );
 										<a class="button-secondary" href="<?php echo esc_url( $invoice->get_url() ); ?>" target="_blank"><span class="dashicons dashicons-printer"></span> <?php esc_html_e( 'Print', 'wp-ever-accounting' ); ?></a>
 										<ul class="ea-dropdown-menu">
 											<?php
-											do_action('eaccounting_before_invoice_actions', $invoice );
+											do_action( 'eaccounting_before_invoice_actions', $invoice );
 											foreach ( $invoice_actions as $action => $title ) {
 												echo sprintf(
 													'<li><a href="%s">%s</a></li>',
@@ -100,7 +99,7 @@ do_action( 'add_meta_boxes_ea_invoice', $invoice );
 													esc_html( $title )
 												);
 											}
-											do_action('eaccounting_after_invoice_actions', $invoice );
+											do_action( 'eaccounting_after_invoice_actions', $invoice );
 											?>
 										</ul>
 									</div>

@@ -16,6 +16,7 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Class Document_Item
+ *
  * @package EverAccounting\Models
  */
 class Document_Item extends Resource_Model {
@@ -67,7 +68,6 @@ class Document_Item extends Resource_Model {
 	 * @param int|object|Document_Item $data object to read.
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public function __construct( $data = 0 ) {
 		parent::__construct( $data );
@@ -84,7 +84,7 @@ class Document_Item extends Resource_Model {
 			$this->set_object_read( true );
 		}
 
-		//Load repository
+		// Load repository
 		$this->repository = Repositories::load( 'document-items' );
 
 		if ( $this->get_id() > 0 ) {
@@ -104,7 +104,6 @@ class Document_Item extends Resource_Model {
 	 *
 	 * @return array
 	 * @since  1.1.0
-	 *
 	 */
 	public function get_data() {
 		return $this->to_array(
@@ -130,7 +129,6 @@ class Document_Item extends Resource_Model {
 	 *
 	 * @return string
 	 * @since  1.1.0
-	 *
 	 */
 	public function get_document_id( $context = 'edit' ) {
 		return $this->get_prop( 'document_id', $context );
@@ -143,7 +141,6 @@ class Document_Item extends Resource_Model {
 	 *
 	 * @return string
 	 * @since  1.1.0
-	 *
 	 */
 	public function get_item_id( $context = 'edit' ) {
 		return $this->get_prop( 'item_id', $context );
@@ -156,7 +153,6 @@ class Document_Item extends Resource_Model {
 	 *
 	 * @return string
 	 * @since  1.1.0
-	 *
 	 */
 	public function get_item_name( $context = 'edit' ) {
 		return $this->get_prop( 'item_name', $context );
@@ -169,7 +165,6 @@ class Document_Item extends Resource_Model {
 	 *
 	 * @return string
 	 * @since  1.1.0
-	 *
 	 */
 	public function get_price( $context = 'edit' ) {
 		return $this->get_prop( 'price', $context );
@@ -182,7 +177,6 @@ class Document_Item extends Resource_Model {
 	 *
 	 * @return int
 	 * @since  1.1.0
-	 *
 	 */
 	public function get_quantity( $context = 'edit' ) {
 		return $this->get_prop( 'quantity', $context );
@@ -195,7 +189,6 @@ class Document_Item extends Resource_Model {
 	 *
 	 * @return float
 	 * @since  1.1.0
-	 *
 	 */
 	public function get_subtotal( $context = 'edit' ) {
 		return $this->get_prop( 'subtotal', $context );
@@ -208,7 +201,6 @@ class Document_Item extends Resource_Model {
 	 *
 	 * @return float
 	 * @since  1.1.0
-	 *
 	 */
 	public function get_tax_rate( $context = 'edit' ) {
 		return $this->get_prop( 'tax_rate', $context );
@@ -221,7 +213,6 @@ class Document_Item extends Resource_Model {
 	 *
 	 * @return float
 	 * @since  1.1.0
-	 *
 	 */
 	public function get_discount( $context = 'edit' ) {
 		return $this->get_prop( 'discount', $context );
@@ -234,7 +225,6 @@ class Document_Item extends Resource_Model {
 	 *
 	 * @return float
 	 * @since 1.1.0
-	 *
 	 */
 	public function get_tax( $context = 'edit' ) {
 		return $this->get_prop( 'tax', $context );
@@ -247,7 +237,6 @@ class Document_Item extends Resource_Model {
 	 *
 	 * @return string
 	 * @since  1.1.0
-	 *
 	 */
 	public function get_total( $context = 'edit' ) {
 		return $this->get_prop( 'total', $context );
@@ -260,7 +249,6 @@ class Document_Item extends Resource_Model {
 	 *
 	 * @return string
 	 * @since  1.1.0
-	 *
 	 */
 	public function get_currency_code( $context = 'edit' ) {
 		return $this->get_prop( 'currency_code', $context );
@@ -271,7 +259,6 @@ class Document_Item extends Resource_Model {
 	 *
 	 * @return array|mixed|string
 	 * @since 1.1.0
-	 *
 	 */
 	public function get_extra( $context = 'edit' ) {
 		return $this->get_prop( 'extra' );
@@ -285,7 +272,6 @@ class Document_Item extends Resource_Model {
 	 *
 	 * @return mixed
 	 * @since  1.1.0
-	 *
 	 */
 	protected function get_extra_prop( $prop, $context = 'view' ) {
 		$value = null;
@@ -308,7 +294,6 @@ class Document_Item extends Resource_Model {
 	 *
 	 * @return float
 	 * @since 1.1.0
-	 *
 	 */
 	public function get_shipping( $context = 'edit' ) {
 		return $this->get_extra_prop( 'shipping', $context );
@@ -321,7 +306,6 @@ class Document_Item extends Resource_Model {
 	 *
 	 * @return float
 	 * @since 1.1.0
-	 *
 	 */
 	public function get_shipping_tax( $context = 'edit' ) {
 		return $this->get_extra_prop( 'shipping_tax', $context );
@@ -334,7 +318,6 @@ class Document_Item extends Resource_Model {
 	 *
 	 * @return float
 	 * @since 1.1.0
-	 *
 	 */
 	public function get_fees( $context = 'edit' ) {
 		return $this->get_extra_prop( 'fees', $context );
@@ -347,7 +330,6 @@ class Document_Item extends Resource_Model {
 	 *
 	 * @return float
 	 * @since 1.1.0
-	 *
 	 */
 	public function get_fees_tax( $context = 'edit' ) {
 		return $this->get_extra_prop( 'fees_tax', $context );
@@ -365,7 +347,6 @@ class Document_Item extends Resource_Model {
 	 * @param int $document_id .
 	 *
 	 * @since  1.1.0
-	 *
 	 */
 	public function set_document_id( $document_id ) {
 		$this->set_prop( 'document_id', absint( $document_id ) );
@@ -377,7 +358,6 @@ class Document_Item extends Resource_Model {
 	 * @param int $item_id .
 	 *
 	 * @since  1.1.0
-	 *
 	 */
 	public function set_item_id( $item_id ) {
 		$this->set_prop( 'item_id', absint( $item_id ) );
@@ -389,7 +369,6 @@ class Document_Item extends Resource_Model {
 	 * @param string $name .
 	 *
 	 * @since  1.1.0
-	 *
 	 */
 	public function set_item_name( $name ) {
 		$this->set_prop( 'item_name', sanitize_text_field( $name ) );
@@ -401,7 +380,6 @@ class Document_Item extends Resource_Model {
 	 * @param double $price .
 	 *
 	 * @since  1.1.0
-	 *
 	 */
 	public function set_price( $price ) {
 		$this->set_prop( 'price', eaccounting_format_decimal( $price, 4 ) );
@@ -414,7 +392,6 @@ class Document_Item extends Resource_Model {
 	 * @param int $quantity .
 	 *
 	 * @since  1.1.0
-	 *
 	 */
 	public function set_quantity( $quantity = 1 ) {
 		$this->set_prop( 'quantity', eaccounting_format_decimal( $quantity, 2 ) );
@@ -428,7 +405,6 @@ class Document_Item extends Resource_Model {
 	 * @param double $subtotal .
 	 *
 	 * @since  1.1.0
-	 *
 	 */
 	public function set_subtotal( $subtotal ) {
 		$this->set_prop( 'subtotal', eaccounting_format_decimal( $subtotal, 4 ) );
@@ -440,7 +416,6 @@ class Document_Item extends Resource_Model {
 	 * @param $tax_rate
 	 *
 	 * @since  1.1.0
-	 *
 	 */
 	public function set_tax_rate( $tax_rate ) {
 		$this->set_prop( 'tax_rate', eaccounting_format_decimal( $tax_rate, 4 ) );
@@ -452,7 +427,6 @@ class Document_Item extends Resource_Model {
 	 * @param $tax
 	 *
 	 * @since  1.1.0
-	 *
 	 */
 	public function set_tax( $tax ) {
 		$this->set_prop( 'tax', eaccounting_format_decimal( $tax, 4 ) );
@@ -466,7 +440,6 @@ class Document_Item extends Resource_Model {
 	 * @param double $discount .
 	 *
 	 * @since  1.1.0
-	 *
 	 */
 	public function set_discount( $discount ) {
 		$this->set_prop( 'discount', eaccounting_format_decimal( $discount, 4 ) );
@@ -478,7 +451,6 @@ class Document_Item extends Resource_Model {
 	 * @param int $total .
 	 *
 	 * @since  1.1.0
-	 *
 	 */
 	public function set_total( $total ) {
 		$this->set_prop( 'total', eaccounting_format_decimal( $total, 4 ) );
@@ -490,7 +462,6 @@ class Document_Item extends Resource_Model {
 	 * @param $currency_code
 	 *
 	 * @since  1.1.0
-	 *
 	 */
 	public function set_currency_code( $currency_code ) {
 		$this->set_prop( 'currency_code', eaccounting_clean( $currency_code ) );
@@ -500,10 +471,9 @@ class Document_Item extends Resource_Model {
 	 * set the total.
 	 *
 	 * @param      $extra
-	 * @param bool $append
+	 * @param bool  $append
 	 *
 	 * @since  1.1.0
-	 *
 	 */
 	public function set_extra( $extra, $append = true ) {
 		$extra = eaccounting_clean( $extra );
@@ -517,10 +487,9 @@ class Document_Item extends Resource_Model {
 	 * Sets a prop for a setter method.
 	 *
 	 * @param string $prop Name of prop to set.
-	 * @param mixed $value Value of the prop.
+	 * @param mixed  $value Value of the prop.
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	protected function set_extra_prop( $prop, $value ) {
 		if ( array_key_exists( $prop, $this->data['extra'] ) ) {
@@ -540,7 +509,6 @@ class Document_Item extends Resource_Model {
 	 * @param string $shipping shipping.
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public function set_shipping( $shipping ) {
 		$this->set_extra_prop( 'shipping', eaccounting_format_decimal( $shipping, 4 ) );
@@ -552,7 +520,6 @@ class Document_Item extends Resource_Model {
 	 * @param string $shipping_tax shipping_tax.
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public function set_shipping_tax( $shipping_tax ) {
 		$this->set_extra_prop( 'shipping_tax', eaccounting_format_decimal( $shipping_tax, 4 ) );
@@ -564,7 +531,6 @@ class Document_Item extends Resource_Model {
 	 * @param string $fees fees.
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public function set_fees( $fees ) {
 		$this->set_extra_prop( 'fees', eaccounting_format_decimal( $fees, 4 ) );
@@ -576,7 +542,6 @@ class Document_Item extends Resource_Model {
 	 * @param string $fees_tax fees_tax.
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public function set_fees_tax( $fees_tax ) {
 		$this->set_extra_prop( 'fees_tax', eaccounting_format_decimal( $fees_tax, 4 ) );
@@ -627,7 +592,6 @@ class Document_Item extends Resource_Model {
 	 *
 	 * @return \Exception|bool
 	 * @since  1.1.0
-	 *
 	 */
 	public function save() {
 		if ( ! empty( $this->changes ) || ! $this->exists() ) {

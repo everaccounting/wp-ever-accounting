@@ -29,7 +29,6 @@ function eaccounting_get_currency_codes() {
  *
  * @return string
  * @since 1.1.0
- *
  */
 function eaccounting_sanitize_currency_code( $code ) {
 	$codes = eaccounting_get_currency_codes();
@@ -55,7 +54,6 @@ function eaccounting_sanitize_currency_code( $code ) {
  *
  * @return EverAccounting\Models\Currency|null
  * @since 1.1.0
- *
  */
 function eaccounting_get_currency( $currency ) {
 	if ( empty( $currency ) ) {
@@ -75,7 +73,6 @@ function eaccounting_get_currency( $currency ) {
  *
  * @return mixed|null
  * @since 1.1.0
- *
  */
 function eaccounting_get_currency_rate( $currency ) {
 	$exist = eaccounting_get_currency( $currency );
@@ -123,7 +120,6 @@ function eaccounting_get_currency_rate( $currency ) {
  *
  * @return EverAccounting\Models\Currency|\WP_Error|bool
  * @since 1.1.0
- *
  */
 function eaccounting_insert_currency( $args, $wp_error = true ) {
 	// Ensure that we have data.
@@ -160,7 +156,6 @@ function eaccounting_insert_currency( $args, $wp_error = true ) {
  *
  * @return bool
  * @since 1.1.0
- *
  */
 function eaccounting_delete_currency( $currency_code ) {
 	try {
@@ -179,8 +174,6 @@ function eaccounting_delete_currency( $currency_code ) {
  *
  * @return array|int|null
  * @since 1.1.0
- *
- *
  */
 function eaccounting_get_currencies( $args = array() ) {
 	$args = wp_parse_args(
@@ -198,7 +191,7 @@ function eaccounting_get_currencies( $args = array() ) {
 		)
 	);
 
-	$qv = apply_filters( 'eaccounting_get_currencies_args', $args );
+	$qv         = apply_filters( 'eaccounting_get_currencies_args', $args );
 	$option     = \EverAccounting\Repositories\Currencies::OPTION;
 	$columns    = \EverAccounting\Repositories\Currencies::get_columns();
 	$currencies = wp_cache_get( 'ea_currencies', 'ea_currencies' );

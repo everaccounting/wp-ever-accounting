@@ -195,11 +195,10 @@ class Bill_Items_Controller extends Controller {
 
 	/**
 	 * @since 1.0.2
-	 * 
+	 *
 	 * @param \WP_REST_Request $request
 	 *
 	 * @return int|mixed|\WP_Error|\WP_REST_Response|null
-	 * 
 	 **/
 
 	public function create_item( $request ) {
@@ -229,7 +228,6 @@ class Bill_Items_Controller extends Controller {
 	 * @param \WP_REST_Request $request
 	 *
 	 * @return mixed|\WP_Error|\WP_REST_Response
-	 * 
 	 */
 	public function get_item( $request ) {
 		$item_id = intval( $request['id'] );
@@ -246,7 +244,7 @@ class Bill_Items_Controller extends Controller {
 
 	/**
 	 * @since 1.0.2
-	 * 
+	 *
 	 * @param \WP_REST_Request $request
 	 *
 	 * @return int|mixed|\WP_Error|\WP_REST_Response|null
@@ -279,11 +277,10 @@ class Bill_Items_Controller extends Controller {
 	/**
 	 * @since 1.0.0
 	 * @since 1.0.2
-	 * 
+	 *
 	 * @param \WP_REST_Request $request
 	 *
 	 * @return void|\WP_Error|\WP_REST_Response
-	 * 
 	 */
 	public function delete_item( $request ) {
 		$item_id = intval( $request['id'] );
@@ -313,12 +310,11 @@ class Bill_Items_Controller extends Controller {
 	/**
 	 *
 	 * @since 1.0.2
-	 * 
+	 *
 	 * @param \WP_REST_Request                 $request
 	 * @param \EverAccounting\Accounts\Account $item
 	 *
 	 * @return mixed|\WP_Error|\WP_REST_Response
-	 * 
 	 */
 	public function prepare_item_for_response( $item, $request ) {
 		$data = array(
@@ -349,10 +345,10 @@ class Bill_Items_Controller extends Controller {
 
 	/**
 	 * Retrieves the items's schema, conforming to JSON Schema.
+	 *
 	 * @since 1.0.2
-	 * 
+	 *
 	 * @return array Item schema data.
-	 * 
 	 */
 	public function get_item_schema() {
 		$schema = array(
@@ -493,9 +489,8 @@ class Bill_Items_Controller extends Controller {
 	 * Retrieves the query params for the items collection.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @return array Collection parameters.
-	 * 
 	 */
 	public function get_collection_params() {
 		$query_params                       = parent::get_collection_params();

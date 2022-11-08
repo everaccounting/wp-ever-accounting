@@ -13,6 +13,7 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Class Release
+ *
  * @package EverAccounting\Admin
  */
 class Release {
@@ -22,13 +23,12 @@ class Release {
 	 */
 	public function __construct() {
 		add_action( 'admin_menu', array( $this, 'register_page' ) );
-//		add_action( 'admin_menu', array( $this, 'register_page' ), 30 );
-		//add_filter( 'admin_title', array( $this, 'admin_title' ), 10 );
+		// add_action( 'admin_menu', array( $this, 'register_page' ), 30 );
+		// add_filter( 'admin_title', array( $this, 'admin_title' ), 10 );
 	}
 
 	/**
 	 * Registers the new releases page.
-	 *
 	 */
 	public function register_page() {
 		add_dashboard_page( '', '', 'manage_options', 'ea-release', array( $this, 'render_page' ) );
@@ -50,7 +50,7 @@ class Release {
 	}
 
 	public function admin_title() {
-		$title = '';
+		$title  = '';
 		$title .= '<div class="ea-release_logo">';
 		$title .= '<img scr="' . eaccounting()->plugin_url( '/dist/images/everaccountinglogo.png' ) . '" alt="ea-release-logo">';
 		$title .= '</div>';

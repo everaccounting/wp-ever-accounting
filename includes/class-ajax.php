@@ -111,57 +111,57 @@ class Ajax {
 		}
 
 		$ajax_events = array(
-			//currency
+			// currency
 			'get_currencies',
 			'get_currency',
 			'get_currency_codes',
 			'edit_currency',
 
-			//category
+			// category
 			'get_expense_categories',
 			'get_income_categories',
 			'get_item_categories',
 			'edit_category',
 
-			//invoice
+			// invoice
 			'add_invoice_payment',
 			'add_invoice_note',
 			'invoice_recalculate',
 			'edit_invoice',
 
-			//revenue
+			// revenue
 			'edit_revenue',
 
-			//customer
+			// customer
 			'get_customers',
 			'edit_customer',
 
-			//bill
+			// bill
 			'add_bill_payment',
 			'add_bill_note',
 			'bill_recalculate',
 			'edit_bill',
 
-			//payment
+			// payment
 			'edit_payment',
 
-			//vendor
+			// vendor
 			'get_vendors',
 			'edit_vendor',
 
-			//account
+			// account
 			'get_account',
 			'get_accounts',
 			'get_account_currency',
 			'edit_account',
 
-			//transfer
+			// transfer
 			'edit_transfer',
 
-			//note
+			// note
 			'delete_note',
 
-			//item
+			// item
 			'get_items',
 			'edit_item',
 		);
@@ -180,7 +180,6 @@ class Ajax {
 		self::verify_nonce( 'ea_categories' );
 		$search = isset( $_REQUEST['search'] ) ? eaccounting_clean( $_REQUEST['search'] ) : '';
 		$page   = isset( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1;
-
 
 		wp_send_json_success(
 			eaccounting_get_categories(
@@ -205,7 +204,6 @@ class Ajax {
 		$search = isset( $_REQUEST['search'] ) ? eaccounting_clean( $_REQUEST['search'] ) : '';
 		$page   = isset( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1;
 
-
 		wp_send_json_success(
 			eaccounting_get_categories(
 				array(
@@ -228,7 +226,6 @@ class Ajax {
 		self::verify_nonce( 'ea_categories' );
 		$search = isset( $_REQUEST['search'] ) ? eaccounting_clean( $_REQUEST['search'] ) : '';
 		$page   = isset( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1;
-
 
 		wp_send_json_success(
 			eaccounting_get_categories(
@@ -319,6 +316,7 @@ class Ajax {
 
 	/**
 	 * Add invoice note.
+	 *
 	 * @since 1.1.0
 	 */
 	public static function add_invoice_note() {
@@ -477,7 +475,6 @@ class Ajax {
 		self::verify_nonce( 'ea_get_customers' );
 		$search = isset( $_REQUEST['search'] ) ? eaccounting_clean( $_REQUEST['search'] ) : '';
 		$page   = isset( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1;
-
 
 		wp_send_json_success(
 			eaccounting_get_customers(
@@ -909,7 +906,6 @@ class Ajax {
 		$search = isset( $_REQUEST['search'] ) ? eaccounting_clean( $_REQUEST['search'] ) : '';
 		$page   = isset( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1;
 
-
 		wp_send_json_success(
 			eaccounting_get_accounts(
 				array(
@@ -1146,7 +1142,6 @@ class Ajax {
 	 * @param $action
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public static function verify_nonce( $action ) {
 		$nonce = '';

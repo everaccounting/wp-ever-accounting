@@ -11,10 +11,10 @@
 
 defined( 'ABSPATH' ) || exit();
 
-include( EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-customer-list-table.php' );
+require EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-customer-list-table.php';
 $customers_table = new EverAccounting_Customer_List_Table();
 $customers_table->prepare_items();
-$add_url = eaccounting_admin_url(
+$add_url    = eaccounting_admin_url(
 	array(
 		'page'   => 'ea-sales',
 		'tab'    => 'customers',
@@ -24,7 +24,7 @@ $add_url = eaccounting_admin_url(
 $import_url = eaccounting_admin_url(
 	array(
 		'page' => 'ea-tools',
-		'tab' => 'import'
+		'tab'  => 'import',
 	),
 	admin_url( 'admin.php' )
 );

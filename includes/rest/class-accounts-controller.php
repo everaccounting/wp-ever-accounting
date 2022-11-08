@@ -19,9 +19,8 @@ class Accounts_Controller extends Entities_Controller {
 	 * Route base.
 	 *
 	 * @since 1.1.0
-	 * 
-	 * @var string
 	 *
+	 * @var string
 	 */
 	protected $rest_base = 'accounts';
 
@@ -29,7 +28,7 @@ class Accounts_Controller extends Entities_Controller {
 	 * Entity model class.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @var string
 	 */
 	protected $entity_model = Account::class;
@@ -54,7 +53,6 @@ class Accounts_Controller extends Entities_Controller {
 	 * @since 1.1.0
 	 *
 	 * @return array Item schema data.
-	 *
 	 */
 	public function get_item_schema() {
 		$schema = array(
@@ -189,9 +187,8 @@ class Accounts_Controller extends Entities_Controller {
 	 * Retrieves the query params for the items collection.
 	 *
 	 * @since 1.1.0
-	 * 
-	 * @return array Collection parameters.
 	 *
+	 * @return array Collection parameters.
 	 */
 	public function get_collection_params() {
 		$query_params                       = parent::get_collection_params();

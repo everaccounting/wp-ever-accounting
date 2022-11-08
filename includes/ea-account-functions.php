@@ -98,8 +98,8 @@ function eaccounting_insert_account( $data, $wp_error = true ) {
 		// Retrieve the account.
 		$item = new \EverAccounting\Models\Account( $data['id'] );
 
-		//check if already account number exists for another user
-		$number = !empty($data['number']) ? $data['number'] : $item->get_number();
+		// check if already account number exists for another user
+		$number           = ! empty( $data['number'] ) ? $data['number'] : $item->get_number();
 		$existing_account = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}ea_accounts WHERE number='$number'" );
 
 		if ( $existing_account ) {
@@ -144,7 +144,6 @@ function eaccounting_delete_account( $account_id ) {
  * Get account items.
  *
  * @since 1.1.0
- *
  *
  * @param array $args            {
  *                               Optional. Arguments to retrieve accounts.
@@ -230,7 +229,7 @@ function eaccounting_get_accounts( $args = array() ) {
 		$fields   .= " , ( {$table}.opening_balance + IFNULL( calculated.total, 0) ) as balance ";
 	}
 
-	//search
+	// search
 	$search_cols = array( 'name', 'number', 'currency_code', 'bank_name', 'bank_phone', 'bank_address' );
 	if ( ! empty( $qv['search'] ) ) {
 		$searches = array();

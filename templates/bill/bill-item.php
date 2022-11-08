@@ -37,7 +37,7 @@ defined( 'ABSPATH' ) || exit;
 	<?php if ( eaccounting_tax_enabled() ) : ?>
 		<td class="ea-document__line-tax" width="1%">
 			<div class="view">
-				<abbr title="<?php echo esc_html( eaccounting_price( $item->get_tax(), $bill->get_currency_code() ) ); ?>"><?php echo esc_html( number_format($item->get_tax_rate(), 2) ); ?><small>%</small></abbr>
+				<abbr title="<?php echo esc_html( eaccounting_price( $item->get_tax(), $bill->get_currency_code() ) ); ?>"><?php echo esc_html( number_format( $item->get_tax_rate(), 2 ) ); ?><small>%</small></abbr>
 			</div>
 		</td>
 	<?php endif; ?>

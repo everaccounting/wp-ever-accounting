@@ -71,16 +71,16 @@ $title = $item->exists() ? __( 'Update Item', 'wp-ever-accounting' ) : __( 'Add 
 							'modal_id'      => 'ea-modal-add-item-category',
 						)
 					);
-					//				eaccounting_text_input(
-					//					array(
-					//						'wrapper_class' => 'ea-col-6',
-					//						'label'         => __( 'Quantity', 'wp-ever-accounting' ),
-					//						'name'          => 'quantity',
-					//						'placeholder'   => __( 'Enter Quantity', 'wp-ever-accounting' ),
-					//						'value'         => $item->get_quantity(),
-					//						'required'      => true,
-					//					)
-					//				);
+					// eaccounting_text_input(
+					// array(
+					// 'wrapper_class' => 'ea-col-6',
+					// 'label'         => __( 'Quantity', 'wp-ever-accounting' ),
+					// 'name'          => 'quantity',
+					// 'placeholder'   => __( 'Enter Quantity', 'wp-ever-accounting' ),
+					// 'value'         => $item->get_quantity(),
+					// 'required'      => true,
+					// )
+					// );
 					eaccounting_text_input(
 						array(
 							'wrapper_class' => 'ea-col-6',

@@ -65,8 +65,6 @@ class Transfer extends Resource_Model {
 	 * @since 1.1.0
 	 *
 	 * @param int|object|Account $data object to read.
-	 *
-	 *
 	 */
 	public function __construct( $data = 0 ) {
 		parent::__construct( $data );
@@ -83,7 +81,7 @@ class Transfer extends Resource_Model {
 			$this->set_object_read( true );
 		}
 
-		//Load repository
+		// Load repository
 		$this->repository = Repositories::load( 'transfers' );
 
 		if ( $this->get_id() > 0 ) {

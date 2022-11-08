@@ -17,6 +17,7 @@ if ( ! class_exists( '\EverAccounting_List_Table' ) ) {
 
 /**
  * Class EverAccounting_Currency_List_Table
+ *
  * @since 1.1.0
  */
 class EverAccounting_Currency_List_Table extends EverAccounting_List_Table {
@@ -148,7 +149,6 @@ class EverAccounting_Currency_List_Table extends EverAccounting_List_Table {
 	 *
 	 * @return string Displays a checkbox.
 	 * @since  1.0.2
-	 *
 	 */
 	function column_cb( $currency ) {
 		return sprintf( '<input type="checkbox" name="currency_code[]" value="%s"/>', $currency->get_code() );
@@ -168,13 +168,12 @@ class EverAccounting_Currency_List_Table extends EverAccounting_List_Table {
 	/**
 	 * This function renders most of the columns in the list table.
 	 *
-	 * @param string $column_name The name of the column
+	 * @param string   $column_name The name of the column
 	 *
 	 * @param Currency $currency
 	 *
 	 * @return string The column value.
 	 * @since 1.0.2
-	 *
 	 */
 	function column_default( $currency, $column_name ) {
 		$currency_code = $currency->get_code();
@@ -302,7 +301,7 @@ class EverAccounting_Currency_List_Table extends EverAccounting_List_Table {
 		$args = apply_filters( 'eaccounting_currency_table_query_args', $args, $this );
 
 		$this->items       = eaccounting_get_currencies( $args );
-		$total_items       = eaccounting_get_currencies( array_merge($args,array( 'count_total' => true )) );
+		$total_items       = eaccounting_get_currencies( array_merge( $args, array( 'count_total' => true ) ) );
 		$this->total_count = $total_items;
 
 		$this->set_pagination_args(

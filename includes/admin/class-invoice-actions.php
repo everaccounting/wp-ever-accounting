@@ -18,6 +18,7 @@ defined( 'ABSPATH' ) || exit();
 
 /**
  * Invoice_Actions class
+ *
  * @package EverAccounting\Admin
  *
  * @since 1.1.0
@@ -91,7 +92,6 @@ class Invoice_Actions {
 	 * @param $invoice_id
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public static function view_invoice( $invoice_id = null ) {
 		try {
@@ -119,7 +119,6 @@ class Invoice_Actions {
 	 * @param $invoice_id
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public static function edit_invoice( $invoice_id = null ) {
 		try {
@@ -144,7 +143,6 @@ class Invoice_Actions {
 	 * @param Invoice $invoice
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public static function invoice_notes( $invoice ) {
 		if ( ! $invoice->exists() ) {
@@ -159,7 +157,6 @@ class Invoice_Actions {
 	 * @param Invoice $invoice
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public static function invoice_payments( $invoice ) {
 		if ( ! $invoice->exists() ) {

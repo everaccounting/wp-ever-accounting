@@ -28,7 +28,6 @@ class Payments_Controller extends Transactions_Controller {
 	 * @since 1.1.0
 	 *
 	 * @var string
-	 *
 	 */
 	protected $rest_base = 'payments';
 

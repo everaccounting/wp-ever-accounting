@@ -70,8 +70,6 @@ class Account extends Resource_Model {
 	 * @since 1.1.0
 	 *
 	 * @param int|object|Account $data object to read.
-	 *
-	 *
 	 */
 	public function __construct( $data = 0 ) {
 		parent::__construct( $data );
@@ -87,7 +85,7 @@ class Account extends Resource_Model {
 			$this->set_object_read( true );
 		}
 
-		//Load repository
+		// Load repository
 		$this->repository = Repositories::load( 'accounts' );
 
 		if ( $this->get_id() > 0 ) {
@@ -117,7 +115,6 @@ class Account extends Resource_Model {
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
 	 * @return string
-	 *
 	 */
 	public function get_name( $context = 'edit' ) {
 		return $this->get_prop( 'name', $context );
@@ -131,7 +128,6 @@ class Account extends Resource_Model {
 	 * @param string $context
 	 *
 	 * @return mixed|null
-	 *
 	 */
 	public function get_number( $context = 'edit' ) {
 		return $this->get_prop( 'number', $context );
@@ -145,7 +141,6 @@ class Account extends Resource_Model {
 	 * @param string $context
 	 *
 	 * @return mixed|null
-	 *
 	 */
 	public function get_opening_balance( $context = 'edit' ) {
 		return $this->get_prop( 'opening_balance', $context );
@@ -159,7 +154,6 @@ class Account extends Resource_Model {
 	 * @param string $context
 	 *
 	 * @return mixed|null
-	 *
 	 */
 	public function get_currency_code( $context = 'edit' ) {
 		return $this->get_prop( 'currency_code', $context );
@@ -173,7 +167,6 @@ class Account extends Resource_Model {
 	 * @param string $context
 	 *
 	 * @return mixed|null
-	 *
 	 */
 	public function get_bank_name( $context = 'edit' ) {
 		return $this->get_prop( 'bank_name', $context );
@@ -187,7 +180,6 @@ class Account extends Resource_Model {
 	 * @param string $context
 	 *
 	 * @return mixed|null
-	 *
 	 */
 	public function get_bank_phone( $context = 'edit' ) {
 		return $this->get_prop( 'bank_phone', $context );
@@ -201,7 +193,6 @@ class Account extends Resource_Model {
 	 * @param string $context
 	 *
 	 * @return mixed|null
-	 *
 	 */
 	public function get_bank_address( $context = 'edit' ) {
 		return $this->get_prop( 'bank_address', $context );
@@ -236,8 +227,6 @@ class Account extends Resource_Model {
 	 * @since 1.1.0
 	 *
 	 * @param string $name Account name.
-	 *
-	 *
 	 */
 	public function set_name( $name ) {
 		$this->set_prop( 'name', eaccounting_clean( $name ) );
@@ -249,7 +238,6 @@ class Account extends Resource_Model {
 	 * @since 1.1.0
 	 *
 	 * @param string $number bank account number
-	 *
 	 */
 	public function set_number( $number ) {
 		$this->set_prop( 'number', eaccounting_clean( $number ) );
@@ -261,11 +249,10 @@ class Account extends Resource_Model {
 	 * @since 1.1.0
 	 *
 	 * @param string $opening_balance opening balance of the account.
-	 *
 	 */
 	public function set_opening_balance( $amount ) {
 		$code = empty( $this->get_currency_code() ) ? 'USD' : $this->get_currency_code();
-		$this->set_prop( 'opening_balance',  eaccounting_format_decimal( $amount, 4 ) );
+		$this->set_prop( 'opening_balance', eaccounting_format_decimal( $amount, 4 ) );
 	}
 
 	/**
@@ -274,7 +261,6 @@ class Account extends Resource_Model {
 	 * @since 1.1.0
 	 *
 	 * @param string $currency_code Bank currency code
-	 *
 	 */
 	public function set_currency_code( $currency_code ) {
 		$this->set_prop( 'currency_code', strtoupper( $currency_code ) );
@@ -286,7 +272,6 @@ class Account extends Resource_Model {
 	 * @since 1.1.0
 	 *
 	 * @param string $bank_name name of the bank
-	 *
 	 */
 	public function set_bank_name( $bank_name ) {
 		$this->set_prop( 'bank_name', eaccounting_clean( $bank_name ) );
@@ -298,7 +283,6 @@ class Account extends Resource_Model {
 	 * @since 1.1.0
 	 *
 	 * @param string $bank_phone Bank phone number.
-	 *
 	 */
 	public function set_bank_phone( $bank_phone ) {
 		$this->set_prop( 'bank_phone', eaccounting_clean( $bank_phone ) );
@@ -310,7 +294,6 @@ class Account extends Resource_Model {
 	 * @since 1.1.0
 	 *
 	 * @param string $bank_address Bank physical address
-	 *
 	 */
 	public function set_bank_address( $bank_address ) {
 		$this->set_prop( 'bank_address', sanitize_textarea_field( $bank_address ) );
@@ -342,7 +325,6 @@ class Account extends Resource_Model {
 	 * @since 1.1.0
 	 *
 	 * @param array|object $currency
-	 *
 	 */
 	public function set_currency( $currency ) {
 		$this->set_object_prop( $currency, 'code', 'currency_code' );
@@ -355,7 +337,6 @@ class Account extends Resource_Model {
 	 * @param bool $format
 	 *
 	 * @return float|string
-	 *
 	 */
 	public function get_balance() {
 		if ( null !== $this->balance ) {
@@ -376,7 +357,6 @@ class Account extends Resource_Model {
 	 * @since 1.1.0
 	 *
 	 * @param $balance
-	 *
 	 */
 	protected function set_balance( $balance ) {
 		$this->balance = $balance;

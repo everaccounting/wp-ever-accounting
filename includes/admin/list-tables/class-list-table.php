@@ -93,7 +93,6 @@ abstract class EverAccounting_List_Table extends \WP_List_Table {
 	 * @see    WP_List_Table::__construct()
 	 *
 	 * @since  1.0.2
-	 *
 	 */
 
 	public function __construct( $args = array() ) {
@@ -138,7 +137,6 @@ abstract class EverAccounting_List_Table extends \WP_List_Table {
 	 * @param string $which String which tablenav is being shown.
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function maybe_render_blank_state( $which ) {
 		if ( 'bottom' === $which && $this->is_empty() ) {
@@ -175,7 +173,6 @@ abstract class EverAccounting_List_Table extends \WP_List_Table {
 	 *
 	 * @return array (Maybe) filtered list of columns.
 	 * @since 1.1.0
-	 *
 	 */
 	public function prepare_columns( $columns ) {
 		if ( ! empty( $this->display_args['columns_to_hide'] ) ) {
@@ -241,7 +238,6 @@ abstract class EverAccounting_List_Table extends \WP_List_Table {
 	 * @access protected
 	 * @return array Column headers.
 	 * @since  1.1.0
-	 *
 	 */
 	public function get_column_info() {
 		if ( true === $this->display_args['hide_column_controls'] ) {
@@ -265,7 +261,6 @@ abstract class EverAccounting_List_Table extends \WP_List_Table {
 	 *
 	 * @return array
 	 * @since 1.0.2
-	 *
 	 */
 	public function get_bulk_actions() {
 		$columns = $this->define_bulk_actions();
@@ -282,7 +277,6 @@ abstract class EverAccounting_List_Table extends \WP_List_Table {
 	 *
 	 * @return void
 	 * @since 1.0.2
-	 *
 	 */
 	public function search_box( $text, $input_id ) {
 		if ( empty( $_REQUEST['s'] ) && ! $this->has_items() ) {
@@ -309,11 +303,9 @@ abstract class EverAccounting_List_Table extends \WP_List_Table {
 	/**
 	 * Generates the table navigation above or below the table.
 	 *
-	 *
 	 * @param string $which Which location the bulk actions are being rendered for.Will be 'top' or 'bottom'.
 	 *
 	 * @since  1.0.2
-	 *
 	 */
 	public function display_tablenav( $which ) {
 		if ( 'top' === $which ) {
@@ -332,7 +324,7 @@ abstract class EverAccounting_List_Table extends \WP_List_Table {
 
 				<?php if ( $this->has_items() && true !== $this->display_args['hide_bulk_options'] ) : ?>
 					<div class="alignleft actions bulkactions">
-						<?php $this->bulk_actions($which); ?>
+						<?php $this->bulk_actions( $which ); ?>
 					</div>
 					<?php
 				endif;
@@ -360,7 +352,6 @@ abstract class EverAccounting_List_Table extends \WP_List_Table {
 	 *
 	 * @return string The column value.
 	 * @since 1.0.2
-	 *
 	 */
 	function column_default( $item, $column_name ) {
 		$getter = "get_$column_name";
@@ -373,7 +364,6 @@ abstract class EverAccounting_List_Table extends \WP_List_Table {
 	 *
 	 * @return string[] Array of CSS classes for the table tag.
 	 * @since 3.1.0
-	 *
 	 */
 	public function get_table_classes() {
 		$mode = get_user_setting( 'posts_list_mode', 'list' );

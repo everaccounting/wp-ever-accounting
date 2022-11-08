@@ -4,11 +4,9 @@
  * Page: Tools
  * Tab: Import
  *
- *
  * @package     EverAccounting
  * @subpackage  Admin/View/Tools
  * @since       1.0.2
- *
  */
 defined( 'ABSPATH' ) || exit();
 ?>

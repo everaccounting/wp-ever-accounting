@@ -6,6 +6,7 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Class Singleton
+ *
  * @package EverAccounting\Abstracts
  */
 abstract class Singleton {

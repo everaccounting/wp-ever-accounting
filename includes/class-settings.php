@@ -28,7 +28,6 @@ class Settings {
 
 	/**
 	 * Settings constructor.
-	 *
 	 */
 	public function __construct() {
 		$this->settings = (array) get_option( 'eaccounting_settings', array() );
@@ -38,7 +37,7 @@ class Settings {
 		add_action( 'admin_init', array( $this, 'register_settings' ) );
 		add_filter( 'eaccounting_settings_sanitize_text', 'sanitize_text_field' );
 		add_filter( 'eaccounting_settings_sanitize_url', 'wp_http_validate_url' );
-		//add_filter( 'eaccounting_settings_sanitize_checkbox', 'eaccounting_bool_to_string' );
+		// add_filter( 'eaccounting_settings_sanitize_checkbox', 'eaccounting_bool_to_string' );
 		add_filter( 'eaccounting_settings_sanitize_number', 'absint' );
 		add_filter( 'eaccounting_settings_sanitize_rich_editor', 'wp_kses_post' );
 	}
@@ -351,7 +350,6 @@ class Settings {
 		 * @param array $settings Array of default settings.
 		 *
 		 * @since 1.0.2
-		 *
 		 */
 		return apply_filters( 'eaccounting_settings', $settings );
 	}
@@ -479,7 +477,6 @@ class Settings {
 	 *
 	 * @return array|int
 	 * @since 1.1.0
-	 *
 	 */
 	protected function get_categories( $type = 'income' ) {
 		$categories = array();
@@ -505,7 +502,6 @@ class Settings {
 	 *
 	 * @return array|int
 	 * @since 1.1.0
-	 *
 	 */
 	protected function get_currencies() {
 		$currencies = array();
@@ -534,7 +530,6 @@ class Settings {
 	 *
 	 * @return void
 	 * @since 1.0.2
-	 *
 	 */
 	function header_callback( $args ) {
 		if ( ! empty( $args['desc'] ) ) {
@@ -551,7 +546,6 @@ class Settings {
 	 *
 	 * @return void
 	 * @since 1.0.2
-	 *
 	 */
 	function text_callback( $args ) {
 		$default = isset( $args['std'] ) ? $args['std'] : '';
@@ -586,7 +580,6 @@ class Settings {
 	 *
 	 * @return void
 	 * @since 1.0.2
-	 *
 	 */
 	function email_callback( $args ) {
 		$default = isset( $args['std'] ) ? $args['std'] : '';
@@ -622,7 +615,6 @@ class Settings {
 	 * @return void
 	 * @since 1.0.2
 	 * @global      $this ->options Array of all the EverAccounting Options
-	 *
 	 */
 	function checkbox_callback( $args ) {
 		$value      = $this->get( $args['id'] );
@@ -647,7 +639,6 @@ class Settings {
 	 * @return void
 	 * @since 1.0.2
 	 * @global      $this ->options Array of all the EverAccounting Options
-	 *
 	 */
 	function multicheck_callback( $args ) {
 
@@ -676,7 +667,6 @@ class Settings {
 	 * @return void
 	 * @since 1.0.2
 	 * @global      $this ->options Array of all the EverAccounting Options
-	 *
 	 */
 	function radio_callback( $args ) {
 
@@ -710,7 +700,6 @@ class Settings {
 	 * @return void
 	 * @since 1.0.2
 	 * @global      $this ->options Array of all the EverAccounting Options
-	 *
 	 */
 	function url_callback( $args ) {
 
@@ -749,7 +738,6 @@ class Settings {
 	 * @return void
 	 * @since 1.0.2
 	 * @global      $this ->options Array of all the EverAccounting Options
-	 *
 	 */
 	function number_callback( $args ) {
 
@@ -791,7 +779,6 @@ class Settings {
 	 * @return void
 	 * @since 1.0.2
 	 * @global      $this ->options Array of all the EverAccounting Options
-	 *
 	 */
 	function textarea_callback( $args ) {
 
@@ -831,7 +818,6 @@ class Settings {
 	 * @return void
 	 * @since 1.0.2
 	 * @global      $this ->options Array of all the EverAccounting Options
-	 *
 	 */
 	function password_callback( $args ) {
 
@@ -870,7 +856,6 @@ class Settings {
 	 * @return void
 	 * @since 1.0.2
 	 * @global      $this ->options Array of all the EverAccounting Options
-	 *
 	 */
 	function select_callback( $args ) {
 
@@ -938,7 +923,6 @@ class Settings {
 	 * @param array $args Arguements passed by the setting
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	function upload_callback( $args ) {
 		if ( isset( $this->settings[ $args['id'] ] ) ) {
@@ -979,7 +963,6 @@ class Settings {
 	 * @param $args
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	function license_key_callback( $args ) {
 		$value    = $this->get( $args['id'], '' );
@@ -1090,7 +1073,7 @@ class Settings {
 			echo '<input type="submit" class="button-secondary" name="' . $args['id'] . '_deactivate" value="' . __( 'Deactivate License', 'wp-ever-accounting' ) . '"/>';
 		}
 
-		//echo '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"> ' . wp_kses_post( $args['desc'] ) . '</label>';
+		// echo '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"> ' . wp_kses_post( $args['desc'] ) . '</label>';
 
 		if ( ! empty( $messages ) ) {
 			foreach ( $messages as $message ) {
@@ -1113,7 +1096,6 @@ class Settings {
 	 *
 	 * @return void
 	 * @since 1.0.2
-	 *
 	 */
 	function missing_callback( $args ) {
 		/* translators: %s name of the callback */
@@ -1127,13 +1109,12 @@ class Settings {
 	 * setting that needs to allow 0 as a valid value, but sure to add its
 	 * key to the filtered array seen in this method.
 	 *
-	 * @param mixed $default (optional)
+	 * @param mixed  $default (optional)
 	 *
 	 * @param string $key
 	 *
 	 * @return mixed
 	 * @since  1.0.2
-	 *
 	 */
 	public function get( $key, $default = false ) {
 
@@ -1227,7 +1208,6 @@ class Settings {
 				 * @param array $value The input array and settings key defined within.
 				 *
 				 * @since 1.0.2
-				 *
 				 */
 				$input[ $key ] = apply_filters( 'eaccounting_settings_sanitize_' . $type, $input[ $key ], $key );
 
@@ -1244,7 +1224,6 @@ class Settings {
 			 * @param array $input [ $key ] The input array and settings key defined within.
 			 *
 			 * @since 1.0
-			 *
 			 */
 			$input[ $key ] = apply_filters( 'eaccounting_settings_sanitize', $input[ $key ], $key );
 		}
@@ -1257,14 +1236,13 @@ class Settings {
 	/**
 	 * Sets an option (in memory).
 	 *
-	 * @param bool $save Optional. Whether to trigger saving the option or options. Default false.
+	 * @param bool  $save Optional. Whether to trigger saving the option or options. Default false.
 	 *
 	 * @param array $settings An array of `key => value` setting pairs to set.
 	 *
 	 * @return bool If `$save` is not false, whether the options were saved successfully. True otherwise.
 	 * @since  1.0.2
 	 * @access public
-	 *
 	 */
 	public function set( $settings, $save = false ) {
 		foreach ( $settings as $option => $value ) {
@@ -1289,7 +1267,6 @@ class Settings {
 	 *
 	 * @return bool False if the options were not updated (saved) successfully, true otherwise.
 	 * @since 1.0.2
-	 *
 	 */
 	protected function save( $options = array() ) {
 		$all_options = $this->get_all();

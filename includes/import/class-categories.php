@@ -71,7 +71,12 @@ class Categories extends CSV_Importer {
 			return new \WP_Error( 'empty_prop', __( 'Empty Type', 'wp-ever-accounting' ) );
 		}
 
-		$category_exists = eaccounting_get_categories( array( 'search' => $data['name'], 'type' => $data['type'] ) );
+		$category_exists = eaccounting_get_categories(
+			array(
+				'search' => $data['name'],
+				'type'   => $data['type'],
+			)
+		);
 		$category_id     = ! empty( $category_exists ) ? $category_exists[0]->get_id() : '';
 
 		if ( ! empty( $category_id ) ) {

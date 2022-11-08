@@ -19,9 +19,8 @@ class Currencies_Controller extends Entities_Controller {
 	 * Route base.
 	 *
 	 * @since 1.1.0
-	 * 
-	 * @var string
 	 *
+	 * @var string
 	 */
 	protected $rest_base = 'currencies';
 
@@ -29,7 +28,7 @@ class Currencies_Controller extends Entities_Controller {
 	 * Entity model class.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @var string
 	 */
 	protected $entity_model = Currency::class;
@@ -52,9 +51,8 @@ class Currencies_Controller extends Entities_Controller {
 	 * Retrieves the items's schema, conforming to JSON Schema.
 	 *
 	 * @since 1.1.0
-	 * 
-	 * @return array Item schema data.
 	 *
+	 * @return array Item schema data.
 	 */
 	public function get_item_schema() {
 		$schema = array(
@@ -166,9 +164,8 @@ class Currencies_Controller extends Entities_Controller {
 	 * Retrieves the query params for the items collection.
 	 *
 	 * @since 1.1.0
-	 * 
-	 * @return array Collection parameters.
 	 *
+	 * @return array Collection parameters.
 	 */
 	public function get_collection_params() {
 		$query_params                       = parent::get_collection_params();

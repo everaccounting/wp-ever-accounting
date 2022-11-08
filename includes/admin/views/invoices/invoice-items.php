@@ -47,7 +47,7 @@ $quantity_label = eaccounting()->settings->get( 'invoice_quantity_label', __( 'Q
 				<?php
 				$item_id = 9999;
 				$item    = new \EverAccounting\Models\Document_Item();
-				include __DIR__ . '/invoice-item.php';
+				require __DIR__ . '/invoice-item.php';
 				?>
 			</script>
 			<script type="text/template" id="ea-invoice-item-selector">

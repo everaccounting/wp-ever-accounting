@@ -18,8 +18,9 @@ defined( 'ABSPATH' ) || exit();
 
 /**
  * Report Class
+ *
  * @package EverAccounting\Admin\Report
-*/
+ */
 
 class Report {
 	/**
@@ -82,9 +83,9 @@ class Report {
 	 * @param        $start_date
 	 *
 	 * @param        $end_date
-	 * @param string $period
-	 * @param string $date_key
-	 * @param string $date_value
+	 * @param string     $period
+	 * @param string     $date_key
+	 * @param string     $date_value
 	 *
 	 * @return array
 	 */
@@ -107,8 +108,8 @@ class Report {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @param null $start_date
-	 * @param null $end_date
+	 * @param null   $start_date
+	 * @param null   $end_date
 	 * @param      $column
 	 *
 	 * @throws \Exception
@@ -149,8 +150,8 @@ class Report {
 	 */
 	public function maybe_clear_cache( $key ) {
 		if ( ! empty( $_GET['refresh_report'] )
-		     && ! empty( $_GET['_wpnonce'] )
-		     && wp_verify_nonce( $_GET['_wpnonce'], 'refresh_report' ) ) {
+			 && ! empty( $_GET['_wpnonce'] )
+			 && wp_verify_nonce( $_GET['_wpnonce'], 'refresh_report' ) ) {
 			$this->delete_cache( $key );
 			wp_redirect( remove_query_arg( array( 'refresh_report', '_wpnonce' ) ) );
 			exit();
@@ -168,7 +169,7 @@ class Report {
 	 */
 	public function generate_cache_key( $key ) {
 		if ( ! is_string( $key ) ) {
-			$key = serialize( $key ). get_called_class();
+			$key = serialize( $key ) . get_called_class();
 		}
 
 		return 'eaccounting_cache_report_' . $key;
@@ -180,7 +181,7 @@ class Report {
 	 * @since 1.1.0
 	 *
 	 * @param     $value
-	 * @param int $expire
+	 * @param int   $expire
 	 * @param     $key
 	 *
 	 * @return bool

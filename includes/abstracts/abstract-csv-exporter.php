@@ -13,6 +13,7 @@ defined( 'ABSPATH' ) || exit();
 
 /**
  * Class CSV_Exporter
+ *
  * @package EverAccounting\Abstracts
  */
 abstract class CSV_Exporter {

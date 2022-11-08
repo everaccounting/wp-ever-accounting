@@ -310,11 +310,11 @@ function eaccounting_file_to_attachment( $file ) {
 			'post_mime_type' => $wp_filetype['type'],
 			'post_title'     => preg_replace( '/\.[^.]+$/', '', $filename ),
 			'post_content'   => '',
-			'post_status'    => 'inherit'
+			'post_status'    => 'inherit',
 		);
 		$attachment_id = wp_insert_attachment( $attachment, $upload_file['file'] );
 		if ( ! is_wp_error( $attachment_id ) ) {
-			require_once( ABSPATH . "wp-admin" . '/includes/image.php' );
+			require_once ABSPATH . 'wp-admin' . '/includes/image.php';
 			$attachment_data = wp_generate_attachment_metadata( $attachment_id, $upload_file['file'] );
 			wp_update_attachment_metadata( $attachment_id, $attachment_data );
 

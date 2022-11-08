@@ -88,21 +88,36 @@ class Payments extends CSV_Importer {
 			return new \WP_Error( 'empty_prop', __( 'Empty Payment Method', 'wp-ever-accounting' ) );
 		}
 
-		$category    = eaccounting_get_categories( array( 'search' => $data['category_name'], 'search_cols' => array( 'name' ), 'type' => 'expense' ) );
+		$category    = eaccounting_get_categories(
+			array(
+				'search'      => $data['category_name'],
+				'search_cols' => array( 'name' ),
+				'type'        => 'expense',
+			)
+		);
 		$category    = ! empty( $category ) ? reset( $category ) : '';
 		$category_id = ! empty( $category ) ? $category->get_id() : '';
 
 		$currency = new Currency( array( 'code' => $data['currency_code'] ) );
 
-		$account               = eaccounting_get_accounts( array( 'search' => $data['account_name'], 'search_cols' => array( 'name' ) ) );
+		$account               = eaccounting_get_accounts(
+			array(
+				'search'      => $data['account_name'],
+				'search_cols' => array( 'name' ),
+			)
+		);
 		$account               = ! empty( $account ) ? reset( $account ) : '';
 		$account_id            = ! empty( $account ) ? $account->get_id() : '';
 		$account_currency_code = ! empty( $account ) ? $account->get_currency_code() : '';
 
-		$vendor    = ( '' != $data['vendor_name'] ) ? eaccounting_get_vendors( array( 'search' => $data['vendor_name'], 'search_cols' => array( 'name' ) ) ) : '';
+		$vendor    = ( '' != $data['vendor_name'] ) ? eaccounting_get_vendors(
+			array(
+				'search'      => $data['vendor_name'],
+				'search_cols' => array( 'name' ),
+			)
+		) : '';
 		$vendor    = ! empty( $vendor ) ? reset( $vendor ) : '';
 		$vendor_id = ! empty( $vendor ) ? $vendor->get_id() : '';
-
 
 		if ( empty( $category_id ) ) {
 			return new \WP_Error( 'invalid_props', __( 'Category does not exist.', 'wp-ever-accounting' ) );

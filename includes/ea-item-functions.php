@@ -17,7 +17,6 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return EverAccounting\Models\Item|null
  * @since 1.1.0
- *
  */
 function eaccounting_get_item( $item ) {
 	if ( empty( $item ) ) {
@@ -86,7 +85,6 @@ function eaccounting_get_item_by_sku( $sku ) {
  *
  * @return EverAccounting\Models\Item|WP_Error|bool
  * @since 1.1.0
- *
  */
 function eaccounting_insert_item( $args, $wp_error = true ) {
 	// Ensure that we have data.
@@ -119,7 +117,6 @@ function eaccounting_insert_item( $args, $wp_error = true ) {
  *
  * @return bool
  * @since 1.1.0
- *
  */
 function eaccounting_delete_item( $item_id ) {
 	try {
@@ -150,8 +147,6 @@ function eaccounting_delete_item( $item_id ) {
  *
  * @return array|int
  * @since 1.1.0
- *
- *
  */
 function eaccounting_get_items( $args = array() ) {
 	// Prepare args.
@@ -192,7 +187,7 @@ function eaccounting_get_items( $args = array() ) {
 		$where  .= " AND $table.`id` NOT IN ($exclude)";
 	}
 
-	//search
+	// search
 	$search_cols = array( 'name', 'sku', 'description' );
 	if ( ! empty( $qv['search'] ) ) {
 		$searches = array();

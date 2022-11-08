@@ -45,7 +45,7 @@ $title = $account->exists() ? __( 'Update Account', 'wp-ever-accounting' ) : __(
 							<?php esc_html_e( 'View Account', 'wp-ever-accounting' ); ?>
 						</a>
 					</div>
-				<?php endif;?>
+				<?php endif; ?>
 			</div>
 			<div class="ea-card__body">
 				<div class="ea-card__inside">

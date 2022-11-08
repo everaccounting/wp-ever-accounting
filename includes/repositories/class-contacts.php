@@ -41,6 +41,7 @@ class Contacts extends Resource_Repository {
 
 	/**
 	 * Meta type.
+	 *
 	 * @var string
 	 */
 	protected $meta_type = 'contact';
@@ -87,7 +88,6 @@ class Contacts extends Resource_Repository {
 	 * Method to read a item from the database.
 	 *
 	 * @param Contact $item Item object.
-	 *
 	 */
 	public function read( &$item ) {
 		global $wpdb;

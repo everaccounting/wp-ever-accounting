@@ -77,7 +77,7 @@ class Currency extends Resource_Model {
 			$this->set_object_read( true );
 		}
 
-		//Load repository
+		// Load repository
 		$this->repository = Repositories::load( 'currencies' );
 
 		if ( ! empty( $this->get_code() ) ) {
@@ -111,7 +111,7 @@ class Currency extends Resource_Model {
 	 * @return int
 	 */
 	public function get_id() {
-//		eaccounting_doing_it_wrong( __METHOD__, __( 'For currency get_id() calling is discoursed use get_code()', 'wp-ever-accounting' ), 'Currency::get_code' );
+		// eaccounting_doing_it_wrong( __METHOD__, __( 'For currency get_id() calling is discoursed use get_code()', 'wp-ever-accounting' ), 'Currency::get_code' );
 		return parent::get_id();
 	}
 

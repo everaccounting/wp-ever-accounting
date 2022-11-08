@@ -8,6 +8,7 @@
  */
 
 namespace EverAccounting\Abstracts;
+
 defined( 'ABSPATH' ) || exit();
 
 /**
@@ -113,7 +114,7 @@ abstract class CSV_Importer {
 	 * Initialize importer.
 	 *
 	 * @param string $file File to read.
-	 * @param array $params Arguments for the parser.
+	 * @param array  $params Arguments for the parser.
 	 */
 	public function __construct( $file, $params = array() ) {
 		$default_args = array(
@@ -177,7 +178,6 @@ abstract class CSV_Importer {
 	 * @param array $mapping
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_mapping( $mapping = array() ) {
 		if ( ! empty( $mapping ) && is_array( $mapping ) ) {
@@ -371,7 +371,7 @@ abstract class CSV_Importer {
 			if ( ! is_wp_error( $result ) && $result ) {
 				$data['imported'] = (int) $data['imported'] + 1;
 			} else {
-				error_log(print_r($result, true ));
+				error_log( print_r( $result, true ) );
 				$data['skipped'] = (int) $data['skipped'] + 1;
 			}
 
@@ -525,7 +525,6 @@ abstract class CSV_Importer {
 	 *
 	 * @return string
 	 * @since 1.0.2
-	 *
 	 */
 	protected function unescape_data( $value ) {
 		$active_content_triggers = array( "'=", "'+", "'-", "'@" );
@@ -544,7 +543,6 @@ abstract class CSV_Importer {
 	 *
 	 * @return array|string
 	 * @since 1.0.2
-	 *
 	 */
 	public function parse_text_field( $value ) {
 		return eaccounting_clean( $this->unescape_data( $value ) );
@@ -557,7 +555,6 @@ abstract class CSV_Importer {
 	 *
 	 * @return bool|string
 	 * @since 1.0.2
-	 *
 	 */
 	public function parse_bool_field( $value ) {
 		if ( '0' === $value ) {
@@ -579,7 +576,6 @@ abstract class CSV_Importer {
 	 *
 	 * @return float|string
 	 * @since 1.0.2
-	 *
 	 */
 	public function parse_float_field( $value ) {
 		if ( '' === $value ) {
@@ -600,7 +596,6 @@ abstract class CSV_Importer {
 	 *
 	 * @return string|null
 	 * @since 1.0.2
-	 *
 	 */
 	public function parse_date_field( $value ) {
 		if ( empty( $value ) ) {
@@ -625,7 +620,6 @@ abstract class CSV_Importer {
 	 *
 	 * @return string
 	 * @since 1.0.2
-	 *
 	 */
 	public function parse_skip_field( $value ) {
 		return $value;
@@ -638,7 +632,6 @@ abstract class CSV_Importer {
 	 *
 	 * @return int
 	 * @since 1.0.2
-	 *
 	 */
 	public function parse_int_field( $value ) {
 		// Remove the ' prepended to fields that start with - if needed.
@@ -654,7 +647,6 @@ abstract class CSV_Importer {
 	 *
 	 * @return string
 	 * @since 1.0.2
-	 *
 	 */
 	public function parse_description_field( $description ) {
 		$parts = explode( "\\\\n", $description );
@@ -672,7 +664,6 @@ abstract class CSV_Importer {
 	 *
 	 * @return string
 	 * @since 1.0.2
-	 *
 	 */
 	public function parse_country_field( $country ) {
 		$country = eaccounting_clean( $country );
@@ -687,7 +678,6 @@ abstract class CSV_Importer {
 	 *
 	 * @return string
 	 * @since 1.0.2
-	 *
 	 */
 	public function parse_currency_code_field( $currency ) {
 		$currency = eaccounting_clean( $currency );

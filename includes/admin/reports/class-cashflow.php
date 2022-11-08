@@ -16,6 +16,7 @@ defined( 'ABSPATH' ) || exit();
 
 /**
  * Cashflow Class
+ *
  * @package EverAccounting\Admin\Report
  */
 class CashFlow extends Report {
@@ -30,12 +31,12 @@ class CashFlow extends Report {
 		$this->maybe_clear_cache( $args );
 		if ( empty( $args['year'] ) ) {
 			echo '<p>';
-			esc_html_e( 'Please select a year to generate the report.','wp-ever-accounting' );
+			esc_html_e( 'Please select a year to generate the report.', 'wp-ever-accounting' );
 			echo '</p>';
 
 			return false;
 		}
-		$report = false; //$this->get_cache( $args );
+		$report = false; // $this->get_cache( $args );
 		if ( empty( $report ) ) {
 			$start_date = $this->get_start_date( $args['year'] );
 			$end_date   = $this->get_end_date( $args['year'] );
@@ -59,31 +60,31 @@ class CashFlow extends Report {
 				'profits'  => $profit,
 				'dates'    => $period,
 			);
-			//$this->set_cache( $args, $report );
+			// $this->set_cache( $args, $report );
 		}
 
 		return $report;
-		//      $interval   = 'M';
-		//      switch ( $days ) {
-		//          case $days < 1:
-		//              $interval = 'H';
-		//              break;
-		//          case $days > 1 && $days < 32:
-		//              $interval = 'D';
-		//              break;
-		//          case $days > 32 && $days < 366:
-		//              $interval = 'M';
-		//              break;
-		//          case $days > 366 && $days < 732:
-		//              $interval = '3M';
-		//              break;
-		//          case $days > 732:
-		//              $interval = '1Y';
-		//              break;
-		//          default:
-		//              $interval = 'M';
-		//              break;
-		//      }
+		// $interval   = 'M';
+		// switch ( $days ) {
+		// case $days < 1:
+		// $interval = 'H';
+		// break;
+		// case $days > 1 && $days < 32:
+		// $interval = 'D';
+		// break;
+		// case $days > 32 && $days < 366:
+		// $interval = 'M';
+		// break;
+		// case $days > 366 && $days < 732:
+		// $interval = '3M';
+		// break;
+		// case $days > 732:
+		// $interval = '1Y';
+		// break;
+		// default:
+		// $interval = 'M';
+		// break;
+		// }
 	}
 
 
@@ -339,13 +340,13 @@ class CashFlow extends Report {
 				</div>
 
 				<div class="ea-card__footer">
-					<a class="button button-secondary" href="<?php echo wp_nonce_url( add_query_arg('refresh_report', 'yes'), 'refresh_report' ); ?>">
+					<a class="button button-secondary" href="<?php echo wp_nonce_url( add_query_arg( 'refresh_report', 'yes' ), 'refresh_report' ); ?>">
 						<?php esc_html_e( 'Reset Cache', 'wp-ever-accounting' ); ?>
 					</a>
 				</div>
 			<?php else : ?>
 				<div class="ea-card__inside">
-					<p><?php _e("Please select financial year.","wp-ever-accounting");?></p>
+					<p><?php _e( 'Please select financial year.', 'wp-ever-accounting' ); ?></p>
 				</div>
 			<?php endif; ?>
 		</div>

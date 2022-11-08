@@ -83,7 +83,7 @@ class Item extends Resource_Model {
 			$this->set_object_read( true );
 		}
 
-		//Load repository
+		// Load repository
 		$this->repository = Repositories::load( 'items' );
 
 		if ( $this->get_id() > 0 ) {
@@ -122,7 +122,6 @@ class Item extends Resource_Model {
 	 *
 	 * @return mixed|null
 	 * @since 1.1.0
-	 *
 	 */
 	public function get_name( $context = 'edit' ) {
 		return $this->get_prop( 'name', $context );
@@ -133,7 +132,6 @@ class Item extends Resource_Model {
 	 *
 	 * @return mixed|null
 	 * @since 1.1.0
-	 *
 	 */
 	public function get_sku( $context = 'edit' ) {
 		return $this->get_prop( 'sku', $context );
@@ -144,7 +142,6 @@ class Item extends Resource_Model {
 	 *
 	 * @return mixed|null
 	 * @since 1.1.0
-	 *
 	 */
 	public function get_thumbnail_id( $context = 'edit' ) {
 		return $this->get_prop( 'thumbnail_id', $context );
@@ -155,7 +152,6 @@ class Item extends Resource_Model {
 	 *
 	 * @return mixed|null
 	 * @since 1.1.0
-	 *
 	 */
 	public function get_description( $context = 'edit' ) {
 		return $this->get_prop( 'description', $context );
@@ -166,7 +162,6 @@ class Item extends Resource_Model {
 	 *
 	 * @return mixed|null
 	 * @since 1.1.0
-	 *
 	 */
 	public function get_sale_price( $context = 'edit' ) {
 		return $this->get_prop( 'sale_price', $context );
@@ -177,7 +172,6 @@ class Item extends Resource_Model {
 	 *
 	 * @return mixed|null
 	 * @since 1.1.0
-	 *
 	 */
 	public function get_purchase_price( $context = 'edit' ) {
 		$price = $this->get_prop( 'purchase_price', $context );
@@ -193,7 +187,6 @@ class Item extends Resource_Model {
 	 *
 	 * @return mixed|null
 	 * @since 1.1.0
-	 *
 	 */
 	public function get_quantity( $context = 'edit' ) {
 		return $this->get_prop( 'quantity', $context );
@@ -204,7 +197,6 @@ class Item extends Resource_Model {
 	 *
 	 * @return mixed|null
 	 * @since 1.1.0
-	 *
 	 */
 	public function get_category_id( $context = 'edit' ) {
 		return $this->get_prop( 'category_id', $context );
@@ -215,7 +207,6 @@ class Item extends Resource_Model {
 	 *
 	 * @return mixed|null
 	 * @since 1.1.0
-	 *
 	 */
 	public function get_sales_tax( $context = 'edit' ) {
 		return $this->get_prop( 'sales_tax', $context );
@@ -226,7 +217,6 @@ class Item extends Resource_Model {
 	 *
 	 * @return mixed|null
 	 * @since 1.1.0
-	 *
 	 */
 	public function get_purchase_tax( $context = 'edit' ) {
 		return $this->get_prop( 'purchase_tax', $context );
@@ -246,7 +236,6 @@ class Item extends Resource_Model {
 	 * @param $name
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public function set_name( $name ) {
 		$this->set_prop( 'name', eaccounting_clean( $name ) );
@@ -256,7 +245,6 @@ class Item extends Resource_Model {
 	 * @param $sku
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public function set_sku( $sku ) {
 		$this->set_prop( 'sku', eaccounting_clean( $sku ) );
@@ -266,7 +254,6 @@ class Item extends Resource_Model {
 	 * @param $thumbnail_id
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public function set_thumbnail_id( $thumbnail_id ) {
 		$this->set_prop( 'thumbnail_id', absint( $thumbnail_id ) );
@@ -276,7 +263,6 @@ class Item extends Resource_Model {
 	 * @param $description
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public function set_description( $description ) {
 		$this->set_prop( 'description', sanitize_textarea_field( $description ) );
@@ -286,7 +272,6 @@ class Item extends Resource_Model {
 	 * @param $sale_price
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public function set_sale_price( $sale_price ) {
 		$this->set_prop( 'sale_price', eaccounting_format_decimal( $sale_price, 4 ) );
@@ -296,7 +281,6 @@ class Item extends Resource_Model {
 	 * @param $purchase_price
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public function set_purchase_price( $purchase_price ) {
 		$this->set_prop( 'purchase_price', eaccounting_format_decimal( $purchase_price, 4 ) );
@@ -306,7 +290,6 @@ class Item extends Resource_Model {
 	 * @param $quantity
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public function set_quantity( $quantity ) {
 		$this->set_prop( 'quantity', absint( $quantity ) );
@@ -316,7 +299,6 @@ class Item extends Resource_Model {
 	 * @param $category_id
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public function set_category_id( $category_id ) {
 		$this->set_prop( 'category_id', absint( $category_id ) );
@@ -326,7 +308,6 @@ class Item extends Resource_Model {
 	 * @param $tax
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public function set_sales_tax( $tax ) {
 		$this->set_prop( 'sales_tax', eaccounting_format_decimal( $tax, 4 ) );
@@ -336,7 +317,6 @@ class Item extends Resource_Model {
 	 * @param $tax_ids
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public function set_purchase_tax( $tax ) {
 		$this->set_prop( 'purchase_tax', eaccounting_format_decimal( $tax, 4 ) );

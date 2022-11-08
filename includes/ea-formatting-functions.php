@@ -284,7 +284,7 @@ function eaccounting_esc_json( $json, $html = false ) {
  *
  * @param      $number
  *
- * @param bool $allow_decimal
+ * @param bool   $allow_decimal
  *
  * @return int|float|null
  */
@@ -306,8 +306,8 @@ function eaccounting_sanitize_number( $number, $allow_decimal = true ) {
  *
  * @param      $number
  *
- * @param int  $decimals
- * @param bool $trim_zeros
+ * @param int    $decimals
+ * @param bool   $trim_zeros
  *
  * @return int|float|null
  */
@@ -395,7 +395,7 @@ function eaccounting_hex_darker( $color, $factor = 30 ) {
 
 	foreach ( $base as $k => $v ) {
 		$amount      = $v / 100;
-		$amount      = eaccounting_format_decimal( ($amount * $factor), false );
+		$amount      = eaccounting_format_decimal( ( $amount * $factor ), false );
 		$new_decimal = $v - $amount;
 
 		$new_hex_component = dechex( $new_decimal );
@@ -424,7 +424,7 @@ function eaccounting_hex_lighter( $color, $factor = 30 ) {
 	foreach ( $base as $k => $v ) {
 		$amount      = 255 - $v;
 		$amount      = $amount / 100;
-		$amount      = eaccounting_format_decimal( ($amount * $factor), false );
+		$amount      = eaccounting_format_decimal( ( $amount * $factor ), false );
 		$new_decimal = $v + $amount;
 
 		$new_hex_component = dechex( $new_decimal );
@@ -545,7 +545,6 @@ function eaccounting_number_dictionary() {
  * @param $amount
  *
  * @return string|null
- *
  */
 function eaccounting_numbers_to_words( $number ) {
 	$hyphen      = '-';

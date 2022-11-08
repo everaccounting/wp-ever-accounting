@@ -58,7 +58,6 @@ class Note extends Resource_Model {
 	 * @since 1.1.0
 	 *
 	 * @param int|object|Account $data object to read.
-	 *
 	 */
 	public function __construct( $data = 0 ) {
 		parent::__construct( $data );
@@ -75,7 +74,7 @@ class Note extends Resource_Model {
 			$this->set_object_read( true );
 		}
 
-		//Load repository
+		// Load repository
 		$this->repository = Repositories::load( 'notes' );
 
 		if ( $this->get_id() > 0 ) {
@@ -171,7 +170,6 @@ class Note extends Resource_Model {
 	 * @since  1.1.0
 	 *
 	 * @param int $parent_id .
-	 *
 	 */
 	public function set_parent_id( $parent_id ) {
 		$this->set_prop( 'parent_id', absint( $parent_id ) );
@@ -183,7 +181,6 @@ class Note extends Resource_Model {
 	 * @since  1.1.0
 	 *
 	 * @param string $type .
-	 *
 	 */
 	public function set_type( $type ) {
 		$this->set_prop( 'type', eaccounting_clean( $type ) );
@@ -195,7 +192,6 @@ class Note extends Resource_Model {
 	 * @since  1.1.0
 	 *
 	 * @param string $note .
-	 *
 	 */
 	public function set_note( $note ) {
 		$this->set_prop( 'note', eaccounting_sanitize_textarea( $note ) );
@@ -207,7 +203,6 @@ class Note extends Resource_Model {
 	 * @since  1.1.0
 	 *
 	 * @param string $extra .
-	 *
 	 */
 	public function set_extra( $extra ) {
 		$this->set_prop( 'extra', eaccounting_clean( $extra ) );

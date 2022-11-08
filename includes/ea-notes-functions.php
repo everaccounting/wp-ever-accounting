@@ -17,7 +17,6 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return EverAccounting\Models\Note|null
  * @since 1.1.0
- *
  */
 function eaccounting_get_note( $item ) {
 	if ( empty( $item ) ) {
@@ -72,7 +71,6 @@ function eaccounting_insert_note( $args, $wp_error = true ) {
  *
  * @return bool
  * @since 1.1.0
- *
  */
 function eaccounting_delete_note( $note_id ) {
 	try {
@@ -131,7 +129,7 @@ function eaccounting_get_notes( $args = array() ) {
 		$where  .= " AND $table.`id` NOT IN ($exclude)";
 	}
 
-	//search
+	// search
 	$search_cols = array( 'note', 'extra' );
 	if ( ! empty( $qv['search'] ) ) {
 		$searches = array();
@@ -199,7 +197,7 @@ function eaccounting_get_notes( $args = array() ) {
 	}
 
 	if ( 'objects' === $qv['return'] && true !== $qv['count_total'] ) {
-		$results = array_map('eaccounting_get_note', $results);
+		$results = array_map( 'eaccounting_get_note', $results );
 	}
 
 	return $results;

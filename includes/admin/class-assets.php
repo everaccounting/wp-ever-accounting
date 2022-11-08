@@ -13,6 +13,7 @@ defined( 'ABSPATH' ) || exit();
 
 /**
  * Class Assets
+ *
  * @package EverAccounting\Admin
  * @since   1.0.2
  */
@@ -62,13 +63,13 @@ class Assets {
 		$screen                = get_current_screen();
 		$screen_id             = $screen ? $screen->id : '';
 		$eaccounting_screen_id = sanitize_title( __( 'Accounting', 'wp-ever-accounting' ) );
-		//$suffix                = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+		// $suffix                = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 		$suffix  = '';
 		$version = eaccounting()->get_version();
 
 		// 3rd parties
 		wp_register_script( 'jquery-blockui', eaccounting()->plugin_url( '/dist/js/jquery.blockUI.min.js' ), array( 'jquery' ), '2.70', true );
-		//wp_register_script( 'jquery-tiptip', eaccounting()->plugin_url( '/assets/js/jquery-tiptip/jquery.tipTip.js' ), array( 'jquery' ), $version, true );
+		// wp_register_script( 'jquery-tiptip', eaccounting()->plugin_url( '/assets/js/jquery-tiptip/jquery.tipTip.js' ), array( 'jquery' ), $version, true );
 		wp_register_script( 'jquery-select2', eaccounting()->plugin_url( '/dist/js/select2.full.js' ), array( 'jquery' ), $version );
 		wp_register_script( 'jquery-inputmask', eaccounting()->plugin_url( '/dist/js/jquery.inputmask.js' ), array( 'jquery' ), '1.0.2' );
 		wp_register_script( 'jquery-chartjs', eaccounting()->plugin_url( '/dist/js/chart.bundle.js' ), array( 'jquery' ), '1.0.2' );
@@ -154,7 +155,7 @@ class Assets {
 			// report page
 			if ( eaccounting_is_admin_page( 'ea-reports' ) ) {
 				wp_enqueue_script( 'jquery-chartjs' );
-				//wp_enqueue_script( 'jquery-chartjs-labels' );
+				// wp_enqueue_script( 'jquery-chartjs-labels' );
 			}
 
 			$default_currency = eaccounting()->settings->get( 'default_currency', 'USD' );

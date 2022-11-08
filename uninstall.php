@@ -10,7 +10,7 @@
 
 defined( 'WP_UNINSTALL_PLUGIN' ) || exit;
 
-//clear events
+// clear events
 wp_clear_scheduled_hook( 'eaccounting_twicedaily_scheduled_events' );
 wp_clear_scheduled_hook( 'eaccounting_daily_scheduled_events' );
 wp_clear_scheduled_hook( 'eaccounting_weekly_scheduled_events' );

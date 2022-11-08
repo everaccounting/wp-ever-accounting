@@ -42,7 +42,6 @@ class Install {
 	 *
 	 * @return void
 	 * @since 1.0.2
-	 *
 	 */
 	public static function check_version() {
 		// todo remove on later version.
@@ -874,7 +873,6 @@ class Install {
 	 * @param string $callback Callback name.
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public static function run_update_callback( $callback ) {
 		include_once EACCOUNTING_ABSPATH . '/includes/ea-update-functions.php';
@@ -890,7 +888,6 @@ class Install {
 	 * @param string|null $version New version or null.
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public static function update_version( $version = null ) {
 		update_option( 'eaccounting_version', is_null( $version ) ? eaccounting()->version : $version );
@@ -912,6 +909,7 @@ class Install {
 
 	/**
 	 * Handle background updates.
+	 *
 	 * @since 1.1.0
 	 */
 	public static function background_updater() {

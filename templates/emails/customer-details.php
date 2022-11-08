@@ -23,7 +23,7 @@ defined( 'ABSPATH' ) || exit;
 	<div style="font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif; margin-bottom: 40px;">
 		<h2><?php esc_html_e( 'Customer details', 'wp-ever-accounting' ); ?></h2>
 		<ul>
-			<?php foreach ( $fields as $label =>$value  ) : ?>
+			<?php foreach ( $fields as $label => $value ) : ?>
 				<li><strong><?php echo wp_kses_post( $label ); ?>:</strong> <span class="text"><?php echo wp_kses_post( $value ); ?></span></li>
 			<?php endforeach; ?>
 		</ul>

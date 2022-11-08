@@ -5,7 +5,7 @@ namespace EverAccounting;
 use EverAccounting\Abstracts\Singleton;
 use EverAccounting\Models\Invoice;
 
-defined('ABSPATH') || exit;
+defined( 'ABSPATH' ) || exit;
 
 class Emails extends Singleton {
 
@@ -13,11 +13,11 @@ class Emails extends Singleton {
 	 * Emails constructor.
 	 */
 	public function __construct() {
-		//invoice
-		//add_action( 'eacccounting_insert_invoice', array( __CLASS__, 'send_new_invoice_notification' ) );
-		//add_action( 'eaccounting_email_invoice_details', array( __CLASS__, 'invoice_details' ), 10, 2 );
-		//add_action( 'eaccounting_email_invoice_items', array( __CLASS__, 'invoice_items' ), 10, 2 );
-		//add_action( 'eaccounting_email_invoice_customer_details', array( __CLASS__, 'invoice_customer_details' ), 10, 2 );
+		// invoice
+		// add_action( 'eacccounting_insert_invoice', array( __CLASS__, 'send_new_invoice_notification' ) );
+		// add_action( 'eaccounting_email_invoice_details', array( __CLASS__, 'invoice_details' ), 10, 2 );
+		// add_action( 'eaccounting_email_invoice_items', array( __CLASS__, 'invoice_items' ), 10, 2 );
+		// add_action( 'eaccounting_email_invoice_customer_details', array( __CLASS__, 'invoice_customer_details' ), 10, 2 );
 	}
 
 	/**
@@ -25,7 +25,6 @@ class Emails extends Singleton {
 	 *
 	 * @param $sent_to_admin
 	 * @param $invoice
-	 *
 	 */
 	public static function invoice_items( $invoice, $sent_to_admin ) {
 		$args = compact( 'invoice', 'sent_to_admin' );
@@ -36,8 +35,7 @@ class Emails extends Singleton {
 	 * @since 1.1.0
 	 *
 	 * @param         $sent_to_admin
-	 * @param Invoice $invoice
-	 *
+	 * @param Invoice       $invoice
 	 */
 	public static function invoice_customer_details( $invoice, $sent_to_admin ) {
 		$fields = apply_filters(
@@ -96,7 +94,6 @@ class Emails extends Singleton {
 	 * @param Invoice $invoice
 	 *
 	 * @return bool
-	 *
 	 */
 	public static function send_customer_invoice( $invoice ) {
 		if ( 'yes' !== eaccounting()->settings->get( 'email_customer_invoice_active' ) ) {
@@ -146,7 +143,7 @@ class Emails extends Singleton {
 				'invoice'       => $invoice,
 				'message_body'  => eaccounting()->settings->get( 'email_customer_invoice_note_body' ),
 				'sent_to_admin' => false,
-				'note'          => $note
+				'note'          => $note,
 			)
 		);
 
@@ -162,7 +159,6 @@ class Emails extends Singleton {
 	 * @since 1.1.0
 	 *
 	 * @param Invoice $invoice
-	 *
 	 */
 	public static function send_new_invoice_notification( $invoice ) {
 		if ( 'yes' !== eaccounting()->settings->get( 'email_new_invoice_active' ) ) {
@@ -192,7 +188,6 @@ class Emails extends Singleton {
 	 * @since 1.1.0
 	 *
 	 * @param Invoice $invoice
-	 *
 	 */
 	public static function send_canecelled_invoice_notification( $invoice ) {
 		if ( 'yes' !== eaccounting()->settings->get( 'email_cancelled_invoice_active' ) ) {
@@ -222,7 +217,6 @@ class Emails extends Singleton {
 	 * @since 1.1.0
 	 *
 	 * @param Invoice $invoice
-	 *
 	 */
 	public static function send_failed_invoice_notification( $invoice ) {
 		if ( 'yes' !== eaccounting()->settings->get( 'email_failed_invoice_active' ) ) {
@@ -252,7 +246,6 @@ class Emails extends Singleton {
 	 * @since 1.1.0
 	 *
 	 * @param Invoice $invoice
-	 *
 	 */
 	public static function send_completed_invoice_notification( $invoice ) {
 		if ( 'yes' !== eaccounting()->settings->get( 'email_completed_invoice_active' ) ) {

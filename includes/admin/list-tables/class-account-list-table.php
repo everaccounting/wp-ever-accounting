@@ -19,6 +19,7 @@ if ( ! class_exists( '\EverAccounting_List_Table' ) ) {
 
 /**
  * Class EverAccounting_Account_List_Table
+ *
  * @since 1.1.0
  */
 class EverAccounting_Account_List_Table extends EverAccounting_List_Table {
@@ -170,7 +171,6 @@ class EverAccounting_Account_List_Table extends EverAccounting_List_Table {
 	 *
 	 * @return string Displays a checkbox.
 	 * @since  1.0.2
-	 *
 	 */
 	function column_cb( $account ) {
 		return sprintf( '<input type="checkbox" name="account_id[]" value="%d"/>', $account->get_id() );
@@ -179,13 +179,12 @@ class EverAccounting_Account_List_Table extends EverAccounting_List_Table {
 	/**
 	 * This function renders most of the columns in the list table.
 	 *
-	 * @param string $column_name The name of the column
+	 * @param string  $column_name The name of the column
 	 *
 	 * @param Account $account
 	 *
 	 * @return string The column value.
 	 * @since 1.0.2
-	 *
 	 */
 	function column_default( $account, $column_name ) {
 		$account_id = $account->get_id();
@@ -221,7 +220,7 @@ class EverAccounting_Account_List_Table extends EverAccounting_List_Table {
 				$value = ! empty( $account->get_bank_name() ) ? $account->get_bank_name() : '&mdash;';
 				break;
 			case 'enabled':
-				$value = '<label class="ea-toggle">';
+				$value  = '<label class="ea-toggle">';
 				$value .= '<input type="checkbox" class="account-status" style="" value="true" data-id="' . $account->get_id() . '" ' . checked( $account->is_enabled(), true, false ) . '>';
 				$value .= '<span data-label-off="' . __( 'No', 'wp-ever-accounting' ) . '" data-label-on="' . __( 'Yes', 'wp-ever-accounting' ) . '" class="ea-toggle-slider"></span>';
 				$value .= '</label>';
@@ -265,7 +264,7 @@ class EverAccounting_Account_List_Table extends EverAccounting_List_Table {
 		}
 
 		$ids = array_map( 'absint', $ids );
-		$ids = array_filter(  $ids );
+		$ids = array_filter( $ids );
 
 		if ( empty( $ids ) ) {
 			return;

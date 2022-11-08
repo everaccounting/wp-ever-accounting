@@ -36,7 +36,6 @@ class Revenue extends Transaction {
 	 * @since 1.1.0
 	 *
 	 * @param int|object|Revenue $data object to read.
-	 *
 	 */
 	public function __construct( $data = 0 ) {
 		$this->data = array_merge( $this->data, array( 'type' => 'income' ) );
@@ -97,7 +96,6 @@ class Revenue extends Transaction {
 	 * @since  1.1.0
 	 *
 	 * @param int $customer_id .
-	 *
 	 */
 	public function set_customer_id( $customer_id ) {
 		$this->set_prop( 'contact_id', absint( $customer_id ) );

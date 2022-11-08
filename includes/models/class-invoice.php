@@ -9,7 +9,7 @@
 
 namespace EverAccounting\Models;
 
-Use \EverAccounting\Abstracts\Document;
+use \EverAccounting\Abstracts\Document;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -41,7 +41,6 @@ class Invoice extends Document {
 	 * @since 1.1.0
 	 *
 	 * @param int|object|Invoice $invoice object to read.
-	 *
 	 */
 	public function __construct( $invoice = 0 ) {
 		$this->data = array_merge( $this->data, array( 'type' => 'invoice' ) );
@@ -69,7 +68,7 @@ class Invoice extends Document {
 		}
 
 		$this->required_props = array(
-			//'line_items'    => __( 'Line Items', 'wp-ever-accounting' ),
+			// 'line_items'    => __( 'Line Items', 'wp-ever-accounting' ),
 			'currency_code' => __( 'Currency', 'wp-ever-accounting' ),
 			'category_id'   => __( 'Category', 'wp-ever-accounting' ),
 			'contact_id'    => __( 'Customer', 'wp-ever-accounting' ),
@@ -230,7 +229,6 @@ class Invoice extends Document {
 	 * @since  1.1.0
 	 *
 	 * @param int $customer_id .
-	 *
 	 */
 	public function set_customer_id( $customer_id ) {
 		parent::set_contact_id( $customer_id );
@@ -294,12 +292,12 @@ class Invoice extends Document {
 			)
 		);
 
-		//check if we have item id or line_id
+		// check if we have item id or line_id
 		if ( empty( $args['item_id'] ) && empty( $args['line_id'] ) ) {
 			return false;
 		}
 
-		//first check if we get line id if so then its from database
+		// first check if we get line id if so then its from database
 		$line_item = new Document_Item();
 		if ( $this->get_item( $args['line_id'] ) ) {
 			$line_item = $this->items[ $args['line_id'] ];
@@ -308,7 +306,7 @@ class Invoice extends Document {
 		if ( ! empty( $args['item_id'] ) ) {
 			$product = new Item( $args['item_id'] );
 			if ( $product->exists() ) {
-				//convert the price from default to invoice currency.
+				// convert the price from default to invoice currency.
 				$default_currency = eaccounting_get_default_currency();
 				$default          = array(
 					'item_id'       => $product->get_id(),
@@ -519,7 +517,7 @@ class Invoice extends Document {
 	 */
 	public function get_total_due() {
 		$due = eaccounting_price( ( $this->get_total() - $this->get_total_paid() ), $this->get_currency_code(), true );
-		if ( eaccounting_price_to_default($due, $this->get_currency_code(), $this->get_currency_rate()) <= 0 ) {
+		if ( eaccounting_price_to_default( $due, $this->get_currency_code(), $this->get_currency_rate() ) <= 0 ) {
 			$due = 0;
 		}
 
@@ -617,7 +615,7 @@ class Invoice extends Document {
 			$this->set_status( 'partial' );
 		} elseif ( empty( $this->get_total_due() ) ) { // phpcs:ignore
 			$this->set_status( 'paid' );
-		} elseif ( $this->is_due() && $this->is_status('pending')) {
+		} elseif ( $this->is_due() && $this->is_status( 'pending' ) ) {
 			$this->set_status( 'overdue' );
 		} elseif ( in_array( $this->get_status(), array( 'partial', 'paid' ), true ) ) {
 			$this->set_status( 'received' );
@@ -678,6 +676,7 @@ class Invoice extends Document {
 
 	/**
 	 * Refund.
+	 *
 	 * @since 1.1.0
 	 */
 	public function set_refunded() {

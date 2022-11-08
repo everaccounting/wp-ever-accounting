@@ -24,7 +24,7 @@ class Data {
 	 *
 	 * Given a key, get the information from the database directly.
 	 *
-	 * @param string $key The stored option key.
+	 * @param string     $key The stored option key.
 	 * @param null|mixed $default Optional. A default value to retrieve should `$value` be empty. Default null.
 	 *
 	 * @return mixed|false The stored data, value of `$default` if not null, otherwise false.
@@ -45,7 +45,7 @@ class Data {
 	 * Write some data based on key and value.
 	 *
 	 * @param string $key The option_name.
-	 * @param mixed $value The value to store.
+	 * @param mixed  $value The value to store.
 	 *
 	 * @since  1.0.2
 	 */

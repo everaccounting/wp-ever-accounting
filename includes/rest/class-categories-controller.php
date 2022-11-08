@@ -26,7 +26,7 @@ class CategoriesController extends Entities_Controller {
 	 * Entity model class.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @var string
 	 */
 	protected $entity_model = Category::class;
@@ -47,11 +47,10 @@ class CategoriesController extends Entities_Controller {
 
 	/**
 	 * Retrieves the items's schema, conforming to JSON Schema.
-	 * 
-	 * @since 1.1.0
-	 * 
-	 * @return array Item schema data.
 	 *
+	 * @since 1.1.0
+	 *
+	 * @return array Item schema data.
 	 */
 	public function get_item_schema() {
 		$schema = array(
@@ -118,9 +117,8 @@ class CategoriesController extends Entities_Controller {
 	 * Retrieves the query params for the items collection.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @return array Collection parameters.
-	 * 
 	 */
 	public function get_collection_params() {
 		$query_params                       = parent::get_collection_params();

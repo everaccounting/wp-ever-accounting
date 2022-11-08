@@ -3,7 +3,6 @@
  * Abstract Model.
  *
  * Handles generic data interaction which is implemented by the different repository classes.
- *
  */
 
 namespace EverAccounting\Abstracts;
@@ -236,7 +235,6 @@ abstract class Resource_Model {
 	 *
 	 * @since  1.1.0
 	 *
-	 *
 	 * @return bool result
 	 */
 	public function delete() {
@@ -438,7 +436,6 @@ abstract class Resource_Model {
 	 * This method does not update custom fields in the database.
 	 *
 	 * @since  1.1.0
-	 *
 	 */
 	public function __set( $key, $value ) {
 
@@ -581,7 +578,6 @@ abstract class Resource_Model {
 	 * @param string       $key    Meta key.
 	 * @param string|array $value  Meta value.
 	 * @param bool         $unique Should this be a unique key?.
-	 *
 	 */
 	public function add_meta_data( $key, $value, $unique = false ) {
 		if ( $this->is_internal_meta_key( $key ) ) {
@@ -854,7 +850,6 @@ abstract class Resource_Model {
 	 *
 	 * @param array  $props   Key value pairs to set. Key is the prop and should map to a setter function name.
 	 * @param string $context In what context to run this.
-	 *
 	 */
 	public function set_props( $props, $context = 'set' ) {
 		foreach ( $props as $prop => $value ) {

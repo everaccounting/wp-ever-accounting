@@ -62,6 +62,7 @@ trait Attachment {
 
 	/**
 	 * Returns placeholder image url.
+	 *
 	 * @since 1.1.0
 	 * @return string
 	 */

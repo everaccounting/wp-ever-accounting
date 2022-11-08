@@ -16,6 +16,7 @@ defined( 'ABSPATH' ) || exit();
 
 /**
  * Profits Class
+ *
  * @package EverAccounting\Admin\Report
  */
 class Profits extends Report {
@@ -24,7 +25,6 @@ class Profits extends Report {
 	 *
 	 * @return array|mixed|void
 	 * @since 1.1.0
-	 *
 	 */
 	public function get_report( $args = array() ) {
 		global $wpdb;
@@ -43,7 +43,7 @@ class Profits extends Report {
 			$start_date      = $this->get_start_date( $args['year'] );
 			$end_date        = $this->get_end_date( $args['year'] );
 			$where           = empty( $args['account_id'] ) ? '' : $wpdb->prepare( ' AND t.account_id = %d', intval( $args['account_id'] ) );
-			$where           .= empty( $args['payment_method'] ) ? '' : $wpdb->prepare( ' AND t.payment_method = %s', sanitize_key( $args['payment_method'] ) );
+			$where          .= empty( $args['payment_method'] ) ? '' : $wpdb->prepare( ' AND t.payment_method = %s', sanitize_key( $args['payment_method'] ) );
 			$dates           = $this->get_dates_in_period( $start_date, $end_date );
 			$sql             = $wpdb->prepare(
 				"SELECT DATE_FORMAT(t.payment_date, '%Y-%m') `date`, SUM(t.amount) amount, t.type, t.currency_code, t.currency_rate,t.category_id,t.payment_method, c.name category
@@ -87,7 +87,7 @@ class Profits extends Report {
 				$report['categories'] = $categories;
 			}
 
-			//$this->set_cache( $args, $report );
+			// $this->set_cache( $args, $report );
 		}
 
 		return $report;
@@ -293,7 +293,7 @@ class Profits extends Report {
 				</div>
 			<?php else : ?>
 				<div class="ea-card__inside">
-					<p><?php _e( "Please select financial year.", "wp-ever-accounting" ); ?></p>
+					<p><?php _e( 'Please select financial year.', 'wp-ever-accounting' ); ?></p>
 				</div>
 			<?php endif; ?>
 		</div>

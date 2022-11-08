@@ -13,6 +13,7 @@ defined( 'ABSPATH' ) || exit();
 
 /**
  * Class Dashboard
+ *
  * @package EverAccounting\Admin
  */
 class Dashboard {
@@ -24,9 +25,10 @@ class Dashboard {
 	}
 
 	/**
-     * Setup the dashboard
-     * @since 1.1.0
-	*/
+	 * Setup the dashboard
+	 *
+	 * @since 1.1.0
+	 */
 	public static function dashboard_setup() {
 		add_meta_box( 'total-income', false, array( __CLASS__, 'render_total_income_widget' ), 'ea-overview', 'top', 'high', array( 'col' => '4' ) );
 		add_meta_box( 'total-expense', false, array( __CLASS__, 'render_total_expense_widget' ), 'ea-overview', 'top', 'high', array( 'col' => '4' ) );
@@ -41,9 +43,10 @@ class Dashboard {
 	}
 
 	/**
-     * Get dashboard income year
-     * @since 1.1.0
-	*/
+	 * Get dashboard income year
+	 *
+	 * @since 1.1.0
+	 */
 	public static function get_dashboard_income_year() {
 		if ( 'yes' === eaccounting_get_option( 'dashboard_transactions_limit' ) ) {
 			return date_i18n( 'Y' );
@@ -54,6 +57,7 @@ class Dashboard {
 
 	/**
 	 * Render total income
+	 *
 	 * @since 1.1.0
 	 */
 	public static function render_total_income_widget() {
@@ -81,6 +85,7 @@ class Dashboard {
 
 	/**
 	 * Render total expense
+	 *
 	 * @since 1.1.0
 	 */
 	public static function render_total_expense_widget() {
@@ -108,6 +113,7 @@ class Dashboard {
 
 	/**
 	 * Render total profit
+	 *
 	 * @since 1.1.0
 	 */
 	public static function render_total_profit_widget() {
@@ -135,6 +141,7 @@ class Dashboard {
 
 	/**
 	 * Render cashflow
+	 *
 	 * @since 1.1.0
 	 */
 	public static function render_cashflow() {
@@ -249,6 +256,7 @@ class Dashboard {
 
 	/**
 	 * Render income categories
+	 *
 	 * @since 1.1.0
 	 */
 	public static function render_incomes_categories() {
@@ -343,6 +351,7 @@ class Dashboard {
 
 	/**
 	 * Render expense categories
+	 *
 	 * @since 1.1.0
 	 */
 	public static function render_expenses_categories() {
@@ -434,9 +443,10 @@ class Dashboard {
 		</script>
 		<?php
 	}
-	
+
 	/**
 	 * Render latest income
+	 *
 	 * @since 1.1.0
 	 */
 	public static function render_latest_incomes() {
@@ -489,6 +499,7 @@ class Dashboard {
 
 	/**
 	 * Render latest expense
+	 *
 	 * @since 1.1.0
 	 */
 	public static function render_latest_expenses() {
@@ -541,6 +552,7 @@ class Dashboard {
 
 	/**
 	 * Render account balances
+	 *
 	 * @since 1.1.0
 	 */
 	public static function render_account_balances() {

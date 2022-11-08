@@ -11,6 +11,7 @@ namespace EverAccounting\Abstracts;
 
 /**
  * Class Assets
+ *
  * @package EverAccounting\Abstracts
  */
 abstract class Assets {
@@ -42,8 +43,8 @@ abstract class Assets {
 	 */
 	public function __construct( $plugin_file = null ) {
 		$plugin_file = is_null( $plugin_file ) ? EACCOUNTING_PLUGIN_FILE : $plugin_file;
-		require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
-		$plugin_data = get_plugin_data( $plugin_file );
+		require_once ABSPATH . 'wp-admin/includes/plugin.php';
+		$plugin_data          = get_plugin_data( $plugin_file );
 		$this->text_domain    = $plugin_data['TextDomain'];
 		$this->plugin_version = $plugin_data['Version'];
 		$this->plugin_file    = $plugin_file;
@@ -94,8 +95,8 @@ abstract class Assets {
 	 *
 	 * @param string $handle style handler.
 	 * @param string $file_path style file path.
-	 * @param array $dependencies style dependencies.
-	 * @param bool $has_rtl support RTL?
+	 * @param array  $dependencies style dependencies.
+	 * @param bool   $has_rtl support RTL?
 	 */
 	protected function register_style( $handle, $file_path, $dependencies = array(), $has_rtl = true ) {
 		$filename = is_null( $file_path ) ? $handle : $file_path;
@@ -118,11 +119,10 @@ abstract class Assets {
 	 *
 	 * @param string $handle Name of the script. Should be unique.
 	 * @param string $file_path file path from dist directory
-	 * @param array $dependencies Optional. An array of registered script handles this script depends on. Default empty array.
-	 * @param bool $has_i18n Optional. Whether to add a script translation call to this file. Default 'true'.
+	 * @param array  $dependencies Optional. An array of registered script handles this script depends on. Default empty array.
+	 * @param bool   $has_i18n Optional. Whether to add a script translation call to this file. Default 'true'.
 	 *
 	 * @since 1.0.0
-	 *
 	 */
 	protected function register_script( $handle, $file_path = null, $dependencies = array(), $has_i18n = true ) {
 		$filename             = is_null( $file_path ) ? $handle : $file_path;

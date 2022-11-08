@@ -212,7 +212,7 @@ abstract class Entities_Controller extends Controller {
 			}
 			$object = new $this->entity_model( $id );
 			if ( ! $object->exists() ) {
-				throw new \Exception(  __( 'Invalid ID.', 'wp-ever-accounting' ) );
+				throw new \Exception( __( 'Invalid ID.', 'wp-ever-accounting' ) );
 			}
 
 			return $object;
@@ -251,7 +251,7 @@ abstract class Entities_Controller extends Controller {
 	public function create_item( $request ) {
 		try {
 			if ( empty( $this->entity_model ) || ! class_exists( $this->entity_model ) ) {
-				throw new \Exception(  __( 'You need to specify a entity model class for this controller', 'wp-ever-accounting' ), 400 );
+				throw new \Exception( __( 'You need to specify a entity model class for this controller', 'wp-ever-accounting' ), 400 );
 			}
 			if ( ! empty( $request['id'] ) ) {
 				throw new \Exception( __( 'Cannot create existing resource.', 'wp-ever-accounting' ), 400 );
@@ -443,7 +443,7 @@ abstract class Entities_Controller extends Controller {
 				}
 			}
 
-			if( is_object( $value ) && isset( $value['id'] ) && is_callable( array( $object, "set_{$key}_id" ) ) ){
+			if ( is_object( $value ) && isset( $value['id'] ) && is_callable( array( $object, "set_{$key}_id" ) ) ) {
 				$object->{"set_{$key}_id"}( $value['id'] );
 			}
 		}
@@ -457,8 +457,8 @@ abstract class Entities_Controller extends Controller {
 	 * @since  1.1.0
 	 *
 	 * @param Resource_Model $object  model object.
-	 * @param array         $fields  Fields to include.
-	 * @param string        $context either view or edit.
+	 * @param array          $fields  Fields to include.
+	 * @param string         $context either view or edit.
 	 *
 	 * @return array
 	 */
@@ -514,7 +514,7 @@ abstract class Entities_Controller extends Controller {
 	 * @since  1.1.0
 	 *
 	 * @param Resource_Model $object    Data object.
-	 * @param string        $field_key The key to check for.
+	 * @param string         $field_key The key to check for.
 	 *
 	 * @return bool
 	 */
@@ -544,7 +544,7 @@ abstract class Entities_Controller extends Controller {
 	/**
 	 * Prepare links for the request.
 	 *
-	 * @param Resource_Model    $object  Object data.
+	 * @param Resource_Model   $object  Object data.
 	 * @param \WP_REST_Request $request Request object.
 	 *
 	 * @return array                   Links for the given post.
@@ -565,7 +565,7 @@ abstract class Entities_Controller extends Controller {
 	 *
 	 * @since  1.1.0
 	 *
-	 * @param Resource_Model    $object  Data object.
+	 * @param Resource_Model   $object  Data object.
 	 * @param \WP_REST_Request $request Request object.
 	 *
 	 * @return \WP_REST_Response

@@ -67,7 +67,6 @@ class EverAccounting_Category_List_Table extends EverAccounting_List_Table {
 	 * @see    WP_List_Table::__construct()
 	 *
 	 * @since  1.0.2
-	 *
 	 */
 	public function __construct( $args = array() ) {
 		$args           = (array) wp_parse_args(
@@ -105,7 +104,19 @@ class EverAccounting_Category_List_Table extends EverAccounting_List_Table {
 			<p class="ea-empty-table__message">
 				<?php echo esc_html__( 'Create categories for incomes, expenses, and see how your business\'s flow at a glance. Track which category is your business is spending most as well is making money.', 'wp-ever-accounting' ); ?>
 			</p>
-			<a href="<?php echo esc_url( eaccounting_admin_url( array( 'page' => 'ea-settings', 'tab' => 'categories', 'action' => 'edit' ) ) ); ?>" class="button-primary ea-empty-table__cta"><?php _e( 'Add Categories', 'wp-ever-accounting' ); ?></a>
+			<a href="
+			<?php
+			echo esc_url(
+				eaccounting_admin_url(
+					array(
+						'page'   => 'ea-settings',
+						'tab'    => 'categories',
+						'action' => 'edit',
+					)
+				)
+			);
+			?>
+						" class="button-primary ea-empty-table__cta"><?php _e( 'Add Categories', 'wp-ever-accounting' ); ?></a>
 			<a href="https://wpeveraccounting.com/docs/general/how-to-add-categories/?utm_source=listtable&utm_medium=link&utm_campaign=admin" class="button-secondary ea-empty-table__cta" target="_blank"><?php _e( 'Learn More', 'wp-ever-accounting' ); ?></a>
 		</div>
 		<?php
@@ -175,7 +186,6 @@ class EverAccounting_Category_List_Table extends EverAccounting_List_Table {
 	 *
 	 * @return string Displays a checkbox.
 	 * @since  1.0.2
-	 *
 	 */
 	function column_cb( $category ) {
 		return sprintf( '<input type="checkbox" name="category_id[]" value="%d"/>', $category->get_id() );
@@ -186,11 +196,10 @@ class EverAccounting_Category_List_Table extends EverAccounting_List_Table {
 	 *
 	 * @param Category $category
 	 *
-	 * @param string $column_name The name of the column
+	 * @param string   $column_name The name of the column
 	 *
 	 * @return string The column value.
 	 * @since 1.0.2
-	 *
 	 */
 	function column_default( $category, $column_name ) {
 		$category_id = $category->get_id();
@@ -215,7 +224,7 @@ class EverAccounting_Category_List_Table extends EverAccounting_List_Table {
 				$value = sprintf( '<span class="dashicons dashicons-marker" style="color:%s;">&nbsp;</span>', $category->get_color() );
 				break;
 			case 'enabled':
-				$value = '<label class="ea-toggle">';
+				$value  = '<label class="ea-toggle">';
 				$value .= '<input type="checkbox" class="category-status" style="" value="true" data-id="' . $category->get_id() . '" ' . checked( $category->is_enabled(), true, false ) . '>';
 				$value .= '<span data-label-off="' . __( 'No', 'wp-ever-accounting' ) . '" data-label-on="' . __( 'Yes', 'wp-ever-accounting' ) . '" class="ea-toggle-slider"></span>';
 				$value .= '</label>';
@@ -248,7 +257,6 @@ class EverAccounting_Category_List_Table extends EverAccounting_List_Table {
 			return;
 		}
 
-
 		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-categories' ) && ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'category-nonce' ) ) {
 			return;
 		}
@@ -260,7 +268,7 @@ class EverAccounting_Category_List_Table extends EverAccounting_List_Table {
 		}
 
 		$ids = array_map( 'absint', $ids );
-		$ids = array_filter(  $ids );
+		$ids = array_filter( $ids );
 
 		if ( empty( $ids ) ) {
 			return;

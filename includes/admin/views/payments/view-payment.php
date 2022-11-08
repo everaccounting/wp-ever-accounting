@@ -22,7 +22,13 @@ try {
 	wp_die( $e->getMessage() );
 }
 $back_url = remove_query_arg( array( 'action', 'payment_id' ) );
-$edit_url = add_query_arg( array( 'action' => 'edit', 'payment_id' => $payment->get_id() ), $back_url );
+$edit_url = add_query_arg(
+	array(
+		'action'     => 'edit',
+		'payment_id' => $payment->get_id(),
+	),
+	$back_url
+);
 ?>
 
 <div class="ea-voucher-page">
@@ -35,7 +41,7 @@ $edit_url = add_query_arg( array( 'action' => 'edit', 'payment_id' => $payment->
 						<a href="<?php echo $edit_url; ?>" class="button-secondary button"><?php _e( 'Edit', 'wp-ever-accounting' ); ?></a>
 						<button onclick="history.go(-1);" class="button-secondary"><?php _e( 'Go Back', 'wp-ever-accounting' ); ?></button>
 					</div>
-					<button class="button button-secondary print-button"><?php _e( 'Print', 'wp-ever-accounting' ) ?></button>
+					<button class="button button-secondary print-button"><?php _e( 'Print', 'wp-ever-accounting' ); ?></button>
 				</div>
 			</div>
 			<!-- /.ea-card__header -->
@@ -167,7 +173,7 @@ $edit_url = add_query_arg( array( 'action' => 'edit', 'payment_id' => $payment->
 
 						<tbody>
 						<tr>
-							<td class="text-left"><?php _e( '1', 'wp-ever-accounting' ) ?></td>
+							<td class="text-left"><?php _e( '1', 'wp-ever-accounting' ); ?></td>
 							<td class="text-center description"><?php echo ! empty( $payment->get_description() ) ? $payment->get_description() : '&mdash;'; ?></td>
 							<td class="text-right"><?php echo eaccounting_format_price( $payment->get_amount(), $payment->get_currency_code() ); ?></td>
 						</tr>
@@ -181,14 +187,14 @@ $edit_url = add_query_arg( array( 'action' => 'edit', 'payment_id' => $payment->
 								</p>
 							</td>
 
-							<td colspan="2" class="ea-voucher__totals"><span><?php _e( 'Total', 'wp-ever-accounting' ) ?></span><?php echo eaccounting_format_price( $payment->get_amount(), $payment->get_currency_code() ); ?></td>
+							<td colspan="2" class="ea-voucher__totals"><span><?php _e( 'Total', 'wp-ever-accounting' ); ?></span><?php echo eaccounting_format_price( $payment->get_amount(), $payment->get_currency_code() ); ?></td>
 						</tr>
 
 						</tfoot>
 					</table>
 					<!-- /.ea-voucher__items -->
 					<p class="ea-voucher__reference">
-						<strong><?php _e( 'Reference:', 'wp-ever-accounting' ) ?> </strong><?php echo ! empty( $payment->get_reference() ) ? $payment->get_reference() : ''; ?>
+						<strong><?php _e( 'Reference:', 'wp-ever-accounting' ); ?> </strong><?php echo ! empty( $payment->get_reference() ) ? $payment->get_reference() : ''; ?>
 					</p>
 				</div>
 				<!-- /.ea-voucher -->

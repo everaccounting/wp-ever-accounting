@@ -169,7 +169,7 @@ $edit_url        = eaccounting_admin_url(
 									'postcode' => $customer->get_postcode(),
 									'country'  => $customer->get_country_nicename(),
 								),
-								","
+								','
 							);
 							echo ( $address != '' ) ? $address : '&mdash;';
 							?>

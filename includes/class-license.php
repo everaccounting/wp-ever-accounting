@@ -181,9 +181,9 @@ class License {
 	 * @return  array
 	 */
 	public function settings( $fields ) {
-		$fields[] = 	array(
+		$fields[] = array(
 			'id'             => $this->short_name . '_license_key',
-			'title'           => sprintf( __( '%1$s', 'wp-ever-accounting' ), $this->plugin_data['name'] ),
+			'title'          => sprintf( __( '%1$s', 'wp-ever-accounting' ), $this->plugin_data['name'] ),
 			'license_status' => $this->license_status,
 			'desc'           => '',
 			'type'           => 'license',
@@ -203,14 +203,15 @@ class License {
 		}
 
 		if ( empty( $this->license_key ) || ( is_object( $this->license_status ) && 'valid' !== $this->license_status->license ) ) {
-			$notice = sprintf(__('You are not receiving critical updates and new features for %s. ', 'wp-ever-accounting'), '<strong>'.$this->plugin_data['name'].'</strong>');
-			$notice .= sprintf(__('Please <a href="%s">activate your license</a> to receive updates and priority support', 'wp-ever-accounting'), admin_url('admin.php?page=ea-settings&tab=licenses'));
-			echo wp_kses_post( '<div class="error"><p>'.$notice.'</p></div>' );
+			$notice  = sprintf( __( 'You are not receiving critical updates and new features for %s. ', 'wp-ever-accounting' ), '<strong>' . $this->plugin_data['name'] . '</strong>' );
+			$notice .= sprintf( __( 'Please <a href="%s">activate your license</a> to receive updates and priority support', 'wp-ever-accounting' ), admin_url( 'admin.php?page=ea-settings&tab=licenses' ) );
+			echo wp_kses_post( '<div class="error"><p>' . $notice . '</p></div>' );
 		}
 	}
 
 	/**
 	 * Check license status periodically every week.
+	 *
 	 * @return void
 	 */
 	public function scheduled_license_check() {
@@ -290,7 +291,7 @@ class License {
 		$response = $this->remote_request(
 			'activate_license',
 			array(
-				'license' => $license,
+				'license'   => $license,
 				'item_name' => $this->item_name,
 			)
 		);
@@ -333,7 +334,7 @@ class License {
 			$response = $this->remote_request(
 				'deactivate_license',
 				array(
-					'license' => $this->license_key,
+					'license'   => $this->license_key,
 					'item_name' => $this->item_name,
 				)
 			);
@@ -351,7 +352,7 @@ class License {
 	 * Queries the remote URL via wp_remote_post and returns a json decoded response.
 	 *
 	 * @param string $action The name of the $_POST action var.
-	 * @param array $body The content to retrieve from the remote URL.
+	 * @param array  $body The content to retrieve from the remote URL.
 	 *
 	 * @since 1.1.0
 	 *

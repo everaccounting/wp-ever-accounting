@@ -9,7 +9,7 @@
 
 defined( 'ABSPATH' ) || exit();
 
-include( EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-transfer-list-table.php' );
+require EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-transfer-list-table.php';
 $transfers_table = new EverAccounting_Transfer_List_Table();
 $transfers_table->prepare_items();
 $add_url = eaccounting_admin_url(
@@ -26,13 +26,14 @@ $add_url = eaccounting_admin_url(
 </a>
 <?php do_action( 'eaccounting_transfers_table_top' ); ?>
 <form id="ea-transfers-table" method="get" action="<?php echo admin_url( 'admin.php' ); ?>">
-	<?php  $transfers_table->display(); ?>
+	<?php $transfers_table->display(); ?>
 	<input type="hidden" name="page" value="ea-banking"/>
 	<input type="hidden" name="tab" value="transfers"/>
 </form>
 <?php do_action( 'eaccounting_transfers_table_bottom' ); ?>
 <?php
-eaccounting_enqueue_js("
+eaccounting_enqueue_js(
+	"
 	jQuery('.del').on('click',function(e){
 		if(confirm('Are you sure you want to delete?')){
 			return true;
@@ -40,4 +41,5 @@ eaccounting_enqueue_js("
 			return false;
 		}
 	});
-");
+"
+);

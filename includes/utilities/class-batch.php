@@ -176,8 +176,8 @@ class Batch extends Registry {
 	 *
 	 * @param string $batch_id Unique item name.
 	 *
-	 * @param array $args {
-	 *                               Arguments for registering a new item.
+	 * @param array  $args {
+	 *                                Arguments for registering a new item.
 	 *
 	 * @type string $class Item class.
 	 * @type string $file Item file containing the class.

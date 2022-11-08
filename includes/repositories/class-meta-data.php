@@ -14,6 +14,7 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Class Metas
+ *
  * @since   1.1.0
  *
  * @package EverAccounting\Repositories

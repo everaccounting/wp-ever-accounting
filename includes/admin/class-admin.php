@@ -58,11 +58,10 @@ class Admin {
 				case 'ea-setup':
 					include_once dirname( __FILE__ ) . '/class-setup.php';
 					break;
-					case 'ea-release':
+				case 'ea-release':
 					include_once dirname( __FILE__ ) . '/class-release.php';
 					break;
 			}
-
 		}
 	}
 

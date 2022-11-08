@@ -19,6 +19,7 @@ if ( ! class_exists( '\EverAccounting_List_Table' ) ) {
 
 /**
  * Class EverAccounting_Payment_List_Table
+ *
  * @since 1.1.0
  */
 class EverAccounting_Payment_List_Table extends EverAccounting_List_Table {
@@ -46,7 +47,6 @@ class EverAccounting_Payment_List_Table extends EverAccounting_List_Table {
 	 * @see    WP_List_Table::__construct()
 	 *
 	 * @since  1.0.2
-	 *
 	 */
 	public function __construct( $args = array() ) {
 		$args = (array) wp_parse_args(
@@ -154,7 +154,6 @@ class EverAccounting_Payment_List_Table extends EverAccounting_List_Table {
 	 *
 	 * @return string Displays a checkbox.
 	 * @since  1.0.2
-	 *
 	 */
 	function column_cb( $payment ) {
 		return sprintf( '<input type="checkbox" name="payment_id[]" value="%d"/>', $payment->get_id() );
@@ -163,13 +162,12 @@ class EverAccounting_Payment_List_Table extends EverAccounting_List_Table {
 	/**
 	 * This function renders most of the columns in the list table.
 	 *
-	 * @param string $column_name The name of the column
+	 * @param string  $column_name The name of the column
 	 *
 	 * @param Payment $payment
 	 *
 	 * @return string The column value.
 	 * @since 1.0.2
-	 *
 	 */
 	function column_default( $payment, $column_name ) {
 		$payment_id = $payment->get_id();
@@ -223,7 +221,6 @@ class EverAccounting_Payment_List_Table extends EverAccounting_List_Table {
 	 * @param string $which
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function extra_tablenav( $which ) {
 		if ( 'top' === $which ) {
@@ -283,9 +280,11 @@ class EverAccounting_Payment_List_Table extends EverAccounting_List_Table {
 
 			submit_button( __( 'Filter', 'wp-ever-accounting' ), 'action', false, false );
 
-			if ( isset( $_GET['filter'] ) ) : ?>
+			if ( isset( $_GET['filter'] ) ) :
+				?>
 				<a class="button-primary button" href="<?php echo esc_url( admin_url( 'admin.php?page=ea-expenses&tab=payments' ) ); ?>"><?php esc_html_e( 'Reset', 'wp-ever-accounting' ); ?></a>
-			<?php endif;
+				<?php
+			endif;
 
 			echo "\n";
 
@@ -315,7 +314,7 @@ class EverAccounting_Payment_List_Table extends EverAccounting_List_Table {
 		}
 
 		$ids = array_map( 'absint', $ids );
-		$ids = array_filter(  $ids );
+		$ids = array_filter( $ids );
 
 		if ( empty( $ids ) ) {
 			return;

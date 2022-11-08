@@ -13,6 +13,7 @@ defined( 'ABSPATH' ) || exit();
 
 /**
  * Class Registry
+ *
  * @package EverAccounting\Abstracts
  */
 abstract class Registry extends \ArrayObject {

@@ -17,6 +17,7 @@ if ( ! class_exists( '\EverAccounting_List_Table' ) ) {
 
 /**
  * Class EverAccounting_Customer_List_Table
+ *
  * @since 1.1.0
  */
 class EverAccounting_Customer_List_Table extends EverAccounting_List_Table {
@@ -178,13 +179,12 @@ class EverAccounting_Customer_List_Table extends EverAccounting_List_Table {
 	/**
 	 * This function renders most of the columns in the list table.
 	 *
-	 * @param string $column_name The name of the column
+	 * @param string   $column_name The name of the column
 	 *
 	 * @param Customer $customer
 	 *
 	 * @return string The column value.
 	 * @since 1.0.2
-	 *
 	 */
 	function column_default( $customer, $column_name ) {
 		$customer_id = $customer->get_id();
@@ -203,7 +203,7 @@ class EverAccounting_Customer_List_Table extends EverAccounting_List_Table {
 					'delete' => sprintf( '<a href="%1$s" class="del">%2$s</a>', esc_url( $del_url ), __( 'Delete', 'wp-ever-accounting' ) ),
 				);
 
-				$value = '<a href="' . esc_url( $view_url ) . '"><strong>' . $customer->get_name() . '</strong></a>';
+				$value  = '<a href="' . esc_url( $view_url ) . '"><strong>' . $customer->get_name() . '</strong></a>';
 				$value .= '<br>';
 				$value .= '<small class=meta>' . $customer->get_company() . '</small>';
 				$value .= $this->row_actions( $actions );
@@ -211,7 +211,7 @@ class EverAccounting_Customer_List_Table extends EverAccounting_List_Table {
 
 			case 'email':
 				if ( ! empty( $customer->get_email() ) || ! empty( $customer->get_phone() ) ) {
-					$value = ! empty( $customer->get_email() ) ? '<a href="mailto:' . sanitize_email( $customer->get_email() ) . '">' . sanitize_email( $customer->get_email() ) . '</a><br>' : '';
+					$value  = ! empty( $customer->get_email() ) ? '<a href="mailto:' . sanitize_email( $customer->get_email() ) . '">' . sanitize_email( $customer->get_email() ) . '</a><br>' : '';
 					$value .= ! empty( $customer->get_phone() ) ? '<span class="contact_phone">' . $customer->get_phone() . '</span>' : '';
 				}
 				if ( empty( $customer->get_email() ) && empty( $customer->get_phone() ) ) {
@@ -230,7 +230,7 @@ class EverAccounting_Customer_List_Table extends EverAccounting_List_Table {
 				$value = ( $value != '' ) ? $value : '&mdash;';
 				break;
 			case 'enabled':
-				$value = '<label class="ea-toggle">';
+				$value  = '<label class="ea-toggle">';
 				$value .= '<input type="checkbox" class="customer-status" style="" value="true" data-id="' . $customer->get_id() . '" ' . checked( $customer->is_enabled(), true, false ) . '>';
 				$value .= '<span data-label-off="' . __( 'No', 'wp-ever-accounting' ) . '" data-label-on="' . __( 'Yes', 'wp-ever-accounting' ) . '" class="ea-toggle-slider"></span>';
 				$value .= '</label>';
@@ -302,7 +302,7 @@ class EverAccounting_Customer_List_Table extends EverAccounting_List_Table {
 		}
 
 		$ids = array_map( 'absint', $ids );
-		$ids = array_filter(  $ids );
+		$ids = array_filter( $ids );
 
 		if ( empty( $ids ) ) {
 			return;

@@ -19,6 +19,7 @@ if ( ! class_exists( '\EverAccounting_List_Table' ) ) {
 
 /**
  * Class EverAccounting_Note_List_Table
+ *
  * @since 1.1.0
  */
 class EverAccounting_Note_List_Table extends EverAccounting_List_Table {
@@ -154,7 +155,6 @@ class EverAccounting_Note_List_Table extends EverAccounting_List_Table {
 	 *
 	 * @return string Displays a checkbox.
 	 * @since  1.1.0
-	 *
 	 */
 	function column_cb( $note ) {
 		return sprintf( '<input type="checkbox" name="note_id[]" value="%d"/>', $note->get_id() );
@@ -165,11 +165,10 @@ class EverAccounting_Note_List_Table extends EverAccounting_List_Table {
 	 *
 	 * @param string $column_name The name of the column
 	 *
-	 * @param Note $note
+	 * @param Note   $note
 	 *
 	 * @return string The column value.
 	 * @since 1.1.0
-	 *
 	 */
 	function column_default( $note, $column_name ) {
 		$note_id = $note->get_id();
@@ -197,13 +196,13 @@ class EverAccounting_Note_List_Table extends EverAccounting_List_Table {
 				$value = esc_html( eaccounting_date( $note->get_date_created() ) );
 				break;
 			case 'actions':
-				$tab = !empty($_GET['tab']) ? $_GET['tab'] : 'customers' ;
+				$tab      = ! empty( $_GET['tab'] ) ? $_GET['tab'] : 'customers';
 				$edit_url = eaccounting_admin_url(
 					array(
 						'tab'     => $tab,
 						'action'  => 'edit',
 						'note_id' => $note_id,
-						'subtab'  => 'notes'
+						'subtab'  => 'notes',
 					)
 				);
 				$del_url  = eaccounting_admin_url(
@@ -211,7 +210,7 @@ class EverAccounting_Note_List_Table extends EverAccounting_List_Table {
 						'tab'     => $tab,
 						'action'  => 'delete',
 						'note_id' => $note_id,
-						'subtab'  => 'notes'
+						'subtab'  => 'notes',
 					)
 				);
 				$actions  = array(
@@ -259,7 +258,7 @@ class EverAccounting_Note_List_Table extends EverAccounting_List_Table {
 		}
 
 		$ids = array_map( 'absint', $ids );
-		$ids = array_filter(  $ids );
+		$ids = array_filter( $ids );
 
 		if ( empty( $ids ) ) {
 			return;
@@ -334,7 +333,6 @@ class EverAccounting_Note_List_Table extends EverAccounting_List_Table {
 		$this->items = eaccounting_get_notes( $args );
 
 		$this->total_count = eaccounting_get_notes( array_merge( $args, array( 'count_total' => true ) ) );
-
 
 		$this->set_pagination_args(
 			array(
