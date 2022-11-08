@@ -3,11 +3,11 @@
  * Plugin Name: Ever Accounting
  * Plugin URI: https://wpeveraccounting.com/
  * Description: Manage your business finances right from your WordPress dashboard.
- * Version: 1.1.2
+ * Version: 1.1.3
  * Author: everaccounting
  * Author URI: https://wpeveraccounting.com/
  * Requires at least: 4.7.0
- * Tested up to: 6.0.3
+ * Tested up to: 6.1.0
  * Text Domain: wp-ever-accounting
  * Domain Path: /languages/
  * License: GPL2+
@@ -35,7 +35,7 @@ final class EverAccounting {
 	 *
 	 * @var string
 	 */
-	public $version = '1.1.2';
+	public $version = '1.1.3';
 
 	/**
 	 * @var array all plugin's classes.

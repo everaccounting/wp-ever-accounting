@@ -2,9 +2,9 @@
 Contributors: everaccounting
 Tags: accounting, income, expense, invoice, bill, crm, accounts, transfer, customer, vendor, company, SME, Business manager
 Requires at least: 4.4
-Tested up to: 5.6.1
+Tested up to: 6.1
 Requires PHP: 5.6
-Stable tag: 1.1.0
+Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -136,6 +136,10 @@ Yes, of course. We do not create products for ourselves. You are always welcome 
 
 
 == Changelog ==
+= 1.1.3 = (8th November 2022)
+* Fix - Compatibility with WordPress 6.1
+* Minor code improvements
+
 = 1.1.2 (25 March,2021) =
 * Fix - Cross currency calculation
 * Fix - Invalid invoice status
