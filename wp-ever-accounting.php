@@ -38,9 +38,10 @@ final class EverAccounting {
 	public $version = '1.1.2';
 
 	/**
-	 * @var array all plugin's classes
+	 * @var array all plugin's classes.
+	 *
 	 * @since 1.1.2
-	 * @var array
+	 * @var array $classes all plugin's classes
 	 */
 	protected $classes = [];
 
@@ -76,9 +77,8 @@ final class EverAccounting {
 	 * @since 1.0.2
 	 * @return void
 	 */
-
 	public function __clone() {
-		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'wp-ever-accounting' ), '1.0.0' );
+		_doing_it_wrong( __FUNCTION__, esc_html__( 'Cheatin&#8217; huh?', 'wp-ever-accounting' ), '1.0.0' );
 	}
 
 	/**
@@ -87,9 +87,8 @@ final class EverAccounting {
 	 * @since 1.0.2
 	 * @return void
 	 */
-
 	public function __wakeup() {
-		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'wp-ever-accounting' ), '1.0.0' );
+		_doing_it_wrong( __FUNCTION__, esc_html__( 'Cheatin&#8217; huh?', 'wp-ever-accounting' ), '1.0.0' );
 	}
 
 	/**
@@ -100,7 +99,7 @@ final class EverAccounting {
 	 * @return mixed
 	 */
 	public function __get( $key ) {
-		if ( $key == 'settings' ) {
+		if ( 'settings' === $key ) {
 			$key = 'options';
 		}
 
@@ -115,8 +114,8 @@ final class EverAccounting {
 	 * Function for add classes to $this->classes
 	 * for run using eaccounting()
 	 *
-	 * @param string $class_name
-	 * @param bool   $instance
+	 * @param string $class_name Class name.
+	 * @param bool   $instance  Instance.
 	 *
 	 * @since 1.1.2
 	 */
@@ -214,8 +213,6 @@ final class EverAccounting {
 		}
 
 		$this->classes['options'] = new Options();
-		// \EverAccounting\ReST\Manager::instance();
-		// \EverAccounting\Emails::instance();
 	}
 
 	/**
@@ -284,7 +281,7 @@ final class EverAccounting {
 	 * @return void
 	 */
 	public function localization_setup() {
-		$locale = ( get_locale() != '' ) ? get_locale() : 'en_US';
+		$locale = ( get_locale() !== '' ) ? get_locale() : 'en_US';
 		load_textdomain( 'wp-ever-accounting', WP_LANG_DIR . '/plugins/wp-ever-accounting-' . $locale . '.mo' );
 		load_plugin_textdomain( 'wp-ever-accounting', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
 	}
@@ -320,7 +317,7 @@ final class EverAccounting {
 	/**
 	 * Plugin URL getter.
 	 *
-	 * @param string $path
+	 * @param string $path Path to append to the URL.
 	 *
 	 * @since 1.2.0
 	 *
@@ -339,10 +336,9 @@ final class EverAccounting {
 	/**
 	 * Plugin path getter.
 	 *
-	 * @param string $path
+	 * @param string $path Path to append to the plugin path.
 	 *
 	 * @since 1.2.0
-	 *
 	 * @return string
 	 */
 	public function plugin_path( $path = '' ) {
