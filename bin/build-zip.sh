@@ -9,13 +9,6 @@ echo "Generating build directory..."
 rm -rf "$BUILD_PATH"
 mkdir -p "$DEST_PATH"
 
-echo "Installing PHP and JS dependencies..."
-npm install
-echo "Running JS Build..."
-npm run build || exit "$?"
-echo "Cleaning up PHP dependencies..."
-composer install || exit "$?"
-composer update --no-dev --no-scripts || exit "$?"
 echo "Syncing files..."
 rsync -rc --exclude-from="$PROJECT_PATH/.distignore" "$PROJECT_PATH/" "$DEST_PATH/" --delete --delete-excluded
 find "$DEST_PATH" -type d -empty -delete
