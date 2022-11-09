@@ -61,7 +61,7 @@ function eaccounting_insert_invoice( $args, $wp_error = true ) {
 		// Load new data.
 		$item->set_props( $args );
 
-		// Save the item
+		// Save the item.
 		$item->save();
 
 		return $item;
@@ -92,7 +92,7 @@ function eaccounting_delete_invoice( $invoice_id ) {
 /**
  * @since 1.1.0
  *
- * @param array $args
+ * @param array $args Query arguments.
  *
  * @return array|Invoice[]|int|
  */
@@ -111,7 +111,7 @@ function eaccounting_get_invoices( $args = array() ) {
  *
  * @since 1.1.0
  *
- * @param $bill
+ * @param mixed $bill Bill ID or object.
  *
  * @return EverAccounting\Models\Bill|null
  */
@@ -133,9 +133,8 @@ function eaccounting_get_bill( $bill ) {
  *  Returns a new bill object on success.
  *
  * @since 1.1.0
- *
- * @param bool $wp_error
- * @param      $args
+ * @param  array    $args   Bill data.
+ * @param bool $wp_error Optional. Whether to return a WP_Error on failure.
  *
  * @return Bill|false|int|WP_Error
  */
@@ -154,7 +153,7 @@ function eaccounting_insert_bill( $args, $wp_error = true ) {
 		// Load new data.
 		$item->set_props( $args );
 
-		// Save the item
+		// Save the item.
 		$item->save();
 
 		return $item;
@@ -168,7 +167,7 @@ function eaccounting_insert_bill( $args, $wp_error = true ) {
  *
  * @since 1.1.0
  *
- * @param $bill_id
+ * @param int $bill_id Bill ID.
  *
  * @return bool
  */
@@ -185,7 +184,7 @@ function eaccounting_delete_bill( $bill_id ) {
 /**
  * @since 1.1.0
  *
- * @param array $args
+ * @param array $args Query arguments.
  *
  * @return array|Invoice[]|int|
  */
@@ -203,7 +202,7 @@ function eaccounting_get_bills( $args = array() ) {
  *
  * @since 1.1.0
  *
- * @param array $args
+ * @param array $args Query arguments.
  *
  * @return array|Bill[]|Invoice[]|null|int
  */
@@ -252,7 +251,7 @@ function eaccounting_get_documents( $args = array() ) {
 		$searches = array();
 		$where   .= ' AND (';
 		foreach ( $search_cols as $col ) {
-			$searches[] = $wpdb->prepare( $col . ' LIKE %s', '%' . $wpdb->esc_like( $qv['search'] ) . '%' );
+			$searches[] = $wpdb->prepare( $col . ' LIKE %s', '%' . $wpdb->esc_like( $qv['search'] ) . '%' ); //phpcs:ignore
 		}
 		$where .= implode( ' OR ', $searches );
 		$where .= ')';
@@ -328,14 +327,14 @@ function eaccounting_get_documents( $args = array() ) {
 	$orderby     = "ORDER BY {$orderby} {$order}";
 	$count_total = true === $qv['count_total'];
 	$clauses     = compact( 'select', 'from', 'where', 'orderby', 'limit' );
-	$cache_key   = 'query:' . md5( serialize( $qv ) ) . ':' . wp_cache_get_last_changed( 'ea_documents' );
+	$cache_key   = 'query:' . md5( maybe_serialize( $qv ) ) . ':' . wp_cache_get_last_changed( 'ea_documents' ); //phpcs:ignore
 	$results     = wp_cache_get( $cache_key, 'ea_documents' );
 	if ( false === $results ) {
 		if ( $count_total ) {
-			$results = (int) $wpdb->get_var( "SELECT COUNT(id) $from $where" );
+			$results = (int) $wpdb->get_var( "SELECT COUNT(id) $from $where" ); //phpcs:ignore
 			wp_cache_set( $cache_key, $results, 'ea_documents' );
 		} else {
-			$results = $wpdb->get_results( implode( ' ', $clauses ) );
+			$results = $wpdb->get_results( implode( ' ', $clauses ) ); //phpcs:ignore
 			if ( in_array( $fields, array( 'all', '*' ), true ) ) {
 				foreach ( $results as $key => $item ) {
 					wp_cache_set( $item->id, $item, 'ea_documents' );

@@ -31,9 +31,8 @@ function eaccounting_get_upload_dir() {
  *
  * @since 1.0.2
  *
- * @param array  $return
- *
- * @param string $path
+ * @param string $path Path to scan.
+ * @param array  $return Array of files.
  *
  * @return array
  */
@@ -61,7 +60,7 @@ function eaccounting_scan_folders( $path = '', $return = array() ) {
  *
  * @since 1.0.2
  *
- * @param bool $force
+ * @param bool $force Force protect.
  */
 function eaccounting_protect_files( $force = false ) {
 
@@ -84,20 +83,20 @@ function eaccounting_protect_files( $force = false ) {
 			@file_put_contents( $htaccess, $rule );
 		}
 
-		// Top level blank index.php
+		// Top level blank index.php.
 		if ( ! file_exists( $base_dir . '/index.php' ) && wp_is_writable( $base_dir ) ) {
 			@file_put_contents( $base_dir . '/index.php', '<?php' . PHP_EOL . '// Silence is golden.' );
 		}
 
 		$folders = eaccounting_scan_folders( $base_dir );
 		foreach ( $folders as $folder ) {
-			// Create index.php, if it doesn't exist
+			// Create index.php, if it doesn't exist.
 			if ( ! file_exists( $folder . 'index.php' ) && wp_is_writable( $folder ) ) {
 				@file_put_contents( $folder . 'index.php', '<?php' . PHP_EOL . '// Silence is golden.' );
 			}
 		}
 
-		// Check for the files once per day
+		// Check for the files once per day.
 		set_transient( 'eaccounting_check_protection_files', true, 3600 * 24 );
 	}
 }
@@ -107,12 +106,13 @@ function eaccounting_protect_files( $force = false ) {
  *
  * @since 1.1.0
  *
- * @param $pathdata
+ * @param array $pathdata Array of upload path data.
  *
  * @return mixed
  */
 function eaccounting_handle_upload_folder( $pathdata ) {
-	if ( isset( $_POST['type'] ) && 'eaccounting_file' === $_POST['type'] ) { // WPCS: CSRF ok, input var ok.
+	$type = filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING );
+	if ( $type && 'eaccounting_file' === $type ) { // WPCS: CSRF ok, input var ok.
 		if ( empty( $pathdata['subdir'] ) ) {
 			$pathdata['path']   = $pathdata['path'] . '/eaccounting';
 			$pathdata['url']    = $pathdata['url'] . '/eaccounting';
@@ -133,7 +133,8 @@ add_filter( 'upload_dir', 'eaccounting_handle_upload_folder' );
 
 
 function eaccounting_handle_assets_name( $full_filename, $ext, $dir ) {
-	if ( ! isset( $_POST['type'] ) || ! 'eaccounting_file' === $_POST['type'] ) { // WPCS: CSRF ok, input var ok.
+	$type = filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING );
+	if ( ! isset( $type ) || ! 'eaccounting_file' === $type ) {
 		return $full_filename;
 	}
 

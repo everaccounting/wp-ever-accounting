@@ -32,11 +32,9 @@ function eaccounting_prices_include_tax() {
 /**
  * @since 1.1.0
  *
- * @param      $amount
- *
- * @param      $rate
- *
- * @param bool   $inclusive
+ * @param string $amount  Amount to calculate tax for.
+ * @param  string $rate   Tax rate.
+ * @param bool   $inclusive Whether the amount is inclusive of tax.
  *
  * @return float|int
  */

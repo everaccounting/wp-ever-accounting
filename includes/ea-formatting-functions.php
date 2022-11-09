@@ -282,9 +282,9 @@ function eaccounting_esc_json( $json, $html = false ) {
  *
  * @since 1.0.2
  *
- * @param      $number
+ * @param  string    $number   Number to get only numbers from.
  *
- * @param bool   $allow_decimal
+ * @param bool   $allow_decimal Allow decimal.
  *
  * @return int|float|null
  */
@@ -304,10 +304,10 @@ function eaccounting_sanitize_number( $number, $allow_decimal = true ) {
  *
  * @since 1.0.2
  *
- * @param      $number
+ * @param  string    $number  Number to get only numbers from.
  *
- * @param int    $decimals
- * @param bool   $trim_zeros
+ * @param int    $decimals Number of decimals.
+ * @param bool   $trim_zeros Trim zeros.
  *
  * @return int|float|null
  */
@@ -542,7 +542,7 @@ function eaccounting_number_dictionary() {
  *
  * @since 1.1.0
  *
- * @param $amount
+ * @param string $amount Amount.
  *
  * @return string|null
  */

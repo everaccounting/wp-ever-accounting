@@ -16,9 +16,8 @@ defined( 'ABSPATH' ) || exit();
  *
  * @since 1.0.2
  *
- * @param string|int|array $options Options to go through when looking for value.
- *
  * @param string|int       $value   Value to find within options.
+ * @param string|int|array $options Options to go through when looking for value.
  *
  * @return string
  */
@@ -36,10 +35,8 @@ function eaccounting_selected( $value, $options ) {
  * Display help tip.
  *
  * @since  1.0.2
- *
- * @param bool   $allow_html Allow sanitized HTML if true or escape.
- *
  * @param string $tip        Help tip text.
+ * @param bool   $allow_html Allow sanitized HTML if true or escape.
  *
  * @return string
  */
@@ -58,7 +55,7 @@ function eaccounting_help_tip( $tip, $allow_html = false ) {
  *
  * @since 1.0.2
  *
- * @param array|string $field
+ * @param array|string $field Field data.
  * @param mixed        ...$args    Optional further parameters.
  */
 function eaccounting_hidden_input( $field, ...$args ) {
@@ -80,7 +77,7 @@ function eaccounting_hidden_input( $field, ...$args ) {
  *
  * @since 1.0.2
  *
- * @param array $field
+ * @param array $field Field data.
  */
 function eaccounting_text_input( $field = array() ) {
 	$field = (array) wp_parse_args(
@@ -108,10 +105,10 @@ function eaccounting_text_input( $field = array() ) {
 
 	$field['id']               = empty( $field['id'] ) ? $field['name'] : $field['id'];
 	$field['value']            = ! isset( $field['value'] ) ? $field['default'] : $field['value'];
-	$field['attr']['required'] = ( true == $field['required'] ) ? ' required ' : '';
-	$field['attr']['readonly'] = ( true == $field['readonly'] ) ? ' readonly ' : '';
-	$field['attr']['disabled'] = ( true == $field['disabled'] ) ? ' disabled ' : '';
-	$field['wrapper_class']   .= ( true == $field['required'] ) ? ' required ' : '';
+	$field['attr']['required'] = ( true === $field['required'] ) ? ' required ' : '';
+	$field['attr']['readonly'] = ( true === $field['readonly'] ) ? ' readonly ' : '';
+	$field['attr']['disabled'] = ( true === $field['disabled'] ) ? ' disabled ' : '';
+	$field['wrapper_class']   .= ( true === $field['required'] ) ? ' required ' : '';
 	$data_type                 = empty( $field['data_type'] ) ? '' : $field['data_type'];
 
 	switch ( $data_type ) {
@@ -136,9 +133,9 @@ function eaccounting_text_input( $field = array() ) {
 			break;
 	}
 
-	// Custom attribute handling
+	// Custom attribute handling.
 	$attributes = eaccounting_implode_html_attributes( $field['attr'] );
-	$tooltip    = ! empty( $field['tooltip'] ) ? eaccounting_help_tip( $field['tooltip'] ) : '';
+	$tooltip    = ! empty( $field['tooltip'] ) ? eaccounting_help_tip( $field['tooltip'] ) : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	$desc       = ! empty( $field['desc'] ) ? sprintf( '<span class="desc">%s</span>', wp_kses_post( $field['desc'] ) ) : '';
 
 	if ( ! empty( $field['label'] ) ) {
@@ -148,12 +145,12 @@ function eaccounting_text_input( $field = array() ) {
 			esc_attr( $field['wrapper_class'] ),
 			esc_attr( $field['id'] ),
 			wp_kses_post( $field['label'] ),
-			$tooltip
+			$tooltip // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		);
 	}
 
-	if ( $field['data_type'] == 'color' ) {
-		echo sprintf( '<span class="colorpickpreview" style="background: %s">&nbsp;</span>', $field['value'] );
+	if ( 'color' === $field['data_type'] ) {
+		echo sprintf( '<span class="colorpickpreview" style="background: %s">&nbsp;</span>', $field['value'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 
 	echo sprintf(
@@ -165,13 +162,13 @@ function eaccounting_text_input( $field = array() ) {
 		esc_attr( $field['id'] ),
 		esc_attr( $field['value'] ),
 		esc_attr( $field['placeholder'] ),
-		$attributes
+		$attributes // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	);
-	if ( $field['data_type'] == 'color' ) {
-		echo sprintf( '<div id="colorPickerDiv_%s" class="colorpickdiv" style="z-index: 100;background:#eee;border:1px solid #ccc;position:absolute;display:none;"></div>', $field['id'] );
+	if ( 'color' === $field['data_type'] ) {
+		echo sprintf( '<div id="colorPickerDiv_%s" class="colorpickdiv" style="z-index: 100;background:#eee;border:1px solid #ccc;position:absolute;display:none;"></div>', esc_attr( $field['id']) ); // phpcs:ignore
 	}
 	if ( ! empty( $field['label'] ) ) {
-		echo $desc;
+		echo $desc; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
 		echo '</div>';
 	}
@@ -182,7 +179,7 @@ function eaccounting_text_input( $field = array() ) {
  *
  * @since 1.0.2
  *
- * @param array $field
+ * @param array $field Field data.
  */
 function eaccounting_textarea( $field ) {
 	$field                     = (array) wp_parse_args(
@@ -208,14 +205,14 @@ function eaccounting_textarea( $field ) {
 	);
 	$field['id']               = empty( $field['id'] ) ? $field['name'] : $field['id'];
 	$field['value']            = empty( $field['value'] ) ? $field['default'] : $field['value'];
-	$field['attr']['required'] = ( true == $field['required'] ) ? ' required ' : '';
-	$field['attr']['readonly'] = ( true == $field['readonly'] ) ? ' readonly ' : '';
-	$field['attr']['disabled'] = ( true == $field['disabled'] ) ? ' disabled ' : '';
+	$field['attr']['required'] = ( true === $field['required'] ) ? ' required ' : '';
+	$field['attr']['readonly'] = ( true === $field['readonly'] ) ? ' readonly ' : '';
+	$field['attr']['disabled'] = ( true === $field['disabled'] ) ? ' disabled ' : '';
 	$field['attr']['rows']     = $field['rows'];
 	$field['attr']['cols']     = $field['cols'];
-	$field['wrapper_class']   .= ( true == $field['required'] ) ? ' required ' : '';
+	$field['wrapper_class']   .= ( true === $field['required'] ) ? ' required ' : '';
 
-	// Custom attribute handling
+	// Custom attribute handling.
 	$attributes = eaccounting_implode_html_attributes( $field['attr'] );
 	$tooltip    = ! empty( $field['tooltip'] ) ? eaccounting_help_tip( $field['tooltip'] ) : '';
 	$desc       = ! empty( $field['desc'] ) ? sprintf( '<span class="desc">%s</span>', wp_kses_post( $field['desc'] ) ) : '';
@@ -226,7 +223,7 @@ function eaccounting_textarea( $field ) {
 		esc_attr( $field['wrapper_class'] ),
 		esc_attr( $field['id'] ),
 		wp_kses_post( $field['label'] ),
-		$tooltip
+		$tooltip // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	);
 
 	echo sprintf(
@@ -236,11 +233,11 @@ function eaccounting_textarea( $field ) {
 		esc_attr( $field['name'] ),
 		esc_attr( $field['id'] ),
 		esc_attr( $field['placeholder'] ),
-		$attributes,
+		$attributes, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		esc_attr( $field['value'] )
 	);
 
-	echo $desc;
+	echo $desc; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
 	echo '</div>';
 
@@ -252,7 +249,7 @@ function eaccounting_textarea( $field ) {
  *
  * @since 1.0.2
  *
- * @param array $field
+ * @param array $field Field data.
  */
 function eaccounting_wp_radio( $field ) {
 	$field = (array) wp_parse_args(
@@ -275,7 +272,7 @@ function eaccounting_wp_radio( $field ) {
 	$field['id']    = empty( $field['id'] ) ? $field['name'] : $field['id'];
 	$field['value'] = empty( $field['value'] ) ? $field['default'] : $field['value'];
 
-	// Custom attribute handling
+	// Custom attribute handling.
 	$attributes = eaccounting_implode_html_attributes( $field['attr'] );
 	$tooltip    = ! empty( $field['tooltip'] ) ? eaccounting_help_tip( $field['tooltip'] ) : '';
 	$desc       = ! empty( $field['desc'] ) ? sprintf( '<span class="desc">%s</span>', wp_kses_post( $field['desc'] ) ) : '';
@@ -286,7 +283,7 @@ function eaccounting_wp_radio( $field ) {
 		esc_attr( $field['wrapper_class'] ),
 		esc_attr( $field['id'] ),
 		wp_kses_post( $field['label'] ),
-		$tooltip
+		$tooltip // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	);
 
 	echo '<ul class="ea-radios">';
@@ -299,14 +296,14 @@ function eaccounting_wp_radio( $field ) {
 			esc_attr( $field['class'] ),
 			esc_attr( $field['style'] ),
 			esc_html( $value ),
-			$attributes,
+			$attributes, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			checked( esc_attr( $field['value'] ), esc_attr( $key ), false )
 		);
 	}
 
 	echo '</ul>';
 
-	echo $desc;
+	echo $desc; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
 	echo '</fieldset>';
 }
@@ -317,7 +314,7 @@ function eaccounting_wp_radio( $field ) {
  *
  * @since 1.0.2
  *
- * @param array $field
+ * @param array $field Field data.
  */
 function eaccounting_checkbox( $field ) {
 	$field = (array) wp_parse_args(
@@ -340,7 +337,7 @@ function eaccounting_checkbox( $field ) {
 	$field['id']    = empty( $field['id'] ) ? $field['name'] : $field['id'];
 	$field['value'] = empty( $field['value'] ) ? $field['default'] : $field['value'];
 
-	// Custom attribute handling
+	// Custom attribute handling.
 	$attributes = eaccounting_implode_html_attributes( $field['attr'] );
 	$tooltip    = ! empty( $field['tooltip'] ) ? eaccounting_help_tip( $field['tooltip'] ) : '';
 	$desc       = ! empty( $field['desc'] ) ? sprintf( '<span class="desc">%s</span>', wp_kses_post( $field['desc'] ) ) : '';
@@ -351,7 +348,7 @@ function eaccounting_checkbox( $field ) {
 		esc_attr( $field['wrapper_class'] ),
 		esc_attr( $field['id'] ),
 		wp_kses_post( $field['label'] ),
-		$tooltip
+		$tooltip // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	);
 
 	echo sprintf(
@@ -361,11 +358,11 @@ function eaccounting_checkbox( $field ) {
 		esc_attr( $field['name'] ),
 		esc_attr( $field['id'] ),
 		esc_attr( $field['cbvalue'] ),
-		$attributes,
+		$attributes, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		checked( $field['value'], $field['cbvalue'], false )
 	);
 
-	echo $desc;
+	echo $desc; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
 	echo '</div>';
 }
@@ -403,13 +400,13 @@ function eaccounting_select( $field ) {
 	static $instance              = 1;
 	$field['id']                  = empty( $field['id'] ) ? $field['name'] . '-' . $instance : $field['id'];
 	$field['value']               = empty( $field['value'] ) ? $field['default'] : $field['value'];
-	$field['wrapper_class']      .= ( true == $field['required'] ) ? ' required ' : '';
-	$field['attr']['required']    = ( true == $field['required'] ) ? ' required ' : '';
-	$field['attr']['readonly']    = ( true == $field['readonly'] ) ? ' readonly ' : '';
-	$field['attr']['disabled']    = ( true == $field['disabled'] ) ? ' disabled ' : '';
-	$field['attr']['multiple']    = ( true == $field['multiple'] ) ? ' multiple ' : '';
+	$field['wrapper_class']      .= ( true === $field['required'] ) ? ' required ' : '';
+	$field['attr']['required']    = ( true === $field['required'] ) ? ' required ' : '';
+	$field['attr']['readonly']    = ( true === $field['readonly'] ) ? ' readonly ' : '';
+	$field['attr']['disabled']    = ( true === $field['disabled'] ) ? ' disabled ' : '';
+	$field['attr']['multiple']    = ( true === $field['multiple'] ) ? ' multiple ' : '';
 	$field['attr']['placeholder'] = $field['placeholder'];
-	// Custom attribute handling
+	// Custom attribute handling.
 	$attributes = eaccounting_implode_html_attributes( $field['attr'] );
 	$tooltip    = ! empty( $field['tooltip'] ) ? eaccounting_help_tip( $field['tooltip'] ) : '';
 	$desc       = ! empty( $field['desc'] ) ? sprintf( '<span class="desc">%s</span>', wp_kses_post( $field['desc'] ) ) : '';
@@ -420,7 +417,7 @@ function eaccounting_select( $field ) {
 			esc_attr( $field['wrapper_class'] ),
 			esc_attr( $field['id'] ),
 			wp_kses_post( $field['label'] ),
-			$tooltip
+			$tooltip // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		);
 	}
 	echo sprintf(
@@ -429,25 +426,25 @@ function eaccounting_select( $field ) {
 		esc_attr( $field['style'] ),
 		esc_attr( $field['name'] ),
 		esc_attr( $field['id'] ),
-		$attributes
+		$attributes // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	);
 	foreach ( $field['options'] as $key => $value ) {
-		echo sprintf( '<option value="%s" %s>%s</option>', esc_attr( $key ), eaccounting_selected( esc_attr( $key ), eaccounting_clean( $field['value'] ) ), esc_html( $value ) );
+		echo sprintf( '<option value="%s" %s>%s</option>', esc_attr( $key ), eaccounting_selected( esc_attr( $key ), eaccounting_clean( $field['value'] ) ), esc_html( $value ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 	echo '</select>';
 
 	if ( ! empty( $field['label'] ) ) {
-		echo $desc;
+		echo $desc; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
 		echo '</div>';
 	}
-	$instance += 1;
+	++ $instance;
 }
 
 /**
  * File input field.
  *
- * @param $field
+ * @param array $field Field data.
  * @since 1.1.0
  */
 function eaccounting_file_input( $field ) {
@@ -484,7 +481,7 @@ function eaccounting_file_input( $field ) {
 			esc_attr( $field['wrapper_class'] ),
 			esc_attr( $field['id'] ),
 			wp_kses_post( $field['label'] ),
-			$tooltip
+			$tooltip // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		);
 	}
 	?>
@@ -494,8 +491,10 @@ function eaccounting_file_input( $field ) {
 					<img class="ea-attachment__image" src="<?php echo esc_attr( $src ); ?>" alt="<?php echo esc_attr( $name ); ?>">
 				</a>
 			</div>
-			<button type="button" class="button-link ea-attachment__remove"><?php _e( 'Remove', 'wp-ever-accounting' ); ?></button>
-			<button type="button" class="button-secondary ea-attachment__upload" data-allowed-types="<?php echo esc_js( $field['allowed-types'] ); ?>"><?php _e( 'Upload', 'wp-ever-accounting' ); ?></button>
+			<button type="button" class="button-link ea-attachment__remove"><?php echo esc_html__( 'Remove', 'wp-ever-accounting' ); ?></button>
+			<button type="button" class="button-secondary ea-attachment__upload" data-allowed-types="<?php echo esc_js( $field['allowed-types'] ); ?>">
+				<?php echo esc_html__( 'Upload', 'wp-ever-accounting' ); ?>
+			</button>
 			<?php
 			echo sprintf(
 				'<input type="hidden" name="%s" class="ea-attachment__input" id="%s" value="%s"/>',
@@ -508,7 +507,7 @@ function eaccounting_file_input( $field ) {
 	<?php
 
 	if ( ! empty( $field['label'] ) ) {
-		echo $desc;
+		echo $desc; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo '</div>';
 	}
 }
@@ -520,7 +519,6 @@ function eaccounting_file_input( $field ) {
  *
  * @param array $field Data about the field to render.
  */
-
 function eaccounting_toggle( $field ) {
 	$field = (array) wp_parse_args(
 		$field,
@@ -547,10 +545,10 @@ function eaccounting_toggle( $field ) {
 
 	$field['id']               = empty( $field['id'] ) ? $field['name'] : $field['id'];
 	$field['value']            = empty( $field['value'] ) ? $field['default'] : $field['value'];
-	$field['attr']['readonly'] = ( true == $field['readonly'] ) ? ' readonly ' : '';
-	$field['attr']['disabled'] = ( true == $field['disabled'] ) ? ' disabled ' : '';
+	$field['attr']['readonly'] = ( true === $field['readonly'] ) ? ' readonly ' : '';
+	$field['attr']['disabled'] = ( true === $field['disabled'] ) ? ' disabled ' : '';
 
-	// Custom attribute handling
+	// Custom attribute handling.
 	$attributes = eaccounting_implode_html_attributes( $field['attr'] );
 	$tooltip    = ! empty( $field['tooltip'] ) ? eaccounting_help_tip( $field['tooltip'] ) : '';
 	$desc       = ! empty( $field['desc'] ) ? sprintf( '<span class="desc">%s</span>', wp_kses_post( $field['desc'] ) ) : '';
@@ -562,7 +560,7 @@ function eaccounting_toggle( $field ) {
 			esc_attr( $field['wrapper_class'] ),
 			esc_attr( $field['id'] ),
 			wp_kses_post( $field['label'] ),
-			$tooltip
+			$tooltip // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		);
 	}
 
@@ -573,13 +571,13 @@ function eaccounting_toggle( $field ) {
 		esc_attr( $field['class'] ),
 		esc_attr( $field['style'] ),
 		esc_attr( $field['cbvalue'] ),
-		$attributes,
+		$attributes, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		checked( $field['value'], $field['cbvalue'], false ),
-		__( 'No', 'wp-ever-accounting' ),
-		__( 'Yes', 'wp-ever-accounting' )
+		esc_html__( 'No', 'wp-ever-accounting' ),
+		esc_html__( 'Yes', 'wp-ever-accounting' )
 	);
 	if ( ! $field['naked'] ) {
-		echo $desc;
+		echo wp_kses_post( $desc );
 
 		echo '</div>';
 	}
@@ -635,7 +633,7 @@ function eaccounting_select2( $field ) {
  *
  * @since 1.1.0
  *
- * @param $field
+ * @param array $field field properties.
  */
 function eaccounting_customer_dropdown( $field ) {
 	$field    = wp_parse_args(
@@ -673,7 +671,7 @@ function eaccounting_customer_dropdown( $field ) {
  *
  * @since 1.1.0
  *
- * @param $field
+ * @param array $field field properties.
  */
 function eaccounting_vendor_dropdown( $field ) {
 	$field    = wp_parse_args(
@@ -712,7 +710,7 @@ function eaccounting_vendor_dropdown( $field ) {
  *
  * @since 1.0.2
  *
- * @param array $field
+ * @param array $field field properties.
  */
 function eaccounting_contact_dropdown( $field ) {
 	$type       = ! empty( $field['type'] ) && array_key_exists( $field['type'], eaccounting_get_contact_types() ) ? eaccounting_clean( $field['type'] ) : false;
@@ -744,7 +742,7 @@ function eaccounting_contact_dropdown( $field ) {
  *
  * @since 1.0.2
  *
- * @param array $field
+ * @param array $field field properties.
  */
 function eaccounting_account_dropdown( $field ) {
 	$field   = wp_parse_args(
@@ -791,7 +789,7 @@ function eaccounting_account_dropdown( $field ) {
  *
  * @since 1.0.2
  *
- * @param array $field
+ * @param array $field field properties.
  */
 function eaccounting_category_dropdown( $field ) {
 	$field       = wp_parse_args(
@@ -823,8 +821,8 @@ function eaccounting_category_dropdown( $field ) {
 			'ajax'         => true,
 			'placeholder'  => __( 'Select Category', 'wp-ever-accounting' ),
 			'nonce_action' => 'ea_categories',
-			'ajax_action'  => $ajax_action, // Specify for the use case
-			'modal_id'     => $modal_id, // Specify for the use case
+			'ajax_action'  => esc_attr( $ajax_action ),
+			'modal_id'     => esc_attr( $modal_id ),
 		),
 		$field
 	);
@@ -837,7 +835,7 @@ function eaccounting_category_dropdown( $field ) {
  *
  * @since 1.0.2
  *
- * @param array $field
+ * @param array $field field properties.
  *
  * @return void
  */
@@ -888,7 +886,7 @@ function eaccounting_currency_dropdown( $field ) {
  *
  * @since 1.0.2
  *
- * @param array $field
+ * @param array $field Field arguments.
  *
  * @return void
  */
@@ -934,7 +932,7 @@ function eaccounting_item_dropdown( $field ) {
  *
  * @since 1.0.2
  *
- * @param array $field
+ * @param array $field Field arguments.
  *
  * @return void
  */
@@ -961,7 +959,7 @@ function eaccounting_payment_method_dropdown( $field ) {
  *
  * @since 1.0.2
  *
- * @param array $field
+ * @param array $field Field arguments.
  *
  * @return void
  */
@@ -984,7 +982,7 @@ function eaccounting_country_dropdown( $field ) {
  *
  * @since 1.0.2
  *
- * @param $field
+ * @param array $field Field attributes.
  */
 function eaccounting_input_date_range( $field ) {
 	$field       = (array) wp_parse_args(
@@ -1007,5 +1005,5 @@ function eaccounting_input_date_range( $field ) {
 	$html .= sprintf( '<input type="hidden" name="start_date" value="%s">', eaccounting_clean( $field['start_date'] ) );
 	$html .= sprintf( '<input type="hidden" name="end_date" value="%s">', eaccounting_clean( $field['end_date'] ) );
 	$html .= '</div>';
-	echo $html;
+	echo $html; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }

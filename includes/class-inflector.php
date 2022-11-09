@@ -19,6 +19,12 @@ defined( 'ABSPATH' ) || exit;
  * @package EverAccounting
  */
 class Inflector {
+	/**
+	 * Plural rules
+	 *
+	 * @since 1.0.0
+	 * @var string[]
+	 */
 	static $plural = array(
 		'/(quiz)$/i'                     => '$1zes',
 		'/^(ox)$/i'                      => '$1en',
@@ -41,6 +47,12 @@ class Inflector {
 		'/$/'                            => 's',
 	);
 
+	/**
+	 * Singular rules
+	 *
+	 * @since 1.0.0
+	 * @var string[]
+	 */
 	static $singular = array(
 		'/(quiz)zes$/i'              => '$1',
 		'/(matr)ices$/i'             => '$1ix',
@@ -72,6 +84,12 @@ class Inflector {
 		'/s$/i'                      => '',
 	);
 
+	/**
+	 * Irregular rules
+	 *
+	 * @since 1.0.0
+	 * @var string[]
+	 */
 	static $irregular = array(
 		'move'   => 'moves',
 		'foot'   => 'feet',
@@ -84,6 +102,12 @@ class Inflector {
 		'valve'  => 'valves',
 	);
 
+	/**
+	 * Uncountable rules
+	 *
+	 * @since 1.0.0
+	 * @var string[]
+	 */
 	static $uncountable = array(
 		'sheep',
 		'fish',
@@ -101,17 +125,17 @@ class Inflector {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @param $string
+	 * @param string $string String to pluralize.
 	 *
 	 * @return string
 	 */
 	public static function pluralize( $string ) {
-		// save some time in the case that singular and plural are the same
+		// save some time in the case that singular and plural are the same.
 		if ( in_array( strtolower( $string ), self::$uncountable, true ) ) {
 			return $string;
 		}
 
-		// check for irregular singular forms
+		// check for irregular singular forms.
 		foreach ( self::$irregular as $pattern => $result ) {
 			$pattern = '/' . $pattern . '$/i';
 
@@ -134,18 +158,17 @@ class Inflector {
 	 * Singularize a string
 	 *
 	 * @since 1.1.0
-	 *
-	 * @param $string
+	 * @param string $string String to singularize.
 	 *
 	 * @return string
 	 */
 	public static function singularize( $string ) {
-		// save some time in the case that singular and plural are the same
+		// save some time in the case that singular and plural are the same.
 		if ( in_array( strtolower( $string ), self::$uncountable, true ) ) {
 			return $string;
 		}
 
-		// check for irregular plural forms
+		// check for irregular plural forms.
 		foreach ( self::$irregular as $result => $pattern ) {
 			$pattern = '/' . $pattern . '$/i';
 
@@ -154,7 +177,7 @@ class Inflector {
 			}
 		}
 
-		// check for matches using regular expressions
+		// check for matches using regular expressions.
 		foreach ( self::$singular as $pattern => $result ) {
 			if ( preg_match( $pattern, $string ) ) {
 				return preg_replace( $pattern, $result, $string );

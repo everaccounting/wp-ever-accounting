@@ -37,7 +37,7 @@ function eaccounting_get_item( $item ) {
  *
  * @since 1.1.0
  *
- * @param $sku
+ * @param string $sku Item sku.
  *
  * @return \EverAccounting\Models\Item
  */
@@ -101,7 +101,7 @@ function eaccounting_insert_item( $args, $wp_error = true ) {
 		// Load new data.
 		$item->set_props( $args );
 
-		// Save the item
+		// Save the item.
 		$item->save();
 
 		return $item;
@@ -131,7 +131,7 @@ function eaccounting_delete_item( $item_id ) {
 /**
  * Get items.
  *
- * @param array $args {
+ * @param array $args { .
  *
  * @type string $name The name of the item.
  * @type string $sku The sku of the item.
@@ -187,13 +187,13 @@ function eaccounting_get_items( $args = array() ) {
 		$where  .= " AND $table.`id` NOT IN ($exclude)";
 	}
 
-	// search
+	// search.
 	$search_cols = array( 'name', 'sku', 'description' );
 	if ( ! empty( $qv['search'] ) ) {
 		$searches = array();
 		$where   .= ' AND (';
 		foreach ( $search_cols as $col ) {
-			$searches[] = $wpdb->prepare( $col . ' LIKE %s', '%' . $wpdb->esc_like( $qv['search'] ) . '%' );
+			$searches[] = $wpdb->prepare( $col . ' LIKE %s', '%' . $wpdb->esc_like( $qv['search'] ) . '%' ); //phpcs:ignore
 		}
 		$where .= implode( ' OR ', $searches );
 		$where .= ')';
@@ -231,15 +231,15 @@ function eaccounting_get_items( $args = array() ) {
 	$from        = "FROM {$wpdb->prefix}$table $table";
 	$orderby     = "ORDER BY {$orderby} {$order}";
 	$count_total = true === $qv['count_total'];
-	$cache_key   = 'query:' . md5( serialize( $qv ) ) . ':' . wp_cache_get_last_changed( 'ea_items' );
+	$cache_key   = 'query:' . md5( maybe_serialize( $qv ) ) . ':' . wp_cache_get_last_changed( 'ea_items' );
 	$results     = wp_cache_get( $cache_key, 'ea_items' );
 	$clauses     = compact( 'select', 'from', 'where', 'orderby', 'limit' );
 	if ( false === $results ) {
 		if ( $count_total ) {
-			$results = (int) $wpdb->get_var( "SELECT COUNT(id) $from $where" );
+			$results = (int) $wpdb->get_var( "SELECT COUNT(id) $from $where" ); // phpcs:ignore
 			wp_cache_set( $cache_key, $results, 'ea_items' );
 		} else {
-			$results = $wpdb->get_results( implode( ' ', $clauses ) );
+			$results = $wpdb->get_results( implode( ' ', $clauses ) );  // phpcs:ignore
 			if ( in_array( $fields, array( 'all', '*' ), true ) ) {
 				foreach ( $results as $key => $item ) {
 					if ( ! empty( $item->sku ) ) {

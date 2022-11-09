@@ -16,48 +16,90 @@ defined( 'ABSPATH' ) || exit();
  * @since 1.0.2
  */
 class Chart {
+	/**
+	 * Chart id.
+	 *
+	 * @since 1.0.0
+	 * @var string
+	 */
 	public $id;
-	public $datasets     = array();
-	public $labels       = array();
-	public $container    = '';
-	public $options      = array();
-	public $type         = '';
-	public $loader_color = '#22292F';
-	public $height       = 400;
-	public $width        = null;
 
 	/**
-	 * Stores the dataset class to be used.
+	 * Char datasets.
 	 *
-	 * @var object
+	 * @since 1.0.0
+	 * @var array
 	 */
-	protected $dataset = DataSet::class;
+	public $datasets = array();
+
+	/**
+	 * Chart labels.
+	 *
+	 * @since 1.0.0
+	 * @var array
+	 */
+	public $labels = array();
+
+	/**
+	 * Chart container.
+	 *
+	 * @since 1.0.0
+	 * @var string
+	 */
+	public $container = '';
+
+	/**
+	 *  Chart Options.
+	 *
+	 * @since 1.0.0
+	 * @var array
+	 */
+	public $options = array();
+
+	/**
+	 * Chart type.
+	 *
+	 * @since 1.0.0
+	 * @var string
+	 */
+	public $type = '';
+
+	/**
+	 * Chart loader color.
+	 *
+	 * @since 1.0.0
+	 * @var string
+	 */
+	public $loader_color = '#22292F';
+
+	/**
+	 * Chart height.
+	 *
+	 * @since 1.0.0
+	 * @var int
+	 */
+	public $height = 400;
+
+	/**
+	 * Chart width.
+	 *
+	 * @since 1.0.0
+	 * @var null
+	 */
+	public $width = null;
 
 	/**
 	 * Chart constructor.
 	 */
 	public function __construct() {
-		$this->id = md5( rand() );
-		// $this->options( [
-		// 'maintainAspectRatio' => false,
-		// 'scales'              => [
-		// 'xAxes' => [],
-		// 'yAxes' => [
-		// [
-		// 'ticks' => [
-		// 'beginAtZero' => true,
-		// ],
-		// ],
-		// ],
-		// ],
-		// ] );
+		$this->id = md5( wp_rand() );
 	}
 
 
 	/**
 	 * Set the chart type.
 	 *
-	 * @param string $type
+	 * @param string $type Chart type.
 	 *
 	 * @return object
 	 */
@@ -70,7 +112,7 @@ class Chart {
 	/**
 	 * Set the chart height.
 	 *
-	 * @param int $height
+	 * @param int $height Chart height.
 	 *
 	 * @return object
 	 */
@@ -83,7 +125,7 @@ class Chart {
 	/**
 	 * Set the chart width.
 	 *
-	 * @param int $width
+	 * @param int $width    Chart width.
 	 *
 	 * @return object
 	 */
@@ -96,8 +138,8 @@ class Chart {
 	/**
 	 * Set the chart options.
 	 *
-	 * @param array $options
-	 * @param bool  $overwrite
+	 * @param array $options Chart options.
+	 * @param bool  $overwrite  Overwrite existing options.
 	 *
 	 * @return object
 	 */
@@ -114,7 +156,7 @@ class Chart {
 	/**
 	 * Set the chart labels.
 	 *
-	 * @param array $labels
+	 * @param array $labels Chart labels.
 	 *
 	 * @return object
 	 */
@@ -128,7 +170,7 @@ class Chart {
 	/**
 	 * Adds a new dataset to the chart.
 	 *
-	 * @param array $dataset
+	 * @param array $dataset Chart dataset.
 	 *
 	 * @return object
 	 */
@@ -215,7 +257,7 @@ class Chart {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param array $colors
+	 * @param array $colors Chart colors.
 	 *
 	 * @return object
 	 */
@@ -257,7 +299,7 @@ class Chart {
 	 * @since 1.0.2
 	 */
 	public function render() {
-		$chart = json_encode(
+		$chart = wp_json_encode(
 			array(
 				'type'    => $this->type,
 				'data'    => array(
@@ -265,15 +307,16 @@ class Chart {
 					'datasets' => $this->datasets,
 				),
 				'options' => $this->options,
-			)
+			),
+			JSON_THROW_ON_ERROR
 		);
 
 		eaccounting_enqueue_js( "new Chart(document.getElementById('ea-chart-$this->id'),$chart);" );
 		echo sprintf(
 			'<canvas id="ea-chart-%s" height="%s" width="%s">',
-			$this->id,
-			$this->height,
-			$this->width
-		);
+			esc_attr( $this->id ),
+			esc_attr( $this->height ),
+			esc_attr( $this->width )
+		); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 }

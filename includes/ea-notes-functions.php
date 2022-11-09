@@ -55,7 +55,7 @@ function eaccounting_insert_note( $args, $wp_error = true ) {
 		// Load new data.
 		$item->set_props( $args );
 
-		// Save the item
+		// Save the item.
 		$item->save();
 
 		return $item;
@@ -67,7 +67,7 @@ function eaccounting_insert_note( $args, $wp_error = true ) {
 /**
  * Delete an item.
  *
- * @param $note_id
+ * @param int $id Item ID.
  *
  * @return bool
  * @since 1.1.0
@@ -177,16 +177,16 @@ function eaccounting_get_notes( $args = array() ) {
 	$from        = "FROM {$wpdb->prefix}$table $table";
 	$orderby     = "ORDER BY {$orderby} {$order}";
 	$count_total = true === $qv['count_total'];
-	$cache_key   = 'query:' . md5( serialize( $qv ) ) . ':' . wp_cache_get_last_changed( 'ea_notes' );
-	$results     = wp_cache_get( $cache_key, 'ea_notes' );
+	$cache_key   = 'query:' . md5( maybe_serialize( $qv ) ) . ':' . wp_cache_get_last_changed( 'ea_notes' );
+	$results     = wp_cache_get( $cache_key, 'ea_notes' ); // phpcs:ignore
 	$clauses     = compact( 'select', 'from', 'where', 'orderby', 'limit' );
 
 	if ( false === $results ) {
 		if ( $count_total ) {
-			$results = (int) $wpdb->get_var( "SELECT COUNT(id) $from $where" );
+			$results = (int) $wpdb->get_var( "SELECT COUNT(id) $from $where" ); // phpcs:ignore
 			wp_cache_set( $cache_key, $results, 'ea_notes' );
 		} else {
-			$results = $wpdb->get_results( implode( ' ', $clauses ) );
+			$results = $wpdb->get_results( implode( ' ', $clauses ) ); // phpcs:ignore
 			if ( in_array( $fields, array( 'all', '*' ), true ) ) {
 				foreach ( $results as $key => $item ) {
 					wp_cache_set( $item->id, $item, 'ea_notes' );

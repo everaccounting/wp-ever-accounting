@@ -18,7 +18,6 @@ defined( 'ABSPATH' ) || exit;
  *
  * @package EverAccounting
  */
-
 class Collection implements Arrayable {
 	/**
 	 * The items contained in the collection.
@@ -32,7 +31,7 @@ class Collection implements Arrayable {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param mixed $items
+	 * @param mixed $items Items.
 	 */
 	public function __construct( $items = array() ) {
 		if ( $items instanceof Collection ) {
@@ -61,7 +60,7 @@ class Collection implements Arrayable {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param mixed $items
+	 * @param mixed $items Items.
 	 *
 	 * @return static
 	 */
@@ -85,7 +84,7 @@ class Collection implements Arrayable {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param callable $callback
+	 * @param callable $callback Callback.
 	 *
 	 * @return object
 	 */
@@ -98,7 +97,7 @@ class Collection implements Arrayable {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param callable $callback
+	 * @param callable $callback Callback.
 	 *
 	 * @return static
 	 */
@@ -111,9 +110,9 @@ class Collection implements Arrayable {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param mixed  $value
-	 * @param bool   $strict
-	 * @param string $key
+	 * @param string $key    Key.
+	 * @param mixed  $value Value.
+	 * @param bool   $strict    Strict.
 	 *
 	 * @return static
 	 */
@@ -129,9 +128,8 @@ class Collection implements Arrayable {
 	 * Filter items by the given key value pair using loose comparison.
 	 *
 	 * @since 1.0.2
-	 *
-	 * @param mixed  $value
-	 * @param string $key
+	 * @param string $key   Key.
+	 * @param mixed  $value Value.
 	 *
 	 * @return static
 	 */
@@ -155,7 +153,7 @@ class Collection implements Arrayable {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param mixed $key
+	 * @param mixed $key Key.
 	 *
 	 * @return void
 	 */
@@ -167,9 +165,8 @@ class Collection implements Arrayable {
 	 * Get an item from the collection by key.
 	 *
 	 * @since 1.0.2
-	 *
-	 * @param mixed $default
-	 * @param mixed $key
+	 * @param mixed $key    Key.
+	 * @param mixed $default Default.
 	 *
 	 * @return mixed
 	 */
@@ -186,7 +183,7 @@ class Collection implements Arrayable {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param mixed $key
+	 * @param mixed $key Key.
 	 *
 	 * @return bool
 	 */
@@ -239,7 +236,7 @@ class Collection implements Arrayable {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param callable $callback
+	 * @param callable $callback Callback.
 	 *
 	 * @return static
 	 */
@@ -263,7 +260,7 @@ class Collection implements Arrayable {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param mixed $value
+	 * @param mixed $value Value.
 	 *
 	 * @return void
 	 */
@@ -276,7 +273,7 @@ class Collection implements Arrayable {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param mixed $value
+	 * @param mixed $value Value.
 	 *
 	 * @return void
 	 */
@@ -288,9 +285,8 @@ class Collection implements Arrayable {
 	 * Put an item in the collection by key.
 	 *
 	 * @since 1.0.2
-	 *
-	 * @param mixed $value
-	 * @param mixed $key
+	 * @param mixed $key  Key.
+	 * @param mixed $value Value.
 	 *
 	 * @return void
 	 */
@@ -303,7 +299,7 @@ class Collection implements Arrayable {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param int $amount
+	 * @param int $amount Amount.
 	 *
 	 * @return mixed
 	 */
@@ -322,7 +318,7 @@ class Collection implements Arrayable {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param Arrayable|array $items
+	 * @param Arrayable|array $items Items.
 	 *
 	 * @return static
 	 */
@@ -335,13 +331,12 @@ class Collection implements Arrayable {
 	 * Reduce the collection to a single value.
 	 *
 	 * @since 1.0.2
-	 *
-	 * @param mixed    $initial
-	 * @param callable $callback
+	 * @param callable $callback Callback.
+	 * @param mixed    $initial Initial.
 	 *
 	 * @return mixed
 	 */
-	public function reduce( callable $callback, $initial = null ) {
+	public function reduce( $callback, $initial = null ) {
 		return array_reduce( $this->items, $callback, $initial );
 	}
 
@@ -350,7 +345,7 @@ class Collection implements Arrayable {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param callable|mixed $callback
+	 * @param callable|mixed $callback Callback.
 	 *
 	 * @return static
 	 */
@@ -375,7 +370,7 @@ class Collection implements Arrayable {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param bool $preserve_keys
+	 * @param bool $preserve_keys Preserve keys.
 	 *
 	 * @return static
 	 */
@@ -388,7 +383,7 @@ class Collection implements Arrayable {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param mixed $value
+	 * @param mixed $value Value.
 	 *
 	 * @return bool
 	 */
@@ -400,10 +395,8 @@ class Collection implements Arrayable {
 	 * Search the collection for a given value and return the corresponding key if successful.
 	 *
 	 * @since 1.0.2
-	 *
-	 * @param bool  $strict
-	 * @param mixed $value
-	 *
+	 * @param mixed $value Value.
+	 * @param bool  $strict Strict.
 	 * @return mixed
 	 */
 	public function search( $value, $strict = false ) {
@@ -430,7 +423,7 @@ class Collection implements Arrayable {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param callable|int|null $callback
+	 * @param callable|int|null $callback Callback.
 	 *
 	 * @return static
 	 */
@@ -447,7 +440,7 @@ class Collection implements Arrayable {
 	/**
 	 * Sort items in descending order by key.
 	 *
-	 * @param int $options
+	 * @param int $options Options.
 	 *
 	 * @return static
 	 */
@@ -464,7 +457,7 @@ class Collection implements Arrayable {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param int $limit
+	 * @param int $limit Limit.
 	 *
 	 * @return static
 	 */
@@ -481,10 +474,9 @@ class Collection implements Arrayable {
 	 * equivalent of offset.
 	 *
 	 * @since 1.0.2
-	 *
-	 * @param int  $length
-	 * @param bool $preserve_keys
-	 * @param int  $offset
+	 * @param int  $offset Offset.
+	 * @param int  $length Length.
+	 * @param bool $preserve_keys Preserve keys.
 	 *
 	 * @return static
 	 */
@@ -496,10 +488,9 @@ class Collection implements Arrayable {
 	 * Splice portion of the underlying collection array.
 	 *
 	 * @since 1.0.2
-	 *
-	 * @param int   $length
-	 * @param mixed $replacement
-	 * @param int   $offset
+	 * @param int   $offset     Offset.
+	 * @param int   $length Length.
+	 * @param mixed $replacement    Replacement.
 	 *
 	 * @return static
 	 */
@@ -545,7 +536,7 @@ class Collection implements Arrayable {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param mixed $key
+	 * @param mixed $key Key.
 	 *
 	 * @return bool
 	 */
@@ -558,7 +549,7 @@ class Collection implements Arrayable {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param mixed $key
+	 * @param mixed $key    Key.
 	 *
 	 * @return mixed
 	 */
@@ -570,9 +561,8 @@ class Collection implements Arrayable {
 	 * Set the item at a given offset.
 	 *
 	 * @since 1.0.2
-	 *
-	 * @param mixed $value
-	 * @param mixed $key
+	 * @param mixed $key  Key.
+	 * @param mixed $value Value.
 	 *
 	 * @return void
 	 */
@@ -612,9 +602,8 @@ class Collection implements Arrayable {
 	 * Chunk the underlying collection array.
 	 *
 	 * @since 1.0.2
-	 *
-	 * @param bool $preserve_keys
-	 * @param int  $size
+	 * @param int  $size Size.
+	 * @param bool $preserve_keys Preserve keys.
 	 *
 	 * @return static
 	 */
@@ -633,7 +622,7 @@ class Collection implements Arrayable {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param string $key
+	 * @param string $key Key.
 	 *
 	 * @return void
 	 */
@@ -644,9 +633,9 @@ class Collection implements Arrayable {
 	/**
 	 * @since 1.0.2
 	 *
-	 * @param      $key
-	 * @param null   $default
-	 * @param      $target
+	 * @param  array|object $target Target.
+	 * @param string       $key Key.
+	 * @param null         $default Default.
 	 *
 	 * @return array
 	 */
@@ -664,7 +653,7 @@ class Collection implements Arrayable {
 				return $target;
 			}
 
-			if ( $segment === '*' ) {
+			if ( '*' === $segment ) {
 				if ( $target instanceof Collection ) {
 					$target = $target->all();
 				} elseif ( ! is_array( $target ) ) {
@@ -703,12 +692,13 @@ class Collection implements Arrayable {
 		$output = array();
 		$value  = null;
 		foreach ( $this->items as $key => $value ) {
-			$output[ $key ] = ! is_object( $value )
-				? $value
-				: ( method_exists( $value, '__toArray' )
-					? $value->__toArray()
-					: (array) $value
-				);
+			if ( ! is_object( $value ) ) {
+				$output[ $key ] = $value;
+			} elseif ( method_exists( $value, '__toArray' ) ) {
+				$output[ $key ] = $value->__toArray();
+			} else {
+				$output[ $key ] = (array) $value;
+			}
 		}
 
 		return $output;
@@ -731,10 +721,16 @@ class Collection implements Arrayable {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param string
+	 * @return  string Converted string.
 	 */
 	public function __toString() {
-		return json_encode( $this->__toArray() );
+		$result = wp_json_encode( $this->__toArray() );
+
+		if ( ! $result ) {
+			return '';
+		}
+
+		return $result;
 	}
 
 	/**

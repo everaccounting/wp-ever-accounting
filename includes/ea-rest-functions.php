@@ -45,12 +45,10 @@ function eaccounting_rest_date_response( $date, $utc = true ) {
  *
  * @since 1.0.2
  *
- * @param        $endpoint
- *
- * @param array    $args
- * @param string   $method
- *
- * @param string   $namespace
+ * @param  string $endpoint API endpoint.
+ * @param array  $args    Request arguments.
+ * @param string $method Request method.
+ * @param string $namespace API namespace.
  *
  * @return array
  */
@@ -65,9 +63,8 @@ function eaccounting_rest_request( $endpoint, $args = array(), $method = 'GET', 
 	$request->set_query_params( $args );
 	$response = rest_do_request( $request );
 	$server   = rest_get_server();
-	$result   = $server->response_to_data( $response, false );
 
-	return $result;
+	return $server->response_to_data( $response, false );
 }
 
 /**
@@ -75,7 +72,7 @@ function eaccounting_rest_request( $endpoint, $args = array(), $method = 'GET', 
  *
  * @since 1.1.0
  *
- * @param $request
+ * @param array $request Request data.
  *
  * @return int|null
  */

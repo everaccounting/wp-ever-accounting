@@ -89,7 +89,7 @@ function eaccounting_insert_payment( $args, $wp_error = true ) {
 		// Load new data.
 		$item->set_props( $args );
 
-		// Save the item
+		// Save the item.
 		$item->save();
 
 		return $item;
@@ -120,7 +120,7 @@ function eaccounting_delete_payment( $payment_id ) {
 /**
  * Get payment items.
  *
- * @param array $args {
+ * @param array $args { .
  *
  * @type int $id Transaction id.
  * @type string $payment_date Time of the transaction.
@@ -145,7 +145,7 @@ function eaccounting_get_payments( $args = array() ) {
 /**
  * Get revenue.
  *
- * @param $revenue
+ * @param mixed $revenue Revenue ID or object.
  *
  * @return Revenue|null
  * @since 1.1.0
@@ -202,7 +202,7 @@ function eaccounting_insert_revenue( $args, $wp_error = true ) {
 		// Load new data.
 		$item->set_props( $args );
 
-		// Save the item
+		// Save the item.
 		$item->save();
 
 		return $item;
@@ -214,7 +214,7 @@ function eaccounting_insert_revenue( $args, $wp_error = true ) {
 /**
  * Delete a revenue.
  *
- * @param $revenue_id
+ * @param int $revenue_id  Revenue ID.
  *
  * @return bool
  * @since 1.1.0
@@ -319,7 +319,7 @@ function eaccounting_insert_transfer( $args, $wp_error = true ) {
 		// Load new data.
 		$item->set_props( $args );
 
-		// Save the item
+		// Save the item.
 		$item->save();
 
 		return $item;
@@ -349,7 +349,7 @@ function eaccounting_delete_transfer( $transfer_id ) {
 /**
  * Get transfers.
  *
- * @param array $args {
+ * @param array $args { An array of arguments.
  *
  * @type int $id ID of the transfer.
  * @type int $from_account_id ID of the source account from where transfer is initiating.
@@ -454,14 +454,14 @@ function eaccounting_get_transfers( $args = array() ) {
 	$orderby     = "ORDER BY {$orderby} {$order}";
 	$count_total = true === $qv['count_total'];
 	$clauses     = compact( 'select', 'from', 'join', 'where', 'orderby', 'limit' );
-	$cache_key   = 'query:' . md5( serialize( $qv ) ) . ':' . wp_cache_get_last_changed( 'ea_transfers' );
+	$cache_key   = 'query:' . md5( maybe_serialize( $qv ) ) . ':' . wp_cache_get_last_changed( 'ea_transfers' ); // phpcs:ignore
 	$results     = wp_cache_get( $cache_key, 'ea_transfers' );
 	if ( false === $results ) {
 		if ( $count_total ) {
-			$results = (int) $wpdb->get_var( "SELECT COUNT($table.id) $from $join $where" );
+			$results = (int) $wpdb->get_var( "SELECT COUNT($table.id) $from $join $where" ); // phpcs:ignore
 			wp_cache_set( $cache_key, $results, 'ea_transfers' );
 		} else {
-			$results = $wpdb->get_results( implode( ' ', $clauses ) );
+			$results = $wpdb->get_results( implode( ' ', $clauses ) ); // phpcs:ignore
 			if ( in_array( $fields, array( 'all', '*', 'ea_transfers.*' ), true ) ) {
 				foreach ( $results as $key => $item ) {
 					wp_cache_set( $item->id, $item, 'ea_transfers' );
@@ -481,7 +481,7 @@ function eaccounting_get_transfers( $args = array() ) {
 /**
  * Get transaction items.
  *
- * @param array $args
+ * @param array $args Query arguments.
  *
  * @return array|Payment[]|Revenue[]|int
  * @since 1.0.
@@ -524,13 +524,13 @@ function eaccounting_get_transactions( $args = array() ) {
 		$exclude = implode( ',', wp_parse_id_list( $qv['exclude'] ) );
 		$where  .= " AND $table.`id` NOT IN ($exclude)";
 	}
-	// search
+	// search.
 	$search_cols = array( 'description', 'reference' );
 	if ( ! empty( $qv['search'] ) ) {
 		$searches = array();
 		$where   .= ' AND (';
 		foreach ( $search_cols as $col ) {
-			$searches[] = $wpdb->prepare( $col . ' LIKE %s', '%' . $wpdb->esc_like( $qv['search'] ) . '%' );
+			$searches[] = $wpdb->prepare( $col . ' LIKE %s', '%' . $wpdb->esc_like( $qv['search'] ) . '%' ); // phpcs:ignore
 		}
 		$where .= implode( ' OR ', $searches );
 		$where .= ')';
@@ -581,10 +581,6 @@ function eaccounting_get_transactions( $args = array() ) {
 		$where             .= $date_created_query->get_sql();
 	}
 
-	// if ( ! empty( $qv['payment_date'] ) && is_array( $qv['payment_date'] ) ) {
-	// $date_created_query = new \WP_Date_Query( $qv['payment_date'], "{$table}.payment_date" );
-	// $where             .= $date_created_query->get_sql();
-	// }
 
 	if ( ! empty( $qv['payment_date'] ) && is_array( $qv['payment_date'] ) ) {
 		$before = $qv['payment_date']['before'];
@@ -617,16 +613,16 @@ function eaccounting_get_transactions( $args = array() ) {
 	$from        = "FROM {$wpdb->prefix}$table $table";
 	$orderby     = "ORDER BY {$orderby} {$order}";
 	$count_total = true === $qv['count_total'];
-	$cache_key   = 'query:' . md5( serialize( $qv ) ) . ':' . wp_cache_get_last_changed( 'ea_transactions' );
+	$cache_key   = 'query:' . md5( maybe_serialize( $qv ) ) . ':' . wp_cache_get_last_changed( 'ea_transactions' ); // phpcs:ignore
 	$results     = wp_cache_get( sanitize_key( $cache_key ), 'ea_transactions' );
 	$clauses     = compact( 'select', 'from', 'where', 'orderby', 'limit' );
 
 	if ( false === $results ) {
 		if ( $count_total ) {
-			$results = (int) $wpdb->get_var( "SELECT COUNT(id) $from $where" );
+			$results = (int) $wpdb->get_var( "SELECT COUNT(id) $from $where" ); // phpcs:ignore
 			wp_cache_set( $cache_key, $results, 'ea_transactions' );
 		} else {
-			$results = $wpdb->get_results( implode( ' ', $clauses ) );
+			$results = $wpdb->get_results( implode( ' ', $clauses ) ); // phpcs:ignore
 			if ( in_array( $fields, array( 'all', '*' ), true ) ) {
 				foreach ( $results as $key => $item ) {
 					wp_cache_set( $item->id, $item, 'ea_transactions' );
@@ -668,7 +664,7 @@ function eaccounting_get_transactions( $args = array() ) {
 /**
  * Get total income.
  *
- * @param null $year
+ * @param null $year Year.
  *
  * @return float
  * @since 1.1.0
@@ -692,7 +688,7 @@ function eaccounting_get_total_income( $year = null ) {
 			",
 			'income'
 		);
-		$results      = $wpdb->get_results( $sql );
+		$results      = $wpdb->get_results( $sql ); // phpcs:ignore
 		$total_income = 0;
 		foreach ( $results as $result ) {
 			$total_income += eaccounting_price_to_default( $result->amount, $result->currency_code, $result->currency_rate );
@@ -706,7 +702,7 @@ function eaccounting_get_total_income( $year = null ) {
 /**
  * Get total expense.
  *
- * @param null $year
+ * @param null $year Year.
  *
  * @return float
  * @since 1.1.0
@@ -730,7 +726,7 @@ function eaccounting_get_total_expense( $year = null ) {
 			",
 			'expense'
 		);
-		$results       = $wpdb->get_results( $sql );
+		$results       = $wpdb->get_results( $sql ); // phpcs:ignore
 		$total_expense = 0;
 		foreach ( $results as $result ) {
 			$total_expense += eaccounting_price_to_default( $result->amount, $result->currency_code, $result->currency_rate );
@@ -744,7 +740,7 @@ function eaccounting_get_total_expense( $year = null ) {
 /**
  * Get total profit.
  *
- * @param null $year
+ * @param null $year Year.
  *
  * @return float
  * @since 1.1.0
@@ -776,7 +772,7 @@ function eaccounting_get_total_receivable() {
 			",
 			'invoice'
 		);
-		$invoices         = $wpdb->get_results( $invoices_sql );
+		$invoices         = $wpdb->get_results( $invoices_sql ); // phpcs:ignore
 		foreach ( $invoices as $invoice ) {
 			$total_receivable += eaccounting_price_to_default( $invoice->amount, $invoice->currency_code, $invoice->currency_rate );
 		}
@@ -792,7 +788,7 @@ function eaccounting_get_total_receivable() {
 		  ",
 			'income'
 		);
-		$results = $wpdb->get_results( $sql );
+		$results = $wpdb->get_results( $sql ); // phpcs:ignore
 		foreach ( $results as $result ) {
 			$total_receivable -= eaccounting_price_to_default( $result->amount, $result->currency_code, $result->currency_rate );
 		}
@@ -821,7 +817,7 @@ function eaccounting_get_total_payable() {
 			",
 			'bill'
 		);
-		$bills         = $wpdb->get_results( $bills_sql );
+		$bills         = $wpdb->get_results( $bills_sql ); // phpcs:ignore
 		foreach ( $bills as $bill ) {
 			$total_payable += eaccounting_price_to_default( $bill->amount, $bill->currency_code, $bill->currency_rate );
 		}
@@ -837,7 +833,7 @@ function eaccounting_get_total_payable() {
 		  ",
 			'expense'
 		);
-		$results = $wpdb->get_results( $sql );
+		$results = $wpdb->get_results( $sql ); // phpcs:ignore
 		foreach ( $results as $result ) {
 			$total_payable -= eaccounting_price_to_default( $result->amount, $result->currency_code, $result->currency_rate );
 		}

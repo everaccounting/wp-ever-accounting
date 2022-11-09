@@ -132,12 +132,10 @@ function eaccounting_get_template( $template_name, $args = array(), $template_pa
 /**
  * Like eaccounting_get_template, but returns the HTML instead of outputting.
  *
- * @param string $template_path Template path. (default: '').
- * @param string $default_path Default path. (default: '').
- *
  * @param string $template_name Template name.
  * @param array  $args Arguments. (default: array).
- *
+ * @param string $template_path Template path. (default: '').
+ * @param string $default_path Default path. (default: '').
  * @return string
  * @see   eaccounting_get_template
  *
@@ -156,14 +154,14 @@ function eaccounting_get_template_html( $template_name, $args = array(), $templa
  *
  * since 1.0.2
  *
- * @param       $template_name
- * @param array         $args
- * @param null          $path
+ * @param     string $template_name Template name.
+ * @param array  $args Arguments. (default: array).
+ * @param null   $path Template path. (default: null).
  */
 function eaccounting_get_admin_template( $template_name, $args = array(), $path = null ) {
 
 	if ( $args && is_array( $args ) ) {
-		extract( $args );
+		extract( $args ); // phpcs:ignore
 	}
 	$template_name = str_replace( '.php', '', $template_name );
 	if ( is_null( $path ) ) {
@@ -183,9 +181,9 @@ function eaccounting_get_admin_template( $template_name, $args = array(), $path 
 /**
  * Render admin template.
  *
- * @param array         $args
+ * @param array  $args Arguments.
  *
- * @param       $template_name
+ * @param string $template_name Template name.
  *
  * @return string
  * @since 1.0.0

@@ -303,7 +303,7 @@ function eaccounting_get_site_name() {
 function eaccounting_file_to_attachment( $file ) {
 	$filename = basename( $file );
 
-	$upload_file = wp_upload_bits( $filename, null, file_get_contents( $file ) );
+	$upload_file = wp_upload_bits( $filename, null, file_get_contents( $file ) ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
 	if ( ! $upload_file['error'] ) {
 		$wp_filetype   = wp_check_filetype( $filename, null );
 		$attachment    = array(
@@ -314,7 +314,7 @@ function eaccounting_file_to_attachment( $file ) {
 		);
 		$attachment_id = wp_insert_attachment( $attachment, $upload_file['file'] );
 		if ( ! is_wp_error( $attachment_id ) ) {
-			require_once ABSPATH . 'wp-admin' . '/includes/image.php';
+			require_once ABSPATH . 'wp-admin/includes/image.php';
 			$attachment_data = wp_generate_attachment_metadata( $attachment_id, $upload_file['file'] );
 			wp_update_attachment_metadata( $attachment_id, $attachment_data );
 

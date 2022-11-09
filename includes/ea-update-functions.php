@@ -80,7 +80,7 @@ function eaccounting_update_1_0_2() {
 				'payment_date'   => $revenue->payment_date,
 				'amount'         => $revenue->amount,
 				'currency_code'  => $currency_code,
-				'currency_rate'  => 1, // protected
+				'currency_rate'  => 1, // protected.
 				'account_id'     => $revenue->account_id,
 				'invoice_id'     => null,
 				'contact_id'     => null,
@@ -105,7 +105,7 @@ function eaccounting_update_1_0_2() {
 				'payment_date'   => $expense->payment_date,
 				'amount'         => $expense->amount,
 				'currency_code'  => $currency_code,
-				'currency_rate'  => 1, // protected
+				'currency_rate'  => 1, // protected.
 				'account_id'     => $expense->account_id,
 				'invoice_id'     => null,
 				'contact_id'     => null,
@@ -168,13 +168,9 @@ function eaccounting_update_1_0_2() {
 			)
 		);
 
-		// $wpdb->delete(
-		// $prefix . 'ea_revenues',
-		// array( 'id' => $revenue->id )
-		// );
 	}
 
-	// expenses
+	// expenses.
 	$expenses = $wpdb->get_results( "SELECT * FROM {$prefix}ea_payments order by id asc" );
 	foreach ( $expenses as $expense ) {
 		$wpdb->insert(
@@ -184,7 +180,7 @@ function eaccounting_update_1_0_2() {
 				'payment_date'   => $expense->payment_date,
 				'amount'         => $expense->amount,
 				'currency_code'  => $currency_code,
-				'currency_rate'  => 1, // protected
+				'currency_rate'  => 1, // protected.
 				'account_id'     => $expense->account_id,
 				'invoice_id'     => null,
 				'contact_id'     => $expense->contact_id,
@@ -200,10 +196,6 @@ function eaccounting_update_1_0_2() {
 			)
 		);
 
-		// $wpdb->delete(
-		// $prefix . 'ea_payments',
-		// array( 'id' => $expense->id )
-		// );
 	}
 
 	// accounts

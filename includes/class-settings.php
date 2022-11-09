@@ -37,7 +37,6 @@ class Settings {
 		add_action( 'admin_init', array( $this, 'register_settings' ) );
 		add_filter( 'eaccounting_settings_sanitize_text', 'sanitize_text_field' );
 		add_filter( 'eaccounting_settings_sanitize_url', 'wp_http_validate_url' );
-		// add_filter( 'eaccounting_settings_sanitize_checkbox', 'eaccounting_bool_to_string' );
 		add_filter( 'eaccounting_settings_sanitize_number', 'absint' );
 		add_filter( 'eaccounting_settings_sanitize_rich_editor', 'wp_kses_post' );
 	}
@@ -45,7 +44,7 @@ class Settings {
 	/**
 	 * Let manager edit settings.
 	 *
-	 * @param $capability
+	 * @param string $capability Capability.
 	 * @since 1.1.0
 	 *
 	 * @return string
@@ -60,7 +59,7 @@ class Settings {
 	 * @return array
 	 * @since 1.0.2
 	 */
-	function get_registered_settings() {
+	public function get_registered_settings() {
 		$settings = array(
 			/** General Settings */
 			'general'  => apply_filters(
@@ -360,7 +359,7 @@ class Settings {
 	 * @return void
 	 * @since 1.0.2
 	 */
-	function register_settings() {
+	public function register_settings() {
 		$whitelisted = array();
 		foreach ( $this->get_registered_settings() as $tab => $sections ) {
 			if ( ! is_array( $sections ) ) {
@@ -454,7 +453,8 @@ class Settings {
 	 */
 	protected function get_accounts() {
 		$accounts = array();
-		if ( isset( $_GET['page'] ) && 'ea-settings' === $_GET['page'] ) {
+		$page     = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_STRING );
+		if ( isset( $page ) && 'ea-settings' === $page ) {
 			$results    = eaccounting_get_accounts(
 				array(
 					'number' => - 1,
@@ -473,14 +473,15 @@ class Settings {
 	/**
 	 * Load categories on settings.
 	 *
-	 * @param string $type
+	 * @param string $type Type of category.
 	 *
 	 * @return array|int
 	 * @since 1.1.0
 	 */
 	protected function get_categories( $type = 'income' ) {
 		$categories = array();
-		if ( isset( $_GET['page'] ) && 'ea-settings' === $_GET['page'] ) {
+		$page       = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_STRING );
+		if ( isset( $page ) && 'ea-settings' === $page ) {
 			$results      = eaccounting_get_categories(
 				array(
 					'number' => - 1,
@@ -498,14 +499,15 @@ class Settings {
 	/**
 	 * Load currencies
 	 *
-	 * @param string $type
+	 * @param string $type Type of currency.
 	 *
 	 * @return array|int
 	 * @since 1.1.0
 	 */
 	protected function get_currencies() {
 		$currencies = array();
-		if ( isset( $_GET['page'] ) && 'ea-settings' === $_GET['page'] ) {
+		$page       = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_STRING );
+		if ( isset( $page ) && 'ea-settings' === $page ) {
 			$results      = eaccounting_get_currencies(
 				array(
 					'number' => - 1,
@@ -526,14 +528,14 @@ class Settings {
 	 *
 	 * Renders the header.
 	 *
-	 * @param array $args Arguments passed by the setting
+	 * @param array $args Arguments passed by the setting.
 	 *
 	 * @return void
 	 * @since 1.0.2
 	 */
-	function header_callback( $args ) {
+	public function header_callback( $args ) {
 		if ( ! empty( $args['desc'] ) ) {
-			echo $args['desc'];
+			echo wp_kses_post( $args['desc'] );
 		}
 	}
 
@@ -542,12 +544,12 @@ class Settings {
 	 *
 	 * Renders text fields.
 	 *
-	 * @param array $args Arguments passed by the setting
+	 * @param array $args Arguments passed by the setting.
 	 *
 	 * @return void
 	 * @since 1.0.2
 	 */
-	function text_callback( $args ) {
+	public function text_callback( $args ) {
 		$default = isset( $args['std'] ) ? $args['std'] : '';
 		$value   = $this->get( $args['id'], $default );
 		$attrs   = array( 'required', 'placeholder', 'disabled', 'style' );
@@ -564,7 +566,7 @@ class Settings {
 			esc_attr( $args['style'] ),
 			esc_attr( $args['id'] ),
 			esc_attr( stripslashes( $value ) ),
-			eaccounting_implode_html_attributes( $args['attr'] )
+			eaccounting_implode_html_attributes( $args['attr'] ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		);
 
 		echo ! empty( $args['desc'] ) ? sprintf( '<p class="description">%s</p>', wp_kses_post( $args['desc'] ) ) : '';
@@ -576,12 +578,12 @@ class Settings {
 	 *
 	 * Renders text fields.
 	 *
-	 * @param array $args Arguments passed by the setting
+	 * @param array $args Arguments passed by the setting.
 	 *
 	 * @return void
 	 * @since 1.0.2
 	 */
-	function email_callback( $args ) {
+	public function email_callback( $args ) {
 		$default = isset( $args['std'] ) ? $args['std'] : '';
 		$value   = $this->get( $args['id'], $default );
 		$attrs   = array( 'required', 'placeholder', 'disabled', 'style' );
@@ -598,7 +600,7 @@ class Settings {
 			esc_attr( $args['style'] ),
 			esc_attr( $args['id'] ),
 			esc_attr( stripslashes( $value ) ),
-			eaccounting_implode_html_attributes( $args['attr'] )
+			eaccounting_implode_html_attributes( $args['attr'] ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		);
 
 		echo ! empty( $args['desc'] ) ? sprintf( '<p class="description">%s</p>', wp_kses_post( $args['desc'] ) ) : '';
@@ -610,13 +612,13 @@ class Settings {
 	 *
 	 * Renders checkboxes.
 	 *
-	 * @param array $args Arguments passed by the setting
+	 * @param array $args Arguments passed by the setting.
 	 *
 	 * @return void
 	 * @since 1.0.2
 	 * @global      $this ->options Array of all the EverAccounting Options
 	 */
-	function checkbox_callback( $args ) {
+	public function checkbox_callback( $args ) {
 		$value      = $this->get( $args['id'] );
 		$checked    = isset( $value ) ? checked( 'yes', $value, false ) : '';
 		$attributes = eaccounting_implode_html_attributes( $args['attr'] );
@@ -626,7 +628,7 @@ class Settings {
 		$html      .= $args['desc'];
 		$html      .= '</label>';
 
-		echo $html;
+		echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 
 	/**
@@ -634,13 +636,13 @@ class Settings {
 	 *
 	 * Renders multiple checkboxes.
 	 *
-	 * @param array $args Arguments passed by the setting
+	 * @param array $args Arguments passed by the setting.
 	 *
 	 * @return void
 	 * @since 1.0.2
 	 * @global      $this ->options Array of all the EverAccounting Options
 	 */
-	function multicheck_callback( $args ) {
+	public function multicheck_callback( $args ) {
 
 		if ( ! empty( $args['options'] ) ) {
 			foreach ( $args['options'] as $key => $option ) {
@@ -649,11 +651,11 @@ class Settings {
 				} else {
 					$enabled = null;
 				}
-				echo '<label for="eaccounting_settings[' . $args['id'] . '][' . $key . ']">';
-				echo '<input name="eaccounting_settings[' . $args['id'] . '][' . $key . ']" id="eaccounting_settings[' . $args['id'] . '][' . $key . ']" type="checkbox" value="' . $option . '" ' . checked( $option, $enabled, false ) . '/>&nbsp;';
-				echo $option . '</label><br/>';
+				echo '<label for="eaccounting_settings[' . $args['id'] . '][' . $key . ']">'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				echo '<input name="eaccounting_settings[' . $args['id'] . '][' . $key . ']" id="eaccounting_settings[' . $args['id'] . '][' . $key . ']" type="checkbox" value="' . $option . '" ' . checked( $option, $enabled, false ) . '/>&nbsp;'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				echo $option . '</label><br/>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			}
-			echo '<p class="description">' . $args['desc'] . '</p>';
+			echo '<p class="description">' . $args['desc'] . '</p>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 	}
 
@@ -662,16 +664,16 @@ class Settings {
 	 *
 	 * Renders radio boxes.
 	 *
-	 * @param array $args Arguments passed by the setting
+	 * @param array $args Arguments passed by the setting.
 	 *
 	 * @return void
 	 * @since 1.0.2
 	 * @global      $this ->options Array of all the EverAccounting Options
 	 */
-	function radio_callback( $args ) {
+	public function radio_callback( $args ) {
 
-		echo '<fieldset id="eaccounting_settings[' . $args['id'] . ']">';
-		echo '<legend class="screen-reader-text">' . $args['name'] . '</legend>';
+		echo '<fieldset id="eaccounting_settings[' . $args['id'] . ']">'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo '<legend class="screen-reader-text">' . $args['name'] . '</legend>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
 		foreach ( $args['options'] as $key => $option ) :
 			$checked = false;
@@ -682,12 +684,12 @@ class Settings {
 				$checked = true;
 			}
 
-			echo '<label for="eaccounting_settings[' . $args['id'] . '][' . $key . ']">';
-			echo '<input name="eaccounting_settings[' . $args['id'] . ']" id="eaccounting_settings[' . $args['id'] . '][' . $key . ']" type="radio" value="' . $key . '" ' . checked( true, $checked, false ) . '/>';
-			echo $option . '</label><br/>';
+			echo '<label for="eaccounting_settings[' . $args['id'] . '][' . $key . ']">'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo '<input name="eaccounting_settings[' . $args['id'] . ']" id="eaccounting_settings[' . $args['id'] . '][' . $key . ']" type="radio" value="' . $key . '" ' . checked( true, $checked, false ) . '/>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo $option . '</label><br/>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		endforeach;
 
-		echo '</fieldset><p class="description">' . $args['desc'] . '</p>';
+		echo '</fieldset><p class="description">' . wp_kses_post( $args['desc'] ) . '</p>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 
 	/**
@@ -695,13 +697,13 @@ class Settings {
 	 *
 	 * Renders URL fields.
 	 *
-	 * @param array $args Arguments passed by the setting
+	 * @param array $args Arguments passed by the setting.
 	 *
 	 * @return void
 	 * @since 1.0.2
 	 * @global      $this ->options Array of all the EverAccounting Options
 	 */
-	function url_callback( $args ) {
+	public function url_callback( $args ) {
 
 		if ( isset( $this->settings[ $args['id'] ] ) && ! empty( $this->settings[ $args['id'] ] ) ) {
 			$value = $this->settings[ $args['id'] ];
@@ -725,7 +727,7 @@ class Settings {
 		);
 		$html .= $desc;
 
-		echo $html;
+		echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 
 	/**
@@ -733,19 +735,19 @@ class Settings {
 	 *
 	 * Renders number fields.
 	 *
-	 * @param array $args Arguments passed by the setting
+	 * @param array $args Arguments passed by the setting.
 	 *
 	 * @return void
 	 * @since 1.0.2
 	 * @global      $this ->options Array of all the EverAccounting Options
 	 */
-	function number_callback( $args ) {
+	public function number_callback( $args ) {
 
-		// Get value, with special consideration for 0 values, and never allowing negative values
+		// Get value, with special consideration for 0 values, and never allowing negative values.
 		$value = isset( $this->settings[ $args['id'] ] ) ? $this->settings[ $args['id'] ] : null;
 		$value = ( ! is_null( $value ) && '' !== $value && floatval( $value ) >= 0 ) ? floatval( $value ) : null;
 
-		// Saving the field empty will revert to std value, if it exists
+		// Saving the field empty will revert to std value, if it exists.
 		$std   = ( isset( $args['std'] ) && ! is_null( $args['std'] ) && '' !== $args['std'] && floatval( $args['std'] ) >= 0 ) ? $args['std'] : null;
 		$value = ! is_null( $value ) ? $value : ( ! is_null( $std ) ? $std : null );
 		$value = eaccounting_format_decimal( $value, false );
@@ -766,7 +768,7 @@ class Settings {
 		);
 		$html .= $desc;
 
-		echo $html;
+		echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 
 	/**
@@ -774,13 +776,13 @@ class Settings {
 	 *
 	 * Renders textarea fields.
 	 *
-	 * @param array $args Arguments passed by the setting
+	 * @param array $args Arguments passed by the setting.
 	 *
 	 * @return void
 	 * @since 1.0.2
 	 * @global      $this ->options Array of all the EverAccounting Options
 	 */
-	function textarea_callback( $args ) {
+	public function textarea_callback( $args ) {
 
 		if ( isset( $this->settings[ $args['id'] ] ) ) {
 			$value = $this->settings[ $args['id'] ];
@@ -804,7 +806,7 @@ class Settings {
 		);
 		$html .= $desc;
 
-		echo $html;
+		echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
 	}
 
@@ -813,13 +815,13 @@ class Settings {
 	 *
 	 * Renders password fields.
 	 *
-	 * @param array $args Arguments passed by the setting
+	 * @param array $args Arguments passed by the setting.
 	 *
 	 * @return void
 	 * @since 1.0.2
 	 * @global      $this ->options Array of all the EverAccounting Options
 	 */
-	function password_callback( $args ) {
+	public function password_callback( $args ) {
 
 		if ( isset( $this->settings[ $args['id'] ] ) ) {
 			$value = $this->settings[ $args['id'] ];
@@ -843,7 +845,7 @@ class Settings {
 		);
 		$html .= $desc;
 
-		echo $html;
+		echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 
 	/**
@@ -851,7 +853,7 @@ class Settings {
 	 *
 	 * Renders select fields.
 	 *
-	 * @param array $args Arguments passed by the setting
+	 * @param array $args Arguments passed by the setting.
 	 *
 	 * @return void
 	 * @since 1.0.2
@@ -880,7 +882,7 @@ class Settings {
 		}
 
 		$html .= '</select>';
-		echo $html;
+		echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
 		echo ! empty( $args['desc'] ) ? sprintf( '<p class="description">%s</p>', wp_kses_post( $args['desc'] ) ) : '';
 	}
@@ -890,7 +892,7 @@ class Settings {
 	 *
 	 * Renders rich editor fields.
 	 *
-	 * @param array $args Arguments passed by the setting
+	 * @param array $args Arguments passed by the setting.
 	 *
 	 * @global        $this ->options Array of all the EverAccounting Options
 	 *
@@ -898,7 +900,7 @@ class Settings {
 	 *
 	 * @since 1.0.2
 	 */
-	function rich_editor_callback( $args ) {
+	public function rich_editor_callback( $args ) {
 
 		if ( ! empty( $this->settings[ $args['id'] ] ) ) {
 			$value = $this->settings[ $args['id'] ];
@@ -912,7 +914,7 @@ class Settings {
 
 		$html .= '<br/><p class="description"> ' . $args['desc'] . '</p>';
 
-		echo $html;
+		echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 
 	/**
@@ -920,11 +922,11 @@ class Settings {
 	 *
 	 * Renders file upload fields.
 	 *
-	 * @param array $args Arguements passed by the setting
+	 * @param array $args Arguements passed by the setting.
 	 *
 	 * @since 1.0.2
 	 */
-	function upload_callback( $args ) {
+	public function upload_callback( $args ) {
 		if ( isset( $this->settings[ $args['id'] ] ) ) {
 			$value = $this->settings[ $args['id'] ];
 		} else {
@@ -948,11 +950,15 @@ class Settings {
 		$html .= sprintf( '<span>&nbsp;<input type="button" class="ea_settings_upload_button button-secondary" value="%s"/></span>', __( 'Upload File', 'wp-ever-accounting' ) );
 		$html .= $desc;
 
-		echo $html;
+		echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 
-
-	function html_callback( $args ) {
+	/**
+	 * HTML Callback.
+	 *
+	 * @param array $args Arguements passed by the setting.
+	 */
+	public function html_callback( $args ) {
 		$args = wp_parse_args( $args, array( 'html' => '' ) );
 		echo sprintf( '<div class="ea-settings-html %s">%s</div>', sanitize_html_class( $args['input_class'] ), wp_kses_post( $args['html'] ) );
 	}
@@ -960,11 +966,11 @@ class Settings {
 	/**
 	 * License key callback.
 	 *
-	 * @param $args
+	 * @param  array $args Arguements passed by the setting.
 	 *
 	 * @since 1.1.0
 	 */
-	function license_key_callback( $args ) {
+	public function license_key_callback( $args ) {
 		$value    = $this->get( $args['id'], '' );
 		$license  = $args['license_status'];
 		$messages = array();
@@ -1065,20 +1071,18 @@ class Settings {
 			$messages[] = sprintf(
 			/* translators: %s extension name */
 				__( 'To receive updates, please enter your valid %s license key.', 'wp-ever-accounting' ),
-				strip_tags( $args['name'] )
+				strip_tags( $args['name'] ) //phpcs:ignore
 			);
 		}
 
 		if ( ( is_object( $license ) && 'valid' === $license->license ) || 'valid' === $license ) {
-			echo '<input type="submit" class="button-secondary" name="' . $args['id'] . '_deactivate" value="' . __( 'Deactivate License', 'wp-ever-accounting' ) . '"/>';
+			echo '<input type="submit" class="button-secondary" name="' . $args['id'] . '_deactivate" value="' . __( 'Deactivate License', 'wp-ever-accounting' ) . '"/>'; //phpcs:ignore
 		}
-
-		// echo '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"> ' . wp_kses_post( $args['desc'] ) . '</label>';
 
 		if ( ! empty( $messages ) ) {
 			foreach ( $messages as $message ) {
 				echo '<div class="edd-license-data edd-license-">';
-				echo '<p>' . $message . '</p>';
+				echo '<p>' . wp_kses_post( $message ) . '</p>';
 				echo '</div>';
 
 			}
@@ -1092,14 +1096,14 @@ class Settings {
 	 *
 	 * If a function is missing for settings callbacks alert the user.
 	 *
-	 * @param array $args Arguments passed by the setting
+	 * @param array $args Arguments passed by the setting.
 	 *
 	 * @return void
 	 * @since 1.0.2
 	 */
-	function missing_callback( $args ) {
+	public function missing_callback( $args ) {
 		/* translators: %s name of the callback */
-		printf( __( 'The callback function used for the <strong>%s</strong> setting is missing.', 'wp-ever-accounting' ), $args['id'] );
+		printf( __( 'The callback function used for the <strong>%s</strong> setting is missing.', 'wp-ever-accounting' ), esc_html( $args['id'] ) ); //phpcs:ignore
 	}
 
 	/**
@@ -1109,16 +1113,15 @@ class Settings {
 	 * setting that needs to allow 0 as a valid value, but sure to add its
 	 * key to the filtered array seen in this method.
 	 *
-	 * @param mixed  $default (optional)
-	 *
-	 * @param string $key
+	 * @param string $key    Key of the setting to retrieve.
+	 * @param mixed  $default Default value if the option does not exist.
 	 *
 	 * @return mixed
 	 * @since  1.0.2
 	 */
 	public function get( $key, $default = false ) {
 
-		// Only allow non-empty values, otherwise fallback to the default
+		// Only allow non-empty values, otherwise fallback to the default.
 		$value = ! empty( $this->settings[ $key ] ) ? $this->settings[ $key ] : $default;
 
 		$zero_values_allowed = array();
@@ -1131,7 +1134,7 @@ class Settings {
 		 */
 		$zero_values_allowed = (array) apply_filters( 'eaccounting_settings_zero_values_allowed', $zero_values_allowed );
 
-		// Allow 0 values for specified keys only
+		// Allow 0 values for specified keys only.
 		if ( in_array( $key, $zero_values_allowed ) ) { // phpcs:ignore
 
 			$value = isset( $this->settings[ $key ] ) ? $this->settings[ $key ] : null;
@@ -1148,12 +1151,12 @@ class Settings {
 	 * @return array
 	 * @since 1.0.2
 	 */
-	function sanitize_settings( $input = array() ) {
+	public function sanitize_settings( $input = array() ) {
 		if ( empty( $_POST['_wp_http_referer'] ) ) {
 			return $input;
 		}
 
-		parse_str( $_POST['_wp_http_referer'], $referrer );
+		parse_str( $_POST['_wp_http_referer'], $referrer ); //phpcs:ignore
 
 		$saved = get_option( 'eaccounting_settings', array() );
 		if ( ! is_array( $saved ) ) {
@@ -1167,17 +1170,17 @@ class Settings {
 
 		$input = $input ? $input : array();
 
-		// Ensure a value is always passed for every checkbox
+		// Ensure a value is always passed for every checkbox.
 		if ( ! empty( $settings ) ) {
 
 			foreach ( $settings as $setting ) {
 
-				// Single checkbox
+				// Single checkbox.
 				if ( 'checkbox' === $setting['type'] ) {
 					$input[ $setting['id'] ] = empty( $input[ $setting['id'] ] ) ? 'no' : 'yes';
 				}
 
-				// Multicheck list
+				// Multicheck list.
 				if ( 'multicheck' === $setting['type'] ) {
 					if ( empty( $input[ $setting['id'] ] ) ) {
 						$input[ $setting['id'] ] = array();
@@ -1186,10 +1189,10 @@ class Settings {
 			}
 		}
 
-		// Loop through each setting being saved and pass it through a sanitization filter
+		// Loop through each setting being saved and pass it through a sanitization filter.
 		foreach ( $input as $key => $value ) {
 
-			// Get the setting type (checkbox, select, etc)
+			// Get the setting type (checkbox, select, etc).
 			$type              = isset( $settings[ $key ]['type'] ) ? $settings[ $key ]['type'] : false;
 			$sanitize_callback = isset( $settings[ $key ]['sanitize_callback'] ) ? $settings[ $key ]['sanitize_callback'] : false;
 			$input[ $key ]     = $value;
@@ -1236,9 +1239,8 @@ class Settings {
 	/**
 	 * Sets an option (in memory).
 	 *
-	 * @param bool  $save Optional. Whether to trigger saving the option or options. Default false.
-	 *
 	 * @param array $settings An array of `key => value` setting pairs to set.
+	 * @param bool  $save Optional. Whether to trigger saving the option or options. Default false.
 	 *
 	 * @return bool If `$save` is not false, whether the options were saved successfully. True otherwise.
 	 * @since  1.0.2
