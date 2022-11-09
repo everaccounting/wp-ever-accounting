@@ -236,7 +236,7 @@ function eaccounting_update_1_0_2() {
 
 	foreach ( $contacts as $contact ) {
 		$types = maybe_unserialize( $contact->types );
-		if ( count( $types ) == 1 ) {
+		if ( count( $types ) === 1 ) {
 			$type = reset( $types );
 			$wpdb->update(
 				$wpdb->prefix . 'ea_contacts',
@@ -307,7 +307,6 @@ function eaccounting_update_1_1_0() {
 	global $wpdb;
 	$prefix = $wpdb->prefix;
 
-	// todo update attachment files
 	$wpdb->query( "ALTER TABLE {$prefix}ea_accounts ADD `thumbnail_id` INT(11) DEFAULT NULL AFTER `bank_address`;" );
 	$wpdb->query( "ALTER TABLE {$prefix}ea_categories ADD INDEX enabled (`enabled`);" );
 

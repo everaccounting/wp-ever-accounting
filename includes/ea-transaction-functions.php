@@ -101,7 +101,7 @@ function eaccounting_insert_payment( $args, $wp_error = true ) {
 /**
  * Delete a payment.
  *
- * @param $payment_id
+ * @param int $payment_id  Payment ID.
  *
  * @return bool
  * @since 1.1.0
@@ -256,7 +256,7 @@ function eaccounting_get_revenues( $args = array() ) {
 /**
  * Get transfer.
  *
- * @param $transfer
+ * @param mixed $transfer Transfer id.
  *
  * @return \EverAccounting\Models\Transfer|null
  * @since 1.1.0
