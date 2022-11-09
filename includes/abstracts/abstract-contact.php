@@ -2,9 +2,9 @@
 /**
  * Handle the contact object.
  *
+ * @version     1.0.2
  * @package     EverAccounting\Models
  * @class       Customer
- * @version     1.0.2
  */
 
 namespace EverAccounting\Abstracts;
@@ -31,8 +31,9 @@ abstract class Contact extends Resource_Model {
 	protected $object_type = 'contact';
 
 	/**
-	 * @since 1.1.0
+	 * Cache group.
 	 *
+	 * @since 1.1.0
 	 * @var string
 	 */
 	protected $cache_group = 'ea_contacts';
@@ -77,13 +78,12 @@ abstract class Contact extends Resource_Model {
 	/**
 	 * Get the contact if ID is passed, otherwise the contact is new and empty.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @param int|object $data object to read.
+	 *
+	 * @since 1.1.0
 	 */
 	public function __construct( $data = 0 ) {
 		parent::__construct( $data );
-		// Load repository
 		$this->repository = Repositories::load( $this->repository_name );
 	}
 
@@ -100,9 +100,9 @@ abstract class Contact extends Resource_Model {
 	/**
 	 * Get contact's wp user ID.
 	 *
-	 * @since 1.0.2
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @param string $context
+	 * @since 1.0.2
 	 *
 	 * @return int|null
 	 */
@@ -113,9 +113,9 @@ abstract class Contact extends Resource_Model {
 	/**
 	 * Get contact Name.
 	 *
-	 * @since 1.0.2
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @param string $context
+	 * @since 1.0.2
 	 *
 	 * @return string
 	 */
@@ -126,9 +126,9 @@ abstract class Contact extends Resource_Model {
 	/**
 	 * Get contact company.
 	 *
-	 * @since 1.0.2
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @param string $context
+	 * @since 1.0.2
 	 *
 	 * @return string
 	 */
@@ -139,9 +139,9 @@ abstract class Contact extends Resource_Model {
 	/**
 	 * Get contact's email.
 	 *
-	 * @since 1.0.2
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @param string $context
+	 * @since 1.0.2
 	 *
 	 * @return string
 	 */
@@ -152,9 +152,9 @@ abstract class Contact extends Resource_Model {
 	/**
 	 * Get contact's phone number.
 	 *
-	 * @since 1.0.2
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @param string $context
+	 * @since 1.0.2
 	 *
 	 * @return string
 	 */
@@ -165,9 +165,9 @@ abstract class Contact extends Resource_Model {
 	/**
 	 * Get contact's website number.
 	 *
-	 * @since 1.0.2
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @param string $context
+	 * @since 1.0.2
 	 *
 	 * @return string
 	 */
@@ -178,9 +178,9 @@ abstract class Contact extends Resource_Model {
 	/**
 	 * Get contact's birth date.
 	 *
-	 * @since 1.0.2
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @param string $context
+	 * @since 1.0.2
 	 *
 	 * @return string
 	 */
@@ -191,9 +191,9 @@ abstract class Contact extends Resource_Model {
 	/**
 	 * Get contact's street.
 	 *
-	 * @since 1.0.2
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @param string $context
+	 * @since 1.0.2
 	 *
 	 * @return string
 	 */
@@ -204,9 +204,9 @@ abstract class Contact extends Resource_Model {
 	/**
 	 * Get contact's city.
 	 *
-	 * @since 1.0.2
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @param string $context
+	 * @since 1.0.2
 	 *
 	 * @return string
 	 */
@@ -217,9 +217,9 @@ abstract class Contact extends Resource_Model {
 	/**
 	 * Get contact's state.
 	 *
-	 * @since 1.0.2
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @param string $context
+	 * @since 1.0.2
 	 *
 	 * @return string
 	 */
@@ -230,9 +230,9 @@ abstract class Contact extends Resource_Model {
 	/**
 	 * Get contact's postcode.
 	 *
-	 * @since 1.0.2
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @param string $context
+	 * @since 1.0.2
 	 *
 	 * @return string
 	 */
@@ -243,9 +243,9 @@ abstract class Contact extends Resource_Model {
 	/**
 	 * Get contact's country.
 	 *
-	 * @since 1.0.2
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @param string $context
+	 * @since 1.0.2
 	 *
 	 * @return string
 	 */
@@ -256,9 +256,9 @@ abstract class Contact extends Resource_Model {
 	/**
 	 * Get contact's country.
 	 *
-	 * @since 1.0.2
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @param string $context
+	 * @since 1.0.2
 	 *
 	 * @return string
 	 */
@@ -271,9 +271,9 @@ abstract class Contact extends Resource_Model {
 	/**
 	 * Get contact's vat number.
 	 *
-	 * @since 1.0.2
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @param string $context
+	 * @since 1.0.2
 	 *
 	 * @return string
 	 */
@@ -284,9 +284,9 @@ abstract class Contact extends Resource_Model {
 	/**
 	 * Get the currency code of the contact.
 	 *
-	 * @since 1.0.2
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @param string $context
+	 * @since 1.0.2
 	 *
 	 * @return string
 	 */
@@ -297,9 +297,9 @@ abstract class Contact extends Resource_Model {
 	/**
 	 * Get the type of contact.
 	 *
-	 * @since 1.0.2
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @param string $context
+	 * @since 1.0.2
 	 *
 	 * @return string
 	 */
@@ -310,9 +310,9 @@ abstract class Contact extends Resource_Model {
 	/**
 	 * Get avatar id
 	 *
-	 * @since 1.1.0
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @param string $context
+	 * @since 1.1.0
 	 *
 	 * @return int|null
 	 */
@@ -333,9 +333,9 @@ abstract class Contact extends Resource_Model {
 	/**
 	 * Set wp user id.
 	 *
-	 * @since 1.0.2
+	 * @param int $id WP user id.
 	 *
-	 * @param $id
+	 * @since 1.0.2
 	 */
 	public function set_user_id( $id ) {
 		$this->set_prop( 'user_id', absint( $id ) );
@@ -344,9 +344,9 @@ abstract class Contact extends Resource_Model {
 	/**
 	 * Set contact name.
 	 *
-	 * @since 1.0.2
+	 * @param string $name Contact name.
 	 *
-	 * @param $name
+	 * @since 1.0.2
 	 */
 	public function set_name( $name ) {
 		$this->set_prop( 'name', eaccounting_clean( $name ) );
@@ -355,9 +355,9 @@ abstract class Contact extends Resource_Model {
 	/**
 	 * Set contact company.
 	 *
-	 * @since 1.0.2
+	 * @param string $company Contact company.
 	 *
-	 * @param $company
+	 * @since 1.0.2
 	 */
 	public function set_company( $company ) {
 		$this->set_prop( 'company', eaccounting_clean( $company ) );
@@ -366,9 +366,9 @@ abstract class Contact extends Resource_Model {
 	/**
 	 * Set contact's email.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param string $value Email.
+	 *
+	 * @since 1.0.2
 	 */
 	public function set_email( $value ) {
 		if ( $value && is_email( $value ) ) {
@@ -379,9 +379,9 @@ abstract class Contact extends Resource_Model {
 	/**
 	 * Set contact's phone.
 	 *
-	 * @since 1.0.2
+	 * @param string $value Phone.
 	 *
-	 * @param $value
+	 * @since 1.0.2
 	 */
 	public function set_phone( $value ) {
 		$this->set_prop( 'phone', eaccounting_clean( $value ) );
@@ -391,9 +391,9 @@ abstract class Contact extends Resource_Model {
 	/**
 	 * Set contact's birth date.
 	 *
-	 * @since 1.0.2
+	 * @param string $date Birth date.
 	 *
-	 * @param $date
+	 * @since 1.0.2
 	 */
 	public function set_birth_date( $date ) {
 		$this->set_date_prop( 'birth_date', $date );
@@ -402,9 +402,9 @@ abstract class Contact extends Resource_Model {
 	/**
 	 * Set contact's website.
 	 *
-	 * @since 1.0.2
+	 * @param string $value Website.
 	 *
-	 * @param $value
+	 * @since 1.0.2
 	 */
 	public function set_website( $value ) {
 		$this->set_prop( 'website', esc_url( $value ) );
@@ -413,9 +413,9 @@ abstract class Contact extends Resource_Model {
 	/**
 	 * Set contact's street.
 	 *
-	 * @since 1.0.2
+	 * @param string $value Street.
 	 *
-	 * @param $value
+	 * @since 1.0.2
 	 */
 	public function set_street( $value ) {
 		$this->set_prop( 'street', sanitize_text_field( $value ) );
@@ -424,9 +424,9 @@ abstract class Contact extends Resource_Model {
 	/**
 	 * Set contact's city.
 	 *
-	 * @since 1.0.2
+	 * @param string $city City.
 	 *
-	 * @param $city
+	 * @since 1.0.2
 	 */
 	public function set_city( $city ) {
 		$this->set_prop( 'city', sanitize_text_field( $city ) );
@@ -435,9 +435,9 @@ abstract class Contact extends Resource_Model {
 	/**
 	 * Set contact's state.
 	 *
-	 * @since 1.0.2
+	 * @param string $state State.
 	 *
-	 * @param $state
+	 * @since 1.0.2
 	 */
 	public function set_state( $state ) {
 		$this->set_prop( 'state', sanitize_text_field( $state ) );
@@ -446,9 +446,9 @@ abstract class Contact extends Resource_Model {
 	/**
 	 * Set contact's postcode.
 	 *
-	 * @since 1.0.2
+	 * @param string $postcode Postcode.
 	 *
-	 * @param $postcode
+	 * @since 1.0.2
 	 */
 	public function set_postcode( $postcode ) {
 		$this->set_prop( 'postcode', sanitize_text_field( $postcode ) );
@@ -457,9 +457,9 @@ abstract class Contact extends Resource_Model {
 	/**
 	 * Set contact country.
 	 *
-	 * @since 1.0.2
+	 * @param string $country Country.
 	 *
-	 * @param $country
+	 * @since 1.0.2
 	 */
 	public function set_country( $country ) {
 		if ( array_key_exists( $country, eaccounting_get_countries() ) ) {
@@ -470,9 +470,9 @@ abstract class Contact extends Resource_Model {
 	/**
 	 * Set contact's tax_number.
 	 *
-	 * @since 1.0.2
+	 * @param string $value Tax number.
 	 *
-	 * @param $value
+	 * @since 1.0.2
 	 */
 	public function set_vat_number( $value ) {
 		$this->set_prop( 'vat_number', eaccounting_clean( $value ) );
@@ -481,9 +481,9 @@ abstract class Contact extends Resource_Model {
 	/**
 	 * Set contact's currency_code.
 	 *
-	 * @since 1.0.2
+	 * @param string $value Currency code.
 	 *
-	 * @param $value
+	 * @since 1.0.2
 	 */
 	public function set_currency_code( $value ) {
 		if ( eaccounting_get_currency( $value ) ) {
@@ -494,9 +494,9 @@ abstract class Contact extends Resource_Model {
 	/**
 	 * Set contact type.
 	 *
-	 * @since 1.0.2
+	 * @param string $type Contact type.
 	 *
-	 * @param $type
+	 * @since 1.0.2
 	 */
 	public function set_type( $type ) {
 		if ( array_key_exists( $type, eaccounting_get_contact_types() ) ) {
@@ -507,9 +507,9 @@ abstract class Contact extends Resource_Model {
 	/**
 	 * Set avatar id
 	 *
-	 * @since 1.1.0
+	 * @param int $thumbnail_id Avatar id.
 	 *
-	 * @param int $thumbnail_id
+	 * @since 1.1.0
 	 */
 	public function set_thumbnail_id( $thumbnail_id ) {
 		$this->set_prop( 'thumbnail_id', absint( $thumbnail_id ) );
@@ -524,7 +524,7 @@ abstract class Contact extends Resource_Model {
 	/**
 	 * Return this customer's avatar.
 	 *
-	 * @param array $args
+	 * @param array $args Arguments to pass to get_avatar().
 	 *
 	 * @return string
 	 */
@@ -537,6 +537,8 @@ abstract class Contact extends Resource_Model {
 	}
 
 	/**
+	 * Get default image url.
+	 *
 	 * @since 1.1.0
 	 * @return string
 	 */

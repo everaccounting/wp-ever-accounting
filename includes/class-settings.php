@@ -499,8 +499,6 @@ class Settings {
 	/**
 	 * Load currencies
 	 *
-	 * @param string $type Type of currency.
-	 *
 	 * @return array|int
 	 * @since 1.1.0
 	 */
@@ -859,7 +857,7 @@ class Settings {
 	 * @since 1.0.2
 	 * @global      $this ->options Array of all the EverAccounting Options
 	 */
-	function select_callback( $args ) {
+	public function select_callback( $args ) {
 
 		if ( isset( $this->settings[ $args['id'] ] ) ) {
 			$value = $this->settings[ $args['id'] ];
@@ -1148,11 +1146,13 @@ class Settings {
 	/**
 	 * Retrieve the array of plugin settings
 	 *
+	 * @param array $input Array of settings.
+	 *
 	 * @return array
 	 * @since 1.0.2
 	 */
 	public function sanitize_settings( $input = array() ) {
-		if ( empty( $_POST['_wp_http_referer'] ) ) {
+		if ( empty( $_POST['_wp_http_referer'] ) ) { //phpcs:ignore
 			return $input;
 		}
 

@@ -16,6 +16,11 @@ use EverAccounting\Traits\CurrencyTrait;
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Class Transaction
+ *
+ * @package EverAccounting\Abstracts
+ */
 abstract class Transaction extends Resource_Model {
 	use CurrencyTrait;
 
@@ -27,6 +32,8 @@ abstract class Transaction extends Resource_Model {
 	protected $object_type = 'transaction';
 
 	/**
+	 * This is the name of the repository class.
+	 *
 	 * @since 1.1.0
 	 *
 	 * @var string
@@ -53,8 +60,8 @@ abstract class Transaction extends Resource_Model {
 		'type_id'        => null,
 		'payment_date'   => null,
 		'amount'         => 0.00,
-		'currency_code'  => '', // protected
-		'currency_rate'  => 0.00, // protected
+		'currency_code'  => '', // protected.
+		'currency_rate'  => 0.00, // protected.
 		'account_id'     => null,
 		'document_id'    => null,
 		'contact_id'     => null,
@@ -78,7 +85,6 @@ abstract class Transaction extends Resource_Model {
 	 */
 	public function __construct( $data = 0 ) {
 		parent::__construct( $data );
-		// Load repository
 		$this->repository = Repositories::load( $this->repository_name );
 	}
 
@@ -96,7 +102,7 @@ abstract class Transaction extends Resource_Model {
 	/**
 	 * Transaction type.
 	 *
-	 * @param string $context
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
 	 * @return mixed|null
 	 * @since 1.0.2
@@ -108,7 +114,7 @@ abstract class Transaction extends Resource_Model {
 	/**
 	 * Paid at time.
 	 *
-	 * @param string $context
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
 	 * @return string
 	 * @since 1.0.2
@@ -122,7 +128,7 @@ abstract class Transaction extends Resource_Model {
 	/**
 	 * Transaction Amount.
 	 *
-	 * @param string $context
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
 	 * @return mixed|null
 	 * @since 1.0.2
@@ -144,7 +150,7 @@ abstract class Transaction extends Resource_Model {
 	/**
 	 * Currency code.
 	 *
-	 * @param string $context
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
 	 * @return mixed|null
 	 * @since 1.0.2
@@ -156,7 +162,7 @@ abstract class Transaction extends Resource_Model {
 	/**
 	 * Currency rate.
 	 *
-	 * @param string $context
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
 	 * @return mixed|null
 	 * @since 1.0.2
@@ -168,7 +174,7 @@ abstract class Transaction extends Resource_Model {
 	/**
 	 * Transaction from account id.
 	 *
-	 * @param string $context
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
 	 * @return mixed|null
 	 * @since 1.0.2
@@ -178,7 +184,9 @@ abstract class Transaction extends Resource_Model {
 	}
 
 	/**
-	 * @param string $context
+	 * Get document id.
+	 *
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
 	 * @return mixed|null
 	 * @since 1.0.2
@@ -190,7 +198,7 @@ abstract class Transaction extends Resource_Model {
 	/**
 	 * Contact id.
 	 *
-	 * @param string $context
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
 	 * @return mixed|null
 	 * @since 1.0.2
@@ -202,7 +210,7 @@ abstract class Transaction extends Resource_Model {
 	/**
 	 * Contact id.
 	 *
-	 * @param string $context
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
 	 * @return mixed|null
 	 * @since 1.0.2
@@ -214,7 +222,7 @@ abstract class Transaction extends Resource_Model {
 	/**
 	 * Category ID.
 	 *
-	 * @param string $context
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
 	 * @return mixed|null
 	 * @since 1.0.2
@@ -226,7 +234,7 @@ abstract class Transaction extends Resource_Model {
 	/**
 	 * Description.
 	 *
-	 * @param string $context
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
 	 * @return mixed|null
 	 * @since 1.0.2
@@ -238,7 +246,7 @@ abstract class Transaction extends Resource_Model {
 	/**
 	 * Transaction payment methods.
 	 *
-	 * @param string $context
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
 	 * @return mixed|null
 	 * @since 1.0.2
@@ -250,7 +258,7 @@ abstract class Transaction extends Resource_Model {
 	/**
 	 * Transaction reference.
 	 *
-	 * @param string $context
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
 	 * @return mixed|null
 	 * @since 1.0.2
@@ -262,7 +270,7 @@ abstract class Transaction extends Resource_Model {
 	/**
 	 * Get attachment url.
 	 *
-	 * @param string $context
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
 	 * @return mixed|null
 	 * @since 1.0.2
@@ -274,7 +282,7 @@ abstract class Transaction extends Resource_Model {
 	/**
 	 * Get associated parent payment id.
 	 *
-	 * @param string $context
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
 	 * @return mixed|null
 	 * @since 1.0.2
@@ -286,7 +294,7 @@ abstract class Transaction extends Resource_Model {
 	/**
 	 * Get if reconciled
 	 *
-	 * @param string $context
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
 	 * @return bool
 	 * @since 1.0.2
@@ -294,6 +302,7 @@ abstract class Transaction extends Resource_Model {
 	public function get_reconciled( $context = 'edit' ) {
 		return (bool) $this->get_prop( 'reconciled', $context );
 	}
+
 	/*
 	|--------------------------------------------------------------------------
 	| Setters
@@ -318,9 +327,9 @@ abstract class Transaction extends Resource_Model {
 	}
 
 	/**
-	 * Set transaction paid.
+	 * Set transaction date.
 	 *
-	 * @param $value
+	 * @param string $value Transaction date.
 	 *
 	 * @since 1.0.2
 	 */
@@ -331,7 +340,7 @@ abstract class Transaction extends Resource_Model {
 	/**
 	 * Set transaction amount.
 	 *
-	 * @param $value
+	 * @param string $value Amount.
 	 *
 	 * @since 1.0.2
 	 */
@@ -342,7 +351,7 @@ abstract class Transaction extends Resource_Model {
 	/**
 	 * Set currency code.
 	 *
-	 * @param $value
+	 * @param string $value Currency code.
 	 *
 	 * @since 1.0.2
 	 */
@@ -353,7 +362,7 @@ abstract class Transaction extends Resource_Model {
 	/**
 	 * Set currency rate.
 	 *
-	 * @param $value
+	 * @param string $value Currency rate.
 	 *
 	 * @since 1.0.2
 	 */
@@ -364,7 +373,7 @@ abstract class Transaction extends Resource_Model {
 	/**
 	 * Set account id.
 	 *
-	 * @param $value
+	 * @param int $value Account id.
 	 *
 	 * @since 1.0.2
 	 */
@@ -375,7 +384,7 @@ abstract class Transaction extends Resource_Model {
 	/**
 	 * Set invoice id.
 	 *
-	 * @param $value
+	 * @param int $value Invoice id.
 	 *
 	 * @since 1.0.2
 	 */
@@ -386,7 +395,7 @@ abstract class Transaction extends Resource_Model {
 	/**
 	 * Set contact id.
 	 *
-	 * @param $value
+	 * @param int $value Contact id.
 	 *
 	 * @since 1.0.2
 	 */
@@ -397,7 +406,7 @@ abstract class Transaction extends Resource_Model {
 	/**
 	 * Set category id.
 	 *
-	 * @param $value
+	 * @param int $value Category id.
 	 *
 	 * @since 1.0.2
 	 */
@@ -408,7 +417,7 @@ abstract class Transaction extends Resource_Model {
 	/**
 	 * Set description.
 	 *
-	 * @param $value
+	 * @param string $value Description.
 	 *
 	 * @since 1.0.2
 	 */
@@ -419,7 +428,7 @@ abstract class Transaction extends Resource_Model {
 	/**
 	 * Set payment method.
 	 *
-	 * @param $value
+	 * @param string $value  Payment method.
 	 *
 	 * @since 1.0.2
 	 */
@@ -432,7 +441,7 @@ abstract class Transaction extends Resource_Model {
 	/**
 	 * Set reference.
 	 *
-	 * @param $value
+	 * @param string $value Reference.
 	 *
 	 * @since 1.0.2
 	 */
@@ -443,7 +452,7 @@ abstract class Transaction extends Resource_Model {
 	/**
 	 * Set attachment.
 	 *
-	 * @param $value
+	 * @param string $value  Attachment ID.
 	 *
 	 * @since 1.0.2
 	 */
@@ -454,7 +463,7 @@ abstract class Transaction extends Resource_Model {
 	/**
 	 * Set parent id.
 	 *
-	 * @param $value
+	 * @param string $value  Parent id.
 	 *
 	 * @since 1.0.2
 	 */
@@ -465,7 +474,7 @@ abstract class Transaction extends Resource_Model {
 	/**
 	 * Set if reconciled.
 	 *
-	 * @param $value
+	 * @param string $value  yes or no.
 	 *
 	 * @since 1.0.2
 	 */
@@ -485,7 +494,7 @@ abstract class Transaction extends Resource_Model {
 	 * Save should create or update based on object existence.
 	 *
 	 * @return bool
-	 * @throws \Exception
+	 * @throws \Exception When invalid data is found.
 	 *
 	 * @since  1.1.0
 	 */
@@ -501,7 +510,7 @@ abstract class Transaction extends Resource_Model {
 			$this->set_currency_rate( $currency->get_rate() );
 		}
 
-		// saving same
+		// saving same.
 		return parent::save();
 	}
 }

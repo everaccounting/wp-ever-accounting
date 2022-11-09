@@ -75,7 +75,7 @@ class Customers extends CSV_Exporter {
 	/**
 	 * Take a customer and generate row data from it for export.
 	 *
-	 * @param \EverAccounting\Models\Customer $item
+	 * @param \EverAccounting\Models\Customer $item Customer object.
 	 *
 	 * @return array
 	 */

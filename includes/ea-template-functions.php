@@ -8,6 +8,8 @@
  * @package EverAccounting
  */
 
+use EverAccounting\Models\Invoice;
+
 defined( 'ABSPATH' ) || exit();
 
 /**
@@ -136,10 +138,11 @@ function eaccounting_get_template( $template_name, $args = array(), $template_pa
  * @param array  $args Arguments. (default: array).
  * @param string $template_path Template path. (default: '').
  * @param string $default_path Default path. (default: '').
+ *
+ * @since 1.0.2
  * @return string
  * @see   eaccounting_get_template
  *
- * @since 1.0.2
  */
 function eaccounting_get_template_html( $template_name, $args = array(), $template_path = '', $default_path = '' ) {
 	ob_start();
@@ -154,7 +157,7 @@ function eaccounting_get_template_html( $template_name, $args = array(), $templa
  *
  * since 1.0.2
  *
- * @param     string $template_name Template name.
+ * @param string $template_name Template name.
  * @param array  $args Arguments. (default: array).
  * @param null   $path Template path. (default: null).
  */
@@ -181,12 +184,11 @@ function eaccounting_get_admin_template( $template_name, $args = array(), $path 
 /**
  * Render admin template.
  *
+ * @param string $template_name Template name.
  * @param array  $args Arguments.
  *
- * @param string $template_name Template name.
- *
- * @return string
  * @since 1.0.0
+ * @return string
  */
 function eaccounting_get_admin_template_html( $template_name, $args = array() ) {
 	ob_start();
@@ -244,12 +246,29 @@ function eaccounting_render_body() {
 
 add_action( 'eaccounting_body', 'eaccounting_render_body' );
 
+/**
+ * Public invoice actions
+ *
+ * @param Invoice $invoice Invoice.
+ *
+ * @since 1.0.0
+ * @return void
+ */
 function eaccounting_public_invoice_actions( $invoice ) {
 	eaccounting_get_template( 'invoice-actions.php', array( 'invoice' => $invoice ) );
 }
 
 add_action( 'eaccounting_public_before_invoice', 'eaccounting_public_invoice_actions' );
 
+
+/**
+ * Output bill actions.
+ *
+ * @param \EverAccounting\Models\Bill $bill Bill.
+ *
+ * @since 1.0.0
+ * @return void
+ */
 function eaccounting_public_bill_actions( $bill ) {
 	eaccounting_get_template( 'bill-actions.php', array( 'bill' => $bill ) );
 }

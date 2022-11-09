@@ -30,7 +30,7 @@ function eaccounting_get_contact_types() {
 /**
  * Get the contact type label of a specific type.
  *
- * @param $type
+ * @param string $type Contact type.
  *
  * @return string
  * @since 1.1.0
@@ -45,7 +45,7 @@ function eaccounting_get_contact_type( $type ) {
 /**
  * Get customer.
  *
- * @param $customer
+ * @param mixed $customer Customer ID or object.
  *
  * @return \EverAccounting\Models\Customer|null
  * @since 1.1.0
@@ -68,9 +68,9 @@ function eaccounting_get_customer( $customer ) {
  *
  * @since 1.1.0
  *
- * @param $email
+ * @param string $email Customer email.
  *
- * @return \EverAccounting\Models\Customer
+ * @return \EverAccounting\Models\Customer | null
  */
 function eaccounting_get_customer_by_email( $email ) {
 	global $wpdb;
@@ -118,6 +118,7 @@ function eaccounting_get_customer_by_email( $email ) {
  * @type string $attachment Attachment attached with contact. Default null.
  *
  * }
+ * @param bool  $wp_error Optional. Whether to return a WP_Error on failure. Default false.
  *
  * @return EverAccounting\Models\Customer|\WP_Error|bool
  * @since 1.1.0
@@ -137,7 +138,7 @@ function eaccounting_insert_customer( $args, $wp_error = true ) {
 		// Load new data.
 		$item->set_props( $args );
 
-		// Save the item
+		// Save the item.
 		$item->save();
 
 		return $item;
@@ -149,7 +150,7 @@ function eaccounting_insert_customer( $args, $wp_error = true ) {
 /**
  * Delete a customer.
  *
- * @param $customer_id
+ * @param int $customer_id Customer ID.
  *
  * @return bool
  * @since 1.1.0
@@ -168,7 +169,7 @@ function eaccounting_delete_customer( $customer_id ) {
  * Get customers items.
  *
  * @param array $args {
- *
+ * An array of arguments.
  * @type int $id ID of the contact.
  * @type int $user_id user_id of the contact.
  * @type string $name name of the contact.
@@ -194,7 +195,7 @@ function eaccounting_get_customers( $args = array() ) {
 /**
  * Get vendor.
  *
- * @param $vendor
+ * @param mixed $vendor Vendor ID or object.
  *
  * @return \EverAccounting\Models\Vendor|null
  * @since 1.1.0
@@ -217,7 +218,7 @@ function eaccounting_get_vendor( $vendor ) {
  *
  * @since 1.1.0
  *
- * @param $email
+ * @param string $email Vendor email.
  *
  * @return \EverAccounting\Models\Vendor
  */
@@ -248,7 +249,7 @@ function eaccounting_get_vendor_by_email( $email ) {
  *  Returns a new vendor object on success.
  *
  * @param array $args {
- *                             An array of elements that make up a vendor to update or insert.
+ * An array of elements that make up a vendor to update or insert.
  *
  * @type int $id ID of the contact. If equal to something other than 0,
  *                               the post with that ID will be updated. Default 0.
@@ -268,6 +269,7 @@ function eaccounting_get_vendor_by_email( $email ) {
  * @type string $attachment Attachment attached with contact. Default null.
  *
  * }
+ * @param bool  $wp_error Optional. Whether to return a WP_Error on failure. Default false.
  *
  * @return EverAccounting\Models\Vendor|\WP_Error|bool
  * @since 1.1.0
@@ -287,7 +289,7 @@ function eaccounting_insert_vendor( $args, $wp_error = true ) {
 		// Load new data.
 		$item->set_props( $args );
 
-		// Save the item
+		// Save the item.
 		$item->save();
 
 		return $item;
@@ -299,7 +301,7 @@ function eaccounting_insert_vendor( $args, $wp_error = true ) {
 /**
  * Delete a vendor.
  *
- * @param $vendor_id
+ * @param int $vendor_id Vendor ID.
  *
  * @return bool
  * @since 1.1.0
@@ -318,7 +320,7 @@ function eaccounting_delete_vendor( $vendor_id ) {
  * Get vendors items.
  *
  * @param array $args {
- *
+ * An array of elements that make up a vendor to update or insert.
  * @type int $id ID of the contact.
  * @type int $user_id user_id of the contact.
  * @type string $name name of the contact.
@@ -346,7 +348,7 @@ function eaccounting_get_vendors( $args = array() ) {
  * Get customers items.
  *
  * @param array $args {
- *
+ * An array of elements that make up a customer to update or insert.
  * @type int $id ID of the contact.
  * @type int $user_id user_id of the contact.
  * @type string $name name of the contact.
@@ -404,13 +406,13 @@ function eaccounting_get_contacts( $args = array() ) {
 		$exclude = implode( ',', wp_parse_id_list( $qv['exclude'] ) );
 		$where  .= " AND $table.`id` NOT IN ($exclude)";
 	}
-	// search
+	// search.
 	$search_cols = array( 'id', 'name', 'email', 'phone', 'street', 'country' );
 	if ( ! empty( $qv['search'] ) ) {
 		$searches = array();
 		$where   .= ' AND (';
 		foreach ( $search_cols as $col ) {
-			$searches[] = $wpdb->prepare( $col . ' LIKE %s', '%' . $wpdb->esc_like( $qv['search'] ) . '%' );
+			$searches[] = $wpdb->prepare( $col . ' LIKE %s', '%' . $wpdb->esc_like( $qv['search'] ) . '%' ); // phpcs:ignore
 		}
 		$where .= implode( ' OR ', $searches );
 		$where .= ')';
@@ -458,16 +460,16 @@ function eaccounting_get_contacts( $args = array() ) {
 	$from        = "FROM {$wpdb->prefix}$table $table";
 	$orderby     = "ORDER BY {$orderby} {$order}";
 	$count_total = true === $qv['count_total'];
-	$cache_key   = 'query:' . md5( serialize( $qv ) ) . ':' . wp_cache_get_last_changed( 'ea_contacts' );
+	$cache_key   = 'query:' . md5( maybe_serialize( $qv ) ) . ':' . wp_cache_get_last_changed( 'ea_contacts' );
 	$results     = wp_cache_get( $cache_key, 'ea_contacts' );
 	$clauses     = compact( 'select', 'from', 'where', 'orderby', 'limit' );
 
 	if ( false === $results ) {
 		if ( $count_total ) {
-			$results = (int) $wpdb->get_var( "SELECT COUNT(id) $from $where" );
+			$results = (int) $wpdb->get_var( "SELECT COUNT(id) $from $where" ); // phpcs:ignore
 			wp_cache_set( $cache_key, $results, 'ea_contacts' );
 		} else {
-			$results = $wpdb->get_results( implode( ' ', $clauses ) );
+			$results = $wpdb->get_results( implode( ' ', $clauses ) ); // phpcs:ignore
 			if ( in_array( $fields, array( 'all', '*' ), true ) ) {
 				foreach ( $results as $key => $item ) {
 					if ( ! empty( $item->email ) ) {

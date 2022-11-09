@@ -25,7 +25,7 @@ function eaccounting_get_currency_codes() {
 /**
  * Check if currency code is a valid one.
  *
- * @param $code
+ * @param string $code Currency code.
  *
  * @return string
  * @since 1.1.0
@@ -50,7 +50,7 @@ function eaccounting_sanitize_currency_code( $code ) {
  * Whenever need to check existence of the object
  * in database must check $currency->exist()
  *
- * @param object|string|int $currency
+ * @param object|string|int $currency Currency object, code or ID.
  *
  * @return EverAccounting\Models\Currency|null
  * @since 1.1.0
@@ -60,16 +60,16 @@ function eaccounting_get_currency( $currency ) {
 		return null;
 	}
 	try {
-		$result = new EverAccounting\Models\Currency( $currency );
-
-		return $result;
+		return new EverAccounting\Models\Currency( $currency );
 	} catch ( \Exception $e ) {
 		return null;
 	}
 }
 
 /**
- * @param $currency
+ * Get currency rate.
+ *
+ * @param string $currency Currency code.
  *
  * @return mixed|null
  * @since 1.1.0
@@ -115,8 +115,8 @@ function eaccounting_get_currency_rate( $currency ) {
  *
  * @type string $date_created The date when the currency is created. Default is current time.
  *
- *
  * }
+ * @param bool  $wp_error Optional. Whether to return a WP_Error on failure. Default false.
  *
  * @return EverAccounting\Models\Currency|\WP_Error|bool
  * @since 1.1.0
@@ -140,7 +140,7 @@ function eaccounting_insert_currency( $args, $wp_error = true ) {
 		// Load new data.
 		$item->set_props( $args );
 
-		// Save the item
+		// Save the item.
 		$item->save();
 
 		return $item;
@@ -152,7 +152,7 @@ function eaccounting_insert_currency( $args, $wp_error = true ) {
 /**
  * Delete a currency.
  *
- * @param $currency_code
+ * @param string $currency_code Currency code.
  *
  * @return bool
  * @since 1.1.0
@@ -170,7 +170,7 @@ function eaccounting_delete_currency( $currency_code ) {
 /**
  * Get currency items.
  *
- * @param array $args
+ * @param array $args Query arguments.
  *
  * @return array|int|null
  * @since 1.1.0

@@ -37,13 +37,13 @@ function eaccounting_get_upload_dir() {
  * @return array
  */
 function eaccounting_scan_folders( $path = '', $return = array() ) {
-	$path  = $path == '' ? dirname( __FILE__ ) : $path;
-	$lists = @scandir( $path );
+	$path  = '' === $path ? dirname( __FILE__ ) : $path;
+	$lists = @scandir( $path ); // phpcs:ignore
 
 	if ( ! empty( $lists ) ) {
 		foreach ( $lists as $f ) {
-			if ( is_dir( $path . DIRECTORY_SEPARATOR . $f ) && $f != '.' && $f != '..' ) {
-				if ( ! in_array( $path . DIRECTORY_SEPARATOR . $f, $return ) ) {
+			if ( is_dir( $path . DIRECTORY_SEPARATOR . $f ) && $f !== '.' && $f !== '..' ) { // phpcs:ignore
+				if ( ! in_array( $path . DIRECTORY_SEPARATOR . $f, $return, true ) ) {
 					$return[] = trailingslashit( $path . DIRECTORY_SEPARATOR . $f );
 				}
 
@@ -80,19 +80,19 @@ function eaccounting_protect_files( $force = false ) {
 			$rule .= "Order Allow,Deny\n";
 			$rule .= "Allow from all\n";
 			$rule .= "</FilesMatch>\n";
-			@file_put_contents( $htaccess, $rule );
+			@file_put_contents( $htaccess, $rule ); // phpcs:ignore
 		}
 
 		// Top level blank index.php.
 		if ( ! file_exists( $base_dir . '/index.php' ) && wp_is_writable( $base_dir ) ) {
-			@file_put_contents( $base_dir . '/index.php', '<?php' . PHP_EOL . '// Silence is golden.' );
+			@file_put_contents( $base_dir . '/index.php', '<?php' . PHP_EOL . '// Silence is golden.' ); // phpcs:ignore
 		}
 
 		$folders = eaccounting_scan_folders( $base_dir );
 		foreach ( $folders as $folder ) {
 			// Create index.php, if it doesn't exist.
 			if ( ! file_exists( $folder . 'index.php' ) && wp_is_writable( $folder ) ) {
-				@file_put_contents( $folder . 'index.php', '<?php' . PHP_EOL . '// Silence is golden.' );
+				@file_put_contents( $folder . 'index.php', '<?php' . PHP_EOL . '// Silence is golden.' ); // phpcs:ignore
 			}
 		}
 
@@ -131,7 +131,15 @@ function eaccounting_handle_upload_folder( $pathdata ) {
 
 add_filter( 'upload_dir', 'eaccounting_handle_upload_folder' );
 
-
+/**
+ * Handle assets name.
+ *
+ * @param string $full_filename Full filename.
+ * @param string $ext Extension.
+ * @param string $dir Directory.
+ *
+ * @return array|mixed|string|string[]
+ */
 function eaccounting_handle_assets_name( $full_filename, $ext, $dir ) {
 	$type = filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING );
 	if ( ! isset( $type ) || ! 'eaccounting_file' === $type ) {

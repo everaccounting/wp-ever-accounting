@@ -39,7 +39,7 @@ abstract class Assets {
 	/**
 	 * Assets constructor.
 	 *
-	 * @param string|null $plugin_file
+	 * @param string|null $plugin_file Plugin file.
 	 */
 	public function __construct( $plugin_file = null ) {
 		$plugin_file = is_null( $plugin_file ) ? EACCOUNTING_PLUGIN_FILE : $plugin_file;
@@ -96,7 +96,7 @@ abstract class Assets {
 	 * @param string $handle style handler.
 	 * @param string $file_path style file path.
 	 * @param array  $dependencies style dependencies.
-	 * @param bool   $has_rtl support RTL?
+	 * @param bool   $has_rtl support RTL?.
 	 */
 	protected function register_style( $handle, $file_path, $dependencies = array(), $has_rtl = true ) {
 		$filename = is_null( $file_path ) ? $handle : $file_path;
@@ -118,7 +118,7 @@ abstract class Assets {
 	 * Registers a script according to `wp_register_script`, additionally loading the translations for the file.
 	 *
 	 * @param string $handle Name of the script. Should be unique.
-	 * @param string $file_path file path from dist directory
+	 * @param string $file_path file path from dist directory.
 	 * @param array  $dependencies Optional. An array of registered script handles this script depends on. Default empty array.
 	 * @param bool   $has_i18n Optional. Whether to add a script translation call to this file. Default 'true'.
 	 *

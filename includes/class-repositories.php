@@ -7,6 +7,7 @@
  * for handling the object's insert, update, delete.
  *
  * @since 1.1.0
+ * @package EverAccounting
  */
 
 namespace EverAccounting;
@@ -83,6 +84,8 @@ class Repositories {
 	 * Initiate the correct repository for the object.
 	 *
 	 * @param string $object_type Name of object.
+	 *
+	 * @throws \Exception If the object type is not supported.
 	 */
 	public function __construct( $object_type ) {
 		$this->object_type  = $object_type;
@@ -208,13 +211,12 @@ class Repositories {
 		$this->instance->delete( $data );
 	}
 
-
 	/**
 	 * Repository can define additional function. This passes
 	 * through to the instance if that function exists.
 	 *
 	 * @param string $method Method.
-	 *
+	 * @param array  $parameters Parameters.
 	 * @return mixed
 	 * @since 1.1.0
 	 */

@@ -40,9 +40,9 @@ class Batch extends Registry {
 	 * @since  1.0.2
 	 */
 	public function includes() {
-		// exporters
+		// exporters.
 		require_once EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-csv-exporter.php';
-		// importers
+		// importers.
 		require_once EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-csv-importer.php';
 	}
 

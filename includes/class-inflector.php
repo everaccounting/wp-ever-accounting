@@ -25,7 +25,7 @@ class Inflector {
 	 * @since 1.0.0
 	 * @var string[]
 	 */
-	static $plural = array(
+	public static $plural = array(
 		'/(quiz)$/i'                     => '$1zes',
 		'/^(ox)$/i'                      => '$1en',
 		'/([m|l])ouse$/i'                => '$1ice',
@@ -53,7 +53,7 @@ class Inflector {
 	 * @since 1.0.0
 	 * @var string[]
 	 */
-	static $singular = array(
+	public static $singular = array(
 		'/(quiz)zes$/i'              => '$1',
 		'/(matr)ices$/i'             => '$1ix',
 		'/(vert|ind)ices$/i'         => '$1ex',
@@ -90,7 +90,7 @@ class Inflector {
 	 * @since 1.0.0
 	 * @var string[]
 	 */
-	static $irregular = array(
+	public static $irregular = array(
 		'move'   => 'moves',
 		'foot'   => 'feet',
 		'goose'  => 'geese',
@@ -108,7 +108,7 @@ class Inflector {
 	 * @since 1.0.0
 	 * @var string[]
 	 */
-	static $uncountable = array(
+	public static $uncountable = array(
 		'sheep',
 		'fish',
 		'deer',
@@ -144,7 +144,7 @@ class Inflector {
 			}
 		}
 
-		// check for matches using regular expressions
+		// check for matches using regular expressions.
 		foreach ( self::$plural as $pattern => $result ) {
 			if ( preg_match( $pattern, $string ) ) {
 				return preg_replace( $pattern, $result, $string );

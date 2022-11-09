@@ -83,7 +83,6 @@ class Item extends Resource_Model {
 			$this->set_object_read( true );
 		}
 
-		// Load repository
 		$this->repository = Repositories::load( 'items' );
 
 		if ( $this->get_id() > 0 ) {
@@ -118,7 +117,9 @@ class Item extends Resource_Model {
 	*/
 
 	/**
-	 * @param string $context
+	 * Get item name.
+	 *
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
 	 * @return mixed|null
 	 * @since 1.1.0
@@ -128,7 +129,9 @@ class Item extends Resource_Model {
 	}
 
 	/**
-	 * @param string $context
+	 * Get item SKU.
+	 *
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
 	 * @return mixed|null
 	 * @since 1.1.0
@@ -138,7 +141,9 @@ class Item extends Resource_Model {
 	}
 
 	/**
-	 * @param string $context
+	 * Get thumbnail ID.
+	 *
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
 	 * @return mixed|null
 	 * @since 1.1.0
@@ -148,7 +153,9 @@ class Item extends Resource_Model {
 	}
 
 	/**
-	 * @param string $context
+	 * Get item description.
+	 *
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
 	 * @return mixed|null
 	 * @since 1.1.0
@@ -158,7 +165,9 @@ class Item extends Resource_Model {
 	}
 
 	/**
-	 * @param string $context
+	 * Get item sale price.
+	 *
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
 	 * @return mixed|null
 	 * @since 1.1.0
@@ -168,7 +177,9 @@ class Item extends Resource_Model {
 	}
 
 	/**
-	 * @param string $context
+	 * Get the sale price.
+	 *
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
 	 * @return mixed|null
 	 * @since 1.1.0
@@ -183,7 +194,9 @@ class Item extends Resource_Model {
 	}
 
 	/**
-	 * @param string $context
+	 * Get the item's quantity.
+	 *
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
 	 * @return mixed|null
 	 * @since 1.1.0
@@ -193,7 +206,9 @@ class Item extends Resource_Model {
 	}
 
 	/**
-	 * @param string $context
+	 * Get the item's category ID.
+	 *
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
 	 * @return mixed|null
 	 * @since 1.1.0
@@ -203,7 +218,9 @@ class Item extends Resource_Model {
 	}
 
 	/**
-	 * @param string $context
+	 * Get the sales tax.
+	 *
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
 	 * @return mixed|null
 	 * @since 1.1.0
@@ -213,7 +230,9 @@ class Item extends Resource_Model {
 	}
 
 	/**
-	 * @param string $context
+	 * Get the purchase tax.
+	 *
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
 	 * @return mixed|null
 	 * @since 1.1.0
@@ -233,7 +252,9 @@ class Item extends Resource_Model {
 	*/
 
 	/**
-	 * @param $name
+	 * Set item name.
+	 *
+	 * @param string $name Item name.
 	 *
 	 * @since 1.1.0
 	 */
@@ -242,7 +263,9 @@ class Item extends Resource_Model {
 	}
 
 	/**
-	 * @param $sku
+	 * Set the SKU.
+	 *
+	 * @param string $sku Item SKU.
 	 *
 	 * @since 1.1.0
 	 */
@@ -251,7 +274,9 @@ class Item extends Resource_Model {
 	}
 
 	/**
-	 * @param $thumbnail_id
+	 * Set the item thumbnail.
+	 *
+	 * @param int $thumbnail_id Attachment ID.
 	 *
 	 * @since 1.1.0
 	 */
@@ -260,7 +285,9 @@ class Item extends Resource_Model {
 	}
 
 	/**
-	 * @param $description
+	 * Set the description.
+	 *
+	 * @param string $description Item description.
 	 *
 	 * @since 1.1.0
 	 */
@@ -269,7 +296,9 @@ class Item extends Resource_Model {
 	}
 
 	/**
-	 * @param $sale_price
+	 * Set the sale price.
+	 *
+	 * @param float $sale_price Item sale price.
 	 *
 	 * @since 1.1.0
 	 */
@@ -278,7 +307,9 @@ class Item extends Resource_Model {
 	}
 
 	/**
-	 * @param $purchase_price
+	 * Set purchase price.
+	 *
+	 * @param float $purchase_price Purchase price.
 	 *
 	 * @since 1.1.0
 	 */
@@ -287,7 +318,9 @@ class Item extends Resource_Model {
 	}
 
 	/**
-	 * @param $quantity
+	 * Set quantity.
+	 *
+	 * @param int $quantity Quantity to add to the current quantity.
 	 *
 	 * @since 1.1.0
 	 */
@@ -296,7 +329,9 @@ class Item extends Resource_Model {
 	}
 
 	/**
-	 * @param $category_id
+	 * Set category id.
+	 *
+	 * @param int $category_id Category ID.
 	 *
 	 * @since 1.1.0
 	 */
@@ -305,7 +340,9 @@ class Item extends Resource_Model {
 	}
 
 	/**
-	 * @param $tax
+	 * Set sales tax.
+	 *
+	 * @param float $tax Sales tax.
 	 *
 	 * @since 1.1.0
 	 */
@@ -314,7 +351,9 @@ class Item extends Resource_Model {
 	}
 
 	/**
-	 * @param $tax_ids
+	 * Set the purchase tax.
+	 *
+	 * @param string $tax Tax.
 	 *
 	 * @since 1.1.0
 	 */

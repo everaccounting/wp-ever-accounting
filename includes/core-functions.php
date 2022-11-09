@@ -86,7 +86,7 @@ function eaccounting_get_financial_start( $year = null, $format = 'Y-m-d' ) {
  * @param null   $year Year.
  * @param string $format Date format.
  *
- * @throws \Exception
+ * @throws \Exception Exception.
  * @return string
  */
 function eaccounting_get_financial_end( $year = null, $format = 'Y-m-d' ) {
@@ -369,7 +369,7 @@ function eaccounting_collect( $items ) {
  */
 function eaccounting_doing_it_wrong( $function, $message, $version ) {
 
-	$message .= ' Backtrace: ' . wp_debug_backtrace_summary();
+	$message .= ' Backtrace: ' . wp_debug_backtrace_summary(); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_wp_debug_backtrace_summary
 
 	if ( wp_doing_ajax() || defined( 'REST_REQUEST' ) ) {
 		do_action( 'doing_it_wrong_run', $function, $message, $version );
@@ -468,6 +468,8 @@ function eaccounting_list_pluck( $list, $callback_or_field, $index_key = null ) 
 
 /**
  * Sets the last changed time for cache group.
+ *
+ * @param string $group Cache group.
  *
  * @since 1.1.0
  * @return void

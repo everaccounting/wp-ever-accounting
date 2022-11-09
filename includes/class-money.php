@@ -1,10 +1,13 @@
 <?php
 /**
+ *
  * Handle the money object
  *
  * @package        EverAccounting
  * @version        1.0.2
  */
+
+// phpcs:disable WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid, WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase
 
 namespace EverAccounting;
 
@@ -25,16 +28,18 @@ class Money {
 	const ROUND_HALF_ODD  = PHP_ROUND_HALF_ODD;
 
 	/**
-	 * @since 1.0.2
+	 * Amount.
 	 *
+	 * @since 1.0.2
 	 * @var float|int
 	 */
 	protected $amount;
 
 	/**
-	 * @since 1.0.2
+	 * Currency object
 	 *
-	 * @var \EverAccounting\Models\Currency
+	 * @since 1.0.2
+	 * @var Currency
 	 */
 	protected $currency;
 
@@ -43,14 +48,14 @@ class Money {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param string $amount Amount to convert
-	 * @param string $code Currency object
-	 * @param bool   $convert
+	 * @param string $amount Amount to convert.
+	 * @param string $code Currency object.
+	 * @param bool   $convert Convert to default currency.
 	 *
-	 * @throws \Exception
+	 * @throws \Exception If currency is not found.
 	 */
 	public function __construct( $amount, $code, $convert = false ) {
-		$this->currency = new \EverAccounting\Models\Currency( $code );
+		$this->currency = new Currency( $code );
 		$this->amount   = $this->parseAmount( $amount, $convert );
 	}
 
@@ -59,10 +64,10 @@ class Money {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param mixed $amount
-	 * @param bool  $convert
+	 * @param mixed $amount Amount to convert.
+	 * @param bool  $convert Convert to default currency.
 	 *
-	 * @throws \UnexpectedValueException
+	 * @throws \UnexpectedValueException If currency is not found.
 	 * @return int|float
 	 */
 	protected function parseAmount( $amount, $convert = false ) {
@@ -83,7 +88,7 @@ class Money {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param mixed $amount
+	 * @param mixed $amount Amount to convert.
 	 *
 	 * @return mixed
 	 */
@@ -100,7 +105,7 @@ class Money {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param mixed $amount
+	 * @param mixed $amount Amount to convert.
 	 *
 	 * @return int|float|mixed
 	 */
@@ -137,8 +142,8 @@ class Money {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param int|float $amount
-	 * @param bool      $convert
+	 * @param int|float $amount Amount to convert.
+	 * @param bool      $convert Convert to default currency.
 	 *
 	 * @return int|float
 	 */
@@ -155,8 +160,8 @@ class Money {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param string $method
-	 * @param array  $arguments
+	 * @param string $method    Method name.
+	 * @param array  $arguments Method arguments.
 	 *
 	 * @return Money
 	 */
@@ -171,11 +176,11 @@ class Money {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param Money $other
+	 * @param Money $other Other money object.
 	 *
-	 * @throws \InvalidArgumentException
+	 * @throws \InvalidArgumentException If currency is not the same.
 	 */
-	protected function assertSameCurrency( self $other ) {
+	protected function assertSameCurrency( $other ) {
 		if ( ! $this->isSameCurrency( $other ) ) {
 			throw new \InvalidArgumentException( 'Different currencies "' . $this->currency . '" and "' . $other->currency . '"' );
 		}
@@ -186,9 +191,9 @@ class Money {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param int|float $operand
+	 * @param int|float $operand    Operand.
 	 *
-	 * @throws \InvalidArgumentException
+	 * @throws \InvalidArgumentException If operand is not numeric.
 	 */
 	protected function assertOperand( $operand ) {
 		if ( ! is_int( $operand ) && ! is_float( $operand ) ) {
@@ -201,14 +206,14 @@ class Money {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param int $roundingMode
+	 * @param int $roundingMode Rounding mode.
 	 *
-	 * @throws \OutOfBoundsException
+	 * @throws \OutOfBoundsException If rounding mode is not valid.
 	 */
 	protected function assertRoundingMode( $roundingMode ) {
 		$roundingModes = array( self::ROUND_HALF_DOWN, self::ROUND_HALF_EVEN, self::ROUND_HALF_ODD, self::ROUND_HALF_UP );
 
-		if ( ! in_array( $roundingMode, $roundingModes ) ) {
+		if ( ! in_array( $roundingMode, $roundingModes, true ) ) {
 			throw new \OutOfBoundsException( 'Rounding mode should be ' . implode( ' | ', $roundingModes ) );
 		}
 	}
@@ -255,11 +260,11 @@ class Money {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param Money $other
+	 * @param Money $other Other money object.
 	 *
 	 * @return bool
 	 */
-	public function isSameCurrency( self $other ) {
+	public function isSameCurrency( $other ) {
 		return $this->currency->equals( $other->currency );
 	}
 
@@ -268,12 +273,12 @@ class Money {
 	 *
 	 * @since       1.0.2
 	 *
-	 * @param Money $other
+	 * @param Money $other Money to compare.
 	 *
-	 * @throws \InvalidArgumentException
+	 * @throws \InvalidArgumentException If currency is not the same.
 	 * @return int
 	 */
-	public function compare( self $other ) {
+	public function compare( $other ) {
 		$this->assertSameCurrency( $other );
 
 		if ( $this->amount < $other->amount ) {
@@ -292,11 +297,11 @@ class Money {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param Money $other
+	 * @param Money $other Money to compare.
 	 *
 	 * @return bool
 	 */
-	public function equals( self $other ) {
+	public function equals( $other ) {
 		return $this->compare( $other ) === 0;
 	}
 
@@ -305,11 +310,11 @@ class Money {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param Money $other
+	 * @param Money $other Money to compare.
 	 *
 	 * @return bool
 	 */
-	public function greaterThan( self $other ) {
+	public function greaterThan( $other ) {
 		return $this->compare( $other ) === 1;
 	}
 
@@ -318,11 +323,11 @@ class Money {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param Money $other
+	 * @param Money $other  Money to compare.
 	 *
 	 * @return bool
 	 */
-	public function greaterThanOrEqual( self $other ) {
+	public function greaterThanOrEqual( $other ) {
 		return $this->compare( $other ) >= 0;
 	}
 
@@ -331,11 +336,11 @@ class Money {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param Money $other
+	 * @param Money $other Money to compare.
 	 *
 	 * @return bool
 	 */
-	public function lessThan( self $other ) {
+	public function lessThan( $other ) {
 		return $this->compare( $other ) === - 1;
 	}
 
@@ -344,11 +349,11 @@ class Money {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param Money $other
+	 * @param Money $other Money to compare.
 	 *
 	 * @return bool
 	 */
-	public function lessThanOrEqual( self $other ) {
+	public function lessThanOrEqual( $other ) {
 		return $this->compare( $other ) <= 0;
 	}
 
@@ -357,12 +362,12 @@ class Money {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param Currency  $currency
-	 * @param int|float $ratio
-	 * @param int       $roundingMode
+	 * @param Currency  $currency    Currency.
+	 * @param int|float $ratio    Conversion ratio.
+	 * @param int       $roundingMode Rounding mode.
 	 *
-	 * @throws \InvalidArgumentException
-	 * @throws \OutOfBoundsException
+	 * @throws \InvalidArgumentException If ratio is not numeric.
+	 * @throws \OutOfBoundsException If rounding mode is not valid.
 	 *
 	 * @return Money
 	 */
@@ -384,11 +389,11 @@ class Money {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param Money $addend
+	 * @param Money $addend Money to add.
 	 *
 	 * @return Money
 	 */
-	public function add( self $addend ) {
+	public function add( $addend ) {
 		$this->assertSameCurrency( $addend );
 
 		return new self( $this->amount + $addend->amount, $this->currency );
@@ -399,12 +404,12 @@ class Money {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param Money $subtrahend
+	 * @param Money $subtrahend Money to subtract.
 	 *
-	 * @throws \InvalidArgumentException
+	 * @throws \InvalidArgumentException|\Exception If currency is not the same.
 	 * @return Money
 	 */
-	public function subtract( self $subtrahend ) {
+	public function subtract( $subtrahend ) {
 		$this->assertSameCurrency( $subtrahend );
 
 		return new self( $this->amount - $subtrahend->amount, $this->currency );
@@ -415,11 +420,11 @@ class Money {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param int|float $multiplier
-	 * @param int       $roundingMode
+	 * @param int|float $multiplier Multiplier.
+	 * @param int       $roundingMode Rounding mode.
 	 *
-	 * @throws \InvalidArgumentException
-	 * @throws \OutOfBoundsException
+	 * @throws \InvalidArgumentException If multiplier is not numeric.
+	 * @throws \OutOfBoundsException If rounding mode is not valid.
 	 *
 	 * @return Money
 	 */
@@ -432,11 +437,11 @@ class Money {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param int|float $divisor
-	 * @param int       $roundingMode
+	 * @param int|float $divisor Divisor.
+	 * @param int       $roundingMode Rounding mode.
 	 *
-	 * @throws \InvalidArgumentException
-	 * @throws \OutOfBoundsException
+	 * @throws \InvalidArgumentException If divisor is not numeric.
+	 * @throws \OutOfBoundsException If rounding mode is not valid.
 	 *
 	 * @return Money
 	 */
@@ -457,7 +462,7 @@ class Money {
 	 *
 	 * @since  1.0.2
 	 *
-	 * @param array $ratios
+	 * @param array $ratios Ratios.
 	 *
 	 * @return array
 	 */
@@ -488,7 +493,7 @@ class Money {
 	 * @return bool
 	 */
 	public function isZero() {
-		return $this->amount === 0;
+		return 0 === $this->amount;
 	}
 
 	/**
@@ -567,14 +572,14 @@ class Money {
 	/**
 	 * Convert the object to its JSON representation.
 	 *
-	 * @param int $options
+	 * @param int $options Options.
 	 *
 	 * @since 1.0.2
 	 *
 	 * @return string
 	 */
 	public function toJson( $options = 0 ) {
-		return json_encode( $this->toArray(), $options );
+		return wp_json_encode( $this->toArray(), $options );
 	}
 
 	/**
@@ -599,3 +604,5 @@ class Money {
 		return $this->format();
 	}
 }
+
+// phpcs:enable WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid, WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase

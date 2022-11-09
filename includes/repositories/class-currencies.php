@@ -32,6 +32,8 @@ class Currencies extends Resource_Repository {
 	const OPTION = 'eaccounting_currencies';
 
 	/**
+	 * Get table name.
+	 *
 	 * @since 1.1.0
 	 *
 	 * @var string
@@ -68,7 +70,7 @@ class Currencies extends Resource_Repository {
 	 *
 	 * @param Resource_Model $item Item object.
 	 *
-	 * @throws \Exception | @return bool
+	 * @throws \Exception If item is not an instance of Resource_Model.
 	 */
 	public function insert( &$item ) {
 		$values = array();
@@ -101,7 +103,7 @@ class Currencies extends Resource_Repository {
 	 *
 	 * @param Currency $item Item object.
 	 *
-	 * @throws \Exception
+	 * @throws \Exception If item is not an instance of Resource_Model.
 	 */
 	public function read( &$item ) {
 		if ( empty( $item->get_code() ) ) {
@@ -140,7 +142,7 @@ class Currencies extends Resource_Repository {
 	 *
 	 * @param Resource_Model $item Subscription object.
 	 *
-	 * @throws \Exception
+	 * @throws \Exception If item is not an instance of Resource_Model.
 	 */
 	public function update( &$item ) {
 		$changes = $item->get_changes();
@@ -171,7 +173,7 @@ class Currencies extends Resource_Repository {
 	/**
 	 * Method to delete a subscription from the database.
 	 *
-	 * @param Resource_Model $item
+	 * @param Resource_Model $item Subscription object.
 	 */
 	public function delete( &$item ) {
 		$code       = $item->get_code();

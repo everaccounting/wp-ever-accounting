@@ -4,7 +4,7 @@
  *
  * @since   1.0.2
  *
- * @package EverAccounting\Export
+ * @package EverAccounting
  */
 
 namespace EverAccounting\Export;
@@ -70,7 +70,7 @@ class Vendors extends CSV_Exporter {
 	/**
 	 * Take a vendor and generate row data from it for export.
 	 *
-	 * @param \EverAccounting\Models\Vendor $item
+	 * @param \EverAccounting\Models\Vendor $item Vendor object.
 	 *
 	 * @return array
 	 */
@@ -101,7 +101,7 @@ class Vendors extends CSV_Exporter {
 					$value = $item->get_city();
 					break;
 				case 'state':
-					$value = $item->get_street();
+					$value = $item->get_state();
 					break;
 				case 'postcode':
 					$value = $item->get_postcode();

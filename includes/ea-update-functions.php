@@ -8,6 +8,8 @@
  * @version 1.0.2
  */
 
+// phpcs:ignoreFile
+
 defined( 'ABSPATH' ) || exit;
 
 function eaccounting_add_background_updater( $action ) {
@@ -24,7 +26,7 @@ function eaccounting_remove_background_updater( $action ) {
 		return;
 	}
 	$updater = get_option( 'eaccounting_background_updater', array() );
-	if ( in_array( $action, $updater ) ) {
+	if ( in_array( $action, $updater, true ) ) {
 		unset( $updater[ array_flip( $updater )[ $action ] ] );
 		update_option( 'eaccounting_background_updater', $updater );
 	}

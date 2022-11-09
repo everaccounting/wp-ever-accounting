@@ -8,6 +8,8 @@
  * @package EverAccounting\Classes
  */
 
+// phpcs:ignoreFile
+
 namespace EverAccounting\Abstracts;
 
 defined( 'ABSPATH' ) || exit;

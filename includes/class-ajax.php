@@ -178,9 +178,8 @@ class Ajax {
 	 */
 	public static function get_expense_categories() {
 		self::verify_nonce( 'ea_categories' );
-		$search = isset( $_REQUEST['search'] ) ? eaccounting_clean( wp_unslash( $_REQUEST['search'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$page   = isset( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-
+		$search = filter_input( INPUT_GET, 'search', FILTER_SANITIZE_STRING );
+		$page   = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_NUMBER_INT );
 		wp_send_json_success(
 			eaccounting_get_categories(
 				array(
@@ -201,8 +200,8 @@ class Ajax {
 	 */
 	public static function get_income_categories() {
 		self::verify_nonce( 'ea_categories' );
-		$search = isset( $_REQUEST['search'] ) ? eaccounting_clean( wp_unslash( $_REQUEST['search'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$page   = isset( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$search = filter_input( INPUT_GET, 'search', FILTER_SANITIZE_STRING );
+		$page   = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_NUMBER_INT );
 
 		wp_send_json_success(
 			eaccounting_get_categories(
@@ -282,6 +281,7 @@ class Ajax {
 	 *
 	 * @return void
 	 * @since 1.1.0
+	 * @throws \Exception When error.
 	 */
 	public static function add_invoice_payment() {
 		self::verify_nonce( 'ea_add_invoice_payment' );
@@ -532,6 +532,7 @@ class Ajax {
 	 *
 	 * @return void
 	 * @since 1.1.0
+	 * @throws \Exception Error message.
 	 */
 	public static function add_bill_payment() {
 		self::verify_nonce( 'ea_add_bill_payment' );
@@ -1125,7 +1126,7 @@ class Ajax {
 	 *
 	 * since 1.0.2
 	 *
-	 * @param string $cap
+	 * @param string $cap capability.
 	 */
 	public static function check_permission( $cap = 'manage_eaccounting' ) {
 		if ( ! current_user_can( $cap ) ) {

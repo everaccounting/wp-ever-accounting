@@ -77,7 +77,6 @@ class Currency extends Resource_Model {
 			$this->set_object_read( true );
 		}
 
-		// Load repository
 		$this->repository = Repositories::load( 'currencies' );
 
 		if ( ! empty( $this->get_code() ) ) {
@@ -103,24 +102,13 @@ class Currency extends Resource_Model {
 	| just returning from the props.
 	|
 	*/
-	/**
-	 * Returns the unique ID for this object.
-	 *
-	 * @since  1.1.0
-	 * @deprecatd 1.1.0
-	 * @return int
-	 */
-	public function get_id() {
-		// eaccounting_doing_it_wrong( __METHOD__, __( 'For currency get_id() calling is discoursed use get_code()', 'wp-ever-accounting' ), 'Currency::get_code' );
-		return parent::get_id();
-	}
 
 	/**
 	 * Get currency name.
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param string $context
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
 	 * @return string
 	 */
@@ -133,7 +121,7 @@ class Currency extends Resource_Model {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param string $context
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
 	 * @return string
 	 */
@@ -146,7 +134,7 @@ class Currency extends Resource_Model {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param string $context
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
 	 * @return string
 	 */
@@ -159,7 +147,7 @@ class Currency extends Resource_Model {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param string $context
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
 	 * @return string
 	 */
@@ -172,7 +160,7 @@ class Currency extends Resource_Model {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param string $context
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
 	 * @return string
 	 */
@@ -185,7 +173,7 @@ class Currency extends Resource_Model {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param string $context
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
 	 * @return string
 	 */
@@ -198,7 +186,7 @@ class Currency extends Resource_Model {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param string $context
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
 	 * @return string
 	 */
@@ -211,7 +199,7 @@ class Currency extends Resource_Model {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param string $context
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
 	 * @return string
 	 */
@@ -224,7 +212,7 @@ class Currency extends Resource_Model {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param string $context
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
 	 * @return string
 	 */
@@ -237,7 +225,7 @@ class Currency extends Resource_Model {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param string $context
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
 	 * @return string
 	 */
@@ -273,7 +261,7 @@ class Currency extends Resource_Model {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param $value
+	 * @param string $value  Currency name.
 	 */
 	public function set_name( $value ) {
 		$this->set_prop( 'name', eaccounting_clean( $value ) );
@@ -284,7 +272,7 @@ class Currency extends Resource_Model {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param $code
+	 * @param string $code Currency code.
 	 */
 	public function set_code( $code ) {
 		$code = eaccounting_sanitize_currency_code( $code );
@@ -298,7 +286,7 @@ class Currency extends Resource_Model {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param $value
+	 * @param string $value Currency rate.
 	 */
 	public function set_rate( $value ) {
 		$this->set_prop( 'rate', eaccounting_format_decimal( $value, 7 ) );
@@ -309,7 +297,7 @@ class Currency extends Resource_Model {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param $value
+	 * @param string $value Currency number.
 	 */
 	public function set_number( $value ) {
 		$this->set_prop( 'number', intval( $value ) );
@@ -320,7 +308,7 @@ class Currency extends Resource_Model {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param $value
+	 * @param string $value Currency precision.
 	 */
 	public function set_precision( $value ) {
 		$this->set_prop( 'precision', eaccounting_sanitize_number( $value ) );
@@ -331,7 +319,7 @@ class Currency extends Resource_Model {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param $value
+	 * @param string $value Currency subunit.
 	 */
 	public function set_subunit( $value ) {
 		$this->set_prop( 'subunit', intval( $value ) );
@@ -342,7 +330,7 @@ class Currency extends Resource_Model {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param $value
+	 * @param string $value Currency symbol.
 	 */
 	public function set_symbol( $value ) {
 		$this->set_prop( 'symbol', eaccounting_clean( $value ) );
@@ -353,7 +341,7 @@ class Currency extends Resource_Model {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param $value
+	 * @param string $value Currency symbol position.
 	 */
 	public function set_position( $value ) {
 		if ( in_array( $value, array( 'before', 'after' ), true ) ) {
@@ -366,7 +354,7 @@ class Currency extends Resource_Model {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param $value
+	 * @param string $value Currency decimal separator.
 	 */
 	public function set_decimal_separator( $value ) {
 		$this->set_prop( 'decimal_separator', eaccounting_clean( $value ) );
@@ -377,7 +365,7 @@ class Currency extends Resource_Model {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param $value
+	 * @param string $value Currency thousand separator.
 	 */
 	public function set_thousand_separator( $value ) {
 		$this->set_prop( 'thousand_separator', eaccounting_clean( $value ) );
@@ -427,11 +415,11 @@ class Currency extends Resource_Model {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param Currency $currency
+	 * @param Currency $currency Currency.
 	 *
 	 * @return bool
 	 */
-	public function equals( self $currency ) {
+	public function equals( $currency ) {
 		return $this->get_code( 'edit' ) === $currency->get_code( 'edit' );
 	}
 

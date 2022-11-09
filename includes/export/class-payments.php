@@ -20,7 +20,6 @@ defined( 'ABSPATH' ) || exit();
  *
  * @package EverAccounting\Export
  */
-
 class Payments extends CSV_Exporter {
 
 	/**
@@ -73,7 +72,7 @@ class Payments extends CSV_Exporter {
 	/**
 	 * Take a revenue and generate row data from it for export.
 	 *
-	 * @param \EverAccounting\Models\Payment $item
+	 * @param \EverAccounting\Models\Payment $item Payment object.
 	 *
 	 * @return array
 	 */

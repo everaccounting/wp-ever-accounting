@@ -73,7 +73,7 @@ class Revenues extends CSV_Exporter {
 	/**
 	 * Take a revenue and generate row data from it for export.
 	 *
-	 * @param \EverAccounting\Models\Revenue $item
+	 * @param \EverAccounting\Models\Revenue $item Revenue object.
 	 *
 	 * @return array
 	 */

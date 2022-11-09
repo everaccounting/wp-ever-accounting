@@ -7,6 +7,7 @@
 	<!-- Check all PHP files in directory tree by default. -->
 	<arg name="extensions" value="php"/>
 	<file>.</file>
+	<exclude-pattern>*/libraries/*</exclude-pattern>
 
 
 	<!-- Check that the proper text domain(s) is used everywhere. -->

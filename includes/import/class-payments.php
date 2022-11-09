@@ -110,7 +110,7 @@ class Payments extends CSV_Importer {
 		$account_id            = ! empty( $account ) ? $account->get_id() : '';
 		$account_currency_code = ! empty( $account ) ? $account->get_currency_code() : '';
 
-		$vendor    = ( '' != $data['vendor_name'] ) ? eaccounting_get_vendors(
+		$vendor    = ( '' !== $data['vendor_name'] ) ? eaccounting_get_vendors(
 			array(
 				'search'      => $data['vendor_name'],
 				'search_cols' => array( 'name' ),
@@ -131,7 +131,7 @@ class Payments extends CSV_Importer {
 			return new \WP_Error( 'invalid_props', __( 'Transaction associated account is not exist.', 'wp-ever-accounting' ) );
 		}
 
-		if ( $data['currency_code'] != $account_currency_code ) {
+		if ( $data['currency_code'] !== $account_currency_code ) {
 			return new \WP_Error( 'invalid_props', __( 'Account currency code does not match with provided currency code.', 'wp-ever-accounting' ) );
 		}
 

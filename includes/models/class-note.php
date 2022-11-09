@@ -30,6 +30,8 @@ class Note extends Resource_Model {
 	protected $object_type = 'note';
 
 	/**
+	 * Cache group.
+	 *
 	 * @since 1.1.0
 	 *
 	 * @var string
@@ -74,7 +76,6 @@ class Note extends Resource_Model {
 			$this->set_object_read( true );
 		}
 
-		// Load repository
 		$this->repository = Repositories::load( 'notes' );
 
 		if ( $this->get_id() > 0 ) {
@@ -87,11 +88,11 @@ class Note extends Resource_Model {
 			'note'      => __( 'Note content', 'wp-ever-accounting' ),
 		);
 	}
-	/*
+	/**
 	|--------------------------------------------------------------------------
 	| Getters
 	|--------------------------------------------------------------------------
-	*/
+	 */
 
 	/**
 	 * Return the id.
@@ -213,7 +214,7 @@ class Note extends Resource_Model {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param int $creator_id Creator id
+	 * @param int $creator_id Creator id.
 	 */
 	public function set_creator_id( $creator_id = null ) {
 		$this->set_prop( 'creator_id', absint( $creator_id ) );

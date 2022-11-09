@@ -201,7 +201,6 @@ final class EverAccounting {
 		require_once EACCOUNTING_ABSPATH . '/includes/class-collection.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/class-datetime.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/class-inflector.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/class-license.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/class-logger.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/class-money.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/class-repositories.php';

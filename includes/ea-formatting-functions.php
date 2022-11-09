@@ -11,9 +11,9 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Converts a string (e.g. 'yes' or 'no') to a bool.
  *
- * @since 1.0.2
- *
  * @param string|boolean $string String to convert.
+ *
+ * @since 1.0.2
  *
  * @return bool
  */
@@ -24,9 +24,9 @@ function eaccounting_string_to_bool( $string ) {
 /**
  * Converts a bool to a 'yes' or 'no'.
  *
- * @since 1.0.2
- *
  * @param bool $bool String to convert.
+ *
+ * @since 1.0.2
  *
  * @return string
  */
@@ -41,9 +41,9 @@ function eaccounting_bool_to_string( $bool ) {
 /**
  * Converts a bool to a 1 or 0.
  *
- * @since 1.1.0
+ * @param bool $bool Bool to convert.
  *
- * @param $bool
+ * @since 1.1.0
  *
  * @return int
  */
@@ -58,11 +58,10 @@ function eaccounting_bool_to_number( $bool ) {
 /**
  * Explode a string into an array by $delimiter and remove empty values.
  *
- * @since 1.0.2
- *
- * @param string|array $string    String to convert.
- *
+ * @param string|array $string String to convert.
  * @param string       $delimiter Delimiter, defaults to ','.
+ *
+ * @since 1.0.2
  *
  * @return array
  */
@@ -74,9 +73,9 @@ function eaccounting_string_to_array( $string, $delimiter = ',' ) {
  * Clean variables using sanitize_text_field. Arrays are cleaned recursively.
  * Non-scalar values are ignored.
  *
- * @since 1.0.2
- *
  * @param string|array $var Data to sanitize.
+ *
+ * @since 1.0.2
  *
  * @return string|array
  */
@@ -92,9 +91,9 @@ function eaccounting_clean( $var ) {
 /**
  * Run eaccounting_clean over posted textarea but maintain line breaks.
  *
- * @since  1.0.2
- *
  * @param string $var Data to sanitize.
+ *
+ * @since  1.0.2
  *
  * @return string
  */
@@ -106,9 +105,9 @@ function eaccounting_sanitize_textarea( $var ) {
 /**
  * Sanitize a string destined to be a tooltip.
  *
- * @since  1.0.2 Tooltips are encoded with htmlspecialchars to prevent XSS. Should not be used in conjunction with esc_attr()
- *
  * @param string $var Data to sanitize.
+ *
+ * @since  1.0.2 Tooltips are encoded with htmlspecialchars to prevent XSS. Should not be used in conjunction with esc_attr()
  *
  * @return string
  */
@@ -155,10 +154,9 @@ function eaccounting_time_format() {
 /**
  * Format a date for output.
  *
+ * @param string $date Date to format.
+ * @param string $format Date format.
  * @since 1.1.0
- *
- * @param string $format
- * @param        $date
  *
  * @return string
  */
@@ -241,9 +239,9 @@ function eaccounting_array_merge_recursive() {
 /**
  * Implode and escape HTML attributes for output.
  *
- * @since 1.0.2
- *
  * @param array $raw_attributes Attribute name value pairs.
+ *
+ * @since 1.0.2
  *
  * @return string
  */
@@ -260,11 +258,11 @@ function eaccounting_implode_html_attributes( $raw_attributes ) {
 /**
  * Escape JSON for use on HTML or attribute text nodes.
  *
- * @since 1.0.2
- *
  * @param string $json JSON to escape.
  *
  * @param bool   $html True if escaping for HTML text node, false for attributes. Determines how quotes are handled.
+ *
+ * @since 1.0.2
  *
  * @return string Escaped JSON.
  */
@@ -280,11 +278,11 @@ function eaccounting_esc_json( $json, $html = false ) {
 /**
  * Get only numbers from the string.
  *
- * @since 1.0.2
- *
- * @param  string    $number   Number to get only numbers from.
+ * @param string $number Number to get only numbers from.
  *
  * @param bool   $allow_decimal Allow decimal.
+ *
+ * @since 1.0.2
  *
  * @return int|float|null
  */
@@ -302,12 +300,12 @@ function eaccounting_sanitize_number( $number, $allow_decimal = true ) {
 /**
  * Get only numbers from the string.
  *
- * @since 1.0.2
- *
- * @param  string    $number  Number to get only numbers from.
+ * @param string $number Number to get only numbers from.
  *
  * @param int    $decimals Number of decimals.
  * @param bool   $trim_zeros Trim zeros.
+ *
+ * @since 1.0.2
  *
  * @return int|float|null
  */
@@ -330,11 +328,11 @@ function eaccounting_format_decimal( $number, $decimals = 4, $trim_zeros = false
 /**
  * Convert a date string to a EverAccounting_DateTime.
  *
- * @since  1.0.2
- *
  * @param string $time_string Time string.
  *
- * @throws Exception
+ * @since  1.0.2
+ *
+ * @throws Exception If the time string cannot be parsed.
  * @return \EverAccounting\DateTime
  */
 function eaccounting_string_to_datetime( $time_string ) {
@@ -349,9 +347,9 @@ function eaccounting_string_to_datetime( $time_string ) {
 		$timestamp  = $datetime->getTimestamp();
 	} else {
 		$original_timezone = date_default_timezone_get();
-		date_default_timezone_set( 'UTC' );
+		date_default_timezone_set( 'UTC' ); //phpcs:ignore
 		$timestamp = strtotime( get_gmt_from_date( gmdate( 'Y-m-d H:i:s', strtotime( $time_string ) ) ) );
-		date_default_timezone_set( $original_timezone );
+		date_default_timezone_set( $original_timezone ); //phpcs:ignore
 	}
 	$datetime = new \EverAccounting\DateTime( "@{$timestamp}", new DateTimeZone( 'UTC' ) );
 
@@ -361,9 +359,9 @@ function eaccounting_string_to_datetime( $time_string ) {
 /**
  * Convert RGB to HEX.
  *
- * @since 1.1.0
- *
  * @param mixed $color Color.
+ *
+ * @since 1.1.0
  *
  * @return array
  */
@@ -383,9 +381,9 @@ function eaccounting_rgb_from_hex( $color ) {
 /**
  * Make HEX color darker.
  *
- * @param mixed $color  Color.
+ * @param mixed $color Color.
  * @param int   $factor Darker factor.
- *                      Defaults to 30.
+ *                        Defaults to 30.
  *
  * @return string
  */
@@ -411,9 +409,9 @@ function eaccounting_hex_darker( $color, $factor = 30 ) {
 /**
  * Make HEX color lighter.
  *
- * @param mixed $color  Color.
+ * @param mixed $color Color.
  * @param int   $factor Lighter factor.
- *                      Defaults to 30.
+ *                        Defaults to 30.
  *
  * @return string
  */
@@ -460,7 +458,7 @@ function eaccounting_hex_is_light( $color ) {
  * Detect if we should use a light or dark color on a background color.
  *
  * @param mixed  $color Color.
- * @param string $dark  Darkest reference.
+ * @param string $dark Darkest reference.
  *                      Defaults to '#000000'.
  * @param string $light Lightest reference.
  *                      Defaults to '#FFFFFF'.
@@ -540,9 +538,9 @@ function eaccounting_number_dictionary() {
 /**
  * Convert Number to words
  *
- * @since 1.1.0
+ * @param string $number Amount.
  *
- * @param string $amount Amount.
+ * @since 1.1.0
  *
  * @return string|null
  */
@@ -578,10 +576,10 @@ function eaccounting_numbers_to_words( $number ) {
 			}
 			break;
 		default:
-			$baseUnit     = pow( 1000, floor( log( $number, 1000 ) ) );
-			$numBaseUnits = (int) ( $number / $baseUnit );
-			$remainder    = $number % $baseUnit;
-			$string       = eaccounting_numbers_to_words( $numBaseUnits ) . ' ' . eaccounting_number_dictionary()[ $baseUnit ];
+			$baseUnit     = pow( 1000, floor( log( $number, 1000 ) ) ); //phpcs:ignore
+			$numBaseUnits = (int) ( $number / $baseUnit ); //phpcs:ignore
+			$remainder    = $number % $baseUnit; //phpcs:ignore
+			$string       = eaccounting_numbers_to_words( $numBaseUnits ) . ' ' . eaccounting_number_dictionary()[ $baseUnit ]; //phpcs:ignore
 			if ( $remainder ) {
 				$string .= $remainder < 100 ? $conjunction : $separator;
 				$string .= eaccounting_numbers_to_words( $remainder );
@@ -593,6 +591,14 @@ function eaccounting_numbers_to_words( $number ) {
 
 }
 
+/**
+ * Format address.
+ *
+ * @param array  $address Address.
+ * @param string $break  Break.
+ *
+ * @return string
+ */
 function eaccounting_format_address( $address, $break = '<br>' ) {
 	$address   = wp_parse_args(
 		$address,

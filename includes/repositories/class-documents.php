@@ -79,7 +79,7 @@ class Documents extends Resource_Repository {
 	/**
 	 * Get the next available number.
 	 *
-	 * @param Document $document
+	 * @param Document $document Document object.
 	 * @since 1.1.0
 	 * @return int
 	 */
@@ -129,7 +129,7 @@ class Documents extends Resource_Repository {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @param $item
+	 * @param Document_Item $item Item object.
 	 */
 	public function delete_items( $item ) {
 		global $wpdb;
@@ -142,7 +142,7 @@ class Documents extends Resource_Repository {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @param $item
+	 * @param Document $item Document object.
 	 */
 	public function delete_notes( $item ) {
 		global $wpdb;
@@ -157,7 +157,9 @@ class Documents extends Resource_Repository {
 	}
 
 	/**
-	 * @param $item
+	 * Delete transactions.
+	 *
+	 * @param Document $item Document object.
 	 * @since 1.1.0 Delete all related transactions.
 	 */
 	public function delete_transactions( $item ) {
@@ -169,7 +171,7 @@ class Documents extends Resource_Repository {
 	/**
 	 * Delete items.
 	 *
-	 * @param \EverAccounting\Abstracts\Resource_Model $item
+	 * @param \EverAccounting\Abstracts\Resource_Model $item Item object.
 	 * @since 1.1.0
 	 */
 	public function delete( &$item ) {

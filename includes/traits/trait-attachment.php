@@ -1,6 +1,8 @@
 <?php
 /**
- * Attachment Trait
+ * Attachment Trait.
+ *
+ * @package EverAccounting
  */
 
 namespace EverAccounting\Traits;
@@ -33,7 +35,7 @@ trait Attachment {
 	/**
 	 * Get attachment image.
 	 *
-	 * @param string $size
+	 * @param string $size Image size.
 	 * @since 1.1.0
 	 *
 	 * @return string
@@ -47,7 +49,9 @@ trait Attachment {
 	}
 
 	/**
-	 * @param string $size
+	 * Get attachment url.
+	 *
+	 * @param string $size Image size.
 	 * @since 1.1.0
 	 *
 	 * @return false|string

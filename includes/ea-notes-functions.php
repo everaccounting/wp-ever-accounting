@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Main function for returning note.
  *
- * @param $item
+ * @param mixed $item Note item.
  *
  * @return EverAccounting\Models\Note|null
  * @since 1.1.0
@@ -34,8 +34,8 @@ function eaccounting_get_note( $item ) {
 /**
  * Insert note.
  *
- * @param      $args
- * @param bool $wp_error
+ * @param  array $args Note arguments.
+ * @param bool  $wp_error Return WP_Error on failure.
  * @since 1.1.0
  *
  * @return \EverAccounting\Models\Note|false|int|WP_Error
@@ -67,7 +67,7 @@ function eaccounting_insert_note( $args, $wp_error = true ) {
 /**
  * Delete an item.
  *
- * @param int $id Item ID.
+ * @param int $note_id Item ID.
  *
  * @return bool
  * @since 1.1.0
@@ -83,7 +83,9 @@ function eaccounting_delete_note( $note_id ) {
 }
 
 /**
- * @param array $args
+ * Get notes.
+ *
+ * @param array $args Query arguments.
  * @since 1.1.0
  *
  * @return array|void
@@ -129,13 +131,13 @@ function eaccounting_get_notes( $args = array() ) {
 		$where  .= " AND $table.`id` NOT IN ($exclude)";
 	}
 
-	// search
+	// search.
 	$search_cols = array( 'note', 'extra' );
 	if ( ! empty( $qv['search'] ) ) {
 		$searches = array();
-		$where    = ' AND (';
+		$where    = ' AND ('; // phpcs:ignore
 		foreach ( $search_cols as $col ) {
-			$searches[] = $wpdb->prepare( $col . ' LIKE %s', '%' . $wpdb->esc_like( $qv['search'] ) . '%' );
+			$searches[] = $wpdb->prepare( $col . ' LIKE %s', '%' . $wpdb->esc_like( $qv['search'] ) . '%' ); // phpcs:ignore
 		}
 		$where .= implode( ' OR ', $searches );
 		$where .= ')';

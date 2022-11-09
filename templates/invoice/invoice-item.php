@@ -8,7 +8,9 @@
  * @var $item_id int
  * @var $item Document_Item
  * @version 1.1.0
+ * @package EverAccounting
  */
+
 use EverAccounting\Models\Invoice;
 use EverAccounting\Models\Document_Item;
 

@@ -57,6 +57,12 @@ class Transfer extends Resource_Model {
 		'date_created'    => null,
 	);
 
+	/**
+	 * Category id.
+	 *
+	 * @since 1.1.0
+	 * @var int
+	 */
 	protected $category_id;
 
 	/**
@@ -81,7 +87,6 @@ class Transfer extends Resource_Model {
 			$this->set_object_read( true );
 		}
 
-		// Load repository
 		$this->repository = Repositories::load( 'transfers' );
 
 		if ( $this->get_id() > 0 ) {
@@ -96,18 +101,18 @@ class Transfer extends Resource_Model {
 			'payment_method'  => __( 'Payment method', 'wp-ever-accounting' ),
 		);
 	}
-	/*
+	/**
 	|--------------------------------------------------------------------------
 	| Getters
 	|--------------------------------------------------------------------------
-	*/
+	 */
 
 	/**
 	 * Income ID.
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param string $context
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
 	 * @return mixed|null
 	 */
@@ -120,7 +125,7 @@ class Transfer extends Resource_Model {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param string $context
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
 	 * @return mixed|null
 	 */
@@ -133,7 +138,7 @@ class Transfer extends Resource_Model {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param string $context
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
 	 * @return mixed|null
 	 */
@@ -147,7 +152,7 @@ class Transfer extends Resource_Model {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param string $context
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
 	 * @return mixed|null
 	 */
@@ -160,7 +165,7 @@ class Transfer extends Resource_Model {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param string $context
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
 	 * @return mixed|null
 	 */
@@ -173,7 +178,7 @@ class Transfer extends Resource_Model {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param string $context
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
 	 * @return \EverAccounting\DateTime
 	 */
@@ -186,7 +191,7 @@ class Transfer extends Resource_Model {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param string $context
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
 	 * @return mixed|null
 	 */
@@ -199,7 +204,7 @@ class Transfer extends Resource_Model {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param string $context
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
 	 * @return mixed|null
 	 */
@@ -212,7 +217,7 @@ class Transfer extends Resource_Model {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param string $context
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
 	 * @return mixed|null
 	 */
@@ -225,7 +230,7 @@ class Transfer extends Resource_Model {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param string $context
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
 	 * @return string
 	 */
@@ -277,7 +282,7 @@ class Transfer extends Resource_Model {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param $account_id
+	 * @param int $account_id account_id.
 	 */
 	public function set_from_account_id( $account_id ) {
 		$this->set_prop( 'from_account_id', absint( $account_id ) );
@@ -288,7 +293,7 @@ class Transfer extends Resource_Model {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param int $account_id
+	 * @param int $account_id account_id.
 	 */
 	public function set_to_account_id( $account_id ) {
 		$this->set_prop( 'to_account_id', absint( $account_id ) );
@@ -299,7 +304,7 @@ class Transfer extends Resource_Model {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param string $date
+	 * @param string $date date.
 	 */
 	public function set_date( $date ) {
 		$this->set_date_prop( 'date', eaccounting_clean( $date ) );
@@ -310,7 +315,7 @@ class Transfer extends Resource_Model {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param string $amount
+	 * @param string $amount amount.
 	 */
 	public function set_amount( $amount ) {
 		$this->set_prop( 'amount', (float) eaccounting_sanitize_number( $amount, true ) );
@@ -321,7 +326,7 @@ class Transfer extends Resource_Model {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param string $payment_method
+	 * @param string $payment_method payment_method.
 	 */
 	public function set_payment_method( $payment_method ) {
 		$this->set_prop( 'payment_method', eaccounting_clean( $payment_method ) );
@@ -332,7 +337,7 @@ class Transfer extends Resource_Model {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param $value
+	 * @param string $value reference.
 	 */
 	public function set_reference( $value ) {
 		$this->set_prop( 'reference', eaccounting_clean( $value ) );
@@ -343,7 +348,7 @@ class Transfer extends Resource_Model {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param $value
+	 * @param string $value description.
 	 */
 	public function set_description( $value ) {
 		$this->set_prop( 'description', eaccounting_clean( $value ) );
@@ -371,7 +376,7 @@ class Transfer extends Resource_Model {
 	 *
 	 * @since  1.1.0
 	 *
-	 * @throws \Exception
+	 * @throws \Exception When invalid data is found.
 	 * @return \Exception|bool
 	 */
 	public function save() {
@@ -390,7 +395,7 @@ class Transfer extends Resource_Model {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @throws \Exception
+	 * @throws \Exception When invalid data is found.
 	 */
 	protected function maybe_set_transfer_category() {
 		global $wpdb;

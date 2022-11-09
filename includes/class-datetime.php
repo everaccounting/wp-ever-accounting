@@ -54,9 +54,9 @@ class DateTime extends DT {
 	/**
 	 * Set UTC offset - this is a fixed offset instead of a timezone.
 	 *
-	 * @since   1.0.2
-	 *
 	 * @param int $offset Offset.
+	 *
+	 * @since   1.0.2
 	 */
 	public function set_utc_offset( $offset ) {
 		$this->utc_offset = intval( $offset );
@@ -76,9 +76,9 @@ class DateTime extends DT {
 	/**
 	 * Set timezone.
 	 *
-	 * @since   1.0.2
-	 *
 	 * @param \DateTimeZone $timezone DateTimeZone instance.
+	 *
+	 * @since   1.0.2
 	 *
 	 * @return bool
 	 */
@@ -91,23 +91,24 @@ class DateTime extends DT {
 	/**
 	 * Adds year.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param int $number number of the years to add.
+	 *
+	 * @since 1.0.2
 	 *
 	 * @return object
 	 */
 	public function addYear( $number = 1 ) {
 		$this->add( new \DateInterval( "P{$number}Y" ) );
+
 		return $this;
 	}
 
 	/**
 	 * Add months.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param int $number Number of the months to add.
+	 *
+	 * @since 1.0.2
 	 *
 	 * @return object
 	 */
@@ -120,9 +121,9 @@ class DateTime extends DT {
 	/**
 	 * Adds day.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param int $number Number of the days to add.
+	 *
+	 * @since 1.0.2
 	 *
 	 * @return object
 	 */
@@ -133,9 +134,11 @@ class DateTime extends DT {
 	}
 
 	/**
-	 * @since 1.0.2
+	 * Adds hour.
 	 *
-	 * @param int $number
+	 * @param int $number Number of the hours to add.
+	 *
+	 * @since 1.0.2
 	 *
 	 * @return object
 	 */
@@ -146,9 +149,11 @@ class DateTime extends DT {
 	}
 
 	/**
-	 * @since 1.0.2
+	 * Subtracts months.
 	 *
-	 * @param int $number
+	 * @param int $number Number of the months to subtract.
+	 *
+	 * @since 1.0.2
 	 *
 	 * @return object
 	 */
@@ -159,9 +164,11 @@ class DateTime extends DT {
 	}
 
 	/**
-	 * @since 1.0.2
+	 * Subtracts day.
 	 *
-	 * @param int $number
+	 * @param int $number Number of the days to subtract.
+	 *
+	 * @since 1.0.2
 	 *
 	 * @return object
 	 */
@@ -194,9 +201,9 @@ class DateTime extends DT {
 	/**
 	 * Format a date based on the offset timestamp.
 	 *
-	 * @since  1.0.2
-	 *
 	 * @param string $format Date format.
+	 *
+	 * @since  1.0.2
 	 *
 	 * @return string
 	 */
@@ -207,9 +214,9 @@ class DateTime extends DT {
 	/**
 	 * Return a localised date based on offset timestamp. Wrapper for date_i18n function.
 	 *
-	 * @since  1.0.2
-	 *
 	 * @param string $format Date format.
+	 *
+	 * @since  1.0.2
 	 *
 	 * @return string
 	 */
@@ -225,7 +232,7 @@ class DateTime extends DT {
 	 * @return string date time
 	 */
 	public function date_mysql() {
-		return date( 'Y-m-d H:i:s', $this->getOffsetTimestamp() );
+		return date( 'Y-m-d H:i:s', $this->getOffsetTimestamp() ); // phpcs:ignore
 	}
 
 	/**

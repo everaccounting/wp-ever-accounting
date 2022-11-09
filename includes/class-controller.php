@@ -2,13 +2,15 @@
 /**
  * Controller various actions of the plugin.
  *
- * @package     EverAccounting
- * @subpackage  Classes
  * @version     1.1.0
+ * @subpackage  Classes
+ * @package     EverAccounting
  */
 
 use EverAccounting\Models\Account;
 use EverAccounting\Models\Category;
+use EverAccounting\Models\Payment;
+use EverAccounting\Models\Revenue;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -23,11 +25,11 @@ class Controller {
 	 * Controller constructor.
 	 */
 	public function __construct() {
-		// accounts
+		// accounts.
 		add_action( 'eaccounting_pre_save_account', array( $this, 'validate_account_data' ), 10, 2 );
 		add_action( 'eaccounting_delete_account', array( $this, 'delete_account_reference' ) );
 
-		// customers
+		// customers.
 		add_action( 'eaccounting_delete_revenue', array( $this, 'update_customer_total_paid' ), 10, 2 );
 		add_action( 'eaccounting_insert_revenue', array( $this, 'update_customer_total_paid' ), 10, 2 );
 		add_action( 'eaccounting_update_revenue', array( $this, 'update_customer_total_paid' ), 10, 2 );
@@ -36,7 +38,7 @@ class Controller {
 		add_action( 'eaccounting_delete_invoice', array( $this, 'update_customer_total_paid' ), 10, 2 );
 		add_action( 'eaccounting_delete_customer', array( $this, 'delete_customer_reference' ) );
 
-		// vendors
+		// vendors.
 		add_action( 'eaccounting_delete_payment', array( $this, 'update_vendor_total_paid' ), 10, 2 );
 		add_action( 'eaccounting_insert_payment', array( $this, 'update_vendor_total_paid' ), 10, 2 );
 		add_action( 'eaccounting_update_payment', array( $this, 'update_vendor_total_paid' ), 10, 2 );
@@ -45,35 +47,34 @@ class Controller {
 		add_action( 'eaccounting_delete_bill', array( $this, 'update_vendor_total_paid' ), 10, 2 );
 		add_action( 'eaccounting_delete_vendor', array( $this, 'delete_vendor_reference' ) );
 
-		// payments
+		// payments.
 		add_action( 'eaccounting_validate_payment_data', array( $this, 'validate_payment_data' ), 10, 2 );
 
-		// revenues
+		// revenues.
 		add_action( 'eaccounting_validate_revenue_data', array( $this, 'validate_revenue_data' ), 10, 2 );
 
-		// transactions
-
-		// category
+		// category.
 		add_action( 'eaccounting_pre_save_category', array( $this, 'validate_category_data' ), 10, 2 );
 		add_action( 'eaccounting_delete_category', array( $this, 'delete_category_reference' ) );
 
-		// currency
+		// currency.
 		add_action( 'update_option_eaccounting_settings', array( $this, 'update_default_currency' ), 10, 2 );
 		add_action( 'eaccounting_delete_currency', array( $this, 'delete_currency_reference' ), 10, 2 );
 
-		// bill
+		// bill.
 		add_action( 'eaccounting_delete_payment', array( $this, 'update_bill_data' ), 10, 2 );
 		add_action( 'eaccounting_update_payment', array( $this, 'update_bill_data' ), 10, 2 );
 		add_action( 'eaccounting_daily_scheduled_events', array( $this, 'update_bill_status' ) );
 
-		// invoice
+		// invoice.
 		add_action( 'eaccounting_delete_revenue', array( $this, 'update_invoice_data' ), 10, 2 );
 		add_action( 'eaccounting_update_revenue', array( $this, 'update_invoice_data' ), 10, 2 );
 		add_action( 'eaccounting_daily_scheduled_events', array( $this, 'update_invoice_status' ) );
 
-		// thumbnail
+		// thumbnail.
 		add_action( 'delete_attachment', array( $this, 'delete_attachment_reference' ) );
 	}
+
 	/*
 	|--------------------------------------------------------------------------
 	| Account
@@ -85,13 +86,11 @@ class Controller {
 	/**
 	 * Validate account data.
 	 *
-	 * @param int     $id
-	 * @param Account $account
+	 * @param array $data Account data.
+	 * @param int   $id Account ID.
 	 *
-	 * @param array   $data
-	 *
-	 * @throws \Exception
 	 * @since 1.1.0
+	 * @throws \Exception  Exception.
 	 */
 	public static function validate_account_data( $data, $id ) {
 		global $wpdb;
@@ -105,7 +104,7 @@ class Controller {
 	 * When an account is deleted check if
 	 * default account need to be updated or not.
 	 *
-	 * @param $account_id
+	 * @param int $account_id Account ID.
 	 *
 	 * @since 1.1.0
 	 */
@@ -114,7 +113,7 @@ class Controller {
 		$wpdb->update( "{$wpdb->prefix}ea_documents", array( 'account_id' => null ), array( 'account_id' => $account_id ) );
 		$wpdb->update( "{$wpdb->prefix}ea_transactions", array( 'account_id' => null ), array( 'account_id' => $account_id ) );
 
-		// delete default account
+		// delete default account.
 		$default_account = eaccounting()->settings->get( 'default_account' );
 		if ( intval( $default_account ) === intval( $account_id ) ) {
 			eaccounting()->settings->set( array( array( 'default_account' => '' ) ), true );
@@ -132,8 +131,8 @@ class Controller {
 	/**
 	 * Update customer total paid
 	 *
-	 * @param int                                   $transaction_id
-	 * @param \EverAccounting\Abstracts\Transaction $transaction
+	 * @param int                                   $transaction_id transaction id.
+	 * @param \EverAccounting\Abstracts\Transaction $transaction transaction.
 	 *
 	 * @since 1.1.0
 	 */
@@ -154,7 +153,7 @@ class Controller {
 	 * When an customer is deleted check if
 	 * customer is associated with any document and transactions.
 	 *
-	 * @param int $customer_id
+	 * @param int $customer_id Customer ID.
 	 *
 	 * @since 1.1.0
 	 */
@@ -175,8 +174,8 @@ class Controller {
 	/**
 	 * Update vendor total paid
 	 *
-	 * @param int                                   $transaction_id
-	 * @param \EverAccounting\Abstracts\Transaction $transaction
+	 * @param int                                   $transaction_id transaction id.
+	 * @param \EverAccounting\Abstracts\Transaction $transaction transaction.
 	 *
 	 * @since 1.1.0
 	 */
@@ -197,7 +196,7 @@ class Controller {
 	 * When a vendor is deleted check if
 	 * customer is associated with any document and transactions.
 	 *
-	 * @param int $vendor_id
+	 * @param int $vendor_id Vendor ID.
 	 *
 	 * @since 1.1.0
 	 */
@@ -218,13 +217,10 @@ class Controller {
 	/**
 	 * Validate payment data.
 	 *
-	 * @param null      $id
-	 * @param \WP_Error $errors
-	 *
-	 * @param array     $data
-	 *
-	 * @throws \Exception
+	 * @param array $data Payment data.
+	 * @param null  $id Payment ID.
 	 * @since 1.1.0
+	 * @throws \Exception Exception.
 	 */
 	public static function validate_payment_data( $data, $id = null ) {
 		if ( empty( $data['payment_date'] ) ) {
@@ -266,13 +262,11 @@ class Controller {
 	/**
 	 * Validate expense data.
 	 *
-	 * @param null      $id
-	 * @param \WP_Error $errors
+	 * @param array $data Expense data.
+	 * @param null  $id Expense ID.
 	 *
-	 * @param array     $data
-	 *
-	 * @throws \Exception
 	 * @since 1.1.0
+	 * @throws \Exception Exception.
 	 */
 	public static function validate_revenue_data( $data, $id = null ) {
 		if ( empty( $data['payment_date'] ) ) {
@@ -323,20 +317,17 @@ class Controller {
 	/**
 	 * Validate category data.
 	 *
-	 * @param null     $id
-	 * @param Category $category
-	 *
-	 * @param array    $data
-	 *
-	 * @throws \Exception
+	 * @param array $data Category data.
+	 * @param int   $id Category id.
 	 *
 	 * @since 1.1.0
+	 * @throws \Exception When category is not valid.
 	 */
 	public static function validate_category_data( $data, $id ) {
 		global $wpdb;
-		$existing_category_id = (int) $wpdb->get_var( $wpdb->prepare( "SELECT id from {$wpdb->prefix}ea_categories WHERE type=%s AND name='%s'", eaccounting_clean( $data['type'] ), eaccounting_clean( $data['name'] ) ) );
+		$existing_category_id = (int) $wpdb->get_var( $wpdb->prepare( "SELECT id from {$wpdb->prefix}ea_categories WHERE type=%s AND name='%s'", eaccounting_clean( $data['type'] ), eaccounting_clean( $data['name'] ) ) ); //phpcs:ignore
 
-		if ( ! empty( $existing_category_id ) && ( $id != $existing_category_id ) ) {
+		if ( ! empty( $existing_category_id ) && ( absint( $id ) !== absint( $existing_category_id ) ) ) {
 			throw new \Exception( __( 'Duplicate category.', 'wp-ever-accounting' ) );
 		}
 	}
@@ -344,7 +335,7 @@ class Controller {
 	/**
 	 * Delete category id from transactions.
 	 *
-	 * @param $id
+	 * @param int $id Category id.
 	 *
 	 * @since 1.1.0
 	 */
@@ -366,9 +357,8 @@ class Controller {
 	/**
 	 * Update default currency.
 	 *
-	 * @param $id
-	 *
-	 * @return bool
+	 * @param array $value New value.
+	 * @param array $old_value Old value.
 	 *
 	 * @since 1.1.0
 	 */
@@ -399,9 +389,8 @@ class Controller {
 	/**
 	 * Delete currency id from settings.
 	 *
-	 * @param $data
-	 *
-	 * @param $id
+	 * @param int   $id Currency id.
+	 * @param array $data Currency data.
 	 *
 	 * @since 1.1.0
 	 */
@@ -420,16 +409,29 @@ class Controller {
 	| Handle side effect of inserting, update, deleting Bill
 	*/
 
+	/**
+	 * Update Bill data.
+	 *
+	 * @param int     $payment_id  Payment id.
+	 * @param Payment $payment Payment object.
+	 *
+	 * @since 1.1.0
+	 */
 	public static function update_bill_data( $payment_id, $payment ) {
 		try {
 			if ( ! empty( $payment->get_document_id() ) && $bill = eaccounting_get_bill( $payment->get_document_id() ) ) { //phpcs:ignore
 				$bill->save();
 			}
 		} catch ( \Exception  $e ) {
-
+			// Do nothing.
 		}
 	}
 
+	/**
+	 * Update bill status.
+	 *
+	 * @since 1.1.0
+	 */
 	public static function update_bill_status() {
 		global $wpdb;
 		$current_time = date_i18n( 'Y-m-d H:i:s' );
@@ -450,16 +452,29 @@ class Controller {
 	|
 	| Handle side effect of inserting, update, deleting invoice
 	*/
+	/**
+	 * Update invoice data.
+	 *
+	 * @param int     $payment_id Payment id.
+	 * @param Revenue $revenue Revenue object.
+	 *
+	 * @since 1.1.0
+	 */
 	public static function update_invoice_data( $payment_id, $revenue ) {
 		try {
 			if ( ! empty( $revenue->get_document_id() ) && $invoice = eaccounting_get_invoice( $revenue->get_document_id() ) ) { //phpcs:ignore
 				$invoice->save();
 			}
 		} catch ( \Exception  $e ) {
-
+			// Do nothing.
 		}
 	}
 
+	/**
+	 * Update invoice status.
+	 *
+	 * @since 1.1.0
+	 */
 	public static function update_invoice_status() {
 		global $wpdb;
 		$current_time = date_i18n( 'Y-m-d H:i:s' );
@@ -485,7 +500,7 @@ class Controller {
 	 * When an attachments is deleted check if
 	 * customer is associated with any account or contacts or document  or items or transactions.
 	 *
-	 * @param int $attachment_id
+	 * @param int $attachment_id Attachment ID.
 	 *
 	 * @since 1.1.0
 	 */

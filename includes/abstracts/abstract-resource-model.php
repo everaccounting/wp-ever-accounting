@@ -3,6 +3,8 @@
  * Abstract Model.
  *
  * Handles generic data interaction which is implemented by the different repository classes.
+ *
+ * @package EverAccounting
  */
 
 namespace EverAccounting\Abstracts;
@@ -220,9 +222,9 @@ abstract class Resource_Model {
 	/**
 	 * Get form status.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @param string $context View or edit context.
+	 *
+	 * @since 1.1.0
 	 *
 	 * @return string
 	 */
@@ -241,6 +243,7 @@ abstract class Resource_Model {
 		if ( $this->repository && $this->get_id() ) {
 			$this->repository->delete( $this );
 			$this->set_id( 0 );
+
 			return true;
 		}
 
@@ -274,8 +277,8 @@ abstract class Resource_Model {
 		/**
 		 * Trigger action before saving to the DB. Allows you to adjust object props before save.
 		 *
-		 * @param array         $data The object data being saved.
-		 * @param int           $id   The ID of the object.
+		 * @param array $data The object data being saved.
+		 * @param int $id The ID of the object.
 		 * @param Resource_Model $this The object being saved.
 		 */
 		do_action( 'eaccounting_pre_save_' . $this->object_type, $this->get_data(), $this->get_id(), $this );
@@ -289,8 +292,8 @@ abstract class Resource_Model {
 		/**
 		 * Trigger action before saving to the DB. Allows you to adjust object props before save.
 		 *
-		 * @param array         $data The object data being saved.
-		 * @param int           $id   The ID of the object.
+		 * @param array $data The object data being saved.
+		 * @param int $id The ID of the object.
 		 * @param Resource_Model $this The object being saved.
 		 */
 		do_action( 'eaccounting_save_' . $this->object_type, $this->get_data(), $this->get_id(), $this );
@@ -307,7 +310,7 @@ abstract class Resource_Model {
 	 * @return string Data in JSON format.
 	 */
 	public function __toString() {
-		return wp_json_encode( $this->get_data() );
+		return wp_json_encode( $this->get_data() );  // phpcs:ignore
 	}
 
 	/**
@@ -331,6 +334,8 @@ abstract class Resource_Model {
 	/**
 	 * Returns as pure array.
 	 * Does depth array casting.
+	 *
+	 * @param array $data Data to cast.
 	 *
 	 * @since 1.0.2
 	 *
@@ -379,9 +384,9 @@ abstract class Resource_Model {
 	/**
 	 * Filter null meta values from array.
 	 *
-	 * @since  1.1.0
-	 *
 	 * @param mixed $meta Meta value to check.
+	 *
+	 * @since  1.1.0
 	 *
 	 * @return bool
 	 */
@@ -405,9 +410,9 @@ abstract class Resource_Model {
 	/**
 	 * Check if the key is an internal one.
 	 *
-	 * @since  1.1.0
-	 *
 	 * @param string $key Key to check.
+	 *
+	 * @since  1.1.0
 	 *
 	 * @return bool   true if it's an internal key, false otherwise
 	 */
@@ -433,7 +438,10 @@ abstract class Resource_Model {
 	/**
 	 * Magic method for setting data fields.
 	 *
-	 * This method does not update custom fields in the database.
+	 * @param string $key Key to set.
+	 * @param mixed  $value Value to set.
+	 *
+	 *  This method does not update custom fields in the database.
 	 *
 	 * @since  1.1.0
 	 */
@@ -458,7 +466,7 @@ abstract class Resource_Model {
 	/**
 	 * Magic method for retrieving a property.
 	 *
-	 * @param $key
+	 * @param string $key Key to get.
 	 *
 	 * @return mixed|null
 	 */
@@ -486,11 +494,11 @@ abstract class Resource_Model {
 	/**
 	 * Get Meta Data by Key.
 	 *
-	 * @since  1.1.0
-	 *
-	 * @param string $key     Meta Key.
-	 * @param bool   $single  return first found meta with key, or all with $key.
+	 * @param string $key Meta Key.
+	 * @param bool   $single return first found meta with key, or all with $key.
 	 * @param string $context What the value is for. Valid values are view and edit.
+	 *
+	 * @since  1.1.0
 	 *
 	 * @return mixed
 	 */
@@ -532,9 +540,9 @@ abstract class Resource_Model {
 	/**
 	 * See if meta data exists, since get_meta always returns a '' or array().
 	 *
-	 * @since  1.1.0
-	 *
 	 * @param string $key Meta Key.
+	 *
+	 * @since  1.1.0
 	 *
 	 * @return boolean
 	 */
@@ -548,9 +556,9 @@ abstract class Resource_Model {
 	/**
 	 * Set all meta data from array.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @param array $data Key/Value pairs.
+	 *
+	 * @since 1.1.0
 	 */
 	public function set_meta_data( $data ) {
 		if ( ! empty( $data ) && is_array( $data ) ) {
@@ -573,11 +581,11 @@ abstract class Resource_Model {
 	/**
 	 * Add meta data.
 	 *
-	 * @since 1.1.0
-	 *
-	 * @param string       $key    Meta key.
-	 * @param string|array $value  Meta value.
+	 * @param string       $key Meta key.
+	 * @param string|array $value Meta value.
 	 * @param bool         $unique Should this be a unique key?.
+	 *
+	 * @since 1.1.0
 	 */
 	public function add_meta_data( $key, $value, $unique = false ) {
 		if ( $this->is_internal_meta_key( $key ) ) {
@@ -603,11 +611,11 @@ abstract class Resource_Model {
 	/**
 	 * Update meta data by key or ID, if provided.
 	 *
-	 * @since  1.1.0
-	 *
-	 * @param string       $key     Meta key.
-	 * @param string|array $value   Meta value.
+	 * @param string       $key Meta key.
+	 * @param string|array $value Meta value.
 	 * @param int          $meta_id Meta ID.
+	 *
+	 * @since  1.1.0
 	 */
 	public function update_meta_data( $key, $value, $meta_id = 0 ) {
 		if ( $this->is_internal_meta_key( $key ) ) {
@@ -655,9 +663,9 @@ abstract class Resource_Model {
 	/**
 	 * Delete meta data.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @param string $key Meta key.
+	 *
+	 * @since 1.1.0
 	 */
 	public function delete_meta_data( $key ) {
 		$this->maybe_read_meta_data();
@@ -673,9 +681,9 @@ abstract class Resource_Model {
 	/**
 	 * Delete meta data.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @param int $mid Meta ID.
+	 *
+	 * @since 1.1.0
 	 */
 	public function delete_meta_data_by_mid( $mid ) {
 		$this->maybe_read_meta_data();
@@ -703,9 +711,9 @@ abstract class Resource_Model {
 	 * Read Meta Data from the database. Ignore any internal properties.
 	 * Uses it's own caches because get_metadata does not provide meta_ids.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @param bool $force_read True to force a new DB read (and update cache).
+	 *
+	 * @since 1.1.0
 	 */
 	public function read_meta_data( $force_read = false ) {
 
@@ -720,7 +728,7 @@ abstract class Resource_Model {
 		// Only read from cache if the cache key is set.
 		$cache_key = null;
 		if ( ! $force_read && ! empty( $this->cache_group ) ) {
-			$cache_key     = md5( $this->cache_group . '_' . 'object_' . $this->get_id() . '_' . 'object_meta_' . $this->get_id() );
+			$cache_key     = md5( $this->cache_group . '_object_' . $this->get_id() . '_object_meta_' . $this->get_id() );
 			$raw_meta_data = wp_cache_get( $cache_key, $this->cache_group );
 		}
 
@@ -774,7 +782,7 @@ abstract class Resource_Model {
 			}
 		}
 		if ( ! empty( $this->cache_group ) ) {
-			$cache_key = md5( $this->cache_group . '_' . 'object_' . $this->get_id() . '_' . 'object_meta_' . $this->get_id() );
+			$cache_key = md5( $this->cache_group . '_object_' . $this->get_id() . '_object_meta_' . $this->get_id() );
 			wp_cache_delete( $cache_key, $this->cache_group );
 		}
 	}
@@ -782,9 +790,9 @@ abstract class Resource_Model {
 	/**
 	 * Set ID.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @param int $id ID.
+	 *
+	 * @since 1.1.0
 	 */
 	public function set_id( $id ) {
 		$this->id = absint( $id );
@@ -793,9 +801,9 @@ abstract class Resource_Model {
 	/**
 	 * Sets item status.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @param string $status New status.
+	 *
+	 * @since 1.1.0
 	 *
 	 * @return array details of change.
 	 */
@@ -824,9 +832,9 @@ abstract class Resource_Model {
 	/**
 	 * Set object read property.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @param boolean $read Should read?.
+	 *
+	 * @since 1.1.0
 	 */
 	public function set_object_read( $read = true ) {
 		$this->object_read = (bool) $read;
@@ -846,10 +854,10 @@ abstract class Resource_Model {
 	 * Set a collection of props in one go, collect any errors, and return the result.
 	 * Only sets using public methods.
 	 *
-	 * @since  1.1.0
-	 *
-	 * @param array  $props   Key value pairs to set. Key is the prop and should map to a setter function name.
+	 * @param array  $props Key value pairs to set. Key is the prop and should map to a setter function name.
 	 * @param string $context In what context to run this.
+	 *
+	 * @since  1.1.0
 	 */
 	public function set_props( $props, $context = 'set' ) {
 		foreach ( $props as $prop => $value ) {
@@ -874,10 +882,10 @@ abstract class Resource_Model {
 	 * This stores changes in a special array so we can track what needs saving
 	 * the the DB later.
 	 *
-	 * @since 1.1.0
-	 *
-	 * @param string $prop  Name of prop to set.
+	 * @param string $prop Name of prop to set.
 	 * @param mixed  $value Value of the prop.
+	 *
+	 * @since 1.1.0
 	 */
 	protected function set_prop( $prop, $value ) {
 		if ( array_key_exists( $prop, $this->data ) ) {
@@ -894,11 +902,11 @@ abstract class Resource_Model {
 	/**
 	 * Sets a date prop whilst handling formatting and datetime objects.
 	 *
-	 * @since 1.1.0
-	 *
-	 * @param string         $prop  Name of prop to set.
+	 * @param string         $prop Name of prop to set.
 	 * @param string|integer $value Value of the prop.
-	 * @param string         $format
+	 * @param string         $format Format to use when converting to a date string.
+	 *
+	 * @since 1.1.0
 	 */
 	protected function set_date_prop( $prop, $value, $format = 'Y-m-d H:i:s' ) {
 		$value = eaccounting_date( $value, $format );
@@ -913,12 +921,12 @@ abstract class Resource_Model {
 	/**
 	 * Set prop from object.
 	 *
-	 * @since 1.1.0
+	 * @param array|object $object The object.
+	 * @param string       $property property of the object will be used.
+	 * @param string       $prop prop that will be assigned to.
+	 * @param mixed        $default default prop that will be assigned to.
 	 *
-	 * @param string       $property property of the object will be used
-	 * @param string       $prop     prop that will be assigned to
-	 * @param mixed        $default  default prop that will be assigned to
-	 * @param array|object $object   The object
+	 * @since 1.1.0
 	 */
 	protected function set_object_prop( $object, $property, $prop, $default = null ) {
 		if ( is_object( $object ) && is_callable( array( $object, 'get_' . $property ) ) ) {
@@ -941,9 +949,9 @@ abstract class Resource_Model {
 	/**
 	 * Set object status.
 	 *
-	 * @since 1.0.2
+	 * @param int $enabled Enabled.
 	 *
-	 * @param int $enabled
+	 * @since 1.0.2
 	 */
 	public function set_enabled( $enabled ) {
 		$this->set_prop( 'enabled', eaccounting_bool_to_number( $enabled ) );
@@ -952,9 +960,9 @@ abstract class Resource_Model {
 	/**
 	 * Set object created date.
 	 *
-	 * @since 1.0.2
+	 * @param string $date Date.
 	 *
-	 * @param string
+	 * @since 1.0.2
 	 */
 	public function set_date_created( $date = null ) {
 		if ( null === $date ) {
@@ -966,9 +974,9 @@ abstract class Resource_Model {
 	/**
 	 * Set object creator id.
 	 *
-	 * @since 1.0.2
+	 * @param int $creator_id Creator id.
 	 *
-	 * @param int $creator_id Creator id
+	 * @since 1.0.2
 	 */
 	public function set_creator_id( $creator_id = null ) {
 		if ( null === $creator_id ) {
@@ -1017,10 +1025,10 @@ abstract class Resource_Model {
 	 * Gets the value from either current pending changes, or the data itself.
 	 * Context controls what happens to the value before it's returned.
 	 *
-	 * @since  1.1.0
-	 *
-	 * @param string $prop    Name of prop to get.
+	 * @param string $prop Name of prop to get.
 	 * @param string $context What the value is for. Valid values are view and edit.
+	 *
+	 * @since  1.1.0
 	 *
 	 * @return mixed
 	 */
@@ -1041,9 +1049,9 @@ abstract class Resource_Model {
 	/**
 	 * Get object created date.
 	 *
-	 * @since 1.0.2
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @param string $context
+	 * @since 1.0.2
 	 *
 	 * @return string
 	 */
@@ -1054,10 +1062,10 @@ abstract class Resource_Model {
 	/**
 	 * Get prop from object.
 	 *
-	 * @since  1.1.0
+	 * @param array|object $object The object.
+	 * @param string       $property property of the object will be used.
 	 *
-	 * @param array|object $object   The object
-	 * @param string       $property property of the object will be used
+	 * @since  1.1.0
 	 *
 	 * @return mixed|null
 	 */
@@ -1074,9 +1082,9 @@ abstract class Resource_Model {
 	/**
 	 * get object status
 	 *
-	 * @since 1.0.2
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @param string $context
+	 * @since 1.0.2
 	 *
 	 * @return bool
 	 */
@@ -1086,11 +1094,11 @@ abstract class Resource_Model {
 
 
 	/**
+	 * Check required fields.
+	 *
 	 * @since 1.1.0
 	 *
-	 * @param $required
-	 *
-	 * @throws \Exception
+	 * @throws \Exception If invalid data is found.
 	 */
 	public function check_required_items() {
 		foreach ( $this->required_props as $key => $title ) {
@@ -1116,9 +1124,9 @@ abstract class Resource_Model {
 	/**
 	 * Return object created by.
 	 *
-	 * @since 1.0.2
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @param string $context
+	 * @since 1.0.2
 	 *
 	 * @return mixed|null
 	 */
@@ -1152,14 +1160,14 @@ abstract class Resource_Model {
 	/**
 	 * When invalid data is found, throw an exception unless reading from the DB.
 	 *
+	 * @param string $code Error code.
+	 * @param string $message Error message.
+	 * @param int    $http_status_code HTTP status code.
+	 * @param array  $data Error data.
+	 *
 	 * @since 1.1.0
 	 *
-	 * @param string $code    Error code.
-	 * @param string $message Error message.
-	 * @param int    $http_status_code
-	 * @param array  $data
-	 *
-	 * @throws \Exception
+	 * @throws \Exception If invalid data is found.
 	 */
 	public function error( $code, $message, $http_status_code = 400, $data = array() ) {
 		throw new \Exception( $message );

@@ -32,7 +32,7 @@ class Data {
 	 */
 	public function get( $key, $default = null ) {
 		global $wpdb;
-		$value = $wpdb->get_var( $wpdb->prepare( "SELECT option_value FROM $wpdb->options WHERE option_name = '%s'", $key ) );
+		$value = $wpdb->get_var( $wpdb->prepare( "SELECT option_value FROM $wpdb->options WHERE option_name = %s", $key ) );
 
 		if ( empty( $value ) && ! is_null( $default ) ) {
 			$value = $default;
@@ -122,7 +122,7 @@ class Data {
 		if ( '^[0-9a-z\\_]+' !== $pattern && ! empty( $pattern ) ) {
 			$query = "DELETE FROM $wpdb->options WHERE option_name REGEXP %s";
 
-			$result = $wpdb->query( $wpdb->prepare( $query, $pattern ) );
+			$result = $wpdb->query( $wpdb->prepare( $query, $pattern ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		} else {
 			$result = false;
 		}

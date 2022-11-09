@@ -29,6 +29,8 @@ class Bill extends Document {
 	protected $object_type = 'bill';
 
 	/**
+	 * Status transition.
+	 *
 	 * @since 1.1.0
 	 *
 	 * @var array
@@ -68,7 +70,6 @@ class Bill extends Document {
 		}
 
 		$this->required_props = array(
-			// 'line_items'    => __( 'Line Items', 'wp-ever-accounting' ),
 			'currency_code' => __( 'Currency', 'wp-ever-accounting' ),
 			'category_id'   => __( 'Category', 'wp-ever-accounting' ),
 			'contact_id'    => __( 'Vendor', 'wp-ever-accounting' ),
@@ -86,12 +87,12 @@ class Bill extends Document {
 	public function get_statuses() {
 		return eaccounting_get_bill_statuses();
 	}
-	/*
+	/**
 	|--------------------------------------------------------------------------
 	| CRUD methods
 	|--------------------------------------------------------------------------
 	|
-	*/
+	 */
 	/**
 	 * Generate document number.
 	 *
@@ -111,7 +112,7 @@ class Bill extends Document {
 	/**
 	 * Generate number.
 	 *
-	 * @param $number
+	 * @param int $number number.
 	 *
 	 * @return string
 	 * @since 1.1.0
@@ -144,7 +145,7 @@ class Bill extends Document {
 	 * @since 1.1.0
 	 */
 	public function generate_key() {
-		$key = 'ea-' . apply_filters( 'eaccounting_generate_bill_key', 'bill' . '-' . str_replace( '-', '', wp_generate_uuid4() ) );
+		$key = 'ea-' . apply_filters( 'eaccounting_generate_bill_key', 'bill-' . str_replace( '-', '', wp_generate_uuid4() ) );
 
 		return strtolower( sanitize_key( $key ) );
 	}
@@ -236,8 +237,8 @@ class Bill extends Document {
 				$getter = "get_{$prop}";
 				$setter = "set_{$prop}";
 				if ( is_callable( array( $contact, $getter ) )
-					 && is_callable( array( $this, $setter ) )
-					 && is_callable( array( $this, $getter ) ) ) {
+					&& is_callable( array( $this, $setter ) )
+					&& is_callable( array( $this, $getter ) ) ) {
 					$this->$setter( $contact->$getter() );
 				}
 			}
@@ -277,7 +278,7 @@ class Bill extends Document {
 	/**
 	 * Adds an item to the bill.
 	 *
-	 * @param array $args
+	 * @param array $args Item data.
 	 *
 	 * @return false|int
 	 */
@@ -290,12 +291,12 @@ class Bill extends Document {
 			)
 		);
 
-		// check if we have item id or line_id
+		// check if we have item id or line_id.
 		if ( empty( $args['item_id'] ) && empty( $args['line_id'] ) ) {
 			return false;
 		}
 
-		// first check if we get line id if so then its from database
+		// first check if we get line id if so then its from database.
 		$line_item = new Document_Item();
 		if ( $this->get_item( $args['line_id'] ) ) {
 			$line_item = $this->items[ $args['line_id'] ];
@@ -353,7 +354,7 @@ class Bill extends Document {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @param array $args
+	 * @param array $args Arguments to pass to get_comments().
 	 *
 	 * @return array|int|void
 	 */
@@ -376,7 +377,7 @@ class Bill extends Document {
 	/**
 	 * Add bill note.
 	 *
-	 * @param string $note
+	 * @param string $note Note to add.
 	 *
 	 * @return Note|false|int|\WP_Error
 	 * @since 1.1.0
@@ -409,10 +410,12 @@ class Bill extends Document {
 	*/
 
 	/**
-	 * @param array $args
+	 * Add payment.
+	 *
+	 * @param array $args Arguments to pass to get_comments().
 	 *
 	 * @return false
-	 * @throws \Exception
+	 * @throws \Exception  Exception.
 	 * @since 1.1.0
 	 */
 	public function add_payment( $args = array() ) {
@@ -543,7 +546,7 @@ class Bill extends Document {
 	/**
 	 * Calculate total.
 	 *
-	 * @throws \Exception
+	 * @throws \Exception Exception.
 	 * @since 1.1.0
 	 */
 	public function calculate_totals() {
@@ -554,7 +557,7 @@ class Bill extends Document {
 		$total_shipping = 0;
 		$discount_rate  = $this->get_discount();
 
-		// before calculating need to know subtotal so we can apply fixed discount
+		// before calculating need to know subtotal so we can apply fixed discount.
 		if ( $this->is_fixed_discount() ) {
 			$subtotal_discount = 0;
 			foreach ( $this->get_items() as $item ) {
@@ -638,7 +641,8 @@ class Bill extends Document {
 	/**
 	 * Set paid.
 	 *
-	 * @return bool|\Exception
+	 * @return bool True if status changed, false if not.
+	 * @throws \Exception Exception.
 	 * @since 1.1.0
 	 */
 	public function set_paid() {
@@ -677,7 +681,8 @@ class Bill extends Document {
 	/**
 	 * Set cancelled.
 	 *
-	 * @return bool|\Exception
+	 * @return bool True if status changed, false if not.
+	 * @throws \Exception Exception.
 	 * @since 1.1.0
 	 */
 	public function set_cancelled() {
@@ -748,7 +753,9 @@ class Bill extends Document {
 	|--------------------------------------------------------------------------
 	*/
 	/**
-	 * @param string $action
+	 * Get action url.
+	 *
+	 * @param string $action Action.
 	 *
 	 * @return string
 	 * @since 1.1.0

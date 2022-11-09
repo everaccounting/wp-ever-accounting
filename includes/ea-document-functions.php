@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 1.1.0
  *
- * @param $invoice
+ * @param mixed $invoice Invoice ID or post object.
  *
  * @return EverAccounting\Models\Invoice|null
  */
@@ -40,9 +40,8 @@ function eaccounting_get_invoice( $invoice ) {
  *  Returns a new invoice object on success.
  *
  * @since 1.1.0
- *
- * @param bool $wp_error
- * @param      $args
+ * @param  array $args   Invoice arguments.
+ * @param bool  $wp_error Whether to return a WP_Error on failure.
  *
  * @return Invoice|false|int|WP_Error
  */
@@ -75,7 +74,7 @@ function eaccounting_insert_invoice( $args, $wp_error = true ) {
  *
  * @since 1.1.0
  *
- * @param $invoice_id
+ * @param int $invoice_id Invoice ID.
  *
  * @return bool
  */
@@ -133,8 +132,8 @@ function eaccounting_get_bill( $bill ) {
  *  Returns a new bill object on success.
  *
  * @since 1.1.0
- * @param  array    $args   Bill data.
- * @param bool $wp_error Optional. Whether to return a WP_Error on failure.
+ * @param  array $args   Bill data.
+ * @param bool  $wp_error Optional. Whether to return a WP_Error on failure.
  *
  * @return Bill|false|int|WP_Error
  */
@@ -245,7 +244,7 @@ function eaccounting_get_documents( $args = array() ) {
 		$where  .= " AND $table.`id` NOT IN ($exclude)";
 	}
 
-	// search
+	// search.
 	$search_cols = array( 'document_number', 'order_number', 'address' );
 	if ( ! empty( $qv['search'] ) ) {
 		$searches = array();

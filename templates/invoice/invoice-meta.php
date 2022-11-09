@@ -6,6 +6,7 @@
  *
  * @var $invoice Invoice
  * @version 1.1.0
+ * @package EverAccounting
  */
 
 use EverAccounting\Models\Invoice;

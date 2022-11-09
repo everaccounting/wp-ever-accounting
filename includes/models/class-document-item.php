@@ -84,7 +84,6 @@ class Document_Item extends Resource_Model {
 			$this->set_object_read( true );
 		}
 
-		// Load repository
 		$this->repository = Repositories::load( 'document-items' );
 
 		if ( $this->get_id() > 0 ) {
@@ -185,7 +184,7 @@ class Document_Item extends Resource_Model {
 	/**
 	 * Return the sub_total.
 	 *
-	 * @param $context
+	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
 	 * @return float
 	 * @since  1.1.0
@@ -221,7 +220,7 @@ class Document_Item extends Resource_Model {
 	/**
 	 * Get total tax.
 	 *
-	 * @param string $context
+	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
 	 * @return float
 	 * @since 1.1.0
@@ -255,7 +254,7 @@ class Document_Item extends Resource_Model {
 	}
 
 	/**
-	 * @param string $context
+	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
 	 * @return array|mixed|string
 	 * @since 1.1.0
@@ -280,7 +279,7 @@ class Document_Item extends Resource_Model {
 			$value = isset( $this->changes['extra'][ $prop ] ) ? $this->changes['extra'][ $prop ] : $this->data['extra'][ $prop ];
 
 			if ( 'view' === $context ) {
-				$value = apply_filters( $this->get_hook_prefix() . 'extra' . '_' . $prop, $value, $this );
+				$value = apply_filters( $this->get_hook_prefix() . 'extra_' . $prop, $value, $this );
 			}
 		}
 
@@ -290,7 +289,7 @@ class Document_Item extends Resource_Model {
 	/**
 	 * Get shipping cost
 	 *
-	 * @param string $context
+	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
 	 * @return float
 	 * @since 1.1.0
@@ -302,7 +301,7 @@ class Document_Item extends Resource_Model {
 	/**
 	 * get shipping tax
 	 *
-	 * @param string $context
+	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
 	 * @return float
 	 * @since 1.1.0
@@ -314,7 +313,7 @@ class Document_Item extends Resource_Model {
 	/**
 	 * Get fees.
 	 *
-	 * @param string $context
+	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
 	 * @return float
 	 * @since 1.1.0
@@ -326,7 +325,7 @@ class Document_Item extends Resource_Model {
 	/**
 	 * Get fees tax.
 	 *
-	 * @param string $context
+	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
 	 * @return float
 	 * @since 1.1.0
@@ -413,7 +412,7 @@ class Document_Item extends Resource_Model {
 	/**
 	 * set the tax.
 	 *
-	 * @param $tax_rate
+	 * @param float $tax_rate .
 	 *
 	 * @since  1.1.0
 	 */
@@ -424,7 +423,7 @@ class Document_Item extends Resource_Model {
 	/**
 	 * set the tax.
 	 *
-	 * @param $tax
+	 * @param float $tax Tax amount.
 	 *
 	 * @since  1.1.0
 	 */
@@ -459,7 +458,7 @@ class Document_Item extends Resource_Model {
 	/**
 	 * set the total.
 	 *
-	 * @param $currency_code
+	 * @param string $currency_code .
 	 *
 	 * @since  1.1.0
 	 */
@@ -470,8 +469,8 @@ class Document_Item extends Resource_Model {
 	/**
 	 * set the total.
 	 *
-	 * @param      $extra
-	 * @param bool  $append
+	 * @param  array $extra Extra data.
+	 * @param bool  $append Append extra data.
 	 *
 	 * @since  1.1.0
 	 */
@@ -550,7 +549,7 @@ class Document_Item extends Resource_Model {
 	/**
 	 * Increment quantity.
 	 *
-	 * @param $increment
+	 * @param int $increment .
 	 *
 	 * @since 1.1.0
 	 */

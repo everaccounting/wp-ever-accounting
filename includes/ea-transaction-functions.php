@@ -31,7 +31,7 @@ function eaccounting_get_transaction_types() {
 /**
  * Get a single payment.
  *
- * @param $payment
+ * @param Payment $payment Payment object.
  *
  * @return Payment|null
  * @since 1.1.0
@@ -56,7 +56,7 @@ function eaccounting_get_payment( $payment ) {
  *  Returns a new payment object on success.
  *
  * @param array $args {
- *                              An array of elements that make up an expense to update or insert.
+ * An array of elements that make up an expense to update or insert.
  *
  * @type int $id Transaction id. If the id is something other than 0 then it will update the transaction.
  * @type string $payment_date Time of the transaction. Default null.
@@ -70,6 +70,7 @@ function eaccounting_get_payment( $payment ) {
  * @type string $description Description of the transaction. Default empty.
  *
  * }
+ * @param bool  $wp_error Optional. Whether to return a WP_Error on failure. Default false.
  *
  * @return EverAccounting\Models\Payment|\WP_Error|bool
  * @since 1.1.0
@@ -183,6 +184,7 @@ function eaccounting_get_revenue( $revenue ) {
  * @type string $description Description of the transaction. Default empty.
  *
  * }
+ * @param bool  $wp_error Optional. Whether to return a WP_Error on failure. Default false.
  *
  * @return EverAccounting\Models\Revenue|\WP_Error|bool
  * @since 1.1.0
@@ -233,7 +235,7 @@ function eaccounting_delete_revenue( $revenue_id ) {
  * Get revenues items.
  *
  * @param array $args {
- *
+ * An array of elements that make up an expense to update or insert.
  * @type int $id Transaction id.
  * @type string $payment_date Time of the transaction.
  * @type string $amount Transaction amount.
@@ -295,8 +297,10 @@ function eaccounting_get_transfer( $transfer ) {
  * @type string $description Description of the transfer. Default empty.
  *
  * }
+ * @param bool  $wp_error Optional. Whether to return a WP_Error on failure. Default false.
  *
  * @return \EverAccounting\Models\Transfer|\WP_Error|\bool
+ * @throws \Exception When the transfer cannot be created.
  * @since 1.1.0
  */
 function eaccounting_insert_transfer( $args, $wp_error = true ) {
@@ -331,7 +335,7 @@ function eaccounting_insert_transfer( $args, $wp_error = true ) {
 /**
  * Delete a transfer.
  *
- * @param $transfer_id
+ * @param int $transfer_id Transfer ID.
  *
  * @return bool
  * @since 1.1.0
@@ -581,7 +585,6 @@ function eaccounting_get_transactions( $args = array() ) {
 		$where             .= $date_created_query->get_sql();
 	}
 
-
 	if ( ! empty( $qv['payment_date'] ) && is_array( $qv['payment_date'] ) ) {
 		$before = $qv['payment_date']['before'];
 		$after  = $qv['payment_date']['after'];
@@ -680,15 +683,16 @@ function eaccounting_get_total_income( $year = null ) {
 			$where          .= $wpdb->prepare( 'AND ( payment_date between %s AND %s )', $financial_start, $financial_end );
 		}
 
-		$sql          = $wpdb->prepare(
-			" SELECT Sum(amount) amount,currency_code,currency_rate
+		$results      = $wpdb->get_results(
+			$wpdb->prepare( //phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				" SELECT Sum(amount) amount,currency_code,currency_rate
 				FROM   {$wpdb->prefix}ea_transactions
 				WHERE 1=1 $where AND type = %s AND category_id NOT IN (SELECT id FROM   {$wpdb->prefix}ea_categories WHERE  type = 'other')
 				GROUP  BY currency_code, currency_rate
 			",
-			'income'
+				'income'
+			) //phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		);
-		$results      = $wpdb->get_results( $sql ); // phpcs:ignore
 		$total_income = 0;
 		foreach ( $results as $result ) {
 			$total_income += eaccounting_price_to_default( $result->amount, $result->currency_code, $result->currency_rate );
@@ -718,15 +722,16 @@ function eaccounting_get_total_expense( $year = null ) {
 			$where          .= $wpdb->prepare( 'AND ( payment_date between %s AND %s )', $financial_start, $financial_end );
 		}
 
-		$sql           = $wpdb->prepare(
-			" SELECT Sum(amount) amount,currency_code,currency_rate
+		$results       = $wpdb->get_results(
+			$wpdb->prepare( //phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				" SELECT Sum(amount) amount,currency_code,currency_rate
 				FROM   {$wpdb->prefix}ea_transactions
 				WHERE 1=1 $where AND type = %s AND category_id NOT IN (SELECT id FROM   {$wpdb->prefix}ea_categories WHERE  type = 'other')
 				GROUP  BY currency_code, currency_rate
 			",
-			'expense'
-		);
-		$results       = $wpdb->get_results( $sql ); // phpcs:ignore
+				'expense'
+			)
+		); //phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$total_expense = 0;
 		foreach ( $results as $result ) {
 			$total_expense += eaccounting_price_to_default( $result->amount, $result->currency_code, $result->currency_rate );

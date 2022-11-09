@@ -6,6 +6,7 @@
  * SQL updates if nothing changed.
  *
  * @version 1.1.0
+ * @package EverAccounting
  */
 
 namespace EverAccounting\Repositories;

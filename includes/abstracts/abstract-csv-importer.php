@@ -175,7 +175,7 @@ abstract class CSV_Importer {
 	/**
 	 * Maps CSV columns to their corresponding import fields.
 	 *
-	 * @param array $mapping
+	 * @param array $mapping Mapping.
 	 *
 	 * @since 1.0.2
 	 */
@@ -214,7 +214,7 @@ abstract class CSV_Importer {
 
 		$filetype = wp_check_filetype( $this->file, $valid_filetypes );
 		if ( ! in_array( $filetype['type'], $valid_filetypes, true ) ) {
-			wp_die( esc_html__( 'Invalid file type. The importer supports CSV and TXT file formats.', 'wp-ever-accounting' ) );
+			wp_die( esc_html__( 'Invalid file type. The importer supports CSV and TXT file formats.', 'wp-ever-accounting' ) ); // phpcs:ignore
 		}
 
 		$handle = fopen( $this->file, 'r' ); // @codingStandardsIgnoreLine.
@@ -313,7 +313,7 @@ abstract class CSV_Importer {
 				$data[ $mapped_keys[ $id ] ] = call_user_func( $parse_functions[ $id ], $this->unescape_data( $value ) );
 			}
 
-			// make all fields filled with empty
+			// make all fields filled with empty.
 			$default             = array_fill_keys( array_keys( $this->headers ), '' );
 			$this->parsed_data[] = wp_parse_args( $data, $default );
 		}
@@ -371,7 +371,7 @@ abstract class CSV_Importer {
 			if ( ! is_wp_error( $result ) && $result ) {
 				$data['imported'] = (int) $data['imported'] + 1;
 			} else {
-				error_log( print_r( $result, true ) );
+				error_log( print_r( $result, true ) ); // phpcs:ignore
 				$data['skipped'] = (int) $data['skipped'] + 1;
 			}
 
@@ -424,6 +424,8 @@ abstract class CSV_Importer {
 	}
 
 	/**
+	 * Get sample data.
+	 *
 	 * @return array
 	 * @since 1.0.2
 	 */
@@ -452,8 +454,8 @@ abstract class CSV_Importer {
 		}
 
 		$percent = absint( min( round( ( $this->params['position'] / $size ) * 100 ), 100 ) );
-		if ( $percent == 100 ) {
-			@unlink( $this->file );
+		if ( 100 === $percent ) {
+			@unlink( $this->file ); // phpcs:ignore
 		}
 
 		return $percent;
@@ -539,7 +541,7 @@ abstract class CSV_Importer {
 	/**
 	 * Parse generalized text field.
 	 *
-	 * @param $value
+	 * @param string $value Value.
 	 *
 	 * @return array|string
 	 * @since 1.0.2

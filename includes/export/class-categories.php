@@ -71,7 +71,7 @@ class Categories extends CSV_Exporter {
 	/**
 	 * Take a category and generate row data from it for export.
 	 *
-	 * @param \EverAccounting\Models\Category $item
+	 * @param \EverAccounting\Models\Category $item Category object.
 	 *
 	 * @return array
 	 */

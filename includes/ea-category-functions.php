@@ -30,7 +30,7 @@ function eaccounting_get_category_types() {
 /**
  * Get the category type label of a specific type.
  *
- * @param $type
+ * @param string $type Category type.
  *
  * @return string
  * @since 1.1.0
@@ -44,7 +44,7 @@ function eaccounting_get_category_type( $type ) {
 /**
  * Get category.
  *
- * @param $category
+ * @param mixed $category Category ID or object.
  *
  * @return null|EverAccounting\Models\Category
  * @since 1.1.0
@@ -65,8 +65,8 @@ function eaccounting_get_category( $category ) {
 /**
  * Get category by name.
  *
- * @param $name
- * @param $type
+ * @param string $name Category name.
+ * @param string $type Category type.
  *
  * @return \EverAccounting\Models\Category|null
  * @since 1.1.0
@@ -91,8 +91,6 @@ function eaccounting_get_category_by_name( $name, $type ) {
 /**
  * Insert a category.
  *
- * @param bool  $wp_error Whether to return false or WP_Error on failure.
- *
  * @param array $data {
  *                            An array of elements that make up an category to update or insert.
  *
@@ -109,6 +107,7 @@ function eaccounting_get_category_by_name( $name, $type ) {
  * @type string $date_created The date when the category is created. Default is current current time.
  *
  * }
+ * @param bool  $wp_error Whether to return false or WP_Error on failure.
  *
  * @return int|\WP_Error|\EverAccounting\Models\Category|bool The value 0 or WP_Error on failure. The Category object on success.
  * @since 1.1.0
@@ -144,7 +143,7 @@ function eaccounting_insert_category( $data = array(), $wp_error = true ) {
 /**
  * Delete a category.
  *
- * @param $category_id
+ * @param int $category_id Category ID.
  *
  * @return bool
  * @since 1.1.0
@@ -162,7 +161,7 @@ function eaccounting_delete_category( $category_id ) {
 /**
  * Get category items.
  *
- * @param array $args
+ * @param array $args Query arguments.
  *
  * @return int|array|null
  * @since 1.1.0
@@ -230,7 +229,7 @@ function eaccounting_get_categories( $args = array() ) {
 		$searches = array();
 		$where   .= ' AND (';
 		foreach ( $search_cols as $col ) {
-			$searches[] = $wpdb->prepare( $col . ' LIKE %s', '%' . $wpdb->esc_like( $qv['search'] ) . '%' );
+			$searches[] = $wpdb->prepare( $col . ' LIKE %s', '%' . $wpdb->esc_like( $qv['search'] ) . '%' ); // phpcs:ignore
 		}
 		$where .= implode( ' OR ', $searches );
 		$where .= ')';
@@ -253,14 +252,14 @@ function eaccounting_get_categories( $args = array() ) {
 	$orderby     = "ORDER BY {$orderby} {$order}";
 	$count_total = true === $qv['count_total'];
 	$clauses     = compact( 'select', 'from', 'where', 'orderby', 'limit' );
-	$cache_key   = 'query:' . md5( serialize( $qv ) ) . ':' . wp_cache_get_last_changed( 'ea_categories' );
+	$cache_key   = 'query:' . md5( maybe_serialize( $qv ) ) . ':' . wp_cache_get_last_changed( 'ea_categories' );
 	$results     = wp_cache_get( $cache_key, 'ea_categories' );
 	if ( false === $results ) {
 		if ( $count_total ) {
-			$results = (int) $wpdb->get_var( "SELECT COUNT(id) $from $where" );
+			$results = (int) $wpdb->get_var( "SELECT COUNT(id) $from $where" ); // phpcs:ignore
 			wp_cache_set( $cache_key, $results, 'ea_categories' );
 		} else {
-			$results = $wpdb->get_results( implode( ' ', $clauses ) );
+			$results = $wpdb->get_results( implode( ' ', $clauses ) ); // phpcs:ignore
 			if ( in_array( $fields, array( 'all', '*' ), true ) ) {
 				foreach ( $results as $key => $item ) {
 					wp_cache_set( $item->id, $item, 'ea_categories' );
@@ -277,12 +276,3 @@ function eaccounting_get_categories( $args = array() ) {
 
 	return $results;
 }
-
-/**
- * Get category by category name.
- *
- * @param array $args
- *
- * @return int|array|null
- * @since 1.1.0
- */

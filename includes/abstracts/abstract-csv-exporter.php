@@ -103,24 +103,24 @@ abstract class CSV_Exporter {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param int $step
+	 * @param int $step Step number.
 	 */
 	public function process_step( $step ) {
 		$this->page = absint( $step );
 		if ( 1 === $this->page ) {
-			@unlink( $this->get_file_path() );
+			@unlink( $this->get_file_path() ); // phpcs:ignore
 		}
 
 		$rows = $this->prepare_rows( $this->get_rows() );
 
 		$file = $this->get_file();
 
-		if ( 100 == $this->get_percent_complete() ) {
+		if ( 100 === $this->get_percent_complete() ) {
 			$file = chr( 239 ) . chr( 187 ) . chr( 191 ) . $this->get_column_headers() . $file;
 		}
 
 		$file .= $rows;
-		@file_put_contents( $this->get_file_path(), $file );
+		@file_put_contents( $this->get_file_path(), $file ); // phpcs:ignore
 	}
 
 	/**
@@ -131,7 +131,7 @@ abstract class CSV_Exporter {
 	public function export() {
 		$this->send_headers();
 		$this->send_content( $this->get_file() );
-		@unlink( $this->get_file_path() );
+		@unlink( $this->get_file_path() ); // phpcs:ignore
 		die();
 	}
 
@@ -150,7 +150,7 @@ abstract class CSV_Exporter {
 	 * @return string
 	 */
 	public function get_filename() {
-		$date = date( 'Ymd' );
+		$date = date( 'Ymd' ); // phpcs:ignore
 
 		return sanitize_file_name( "{$this->export_type}-$date.csv" );
 	}
@@ -195,11 +195,11 @@ abstract class CSV_Exporter {
 	 */
 	protected function get_file() {
 		$file = '';
-		if ( @file_exists( $this->get_file_path() ) ) {
-			$file = @file_get_contents( $this->get_file_path() );
+		if ( @file_exists( $this->get_file_path() ) ) { // phpcs:ignore
+			$file = @file_get_contents( $this->get_file_path() ); // phpcs:ignore
 		} else {
-			@file_put_contents( $this->get_file_path(), '' );
-			@chmod( $this->get_file_path(), 0664 );
+			@file_put_contents( $this->get_file_path(), '' ); // phpcs:ignore
+			@chmod( $this->get_file_path(), 0664 ); // phpcs:ignore
 		}
 
 		return $file;
@@ -207,6 +207,8 @@ abstract class CSV_Exporter {
 
 	/**
 	 * Export rows in CSV format.
+	 *
+	 * @param array $rows Rows to export.
 	 *
 	 * @since 1.0.2
 	 * @return string
@@ -225,7 +227,7 @@ abstract class CSV_Exporter {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param array    $row_data Data to export.
+	 * @param array    $row Data to export.
 	 * @param string   $key      Column being exported.
 	 * @param resource $buffer   Output buffer.
 	 */
@@ -251,7 +253,7 @@ abstract class CSV_Exporter {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param string $data Data to format.
+	 * @param mixed $data Data to format.
 	 *
 	 * @return string
 	 */
@@ -350,12 +352,12 @@ abstract class CSV_Exporter {
 	 * @return void
 	 */
 	protected function send_headers() {
-		@ini_set( 'zlib.output_compression', 'Off' );
-		@ini_set( 'output_buffering', 'Off' );
-		@ini_set( 'output_handler', '' );
+		@ini_set( 'zlib.output_compression', 'Off' ); // phpcs:ignore
+		@ini_set( 'output_buffering', 'Off' ); // phpcs:ignore
+		@ini_set( 'output_handler', '' ); // phpcs:ignore
 		ignore_user_abort( true );
 		if ( function_exists( 'set_time_limit' ) && false === strpos( ini_get( 'disable_functions' ), 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) {
-			@set_time_limit( 0 );
+			@set_time_limit( 0 ); // phpcs:ignore
 		}
 
 		nocache_headers();
@@ -373,6 +375,6 @@ abstract class CSV_Exporter {
 	 * @param string $content All CSV content.
 	 */
 	protected function send_content( $content ) {
-		echo $content;
+		echo $content; // phpcs:ignore
 	}
 }

@@ -106,7 +106,7 @@ abstract class Registry extends \ArrayObject {
 	 *
 	 * @since 1.0.2
 	 */
-	public function _reset_items() {
+	public function reset_items() {
 		$this->items = array();
 	}
 
@@ -119,11 +119,7 @@ abstract class Registry extends \ArrayObject {
 	 * @since 1.0.2
 	 */
 	public function offsetExists( $offset ) {
-		if ( false !== $this->get( $offset ) ) {
-			return true;
-		}
-
-		return false;
+		return false !== $this->get( $offset );
 	}
 
 	/**

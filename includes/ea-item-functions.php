@@ -8,12 +8,14 @@
  * @package EverAccounting
  */
 
+use EverAccounting\Models\Item;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
  * Main function for returning item.
  *
- * @param $item
+ * @param Item $item Item object.
  *
  * @return EverAccounting\Models\Item|null
  * @since 1.1.0
@@ -39,7 +41,7 @@ function eaccounting_get_item( $item ) {
  *
  * @param string $sku Item sku.
  *
- * @return \EverAccounting\Models\Item
+ * @return Item
  */
 function eaccounting_get_item_by_sku( $sku ) {
 	global $wpdb;
@@ -82,6 +84,7 @@ function eaccounting_get_item_by_sku( $sku ) {
  * @type int $tax_id The tax_id of the item.
  * @type int $enabled The enabled of the item.
  * }
+ * @param bool  $wp_error Optional. Whether to return a WP_Error on failure. Default false.
  *
  * @return EverAccounting\Models\Item|WP_Error|bool
  * @since 1.1.0
@@ -96,7 +99,7 @@ function eaccounting_insert_item( $args, $wp_error = true ) {
 		$args = wp_parse_args( $args, array( 'id' => null ) );
 
 		// Retrieve the item.
-		$item = new \EverAccounting\Models\Item( $args['id'] );
+		$item = new Item( $args['id'] );
 
 		// Load new data.
 		$item->set_props( $args );
@@ -113,7 +116,7 @@ function eaccounting_insert_item( $args, $wp_error = true ) {
 /**
  * Delete an item.
  *
- * @param $item_id
+ * @param int $item_id Item ID.
  *
  * @return bool
  * @since 1.1.0
@@ -132,7 +135,7 @@ function eaccounting_delete_item( $item_id ) {
  * Get items.
  *
  * @param array $args { .
- *
+ *    Optional. Arguments to retrieve items.
  * @type string $name The name of the item.
  * @type string $sku The sku of the item.
  * @type int $image_id The image_id for the item.

@@ -72,7 +72,6 @@ class Category extends Resource_Model {
 			$this->set_object_read( true );
 		}
 
-		// Load repository
 		$this->repository = Repositories::load( 'categories' );
 
 		if ( $this->get_id() > 0 ) {
@@ -109,7 +108,7 @@ class Category extends Resource_Model {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param string $context
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
 	 * @return mixed|null
 	 */
@@ -122,7 +121,7 @@ class Category extends Resource_Model {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param string $context
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
 	 * @return mixed|null
 	 */
@@ -135,7 +134,7 @@ class Category extends Resource_Model {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param string $context
+	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
 	 * @return mixed|null
 	 */
@@ -158,7 +157,7 @@ class Category extends Resource_Model {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param $value
+	 * @param string $value Category name.
 	 */
 	public function set_name( $value ) {
 		$this->set_prop( 'name', eaccounting_clean( $value ) );
@@ -169,7 +168,7 @@ class Category extends Resource_Model {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param $value
+	 * @param string $value  Category type.
 	 */
 	public function set_type( $value ) {
 		if ( array_key_exists( $value, eaccounting_get_category_types() ) ) {
@@ -182,7 +181,7 @@ class Category extends Resource_Model {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param $value
+	 * @param string $value Category color.
 	 */
 	public function set_color( $value ) {
 		$this->set_prop( 'color', eaccounting_clean( $value ) );

@@ -35,6 +35,8 @@ class Account extends Resource_Model {
 	protected $object_type = 'account';
 
 	/**
+	 * Cache group.
+	 *
 	 * @since 1.1.0
 	 *
 	 * @var string
@@ -62,6 +64,13 @@ class Account extends Resource_Model {
 		'date_created'    => null,
 	);
 
+	/**
+	 * Balance of the account.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @var  string
+	 */
 	protected $balance = null;
 
 	/**
@@ -85,7 +94,7 @@ class Account extends Resource_Model {
 			$this->set_object_read( true );
 		}
 
-		// Load repository
+		// Load repository.
 		$this->repository = Repositories::load( 'accounts' );
 
 		if ( $this->get_id() > 0 ) {
@@ -97,7 +106,7 @@ class Account extends Resource_Model {
 			'number' => __( 'Account number', 'wp-ever-accounting' ),
 		);
 	}
-	/*
+	/**
 	|--------------------------------------------------------------------------
 	| Getters
 	|--------------------------------------------------------------------------
@@ -105,7 +114,7 @@ class Account extends Resource_Model {
 	| Functions for getting item data. Getter methods wont change anything unless
 	| just returning from the props.
 	|
-	*/
+	 */
 
 	/**
 	 * Return the account name.
@@ -125,7 +134,7 @@ class Account extends Resource_Model {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @param string $context
+	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
 	 * @return mixed|null
 	 */
@@ -138,7 +147,7 @@ class Account extends Resource_Model {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @param string $context
+	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
 	 * @return mixed|null
 	 */
@@ -151,7 +160,7 @@ class Account extends Resource_Model {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @param string $context
+	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
 	 * @return mixed|null
 	 */
@@ -164,7 +173,7 @@ class Account extends Resource_Model {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @param string $context
+	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
 	 * @return mixed|null
 	 */
@@ -177,7 +186,7 @@ class Account extends Resource_Model {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @param string $context
+	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
 	 * @return mixed|null
 	 */
@@ -190,7 +199,7 @@ class Account extends Resource_Model {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @param string $context
+	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
 	 * @return mixed|null
 	 */
@@ -203,7 +212,7 @@ class Account extends Resource_Model {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @param string $context
+	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
 	 * @return int
 	 */
@@ -237,7 +246,7 @@ class Account extends Resource_Model {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @param string $number bank account number
+	 * @param string $number bank account number.
 	 */
 	public function set_number( $number ) {
 		$this->set_prop( 'number', eaccounting_clean( $number ) );
@@ -248,7 +257,7 @@ class Account extends Resource_Model {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @param string $opening_balance opening balance of the account.
+	 * @param string $amount account opening balance.
 	 */
 	public function set_opening_balance( $amount ) {
 		$code = empty( $this->get_currency_code() ) ? 'USD' : $this->get_currency_code();
@@ -260,7 +269,7 @@ class Account extends Resource_Model {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @param string $currency_code Bank currency code
+	 * @param string $currency_code Bank currency code.
 	 */
 	public function set_currency_code( $currency_code ) {
 		$this->set_prop( 'currency_code', strtoupper( $currency_code ) );
@@ -271,7 +280,7 @@ class Account extends Resource_Model {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @param string $bank_name name of the bank
+	 * @param string $bank_name name of the bank.
 	 */
 	public function set_bank_name( $bank_name ) {
 		$this->set_prop( 'bank_name', eaccounting_clean( $bank_name ) );
@@ -293,7 +302,7 @@ class Account extends Resource_Model {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @param string $bank_address Bank physical address
+	 * @param string $bank_address Bank physical address.
 	 */
 	public function set_bank_address( $bank_address ) {
 		$this->set_prop( 'bank_address', sanitize_textarea_field( $bank_address ) );
@@ -304,7 +313,7 @@ class Account extends Resource_Model {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @param int $thumbnail_id
+	 * @param int $thumbnail_id Thumbnail id.
 	 */
 	public function set_thumbnail_id( $thumbnail_id ) {
 		$this->set_prop( 'thumbnail_id', absint( $thumbnail_id ) );
@@ -324,17 +333,17 @@ class Account extends Resource_Model {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @param array|object $currency
+	 * @param array|object $currency Currency object.
 	 */
 	public function set_currency( $currency ) {
 		$this->set_object_prop( $currency, 'code', 'currency_code' );
 	}
 
 	/**
+	 * Get balance.
+	 *
 	 * @since 1.1.0
 	 * @since 1.0.2
-	 *
-	 * @param bool $format
 	 *
 	 * @return float|string
 	 */
@@ -356,7 +365,7 @@ class Account extends Resource_Model {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @param $balance
+	 * @param float $balance Account balance.
 	 */
 	protected function set_balance( $balance ) {
 		$this->balance = $balance;

@@ -15,7 +15,6 @@ defined( 'ABSPATH' ) || exit();
  *
  * @since 1.0.2
  */
-
 class Assets {
 
 	/**

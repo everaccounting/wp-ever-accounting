@@ -70,7 +70,7 @@ class Items extends CSV_Exporter {
 	/**
 	 * Take a item and generate row data from it for export.
 	 *
-	 * @param \EverAccounting\Models\Item $item
+	 * @param \EverAccounting\Models\Item $item Item object.
 	 *
 	 * @return array
 	 */

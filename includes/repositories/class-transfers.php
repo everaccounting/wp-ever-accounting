@@ -68,7 +68,7 @@ class Transfers extends Resource_Repository {
 	 *
 	 * @param Transfer $transfer Item object.
 	 *
-	 * @throws \Exception
+	 * @throws \Exception When item cannot be created.
 	 */
 	public function insert( &$transfer ) {
 		global $wpdb;
@@ -166,7 +166,7 @@ class Transfers extends Resource_Repository {
 	 *
 	 * @param Transfer $item Item object.
 	 *
-	 * @throws \Exception
+	 * @throws \Exception When item cannot be read.
 	 */
 	public function read( &$item ) {
 		global $wpdb;
@@ -186,12 +186,9 @@ class Transfers extends Resource_Repository {
 		// If not found, retrieve from the db.
 		if ( false === $raw_item ) {
 			$raw_item = $wpdb->get_row(
-				$wpdb->prepare(
-					"SELECT * FROM {$table} WHERE id = %d",
-					$item->get_id()
-				)
+				$wpdb->prepare( "SELECT * FROM {$table} WHERE id = %d", $item->get_id() ) // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 			);
-			// Update the cache with our data
+			// Update the cache with our data.
 			wp_cache_set( $item->get_id(), $raw_item, $item->get_cache_group() );
 		}
 
@@ -234,7 +231,7 @@ class Transfers extends Resource_Repository {
 	 *
 	 * @param Transfer $item Subscription object.
 	 *
-	 * @throws \Exception
+	 * @throws \Exception When item cannot be updated.
 	 */
 	public function update( &$item ) {
 		return $this->insert( $item );
@@ -243,7 +240,7 @@ class Transfers extends Resource_Repository {
 	/**
 	 * Method to delete a subscription from the database.
 	 *
-	 * @param Transfer $item
+	 * @param Transfer $item Transaction object.
 	 */
 	public function delete( &$item ) {
 		global $wpdb;

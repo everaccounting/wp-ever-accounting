@@ -23,7 +23,6 @@ class Compatibility {
 	 * Compatibility constructor.
 	 */
 	public function __construct() {
-		// woocommerce
 		add_filter( 'woocommerce_prevent_admin_access', array( $this, 'change_admin_access' ) );
 	}
 

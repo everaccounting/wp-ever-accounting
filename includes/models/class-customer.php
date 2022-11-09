@@ -38,7 +38,7 @@ class Customer extends Contact {
 	 *
 	 * @param int|object|Customer $data object to read.
 	 *
-	 * @throws \Exception
+	 * @throws \Exception If invalid customer.
 	 */
 	public function __construct( $data = 0 ) {
 		$this->data = array_merge( $this->data, array( 'type' => 'customer' ) );
@@ -170,13 +170,7 @@ class Customer extends Contact {
 			if ( ! empty( $total ) ) {
 				$invoice_ids = implode( ',', wp_parse_id_list( wp_list_pluck( $invoices, 'id' ) ) );
 				$revenues    = $wpdb->get_results(
-					$wpdb->prepare(
-						"SELECT Sum(amount) amount, currency_code, currency_rate
-		  			   FROM   {$wpdb->prefix}ea_transactions
-		               WHERE  type = %s AND document_id IN ($invoice_ids)
-		  			   GROUP  BY currency_code,currency_rate",
-						'income'
-					)
+					$wpdb->prepare( "SELECT Sum(amount) amount, currency_code, currency_rate FROM   {$wpdb->prefix}ea_transactionsWHERE  type = %s AND document_id IN ($invoice_ids) GROUP  BY currency_code,currency_rate",  'income') //phpcs:ignore
 				);
 
 				foreach ( $revenues as $revenue ) {

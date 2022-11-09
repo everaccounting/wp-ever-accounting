@@ -11,11 +11,15 @@ defined( 'ABSPATH' ) || exit;
  */
 abstract class Singleton {
 	/**
+	 * Instance of the classes.
+	 *
 	 * @var $this []
 	 */
 	protected static $instance = array();
 
 	/**
+	 * Singleton instance.
+	 *
 	 * @return $this
 	 */
 	public static function instance() {
@@ -38,7 +42,7 @@ abstract class Singleton {
 	 * Prevent unserializing.
 	 */
 	final public function __wakeup() {
-		_doing_it_wrong( __FUNCTION__, __( 'Unserializing instances of this class is forbidden.', 'wp-ever-accounting' ), '1.1.0' );
+		_doing_it_wrong( __FUNCTION__, esc_html__( 'Unserializing instances of this class is forbidden.', 'wp-ever-accounting' ), '1.1.0' );
 		die();
 	}
 }

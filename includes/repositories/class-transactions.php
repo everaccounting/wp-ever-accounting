@@ -54,8 +54,8 @@ class Transactions extends Resource_Repository {
 		'type'           => '%s',
 		'payment_date'   => '%s',
 		'amount'         => '%.4f',
-		'currency_code'  => '%s', // protected
-		'currency_rate'  => '%.8f', // protected
+		'currency_code'  => '%s', // protected.
+		'currency_rate'  => '%.8f', // protected.
 		'account_id'     => '%d',
 		'document_id'    => '%d',
 		'contact_id'     => '%d',
@@ -75,7 +75,7 @@ class Transactions extends Resource_Repository {
 	 *
 	 * @param Transaction $item Item object.
 	 *
-	 * @throws \Exception
+	 * @throws \Exception If there is an error reading from the database.
 	 */
 	public function read( &$item ) {
 		global $wpdb;
@@ -92,7 +92,7 @@ class Transactions extends Resource_Repository {
 		$data = wp_cache_get( $item->get_id(), $item->get_cache_group() );
 
 		if ( false === $data ) {
-			$data = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$table} WHERE id = %d AND type =%s LIMIT 1;", $item->get_id(), $item->get_type() ) );
+			$data = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$table} WHERE id = %d AND type =%s LIMIT 1;", $item->get_id(), $item->get_type() ) ); //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 			wp_cache_set( $item->get_id(), $data, $item->get_cache_group() );
 		}
 

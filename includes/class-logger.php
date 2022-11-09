@@ -107,7 +107,7 @@ class Logger {
 	 * @since 1.0.2
 	 */
 	public function log( $level, $message, $context = array() ) {
-		// format log entry
+		// format log entry.
 		$time         = date_i18n( 'm-d-Y @ H:i:s' );
 		$level_string = strtoupper( $level );
 		$entry        = "{$time} {$level_string} {$message}";
@@ -159,7 +159,7 @@ class Logger {
 		$file = self::get_log_file_path( $name );
 
 		if ( $file ) {
-			@wp_mkdir_p( dirname( $file ) );
+			@wp_mkdir_p( dirname( $file ) ); // @codingStandardsIgnoreLine.
 
 			if ( ! file_exists( $file ) ) {
 				$temphandle = @fopen( $file, 'wb+' ); // @codingStandardsIgnoreLine.
@@ -205,14 +205,14 @@ class Logger {
 	/**
 	 * Get a log file path.
 	 *
-	 * @param $name
+	 * @param string $name Optional. Name of the log file.
 	 *
 	 * @since 1.0.2
 	 *
 	 * @return bool|string The log file path or false if path cannot be determined.
 	 */
 	public static function get_log_file_path( $name ) {
-		$date_suffix = date( 'Y-m-d', time() );
+		$date_suffix = date( 'Y-m-d', time() ); // @codingStandardsIgnoreLine.
 		$name        = sanitize_file_name( implode( '-', array( $name, $date_suffix ) ) . '.log' );
 
 		return trailingslashit( EACCOUNTING_LOG_DIR ) . $name;
@@ -276,7 +276,7 @@ class Logger {
 	/**
 	 * Remove/delete the chosen file.
 	 *
-	 * @param $file_name
+	 * @param string $file_name Name of the log file.
 	 *
 	 * @since 1.0.2
 	 *

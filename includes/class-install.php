@@ -10,6 +10,12 @@ namespace EverAccounting;
 
 defined( 'ABSPATH' ) || exit();
 
+/**
+ * Class Install
+ *
+ * @package EverAccounting
+ * @since 1.0.2
+ */
 class Install {
 	/**
 	 * Updates and callbacks that need to be run per version.
@@ -185,7 +191,7 @@ class Install {
 		$tables         = self::get_tables();
 		$notices        = \EverAccounting\Admin\Notices::init();
 		foreach ( $tables as $table ) {
-			if ( ! $wpdb->get_var( "SHOW TABLES LIKE '$table'" ) ) {
+			if ( ! $wpdb->get_var( "SHOW TABLES LIKE '$table'" ) ) { // phpcs:ignore
 				$missing_tables[] = $table;
 			}
 		}
@@ -225,7 +231,7 @@ class Install {
 	 * @since 1.0.2
 	 */
 	private static function create_categories() {
-		// If no categories then create default categories
+		// If no categories then create default categories.
 		if ( ! eaccounting_get_categories( array( 'count_total' => true ) ) ) {
 			eaccounting_insert_category(
 				array(
@@ -252,7 +258,7 @@ class Install {
 			);
 		}
 
-		// create transfer category
+		// create transfer category.
 		if ( ! eaccounting_get_currencies(
 			array(
 				'count_total' => true,
@@ -279,7 +285,7 @@ class Install {
 	 * @since 1.0.2
 	 */
 	private static function create_currencies() {
-		// create currencies
+		// create currencies.
 		if ( ! eaccounting_get_currencies( array( 'count_total' => true ) ) ) {
 
 			eaccounting_insert_currency(
@@ -676,7 +682,7 @@ class Install {
 		$tables = self::get_tables();
 
 		foreach ( $tables as $table ) {
-			$wpdb->query( "DROP TABLE IF EXISTS {$table}" );
+			$wpdb->query( "DROP TABLE IF EXISTS {$table}" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.SchemaChange,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		}
 	}
 
@@ -744,7 +750,7 @@ class Install {
 			)
 		);
 
-		// add caps to admin
+		// add caps to admin.
 		global $wp_roles;
 
 		if ( is_object( $wp_roles ) ) {
@@ -812,7 +818,6 @@ class Install {
 	 */
 	private static function maybe_enable_setup_wizard() {
 		if ( apply_filters( 'eaccounting_enable_setup_wizard', true ) && self::is_new_install() ) {
-			// \EverAccounting\Admin\Admin_Notices::add_notice( 'install', true );
 			set_transient( '_eaccounting_activation_redirect', 1, 30 );
 		}
 	}

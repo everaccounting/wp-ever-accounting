@@ -3,6 +3,7 @@
  * Handles the default properties of the company.
  *
  * @since 1.0.2
+ * @package EverAccounting
  */
 
 namespace EverAccounting\Utilities;
@@ -33,14 +34,13 @@ class Defaults {
 	public function init() {
 		$this->set_currency();
 		$this->set_account();
-		// $this->set_payment_method();
 		do_action( 'eaccounting_init_company_defaults', $this );
 	}
 
 	/**
 	 * Retrieves an item and its associated value.
 	 *
-	 * @param string $prop
+	 * @param string $prop Property name.
 	 *
 	 * @return mixed
 	 * @since 1.0.2
@@ -56,7 +56,7 @@ class Defaults {
 	/**
 	 * Magic isset to bypass referencing plugin.
 	 *
-	 * @param $prop
+	 * @param string $prop Property name.
 	 *
 	 * @return mixed
 	 * @since 1.0.2
@@ -96,7 +96,7 @@ class Defaults {
 	protected function set_account() {
 		$account_id = (int) eaccounting()->settings->get( 'default_account', '' );
 		$account    = null;
-		if ( ! empty( $account_id ) && $account = eaccounting_get_account( $account_id ) ) {
+		if ( ! empty( $account_id ) && eaccounting_get_account( $account_id ) === $account ) {
 			$account = $account->get_data();
 		}
 

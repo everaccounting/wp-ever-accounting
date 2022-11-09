@@ -37,7 +37,7 @@ class Vendor extends Contact {
 	 *
 	 * @param int|object|Customer $data object to read.
 	 *
-	 * @throws \Exception
+	 * @throws \Exception If invalid data is passed.
 	 */
 	public function __construct( $data = 0 ) {
 		$this->data = array_merge( $this->data, array( 'type' => 'vendor' ) );
@@ -154,7 +154,7 @@ class Vendor extends Contact {
 					   WHERE  status NOT IN ( 'draft', 'cancelled', 'paid' )
 					   AND type = 'bill' AND contact_id=%d",
 					$this->get_id()
-				)
+				) //phpcs:ignore
 			);
 
 			$total = 0;
@@ -165,13 +165,7 @@ class Vendor extends Contact {
 			if ( ! empty( $total ) ) {
 				$bill_ids = implode( ',', wp_parse_id_list( wp_list_pluck( $bills, 'id' ) ) );
 				$revenues = $wpdb->get_results(
-					$wpdb->prepare(
-						"SELECT Sum(amount) amount, currency_code, currency_rate
-		  			   FROM   {$wpdb->prefix}ea_transactions
-		               WHERE  type = %s AND document_id IN ($bill_ids)
-		  			   GROUP  BY currency_code,currency_rate",
-						'expense'
-					)
+					$wpdb->prepare( "SELECT Sum(amount) amount, currency_code, currency_rate FROM   {$wpdb->prefix}ea_transactions WHERE  type = %s AND document_id IN ($bill_ids) GROUP  BY currency_code,currency_rate", 'expense' ) //phpcs:ignore
 				);
 
 				foreach ( $revenues as $revenue ) {

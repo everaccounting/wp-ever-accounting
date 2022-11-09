@@ -71,7 +71,7 @@ class Currencies extends CSV_Exporter {
 	/**
 	 * Take a currency and generate row data from it for export.
 	 *
-	 * @param \EverAccounting\Models\Currency $item
+	 * @param \EverAccounting\Models\Currency $item Currency object.
 	 *
 	 * @return array
 	 */

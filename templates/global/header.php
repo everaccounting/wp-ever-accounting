@@ -5,7 +5,9 @@
  * This template can be overridden by copying it to yourtheme/eaccounting/global/head.php.
  *
  * @version 1.1.0
+ * @package EverAccounting
  */
+
 defined( 'ABSPATH' ) || exit;
 $logo      = eaccounting()->settings->get( 'company_logo' );
 $site_name = eaccounting_get_site_name();
@@ -19,7 +21,7 @@ $site_name = eaccounting_get_site_name();
 						<img src="<?php echo esc_url( $logo ); ?>" alt="<?php echo esc_attr( $site_name ); ?>" height="100" width="100">
 					</a>
 				<?php else : ?>
-				<h1 class="ea-site-title"><?php esc_html_e( $site_name, 'wp-ever-accounting' ); ?></h1>
+				<h1 class="ea-site-title"><?php echo esc_html( $site_name ); ?></h1>
 				<?php endif; ?>
 			</div>
 			<div class="ea-col-9"></div>

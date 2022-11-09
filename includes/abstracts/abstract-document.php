@@ -2,9 +2,9 @@
 /**
  * Abstract class for document object.
  *
+ * @version     1.1.0
  * @package     EverAccounting\Abstracts
  * @class       Document
- * @version     1.1.0
  */
 
 namespace EverAccounting\Abstracts;
@@ -54,7 +54,7 @@ abstract class Document extends Resource_Model {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @var
+	 * @var string
 	 */
 	protected $repository_name = 'documents';
 
@@ -135,7 +135,6 @@ abstract class Document extends Resource_Model {
 	 */
 	public function __construct( $document = 0 ) {
 		parent::__construct( $document );
-		// Load repository
 		$this->repository = Repositories::load( $this->repository_name );
 	}
 
@@ -261,7 +260,7 @@ abstract class Document extends Resource_Model {
 	/**
 	 * Get internal type.
 	 *
-	 * @param string $context
+	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
 	 * @return string
 	 */
@@ -298,7 +297,7 @@ abstract class Document extends Resource_Model {
 	/**
 	 * Return the issued at.
 	 *
-	 * @param string $context
+	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
 	 * @since  1.1.0
 	 *
@@ -311,7 +310,7 @@ abstract class Document extends Resource_Model {
 	/**
 	 * Return the due at.
 	 *
-	 * @param string $context
+	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
 	 * @since  1.1.0
 	 *
@@ -324,7 +323,7 @@ abstract class Document extends Resource_Model {
 	/**
 	 * Return the due at.
 	 *
-	 * @param string $context
+	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
 	 * @since  1.1.0
 	 *
@@ -363,7 +362,7 @@ abstract class Document extends Resource_Model {
 	/**
 	 * Return the address.
 	 *
-	 * @param string $context
+	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
 	 * @since  1.1.0
 	 *
@@ -390,7 +389,7 @@ abstract class Document extends Resource_Model {
 			$value = isset( $this->changes['address'][ $prop ] ) ? $this->changes['address'][ $prop ] : $this->data['address'][ $prop ];
 
 			if ( 'view' === $context ) {
-				$value = apply_filters( $this->get_hook_prefix() . 'address' . '_' . $prop, $value, $this );
+				$value = apply_filters( $this->get_hook_prefix() . 'address_' . $prop, $value, $this );
 			}
 		}
 
@@ -634,7 +633,7 @@ abstract class Document extends Resource_Model {
 	/**
 	 * Get tax inclusive or not.
 	 *
-	 * @param string $context
+	 * @param string $context View or edit context.
 	 *
 	 * @since 1.1.0
 	 *
@@ -651,7 +650,7 @@ abstract class Document extends Resource_Model {
 	/**
 	 * Return the note.
 	 *
-	 * @param string $context
+	 * @param string $context View or edit context.
 	 *
 	 * @since  1.1.0
 	 *
@@ -664,7 +663,7 @@ abstract class Document extends Resource_Model {
 	/**
 	 * Return the terms.
 	 *
-	 * @param string $context
+	 * @param string $context View or edit context.
 	 *
 	 * @since  1.1.0
 	 *
@@ -758,7 +757,7 @@ abstract class Document extends Resource_Model {
 	/**
 	 * set the number.
 	 *
-	 * @param string $order_number .
+	 * @param string $order_number Order number.
 	 *
 	 * @since  1.1.0
 	 */
@@ -769,7 +768,7 @@ abstract class Document extends Resource_Model {
 	/**
 	 * set the number.
 	 *
-	 * @param string $type .
+	 * @param string $type Type of document.
 	 *
 	 * @since  1.1.0
 	 */
@@ -1100,7 +1099,7 @@ abstract class Document extends Resource_Model {
 	/**
 	 * set the note.
 	 *
-	 * @param string $note .
+	 * @param string $type .
 	 *
 	 * @since  1.1.0
 	 */
@@ -1122,7 +1121,7 @@ abstract class Document extends Resource_Model {
 	/**
 	 * set the note.
 	 *
-	 * @param $terms
+	 * @param string $terms .
 	 *
 	 * @since  1.1.0
 	 */
@@ -1133,7 +1132,7 @@ abstract class Document extends Resource_Model {
 	/**
 	 * set the attachment.
 	 *
-	 * @param string $attachment .
+	 * @param string $attachment Attachment id.
 	 *
 	 * @since  1.1.0
 	 */
@@ -1212,10 +1211,6 @@ abstract class Document extends Resource_Model {
 	 */
 	public function get_status_nicename() {
 		return isset( $this->get_statuses()[ $this->get_status() ] ) ? $this->get_statuses()[ $this->get_status() ] : $this->get_status();
-	}
-
-	public function get_formatted_address() {
-
 	}
 
 
@@ -1309,7 +1304,7 @@ abstract class Document extends Resource_Model {
 	}
 
 	/**
-	 * @param      $item_id
+	 * @param int $item_id .
 	 *
 	 * @since 1.1.0
 	 *
@@ -1334,7 +1329,7 @@ abstract class Document extends Resource_Model {
 	 * Set the document items.
 	 *
 	 * @param array|Document_Item[] $items items.
-	 * @param bool                  $append
+	 * @param bool                  $append append.
 	 *
 	 * @since 1.1.0
 	 */
@@ -1364,7 +1359,7 @@ abstract class Document extends Resource_Model {
 	/**
 	 * Adds an item to the document.
 	 *
-	 * @param $args
+	 * @param array $args array|Document_Item item data.
 	 *
 	 * @return false|int
 	 */
@@ -1373,9 +1368,7 @@ abstract class Document extends Resource_Model {
 	/**
 	 * Remove item from the order.
 	 *
-	 * @param int  $item_id Item ID to delete.
-	 *
-	 * @param bool $by_line_id
+	 * @param int $item_id Item ID to delete.
 	 *
 	 * @return false|void
 	 */
@@ -1406,7 +1399,7 @@ abstract class Document extends Resource_Model {
 	/**
 	 * Checks if the invoice has a given status.
 	 *
-	 * @param $status
+	 * @param string $status Status to check.
 	 *
 	 * @since 1.1.0
 	 *

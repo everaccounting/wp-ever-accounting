@@ -7,6 +7,7 @@
  * @since   1.1.0
  * @package EverAccounting
  */
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -14,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 1.1.0
  *
- * @param $account
+ * @param mixed $account Account ID or object.
  *
  * @return EverAccounting\Models\Account|null
  */
@@ -34,7 +35,7 @@ function eaccounting_get_account( $account ) {
 /**
  * @since 1.1.0
  *
- * @param $account
+ * @param mixed $account   Account ID or object.
  *
  * @return mixed|null
  */
@@ -79,11 +80,11 @@ function eaccounting_get_account_currency_code( $account ) {
  * @type int    $creator_id      The creator id for the account. Default is current user id of the WordPress.
  *
  * @type string $date_created    The date when the account is created. Default is current time.
- *
- *
  * }
+ * @param bool  $wp_error Optional. Whether to return a WP_Error on failure. Default false.
  *
  * @return EverAccounting\Models\Account|\WP_Error|bool
+ * @throws \Exception When account is not created.
  */
 function eaccounting_insert_account( $data, $wp_error = true ) {
 	global $wpdb;
@@ -98,21 +99,21 @@ function eaccounting_insert_account( $data, $wp_error = true ) {
 		// Retrieve the account.
 		$item = new \EverAccounting\Models\Account( $data['id'] );
 
-		// check if already account number exists for another user
+		// check if already account number exists for another user.
 		$number           = ! empty( $data['number'] ) ? $data['number'] : $item->get_number();
-		$existing_account = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}ea_accounts WHERE number='$number'" );
+		$existing_account = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}ea_accounts WHERE number='$number'" ); // phpcs:ignore
 
 		if ( $existing_account ) {
 			$existing_id = $existing_account->id;
 		}
-		if ( ! empty( $existing_id ) && absint( $existing_id ) != $item->get_id() ) {
+		if ( ! empty( $existing_id ) && absint( $existing_id ) !== $item->get_id() ) {
 			throw new \Exception( __( 'Duplicate account number.', 'wp-ever-accounting' ) );
 		}
 
 		// Load new data.
 		$item->set_props( $data );
 
-		// Save the item
+		// Save the item.
 		$item->save();
 
 		return $item;
@@ -126,7 +127,7 @@ function eaccounting_insert_account( $data, $wp_error = true ) {
  *
  * @since 1.1.0
  *
- * @param $account_id
+ * @param int $account_id Account ID.
  *
  * @return bool
  */
@@ -229,13 +230,13 @@ function eaccounting_get_accounts( $args = array() ) {
 		$fields   .= " , ( {$table}.opening_balance + IFNULL( calculated.total, 0) ) as balance ";
 	}
 
-	// search
+	// search.
 	$search_cols = array( 'name', 'number', 'currency_code', 'bank_name', 'bank_phone', 'bank_address' );
 	if ( ! empty( $qv['search'] ) ) {
 		$searches = array();
 		$where   .= ' AND (';
 		foreach ( $search_cols as $col ) {
-			$searches[] = $wpdb->prepare( $col . ' LIKE %s', '%' . $wpdb->esc_like( $qv['search'] ) . '%' );
+			$searches[] = $wpdb->prepare( $col . ' LIKE %s', '%' . $wpdb->esc_like( $qv['search'] ) . '%' ); // phpcs:ignore
 		}
 		$where .= implode( ' OR ', $searches );
 		$where .= ')';
@@ -263,14 +264,14 @@ function eaccounting_get_accounts( $args = array() ) {
 	$orderby     = "ORDER BY {$orderby} {$order}";
 	$count_total = true === $qv['count_total'];
 	$clauses     = compact( 'select', 'from', 'join', 'where', 'orderby', 'limit' );
-	$cache_key   = 'query:' . md5( serialize( $qv ) ) . ':' . wp_cache_get_last_changed( 'ea_accounts' );
+	$cache_key   = 'query:' . md5( maybe_serialize( $qv ) ) . ':' . wp_cache_get_last_changed( 'ea_accounts' ); // phpcs:ignore
 	$results     = wp_cache_get( $cache_key, 'ea_accounts' );
 	if ( false === $results ) {
 		if ( $count_total ) {
-			$results = (int) $wpdb->get_var( "SELECT COUNT(id) $from $where" );
+			$results = (int) $wpdb->get_var( "SELECT COUNT(id) $from $where" ); // phpcs:ignore
 			wp_cache_set( $cache_key, $results, 'ea_accounts' );
 		} else {
-			$results = $wpdb->get_results( implode( ' ', $clauses ) );
+			$results = $wpdb->get_results( implode( ' ', $clauses ) ); // phpcs:ignore
 			if ( in_array( $fields, array( 'all', '*' ), true ) ) {
 				foreach ( $results as $key => $item ) {
 					wp_cache_set( $item->id, $item, 'ea_accounts' );

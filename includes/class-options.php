@@ -1,6 +1,8 @@
 <?php
 /**
  * Options for plugin
+ *
+ * @package EverAccounting
  */
 
 namespace EverAccounting;
@@ -12,9 +14,11 @@ namespace EverAccounting;
  */
 class Options {
 	/**
+	 * Options.
+	 *
 	 * @var array
 	 */
-	var $options = array();
+	protected $options = array();
 
 	/**
 	 * Options constructor.
@@ -27,15 +31,14 @@ class Options {
 	/**
 	 * Get the value of a specific option
 	 *
-	 * @param mixed  $default (optional)
-	 *
-	 * @param string $key
+	 * @param string $key Key of the option.
+	 * @param mixed  $default Default value.
 	 *
 	 * @since  1.0.2
 	 *
 	 * @return mixed
 	 */
-	function get( $key, $default = false ) {
+	public function get( $key, $default = false ) {
 		$value = ! empty( $this->options[ $key ] ) ? $this->options[ $key ] : $default;
 
 		return apply_filters( "ever_accounting_option__{$key}", $value );
@@ -44,21 +47,20 @@ class Options {
 	/**
 	 * Update option value
 	 *
-	 * @param $option_id
-	 * @param $value
+	 * @param string $option_id Option ID.
+	 * @param string $value Option value.
 	 */
-	function update( $option_id, $value ) {
+	public function update( $option_id, $value ) {
 		$this->options[ $option_id ] = $value;
 		update_option( 'eaccounting_settings', $this->options );
 	}
 
-
 	/**
 	 * Delete option
 	 *
-	 * @param $option_id
+	 * @param string $option_id Option ID.
 	 */
-	function remove( $option_id ) {
+	public function remove( $option_id ) {
 		if ( ! empty( $this->options[ $option_id ] ) ) {
 			unset( $this->options[ $option_id ] );
 		}
@@ -79,9 +81,9 @@ class Options {
 	/**
 	 * Sets an option (in memory).
 	 *
-	 * @param bool  $save Optional. Whether to trigger saving the option or options. Default false.
-	 *
 	 * @param array $options An array of `key => value` setting pairs to set.
+	 *
+	 * @param bool  $save Optional. Whether to trigger saving the option or options. Default false.
 	 *
 	 * @return bool If `$save` is not false, whether the options were saved successfully. True otherwise.
 	 * @since  1.0.2

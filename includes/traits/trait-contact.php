@@ -1,6 +1,8 @@
 <?php
 /**
- * Contact Trait
+ * Contact Trait.
+ *
+ * @package EverAccounting
  */
 
 namespace EverAccounting\Traits;

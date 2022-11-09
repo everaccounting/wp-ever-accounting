@@ -1,6 +1,8 @@
 <?php
 /**
  * Currency Trait
+ *
+ * @package EverAccounting
  */
 
 namespace EverAccounting\Traits;
@@ -34,9 +36,9 @@ trait CurrencyTrait {
 	/**
 	 * Get currency rate.
 	 *
-	 * @since 1.1.0
+	 * @param string $context Context.
 	 *
-	 * @param string $context
+	 * @since 1.1.0
 	 *
 	 * @return int|string
 	 */
@@ -51,6 +53,8 @@ trait CurrencyTrait {
 	/**
 	 * Get currency rate.
 	 *
+	 * @param string $context Context.
+	 *
 	 * @since 1.1.0
 	 * @return int|string
 	 */
@@ -63,9 +67,11 @@ trait CurrencyTrait {
 	}
 
 	/**
-	 * @since 1.1.0
+	 * Get currency symbol.
 	 *
-	 * @param string $context
+	 * @param string $context Context.
+	 *
+	 * @since 1.1.0
 	 *
 	 * @return string
 	 */
@@ -78,6 +84,10 @@ trait CurrencyTrait {
 	}
 
 	/**
+	 * Get currency subunit.
+	 *
+	 * @param string $context Context.
+	 *
 	 * @since 1.1.0
 	 * @return string
 	 */
@@ -90,9 +100,11 @@ trait CurrencyTrait {
 	}
 
 	/**
-	 * @since 1.1.0
+	 * Get currency position.
 	 *
-	 * @param string $context
+	 * @param string $context Context.
+	 *
+	 * @since 1.1.0
 	 *
 	 * @return string
 	 */
@@ -107,9 +119,9 @@ trait CurrencyTrait {
 	/**
 	 * Get currency rate.
 	 *
-	 * @since 1.1.0
+	 * @param string $context Context.
 	 *
-	 * @param string $context
+	 * @since 1.1.0
 	 *
 	 * @return int|string
 	 */
@@ -124,9 +136,9 @@ trait CurrencyTrait {
 	/**
 	 * Get currency rate.
 	 *
-	 * @since 1.1.0
+	 * @param string $context Context.
 	 *
-	 * @param string $context
+	 * @since 1.1.0
 	 *
 	 * @return int|string
 	 */
@@ -141,9 +153,9 @@ trait CurrencyTrait {
 	/**
 	 * Format amount.
 	 *
-	 * @since 1.1.0
+	 * @param string $amount Amount.
 	 *
-	 * @param $amount
+	 * @since 1.1.0
 	 *
 	 * @return string
 	 */
@@ -154,14 +166,14 @@ trait CurrencyTrait {
 	/**
 	 * Get converted amount.
 	 *
-	 * @since 1.1.0
+	 * @param  string $amount Amount.
+	 * @param string $code Currency code.
+	 * @param null   $rate Rate.
 	 *
-	 * @param      $code
-	 * @param null   $rate
-	 * @param      $amount
+	 * @since 1.1.0
 	 */
 	public function get_converted_amount( $amount, $code, $rate = null ) {
-		// todo complete
+		// Get currency.
 	}
 
 }

@@ -11,6 +11,13 @@ namespace EverAccounting;
 
 defined( 'ABSPATH' ) || exit();
 
+/**
+ * Rewrites Handlers.
+ *
+ * @since       1.1.0
+ * @package     EverAccounting
+ * @class       Rewrites
+ */
 class Rewrites {
 
 	/**
@@ -27,25 +34,20 @@ class Rewrites {
 	 *
 	 * @return void
 	 */
-	function add_rewrite_rules() {
+	public function add_rewrite_rules() {
 		$eaccounting_slug = eaccounting_get_parmalink_base();
 		add_rewrite_rule( '^' . $eaccounting_slug . '/invoice/([0-9]{1,})/(.*)?/?$', 'index.php?eaccounting=true&ea_page=invoice&id=$matches[1]&key=$matches[2]', 'top' );
 		add_rewrite_rule( '^' . $eaccounting_slug . '/bill/([0-9]{1,})/(.*)?/?$', 'index.php?eaccounting=true&ea_page=bill&id=$matches[1]&key=$matches[2]', 'top' );
-		// add_rewrite_rule( '^' . $eaccounting_slug . '/?$', 'index.php?eaccounting=true&ea_page=dashboard', 'top' );
-		// add_rewrite_rule( '^' . $eaccounting_slug . '/([a-z]+?)/?$', 'index.php?eaccounting=true&ea_page=$matches[1]&page=index', 'top' );
-		// add_rewrite_rule( '^' . $eaccounting_slug . '/([a-z]+?)/page/([0-9]{1,5})?/?$', 'index.php?eaccounting=true&ea_page=$matches[1]&page=index&page=$matches[2]', 'top' );
-		// add_rewrite_rule( '^' . $eaccounting_slug . '/([a-z]+?)?/([0-9]{1,5})?/?$', 'index.php?eaccounting=true&ea_page=$matches[1]&id=$matches[2]&page=single', 'top' );
-		// add_rewrite_rule( '^' . $eaccounting_slug . '/([a-z]+?)?/([0-9]{1,5})?/(.*)?/?$', 'index.php?eaccounting=true&ea_page=$matches[1]&id=$matches[1]&key=$matches[2]&page=single', 'top' );
 	}
 
 	/**
 	 * Register our query vars
 	 *
-	 * @param array $vars
+	 * @param array $vars The query vars.
 	 *
 	 * @return array
 	 */
-	function register_query_var( $vars ) {
+	public function register_query_var( $vars ) {
 		$vars[] = 'eaccounting';
 		$vars[] = 'ea_page';
 		$vars[] = 'id';

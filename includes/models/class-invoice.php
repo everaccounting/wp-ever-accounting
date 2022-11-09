@@ -68,7 +68,6 @@ class Invoice extends Document {
 		}
 
 		$this->required_props = array(
-			// 'line_items'    => __( 'Line Items', 'wp-ever-accounting' ),
 			'currency_code' => __( 'Currency', 'wp-ever-accounting' ),
 			'category_id'   => __( 'Category', 'wp-ever-accounting' ),
 			'contact_id'    => __( 'Customer', 'wp-ever-accounting' ),
@@ -87,12 +86,12 @@ class Invoice extends Document {
 		return eaccounting_get_invoice_statuses();
 	}
 
-	/*
+	/**
 	|--------------------------------------------------------------------------
 	| CRUD methods
 	|--------------------------------------------------------------------------
 	|
-	*/
+	 */
 
 	/**
 	 * Generate document number.
@@ -115,7 +114,7 @@ class Invoice extends Document {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @param $number
+	 * @param int $number Number.
 	 *
 	 * @return string
 	 */
@@ -146,7 +145,7 @@ class Invoice extends Document {
 	 * @return string
 	 */
 	public function generate_key() {
-		$key = 'ea-' . apply_filters( 'eaccounting_generate_invoice_key', 'invoice' . '-' . str_replace( '-', '', wp_generate_uuid4() ) );
+		$key = 'ea-' . apply_filters( 'eaccounting_generate_invoice_key', 'invoice-' . str_replace( '-', '', wp_generate_uuid4() ) );
 		return strtolower( sanitize_key( $key ) );
 	}
 
@@ -238,9 +237,7 @@ class Invoice extends Document {
 			foreach ( $address as $prop => $value ) {
 				$getter = "get_{$prop}";
 				$setter = "set_{$prop}";
-				if ( is_callable( array( $contact, $getter ) )
-					 && is_callable( array( $this, $setter ) )
-					 && is_callable( array( $this, $getter ) ) ) {
+				if ( is_callable( array( $contact, $getter ) ) && is_callable( array( $this, $setter ) ) && is_callable( array( $this, $getter ) ) ) {
 					$this->$setter( $contact->$getter() );
 				}
 			}
@@ -279,7 +276,7 @@ class Invoice extends Document {
 	/**
 	 * Adds an item to the invoice.
 	 *
-	 * @param array $args
+	 * @param array $args Item data.
 	 *
 	 * @return bool
 	 */
@@ -292,12 +289,12 @@ class Invoice extends Document {
 			)
 		);
 
-		// check if we have item id or line_id
+		// check if we have item id or line_id.
 		if ( empty( $args['item_id'] ) && empty( $args['line_id'] ) ) {
 			return false;
 		}
 
-		// first check if we get line id if so then its from database
+		// first check if we get line id if so then its from database.
 		$line_item = new Document_Item();
 		if ( $this->get_item( $args['line_id'] ) ) {
 			$line_item = $this->items[ $args['line_id'] ];
@@ -356,7 +353,7 @@ class Invoice extends Document {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @param array $args
+	 * @param array $args Arguments to pass to get_comments.
 	 *
 	 * @return array|int|void
 	 */
@@ -381,7 +378,7 @@ class Invoice extends Document {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @param string $note
+	 * @param string $note Note content.
 	 *
 	 * @return Note|false|int|\WP_Error
 	 */
@@ -415,9 +412,9 @@ class Invoice extends Document {
 	/**
 	 * @since 1.1.0
 	 *
-	 * @param array $args
+	 * @param array $args Arguments to pass to get_comments.
 	 *
-	 * @throws \Exception
+	 * @throws \Exception When payment not found.
 	 * @return false
 	 */
 	public function add_payment( $args = array() ) {
@@ -487,7 +484,7 @@ class Invoice extends Document {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @return Payment[]
+	 * @return Payment[] Array of payments.
 	 */
 	public function get_payments() {
 		if ( $this->exists() ) {
@@ -544,7 +541,7 @@ class Invoice extends Document {
 	 * Calculate total.
 	 *
 	 * @since 1.1.0
-	 * @throws \Exception
+	 * @throws \Exception When invoice not found.
 	 */
 	public function calculate_totals() {
 		$subtotal       = 0;
@@ -554,7 +551,7 @@ class Invoice extends Document {
 		$total_shipping = 0;
 		$discount_rate  = $this->get_discount();
 
-		// before calculating need to know subtotal so we can apply fixed discount
+		// before calculating need to know subtotal so we can apply fixed discount.
 		if ( $this->is_fixed_discount() ) {
 			$subtotal_discount = 0;
 			foreach ( $this->get_items() as $item ) {
@@ -631,16 +628,18 @@ class Invoice extends Document {
 		);
 	}
 
-	/*
+	/**
 	|--------------------------------------------------------------------------
 	| Status handling.
 	|--------------------------------------------------------------------------
-	*/
+	 */
+
 	/**
 	 * Set paid.
 	 *
 	 * @since 1.1.0
-	 * @return bool|\Exception
+	 * @return bool|\Exception True on success, exception on failure.
+	 * @throws \Exception When invoice not found.
 	 */
 	public function set_paid() {
 		if ( ! $this->get_id() ) { // Order must exist.
@@ -778,7 +777,9 @@ class Invoice extends Document {
 	*/
 
 	/**
-	 * @param string $action
+	 * Admin edit URL.
+	 *
+	 * @param string $action Action.
 	 * @since 1.1.0
 	 *
 	 * @return string
