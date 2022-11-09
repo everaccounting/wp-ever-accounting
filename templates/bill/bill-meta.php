@@ -6,6 +6,7 @@
  *
  * @var $bill Bill
  * @version 1.1.0
+ * @package EverAccounting
  */
 
 use EverAccounting\Models\Bill;

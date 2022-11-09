@@ -7,6 +7,7 @@
  * @version 1.1.0
  * @var int $bill_id
  * @var string $key
+ * @package EverAccounting
  */
 
 defined( 'ABSPATH' ) || exit();

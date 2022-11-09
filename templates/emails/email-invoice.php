@@ -10,7 +10,7 @@
  * happen. When this occurs the version of the template file will be bumped and
  * the readme will list any important changes.
  *
- * @package eaccounting\Templates
+ * @package EverAccounting
  * @version 1.0.0
  */
 
@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
 
 // Generate the custom message body.
 if ( isset( $message_body ) ) {
-	echo $message_body;
+	echo $message_body; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 // Print invoice details.

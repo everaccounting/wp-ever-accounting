@@ -10,8 +10,8 @@
  * happen. When this occurs the version of the template file will be bumped and
  * the readme will list any important changes.
  *
- * @package eaccounting\Templates
  * @version 1.0.0
+ * @package EverAccounting
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -19,4 +19,4 @@ defined( 'ABSPATH' ) || exit;
 do_action( 'eaccounting_email_header', $email_heading, $email ); ?>
 
 <?php /* translators: %s: Customer billing full name */ ?>
-<p><?php printf( esc_html__( 'New expense added for the vendor %s:', 'wp-ever-accounting' ), $expense->get_vendor_name() ); ?></p>
+<p><?php printf( esc_html__( 'New expense added for the vendor %s:', 'wp-ever-accounting' ), esc_html( $expense->get_vendor_name() ) ); ?></p>

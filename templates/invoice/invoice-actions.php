@@ -27,7 +27,7 @@ defined( 'ABSPATH' ) || exit;
 							<?php esc_html_e( 'Download', 'wp-ever-accounting' ); ?>
 						</button>
 						<?php if ( is_user_logged_in() && current_user_can( 'ea_manage_invoice' ) && $invoice->is_editable() ) : ?>
-							<a class="button button-primary edit" href="<?php echo admin_url( 'admin.php?page=ea-sales&tab=invoices&action=edit&invoice_id=' . $invoice->get_id(), 'admin' ); ?>">
+							<a class="button button-primary edit" href="<?php echo esc_url( admin_url( 'admin.php?page=ea-sales&tab=invoices&action=edit&invoice_id=' . $invoice->get_id(), 'admin' ) ); ?>">
 								<span class="dashicons dashicons-money-alt"></span>
 								<?php esc_html_e( 'Edit', 'wp-ever-accounting' ); ?>
 							</a>

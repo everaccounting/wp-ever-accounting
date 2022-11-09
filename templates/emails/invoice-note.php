@@ -10,7 +10,7 @@
  * happen. When this occurs the version of the template file will be bumped and
  * the readme will list any important changes.
  *
- * @package EverAccounting\Templates
+ * @package EverAccounting
  * @version 1.0.0
  */
 
@@ -28,13 +28,3 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<p><?php esc_html_e( 'As a reminder, here are your invoice details:', 'wp-ever-accounting' ); ?></p>
 
 <?php
-
-/**
- * Show user-defined additional content - this is set in each email's settings.
- */
-/*
-if ( $additional_content ) {
-	echo wp_kses_post( wpautop( wptexturize( $additional_content ) ) );
-}
-*/
-

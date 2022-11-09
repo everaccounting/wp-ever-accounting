@@ -32,6 +32,6 @@ $countries       = eaccounting_get_countries();
 	<span class="ea-document__info-city"><?php echo esc_html( implode( ' ', array_filter( array( $company_details['city'], $company_details['state'], $company_details['postcode'] ) ) ) ); ?></span>
 	<span class="ea-document__info-country"><?php echo isset( $countries[ $company_details['country'] ] ) ? esc_html( $countries[ $company_details['country'] ] ) : ''; ?></span>
 	<?php if ( $company_details['vat_number'] ) : ?>
-		<span class="ea-document__var-number"><?php _e( 'VAT Number', 'wp-ever-accounting' ); ?>: <span><?php echo esc_html( $company_details['vat_number'] ); ?></span></span>
+		<span class="ea-document__var-number"><?php echo esc_html__( 'VAT Number', 'wp-ever-accounting' ); ?>: <span><?php echo esc_html( $company_details['vat_number'] ); ?></span></span>
 	<?php endif; ?>
 </address>

@@ -8,7 +8,9 @@
  * @var $item_id int
  * @var $item Document_Item
  * @version 1.1.0
+ * @package EverAccounting
  */
+
 use EverAccounting\Models\Bill;
 use EverAccounting\Models\Document_Item;
 
@@ -23,7 +25,7 @@ defined( 'ABSPATH' ) || exit;
 	</td>
 	<?php do_action( 'eaccounting_bill_item_values', $item_id, $item, $bill ); ?>
 
-	<td class="ea-document__line-price" width="1%" data-value="<?php echo $item->get_price(); ?>">
+	<td class="ea-document__line-price" width="1%" data-value="<?php echo esc_attr( $item->get_price() ); ?>">
 		<div class="view">
 			<?php echo esc_html( eaccounting_price( $item->get_price(), $bill->get_currency_code() ) ); ?>
 		</div>
