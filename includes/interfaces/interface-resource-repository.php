@@ -39,7 +39,7 @@ interface Resource_Repository {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @param $id
+	 * @param int $id Item ID.
 	 *
 	 * @return mixed
 	 */
@@ -50,7 +50,7 @@ interface Resource_Repository {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @param $data
+	 * @param array $data Item data.
 	 *
 	 * @return mixed
 	 */
@@ -61,8 +61,8 @@ interface Resource_Repository {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @param $id
-	 * @param $data
+	 * @param int   $id   Item ID.
+	 * @param array $data Item data.
 	 *
 	 * @return mixed
 	 */
@@ -73,7 +73,7 @@ interface Resource_Repository {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @param $id
+	 * @param int $id Item ID.
 	 *
 	 * @return mixed
 	 */
@@ -84,7 +84,7 @@ interface Resource_Repository {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @param $id
+	 * @param int $id Item ID.
 	 *
 	 * @return bool
 	 */
@@ -95,7 +95,7 @@ interface Resource_Repository {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @param $args
+	 * @param array $args Query arguments.
 	 *
 	 * @return array
 	 */
@@ -106,7 +106,7 @@ interface Resource_Repository {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @param array $args
+	 * @param array $args Query arguments.
 	 *
 	 * @return mixed
 	 */

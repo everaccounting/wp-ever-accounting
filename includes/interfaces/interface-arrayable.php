@@ -17,7 +17,8 @@ interface Arrayable {
 	 *
 	 * @since 1.0.0
 	 */
-	public function __toArray();
+	public function __toArray(); // phpcs:ignore
+
 	/**
 	 * Returns object as string.
 	 *
