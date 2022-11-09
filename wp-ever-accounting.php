@@ -30,6 +30,7 @@ defined( 'ABSPATH' ) || exit();
  * @property-read Logger $logger
  */
 final class EverAccounting {
+
 	/**
 	 * EverAccounting version.
 	 *
@@ -38,10 +39,10 @@ final class EverAccounting {
 	public $version = '1.1.3';
 
 	/**
-	 * @var array all plugin's classes.
+	 * All plugin's classes.
 	 *
 	 * @since 1.1.2
-	 * @var array $classes all plugin's classes
+	 * @var array $classes all plugin's classes.
 	 */
 	protected $classes = [];
 
