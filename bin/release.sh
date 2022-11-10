@@ -29,6 +29,11 @@ then
 	exit 1
 fi
 
+# Replace the version in readme.txt
+sed -i '' "s/Stable tag: .*/Stable tag: $VERSION/" readme.txt
+# Replace the version in plugin file
+sed -i '' "s/Version: .*/Version: $VERSION/" $SLUG.php
+
 # if directory already exists, delete it
 if [ -d "$SVN_DIR" ]; then
 	rm -rf $SVN_DIR
