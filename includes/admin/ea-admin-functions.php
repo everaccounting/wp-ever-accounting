@@ -28,7 +28,6 @@ function eaccounting_get_settings_tabs() {
 		'categories' => __( 'Categories', 'wp-ever-accounting' ),
 		'extensions' => __( 'Extensions', 'wp-ever-accounting' ),
 		'licenses'   => __( 'Licenses', 'wp-ever-accounting' ),
-		// 'advanced'   => __( 'Advanced', 'wp-ever-accounting' ),
 	);
 
 	if ( ! has_filter( 'eaccounting_settings_sections_extensions' ) ) {
@@ -88,7 +87,7 @@ function eaccounting_get_settings_sections() {
 /**
  * Retrieve settings tabs
  *
- * @param bool $tab
+ * @param bool $tab Tab to retrieve.
  *
  * @return array $section
  * @since 1.1.0
@@ -136,7 +135,7 @@ function eaccounting_get_screen_ids() {
 /**
  * Check current page if admin page.
  *
- * @param string $page
+ * @param string $page Page name.
  *
  * @return mixed|void
  * @since 1.0.2
@@ -145,14 +144,14 @@ function eaccounting_is_admin_page( $page = '' ) {
 	if ( ! is_admin() || ! did_action( 'wp_loaded' ) ) {
 		$ret = false;
 	}
-
-	if ( empty( $page ) && isset( $_GET['page'] ) ) {
-		$page = eaccounting_clean( $_GET['page'] );
+	$current_page = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_STRING );
+	if ( empty( $page ) && ! empty( $current_page ) ) {
+		$page = eaccounting_clean( $current_page );
 	} else {
 		$ret = false;
 	}
-	// When translate the page name becomes different so use translated
-	$eaccounting_screen_id = sanitize_title( __( 'Accounting', 'wp-ever-accounting' ) );
+	// When translate the page name becomes different so use translated.
+	$eaccounting_screen_id = sanitize_title( esc_html__( 'Accounting', 'wp-ever-accounting' ) );
 	$pages                 = str_replace(
 		array(
 			'toplevel_page_',
@@ -163,33 +162,31 @@ function eaccounting_is_admin_page( $page = '' ) {
 		eaccounting_get_screen_ids()
 	);
 
-	if ( ! empty( $page ) && in_array( $page, $pages ) ) {
+	if ( ! empty( $page ) && in_array( $page, $pages, true ) ) {
 		$ret = true;
 	} else {
-		$ret = in_array( $page, $pages );
+		$ret = in_array( $page, $pages, true );
 	}
 
 	return apply_filters( 'eaccounting_is_admin_page', $ret );
 }
 
-
 /**
  * Generates an EverAccounting admin URL based on the given type.
  *
  * @param array  $query_args Optional. Query arguments to append to the admin URL. Default empty array.
- *
- * @param string $type Optional Type of admin URL. Accepts 'transactions', 'sales', 'purchases', 'banking', 'reports', 'settings', 'tools', 'add-ons'.
+ * @param string $page Optional Type of admin URL. Accepts 'transactions', 'sales', 'purchases', 'banking', 'reports', 'settings', 'tools', 'add-ons'.
  *
  * @return string Constructed admin URL.
  * @since 1.0.2
  */
 function eaccounting_admin_url( $query_args = array(), $page = null ) {
 	if ( null === $page ) {
-		$page = isset( $_GET['page'] ) ? eaccounting_clean( $_GET['page'] ) : '';
+		$page = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_STRING );
 	}
 
-	// When translate the page name becomes different so use translated
-	$eaccounting_screen_id = sanitize_title( __( 'Accounting', 'wp-ever-accounting' ) );
+	// When translate the page name becomes different so use translated.
+	$eaccounting_screen_id = sanitize_title( esc_html__( 'Accounting', 'wp-ever-accounting' ) );
 	$whitelist             = str_replace(
 		array(
 			'toplevel_page_',
@@ -225,16 +222,16 @@ function eaccounting_admin_url( $query_args = array(), $page = null ) {
 /**
  * Get activate tab.
  *
- * @param      $tabs
- *
- * @param null $default
+ * @param array $tabs Tabs array.
+ * @param null  $default Default tab.
  *
  * @return array|mixed|string
  * @since 1.0.2
  */
 function eaccounting_get_active_tab( $tabs, $default = null ) {
-	if ( isset( $_GET['tab'] ) && array_key_exists( $_GET['tab'], $tabs ) ) {
-		$active_tab = eaccounting_clean( $_GET['tab'] );
+	$tab = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_STRING );
+	if ( ! empty( $tab ) && array_key_exists( $tab, $tabs, true ) ) {
+		$active_tab = eaccounting_clean( $tab );
 	} elseif ( ! empty( $default ) ) {
 		$active_tab = $default;
 	} else {
@@ -248,13 +245,10 @@ function eaccounting_get_active_tab( $tabs, $default = null ) {
 /**
  * Outputs navigation tabs markup in core screens.
  *
- * @param array  $query_args Optional. Query arguments used to build the tab URLs. Default empty array.
- *
- * @param string $tab
- *
  * @param array  $tabs Navigation tabs.
  * @param string $active_tab Active tab slug.
- *
+ * @param array  $query_args Optional. Query arguments used to build the tab URLs. Default empty array.
+ * @param string $tab Optional. Tab to highlight. Default empty string.
  * @since 1.0.2
  * @since 1.1.0 add $tab argument.
  */
@@ -285,7 +279,7 @@ function eaccounting_navigation_tabs( $tabs, $active_tab, $query_args = array(),
 /**
  * Get current tab.
  *
- * @param string $tab
+ * @param string $tab Tab name.
  *
  * @return array|string
  * @since 1.0.2
@@ -298,17 +292,15 @@ function eaccounting_get_current_tab( $tab = 'tab' ) {
 /**
  * Per page screen option value for the Affiliates list table
  *
- * @param mixed    $value
- *
- * @param bool|int $status
- *
- * @param string   $option
+ * @param bool|int $status The status of the screen option.
+ * @param string   $option The screen option name.
+ * @param mixed    $value The current screen option value.
  *
  * @return mixed
  * @since  1.0.2
  */
 function eaccounting_accounts_set_screen_option( $status, $option, $value ) {
-	if ( in_array( $option, array( 'eaccounting_edit_accounts_per_page' ), true ) ) {
+	if ( 'eaccounting_edit_accounts_per_page' === $option ) {
 		return $value;
 	}
 
@@ -322,7 +314,7 @@ add_filter( 'set-screen-option', 'eaccounting_accounts_set_screen_option', 10, 3
 /**
  * Get import export headers.
  *
- * @param $type
+ * @param string $type Type of headers.
  *
  * @return mixed|void
  * @since 1.0.2
@@ -429,7 +421,7 @@ function eaccounting_get_io_headers( $type ) {
 /**
  * Render the importer mapping table.
  *
- * @param string $type
+ * @param string $type Type of importer.
  *
  * @since 1.0.2
  */
@@ -458,8 +450,9 @@ function eaccounting_do_import_fields( $type ) {
 /**
  * Meta-Box template function.
  *
- * @since 1.1.0
- *
+ * @param  string $screen Screen name.
+ * @param string $context Context.
+ * @param $object $object Object.
  * @global array $wp_meta_boxes
  */
 function eaccounting_do_meta_boxes( $screen, $context, $object ) {
@@ -477,12 +470,11 @@ function eaccounting_do_meta_boxes( $screen, $context, $object ) {
 					$args         = wp_parse_args( $box['args'], array( 'col' => '' ) );
 					$col          = ! empty( $args['col'] ) ? "ea-col-{$args['col']}" : '';
 					$custom_class = isset( $args['class'] ) ? wp_parse_list( $args['class'] ) : array();
-					$custom_class = array_map( 'sanitize_html_class', $custom_class );
-					echo '<div id="ea-' . $box['id'] . '" class="ea-metabox ' . $col . '" ' . '>' . "\n";
-					echo '<div class="ea-card ' . implode( ' ', $custom_class ) . '" ' . '>' . "\n";
+					echo '<div id="ea-' . esc_attr( $box['id'] ) . '" class="ea-metabox ' . esc_attr( $col ) . '" >' . "\n";
+					echo '<div class="ea-card ' . implode( ' ', array_map( 'sanitize_html_class', $custom_class ) ) . '" >' . "\n";
 					if ( ! empty( $box['title'] ) ) {
 						echo '<div class="ea-card__header">';
-						echo '<h3 class="ea-card__title">' . $box['title'] . '</h3>';
+						echo '<h3 class="ea-card__title">' . esc_html( $box['title'] ) . '</h3>';
 						if ( isset( $args['toolbar_callback'] ) && is_callable( $args['toolbar_callback'] ) ) {
 							echo '<div class="ea-card__toolbar">';
 							call_user_func( $box['toolbar_callback'], $object, $box );
@@ -506,7 +498,7 @@ function eaccounting_do_meta_boxes( $screen, $context, $object ) {
  * @since 1.1.0
  */
 function eaccounting_get_report_years() {
-	$years = range( date( 'Y' ), ( date( 'Y' ) - 10 ), 1 );
+	$years = range( date( 'Y' ), ( date( 'Y' ) - 10 ), 1 ); // phpcs:ignore
 
 	return array_combine( array_values( $years ), $years );
 }

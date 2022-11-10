@@ -4,14 +4,16 @@
  *
  * @var array  $tabs
  * @var string $current_tab
+ * @package EverAccouting
  */
+
 defined( 'ABSPATH' ) || exit;
 ?>
 <div class="wrap eaccounting ea-banking">
 	<nav class="nav-tab-wrapper ea-nav-tab-wrapper">
 		<?php
 		foreach ( $tabs as $name => $label ) {
-			echo '<a href="' . admin_url( 'admin.php?page=ea-banking&tab=' . $name ) . '" class="nav-tab ';
+			echo '<a href="' . esc_url( admin_url( 'admin.php?page=ea-banking&tab=' . $name ) ) . '" class="nav-tab ';
 			if ( $current_tab === $name ) {
 				echo 'nav-tab-active';
 			}

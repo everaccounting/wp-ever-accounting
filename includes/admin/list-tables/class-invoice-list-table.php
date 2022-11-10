@@ -98,8 +98,8 @@ class EverAccounting_Invoice_List_Table extends EverAccounting_List_Table {
 			<p class="ea-empty-table__message">
 				<?php echo esc_html__( 'Create professional invoices for your customers in their currency. Print and share invoice with easily. Invoice also support tax calculation & discount.', 'wp-ever-accounting' ); ?>
 			</p>
-            <a href="<?php echo esc_url( eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'invoices', 'action' => 'edit', ) ) ); //phpcs:ignore ?>" class="button-primary ea-empty-table__cta"><?php _e( 'Add Invoices', 'wp-ever-accounting' ); ?></a>
-			<a href="https://wpeveraccounting.com/docs/general/add-invoice/?utm_source=listtable&utm_medium=link&utm_campaign=admin" class="button-secondary ea-empty-table__cta" target="_blank"><?php _e( 'Learn More', 'wp-ever-accounting' ); ?></a>
+            <a href="<?php echo esc_url( eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'invoices', 'action' => 'edit', ) ) ); //phpcs:ignore ?>" class="button-primary ea-empty-table__cta"><?php esc_html_e( 'Add Invoices', 'wp-ever-accounting' ); ?></a>
+			<a href="https://wpeveraccounting.com/docs/general/add-invoice/?utm_source=listtable&utm_medium=link&utm_campaign=admin" class="button-secondary ea-empty-table__cta" target="_blank"><?php esc_html_e( 'Learn More', 'wp-ever-accounting' ); ?></a>
 		</div>
 		<?php
 	}
@@ -172,21 +172,20 @@ class EverAccounting_Invoice_List_Table extends EverAccounting_List_Table {
 	 * @return string Displays a checkbox.
 	 * @since  1.1.0
 	 */
-	function column_cb( $invoice ) {
+	public function column_cb( $invoice ) {
 		return sprintf( '<input type="checkbox" name="invoice_id[]" value="%d"/>', $invoice->get_id() );
 	}
 
 	/**
 	 * This function renders most of the columns in the list table.
 	 *
-	 * @param string  $column_name The name of the column
-	 *
-	 * @param Invoice $invoice
+	 * @param Invoice $invoice The current account object.
+	 * @param string  $column_name The name of the column.
 	 *
 	 * @return string The column value.
 	 * @since 1.1.0
 	 */
-	function column_default( $invoice, $column_name ) {
+	public function column_default( $invoice, $column_name ) {
 		$invoice_id = $invoice->get_id();
 		switch ( $column_name ) {
 			case 'invoice_number':
@@ -238,8 +237,8 @@ class EverAccounting_Invoice_List_Table extends EverAccounting_List_Table {
 	 * @return void
 	 * @since  1.1.0
 	 */
-	function no_items() {
-		_e( 'There is no invoices found.', 'wp-ever-accounting' );
+	public function no_items() {
+		esc_html_e( 'There is no invoices found.', 'wp-ever-accounting' );
 	}
 
 	/**
@@ -249,15 +248,12 @@ class EverAccounting_Invoice_List_Table extends EverAccounting_List_Table {
 	 * @since 1.1.0
 	 */
 	public function process_bulk_action() {
-		if ( empty( $_REQUEST['_wpnonce'] ) ) {
+		$nonce = isset( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ) : '';
+		if ( ! wp_verify_nonce( $nonce, 'bulk-invoices' ) && ! wp_verify_nonce( $nonce, 'invoice-nonce' ) ) {
 			return;
 		}
 
-		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-invoices' ) && ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'invoice-nonce' ) ) {
-			return;
-		}
-
-		$ids = isset( $_GET['invoice_id'] ) ? $_GET['invoice_id'] : false;
+		$ids = isset( $_GET['invoice_id'] ) ? wp_parse_id_list( $_GET['invoice_id'] ) : false; // phpcs:ignore
 
 		if ( ! is_array( $ids ) ) {
 			$ids = array( $ids );
@@ -296,7 +292,7 @@ class EverAccounting_Invoice_List_Table extends EverAccounting_List_Table {
 			}
 		}
 
-		if ( isset( $_GET['_wpnonce'] ) ) {
+		if ( $nonce ) {
 			wp_safe_redirect(
 				remove_query_arg(
 					array(
@@ -325,17 +321,15 @@ class EverAccounting_Invoice_List_Table extends EverAccounting_List_Table {
 		$hidden                = array();
 		$sortable              = $this->get_sortable_columns();
 		$this->_column_headers = array( $columns, $hidden, $sortable );
-
 		$this->process_bulk_action();
 
-		$page        = isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
-		$status      = isset( $_GET['status'] ) ? $_GET['status'] : '';
-		$search      = isset( $_GET['s'] ) ? $_GET['s'] : '';
-		$order       = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
-		$orderby     = isset( $_GET['orderby'] ) ? $_GET['orderby'] : 'id';
-		$customer_id = isset( $_GET['customer_id'] ) ? $_GET['customer_id'] : '';
-
-		$per_page = $this->per_page;
+		$page        = filter_input( INPUT_GET, 'paged', FILTER_SANITIZE_NUMBER_INT, array( 'options' => array( 'default' => 1 ) ) );
+		$search      = filter_input( INPUT_GET, 's', FILTER_SANITIZE_STRING );
+		$order       = filter_input( INPUT_GET, 'order', FILTER_SANITIZE_STRING, array( 'options' => array( 'default' => 'DESC' ) ) );
+		$orderby     = filter_input( INPUT_GET, 'orderby', FILTER_SANITIZE_STRING, array( 'options' => array( 'default' => 'id' ) ) );
+		$status      = filter_input( INPUT_GET, 'status', FILTER_SANITIZE_STRING );
+		$customer_id = filter_input( INPUT_GET, 'customer_id', FILTER_SANITIZE_NUMBER_INT );
+		$per_page    = $this->per_page;
 
 		$args = wp_parse_args(
 			$this->query_args,

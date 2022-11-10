@@ -7,6 +7,7 @@
  * @since       1.0.2
  * @var \EverAccounting\Models\Invoice $invoice;
  */
+
 defined( 'ABSPATH' ) || exit();
 ?>
 <script type="text/template" id="ea-modal-add-invoice-payment" data-title="<?php esc_html_e( 'Add Payment', 'wp-ever-accounting' ); ?>">

@@ -32,11 +32,11 @@ $accounts_table->prepare_items();
 ?>
 	<h1>
 		<?php esc_html_e( 'Accounts', 'wp-ever-accounting' ); ?>
-		<a href="<?php echo esc_url( $add_url ); ?>" class="page-title-action"><?php _e( 'Add New', 'wp-ever-accounting' ); ?></a>
-		<a class="page-title-action" href=" <?php echo esc_url( $import_url ); ?>"><?php _e( 'Import', 'wp-ever-accounting' ); ?></a>
+		<a href="<?php echo esc_url( $add_url ); ?>" class="page-title-action"><?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?></a>
+		<a class="page-title-action" href=" <?php echo esc_url( $import_url ); ?>"><?php esc_html_e( 'Import', 'wp-ever-accounting' ); ?></a>
 	</h1>
 	<?php do_action( 'eaccounting_accounts_table_top' ); ?>
-	<form method="get" id="ea-accounts-table" action="<?php echo admin_url( 'admin.php' ); ?>">
+	<form method="get" id="ea-accounts-table" action="<?php echo esc_url( admin_url( 'admin.php' ) ); ?>">
 		<?php $accounts_table->views(); ?>
 		<?php $accounts_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'ea-accounts' ); ?>
 		<?php $accounts_table->display(); ?>

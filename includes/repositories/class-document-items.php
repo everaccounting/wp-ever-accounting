@@ -30,6 +30,8 @@ class Document_Items extends Resource_Repository {
 	const TABLE = 'ea_document_items';
 
 	/**
+	 * The table name.
+	 *
 	 * @since 1.1.0
 	 *
 	 * @var string

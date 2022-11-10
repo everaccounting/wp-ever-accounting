@@ -98,8 +98,8 @@ class EverAccounting_Customer_List_Table extends EverAccounting_List_Table {
 			<p class="ea-empty-table__message">
 				<?php echo esc_html__( 'Create customers to assign revenues, and later you can filter the transactions you made with them. You can store the name, address, email, phone number, etc. of a customer.', 'wp-ever-accounting' ); ?>
 			</p>
-			<a href="<?php echo esc_url( eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'customers', 'action' => 'edit', ) ) ); //phpcs:ignore?>" class="button-primary ea-empty-table__cta"><?php _e( 'Add Customer', 'wp-ever-accounting' ); ?></a>
-			<a href="https://wpeveraccounting.com/docs/general/add-customers/?utm_source=listtable&utm_medium=link&utm_campaign=admin" class="button-secondary ea-empty-table__cta" target="_blank"><?php _e( 'Learn More', 'wp-ever-accounting' ); ?></a>
+			<a href="<?php echo esc_url( eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'customers', 'action' => 'edit', ) ) ); //phpcs:ignore?>" class="button-primary ea-empty-table__cta"><?php esc_html_e( 'Add Customer', 'wp-ever-accounting' ); ?></a>
+			<a href="https://wpeveraccounting.com/docs/general/add-customers/?utm_source=listtable&utm_medium=link&utm_campaign=admin" class="button-secondary ea-empty-table__cta" target="_blank"><?php esc_html_e( 'Learn More', 'wp-ever-accounting' ); ?></a>
 		</div>
 		<?php
 	}
@@ -172,21 +172,20 @@ class EverAccounting_Customer_List_Table extends EverAccounting_List_Table {
 	 * @return string Displays a checkbox.
 	 * @since  1.0.2
 	 */
-	function column_cb( $customer ) {
+	public function column_cb( $customer ) {
 		return sprintf( '<input type="checkbox" name="customer_id[]" value="%d"/>', $customer->get_id() );
 	}
 
 	/**
 	 * This function renders most of the columns in the list table.
 	 *
-	 * @param string   $column_name The name of the column
-	 *
-	 * @param Customer $customer
+	 * @param Customer $customer The current object.
+	 * @param string   $column_name The name of the column.
 	 *
 	 * @return string The column value.
 	 * @since 1.0.2
 	 */
-	function column_default( $customer, $column_name ) {
+	public function column_default( $customer, $column_name ) {
 		$customer_id = $customer->get_id();
 		switch ( $column_name ) {
 			case 'thumb':
@@ -227,7 +226,7 @@ class EverAccounting_Customer_List_Table extends EverAccounting_List_Table {
 					),
 					','
 				);
-				$value = ( $value != '' ) ? $value : '&mdash;';
+				$value = ( '' !== $value ) ? $value : '&mdash;';
 				break;
 			case 'enabled':
 				$value  = '<label class="ea-toggle">';
@@ -276,8 +275,8 @@ class EverAccounting_Customer_List_Table extends EverAccounting_List_Table {
 	 * @return void
 	 * @since  1.0.2
 	 */
-	function no_items() {
-		_e( 'There is no customers found.', 'wp-ever-accounting' );
+	public function no_items() {
+		esc_html_e( 'There is no customers found.', 'wp-ever-accounting' );
 	}
 
 	/**
@@ -287,15 +286,12 @@ class EverAccounting_Customer_List_Table extends EverAccounting_List_Table {
 	 * @since 1.0.2
 	 */
 	public function process_bulk_action() {
-		if ( empty( $_REQUEST['_wpnonce'] ) ) {
+		$nonce = isset( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ) : '';
+		if ( ! wp_verify_nonce( $nonce, 'bulk-customers' ) && ! wp_verify_nonce( $nonce, 'customer-nonce' ) ) {
 			return;
 		}
 
-		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-customers' ) && ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'customer-nonce' ) ) {
-			return;
-		}
-
-		$ids = isset( $_GET['customer_id'] ) ? $_GET['customer_id'] : false;
+		$ids = isset( $_GET['customer_id'] ) ? wp_parse_id_list( $_GET['customer_id'] ) : false; // phpcs:ignore
 
 		if ( ! is_array( $ids ) ) {
 			$ids = array( $ids );
@@ -335,7 +331,7 @@ class EverAccounting_Customer_List_Table extends EverAccounting_List_Table {
 			}
 		}
 
-		if ( isset( $_GET['_wpnonce'] ) ) {
+		if ( $nonce ) {
 			wp_safe_redirect(
 				remove_query_arg(
 					array(
@@ -361,17 +357,16 @@ class EverAccounting_Customer_List_Table extends EverAccounting_List_Table {
 	 */
 	public function get_views() {
 		$base           = eaccounting_admin_url( array( 'tab' => 'customers' ) );
-		$current        = isset( $_GET['status'] ) ? $_GET['status'] : '';
+		$current        = filter_input( INPUT_GET, 'status', FILTER_SANITIZE_STRING );
 		$total_count    = '&nbsp;<span class="count">(' . $this->total_count . ')</span>';
 		$active_count   = '&nbsp;<span class="count">(' . $this->active_count . ')</span>';
 		$inactive_count = '&nbsp;<span class="count">(' . $this->inactive_count . ')</span>';
 
 		$views = array(
-			'all'      => sprintf( '<a href="%s"%s>%s</a>', esc_url( remove_query_arg( 'status', $base ) ), $current === 'all' || $current === '' ? ' class="current"' : '', __( 'All', 'wp-ever-accounting' ) . $total_count ),
-			'active'   => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'active', $base ) ), $current === 'active' ? ' class="current"' : '', __( 'Active', 'wp-ever-accounting' ) . $active_count ),
-			'inactive' => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'inactive', $base ) ), $current === 'inactive' ? ' class="current"' : '', __( 'Inactive', 'wp-ever-accounting' ) . $inactive_count ),
+			'all'      => sprintf( '<a href="%s"%s>%s</a>', esc_url( remove_query_arg( 'status', $base ) ), 'all' === $current || '' === $current ? ' class="current"' : '', __( 'All', 'wp-ever-accounting' ) . $total_count ),
+			'active'   => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'active', $base ) ), 'active' === $current ? ' class="current"' : '', __( 'Active', 'wp-ever-accounting' ) . $active_count ),
+			'inactive' => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'inactive', $base ) ), 'inactive' === $current ? ' class="current"' : '', __( 'Inactive', 'wp-ever-accounting' ) . $inactive_count ),
 		);
-
 		return $views;
 	}
 
@@ -390,11 +385,11 @@ class EverAccounting_Customer_List_Table extends EverAccounting_List_Table {
 
 		$this->process_bulk_action();
 
-		$page    = isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
-		$status  = isset( $_GET['status'] ) ? $_GET['status'] : '';
-		$search  = isset( $_GET['s'] ) ? $_GET['s'] : '';
-		$order   = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
-		$orderby = isset( $_GET['orderby'] ) ? $_GET['orderby'] : 'id';
+		$page    = filter_input( INPUT_GET, 'paged', FILTER_SANITIZE_NUMBER_INT, array( 'options' => array( 'default' => 1 ) ) );
+		$search  = filter_input( INPUT_GET, 's', FILTER_SANITIZE_STRING );
+		$order   = filter_input( INPUT_GET, 'order', FILTER_SANITIZE_STRING, array( 'options' => array( 'default' => 'DESC' ) ) );
+		$orderby = filter_input( INPUT_GET, 'orderby', FILTER_SANITIZE_STRING, array( 'options' => array( 'default' => 'id' ) ) );
+		$status  = filter_input( INPUT_GET, 'status', FILTER_SANITIZE_STRING );
 
 		$per_page = $this->per_page;
 
@@ -437,9 +432,6 @@ class EverAccounting_Customer_List_Table extends EverAccounting_List_Table {
 		);
 
 		$this->total_count = $this->active_count + $this->inactive_count;
-
-		$status = isset( $_GET['status'] ) ? $_GET['status'] : 'any';
-
 		switch ( $status ) {
 			case 'active':
 				$total_items = $this->active_count;

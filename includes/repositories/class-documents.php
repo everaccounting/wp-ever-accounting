@@ -25,11 +25,15 @@ defined( 'ABSPATH' ) || exit;
  */
 class Documents extends Resource_Repository {
 	/**
+	 * The table name.
+	 *
 	 * @var string
 	 */
 	const TABLE = 'ea_documents';
 
 	/**
+	 * The table name.
+	 *
 	 * @since 1.1.0
 	 *
 	 * @var string

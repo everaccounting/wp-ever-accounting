@@ -77,9 +77,9 @@ class Notices {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @param string $message
-	 * @param string $type
-	 * @param array  $args
+	 * @param string $message Message.
+	 * @param string $type   Type.
+	 * @param array  $args  Args.
 	 */
 	public function add_notice( $message, $type = 'success', $args = array() ) {
 		$args                  = wp_parse_args(
@@ -97,7 +97,7 @@ class Notices {
 				'type'    => $type,
 			)
 		);
-		$key                   = md5( serialize( $notice ) );
+		$key                   = md5( maybe_serialize( $notice ) );
 		$this->notices[ $key ] = $notice;
 	}
 
@@ -106,8 +106,8 @@ class Notices {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @param string $message
-	 * @param array  $args
+	 * @param string $message Message.
+	 * @param array  $args  Args.
 	 */
 	public function add_success( $message, $args = array() ) {
 		$this->add_notice( $message, 'success', $args );
@@ -118,8 +118,8 @@ class Notices {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @param string $message
-	 * @param array  $args
+	 * @param string $message Message.
+	 * @param array  $args  Args.
 	 */
 	public function add_error( $message, $args = array() ) {
 		$this->add_notice( $message, 'error', $args );
@@ -130,8 +130,8 @@ class Notices {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @param string $message
-	 * @param array  $args
+	 * @param string $message Message.
+	 * @param array  $args  Args.
 	 */
 	public function add_warning( $message, $args = array() ) {
 		$this->add_notice( $message, 'warning', $args );
@@ -142,8 +142,8 @@ class Notices {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @param string $message
-	 * @param array  $args
+	 * @param string $message Message.
+	 * @param array  $args  Args.
 	 */
 	public function add_info( $message, $args = array() ) {
 		$this->add_notice( $message, 'info', $args );
@@ -154,7 +154,7 @@ class Notices {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @param $id
+	 * @param string $id  Notice ID.
 	 */
 	public function add_core_notice( $id ) {
 		if ( array_key_exists( $id, $this->core_notices ) ) {
@@ -180,10 +180,10 @@ class Notices {
 		if ( ! isset( $_GET['eaccounting_hide_notice'] ) || ! isset( $_GET['_ea_notice_nonce'] ) ) {
 			return;
 		}
-		if ( wp_verify_nonce( $_GET['_ea_notice_nonce'], 'eaccounting_hide_notice' ) ) {
-			$this->remove_notice( $_GET['eaccounting_hide_notice'] );
+		if ( wp_verify_nonce( $_GET['_ea_notice_nonce'], 'eaccounting_hide_notice' ) ) { // phpcs:ignore
+			$this->remove_notice( sanitize_textarea_field( $_GET['eaccounting_hide_notice'] ) ); // phpcs:ignore
 		}
-		wp_redirect( remove_query_arg( array( 'eaccounting_hide_notice', '_ea_notice_nonce' ) ) );
+		wp_safe_redirect( remove_query_arg( array( 'eaccounting_hide_notice', '_ea_notice_nonce' ) ) );
 		exit();
 	}
 
@@ -192,7 +192,7 @@ class Notices {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @param $id
+	 * @param string $id Notice ID.
 	 */
 	public function remove_notice( $id ) {
 		if ( array_key_exists( $id, $this->notices ) ) {
@@ -253,13 +253,14 @@ class Notices {
 					unset( $this->notices[ $id ] );
 				}
 				$classes[] = 'notice-' . $notice['type'];
-				$classes   = array_merge( $classes, $notice['classes'] );
-				$classes   = array_map( 'sanitize_html_class', $classes );
+				$classes   = array_merge( $classes, $notice['classes'] ); // phpcs:ignore
 				?>
-				<div id="message" class="<?php echo implode( ' ', $classes ); ?>">
+				<div id="message" class="<?php echo implode( ' ', array_map( 'sanitize_html_class', $classes ) ); ?>">
 					<?php if ( $dismissible ) : ?>
-						<a class="ea-dismiss-notice notice-dismiss" href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'eaccounting_hide_notice', $id ), 'eaccounting_hide_notice', '_ea_notice_nonce' ) ); ?>">
-							<span class="screen-reader-text"><?php _e( 'Dismiss', 'wp-ever-accounting' ); ?></span>
+						<a
+								class="ea-dismiss-notice notice-dismiss"
+								href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'eaccounting_hide_notice', $id ), 'eaccounting_hide_notice', '_ea_notice_nonce' ) ); ?>">
+							<span class="screen-reader-text"><?php esc_html_e( 'Dismiss', 'wp-ever-accounting' ); ?></span>
 						</a>
 					<?php endif; ?>
 					<?php echo wp_kses_post( wpautop( $notice['message'] ) ); ?>
@@ -277,13 +278,13 @@ class Notices {
 	public function install_notice() {
 		?>
 		<div id="message" class="updated ea-admin-notice">
-			<p><?php _e( '<strong>Welcome to Ever Accounting</strong> &#8211; You&lsquo;re almost done :)', 'wp-ever-accounting' ); ?></p>
+			<p><?php esc_html_e( '<strong>Welcome to Ever Accounting</strong> &#8211; You&lsquo;re almost done :)', 'wp-ever-accounting' ); ?></p>
 			<p class="submit">
 				<a href="<?php echo esc_url( admin_url( 'admin.php?page=ea-setup' ) ); ?>" class="button-primary">
-					<?php _e( 'Run the Setup Wizard', 'wp-ever-accounting' ); ?>
+					<?php esc_html_e( 'Run the Setup Wizard', 'wp-ever-accounting' ); ?>
 				</a>
 				<a class="button-secondary skip" href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'eaccounting_hide_notice', 'install' ), 'eaccounting_hide_notice', '_ea_notice_nonce' ) ); ?>">
-					<?php _e( 'Skip setup', 'wp-ever-accounting' ); ?>
+					<?php esc_html_e( 'Skip setup', 'wp-ever-accounting' ); ?>
 				</a>
 			</p>
 		</div>

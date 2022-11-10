@@ -33,12 +33,12 @@ defined( 'ABSPATH' ) || exit;
 	</td>
 	<?php do_action( 'eaccounting_invoice_item_values', $item_id, $item, $invoice ); ?>
 
-	<td class="ea-document__line-price" width="1%" data-value="<?php echo $item->get_price(); ?>">
+	<td class="ea-document__line-price" width="1%" data-value="<?php echo esc_attr( $item->get_price() ); ?>">
 		<div class="view">
 			<?php echo esc_html( eaccounting_price( $item->get_price(), $invoice->get_currency_code() ) ); ?>
 		</div>
 		<div class="edit" style="display: none;">
-			<input type="number" step="0.0001" min="0" class="line_item_price" name="items[<?php echo $item_id; ?>][price]" value="<?php echo esc_attr( $item->get_price() ); ?>"/>
+			<input type="number" step="0.0001" min="0" class="line_item_price" name="items[<?php echo esc_attr( $item_id ); ?>][price]" value="<?php echo esc_attr( $item->get_price() ); ?>"/>
 		</div>
 	</td>
 

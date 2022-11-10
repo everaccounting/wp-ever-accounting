@@ -631,6 +631,8 @@ class Collection implements Arrayable {
 	}
 
 	/**
+	 * Get data.
+	 *
 	 * @since 1.0.2
 	 *
 	 * @param  array|object $target Target.

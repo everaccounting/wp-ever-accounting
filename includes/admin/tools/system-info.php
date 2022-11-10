@@ -4,17 +4,23 @@
  *
  * @return string The compiled system info report.
  * @since 1.0.2
+ * @package EverAccounting
  */
 
 defined( 'ABSPATH' ) || exit();
 
+/**
+ * Output system report.
+ *
+ * @return string The compiled system info report.
+ */
 function eaccounting_tools_system_info_report() {
 
 	global $wpdb;
 
-	// Get theme info
+	// Get theme info.
 	$theme_data = wp_get_theme();
-	$theme      = $theme_data->Name . ' ' . $theme_data->Version;
+	$theme      = $theme_data->Name . ' ' . $theme_data->Version; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 
 	$return = '### Begin System Info ###' . "\n\n";
 
@@ -26,7 +32,7 @@ function eaccounting_tools_system_info_report() {
 
 	$locale = get_locale();
 
-	// WordPress configuration
+	// WordPress configuration.
 	$return .= "\n" . '-- WordPress Configuration' . "\n\n";
 	$return .= 'Version:                  ' . get_bloginfo( 'version' ) . "\n";
 	$return .= 'Language:                 ' . ( empty( $locale ) ? 'en_US' : $locale ) . "\n";
@@ -34,23 +40,23 @@ function eaccounting_tools_system_info_report() {
 	$return .= 'Active Theme:             ' . $theme . "\n";
 	$return .= 'Show On Front:            ' . get_option( 'show_on_front' ) . "\n";
 
-	// Only show page specs if frontpage is set to 'page'
+	// Only show page specs if frontpage is set to 'page'.
 	if ( get_option( 'show_on_front' ) === 'page' ) {
 		$front_page_id = get_option( 'page_on_front' );
 		$blog_page_id  = get_option( 'page_for_posts' );
 
-		$return .= 'Page On Front:            ' . ( $front_page_id != 0 ? get_the_title( $front_page_id ) . ' (#' . $front_page_id . ')' : 'Unset' ) . "\n";
-		$return .= 'Page For Posts:           ' . ( $blog_page_id != 0 ? get_the_title( $blog_page_id ) . ' (#' . $blog_page_id . ')' : 'Unset' ) . "\n";
+		$return .= 'Page On Front:            ' . ( $front_page_id != 0 ? get_the_title( $front_page_id ) . ' (#' . $front_page_id . ')' : 'Unset' ) . "\n"; // phpcs:ignore
+		$return .= 'Page For Posts:           ' . ( $blog_page_id != 0 ? get_the_title( $blog_page_id ) . ' (#' . $blog_page_id . ')' : 'Unset' ) . "\n"; // phpcs:ignore
 	}
 
 	$return .= 'ABSPATH:                  ' . ABSPATH . "\n";
-	$return .= 'Table Prefix:             ' . 'Length: ' . strlen( $wpdb->prefix ) . '   Status: ' . ( strlen( $wpdb->prefix ) > 16 ? 'ERROR: Too long' : 'Acceptable' ) . "\n";
-	$return .= 'WP_DEBUG:                 ' . ( defined( 'WP_DEBUG' ) ? WP_DEBUG ? 'Enabled' : 'Disabled' : 'Not set' ) . "\n";
+	$return .= 'Table Prefix:             ' . 'Length: ' . strlen( $wpdb->prefix ) . '   Status: ' . ( strlen( $wpdb->prefix ) > 16 ? 'ERROR: Too long' : 'Acceptable' ) . "\n"; // phpcs:ignore
+	$return .= 'WP_DEBUG:                 ' . ( defined( 'WP_DEBUG' ) ? WP_DEBUG ? 'Enabled' : 'Disabled' : 'Not set' ) . "\n"; // phpcs:ignore
 	$return .= 'Memory Limit:             ' . WP_MEMORY_LIMIT . "\n";
 	$return .= 'Registered Post Statuses: ' . implode( ', ', get_post_stati() ) . "\n";
 
 	//
-	// EverAccounting
+	// EverAccounting.
 	//
 
 	$settings      = eaccounting()->settings;
@@ -67,7 +73,7 @@ function eaccounting_tools_system_info_report() {
 	$return .= "\n" . '-- EverAccounting Configuration' . "\n\n";
 	$return .= 'Version:                          ' . eaccounting()->get_version() . "\n";
 	$return .= 'DB Version:                       ' . ( $db_version ? "$db_version\n" : "Unset\n" );
-	$return .= 'Install Date:                     ' . ( $install_date ? date( 'Y-m-d H:i:s' ) . "\n" : "Unset\n" );
+	$return .= 'Install Date:                     ' . ( $install_date ? date( 'Y-m-d H:i:s' ) . "\n" : "Unset\n" ); // phpcs:ignore
 	$return .= 'Debug Mode:                       ' . ( $settings->get( 'debug_mode', false ) ? 'True' . "\n" : "False\n" );
 	$return .= 'Accounts Table:                   ' . ( in_array( 'ea_accounts', $tables, true ) ? 'True' . "\n" : "False\n" );
 	$return .= 'Transactions Table:               ' . ( in_array( 'ea_transactions', $tables, true ) ? 'True' . "\n" : "False\n" );
@@ -76,7 +82,7 @@ function eaccounting_tools_system_info_report() {
 	$return .= 'Transfers Table:                  ' . ( in_array( 'ea_transfers', $tables, true ) ? 'True' . "\n" : "False\n" );
 	$return .= 'Categories Table:                 ' . ( in_array( 'ea_categories', $tables, true ) ? 'True' . "\n" : "False\n" );
 
-	// Misc Settings
+	// Misc Settings.
 	$return .= "\n" . '-- EverAccounting Misc Settings' . "\n\n";
 
 	// Object counts.
@@ -87,7 +93,7 @@ function eaccounting_tools_system_info_report() {
 	$return .= 'Currencies:                       ' . number_format( \EverAccounting\Currencies\query()->count(), false ) . "\n";
 	$return .= 'Categories:                       ' . number_format( \EverAccounting\Categories\query()->count(), false ) . "\n";
 
-	// Get plugins that have an update
+	// Get plugins that have an update.
 	$updates = get_plugin_updates();
 
 	// Must-use plugins
@@ -101,14 +107,14 @@ function eaccounting_tools_system_info_report() {
 		}
 	}
 
-	// WordPress active plugins
+	// WordPress active plugins.
 	$return .= "\n" . '-- WordPress Active Plugins' . "\n\n";
 
 	$plugins        = get_plugins();
 	$active_plugins = get_option( 'active_plugins', array() );
 
 	foreach ( $plugins as $plugin_path => $plugin ) {
-		if ( ! in_array( $plugin_path, $active_plugins ) ) {
+		if ( ! in_array( $plugin_path, $active_plugins, true ) ) {
 			continue;
 		}
 
@@ -116,11 +122,11 @@ function eaccounting_tools_system_info_report() {
 		$return .= $plugin['Name'] . ': ' . $plugin['Version'] . $update . "\n";
 	}
 
-	// WordPress inactive plugins
+	// WordPress inactive plugins.
 	$return .= "\n" . '-- WordPress Inactive Plugins' . "\n\n";
 
 	foreach ( $plugins as $plugin_path => $plugin ) {
-		if ( in_array( $plugin_path, $active_plugins ) ) {
+		if ( in_array( $plugin_path, $active_plugins, true ) ) {
 			continue;
 		}
 
@@ -129,7 +135,7 @@ function eaccounting_tools_system_info_report() {
 	}
 
 	if ( is_multisite() ) {
-		// WordPress Multisite active plugins
+		// WordPress Multisite active plugins.
 		$return .= "\n" . '-- Network Active Plugins' . "\n\n";
 
 		$plugins        = wp_get_active_network_plugins();
@@ -148,14 +154,14 @@ function eaccounting_tools_system_info_report() {
 		}
 	}
 
-	// Server configuration (really just versioning)
+	// Server configuration (really just versioning).
 	$return .= "\n" . '-- Webserver Configuration' . "\n\n";
 	$return .= 'PHP Version:              ' . PHP_VERSION . "\n";
 	$return .= 'MySQL Version:            ' . $wpdb->db_version() . "\n";
-	$return .= 'Webserver Info:           ' . $_SERVER['SERVER_SOFTWARE'] . "\n";
+	$return .= 'Webserver Info:           ' . $_SERVER['SERVER_SOFTWARE'] . "\n"; // phpcs:ignore
 	$return .= 'SSL Configured:           ' . ( is_ssl() ? 'Yes' : 'No' ) . "\n";
 
-	// PHP configuration
+	// PHP configuration.
 	$return .= "\n" . '-- PHP Configuration' . "\n\n";
 	$return .= 'Memory Limit:             ' . ini_get( 'memory_limit' ) . "\n";
 	$return .= 'Upload Max Size:          ' . ini_get( 'upload_max_filesize' ) . "\n";
@@ -165,7 +171,7 @@ function eaccounting_tools_system_info_report() {
 	$return .= 'Max Input Vars:           ' . ini_get( 'max_input_vars' ) . "\n";
 	$return .= 'Display Errors:           ' . ( ini_get( 'display_errors' ) ? 'On (' . ini_get( 'display_errors' ) . ')' : 'N/A' ) . "\n";
 
-	// PHP extensions and such
+	// PHP extensions and such.
 	$return .= "\n" . '-- PHP Extensions' . "\n\n";
 	$return .= 'cURL:                     ' . ( function_exists( 'curl_init' ) ? 'Supported' : 'Not Supported' ) . "\n";
 	$return .= 'fsockopen:                ' . ( function_exists( 'fsockopen' ) ? 'Supported' : 'Not Supported' ) . "\n";

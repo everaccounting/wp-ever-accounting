@@ -4,10 +4,10 @@
  *
  * Functions used for displaying invoice related pages.
  *
- * @author      EverAccounting
+ * @version     1.1.10
  * @category    Admin
  * @package     EverAccounting\Admin
- * @version     1.1.10
+ * @author      EverAccounting
  */
 
 namespace EverAccounting\Admin;
@@ -19,9 +19,8 @@ defined( 'ABSPATH' ) || exit();
 /**
  * Invoice_Actions class
  *
- * @package EverAccounting\Admin
- *
  * @since 1.1.0
+ * @package EverAccounting\Admin
  */
 class Invoice_Actions {
 	/**
@@ -37,12 +36,13 @@ class Invoice_Actions {
 	 * @since 1.1.0
 	 */
 	public function invoice_action() {
-		$action     = eaccounting_clean( wp_unslash( $_REQUEST['invoice_action'] ) );
-		$invoice_id = absint( wp_unslash( $_REQUEST['invoice_id'] ) );
+		$nonce      = filter_input( INPUT_GET, '_wpnonce', FILTER_SANITIZE_STRING );
+		$action     = filter_input( INPUT_GET, 'invoice_action', FILTER_SANITIZE_STRING );
+		$invoice_id = filter_input( INPUT_GET, 'invoice_id', FILTER_SANITIZE_NUMBER_INT );
 		$invoice    = eaccounting_get_invoice( $invoice_id );
 
-		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'ea_invoice_action' ) || ! current_user_can( 'ea_manage_invoice' ) || ! $invoice->exists() ) {
-			wp_die( __( 'no cheating!', 'wp-ever-accounting' ) );
+		if ( ! wp_verify_nonce( $nonce, 'ea_invoice_action' ) || ! current_user_can( 'ea_manage_invoice' ) || ! $invoice->exists() ) {
+			wp_die( esc_html__( 'no cheating!', 'wp-ever-accounting' ) ); // phpcs:ignore
 		}
 		$redirect_url = add_query_arg(
 			array(
@@ -89,7 +89,7 @@ class Invoice_Actions {
 	/**
 	 * View invoice.
 	 *
-	 * @param $invoice_id
+	 * @param int $invoice_id Invoice ID.
 	 *
 	 * @since 1.1.0
 	 */
@@ -97,11 +97,11 @@ class Invoice_Actions {
 		try {
 			$invoice = new Invoice( $invoice_id );
 		} catch ( \Exception $e ) {
-			wp_die( $e->getMessage() );
+			wp_die( esc_html( $e->getMessage() ) );
 		}
 
 		if ( empty( $invoice ) || ! $invoice->exists() ) {
-			wp_die( __( 'Sorry, Invoice does not exist', 'wp-ever-accounting' ) );
+			wp_die( esc_html__( 'Sorry, Invoice does not exist', 'wp-ever-accounting' ) );
 		}
 
 		eaccounting_get_admin_template(
@@ -114,17 +114,16 @@ class Invoice_Actions {
 	}
 
 	/**
-	 * @param $invoice_id
+	 * Edit invoice.
 	 *
-	 * @param $invoice_id
-	 *
+	 * @param int $invoice_id Invoice ID.
 	 * @since 1.1.0
 	 */
 	public static function edit_invoice( $invoice_id = null ) {
 		try {
 			$invoice = new Invoice( $invoice_id );
 		} catch ( \Exception $e ) {
-			wp_die( $e->getMessage() );
+			wp_die( esc_html( $e->getMessage() ) );
 		}
 		eaccounting_get_admin_template(
 			'invoices/edit-invoice',
@@ -138,9 +137,7 @@ class Invoice_Actions {
 	/**
 	 * Get invoice notes.
 	 *
-	 * @param Invoice $invoice
-	 *
-	 * @param Invoice $invoice
+	 * @param Invoice $invoice Invoice object.
 	 *
 	 * @since 1.1.0
 	 */
@@ -154,7 +151,7 @@ class Invoice_Actions {
 	/**
 	 * Get invoice payments.
 	 *
-	 * @param Invoice $invoice
+	 * @param Invoice $invoice Invoice object.
 	 *
 	 * @since 1.1.0
 	 */
@@ -166,4 +163,4 @@ class Invoice_Actions {
 	}
 }
 
- new Invoice_Actions();
+new Invoice_Actions();

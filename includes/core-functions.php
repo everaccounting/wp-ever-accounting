@@ -14,7 +14,6 @@ defined( 'ABSPATH' ) || exit();
 require_once EACCOUNTING_ABSPATH . '/includes/ea-account-functions.php';
 require_once EACCOUNTING_ABSPATH . '/includes/ea-misc-functions.php';
 require_once EACCOUNTING_ABSPATH . '/includes/ea-formatting-functions.php';
-require_once EACCOUNTING_ABSPATH . '/includes/ea-rest-functions.php';
 require_once EACCOUNTING_ABSPATH . '/includes/ea-form-functions.php';
 require_once EACCOUNTING_ABSPATH . '/includes/ea-file-functions.php';
 require_once EACCOUNTING_ABSPATH . '/includes/ea-currency-functions.php';
@@ -303,9 +302,9 @@ function eaccounting_get_payment_methods() {
 	return apply_filters(
 		'eaccounting_payment_methods',
 		array(
-			'cash'          => __( 'Cash', 'wp-ever-accounting' ),
-			'bank_transfer' => __( 'Bank Transfer', 'wp-ever-accounting' ),
-			'check'         => __( 'Cheque', 'wp-ever-accounting' ),
+			'cash'          => esc_html__( 'Cash', 'wp-ever-accounting' ),
+			'bank_transfer' => esc_html__( 'Bank Transfer', 'wp-ever-accounting' ),
+			'check'         => esc_html__( 'Cheque', 'wp-ever-accounting' ),
 		)
 	);
 }
@@ -594,6 +593,8 @@ function eaccounting_get_full_name( $user_id ) {
 }
 
 /**
+ * Init license.
+ *
  * @param string $file File name.
  * @param string $item_name name of the item to be initialize license.
  */

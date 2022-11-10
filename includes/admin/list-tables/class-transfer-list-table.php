@@ -44,9 +44,8 @@ class EverAccounting_Transfer_List_Table extends EverAccounting_List_Table {
 	 *
 	 * @param array $args Optional. Arbitrary display and query arguments to pass through the list table. Default empty array.
 	 *
-	 * @see    WP_List_Table::__construct()
-	 *
 	 * @since  1.0.2
+	 * @see    WP_List_Table::__construct()
 	 */
 	public function __construct( $args = array() ) {
 		$args = (array) wp_parse_args(
@@ -63,8 +62,8 @@ class EverAccounting_Transfer_List_Table extends EverAccounting_List_Table {
 	/**
 	 * Check if there is contents in the database.
 	 *
-	 * @return bool
 	 * @since 1.0.2
+	 * @return bool
 	 */
 	public function is_empty() {
 		global $wpdb;
@@ -75,17 +74,28 @@ class EverAccounting_Transfer_List_Table extends EverAccounting_List_Table {
 	/**
 	 * Render blank state.
 	 *
-	 * @return void
 	 * @since 1.0.2
+	 * @return void
 	 */
 	protected function render_blank_state() {
+		$url = eaccounting_admin_url(
+			array(
+				'page'   => 'ea-banking',
+				'tab'    => 'transfers',
+				'action' => 'edit',
+			)
+		);
 		?>
 		<div class="ea-empty-table">
 			<p class="ea-empty-table__message">
 				<?php echo esc_html__( 'Add deposits to and transfers between accounts and keep the balance of your bank accounts active regardless of currency. The transferred amount will automatically adjust to the account currency.', 'wp-ever-accounting' ); ?>
 			</p>
-			<a href="<?php echo esc_url( eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'transfers', 'action' => 'edit', ) ) ); //phpcs:ignore ?>" class="button-primary ea-empty-table__cta"><?php _e( 'Add Transfers', 'wp-ever-accounting' ); ?></a>
-			<a href="https://wpeveraccounting.com/docs/general/add-transfers/?utm_source=listtable&utm_medium=link&utm_campaign=admin" class="button-secondary ea-empty-table__cta" target="_blank"><?php _e( 'Learn More', 'wp-ever-accounting' ); ?></a>
+			<a href="<?php echo esc_url( $url ); ?>" class="button-primary ea-empty-table__cta">
+				<?php esc_html_e( 'Add Transfers', 'wp-ever-accounting' ); ?>
+			</a>
+			<a href="https://wpeveraccounting.com/docs/general/add-transfers/?utm_source=listtable&utm_medium=link&utm_campaign=admin" class="button-secondary ea-empty-table__cta" target="_blank">
+				<?php esc_html_e( 'Learn More', 'wp-ever-accounting' ); ?>
+			</a>
 		</div>
 		<?php
 	}
@@ -93,8 +103,8 @@ class EverAccounting_Transfer_List_Table extends EverAccounting_List_Table {
 	/**
 	 * Define which columns to show on this screen.
 	 *
-	 * @return array
 	 * @since 1.0.2
+	 * @return array
 	 */
 	public function define_columns() {
 		return array(
@@ -110,8 +120,8 @@ class EverAccounting_Transfer_List_Table extends EverAccounting_List_Table {
 	/**
 	 * Define sortable columns.
 	 *
-	 * @return array
 	 * @since 1.0.2
+	 * @return array
 	 */
 	protected function define_sortable_columns() {
 		return array(
@@ -126,8 +136,8 @@ class EverAccounting_Transfer_List_Table extends EverAccounting_List_Table {
 	/**
 	 * Define bulk actions
 	 *
-	 * @return array
 	 * @since 1.0.2
+	 * @return array
 	 */
 	public function define_bulk_actions() {
 		return array(
@@ -138,8 +148,8 @@ class EverAccounting_Transfer_List_Table extends EverAccounting_List_Table {
 	/**
 	 * Define primary column.
 	 *
-	 * @return string
 	 * @since 1.0.2
+	 * @return string
 	 */
 	public function get_primary_column_name() {
 		return 'date';
@@ -150,29 +160,35 @@ class EverAccounting_Transfer_List_Table extends EverAccounting_List_Table {
 	 *
 	 * @param Transfer $transfer The current object.
 	 *
-	 * @return string Displays a checkbox.
 	 * @since  1.0.2
+	 * @return string Displays a checkbox.
 	 */
-	function column_cb( $transfer ) {
+	public function column_cb( $transfer ) {
 		return sprintf( '<input type="checkbox" name="transfer_id[]" value="%d"/>', $transfer->get_id() );
 	}
 
 	/**
 	 * This function renders most of the columns in the list table.
 	 *
-	 * @param Transfer $transfer
+	 * @param Transfer $transfer The current object.
+	 * @param string   $column_name The name of the column.
 	 *
-	 * @param string   $column_name The name of the column
-	 *
-	 * @return string The column value.
 	 * @since 1.0.2
+	 * @return string The column value.
 	 */
-	function column_default( $transfer, $column_name ) {
+	public function column_default( $transfer, $column_name ) {
 		$transfer_id = $transfer->get_id();
 		switch ( $column_name ) {
 			case 'date':
 				$edit_url = eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'transfers', 'action' => 'edit', 'transfer_id' => $transfer_id, ) );// phpcs:ignore
-				$del_url  = eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'transfers', 'action' => 'delete', 'transfer_id' => $transfer_id, '_wpnonce' => wp_create_nonce( 'transfer-nonce' ), ) );// phpcs:ignore
+				$del_url  = eaccounting_admin_url(
+					array(
+						'page'        => 'ea-banking',
+						'tab'         => 'transfers',
+						'action'      => 'delete',
+						'transfer_id' => $transfer_id,
+						'_wpnonce'    => wp_create_nonce( 'transfer-nonce' ),
+				) );// phpcs:ignore
 
 				$actions = array(
 					'edit'   => '<a href="' . $edit_url . '">' . __( 'Edit', 'wp-ever-accounting' ) . '</a>',
@@ -189,12 +205,30 @@ class EverAccounting_Transfer_List_Table extends EverAccounting_List_Table {
 				break;
 			case 'from_account_id':
 				$account = eaccounting_get_account( $transfer->get_from_account_id( 'edit' ) );
-				$value   = $account ? sprintf( '<a href="%1$s">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'accounts', 'action' => 'view', 'account_id' => $transfer->get_from_account_id() ) ) ), $account->get_name() ) : '&mdash;';// phpcs:ignore
+				$value   = $account ? sprintf(
+					'<a href="%1$s">%2$s</a>',
+					esc_url(
+						eaccounting_admin_url(
+							array(
+								'page'       => 'ea-banking',
+								'tab'        => 'accounts',
+								'action'     => 'view',
+								'account_id' => $transfer->get_from_account_id(),
+				) ) ), $account->get_name() ) : '&mdash;';// phpcs:ignore
 
 				break;
 			case 'to_account_id':
 				$account = eaccounting_get_account( $transfer->get_to_account_id( 'edit' ) );
-				$value   = $account ? sprintf( '<a href="%1$s">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'accounts', 'action' => 'view', 'account_id' => $transfer->get_to_account_id() ) ) ), $account->get_name() ) : '&mdash;';// phpcs:ignore
+				$value   = $account ? sprintf(
+					'<a href="%1$s">%2$s</a>',
+					esc_url(
+						eaccounting_admin_url(
+							array(
+								'page'       => 'ea-banking',
+								'tab'        => 'accounts',
+								'action'     => 'view',
+								'account_id' => $transfer->get_to_account_id(),
+				) ) ), $account->get_name() ) : '&mdash;';// phpcs:ignore
 				break;
 			case 'reference':
 				$value = ! empty( $transfer->get_reference() ) ? $transfer->get_reference() : '&mdash;';
@@ -209,29 +243,26 @@ class EverAccounting_Transfer_List_Table extends EverAccounting_List_Table {
 	/**
 	 * Renders the message to be displayed when there are no items.
 	 *
-	 * @return void
 	 * @since  1.0.2
+	 * @return void
 	 */
-	function no_items() {
-		_e( 'There is no transfers found.', 'wp-ever-accounting' );
+	public function no_items() {
+		esc_html_e( 'There is no transfers found.', 'wp-ever-accounting' );
 	}
 
 	/**
 	 * Process the bulk actions
 	 *
-	 * @return void
 	 * @since 1.0.2
+	 * @return void
 	 */
 	public function process_bulk_action() {
-		if ( empty( $_REQUEST['_wpnonce'] ) ) {
+		$nonce = isset( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ) : '';
+		if ( ! wp_verify_nonce( $nonce, 'bulk-transfers' ) && ! wp_verify_nonce( $nonce, 'transfer-nonce' ) ) {
 			return;
 		}
 
-		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-transfers' ) && ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'transfer-nonce' ) ) {
-			return;
-		}
-
-		$ids = isset( $_GET['transfer_id'] ) ? $_GET['transfer_id'] : false;
+		$ids = isset( $_GET['transfer_id'] ) ? wp_parse_id_list( $_GET['transfer_id'] ) : false; // phpcs:ignore
 
 		if ( ! is_array( $ids ) ) {
 			$ids = array( $ids );
@@ -276,8 +307,8 @@ class EverAccounting_Transfer_List_Table extends EverAccounting_List_Table {
 	 * Retrieve all the data for the table.
 	 * Setup the final data for the table
 	 *
-	 * @return void
 	 * @since 1.0.2
+	 * @return void
 	 */
 	public function prepare_items() {
 		$columns               = $this->get_columns();
@@ -287,12 +318,13 @@ class EverAccounting_Transfer_List_Table extends EverAccounting_List_Table {
 
 		$this->process_bulk_action();
 
-		$page = isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
-
-		$search  = isset( $_GET['s'] ) ? $_GET['s'] : '';
-		$order   = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
-		$orderby = isset( $_GET['orderby'] ) ? $_GET['orderby'] : 'id';
-		$from_id = isset( $_GET['account_id'] ) ? $_GET['account_id'] : '';
+		$page       = isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1; // phpcs:ignore
+		$search     = isset( $_GET['s'] ) ? sanitize_text_field( $_GET['s'] ) : ''; // phpcs:ignore
+		$order      = isset( $_GET['order'] ) ? sanitize_text_field( $_GET['order'] ) : 'DESC'; // phpcs:ignore
+		$orderby    = isset( $_GET['orderby'] ) ? sanitize_text_field( $_GET['orderby'] ) : 'id'; // phpcs:ignore
+		$from_id    = isset( $_GET['account_id'] ) ? absint( $_GET['account_id'] ) : ''; // phpcs:ignore
+		$start_date = isset( $_GET['start_date'] ) ? sanitize_text_field( $_GET['start_date'] ) : ''; // phpcs:ignore
+		$end_date   = isset( $_GET['end_date'] ) ? sanitize_text_field( $_GET['end_date'] ) : ''; // phpcs:ignore
 
 		$per_page = $this->per_page;
 
@@ -312,8 +344,8 @@ class EverAccounting_Transfer_List_Table extends EverAccounting_List_Table {
 
 		if ( ! empty( $start_date ) && ! empty( $end_date ) ) {
 			$args['payment_date'] = array(
-				'before' => date( 'Y-m-d', strtotime( $end_date ) ),
-				'after'  => date( 'Y-m-d', strtotime( $start_date ) ),
+					'before' => date( 'Y-m-d', strtotime( $end_date ) ), // phpcs:ignore
+					'after'  => date( 'Y-m-d', strtotime( $start_date ) ), // phpcs:ignore
 			);
 		}
 

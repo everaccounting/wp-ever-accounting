@@ -31,7 +31,9 @@ $due_date = date_i18n( 'Y-m-d', strtotime( "+ $due days", current_time( 'timesta
 				<?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?>
 			</a>
 		<?php else : ?>
-			<a href="<?php echo remove_query_arg( array( 'action', 'id' ) ); ?>" class="page-title-action"><?php esc_html_e( 'View All', 'wp-ever-accounting' ); ?></a>
+			<a href="<?php echo esc_url( remove_query_arg( array( 'action', 'id' ) ) ); ?>" class="page-title-action">
+				<?php esc_html_e( 'View All', 'wp-ever-accounting' ); ?>
+			</a>
 		<?php endif; ?>
 	</div>
 

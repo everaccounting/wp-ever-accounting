@@ -43,6 +43,8 @@ abstract class Document extends Resource_Model {
 	protected $object_type = 'document';
 
 	/**
+	 * Cache group.
+	 *
 	 * @since 1.1.0
 	 *
 	 * @var string
@@ -1304,6 +1306,8 @@ abstract class Document extends Resource_Model {
 	}
 
 	/**
+	 * Get item.
+	 *
 	 * @param int $item_id .
 	 *
 	 * @since 1.1.0

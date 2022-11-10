@@ -275,6 +275,7 @@ function eaccounting_get_countries() {
 
 /**
  * Get site name.
+ *
  * @return string
  */
 function eaccounting_get_site_name() {
@@ -284,6 +285,8 @@ function eaccounting_get_site_name() {
 }
 
 /**
+ * Upload file path to attachment.
+ *
  * @param string $file File name.
  *
  * @return false|int|WP_Error

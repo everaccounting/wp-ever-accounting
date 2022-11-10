@@ -20,8 +20,8 @@ function eaccounting_get_contact_types() {
 	return apply_filters(
 		'eaccounting_contact_types',
 		array(
-			'customer' => __( 'Customer', 'wp-ever-accounting' ),
-			'vendor'   => __( 'Vendor', 'wp-ever-accounting' ),
+			'customer' => esc_html__( 'Customer', 'wp-ever-accounting' ),
+			'vendor'   => esc_html__( 'Vendor', 'wp-ever-accounting' ),
 		)
 	);
 }

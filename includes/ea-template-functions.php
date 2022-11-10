@@ -142,7 +142,6 @@ function eaccounting_get_template( $template_name, $args = array(), $template_pa
  * @since 1.0.2
  * @return string
  * @see   eaccounting_get_template
- *
  */
 function eaccounting_get_template_html( $template_name, $args = array(), $template_path = '', $default_path = '' ) {
 	ob_start();

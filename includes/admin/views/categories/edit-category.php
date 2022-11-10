@@ -7,13 +7,12 @@
  * @since       1.0.2
  */
 
-
 defined( 'ABSPATH' ) || exit();
-$category_id = isset( $_REQUEST['category_id'] ) ? absint( $_REQUEST['category_id'] ) : null;
+$category_id = isset( $_REQUEST['category_id'] ) ? absint( $_REQUEST['category_id'] ) : null; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 try {
 	$category = new \EverAccounting\Models\Category( $category_id );
 } catch ( Exception $e ) {
-	wp_die( $e->getMessage() );
+	wp_die( esc_html( $e->getMessage() ) );
 }
 $back_url = remove_query_arg( array( 'action', 'category_id' ) );
 ?>
@@ -25,7 +24,7 @@ $back_url = remove_query_arg( array( 'action', 'category_id' ) );
 				<?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?>
 			</a>
 		<?php else : ?>
-			<a href="<?php echo remove_query_arg( array( 'action', 'id' ) ); ?>" class="page-title-action"><?php esc_html_e( 'View All', 'wp-ever-accounting' ); ?></a>
+			<a href="<?php echo esc_url( remove_query_arg( array( 'action', 'id' ) ) ); ?>" class="page-title-action"><?php esc_html_e( 'View All', 'wp-ever-accounting' ); ?></a>
 		<?php endif; ?>
 
 	</div>
@@ -35,7 +34,9 @@ $back_url = remove_query_arg( array( 'action', 'category_id' ) );
 <form id="ea-category-form" method="post">
 <div class="ea-card">
 	<div class="ea-card__header">
-		<h3 class="ea-card__title"><?php echo $category->exists() ? __( 'Update Category', 'wp-ever-accounting' ) : __( 'Add Category', 'wp-ever-accounting' ); ?></h3>
+		<h3 class="ea-card__title">
+			<?php echo $category->exists() ? esc_html__( 'Update Category', 'wp-ever-accounting' ) : esc_html__( 'Add Category', 'wp-ever-accounting' ); ?>
+		</h3>
 	</div>
 
 	<div class="ea-card__inside">
@@ -79,13 +80,6 @@ $back_url = remove_query_arg( array( 'action', 'category_id' ) );
 					)
 				);
 
-				// eaccounting_toggle( array(
-				// 'wrapper_class' => 'ea-col-6',
-				// 'label'         => __( 'Enabled', 'wp-ever-accounting' ),
-				// 'name'          => 'enabled',
-				// 'value'         => $category->get_enabled( 'edit' ),
-				// ) );
-
 				eaccounting_hidden_input(
 					array(
 						'name'  => 'id',
@@ -102,8 +96,6 @@ $back_url = remove_query_arg( array( 'action', 'category_id' ) );
 
 				?>
 			</div>
-
-
 
 	</div>
 	<div class="ea-card__footer">

@@ -23,8 +23,6 @@ class Release {
 	 */
 	public function __construct() {
 		add_action( 'admin_menu', array( $this, 'register_page' ) );
-		// add_action( 'admin_menu', array( $this, 'register_page' ), 30 );
-		// add_filter( 'admin_title', array( $this, 'admin_title' ), 10 );
 	}
 
 	/**
@@ -49,6 +47,11 @@ class Release {
 		include dirname( __FILE__ ) . '/views/admin-page-release.php';
 	}
 
+	/**
+	 * Render admin title.
+	 *
+	 * @return string
+	 */
 	public function admin_title() {
 		$title  = '';
 		$title .= '<div class="ea-release_logo">';
@@ -59,7 +62,6 @@ class Release {
 		$title .= '</div>';
 
 		return $title;
-
 	}
 }
 

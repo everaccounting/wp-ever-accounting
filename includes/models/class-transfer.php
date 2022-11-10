@@ -30,6 +30,8 @@ class Transfer extends Resource_Model {
 	protected $object_type = 'transfer';
 
 	/**
+	 * Cache group.
+	 *
 	 * @since 1.1.0
 	 *
 	 * @var string

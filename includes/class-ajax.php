@@ -298,7 +298,7 @@ class Ajax {
 
 			wp_send_json_success(
 				array(
-					'message' => __( 'Invoice Payment saved', 'wp-ever-accounting' ),
+					'message' => esc_html__( 'Invoice Payment saved', 'wp-ever-accounting' ),
 					'total'   => $invoice->get_total(),
 					'due'     => $invoice->get_total_due(),
 					'paid'    => $invoice->get_total_paid(),
@@ -328,7 +328,7 @@ class Ajax {
 		if ( empty( $note ) ) {
 			wp_send_json_error(
 				array(
-					'message' => __( 'Note Content empty.', 'wp-ever-accounting' ),
+					'message' => esc_html__( 'Note Content empty.', 'wp-ever-accounting' ),
 				)
 			);
 		}
@@ -338,7 +338,7 @@ class Ajax {
 			$notes = eaccounting_get_admin_template_html( 'invoices/invoice-notes', array( 'invoice' => $invoice ) );
 			wp_send_json_success(
 				array(
-					'message' => __( 'Note Added.', 'wp-ever-accounting' ),
+					'message' => esc_html__( 'Note Added.', 'wp-ever-accounting' ),
 					'notes'   => $notes,
 				)
 			);
@@ -549,7 +549,7 @@ class Ajax {
 
 			wp_send_json_success(
 				array(
-					'message' => __( 'Bill Payment saved', 'wp-ever-accounting' ),
+					'message' => esc_html__( 'Bill Payment saved', 'wp-ever-accounting' ),
 					'total'   => $bill->get_total(),
 					'due'     => $bill->get_total_due(),
 					'paid'    => $bill->get_total_paid(),
@@ -579,7 +579,7 @@ class Ajax {
 		if ( empty( $note ) ) {
 			wp_send_json_error(
 				array(
-					'message' => __( 'Note Content empty.', 'wp-ever-accounting' ),
+					'message' => esc_html__( 'Note Content empty.', 'wp-ever-accounting' ),
 				)
 			);
 		}
@@ -589,7 +589,7 @@ class Ajax {
 			$notes = eaccounting_get_admin_template_html( 'bills/bill-notes', array( 'bill' => $bill ) );
 			wp_send_json_success(
 				array(
-					'message' => __( 'Note Added.', 'wp-ever-accounting' ),
+					'message' => esc_html__( 'Note Added.', 'wp-ever-accounting' ),
 					'notes'   => $notes,
 				)
 			);
@@ -710,7 +710,7 @@ class Ajax {
 		if ( ! $code ) {
 			wp_send_json_error(
 				array(
-					'message' => __( 'No code received', 'wp-ever-accounting' ),
+					'message' => esc_html__( 'No code received', 'wp-ever-accounting' ),
 				)
 			);
 		}
@@ -718,7 +718,7 @@ class Ajax {
 		if ( empty( $currency ) || is_wp_error( $currency ) ) {
 			wp_send_json_error(
 				array(
-					'message' => __( 'Could not find the currency', 'wp-ever-accounting' ),
+					'message' => esc_html__( 'Could not find the currency', 'wp-ever-accounting' ),
 				)
 			);
 		}
@@ -933,7 +933,7 @@ class Ajax {
 		if ( ! $account_id ) {
 			wp_send_json_error(
 				array(
-					'message' => __( 'No account id received', 'wp-ever-accounting' ),
+					'message' => esc_html__( 'No account id received', 'wp-ever-accounting' ),
 				)
 			);
 		}
@@ -941,7 +941,7 @@ class Ajax {
 		if ( empty( $account ) || is_wp_error( $account ) || empty( $account->get_currency()->exists() ) ) {
 			wp_send_json_error(
 				array(
-					'message' => __( 'Could not find the currency', 'wp-ever-accounting' ),
+					'message' => esc_html__( 'Could not find the currency', 'wp-ever-accounting' ),
 				)
 			);
 		}
@@ -1041,7 +1041,7 @@ class Ajax {
 		if ( ! $deleted ) {
 			wp_send_json_error(
 				array(
-					'message' => __( 'Note could not be deleted.', 'wp-ever-accounting' ),
+					'message' => esc_html__( 'Note could not be deleted.', 'wp-ever-accounting' ),
 				)
 			);
 		}
@@ -1057,7 +1057,7 @@ class Ajax {
 
 		wp_send_json_success(
 			array(
-				'message' => __( 'Note Deleted.', 'wp-ever-accounting' ),
+				'message' => esc_html__( 'Note Deleted.', 'wp-ever-accounting' ),
 				'notes'   => $notes,
 			)
 		);
@@ -1130,7 +1130,7 @@ class Ajax {
 	 */
 	public static function check_permission( $cap = 'manage_eaccounting' ) {
 		if ( ! current_user_can( $cap ) ) {
-			wp_send_json_error( array( 'message' => __( 'Error: You are not allowed to do this.', 'wp-ever-accounting' ) ) );
+			wp_send_json_error( array( 'message' => esc_html__( 'Error: You are not allowed to do this.', 'wp-ever-accounting' ) ) );
 		}
 	}
 
@@ -1151,7 +1151,7 @@ class Ajax {
 			$nonce = $_REQUEST['nonce']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.NonceVerification.Recommended
 		}
 		if ( false === wp_verify_nonce( $nonce, $action ) ) {
-			wp_send_json_error( array( 'message' => __( 'Error: Cheatin&#8217; huh?.', 'wp-ever-accounting' ) ) );
+			wp_send_json_error( array( 'message' => esc_html__( 'Error: Cheatin&#8217; huh?.', 'wp-ever-accounting' ) ) );
 			wp_die();
 		}
 

@@ -8,20 +8,23 @@
  * @subpackage  Admin/View/Tools
  * @since       1.0.2
  */
+
 defined( 'ABSPATH' ) || exit();
 ?>
 
 <div class="ea-card">
 		<div class="ea-card__header is-compact">
-			<h3 class="ea-card__title"><?php _e( 'Import Customers', 'wp-ever-accounting' ); ?></h3>
+			<h3 class="ea-card__title">
+				<?php esc_html_e( 'Import Customers', 'wp-ever-accounting' ); ?>
+			</h3>
+		</div>
 </div>
 
 <div class="ea-card__inside">
-	<form action="" method="post" enctype="multipart/form-data" class="ea-importer ea-batch"
-		  data-type="import-customers"
-		  data-nonce="<?php echo wp_create_nonce( 'import-customers_importer_nonce' ); ?>">
+	<form action="" method="post" enctype="multipart/form-data" class="ea-importer ea-batch" data-type="import-customers" data-nonce="<?php echo esc_attr( wp_create_nonce( 'import-customers_importer_nonce' ) ); ?>">
 		<p>
 			<?php
+			/* translators: %s: link to the documentation */
 			echo wp_kses_post( sprintf( __( 'Import customers from CSV file. Download a <a href="%s"> sample </a> file to learn how to format the CSV file.', 'wp-ever-accounting' ), eaccounting()->plugin_url( '/sample-data/import/customers.csv' ) ) );
 			?>
 		</p>
@@ -57,15 +60,14 @@ defined( 'ABSPATH' ) || exit();
 
 <div class="ea-card">
 	<div class="ea-card__header is-compact">
-		<h3 class="ea-card__title"><?php _e( 'Import Vendors', 'wp-ever-accounting' ); ?></h3>
+		<h3 class="ea-card__title"><?php esc_html_e( 'Import Vendors', 'wp-ever-accounting' ); ?></h3>
 	</div>
 
 	<div class="ea-card__inside">
-		<form action="" method="post" enctype="multipart/form-data" class="ea-importer ea-batch"
-			  data-type="import-vendors"
-			  data-nonce="<?php echo wp_create_nonce( 'import-vendors_importer_nonce' ); ?>">
+		<form action="" method="post" enctype="multipart/form-data" class="ea-importer ea-batch" data-type="import-vendors" data-nonce="<?php echo esc_attr( wp_create_nonce( 'import-vendors_importer_nonce' ) ); ?>">
 			<p>
 				<?php
+				/* translators: %s: link to the documentation */
 				echo wp_kses_post( sprintf( __( 'Import vendors from CSV file. Download a <a href="%s"> sample </a> file to learn how to format the CSV file.', 'wp-ever-accounting' ), eaccounting()->plugin_url( '/sample-data/import/vendors.csv' ) ) );
 				?>
 			</p>
@@ -101,15 +103,14 @@ defined( 'ABSPATH' ) || exit();
 
 <div class="ea-card">
 	<div class="ea-card__header is-compact">
-		<h3 class="ea-card__title"><?php _e( 'Import Accounts', 'wp-ever-accounting' ); ?></h3>
+		<h3 class="ea-card__title"><?php esc_html_e( 'Import Accounts', 'wp-ever-accounting' ); ?></h3>
 	</div>
 
 	<div class="ea-card__inside">
-		<form action="" method="post" enctype="multipart/form-data" class="ea-importer ea-batch"
-			  data-type="import-accounts"
-			  data-nonce="<?php echo wp_create_nonce( 'import-accounts_importer_nonce' ); ?>">
+		<form action="" method="post" enctype="multipart/form-data" class="ea-importer ea-batch" data-type="import-accounts" data-nonce="<?php echo esc_attr( wp_create_nonce( 'import-accounts_importer_nonce' ) ); ?>">
 			<p>
 				<?php
+				/* translators: %s: link to the documentation */
 				echo wp_kses_post( sprintf( __( 'Import accounts from CSV file. Download a <a href="%s"> sample </a> file to learn how to format the CSV file.', 'wp-ever-accounting' ), eaccounting()->plugin_url( '/sample-data/import/accounts.csv' ) ) );
 				?>
 			</p>
@@ -145,16 +146,15 @@ defined( 'ABSPATH' ) || exit();
 
 <div class="ea-card">
 	<div class="ea-card__header is-compact">
-		<h3 class="ea-card__title"><?php _e( 'Import Items', 'wp-ever-accounting' ); ?></h3>
+		<h3 class="ea-card__title"><?php esc_html_e( 'Import Items', 'wp-ever-accounting' ); ?></h3>
 	</div>
 
 	<div class="ea-card__inside">
-		<form action="" method="post" enctype="multipart/form-data" class="ea-importer ea-batch"
-			  data-type="import-items"
-			  data-nonce="<?php echo wp_create_nonce( 'import-items_importer_nonce' ); ?>">
+		<form action="" method="post" enctype="multipart/form-data" class="ea-importer ea-batch" data-type="import-items" data-nonce="<?php echo esc_attr( wp_create_nonce( 'import-items_importer_nonce' ) ); ?>">
 			<p>
 				<?php
-				echo wp_kses_post( sprintf( __( 'Import items from CSV file. Download a <a href="%s"> sample </a> file to learn how to format the CSV file.', 'wp-ever-accounting' ), eaccounting()->plugin_url( '/sample-data/import/items.csv' ) ) );
+				/* translators: %s: link to the documentation */
+				echo wp_kses_post( sprintf( esc_html__( 'Import items from CSV file. Download a <a href="%s"> sample </a> file to learn how to format the CSV file.', 'wp-ever-accounting' ), eaccounting()->plugin_url( '/sample-data/import/items.csv' ) ) );
 				?>
 			</p>
 
@@ -189,15 +189,14 @@ defined( 'ABSPATH' ) || exit();
 
 <div class="ea-card">
 	<div class="ea-card__header is-compact">
-		<h3 class="ea-card__title"><?php _e( 'Import Revenues', 'wp-ever-accounting' ); ?></h3>
+		<h3 class="ea-card__title"><?php esc_html_e( 'Import Revenues', 'wp-ever-accounting' ); ?></h3>
 	</div>
 
 	<div class="ea-card__inside">
-		<form action="" method="post" enctype="multipart/form-data" class="ea-importer ea-batch"
-			  data-type="import-revenues"
-			  data-nonce="<?php echo wp_create_nonce( 'import-revenues_importer_nonce' ); ?>">
+		<form action="" method="post" enctype="multipart/form-data" class="ea-importer ea-batch" data-type="import-revenues" data-nonce="<?php echo esc_attr( wp_create_nonce( 'import-revenues_importer_nonce' ) ); ?>">
 			<p>
 				<?php
+				/* translators: %s: link to the documentation */
 				echo wp_kses_post( sprintf( __( 'Import revenues from CSV file. Download a <a href="%s"> sample </a> file to learn how to format the CSV file.', 'wp-ever-accounting' ), eaccounting()->plugin_url( '/sample-data/import/revenues.csv' ) ) );
 				?>
 			</p>
@@ -234,17 +233,16 @@ defined( 'ABSPATH' ) || exit();
 
 <div class="ea-card">
 	<div class="ea-card__header is-compact">
-		<h3 class="ea-card__title"><?php _e( 'Import Payments', 'wp-ever-accounting' ); ?></h3>
+		<h3 class="ea-card__title"><?php esc_html_e( 'Import Payments', 'wp-ever-accounting' ); ?></h3>
 	</div>
 
 	<div class="ea-card__inside">
-		<form action="" method="post" enctype="multipart/form-data" class="ea-importer ea-batch"
-			  data-type="import-payments"
-			  data-nonce="<?php echo wp_create_nonce( 'import-payments_importer_nonce' ); ?>">
+		<form action="" method="post" enctype="multipart/form-data" class="ea-importer ea-batch" data-type="import-payments" data-nonce="<?php echo esc_attr( wp_create_nonce( 'import-payments_importer_nonce' ) ); ?>">
 			<p>
 				<?php
 				echo wp_kses_post(
 					sprintf(
+						/* translators: %s: link to the documentation */
 						__( 'Import payments from CSV file. Download a <a href="%s"> sample </a> file to learn how to format the CSV file.', 'wp-ever-accounting' ),
 						eaccounting()->plugin_url( '/sample-data/import/payments.csv' )
 					)
@@ -283,18 +281,16 @@ defined( 'ABSPATH' ) || exit();
 
 <div class="ea-card">
 	<div class="ea-card__header is-compact">
-		<h3 class="ea-card__title"><?php _e( 'Import Currencies', 'wp-ever-accounting' ); ?></h3>
+		<h3 class="ea-card__title"><?php esc_html_e( 'Import Currencies', 'wp-ever-accounting' ); ?></h3>
 	</div>
 
 	<div class="ea-card__inside">
-		<form action="" method="post" enctype="multipart/form-data"
-			  class="ea-importer ea-batch"
-			  data-type="import-currencies"
-			  data-nonce="<?php echo wp_create_nonce( 'import-currencies_importer_nonce' ); ?>">
+		<form action="" method="post" enctype="multipart/form-data" class="ea-importer ea-batch" data-type="import-currencies" data-nonce="<?php echo esc_attr( wp_create_nonce( 'import-currencies_importer_nonce' ) ); ?>">
 			<p>
 				<?php
 				echo wp_kses_post(
 					sprintf(
+						/* translators: %s: link to the documentation */
 						__( 'Import currencies from CSV file. Download a <a href="%s"> sample </a> file to learn how to format the CSV file.', 'wp-ever-accounting' ),
 						eaccounting()->plugin_url( '/sample-data/import/currencies.csv' )
 					)
@@ -333,17 +329,16 @@ defined( 'ABSPATH' ) || exit();
 
 <div class="ea-card">
 	<div class="ea-card__header is-compact">
-		<h3 class="ea-card__title"><?php _e( 'Import Categories', 'wp-ever-accounting' ); ?></h3>
+		<h3 class="ea-card__title"><?php esc_html_e( 'Import Categories', 'wp-ever-accounting' ); ?></h3>
 	</div>
 
 	<div class="ea-card__inside">
-		<form action="" method="post" enctype="multipart/form-data" class="ea-importer ea-batch"
-			  data-type="import-categories"
-			  data-nonce="<?php echo wp_create_nonce( 'import-categories_importer_nonce' ); ?>">
+		<form action="" method="post" enctype="multipart/form-data" class="ea-importer ea-batch" data-type="import-categories" data-nonce="<?php echo esc_attr( wp_create_nonce( 'import-categories_importer_nonce' ) ); ?>">
 			<p>
 				<?php
 				echo wp_kses_post(
 					sprintf(
+						/* translators: %s: link to the documentation */
 						__( 'Import categories from CSV file. Download a <a href="%s"> sample </a> file to learn how to format the CSV file.', 'wp-ever-accounting' ),
 						eaccounting()->plugin_url( '/sample-data/import/categories.csv' )
 					)

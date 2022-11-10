@@ -89,6 +89,8 @@ function eaccounting_delete_invoice( $invoice_id ) {
 }
 
 /**
+ * Get invoices.
+ *
  * @since 1.1.0
  *
  * @param array $args Query arguments.
@@ -181,6 +183,8 @@ function eaccounting_delete_bill( $bill_id ) {
 }
 
 /**
+ * Get bills.
+ *
  * @since 1.1.0
  *
  * @param array $args Query arguments.
@@ -372,33 +376,37 @@ function eaccounting_get_documents( $args = array() ) {
 
 
 /**
+ * Get bill statuses.
+ *
  * @return mixed|void
  */
 function eaccounting_get_bill_statuses() {
 	$statuses = array(
-		'draft'     => __( 'Draft', 'wp-ever-accounting' ),
-		'received'  => __( 'Received', 'wp-ever-accounting' ),
-		'partial'   => __( 'Partial', 'wp-ever-accounting' ),
-		'paid'      => __( 'Paid', 'wp-ever-accounting' ),
-		'overdue'   => __( 'Overdue', 'wp-ever-accounting' ),
-		'cancelled' => __( 'Cancelled', 'wp-ever-accounting' ),
+		'draft'     => esc_html__( 'Draft', 'wp-ever-accounting' ),
+		'received'  => esc_html__( 'Received', 'wp-ever-accounting' ),
+		'partial'   => esc_html__( 'Partial', 'wp-ever-accounting' ),
+		'paid'      => esc_html__( 'Paid', 'wp-ever-accounting' ),
+		'overdue'   => esc_html__( 'Overdue', 'wp-ever-accounting' ),
+		'cancelled' => esc_html__( 'Cancelled', 'wp-ever-accounting' ),
 	);
 
 	return apply_filters( 'eaccounting_bill_statuses', $statuses );
 }
 
 /**
+ * Get invoice statuses.
+ *
  * @return mixed|void
  */
 function eaccounting_get_invoice_statuses() {
 	$statuses = array(
-		'draft'     => __( 'Draft', 'wp-ever-accounting' ),
-		'pending'   => __( 'Pending', 'wp-ever-accounting' ),
-		'partial'   => __( 'Partial', 'wp-ever-accounting' ),
-		'paid'      => __( 'Paid', 'wp-ever-accounting' ),
-		'overdue'   => __( 'Overdue', 'wp-ever-accounting' ),
-		'cancelled' => __( 'Cancelled', 'wp-ever-accounting' ),
-		'refunded'  => __( 'Refunded', 'wp-ever-accounting' ),
+		'draft'     => esc_html__( 'Draft', 'wp-ever-accounting' ),
+		'pending'   => esc_html__( 'Pending', 'wp-ever-accounting' ),
+		'partial'   => esc_html__( 'Partial', 'wp-ever-accounting' ),
+		'paid'      => esc_html__( 'Paid', 'wp-ever-accounting' ),
+		'overdue'   => esc_html__( 'Overdue', 'wp-ever-accounting' ),
+		'cancelled' => esc_html__( 'Cancelled', 'wp-ever-accounting' ),
+		'refunded'  => esc_html__( 'Refunded', 'wp-ever-accounting' ),
 	);
 
 	return apply_filters( 'eaccounting_invoice_statuses', $statuses );

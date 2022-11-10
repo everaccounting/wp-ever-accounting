@@ -43,6 +43,7 @@ class Items extends CSV_Exporter {
 	}
 
 	/**
+	 * Get rows.
 	 *
 	 * @since 1.0.2
 	 */
@@ -65,7 +66,6 @@ class Items extends CSV_Exporter {
 
 		return $rows;
 	}
-
 
 	/**
 	 * Take a item and generate row data from it for export.

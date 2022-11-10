@@ -6,6 +6,7 @@
  * @var string $current_tab
  * @var array $sections
  * @var string $current_section
+ * @package EverAccouting
  */
 
 defined( 'ABSPATH' ) || exit();
@@ -24,7 +25,7 @@ defined( 'ABSPATH' ) || exit();
 	<nav class="nav-tab-wrapper ea-nav-tab-wrapper">
 		<?php
 		foreach ( $tabs as $name => $label ) {
-			echo '<a href="' . admin_url( 'admin.php?page=ea-reports&tab=' . $name ) . '" class="nav-tab ';
+			echo '<a href="' . esc_url( admin_url( 'admin.php?page=ea-reports&tab=' . $name ) ) . '" class="nav-tab ';
 			if ( $current_tab === $name ) {
 				echo 'nav-tab-active';
 			}

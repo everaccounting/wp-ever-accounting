@@ -29,7 +29,7 @@ $import_url = add_query_arg(
 	admin_url( 'admin.php' )
 );
 ?>
-	<h1 class="wp-heading-inline"><?php _e( 'Vendors', 'wp-ever-accounting' ); ?></h1>
+	<h1 class="wp-heading-inline"><?php esc_html_e( 'Vendors', 'wp-ever-accounting' ); ?></h1>
 	<a class="page-title-action" href="<?php echo esc_url( $add_url ); ?>">
 		<?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?>
 	</a>
@@ -37,10 +37,10 @@ $import_url = add_query_arg(
 		<?php esc_html_e( 'Import', 'wp-ever-accounting' ); ?>
 	</a>
 <?php do_action( 'eaccounting_vendors_table_top' ); ?>
-	<form id="ea-vendors-table" method="get" action="<?php echo admin_url( 'admin.php' ); ?>">
+	<form id="ea-vendors-table" method="get" action="<?php echo esc_url( admin_url( 'admin.php' ) ); ?>">
 		<?php
 		$vendors_table->views();
-		$vendors_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'ea-vendors' );
+		$vendors_table->search_box( esc_html__( 'Search', 'wp-ever-accounting' ), 'ea-vendors' );
 		$vendors_table->display();
 		?>
 		<input type="hidden" name="page" value="ea-expenses"/>

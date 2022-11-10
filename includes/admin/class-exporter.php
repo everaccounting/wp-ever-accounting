@@ -34,22 +34,23 @@ class Exporter {
 	 * @since 1.0.2
 	 */
 	public static function do_ajax_export() {
-		if ( ! isset( $_REQUEST['type'] ) ) {
+		$type = filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING );
+		if ( empty( $type ) ) {
 			wp_send_json_error(
 				array(
-					'message' => __( 'Export type must be present.', 'wp-ever-accounting' ),
+					'message' => esc_html__( 'Export type must be present.', 'wp-ever-accounting' ),
 				)
 			);
 		}
 
-		$type = sanitize_key( $_REQUEST['type'] );
-
+		$type = sanitize_key( $type );
 		Ajax::verify_nonce( "{$type}_exporter_nonce" );
 
-		if ( empty( $type ) || false === $batch = eaccounting()->utils->batch->get( $type ) ) {
+		if ( empty( $type ) || false === $batch = eaccounting()->utils->batch->get( $type ) ) { // phpcs:ignore
 			wp_send_json_error(
 				array(
-					'message' => sprintf( __( '%s is an invalid export type.', 'wp-ever-accounting' ), esc_html( $type ) ),
+					/* translators: %s: export type */
+					'message' => sprintf( esc_html__( '%s is an invalid export type.', 'wp-ever-accounting' ), esc_html( $type ) ),
 				)
 			);
 		}
@@ -60,7 +61,8 @@ class Exporter {
 		if ( empty( $class_file ) ) {
 			wp_send_json_error(
 				array(
-					'message' => sprintf( __( 'An invalid file path is registered for the %1$s handler.', 'wp-ever-accounting' ), "<code>{$type}</code>" ),
+					/* translators: %s: export type */
+					'message' => sprintf( esc_html__( 'An invalid file path is registered for the %1$s handler.', 'wp-ever-accounting' ), "<code>{$type}</code>" ),
 				)
 			);
 		} else {
@@ -71,7 +73,7 @@ class Exporter {
 			wp_send_json_error(
 				array(
 					'message' => sprintf(
-						__( '%1$s is an invalid exporter handler for the %2$s . Please try again.', 'wp-ever-accounting' ),
+						$type( '%1$s is an invalid exporter handler for the %2$s . Please try again.', 'wp-ever-accounting' ),
 						"<code>{$class}</code>",
 						"<code>{$type}</code>"
 					),
@@ -79,15 +81,12 @@ class Exporter {
 			);
 		}
 
-		/**
-		 * @var $exporter \EverAccounting\Abstracts\CSV_Exporter
-		 */
 		$exporter = new $class();
 
 		if ( ! $exporter->can_export() ) {
 			wp_send_json_error(
 				array(
-					'message' => __( 'You do not have enough privileges to export this.', 'wp-ever-accounting' ),
+					'message' => esc_html__( 'You do not have enough privileges to export this.', 'wp-ever-accounting' ),
 				)
 			);
 		}
@@ -114,7 +113,7 @@ class Exporter {
 				array(
 					'step'       => 'done',
 					'percentage' => 100,
-					'message'    => sprintf( __( 'Total %d items exported', 'wp-ever-accounting' ), $total ),
+					'message'    => sprintf( $type( 'Total %d items exported', 'wp-ever-accounting' ), $total ),
 					'url'        => add_query_arg(
 						$query_args,
 						eaccounting_admin_url(
@@ -144,12 +143,13 @@ class Exporter {
 	 * @since 1.0.2
 	 */
 	public static function handle_csv_download() {
-		if ( isset( $_GET['action'], $_GET['nonce'] ) && wp_verify_nonce( wp_unslash( $_GET['nonce'] ), 'ea-download-file' ) && 'eaccounting_download_export_file' === wp_unslash( $_GET['action'] ) ) {
-
-			if ( empty( $_REQUEST['export'] ) || false === $batch = eaccounting()->utils->batch->get( $_REQUEST['export'] ) ) {
+		if ( isset( $_GET['action'], $_GET['nonce'] ) && wp_verify_nonce( wp_unslash( $_GET['nonce'] ), 'ea-download-file' ) && 'eaccounting_download_export_file' === wp_unslash( $_GET['action'] ) ) { // phpcs:ignore
+			$export_type = isset( $_GET['export'] ) ? sanitize_key( wp_unslash( $_GET['export'] ) ) : '';
+			$filename    = isset( $_GET['filename'] ) ? sanitize_text_field( wp_unslash( $_GET['filename'] ) ) : '';
+			if ( empty( $export_type ) || false === $batch = eaccounting()->utils->batch->get( $export_type ) ) { // phpcs:ignore
 				wp_die(
-					__( 'Invalid export type.', 'wp-ever-accounting' ),
-					__( 'Error', 'wp-ever-accounting' ),
+					esc_html__( 'Invalid export type.', 'wp-ever-accounting' ),
+					esc_html__( 'Error', 'wp-ever-accounting' ),
 					array( 'response' => 403 )
 				);
 			}
@@ -158,27 +158,24 @@ class Exporter {
 
 			if ( empty( $batch['class'] ) || ( ! empty( $batch['class'] ) && ! class_exists( $batch['class'] ) ) ) {
 				wp_die(
-					__( 'Invalid export class.', 'wp-ever-accounting' ),
-					__( 'Error', 'wp-ever-accounting' ),
+					esc_html__( 'Invalid export class.', 'wp-ever-accounting' ),
+					esc_html__( 'Error', 'wp-ever-accounting' ),
 					array( 'response' => 403 )
 				);
 			}
 
-			$class = $batch['class'];
-			/**
-			 * @var $class \EverAccounting\Abstracts\CSV_Exporter
-			 */
+			$class    = $batch['class'];
 			$exporter = new $class();
 
 			if ( ! $exporter->can_export() ) {
 				wp_die(
-					__( 'You do not have enough privileges to export this.', 'wp-ever-accounting' ),
-					__( 'Error', 'wp-ever-accounting' ),
+					esc_html__( 'You do not have enough privileges to export this.', 'wp-ever-accounting' ),
+					esc_html__( 'Error', 'wp-ever-accounting' ),
 					array( 'response' => 403 )
 				);
 			}
-			if ( ! empty( $_GET['filename'] ) ) {
-				$exporter->set_filename( wp_unslash( $_GET['filename'] ) );
+			if ( ! empty( $filename ) ) {
+				$exporter->set_filename( $filename );
 			}
 
 			$exporter->export();

@@ -6,6 +6,7 @@
  * @subpackage  Admin/Js Templates
  * @package     EverAccounting
  */
+
 defined( 'ABSPATH' ) || exit();
 ?>
 <script type="text/template" id="modal-add-line-item" data-title="<?php esc_html_e( 'Add Line Item', 'wp-ever-accounting' ); ?>">

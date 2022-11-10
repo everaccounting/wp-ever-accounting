@@ -26,9 +26,4 @@
 	<rule ref="WordPress.NamingConventions">
 		<exclude-pattern>*/tests/*</exclude-pattern>
 	</rule>
-
-	<!--Exclude docblock from phpcs-->
-	<rule ref="Generic.Commenting.DocComment">
-		<exclude-pattern>*</exclude-pattern>
-	</rule>
 </ruleset>

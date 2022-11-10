@@ -29,7 +29,7 @@ $import_url = add_query_arg(
 	admin_url( 'admin.php' )
 );
 ?>
-<h1 class="wp-heading-inline"><?php _e( 'Payments', 'wp-ever-accounting' ); ?></h1>
+<h1 class="wp-heading-inline"><?php esc_html_e( 'Payments', 'wp-ever-accounting' ); ?></h1>
 <a class="page-title-action" href="<?php echo esc_url( $add_url ); ?>">
 	<?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?>
 </a>
@@ -37,7 +37,7 @@ $import_url = add_query_arg(
 		<?php esc_html_e( 'Import', 'wp-ever-accounting' ); ?>
 </a>
 <?php do_action( 'eaccounting_payments_table_top' ); ?>
-<form id="ea-payments-table" method="get" action="<?php echo admin_url( 'admin.php' ); ?>">
+<form id="ea-payments-table" method="get" action="<?php echo esc_url( admin_url( 'admin.php' ) ); ?>">
 	<?php
 	$payments_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'ea-payments' );
 	$payments_table->display();

@@ -30,6 +30,8 @@ class Currency extends Resource_Model {
 	protected $object_type = 'currency';
 
 	/**
+	 * Cache group.
+	 *
 	 * @since 1.1.0
 	 *
 	 * @var string

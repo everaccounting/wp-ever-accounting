@@ -6,11 +6,11 @@
  * @subpackage  Admin/Reports
  * @package     EverAccounting
  */
+
 defined( 'ABSPATH' ) || exit();
 require_once dirname( __FILE__ ) . '/expense-summary.php';
 require_once dirname( __FILE__ ) . '/income-summary.php';
 require_once dirname( __FILE__ ) . '/income-expense.php';
-// require_once dirname( __FILE__ ) . '/profit-loss.php';
 
 /**
  * render reports page.
@@ -41,7 +41,7 @@ function eaccounting_admin_reports_page() {
 		</div><!-- #tab_container-->
 	</div><!-- .wrap -->
 	<?php
-	echo ob_get_clean();
+	echo ob_get_clean(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 /**
@@ -55,7 +55,6 @@ function eaccounting_get_reports_tabs() {
 	$tabs['income_summary']  = __( 'Income Summary', 'wp-ever-accounting' );
 	$tabs['expense_summary'] = __( 'Expense Summary', 'wp-ever-accounting' );
 	$tabs['income_expense']  = __( 'Income vs Expense', 'wp-ever-accounting' );
-	// $tabs['profit_loss']     = __( 'Profit & Loss', 'wp-ever-accounting' );
 
 	return apply_filters( 'eaccounting_reports_tabs', $tabs );
 }
@@ -68,7 +67,7 @@ function eaccounting_get_reports_tabs() {
 function eaccounting_load_reports_page() {
 	$tab = eaccounting_get_current_tab();
 	if ( empty( $tab ) ) {
-		wp_redirect( add_query_arg( [ 'tab' => 'income_summary' ] ) );
+		wp_safe_redirect( add_query_arg( [ 'tab' => 'income_summary' ] ) );
 		exit();
 	}
 

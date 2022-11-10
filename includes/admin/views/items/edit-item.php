@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit();
 try {
 	$item = new \EverAccounting\Models\Item( $item_id );
 } catch ( Exception $e ) {
-	wp_die( $e->getMessage() );
+	wp_die( esc_html( $e->getMessage() ) );
 }
 
 $title = $item->exists() ? __( 'Update Item', 'wp-ever-accounting' ) : __( 'Add Item', 'wp-ever-accounting' );
@@ -28,7 +28,7 @@ $title = $item->exists() ? __( 'Update Item', 'wp-ever-accounting' ) : __( 'Add 
 					<?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?>
 				</a>
 			<?php else : ?>
-				<a href="<?php echo remove_query_arg( array( 'action', 'id' ) ); ?>" class="page-title-action"><?php esc_html_e( 'View All', 'wp-ever-accounting' ); ?></a>
+				<a href="<?php echo esc_url( remove_query_arg( array( 'action', 'id' ) ) ); ?>" class="page-title-action"><?php esc_html_e( 'View All', 'wp-ever-accounting' ); ?></a>
 			<?php endif; ?>
 		</div>
 
@@ -41,7 +41,7 @@ $title = $item->exists() ? __( 'Update Item', 'wp-ever-accounting' ) : __( 'Add 
 	<form id="ea-item-form" method="post" enctype="multipart/form-data">
 		<div class="ea-card">
 			<div class="ea-card__header">
-				<h3 class="ea-card__title"><?php echo $title; ?></h3>
+				<h3 class="ea-card__title"><?php echo esc_html( $title ); ?></h3>
 			</div>
 			<div class="ea-card__inside">
 
@@ -71,16 +71,6 @@ $title = $item->exists() ? __( 'Update Item', 'wp-ever-accounting' ) : __( 'Add 
 							'modal_id'      => 'ea-modal-add-item-category',
 						)
 					);
-					// eaccounting_text_input(
-					// array(
-					// 'wrapper_class' => 'ea-col-6',
-					// 'label'         => __( 'Quantity', 'wp-ever-accounting' ),
-					// 'name'          => 'quantity',
-					// 'placeholder'   => __( 'Enter Quantity', 'wp-ever-accounting' ),
-					// 'value'         => $item->get_quantity(),
-					// 'required'      => true,
-					// )
-					// );
 					eaccounting_text_input(
 						array(
 							'wrapper_class' => 'ea-col-6',
@@ -117,7 +107,6 @@ $title = $item->exists() ? __( 'Update Item', 'wp-ever-accounting' ) : __( 'Add 
 								),
 							)
 						);
-
 						eaccounting_text_input(
 							array(
 								'wrapper_class' => 'ea-col-6',
@@ -173,8 +162,6 @@ $title = $item->exists() ? __( 'Update Item', 'wp-ever-accounting' ) : __( 'Add 
 
 					?>
 				</div>
-
-
 			</div>
 			<div class="ea-card__footer">
 				<?php

@@ -26,7 +26,7 @@ if ( $invoice->needs_payment() ) {
 	$invoice_actions['status_paid'] = __( 'Mark as Paid', 'wp-ever-accounting' );
 }
 
-if ( ! in_array( $invoice->get_status( 'edit' ), array( 'paid', 'partial' ) ) ) {
+if ( ! in_array( $invoice->get_status( 'edit' ), array( 'paid', 'partial' ), true ) ) {
 	$invoice_actions['status_pending'] = __( 'Mark Pending', 'wp-ever-accounting' );
 }
 
@@ -55,7 +55,7 @@ do_action( 'add_meta_boxes_ea_invoice', $invoice );
 
 <?php if ( $invoice->exists() && $invoice->is_draft() ) : ?>
 	<div class="notice error">
-		<p><?php echo __( 'This is a <strong>DRAFT</strong> Invoice and will not be reflected until its marked as <strong>pending</strong>.', 'wp-ever-accounting' ); ?></p>
+		<p><?php echo wp_kses_post( __( 'This is a <strong>DRAFT</strong> Invoice and will not be reflected until its marked as <strong>pending</strong>.', 'wp-ever-accounting' ) ); ?></p>
 	</div>
 <?php endif; ?>
 
@@ -85,7 +85,7 @@ do_action( 'add_meta_boxes_ea_invoice', $invoice );
 											foreach ( $invoice_actions as $action => $title ) {
 												echo sprintf(
 													'<li><a href="%s">%s</a></li>',
-													wp_nonce_url(
+													wp_nonce_url( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 														add_query_arg(
 															array(
 																'action'         => 'eaccounting_invoice_action',

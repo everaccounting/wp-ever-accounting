@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit();
 $account = eaccounting_get_account( $account_id );
 
 if ( empty( $account ) || ! $account->exists() ) {
-	wp_die( __( 'Sorry, Account does not exist', 'wp-ever-accounting' ) );
+	wp_die( esc_html__( 'Sorry, Account does not exist', 'wp-ever-accounting' ) );
 }
 
 $sections        = array(
@@ -24,7 +24,7 @@ $sections        = array(
 );
 $sections        = apply_filters( 'eaccounting_account_sections', $sections );
 $first_section   = current( array_keys( $sections ) );
-$current_section = ! empty( $_GET['section'] ) && array_key_exists( $_GET['section'], $sections ) ? sanitize_title( $_GET['section'] ) : $first_section;
+$current_section = ! empty( $_GET['section'] ) && array_key_exists( $_GET['section'], $sections ) ? sanitize_title( $_GET['section'] ) : $first_section; //phpcs:ignore
 $edit_url        = eaccounting_admin_url(
 	array(
 		'page'       => 'ea-banking',
@@ -55,7 +55,9 @@ $edit_url        = eaccounting_admin_url(
 					<div class="ea-widget-card__content">
 						<div class="ea-widget-card__primary">
 							<span class="ea-widget-card__title"><?php esc_html_e( 'Current Balance', 'wp-ever-accounting' ); ?></span>
-							<span class="ea-widget-card__amount"><?php echo eaccounting_format_price( $account->get_balance(), $account->get_currency_code() ); ?></span>
+							<span class="ea-widget-card__amount">
+								<?php echo esc_html( eaccounting_format_price( $account->get_balance(), $account->get_currency_code() ) ); ?>
+							</span>
 						</div>
 					</div>
 				</div><!--.ea-widget-card-->
@@ -71,7 +73,9 @@ $edit_url        = eaccounting_admin_url(
 					<div class="ea-widget-card__content">
 						<div class="ea-widget-card__primary">
 							<span class="ea-widget-card__title"><?php esc_html_e( 'Opening Balance', 'wp-ever-accounting' ); ?></span>
-							<span class="ea-widget-card__amount"><?php echo eaccounting_format_price( $account->get_opening_balance(), $account->get_currency_code() ); ?></span>
+							<span class="ea-widget-card__amount">
+								<?php echo esc_html( eaccounting_format_price( $account->get_opening_balance(), $account->get_currency_code() ) ); ?>
+							</span>
 						</div>
 					</div>
 				</div><!--.ea-widget-card-->
@@ -138,19 +142,19 @@ $edit_url        = eaccounting_admin_url(
 				</div>
 				<div class="ea-list-group__item">
 					<div class="ea-list-group__title"><?php esc_html_e( 'Currency', 'wp-ever-accounting' ); ?></div>
-					<div class="ea-list-group__text"><?php echo ! empty( $account->get_currency_code() ) ? $account->get_currency_code() : '&mdash;'; ?></div>
+					<div class="ea-list-group__text"><?php echo ! empty( $account->get_currency_code() ) ? esc_html( $account->get_currency_code() ) : '&mdash;'; ?></div>
 				</div>
 				<div class="ea-list-group__item">
 					<div class="ea-list-group__title"><?php esc_html_e( 'Bank Name', 'wp-ever-accounting' ); ?></div>
-					<div class="ea-list-group__text"><?php echo ! empty( $account->get_bank_name() ) ? $account->get_bank_name() : ' &mdash;'; ?></div>
+					<div class="ea-list-group__text"><?php echo ! empty( $account->get_bank_name() ) ? esc_html( $account->get_bank_name() ) : ' &mdash;'; ?></div>
 				</div>
 				<div class="ea-list-group__item">
 					<div class="ea-list-group__title"><?php esc_html_e( 'Bank Phone Number', 'wp-ever-accounting' ); ?></div>
-					<div class="ea-list-group__text"><?php echo ! empty( $account->get_bank_phone() ) ? $account->get_bank_phone() : '&mdash;'; ?></div>
+					<div class="ea-list-group__text"><?php echo ! empty( $account->get_bank_phone() ) ? esc_html( $account->get_bank_phone() ) : '&mdash;'; ?></div>
 				</div>
 				<div class="ea-list-group__item">
 					<div class="ea-list-group__title"><?php esc_html_e( 'Bank Address', 'wp-ever-accounting' ); ?></div>
-					<div class="ea-list-group__text"><?php echo ! empty( $account->get_bank_address() ) ? $account->get_bank_address() : '&mdash;'; ?></div>
+					<div class="ea-list-group__text"><?php echo ! empty( $account->get_bank_address() ) ? esc_html( $account->get_bank_address() ) : '&mdash;'; ?></div>
 				</div>
 			</div>
 
@@ -160,8 +164,8 @@ $edit_url        = eaccounting_admin_url(
 					echo sprintf(
 					/* translators: %s date and %s name */
 						esc_html__( 'The account was created at %1$s by %2$s', 'wp-ever-accounting' ),
-						eaccounting_date( $account->get_date_created(), 'F m, Y H:i a' ),
-						eaccounting_get_full_name( $account->get_creator_id() )
+						eaccounting_date( $account->get_date_created(), 'F m, Y H:i a' ), // phpcs:ignore
+						eaccounting_get_full_name( $account->get_creator_id() ) // phpcs:ignore
 					);
 					?>
 				</p>

@@ -30,6 +30,8 @@ function eaccounting_prices_include_tax() {
 }
 
 /**
+ * Get calculated tax.
+ *
  * @since 1.1.0
  *
  * @param string $amount  Amount to calculate tax for.

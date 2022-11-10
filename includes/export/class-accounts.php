@@ -42,6 +42,7 @@ class Accounts extends CSV_Exporter {
 	}
 
 	/**
+	 * Get rows.
 	 *
 	 * @since 1.0.2
 	 */

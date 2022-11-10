@@ -17,34 +17,50 @@ defined( 'ABSPATH' ) || exit;
 class Logger {
 
 	/**
+	 * Log level.
+	 *
 	 * @var string
 	 */
 	const EMERGENCY = 'emergency';
 	/**
+	 * Log level.
+	 *
 	 * @var string
 	 */
 	const ALERT = 'alert';
 	/**
+	 * Log level.
+	 *
 	 * @var string
 	 */
 	const CRITICAL = 'critical';
 	/**
+	 * Log level.
+	 *
 	 * @var string
 	 */
 	const ERROR = 'error';
 	/**
+	 * Log level.
+	 *
 	 * @var string
 	 */
 	const WARNING = 'warning';
 	/**
+	 * Log level.
+	 *
 	 * @var string
 	 */
 	const NOTICE = 'notice';
 	/**
+	 * Log level.
+	 *
 	 * @var string
 	 */
 	const INFO = 'info';
 	/**
+	 * Log level.
+	 *
 	 * @var string
 	 */
 	const DEBUG = 'debug';

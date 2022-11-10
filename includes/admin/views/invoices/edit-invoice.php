@@ -32,16 +32,16 @@ $view_url = admin_url( 'admin.php' ) . '?page=ea-sales&tab=invoices&action=view&
 				<?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?>
 			</a>
 		<?php else : ?>
-			<a href="<?php echo remove_query_arg( array( 'action', 'id' ) ); ?>" class="page-title-action"><?php esc_html_e( 'View All', 'wp-ever-accounting' ); ?></a>
+			<a href="<?php echo esc_url( remove_query_arg( array( 'action', 'id' ) ) ); ?>" class="page-title-action">
+				<?php esc_html_e( 'View All', 'wp-ever-accounting' ); ?>
+			</a>
 		<?php endif; ?>
 	</div>
 
-	<div class="ea-col-5">
-
-	</div>
+	<div class="ea-col-5"></div>
 </div>
-<hr class="wp-header-end">
 
+<hr class="wp-header-end">
 <form id="ea-invoice-form" method="post" class="ea-form">
 	<div class="ea-card">
 		<div class="ea-card__header">

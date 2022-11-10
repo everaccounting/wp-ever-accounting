@@ -30,6 +30,8 @@ class Category extends Resource_Model {
 	protected $object_type = 'category';
 
 	/**
+	 * Cache group.
+	 *
 	 * @since 1.1.0
 	 *
 	 * @var string

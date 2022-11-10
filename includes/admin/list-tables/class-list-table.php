@@ -9,11 +9,16 @@
 
 defined( 'ABSPATH' ) || exit();
 
-// Load WP_List_Table if not loaded
+// Load WP_List_Table if not loaded.
 if ( ! class_exists( '\WP_List_Table' ) ) {
 	require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
 }
 
+/**
+ * List table class.
+ *
+ * @since 1.0.0
+ */
 abstract class EverAccounting_List_Table extends \WP_List_Table {
 	/**
 	 * Optional arguments to pass when preparing items.
@@ -48,6 +53,8 @@ abstract class EverAccounting_List_Table extends \WP_List_Table {
 	public $per_page = 20;
 
 	/**
+	 * Table classes.
+	 *
 	 * @since 1.1.0
 	 * @var array
 	 */
@@ -94,7 +101,6 @@ abstract class EverAccounting_List_Table extends \WP_List_Table {
 	 *
 	 * @since  1.0.2
 	 */
-
 	public function __construct( $args = array() ) {
 		$this->screen = get_current_screen();
 		$display_args = array(
@@ -271,30 +277,31 @@ abstract class EverAccounting_List_Table extends \WP_List_Table {
 	/**
 	 * Show the search field
 	 *
-	 * @param string $input_id ID of the search box
-	 *
-	 * @param string $text Label for the search box
+	 * @param string $text Label for the search box.
+	 * @param string $input_id ID of the search box.
 	 *
 	 * @return void
 	 * @since 1.0.2
 	 */
 	public function search_box( $text, $input_id ) {
-		if ( empty( $_REQUEST['s'] ) && ! $this->has_items() ) {
+		if ( empty( filter_input( INPUT_GET, 's', FILTER_SANITIZE_STRING ) ) && ! $this->has_items() ) {
 			return;
 		}
 
 		$input_id = $input_id . '-search-input';
+		$orderby  = filter_input( INPUT_GET, 'orderby', FILTER_SANITIZE_STRING );
+		$order    = filter_input( INPUT_GET, 'order', FILTER_SANITIZE_STRING );
 
-		if ( ! empty( $_REQUEST['orderby'] ) ) {
-			echo '<input type="hidden" name="orderby" value="' . esc_attr( $_REQUEST['orderby'] ) . '" />';
+		if ( ! empty( $orderby ) ) {
+			echo '<input type="hidden" name="orderby" value="' . esc_attr( $orderby ) . '" />';
 		}
-		if ( ! empty( $_REQUEST['order'] ) ) {
-			echo '<input type="hidden" name="order" value="' . esc_attr( $_REQUEST['order'] ) . '" />';
+		if ( ! empty( $order ) ) {
+			echo '<input type="hidden" name="order" value="' . esc_attr( $order ) . '" />';
 		}
 		?>
 		<p class="search-box">
-			<label class="screen-reader-text" for="<?php echo $input_id; ?>"><?php echo $text; ?>:</label>
-			<input type="search" id="<?php echo $input_id; ?>" name="s" value="<?php _admin_search_query(); ?>"/>
+			<label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>"><?php echo esc_html( $text ); ?>:</label>
+			<input type="search" id="<?php echo esc_attr( $input_id ); ?>" name="s" value="<?php _admin_search_query(); ?>"/>
 			<?php submit_button( $text, 'button', false, false, array( 'ID' => 'search-submit' ) ); ?>
 		</p>
 		<?php
@@ -313,7 +320,7 @@ abstract class EverAccounting_List_Table extends \WP_List_Table {
 		}
 
 		if ( ! empty( $this->display_args['pre_table_callback'] ) && is_callable( $this->display_args['pre_table_callback'] ) && 'top' === $which ) {
-			echo call_user_func( $this->display_args['pre_table_callback'] );
+			echo call_user_func( $this->display_args['pre_table_callback'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 
 		$this->maybe_render_blank_state( $which );
@@ -346,17 +353,19 @@ abstract class EverAccounting_List_Table extends \WP_List_Table {
 	/**
 	 * This function renders most of the columns in the list table.
 	 *
-	 * @param string $column_name The name of the column
-	 *
-	 * @param Object $item
+	 * @param Object $item      The current item.
+	 * @param string $column_name The name of the column.
 	 *
 	 * @return string The column value.
 	 * @since 1.0.2
 	 */
-	function column_default( $item, $column_name ) {
+	public function column_default( $item, $column_name ) {
 		$getter = "get_$column_name";
+		if ( method_exists( $item, $getter ) ) {
+			return esc_html( $item->$getter() );
+		}
 
-		return is_callable( array( $item, $getter ) ) ? empty( $item->$getter() ) ? '&mdash;' : $item->$getter() : '&mdash;';
+		return '&mdash;';
 	}
 
 	/**

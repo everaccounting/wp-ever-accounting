@@ -17,7 +17,6 @@ defined( 'ABSPATH' ) || exit();
  * @package EverAccounting\Admin
  * @since   1.1.0
  */
-
 class Extensions {
 
 	/**
@@ -71,8 +70,13 @@ class Extensions {
 		<?php
 	}
 
+	/**
+	 * Get extensions.
+	 *
+	 * @return array
+	 */
 	public function get_extensions() {
-		$cache = false;// get_transient( 'wpeveraccounting_extensions_feed' );
+		$cache = get_transient( 'wpeveraccounting_extensions_feed' );
 
 		if ( false === $cache ) {
 			$url = 'https://wpeveraccounting.com/edd-api/products/';

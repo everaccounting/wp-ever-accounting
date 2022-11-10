@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit();
 $vendor = eaccounting_get_vendor( $vendor_id );
 
 if ( empty( $vendor ) || ! $vendor->exists() ) {
-	wp_die( __( 'Sorry, Vendor does not exist', 'wp-ever-accounting' ) );
+	wp_die( esc_html__( 'Sorry, Vendor does not exist', 'wp-ever-accounting' ) );
 }
 
 $sections = array(
@@ -25,7 +25,7 @@ $sections = array(
 
 $sections        = apply_filters( 'eaccounting_vendor_sections', $sections );
 $first_section   = current( array_keys( $sections ) );
-$current_section = ! empty( $_GET['section'] ) && array_key_exists( $_GET['section'], $sections ) ? sanitize_title( $_GET['section'] ) : $first_section;
+$current_section = ! empty( $_GET['section'] ) && array_key_exists( $_GET['section'], $sections ) ? sanitize_title( $_GET['section'] ) : $first_section; // phpcs:ignore
 $edit_url        = eaccounting_admin_url(
 	array(
 		'page'      => 'ea-expenses',
@@ -58,7 +58,7 @@ $edit_url        = eaccounting_admin_url(
 						<div class="ea-widget-card__content">
 							<div class="ea-widget-card__primary">
 								<span class="ea-widget-card__title"><?php esc_html_e( 'Total Paid', 'wp-ever-accounting' ); ?></span>
-								<span class="ea-widget-card__amount"><?php echo eaccounting_format_price( $vendor->get_total_paid(), $vendor->get_currency_code() ); ?></span>
+								<span class="ea-widget-card__amount"><?php echo esc_html( eaccounting_format_price( $vendor->get_total_paid(), $vendor->get_currency_code() ) ); ?></span>
 							</div>
 						</div>
 					</div><!--.ea-widget-card-->
@@ -74,7 +74,7 @@ $edit_url        = eaccounting_admin_url(
 						<div class="ea-widget-card__content">
 							<div class="ea-widget-card__primary">
 								<span class="ea-widget-card__title"><?php esc_html_e( 'Total Due', 'wp-ever-accounting' ); ?></span>
-								<span class="ea-widget-card__amount"><?php echo eaccounting_format_price( $vendor->get_total_due(), $vendor->get_currency_code() ); ?></span>
+								<span class="ea-widget-card__amount"><?php echo esc_html( eaccounting_format_price( $vendor->get_total_due(), $vendor->get_currency_code() ) ); ?></span>
 							</div>
 						</div>
 					</div><!--.ea-widget-card-->
@@ -138,27 +138,27 @@ $edit_url        = eaccounting_admin_url(
 					</div>
 					<div class="ea-list-group__item">
 						<div class="ea-list-group__title"><?php esc_html_e( 'Currency', 'wp-ever-accounting' ); ?></div>
-						<div class="ea-list-group__text"><?php echo ! empty( $vendor->get_currency_code() ) ? $vendor->get_currency_code() : '&mdash;'; ?></div>
+						<div class="ea-list-group__text"><?php echo ! empty( $vendor->get_currency_code() ) ? esc_html( $vendor->get_currency_code() ) : '&mdash;'; ?></div>
 					</div>
 					<div class="ea-list-group__item">
 						<div class="ea-list-group__title"><?php esc_html_e( 'Birthdate', 'wp-ever-accounting' ); ?></div>
-						<div class="ea-list-group__text"><?php echo ! empty( $vendor->get_birth_date() ) ? eaccounting_date( $vendor->get_birth_date() ) : '&mdash;'; ?></div>
+						<div class="ea-list-group__text"><?php echo ! empty( $vendor->get_birth_date() ) ? esc_html( eaccounting_date( $vendor->get_birth_date() ) ) : '&mdash;'; ?></div>
 					</div>
 					<div class="ea-list-group__item">
 						<div class="ea-list-group__title"><?php esc_html_e( 'Phone', 'wp-ever-accounting' ); ?></div>
-						<div class="ea-list-group__text"><?php echo ! empty( $vendor->get_phone() ) ? $vendor->get_phone() : '&mdash;'; ?></div>
+						<div class="ea-list-group__text"><?php echo ! empty( $vendor->get_phone() ) ? esc_html( $vendor->get_phone() ) : '&mdash;'; ?></div>
 					</div>
 					<div class="ea-list-group__item">
 						<div class="ea-list-group__title"><?php esc_html_e( 'Email', 'wp-ever-accounting' ); ?></div>
-						<div class="ea-list-group__text"><?php echo ! empty( $vendor->get_email() ) ? $vendor->get_email() : '&mdash;'; ?></div>
+						<div class="ea-list-group__text"><?php echo ! empty( $vendor->get_email() ) ? esc_html( $vendor->get_email() ) : '&mdash;'; ?></div>
 					</div>
 					<div class="ea-list-group__item">
 						<div class="ea-list-group__title"><?php esc_html_e( 'VAT Number', 'wp-ever-accounting' ); ?></div>
-						<div class="ea-list-group__text"><?php echo ! empty( $vendor->get_vat_number() ) ? $vendor->get_vat_number() : '&mdash;'; ?></div>
+						<div class="ea-list-group__text"><?php echo ! empty( $vendor->get_vat_number() ) ? esc_html( $vendor->get_vat_number() ) : '&mdash;'; ?></div>
 					</div>
 					<div class="ea-list-group__item">
 						<div class="ea-list-group__title"><?php esc_html_e( 'Website', 'wp-ever-accounting' ); ?></div>
-						<div class="ea-list-group__text"><?php echo ! empty( $vendor->get_website() ) ? $vendor->get_website() : '&mdash;'; ?></div>
+						<div class="ea-list-group__text"><?php echo ! empty( $vendor->get_website() ) ? esc_html( $vendor->get_website() ) : '&mdash;'; ?></div>
 					</div>
 					<div class="ea-list-group__item">
 						<div class="ea-list-group__title"><?php esc_html_e( 'Address', 'wp-ever-accounting' ); ?></div>
@@ -174,7 +174,7 @@ $edit_url        = eaccounting_admin_url(
 								),
 								','
 							);
-							echo ( $address != '' ) ? $address : '&mdash;';
+							echo ! empty( $address ) ? esc_html( $address ) : '&mdash;';
 							?>
 						</div>
 					</div>
@@ -186,8 +186,8 @@ $edit_url        = eaccounting_admin_url(
 						echo sprintf(
 						/* translators: %s date and %s name */
 							esc_html__( 'The vendor was created at %1$s by %2$s', 'wp-ever-accounting' ),
-							eaccounting_date( $vendor->get_date_created(), 'F m, Y H:i a' ),
-							eaccounting_get_full_name( $vendor->get_creator_id() )
+							eaccounting_date( $vendor->get_date_created(), 'F m, Y H:i a' ), // phpcs:ignore
+							eaccounting_get_full_name( $vendor->get_creator_id() ) // phpcs:ignore
 						);
 						?>
 					</p>

@@ -39,8 +39,8 @@ $notes = eaccounting_get_notes(
 								echo sprintf(
 								/* translators: %s note creator user */
 									esc_html__( 'added on %1$s at %2$s', 'wp-ever-accounting' ),
-									eaccounting_date( $note->get_date_created(), 'F m, Y' ),
-									eaccounting_date( $note->get_date_created(), 'H:i a' )
+									eaccounting_date( $note->get_date_created(), 'F m, Y' ), //phpcs:ignore
+									eaccounting_date( $note->get_date_created(), 'H:i a' ) //phpcs:ignore
 								);
 								?>
 							</abbr>
@@ -56,11 +56,11 @@ $notes = eaccounting_get_notes(
 	<div class="ea-card__footer">
 		<form id="bill-note-form" method="post" class="ea-document-notes__form">
 			<p class="form-field">
-				<label for="bill_note"><?php _e( 'Add note', 'wp-ever-accounting' ); ?></label>
+				<label for="bill_note"><?php esc_html_e( 'Add note', 'wp-ever-accounting' ); ?></label>
 				<textarea type="text" name="note" class="input-text" cols="20" rows="5" autocomplete="off" spellcheck="false" required></textarea>
 			</p>
 
-			<button type="submit" class="add_document_note button"><?php _e( 'Add', 'wp-ever-accounting' ); ?></button>
+			<button type="submit" class="add_document_note button"><?php esc_html_e( 'Add', 'wp-ever-accounting' ); ?></button>
 			<input type="hidden" name="action" value="eaccounting_add_bill_note">
 			<input type="hidden" name="bill_id" value="<?php echo esc_attr( $bill->get_id() ); ?>">
 			<?php wp_nonce_field( 'ea_add_bill_note', 'nonce' ); ?>

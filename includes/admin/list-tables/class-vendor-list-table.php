@@ -77,8 +77,8 @@ class EverAccounting_Vendor_List_Table extends EverAccounting_List_Table {
 	/**
 	 * Check if there is contents in the database.
 	 *
-	 * @return bool
 	 * @since 1.0.2
+	 * @return bool
 	 */
 	public function is_empty() {
 		global $wpdb;
@@ -89,8 +89,8 @@ class EverAccounting_Vendor_List_Table extends EverAccounting_List_Table {
 	/**
 	 * Render blank state.
 	 *
-	 * @return void
 	 * @since 1.0.2
+	 * @return void
 	 */
 	protected function render_blank_state() {
 		?>
@@ -98,8 +98,12 @@ class EverAccounting_Vendor_List_Table extends EverAccounting_List_Table {
 			<p class="ea-empty-table__message">
 				<?php echo esc_html__( 'Create vendors to assign payments, and later you can filter the transactions you made with them. You can store the name, address, email, phone number, etc. of a vendor.', 'wp-ever-accounting' ); ?>
 			</p>
-			<a href="<?php echo esc_url( eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'vendors', 'action' => 'edit', ) ) ); //phpcs:ignore?>" class="button-primary ea-empty-table__cta"><?php _e( 'Add Vendors', 'wp-ever-accounting' ); ?></a>
-			<a href="https://wpeveraccounting.com/docs/general/add-vendors/?utm_source=listtable&utm_medium=link&utm_campaign=admin" class="button-secondary ea-empty-table__cta" target="_blank"><?php _e( 'Learn More', 'wp-ever-accounting' ); ?></a>
+			<a href="<?php echo esc_url( eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'vendors', 'action' => 'edit', ) ) ); //phpcs:ignore?>" class="button-primary ea-empty-table__cta">
+				<?php esc_html_e( 'Add Vendors', 'wp-ever-accounting' ); ?>
+			</a>
+			<a href="https://wpeveraccounting.com/docs/general/add-vendors/?utm_source=listtable&utm_medium=link&utm_campaign=admin" class="button-secondary ea-empty-table__cta" target="_blank">
+				<?php esc_html_e( 'Learn More', 'wp-ever-accounting' ); ?>
+			</a>
 		</div>
 		<?php
 	}
@@ -107,8 +111,8 @@ class EverAccounting_Vendor_List_Table extends EverAccounting_List_Table {
 	/**
 	 * Define which columns to show on this screen.
 	 *
-	 * @return array
 	 * @since 1.0.2
+	 * @return array
 	 */
 	public function define_columns() {
 		return array(
@@ -126,8 +130,8 @@ class EverAccounting_Vendor_List_Table extends EverAccounting_List_Table {
 	/**
 	 * Define sortable columns.
 	 *
-	 * @return array
 	 * @since 1.0.2
+	 * @return array
 	 */
 	protected function define_sortable_columns() {
 		return array(
@@ -141,8 +145,8 @@ class EverAccounting_Vendor_List_Table extends EverAccounting_List_Table {
 	/**
 	 * Define bulk actions
 	 *
-	 * @return array
 	 * @since 1.0.2
+	 * @return array
 	 */
 	public function define_bulk_actions() {
 		return array(
@@ -156,8 +160,8 @@ class EverAccounting_Vendor_List_Table extends EverAccounting_List_Table {
 	/**
 	 * Define primary column.
 	 *
-	 * @return string
 	 * @since 1.0.2
+	 * @return string
 	 */
 	public function get_primary_column_name() {
 		return 'name';
@@ -169,24 +173,23 @@ class EverAccounting_Vendor_List_Table extends EverAccounting_List_Table {
 	 *
 	 * @param Vendor $vendor The current object.
 	 *
-	 * @return string Displays a checkbox.
 	 * @since  1.0.2
+	 * @return string Displays a checkbox.
 	 */
-	function column_cb( $vendor ) {
+	public function column_cb( $vendor ) {
 		return sprintf( '<input type="checkbox" name="vendor_id[]" value="%d"/>', $vendor->get_id() );
 	}
 
 	/**
 	 * This function renders most of the columns in the list table.
 	 *
-	 * @param string $column_name The name of the column
+	 * @param Vendor $vendor The current object.
+	 * @param string $column_name The name of the column.
 	 *
-	 * @param Vendor $vendor
-	 *
-	 * @return string The column value.
 	 * @since 1.0.2
+	 * @return string The column value.
 	 */
-	function column_default( $vendor, $column_name ) {
+	public function column_default( $vendor, $column_name ) {
 		$vendor_id = $vendor->get_id();
 
 		switch ( $column_name ) {
@@ -197,21 +200,28 @@ class EverAccounting_Vendor_List_Table extends EverAccounting_List_Table {
 			case 'name':
 				$view_url = eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'vendors', 'action' => 'view', 'vendor_id' => $vendor_id, ) );// phpcs:ignore
 				$edit_url = eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'vendors', 'action' => 'edit', 'vendor_id' => $vendor_id, ) );// phpcs:ignore
-				$del_url  = eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'vendors', 'action' => 'delete', 'vendor_id' => $vendor_id, '_wpnonce' => wp_create_nonce( 'vendor-nonce' ), ) );// phpcs:ignore
+				$del_url  = eaccounting_admin_url(
+					array(
+						'page'      => 'ea-expenses',
+						'tab'       => 'vendors',
+						'action'    => 'delete',
+						'vendor_id' => $vendor_id,
+						'_wpnonce'  => wp_create_nonce( 'vendor-nonce' ),
+						) );// phpcs:ignore
 				$actions  = array(
 					'view'   => sprintf( '<a href="%1$s">%2$s</a>', esc_url( $view_url ), __( 'View', 'wp-ever-accounting' ) ),
 					'edit'   => sprintf( '<a href="%1$s">%2$s</a>', esc_url( $edit_url ), __( 'Edit', 'wp-ever-accounting' ) ),
 					'delete' => sprintf( '<a href="%1$s" class="del">%2$s</a>', esc_url( $del_url ), __( 'Delete', 'wp-ever-accounting' ) ),
 				);
-				$value    = '<a href="' . esc_url( $view_url ) . '"><strong>' . $vendor->get_name() . '</strong></a>';
+				$value    = '<a href="' . esc_url( $view_url ) . '"><strong>' . esc_html( $vendor->get_name() ) . '</strong></a>';
 				$value   .= '<br>';
-				$value   .= '<small class=meta>' . $vendor->get_company() . '</small>';
+				$value   .= '<small class=meta>' . esc_html( $vendor->get_company() ) . '</small>';
 				$value   .= $this->row_actions( $actions );
 				break;
 			case 'email':
 				if ( ! empty( $vendor->get_email() ) || ! empty( $vendor->get_phone() ) ) {
 					$value  = ! empty( $vendor->get_email() ) ? '<a href="mailto:' . sanitize_email( $vendor->get_email() ) . '">' . sanitize_email( $vendor->get_email() ) . '</a><br>' : '';
-					$value .= ! empty( $vendor->get_phone() ) ? '<span class="contact_phone">' . $vendor->get_phone() . '</span>' : '';
+					$value .= ! empty( $vendor->get_phone() ) ? '<span class="contact_phone">' . esc_html( $vendor->get_phone() ) . '</span>' : '';
 				}
 				if ( empty( $vendor->get_email() ) && empty( $vendor->get_phone() ) ) {
 					$value = '&mdash;';
@@ -226,12 +236,12 @@ class EverAccounting_Vendor_List_Table extends EverAccounting_List_Table {
 					),
 					','
 				);
-				$value = ( $value != '' ) ? $value : '&mdash;';
+				$value = ( '' !== $value ) ? $value : '&mdash;';
 				break;
 			case 'enabled':
 				$value  = '<label class="ea-toggle">';
-				$value .= '<input type="checkbox" class="vendor-status" style="" value="true" data-id="' . $vendor->get_id() . '" ' . checked( $vendor->is_enabled(), true, false ) . '>';
-				$value .= '<span data-label-off="' . __( 'No', 'wp-ever-accounting' ) . '" data-label-on="' . __( 'Yes', 'wp-ever-accounting' ) . '" class="ea-toggle-slider"></span>';
+				$value .= '<input type="checkbox" class="vendor-status" style="" value="true" data-id="' . esc_attr( $vendor->get_id() ) . '" ' . checked( $vendor->is_enabled(), true, false ) . '>';
+				$value .= '<span data-label-off="' . esc_html__( 'No', 'wp-ever-accounting' ) . '" data-label-on="' . esc_html__( 'Yes', 'wp-ever-accounting' ) . '" class="ea-toggle-slider"></span>';
 				$value .= '</label>';
 				break;
 			case 'actions':
@@ -272,29 +282,26 @@ class EverAccounting_Vendor_List_Table extends EverAccounting_List_Table {
 	/**
 	 * Renders the message to be displayed when there are no items.
 	 *
-	 * @return void
 	 * @since  1.0.2
+	 * @return void
 	 */
-	function no_items() {
-		_e( 'There is no vendors found.', 'wp-ever-accounting' );
+	public function no_items() {
+		esc_html_e( 'There is no vendors found.', 'wp-ever-accounting' );
 	}
 
 	/**
 	 * Process the bulk actions
 	 *
-	 * @return void
 	 * @since 1.0.2
+	 * @return void
 	 */
 	public function process_bulk_action() {
-		if ( empty( $_REQUEST['_wpnonce'] ) ) {
+		$nonce = isset( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ) : '';
+		if ( ! wp_verify_nonce( $nonce, 'bulk-vendors' ) && ! wp_verify_nonce( $nonce, 'vendor-nonce' ) ) {
 			return;
 		}
 
-		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-vendors' ) && ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'vendor-nonce' ) ) {
-			return;
-		}
-
-		$ids = isset( $_GET['vendor_id'] ) ? $_GET['vendor_id'] : false;
+		$ids = isset( $_GET['vendor_id'] ) ? wp_parse_id_list( $_GET['vendor_id'] ) : false; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 
 		if ( ! is_array( $ids ) ) {
 			$ids = array( $ids );
@@ -355,20 +362,20 @@ class EverAccounting_Vendor_List_Table extends EverAccounting_List_Table {
 	 * Retrieve the view types
 	 *
 	 * @access public
-	 * @return array $views All the views available
 	 * @since 1.1.0
+	 * @return array $views All the views available
 	 */
 	public function get_views() {
 		$base           = eaccounting_admin_url( array( 'tab' => 'vendors' ) );
-		$current        = isset( $_GET['status'] ) ? $_GET['status'] : '';
+		$current        = isset( $_GET['status'] ) ? sanitize_key( $_GET['status'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$total_count    = '&nbsp;<span class="count">(' . $this->total_count . ')</span>';
 		$active_count   = '&nbsp;<span class="count">(' . $this->active_count . ')</span>';
 		$inactive_count = '&nbsp;<span class="count">(' . $this->inactive_count . ')</span>';
 
 		$views = array(
-			'all'      => sprintf( '<a href="%s"%s>%s</a>', esc_url( remove_query_arg( 'status', $base ) ), $current === 'all' || $current === '' ? ' class="current"' : '', __( 'All', 'wp-ever-accounting' ) . $total_count ),
-			'active'   => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'active', $base ) ), $current === 'active' ? ' class="current"' : '', __( 'Active', 'wp-ever-accounting' ) . $active_count ),
-			'inactive' => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'inactive', $base ) ), $current === 'inactive' ? ' class="current"' : '', __( 'Inactive', 'wp-ever-accounting' ) . $inactive_count ),
+			'all'      => sprintf( '<a href="%s"%s>%s</a>', esc_url( remove_query_arg( 'status', $base ) ), 'all' === $current || '' === $current ? ' class="current"' : '', __( 'All', 'wp-ever-accounting' ) . $total_count ),
+			'active'   => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'active', $base ) ), 'active' === $current ? ' class="current"' : '', __( 'Active', 'wp-ever-accounting' ) . $active_count ),
+			'inactive' => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'inactive', $base ) ), 'inactive' === $current ? ' class="current"' : '', __( 'Inactive', 'wp-ever-accounting' ) . $inactive_count ),
 		);
 
 		return $views;
@@ -376,10 +383,10 @@ class EverAccounting_Vendor_List_Table extends EverAccounting_List_Table {
 
 	/**
 	 * Retrieve all the data for the table.
-	 * Setup the final data for the table
+	 * Set up the final data for the table
 	 *
-	 * @return void
 	 * @since 1.0.2
+	 * @return void
 	 */
 	public function prepare_items() {
 		$columns               = $this->get_columns();
@@ -389,12 +396,11 @@ class EverAccounting_Vendor_List_Table extends EverAccounting_List_Table {
 
 		$this->process_bulk_action();
 
-		$page    = isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
-		$status  = isset( $_GET['status'] ) ? $_GET['status'] : '';
-		$search  = isset( $_GET['s'] ) ? $_GET['s'] : '';
-		$order   = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
-		$orderby = isset( $_GET['orderby'] ) ? $_GET['orderby'] : 'id';
-
+		$page     = filter_input( INPUT_GET, 'paged', FILTER_SANITIZE_NUMBER_INT, array( 'options' => array( 'default' => 1 ) ) );
+		$search   = filter_input( INPUT_GET, 's', FILTER_SANITIZE_STRING );
+		$order    = filter_input( INPUT_GET, 'order', FILTER_SANITIZE_STRING, array( 'options' => array( 'default' => 'DESC' ) ) );
+		$orderby  = filter_input( INPUT_GET, 'orderby', FILTER_SANITIZE_STRING, array( 'options' => array( 'default' => 'id' ) ) );
+		$status   = filter_input( INPUT_GET, 'status', FILTER_SANITIZE_STRING );
 		$per_page = $this->per_page;
 
 		$args = wp_parse_args(
@@ -438,7 +444,7 @@ class EverAccounting_Vendor_List_Table extends EverAccounting_List_Table {
 
 		$this->total_count = $this->active_count + $this->inactive_count;
 
-		$status = isset( $_GET['status'] ) ? $_GET['status'] : 'any';
+		$status = isset( $_GET['status'] ) ? sanitize_key( $_GET['status'] ) : 'any';  // phpcs:ignore
 
 		switch ( $status ) {
 			case 'active':

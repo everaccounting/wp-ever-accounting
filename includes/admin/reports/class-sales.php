@@ -21,7 +21,9 @@ defined( 'ABSPATH' ) || exit();
  */
 class Sales extends Report {
 	/**
-	 * @param array $args
+	 * Get report.
+	 *
+	 * @param array $args Report arguments.
 	 *
 	 * @return array|mixed|void
 	 * @since 1.1.0
@@ -37,7 +39,7 @@ class Sales extends Report {
 			return false;
 		}
 
-		$report = false;// $this->get_cache( $args );
+		$report = false;
 		if ( empty( $report ) ) {
 			$report     = array();
 			$start_date = $this->get_start_date( $args['year'] );
@@ -47,7 +49,9 @@ class Sales extends Report {
 			$where     .= empty( $args['customer_id'] ) ? '' : $wpdb->prepare( ' AND t.contact_id = %d', intval( $args['customer_id'] ) );
 			$where     .= empty( $args['payment_method'] ) ? '' : $wpdb->prepare( ' AND t.payment_method = %s', sanitize_key( $args['payment_method'] ) );
 			$dates      = $this->get_dates_in_period( $start_date, $end_date );
-			$sql        = $wpdb->prepare(
+
+			// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQLPlaceholders.UnsupportedPlaceholder
+			$sql = $wpdb->prepare(
 				"SELECT DATE_FORMAT(t.payment_date, '%Y-%m') `date`, SUM(t.amount) amount, t.currency_code, t.currency_rate,t.category_id,t.payment_method, c.name category, c.color
 					   FROM {$wpdb->prefix}ea_transactions t
 					   LEFT JOIN {$wpdb->prefix}ea_categories c on c.id=t.category_id
@@ -57,8 +61,9 @@ class Sales extends Report {
 				$start_date,
 				$end_date
 			);
+			// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQLPlaceholders.UnsupportedPlaceholder
 
-			$results           = $wpdb->get_results( $sql );
+			$results           = $wpdb->get_results( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 			$report['results'] = $results;
 			$report['dates']   = $dates;
 			$report['data']    = array();
@@ -85,8 +90,6 @@ class Sales extends Report {
 
 				$report['categories'] = $categories;
 			}
-
-			// $this->set_cache( $args, $report );
 		}
 
 		return $report;
@@ -99,11 +102,12 @@ class Sales extends Report {
 	 * @since 1.1.0
 	 */
 	public function output() {
-		$year           = empty( $_GET['year'] ) ? date_i18n( 'Y' ) : intval( $_GET['year'] );
-		$category_id    = empty( $_GET['category_id'] ) ? '' : intval( $_GET['category_id'] );
-		$account_id     = empty( $_GET['account_id'] ) ? '' : intval( $_GET['account_id'] );
-		$customer_id    = empty( $_GET['customer_id'] ) ? '' : intval( $_GET['customer_id'] );
-		$payment_method = empty( $_GET['payment_method'] ) ? '' : $_GET['payment_method'];
+		$year           = empty( $_GET['year'] ) ? date_i18n( 'Y' ) : intval( $_GET['year'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$category_id    = filter_input( INPUT_GET, 'category_id', FILTER_SANITIZE_NUMBER_INT );
+		$account_id     = filter_input( INPUT_GET, 'account_id', FILTER_SANITIZE_NUMBER_INT );
+		$customer_id    = filter_input( INPUT_GET, 'customer_id', FILTER_SANITIZE_NUMBER_INT );
+		$payment_method = filter_input( INPUT_GET, 'payment_method', FILTER_SANITIZE_STRING );
+		$filter         = filter_input( INPUT_GET, 'filter', FILTER_SANITIZE_STRING );
 		$report         = $this->get_report(
 			array(
 				'year'           => $year,
@@ -118,7 +122,7 @@ class Sales extends Report {
 			<div class="ea-card__header">
 				<h3 class="ea-card__title"><?php esc_html_e( 'Sales report', 'wp-ever-accounting' ); ?></h3>
 				<div class="ea-card__toolbar">
-					<form action="<?php echo admin_url( 'admin.php?page=ea-reports' ); ?>>" method="get">
+					<form action="<?php echo esc_url( admin_url( 'admin.php?page=ea-reports' ) ); ?>>" method="get">
 						<?php esc_html_e( 'Filter', 'wp-ever-accounting' ); ?>
 						<?php
 						eaccounting_select2(
@@ -165,7 +169,7 @@ class Sales extends Report {
 						<input type="hidden" name="tab" value="sales">
 						<input type="hidden" name="filter" value="true">
 						<button type="submit" class="button-primary button"><?php esc_html_e( 'Submit', 'wp-ever-accounting' ); ?></button>
-						<?php if ( isset( $_GET['filter'] ) ) : ?>
+						<?php if ( ! empty( $filter ) ) : ?>
 							<a class="button-secondary button" href="<?php echo esc_url( admin_url( 'admin.php?page=ea-reports&tab=sales' ) ); ?>"><?php esc_html_e( 'Reset', 'wp-ever-accounting' ); ?></a>
 						<?php endif; ?>
 					</form>
@@ -184,11 +188,11 @@ class Sales extends Report {
 								{
 									type: 'line',
 									data: {
-										'labels': <?php echo json_encode( array_values( $report['dates'] ) ); ?>,
+										'labels': <?php echo wp_json_encode( array_values( $report['dates'] ) ); ?>,
 										'datasets': [
 											{
-												label: '<?php echo __( 'Sales', 'wp-ever-accounting' ); ?>',
-												data: <?php echo json_encode( array_values( $report['data']['totals'] ) ); ?>,
+												label: '<?php echo esc_html__( 'Sales', 'wp-ever-accounting' ); ?>',
+												data: <?php echo wp_json_encode( array_values( $report['data']['totals'] ) ); ?>,
 												backgroundColor: 'rgba(54, 68, 255, 0.1)',
 												borderColor: 'rgb(54, 68, 255)',
 												borderWidth: 4,
@@ -264,9 +268,9 @@ class Sales extends Report {
 						<table class="wp-list-table widefat fixed striped">
 							<thead>
 							<tr>
-								<th><?php _e( 'Categories', 'wp-ever-accounting' ); ?></th>
+								<th><?php esc_html_e( 'Categories', 'wp-ever-accounting' ); ?></th>
 								<?php foreach ( $report['dates'] as $date ) : ?>
-									<th class="align-right"><?php echo $date; ?></th>
+									<th class="align-right"><?php echo esc_html( $date ); ?></th>
 								<?php endforeach; ?>
 							</tr>
 							</thead>
@@ -275,16 +279,16 @@ class Sales extends Report {
 							<?php if ( ! empty( $report['data']['category'] ) ) : ?>
 								<?php foreach ( $report['data']['category'] as $category_id => $sales ) : ?>
 									<tr>
-										<td><?php echo $report['categories'][ $category_id ]; ?></td>
+										<td><?php echo esc_html( $report['categories'][ $category_id ] ); ?></td>
 										<?php foreach ( $sales as $amount ) : ?>
-											<td><?php echo eaccounting_format_price( $amount ); ?></td>
+											<td><?php echo esc_html( eaccounting_format_price( $amount ) ); ?></td>
 										<?php endforeach; ?>
 									</tr>
 								<?php endforeach; ?>
 							<?php else : ?>
 								<tr class="no-results">
 									<td colspan="13">
-										<p><?php _e( 'No records found', 'wp-ever-accounting' ); ?></p>
+										<p><?php esc_html_e( 'No records found', 'wp-ever-accounting' ); ?></p>
 									</td>
 								</tr>
 							<?php endif; ?>
@@ -294,9 +298,9 @@ class Sales extends Report {
 							<?php if ( ! empty( $report['data']['totals'] ) ) : ?>
 								<tfoot>
 								<tr>
-									<th><?php _e( 'Total', 'wp-ever-accounting' ); ?></th>
+									<th><?php esc_html_e( 'Total', 'wp-ever-accounting' ); ?></th>
 									<?php foreach ( $report['data']['totals'] as $total ) : ?>
-										<th class="align-right"><?php echo eaccounting_format_price( $total ); ?></th>
+										<th class="align-right"><?php echo esc_html( eaccounting_format_price( $total ) ); ?></th>
 									<?php endforeach; ?>
 								</tr>
 								</tfoot>
@@ -306,13 +310,13 @@ class Sales extends Report {
 				</div>
 
 				<div class="ea-card__footer">
-					<a class="button button-secondary" href="<?php echo wp_nonce_url( add_query_arg( 'refresh_report', 'yes' ), 'refresh_report' ); ?>">
+					<a class="button button-secondary" href="<?php echo wp_nonce_url( add_query_arg( 'refresh_report', 'yes' ), 'refresh_report' ); ?>"> <?php //phpcs:ignore ?>
 						<?php esc_html_e( 'Reset Cache', 'wp-ever-accounting' ); ?>
 					</a>
 				</div>
 			<?php else : ?>
 				<div class="ea-card__inside">
-					<p><?php _e( 'Please select financial year.', 'wp-ever-accounting' ); ?></p>
+					<p><?php esc_html_e( 'Please select financial year.', 'wp-ever-accounting' ); ?></p>
 				</div>
 			<?php endif; ?>
 		</div>

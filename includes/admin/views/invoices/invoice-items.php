@@ -80,7 +80,7 @@ $quantity_label = eaccounting()->settings->get( 'invoice_quantity_label', __( 'Q
 				<td class="label"><?php esc_html_e( 'Items Subtotal:', 'wp-ever-accounting' ); ?></td>
 				<td width="1%"></td>
 				<td class="total">
-					<?php echo eaccounting_price( $invoice->get_subtotal(), $invoice->get_currency_code() ); ?>
+					<?php echo esc_html( eaccounting_price( $invoice->get_subtotal(), $invoice->get_currency_code() ) ); ?>
 				</td>
 			</tr>
 
@@ -88,7 +88,7 @@ $quantity_label = eaccounting()->settings->get( 'invoice_quantity_label', __( 'Q
 				<td class="label"><?php esc_html_e( 'Discount:', 'wp-ever-accounting' ); ?></td>
 				<td width="1%"></td>
 				<td class="total">-
-					<?php echo eaccounting_price( $invoice->get_total_discount(), $invoice->get_currency_code() ); ?>
+					<?php echo esc_html( eaccounting_price( $invoice->get_total_discount(), $invoice->get_currency_code() ) ); ?>
 				</td>
 			</tr>
 
@@ -97,7 +97,7 @@ $quantity_label = eaccounting()->settings->get( 'invoice_quantity_label', __( 'Q
 					<td class="label"><?php esc_html_e( 'Fees:', 'wp-ever-accounting' ); ?></td>
 					<td width="1%"></td>
 					<td class="total">
-						<?php echo eaccounting_price( $invoice->get_total_fees(), $invoice->get_currency_code() ); ?>
+						<?php echo esc_html( eaccounting_price( $invoice->get_total_fees(), $invoice->get_currency_code() ) ); ?>
 					</td>
 				</tr>
 			<?php endif; ?>
@@ -107,7 +107,7 @@ $quantity_label = eaccounting()->settings->get( 'invoice_quantity_label', __( 'Q
 					<td class="label"><?php esc_html_e( 'Shipping:', 'wp-ever-accounting' ); ?></td>
 					<td width="1%"></td>
 					<td class="total">
-						<?php echo eaccounting_price( $invoice->get_total_shipping(), $invoice->get_currency_code() ); ?>
+						<?php echo esc_html( eaccounting_price( $invoice->get_total_shipping(), $invoice->get_currency_code() ) ); ?>
 					</td>
 				</tr>
 			<?php endif; ?>
@@ -118,7 +118,7 @@ $quantity_label = eaccounting()->settings->get( 'invoice_quantity_label', __( 'Q
 						<td class="label"><?php esc_html_e( 'Tax', 'wp-ever-accounting' ); ?>:</td>
 						<td width="1%"></td>
 						<td class="total">
-							<?php echo eaccounting_price( $invoice->get_total_tax(), $invoice->get_currency_code() ); ?>
+							<?php echo esc_html( eaccounting_price( $invoice->get_total_tax(), $invoice->get_currency_code() ) ); ?>
 						</td>
 					</tr>
 				<?php else : ?>
@@ -127,7 +127,7 @@ $quantity_label = eaccounting()->settings->get( 'invoice_quantity_label', __( 'Q
 							<td class="label"><?php echo esc_html( __( 'Tax', 'wp-ever-accounting' ) . '(' . number_format_i18n( $tax['rate'] ) . '%)' ); ?>:</td>
 							<td width="1%"></td>
 							<td class="total">
-								<?php echo eaccounting_price( $tax['amount'], $invoice->get_currency_code() ); ?>
+								<?php echo esc_html( eaccounting_price( $tax['amount'], $invoice->get_currency_code() ) ); ?>
 							</td>
 						</tr>
 					<?php endforeach; ?>
@@ -138,7 +138,7 @@ $quantity_label = eaccounting()->settings->get( 'invoice_quantity_label', __( 'Q
 				<td class="label"><?php esc_html_e( 'Total', 'wp-ever-accounting' ); ?>:</td>
 				<td width="1%"></td>
 				<td class="total">
-					<?php echo eaccounting_price( $invoice->get_total(), $invoice->get_currency_code() ); ?>
+					<?php echo esc_html( eaccounting_price( $invoice->get_total(), $invoice->get_currency_code() ) ); ?>
 				</td>
 			</tr>
 			<?php if ( $invoice->exists() ) : ?>
@@ -146,7 +146,7 @@ $quantity_label = eaccounting()->settings->get( 'invoice_quantity_label', __( 'Q
 					<td class="label"><?php esc_html_e( 'Paid', 'wp-ever-accounting' ); ?>:</td>
 					<td width="1%"></td>
 					<td class="total">
-						<?php echo eaccounting_price( $invoice->get_total_paid(), $invoice->get_currency_code() ); ?>
+						<?php echo esc_html( eaccounting_price( $invoice->get_total_paid(), $invoice->get_currency_code() ) ); ?>
 					</td>
 				</tr>
 			<?php endif; ?>
@@ -155,7 +155,7 @@ $quantity_label = eaccounting()->settings->get( 'invoice_quantity_label', __( 'Q
 					<td class="label"><?php esc_html_e( 'Due', 'wp-ever-accounting' ); ?>:</td>
 					<td width="1%"></td>
 					<td class="total">
-						<?php echo eaccounting_price( abs( $invoice->get_total_due() ), $invoice->get_currency_code() ); ?>
+						<?php echo esc_html( eaccounting_price( abs( $invoice->get_total_due() ), $invoice->get_currency_code() ) ); ?>
 					</td>
 				</tr>
 			<?php endif; ?>

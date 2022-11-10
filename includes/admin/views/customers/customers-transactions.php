@@ -3,6 +3,8 @@
  * Page: Sales
  * Tab: Customers
  * Section: Transactions
+ *
+ * @package EverAccounting
  */
 
 defined( 'ABSPATH' ) || exit();

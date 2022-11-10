@@ -29,6 +29,8 @@ class Invoice extends Document {
 	protected $object_type = 'invoice';
 
 	/**
+	 * Transaction status.
+	 *
 	 * @since 1.1.0
 	 *
 	 * @var array
@@ -68,11 +70,11 @@ class Invoice extends Document {
 		}
 
 		$this->required_props = array(
-			'currency_code' => __( 'Currency', 'wp-ever-accounting' ),
-			'category_id'   => __( 'Category', 'wp-ever-accounting' ),
-			'contact_id'    => __( 'Customer', 'wp-ever-accounting' ),
-			'issue_date'    => __( 'Issue date', 'wp-ever-accounting' ),
-			'due_date'      => __( 'Due date', 'wp-ever-accounting' ),
+			'currency_code' => esc_html__( 'Currency', 'wp-ever-accounting' ),
+			'category_id'   => esc_html__( 'Category', 'wp-ever-accounting' ),
+			'contact_id'    => esc_html__( 'Customer', 'wp-ever-accounting' ),
+			'issue_date'    => esc_html__( 'Issue date', 'wp-ever-accounting' ),
+			'due_date'      => esc_html__( 'Due date', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -410,6 +412,8 @@ class Invoice extends Document {
 	*/
 
 	/**
+	 * Add a payment.
+	 *
 	 * @since 1.1.0
 	 *
 	 * @param array $args Arguments to pass to get_comments.

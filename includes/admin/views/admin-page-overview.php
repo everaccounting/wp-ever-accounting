@@ -1,7 +1,10 @@
 <?php
 /**
  * Page: Overview page
+ *
+ * @package EverAccouting
  */
+
 defined( 'ABSPATH' ) || exit;
 ?>
 <div class="wrap eaccounting ea-overview">

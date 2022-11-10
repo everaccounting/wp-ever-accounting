@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit();
 try {
 	$payment = new \EverAccounting\Models\Payment( $payment_id );
 } catch ( Exception $e ) {
-	wp_die( $e->getMessage() );
+	wp_die( esc_html( $e->getMessage() ) );
 }
 
 $back_url = remove_query_arg( array( 'action', 'payment_id' ) );
@@ -31,7 +31,9 @@ $title    = $payment->exists() ? __( 'Update Payment', 'wp-ever-accounting' ) : 
 					<?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?>
 				</a>
 			<?php else : ?>
-				<a href="<?php echo remove_query_arg( array( 'action', 'id' ) ); ?>" class="page-title-action"><?php esc_html_e( 'View All', 'wp-ever-accounting' ); ?></a>
+				<a href="<?php echo esc_url( remove_query_arg( array( 'action', 'id' ) ) ); ?>" class="page-title-action">
+					<?php esc_html_e( 'View All', 'wp-ever-accounting' ); ?>
+				</a>
 			<?php endif; ?>
 		</div>
 	</div>
@@ -40,7 +42,7 @@ $title    = $payment->exists() ? __( 'Update Payment', 'wp-ever-accounting' ) : 
 	<form id="ea-payment-form" method="post">
 		<div class="ea-card">
 			<div class="ea-card__header">
-				<h3 class="ea-card__title"><?php echo $title; ?></h3>
+				<h3 class="ea-card__title"><?php echo esc_html( $title ); ?></h3>
 			</div>
 
 			<div class="ea-card__inside">
@@ -50,9 +52,9 @@ $title    = $payment->exists() ? __( 'Update Payment', 'wp-ever-accounting' ) : 
 					eaccounting_text_input(
 						array(
 							'wrapper_class' => 'ea-col-6',
-							'label'         => __( 'Date', 'wp-ever-accounting' ),
+							'label'         => esc_html__( 'Date', 'wp-ever-accounting' ),
 							'name'          => 'payment_date',
-							'placeholder'   => __( 'Enter date', 'wp-ever-accounting' ),
+							'placeholder'   => esc_html__( 'Enter date', 'wp-ever-accounting' ),
 							'data_type'     => 'date',
 							'value'         => $payment->get_payment_date() ? $payment->get_payment_date() : null,
 							'required'      => true,
@@ -62,35 +64,35 @@ $title    = $payment->exists() ? __( 'Update Payment', 'wp-ever-accounting' ) : 
 					eaccounting_account_dropdown(
 						array(
 							'wrapper_class' => 'ea-col-6',
-							'label'         => __( 'Account', 'wp-ever-accounting' ),
+							'label'         => esc_html__( 'Account', 'wp-ever-accounting' ),
 							'name'          => 'account_id',
 							'value'         => $payment->get_account_id(),
 							'creatable'     => true,
-							'placeholder'   => __( 'Select Account', 'wp-ever-accounting' ),
+							'placeholder'   => esc_html__( 'Select Account', 'wp-ever-accounting' ),
 							'required'      => true,
 						)
 					);
 
 					eaccounting_text_input(
 						array(
-							'label'         => __( 'Amount', 'wp-ever-accounting' ),
+							'label'         => esc_html__( 'Amount', 'wp-ever-accounting' ),
 							'name'          => 'amount',
 							'value'         => $payment->get_amount(),
 							'data_type'     => 'price',
 							'required'      => true,
 							'wrapper_class' => 'ea-col-6',
-							'placeholder'   => __( 'Enter amount', 'wp-ever-accounting' ),
+							'placeholder'   => esc_html__( 'Enter amount', 'wp-ever-accounting' ),
 						)
 					);
 
 					eaccounting_vendor_dropdown(
 						array(
 							'wrapper_class' => 'ea-col-6',
-							'label'         => __( 'Vendor', 'wp-ever-accounting' ),
+							'label'         => esc_html__( 'Vendor', 'wp-ever-accounting' ),
 							'name'          => 'contact_id',
 							'id'            => 'vendor_id',
 							'value'         => $payment->get_contact_id(),
-							'placeholder'   => __( 'Select Vendor', 'wp-ever-accounting' ),
+							'placeholder'   => esc_html__( 'Select Vendor', 'wp-ever-accounting' ),
 							'type'          => 'vendor',
 							'creatable'     => true,
 						)
@@ -99,7 +101,7 @@ $title    = $payment->exists() ? __( 'Update Payment', 'wp-ever-accounting' ) : 
 					eaccounting_category_dropdown(
 						array(
 							'wrapper_class' => 'ea-col-6',
-							'label'         => __( 'Category', 'wp-ever-accounting' ),
+							'label'         => esc_html__( 'Category', 'wp-ever-accounting' ),
 							'name'          => 'category_id',
 							'value'         => $payment->get_category_id(),
 							'required'      => true,
@@ -112,7 +114,7 @@ $title    = $payment->exists() ? __( 'Update Payment', 'wp-ever-accounting' ) : 
 
 					eaccounting_payment_method_dropdown(
 						array(
-							'label'         => __( 'Payment Method', 'wp-ever-accounting' ),
+							'label'         => esc_html__( 'Payment Method', 'wp-ever-accounting' ),
 							'name'          => 'payment_method',
 							'wrapper_class' => 'ea-col-6',
 							'required'      => true,
@@ -121,35 +123,35 @@ $title    = $payment->exists() ? __( 'Update Payment', 'wp-ever-accounting' ) : 
 					);
 					eaccounting_textarea(
 						array(
-							'label'         => __( 'Description', 'wp-ever-accounting' ),
+							'label'         => esc_html__( 'Description', 'wp-ever-accounting' ),
 							'name'          => 'description',
 							'value'         => $payment->get_description(),
 							'required'      => false,
 							'wrapper_class' => 'ea-col-12',
-							'placeholder'   => __( 'Enter description', 'wp-ever-accounting' ),
+							'placeholder'   => esc_html__( 'Enter description', 'wp-ever-accounting' ),
 						)
 					);
 
 					eaccounting_text_input(
 						array(
-							'label'         => __( 'Reference', 'wp-ever-accounting' ),
+							'label'         => esc_html__( 'Reference', 'wp-ever-accounting' ),
 							'name'          => 'reference',
 							'value'         => $payment->get_reference(),
 							'required'      => false,
 							'wrapper_class' => 'ea-col-6',
-							'placeholder'   => __( 'Enter reference', 'wp-ever-accounting' ),
+							'placeholder'   => esc_html__( 'Enter reference', 'wp-ever-accounting' ),
 						)
 					);
 
 					eaccounting_file_input(
 						array(
-							'label'         => __( 'Attachments', 'wp-ever-accounting' ),
+							'label'         => esc_html__( 'Attachments', 'wp-ever-accounting' ),
 							'name'          => 'attachment_id',
 							'allowed-types' => 'jpg,jpeg,png,pdf',
 							'value'         => $payment->get_attachment_id(),
 							'required'      => false,
 							'wrapper_class' => 'ea-col-6',
-							'placeholder'   => __( 'Upload File', 'wp-ever-accounting' ),
+							'placeholder'   => esc_html__( 'Upload File', 'wp-ever-accounting' ),
 						)
 					);
 					eaccounting_hidden_input(

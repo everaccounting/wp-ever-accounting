@@ -30,6 +30,8 @@ class Categories extends Resource_Repository {
 	const TABLE = 'ea_categories';
 
 	/**
+	 * The table name.
+	 *
 	 * @since 1.1.0
 	 *
 	 * @var string

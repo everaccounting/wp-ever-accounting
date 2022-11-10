@@ -8,11 +8,11 @@
  */
 
 defined( 'ABSPATH' ) || exit();
-$currency_code = isset( $_REQUEST['currency_code'] ) ? eaccounting_clean( $_REQUEST['currency_code'] ) : null;
+$currency_code = isset( $_REQUEST['currency_code'] ) ? eaccounting_clean( $_REQUEST['currency_code'] ) : null; // phpcs:ignore
 try {
 	$currency = new \EverAccounting\Models\Currency( $currency_code );
 } catch ( Exception $e ) {
-	wp_die( $e->getMessage() );
+	wp_die( esc_html( $e->getMessage() ) );
 }
 $currencies = eaccounting_get_global_currencies();
 $options    = array();
@@ -28,7 +28,7 @@ foreach ( $currencies as $code => $props ) {
 				<?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?>
 			</a>
 		<?php else : ?>
-			<a href="<?php echo remove_query_arg( array( 'action', 'id' ) ); ?>" class="page-title-action"><?php esc_html_e( 'View All', 'wp-ever-accounting' ); ?></a>
+			<a href="<?php echo esc_url( remove_query_arg( array( 'action', 'id' ) ) ); ?>" class="page-title-action"><?php esc_html_e( 'View All', 'wp-ever-accounting' ); ?></a>
 		<?php endif; ?>
 
 	</div>
@@ -39,8 +39,8 @@ foreach ( $currencies as $code => $props ) {
 	<?php
 	echo sprintf(
 		'<p><strong>%s:</strong> %s',
-		__( 'Note', 'wp-ever-accounting' ),
-		__(
+		esc_html__( 'Note', 'wp-ever-accounting' ),
+		esc_html__(
 			'Default currency rate should be always 1 & additional currency rates should be equivalent of default currency.
 		e.g. If USD is your default currency then USD rate is 1 & GBP rate will be 0.77',
 			'wp-ever-accounting'
@@ -51,7 +51,7 @@ foreach ( $currencies as $code => $props ) {
 <form id="ea-currency-form" method="post">
 <div class="ea-card">
 	<div class="ea-card__header">
-		<h3 class="ea-card__title"><?php echo $currency->exists() ? __( 'Update Currency', 'wp-ever-accounting' ) : __( 'Add Currency', 'wp-ever-accounting' ); ?></h3>
+		<h3 class="ea-card__title"><?php echo $currency->exists() ? esc_html__( 'Update Currency', 'wp-ever-accounting' ) : esc_html__( 'Add Currency', 'wp-ever-accounting' ); ?></h3>
 	</div>
 
 	<div class="ea-card__inside">
@@ -154,9 +154,6 @@ foreach ( $currencies as $code => $props ) {
 
 				?>
 			</div>
-
-
-
 	</div>
 	<div class="ea-card__footer">
 		<?php

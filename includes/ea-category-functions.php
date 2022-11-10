@@ -18,10 +18,10 @@ defined( 'ABSPATH' ) || exit();
  */
 function eaccounting_get_category_types() {
 	$types = array(
-		'expense' => __( 'Expense', 'wp-ever-accounting' ),
-		'income'  => __( 'Income', 'wp-ever-accounting' ),
-		'other'   => __( 'Other', 'wp-ever-accounting' ),
-		'item'    => __( 'Item', 'wp-ever-accounting' ),
+		'expense' => esc_html__( 'Expense', 'wp-ever-accounting' ),
+		'income'  => esc_html__( 'Income', 'wp-ever-accounting' ),
+		'other'   => esc_html__( 'Other', 'wp-ever-accounting' ),
+		'item'    => esc_html__( 'Item', 'wp-ever-accounting' ),
 	);
 
 	return apply_filters( 'eaccounting_category_types', $types );

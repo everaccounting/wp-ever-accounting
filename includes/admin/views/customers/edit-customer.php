@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit();
 try {
 	$customer = new \EverAccounting\Models\Customer( $customer_id );
 } catch ( Exception $e ) {
-	wp_redirect( admin_url( 'admin.php?page=ea-sales&tab=customers' ) );
+	wp_safe_redirect( admin_url( 'admin.php?page=ea-sales&tab=customers' ) );
 }
 $title = $customer->exists() ? __( 'Update Customer', 'wp-ever-accounting' ) : __( 'Add Customer', 'wp-ever-accounting' );
 ?>
@@ -28,7 +28,9 @@ $title = $customer->exists() ? __( 'Update Customer', 'wp-ever-accounting' ) : _
 				<?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?>
 			</a>
 		<?php else : ?>
-			<a href="<?php echo remove_query_arg( array( 'action', 'id' ) ); ?>" class="page-title-action"><?php esc_html_e( 'View All', 'wp-ever-accounting' ); ?></a>
+			<a href="<?php echo esc_url( remove_query_arg( array( 'action', 'id' ) ) ); ?>" class="page-title-action">
+				<?php esc_html_e( 'View All', 'wp-ever-accounting' ); ?>
+			</a>
 		<?php endif; ?>
 	</div>
 </div>

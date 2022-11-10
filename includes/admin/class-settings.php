@@ -439,7 +439,7 @@ class Settings {
 						$args['title']     = sprintf( '%s<span class="ea-help-tip" title="%s"></span>', $args['title'], $tooltip );
 						$args['label_for'] = $args['id'];
 					}
-					if ( 'section' == $args['type'] ) {
+					if ( 'section' === $args['type'] ) {
 						$args['title'] = sprintf( '<h3>%s</h3>', $args['title'] );
 					}
 
@@ -461,7 +461,9 @@ class Settings {
 	}
 
 	/**
-	 * @param $field
+	 * Render settings field
+	 *
+	 * @param array $field Field data.
 	 */
 	public function render_field( $field ) {
 		// Custom attribute handling.
@@ -501,29 +503,29 @@ class Settings {
 			case 'url':
 			case 'tel':
 				?>
-				<input name="eaccounting_settings[<?php echo esc_attr( $field['id'] ); ?>]"
-					   id="<?php echo esc_attr( $field['id'] ); ?>"
-					   type="<?php echo esc_attr( $field['type'] ); ?>"
-					   style="<?php echo esc_attr( $field['style'] ); ?>"
-					   value="<?php echo esc_attr( wp_unslash( $value ) ); ?>"
-					   class="<?php echo esc_attr( sprintf( '%s-text %s', $field['size'], $field['input_class'] ) ); ?>"
-						<?php echo implode( ' ', $attributes ); ?>/>
-				<?php echo $description; ?>
+				<input
+						name="eaccounting_settings[<?php echo esc_attr( $field['id'] ); ?>]" id="<?php echo esc_attr( $field['id'] ); ?>" type="<?php echo esc_attr( $field['type'] ); ?>"
+						style="<?php echo esc_attr( $field['style'] ); ?>"
+						value="<?php echo esc_attr( wp_unslash( $value ) ); ?>"
+						class="<?php echo esc_attr( sprintf( '%s-text %s', $field['size'], $field['input_class'] ) ); ?>"
+						<?php echo implode( ' ', $attributes ); // phpcs:ignore ?>/>
+				<?php echo wp_kses_post( $description ); ?>
 				<?php
 				break;
 			case 'textarea':
-				echo $description;
+				echo wp_kses_post( $description );
 				?>
-				<textarea name="eaccounting_settings[<?php echo esc_attr( $field['id'] ); ?>]"
-						  id="<?php echo esc_attr( $field['id'] ); ?>"
-						  style="<?php echo esc_attr( $field['style'] ); ?>"
-						  class="<?php echo esc_attr( sprintf( '%s-text %s', $field['size'], $field['input_class'] ) ); ?>"
-					<?php echo implode( ' ', $attributes ); ?>><?php echo esc_textarea( wp_unslash( $value ) ); ?></textarea>
+				<textarea
+						name="eaccounting_settings[<?php echo esc_attr( $field['id'] ); ?>]"
+						id="<?php echo esc_attr( $field['id'] ); ?>"
+						style="<?php echo esc_attr( $field['style'] ); ?>"
+						class="<?php echo esc_attr( sprintf( '%s-text %s', $field['size'], $field['input_class'] ) ); ?>"
+					<?php echo implode( ' ', $attributes );  // phpcs:ignore ?>><?php echo esc_textarea( wp_unslash( $value ) ); ?></textarea>
 				<?php
 				break;
 			case 'country_select':
 			case 'select':
-				if ( 'country_select' == $field['type'] ) {
+				if ( 'country_select' === $field['type'] ) {
 					$field['options'] = array( '' => __( 'Select Country', 'wp-ever-accounting' ) ) + eaccounting_get_countries();
 				}
 				?>
@@ -532,7 +534,7 @@ class Settings {
 						id="<?php echo esc_attr( $field['id'] ); ?>"
 						style="<?php echo esc_attr( $field['style'] ); ?>"
 						class="<?php echo esc_attr( sprintf( '%s-text %s', $field['size'], $field['input_class'] ) ); ?>"
-						<?php echo implode( ' ', $attributes ); ?>
+						<?php echo implode( ' ', $attributes );  // phpcs:ignore ?>
 				>
 					<?php
 					foreach ( $field['options'] as $key => $val ) {
@@ -549,7 +551,7 @@ class Settings {
 						<?php
 					}
 					?>
-				</select> <?php echo $description; ?>
+				</select> <?php echo wp_kses_post( $description ); ?>
 				<?php
 				break;
 			case 'checkbox':
@@ -561,8 +563,8 @@ class Settings {
 							type="checkbox"
 							value="yes"
 							<?php checked( $value, 'yes' ); ?>
-							<?php echo implode( ' ', $attributes ); ?>
-					/> <?php echo $description; ?>
+							<?php echo implode( ' ', $attributes );  // phpcs:ignore ?>
+					/> <?php echo wp_kses_post( $description ); ?>
 				</label>
 				<?php
 				break;
@@ -570,10 +572,10 @@ class Settings {
 			case 'radio':
 			case 'multicheck':
 				$value = ! is_array( $value ) ? array() : $value;
-				$type  = 'multicheck' == $field['type'] ? 'checkbox' : $field['type'];
+				$type  = 'multicheck' == $field['type'] ? 'checkbox' : $field['type'];  // phpcs:ignore
 				?>
 				<fieldset>
-					<?php echo $description; ?>
+					<?php echo wp_kses_post( $description ); ?>
 					<ul>
 						<?php
 						foreach ( $field['options'] as $key => $option ) {
@@ -586,7 +588,7 @@ class Settings {
 											type="<?php echo esc_attr( $type ); ?>"
 											style="<?php echo esc_attr( $field['style'] ); ?>"
 											class="<?php echo esc_attr( $field['class'] ); ?>"
-											<?php echo implode( ' ', $attributes ); ?>
+											<?php echo implode( ' ', $attributes );  // phpcs:ignore ?>
 											<?php checked( 'yes', $checked ); ?>
 									/> <?php echo esc_html( $option ); ?></label>
 							</li>
@@ -600,22 +602,22 @@ class Settings {
 			case 'wysiwyg':
 				ob_start();
 				wp_editor( stripslashes( $value ), 'eaccounting_settings_' . $field['id'], array( 'textarea_name' => 'eaccounting_settings[' . $field['id'] . ']' ) );
-				echo ob_get_clean();
+				echo ob_get_clean(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
 				break;
 
 			case 'file_upload':
 				?>
-				<?php echo $description; ?>
-				<input name="eaccounting_settings[<?php echo esc_attr( $field['id'] ); ?>]"
-					   id="<?php echo esc_attr( $field['id'] ); ?>"
-					   type="text"
-					   style="<?php echo esc_attr( $field['style'] ); ?>"
-					   value="<?php echo esc_attr( wp_unslash( $value ) ); ?>"
-					   class="<?php echo esc_attr( sprintf( '%s-text %s', $field['size'], $field['input_class'] ) ); ?>"
-						<?php echo implode( ' ', $attributes ); ?>/>
-				<span>&nbsp;<button type="button"
-									class="ea_settings_upload_button button-secondary"><?php esc_html_e( 'Upload File', 'wp-ever-accounting' ); ?></button></span>
+				<?php echo wp_kses_post( $description ); ?>
+				<input
+						name="eaccounting_settings[<?php echo esc_attr( $field['id'] ); ?>]"
+						id="<?php echo esc_attr( $field['id'] ); ?>"
+						type="text"
+						style="<?php echo esc_attr( $field['style'] ); ?>"
+						value="<?php echo esc_attr( wp_unslash( $value ) ); ?>"
+						class="<?php echo esc_attr( sprintf( '%s-text %s', $field['size'], $field['input_class'] ) ); ?>"
+						<?php echo implode( ' ', $attributes );  // phpcs:ignore ?>/>
+				<span>&nbsp;<button type="button" class="ea_settings_upload_button button-secondary"><?php esc_html_e( 'Upload File', 'wp-ever-accounting' ); ?></button></span>
 				<?php
 				break;
 
@@ -641,8 +643,9 @@ class Settings {
 	 * @return array|int
 	 */
 	protected function get_accounts() {
+		$page     = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_STRING );
 		$accounts = array();
-		if ( isset( $_GET['page'] ) && 'ea-settings' === $_GET['page'] ) {
+		if ( 'ea-settings' === $page ) {
 			$results    = eaccounting_get_accounts(
 				array(
 					'number' => - 1,
@@ -661,15 +664,16 @@ class Settings {
 	/**
 	 * Load categories on settings.
 	 *
-	 * @param string $type
+	 * @param string $type Type of category.
 	 *
 	 * @since 1.1.0
 	 *
 	 * @return array|int
 	 */
 	protected function get_categories( $type = 'income' ) {
+		$page       = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_STRING );
 		$categories = array();
-		if ( isset( $_GET['page'] ) && 'ea-settings' === $_GET['page'] ) {
+		if ( 'ea-settings' === $page ) {
 			$results      = eaccounting_get_categories(
 				array(
 					'number' => - 1,
@@ -687,15 +691,14 @@ class Settings {
 	/**
 	 * Load currencies
 	 *
-	 * @param string $type
-	 *
 	 * @since 1.1.0
 	 *
 	 * @return array|int
 	 */
 	protected function get_currencies() {
 		$currencies = array();
-		if ( isset( $_GET['page'] ) && 'ea-settings' === $_GET['page'] ) {
+		$page       = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_STRING );
+		if ( 'ea-settings' === $page ) {
 			$results      = eaccounting_get_currencies(
 				array(
 					'number' => - 1,
@@ -712,13 +715,17 @@ class Settings {
 	}
 
 	/**
-	 * @param $field
+	 * Render license field.
+	 *
+	 * @param array $field Field data.
+	 *
+	 * @since 1.1.0
 	 */
 	public function render_license_field( $field ) {
 		$license = $field['license_status'];
 		$value   = eaccounting_get_option( $field['id'] );
 		if ( is_object( $license ) && ! empty( $value ) ) {
-			// activate_license 'invalid' on anything other than valid, so if there was an error capture it
+			// activate_license 'invalid' on anything other than valid, so if there was an error capture it.
 			if ( empty( $license->success ) ) {
 
 				if ( ! empty( $license->error ) ) {
@@ -727,8 +734,9 @@ class Settings {
 						case 'expired':
 							$class      = 'expired';
 							$messages[] = sprintf(
+								/* translators: %s: license key */
 								__( 'Your license key expired on %1$s. Please <a href="%2$s" target="_blank">renew your license key</a>.', 'wp-ever-accounting' ),
-								date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ),
+								date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ), // phpcs:ignore
 								'https://wpeveraccounting.com/checkout/?edd_license_key=' . $value . '&utm_campaign=admin&utm_source=licenses&utm_medium=expired'
 							);
 
@@ -739,6 +747,7 @@ class Settings {
 						case 'revoked':
 							$class      = 'error';
 							$messages[] = sprintf(
+								/* translators: %s: license key */
 								__( 'Your license key has been disabled. Please <a href="%s" target="_blank">contact support</a> for more information.', 'wp-ever-accounting' ),
 								'https://wpeveraccounting.com/support?utm_campaign=admin&utm_source=licenses&utm_medium=revoked'
 							);
@@ -750,6 +759,7 @@ class Settings {
 						case 'missing':
 							$class      = 'error';
 							$messages[] = sprintf(
+								/* translators: %s: license key */
 								__( 'Invalid license. Please <a href="%s" target="_blank">visit your account page</a> and verify it.', 'wp-ever-accounting' ),
 								'https://wpeveraccounting.com/my-account?utm_campaign=admin&utm_source=licenses&utm_medium=missing'
 							);
@@ -762,6 +772,7 @@ class Settings {
 						case 'site_inactive':
 							$class      = 'error';
 							$messages[] = sprintf(
+								/* translators: %s: license key */
 								__( 'Your %1$s is not active for this URL. Please <a href="%2$s" target="_blank">visit your account page</a> to manage your license key URLs.', 'wp-ever-accounting' ),
 								$field['title'],
 								'https://wpeveraccounting.com/my-account?utm_campaign=admin&utm_source=licenses&utm_medium=invalid'
@@ -772,7 +783,8 @@ class Settings {
 							break;
 
 						case 'item_name_mismatch':
-							$class      = 'error';
+							$class = 'error';
+							/* translators: %s: license key */
 							$messages[] = sprintf( __( 'This appears to be an invalid license key for %s.', 'wp-ever-accounting' ), $field['title'] );
 
 							$license_status = 'license-' . $class . '-notice';
@@ -780,7 +792,8 @@ class Settings {
 							break;
 
 						case 'no_activations_left':
-							$class      = 'error';
+							$class = 'error';
+							/* translators: %s: license key */
 							$messages[] = sprintf( __( 'Your license key has reached its activation limit. <a href="%s">View possible upgrades</a> now.', 'wp-ever-accounting' ), 'https://wpeveraccounting.com/account' );
 
 							$license_status = 'license-' . $class . '-notice';
@@ -795,16 +808,18 @@ class Settings {
 							break;
 
 						default:
-							$class      = 'error';
-							$error      = ! empty( $license->error ) ? $license->error : __( 'unknown_error', 'wp-ever-accounting' );
+							$class = 'error';
+							$error = ! empty( $license->error ) ? $license->error : __( 'unknown_error', 'wp-ever-accounting' );
+							/* translators: %s: license key */
 							$messages[] = sprintf( __( 'There was an error with this license key: %1$s. Please <a href="%2$s">contact our support team</a>.', 'wp-ever-accounting' ), $error, 'https://wpeveraccounting.com/support' );
 
 							$license_status = 'license-' . $class . '-notice';
 							break;
 					}
 				} else {
-					$class      = 'error';
-					$error      = ! empty( $license->error ) ? $license->error : __( 'unknown_error', 'wp-ever-accounting' );
+					$class = 'error';
+					$error = ! empty( $license->error ) ? $license->error : __( 'unknown_error', 'wp-ever-accounting' );
+					/* translators: %s: license key */
 					$messages[] = sprintf( __( 'There was an error with this license key: %1$s. Please <a href="%2$s">contact our support team</a>.', 'wp-ever-accounting' ), $error, 'https://wpeveraccounting.com/support' );
 
 					$license_status = 'license-' . $class . '-notice';
@@ -817,7 +832,8 @@ class Settings {
 				$class       = 'error';
 				$error       = ! empty( $errors[0] ) ? $errors[0] : __( 'unknown_error', 'wp-ever-accounting' );
 				$errors_data = ! empty( $errors_data[0][0] ) ? ', ' . $errors_data[0][0] : '';
-				$messages[]  = sprintf( __( 'There was an error with this license key: %1$s%2$s. Please <a href="%3$s">contact our support team</a>.', 'wp-ever-accounting' ), $error, $errors_data, 'https://wpeveraccounting.com/support' );
+				/* translators: %s: license key */
+				$messages[] = sprintf( __( 'There was an error with this license key: %1$s%2$s. Please <a href="%3$s">contact our support team</a>.', 'wp-ever-accounting' ), $error, $errors_data, 'https://wpeveraccounting.com/support' );
 
 				$license_status = 'license-' . $class . '-notice';
 
@@ -828,8 +844,9 @@ class Settings {
 					case 'expired':
 						$class      = 'expired';
 						$messages[] = sprintf(
+							/* translators: %s: license key */
 							__( 'Your license key expired on %1$s. Please <a href="%2$s" target="_blank">renew your license key</a>.', 'wp-ever-accounting' ),
-							date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ),
+							date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ), // phpcs:ignore
 							'https://wpeveraccounting.com/checkout/?edd_license_key=' . $value . '&utm_campaign=admin&utm_source=licenses&utm_medium=expired'
 						);
 
@@ -840,6 +857,7 @@ class Settings {
 					case 'revoked':
 						$class      = 'error';
 						$messages[] = sprintf(
+							/* translators: %s: license key */
 							__( 'Your license key has been disabled. Please <a href="%s" target="_blank">contact support</a> for more information.', 'wp-ever-accounting' ),
 							'https://wpeveraccounting.com/support?utm_campaign=admin&utm_source=licenses&utm_medium=revoked'
 						);
@@ -851,6 +869,7 @@ class Settings {
 					case 'missing':
 						$class      = 'error';
 						$messages[] = sprintf(
+								/* translators: %s: license key */
 							__( 'Invalid license. Please <a href="%s" target="_blank">visit your account page</a> and verify it.', 'wp-ever-accounting' ),
 							'https://wpeveraccounting.com/my-account?utm_campaign=admin&utm_source=licenses&utm_medium=missing'
 						);
@@ -863,6 +882,7 @@ class Settings {
 					case 'site_inactive':
 						$class      = 'error';
 						$messages[] = sprintf(
+								/* translators: %s: license key */
 							__( 'Your %1$s is not active for this URL. Please <a href="%2$s" target="_blank">visit your account page</a> to manage your license key URLs.', 'wp-ever-accounting' ),
 							$field['title'],
 							'https://wpeveraccounting.com/my-account?utm_campaign=admin&utm_source=licenses&utm_medium=invalid'
@@ -873,7 +893,8 @@ class Settings {
 						break;
 
 					case 'item_name_mismatch':
-						$class      = 'error';
+						$class = 'error';
+						/* translators: %s: license key */
 						$messages[] = sprintf( __( 'This appears to be an invalid license key for %s.', 'wp-ever-accounting' ), $field['title'] );
 
 						$license_status = 'license-' . $class . '-notice';
@@ -881,7 +902,8 @@ class Settings {
 						break;
 
 					case 'no_activations_left':
-						$class      = 'error';
+						$class = 'error';
+						/* translators: %s: license key */
 						$messages[] = sprintf( __( 'Your license key has reached its activation limit. <a href="%s">View possible upgrades</a> now.', 'wp-ever-accounting' ), 'https://wpeveraccounting.com/account' );
 
 						$license_status = 'license-' . $class . '-notice';
@@ -899,7 +921,7 @@ class Settings {
 					default:
 						$class = 'valid';
 
-						$now        = current_time( 'timestamp' );
+						$now        = current_time( 'timestamp' ); // phpcs:ignore
 						$expiration = strtotime( $license->expires, $now );
 
 						if ( 'lifetime' === $license->expires ) {
@@ -911,8 +933,8 @@ class Settings {
 						} elseif ( $expiration > $now && $expiration - $now < ( DAY_IN_SECONDS * 30 ) ) {
 
 							$messages[] = sprintf(
-								__( 'Your license key expires soon! It expires on %1$s. <a href="%2$s" target="_blank">Renew your license key</a>.', 'wp-ever-accounting' ),
-								date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ),
+								__( 'Your license key expires soon! It expires on %1$s. <a href="%2$s" target="_blank">Renew your license key</a>.', 'wp-ever-accounting' ), // phpcs:ignore
+								date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ), // phpcs:ignore
 								'https://wpeveraccounting.com/checkout/?edd_license_key=' . $value . '&utm_campaign=admin&utm_source=licenses&utm_medium=renew'
 							);
 
@@ -921,8 +943,9 @@ class Settings {
 						} else {
 
 							$messages[] = sprintf(
+									/* translators: %s: license key */
 								__( 'Your license key expires on %s.', 'wp-ever-accounting' ),
-								date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) )
+								date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ) // phpcs:ignore
 							);
 
 							$license_status = 'license-expiration-date-notice';
@@ -934,8 +957,9 @@ class Settings {
 				}
 			}
 		} else {
-			$class          = 'empty';
-			$messages[]     = sprintf(
+			$class      = 'empty';
+			$messages[] = sprintf(
+					/* translators: %s: license key */
 				__( 'To receive updates, please enter your valid %s license key.', 'wp-ever-accounting' ),
 				$field['title']
 			);
@@ -943,22 +967,17 @@ class Settings {
 		}
 		wp_nonce_field( sanitize_key( $field['id'] ) . '-nonce', sanitize_key( $field['id'] ) . '-nonce' );
 		?>
-		<input type="text" class="regular-text" id="eaccounting_settings[<?php echo esc_attr( $field['id'] ); ?>]"
-			   name="eaccounting_settings[<?php echo esc_attr( $field['id'] ); ?>]" value="<?php echo $value; ?>"/>
+		<input type="text" class="regular-text" id="eaccounting_settings[<?php echo esc_attr( $field['id'] ); ?>]" name="eaccounting_settings[<?php echo esc_attr( $field['id'] ); ?>]" value="<?php echo esc_attr( $value ); ?>"/>
 		<?php if ( ! empty( $field['description'] ) ) { ?>
-			<div class="description"><?php echo $field['description']; ?></div>
+			<div class="description"><?php echo wp_kses_post( $field['description'] ); ?></div>
 		<?php } ?>
 
-		<?php if ( ! empty( $value ) && ( ( is_object( $license ) && 'valid' == $license->license ) || 'valid' == $license ) ) { ?>
-			<input type="button" class="button um_license_deactivate"
-				   id="<?php echo esc_attr( $field['id'] ); ?>_deactivate"
-				   value="<?php esc_attr_e( 'Clear License', 'wp-ever-accounting' ); ?>"/>
+		<?php if ( ! empty( $value ) && ( ( is_object( $license ) && 'valid' === $license->license ) || 'valid' === $license ) ) { // phpcs:ignore ?>
+			<input type="button" class="button um_license_deactivate" id="<?php echo esc_attr( $field['id'] ); ?>_deactivate" value="<?php esc_attr_e( 'Clear License', 'wp-ever-accounting' ); ?>"/>
 		<?php } elseif ( empty( $value ) ) { ?>
-			<input type="submit" name="submit" id="submit" class="button button-primary"
-				   value="<?php esc_attr_e( 'Activate', 'wp-ever-accounting' ); ?>"/>
+			<input type="submit" name="submit" id="submit" class="button button-primary" value="<?php esc_attr_e( 'Activate', 'wp-ever-accounting' ); ?>"/>
 		<?php } else { ?>
-			<input type="submit" name="submit" id="submit" class="button button-primary"
-				   value="<?php esc_attr_e( 'Re-Activate', 'wp-ever-accounting' ); ?>"/>
+			<input type="submit" name="submit" id="submit" class="button button-primary" value="<?php esc_attr_e( 'Re-Activate', 'wp-ever-accounting' ); ?>"/>
 			<?php
 		}
 
@@ -966,7 +985,7 @@ class Settings {
 			foreach ( $messages as $message ) {
 				?>
 				<div class="edd-license-data edd-license-<?php echo esc_attr( $class . ' ' . $license_status ); ?>">
-					<p><?php echo $message; ?></p>
+					<p><?php echo wp_kses_post( $message ); ?></p>
 				</div>
 				<?php
 			}
@@ -978,16 +997,17 @@ class Settings {
 	/**
 	 * Retrieve the array of plugin settings
 	 *
+	 * @param array $input The value inputted in the field.
+	 *
 	 * @since 1.0.2
 	 * @return array
 	 */
-	function sanitize_settings( $input = array() ) {
+	public function sanitize_settings( $input = array() ) {
 		if ( empty( $_POST['_wp_http_referer'] ) ) {
 			return $input;
 		}
 
-		parse_str( $_POST['_wp_http_referer'], $referrer );
-
+		parse_str( $_POST['_wp_http_referer'], $referrer ); // phpcs:ignore
 		$fields          = array();
 		$tabs            = array_keys( $this->settings );
 		$current_tab     = isset( $referrer['tab'] ) && in_array( $referrer['tab'], $tabs, true ) ? sanitize_title( $referrer['tab'] ) : current( $tabs );
@@ -1087,10 +1107,10 @@ class Settings {
 	public function render_settings_page() {
 		$settings        = $this->settings;
 		$tabs            = wp_list_pluck( $settings, 'title' );
-		$current_tab     = isset( $_GET['tab'] ) && array_key_exists( $_GET['tab'], $tabs ) ? sanitize_title( $_GET['tab'] ) : current( array_keys( $tabs ) );
+		$current_tab     = isset( $_GET['tab'] ) && array_key_exists( $_GET['tab'], $tabs ) ? sanitize_title( $_GET['tab'] ) : current( array_keys( $tabs ) ); // phpcs:ignore
 		$sections        = array_key_exists( 'sections', $settings[ $current_tab ] ) && ! empty( $settings[ $current_tab ]['sections'] ) ? $settings[ $current_tab ]['sections'] : array();
 		$sections        = wp_list_pluck( $sections, 'title' );
-		$current_section = isset( $_GET['section'] ) && array_key_exists( $_GET['section'], $sections ) ? sanitize_title( $_GET['section'] ) : current( array_keys( $sections ) );
+		$current_section = isset( $_GET['section'] ) && array_key_exists( $_GET['section'], $sections ) ? sanitize_title( $_GET['section'] ) : current( array_keys( $sections ) ); // phpcs:ignore
 		$menu_tabs       = apply_filters( 'eaccounting_settings_menu_tabs', $tabs );
 
 		foreach ( array_keys( $menu_tabs ) as $tab ) {
@@ -1099,9 +1119,9 @@ class Settings {
 			}
 		}
 
-		// Section have name but not in url then redirect
-		if ( ! empty( $current_section ) && empty( $_GET['section'] ) ) {
-			wp_redirect( add_query_arg( [ 'section' => $current_section ] ) );
+		// Section have name but not in url then redirect.
+		if ( ! empty( $current_section ) && empty( $_GET['section'] ) ) { // phpcs:ignore
+			wp_safe_redirect( add_query_arg( [ 'section' => $current_section ] ) );
 			exit();
 		}
 
@@ -1126,8 +1146,7 @@ class Settings {
 			<?php if ( count( $menu_tabs ) > 1 ) : ?>
 				<h2 class="nav-tab-wrapper ea-tab-wrapper">
 					<?php foreach ( $tabs as $tab_slug => $tab_title ) : ?>
-						<a href="<?php echo esc_url( admin_url( 'admin.php?page=ea-settings' . ( empty( $tab_slug ) ? '' : '&tab=' . $tab_slug ) ) ); ?>"
-						   class="nav-tab <?php echo sanitize_html_class( ( $current_tab == $tab_slug ) ? 'nav-tab-active' : '' ); ?>">
+						<a href="<?php echo esc_url( admin_url( 'admin.php?page=ea-settings' . ( empty( $tab_slug ) ? '' : '&tab=' . $tab_slug ) ) ); ?>" class="nav-tab <?php echo sanitize_html_class( ( $current_tab === $tab_slug ) ? 'nav-tab-active' : '' ); ?>">
 							<?php echo esc_html( $tab_title ); ?>
 						</a>
 					<?php endforeach; ?>
@@ -1135,7 +1154,7 @@ class Settings {
 			<?php endif; ?>
 			<?php if ( count( $sections ) > 1 ) : ?>
 				<ul class="subsubsub">
-					<?php echo implode( ' | </li><li>', $subsub_links ); ?>
+					<?php echo implode( ' | </li><li>', $subsub_links ); // phpcs:ignore ?>
 				</ul>
 			<?php endif; ?>
 			<br class="clear"/>
@@ -1161,7 +1180,7 @@ class Settings {
 
 		</div>
 		<?php
-		echo ob_get_clean();
+		echo ob_get_clean(); // phpcs:ignore
 	}
 }
 

@@ -17,7 +17,6 @@ defined( 'ABSPATH' ) || exit();
  * @package EverAccounting\Admin
  * @since   1.0.2
  */
-
 class Assets {
 	/**
 	 * Assets constructor
@@ -62,37 +61,35 @@ class Assets {
 	public function admin_scripts() {
 		$screen                = get_current_screen();
 		$screen_id             = $screen ? $screen->id : '';
-		$eaccounting_screen_id = sanitize_title( __( 'Accounting', 'wp-ever-accounting' ) );
-		// $suffix                = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-		$suffix  = '';
-		$version = eaccounting()->get_version();
+		$eaccounting_screen_id = sanitize_title( esc_html__( 'Accounting', 'wp-ever-accounting' ) );
+		$suffix                = '';
+		$version               = eaccounting()->get_version();
 
-		// 3rd parties
+		// 3rd parties.
 		wp_register_script( 'jquery-blockui', eaccounting()->plugin_url( '/dist/js/jquery.blockUI.min.js' ), array( 'jquery' ), '2.70', true );
-		// wp_register_script( 'jquery-tiptip', eaccounting()->plugin_url( '/assets/js/jquery-tiptip/jquery.tipTip.js' ), array( 'jquery' ), $version, true );
-		wp_register_script( 'jquery-select2', eaccounting()->plugin_url( '/dist/js/select2.full.js' ), array( 'jquery' ), $version );
-		wp_register_script( 'jquery-inputmask', eaccounting()->plugin_url( '/dist/js/jquery.inputmask.js' ), array( 'jquery' ), '1.0.2' );
-		wp_register_script( 'jquery-chartjs', eaccounting()->plugin_url( '/dist/js/chart.bundle.js' ), array( 'jquery' ), '1.0.2' );
-		wp_register_script( 'jquery-chartjs-labels', eaccounting()->plugin_url( '/dist/js/chartjs-plugin-labels.js' ), array( 'jquery' ), '1.0.2' );
+		wp_register_script( 'jquery-select2', eaccounting()->plugin_url( '/dist/js/select2.full.js' ), array( 'jquery' ), $version, true );
+		wp_register_script( 'jquery-inputmask', eaccounting()->plugin_url( '/dist/js/jquery.inputmask.js' ), array( 'jquery' ), '1.0.2', true );
+		wp_register_script( 'jquery-chartjs', eaccounting()->plugin_url( '/dist/js/chart.bundle.js' ), array( 'jquery' ), '1.0.2', true );
+		wp_register_script( 'jquery-chartjs-labels', eaccounting()->plugin_url( '/dist/js/chartjs-plugin-labels.js' ), array( 'jquery' ), '1.0.2', true );
 		wp_register_script( 'ea-print', eaccounting()->plugin_url( '/dist/js/printThis.js' ), array( 'jquery' ), $version, true );
 
-		// core plugins
-		wp_register_script( 'ea-select', eaccounting()->plugin_url( '/dist/js/ea-select2.js' ), array( 'jquery', 'jquery-select2' ), $version );
-		wp_register_script( 'ea-creatable', eaccounting()->plugin_url( '/dist/js/ea-creatable.js' ), array( 'jquery', 'ea-select', 'wp-util', 'ea-modal', 'jquery-blockui' ), $version );
-		wp_register_script( 'ea-modal', eaccounting()->plugin_url( '/dist/js/ea-modal.js' ), array( 'jquery' ), $version );
-		wp_register_script( 'ea-form', eaccounting()->plugin_url( '/dist/js/ea-form.js' ), array( 'jquery' ), $version );
-		wp_register_script( 'ea-exporter', eaccounting()->plugin_url( '/dist/js/ea-exporter.js' ), array( 'jquery' ), $version );
-		wp_register_script( 'ea-importer', eaccounting()->plugin_url( '/dist/js/ea-importer.js' ), array( 'jquery' ), $version );
+		// core plugins.
+		wp_register_script( 'ea-select', eaccounting()->plugin_url( '/dist/js/ea-select2.js' ), array( 'jquery', 'jquery-select2' ), $version, true );
+		wp_register_script( 'ea-creatable', eaccounting()->plugin_url( '/dist/js/ea-creatable.js' ), array( 'jquery', 'ea-select', 'wp-util', 'ea-modal', 'jquery-blockui' ), $version, true );
+		wp_register_script( 'ea-modal', eaccounting()->plugin_url( '/dist/js/ea-modal.js' ), array( 'jquery' ), $version, true );
+		wp_register_script( 'ea-form', eaccounting()->plugin_url( '/dist/js/ea-form.js' ), array( 'jquery' ), $version, true );
+		wp_register_script( 'ea-exporter', eaccounting()->plugin_url( '/dist/js/ea-exporter.js' ), array( 'jquery' ), $version, true );
+		wp_register_script( 'ea-importer', eaccounting()->plugin_url( '/dist/js/ea-importer.js' ), array( 'jquery' ), $version, true );
 
-		// core script
-		wp_register_script( 'ea-helper', eaccounting()->plugin_url( '/dist/js/ea-helper.js' ), array( 'jquery', 'jquery-blockui' ), $version );
-		wp_register_script( 'ea-overview', eaccounting()->plugin_url( '/dist/js/ea-overview.js' ), array( 'jquery', 'jquery-daterange', 'jquery-chartjs' ), $version );
-		wp_register_script( 'ea-settings', eaccounting()->plugin_url( '/dist/js/ea-settings.js' ), array( 'jquery' ), $version );
-		wp_register_script( 'ea-admin', eaccounting()->plugin_url( '/dist/js/ea-admin.js' ), array( 'jquery' ), $version );
+		// core script.
+		wp_register_script( 'ea-helper', eaccounting()->plugin_url( '/dist/js/ea-helper.js' ), array( 'jquery', 'jquery-blockui' ), $version, true );
+		wp_register_script( 'ea-overview', eaccounting()->plugin_url( '/dist/js/ea-overview.js' ), array( 'jquery', 'jquery-daterange', 'jquery-chartjs' ), $version, true );
+		wp_register_script( 'ea-settings', eaccounting()->plugin_url( '/dist/js/ea-settings.js' ), array( 'jquery' ), $version, true );
+		wp_register_script( 'ea-admin', eaccounting()->plugin_url( '/dist/js/ea-admin.js' ), array( 'jquery' ), $version, true );
 
 		// Admin scripts for Accounting pages only.
 		if ( in_array( $screen_id, eaccounting_get_screen_ids(), true ) ) {
-			// globally needed scripts
+			// globally needed scripts.
 			wp_enqueue_script( 'jquery-ui-datepicker' );
 			wp_enqueue_script( 'jquery-ui-tooltip' );
 			wp_enqueue_script( 'wp-color-picker' );
@@ -127,13 +124,14 @@ class Assets {
 				)
 			);
 
-			// export page
-			if ( eaccounting_is_admin_page( 'ea-tools' ) && isset( $_GET['tab'] ) && 'export' === $_GET['tab'] ) {
+			// export page.
+			$tab = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_STRING );
+			if ( eaccounting_is_admin_page( 'ea-tools' ) && $tab && 'export' === $tab ) {
 				wp_enqueue_script( 'ea-exporter' );
 			}
 
-			// import page
-			if ( eaccounting_is_admin_page( 'ea-tools' ) && isset( $_GET['tab'] ) && 'import' === $_GET['tab'] ) {
+			// import page.
+			if ( eaccounting_is_admin_page( 'ea-tools' ) && $tab && 'import' === $tab ) {
 				wp_localize_script(
 					'ea-importer',
 					'eaccounting_importer_i10n',
@@ -146,16 +144,15 @@ class Assets {
 				wp_enqueue_script( 'ea-importer' );
 			}
 
-			// settings page
+			// settings page.
 			if ( eaccounting_is_admin_page( 'ea-settings' ) ) {
 				wp_enqueue_media();
 				wp_enqueue_script( 'ea-settings' );
 			}
 
-			// report page
+			// report page.
 			if ( eaccounting_is_admin_page( 'ea-reports' ) ) {
 				wp_enqueue_script( 'jquery-chartjs' );
-				// wp_enqueue_script( 'jquery-chartjs-labels' );
 			}
 
 			$default_currency = eaccounting()->settings->get( 'default_currency', 'USD' );
@@ -181,11 +178,10 @@ class Assets {
 	 *
 	 * @since 1.0.0
 	 *
+	 * @param string $handle       Name of the script. Should be unique.
 	 * @param string $src          Full URL of the script, or path of the script relative to the WordPress root directory.
 	 * @param array  $dependencies Optional. An array of registered script handles this script depends on. Default empty array.
 	 * @param bool   $has_i18n     Optional. Whether to add a script translation call to this file. Default 'true'.
-	 *
-	 * @param string $handle       Name of the script. Should be unique.
 	 */
 	protected static function register_react_script( $handle, $src, $dependencies = array(), $has_i18n = true ) {
 		$relative_src = str_replace( plugins_url( '/', EACCOUNTING_PLUGIN_FILE ), '', $src );

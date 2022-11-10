@@ -13,6 +13,7 @@
 namespace EverAccounting\Admin;
 
 use EverAccounting\Models\Bill;
+use PHPUnit\Runner\Exception;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -21,7 +22,6 @@ defined( 'ABSPATH' ) || exit();
  *
  * @package EverAccounting\Admin
  */
-
 class Bill_Actions {
 	/**
 	 * Bill_Actions constructor.
@@ -30,13 +30,18 @@ class Bill_Actions {
 		add_action( 'admin_post_eaccounting_bill_action', array( $this, 'bill_action' ) );
 	}
 
+	/**
+	 * Handle bill.
+	 *
+	 * @throws \Exception Exception.
+	 */
 	public function bill_action() {
-		$action  = eaccounting_clean( wp_unslash( $_REQUEST['bill_action'] ) );
-		$bill_id = absint( wp_unslash( $_REQUEST['bill_id'] ) );
+		$action  = eaccounting_clean( wp_unslash( $_REQUEST['bill_action'] ) ); // phpcs:ignore
+		$bill_id = absint( wp_unslash( $_REQUEST['bill_id'] ) ); // phpcs:ignore
 		$bill    = eaccounting_get_bill( $bill_id );
 
-		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'ea_bill_action' ) || ! current_user_can( 'ea_manage_bill' ) || ! $bill->exists() ) {
-			wp_die( __( 'no cheating!', 'wp-ever-accounting' ) );
+		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'ea_bill_action' ) || ! current_user_can( 'ea_manage_bill' ) || ! $bill->exists() ) { // phpcs:ignore
+			wp_die( esc_html__( 'no cheating!', 'wp-ever-accounting' ) );
 		}
 		$redirect_url = add_query_arg(
 			array(
@@ -81,7 +86,7 @@ class Bill_Actions {
 	/**
 	 * View bill.
 	 *
-	 * @param $bill_id
+	 * @param int $bill_id Bill id.
 	 *
 	 * @since 1.1.0
 	 */
@@ -89,11 +94,11 @@ class Bill_Actions {
 		try {
 			$bill = new Bill( $bill_id );
 		} catch ( \Exception $e ) {
-			wp_die( $e->getMessage() );
+			wp_die( esc_html( $e->getMessage() ) );
 		}
 
 		if ( empty( $bill ) || ! $bill->exists() ) {
-			wp_die( __( 'Sorry, Bill does not exist', 'wp-ever-accounting' ) );
+			wp_die( esc_html__( 'Sorry, Bill does not exist', 'wp-ever-accounting' ) );
 		}
 
 		eaccounting_get_admin_template(
@@ -106,17 +111,16 @@ class Bill_Actions {
 	}
 
 	/**
-	 * @param $bill_id
+	 * Edit bill.
 	 *
-	 * @param $bill_id
-	 *
+	 * @param int $bill_id Bill id.
 	 * @since 1.1.0
 	 */
 	public static function edit_bill( $bill_id = null ) {
 		try {
 			$bill = new Bill( $bill_id );
 		} catch ( \Exception $e ) {
-			wp_die( $e->getMessage() );
+			wp_die( esc_html( $e->getMessage() ) );
 		}
 		eaccounting_get_admin_template(
 			'bills/edit-bill',
@@ -130,9 +134,7 @@ class Bill_Actions {
 	/**
 	 * Get bill notes.
 	 *
-	 * @param Bill $bill
-	 *
-	 * @param Bill $bill
+	 * @param Bill $bill Bill.
 	 *
 	 * @since 1.1.0
 	 */
@@ -146,7 +148,7 @@ class Bill_Actions {
 	/**
 	 * Get bill payments.
 	 *
-	 * @param Bill $bill
+	 * @param Bill $bill Bill.
 	 *
 	 * @since 1.1.0
 	 */

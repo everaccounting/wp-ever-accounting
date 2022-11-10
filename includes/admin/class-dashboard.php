@@ -71,12 +71,12 @@ class Dashboard {
 			<div class="ea-widget-card__content">
 				<div class="ea-widget-card__primary">
 					<span class="ea-widget-card__title"><?php esc_html_e( 'Total Sales', 'wp-ever-accounting' ); ?></span>
-					<span class="ea-widget-card__amount"><?php echo eaccounting_format_price( $total_income ); ?></span>
+					<span class="ea-widget-card__amount"><?php echo esc_html( eaccounting_format_price( $total_income ) ); ?></span>
 				</div>
 
 				<div class="ea-widget-card__secondary">
 					<span class="ea-widget-card__title"><?php esc_html_e( 'Receivable', 'wp-ever-accounting' ); ?></span>
-					<span class="ea-widget-card__amount"><?php echo eaccounting_format_price( $total_receivable ); ?></span>
+					<span class="ea-widget-card__amount"><?php echo esc_html( eaccounting_format_price( $total_receivable ) ); ?></span>
 				</div>
 			</div>
 		</div>
@@ -99,12 +99,12 @@ class Dashboard {
 			<div class="ea-widget-card__content">
 				<div class="ea-widget-card__primary">
 					<span class="ea-widget-card__title"><?php esc_html_e( 'Total Expenses', 'wp-ever-accounting' ); ?></span>
-					<span class="ea-widget-card__amount"><?php echo eaccounting_format_price( $total_expense ); ?></span>
+					<span class="ea-widget-card__amount"><?php echo esc_html( eaccounting_format_price( $total_expense ) ); ?></span>
 				</div>
 
 				<div class="ea-widget-card__secondary">
 					<span class="ea-widget-card__title"><?php esc_html_e( 'Payable', 'wp-ever-accounting' ); ?></span>
-					<span class="ea-widget-card__amount"><?php echo eaccounting_format_price( $total_payable ); ?></span>
+					<span class="ea-widget-card__amount"><?php echo esc_html( eaccounting_format_price( $total_payable ) ); ?></span>
 				</div>
 			</div>
 		</div>
@@ -127,12 +127,12 @@ class Dashboard {
 			<div class="ea-widget-card__content">
 				<div class="ea-widget-card__primary">
 					<span class="ea-widget-card__title"><?php esc_html_e( 'Total Profit', 'wp-ever-accounting' ); ?></span>
-					<span class="ea-widget-card__amount"><?php echo eaccounting_format_price( $total_profit ); ?></span>
+					<span class="ea-widget-card__amount"><?php echo esc_html( eaccounting_format_price( $total_profit ) ); ?></span>
 				</div>
 
 				<div class="ea-widget-card__secondary">
 					<span class="ea-widget-card__title"><?php esc_html_e( 'Upcoming', 'wp-ever-accounting' ); ?></span>
-					<span class="ea-widget-card__amount"><?php echo eaccounting_format_price( $total_upcoming ); ?></span>
+					<span class="ea-widget-card__amount"><?php echo esc_html( eaccounting_format_price( $total_upcoming ) ); ?></span>
 				</div>
 			</div>
 		</div>
@@ -161,11 +161,11 @@ class Dashboard {
 							{
 								type: 'line',
 								data: {
-									'labels': <?php echo json_encode( array_values( $report['dates'] ) ); ?>,
+									'labels': <?php echo wp_json_encode( array_values( $report['dates'] ) ); ?>,
 									'datasets': [
 										{
-											label: '<?php echo __( 'Income', 'wp-ever-accounting' ); ?>',
-											data: <?php echo json_encode( array_values( $report['incomes'] ) ); ?>,
+											label: '<?php echo esc_html__( 'Income', 'wp-ever-accounting' ); ?>',
+											data: <?php echo wp_json_encode( array_values( $report['incomes'] ) ); ?>,
 											backgroundColor: 'rgba(54, 68, 255, 0.1)',
 											borderColor: 'rgb(54, 68, 255)',
 											borderWidth: 4,
@@ -173,8 +173,8 @@ class Dashboard {
 											pointBackgroundColor: 'rgb(54, 68, 255)'
 										},
 										{
-											label: '<?php echo __( 'Expense', 'wp-ever-accounting' ); ?>',
-											data: <?php echo json_encode( array_values( $report['expenses'] ) ); ?>,
+											label: '<?php echo esc_html__( 'Expense', 'wp-ever-accounting' ); ?>',
+											data: <?php echo wp_json_encode( array_values( $report['expenses'] ) ); ?>,
 											backgroundColor: 'rgba(242, 56, 90, 0.1)',
 											borderColor: 'rgb(242, 56, 90)',
 											borderWidth: 4,
@@ -182,8 +182,8 @@ class Dashboard {
 											pointBackgroundColor: 'rgb(242, 56, 90)'
 										},
 										{
-											label: '<?php echo __( 'Profit', 'wp-ever-accounting' ); ?>',
-											data: <?php echo json_encode( array_values( $report['profits'] ) ); ?>,
+											label: '<?php echo esc_html__( 'Profit', 'wp-ever-accounting' ); ?>',
+											data: <?php echo wp_json_encode( array_values( $report['profits'] ) ); ?>,
 											backgroundColor: 'rgba(0, 198, 137, 0.1)',
 											borderColor: 'rgb(0, 198, 137)',
 											borderWidth: 4,
@@ -275,7 +275,7 @@ class Dashboard {
 			$start_date,
 			$end_date
 		);
-		$results    = $wpdb->get_results( $sql );
+		$results    = $wpdb->get_results( $sql ); // phpcs:ignore
 		$data       = array();
 		foreach ( $results as $result ) {
 			$amount = eaccounting_price_to_default( $result->amount, $result->currency_code, $result->currency_rate );
@@ -299,7 +299,7 @@ class Dashboard {
 		$total = array_sum( wp_list_pluck( $rest, 'amount' ) );
 		$chart->push(
 			array(
-				'name'   => __( 'Others', 'wp-ever-accounting' ),
+				'name'   => esc_html__( 'Others', 'wp-ever-accounting' ),
 				'color'  => eaccounting_get_random_color(),
 				'amount' => (int) $total,
 			)
@@ -315,11 +315,11 @@ class Dashboard {
 		<script>
 			window.addEventListener('DOMContentLoaded', function () {
 				var data = {
-					labels: <?php echo json_encode( array_values( $labels ) ); ?>,
+					labels: <?php echo wp_json_encode( array_values( $labels ) ); ?>,
 					datasets: [
 						{
-							data: <?php echo json_encode( array_values( $amounts ) ); ?>,
-							backgroundColor: <?php echo json_encode( array_values( $colors ) ); ?>
+							data: <?php echo wp_json_encode( array_values( $amounts ) ); ?>,
+							backgroundColor: <?php echo wp_json_encode( array_values( $colors ) ); ?>
 						}
 					]
 				};
@@ -370,7 +370,7 @@ class Dashboard {
 			$start_date,
 			$end_date
 		);
-		$results    = $wpdb->get_results( $sql );
+		$results    = $wpdb->get_results( $sql ); // phpcs:ignore
 		$data       = array();
 		foreach ( $results as $result ) {
 			$amount = eaccounting_price_to_default( $result->amount, $result->currency_code, $result->currency_rate );
@@ -394,7 +394,7 @@ class Dashboard {
 		$total = array_sum( wp_list_pluck( $rest, 'amount' ) );
 		$chart->push(
 			array(
-				'name'   => __( 'Others', 'wp-ever-accounting' ),
+				'name'   => esc_html__( 'Others', 'wp-ever-accounting' ),
 				'color'  => eaccounting_get_random_color(),
 				'amount' => (int) $total,
 			)
@@ -410,11 +410,11 @@ class Dashboard {
 		<script>
 			window.addEventListener('DOMContentLoaded', function () {
 				var data = {
-					labels: <?php echo json_encode( array_values( $labels ) ); ?>,
+					labels: <?php echo wp_json_encode( array_values( $labels ) ); ?>,
 					datasets: [
 						{
-							data: <?php echo json_encode( array_values( $amounts ) ); ?>,
-							backgroundColor: <?php echo json_encode( array_values( $colors ) ); ?>
+							data: <?php echo wp_json_encode( array_values( $amounts ) ); ?>,
+							backgroundColor: <?php echo wp_json_encode( array_values( $colors ) ); ?>
 						}
 					]
 				};
@@ -451,6 +451,7 @@ class Dashboard {
 	 */
 	public static function render_latest_incomes() {
 		global $wpdb;
+		// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
 		$incomes = $wpdb->get_results(
 			$wpdb->prepare(
 				"
@@ -466,11 +467,12 @@ class Dashboard {
 				5
 			)
 		);
+		// phpcs:enable WordPress.DB.PreparedSQL.NotPrepared
 
 		if ( empty( $incomes ) ) {
 			echo sprintf(
 				'<p class="ea-card__inside">%s</p>',
-				__( 'There is no income records.', 'wp-ever-accounting' )
+				esc_html__( 'There is no income records.', 'wp-ever-accounting' )
 			);
 
 			return;
@@ -479,9 +481,9 @@ class Dashboard {
 		<table class="ea-table">
 			<thead>
 			<tr>
-				<th><?php _e( 'Date', 'wp-ever-accounting' ); ?></th>
-				<th><?php _e( 'Category', 'wp-ever-accounting' ); ?></th>
-				<th><?php _e( 'Amount', 'wp-ever-accounting' ); ?></th>
+				<th><?php esc_html_e( 'Date', 'wp-ever-accounting' ); ?></th>
+				<th><?php esc_html_e( 'Category', 'wp-ever-accounting' ); ?></th>
+				<th><?php esc_html_e( 'Amount', 'wp-ever-accounting' ); ?></th>
 			</tr>
 			</thead>
 			<tbody>
@@ -489,7 +491,7 @@ class Dashboard {
 				<tr>
 					<td><?php echo esc_html( $income->payment_date ); ?></td>
 					<td><?php echo esc_html( $income->name ); ?></td>
-					<td><?php echo eaccounting_format_price( $income->amount, $income->currency_code ); ?></td>
+					<td><?php echo esc_html( eaccounting_format_price( $income->amount, $income->currency_code ) ); ?></td>
 				</tr>
 			<?php endforeach; ?>
 			</tbody>
@@ -504,6 +506,7 @@ class Dashboard {
 	 */
 	public static function render_latest_expenses() {
 		global $wpdb;
+		// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
 		$expenses = $wpdb->get_results(
 			$wpdb->prepare(
 				"
@@ -519,10 +522,11 @@ class Dashboard {
 				5
 			)
 		);
+		// phpcs:enable WordPress.DB.PreparedSQL.NotPrepared
 		if ( empty( $expenses ) ) {
 			echo sprintf(
 				'<p class="ea-card__inside">%s</p>',
-				__( 'There is no expense records.', 'wp-ever-accounting' )
+				esc_html__( 'There is no expense records.', 'wp-ever-accounting' )
 			);
 
 			return;
@@ -532,9 +536,9 @@ class Dashboard {
 		<table class="ea-table">
 			<thead>
 			<tr>
-				<th><?php _e( 'Date', 'wp-ever-accounting' ); ?></th>
-				<th><?php _e( 'Category', 'wp-ever-accounting' ); ?></th>
-				<th><?php _e( 'Amount', 'wp-ever-accounting' ); ?></th>
+				<th><?php esc_html_e( 'Date', 'wp-ever-accounting' ); ?></th>
+				<th><?php esc_html_e( 'Category', 'wp-ever-accounting' ); ?></th>
+				<th><?php esc_html_e( 'Amount', 'wp-ever-accounting' ); ?></th>
 			</tr>
 			</thead>
 			<tbody>
@@ -542,7 +546,7 @@ class Dashboard {
 				<tr>
 					<td><?php echo esc_html( $expense->payment_date ); ?></td>
 					<td><?php echo esc_html( $expense->name ); ?></td>
-					<td><?php echo eaccounting_format_price( $expense->amount, $expense->currency_code ); ?></td>
+					<td><?php echo esc_html( eaccounting_format_price( $expense->amount, $expense->currency_code ) ); ?></td>
 				</tr>
 			<?php endforeach; ?>
 			</tbody>
@@ -580,7 +584,7 @@ class Dashboard {
 		if ( empty( $accounts ) ) {
 			echo sprintf(
 				'<p class="ea-card__inside">%s</p>',
-				__( 'There is not accounts.', 'wp-ever-accounting' )
+				esc_html__( 'There is not accounts.', 'wp-ever-accounting' )
 			);
 
 			return;
@@ -590,8 +594,8 @@ class Dashboard {
 		<table class="ea-table">
 			<thead>
 			<tr>
-				<th><?php _e( 'Account', 'wp-ever-accounting' ); ?></th>
-				<th><?php _e( 'Balance', 'wp-ever-accounting' ); ?></th>
+				<th><?php esc_html_e( 'Account', 'wp-ever-accounting' ); ?></th>
+				<th><?php esc_html_e( 'Balance', 'wp-ever-accounting' ); ?></th>
 			</tr>
 			</thead>
 			<tbody>

@@ -15,9 +15,9 @@ require EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-transaction-lis
 $transactions_table = new EverAccounting_Transaction_List_Table();
 $transactions_table->prepare_items();
 ?>
-<h1 class="wp-heading-inline"><?php _e( 'Transactions', 'wp-ever-accounting' ); ?></h1>
+<h1 class="wp-heading-inline"><?php esc_html_e( 'Transactions', 'wp-ever-accounting' ); ?></h1>
 <?php do_action( 'eaccounting_transactions_table_top' ); ?>
-<form id="ea-transactions-table" method="get" action="<?php echo admin_url( 'admin.php' ); ?>">
+<form id="ea-transactions-table" method="get" action="<?php echo esc_url( admin_url( 'admin.php' ) ); ?>">
 	<?php
 	$transactions_table->views();
 	$transactions_table->display();

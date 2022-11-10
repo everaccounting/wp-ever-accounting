@@ -4,10 +4,10 @@
  *
  * Extended by reports to show charts and stats in admin.
  *
- * @author      EverAccounting
+ * @version     1.1.0
  * @category    Admin
  * @package     EverAccounting\Admin
- * @version     1.1.0
+ * @author      EverAccounting
  */
 
 namespace EverAccounting\Admin\Report;
@@ -21,15 +21,17 @@ defined( 'ABSPATH' ) || exit();
  *
  * @package EverAccounting\Admin\Report
  */
-
 class Report {
 	/**
-	 * @param array $args
+	 * Get report.
+	 *
+	 * @param array $args Report arguments.
 	 * @since 1.1.0
 	 *
 	 * @return array|mixed|void
 	 */
-	public function get_report( $args = array() ) {}
+	public function get_report( $args = array() ) {
+	}
 
 	/**
 	 * Output report.
@@ -37,14 +39,15 @@ class Report {
 	 * @since 1.1.0
 	 * @return void
 	 */
-	public function output() {}
+	public function output() {
+	}
 
 	/**
 	 * Get start date.
 	 *
-	 * @since 1.1.0
+	 * @param string $year  Year.
 	 *
-	 * @param $year
+	 * @since 1.1.0
 	 *
 	 * @return string
 	 */
@@ -59,11 +62,11 @@ class Report {
 	/**
 	 * Get end date.
 	 *
+	 * @param string $year Year.
+	 *
 	 * @since 1.1.0
 	 *
-	 * @param $year
-	 *
-	 * @throws \Exception
+	 * @throws \Exception Exception.
 	 * @return string
 	 */
 	public function get_end_date( $year = null ) {
@@ -78,14 +81,13 @@ class Report {
 	/**
 	 * Get months in the financial period.
 	 *
+	 * @param string $start_date Start date.
+	 * @param  string $end_date End date.
+	 * @param string $interval Period.
+	 * @param string $date_key Date key.
+	 * @param string $date_value Date value.
+	 *
 	 * @since 1.1.0
-	 *
-	 * @param        $start_date
-	 *
-	 * @param        $end_date
-	 * @param string     $period
-	 * @param string     $date_key
-	 * @param string     $date_value
 	 *
 	 * @return array
 	 */
@@ -106,13 +108,13 @@ class Report {
 	/**
 	 * Get range sql.
 	 *
+	 * @param  string $column    Column.
+	 * @param string $start_date Start date.
+	 * @param string $end_date    End date.
+	 *
 	 * @since 1.1.0
 	 *
-	 * @param null   $start_date
-	 * @param null   $end_date
-	 * @param      $column
-	 *
-	 * @throws \Exception
+	 * @throws \Exception Exception.
 	 * @return array
 	 */
 	public function get_range_sql( $column, $start_date = null, $end_date = null ) {
@@ -133,7 +135,7 @@ class Report {
 			case $period < 24:
 				$sql = array(
 					"DATE_FORMAT(`$column`, '%Y-%m')",
-					$wpdb->prepare( "$date BETWEEN %s AND %s", $start_date, $end_date ),
+					$wpdb->prepare( "$date BETWEEN %s AND %s", $start_date, $end_date ), // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 				);
 				break;
 		}
@@ -145,15 +147,15 @@ class Report {
 	/**
 	 * Clear cache and redirect .
 	 *
-	 * @param $key
+	 * @param string $key Cache key.
+	 *
 	 * @since 1.1.0
 	 */
 	public function maybe_clear_cache( $key ) {
-		if ( ! empty( $_GET['refresh_report'] )
-			 && ! empty( $_GET['_wpnonce'] )
-			 && wp_verify_nonce( $_GET['_wpnonce'], 'refresh_report' ) ) {
+		$nonce = isset( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ) : ''; //phpcs:ignore
+		if ( ! empty( $_GET['refresh_report'] ) && ! empty( $nonce ) && wp_verify_nonce( $nonce, 'refresh_report' ) ) {
 			$this->delete_cache( $key );
-			wp_redirect( remove_query_arg( array( 'refresh_report', '_wpnonce' ) ) );
+			wp_safe_redirect( remove_query_arg( array( 'refresh_report', '_wpnonce' ) ) );
 			exit();
 		}
 	}
@@ -161,15 +163,15 @@ class Report {
 	/**
 	 * Generate cache key.
 	 *
-	 * @since 1.1.0
+	 * @param string $key Cache key.
 	 *
-	 * @param $key
+	 * @since 1.1.0
 	 *
 	 * @return string
 	 */
 	public function generate_cache_key( $key ) {
 		if ( ! is_string( $key ) ) {
-			$key = serialize( $key ) . get_called_class();
+			$key = maybe_serialize( $key ) . get_called_class();
 		}
 
 		return 'eaccounting_cache_report_' . $key;
@@ -178,13 +180,13 @@ class Report {
 	/**
 	 * Add cache key.
 	 *
+	 * @param string $key Cache key.
+	 * @param string $value Cache value.
+	 * @param int    $minute Cache expire.
+	 *
 	 * @since 1.1.0
 	 *
-	 * @param     $value
-	 * @param int   $expire
-	 * @param     $key
-	 *
-	 * @return bool
+	 * @return bool True on success, false on failure.
 	 */
 	public function set_cache( $key, $value, $minute = 5 ) {
 		if ( ! is_string( $key ) ) {
@@ -197,9 +199,9 @@ class Report {
 	/**
 	 * Get cache.
 	 *
-	 * @since 1.1.0
+	 * @param string $key Cache key.
 	 *
-	 * @param $key
+	 * @since 1.1.0
 	 *
 	 * @return mixed
 	 */
@@ -214,9 +216,9 @@ class Report {
 	/**
 	 * Delete report cache.
 	 *
-	 * @since 1.1.0
+	 * @param string $key Cache key.
 	 *
-	 * @param $key
+	 * @since 1.1.0
 	 *
 	 * @return bool|void
 	 */

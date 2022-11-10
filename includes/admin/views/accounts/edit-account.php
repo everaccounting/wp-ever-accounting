@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit();
 try {
 	$account = new \EverAccounting\Models\Account( $account_id );
 } catch ( Exception $e ) {
-	wp_die( $e->getMessage() );
+	wp_die( esc_html( $e->getMessage() ) );
 }
 
 $title = $account->exists() ? __( 'Update Account', 'wp-ever-accounting' ) : __( 'Add Account', 'wp-ever-accounting' );
@@ -29,7 +29,7 @@ $title = $account->exists() ? __( 'Update Account', 'wp-ever-accounting' ) : __(
 					<?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?>
 				</a>
 			<?php else : ?>
-				<a href="<?php echo remove_query_arg( array( 'action', 'id' ) ); ?>" class="page-title-action"><?php esc_html_e( 'View All', 'wp-ever-accounting' ); ?></a>
+				<a href="<?php echo esc_url( remove_query_arg( array( 'action', 'id' ) ) ); ?>" class="page-title-action"><?php esc_html_e( 'View All', 'wp-ever-accounting' ); ?></a>
 			<?php endif; ?>
 		</div>
 	</div>
@@ -38,7 +38,7 @@ $title = $account->exists() ? __( 'Update Account', 'wp-ever-accounting' ) : __(
 	<form id="ea-account-form" method="post">
 		<div class="ea-card">
 			<div class="ea-card__header">
-				<h3 class="ea-card__title"><?php echo $title; ?></h3>
+				<h3 class="ea-card__title"><?php echo esc_html( $title ); ?></h3>
 				<?php if ( $account->exists() ) : ?>
 					<div>
 						<a href="<?php echo esc_url( add_query_arg( 'action', 'view' ) ); ?>" class="button-secondary">
@@ -156,10 +156,10 @@ $title = $account->exists() ? __( 'Update Account', 'wp-ever-accounting' ) : __(
 					<p class="description"><span class="dashicons dashicons-info"></span>
 						<?php
 						echo sprintf(
-						/* translators: %s date and %s name */
+							/* translators: %s date and %s name */
 							esc_html__( 'The account was created at %1$s by %2$s', 'wp-ever-accounting' ),
-							eaccounting_date( $account->get_date_created(), 'F m, Y H:i a' ),
-							eaccounting_get_full_name( $account->get_creator_id() )
+							eaccounting_date( $account->get_date_created(), 'F m, Y H:i a' ), // phpcs:ignore
+							eaccounting_get_full_name( $account->get_creator_id() ) // phpcs:ignore
 						);
 						?>
 					</p>

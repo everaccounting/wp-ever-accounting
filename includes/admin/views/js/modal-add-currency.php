@@ -6,6 +6,7 @@
  * @subpackage  Admin/Js Templates
  * @package     EverAccounting
  */
+
 defined( 'ABSPATH' ) || exit();
 $currencies = eaccounting_get_global_currencies();
 $options    = array();

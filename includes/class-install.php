@@ -118,17 +118,17 @@ class Install {
 	public static function cron_schedules( $schedules ) {
 		$schedules['monthly'] = array(
 			'interval' => 2635200,
-			'display'  => __( 'Monthly', 'wp-ever-accounting' ),
+			'display'  => esc_html__( 'Monthly', 'wp-ever-accounting' ),
 		);
 
 		$schedules['fifteendays'] = array(
 			'interval' => 1296000,
-			'display'  => __( 'Every 15 Days', 'wp-ever-accounting' ),
+			'display'  => esc_html__( 'Every 15 Days', 'wp-ever-accounting' ),
 		);
 
 		$schedules['weekly'] = array(
 			'interval' => 604800,
-			'display'  => __( 'Once Weekly', 'wp-ever-accounting' ),
+			'display'  => esc_html__( 'Once Weekly', 'wp-ever-accounting' ),
 		);
 
 		return $schedules;
@@ -235,7 +235,7 @@ class Install {
 		if ( ! eaccounting_get_categories( array( 'count_total' => true ) ) ) {
 			eaccounting_insert_category(
 				array(
-					'name'    => __( 'Deposit', 'wp-ever-accounting' ),
+					'name'    => esc_html__( 'Deposit', 'wp-ever-accounting' ),
 					'type'    => 'income',
 					'enabled' => '1',
 				)
@@ -243,7 +243,7 @@ class Install {
 
 			eaccounting_insert_category(
 				array(
-					'name'    => __( 'Other', 'wp-ever-accounting' ),
+					'name'    => esc_html__( 'Other', 'wp-ever-accounting' ),
 					'type'    => 'expense',
 					'enabled' => '1',
 				)
@@ -251,7 +251,7 @@ class Install {
 
 			eaccounting_insert_category(
 				array(
-					'name'    => __( 'Sales', 'wp-ever-accounting' ),
+					'name'    => esc_html__( 'Sales', 'wp-ever-accounting' ),
 					'type'    => 'income',
 					'enabled' => '1',
 				)
@@ -262,7 +262,7 @@ class Install {
 		if ( ! eaccounting_get_currencies(
 			array(
 				'count_total' => true,
-				'search'      => __(
+				'search'      => esc_html__(
 					'Transfer',
 					'wp-ever-accounting'
 				),
@@ -270,7 +270,7 @@ class Install {
 		) ) {
 			eaccounting_insert_category(
 				array(
-					'name'    => __( 'Transfer', 'wp-ever-accounting' ),
+					'name'    => esc_html__( 'Transfer', 'wp-ever-accounting' ),
 					'type'    => 'other',
 					'enabled' => '1',
 				)
@@ -381,15 +381,15 @@ class Install {
 			'invoice_prefix'         => 'INV-',
 			'invoice_digit'          => '5',
 			'invoice_due'            => '15',
-			'invoice_item_label'     => __( 'Item', 'wp-ever-accounting' ),
-			'invoice_price_label'    => __( 'Price', 'wp-ever-accounting' ),
-			'invoice_quantity_label' => __( 'Quantity', 'wp-ever-accounting' ),
+			'invoice_item_label'     => esc_html__( 'Item', 'wp-ever-accounting' ),
+			'invoice_price_label'    => esc_html__( 'Price', 'wp-ever-accounting' ),
+			'invoice_quantity_label' => esc_html__( 'Quantity', 'wp-ever-accounting' ),
 			'bill_prefix'            => 'BILL-',
 			'bill_digit'             => '5',
 			'bill_due'               => '15',
-			'bill_item_label'        => __( 'Item', 'wp-ever-accounting' ),
-			'bill_price_label'       => __( 'Price', 'wp-ever-accounting' ),
-			'bill_quantity_label'    => __( 'Quantity', 'wp-ever-accounting' ),
+			'bill_item_label'        => esc_html__( 'Item', 'wp-ever-accounting' ),
+			'bill_price_label'       => esc_html__( 'Price', 'wp-ever-accounting' ),
+			'bill_quantity_label'    => esc_html__( 'Quantity', 'wp-ever-accounting' ),
 		);
 
 		foreach ( $defaults as $key => $value ) {

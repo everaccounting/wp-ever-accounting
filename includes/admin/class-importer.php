@@ -32,6 +32,7 @@ class Importer {
 	 * @since 1.0.2
 	 */
 	public static function do_ajax_import() {
+		check_admin_referer( 'eaccounting_do_ajax_import' );
 		if ( ! isset( $_REQUEST['type'] ) ) {
 			wp_send_json_error(
 				array(
@@ -40,25 +41,26 @@ class Importer {
 			);
 		}
 		$params = array(
-			'delimiter'       => ! empty( $_REQUEST['delimiter'] ) ? eaccounting_clean( wp_unslash( $_REQUEST['delimiter'] ) ) : ',',
+			'delimiter'       => ! empty( $_REQUEST['delimiter'] ) ? sanitize_key( wp_unslash( $_REQUEST['delimiter'] ) ) : ',',
 			'position'        => isset( $_REQUEST['position'] ) ? absint( $_REQUEST['position'] ) : 0,
-			'mapping'         => isset( $_REQUEST['mapping'] ) ? (array) wp_unslash( $_REQUEST['mapping'] ) : array(),
-			'update_existing' => isset( $_REQUEST['update_existing'] ) ? (bool) $_REQUEST['update_existing'] : false,
+			'mapping'         => isset( $_REQUEST['mapping'] ) ? (array) wp_unslash( $_REQUEST['mapping'] ) : array(), // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			'update_existing' => isset( $_REQUEST['update_existing'] ) ? (bool) $_REQUEST['update_existing'] : false, // phpcs:ignore
 			'limit'           => apply_filters( 'eaccounting_import_batch_size', 30 ),
 			'parse'           => true,
 		);
 
-		$step = isset( $_REQUEST['step'] ) ? eaccounting_clean( $_REQUEST['step'] ) : '';
+		$step = isset( $_REQUEST['step'] ) ? eaccounting_clean( $_REQUEST['step'] ) : ''; // phpcs:ignore
 		$type = sanitize_key( $_REQUEST['type'] );
-		$file = ! empty( $_REQUEST['file'] ) ? eaccounting_clean( wp_unslash( $_REQUEST['file'] ) ) : '';
+		$file = ! empty( $_REQUEST['file'] ) ? eaccounting_clean( wp_unslash( $_REQUEST['file'] ) ) : ''; // phpcs:ignore
 
-		// verify nonce
+		// verify nonce.
 		Ajax::verify_nonce( "{$type}_importer_nonce" );
 
-		if ( empty( $type ) || false === $batch = eaccounting()->utils->batch->get( $type ) ) {
+		if ( empty( $type ) || false === $batch = eaccounting()->utils->batch->get( $type ) ) { // phpcs:ignore
 			wp_send_json_error(
 				array(
-					'message' => sprintf( __( '%s is an invalid import type.', 'wp-ever-accounting' ), esc_html( $type ) ),
+					/* translators: %s: import type */
+					'message' => sprintf( esc_html__( '%s is an invalid import type.', 'wp-ever-accounting' ), esc_html( $type ) ),
 				)
 			);
 		}
@@ -69,7 +71,8 @@ class Importer {
 		if ( empty( $class_file ) ) {
 			wp_send_json_error(
 				array(
-					'message' => sprintf( __( 'An invalid file path is registered for the %1$s handler.', 'wp-ever-accounting' ), "<code>{$type}</code>" ),
+					/* translators: %s: import type */
+					'message' => sprintf( esc_html__( 'An invalid file path is registered for the %1$s handler.', 'wp-ever-accounting' ), "<code>{$type}</code>" ),
 				)
 			);
 		}
@@ -80,7 +83,8 @@ class Importer {
 			wp_send_json_error(
 				array(
 					'message' => sprintf(
-						__( '%1$s is an invalid importer handler for the %2$s . Please try again.', 'wp-ever-accounting' ),
+						/* translators: %1$s: import type, %2$s: class name */
+						esc_html__( '%1$s is an invalid importer handler for the %2$s . Please try again.', 'wp-ever-accounting' ),
 						"<code>{$class}</code>",
 						"<code>{$type}</code>"
 					),
@@ -92,7 +96,7 @@ class Importer {
 			wp_send_json_error(
 				array(
 					'message' => __( 'Missing import file. Please provide an import file.', 'wp-ever-accounting' ),
-					'request' => $_REQUEST,
+					'request' => wp_unslash( $_REQUEST ),
 				)
 			);
 		}
@@ -113,16 +117,16 @@ class Importer {
 				'application/vnd.msexcel',
 			);
 
-			if ( empty( $_FILES['upload']['type'] ) || ! in_array( strtolower( $_FILES['upload']['type'] ), $accepted_mime_types ) ) {
+			if ( empty( $_FILES['upload']['type'] ) || ! in_array( strtolower( $_FILES['upload']['type'] ), $accepted_mime_types ) ) { // phpcs:ignore
 				wp_send_json_error(
 					array(
 						'message' => __( 'The file you uploaded does not appear to be a CSV file.', 'wp-ever-accounting' ),
-						'request' => $_REQUEST,
+						'request' => wp_unslash( $_REQUEST ),
 					)
 				);
 			}
 
-			if ( ! file_exists( $_FILES['upload']['tmp_name'] ) ) {
+			if ( ! file_exists( $_FILES['upload']['tmp_name'] ) ) { // phpcs:ignore
 				wp_send_json_error(
 					array(
 						'message' => __( 'Something went wrong during the upload process, please try again.', 'wp-ever-accounting' ),
@@ -131,8 +135,8 @@ class Importer {
 				);
 			}
 
-			// Let WordPress import the file. We will remove it after import is complete
-			$import_file = wp_handle_upload( $_FILES['upload'], array( 'test_form' => false ) );
+			// Let WordPress import the file. We will remove it after import is complete.
+			$import_file = wp_handle_upload( $_FILES['upload'], array( 'test_form' => false ) ); // phpcs:ignore
 			if ( ! empty( $import_file['error'] ) ) {
 				wp_send_json_error(
 					array(
@@ -149,7 +153,7 @@ class Importer {
 			wp_send_json_error(
 				array(
 					'message' => __( 'Missing import file. Please provide an import file.', 'wp-ever-accounting' ),
-					'request' => $_REQUEST,
+					'request' => wp_unslash( $_REQUEST ),
 				)
 			);
 		}
@@ -166,7 +170,7 @@ class Importer {
 			wp_send_json_error( array( 'message' => __( 'The file is empty or using a different encoding than UTF-8, please try again with a new file.', 'wp-ever-accounting' ) ) );
 		}
 
-		if ( $step == 'upload' ) {
+		if ( 'upload' === $step ) {
 			wp_send_json_success(
 				array(
 					'position' => 0,
@@ -206,7 +210,8 @@ class Importer {
 					'imported'   => (int) $imported,
 					'skipped'    => (int) $skipped,
 					'file'       => $file,
-					'message'    => esc_html__( sprintf( '%d items imported and %d items skipped.', $imported, $skipped ), 'wp-ever-accounting' ),
+					/* translators: %d: number of imported items */
+					'message'    => esc_html__( sprintf( '%d items imported and %d items skipped.', $imported, $skipped ), 'wp-ever-accounting' ), // phpcs:ignore
 				)
 			);
 		} else {

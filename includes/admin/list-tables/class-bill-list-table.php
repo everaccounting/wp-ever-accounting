@@ -61,8 +61,8 @@ class EverAccounting_Bill_List_Table extends EverAccounting_List_Table {
 	/**
 	 * Check if there is contents in the database.
 	 *
-	 * @return bool
 	 * @since 1.1.0
+	 * @return bool
 	 */
 	public function is_empty() {
 		global $wpdb;
@@ -73,17 +73,26 @@ class EverAccounting_Bill_List_Table extends EverAccounting_List_Table {
 	/**
 	 * Render blank state.
 	 *
-	 * @return void
 	 * @since 1.1.0
+	 * @return void
 	 */
 	protected function render_blank_state() {
+		$url = eaccounting_admin_url(
+			array(
+				'page'   => 'ea-expenses',
+				'tab'    => 'bills',
+				'action' => 'edit',
+			)
+		);
 		?>
 		<div class="ea-empty-table">
 			<p class="ea-empty-table__message">
 				<?php echo esc_html__( 'Create and manage bills so your finances are always accurate and healthy. Print and share bill with your vendor. Bill also support tax calculation & discount.', 'wp-ever-accounting' ); ?>
 			</p>
-			<a href="<?php echo esc_url( eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'bills', 'action' => 'edit', ) ) ); //phpcs:ignore ?>" class="button-primary ea-empty-table__cta"><?php _e( 'Add Bills', 'wp-ever-accounting' ); ?></a>
-			<a href="https://wpeveraccounting.com/docs/general/add-bills/?utm_source=listtable&utm_medium=link&utm_campaign=admin" class="button-secondary ea-empty-table__cta" target="_blank"><?php _e( 'Learn More', 'wp-ever-accounting' ); ?></a>
+			<a href="<?php echo esc_url( $url ); ?>" class="button-primary ea-empty-table__cta"><?php esc_html_e( 'Add Bills', 'wp-ever-accounting' ); ?></a>
+			<a href="https://wpeveraccounting.com/docs/general/add-bills/?utm_source=listtable&utm_medium=link&utm_campaign=admin" class="button-secondary ea-empty-table__cta" target="_blank">
+				<?php esc_html_e( 'Learn More', 'wp-ever-accounting' ); ?>
+			</a>
 		</div>
 		<?php
 	}
@@ -91,26 +100,26 @@ class EverAccounting_Bill_List_Table extends EverAccounting_List_Table {
 	/**
 	 * Define which columns to show on this screen.
 	 *
-	 * @return array
 	 * @since 1.1.0
+	 * @return array
 	 */
 	public function define_columns() {
 		return array(
 			'cb'          => '<input type="checkbox" />',
-			'bill_number' => __( 'Number', 'wp-ever-accounting' ),
-			'total'       => __( 'Total', 'wp-ever-accounting' ),
-			'name'        => __( 'Vendor', 'wp-ever-accounting' ),
-			'issue_date'  => __( 'Bill Date', 'wp-ever-accounting' ),
-			'due_date'    => __( 'Due Date', 'wp-ever-accounting' ),
-			'status'      => __( 'Status', 'wp-ever-accounting' ),
+			'bill_number' => esc_html__( 'Number', 'wp-ever-accounting' ),
+			'total'       => esc_html__( 'Total', 'wp-ever-accounting' ),
+			'name'        => esc_html__( 'Vendor', 'wp-ever-accounting' ),
+			'issue_date'  => esc_html__( 'Bill Date', 'wp-ever-accounting' ),
+			'due_date'    => esc_html__( 'Due Date', 'wp-ever-accounting' ),
+			'status'      => esc_html__( 'Status', 'wp-ever-accounting' ),
 		);
 	}
 
 	/**
 	 * Define sortable columns.
 	 *
-	 * @return array
 	 * @since 1.1.0
+	 * @return array
 	 */
 	protected function define_sortable_columns() {
 		return array(
@@ -126,23 +135,23 @@ class EverAccounting_Bill_List_Table extends EverAccounting_List_Table {
 	/**
 	 * Define bulk actions
 	 *
-	 * @return array
 	 * @since 1.1.0
+	 * @return array
 	 */
 	public function define_bulk_actions() {
 		return array(
-			'cancel'   => __( 'Cancel', 'wp-ever-accounting' ),
-			'paid'     => __( 'Paid', 'wp-ever-accounting' ),
-			'received' => __( 'Received', 'wp-ever-accounting' ),
-			'delete'   => __( 'Delete', 'wp-ever-accounting' ),
+			'cancel'   => esc_html__( 'Cancel', 'wp-ever-accounting' ),
+			'paid'     => esc_html__( 'Paid', 'wp-ever-accounting' ),
+			'received' => esc_html__( 'Received', 'wp-ever-accounting' ),
+			'delete'   => esc_html__( 'Delete', 'wp-ever-accounting' ),
 		);
 	}
 
 	/**
 	 * Define primary column.
 	 *
-	 * @return string
 	 * @since 1.1.0
+	 * @return string
 	 */
 	public function get_primary_column_name() {
 		return 'bill_number';
@@ -153,24 +162,23 @@ class EverAccounting_Bill_List_Table extends EverAccounting_List_Table {
 	 *
 	 * @param Bill $bill The current account object.
 	 *
-	 * @return string Displays a checkbox.
 	 * @since  1.1.0
+	 * @return string Displays a checkbox.
 	 */
-	function column_cb( $bill ) {
+	public function column_cb( $bill ) {
 		return sprintf( '<input type="checkbox" name="bill_id[]" value="%d"/>', $bill->get_id() );
 	}
 
 	/**
 	 * This function renders most of the columns in the list table.
 	 *
-	 * @param string $column_name The name of the column
+	 * @param Bill   $bill The current account object.
+	 * @param string $column_name The name of the column.
 	 *
-	 * @param Bill   $bill
-	 *
-	 * @return string The column value.
 	 * @since 1.1.0
+	 * @return string The column value.
 	 */
-	function column_default( $bill, $column_name ) {
+	public function column_default( $bill, $column_name ) {
 		$bill_id = $bill->get_id();
 		switch ( $column_name ) {
 			case 'bill_number':
@@ -196,7 +204,18 @@ class EverAccounting_Bill_List_Table extends EverAccounting_List_Table {
 			case 'name':
 				$value = esc_html( $bill->get_name() );
 				if ( ! empty( $bill->get_contact_id() ) ) {
-					$value = sprintf( '<a href="%1$s">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'vendors', 'action' => 'view', 'vendor_id' => $bill->get_contact_id() ) ) ), $bill->get_name() );// phpcs:ignore
+					$url   = eaccounting_admin_url(
+						array(
+							'page'      => 'ea-expenses',
+							'tab'       => 'vendors',
+							'action'    => 'view',
+							'vendor_id' => $bill->get_contact_id(),
+						)
+					);
+					$value = sprintf(
+						'<a href="%1$s">%2$s</a>',
+						esc_url( $url ),
+						esc_html( $bill->get_name() ) );// phpcs:ignore
 				}
 				break;
 			case 'issue_date':
@@ -206,7 +225,7 @@ class EverAccounting_Bill_List_Table extends EverAccounting_List_Table {
 				$value = eaccounting_date( $bill->get_due_date(), 'Y-m-d' );
 				break;
 			case 'status':
-				$value = sprintf( '<div class="ea-document__status %s"><span>%s</span></div>', $bill->get_status(), $bill->get_status_nicename() );
+				$value = sprintf( '<div class="ea-document__status %s"><span>%s</span></div>', sanitize_html_class( $bill->get_status() ), esc_html( $bill->get_status_nicename() ) );
 				break;
 			default:
 				return parent::column_default( $bill, $column_name );
@@ -218,29 +237,25 @@ class EverAccounting_Bill_List_Table extends EverAccounting_List_Table {
 	/**
 	 * Renders the message to be displayed when there are no items.
 	 *
-	 * @return void
 	 * @since  1.1.0
+	 * @return void
 	 */
-	function no_items() {
-		_e( 'There is no bills found.', 'wp-ever-accounting' );
+	public function no_items() {
+		esc_html_e( 'There is no bills found.', 'wp-ever-accounting' );
 	}
 
 	/**
 	 * Process the bulk actions
 	 *
-	 * @return void
 	 * @since 1.1.0
+	 * @return void
 	 */
 	public function process_bulk_action() {
-		if ( empty( $_REQUEST['_wpnonce'] ) ) {
+		$nonce = isset( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ) : ''; // phpcs:ignore
+		if ( ! wp_verify_nonce( $nonce, 'bulk-bills' ) && ! wp_verify_nonce( $nonce, 'bill-nonce' ) ) {
 			return;
 		}
-
-		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-bills' ) && ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bill-nonce' ) ) {
-			return;
-		}
-
-		$ids = isset( $_GET['bill_id'] ) ? $_GET['bill_id'] : false;
+		$ids = isset( $_GET['bill_id'] ) ? wp_parse_id_list( $_GET['bill_id'] ) : false; // phpcs:ignore
 
 		if ( ! is_array( $ids ) ) {
 			$ids = array( $ids );
@@ -279,7 +294,7 @@ class EverAccounting_Bill_List_Table extends EverAccounting_List_Table {
 			}
 		}
 
-		if ( isset( $_GET['_wpnonce'] ) ) {
+		if ( $nonce ) {
 			wp_safe_redirect(
 				remove_query_arg(
 					array(
@@ -300,8 +315,8 @@ class EverAccounting_Bill_List_Table extends EverAccounting_List_Table {
 	 * Retrieve all the data for the table.
 	 * Setup the final data for the table
 	 *
-	 * @return void
 	 * @since 1.1.0
+	 * @return void
 	 */
 	public function prepare_items() {
 		$columns               = $this->get_columns();
@@ -311,11 +326,11 @@ class EverAccounting_Bill_List_Table extends EverAccounting_List_Table {
 
 		$this->process_bulk_action();
 
-		$page    = isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
-		$status  = isset( $_GET['status'] ) ? $_GET['status'] : '';
-		$search  = isset( $_GET['s'] ) ? $_GET['s'] : '';
-		$order   = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
-		$orderby = isset( $_GET['orderby'] ) ? $_GET['orderby'] : 'id';
+		$page    = filter_input( INPUT_GET, 'paged', FILTER_SANITIZE_NUMBER_INT, array( 'options' => array( 'default' => 1 ) ) );
+		$search  = filter_input( INPUT_GET, 's', FILTER_SANITIZE_STRING );
+		$order   = filter_input( INPUT_GET, 'order', FILTER_SANITIZE_STRING, array( 'options' => array( 'default' => 'DESC' ) ) );
+		$orderby = filter_input( INPUT_GET, 'orderby', FILTER_SANITIZE_STRING, array( 'options' => array( 'default' => 'id' ) ) );
+		$status  = filter_input( INPUT_GET, 'status', FILTER_SANITIZE_STRING );
 
 		$per_page = $this->per_page;
 

@@ -81,7 +81,7 @@ $quantity_label = eaccounting()->settings->get( 'bill_quantity_label', __( 'Quan
 				<td class="label"><?php esc_html_e( 'Items Subtotal:', 'wp-ever-accounting' ); ?></td>
 				<td width="1%"></td>
 				<td class="total">
-					<?php echo eaccounting_price( $bill->get_subtotal(), $bill->get_currency_code() ); ?>
+					<?php echo esc_html( eaccounting_price( $bill->get_subtotal(), $bill->get_currency_code() ) ); ?>
 				</td>
 			</tr>
 
@@ -89,7 +89,7 @@ $quantity_label = eaccounting()->settings->get( 'bill_quantity_label', __( 'Quan
 				<td class="label"><?php esc_html_e( 'Discount:', 'wp-ever-accounting' ); ?></td>
 				<td width="1%"></td>
 				<td class="total">-
-					<?php echo eaccounting_price( $bill->get_total_discount(), $bill->get_currency_code() ); ?>
+					<?php echo esc_html( eaccounting_price( $bill->get_total_discount(), $bill->get_currency_code() ) ); ?>
 				</td>
 			</tr>
 
@@ -99,7 +99,7 @@ $quantity_label = eaccounting()->settings->get( 'bill_quantity_label', __( 'Quan
 						<td class="label"><?php esc_html_e( 'Tax', 'wp-ever-accounting' ); ?>:</td>
 						<td width="1%"></td>
 						<td class="total">
-							<?php echo eaccounting_price( $bill->get_total_tax(), $bill->get_currency_code() ); ?>
+							<?php echo esc_html( eaccounting_price( $bill->get_total_tax(), $bill->get_currency_code() ) ); ?>
 						</td>
 					</tr>
 				<?php else : ?>
@@ -108,7 +108,7 @@ $quantity_label = eaccounting()->settings->get( 'bill_quantity_label', __( 'Quan
 							<td class="label"><?php echo esc_html( __( 'Tax', 'wp-ever-accounting' ) . '(' . number_format_i18n( $tax['rate'] ) . '%)' ); ?>:</td>
 							<td width="1%"></td>
 							<td class="total">
-								<?php echo eaccounting_price( $tax['amount'], $bill->get_currency_code() ); ?>
+								<?php echo esc_html( eaccounting_price( $tax['amount'], $bill->get_currency_code() ) ); ?>
 							</td>
 						</tr>
 					<?php endforeach; ?>
@@ -119,7 +119,7 @@ $quantity_label = eaccounting()->settings->get( 'bill_quantity_label', __( 'Quan
 				<td class="label"><?php esc_html_e( 'Total', 'wp-ever-accounting' ); ?>:</td>
 				<td width="1%"></td>
 				<td class="total">
-					<?php echo eaccounting_price( $bill->get_total(), $bill->get_currency_code() ); ?>
+					<?php echo esc_html( eaccounting_price( $bill->get_total(), $bill->get_currency_code() ) ); ?>
 				</td>
 			</tr>
 			<?php if ( $bill->exists() ) : ?>
@@ -127,7 +127,7 @@ $quantity_label = eaccounting()->settings->get( 'bill_quantity_label', __( 'Quan
 					<td class="label"><?php esc_html_e( 'Paid', 'wp-ever-accounting' ); ?>:</td>
 					<td width="1%"></td>
 					<td class="total">
-						<?php echo eaccounting_price( $bill->get_total_paid(), $bill->get_currency_code() ); ?>
+						<?php echo esc_html( eaccounting_price( $bill->get_total_paid(), $bill->get_currency_code() ) ); ?>
 					</td>
 				</tr>
 			<?php endif; ?>
@@ -136,7 +136,7 @@ $quantity_label = eaccounting()->settings->get( 'bill_quantity_label', __( 'Quan
 					<td class="label"><?php esc_html_e( 'Due', 'wp-ever-accounting' ); ?>:</td>
 					<td width="1%"></td>
 					<td class="total">
-						<?php echo eaccounting_price( abs( $bill->get_total_due() ), $bill->get_currency_code() ); ?>
+						<?php echo esc_html( eaccounting_price( abs( $bill->get_total_due() ), $bill->get_currency_code() ) ); ?>
 					</td>
 				</tr>
 			<?php endif; ?>

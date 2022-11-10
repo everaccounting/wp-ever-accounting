@@ -21,9 +21,11 @@ defined( 'ABSPATH' ) || exit();
  */
 class CashFlow extends Report {
 	/**
+	 * Get report.
+	 *
 	 * @since 1.1.0
 	 *
-	 * @param array $args
+	 * @param array $args Report arguments.
 	 *
 	 * @return array|mixed|void
 	 */
@@ -36,7 +38,7 @@ class CashFlow extends Report {
 
 			return false;
 		}
-		$report = false; // $this->get_cache( $args );
+		$report = false;
 		if ( empty( $report ) ) {
 			$start_date = $this->get_start_date( $args['year'] );
 			$end_date   = $this->get_end_date( $args['year'] );
@@ -60,37 +62,26 @@ class CashFlow extends Report {
 				'profits'  => $profit,
 				'dates'    => $period,
 			);
-			// $this->set_cache( $args, $report );
 		}
 
 		return $report;
-		// $interval   = 'M';
-		// switch ( $days ) {
-		// case $days < 1:
-		// $interval = 'H';
-		// break;
-		// case $days > 1 && $days < 32:
-		// $interval = 'D';
-		// break;
-		// case $days > 32 && $days < 366:
-		// $interval = 'M';
-		// break;
-		// case $days > 366 && $days < 732:
-		// $interval = '3M';
-		// break;
-		// case $days > 732:
-		// $interval = '1Y';
-		// break;
-		// default:
-		// $interval = 'M';
-		// break;
-		// }
 	}
 
-
+	/**
+	 * Get calculated total income.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param string $start_date Start date.
+	 * @param string $end_date End date.
+	 * @param string $format Format.
+	 *
+	 * @return array
+	 */
 	protected function calculate_total_income( $start_date, $end_date, $format = '%Y-%m' ) {
 		global $wpdb;
-		$sql     = $wpdb->prepare(
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$sql = $wpdb->prepare(
 			"SELECT DATE_FORMAT(payment_date, '$format') `date`, SUM(amount) amount, currency_code, currency_rate
 					   FROM {$wpdb->prefix}ea_transactions
 					   WHERE type=%s AND payment_date BETWEEN %s AND %s AND category_id NOT IN (SELECT id from {$wpdb->prefix}ea_categories WHERE type='other')
@@ -99,7 +90,8 @@ class CashFlow extends Report {
 			$start_date,
 			$end_date
 		);
-		$results = $wpdb->get_results( $sql );
+		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$results = $wpdb->get_results( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		$income  = array();
 		foreach ( $results as $result ) {
 			if ( ! isset( $income[ $result->date ] ) ) {
@@ -112,8 +104,20 @@ class CashFlow extends Report {
 		return $income;
 	}
 
+	/**
+	 * Get calculated total expense.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param string $start_date Start date.
+	 * @param string $end_date End date.
+	 * @param string $format Format.
+	 *
+	 * @return array
+	 */
 	protected function calculate_total_expense( $start_date, $end_date, $format = '%Y-%m' ) {
 		global $wpdb;
+		//phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$sql = $wpdb->prepare(
 			"SELECT DATE_FORMAT(payment_date, '$format') `date`, SUM(amount) amount, currency_code, currency_rate
 					   FROM {$wpdb->prefix}ea_transactions
@@ -123,8 +127,9 @@ class CashFlow extends Report {
 			$start_date,
 			$end_date
 		);
+		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
-		$results = $wpdb->get_results( $sql );
+		$results = $wpdb->get_results( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$expense = array();
 		foreach ( $results as $result ) {
 			if ( ! isset( $expense[ $result->date ] ) ) {
@@ -144,7 +149,7 @@ class CashFlow extends Report {
 	 * @return void
 	 */
 	public function output() {
-		$year   = empty( $_GET['year'] ) ? date_i18n( 'Y' ) : intval( $_GET['year'] );
+		$year   = empty( $_GET['year'] ) ? date_i18n( 'Y' ) : intval( $_GET['year'] ); // phpcs:ignore
 		$report = $this->get_report( array( 'year' => $year ) );
 		$report = wp_parse_args(
 			$report,
@@ -160,7 +165,7 @@ class CashFlow extends Report {
 			<div class="ea-card__header">
 				<h3 class="ea-card__title"><?php esc_html_e( 'Cashflow report', 'wp-ever-accounting' ); ?></h3>
 				<div class="ea-card__toolbar">
-					<form action="<?php echo admin_url( 'admin.php?page=ea-reports' ); ?>>" method="get">
+					<form action="<?php echo esc_url( admin_url( 'admin.php?page=ea-reports' ) ); ?>>" method="get">
 						<?php esc_html_e( 'Filter', 'wp-ever-accounting' ); ?>
 						<?php
 						eaccounting_select2(
@@ -176,7 +181,7 @@ class CashFlow extends Report {
 						<input type="hidden" name="tab" value="cashflow">
 						<input type="hidden" name="filter" value="true">
 						<button type="submit" class="button-primary button"><?php esc_html_e( 'Submit', 'wp-ever-accounting' ); ?></button>
-						<?php if ( isset( $_GET['filter'] ) ) : ?>
+						<?php if ( isset( $_GET['filter'] ) ) : ?> <?php //phpcs:ignore ?>
 							<a class="button-secondary button" href="<?php echo esc_url( admin_url( 'admin.php?page=ea-reports&tab=cashflow' ) ); ?>"><?php esc_html_e( 'Reset', 'wp-ever-accounting' ); ?></a>
 						<?php endif; ?>
 					</form>
@@ -195,11 +200,11 @@ class CashFlow extends Report {
 									{
 										type: 'line',
 										data: {
-											'labels': <?php echo json_encode( array_values( $report['dates'] ) ); ?>,
+											'labels': <?php echo wp_json_encode( array_values( $report['dates'] ) ); ?>,
 											'datasets': [
 												{
-													label: '<?php echo __( 'Income', 'wp-ever-accounting' ); ?>',
-													data: <?php echo json_encode( array_values( $report['incomes'] ) ); ?>,
+													label: '<?php echo esc_html__( 'Income', 'wp-ever-accounting' ); ?>',
+													data: <?php echo wp_json_encode( array_values( $report['incomes'] ) ); ?>,
 													backgroundColor: 'rgba(54, 68, 255, 0.1)',
 													borderColor: 'rgb(54, 68, 255)',
 													borderWidth: 4,
@@ -207,8 +212,8 @@ class CashFlow extends Report {
 													pointBackgroundColor: 'rgb(54, 68, 255)'
 												},
 												{
-													label: '<?php echo __( 'Expense', 'wp-ever-accounting' ); ?>',
-													data: <?php echo json_encode( array_values( $report['expenses'] ) ); ?>,
+													label: '<?php echo esc_html__( 'Expense', 'wp-ever-accounting' ); ?>',
+													data: <?php echo wp_json_encode( array_values( $report['expenses'] ) ); ?>,
 													backgroundColor: 'rgba(242, 56, 90, 0.1)',
 													borderColor: 'rgb(242, 56, 90)',
 													borderWidth: 4,
@@ -216,8 +221,8 @@ class CashFlow extends Report {
 													pointBackgroundColor: 'rgb(242, 56, 90)'
 												},
 												{
-													label: '<?php echo __( 'Profit', 'wp-ever-accounting' ); ?>',
-													data: <?php echo json_encode( array_values( $report['profits'] ) ); ?>,
+													label: '<?php echo esc_html__( 'Profit', 'wp-ever-accounting' ); ?>',
+													data: <?php echo wp_json_encode( array_values( $report['profits'] ) ); ?>,
 													backgroundColor: 'rgba(0, 198, 137, 0.1)',
 													borderColor: 'rgb(0, 198, 137)',
 													borderWidth: 4,
@@ -296,7 +301,7 @@ class CashFlow extends Report {
 							<tr>
 								<th>&mdash;</th>
 								<?php foreach ( $report['dates'] as $date ) : ?>
-									<th class="align-right"><?php echo $date; ?></th>
+									<th class="align-right"><?php echo esc_html( $date ); ?></th>
 								<?php endforeach; ?>
 							</tr>
 							</thead>
@@ -304,21 +309,21 @@ class CashFlow extends Report {
 							<tbody>
 							<?php if ( ! empty( $report['incomes'] ) ) : ?>
 								<tr>
-									<th><?php _e( 'Income', 'wp-ever-accounting' ); ?></th>
+									<th><?php esc_html_e( 'Income', 'wp-ever-accounting' ); ?></th>
 									<?php foreach ( $report['incomes'] as $income ) : ?>
-										<td><?php echo eaccounting_format_price( $income ); ?></td>
+										<td><?php echo esc_html( eaccounting_format_price( $income ) ); ?></td>
 									<?php endforeach; ?>
 								</tr>
 								<tr>
-									<th><?php _e( 'Expense', 'wp-ever-accounting' ); ?></th>
+									<th><?php esc_html_e( 'Expense', 'wp-ever-accounting' ); ?></th>
 									<?php foreach ( $report['expenses'] as $expense ) : ?>
-										<td><?php echo eaccounting_format_price( $expense ); ?></td>
+										<td><?php echo esc_html( eaccounting_format_price( $expense ) ); ?></td>
 									<?php endforeach; ?>
 								</tr>
 							<?php else : ?>
 								<tr class="no-results">
 									<td colspan="13">
-										<p><?php _e( 'No records found', 'wp-ever-accounting' ); ?></p>
+										<p><?php esc_html_e( 'No records found', 'wp-ever-accounting' ); ?></p>
 									</td>
 								</tr>
 							<?php endif; ?>
@@ -328,9 +333,9 @@ class CashFlow extends Report {
 							<?php if ( ! empty( $report['profits'] ) ) : ?>
 								<tfoot>
 								<tr>
-									<th><?php _e( 'Profit', 'wp-ever-accounting' ); ?></th>
+									<th><?php esc_html_e( 'Profit', 'wp-ever-accounting' ); ?></th>
 									<?php foreach ( $report['profits'] as $profit ) : ?>
-										<th class="align-right"><?php echo eaccounting_format_price( $profit ); ?></th>
+										<th class="align-right"><?php echo esc_html( eaccounting_format_price( $profit ) ); ?></th>
 									<?php endforeach; ?>
 								</tr>
 								</tfoot>
@@ -340,13 +345,13 @@ class CashFlow extends Report {
 				</div>
 
 				<div class="ea-card__footer">
-					<a class="button button-secondary" href="<?php echo wp_nonce_url( add_query_arg( 'refresh_report', 'yes' ), 'refresh_report' ); ?>">
+					<a class="button button-secondary" href="<?php echo wp_nonce_url( add_query_arg( 'refresh_report', 'yes' ), 'refresh_report' ); ?>"> <?php //phpcs:ignore ?>
 						<?php esc_html_e( 'Reset Cache', 'wp-ever-accounting' ); ?>
 					</a>
 				</div>
 			<?php else : ?>
 				<div class="ea-card__inside">
-					<p><?php _e( 'Please select financial year.', 'wp-ever-accounting' ); ?></p>
+					<p><?php esc_html_e( 'Please select financial year.', 'wp-ever-accounting' ); ?></p>
 				</div>
 			<?php endif; ?>
 		</div>

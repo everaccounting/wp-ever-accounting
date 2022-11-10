@@ -6,6 +6,7 @@
  * @subpackage  Admin/Js Templates
  * @since       1.0.2
  */
+
 defined( 'ABSPATH' ) || exit();
 ?>
 <script type="text/template" id="tmpl-ea-modal-add-category">
@@ -17,7 +18,7 @@ defined( 'ABSPATH' ) || exit();
 					<header class="ea-modal-header">
 						<h1><?php esc_html_e( 'Add Category', 'wp-ever-accounting' ); ?></h1>
 						<button class="modal-close modal-close-link dashicons">
-							<span class="screen-reader-text"><?php _e( 'Close', 'wp-ever-accounting' ); ?>></span>
+							<span class="screen-reader-text"><?php esc_html_e( 'Close', 'wp-ever-accounting' ); ?>></span>
 						</button>
 					</header>
 

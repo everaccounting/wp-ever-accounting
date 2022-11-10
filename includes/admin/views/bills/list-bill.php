@@ -8,6 +8,7 @@
  * @subpackage  Admin/Views/Bills
  * @package     EverAccounting
  */
+
 defined( 'ABSPATH' ) || exit();
 require EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-bill-list-table.php';
 $bill_table = new EverAccounting_Bill_List_Table();
@@ -20,13 +21,13 @@ $add_url = eaccounting_admin_url(
 	)
 );
 ?>
-	<h1 class="wp-heading-inline"><?php _e( 'Bills', 'wp-ever-accounting' ); ?></h1>
+	<h1 class="wp-heading-inline"><?php esc_html_e( 'Bills', 'wp-ever-accounting' ); ?></h1>
 	<a class="page-title-action" href="<?php echo esc_url( $add_url ); ?>">
 		<?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?>
 	</a>
 	<hr class="wp-header-end">
 <?php do_action( 'eaccounting_bills_table_top' ); ?>
-	<form id="ea-bills-table" method="get" action="<?php echo admin_url( 'admin.php' ); ?>">
+	<form id="ea-bills-table" method="get" action="<?php echo esc_url( admin_url( 'admin.php' ) ); ?>">
 		<?php
 		$bill_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'ea-bills' );
 		$bill_table->display();

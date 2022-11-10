@@ -9,7 +9,6 @@
  * @package     EverAccounting
  */
 
-
 defined( 'ABSPATH' ) || exit();
 
 require EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-invoice-list-table.php';
@@ -23,12 +22,12 @@ $add_url = eaccounting_admin_url(
 	)
 );
 ?>
-	<h1 class="wp-heading-inline"><?php _e( 'Invoices', 'wp-ever-accounting' ); ?></h1>
+	<h1 class="wp-heading-inline"><?php esc_html_e( 'Invoices', 'wp-ever-accounting' ); ?></h1>
 	<a class="page-title-action" href="<?php echo esc_url( $add_url ); ?>">
 		<?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?>
 	</a>
 <?php do_action( 'eaccounting_invoices_table_top' ); ?>
-	<form id="ea-invoices-table" method="get" action="<?php echo admin_url( 'admin.php' ); ?>">
+	<form id="ea-invoices-table" method="get" action="<?php echo esc_url( admin_url( 'admin.php' ) ); ?>">
 		<?php
 		$invoice_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'ea-invoices' );
 		$invoice_table->display();

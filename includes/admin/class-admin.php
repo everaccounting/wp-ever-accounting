@@ -53,8 +53,9 @@ class Admin {
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-extensions.php';
 
 		// Setup/welcome.
-		if ( ! empty( $_GET['page'] ) ) {
-			switch ( $_GET['page'] ) {
+		$page = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_STRING );
+		if ( ! empty( $page ) ) {
+			switch ( $page ) {
 				case 'ea-setup':
 					include_once dirname( __FILE__ ) . '/class-setup.php';
 					break;
@@ -119,7 +120,7 @@ class Admin {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param $classes
+	 * @param string $classes Admin body classes.
 	 *
 	 * @return string
 	 */
@@ -167,7 +168,7 @@ class Admin {
 					});"
 				);
 			} else {
-				$footer_text = __( 'Thank you for using with Ever Accounting.', 'wp-ever-accounting' );
+				$footer_text = esc_html__( 'Thank you for using with Ever Accounting.', 'wp-ever-accounting' );
 			}
 		}
 
@@ -182,7 +183,8 @@ class Admin {
 	public function load_js_templates() {
 		$screen    = get_current_screen();
 		$screen_id = $screen ? $screen->id : '';
-		if ( in_array( $screen_id, eaccounting_get_screen_ids(), true ) && isset( $_GET['action'] ) && in_array( $_GET['action'], array( 'add', 'edit' ), true ) ) {
+		$action    = filter_input( INPUT_GET, 'action', FILTER_SANITIZE_STRING );
+		if ( in_array( $screen_id, eaccounting_get_screen_ids(), true ) && in_array( $action, array( 'add', 'edit' ), true ) ) {
 			eaccounting_get_admin_template( 'js/modal-add-account' );
 			eaccounting_get_admin_template( 'js/modal-add-currency' );
 			eaccounting_get_admin_template( 'js/modal-add-income-category' );

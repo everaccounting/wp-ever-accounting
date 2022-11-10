@@ -39,6 +39,8 @@ class Utilities {
 	public $defaults;
 
 	/**
+	 * Batch processing class instance variable.
+	 *
 	 * @since 1.0.2
 	 * @var Batch
 	 */

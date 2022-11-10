@@ -23,8 +23,7 @@ $bill_actions = apply_filters(
 	)
 );
 
-
-if ( ! in_array( $bill->get_status( 'edit' ), array( 'paid', 'partial' ) ) ) {
+if ( ! in_array( $bill->get_status( 'edit' ), array( 'paid', 'partial' ), true ) ) {
 	$bill_actions['status_received'] = __( 'Mark as Received', 'wp-ever-accounting' );
 }
 
@@ -55,7 +54,7 @@ do_action( 'add_meta_boxes_ea_bill', $bill );
 
 <?php if ( $bill->exists() && $bill->is_draft() ) : ?>
 	<div class="notice error">
-		<p><?php echo __( 'This is a <strong>DRAFT</strong> bill and will not be reflected until its marked as <strong>received</strong>.', 'wp-ever-accounting' ); ?></p>
+		<p><?php echo wp_kses_post( __( 'This is a <strong>DRAFT</strong> bill and will not be reflected until its marked as <strong>received</strong>.', 'wp-ever-accounting' ) ); ?></p>
 	</div>
 <?php endif; ?>
 
@@ -84,7 +83,7 @@ do_action( 'add_meta_boxes_ea_bill', $bill );
 											foreach ( $bill_actions as $action => $title ) {
 												echo sprintf(
 													'<li><a href="%s">%s</a></li>',
-													wp_nonce_url(
+													wp_nonce_url( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 														add_query_arg(
 															array(
 																'action'      => 'eaccounting_bill_action',

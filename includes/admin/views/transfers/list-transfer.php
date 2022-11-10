@@ -20,12 +20,12 @@ $add_url = eaccounting_admin_url(
 	)
 );
 ?>
-<h1 class="wp-heading-inline"><?php _e( 'Transfers', 'wp-ever-accounting' ); ?></h1>
+<h1 class="wp-heading-inline"><?php esc_html_e( 'Transfers', 'wp-ever-accounting' ); ?></h1>
 <a class="page-title-action" href="<?php echo esc_url( $add_url ); ?>">
 	<?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?>
 </a>
 <?php do_action( 'eaccounting_transfers_table_top' ); ?>
-<form id="ea-transfers-table" method="get" action="<?php echo admin_url( 'admin.php' ); ?>">
+<form id="ea-transfers-table" method="get" action="<?php echo esc_url( admin_url( 'admin.php' ) ); ?>">
 	<?php $transfers_table->display(); ?>
 	<input type="hidden" name="page" value="ea-banking"/>
 	<input type="hidden" name="tab" value="transfers"/>

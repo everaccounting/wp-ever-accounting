@@ -28,6 +28,8 @@ class Document_Item extends Resource_Model {
 	protected $object_type = 'line_item';
 
 	/**
+	 * Cache group.
+	 *
 	 * @since 1.1.0
 	 *
 	 * @var string
@@ -254,6 +256,8 @@ class Document_Item extends Resource_Model {
 	}
 
 	/**
+	 * Get extra data.
+	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
 	 * @return array|mixed|string

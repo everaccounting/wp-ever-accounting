@@ -84,8 +84,8 @@ class EverAccounting_Payment_List_Table extends EverAccounting_List_Table {
 			<p class="ea-empty-table__message">
 				<?php echo esc_html__( 'Create and manage your business expenses in any currency you want, so your finances are always accurate and healthy. Know what and when to pay.', 'wp-ever-accounting' ); ?>
 			</p>
-			<a href="<?php echo esc_url( eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'payments', 'action' => 'edit', ) ) ); //phpcs:ignore?>" class="button-primary ea-empty-table__cta"><?php _e( 'Add Payment', 'wp-ever-accounting' ); ?></a>
-			<a href="https://wpeveraccounting.com/docs/general/add-payments/?utm_source=listtable&utm_medium=link&utm_campaign=admin" class="button-secondary ea-empty-table__cta" target="_blank"><?php _e( 'Learn More', 'wp-ever-accounting' ); ?></a>
+			<a href="<?php echo esc_url( eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'payments', 'action' => 'edit', ) ) ); //phpcs:ignore?>" class="button-primary ea-empty-table__cta"><?php esc_html_e( 'Add Payment', 'wp-ever-accounting' ); ?></a>
+			<a href="https://wpeveraccounting.com/docs/general/add-payments/?utm_source=listtable&utm_medium=link&utm_campaign=admin" class="button-secondary ea-empty-table__cta" target="_blank"><?php esc_html_e( 'Learn More', 'wp-ever-accounting' ); ?></a>
 		</div>
 		<?php
 	}
@@ -155,21 +155,20 @@ class EverAccounting_Payment_List_Table extends EverAccounting_List_Table {
 	 * @return string Displays a checkbox.
 	 * @since  1.0.2
 	 */
-	function column_cb( $payment ) {
+	public function column_cb( $payment ) {
 		return sprintf( '<input type="checkbox" name="payment_id[]" value="%d"/>', $payment->get_id() );
 	}
 
 	/**
 	 * This function renders most of the columns in the list table.
 	 *
-	 * @param string  $column_name The name of the column
-	 *
-	 * @param Payment $payment
+	 * @param Payment $payment The current object.
+	 * @param string  $column_name The name of the column.
 	 *
 	 * @return string The column value.
 	 * @since 1.0.2
 	 */
-	function column_default( $payment, $column_name ) {
+	public function column_default( $payment, $column_name ) {
 		$payment_id = $payment->get_id();
 		switch ( $column_name ) {
 			case 'date':
@@ -211,23 +210,23 @@ class EverAccounting_Payment_List_Table extends EverAccounting_List_Table {
 	 * @return void
 	 * @since  1.0.2
 	 */
-	function no_items() {
-		_e( 'There is no payments found.', 'wp-ever-accounting' );
+	public function no_items() {
+		esc_html_e( 'There is no payments found.', 'wp-ever-accounting' );
 	}
 
 	/**
 	 * Extra controls to be displayed between bulk actions and pagination.
 	 *
-	 * @param string $which
+	 * @param string $which The location of the extra table nav markup: 'top' or 'bottom'.
 	 *
 	 * @since 1.0.2
 	 */
 	public function extra_tablenav( $which ) {
 		if ( 'top' === $which ) {
-			$account_id  = isset( $_GET['account_id'] ) ? absint( $_GET['account_id'] ) : '';
-			$category_id = isset( $_GET['category_id'] ) ? absint( $_GET['category_id'] ) : '';
-			$vendor_id   = isset( $_GET['vendor_id'] ) ? absint( $_GET['vendor_id'] ) : '';
-			$month       = isset( $_GET['month'] ) ? eaccounting_clean( $_GET['month'] ) : '';
+			$account_id  = isset( $_GET['account_id'] ) ? absint( $_GET['account_id'] ) : ''; //phpcs:ignore
+			$category_id = isset( $_GET['category_id'] ) ? absint( $_GET['category_id'] ) : ''; //phpcs:ignore
+			$vendor_id   = isset( $_GET['vendor_id'] ) ? absint( $_GET['vendor_id'] ) : ''; //phpcs:ignore
+			$month       = isset( $_GET['month'] ) ? eaccounting_clean( $_GET['month'] ) : ''; //phpcs:ignore
 			echo '<div class="alignleft actions ea-table-filter">';
 
 			eaccounting_select2(
@@ -280,7 +279,7 @@ class EverAccounting_Payment_List_Table extends EverAccounting_List_Table {
 
 			submit_button( __( 'Filter', 'wp-ever-accounting' ), 'action', false, false );
 
-			if ( isset( $_GET['filter'] ) ) :
+			if ( isset( $_GET['filter'] ) ) :  //phpcs:ignore
 				?>
 				<a class="button-primary button" href="<?php echo esc_url( admin_url( 'admin.php?page=ea-expenses&tab=payments' ) ); ?>"><?php esc_html_e( 'Reset', 'wp-ever-accounting' ); ?></a>
 				<?php
@@ -299,15 +298,12 @@ class EverAccounting_Payment_List_Table extends EverAccounting_List_Table {
 	 * @since 1.0.2
 	 */
 	public function process_bulk_action() {
-		if ( empty( $_REQUEST['_wpnonce'] ) ) {
+		$nonce = isset( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ) : '';
+		if ( ! wp_verify_nonce( $nonce, 'bulk-payments' ) && ! wp_verify_nonce( $nonce, 'payment-nonce' ) ) {
 			return;
 		}
 
-		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-payments' ) && ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'payment-nonce' ) ) {
-			return;
-		}
-
-		$ids = isset( $_GET['payment_id'] ) ? $_GET['payment_id'] : false;
+		$ids = isset( $_GET['payment_id'] ) ? wp_parse_id_list( $_GET['payment_id'] ) : false; //phpcs:ignore
 
 		if ( ! is_array( $ids ) ) {
 			$ids = array( $ids );
@@ -333,7 +329,7 @@ class EverAccounting_Payment_List_Table extends EverAccounting_List_Table {
 			}
 		}
 
-		if ( isset( $_GET['_wpnonce'] ) ) {
+		if ( $nonce ) {
 			wp_safe_redirect(
 				remove_query_arg(
 					array(
@@ -365,18 +361,15 @@ class EverAccounting_Payment_List_Table extends EverAccounting_List_Table {
 
 		$this->process_bulk_action();
 
-		$page = isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
-
-		$search  = isset( $_GET['s'] ) ? $_GET['s'] : '';
-		$order   = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
-		$orderby = isset( $_GET['orderby'] ) ? $_GET['orderby'] : 'id';
-
-		$category_id = ! empty( $_GET['category_id'] ) ? absint( $_GET['category_id'] ) : '';
-		$account_id  = ! empty( $_GET['account_id'] ) ? absint( $_GET['account_id'] ) : '';
-		$vendor_id   = ! empty( $_GET['vendor_id'] ) ? absint( $_GET['vendor_id'] ) : '';
-		$month       = ! empty( $_GET['month'] ) ? eaccounting_clean( $_GET['month'] ) : '';
-
-		$per_page = $this->per_page;
+		$page        = filter_input( INPUT_GET, 'paged', FILTER_SANITIZE_NUMBER_INT, array( 'options' => array( 'default' => 1 ) ) );
+		$search      = filter_input( INPUT_GET, 's', FILTER_SANITIZE_STRING );
+		$order       = filter_input( INPUT_GET, 'order', FILTER_SANITIZE_STRING, array( 'options' => array( 'default' => 'DESC' ) ) );
+		$orderby     = filter_input( INPUT_GET, 'orderby', FILTER_SANITIZE_STRING, array( 'options' => array( 'default' => 'id' ) ) );
+		$category_id = filter_input( INPUT_GET, 'category_id', FILTER_SANITIZE_NUMBER_INT );
+		$account_id  = filter_input( INPUT_GET, 'account_id', FILTER_SANITIZE_NUMBER_INT );
+		$vendor_id   = filter_input( INPUT_GET, 'vendor_id', FILTER_SANITIZE_NUMBER_INT );
+		$month       = filter_input( INPUT_GET, 'month', FILTER_SANITIZE_STRING );
+		$per_page    = $this->per_page;
 
 		$args = wp_parse_args(
 			$this->query_args,
@@ -396,8 +389,8 @@ class EverAccounting_Payment_List_Table extends EverAccounting_List_Table {
 
 		if ( ! empty( $month ) ) {
 			$args['payment_date'] = array(
-				'before' => date( 'Y-m-01', strtotime( $month ) ),
-				'after'  => date( 'Y-m-t', strtotime( $month ) ),
+				'before' => date( 'Y-m-01', strtotime( $month ) ), //phpcs:ignore
+				'after'  => date( 'Y-m-t', strtotime( $month ) ), //phpcs:ignore
 			);
 		}
 

@@ -3,7 +3,10 @@
  * Page: Expenses
  * Tab: Vendors
  * Section: Transactions
+ *
+ * @package     EverAccounting
  */
+
 defined( 'ABSPATH' ) || exit();
 
 require_once EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-payment-list-table.php';

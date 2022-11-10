@@ -33,6 +33,8 @@ function eaccounting_get_account( $account ) {
 }
 
 /**
+ * Get account currency code.
+ *
  * @since 1.1.0
  *
  * @param mixed $account   Account ID or object.

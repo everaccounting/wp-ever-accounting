@@ -1,11 +1,15 @@
 <?php
 defined( 'ABSPATH' ) || exit();
 
+/**
+ * Report for Income Summary.
+ */
 function eaccounting_reports_income_summary_tab() {
-	$year        = isset( $_REQUEST['year'] ) ? intval( $_REQUEST['year'] ) : date( 'Y' );
-	$category_id = isset( $_REQUEST['category_id'] ) ? absint( $_REQUEST['category_id'] ) : '';
-	$account_id  = isset( $_REQUEST['account_id'] ) ? absint( $_REQUEST['account_id'] ) : '';
-	$customer_id = isset( $_REQUEST['customer_id'] ) ? absint( $_REQUEST['customer_id'] ) : '';
+	$year        = isset( $_REQUEST['year'] ) ? intval( $_REQUEST['year'] ) : date( 'Y' ); // phpcs:ignore
+	$category_id = filter_input( INPUT_GET, 'category_id', FILTER_SANITIZE_NUMBER_INT );
+	$account_id  = filter_input( INPUT_GET, 'account_id', FILTER_SANITIZE_NUMBER_INT );
+	$customer_id = filter_input( INPUT_GET, 'customer_id', FILTER_SANITIZE_NUMBER_INT );
+	$vendor_id   = filter_input( INPUT_GET, 'vendor_id', FILTER_SANITIZE_NUMBER_INT );
 
 	?>
 	<div class="ea-card is-compact">
@@ -24,7 +28,7 @@ function eaccounting_reports_income_summary_tab() {
 				)
 			);
 
-			$years = range( date( 'Y' ), ( $year - 5 ), 1 );
+			$years = range( date( 'Y' ), ( $year - 5 ), 1 ); // phpcs:ignore
 			eaccounting_select2(
 				array(
 					'placeholder' => __( 'Year', 'wp-ever-accounting' ),
@@ -74,7 +78,7 @@ function eaccounting_reports_income_summary_tab() {
 	<div class="ea-card">
 		<?php
 		global $wpdb;
-		$dates  = $totals = $incomes = $graph = $categories = array();
+		$dates = $totals = $incomes = $graph = $categories = array(); // phpcs:ignore
 		$start  = eaccounting_get_financial_start( $year );
 		$end    = eaccounting_get_financial_end( $year );
 		$where  = "category_id NOT IN ( SELECT id from {$wpdb->prefix}ea_categories WHERE type='other')";
@@ -89,6 +93,7 @@ function eaccounting_reports_income_summary_tab() {
 			$where .= $wpdb->prepare( ' AND category_id=%d', $category_id );
 		}
 
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$transactions = $wpdb->get_results(
 			"
 		SELECT name, payment_date, currency_code, currency_rate, amount, ea_categories.id category_id
@@ -97,6 +102,7 @@ function eaccounting_reports_income_summary_tab() {
 		WHERE $where AND ea_transactions.type = 'income'
 		"
 		);
+		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
 		foreach ( $transactions as $key => $transaction ) {
 			$transaction->amount = eaccounting_price_to_default( $transaction->amount, $transaction->currency_code, $transaction->currency_rate );
@@ -106,11 +112,11 @@ function eaccounting_reports_income_summary_tab() {
 
 		$categories = wp_list_pluck( $transactions, 'name', 'category_id' );
 		$date       = new \EverAccounting\DateTime( $start );
-		// Dates
+		// Dates.
 		for ( $j = 1; $j <= 12; $j ++ ) {
 			$dates[ $j ]                     = $date->format( 'F' );
 			$graph[ $date->format( 'F-Y' ) ] = 0;
-			// Totals
+			// Totals.
 			$totals[ $dates[ $j ] ] = array(
 				'amount' => 0,
 			);
@@ -127,19 +133,15 @@ function eaccounting_reports_income_summary_tab() {
 
 		foreach ( $transactions as $transaction ) {
 			if ( isset( $incomes[ $transaction->category_id ] ) ) {
-				$month      = date( 'F', strtotime( $transaction->payment_date ) );
-				$month_year = date( 'F-Y', strtotime( $transaction->payment_date ) );
+				$month      = date( 'F', strtotime( $transaction->payment_date ) ); // phpcs:ignore
+				$month_year = date( 'F-Y', strtotime( $transaction->payment_date ) ); // phpcs:ignore
 				$incomes[ $transaction->category_id ][ $month ]['amount'] += $transaction->amount;
 				$graph[ $month_year ]                                     += $transaction->amount;
 				$totals[ $month ]['amount']                               += $transaction->amount;
 			}
 		}
 		$chart = new \EverAccounting\Chart();
-		$chart->type( 'line' )
-			  ->width( 0 )
-			  ->height( 300 )
-			  ->set_line_options()
-			  ->labels( array_values( $dates ) )
+		$chart->type( 'line' )->width( 0 )->height( 300 )->set_line_options()->labels( array_values( $dates ) )
 			->dataset(
 				array(
 					'label'           => __( 'Income', 'wp-ever-accounting' ),
@@ -159,9 +161,9 @@ function eaccounting_reports_income_summary_tab() {
 			<table class="ea-table">
 				<thead>
 				<tr>
-					<th><?php _e( 'Categories', 'wp-ever-accounting' ); ?></th>
+					<th><?php esc_html_e( 'Categories', 'wp-ever-accounting' ); ?></th>
 					<?php foreach ( $dates as $date ) : ?>
-						<th class="align-right"><?php echo $date; ?></th>
+						<th class="align-right"><?php echo esc_html( $date ); ?></th>
 					<?php endforeach; ?>
 				</tr>
 				</thead>
@@ -170,25 +172,25 @@ function eaccounting_reports_income_summary_tab() {
 				<?php if ( ! empty( $incomes ) ) : ?>
 					<?php foreach ( $incomes as $category_id => $category ) : ?>
 						<tr>
-							<td><?php echo $categories[ $category_id ]; ?></td>
+							<td><?php echo esc_html( $categories[ $category_id ] ); ?></td>
 							<?php foreach ( $category as $item ) : ?>
-								<td class="align-right"><?php echo eaccounting_format_price( $item['amount'] ); ?></td>
+								<td class="align-right"><?php echo esc_html( eaccounting_format_price( $item['amount'] ) ); ?></td>
 							<?php endforeach; ?>
 						</tr>
 					<?php endforeach; ?>
 				<?php else : ?>
 					<tr class="no-results">
 						<td colspan="13">
-							<p><?php _e( 'No records found', 'wp-ever-accounting' ); ?></p>
+							<p><?php esc_html_e( 'No records found', 'wp-ever-accounting' ); ?></p>
 						</td>
 					</tr>
 				<?php endif; ?>
 				</tbody>
 				<tfoot>
 				<tr>
-					<th><?php _e( 'Total', 'wp-ever-accounting' ); ?></th>
+					<th><?php esc_html_e( 'Total', 'wp-ever-accounting' ); ?></th>
 					<?php foreach ( $totals as $total ) : ?>
-						<th class="align-right"><?php echo eaccounting_format_price( $total['amount'] ); ?></th>
+						<th class="align-right"><?php echo esc_html( eaccounting_format_price( $total['amount'] ) ); ?></th>
 					<?php endforeach; ?>
 				</tr>
 				</tfoot>
