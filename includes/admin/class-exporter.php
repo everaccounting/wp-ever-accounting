@@ -113,7 +113,11 @@ class Exporter {
 				array(
 					'step'       => 'done',
 					'percentage' => 100,
-					'message'    => sprintf( $type( 'Total %d items exported', 'wp-ever-accounting' ), $total ),
+					'message'    => sprintf(
+						// translators: %d: total items.
+						esc_html__( 'Total %d items exported', 'wp-ever-accounting' ),
+						$total
+					),
 					'url'        => add_query_arg(
 						$query_args,
 						eaccounting_admin_url(

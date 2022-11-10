@@ -4,58 +4,56 @@
  * Page: Tools
  * Tab: Import
  *
- * @package     EverAccounting
- * @subpackage  Admin/View/Tools
  * @since       1.0.2
+ * @subpackage  Admin/View/Tools
+ * @package     EverAccounting
  */
 
 defined( 'ABSPATH' ) || exit();
 ?>
 
 <div class="ea-card">
-		<div class="ea-card__header is-compact">
-			<h3 class="ea-card__title">
-				<?php esc_html_e( 'Import Customers', 'wp-ever-accounting' ); ?>
-			</h3>
-		</div>
-</div>
-
-<div class="ea-card__inside">
-	<form action="" method="post" enctype="multipart/form-data" class="ea-importer ea-batch" data-type="import-customers" data-nonce="<?php echo esc_attr( wp_create_nonce( 'import-customers_importer_nonce' ) ); ?>">
-		<p>
-			<?php
-			/* translators: %s: link to the documentation */
-			echo wp_kses_post( sprintf( __( 'Import customers from CSV file. Download a <a href="%s"> sample </a> file to learn how to format the CSV file.', 'wp-ever-accounting' ), eaccounting()->plugin_url( '/sample-data/import/customers.csv' ) ) );
-			?>
-		</p>
-
-		<div class="ea-importer-top">
-			<input name="upload" type="file" required="required" accept="text/csv">
-			<?php submit_button( esc_html__( 'Import CSV', 'wp-ever-accounting' ), 'secondary', null, true ); ?>
-		</div>
-
-		<div class="ea-importer-bottom">
+	<div class="ea-card__header is-compact">
+		<h3 class="ea-card__title">
+			<?php esc_html_e( 'Import Customers', 'wp-ever-accounting' ); ?>
+		</h3>
+	</div>
+	<div class="ea-card__inside">
+		<form action="" method="post" enctype="multipart/form-data" class="ea-importer ea-batch" data-type="import-customers" data-nonce="<?php echo esc_attr( wp_create_nonce( 'import-customers_importer_nonce' ) ); ?>">
 			<p>
-				<?php esc_html_e( 'Each column loaded from the CSV may be mapped to a customer field. Select the column that should be mapped to each field below. Any columns not needed, can be ignored.', 'wp-ever-accounting' ); ?>
+				<?php
+				/* translators: %s: link to the documentation */
+				echo wp_kses_post( sprintf( __( 'Import customers from CSV file. Download a <a href="%s"> sample </a> file to learn how to format the CSV file.', 'wp-ever-accounting' ), eaccounting()->plugin_url( '/sample-data/import/customers.csv' ) ) );
+				?>
 			</p>
 
-			<table class="widefat striped fixed">
-				<thead>
-				<tr>
-					<th><strong><?php esc_html_e( 'Column name', 'wp-ever-accounting' ); ?></strong></th>
-					<th><strong><?php esc_html_e( 'Map to field', 'wp-ever-accounting' ); ?></strong></th>
-					<th><strong><?php esc_html_e( 'Data Preview', 'wp-ever-accounting' ); ?></strong></th>
-				</tr>
-				</thead>
-				<tbody>
-				<?php eaccounting_do_import_fields( 'customer' ); ?>
-				</tbody>
-			</table>
+			<div class="ea-importer-top">
+				<input name="upload" type="file" required="required" accept="text/csv">
+				<?php submit_button( esc_html__( 'Import CSV', 'wp-ever-accounting' ), 'secondary', null, true ); ?>
+			</div>
 
-			<?php submit_button( esc_attr__( 'Process', 'wp-ever-accounting' ), 'primary', null, true ); ?>
-		</div>
-	</form>
-</div>
+			<div class="ea-importer-bottom">
+				<p>
+					<?php esc_html_e( 'Each column loaded from the CSV may be mapped to a customer field. Select the column that should be mapped to each field below. Any columns not needed, can be ignored.', 'wp-ever-accounting' ); ?>
+				</p>
+
+				<table class="widefat striped fixed">
+					<thead>
+					<tr>
+						<th><strong><?php esc_html_e( 'Column name', 'wp-ever-accounting' ); ?></strong></th>
+						<th><strong><?php esc_html_e( 'Map to field', 'wp-ever-accounting' ); ?></strong></th>
+						<th><strong><?php esc_html_e( 'Data Preview', 'wp-ever-accounting' ); ?></strong></th>
+					</tr>
+					</thead>
+					<tbody>
+					<?php eaccounting_do_import_fields( 'customer' ); ?>
+					</tbody>
+				</table>
+
+				<?php submit_button( esc_attr__( 'Process', 'wp-ever-accounting' ), 'primary', null, true ); ?>
+			</div>
+		</form>
+	</div>
 </div>
 
 <div class="ea-card">
@@ -154,7 +152,7 @@ defined( 'ABSPATH' ) || exit();
 			<p>
 				<?php
 				/* translators: %s: link to the documentation */
-				echo wp_kses_post( sprintf( esc_html__( 'Import items from CSV file. Download a <a href="%s"> sample </a> file to learn how to format the CSV file.', 'wp-ever-accounting' ), eaccounting()->plugin_url( '/sample-data/import/items.csv' ) ) );
+				echo wp_kses_post( sprintf( __( 'Import items from CSV file. Download a <a href="%s"> sample </a> file to learn how to format the CSV file.', 'wp-ever-accounting' ), eaccounting()->plugin_url( '/sample-data/import/items.csv' ) ) );
 				?>
 			</p>
 

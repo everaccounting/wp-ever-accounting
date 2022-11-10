@@ -32,14 +32,16 @@ class Importer {
 	 * @since 1.0.2
 	 */
 	public static function do_ajax_import() {
-		check_admin_referer( 'eaccounting_do_ajax_import' );
-		if ( ! isset( $_REQUEST['type'] ) ) {
+		$type = filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING );
+		if ( empty( $type ) ) {
 			wp_send_json_error(
 				array(
 					'message' => __( 'Import type must be present.', 'wp-ever-accounting' ),
 				)
 			);
 		}
+		$type = sanitize_key( $_REQUEST['type'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated
+		check_admin_referer( $type . '_importer_nonce', 'nonce' );
 		$params = array(
 			'delimiter'       => ! empty( $_REQUEST['delimiter'] ) ? sanitize_key( wp_unslash( $_REQUEST['delimiter'] ) ) : ',',
 			'position'        => isset( $_REQUEST['position'] ) ? absint( $_REQUEST['position'] ) : 0,
@@ -50,7 +52,6 @@ class Importer {
 		);
 
 		$step = isset( $_REQUEST['step'] ) ? eaccounting_clean( $_REQUEST['step'] ) : ''; // phpcs:ignore
-		$type = sanitize_key( $_REQUEST['type'] );
 		$file = ! empty( $_REQUEST['file'] ) ? eaccounting_clean( wp_unslash( $_REQUEST['file'] ) ) : ''; // phpcs:ignore
 
 		// verify nonce.

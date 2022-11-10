@@ -440,6 +440,7 @@ class EverAccounting_Customer_List_Table extends EverAccounting_List_Table {
 				$total_items = $this->inactive_count;
 				break;
 			case 'any':
+			default:
 				$total_items = $this->total_count;
 				break;
 		}
