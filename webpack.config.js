@@ -45,14 +45,6 @@ const config = {
 			memo[ path.parse( filepath ).name ] = filepath;
 			return memo;
 		}, {} ),
-		...glob.sync( './packages/**/index.js' ).reduce( ( memo, filepath ) => {
-			const name = path.basename( path.dirname( filepath ) );
-			externals[ `@eaccounting/${ name }` ] = {
-				this: [ 'eaccounting', camelCaseDash( name ) ],
-			};
-			memo[ name ] = filepath;
-			return memo;
-		}, {} ),
 	},
 	output: {
 		...defaultConfig.output,
