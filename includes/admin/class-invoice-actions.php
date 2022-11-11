@@ -82,8 +82,7 @@ class Invoice_Actions {
 		if ( ! did_action( 'eaccounting_invoice_action_' . sanitize_title( $action ) ) ) {
 			do_action( 'eaccounting_invoice_action_' . sanitize_title( $action ), $invoice, $redirect_url );
 		}
-		wp_redirect( $redirect_url ); //phpcs:ignore
-		exit();
+		wp_safe_redirect( $redirect_url );
 	}
 
 	/**

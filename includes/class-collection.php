@@ -119,7 +119,7 @@ class Collection implements Arrayable {
 	public function where( $key, $value, $strict = true ) {
 		return $this->filter(
 			function ( $item ) use ( $key, $value, $strict ) {
-				return $strict ? self::data_get( $item, $key ) === $value : self::data_get( $item, $key ) == $value; //phpcs:ignore
+				return $strict ? self::data_get( $item, $key ) === $value : self::data_get( $item, $key ) === $value;
 			}
 		);
 	}
@@ -360,7 +360,7 @@ class Collection implements Arrayable {
 
 		return $this->filter(
 			function ( $item ) use ( $callback ) {
-				return $callback != $item ; //phpcs:ignore
+				return $callback !== $item;
 			}
 		);
 	}
@@ -401,7 +401,7 @@ class Collection implements Arrayable {
 	 */
 	public function search( $value, $strict = false ) {
 		if ( ! $this->use_as_callable( $value ) ) {
-			return array_search( $value, $this->items, $strict ); //phpcs:ignore
+			return array_search( $value, $this->items, $strict ); // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
 		}
 
 		foreach ( $this->items as $key => $item ) {

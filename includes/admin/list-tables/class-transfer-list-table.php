@@ -257,12 +257,12 @@ class EverAccounting_Transfer_List_Table extends EverAccounting_List_Table {
 	 * @return void
 	 */
 	public function process_bulk_action() {
-		$nonce = isset( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ) : '';
+		$nonce = filter_input( INPUT_GET, '_wpnonce', FILTER_SANITIZE_STRING );
 		if ( ! wp_verify_nonce( $nonce, 'bulk-transfers' ) && ! wp_verify_nonce( $nonce, 'transfer-nonce' ) ) {
 			return;
 		}
 
-		$ids = isset( $_GET['transfer_id'] ) ? wp_parse_id_list( $_GET['transfer_id'] ) : false; // phpcs:ignore
+		$ids = isset( $_GET['transfer_id'] ) ? wp_parse_id_list( $_GET['transfer_id'] ) : false; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 
 		if ( ! is_array( $ids ) ) {
 			$ids = array( $ids );
@@ -286,7 +286,7 @@ class EverAccounting_Transfer_List_Table extends EverAccounting_List_Table {
 			}
 		}
 
-		if ( isset( $_GET['_wpnonce'] ) ) {
+		if ( $nonce ) {
 			wp_safe_redirect(
 				remove_query_arg(
 					array(
@@ -318,13 +318,13 @@ class EverAccounting_Transfer_List_Table extends EverAccounting_List_Table {
 
 		$this->process_bulk_action();
 
-		$page       = isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1; // phpcs:ignore
-		$search     = isset( $_GET['s'] ) ? sanitize_text_field( $_GET['s'] ) : ''; // phpcs:ignore
-		$order      = isset( $_GET['order'] ) ? sanitize_text_field( $_GET['order'] ) : 'DESC'; // phpcs:ignore
-		$orderby    = isset( $_GET['orderby'] ) ? sanitize_text_field( $_GET['orderby'] ) : 'id'; // phpcs:ignore
-		$from_id    = isset( $_GET['account_id'] ) ? absint( $_GET['account_id'] ) : ''; // phpcs:ignore
-		$start_date = isset( $_GET['start_date'] ) ? sanitize_text_field( $_GET['start_date'] ) : ''; // phpcs:ignore
-		$end_date   = isset( $_GET['end_date'] ) ? sanitize_text_field( $_GET['end_date'] ) : ''; // phpcs:ignore
+		$page       = filter_input( INPUT_GET, 'paged', FILTER_SANITIZE_NUMBER_INT, array( 'options' => array( 'default' => 1 ) ) );
+		$search     = filter_input( INPUT_GET, 's', FILTER_SANITIZE_STRING );
+		$order      = filter_input( INPUT_GET, 'order', FILTER_SANITIZE_STRING );
+		$orderby    = filter_input( INPUT_GET, 'orderby', FILTER_SANITIZE_STRING, array( 'options' => array( 'default' => 'id' ) ) );
+		$from_id    = filter_input( INPUT_GET, 'from_account_id', FILTER_SANITIZE_NUMBER_INT );
+		$start_date = filter_input( INPUT_GET, 'start_date', FILTER_SANITIZE_STRING );
+		$end_date   = filter_input( INPUT_GET, 'end_date', FILTER_SANITIZE_STRING );
 
 		$per_page = $this->per_page;
 

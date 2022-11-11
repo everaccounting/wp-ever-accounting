@@ -962,134 +962,6 @@ class Settings {
 	}
 
 	/**
-	 * License key callback.
-	 *
-	 * @param  array $args Arguements passed by the setting.
-	 *
-	 * @since 1.1.0
-	 */
-	public function license_key_callback( $args ) {
-		$value    = $this->get( $args['id'], '' );
-		$license  = $args['license_status'];
-		$messages = array();
-
-		echo sprintf(
-			'<input type="text" class="%1$s-text %2$s" style="%3$s" name="eaccounting_settings[%4$s]" id="eaccounting_settings[%4$s]" value="%5$s"/>',
-			esc_attr( $args['size'] ),
-			esc_attr( $args['input_class'] ),
-			esc_attr( $args['style'] ),
-			esc_attr( $args['id'] ),
-			esc_attr( stripslashes( $value ) )
-		);
-
-		$messages = array();
-		if ( is_object( $license ) && false === $license->success ) {
-			switch ( $license->error ) {
-				case 'expired':
-					$messages[] = sprintf(
-					/* translators: %s extension name */
-						__( 'Your license key expired on %1$s. Please <a href="%2$s" target="_blank">renew your license key</a>.', 'wp-ever-accounting' ),
-						date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ), //phpcs:ignore
-						'https://wpeveraccounting.com/checkout/?edd_license_key=' . $value . '&utm_campaign=admin&utm_source=licenses&utm_medium=expired'
-					);
-					break;
-
-				case 'disabled':
-				case 'revoked':
-					$messages[] = sprintf(
-					/* translators: %s extension name */
-						__( 'Your license key has been disabled. Please <a href="%s" target="_blank">contact support</a> for more information.', 'wp-ever-accounting' ),
-						'https://wpeveraccounting.com/support?utm_campaign=admin&utm_source=licenses&utm_medium=revoked'
-					);
-					break;
-
-				case 'missing':
-					$messages[] = sprintf(
-					/* translators: %s extension name */
-						__( 'Invalid license. Please <a href="%s" target="_blank">visit your account page</a> and verify it.', 'wp-ever-accounting' ),
-						'https://wpeveraccounting.com/your-account?utm_campaign=admin&utm_source=licenses&utm_medium=missing'
-					);
-					break;
-
-				case 'invalid':
-				case 'site_inactive':
-					$messages[] = sprintf(
-					/* translators: %s extension name */
-						__( 'Your %1$s is not active for this URL. Please <a href="%2$s" target="_blank">visit your account page</a> to manage your license key URLs.', 'wp-ever-accounting' ),
-						$args['name'],
-						'https://wpeveraccounting.com/your-account?utm_campaign=admin&utm_source=licenses&utm_medium=invalid'
-					);
-					break;
-
-				case 'item_name_mismatch':
-					/* translators: %s extension name */
-					$messages[] = sprintf( __( 'This appears to be an invalid license key for %s.', 'wp-ever-accounting' ), $args['name'] );
-
-					break;
-
-				case 'no_activations_left':
-					/* translators: %s extension name */
-					$messages[] = sprintf( __( 'Your license key has reached its activation limit. <a href="%s">View possible upgrades</a> now.', 'wp-ever-accounting' ), 'https://wpeveraccounting.com/your-account/' );
-					break;
-
-				case 'license_not_activable':
-					$messages[] = __( 'The key you entered belongs to a bundle, please use the product specific license key.', 'wp-ever-accounting' );
-					break;
-
-				default:
-					$error = ! empty( $license->error ) ? $license->error : __( 'unknown_error', 'wp-ever-accounting' );
-					/* translators: %s extension name */
-					$messages[] = sprintf( __( 'There was an error with this license key: %1$s. Please <a href="%2$s">contact our support team</a>.', 'wp-ever-accounting' ), $error, 'https://wpeveraccounting.com/support' );
-					break;
-
-			}
-		}
-
-		if ( is_object( $license ) && $license->success && $license->license ) {
-			$now        = current_time( 'timestamp' ); //phpcs:ignore
-			$expiration = strtotime( $license->expires, current_time( 'timestamp' ) ); //phpcs:ignore
-			if ( 'lifetime' === $license->expires ) {
-				$messages[] = __( 'License key never expires.', 'wp-ever-accounting' );
-			} elseif ( $expiration > $now && $expiration - $now < ( DAY_IN_SECONDS * 30 ) ) {
-				$messages[] = sprintf(
-				/* translators: %s extension name */
-					__( 'Your license key expires soon! It expires on %1$s. <a href="%2$s" target="_blank">Renew your license key</a>.', 'wp-ever-accounting' ),
-					date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ), //phpcs:ignore
-					'https://wpeveraccounting.com/checkout/?edd_license_key=' . $value . '&utm_campaign=admin&utm_source=licenses&utm_medium=renew'
-				);
-			} else {
-				$messages[] = sprintf(
-				/* translators: %s extension name */
-					__( 'Your license key expires on %s.', 'wp-ever-accounting' ),
-					date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ) //phpcs:ignore
-				);
-			}
-		}
-		if ( empty( $messages ) ) {
-			$messages[] = sprintf(
-			/* translators: %s extension name */
-				__( 'To receive updates, please enter your valid %s license key.', 'wp-ever-accounting' ),
-				strip_tags( $args['name'] ) //phpcs:ignore
-			);
-		}
-
-		if ( ( is_object( $license ) && 'valid' === $license->license ) || 'valid' === $license ) {
-			echo '<input type="submit" class="button-secondary" name="' . $args['id'] . '_deactivate" value="' . __( 'Deactivate License', 'wp-ever-accounting' ) . '"/>'; //phpcs:ignore
-		}
-
-		if ( ! empty( $messages ) ) {
-			foreach ( $messages as $message ) {
-				echo '<div class="edd-license-data edd-license-">';
-				echo '<p>' . wp_kses_post( $message ) . '</p>';
-				echo '</div>';
-
-			}
-		}
-
-		wp_nonce_field( sanitize_key( $args['id'] ) . '-nonce', sanitize_key( $args['id'] ) . '-nonce' );
-	}
-
-	/**
 	 * Missing Callback
 	 *
 	 * If a function is missing for settings callbacks alert the user.
@@ -1133,7 +1005,7 @@ class Settings {
 		$zero_values_allowed = (array) apply_filters( 'eaccounting_settings_zero_values_allowed', $zero_values_allowed );
 
 		// Allow 0 values for specified keys only.
-		if ( in_array( $key, $zero_values_allowed ) ) { // phpcs:ignore
+		if ( in_array( $key, $zero_values_allowed ) ) { // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
 
 			$value = isset( $this->settings[ $key ] ) ? $this->settings[ $key ] : null;
 			$value = ( ! is_null( $value ) && '' !== $value ) ? $value : $default;
@@ -1152,11 +1024,11 @@ class Settings {
 	 * @since 1.0.2
 	 */
 	public function sanitize_settings( $input = array() ) {
-		if ( empty( $_POST['_wp_http_referer'] ) ) { //phpcs:ignore
+		if ( empty( $_POST['_wp_http_referer'] ) ) { //phpcs:ignore WordPress.Security.NonceVerification
 			return $input;
 		}
 
-		parse_str( $_POST['_wp_http_referer'], $referrer ); //phpcs:ignore
+		parse_str( wp_unslash( $_POST['_wp_http_referer'] ), $referrer ); //phpcs:ignore WordPress.Security.NonceVerification,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
 		$saved = get_option( 'eaccounting_settings', array() );
 		if ( ! is_array( $saved ) ) {

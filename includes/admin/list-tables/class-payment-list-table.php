@@ -223,10 +223,11 @@ class EverAccounting_Payment_List_Table extends EverAccounting_List_Table {
 	 */
 	public function extra_tablenav( $which ) {
 		if ( 'top' === $which ) {
-			$account_id  = isset( $_GET['account_id'] ) ? absint( $_GET['account_id'] ) : ''; //phpcs:ignore
-			$category_id = isset( $_GET['category_id'] ) ? absint( $_GET['category_id'] ) : ''; //phpcs:ignore
-			$vendor_id   = isset( $_GET['vendor_id'] ) ? absint( $_GET['vendor_id'] ) : ''; //phpcs:ignore
-			$month       = isset( $_GET['month'] ) ? eaccounting_clean( $_GET['month'] ) : ''; //phpcs:ignore
+			$account_id  = filter_input( INPUT_GET, 'account_id', FILTER_VALIDATE_INT );
+			$category_id = filter_input( INPUT_GET, 'category_id', FILTER_VALIDATE_INT );
+			$vendor_id   = filter_input( INPUT_GET, 'vendor_id', FILTER_VALIDATE_INT );
+			$month       = filter_input( INPUT_GET, 'month', FILTER_SANITIZE_STRING );
+			$filter      = filter_input( INPUT_GET, 'filter', FILTER_SANITIZE_STRING );
 			echo '<div class="alignleft actions ea-table-filter">';
 
 			eaccounting_select2(
@@ -279,7 +280,7 @@ class EverAccounting_Payment_List_Table extends EverAccounting_List_Table {
 
 			submit_button( __( 'Filter', 'wp-ever-accounting' ), 'action', false, false );
 
-			if ( isset( $_GET['filter'] ) ) :  //phpcs:ignore
+			if ( $filter ) :
 				?>
 				<a class="button-primary button" href="<?php echo esc_url( admin_url( 'admin.php?page=ea-expenses&tab=payments' ) ); ?>"><?php esc_html_e( 'Reset', 'wp-ever-accounting' ); ?></a>
 				<?php
@@ -303,7 +304,7 @@ class EverAccounting_Payment_List_Table extends EverAccounting_List_Table {
 			return;
 		}
 
-		$ids = isset( $_GET['payment_id'] ) ? wp_parse_id_list( $_GET['payment_id'] ) : false; //phpcs:ignore
+		$ids = isset( $_GET['payment_id'] ) ? wp_parse_id_list( $_GET['payment_id'] ) : false;  // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 
 		if ( ! is_array( $ids ) ) {
 			$ids = array( $ids );

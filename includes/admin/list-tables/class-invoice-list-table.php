@@ -253,7 +253,7 @@ class EverAccounting_Invoice_List_Table extends EverAccounting_List_Table {
 			return;
 		}
 
-		$ids = isset( $_GET['invoice_id'] ) ? wp_parse_id_list( $_GET['invoice_id'] ) : false; // phpcs:ignore
+		$ids = isset( $_GET['invoice_id'] ) ? wp_parse_id_list( $_GET['invoice_id'] ) : false; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 
 		if ( ! is_array( $ids ) ) {
 			$ids = array( $ids );

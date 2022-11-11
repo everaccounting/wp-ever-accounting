@@ -252,8 +252,7 @@ class EverAccounting_Account_List_Table extends EverAccounting_List_Table {
 		if ( ! wp_verify_nonce( $nonce, 'bulk-accounts' ) && ! wp_verify_nonce( $nonce, 'account-nonce' ) ) {
 			return;
 		}
-
-		$ids = isset( $_GET['account_id'] ) ? wp_parse_id_list( $_GET['account_id'] ) : false; // phpcs:ignore
+		$ids = isset( $_GET['account_id'] ) ? wp_parse_id_list( $_GET['account_id'] ) : false; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 		if ( ! is_array( $ids ) ) {
 			$ids = array( $ids );
 		}

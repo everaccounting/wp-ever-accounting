@@ -104,9 +104,10 @@ class Profits extends Report {
 	 * @return void
 	 */
 	public function output() {
-		$year           = empty( $_GET['year'] ) ? date_i18n( 'Y' ) : intval( $_GET['year'] ); // phpcs:ignore
+		$year           = empty( $_GET['year'] ) ? date_i18n( 'Y' ) : intval( $_GET['year'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$account_id     = filter_input( INPUT_GET, 'account_id', FILTER_SANITIZE_NUMBER_INT );
 		$payment_method = filter_input( INPUT_GET, 'payment_method', FILTER_SANITIZE_STRING );
+		$filter         = filter_input( INPUT_GET, 'filter', FILTER_SANITIZE_STRING );
 		$report         = $this->get_report(
 			array(
 				'year'           => $year,
@@ -150,7 +151,7 @@ class Profits extends Report {
 						<input type="hidden" name="tab" value="profits">
 						<input type="hidden" name="filter" value="true">
 						<button type="submit" class="button-primary button"><?php esc_html_e( 'Submit', 'wp-ever-accounting' ); ?></button>
-						<?php if ( isset( $_GET['filter'] ) ) : ?><?php //phpcs:ignore ?>
+						<?php if ( empty( $filter ) ) : ?>
 							<a class="button-secondary button" href="<?php echo esc_url( admin_url( 'admin.php?page=ea-reports&tab=profits' ) ); ?>">
 								<?php esc_html_e( 'Reset', 'wp-ever-accounting' ); ?>
 							</a>

@@ -275,7 +275,7 @@ class Dashboard {
 			$start_date,
 			$end_date
 		);
-		$results    = $wpdb->get_results( $sql ); // phpcs:ignore
+		$results    = $wpdb->get_results( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		$data       = array();
 		foreach ( $results as $result ) {
 			$amount = eaccounting_price_to_default( $result->amount, $result->currency_code, $result->currency_rate );
@@ -370,7 +370,7 @@ class Dashboard {
 			$start_date,
 			$end_date
 		);
-		$results    = $wpdb->get_results( $sql ); // phpcs:ignore
+		$results    = $wpdb->get_results( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		$data       = array();
 		foreach ( $results as $result ) {
 			$amount = eaccounting_price_to_default( $result->amount, $result->currency_code, $result->currency_rate );

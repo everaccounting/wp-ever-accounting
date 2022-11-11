@@ -264,7 +264,7 @@ class EverAccounting_Item_List_Table extends EverAccounting_List_Table {
 			return;
 		}
 
-		$ids = isset( $_GET['item_id'] ) ? wp_parse_id_list( $_GET['item_id'] ) : false; // phpcs:ignore
+		$ids = isset( $_GET['item_id'] ) ? wp_parse_id_list( $_GET['item_id'] ) : false; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 
 		if ( ! is_array( $ids ) ) {
 			$ids = array( $ids );

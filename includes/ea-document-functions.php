@@ -254,7 +254,7 @@ function eaccounting_get_documents( $args = array() ) {
 		$searches = array();
 		$where   .= ' AND (';
 		foreach ( $search_cols as $col ) {
-			$searches[] = $wpdb->prepare( $col . ' LIKE %s', '%' . $wpdb->esc_like( $qv['search'] ) . '%' ); //phpcs:ignore
+			$searches[] = $wpdb->prepare( $col . ' LIKE %s', '%' . $wpdb->esc_like( $qv['search'] ) . '%' ); //phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		}
 		$where .= implode( ' OR ', $searches );
 		$where .= ')';
@@ -330,14 +330,14 @@ function eaccounting_get_documents( $args = array() ) {
 	$orderby     = "ORDER BY {$orderby} {$order}";
 	$count_total = true === $qv['count_total'];
 	$clauses     = compact( 'select', 'from', 'where', 'orderby', 'limit' );
-	$cache_key   = 'query:' . md5( maybe_serialize( $qv ) ) . ':' . wp_cache_get_last_changed( 'ea_documents' ); //phpcs:ignore
+	$cache_key   = 'query:' . md5( maybe_serialize( $qv ) ) . ':' . wp_cache_get_last_changed( 'ea_documents' ); //phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 	$results     = wp_cache_get( $cache_key, 'ea_documents' );
 	if ( false === $results ) {
 		if ( $count_total ) {
-			$results = (int) $wpdb->get_var( "SELECT COUNT(id) $from $where" ); //phpcs:ignore
+			$results = (int) $wpdb->get_var( "SELECT COUNT(id) $from $where" );  //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 			wp_cache_set( $cache_key, $results, 'ea_documents' );
 		} else {
-			$results = $wpdb->get_results( implode( ' ', $clauses ) ); //phpcs:ignore
+			$results = $wpdb->get_results( implode( ' ', $clauses ) );  //phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 			if ( in_array( $fields, array( 'all', '*' ), true ) ) {
 				foreach ( $results as $key => $item ) {
 					wp_cache_set( $item->id, $item, 'ea_documents' );

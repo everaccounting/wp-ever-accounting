@@ -177,11 +177,13 @@ class Notices {
 	 * @since 1.1.0
 	 */
 	public function hide_notices() {
-		if ( ! isset( $_GET['eaccounting_hide_notice'] ) || ! isset( $_GET['_ea_notice_nonce'] ) ) {
+		$action = filter_input( INPUT_GET, 'eaccounting_hide_notice', FILTER_SANITIZE_STRING );
+		$nonce  = filter_input( INPUT_GET, '_ea_notice_nonce', FILTER_SANITIZE_STRING );
+		if ( empty( $action ) || empty( $nonce ) ) {
 			return;
 		}
-		if ( wp_verify_nonce( $_GET['_ea_notice_nonce'], 'eaccounting_hide_notice' ) ) { // phpcs:ignore
-			$this->remove_notice( sanitize_textarea_field( $_GET['eaccounting_hide_notice'] ) ); // phpcs:ignore
+		if ( wp_verify_nonce( $nonce, 'eaccounting_hide_notice' ) ) {
+			$this->remove_notice( sanitize_textarea_field( $action ) );
 		}
 		wp_safe_redirect( remove_query_arg( array( 'eaccounting_hide_notice', '_ea_notice_nonce' ) ) );
 		exit();
@@ -253,13 +255,13 @@ class Notices {
 					unset( $this->notices[ $id ] );
 				}
 				$classes[] = 'notice-' . $notice['type'];
-				$classes   = array_merge( $classes, $notice['classes'] ); // phpcs:ignore
+				$classes   = array_merge( $classes, $notice['classes'] );
+				$classes   = implode( ' ', array_map( 'sanitize_html_class', $classes ) );
+				$url       = wp_nonce_url( add_query_arg( 'eaccounting_hide_notice', $id ), 'eaccounting_hide_notice', '_ea_notice_nonce' );
 				?>
-				<div id="message" class="<?php echo implode( ' ', array_map( 'sanitize_html_class', $classes ) ); ?>">
+				<div id="message" class="<?php echo esc_attr( $classes ); ?>">
 					<?php if ( $dismissible ) : ?>
-						<a
-								class="ea-dismiss-notice notice-dismiss"
-								href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'eaccounting_hide_notice', $id ), 'eaccounting_hide_notice', '_ea_notice_nonce' ) ); ?>">
+						<a class="ea-dismiss-notice notice-dismiss" href="<?php echo esc_url( $url ); ?>">
 							<span class="screen-reader-text"><?php esc_html_e( 'Dismiss', 'wp-ever-accounting' ); ?></span>
 						</a>
 					<?php endif; ?>
@@ -271,7 +273,7 @@ class Notices {
 	}
 
 	/**
-	 * If we have just installed, show a message with the install pages button.
+	 * If we have just installed, show a message with the installation pages button.
 	 *
 	 * @since 1.1.0
 	 */

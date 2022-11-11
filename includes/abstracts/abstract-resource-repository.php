@@ -392,7 +392,7 @@ abstract class Resource_Repository {
 		$data = wp_cache_get( $item->get_id(), $item->get_cache_group() );
 
 		if ( false === $data ) {
-			$data = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$table} WHERE id = %d LIMIT 1;", $item->get_id() ) ); //phpcs:ignore
+			$data = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$table} WHERE id = %d LIMIT 1;", $item->get_id() ) ); //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 			wp_cache_set( $item->get_id(), $data, $item->get_cache_group() );
 		}
 

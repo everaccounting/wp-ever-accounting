@@ -253,7 +253,7 @@ class EverAccounting_Category_List_Table extends EverAccounting_List_Table {
 		if ( ! wp_verify_nonce( $nonce, 'bulk-categories' ) && ! wp_verify_nonce( $nonce, 'category-nonce' ) ) {
 			return;
 		}
-		$ids = isset( $_GET['category_id'] ) ? wp_parse_id_list( $_GET['category_id'] ) : false; // phpcs:ignore
+		$ids = isset( $_GET['category_id'] ) ? wp_parse_id_list( $_GET['category_id'] ) : false; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 
 		if ( ! is_array( $ids ) ) {
 			$ids = array( $ids );

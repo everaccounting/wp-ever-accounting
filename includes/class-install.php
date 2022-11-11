@@ -191,7 +191,7 @@ class Install {
 		$tables         = self::get_tables();
 		$notices        = \EverAccounting\Admin\Notices::init();
 		foreach ( $tables as $table ) {
-			if ( ! $wpdb->get_var( "SHOW TABLES LIKE '$table'" ) ) { // phpcs:ignore
+			if ( ! $wpdb->get_var( "SHOW TABLES LIKE '$table'" ) ) { //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 				$missing_tables[] = $table;
 			}
 		}

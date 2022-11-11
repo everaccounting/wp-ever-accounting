@@ -152,7 +152,7 @@ class Report {
 	 * @since 1.1.0
 	 */
 	public function maybe_clear_cache( $key ) {
-		$nonce = isset( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ) : ''; //phpcs:ignore
+		$nonce = isset( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		if ( ! empty( $_GET['refresh_report'] ) && ! empty( $nonce ) && wp_verify_nonce( $nonce, 'refresh_report' ) ) {
 			$this->delete_cache( $key );
 			wp_safe_redirect( remove_query_arg( array( 'refresh_report', '_wpnonce' ) ) );

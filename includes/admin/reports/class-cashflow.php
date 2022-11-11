@@ -91,7 +91,7 @@ class CashFlow extends Report {
 			$end_date
 		);
 		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		$results = $wpdb->get_results( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		$results = $wpdb->get_results( $sql ); //phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		$income  = array();
 		foreach ( $results as $result ) {
 			if ( ! isset( $income[ $result->date ] ) ) {
@@ -149,7 +149,7 @@ class CashFlow extends Report {
 	 * @return void
 	 */
 	public function output() {
-		$year   = empty( $_GET['year'] ) ? date_i18n( 'Y' ) : intval( $_GET['year'] ); // phpcs:ignore
+		$year   = empty( $_GET['year'] ) ? date_i18n( 'Y' ) : intval( $_GET['year'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$report = $this->get_report( array( 'year' => $year ) );
 		$report = wp_parse_args(
 			$report,
@@ -181,7 +181,7 @@ class CashFlow extends Report {
 						<input type="hidden" name="tab" value="cashflow">
 						<input type="hidden" name="filter" value="true">
 						<button type="submit" class="button-primary button"><?php esc_html_e( 'Submit', 'wp-ever-accounting' ); ?></button>
-						<?php if ( isset( $_GET['filter'] ) ) : ?> <?php //phpcs:ignore ?>
+						<?php if ( isset( $_GET['filter'] ) ) : ?> <?php // phpcs:ignore WordPress.Security.NonceVerification.Recommended ?>
 							<a class="button-secondary button" href="<?php echo esc_url( admin_url( 'admin.php?page=ea-reports&tab=cashflow' ) ); ?>"><?php esc_html_e( 'Reset', 'wp-ever-accounting' ); ?></a>
 						<?php endif; ?>
 					</form>

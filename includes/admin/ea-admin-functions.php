@@ -470,21 +470,24 @@ function eaccounting_do_meta_boxes( $screen, $context, $object ) {
 					$args         = wp_parse_args( $box['args'], array( 'col' => '' ) );
 					$col          = ! empty( $args['col'] ) ? "ea-col-{$args['col']}" : '';
 					$custom_class = isset( $args['class'] ) ? wp_parse_list( $args['class'] ) : array();
-					echo '<div id="ea-' . esc_attr( $box['id'] ) . '" class="ea-metabox ' . esc_attr( $col ) . '" >' . "\n";
-					echo '<div class="ea-card ' . implode( ' ', array_map( 'sanitize_html_class', $custom_class ) ) . '" >' . "\n";
-					if ( ! empty( $box['title'] ) ) {
-						echo '<div class="ea-card__header">';
-						echo '<h3 class="ea-card__title">' . esc_html( $box['title'] ) . '</h3>';
-						if ( isset( $args['toolbar_callback'] ) && is_callable( $args['toolbar_callback'] ) ) {
-							echo '<div class="ea-card__toolbar">';
-							call_user_func( $box['toolbar_callback'], $object, $box );
-							echo "</div>\n";
-						}
-						echo "</div>\n";
-					}
-					call_user_func( $box['callback'], $object, $box );
-					echo '</div>';
-					echo '</div>';
+					$classes      = implode( ' ', array_map( 'sanitize_html_class', $custom_class ) );
+					?>
+						<div id="id-<?php echo esc_attr( $box['id'] ); ?>" class="ea-metabox <?php echo esc_attr( $col ); ?>" >
+							<div class="ea-card <?php echo esc_attr( $classes ); ?>" >
+								<?php if ( ! empty( $box['title'] ) ) : ?>
+									<div class="ea-card__header">
+										<h3 class="ea-card__title"><?php echo esc_html( $box['title'] ); ?></h3>
+										<?php if ( isset( $args['toolbar_callback'] ) && is_callable( $args['toolbar_callback'] ) ) : ?>
+											<div class="ea-card__toolbar">
+												<?php call_user_func( $box['toolbar_callback'], $object, $box ); ?>
+											</div>
+										<?php endif; ?>
+									</div>
+								<?php endif; ?>
+								<?php call_user_func( $box['callback'], $object, $box ); ?>
+							</div>
+						</div>
+					<?php
 				}
 			}
 		}
@@ -498,7 +501,7 @@ function eaccounting_do_meta_boxes( $screen, $context, $object ) {
  * @since 1.1.0
  */
 function eaccounting_get_report_years() {
-	$years = range( date( 'Y' ), ( date( 'Y' ) - 10 ), 1 ); // phpcs:ignore
+	$years = range( date( 'Y' ), ( date( 'Y' ) - 10 ), 1 ); //phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
 
 	return array_combine( array_values( $years ), $years );
 }

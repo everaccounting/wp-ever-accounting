@@ -239,10 +239,10 @@ function eaccounting_get_items( $args = array() ) {
 	$clauses     = compact( 'select', 'from', 'where', 'orderby', 'limit' );
 	if ( false === $results ) {
 		if ( $count_total ) {
-			$results = (int) $wpdb->get_var( "SELECT COUNT(id) $from $where" ); // phpcs:ignore
+			$results = (int) $wpdb->get_var( "SELECT COUNT(id) $from $where" ); //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 			wp_cache_set( $cache_key, $results, 'ea_items' );
 		} else {
-			$results = $wpdb->get_results( implode( ' ', $clauses ) );  // phpcs:ignore
+			$results = $wpdb->get_results( implode( ' ', $clauses ) );  //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared
 			if ( in_array( $fields, array( 'all', '*' ), true ) ) {
 				foreach ( $results as $key => $item ) {
 					if ( ! empty( $item->sku ) ) {

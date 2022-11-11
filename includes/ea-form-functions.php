@@ -168,7 +168,7 @@ function eaccounting_text_input( $field = array() ) {
 		echo sprintf( '<div id="colorPickerDiv_%s" class="colorpickdiv" style="z-index: 100;background:#eee;border:1px solid #ccc;position:absolute;display:none;"></div>', esc_attr( $field['id']) ); // phpcs:ignore
 	}
 	if ( ! empty( $field['label'] ) ) {
-		echo $desc; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo wp_kses_post( $desc );
 
 		echo '</div>';
 	}
@@ -236,8 +236,7 @@ function eaccounting_textarea( $field ) {
 		$attributes, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		esc_attr( $field['value'] )
 	);
-
-	echo $desc; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	echo wp_kses_post( $desc );
 
 	echo '</div>';
 
@@ -303,7 +302,7 @@ function eaccounting_wp_radio( $field ) {
 
 	echo '</ul>';
 
-	echo $desc; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	echo wp_kses_post( $desc );
 
 	echo '</fieldset>';
 }

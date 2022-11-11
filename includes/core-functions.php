@@ -59,7 +59,7 @@ function eaccounting_update_option( $key, $value ) {
 /**
  * Get financial Start
  *
- * @param string $year Year.
+ * @param int    $year Year.
  * @param string $format Format.
  *
  * @since 1.0.2
@@ -70,7 +70,7 @@ function eaccounting_get_financial_start( $year = null, $format = 'Y-m-d' ) {
 	$setting         = explode( '-', $financial_start );
 	$day             = ! empty( $setting[0] ) ? $setting[0] : '01';
 	$month           = ! empty( $setting[1] ) ? $setting[1] : '01';
-	$year            = empty( $year ) ? date( 'Y' ) : $year; // phpcs:ignore
+	$year            = empty( $year ) ? date( 'Y' ) : absint( $year ); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
 
 	$financial_year = new \EverAccounting\DateTime();
 	$financial_year->setDate( $year, $month, $day );

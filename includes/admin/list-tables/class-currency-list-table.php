@@ -207,7 +207,7 @@ class EverAccounting_Currency_List_Table extends EverAccounting_List_Table {
 			return;
 		}
 
-		$codes = isset( $_GET['currency_code'] ) ? wp_parse_id_list( $_GET['currency_code'] ) : false; //phpcs:ignore
+		$codes = isset( $_GET['currency_code'] ) ? wp_parse_id_list( $_GET['currency_code'] ) : false; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 		$codes = wp_parse_list( $codes );
 
 		$action = $this->current_action();

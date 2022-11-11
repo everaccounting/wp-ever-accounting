@@ -412,7 +412,7 @@ function eaccounting_get_contacts( $args = array() ) {
 		$searches = array();
 		$where   .= ' AND (';
 		foreach ( $search_cols as $col ) {
-			$searches[] = $wpdb->prepare( $col . ' LIKE %s', '%' . $wpdb->esc_like( $qv['search'] ) . '%' ); // phpcs:ignore
+			$searches[] = $wpdb->prepare( $col . ' LIKE %s', '%' . $wpdb->esc_like( $qv['search'] ) . '%' ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		}
 		$where .= implode( ' OR ', $searches );
 		$where .= ')';
@@ -466,10 +466,10 @@ function eaccounting_get_contacts( $args = array() ) {
 
 	if ( false === $results ) {
 		if ( $count_total ) {
-			$results = (int) $wpdb->get_var( "SELECT COUNT(id) $from $where" ); // phpcs:ignore
+			$results = (int) $wpdb->get_var( "SELECT COUNT(id) $from $where" );  //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 			wp_cache_set( $cache_key, $results, 'ea_contacts' );
 		} else {
-			$results = $wpdb->get_results( implode( ' ', $clauses ) ); // phpcs:ignore
+			$results = $wpdb->get_results( implode( ' ', $clauses ) );  //phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 			if ( in_array( $fields, array( 'all', '*' ), true ) ) {
 				foreach ( $results as $key => $item ) {
 					if ( ! empty( $item->email ) ) {

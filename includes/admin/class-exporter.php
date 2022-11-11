@@ -45,8 +45,9 @@ class Exporter {
 
 		$type = sanitize_key( $type );
 		Ajax::verify_nonce( "{$type}_exporter_nonce" );
-
-		if ( empty( $type ) || false === $batch = eaccounting()->utils->batch->get( $type ) ) { // phpcs:ignore
+		$step  = filter_input( INPUT_POST, 'step', FILTER_SANITIZE_NUMBER_INT );
+		$batch = eaccounting()->utils->batch->get( $type );
+		if ( empty( $type ) || false === $batch ) {
 			wp_send_json_error(
 				array(
 					/* translators: %s: export type */
@@ -91,8 +92,7 @@ class Exporter {
 			);
 		}
 
-		$step = isset( $_POST['step'] ) ? absint( $_POST['step'] ) : 1;
-
+		$step = ! empty( $step ) ? absint( $step ) : 1;
 		$exporter->process_step( $step );
 
 		$query_args = apply_filters(
@@ -148,9 +148,10 @@ class Exporter {
 	 */
 	public static function handle_csv_download() {
 		if ( isset( $_GET['action'], $_GET['nonce'] ) && wp_verify_nonce( wp_unslash( $_GET['nonce'] ), 'ea-download-file' ) && 'eaccounting_download_export_file' === wp_unslash( $_GET['action'] ) ) { // phpcs:ignore
-			$export_type = isset( $_GET['export'] ) ? sanitize_key( wp_unslash( $_GET['export'] ) ) : '';
-			$filename    = isset( $_GET['filename'] ) ? sanitize_text_field( wp_unslash( $_GET['filename'] ) ) : '';
-			if ( empty( $export_type ) || false === $batch = eaccounting()->utils->batch->get( $export_type ) ) { // phpcs:ignore
+			$export_type = filter_input( INPUT_GET, 'export', FILTER_SANITIZE_STRING );
+			$filename    = filter_input( INPUT_GET, 'filename', FILTER_SANITIZE_STRING );
+			$batch       = eaccounting()->utils->batch->get( $export_type );
+			if ( empty( $export_type ) || false === $batch ) {
 				wp_die(
 					esc_html__( 'Invalid export type.', 'wp-ever-accounting' ),
 					esc_html__( 'Error', 'wp-ever-accounting' ),

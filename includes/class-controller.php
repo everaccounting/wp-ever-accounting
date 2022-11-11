@@ -419,7 +419,11 @@ class Controller {
 	 */
 	public static function update_bill_data( $payment_id, $payment ) {
 		try {
-			if ( ! empty( $payment->get_document_id() ) && $bill = eaccounting_get_bill( $payment->get_document_id() ) ) { //phpcs:ignore
+			if ( empty( $payment->get_document_id() ) ) {
+				return;
+			}
+			$bill = eaccounting_get_bill( $payment->get_document_id() );
+			if ( $bill ) {
 				$bill->save();
 			}
 		} catch ( \Exception  $e ) {

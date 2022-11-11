@@ -38,11 +38,11 @@ function eaccounting_get_upload_dir() {
  */
 function eaccounting_scan_folders( $path = '', $return = array() ) {
 	$path  = '' === $path ? dirname( __FILE__ ) : $path;
-	$lists = @scandir( $path ); // phpcs:ignore
+	$lists = @scandir( $path ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 
 	if ( ! empty( $lists ) ) {
 		foreach ( $lists as $f ) {
-			if ( is_dir( $path . DIRECTORY_SEPARATOR . $f ) && $f !== '.' && $f !== '..' ) { // phpcs:ignore
+			if ( is_dir( $path . DIRECTORY_SEPARATOR . $f ) && '.' !== $f && '..' !== $f ) {
 				if ( ! in_array( $path . DIRECTORY_SEPARATOR . $f, $return, true ) ) {
 					$return[] = trailingslashit( $path . DIRECTORY_SEPARATOR . $f );
 				}

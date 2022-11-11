@@ -103,7 +103,7 @@ class Expenses extends Report {
 	 * @return void
 	 */
 	public function output() {
-		$year           = empty( $_GET['year'] ) ? date_i18n( 'Y' ) : intval( $_GET['year'] ); // phpcs:ignore
+		$year           = empty( $_GET['year'] ) ? date_i18n( 'Y' ) : intval( $_GET['year'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$category_id    = filter_input( INPUT_GET, 'category_id', FILTER_SANITIZE_NUMBER_INT );
 		$account_id     = filter_input( INPUT_GET, 'account_id', FILTER_SANITIZE_NUMBER_INT );
 		$vendor_id      = filter_input( INPUT_GET, 'vendor_id', FILTER_SANITIZE_NUMBER_INT );
@@ -171,7 +171,7 @@ class Expenses extends Report {
 						<input type="hidden" name="tab" value="expenses">
 						<input type="hidden" name="filter" value="true">
 						<button type="submit" class="button-primary button"><?php esc_html_e( 'Submit', 'wp-ever-accounting' ); ?></button>
-						<?php if ( isset( $_GET['filter'] ) ) : ?> <?php //phpcs:ignore ?>
+						<?php if ( isset( $_GET['filter'] ) ) : ?> <?php // phpcs:ignore WordPress.Security.NonceVerification.Recommended ?>
 							<a class="button-secondary button" href="<?php echo esc_url( admin_url( 'admin.php?page=ea-reports&tab=expenses' ) ); ?>"><?php esc_html_e( 'Reset', 'wp-ever-accounting' ); ?></a>
 						<?php endif; ?>
 					</form>

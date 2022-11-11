@@ -42,7 +42,6 @@ class Menu {
 		add_action( 'eaccounting_banking_page_tab_transfers', array( $this, 'render_transfers_tab' ) );
 		add_action( 'eaccounting_tools_page_tab_export', array( $this, 'render_export_page' ), 20 );
 		add_action( 'eaccounting_tools_page_tab_import', array( $this, 'render_import_page' ), 20 );
-		add_action( 'eaccounting_tools_page_tab_system_info', array( $this, 'render_system_info_page' ), 20 );
 		add_action( 'eaccounting_reports_tab_sales', array( $this, 'render_sales_report_tab' ) );
 		add_action( 'eaccounting_reports_tab_expenses', array( $this, 'render_expenses_report_tab' ) );
 		add_action( 'eaccounting_reports_tab_profits', array( $this, 'render_profits_report_tab' ) );
@@ -63,7 +62,7 @@ class Menu {
 		if ( current_user_can( 'manage_eaccounting' ) ) {
 			$menu[] = array( '', 'read', 'ea-separator', '', 'wp-menu-separator accounting' );
 		}
-		$icons = 'data:image/svg+xml;base64,' . base64_encode( file_get_contents( eaccounting()->plugin_path( 'assets/images/icon.svg' ) ) ); // phpcs:ignore
+		$icons = 'data:image/svg+xml;base64,' . base64_encode( file_get_contents( eaccounting()->plugin_path( 'assets/images/icon.svg' ) ) ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode,WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
 
 		add_menu_page(
 			__( 'Accounting', 'wp-ever-accounting' ),
@@ -292,8 +291,6 @@ class Menu {
 		if ( current_user_can( 'ea_export' ) ) {
 			$tabs['export'] = __( 'Export', 'wp-ever-accounting' );
 		}
-		$tabs['system_info'] = __( 'System Info', 'wp-ever-accounting' );
-
 		$tabs = apply_filters( 'eaccounting_tools_tabs', $tabs );
 
 		$first_tab   = current( array_keys( $tabs ) );
@@ -506,16 +503,6 @@ class Menu {
 	 */
 	public function render_import_page() {
 		include dirname( __FILE__ ) . '/views/tools/import.php';
-	}
-
-	/**
-	 * Render System Info tab.
-	 *
-	 * @since 1.0.2
-	 */
-	public function render_system_info_page() {
-		require_once dirname( __FILE__ ) . '/views/tools/system-info.php';
-		include dirname( __FILE__ ) . '/views/tools/system_info.php';
 	}
 
 	/**

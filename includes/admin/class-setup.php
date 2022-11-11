@@ -57,7 +57,8 @@ class Setup_Wizard {
 	 * Show the setup wizard.
 	 */
 	public function setup_wizard() {
-		$page = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_STRING );
+		$page      = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_STRING );
+		$save_step = filter_input( INPUT_GET, 'save_step', FILTER_SANITIZE_STRING );
 		if ( empty( $page ) || 'ea-setup' !== $page ) {
 			return;
 		}
@@ -100,8 +101,7 @@ class Setup_Wizard {
 		wp_enqueue_script( 'ea-select2', eaccounting()->plugin_url( '/dist/js/ea-select2' . $suffix . '.js' ), array( 'jquery', 'jquery-select2' ), $version, true );
 		wp_enqueue_script( 'ea-setup', eaccounting()->plugin_url( '/dist/js/ea-setup' . $suffix . '.js' ), array( 'jquery', 'ea-select2' ), $version, true );
 
-		// @codingStandardsIgnoreStart
-		if ( ! empty( $_POST['save_step'] ) && isset( $this->steps[ $this->step ]['handler'] ) ) {
+		if ( ! empty( $save_step ) && isset( $this->steps[ $this->step ]['handler'] ) ) {
 			call_user_func( $this->steps[ $this->step ]['handler'], $this );
 		}
 
@@ -446,11 +446,11 @@ class Setup_Wizard {
 		check_admin_referer( 'currency_settings' );
 		$new_currency = false;
 		$default      = filter_input( INPUT_POST, 'default', FILTER_SANITIZE_STRING );
-		if ( ! empty( $_REQUEST['code']['custom'] ) && ! empty( $_REQUEST['rate']['custom'] ) ) { // phpcs:ignore
+		if ( ! empty( $_REQUEST['code']['custom'] ) && ! empty( $_REQUEST['rate']['custom'] ) ) {
 			$new_currency = eaccounting_insert_currency(
 				array(
-					'code' => sanitize_key( $_REQUEST['code']['custom'] ),
-					'rate' => (float) $_REQUEST['rate']['custom'],
+					'code' => sanitize_key( wp_unslash( $_REQUEST['code']['custom'] ) ),
+					'rate' => (float) sanitize_text_field( wp_unslash( $_REQUEST['rate']['custom'] ) ),
 				)
 			);
 		}

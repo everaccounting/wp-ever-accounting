@@ -474,7 +474,8 @@ class Bill extends Document {
 				'vendor_id'      => $this->get_contact_id(),
 				'payment_method' => eaccounting_clean( $args['payment_method'] ),
 				'description'    => eaccounting_clean( $args['description'] ),
-				'reference'      => sprintf( __( 'Bill Payment #%d', 'wp-ever-accounting' ), $this->get_id() ),//phpcs:ignore
+				/* translators: %s: bill number */
+				'reference'      => sprintf( __( 'Bill Payment #%d', 'wp-ever-accounting' ), $this->get_id() ),
 			)
 		);
 

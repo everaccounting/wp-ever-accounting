@@ -462,10 +462,10 @@ function eaccounting_get_transfers( $args = array() ) {
 	$results     = wp_cache_get( $cache_key, 'ea_transfers' );
 	if ( false === $results ) {
 		if ( $count_total ) {
-			$results = (int) $wpdb->get_var( "SELECT COUNT($table.id) $from $join $where" ); // phpcs:ignore
+			$results = (int) $wpdb->get_var( "SELECT COUNT($table.id) $from $join $where" );  //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 			wp_cache_set( $cache_key, $results, 'ea_transfers' );
 		} else {
-			$results = $wpdb->get_results( implode( ' ', $clauses ) ); // phpcs:ignore
+			$results = $wpdb->get_results( implode( ' ', $clauses ) );  //phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 			if ( in_array( $fields, array( 'all', '*', 'ea_transfers.*' ), true ) ) {
 				foreach ( $results as $key => $item ) {
 					wp_cache_set( $item->id, $item, 'ea_transfers' );

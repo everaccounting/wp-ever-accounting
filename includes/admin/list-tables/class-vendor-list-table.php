@@ -341,7 +341,7 @@ class EverAccounting_Vendor_List_Table extends EverAccounting_List_Table {
 			}
 		}
 
-		if ( isset( $_GET['_wpnonce'] ) ) {
+		if ( isset( $nonce ) ) {
 			wp_safe_redirect(
 				remove_query_arg(
 					array(
@@ -367,7 +367,7 @@ class EverAccounting_Vendor_List_Table extends EverAccounting_List_Table {
 	 */
 	public function get_views() {
 		$base           = eaccounting_admin_url( array( 'tab' => 'vendors' ) );
-		$current        = isset( $_GET['status'] ) ? sanitize_key( $_GET['status'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$current        = filter_input( INPUT_GET, 'status', FILTER_SANITIZE_STRING );
 		$total_count    = '&nbsp;<span class="count">(' . $this->total_count . ')</span>';
 		$active_count   = '&nbsp;<span class="count">(' . $this->active_count . ')</span>';
 		$inactive_count = '&nbsp;<span class="count">(' . $this->inactive_count . ')</span>';
@@ -444,7 +444,7 @@ class EverAccounting_Vendor_List_Table extends EverAccounting_List_Table {
 
 		$this->total_count = $this->active_count + $this->inactive_count;
 
-		$status = isset( $_GET['status'] ) ? sanitize_key( $_GET['status'] ) : 'any';  // phpcs:ignore
+		$status = ! empty( $status ) ? sanitize_key( $status ) : 'any';
 
 		switch ( $status ) {
 			case 'active':

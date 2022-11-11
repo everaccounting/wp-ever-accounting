@@ -24,7 +24,8 @@ $sections        = array(
 );
 $sections        = apply_filters( 'eaccounting_customer_sections', $sections );
 $first_section   = current( array_keys( $sections ) );
-$current_section = ! empty( $_GET['section'] ) && array_key_exists( $_GET['section'], $sections ) ? sanitize_title( $_GET['section'] ) : $first_section; //phpcs:ignore
+$section         = filter_input( INPUT_GET, 'section', FILTER_SANITIZE_STRING );
+$current_section = ! empty( $section ) && array_key_exists( $section, $sections ) ? sanitize_title( $section ) : $first_section;
 $edit_url        = eaccounting_admin_url(
 	array(
 		'page'        => 'ea-sales',

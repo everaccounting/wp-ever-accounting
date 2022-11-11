@@ -255,7 +255,7 @@ class EverAccounting_Bill_List_Table extends EverAccounting_List_Table {
 		if ( ! wp_verify_nonce( $nonce, 'bulk-bills' ) && ! wp_verify_nonce( $nonce, 'bill-nonce' ) ) {
 			return;
 		}
-		$ids = isset( $_GET['bill_id'] ) ? wp_parse_id_list( $_GET['bill_id'] ) : false; // phpcs:ignore
+		$ids = isset( $_GET['bill_id'] ) ? wp_parse_id_list( $_GET['bill_id'] ) : false; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 
 		if ( ! is_array( $ids ) ) {
 			$ids = array( $ids );
