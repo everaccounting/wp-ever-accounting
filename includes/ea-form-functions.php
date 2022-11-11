@@ -165,7 +165,7 @@ function eaccounting_text_input( $field = array() ) {
 		$attributes // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	);
 	if ( 'color' === $field['data_type'] ) {
-		echo sprintf( '<div id="colorPickerDiv_%s" class="colorpickdiv" style="z-index: 100;background:#eee;border:1px solid #ccc;position:absolute;display:none;"></div>', esc_attr( $field['id']) ); // phpcs:ignore
+		echo sprintf( '<div id="colorPickerDiv_%s" class="colorpickdiv" style="z-index: 100;background:#eee;border:1px solid #ccc;position:absolute;display:none;"></div>', esc_attr( $field['id'] ) );
 	}
 	if ( ! empty( $field['label'] ) ) {
 		echo wp_kses_post( $desc );

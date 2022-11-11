@@ -466,9 +466,9 @@ abstract class Resource_Repository {
 	public function delete( &$item ) {
 		global $wpdb;
 		$table = $wpdb->prefix . $this->table;
-		$wpdb->query( $wpdb->prepare( "DELETE FROM {$table} WHERE id = %d", $item->get_id() ) ); //phpcs:ignore
+		$wpdb->query( $wpdb->prepare( "DELETE FROM {$table} WHERE id = %d", $item->get_id() ) ); //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		if ( $this->meta_type ) {
-			$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}ea_{$this->meta_type}meta WHERE {$this->meta_type}_id = %d", $item->get_id() ) ); //phpcs:ignore
+			$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}ea_{$this->meta_type}meta WHERE {$this->meta_type}_id = %d", $item->get_id() ) ); //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		}
 
 		// Delete cache.

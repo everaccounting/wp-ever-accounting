@@ -471,7 +471,8 @@ class Invoice extends Document {
 				'customer_id'    => $this->get_contact_id(),
 				'payment_method' => eaccounting_clean( $args['payment_method'] ),
 				'description'    => eaccounting_clean( $args['description'] ),
-				'reference'      => sprintf( __( 'Invoice Payment #%d', 'wp-ever-accounting' ), $this->get_id() ),//phpcs:ignore
+				/* translators: %s: invoice number */
+				'reference'      => sprintf( __( 'Invoice Payment #%d', 'wp-ever-accounting' ), $this->get_id() ),
 			)
 		);
 

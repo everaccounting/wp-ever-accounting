@@ -8,7 +8,7 @@
  */
 
 defined( 'ABSPATH' ) || exit();
-$currency_code = isset( $_REQUEST['currency_code'] ) ? eaccounting_clean( $_REQUEST['currency_code'] ) : null; // phpcs:ignore
+$currency_code = filter_input( INPUT_GET, 'currency_code', FILTER_SANITIZE_STRING );
 try {
 	$currency = new \EverAccounting\Models\Currency( $currency_code );
 } catch ( Exception $e ) {

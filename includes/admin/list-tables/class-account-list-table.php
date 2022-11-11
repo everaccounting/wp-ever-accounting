@@ -189,7 +189,14 @@ class EverAccounting_Account_List_Table extends EverAccounting_List_Table {
 		$account_id = $account->get_id();
 		switch ( $column_name ) {
 			case 'thumb':
-				$view_url  = eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'accounts', 'action' => 'view', 'account_id' => $account_id ) );// phpcs:ignore
+				$view_url  = eaccounting_admin_url(
+					array(
+						'page'       => 'ea-banking',
+						'tab'        => 'accounts',
+						'action'     => 'view',
+						'account_id' => $account_id,
+					)
+				);
 				$thumb_url = wp_get_attachment_thumb_url( $account->get_thumbnail_id() );
 				$thumb_url = empty( $thumb_url ) ? eaccounting()->plugin_url( '/dist/images/placeholder-logo.png' ) : $thumb_url;
 				$value     = '<a href="' . esc_url( $view_url ) . '"><img src="' . $thumb_url . '" height="36" width="36" alt="' . $account->get_name() . '"></a>';
@@ -197,9 +204,31 @@ class EverAccounting_Account_List_Table extends EverAccounting_List_Table {
 
 			case 'name':
 				$nonce    = wp_create_nonce( 'account-nonce' );
-				$view_url = eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'accounts', 'action' => 'view', 'account_id' => $account_id ) );// phpcs:ignore
-				$edit_url = eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'accounts', 'action' => 'edit', 'account_id' => $account_id ) );// phpcs:ignore
-				$del_url  = eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'accounts', 'action' => 'delete', 'account_id' => $account_id, '_wpnonce' => $nonce ) );// phpcs:ignore
+				$view_url = eaccounting_admin_url(
+					array(
+						'page'       => 'ea-banking',
+						'tab'        => 'accounts',
+						'action'     => 'view',
+						'account_id' => $account_id,
+					)
+				);
+				$edit_url = eaccounting_admin_url(
+					array(
+						'page'       => 'ea-banking',
+						'tab'        => 'accounts',
+						'action'     => 'edit',
+						'account_id' => $account_id,
+					)
+				);
+				$del_url  = eaccounting_admin_url(
+					array(
+						'page'       => 'ea-banking',
+						'tab'        => 'accounts',
+						'action'     => 'delete',
+						'account_id' => $account_id,
+						'_wpnonce'   => $nonce,
+					)
+				);
 
 				$actions = array(
 					'id'     => 'ID: ' . $account_id,

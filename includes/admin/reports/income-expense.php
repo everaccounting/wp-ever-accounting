@@ -7,7 +7,7 @@ defined( 'ABSPATH' ) || exit();
  * @since 1.0.0
  */
 function eaccounting_reports_income_expense_tab() {
-	$year       = isset( $_REQUEST['year'] ) ? intval( $_REQUEST['year'] ) : date( 'Y' ); // phpcs:ignore
+	$year       = isset( $_REQUEST['year'] ) ? intval( $_REQUEST['year'] ) : date( 'Y' ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.DateTime.RestrictedFunctions.date_date
 	$account_id = filter_input( INPUT_GET, 'account_id', FILTER_SANITIZE_NUMBER_INT );
 	?>
 	<div class="ea-card is-compact">
@@ -55,7 +55,7 @@ function eaccounting_reports_income_expense_tab() {
 	<div class="ea-card">
 		<?php
 		global $wpdb;
-		$dates        = $totals = $compares = $graph = $categories = array(); // phpcs:ignore
+		$dates        = $totals = $compares = $graph = $categories = array(); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited, Squiz.PHP.DisallowMultipleAssignments.Found
 		$date_start   = eaccounting_get_financial_start( $year );
 		$end          = eaccounting_get_financial_end( $year );
 		$income_cats  = eaccounting_get_categories(
@@ -122,8 +122,8 @@ function eaccounting_reports_income_expense_tab() {
 
 		foreach ( $transactions as $transaction ) {
 			$amount     = eaccounting_price_to_default( $transaction->amount, $transaction->currency_code, $transaction->currency_rate );
-			$month      = date( 'F', strtotime( $transaction->payment_date ) ); // phpcs:ignore
-			$month_year = date( 'F-Y', strtotime( $transaction->payment_date ) ); // phpcs:ignore
+			$month      = date( 'F', strtotime( $transaction->payment_date ) ); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
+			$month_year = date( 'F-Y', strtotime( $transaction->payment_date ) ); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
 
 			if ( 'income' === $transaction->type && isset( $compares['income'][ $transaction->category_id ] ) ) {
 				$compares['income'][ $transaction->category_id ][ $month ]['amount'] += $amount;

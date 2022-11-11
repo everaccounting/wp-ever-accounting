@@ -121,7 +121,7 @@ class Importer {
 				'application/vnd.msexcel',
 			);
 
-			if ( empty( $_FILES['upload']['type'] ) || ! in_array( strtolower( $_FILES['upload']['type'] ), $accepted_mime_types ) ) { // phpcs:ignore
+			if ( empty( $_FILES['upload']['type'] ) || ! in_array( strtolower( $_FILES['upload']['type'] ), $accepted_mime_types, true ) ) {
 				wp_send_json_error(
 					array(
 						'message' => __( 'The file you uploaded does not appear to be a CSV file.', 'wp-ever-accounting' ),
@@ -129,7 +129,7 @@ class Importer {
 				);
 			}
 
-			if ( ! file_exists( $_FILES['upload']['tmp_name'] ) ) { // phpcs:ignore
+			if ( ! file_exists( wp_unslash( $_FILES['upload']['tmp_name'] ) ) ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 				wp_send_json_error(
 					array(
 						'message' => __( 'Something went wrong during the upload process, please try again.', 'wp-ever-accounting' ),
@@ -138,7 +138,7 @@ class Importer {
 			}
 
 			// Let WordPress import the file. We will remove it after import is complete.
-			$import_file = wp_handle_upload( $_FILES['upload'], array( 'test_form' => false ) ); // phpcs:ignore
+			$import_file = wp_handle_upload( $_FILES['upload'], array( 'test_form' => false ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated,WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 			if ( ! empty( $import_file['error'] ) ) {
 				wp_send_json_error(
 					array(

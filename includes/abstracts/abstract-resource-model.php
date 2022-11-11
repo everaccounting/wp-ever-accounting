@@ -310,7 +310,7 @@ abstract class Resource_Model {
 	 * @return string Data in JSON format.
 	 */
 	public function __toString() {
-		return wp_json_encode( $this->get_data() );  // phpcs:ignore
+		return wp_json_encode( $this->get_data() );
 	}
 
 	/**

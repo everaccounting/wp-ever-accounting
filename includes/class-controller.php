@@ -325,7 +325,8 @@ class Controller {
 	 */
 	public static function validate_category_data( $data, $id ) {
 		global $wpdb;
-		$existing_category_id = (int) $wpdb->get_var( $wpdb->prepare( "SELECT id from {$wpdb->prefix}ea_categories WHERE type=%s AND name='%s'", eaccounting_clean( $data['type'] ), eaccounting_clean( $data['name'] ) ) ); //phpcs:ignore
+		$sql                  = $wpdb->prepare( "SELECT id from {$wpdb->prefix}ea_categories WHERE type=%s AND name=%s", eaccounting_clean( $data['type'] ), eaccounting_clean( $data['name'] ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		$existing_category_id = (int) $wpdb->get_var( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
 		if ( ! empty( $existing_category_id ) && ( absint( $id ) !== absint( $existing_category_id ) ) ) {
 			throw new \Exception( __( 'Duplicate category.', 'wp-ever-accounting' ) );
@@ -466,7 +467,11 @@ class Controller {
 	 */
 	public static function update_invoice_data( $payment_id, $revenue ) {
 		try {
-			if ( ! empty( $revenue->get_document_id() ) && $invoice = eaccounting_get_invoice( $revenue->get_document_id() ) ) { //phpcs:ignore
+			if ( empty( $revenue->get_document_id() ) ) {
+				return;
+			}
+			$invoice = eaccounting_get_invoice( $revenue->get_document_id() );
+			if ( $invoice ) {
 				$invoice->save();
 			}
 		} catch ( \Exception  $e ) {

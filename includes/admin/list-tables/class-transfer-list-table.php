@@ -180,7 +180,14 @@ class EverAccounting_Transfer_List_Table extends EverAccounting_List_Table {
 		$transfer_id = $transfer->get_id();
 		switch ( $column_name ) {
 			case 'date':
-				$edit_url = eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'transfers', 'action' => 'edit', 'transfer_id' => $transfer_id, ) );// phpcs:ignore
+				$edit_url = eaccounting_admin_url(
+					array(
+						'page'        => 'ea-banking',
+						'tab'         => 'transfers',
+						'action'      => 'edit',
+						'transfer_id' => $transfer_id,
+					)
+				);
 				$del_url  = eaccounting_admin_url(
 					array(
 						'page'        => 'ea-banking',
@@ -188,7 +195,8 @@ class EverAccounting_Transfer_List_Table extends EverAccounting_List_Table {
 						'action'      => 'delete',
 						'transfer_id' => $transfer_id,
 						'_wpnonce'    => wp_create_nonce( 'transfer-nonce' ),
-				) );// phpcs:ignore
+					)
+				);
 
 				$actions = array(
 					'edit'   => '<a href="' . $edit_url . '">' . __( 'Edit', 'wp-ever-accounting' ) . '</a>',
@@ -214,7 +222,11 @@ class EverAccounting_Transfer_List_Table extends EverAccounting_List_Table {
 								'tab'        => 'accounts',
 								'action'     => 'view',
 								'account_id' => $transfer->get_from_account_id(),
-				) ) ), $account->get_name() ) : '&mdash;';// phpcs:ignore
+							)
+						)
+					),
+					$account->get_name()
+				) : '&mdash;';
 
 				break;
 			case 'to_account_id':
@@ -228,7 +240,11 @@ class EverAccounting_Transfer_List_Table extends EverAccounting_List_Table {
 								'tab'        => 'accounts',
 								'action'     => 'view',
 								'account_id' => $transfer->get_to_account_id(),
-				) ) ), $account->get_name() ) : '&mdash;';// phpcs:ignore
+							)
+						)
+					),
+					$account->get_name()
+				) : '&mdash;';
 				break;
 			case 'reference':
 				$value = ! empty( $transfer->get_reference() ) ? $transfer->get_reference() : '&mdash;';
@@ -344,8 +360,8 @@ class EverAccounting_Transfer_List_Table extends EverAccounting_List_Table {
 
 		if ( ! empty( $start_date ) && ! empty( $end_date ) ) {
 			$args['payment_date'] = array(
-					'before' => date( 'Y-m-d', strtotime( $end_date ) ), // phpcs:ignore
-					'after'  => date( 'Y-m-d', strtotime( $start_date ) ), // phpcs:ignore
+				'before'    => date( 'Y-m-d', strtotime( $end_date ) ), // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
+					'after' => date( 'Y-m-d', strtotime( $start_date ) ), // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
 			);
 		}
 

@@ -192,9 +192,31 @@ class EverAccounting_Invoice_List_Table extends EverAccounting_List_Table {
 				$invoice_number = $invoice->get_invoice_number();
 
 				$nonce    = wp_create_nonce( 'invoice-nonce' );
-				$view_url = eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'invoices', 'action' => 'view', 'invoice_id' => $invoice_id, ) );// phpcs:ignore
-				$edit_url = eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'invoices', 'action' => 'edit', 'invoice_id' => $invoice_id, ) );// phpcs:ignore
-				$del_url  = eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'invoices', 'action' => 'delete', 'invoice_id' => $invoice_id, '_wpnonce' => $nonce, ) );// phpcs:ignore
+				$view_url = eaccounting_admin_url(
+					array(
+						'page'       => 'ea-sales',
+						'tab'        => 'invoices',
+						'action'     => 'view',
+						'invoice_id' => $invoice_id,
+					)
+				);
+				$edit_url = eaccounting_admin_url(
+					array(
+						'page'       => 'ea-sales',
+						'tab'        => 'invoices',
+						'action'     => 'edit',
+						'invoice_id' => $invoice_id,
+					)
+				);
+				$del_url  = eaccounting_admin_url(
+					array(
+						'page'       => 'ea-sales',
+						'tab'        => 'invoices',
+						'action'     => 'delete',
+						'invoice_id' => $invoice_id,
+						'_wpnonce'   => $nonce,
+					)
+				);
 
 				$actions          = array();
 				$actions['view']  = '<a href="' . $view_url . '">' . __( 'View', 'wp-ever-accounting' ) . '</a>';
@@ -212,7 +234,20 @@ class EverAccounting_Invoice_List_Table extends EverAccounting_List_Table {
 			case 'name':
 				$value = esc_html( $invoice->get_name() );
 				if ( ! empty( $invoice->get_contact_id() ) ) {
-					$value = sprintf( '<a href="%1$s">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'customers', 'action' => 'view', 'customer_id' => $invoice->get_contact_id() ) ) ), $invoice->get_name() );// phpcs:ignore
+					$value = sprintf(
+						'<a href="%1$s">%2$s</a>',
+						esc_url(
+							eaccounting_admin_url(
+								array(
+									'page'        => 'ea-sales',
+									'tab'         => 'customers',
+									'action'      => 'view',
+									'customer_id' => $invoice->get_contact_id(),
+								)
+							)
+						),
+						$invoice->get_name()
+					);
 				}
 				break;
 			case 'issue_date':

@@ -137,7 +137,7 @@ function eaccounting_get_notes( $args = array() ) {
 		$searches = array();
 		$where    = ' AND ('; // phpcs:ignore
 		foreach ( $search_cols as $col ) {
-			$searches[] = $wpdb->prepare( $col . ' LIKE %s', '%' . $wpdb->esc_like( $qv['search'] ) . '%' ); // phpcs:ignore
+			$searches[] = $wpdb->prepare( $col . ' LIKE %s', '%' . $wpdb->esc_like( $qv['search'] ) . '%' ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		}
 		$where .= implode( ' OR ', $searches );
 		$where .= ')';
@@ -180,7 +180,7 @@ function eaccounting_get_notes( $args = array() ) {
 	$orderby     = "ORDER BY {$orderby} {$order}";
 	$count_total = true === $qv['count_total'];
 	$cache_key   = 'query:' . md5( maybe_serialize( $qv ) ) . ':' . wp_cache_get_last_changed( 'ea_notes' );
-	$results     = wp_cache_get( $cache_key, 'ea_notes' ); // phpcs:ignore
+	$results     = wp_cache_get( $cache_key, 'ea_notes' );
 	$clauses     = compact( 'select', 'from', 'where', 'orderby', 'limit' );
 
 	if ( false === $results ) {

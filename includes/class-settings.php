@@ -676,9 +676,9 @@ class Settings {
 		foreach ( $args['options'] as $key => $option ) :
 			$checked = false;
 
-			if ( isset( $this->settings[ $args['id'] ] ) && $this->settings[ $args['id'] ] == $key ) { //phpcs:ignore
+			if ( isset( $this->settings[ $args['id'] ] ) && $this->settings[ $args['id'] ] === $key ) {
 				$checked = true;
-			} elseif ( isset( $args['std'] ) && $args['std'] == $key && ! isset( $this->options[ $args['id'] ] ) ) { //phpcs:ignore
+			} elseif ( isset( $args['std'] ) && $args['std'] === $key && ! isset( $this->options[ $args['id'] ] ) ) {
 				$checked = true;
 			}
 
@@ -973,7 +973,7 @@ class Settings {
 	 */
 	public function missing_callback( $args ) {
 		/* translators: %s name of the callback */
-		printf( __( 'The callback function used for the <strong>%s</strong> setting is missing.', 'wp-ever-accounting' ), esc_html( $args['id'] ) ); //phpcs:ignore
+		printf( __( 'The callback function used for the <strong>%s</strong> setting is missing.', 'wp-ever-accounting' ), esc_html( $args['id'] ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 
 	/**

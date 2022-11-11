@@ -1451,7 +1451,7 @@ abstract class Document extends Resource_Model {
 	public function is_due() {
 		$due_date = $this->get_due_date();
 
-		return empty( $due_date ) || $this->is_paid() ? false : strtotime( date_i18n( 'Y-m-d 23:59:00' ) ) > strtotime( date_i18n( 'Y-m-d 23:59:00', strtotime( $due_date ) ) ); //phpcs:ignore
+		return empty( $due_date ) || $this->is_paid() ? false : strtotime( date_i18n( 'Y-m-d 23:59:00' ) ) > strtotime( date_i18n( 'Y-m-d 23:59:00', strtotime( $due_date ) ) ); //phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
 	}
 
 	/**

@@ -147,7 +147,9 @@ class Exporter {
 	 * @since 1.0.2
 	 */
 	public static function handle_csv_download() {
-		if ( isset( $_GET['action'], $_GET['nonce'] ) && wp_verify_nonce( wp_unslash( $_GET['nonce'] ), 'ea-download-file' ) && 'eaccounting_download_export_file' === wp_unslash( $_GET['action'] ) ) { // phpcs:ignore
+		$action = filter_input( INPUT_GET, 'action', FILTER_SANITIZE_STRING );
+		$nonce  = filter_input( INPUT_GET, 'nonce', FILTER_SANITIZE_STRING );
+		if ( isset( $action, $nonce ) && wp_verify_nonce( wp_unslash( $nonce ), 'ea-download-file' ) && 'eaccounting_download_export_file' === wp_unslash( $action ) ) {
 			$export_type = filter_input( INPUT_GET, 'export', FILTER_SANITIZE_STRING );
 			$filename    = filter_input( INPUT_GET, 'filename', FILTER_SANITIZE_STRING );
 			$batch       = eaccounting()->utils->batch->get( $export_type );

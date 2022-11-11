@@ -194,12 +194,33 @@ class EverAccounting_Vendor_List_Table extends EverAccounting_List_Table {
 
 		switch ( $column_name ) {
 			case 'thumb':
-				$view_url = eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'vendors', 'action' => 'view', 'vendor_id' => $vendor_id, ) );// phpcs:ignore
+				$view_url = eaccounting_admin_url(
+					array(
+						'page'      => 'ea-expenses',
+						'tab'       => 'vendors',
+						'action'    => 'view',
+						'vendor_id' => $vendor_id,
+					)
+				);
 				$value    = '<a href="' . esc_url( $view_url ) . '"><img src="' . $vendor->get_avatar_url() . '" height="36" width="36" alt="' . $vendor->get_name() . '"></a>';
 				break;
 			case 'name':
-				$view_url = eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'vendors', 'action' => 'view', 'vendor_id' => $vendor_id, ) );// phpcs:ignore
-				$edit_url = eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'vendors', 'action' => 'edit', 'vendor_id' => $vendor_id, ) );// phpcs:ignore
+				$view_url = eaccounting_admin_url(
+					array(
+						'page'      => 'ea-expenses',
+						'tab'       => 'vendors',
+						'action'    => 'view',
+						'vendor_id' => $vendor_id,
+					)
+				);
+				$edit_url = eaccounting_admin_url(
+					array(
+						'page'      => 'ea-expenses',
+						'tab'       => 'vendors',
+						'action'    => 'edit',
+						'vendor_id' => $vendor_id,
+					)
+				);
 				$del_url  = eaccounting_admin_url(
 					array(
 						'page'      => 'ea-expenses',
@@ -207,7 +228,8 @@ class EverAccounting_Vendor_List_Table extends EverAccounting_List_Table {
 						'action'    => 'delete',
 						'vendor_id' => $vendor_id,
 						'_wpnonce'  => wp_create_nonce( 'vendor-nonce' ),
-						) );// phpcs:ignore
+					)
+				);
 				$actions  = array(
 					'view'   => sprintf( '<a href="%1$s">%2$s</a>', esc_url( $view_url ), __( 'View', 'wp-ever-accounting' ) ),
 					'edit'   => sprintf( '<a href="%1$s">%2$s</a>', esc_url( $edit_url ), __( 'Edit', 'wp-ever-accounting' ) ),

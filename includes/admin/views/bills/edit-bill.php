@@ -21,7 +21,7 @@ $title    = $bill->exists() ? __( 'Update Bill', 'wp-ever-accounting' ) : __( 'A
 $note     = eaccounting()->settings->get( 'bill_note' );
 $terms    = eaccounting()->settings->get( 'bill_terms' );
 $due      = eaccounting()->settings->get( 'bill_due', 15 );
-$due_date = date_i18n( 'Y-m-d', strtotime( "+ $due days", current_time( 'timestamp' ) ) );//phpcs:ignore
+$due_date = date_i18n( 'Y-m-d', strtotime( "+ $due days", current_time( 'timestamp' ) ) );//phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date,WordPress.DateTime.CurrentTimeTimestamp.Requested
 ?>
 <div class="ea-row">
 	<div class="ea-col-7">

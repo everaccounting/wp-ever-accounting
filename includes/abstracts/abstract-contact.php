@@ -529,7 +529,9 @@ abstract class Contact extends Resource_Model {
 	 * @return string
 	 */
 	public function get_avatar_url( $args = array() ) {
-		if ( ! empty( $this->get_thumbnail_id() ) && $url = wp_get_attachment_thumb_url( $this->get_thumbnail_id() ) ) { //phpcs:ignore
+		$thumbnail_id = $this->get_thumbnail_id();
+		$url          = $thumbnail_id ? wp_get_attachment_url( $thumbnail_id ) : '';
+		if ( ! empty( $thumbnail_id ) && $url ) {
 			return $url;
 		}
 

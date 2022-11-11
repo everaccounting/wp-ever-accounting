@@ -172,8 +172,25 @@ class EverAccounting_Revenue_List_Table extends EverAccounting_List_Table {
 		$revenue_id = $revenue->get_id();
 		switch ( $column_name ) {
 			case 'date':
-				$edit_url = eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'revenues', 'action' => 'edit', 'revenue_id' => $revenue_id, ), 'admin.php' );// phpcs:ignore
-				$del_url  = eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'revenues', 'action' => 'delete', 'revenue_id' => $revenue_id, '_wpnonce' => wp_create_nonce( 'revenue-nonce' ), ), 'admin.php' );// phpcs:ignore
+				$edit_url = eaccounting_admin_url(
+					array(
+						'page'       => 'ea-sales',
+						'tab'        => 'revenues',
+						'action'     => 'edit',
+						'revenue_id' => $revenue_id,
+					),
+					'admin.php'
+				);
+				$del_url  = eaccounting_admin_url(
+					array(
+						'page'       => 'ea-sales',
+						'tab'        => 'revenues',
+						'action'     => 'delete',
+						'revenue_id' => $revenue_id,
+						'_wpnonce'   => wp_create_nonce( 'revenue-nonce' ),
+					),
+					'admin.php'
+				);
 
 				$actions = array(
 					'edit'   => '<a href="' . $edit_url . '">' . __( 'Edit', 'wp-ever-accounting' ) . '</a>',
@@ -187,7 +204,20 @@ class EverAccounting_Revenue_List_Table extends EverAccounting_List_Table {
 				break;
 			case 'account_id':
 				$account = eaccounting_get_account( $revenue->get_account_id( 'edit' ) );
-				$value   = $account ? sprintf( '<a href="%1$s">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'accounts', 'action' => 'view', 'account_id' => $revenue->get_account_id( 'edit' ), ) ) ), $account->get_name() ) : '&mdash;';// phpcs:ignore
+				$value   = $account ? sprintf(
+					'<a href="%1$s">%2$s</a>',
+					esc_url(
+						eaccounting_admin_url(
+							array(
+								'page'       => 'ea-banking',
+								'tab'        => 'accounts',
+								'action'     => 'view',
+								'account_id' => $revenue->get_account_id( 'edit' ),
+							)
+						)
+					),
+					$account->get_name()
+				) : '&mdash;';
 				break;
 			case 'category_id':
 				$category = eaccounting_get_category( $revenue->get_category_id( 'edit' ) );
@@ -195,7 +225,20 @@ class EverAccounting_Revenue_List_Table extends EverAccounting_List_Table {
 				break;
 			case 'contact_id':
 				$contact = eaccounting_get_customer( $revenue->get_contact_id( 'edit' ) );
-				$value   = $contact ? sprintf( '<a href="%1$s">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'customers', 'action' => 'view', 'customer_id' => $revenue->get_contact_id( 'edit' ), ) ) ), $contact->get_name() ) : '&mdash;';// phpcs:ignore
+				$value   = $contact ? sprintf(
+					'<a href="%1$s">%2$s</a>',
+					esc_url(
+						eaccounting_admin_url(
+							array(
+								'page'        => 'ea-sales',
+								'tab'         => 'customers',
+								'action'      => 'view',
+								'customer_id' => $revenue->get_contact_id( 'edit' ),
+							)
+						)
+					),
+					$contact->get_name()
+				) : '&mdash;';
 				break;
 			default:
 				return parent::column_default( $revenue, $column_name );
@@ -388,8 +431,8 @@ class EverAccounting_Revenue_List_Table extends EverAccounting_List_Table {
 
 		if ( ! empty( $month ) ) {
 			$args['payment_date'] = array(
-				'before' => date( 'Y-m-01', strtotime( $month ) ), // phpcs:ignore
-				'after'  => date( 'Y-m-t', strtotime( $month ) ), // phpcs:ignore
+				'before' => date( 'Y-m-01', strtotime( $month ) ), // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
+				'after'  => date( 'Y-m-t', strtotime( $month ) ), // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
 			);
 		}
 

@@ -108,7 +108,7 @@ abstract class CSV_Exporter {
 	public function process_step( $step ) {
 		$this->page = absint( $step );
 		if ( 1 === $this->page ) {
-			@unlink( $this->get_file_path() ); // phpcs:ignore
+			@unlink( $this->get_file_path() ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 		}
 
 		$rows = $this->prepare_rows( $this->get_rows() );
@@ -120,7 +120,7 @@ abstract class CSV_Exporter {
 		}
 
 		$file .= $rows;
-		@file_put_contents( $this->get_file_path(), $file ); // phpcs:ignore
+		@file_put_contents( $this->get_file_path(), $file ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged,WordPress.WP.AlternativeFunctions.file_system_read_file_put_contents
 	}
 
 	/**
@@ -131,7 +131,7 @@ abstract class CSV_Exporter {
 	public function export() {
 		$this->send_headers();
 		$this->send_content( $this->get_file() );
-		@unlink( $this->get_file_path() ); // phpcs:ignore
+		@unlink( $this->get_file_path() ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 		die();
 	}
 
@@ -150,7 +150,7 @@ abstract class CSV_Exporter {
 	 * @return string
 	 */
 	public function get_filename() {
-		$date = date( 'Ymd' ); // phpcs:ignore
+		$date = date( 'Ymd' ); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
 
 		return sanitize_file_name( "{$this->export_type}-$date.csv" );
 	}
@@ -195,11 +195,11 @@ abstract class CSV_Exporter {
 	 */
 	protected function get_file() {
 		$file = '';
-		if ( @file_exists( $this->get_file_path() ) ) { // phpcs:ignore
-			$file = @file_get_contents( $this->get_file_path() ); // phpcs:ignore
+		if ( @file_exists( $this->get_file_path() ) ) { // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged,WordPress.WP.AlternativeFunctions.file_system_read_file_exists
+			$file = @file_get_contents( $this->get_file_path() ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged,WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
 		} else {
-			@file_put_contents( $this->get_file_path(), '' ); // phpcs:ignore
-			@chmod( $this->get_file_path(), 0664 ); // phpcs:ignore
+			@file_put_contents( $this->get_file_path(), '' ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged,WordPress.WP.AlternativeFunctions.file_system_read_file_put_contents
+			@chmod( $this->get_file_path(), 0664 ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged,WordPress.WP.AlternativeFunctions.file_system_read_file_put_contents
 		}
 
 		return $file;
@@ -352,12 +352,12 @@ abstract class CSV_Exporter {
 	 * @return void
 	 */
 	protected function send_headers() {
-		@ini_set( 'zlib.output_compression', 'Off' ); // phpcs:ignore
-		@ini_set( 'output_buffering', 'Off' ); // phpcs:ignore
-		@ini_set( 'output_handler', '' ); // phpcs:ignore
+		@ini_set( 'zlib.output_compression', 'Off' ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged,WordPress.PHP.IniSet.Risky
+		@ini_set( 'output_buffering', 'Off' ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged,WordPress.PHP.IniSet.Risky
+		@ini_set( 'output_handler', '' ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged,WordPress.PHP.IniSet.Risky
 		ignore_user_abort( true );
 		if ( function_exists( 'set_time_limit' ) && false === strpos( ini_get( 'disable_functions' ), 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) {
-			@set_time_limit( 0 ); // phpcs:ignore
+			@set_time_limit( 0 ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged,WordPress.PHP.IniSet.Risky
 		}
 
 		nocache_headers();
@@ -375,6 +375,6 @@ abstract class CSV_Exporter {
 	 * @param string $content All CSV content.
 	 */
 	protected function send_content( $content ) {
-		echo $content; // phpcs:ignore
+		echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 }

@@ -23,7 +23,7 @@ interface JSONable {
 	 *
 	 * @since 1.0.2
 	 */
-	public function __toJSON( $options = 0, $depth = 512);  // phpcs:ignore
+	public function __toJSON( $options = 0, $depth = 512);  // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.MethodDoubleUnderscore,WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
 
 	/**
 	 * Returns object as JSON string.
@@ -32,5 +32,5 @@ interface JSONable {
 	 * @param int $depth   JSON depth.
 	 * @since 1.0.2
 	 */
-	public function to_JSON( $options = 0, $depth = 512);  // phpcs:ignore
+	public function to_JSON( $options = 0, $depth = 512);  // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.MethodDoubleUnderscore,WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
 }

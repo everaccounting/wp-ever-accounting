@@ -39,10 +39,10 @@ class Invoice_Actions {
 		$nonce      = filter_input( INPUT_GET, '_wpnonce', FILTER_SANITIZE_STRING );
 		$action     = filter_input( INPUT_GET, 'invoice_action', FILTER_SANITIZE_STRING );
 		$invoice_id = filter_input( INPUT_GET, 'invoice_id', FILTER_SANITIZE_NUMBER_INT );
-		$invoice    = eaccounting_get_invoice( $invoice_id );
+		$invoice    = $invoice_id ? eaccounting_get_invoice( $invoice_id ) : false;
 
 		if ( ! wp_verify_nonce( $nonce, 'ea_invoice_action' ) || ! current_user_can( 'ea_manage_invoice' ) || ! $invoice->exists() ) {
-			wp_die( esc_html__( 'no cheating!', 'wp-ever-accounting' ) ); // phpcs:ignore
+			wp_die( esc_html__( 'no cheating!', 'wp-ever-accounting' ) );
 		}
 		$redirect_url = add_query_arg(
 			array(

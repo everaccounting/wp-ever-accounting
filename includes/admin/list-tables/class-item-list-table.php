@@ -189,13 +189,27 @@ class EverAccounting_Item_List_Table extends EverAccounting_List_Table {
 		$item_id = $item->get_id();
 		switch ( $column_name ) {
 			case 'thumb':
-				$edit_url  = eaccounting_admin_url( array( 'page' => 'ea-items', 'tab' => 'items', 'action' => 'edit', 'item_id' => $item_id, ) );// phpcs:ignore
+				$edit_url  = eaccounting_admin_url(
+					array(
+						'page'    => 'ea-items',
+						'tab'     => 'items',
+						'action'  => 'edit',
+						'item_id' => $item_id,
+					)
+				);
 				$thumb_url = wp_get_attachment_thumb_url( $item->get_thumbnail_id() );
 				$thumb_url = empty( $thumb_url ) ? eaccounting()->plugin_url( '/dist/images/placeholder.png' ) : $thumb_url;
 				$value     = '<a href="' . esc_url( $edit_url ) . '"><img src="' . $thumb_url . '" height="36" width="36" alt="' . $item->get_name() . '"></a>';
 				break;
 			case 'name':
-				$edit_url = eaccounting_admin_url( array( 'page' => 'ea-items', 'tab' => 'items', 'action' => 'edit', 'item_id' => $item_id, ) );// phpcs:ignore
+				$edit_url = eaccounting_admin_url(
+					array(
+						'page'    => 'ea-items',
+						'tab'     => 'items',
+						'action'  => 'edit',
+						'item_id' => $item_id,
+					)
+				);
 				$nonce    = wp_create_nonce( 'item-nonce' );
 				$actions  = array(
 					'id'     => 'ID: ' . $item_id,

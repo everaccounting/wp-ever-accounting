@@ -184,9 +184,31 @@ class EverAccounting_Bill_List_Table extends EverAccounting_List_Table {
 			case 'bill_number':
 				$bill_number = $bill->get_bill_number();
 				$nonce       = wp_create_nonce( 'bill-nonce' );
-				$view_url    = eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'bills', 'action' => 'view', 'bill_id' => $bill_id ) );// phpcs:ignore
-				$edit_url    = eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'bills', 'action' => 'edit', 'bill_id' => $bill_id ) );// phpcs:ignore
-				$del_url     = eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'bills', 'action' => 'delete', 'bill_id' => $bill_id, '_wpnonce' => $nonce ) );// phpcs:ignore
+				$view_url    = eaccounting_admin_url(
+					array(
+						'page'    => 'ea-expenses',
+						'tab'     => 'bills',
+						'action'  => 'view',
+						'bill_id' => $bill_id,
+					)
+				);
+				$edit_url    = eaccounting_admin_url(
+					array(
+						'page'    => 'ea-expenses',
+						'tab'     => 'bills',
+						'action'  => 'edit',
+						'bill_id' => $bill_id,
+					)
+				);
+				$del_url     = eaccounting_admin_url(
+					array(
+						'page'     => 'ea-expenses',
+						'tab'      => 'bills',
+						'action'   => 'delete',
+						'bill_id'  => $bill_id,
+						'_wpnonce' => $nonce,
+					)
+				);
 
 				$actions          = array();
 				$actions['view']  = '<a href="' . $view_url . '">' . __( 'View', 'wp-ever-accounting' ) . '</a>';
@@ -251,7 +273,7 @@ class EverAccounting_Bill_List_Table extends EverAccounting_List_Table {
 	 * @return void
 	 */
 	public function process_bulk_action() {
-		$nonce = isset( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ) : ''; // phpcs:ignore
+		$nonce = filter_input( INPUT_GET, '_wpnonce', FILTER_SANITIZE_STRING );
 		if ( ! wp_verify_nonce( $nonce, 'bulk-bills' ) && ! wp_verify_nonce( $nonce, 'bill-nonce' ) ) {
 			return;
 		}

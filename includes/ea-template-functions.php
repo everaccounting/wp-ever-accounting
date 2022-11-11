@@ -163,7 +163,7 @@ function eaccounting_get_template_html( $template_name, $args = array(), $templa
 function eaccounting_get_admin_template( $template_name, $args = array(), $path = null ) {
 
 	if ( $args && is_array( $args ) ) {
-		extract( $args ); // phpcs:ignore
+		extract( $args ); // phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 	}
 	$template_name = str_replace( '.php', '', $template_name );
 	if ( is_null( $path ) ) {

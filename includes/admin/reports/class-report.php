@@ -126,7 +126,7 @@ class Report {
 		$date       = 'CAST(`' . $column . '` AS DATE)';
 
 		$period = 0;
-		while ( ( $start = strtotime( '+1 MONTH', $start ) ) <= $end ) { //phpcs:ignore
+		while ( ( $start = strtotime( '+1 MONTH', $start ) ) <= $end ) { //phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date,WordPress.CodeAnalysis.AssignmentInCondition.FoundInWhileCondition
 			$period ++;
 		}
 

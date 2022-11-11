@@ -189,13 +189,42 @@ class EverAccounting_Customer_List_Table extends EverAccounting_List_Table {
 		$customer_id = $customer->get_id();
 		switch ( $column_name ) {
 			case 'thumb':
-				$view_url = eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'customers', 'action' => 'view', 'customer_id' => $customer_id, ) );// phpcs:ignore
+				$view_url = eaccounting_admin_url(
+					array(
+						'page'        => 'ea-sales',
+						'tab'         => 'customers',
+						'action'      => 'view',
+						'customer_id' => $customer_id,
+					)
+				);
 				$value    = '<a href="' . esc_url( $view_url ) . '"><img src="' . $customer->get_avatar_url() . '" height="36" width="36" alt="' . $customer->get_name() . '"></a>';
 				break;
 			case 'name':
-				$view_url = eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'customers', 'action' => 'view', 'customer_id' => $customer_id, ) );// phpcs:ignore
-				$edit_url = eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'customers', 'action' => 'edit', 'customer_id' => $customer_id, ) );// phpcs:ignore
-				$del_url  = eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'customers', 'action' => 'delete', 'customer_id' => $customer_id, '_wpnonce' => wp_create_nonce( 'customer-nonce' ), ) );// phpcs:ignore
+				$view_url = eaccounting_admin_url(
+					array(
+						'page'        => 'ea-sales',
+						'tab'         => 'customers',
+						'action'      => 'view',
+						'customer_id' => $customer_id,
+					)
+				);
+				$edit_url = eaccounting_admin_url(
+					array(
+						'page'        => 'ea-sales',
+						'tab'         => 'customers',
+						'action'      => 'edit',
+						'customer_id' => $customer_id,
+					)
+				);
+				$del_url  = eaccounting_admin_url(
+					array(
+						'page'        => 'ea-sales',
+						'tab'         => 'customers',
+						'action'      => 'delete',
+						'customer_id' => $customer_id,
+						'_wpnonce'    => wp_create_nonce( 'customer-nonce' ),
+					)
+				);
 				$actions  = array(
 					'view'   => sprintf( '<a href="%1$s">%2$s</a>', esc_url( $view_url ), __( 'View', 'wp-ever-accounting' ) ),
 					'edit'   => sprintf( '<a href="%1$s">%2$s</a>', esc_url( $edit_url ), __( 'Edit', 'wp-ever-accounting' ) ),

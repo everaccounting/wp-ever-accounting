@@ -184,11 +184,13 @@ $edit_url        = eaccounting_admin_url(
 				<div class="ea-card__footer">
 					<p class="description">
 						<?php
-						echo sprintf(
-						/* translators: %s date and %s name */
-							esc_html__( 'The vendor was created at %1$s by %2$s', 'wp-ever-accounting' ),
-							eaccounting_date( $vendor->get_date_created(), 'F m, Y H:i a' ), // phpcs:ignore
-							eaccounting_get_full_name( $vendor->get_creator_id() ) // phpcs:ignore
+						echo wp_kses_post(
+							sprintf(
+								/* translators: %s date and %s name */
+								esc_html__( 'The vendor was created at %1$s by %2$s', 'wp-ever-accounting' ),
+								eaccounting_date( $vendor->get_date_created(), 'F m, Y H:i a' ),
+								eaccounting_get_full_name( $vendor->get_creator_id() )
+							)
 						);
 						?>
 					</p>

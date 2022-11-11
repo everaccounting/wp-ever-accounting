@@ -161,7 +161,20 @@ class EverAccounting_Transaction_List_Table extends EverAccounting_List_Table {
 				break;
 			case 'account_id':
 				$account = eaccounting_get_account( $transaction->get_account_id( 'edit' ) );
-				$value = $account ? sprintf( '<a href="%1$s">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'accounts', 'action' => 'view', 'account_id' => $transaction->get_account_id() ) ) ), $account->get_name() ) : '&mdash;';// phpcs:ignore
+				$value   = $account ? sprintf(
+					'<a href="%1$s">%2$s</a>',
+					esc_url(
+						eaccounting_admin_url(
+							array(
+								'page'       => 'ea-banking',
+								'tab'        => 'accounts',
+								'action'     => 'view',
+								'account_id' => $transaction->get_account_id(),
+							)
+						)
+					),
+					$account->get_name()
+				) : '&mdash;';
 
 				break;
 			case 'category_id':
@@ -303,8 +316,8 @@ class EverAccounting_Transaction_List_Table extends EverAccounting_List_Table {
 
 		if ( ! empty( $start_date ) && ! empty( $end_date ) ) {
 			$args['payment_date'] = array(
-				'before' => date( 'Y-m-d', strtotime( $end_date ) ), // phpcs:ignore
-				'after'  => date( 'Y-m-d', strtotime( $start_date ) ), // phpcs:ignore
+				'before' => date( 'Y-m-d', strtotime( $end_date ) ), // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
+				'after'  => date( 'Y-m-d', strtotime( $start_date ) ), // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
 			);
 		}
 

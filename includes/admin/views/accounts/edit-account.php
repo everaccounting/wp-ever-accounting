@@ -155,11 +155,13 @@ $title = $account->exists() ? __( 'Update Account', 'wp-ever-accounting' ) : __(
 				<div class="ea-card__footer">
 					<p class="description"><span class="dashicons dashicons-info"></span>
 						<?php
-						echo sprintf(
-							/* translators: %s date and %s name */
-							esc_html__( 'The account was created at %1$s by %2$s', 'wp-ever-accounting' ),
-							eaccounting_date( $account->get_date_created(), 'F m, Y H:i a' ), // phpcs:ignore
-							eaccounting_get_full_name( $account->get_creator_id() ) // phpcs:ignore
+						echo wp_kses_post(
+							sprintf(
+								/* translators: %s date and %s name */
+								esc_html__( 'The account was created at %1$s by %2$s', 'wp-ever-accounting' ),
+								eaccounting_date( $account->get_date_created(), 'F m, Y H:i a' ),
+								eaccounting_get_full_name( $account->get_creator_id() )
+							)
 						);
 						?>
 					</p>

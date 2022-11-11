@@ -238,7 +238,7 @@ function eaccounting_get_accounts( $args = array() ) {
 		$searches = array();
 		$where   .= ' AND (';
 		foreach ( $search_cols as $col ) {
-			$searches[] = $wpdb->prepare( $col . ' LIKE %s', '%' . $wpdb->esc_like( $qv['search'] ) . '%' ); // phpcs:ignore
+			$searches[] = $wpdb->prepare( $col . ' LIKE %s', '%' . $wpdb->esc_like( $qv['search'] ) . '%' ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		}
 		$where .= implode( ' OR ', $searches );
 		$where .= ')';

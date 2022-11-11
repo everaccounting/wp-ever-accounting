@@ -203,8 +203,23 @@ class EverAccounting_Category_List_Table extends EverAccounting_List_Table {
 		switch ( $column_name ) {
 			case 'name':
 				$name     = $category->get_name();
-				$edit_url = eaccounting_admin_url( array( 'page' => 'ea-settings', 'tab' => 'categories', 'action' => 'edit', 'category_id' => $category_id, ) );// phpcs:ignore
-				$del_url  = eaccounting_admin_url( array( 'page' => 'ea-settings', 'tab' => 'categories', 'action' => 'delete', 'category_id' => $category_id, '_wpnonce' => wp_create_nonce( 'category-nonce' ), ) );// phpcs:ignore
+				$edit_url = eaccounting_admin_url(
+					array(
+						'page'        => 'ea-settings',
+						'tab'         => 'categories',
+						'action'      => 'edit',
+						'category_id' => $category_id,
+					)
+				);
+				$del_url  = eaccounting_admin_url(
+					array(
+						'page'        => 'ea-settings',
+						'tab'         => 'categories',
+						'action'      => 'delete',
+						'category_id' => $category_id,
+						'_wpnonce'    => wp_create_nonce( 'category-nonce' ),
+					)
+				);
 				$actions  = array(
 					'edit'   => sprintf( '<a href="%1$s">%2$s</a>', esc_url( $edit_url ), __( 'Edit', 'wp-ever-accounting' ) ),
 					'delete' => sprintf( '<a href="%1$s" class="del">%2$s</a>', esc_url( $del_url ), __( 'Delete', 'wp-ever-accounting' ) ),

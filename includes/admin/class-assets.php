@@ -165,7 +165,12 @@ class Assets {
 					'asset_url'  => eaccounting()->plugin_url( '/assets' ),
 					'plugin_url' => eaccounting()->plugin_url(),
 					'currency'   => eaccounting_get_currency( $default_currency )->get_data(),
-					'currencies' => eaccounting_get_currencies(array('return' => 'raw', 'number' => -1 )) //phpcs:ignore
+					'currencies' => eaccounting_get_currencies(
+						array(
+							'return' => 'raw',
+							'number' => -1,
+						)
+					),
 				)
 			);
 			wp_enqueue_media();

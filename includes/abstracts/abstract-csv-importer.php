@@ -214,7 +214,7 @@ abstract class CSV_Importer {
 
 		$filetype = wp_check_filetype( $this->file, $valid_filetypes );
 		if ( ! in_array( $filetype['type'], $valid_filetypes, true ) ) {
-			wp_die( esc_html__( 'Invalid file type. The importer supports CSV and TXT file formats.', 'wp-ever-accounting' ) ); // phpcs:ignore
+			wp_die( esc_html__( 'Invalid file type. The importer supports CSV and TXT file formats.', 'wp-ever-accounting' ) );
 		}
 
 		$handle = fopen( $this->file, 'r' ); // @codingStandardsIgnoreLine.
@@ -455,7 +455,7 @@ abstract class CSV_Importer {
 
 		$percent = absint( min( round( ( $this->params['position'] / $size ) * 100 ), 100 ) );
 		if ( 100 === $percent ) {
-			@unlink( $this->file ); // phpcs:ignore
+			@unlink( $this->file ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 		}
 
 		return $percent;

@@ -161,8 +161,23 @@ class EverAccounting_Currency_List_Table extends EverAccounting_List_Table {
 		switch ( $column_name ) {
 			case 'name':
 				$name     = $currency->get_name();
-				$edit_url = eaccounting_admin_url( array( 'page' => 'ea-settings', 'tab' => 'currencies', 'action' => 'edit', 'currency_code' => $currency_code, ) );// phpcs:ignore
-				$del_url  = eaccounting_admin_url( array( 'page' => 'ea-settings', 'tab' => 'currencies', 'action' => 'delete', 'currency_code' => $currency_code, '_wpnonce' => wp_create_nonce( 'currency-nonce' ), ) );// phpcs:ignore
+				$edit_url = eaccounting_admin_url(
+					array(
+						'page'          => 'ea-settings',
+						'tab'           => 'currencies',
+						'action'        => 'edit',
+						'currency_code' => $currency_code,
+					)
+				);
+				$del_url  = eaccounting_admin_url(
+					array(
+						'page'          => 'ea-settings',
+						'tab'           => 'currencies',
+						'action'        => 'delete',
+						'currency_code' => $currency_code,
+						'_wpnonce'      => wp_create_nonce( 'currency-nonce' ),
+					)
+				);
 				$actions  = array(
 					'edit'   => sprintf( '<a href="%1$s">%2$s</a>', esc_url( $edit_url ), __( 'Edit', 'wp-ever-accounting' ) ),
 					'delete' => sprintf( '<a href="%1$s" class="del">%2$s</a>', esc_url( $del_url ), __( 'Delete', 'wp-ever-accounting' ) ),

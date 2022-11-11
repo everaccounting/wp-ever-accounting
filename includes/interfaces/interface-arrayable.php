@@ -17,7 +17,7 @@ interface Arrayable {
 	 *
 	 * @since 1.0.0
 	 */
-	public function __toArray(); // phpcs:ignore
+	public function __toArray(); // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.MethodDoubleUnderscore,WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
 
 	/**
 	 * Returns object as string.

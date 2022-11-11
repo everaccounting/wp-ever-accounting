@@ -615,7 +615,7 @@ class Bill extends Document {
 		$this->set_total( $total );
 		if ( ( ! empty( $this->get_total_paid() ) && $this->get_total_due() > 0 ) ) {
 			$this->set_status( 'partial' );
-		} elseif ( empty( $this->get_total_due() )) { // phpcs:ignore
+		} elseif ( empty( $this->get_total_due() ) ) {
 			$this->set_status( 'paid' );
 		} elseif ( $this->is_due() && $this->is_status( 'received' ) ) {
 			$this->set_status( 'overdue' );

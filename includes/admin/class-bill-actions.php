@@ -36,11 +36,12 @@ class Bill_Actions {
 	 * @throws \Exception Exception.
 	 */
 	public function bill_action() {
-		$action  = eaccounting_clean( wp_unslash( $_REQUEST['bill_action'] ) ); // phpcs:ignore
-		$bill_id = absint( wp_unslash( $_REQUEST['bill_id'] ) ); // phpcs:ignore
-		$bill    = eaccounting_get_bill( $bill_id );
+		$nonce   = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
+		$action  = filter_input( INPUT_POST, 'bill_action', FILTER_SANITIZE_STRING );
+		$bill_id = filter_input( INPUT_POST, 'bill_id', FILTER_SANITIZE_NUMBER_INT );
+		$bill    = $bill_id ? eaccounting_get_bill( $bill_id ) : false;
 
-		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'ea_bill_action' ) || ! current_user_can( 'ea_manage_bill' ) || ! $bill->exists() ) { // phpcs:ignore
+		if ( ! wp_verify_nonce( $nonce, 'ea_bill_action' ) || ! current_user_can( 'ea_manage_bill' ) || ! $bill->exists() ) {
 			wp_die( esc_html__( 'no cheating!', 'wp-ever-accounting' ) );
 		}
 		$redirect_url = add_query_arg(
@@ -79,7 +80,7 @@ class Bill_Actions {
 			do_action( 'eaccounting_bill_action_' . sanitize_title( $action ), $bill, $redirect_url );
 		}
 
-		wp_redirect( $redirect_url ); //phpcs:ignore
+		wp_safe_redirect( $redirect_url );
 		exit();
 	}
 
