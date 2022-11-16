@@ -85,16 +85,18 @@ do_action( 'add_meta_boxes_ea_invoice', $invoice );
 											foreach ( $invoice_actions as $action => $title ) {
 												echo sprintf(
 													'<li><a href="%s">%s</a></li>',
-													wp_nonce_url( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-														add_query_arg(
-															array(
-																'action'         => 'eaccounting_invoice_action',
-																'invoice_action' => $action,
-																'invoice_id'     => $invoice->get_id(),
+													esc_attr(
+														wp_nonce_url(
+															add_query_arg(
+																array(
+																	'action'         => 'eaccounting_invoice_action',
+																	'invoice_action' => $action,
+																	'invoice_id'     => $invoice->get_id(),
+																),
+																admin_url( 'admin-post.php' )
 															),
-															admin_url( 'admin-post.php' )
-														),
-														'ea_invoice_action'
+															'ea_invoice_action'
+														)
 													),
 													esc_html( $title )
 												);

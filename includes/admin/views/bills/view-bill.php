@@ -83,16 +83,18 @@ do_action( 'add_meta_boxes_ea_bill', $bill );
 											foreach ( $bill_actions as $action => $title ) {
 												echo sprintf(
 													'<li><a href="%s">%s</a></li>',
-													wp_nonce_url( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-														add_query_arg(
-															array(
-																'action'      => 'eaccounting_bill_action',
-																'bill_action' => $action,
-																'bill_id'     => $bill->get_id(),
+													esc_attr(
+														wp_nonce_url(
+															add_query_arg(
+																array(
+																	'action'      => 'eaccounting_bill_action',
+																	'bill_action' => $action,
+																	'bill_id'     => $bill->get_id(),
+																),
+																admin_url( 'admin-post.php' )
 															),
-															admin_url( 'admin-post.php' )
-														),
-														'ea_bill_action'
+															'ea_bill_action'
+														)
 													),
 													esc_html( $title )
 												);

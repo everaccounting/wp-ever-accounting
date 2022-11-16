@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Ever Accounting 1.1.3\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/wp-ever-accounting\n"
-"POT-Creation-Date: 2022-11-16 04:27:14+00:00\n"
+"POT-Creation-Date: 2022-11-16 19:07:58+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -279,7 +279,7 @@ msgstr ""
 #: includes/admin/views/js/modal-invoice-payment.php:40
 #: includes/admin/views/payments/edit-payment.php:67
 #: includes/admin/views/revenues/edit-revenue.php:62
-#: includes/class-settings.php:165
+#: includes/class-settings.php:166
 msgid "Account"
 msgstr ""
 
@@ -499,7 +499,7 @@ msgstr ""
 msgid "Transfers"
 msgstr ""
 
-#: includes/admin/class-menu.php:289 includes/admin/tools/tools.php:55
+#: includes/admin/class-menu.php:289 includes/admin/tools/tools.php:52
 #: includes/admin/views/accounts/list-account.php:36
 #: includes/admin/views/categories/list-category.php:35
 #: includes/admin/views/currencies/list-currency.php:35
@@ -511,11 +511,11 @@ msgstr ""
 msgid "Import"
 msgstr ""
 
-#: includes/admin/class-menu.php:292 includes/admin/tools/tools.php:58
-#: includes/admin/tools/tools.php:97 includes/admin/tools/tools.php:110
-#: includes/admin/tools/tools.php:123 includes/admin/tools/tools.php:136
-#: includes/admin/tools/tools.php:149 includes/admin/tools/tools.php:162
-#: includes/admin/tools/tools.php:175 includes/admin/views/tools/export.php:23
+#: includes/admin/class-menu.php:292 includes/admin/tools/tools.php:55
+#: includes/admin/tools/tools.php:94 includes/admin/tools/tools.php:107
+#: includes/admin/tools/tools.php:120 includes/admin/tools/tools.php:133
+#: includes/admin/tools/tools.php:146 includes/admin/tools/tools.php:159
+#: includes/admin/tools/tools.php:172 includes/admin/views/tools/export.php:23
 #: includes/admin/views/tools/export.php:36
 #: includes/admin/views/tools/export.php:49
 #: includes/admin/views/tools/export.php:62
@@ -594,7 +594,7 @@ msgstr ""
 msgid "General"
 msgstr ""
 
-#: includes/admin/class-settings.php:52 includes/class-settings.php:71
+#: includes/admin/class-settings.php:52 includes/class-settings.php:72
 msgid "Company Settings"
 msgstr ""
 
@@ -616,12 +616,12 @@ msgstr ""
 #: includes/admin/views/js/modal-add-vendor.php:17
 #: includes/admin/views/vendors/edit-vendor.php:61
 #: includes/admin/views/vendors/view-vendor.php:137
-#: includes/class-settings.php:77 includes/models/class-customer.php:64
+#: includes/class-settings.php:78 includes/models/class-customer.php:64
 #: includes/models/class-vendor.php:63
 msgid "Name"
 msgstr ""
 
-#: includes/admin/class-settings.php:61 includes/class-settings.php:80
+#: includes/admin/class-settings.php:61 includes/class-settings.php:81
 msgid "XYZ Company"
 msgstr ""
 
@@ -632,11 +632,11 @@ msgstr ""
 #: includes/admin/views/js/modal-add-vendor.php:45
 #: includes/admin/views/vendors/edit-vendor.php:91
 #: includes/admin/views/vendors/view-vendor.php:153
-#: includes/class-settings.php:84
+#: includes/class-settings.php:85
 msgid "Email"
 msgstr ""
 
-#: includes/admin/class-settings.php:72 includes/class-settings.php:91
+#: includes/admin/class-settings.php:72 includes/class-settings.php:92
 msgid "Phone Number"
 msgstr ""
 
@@ -645,7 +645,7 @@ msgstr ""
 #: includes/admin/views/customers/view-customer.php:162
 #: includes/admin/views/vendors/edit-vendor.php:110
 #: includes/admin/views/vendors/view-vendor.php:157
-#: includes/class-settings.php:96 templates/bill/bill-from.php:23
+#: includes/class-settings.php:97 templates/bill/bill-from.php:23
 #: templates/bill/company-info.php:36 templates/invoice/company-info.php:36
 #: templates/invoice/invoice-to.php:23
 msgid "VAT Number"
@@ -654,67 +654,67 @@ msgstr ""
 #: includes/admin/class-settings.php:82
 #: includes/admin/views/customers/edit-customer.php:136
 #: includes/admin/views/vendors/edit-vendor.php:139
-#: includes/class-settings.php:101
+#: includes/class-settings.php:102
 msgid "Street"
 msgstr ""
 
 #: includes/admin/class-settings.php:87
 #: includes/admin/views/customers/edit-customer.php:145
 #: includes/admin/views/vendors/edit-vendor.php:148
-#: includes/class-settings.php:106
+#: includes/class-settings.php:107
 msgid "City"
 msgstr ""
 
 #: includes/admin/class-settings.php:92
 #: includes/admin/views/customers/edit-customer.php:154
 #: includes/admin/views/vendors/edit-vendor.php:157
-#: includes/class-settings.php:111
+#: includes/class-settings.php:112
 msgid "State"
 msgstr ""
 
 #: includes/admin/class-settings.php:97
 #: includes/admin/views/customers/edit-customer.php:163
 #: includes/admin/views/vendors/edit-vendor.php:166
-#: includes/class-settings.php:116
+#: includes/class-settings.php:117
 msgid "Postcode"
 msgstr ""
 
 #: includes/admin/class-settings.php:102 includes/admin/class-setup.php:279
 #: includes/admin/views/customers/edit-customer.php:172
 #: includes/admin/views/vendors/edit-vendor.php:175
-#: includes/class-settings.php:121
+#: includes/class-settings.php:122
 msgid "Country"
 msgstr ""
 
-#: includes/admin/class-settings.php:108 includes/class-settings.php:128
+#: includes/admin/class-settings.php:108 includes/class-settings.php:129
 msgid "Logo"
 msgstr ""
 
-#: includes/admin/class-settings.php:113 includes/class-settings.php:133
+#: includes/admin/class-settings.php:113 includes/class-settings.php:134
 msgid "General Settings"
 msgstr ""
 
-#: includes/admin/class-settings.php:119 includes/class-settings.php:139
+#: includes/admin/class-settings.php:119 includes/class-settings.php:140
 msgid "Financial Year Start"
 msgstr ""
 
-#: includes/admin/class-settings.php:120 includes/class-settings.php:140
+#: includes/admin/class-settings.php:120 includes/class-settings.php:141
 msgid "Enter the company financial start date."
 msgstr ""
 
-#: includes/admin/class-settings.php:127 includes/class-settings.php:147
+#: includes/admin/class-settings.php:127 includes/class-settings.php:148
 msgid "Enable taxes"
 msgstr ""
 
-#: includes/admin/class-settings.php:133 includes/class-settings.php:153
+#: includes/admin/class-settings.php:133 includes/class-settings.php:154
 msgid "Total Transactions"
 msgstr ""
 
-#: includes/admin/class-settings.php:139 includes/class-settings.php:159
+#: includes/admin/class-settings.php:139 includes/class-settings.php:160
 msgid "Default Settings"
 msgstr ""
 
-#: includes/admin/class-settings.php:147 includes/class-settings.php:167
+#: includes/admin/class-settings.php:147 includes/class-settings.php:168
 msgid "Default account will be used for automatic transactions."
 msgstr ""
 
@@ -728,13 +728,13 @@ msgstr ""
 #: includes/admin/views/js/modal-add-vendor.php:25
 #: includes/admin/views/vendors/edit-vendor.php:72
 #: includes/admin/views/vendors/view-vendor.php:141
-#: includes/class-settings.php:173 includes/models/class-bill.php:73
+#: includes/class-settings.php:174 includes/models/class-bill.php:73
 #: includes/models/class-invoice.php:73
 msgid "Currency"
 msgstr ""
 
 #: includes/admin/class-settings.php:155 includes/admin/class-settings.php:164
-#: includes/class-settings.php:175 includes/class-settings.php:184
+#: includes/class-settings.php:176 includes/class-settings.php:185
 msgid "Default currency rate will update to 1."
 msgstr ""
 
@@ -746,63 +746,63 @@ msgstr ""
 #: includes/admin/views/revenues/edit-revenue.php:106
 #: includes/admin/views/revenues/view-income.php:104
 #: includes/admin/views/transfers/edit-transfer.php:93
-#: includes/class-settings.php:181 includes/models/class-payment.php:66
+#: includes/class-settings.php:182 includes/models/class-payment.php:66
 #: includes/models/class-revenue.php:65
 msgid "Payment Method"
 msgstr ""
 
-#: includes/admin/class-settings.php:175 includes/class-settings.php:192
+#: includes/admin/class-settings.php:175 includes/class-settings.php:193
 msgid "Invoice Prefix"
 msgstr ""
 
-#: includes/admin/class-settings.php:181 includes/class-settings.php:198
+#: includes/admin/class-settings.php:181 includes/class-settings.php:199
 msgid "Minimum Digits"
 msgstr ""
 
-#: includes/admin/class-settings.php:187 includes/class-settings.php:204
+#: includes/admin/class-settings.php:187 includes/class-settings.php:205
 msgid "Invoice Terms"
 msgstr ""
 
-#: includes/admin/class-settings.php:193 includes/class-settings.php:210
+#: includes/admin/class-settings.php:193 includes/class-settings.php:211
 msgid "Invoice Note"
 msgstr ""
 
-#: includes/admin/class-settings.php:199 includes/class-settings.php:216
+#: includes/admin/class-settings.php:199 includes/class-settings.php:217
 msgid "Invoice Due"
 msgstr ""
 
 #: includes/admin/class-settings.php:203 includes/admin/class-settings.php:264
-#: includes/class-settings.php:220 includes/class-settings.php:278
+#: includes/class-settings.php:221 includes/class-settings.php:279
 msgid "Due within 7 days"
 msgstr ""
 
 #: includes/admin/class-settings.php:204 includes/admin/class-settings.php:265
-#: includes/class-settings.php:221 includes/class-settings.php:279
+#: includes/class-settings.php:222 includes/class-settings.php:280
 msgid "Due within 15 days"
 msgstr ""
 
 #: includes/admin/class-settings.php:205 includes/admin/class-settings.php:266
-#: includes/class-settings.php:222 includes/class-settings.php:280
+#: includes/class-settings.php:223 includes/class-settings.php:281
 msgid "Due within 30 days"
 msgstr ""
 
 #: includes/admin/class-settings.php:206 includes/admin/class-settings.php:267
-#: includes/class-settings.php:223 includes/class-settings.php:281
+#: includes/class-settings.php:224 includes/class-settings.php:282
 msgid "Due within 45 days"
 msgstr ""
 
 #: includes/admin/class-settings.php:207 includes/admin/class-settings.php:268
-#: includes/class-settings.php:224 includes/class-settings.php:282
+#: includes/class-settings.php:225 includes/class-settings.php:283
 msgid "Due within 60 days"
 msgstr ""
 
 #: includes/admin/class-settings.php:208 includes/admin/class-settings.php:269
-#: includes/class-settings.php:225 includes/class-settings.php:283
+#: includes/class-settings.php:226 includes/class-settings.php:284
 msgid "Due within 90 days"
 msgstr ""
 
 #: includes/admin/class-settings.php:213 includes/admin/class-settings.php:274
-#: includes/class-settings.php:230 includes/class-settings.php:288
+#: includes/class-settings.php:231 includes/class-settings.php:289
 msgid "Item Label"
 msgstr ""
 
@@ -811,25 +811,25 @@ msgstr ""
 #: includes/admin/views/invoices/invoice-items.php:13
 #: includes/admin/views/js/modal-add-invoice-item.php:17
 #: includes/class-install.php:384 includes/class-install.php:390
-#: includes/class-settings.php:231 includes/class-settings.php:289
+#: includes/class-settings.php:232 includes/class-settings.php:290
 #: includes/ea-category-functions.php:24 templates/bill/bill-items.php:16
 #: templates/invoice/invoice-items.php:16
 msgid "Item"
 msgstr ""
 
 #: includes/admin/class-settings.php:219 includes/admin/class-settings.php:280
-#: includes/class-settings.php:236 includes/class-settings.php:294
+#: includes/class-settings.php:237 includes/class-settings.php:295
 msgid "Price Label"
 msgstr ""
 
 #: includes/admin/class-settings.php:220 includes/admin/class-settings.php:281
 #: includes/class-install.php:385 includes/class-install.php:391
-#: includes/class-settings.php:237 includes/class-settings.php:295
+#: includes/class-settings.php:238 includes/class-settings.php:296
 msgid "Price"
 msgstr ""
 
 #: includes/admin/class-settings.php:225 includes/admin/class-settings.php:286
-#: includes/class-settings.php:242 includes/class-settings.php:300
+#: includes/class-settings.php:243 includes/class-settings.php:301
 msgid "Quantity Label"
 msgstr ""
 
@@ -838,28 +838,28 @@ msgstr ""
 #: includes/admin/views/invoices/invoice-items.php:15
 #: includes/admin/views/js/modal-add-invoice-item.php:18
 #: includes/class-install.php:386 includes/class-install.php:392
-#: includes/class-settings.php:243 includes/class-settings.php:301
+#: includes/class-settings.php:244 includes/class-settings.php:302
 #: templates/bill/bill-items.php:18 templates/invoice/invoice-items.php:18
 msgid "Quantity"
 msgstr ""
 
-#: includes/admin/class-settings.php:236 includes/class-settings.php:250
+#: includes/admin/class-settings.php:236 includes/class-settings.php:251
 msgid "Bill Prefix"
 msgstr ""
 
-#: includes/admin/class-settings.php:242 includes/class-settings.php:256
+#: includes/admin/class-settings.php:242 includes/class-settings.php:257
 msgid "Bill Digits"
 msgstr ""
 
-#: includes/admin/class-settings.php:248 includes/class-settings.php:262
+#: includes/admin/class-settings.php:248 includes/class-settings.php:263
 msgid "Bill Terms & Conditions"
 msgstr ""
 
-#: includes/admin/class-settings.php:254 includes/class-settings.php:268
+#: includes/admin/class-settings.php:254 includes/class-settings.php:269
 msgid "Bill Note"
 msgstr ""
 
-#: includes/admin/class-settings.php:260 includes/class-settings.php:274
+#: includes/admin/class-settings.php:260 includes/class-settings.php:275
 msgid "Bill Due"
 msgstr ""
 
@@ -879,72 +879,72 @@ msgstr ""
 msgid "Tax"
 msgstr ""
 
-#: includes/admin/class-settings.php:316 includes/class-settings.php:316
+#: includes/admin/class-settings.php:316 includes/class-settings.php:317
 msgid "Rounding"
 msgstr ""
 
-#: includes/admin/class-settings.php:318 includes/class-settings.php:318
+#: includes/admin/class-settings.php:318 includes/class-settings.php:319
 msgid "Round tax at subtotal level, instead of rounding per tax rate."
 msgstr ""
 
-#: includes/admin/class-settings.php:322 includes/class-settings.php:322
+#: includes/admin/class-settings.php:322 includes/class-settings.php:323
 msgid "Prices entered with tax"
 msgstr ""
 
-#: includes/admin/class-settings.php:326 includes/class-settings.php:326
+#: includes/admin/class-settings.php:326 includes/class-settings.php:327
 msgid "Yes, I will enter prices inclusive of tax"
 msgstr ""
 
-#: includes/admin/class-settings.php:327 includes/class-settings.php:327
+#: includes/admin/class-settings.php:327 includes/class-settings.php:328
 msgid "No, I will enter prices exclusive of tax"
 msgstr ""
 
-#: includes/admin/class-settings.php:332 includes/class-settings.php:332
+#: includes/admin/class-settings.php:332 includes/class-settings.php:333
 msgid "Display tax totals\t"
 msgstr ""
 
-#: includes/admin/class-settings.php:336 includes/class-settings.php:336
+#: includes/admin/class-settings.php:336 includes/class-settings.php:337
 msgid "As a single total"
 msgstr ""
 
-#: includes/admin/class-settings.php:337 includes/class-settings.php:337
+#: includes/admin/class-settings.php:337 includes/class-settings.php:338
 msgid "As individual tax rates"
 msgstr ""
 
-#: includes/admin/class-settings.php:516 includes/class-settings.php:124
-#: includes/ea-form-functions.php:972
+#: includes/admin/class-settings.php:516 includes/class-settings.php:125
+#: includes/ea-form-functions.php:973
 msgid "Select Country"
 msgstr ""
 
-#: includes/admin/class-settings.php:603
+#: includes/admin/class-settings.php:600
 #: includes/admin/views/payments/edit-payment.php:154
 #: includes/admin/views/revenues/edit-revenue.php:141
-#: includes/class-settings.php:948
+#: includes/class-settings.php:917
 msgid "Upload File"
 msgstr ""
 
-#: includes/admin/class-settings.php:634 includes/class-settings.php:464
+#: includes/admin/class-settings.php:631 includes/class-settings.php:465
 msgid "Select account"
 msgstr ""
 
-#: includes/admin/class-settings.php:663 includes/class-settings.php:492
+#: includes/admin/class-settings.php:660 includes/class-settings.php:493
 msgid "Select category"
 msgstr ""
 
-#: includes/admin/class-settings.php:687 includes/class-settings.php:515
+#: includes/admin/class-settings.php:684 includes/class-settings.php:516
 msgid "Select currencies"
 msgstr ""
 
-#: includes/admin/class-settings.php:781 includes/class-settings.php:1106
+#: includes/admin/class-settings.php:778 includes/class-settings.php:1073
 msgid "Settings updated."
 msgstr ""
 
-#: includes/admin/class-settings.php:792 includes/admin/class-settings.php:793
+#: includes/admin/class-settings.php:789 includes/admin/class-settings.php:790
 #: includes/class-install.php:73
 msgid "Settings"
 msgstr ""
 
-#: includes/admin/class-settings.php:846
+#: includes/admin/class-settings.php:843
 msgid "Ever Accounting - Settings"
 msgstr ""
 
@@ -1166,9 +1166,9 @@ msgstr ""
 #: includes/admin/list-tables/class-transfer-list-table.php:202
 #: includes/admin/list-tables/class-vendor-list-table.php:235
 #: includes/admin/views/accounts/view-account.php:126
-#: includes/admin/views/bills/view-bill.php:108
+#: includes/admin/views/bills/view-bill.php:110
 #: includes/admin/views/customers/view-customer.php:123
-#: includes/admin/views/invoices/view-invoice.php:111
+#: includes/admin/views/invoices/view-invoice.php:113
 #: includes/admin/views/payments/view-payment.php:43
 #: includes/admin/views/revenues/view-income.php:33
 #: includes/admin/views/vendors/view-vendor.php:126
@@ -1181,7 +1181,7 @@ msgstr ""
 #: includes/admin/list-tables/class-customer-list-table.php:263
 #: includes/admin/list-tables/class-item-list-table.php:249
 #: includes/admin/list-tables/class-vendor-list-table.php:266
-#: includes/ea-form-functions.php:575
+#: includes/ea-form-functions.php:576
 msgid "No"
 msgstr ""
 
@@ -1190,7 +1190,7 @@ msgstr ""
 #: includes/admin/list-tables/class-customer-list-table.php:263
 #: includes/admin/list-tables/class-item-list-table.php:249
 #: includes/admin/list-tables/class-vendor-list-table.php:266
-#: includes/ea-form-functions.php:576
+#: includes/ea-form-functions.php:577
 msgid "Yes"
 msgstr ""
 
@@ -1472,8 +1472,8 @@ msgid ""
 msgstr ""
 
 #: includes/admin/list-tables/class-payment-list-table.php:87
-#: includes/admin/views/bills/view-bill.php:114
-#: includes/admin/views/invoices/view-invoice.php:117
+#: includes/admin/views/bills/view-bill.php:116
+#: includes/admin/views/invoices/view-invoice.php:119
 #: includes/admin/views/js/modal-bill-payment.php:13
 #: includes/admin/views/js/modal-invoice-payment.php:13
 #: includes/admin/views/payments/edit-payment.php:23
@@ -1672,7 +1672,7 @@ msgstr ""
 #: includes/admin/views/revenues/edit-revenue.php:66
 #: includes/admin/views/transfers/edit-transfer.php:50
 #: includes/admin/views/transfers/edit-transfer.php:63
-#: includes/ea-form-functions.php:774
+#: includes/ea-form-functions.php:775
 msgid "Select Account"
 msgstr ""
 
@@ -1684,97 +1684,97 @@ msgstr ""
 msgid "Sales report"
 msgstr ""
 
-#: includes/admin/reports/reports.php:55
+#: includes/admin/reports/reports.php:53
 msgid "Income Summary"
 msgstr ""
 
-#: includes/admin/reports/reports.php:56
+#: includes/admin/reports/reports.php:54
 msgid "Expense Summary"
 msgstr ""
 
-#: includes/admin/reports/reports.php:57
+#: includes/admin/reports/reports.php:55
 msgid "Income vs Expense"
 msgstr ""
 
-#: includes/admin/tools/tools.php:60
+#: includes/admin/tools/tools.php:57
 msgid "System Info"
 msgstr ""
 
-#: includes/admin/tools/tools.php:91 includes/admin/views/tools/export.php:17
+#: includes/admin/tools/tools.php:88 includes/admin/views/tools/export.php:17
 msgid "Export Customers"
 msgstr ""
 
-#: includes/admin/tools/tools.php:96 includes/admin/views/tools/export.php:22
+#: includes/admin/tools/tools.php:93 includes/admin/views/tools/export.php:22
 msgid ""
 "Export customers from this site as CSV file. Exported file can be imported "
 "into other site."
 msgstr ""
 
-#: includes/admin/tools/tools.php:104 includes/admin/views/tools/export.php:30
+#: includes/admin/tools/tools.php:101 includes/admin/views/tools/export.php:30
 msgid "Export Vendors"
 msgstr ""
 
-#: includes/admin/tools/tools.php:109 includes/admin/views/tools/export.php:35
+#: includes/admin/tools/tools.php:106 includes/admin/views/tools/export.php:35
 msgid ""
 "Export vendors from this site as CSV file. Exported file can be imported "
 "into other site."
 msgstr ""
 
-#: includes/admin/tools/tools.php:117 includes/admin/views/tools/export.php:43
+#: includes/admin/tools/tools.php:114 includes/admin/views/tools/export.php:43
 msgid "Export Revenues"
 msgstr ""
 
-#: includes/admin/tools/tools.php:122 includes/admin/views/tools/export.php:48
+#: includes/admin/tools/tools.php:119 includes/admin/views/tools/export.php:48
 msgid ""
 "Export revenues from this site as CSV file. Exported file can be imported "
 "into other site."
 msgstr ""
 
-#: includes/admin/tools/tools.php:130 includes/admin/views/tools/export.php:56
+#: includes/admin/tools/tools.php:127 includes/admin/views/tools/export.php:56
 msgid "Export Payments"
 msgstr ""
 
-#: includes/admin/tools/tools.php:135 includes/admin/views/tools/export.php:61
+#: includes/admin/tools/tools.php:132 includes/admin/views/tools/export.php:61
 msgid ""
 "Export payments from this site as CSV file. Exported file can be imported "
 "into other site."
 msgstr ""
 
-#: includes/admin/tools/tools.php:143 includes/admin/views/tools/export.php:69
+#: includes/admin/tools/tools.php:140 includes/admin/views/tools/export.php:69
 msgid "Export Accounts"
 msgstr ""
 
-#: includes/admin/tools/tools.php:148 includes/admin/views/tools/export.php:74
+#: includes/admin/tools/tools.php:145 includes/admin/views/tools/export.php:74
 msgid ""
 "Export accounts from this site as CSV file. Exported file can be imported "
 "into other site."
 msgstr ""
 
-#: includes/admin/tools/tools.php:156 includes/admin/views/tools/export.php:95
+#: includes/admin/tools/tools.php:153 includes/admin/views/tools/export.php:95
 msgid "Export Currencies"
 msgstr ""
 
-#: includes/admin/tools/tools.php:161 includes/admin/views/tools/export.php:100
+#: includes/admin/tools/tools.php:158 includes/admin/views/tools/export.php:100
 msgid ""
 "Export currencies from this site as CSV file. Exported file can be imported "
 "into other site."
 msgstr ""
 
-#: includes/admin/tools/tools.php:169 includes/admin/views/tools/export.php:108
+#: includes/admin/tools/tools.php:166 includes/admin/views/tools/export.php:108
 msgid "Export Categories"
 msgstr ""
 
-#: includes/admin/tools/tools.php:174 includes/admin/views/tools/export.php:113
+#: includes/admin/tools/tools.php:171 includes/admin/views/tools/export.php:113
 msgid ""
 "Export categories from this site as CSV file. Exported file can be imported "
 "into other site."
 msgstr ""
 
-#: includes/admin/tools/tools.php:199 includes/admin/views/tools/import.php:18
+#: includes/admin/tools/tools.php:196 includes/admin/views/tools/import.php:18
 msgid "Import Customers"
 msgstr ""
 
-#: includes/admin/tools/tools.php:207 includes/admin/views/tools/import.php:26
+#: includes/admin/tools/tools.php:204 includes/admin/views/tools/import.php:26
 #. translators: %s: CSV file
 #. translators: %s: link to the documentation
 msgid ""
@@ -1782,10 +1782,10 @@ msgid ""
 "to learn how to format the CSV file."
 msgstr ""
 
-#: includes/admin/tools/tools.php:213 includes/admin/tools/tools.php:256
-#: includes/admin/tools/tools.php:299 includes/admin/tools/tools.php:343
-#: includes/admin/tools/tools.php:392 includes/admin/tools/tools.php:440
-#: includes/admin/tools/tools.php:488 includes/admin/views/tools/import.php:32
+#: includes/admin/tools/tools.php:210 includes/admin/tools/tools.php:253
+#: includes/admin/tools/tools.php:296 includes/admin/tools/tools.php:340
+#: includes/admin/tools/tools.php:389 includes/admin/tools/tools.php:437
+#: includes/admin/tools/tools.php:485 includes/admin/views/tools/import.php:32
 #: includes/admin/views/tools/import.php:75
 #: includes/admin/views/tools/import.php:118
 #: includes/admin/views/tools/import.php:161
@@ -1796,17 +1796,17 @@ msgstr ""
 msgid "Import CSV"
 msgstr ""
 
-#: includes/admin/tools/tools.php:218 includes/admin/views/tools/import.php:37
+#: includes/admin/tools/tools.php:215 includes/admin/views/tools/import.php:37
 msgid ""
 "Each column loaded from the CSV may be mapped to a customer field. Select "
 "the column that should be mapped to each field below. Any columns not "
 "needed, can be ignored."
 msgstr ""
 
-#: includes/admin/tools/tools.php:224 includes/admin/tools/tools.php:267
-#: includes/admin/tools/tools.php:310 includes/admin/tools/tools.php:354
-#: includes/admin/tools/tools.php:403 includes/admin/tools/tools.php:451
-#: includes/admin/tools/tools.php:499 includes/admin/views/tools/import.php:43
+#: includes/admin/tools/tools.php:221 includes/admin/tools/tools.php:264
+#: includes/admin/tools/tools.php:307 includes/admin/tools/tools.php:351
+#: includes/admin/tools/tools.php:400 includes/admin/tools/tools.php:448
+#: includes/admin/tools/tools.php:496 includes/admin/views/tools/import.php:43
 #: includes/admin/views/tools/import.php:86
 #: includes/admin/views/tools/import.php:129
 #: includes/admin/views/tools/import.php:172
@@ -1817,10 +1817,10 @@ msgstr ""
 msgid "Column name"
 msgstr ""
 
-#: includes/admin/tools/tools.php:225 includes/admin/tools/tools.php:268
-#: includes/admin/tools/tools.php:311 includes/admin/tools/tools.php:355
-#: includes/admin/tools/tools.php:404 includes/admin/tools/tools.php:452
-#: includes/admin/tools/tools.php:500 includes/admin/views/tools/import.php:44
+#: includes/admin/tools/tools.php:222 includes/admin/tools/tools.php:265
+#: includes/admin/tools/tools.php:308 includes/admin/tools/tools.php:352
+#: includes/admin/tools/tools.php:401 includes/admin/tools/tools.php:449
+#: includes/admin/tools/tools.php:497 includes/admin/views/tools/import.php:44
 #: includes/admin/views/tools/import.php:87
 #: includes/admin/views/tools/import.php:130
 #: includes/admin/views/tools/import.php:173
@@ -1831,10 +1831,10 @@ msgstr ""
 msgid "Map to field"
 msgstr ""
 
-#: includes/admin/tools/tools.php:226 includes/admin/tools/tools.php:269
-#: includes/admin/tools/tools.php:312 includes/admin/tools/tools.php:356
-#: includes/admin/tools/tools.php:405 includes/admin/tools/tools.php:453
-#: includes/admin/tools/tools.php:501 includes/admin/views/tools/import.php:45
+#: includes/admin/tools/tools.php:223 includes/admin/tools/tools.php:266
+#: includes/admin/tools/tools.php:309 includes/admin/tools/tools.php:353
+#: includes/admin/tools/tools.php:402 includes/admin/tools/tools.php:450
+#: includes/admin/tools/tools.php:498 includes/admin/views/tools/import.php:45
 #: includes/admin/views/tools/import.php:88
 #: includes/admin/views/tools/import.php:131
 #: includes/admin/views/tools/import.php:174
@@ -1845,10 +1845,10 @@ msgstr ""
 msgid "Data Preview"
 msgstr ""
 
-#: includes/admin/tools/tools.php:234 includes/admin/tools/tools.php:277
-#: includes/admin/tools/tools.php:320 includes/admin/tools/tools.php:364
-#: includes/admin/tools/tools.php:413 includes/admin/tools/tools.php:461
-#: includes/admin/tools/tools.php:509 includes/admin/views/tools/import.php:53
+#: includes/admin/tools/tools.php:231 includes/admin/tools/tools.php:274
+#: includes/admin/tools/tools.php:317 includes/admin/tools/tools.php:361
+#: includes/admin/tools/tools.php:410 includes/admin/tools/tools.php:458
+#: includes/admin/tools/tools.php:506 includes/admin/views/tools/import.php:53
 #: includes/admin/views/tools/import.php:96
 #: includes/admin/views/tools/import.php:139
 #: includes/admin/views/tools/import.php:182
@@ -1859,11 +1859,11 @@ msgstr ""
 msgid "Process"
 msgstr ""
 
-#: includes/admin/tools/tools.php:242 includes/admin/views/tools/import.php:61
+#: includes/admin/tools/tools.php:239 includes/admin/views/tools/import.php:61
 msgid "Import Vendors"
 msgstr ""
 
-#: includes/admin/tools/tools.php:250 includes/admin/views/tools/import.php:69
+#: includes/admin/tools/tools.php:247 includes/admin/views/tools/import.php:69
 #. translators: %s: CSV file
 #. translators: %s: link to the documentation
 msgid ""
@@ -1871,18 +1871,18 @@ msgid ""
 "to learn how to format the CSV file."
 msgstr ""
 
-#: includes/admin/tools/tools.php:261 includes/admin/views/tools/import.php:80
+#: includes/admin/tools/tools.php:258 includes/admin/views/tools/import.php:80
 msgid ""
 "Each column loaded from the CSV may be mapped to a vendor field. Select the "
 "column that should be mapped to each field below. Any columns not needed, "
 "can be ignored."
 msgstr ""
 
-#: includes/admin/tools/tools.php:285 includes/admin/views/tools/import.php:104
+#: includes/admin/tools/tools.php:282 includes/admin/views/tools/import.php:104
 msgid "Import Accounts"
 msgstr ""
 
-#: includes/admin/tools/tools.php:293 includes/admin/views/tools/import.php:112
+#: includes/admin/tools/tools.php:290 includes/admin/views/tools/import.php:112
 #. translators: %s: CSV file
 #. translators: %s: link to the documentation
 msgid ""
@@ -1890,18 +1890,18 @@ msgid ""
 "to learn how to format the CSV file."
 msgstr ""
 
-#: includes/admin/tools/tools.php:304 includes/admin/views/tools/import.php:123
+#: includes/admin/tools/tools.php:301 includes/admin/views/tools/import.php:123
 msgid ""
 "Each column loaded from the CSV may be mapped to a account field. Select "
 "the column that should be mapped to each field below. Any columns not "
 "needed, can be ignored."
 msgstr ""
 
-#: includes/admin/tools/tools.php:328 includes/admin/views/tools/import.php:190
+#: includes/admin/tools/tools.php:325 includes/admin/views/tools/import.php:190
 msgid "Import Revenues"
 msgstr ""
 
-#: includes/admin/tools/tools.php:336 includes/admin/views/tools/import.php:198
+#: includes/admin/tools/tools.php:333 includes/admin/views/tools/import.php:198
 #. translators: %s: CSV file
 #. translators: %s: link to the documentation
 msgid ""
@@ -1909,18 +1909,18 @@ msgid ""
 "to learn how to format the CSV file."
 msgstr ""
 
-#: includes/admin/tools/tools.php:348 includes/admin/views/tools/import.php:209
+#: includes/admin/tools/tools.php:345 includes/admin/views/tools/import.php:209
 msgid ""
 "Each column loaded from the CSV may be mapped to a revenue field. Select "
 "the column that should be mapped to each field below. Any columns not "
 "needed, can be ignored."
 msgstr ""
 
-#: includes/admin/tools/tools.php:373 includes/admin/views/tools/import.php:234
+#: includes/admin/tools/tools.php:370 includes/admin/views/tools/import.php:234
 msgid "Import Payments"
 msgstr ""
 
-#: includes/admin/tools/tools.php:383 includes/admin/views/tools/import.php:244
+#: includes/admin/tools/tools.php:380 includes/admin/views/tools/import.php:244
 #. translators: %s: CSV file
 #. translators: %s: link to the documentation
 msgid ""
@@ -1928,18 +1928,18 @@ msgid ""
 "to learn how to format the CSV file."
 msgstr ""
 
-#: includes/admin/tools/tools.php:397 includes/admin/views/tools/import.php:258
+#: includes/admin/tools/tools.php:394 includes/admin/views/tools/import.php:258
 msgid ""
 "Each column loaded from the CSV may be mapped to a payment field. Select "
 "the column that should be mapped to each field below. Any columns not "
 "needed, can be ignored."
 msgstr ""
 
-#: includes/admin/tools/tools.php:421 includes/admin/views/tools/import.php:282
+#: includes/admin/tools/tools.php:418 includes/admin/views/tools/import.php:282
 msgid "Import Currencies"
 msgstr ""
 
-#: includes/admin/tools/tools.php:431 includes/admin/views/tools/import.php:292
+#: includes/admin/tools/tools.php:428 includes/admin/views/tools/import.php:292
 #. translators: %s: sample file url.
 #. translators: %s: link to the documentation
 msgid ""
@@ -1947,18 +1947,18 @@ msgid ""
 "file to learn how to format the CSV file."
 msgstr ""
 
-#: includes/admin/tools/tools.php:445 includes/admin/views/tools/import.php:306
+#: includes/admin/tools/tools.php:442 includes/admin/views/tools/import.php:306
 msgid ""
 "Each column loaded from the CSV may be mapped to a currency field. Select "
 "the column that should be mapped to each field below. Any columns not "
 "needed, can be ignored."
 msgstr ""
 
-#: includes/admin/tools/tools.php:469 includes/admin/views/tools/import.php:330
+#: includes/admin/tools/tools.php:466 includes/admin/views/tools/import.php:330
 msgid "Import Categories"
 msgstr ""
 
-#: includes/admin/tools/tools.php:479 includes/admin/views/tools/import.php:340
+#: includes/admin/tools/tools.php:476 includes/admin/views/tools/import.php:340
 #. translators: %s: sample file url.
 #. translators: %s: link to the documentation
 msgid ""
@@ -1966,17 +1966,11 @@ msgid ""
 "file to learn how to format the CSV file."
 msgstr ""
 
-#: includes/admin/tools/tools.php:493 includes/admin/views/tools/import.php:354
+#: includes/admin/tools/tools.php:490 includes/admin/views/tools/import.php:354
 msgid ""
 "Each column loaded from the CSV may be mapped to a category field. Select "
 "the column that should be mapped to each field below. Any columns not "
 "needed, can be ignored."
-msgstr ""
-
-#: includes/admin/tools/tools.php:533
-msgid ""
-"To copy the system info, click below then press Ctrl + C (PC) or Cmd + C "
-"(Mac)."
 msgstr ""
 
 #: includes/admin/views/accounts/edit-account.php:22
@@ -2010,7 +2004,7 @@ msgstr ""
 #: includes/admin/views/vendors/edit-vendor.php:33
 #: includes/admin/views/vendors/list-vendor.php:34
 #: includes/admin/views/vendors/view-vendor.php:44
-#: includes/ea-form-functions.php:599
+#: includes/ea-form-functions.php:600
 msgid "Add New"
 msgstr ""
 
@@ -2679,7 +2673,7 @@ msgstr ""
 #: includes/admin/views/js/modal-add-currency.php:17
 #: includes/admin/views/js/modal-add-customer.php:28
 #: includes/admin/views/js/modal-add-vendor.php:28
-#: includes/ea-form-functions.php:869
+#: includes/ea-form-functions.php:870
 msgid "Select Currency"
 msgstr ""
 
@@ -2705,7 +2699,7 @@ msgid "Add Income Category"
 msgstr ""
 
 #: includes/admin/views/js/modal-add-invoice-item.php:30
-#: includes/ea-form-functions.php:917
+#: includes/ea-form-functions.php:918
 msgid "Select Item"
 msgstr ""
 
@@ -3130,14 +3124,14 @@ msgstr ""
 msgid "Invalid repository."
 msgstr ""
 
-#: includes/class-settings.php:389
+#: includes/class-settings.php:390
 #. translators: %s settings id name
 msgid ""
 "%s settings field was registered earlier, duplicate settings key is not "
 "allowed."
 msgstr ""
 
-#: includes/class-settings.php:976
+#: includes/class-settings.php:943
 #. translators: %s name of the callback
 msgid "The callback function used for the <strong>%s</strong> setting is missing."
 msgstr ""
@@ -3191,19 +3185,19 @@ msgstr ""
 msgid "Refunded"
 msgstr ""
 
-#: includes/ea-form-functions.php:493
+#: includes/ea-form-functions.php:494
 msgid "Remove"
 msgstr ""
 
-#: includes/ea-form-functions.php:495
+#: includes/ea-form-functions.php:496
 msgid "Upload"
 msgstr ""
 
-#: includes/ea-form-functions.php:821
+#: includes/ea-form-functions.php:822
 msgid "Select Category"
 msgstr ""
 
-#: includes/ea-form-functions.php:946
+#: includes/ea-form-functions.php:947
 msgid "Select payment method"
 msgstr ""
 

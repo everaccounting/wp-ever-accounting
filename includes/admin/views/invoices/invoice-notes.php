@@ -39,8 +39,8 @@ $notes = eaccounting_get_notes(
 								echo sprintf(
 								/* translators: %s note creator user */
 									esc_html__( 'added on %1$s at %2$s', 'wp-ever-accounting' ),
-									eaccounting_date( $note->get_date_created(), 'F m, Y' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-									eaccounting_date( $note->get_date_created(), 'H:i a' ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+									esc_html( eaccounting_date( $note->get_date_created(), 'F m, Y' ) ),
+									esc_html( eaccounting_date( $note->get_date_created(), 'H:i a' ) )
 								);
 								?>
 							</abbr>

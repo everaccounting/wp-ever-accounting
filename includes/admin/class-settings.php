@@ -584,10 +584,7 @@ class Settings {
 				<?php
 				break;
 			case 'wysiwyg':
-				ob_start();
 				wp_editor( stripslashes( $value ), 'eaccounting_settings_' . $field['id'], array( 'textarea_name' => 'eaccounting_settings[' . $field['id'] . ']' ) );
-				echo ob_get_clean(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-
 				break;
 
 			case 'file_upload':

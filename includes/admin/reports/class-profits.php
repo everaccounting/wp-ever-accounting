@@ -294,7 +294,7 @@ class Profits extends Report {
 				</div>
 
 				<div class="ea-card__footer">
-					<a class="button button-secondary" href="<?php echo wp_nonce_url( add_query_arg( 'refresh_report', 'yes' ), 'refresh_report' ); ?>"> <?php //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+					<a class="button button-secondary" href="<?php echo esc_attr( wp_nonce_url( add_query_arg( 'refresh_report', 'yes' ), 'refresh_report' ) ); ?>">
 						<?php esc_html_e( 'Reset Cache', 'wp-ever-accounting' ); ?>
 					</a>
 				</div>

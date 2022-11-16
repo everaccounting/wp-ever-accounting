@@ -317,6 +317,6 @@ class Chart {
 			esc_attr( $this->id ),
 			esc_attr( $this->height ),
 			esc_attr( $this->width )
-		); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		);
 	}
 }

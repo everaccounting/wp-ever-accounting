@@ -18,8 +18,6 @@ require_once EACCOUNTING_ABSPATH . '/includes/admin/tools/system-info.php';
 function eaccounting_admin_tools_page() {
 	$tabs       = eaccounting_get_tools_tabs();
 	$active_tab = eaccounting_get_active_tab( $tabs, 'import' );
-
-	ob_start();
 	?>
 	<div class="wrap">
 		<h2 class="nav-tab-wrapper">
@@ -40,7 +38,6 @@ function eaccounting_admin_tools_page() {
 		</div><!-- #tab_container-->
 	</div><!-- .wrap -->
 	<?php
-	echo ob_get_clean(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 /**
@@ -515,26 +512,3 @@ function eaccounting_tools_import_tab() {
 }
 
 add_action( 'eaccounting_tools_tab_import', 'eaccounting_tools_import_tab' );
-
-
-/**
- * System Info tab.
- *
- * @since 1.0.2
- */
-function eaccounting_system_info_tab() {
-	if ( ! current_user_can( 'manage_eaccounting' ) ) {
-		return;
-	}
-
-	$action_url = eaccounting_admin_url( array( 'tab' => 'system_info' ) );
-	?>
-	<form action="<?php echo esc_url( $action_url ); ?>" method="post" dir="ltr">
-		<textarea readonly="readonly" onclick="this.focus(); this.select()" id="ea-system-info-textarea" name="ea-sysinfo" title="<?php esc_attr_e( 'To copy the system info, click below then press Ctrl + C (PC) or Cmd + C (Mac).', 'wp-ever-accounting' ); ?>">
-			<?php echo eaccounting_tools_system_info_report(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-		</textarea>
-	</form>
-	<?php
-}
-
-add_action( 'eaccounting_tools_tab_system_info', 'eaccounting_system_info_tab' );

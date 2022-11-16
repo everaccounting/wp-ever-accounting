@@ -20,7 +20,6 @@ require_once dirname( __FILE__ ) . '/income-expense.php';
 function eaccounting_admin_reports_page() {
 	$tabs       = eaccounting_get_reports_tabs();
 	$active_tab = eaccounting_get_active_tab( $tabs, 'income_summary' );
-	ob_start();
 	?>
 	<div class="wrap">
 		<h2 class="nav-tab-wrapper">
@@ -41,7 +40,6 @@ function eaccounting_admin_reports_page() {
 		</div><!-- #tab_container-->
 	</div><!-- .wrap -->
 	<?php
-	echo ob_get_clean(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 /**
