@@ -436,11 +436,11 @@ class Settings {
 						),
 						true
 					) && ! empty( $tooltip ) ) {
-						$args['title']     = sprintf( '%s<span class="ea-help-tip" title="%s"></span>', $args['title'], $tooltip );
+						$args['title']     = sprintf( '%s<span class="ea-help-tip" title="%s"></span>', esc_html( $args['title'] ), wp_kses_post( $tooltip ) );
 						$args['label_for'] = $args['id'];
 					}
 					if ( 'section' === $args['type'] ) {
-						$args['title'] = sprintf( '<h3>%s</h3>', $args['title'] );
+						$args['title'] = sprintf( '<h3>%s</h3>', esc_html( $args['title'] ) );
 					}
 
 					$callback = ! empty( $args['callback'] ) ? $args['callback'] : array( $this, 'render_field' );
@@ -466,19 +466,6 @@ class Settings {
 	 * @param array $field Field data.
 	 */
 	public function render_field( $field ) {
-		// Custom attribute handling.
-		$attributes = array();
-		$attrs      = array( 'min', 'max', 'step', 'multiple', 'placeholder', 'required', 'disabled' );
-		foreach ( $attrs as $key ) {
-			if ( ! empty( $field[ $key ] ) ) {
-				$field['attrs'][ $key ] = esc_attr( $field[ $key ] );
-			}
-		}
-		if ( ! empty( $field['attrs'] ) && is_array( $field['attrs'] ) ) {
-			foreach ( $field['attrs'] as $attribute => $attribute_value ) {
-				$attributes[] = esc_attr( $attribute ) . '="' . esc_attr( $attribute_value ) . '"';
-			}
-		}
 		$description = '';
 		if ( ! empty( $field['desc'] ) && in_array( $field['type'], array( 'textarea', 'radio' ), true ) ) {
 			$description = '<p style="margin-top:0">' . wp_kses_post( $field['desc'] ) . '</p>';
@@ -508,7 +495,7 @@ class Settings {
 						style="<?php echo esc_attr( $field['style'] ); ?>"
 						value="<?php echo esc_attr( wp_unslash( $value ) ); ?>"
 						class="<?php echo esc_attr( sprintf( '%s-text %s', $field['size'], $field['input_class'] ) ); ?>"
-						<?php echo implode( ' ', $attributes ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>/>
+						placeholder="<?php echo esc_attr( $field['placeholder'] ); ?>" />
 				<?php echo wp_kses_post( $description ); ?>
 				<?php
 				break;
@@ -520,7 +507,7 @@ class Settings {
 						id="<?php echo esc_attr( $field['id'] ); ?>"
 						style="<?php echo esc_attr( $field['style'] ); ?>"
 						class="<?php echo esc_attr( sprintf( '%s-text %s', $field['size'], $field['input_class'] ) ); ?>"
-					<?php echo implode( ' ', $attributes );  // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>><?php echo esc_textarea( wp_unslash( $value ) ); ?></textarea>
+						placeholder="<?php echo esc_attr( $field['placeholder'] ); ?>"><?php echo esc_textarea( wp_unslash( $value ) ); ?></textarea>
 				<?php
 				break;
 			case 'country_select':
@@ -534,7 +521,6 @@ class Settings {
 						id="<?php echo esc_attr( $field['id'] ); ?>"
 						style="<?php echo esc_attr( $field['style'] ); ?>"
 						class="<?php echo esc_attr( sprintf( '%s-text %s', $field['size'], $field['input_class'] ) ); ?>"
-						<?php echo implode( ' ', $attributes );  // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 				>
 					<?php
 					foreach ( $field['options'] as $key => $val ) {
@@ -563,7 +549,6 @@ class Settings {
 							type="checkbox"
 							value="yes"
 							<?php checked( $value, 'yes' ); ?>
-							<?php echo implode( ' ', $attributes );  // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 					/> <?php echo wp_kses_post( $description ); ?>
 				</label>
 				<?php
@@ -588,7 +573,6 @@ class Settings {
 											type="<?php echo esc_attr( $type ); ?>"
 											style="<?php echo esc_attr( $field['style'] ); ?>"
 											class="<?php echo esc_attr( $field['class'] ); ?>"
-											<?php echo implode( ' ', $attributes );  // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 											<?php checked( 'yes', $checked ); ?>
 									/> <?php echo esc_html( $option ); ?></label>
 							</li>
@@ -616,7 +600,6 @@ class Settings {
 						style="<?php echo esc_attr( $field['style'] ); ?>"
 						value="<?php echo esc_attr( wp_unslash( $value ) ); ?>"
 						class="<?php echo esc_attr( sprintf( '%s-text %s', $field['size'], $field['input_class'] ) ); ?>"
-						<?php echo implode( ' ', $attributes );  // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>/>
 				<span>&nbsp;<button type="button" class="ea_settings_upload_button button-secondary"><?php esc_html_e( 'Upload File', 'wp-ever-accounting' ); ?></button></span>
 				<?php
 				break;
@@ -855,7 +838,7 @@ class Settings {
 				)
 			);
 			$active         = ( $current_section === $section_slug ) ? 'current' : '';
-			$subsub_links[] = sprintf( '<a href="%s" class="%s">%s</a>', esc_url( $link ), $active, esc_html( $section_title ) );
+			$subsub_links[] = sprintf( '<a href="%s" class="%s">%s</a>', esc_url( $link ), sanitize_html_class( $active ), esc_html( $section_title ) );
 		}
 		ob_start();
 		?>
