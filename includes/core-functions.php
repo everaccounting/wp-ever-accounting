@@ -372,9 +372,8 @@ function eaccounting_doing_it_wrong( $function, $message, $version ) {
 
 	if ( wp_doing_ajax() || defined( 'REST_REQUEST' ) ) {
 		do_action( 'doing_it_wrong_run', $function, $message, $version );
-		error_log( "{$function} was called incorrectly. {$message}. This message was added in version {$version}." ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 	} else {
-		_doing_it_wrong( $function, $message, $version ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log__doing_it_wrong, WordPress.Security.EscapeOutput.OutputNotEscaped
+		_doing_it_wrong( esc_html( $function ), esc_html( $message ), esc_html( $version ) ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log__doing_it_wrong
 	}
 
 }
