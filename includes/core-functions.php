@@ -70,7 +70,7 @@ function eaccounting_get_financial_start( $year = null, $format = 'Y-m-d' ) {
 	$setting         = explode( '-', $financial_start );
 	$day             = ! empty( $setting[0] ) ? $setting[0] : '01';
 	$month           = ! empty( $setting[1] ) ? $setting[1] : '01';
-	$year            = empty( $year ) ? date( 'Y' ) : absint( $year ); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
+	$year            = empty( $year ) ? (int) wp_date( 'Y' ) : absint( $year );
 
 	$financial_year = new \EverAccounting\DateTime();
 	$financial_year->setDate( $year, $month, $day );
@@ -177,7 +177,7 @@ function eaccounting_sanitize_price( $amount, $code = null ) {
 		return 0;
 	}
 
-	return $amount->getAmount();
+	return $amount->get_amount();
 }
 
 /**
@@ -216,7 +216,7 @@ function eaccounting_price_from_default( $amount, $to, $to_rate ) {
 	$money   = eaccounting_money( $amount, $to );
 	// No need to convert same currency.
 	if ( $default === $to ) {
-		return $money->getAmount();
+		return $money->get_amount();
 	}
 
 	try {
@@ -225,7 +225,7 @@ function eaccounting_price_from_default( $amount, $to, $to_rate ) {
 		return 0;
 	}
 
-	return $money->getAmount();
+	return $money->get_amount();
 }
 
 /**
@@ -244,7 +244,7 @@ function eaccounting_price_to_default( $amount, $from, $from_rate ) {
 	$money   = eaccounting_money( $amount, $from );
 	// No need to convert same currency.
 	if ( $default === $from ) {
-		return $money->getAmount();
+		return $money->get_amount();
 	}
 
 	try {
@@ -253,7 +253,7 @@ function eaccounting_price_to_default( $amount, $from, $from_rate ) {
 		return 0;
 	}
 
-	return $money->getAmount();
+	return $money->get_amount();
 }
 
 /**
@@ -367,15 +367,11 @@ function eaccounting_collect( $items ) {
  * @param string $version  Version the message was added in.
  */
 function eaccounting_doing_it_wrong( $function, $message, $version ) {
-
-	$message .= ' Backtrace: ' . wp_debug_backtrace_summary(); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_wp_debug_backtrace_summary
-
 	if ( wp_doing_ajax() || defined( 'REST_REQUEST' ) ) {
 		do_action( 'doing_it_wrong_run', $function, $message, $version );
 	} else {
-		_doing_it_wrong( esc_html( $function ), esc_html( $message ), esc_html( $version ) ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log__doing_it_wrong
+		_doing_it_wrong( esc_html( $function ), esc_html( $message ), esc_html( $version ) );
 	}
-
 }
 
 /**
@@ -527,7 +523,7 @@ function eaccounting_print_js() {
 
 		$js = "<!-- EverAccounting JavaScript -->\n<script type=\"text/javascript\">\njQuery(function($) { $eaccounting_queued_js });\n</script>\n";
 
-		echo apply_filters( 'eaccounting_queued_js', $js ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo apply_filters( 'eaccounting_queued_js', $js );
 
 		unset( $eaccounting_queued_js );
 	}

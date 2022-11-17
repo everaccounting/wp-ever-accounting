@@ -44,7 +44,7 @@ final class EverAccounting {
 	 * @since 1.1.2
 	 * @var array $classes all plugin's classes.
 	 */
-	protected $classes = [];
+	protected $classes = array();
 
 	/**
 	 * The single instance of the class.
@@ -176,8 +176,7 @@ final class EverAccounting {
 	/**
 	 * Include all required files
 	 *
-	 * since 1.0.0
-	 *
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function includes() {

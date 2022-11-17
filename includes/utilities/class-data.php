@@ -120,9 +120,7 @@ class Data {
 
 		// Double check to make sure the batch_id got included before proceeding.
 		if ( '^[0-9a-z\\_]+' !== $pattern && ! empty( $pattern ) ) {
-			$query = "DELETE FROM $wpdb->options WHERE option_name REGEXP %s";
-
-			$result = $wpdb->query( $wpdb->prepare( $query, $pattern ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			$result = $wpdb->query( $wpdb->prepare( "DELETE FROM $wpdb->options WHERE option_name REGEXP %s", $pattern ) );
 		} else {
 			$result = false;
 		}

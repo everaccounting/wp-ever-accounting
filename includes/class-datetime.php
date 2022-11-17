@@ -232,7 +232,7 @@ class DateTime extends DT {
 	 * @return string date time
 	 */
 	public function date_mysql() {
-		return date( 'Y-m-d H:i:s', $this->getOffsetTimestamp() ); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
+		return wp_date( 'Y-m-d H:i:s', $this->getOffsetTimestamp() );
 	}
 
 	/**

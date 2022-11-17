@@ -50,7 +50,7 @@ jQuery( function ( $ ) {
 		this.process_step = function ( step ) {
 			window.wp.ajax.send( plugin.action, {
 				data: {
-					nonce: plugin.nonce,
+					_wpnonce: plugin.nonce,
 					type: plugin.type,
 					step,
 				},

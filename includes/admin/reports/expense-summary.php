@@ -5,7 +5,7 @@ defined( 'ABSPATH' ) || exit();
  * Expense Summary Report.
  */
 function eaccounting_reports_expense_summary_tab() {
-	$year        = isset( $_REQUEST['year'] ) ? intval( $_REQUEST['year'] ) : date( 'Y' ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended,WordPress.DateTime.RestrictedFunctions.date_date
+	$year        = filter_input( INPUT_GET, 'year', FILTER_SANITIZE_NUMBER_INT, array( 'options' => array( 'default' => wp_date( 'Y' ) ) ) );
 	$category_id = filter_input( INPUT_GET, 'category_id', FILTER_SANITIZE_NUMBER_INT );
 	$account_id  = filter_input( INPUT_GET, 'account_id', FILTER_SANITIZE_NUMBER_INT );
 	$vendor_id   = filter_input( INPUT_GET, 'vendor_id', FILTER_SANITIZE_NUMBER_INT );
@@ -27,7 +27,7 @@ function eaccounting_reports_expense_summary_tab() {
 				)
 			);
 
-			$years = range( date( 'Y' ), ( $year - 5 ), 1 ); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
+			$years = range( wp_date( 'Y' ), ( $year - 5 ), 1 );
 			eaccounting_select2(
 				array(
 					'placeholder' => __( 'Year', 'wp-ever-accounting' ),
@@ -76,9 +76,13 @@ function eaccounting_reports_expense_summary_tab() {
 	<div class="ea-card">
 		<?php
 		global $wpdb;
-		$dates = $totals = $expenses = $graph = $categories = array(); // phpcs:ignore Squiz.PHP.DisallowMultipleAssignments.Found,WordPress.DateTime.RestrictedFunctions.date_date
-		$start = eaccounting_get_financial_start( $year );
-		$end   = eaccounting_get_financial_end( $year );
+		$dates      = array();
+		$totals     = array();
+		$expenses   = array();
+		$graph      = array();
+		$categories = array();
+		$start      = eaccounting_get_financial_start( $year );
+		$end        = eaccounting_get_financial_end( $year );
 
 		$where  = "category_id NOT IN ( SELECT id from {$wpdb->prefix}ea_categories WHERE type='other')";
 		$where .= $wpdb->prepare( ' AND (payment_date BETWEEN %s AND %s)', $start, $end );
@@ -92,7 +96,6 @@ function eaccounting_reports_expense_summary_tab() {
 			$where .= $wpdb->prepare( ' AND category_id=%d', $category_id );
 		}
 
-		// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$transactions = $wpdb->get_results(
 			"
 		SELECT name, payment_date, currency_code, currency_rate, amount, ea_categories.id category_id
@@ -101,7 +104,6 @@ function eaccounting_reports_expense_summary_tab() {
 		WHERE $where AND ea_transactions.type = 'expense'
 		"
 		);
-		// phpcs:enable WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
 		foreach ( $transactions as $key => $transaction ) {
 			$transaction->amount = eaccounting_price_to_default( $transaction->amount, $transaction->currency_code, $transaction->currency_rate );
@@ -132,8 +134,8 @@ function eaccounting_reports_expense_summary_tab() {
 
 		foreach ( $transactions as $transaction ) {
 			if ( isset( $expenses[ $transaction->category_id ] ) ) {
-				$month      = date( 'F', strtotime( $transaction->payment_date ) ); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
-				$month_year = date( 'F-Y', strtotime( $transaction->payment_date ) ); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
+				$month      = wp_date( 'F', strtotime( $transaction->payment_date ) );
+				$month_year = wp_date( 'F-Y', strtotime( $transaction->payment_date ) );
 				$expenses[ $transaction->category_id ][ $month ]['amount'] += $transaction->amount;
 				$graph[ $month_year ]                                      += $transaction->amount;
 				$totals[ $month ]['amount']                                += $transaction->amount;

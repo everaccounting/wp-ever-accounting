@@ -93,12 +93,19 @@ class EverAccounting_Invoice_List_Table extends EverAccounting_List_Table {
 	 * @since 1.1.0
 	 */
 	protected function render_blank_state() {
+		$url = eaccounting_admin_url(
+			array(
+				'page'   => 'ea-sales',
+				'tab'    => 'invoices',
+				'action' => 'edit',
+			)
+		);
 		?>
 		<div class="ea-empty-table">
 			<p class="ea-empty-table__message">
 				<?php echo esc_html__( 'Create professional invoices for your customers in their currency. Print and share invoice with easily. Invoice also support tax calculation & discount.', 'wp-ever-accounting' ); ?>
 			</p>
-            <a href="<?php echo esc_url( eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'invoices', 'action' => 'edit', ) ) ); //phpcs:ignore ?>" class="button-primary ea-empty-table__cta"><?php esc_html_e( 'Add Invoices', 'wp-ever-accounting' ); ?></a>
+			<a href="<?php echo esc_url( $url ); ?>" class="button-primary ea-empty-table__cta"><?php esc_html_e( 'Add Invoices', 'wp-ever-accounting' ); ?></a>
 			<a href="https://wpeveraccounting.com/docs/general/add-invoice/?utm_source=listtable&utm_medium=link&utm_campaign=admin" class="button-secondary ea-empty-table__cta" target="_blank"><?php esc_html_e( 'Learn More', 'wp-ever-accounting' ); ?></a>
 		</div>
 		<?php
@@ -173,7 +180,7 @@ class EverAccounting_Invoice_List_Table extends EverAccounting_List_Table {
 	 * @since  1.1.0
 	 */
 	public function column_cb( $invoice ) {
-		return sprintf( '<input type="checkbox" name="invoice_id[]" value="%d"/>', $invoice->get_id() );
+		return sprintf( '<input type="checkbox" name="invoice_id[]" value="%d"/>', esc_attr( $invoice->get_id() ) );
 	}
 
 	/**
@@ -219,14 +226,14 @@ class EverAccounting_Invoice_List_Table extends EverAccounting_List_Table {
 				);
 
 				$actions          = array();
-				$actions['view']  = '<a href="' . $view_url . '">' . __( 'View', 'wp-ever-accounting' ) . '</a>';
-				$actions['print'] = '<a href="' . $invoice->get_url() . '" target="_blank">' . __( 'Print', 'wp-ever-accounting' ) . '</a>';
+				$actions['view']  = '<a href="' . esc_url( $view_url ) . '">' . esc_html__( 'View', 'wp-ever-accounting' ) . '</a>';
+				$actions['print'] = '<a href="' . esc_url( $invoice->get_url() ) . '" target="_blank">' . esc_html__( 'Print', 'wp-ever-accounting' ) . '</a>';
 				if ( $invoice->is_editable() ) {
-					$actions['edit'] = '<a href="' . $edit_url . '">' . __( 'Edit', 'wp-ever-accounting' ) . '</a>';
+					$actions['edit'] = '<a href="' . esc_url( $edit_url ) . '">' . esc_html__( 'Edit', 'wp-ever-accounting' ) . '</a>';
 				}
-				$actions['delete'] = '<a href="' . $del_url . '" class="del">' . __( 'Delete', 'wp-ever-accounting' ) . '</a>';
+				$actions['delete'] = '<a href="' . esc_url( $del_url ) . '" class="del">' . esc_html__( 'Delete', 'wp-ever-accounting' ) . '</a>';
 
-				$value = '<a href="' . esc_url( $view_url ) . '">' . $invoice_number . '</a>' . $this->row_actions( $actions );
+				$value = '<a href="' . esc_url( $view_url ) . '">' . esc_html( $invoice_number ) . '</a>' . $this->row_actions( $actions );
 				break;
 			case 'total':
 				$value = eaccounting_price( $invoice->get_total(), $invoice->get_currency_code() );
@@ -288,7 +295,7 @@ class EverAccounting_Invoice_List_Table extends EverAccounting_List_Table {
 			return;
 		}
 
-		$ids = isset( $_GET['invoice_id'] ) ? wp_parse_id_list( $_GET['invoice_id'] ) : false; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+		$ids = isset( $_GET['invoice_id'] ) ? wp_parse_id_list( wp_unslash( $_GET['invoice_id'] ) ) : false;
 
 		if ( ! is_array( $ids ) ) {
 			$ids = array( $ids );

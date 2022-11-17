@@ -325,8 +325,8 @@ class Controller {
 	 */
 	public static function validate_category_data( $data, $id ) {
 		global $wpdb;
-		$sql                  = $wpdb->prepare( "SELECT id from {$wpdb->prefix}ea_categories WHERE type=%s AND name=%s", eaccounting_clean( $data['type'] ), eaccounting_clean( $data['name'] ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-		$existing_category_id = (int) $wpdb->get_var( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		$sql                  = $wpdb->prepare( "SELECT id from {$wpdb->prefix}ea_categories WHERE type=%s AND name=%s", eaccounting_clean( $data['type'] ), eaccounting_clean( $data['name'] ) );
+		$existing_category_id = (int) $wpdb->get_var( $sql );
 
 		if ( ! empty( $existing_category_id ) && ( absint( $id ) !== absint( $existing_category_id ) ) ) {
 			throw new \Exception( __( 'Duplicate category.', 'wp-ever-accounting' ) );

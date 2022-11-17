@@ -191,7 +191,7 @@ class Install {
 		$tables         = self::get_tables();
 		$notices        = \EverAccounting\Admin\Notices::init();
 		foreach ( $tables as $table ) {
-			if ( ! $wpdb->get_var( "SHOW TABLES LIKE '$table'" ) ) { //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			if ( ! $wpdb->get_var( "SHOW TABLES LIKE '$table'" ) ) {
 				$missing_tables[] = $table;
 			}
 		}
@@ -682,7 +682,7 @@ class Install {
 		$tables = self::get_tables();
 
 		foreach ( $tables as $table ) {
-			$wpdb->query( "DROP TABLE IF EXISTS {$table}" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.SchemaChange,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$wpdb->query( "DROP TABLE IF EXISTS {$table}" );
 		}
 	}
 

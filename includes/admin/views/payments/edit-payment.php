@@ -27,7 +27,20 @@ $title    = $payment->exists() ? __( 'Update Payment', 'wp-ever-accounting' ) : 
 		<div>
 			<h1 class="wp-heading-inline"><?php esc_html_e( 'Payments', 'wp-ever-accounting' ); ?></h1>
 			<?php if ( $payment->exists() ) : ?>
-				<a href="<?php echo esc_url( add_query_arg( array( 'tab' => 'payments', 'page' => 'ea-expenses', 'action' => 'add' ), admin_url( 'admin.php' ) ) );//phpcs:ignore ?>" class="page-title-action">
+				<a href="
+				<?php
+				echo esc_url(
+					add_query_arg(
+						array(
+							'tab'    => 'payments',
+							'page'   => 'ea-expenses',
+							'action' => 'add',
+						),
+						admin_url( 'admin.php' )
+					)
+				);
+				?>
+							" class="page-title-action">
 					<?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?>
 				</a>
 			<?php else : ?>

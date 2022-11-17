@@ -103,7 +103,7 @@ function eaccounting_insert_account( $data, $wp_error = true ) {
 
 		// check if already account number exists for another user.
 		$number           = ! empty( $data['number'] ) ? $data['number'] : $item->get_number();
-		$existing_account = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}ea_accounts WHERE number='$number'" ); //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$existing_account = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}ea_accounts WHERE number='$number'" );
 
 		if ( $existing_account ) {
 			$existing_id = $existing_account->id;
@@ -238,7 +238,7 @@ function eaccounting_get_accounts( $args = array() ) {
 		$searches = array();
 		$where   .= ' AND (';
 		foreach ( $search_cols as $col ) {
-			$searches[] = $wpdb->prepare( $col . ' LIKE %s', '%' . $wpdb->esc_like( $qv['search'] ) . '%' ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			$searches[] = $wpdb->prepare( $col . ' LIKE %s', '%' . $wpdb->esc_like( $qv['search'] ) . '%' );
 		}
 		$where .= implode( ' OR ', $searches );
 		$where .= ')';
@@ -266,14 +266,14 @@ function eaccounting_get_accounts( $args = array() ) {
 	$orderby     = "ORDER BY {$orderby} {$order}";
 	$count_total = true === $qv['count_total'];
 	$clauses     = compact( 'select', 'from', 'join', 'where', 'orderby', 'limit' );
-	$cache_key   = 'query:' . md5( maybe_serialize( $qv ) ) . ':' . wp_cache_get_last_changed( 'ea_accounts' ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+	$cache_key   = 'query:' . md5( maybe_serialize( $qv ) ) . ':' . wp_cache_get_last_changed( 'ea_accounts' );
 	$results     = wp_cache_get( $cache_key, 'ea_accounts' );
 	if ( false === $results ) {
 		if ( $count_total ) {
-			$results = (int) $wpdb->get_var( "SELECT COUNT(id) $from $where" ); //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$results = (int) $wpdb->get_var( "SELECT COUNT(id) $from $where" );
 			wp_cache_set( $cache_key, $results, 'ea_accounts' );
 		} else {
-			$results = $wpdb->get_results( implode( ' ', $clauses ) ); //phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			$results = $wpdb->get_results( implode( ' ', $clauses ) );
 			if ( in_array( $fields, array( 'all', '*' ), true ) ) {
 				foreach ( $results as $key => $item ) {
 					wp_cache_set( $item->id, $item, 'ea_accounts' );

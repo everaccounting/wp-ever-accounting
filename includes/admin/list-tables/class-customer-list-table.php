@@ -93,12 +93,19 @@ class EverAccounting_Customer_List_Table extends EverAccounting_List_Table {
 	 * @since 1.0.2
 	 */
 	protected function render_blank_state() {
+		$url = eaccounting_admin_url(
+			array(
+				'page'   => 'ea-sales',
+				'tab'    => 'customers',
+				'action' => 'edit',
+			)
+		);
 		?>
 		<div class="ea-empty-table">
 			<p class="ea-empty-table__message">
 				<?php echo esc_html__( 'Create customers to assign revenues, and later you can filter the transactions you made with them. You can store the name, address, email, phone number, etc. of a customer.', 'wp-ever-accounting' ); ?>
 			</p>
-			<a href="<?php echo esc_url( eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'customers', 'action' => 'edit', ) ) ); //phpcs:ignore?>" class="button-primary ea-empty-table__cta"><?php esc_html_e( 'Add Customer', 'wp-ever-accounting' ); ?></a>
+			<a href="<?php echo esc_url( $url ); ?>" class="button-primary ea-empty-table__cta"><?php esc_html_e( 'Add Customer', 'wp-ever-accounting' ); ?></a>
 			<a href="https://wpeveraccounting.com/docs/general/add-customers/?utm_source=listtable&utm_medium=link&utm_campaign=admin" class="button-secondary ea-empty-table__cta" target="_blank"><?php esc_html_e( 'Learn More', 'wp-ever-accounting' ); ?></a>
 		</div>
 		<?php
@@ -173,7 +180,7 @@ class EverAccounting_Customer_List_Table extends EverAccounting_List_Table {
 	 * @since  1.0.2
 	 */
 	public function column_cb( $customer ) {
-		return sprintf( '<input type="checkbox" name="customer_id[]" value="%d"/>', $customer->get_id() );
+		return sprintf( '<input type="checkbox" name="customer_id[]" value="%d"/>', esc_attr( $customer->get_id() ) );
 	}
 
 	/**
@@ -197,7 +204,7 @@ class EverAccounting_Customer_List_Table extends EverAccounting_List_Table {
 						'customer_id' => $customer_id,
 					)
 				);
-				$value    = '<a href="' . esc_url( $view_url ) . '"><img src="' . $customer->get_avatar_url() . '" height="36" width="36" alt="' . $customer->get_name() . '"></a>';
+				$value    = '<a href="' . esc_url( $view_url ) . '"><img src="' . esc_attr( $customer->get_avatar_url() ) . '" height="36" width="36" alt="' . esc_attr( $customer->get_name() ) . '"></a>';
 				break;
 			case 'name':
 				$view_url = eaccounting_admin_url(
@@ -240,7 +247,7 @@ class EverAccounting_Customer_List_Table extends EverAccounting_List_Table {
 			case 'email':
 				if ( ! empty( $customer->get_email() ) || ! empty( $customer->get_phone() ) ) {
 					$value  = ! empty( $customer->get_email() ) ? '<a href="mailto:' . sanitize_email( $customer->get_email() ) . '">' . sanitize_email( $customer->get_email() ) . '</a><br>' : '';
-					$value .= ! empty( $customer->get_phone() ) ? '<span class="contact_phone">' . $customer->get_phone() . '</span>' : '';
+					$value .= ! empty( $customer->get_phone() ) ? '<span class="contact_phone">' . esc_html( $customer->get_phone() ) . '</span>' : '';
 				}
 				if ( empty( $customer->get_email() ) && empty( $customer->get_phone() ) ) {
 					$value = '&mdash;';
@@ -259,8 +266,8 @@ class EverAccounting_Customer_List_Table extends EverAccounting_List_Table {
 				break;
 			case 'enabled':
 				$value  = '<label class="ea-toggle">';
-				$value .= '<input type="checkbox" class="customer-status" style="" value="true" data-id="' . $customer->get_id() . '" ' . checked( $customer->is_enabled(), true, false ) . '>';
-				$value .= '<span data-label-off="' . __( 'No', 'wp-ever-accounting' ) . '" data-label-on="' . __( 'Yes', 'wp-ever-accounting' ) . '" class="ea-toggle-slider"></span>';
+				$value .= '<input type="checkbox" class="customer-status" style="" value="true" data-id="' . esc_attr( $customer->get_id() ) . '" ' . checked( $customer->is_enabled(), true, false ) . '>';
+				$value .= '<span data-label-off="' . esc_attr( __( 'No', 'wp-ever-accounting' ) ) . '" data-label-on="' . esc_attr( __( 'Yes', 'wp-ever-accounting' ) ) . '" class="ea-toggle-slider"></span>';
 				$value .= '</label>';
 				break;
 			case 'due':
@@ -320,7 +327,7 @@ class EverAccounting_Customer_List_Table extends EverAccounting_List_Table {
 			return;
 		}
 
-		$ids = isset( $_GET['customer_id'] ) ? wp_parse_id_list( $_GET['customer_id'] ) : false; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+		$ids = isset( $_GET['customer_id'] ) ? wp_parse_id_list( wp_unslash( $_GET['customer_id'] ) ) : false;
 
 		if ( ! is_array( $ids ) ) {
 			$ids = array( $ids );

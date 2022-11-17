@@ -196,7 +196,7 @@ function eaccounting_get_items( $args = array() ) {
 		$searches = array();
 		$where   .= ' AND (';
 		foreach ( $search_cols as $col ) {
-			$searches[] = $wpdb->prepare( $col . ' LIKE %s', '%' . $wpdb->esc_like( $qv['search'] ) . '%' ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			$searches[] = $wpdb->prepare( $col . ' LIKE %s', '%' . $wpdb->esc_like( $qv['search'] ) . '%' );
 		}
 		$where .= implode( ' OR ', $searches );
 		$where .= ')';
@@ -239,10 +239,10 @@ function eaccounting_get_items( $args = array() ) {
 	$clauses     = compact( 'select', 'from', 'where', 'orderby', 'limit' );
 	if ( false === $results ) {
 		if ( $count_total ) {
-			$results = (int) $wpdb->get_var( "SELECT COUNT(id) $from $where" ); //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$results = (int) $wpdb->get_var( "SELECT COUNT(id) $from $where" );
 			wp_cache_set( $cache_key, $results, 'ea_items' );
 		} else {
-			$results = $wpdb->get_results( implode( ' ', $clauses ) );  //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared
+			$results = $wpdb->get_results( implode( ' ', $clauses ) );
 			if ( in_array( $fields, array( 'all', '*' ), true ) ) {
 				foreach ( $results as $key => $item ) {
 					if ( ! empty( $item->sku ) ) {

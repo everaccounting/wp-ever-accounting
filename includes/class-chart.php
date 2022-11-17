@@ -307,8 +307,7 @@ class Chart {
 					'datasets' => $this->datasets,
 				),
 				'options' => $this->options,
-			),
-			JSON_THROW_ON_ERROR
+			)
 		);
 
 		eaccounting_enqueue_js( "new Chart(document.getElementById('ea-chart-$this->id'),$chart);" );

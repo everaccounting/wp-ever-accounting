@@ -37,7 +37,7 @@ class Collection implements Arrayable {
 		if ( $items instanceof Collection ) {
 			$this->items = $items->all();
 		} elseif ( $items instanceof Arrayable ) {
-			$this->items = $items->toArray();
+			$this->items = $items->to_array();
 		} elseif ( is_array( $items ) ) {
 			$this->items = $items;
 		} else {
@@ -401,7 +401,7 @@ class Collection implements Arrayable {
 	 */
 	public function search( $value, $strict = false ) {
 		if ( ! $this->use_as_callable( $value ) ) {
-			return array_search( $value, $this->items, $strict ); // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
+			return array_search( $value, $this->items, $strict ? true : false );
 		}
 
 		foreach ( $this->items as $key => $item ) {
@@ -690,32 +690,20 @@ class Collection implements Arrayable {
 	 *
 	 * @return array
 	 */
-	public function __toArray() {
+	public function to_array() {
 		$output = array();
 		$value  = null;
 		foreach ( $this->items as $key => $value ) {
 			if ( ! is_object( $value ) ) {
 				$output[ $key ] = $value;
-			} elseif ( method_exists( $value, '__toArray' ) ) {
-				$output[ $key ] = $value->__toArray();
+			} elseif ( method_exists( $value, 'to_array' ) ) {
+				$output[ $key ] = $value->to_array();
 			} else {
 				$output[ $key ] = (array) $value;
 			}
 		}
 
 		return $output;
-	}
-
-	/**
-	 * Returns collection as pure array.
-	 * Does depth array casting.
-	 *
-	 * @since 1.0.2
-	 *
-	 * @return array
-	 */
-	public function toArray() {
-		return $this->__toArray();
 	}
 
 	/**
@@ -726,24 +714,12 @@ class Collection implements Arrayable {
 	 * @return  string Converted string.
 	 */
 	public function __toString() {
-		$result = wp_json_encode( $this->__toArray() );
+		$result = wp_json_encode( $this->to_array() );
 
 		if ( ! $result ) {
 			return '';
 		}
 
 		return $result;
-	}
-
-	/**
-	 * Returns collection as pure array.
-	 * Does depth array casting.
-	 *
-	 * @since 1.0.2
-	 *
-	 * @return array
-	 */
-	public function to_array() {
-		return $this->__toArray();
 	}
 }

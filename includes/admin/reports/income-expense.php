@@ -7,7 +7,7 @@ defined( 'ABSPATH' ) || exit();
  * @since 1.0.0
  */
 function eaccounting_reports_income_expense_tab() {
-	$year       = isset( $_REQUEST['year'] ) ? intval( $_REQUEST['year'] ) : date( 'Y' ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.DateTime.RestrictedFunctions.date_date
+	$year       = isset( $_REQUEST['year'] ) ? intval( $_REQUEST['year'] ) : wp_date( 'Y' );
 	$account_id = filter_input( INPUT_GET, 'account_id', FILTER_SANITIZE_NUMBER_INT );
 	?>
 	<div class="ea-card is-compact">
@@ -26,7 +26,7 @@ function eaccounting_reports_income_expense_tab() {
 				)
 			);
 
-			$years = range( date( 'Y' ), ( $year - 5 ), 1 ); // phpcs:ignore
+			$years = range( wp_date( 'Y' ), ( $year - 5 ), 1 );
 			eaccounting_select2(
 				array(
 					'placeholder' => __( 'Year', 'wp-ever-accounting' ),
@@ -55,7 +55,11 @@ function eaccounting_reports_income_expense_tab() {
 	<div class="ea-card">
 		<?php
 		global $wpdb;
-		$dates        = $totals = $compares = $graph = $categories = array(); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited, Squiz.PHP.DisallowMultipleAssignments.Found
+		$dates        = array();
+		$totals       = array();
+		$compares     = array();
+		$graph        = array();
+		$categories   = array();
 		$date_start   = eaccounting_get_financial_start( $year );
 		$end          = eaccounting_get_financial_end( $year );
 		$income_cats  = eaccounting_get_categories(
@@ -104,26 +108,17 @@ function eaccounting_reports_income_expense_tab() {
 		}
 
 		$where  = "category_id NOT IN ( SELECT id from {$wpdb->prefix}ea_categories WHERE type='other')";
-		$where .= $wpdb->prepare( ' AND (payment_date BETWEEN %s AND %s)', $date_start, $end ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$where .= $wpdb->prepare( ' AND (payment_date BETWEEN %s AND %s)', $date_start, $end );
 		if ( ! empty( $account_id ) ) {
 			$where .= $wpdb->prepare( ' AND account_id=%d', $account_id );
 		}
 
-		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		$transactions = $wpdb->get_results(
-			"
-
-		SELECT `type`, payment_date, currency_code, currency_rate, amount, category_id
-		FROM {$wpdb->prefix}ea_transactions
-		WHERE $where
-		"
-		);
-		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$transactions = $wpdb->get_results( "SELECT `type`, payment_date, currency_code, currency_rate, amount, category_idFROM {$wpdb->prefix}ea_transactions WHERE $where" );
 
 		foreach ( $transactions as $transaction ) {
 			$amount     = eaccounting_price_to_default( $transaction->amount, $transaction->currency_code, $transaction->currency_rate );
-			$month      = date( 'F', strtotime( $transaction->payment_date ) ); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
-			$month_year = date( 'F-Y', strtotime( $transaction->payment_date ) ); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
+			$month      = wp_date( 'F', strtotime( $transaction->payment_date ) );
+			$month_year = wp_date( 'F-Y', strtotime( $transaction->payment_date ) );
 
 			if ( 'income' === $transaction->type && isset( $compares['income'][ $transaction->category_id ] ) ) {
 				$compares['income'][ $transaction->category_id ][ $month ]['amount'] += $amount;

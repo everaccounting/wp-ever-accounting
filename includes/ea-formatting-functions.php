@@ -326,37 +326,6 @@ function eaccounting_format_decimal( $number, $decimals = 4, $trim_zeros = false
 }
 
 /**
- * Convert a date string to a EverAccounting_DateTime.
- *
- * @param string $time_string Time string.
- *
- * @since  1.0.2
- *
- * @throws Exception If the time string cannot be parsed.
- * @return \EverAccounting\DateTime
- */
-function eaccounting_string_to_datetime( $time_string ) {
-	// Strings are defined in local WP timezone. Convert to UTC.
-	if ( 1 === preg_match( '/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(Z|((-|\+)\d{2}:\d{2}))$/', $time_string, $date_bits ) ) {
-		$offset    = ! empty( $date_bits[7] ) ? iso8601_timezone_to_offset( $date_bits[7] ) : ( (float) get_option( 'gmt_offset', 0 ) * HOUR_IN_SECONDS );
-		$timestamp = gmmktime( $date_bits[4], $date_bits[5], $date_bits[6], $date_bits[2], $date_bits[3], $date_bits[1] ) - $offset;
-	} elseif ( is_numeric( $time_string ) ) {
-		$local_time = gmdate( 'Y-m-d H:i:s', $time_string );
-		$timezone   = wp_timezone();
-		$datetime   = date_create( $local_time, $timezone );
-		$timestamp  = $datetime->getTimestamp();
-	} else {
-		$original_timezone = date_default_timezone_get();
-		date_default_timezone_set( 'UTC' ); //phpcs:ignore
-		$timestamp = strtotime( get_gmt_from_date( gmdate( 'Y-m-d H:i:s', strtotime( $time_string ) ) ) );
-		date_default_timezone_set( $original_timezone ); //phpcs:ignore
-	}
-	$datetime = new \EverAccounting\DateTime( "@{$timestamp}", new DateTimeZone( 'UTC' ) );
-
-	return $datetime;
-}
-
-/**
  * Convert RGB to HEX.
  *
  * @param mixed $color Color.
@@ -576,10 +545,10 @@ function eaccounting_numbers_to_words( $number ) {
 			}
 			break;
 		default:
-			$baseUnit     = pow( 1000, floor( log( $number, 1000 ) ) ); //phpcs:ignore
-			$numBaseUnits = (int) ( $number / $baseUnit ); //phpcs:ignore
-			$remainder    = $number % $baseUnit; //phpcs:ignore
-			$string       = eaccounting_numbers_to_words( $numBaseUnits ) . ' ' . eaccounting_number_dictionary()[ $baseUnit ]; //phpcs:ignore
+			$base_unit      = 1000 ** floor( log( $number, 1000 ) );
+			$num_base_units = (int) ( $number / $base_unit );
+			$remainder      = $number % $base_unit;
+			$string         = eaccounting_numbers_to_words( $num_base_units ) . ' ' . eaccounting_number_dictionary()[ $base_unit ];
 			if ( $remainder ) {
 				$string .= $remainder < 100 ? $conjunction : $separator;
 				$string .= eaccounting_numbers_to_words( $remainder );

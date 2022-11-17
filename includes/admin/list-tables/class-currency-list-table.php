@@ -133,7 +133,7 @@ class EverAccounting_Currency_List_Table extends EverAccounting_List_Table {
 	 * @since  1.0.2
 	 */
 	public function column_cb( $currency ) {
-		return sprintf( '<input type="checkbox" name="currency_code[]" value="%s"/>', $currency->get_code() );
+		return sprintf( '<input type="checkbox" name="currency_code[]" value="%s"/>', esc_attr( $currency->get_code() ) );
 	}
 
 	/**
@@ -222,7 +222,7 @@ class EverAccounting_Currency_List_Table extends EverAccounting_List_Table {
 			return;
 		}
 
-		$codes = isset( $_GET['currency_code'] ) ? wp_parse_id_list( $_GET['currency_code'] ) : false; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+		$codes = isset( $_GET['currency_code'] ) ? wp_parse_id_list( wp_unslash( $_GET['currency_code'] ) ) : false;
 		$codes = wp_parse_list( $codes );
 
 		$action = $this->current_action();

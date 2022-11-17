@@ -79,12 +79,19 @@ class EverAccounting_Revenue_List_Table extends EverAccounting_List_Table {
 	 * @since 1.0.2
 	 */
 	protected function render_blank_state() {
+		$url = eaccounting_admin_url(
+			array(
+				'page'   => 'ea-sales',
+				'tab'    => 'revenues',
+				'action' => 'edit',
+			)
+		);
 		?>
 		<div class="ea-empty-table">
 			<p class="ea-empty-table__message">
 				<?php echo esc_html__( 'Create and manage your business incomes in any currency you want, so your finances are always accurate and healthy. Know what and when to get paid.', 'wp-ever-accounting' ); ?>
 			</p>
-			<a href="<?php echo esc_url( eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'revenues', 'action' => 'edit', ) ) );//phpcs:ignore?>" class="button-primary ea-empty-table__cta"><?php esc_html_e( 'Add Revenue', 'wp-ever-accounting' ); ?></a>
+			<a href="<?php echo esc_url( $url ); ?>" class="button-primary ea-empty-table__cta"><?php esc_html_e( 'Add Revenue', 'wp-ever-accounting' ); ?></a>
 			<a href="https://wpeveraccounting.com/docs/general/add-revenues/?utm_source=listtable&utm_medium=link&utm_campaign=admin" class="button-secondary ea-empty-table__cta" target="_blank"><?php esc_html_e( 'Learn More', 'wp-ever-accounting' ); ?></a>
 		</div>
 		<?php
@@ -156,7 +163,7 @@ class EverAccounting_Revenue_List_Table extends EverAccounting_List_Table {
 	 * @since  1.0.2
 	 */
 	public function column_cb( $revenue ) {
-		return sprintf( '<input type="checkbox" name="revenue_id[]" value="%d"/>', $revenue->get_id() );
+		return sprintf( '<input type="checkbox" name="revenue_id[]" value="%d"/>', esc_attr( $revenue->get_id() ) );
 	}
 
 	/**
@@ -346,7 +353,7 @@ class EverAccounting_Revenue_List_Table extends EverAccounting_List_Table {
 			return;
 		}
 
-		$ids = isset( $_GET['revenue_id'] ) ? wp_parse_id_list( $_GET['revenue_id'] ) : false; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+		$ids = isset( $_GET['revenue_id'] ) ? wp_parse_id_list( wp_unslash( $_GET['revenue_id'] ) ) : false;
 
 		if ( ! is_array( $ids ) ) {
 			$ids = array( $ids );
@@ -431,8 +438,8 @@ class EverAccounting_Revenue_List_Table extends EverAccounting_List_Table {
 
 		if ( ! empty( $month ) ) {
 			$args['payment_date'] = array(
-				'before' => date( 'Y-m-01', strtotime( $month ) ), // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
-				'after'  => date( 'Y-m-t', strtotime( $month ) ), // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
+				'before' => wp_date( 'Y-m-01', strtotime( $month ) ),
+				'after'  => wp_date( 'Y-m-t', strtotime( $month ) ),
 			);
 		}
 

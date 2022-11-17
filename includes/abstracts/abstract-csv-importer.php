@@ -371,7 +371,6 @@ abstract class CSV_Importer {
 			if ( ! is_wp_error( $result ) && $result ) {
 				$data['imported'] = (int) $data['imported'] + 1;
 			} else {
-				error_log( print_r( $result, true ) ); // phpcs:ignore
 				$data['skipped'] = (int) $data['skipped'] + 1;
 			}
 
@@ -455,7 +454,13 @@ abstract class CSV_Importer {
 
 		$percent = absint( min( round( ( $this->params['position'] / $size ) * 100 ), 100 ) );
 		if ( 100 === $percent ) {
-			@unlink( $this->file ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+			global $wp_filesystem;
+			if ( empty( $wp_filesystem ) ) {
+				require_once ABSPATH . 'wp-admin/includes/file.php';
+				WP_Filesystem();
+			}
+
+			$wp_filesystem->delete( $this->file );
 		}
 
 		return $percent;

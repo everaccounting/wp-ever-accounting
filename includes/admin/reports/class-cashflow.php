@@ -80,18 +80,17 @@ class CashFlow extends Report {
 	 */
 	protected function calculate_total_income( $start_date, $end_date, $format = '%Y-%m' ) {
 		global $wpdb;
-		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		$sql = $wpdb->prepare(
-			"SELECT DATE_FORMAT(payment_date, '$format') `date`, SUM(amount) amount, currency_code, currency_rate
+		$results = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT DATE_FORMAT(payment_date, '$format') `date`, SUM(amount) amount, currency_code, currency_rate
 					   FROM {$wpdb->prefix}ea_transactions
 					   WHERE type=%s AND payment_date BETWEEN %s AND %s AND category_id NOT IN (SELECT id from {$wpdb->prefix}ea_categories WHERE type='other')
 					   GROUP BY currency_code, currency_rate, payment_date",
-			'income',
-			$start_date,
-			$end_date
+				'income',
+				$start_date,
+				$end_date
+			)
 		);
-		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		$results = $wpdb->get_results( $sql ); //phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		$income  = array();
 		foreach ( $results as $result ) {
 			if ( ! isset( $income[ $result->date ] ) ) {
@@ -117,19 +116,17 @@ class CashFlow extends Report {
 	 */
 	protected function calculate_total_expense( $start_date, $end_date, $format = '%Y-%m' ) {
 		global $wpdb;
-		//phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		$sql = $wpdb->prepare(
-			"SELECT DATE_FORMAT(payment_date, '$format') `date`, SUM(amount) amount, currency_code, currency_rate
+		$results = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT DATE_FORMAT(payment_date, '$format') `date`, SUM(amount) amount, currency_code, currency_rate
 					   FROM {$wpdb->prefix}ea_transactions
 					   WHERE type=%s AND payment_date BETWEEN %s AND %s AND category_id NOT IN (SELECT id from {$wpdb->prefix}ea_categories WHERE type='other')
 					   GROUP BY currency_code, currency_rate, payment_date",
-			'expense',
-			$start_date,
-			$end_date
+				'expense',
+				$start_date,
+				$end_date
+			)
 		);
-		// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-
-		$results = $wpdb->get_results( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$expense = array();
 		foreach ( $results as $result ) {
 			if ( ! isset( $expense[ $result->date ] ) ) {
@@ -149,8 +146,9 @@ class CashFlow extends Report {
 	 * @return void
 	 */
 	public function output() {
-		$year   = empty( $_GET['year'] ) ? date_i18n( 'Y' ) : intval( $_GET['year'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$year   = filter_input( INPUT_GET, 'year', FILTER_SANITIZE_NUMBER_INT, array( 'options' => array( 'default' => wp_date( 'Y' ) ) ) );
 		$report = $this->get_report( array( 'year' => $year ) );
+		$filter = filter_input( INPUT_GET, 'filter', FILTER_SANITIZE_STRING );
 		$report = wp_parse_args(
 			$report,
 			array(
@@ -181,7 +179,7 @@ class CashFlow extends Report {
 						<input type="hidden" name="tab" value="cashflow">
 						<input type="hidden" name="filter" value="true">
 						<button type="submit" class="button-primary button"><?php esc_html_e( 'Submit', 'wp-ever-accounting' ); ?></button>
-						<?php if ( isset( $_GET['filter'] ) ) : ?> <?php // phpcs:ignore WordPress.Security.NonceVerification.Recommended ?>
+						<?php if ( ! empty( $filter ) ) : ?>
 							<a class="button-secondary button" href="<?php echo esc_url( admin_url( 'admin.php?page=ea-reports&tab=cashflow' ) ); ?>"><?php esc_html_e( 'Reset', 'wp-ever-accounting' ); ?></a>
 						<?php endif; ?>
 					</form>
@@ -345,7 +343,7 @@ class CashFlow extends Report {
 				</div>
 
 				<div class="ea-card__footer">
-					<a class="button button-secondary" href="<?php echo wp_nonce_url( add_query_arg( 'refresh_report', 'yes' ), 'refresh_report' ); ?>"> <?php //phpcs:ignore ?>
+					<a class="button button-secondary" href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'refresh_report', 'yes' ), 'refresh_report' ) ); ?>">
 						<?php esc_html_e( 'Reset Cache', 'wp-ever-accounting' ); ?>
 					</a>
 				</div>

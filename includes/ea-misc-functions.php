@@ -293,8 +293,13 @@ function eaccounting_get_site_name() {
  */
 function eaccounting_file_to_attachment( $file ) {
 	$filename = basename( $file );
-
-	$upload_file = wp_upload_bits( $filename, null, file_get_contents( $file ) ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+	global $wp_filesystem;
+	if ( empty( $wp_filesystem ) ) {
+		require_once ABSPATH . 'wp-admin/includes/file.php';
+		WP_Filesystem();
+	}
+	$data        = $wp_filesystem->get_contents( $file );
+	$upload_file = wp_upload_bits( $filename, null, $data );
 	if ( ! $upload_file['error'] ) {
 		$wp_filetype   = wp_check_filetype( $filename, null );
 		$attachment    = array(

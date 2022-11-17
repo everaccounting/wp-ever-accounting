@@ -65,7 +65,7 @@ function eaccounting_get_reports_tabs() {
 function eaccounting_load_reports_page() {
 	$tab = eaccounting_get_current_tab();
 	if ( empty( $tab ) ) {
-		wp_safe_redirect( add_query_arg( [ 'tab' => 'income_summary' ] ) );
+		wp_safe_redirect( add_query_arg( array( 'tab' => 'income_summary' ) ) );
 		exit();
 	}
 

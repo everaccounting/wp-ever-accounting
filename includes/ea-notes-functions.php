@@ -135,9 +135,9 @@ function eaccounting_get_notes( $args = array() ) {
 	$search_cols = array( 'note', 'extra' );
 	if ( ! empty( $qv['search'] ) ) {
 		$searches = array();
-		$where    = ' AND ('; // phpcs:ignore
+		$where    = ' AND (';
 		foreach ( $search_cols as $col ) {
-			$searches[] = $wpdb->prepare( $col . ' LIKE %s', '%' . $wpdb->esc_like( $qv['search'] ) . '%' ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			$searches[] = $wpdb->prepare( $col . ' LIKE %s', '%' . $wpdb->esc_like( $qv['search'] ) . '%' );
 		}
 		$where .= implode( ' OR ', $searches );
 		$where .= ')';
@@ -185,10 +185,10 @@ function eaccounting_get_notes( $args = array() ) {
 
 	if ( false === $results ) {
 		if ( $count_total ) {
-			$results = (int) $wpdb->get_var( "SELECT COUNT(id) $from $where" );  //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$results = (int) $wpdb->get_var( "SELECT COUNT(id) $from $where" );
 			wp_cache_set( $cache_key, $results, 'ea_notes' );
 		} else {
-			$results = $wpdb->get_results( implode( ' ', $clauses ) );  //phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			$results = $wpdb->get_results( implode( ' ', $clauses ) );
 			if ( in_array( $fields, array( 'all', '*' ), true ) ) {
 				foreach ( $results as $key => $item ) {
 					wp_cache_set( $item->id, $item, 'ea_notes' );

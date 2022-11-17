@@ -50,20 +50,19 @@ class Sales extends Report {
 			$where     .= empty( $args['payment_method'] ) ? '' : $wpdb->prepare( ' AND t.payment_method = %s', sanitize_key( $args['payment_method'] ) );
 			$dates      = $this->get_dates_in_period( $start_date, $end_date );
 
-			// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQLPlaceholders.UnsupportedPlaceholder
-			$sql = $wpdb->prepare(
-				"SELECT DATE_FORMAT(t.payment_date, '%Y-%m') `date`, SUM(t.amount) amount, t.currency_code, t.currency_rate,t.category_id,t.payment_method, c.name category, c.color
+			$results = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT DATE_FORMAT(t.payment_date, '%Y-%m') `date`, SUM(t.amount) amount, t.currency_code, t.currency_rate,t.category_id,t.payment_method, c.name category, c.color
 					   FROM {$wpdb->prefix}ea_transactions t
 					   LEFT JOIN {$wpdb->prefix}ea_categories c on c.id=t.category_id
 					   WHERE c.type = %s AND t.payment_date BETWEEN %s AND %s $where
 					   GROUP BY t.currency_code,t.currency_rate, t.payment_date, t.category_id,t.payment_method ",
-				'income',
-				$start_date,
-				$end_date
+					'income',
+					$start_date,
+					$end_date
+				)
 			);
-			// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQLPlaceholders.UnsupportedPlaceholder
 
-			$results           = $wpdb->get_results( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 			$report['results'] = $results;
 			$report['dates']   = $dates;
 			$report['data']    = array();
@@ -102,7 +101,7 @@ class Sales extends Report {
 	 * @since 1.1.0
 	 */
 	public function output() {
-		$year           = empty( $_GET['year'] ) ? date_i18n( 'Y' ) : intval( $_GET['year'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$year           = filter_input( INPUT_GET, 'year', FILTER_SANITIZE_NUMBER_INT, array( 'options' => array( 'default' => wp_date( 'Y' ) ) ) );
 		$category_id    = filter_input( INPUT_GET, 'category_id', FILTER_SANITIZE_NUMBER_INT );
 		$account_id     = filter_input( INPUT_GET, 'account_id', FILTER_SANITIZE_NUMBER_INT );
 		$customer_id    = filter_input( INPUT_GET, 'customer_id', FILTER_SANITIZE_NUMBER_INT );
@@ -310,7 +309,7 @@ class Sales extends Report {
 				</div>
 
 				<div class="ea-card__footer">
-					<a class="button button-secondary" href="<?php echo wp_nonce_url( add_query_arg( 'refresh_report', 'yes' ), 'refresh_report' ); ?>"> <?php //phpcs:ignore ?>
+					<a class="button button-secondary" href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'refresh_report', 'yes' ), 'refresh_report' ) ); ?>">
 						<?php esc_html_e( 'Reset Cache', 'wp-ever-accounting' ); ?>
 					</a>
 				</div>

@@ -17,18 +17,26 @@ use EverAccounting\Models\Invoice;
 defined( 'ABSPATH' ) || exit();
 
 $due      = eaccounting()->settings->get( 'invoice_due', 15 );
-$due_date = date_i18n( 'Y-m-d', strtotime( "+ $due days", current_time( 'timestamp' ) ) ); //phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date,WordPress.DateTime.CurrentTimeTimestamp.Requested
+$due_date = date_i18n( 'Y-m-d', strtotime( "+ $due days", wp_date( 'U' ) ) );
 $invoice->maybe_set_invoice_number();
 $title    = $invoice->exists() ? __( 'Update Invoice', 'wp-ever-accounting' ) : __( 'Add Invoice', 'wp-ever-accounting' );
 $note     = eaccounting()->settings->get( 'invoice_note' );
 $terms    = eaccounting()->settings->get( 'invoice_terms' );
 $view_url = admin_url( 'admin.php' ) . '?page=ea-sales&tab=invoices&action=view&invoice_id=' . $invoice->get_id();
+$add_new  = add_query_arg(
+	array(
+		'tab'    => 'invoices',
+		'page'   => 'ea-sales',
+		'action' => 'add',
+	),
+	admin_url( 'admin.php' )
+);
 ?>
 <div class="ea-row">
 	<div class="ea-col-7">
 		<h1 class="wp-heading-inline"><?php esc_html_e( 'Invoices', 'wp-ever-accounting' ); ?></h1>
 		<?php if ( $invoice->exists() ) : ?>
-			<a href="<?php echo esc_url( add_query_arg( array( 'tab' => 'invoices', 'page' => 'ea-sales', 'action' => 'add' ), admin_url( 'admin.php' ) ) );//phpcs:ignore ?>" class="page-title-action">
+			<a href="<?php echo esc_url( $add_new ); ?>" class="page-title-action">
 				<?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?>
 			</a>
 		<?php else : ?>

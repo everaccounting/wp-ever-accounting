@@ -29,16 +29,16 @@ function eaccounting_get_upload_dir() {
 /**
  * Scan folders
  *
- * @since 1.0.2
- *
  * @param string $path Path to scan.
  * @param array  $return Array of files.
+ *
+ * @since 1.0.2
  *
  * @return array
  */
 function eaccounting_scan_folders( $path = '', $return = array() ) {
-	$path  = '' === $path ? dirname( __FILE__ ) : $path;
-	$lists = @scandir( $path ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+	$path  = '' === $path ? __DIR__ : $path;
+	$lists = scandir( $path );
 
 	if ( ! empty( $lists ) ) {
 		foreach ( $lists as $f ) {
@@ -58,9 +58,9 @@ function eaccounting_scan_folders( $path = '', $return = array() ) {
 /**
  * Protect accounting files
  *
- * @since 1.0.2
- *
  * @param bool $force Force protect.
+ *
+ * @since 1.0.2
  */
 function eaccounting_protect_files( $force = false ) {
 
@@ -71,28 +71,37 @@ function eaccounting_protect_files( $force = false ) {
 		}
 
 		$base_dir = $upload_dir['basedir'];
-
 		$htaccess = trailingslashit( $base_dir ) . '.htaccess';
-		if ( ! file_exists( $htaccess ) ) {
+		// init file system.
+		global $wp_filesystem;
+		if ( empty( $wp_filesystem ) ) {
+			require_once ABSPATH . 'wp-admin/includes/file.php';
+			WP_Filesystem();
+		}
+		if ( empty( $wp_filesystem ) ) {
+			return;
+		}
+
+		if ( ! $wp_filesystem->exists( $htaccess ) ) {
 			$rule  = "Options -Indexes\n";
 			$rule .= "deny from all\n";
 			$rule .= "<FilesMatch '\.(jpg|jpeg|png|pdf|doc|docx|xls)$'>\n";
 			$rule .= "Order Allow,Deny\n";
 			$rule .= "Allow from all\n";
 			$rule .= "</FilesMatch>\n";
-			@file_put_contents( $htaccess, $rule ); // phpcs:ignore
+			$wp_filesystem->put_contents( $htaccess, $rule, FS_CHMOD_FILE );
 		}
 
 		// Top level blank index.php.
 		if ( ! file_exists( $base_dir . '/index.php' ) && wp_is_writable( $base_dir ) ) {
-			@file_put_contents( $base_dir . '/index.php', '<?php' . PHP_EOL . '// Silence is golden.' ); // phpcs:ignore
+			$wp_filesystem->put_contents( $base_dir . '/index.php', '<?php' . PHP_EOL . '// Silence is golden.' );
 		}
 
 		$folders = eaccounting_scan_folders( $base_dir );
 		foreach ( $folders as $folder ) {
 			// Create index.php, if it doesn't exist.
 			if ( ! file_exists( $folder . 'index.php' ) && wp_is_writable( $folder ) ) {
-				@file_put_contents( $folder . 'index.php', '<?php' . PHP_EOL . '// Silence is golden.' ); // phpcs:ignore
+				$wp_filesystem->put_contents( $folder . 'index.php', '<?php' . PHP_EOL . '// Silence is golden.' );
 			}
 		}
 
@@ -104,9 +113,9 @@ function eaccounting_protect_files( $force = false ) {
 /**
  * Conditionally change upload folder if accounting assets.
  *
- * @since 1.1.0
- *
  * @param array $pathdata Array of upload path data.
+ *
+ * @since 1.1.0
  *
  * @return mixed
  */

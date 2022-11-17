@@ -93,12 +93,19 @@ class EverAccounting_Vendor_List_Table extends EverAccounting_List_Table {
 	 * @return void
 	 */
 	protected function render_blank_state() {
+		$url = eaccounting_admin_url(
+			array(
+				'page'   => 'ea-expenses',
+				'tab'    => 'vendors',
+				'action' => 'edit',
+			)
+		);
 		?>
 		<div class="ea-empty-table">
 			<p class="ea-empty-table__message">
 				<?php echo esc_html__( 'Create vendors to assign payments, and later you can filter the transactions you made with them. You can store the name, address, email, phone number, etc. of a vendor.', 'wp-ever-accounting' ); ?>
 			</p>
-			<a href="<?php echo esc_url( eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'vendors', 'action' => 'edit', ) ) ); //phpcs:ignore?>" class="button-primary ea-empty-table__cta">
+			<a href="<?php echo esc_url( $url ); ?>" class="button-primary ea-empty-table__cta">
 				<?php esc_html_e( 'Add Vendors', 'wp-ever-accounting' ); ?>
 			</a>
 			<a href="https://wpeveraccounting.com/docs/general/add-vendors/?utm_source=listtable&utm_medium=link&utm_campaign=admin" class="button-secondary ea-empty-table__cta" target="_blank">
@@ -177,7 +184,7 @@ class EverAccounting_Vendor_List_Table extends EverAccounting_List_Table {
 	 * @return string Displays a checkbox.
 	 */
 	public function column_cb( $vendor ) {
-		return sprintf( '<input type="checkbox" name="vendor_id[]" value="%d"/>', $vendor->get_id() );
+		return sprintf( '<input type="checkbox" name="vendor_id[]" value="%d"/>', esc_attr( $vendor->get_id() ) );
 	}
 
 	/**
@@ -202,7 +209,7 @@ class EverAccounting_Vendor_List_Table extends EverAccounting_List_Table {
 						'vendor_id' => $vendor_id,
 					)
 				);
-				$value    = '<a href="' . esc_url( $view_url ) . '"><img src="' . $vendor->get_avatar_url() . '" height="36" width="36" alt="' . $vendor->get_name() . '"></a>';
+				$value    = '<a href="' . esc_url( $view_url ) . '"><img src="' . esc_url( $vendor->get_avatar_url() ) . '" height="36" width="36" alt="' . esc_attr( $vendor->get_name() ) . '"></a>';
 				break;
 			case 'name':
 				$view_url = eaccounting_admin_url(
@@ -323,7 +330,7 @@ class EverAccounting_Vendor_List_Table extends EverAccounting_List_Table {
 			return;
 		}
 
-		$ids = isset( $_GET['vendor_id'] ) ? wp_parse_id_list( $_GET['vendor_id'] ) : false; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+		$ids = isset( $_GET['vendor_id'] ) ? wp_parse_id_list( wp_unslash( $_GET['vendor_id'] ) ) : false;
 
 		if ( ! is_array( $ids ) ) {
 			$ids = array( $ids );

@@ -703,7 +703,7 @@ class Settings {
 			return $input;
 		}
 
-		parse_str( wp_unslash( $_POST['_wp_http_referer'] ), $referrer ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		parse_str( wp_get_referer(), $referrer );
 		$fields          = array();
 		$tabs            = array_keys( $this->settings );
 		$current_tab     = isset( $referrer['tab'] ) && in_array( $referrer['tab'], $tabs, true ) ? sanitize_title( $referrer['tab'] ) : current( $tabs );
@@ -819,7 +819,7 @@ class Settings {
 
 		// Section have name but not in url then redirect.
 		if ( ! empty( $current_section ) && empty( $requested_section ) ) {
-			wp_safe_redirect( add_query_arg( [ 'section' => $current_section ] ) );
+			wp_safe_redirect( add_query_arg( array( 'section' => $current_section ) ) );
 			exit();
 		}
 
@@ -852,7 +852,7 @@ class Settings {
 			<?php endif; ?>
 			<?php if ( count( $sections ) > 1 ) : ?>
 				<ul class="subsubsub">
-					<?php echo implode( ' | </li><li>', $subsub_links ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+					<?php echo wp_kses_post( implode( ' | </li><li>', $subsub_links ) ); ?>
 				</ul>
 			<?php endif; ?>
 			<br class="clear"/>
@@ -878,7 +878,6 @@ class Settings {
 
 		</div>
 		<?php
-		echo ob_get_clean(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 }
 

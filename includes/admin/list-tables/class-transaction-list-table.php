@@ -316,8 +316,8 @@ class EverAccounting_Transaction_List_Table extends EverAccounting_List_Table {
 
 		if ( ! empty( $start_date ) && ! empty( $end_date ) ) {
 			$args['payment_date'] = array(
-				'before' => date( 'Y-m-d', strtotime( $end_date ) ), // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
-				'after'  => date( 'Y-m-d', strtotime( $start_date ) ), // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
+				'before' => wp_date( 'Y-m-d', strtotime( $end_date ) ),
+				'after'  => wp_date( 'Y-m-d', strtotime( $start_date ) ),
 			);
 		}
 

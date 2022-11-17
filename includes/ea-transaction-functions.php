@@ -462,10 +462,10 @@ function eaccounting_get_transfers( $args = array() ) {
 	$results     = wp_cache_get( $cache_key, 'ea_transfers' );
 	if ( false === $results ) {
 		if ( $count_total ) {
-			$results = (int) $wpdb->get_var( "SELECT COUNT($table.id) $from $join $where" );  //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$results = (int) $wpdb->get_var( "SELECT COUNT($table.id) $from $join $where" );
 			wp_cache_set( $cache_key, $results, 'ea_transfers' );
 		} else {
-			$results = $wpdb->get_results( implode( ' ', $clauses ) );  //phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			$results = $wpdb->get_results( implode( ' ', $clauses ) );
 			if ( in_array( $fields, array( 'all', '*', 'ea_transfers.*' ), true ) ) {
 				foreach ( $results as $key => $item ) {
 					wp_cache_set( $item->id, $item, 'ea_transfers' );
@@ -534,7 +534,7 @@ function eaccounting_get_transactions( $args = array() ) {
 		$searches = array();
 		$where   .= ' AND (';
 		foreach ( $search_cols as $col ) {
-			$searches[] = $wpdb->prepare( $col . ' LIKE %s', '%' . $wpdb->esc_like( $qv['search'] ) . '%' ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			$searches[] = $wpdb->prepare( $col . ' LIKE %s', '%' . $wpdb->esc_like( $qv['search'] ) . '%' );
 		}
 		$where .= implode( ' OR ', $searches );
 		$where .= ')';
@@ -622,10 +622,10 @@ function eaccounting_get_transactions( $args = array() ) {
 
 	if ( false === $results ) {
 		if ( $count_total ) {
-			$results = (int) $wpdb->get_var( "SELECT COUNT(id) $from $where" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$results = (int) $wpdb->get_var( "SELECT COUNT(id) $from $where" );
 			wp_cache_set( $cache_key, $results, 'ea_transactions' );
 		} else {
-			$results = $wpdb->get_results( implode( ' ', $clauses ) );  // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			$results = $wpdb->get_results( implode( ' ', $clauses ) );
 			if ( in_array( $fields, array( 'all', '*' ), true ) ) {
 				foreach ( $results as $key => $item ) {
 					wp_cache_set( $item->id, $item, 'ea_transactions' );
@@ -684,14 +684,14 @@ function eaccounting_get_total_income( $year = null ) {
 		}
 
 		$results      = $wpdb->get_results(
-			$wpdb->prepare( //phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$wpdb->prepare(
 				" SELECT Sum(amount) amount,currency_code,currency_rate
 				FROM   {$wpdb->prefix}ea_transactions
 				WHERE 1=1 $where AND type = %s AND category_id NOT IN (SELECT id FROM   {$wpdb->prefix}ea_categories WHERE  type = 'other')
 				GROUP  BY currency_code, currency_rate
 			",
 				'income'
-			) //phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			)
 		);
 		$total_income = 0;
 		foreach ( $results as $result ) {
@@ -723,7 +723,7 @@ function eaccounting_get_total_expense( $year = null ) {
 		}
 
 		$results       = $wpdb->get_results(
-			$wpdb->prepare( //phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$wpdb->prepare(
 				" SELECT Sum(amount) amount,currency_code,currency_rate
 				FROM   {$wpdb->prefix}ea_transactions
 				WHERE 1=1 $where AND type = %s AND category_id NOT IN (SELECT id FROM   {$wpdb->prefix}ea_categories WHERE  type = 'other')
@@ -731,7 +731,7 @@ function eaccounting_get_total_expense( $year = null ) {
 			",
 				'expense'
 			)
-		); //phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		);
 		$total_expense = 0;
 		foreach ( $results as $result ) {
 			$total_expense += eaccounting_price_to_default( $result->amount, $result->currency_code, $result->currency_rate );
@@ -777,7 +777,7 @@ function eaccounting_get_total_receivable() {
 			",
 			'invoice'
 		);
-		$invoices         = $wpdb->get_results( $invoices_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		$invoices         = $wpdb->get_results( $invoices_sql );
 		foreach ( $invoices as $invoice ) {
 			$total_receivable += eaccounting_price_to_default( $invoice->amount, $invoice->currency_code, $invoice->currency_rate );
 		}
@@ -793,7 +793,7 @@ function eaccounting_get_total_receivable() {
 		  ",
 			'income'
 		);
-		$results = $wpdb->get_results( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		$results = $wpdb->get_results( $sql );
 		foreach ( $results as $result ) {
 			$total_receivable -= eaccounting_price_to_default( $result->amount, $result->currency_code, $result->currency_rate );
 		}
@@ -822,7 +822,7 @@ function eaccounting_get_total_payable() {
 			",
 			'bill'
 		);
-		$bills         = $wpdb->get_results( $bills_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		$bills         = $wpdb->get_results( $bills_sql );
 		foreach ( $bills as $bill ) {
 			$total_payable += eaccounting_price_to_default( $bill->amount, $bill->currency_code, $bill->currency_rate );
 		}
@@ -838,7 +838,7 @@ function eaccounting_get_total_payable() {
 		  ",
 			'expense'
 		);
-		$results = $wpdb->get_results( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		$results = $wpdb->get_results( $sql );
 		foreach ( $results as $result ) {
 			$total_payable -= eaccounting_price_to_default( $result->amount, $result->currency_code, $result->currency_rate );
 		}

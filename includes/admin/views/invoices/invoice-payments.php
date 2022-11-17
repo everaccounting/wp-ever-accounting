@@ -29,7 +29,20 @@ $payments = $invoice->get_payments();
 			<?php foreach ( $payments as $payment ) : ?>
 				<tr>
 					<td>
-						<a href="<?php echo add_query_arg( array( 'page' => 'ea-sales', 'tab' => 'invoices', 's' => $invoice->get_invoice_number() ), admin_url( 'admin.php' ) );//phpcs:ignore?>">
+						<a href="
+						<?php
+						echo esc_url(
+							add_query_arg(
+								array(
+									'page' => 'ea-sales',
+									'tab'  => 'invoices',
+									's'    => $invoice->get_invoice_number(),
+								),
+								admin_url( 'admin.php' )
+							)
+						);
+						?>
+									">
 							<?php echo esc_html( $payment->get_payment_date() ); ?>
 						</a>
 					</td>

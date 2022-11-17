@@ -584,7 +584,7 @@ class Settings {
 			esc_attr( $args['input_class'] ),
 			esc_attr( $args['style'] ),
 			esc_attr( $args['id'] ),
-			esc_attr( stripslashes( $value ) ),
+			esc_attr( stripslashes( $value ) )
 		);
 
 		echo ! empty( $args['desc'] ) ? sprintf( '<p class="description">%s</p>', wp_kses_post( $args['desc'] ) ) : '';
@@ -972,11 +972,9 @@ class Settings {
 		$zero_values_allowed = (array) apply_filters( 'eaccounting_settings_zero_values_allowed', $zero_values_allowed );
 
 		// Allow 0 values for specified keys only.
-		if ( in_array( $key, $zero_values_allowed ) ) { // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
-
+		if ( in_array( $key, $zero_values_allowed ) ) {
 			$value = isset( $this->settings[ $key ] ) ? $this->settings[ $key ] : null;
 			$value = ( ! is_null( $value ) && '' !== $value ) ? $value : $default;
-
 		}
 
 		return $value;
@@ -991,12 +989,10 @@ class Settings {
 	 * @return array
 	 */
 	public function sanitize_settings( $input = array() ) {
-		if ( empty( $_POST['_wp_http_referer'] ) ) { //phpcs:ignore WordPress.Security.NonceVerification
+		if ( empty( $_POST['_wp_http_referer'] ) ) {
 			return $input;
 		}
-
-		parse_str( wp_unslash( $_POST['_wp_http_referer'] ), $referrer ); //phpcs:ignore WordPress.Security.NonceVerification,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-
+		parse_str( wp_unslash( $_POST['_wp_http_referer'] ), $referrer );
 		$saved = get_option( 'eaccounting_settings', array() );
 		if ( ! is_array( $saved ) ) {
 			$saved = array();

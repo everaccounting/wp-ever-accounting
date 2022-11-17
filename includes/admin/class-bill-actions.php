@@ -42,7 +42,8 @@ class Bill_Actions {
 		$bill    = $bill_id ? eaccounting_get_bill( $bill_id ) : false;
 
 		if ( ! wp_verify_nonce( $nonce, 'ea_bill_action' ) || ! current_user_can( 'ea_manage_bill' ) || ! $bill->exists() ) {
-			wp_die( esc_html__( 'no cheating!', 'wp-ever-accounting' ) );
+			echo esc_html__( 'no cheating!', 'wp-ever-accounting' );
+			exit();
 		}
 		$redirect_url = add_query_arg(
 			array(

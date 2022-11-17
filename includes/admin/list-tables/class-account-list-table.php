@@ -95,12 +95,19 @@ class EverAccounting_Account_List_Table extends EverAccounting_List_Table {
 	 * @since 1.0.2
 	 */
 	protected function render_blank_state() {
+		$url = eaccounting_admin_url(
+			array(
+				'page'   => 'ea-banking',
+				'tab'    => 'accounts',
+				'action' => 'edit',
+			)
+		);
 		?>
 		<div class="ea-empty-table">
 			<p class="ea-empty-table__message">
 				<?php echo esc_html__( 'Create unlimited bank and cash accounts and track their opening and current balances. You can use it with any currencies that you want. Ever Accounting will take care of the currency.', 'wp-ever-accounting' ); ?>
 			</p>
-			<a href="<?php echo esc_url( eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'accounts', 'action' => 'edit', ) ) ); //phpcs:ignore?>" class="button-primary ea-empty-table__cta"><?php esc_html_e( 'Add Account', 'wp-ever-accounting' ); ?></a>
+			<a href="<?php echo esc_url( $url ); ?>" class="button-primary ea-empty-table__cta"><?php esc_html_e( 'Add Account', 'wp-ever-accounting' ); ?></a>
 			<a href="https://wpeveraccounting.com/docs/general/how-to-add-accounts/?utm_source=listtable&utm_medium=link&utm_campaign=admin" class="button-secondary ea-empty-table__cta" target="_blank"><?php esc_html_e( 'Learn More', 'wp-ever-accounting' ); ?></a>
 		</div>
 		<?php
@@ -173,7 +180,7 @@ class EverAccounting_Account_List_Table extends EverAccounting_List_Table {
 	 * @since  1.0.2
 	 */
 	public function column_cb( $account ) {
-		return sprintf( '<input type="checkbox" name="account_id[]" value="%d"/>', $account->get_id() );
+		return sprintf( '<input type="checkbox" name="account_id[]" value="%d"/>', esc_attr( $account->get_id() ) );
 	}
 
 	/**
@@ -281,7 +288,7 @@ class EverAccounting_Account_List_Table extends EverAccounting_List_Table {
 		if ( ! wp_verify_nonce( $nonce, 'bulk-accounts' ) && ! wp_verify_nonce( $nonce, 'account-nonce' ) ) {
 			return;
 		}
-		$ids = isset( $_GET['account_id'] ) ? wp_parse_id_list( $_GET['account_id'] ) : false; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+		$ids = isset( $_GET['account_id'] ) ? wp_parse_id_list( wp_unslash( $_GET['account_id'] ) ) : false;
 		if ( ! is_array( $ids ) ) {
 			$ids = array( $ids );
 		}

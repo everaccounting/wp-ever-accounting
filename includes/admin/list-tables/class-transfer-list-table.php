@@ -164,7 +164,7 @@ class EverAccounting_Transfer_List_Table extends EverAccounting_List_Table {
 	 * @return string Displays a checkbox.
 	 */
 	public function column_cb( $transfer ) {
-		return sprintf( '<input type="checkbox" name="transfer_id[]" value="%d"/>', $transfer->get_id() );
+		return sprintf( '<input type="checkbox" name="transfer_id[]" value="%d"/>', esc_attr( $transfer->get_id() ) );
 	}
 
 	/**
@@ -278,7 +278,7 @@ class EverAccounting_Transfer_List_Table extends EverAccounting_List_Table {
 			return;
 		}
 
-		$ids = isset( $_GET['transfer_id'] ) ? wp_parse_id_list( $_GET['transfer_id'] ) : false; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+		$ids = isset( $_GET['transfer_id'] ) ? wp_parse_id_list( wp_unslash( $_GET['transfer_id'] ) ) : false;
 
 		if ( ! is_array( $ids ) ) {
 			$ids = array( $ids );
@@ -360,8 +360,8 @@ class EverAccounting_Transfer_List_Table extends EverAccounting_List_Table {
 
 		if ( ! empty( $start_date ) && ! empty( $end_date ) ) {
 			$args['payment_date'] = array(
-				'before'    => date( 'Y-m-d', strtotime( $end_date ) ), // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
-					'after' => date( 'Y-m-d', strtotime( $start_date ) ), // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
+				'before' => wp_date( 'Y-m-d', strtotime( $end_date ) ),
+				'after'  => wp_date( 'Y-m-d', strtotime( $start_date ) ),
 			);
 		}
 

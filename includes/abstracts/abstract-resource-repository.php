@@ -106,13 +106,13 @@ abstract class Resource_Repository {
 			global $wpdb;
 			$db_info       = $this->get_db_info();
 			$raw_meta_data = $wpdb->get_results(
-				$wpdb->prepare( //phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				$wpdb->prepare(
 					"SELECT {$db_info['meta_id_field']} as meta_id, meta_key, meta_value
 				FROM {$db_info['table']}
 				WHERE {$db_info['object_id_field']} = %d
 				ORDER BY {$db_info['meta_id_field']}",
 					$object->get_id()
-				) //phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				)
 			);
 
 			$this->internal_meta_keys = array_merge( array_map( array( $this, 'prefix_key' ), $object->get_data_keys() ), $this->internal_meta_keys );
@@ -392,7 +392,7 @@ abstract class Resource_Repository {
 		$data = wp_cache_get( $item->get_id(), $item->get_cache_group() );
 
 		if ( false === $data ) {
-			$data = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$table} WHERE id = %d LIMIT 1;", $item->get_id() ) ); //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$data = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$table} WHERE id = %d LIMIT 1;", $item->get_id() ) );
 			wp_cache_set( $item->get_id(), $data, $item->get_cache_group() );
 		}
 
@@ -466,9 +466,9 @@ abstract class Resource_Repository {
 	public function delete( &$item ) {
 		global $wpdb;
 		$table = $wpdb->prefix . $this->table;
-		$wpdb->query( $wpdb->prepare( "DELETE FROM {$table} WHERE id = %d", $item->get_id() ) ); //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$wpdb->query( $wpdb->prepare( "DELETE FROM {$table} WHERE id = %d", $item->get_id() ) );
 		if ( $this->meta_type ) {
-			$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}ea_{$this->meta_type}meta WHERE {$this->meta_type}_id = %d", $item->get_id() ) ); //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}ea_{$this->meta_type}meta WHERE {$this->meta_type}_id = %d", $item->get_id() ) );
 		}
 
 		// Delete cache.

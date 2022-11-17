@@ -166,7 +166,7 @@ class EverAccounting_Bill_List_Table extends EverAccounting_List_Table {
 	 * @return string Displays a checkbox.
 	 */
 	public function column_cb( $bill ) {
-		return sprintf( '<input type="checkbox" name="bill_id[]" value="%d"/>', $bill->get_id() );
+		return sprintf( '<input type="checkbox" name="bill_id[]" value="%d"/>', esc_attr( $bill->get_id() ) );
 	}
 
 	/**
@@ -237,7 +237,8 @@ class EverAccounting_Bill_List_Table extends EverAccounting_List_Table {
 					$value = sprintf(
 						'<a href="%1$s">%2$s</a>',
 						esc_url( $url ),
-						esc_html( $bill->get_name() ) );// phpcs:ignore
+						esc_html( $bill->get_name() )
+					);
 				}
 				break;
 			case 'issue_date':
@@ -277,7 +278,7 @@ class EverAccounting_Bill_List_Table extends EverAccounting_List_Table {
 		if ( ! wp_verify_nonce( $nonce, 'bulk-bills' ) && ! wp_verify_nonce( $nonce, 'bill-nonce' ) ) {
 			return;
 		}
-		$ids = isset( $_GET['bill_id'] ) ? wp_parse_id_list( $_GET['bill_id'] ) : false; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+		$ids = isset( $_GET['bill_id'] ) ? wp_parse_id_list( wp_unslash( $_GET['bill_id'] ) ) : false;
 
 		if ( ! is_array( $ids ) ) {
 			$ids = array( $ids );

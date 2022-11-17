@@ -17,17 +17,30 @@ use EverAccounting\Models\Bill;
 defined( 'ABSPATH' ) || exit();
 
 $bill->maybe_set_bill_number();
-$title    = $bill->exists() ? __( 'Update Bill', 'wp-ever-accounting' ) : __( 'Add Bill', 'wp-ever-accounting' );
+$title    = $bill->exists() ? esc_html__( 'Update Bill', 'wp-ever-accounting' ) : __( 'Add Bill', 'wp-ever-accounting' );
 $note     = eaccounting()->settings->get( 'bill_note' );
 $terms    = eaccounting()->settings->get( 'bill_terms' );
 $due      = eaccounting()->settings->get( 'bill_due', 15 );
-$due_date = date_i18n( 'Y-m-d', strtotime( "+ $due days", current_time( 'timestamp' ) ) );//phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date,WordPress.DateTime.CurrentTimeTimestamp.Requested
+$due_date = date_i18n( 'Y-m-d', strtotime( "+ $due days", wp_date( 'U' ) ) );
 ?>
 <div class="ea-row">
 	<div class="ea-col-7">
 		<h1 class="wp-heading-inline"><?php esc_html_e( 'Bills', 'wp-ever-accounting' ); ?></h1>
 		<?php if ( $bill->exists() ) : ?>
-			<a href="<?php echo esc_url( add_query_arg( array( 'tab' => 'bills', 'page' => 'ea-expenses', 'action' => 'add' ), admin_url( 'admin.php' ) ) );//phpcs:ignore ?>" class="page-title-action">
+			<a href="
+			<?php
+			echo esc_url(
+				add_query_arg(
+					array(
+						'tab'    => 'bills',
+						'page'   => 'ea-expenses',
+						'action' => 'add',
+					),
+					admin_url( 'admin.php' )
+				)
+			);
+			?>
+						" class="page-title-action">
 				<?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?>
 			</a>
 		<?php else : ?>

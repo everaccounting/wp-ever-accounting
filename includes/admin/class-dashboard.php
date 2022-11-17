@@ -275,7 +275,7 @@ class Dashboard {
 			$start_date,
 			$end_date
 		);
-		$results    = $wpdb->get_results( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		$results    = $wpdb->get_results( $sql );
 		$data       = array();
 		foreach ( $results as $result ) {
 			$amount = eaccounting_price_to_default( $result->amount, $result->currency_code, $result->currency_rate );
@@ -370,7 +370,7 @@ class Dashboard {
 			$start_date,
 			$end_date
 		);
-		$results    = $wpdb->get_results( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		$results    = $wpdb->get_results( $sql );
 		$data       = array();
 		foreach ( $results as $result ) {
 			$amount = eaccounting_price_to_default( $result->amount, $result->currency_code, $result->currency_rate );
@@ -451,7 +451,6 @@ class Dashboard {
 	 */
 	public static function render_latest_incomes() {
 		global $wpdb;
-		// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
 		$incomes = $wpdb->get_results(
 			$wpdb->prepare(
 				"
@@ -467,7 +466,6 @@ class Dashboard {
 				5
 			)
 		);
-		// phpcs:enable WordPress.DB.PreparedSQL.NotPrepared
 
 		if ( empty( $incomes ) ) {
 			echo sprintf(
@@ -506,7 +504,6 @@ class Dashboard {
 	 */
 	public static function render_latest_expenses() {
 		global $wpdb;
-		// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
 		$expenses = $wpdb->get_results(
 			$wpdb->prepare(
 				"
@@ -522,7 +519,6 @@ class Dashboard {
 				5
 			)
 		);
-		// phpcs:enable WordPress.DB.PreparedSQL.NotPrepared
 		if ( empty( $expenses ) ) {
 			echo sprintf(
 				'<p class="ea-card__inside">%s</p>',

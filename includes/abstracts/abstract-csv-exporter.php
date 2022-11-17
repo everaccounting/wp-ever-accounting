@@ -107,8 +107,14 @@ abstract class CSV_Exporter {
 	 */
 	public function process_step( $step ) {
 		$this->page = absint( $step );
+		global $wp_filesystem;
+		if ( empty( $wp_filesystem ) ) {
+			require_once ABSPATH . 'wp-admin/includes/file.php';
+			WP_Filesystem();
+		}
+
 		if ( 1 === $this->page ) {
-			@unlink( $this->get_file_path() ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+			$wp_filesystem->delete( $this->get_file_path() );
 		}
 
 		$rows = $this->prepare_rows( $this->get_rows() );
@@ -120,7 +126,7 @@ abstract class CSV_Exporter {
 		}
 
 		$file .= $rows;
-		@file_put_contents( $this->get_file_path(), $file ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged,WordPress.WP.AlternativeFunctions.file_system_read_file_put_contents
+		$wp_filesystem->put_contents( $this->get_file_path(), $file, FS_CHMOD_FILE );
 	}
 
 	/**
@@ -131,7 +137,12 @@ abstract class CSV_Exporter {
 	public function export() {
 		$this->send_headers();
 		$this->send_content( $this->get_file() );
-		@unlink( $this->get_file_path() ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+		global $wp_filesystem;
+		if ( empty( $wp_filesystem ) ) {
+			require_once ABSPATH . 'wp-admin/includes/file.php';
+			WP_Filesystem();
+		}
+		$wp_filesystem->delete( $this->get_file_path() );
 		die();
 	}
 
@@ -150,7 +161,7 @@ abstract class CSV_Exporter {
 	 * @return string
 	 */
 	public function get_filename() {
-		$date = date( 'Ymd' ); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
+		$date = wp_date( 'Ymd' );
 
 		return sanitize_file_name( "{$this->export_type}-$date.csv" );
 	}
@@ -195,11 +206,18 @@ abstract class CSV_Exporter {
 	 */
 	protected function get_file() {
 		$file = '';
-		if ( @file_exists( $this->get_file_path() ) ) { // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged,WordPress.WP.AlternativeFunctions.file_system_read_file_exists
-			$file = @file_get_contents( $this->get_file_path() ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged,WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+		global $wp_filesystem;
+		if ( empty( $wp_filesystem ) ) {
+			require_once ABSPATH . 'wp-admin/includes/file.php';
+			WP_Filesystem();
+		}
+
+		// check if file exists.
+		if ( $wp_filesystem->exists( $this->get_file_path() ) ) {
+			$file = $wp_filesystem->get_contents( $this->get_file_path() );
 		} else {
-			@file_put_contents( $this->get_file_path(), '' ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged,WordPress.WP.AlternativeFunctions.file_system_read_file_put_contents
-			@chmod( $this->get_file_path(), 0664 ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged,WordPress.WP.AlternativeFunctions.file_system_read_file_put_contents
+			// create file if not exists.
+			$wp_filesystem->put_contents( $this->get_file_path(), $file, FS_CHMOD_FILE );
 		}
 
 		return $file;
@@ -298,7 +316,7 @@ abstract class CSV_Exporter {
 	}
 
 	/**
-	 * get column headers in CSV format.
+	 * Get column headers in CSV format.
 	 *
 	 * @since 1.0.2
 	 * @return string
@@ -352,14 +370,7 @@ abstract class CSV_Exporter {
 	 * @return void
 	 */
 	protected function send_headers() {
-		@ini_set( 'zlib.output_compression', 'Off' ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged,WordPress.PHP.IniSet.Risky
-		@ini_set( 'output_buffering', 'Off' ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged,WordPress.PHP.IniSet.Risky
-		@ini_set( 'output_handler', '' ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged,WordPress.PHP.IniSet.Risky
 		ignore_user_abort( true );
-		if ( function_exists( 'set_time_limit' ) && false === strpos( ini_get( 'disable_functions' ), 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) {
-			@set_time_limit( 0 ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged,WordPress.PHP.IniSet.Risky
-		}
-
 		nocache_headers();
 		header( 'Content-Type: text/csv; charset=utf-8' );
 		header( 'Content-Disposition: attachment; filename=' . $this->get_filename() );
@@ -375,6 +386,6 @@ abstract class CSV_Exporter {
 	 * @param string $content All CSV content.
 	 */
 	protected function send_content( $content ) {
-		echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo wp_kses_post( $content );
 	}
 }

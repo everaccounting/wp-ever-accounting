@@ -137,7 +137,7 @@ class EverAccounting_Note_List_Table extends EverAccounting_List_Table {
 	 * @since  1.1.0
 	 */
 	public function column_cb( $note ) {
-		return sprintf( '<input type="checkbox" name="note_id[]" value="%d"/>', $note->get_id() );
+		return sprintf( '<input type="checkbox" name="note_id[]" value="%d"/>', esc_attr( $note->get_id() ) );
 	}
 
 	/**
@@ -225,7 +225,7 @@ class EverAccounting_Note_List_Table extends EverAccounting_List_Table {
 			return;
 		}
 
-		$ids = isset( $_GET['note_id'] ) ? wp_parse_id_list( $_GET['note_id'] ) : false; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+		$ids = isset( $_GET['note_id'] ) ? wp_parse_id_list( wp_unslash( $_GET['note_id'] ) ) : false;
 
 		if ( ! is_array( $ids ) ) {
 			$ids = array( $ids );

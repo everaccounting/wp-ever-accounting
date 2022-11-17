@@ -38,7 +38,20 @@ $edit_url        = eaccounting_admin_url(
 	<div class="ea-title-section">
 		<div>
 			<h1 class="wp-heading-inline"><?php esc_html_e( 'Customers', 'wp-ever-accounting' ); ?></h1>
-			<a href="<?php echo esc_url( add_query_arg( array( 'tab' => 'customers', 'page' => 'ea-sales', 'action' => 'add' ), admin_url( 'admin.php' ) ) );//phpcs:ignore ?>" class="page-title-action">
+			<a href="
+			<?php
+			echo esc_url(
+				add_query_arg(
+					array(
+						'tab'    => 'customers',
+						'page'   => 'ea-sales',
+						'action' => 'add',
+					),
+					admin_url( 'admin.php' )
+				)
+			);
+			?>
+			" class="page-title-action">
 				<?php echo esc_html__( 'Add New', 'wp-ever-accounting' ); ?>
 			</a>
 
@@ -197,8 +210,8 @@ $edit_url        = eaccounting_admin_url(
 							sprintf(
 								/* translators: %s date and %s name */
 								esc_html__( 'The customer was created at %1$s by %2$s', 'wp-ever-accounting' ),
-										eaccounting_date( $customer->get_date_created(), 'F m, Y H:i a' ), // phpcs:ignore
-										eaccounting_get_full_name( $customer->get_creator_id() ) // phpcs:ignore
+								esc_html( eaccounting_date( $customer->get_date_created(), 'F m, Y H:i a' ) ),
+								esc_html( eaccounting_get_full_name( $customer->get_creator_id() ) )
 							)
 						);
 						?>

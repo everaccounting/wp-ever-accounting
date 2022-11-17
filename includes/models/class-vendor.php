@@ -165,7 +165,7 @@ class Vendor extends Contact {
 			if ( ! empty( $total ) ) {
 				$bill_ids = implode( ',', wp_parse_id_list( wp_list_pluck( $bills, 'id' ) ) );
 				$revenues = $wpdb->get_results(
-					$wpdb->prepare( "SELECT Sum(amount) amount, currency_code, currency_rate FROM   {$wpdb->prefix}ea_transactions WHERE  type = %s AND document_id IN ($bill_ids) GROUP  BY currency_code,currency_rate", 'expense' ) // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+					$wpdb->prepare( "SELECT Sum(amount) amount, currency_code, currency_rate FROM   {$wpdb->prefix}ea_transactions WHERE  type = %s AND document_id IN ($bill_ids) GROUP  BY currency_code,currency_rate", 'expense' )
 				);
 
 				foreach ( $revenues as $revenue ) {

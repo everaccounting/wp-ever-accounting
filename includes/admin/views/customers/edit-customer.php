@@ -18,13 +18,26 @@ try {
 } catch ( Exception $e ) {
 	wp_safe_redirect( admin_url( 'admin.php?page=ea-sales&tab=customers' ) );
 }
-$title = $customer->exists() ? __( 'Update Customer', 'wp-ever-accounting' ) : __( 'Add Customer', 'wp-ever-accounting' );
+$title = $customer->exists() ? esc_html__( 'Update Customer', 'wp-ever-accounting' ) : esc_html__( 'Add Customer', 'wp-ever-accounting' );
 ?>
 <div class="ea-title-section">
 	<div>
 		<h1 class="wp-heading-inline"><?php esc_html_e( 'Customers', 'wp-ever-accounting' ); ?></h1>
 		<?php if ( $customer->exists() ) : ?>
-			<a href="<?php echo esc_url( add_query_arg( array( 'tab' => 'customers', 'page' => 'ea-sales', 'action' => 'add' ), admin_url( 'admin.php' ) ) );//phpcs:ignore ?>" class="page-title-action">
+			<a href="
+			<?php
+			echo esc_url(
+				add_query_arg(
+					array(
+						'tab'    => 'customers',
+						'page'   => 'ea-sales',
+						'action' => 'add',
+					),
+					admin_url( 'admin.php' )
+				)
+			);
+			?>
+						" class="page-title-action">
 				<?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?>
 			</a>
 		<?php else : ?>

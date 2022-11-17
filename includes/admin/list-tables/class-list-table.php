@@ -320,7 +320,7 @@ abstract class EverAccounting_List_Table extends \WP_List_Table {
 		}
 
 		if ( ! empty( $this->display_args['pre_table_callback'] ) && is_callable( $this->display_args['pre_table_callback'] ) && 'top' === $which ) {
-			echo call_user_func( $this->display_args['pre_table_callback'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			call_user_func( $this->display_args['pre_table_callback'] );
 		}
 
 		$this->maybe_render_blank_state( $which );

@@ -186,7 +186,7 @@ class Transfers extends Resource_Repository {
 		// If not found, retrieve from the db.
 		if ( false === $raw_item ) {
 			$raw_item = $wpdb->get_row(
-				$wpdb->prepare( "SELECT * FROM {$table} WHERE id = %d", $item->get_id() ) // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				$wpdb->prepare( "SELECT * FROM {$table} WHERE id = %d", $item->get_id() )
 			);
 			// Update the cache with our data.
 			wp_cache_set( $item->get_id(), $raw_item, $item->get_cache_group() );

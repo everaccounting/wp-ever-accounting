@@ -85,7 +85,7 @@ do_action( 'add_meta_boxes_ea_invoice', $invoice );
 											foreach ( $invoice_actions as $action => $title ) {
 												echo sprintf(
 													'<li><a href="%s">%s</a></li>',
-													esc_attr(
+													esc_url(
 														wp_nonce_url(
 															add_query_arg(
 																array(

@@ -232,12 +232,12 @@ class EverAccounting_Category_List_Table extends EverAccounting_List_Table {
 				$value = array_key_exists( $type, $types ) ? $types[ $type ] : ucfirst( $type );
 				break;
 			case 'color':
-				$value = sprintf( '<span class="dashicons dashicons-marker" style="color:%s;">&nbsp;</span>', $category->get_color() );
+				$value = sprintf( '<span class="dashicons dashicons-marker" style="color:%s;">&nbsp;</span>', esc_attr( $category->get_color() ) );
 				break;
 			case 'enabled':
 				$value  = '<label class="ea-toggle">';
-				$value .= '<input type="checkbox" class="category-status" style="" value="true" data-id="' . $category->get_id() . '" ' . checked( $category->is_enabled(), true, false ) . '>';
-				$value .= '<span data-label-off="' . __( 'No', 'wp-ever-accounting' ) . '" data-label-on="' . __( 'Yes', 'wp-ever-accounting' ) . '" class="ea-toggle-slider"></span>';
+				$value .= '<input type="checkbox" class="category-status" style="" value="true" data-id="' . esc_attr( $category->get_id() ) . '" ' . checked( $category->is_enabled(), true, false ) . '>';
+				$value .= '<span data-label-off="' . esc_html__( 'No', 'wp-ever-accounting' ) . '" data-label-on="' . esc_html__( 'Yes', 'wp-ever-accounting' ) . '" class="ea-toggle-slider"></span>';
 				$value .= '</label>';
 				break;
 			default:
@@ -268,7 +268,7 @@ class EverAccounting_Category_List_Table extends EverAccounting_List_Table {
 		if ( ! wp_verify_nonce( $nonce, 'bulk-categories' ) && ! wp_verify_nonce( $nonce, 'category-nonce' ) ) {
 			return;
 		}
-		$ids = isset( $_GET['category_id'] ) ? wp_parse_id_list( $_GET['category_id'] ) : false; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+		$ids = isset( $_GET['category_id'] ) ? wp_parse_id_list( wp_unslash( $_GET['category_id'] ) ) : false;
 
 		if ( ! is_array( $ids ) ) {
 			$ids = array( $ids );
@@ -410,7 +410,7 @@ class EverAccounting_Category_List_Table extends EverAccounting_List_Table {
 			)
 		);
 
-		$this->total_count = $this->active_count + $this->inactive_count;
+		$this->total_count = absint( $this->active_count ) + absint( $this->inactive_count );
 		switch ( $status ) {
 			case 'active':
 				$total_items = $this->active_count;

@@ -305,9 +305,9 @@ class Logger {
 
 		if ( isset( $logs[ $handle ] ) && $logs[ $handle ] ) {
 			$file = realpath( trailingslashit( EACCOUNTING_LOG_DIR ) . $logs[ $handle ] );
-			if ( 0 === stripos( $file, realpath( trailingslashit( EACCOUNTING_LOG_DIR ) ) ) && is_file( $file ) && is_writable( $file ) ) { // phpcs:ignore WordPress.VIP.FileSystemWritesDisallow.file_ops_is_writable
+			if ( 0 === stripos( $file, realpath( trailingslashit( EACCOUNTING_LOG_DIR ) ) ) && is_file( $file ) && is_writable( $file ) ) {
 				$this->close( $file ); // Close first to be certain no processes keep it alive after it is unlinked.
-				$removed = unlink( $file ); // phpcs:ignore WordPress.VIP.FileSystemWritesDisallow.file_ops_unlink
+				$removed = unlink( $file );
 			}
 			do_action( 'eaccounting_log_remove', $handle, $removed );
 		}

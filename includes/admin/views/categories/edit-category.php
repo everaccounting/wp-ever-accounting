@@ -8,7 +8,7 @@
  */
 
 defined( 'ABSPATH' ) || exit();
-$category_id = isset( $_REQUEST['category_id'] ) ? absint( $_REQUEST['category_id'] ) : null; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+$category_id = filter_input( INPUT_GET, 'category_id', FILTER_VALIDATE_INT );
 try {
 	$category = new \EverAccounting\Models\Category( $category_id );
 } catch ( Exception $e ) {
@@ -20,7 +20,20 @@ $back_url = remove_query_arg( array( 'action', 'category_id' ) );
 	<div>
 		<h1 class="wp-heading-inline"><?php esc_html_e( 'Categories', 'wp-ever-accounting' ); ?></h1>
 		<?php if ( $category->exists() ) : ?>
-			<a href="<?php echo esc_url( add_query_arg( array( 'tab' => 'categories', 'page' => 'ea-settings', 'action' => 'add' ), admin_url( 'admin.php' ) ) );//phpcs:ignore ?>" class="page-title-action">
+			<a href="
+			<?php
+			echo esc_url(
+				add_query_arg(
+					array(
+						'tab'    => 'categories',
+						'page'   => 'ea-settings',
+						'action' => 'add',
+					),
+					admin_url( 'admin.php' )
+				)
+			);
+			?>
+						" class="page-title-action">
 				<?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?>
 			</a>
 		<?php else : ?>

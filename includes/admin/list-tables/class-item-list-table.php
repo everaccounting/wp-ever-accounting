@@ -95,12 +95,19 @@ class EverAccounting_Item_List_Table extends EverAccounting_List_Table {
 	 * @since 1.1.0
 	 */
 	protected function render_blank_state() {
+		$url = eaccounting_admin_url(
+			array(
+				'page'   => 'ea-items',
+				'tab'    => 'items',
+				'action' => 'edit',
+			)
+		);
 		?>
 		<div class="ea-empty-table">
 			<p class="ea-empty-table__message">
 				<?php echo esc_html__( 'Use items as products or services. You can use items when creating invoices and bills to have the price, tax etc fields.', 'wp-ever-accounting' ); ?>
 			</p>
-			<a href="<?php echo esc_url( eaccounting_admin_url( array( 'page' => 'ea-items', 'tab' => 'items', 'action' => 'edit', ) ) ); //phpcs:ignore?>" class="button-primary ea-empty-table__cta"><?php esc_html_e( 'Add Item', 'wp-ever-accounting' ); ?></a>
+			<a href="<?php echo esc_url( $url ); ?>" class="button-primary ea-empty-table__cta"><?php esc_html_e( 'Add Item', 'wp-ever-accounting' ); ?></a>
 			<a href="https://wpeveraccounting.com/docs/general/how-to-add-items/?utm_source=listtable&utm_medium=link&utm_campaign=admin" class="button-secondary ea-empty-table__cta" target="_blank"><?php esc_html_e( 'Learn More', 'wp-ever-accounting' ); ?></a>
 		</div>
 		<?php
@@ -173,7 +180,7 @@ class EverAccounting_Item_List_Table extends EverAccounting_List_Table {
 	 * @since  1.1.0
 	 */
 	public function column_cb( $item ) {
-		return sprintf( '<input type="checkbox" name="item_id[]" value="%d"/>', $item->get_id() );
+		return sprintf( '<input type="checkbox" name="item_id[]" value="%d"/>', esc_attr( $item->get_id() ) );
 	}
 
 	/**
@@ -245,8 +252,8 @@ class EverAccounting_Item_List_Table extends EverAccounting_List_Table {
 				break;
 			case 'enabled':
 				$value  = '<label class="ea-toggle">';
-				$value .= '<input type="checkbox" class="item-status" style="" value="true" data-id="' . $item->get_id() . '" ' . checked( $item->is_enabled(), true, false ) . '>';
-				$value .= '<span data-label-off="' . __( 'No', 'wp-ever-accounting' ) . '" data-label-on="' . __( 'Yes', 'wp-ever-accounting' ) . '" class="ea-toggle-slider"></span>';
+				$value .= '<input type="checkbox" class="item-status" style="" value="true" data-id="' . esc_attr( $item->get_id() ) . '" ' . checked( $item->is_enabled(), true, false ) . '>';
+				$value .= '<span data-label-off="' . esc_html__( 'No', 'wp-ever-accounting' ) . '" data-label-on="' . esc_html__( 'Yes', 'wp-ever-accounting' ) . '" class="ea-toggle-slider"></span>';
 				$value .= '</label>';
 				break;
 			default:
@@ -278,7 +285,7 @@ class EverAccounting_Item_List_Table extends EverAccounting_List_Table {
 			return;
 		}
 
-		$ids = isset( $_GET['item_id'] ) ? wp_parse_id_list( $_GET['item_id'] ) : false; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+		$ids = isset( $_GET['item_id'] ) ? wp_parse_id_list( wp_unslash( $_GET['item_id'] ) ) : false;
 
 		if ( ! is_array( $ids ) ) {
 			$ids = array( $ids );

@@ -40,7 +40,6 @@ class Importer {
 				)
 			);
 		}
-		$type = sanitize_key( $_REQUEST['type'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated
 		check_admin_referer( $type . '_importer_nonce', 'nonce' );
 		$delimiter       = filter_input( INPUT_POST, 'delimiter', FILTER_SANITIZE_STRING );
 		$position        = filter_input( INPUT_POST, 'position', FILTER_SANITIZE_NUMBER_INT );
@@ -59,7 +58,7 @@ class Importer {
 		);
 
 		// verify nonce.
-		Ajax::verify_nonce( "{$type}_importer_nonce" );
+		check_admin_referer( "{$type}_importer_nonce" );
 		$batch = eaccounting()->utils->batch->get( $type );
 		if ( empty( $type ) || false === $batch ) {
 			wp_send_json_error(
@@ -129,7 +128,7 @@ class Importer {
 				);
 			}
 
-			if ( ! file_exists( wp_unslash( $_FILES['upload']['tmp_name'] ) ) ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			if ( isset( $_FILES['upload']['tmp_name'] ) && ! file_exists( wp_unslash( $_FILES['upload']['tmp_name'] ) ) ) {
 				wp_send_json_error(
 					array(
 						'message' => __( 'Something went wrong during the upload process, please try again.', 'wp-ever-accounting' ),
@@ -138,7 +137,8 @@ class Importer {
 			}
 
 			// Let WordPress import the file. We will remove it after import is complete.
-			$import_file = wp_handle_upload( $_FILES['upload'], array( 'test_form' => false ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated,WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+			$upload      = wp_unslash( $_FILES['upload'] );
+			$import_file = wp_handle_upload( $upload, array( 'test_form' => false ) );
 			if ( ! empty( $import_file['error'] ) ) {
 				wp_send_json_error(
 					array(

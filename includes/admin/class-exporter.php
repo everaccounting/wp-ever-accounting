@@ -9,8 +9,6 @@
 
 namespace EverAccounting\Admin;
 
-use EverAccounting\Ajax;
-
 defined( 'ABSPATH' ) || exit();
 
 /**
@@ -44,7 +42,7 @@ class Exporter {
 		}
 
 		$type = sanitize_key( $type );
-		Ajax::verify_nonce( "{$type}_exporter_nonce" );
+		check_admin_referer( "{$type}_exporter_nonce" );
 		$step  = filter_input( INPUT_POST, 'step', FILTER_SANITIZE_NUMBER_INT );
 		$batch = eaccounting()->utils->batch->get( $type );
 		if ( empty( $type ) || false === $batch ) {

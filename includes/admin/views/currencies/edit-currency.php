@@ -19,12 +19,20 @@ $options    = array();
 foreach ( $currencies as $code => $props ) {
 	$options[ $code ] = sprintf( '%s (%s)', $props['code'], $props['symbol'] );
 }
+$add_new = add_query_arg(
+	array(
+		'tab'    => 'currencies',
+		'page'   => 'ea-settings',
+		'action' => 'add',
+	),
+	admin_url( 'admin.php' )
+);
 ?>
 <div class="ea-title-section">
 	<div>
 		<h1 class="wp-heading-inline"><?php esc_html_e( 'Currencies', 'wp-ever-accounting' ); ?></h1>
 		<?php if ( $currency->exists() ) : ?>
-			<a href="<?php echo esc_url( add_query_arg( array( 'tab' => 'currencies', 'page' => 'ea-settings', 'action' => 'add' ), admin_url( 'admin.php' ) ) );//phpcs:ignore ?>" class="page-title-action">
+			<a href="<?php echo esc_url( $add_new ); ?>" class="page-title-action">
 				<?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?>
 			</a>
 		<?php else : ?>

@@ -428,7 +428,7 @@ function eaccounting_select( $field ) {
 		wp_kses_post( $attributes )
 	);
 	foreach ( $field['options'] as $key => $value ) {
-		echo sprintf( '<option value="%s" %s>%s</option>', esc_attr( $key ), wp_kses_post( eaccounting_selected( esc_attr( $key ), esc_attr( $field['value'] ) ) ), esc_html( $value ) );
+		echo sprintf( '<option value="%s" %s>%s</option>', esc_attr( $key ), wp_kses_post( eaccounting_selected( $key, $field['value'] ) ), esc_html( $value ) );
 	}
 	echo '</select>';
 

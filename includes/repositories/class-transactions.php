@@ -92,7 +92,7 @@ class Transactions extends Resource_Repository {
 		$data = wp_cache_get( $item->get_id(), $item->get_cache_group() );
 
 		if ( false === $data ) {
-			$data = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$table} WHERE id = %d AND type =%s LIMIT 1;", $item->get_id(), $item->get_type() ) ); //phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$data = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$table} WHERE id = %d AND type =%s LIMIT 1;", $item->get_id(), $item->get_type() ) );
 			wp_cache_set( $item->get_id(), $data, $item->get_cache_group() );
 		}
 
