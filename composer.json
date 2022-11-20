@@ -20,6 +20,10 @@
     {
       "url": "git@github.com:byteever/byteever-sniffs.git",
       "type": "github"
+    },
+    {
+      "type": "path",
+      "url": "../../byteever-sniffs"
     }
   ],
   "require": {
@@ -37,8 +41,7 @@
   "require-dev": {
     "roave/security-advisories": "dev-latest",
     "phpunit/phpunit": "^6.5",
-    "wp-coding-standards/wpcs": "^2.3.0",
-    "phpcompatibility/phpcompatibility-wp": "2.1.0"
+    "byteever/byteever-sniffs": "dev-master"
   },
   "config": {
     "optimize-autoloader": true,
