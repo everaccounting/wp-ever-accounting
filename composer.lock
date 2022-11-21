@@ -13,12 +13,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/byteever/byteever-sniffs.git",
-                "reference": "dc218e4aa07254c1ae9fda3c64f64e83fdaa3b85"
+                "reference": "12bbcbbd8bbdda2bd325ee7d744bbfb2378f3a02"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/byteever/byteever-sniffs/zipball/dc218e4aa07254c1ae9fda3c64f64e83fdaa3b85",
-                "reference": "dc218e4aa07254c1ae9fda3c64f64e83fdaa3b85",
+                "url": "https://api.github.com/repos/byteever/byteever-sniffs/zipball/12bbcbbd8bbdda2bd325ee7d744bbfb2378f3a02",
+                "reference": "12bbcbbd8bbdda2bd325ee7d744bbfb2378f3a02",
                 "shasum": ""
             },
             "require": {
@@ -66,7 +66,7 @@
                 "source": "https://github.com/byteever/byteever-sniffs/tree/master",
                 "issues": "https://github.com/byteever/byteever-sniffs/issues"
             },
-            "time": "2022-11-19T16:49:31+00:00"
+            "time": "2022-11-21T08:46:53+00:00"
         },
         {
             "name": "dealerdirect/phpcodesniffer-composer-installer",
