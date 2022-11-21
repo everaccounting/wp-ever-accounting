@@ -2,10 +2,10 @@
 # This file is distributed under the GPL2+.
 msgid ""
 msgstr ""
-"Project-Id-Version: Ever Accounting 1.1.3\n"
+"Project-Id-Version: Ever Accounting 1.1.4\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/wp-ever-accounting\n"
-"POT-Creation-Date: 2022-11-17 12:18:49+00:00\n"
+"POT-Creation-Date: 2022-11-21 14:50:03+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -174,7 +174,7 @@ msgid "Upcoming"
 msgstr ""
 
 #: includes/admin/class-dashboard.php:167
-#: includes/admin/list-tables/class-transaction-list-table.php:265
+#: includes/admin/list-tables/class-transaction-list-table.php:266
 #: includes/admin/reports/class-cashflow.php:204
 #: includes/admin/reports/class-cashflow.php:310
 #: includes/admin/reports/income-summary.php:149
@@ -184,7 +184,7 @@ msgid "Income"
 msgstr ""
 
 #: includes/admin/class-dashboard.php:176
-#: includes/admin/list-tables/class-transaction-list-table.php:266
+#: includes/admin/list-tables/class-transaction-list-table.php:267
 #: includes/admin/reports/class-cashflow.php:213
 #: includes/admin/reports/class-cashflow.php:316
 #: includes/admin/reports/expense-summary.php:148
@@ -289,40 +289,40 @@ msgstr ""
 msgid "Balance"
 msgstr ""
 
-#: includes/admin/class-exporter.php:41
+#: includes/admin/class-exporter.php:39
 msgid "Export type must be present."
 msgstr ""
 
-#: includes/admin/class-exporter.php:54
+#: includes/admin/class-exporter.php:52
 #. translators: %s: export type
 msgid "%s is an invalid export type."
 msgstr ""
 
-#: includes/admin/class-exporter.php:66 includes/admin/class-importer.php:79
+#: includes/admin/class-exporter.php:64 includes/admin/class-importer.php:79
 #. translators: %s: export type
 #. translators: %s: import type
 msgid "An invalid file path is registered for the %1$s handler."
 msgstr ""
 
-#: includes/admin/class-exporter.php:90 includes/admin/class-exporter.php:179
+#: includes/admin/class-exporter.php:88 includes/admin/class-exporter.php:177
 msgid "You do not have enough privileges to export this."
 msgstr ""
 
-#: includes/admin/class-exporter.php:118
+#: includes/admin/class-exporter.php:116
 #. translators: %d: total items.
 msgid "Total %d items exported"
 msgstr ""
 
-#: includes/admin/class-exporter.php:158
+#: includes/admin/class-exporter.php:156
 msgid "Invalid export type."
 msgstr ""
 
-#: includes/admin/class-exporter.php:159 includes/admin/class-exporter.php:169
-#: includes/admin/class-exporter.php:180
+#: includes/admin/class-exporter.php:157 includes/admin/class-exporter.php:167
+#: includes/admin/class-exporter.php:178
 msgid "Error"
 msgstr ""
 
-#: includes/admin/class-exporter.php:168
+#: includes/admin/class-exporter.php:166
 msgid "Invalid export class."
 msgstr ""
 
@@ -1203,7 +1203,7 @@ msgstr ""
 #: includes/admin/list-tables/class-category-list-table.php:344
 #: includes/admin/list-tables/class-customer-list-table.php:402
 #: includes/admin/list-tables/class-item-list-table.php:360
-#: includes/admin/list-tables/class-transaction-list-table.php:264
+#: includes/admin/list-tables/class-transaction-list-table.php:265
 #: includes/admin/list-tables/class-vendor-list-table.php:405
 msgid "All"
 msgstr ""
