@@ -58,7 +58,7 @@ class Setup_Wizard {
 	 */
 	public function setup_wizard() {
 		$page      = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_STRING );
-		$save_step = filter_input( INPUT_GET, 'save_step', FILTER_SANITIZE_STRING );
+		$save_step = filter_input( INPUT_POST, 'save_step', FILTER_SANITIZE_STRING );
 		if ( empty( $page ) || 'ea-setup' !== $page ) {
 			return;
 		}
