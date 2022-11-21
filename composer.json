@@ -20,10 +20,6 @@
     {
       "url": "git@github.com:byteever/byteever-sniffs.git",
       "type": "github"
-    },
-    {
-      "type": "path",
-      "url": "../../byteever-sniffs"
     }
   ],
   "require": {

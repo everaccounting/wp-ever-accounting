@@ -4,7 +4,7 @@ Tags: accounting, income, expense, invoice, bill, crm, accounts, transfer, custo
 Requires at least: 4.4
 Tested up to: 6.1
 Requires PHP: 5.6
-Stable tag: 1.1.3
+Stable tag: 1.1.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -136,6 +136,12 @@ Yes, of course. We do not create products for ourselves. You are always welcome 
 
 
 == Changelog ==
+= 1.1.4 = (21th November 2020)
+* Fix: Missing logo in the setup wizard.
+* Fix: Stuck on the setup wizard.
+* Fix: Transaction subsub links redirecting to accounts page.
+
+
 = 1.1.3 = (8th November 2022)
 * Fix - Compatibility with WordPress 6.1
 * Minor code improvements
