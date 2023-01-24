@@ -1,15 +1,15 @@
-# Copyright (C) 2022 everaccounting
+# Copyright (C) 2023 everaccounting
 # This file is distributed under the GPL2+.
 msgid ""
 msgstr ""
-"Project-Id-Version: Ever Accounting 1.1.4\n"
+"Project-Id-Version: Ever Accounting 1.1.5\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/wp-ever-accounting\n"
-"POT-Creation-Date: 2022-11-21 14:50:03+00:00\n"
+"POT-Creation-Date: 2023-01-24 15:27:04+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2022-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2023-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: en\n"
@@ -2895,125 +2895,125 @@ msgstr ""
 msgid "The vendor was created at %1$s by %2$s"
 msgstr ""
 
-#: includes/class-ajax.php:251
+#: includes/class-ajax.php:302
 msgid "Category updated successfully!"
 msgstr ""
 
-#: includes/class-ajax.php:255
+#: includes/class-ajax.php:306
 msgid "Category created successfully!"
 msgstr ""
 
-#: includes/class-ajax.php:284 includes/class-ajax.php:537
+#: includes/class-ajax.php:335 includes/class-ajax.php:600
 msgid "Invalid Invoice Item"
 msgstr ""
 
-#: includes/class-ajax.php:291
+#: includes/class-ajax.php:342
 msgid "Invoice Payment saved"
 msgstr ""
 
-#: includes/class-ajax.php:320 includes/class-ajax.php:573
+#: includes/class-ajax.php:371 includes/class-ajax.php:636
 msgid "Note Content empty."
 msgstr ""
 
-#: includes/class-ajax.php:330 includes/class-ajax.php:583
+#: includes/class-ajax.php:381 includes/class-ajax.php:646
 msgid "Note Added."
 msgstr ""
 
-#: includes/class-ajax.php:413 includes/class-ajax.php:667
+#: includes/class-ajax.php:464 includes/class-ajax.php:730
 #. translators: %s: invoice number
 #. translators: %s: bill id
 msgid "%s added"
 msgstr ""
 
-#: includes/class-ajax.php:441
+#: includes/class-ajax.php:492
 msgid "Revenue updated successfully!"
 msgstr ""
 
-#: includes/class-ajax.php:445
+#: includes/class-ajax.php:496
 msgid "Revenue created successfully!"
 msgstr ""
 
-#: includes/class-ajax.php:503
+#: includes/class-ajax.php:566
 msgid "Customer updated successfully!"
 msgstr ""
 
-#: includes/class-ajax.php:507
+#: includes/class-ajax.php:570
 msgid "Customer created successfully!"
 msgstr ""
 
-#: includes/class-ajax.php:544
+#: includes/class-ajax.php:607
 msgid "Bill Payment saved"
 msgstr ""
 
-#: includes/class-ajax.php:705
+#: includes/class-ajax.php:784
 msgid "No code received"
 msgstr ""
 
-#: includes/class-ajax.php:713 includes/class-ajax.php:935
+#: includes/class-ajax.php:792 includes/class-ajax.php:1042
 msgid "Could not find the currency"
 msgstr ""
 
-#: includes/class-ajax.php:753
+#: includes/class-ajax.php:832
 msgid "Currency updated successfully!"
 msgstr ""
 
-#: includes/class-ajax.php:757
+#: includes/class-ajax.php:836
 msgid "Currency created successfully!"
 msgstr ""
 
-#: includes/class-ajax.php:792
+#: includes/class-ajax.php:871
 msgid "Payment updated successfully!"
 msgstr ""
 
-#: includes/class-ajax.php:796
+#: includes/class-ajax.php:875
 msgid "Payment created successfully!"
 msgstr ""
 
-#: includes/class-ajax.php:853
+#: includes/class-ajax.php:945
 msgid "Vendor updated successfully!"
 msgstr ""
 
-#: includes/class-ajax.php:857
+#: includes/class-ajax.php:949
 msgid "Vendor created successfully!"
 msgstr ""
 
-#: includes/class-ajax.php:927
+#: includes/class-ajax.php:1034
 msgid "No account id received"
 msgstr ""
 
-#: includes/class-ajax.php:964
+#: includes/class-ajax.php:1071
 msgid "Account updated successfully!"
 msgstr ""
 
-#: includes/class-ajax.php:968
+#: includes/class-ajax.php:1075
 msgid "Account created successfully!"
 msgstr ""
 
-#: includes/class-ajax.php:1003
+#: includes/class-ajax.php:1110
 msgid "Transfer updated successfully!"
 msgstr ""
 
-#: includes/class-ajax.php:1007
+#: includes/class-ajax.php:1114
 msgid "Transfer created successfully!"
 msgstr ""
 
-#: includes/class-ajax.php:1038
+#: includes/class-ajax.php:1145
 msgid "Note could not be deleted."
 msgstr ""
 
-#: includes/class-ajax.php:1054
+#: includes/class-ajax.php:1161
 msgid "Note Deleted."
 msgstr ""
 
-#: includes/class-ajax.php:1101
+#: includes/class-ajax.php:1223
 msgid "Item updated successfully!"
 msgstr ""
 
-#: includes/class-ajax.php:1105
+#: includes/class-ajax.php:1227
 msgid "Item created successfully!"
 msgstr ""
 
-#: includes/class-ajax.php:1128
+#: includes/class-ajax.php:1250
 msgid "Error: You are not allowed to do this."
 msgstr ""
 
