@@ -145,6 +145,7 @@ Yes, of course. We do not create products for ourselves. You are always welcome 
 * Fix: Item dropdown not showing all items.
 * Fix: Import not working.
 * Fix: Bill mark as paid not working.
+* Fix: No account id received error.
 
 = 1.1.4 = (21th November 2020)
 * Fix: Missing logo in the setup wizard.
