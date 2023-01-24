@@ -131,7 +131,7 @@ class Assets {
 			}
 
 			// import page.
-			if ( eaccounting_is_admin_page( 'ea-tools' ) && $tab && 'import' === $tab ) {
+			if ( eaccounting_is_admin_page( 'ea-tools' ) ) {
 				wp_localize_script(
 					'ea-importer',
 					'eaccounting_importer_i10n',

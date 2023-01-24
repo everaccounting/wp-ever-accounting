@@ -40,13 +40,14 @@ class Importer {
 				)
 			);
 		}
-		check_admin_referer( $type . '_importer_nonce', 'nonce' );
+
+		check_ajax_referer( $type . '_importer_nonce', 'nonce' );
 		$delimiter       = filter_input( INPUT_POST, 'delimiter', FILTER_SANITIZE_STRING );
 		$position        = filter_input( INPUT_POST, 'position', FILTER_SANITIZE_NUMBER_INT );
 		$mapping         = filter_input( INPUT_POST, 'mapping', FILTER_SANITIZE_STRING, FILTER_REQUIRE_ARRAY );
 		$update_existing = filter_input( INPUT_POST, 'update_existing', FILTER_SANITIZE_STRING );
 		$limit           = filter_input( INPUT_POST, 'limit', FILTER_SANITIZE_NUMBER_INT );
-		$step            = filter_input( INPUT_POST, 'step', FILTER_SANITIZE_NUMBER_INT );
+		$step            = filter_input( INPUT_POST, 'step', FILTER_SANITIZE_STRING );
 		$file            = filter_input( INPUT_POST, 'file', FILTER_SANITIZE_STRING );
 		$params          = array(
 			'delimiter'       => ! empty( $delimiter ) ? sanitize_key( $delimiter ) : ',',
@@ -57,8 +58,7 @@ class Importer {
 			'parse'           => true,
 		);
 
-		// verify nonce.
-		check_admin_referer( "{$type}_importer_nonce" );
+
 		$batch = eaccounting()->utils->batch->get( $type );
 		if ( empty( $type ) || false === $batch ) {
 			wp_send_json_error(
@@ -158,7 +158,7 @@ class Importer {
 				)
 			);
 		}
-
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/ea-admin-functions.php';
 		$importer = new $class( $file, $params );
 		if ( ! $importer->can_import() ) {
 			wp_send_json_error( array( 'message' => __( 'You do not have permission to import data', 'wp-ever-accounting' ) ) );

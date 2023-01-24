@@ -37,17 +37,16 @@ jQuery( function ( $ ) {
 						page: params.page,
 					};
 				},
-				processResults( json, params ) {
-					params.page = params.page || 1;
+				processResults( json ) {
 					const map =
 						plugin.options.map ||
 						'return {text: option.name, id:option.id}';
 					const fn = new Function( 'option', map );
 					return {
-						results: json.data.map( function ( option ) {
+						results: json.data.results.map( function ( option ) {
 							return fn( option );
 						} ),
-						pagination: false,
+						pagination: json.data.pagination
 					};
 				},
 			};
@@ -56,7 +55,7 @@ jQuery( function ( $ ) {
 		this.$el.select2( options );
 
 		if ( this.options.modal_id ) {
-			this.$el.on( 'select2:open', function ( e ) {
+			this.$el.on( 'select2:open', function () {
 				const $results = $( this ).data( 'select2' ).$results;
 				if ( ! $results.siblings( '.ea-select2-footer' ).length ) {
 					const $footer = $(

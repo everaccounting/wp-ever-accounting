@@ -206,7 +206,7 @@ function eaccounting_get_currencies( $args = array() ) {
 		$currencies = $currencies->filter(
 			function ( $item ) use ( $qv ) {
 				$search = implode( ' ', array( $item['name'], $item['code'], $item['symbol'] ) );
-				if ( false !== strpos( $search, $qv['search'] ) ) {
+				if ( false !== strpos( strtolower( $search ), strtolower( $qv['search'] ) ) ) {
 					return $item;
 				}
 

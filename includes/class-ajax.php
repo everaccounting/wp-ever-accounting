@@ -167,19 +167,36 @@ class Ajax {
 	 */
 	public static function get_expense_categories() {
 		check_admin_referer( 'ea_categories' );
-		$search = filter_input( INPUT_GET, 'search', FILTER_SANITIZE_STRING );
-		$page   = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_NUMBER_INT );
-		wp_send_json_success(
-			eaccounting_get_categories(
-				array(
-					'search' => $search,
-					'type'   => 'expense',
-					'page'   => $page,
-					'return' => 'raw',
-					'status' => 'active',
-				)
+		$search = filter_input( INPUT_POST, 'search', FILTER_SANITIZE_STRING );
+		$page   = filter_input( INPUT_POST, 'page', FILTER_SANITIZE_NUMBER_INT );
+		$results = eaccounting_get_categories(
+			array(
+				'search' => $search,
+				'type'   => 'expense',
+				'page'   => $page,
+				'return' => 'raw',
+				'status' => 'active',
 			)
 		);
+
+		$total = eaccounting_get_categories(
+			array(
+				'search' => $search,
+				'type'   => 'expense',
+				'page'   => $page,
+				'status' => 'active',
+				'count_total' => true,
+			)
+		);
+
+		$result = array(
+			'results'    => $results,
+			'page'       => $page,
+			'pagination' => array(
+				'more' => $total > $page * 20,
+			),
+		);
+		wp_send_json_success( $result );
 	}
 
 	/**
@@ -189,20 +206,37 @@ class Ajax {
 	 */
 	public static function get_income_categories() {
 		check_admin_referer( 'ea_categories' );
-		$search = filter_input( INPUT_GET, 'search', FILTER_SANITIZE_STRING );
-		$page   = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_NUMBER_INT );
+		$search = filter_input( INPUT_POST, 'search', FILTER_SANITIZE_STRING );
+		$page   = filter_input( INPUT_POST, 'page', FILTER_SANITIZE_NUMBER_INT );
 
-		wp_send_json_success(
-			eaccounting_get_categories(
-				array(
-					'search' => $search,
-					'type'   => 'income',
-					'page'   => $page,
-					'return' => 'raw',
-					'status' => 'active',
-				)
+		$results = eaccounting_get_categories(
+			array(
+				'search' => $search,
+				'type'   => 'income',
+				'page'   => $page,
+				'return' => 'raw',
+				'status' => 'active',
 			)
 		);
+
+		$total = eaccounting_get_categories(
+			array(
+				'search' => $search,
+				'type'   => 'income',
+				'page'   => $page,
+				'status' => 'active',
+				'count_total' => true,
+			)
+		);
+
+		$result = array(
+			'results'    => $results,
+			'page'       => $page,
+			'pagination' => array(
+				'more' => $total > $page * 20,
+			),
+		);
+		wp_send_json_success( $result );
 	}
 
 	/**
@@ -212,20 +246,37 @@ class Ajax {
 	 */
 	public static function get_item_categories() {
 		check_admin_referer( 'ea_categories' );
-		$search = filter_input( INPUT_GET, 'search', FILTER_SANITIZE_STRING );
-		$page   = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_NUMBER_INT );
+		$search = filter_input( INPUT_POST, 'search', FILTER_SANITIZE_STRING );
+		$page   = filter_input( INPUT_POST, 'page', FILTER_SANITIZE_NUMBER_INT );
 
-		wp_send_json_success(
-			eaccounting_get_categories(
-				array(
-					'search' => $search,
-					'type'   => 'item',
-					'page'   => $page,
-					'return' => 'raw',
-					'status' => 'active',
-				)
+		$results = eaccounting_get_categories(
+			array(
+				'search' => $search,
+				'type'   => 'item',
+				'page'   => $page,
+				'return' => 'raw',
+				'status' => 'active',
 			)
 		);
+
+		$total = eaccounting_get_categories(
+			array(
+				'search' => $search,
+				'type'   => 'item',
+				'page'   => $page,
+				'status' => 'active',
+				'count_total' => true,
+			)
+		);
+
+		$result = array(
+			'results'    => $results,
+			'page'       => $page,
+			'pagination' => array(
+				'more' => $total > $page * 20,
+			),
+		);
+		wp_send_json_success( $result );
 	}
 
 	/**
@@ -269,8 +320,8 @@ class Ajax {
 	/**
 	 * Add payment to invoice.
 	 *
-	 * @since 1.1.0
 	 * @throws \Exception When error.
+	 * @since 1.1.0
 	 * @return void
 	 */
 	public static function add_invoice_payment() {
@@ -464,19 +515,31 @@ class Ajax {
 	 */
 	public static function get_customers() {
 		check_admin_referer( 'ea_get_customers' );
-		$search = filter_input( INPUT_GET, 'search', FILTER_SANITIZE_STRING );
-		$page   = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_NUMBER_INT, array( 'options' => array( 'default' => 1 ) ) );
-
-		wp_send_json_success(
-			eaccounting_get_customers(
-				array(
-					'search' => $search,
-					'page'   => $page,
-					'return' => 'raw',
-					'status' => 'active',
-				)
+		$search  = filter_input( INPUT_POST, 'search', FILTER_SANITIZE_STRING );
+		$page    = filter_input( INPUT_POST, 'page', FILTER_SANITIZE_NUMBER_INT, array( 'options' => array( 'default' => 1 ) ) );
+		$results = eaccounting_get_customers(
+			array(
+				'search' => $search,
+				'page'   => $page,
+				'return' => 'raw',
+				'status' => 'active',
 			)
 		);
+		$total   = eaccounting_get_customers(
+			array(
+				'search'      => $search,
+				'count_total' => true,
+				'status'      => 'active',
+			)
+		);
+		$result = array(
+			'results'    => $results,
+			'page'       => $page,
+			'pagination' => array(
+				'more' => $total > $page * 20,
+			),
+		);
+		wp_send_json_success( $result );
 	}
 
 
@@ -522,8 +585,8 @@ class Ajax {
 	/**
 	 * Add payment to bill.
 	 *
-	 * @since 1.1.0
 	 * @throws \Exception Error message.
+	 * @since 1.1.0
 	 * @return void
 	 */
 	public static function add_bill_payment() {
@@ -679,14 +742,30 @@ class Ajax {
 	 */
 	public static function get_currencies() {
 		check_admin_referer( 'ea_get_currencies' );
-		$currencies = eaccounting_get_currencies(
+		$search = isset( $_POST['search'] ) ? eaccounting_clean( wp_unslash( $_POST['search'] ) ) : '';
+		$page   = isset( $_POST['page'] ) ? absint( $_POST['page'] ) : 1;
+		$items  = eaccounting_get_currencies(
 			array(
-				'number' => - 1,
+				'search' => $search,
+				'offset' => ( $page - 1 ) * 20,
 				'return' => 'raw',
 			)
 		);
+		$total  = eaccounting_get_currencies(
+			array(
+				'search'      => $search,
+				'count_total' => true
+			)
+		);
 
-		wp_send_json_success( $currencies );
+		$result = array(
+			'results'    => $items,
+			'page'       => $page,
+			'pagination' => array(
+				'more' => $total > $page * 20,
+			),
+		);
+		wp_send_json_success( $result );
 	}
 
 	/**
@@ -815,19 +894,32 @@ class Ajax {
 	 */
 	public static function get_vendors() {
 		check_admin_referer( 'ea_get_vendors' );
-		$search = filter_input( INPUT_GET, 'search', FILTER_SANITIZE_STRING );
-		$page   = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_NUMBER_INT );
+		$search = filter_input( INPUT_POST, 'search', FILTER_SANITIZE_STRING );
+		$page   = filter_input( INPUT_POST, 'page', FILTER_SANITIZE_NUMBER_INT );
 
-		wp_send_json_success(
-			eaccounting_get_vendors(
-				array(
-					'search' => $search,
-					'page'   => $page,
-					'return' => 'raw',
-					'status' => 'active',
-				)
+		$results = eaccounting_get_vendors(
+			array(
+				'search' => $search,
+				'page'   => $page,
+				'return' => 'raw',
+				'status' => 'active',
 			)
 		);
+		$total  = eaccounting_get_vendors(
+			array(
+				'search' => $search,
+				'status' => 'active',
+				'count_total' => true,
+			)
+		);
+		$result = array(
+			'results'    => $results,
+			'page'       => $page,
+			'pagination' => array(
+				'more' => $total > $page * 20,
+			),
+		);
+		wp_send_json_success( $result );
 	}
 
 	/**
@@ -897,19 +989,34 @@ class Ajax {
 	 */
 	public static function get_accounts() {
 		check_admin_referer( 'ea_get_accounts' );
-		$search = filter_input( INPUT_GET, 'search', FILTER_SANITIZE_STRING );
-		$page   = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_NUMBER_INT, array( 'options' => array( 'default' => 1 ) ) );
+		$search = filter_input( INPUT_POST, 'search', FILTER_SANITIZE_STRING );
+		$page   = filter_input( INPUT_POST, 'page', FILTER_SANITIZE_NUMBER_INT, array( 'options' => array( 'default' => 1 ) ) );
 
-		wp_send_json_success(
-			eaccounting_get_accounts(
-				array(
-					'search' => $search,
-					'page'   => $page,
-					'return' => 'raw',
-					'status' => 'active',
-				)
+		$results = eaccounting_get_accounts(
+			array(
+				'search' => $search,
+				'paged'   => $page,
+				'return' => 'raw',
+				'status' => 'active',
 			)
 		);
+
+		$total = eaccounting_get_accounts(
+			array(
+				'search' => $search,
+				'status' => 'active',
+				'count_total' => true,
+			)
+		);
+
+		$result = array(
+			'results'    => $results,
+			'page'       => $page,
+			'pagination' => array(
+				'more' => $total > $page * 20,
+			),
+		);
+		wp_send_json_success( $result );
 	}
 
 	/**
@@ -920,7 +1027,7 @@ class Ajax {
 	public static function get_account_currency() {
 		check_admin_referer( 'ea_get_currency' );
 		self::check_permission( 'manage_eaccounting' );
-		$account_id = filter_input( INPUT_GET, 'account_id', FILTER_SANITIZE_NUMBER_INT );
+		$account_id = filter_input( INPUT_POST, 'account_id', FILTER_SANITIZE_NUMBER_INT );
 		if ( empty( $account_id ) ) {
 			wp_send_json_error(
 				array(
@@ -1065,17 +1172,32 @@ class Ajax {
 	public static function get_items() {
 		check_admin_referer( 'ea_get_items' );
 		self::check_permission( 'manage_eaccounting' );
-		$search = filter_input( INPUT_GET, 'search', FILTER_SANITIZE_STRING );
+		$search = filter_input( INPUT_POST, 'search', FILTER_SANITIZE_STRING );
+		$page  = filter_input( INPUT_POST, 'page', FILTER_SANITIZE_NUMBER_INT );
 
-		wp_send_json_success(
-			eaccounting_get_items(
-				array(
-					'search' => $search,
-					'return' => 'raw',
-					'status' => 'active',
-				)
+		$results = eaccounting_get_items(
+			array(
+				'search' => $search,
+				'return' => 'raw',
+				'status' => 'active',
 			)
 		);
+		$total = eaccounting_get_items(
+			array(
+				'search' => $search,
+				'status' => 'active',
+				'count_total' => true,
+			)
+		);
+
+		$result = array(
+			'results'    => $results,
+			'page'       => $page,
+			'pagination' => array(
+				'more' => $total > $page * 20,
+			),
+		);
+		wp_send_json_success( $result );
 	}
 
 	/**

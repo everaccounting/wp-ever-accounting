@@ -36,9 +36,9 @@ class Bill_Actions {
 	 * @throws \Exception Exception.
 	 */
 	public function bill_action() {
-		$nonce   = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
-		$action  = filter_input( INPUT_POST, 'bill_action', FILTER_SANITIZE_STRING );
-		$bill_id = filter_input( INPUT_POST, 'bill_id', FILTER_SANITIZE_NUMBER_INT );
+		$nonce   = filter_input( INPUT_GET, '_wpnonce', FILTER_SANITIZE_STRING );
+		$action  = filter_input( INPUT_GET, 'bill_action', FILTER_SANITIZE_STRING );
+		$bill_id = filter_input( INPUT_GET, 'bill_id', FILTER_SANITIZE_NUMBER_INT );
 		$bill    = $bill_id ? eaccounting_get_bill( $bill_id ) : false;
 
 		if ( ! wp_verify_nonce( $nonce, 'ea_bill_action' ) || ! current_user_can( 'ea_manage_bill' ) || ! $bill->exists() ) {

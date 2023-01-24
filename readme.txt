@@ -1,5 +1,5 @@
 === WP Ever Accounting - Accounting for small business ===
-Contributors: everaccounting
+Contributors: everaccounting,manikmist09
 Tags: accounting, income, expense, invoice, bill, crm, accounts, transfer, customer, vendor, company, SME, Business manager
 Requires at least: 4.4
 Tested up to: 6.1
@@ -136,6 +136,16 @@ Yes, of course. We do not create products for ourselves. You are always welcome 
 
 
 == Changelog ==
+= 1.1.5 = (24th January 2023)
+* Fix: Currency dropdown not showing all currencies.
+* Fix: Customer dropdown not showing all customers.
+* Fix: Vendor dropdown not showing all vendors.
+* Fix: Account dropdown not showing all accounts.
+* Fix: Category dropdown not showing all categories.
+* Fix: Item dropdown not showing all items.
+* Fix: Import not working.
+* Fix: Bill mark as paid not working.
+
 = 1.1.4 = (21th November 2020)
 * Fix: Missing logo in the setup wizard.
 * Fix: Stuck on the setup wizard.
