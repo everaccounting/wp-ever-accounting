@@ -39,7 +39,7 @@
     "@wordpress/element": "^2.19.1",
     "@wordpress/i18n": "^3.18.0",
     "@wordpress/scripts": "^13.0.3",
-    "browser-sync": "^2.27.10",
+    "browser-sync": "^2.27.11",
     "browser-sync-webpack-plugin": "^2.3.0",
     "caniuse-db": "^1.0.30001196",
     "copy-webpack-plugin": "^6.4.1",
