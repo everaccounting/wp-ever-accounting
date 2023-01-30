@@ -313,6 +313,13 @@ class Currency extends Resource_Model {
 	 * @param string $value Currency precision.
 	 */
 	public function set_precision( $value ) {
+		// Precision will be always 0 to 4.
+		if( $value > 4 ) {
+			$value = 4;
+		} elseif( $value < 0 ) {
+			$value = 0;
+		}
+
 		$this->set_prop( 'precision', eaccounting_sanitize_number( $value ) );
 	}
 

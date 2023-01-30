@@ -138,6 +138,92 @@ abstract class EverAccounting_List_Table extends \WP_List_Table {
 	}
 
 	/**
+	 * Get a request var, or return the default if not set.
+	 *
+	 * @since 1.1.6
+	 *
+	 * @param string $var
+	 * @param mixed  $default
+	 *
+	 * @return mixed Un-sanitized request var
+	 */
+	protected function get_request_var( $var = '', $default = false ) {
+		return isset( $_REQUEST[ $var ] ) ? $_REQUEST[ $var ] : $default;
+	}
+
+	/**
+	 * Retrieve the search query string.
+	 *
+	 * @since 1.1.6
+	 * @return string Search query.
+	 */
+	protected function get_search() {
+		return $this->get_request_var( 's', '' );
+	}
+
+	/**
+	 * Retrieve the order query string.
+	 *
+	 * @since 1.1.6
+	 * @return string Order query.
+	 */
+	protected function get_order() {
+		return $this->get_request_var( 'order', 'DESC' );
+	}
+
+	/**
+	 * Retrieve the orderby query string.
+	 *
+	 * @since 1.1.6
+	 * @return string Orderby query.
+	 */
+	protected function get_orderby() {
+		return $this->get_request_var( 'orderby', 'date' );
+	}
+
+	/**
+	 * Retrieve the page query string.
+	 *
+	 * @since 1.1.6
+	 * @return string Page query.
+	 */
+	protected function get_page() {
+		return $this->get_request_var( 'page', '' );
+	}
+
+	/**
+	 * Retrieve the tab query string.
+	 *
+	 * @since 1.1.6
+	 * @return string Tab query.
+	 */
+	protected function get_tab() {
+		return $this->get_request_var( 'tab', '' );
+	}
+
+	/**
+	 * Retrieve the current page URL.
+	 *
+	 * @since 1.1.6
+	 * @return string Current page URL.
+	 */
+	protected function get_current_page_url() {
+		$page = $this->get_page();
+		$tab  = $this->get_tab();
+
+		// Build the base URL.
+		$url = add_query_arg( 'page', $page, admin_url( 'admin.php' ) );
+
+		// Add the tab if it's set.
+		if ( ! empty( $tab ) ) {
+			$url = add_query_arg( 'tab', $tab, $url );
+		}
+
+		return $url;
+	}
+
+
+	/**
 	 * Show blank slate.
 	 *
 	 * @param string $which String which tablenav is being shown.

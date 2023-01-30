@@ -23,7 +23,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @package EverAccounting\Models
  */
-class Account extends Resource_Model {
+class Account_OLD extends Resource_Model {
 	use CurrencyTrait;
 	use Attachment;
 

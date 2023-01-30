@@ -54,15 +54,11 @@ class Repositories {
 	 * @var array
 	 */
 	private $repositories = array(
-		'items'          => Items::class,
-		'categories'     => Categories::class,
 		'contacts'       => Contacts::class,
 		'transactions'   => Transactions::class,
-		'accounts'       => Accounts::class,
 		'currencies'     => Currencies::class,
 		'documents'      => Documents::class,
 		'document-items' => Document_Items::class,
-		'notes'          => Notes::class,
 		'transfers'      => Transfers::class,
 	);
 

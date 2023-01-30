@@ -53,8 +53,8 @@ eaccounting_enqueue_js(
 		jQuery.post('" . eaccounting()->ajax_url() . "', {
 			action:'eaccounting_edit_account',
 			id: $(this).data('id'),
-			enabled: $(this).is(':checked'),
-			nonce: '" . wp_create_nonce( 'ea_edit_account' ) . "',
+			status: $(this).is(':checked') ? 'active' : 'inactive',
+			_wpnonce: '" . wp_create_nonce( 'ea_edit_account' ) . "',
 		}, function(json){
 			$.eaccounting_notice(json);
 		});

@@ -116,7 +116,7 @@ final class EverAccounting {
 	 * for run using eaccounting()
 	 *
 	 * @param string $class_name Class name.
-	 * @param bool   $instance  Instance.
+	 * @param bool   $instance Instance.
 	 *
 	 * @since 1.1.2
 	 */
@@ -196,12 +196,8 @@ final class EverAccounting {
 		require_once EACCOUNTING_ABSPATH . '/includes/class-rewrites.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/class-controller.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/class-compatibility.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/class-chart.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/class-collection.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/class-datetime.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/class-inflector.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/class-logger.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/class-money.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/class-repositories.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/core-functions.php';
 
@@ -368,6 +364,9 @@ final class EverAccounting {
 		return admin_url( 'admin-ajax.php', 'relative' );
 	}
 }
+
+require_once __DIR__ . '/src/Autoloader.php';
+\EverAccounting\Autoloader::init();
 
 /**
  * Returns the main instance of Plugin.

@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Ever Accounting 1.1.5\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/wp-ever-accounting\n"
-"POT-Creation-Date: 2023-01-24 15:27:04+00:00\n"
+"POT-Creation-Date: 2023-01-30 09:00:53+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -413,7 +413,7 @@ msgstr ""
 #: includes/admin/class-menu.php:322
 #: includes/admin/reports/class-expenses.php:195
 #: includes/admin/reports/class-profits.php:176
-#: includes/admin/reports/class-sales.php:193 includes/class-install.php:254
+#: includes/admin/reports/class-sales.php:193 includes/class-install.php:255
 msgid "Sales"
 msgstr ""
 
@@ -811,7 +811,7 @@ msgstr ""
 #: includes/admin/views/bills/bill-items.php:13
 #: includes/admin/views/invoices/invoice-items.php:13
 #: includes/admin/views/js/modal-add-invoice-item.php:17
-#: includes/class-install.php:384 includes/class-install.php:390
+#: includes/class-install.php:385 includes/class-install.php:391
 #: includes/class-settings.php:232 includes/class-settings.php:290
 #: includes/ea-category-functions.php:24 templates/bill/bill-items.php:16
 #: templates/invoice/invoice-items.php:16
@@ -824,7 +824,7 @@ msgid "Price Label"
 msgstr ""
 
 #: includes/admin/class-settings.php:220 includes/admin/class-settings.php:281
-#: includes/class-install.php:385 includes/class-install.php:391
+#: includes/class-install.php:386 includes/class-install.php:392
 #: includes/class-settings.php:238 includes/class-settings.php:296
 msgid "Price"
 msgstr ""
@@ -838,7 +838,7 @@ msgstr ""
 #: includes/admin/views/bills/bill-items.php:15
 #: includes/admin/views/invoices/invoice-items.php:15
 #: includes/admin/views/js/modal-add-invoice-item.php:18
-#: includes/class-install.php:386 includes/class-install.php:392
+#: includes/class-install.php:387 includes/class-install.php:393
 #: includes/class-settings.php:244 includes/class-settings.php:302
 #: templates/bill/bill-items.php:18 templates/invoice/invoice-items.php:18
 msgid "Quantity"
@@ -913,7 +913,7 @@ msgid "As individual tax rates"
 msgstr ""
 
 #: includes/admin/class-settings.php:516 includes/class-settings.php:125
-#: includes/ea-form-functions.php:973
+#: includes/ea-form-functions.php:972
 msgid "Select Country"
 msgstr ""
 
@@ -941,7 +941,7 @@ msgid "Settings updated."
 msgstr ""
 
 #: includes/admin/class-settings.php:789 includes/admin/class-settings.php:790
-#: includes/class-install.php:73
+#: includes/class-install.php:74
 msgid "Settings"
 msgstr ""
 
@@ -1633,6 +1633,7 @@ msgstr ""
 #: includes/admin/views/revenues/edit-revenue.php:176
 #: includes/admin/views/transfers/edit-transfer.php:157
 #: includes/admin/views/vendors/edit-vendor.php:226
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:284
 msgid "Submit"
 msgstr ""
 
@@ -2674,7 +2675,7 @@ msgstr ""
 #: includes/admin/views/js/modal-add-currency.php:17
 #: includes/admin/views/js/modal-add-customer.php:28
 #: includes/admin/views/js/modal-add-vendor.php:28
-#: includes/ea-form-functions.php:870
+#: includes/ea-form-functions.php:869
 msgid "Select Currency"
 msgstr ""
 
@@ -2700,7 +2701,7 @@ msgid "Add Income Category"
 msgstr ""
 
 #: includes/admin/views/js/modal-add-invoice-item.php:30
-#: includes/ea-form-functions.php:918
+#: includes/ea-form-functions.php:917
 msgid "Select Item"
 msgstr ""
 
@@ -2895,125 +2896,125 @@ msgstr ""
 msgid "The vendor was created at %1$s by %2$s"
 msgstr ""
 
-#: includes/class-ajax.php:302
+#: includes/class-ajax.php:275
 msgid "Category updated successfully!"
 msgstr ""
 
-#: includes/class-ajax.php:306
+#: includes/class-ajax.php:279
 msgid "Category created successfully!"
 msgstr ""
 
-#: includes/class-ajax.php:335 includes/class-ajax.php:600
+#: includes/class-ajax.php:308 includes/class-ajax.php:573
 msgid "Invalid Invoice Item"
 msgstr ""
 
-#: includes/class-ajax.php:342
+#: includes/class-ajax.php:315
 msgid "Invoice Payment saved"
 msgstr ""
 
-#: includes/class-ajax.php:371 includes/class-ajax.php:636
+#: includes/class-ajax.php:344 includes/class-ajax.php:609
 msgid "Note Content empty."
 msgstr ""
 
-#: includes/class-ajax.php:381 includes/class-ajax.php:646
+#: includes/class-ajax.php:354 includes/class-ajax.php:619
 msgid "Note Added."
 msgstr ""
 
-#: includes/class-ajax.php:464 includes/class-ajax.php:730
+#: includes/class-ajax.php:437 includes/class-ajax.php:703
 #. translators: %s: invoice number
 #. translators: %s: bill id
 msgid "%s added"
 msgstr ""
 
-#: includes/class-ajax.php:492
+#: includes/class-ajax.php:465
 msgid "Revenue updated successfully!"
 msgstr ""
 
-#: includes/class-ajax.php:496
+#: includes/class-ajax.php:469
 msgid "Revenue created successfully!"
 msgstr ""
 
-#: includes/class-ajax.php:566
+#: includes/class-ajax.php:539
 msgid "Customer updated successfully!"
 msgstr ""
 
-#: includes/class-ajax.php:570
+#: includes/class-ajax.php:543
 msgid "Customer created successfully!"
 msgstr ""
 
-#: includes/class-ajax.php:607
+#: includes/class-ajax.php:580
 msgid "Bill Payment saved"
 msgstr ""
 
-#: includes/class-ajax.php:784
+#: includes/class-ajax.php:757
 msgid "No code received"
 msgstr ""
 
-#: includes/class-ajax.php:792 includes/class-ajax.php:1042
+#: includes/class-ajax.php:765 includes/class-ajax.php:1015
 msgid "Could not find the currency"
 msgstr ""
 
-#: includes/class-ajax.php:832
+#: includes/class-ajax.php:805
 msgid "Currency updated successfully!"
 msgstr ""
 
-#: includes/class-ajax.php:836
+#: includes/class-ajax.php:809
 msgid "Currency created successfully!"
 msgstr ""
 
-#: includes/class-ajax.php:871
+#: includes/class-ajax.php:844
 msgid "Payment updated successfully!"
 msgstr ""
 
-#: includes/class-ajax.php:875
+#: includes/class-ajax.php:848
 msgid "Payment created successfully!"
 msgstr ""
 
-#: includes/class-ajax.php:945
+#: includes/class-ajax.php:918
 msgid "Vendor updated successfully!"
 msgstr ""
 
-#: includes/class-ajax.php:949
+#: includes/class-ajax.php:922
 msgid "Vendor created successfully!"
 msgstr ""
 
-#: includes/class-ajax.php:1034
+#: includes/class-ajax.php:1007
 msgid "No account id received"
 msgstr ""
 
-#: includes/class-ajax.php:1071
+#: includes/class-ajax.php:1044
 msgid "Account updated successfully!"
 msgstr ""
 
-#: includes/class-ajax.php:1075
+#: includes/class-ajax.php:1048
 msgid "Account created successfully!"
 msgstr ""
 
-#: includes/class-ajax.php:1110
+#: includes/class-ajax.php:1083
 msgid "Transfer updated successfully!"
 msgstr ""
 
-#: includes/class-ajax.php:1114
+#: includes/class-ajax.php:1087
 msgid "Transfer created successfully!"
 msgstr ""
 
-#: includes/class-ajax.php:1145
+#: includes/class-ajax.php:1118
 msgid "Note could not be deleted."
 msgstr ""
 
-#: includes/class-ajax.php:1161
+#: includes/class-ajax.php:1134
 msgid "Note Deleted."
 msgstr ""
 
-#: includes/class-ajax.php:1223
+#: includes/class-ajax.php:1191
 msgid "Item updated successfully!"
 msgstr ""
 
-#: includes/class-ajax.php:1227
+#: includes/class-ajax.php:1195
 msgid "Item created successfully!"
 msgstr ""
 
-#: includes/class-ajax.php:1250
+#: includes/class-ajax.php:1218
 msgid "Error: You are not allowed to do this."
 msgstr ""
 
@@ -3069,55 +3070,50 @@ msgstr ""
 msgid "Duplicate category."
 msgstr ""
 
-#: includes/class-install.php:73
+#: includes/class-install.php:74
 msgid "View settings"
 msgstr ""
 
-#: includes/class-install.php:93
+#: includes/class-install.php:94
 msgid "View documentation"
 msgstr ""
 
-#: includes/class-install.php:93
+#: includes/class-install.php:94
 msgid "Docs"
 msgstr ""
 
-#: includes/class-install.php:121
+#: includes/class-install.php:122
 msgid "Monthly"
 msgstr ""
 
-#: includes/class-install.php:126
+#: includes/class-install.php:127
 msgid "Every 15 Days"
 msgstr ""
 
-#: includes/class-install.php:131
+#: includes/class-install.php:132
 msgid "Once Weekly"
 msgstr ""
 
-#: includes/class-install.php:238
+#: includes/class-install.php:239
 msgid "Deposit"
 msgstr ""
 
-#: includes/class-install.php:246 includes/ea-category-functions.php:23
+#: includes/class-install.php:247 includes/ea-category-functions.php:23
 msgid "Other"
 msgstr ""
 
-#: includes/class-install.php:265 includes/class-install.php:273
+#: includes/class-install.php:266 includes/class-install.php:274
 #: includes/models/class-transfer.php:404
 #: includes/models/class-transfer.php:407
 #: includes/models/class-transfer.php:415
 msgid "Transfer"
 msgstr ""
 
-#: includes/class-money.php:400
-#. translators: %s amount %s currency
-msgid "Division by zero is not permitted amount %1$s currency %2$s"
-msgstr ""
-
-#: includes/class-repositories.php:108
+#: includes/class-repositories.php:104
 msgid "Repository class does not exist."
 msgstr ""
 
-#: includes/class-repositories.php:114
+#: includes/class-repositories.php:110
 msgid "Invalid repository."
 msgstr ""
 
@@ -3154,10 +3150,6 @@ msgstr ""
 msgid "Unknown User"
 msgstr ""
 
-#: includes/ea-account-functions.php:112
-msgid "Duplicate account number."
-msgstr ""
-
 #: includes/ea-document-functions.php:385
 #: includes/ea-document-functions.php:403
 msgid "Draft"
@@ -3190,15 +3182,15 @@ msgstr ""
 msgid "Upload"
 msgstr ""
 
-#: includes/ea-form-functions.php:822
+#: includes/ea-form-functions.php:821
 msgid "Select Category"
 msgstr ""
 
-#: includes/ea-form-functions.php:947
+#: includes/ea-form-functions.php:946
 msgid "Select payment method"
 msgstr ""
 
-#: includes/ea-form-functions.php:997
+#: includes/ea-form-functions.php:996
 msgid "Date range"
 msgstr ""
 
@@ -3625,6 +3617,91 @@ msgstr ""
 msgid "Invalid batch class handler file has been supplied."
 msgstr ""
 
+#: src/Models/Account.php:411
+msgid "Account name is required."
+msgstr ""
+
+#: src/Models/Account.php:416
+msgid "Account number is required."
+msgstr ""
+
+#: src/Models/Account.php:421
+msgid "Account currency is required."
+msgstr ""
+
+#: src/Models/Account.php:427
+msgid "Account number already exists."
+msgstr ""
+
+#: src/Models/Category.php:231
+msgid "Category name is required."
+msgstr ""
+
+#: src/Models/Category.php:236
+msgid "Category type is required."
+msgstr ""
+
+#: src/Models/Category.php:246
+msgid "Category name already exists."
+msgstr ""
+
+#: src/Models/Item.php:424
+msgid "Creator ID is required."
+msgstr ""
+
+#: src/Models/Item.php:429
+msgid "Date created is required."
+msgstr ""
+
+#: src/Models/Item.php:434
+msgid "Item name is required."
+msgstr ""
+
+#: src/Models/Item.php:439
+msgid "Sales price is required."
+msgstr ""
+
+#: src/Models/Item.php:444
+msgid "Purchase price is required."
+msgstr ""
+
+#: src/Models/Model.php:153
+msgid "You must define core data for the model."
+msgstr ""
+
+#: src/Models/Model.php:157
+msgid "You must define a table name for the model."
+msgstr ""
+
+#: src/Models/Model.php:161
+msgid "You must define an id key for the model."
+msgstr ""
+
+#: src/Models/Model.php:165
+msgid "You must define an id key type for the model."
+msgstr ""
+
+#: src/Models/Model.php:169
+msgid "You must define an object type for the model."
+msgstr ""
+
+#: src/Models/Model.php:358
+msgid "Method does not exist."
+msgstr ""
+
+#: src/Models/Model.php:1269
+msgid "Could not insert item into the database."
+msgstr ""
+
+#: src/Models/Model.php:1366
+msgid "Could not update item in the database."
+msgstr ""
+
+#: src/Money.php:400
+#. translators: %s amount %s currency
+msgid "Division by zero is not permitted amount %1$s currency %2$s"
+msgstr ""
+
 #: templates/bill/bill-meta.php:26 templates/invoice/invoice-meta.php:26
 msgid "Issue Date"
 msgstr ""
@@ -3646,11 +3723,233 @@ msgstr ""
 msgid "Invoice To:"
 msgstr ""
 
+#: vendor/lucatume/wp-browser/src/data/plugins/internationalized-plugin.php:11
+msgid "This is a dummy plugin"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:42
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:72
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:80
+msgid "There was an error when reading this WXR file"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:43
+msgid ""
+"Details are shown above. The importer will now try again with a different "
+"parser..."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:84
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:89
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:306
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:495
+msgid "This does not appear to be a WXR file, missing/invalid WXR version number"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:132
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:141
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:192
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:196
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:205
+msgid "Sorry, there has been an error."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:133
+msgid "The file does not exist, please try again."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:176
+msgid "All done."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:176
+msgid "Have fun!"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:177
+msgid "Remember to update the passwords and roles of imported users."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:197
+msgid ""
+"The export file could not be found at <code>%s</code>. It is likely that "
+"this was caused by a permissions problem."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:213
+msgid ""
+"This WXR file (version %s) may not be supported by this version of the "
+"importer. Please consider updating."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:238
+msgid ""
+"Failed to import author %s. Their posts will be attributed to the current "
+"user."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:264
+msgid "Assign Authors"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:265
+msgid ""
+"To make it easier for you to edit and save the imported content, you may "
+"want to reassign the author of the imported item to an existing user of "
+"this site. For example, you may want to import all the entries as "
+"<code>admin</code>s entries."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:267
+msgid ""
+"If a new user is created by WordPress, a new password will be randomly "
+"generated and the new user&#8217;s role will be set as %s. Manually "
+"changing the new user&#8217;s details will be necessary."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:277
+msgid "Import Attachments"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:280
+msgid "Download and import file attachments"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:297
+msgid "Import author:"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:308
+msgid "or create new user with login name:"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:311
+msgid "as a new user:"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:319
+msgid "assign posts to an existing user:"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:321
+msgid "or assign posts to an existing user:"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:322
+msgid "- Select -"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:372
+msgid ""
+"Failed to create new user for %s. Their posts will be attributed to the "
+"current user."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:424
+msgid "Failed to import category %s"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:467
+msgid "Failed to import post tag %s"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:516
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:738
+msgid "Failed to import %s %s"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:605
+msgid "Failed to import &#8220;%s&#8221;: Invalid post type %s"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:642
+msgid "%s &#8220;%s&#8221; already exists."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:704
+msgid "Failed to import %s &#8220;%s&#8221;"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:869
+msgid "Menu item skipped due to missing menu slug"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:876
+msgid "Menu item skipped due to invalid menu slug: %s"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:939
+msgid "Fetching attachments is not enabled"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:952
+msgid "Invalid file type"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:996
+msgid "Remote server did not respond"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1002
+msgid "Remote server returned error response %1$d %2$s"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1009
+msgid "Remote file is incorrect size"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1014
+msgid "Zero size file downloaded"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1020
+msgid "Remote file is too large, limit is %s"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1119
+msgid "Import WordPress"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1126
+msgid ""
+"A new version of this importer is available. Please update to version %s to "
+"ensure compatibility with newer export files."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1141
+msgid ""
+"Howdy! Upload your WordPress eXtended RSS (WXR) file and we&#8217;ll import "
+"the posts, pages, comments, custom fields, categories, and tags into this "
+"site."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1142
+msgid "Choose a WXR (.xml) file to upload, then click Upload file and import."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1216
+msgid ""
+"Import <strong>posts, pages, comments, custom fields, categories, and "
+"tags</strong> from a WordPress export file."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/themedir1/internationalized-theme/functions.php:7
+msgid "This is a dummy theme"
+msgstr ""
+
+#: vendor/wp-cli/wp-cli/php/utils-wp.php:230
+msgid "Inactive Widgets"
+msgstr ""
+
+#: vendor/wp-cli/wp-cli/php/utils-wp.php:233
+msgid "Drag widgets here to remove them from the sidebar but keep their settings."
+msgstr ""
+
 #: wp-ever-accounting.php:82 wp-ever-accounting.php:92
 msgid "Cheatin&#8217; huh?"
 msgstr ""
 
-#: wp-ever-accounting.php:265
+#: wp-ever-accounting.php:261
 #. translators: 1: error message 2: file name and path 3: line number
 msgid "%1$s in %2$s on line %3$s"
 msgstr ""
@@ -3667,12 +3966,12 @@ msgstr ""
 msgid "everaccounting"
 msgstr ""
 
-#: includes/class-install.php:704
+#: includes/class-install.php:706
 msgctxt "User role"
 msgid "Accounting Manager"
 msgstr ""
 
-#: includes/class-install.php:705
+#: includes/class-install.php:707
 msgctxt "User role"
 msgid "Accountant"
 msgstr ""
