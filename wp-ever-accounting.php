@@ -36,7 +36,7 @@ final class EverAccounting {
 	 *
 	 * @var string
 	 */
-	public $version = '1.1.5';
+	public $version = '1.1.6';
 
 	/**
 	 * All plugin's classes.
