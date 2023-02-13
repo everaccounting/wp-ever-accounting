@@ -35,6 +35,16 @@
     ]
   },
   "require-dev": {
+    "codeception/lib-innerbrowser": "^1.0",
+    "codeception/module-asserts": "^1.1",
+    "codeception/module-cli": "^1.0",
+    "codeception/module-db": "^1.0",
+    "codeception/module-filesystem": "^1.0",
+    "codeception/module-phpbrowser": "^1.0",
+    "codeception/module-rest": "^1.2",
+    "codeception/module-webdriver": "^1.0",
+    "codeception/util-universalframework": "^1.0",
+    "lucatume/wp-browser": "^3.1",
     "roave/security-advisories": "dev-latest",
     "phpunit/phpunit": "^6.5",
     "byteever/byteever-sniffs": "dev-master"
@@ -46,20 +56,25 @@
     },
     "sort-packages": true,
     "allow-plugins": {
-      "dealerdirect/phpcodesniffer-composer-installer": true
+      "dealerdirect/phpcodesniffer-composer-installer": true,
+      "kylekatarnls/update-helper": true
     }
   },
   "scripts": {
-    "pre-commit": [
-      "@phpcs"
-    ],
     "phpcs": "@php ./vendor/bin/phpcs --standard=phpcs.xml -s -v",
-    "phpcbf": "@php ./vendor/bin/phpcbf --standard=phpcs.xml -v"
-  },
-  "extra": {
-    "scripts-description": {
-      "phpcs": "Analyze code against the WordPress coding standards with PHP_CodeSniffer",
-      "phpcbf": "Fix coding standards warnings/errors automatically with PHP Code Beautifier"
-    }
+    "phpcbf": "@php ./vendor/bin/phpcbf --standard=phpcs.xml -v",
+    "selenium:start": "selenium-server -port 4444",
+    "test:build": "@php ./vendor/bin/codecept build",
+    "test:acceptance": "@php ./vendor/bin/codecept run acceptance",
+    "test:functional": "@php ./vendor/bin/codecept run functional",
+    "test:wpunit": "@php ./vendor/bin/codecept run wpunit",
+    "test": "composer test:acceptance && composer test:functional && composer test:wpunit",
+    "test:gen:acceptance": "@php ./vendor/bin/codecept generate:cept",
+    "test:gen:func": "@php ./vendor/bin/codecept generate:cest",
+    "test:gen:wpunit": "@php ./vendor/bin/codecept generate:wpunit wpunit",
+    "test:clean": "@php ./vendor/bin/codecept clean",
+    "test:coverage": "@php ./vendor/bin/codecept run wpunit --coverage --coverage-xml --coverage-html",
+    "test:generate": "@php ./vendor/bin/codecept generate:scenarios",
+    "codecept": "@php ./vendor/bin/codecept"
   }
 }

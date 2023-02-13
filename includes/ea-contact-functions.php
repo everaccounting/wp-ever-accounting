@@ -13,8 +13,8 @@ defined( 'ABSPATH' ) || exit();
 /**
  * Get contact types.
  *
- * @return array
  * @since 1.1.0
+ * @return array
  */
 function eaccounting_get_contact_types() {
 	return apply_filters(
@@ -32,8 +32,8 @@ function eaccounting_get_contact_types() {
  *
  * @param string $type Contact type.
  *
- * @return string
  * @since 1.1.0
+ * @return string
  */
 function eaccounting_get_contact_type( $type ) {
 	$types = eaccounting_get_contact_types();
@@ -47,8 +47,8 @@ function eaccounting_get_contact_type( $type ) {
  *
  * @param mixed $customer Customer ID or object.
  *
- * @return \EverAccounting\Models\Customer|null
  * @since 1.1.0
+ * @return \EverAccounting\Models\Customer|null
  */
 function eaccounting_get_customer( $customer ) {
 	if ( empty( $customer ) ) {
@@ -66,9 +66,9 @@ function eaccounting_get_customer( $customer ) {
 /**
  * Get customer by email.
  *
- * @since 1.1.0
- *
  * @param string $email Customer email.
+ *
+ * @since 1.1.0
  *
  * @return \EverAccounting\Models\Customer | null
  */
@@ -86,6 +86,7 @@ function eaccounting_get_customer_by_email( $email ) {
 	}
 	if ( $customer ) {
 		wp_cache_set( $customer->id, $customer, 'ea_contacts' );
+
 		return eaccounting_get_customer( $customer );
 	}
 
@@ -118,10 +119,10 @@ function eaccounting_get_customer_by_email( $email ) {
  * @type string $attachment Attachment attached with contact. Default null.
  *
  * }
- * @param bool  $wp_error Optional. Whether to return a WP_Error on failure. Default false.
+ * @param bool $wp_error Optional. Whether to return a WP_Error on failure. Default false.
  *
- * @return EverAccounting\Models\Customer|\WP_Error|bool
  * @since 1.1.0
+ * @return EverAccounting\Models\Customer|\WP_Error|bool
  */
 function eaccounting_insert_customer( $args, $wp_error = true ) {
 	// Ensure that we have data.
@@ -152,8 +153,8 @@ function eaccounting_insert_customer( $args, $wp_error = true ) {
  *
  * @param int $customer_id Customer ID.
  *
- * @return bool
  * @since 1.1.0
+ * @return bool
  */
 function eaccounting_delete_customer( $customer_id ) {
 	try {
@@ -170,6 +171,7 @@ function eaccounting_delete_customer( $customer_id ) {
  *
  * @param array $args {
  * An array of arguments.
+ *
  * @type int $id ID of the contact.
  * @type int $user_id user_id of the contact.
  * @type string $name name of the contact.
@@ -186,19 +188,20 @@ function eaccounting_delete_customer( $customer_id ) {
  *
  * }
  *
- * @return array|int
  * @since 1.1.0
+ * @return array|int
  */
 function eaccounting_get_customers( $args = array() ) {
 	return eaccounting_get_contacts( array_merge( $args, array( 'type' => 'customer' ) ) );
 }
+
 /**
  * Get vendor.
  *
  * @param mixed $vendor Vendor ID or object.
  *
- * @return \EverAccounting\Models\Vendor|null
  * @since 1.1.0
+ * @return \EverAccounting\Models\Vendor|null
  */
 function eaccounting_get_vendor( $vendor ) {
 	if ( empty( $vendor ) ) {
@@ -216,9 +219,9 @@ function eaccounting_get_vendor( $vendor ) {
 /**
  * Get vendor by email.
  *
- * @since 1.1.0
- *
  * @param string $email Vendor email.
+ *
+ * @since 1.1.0
  *
  * @return \EverAccounting\Models\Vendor
  */
@@ -236,6 +239,7 @@ function eaccounting_get_vendor_by_email( $email ) {
 	}
 	if ( $vendor ) {
 		wp_cache_set( $vendor->id, $vendor, 'ea_contacts' );
+
 		return eaccounting_get_vendor( $vendor );
 	}
 
@@ -269,10 +273,10 @@ function eaccounting_get_vendor_by_email( $email ) {
  * @type string $attachment Attachment attached with contact. Default null.
  *
  * }
- * @param bool  $wp_error Optional. Whether to return a WP_Error on failure. Default false.
+ * @param bool $wp_error Optional. Whether to return a WP_Error on failure. Default false.
  *
- * @return EverAccounting\Models\Vendor|\WP_Error|bool
  * @since 1.1.0
+ * @return EverAccounting\Models\Vendor|\WP_Error|bool
  */
 function eaccounting_insert_vendor( $args, $wp_error = true ) {
 	// Ensure that we have data.
@@ -303,8 +307,8 @@ function eaccounting_insert_vendor( $args, $wp_error = true ) {
  *
  * @param int $vendor_id Vendor ID.
  *
- * @return bool
  * @since 1.1.0
+ * @return bool
  */
 function eaccounting_delete_vendor( $vendor_id ) {
 	try {
@@ -321,6 +325,7 @@ function eaccounting_delete_vendor( $vendor_id ) {
  *
  * @param array $args {
  * An array of elements that make up a vendor to update or insert.
+ *
  * @type int $id ID of the contact.
  * @type int $user_id user_id of the contact.
  * @type string $name name of the contact.
@@ -337,8 +342,8 @@ function eaccounting_delete_vendor( $vendor_id ) {
  *
  * }
  *
- * @return array|int
  * @since 1.1.0
+ * @return array|int
  */
 function eaccounting_get_vendors( $args = array() ) {
 	return eaccounting_get_contacts( array_merge( $args, array( 'type' => 'vendor' ) ) );
@@ -349,6 +354,7 @@ function eaccounting_get_vendors( $args = array() ) {
  *
  * @param array $args {
  * An array of elements that make up a customer to update or insert.
+ *
  * @type int $id ID of the contact.
  * @type int $user_id user_id of the contact.
  * @type string $name name of the contact.
@@ -365,8 +371,8 @@ function eaccounting_get_vendors( $args = array() ) {
  *
  * }
  *
- * @return array|int
  * @since 1.1.0
+ * @return array|int
  */
 function eaccounting_get_contacts( $args = array() ) {
 	// Prepare args.
@@ -401,16 +407,16 @@ function eaccounting_get_contacts( $args = array() ) {
 	$where  = 'WHERE 1=1';
 	if ( ! empty( $qv['include'] ) ) {
 		$include = implode( ',', wp_parse_id_list( $qv['include'] ) );
-		$where  .= " AND $table.`id` IN ($include)";
+		$where   .= " AND $table.`id` IN ($include)";
 	} elseif ( ! empty( $qv['exclude'] ) ) {
 		$exclude = implode( ',', wp_parse_id_list( $qv['exclude'] ) );
-		$where  .= " AND $table.`id` NOT IN ($exclude)";
+		$where   .= " AND $table.`id` NOT IN ($exclude)";
 	}
 	// search.
 	$search_cols = array( 'id', 'name', 'email', 'phone', 'street', 'country' );
 	if ( ! empty( $qv['search'] ) ) {
 		$searches = array();
-		$where   .= ' AND (';
+		$where    .= ' AND (';
 		foreach ( $search_cols as $col ) {
 			$searches[] = $wpdb->prepare( $col . ' LIKE %s', '%' . $wpdb->esc_like( $qv['search'] ) . '%' );
 		}
@@ -419,29 +425,29 @@ function eaccounting_get_contacts( $args = array() ) {
 	}
 
 	if ( ! empty( $qv['type'] ) ) {
-		$types  = implode( "','", wp_parse_list( $qv['type'] ) );
+		$types = implode( "','", wp_parse_list( $qv['type'] ) );
 		$where .= " AND $table.`type` IN ('$types')";
 	}
 
 	if ( ! empty( $qv['currency_code'] ) ) {
 		$currency_code = implode( "','", wp_parse_list( $qv['currency_code'] ) );
-		$where        .= " AND $table.`currency_code` IN ('$currency_code')";
+		$where         .= " AND $table.`currency_code` IN ('$currency_code')";
 	}
 
 	if ( ! empty( $qv['status'] ) && ! in_array( $qv['status'], array( 'all', 'any' ), true ) ) {
 		$status = eaccounting_string_to_bool( $qv['status'] );
 		$status = eaccounting_bool_to_number( $status );
-		$where .= " AND $table.`enabled` = ('$status')";
+		$where  .= " AND $table.`enabled` = ('$status')";
 	}
 
 	if ( ! empty( $qv['creator_id'] ) ) {
 		$creator_id = implode( ',', wp_parse_id_list( $qv['creator_id'] ) );
-		$where     .= " AND $table.`creator_id` IN ($creator_id)";
+		$where      .= " AND $table.`creator_id` IN ($creator_id)";
 	}
 
 	if ( ! empty( $qv['date_created'] ) && is_array( $qv['date_created'] ) ) {
 		$date_created_query = new \WP_Date_Query( $qv['date_created'], "{$table}.date_created" );
-		$where             .= $date_created_query->get_sql();
+		$where              .= $date_created_query->get_sql();
 	}
 
 	$order   = isset( $qv['order'] ) ? strtoupper( $qv['order'] ) : 'ASC';
@@ -452,7 +458,8 @@ function eaccounting_get_contacts( $args = array() ) {
 		if ( $qv['offset'] ) {
 			$limit = $wpdb->prepare( 'LIMIT %d, %d', $qv['offset'], $qv['number'] );
 		} else {
-			$limit = $wpdb->prepare( 'LIMIT %d, %d', $qv['number'] * ( $qv['paged'] - 1 ), $qv['number'] );
+			$offset = max( 0, $qv['number'] * ( $qv['paged'] - 1 ) );
+			$limit  = $wpdb->prepare( 'LIMIT %d, %d', $offset, $qv['number'] );
 		}
 	}
 

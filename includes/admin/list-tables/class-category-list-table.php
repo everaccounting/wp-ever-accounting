@@ -288,7 +288,7 @@ class EverAccounting_Category_List_Table extends EverAccounting_List_Table {
 					eaccounting_insert_category(
 						array(
 							'id'      => $id,
-							'enabled' => '1',
+							'status' => 'active',
 						)
 					);
 					break;
@@ -296,7 +296,7 @@ class EverAccounting_Category_List_Table extends EverAccounting_List_Table {
 					eaccounting_insert_category(
 						array(
 							'id'      => $id,
-							'enabled' => '0',
+							'status' => 'inactive',
 						)
 					);
 					break;
@@ -364,23 +364,20 @@ class EverAccounting_Category_List_Table extends EverAccounting_List_Table {
 
 		$this->process_bulk_action();
 
-		$page    = filter_input( INPUT_GET, 'paged', FILTER_SANITIZE_NUMBER_INT, array( 'options' => array( 'default' => 1 ) ) );
-		$search  = filter_input( INPUT_GET, 's', FILTER_SANITIZE_STRING );
-		$order   = filter_input( INPUT_GET, 'order', FILTER_SANITIZE_STRING, array( 'options' => array( 'default' => 'DESC' ) ) );
-		$orderby = filter_input( INPUT_GET, 'orderby', FILTER_SANITIZE_STRING, array( 'options' => array( 'default' => 'id' ) ) );
-		$status  = filter_input( INPUT_GET, 'status', FILTER_SANITIZE_STRING );
-
+		$page    = $this->get_pagenum();
+		$search  = $this->get_search();
+		$order   = $this->get_order();
+		$orderby = $this->get_orderby();
+		$status  = sanitize_key( $this->get_request_var( 'status', 'all') );
 		$per_page = $this->per_page;
 
 		$args = wp_parse_args(
 			$this->query_args,
 			array(
-				'number'   => $per_page,
-				'offset'   => $per_page * ( $page - 1 ),
 				'per_page' => $per_page,
-				'page'     => $page,
+				'paged'     => $page,
 				'search'   => $search,
-				'status'   => $status,
+				'status'   => in_array( $status, array( 'active', 'inactive' ) ) ? $status : '',
 				'orderby'  => eaccounting_clean( $orderby ),
 				'order'    => eaccounting_clean( $order ),
 			)
@@ -388,27 +385,9 @@ class EverAccounting_Category_List_Table extends EverAccounting_List_Table {
 
 		$args = apply_filters( 'eaccounting_category_table_query_args', $args, $this );
 
-		$this->items = eaccounting_get_categories( $args );
-
-		$this->active_count = eaccounting_get_categories(
-			array_merge(
-				$args,
-				array(
-					'count_total' => true,
-					'status'      => 'active',
-				)
-			)
-		);
-
-		$this->inactive_count = eaccounting_get_categories(
-			array_merge(
-				$args,
-				array(
-					'count_total' => true,
-					'status'      => 'inactive',
-				)
-			)
-		);
+		$this->items = Category::query( $args );
+		$this->active_count = Category::count( array_merge( $args, array( 'status' => 'active' ) ) );
+		$this->inactive_count = Category::count( array_merge( $args, array( 'status' => 'inactive' ) ) );
 
 		$this->total_count = absint( $this->active_count ) + absint( $this->inactive_count );
 		switch ( $status ) {

@@ -813,7 +813,6 @@ function eaccounting_category_dropdown( $field ) {
 			'type'    => $type,
 		)
 	);
-
 	$field = wp_parse_args(
 		array(
 			'value'        => $include,

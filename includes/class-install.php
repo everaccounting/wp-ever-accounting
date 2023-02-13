@@ -26,6 +26,7 @@ class Install {
 	private static $updates = array(
 		'1.0.2' => 'eaccounting_update_1_0_2',
 		'1.1.0' => 'eaccounting_update_1_1_0',
+		'1.1.6' => 'eaccounting_update_1_1_6',
 	);
 
 	/**
@@ -437,12 +438,12 @@ class Install {
 		    `bank_phone` VARCHAR(20) DEFAULT NULL,
 		    `bank_address` VARCHAR(191) DEFAULT NULL,
 		    `thumbnail_id` INT(11) DEFAULT NULL,
-		   	`enabled` tinyint(1) NOT NULL DEFAULT '1',
+		   	`status` ENUM('active','inactive') NOT NULL DEFAULT 'active',
 		   	`creator_id` INT(11) DEFAULT NULL,
 		    `date_created` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
 		    PRIMARY KEY (`id`),
 		    KEY `currency_code` (`currency_code`),
-		    KEY `enabled` (`enabled`),
+		    KEY `status` (`status`),
 		    UNIQUE KEY (`number`)
             ) $collate",
 
@@ -451,11 +452,11 @@ class Install {
   		  	`name` VARCHAR(191) NOT NULL,
 		  	`type` VARCHAR(50) NOT NULL,
 		  	`color` VARCHAR(20) NOT NULL,
-		  	`enabled` tinyint(1) NOT NULL DEFAULT '1',
+		  	`status` ENUM('active','inactive') NOT NULL DEFAULT 'active',
 		    `date_created` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
 		    PRIMARY KEY (`id`),
 		    KEY `type` (`type`),
-		    KEY `enabled` (`enabled`),
+		    KEY `status` (`status`),
 		    UNIQUE KEY (`name`, `type`)
             ) $collate",
 
@@ -627,13 +628,14 @@ class Install {
   			`sales_tax` double(15,4) DEFAULT NULL,
   			`purchase_tax` double(15,4) DEFAULT NULL,
   			`thumbnail_id` INT(11) DEFAULT NULL,
-			`enabled` tinyint(1) NOT NULL DEFAULT '1',
+			`status` ENUM('active','inactive') NOT NULL DEFAULT 'active',
 			`creator_id` INT(11) DEFAULT NULL,
 		    `date_created` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
 		    PRIMARY KEY (`id`),
 		    KEY `sale_price` (`sale_price`),
 		    KEY `purchase_price` (`purchase_price`),
 		    KEY `category_id` (`category_id`),
+		    KEY `status` (`status`),
 		    KEY `quantity` (`quantity`)
             ) $collate",
 		);

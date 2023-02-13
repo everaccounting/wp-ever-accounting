@@ -9,8 +9,11 @@
 
 namespace EverAccounting;
 
+use EverAccounting\Models\Account;
 use EverAccounting\Models\Bill;
+use EverAccounting\Models\Category;
 use EverAccounting\Models\Invoice;
+use EverAccounting\Models\Item;
 use EverAccounting\Models\Note;
 
 defined( 'ABSPATH' ) || exit();
@@ -167,27 +170,18 @@ class Ajax {
 	 */
 	public static function get_expense_categories() {
 		check_admin_referer( 'ea_categories' );
-		$search = filter_input( INPUT_POST, 'search', FILTER_SANITIZE_STRING );
-		$page   = filter_input( INPUT_POST, 'page', FILTER_SANITIZE_NUMBER_INT );
-		$results = eaccounting_get_categories(
-			array(
-				'search' => $search,
-				'type'   => 'expense',
-				'page'   => $page,
-				'return' => 'raw',
-				'status' => 'active',
-			)
+		$search  = filter_input( INPUT_POST, 'search', FILTER_SANITIZE_STRING );
+		$page    = filter_input( INPUT_POST, 'page', FILTER_SANITIZE_NUMBER_INT );
+		$args    = array(
+			'search'         => $search,
+			'search_columns' => array( 'name' ),
+			'type'           => 'expense',
+			'paged'          => $page,
+			'return'         => 'raw',
+			'status'         => 'active',
 		);
-
-		$total = eaccounting_get_categories(
-			array(
-				'search' => $search,
-				'type'   => 'expense',
-				'page'   => $page,
-				'status' => 'active',
-				'count_total' => true,
-			)
-		);
+		$results = Category::query( $args );
+		$total   = Category::count( $args );
 
 		$result = array(
 			'results'    => $results,
@@ -206,28 +200,18 @@ class Ajax {
 	 */
 	public static function get_income_categories() {
 		check_admin_referer( 'ea_categories' );
-		$search = filter_input( INPUT_POST, 'search', FILTER_SANITIZE_STRING );
-		$page   = filter_input( INPUT_POST, 'page', FILTER_SANITIZE_NUMBER_INT );
-
-		$results = eaccounting_get_categories(
-			array(
-				'search' => $search,
-				'type'   => 'income',
-				'page'   => $page,
-				'return' => 'raw',
-				'status' => 'active',
-			)
+		$search  = filter_input( INPUT_POST, 'search', FILTER_SANITIZE_STRING );
+		$page    = filter_input( INPUT_POST, 'page', FILTER_SANITIZE_NUMBER_INT );
+		$args    = array(
+			'search'         => $search,
+			'search_columns' => array( 'name' ),
+			'type'           => 'income',
+			'paged'          => $page,
+			'return'         => 'raw',
+			'status'         => 'active',
 		);
-
-		$total = eaccounting_get_categories(
-			array(
-				'search' => $search,
-				'type'   => 'income',
-				'page'   => $page,
-				'status' => 'active',
-				'count_total' => true,
-			)
-		);
+		$results = Category::query( $args );
+		$total   = Category::count( $args );
 
 		$result = array(
 			'results'    => $results,
@@ -246,28 +230,18 @@ class Ajax {
 	 */
 	public static function get_item_categories() {
 		check_admin_referer( 'ea_categories' );
-		$search = filter_input( INPUT_POST, 'search', FILTER_SANITIZE_STRING );
-		$page   = filter_input( INPUT_POST, 'page', FILTER_SANITIZE_NUMBER_INT );
-
-		$results = eaccounting_get_categories(
-			array(
-				'search' => $search,
-				'type'   => 'item',
-				'page'   => $page,
-				'return' => 'raw',
-				'status' => 'active',
-			)
+		$search  = filter_input( INPUT_POST, 'search', FILTER_SANITIZE_STRING );
+		$page    = filter_input( INPUT_POST, 'page', FILTER_SANITIZE_NUMBER_INT );
+		$args    = array(
+			'search'         => $search,
+			'search_columns' => array( 'name' ),
+			'type'           => 'item',
+			'paged'          => $page,
+			'return'         => 'raw',
+			'status'         => 'active',
 		);
-
-		$total = eaccounting_get_categories(
-			array(
-				'search' => $search,
-				'type'   => 'item',
-				'page'   => $page,
-				'status' => 'active',
-				'count_total' => true,
-			)
-		);
+		$results = Category::query( $args );
+		$total   = Category::count( $args );
 
 		$result = array(
 			'results'    => $results,
@@ -406,6 +380,7 @@ class Ajax {
 			$invoice = new Invoice( $posted['id'] );
 			$invoice->set_props( $posted );
 			$totals = $invoice->calculate_totals();
+			var_dump($totals);
 			wp_send_json_success(
 				array(
 					'html'   => eaccounting_get_admin_template_html(
@@ -520,7 +495,7 @@ class Ajax {
 		$results = eaccounting_get_customers(
 			array(
 				'search' => $search,
-				'page'   => $page,
+				'paged'  => $page,
 				'return' => 'raw',
 				'status' => 'active',
 			)
@@ -532,7 +507,7 @@ class Ajax {
 				'status'      => 'active',
 			)
 		);
-		$result = array(
+		$result  = array(
 			'results'    => $results,
 			'page'       => $page,
 			'pagination' => array(
@@ -900,19 +875,19 @@ class Ajax {
 		$results = eaccounting_get_vendors(
 			array(
 				'search' => $search,
-				'page'   => $page,
+				'paged'  => $page,
 				'return' => 'raw',
 				'status' => 'active',
 			)
 		);
-		$total  = eaccounting_get_vendors(
+		$total   = eaccounting_get_vendors(
 			array(
-				'search' => $search,
-				'status' => 'active',
+				'search'      => $search,
+				'status'      => 'active',
 				'count_total' => true,
 			)
 		);
-		$result = array(
+		$result  = array(
 			'results'    => $results,
 			'page'       => $page,
 			'pagination' => array(
@@ -991,23 +966,14 @@ class Ajax {
 		check_admin_referer( 'ea_get_accounts' );
 		$search = filter_input( INPUT_POST, 'search', FILTER_SANITIZE_STRING );
 		$page   = filter_input( INPUT_POST, 'page', FILTER_SANITIZE_NUMBER_INT, array( 'options' => array( 'default' => 1 ) ) );
-
-		$results = eaccounting_get_accounts(
-			array(
-				'search' => $search,
-				'paged'   => $page,
-				'return' => 'raw',
-				'status' => 'active',
-			)
+		$args    = array(
+			'search' => $search,
+			'paged'  => $page,
+			'return' => 'raw',
+			'status' => 'active',
 		);
-
-		$total = eaccounting_get_accounts(
-			array(
-				'search' => $search,
-				'status' => 'active',
-				'count_total' => true,
-			)
-		);
+		$results = Account::query( $args );
+		$total   = Account::count( $args );
 
 		$result = array(
 			'results'    => $results,
@@ -1173,22 +1139,17 @@ class Ajax {
 		check_admin_referer( 'ea_get_items' );
 		self::check_permission( 'manage_eaccounting' );
 		$search = filter_input( INPUT_POST, 'search', FILTER_SANITIZE_STRING );
-		$page  = filter_input( INPUT_POST, 'page', FILTER_SANITIZE_NUMBER_INT );
+		$page   = filter_input( INPUT_POST, 'page', FILTER_SANITIZE_NUMBER_INT );
+		$args   = array(
+			'search'         => $search,
+			'search_columns' => array( 'name' ),
+			'paged'          => $page,
+			'return'         => 'raw',
+			'status'         => 'active',
+		);
 
-		$results = eaccounting_get_items(
-			array(
-				'search' => $search,
-				'return' => 'raw',
-				'status' => 'active',
-			)
-		);
-		$total = eaccounting_get_items(
-			array(
-				'search' => $search,
-				'status' => 'active',
-				'count_total' => true,
-			)
-		);
+		$results = Item::query( $args );
+		$total   = Item::count( $args );
 
 		$result = array(
 			'results'    => $results,

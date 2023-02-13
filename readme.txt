@@ -1,4 +1,4 @@
-=== WP Ever Accounting - Accounting for small business ===
+=== Ever Accounting - Accounting for small business ===
 Contributors: everaccounting,manikmist09
 Tags: accounting, income, expense, invoice, bill, crm, accounts, transfer, customer, vendor, company, SME, Business manager
 Requires at least: 4.4
@@ -8,11 +8,11 @@ Stable tag: 1.1.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Manage your business finances right from your WordPress dashboard. Keep track of your payments, expenses, send professional invoices in multi-currencies using WP Ever Accounting.
+Manage your business finances right from your WordPress dashboard. Keep track of your payments, expenses, send professional invoices in multi-currencies using Ever Accounting.
 
 == Description ==
 
-**WP Ever Accounting** is the best WordPress accounting plugin. Keep track of your income, expense, send professional invoices in multi-currencies. WP Ever Accounting offers everything you need to run your business confidently.
+**Ever Accounting** is the best WordPress accounting plugin. Keep track of your income, expense, send professional invoices in multi-currencies. Ever Accounting offers everything you need to run your business confidently.
 
 It offers a one-stop accounting solution for small businesses. The plugin's primary goal is to provide an easy yet professional solution for a business to manage finances, keep logs of income and expenses, and offer details and powerful reports to understand its financial position.
 
@@ -90,21 +90,21 @@ Using bulk import, you can import customers, vendors, revenues, payments, accoun
 Ever Accounting lets you export most of your accounting records like customers, vendors, revenues, payments, accounts in CSV format, which you can import later or analyze.
 
 === User Roles ===
-WP Ever Accounting has a built-in fine-grained permissions setup. By default, it supports 2 user roles accounting manager & accountant. Control permissions to protect and simplify your management experience.
+Ever Accounting has a built-in fine-grained permissions setup. By default, it supports 2 user roles accounting manager & accountant. Control permissions to protect and simplify your management experience.
 
 === Open Source ===
-WP Ever Accounting is an open-source project and hosted in your space. You must be sure that data is safe, and nobody can abuse them. Open Source software provides you full privacy.
+Ever Accounting is an open-source project and hosted in your space. You must be sure that data is safe, and nobody can abuse them. Open Source software provides you full privacy.
 
-== How does WP Ever Accounting Work: ==
-WP Ever Accounting creates a new menu option called **Accounting** on the dashboard. Under this new menu, you will find several sub-menus titled as Dashboard, Transactions, Contacts, Payments, Revenues, Accounts, Transfers, Categories, and settings. The dashboard is dedicated to a detailed summary with highlights of the most important and recent accounting events.
+== How does Ever Accounting Work: ==
+Ever Accounting creates a new menu option called **Accounting** on the dashboard. Under this new menu, you will find several sub-menus titled as Dashboard, Transactions, Contacts, Payments, Revenues, Accounts, Transfers, Categories, and settings. The dashboard is dedicated to a detailed summary with highlights of the most important and recent accounting events.
 
 
 == Installation ==
 1. Upload the plugin files to the `/wp-content/plugins/plugin-name` directory, or install the plugin through the WordPress plugins screen directly.
 1. Activate the plugin through the 'Plugins' screen in WordPress
 
-= What do I need to properly use WP Ever Accounting? =
-Apart from a fully functional WordPress installation, WP Ever Accounting does not have any dependency. The minimum required version of WordPress is 4.7.0.
+= What do I need to properly use Ever Accounting? =
+Apart from a fully functional WordPress installation, Ever Accounting does not have any dependency. The minimum required version of WordPress is 4.7.0.
 
 = What is the minimum PHP version that I have to maintain to use this plugin? =
 To enjoy the sweet features of this powerful plugin you have to at least have PHP version 5.6 or higher installed. If you have a lower version of PHP then you may face problems.
