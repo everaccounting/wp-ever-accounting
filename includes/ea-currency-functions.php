@@ -236,15 +236,6 @@ function eaccounting_get_currencies( $args = array() ) {
 	$qv['number'] = isset( $qv['number'] ) && $qv['number'] > 0 ? $qv['number'] : - 1;
 	$qv['offset'] = isset( $qv['offset'] ) ? $qv['offset'] : ( $qv['number'] * ( $qv['paged'] - 1 ) );
 	$count_total  = true === $qv['count_total'];
-	$currencies   = $currencies->sort(
-		function ( $a, $b ) use ( $qv ) {
-			if ( 'ASC' === $qv['order'] ) {
-				return $a[ $qv['orderby'] ] < $b[ $qv['orderby'] ];
-			}
-
-			return $a[ $qv['orderby'] ] > $b[ $qv['orderby'] ];
-		}
-	);
 
 	if ( $count_total ) {
 		return $currencies->count();
