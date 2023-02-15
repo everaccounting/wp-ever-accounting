@@ -405,6 +405,7 @@ class EverAccounting_Account_List_Table extends EverAccounting_List_Table {
 		$this->inactive_count = Account::count( array_merge( $args, array( 'status' => 'inactive' ) ) );
 		$this->total_count    = $this->active_count + $this->inactive_count;
 
+
 		switch ( $status ) {
 			case 'active':
 				$total_items = $this->active_count;

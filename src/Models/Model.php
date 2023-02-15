@@ -1598,6 +1598,7 @@ abstract class Model {
 		$return_raw = isset( $args['return'] ) && 'raw' === $args['return'];
 		unset( $args['count'], $args['no_count'], $args['return'] );
 		$clauses      = $this->get_query_clauses( $args );
+		$clauses = $this->prepare_query_clauses( $clauses, $args );
 		$last_changed = wp_cache_get_last_changed( $this->get_cache_group() );
 		$cache_key    = $this->get_cache_group() . ':' . md5( wp_json_encode( $clauses ) ) . ':' . $last_changed;
 		$result       = wp_cache_get( $cache_key, $this->get_cache_group() );
@@ -1606,7 +1607,6 @@ abstract class Model {
 			return $is_count ? absint( $result->total ) : $result->items;
 		}
 
-		$clauses = $this->prepare_query_clauses( $clauses, $args );
 		// Go through each clause and add it to the query.
 		$query = '';
 		foreach ( $clauses as $type => $clause ) {
