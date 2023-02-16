@@ -151,7 +151,7 @@ class Documents extends Resource_Repository {
 	public function delete_notes( $item ) {
 		global $wpdb;
 		$wpdb->delete(
-			$wpdb->prefix . Notes::TABLE,
+			$wpdb->prefix . 'ea_notes',
 			array(
 				'parent_id' => $item->get_id(),
 				'type'      => $item->get_type(),

@@ -405,3 +405,33 @@ function eaccounting_update_attachments_1_1_0() {
 		}
 	}
 }
+
+function eaccounting_update_1_1_6() {
+	global $wpdb;
+	$table_name = $wpdb->prefix . 'ea_categories';
+	if ( $wpdb->get_var( "SHOW COLUMNS FROM $table_name LIKE 'status'" ) !== 'status' ) {
+		$wpdb->query( "ALTER TABLE $table_name ADD `status` ENUM('active','inactive') NOT NULL DEFAULT 'active' AFTER `color`" );
+		$wpdb->query( "ALTER TABLE $table_name ADD KEY `status` (`status`)" );
+		$wpdb->query( "UPDATE $table_name SET status = 'active' WHERE enabled = 1" );
+		$wpdb->query( "UPDATE $table_name SET status = 'inactive' WHERE enabled = 0" );
+		$wpdb->query( "ALTER TABLE $table_name DROP `enabled`" );
+	}
+	// Check if status column exists in ea_accounts table. If not, add it.
+	$table_name = $wpdb->prefix . 'ea_accounts';
+	if ( $wpdb->get_var( "SHOW COLUMNS FROM $table_name LIKE 'status'" ) !== 'status' ) {
+		$wpdb->query( "ALTER TABLE $table_name ADD `status` ENUM('active','inactive') NOT NULL DEFAULT 'active' AFTER `thumbnail_id`" );
+		$wpdb->query( "ALTER TABLE $table_name ADD KEY `status` (`status`)" );
+		$wpdb->query( "UPDATE $table_name SET status = 'active' WHERE enabled = 1" );
+		$wpdb->query( "UPDATE $table_name SET status = 'inactive' WHERE enabled = 0" );
+		$wpdb->query( "ALTER TABLE $table_name DROP `enabled`" );
+	}
+	//ea_items table.
+	$table_name = $wpdb->prefix . 'ea_items';
+	if ( $wpdb->get_var( "SHOW COLUMNS FROM $table_name LIKE 'status'" ) !== 'status' ) {
+		$wpdb->query( "ALTER TABLE $table_name ADD `status` ENUM('active','inactive') NOT NULL DEFAULT 'active' AFTER `thumbnail_id`" );
+		$wpdb->query( "ALTER TABLE $table_name ADD KEY `status` (`status`)" );
+		$wpdb->query( "UPDATE $table_name SET status = 'active' WHERE enabled = 1" );
+		$wpdb->query( "UPDATE $table_name SET status = 'inactive' WHERE enabled = 0" );
+		$wpdb->query( "ALTER TABLE $table_name DROP `enabled`" );
+	}
+}

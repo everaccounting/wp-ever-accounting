@@ -52,8 +52,8 @@ eaccounting_enqueue_js(
 		jQuery.post('" . eaccounting()->ajax_url() . "', {
 			action:'eaccounting_edit_currency',
 			id: $(this).data('id'),
-			enabled: $(this).is(':checked'),
-			nonce: '" . wp_create_nonce( 'ea_edit_currency' ) . "',
+			status: $(this).is(':checked') ? 'active' : 'inactive',
+			_wpnonce: '" . wp_create_nonce( 'ea_edit_currency' ) . "',
 		}, function(json){
 			$.eaccounting_notice(json);
 		});

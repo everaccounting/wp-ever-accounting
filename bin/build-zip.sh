@@ -5,6 +5,11 @@ PROJECT_PATH=$(pwd)
 BUILD_PATH="${PROJECT_PATH}/zip"
 DEST_PATH="$BUILD_PATH/$PLUGIN_SLUG"
 
+# Build the plugin
+npm install
+npm run build
+composer update --no-dev --optimize-autoloader
+
 echo "Generating build directory..."
 rm -rf "$BUILD_PATH"
 mkdir -p "$DEST_PATH"
