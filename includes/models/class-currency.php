@@ -21,7 +21,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @package EverAccounting\Models
  */
-class Currency extends Resource_Model {
+class Currency_Legacy extends Resource_Model {
 	/**
 	 * This is the name of this object type.
 	 *
@@ -277,7 +277,6 @@ class Currency extends Resource_Model {
 	 * @param string $code Currency code.
 	 */
 	public function set_code( $code ) {
-		$code = eaccounting_sanitize_currency_code( $code );
 		if ( ! empty( $code ) ) {
 			$this->set_prop( 'code', $code );
 		}

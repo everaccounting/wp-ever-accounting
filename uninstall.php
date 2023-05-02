@@ -11,16 +11,16 @@
 defined( 'WP_UNINSTALL_PLUGIN' ) || exit;
 
 // clear events.
-wp_clear_scheduled_hook( 'eaccounting_twicedaily_scheduled_events' );
-wp_clear_scheduled_hook( 'eaccounting_daily_scheduled_events' );
-wp_clear_scheduled_hook( 'eaccounting_weekly_scheduled_events' );
+wp_clear_scheduled_hook( 'eac_twicedaily_scheduled_event' );
+wp_clear_scheduled_hook( 'eac_daily_scheduled_event' );
+wp_clear_scheduled_hook( 'eac_weekly_scheduled_event' );
 
 /*
  * Only remove ALL product and page data if EACCOUNTING_REMOVE_ALL_DATA constant is set to true in user's
  * wp-config.php. This is to prevent data loss when deleting the plugin from the backend
  * and to ensure only the site owner can perform this action.
  */
-if ( defined( 'EACCOUNTING_REMOVE_ALL_DATA' ) && true === EACCOUNTING_REMOVE_ALL_DATA ) {
+if ( defined( 'EAC_REMOVE_ALL_DATA' ) && true === EAC_REMOVE_ALL_DATA ) {
 	global $wpdb;
 
 	// Roles.

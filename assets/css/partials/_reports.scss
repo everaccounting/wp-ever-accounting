@@ -1,0 +1,163 @@
+.ea-report-cards {
+	position: relative;
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+	grid-gap: 20px;
+
+	.ea-report-card {
+		box-sizing: border-box;
+		border-color: var(--card-border-color, #e0e0e0);
+		color: var(--card-color, #757575);
+		border-width: 1px;
+		border-style: solid;
+		background: var(--card-background, #ffffff);
+		padding: 25px;
+		flex: 1 1 auto;
+		flex-direction: row;
+		align-items: stretch;
+		justify-content: space-between;
+		flex-wrap: nowrap;
+		display: flex;
+		box-shadow: none;
+		position: relative;
+		height: 100%;
+		transition: all 0.2s ease-in-out;
+
+		&__icon{
+			margin-right: 20px;
+			padding: 10px;
+			border-radius: 50%;
+			background-color: var(--card-color, #f6f7f7);
+			color: var(--card-icon-color, #e0e0e0);
+			min-height: 50px;
+			min-width: 50px;
+			position: relative;
+
+			&>*{
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+			}
+		}
+
+		&__body{
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+			flex: 1 1 auto;
+			overflow: hidden;
+		}
+
+		&__primary, &__secondary{
+			display: flex;
+			flex-direction: row;
+			justify-content: space-between;
+			flex: 1 1 auto;
+			align-items: center;
+
+		}
+
+		&__primary{
+			font-size: 1.2em;
+			align-items: end;
+		}
+
+		&__title, &__value{
+			color: inherit;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			font-weight: 400;
+		}
+
+		&__value{
+			// apply a font family thats look better for numbers
+			font-family: 'Roboto Mono', monospace;
+		}
+
+		&__secondary{
+			margin-top: 5px;
+			padding-top: 5px;
+			border-top-color: inherit;
+			border-top-width: 0.5px;
+			border-top-style: solid;
+			font-size: 0.9em;
+			align-items: start;
+		}
+
+		&__label{
+			position: absolute;
+			right: 0;
+			bottom: 0;
+			color: inherit;
+			font-size: 11px;
+			line-height: 1em;
+			background-color: inherit;
+			border-top-color: var(--card-border-color, #e0e0e0);
+			border-right-color: var(--card-background-color, #ffff);
+			border-bottom-color: var(--card-background-color, #ffff);
+			border-left-color: var(--card-border-color, #e0e0e0);
+			border-style: solid;
+			border-width: 1px;
+			border-top-left-radius: 8px;
+			padding: 4px 0 0 9px;
+			margin: 0 -1px -1px 0;
+		}
+
+		&:hover{
+			box-shadow: 0 0 10px rgba(0,0,0,0.1);
+		}
+
+		&.is--success{
+			--card-border-color: #52c41a;
+			--card-color: #52c41a;
+			//--card-background: #f7fff9;
+			--card-icon-color: #fff;
+		}
+
+		&.is--info{
+			--card-border-color: #17a2b8;
+			--card-color: #17a2b8;
+			//--card-background: #f7ffff;
+			--card-icon-color: #fff;
+		}
+
+		&.is--warning{
+			--card-border-color: #ffc107;
+			--card-color: #ffc107;
+			////--card-background: #fffff7;
+			//--card-background: invert(#ffc107, 80%);
+			--card-icon-color: #fff;
+		}
+
+
+		&.is--danger{
+			--card-border-color: #f64e60;
+			--card-color: #f64e60;
+			//--card-background: #fff7f7;
+			--card-icon-color: #fff;
+		}
+
+		&.is--primary{
+			--card-border-color: #007bff;
+			--card-color: #007bff;
+			//--card-background: #f7faff;
+			--card-icon-color: #fff;
+		}
+
+		&.is--secondary{
+			--card-border-color: #6c757d;
+			--card-color: #6c757d;
+			//--card-background: #fff;
+			--card-icon-color: #fff;
+		}
+
+		&.is--wp{
+			--card-border-color: #0073aa;
+			--card-color: #0073aa;
+			//--card-background: #f7faff;
+			--card-icon-color: #fff;
+		}
+	}
+}

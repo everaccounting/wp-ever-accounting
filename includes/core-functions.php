@@ -11,18 +11,18 @@
 defined( 'ABSPATH' ) || exit();
 
 // Functions.
-require_once EACCOUNTING_ABSPATH . '/includes/ea-account-functions.php';
+//require_once EACCOUNTING_ABSPATH . '/includes/ea-account-functions.php';
 require_once EACCOUNTING_ABSPATH . '/includes/ea-misc-functions.php';
 require_once EACCOUNTING_ABSPATH . '/includes/ea-formatting-functions.php';
 require_once EACCOUNTING_ABSPATH . '/includes/ea-form-functions.php';
 require_once EACCOUNTING_ABSPATH . '/includes/ea-file-functions.php';
-require_once EACCOUNTING_ABSPATH . '/includes/ea-currency-functions.php';
+//require_once EACCOUNTING_ABSPATH . '/includes/ea-currency-functions.php';
 require_once EACCOUNTING_ABSPATH . '/includes/ea-transaction-functions.php';
-require_once EACCOUNTING_ABSPATH . '/includes/ea-category-functions.php';
+//require_once EACCOUNTING_ABSPATH . '/includes/ea-category-functions.php';
 require_once EACCOUNTING_ABSPATH . '/includes/ea-contact-functions.php';
 require_once EACCOUNTING_ABSPATH . '/includes/ea-notes-functions.php';
 require_once EACCOUNTING_ABSPATH . '/includes/ea-deprecated-functions.php';
-require_once EACCOUNTING_ABSPATH . '/includes/ea-item-functions.php';
+//require_once EACCOUNTING_ABSPATH . '/includes/ea-item-functions.php';
 require_once EACCOUNTING_ABSPATH . '/includes/ea-tax-functions.php';
 require_once EACCOUNTING_ABSPATH . '/includes/ea-document-functions.php';
 require_once EACCOUNTING_ABSPATH . '/includes/ea-template-functions.php';
@@ -32,16 +32,17 @@ require_once EACCOUNTING_ABSPATH . '/includes/ea-template-functions.php';
  *
  * Looks to see if the specified setting exists, returns default if not
  *
- * @since 1.1.0
- *
- * @param string $key    Option key.
+ * @param string $key Option key.
  * @param bool   $default Default value.
+ *
+ * @since 1.1.0
  *
  * @return mixed
  */
 function eaccounting_get_option( $key = '', $default = false ) {
 	$value = eaccounting()->options->get( $key, $default );
 	$value = apply_filters( 'eaccounting_get_option', $value, $key, $default );
+
 	return apply_filters( 'eaccounting_get_option_' . $key, $value, $key, $default );
 }
 
@@ -50,6 +51,7 @@ function eaccounting_get_option( $key = '', $default = false ) {
  *
  * @param string $key Option key.
  * @param mixed  $value Option value.
+ *
  * @since 1.1.0
  */
 function eaccounting_update_option( $key, $value ) {
@@ -81,40 +83,17 @@ function eaccounting_get_financial_start( $year = null, $format = 'Y-m-d' ) {
 /**
  * Get financial end date.
  *
- * @since 1.0.2
  * @param null   $year Year.
  * @param string $format Date format.
  *
  * @throws \Exception Exception.
+ * @since 1.0.2
  * @return string
  */
 function eaccounting_get_financial_end( $year = null, $format = 'Y-m-d' ) {
 	$dt = new \EverAccounting\DateTime( eaccounting_get_financial_start( $year, 'Y-m-d' ) );
-	return $dt->addYear( 1 )->subDay( 1 )->date( $format );
-}
 
-/**
- * Instance of money class.
- *
- * For formatting with currency code
- * eaccounting_money( 100000, 'USD', true )->format()
- * For inserting into database
- * eaccounting_money( "$100,000", "USD", false )->getAmount()
- *
- * @since 1.0.2
- *
- * @param mixed  $amount    Amount.
- * @param string $code Currency code.
- * @param bool   $convert   Convert to default currency.
- *
- * @return \EverAccounting\Money|WP_Error
- */
-function eaccounting_money( $amount, $code = 'USD', $convert = false ) {
-	try {
-		return new \EverAccounting\Money( $amount, $code, $convert );
-	} catch ( Exception $e ) {
-		return new \WP_Error( 'invalid_action', $e->getMessage() );
-	}
+	return $dt->addYear( 1 )->subDay( 1 )->date( $format );
 }
 
 /**
@@ -133,62 +112,43 @@ function eaccounting_get_default_currency() {
 /**
  * Format price with currency code & number format
  *
- * @since 1.0.2
- *
  * @param string $amount Amount.
  *
  * @param string $code If not passed will be used default currency.
  *
+ * @deprecated 1.1.6
+ * @since 1.0.2
  * @return string
  */
 function eaccounting_format_price( $amount, $code = null ) {
-	if ( is_null( $code ) ) {
-		$code = eaccounting_get_default_currency();
-	}
-
-	$amount = eaccounting_money( $amount, $code, true );
-	if ( is_wp_error( $amount ) ) {
-		/* translators: %s currency code */
-		eaccounting_logger()->log_alert( sprintf( __( 'invalid currency code %s', 'wp-ever-accounting' ), $code ) );
-
-		return '00.00';
-	}
-
-	return $amount->format();
+	return eac_format_price( $amount, $code );
 }
 
 /**
  * Sanitize price for inserting into database
  *
- * @since 1.0.2
- *
  * @param string $amount Amount.
  *
  * @param string $code If not passed will be used default currency.
  *
+ * @deprecated 1.1.6
+ *
+ * @since 1.0.2
  * @return float|int
  */
 function eaccounting_sanitize_price( $amount, $code = null ) {
-	$amount = eaccounting_money( $amount, $code, false );
-	if ( is_wp_error( $amount ) ) {
-		/* translators: %s currency code */
-		eaccounting_logger()->log_alert( sprintf( __( 'invalid currency code %s', 'wp-ever-accounting' ), $code ) );
-
-		return 0;
-	}
-
-	return $amount->get_amount();
+	return eac_sanitize_price( $amount, $code );
 }
 
 /**
  * Wrapper for sanitize and formatting.
  * If needs formatting with symbol $get_value = false otherwise true.
  *
- * @since 1.1.0
- *
  * @param string $amount Amount.
  * @param null   $code Currency code.
  * @param false  $get_value Get value.
+ *
+ * @since 1.1.0
  *
  * @return float|int|string
  */
@@ -203,92 +163,51 @@ function eaccounting_price( $amount, $code = null, $get_value = false ) {
 /**
  * Convert price from default to any other currency.
  *
- * @since 1.0.2
- *
  * @param string $amount Amount.
  * @param string $to Convert to currency code.
  * @param string $to_rate Convert to currency rate.
  *
+ * @since 1.0.2
+ * @deprecated 1.1.6
+ *
  * @return float|int|string
  */
 function eaccounting_price_from_default( $amount, $to, $to_rate ) {
-	$default = eaccounting_get_default_currency();
-	$money   = eaccounting_money( $amount, $to );
-	// No need to convert same currency.
-	if ( $default === $to ) {
-		return $money->get_amount();
-	}
-
-	try {
-		$money = $money->multiply( (float) $to_rate );
-	} catch ( Exception $e ) {
-		return 0;
-	}
-
-	return $money->get_amount();
+	return eac_price_from_default( $amount, $to, $to_rate );
 }
 
 /**
  * Convert price from other currency to default currency.
  *
- * @since 1.0.2
- *
  * @param string $amount Amount.
- * @param   string $from    Convert from currency code.
- * @param   string $from_rate Convert from currency rate.
+ * @param string $from Convert from currency code.
+ * @param string $from_rate Convert from currency rate.
+ *
+ * @since 1.0.2
+ * @deprecated 1.1.6
  *
  * @return float|int|string
  */
 function eaccounting_price_to_default( $amount, $from, $from_rate ) {
-	$default = eaccounting_get_default_currency();
-	$money   = eaccounting_money( $amount, $from );
-	// No need to convert same currency.
-	if ( $default === $from ) {
-		return $money->get_amount();
-	}
-
-	try {
-		$money = $money->divide( (float) $from_rate );
-	} catch ( Exception $e ) {
-		return 0;
-	}
-
-	return $money->get_amount();
+	return eac_price_to_default( $amount, $from, $from_rate );
 }
 
 /**
  * Convert price convert between currency.
  *
- * @since 1.1.0
- *
- * @param  string $amount Amount.
- * @param  string $from  Convert from currency code.
- * @param string $to   Convert to currency code.
+ * @param string $amount Amount.
+ * @param string $from Convert from currency code.
+ * @param string $to Convert to currency code.
  * @param string $from_rate Convert from currency rate.
  * @param string $to_rate Convert to currency rate.
+ *
+ * @since 1.1.0
+ * @deprecated 1.1.6
  *
  * @return float|int|string
  */
 function eaccounting_price_convert( $amount, $from, $to = null, $from_rate = null, $to_rate = null ) {
-	$default = eaccounting_get_default_currency();
-	if ( is_null( $to ) ) {
-		$to = $default;
-	}
-
-	if ( is_null( $from_rate ) ) {
-		$from      = eaccounting_get_currency( $from );
-		$from_rate = $from->get_rate();
-	}
-	if ( is_null( $to_rate ) ) {
-		$to      = eaccounting_get_currency( $to );
-		$to_rate = $to->get_rate();
-	}
-
-	if ( $from !== $default ) {
-		$amount = eaccounting_price_to_default( $amount, $from, $from_rate );
-	}
-
-	return eaccounting_price_from_default( $amount, $to, $to_rate );
+	return eac_convert_price( $amount, $from, $to, $from_rate, $to_rate );
 }
 
 
@@ -332,10 +251,11 @@ function eaccounting_cleanup_logs() {
 /**
  * Define a constant if it is not already defined.
  *
+ * @param string $name Constant name.
+ * @param mixed  $value Value.
+ *
  * @since 1.0.2
  *
- * @param string $name  Constant name.
- * @param mixed  $value Value.
  */
 function eaccounting_maybe_define_constant( $name, $value ) {
 	if ( ! defined( $name ) ) {
@@ -346,9 +266,9 @@ function eaccounting_maybe_define_constant( $name, $value ) {
 /**
  * Create a collection from the given value.
  *
- * @since 1.0.2
- *
  * @param mixed $items Items.
+ *
+ * @since 1.0.2
  *
  * @return \EverAccounting\Collection
  */
@@ -360,11 +280,12 @@ function eaccounting_collect( $items ) {
 /**
  * Wrapper for _doing_it_wrong().
  *
+ * @param string $function Function used.
+ * @param string $message Message to log.
+ * @param string $version Version the message was added in.
+ *
  * @since  1.1.0
  *
- * @param string $function Function used.
- * @param string $message  Message to log.
- * @param string $version  Version the message was added in.
  */
 function eaccounting_doing_it_wrong( $function, $message, $version ) {
 	if ( wp_doing_ajax() || defined( 'REST_REQUEST' ) ) {
@@ -377,9 +298,9 @@ function eaccounting_doing_it_wrong( $function, $message, $version ) {
 /**
  * Fetches data stored on disk.
  *
- * @since 1.1.0
- *
  * @param string $key Type of data to fetch.
+ *
+ * @since 1.1.0
  *
  * @return mixed Fetched data.
  */
@@ -399,9 +320,9 @@ function eaccounting_get_data( $key ) {
 /**
  * Send HTML emails from EverAccounting.
  *
- * @param mixed  $to          Receiver.
- * @param mixed  $subject     Subject.
- * @param mixed  $message     Message.
+ * @param mixed  $to Receiver.
+ * @param mixed  $subject Subject.
+ * @param mixed  $message Message.
  * @param string $attachments Attachments. (default: "").
  *
  * @return bool
@@ -414,12 +335,12 @@ function eaccounting_mail( $to, $subject, $message, $attachments = '' ) {
 /**
  * Based on wp_list_pluck, this calls a method instead of returning a property.
  *
- * @since 1.1.0
- *
- * @param array      $list              List of objects or arrays.
+ * @param array      $list List of objects or arrays.
  * @param int|string $callback_or_field Callback method from the object to place instead of the entire object.
- * @param int|string $index_key         Optional. Field from the object to use as keys for the new array.
+ * @param int|string $index_key Optional. Field from the object to use as keys for the new array.
  *                                      Default null.
+ *
+ * @since 1.1.0
  *
  * @return array Array of values.
  */
@@ -476,9 +397,10 @@ function eaccounting_cache_set_last_changed( $group ) {
  * Get percentage of a full number.
  * what percentage of 3 of 10
  *
- * @param   string $total Total number.
- * @param  string $number Number to get percentage of.
+ * @param string $total Total number.
+ * @param string $number Number to get percentage of.
  * @param int    $decimals Number of decimals to return.
+ *
  * @since 1.1.0
  *
  * @return float
@@ -491,9 +413,10 @@ function eaccounting_get_percentage( $total, $number, $decimals = 2 ) {
 /**
  * Queue some JavaScript code to be output in the footer.
  *
+ * @param string $code Code.
+ *
  * @since 1.0.2
  *
- * @param string $code Code.
  * @return void
  */
 function eaccounting_enqueue_js( $code ) {
@@ -564,9 +487,9 @@ function eaccounting_get_current_user_id() {
 /**
  * Get user full name.
  *
- * @since 1.1.0
- *
  * @param int $user_id User ID.
+ *
+ * @since 1.1.0
  *
  * @return string|void
  */

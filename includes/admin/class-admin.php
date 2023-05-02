@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit();
  *
  * @since   1.0.2
  */
-class Admin {
+class Admin_Legacy {
 	/**
 	 * Admin constructor.
 	 *
@@ -26,7 +26,6 @@ class Admin {
 		add_action( 'init', array( $this, 'includes' ) );
 		add_action( 'current_screen', array( $this, 'conditional_includes' ) );
 		add_action( 'admin_init', array( $this, 'admin_redirects' ) );
-		add_action( 'admin_init', array( $this, 'buffer' ), 1 );
 		add_filter( 'admin_body_class', array( $this, 'admin_body_class' ) );
 		add_action( 'admin_footer', 'eaccounting_print_js', 25 );
 		add_action( 'admin_footer', array( $this, 'load_js_templates' ) );
@@ -50,7 +49,7 @@ class Admin {
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-dashboard.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-invoice-actions.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-bill-actions.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-extensions.php';
+//		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-extensions.php';
 
 		// Setup/welcome.
 		$page = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_STRING );
@@ -79,16 +78,6 @@ class Admin {
 			return;
 		}
 
-	}
-
-	/**
-	 * Output buffering allows admin screens to make redirects later on.
-	 *
-	 * @since 1.0.2
-	 * @return void
-	 */
-	public function buffer() {
-		ob_start();
 	}
 
 	/**
@@ -185,17 +174,17 @@ class Admin {
 		$screen_id = $screen ? $screen->id : '';
 		$action    = filter_input( INPUT_GET, 'action', FILTER_SANITIZE_STRING );
 		if ( in_array( $screen_id, eaccounting_get_screen_ids(), true ) && in_array( $action, array( 'add', 'edit' ), true ) ) {
-			eaccounting_get_admin_template( 'js/modal-add-account' );
-			eaccounting_get_admin_template( 'js/modal-add-currency' );
-			eaccounting_get_admin_template( 'js/modal-add-income-category' );
-			eaccounting_get_admin_template( 'js/modal-add-expense-category' );
-			eaccounting_get_admin_template( 'js/modal-add-item-category' );
-			eaccounting_get_admin_template( 'js/modal-add-customer' );
-			eaccounting_get_admin_template( 'js/modal-add-vendor' );
-			eaccounting_get_admin_template( 'js/modal-add-invoice-item' );
-			eaccounting_get_admin_template( 'js/modal-add-item' );
+//			eaccounting_get_admin_template( 'js/modal-add-account' );
+//			eaccounting_get_admin_template( 'js/modal-add-currency' );
+//			eaccounting_get_admin_template( 'js/modal-add-income-category' );
+//			eaccounting_get_admin_template( 'js/modal-add-expense-category' );
+//			eaccounting_get_admin_template( 'js/modal-add-item-category' );
+//			eaccounting_get_admin_template( 'js/modal-add-customer' );
+//			eaccounting_get_admin_template( 'js/modal-add-vendor' );
+//			eaccounting_get_admin_template( 'js/modal-add-invoice-item' );
+//			eaccounting_get_admin_template( 'js/modal-add-item' );
 		}
 	}
 }
 
-return new Admin();
+return new Admin_Legacy();

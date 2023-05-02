@@ -22,33 +22,31 @@ class Menu {
 	public function __construct() {
 		// Register menus.
 		add_action( 'admin_menu', array( $this, 'register_parent_page' ), 1 );
-		add_action( 'admin_menu', array( $this, 'register_items_page' ), 20 );
-		add_action( 'admin_menu', array( $this, 'register_sales_page' ), 30 );
-		add_action( 'admin_menu', array( $this, 'register_expenses_page' ), 40 );
-		add_action( 'admin_menu', array( $this, 'register_banking_page' ), 50 );
-		add_action( 'admin_menu', array( $this, 'register_tools_page' ), 70 );
-		add_action( 'admin_menu', array( $this, 'register_reports_page' ), 80 );
-
-		// Register tabs.
-		add_action( 'eaccounting_items_page_tab_items', array( $this, 'render_items_tab' ), 20 );
-		add_action( 'eaccounting_sales_page_tab_revenues', array( $this, 'render_revenues_tab' ) );
-		add_action( 'eaccounting_sales_page_tab_invoices', array( $this, 'render_invoices_tab' ), 20 );
-		add_action( 'eaccounting_sales_page_tab_customers', array( $this, 'render_customers_tab' ) );
-		add_action( 'eaccounting_expenses_page_tab_payments', array( $this, 'render_payments_tab' ) );
-		add_action( 'eaccounting_expenses_page_tab_bills', array( $this, 'render_bills_tab' ), 20 );
-		add_action( 'eaccounting_expenses_page_tab_vendors', array( $this, 'render_vendors_tab' ) );
-		add_action( 'eaccounting_banking_page_tab_accounts', array( $this, 'render_accounts_tab' ) );
-		add_action( 'eaccounting_banking_page_tab_transactions', array( $this, 'render_transactions_tab' ), 20 );
-		add_action( 'eaccounting_banking_page_tab_transfers', array( $this, 'render_transfers_tab' ) );
-		add_action( 'eaccounting_tools_page_tab_export', array( $this, 'render_export_page' ), 20 );
-		add_action( 'eaccounting_tools_page_tab_import', array( $this, 'render_import_page' ), 20 );
-		add_action( 'eaccounting_reports_tab_sales', array( $this, 'render_sales_report_tab' ) );
-		add_action( 'eaccounting_reports_tab_expenses', array( $this, 'render_expenses_report_tab' ) );
-		add_action( 'eaccounting_reports_tab_profits', array( $this, 'render_profits_report_tab' ) );
-		add_action( 'eaccounting_reports_tab_cashflow', array( $this, 'render_cashflow_report_tab' ) );
-		add_filter( 'eaccounting_settings_tabs', array( $this, 'add_setting_tabs' ) );
-		add_action( 'eaccounting_settings_tab_currencies', array( $this, 'render_currencies_tab' ) );
-		add_action( 'eaccounting_settings_tab_categories', array( $this, 'render_categories_tab' ) );
+//		add_action( 'admin_menu', array( $this, 'register_items_page' ), 20 );
+//		add_action( 'admin_menu', array( $this, 'register_sales_page' ), 30 );
+//		add_action( 'admin_menu', array( $this, 'register_expenses_page' ), 40 );
+//		add_action( 'admin_menu', array( $this, 'register_banking_page' ), 50 );
+//		add_action( 'admin_menu', array( $this, 'register_tools_page' ), 700 );
+//		add_action( 'admin_menu', array( $this, 'register_reports_page' ), 800 );
+//
+//		// Register tabs.
+//		add_action( 'eaccounting_sales_page_tab_revenues', array( $this, 'render_revenues_tab' ) );
+//		add_action( 'eaccounting_sales_page_tab_invoices', array( $this, 'render_invoices_tab' ), 20 );
+//		add_action( 'eaccounting_sales_page_tab_customers', array( $this, 'render_customers_tab' ) );
+//		add_action( 'eaccounting_expenses_page_tab_payments', array( $this, 'render_payments_tab' ) );
+//		add_action( 'eaccounting_expenses_page_tab_bills', array( $this, 'render_bills_tab' ), 20 );
+//		add_action( 'eaccounting_expenses_page_tab_vendors', array( $this, 'render_vendors_tab' ) );
+//		add_action( 'eaccounting_banking_page_tab_transactions', array( $this, 'render_transactions_tab' ), 20 );
+//		add_action( 'eaccounting_banking_page_tab_transfers', array( $this, 'render_transfers_tab' ) );
+//		add_action( 'eaccounting_tools_page_tab_export', array( $this, 'render_export_page' ), 20 );
+//		add_action( 'eaccounting_tools_page_tab_import', array( $this, 'render_import_page' ), 20 );
+//		add_action( 'eaccounting_reports_tab_sales', array( $this, 'render_sales_report_tab' ) );
+//		add_action( 'eaccounting_reports_tab_expenses', array( $this, 'render_expenses_report_tab' ) );
+//		add_action( 'eaccounting_reports_tab_profits', array( $this, 'render_profits_report_tab' ) );
+//		add_action( 'eaccounting_reports_tab_cashflow', array( $this, 'render_cashflow_report_tab' ) );
+//		add_filter( 'eaccounting_settings_tabs', array( $this, 'add_setting_tabs' ) );
+//		add_action( 'ever_accounting_settings_currencies', array( $this, 'render_currencies_tab' ) );
+//		add_action( 'ever_accounting_settings_categories', array( $this, 'render_categories_tab' ) );
 	}
 
 	/**
@@ -57,22 +55,6 @@ class Menu {
 	 * @since 1.1.0
 	 */
 	public function register_parent_page() {
-		global $menu;
-
-		if ( current_user_can( 'manage_eaccounting' ) ) {
-			$menu[] = array( '', 'read', 'ea-separator', '', 'wp-menu-separator accounting' );
-		}
-		$icons = 'data:image/svg+xml;base64,' . base64_encode( file_get_contents( eaccounting()->plugin_path( 'dist/images/icon.svg' ) ) );
-
-		add_menu_page(
-			__( 'Accounting', 'wp-ever-accounting' ),
-			__( 'Accounting', 'wp-ever-accounting' ),
-			'manage_eaccounting',
-			'eaccounting',
-			null,
-			$icons,
-			'54.5'
-		);
 		add_submenu_page(
 			'eaccounting',
 			__( 'Overview', 'wp-ever-accounting' ),
@@ -342,9 +324,9 @@ class Menu {
 		$requested_view = filter_input( INPUT_GET, 'action', FILTER_SANITIZE_STRING );
 		if ( in_array( $requested_view, array( 'add', 'edit' ), true ) ) {
 			$item_id = filter_input( INPUT_GET, 'item_id', FILTER_SANITIZE_NUMBER_INT );
-			include dirname( __FILE__ ) . '/views/items/edit-item.php';
+			include dirname( __FILE__ ) . '/views/items-bk/edit-item.php';
 		} else {
-			include dirname( __FILE__ ) . '/views/items/list-item.php';
+			include dirname( __FILE__ ) . '/views/items-bk/list-item.php';
 		}
 	}
 
@@ -443,23 +425,6 @@ class Menu {
 			include dirname( __FILE__ ) . '/views/vendors/edit-vendor.php';
 		} else {
 			include dirname( __FILE__ ) . '/views/vendors/list-vendor.php';
-		}
-	}
-
-	/**
-	 * Render accounts tab.
-	 *
-	 * @since 1.1.0
-	 */
-	public function render_accounts_tab() {
-		$requested_view = filter_input( INPUT_GET, 'action', FILTER_SANITIZE_STRING );
-		$account_id     = filter_input( INPUT_GET, 'account_id', FILTER_SANITIZE_NUMBER_INT );
-		if ( 'view' === $requested_view && ! empty( $account_id ) ) {
-			include dirname( __FILE__ ) . '/views/accounts/view-account.php';
-		} elseif ( in_array( $requested_view, array( 'add', 'edit' ), true ) ) {
-			include dirname( __FILE__ ) . '/views/accounts/edit-account.php';
-		} else {
-			include dirname( __FILE__ ) . '/views/accounts/list-account.php';
 		}
 	}
 

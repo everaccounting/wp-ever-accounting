@@ -163,11 +163,11 @@ class Install {
 		self::remove_admin_notices();
 		self::create_tables();
 		self::verify_base_tables();
-		self::create_options();
-		self::create_categories();
-		self::create_currencies();
-		self::create_accounts();
-		self::create_defaults();
+//		self::create_options();
+//		self::create_categories();
+//		self::create_currencies();
+//		self::create_accounts();
+//		self::create_defaults();
 		self::create_roles();
 		self::schedule_events();
 		self::maybe_enable_setup_wizard();
@@ -363,40 +363,32 @@ class Install {
 				eaccounting_update_option( 'default_account', $account->get_id() );
 			}
 		}
-		if ( empty( eaccounting_get_option( 'default_currency' ) ) ) {
-			$currencies = eaccounting_get_currencies( array( 'return' => 'raw' ) );
-			$currencies = wp_list_pluck( $currencies, 'code' );
-			$currency   = current( $currencies );
-			if ( in_array( 'USD', $currencies, true ) ) {
-				$currency = 'USD';
-			}
-			eaccounting_update_option( 'default_currency', $currency );
-		}
 
-		$defaults = array(
-			'default_payment_method' => 'cash',
-			'financial_year_start'   => '01-01',
-			'company_name'           => eaccounting_get_site_name(),
-			'company_email'          => get_option( 'admin_url' ),
-			'invoice_prefix'         => 'INV-',
-			'invoice_digit'          => '5',
-			'invoice_due'            => '15',
-			'invoice_item_label'     => esc_html__( 'Item', 'wp-ever-accounting' ),
-			'invoice_price_label'    => esc_html__( 'Price', 'wp-ever-accounting' ),
-			'invoice_quantity_label' => esc_html__( 'Quantity', 'wp-ever-accounting' ),
-			'bill_prefix'            => 'BILL-',
-			'bill_digit'             => '5',
-			'bill_due'               => '15',
-			'bill_item_label'        => esc_html__( 'Item', 'wp-ever-accounting' ),
-			'bill_price_label'       => esc_html__( 'Price', 'wp-ever-accounting' ),
-			'bill_quantity_label'    => esc_html__( 'Quantity', 'wp-ever-accounting' ),
-		);
 
-		foreach ( $defaults as $key => $value ) {
-			if ( empty( eaccounting_get_option( $key ) ) ) {
-				eaccounting_update_option( $key, $value );
-			}
-		}
+//		$defaults = array(
+//			'default_payment_method' => 'cash',
+//			'financial_year_start'   => '01-01',
+//			'company_name'           => eaccounting_get_site_name(),
+//			'company_email'          => get_option( 'admin_url' ),
+//			'invoice_prefix'         => 'INV-',
+//			'invoice_digit'          => '5',
+//			'invoice_due'            => '15',
+//			'invoice_item_label'     => esc_html__( 'Item', 'wp-ever-accounting' ),
+//			'invoice_price_label'    => esc_html__( 'Price', 'wp-ever-accounting' ),
+//			'invoice_quantity_label' => esc_html__( 'Quantity', 'wp-ever-accounting' ),
+//			'bill_prefix'            => 'BILL-',
+//			'bill_digit'             => '5',
+//			'bill_due'               => '15',
+//			'bill_item_label'        => esc_html__( 'Item', 'wp-ever-accounting' ),
+//			'bill_price_label'       => esc_html__( 'Price', 'wp-ever-accounting' ),
+//			'bill_quantity_label'    => esc_html__( 'Quantity', 'wp-ever-accounting' ),
+//		);
+//
+//		foreach ( $defaults as $key => $value ) {
+//			if ( empty( eaccounting_get_option( $key ) ) ) {
+//				eaccounting_update_option( $key, $value );
+//			}
+//		}
 	}
 
 	/**
@@ -427,119 +419,6 @@ class Install {
 		$collate          = $wpdb->get_charset_collate();
 
 		$tables = array(
-			"CREATE TABLE {$wpdb->prefix}ea_accounts(
-            `id` bigINT(20) NOT NULL AUTO_INCREMENT,
-		    `name` VARCHAR(191) NOT NULL COMMENT 'Account Name',
-		    `number` VARCHAR(191) NOT NULL COMMENT 'Account Number',
-		    `opening_balance` DOUBLE(15,4) NOT NULL DEFAULT '0.0000',
-		    `currency_code` varchar(3) NOT NULL DEFAULT 'USD',
-		    `bank_name` VARCHAR(191) DEFAULT NULL,
-		    `bank_phone` VARCHAR(20) DEFAULT NULL,
-		    `bank_address` VARCHAR(191) DEFAULT NULL,
-		    `thumbnail_id` INT(11) DEFAULT NULL,
-		   	`enabled` tinyint(1) NOT NULL DEFAULT '1',
-		   	`creator_id` INT(11) DEFAULT NULL,
-		    `date_created` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
-		    PRIMARY KEY (`id`),
-		    KEY `currency_code` (`currency_code`),
-		    KEY `enabled` (`enabled`),
-		    UNIQUE KEY (`number`)
-            ) $collate",
-
-			"CREATE TABLE {$wpdb->prefix}ea_categories(
-            `id` bigINT(20) NOT NULL AUTO_INCREMENT,
-  		  	`name` VARCHAR(191) NOT NULL,
-		  	`type` VARCHAR(50) NOT NULL,
-		  	`color` VARCHAR(20) NOT NULL,
-		  	`enabled` tinyint(1) NOT NULL DEFAULT '1',
-		    `date_created` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
-		    PRIMARY KEY (`id`),
-		    KEY `type` (`type`),
-		    KEY `enabled` (`enabled`),
-		    UNIQUE KEY (`name`, `type`)
-            ) $collate",
-
-			"CREATE TABLE {$wpdb->prefix}ea_contacts(
-            `id` bigINT(20) NOT NULL AUTO_INCREMENT,
-            `user_id` INT(11) DEFAULT NULL,
-			`name` VARCHAR(191) NOT NULL,
-			`company` VARCHAR(191) NOT NULL,
-			`email` VARCHAR(191) DEFAULT NULL,
-			`phone` VARCHAR(50) DEFAULT NULL,
-			`website` VARCHAR(191) DEFAULT NULL,
-			`birth_date` date DEFAULT NULL,
-			`vat_number` VARCHAR(50) DEFAULT NULL,
-			`street` VARCHAR(191) DEFAULT NULL,
-			`city` VARCHAR(191) DEFAULT NULL,
-			`state` VARCHAR(191) DEFAULT NULL,
-			`postcode` VARCHAR(20) DEFAULT NULL,
-			`country` VARCHAR(3) DEFAULT NULL,
-			`currency_code` varchar(3),
-  			`type` VARCHAR(100) DEFAULT NULL COMMENT 'Customer or vendor',
-			`thumbnail_id` INT(11) DEFAULT NULL,
-			`enabled` tinyint(1) NOT NULL DEFAULT '1',
-			`creator_id` INT(11) DEFAULT NULL,
-		    `date_created` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
-		    PRIMARY KEY (`id`),
-		    KEY `user_id`(`user_id`),
-		    KEY `name`(`name`),
-		    KEY `email`(`email`),
-		    KEY `phone`(`phone`),
-		    KEY `enabled`(`enabled`),
-		    KEY `type`(`type`)
-            ) $collate",
-
-			"CREATE TABLE {$wpdb->prefix}ea_contactmeta(
-			`meta_id` bigINT(20) NOT NULL AUTO_INCREMENT,
-			`contact_id` bigint(20) unsigned NOT NULL default '0',
-			`meta_key` varchar(255) default NULL,
-			`meta_value` longtext,
-			 PRIMARY KEY (`meta_id`),
-		    KEY `contact_id`(`contact_id`),
-			KEY `meta_key` (meta_key($max_index_length))
-			) $collate",
-
-			"CREATE TABLE {$wpdb->prefix}ea_transactions(
-            `id` bigINT(20) NOT NULL AUTO_INCREMENT,
-            `type` VARCHAR(100) DEFAULT NULL,
-		  	`payment_date` date NOT NULL,
-		  	`amount` DOUBLE(15,4) NOT NULL,
-		  	`currency_code` varchar(3) NOT NULL DEFAULT 'USD',
-		  	`currency_rate` double(15,8) NOT NULL DEFAULT 1,
-            `account_id` INT(11) NOT NULL,
-            `document_id` INT(11) DEFAULT NULL,
-		  	`contact_id` INT(11) DEFAULT NULL,
-		  	`category_id` INT(11) NOT NULL,
-		  	`description` text,
-	  		`payment_method` VARCHAR(100) DEFAULT NULL,
-		  	`reference` VARCHAR(191) DEFAULT NULL,
-			`attachment_id` INT(11) DEFAULT NULL,
-		  	`parent_id` INT(11) DEFAULT NULL,
-		    `reconciled` tinyINT(1) NOT NULL DEFAULT '0',
-		    `creator_id` INT(11) DEFAULT NULL,
-		    `date_created` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
-		    PRIMARY KEY (`id`),
-		    KEY `amount` (`amount`),
-		    KEY `currency_code` (`currency_code`),
-		    KEY `currency_rate` (`currency_rate`),
-		    KEY `type` (`type`),
-		    KEY `account_id` (`account_id`),
-		    KEY `document_id` (`document_id`),
-		    KEY `category_id` (`category_id`),
-		    KEY `contact_id` (`contact_id`)
-            ) $collate",
-
-			"CREATE TABLE {$wpdb->prefix}ea_transfers(
-            `id` bigINT(20) NOT NULL AUTO_INCREMENT,
-  			`income_id` INT(11) NOT NULL,
-  			`expense_id` INT(11) NOT NULL,
-  			`creator_id` INT(11) DEFAULT NULL,
-		    `date_created` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
-		    PRIMARY KEY (`id`),
-		    KEY `income_id` (`income_id`),
-		    KEY `expense_id` (`expense_id`)
-            ) $collate",
-
 			"CREATE TABLE {$wpdb->prefix}ea_documents(
             `id` bigINT(20) NOT NULL AUTO_INCREMENT,
             `document_number` VARCHAR(100) NOT NULL,
@@ -613,28 +492,6 @@ class Install {
 		    PRIMARY KEY (`id`),
 		    KEY `parent_id` (`parent_id`),
 		    KEY `type` (`type`)
-            ) $collate",
-
-			"CREATE TABLE {$wpdb->prefix}ea_items(
-            `id` bigINT(20) NOT NULL AUTO_INCREMENT,
-            `name` VARCHAR(191) NOT NULL,
-  			`sku` VARCHAR(100) NULL default '',
-			`description` TEXT DEFAULT NULL ,
-  			`sale_price` double(15,4) NOT NULL,
-  			`purchase_price` double(15,4) NOT NULL,
-  			`quantity` int(11) NOT NULL DEFAULT '1',
-  			`category_id` int(11) DEFAULT NULL,
-  			`sales_tax` double(15,4) DEFAULT NULL,
-  			`purchase_tax` double(15,4) DEFAULT NULL,
-  			`thumbnail_id` INT(11) DEFAULT NULL,
-			`enabled` tinyint(1) NOT NULL DEFAULT '1',
-			`creator_id` INT(11) DEFAULT NULL,
-		    `date_created` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
-		    PRIMARY KEY (`id`),
-		    KEY `sale_price` (`sale_price`),
-		    KEY `purchase_price` (`purchase_price`),
-		    KEY `category_id` (`category_id`),
-		    KEY `quantity` (`quantity`)
             ) $collate",
 		);
 

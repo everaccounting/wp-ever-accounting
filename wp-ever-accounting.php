@@ -3,7 +3,7 @@
  * Plugin Name: Ever Accounting
  * Plugin URI: https://wpeveraccounting.com/
  * Description: Manage your business finances right from your WordPress dashboard.
- * Version: 1.1.5
+ * Version: 1.1.6
  * Author: everaccounting
  * Author URI: https://wpeveraccounting.com/
  * Requires at least: 4.7.0
@@ -196,9 +196,9 @@ final class EverAccounting {
 		require_once EACCOUNTING_ABSPATH . '/includes/class-rewrites.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/class-controller.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/class-compatibility.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/class-chart.php';
+		// require_once EACCOUNTING_ABSPATH . '/includes/class-chart.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/class-collection.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/class-datetime.php';
+		// require_once EACCOUNTING_ABSPATH . '/includes/class-datetime.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/class-inflector.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/class-logger.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/class-money.php';
@@ -369,14 +369,69 @@ final class EverAccounting {
 	}
 }
 
+
+/**
+ * Autoload function.
+ *
+ * @param string $class_name Class name.
+ *
+ * @since 1.1.6
+ * @return void
+ */
+function eac_autoloader( $class_name ) {
+	// Bail out if the class name doesn't start with our prefix.
+	if ( strpos( $class_name, 'EverAccounting\\' ) !== 0 ) {
+		return;
+	}
+
+	// Remove the prefix from the class name.
+	$class_name = substr( $class_name, strlen( 'EverAccounting\\' ) );
+
+	// Replace the namespace separator with the directory separator.
+	$class_name = str_replace( '\\', DIRECTORY_SEPARATOR, $class_name );
+
+	// Add the .php extension.
+	$class_name = $class_name . '.php';
+
+	$file_paths = array(
+		__DIR__ . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . $class_name,
+		__DIR__ . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . $class_name,
+	);
+
+	foreach ( $file_paths as $file_path ) {
+		if ( file_exists( $file_path ) ) {
+			require_once $file_path;
+			break;
+		}
+	}
+}
+
+spl_autoload_register( 'eac_autoloader' );
+
+
 /**
  * Returns the main instance of Plugin.
  *
  * @since  1.0.0
  * @return EverAccounting
  */
-function eaccounting() {
-	return EverAccounting::instance();
+// function eaccounting() {
+// return EverAccounting::instance();
+// }
+
+// eaccounting();
+
+/**
+ * Main EverAccounting Instance.
+ *
+ * Ensures only one instance of EverAccounting is loaded or can be loaded.
+ *
+ * @since 1.0.0
+ * @since 1.1.6 renamed from eaccounting() to EverAccounting().
+ * @return EverAccounting\Plugin
+ */
+function ever_accounting() {
+	return \EverAccounting\Plugin::create( __FILE__ );
 }
 
-eaccounting();
+ever_accounting();

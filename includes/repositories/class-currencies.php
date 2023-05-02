@@ -214,7 +214,7 @@ class Currencies extends Resource_Repository {
 	 * @return \EverAccounting\Collection
 	 */
 	public function get_codes() {
-		return eaccounting_collect( array_values( eaccounting_get_currency_codes() ) );
+		return array(); //eaccounting_collect( array_values( eaccounting_get_currency_codes() ) );
 	}
 
 }

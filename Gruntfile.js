@@ -1,25 +1,80 @@
 module.exports = function ( grunt ) {
 	'use strict';
-	const pkg = grunt.file.readJSON( 'package.json' );
+	const sass = require('node-sass');
 	// Project configuration
 	grunt.initConfig( {
-		addtextdomain: {
+		// Setting folder templates.
+		dirs: {
+			css: 'assets/css',
+			fonts: 'assets/fonts',
+			images: 'assets/images',
+			js: 'assets/js'
+		},
+		// Minify .js files.
+		uglify: {
 			options: {
-				textdomain: 'wp-ever-accounting',
-			},
-			update_all_domains: {
-				options: {
-					updateDomains: true,
+				ie8: true,
+				parse: {
+					strict: false
 				},
-				src: [
-					'*.php',
-					'**/*.php',
-					'!.git/**/*',
-					'!bin/**/*',
-					'!node_modules/**/*',
-					'!tests/**/*',
-				],
+				output: {
+					comments: /@license|@preserve|^!/
+				}
 			},
+			dist: {
+				files: [{
+					expand: true,
+					cwd: '<%= dirs.js %>/',
+					src: [
+						'**/*.js',
+						'!**/*.min.js'
+					],
+					dest: '<%= dirs.js %>/',
+					ext: '.min.js'
+				}]
+			}
+		},
+
+		// Compile all .scss files.
+		sass: {
+			options: {
+				implementation: sass,
+				sourceMap: false,
+				outputStyle: 'compressed'
+			},
+			dist: {
+				files: [{
+					expand: true,
+					cwd: '<%= dirs.css %>/',
+					src: ['*.scss'],
+					dest: '<%= dirs.css %>/',
+					ext: '.css'
+				}]
+			}
+		},
+		// Autoprefixer.
+		postcss: {
+			options: {
+				map: true,
+				processors: [
+					require('autoprefixer')
+				]
+			},
+			dist: {
+				src: [
+					'<%= dirs.css %>/*.css'
+				]
+			}
+		},
+		// Minify all .css files.
+		cssmin: {
+			minify: {
+				expand: true,
+				cwd: '<%= dirs.css %>/',
+				src: ['*.css', '!*.min.css'],
+				dest: '<%= dirs.css %>/',
+				ext: '.min.css'
+			}
 		},
 
 		// Check textdomain errors.
@@ -40,119 +95,61 @@ module.exports = function ( grunt ) {
 					'_n:1,2,4d',
 					'_nx:1,2,4c,5d',
 					'_n_noop:1,2,3d',
-					'_nx_noop:1,2,3c,4d',
-				],
+					'_nx_noop:1,2,3c,4d'
+				]
 			},
 			files: {
 				src: [
-					'**/*.php', //Include all files
-					'!apigen/**', // Exclude apigen/
-					'!node_modules/**', // Exclude node_modules/
-					'!tests/**', // Exclude tests/
-					'!vendor/**', // Exclude vendor/
-					'!tmp/**', // Exclude tmp/
+					'**/*.php',               // Include all files
+					'!node_modules/**',       // Exclude node_modules/
+					'!tests/**',              // Exclude tests/
+					'!vendor/**',             // Exclude vendor/
+					'!tmp/**'                 // Exclude tmp/
 				],
-				expand: true,
-			},
+				expand: true
+			}
 		},
 
+		// Generate POT files.
 		makepot: {
-			target: {
+			options: {
+				type: 'wp-plugin',
+				domainPath: 'i18n/languages',
+				potHeaders: {
+					'language-team': 'LANGUAGE <EMAIL@ADDRESS>'
+				}
+			},
+			dist: {
 				options: {
-					domainPath: '/languages',
-					exclude: [ '.git/*', 'bin/*', 'node_modules/*', 'tests/*' ],
-					mainFile: 'wp-ever-accounting.php',
 					potFilename: 'wp-ever-accounting.pot',
-					potHeaders: {
-						poedit: true,
-						'x-poedit-keywordslist': true,
-					},
-					type: 'wp-plugin',
-					updateTimestamp: true,
-				},
-			},
+					exclude: [
+						'vendor/.*',
+						'tests/.*',
+						'tmp/.*'
+					]
+				}
+			}
 		},
 
-		wp_readme_to_markdown: {
-			your_target: {
-				files: {
-					'README.md': 'readme.txt',
-				},
+		// Watch changes for assets.
+		watch: {
+			css: {
+				files: ['<%= dirs.css %>/**/*.scss'],
+				tasks: ['sass', 'postcss', 'cssmin' ]
 			},
-		},
-
-		// Clean up build directory
-		clean: {
-			main: [ 'build/' ],
-		},
-		copy: {
-			main: {
-				src: [
-					'**',
-					'!node_modules/**',
-					'!assets/**',
-					'!build/**',
-					'!hookdocs/**',
-					'!**/*.md',
-					'!**/*.map',
-					'!**/*.sh',
-					'!.idea/**',
-					'!bin/**',
-					'!.git/**',
-					'!debug.log',
-					'!none',
-					'!.gitignore',
-					'!.gitmodules',
-					'!phpcs.xml',
-					'!phpunit.xml',
-					'!npm-debug.log',
-					'!plugin-deploy.sh',
-					'!export.sh',
-					'!tests/**',
-					'!.csscomb.json',
-					'!.jshintrc',
-					'!.tmp',
-					'!Gruntfile.js',
-					'!package.json',
-					'!package-lock.json',
-					'!composer.json',
-					'!composer.lock',
-					'!babel.config.js',
-					'!postcss.config.js',
-					'!hookdoc-conf.json',
-					'!webpack.config.js',
-					'!.editorconfig',
+			js: {
+				files: [
+					'<%= dirs.js %>/*js',
+					'<%= dirs.js %>/**/*js',
+					'!<%= dirs.js %>/*.min.js',
+					'!<%= dirs.js %>/**/*.min.js'
 				],
-				dest: 'build/',
-			},
-		},
-
-		compress: {
-			main: {
-				options: {
-					mode: 'zip',
-					archive:
-						'./build/' + pkg.name + '-v' + pkg.version + '.zip',
-				},
-				expand: true,
-				cwd: 'build/',
-				src: [ '**/*' ],
-				dest: pkg.name,
-			},
+				tasks: ['uglify']
+			}
 		},
 	} );
 
+	grunt.registerTask('build', ['uglify', 'sass', 'postcss', 'cssmin']);
 	// Saves having to declare each dependency
 	require( 'matchdep' ).filterDev( 'grunt-*' ).forEach( grunt.loadNpmTasks );
-
-	grunt.registerTask( 'default', [ 'i18n', 'readme' ] );
-	grunt.registerTask( 'build', [ 'i18n', 'readme' ] );
-	grunt.registerTask( 'i18n', [
-		'addtextdomain',
-		'checktextdomain',
-		'makepot',
-	] );
-	grunt.registerTask( 'readme', [ 'wp_readme_to_markdown' ] );
-	grunt.registerTask( 'zip', [ 'clean', 'copy', 'compress' ] );
-	grunt.util.linefeed = '\n';
 };
