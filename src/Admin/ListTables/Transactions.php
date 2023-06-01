@@ -87,7 +87,7 @@ class Transactions extends ListTable {
 		if ( 'top' !== $which ) {
 			return;
 		}
-		$filter = eac_filter_input( INPUT_GET, 'filter' );
+		$filter = eac_get_input_var( 'filter' );
 		if ( ! empty( $filter ) || ! empty( $this->get_search() ) ) {
 			echo sprintf(
 				'<a href="%s" class="button">%s</a>',
@@ -106,8 +106,8 @@ class Transactions extends ListTable {
 	 */
 	public function process_bulk_action( $doaction ) {
 		if ( ! empty( $doaction ) ) {
-			$id  = eac_get_request_var( 'transaction_id', 'get', 0 );
-			$ids = eac_get_request_var( 'transaction_ids', 'get', array() );
+			$id  = eac_get_input_var( 'transaction_id' );
+			$ids = eac_get_input_var( 'transaction_ids' );
 			if ( ! empty( $id ) ) {
 				$ids      = wp_parse_id_list( $id );
 				$doaction = ( - 1 !== $_REQUEST['action'] ) ? $_REQUEST['action'] : $_REQUEST['action2']; // phpcs:ignore
@@ -237,7 +237,7 @@ class Transactions extends ListTable {
 	 */
 	public function column_name( $item ) {
 		$type       = $item->get_type();
-		$page       = 'payment' === $type ? 'ea-sales' : 'ea-purchases';
+		$page       = 'payment' === $type ? 'ea-sales' : 'ea-purchase';
 		$tab        = 'payment' === $type ? 'payments' : 'expenses';
 		$args       = array(
 			$type . '_id' => $item->get_id(),

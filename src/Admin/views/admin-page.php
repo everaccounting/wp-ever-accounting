@@ -12,11 +12,10 @@
  */
 
 defined( 'ABSPATH' ) || exit;
-
 ?>
 <div class="wrap eac-page">
 	<?php if ( isset( $tabs ) && ! empty( $tabs ) ) : ?>
-		<nav class="nav-tab-wrapper eac-page__tabs">
+		<nav class="nav-tab-wrapper eac-page__nav">
 			<?php
 			foreach ( $tabs as $name => $label ) {
 				echo sprintf(
@@ -61,3 +60,4 @@ defined( 'ABSPATH' ) || exit;
 	do_action( 'ever_accounting_' . $page_name . '_content' );
 	?>
 </div>
+<?php

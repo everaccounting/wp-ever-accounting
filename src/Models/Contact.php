@@ -43,7 +43,16 @@ class Contact extends Model {
 	 * @since 1.0.0
 	 * @var string
 	 */
-	const META_TYPE = 'contact';
+	const META_TYPE = 'ea_contact';
+
+	/**
+	 * This only needs set if you are using a custom metadata type
+	 * This should be the name of the field your table uses for associating meta with objects.
+	 *
+	 * @since 1.0.0
+	 * @var string
+	 */
+	protected $meta_object_id_field = 'contact_id';
 
 	/**
 	 * Core data for this object. Name value pairs (name + default value).
@@ -57,8 +66,8 @@ class Contact extends Model {
 		'company'       => '',
 		'email'         => '',
 		'phone'         => '',
-		'birth_date'    => '',
-		'street'        => '',
+		'address_1'     => '',
+		'address_2'     => '',
 		'city'          => '',
 		'state'         => '',
 		'postcode'      => '',
@@ -68,6 +77,7 @@ class Contact extends Model {
 		'currency_code' => '',
 		'type'          => 'contact',
 		'status'        => 'active',
+		'thumbnail_id'  => null,
 		'creator_id'    => null,
 		'updated_at'    => null,
 		'created_at'    => null,
@@ -81,7 +91,7 @@ class Contact extends Model {
 	 * @since 1.0.0
 	 */
 	public function __construct( $data = 0 ) {
-		$this->core_data['currency_code'] = eac_get_default_currency();
+		$this->core_data['currency_code'] = eac_get_base_currency();
 		parent::__construct( $data );
 	}
 
@@ -220,7 +230,6 @@ class Contact extends Model {
 		$this->set_prop( 'phone', eac_clean( $value ) );
 	}
 
-
 	/**
 	 * Get contact's website number.
 	 *
@@ -234,7 +243,6 @@ class Contact extends Model {
 		return $this->get_prop( 'website', $context );
 	}
 
-
 	/**
 	 * Set contact's website.
 	 *
@@ -247,7 +255,7 @@ class Contact extends Model {
 	}
 
 	/**
-	 * Get contact's birth date.
+	 * Get contact's adrress 1.
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
@@ -255,44 +263,43 @@ class Contact extends Model {
 	 *
 	 * @return string
 	 */
-	public function get_birth_date( $context = 'edit' ) {
-		return $this->get_prop( 'birth_date', $context );
+	public function get_address_1( $context = 'edit' ) {
+		return $this->get_prop( 'address_1', $context );
 	}
 
 	/**
-	 * Set contact's birth date.
-	 *
-	 * @param string $date Birth date.
-	 *
-	 * @since 1.0.2
-	 */
-	public function set_birth_date( $date ) {
-		$this->set_date_prop( 'birth_date', $date );
-	}
-
-	/**
-	 * Get contact's street.
-	 *
-	 * @param string $context What the value is for. Valid values are view and edit.
-	 *
-	 * @since 1.0.2
-	 *
-	 * @return string
-	 */
-	public function get_street( $context = 'edit' ) {
-		return $this->get_prop( 'street', $context );
-	}
-
-
-	/**
-	 * Set contact's street.
+	 * Set contact's address_1.
 	 *
 	 * @param string $value Street.
 	 *
 	 * @since 1.0.2
 	 */
-	public function set_street( $value ) {
-		$this->set_prop( 'street', sanitize_text_field( $value ) );
+	public function set_address_1( $value ) {
+		$this->set_prop( 'address_1', sanitize_text_field( $value ) );
+	}
+
+	/**
+	 * Get contact's adrress 2.
+	 *
+	 * @param string $context What the value is for. Valid values are view and edit.
+	 *
+	 * @since 1.0.2
+	 *
+	 * @return string
+	 */
+	public function get_address_2( $context = 'edit' ) {
+		return $this->get_prop( 'address_2', $context );
+	}
+
+	/**
+	 * Set contact's address_2.
+	 *
+	 * @param string $value Street.
+	 *
+	 * @since 1.0.2
+	 */
+	public function set_address_2( $value ) {
+		$this->set_prop( 'address_2', sanitize_text_field( $value ) );
 	}
 
 	/**
@@ -444,11 +451,10 @@ class Contact extends Model {
 	 * @since 1.0.2
 	 */
 	public function set_currency_code( $value ) {
-		if ( eac_get_currency( $value ) ) {
+		if ( eac_get_currency_rate( $value ) ) {
 			$this->set_prop( 'currency_code', eac_clean( $value ) );
 		}
 	}
-
 
 	/**
 	 * Get the type of contact.

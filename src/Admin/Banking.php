@@ -21,8 +21,8 @@ class Banking extends \EverAccounting\Singleton {
 		add_action( 'ever_accounting_banking_tab_transactions', array( __CLASS__, 'output_transactions_tab' ) );
 		add_action( 'ever_accounting_banking_tab_accounts', array( __CLASS__, 'output_accounts_tab' ) );
 		add_action( 'ever_accounting_banking_tab_transfers', array( __CLASS__, 'output_transfers_tab' ) );
-		add_action( 'admin_footer', array( __CLASS__, 'output_account_modal' ) );
-		add_action( 'admin_footer', array( __CLASS__, 'output_transfer_modal' ) );
+		// add_action( 'admin_footer', array( __CLASS__, 'output_account_modal' ) );
+		// add_action( 'admin_footer', array( __CLASS__, 'output_transfer_modal' ) );
 	}
 
 	/**
@@ -33,9 +33,9 @@ class Banking extends \EverAccounting\Singleton {
 	 */
 	public static function output() {
 		$tabs         = eac_get_banking_tabs();
-		$tab          = eac_filter_input( INPUT_GET, 'tab' );
+		$tab          = eac_get_input_var( 'tab' );
 		$current_tab  = ! empty( $tab ) && array_key_exists( $tab, $tabs ) ? $tab : key( $tabs );
-		$current_page = eac_filter_input( INPUT_GET, 'page' );
+		$current_page = eac_get_input_var( 'page' );
 		$page_name    = 'banking';
 
 		include dirname( __FILE__ ) . '/views/admin-page.php';
@@ -48,8 +48,8 @@ class Banking extends \EverAccounting\Singleton {
 	 * @return void
 	 */
 	public static function output_transactions_tab() {
-		$action         = eac_filter_input( INPUT_GET, 'action' );
-		$transaction_id = eac_filter_input( INPUT_GET, 'transaction_id', 'absint' );
+		$action         = eac_get_input_var( 'action' );
+		$transaction_id = eac_get_input_var( 'transaction_id' );
 		if ( in_array( $action, array( 'add', 'edit' ), true ) ) {
 			include dirname( __FILE__ ) . '/views/transactions/edit-transaction.php';
 		} elseif ( 'view' === $action ) {
@@ -67,8 +67,8 @@ class Banking extends \EverAccounting\Singleton {
 	 * @return void
 	 */
 	public static function output_accounts_tab() {
-		$action     = eac_filter_input( INPUT_GET, 'action' );
-		$account_id = eac_filter_input( INPUT_GET, 'account_id', 'absint' );
+		$action     = eac_get_input_var( 'action' );
+		$account_id = eac_get_input_var( 'account_id' );
 		if ( in_array( $action, array( 'add', 'edit' ), true ) ) {
 			include dirname( __FILE__ ) . '/views/accounts/edit-account.php';
 		} elseif ( 'view' === $action ) {
@@ -85,8 +85,8 @@ class Banking extends \EverAccounting\Singleton {
 	 * @return void
 	 */
 	public static function output_transfers_tab() {
-		$action      = eac_filter_input( INPUT_GET, 'action' );
-		$transfer_id = eac_filter_input( INPUT_GET, 'transfer_id', 'absint' );
+		$action      = eac_get_input_var( 'action' );
+		$transfer_id = eac_get_input_var( 'transfer_id' );
 		if ( in_array( $action, array( 'add', 'edit' ), true ) ) {
 			include dirname( __FILE__ ) . '/views/transfers/edit-transfer.php';
 		} elseif ( 'view' === $action ) {

@@ -27,11 +27,13 @@
 			margin-right: 20px;
 			padding: 10px;
 			border-radius: 50%;
-			background-color: var(--card-color, #f6f7f7);
-			color: var(--card-icon-color, #e0e0e0);
+			background-color: var(--card-color, #f0f0f1);
+			color: var(--card-icon-color, #3c434a);
 			min-height: 50px;
 			min-width: 50px;
 			position: relative;
+			//box-shadow: 0 0 0 1px var(--card-border-color, #e0e0e0);
+			box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
 
 			&>*{
 				position: absolute;

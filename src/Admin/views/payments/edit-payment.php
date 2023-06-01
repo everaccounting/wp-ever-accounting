@@ -14,12 +14,12 @@ $payment = new \EverAccounting\Models\Payment( $payment_id );
 $title   = $payment->exists() ? __( 'Update Payment', 'wp-ever-accounting' ) : __( 'Add Payment', 'wp-ever-accounting' );
 ?>
 
-<div class="eac-page__header">
-	<div class="eac-page__header-col">
-		<h2 class="eac-page__title"><?php echo esc_html( $title ); ?></h2>
+<div class="eac-section-header">
+	<div>
+		<h2><?php echo esc_html( $title ); ?></h2>
 		<a href="<?php echo esc_url( admin_url( 'admin.php?page=eac-sales&tab=payments' ) ); ?>"><span class="dashicons dashicons-undo"></span></a>
 	</div>
-	<div class="eac-page__header-col">
+	<div>
 		<?php if ( $payment->exists() ) : ?>
 			<a href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin.php?page=eac-sales&tab=payments&action=delete&payment_id=' . $payment->get_id() ), 'bulk-items' ) ); ?>" class="del">
 				<?php esc_html_e( 'Delete', 'wp-ever-accounting' ); ?>

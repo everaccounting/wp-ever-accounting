@@ -175,3 +175,15 @@ function eac_get_vendors( $args = array(), $count = false ) {
 
 	return Vendor::query( $args );
 }
+
+
+/**
+ * Get contact.
+ *
+ * @param mixed  $contact Contact ID or object.
+ * @param string $column Optional. Column to get. Default null.
+ * @param array  $args Optional. Additional arguments. Default empty array.
+ */
+function eac_get_contact( $contact, $column = null, $args = array() ) {
+	return \EverAccounting\Models\Contact::get( $contact, $column, $args );
+}

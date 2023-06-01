@@ -90,7 +90,7 @@ function eaccounting_get_item( $item ) {
  * @return \EverAccounting\Models\Item|WP_Error|bool
  */
 function eaccounting_insert_item( $data, $wp_error = true ) {
-	return eac_insert_item( $data, $wp_error );
+	return eac_insert_product( $data, $wp_error );
 }
 
 /**
@@ -116,8 +116,8 @@ function eaccounting_delete_item( $item_id ) {
  * @since 1.1.0
  * @return array|int
  */
-function eaccounting_get_items( $args = array(), $count = false ) {
-	return eac_get_items( $args, $count );
+function eaccounting_get_products( $args = array(), $count = false ) {
+	return eac_get_products( $args, $count );
 }
 
 /**

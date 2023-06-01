@@ -18,7 +18,7 @@ function eac_get_account_types() {
 		'card' => __( 'Card', 'wp-ever-accounting' ),
 	);
 
-	return apply_filters( 'wp_ever_accounting_account_types', $bank_types );
+	return apply_filters( 'ever_accounting_account_types', $bank_types );
 }
 
 
@@ -97,40 +97,3 @@ function eac_get_accounts( $args = array(), $count = false ) {
 
 	return Account::query( $args );
 }
-
-/**
- * Get Accounts currencies.
- *
- * @since 1.1.0
- * @returns array
- */
-function eac_get_account_currencies() {
-	$currencies = get_transient( 'eac_account_currencies' );
-	if ( false === $currencies ) {
-		$currencies = array();
-		$accounts   = eac_get_accounts(
-			array(
-				'limit'    => - 1,
-				'no_count' => true,
-			)
-		);
-		foreach ( $accounts as $account ) {
-			$currencies[ $account->get_id() ] = $account->get_currency_code();
-		}
-		set_transient( 'eac_account_currencies', $currencies, 24 * DAY_IN_SECONDS );
-	}
-
-	return $currencies;
-}
-
-/**
- * Flush accounts currencies.
- *
- * @since 1.1.0
- */
-function eac_flush_account_currencies() {
-	delete_transient( 'eac_account_currencies' );
-}
-
-add_action( 'ever_accounting_account_saved', 'eac_flush_account_currencies' );
-add_action( 'ever_accounting_account_deleted', 'eac_flush_account_currencies' );

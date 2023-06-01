@@ -21,8 +21,8 @@ class Sales extends \EverAccounting\Singleton {
 		add_action( 'ever_accounting_sales_tab_payments', array( __CLASS__, 'output_payments_tab' ) );
 		add_action( 'ever_accounting_sales_tab_invoices', array( __CLASS__, 'output_invoices_tab' ) );
 		add_action( 'ever_accounting_sales_tab_customers', array( __CLASS__, 'output_customers_tab' ) );
-		add_action( 'admin_footer', array( __CLASS__, 'output_payment_modal' ) );
-		add_action( 'admin_footer', array( __CLASS__, 'output_customers_modal' ) );
+		// add_action( 'admin_footer', array( __CLASS__, 'output_payment_modal' ) );
+		// add_action( 'admin_footer', array( __CLASS__, 'output_customers_modal' ) );
 	}
 
 	/**
@@ -33,9 +33,9 @@ class Sales extends \EverAccounting\Singleton {
 	 */
 	public static function output() {
 		$tabs         = eac_get_sales_tabs();
-		$tab          = eac_filter_input( INPUT_GET, 'tab' );
+		$tab          = eac_get_input_var( 'tab' );
 		$current_tab  = ! empty( $tab ) && array_key_exists( $tab, $tabs ) ? $tab : key( $tabs );
-		$current_page = eac_filter_input( INPUT_GET, 'page' );
+		$current_page = eac_get_input_var( 'page' );
 		$page_name    = 'sales';
 
 		include dirname( __FILE__ ) . '/views/admin-page.php';
@@ -48,8 +48,12 @@ class Sales extends \EverAccounting\Singleton {
 	 * @return void
 	 */
 	public static function output_payments_tab() {
-		$action     = eac_filter_input( INPUT_GET, 'action' );
-		$payment_id = eac_filter_input( INPUT_GET, 'payment_id', 'absint' );
+		$action     = eac_get_input_var( 'action' );
+		$payment_id = eac_get_input_var( 'payment_id' );
+		if ( eac_is_input_var_set( 'payment_id' ) && empty( eac_get_payment( $payment_id ) ) ) {
+			wp_safe_redirect( admin_url( 'admin.php?page=eac-sales&tab=payments' ) );
+			exit;
+		}
 		if ( in_array( $action, array( 'add', 'edit' ), true ) ) {
 			include dirname( __FILE__ ) . '/views/payments/edit-payment.php';
 		} elseif ( 'view' === $action ) {
@@ -66,8 +70,8 @@ class Sales extends \EverAccounting\Singleton {
 	 * @return void
 	 */
 	public static function output_invoices_tab() {
-		$action     = eac_filter_input( INPUT_GET, 'action' );
-		$invoice_id = eac_filter_input( INPUT_GET, 'invoice_id', 'absint' );
+		$action     = eac_get_input_var( 'action' );
+		$invoice_id = eac_get_input_var( 'invoice_id' );
 		if ( in_array( $action, array( 'add', 'edit' ), true ) ) {
 			include dirname( __FILE__ ) . '/views/invoices/edit-invoice.php';
 		} elseif ( 'view' === $action ) {
@@ -84,8 +88,8 @@ class Sales extends \EverAccounting\Singleton {
 	 * @return void
 	 */
 	public static function output_customers_tab() {
-		$action      = eac_filter_input( INPUT_GET, 'action' );
-		$customer_id = eac_filter_input( INPUT_GET, 'customer_id', 'absint' );
+		$action      = eac_get_input_var( 'action' );
+		$customer_id = eac_get_input_var( 'customer_id' );
 		if ( in_array( $action, array( 'add', 'edit' ), true ) ) {
 			include dirname( __FILE__ ) . '/views/customers/edit-customer.php';
 		} elseif ( 'view' === $action ) {

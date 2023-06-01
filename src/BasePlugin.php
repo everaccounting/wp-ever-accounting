@@ -267,7 +267,7 @@ class BasePlugin {
 	 *
 	 * @return string
 	 */
-	public function get_path() {
+	public function get_dir_path() {
 		$args   = func_get_args();
 		$append = isset( $args[0] ) ? $args[0] : '';
 
@@ -281,7 +281,7 @@ class BasePlugin {
 	 *
 	 * @return string
 	 */
-	public function get_url() {
+	public function get_dir_url() {
 		// Get the first argument if passed and append it to the url.
 		$args   = func_get_args();
 		$append = isset( $args[0] ) ? $args[0] : '';
@@ -296,7 +296,7 @@ class BasePlugin {
 	 * @return string
 	 */
 	public function get_assets_path() {
-		return $this->get_path() . 'assets/';
+		return $this->get_dir_path() . 'assets/';
 	}
 
 	/**
@@ -306,7 +306,7 @@ class BasePlugin {
 	 * @return string
 	 */
 	public function get_assets_url() {
-		return $this->get_url() . 'assets/';
+		return $this->get_dir_url() . 'assets/';
 	}
 
 	/**
@@ -316,7 +316,7 @@ class BasePlugin {
 	 * @return string
 	 */
 	public function get_template_path() {
-		return $this->get_path() . 'templates/';
+		return $this->get_dir_path() . 'templates/';
 	}
 
 	/**
@@ -402,7 +402,7 @@ class BasePlugin {
 			$path = $this->get_assets_path() . ltrim( $src );
 		} else {
 			$url  = $src;
-			$path = str_replace( $this->get_url(), $this->get_path(), $src );
+			$path = str_replace( $this->get_dir_url(), $this->get_dir_path(), $src );
 		}
 		$php_file = str_replace( '.js', '.asset.php', $path );
 		$asset    = $php_file && file_exists( $php_file ) ? require $php_file : [
@@ -436,7 +436,7 @@ class BasePlugin {
 			$path = $this->get_assets_path() . ltrim( $src );
 		} else {
 			$url  = $src;
-			$path = str_replace( $this->get_url(), $this->get_path(), $src );
+			$path = str_replace( $this->get_dir_url(), $this->get_dir_path(), $src );
 		}
 		$php_file = str_replace( '.css', '.asset.php', $path );
 		$asset    = $php_file && file_exists( $php_file ) ? require $php_file : [

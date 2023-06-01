@@ -53,7 +53,7 @@ class Bills extends ListTable {
 			'search'     => $this->get_search(),
 			'order'      => $this->get_order(),
 			'orderby'    => $this->get_orderby( 'issue_date' ),
-			'account_id' => eac_filter_input( INPUT_GET, 'account_id', 'absint' ),
+			'account_id' => eac_get_input_var( 'account_id' ),
 		);
 
 		$this->items       = eac_get_bills( $args );
@@ -91,7 +91,7 @@ class Bills extends ListTable {
 			return;
 		}
 
-		$filter = eac_filter_input( INPUT_GET, 'filter' );
+		$filter = eac_get_input_var( 'filter' );
 		if ( ! empty( $filter ) || ! empty( $this->get_search() ) ) {
 			echo sprintf(
 				'<a href="%s" class="button">%s</a>',
@@ -110,8 +110,8 @@ class Bills extends ListTable {
 	 */
 	public function process_bulk_action( $doaction ) {
 		if ( ! empty( $doaction ) ) {
-			$id  = eac_get_request_var( 'bill_id', 'get', 0 );
-			$ids = eac_get_request_var( 'bill_ids', 'get', array() );
+			$id  = eac_get_input_var( 'bill_id' );
+			$ids = eac_get_input_var( 'bill_ids', array() );
 			if ( ! empty( $id ) ) {
 				$ids      = wp_parse_id_list( $id );
 				$doaction = ( - 1 !== $_REQUEST['action'] ) ? $_REQUEST['action'] : $_REQUEST['action2']; // phpcs:ignore
@@ -138,7 +138,7 @@ class Bills extends ListTable {
 			}
 			eac_add_notice( $notice, 'success' );
 
-			wp_safe_redirect( admin_url( 'admin.php?page=eac-purchases&tab=bills' ) );
+			wp_safe_redirect( admin_url( 'admin.php?page=eac-purchase&tab=bills' ) );
 			exit();
 		}
 

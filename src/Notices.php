@@ -39,10 +39,10 @@ class Notices extends Singleton {
 	 *
 	 * @since 1.1.6
 	 */
-	public function __construct() {
-		add_action( 'init', array( $this, 'load_notices' ), 1 );
+	protected function __construct() {
+		add_action( 'init', array( $this, 'load_notices' ), 10 );
 		add_filter( 'wp_redirect', array( $this, 'redirect' ), 1 );
-		add_filter( 'wp_shutdown', array( $this, 'save_notices' ), PHP_INT_MAX );
+		// add_filter( 'wp_shutdown', array( $this, 'save_notices' ), PHP_INT_MAX );
 		add_action( 'wp_ajax_eac_dismiss_notice', array( $this, 'dismiss_notice' ) );
 		add_action( 'admin_notices', array( $this, 'display_notices' ) );
 		add_action( 'admin_footer', array( $this, 'display_notices' ) );
@@ -60,24 +60,18 @@ class Notices extends Singleton {
 		// when a user is logged in the notices are stored in the user meta.
 		// when a user is not logged in the notices are stored in the transient based on the session id.
 		foreach ( array( 'notices', 'messages' ) as $type ) {
-			// if the notices are not empty.
-			if ( ! empty( $this->{$type} ) ) {
-				// if the user is logged in.
-				if ( is_user_logged_in() ) {
-					$notices = get_user_meta( get_current_user_id(), 'eac_' . $type, true );
-					// if the notices are not empty.
-					if ( ! empty( $notices ) ) {
-						$this->{$type} = array_merge( $this->{$type}, $notices );
-					}
-				} else {
-					// Take the first 8 characters of the session token.
-					$token   = substr( wp_get_session_token(), 0, 8 );
-					$notices = get_transient( 'eac_' . $type . '_' . $token );
-					// if the notices are not empty.
-					if ( ! empty( $notices ) ) {
-						$this->{$type} = array_merge( $this->{$type}, $notices );
-					}
-				}
+			// if the user is logged in.
+			if ( is_user_logged_in() ) {
+				$notices = get_user_meta( get_current_user_id(), 'eac_' . $type, true );
+				// if the notices are not empty.
+			} else {
+				// Take the first 8 characters of the session token.
+				$token   = substr( wp_get_session_token(), 0, 8 );
+				$notices = get_transient( 'eac_' . $type . '_' . $token );
+				// if the notices are not empty.
+			}
+			if ( ! empty( $notices ) && is_array( $notices ) ) {
+				$this->{$type} = array_merge( $this->{$type}, $notices );
 			}
 		}
 	}
@@ -183,6 +177,8 @@ class Notices extends Singleton {
 					unset( $this->notices[ $key ] );
 				}
 			}
+
+			update_user_meta( get_current_user_id(), 'eac_notices', $this->notices );
 		}
 	}
 
@@ -267,9 +263,7 @@ class Notices extends Singleton {
 	 * @since 1.1.6
 	 * @return void
 	 */
-	public function add_core_notices() {
-
-	}
+	public function add_core_notices() {}
 
 	/**
 	 * Add admin notice.
@@ -292,7 +286,7 @@ class Notices extends Singleton {
 		if ( empty( $message ) ) {
 			return;
 		}
-
+		var_dump( $message );
 		// if the notice already dismissed then return.
 		if ( true === self::is_dismissed( $args['id'] ) && self::is_dismissed( $args['id'] ) ) {
 			return;

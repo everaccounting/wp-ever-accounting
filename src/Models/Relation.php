@@ -45,10 +45,10 @@ class Relation extends Model {
 	 * @var array
 	 */
 	protected $core_data = array(
-		'id1'        => 0,
-		'id2'        => 0,
-		'type1'      => '',
-		'type2'      => '',
+		'id_1'       => 0,
+		'id_2'       => 0,
+		'type_1'     => '',
+		'type_2'     => '',
 		'updated_at' => null,
 		'created_at' => null,
 	);
@@ -69,19 +69,19 @@ class Relation extends Model {
 	 * @since 1.1.0
 	 * @return int
 	 */
-	public function get_id1( $context = 'edit' ) {
-		return $this->get_prop( 'id1', $context );
+	public function get_id_1( $context = 'edit' ) {
+		return $this->get_prop( 'id_1', $context );
 	}
 
 	/**
 	 * Set the first item id.
 	 *
-	 * @param int $id1 ID of the first item.
+	 * @param int $id_1 ID of the first item.
 	 *
 	 * @since 1.1.0
 	 */
-	public function set_name( $id1 ) {
-		$this->set_prop( 'id1', absint( $id1 ) );
+	public function set_name( $id_1 ) {
+		$this->set_prop( 'id_1', absint( $id_1 ) );
 	}
 
 	/**
@@ -92,19 +92,19 @@ class Relation extends Model {
 	 * @since 1.1.0
 	 * @return int
 	 */
-	public function get_id2( $context = 'edit' ) {
-		return $this->get_prop( 'id2', $context );
+	public function get_id_2( $context = 'edit' ) {
+		return $this->get_prop( 'id_2', $context );
 	}
 
 	/**
 	 * Set the second item id.
 	 *
-	 * @param int $id2 ID of the second item.
+	 * @param int $id_2 ID of the second item.
 	 *
 	 * @since 1.1.0
 	 */
-	public function set_id2( $id2 ) {
-		$this->set_prop( 'id2', absint( $id2 ) );
+	public function set_id_2( $id_2 ) {
+		$this->set_prop( 'id_2', absint( $id_2 ) );
 	}
 
 	/**
@@ -115,19 +115,19 @@ class Relation extends Model {
 	 * @since 1.1.0
 	 * @return string
 	 */
-	public function get_type1( $context = 'edit' ) {
-		return $this->get_prop( 'type1', $context );
+	public function get_type_1( $context = 'edit' ) {
+		return $this->get_prop( 'type_1', $context );
 	}
 
 	/**
 	 * Set the first item type.
 	 *
-	 * @param string $type1 Type of the first item.
+	 * @param string $type_1 Type of the first item.
 	 *
 	 * @since 1.1.0
 	 */
-	public function set_type1( $type1 ) {
-		$this->set_prop( 'type1', $type1 );
+	public function set_type_1( $type_1 ) {
+		$this->set_prop( 'type_1', $type_1 );
 	}
 
 	/**
@@ -138,19 +138,19 @@ class Relation extends Model {
 	 * @since 1.1.0
 	 * @return string
 	 */
-	public function get_type2( $context = 'edit' ) {
-		return $this->get_prop( 'type2', $context );
+	public function get_type_2( $context = 'edit' ) {
+		return $this->get_prop( 'type_2', $context );
 	}
 
 	/**
 	 * Set the second item type.
 	 *
-	 * @param string $type2 Type of the second item.
+	 * @param string $type_2 Type of the second item.
 	 *
 	 * @since 1.1.0
 	 */
-	public function set_type2( $type2 ) {
-		$this->set_prop( 'type2', $type2 );
+	public function set_type_2( $type_2 ) {
+		$this->set_prop( 'type_2', $type_2 );
 	}
 
 
@@ -211,20 +211,20 @@ class Relation extends Model {
 	 */
 	public function save() {
 
-		if ( empty( $this->get_id1() ) ) {
-			return new \WP_Error( 'missing_required', __( 'Missing required id1.', 'easy-appointments' ) );
+		if ( empty( $this->get_id_1() ) ) {
+			return new \WP_Error( 'missing_required', __( 'Missing required id_1.', 'easy-appointments' ) );
 		}
 
-		if ( empty( $this->get_id2() ) ) {
-			return new \WP_Error( 'missing_required', __( 'Missing required id2.', 'easy-appointments' ) );
+		if ( empty( $this->get_id_2() ) ) {
+			return new \WP_Error( 'missing_required', __( 'Missing required id_2.', 'easy-appointments' ) );
 		}
 
-		if ( empty( $this->get_type1() ) ) {
-			return new \WP_Error( 'missing_required', __( 'Missing required type1.', 'easy-appointments' ) );
+		if ( empty( $this->get_type_1() ) ) {
+			return new \WP_Error( 'missing_required', __( 'Missing required type_1.', 'easy-appointments' ) );
 		}
 
-		if ( empty( $this->get_type2() ) ) {
-			return new \WP_Error( 'missing_required', __( 'Missing required type2.', 'easy-appointments' ) );
+		if ( empty( $this->get_type_2() ) ) {
+			return new \WP_Error( 'missing_required', __( 'Missing required type_2.', 'easy-appointments' ) );
 		}
 
 		// If date created is not set, set it to now.
@@ -247,4 +247,14 @@ class Relation extends Model {
 	| Utility methods which don't directly relate to this object but may be
 	| used by this object.
 	*/
+	/**
+	 * Replace related items.
+	 *
+	 * @param int    $id_1    ID of the first item.
+	 * @param int    $id_2    ID of the second item.
+	 * @param string $type_2  Type of the second item.
+	 */
+	public static function replace( $id_1, $ids_2, $type_2 ) {
+
+	}
 }

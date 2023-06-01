@@ -53,9 +53,9 @@ class Expenses extends ListTable {
 			'search'      => $this->get_search(),
 			'order'       => $this->get_order( 'DESC' ),
 			'orderby'     => $this->get_orderby( 'payment_date' ),
-			'account_id'  => eac_filter_input( INPUT_GET, 'account_id', 'absint' ),
-			'category_id' => eac_filter_input( INPUT_GET, 'category_id', 'absint' ),
-			'contact_id'  => eac_filter_input( INPUT_GET, 'vendor_id', 'absint' ),
+			'account_id'  => eac_get_input_var( 'account_id' ),
+			'category_id' => eac_get_input_var( 'category_id' ),
+			'contact_id'  => eac_get_input_var( 'vendor_id' ),
 		);
 
 		$this->items       = eac_get_expenses( $args );
@@ -92,7 +92,7 @@ class Expenses extends ListTable {
 		if ( 'top' !== $which ) {
 			return;
 		}
-		$filter = eac_filter_input( INPUT_GET, 'filter' );
+		$filter = eac_get_input_var( 'filter' );
 		if ( ! empty( $filter ) || ! empty( $this->get_search() ) ) {
 			echo sprintf(
 				'<a href="%s" class="button">%s</a>',
@@ -111,8 +111,8 @@ class Expenses extends ListTable {
 	 */
 	public function process_bulk_action( $doaction ) {
 		if ( ! empty( $doaction ) ) {
-			$id  = eac_get_request_var( 'expense_id', 'get', 0 );
-			$ids = eac_get_request_var( 'expense_ids', 'get', array() );
+			$id  = eac_get_input_var( 'expense_id' );
+			$ids = eac_get_input_var( 'expense_ids' );
 			if ( ! empty( $id ) ) {
 				$ids      = wp_parse_id_list( $id );
 				$doaction = ( - 1 !== $_REQUEST['action'] ) ? $_REQUEST['action'] : $_REQUEST['action2']; // phpcs:ignore
@@ -139,7 +139,7 @@ class Expenses extends ListTable {
 			}
 			eac_add_notice( $notice, 'success' );
 
-			wp_safe_redirect( admin_url( 'admin.php?page=eac-purchases&tab=expenses' ) );
+			wp_safe_redirect( admin_url( 'admin.php?page=eac-purchase&tab=expenses' ) );
 			exit();
 		}
 

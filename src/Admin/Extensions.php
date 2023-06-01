@@ -27,9 +27,9 @@ class Extensions extends \EverAccounting\Singleton {
 	 */
 	public static function output() {
 		$tabs         = eac_get_tools_tabs();
-		$tab          = eac_filter_input( INPUT_GET, 'tab' );
+		$tab          = eac_get_input_var( 'tab' );
 		$current_tab  = ! empty( $tab ) && array_key_exists( $tab, $tabs ) ? $tab : key( $tabs );
-		$current_page = eac_filter_input( INPUT_GET, 'page' );
+		$current_page = eac_get_input_var( 'page' );
 		$page_name    = 'extensions';
 
 		include dirname( __FILE__ ) . '/views/admin-page.php';

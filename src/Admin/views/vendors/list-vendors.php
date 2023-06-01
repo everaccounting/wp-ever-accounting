@@ -13,13 +13,13 @@ $list_table = new \EverAccounting\Admin\ListTables\Vendors();
 $action     = $list_table->current_action();
 $list_table->process_bulk_action( $action );
 $list_table->prepare_items();
-$page = eac_filter_input( INPUT_GET, 'page' );
-$tab  = eac_filter_input( INPUT_GET, 'tab' );
+$page = eac_get_input_var( 'page' );
+$tab  = eac_get_input_var( 'tab' );
 ?>
-	<div class="eac-page__header">
-		<div class="eac-page__header-col">
-			<h2 class="eac-page__title"><?php esc_html_e( 'Vendors', 'ever-accounting' ); ?></h2>
-			<a href="<?php echo esc_url( admin_url( 'admin.php?page=eac-purchases&tab=vendors&action=add' ) ); ?>" class="page-title-action"><?php esc_html_e( 'Add New', 'ever-accounting' ); ?></a>
+	<div class="eac-section-header">
+		<div>
+			<h2><?php esc_html_e( 'Vendors', 'ever-accounting' ); ?></h2>
+			<a href="<?php echo esc_url( admin_url( 'admin.php?page=eac-purchase&tab=vendors&action=add' ) ); ?>" class="page-title-action"><?php esc_html_e( 'Add New', 'ever-accounting' ); ?></a>
 			<a class="page-title-action" href=" <?php echo esc_url( admin_url( 'admin.php?page=eac-tools&tab=import' ) ); ?>"><?php esc_html_e( 'Import', 'ever-accounting' ); ?></a>
 		</div>
 	</div>

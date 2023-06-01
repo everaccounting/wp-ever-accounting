@@ -53,8 +53,8 @@ class Invoices extends ListTable {
 			'search'      => $this->get_search(),
 			'order'       => $this->get_order( 'DESC' ),
 			'orderby'     => $this->get_orderby( 'issue_date' ),
-			'category_id' => eac_filter_input( INPUT_GET, 'category_id', 'absint' ),
-			'contact_id'  => eac_filter_input( INPUT_GET, 'customer_id', 'absint' ),
+			'category_id' => eac_get_input_var( 'category_id' ),
+			'contact_id'  => eac_get_input_var( 'customer_id' ),
 		);
 
 		$this->items       = eac_get_invoices( $args );
@@ -91,7 +91,7 @@ class Invoices extends ListTable {
 		if ( 'top' !== $which ) {
 			return;
 		}
-		$filter = eac_filter_input( INPUT_GET, 'filter' );
+		$filter = eac_get_input_var( 'filter' );
 		if ( ! empty( $filter ) || ! empty( $this->get_search() ) ) {
 			echo sprintf(
 				'<a href="%s" class="button">%s</a>',
@@ -110,8 +110,8 @@ class Invoices extends ListTable {
 	 */
 	public function process_bulk_action( $doaction ) {
 		if ( ! empty( $doaction ) ) {
-			$id  = eac_get_request_var( 'invoice_id', 'get', 0 );
-			$ids = eac_get_request_var( 'invoice_ids', 'get', array() );
+			$id  = eac_get_input_var( 'invoice_id' );
+			$ids = eac_get_input_var( 'invoice_ids', array() );
 			if ( ! empty( $id ) ) {
 				$ids      = wp_parse_id_list( $id );
 				$doaction = ( - 1 !== $_REQUEST['action'] ) ? $_REQUEST['action'] : $_REQUEST['action2']; // phpcs:ignore
@@ -232,7 +232,7 @@ class Invoices extends ListTable {
 			'edit'   => sprintf( '<a href="%s">%s</a>', esc_url( $edit_url ), __( 'Edit', 'wp-ever-accounting' ) ),
 			'delete' => sprintf( '<a href="%s" class="del">%s</a>', esc_url( wp_nonce_url( $delete_url, 'bulk-accounts' ) ), __( 'Delete', 'wp-ever-accounting' ) ),
 		);
-		$date       = $item->get_issue_date();
+		$date       = $item->get_issued_at();
 		return sprintf( '<a href="%s">%s</a> %s', esc_url( $edit_url ), esc_html( $date ), $this->row_actions( $actions ) );
 	}
 
@@ -251,7 +251,7 @@ class Invoices extends ListTable {
 				$value = $item->get_formatted_total();
 				$value = ! empty( $value ) ? $value : '&mdash;';
 				break;
-			case 'category':
+			case 'category123':
 				$category_id = $item->get_category_id();
 				$category    = eac_get_category( $category_id );
 				$link        = add_query_arg(

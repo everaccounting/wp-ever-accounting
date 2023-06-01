@@ -36,11 +36,11 @@ class Admin extends \EverAccounting\Singleton {
 		require_once __DIR__ . '/Functions.php';
 		Actions::instantiate();
 		Extensions::instantiate();
-		Items::instantiate();
+		Products::instantiate();
 		Banking::instantiate();
 		Misc::instantiate();
 		Overview::instantiate();
-		Purchases::instantiate();
+		Purchase::instantiate();
 		Reports::instantiate();
 		Sales::instantiate();
 		Tools::instantiate();
@@ -73,7 +73,7 @@ class Admin extends \EverAccounting\Singleton {
 	 */
 	public function save_settings() {
 		global $current_tab, $current_section;
-		$page = eac_get_request_var( 'page', 'get', '' );
+		$page = eac_get_input_var( 'page' );
 
 		// We should only save on the settings page.
 		if ( ! is_admin() || empty( $page ) || 'eac-settings' !== $page ) {
@@ -84,9 +84,9 @@ class Admin extends \EverAccounting\Singleton {
 		Settings::get_tabs();
 
 		// Get current tab/section.
-		$current_tab     = eac_get_request_var( 'tab', 'get', 'general' );
-		$current_section = eac_get_request_var( 'section', 'request', '' );
-		$is_save         = ! empty( eac_get_request_var( 'save', 'post', '' ) );
+		$current_tab     = eac_get_input_var( 'tab', 'general' );
+		$current_section = eac_get_input_var( 'section', '' );
+		$is_save         = ! empty( eac_get_input_var( 'save', '', 'POST' ) );
 
 		// Save settings if data has been posted.
 		if ( '' !== $current_section && apply_filters( "ever_accounting_save_settings_{$current_tab}_{$current_section}", $is_save ) ) {

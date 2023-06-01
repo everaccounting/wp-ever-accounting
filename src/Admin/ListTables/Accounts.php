@@ -93,7 +93,7 @@ class Accounts extends ListTable {
 		submit_button( __( 'Filter', 'wp-ever-accounting' ), '', 'filter', false );
 		echo '</div>';
 
-		$filter = eac_filter_input( INPUT_GET, 'filter' );
+		$filter = eac_get_input_var( 'filter' );
 		if ( ! empty( $filter ) || ! empty( $this->get_search() ) ) {
 			echo sprintf(
 				'<a href="%s" class="button">%s</a>',
@@ -112,8 +112,8 @@ class Accounts extends ListTable {
 	 */
 	public function process_bulk_action( $doaction ) {
 		if ( ! empty( $doaction ) ) {
-			$id  = eac_get_request_var( 'account_id', 'get', 0 );
-			$ids = eac_get_request_var( 'account_ids', 'get', array() );
+			$id  = eac_get_input_var( 'account_id', 'get' );
+			$ids = eac_get_input_var( 'account_ids', array() );
 			if ( ! empty( $id ) ) {
 				$ids      = wp_parse_id_list( $id );
 				$doaction = ( - 1 !== $_REQUEST['action'] ) ? $_REQUEST['action'] : $_REQUEST['action2']; // phpcs:ignore

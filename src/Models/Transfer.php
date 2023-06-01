@@ -201,7 +201,7 @@ class Transfer extends Model {
 	 * @return void
 	 */
 	public function set_amount( $value ) {
-		$this->set_prop( 'amount', (float) eaccounting_sanitize_number( $value, true ) );
+		$this->set_prop( 'amount', (float) $value );
 	}
 
 	/**
@@ -227,7 +227,7 @@ class Transfer extends Model {
 	 * @return void
 	 */
 	public function set_date( $value ) {
-		$this->set_date_prop( 'date', $value );
+		$this->set_date_prop( 'date', $value, get_option( 'date_format' ) );
 	}
 
 	/**
@@ -344,6 +344,7 @@ class Transfer extends Model {
 	public function set_category_id( $category_id ) {
 		$this->set_prop( 'category_id', absint( $category_id ) );
 	}
+
 	/**
 	 * Get the creator id.
 	 *
@@ -417,6 +418,29 @@ class Transfer extends Model {
 	| on if the order exists yet).
 	|
 	*/
+	/**
+	 * Prepare join query.
+	 *
+	 * @param array $clauses Query clauses.
+	 * @param array $args Array of args to pass to the query method.
+	 *
+	 * @since 1.0.0
+	 * @return array
+	 */
+	protected function prepare_join_query( $clauses, $args = array() ) {
+		global $wpdb;
+		$clauses          = parent::prepare_join_query( $clauses, $args );
+		$clauses['join'] .= " LEFT JOIN {$wpdb->prefix}ea_transactions AS payment ON {$this->table_alias}.payment_id = payment.id";
+		$clauses['join'] .= " LEFT JOIN {$wpdb->prefix}ea_transactions AS expense ON {$this->table_alias}.expense_id = expense.id";
+
+		// If selected all fields, then select all fields from payment and expense tables.
+		if ( strpos( $clauses['select'], '*' ) !== false ) {
+			$clauses['select'] .= ', payment.account_id AS from_account_id';
+			$clauses['select'] .= ', expense.account_id AS to_account_id, expense.amount, expense.payment_date date, expense.payment_method, expense.note, expense.reference';
+		}
+		return $clauses;
+	}
+
 
 	/**
 	 * Retrieve the object from database instance.
@@ -437,7 +461,7 @@ class Transfer extends Model {
 				$this->data['amount']          = eac_format_decimal( $expense->get_amount() );
 				$this->data['date']            = $expense->get_payment_date();
 				$this->data['payment_method']  = $expense->get_payment_method();
-				$this->data['description']     = $expense->get_description();
+				$this->data['note']            = $expense->get_note();
 				$this->data['reference']       = $expense->get_reference();
 			}
 		}
@@ -468,10 +492,10 @@ class Transfer extends Model {
 	/**
 	 * Saves an object in the database.
 	 *
+	 * @throws \Exception When the object cannot be saved.
 	 * @since 1.0.0
 	 *
 	 * @return static|\WP_Error Object instance on success, WP_Error on failure.
-	 * @throws \Exception When the object cannot be saved.
 	 */
 	public function save() {
 		global $wpdb;
@@ -611,6 +635,6 @@ class Transfer extends Model {
 	 * @return string
 	 */
 	public function get_formatted_amount() {
-		return eac_format_price( $this->get_amount(), $this->get_currency_code() );
+		return eac_format_money( $this->get_amount(), $this->get_currency_code() );
 	}
 }

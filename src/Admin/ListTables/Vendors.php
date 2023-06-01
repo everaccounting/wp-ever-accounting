@@ -87,7 +87,7 @@ class Vendors extends ListTable {
 		if ( 'top' !== $which ) {
 			return;
 		}
-		$filter = eac_filter_input( INPUT_GET, 'filter' );
+		$filter = eac_get_input_var( 'filter' );
 		if ( ! empty( $filter ) || ! empty( $this->get_search() ) ) {
 			echo sprintf(
 				'<a href="%s" class="button">%s</a>',
@@ -106,8 +106,8 @@ class Vendors extends ListTable {
 	 */
 	public function process_bulk_action( $doaction ) {
 		if ( ! empty( $doaction ) ) {
-			$id  = eac_get_request_var( 'vendor_id', 'get', 0 );
-			$ids = eac_get_request_var( 'vendor_ids', 'get', array() );
+			$id  = eac_get_input_var( 'vendor_id' );
+			$ids = eac_get_input_var( 'vendor_ids', array() );
 			if ( ! empty( $id ) ) {
 				$ids      = wp_parse_id_list( $id );
 				$doaction = ( - 1 !== $_REQUEST['action'] ) ? $_REQUEST['action'] : $_REQUEST['action2']; // phpcs:ignore
@@ -121,10 +121,10 @@ class Vendors extends ListTable {
 			foreach ( $ids as $id ) { // Check the permissions on each.
 				switch ( $doaction ) {
 					case 'delete':
-						eac_delete_account( $id );
+						eac_delete_vendor( $id );
 						break;
 					case 'enable':
-						eac_insert_account(
+						eac_insert_vendor(
 							array(
 								'id'     => $id,
 								'status' => 'active',
@@ -132,7 +132,7 @@ class Vendors extends ListTable {
 						);
 						break;
 					case 'disable':
-						eac_insert_account(
+						eac_insert_vendor(
 							array(
 								'id'     => $id,
 								'status' => 'inactive',
@@ -146,17 +146,19 @@ class Vendors extends ListTable {
 			switch ( $doaction ) {
 				case 'delete':
 					$notice = __( 'Vendor(s) deleted successfully.', 'wp-ever-accounting' );
+					eac_add_notice( $notice, 'success' );
 					break;
 				case 'enable':
 					$notice = __( 'Vendor(s) enabled successfully.', 'wp-ever-accounting' );
+					eac_add_notice( $notice, 'success' );
 					break;
 				case 'disable':
 					$notice = __( 'Vendor(s) disabled successfully.', 'wp-ever-accounting' );
+					eac_add_notice( $notice, 'success' );
 					break;
 			}
-			eac_add_notice( $notice, 'success' );
 
-			wp_safe_redirect( admin_url( 'admin.php?page=ea-sales&tab=vendors' ) );
+			wp_safe_redirect( admin_url( 'admin.php?page=eac-purchase&tab=vendors' ) );
 			exit();
 		}
 

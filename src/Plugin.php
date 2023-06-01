@@ -44,8 +44,8 @@ class Plugin extends BasePlugin {
 		define( 'EAC_VERSION', $this->get_version() );
 		define( 'EAC_PLUGIN_BASENAME', $this->get_basename() );
 		define( 'EAC_PLUGIN_FILE', $this->get_file() );
-		define( 'EAC_PLUGIN_PATH', $this->get_path() );
-		define( 'EAC_PLUGIN_URL', $this->get_url() );
+		define( 'EAC_PLUGIN_PATH', $this->get_dir_path() );
+		define( 'EAC_PLUGIN_URL', $this->get_dir_url() );
 		define( 'EAC_UPLOADS_DIR', $upload_dir['basedir'] . '/ever-accounting' );
 		define( 'EAC_UPLOADS_URL', $upload_dir['baseurl'] . '/ever-accounting' );
 		define( 'EAC_LOG_DIR', $upload_dir['basedir'] . '/ever-accounting-logs/' );
@@ -72,7 +72,6 @@ class Plugin extends BasePlugin {
 	 */
 	protected function init_hooks() {
 		register_activation_hook( $this->get_file(), array( Installer::class, 'install' ) );
-
 		add_action( 'plugins_loaded', array( $this, 'init' ), 0 );
 	}
 
@@ -88,9 +87,14 @@ class Plugin extends BasePlugin {
 
 		// Load class instances.
 		Installer::instantiate();
-		Actions::instantiate();
+		Endpoints::instantiate();
 		Scripts::instantiate();
 		Notices::instantiate();
+
+		// If frontend.
+		if ( self::is_request( 'frontend' ) ) {
+			Frontend\Frontend::instantiate();
+		}
 
 		if ( self::is_request( 'admin' ) ) {
 			Admin\Admin::instantiate();
@@ -98,5 +102,34 @@ class Plugin extends BasePlugin {
 
 		// Init action.
 		do_action( 'ever_accounting_init' );
+	}
+
+
+	/**
+	 * Add the required rewrite rules
+	 *
+	 * @return void
+	 */
+	public function add_rewrite_rules() {
+		$types       = array( 'payment', 'expense', 'invoice', 'bill' );
+		$regex       = '^eac/(' . implode( '|', $types ) . ')/([^/]+)/?([^/]*)/?$';
+		$replacement = 'index.php?eac=true&type=$1&token=$2&output=$3';
+		add_rewrite_rule( $regex, $replacement, 'top' );
+	}
+
+	/**
+	 * Register our query vars
+	 *
+	 * @param array $vars The query vars.
+	 *
+	 * @return array
+	 */
+	public function register_query_var( $vars ) {
+		$vars[] = 'eac';
+		$vars[] = 'type';
+		$vars[] = 'token';
+		$vars[] = 'output';
+
+		return $vars;
 	}
 }

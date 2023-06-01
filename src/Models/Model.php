@@ -156,15 +156,6 @@ abstract class Model {
 	protected $core_meta_keys = array();
 
 	/**
-	 * This only needs set if you are using a custom metadata type
-	 * This should be the name of the field your table uses for associating meta with objects.
-	 *
-	 * @since 1.0.0
-	 * @var string
-	 */
-	protected $meta_object_id_field = 'post_id';
-
-	/**
 	 * Model constructor.
 	 *
 	 * @param int|object|array $data Object ID, post object, or array of data.
@@ -261,6 +252,12 @@ abstract class Model {
 	 * @return bool Whether the given field is set.
 	 */
 	public function __isset( $key ) {
+		// If there is a getter function for this field, use it.
+		$getter = 'get_' . $key;
+		if ( method_exists( $this, $getter ) ) {
+			return null !== $this->$getter();
+		}
+
 		return ! empty( $this->get_prop( $key ) );
 	}
 
@@ -272,6 +269,13 @@ abstract class Model {
 	 * @since 1.0.0
 	 */
 	public function __unset( $key ) {
+		// If there is a setter function for this field, use it.
+		$setter = 'set_' . $key;
+		if ( method_exists( $this, $setter ) ) {
+			$this->$setter( null );
+
+			return;
+		}
 		$this->set_prop( $key, '' );
 	}
 
@@ -286,10 +290,14 @@ abstract class Model {
 	 * @since  1.0.0
 	 */
 	public function __set( $key, $value ) {
-		if ( 'id' === $key ) {
-			$this->set_id( $value );
+		// If there is a setter function for this field, use it.
+		$setter = 'set_' . $key;
+		if ( method_exists( $this, $setter ) ) {
+			$this->$setter( $value );
+
+			return;
 		}
-		$this->set_props( array( $key => $value ) );
+		$this->set_prop( $key, $value );
 	}
 
 	/**
@@ -367,6 +375,8 @@ abstract class Model {
 		$value = null;
 		if ( array_key_exists( $prop, $this->data ) ) {
 			$value = isset( $this->changes[ $prop ] ) ? $this->changes[ $prop ] : $this->data[ $prop ];
+		} elseif ( 'id' === $prop ) {
+			$value = $this->get_id();
 		}
 
 		if ( 'view' === $context ) {
@@ -502,15 +512,18 @@ abstract class Model {
 		if ( ! is_array( $props ) ) {
 			return;
 		}
+
 		foreach ( $props as $prop => $value ) {
 			$prop = preg_replace( '/^[^a-zA-Z]+/', '', $prop );
+			// If the property name is id, then we will skip it.
+			if ( 'id' === $prop ) {
+				continue;
+			}
 			// if value is array, call the same function for each item.
 			if ( 'metadata' === $prop && is_array( $value ) ) {
 				$this->set_props( $value );
 
 				return;
-			} elseif ( 'id' === $prop ) {
-				$this->set_id( $value );
 			} elseif ( is_callable( array( $this, "set_$prop" ) ) ) {
 				$this->{"set_$prop"}( $value );
 			} else {
@@ -776,7 +789,8 @@ abstract class Model {
 		$data = apply_filters( $this->get_hook_prefix() . '_insert_data', $data, $this );
 
 		if ( false === $wpdb->insert( $this->table, $data, array() ) ) {
-			return new \WP_Error( 'db_insert_error', __( 'Could not insert item into the database.', 'framework-text-domain' ), $wpdb->last_error );
+			// translators: %s: database error message.
+			return new \WP_Error( 'db_insert_error', sprintf( __( 'Could not insert item into the database error %s', 'framework-text-domain' ), $wpdb->last_error ) );
 		}
 
 		$this->set_id( $wpdb->insert_id );
@@ -813,18 +827,17 @@ abstract class Model {
 		$data = wp_cache_get( $this->get_id(), static::CACHE_GROUP );
 		if ( false === $data ) {
 			$data = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $this->table WHERE id = %d LIMIT 1;", $this->get_id() ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-			$id   = isset( $data->ID ) ? $data->ID : $data->id; // Support both ID and id.
-			wp_cache_add( $id, $data, static::CACHE_GROUP );
 		}
-
 		if ( ! $data ) {
 			$this->set_id( 0 );
 
 			return false;
 		}
+		$id = isset( $data->ID ) ? $data->ID : $data->id; // Support both ID and id.
+		wp_cache_add( $id, $data, static::CACHE_GROUP );
 
 		foreach ( $data as $key => $value ) {
-			if ( ! is_scalar( $value ) ) {
+			if ( is_serialized( $value ) ) {
 				$data->$key = maybe_unserialize( $value );
 			}
 		}
@@ -1043,7 +1056,7 @@ abstract class Model {
 		if ( static::META_TYPE && $this->exists() && ! $this->metadata_read ) {
 			// Read metadata based on meta type.
 			$table           = $wpdb->prefix . static::META_TYPE . 'meta';
-			$object_id_field = $this->meta_object_id_field;
+			$object_id_field = static::META_TYPE . '_id';
 			$meta_id_field   = 'user' === static::META_TYPE ? 'umeta_id' : 'meta_id';
 			$cache_key       = static::META_TYPE . '_meta';
 			$cache_group     = static::META_TYPE . '_meta';
@@ -1098,7 +1111,7 @@ abstract class Model {
 		global $wpdb;
 		if ( static::META_TYPE && $this->exists() ) {
 			$table           = $wpdb->prefix . static::META_TYPE . 'meta';
-			$object_id_field = $this->meta_object_id_field;
+			$object_id_field = static::META_TYPE . '_id';
 			$cache_key       = static::META_TYPE . '_meta';
 			$wpdb->delete(
 				$table,
@@ -1181,7 +1194,7 @@ abstract class Model {
 			$id = sanitize_text_field( $id );
 		}
 
-		if ( is_null( $column ) || 'id' === $column ) {
+		if ( empty( $column ) || 'id' === $column ) {
 			$class  = new \ReflectionClass( get_called_class() );
 			$object = $class->newInstance( $id );
 			if ( $object->exists() ) {
@@ -1316,7 +1329,6 @@ abstract class Model {
 					}
 				}
 			}
-
 			// var dump the query, no carecter limit.
 			$total = 0;
 			if ( is_array( $args['fields'] ) || 'all' === $args['fields'] ) {
@@ -1371,9 +1383,8 @@ abstract class Model {
 				 * @since 1.0.0
 				 */
 				$row = (object) apply_filters( $this->get_hook_prefix() . '_db_data', (array) $row, $this );
-
 				foreach ( $row as $column => $value ) {
-					if ( ! is_scalar( $value ) ) {
+					if ( is_serialized( $value ) ) {
 						$row->$column = maybe_unserialize( $value );
 					}
 				}
@@ -1381,7 +1392,7 @@ abstract class Model {
 				$id = isset( $row->ID ) ? $row->ID : $row->id;
 				wp_cache_add( $id, $row, static::CACHE_GROUP );
 
-				$item = new static();
+				$item = new static( $id );
 				$item->set_object_read( true );
 				$item->set_props( $row );
 				$items[ $key ] = $item;
@@ -1623,142 +1634,125 @@ abstract class Model {
 		foreach ( $this->get_columns() as $column ) {
 			// equals clause.
 			if ( ! empty( $args[ $column ] ) ) {
-				$query_where[] = array(
+				$query_where[] = [
 					'column'  => "{$this->table_alias}.{$column}",
 					'value'   => $args[ $column ],
-					'compare' => '=',
-				);
-			}
-
-			// __in clause.
-			if ( ! empty( $args[ $column . '__in' ] ) ) {
-				$query_where[] = array(
+					'compare' => false !== strpos( $column, '_ids' ) ? 'FIND_IN_SET' : '=', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+				];
+			} elseif ( ! empty( $args[ $column . '__in' ] ) ) {
+				$query_where[] = [
 					'column'  => "{$this->table_alias}.{$column}",
 					'value'   => $args[ $column . '__in' ],
-					'compare' => 'IN',
-				);
-			}
-
-			// __not_in clause.
-			if ( ! empty( $args[ $column . '__not_in' ] ) ) {
-				$query_where[] = array(
+					'compare' => false !== strpos( $column, '_ids' ) ? 'FIND_IN_SET' : 'IN', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+				];
+			} elseif ( ! empty( $args[ $column . '__not_in' ] ) ) {
+				// __not_in clause.
+				$query_where[] = [
 					'column'  => "{$this->table_alias}.{$column}",
 					'value'   => $args[ $column . '__not_in' ],
-					'compare' => 'NOT IN',
-				);
-			}
-
-			// __between clause.
-			if ( ! empty( $args[ $column . '__between' ] ) ) {
-				$query_where[] = array(
+					'compare' => false !== strpos( $column, '_ids' ) ? 'NOT_IN_SET' : 'NOT IN', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+				];
+			} elseif ( ! empty( $args[ $column . '__between' ] ) ) {
+				// __between clause.
+				$query_where[] = [
 					'column'  => "{$this->table_alias}.{$column}",
 					'value'   => $args[ $column . '__between' ],
 					'compare' => 'BETWEEN',
-				);
-			}
-
-			// __not_between clause.
-			if ( ! empty( $args[ $column . '__not_between' ] ) ) {
-				$query_where[] = array(
+				];
+			} elseif ( ! empty( $args[ $column . '__not_between' ] ) ) {
+				// __not_between clause.
+				$query_where[] = [
 					'column'  => "{$this->table_alias}.{$column}",
 					'value'   => $args[ $column . '__not_between' ],
 					'compare' => 'NOT BETWEEN',
-				);
-			}
-
-			// __exists clause.
-			if ( ! empty( $args[ $column . '__exists' ] ) ) {
-				$query_where[] = array(
+				];
+			} elseif ( ! empty( $args[ $column . '__exists' ] ) ) {
+				// __exists clause.
+				$query_where[] = [
 					'column'  => "{$this->table_alias}.{$column}",
 					'compare' => 'EXISTS',
-				);
-			}
-
-			// __not_exists clause.
-			if ( ! empty( $args[ $column . '__not_exists' ] ) ) {
-				$query_where[] = array(
+				];
+			} elseif ( ! empty( $args[ $column . '__not_exists' ] ) ) {
+				// __not_exists clause.
+				$query_where[] = [
 					'column'  => "{$this->table_alias}.{$column}",
 					'compare' => 'NOT EXISTS',
-				);
-			}
-
-			// __like clause.
-			if ( ! empty( $args[ $column . '__like' ] ) ) {
-				$query_where[] = array(
+				];
+			} elseif ( ! empty( $args[ $column . '__like' ] ) ) {
+				// __like clause.
+				$query_where[] = [
 					'column'  => "{$this->table_alias}.{$column}",
 					'value'   => $args[ $column . '__like' ],
 					'compare' => 'LIKE',
-				);
-			}
-
-			// __not_like clause.
-			if ( ! empty( $args[ $column . '__not_like' ] ) ) {
-				$query_where[] = array(
+				];
+			} elseif ( ! empty( $args[ $column . '__not_like' ] ) ) {
+				// __not_like clause.
+				$query_where[] = [
 					'column'  => "{$this->table_alias}.{$column}",
 					'value'   => $args[ $column . '__not_like' ],
 					'compare' => 'NOT LIKE',
-				);
-			}
-
-			// __starts_with clause.
-			if ( ! empty( $args[ $column . '__starts_with' ] ) ) {
-				$query_where[] = array(
+				];
+			} elseif ( ! empty( $args[ $column . '__starts_with' ] ) ) {
+				// __starts_with clause.
+				$query_where[] = [
 					'column'  => "{$this->table_alias}.{$column}",
 					'value'   => $args[ $column . '__starts_with' ],
 					'compare' => 'LIKE',
-				);
-			}
-
-			// __ends_with clause.
-			if ( ! empty( $args[ $column . '__ends_with' ] ) ) {
-				$query_where[] = array(
+				];
+			} elseif ( ! empty( $args[ $column . '__ends_with' ] ) ) {
+				// __ends_with clause.
+				$query_where[] = [
 					'column'  => "{$this->table_alias}.{$column}",
 					'value'   => $args[ $column . '__ends_with' ],
 					'compare' => 'ENDS WITH',
-				);
-			}
-
-			// __is_null clause.
-			if ( ! empty( $args[ $column . '__is_null' ] ) ) {
-				$query_where[] = array(
+				];
+			} elseif ( ! empty( $args[ $column . '__is_null' ] ) ) {
+				// __is_null clause.
+				$query_where[] = [
 					'column'  => "{$this->table_alias}.{$column}",
 					'compare' => 'IS NULL',
-				);
-			}
-
-			// __is_not_null clause.
-			if ( ! empty( $args[ $column . '__is_not_null' ] ) ) {
-				$query_where[] = array(
+				];
+			} elseif ( ! empty( $args[ $column . '__is_not_null' ] ) ) {
+				// __is_not_null clause.
+				$query_where[] = [
 					'column'  => "{$this->table_alias}.{$column}",
 					'compare' => 'IS NOT NULL',
-				);
-			}
-
-			// __gt clause.
-			if ( ! empty( $args[ $column . '__gt' ] ) ) {
-				$query_where[] = array(
+				];
+			} elseif ( ! empty( $args[ $column . '__gt' ] ) ) {
+				// __gt clause.
+				$query_where[] = [
 					'column'  => "{$this->table_alias}.{$column}",
 					'value'   => $args[ $column . '__gt' ],
 					'compare' => 'GREATER THAN',
-				);
-			}
-
-			// __lt clause.
-			if ( ! empty( $args[ $column . '__lt' ] ) ) {
-				$query_where[] = array(
+				];
+			} elseif ( ! empty( $args[ $column . '__lt' ] ) ) {
+				// __lt clause.
+				$query_where[] = [
 					'column'  => "{$this->table_alias}.{$column}",
 					'value'   => $args[ $column . '__lt' ],
 					'compare' => 'LESS THAN',
-				);
-			}
-
-			// __regexp clause.
-			if ( ! empty( $args[ $column . '__regexp' ] ) ) {
-				$query_where[] = array(
+				];
+			} elseif ( ! empty( $args[ $column . '__find_in_set' ] ) ) {
+				// find_in_set clause.
+				$query_where[] = [
+					'column'  => "{$this->table_alias}.{$column}",
+					'compare' => 'FIND_IN_SET',
+					'value'   => $args[ $column . '__find_in_set' ],
+				];
+			} elseif ( ! empty( $args[ $column . '__find_not_in_set' ] ) ) {
+				// find_in_set clause.
+				$query_where[] = [
+					'column'  => "{$this->table_alias}.{$column}",
+					'compare' => 'NOT_IN_SET',
+					'value'   => $args[ $column . '__find_not_in_set' ],
+				];
+			} elseif ( ! empty( $args[ $column . '__regexp' ] ) ) {
+				// __regexp clause.
+				$query_where[] = [
 					'column'  => "{$this->table_alias}.{$column}",
 					'value'   => $args[ $column . '__regexp' ],
 					'compare' => 'REGEXP',
-				);
+				];
 			}
 		}
 
@@ -1852,6 +1846,18 @@ abstract class Model {
 				case 'LESS THAN':
 					$placeholder       = is_numeric( $where_value ) ? '%d' : '%s';
 					$format            = "AND ( $where_column < $placeholder )";
+					$clauses['where'] .= $wpdb->prepare( $format, $where_value ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+					break;
+				case 'FIND_IN_SET':
+					$clause            = is_array( $where_value ) ? 'REGEXP' : 'FIND_IN_SET';
+					$where_value       = is_array( $where_value ) ? implode( '|', $where_value ) : $where_value;
+					$format            = 'REGEXP' === $clause ? "AND ( $where_column REGEXP %s )" : "AND ( FIND_IN_SET( %s, $where_column ) > 0 )";
+					$clauses['where'] .= $wpdb->prepare( $format, $where_value ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+					break;
+				case 'NOT_IN_SET':
+					$clause            = is_array( $where_value ) ? 'NOT REGEXP' : 'FIND_IN_SET';
+					$where_value       = is_array( $where_value ) ? implode( '|', $where_value ) : $where_value;
+					$format            = 'NOT REGEXP' === $clause ? "AND ( $where_column NOT REGEXP %s )" : "AND ( FIND_IN_SET( %s, $where_column ) = 0 )";
 					$clauses['where'] .= $wpdb->prepare( $format, $where_value ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 					break;
 				case 'REGEXP':
@@ -2318,7 +2324,7 @@ abstract class Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	protected function get_hook_prefix() {
+	public function get_hook_prefix() {
 		return 'ever_accounting_' . static::OBJECT_TYPE;
 	}
 
@@ -2394,7 +2400,11 @@ abstract class Model {
 	 */
 	public function bool_to_string( $value ) {
 		if ( is_string( $value ) ) {
-			return $value;
+			if ( 'true' === $value || 'yes' === $value || '1' === $value ) {
+				return 'yes';
+			}
+
+			return 'no';
 		}
 
 		if ( is_numeric( $value ) ) {

@@ -11,11 +11,11 @@ defined( 'ABSPATH' ) || exit();
 
 ?>
 
-<div class="eac-page__header eac-mt-20">
-	<div class="eac-page__header-col">
-		<h2 class="eac-page__title"><?php esc_html_e( 'Tax Rates', 'ever-accounting' ); ?></h2>
+<div class="eac-section-header eac-mt-20">
+	<div>
+		<h2><?php esc_html_e( 'Tax Rates', 'ever-accounting' ); ?></h2>
 	</div>
-	<div class="eac-page__header-col">
+	<div>
 		<?php submit_button( __( 'Save Rates', 'wp-ever-accounting' ), 'primary', 'submit', false, array( 'form' => 'eac-item-form' ) ); ?>
 	</div>
 </div>

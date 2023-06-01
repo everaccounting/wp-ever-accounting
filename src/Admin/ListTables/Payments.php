@@ -53,9 +53,9 @@ class Payments extends ListTable {
 			'search'      => $this->get_search(),
 			'order'       => $this->get_order( 'DESC' ),
 			'orderby'     => $this->get_orderby( 'payment_date' ),
-			'account_id'  => eac_filter_input( INPUT_GET, 'account_id', 'absint' ),
-			'category_id' => eac_filter_input( INPUT_GET, 'category_id', 'absint' ),
-			'contact_id'  => eac_filter_input( INPUT_GET, 'customer_id', 'absint' ),
+			'account_id'  => eac_get_input_var( 'account_id' ),
+			'category_id' => eac_get_input_var( 'category_id' ),
+			'contact_id'  => eac_get_input_var( 'customer_id' ),
 		);
 
 		$this->items       = eac_get_payments( $args );
@@ -92,7 +92,7 @@ class Payments extends ListTable {
 		if ( 'top' !== $which ) {
 			return;
 		}
-		$filter = eac_filter_input( INPUT_GET, 'filter' );
+		$filter = eac_get_input_var( 'filter' );
 		if ( ! empty( $filter ) || ! empty( $this->get_search() ) ) {
 			echo sprintf(
 				'<a href="%s" class="button">%s</a>',
@@ -111,8 +111,8 @@ class Payments extends ListTable {
 	 */
 	public function process_bulk_action( $doaction ) {
 		if ( ! empty( $doaction ) ) {
-			$id  = eac_get_request_var( 'payment_id', 'get', 0 );
-			$ids = eac_get_request_var( 'payment_ids', 'get', array() );
+			$id  = eac_get_input_var( 'payment_id' );
+			$ids = eac_get_input_var( 'payment_ids', array() );
 			if ( ! empty( $id ) ) {
 				$ids      = wp_parse_id_list( $id );
 				$doaction = ( - 1 !== $_REQUEST['action'] ) ? $_REQUEST['action'] : $_REQUEST['action2']; // phpcs:ignore
@@ -154,13 +154,14 @@ class Payments extends ListTable {
 	 */
 	public function get_columns() {
 		return array(
-			'cb'        => '<input type="checkbox" />',
-			'date'      => __( 'Date', 'wp-ever-accounting' ),
-			'amount'    => __( 'Amount', 'wp-ever-accounting' ),
-			'account'   => __( 'Account', 'wp-ever-accounting' ),
-			'category'  => __( 'Category', 'wp-ever-accounting' ),
-			'customer'  => __( 'Customer', 'wp-ever-accounting' ),
-			'reference' => __( 'Reference', 'wp-ever-accounting' ),
+			'cb'             => '<input type="checkbox" />',
+			'voucher_number' => __( 'Voucher Number', 'wp-ever-accounting' ),
+			'amount'         => __( 'Amount', 'wp-ever-accounting' ),
+			'date'           => __( 'Date', 'wp-ever-accounting' ),
+			'customer'       => __( 'Customer', 'wp-ever-accounting' ),
+			'account'        => __( 'Account', 'wp-ever-accounting' ),
+			'category'       => __( 'Category', 'wp-ever-accounting' ),
+			'reference'      => __( 'Reference', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -172,12 +173,13 @@ class Payments extends ListTable {
 	 */
 	protected function get_sortable_columns() {
 		return array(
-			'date'      => array( 'payment_date', true ),
-			'amount'    => array( 'amount', false ),
-			'account'   => array( 'account_id', false ),
-			'category'  => array( 'category_id', false ),
-			'customer'  => array( 'contact_id', false ),
-			'reference' => array( 'reference', false ),
+			'date'           => array( 'payment_date', true ),
+			'voucher_number' => array( 'voucher_number', false ),
+			'amount'         => array( 'amount', false ),
+			'account'        => array( 'account_id', false ),
+			'category'       => array( 'category_id', false ),
+			'customer'       => array( 'contact_id', false ),
+			'reference'      => array( 'reference', false ),
 		);
 	}
 
@@ -201,7 +203,7 @@ class Payments extends ListTable {
 	 * @return string
 	 */
 	public function get_primary_column_name() {
-		return 'date';
+		return 'voucher_number';
 	}
 
 	/**
@@ -224,7 +226,7 @@ class Payments extends ListTable {
 	 * @since  1.0.2
 	 * @return string Displays a checkbox.
 	 */
-	public function column_date( $item ) {
+	public function column_voucher_number( $item ) {
 		$args       = array( 'payment_id' => $item->get_id() );
 		$edit_url   = $this->get_current_url( array_merge( $args, array( 'action' => 'edit' ) ) );
 		$view_url   = $this->get_current_url( array_merge( $args, array( 'action' => 'view' ) ) );
@@ -234,7 +236,8 @@ class Payments extends ListTable {
 			'edit'   => sprintf( '<a href="%s">%s</a>', esc_url( $edit_url ), __( 'Edit', 'wp-ever-accounting' ) ),
 			'delete' => sprintf( '<a href="%s" class="del">%s</a>', esc_url( wp_nonce_url( $delete_url, 'bulk-accounts' ) ), __( 'Delete', 'wp-ever-accounting' ) ),
 		);
-		return sprintf( '<a href="%s">%s</a> %s', esc_url( $view_url ), esc_html( $item->get_payment_date() ), $this->row_actions( $actions ) );
+
+		return sprintf( '<a href="%s">%s</a> %s', esc_url( $view_url ), esc_html( $item->get_voucher_number() ), $this->row_actions( $actions ) );
 	}
 
 	/**
@@ -248,6 +251,9 @@ class Payments extends ListTable {
 	 */
 	public function column_default( $item, $column_name ) {
 		switch ( $column_name ) {
+			case 'date':
+				$value = $item->get_payment_date();
+				break;
 			case 'amount':
 				$value = $item->get_formatted_amount();
 				break;

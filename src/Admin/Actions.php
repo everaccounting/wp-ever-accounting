@@ -2,6 +2,17 @@
 
 namespace EverAccounting\Admin;
 
+use EverAccounting\Models\Account;
+use EverAccounting\Models\Category;
+use EverAccounting\Models\Currency;
+use EverAccounting\Models\Customer;
+use EverAccounting\Models\Expense;
+use EverAccounting\Models\Invoice;
+use EverAccounting\Models\Product;
+use EverAccounting\Models\Payment;
+use EverAccounting\Models\Tax;
+use EverAccounting\Models\Transfer;
+use EverAccounting\Models\Vendor;
 use EverAccounting\Singleton;
 
 defined( 'ABSPATH' ) || exit;
@@ -22,16 +33,85 @@ class Actions extends Singleton {
 	 */
 	protected function __construct() {
 		// AJAX actions.
+		add_action( 'wp_ajax_eac_get_html_response', array( __CLASS__, 'get_html_response' ) );
 		add_action( 'wp_ajax_eac_json_search', array( __CLASS__, 'json_search' ) );
+		add_action( 'wp_ajax_eac_get_contact_details', array( __CLASS__, 'get_contact_details' ) );
+		add_action( 'wp_ajax_eac_get_product_details', array( __CLASS__, 'get_product_details' ) );
 		add_action( 'wp_ajax_eac_edit_customer', array( __CLASS__, 'edit_customer' ) );
 		add_action( 'wp_ajax_eac_edit_vendor', array( __CLASS__, 'edit_vendor' ) );
 		add_action( 'wp_ajax_eac_edit_account', array( __CLASS__, 'edit_account' ) );
-		add_action( 'wp_ajax_eac_edit_item', array( __CLASS__, 'edit_item' ) );
+		add_action( 'wp_ajax_eac_edit_product', array( __CLASS__, 'edit_product' ) );
 		add_action( 'wp_ajax_eac_edit_category', array( __CLASS__, 'edit_category' ) );
 		add_action( 'wp_ajax_eac_edit_currency', array( __CLASS__, 'edit_currency' ) );
 		add_action( 'wp_ajax_eac_edit_payment', array( __CLASS__, 'edit_payment' ) );
 		add_action( 'wp_ajax_eac_edit_expense', array( __CLASS__, 'edit_expense' ) );
 		add_action( 'wp_ajax_eac_edit_transfer', array( __CLASS__, 'edit_transfer' ) );
+		add_action( 'wp_ajax_eac_edit_tax', array( __CLASS__, 'edit_tax' ) );
+		add_action( 'wp_ajax_eac_edit_invoice', array( __CLASS__, 'edit_invoice' ) );
+		add_action( 'wp_ajax_eac_calculate_invoice', array( __CLASS__, 'calculate_invoice' ) );
+		add_action( 'admin_post_eac_export_data', array( __CLASS__, 'export_data' ) );
+	}
+
+	/**
+	 * Get modal content.
+	 *
+	 * @since 1.1.6
+	 * @return void
+	 */
+	public static function get_html_response() {
+		check_ajax_referer( 'eac_get_html_response' );
+		$id        = isset( $_GET['id'] ) ? absint( wp_unslash( $_GET['id'] ) ) : 0;
+		$html_type = isset( $_GET['html_type'] ) ? sanitize_text_field( wp_unslash( $_GET['html_type'] ) ) : '';
+		ob_start();
+		switch ( $html_type ) {
+			case 'edit_category':
+				$type     = isset( $_GET['type'] ) ? sanitize_text_field( wp_unslash( $_GET['type'] ) ) : 'item';
+				$category = new Category( $id );
+				$category->set_type( $type );
+				require __DIR__ . '/views/categories/category-form.php';
+				break;
+			case 'edit_account':
+				$account = new Account( $id );
+				require __DIR__ . '/views/accounts/account-form.php';
+				break;
+			case 'edit_transfer':
+				$transfer = new Transfer( $id );
+				require __DIR__ . '/views/transfers/transfer-form.php';
+				break;
+			case 'edit_vendor':
+				$vendor = new Vendor( $id );
+				require __DIR__ . '/views/vendors/vendor-form.php';
+				break;
+			case 'edit_customer':
+				$customer = new Customer( $id );
+				require __DIR__ . '/views/customers/customer-form.php';
+				break;
+			case 'edit_payment':
+				$payment = new Payment( $id );
+				require __DIR__ . '/views/payments/payment-form.php';
+				break;
+			case 'edit_expense':
+				$expense = new Expense( $id );
+				require __DIR__ . '/views/expenses/expense-form.php';
+				break;
+			case 'edit_product':
+				$product = new Product( $id );
+				require __DIR__ . '/views/products/product-form.php';
+				break;
+			case 'edit_currency':
+				$currency = new Currency( $id );
+				require __DIR__ . '/views/currencies/currency-form.php';
+				break;
+			case 'edit_tax':
+				$tax = new Tax( $id );
+				require __DIR__ . '/views/taxes/tax-form.php';
+				break;
+			default:
+				do_action( 'eac_get_html_response', $html_type );
+				break;
+		}
+		echo ob_get_clean(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		wp_die();
 	}
 
 	/**
@@ -67,9 +147,9 @@ class Actions extends Singleton {
 					);
 				}
 				break;
-			case 'item':
-				$items = eac_get_items( $args );
-				$total = eac_get_items( $args, true );
+			case 'product':
+				$items = eac_get_products( $args );
+				$total = eac_get_products( $args, true );
 				foreach ( $items as $item ) {
 					$results[] = array(
 						'id'   => $item->get_id(),
@@ -91,8 +171,8 @@ class Actions extends Singleton {
 				break;
 
 			case 'currency':
-				$currencies = eac_get_currencies( $args );
-				$total      = eac_get_currencies( $args, true );
+				$currencies = eac_get_currencies();
+				$total      = eac_get_currencies();
 				foreach ( $currencies as $currency ) {
 					$results[] = array(
 						'id'   => $currency->get_code(),
@@ -164,6 +244,17 @@ class Actions extends Singleton {
 					);
 				}
 				break;
+			case 'tax':
+				$tax_rates = eac_get_taxes( $args );
+				$total     = eac_get_taxes( $args, true );
+				foreach ( $tax_rates as $tax_rate ) {
+					$results[] = array(
+						'id'   => $tax_rate->get_id(),
+						'text' => $tax_rate->get_formatted_name(),
+					);
+				}
+				break;
+
 			default:
 				$filtered = apply_filters(
 					'ever_accounting_json_search',
@@ -191,6 +282,50 @@ class Actions extends Singleton {
 					'more' => ( $page * $limit ) < $total,
 				),
 			)
+		);
+	}
+
+	/**
+	 * Get contact details.
+	 *
+	 * @since 1.1.6
+	 * @return void
+	 */
+	public static function get_contact_details() {
+		$contact_id = eac_get_input_var( 'contact_id', 0, 'post' );
+		$contact    = eac_get_contact( $contact_id );
+		if ( ! $contact ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Invalid contact!', 'wp-ever-accounting' ),
+				)
+			);
+		}
+
+		wp_send_json_success(
+			$contact->get_data()
+		);
+	}
+
+	/**
+	 * Get contact details.
+	 *
+	 * @since 1.1.6
+	 * @return void
+	 */
+	public static function get_product_details() {
+		$item_id = eac_get_input_var( 'product_id', 0, 'post' );
+		$item    = eac_get_product( $item_id );
+		if ( ! $item ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Invalid product!', 'wp-ever-accounting' ),
+				)
+			);
+		}
+
+		wp_send_json_success(
+			$item->get_data()
 		);
 	}
 
@@ -276,10 +411,10 @@ class Actions extends Singleton {
 	 * @since 1.1.6
 	 * @return void
 	 */
-	public static function edit_item() {
-		check_admin_referer( 'eac_edit_item' );
+	public static function edit_product() {
+		check_admin_referer( 'eac_edit_product' );
 		$posted  = eac_clean( wp_unslash( $_POST ) );
-		$created = eac_insert_item( $posted );
+		$created = eac_insert_product( $posted );
 		$referer = wp_get_referer();
 		if ( is_wp_error( $created ) ) {
 			wp_send_json_error(
@@ -289,11 +424,11 @@ class Actions extends Singleton {
 			);
 		}
 
-		$message  = __( 'Item updated successfully!', 'wp-ever-accounting' );
+		$message  = __( 'Product updated successfully!', 'wp-ever-accounting' );
 		$update   = ! empty( $posted['id'] );
 		$redirect = '';
 		if ( ! $update ) {
-			$message  = __( 'Item created successfully!', 'wp-ever-accounting' );
+			$message  = __( 'Product created successfully!', 'wp-ever-accounting' );
 			$redirect = remove_query_arg( array( 'action' ), eac_clean( $referer ) );
 		}
 
@@ -301,7 +436,7 @@ class Actions extends Singleton {
 			array(
 				'message'  => $message,
 				'redirect' => $redirect,
-				'item'     => $created->get_data(),
+				'product'  => $created->get_data(),
 			)
 		);
 
@@ -354,8 +489,32 @@ class Actions extends Singleton {
 	 */
 	public static function edit_currency() {
 		check_admin_referer( 'eac_edit_currency' );
-		$posted  = eac_clean( wp_unslash( $_POST ) );
-		$created = eac_insert_currency( $posted );
+		$posted            = eac_clean( wp_unslash( $_POST ) );
+		$global_currencies = eac_get_global_currencies();
+		$code              = ! empty( $posted['code'] ) ? $posted['code'] : '';
+		$name              = ! empty( $posted['name'] ) ? sanitize_text_field( $posted['name'] ) : '';
+		$symbol            = ! empty( $posted['symbol'] ) ? sanitize_text_field( $posted['symbol'] ) : '';
+		$position          = ! empty( $posted['position'] ) ? sanitize_text_field( $posted['position'] ) : '';
+		$precision         = ! empty( $posted['precision'] ) ? absint( $posted['precision'] ) : '';
+
+		if ( empty( $code ) || empty( $global_currencies[ $code ] ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Invalid currency code!', 'wp-ever-accounting' ),
+				)
+			);
+		}
+
+		$data = array(
+			'code'      => $code,
+			'name'      => $name,
+			'symbol'    => $symbol,
+			'position'  => $position,
+			'precision' => $precision,
+		);
+		$data = wp_parse_args( $data, $global_currencies[ $code ] );
+
+
 		$referer = wp_get_referer();
 		if ( is_wp_error( $created ) ) {
 			wp_send_json_error(
@@ -533,6 +692,142 @@ class Actions extends Singleton {
 			)
 		);
 
+		exit();
+	}
+
+	/**
+	 * Edit tax rate.
+	 *
+	 * @since 1.1.6
+	 * @return void
+	 */
+	public static function edit_tax() {
+		check_admin_referer( 'eac_edit_tax' );
+		$posted  = eac_clean( wp_unslash( $_POST ) );
+		$created = eac_insert_tax( $posted );
+		$referer = wp_get_referer();
+		if ( is_wp_error( $created ) ) {
+			wp_send_json_error(
+				array(
+					'message' => $created->get_error_message(),
+				)
+			);
+		}
+
+		$message  = __( 'Tax rate updated successfully!', 'wp-ever-accounting' );
+		$update   = ! empty( $posted['id'] );
+		$redirect = '';
+		if ( ! $update ) {
+			$message  = __( 'Tax rate created successfully!', 'wp-ever-accounting' );
+			$redirect = remove_query_arg( array( 'action' ), eac_clean( $referer ) );
+		}
+
+		wp_send_json_success(
+			array(
+				'message'  => $message,
+				'redirect' => $redirect,
+				'item'     => $created->get_data(),
+			)
+		);
+
+		exit();
+	}
+
+	/**
+	 * Edit document.
+	 *
+	 * @since 1.1.6
+	 * @return void
+	 */
+	public static function edit_invoice() {
+		check_ajax_referer( 'eac_edit_invoice' );
+		$referer  = wp_get_referer();
+		$posted   = eac_clean( wp_unslash( $_POST ) );
+		$posted   = wp_parse_args( $posted );
+		$document = new Invoice( $posted['id'] );
+		$document->set_props( $posted );
+
+		$message  = __( 'Invoice updated successfully!', 'wp-ever-accounting' );
+		$update   = ! empty( $posted['id'] );
+		$redirect = '';
+		if ( ! $update ) {
+			$message  = __( 'Invoice created successfully!', 'wp-ever-accounting' );
+			$redirect = remove_query_arg( array( 'action' ), eac_clean( $referer ) );
+		}
+
+		$saved = $document->save();
+		if ( is_wp_error( $saved ) ) {
+			wp_send_json_error(
+				array(
+					'message' => $saved->get_error_message(),
+				)
+			);
+		}
+
+		wp_send_json_success(
+			array(
+				'message'  => $message,
+				'redirect' => $redirect,
+				'item'     => $document->get_data(),
+			)
+		);
+	}
+
+	/**
+	 * Calculate invoice totals.
+	 *
+	 * @since 1.1.6
+	 * @return void
+	 */
+	public static function calculate_invoice() {
+		check_ajax_referer( 'eac_edit_invoice' );
+		$posted = wp_parse_args( $_POST );
+		$posted = eac_clean( $posted );
+		if ( ! isset( $posted['items'] ) ) {
+			$posted['items'] = array();
+		}
+		foreach ( $posted['items'] as $key => $item ) {
+			if ( ! isset( $item['tax_ids'] ) ) {
+				$posted['items'][ $key ]['tax_ids'] = '';
+			}
+		}
+		$document = new Invoice( $posted['id'] );
+		$document->set_props( $posted );
+		$document->calculate_totals();
+		include __DIR__ . '/views/invoices/invoice-form.php';
+		exit();
+	}
+
+	/**
+	 * Export data.
+	 *
+	 * @since 1.1.6
+	 * @return void
+	 */
+	public static function export_data() {
+		check_admin_referer( 'eac_export_data' );
+		$posted      = eac_clean( wp_unslash( $_POST ) );
+		$export_type = isset( $posted['export_type'] ) ? $posted['export_type'] : '';
+
+		// if export type not set, die.
+		if ( empty( $export_type ) ) {
+			wp_die( esc_html__( 'Export type not found!', 'wp-ever-accounting' ) );
+		}
+
+		switch ( $export_type ) {
+			case 'accounts':
+				$exporter = new Exporters\Accounts();
+				$exporter->process_step( 1 );
+				$exporter->export();
+				break;
+			case 'customers':
+				$exporter = new Exporters\Customers();
+				$exporter->process_step( 1 );
+				$exporter->export();
+				break;
+		}
+
+		wp_safe_redirect( wp_get_referer() );
 		exit();
 	}
 }

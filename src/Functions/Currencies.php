@@ -1,130 +1,205 @@
 <?php
 
-use EverAccounting\Models\Currency;
-
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Main function for returning currency.
-
- * @param mixed  $currency Currency object, code or ID.
- * @param string $column Optional. Column to get. Default null.
- * @param array  $args Optional. Additional arguments. Default empty array.
- * @since 1.1.0
- * @return Currency|null
+ * Get currency symbol
+ *
+ * @param string $code Currency code.
+ *
+ * @since 1.0.2
+ *
+ * @return string
  */
-function eac_get_currency( $currency, $column = null, $args = array() ) {
-	return Currency::get( $currency, $column, $args );
+function eac_get_currency_symbol( $code = '' ) {
+	$currencies = eac_get_currencies();
+	if ( empty( $code ) ) {
+		$code = eac_get_base_currency();
+	}
+
+	if ( empty( $currencies[ $code ] ) || empty( $currencies[ $code ]['symbol'] ) ) {
+		return $code;
+	}
+
+	return $currencies[ $code ]['symbol'];
+}
+
+/**
+ * Get currency position.
+ *
+ * @param string $code Currency code.
+ *
+ * @since 1.0.2
+ *
+ * @return string
+ */
+function eac_get_currency_position( $code = '' ) {
+	if ( empty( $code ) ) {
+		$code = eac_get_base_currency();
+	}
+
+	$currencies = eac_get_currencies();
+	if ( empty( $currencies[ $code ] ) || empty( $currencies[ $code ]['position'] ) ) {
+		return 'left';
+	}
+
+	return $currencies[ $code ]['position'];
+}
+
+/**
+ * Get currency decimal separator.
+ *
+ * @param string $code Currency code.
+ *
+ * @since 1.0.2
+ *
+ * @return string
+ */
+function eac_get_currency_decimal_separator( $code = '' ) {
+	if ( empty( $code ) ) {
+		$code = eac_get_base_currency();
+	}
+
+	$currencies = eac_get_currencies();
+	if ( empty( $currencies[ $code ] ) || empty( $currencies[ $code ]['decimal_sep'] ) ) {
+		return '.';
+	}
+
+	return $currencies[ $code ]['decimal_sep'];
+}
+
+/**
+ * Get currency a thousand separator.
+ *
+ * @param string $code Currency code.
+ *
+ * @since 1.0.2
+ *
+ * @return string
+ */
+function eac_get_currency_thousand_separator( $code = '' ) {
+	if ( empty( $code ) ) {
+		$code = eac_get_base_currency();
+	}
+
+	$currencies = eac_get_currencies();
+	if ( empty( $currencies[ $code ] ) || empty( $currencies[ $code ]['thousand_sep'] ) ) {
+		return ',';
+	}
+
+	return $currencies[ $code ]['thousand_sep'];
+}
+
+/**
+ * Get currency decimal places.
+ *
+ * @param string $code Currency code.
+ *
+ * @since 1.0.2
+ *
+ * @return int
+ */
+function eac_get_currency_precision( $code = '' ) {
+	if ( empty( $code ) ) {
+		$code = eac_get_base_currency();
+	}
+
+	$currencies = eac_get_currencies();
+	if ( empty( $currencies[ $code ] ) || empty( $currencies[ $code ]['precision'] ) ) {
+		return 2;
+	}
+
+	return $currencies[ $code ]['precision'];
 }
 
 /**
  * Get currency rate.
  *
- * @param string $currency Currency code.
+ * @param string $code Currency code.
  *
- * @return mixed|null
- * @since 1.1.0
+ * @since 1.0.2
+ *
+ * @return string
  */
-function eac_get_currency_rate( $currency ) {
-	$currency = eac_get_currency( $currency );
-	if ( ! $currency ) {
+function eac_get_currency_rate( $code = '' ) {
+	if ( empty( $code ) ) {
+		$code = eac_get_base_currency();
+	}
+
+	$currencies = eac_get_currencies();
+	if ( empty( $currencies[ $code ] ) || empty( $currencies[ $code ]['rate'] ) ) {
 		return 1;
 	}
 
-	return $currency->get_rate();
-}
-
-
-/**
- *  Create new currency programmatically.
- *
- *  Returns a new currency object on success.
- *
- * @param array $args   Currency arguments.
- * @param bool  $wp_error Optional. Whether to return a WP_Error on failure. Default false.
- *
- * @since 1.1.0
- * @return Currency|\WP_Error|bool
- */
-function eac_insert_currency( $args, $wp_error = true ) {
-	return Currency::insert( $args, $wp_error );
+	return $currencies[ $code ]['rate'];
 }
 
 /**
- * Delete a currency.
+ * Update currency.
  *
- * @param string $currency_code Currency code.
+ * @param array $data Currency data.
  *
+ * @since 1.0.0
  * @return bool
- * @since 1.1.0
  */
-function eac_delete_currency( $currency_code ) {
-	$currency = eac_get_currency( $currency_code );
-	if ( ! $currency ) {
+function eac_update_currency( $data ) {
+	$currencies = eac_get_currencies();
+	if ( empty( $data['code'] ) || empty( $currencies[ $data['code'] ] ) ) {
 		return false;
 	}
+	$code     = sanitize_text_field( strtoupper( $data['code'] ) );
+	$currency = wp_parse_args( $data, $currencies[ $code ] );
+	$currency = wp_array_slice_assoc( $currency, array_keys( $currencies[ $code ] ) );
+	$is_base  = ! empty( $data['base'] ) && 'yes' === $data['base'];
 
-	return $currency->delete();
-}
-
-/**
- * Get currency items.
- *
- * @param array $args Query arguments.
- * @param bool  $count Whether to return count or items.
- *
- * @return Currency[]|int|null
- * @since 1.1.0
- */
-function eac_get_currencies( $args = array(), $count = false ) {
-	$args = wp_parse_args(
-		$args,
-		array(
-			'limit'   => 20,
-			'offset'  => 0,
-			'orderby' => 'id',
-			'order'   => 'DESC',
-		)
-	);
-
-	if ( $count ) {
-		return Currency::count( $args );
-	}
-
-	return Currency::query( $args );
-}
-
-
-/**
- * Get currency rates.
- *
- * @return array
- * @since 1.1.0
- */
-function eac_get_currency_rates() {
-	$rates = get_transient( 'eac_currency_rates' );
-	if ( false === $rates ) {
-		$currencies = eac_get_currencies( array( 'limit' => - 1 ) );
-		$rates      = array();
-		foreach ( $currencies as $currency ) {
-			$rates[ $currency->get_code() ] = $currency->get_rate();
+	// When a currency is set as base, make sure all other currencies rate is updated.
+	if ( $is_base ) {
+		$new_rate = $currencies[ $code ]['rate'];
+		foreach ( $currencies as $currency_code => &$currency_data ) {
+			if ( $currency_code !== $code ) {
+				$currencies[ $currency_code ]['rate'] = $currency_data['rate'] / $new_rate;
+				if ( $currency_data['base'] ) {
+					unset( $currencies['base'] );
+				}
+			}
 		}
 
-		set_transient( 'eac_currency_rates', $rates, 24 * HOUR_IN_SECONDS );
+		$currency['rate']   = 1;
+		$currency['base']   = 'yes';
+		$currency['status'] = 'active';
 	}
+	// status should either be active or inactive.
+	$currency['status']    = in_array( $currency['status'], array( 'active', 'inactive' ), true ) ? $currency['status'] : 'inactive';
+	$currency['precision'] = max( 0, min( 4, $currency['precision'] ) );
+	$currency['rate']      = max( 0, $currency['rate'] );
+	$currencies[ $code ]   = $currency;
 
-	return $rates;
+	return update_option( 'eac_currencies', $currencies );
 }
-
 
 /**
- * Flush currency rates.
+ * Get currencies.
  *
- * @since 1.1.0
+ * @param string $status Currency status.
+ *
+ * @since 1.0.0
+ * @return array
  */
-function eac_flush_currency_rates() {
-	delete_transient( 'eac_currency_rates' );
-}
+function eac_get_currencies( $status = null ) {
+	$currencies = get_option( 'eac_currencies', array() );
+	if ( in_array( $status, array( 'active', 'inactive' ), true ) ) {
+		$currencies = array_filter(
+			$currencies,
+			function ( $currency ) use ( $status ) {
+				return $currency['status'] === $status;
+			}
+		);
+	}
 
-add_action( 'ever_accounting_currency_saved', 'eac_flush_currency_rates' );
-add_action( 'ever_accounting_currency_deleted', 'eac_flush_currency_rates' );
+	// set a formatted name for each currency.
+	foreach ( $currencies as $code => $currency ) {
+		$currencies[ $code ]['formatted_name'] = sprintf( '%s (%s)', $currency['name'], $currency['symbol'] );
+	}
+
+	return apply_filters( 'ever_accounting_currencies', $currencies );
+}

@@ -52,26 +52,26 @@ class Transaction extends Model {
 	 * @var array
 	 */
 	protected $core_data = array(
-		'type'               => 'payment',
-		'transaction_number' => '',
-		'payment_date'       => null,
-		'amount'             => 0.00,
-		'currency_rate'      => 1,    // exchange rate of transaction currency to base currency.
-		'currency_code'      => '',   // currency code of the transaction.
-		'account_id'         => null, // ID of the account associated with the transaction.
-		'document_id'        => null, // ID of the document associated with the transaction.
-		'contact_id'         => null, // ID of the contact associated with the transaction.
-		'category_id'        => null, // ID of the category associated with the transaction.
-		'note'               => '',   // additional notes about the transaction.
-		'payment_method'     => '',   // method of payment used for the transaction.
-		'reference'          => '',   // reference number or other identifier for the transaction.
-		'attachment_id'      => null, // ID of any attachments associated with the transaction.
-		'parent_id'          => 0,    // ID of the parent transaction, if any.
-		'reconciled'         => 0,    // whether the transaction has been reconciled.
-		'token'              => '',   // token used for payment processing, if any.
-		'creator_id'         => null, // ID of the user who created the transaction.
-		'updated_at'         => null, // date and time the transaction was last updated.
-		'created_at'         => null, // date and time the transaction was created.
+		'type'           => 'payment',
+		'voucher_number' => '',
+		'payment_date'   => null,
+		'amount'         => 0.00,
+		'currency_rate'  => 1,    // exchange rate of transaction currency to base currency.
+		'currency_code'  => '',   // currency code of the transaction.
+		'account_id'     => null, // ID of the account associated with the transaction.
+		'document_id'    => null, // ID of the document associated with the transaction.
+		'contact_id'     => null, // ID of the contact associated with the transaction.
+		'category_id'    => null, // ID of the category associated with the transaction.
+		'note'           => '',   // additional notes about the transaction.
+		'payment_method' => '',   // method of payment used for the transaction.
+		'reference'      => '',   // reference number or other identifier for the transaction.
+		'attachment_id'  => null, // ID of any attachments associated with the transaction.
+		'parent_id'      => 0,    // ID of the parent transaction, if any.
+		'reconciled'     => 0,    // whether the transaction has been reconciled.
+		'unique_hash'    => '',   // token used for payment processing, if any.
+		'creator_id'     => null, // ID of the user who created the transaction.
+		'updated_at'     => null, // date and time the transaction was last updated.
+		'created_at'     => null, // date and time the transaction was created.
 	);
 
 	/**
@@ -82,14 +82,8 @@ class Transaction extends Model {
 	 * @since 1.0.0
 	 */
 	public function __construct( $data = 0 ) {
-		global $wpdb;
-		$this->core_data['currency_code'] = eac_get_default_currency();
+		$this->core_data['currency_code'] = eac_get_base_currency();
 		parent::__construct( $data );
-
-		// if the object is not loaded, set the default values.
-		if ( ! $this->exists() ) {
-			$this->set_next_transaction_number();
-		}
 	}
 
 	/*
@@ -134,8 +128,8 @@ class Transaction extends Model {
 	 * @since 1.1.0
 	 * @return mixed|null
 	 */
-	public function get_transaction_number( $context = 'edit' ) {
-		return $this->get_prop( 'transaction_number', $context );
+	public function get_voucher_number( $context = 'edit' ) {
+		return $this->get_prop( 'voucher_number', $context );
 	}
 
 	/**
@@ -145,8 +139,8 @@ class Transaction extends Model {
 	 *
 	 * @since 1.1.0
 	 */
-	public function set_transaction_number( $value ) {
-		$this->set_prop( 'transaction_number', $value );
+	public function set_voucher_number( $value ) {
+		$this->set_prop( 'voucher_number', $value );
 	}
 
 	/**
@@ -496,23 +490,23 @@ class Transaction extends Model {
 	}
 
 	/**
-	 * Get the token.
+	 * Get the unique_hash.
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
 	 * @return string
 	 */
-	public function get_token( $context = 'edit' ) {
-		return $this->get_prop( 'token', $context );
+	public function get_unique_hash( $context = 'edit' ) {
+		return $this->get_prop( 'unique_hash', $context );
 	}
 
 	/**
-	 * Set the token.
+	 * Set the unique_hash.
 	 *
-	 * @param string $token token.
+	 * @param string $unique_hash unique_hash.
 	 */
-	public function set_token( $token ) {
-		$this->set_prop( 'token', $token );
+	public function set_unique_hash( $unique_hash ) {
+		$this->set_prop( 'unique_hash', $unique_hash );
 	}
 
 	/**
@@ -610,8 +604,8 @@ class Transaction extends Model {
 			$this->set_amount( eac_sanitize_price( $this->get_amount(), $currency->get_code() ) );
 		}
 
-		if ( empty( $this->get_token() ) ) {
-			$this->set_token( wp_generate_uuid4() );
+		if ( empty( $this->get_unique_hash() ) ) {
+			$this->set_unique_hash( md5( wp_generate_uuid4() ) );
 		}
 
 		// Creator ID.
@@ -630,8 +624,8 @@ class Transaction extends Model {
 		}
 
 		// if number is not set, set it to the next available number from database based on type.
-		if ( empty( $this->get_transaction_number() ) ) {
-			$this->set_next_transaction_number();
+		if ( empty( $this->get_voucher_number() ) ) {
+			$this->set_voucher_number( $this->get_next_voucher_number() );
 		}
 
 		return parent::save();
@@ -668,34 +662,32 @@ class Transaction extends Model {
 	 * Set next transaction number.
 	 *
 	 * @since 1.0.0
-	 * @return void
+	 * @return string
 	 */
-	public function set_next_transaction_number() {
-		if ( empty( $this->get_transaction_number() ) ) {
-			global $wpdb;
-			// take the 3 first letters of the transaction type as the prefix.
-			$prefix = strtoupper( substr( $this->get_type(), 0, 3 ) );
-			// find the next available transaction number.
-			$number = $wpdb->get_var(
-				$wpdb->prepare(
-					"select MAX(ABS(CAST(REGEXP_REPLACE(transaction_number, '[^0-9]+', '') AS SIGNED))) as number FROM {$this->table} WHERE `type` = %s",
-					$this->get_type(),
-				)
-			);
+	public function get_next_voucher_number() {
+		global $wpdb;
+		// take the 3 first letters of the transaction type as the prefix.
+		$prefix = strtoupper( substr( $this->get_type(), 0, 3 ) );
+		// find the next available transaction number.
+		$number = (int) $wpdb->get_var(
+			$wpdb->prepare(
+				"select MAX(ABS(CAST(REGEXP_REPLACE(voucher_number, '[^0-9]+', '') AS SIGNED))) as number FROM {$this->table} WHERE `type` = %s",
+				$this->get_type(),
+			)
+		);
 
-			// if there is no transaction number, start from 0.
-			if ( empty( $number ) ) {
-				$number = 0;
-			}
-			// digits to pad the number with.
-			$minimum_digits = 6;
-			// pad the number with zeros to the left.
-			$number = str_pad( $number, $minimum_digits, '0', STR_PAD_LEFT );
-			// format the number.
-			$number = $prefix . '-' . $number;
-			// set the number.
-			$this->set_transaction_number( $number );
+		// if there is no transaction number, start from 0.
+		if ( empty( $number ) ) {
+			$number = 0;
 		}
+		$number++;
+		// digits to pad the number with.
+		$minimum_digits = get_option( 'eac_voucher_number_digits', 6 );
+		// pad the number with zeros to the left.
+		$number = str_pad( $number, $minimum_digits, '0', STR_PAD_LEFT );
+		// format the number.
+		$number = $prefix . $number;
+		return $number;
 	}
 
 	/**
@@ -705,6 +697,6 @@ class Transaction extends Model {
 	 * @return string
 	 */
 	public function get_formatted_amount() {
-		return eac_format_price( $this->get_amount(), $this->get_currency_code() );
+		return eac_format_money( $this->get_amount(), $this->get_currency_code() );
 	}
 }

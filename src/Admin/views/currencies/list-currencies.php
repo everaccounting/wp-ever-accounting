@@ -13,22 +13,19 @@ $list_table = new \EverAccounting\Admin\ListTables\Currencies();
 $action     = $list_table->current_action();
 $list_table->process_bulk_action( $action );
 $list_table->prepare_items();
-$page = eac_get_request_var( 'page', 'get', '' );
-$tab  = eac_get_request_var( 'tab', 'get', '' );
+$page = eac_get_input_var( 'page' );
+$tab  = eac_get_input_var( 'tab' );
 
 ?>
-	<div class="eac-page__header">
-		<div class="eac-page__header-col">
-			<h2 class="eac-page__title"><?php esc_html_e( 'Currencies', 'ever-accounting' ); ?></h2>
+	<div class="eac-section-header">
+		<div>
+			<h2><?php esc_html_e( 'Currencies', 'wp-ever-accounting' ); ?></h2>
+			<a href="<?php echo esc_url( admin_url( 'admin.php?page=eac-settings&tab=currencies&action=add' ) ); ?>" class="page-title-action"><?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?></a>
 		</div>
 	</div>
 <?php do_action( 'ever_accounting_currencies_table_top' ); ?>
 	<form method="get" id="eac-currencies-table">
-		<?php
-		$list_table->views();
-		$list_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'search' );
-		$list_table->display();
-		?>
+		<?php $list_table->display(); ?>
 		<input type="hidden" name="page" value="<?php echo esc_attr( $page ); ?>"/>
 		<input type="hidden" name="tab" value="<?php echo esc_attr( $tab ); ?>"/>
 	</form>

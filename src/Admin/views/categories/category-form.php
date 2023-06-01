@@ -21,31 +21,31 @@ defined( 'ABSPATH' ) || exit;
 				<?php
 				eac_input_field(
 					array(
-						'id'            => 'name',
-						'label'         => __( 'Name', 'wp-ever-accounting' ),
-						'value'         => $category->get_name(),
-						'wrapper_class' => 'eac-col-6',
-						'required'      => true,
+						'id'       => 'name',
+						'label'    => __( 'Name', 'wp-ever-accounting' ),
+						'value'    => $category->get_name(),
+						'class'    => 'eac-col-6',
+						'required' => true,
 					)
 				);
 				eac_input_field(
 					array(
-						'id'            => 'type',
-						'label'         => __( 'Type', 'wp-ever-accounting' ),
-						'value'         => $category->get_type(),
-						'wrapper_class' => 'eac-col-6',
-						'required'      => true,
-						'options'       => eac_get_category_types(),
-						'type'          => 'select',
+						'id'       => 'type',
+						'label'    => __( 'Type', 'wp-ever-accounting' ),
+						'value'    => $category->get_type(),
+						'class'    => 'eac-col-6',
+						'required' => true,
+						'options'  => eac_get_category_types(),
+						'type'     => 'select',
 					)
 				);
 				eac_input_field(
 					array(
-						'id'            => 'description',
-						'label'         => __( 'Description', 'wp-ever-accounting' ),
-						'value'         => $category->get_description(),
-						'wrapper_class' => 'eac-col-12',
-						'type'          => 'textarea',
+						'id'    => 'description',
+						'label' => __( 'Description', 'wp-ever-accounting' ),
+						'value' => $category->get_description(),
+						'class' => 'eac-col-12',
+						'type'  => 'textarea',
 					)
 				);
 				?>

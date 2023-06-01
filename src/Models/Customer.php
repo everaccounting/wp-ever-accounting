@@ -29,7 +29,7 @@ class Customer extends Contact {
 	public function __construct( $data = 0 ) {
 		$args            = array(
 			'type'          => 'customer',
-			'currency_code' => eac_get_default_currency(),
+			'currency_code' => eac_get_base_currency(),
 			'country'       => get_option( 'eac_business_country' ),
 		);
 		$this->core_data = array_merge( $this->core_data, $args );

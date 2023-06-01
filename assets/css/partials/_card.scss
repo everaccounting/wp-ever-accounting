@@ -18,7 +18,7 @@
 		overflow: hidden;
 	}
 
-	&__header, &__footer, &__section {
+	&__header, &__footer{
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
@@ -27,7 +27,7 @@
 		min-height: 25px;
 		background: #fff;
 
-		p.submit {
+		p {
 			margin: 0;
 			padding: 0;
 		}
@@ -46,7 +46,7 @@
 		}
 	}
 
-	&__body {
+	&__body,  &__section {
 		box-sizing: content-box;
 		position: relative;
 		padding: 15px;
@@ -100,6 +100,10 @@
 
 		+ [class*=eac-card__] {
 			border-top: 1px solid #e1e2e2 !important;
+			// if not last child
+			//&:not(:last-child) {
+			//	border-bottom: 0 !important;
+			//}
 		}
 	}
 
@@ -116,5 +120,27 @@
 		&:not(:first-child) {
 			border-top: 0;
 		}
+	}
+}
+
+
+.eac-drawer__body {
+	// remove border from any div that starts with class "acf-field" eac-card
+	div[class^="eac-card"] {
+		border: none !important;
+		padding: 0;
+	}
+
+	.eac-card__header {
+		display: none;
+	}
+
+	.eac-card {
+		margin-top: 0;
+	}
+
+	.eac-field {
+		flex: 0 0 100% !important;
+		max-width: 100% !important;
 	}
 }

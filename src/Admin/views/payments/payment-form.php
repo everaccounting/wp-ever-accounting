@@ -21,82 +21,94 @@ defined( 'ABSPATH' ) || exit();
 				<?php
 				eac_input_field(
 					array(
-						'type'          => 'account',
-						'name'          => 'account_id',
-						'label'         => __( 'Account', 'wp-ever-accounting' ),
-						'value'         => $payment->get_account_id(),
-						'placeholder'   => __( 'Select account', 'wp-ever-accounting' ),
-						'required'      => true,
-						'wrapper_class' => 'eac-col-6',
-						'suffix'        => '<button class="eac-add-account" type="button"><span class="dashicons dashicons-plus"></span></button>',
+						'type'        => 'price',
+						'name'        => 'amount',
+						'label'       => __( 'Amount', 'wp-ever-accounting' ),
+						'placeholder' => '0.00',
+						'value'       => $payment->get_amount(),
+						'required'    => true,
+						'class'       => 'eac-col-6',
 					)
 				);
 				eac_input_field(
 					array(
-						'type'          => 'price',
-						'name'          => 'amount',
-						'label'         => __( 'Amount', 'wp-ever-accounting' ),
-						'placeholder'   => '0.00',
-						'value'         => $payment->get_amount(),
-						'required'      => true,
-						'wrapper_class' => 'eac-col-6',
+						'type'        => 'account',
+						'name'        => 'account_id',
+						'label'       => __( 'Account', 'wp-ever-accounting' ),
+						'value'       => $payment->get_account_id(),
+						'placeholder' => __( 'Select account', 'wp-ever-accounting' ),
+						'required'    => true,
+						'class'       => 'eac-col-6',
+						'suffix'      => sprintf(
+							'<a class="button" href="%s" title="%s"><span class="dashicons dashicons-plus"></span></a>',
+							esc_url( eac_action_url( 'action=get_html_response&html_type=edit_account' ) ),
+							__( 'Add account', 'wp-ever-accounting' )
+						),
 					)
 				);
 				eac_input_field(
 					array(
-						'type'          => 'date',
-						'name'          => 'payment_date',
-						'label'         => __( 'Date', 'wp-ever-accounting' ),
-						'placeholder'   => 'YYYY-MM-DD',
-						'value'         => $payment->get_payment_date(),
-						'required'      => true,
-						'wrapper_class' => 'eac-col-6',
+						'type'        => 'date',
+						'name'        => 'payment_date',
+						'label'       => __( 'Date', 'wp-ever-accounting' ),
+						'placeholder' => 'YYYY-MM-DD',
+						'value'       => $payment->get_payment_date(),
+						'required'    => true,
+						'class'       => 'eac-col-6',
 					)
 				);
 				eac_input_field(
 					array(
-						'type'          => 'category',
-						'name'          => 'category_id',
-						'label'         => __( 'Category', 'wp-ever-accounting' ),
-						'value'         => $payment->get_category_id(),
-						'placeholder'   => __( 'Select category', 'wp-ever-accounting' ),
-						'required'      => true,
-						'subtype'       => 'payment',
-						'wrapper_class' => 'eac-col-6',
-						'suffix'        => '<button class="eac-add-category" type="button" data-type="payment"><span class="dashicons dashicons-plus"></span></button>',
+						'type'        => 'category',
+						'name'        => 'category_id',
+						'label'       => __( 'Category', 'wp-ever-accounting' ),
+						'value'       => $payment->get_category_id(),
+						'placeholder' => __( 'Select category', 'wp-ever-accounting' ),
+						'required'    => true,
+						'subtype'     => 'payment',
+						'class'       => 'eac-col-6',
+						'suffix'      => sprintf(
+							'<a class="button" href="%s" title="%s"><span class="dashicons dashicons-plus"></span></a>',
+							esc_url( eac_action_url( 'action=get_html_response&html_type=edit_category&type=payment' ) ),
+							__( 'Add category', 'wp-ever-accounting' )
+						),
 					)
 				);
 				eac_input_field(
 					array(
-						'type'          => 'invoice',
-						'name'          => 'document_id',
-						'label'         => __( 'Invoice', 'wp-ever-accounting' ),
-						'value'         => $payment->get_document_id(),
-						'placeholder'   => __( 'Select invoice', 'wp-ever-accounting' ),
-						'required'      => false,
-						'wrapper_class' => 'eac-col-6',
+						'type'        => 'invoice',
+						'name'        => 'document_id',
+						'label'       => __( 'Invoice', 'wp-ever-accounting' ),
+						'value'       => $payment->get_document_id(),
+						'placeholder' => __( 'Select invoice', 'wp-ever-accounting' ),
+						'required'    => false,
+						'class'       => 'eac-col-6',
 					)
 				);
 				eac_input_field(
 					array(
-						'type'          => 'customer',
-						'name'          => 'customer_id',
-						'label'         => __( 'Customer', 'wp-ever-accounting' ),
-						'value'         => $payment->get_customer_id(),
-						'placeholder'   => __( 'Select customer', 'wp-ever-accounting' ),
-						'wrapper_class' => 'eac-col-6',
-						'suffix'        => '<button class="eac-add-customer" type="button"><span class="dashicons dashicons-plus"></span></button>',
+						'type'        => 'customer',
+						'name'        => 'customer_id',
+						'label'       => __( 'Customer', 'wp-ever-accounting' ),
+						'value'       => $payment->get_customer_id(),
+						'placeholder' => __( 'Select customer', 'wp-ever-accounting' ),
+						'class'       => 'eac-col-6',
+						'suffix'      => sprintf(
+							'<a class="button" href="%s" title="%s"><span class="dashicons dashicons-plus"></span></a>',
+							esc_url( eac_action_url( 'action=get_html_response&html_type=edit_customer' ) ),
+							__( 'Add customer', 'wp-ever-accounting' )
+						),
 					)
 				);
 				eac_input_field(
 					array(
-						'type'          => 'select',
-						'name'          => 'payment_method',
-						'label'         => __( 'Payment Method', 'wp-ever-accounting' ),
-						'value'         => $payment->get_payment_method(),
-						'options'       => eac_get_payment_methods(),
-						'placeholder'   => __( 'Select payment method', 'wp-ever-accounting' ),
-						'wrapper_class' => 'eac-col-6',
+						'type'        => 'select',
+						'name'        => 'payment_method',
+						'label'       => __( 'Payment Method', 'wp-ever-accounting' ),
+						'value'       => $payment->get_payment_method(),
+						'options'     => eac_get_payment_methods(),
+						'placeholder' => __( 'Select payment method', 'wp-ever-accounting' ),
+						'class'       => 'eac-col-6',
 					)
 				);
 				?>
@@ -111,22 +123,22 @@ defined( 'ABSPATH' ) || exit();
 				<?php
 				eac_input_field(
 					array(
-						'type'          => 'text',
-						'name'          => 'reference',
-						'label'         => __( 'Reference', 'wp-ever-accounting' ),
-						'value'         => $payment->get_reference(),
-						'placeholder'   => __( 'Enter reference', 'wp-ever-accounting' ),
-						'wrapper_class' => 'eac-col-12',
+						'type'        => 'text',
+						'name'        => 'reference',
+						'label'       => __( 'Reference', 'wp-ever-accounting' ),
+						'value'       => $payment->get_reference(),
+						'placeholder' => __( 'Enter reference', 'wp-ever-accounting' ),
+						'class'       => 'eac-col-12',
 					)
 				);
 				eac_input_field(
 					array(
-						'type'          => 'textarea',
-						'name'          => 'note',
-						'label'         => __( 'Notes', 'wp-ever-accounting' ),
-						'value'         => $payment->get_note(),
-						'placeholder'   => __( 'Enter description', 'wp-ever-accounting' ),
-						'wrapper_class' => 'eac-col-12',
+						'type'        => 'textarea',
+						'name'        => 'note',
+						'label'       => __( 'Notes', 'wp-ever-accounting' ),
+						'value'       => $payment->get_note(),
+						'placeholder' => __( 'Enter description', 'wp-ever-accounting' ),
+						'class'       => 'eac-col-12',
 					)
 				);
 				?>

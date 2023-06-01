@@ -15,12 +15,12 @@ $payments = eac_get_payments(
 	)
 );
 ?>
-<div class="wrap ea-page">
-	<div class="eac-page__header eac-mb-20">
-		<div class="eac-page__header-col">
-			<h2 class="eac-page__title"><?php echo esc_html__( 'Overview', 'wp-ever-accounting' ); ?></h2>
+<div class="wrap eac-page">
+	<div class="eac-section-header eac-mb-20">
+		<div>
+			<h2><?php echo esc_html__( 'Overview', 'wp-ever-accounting' ); ?></h2>
 		</div>
-		<div class="eac-page__header-col">
+		<div>
 		</div>
 	</div>
 
@@ -36,7 +36,7 @@ $payments = eac_get_payments(
 	</div>
 
 	<div class="ea-report-cards eac-mb-20">
-		<div class="ea-report-card is--wp">
+		<div class="ea-report-card">
 			<div class="ea-report-card__icon">
 				<?php echo eac_get_svg_icon( 'category', 32 ); ?>
 			</div>
@@ -57,7 +57,7 @@ $payments = eac_get_payments(
 			</div>
 		</div>
 
-		<div class="ea-report-card is--wp">
+		<div class="ea-report-card">
 			<div class="ea-report-card__icon">
 				<?php echo eac_get_svg_icon( 'calendar', 32 ); ?>
 			</div>
@@ -78,7 +78,7 @@ $payments = eac_get_payments(
 			</div>
 		</div>
 
-		<div class="ea-report-card is--wp">
+		<div class="ea-report-card">
 			<div class="ea-report-card__icon">
 				<?php echo eac_get_svg_icon( 'check', 32 ); ?>
 			</div>
@@ -99,7 +99,7 @@ $payments = eac_get_payments(
 			</div>
 		</div>
 
-		<div class="ea-report-card is--wp">
+		<div class="ea-report-card">
 			<div class="ea-report-card__icon">
 				<?php echo eac_get_svg_icon( 'chevron_left', 32 ); ?>
 			</div>
@@ -120,7 +120,7 @@ $payments = eac_get_payments(
 			</div>
 		</div>
 
-		<div class="ea-report-card is--wp">
+		<div class="ea-report-card">
 			<div class="ea-report-card__icon">
 				<?php echo eac_get_svg_icon( 'chevron_right', 32 ); ?>
 			</div>

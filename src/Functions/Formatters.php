@@ -36,7 +36,7 @@ function eac_tooltip( $tip, $allow_html = false ) {
 		$tip = esc_attr( $tip );
 	}
 
-	return '<span class="eac-help-tip ea-help-tip" title="' . wp_kses_post( $tip ) . '"></span>';
+	return '<span class="eac-tooltip" title="' . wp_kses_post( $tip ) . '"></span>';
 }
 
 
@@ -68,43 +68,72 @@ function eac_sanitize_tooltip( $var ) {
 }
 
 /**
- * Get request variable.
+ * Get input variable.
  *
- * @param string $key Request variable key.
- * @param string $method Request method.
- * @param mixed  $default Default value.
+ * @param string $var Input variable.
+ * @param string $default Default value.
+ * @param string $method Request method. Possible values: get, post, request.
  * @param string $sanitizer Sanitizer function.
  *
  * @since 1.1.6
  * @return mixed
  */
-function eac_get_request_var( $key, $method = 'get', $default = null, $sanitizer = 'eac_clean' ) {
+function eac_get_input_var( $var, $default = null, $method = 'get', $sanitizer = 'eac_clean' ) {
 	$method = strtolower( $method );
 
 	if ( 'get' === $method ) {
-		$value = isset( $_GET[ $key ] ) ? eac_clean( wp_unslash( $_GET[ $key ] ) ) : $default; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$value = isset( $_GET[ $var ] ) ? eac_clean( wp_unslash( $_GET[ $var ] ) ) : $default; // phpcs:ignore
 	} elseif ( 'post' === $method ) {
-		$value = isset( $_POST[ $key ] ) ? eac_clean( wp_unslash( $_POST[ $key ] ) ) : $default; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$value = isset( $_POST[ $var ] ) ? eac_clean( wp_unslash( $_POST[ $var ] ) ) : $default; // phpcs:ignore
 	} elseif ( 'request' === $method ) {
-		$value = isset( $_REQUEST[ $key ] ) ? eac_clean( wp_unslash( $_REQUEST[ $key ] ) ) : $default; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$value = isset( $_REQUEST[ $var ] ) ? eac_clean( wp_unslash( $_REQUEST[ $var ] ) ) : $default; // phpcs:ignore
 	}
 
 	return $sanitizer ? call_user_func( $sanitizer, $value ) : $value;
 }
 
 /**
- * Get input variable.
+ * Check if an input variable is set.
  *
- * @param int    $type Input type.
  * @param string $var Input variable.
- * @param string $sanitizer Sanitizer function.
- * @param mixed  $default Default value.
- * @return mixed
+ * @param string $method Request method.
+ *
+ * @since 1.1.6
+ * @return bool
  */
-function eac_filter_input( $type, $var, $sanitizer = 'eac_clean', $default = null ) {
-	$value = filter_input( $type, $var, FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+function eac_is_input_var_set( $var, $method = 'get' ) {
+	$method = strtolower( $method );
 
-	$value = $sanitizer ? call_user_func( $sanitizer, $value ) : $value;
+	if ( 'get' === $method ) {
+		return isset( $_GET[ $var ] ); // phpcs:ignore
+	} elseif ( 'post' === $method ) {
+		return isset( $_POST[ $var ] ); // phpcs:ignore
+	} elseif ( 'request' === $method ) {
+		return isset( $_REQUEST[ $var ] ); // phpcs:ignore
+	}
 
-	return empty( $value ) ? $default : $value;
+	return false;
+}
+
+
+/**
+ * Get the ajax action url.
+ *
+ * @param array|string $args Array of arguments.
+ * @param bool         $ajax Whether to use ajax or not.
+ * @param bool         $nonce Whether to use nonce or not.
+ *
+ * @since 1.0.0
+ */
+function eac_action_url( $args = array(), $ajax = true, $nonce = true ) {
+	$args = wp_parse_args( $args );
+	if ( isset( $args['action'] ) && 0 !== strpos( $args['action'], 'eac_' ) ) {
+		$args['action'] = 'eac_' . $args['action'];
+	}
+	$url = add_query_arg( $args, admin_url( $ajax ? 'admin-ajax.php' : 'admin-post.php' ) );
+	if ( $nonce && isset( $args['action'] ) ) {
+		$url = wp_nonce_url( $url, $args['action'] );
+	}
+
+	return $url;
 }

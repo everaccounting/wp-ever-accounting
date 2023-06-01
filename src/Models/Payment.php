@@ -28,14 +28,11 @@ class Payment extends Transaction {
 	 * @since 1.0.0
 	 */
 	public function __construct( $data = 0 ) {
-		$prefix          = get_option( 'eac_payment_number_prefix', 'PAY' );
-		$this->core_data = array_merge(
-			$this->core_data,
-			array(
-				'type'   => 'payment',
-				'prefix' => $prefix,
-			)
-		);
+		$this->core_data['type']           = self::OBJECT_TYPE;
+		$this->core_data['account_id']     = get_option( 'eac_payment_account', 0 );
+		$this->core_data['category_id']    = get_option( 'eac_payment_category', 0 );
+		$this->core_data['payment_method'] = get_option( 'eac_payment_method', 'cash' );
+		$this->core_data['payment_date']   = wp_date( 'Y-m-d' );
 		parent::__construct( $data );
 
 		// after reading check if the contact is a customer.

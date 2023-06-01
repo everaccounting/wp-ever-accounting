@@ -2,8 +2,6 @@
 
 namespace EverAccounting\Admin\ListTables;
 
-use EverAccounting\Models\Currency;
-
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -43,24 +41,55 @@ class Currencies extends ListTable {
 		$sortable              = $this->get_sortable_columns();
 		$hidden                = $this->get_hidden_columns();
 		$this->_column_headers = array( $columns, $hidden, $sortable );
+		$search                = $this->get_search();
+		$order_by              = $this->get_orderby( 'status' );
+		$order                 = $this->get_order( 'asc' );
+		$base_currency         = eac_get_base_currency();
 
-		$args = array(
-			'limit'   => $this->get_per_page(),
-			'offset'  => $this->get_offset(),
-			'status'  => $this->get_status(),
-			'search'  => $this->get_search(),
-			'order'   => $this->get_order( 'ASC' ),
-			'orderby' => $this->get_orderby( 'status' ),
-		);
+		$currencies = eac_get_currencies();
+		if ( isset( $currencies[ $base_currency ] ) ) {
+			unset( $currencies[ $base_currency ] );
+		}
+		// if search string is present, filter the currencies by the search string.
+		if ( ! empty( $search ) ) {
+			$currencies = array_filter(
+				$currencies,
+				function ( $currency ) use ( $search ) {
+					return false !== stripos( $currency['name'], $search ) || false !== stripos( $currency['code'], $search );
+				}
+			);
+		}
 
-		$this->items       = eac_get_currencies( $args );
-		$this->total_count = eac_get_currencies( $args, true );
+		// if order by is present, sort the currencies by the order by.
+		if ( ! empty( $order_by ) ) {
+			usort(
+				$currencies,
+				function ( $a, $b ) use ( $order_by, $order ) {
+					if ( 'asc' === $order ) {
+						if ( $a[ $order_by ] === $b[ $order_by ] ) {
+							return 0;
+						}
+
+						return ( $a[ $order_by ] < $b[ $order_by ] ) ? - 1 : 1;
+					}
+
+					if ( $a[ $order_by ] === $b[ $order_by ] ) {
+						return 0;
+					}
+
+					return ( $a[ $order_by ] > $b[ $order_by ] ) ? - 1 : 1;
+				}
+			);
+		}
+
+		$this->items       = $currencies;
+		$this->total_count = count( $currencies );
 
 		$this->set_pagination_args(
 			array(
 				'total_items' => $this->total_count,
-				'per_page'    => $this->get_per_page(),
-				'total_pages' => ceil( $this->total_count / $this->get_per_page() ),
+				'per_page'    => $this->total_count,
+				'total_pages' => 1,
 			)
 		);
 	}
@@ -72,7 +101,7 @@ class Currencies extends ListTable {
 	 * @return void
 	 */
 	public function no_items() {
-		esc_html_e( 'No currencies found.', 'ever-accounting' );
+		esc_html_e( 'No currencies found. Note: Base currency is not listed here.', 'wp-ever-accounting' );
 	}
 
 	/**
@@ -86,19 +115,6 @@ class Currencies extends ListTable {
 		if ( 'top' !== $which ) {
 			return;
 		}
-
-		echo '<div class="alignleft actions">';
-		$this->status_filter();
-		submit_button( __( 'Filter', 'wp-ever-accounting' ), '', 'filter', false );
-		echo '</div>';
-		$filter = eac_filter_input( INPUT_GET, 'filter' );
-		if ( ! empty( $filter ) || ! empty( $this->get_search() ) ) {
-			echo sprintf(
-				'<a href="%s" class="button">%s</a>',
-				esc_url( $this->get_current_url() ),
-				esc_html__( 'Reset', 'wp-ever-accounting' )
-			);
-		}
 	}
 
 	/**
@@ -110,32 +126,35 @@ class Currencies extends ListTable {
 	 */
 	public function process_bulk_action( $doaction ) {
 		if ( ! empty( $doaction ) ) {
-			$id  = eac_get_request_var( 'currency_id', 'get', 0 );
-			$ids = eac_get_request_var( 'currency_ids', 'get', array() );
+			$currency   = eac_get_input_var( 'currency' );
+			$currencies = eac_get_input_var( 'currencies' );
+
 			if ( ! empty( $id ) ) {
-				$ids      = wp_parse_id_list( $id );
+				$currencies = wp_parse_list( $currency );
 				$doaction = ( - 1 !== $_REQUEST['action'] ) ? $_REQUEST['action'] : $_REQUEST['action2']; // phpcs:ignore
 			} elseif ( ! empty( $ids ) ) {
-				$ids = array_map( 'absint', $ids );
+				$currencies = array_map( 'sanitize_text_field', $currencies );
 			} elseif ( wp_get_referer() ) {
 				wp_safe_redirect( wp_get_referer() );
 				exit;
 			}
 
-			foreach ( $ids as $id ) { // Check the permissions on each.
+			var_dump($currencies);
+
+			foreach ( $currencies as $currency ) {
 				switch ( $doaction ) {
-					case 'enable':
-						eac_insert_currency(
+					case 'activate':
+						eac_update_currency(
 							array(
-								'id'     => $id,
+								'code'   => $currency,
 								'status' => 'active',
 							)
 						);
 						break;
-					case 'disable':
-						eac_insert_currency(
+					case 'deactivate':
+						eac_update_currency(
 							array(
-								'id'     => $id,
+								'code'   => $currency,
 								'status' => 'inactive',
 							)
 						);
@@ -147,18 +166,17 @@ class Currencies extends ListTable {
 			switch ( $doaction ) {
 				case 'enable':
 					$notice = __( 'Currency(s) enabled successfully.', 'wp-ever-accounting' );
+					eac_add_notice( $notice, 'success' );
 					break;
 				case 'disable':
 					$notice = __( 'Currency(s) disabled successfully.', 'wp-ever-accounting' );
+					eac_add_notice( $notice, 'success' );
 					break;
 			}
-			eac_add_notice( $notice, 'success' );
 
-			wp_safe_redirect( wp_get_referer() );
-			exit();
+//			wp_safe_redirect( admin_url( 'admin.php?page=eac-settings&tab=currencies' ) );
+//			exit();
 		}
-
-		parent::process_bulk_actions( $doaction );
 	}
 
 
@@ -172,9 +190,9 @@ class Currencies extends ListTable {
 		return array(
 			'cb'     => '<input type="checkbox" />',
 			'name'   => __( 'Name', 'wp-ever-accounting' ),
-			'rate'   => __( 'Rate', 'wp-ever-accounting' ),
 			'code'   => __( 'Code', 'wp-ever-accounting' ),
 			'symbol' => __( 'Symbol', 'wp-ever-accounting' ),
+			'rate'   => __( 'Rate', 'wp-ever-accounting' ),
 			'status' => __( 'Status', 'wp-ever-accounting' ),
 		);
 	}
@@ -187,9 +205,10 @@ class Currencies extends ListTable {
 	 */
 	protected function get_sortable_columns() {
 		return array(
-			'name'   => array( 'name', false ),
-			'code'   => array( 'code', false ),
-			'rate'   => array( 'rate', false ),
+			'name'   => array( 'name', true ),
+			'code'   => array( 'code', true ),
+			'symbol' => array( 'symbol', true ),
+			'rate'   => array( 'rate', true ),
 			'status' => array( 'status', true ),
 		);
 	}
@@ -219,50 +238,49 @@ class Currencies extends ListTable {
 	}
 
 	/**
-	 * Renders the checkbox column in the categories list table.
+	 * Renders the checkbox column in the customers list table.
 	 *
-	 * @param Currency $item The current object.
+	 * @param array $item The current account object.
 	 *
 	 * @since  1.0.2
 	 * @return string Displays a checkbox.
 	 */
 	public function column_cb( $item ) {
-		return sprintf( '<input type="checkbox" name="currency_ids[]" value="%s"/>', esc_attr( $item->get_id() ) );
+		return sprintf( '<input type="checkbox" name="currencies[]" value="%s"/>', esc_attr( $item['code'] ) );
 	}
 
 	/**
 	 * Renders the name column in the accounts list table.
 	 *
-	 * @param Currency $item The current account object.
+	 * @param array $item The current account object.
 	 *
 	 * @since  1.0.2
 	 * @return string Displays a checkbox.
 	 */
 	public function column_name( $item ) {
-		$args        = array( 'currency_id' => $item->get_id() );
+		$args        = array( 'currency' => $item['code'] );
 		$edit_url    = $this->get_current_url( array_merge( $args, array( 'action' => 'edit' ) ) );
 		$enable_url  = $this->get_current_url( array_merge( $args, array( 'action' => 'enable' ) ) );
 		$disable_url = $this->get_current_url( array_merge( $args, array( 'action' => 'disable' ) ) );
 		$actions     = array(
-			'id'      => sprintf( '<strong>#%d</strong>', esc_attr( $item->get_id() ) ),
 			'edit'    => sprintf( '<a href="%s">%s</a>', esc_url( $edit_url ), __( 'Edit', 'wp-ever-accounting' ) ),
-			'enable'  => sprintf( '<a href="%s">%s</a>', esc_url( wp_nonce_url( $enable_url, 'bulk-accounts' ) ), __( 'Enable', 'wp-ever-accounting' ) ),
-			'disable' => sprintf( '<a href="%s">%s</a>', esc_url( wp_nonce_url( $disable_url, 'bulk-accounts' ) ), __( 'Disable', 'wp-ever-accounting' ) ),
+			'enable'  => sprintf( '<a href="%s">%s</a>', esc_url( $enable_url ), __( 'Enable', 'wp-ever-accounting' ) ),
+			'disable' => sprintf( '<a href="%s">%s</a>', esc_url( $disable_url ), __( 'Disable', 'wp-ever-accounting' ) ),
 		);
-		if ( 'active' === $item->get_status() ) {
+		if ( 'active' === $item['status'] ) {
 			unset( $actions['enable'] );
 		} else {
 			unset( $actions['disable'] );
 		}
 
-		return sprintf( '<a href="%s">%s</a> %s', esc_url( $edit_url ), esc_html( $item->get_name() ), $this->row_actions( $actions ) );
+		return sprintf( '<a href="%s">%s</a> %s', esc_url( $edit_url ), esc_html( $item['name'] ), $this->row_actions( $actions ) );
 	}
 
 	/**
 	 * This function renders most of the columns in the list table.
 	 *
-	 * @param Currency $item The current account object.
-	 * @param string   $column_name The name of the column.
+	 * @param array  $item The current account object.
+	 * @param string $column_name The name of the column.
 	 *
 	 * @since 1.0.2
 	 * @return string The column value.
@@ -270,11 +288,11 @@ class Currencies extends ListTable {
 	public function column_default( $item, $column_name ) {
 		switch ( $column_name ) {
 			case 'rate':
-				$value = empty( $item->get_rate() ) ? '&mdash;' : esc_html( eac_format_price( $item->get_rate() ) );
+				$value = empty( $item['rate'] ) ? '&mdash;' : esc_html( eac_convert_money( $item['rate'], eac_get_base_currency(), $item['rate'], null, true ) );
 				break;
 			case 'status':
-				$value = esc_html( $item->get_status( 'view' ) );
-				$value = $value ? sprintf( '<span class="eac-status-label %s">%s</span>', esc_attr( $item->get_status() ), $value ) : '&mdash;';
+				$value = esc_html( $item['status'] );
+				$value = $value ? sprintf( '<span class="eac-status-label %s">%s</span>', esc_attr( $item['status'] ), $value ) : '&mdash;';
 				break;
 			default:
 				$value = parent::column_default( $item, $column_name );

@@ -8,15 +8,15 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Get all the available type of category the plugin support.
  *
- * @return array
  * @since 1.1.0
+ * @return array
  */
 function eac_get_category_types() {
 	$types = array(
 		'expense' => esc_html__( 'Expense', 'wp-ever-accounting' ),
 		'payment' => esc_html__( 'Payment', 'wp-ever-accounting' ),
 		'other'   => esc_html__( 'Other', 'wp-ever-accounting' ),
-		'item'    => esc_html__( 'Item', 'wp-ever-accounting' ),
+		'product' => esc_html__( 'Product', 'wp-ever-accounting' ),
 	);
 
 	return apply_filters( 'ever_accounting_category_types', $types );
@@ -28,8 +28,9 @@ function eac_get_category_types() {
  * @param mixed  $category Category ID or object.
  * @param string $column Optional. Column to get. Default null.
  * @param array  $args Optional. Additional arguments. Default empty array.
- * @return null|EverAccounting\Models\Category
+ *
  * @since 1.1.0
+ * @return null|EverAccounting\Models\Category
  */
 function eac_get_category( $category, $column = null, $args = array() ) {
 	return Category::get( $category, $column, $args );
@@ -38,7 +39,7 @@ function eac_get_category( $category, $column = null, $args = array() ) {
 /**
  * Insert a category.
  *
- * @param array $data   Category data.
+ * @param array $data Category data.
  * @param bool  $wp_error Whether to return false or WP_Error on failure.
  *
  * @since 1.1.0
@@ -53,8 +54,8 @@ function eac_insert_category( $data = array(), $wp_error = true ) {
  *
  * @param int $category_id Category ID.
  *
- * @return bool
  * @since 1.1.0
+ * @return bool
  */
 function eac_delete_category( $category_id ) {
 	$category = eac_get_category( $category_id );
@@ -71,8 +72,8 @@ function eac_delete_category( $category_id ) {
  * @param array $args Query arguments.
  * @param bool  $count Whether to return the count of items.
  *
- * @return int|array|Category[]
  * @since 1.1.0
+ * @return int|array|Category[]
  */
 function eac_get_categories( $args = array(), $count = false ) {
 	$defaults = array(

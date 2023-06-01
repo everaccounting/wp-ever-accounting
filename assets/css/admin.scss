@@ -8,15 +8,18 @@
  * Imports
  */
 @import "variables";
+@import "mixins";
 @import "partials/card";
 @import "partials/columns";
+@import "partials/drawer";
 @import "partials/daterangepicker";
-@import "partials/fields";
+@import "partials/form";
 @import "partials/modal";
 @import "partials/notice";
 @import "partials/layout";
 @import "partials/reports";
 @import "partials/utilities";
+@import "partials/document";
 
 /**
  * Common Styles
@@ -131,8 +134,8 @@
 			position: relative;
 			display: block;
 
-			img.help_tip,
-			.eac-help-tip {
+			img.eac-tooltip,
+			.eac-tooltip {
 				margin: -8px -24px 0 0;
 				position: absolute;
 				right: 0;
@@ -236,6 +239,12 @@
 		color: red;
 	}
 
+	.select2-selection--multiple{
+		.select2-search__field{
+			min-height: auto !important;
+			width: auto !important;
+		}
+	}
 }
 
 
@@ -268,9 +277,67 @@
 }
 
 /*------------------------------------------------------------------------------
+Section header
+------------------------------------------------------------------------------*/
+.eac-section-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin: 0;
+	min-height: 25px;
+	box-sizing: border-box;
+	flex-wrap: wrap;
+	gap: 10px;
+
+	h2, h3 {
+		line-height: 1.7;
+		font-size: 1.5em;
+		margin: 0 .25em 0 0;
+
+		&:last-child {
+			margin-right: 0;
+		}
+	}
+
+	&__subtitle {
+		font-size: 1.25rem;
+		font-weight: 400;
+		margin: 0;
+	}
+
+	& > div {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		box-sizing: border-box;
+		gap: 10px;
+	}
+
+	p {
+		margin: 0;
+		padding: 0;
+	}
+
+	input, select, .select2, button {
+		margin: 0;
+	}
+
+	a {
+		text-decoration: none;
+	}
+
+	.page-title-action,
+	.page-title-action:active,
+	.page-title-action:focus,
+	.page-title-action:hover {
+		top: 0;
+	}
+}
+
+/*------------------------------------------------------------------------------
   Tooltip
 ------------------------------------------------------------------------------*/
-.eac-help-tip{
+.eac-tooltip {
 	color: #666;
 	display: inline-block;
 	font-size: 1.1em;
@@ -283,7 +350,8 @@
 	padding: 0;
 	margin: -4px 0 0 5px;
 	cursor: help;
-	&:before{
+
+	&:before {
 		font-family: 'Dashicons';
 		speak: none;
 		font-weight: normal;
@@ -295,7 +363,7 @@
 		text-decoration: none;
 	}
 
-	.eac-label &{
+	.eac-input__label & {
 		margin: 0;
 		font-size: 15px;
 		position: absolute;
@@ -303,7 +371,8 @@
 		right: 15px;
 	}
 }
-.eac-ui-tooltip{
+
+.eac-ui-tooltip {
 	opacity: 1 !important;
 	font-size: .8em !important;
 	padding: .618em 1em !important;
@@ -311,13 +380,278 @@
 	background: #333 !important;
 	border-width: 1px !important;
 	border-radius: 3px !important;
-	box-shadow: 1px 1px 2px 1px rgba(214,214,214,0.5) !important;
+	box-shadow: 1px 1px 2px 1px rgba(214, 214, 214, 0.5) !important;
 	color: #dedede !important;
 	max-width: 200px !important;
 	text-rendering: optimizeLegibility;
 	text-shadow: none !important;
 	z-index: 9999 !important;
 	margin: -17px 0 0 -8px !important;
+}
+
+/*------------------------------------------------------------------------------
+Dropdown
+------------------------------------------------------------------------------*/
+
+.eac-dropdown {
+	display: inline-block;
+	position: relative;
+	box-sizing: border-box;
+	vertical-align: top;
+
+	&__menu {
+		display: none;
+		position: absolute;
+		right: 0;
+		left: auto;
+		margin: 0;
+		margin-top: 3px;
+		border-radius: 3px;
+		text-align: left;
+		box-shadow: 0 50px 100px rgba(50, 50, 93, .1), 0 15px 35px rgba(50, 50, 93, .15), 0 5px 15px rgba(0, 0, 0, .1);
+		background-clip: padding-box;
+		border: 0 solid rgba(0, 0, 0, .15);
+		min-width: 150px;
+		width: auto;
+		z-index: 99;
+		background-color: #ffffff;
+		padding: 0;
+
+
+		li {
+			display: block;
+			color: #333;
+			background-color: #fff;
+			margin: 0;
+			padding: 0;
+			text-decoration: none;
+			border-top: 1px solid #e9ecef;
+
+			&:first-child {
+				border-top: 0;
+			}
+
+			a {
+				display: block;
+				color: #333;
+				background-color: #fff;
+				text-decoration: none;
+				padding: 5px 10px;
+				transition: all 0.5s;
+
+				&:hover {
+					background-color: #f3f5f6;
+				}
+
+				&:focus, &:hover, &:active {
+					outline: none;
+					box-shadow: none;
+				}
+			}
+		}
+
+		.ea-dropdown.active & {
+			display: block;
+		}
+	}
+
+	&.is--open {
+		> .eac-dropdown__menu {
+			display: block;
+		}
+	}
+
+	.dashicons {
+		vertical-align: middle;
+		line-height: 1;
+		font-size: 16px;
+	}
+}
+
+/*------------------------------------------------------------------------------
+Form fields
+------------------------------------------------------------------------------*/
+.eac-field {
+	display: flex;
+	flex-direction: column;
+	margin: 0 0 12px 0;
+	flex: 1 1 auto;
+
+	input:not([type="checkbox"]):not([type="radio"]):not(.select2-search__field),
+	select,
+	textarea {
+		box-sizing: border-box;
+		max-width: none !important;
+		min-height: 32px;
+	}
+	textarea {
+		resize: none;
+		min-height: 75px;
+	}
+
+	// hide arrows on number inputs
+	input[type=number]::-webkit-inner-spin-button,
+	input[type=number]::-webkit-outer-spin-button {
+		-webkit-appearance: none;
+		margin: 0;
+	}
+
+	&:last-child {
+		border-bottom: 0;
+	}
+
+	&__label {
+		text-align: left;
+		margin: 0 8px 5px 0;
+		padding: 2px 0;
+		font-weight: bold;
+	}
+
+	&__required {
+		color: #ff0000;
+		text-decoration: none;
+	}
+
+	&__desc {
+		margin: 2px 0 5px;
+		color: #646970;
+	}
+
+	&__range {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin: 0;
+		padding: 0;
+		border: 0;
+		min-width: 0;
+		flex: 1 1 auto;
+
+		&-start,
+		&-end {
+			flex: 1 1 auto;
+		}
+
+		.eac-field__group & {
+			&-start,
+			&-end {
+				flex: 1 1 auto;
+			}
+			&-start{
+				border-top-left-radius: 0;
+				border-bottom-left-radius: 0;
+			}
+			&-end{
+				border-top-right-radius: 0;
+				border-bottom-right-radius: 0;
+			}
+		}
+
+		&-sep{
+			flex: 0 0 auto;
+			margin: 0 5px;
+		}
+	}
+
+	&__checkboxes,
+	&__radios{
+		margin-bottom: .5em;
+		display: flex;
+		flex-direction: column;
+		label{
+			margin-bottom: .5em;
+		}
+	}
+
+	&__addon {
+		display: flex;
+		align-items: center;
+		padding: 0 8px;
+		text-align: center;
+		white-space: nowrap;
+		background-color: #eee;
+		border: 1px solid #8c8f94;
+		border-radius: 4px;
+		user-select: none;
+	}
+
+	&__group {
+		position: relative;
+		display: flex;
+		flex-wrap: nowrap;
+		align-items: stretch;
+
+		& > input:not([type="checkbox"]):not([type="radio"]):not(.select2-search__field),
+		& > select,
+		& > textarea{
+			position: relative;
+			flex: 1 1 auto;
+			width: 1%;
+			min-width: 0;
+			margin: 0;
+			max-width: none;
+
+			&:focus {
+				z-index: 3;
+			}
+		}
+
+		.select2-container--focus {
+			z-index: 3;
+		}
+
+		// Ensure buttons are always above inputs for more visually pleasing borders.
+		// This isn't needed for `.input-group-text` since it shares the same border-color
+		// as our inputs.
+		.button, button {
+			position: relative;
+			z-index: 2;
+			display: flex;
+			align-items: center;
+			margin-left: 0;
+			border-width: 1px;
+
+			&:focus {
+				z-index: 3;
+			}
+		}
+
+		// anything but not the last child
+		& > :not(:last-child) {
+			border-top-right-radius: 0;
+			border-bottom-right-radius: 0;
+
+			.select2-selection {
+				border-top-right-radius: 0;
+				border-bottom-right-radius: 0;
+			}
+		}
+
+		& > :nth-last-child(n+3){
+			border-top-right-radius: 0;
+			border-bottom-right-radius: 0;
+		}
+
+		& > :not(:first-child) {
+			margin-left: -1px !important;
+			border-top-left-radius: 0;
+			border-bottom-left-radius: 0;
+
+			.select2-selection {
+				border-top-left-radius: 0;
+				border-bottom-left-radius: 0;
+			}
+		}
+
+		// if the 2nd child is select2.
+		& > :nth-child(2) {
+			.select2-selection {
+				border-top-left-radius: 4px;
+				border-bottom-left-radius: 4px;
+			}
+		}
+
+	}
 }
 
 

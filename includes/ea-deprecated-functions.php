@@ -19,6 +19,10 @@ defined( 'ABSPATH' ) || exit;
  * @return array  List of currencies.
  * @deprecated 1.1.0
  */
-//function eaccounting_get_global_currencies() {
-//	return eaccounting_get_currency_codes();
-//}
+// function eaccounting_get_global_currencies() {
+// return eaccounting_get_currency_codes();
+// }
+
+class test {
+
+}

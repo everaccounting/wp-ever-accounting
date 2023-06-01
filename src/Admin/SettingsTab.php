@@ -29,7 +29,7 @@ abstract class SettingsTab {
 	 * Constructor.
 	 */
 	public function __construct() {
-		add_filter( 'ever_accounting_settings_tabs_array', array( $this, 'add_settings_tab' ), 20 );
+		add_filter( 'ever_accounting_settings_tabs_array', array( $this, 'add_settings_tab' ), 0 );
 		add_action( 'ever_accounting_settings_sections_' . $this->id, array( $this, 'output_sections' ) );
 		add_action( 'ever_accounting_settings_tab_' . $this->id, array( $this, 'output' ) );
 		add_action( 'ever_accounting_settings_save_' . $this->id, array( $this, 'save' ) );
@@ -86,7 +86,7 @@ abstract class SettingsTab {
 	 * @return array Settings array, each item being an associative array representing a setting.
 	 */
 	final public function get_settings_for_section( $section_id ) {
-		if ( '' === $section_id ) {
+		if ( empty( $section_id ) ) {
 			$method_name = 'get_settings_for_default_section';
 		} else {
 			$method_name = "get_settings_for_{$section_id}_section";

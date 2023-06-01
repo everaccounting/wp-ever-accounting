@@ -76,7 +76,7 @@ class Account extends Model {
 	 * @since 1.0.0
 	 */
 	public function __construct( $data = 0 ) {
-		$this->core_data['currency_code'] = eac_get_default_currency();
+		$this->core_data['currency_code'] = eac_get_base_currency();
 		parent::__construct( $data );
 	}
 
@@ -489,7 +489,7 @@ class Account extends Model {
 	 * @since 1.0.0
 	 */
 	public function get_formatted_balance() {
-		return eac_format_price( $this->get_balance(), $this->get_currency_code() );
+		return eac_format_money( $this->get_balance(), $this->get_currency_code() );
 	}
 
 	/**

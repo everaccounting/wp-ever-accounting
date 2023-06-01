@@ -53,7 +53,7 @@ class Transfers extends ListTable {
 			'search'     => $this->get_search(),
 			'order'      => $this->get_order( 'ASC' ),
 			'orderby'    => $this->get_orderby( 'date_paid' ),
-			'account_id' => eac_filter_input( INPUT_GET, 'account_id', 'absint' ),
+			'account_id' => eac_get_input_var( 'account_id' ),
 		);
 
 		$this->items       = eac_get_transfers( $args );
@@ -90,7 +90,7 @@ class Transfers extends ListTable {
 		if ( 'top' !== $which ) {
 			return;
 		}
-		$filter = eac_filter_input( INPUT_GET, 'filter' );
+		$filter = eac_get_input_var( 'filter' );
 		if ( ! empty( $filter ) || ! empty( $this->get_search() ) ) {
 			echo sprintf(
 				'<a href="%s" class="button">%s</a>',
@@ -109,8 +109,8 @@ class Transfers extends ListTable {
 	 */
 	public function process_bulk_action( $doaction ) {
 		if ( ! empty( $doaction ) ) {
-			$id  = eac_get_request_var( 'transfer_id', 'get', 0 );
-			$ids = eac_get_request_var( 'transfer_ids', 'get', array() );
+			$id  = eac_get_input_var( 'transfer_id' );
+			$ids = eac_get_input_var( 'transfer_ids' );
 			if ( ! empty( $id ) ) {
 				$ids      = wp_parse_id_list( $id );
 				$doaction = ( - 1 !== $_REQUEST['action'] ) ? $_REQUEST['action'] : $_REQUEST['action2']; // phpcs:ignore
@@ -153,8 +153,8 @@ class Transfers extends ListTable {
 	public function get_columns() {
 		return array(
 			'cb'           => '<input type="checkbox" />',
-			'amount'       => __( 'Amount', 'wp-ever-accounting' ),
 			'date'         => __( 'Date', 'wp-ever-accounting' ),
+			'amount'       => __( 'Amount', 'wp-ever-accounting' ),
 			'from_account' => __( 'From Account', 'wp-ever-accounting' ),
 			'to_account'   => __( 'To Account', 'wp-ever-accounting' ),
 			'reference'    => __( 'Reference', 'wp-ever-accounting' ),
@@ -229,8 +229,7 @@ class Transfers extends ListTable {
 			'edit'   => sprintf( '<a href="%s">%s</a>', esc_url( $edit_url ), __( 'Edit', 'wp-ever-accounting' ) ),
 			'delete' => sprintf( '<a href="%s" class="del">%s</a>', esc_url( wp_nonce_url( $delete_url, 'bulk-accounts' ) ), __( 'Delete', 'wp-ever-accounting' ) ),
 		);
-		$amount     = $item->get_formatted_amount();
-		return sprintf( '<a href="%s">%s</a> %s', esc_url( $edit_url ), esc_html( $amount ), $this->row_actions( $actions ) );
+		return sprintf( '<a href="%s">%s</a> %s', esc_url( $edit_url ), esc_html( $item->get_date() ), $this->row_actions( $actions ) );
 	}
 
 	/**
@@ -244,6 +243,9 @@ class Transfers extends ListTable {
 	 */
 	public function column_default( $item, $column_name ) {
 		switch ( $column_name ) {
+			case 'amount':
+				$value = $item->get_formatted_amount();
+				break;
 			default:
 				$value = parent::column_default( $item, $column_name );
 				break;

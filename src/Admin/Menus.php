@@ -19,14 +19,16 @@ class Menus extends \EverAccounting\Singleton {
 	 */
 	protected function __construct() {
 		add_action( 'admin_menu', array( __CLASS__, 'main_menu' ), 1 );
-		add_action( 'admin_menu', array( __CLASS__, 'items_menu' ), 20 );
+		add_action( 'admin_menu', array( __CLASS__, 'products_menu' ), 20 );
 		add_action( 'admin_menu', array( __CLASS__, 'sales_menu' ), 30 );
-		add_action( 'admin_menu', array( __CLASS__, 'purchases_menu' ), 40 );
+		add_action( 'admin_menu', array( __CLASS__, 'purchase_menu' ), 40 );
 		add_action( 'admin_menu', array( __CLASS__, 'banking_menu' ), 50 );
 		add_action( 'admin_menu', array( __CLASS__, 'tools_menu' ), 600 );
 		add_action( 'admin_menu', array( __CLASS__, 'reports_menu' ), 700 );
 		add_action( 'admin_menu', array( __CLASS__, 'settings_menu' ), 999 );
 		add_action( 'admin_menu', array( __CLASS__, 'extensions_menu' ), 9999 );
+
+		add_action( 'in_admin_header', array( __CLASS__, 'plugin_header' ) );
 	}
 
 	/**
@@ -66,18 +68,18 @@ class Menus extends \EverAccounting\Singleton {
 	 *
 	 * @since 1.0.0
 	 */
-	public static function items_menu() {
-		$tabs = eac_get_items_tabs();
+	public static function products_menu() {
+		$tabs = eac_get_products_tabs();
 		if ( empty( $tabs ) ) {
 			return;
 		}
 		add_submenu_page(
 			'ever-accounting',
-			__( 'Items', 'ever-accounting' ),
-			__( 'Items', 'ever-accounting' ),
+			__( 'Products', 'wp-ever-accounting' ),
+			__( 'Products', 'wp-ever-accounting' ),
 			'manage_options',
-			'eac-items',
-			array( Items::class, 'output' )
+			'eac-products',
+			array( Products::class, 'output' )
 		);
 	}
 
@@ -104,24 +106,24 @@ class Menus extends \EverAccounting\Singleton {
 	}
 
 	/**
-	 * Add Purchases menu.
+	 * Add purchase menu.
 	 *
 	 * @since 1.0.0
 	 * @returns void
 	 */
-	public static function purchases_menu() {
-		$tabs = eac_get_purchases_tabs();
+	public static function purchase_menu() {
+		$tabs = eac_get_purchase_tabs();
 		if ( empty( $tabs ) ) {
 			return;
 		}
 
 		add_submenu_page(
 			'ever-accounting',
-			__( 'Purchases', 'ever-accounting' ),
-			__( 'Purchases', 'ever-accounting' ),
+			__( 'Purchase', 'ever-accounting' ),
+			__( 'Purchase', 'ever-accounting' ),
 			'manage_options',
-			'eac-purchases',
-			array( Purchases::class, 'output' )
+			'eac-purchase',
+			array( Purchase::class, 'output' )
 		);
 	}
 
@@ -197,7 +199,7 @@ class Menus extends \EverAccounting\Singleton {
 	 * @since 1.0.0
 	 */
 	public static function settings_menu() {
-		add_submenu_page(
+		$hook = add_submenu_page(
 			'ever-accounting',
 			__( 'Settings', 'ever-accounting' ),
 			__( 'Settings', 'ever-accounting' ),
@@ -205,6 +207,18 @@ class Menus extends \EverAccounting\Singleton {
 			'eac-settings',
 			array( Settings::class, 'output' )
 		);
+
+		add_action( 'load-' . $hook, array( __CLASS__, 'settings_page_init' ) );
+	}
+
+	/**
+	 * Settings page init.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public static function settings_page_init() {
+		Settings::get_tabs();
 	}
 
 	/**
@@ -224,64 +238,95 @@ class Menus extends \EverAccounting\Singleton {
 		);
 	}
 
-
 	/**
-	 * Output accounts tab.
+	 * Plugin header.
 	 *
-	 * @since 1.1.0
+	 * @since 1.0.0
+	 * @returns void
 	 */
-	public static function output_items_tab() {
-		$action  = eac_get_request_var( 'action', 'get', '' );
-		$item_id = eac_get_request_var( 'item_id', 'get', 0 );
-		if ( in_array( $action, array( 'add', 'edit' ), true ) ) {
-			include dirname( __FILE__ ) . '/views/items/edit-item.php';
-		} else {
-			include dirname( __FILE__ ) . '/views/items/list-items.php';
+	public static function plugin_header() {
+		if ( ! eac_is_admin_page() ) {
+			return;
 		}
-	}
-
-	/**
-	 * Output accounts tab.
-	 *
-	 * @since 1.1.0
-	 */
-	public static function output_accounts_tab() {
-		$action     = eac_get_request_var( 'action', 'get', '' );
-		$account_id = eac_get_request_var( 'account_id', 'get', 0 );
-		if ( in_array( $action, array( 'add', 'edit' ), true ) ) {
-			include dirname( __FILE__ ) . '/views/accounts/edit-account.php';
-		} else {
-			include dirname( __FILE__ ) . '/views/accounts/list-accounts.php';
-		}
-	}
-
-	/**
-	 * Output currencies tab.
-	 *
-	 * @since 1.1.0
-	 */
-	public static function output_currencies_tab() {
-		$action      = eac_get_request_var( 'action', 'get', '' );
-		$currency_id = eac_get_request_var( 'currency_id', 'get', 0 );
-		if ( in_array( $action, array( 'add', 'edit' ), true ) ) {
-			include dirname( __FILE__ ) . '/views/currencies/edit-currency.php';
-		} else {
-			include dirname( __FILE__ ) . '/views/currencies/list-currencies.php';
-		}
-	}
-
-	/**
-	 * Output categories tab.
-	 *
-	 * @since 1.1.0
-	 */
-	public static function output_categories_tab() {
-		$action      = eac_get_request_var( 'action', 'get', '' );
-		$category_id = eac_get_request_var( 'category_id', 'get', 0 );
-		if ( in_array( $action, array( 'add', 'edit' ), true ) ) {
-			include dirname( __FILE__ ) . '/views/categories/edit-category.php';
-		} else {
-			include dirname( __FILE__ ) . '/views/categories/list-categories.php';
-		}
+		$menus = array(
+			array(
+				'title' => __( 'Dashboard', 'wp-ever-accounting' ),
+				'icon'  => 'dashicons dashicons-dashboard',
+				'url'   => admin_url( 'admin.php?page=eac-dashboard' ),
+			),
+			array(
+				'title' => __( 'Sales', 'wp-ever-accounting' ),
+				'icon'  => 'dashicons dashicons-money-alt',
+				'url'   => admin_url( 'admin.php?page=eac-sales' ),
+			),
+			array(
+				'title' => __( 'Purchase', 'wp-ever-accounting' ),
+				'icon'  => 'dashicons dashicons-cart',
+				'url'   => admin_url( 'admin.php?page=eac-purchase' ),
+			),
+			array(
+				'title'   => __( 'New', 'wp-ever-accounting' ),
+				'icon'    => 'dashicons dashicons-plus-alt',
+				'url'     => '#',
+				'submenu' => array(
+					array(
+						'title' => __( 'Payment', 'wp-ever-accounting' ),
+						'url'   => eac_action_url( 'action=get_html_response&html_type=edit_payment' ),
+					),
+					array(
+						'title' => __( 'Expense', 'wp-ever-accounting' ),
+						'url'   => eac_action_url( 'action=get_html_response&html_type=edit_expense' ),
+					),
+					array(
+						'title' => __( 'Customer', 'wp-ever-accounting' ),
+						'url'   => eac_action_url( 'action=get_html_response&html_type=edit_customer' ),
+					),
+					array(
+						'title' => __( 'Vendor', 'wp-ever-accounting' ),
+						'url'   => eac_action_url( 'action=get_html_response&html_type=edit_vendor' ),
+					),
+				),
+			),
+			array(
+				'title' => __( 'Support', 'wp-ever-accounting' ),
+				'icon'  => 'dashicons dashicons-editor-help',
+				'url'   => admin_url( 'admin.php?page=eac-documents' ),
+			),
+		);
+		?>
+		<div class="eac-header">
+			<div class="eac-header__wrapper">
+				<div class="eac-header__logo">
+					<a href="<?php echo esc_url( admin_url( 'admin.php?page=ever-accounting' ) ); ?>">
+						<?php echo eac_get_svg_icon( 'logo', 40 ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+					</a>
+				</div>
+				<h1 class="eac-header__title"><?php esc_html_e( 'Ever Accounting', 'wp-ever-accounting' ); ?></h1>
+				<?php if ( ! empty( $menus ) ) : ?>
+					<ul class="eac-header__menu">
+						<?php foreach ( $menus as $menu ) : ?>
+							<li>
+								<a href="<?php echo esc_url( $menu['url'] ); ?>">
+									<?php if ( ! empty( $menu['icon'] ) ) : ?>
+										<i class="eac-header__menu-icon <?php echo esc_attr( $menu['icon'] ); ?>"></i>
+									<?php endif; ?>
+									<?php if ( ! empty( $menu['title'] ) ) : ?>
+										<?php echo esc_html( $menu['title'] ); ?>
+									<?php endif; ?>
+								</a>
+								<?php if ( ! empty( $menu['submenu'] ) ) : ?>
+									<ul>
+										<?php foreach ( $menu['submenu'] as $submenu ) : ?>
+											<li><a href="<?php echo esc_url( $submenu['url'] ); ?>"><?php echo esc_html( $submenu['title'] ); ?></a></li>
+										<?php endforeach; ?>
+									</ul>
+								<?php endif; ?>
+							</li>
+						<?php endforeach; ?>
+					</ul>
+				<?php endif; ?>
+			</div>
+		</div>
+		<?php
 	}
 }

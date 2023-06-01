@@ -27,7 +27,8 @@ class Vendor extends Contact {
 	 * @since 1.0.0
 	 */
 	public function __construct( $data = 0 ) {
-		$this->core_data = array_merge( $this->core_data, array( 'type' => 'vendor' ) );
+		$this->core_data['type']    = self::OBJECT_TYPE;
+		$this->core_data['country'] = get_option( 'eac_company_country', 'US' );
 		parent::__construct( $data );
 		// after reading check if the contact is a customer.
 		if ( $this->exists() && 'vendor' !== $this->get_type() ) {

@@ -97,6 +97,7 @@ class Installer extends Singleton {
 		self::create_categories();
 		self::create_roles();
 		self::schedule_events();
+		flush_rewrite_rules();
 	}
 
 	/**
@@ -134,10 +135,10 @@ class Installer extends Singleton {
 		    `name` VARCHAR(191) NOT NULL,
 		    `number` VARCHAR(100) NOT NULL,
 		    `opening_balance` DOUBLE(15,4) NOT NULL DEFAULT '0.0000',
-		    `currency_code` varchar(3) NOT NULL DEFAULT 'USD',
 		    `bank_name` VARCHAR(191) DEFAULT NULL,
 		    `bank_phone` VARCHAR(20) DEFAULT NULL,
 		    `bank_address` VARCHAR(191) DEFAULT NULL,
+		    `currency_code` varchar(3) NOT NULL DEFAULT 'USD',
 		   	`status` ENUM('active','inactive') NOT NULL DEFAULT 'active',
 		   	`creator_id` INT(11) DEFAULT NULL,
 		   	`updated_at` DATETIME NULL DEFAULT NULL,
@@ -172,15 +173,15 @@ class Installer extends Singleton {
 			`email` VARCHAR(191) DEFAULT NULL,
 			`phone` VARCHAR(50) DEFAULT NULL,
 			`website` VARCHAR(191) DEFAULT NULL,
-			`birth_date` date DEFAULT NULL,
-			`vat_number` VARCHAR(50) DEFAULT NULL,
-			`street` VARCHAR(191) DEFAULT NULL,
+			`address_1` VARCHAR(191) DEFAULT NULL,
+			`address_2` VARCHAR(191) DEFAULT NULL,
 			`city` VARCHAR(191) DEFAULT NULL,
 			`state` VARCHAR(191) DEFAULT NULL,
 			`postcode` VARCHAR(20) DEFAULT NULL,
 			`country` VARCHAR(3) DEFAULT NULL,
-			`currency_code` varchar(3),
-  			`type` VARCHAR(100) DEFAULT NULL COMMENT 'Customer or vendor',
+			`vat_number` VARCHAR(50) DEFAULT NULL,
+			`currency_code` varchar(3) NOT NULL DEFAULT 'USD',
+  			`type` VARCHAR(100) DEFAULT NULL default 'customer',
 			`status` ENUM('active','inactive') NOT NULL DEFAULT 'active',
 			`thumbnail_id` BIGINT(20) UNSIGNED DEFAULT NULL,
 			`creator_id` INT(11) DEFAULT NULL,
@@ -197,166 +198,189 @@ class Installer extends Singleton {
 
 			"CREATE TABLE {$wpdb->prefix}ea_contactmeta(
 			`meta_id` bigINT(20) NOT NULL AUTO_INCREMENT,
-			`contact_id` bigint(20) unsigned NOT NULL default '0',
+			`ea_contact_id` bigint(20) unsigned NOT NULL default '0',
 			`meta_key` varchar(255) default NULL,
 			`meta_value` longtext,
 			 PRIMARY KEY (`meta_id`),
-		    KEY `contact_id`(`contact_id`),
+		    KEY `ea_contact_id`(`ea_contact_id`),
 			KEY `meta_key` (meta_key($index_length))
 			) $collate",
-
-			"CREATE TABLE {$wpdb->prefix}ea_currencies(
-			`id` bigINT(20) NOT NULL AUTO_INCREMENT,
-		    `code` VARCHAR(191) NOT NULL COMMENT 'Currency Code',
-		    `name` VARCHAR(191) NOT NULL COMMENT 'Currency Name',
-		    `rate` DOUBLE(15,4) NOT NULL DEFAULT '0.0000',
-		    `precision` INT(2) NOT NULL DEFAULT 0,
-		    `symbol` VARCHAR(5) NOT NULL COMMENT 'Currency Symbol',
-		    `position` ENUM('before','after') NOT NULL DEFAULT 'before',
-		    `thousand_sep` VARCHAR(5) NOT NULL DEFAULT ',',
-		    `decimal_sep` VARCHAR(5) NOT NULL DEFAULT '.',
-		    `status` ENUM('active','inactive') NOT NULL DEFAULT 'active',
-		  	`updated_at` DATETIME NULL DEFAULT NULL,
-		    `created_at` DATETIME NULL DEFAULT NULL,
-		    PRIMARY KEY (`id`),
-		    KEY `rate` (`rate`),
-		    KEY `status` (`status`),
-		    UNIQUE KEY `code` (`code`)
-    		) $collate;",
 
 			"CREATE TABLE {$wpdb->prefix}ea_document_items(
             `id` bigINT(20) NOT NULL AUTO_INCREMENT,
   			`document_id` INT(11) DEFAULT NULL,
-  			`item_id` INT(11) DEFAULT NULL,
+  			`product_id` INT(11) DEFAULT NULL,
   			`name` VARCHAR(191) NOT NULL,
+  			`description` TEXT NULL,
+  			`unit` VARCHAR(50) NOT NULL,
   			`price` double(15,4) NOT NULL,
   			`quantity` double(7,2) NOT NULL DEFAULT 0.00,
   			`subtotal` double(15,4) NOT NULL DEFAULT 0.00,
-  			`tax_rate` double(15,4) NOT NULL DEFAULT 0.00,
+  			`subtotal_tax` double(15,4) NOT NULL DEFAULT 0.00,
   			`discount` double(15,4) NOT NULL DEFAULT 0.00,
-  			`tax` double(15,4) NOT NULL DEFAULT 0.00,
+  			`discount_tax` double(15,4) NOT NULL DEFAULT 0.00,
+  			`shipping` double(15,4) NOT NULL DEFAULT 0.00,
+  			`shipping_tax` double(15,4) NOT NULL DEFAULT 0.00,
+  			`fee` double(15,4) NOT NULL DEFAULT 0.00,
+  			`fee_tax` double(15,4) NOT NULL DEFAULT 0.00,
+  			`tax_total` double(15,4) NOT NULL DEFAULT 0.00,
   			`total` double(15,4) NOT NULL DEFAULT 0.00,
+  			`taxable` ENUM('yes','no') NOT NULL DEFAULT 'yes',
+  			`taxable_shipping` ENUM('yes','no') NOT NULL DEFAULT 'yes',
+  			`taxable_fee` ENUM('yes','no') NOT NULL DEFAULT 'yes',
   			`currency_code` varchar(3) NOT NULL DEFAULT 'USD',
-  			`extra` longtext DEFAULT NULL,
-		    `date_created` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
+		  	`updated_at` DATETIME NULL DEFAULT NULL,
+		    `created_at` DATETIME NULL DEFAULT NULL,
 		    PRIMARY KEY (`id`),
 		    KEY `document_id` (`document_id`),
-		    KEY `item_id` (`item_id`)
+		    KEY `product_id` (`product_id`),
+		    KEY `name` (`name`),
+		    KEY `unit` (`unit`),
+		    KEY `price` (`price`),
+		    KEY `quantity` (`quantity`),
+		    KEY `subtotal` (`subtotal`),
+		    KEY `discount` (`discount`),
+		    KEY `shipping` (`shipping`),
+		    KEY `fee` (`fee`),
+		    KEY `total` (`total`),
+		    KEY `tax` (`tax`),
+		    KEY `taxable` (`taxable`)
+            ) $collate",
+
+			"CREATE TABLE {$wpdb->prefix}ea_document_taxes(
+            `id` bigINT(20) NOT NULL AUTO_INCREMENT,
+  			`item_id` BIGINT(20) UNSIGNED NOT NULL,
+  			`tax_id` BIGINT(20) UNSIGNED NOT NULL,
+  			`document_id` BIGINT(20) UNSIGNED NOT NULL,
+  			`name` VARCHAR(191) NOT NULL,
+  			`rate` double(15,4) NOT NULL,
+  			`is_compound` ENUM('yes','no') NOT NULL DEFAULT 'no',
+  			`amount` double(15,4) NOT NULL DEFAULT 0.00,
+  			`currency_code` varchar(3) NOT NULL DEFAULT 'USD',
+		  	`updated_at` DATETIME NULL DEFAULT NULL,
+		    `created_at` DATETIME NULL DEFAULT NULL,
+		    PRIMARY KEY (`id`),
+		    KEY `item_id` (`item_id`),
+		    KEY `tax_id` (`tax_id`),
+		    KEY `document_id` (`document_id`)
             ) $collate",
 
 			"CREATE TABLE {$wpdb->prefix}ea_documents(
             `id` bigINT(20) NOT NULL AUTO_INCREMENT,
-            `type` VARCHAR(60) NOT NULL,
-            `document_number` VARCHAR(100) NOT NULL,
-            `order_number` VARCHAR(100) DEFAULT NULL,
-            `status` VARCHAR(100) DEFAULT NULL,
-            `issue_date` DATETIME NULL DEFAULT NULL,
-            `due_date` DATETIME NULL DEFAULT NULL,
-            `payment_date` DATETIME NULL DEFAULT NULL,
-            `category_id` INT(11) NOT NULL,
-  			`contact_id` INT(11) NOT NULL,
-  			`address` longtext DEFAULT NULL,
-            `discount` DOUBLE(15,4) DEFAULT 0,
-            `discount_type`  ENUM('percentage', 'fixed') DEFAULT 'percentage',
+            `type` VARCHAR(20) NOT NULL DEFAULT 'invoice',
+            `status` VARCHAR(20) DEFAULT NULL DEFAULT 'draft',
+            `document_number` VARCHAR(30) NOT NULL,
+            `contact_id` BIGINT(20) UNSIGNED NOT NULL,
             `subtotal` DOUBLE(15,4) DEFAULT 0,
-            `total_tax` DOUBLE(15,4) DEFAULT 0,
-            `total_discount` DOUBLE(15,4) DEFAULT 0,
-            `total_fees` DOUBLE(15,4) DEFAULT 0,
-            `total_shipping` DOUBLE(15,4) DEFAULT 0,
-            `total` DOUBLE(15,4) DEFAULT 0,
-            `tax_inclusive` tinyINT(1) NOT NULL DEFAULT '0',
-  			`note` TEXT DEFAULT NULL,
-  			`terms` TEXT DEFAULT NULL,
-			`attachment_id` INT(11) DEFAULT NULL,
-		  	`currency_code` varchar(3) NOT NULL DEFAULT 'USD',
-		  	`currency_rate` double(15,8) NOT NULL DEFAULT 1,
-  			`token` VARCHAR(100) DEFAULT NULL,
-  			`parent_id` INT(11) DEFAULT NULL,
-  			`creator_id` INT(11) DEFAULT NULL,
-		    `date_created` DATETIME NULL DEFAULT NULL,
-		    PRIMARY KEY (`id`),
-		    KEY `type` (`type`),
-		    KEY `status` (`status`),
-		    KEY `issue_date` (`issue_date`),
-		    KEY `contact_id` (`contact_id`),
-		    KEY `category_id` (`category_id`),
-		    KEY `total` (`total`),
-		    KEY `currency_code` (`currency_code`),
-		    KEY `currency_rate` (`currency_rate`),
-		    UNIQUE KEY (`document_number`)
-            ) $collate",
+    		`discount_total` DOUBLE(15,4) DEFAULT 0,
+    		`shipping_total` DOUBLE(15,4) DEFAULT 0,
+    		`fees_total` DOUBLE(15,4) DEFAULT 0,
+    		`tax_total` DOUBLE(15,4) DEFAULT 0,
+    		`total` DOUBLE(15,4) DEFAULT 0,
+    		`total_paid` DOUBLE(15,4) DEFAULT 0,
+    		`total_refunded` DOUBLE(15,4) DEFAULT 0,
+    		`discount_amount` DOUBLE(15,4) DEFAULT 0,
+    		`discount_type` VARCHAR(30) DEFAULT NULL,
+    		`shipping_amount` DOUBLE(15,4) DEFAULT 0,
+    		`fees_amount` DOUBLE(15,4) DEFAULT 0,
+    		`billing_data` TEXT DEFAULT NULL,
+    		`shipping_data` TEXT DEFAULT NULL,
+    		`order_number` VARCHAR(30) DEFAULT NULL,
+            `document_note` TEXT DEFAULT NULL,
+			`tax_inclusive` ENUM('yes', 'no') DEFAULT 'no',
+            `vat_exempt` ENUM('yes', 'no') DEFAULT 'no',
+  			`issued_at` DATETIME NULL DEFAULT NULL,
+            `due_at` DATETIME NULL DEFAULT NULL,
+            `sent_at` DATETIME NULL DEFAULT NULL,
+            `viewed_at` DATETIME NULL DEFAULT NULL,
+            `paid_at` DATETIME NULL DEFAULT NULL,
+    		`created_via` VARCHAR(100) DEFAULT NULL,
+			`currency_code` varchar(3) NOT NULL DEFAULT 'USD',
+    		`document_key` VARCHAR(100) DEFAULT NULL,
+  			`parent_id` BIGINT(20) UNSIGNED NOT NULL,
+  			`creator_id` BIGINT(20) UNSIGNED NOT NULL,
+		  	`updated_at` DATETIME NULL DEFAULT NULL,
+		    `created_at` DATETIME NULL DEFAULT NULL,
+    		    PRIMARY KEY (`id`),
+    		    KEY `document_number` (`document_number`),
+    		    KEY `contact_id` (`contact_id`),
+    		    KEY `type` (`type`),
+    		    KEY `status` (`status`),
+    		    KEY `total_tax` (`total_tax`),
+    		    KEY `total` (`total`),
+    		    KEY `total_paid` (`total_paid`),
+    		    KEY `total_refunded` (`total_refunded`),
+    		    KEY `total_due` (`total_due`),
+    		    KEY `issued_at` (`issued_at`),
+    		    KEY `due_at` (`due_at`),
+    		    KEY `sent_at` (`sent_at`),
+    		    KEY `viewed_at` (`viewed_at`),
+    		    KEY `document_key` (`document_key`)
+    		) $collate",
 
 			"CREATE TABLE {$wpdb->prefix}ea_documentmeta(
 			`meta_id` bigINT(20) NOT NULL AUTO_INCREMENT,
-			`document_id` bigint(20) unsigned NOT NULL default '0',
+			`ea_document_id` bigint(20) unsigned NOT NULL default '0',
 			`meta_key` varchar(255) default NULL,
 			`meta_value` longtext,
 			 PRIMARY KEY (`meta_id`),
-		    KEY `document_id`(`document_id`),
+		    KEY `ea_document_id`(`ea_document_id`),
 			KEY `meta_key` (meta_key($index_length))
 			) $collate",
 
-			"CREATE TABLE {$wpdb->prefix}ea_items(
+			"CREATE TABLE {$wpdb->prefix}ea_products(
             `id` bigINT(20) NOT NULL AUTO_INCREMENT,
-            `type` VARCHAR(50) NOT NULL COMMENT 'Item Type',
             `name` VARCHAR(191) NOT NULL,
-  			`sku` VARCHAR(100) NULL default '',
+            `price` double(15,4) NOT NULL,
+			`unit` VARCHAR(50) NOT NULL DEFAULT 'unit',
 			`description` TEXT DEFAULT NULL ,
-  			`price` double(15,4) NOT NULL,
-  			`unit` VARCHAR(50) DEFAULT NULL,
-  			`quantity` int(11) NOT NULL DEFAULT '1',
-  			`category_id` int(11) DEFAULT NULL,
-  			`sales_tax` double(15,4) DEFAULT NULL,
-  			`purchase_tax` double(15,4) DEFAULT NULL,
+			`category_id` int(11) DEFAULT NULL,
+  			`taxable` ENUM('yes', 'no') DEFAULT 'yes',
+  			`tax_ids` TEXT DEFAULT NULL,
 			`status` ENUM('active','inactive') NOT NULL DEFAULT 'active',
-			`creator_id` INT(11) DEFAULT NULL,
 		  	`updated_at` DATETIME NULL DEFAULT NULL,
 		    `created_at` DATETIME NULL DEFAULT NULL,
 		    PRIMARY KEY (`id`),
-		    KEY `type` (`type`),
 		    KEY `price` (`price`),
 		    KEY `unit` (`unit`),
-		    KEY `category_id` (`category_id`),
-		    KEY `quantity` (`quantity`)
+		    KEY `category_id` (`category_id`)
             ) $collate",
-
-			"CREATE TABLE {$wpdb->prefix}ea_media(
-    		`id` bigINT(20) NOT NULL AUTO_INCREMENT,
-			`name` VARCHAR(191) NOT NULL,
-			`path` VARCHAR(191) NOT NULL,
-			`type` VARCHAR(50) NOT NULL,
-  			`size` int(11) NOT NULL DEFAULT '0',
-  			`description` TEXT DEFAULT NULL ,
-  			`ext` VARCHAR(50) NOT NULL,
-  			`mime` VARCHAR(50) NOT NULL,
-  			`creator_id` INT(11) DEFAULT NULL,
-		  	`updated_at` DATETIME NULL DEFAULT NULL,
-		    `created_at` DATETIME NULL DEFAULT NULL,
-		    PRIMARY KEY (`id`),
-		    KEY `type` (`type`),
-		    KEY `name` (`name`),
-		    KEY `path` (`path`),
-		    KEY `ext` (`ext`),
-		    KEY `mime` (`mime`)
-			) $collate",
 
 			"CREATE TABLE {$wpdb->prefix}ea_notes(
             `id` bigINT(20) NOT NULL AUTO_INCREMENT,
-  			`parent_id` INT(11) NOT NULL,
-  			`type` VARCHAR(20) NOT NULL,
-  			`note` TEXT DEFAULT NULL,
+  			`object_id` INT(11) NOT NULL,
+  			`object_type` VARCHAR(20) NOT NULL,
+  			`content` TEXT DEFAULT NULL,
   			`extra` longtext DEFAULT NULL,
   			`creator_id` INT(11) DEFAULT NULL,
-		    `date_created` DATETIME NULL DEFAULT NULL,
+		  	`updated_at` DATETIME NULL DEFAULT NULL,
+		    `created_at` DATETIME NULL DEFAULT NULL,
 		    PRIMARY KEY (`id`),
-		    KEY `parent_id` (`parent_id`),
-		    KEY `type` (`type`)
+		    KEY `object_id` (`object_id`),
+		    KEY `object_type` (`object_type`)
             ) $collate",
+
+			"CREATE TABLE {$wpdb->prefix}ea_taxes(
+    		`id` bigINT(20) NOT NULL AUTO_INCREMENT,
+    		`name` VARCHAR(191) NOT NULL,
+    		`rate` double(15,4) NOT NULL,
+    		`is_compound` ENUM('yes','no') NOT NULL DEFAULT 'no',
+    		`description` TEXT DEFAULT NULL ,
+    		`status` ENUM('active','inactive') NOT NULL DEFAULT 'active',
+    		`updated_at` DATETIME NULL DEFAULT NULL,
+		    `created_at` DATETIME NULL DEFAULT NULL,
+             PRIMARY KEY (`id`),
+             KEY `name` (`name`),
+             KEY `rate` (`rate`),
+             KEY `is_compound` (`is_compound`),
+             KEY `status` (`status`),
+    		 UNIQUE KEY `name_rate_compund` (`name`,`rate`,`is_compound`)
+			 ) $collate",
 
 			"CREATE TABLE {$wpdb->prefix}ea_transactions(
             `id` bigINT(20) NOT NULL AUTO_INCREMENT,
             `type` VARCHAR(100) DEFAULT NULL,
-            `transaction_number` VARCHAR(100) DEFAULT NULL,
+            `voucher_number` VARCHAR(100) DEFAULT NULL,
 		  	`payment_date` date NOT NULL,
 		  	`amount` DOUBLE(15,4) NOT NULL,
 		  	`currency_code` varchar(3) NOT NULL DEFAULT 'USD',
@@ -371,13 +395,11 @@ class Installer extends Singleton {
 			`attachment_id` INT(11) DEFAULT NULL,
 		  	`parent_id` INT(11) DEFAULT NULL,
 		    `reconciled` tinyINT(1) NOT NULL DEFAULT '0',
-		    `token` VARCHAR(100) DEFAULT NULL,
+		    `unique_hash` VARCHAR(100) DEFAULT NULL,
 		    `creator_id` INT(11) DEFAULT NULL,
 		    `updated_at` DATETIME NULL DEFAULT NULL,
 		    `created_at` DATETIME NULL DEFAULT NULL,
 		    PRIMARY KEY (`id`),
-		    KEY `prefix` (`prefix`),
-		    KEY `number` (`number`),
 		    KEY `amount` (`amount`),
 		    KEY `currency_code` (`currency_code`),
 		    KEY `currency_rate` (`currency_rate`),
@@ -385,17 +407,18 @@ class Installer extends Singleton {
 		    KEY `account_id` (`account_id`),
 		    KEY `document_id` (`document_id`),
 		    KEY `category_id` (`category_id`),
-		    KEY `token` (`token`),
+		    KEY `unique_hash` (`unique_hash`),
 		    KEY `contact_id` (`contact_id`),
-		    UNIQUE KEY `transaction_number` (`transaction_number`)
+		    UNIQUE KEY `voucher_number` (`voucher_number`)
             ) $collate",
+
 			"CREATE TABLE {$wpdb->prefix}ea_transactionmeta(
     		`meta_id` bigINT(20) NOT NULL AUTO_INCREMENT,
-    		`transaction_id` bigint(20) unsigned NOT NULL default '0',
+    		`ea_transaction_id` bigint(20) unsigned NOT NULL default '0',
     		`meta_key` varchar(255) default NULL,
     		`meta_value` longtext,
     		PRIMARY KEY (`meta_id`),
-    		KEY `transaction_id`(`transaction_id`),
+    		KEY `ea_transaction_id`(`ea_transaction_id`),
     		KEY `meta_key` (meta_key($index_length))
             ) $collate",
 
@@ -411,22 +434,22 @@ class Installer extends Singleton {
 		    KEY `expense_id` (`expense_id`)
             ) $collate",
 
-			"CREATE TABLE {$wpdb->prefix}ea_relationships(
-			`id` bigINT(20) NOT NULL AUTO_INCREMENT,
-  			`id1` INT(11) NOT NULL,
-  			`id2` INT(11) NOT NULL,
-  			`type1` VARCHAR(100) NOT NULL,
-  			`type2` VARCHAR(100) NOT NULL,
-  			`order` INT(11) NOT NULL DEFAULT 0,
-		    `updated_at` DATETIME NULL DEFAULT NULL,
-		    `created_at` DATETIME NULL DEFAULT NULL,
-		    PRIMARY KEY (`id`),
-		    KEY `id1` (`id1`),
-		    KEY `id2` (`id2`),
-		    KEY `type1` (`type1`),
-		    KEY `type2` (`type2`),
-		    UNIQUE KEY id1_id2_type1_type2 (`id1`,`id2`,`type1`,`type2`)
-			) $collate",
+			// "CREATE TABLE {$wpdb->prefix}ea_relationships(
+			// `id` bigINT(20) NOT NULL AUTO_INCREMENT,
+			// `id1` INT(11) NOT NULL,
+			// `id2` INT(11) NOT NULL,
+			// `type1` VARCHAR(100) NOT NULL,
+			// `type2` VARCHAR(100) NOT NULL,
+			// `order` INT(11) NOT NULL DEFAULT 0,
+			// `updated_at` DATETIME NULL DEFAULT NULL,
+			// `created_at` DATETIME NULL DEFAULT NULL,
+			// PRIMARY KEY (`id`),
+			// KEY `id1` (`id1`),
+			// KEY `id2` (`id2`),
+			// KEY `type1` (`type1`),
+			// KEY `type2` (`type2`),
+			// UNIQUE KEY id1_id2_type1_type2 (`id1`,`id2`,`type1`,`type2`)
+			// ) $collate",
 		);
 
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
@@ -467,72 +490,54 @@ class Installer extends Singleton {
 	 * @returns void
 	 */
 	public static function create_currencies() {
-		global $wpdb;
-		$default_currency      = eac_get_default_currency();
-		$currencies            = include ever_accounting()->get_path( 'i18n/currencies.php' );
-		$default_currency_rate = (float) ( isset( $currencies[ $default_currency ]['rate'] ) ? $currencies[ $default_currency ]['rate'] : 1 );
-		// This is the part of migration, we use to save the currencies in options table before.
-		if ( ! empty( get_option( 'eaccounting_currencies' ) ) ) {
-			foreach ( get_option( 'eaccounting_currencies', array() ) as $currency ) {
-				$code = $currency['code'];
-				if ( empty( $code ) ) {
-					continue;
+		// migrate currency.
+		$currencies        = include ever_accounting()->get_dir_path( 'i18n/currencies.php' );
+		$active_currencies = array( 'BDT', 'USD', 'EUR', 'GBP', 'INR', 'AUD', 'CAD', 'SGD', 'CHF', 'MYR', 'JPY', 'CNY' );
+		$legacy_settings   = get_option( 'eaccounting_settings', array() );
+		$is_new            = empty( get_option( 'eac_currencies' ) );
+		if ( ! empty( $legacy_settings ) && $is_new ) {
+			$legacy_base = isset( $legacy_settings['base_currency'] ) ? $legacy_settings['base_currency'] : 'USD';
+			update_option( 'eac_base_currency', $legacy_base );
+			$legacy_currencies = get_option( 'eaccounting_currencies', array() );
+			$legacy_currencies = wp_list_pluck( $legacy_currencies, 'code' );
+			if ( ! empty( $legacy_currencies ) ) {
+				$active_currencies = $legacy_currencies;
+			}
+		}
+
+		// This part must go after the above migration.
+		$base_currency = eac_get_base_currency();
+		// Make sure base currency is active.
+		if ( ! in_array( $base_currency, $active_currencies, true ) ) {
+			$active_currencies[] = $base_currency;
+		}
+
+		if ( 'USD' !== $base_currency && isset( $currencies[ $base_currency ] ) ) {
+			$new_rate = $currencies[ $base_currency ]['rate'];
+			foreach ( $currencies as $code => $currency ) {
+				if ( isset( $currency['rate'] ) ) {
+					$currencies[ $code ]['rate'] = $currency['rate'] / $new_rate;
 				}
-				$data = array(
-					'code'         => $currency['code'],
-					'name'         => $currency['name'],
-					'rate'         => $currency['rate'],
-					'precision'    => $currency['precision'],
-					'symbol'       => $currency['symbol'],
-					'position'     => $currency['position'],
-					'thousand_sep' => $currency['thousand_separator'],
-					'decimal_sep'  => $currency['decimal_separator'],
-					'status'       => 'active',
-				);
-				if ( isset( $currencies[ $code ] ) ) {
-					$currencies[ $code ] = wp_parse_args( array_filter( $data ), $currencies[ $code ] );
-				}
-			}
-
-			// rename the option.
-			delete_option( 'eaccounting_currencies' );
-		}
-		$db_currencies = $wpdb->get_col( "SELECT code FROM {$wpdb->prefix}ea_currencies" );
-
-		foreach ( $db_currencies as $db_currency ) {
-			if ( isset( $currencies[ $db_currency ] ) ) {
-				unset( $currencies[ $db_currency ] );
 			}
 		}
-		foreach ( $currencies as $code => $currency ) {
-			if ( $code === $default_currency ) {
-				$status = 'active';
-			} elseif ( ! empty( $currency['status'] ) ) {
-				$status = $currency['status'];
-			} else {
-				$status = 'inactive';
+		$currencies[ $base_currency ]['rate'] = 1;
+		// Set all currency status as inactive.
+		foreach ( $currencies as $code => &$currency ) {
+			$status             = in_array( $code, $active_currencies, true ) ? 'active' : 'inactive';
+			$currency['status'] = $status;
+			// If base currency the set a flag.
+			if ( $base_currency === $code ) {
+				$currency['base'] = 'yes';
 			}
-			$data = array(
-				'code'         => $code,
-				'name'         => $currency['name'],
-				'rate'         => $code === $default_currency ? 1 : $currency['rate'],
-				'precision'    => $currency['precision'],
-				'symbol'       => $currency['symbol'],
-				'position'     => $currency['position'],
-				'thousand_sep' => $currency['thousand_sep'],
-				'decimal_sep'  => $currency['decimal_sep'],
-				'status'       => $status,
-				'created_at'   => current_time( 'mysql' ),
-			);
-
-			// Default currency is not USD then we have to change the conversion rate as we have conversion rate based on USD.
-			if ( 'USD' !== $default_currency && $code !== $default_currency ) {
-				// Old conversion rate is based on USD. So we have to convert it to the default currency.
-				$data['rate'] = $data['rate'] / $default_currency_rate;
-			}
-
-			$wpdb->insert( "{$wpdb->prefix}ea_currencies", $data );
 		}
+		// sort by name.
+		uasort(
+			$currencies,
+			function ( $a, $b ) {
+				return strcasecmp( $a['name'], $b['name'] );
+			}
+		);
+		add_option( 'eac_currencies', $currencies );
 	}
 
 	/**
@@ -542,14 +547,14 @@ class Installer extends Singleton {
 	 * @returns void
 	 */
 	public static function create_accounts() {
-		$default_currency = eac_get_default_currency();
+		$default_currency = eac_get_base_currency();
 		global $wpdb;
 		$accounts = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}ea_accounts" );
 		if ( empty( $accounts ) ) {
 			// Create few dummy accounts.
 			$accounts = array(
 				array(
-					'name'       => __( 'Cash', 'ever-accounting' ),
+					'name'       => __( 'Cash', 'wp-ever-accounting' ),
 					'number'     => '1000',
 					'currency'   => $default_currency,
 					'balance'    => 0,
@@ -557,7 +562,7 @@ class Installer extends Singleton {
 					'created_at' => current_time( 'mysql' ),
 				),
 				array(
-					'name'       => __( 'Bank', 'ever-accounting' ),
+					'name'       => __( 'Bank', 'wp-ever-accounting' ),
 					'number'     => '1001',
 					'type'       => 'bank',
 					'currency'   => $default_currency,
@@ -590,37 +595,37 @@ class Installer extends Singleton {
 		if ( empty( $categories ) ) {
 			$categories = array(
 				array(
-					'name'       => __( 'Deposit', 'ever-accounting' ),
+					'name'       => __( 'Deposit', 'wp-ever-accounting' ),
 					'type'       => 'payment',
 					'status'     => 'active',
 					'created_at' => current_time( 'mysql' ),
 				),
 				array(
-					'name'       => __( 'Sales', 'ever-accounting' ),
+					'name'       => __( 'Sales', 'wp-ever-accounting' ),
 					'type'       => 'payment',
 					'status'     => 'active',
 					'created_at' => current_time( 'mysql' ),
 				),
 				array(
-					'name'       => __( 'Other', 'ever-accounting' ),
+					'name'       => __( 'Other', 'wp-ever-accounting' ),
 					'type'       => 'payment',
 					'status'     => 'active',
 					'created_at' => current_time( 'mysql' ),
 				),
 				array(
-					'name'       => __( 'Withdrawal', 'ever-accounting' ),
+					'name'       => __( 'Withdrawal', 'wp-ever-accounting' ),
 					'type'       => 'expense',
 					'status'     => 'active',
 					'created_at' => current_time( 'mysql' ),
 				),
 				array(
-					'name'       => __( 'Purchase', 'ever-accounting' ),
+					'name'       => __( 'Purchase', 'wp-ever-accounting' ),
 					'type'       => 'expense',
 					'status'     => 'active',
 					'created_at' => current_time( 'mysql' ),
 				),
 				array(
-					'name'       => __( 'Other', 'ever-accounting' ),
+					'name'       => __( 'Other', 'wp-ever-accounting' ),
 					'type'       => 'expense',
 					'status'     => 'active',
 					'created_at' => current_time( 'mysql' ),
@@ -669,6 +674,7 @@ class Installer extends Singleton {
 			'Accountant',
 			array(
 				'manage_accounting'   => true,
+				'eac_manage_product'  => true,
 				'eac_manage_customer' => true,
 				'eac_manage_vendor'   => true,
 				'eac_manage_account'  => true,
@@ -692,6 +698,7 @@ class Installer extends Singleton {
 				'manage_accounting'   => true,
 				'eac_manage_report'   => true,
 				'eac_manage_options'  => true,
+				'eac_manage_product'  => true,
 				'eac_manage_customer' => true,
 				'eac_manage_vendor'   => true,
 				'eac_manage_account'  => true,
@@ -716,6 +723,7 @@ class Installer extends Singleton {
 			$wp_roles->add_cap( 'administrator', 'manage_accounting' );
 			$wp_roles->add_cap( 'administrator', 'eac_manage_report' );
 			$wp_roles->add_cap( 'administrator', 'eac_manage_options' );
+			$wp_roles->add_cap( 'administrator', 'eac_manage_product' );
 			$wp_roles->add_cap( 'administrator', 'eac_manage_customer' );
 			$wp_roles->add_cap( 'administrator', 'eac_manage_vendor' );
 			$wp_roles->add_cap( 'administrator', 'eac_manage_account' );
@@ -735,8 +743,8 @@ class Installer extends Singleton {
 	/**
 	 * Create cron jobs (clear them first).
 	 *
-	 * @return void
 	 * @since 1.0.2
+	 * @return void
 	 */
 	public static function schedule_events() {
 		wp_clear_scheduled_hook( 'eac_twicedaily_scheduled_event' );

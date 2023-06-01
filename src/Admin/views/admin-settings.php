@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
 $current_tab_label = isset( $tabs[ $current_tab ] ) ? $tabs[ $current_tab ] : '';
 ?>
 <div class="wrap eac-page">
-	<nav class="nav-tab-wrapper eac-page__tabs">
+	<nav class="nav-tab-wrapper eac-page__nav">
 		<?php foreach ( $tabs as $slug => $label ) : ?>
 			<a href="<?php echo esc_url( admin_url( 'admin.php?page=' . esc_attr( $page ) . '&tab=' . esc_attr( $slug ) ) ); ?>" class="nav-tab <?php echo $current_tab === $slug ? 'nav-tab-active' : ''; ?>">
 				<?php echo esc_html( $label ); ?>

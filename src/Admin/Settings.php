@@ -2,8 +2,6 @@
 
 namespace EverAccounting\Admin;
 
-use EverAccounting\Models\Account;
-
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -64,11 +62,8 @@ class Settings {
 			$tabs   = array();
 			$tabs[] = new Settings\General();
 			$tabs[] = new Settings\Tax();
-			$tabs[] = new Settings\Transactions();
-			// $tabs[] = new Settings\Expenses();
-			$tabs[] = new Settings\Advanced();
-			$tabs[] = new Settings\Currencies();
-			$tabs[] = new Settings\Categories();
+			$tabs[] = new Settings\Sales();
+			$tabs[] = new Settings\Purchase();
 
 			self::$tabs = apply_filters( 'ever_accounting_get_settings_tabs', $tabs );
 		}
@@ -253,12 +248,16 @@ class Settings {
 			switch ( $value['type'] ) {
 				// Section Titles.
 				case 'title':
+					echo '<div class="eac-card">';
+					echo '<div class="eac-card__header">';
 					if ( ! empty( $value['title'] ) ) {
-						echo '<h2>' . esc_html( $value['title'] ) . '</h2>';
+						echo '<h2 class="eac-card__title">' . esc_html( $value['title'] ) . '</h2>';
 					}
 					if ( ! empty( $value['desc'] ) ) {
 						echo wp_kses_post( wpautop( wptexturize( $value['desc'] ) ) );
 					}
+					echo '</div><!-- .eac-card__header -->';
+					echo '<div class="eac-card__body">';
 					echo '<table class="form-table eac-settings-table">';
 					if ( ! empty( $value['id'] ) ) {
 						do_action( 'ever_accounting_settings_' . sanitize_title( $value['id'] ) );
@@ -274,6 +273,8 @@ class Settings {
 					if ( ! empty( $value['id'] ) ) {
 						do_action( 'ever_accounting_settings_' . sanitize_title( $value['id'] ) . '_after' );
 					}
+					echo '</div><!-- .eac-card__body -->';
+					echo '</div><!-- .eac-card -->';
 					break;
 
 				// Standard text inputs and subtypes like 'number'.
@@ -334,10 +335,6 @@ class Settings {
 					</tr>
 					<?php
 					break;
-
-				case 'select':
-				case 'select2':
-				case 'country':
 				case 'currency':
 				case 'account':
 				case 'customer':
@@ -347,63 +344,75 @@ class Settings {
 					$value['value'] = wp_parse_list( $value['value'] );
 					$value['value'] = array_map( 'strval', $value['value'] );
 					if ( ! empty( $value['multiple'] ) ) {
+						$value['name'] .= '[]';
+						$attrs[]        = 'multiple="multiple"';
+					}
+					if ( 'currency' === $value['type'] ) {
+						$currencies       = eac_get_currencies( array( 'code__in' => $value['value'] ) );
+						$value['options'] = wp_list_pluck( $currencies, 'formatted_name', 'code' );
+					} elseif ( 'account' === $value['type'] ) {
+						$accounts         = eac_get_accounts( array( 'include' => $value['value'] ) );
+						$value['options'] = wp_list_pluck( $accounts, 'name', 'id' );
+					} elseif ( 'category' === $value['type'] ) {
+						$subtype          = ! empty( $value['subtype'] ) ? $value['subtype'] : 'expense';
+						$categories       = eac_get_categories(
+							array(
+								'id__in' => $value['value'],
+								'type'   => $subtype,
+							)
+						);
+						$value['options'] = wp_list_pluck( $categories, 'formatted_name', 'id' );
+						$attrs[]          = 'data-subtype="' . esc_attr( $subtype ) . '"';
+					} elseif ( 'tax' === $value['type'] ) {
+						$taxes            = eac_get_taxes( array( 'include' => $value['value'] ) );
+						$value['options'] = wp_list_pluck( $taxes, 'formatted_name', 'id' );
+					}
+					$attrs[]                = 'data-search-type="' . esc_attr( $value['type'] ) . '"';
+					$value['input_class'][] = 'eac-select-' . $value['type'];
+
+					if ( ! empty( $value['placeholder'] ) ) {
+						$attrs[] = 'data-placeholder="' . esc_attr( $value['placeholder'] ) . '"';
+					}
+
+					?>
+					<tr valign="top">
+						<th scope="row" class="titledesc">
+							<label for="<?php echo esc_attr( $value['name'] ); ?>"><?php echo esc_html( $value['title'] ); ?><?php echo wp_kses_post( $tooltip ); ?></label>
+						</th>
+						<td class="forminp forminp-<?php echo esc_attr( $value['type'] ); ?>">
+							<select
+								name="<?php echo esc_attr( $value['name'] ); ?>"
+								id="<?php echo esc_attr( $value['name'] ); ?>"
+								style="<?php echo esc_attr( $value['css'] ); ?>"
+								class="<?php echo esc_attr( $value['class'] ); ?>"
+								<?php echo wp_kses_post( implode( ' ', $attrs ) ); ?>
+							>
+								<?php
+								foreach ( $value['options'] as $key => $option ) {
+									?>
+									<option value="<?php echo esc_attr( $key ); ?>" <?php selected( in_array( $key, $value['value'], true ) ); ?>><?php echo esc_html( $option ); ?></option>
+									<?php
+								}
+								?>
+							</select>
+							<?php echo wp_kses_post( $suffix ); ?>
+							<?php echo wp_kses_post( $description ); ?>
+						</td>
+					</tr>
+					<?php
+					break;
+				case 'country':
+					$value['options'] = eac_get_countries();
+					// no break.
+				case 'select':
+				case 'select2':
+					$value['value'] = wp_parse_list( $value['value'] );
+					$value['value'] = array_map( 'strval', $value['value'] );
+					if ( ! empty( $value['multiple'] ) ) {
 						$value['name'] = $value['name'] . '[]';
 						$attrs[]       = 'multiple="multiple"';
 					}
 					$value['class'] .= ' eac-select__' . sanitize_html_class( $value['type'] );
-					$data_search     = false;
-					if ( 'country' === $value['type'] ) {
-						$value['options'] = eac_get_countries();
-					} elseif ( 'currency' === $value['type'] ) {
-						$data_search = $value['type'];
-						$currencies  = eac_get_currencies( array( 'code__in' => $value['value'] ) );
-						foreach ( $currencies as $currency ) {
-							$value['options'][ $currency->get_code() ] = $currency->get_formatted_name();
-						}
-					} elseif ( 'account' === $value['type'] ) {
-						$data_search = $value['type'];
-						$accounts    = eac_get_accounts( array( 'include' => $value['value'] ) );
-						foreach ( $accounts as $account ) {
-							$value['options'][ $account->get_id() ] = $account->get_formatted_name();
-						}
-					} elseif ( 'customer' === $value['type'] ) {
-						$data_search = $value['type'];
-						$customers   = eac_get_customers( array( 'include' => $value['value'] ) );
-						foreach ( $customers as $customer ) {
-							$value['options'][ $customer->get_id() ] = $customer->get_formatted_name();
-						}
-					} elseif ( 'vendor' === $value['type'] ) {
-						$data_search = $value['type'];
-						$vendors     = eac_get_vendors( array( 'include' => $value['value'] ) );
-						foreach ( $vendors as $vendor ) {
-							$value['options'][ $vendor->get_id() ] = $vendor->get_formatted_name();
-						}
-					} elseif ( 'category' === $value['type'] ) {
-						 $data_search = $value['type'];
-						 $subtype     = ! empty( $value['subtype'] ) ? $value['subtype'] : 'expense';
-						$categories   = eac_get_categories(
-							array(
-								'include' => $value['value'],
-								'type'    => $subtype,
-							)
-						);
-						foreach ( $categories as $category ) {
-							$value['options'][ $category->get_id() ] = $category->get_formatted_name();
-						}
-						$attrs[] = 'data-subtype="' . esc_attr( $value['subtype'] ) . '"';
-					} elseif ( 'item' === $value['type'] ) {
-						$data_search = $value['type'];
-						$items       = eac_get_items( array( 'include' => $value['value'] ) );
-						foreach ( $items as $item ) {
-							$value['options'][ $item->get_id() ] = $item->get_formatted_name();
-						}
-					}
-
-					// If we have a data search, we need to add the data-search attribute.
-					if ( $data_search ) {
-						$attrs[] = 'data-search="' . esc_attr( $data_search ) . '"';
-					}
-
 					?>
 					<tr valign="top">
 						<th scope="row" class="titledesc">
@@ -596,8 +605,8 @@ class Settings {
 							<label for="<?php echo esc_attr( $value['name'] ); ?>"><?php echo esc_html( $value['title'] ); ?><?php echo wp_kses_post( $tooltip ); ?></label>
 						</th>
 						<td class="forminp forminp-<?php echo esc_attr( $value['type'] ); ?>">
-						<?php wp_editor( $value['value'], $value['name'], array( 'textarea_name' => $value['name'] ) ); ?>
-						<?php echo wp_kses_post( $description ); ?>
+							<?php wp_editor( $value['value'], $value['name'], array( 'textarea_name' => $value['name'] ) ); ?>
+							<?php echo wp_kses_post( $description ); ?>
 						</td>
 					</tr>
 					<?php

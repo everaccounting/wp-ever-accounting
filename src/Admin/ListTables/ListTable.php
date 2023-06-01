@@ -9,7 +9,6 @@ if ( ! class_exists( '\WP_List_Table' ) ) {
 	require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
 }
 
-
 /**
  * Class ListTable.
  *
@@ -44,13 +43,41 @@ class ListTable extends \WP_List_Table {
 	public $per_page = 20;
 
 	/**
+	 * Get things started
+	 *
+	 * @param array $args Optional. Arbitrary display and query arguments to pass through the list table. Default empty array.
+	 *
+	 * @see WP_List_Table::__construct()
+	 * @since  1.0.2
+	 */
+	public function __construct( $args = array() ) {
+		$this->per_page = (int) get_option( 'eac_records_per_page', 20 );
+		parent::__construct( $args );
+	}
+
+	/**
+	 * Gets a list of CSS classes for the WP_List_Table table tag.
+	 *
+	 * @since 3.1.0
+	 *
+	 * @return string[] Array of CSS classes for the table tag.
+	 */
+//	protected function get_table_classes() {
+//		$mode = get_user_setting( 'posts_list_mode', 'list' );
+//
+//		$mode_class = esc_attr( 'table-view-' . $mode );
+//
+//		return array( 'widefat', 'striped', $mode_class, $this->_args['plural'] );
+//	}
+
+	/**
 	 * Retrieve the search query string.
 	 *
 	 * @since 1.1.6
 	 * @return string Search query.
 	 */
 	protected function get_search() {
-		return eac_get_request_var( 's', 'get', '' );
+		return eac_get_input_var( 's', '' );
 	}
 
 	/**
@@ -62,7 +89,7 @@ class ListTable extends \WP_List_Table {
 	 * @return string Order query.
 	 */
 	protected function get_order( $default = 'DESC' ) {
-		return eac_get_request_var( 'order', 'get', $default );
+		return eac_get_input_var( 'order', $default );
 	}
 
 	/**
@@ -74,7 +101,12 @@ class ListTable extends \WP_List_Table {
 	 * @return string Orderby query.
 	 */
 	protected function get_orderby( $default = 'id' ) {
-		return eac_get_request_var( 'orderby', 'get', $default );
+		$orderby = eac_get_input_var( 'orderby', $default );
+		if ( ! array_key_exists( $orderby, $this->get_sortable_columns() ) ) {
+			$orderby = $default;
+		}
+
+		return $orderby;
 	}
 
 	/**
@@ -84,7 +116,7 @@ class ListTable extends \WP_List_Table {
 	 * @return string Status query.
 	 */
 	protected function get_status() {
-		return eac_get_request_var( 'status', 'get', '' );
+		return eac_get_input_var( 'status', '' );
 	}
 
 	/**
@@ -94,7 +126,7 @@ class ListTable extends \WP_List_Table {
 	 * @return int Per page.
 	 */
 	protected function get_per_page() {
-		return (int) eac_get_request_var( 'per_page', 'get', $this->per_page );
+		return (int) eac_get_input_var( 'per_page', $this->per_page );
 	}
 
 	/**
@@ -114,7 +146,7 @@ class ListTable extends \WP_List_Table {
 	 * @return string Page query.
 	 */
 	protected function get_page() {
-		return eac_get_request_var( 'page', 'get' );
+		return eac_get_input_var( 'page' );
 	}
 
 	/**
@@ -127,7 +159,7 @@ class ListTable extends \WP_List_Table {
 	 */
 	protected function get_current_url( $args = array() ) {
 		$page = $this->get_page();
-		$tab  = eac_get_request_var( 'tab', 'get' );
+		$tab  = eac_get_input_var( 'tab' );
 		$args = array_merge(
 			array(
 				'page' => $page,
@@ -153,16 +185,19 @@ class ListTable extends \WP_List_Table {
 	/**
 	 * This function renders most of the columns in the list table.
 	 *
-	 * @param Object $item The current item.
-	 * @param string $column_name The name of the column.
+	 * @param Object|array $item The current item.
+	 * @param string       $column_name The name of the column.
 	 *
 	 * @since 1.0.2
 	 * @return string The column value.
 	 */
 	public function column_default( $item, $column_name ) {
-		$getter = "get_$column_name";
-		if ( method_exists( $item, $getter ) ) {
+
+		if ( is_object( $item ) && method_exists( $item, "get_$column_name" ) ) {
+			$getter = "get_$column_name";
 			return empty( $item->$getter( 'view' ) ) ? '&mdash;' : esc_html( $item->$getter( 'view' ) );
+		} elseif ( is_array( $item ) && isset( $item[ $column_name ] ) ) {
+			return empty( $item[ $column_name ] ) ? '&mdash;' : esc_html( $item[ $column_name ] );
 		}
 
 		return '&mdash;';
@@ -236,7 +271,7 @@ class ListTable extends \WP_List_Table {
 			'inactive' => __( 'Inactive', 'ever-accounting' ),
 		);
 
-		$selected = eac_get_request_var( 'status', 'get', '' );
+		$selected = eac_get_input_var( 'status', '' );
 
 		?>
 		<select name="status" id="status-filter">
@@ -255,7 +290,7 @@ class ListTable extends \WP_List_Table {
 	 * @return void
 	 */
 	public function account_filter() {
-		$account_id = eac_get_request_var( 'account_id', 'get', '', 'absint' );
+		$account_id = eac_get_input_var( 'account_id' );
 		$accounts   = eac_get_accounts( array( 'include' => $account_id ) );
 		?>
 		<select class="eac-select__account" name="account_id" id="account-filter">
@@ -268,25 +303,27 @@ class ListTable extends \WP_List_Table {
 	}
 
 	/**
-	 * Payment category filter.
+	 * Category filter.
+	 *
+	 * @param string $type Type of category.
 	 *
 	 * @since 1.1.6
 	 *
 	 * @return void
 	 */
-	public function payment_category_filter() {
-		$category_id = eac_get_request_var( 'category_id', 'get', '', 'absint' );
+	public function category_filter( $type = 'item' ) {
+		$category_id = eac_get_input_var( 'category_id' );
 		$categories  = eac_get_categories(
 			array(
 				'include' => $category_id,
-				'type'    => 'payment',
+				'type'    => $type,
 			)
 		);
 		?>
-		<select class="eac-select__payment-category" name="category_id" id="payment-category-filter">
-			<option value=""><?php esc_html_e( 'All ayment categories', 'wp-ever-accounting' ); ?></option>
+		<select class="eac-input__select" name="category_id" id="category-filter" data-search="category" data-subtime="<?php echo esc_attr( $type ); ?>" data-placeholder="<?php esc_attr_e( 'Filter by category', 'wp-ever-accounting' ); ?>">
+			<option value=""><?php esc_html_e( 'All categories', 'wp-ever-accounting' ); ?></option>
 			<?php foreach ( $categories as $category ) : ?>
-				<option value="<?php echo esc_attr( $category->get_id() ); ?>" <?php selected( $category_id, $category->get_id() ); ?>><?php echo esc_html( $payment_category->get_name() ); ?></option>
+				<option value="<?php echo esc_attr( $category->get_id() ); ?>" <?php selected( $category_id, $category->get_id() ); ?>><?php echo esc_html( $category->get_name() ); ?></option>
 			<?php endforeach; ?>
 		</select>
 		<?php
@@ -300,7 +337,7 @@ class ListTable extends \WP_List_Table {
 	 * @return void
 	 */
 	public function expense_category_filter() {
-		$category_id = eac_get_request_var( 'category_id', 'get', '', 'absint' );
+		$category_id = eac_get_input_var( 'category_id' );
 		$categories  = eac_get_categories(
 			array(
 				'include' => $category_id,
@@ -325,7 +362,7 @@ class ListTable extends \WP_List_Table {
 	 * @return void
 	 */
 	public function item_category_filter() {
-		$category_id = eac_get_request_var( 'category_id', 'get', '', 'absint' );
+		$category_id = eac_get_input_var( 'category_id' );
 		$categories  = eac_get_categories(
 			array(
 				'include' => $category_id,
@@ -350,7 +387,7 @@ class ListTable extends \WP_List_Table {
 	 * @return void
 	 */
 	public function customer_filter() {
-		$customer_id = eac_get_request_var( 'customer_id', 'get', '', 'absint' );
+		$customer_id = eac_get_input_var( 'customer_id', 'get', '', 'absint' );
 		$customers   = eac_get_customers( array( 'include' => $customer_id ) );
 		?>
 		<select class="eac-select__customer" name="customer_id" id="customer-filter">
@@ -370,7 +407,7 @@ class ListTable extends \WP_List_Table {
 	 * @return void
 	 */
 	public function vendor_filter() {
-		$vendor_id = eac_get_request_var( 'vendor_id', 'get', '', 'absint' );
+		$vendor_id = eac_get_input_var( 'vendor_id' );
 		$vendors   = eac_get_vendors( array( 'include' => $vendor_id ) );
 		?>
 		<select class="eac-select__vendor" name="vendor_id" id="vendor-filter">
@@ -390,8 +427,8 @@ class ListTable extends \WP_List_Table {
 	 * @return void
 	 */
 	public function payment_method_filter() {
-		$payment_method_id = eac_get_request_var( 'payment_method_id', 'get', '', 'absint' );
-		$payment_methods   = eac_get_payment_methods( array( 'include' => $payment_method_id ) );
+		$payment_method_id = eac_get_input_var( 'payment_method_id' );
+		$payment_methods   = eac_get_payment_methods();
 		?>
 		<select class="eac-select__payment-method" name="payment_method_id" id="payment-method-filter">
 			<option value=""><?php esc_html_e( 'All payment methods', 'wp-ever-accounting' ); ?></option>
@@ -410,8 +447,8 @@ class ListTable extends \WP_List_Table {
 	 * @return void
 	 */
 	public function date_range_filter() {
-		$start_date = eac_get_request_var( 'start_date', 'get', '', 'sanitize_text_field' );
-		$end_date   = eac_get_request_var( 'end_date', 'get', '', 'sanitize_text_field' );
+		$start_date = eac_get_input_var( 'start_date' );
+		$end_date   = eac_get_input_var( 'end_date' );
 		?>
 		<div class="eac-date-range">
 			<input type="text" class="eac-date-range__start" name="start_date" id="start-date-filter" value="<?php echo esc_attr( $start_date ); ?>" placeholder="<?php esc_attr_e( 'Start date', 'wp-ever-accounting' ); ?>" />
@@ -429,7 +466,7 @@ class ListTable extends \WP_List_Table {
 	 * @return void
 	 */
 	public function currency_filter() {
-		$currency_code = eac_get_request_var( 'currency_code', 'get', '', 'sanitize_text_field' );
+		$currency_code = eac_get_input_var( 'currency_code' );
 		$currencies    = eac_get_currencies( array( 'code__in' => $currency_code ) );
 		$currency_code = wp_parse_list( $currency_code );
 		?>

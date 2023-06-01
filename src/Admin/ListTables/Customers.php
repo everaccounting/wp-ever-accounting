@@ -87,7 +87,7 @@ class Customers extends ListTable {
 		if ( 'top' !== $which ) {
 			return;
 		}
-		$filter = eac_filter_input( INPUT_GET, 'filter' );
+		$filter = eac_get_input_var( 'filter' );
 		if ( ! empty( $filter ) || ! empty( $this->get_search() ) ) {
 			echo sprintf(
 				'<a href="%s" class="button">%s</a>',
@@ -106,8 +106,8 @@ class Customers extends ListTable {
 	 */
 	public function process_bulk_action( $doaction ) {
 		if ( ! empty( $doaction ) ) {
-			$id  = eac_get_request_var( 'customer_id', 'get', 0 );
-			$ids = eac_get_request_var( 'customer_ids', 'get', array() );
+			$id  = eac_get_input_var( 'customer_id' );
+			$ids = eac_get_input_var( 'customer_ids' );
 			if ( ! empty( $id ) ) {
 				$ids      = wp_parse_id_list( $id );
 				$doaction = ( - 1 !== $_REQUEST['action'] ) ? $_REQUEST['action'] : $_REQUEST['action2']; // phpcs:ignore
@@ -156,7 +156,7 @@ class Customers extends ListTable {
 			}
 			eac_add_notice( $notice, 'success' );
 
-			wp_safe_redirect( admin_url( 'admin.php?page=ea-sales&tab=customers' ) );
+			wp_safe_redirect( admin_url( 'admin.php?page=eac-sales&tab=customers' ) );
 			exit();
 		}
 
@@ -171,13 +171,13 @@ class Customers extends ListTable {
 	 */
 	public function get_columns() {
 		return array(
-			'cb'     => '<input type="checkbox" />',
-			'name'   => __( 'Name', 'wp-ever-accounting' ),
-			'email'  => __( 'Contact', 'wp-ever-accounting' ),
-			'street' => __( 'Address', 'wp-ever-accounting' ),
-			'paid'   => __( 'Paid', 'wp-ever-accounting' ),
-			'due'    => __( 'Receivable', 'wp-ever-accounting' ),
-			'status' => __( 'Status', 'wp-ever-accounting' ),
+			'cb'      => '<input type="checkbox" />',
+			'name'    => __( 'Name', 'wp-ever-accounting' ),
+			'email'   => __( 'Contact', 'wp-ever-accounting' ),
+			'address' => __( 'Address', 'wp-ever-accounting' ),
+			'paid'    => __( 'Paid', 'wp-ever-accounting' ),
+			'due'     => __( 'Receivable', 'wp-ever-accounting' ),
+			'status'  => __( 'Status', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -189,10 +189,10 @@ class Customers extends ListTable {
 	 */
 	protected function get_sortable_columns() {
 		return array(
-			'name'   => array( 'name', false ),
-			'email'  => array( 'email', false ),
-			'street' => array( 'street', false ),
-			'status' => array( 'status', false ),
+			'name'    => array( 'name', false ),
+			'email'   => array( 'email', false ),
+			'address' => array( 'address_1', false ),
+			'status'  => array( 'status', false ),
 		);
 	}
 
@@ -274,6 +274,18 @@ class Customers extends ListTable {
 	 */
 	public function column_default( $item, $column_name ) {
 		switch ( $column_name ) {
+			case 'address':
+				$data  = array(
+					'company'   => $item->get_company(),
+					'address_1' => $item->get_address_1(),
+					'address_2' => $item->get_address_2(),
+					'city'      => $item->get_city(),
+					'state'     => $item->get_state(),
+					'postcode'  => $item->get_postcode(),
+					'country'   => $item->get_country(),
+				);
+				$value = eac_get_formatted_address( $data );
+				break;
 			case 'status':
 				$value = esc_html( $item->get_status( 'view' ) );
 				$value = $value ? sprintf( '<span class="eac-status-label %s">%s</span>', esc_attr( $item->get_status() ), $value ) : '&mdash;';
