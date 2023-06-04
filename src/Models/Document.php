@@ -135,10 +135,11 @@ abstract class Document extends Model {
 		'viewed_at'       => null,
 		'paid_at'         => null,
 		'created_via'     => '',
-		'document_key'    => '',
 		'currency_code'   => '',
+		'currency_rate'   => 1.00,
 		'parent_id'       => null,
 		'creator_id'      => null,
+		'uuid_key'        => '',
 		'updated_at'      => null,
 		'created_at'      => null,
 	);
@@ -170,7 +171,7 @@ abstract class Document extends Model {
 	 */
 	public function __construct( $data = 0 ) {
 		$this->core_data['tax_inclusive'] = eac_price_includes_tax() ? 'yes' : 'no';
-		$this->core_data['document_key']  = eac_generate_hash();
+		$this->core_data['document_key']  = eac_generate_uuid();
 		$this->core_data['currency_code'] = eac_get_base_currency();
 		$this->core_data['creator_id']    = get_current_user_id();
 		$this->core_data['created_at']    = wp_date( 'Y-m-d H:i:s' );
@@ -1438,26 +1439,6 @@ abstract class Document extends Model {
 	}
 
 	/**
-	 * Get the unique_hash.
-	 *
-	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
-	 *
-	 * @return string
-	 */
-	public function get_document_key( $context = 'edit' ) {
-		return $this->get_prop( 'document_key', $context );
-	}
-
-	/**
-	 * Set the document_key.
-	 *
-	 * @param string $key document_key.
-	 */
-	public function set_document_key( $key ) {
-		$this->set_prop( 'document_key', $key );
-	}
-
-	/**
 	 * Get currency code.
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
@@ -1481,6 +1462,28 @@ abstract class Document extends Model {
 		$this->set_prop( 'currency_code', eac_clean( $currency_code ) );
 	}
 
+	/**
+	 * Currency rate.
+	 *
+	 * @param string $context What the value is for. Valid values are view and edit.
+	 *
+	 * @since 1.0.2
+	 * @return mixed|null
+	 */
+	public function get_currency_rate( $context = 'edit' ) {
+		return $this->get_prop( 'currency_rate', $context );
+	}
+
+	/**
+	 * Set currency rate.
+	 *
+	 * @param string $value Currency rate.
+	 *
+	 * @since 1.0.2
+	 */
+	public function set_currency_rate( $value ) {
+		$this->set_prop( 'currency_rate', eac_format_decimal( $value, 8 ) );
+	}
 
 	/**
 	 * Get associated parent payment id.
@@ -1503,6 +1506,26 @@ abstract class Document extends Model {
 	 */
 	public function set_parent_id( $value ) {
 		$this->set_prop( 'parent_id', absint( $value ) );
+	}
+
+	/**
+	 * Get the unique_hash.
+	 *
+	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
+	 *
+	 * @return string
+	 */
+	public function get_uuid_key( $context = 'edit' ) {
+		return $this->get_prop( 'uuid_key', $context );
+	}
+
+	/**
+	 * Set the uuid_key.
+	 *
+	 * @param string $key uuid_key.
+	 */
+	public function set_uuid_key( $key ) {
+		$this->set_prop( 'uuid_key', $key );
 	}
 
 	/**

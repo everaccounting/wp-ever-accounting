@@ -75,7 +75,7 @@ class Transfers extends ListTable {
 	 * @return void
 	 */
 	public function no_items() {
-		esc_html_e( 'No transfers found.', 'ever-accounting' );
+		esc_html_e( 'No transfers found.', 'wp-ever-accounting' );
 	}
 
 
@@ -245,6 +245,28 @@ class Transfers extends ListTable {
 		switch ( $column_name ) {
 			case 'amount':
 				$value = $item->get_formatted_amount();
+				break;
+			case 'from_account':
+				$account_id = $item->get_from_account_id();
+				$account    = eac_get_account( $account_id );
+				$link       = add_query_arg(
+					array(
+						'from_account_id' => $account_id,
+						'filter'          => 'yes',
+					)
+				);
+				$value      = $account ? sprintf( '<a href="%s">%s</a>', esc_url( $link ), esc_html( $account->get_name() ) ) : '&mdash;';
+				break;
+			case 'to_account':
+				$account_id = $item->get_to_account_id();
+				$account    = eac_get_account( $account_id );
+				$link       = add_query_arg(
+					array(
+						'to_account_id' => $account_id,
+						'filter'        => 'yes',
+					)
+				);
+				$value      = $account ? sprintf( '<a href="%s">%s</a>', esc_url( $link ), esc_html( $account->get_name() ) ) : '&mdash;';
 				break;
 			default:
 				$value = parent::column_default( $item, $column_name );

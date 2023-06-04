@@ -11,6 +11,4 @@ use EverAccounting\Models\Document;
 
 defined( 'ABSPATH' ) || exit();
 
-?>
-
 

@@ -62,13 +62,13 @@ class ListTable extends \WP_List_Table {
 	 *
 	 * @return string[] Array of CSS classes for the table tag.
 	 */
-//	protected function get_table_classes() {
-//		$mode = get_user_setting( 'posts_list_mode', 'list' );
-//
-//		$mode_class = esc_attr( 'table-view-' . $mode );
-//
-//		return array( 'widefat', 'striped', $mode_class, $this->_args['plural'] );
-//	}
+	// protected function get_table_classes() {
+	// $mode = get_user_setting( 'posts_list_mode', 'list' );
+	//
+	// $mode_class = esc_attr( 'table-view-' . $mode );
+	//
+	// return array( 'widefat', 'striped', $mode_class, $this->_args['plural'] );
+	// }
 
 	/**
 	 * Retrieve the search query string.
@@ -158,15 +158,19 @@ class ListTable extends \WP_List_Table {
 	 * @return string Current page URL.
 	 */
 	protected function get_current_url( $args = array() ) {
-		$page = $this->get_page();
-		$tab  = eac_get_input_var( 'tab' );
-		$args = array_merge(
+		$page    = $this->get_page();
+		$tab     = eac_get_input_var( 'tab' );
+		$section = eac_get_input_var( 'section' );
+		$args    = array_merge(
 			array(
-				'page' => $page,
-				'tab'  => $tab,
+				'page'    => $page,
+				'tab'     => $tab,
+				'section' => $section,
 			),
 			$args
 		);
+
+		$args = array_filter( $args );
 
 		// Build the base URL.
 		return add_query_arg( $args, admin_url( 'admin.php' ) );
@@ -195,6 +199,7 @@ class ListTable extends \WP_List_Table {
 
 		if ( is_object( $item ) && method_exists( $item, "get_$column_name" ) ) {
 			$getter = "get_$column_name";
+
 			return empty( $item->$getter( 'view' ) ) ? '&mdash;' : esc_html( $item->$getter( 'view' ) );
 		} elseif ( is_array( $item ) && isset( $item[ $column_name ] ) ) {
 			return empty( $item[ $column_name ] ) ? '&mdash;' : esc_html( $item[ $column_name ] );
@@ -267,8 +272,8 @@ class ListTable extends \WP_List_Table {
 	public function status_filter() {
 		$filters = array(
 			''         => __( 'All status', 'wp-ever-accounting' ),
-			'active'   => __( 'Active', 'ever-accounting' ),
-			'inactive' => __( 'Inactive', 'ever-accounting' ),
+			'active'   => __( 'Active', 'wp-ever-accounting' ),
+			'inactive' => __( 'Inactive', 'wp-ever-accounting' ),
 		);
 
 		$selected = eac_get_input_var( 'status', '' );
@@ -293,7 +298,7 @@ class ListTable extends \WP_List_Table {
 		$account_id = eac_get_input_var( 'account_id' );
 		$accounts   = eac_get_accounts( array( 'include' => $account_id ) );
 		?>
-		<select class="eac-select__account" name="account_id" id="account-filter">
+		<select class="eac-select__account" name="account_id" id="account-filter" data-ajax-type="account">
 			<option value=""><?php esc_html_e( 'All accounts', 'wp-ever-accounting' ); ?></option>
 			<?php foreach ( $accounts as $account ) : ?>
 				<option value="<?php echo esc_attr( $account->get_id() ); ?>" <?php selected( $account_id, $account->get_id() ); ?>><?php echo esc_html( $account->get_name() ); ?></option>
@@ -311,16 +316,16 @@ class ListTable extends \WP_List_Table {
 	 *
 	 * @return void
 	 */
-	public function category_filter( $type = 'item' ) {
+	public function category_filter( $type = 'product_cat' ) {
 		$category_id = eac_get_input_var( 'category_id' );
-		$categories  = eac_get_categories(
+		$categories  = eac_get_terms(
 			array(
 				'include' => $category_id,
 				'type'    => $type,
 			)
 		);
 		?>
-		<select class="eac-input__select" name="category_id" id="category-filter" data-search="category" data-subtime="<?php echo esc_attr( $type ); ?>" data-placeholder="<?php esc_attr_e( 'Filter by category', 'wp-ever-accounting' ); ?>">
+		<select class="eac-input__select" name="category_id" id="category-filter" data-eac-select2="category" data-subtime="<?php echo esc_attr( $type ); ?>" data-placeholder="<?php esc_attr_e( 'Filter by category', 'wp-ever-accounting' ); ?>">
 			<option value=""><?php esc_html_e( 'All categories', 'wp-ever-accounting' ); ?></option>
 			<?php foreach ( $categories as $category ) : ?>
 				<option value="<?php echo esc_attr( $category->get_id() ); ?>" <?php selected( $category_id, $category->get_id() ); ?>><?php echo esc_html( $category->get_name() ); ?></option>
@@ -380,6 +385,32 @@ class ListTable extends \WP_List_Table {
 	}
 
 	/**
+	 * Terms filter
+	 *
+	 * @param string $group Group of terms.
+	 * @param string $placeholder Placeholder text.
+	 *
+	 * @since 1.1.6
+	 */
+	public function terms_filter( $group = 'product_ca', $placeholder = '' ) {
+		$category_id = eac_get_input_var( 'category_id' );
+		$categories  = eac_get_categories(
+			array(
+				'include' => $category_id,
+				'type'    => 'item',
+			)
+		);
+		?>
+		<select class="eac-select__item-category" name="category_id" id="item-category-filter">
+			<option value=""><?php esc_html_e( 'All item categories', 'wp-ever-accounting' ); ?></option>
+			<?php foreach ( $categories as $category ) : ?>
+				<option value="<?php echo esc_attr( $category->get_id() ); ?>" <?php selected( $category_id, $category->get_id() ); ?>><?php echo esc_html( $category->get_name() ); ?></option>
+			<?php endforeach; ?>
+		</select>
+		<?php
+	}
+
+	/**
 	 * Customer filter.
 	 *
 	 * @since 1.1.6
@@ -410,7 +441,7 @@ class ListTable extends \WP_List_Table {
 		$vendor_id = eac_get_input_var( 'vendor_id' );
 		$vendors   = eac_get_vendors( array( 'include' => $vendor_id ) );
 		?>
-		<select class="eac-select__vendor" name="vendor_id" id="vendor-filter">
+		<select class="eac-select__vendor" name="vendor_id" id="vendor-filter" data-ajax-type="vendor" data-placeholder="<?php esc_attr_e( 'Filter by vendor', 'wp-ever-accounting' ); ?>">
 			<option value=""><?php esc_html_e( 'All vendors', 'wp-ever-accounting' ); ?></option>
 			<?php foreach ( $vendors as $vendor ) : ?>
 				<option value="<?php echo esc_attr( $vendor->get_id() ); ?>" <?php selected( $vendor_id, $vendor->get_id() ); ?>><?php echo esc_html( $vendor->get_name() ); ?></option>
@@ -451,9 +482,9 @@ class ListTable extends \WP_List_Table {
 		$end_date   = eac_get_input_var( 'end_date' );
 		?>
 		<div class="eac-date-range">
-			<input type="text" class="eac-date-range__start" name="start_date" id="start-date-filter" value="<?php echo esc_attr( $start_date ); ?>" placeholder="<?php esc_attr_e( 'Start date', 'wp-ever-accounting' ); ?>" />
+			<input type="text" class="eac-date-range__start" name="start_date" id="start-date-filter" value="<?php echo esc_attr( $start_date ); ?>" placeholder="<?php esc_attr_e( 'Start date', 'wp-ever-accounting' ); ?>"/>
 			<span class="eac-date-range__separator">-</span>
-			<input type="text" class="eac-date-range__end" name="end_date" id="end-date-filter" value="<?php echo esc_attr( $end_date ); ?>" placeholder="<?php esc_attr_e( 'End date', 'wp-ever-accounting' ); ?>" />
+			<input type="text" class="eac-date-range__end" name="end_date" id="end-date-filter" value="<?php echo esc_attr( $end_date ); ?>" placeholder="<?php esc_attr_e( 'End date', 'wp-ever-accounting' ); ?>"/>
 		</div>
 		<?php
 	}

@@ -143,10 +143,9 @@ function eac_get_template_html( $template_name, $args = array(), $template_path 
  * @since 1.1.6
  * @return void
  */
-function eac_endpoint_header() {
+function eac_page_header() {
 	eac_get_template_part( 'header' );
 }
-add_action( 'ever_accounting_endpoint_header', 'eac_endpoint_header' );
 
 /**
  * Output endpoint footer.
@@ -154,29 +153,9 @@ add_action( 'ever_accounting_endpoint_header', 'eac_endpoint_header' );
  * @since 1.1.6
  * @return void
  */
-function eac_endpoint_footer() {
+function eac_page_footer() {
 	eac_get_template_part( 'footer' );
 }
-add_action( 'ever_accounting_endpoint_footer', 'eac_endpoint_footer' );
-
-
-/**
- * Output endpoint content.
- *
- * @since 1.1.6
- * @return void
- */
-function eac_endpoint_content() {
-	$endpoint = get_query_var( 'eac_endpoint' );
-	$entry_id = get_query_var( 'entry_id' );
-
-	do_action( "ever_accounting_endpoint_content_{$endpoint}" );
-
-	if ( $entry_id ) {
-		do_action( "ever_accounting_endpoint_content_{$endpoint}" );
-	}
-}
-add_action( 'ever_accounting_endpoint_content', 'eac_endpoint_content' );
 
 /**
  * Dropdown menu.

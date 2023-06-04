@@ -46,14 +46,12 @@ function eac_get_unit_types() {
 /**
  * Main function for returning item.
  *
- * @param mixed  $item Product object.
- * @param string $column Optional. Column to get. Default null.
- * @param array  $args Optional. Additional arguments. Default empty array.
+ * @param mixed $item Product object.
  * @return Product|null
  * @since 1.1.0
  */
-function eac_get_product( $item, $column = null, $args = array() ) {
-	return Product::get( $item, $column, $args );
+function eac_get_product( $item ) {
+	return Product::get( $item );
 }
 
 /**

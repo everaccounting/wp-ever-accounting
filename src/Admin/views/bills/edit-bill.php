@@ -19,15 +19,15 @@ $title = $bill->exists() ? __( 'Update Bill', 'wp-ever-accounting' ) : __( 'Add 
 <div class="eac-section-header">
 	<div>
 		<h2><?php echo esc_html( $title ); ?></h2>
-		<a href="<?php echo esc_url( admin_url( 'admin.php?page=eac-purchase&tab=bills' ) ); ?>"><span class="dashicons dashicons-undo"></span></a>
+		<a href="<?php echo esc_url( admin_url( 'admin.php?page=eac-purchases&tab=bills' ) ); ?>"><span class="dashicons dashicons-undo"></span></a>
 	</div>
 	<div>
 		<?php if ( $bill->exists() ) : ?>
-			<a href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin.php?page=eac-purchase&tab=bills&delete=' . $bill->get_id() ), 'bulk-accounts' ) ); ?>" class="del">
+			<a href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin.php?page=eac-purchases&tab=bills&delete=' . $bill->get_id() ), 'bulk-accounts' ) ); ?>" class="del">
 				<?php esc_html_e( 'Delete', 'wp-ever-accounting' ); ?>
 			</a>
 			<!--view-->
-			<a href="<?php echo esc_url( admin_url( 'admin.php?page=eac-purchase&tab=bills&action=view&bill_id=' . $bill->get_id() ) ); ?>">
+			<a href="<?php echo esc_url( admin_url( 'admin.php?page=eac-purchases&tab=bills&action=view&bill_id=' . $bill->get_id() ) ); ?>">
 				<?php esc_html_e( 'View', 'wp-ever-accounting' ); ?>
 			</a>
 		<?php endif; ?>

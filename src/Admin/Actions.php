@@ -9,7 +9,7 @@ use EverAccounting\Models\Customer;
 use EverAccounting\Models\Expense;
 use EverAccounting\Models\Invoice;
 use EverAccounting\Models\Product;
-use EverAccounting\Models\Payment;
+use EverAccounting\Models\Income;
 use EverAccounting\Models\Tax;
 use EverAccounting\Models\Transfer;
 use EverAccounting\Models\Vendor;
@@ -43,7 +43,7 @@ class Actions extends Singleton {
 		add_action( 'wp_ajax_eac_edit_product', array( __CLASS__, 'edit_product' ) );
 		add_action( 'wp_ajax_eac_edit_category', array( __CLASS__, 'edit_category' ) );
 		add_action( 'wp_ajax_eac_edit_currency', array( __CLASS__, 'edit_currency' ) );
-		add_action( 'wp_ajax_eac_edit_payment', array( __CLASS__, 'edit_payment' ) );
+		add_action( 'wp_ajax_eac_edit_income', array( __CLASS__, 'edit_income' ) );
 		add_action( 'wp_ajax_eac_edit_expense', array( __CLASS__, 'edit_expense' ) );
 		add_action( 'wp_ajax_eac_edit_transfer', array( __CLASS__, 'edit_transfer' ) );
 		add_action( 'wp_ajax_eac_edit_tax', array( __CLASS__, 'edit_tax' ) );
@@ -86,9 +86,9 @@ class Actions extends Singleton {
 				$customer = new Customer( $id );
 				require __DIR__ . '/views/customers/customer-form.php';
 				break;
-			case 'edit_payment':
-				$payment = new Payment( $id );
-				require __DIR__ . '/views/payments/payment-form.php';
+			case 'edit_income':
+				$income = new Income( $id );
+				require __DIR__ . '/views/incomes/income-form.php';
 				break;
 			case 'edit_expense':
 				$expense = new Expense( $id );
@@ -157,11 +157,12 @@ class Actions extends Singleton {
 					);
 				}
 				break;
-			case 'category':
-				$type         = isset( $_POST['subtype'] ) ? sanitize_text_field( wp_unslash( $_POST['subtype'] ) ) : 'item';
-				$args['type'] = $type;
-				$categories   = eac_get_categories( $args );
-				$total        = eac_get_categories( $args, true );
+			case 'product_cat':
+			case 'income_cat':
+			case 'expense_cat':
+				$args['group'] = $type;
+				$categories    = eac_get_terms( $args );
+				$total         = eac_get_terms( $args, true );
 				foreach ( $categories as $category ) {
 					$results[] = array(
 						'id'   => $category->get_id(),
@@ -181,13 +182,13 @@ class Actions extends Singleton {
 				}
 				break;
 
-			case 'payment':
-				$payments = eac_get_payments( $args );
-				$total    = eac_get_payments( $args, true );
-				foreach ( $payments as $payment ) {
+			case 'income':
+				$incomes = eac_get_incomes( $args );
+				$total   = eac_get_incomes( $args, true );
+				foreach ( $incomes as $income ) {
 					$results[] = array(
-						'id'   => $payment->get_id(),
-						'text' => $payment->get_amount(),
+						'id'   => $income->get_id(),
+						'text' => $income->get_amount(),
 					);
 				}
 				break;
@@ -450,9 +451,9 @@ class Actions extends Singleton {
 	 * @return void
 	 */
 	public static function edit_category() {
-		check_admin_referer( 'eac-edit-category' );
+		check_admin_referer( 'eac_edit_category' );
 		$posted  = eac_clean( wp_unslash( $_POST ) );
-		$created = eac_insert_category( $posted );
+		$created = eac_insert_term( $posted );
 		$referer = wp_get_referer();
 		if ( is_wp_error( $created ) ) {
 			wp_send_json_error(
@@ -489,15 +490,19 @@ class Actions extends Singleton {
 	 */
 	public static function edit_currency() {
 		check_admin_referer( 'eac_edit_currency' );
-		$posted            = eac_clean( wp_unslash( $_POST ) );
-		$global_currencies = eac_get_global_currencies();
-		$code              = ! empty( $posted['code'] ) ? $posted['code'] : '';
-		$name              = ! empty( $posted['name'] ) ? sanitize_text_field( $posted['name'] ) : '';
-		$symbol            = ! empty( $posted['symbol'] ) ? sanitize_text_field( $posted['symbol'] ) : '';
-		$position          = ! empty( $posted['position'] ) ? sanitize_text_field( $posted['position'] ) : '';
-		$precision         = ! empty( $posted['precision'] ) ? absint( $posted['precision'] ) : '';
+		$posted = eac_clean( wp_unslash( $_POST ) );
+		$data   = array(
+			'code'         => isset( $posted['code'] ) ? sanitize_text_field( $posted['code'] ) : '',
+			'name'         => isset( $posted['name'] ) ? sanitize_text_field( $posted['name'] ) : '',
+			'symbol'       => isset( $posted['symbol'] ) ? sanitize_text_field( $posted['symbol'] ) : '',
+			'rate'         => isset( $posted['rate'] ) ? doubleval( $posted['rate'] ) : '',
+			'position'     => isset( $posted['position'] ) ? sanitize_text_field( $posted['position'] ) : '',
+			'precision'    => isset( $posted['precision'] ) ? absint( $posted['precision'] ) : '',
+			'thousand_sep' => isset( $posted['thousand_sep'] ) ? sanitize_text_field( $posted['thousand_sep'] ) : '',
+			'decimal_sep'  => isset( $posted['decimal_sep'] ) ? sanitize_text_field( $posted['decimal_sep'] ) : '',
+		);
 
-		if ( empty( $code ) || empty( $global_currencies[ $code ] ) ) {
+		if ( empty( $data['code'] ) ) {
 			wp_send_json_error(
 				array(
 					'message' => __( 'Invalid currency code!', 'wp-ever-accounting' ),
@@ -505,21 +510,11 @@ class Actions extends Singleton {
 			);
 		}
 
-		$data = array(
-			'code'      => $code,
-			'name'      => $name,
-			'symbol'    => $symbol,
-			'position'  => $position,
-			'precision' => $precision,
-		);
-		$data = wp_parse_args( $data, $global_currencies[ $code ] );
-
-
 		$referer = wp_get_referer();
-		if ( is_wp_error( $created ) ) {
+		if ( is_wp_error( eac_update_currency( $data ) ) ) {
 			wp_send_json_error(
 				array(
-					'message' => $created->get_error_message(),
+					'message' => __( 'Something went wrong!', 'wp-ever-accounting' ),
 				)
 			);
 		}
@@ -536,7 +531,6 @@ class Actions extends Singleton {
 			array(
 				'message'  => $message,
 				'redirect' => $redirect,
-				'item'     => $created->get_data(),
 			)
 		);
 
@@ -544,15 +538,15 @@ class Actions extends Singleton {
 	}
 
 	/**
-	 * Edit Payment
+	 * Edit Income
 	 *
 	 * @since 1.1.6
 	 * @return void
 	 */
-	public static function edit_payment() {
-		check_admin_referer( 'eac_edit_payment' );
+	public static function edit_income() {
+		check_admin_referer( 'eac_edit_income' );
 		$posted  = eac_clean( wp_unslash( $_POST ) );
-		$created = eac_insert_payment( $posted );
+		$created = eac_insert_income( $posted );
 		$referer = wp_get_referer();
 		if ( is_wp_error( $created ) ) {
 			wp_send_json_error(
@@ -562,11 +556,11 @@ class Actions extends Singleton {
 			);
 		}
 
-		$message  = __( 'Payment updated successfully!', 'wp-ever-accounting' );
+		$message  = __( 'Income updated successfully!', 'wp-ever-accounting' );
 		$update   = ! empty( $posted['id'] );
 		$redirect = '';
 		if ( ! $update ) {
-			$message  = __( 'Payment created successfully!', 'wp-ever-accounting' );
+			$message  = __( 'Income created successfully!', 'wp-ever-accounting' );
 			$redirect = remove_query_arg( array( 'action' ), eac_clean( $referer ) );
 		}
 

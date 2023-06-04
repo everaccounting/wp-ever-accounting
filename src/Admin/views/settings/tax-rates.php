@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit();
 
 <div class="eac-section-header eac-mt-20">
 	<div>
-		<h2><?php esc_html_e( 'Tax Rates', 'ever-accounting' ); ?></h2>
+		<h2><?php esc_html_e( 'Tax Rates', 'wp-ever-accounting' ); ?></h2>
 	</div>
 	<div>
 		<?php submit_button( __( 'Save Rates', 'wp-ever-accounting' ), 'primary', 'submit', false, array( 'form' => 'eac-item-form' ) ); ?>

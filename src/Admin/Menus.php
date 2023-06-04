@@ -21,7 +21,7 @@ class Menus extends \EverAccounting\Singleton {
 		add_action( 'admin_menu', array( __CLASS__, 'main_menu' ), 1 );
 		add_action( 'admin_menu', array( __CLASS__, 'products_menu' ), 20 );
 		add_action( 'admin_menu', array( __CLASS__, 'sales_menu' ), 30 );
-		add_action( 'admin_menu', array( __CLASS__, 'purchase_menu' ), 40 );
+		add_action( 'admin_menu', array( __CLASS__, 'purchases_menu' ), 40 );
 		add_action( 'admin_menu', array( __CLASS__, 'banking_menu' ), 50 );
 		add_action( 'admin_menu', array( __CLASS__, 'tools_menu' ), 600 );
 		add_action( 'admin_menu', array( __CLASS__, 'reports_menu' ), 700 );
@@ -97,8 +97,8 @@ class Menus extends \EverAccounting\Singleton {
 
 		add_submenu_page(
 			'ever-accounting',
-			__( 'Sales', 'ever-accounting' ),
-			__( 'Sales', 'ever-accounting' ),
+			__( 'Sales', 'wp-ever-accounting' ),
+			__( 'Sales', 'wp-ever-accounting' ),
 			'manage_options',
 			'eac-sales',
 			array( Sales::class, 'output' )
@@ -111,7 +111,7 @@ class Menus extends \EverAccounting\Singleton {
 	 * @since 1.0.0
 	 * @returns void
 	 */
-	public static function purchase_menu() {
+	public static function purchases_menu() {
 		$tabs = eac_get_purchase_tabs();
 		if ( empty( $tabs ) ) {
 			return;
@@ -119,11 +119,11 @@ class Menus extends \EverAccounting\Singleton {
 
 		add_submenu_page(
 			'ever-accounting',
-			__( 'Purchase', 'ever-accounting' ),
-			__( 'Purchase', 'ever-accounting' ),
+			__( 'Purchases', 'wp-ever-accounting' ),
+			__( 'Purchases', 'wp-ever-accounting' ),
 			'manage_options',
-			'eac-purchase',
-			array( Purchase::class, 'output' )
+			'eac-purchases',
+			array( Purchases::class, 'output' )
 		);
 	}
 
@@ -141,8 +141,8 @@ class Menus extends \EverAccounting\Singleton {
 
 		add_submenu_page(
 			'ever-accounting',
-			__( 'Banking', 'ever-accounting' ),
-			__( 'Banking', 'ever-accounting' ),
+			__( 'Banking', 'wp-ever-accounting' ),
+			__( 'Banking', 'wp-ever-accounting' ),
 			'manage_options',
 			'eac-banking',
 			array( Banking::class, 'output' )
@@ -163,8 +163,8 @@ class Menus extends \EverAccounting\Singleton {
 
 		add_submenu_page(
 			'ever-accounting',
-			__( 'Tools', 'ever-accounting' ),
-			__( 'Tools', 'ever-accounting' ),
+			__( 'Tools', 'wp-ever-accounting' ),
+			__( 'Tools', 'wp-ever-accounting' ),
 			'manage_options',
 			'eac-tools',
 			array( Tools::class, 'output' )
@@ -185,8 +185,8 @@ class Menus extends \EverAccounting\Singleton {
 
 		add_submenu_page(
 			'ever-accounting',
-			__( 'Reports', 'ever-accounting' ),
-			__( 'Reports', 'ever-accounting' ),
+			__( 'Reports', 'wp-ever-accounting' ),
+			__( 'Reports', 'wp-ever-accounting' ),
 			'manage_options',
 			'eac-reports',
 			array( Reports::class, 'output' )
@@ -201,8 +201,8 @@ class Menus extends \EverAccounting\Singleton {
 	public static function settings_menu() {
 		$hook = add_submenu_page(
 			'ever-accounting',
-			__( 'Settings', 'ever-accounting' ),
-			__( 'Settings', 'ever-accounting' ),
+			__( 'Settings', 'wp-ever-accounting' ),
+			__( 'Settings', 'wp-ever-accounting' ),
 			'manage_options',
 			'eac-settings',
 			array( Settings::class, 'output' )
@@ -230,8 +230,8 @@ class Menus extends \EverAccounting\Singleton {
 	public static function extensions_menu() {
 		add_submenu_page(
 			'ever-accounting',
-			__( 'Extensions', 'ever-accounting' ),
-			__( 'Extensions', 'ever-accounting' ),
+			__( 'Extensions', 'wp-ever-accounting' ),
+			__( 'Extensions', 'wp-ever-accounting' ),
 			'manage_options',
 			'eac-extensions',
 			array( Extensions::class, 'output' )
@@ -252,7 +252,7 @@ class Menus extends \EverAccounting\Singleton {
 			array(
 				'title' => __( 'Dashboard', 'wp-ever-accounting' ),
 				'icon'  => 'dashicons dashicons-dashboard',
-				'url'   => admin_url( 'admin.php?page=eac-dashboard' ),
+				'url'   => admin_url( 'admin.php?page=ever-accounting' ),
 			),
 			array(
 				'title' => __( 'Sales', 'wp-ever-accounting' ),
@@ -260,9 +260,9 @@ class Menus extends \EverAccounting\Singleton {
 				'url'   => admin_url( 'admin.php?page=eac-sales' ),
 			),
 			array(
-				'title' => __( 'Purchase', 'wp-ever-accounting' ),
+				'title' => __( 'Purchases', 'wp-ever-accounting' ),
 				'icon'  => 'dashicons dashicons-cart',
-				'url'   => admin_url( 'admin.php?page=eac-purchase' ),
+				'url'   => admin_url( 'admin.php?page=eac-purchases' ),
 			),
 			array(
 				'title'   => __( 'New', 'wp-ever-accounting' ),
@@ -270,12 +270,20 @@ class Menus extends \EverAccounting\Singleton {
 				'url'     => '#',
 				'submenu' => array(
 					array(
-						'title' => __( 'Payment', 'wp-ever-accounting' ),
-						'url'   => eac_action_url( 'action=get_html_response&html_type=edit_payment' ),
+						'title' => __( 'Income', 'wp-ever-accounting' ),
+						'url'   => eac_action_url( 'action=get_html_response&html_type=edit_income' ),
 					),
 					array(
 						'title' => __( 'Expense', 'wp-ever-accounting' ),
 						'url'   => eac_action_url( 'action=get_html_response&html_type=edit_expense' ),
+					),
+					array(
+						'title' => __( 'Proudct', 'wp-ever-accounting' ),
+						'url'   => eac_action_url( 'action=get_html_response&html_type=edit_product' ),
+					),
+					array(
+						'title' => __( 'Invoice', 'wp-ever-accounting' ),
+						'url'   => admin_url( 'admin.php?page=eac-sales&tab=invoices&action=add' ),
 					),
 					array(
 						'title' => __( 'Customer', 'wp-ever-accounting' ),
@@ -290,7 +298,7 @@ class Menus extends \EverAccounting\Singleton {
 			array(
 				'title' => __( 'Support', 'wp-ever-accounting' ),
 				'icon'  => 'dashicons dashicons-editor-help',
-				'url'   => admin_url( 'admin.php?page=eac-documents' ),
+				'url'   => 'https://wpeveraccounting.com/docs/',
 			),
 		);
 		?>

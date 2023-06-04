@@ -40,7 +40,7 @@ class General extends \EverAccounting\Admin\SettingsTab {
 	protected function get_own_sections() {
 		$sections = array(
 			''         => __( 'General', 'wp-ever-accounting' ),
-			'defaults' => __( 'Defaults', 'wp-ever-accounting' )
+			'defaults' => __( 'Defaults', 'wp-ever-accounting' ),
 		);
 
 		return $sections;
@@ -178,7 +178,7 @@ class General extends \EverAccounting\Admin\SettingsTab {
 				'type'     => 'currency',
 				'default'  => 'USD',
 				'desc_tip' => true,
-				'desc'  => __( 'Overview, and Reports will be shown in this currency. You can change the currency for each invoice, bill, and other records.', 'wp-ever-accounting' ),
+				'desc'     => __( 'Overview, and Reports will be shown in this currency. You can change the currency for each invoice, bill, and other records.', 'wp-ever-accounting' ),
 			),
 			array(
 				'title'       => __( 'Financial Year Start', 'wp-ever-accounting' ),

@@ -127,16 +127,6 @@ class Sales extends \EverAccounting\Admin\SettingsTab {
 				'default'     => 'Thank you for your business!',
 				'desc_tip'    => true,
 			),
-			// footer.
-			array(
-				'title'       => __( 'Footer', 'wp-ever-accounting' ),
-				'desc'        => __( 'The footer that will be added to the invoice automatically when you create a new invoice.', 'wp-ever-accounting' ),
-				'id'          => 'eac_invoice_footer',
-				'type'        => 'textarea',
-				'placeholder' => 'e.g. Thank you for your business!',
-				'desc_tip'    => true,
-			),
-
 			// end section.
 			array(
 				'type' => 'sectionend',

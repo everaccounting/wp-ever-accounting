@@ -18,11 +18,11 @@ class Sales extends \EverAccounting\Singleton {
 	 * @since 1.0.0
 	 */
 	protected function __construct() {
-		add_action( 'ever_accounting_sales_tab_payments', array( __CLASS__, 'output_payments_tab' ) );
-		add_action( 'ever_accounting_sales_tab_invoices', array( __CLASS__, 'output_invoices_tab' ) );
-		add_action( 'ever_accounting_sales_tab_customers', array( __CLASS__, 'output_customers_tab' ) );
-		// add_action( 'admin_footer', array( __CLASS__, 'output_payment_modal' ) );
-		// add_action( 'admin_footer', array( __CLASS__, 'output_customers_modal' ) );
+		add_filter( 'ever_accounting_sales_incomes_sections', array( __CLASS__, 'add_incomes_sections' ) );
+		add_action( 'ever_accounting_sales_incomes_incomes_content', array( __CLASS__, 'output_incomes_incomes_content' ) );
+		add_action( 'ever_accounting_sales_incomes_categories_content', array( __CLASS__, 'output_income_categories_section' ) );
+		add_action( 'ever_accounting_sales_invoices_content', array( __CLASS__, 'output_invoices_content' ) );
+		add_action( 'ever_accounting_sales_customers_content', array( __CLASS__, 'output_customers_content' ) );
 	}
 
 	/**
@@ -42,24 +42,60 @@ class Sales extends \EverAccounting\Singleton {
 	}
 
 	/**
+	 * Add the incomes sections.
+	 *
+	 * @param array $sections The sections.
+	 *
+	 * @since 1.0.0
+	 * @return array
+	 */
+	public static function add_incomes_sections( $sections ) {
+		$sections['incomes']    = __( 'Incomes', 'wp-ever-accounting' );
+		$sections['categories'] = __( 'Categories', 'wp-ever-accounting' );
+
+		return $sections;
+	}
+
+	/**
 	 * Output the payments tab.
 	 *
 	 * @since 1.0.0
 	 * @return void
 	 */
-	public static function output_payments_tab() {
-		$action     = eac_get_input_var( 'action' );
-		$payment_id = eac_get_input_var( 'payment_id' );
-		if ( eac_is_input_var_set( 'payment_id' ) && empty( eac_get_payment( $payment_id ) ) ) {
-			wp_safe_redirect( admin_url( 'admin.php?page=eac-sales&tab=payments' ) );
+	public static function output_incomes_incomes_content() {
+		$action    = eac_get_input_var( 'action' );
+		$income_id = eac_get_input_var( 'income_id' );
+		if ( eac_is_input_var_set( 'income_id' ) && empty( eac_get_income( $income_id ) ) ) {
+			wp_safe_redirect( admin_url( 'admin.php?page=eac-sales&tab=incomes' ) );
 			exit;
 		}
 		if ( in_array( $action, array( 'add', 'edit' ), true ) ) {
-			include dirname( __FILE__ ) . '/views/payments/edit-payment.php';
+			include dirname( __FILE__ ) . '/views/incomes/edit-income.php';
 		} elseif ( 'view' === $action ) {
-			include dirname( __FILE__ ) . '/views/payments/view-payment.php';
+			include dirname( __FILE__ ) . '/views/incomes/view-income.php';
 		} else {
-			include dirname( __FILE__ ) . '/views/payments/list-payments.php';
+			include dirname( __FILE__ ) . '/views/incomes/list-incomes.php';
+		}
+	}
+
+	/**
+	 * Output the income categories tab.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public static function output_income_categories_section() {
+		$action  = eac_get_input_var( 'action' );
+		$term_id = eac_get_input_var( 'term_id' );
+		$term    = empty( $term_id ) ? false : eac_get_term( $term_id, 'income_cat' );
+		if ( ! empty( $term_id ) && empty( $term ) ) {
+			wp_safe_redirect( admin_url( 'admin.php?page=eac-sales&tab=incomes&section=categories' ) );
+			exit;
+		}
+		if ( in_array( $action, array( 'add', 'edit' ), true ) ) {
+			include dirname( __FILE__ ) . '/views/incomes/edit-category.php';
+		} else {
+			include dirname( __FILE__ ) . '/views/incomes/list-categories.php';
 		}
 	}
 
@@ -69,7 +105,7 @@ class Sales extends \EverAccounting\Singleton {
 	 * @since 1.0.0
 	 * @return void
 	 */
-	public static function output_invoices_tab() {
+	public static function output_invoices_content() {
 		$action     = eac_get_input_var( 'action' );
 		$invoice_id = eac_get_input_var( 'invoice_id' );
 		if ( in_array( $action, array( 'add', 'edit' ), true ) ) {
@@ -87,7 +123,7 @@ class Sales extends \EverAccounting\Singleton {
 	 * @since 1.0.0
 	 * @return void
 	 */
-	public static function output_customers_tab() {
+	public static function output_customers_content() {
 		$action      = eac_get_input_var( 'action' );
 		$customer_id = eac_get_input_var( 'customer_id' );
 		if ( in_array( $action, array( 'add', 'edit' ), true ) ) {
@@ -97,35 +133,5 @@ class Sales extends \EverAccounting\Singleton {
 		} else {
 			include dirname( __FILE__ ) . '/views/customers/list-customers.php';
 		}
-	}
-
-	/**
-	 * Output the payment modal.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	public static function output_payment_modal() {
-		$payment = new \EverAccounting\Models\Payment();
-		?>
-		<script type="text/template" id="eac-payment-modal" data-title="<?php esc_html_e( 'Add Payment', 'wp-ever-accounting' ); ?>">
-			<?php require __DIR__ . '/views/payments/payment-form.php'; ?>
-		</script>
-		<?php
-	}
-
-	/**
-	 * Output the customers modal.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	public static function output_customers_modal() {
-		$customer = new \EverAccounting\Models\Customer();
-		?>
-		<script type="text/template" id="eac-customer-modal" data-title="<?php esc_html_e( 'Add Customer', 'wp-ever-accounting' ); ?>">
-			<?php require __DIR__ . '/views/customers/customer-form.php'; ?>
-		</script>
-		<?php
 	}
 }

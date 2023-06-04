@@ -13,7 +13,7 @@ namespace EverAccounting\Repositories;
 use EverAccounting\Abstracts\Resource_Repository;
 
 use EverAccounting\Models\Account;
-use EverAccounting\Models\Payment;
+use EverAccounting\Models\Income;
 use EverAccounting\Models\Revenue;
 use EverAccounting\Models\Transfer;
 
@@ -76,7 +76,7 @@ class Transfers extends Resource_Repository {
 			$wpdb->query( 'START TRANSACTION' );
 			$from_account = new Account( $transfer->get_from_account_id() );
 			$to_account   = new Account( $transfer->get_to_account_id() );
-			$expense      = new Payment( $transfer->get_expense_id() );
+			$expense      = new Income( $transfer->get_expense_id() );
 			$expense->set_props(
 				array(
 					'account_id'     => $transfer->get_from_account_id(),

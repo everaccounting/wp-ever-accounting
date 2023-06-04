@@ -9,7 +9,7 @@
 
 use EverAccounting\Models\Account;
 use EverAccounting\Models\Category;
-use EverAccounting\Models\Payment;
+use EverAccounting\Models\Income;
 use EverAccounting\Models\Revenue;
 
 defined( 'ABSPATH' ) || exit();
@@ -413,8 +413,8 @@ class Controller {
 	/**
 	 * Update Bill data.
 	 *
-	 * @param int     $payment_id  Payment id.
-	 * @param Payment $payment Payment object.
+	 * @param int    $payment_id  Payment id.
+	 * @param Income $payment Payment object.
 	 *
 	 * @since 1.1.0
 	 */

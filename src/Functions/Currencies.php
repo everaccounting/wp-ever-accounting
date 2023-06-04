@@ -158,7 +158,7 @@ function eac_update_currency( $data ) {
 		foreach ( $currencies as $currency_code => &$currency_data ) {
 			if ( $currency_code !== $code ) {
 				$currencies[ $currency_code ]['rate'] = $currency_data['rate'] / $new_rate;
-				if ( $currency_data['base'] ) {
+				if ( isset( $currency_data['base'] ) ) {
 					unset( $currencies['base'] );
 				}
 			}
@@ -198,6 +198,8 @@ function eac_get_currencies( $status = null ) {
 
 	// set a formatted name for each currency.
 	foreach ( $currencies as $code => $currency ) {
+		// set rate upto 4 decimal places.
+		$currencies[ $code ]['rate']           = round( $currency['rate'], 4 );
 		$currencies[ $code ]['formatted_name'] = sprintf( '%s (%s)', $currency['name'], $currency['symbol'] );
 	}
 

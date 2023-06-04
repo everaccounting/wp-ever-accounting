@@ -75,7 +75,7 @@ class Bills extends ListTable {
 	 * @return void
 	 */
 	public function no_items() {
-		esc_html_e( 'No bills found.', 'ever-accounting' );
+		esc_html_e( 'No bills found.', 'wp-ever-accounting' );
 	}
 
 
@@ -138,7 +138,7 @@ class Bills extends ListTable {
 			}
 			eac_add_notice( $notice, 'success' );
 
-			wp_safe_redirect( admin_url( 'admin.php?page=eac-purchase&tab=bills' ) );
+			wp_safe_redirect( admin_url( 'admin.php?page=eac-purchases&tab=bills' ) );
 			exit();
 		}
 

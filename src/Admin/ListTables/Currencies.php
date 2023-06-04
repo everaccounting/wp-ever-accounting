@@ -37,6 +37,8 @@ class Currencies extends ListTable {
 	 * @return void
 	 */
 	public function prepare_items() {
+		$current_page          = $this->get_pagenum();
+		$per_page              = $this->get_items_per_page( 'currencies_per_page', 20 );
 		$columns               = $this->get_columns();
 		$sortable              = $this->get_sortable_columns();
 		$hidden                = $this->get_hidden_columns();
@@ -82,14 +84,18 @@ class Currencies extends ListTable {
 			);
 		}
 
+		// Handle pagination.
+		$count_total = count( $currencies );
+		$currencies  = array_slice( $currencies, ( ( $current_page - 1 ) * $per_page ), $per_page );
+
 		$this->items       = $currencies;
-		$this->total_count = count( $currencies );
+		$this->total_count = $count_total;
 
 		$this->set_pagination_args(
 			array(
 				'total_items' => $this->total_count,
 				'per_page'    => $this->total_count,
-				'total_pages' => 1,
+				'total_pages' => ceil( $this->total_count / $this->get_per_page() ),
 			)
 		);
 	}
@@ -131,7 +137,7 @@ class Currencies extends ListTable {
 
 			if ( ! empty( $id ) ) {
 				$currencies = wp_parse_list( $currency );
-				$doaction = ( - 1 !== $_REQUEST['action'] ) ? $_REQUEST['action'] : $_REQUEST['action2']; // phpcs:ignore
+				$doaction   = ( - 1 !== $_REQUEST['action'] ) ? $_REQUEST['action'] : $_REQUEST['action2']; // phpcs:ignore
 			} elseif ( ! empty( $ids ) ) {
 				$currencies = array_map( 'sanitize_text_field', $currencies );
 			} elseif ( wp_get_referer() ) {
@@ -139,7 +145,7 @@ class Currencies extends ListTable {
 				exit;
 			}
 
-			var_dump($currencies);
+			var_dump( $currencies );
 
 			foreach ( $currencies as $currency ) {
 				switch ( $doaction ) {
@@ -174,8 +180,8 @@ class Currencies extends ListTable {
 					break;
 			}
 
-//			wp_safe_redirect( admin_url( 'admin.php?page=eac-settings&tab=currencies' ) );
-//			exit();
+			// wp_safe_redirect( admin_url( 'admin.php?page=eac-settings&tab=currencies' ) );
+			// exit();
 		}
 	}
 

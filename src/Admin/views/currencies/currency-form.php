@@ -4,32 +4,10 @@
  *
  * @since 1.0.0
  * @package EverAccounting
- * @var string $code Currency object.
+ * @var array $currency_data Currency data.
  */
 
 defined( 'ABSPATH' ) || exit;
-
-$addable_currencies = array();
-$global_currencies  = eac_get_global_currencies();
-$currencies         = eac_get_currencies();
-foreach ( $global_currencies as $code => $data ) {
-	if ( ! isset( $currencies[ $code ] ) ) {
-		$addable_currencies[ $code ] = $data;
-	}
-}
-$default = array(
-	'code'         => '',
-	'name'         => '',
-	'symbol'       => '',
-	'rate'         => '1',
-	'thousand_sep' => ',',
-	'decimal_sep'  => '.',
-	'precision'    => '2',
-	'position'     => 'before',
-);
-var_dump( $code );
-$currency = ! empty( $code ) && ! empty( $global_currencies[ $code ] ) ? $global_currencies[ $code ] : array();
-$currency = wp_parse_args( $currency, $default );
 ?>
 
 <form id="eac-currency-form" class="eac-form" method="post">
@@ -42,14 +20,12 @@ $currency = wp_parse_args( $currency, $default );
 				<?php
 				eac_input_field(
 					array(
-						'type'     => 'select',
 						'id'       => 'code',
 						'label'    => __( 'Code', 'wp-ever-accounting' ),
-						'value'    => $currency['code'],
-						'options'  => wp_list_pluck( $addable_currencies, 'code', 'code' ),
+						'value'    => $currency_data['code'],
 						'class'    => 'eac-col-6',
-						'select2'  => true,
 						'required' => true,
+						'readonly' => true,
 					)
 				);
 				eac_input_field(
@@ -57,7 +33,7 @@ $currency = wp_parse_args( $currency, $default );
 						'id'       => 'name',
 						'label'    => __( 'Name', 'wp-ever-accounting' ),
 						'type'     => 'text',
-						'value'    => $currency['name'],
+						'value'    => $currency_data['name'],
 						'class'    => 'eac-col-6',
 						'required' => true,
 					)
@@ -67,7 +43,7 @@ $currency = wp_parse_args( $currency, $default );
 						'id'       => 'symbol',
 						'label'    => __( 'Symbol', 'wp-ever-accounting' ),
 						'type'     => 'text',
-						'value'    => $currency['symbol'],
+						'value'    => $currency_data['symbol'],
 						'class'    => 'eac-col-6',
 						'required' => true,
 					)
@@ -77,12 +53,12 @@ $currency = wp_parse_args( $currency, $default );
 						'id'       => 'rate',
 						'label'    => __( 'Rate', 'wp-ever-accounting' ),
 						'type'     => 'number',
-						'value'    => $currency['rate'],
+						'value'    => $currency_data['rate'],
 						'class'    => 'eac-col-6',
 						'required' => true,
 						// translators: %s is the base currency.
 						'prefix'   => sprintf( __( '1 %s =', 'wp-ever-accounting' ), eac_get_base_currency() ),
-						'suffix'   => $currency['symbol'],
+						'suffix'   => $currency_data['symbol'],
 					)
 				);
 				?>
@@ -100,7 +76,7 @@ $currency = wp_parse_args( $currency, $default );
 						'id'       => 'thousand_sep',
 						'label'    => __( 'Thousand Separator', 'wp-ever-accounting' ),
 						'type'     => 'text',
-						'value'    => $currency['thousand_sep'],
+						'value'    => $currency_data['thousand_sep'],
 						'class'    => 'eac-col-6',
 						'required' => true,
 					)
@@ -111,7 +87,7 @@ $currency = wp_parse_args( $currency, $default );
 						'id'       => 'decimal_sep',
 						'label'    => __( 'Decimal Separator', 'wp-ever-accounting' ),
 						'type'     => 'text',
-						'value'    => $currency['decimal_sep'],
+						'value'    => $currency_data['decimal_sep'],
 						'class'    => 'eac-col-6',
 						'required' => true,
 					)
@@ -122,7 +98,7 @@ $currency = wp_parse_args( $currency, $default );
 						'id'       => 'precision',
 						'label'    => __( 'Number of Decimals', 'wp-ever-accounting' ),
 						'type'     => 'number',
-						'value'    => $currency['precision'],
+						'value'    => $currency_data['precision'],
 						'class'    => 'eac-col-6',
 						'required' => true,
 					)
@@ -133,7 +109,7 @@ $currency = wp_parse_args( $currency, $default );
 						'id'       => 'position',
 						'label'    => __( 'Symbol Position', 'wp-ever-accounting' ),
 						'type'     => 'select',
-						'value'    => $currency['position'],
+						'value'    => $currency_data['position'],
 						'class'    => 'eac-col-6',
 						'required' => true,
 						'options'  => array(

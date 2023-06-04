@@ -63,7 +63,7 @@ class Settings {
 			$tabs[] = new Settings\General();
 			$tabs[] = new Settings\Tax();
 			$tabs[] = new Settings\Sales();
-			$tabs[] = new Settings\Purchase();
+			$tabs[] = new Settings\Purchases();
 
 			self::$tabs = apply_filters( 'ever_accounting_get_settings_tabs', $tabs );
 		}
@@ -248,16 +248,12 @@ class Settings {
 			switch ( $value['type'] ) {
 				// Section Titles.
 				case 'title':
-					echo '<div class="eac-card">';
-					echo '<div class="eac-card__header">';
 					if ( ! empty( $value['title'] ) ) {
-						echo '<h2 class="eac-card__title">' . esc_html( $value['title'] ) . '</h2>';
+						echo '<h2>' . esc_html( $value['title'] ) . '</h2>';
 					}
 					if ( ! empty( $value['desc'] ) ) {
 						echo wp_kses_post( wpautop( wptexturize( $value['desc'] ) ) );
 					}
-					echo '</div><!-- .eac-card__header -->';
-					echo '<div class="eac-card__body">';
 					echo '<table class="form-table eac-settings-table">';
 					if ( ! empty( $value['id'] ) ) {
 						do_action( 'ever_accounting_settings_' . sanitize_title( $value['id'] ) );
@@ -273,8 +269,7 @@ class Settings {
 					if ( ! empty( $value['id'] ) ) {
 						do_action( 'ever_accounting_settings_' . sanitize_title( $value['id'] ) . '_after' );
 					}
-					echo '</div><!-- .eac-card__body -->';
-					echo '</div><!-- .eac-card -->';
+
 					break;
 
 				// Standard text inputs and subtypes like 'number'.
@@ -340,38 +335,47 @@ class Settings {
 				case 'customer':
 				case 'vendor':
 				case 'category':
-				case 'item':
-					$value['value'] = wp_parse_list( $value['value'] );
-					$value['value'] = array_map( 'strval', $value['value'] );
+				case 'product':
+				case 'country':
+				case 'select':
+					$value['value']       = wp_parse_list( $value['value'] );
+					$value['value']       = array_map( 'strval', $value['value'] );
+					$value['placeholder'] = ! empty( $value['placeholder'] ) ? $value['placeholder'] : __( 'Select an option&hellip;', 'wp-ever-accounting' );
+					$callback_map         = array(
+						'account'  => 'eac_get_accounts',
+						'customer' => 'eac_get_customers',
+						'vendor'   => 'eac_get_vendors',
+						'category' => 'eac_get_categories',
+						'item'     => 'eac_get_products',
+						'invoice'  => 'eac_get_invoices',
+						'bill'     => 'eac_get_bills',
+						'payment'  => 'eac_get_payments',
+						'tax'      => 'eac_get_taxes',
+					);
+					if ( array_key_exists( $value['type'], $callback_map ) && is_callable( $callback_map[ $value['type'] ] ) ) {
+						$callback               = $callback_map[ $value['type'] ];
+						$query_args             = isset( $value['query_args'] ) ? wp_parse_args( $value['query_args'] ) : array();
+						$results                = call_user_func( $callback, array_merge( $query_args, array( 'include' => $value['value'] ) ) );
+						$value['options']       = wp_list_pluck( $results, 'formatted_name', 'id' );
+						$attrs[]                = 'data-query-args="' . esc_attr( wp_json_encode( $query_args ) ) . '"';
+						$attrs[]                = 'data-eac-select2="' . esc_attr( $value['type'] ) . '"';
+						$value['input_class'][] = 'eac-select-' . esc_attr( $value['type'] );
+					} elseif ( 'currency' === $value['type'] ) {
+						$results                = eac_get_currencies( 'active' );
+						$value['options']       = wp_list_pluck( $results, 'formatted_name', 'code' );
+						$value['input_class'][] = 'eac-select-currency';
+						$value['select2']       = true;
+					} elseif ( 'country' === $value['type'] ) {
+						$value['options']       = eac_get_countries();
+						$value['input_class'][] = 'eac-select-country';
+						$value['select2']       = true;
+					}
 					if ( ! empty( $value['multiple'] ) ) {
 						$value['name'] .= '[]';
 						$attrs[]        = 'multiple="multiple"';
 					}
-					if ( 'currency' === $value['type'] ) {
-						$currencies       = eac_get_currencies( array( 'code__in' => $value['value'] ) );
-						$value['options'] = wp_list_pluck( $currencies, 'formatted_name', 'code' );
-					} elseif ( 'account' === $value['type'] ) {
-						$accounts         = eac_get_accounts( array( 'include' => $value['value'] ) );
-						$value['options'] = wp_list_pluck( $accounts, 'name', 'id' );
-					} elseif ( 'category' === $value['type'] ) {
-						$subtype          = ! empty( $value['subtype'] ) ? $value['subtype'] : 'expense';
-						$categories       = eac_get_categories(
-							array(
-								'id__in' => $value['value'],
-								'type'   => $subtype,
-							)
-						);
-						$value['options'] = wp_list_pluck( $categories, 'formatted_name', 'id' );
-						$attrs[]          = 'data-subtype="' . esc_attr( $subtype ) . '"';
-					} elseif ( 'tax' === $value['type'] ) {
-						$taxes            = eac_get_taxes( array( 'include' => $value['value'] ) );
-						$value['options'] = wp_list_pluck( $taxes, 'formatted_name', 'id' );
-					}
-					$attrs[]                = 'data-search-type="' . esc_attr( $value['type'] ) . '"';
-					$value['input_class'][] = 'eac-select-' . $value['type'];
-
-					if ( ! empty( $value['placeholder'] ) ) {
-						$attrs[] = 'data-placeholder="' . esc_attr( $value['placeholder'] ) . '"';
+					if ( ! empty( $value['select2'] ) ) {
+						$value['class'] .= ' eac-select2';
 					}
 
 					?>
@@ -383,61 +387,22 @@ class Settings {
 							<select
 								name="<?php echo esc_attr( $value['name'] ); ?>"
 								id="<?php echo esc_attr( $value['name'] ); ?>"
+								type="<?php echo esc_attr( $value['type'] ); ?>"
 								style="<?php echo esc_attr( $value['css'] ); ?>"
 								class="<?php echo esc_attr( $value['class'] ); ?>"
 								<?php echo wp_kses_post( implode( ' ', $attrs ) ); ?>
 							>
-								<?php
-								foreach ( $value['options'] as $key => $option ) {
-									?>
-									<option value="<?php echo esc_attr( $key ); ?>" <?php selected( in_array( $key, $value['value'], true ) ); ?>><?php echo esc_html( $option ); ?></option>
-									<?php
-								}
-								?>
-							</select>
-							<?php echo wp_kses_post( $suffix ); ?>
-							<?php echo wp_kses_post( $description ); ?>
-						</td>
-					</tr>
-					<?php
-					break;
-				case 'country':
-					$value['options'] = eac_get_countries();
-					// no break.
-				case 'select':
-				case 'select2':
-					$value['value'] = wp_parse_list( $value['value'] );
-					$value['value'] = array_map( 'strval', $value['value'] );
-					if ( ! empty( $value['multiple'] ) ) {
-						$value['name'] = $value['name'] . '[]';
-						$attrs[]       = 'multiple="multiple"';
-					}
-					$value['class'] .= ' eac-select__' . sanitize_html_class( $value['type'] );
-					?>
-					<tr valign="top">
-						<th scope="row" class="titledesc">
-							<label for="<?php echo esc_attr( $value['name'] ); ?>"><?php echo esc_html( $value['title'] ); ?><?php echo wp_kses_post( $tooltip ); ?></label>
-						</th>
-						<td class="forminp forminp-<?php echo esc_attr( $value['type'] ); ?>">
-							<select
-								name="<?php echo esc_attr( $value['name'] ); ?>"
-								id="<?php echo esc_attr( $value['name'] ); ?>"
-								style="<?php echo esc_attr( $value['css'] ); ?>"
-								class="eac-input__select <?php echo esc_attr( $value['class'] ); ?>"
-								<?php echo wp_kses_post( implode( ' ', $attrs ) ); ?>
-							>
-								<?php if ( ! empty( $value['placeholder'] ) ) : ?>
-									<option value=""><?php echo esc_html( $value['placeholder'] ); ?></option>
-								<?php endif; ?>
 								<?php foreach ( $value['options'] as $key => $val ) : ?>
-									<option value="<?php echo esc_attr( $key ); ?>" <?php selected( in_array( $key, $value['value'], true ), true, true ); ?>><?php echo esc_html( $val ); ?></option>
+									<option value="<?php echo esc_attr( $key ); ?>" <?php selected( in_array( $key, $value['value'], true ), true ); ?>><?php echo esc_html( $val ); ?></option>
 								<?php endforeach; ?>
 							</select>
 							<?php echo wp_kses_post( $suffix ); ?>
 							<?php echo wp_kses_post( $description ); ?>
 						</td>
+
 					</tr>
 					<?php
+
 					break;
 				case 'radio':
 					?>
@@ -598,7 +563,7 @@ class Settings {
 					<?php
 					break;
 
-				case 'editor':
+				case 'wp_editor':
 					?>
 					<tr valign="top">
 						<th scope="row" class="titledesc">

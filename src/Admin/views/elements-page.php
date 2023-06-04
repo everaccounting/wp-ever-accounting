@@ -305,16 +305,16 @@ eac_input_fields(
 			'class'    => 'eac-col-12',
 		),
 		array(
-			'id'       => 'rate',
-			'label'    => __( 'Rate', 'wp-ever-accounting' ),
-			'type'     => 'number',
-			'value'    => 1,
-//							'class'    => 'eac-col-12',
-			'required' => true,
+			'id'                           => 'rate',
+			'label'                        => __( 'Rate', 'wp-ever-accounting' ),
+			'type'                         => 'number',
+			'value'                        => 1,
+			// 'class'    => 'eac-col-12',
+								'required' => true,
 			// translators: %s is the base currency.
-			'prefix'   => sprintf( __( '1 %s =', 'wp-ever-accounting' ), eac_get_base_currency() ),
-			'suffix'   => 'BDT',
-		)
+			'prefix'                       => sprintf( __( '1 %s =', 'wp-ever-accounting' ), eac_get_base_currency() ),
+			'suffix'                       => 'BDT',
+		),
 	)
 )
 ?>

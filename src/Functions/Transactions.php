@@ -9,7 +9,7 @@
  */
 
 use EverAccounting\Models\Expense;
-use EverAccounting\Models\Payment;
+use EverAccounting\Models\Income;
 use EverAccounting\Models\Transfer;
 use EverAccounting\Models\Transaction;
 
@@ -23,7 +23,7 @@ defined( 'ABSPATH' ) || exit;
  */
 function eac_get_transaction_types() {
 	$types = array(
-		'payment' => esc_html__( 'Payment', 'wp-ever-accounting' ),
+		'income' => esc_html__( 'Income', 'wp-ever-accounting' ),
 		'expense' => esc_html__( 'Expense', 'wp-ever-accounting' ),
 	);
 
@@ -49,64 +49,62 @@ function eac_get_transaction_statuses() {
 }
 
 /**
- * Get payment.
+ * Get income.
  *
- * @param mixed  $payment Payment object or ID.
- * @param string $column Optional. Column to get. Default null.
- * @param array  $args Optional. Additional arguments. Default empty array.
+ * @param mixed $income Payment object or ID.
  *
  * @since 1.1.6
- * @return Payment|null
+ * @return Income|null
  */
-function eac_get_payment( $payment, $column = null, $args = array() ) {
-	return Payment::get( $payment, $column, $args );
+function eac_get_income( $income ) {
+	return Income::get( $income );
 }
 
 /**
- *  Create new payment.
+ *  Create new income.
  *
- *  Returns a new payment object on success.
+ *  Returns a new income object on success.
  *
- * @param array $data Payment data.
+ * @param array $data Income data.
  * @param bool  $wp_error Optional. Whether to return a WP_Error on failure. Default false.
  *
  * @since 1.1.0
- * @return Payment|false|WP_Error Payment object on success, false or WP_Error on failure.
+ * @return Income|false|WP_Error Income object on success, false or WP_Error on failure.
  */
-function eac_insert_payment( $data, $wp_error = true ) {
-	return Payment::insert( $data, $wp_error );
+function eac_insert_income( $data, $wp_error = true ) {
+	return Income::insert( $data, $wp_error );
 }
 
 /**
- * Delete an payment.
+ * Delete an income.
  *
- * @param int $payment_id Payment ID.
+ * @param int $income_id Payment ID.
  *
  * @since 1.1.0
  *
  * @return bool
  */
-function eac_delete_payment( $payment_id ) {
-	$payment = eac_get_payment( $payment_id );
+function eac_delete_income( $income_id ) {
+	$income = eac_get_income( $income_id );
 
-	if ( ! $payment ) {
+	if ( ! $income ) {
 		return false;
 	}
 
-	return $payment->delete();
+	return $income->delete();
 }
 
 /**
- * Get payments.
+ * Get incomes.
  *
  * @param array $args Query arguments.
  * @param bool  $count Optional. Whether to return only the total found accounts for the query.
  *
  * @since 1.1.0
  *
- * @return array|int|Payment[] Array of payment objects, the total found payment for the query, or the total found payments for the query as int when `$count` is true.
+ * @return array|int|Income[] Array of income objects, the total found income for the query, or the total found incomes for the query as int when `$count` is true.
  */
-function eac_get_payments( $args = array(), $count = false ) {
+function eac_get_incomes( $args = array(), $count = false ) {
 	$defaults = array(
 		'limit'   => 20,
 		'offset'  => 0,
@@ -118,24 +116,21 @@ function eac_get_payments( $args = array(), $count = false ) {
 	$args = wp_parse_args( $args, $defaults );
 
 	if ( $count ) {
-		return Payment::count( $args );
+		return Income::count( $args );
 	}
 
-	return Payment::query( $args );
+	return Income::query( $args );
 }
 
 /**
  * Get expense.
  *
- * @param mixed  $expesnse Payment object or ID.
- * @param string $column Optional. Column to get. Default null.
- * @param array  $args Optional. Additional arguments. Default empty array.
- *
+ * @param mixed $expesnse Payment object or ID.
  * @since 1.1.6
  * @return Expense|null
  */
-function eac_get_expense( $expesnse, $column = null, $args = array() ) {
-	return Expense::get( $expesnse, $column, $args );
+function eac_get_expense( $expesnse ) {
+	return Expense::get( $expesnse );
 }
 
 /**
@@ -230,15 +225,12 @@ function eac_get_transactions( $args = array(), $count = false ) {
 /**
  * Get transfer.
  *
- * @param mixed  $transfer Transfer object or ID.
- * @param string $column Optional. Column to get. Default null.
- * @param array  $args Optional. Additional arguments. Default empty array.
- *
+ * @param mixed $transfer Transfer object or ID.
  * @since 1.1.6
  * @return Transfer|null
  */
-function eac_get_transfer( $transfer, $column = null, $args = array() ) {
-	return Transfer::get( $transfer, $column, $args );
+function eac_get_transfer( $transfer ) {
+	return Transfer::get( $transfer );
 }
 
 /**
@@ -309,7 +301,7 @@ function eac_get_transfers( $args = array(), $count = false ) {
  * @since 1.1.0
  *
  * @param string $period The time period to calculate estimated income for. Accepts 'month', 'quarter', or 'year'.
- * @param string $type The type of transaction to calculate estimated income for. Accepts 'payment' or 'refund'.
+ * @param string $type The type of transaction to calculate estimated income for. Accepts 'income' or 'refund'.
  *
  * @return float
  */

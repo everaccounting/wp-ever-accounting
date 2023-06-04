@@ -45,7 +45,7 @@ class Transfer extends Model {
 	 * @var array
 	 */
 	protected $core_data = array(
-		'payment_id'   => null,
+		'income_id'   => null,
 		'expense_id'   => null,
 		'creator_id'   => null,
 		'date_created' => null,
@@ -87,19 +87,19 @@ class Transfer extends Model {
 	 *
 	 * @return mixed|null
 	 */
-	public function get_payment_id( $context = 'edit' ) {
-		return $this->get_prop( 'payment_id', $context );
+	public function get_income_id( $context = 'edit' ) {
+		return $this->get_prop( 'income_id', $context );
 	}
 
 	/**
-	 * Set payment ID.
+	 * Set income ID.
 	 *
 	 * @param int $value Payment ID.
 	 *
 	 * @since 1.0.2
 	 */
-	public function set_payment_id( $value ) {
-		$this->set_prop( 'payment_id', absint( $value ) );
+	public function set_income_id( $value ) {
+		$this->set_prop( 'income_id', absint( $value ) );
 	}
 
 	/**
@@ -430,14 +430,15 @@ class Transfer extends Model {
 	protected function prepare_join_query( $clauses, $args = array() ) {
 		global $wpdb;
 		$clauses          = parent::prepare_join_query( $clauses, $args );
-		$clauses['join'] .= " LEFT JOIN {$wpdb->prefix}ea_transactions AS payment ON {$this->table_alias}.payment_id = payment.id";
+		$clauses['join'] .= " LEFT JOIN {$wpdb->prefix}ea_transactions AS income ON {$this->table_alias}.income_id = income.id";
 		$clauses['join'] .= " LEFT JOIN {$wpdb->prefix}ea_transactions AS expense ON {$this->table_alias}.expense_id = expense.id";
 
 		// If selected all fields, then select all fields from payment and expense tables.
 		if ( strpos( $clauses['select'], '*' ) !== false ) {
-			$clauses['select'] .= ', payment.account_id AS from_account_id';
-			$clauses['select'] .= ', expense.account_id AS to_account_id, expense.amount, expense.payment_date date, expense.payment_method, expense.note, expense.reference';
+			$clauses['select'] .= ', income.account_id AS from_account_id';
+			$clauses['select'] .= ', expense.account_id AS to_account_id, expense.amount, expense.payment_date date, expense.payment_method, expense.payment_note, expense.reference';
 		}
+
 		return $clauses;
 	}
 
@@ -453,7 +454,7 @@ class Transfer extends Model {
 	protected function read() {
 		$transfer = parent::read();
 		if ( $transfer ) {
-			$payment = Payment::get( $this->get_payment_id() );
+			$payment = Income::get( $this->get_income_id() );
 			$expense = Expense::get( $this->get_expense_id() );
 			if ( $payment && $expense ) {
 				$this->data['from_account_id'] = $payment->get_account_id();
@@ -461,7 +462,7 @@ class Transfer extends Model {
 				$this->data['amount']          = eac_format_decimal( $expense->get_amount() );
 				$this->data['date']            = $expense->get_payment_date();
 				$this->data['payment_method']  = $expense->get_payment_method();
-				$this->data['note']            = $expense->get_note();
+				$this->data['note']            = $expense->get_payment_note();
 				$this->data['reference']       = $expense->get_reference();
 			}
 		}
@@ -476,7 +477,7 @@ class Transfer extends Model {
 	 * @return array|false true on success, false on failure.
 	 */
 	public function delete() {
-		$payment = Payment::get( $this->get_payment_id() );
+		$payment = Income::get( $this->get_payment_id() );
 		$expense = Expense::get( $this->get_expense_id() );
 		$deleted = parent::delete();
 		if ( $deleted && $payment && $expense ) {
@@ -535,25 +536,6 @@ class Transfer extends Model {
 			$this->set_created_at( current_time( 'mysql' ) );
 		}
 
-		// Check if transfer category exists if not create it.
-		$name              = __( 'Transfer', 'wp-ever-accounting' );
-		$transfer_category = Category::get( $name, 'name', array( 'type' => 'other' ) );
-		if ( ! $transfer_category ) {
-			$transfer_category = new Category();
-			$transfer_category->set_name( 'Transfer' );
-			$transfer_category->set_type( 'other' );
-		}
-		if ( ! $transfer_category ) {
-			$message = sprintf(
-			/* translators: %s: category name %s: category type */
-				__( 'Transfer category is missing please create a category named "%1$s" and type"%2$s".', 'wp-ever-accounting' ),
-				__( 'Transfer', 'wp-ever-accounting' ),
-				'other'
-			);
-
-			return new \WP_Error( 'invalid_data', $message );
-		}
-
 		try {
 			$wpdb->query( 'START TRANSACTION' );
 			$from_account = Account::get( $this->get_from_account_id() );
@@ -571,7 +553,6 @@ class Transfer extends Model {
 					'payment_date'   => $this->get_date(),
 					'amount'         => $this->get_amount(),
 					'description'    => $this->get_note(),
-					'category_id'    => $transfer_category->get_id(),
 					'payment_method' => $this->get_payment_method(),
 					'reference'      => $this->get_reference(),
 				)
@@ -585,19 +566,18 @@ class Transfer extends Model {
 
 			$amount = $this->get_amount();
 			if ( $from_account->get_currency_code() !== $to_account->get_currency_code() ) {
-				$expense_currency = eac_get_currency( $from_account->get_currency_code() );
-				$payment_currency = eac_get_currency( $to_account->get_currency_code() );
-				$amount           = eac_convert_price( $amount, $from_account->get_currency_code(), $to_account->get_currency_code(), $expense_currency->get_rate(), $payment_currency->get_rate() );
+				$expense_currency_rate = eac_get_currency_rate( $from_account->get_currency_code() );
+				$payment_currency_rate = eac_get_currency_rate( $to_account->get_currency_code() );
+				$amount                = eac_convert_price( $amount, $from_account->get_currency_code(), $to_account->get_currency_code(), $expense_currency_rate, $payment_currency_rate );
 			}
 
-			$payment = new Payment( $this->get_payment_id() );
+			$payment = new Income( $this->get_payment_id() );
 			$payment->set_props(
 				array(
 					'account_id'     => $this->get_to_account_id(),
 					'payment_date'   => $this->get_date(),
 					'amount'         => $amount,
 					'description'    => $this->get_note(),
-					'category_id'    => $transfer_category->get_id(),
 					'payment_method' => $this->get_payment_method(),
 					'reference'      => $this->get_reference(),
 				)

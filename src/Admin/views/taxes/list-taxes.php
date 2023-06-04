@@ -9,7 +9,7 @@
 
 defined( 'ABSPATH' ) || exit();
 
-$list_table = new \EverAccounting\Admin\ListTables\Taxes();
+$list_table = new \EverAccounting\Admin\ListTables\TaxRates();
 $action     = $list_table->current_action();
 $list_table->process_bulk_action( $action );
 $list_table->prepare_items();
@@ -19,9 +19,9 @@ $section = eac_get_input_var( 'section' );
 ?>
 	<div class="eac-section-header">
 		<div>
-			<h2><?php esc_html_e( 'Tax rates', 'ever-accounting' ); ?></h2>
-			<a href="<?php echo esc_url( admin_url( 'admin.php?page=eac-settings&tab=tax&section=taxes&action=add' ) ); ?>" class="page-title-action"><?php esc_html_e( 'Add New', 'ever-accounting' ); ?></a>
-			<a class="page-title-action" href=" <?php echo esc_url( admin_url( 'admin.php?page=eac-tools&tab=import' ) ); ?>"><?php esc_html_e( 'Import', 'ever-accounting' ); ?></a>
+			<h2><?php esc_html_e( 'Tax rates', 'wp-ever-accounting' ); ?></h2>
+			<a href="<?php echo esc_url( admin_url( 'admin.php?page=eac-settings&tab=tax&section=taxes&action=add' ) ); ?>" class="page-title-action"><?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?></a>
+			<a class="page-title-action" href=" <?php echo esc_url( admin_url( 'admin.php?page=eac-tools&tab=import' ) ); ?>"><?php esc_html_e( 'Import', 'wp-ever-accounting' ); ?></a>
 		</div>
 	</div>
 <?php do_action( 'ever_accounting_tax_rates_table_top' ); ?>

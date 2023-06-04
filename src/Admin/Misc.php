@@ -20,7 +20,6 @@ class Misc extends \EverAccounting\Singleton {
 	protected function __construct() {
 		add_filter( 'ever_accounting_settings_tabs_array', array( __CLASS__, 'add_settings_tabs' ) );
 		add_action( 'ever_accounting_settings_tab_currencies', array( __CLASS__, 'output_currencies_tab' ) );
-		add_action( 'ever_accounting_settings_tab_categories', array( __CLASS__, 'output_categories_tab' ) );
 		add_action( 'ever_accounting_settings_tab_tax', array( __CLASS__, 'output_tax_tab' ) );
 	}
 
@@ -34,17 +33,8 @@ class Misc extends \EverAccounting\Singleton {
 	 */
 	public static function add_settings_tabs( $tabs ) {
 		$tabs['currencies'] = __( 'Currencies', 'wp-ever-accounting' );
-		$tabs['categories'] = __( 'Categories', 'wp-ever-accounting' );
-		return $tabs;
-	}
 
-	/**
-	 * Output the banking page.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	public static function output() {
+		return $tabs;
 	}
 
 	/**
@@ -55,43 +45,18 @@ class Misc extends \EverAccounting\Singleton {
 	 */
 	public static function output_currencies_tab() {
 		$action = eac_get_input_var( 'action' );
-		$code   = eac_get_input_var( 'currency' );
-		if ( in_array( $action, array( 'add', 'edit' ), true ) ) {
+		if ( in_array( $action, array( 'edit' ), true ) ) {
+			$currency   = eac_get_input_var( 'currency' );
+			$currencies = eac_get_currencies();
+			if ( empty( $currency ) || ! isset( $currencies[ $currency ] ) ) {
+				wp_safe_redirect( admin_url( 'admin.php?page=eac-settings&tab=currencies' ) );
+				exit;
+			}
+			$currency_data = $currencies[ $currency ];
 			include dirname( __FILE__ ) . '/views/currencies/edit-currency.php';
 		} else {
 			include dirname( __FILE__ ) . '/views/currencies/list-currencies.php';
 		}
-	}
-
-	/**
-	 * Output the categories tab.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	public static function output_categories_tab() {
-		$action      = eac_get_input_var( 'action' );
-		$category_id = eac_get_input_var( 'category_id' );
-		if ( in_array( $action, array( 'add', 'edit' ), true ) ) {
-			include dirname( __FILE__ ) . '/views/categories/edit-category.php';
-		} else {
-			include dirname( __FILE__ ) . '/views/categories/list-categories.php';
-		}
-	}
-
-	/**
-	 * Output the category modal.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	public static function output_category_modal() {
-		$category = new \EverAccounting\Models\Category();
-		?>
-		<script type="text/template" id="eac-category-modal" data-title="<?php esc_html_e( 'Add Category', 'wp-ever-accounting' ); ?>">
-			<?php require __DIR__ . '/views/categories/category-form.php'; ?>
-		</script>
-		<?php
 	}
 
 	/**
@@ -106,8 +71,11 @@ class Misc extends \EverAccounting\Singleton {
 		if ( 'taxes' !== $section ) {
 			return;
 		}
-		$action = eac_get_input_var( 'action' );
-		$tax_id = eac_get_input_var( 'tax_id' );
+		$action   = eac_get_input_var( 'action' );
+		$tax_id   = eac_get_input_var( 'tax_id' );
+		$tax_rate = empty( $term_id ) ? false : eac_get_term( $term_id, 'income_cat' );
+
+		return;
 		if ( in_array( $action, array( 'add', 'edit' ), true ) ) {
 			include dirname( __FILE__ ) . '/views/taxes/edit-tax.php';
 		} else {

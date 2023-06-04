@@ -8,223 +8,82 @@
  */
 
 defined( 'ABSPATH' ) || exit();
-
-$payments = eac_get_payments(
-	array(
-		'limit' => 5,
-	)
-);
 ?>
-<div class="wrap eac-page">
-	<div class="eac-section-header eac-mb-20">
-		<div>
-			<h2><?php echo esc_html__( 'Overview', 'wp-ever-accounting' ); ?></h2>
-		</div>
-		<div>
-		</div>
+
+<div class="eac-page-section">
+	<h2><?php esc_html_e( 'Overview', 'wp-ever-accounting' ); ?></h2>
+</div>
+
+<div class="eac-summaries-section">
+	<ul class="eac-summaries">
+		<li class="eac-summary">
+			<div class="eac-summary__label"><?php esc_html_e( 'Total Incomes', 'wp-ever-accounting' ); ?></div>
+			<div class="eac-summary__data">
+				<div class="eac-summary__value"><?php echo esc_html( eac_format_money( eac_get_income_summary()['total'] ) ); ?></div>
+			</div>
+		</li>
+		<li class="eac-summary">
+			<div class="eac-summary__label"><?php esc_html_e( 'Total Expenses', 'wp-ever-accounting' ); ?></div>
+			<div class="eac-summary__data">
+				<div class="eac-summary__value"><?php echo esc_html( eac_format_money( eac_get_expense_summary()['total'] ) ); ?></div>
+			</div>
+		</li>
+		<li class="eac-summary">
+			<div class="eac-summary__label"><?php esc_html_e( 'Total Profit', 'wp-ever-accounting' ); ?></div>
+			<div class="eac-summary__data">
+				<div class="eac-summary__value"><?php echo esc_html( eac_format_money( eac_get_profit_summary()['total'] ) ); ?></div>
+			</div>
+		</li>
+	</ul>
+</div>
+
+<div class="eac-card">
+	<div class="eac-card__header"><?php esc_html_e( 'Cash Flow', 'wp-ever-accounting' ); ?></div>
+	<div class="eac-card__body">
+		Lorem ipsum dolor sit amet, consectetur adipisicing elit. Autem dicta eos minima nulla soluta ut. Aspernatur cum dicta ex, iste laudantium minima numquam odio ratione repudiandae voluptatibus? Ad facere incidunt itaque iure iusto molestiae natus necessitatibus odio! At autem blanditiis cum debitis dicta dolorem doloribus eligendi eum ex expedita fuga, harum hic ipsum iure labore laboriosam magni maiores minus mollitia necessitatibus neque nostrum nulla odio pariatur placeat possimus, quae quam quas quidem quo rerum, ullam unde ut veniam vero voluptatem voluptates. Aliquam amet beatae et, expedita fuga inventore itaque iusto laboriosam minus nobis placeat porro praesentium reprehenderit sit veniam, voluptatum.
 	</div>
+</div>
 
-	<div class="ea-overview-tiles">
-		<?php
-		/**
-		 * Fires before the overview page content.
-		 *
-		 * @since 1.1.0
-		 */
-		do_action( 'eac_before_overview_page' );
-		?>
-	</div>
-
-	<div class="ea-report-cards eac-mb-20">
-		<div class="ea-report-card">
-			<div class="ea-report-card__icon">
-				<?php echo eac_get_svg_icon( 'category', 32 ); ?>
-			</div>
-			<div class="ea-report-card__body">
-				<div class="ea-report-card__primary">
-					<span class="ea-report-card__title">Sales</span>
-					<span class="ea-report-card__value">৳410,569.10</span>
-				</div>
-
-				<div class="ea-report-card__secondary">
-					<span class="ea-report-card__title">Estimated</span>
-					<span class="ea-report-card__value">৳498.00</span>
-				</div>
-
-				<div class="ea-report-card__label">
-					<?php echo wp_date( 'F Y' ); ?>
-				</div>
-			</div>
-		</div>
-
-		<div class="ea-report-card">
-			<div class="ea-report-card__icon">
-				<?php echo eac_get_svg_icon( 'calendar', 32 ); ?>
-			</div>
-			<div class="ea-report-card__body">
-				<div class="ea-report-card__primary">
-					<span class="ea-report-card__title">Expenses</span>
-					<span class="ea-report-card__value">৳410,569.10</span>
-				</div>
-
-				<div class="ea-report-card__secondary">
-					<span class="ea-report-card__title">Estimated</span>
-					<span class="ea-report-card__value">৳498.00</span>
-				</div>
-
-				<div class="ea-report-card__label">
-					<?php echo wp_date( 'F Y' ); ?>
-				</div>
-			</div>
-		</div>
-
-		<div class="ea-report-card">
-			<div class="ea-report-card__icon">
-				<?php echo eac_get_svg_icon( 'check', 32 ); ?>
-			</div>
-			<div class="ea-report-card__body">
-				<div class="ea-report-card__primary">
-					<span class="ea-report-card__title">Profit</span>
-					<span class="ea-report-card__value">৳410,569.10</span>
-				</div>
-
-				<div class="ea-report-card__secondary">
-					<span class="ea-report-card__title">Estimated</span>
-					<span class="ea-report-card__value">৳498.00</span>
-				</div>
-
-				<div class="ea-report-card__label">
-					<?php echo wp_date( 'F Y' ); ?>
-				</div>
-			</div>
-		</div>
-
-		<div class="ea-report-card">
-			<div class="ea-report-card__icon">
-				<?php echo eac_get_svg_icon( 'chevron_left', 32 ); ?>
-			</div>
-			<div class="ea-report-card__body">
-				<div class="ea-report-card__primary">
-					<span class="ea-report-card__title">Receivable</span>
-					<span class="ea-report-card__value">৳410,569.10</span>
-				</div>
-
-				<div class="ea-report-card__secondary">
-					<span class="ea-report-card__title">overdue</span>
-					<span class="ea-report-card__value">৳498.00</span>
-				</div>
-
-				<div class="ea-report-card__label">
-					<?php echo wp_date( 'F Y' ); ?>
-				</div>
-			</div>
-		</div>
-
-		<div class="ea-report-card">
-			<div class="ea-report-card__icon">
-				<?php echo eac_get_svg_icon( 'chevron_right', 32 ); ?>
-			</div>
-			<div class="ea-report-card__body">
-				<div class="ea-report-card__primary">
-					<span class="ea-report-card__title">Payable</span>
-					<span class="ea-report-card__value">৳410,569.10</span>
-				</div>
-
-				<div class="ea-report-card__secondary">
-					<span class="ea-report-card__title">overdue</span>
-					<span class="ea-report-card__value">৳498.00</span>
-				</div>
-
-				<div class="ea-report-card__label">
-					<?php echo wp_date( 'F Y' ); ?>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<div class="ea-overview-charts">
+<div class="eac-columns">
+	<div class="eac-col-6">
 		<div class="eac-card">
-			<div class="eac-card__header">
-				<h3 class="eac-card__title">Cashflow</h3>
+			<div class="eac-card__header"><?php esc_html_e( 'Profit & Loss', 'wp-ever-accounting' ); ?></div>
+			<div class="eac-card__body">
+				Lorem ipsum dolor sit amet, consectetur adipisicing elit. Autem dicta eos minima nulla soluta ut. Aspernatur cum dicta ex, iste laudantium minima numquam odio ratione repudiandae voluptatibus? Ad facere incidunt itaque iure iusto molestiae natus necessitatibus odio! At autem blanditiis cum debitis dicta dolorem doloribus eligendi eum ex expedita fuga, harum hic ipsum iure labore laboriosam magni maiores minus mollitia necessitatibus neque nostrum nulla odio pariatur placeat possimus, quae quam quas quidem quo rerum, ullam unde ut veniam vero voluptatem voluptates. Aliquam amet beatae et, expedita fuga inventore itaque iusto laboriosam minus nobis placeat porro praesentium reprehenderit sit veniam, voluptatum.
 			</div>
-			<div class="eac-card__body">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Maxime, voluptatum!</div>
 		</div>
 	</div>
-
-	<div class="ea-overview-contents">
-		<div class="eac-columns">
-			<div class="eac-col-4">
-				<div class="eac-card">
-					<div class="eac-card__header">
-						<h3 class="eac-card__title">Profit & Loss</h3>
-					</div>
-					<div class="eac-card__body">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Maxime, voluptatum!</div>
-				</div>
+	<div class="eac-col-6">
+		<div class="eac-card">
+			<div class="eac-card__header"><?php esc_html_e( 'Expenses By Category', 'wp-ever-accounting' ); ?></div>
+			<div class="eac-card__body">
+				Lorem ipsum dolor sit amet, consectetur adipisicing elit. Autem dicta eos minima nulla soluta ut. Aspernatur cum dicta ex, iste laudantium minima numquam odio ratione repudiandae voluptatibus? Ad facere incidunt itaque iure iusto molestiae natus necessitatibus odio! At autem blanditiis cum debitis dicta dolorem doloribus eligendi eum ex expedita fuga, harum hic ipsum iure labore laboriosam magni maiores minus mollitia necessitatibus neque nostrum nulla odio pariatur placeat possimus, quae quam quas quidem quo rerum, ullam unde ut veniam vero voluptatem voluptates. Aliquam amet beatae et, expedita fuga inventore itaque iusto laboriosam minus nobis placeat porro praesentium reprehenderit sit veniam, voluptatum.
 			</div>
-			<div class="eac-col-4">
-				<div class="eac-card">
-					<div class="eac-card__header">
-						<h3 class="eac-card__title">Expenses By Category</h3>
-					</div>
-					<div class="eac-card__body">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Maxime, voluptatum!</div>
-				</div>
+		</div>
+	</div>
+</div>
+<div class="eac-columns">
+	<div class="eac-col-4">
+		<div class="eac-card">
+			<div class="eac-card__header"><?php esc_html_e( 'Recent Incomes', 'wp-ever-accounting' ); ?></div>
+			<div class="eac-card__body">
+				Lorem ipsum dolor sit amet, consectetur adipisicing elit. Autem dicta eos minima nulla soluta ut. Aspernatur cum dicta ex, iste laudantium minima numquam odio ratione repudiandae voluptatibus? Ad facere incidunt itaque iure iusto molestiae natus necessitatibus odio! At autem blanditiis cum debitis dicta dolorem doloribus eligendi eum ex expedita fuga, harum hic ipsum iure labore laboriosam magni maiores minus mollitia necessitatibus neque nostrum nulla odio pariatur placeat possimus, quae quam quas quidem quo rerum, ullam unde ut veniam vero voluptatem voluptates. Aliquam amet beatae et, expedita fuga inventore itaque iusto laboriosam minus nobis placeat porro praesentium reprehenderit sit veniam, voluptatum.
 			</div>
-			<div class="eac-col-4">
-				<div class="eac-card">
-					<div class="eac-card__header">
-						<h3 class="eac-card__title">Income By Category</h3>
-					</div>
-					<div class="eac-card__body">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Maxime, voluptatum!</div>
-				</div>
+		</div>
+	</div>
+	<div class="eac-col-4">
+		<div class="eac-card">
+			<div class="eac-card__header"><?php esc_html_e( 'Recent Expenses', 'wp-ever-accounting' ); ?></div>
+			<div class="eac-card__body">
+				Lorem ipsum dolor sit amet, consectetur adipisicing elit. Autem dicta eos minima nulla soluta ut. Aspernatur cum dicta ex, iste laudantium minima numquam odio ratione repudiandae voluptatibus? Ad facere incidunt itaque iure iusto molestiae natus necessitatibus odio! At autem blanditiis cum debitis dicta dolorem doloribus eligendi eum ex expedita fuga, harum hic ipsum iure labore laboriosam magni maiores minus mollitia necessitatibus neque nostrum nulla odio pariatur placeat possimus, quae quam quas quidem quo rerum, ullam unde ut veniam vero voluptatem voluptates. Aliquam amet beatae et, expedita fuga inventore itaque iusto laboriosam minus nobis placeat porro praesentium reprehenderit sit veniam, voluptatum.
 			</div>
-			<div class="eac-col-4">
-				<div class="eac-card">
-					<div class="eac-card__header">
-						<h3 class="eac-card__title">Recent Payments</h3>
-					</div>
-					<div class="eac-card__body p-0">
-						<?php if ( empty( $payments ) ) : ?>
-							<p>No payments found.</p>
-						<?php else : ?>
-							<table class="widefat fixed striped">
-								<thead>
-								<tr>
-									<th><?php esc_html_e( 'Payment', 'wp-ever-accounting' ); ?></th>
-									<th><?php esc_html_e( 'Date', 'wp-ever-accounting' ); ?></th>
-									<th><?php esc_html_e( 'Amount', 'wp-ever-accounting' ); ?></th>
-								</tr>
-								</thead>
-								<tbody>
-								<?php foreach ( $payments as $payment ) : ?>
-									<tr>
-										<td><?php echo esc_html( $payment->get_transaction_number() ); ?></td>
-										<td><?php echo esc_html( $payment->get_payment_date() ); ?></td>
-										<td><?php echo esc_html( eac_price_to_default( $payment->get_amount(), $payment->get_currency_code(), $payment->get_currency_rate(), true ) ); ?></td>
-									</tr>
-								<?php endforeach; ?>
-								</tbody>
-							</table>
-						<?php endif; ?>
-					</div>
-				</div>
-			</div>
-			<div class="eac-col-4">
-				<div class="eac-card">
-					<div class="eac-card__header">
-						<h3 class="eac-card__title">Recent Expenses</h3>
-					</div>
-					<div class="eac-card__body">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Maxime, voluptatum!</div>
-				</div>
-			</div>
-			<div class="eac-col-4">
-				<div class="eac-card">
-					<div class="eac-card__header">
-						<h3 class="eac-card__title">Account Balances</h3>
-					</div>
-					<div class="eac-card__body">
-
-					</div>
-				</div>
+		</div>
+	</div>
+	<div class="eac-col-4">
+		<div class="eac-card">
+			<div class="eac-card__header"><?php esc_html_e( 'Account Balances', 'wp-ever-accounting' ); ?></div>
+			<div class="eac-card__body">
+				Lorem ipsum dolor sit amet, consectetur adipisicing elit. Autem dicta eos minima nulla soluta ut. Aspernatur cum dicta ex, iste laudantium minima numquam odio ratione repudiandae voluptatibus? Ad facere incidunt itaque iure iusto molestiae natus necessitatibus odio! At autem blanditiis cum debitis dicta dolorem doloribus eligendi eum ex expedita fuga, harum hic ipsum iure labore laboriosam magni maiores minus mollitia necessitatibus neque nostrum nulla odio pariatur placeat possimus, quae quam quas quidem quo rerum, ullam unde ut veniam vero voluptatem voluptates. Aliquam amet beatae et, expedita fuga inventore itaque iusto laboriosam minus nobis placeat porro praesentium reprehenderit sit veniam, voluptatum.
 			</div>
 		</div>
 	</div>

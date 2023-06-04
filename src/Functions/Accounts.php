@@ -25,16 +25,14 @@ function eac_get_account_types() {
 /**
  * Main function for returning account.
  *
- * @param mixed  $account Account ID or object.
- * @param string $column Optional. Column to get. Default null.
- * @param array  $args Optional. Additional arguments. Default empty array.
+ * @param mixed $account Account ID or object.
  *
  * @since 1.1.6
  *
  * @return EverAccounting\Models\Account|null
  */
-function eac_get_account( $account, $column = null, $args = array() ) {
-	return Account::get( $account, $column, $args );
+function eac_get_account( $account ) {
+	return Account::get( $account );
 }
 
 /**

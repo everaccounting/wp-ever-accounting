@@ -1168,55 +1168,43 @@ abstract class Model {
 	| Methods for reading and manipulating the object properties.
 	|
 	*/
+
 	/**
 	 * Retrieve the object instance.
 	 *
-	 * @param int    $id Object id to retrieve.
-	 * @param string $column Optional. The field to retrieve the object by. Default 'id'.
-	 * @param array  $args Optional. Additional arguments to pass to the query.
+	 * @param int|array|static $id Object ID or array of arguments.
 	 *
 	 * @since 1.0.0
 	 *
 	 * @return static|false Object instance on success, false on failure.
 	 */
-	public static function get( $id, $column = null, $args = array() ) {
-		if ( ! $id ) {
+	public static function get( $id ) {
+		if ( empty( $id ) ) {
 			return false;
 		}
 
-		if ( is_object( $id ) && method_exists( $id, 'get_id' ) ) {
-			$id = $id->get_id();
-		} elseif ( is_array( $id ) && isset( $id['id'] ) ) {
-			$id = $id['id'];
-		} elseif ( is_numeric( $id ) ) {
-			$id = absint( $id );
+		if ( is_numeric( $id ) ) {
+			$args = array( 'id' => $id );
+		} elseif ( is_array( $id ) ) {
+			$args = $id;
+		} elseif ( is_a( $id, __CLASS__ ) ) {
+			$args = array( 'id' => $id->get_id() );
+		} elseif ( is_object( $id ) ) {
+			$args = get_object_vars( $id );
 		} else {
-			$id = sanitize_text_field( $id );
+			$args = array();
 		}
 
-		if ( empty( $column ) || 'id' === $column ) {
-			$class  = new \ReflectionClass( get_called_class() );
-			$object = $class->newInstance( $id );
-			if ( $object->exists() ) {
-				return $object;
-			}
-
-			return null;
+		// If empty args, then return false.
+		if ( empty( array_filter( $args ) ) ) {
+			return false;
 		}
 
-		if ( ! empty( $column ) ) {
-			$args  = array_merge(
-				$args,
-				array(
-					'no_count' => true,
-					$column    => $id,
-				)
-			);
-			$items = static::query( $args );
+		$args['no_count'] = true;
 
-			if ( ! empty( $items ) && is_array( $items ) ) {
-				return reset( $items );
-			}
+		$items = static::query( $args );
+		if ( ! empty( $items ) && is_array( $items ) ) {
+			return reset( $items );
 		}
 
 		return null;

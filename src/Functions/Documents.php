@@ -19,13 +19,11 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 1.1.0
  *
- * @param mixed  $invoice Invoice ID or post object.
- * @param string $column Optional. Column to get. Default null.
- * @param array  $args Optional. Additional arguments. Default empty array.
+ * @param mixed $invoice Invoice ID or post object.
  * @return EverAccounting\Models\Invoice|null
  */
-function eac_get_invoice( $invoice, $column = null, $args = array() ) {
-	return Invoice::get( $invoice, $column, $args );
+function eac_get_invoice( $invoice ) {
+	return Invoice::get( $invoice );
 }
 
 /**
@@ -90,13 +88,11 @@ function eac_get_invoices( $args = array(), $count = false ) {
  *
  * @since 1.1.0
  *
- * @param mixed  $bill Bill ID or object.
- * @param string $column Optional. Column to get. Default null.
- * @param array  $args Optional. Additional arguments. Default empty array.
+ * @param mixed $bill Bill ID or object.
  * @return Bill|null
  */
-function eac_get_bill( $bill, $column = null, $args = array() ) {
-	return Bill::get( $bill, $column, $args );
+function eac_get_bill( $bill ) {
+	return Bill::get( $bill );
 }
 
 /**

@@ -87,9 +87,11 @@ class Plugin extends BasePlugin {
 
 		// Load class instances.
 		Installer::instantiate();
-		Endpoints::instantiate();
+		Rewrites::instantiate();
 		Scripts::instantiate();
 		Notices::instantiate();
+		Actions::instantiate();
+		Cache::instantiate();
 
 		// If frontend.
 		if ( self::is_request( 'frontend' ) ) {

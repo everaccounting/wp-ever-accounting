@@ -107,13 +107,13 @@ $tax_enabled = $document->is_calculating_tax();
 	</tr>
 	</thead>
 	<tbody>
-	<?php if ( $document->get_items() ) : ?>
+	<?php if ( $document->get_items() ) :; ?>
 		<?php foreach ( $document->get_items() as $item ) : ?>
 			<tr class="item" data-item_id="<?php esc_attr_e( $item->get_id() ); ?>">
 
 			</tr>
 		<?php endforeach; ?>
-	<?php else : ?>
+	<?php else :; ?>
 	</tbody>
 </table>
 
@@ -289,10 +289,10 @@ $tax_enabled = $document->is_calculating_tax();
 										);
 										eac_input_field(
 											array(
-												'type'        => 'textarea',
-												'name'        => sprintf( 'items[%s][description]', $key ),
-												'value'       => $item->get_description(),
-												'label'       => __( 'Description', 'wp-ever-accounting' ),
+												'type'  => 'textarea',
+												'name'  => sprintf( 'items[%s][description]', $key ),
+												'value' => $item->get_description(),
+												'label' => __( 'Description', 'wp-ever-accounting' ),
 												'placeholder' => __( 'Enter description (optional)', 'wp-ever-accounting' ),
 												'input_style' => 'min-height: unset;',
 											)

@@ -2266,7 +2266,7 @@ abstract class Document_BK7 extends Model {
 		$items = $this->get_items();
 		$total = 0;
 		foreach ( $items as $item ) {
-			$line_total = $item->get_subtotal();
+			$line_total  = $item->get_subtotal();
 			$line_total += $item->get_shipping();
 			$line_total += $item->get_fee();
 			$line_total -= $item->get_discount();

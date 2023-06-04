@@ -627,13 +627,13 @@ abstract class Document_BK3 extends Model {
 	 * Get payments.
 	 *
 	 * @since 1.0.0
-	 * @return Payment[]
+	 * @return Income[]
 	 */
 	public function get_payments() {
 		// Get payments only if the amount is positive.
 		$payments = array();
 		if ( $this->exists() ) {
-			$payments = Payment::query(
+			$payments = Income::query(
 				array(
 					'document_id' => $this->get_id(),
 					'orderby'     => 'id',
@@ -657,12 +657,12 @@ abstract class Document_BK3 extends Model {
 	 * Get refund payments.
 	 *
 	 * @since 1.0.0
-	 * @return  Payment[] $payments Payments.
+	 * @return  Income[] $payments Payments.
 	 */
 	public function get_refunds() {
 		$refunds = array();
 		if ( $this->exists() ) {
-			$refunds = Payment::query(
+			$refunds = Income::query(
 				array(
 					'document_id' => $this->get_id(),
 					'orderby'     => 'id',

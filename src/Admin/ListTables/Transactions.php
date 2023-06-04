@@ -46,12 +46,15 @@ class Transactions extends ListTable {
 		$this->_column_headers = array( $columns, $hidden, $sortable );
 
 		$args = array(
-			'limit'   => $this->get_per_page(),
-			'offset'  => $this->get_offset(),
-			'status'  => $this->get_status(),
-			'search'  => $this->get_search(),
-			'order'   => $this->get_order( 'DESC' ),
-			'orderby' => $this->get_orderby( 'payment_date' ),
+			'limit'       => $this->get_per_page(),
+			'offset'      => $this->get_offset(),
+			'status'      => $this->get_status(),
+			'search'      => $this->get_search(),
+			'order'       => $this->get_order( 'DESC' ),
+			'orderby'     => $this->get_orderby( 'payment_date' ),
+			'account_id'  => eac_get_input_var( 'account_id' ),
+			'category_id' => eac_get_input_var( 'category_id' ),
+			'contact_id'  => eac_get_input_var( 'contact_id' ),
 		);
 
 		$this->items       = eac_get_transactions( $args );
@@ -165,13 +168,12 @@ class Transactions extends ListTable {
 	 */
 	public function get_columns() {
 		return array(
-			'cb'        => '<input type="checkbox" />',
-			'date'      => __( 'Date', 'wp-ever-accounting' ),
-			'amount'    => __( 'Amount', 'wp-ever-accounting' ),
-			'type'      => __( 'Type', 'wp-ever-accounting' ),
-			'account'   => __( 'Account', 'wp-ever-accounting' ),
-			'category'  => __( 'Category', 'wp-ever-accounting' ),
-			'reference' => __( 'Reference', 'wp-ever-accounting' ),
+			'cb'       => '<input type="checkbox" />',
+			'date'     => __( 'Date', 'wp-ever-accounting' ),
+			'category' => __( 'Category', 'wp-ever-accounting' ),
+			'account'  => __( 'Account', 'wp-ever-accounting' ),
+			'contact'  => __( 'Contact', 'wp-ever-accounting' ),
+			'amount'   => __( 'Amount', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -184,6 +186,7 @@ class Transactions extends ListTable {
 	protected function get_sortable_columns() {
 		return array(
 			'date'      => array( 'payment_date', false ),
+			'contact'   => array( 'contact_id', false ),
 			'amount'    => array( 'amount', false ),
 			'type'      => array( 'type', false ),
 			'account'   => array( 'account_id', false ),
@@ -235,10 +238,10 @@ class Transactions extends ListTable {
 	 * @since  1.0.2
 	 * @return string Displays a checkbox.
 	 */
-	public function column_name( $item ) {
+	public function column_date( $item ) {
 		$type       = $item->get_type();
-		$page       = 'payment' === $type ? 'ea-sales' : 'ea-purchase';
-		$tab        = 'payment' === $type ? 'payments' : 'expenses';
+		$page       = 'income' === $type ? 'eac-sales' : 'eac-purchases';
+		$tab        = 'income' === $type ? 'incomes' : 'expenses';
 		$args       = array(
 			$type . '_id' => $item->get_id(),
 			'page'        => $page,
@@ -260,9 +263,8 @@ class Transactions extends ListTable {
 			'edit'   => sprintf( '<a href="%s">%s</a>', esc_url( $edit_url ), __( 'Edit', 'wp-ever-accounting' ) ),
 			'delete' => sprintf( '<a href="%s" class="del">%s</a>', esc_url( wp_nonce_url( $delete_url, 'bulk-transactions' ) ), __( 'Delete', 'wp-ever-accounting' ) ),
 		);
-		$amount     = $item->get_formatted_amount();
 
-		return sprintf( '<a href="%s">%s</a> %s', esc_url( $edit_url ), esc_html( $amount ), $this->row_actions( $actions ) );
+		return sprintf( '<a href="%s">%s</a> %s', esc_url( $edit_url ), esc_html( $item->get_payment_date() ), $this->row_actions( $actions ) );
 	}
 
 	/**
@@ -276,6 +278,51 @@ class Transactions extends ListTable {
 	 */
 	public function column_default( $item, $column_name ) {
 		switch ( $column_name ) {
+			case 'date':
+				$value = $item->get_payment_date();
+				break;
+			case 'amount':
+				// Based on the type show minus or plus.
+				$type = $item->get_type();
+				if ( 'income' === $type ) {
+					$value = $item->get_formatted_amount();
+				} else {
+					$value = '-&nbsp;' . $item->get_formatted_amount();
+				}
+				break;
+			case 'account':
+				$account_id = $item->get_account_id();
+				$account    = eac_get_account( $account_id );
+				$link       = add_query_arg(
+					array(
+						'account_id' => $account_id,
+						'filter'     => 'yes',
+					)
+				);
+				$value      = $account ? sprintf( '<a href="%s">%s</a>', esc_url( $link ), esc_html( $account->get_name() ) ) : '&mdash;';
+				break;
+			case 'category':
+				$category_id = $item->get_category_id();
+				$category    = eac_get_term( $category_id );
+				$link        = add_query_arg(
+					array(
+						'category_id' => $category_id,
+						'filter'      => 'yes',
+					)
+				);
+				$value       = $category ? sprintf( '<a href="%s">%s</a>', esc_url( $link ), esc_html( $category->get_name() ) ) : '&mdash;';
+				break;
+			case 'contact':
+				$contact_id = $item->get_contact_id();
+				$contact    = eac_get_customer( $contact_id );
+				$link       = add_query_arg(
+					array(
+						'contact_id' => $contact_id,
+						'filter'     => 'yes',
+					)
+				);
+				$value      = $contact ? sprintf( '<a href="%s">%s</a>', esc_url( $link ), esc_html( $contact->get_name() ) ) : '&mdash;';
+				break;
 			default:
 				$value = parent::column_default( $item, $column_name );
 				break;

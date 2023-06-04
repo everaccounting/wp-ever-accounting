@@ -39,7 +39,7 @@ class Transactions extends \EverAccounting\Admin\SettingsTab {
 	 */
 	protected function get_own_sections() {
 		$sections = array(
-			'' => __( 'Invoices', 'wp-ever-accounting' ),
+			''         => __( 'Invoices', 'wp-ever-accounting' ),
 			'bills'    => __( 'Bills', 'wp-ever-accounting' ),
 			'payments' => __( 'Payments', 'wp-ever-accounting' ),
 			'expenses' => __( 'Expenses', 'wp-ever-accounting' ),

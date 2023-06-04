@@ -255,52 +255,6 @@ function eac_get_countries() {
 }
 
 /**
- * Get country address format.
- *
- * @param array  $args Arguments.
- * @param string $separator How to separate address lines.
- *
- * @return string
- */
-function eac_get_formatted_address( $args = array(), $separator = '<br/>' ) {
-	$default_args = array(
-		'name'      => '',
-		'company'   => '',
-		'address_1' => '',
-		'city'      => '',
-		'state'     => '',
-		'postcode'  => '',
-		'country'   => '',
-	);
-	$format       = apply_filters( 'ever_accounting_address_format', "{name}\n{company}\n{address_1}\n{address_2}\n{city}\n{state}\n{postcode}\n{country}" );
-	$args         = array_map( 'trim', wp_parse_args( $args, $default_args ) );
-	$countries    = eac_get_countries();
-	$country      = isset( $countries[ $args['country'] ] ) ? $countries[ $args['country'] ] : $args['country'];
-	$replace      = array_map(
-		'esc_html',
-		array(
-			'{name}'      => $args['name'],
-			'{company}'   => $args['company'],
-			'{address_1}' => $args['address_1'],
-			'{address_2}' => $args['address_2'],
-			'{city}'      => $args['city'],
-			'{state}'     => $args['state'],
-			'{postcode}'  => $args['postcode'],
-			'{country}'   => $country,
-		)
-	);
-
-	$formatted_address = str_replace( array_keys( $replace ), $replace, $format );
-	// Clean up white space.
-	$formatted_address = preg_replace( '/  +/', ' ', trim( $formatted_address ) );
-	$formatted_address = preg_replace( '/\n\n+/', "\n", $formatted_address );
-	// Break newlines apart and remove empty lines/trim commas and white space.
-	$address_lines = array_map( 'trim', array_filter( explode( "\n", $formatted_address ) ) );
-
-	return implode( $separator, $address_lines );
-}
-
-/**
  * Form field.
  *
  * @param array $field Field arguments.
@@ -391,14 +345,16 @@ function eac_input_field( $field ) {
 
 	switch ( $field['type'] ) {
 		case 'select':
+		case 'product_cat':
+		case 'income_cat':
+		case 'expense_cat':
 		case 'account':
 		case 'customer':
 		case 'vendor':
-		case 'category':
-		case 'item':
+		case 'product':
 		case 'invoice':
 		case 'payment':
-		case 'tax':
+		case 'tax_rate':
 		case 'country':
 		case 'currency':
 			$field['value']       = wp_parse_list( $field['value'] );
@@ -406,29 +362,36 @@ function eac_input_field( $field ) {
 			$field['placeholder'] = ! empty( $field['placeholder'] ) ? $field['placeholder'] : __( 'Select an option&hellip;', 'wp-ever-accounting' );
 
 			$callback_map = array(
-				'account'  => 'eac_get_accounts',
-				'customer' => 'eac_get_customers',
-				'vendor'   => 'eac_get_vendors',
-				'category' => 'eac_get_categories',
-				'item'     => 'eac_get_products',
-				'invoice'  => 'eac_get_invoices',
-				'bill'     => 'eac_get_bills',
-				'payment'  => 'eac_get_payments',
-				'tax'      => 'eac_get_taxes',
+				'account'     => 'eac_get_accounts',
+				'customer'    => 'eac_get_customers',
+				'vendor'      => 'eac_get_vendors',
+				'product_cat' => 'eac_get_terms',
+				'income_cat'  => 'eac_get_terms',
+				'expense_cat' => 'eac_get_terms',
+				'item'        => 'eac_get_products',
+				'invoice'     => 'eac_get_invoices',
+				'bill'        => 'eac_get_bills',
+				'payment'     => 'eac_get_payments',
+				'tax_rate'    => 'eac_get_taxes',
+			);
+
+			$callback_args = array(
+				'product_cat' => array( 'group' => 'product_cat' ),
+				'income_cat'  => array( 'group' => 'income_cat' ),
+				'expense_cat' => array( 'group' => 'expense_cat' ),
 			);
 
 			if ( is_callable( $field['options'] ) ) {
 				$field['options'] = call_user_func( $field['options'], $field['value'] );
 			} elseif ( array_key_exists( $field['type'], $callback_map ) && is_callable( $callback_map[ $field['type'] ] ) ) {
 				$callback               = $callback_map[ $field['type'] ];
-				$query_args             = isset( $field['query_args'] ) ? wp_parse_args( $field['query_args'] ) : array();
+				$query_args             = isset( $callback_args[ $field['type'] ] ) ? $callback_args[ $field['type'] ] : array();
 				$results                = call_user_func( $callback, array_merge( $query_args, array( 'include' => $field['value'] ) ) );
 				$field['options']       = wp_list_pluck( $results, 'formatted_name', 'id' );
-				$attrs[]                = 'data-query-args="' . esc_attr( wp_json_encode( $query_args ) ) . '"';
-				$attrs[]                = 'data-eac-select2="' . esc_attr( $field['type'] ) . '"';
+				$attrs[]                = 'data-ajax-type="' . esc_attr( $field['type'] ) . '"';
 				$field['input_class'][] = 'eac-select-' . esc_attr( $field['type'] );
 			} elseif ( 'currency' === $field['type'] ) {
-				$results                = eac_get_currencies();
+				$results                = eac_get_currencies( 'active' );
 				$field['options']       = wp_list_pluck( $results, 'formatted_name', 'code' );
 				$field['input_class'][] = 'eac-select-currency';
 				$field['select2']       = true;
@@ -622,7 +585,7 @@ function eac_input_field( $field ) {
 		case 'money':
 		case 'price':
 			$input = sprintf(
-				'<input type="number" name="%1$s" id="%2$s" class="eac-field-money %3$s" value="%4$s" %5$s>',
+				'<input type="text" inputmode="decimal" name="%1$s" id="%2$s" class="eac-field-money %3$s" value="%4$s" %5$s>',
 				esc_attr( $field['name'] ),
 				esc_attr( $field['id'] ),
 				esc_attr( implode( ' ', $field['input_class'] ) ),
@@ -1245,7 +1208,6 @@ function eac_input_fields( $fields ) {
 		eac_input_field( $field );
 	}
 }
-
 
 /**
  * Form field.
@@ -2631,9 +2593,10 @@ function eac_get_svg_icon( $icon, $size = '24' ) {
  * Remove formatting and allow "+".
  * Example and specs: https://developer.mozilla.org/en/docs/Web/HTML/Element/a#Creating_a_phone_link
  *
+ * @param string $phone Content to convert phone number.
+ *
  * @since 1.1.6
  *
- * @param string $phone Content to convert phone number.
  * @return string Content with converted phone number.
  */
 function eac_make_phone_clickable( $phone ) {
@@ -2648,6 +2611,6 @@ function eac_make_phone_clickable( $phone ) {
  * @since 1.1.6
  * @return string
  */
-function eac_generate_hash() {
-	return md5( uniqid( rand(), true ) );
+function eac_generate_uuid() {
+	return md5( uniqid( wp_rand(), true ) );
 }

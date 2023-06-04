@@ -91,6 +91,7 @@ class Contact extends Model {
 	 * @since 1.0.0
 	 */
 	public function __construct( $data = 0 ) {
+		$this->core_data['country']       = eac_get_base_country();
 		$this->core_data['currency_code'] = eac_get_base_currency();
 		parent::__construct( $data );
 	}

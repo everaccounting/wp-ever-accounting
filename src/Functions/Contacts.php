@@ -33,14 +33,12 @@ function eac_get_contact_types() {
 /**
  * Get customer.
  *
- * @param mixed  $customer Customer ID or object.
- * @param string $column Optional. Column to get. Default null.
- * @param array  $args Optional. Additional arguments. Default empty array.
+ * @param mixed $customer Customer ID or object.
  * @return Customer|null
  * @since 1.1.0
  */
-function eac_get_customer( $customer, $column = null, $args = array() ) {
-	return Customer::get( $customer, $column, $args );
+function eac_get_customer( $customer ) {
+	return Customer::get( $customer );
 }
 
 /**
@@ -106,14 +104,12 @@ function eac_get_customers( $args = array(), $count = false ) {
 /**
  * Get vendor.
  *
- * @param mixed  $vendor Vendor ID or object.
- * @param string $column Optional. Column to get. Default null.
- * @param array  $args Optional. Additional arguments. Default empty array.
+ * @param mixed $vendor Vendor ID or object.
  * @return Vendor|null
  * @since 1.1.0
  */
-function eac_get_vendor( $vendor, $column = null, $args = array() ) {
-	return Vendor::get( $vendor, $column, $args );
+function eac_get_vendor( $vendor ) {
+	return Vendor::get( $vendor );
 }
 
 /**
@@ -180,10 +176,8 @@ function eac_get_vendors( $args = array(), $count = false ) {
 /**
  * Get contact.
  *
- * @param mixed  $contact Contact ID or object.
- * @param string $column Optional. Column to get. Default null.
- * @param array  $args Optional. Additional arguments. Default empty array.
+ * @param mixed $contact Contact ID or object.
  */
-function eac_get_contact( $contact, $column = null, $args = array() ) {
-	return \EverAccounting\Models\Contact::get( $contact, $column, $args );
+function eac_get_contact( $contact ) {
+	return \EverAccounting\Models\Contact::get( $contact );
 }

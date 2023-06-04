@@ -17,15 +17,15 @@ $title   = $expense->exists() ? __( 'Update Expense', 'wp-ever-accounting' ) : _
 <div class="eac-section-header">
 	<div>
 		<h2><?php echo esc_html( $title ); ?></h2>
-		<a href="<?php echo esc_url( admin_url( 'admin.php?page=eac-purchase&tab=expenses' ) ); ?>"><span class="dashicons dashicons-undo"></span></a>
+		<a href="<?php echo esc_url( admin_url( 'admin.php?page=eac-purchases&tab=expenses' ) ); ?>"><span class="dashicons dashicons-undo"></span></a>
 	</div>
 	<div>
 		<?php if ( $expense->exists() ) : ?>
-			<a href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin.php?page=eac-purchase&tab=expenses&action=delete&expense_id=' . $expense->get_id() ), 'bulk-purchase' ) ); ?>" class="del">
+			<a href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin.php?page=eac-purchases&tab=expenses&action=delete&expense_id=' . $expense->get_id() ), 'bulk-purchase' ) ); ?>" class="del">
 				<?php esc_html_e( 'Delete', 'wp-ever-accounting' ); ?>
 			</a>
 			<!--view-->
-			<a href="<?php echo esc_url( admin_url( 'admin.php?page=eac-purchase&tab=expenses&action=view&expense_id=' . $expense->get_id() ) ); ?>" class="button button-secondary">
+			<a href="<?php echo esc_url( admin_url( 'admin.php?page=eac-purchases&tab=expenses&action=view&expense_id=' . $expense->get_id() ) ); ?>" class="button button-secondary">
 				<?php esc_html_e( 'View Expense', 'wp-ever-accounting' ); ?>
 			</a>
 		<?php endif; ?>

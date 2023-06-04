@@ -115,7 +115,6 @@ function eac_is_input_var_set( $var, $method = 'get' ) {
 	return false;
 }
 
-
 /**
  * Get the ajax action url.
  *
@@ -136,4 +135,63 @@ function eac_action_url( $args = array(), $ajax = true, $nonce = true ) {
 	}
 
 	return $url;
+}
+
+/**
+ * Check if the number is empty.
+ *
+ * @param string $number Number to check.
+ *
+ * @since 1.1.6
+ * @return bool
+ */
+function eac_is_empty_number( $number ) {
+	// convert to double to remove trailing zeros.
+	return empty( (float) $number );
+}
+
+/**
+ * Get country address format.
+ *
+ * @param array  $args Arguments.
+ * @param string $separator How to separate address lines.
+ *
+ * @return string
+ */
+function eac_get_formatted_address( $args = array(), $separator = '<br/>' ) {
+	$default_args = array(
+		'name'      => '',
+		'company'   => '',
+		'address_1' => '',
+		'city'      => '',
+		'state'     => '',
+		'postcode'  => '',
+		'country'   => '',
+	);
+	$format       = apply_filters( 'ever_accounting_address_format', "{name}\n{company}\n{address_1}\n{address_2}\n{city}\n{state}\n{postcode}\n{country}" );
+	$args         = array_map( 'trim', wp_parse_args( $args, $default_args ) );
+	$countries    = eac_get_countries();
+	$country      = isset( $countries[ $args['country'] ] ) ? $countries[ $args['country'] ] : $args['country'];
+	$replace      = array_map(
+		'esc_html',
+		array(
+			'{name}'      => $args['name'],
+			'{company}'   => $args['company'],
+			'{address_1}' => $args['address_1'],
+			'{address_2}' => $args['address_2'],
+			'{city}'      => $args['city'],
+			'{state}'     => $args['state'],
+			'{postcode}'  => $args['postcode'],
+			'{country}'   => $country,
+		)
+	);
+
+	$formatted_address = str_replace( array_keys( $replace ), $replace, $format );
+	// Clean up white space.
+	$formatted_address = preg_replace( '/  +/', ' ', trim( $formatted_address ) );
+	$formatted_address = preg_replace( '/\n\n+/', "\n", $formatted_address );
+	// Break newlines apart and remove empty lines/trim commas and white space.
+	$address_lines = array_map( 'trim', array_filter( explode( "\n", $formatted_address ) ) );
+
+	return implode( $separator, $address_lines );
 }

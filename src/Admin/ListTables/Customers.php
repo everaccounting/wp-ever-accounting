@@ -124,7 +124,7 @@ class Customers extends ListTable {
 						eac_delete_account( $id );
 						break;
 					case 'enable':
-						eac_insert_account(
+						eac_insert_customer(
 							array(
 								'id'     => $id,
 								'status' => 'active',
@@ -132,7 +132,7 @@ class Customers extends ListTable {
 						);
 						break;
 					case 'disable':
-						eac_insert_account(
+						eac_insert_customer(
 							array(
 								'id'     => $id,
 								'status' => 'inactive',
@@ -173,10 +173,9 @@ class Customers extends ListTable {
 		return array(
 			'cb'      => '<input type="checkbox" />',
 			'name'    => __( 'Name', 'wp-ever-accounting' ),
-			'email'   => __( 'Contact', 'wp-ever-accounting' ),
-			'address' => __( 'Address', 'wp-ever-accounting' ),
-			'paid'    => __( 'Paid', 'wp-ever-accounting' ),
-			'due'     => __( 'Receivable', 'wp-ever-accounting' ),
+			'email'   => __( 'Email', 'wp-ever-accounting' ),
+			'phone'   => __( 'Phone', 'wp-ever-accounting' ),
+			'country' => __( 'Country', 'wp-ever-accounting' ),
 			'status'  => __( 'Status', 'wp-ever-accounting' ),
 		);
 	}
@@ -191,7 +190,8 @@ class Customers extends ListTable {
 		return array(
 			'name'    => array( 'name', false ),
 			'email'   => array( 'email', false ),
-			'address' => array( 'address_1', false ),
+			'phone'   => array( 'phone', false ),
+			'country' => array( 'country', false ),
 			'status'  => array( 'status', false ),
 		);
 	}
@@ -285,6 +285,10 @@ class Customers extends ListTable {
 					'country'   => $item->get_country(),
 				);
 				$value = eac_get_formatted_address( $data );
+				break;
+			case 'country':
+				$countries = eac_get_countries();
+				$value     = isset( $countries[ $item->get_country() ] ) ? $countries[ $item->get_country() ] : '&mdash;';
 				break;
 			case 'status':
 				$value = esc_html( $item->get_status( 'view' ) );

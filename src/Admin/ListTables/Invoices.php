@@ -76,7 +76,7 @@ class Invoices extends ListTable {
 	 * @return void
 	 */
 	public function no_items() {
-		esc_html_e( 'No invoices found.', 'ever-accounting' );
+		esc_html_e( 'No invoices found.', 'wp-ever-accounting' );
 	}
 
 

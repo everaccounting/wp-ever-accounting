@@ -2017,7 +2017,7 @@ abstract class Document_Ok extends Model {
 		}
 
 		$per_item_discount = round( $amount / $item_count, 2 );
-		var_dump($per_item_discount);
+		var_dump( $per_item_discount );
 		if ( $per_item_discount > 0 ) {
 			foreach ( $items as $item ) {
 				$discounted_price = $item->get_discounted_price();

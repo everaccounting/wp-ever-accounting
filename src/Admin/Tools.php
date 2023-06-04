@@ -18,15 +18,15 @@ class Tools extends \EverAccounting\Singleton {
 	 * @since 1.0.0
 	 */
 	protected function __construct() {
-		add_action( 'ever_accounting_tools_tab_export', array( __CLASS__, 'output_accounts_export_form' ) );
-		add_action( 'ever_accounting_tools_tab_export', array( __CLASS__, 'output_categories_export_form' ) );
-		add_action( 'ever_accounting_tools_tab_export', array( __CLASS__, 'output_customers_export_form' ) );
-		add_action( 'ever_accounting_tools_tab_export', array( __CLASS__, 'output_expenses_export_form' ) );
-		add_action( 'ever_accounting_tools_tab_export', array( __CLASS__, 'output_items_export_form' ) );
-		add_action( 'ever_accounting_tools_tab_export', array( __CLASS__, 'output_payments_export_form' ) );
-		add_action( 'ever_accounting_tools_tab_export', array( __CLASS__, 'output_vendors_export_form' ) );
-		add_action( 'ever_accounting_tools_tab_elements', array( __CLASS__, 'output_elements_page' ) );
-		add_action( 'ever_accounting_tools_tab_settings', array( __CLASS__, 'output_settings_page' ) );
+		add_action( 'ever_accounting_tools_export_content', array( __CLASS__, 'output_accounts_export_form' ) );
+		add_action( 'ever_accounting_tools_export_content', array( __CLASS__, 'output_categories_export_form' ) );
+		add_action( 'ever_accounting_tools_export_content', array( __CLASS__, 'output_customers_export_form' ) );
+		add_action( 'ever_accounting_tools_export_content', array( __CLASS__, 'output_expenses_export_form' ) );
+		add_action( 'ever_accounting_tools_export_content', array( __CLASS__, 'output_items_export_form' ) );
+		add_action( 'ever_accounting_tools_export_content', array( __CLASS__, 'output_payments_export_form' ) );
+		add_action( 'ever_accounting_tools_export_content', array( __CLASS__, 'output_vendors_export_form' ) );
+		add_action( 'ever_accounting_tools_elements_content', array( __CLASS__, 'output_elements_page' ) );
+		add_action( 'ever_accounting_tools_settings_content', array( __CLASS__, 'output_settings_page' ) );
 	}
 
 	/**

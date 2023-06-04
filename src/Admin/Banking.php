@@ -18,11 +18,9 @@ class Banking extends \EverAccounting\Singleton {
 	 * @since 1.0.0
 	 */
 	protected function __construct() {
-		add_action( 'ever_accounting_banking_tab_transactions', array( __CLASS__, 'output_transactions_tab' ) );
-		add_action( 'ever_accounting_banking_tab_accounts', array( __CLASS__, 'output_accounts_tab' ) );
-		add_action( 'ever_accounting_banking_tab_transfers', array( __CLASS__, 'output_transfers_tab' ) );
-		// add_action( 'admin_footer', array( __CLASS__, 'output_account_modal' ) );
-		// add_action( 'admin_footer', array( __CLASS__, 'output_transfer_modal' ) );
+		add_action( 'ever_accounting_banking_transactions_content', array( __CLASS__, 'output_transactions_tab' ) );
+		add_action( 'ever_accounting_banking_accounts_content', array( __CLASS__, 'output_accounts_tab' ) );
+		add_action( 'ever_accounting_banking_transfers_content', array( __CLASS__, 'output_transfers_tab' ) );
 	}
 
 	/**
@@ -94,33 +92,5 @@ class Banking extends \EverAccounting\Singleton {
 		} else {
 			include dirname( __FILE__ ) . '/views/transfers/list-transfers.php';
 		}
-	}
-
-	/**
-	 * Output the account modal.
-	 *
-	 * @since 1.0.0
-	 */
-	public static function output_account_modal() {
-		$account = new \EverAccounting\Models\Account();
-		?>
-		<script type="text/template" id="eac-account-modal" data-title="<?php esc_html_e( 'Add Account', 'wp-ever-accounting' ); ?>">
-			<?php require __DIR__ . '/views/accounts/account-form.php'; ?>
-		</script>
-		<?php
-	}
-
-	/**
-	 * Output the transfer modal.
-	 *
-	 * @since 1.0.0
-	 */
-	public static function output_transfer_modal() {
-		$transfer = new \EverAccounting\Models\Transfer();
-		?>
-		<script type="text/template" id="eac-transfer-modal" data-title="<?php esc_html_e( 'Add Transfer', 'wp-ever-accounting' ); ?>">
-			<?php require __DIR__ . '/views/transfers/transfer-form.php'; ?>
-		</script>
-		<?php
 	}
 }

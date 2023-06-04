@@ -18,9 +18,9 @@ $list_table->prepare_items();
 ?>
 	<div class="eac-section-header">
 		<div>
-			<h2 class="eac-section-header__title"><?php esc_html_e( 'Bills', 'ever-accounting' ); ?></h2>
-			<a href="<?php echo esc_url( admin_url( 'admin.php?page=eac-purchase&tab=bills&action=add' ) ); ?>" class="page-title-action"><?php esc_html_e( 'Add New', 'ever-accounting' ); ?></a>
-			<a class="page-title-action" href=" <?php echo esc_url( admin_url( 'admin.php?page=eac-tools&tab=import' ) ); ?>"><?php esc_html_e( 'Import', 'ever-accounting' ); ?></a>
+			<h2 class="eac-section-header__title"><?php esc_html_e( 'Bills', 'wp-ever-accounting' ); ?></h2>
+			<a href="<?php echo esc_url( admin_url( 'admin.php?page=eac-purchases&tab=bills&action=add' ) ); ?>" class="page-title-action"><?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?></a>
+			<a class="page-title-action" href=" <?php echo esc_url( admin_url( 'admin.php?page=eac-tools&tab=import' ) ); ?>"><?php esc_html_e( 'Import', 'wp-ever-accounting' ); ?></a>
 		</div>
 	</div>
 <?php do_action( 'ever_accounting_bills_table_top' ); ?>

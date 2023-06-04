@@ -59,7 +59,7 @@ class DocumentItem extends Model {
 		'shipping_tax'     => 0.00, // Shipping tax amount.
 		'fee'              => 0.00, // Extra fee amount.
 		'fee_tax'          => 0.00, // Extra fee tax amount.
-		'tax'        => 0.00, // Tax amount.
+		'tax'              => 0.00, // Tax amount.
 		'total'            => 0.00, // Subtotal - discount + shipping_cost + fee_amount.
 		'taxable'          => 'no', // Is the item taxable?
 		'taxable_shipping' => 'no', // Is shipping taxable? 'yes' or 'no.
@@ -972,7 +972,7 @@ class DocumentItem extends Model {
 		if ( $tax_inclusive ) {
 			$tax_rates    = eac_calculate_taxes( $subtotal, $this->get_taxes(), $tax_inclusive );
 			$subtotal_tax = array_sum( wp_list_pluck( $tax_rates, 'amount' ) );
-			$subtotal     -= $subtotal_tax;
+			$subtotal    -= $subtotal_tax;
 		}
 
 		$this->set_subtotal( $subtotal );
@@ -996,13 +996,13 @@ class DocumentItem extends Model {
 	 */
 	public function is_similar( $item ) {
 		return $this->get_product_id() === $item->get_product_id() &&
-		       $this->get_name() === $item->get_name() &&
-		       $this->get_unit() === $item->get_unit() &&
-		       $this->get_price() === $item->get_price() &&
-		       $this->is_taxable() === $item->is_taxable() &&
-		       $this->get_tax_ids() === $item->get_tax_ids() &&
-		       $this->is_taxable_shipping() === $item->is_taxable_shipping() &&
-		       $this->is_taxable_fee() === $item->is_taxable_fee();
+			   $this->get_name() === $item->get_name() &&
+			   $this->get_unit() === $item->get_unit() &&
+			   $this->get_price() === $item->get_price() &&
+			   $this->is_taxable() === $item->is_taxable() &&
+			   $this->get_tax_ids() === $item->get_tax_ids() &&
+			   $this->is_taxable_shipping() === $item->is_taxable_shipping() &&
+			   $this->is_taxable_fee() === $item->is_taxable_fee();
 	}
 
 	/**

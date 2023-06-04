@@ -77,7 +77,7 @@ class Expenses extends ListTable {
 	 * @return void
 	 */
 	public function no_items() {
-		esc_html_e( 'No expenses found.', 'ever-accounting' );
+		esc_html_e( 'No expenses found.', 'wp-ever-accounting' );
 	}
 
 
@@ -139,7 +139,7 @@ class Expenses extends ListTable {
 			}
 			eac_add_notice( $notice, 'success' );
 
-			wp_safe_redirect( admin_url( 'admin.php?page=eac-purchase&tab=expenses' ) );
+			wp_safe_redirect( admin_url( 'admin.php?page=eac-purchases&tab=expenses' ) );
 			exit();
 		}
 
@@ -154,13 +154,12 @@ class Expenses extends ListTable {
 	 */
 	public function get_columns() {
 		return array(
-			'cb'        => '<input type="checkbox" />',
-			'date'      => __( 'Date', 'wp-ever-accounting' ),
-			'amount'    => __( 'Amount', 'wp-ever-accounting' ),
-			'account'   => __( 'Account', 'wp-ever-accounting' ),
-			'category'  => __( 'Category', 'wp-ever-accounting' ),
-			'vendor'    => __( 'Vendor', 'wp-ever-accounting' ),
-			'reference' => __( 'Reference', 'wp-ever-accounting' ),
+			'cb'       => '<input type="checkbox" />',
+			'date'     => __( 'Date', 'wp-ever-accounting' ),
+			'category' => __( 'Category', 'wp-ever-accounting' ),
+			'account'  => __( 'Account', 'wp-ever-accounting' ),
+			'vendor'   => __( 'Vendor', 'wp-ever-accounting' ),
+			'amount'   => __( 'Amount', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -172,12 +171,13 @@ class Expenses extends ListTable {
 	 */
 	protected function get_sortable_columns() {
 		return array(
-			'date'      => array( 'expense_date', true ),
-			'amount'    => array( 'amount', false ),
-			'account'   => array( 'account_id', false ),
-			'category'  => array( 'category_id', false ),
-			'vendor'    => array( 'contact_id', false ),
-			'reference' => array( 'reference', false ),
+			'date'           => array( 'payment_date', true ),
+			'category'       => array( 'category_id', false ),
+			'voucher_number' => array( 'voucher_number', false ),
+			'amount'         => array( 'amount', false ),
+			'account'        => array( 'account_id', false ),
+			'vendor'         => array( 'contact_id', false ),
+			'reference'      => array( 'reference', false ),
 		);
 	}
 
@@ -234,6 +234,7 @@ class Expenses extends ListTable {
 			'delete' => sprintf( '<a href="%s" class="del">%s</a>', esc_url( wp_nonce_url( $delete_url, 'bulk-accounts' ) ), __( 'Delete', 'wp-ever-accounting' ) ),
 		);
 		$date       = $item->get_payment_date();
+
 		return sprintf( '<a href="%s">%s</a> %s', esc_url( $edit_url ), esc_html( $date ), $this->row_actions( $actions ) );
 	}
 
@@ -248,8 +249,11 @@ class Expenses extends ListTable {
 	 */
 	public function column_default( $item, $column_name ) {
 		switch ( $column_name ) {
+			case 'date':
+				$value = $item->get_payment_date();
+				break;
 			case 'amount':
-				$value = esc_html( $item->get_formatted_amount() );
+				$value = $item->get_formatted_amount();
 				break;
 			case 'account':
 				$account_id = $item->get_account_id();
@@ -264,7 +268,7 @@ class Expenses extends ListTable {
 				break;
 			case 'category':
 				$category_id = $item->get_category_id();
-				$category    = eac_get_category( $category_id );
+				$category    = eac_get_term( $category_id );
 				$link        = add_query_arg(
 					array(
 						'category_id' => $category_id,
@@ -274,15 +278,15 @@ class Expenses extends ListTable {
 				$value       = $category ? sprintf( '<a href="%s">%s</a>', esc_url( $link ), esc_html( $category->get_name() ) ) : '&mdash;';
 				break;
 			case 'vendor':
-				$contact_id = $item->get_contact_id();
-				$contact    = eac_get_customer( $contact_id );
-				$link       = add_query_arg(
+				$vendor_id = $item->get_vendor_id();
+				$vendor    = eac_get_customer( $vendor_id );
+				$link      = add_query_arg(
 					array(
-						'customer_id' => $contact_id,
-						'filter'      => 'yes',
+						'vendor_id' => $vendor_id,
+						'filter'    => 'yes',
 					)
 				);
-				$value      = $contact ? sprintf( '<a href="%s">%s</a>', esc_url( $link ), esc_html( $contact->get_name() ) ) : '&mdash;';
+				$value     = $vendor ? sprintf( '<a href="%s">%s</a>', esc_url( $link ), esc_html( $vendor->get_name() ) ) : '&mdash;';
 				break;
 			default:
 				$value = parent::column_default( $item, $column_name );

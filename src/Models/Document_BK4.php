@@ -2036,11 +2036,11 @@ abstract class Document_BK4 extends Model {
 	public function calculate_totals() {
 		$this->reset_totals();
 		$this->calculate_subtotals();
-//		$this->calculate_discounts();
-//		$this->calculate_shipping();
-//		$this->calculate_fees();
-//		$this->calculate_taxes();
-//		$this->calculate_total();
+		// $this->calculate_discounts();
+		// $this->calculate_shipping();
+		// $this->calculate_fees();
+		// $this->calculate_taxes();
+		// $this->calculate_total();
 	}
 
 	/**

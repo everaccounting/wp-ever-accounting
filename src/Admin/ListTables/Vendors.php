@@ -158,7 +158,7 @@ class Vendors extends ListTable {
 					break;
 			}
 
-			wp_safe_redirect( admin_url( 'admin.php?page=eac-purchase&tab=vendors' ) );
+			wp_safe_redirect( admin_url( 'admin.php?page=eac-purchases&tab=vendors' ) );
 			exit();
 		}
 

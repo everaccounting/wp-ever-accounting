@@ -104,11 +104,6 @@ class Expense extends Transaction {
 		if ( empty( $this->get_category_id() ) ) {
 			return new \WP_Error( 'missing_required', __( 'Category is required.', 'wp-ever-accounting' ) );
 		}
-
-		if ( empty( $this->get_payment_method() ) ) {
-			return new \WP_Error( 'missing_required', __( 'Expense method is required.', 'wp-ever-accounting' ) );
-		}
-
 		return parent::save();
 	}
 

@@ -40,7 +40,7 @@ class Admin extends \EverAccounting\Singleton {
 		Banking::instantiate();
 		Misc::instantiate();
 		Overview::instantiate();
-		Purchase::instantiate();
+		Purchases::instantiate();
 		Reports::instantiate();
 		Sales::instantiate();
 		Tools::instantiate();

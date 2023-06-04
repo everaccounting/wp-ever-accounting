@@ -1,15 +1,7 @@
-node_modules
-bower_components
-release
-vendor
-.idea
-
-# Project Files
-dist
-build
-backstop_data
-
-# Editors
+# IDEs
+/.settings
+/.project
+/.idea
 *.esproj
 *.tmproj
 *.tmproject
@@ -29,5 +21,35 @@ Session.vim
 Thumbs.db
 Desktop.ini
 
-#Override
-!assets/js/vendor
+# NPM packages used by Grunt.js
+node_modules
+bower_components
+.idea
+*.log
+npm-debug.log
+
+# Composer
+/vendor
+
+# PHPUnit
+/tmp
+
+# Misc
+*.zip
+.cache
+.sass-cache*
+.husky
+*.lock
+
+# Tests
+codeception.yml
+.env
+/tests/_data/dump.sql
+.env.testing
+
+# Framework
+lib
+
+
+# Build
+assets/dist

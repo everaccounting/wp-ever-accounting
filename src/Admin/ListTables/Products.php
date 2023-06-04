@@ -91,7 +91,7 @@ class Products extends ListTable {
 
 		echo '<div class="alignleft actions">';
 		$this->status_filter();
-		$this->category_filter( 'item' );
+		$this->category_filter( 'product_cat' );
 		submit_button( __( 'Filter', 'wp-ever-accounting' ), '', 'filter-action', false );
 		echo '</div>';
 		$filter = eac_get_input_var( 'filter' );
@@ -163,7 +163,7 @@ class Products extends ListTable {
 			}
 			eac_add_notice( $notice, 'success' );
 
-			wp_safe_redirect( admin_url( 'admin.php?page=eac-items&tab=items' ) );
+			wp_safe_redirect( admin_url( 'admin.php?page=eac-products&tab=products' ) );
 			exit();
 		}
 
@@ -290,7 +290,7 @@ class Products extends ListTable {
 				break;
 			case 'category':
 				$category_id = $item->get_category_id();
-				$category    = eac_get_category( $category_id );
+				$category    = eac_get_term( $category_id, 'product_cat' );
 				$link        = add_query_arg( array( 'category_id' => $category_id ) );
 				$value       = $category ? sprintf( '<a href="%s">%s</a>', esc_url( $link ), esc_html( $category->get_name() ) ) : '&mdash;';
 				break;

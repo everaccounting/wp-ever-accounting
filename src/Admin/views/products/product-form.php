@@ -48,6 +48,7 @@ defined( 'ABSPATH' ) || exit;
 					array(
 						'type'        => 'select',
 						'name'        => 'unit',
+						'select2'     => true,
 						'label'       => __( 'Unit', 'wp-ever-accounting' ),
 						'value'       => $product->get_unit(),
 						'options'     => eac_get_unit_types(),
@@ -57,16 +58,15 @@ defined( 'ABSPATH' ) || exit;
 				);
 				eac_input_field(
 					array(
-						'type'        => 'category',
+						'type'        => 'product_cat',
 						'name'        => 'category_id',
 						'label'       => __( 'Category', 'wp-ever-accounting' ),
 						'value'       => $product->get_category_id(),
 						'placeholder' => __( 'Select item category', 'wp-ever-accounting' ),
-						'query_args'  => 'type=item',
 						'class'       => 'eac-col-6',
 						'suffix'      => sprintf(
 							'<a class="button" href="%s" title="%s"><span class="dashicons dashicons-plus"></span></a>',
-							esc_url( eac_action_url( 'action=get_html_response&html_type=edit_category&subtype=product' ) ),
+							esc_url( eac_action_url( 'action=get_html_response&html_type=edit_category&group=product_cat' ) ),
 							__( 'Add Category', 'wp-ever-accounting' )
 						),
 					)

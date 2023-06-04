@@ -18,8 +18,8 @@ $list_table->prepare_items();
 ?>
 	<div class="eac-section-header">
 		<div>
-			<h2><?php esc_html_e( 'Invoices', 'ever-accounting' ); ?></h2>
-			<a href="<?php echo esc_url( admin_url( 'admin.php?page=eac-sales&tab=invoices&action=add' ) ); ?>" class="page-title-action"><?php esc_html_e( 'Add New', 'ever-accounting' ); ?></a>
+			<h2><?php esc_html_e( 'Invoices', 'wp-ever-accounting' ); ?></h2>
+			<a href="<?php echo esc_url( admin_url( 'admin.php?page=eac-sales&tab=invoices&action=add' ) ); ?>" class="page-title-action"><?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?></a>
 		</div>
 	</div>
 <?php do_action( 'ever_accounting_invoices_table_top' ); ?>

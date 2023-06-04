@@ -416,7 +416,7 @@ class Invoice_legacy extends Document {
 		$account          = eaccounting_get_account( $args['account_id'] );
 		$currency         = eaccounting_get_currency( $account->get_currency_code() );
 		$converted_amount = eaccounting_price_convert( $amount, $this->get_currency_code(), $currency->get_code(), $this->get_currency_rate(), $currency->get_rate() );
-		$payment          = new Payment();
+		$payment          = new Income();
 		$payment->set_props(
 			array(
 				'payment_date'   => $args['date'],
@@ -447,7 +447,7 @@ class Invoice_legacy extends Document {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @return Payment[] Array of payments.
+	 * @return Income[] Array of payments.
 	 */
 	public function get_payments() {
 		if ( $this->exists() ) {

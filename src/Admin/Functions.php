@@ -9,20 +9,19 @@ defined( 'ABSPATH' ) || exit;
  * @return array
  */
 function eac_get_screen_ids() {
-	$screen_id = sanitize_title( __( 'Accounting', 'wp-ever-accounting' ) );
-
+	$screen_id  = sanitize_title( __( 'Accounting', 'wp-ever-accounting' ) );
 	$screen_ids = array(
 		'toplevel_page_' . $screen_id,
 		$screen_id . '_page_eac-transactions',
 		$screen_id . '_page_eac-sales',
-		$screen_id . '_page_eac-purchase',
+		$screen_id . '_page_eac-purchases',
 		$screen_id . '_page_eac-banking',
 		$screen_id . '_page_eac-products',
 		$screen_id . '_page_eac-reports',
 		$screen_id . '_page_eac-tools',
 		$screen_id . '_page_eac-settings',
 		$screen_id . '_page_eac-extensions',
-		'toplevel_page_ever-accounting',
+		'toplevel_page_ever-accounting'
 	);
 
 	return apply_filters( 'ever_accounting_screen_ids', $screen_ids );
@@ -70,6 +69,21 @@ function eac_is_admin_page( $page = null ) {
 }
 
 /**
+ * Get overview tabs.
+ *
+ * @since 1.1.6
+ * @return array
+ */
+function eac_get_overview_tabs() {
+	$tabs = array();
+	if ( current_user_can( 'manage_accounting' ) ) {
+		$tabs['overview'] = __( 'Overview', 'wp-ever-accounting' );
+	}
+
+	return apply_filters( 'ever_accounting_overview_tabs', $tabs );
+}
+
+/**
  * Get products tabs.
  *
  * @since 1.1.6
@@ -80,6 +94,7 @@ function eac_get_products_tabs() {
 	if ( current_user_can( 'eac_manage_product' ) ) {
 		$tabs['products'] = __( 'Products', 'wp-ever-accounting' );
 	}
+	$tabs['categories'] = __( 'Categories', 'wp-ever-accounting' );
 
 	return apply_filters( 'ever_accounting_products_tabs', $tabs );
 }
@@ -92,8 +107,8 @@ function eac_get_products_tabs() {
  */
 function eac_get_sales_tabs() {
 	$tabs = array();
-	if ( current_user_can( 'eac_manage_payment' ) ) {
-		$tabs['payments'] = __( 'Payments', 'wp-ever-accounting' );
+	if ( current_user_can( 'eac_manage_income' ) ) {
+		$tabs['incomes'] = __( 'Incomes', 'wp-ever-accounting' );
 	}
 	if ( current_user_can( 'eac_manage_invoice' ) ) {
 		$tabs['invoices'] = __( 'Invoices', 'wp-ever-accounting' );

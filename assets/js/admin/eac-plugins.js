@@ -65,41 +65,41 @@
 	};
 
 }(jQuery, window, document));
-
-(function ($, window, document, undefined) {
-	'use strict';
-	$.eac_select2 = function (el, options) {
-		this.el = el;
-		this.$el = $(el);
-		this.options = $.extend({
-			minimumResultsForSearch: 10,
-			allowClear: this.$el.data('allow_clear') || true,
-			placeholder: this.$el.data('placeholder')||'',
-			minimumInputLength: this.$el.data('minimum_input_length') ? this.$el.data('minimum_input_length') : 0,
-		}, options);
-
-		// When multiple set allowClear to false.
-		if (this.$el.prop('multiple')){
-			this.options.allowClear = false;
-		}
-
-		// if the select2 is within a drawer, then set the parent to the drawer.
-		if (this.$el.closest('.eac-form').length) {
-			this.options.dropdownParent = this.$el.closest('.eac-form');
-		}
-
-		return this.$el.select2(this.options);
-	};
-	$.fn.eac_select2 = function (options) {
-		return this.each(function () {
-			if (!$(this).data('select2')) {
-				new $.eac_select2(this, $.extend({}, $(this).data(), options));
-			}
-		});
-	};
-
-
-}(jQuery, window, document));
+//
+// (function ($, window, document, undefined) {
+// 	'use strict';
+// 	$.eac_select2 = function (el, options) {
+// 		this.el = el;
+// 		this.$el = $(el);
+// 		this.options = $.extend({
+// 			minimumResultsForSearch: 10,
+// 			allowClear: this.$el.data('allow_clear') || true,
+// 			placeholder: this.$el.data('placeholder')||'',
+// 			minimumInputLength: this.$el.data('minimum_input_length') ? this.$el.data('minimum_input_length') : 0,
+// 		}, options);
+//
+// 		// When multiple set allowClear to false.
+// 		if (this.$el.prop('multiple')){
+// 			this.options.allowClear = false;
+// 		}
+//
+// 		// if the select2 is within a drawer, then set the parent to the drawer.
+// 		if (this.$el.closest('.eac-form').length) {
+// 			this.options.dropdownParent = this.$el.closest('.eac-form');
+// 		}
+//
+// 		return this.$el.select2(this.options);
+// 	};
+// 	$.fn.eac_select2 = function (options) {
+// 		return this.each(function () {
+// 			if (!$(this).data('select2')) {
+// 				new $.eac_select2(this, $.extend({}, $(this).data(), options));
+// 			}
+// 		});
+// 	};
+//
+//
+// }(jQuery, window, document));
 
 (function ($, window, document, undefined) {
 	'use strict';

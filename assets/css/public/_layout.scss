@@ -1,0 +1,14 @@
+.eac-page{
+	min-height: 100vh;
+
+	.admin-bar &{
+		min-height: calc(100vh - 32px);
+		margin-top: 32px;
+	}
+}
+
+.eac-page-content{
+	max-width: 800px;
+	margin: 0 auto;
+	padding: 30px 20px;
+}

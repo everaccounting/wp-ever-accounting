@@ -8,7 +8,7 @@ defined( 'ABSPATH' ) || exit;
  * @since 1.1.6
  * @return void
  */
-function eac_update_1_1_6() {
+function eac_update_1_1_5_1() {
 	$settings     = get_option( 'eaccounting_settings', array() );
 	$settings_map = array(
 		'company_name'                 => 'eac_business_name',
@@ -58,159 +58,183 @@ function eac_update_1_1_6() {
 	$index_length = 191;
 
 	$table_name = $wpdb->prefix . 'ea_accounts';
-	if ( $wpdb->get_var( "SHOW COLUMNS FROM $table_name LIKE 'type'" ) !== 'type' ) {
-		$wpdb->query( "ALTER TABLE $table_name ADD `type` VARCHAR(50) NOT NULL DEFAULT 'bank' COMMENT 'Account Type' AFTER `id`" );
-		$wpdb->query( "ALTER TABLE $table_name ADD KEY `type` (`type`)" );
-	}
+	$wpdb->query( "ALTER TABLE $table_name ADD `type` VARCHAR(50) NOT NULL DEFAULT 'bank' AFTER `id`" );
+	$wpdb->query( "ALTER TABLE $table_name ADD KEY `type` (`type`)" );
+	$wpdb->query( "ALTER TABLE $table_name CHANGE `currency_code` `currency_code` varchar(3) NOT NULL DEFAULT 'USD' AFTER `bank_address`" );
+	$wpdb->query( "ALTER TABLE $table_name DROP `thumbnail_id`" );
+	$wpdb->query( "ALTER TABLE $table_name ADD `updated_at` DATETIME NULL DEFAULT NULL AFTER `creator_id`" );
+	$wpdb->query( "ALTER TABLE $table_name CHANGE `date_created` `created_at` DATETIME NULL DEFAULT NULL" );
 
-	if ( $wpdb->get_var( "SHOW COLUMNS FROM $table_name LIKE 'status'" ) !== 'status' ) {
-		$wpdb->query( "ALTER TABLE $table_name ADD `status` ENUM('active','inactive') NOT NULL DEFAULT 'active' AFTER `thumbnail_id`" );
+	if ( $wpdb->get_var( "SHOW COLUMNS FROM $table_name LIKE 'enabled'" ) == 'enabled' ) {
+		$wpdb->query( "ALTER TABLE $table_name ADD `status` ENUM('active','inactive') NOT NULL DEFAULT 'active' AFTER `currency_code`" );
 		$wpdb->query( "ALTER TABLE $table_name ADD KEY `status` (`status`)" );
 		$wpdb->query( "UPDATE $table_name SET status = 'active' WHERE enabled = 1" );
 		$wpdb->query( "UPDATE $table_name SET status = 'inactive' WHERE enabled = 0" );
 		$wpdb->query( "ALTER TABLE $table_name DROP `enabled`" );
 	}
-	if ( $wpdb->get_var( "SHOW COLUMNS FROM $table_name LIKE 'updated_at'" ) !== 'updated_at' ) {
-		$wpdb->query( "ALTER TABLE $table_name ADD `updated_at` DATETIME NULL DEFAULT NULL COMMENT 'Update Date' AFTER `status`" );
-		$wpdb->query( "ALTER TABLE $table_name CHANGE `date_created` `created_at` DATETIME NULL DEFAULT NULL COMMENT 'Create Date'" );
-	}
-	if ( $wpdb->get_var( "SHOW COLUMNS FROM $table_name LIKE 'created_at'" ) !== 'created_at' ) {
-		$wpdb->query( "ALTER TABLE $table_name CHANGE `date_created` `created_at` DATETIME NULL DEFAULT NULL COMMENT 'Create Date'" );
-	}
-
-	$table_name = $wpdb->prefix . 'ea_categories';
-	if ( $wpdb->get_var( "SHOW COLUMNS FROM $table_name LIKE 'status'" ) !== 'status' ) {
-		$wpdb->query( "ALTER TABLE $table_name ADD `status` ENUM('active','inactive') NOT NULL DEFAULT 'active' AFTER `color`" );
-		$wpdb->query( "ALTER TABLE $table_name ADD KEY `status` (`status`)" );
-		$wpdb->query( "UPDATE $table_name SET status = 'active' WHERE enabled = 1" );
-		$wpdb->query( "UPDATE $table_name SET status = 'inactive' WHERE enabled = 0" );
-		$wpdb->query( "ALTER TABLE $table_name DROP `enabled`" );
-	}
-	if ( $wpdb->get_var( "SHOW COLUMNS FROM $table_name LIKE 'updated_at'" ) !== 'updated_at' ) {
-		$wpdb->query( "ALTER TABLE $table_name ADD `updated_at` DATETIME NULL DEFAULT NULL COMMENT 'Update Date' AFTER `status`" );
-		$wpdb->query( "ALTER TABLE $table_name CHANGE `date_created` `created_at` DATETIME NULL DEFAULT NULL COMMENT 'Create Date'" );
-	}
-	// Add description column.
-	if ( $wpdb->get_var( "SHOW COLUMNS FROM $table_name LIKE 'description'" ) !== 'description' ) {
-		$wpdb->query( "ALTER TABLE $table_name ADD `description` TEXT NULL DEFAULT NULL COMMENT 'Description' AFTER `type`" );
-	}
-	// change type income to payment.
-	$wpdb->query( "UPDATE $table_name SET type = 'payment' WHERE type = 'income'" );
 
 	$table_name = $wpdb->prefix . 'ea_contacts';
-	if ( $wpdb->get_var( "SHOW COLUMNS FROM $table_name LIKE 'status'" ) !== 'status' ) {
-		$wpdb->query( "ALTER TABLE $table_name ADD `status` ENUM('active','inactive') NOT NULL DEFAULT 'active' AFTER `thumbnail_id`" );
-		$wpdb->query( "ALTER TABLE $table_name ADD KEY `status` (`status`)" );
-		$wpdb->query( "UPDATE $table_name SET status = 'active' WHERE enabled = 1" );
-		$wpdb->query( "UPDATE $table_name SET status = 'inactive' WHERE enabled = 0" );
-		$wpdb->query( "ALTER TABLE $table_name DROP `enabled`" );
-		// $wpdb->query( "ALTER TABLE $table_name DROP `thumbnail_id`" );
-	}
-	if ( $wpdb->get_var( "SHOW COLUMNS FROM $table_name LIKE 'updated_at'" ) !== 'updated_at' ) {
-		$wpdb->query( "ALTER TABLE $table_name ADD `updated_at` DATETIME NULL DEFAULT NULL COMMENT 'Update Date' AFTER `creator_id`" );
-		$wpdb->query( "ALTER TABLE $table_name CHANGE `date_created` `created_at` DATETIME NULL DEFAULT NULL COMMENT 'Create Date'" );
-	}
-	// drop attachments column.
+	$wpdb->query( "ALTER TABLE $table_name CHANGE `city` `city` VARCHAR(50) DEFAULT NULL" );
+	$wpdb->query( "ALTER TABLE $table_name CHANGE `state` `state` VARCHAR(50) DEFAULT NULL" );
+	$wpdb->query( "ALTER TABLE $table_name DROP `birth_date`" );
+	$wpdb->query( "ALTER TABLE $table_name CHANGE `website` `website` VARCHAR(191) DEFAULT NULL AFTER `phone`" );
+	$wpdb->query( "ALTER TABLE $table_name CHANGE `address` `address_1` VARCHAR(191) DEFAULT NULL" );
+	$wpdb->query( "ALTER TABLE $table_name ADD `address_2` VARCHAR(191) NULL DEFAULT NULL AFTER `address_1`" );
+	$wpdb->query( "ALTER TABLE $table_name DROP `street`" );
+	$wpdb->query( "ALTER TABLE $table_name CHANGE `postcode` `postcode` VARCHAR(20) DEFAULT NULL" );
+	$wpdb->query( "ALTER TABLE $table_name CHANGE `country` `country` VARCHAR(3) DEFAULT NULL AFTER `postcode`" );
+	$wpdb->query( "ALTER TABLE $table_name CHANGE `vat_number` `vat_number` VARCHAR(50) DEFAULT NULL AFTER `country`" );
 	$wpdb->query( "ALTER TABLE $table_name DROP `attachment`" );
+	$wpdb->query( "ALTER TABLE $table_name CHANGE `vat_number` `vat_number` VARCHAR(50) DEFAULT NULL AFTER `country`" );
+	$wpdb->query( "ALTER TABLE $table_name CHANGE `type` `type` VARCHAR(30) DEFAULT NULL default 'customer'" );
+	$wpdb->query( "ALTER TABLE $table_name ADD `updated_at` DATETIME NULL DEFAULT NULL AFTER `creator_id`" );
+	$wpdb->query( "ALTER TABLE $table_name CHANGE `date_created` `created_at` DATETIME NULL DEFAULT NULL" );
 
-	// ea_documents_items table.
+	if ( $wpdb->get_var( "SHOW COLUMNS FROM $table_name LIKE 'enabled'" ) == 'enabled' ) {
+		$wpdb->query( "ALTER TABLE $table_name ADD `status` ENUM('active','inactive') NOT NULL DEFAULT 'active' AFTER `type`" );
+		$wpdb->query( "ALTER TABLE $table_name ADD KEY `status` (`status`)" );
+		$wpdb->query( "UPDATE $table_name SET status = 'active' WHERE enabled = 1" );
+		$wpdb->query( "UPDATE $table_name SET status = 'inactive' WHERE enabled = 0" );
+		$wpdb->query( "ALTER TABLE $table_name DROP `enabled`" );
+	}
+
 	$table_name = $wpdb->prefix . 'ea_document_items';
-	if ( $wpdb->get_var( "SHOW COLUMNS FROM $table_name LIKE 'updated_at'" ) !== 'updated_at' ) {
-		$wpdb->query( "ALTER TABLE $table_name ADD `updated_at` DATETIME NULL DEFAULT NULL COMMENT 'Update Date' AFTER `date_created`" );
-		$wpdb->query( "ALTER TABLE $table_name CHANGE `date_created` `created_at` DATETIME NULL DEFAULT NULL COMMENT 'Create Date'" );
-	}
-	// rename item_name to name.
-	$wpdb->query( "ALTER TABLE $table_name CHANGE `item_name` `name` VARCHAR(255) NULL DEFAULT NULL" );
+	$wpdb->query( "ALTER TABLE $table_name CHANGE `item_id` `product_id` INT(11) DEFAULT NULL" );
+	$wpdb->query( "ALTER TABLE $table_name CHANGE `item_name` `name` VARCHAR(191) NOT NULL" );
+	$wpdb->query( "ALTER TABLE $table_name ADD `description` TEXT NULL AFTER `name`" );
+	$wpdb->query( "ALTER TABLE $table_name ADD `unit` VARCHAR(20) NOT NULL AFTER `description`" );
+	$wpdb->query( "ALTER TABLE $table_name ADD `subtotal_tax` double(15,4) NOT NULL DEFAULT 0.00 AFTER `subtotal`" );
+	$wpdb->query( "ALTER TABLE $table_name ADD `discount_tax` double(15,4) NOT NULL DEFAULT 0.00 AFTER `discount`" );
+	$wpdb->query( "ALTER TABLE $table_name ADD `shipping` double(15,4) NOT NULL DEFAULT 0.00 AFTER `discount_tax`" );
+	$wpdb->query( "ALTER TABLE $table_name ADD `shipping_tax` double(15,4) NOT NULL DEFAULT 0.00 AFTER `shipping`" );
+	$wpdb->query( "ALTER TABLE $table_name ADD `fee` double(15,4) NOT NULL DEFAULT 0.00 AFTER `shipping_tax`" );
+	$wpdb->query( "ALTER TABLE $table_name ADD `fee_tax` double(15,4) NOT NULL DEFAULT 0.00 AFTER `fee`" );
+	$wpdb->query( "ALTER TABLE $table_name CHANGE `tax` `tax_total` double(15,4) NOT NULL DEFAULT 0.00" );
+	$wpdb->query( "ALTER TABLE $table_name ADD `taxable` ENUM('yes','no') NOT NULL DEFAULT 'yes' AFTER `total`" );
+	$wpdb->query( "ALTER TABLE $table_name ADD `taxable_shipping` ENUM('yes','no') NOT NULL DEFAULT 'yes' AFTER `taxable`" );
+	$wpdb->query( "ALTER TABLE $table_name ADD `taxable_fee` ENUM('yes','no') NOT NULL DEFAULT 'yes' AFTER `taxable_shipping`" );
+	$wpdb->query( "ALTER TABLE $table_name ADD `updated_at` DATETIME NULL DEFAULT NULL AFTER `status`" );
+	$wpdb->query( "ALTER TABLE $table_name ADD `updated_at` DATETIME NULL DEFAULT NULL AFTER `currency_code`" );
+	$wpdb->query( "ALTER TABLE $table_name CHANGE `date_created` `created_at` DATETIME NULL DEFAULT NULL" );
+	$wpdb->query( "ALTER TABLE $table_name DROP `tax_rate`" );
+	$wpdb->query( "ALTER TABLE $table_name DROP `extra`" );
 
-	// ea_documents table.
 	$table_name = $wpdb->prefix . 'ea_documents';
-	// add prefix column.
-	if ( $wpdb->get_var( "SHOW COLUMNS FROM $table_name LIKE 'prefix'" ) !== 'prefix' ) {
-		$wpdb->query( "ALTER TABLE $table_name ADD `prefix` VARCHAR(100) NULL DEFAULT NULL AFTER `id`" );
-	}
-	// if token column does not exist rename key to token.
-	if ( $wpdb->get_var( "SHOW COLUMNS FROM $table_name LIKE 'token'" ) !== 'token' ) {
-		$wpdb->query( "ALTER TABLE $table_name CHANGE `key` `token` VARCHAR(100) NULL DEFAULT NULL" );
-	}
-	if ( $wpdb->get_var( "SHOW COLUMNS FROM $table_name LIKE 'updated_at'" ) !== 'updated_at' ) {
-		$wpdb->query( "ALTER TABLE $table_name ADD `updated_at` DATETIME NULL DEFAULT NULL COMMENT 'Update Date' AFTER `creator_id`" );
-		$wpdb->query( "ALTER TABLE $table_name CHANGE `date_created` `created_at` DATETIME NULL DEFAULT NULL COMMENT 'Create Date'" );
-	}
-	// If footer does not exist rename terms to footer.
-	if ( $wpdb->get_var( "SHOW COLUMNS FROM $table_name LIKE 'footer'" ) !== 'footer' ) {
-		$wpdb->query( "ALTER TABLE $table_name CHANGE `terms` `footer` TEXT NULL DEFAULT NULL" );
-	}
-	// change type income to payment.
-	$wpdb->query( "UPDATE $table_name SET type = 'payment' WHERE type = 'income'" );
+	$wpdb->query( "ALTER TABLE $table_name CHANGE `type` `type` VARCHAR(20) NOT NULL DEFAULT 'invoice' AFTER `id`" );
+	$wpdb->query( "ALTER TABLE $table_name CHANGE `status` `status` VARCHAR(20) NOT NULL DEFAULT 'draft' AFTER `type`" );
+	$wpdb->query( "ALTER TABLE $table_name CHANGE `document_number` `document_number` VARCHAR(30) NOT NULL AFTER `status`" );
+	$wpdb->query( "ALTER TABLE $table_name CHANGE `contact_id` `contact_id` BIGINT(20) UNSIGNED NOT NULL AFTER `document_number`" );
+	$wpdb->query( "ALTER TABLE $table_name CHANGE `subtotal` `subtotal` DOUBLE(15,4) DEFAULT 0 AFTER `contact_id`" );
+	$wpdb->query( "ALTER TABLE $table_name CHANGE `total_discount` `discount_total` DOUBLE(15,4) DEFAULT 0 AFTER `subtotal`" );
+	$wpdb->query( "ALTER TABLE $table_name CHANGE `total_shipping` `shipping_total` DOUBLE(15,4) DEFAULT 0 AFTER `discount_total`" );
+	$wpdb->query( "ALTER TABLE $table_name CHANGE `total_fees` `fees_total` DOUBLE(15,4) DEFAULT 0 AFTER `shipping_total`" );
+	$wpdb->query( "ALTER TABLE $table_name CHANGE `total_tax` `tax_total` DOUBLE(15,4) DEFAULT 0 AFTER `fees_total`" );
+	$wpdb->query( "ALTER TABLE $table_name CHANGE `total` `total` DOUBLE(15,4) DEFAULT 0 AFTER `tax_total`" );
+	$wpdb->query( "ALTER TABLE $table_name ADD `total_paid` DOUBLE(15,4) DEFAULT 0 AFTER `total`" );
+	$wpdb->query( "ALTER TABLE $table_name ADD `total_refunded` DOUBLE(15,4) DEFAULT 0 AFTER `total_paid`" );
+	$wpdb->query( "ALTER TABLE $table_name CHANGE `discount` `discount_amount` DOUBLE(15,4) DEFAULT 0 AFTER `total_refunded`" );
+	$wpdb->query( "ALTER TABLE $table_name CHANGE `discount_type` `discount_type` VARCHAR(20) NOT NULL DEFAULT 'fixed' AFTER `discount_amount`" );
+	$wpdb->query( "UPDATE $table_name SET discount_type = 'percent' WHERE discount_type = 'percentage'" );
+	$wpdb->query( "ALTER TABLE $table_name CHANGE `discount_type` `discount_type` ENUM('fixed','percent') NOT NULL DEFAULT 'fixed'" );
+	$wpdb->query( "ALTER TABLE $table_name ADD `shipping_amount` DOUBLE(15,4) DEFAULT 0 AFTER `discount_type`" );
+	$wpdb->query( "ALTER TABLE $table_name ADD `fees_amount` DOUBLE(15,4) DEFAULT 0 AFTER `shipping_amount`" );
+	$wpdb->query( "ALTER TABLE $table_name CHANGE `address` `billing_data` longtext NULL AFTER `fees_amount`" );
+	$wpdb->query( "ALTER TABLE $table_name ADD `shipping_data` longtext NULL AFTER `billing_data`" );
+	$wpdb->query( "ALTER TABLE $table_name CHANGE `note` `document_note` TEXT DEFAULT NULL AFTER `order_number` " );
+	$wpdb->query( "ALTER TABLE $table_name CHANGE `tax_inclusive` `tax_inclusive` VARCHAR(20) DEFAULT NULL AFTER `document_note`" );
+	$wpdb->query( "UPDATE $table_name SET tax_inclusive = 'yes' WHERE tax_inclusive = 1" );
+	$wpdb->query( "UPDATE $table_name SET tax_inclusive = 'no' WHERE tax_inclusive = 0" );
+	$wpdb->query( "ALTER TABLE $table_name CHANGE `tax_inclusive` `tax_inclusive` ENUM('yes','no') NOT NULL DEFAULT 'no'" );
+	$wpdb->query( "ALTER TABLE $table_name ADD `vat_exempt` ENUM('yes','no') NOT NULL DEFAULT 'no' AFTER `tax_inclusive`" );
+	$wpdb->query( "ALTER TABLE $table_name CHANGE `issue_date` `issued_at` DATETIME NULL DEFAULT NULL AFTER `vat_exempt`" );
+	$wpdb->query( "ALTER TABLE $table_name CHANGE `due_date` `due_at` DATETIME NULL DEFAULT NULL AFTER `issued_at`" );
+	$wpdb->query( "ALTER TABLE $table_name ADD `sent_at` DATETIME NULL DEFAULT NULL AFTER `due_at`" );
+	$wpdb->query( "ALTER TABLE $table_name ADD `viewed_at` DATETIME NULL DEFAULT NULL AFTER `sent_at`" );
+	$wpdb->query( "ALTER TABLE $table_name CHANGE `payment_date` `paid_at` DATETIME NULL DEFAULT NULL AFTER `viewed_at`" );
+	$wpdb->query( "ALTER TABLE $table_name ADD `created_via` VARCHAR(100) DEFAULT NULL AFTER `paid_at`" );
+	$wpdb->query( "ALTER TABLE $table_name DROP `terms`" );
+	$wpdb->query( "ALTER TABLE $table_name DROP `attachment_id`" );
+	$wpdb->query( "ALTER TABLE $table_name DROP `category_id`" );
+	$wpdb->query( "ALTER TABLE $table_name CHANGE `key` `uuid_key` VARCHAR(32) DEFAULT NULL AFTER `creator_id`" );
+	$wpdb->query( "ALTER TABLE $table_name ADD `updated_at` DATETIME NULL DEFAULT NULL AFTER `uuid_key`" );
+	$wpdb->query( "ALTER TABLE $table_name CHANGE `date_created` `created_at` DATETIME NULL DEFAULT NULL" );
 
-	// ea_items table.
 	$table_name = $wpdb->prefix . 'ea_items';
-	if ( $wpdb->get_var( "SHOW COLUMNS FROM $table_name LIKE 'status'" ) !== 'status' ) {
+	$wpdb->query( "ALTER TABLE $table_name ADD `unit` VARCHAR(20) NOT NULL AFTER `description`" );
+	$wpdb->query( "ALTER TABLE $table_name DROP `sku`" );
+	$wpdb->query( "ALTER TABLE $table_name CHANGE `sale_price` `price` double(15,4) NOT NULL DEFAULT 0.00" );
+	$wpdb->query( "ALTER TABLE $table_name DROP `purchase_price`" );
+	$wpdb->query( "ALTER TABLE $table_name DROP `quantity`" );
+	$wpdb->query( "ALTER TABLE $table_name DROP `sales_tax`" );
+	$wpdb->query( "ALTER TABLE $table_name DROP `purchase_tax`" );
+	$wpdb->query( "ALTER TABLE $table_name ADD `taxable` ENUM('yes', 'no') DEFAULT 'yes' AFTER `category_id`" );
+	$wpdb->query( "ALTER TABLE $table_name ADD `tax_ids` TEXT DEFAULT NULL AFTER `taxable`" );
+	if ( $wpdb->get_var( "SHOW COLUMNS FROM $table_name LIKE 'enabled'" ) == 'enabled' ) {
 		$wpdb->query( "ALTER TABLE $table_name ADD `status` ENUM('active','inactive') NOT NULL DEFAULT 'active' AFTER `thumbnail_id`" );
 		$wpdb->query( "ALTER TABLE $table_name ADD KEY `status` (`status`)" );
 		$wpdb->query( "UPDATE $table_name SET status = 'active' WHERE enabled = 1" );
 		$wpdb->query( "UPDATE $table_name SET status = 'inactive' WHERE enabled = 0" );
 		$wpdb->query( "ALTER TABLE $table_name DROP `enabled`" );
 	}
-	if ( $wpdb->get_var( "SHOW COLUMNS FROM $table_name LIKE 'type'" ) !== 'type' ) {
-		$wpdb->query( "ALTER TABLE $table_name ADD `type` VARCHAR(191) NOT NULL DEFAULT 'product' COMMENT 'Item Type' AFTER `id`" );
-		$wpdb->query( "ALTER TABLE $table_name ADD KEY `type` (`type`)" );
-	}
-	if ( $wpdb->get_var( "SHOW COLUMNS FROM $table_name LIKE 'unit'" ) !== 'unit' ) {
-		$wpdb->query( "ALTER TABLE $table_name ADD `unit` VARCHAR(50) DEFAULT NULL AFTER `purchase_price`" );
-		$wpdb->query( "ALTER TABLE $table_name ADD KEY `unit` (`unit`)" );
-	}
-	if ( $wpdb->get_var( "SHOW COLUMNS FROM $table_name LIKE 'price'" ) !== 'price' ) {
-		$wpdb->query( "ALTER TABLE $table_name CHANGE `sale_price` `price` DECIMAL(10,2) NOT NULL DEFAULT '0.00' COMMENT 'Price'" );
-	}
-	// drop purchase_price column.
-	$wpdb->query( "ALTER TABLE $table_name DROP `purchase_price`" );
-	$wpdb->query( "ALTER TABLE $table_name DROP `sku`" );
-	if ( $wpdb->get_var( "SHOW COLUMNS FROM $table_name LIKE 'updated_at'" ) !== 'updated_at' ) {
-		$wpdb->query( "ALTER TABLE $table_name ADD `updated_at` DATETIME NULL DEFAULT NULL COMMENT 'Update Date' AFTER `status`" );
-		$wpdb->query( "ALTER TABLE $table_name CHANGE `date_created` `created_at` DATETIME NULL DEFAULT NULL COMMENT 'Create Date'" );
-	}
+	$wpdb->query( "ALTER TABLE $table_name ADD `updated_at` DATETIME NULL DEFAULT NULL AFTER `creator_id`" );
+	$wpdb->query( "ALTER TABLE $table_name CHANGE `date_created` `created_at` DATETIME NULL DEFAULT NULL" );
+	$wpdb->query( "ALTER TABLE $table_name DROP `creator_id`" );
 
-	// notes table.
-	$table_name = $wpdb->prefix . 'ea_notes';
-	if ( $wpdb->get_var( "SHOW COLUMNS FROM $table_name LIKE 'updated_at'" ) !== 'updated_at' ) {
-		$wpdb->query( "ALTER TABLE $table_name ADD `updated_at` DATETIME NULL DEFAULT NULL COMMENT 'Update Date' AFTER `creator_id`" );
-		$wpdb->query( "ALTER TABLE $table_name CHANGE `date_created` `created_at` DATETIME NULL DEFAULT NULL COMMENT 'Create Date'" );
+	// Now if products and items both table exists then remove the products table and rename the items table to products.
+	$products_table = $wpdb->prefix . 'ea_products';
+	if ( $wpdb->get_var( "SHOW TABLES LIKE '$products_table'" ) == $products_table  && $wpdb->get_var( "SHOW TABLES LIKE '$table_name'" ) == $table_name ) {
+		$wpdb->query( "DROP TABLE $products_table" );
 	}
-
-	$table_name = $wpdb->prefix . 'ea_transactions';
-	if ( $wpdb->get_var( "SHOW COLUMNS FROM $table_name LIKE 'transaction_number'" ) !== 'transaction_number' ) {
-		$wpdb->query( "ALTER TABLE $table_name ADD `transaction_number` VARCHAR(100) NULL DEFAULT NULL AFTER `type`" );
-		$wpdb->query( "ALTER TABLE $table_name ADD UNIQUE KEY `transaction_number` (`transaction_number`)" );
-	}
-	// set unique key for prefix and number.
-	// if token column does not exist add token column.
-	if ( $wpdb->get_var( "SHOW COLUMNS FROM $table_name LIKE 'token'" ) !== 'token' ) {
-		$wpdb->query( "ALTER TABLE $table_name ADD `token` VARCHAR(100) NULL DEFAULT NULL AFTER `reconciled`" );
-		$wpdb->query( "ALTER TABLE $table_name ADD KEY `token` (`token`)" );
-	}
-
-	// if not column does not exist rename description to note.
-	if ( $wpdb->get_var( "SHOW COLUMNS FROM $table_name LIKE 'note'" ) !== 'note' ) {
-		$wpdb->query( "ALTER TABLE $table_name CHANGE `description` `note` TEXT NULL DEFAULT NULL" );
-	}
-	if ( $wpdb->get_var( "SHOW COLUMNS FROM $table_name LIKE 'updated_at'" ) !== 'updated_at' ) {
-		$wpdb->query( "ALTER TABLE $table_name ADD `updated_at` DATETIME NULL DEFAULT NULL COMMENT 'Update Date' AFTER `creator_id`" );
-		$wpdb->query( "ALTER TABLE $table_name CHANGE `date_created` `created_at` DATETIME NULL DEFAULT NULL COMMENT 'Create Date'" );
-	}
-
-	$wpdb->query( "UPDATE $table_name SET type = 'payment' WHERE type = 'income'" );
-	$wpdb->query( "UPDATE $table_name JOIN (SELECT @rank := 0) r SET transaction_number=CONCAT('PAY-',LPAD(@rank:=@rank+1, 5, '0')) WHERE type='payment' AND transaction_number IS NULL OR transaction_number = ''" );
-	$wpdb->query( "UPDATE $table_name JOIN (SELECT @rank := 0) r SET transaction_number=CONCAT('EXP-',LPAD(@rank:=@rank+1, 5, '0')) WHERE type='expense' AND transaction_number IS NULL OR transaction_number = ''" );
-	$wpdb->query( "UPDATE $table_name SET token=MD5(id) WHERE token IS NULL OR token = ''" );
+	$wpdb->query( "RENAME TABLE $table_name TO $products_table" );
 
 	$table_name = $wpdb->prefix . 'ea_transfers';
-	// if payment_id column does not exist rename income_id to payment_id.
-	if ( $wpdb->get_var( "SHOW COLUMNS FROM $table_name LIKE 'payment_id'" ) !== 'payment_id' ) {
-		$wpdb->query( "ALTER TABLE $table_name CHANGE `income_id` `payment_id` BIGINT(20) UNSIGNED NULL DEFAULT NULL" );
+	$wpdb->query( "ALTER TABLE $table_name ADD `updated_at` DATETIME NULL DEFAULT NULL AFTER `creator_id`" );
+	$wpdb->query( "ALTER TABLE $table_name CHANGE `date_created` `created_at` DATETIME NULL DEFAULT NULL" );
+
+	$table_name = $wpdb->prefix . 'ea_transactions';
+	$wpdb->query( "ALTER TABLE $table_name ADD `voucher_number` VARCHAR(30) DEFAULT NULL AFTER `type`" );
+	$wpdb->query( "ALTER TABLE $table_name CHANGE `description` `payment_note` TEXT DEFAULT NULL " );
+	$wpdb->query( "ALTER TABLE $table_name ADD `uuid_key` VARCHAR(32) DEFAULT NULL AFTER `creator_id`" );
+	$wpdb->query( "ALTER TABLE $table_name ADD `updated_at` DATETIME NULL DEFAULT NULL AFTER `uuid_key`" );
+	$wpdb->query( "ALTER TABLE $table_name CHANGE `date_created` `created_at` DATETIME NULL DEFAULT NULL" );
+
+	$wpdb->query( "UPDATE $table_name JOIN (SELECT @rank := 0) r SET voucher_number=CONCAT('INC-',LPAD(@rank:=@rank+1, 5, '0')) WHERE type='income' AND voucher_number IS NULL OR voucher_number = ''" );
+	$wpdb->query( "UPDATE $table_name JOIN (SELECT @rank := 0) r SET voucher_number=CONCAT('EXP-',LPAD(@rank:=@rank+1, 5, '0')) WHERE type='expense' AND voucher_number IS NULL OR voucher_number = ''" );
+	$wpdb->query( "UPDATE $table_name SET uuid_key=MD5(id) WHERE uuid_key IS NULL OR uuid_key = ''" );
+
+	$table_name = $wpdb->prefix . 'ea_notes';
+	$wpdb->query( "ALTER TABLE $table_name CHANGE `parent_id` `object_id`  BIGINT(20) UNSIGNED NOT NULL" );
+	$wpdb->query( "ALTER TABLE $table_name CHANGE `type` `object_type`   VARCHAR(20) NOT NULL" );
+	$wpdb->query( "ALTER TABLE $table_name CHANGE `note` `content` TEXT DEFAULT NULL" );
+	$wpdb->query( "ALTER TABLE $table_name ADD `updated_at` DATETIME NULL DEFAULT NULL AFTER `creator_id`" );
+	$wpdb->query( "ALTER TABLE $table_name CHANGE `date_created` `created_at` DATETIME NULL DEFAULT NULL" );
+
+	$table_name = $wpdb->prefix . 'ea_categories';
+	$wpdb->query( "ALTER TABLE $table_name ADD `description` TEXT DEFAULT NULL AFTER `name`" );
+	$wpdb->query( "ALTER TABLE $table_name CHANGE `type` `group` VARCHAR(20) NOT NULL" );
+	$wpdb->query( "ALTER TABLE $table_name ADD `parent_id` BIGINT(20) UNSIGNED NOT NULL DEFAULT 0 AFTER `group`" );
+	$wpdb->query( "ALTER TABLE $table_name ADD KEY `group` (`group`)" );
+	$wpdb->query( "ALTER TABLE $table_name ADD KEY `parent_id` (`parent_id`)" );
+	$wpdb->query( "UPDATE $table_name SET `group` = 'income_cat' WHERE `group` = 'income'" );
+	$wpdb->query( "UPDATE $table_name SET `group` = 'expense_cat' WHERE `group` = 'expense'" );
+	$wpdb->query( "UPDATE $table_name SET `group` = 'product_cat' WHERE `group` = 'item'" );
+	$wpdb->query( "ALTER TABLE $table_name ADD `status` ENUM('active','inactive') NOT NULL DEFAULT 'active' AFTER `parent_id`" );
+	$wpdb->query( "ALTER TABLE $table_name ADD KEY `status` (`status`)" );
+	$wpdb->query( "ALTER TABLE $table_name DROP `color`" );
+	$wpdb->query( "ALTER TABLE $table_name DROP `date_created`" );
+
+	$terms_table = $wpdb->prefix . 'ea_terms';
+	if ( $wpdb->get_var( "SHOW TABLES LIKE '$terms_table'" ) == $terms_table  && $wpdb->get_var( "SHOW TABLES LIKE '$table_name'" ) == $table_name ) {
+		$wpdb->query( "DROP TABLE $terms_table" );
 	}
-	if ( $wpdb->get_var( "SHOW COLUMNS FROM $table_name LIKE 'updated_at'" ) !== 'updated_at' ) {
-		$wpdb->query( "ALTER TABLE $table_name ADD `updated_at` DATETIME NULL DEFAULT NULL COMMENT 'Update Date' AFTER `creator_id`" );
-		$wpdb->query( "ALTER TABLE $table_name CHANGE `date_created` `created_at` DATETIME NULL DEFAULT NULL COMMENT 'Create Date'" );
+	$wpdb->query( "RENAME TABLE $table_name TO $terms_table" );
+
+	$table_name = $wpdb->prefix . 'ea_contactmeta';
+	$wpdb->query( "ALTER TABLE $table_name CHANGE `contact_id` `ea_contact_id` bigint(20) unsigned NOT NULL default '0'" );
+
+	$table_name = $wpdb->prefix . 'ea_currencies';
+
+	if ( $wpdb->get_var( "SHOW TABLES LIKE '$table_name'" ) == $table_name ) {
+		$wpdb->query( "DROP TABLE $table_name" );
 	}
 }

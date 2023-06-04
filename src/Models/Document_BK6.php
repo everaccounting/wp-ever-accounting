@@ -1810,7 +1810,7 @@ abstract class Document_BK6 extends Model {
 	 */
 	public function get_items( $item_id = null ) {
 		if ( $this->exists() && empty( $this->items ) ) {
-			$items       = DocumentItem::query(
+			$items = DocumentItem::query(
 				array(
 					'document_id' => $this->get_id(),
 					'orderby'     => 'id',

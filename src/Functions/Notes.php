@@ -15,15 +15,13 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Main function for returning note.
  *
- * @param mixed  $item Note item.
- * @param string $column Optional. Column to get. Default null.
- * @param array  $args Optional. Additional arguments. Default empty array.
+ * @param mixed $item Note item.
  *
  * @return Note|null
  * @since 1.1.0
  */
-function eac_get_note( $item, $column = null, $args = array() ) {
-	return Note::get( $item, $column, $args );
+function eac_get_note( $item ) {
+	return Note::get( $item );
 }
 
 /**

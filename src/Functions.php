@@ -3,19 +3,20 @@
 defined( 'ABSPATH' ) || exit;
 
 require_once __DIR__ . '/Functions/Accounts.php';
-require_once __DIR__ . '/Functions/Categories.php';
 require_once __DIR__ . '/Functions/Contacts.php';
 require_once __DIR__ . '/Functions/Currencies.php';
 require_once __DIR__ . '/Functions/Deprecated.php';
 require_once __DIR__ . '/Functions/Documents.php';
 require_once __DIR__ . '/Functions/Formatters.php';
-require_once __DIR__ . '/Functions/Products.php';
 require_once __DIR__ . '/Functions/Media.php';
 require_once __DIR__ . '/Functions/Misc.php';
 require_once __DIR__ . '/Functions/Notes.php';
+require_once __DIR__ . '/Functions/Products.php';
+require_once __DIR__ . '/Functions/Reports.php';
 require_once __DIR__ . '/Functions/Taxes.php';
-require_once __DIR__ . '/Functions/Transactions.php';
 require_once __DIR__ . '/Functions/Templates.php';
+require_once __DIR__ . '/Functions/Terms.php';
+require_once __DIR__ . '/Functions/Transactions.php';
 
 /**
  * Get base currency code
@@ -28,6 +29,19 @@ function eac_get_base_currency() {
 	$currency = get_option( 'eac_base_currency', 'USD' );
 
 	return apply_filters( 'ever_accounting_base_currency', $currency );
+}
+
+/**
+ * Get base country.
+ *
+ * @since 1.0.2
+ *
+ * @return string
+ */
+function eac_get_base_country() {
+	$country = get_option( 'eac_company_country', 'US' );
+
+	return apply_filters( 'ever_accounting_base_country', $country );
 }
 
 /**
@@ -310,39 +324,6 @@ function eac_convert_money( $amount, $from, $to = null, $to_rate = null, $from_r
 	}
 
 	return $amount;
-}
-
-/**
- * Convert price from one currency to another.
- *
- * @param string $amount Amount.
- * @param string $from Convert from currency code.
- * @param string $to Convert to currency code.
- * @param string $from_rate Convert from currency rate.
- * @param string $to_rate Convert to currency rate.
- *
- * @since 1.0.2
- *
- * @return float|int|string
- */
-function eac_convert_money123( $amount, $from, $to = null, $from_rate = null, $to_rate = null ) {
-	if ( is_null( $to ) ) {
-		$to = eac_get_base_currency();
-	}
-
-	if ( is_null( $from_rate ) ) {
-		$from_rate = eac_get_currency_rate( $from );
-	}
-
-	if ( is_null( $to_rate ) ) {
-		$to_rate = eac_get_currency_rate( $to );
-	}
-
-	if ( $from !== $to ) {
-		$amount = eac_money_to_base( $amount, $to, $to_rate );
-	}
-
-	return eac_money_from_base( $amount, $from, $from_rate );
 }
 
 /**

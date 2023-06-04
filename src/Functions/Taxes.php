@@ -8,7 +8,7 @@
  * @package EverAccounting
  */
 
-use EverAccounting\Models\Tax;
+use EverAccounting\Models\TaxRate;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -35,186 +35,87 @@ function eac_price_includes_tax() {
  * Get calculated tax.
  *
  * @param double $amount Amount to calculate tax for.
- * @param array  $taxes Taxes.
+ * @param array  $rates Taxes.
  * @param bool   $inclusive Whether the amount is inclusive of tax.
  *
  * @since 1.1.0
  *
  * @return array Array of tax amounts.
  */
-function eac_calculate_taxes( $amount, $taxes, $inclusive = false ) {
+function eac_calculate_taxes( $amount, $rates, $inclusive = false ) {
 	$default_data = array(
-		'tax_id'      => 0,
+		'rate_id'     => 0,
 		'rate'        => 0,
 		'is_compound' => 'no',
 	);
-	foreach ( $taxes as $key => $tax ) {
-		if ( is_a( $tax, '\EverAccounting\Models\DocumentTax' ) ) {
-			$tax = $tax->get_data();
-		} elseif ( is_object( $tax ) ) {
-			$tax = get_object_vars( $tax );
+	foreach ( $rates as $key => $rate ) {
+		if ( is_a( $rate, '\EverAccounting\Models\DocumentTax' ) ) {
+			$rate = $rate->get_data();
+		} elseif ( is_object( $rate ) ) {
+			$rate = get_object_vars( $rate );
 		}
 		// If rate id is not set, use then continue.
-		if ( empty( $tax['tax_id'] ) ) {
-			unset( $taxes[ $key ] );
+		if ( empty( $rate['rate_id'] ) ) {
+			unset( $rates[ $key ] );
 			continue;
 		}
-		$taxes[ $key ]           = wp_parse_args( $tax, $default_data );
-		$taxes[ $key ]['amount'] = 0;
+		$rates[ $key ]           = wp_parse_args( $rate, $default_data );
+		$rates[ $key ]['amount'] = 0;
 	}
 
 	if ( $inclusive ) {
 		$non_compounded = $amount;
-		foreach ( $taxes as &$tax ) {
-			if ( 'yes' !== $tax['is_compound'] ) {
+		foreach ( $rates as &$rate ) {
+			if ( 'yes' !== $rate['is_compound'] ) {
 				continue;
 			}
-			$tax_amount      = $non_compounded - ( $non_compounded / ( 1 + ( $tax['rate'] / 100 ) ) );
-			$tax['amount']   = $tax_amount;
+			$tax_amount      = $non_compounded - ( $non_compounded / ( 1 + ( $rate['rate'] / 100 ) ) );
+			$rate['amount']  = $tax_amount;
 			$non_compounded -= $tax_amount;
 		}
 
-		$regular_tax_rate = 1 + ( array_sum( array_column( wp_list_filter( $taxes, array( 'is_compound' => 'no' ) ), 'rate' ) ) / 100 );
-		foreach ( $taxes as &$tax ) {
-			if ( 'yes' === $tax['is_compound'] ) {
+		$regular_tax_rate = 1 + ( array_sum( array_column( wp_list_filter( $rates, array( 'is_compound' => 'no' ) ), 'rate' ) ) / 100 );
+		foreach ( $rates as &$rate ) {
+			if ( 'yes' === $rate['is_compound'] ) {
 				continue;
 			}
-			$the_rate       = $tax['rate'] / 100 / $regular_tax_rate;
-			$net_price      = $amount - ( $the_rate * $non_compounded );
-			$tax['amount'] += $amount - $net_price;
+			$the_rate        = $rate['rate'] / 100 / $regular_tax_rate;
+			$net_price       = $amount - ( $the_rate * $non_compounded );
+			$rate['amount'] += $amount - $net_price;
 		}
 	} else {
-		foreach ( $taxes as &$tax ) {
-			if ( 'yes' === $tax['is_compound'] ) {
+		foreach ( $rates as &$rate ) {
+			if ( 'yes' === $rate['is_compound'] ) {
 				continue;
 			}
-			$tax['amount'] = $amount * ( $tax['rate'] / 100 );
+			$rate['amount'] = $amount * ( $rate['rate'] / 100 );
 		}
-		$pre_compounded = array_sum( wp_list_pluck( $taxes, 'amount' ) );
-		foreach ( $taxes as &$tax ) {
-			if ( 'yes' !== $tax['is_compound'] ) {
+		$pre_compounded = array_sum( wp_list_pluck( $rates, 'amount' ) );
+		foreach ( $rates as &$rate ) {
+			if ( 'yes' !== $rate['is_compound'] ) {
 				continue;
 			}
-			$tax_amount      = ( $amount + $pre_compounded ) * ( $tax['rate'] / 100 );
-			$tax['amount']  += $tax_amount;
+			$tax_amount      = ( $amount + $pre_compounded ) * ( $rate['rate'] / 100 );
+			$rate['amount'] += $tax_amount;
 			$pre_compounded += $tax_amount;
 		}
 	}
 
-	return wp_list_pluck( $taxes, 'amount', 'tax_id' );
-}
-
-/**
- * Get calculated tax.
- *
- * @param double $amount Amount to calculate tax for.
- * @param array  $taxes Taxes.
- * @param bool   $inclusive Whether the amount is inclusive of tax.
- * @param bool   $flat Whether to return a flat tax amount or an array of tax amounts.
- *
- * @since 1.1.0
- *
- * @return array|float Tax amount or array of tax amounts.
- */
-function eac_calculate_taxes_v1( $amount, $taxes, $inclusive = false, $flat = false ) {
-	$default_tax = array(
-		'tax_id'      => 0,
-		'rate'        => 0,
-		'is_compound' => 'no',
-		'amount'      => 0,
-	);
-
-	if ( ! is_array( $taxes ) ) {
-		$taxes = wp_parse_id_list( $taxes );
-	}
-
-	foreach ( $taxes as $key => $tax ) {
-		// if $tax is a Tax object, convert it to an array.
-		if ( is_a( $tax, '\EverAccounting\Models\DocumentTax' ) ) {
-			$tax = $tax->get_data();
-		} elseif ( is_numeric( $tax ) ) {
-			$tax = array(
-				'tax_id'      => $key,
-				'rate'        => $tax,
-				'is_compound' => 'no',
-				'amount'      => 0,
-			);
-		}
-		$taxes[ $key ] = wp_parse_args( $tax, $default_tax );
-	}
-
-	if ( $inclusive ) {
-		$non_compounded = $amount;
-		foreach ( $taxes as &$tax ) {
-			if ( 'yes' !== $tax['is_compound'] ) {
-				continue;
-			}
-			$tax_amount      = $non_compounded - ( $non_compounded / ( 1 + ( $tax['rate'] / 100 ) ) );
-			$tax['amount']   = $tax_amount;
-			$non_compounded -= $tax_amount;
-		}
-
-		$regular_tax_rate = 1 + ( array_sum( array_column( wp_list_filter( $taxes, array( 'is_compound' => 'no' ) ), 'rate' ) ) / 100 );
-		foreach ( $taxes as &$tax ) {
-			if ( 'yes' === $tax['is_compound'] ) {
-				continue;
-			}
-			$the_rate       = $tax['rate'] / 100 / $regular_tax_rate;
-			$net_price      = $amount - ( $the_rate * $non_compounded );
-			$tax['amount'] += $amount - $net_price;
-		}
-	} else {
-		foreach ( $taxes as &$tax ) {
-			if ( 'yes' === $tax['is_compound'] ) {
-				continue;
-			}
-			$tax['amount'] = $amount * ( $tax['rate'] / 100 );
-		}
-		$pre_compounded = array_sum( wp_list_pluck( $taxes, 'amount' ) );
-		foreach ( $taxes as &$tax ) {
-			if ( 'yes' !== $tax['is_compound'] ) {
-				continue;
-			}
-			$tax_amount      = ( $amount + $pre_compounded ) * ( $tax['rate'] / 100 );
-			$tax['amount']  += $tax_amount;
-			$pre_compounded += $tax_amount;
-		}
-	}
-
-	return $flat ? wp_list_pluck( $taxes, 'amount', 'tax_id' ) : $taxes;
-}
-
-/**
- * Get tax rate types.
- *
- * @since 1.1.0
- *
- * @return array
- */
-function eac_get_tax_types() {
-	return apply_filters(
-		'ever_accounting_tax_types',
-		array(
-			'simple'   => __( 'Simple', 'wp-ever-accounting' ),
-			'compound' => __( 'Compound', 'wp-ever-accounting' ),
-		)
-	);
+	return wp_list_pluck( $rates, 'amount', 'rate_id' );
 }
 
 /**
  * Get tax rate.
  *
- * @param int    $rate_id Tax rate ID.
- * @param string $column Optional. Column to get. Default null.
- * @param array  $args Optional. Additional arguments. Default empty array.
+ * @param int $rate_id Tax rate ID.
  *
  * @since 1.1.0
  *
  * @since 1.1.0
- * @return Tax|null
+ * @return TaxRate|null
  */
-function eac_get_tax( $rate_id, $column = null, $args = array() ) {
-	return Tax::get( $rate_id, $column, $args );
+function eac_get_tax_rate( $rate_id ) {
+	return TaxRate::get( $rate_id );
 }
 
 /**
@@ -225,10 +126,10 @@ function eac_get_tax( $rate_id, $column = null, $args = array() ) {
  *
  * @since 1.1.0
  *
- * @return Tax|false|int|WP_Error
+ * @return TaxRate|false|int|WP_Error
  */
-function eac_insert_tax( $args, $wp_error = true ) {
-	return Tax::insert( $args, $wp_error );
+function eac_insert_tax_rate( $args, $wp_error = true ) {
+	return TaxRate::insert( $args, $wp_error );
 }
 
 /**
@@ -239,7 +140,7 @@ function eac_insert_tax( $args, $wp_error = true ) {
  * @since 1.1.0
  * @return bool
  */
-function eac_delete_tax( $rate_id ) {
+function eac_delete_tax_rate( $rate_id ) {
 	$rate = eac_get_tax( $rate_id );
 
 	if ( ! $rate ) {
@@ -257,9 +158,9 @@ function eac_delete_tax( $rate_id ) {
  *
  * @since 1.1.0
  *
- * @return array|int|Tax[]
+ * @return array|int|TaxRate[]
  */
-function eac_get_taxes( $args = array(), $count = false ) {
+function eac_get_tax_rates( $args = array(), $count = false ) {
 	$defaults = array(
 		'limit'   => 20,
 		'offset'  => 0,
@@ -271,8 +172,8 @@ function eac_get_taxes( $args = array(), $count = false ) {
 	$args = wp_parse_args( $args, $defaults );
 
 	if ( $count ) {
-		return Tax::count( $args );
+		return TaxRate::count( $args );
 	}
 
-	return Tax::query( $args );
+	return TaxRate::query( $args );
 }
