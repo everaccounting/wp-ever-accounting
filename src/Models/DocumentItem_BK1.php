@@ -74,7 +74,7 @@ class DocumentItem_BK1 extends Model {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @var DocumentTax[]
+	 * @var DocumentLineTax[]
 	 */
 	protected $taxes = null;
 
@@ -83,7 +83,7 @@ class DocumentItem_BK1 extends Model {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @var DocumentTax[]
+	 * @var DocumentLineTax[]
 	 */
 	protected $deletable = array();
 
@@ -697,13 +697,13 @@ class DocumentItem_BK1 extends Model {
 	 * Get taxes.
 	 *
 	 * @since 1.0.0
-	 * @return DocumentTax[]
+	 * @return DocumentLineTax[]
 	 */
 	public function get_taxes() {
 		if ( is_null( $this->taxes ) ) {
 			$this->taxes = array();
 			if ( $this->exists() ) {
-				$this->taxes = DocumentTax::query(
+				$this->taxes = DocumentLineTax::query(
 					array(
 						'item_id'     => $this->get_id(),
 						'document_id' => $this->get_document_id(),
@@ -757,7 +757,7 @@ class DocumentItem_BK1 extends Model {
 	/**
 	 * Add tax.
 	 *
-	 * @param int|array|DocumentTax $data Tax data.
+	 * @param int|array|DocumentLineTax $data Tax data.
 	 *
 	 * @since 1.0.0
 	 * @return void
@@ -793,7 +793,7 @@ class DocumentItem_BK1 extends Model {
 		}
 
 		$data     = wp_parse_args( $data, $default );
-		$item_tax = new DocumentTax( $data['id'] );
+		$item_tax = new DocumentLineTax( $data['id'] );
 		$item_tax->set_props( $data );
 		// If tax id is not set, we will ignore the tax.
 		if ( empty( $item_tax->get_tax_id() ) ) {

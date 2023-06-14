@@ -3,7 +3,7 @@
 	box-sizing: border-box;
 }
 
-.eac-header {
+.eac-admin-header {
 	display: flex;
 	margin-bottom: 20px;
 	margin-left: -20px;
@@ -171,7 +171,7 @@
 	}
 }
 
-.eac-page {
+.eac-admin-page {
 	box-sizing: border-box;
 	position: relative;
 	max-width: 1400px;
@@ -180,68 +180,10 @@
 	padding-right: 20px;
 }
 
-.eac-page__nav {
+.eac-admin-page__nav {
 	margin: 0 0 1em;
 
 	+ .subsubsub {
 		margin: -8px 0 0;
-	}
-}
-
-
-
-.eac-page__header {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	min-height: 25px;
-	box-sizing: border-box;
-	flex-wrap: wrap;
-
-	&-title {
-		line-height: 1.7;
-		font-size: 1.5em;
-		margin: 0;
-	}
-
-	&-subtitle {
-		font-size: 1.25rem;
-		font-weight: 400;
-		margin: 0;
-	}
-
-	& > div {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		box-sizing: border-box;
-
-		> * {
-			//margin-right: 10px !important;
-
-			&:last-child {
-				margin-right: 0 !important;
-			}
-		}
-	}
-
-	p {
-		margin: 0;
-		padding: 0;
-	}
-
-	input, select, .select2, button {
-		margin-right: 5px;
-	}
-
-	a {
-		text-decoration: none;
-	}
-
-	.page-title-action,
-	.page-title-action:active,
-	.page-title-action:focus,
-	.page-title-action:hover {
-		top: 0;
 	}
 }

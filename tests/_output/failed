@@ -1,0 +1,4 @@
+tests/wpunit/ProductTest.php:testCreateProduct
+tests/wpunit/ProductTest.php:testUpdateProduct
+tests/wpunit/ProductTest.php:testDeleteProduct
+tests/wpunit/ProductTest.php:testQueryProducts

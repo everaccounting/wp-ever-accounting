@@ -22,8 +22,8 @@ function eac_get_template_part( $slug, $name = null ) {
 	 * Filters the  templates for a given $slug and/or $name combination.
 	 *
 	 * @param string $templates The list of possible template parts.
-	 * @param string $slug      The slug of the template part.
-	 * @param string $name      The name of the template part.
+	 * @param string $slug The slug of the template part.
+	 * @param string $name The name of the template part.
 	 */
 	$templates = apply_filters( 'ever_accounting_get_template_part', $templates, $slug, $name );
 
@@ -143,7 +143,7 @@ function eac_get_template_html( $template_name, $args = array(), $template_path 
  * @since 1.1.6
  * @return void
  */
-function eac_page_header() {
+function eac_get_header() {
 	eac_get_template_part( 'header' );
 }
 
@@ -153,17 +153,17 @@ function eac_page_header() {
  * @since 1.1.6
  * @return void
  */
-function eac_page_footer() {
+function eac_get_footer() {
 	eac_get_template_part( 'footer' );
 }
 
 /**
  * Dropdown menu.
  *
- * @since 1.1.6
- *
- * @param  array $items Array of actions.
+ * @param array $items Array of actions.
  * @param array $args Array of arguments.
+ *
+ * @since 1.1.6
  *
  * @return void
  */
@@ -178,7 +178,7 @@ function eac_dropdown_menu( $items, $args = array() ) {
 		'button_attrs'  => array(),
 	);
 
-	$args                  = wp_parse_args( $args, $defaults );
+	$args                 = wp_parse_args( $args, $defaults );
 	$args['button_class'] .= ' eac-dropdown__button';
 
 	if ( ! empty( $args['button_css'] ) ) {

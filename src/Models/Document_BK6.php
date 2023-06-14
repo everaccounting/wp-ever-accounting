@@ -79,7 +79,7 @@ abstract class Document_BK6 extends Model {
 		'type'           => '',
 		'status'         => 'draft',
 		'doc_number'     => '', // Document number, invoice number, bill number, estimate number, etc.
-		'order_number'   => '',
+		'reference'   => '',
 		'contact_id'     => null,
 		'billing_data'   => array(
 			'name'       => '',
@@ -163,7 +163,7 @@ abstract class Document_BK6 extends Model {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @var DocumentTax[]
+	 * @var DocumentLineTax[]
 	 */
 	protected $taxes = array();
 
@@ -173,7 +173,7 @@ abstract class Document_BK6 extends Model {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @var DocumentItem[]|DocumentTax[]
+	 * @var DocumentItem[]|DocumentLineTax[]
 	 */
 	protected $deletables = array();
 
@@ -278,8 +278,8 @@ abstract class Document_BK6 extends Model {
 	 *
 	 * @return string
 	 */
-	public function get_order_number( $context = 'edit' ) {
-		return $this->get_prop( 'order_number', $context );
+	public function get_reference( $context = 'edit' ) {
+		return $this->get_prop( 'reference', $context );
 	}
 
 	/**
@@ -289,8 +289,8 @@ abstract class Document_BK6 extends Model {
 	 *
 	 * @since  1.1.0
 	 */
-	public function set_order_number( $value ) {
-		$this->set_prop( 'order_number', eac_clean( $value ) );
+	public function set_reference( $value ) {
+		$this->set_prop( 'reference', eac_clean( $value ) );
 	}
 
 	/**
@@ -2021,11 +2021,11 @@ abstract class Document_BK6 extends Model {
 	 * @param bool $by_line_id Whether to get taxes by line id.
 	 *
 	 * @since 1.0.0
-	 * @return DocumentTax[]
+	 * @return DocumentLineTax[]
 	 */
 	public function get_taxes( $id = null, $by_line_id = false ) {
 		if ( $this->exists() && empty( $this->taxes ) ) {
-			$taxes = DocumentTax::query(
+			$taxes = DocumentLineTax::query(
 				array(
 					'document_id' => $this->get_id(),
 					'orderby'     => 'id',
@@ -2059,7 +2059,7 @@ abstract class Document_BK6 extends Model {
 	 * Get merged taxes.
 	 *
 	 * @since 1.0.0
-	 * @return DocumentTax[]
+	 * @return DocumentLineTax[]
 	 */
 	public function get_merged_taxes() {
 		$taxes = array();
@@ -2725,7 +2725,7 @@ abstract class Document_BK6 extends Model {
 	 */
 	public function get_next_doc_number() {
 		global $wpdb;
-		$number = (int) $wpdb->get_var( $wpdb->prepare( "SELECT MAX(REGEXP_REPLACE(document_number, '[^0-9]', '')) FROM {$this->table} WHERE type = %s", $this->get_type() ) );
+		$number = (int) $wpdb->get_var( $wpdb->prepare( "SELECT MAX(REGEXP_REPLACE(number, '[^0-9]', '')) FROM {$this->table} WHERE type = %s", $this->get_type() ) );
 		$number ++;
 		return $number;
 	}

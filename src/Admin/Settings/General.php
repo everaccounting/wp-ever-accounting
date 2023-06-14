@@ -39,8 +39,9 @@ class General extends \EverAccounting\Admin\SettingsTab {
 	 */
 	protected function get_own_sections() {
 		$sections = array(
-			''         => __( 'General', 'wp-ever-accounting' ),
-			'defaults' => __( 'Defaults', 'wp-ever-accounting' ),
+			''           => __( 'General', 'wp-ever-accounting' ),
+			'currencies' => __( 'Currencies', 'wp-ever-accounting' ),
+			//'defaults' => __( 'Defaults', 'wp-ever-accounting' ),
 		);
 
 		return $sections;
@@ -53,8 +54,8 @@ class General extends \EverAccounting\Admin\SettingsTab {
 	 * @return array
 	 */
 	protected function get_settings_for_default_section() {
+
 		return array(
-			// general settings section
 			array(
 				'title' => __( 'General Settings', 'wp-ever-accounting' ),
 				'desc'  => __( 'General details about your business. These will be used in the records you create.', 'wp-ever-accounting' ),
@@ -89,20 +90,29 @@ class General extends \EverAccounting\Admin\SettingsTab {
 				'desc_tip'    => true,
 			),
 			array(
-				'title'       => __( 'Tax Number', 'wp-ever-accounting' ),
-				'desc'        => __( 'The tax number of your business. This will be used in the invoice, bill, and other documents.', 'wp-ever-accounting' ),
-				'id'          => 'eac_business_tax_number',
+				'title'       => __( 'Logo', 'wp-ever-accounting' ),
+				'desc'        => __( 'The logo of your business. This will be used in the invoice, bill, and other documents.', 'wp-ever-accounting' ),
+				'id'          => 'eac_business_logo',
+				'type'        => 'text',
+				'placeholder' => 'e.g. http://example.com/logo.png',
+				'default'     => '',
+				'desc_tip'    => true,
+			),
+			array(
+				'title'       => __( 'VAT Number', 'wp-ever-accounting' ),
+				'desc'        => __( 'The vat number of your business. This will be used in the invoice, bill, and other documents.', 'wp-ever-accounting' ),
+				'id'          => 'eac_business_vat_number',
 				'type'        => 'text',
 				'placeholder' => 'e.g. 123456789',
 				'default'     => '',
 				'desc_tip'    => true,
 			),
 			array(
-				'title'       => __( 'Logo', 'wp-ever-accounting' ),
-				'desc'        => __( 'The logo of your business. This will be used in the invoice, bill, and other documents.', 'wp-ever-accounting' ),
-				'id'          => 'eac_business_logo',
+				'title'       => __( 'Tax Number', 'wp-ever-accounting' ),
+				'desc'        => __( 'The tax number of your business. This will be used in the invoice, bill, and other documents.', 'wp-ever-accounting' ),
+				'id'          => 'eac_business_tax_number',
 				'type'        => 'text',
-				'placeholder' => 'e.g. http://example.com/logo.png',
+				'placeholder' => 'e.g. 123456789',
 				'default'     => '',
 				'desc_tip'    => true,
 			),
@@ -117,11 +127,20 @@ class General extends \EverAccounting\Admin\SettingsTab {
 				'id'    => 'business_address',
 			),
 			array(
-				'title'       => __( 'Street', 'wp-ever-accounting' ),
-				'desc'        => __( 'The street address of your business. This will be used in the invoice, bill, and other documents.', 'wp-ever-accounting' ),
-				'id'          => 'eac_business_street',
+				'title'       => __( 'Address Line 1', 'wp-ever-accounting' ),
+				'desc'        => __( 'The street address of your business.', 'wp-ever-accounting' ),
+				'id'          => 'eac_business_address_1',
 				'type'        => 'text',
 				'placeholder' => 'e.g. 123 Main Street',
+				'default'     => '',
+				'desc_tip'    => true,
+			),
+			array(
+				'title'       => __( 'Address Line 2', 'wp-ever-accounting' ),
+				'desc'        => __( 'An additional, optional address line for your business location.', 'wp-ever-accounting' ),
+				'id'          => 'eac_business_address_2',
+				'type'        => 'text',
+				'placeholder' => 'e.g. Suite 100',
 				'default'     => '',
 				'desc_tip'    => true,
 			),
@@ -155,9 +174,10 @@ class General extends \EverAccounting\Admin\SettingsTab {
 			array(
 				'title'       => __( 'Country', 'wp-ever-accounting' ),
 				'desc'        => __( 'The country in which your business is located.', 'wp-ever-accounting' ),
-				'id'          => 'eac_company_country',
+				'id'          => 'eac_business_country',
 				'type'        => 'select',
 				'options'     => eac_get_countries(),
+				'class'       => 'eac-select2',
 				'default'     => 'US',
 				'placeholder' => __( 'Select a country&hellip;', 'wp-ever-accounting' ),
 				'desc_tip'    => true,
@@ -167,18 +187,84 @@ class General extends \EverAccounting\Admin\SettingsTab {
 				'id'   => 'business_address',
 			),
 			array(
-				'title' => __( 'Other Settings', 'wp-ever-accounting' ),
-				'desc'  => __( 'Company specific other settings.', 'wp-ever-accounting' ),
+				'title' => __( 'Currency options', 'wp-ever-accounting' ),
 				'type'  => 'title',
-				'id'    => 'other_settings',
+				'desc'  => __( 'The following options affect how currency is displayed.', 'wp-ever-accounting' ),
+				'id'    => 'currency_options',
+			),
+			// enable disable multi currency.
+			array(
+				'title'   => __( 'Multi Currency', 'wp-ever-accounting' ),
+				'id'      => 'eac_multi_currency',
+				'type'    => 'checkbox',
+				'default' => 'no',
+				'desc'    => __( 'Enabling this will allow you to record transactions in multiple currencies.', 'wp-ever-accounting' ),
 			),
 			array(
 				'title'    => __( 'Base Currency', 'wp-ever-accounting' ),
 				'id'       => 'eac_base_currency',
 				'type'     => 'currency',
 				'default'  => 'USD',
+				'class'    => 'eac-select2',
+				'disabled' => ! empty( eac_get_transactions() ),
+				'desc_tip' => __( 'Base currency can not be changed once you have recorded any transaction.', 'wp-ever-accounting' ),
+			),
+			array(
+				'title'    => __( 'Currency position', 'wp-ever-accounting' ),
+				'desc'     => __( 'This controls the position of the currency symbol.', 'wp-ever-accounting' ),
+				'id'       => 'eac_currency_position',
+				'default'  => 'before',
+				'type'     => 'select',
+				'options'  => array(
+					'before' => __( 'Before - $10', 'wp-ever-accounting' ),
+					'after'  => __( 'After - 10$', 'wp-ever-accounting' ),
+				),
 				'desc_tip' => true,
-				'desc'     => __( 'Overview, and Reports will be shown in this currency. You can change the currency for each invoice, bill, and other records.', 'wp-ever-accounting' ),
+			),
+
+			array(
+				'title'    => __( 'Thousand separator', 'wp-ever-accounting' ),
+				'desc'     => __( 'This sets the thousand separator of displayed prices.', 'wp-ever-accounting' ),
+				'id'       => 'eac_currency_thousand_separator',
+				'css'      => 'width:50px;',
+				'default'  => ',',
+				'type'     => 'text',
+				'desc_tip' => true,
+			),
+
+			array(
+				'title'    => __( 'Decimal separator', 'wp-ever-accounting' ),
+				'desc'     => __( 'This sets the decimal separator of displayed prices.', 'wp-ever-accounting' ),
+				'id'       => 'eac_currency_decimal_separator',
+				'css'      => 'width:50px;',
+				'default'  => '.',
+				'type'     => 'text',
+				'desc_tip' => true,
+			),
+
+			array(
+				'title'             => __( 'Number of decimals', 'wp-ever-accounting' ),
+				'desc'              => __( 'This sets the number of decimal points shown in displayed prices.', 'wp-ever-accounting' ),
+				'id'                => 'eac_currency_precision',
+				'css'               => 'width:50px;',
+				'default'           => '2',
+				'desc_tip'          => true,
+				'type'              => 'number',
+				'custom_attributes' => array(
+					'min'  => 0,
+					'step' => 1,
+				),
+			),
+
+			array(
+				'type' => 'sectionend',
+				'id'   => 'currency_options',
+			),
+			array(
+				'title' => __( 'Other Settings', 'wp-ever-accounting' ),
+				'desc'  => __( 'Company specific other settings.', 'wp-ever-accounting' ),
+				'type'  => 'title',
+				'id'    => 'other_settings',
 			),
 			array(
 				'title'       => __( 'Financial Year Start', 'wp-ever-accounting' ),
@@ -188,13 +274,6 @@ class General extends \EverAccounting\Admin\SettingsTab {
 				'placeholder' => 'e.g. 01-01',
 				'default'     => '01-01',
 				'desc_tip'    => true,
-			),
-			array(
-				'title'   => __( 'Enable Taxes', 'wp-ever-accounting' ),
-				'desc'    => __( 'Enable tax rates and calculations.', 'wp-ever-accounting' ),
-				'id'      => 'eac_enabled_tax',
-				'type'    => 'checkbox',
-				'default' => 'no',
 			),
 			array(
 				'type' => 'sectionend',
@@ -210,79 +289,142 @@ class General extends \EverAccounting\Admin\SettingsTab {
 	 * @return array
 	 */
 	public function get_settings_for_defaults_section() {
+		$payment_accounts   = eac_get_accounts( array( 'include' => get_option( 'eac_default_payment_account' ) ) );
+		$expense_accounts   = eac_get_accounts( array( 'include' => get_option( 'eac_default_expense_account' ) ) );
+		$payment_categories = eac_get_categories( array( 'include' => get_option( 'eac_default_payment_category' ) ) );
+		$expense_categories = eac_get_categories( array( 'include' => get_option( 'eac_default_expense_category' ) ) );
+
 		return array(
+			// Sales defaults section.
 			array(
-				'title' => __( 'Defaults settings', 'wp-ever-accounting' ),
-				'desc'  => __( 'These defaults will be used in particular cases.e.g. when creating a new invoice, bill, etc.', 'wp-ever-accounting' ),
+				'title' => __( 'Sales Defaults', 'wp-ever-accounting' ),
 				'type'  => 'title',
-				'id'    => 'defaults',
+				'desc'  => __( 'Default settings for sales.', 'wp-ever-accounting' ),
+				'id'    => 'sales_defaults',
 			),
+			// Default payment account.
 			array(
 				'title'       => __( 'Default Payment Account', 'wp-ever-accounting' ),
-				'desc'        => __( 'The default account to be used in the payment.', 'wp-ever-accounting' ),
-				'id'          => 'eac_payment_account',
+				'desc'        => __( 'The default account to which the payments will be credited.', 'wp-ever-accounting' ),
+				'id'          => 'eac_default_payment_account',
+				'type'        => 'select',
+				'options'     => wp_list_pluck( $payment_accounts, 'formatted_name', 'id' ),
+				'default'     => '',
 				'placeholder' => __( 'Select an account&hellip;', 'wp-ever-accounting' ),
-				'type'        => 'account',
 				'desc_tip'    => true,
-			),
-			array(
-				'title'       => __( 'Default Expense Account', 'wp-ever-accounting' ),
-				'desc'        => __( 'The default account to be used in the expense.', 'wp-ever-accounting' ),
-				'id'          => 'eac_expense_account',
-				'placeholder' => __( 'Select an account&hellip;', 'wp-ever-accounting' ),
-				'type'        => 'account',
-				'desc_tip'    => true,
-			),
-			array(
-				'title'    => __( 'Payment Category', 'wp-ever-accounting' ),
-				'desc'     => __( 'The default income category to be used in the payment.', 'wp-ever-accounting' ),
-				'id'       => 'eac_payment_category',
-				'type'     => 'category',
-				'subtype'  => 'payment',
-				'desc_tip' => true,
-			),
-			array(
-				'title'    => __( 'Expense Category', 'wp-ever-accounting' ),
-				'desc'     => __( 'The default expense category to be used in the expense.', 'wp-ever-accounting' ),
-				'id'       => 'eac_expense_category',
-				'type'     => 'category',
-				'subtype'  => 'expense',
-				'desc_tip' => true,
-			),
-			array(
-				'title'    => __( 'Payment Method', 'wp-ever-accounting' ),
-				'desc'     => __( 'The default payment method to be in the payment.', 'wp-ever-accounting' ),
-				'id'       => 'eac_payment_method',
-				'type'     => 'select',
-				'options'  => eac_get_payment_methods(),
-				'default'  => '',
-				'desc_tip' => true,
-			),
-			array(
-				'title'    => __( 'Expense Method', 'wp-ever-accounting' ),
-				'desc'     => __( 'The default expense method to be used in the expense.', 'wp-ever-accounting' ),
-				'id'       => 'eac_expense_method',
-				'type'     => 'select',
-				'options'  => eac_get_payment_methods(),
-				'default'  => '',
-				'desc_tip' => true,
-			),
-			array(
-				'title'    => __( 'Records per page', 'wp-ever-accounting' ),
-				'desc'     => __( 'The number of records to be displayed per page in the list table.', 'wp-ever-accounting' ),
-				'id'       => 'eac_records_per_page',
-				'type'     => 'number',
-				'default'  => '20',
-				'desc_tip' => true,
-				'attrs'    => array(
-					'min'  => 1,
-					'step' => 1,
-					'max'  => '100',
+				'class'       => 'eac_select2',
+				'attrs'       => array(
+					'data-action' => 'eac_json_search',
+					'data-type'   => 'account',
 				),
 			),
+			// Default payment method.
+			array(
+				'title'       => __( 'Default Payment Method', 'wp-ever-accounting' ),
+				'desc'        => __( 'The default payment method for sales.', 'wp-ever-accounting' ),
+				'id'          => 'eac_default_payment_method',
+				'type'        => 'select',
+				'options'     => eac_get_payment_methods(),
+				'default'     => '',
+				'placeholder' => __( 'Select a payment method&hellip;', 'wp-ever-accounting' ),
+				'desc_tip'    => true,
+			),
+			// Default category.
+			array(
+				'title'       => __( 'Default Category', 'wp-ever-accounting' ),
+				'desc'        => __( 'The default category for sales.', 'wp-ever-accounting' ),
+				'id'          => 'eac_default_category',
+				'type'        => 'select',
+				'default'     => '',
+				'options'     => wp_list_pluck( $payment_categories, 'formatted_name', 'id' ),
+				'placeholder' => __( 'Select a category&hellip;', 'wp-ever-accounting' ),
+				'desc_tip'    => true,
+				'class'       => 'eac_select2',
+				'attrs'       => array(
+					'data-action' => 'eac_json_search',
+					'data-type'   => 'payment_category',
+				),
+			),
+			// end of sales defaults section.
 			array(
 				'type' => 'sectionend',
-				'id'   => 'defaults',
+				'id'   => 'sales_defaults',
+			),
+			// Purchase defaults section.
+			array(
+				'title' => __( 'Purchase Defaults', 'wp-ever-accounting' ),
+				'type'  => 'title',
+				'desc'  => __( 'Default settings for purchases.', 'wp-ever-accounting' ),
+				'id'    => 'purchase_defaults',
+			),
+			// Default payment account.
+			array(
+				'title'       => __( 'Default expense Account', 'wp-ever-accounting' ),
+				'desc'        => __( 'The default account to which the expense will be debited.', 'wp-ever-accounting' ),
+				'id'          => 'eac_default_expense_account',
+				'type'        => 'select',
+				'options'     => wp_list_pluck( $expense_accounts, 'formatted_name', 'id' ),
+				'default'     => '',
+				'placeholder' => __( 'Select an account&hellip;', 'wp-ever-accounting' ),
+				'desc_tip'    => true,
+				'class'       => 'eac_select2',
+				'attrs'       => array(
+					'data-action' => 'eac_json_search',
+					'data-type'   => 'account',
+				),
+			),
+			// Default payment method.
+			array(
+				'title'       => __( 'Default Payment Method', 'wp-ever-accounting' ),
+				'desc'        => __( 'The default payment method for purchases.', 'wp-ever-accounting' ),
+				'id'          => 'eac_default_expense_method',
+				'type'        => 'select',
+				'options'     => eac_get_payment_methods(),
+				'default'     => '',
+				'placeholder' => __( 'Select a payment method&hellip;', 'wp-ever-accounting' ),
+				'desc_tip'    => true,
+			),
+			// Default category.
+			array(
+				'title'       => __( 'Default Category', 'wp-ever-accounting' ),
+				'desc'        => __( 'The default category for purchases.', 'wp-ever-accounting' ),
+				'id'          => 'eac_default_expense_category',
+				'type'        => 'select',
+				'options'     => wp_list_pluck( $expense_categories, 'formatted_name', 'id' ),
+				'placeholder' => __( 'Select a category&hellip;', 'wp-ever-accounting' ),
+				'desc_tip'    => true,
+				'class'       => 'eac_select2',
+				'attrs'       => array(
+					'data-action' => 'eac_json_search',
+					'data-type'   => 'expense_category',
+				),
+			),
+			// end of purchase defaults section.
+			array(
+				'type' => 'sectionend',
+				'id'   => 'purchase_defaults',
+			),
+			// Misc defaults section.
+			array(
+				'title' => __( 'Misc Defaults', 'wp-ever-accounting' ),
+				'type'  => 'title',
+				'desc'  => __( 'Miscellaneous default settings.', 'wp-ever-accounting' ),
+				'id'    => 'misc_defaults',
+			),
+			// Record per page.
+			array(
+				'title'       => __( 'Records per page', 'wp-ever-accounting' ),
+				'desc'        => __( 'The number of records to show per page.', 'wp-ever-accounting' ),
+				'id'          => 'eac_records_per_page',
+				'type'        => 'number',
+				'default'     => 20,
+				'placeholder' => __( 'Enter a number&hellip;', 'wp-ever-accounting' ),
+				'desc_tip'    => true,
+			),
+			// end of misc defaults section.
+			array(
+				'type' => 'sectionend',
+				'id'   => 'misc_defaults',
 			),
 		);
 	}

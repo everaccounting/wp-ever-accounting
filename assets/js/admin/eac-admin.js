@@ -1,230 +1,379 @@
+/* global eac_admin_vars */
 (function ($, window, document, undefined) {
 	'use strict';
-
 	var eac_admin = {
-		init: function () {
-			$(document)
-				.on('click', '.eac-dropdown__button', this.toggle_dropdown)
-				.on('click', '.del', this.handle_delete)
-				.on('block', 'form.eac-form', this.block_form)
-				.on('unblock', 'form.eac-form', this.unblock_form)
-				.on('submit', 'form.eac-form', this.submit_form)
-				.on('change', '.eac-form [name="is_taxable"]', this.toggle_tax_fields)
-				.on('eac_drawer_ready', this.triggerEvents)
-				.on('init-select2', this.init_select2)
-				.on('init-datepicker', this.init_datepicker)
-				.on('init-price-input', this.init_price_input)
-				.on('init-tooltip', this.init_tooltip)
-				.on('ready', this.triggerEvents)
+		get_conversion_rate: function (currency) {
+			var base = eac_admin_vars.base_currency;
+			var data = eac_admin_vars.currencies[currency] || eac_admin_vars.currencies[base];
+			return data.rate;
 		},
-		triggerEvents: function () {
-			// Events that need to be bound on page load or after ajax.
-			$(document)
-				.trigger('init-select2')
-				.trigger('init-datepicker')
-				.trigger('init-price-input')
-				.trigger('init-tooltip');
-
-			console.log('bindEvents');
+		get_currency_data: function (currency) {
+			var base = eac_admin_vars.base_currency;
+			return eac_admin_vars.currencies[currency] || eac_admin_vars.currencies[base];
 		},
-		init_select2: function () {
-			$('.eac-select2,select[data-ajax-type]').each(function () {
-				var $el = $(this);
-				var options = {
-					allowClear: $el.data('allow_clear') && !$el.prop('multiple') || true,
-					placeholder: $el.data('placeholder') || '',
-					minimumInputLength: $el.data('minimum_input_length') ? $el.data('minimum_input_length') : 0,
-					minimumResultsForSearch: 10,
-				}
-				// if the select2 is within a drawer, then set the parent to the drawer.
-				if ($el.closest('.eac-form').length) {
-					this.options.dropdownParent = $el.closest('.eac-form');
-				}
+		input_mask: function ($el, currency) {
+			var base = eac_admin_vars.base_currency;
+			var data = eac_admin_vars.currencies[currency] || eac_admin_vars.currencies[base];
+			var decimal_separator = data.decimal_separator;
+			var thousand_separator = data.thousand_separator;
+			var precision = data.precision;
+			var position = data.position;
+			var symbol = data.symbol;
 
-				// If data-eac-select2 is set, then we will add ajax options.
-				if ($el.data('ajax-type')) {
-					options.ajax = {
-						url: eac_admin_vars.ajax_url,
-						dataType: 'json',
-						method: 'POST',
-						delay: 250,
-						data: function (params) {
-							return {
-								action: 'eac_json_search',
-								type: $(this).data('ajax-type'),
-								_wpnonce: eac_admin_vars.json_search,
-								term: params.term,
-								page: params.page,
-							};
-						},
-						processResults: function (data, params) {
-							params.page = params.page || 1;
-							return data;
-						},
-						cache: true,
-					};
-				}
-
-
-				// init the select2.
-				return $el.select2(options);
+			$el.inputmask('decimal', {
+				alias: 'numeric',
+				groupSeparator: thousand_separator,
+				autoGroup: true,
+				digits: precision,
+				radixPoint: decimal_separator,
+				digitsOptional: false,
+				allowMinus: true,
+				rightAlign: false,
+				prefix: position === 'before' ? symbol : '',
+				suffix: position === 'after' ? symbol : '',
 			});
 		},
-		init_datepicker: function () {
-			$('.eac-field-date').datepicker({
-				dateFormat: 'yy-mm-dd',
-				changeMonth: true,
-				changeYear: true,
-				yearRange: '-100:+0',
-			});
-			$('#eac_financial_year_start').datepicker({
-				dateFormat: 'mm-dd',
-				changeMonth: true,
-				changeYear: false,
-				yearRange: '-100:+0',
-			});
-		},
-		init_price_input: function () {
-			var base_currency = eac_admin_vars.base_currency || 'USD';
-			var currencies = eac_admin_vars.currencies || {};
-			$('form.eac-form').each(function () {
-				var $form = $(this);
-				var $currency_input = $form.find('.eac-select-currency');
-				var $amount_input = $form.find('.eac-field-money');
-				var $rate_input = $form.find('input[name="currency_rate"]');
-				var currency_code = $currency_input.val() || base_currency;
-				var currency_data = currencies[currency_code] || {};
-				var currency_rate = currency_data['rate'] || 1;
-				// If the currency input field value is base currency, then hide the rate input otherwise show it.
-				// Based on the currency input field value, set the rate input value.
-				// Based on the currency input field format, set the amount input format.
-
-				// If rate input is exists, then set the rate input value.
-				if ($rate_input.length) {
-					$rate_input.val(currency_rate);
-					if (currency_code === base_currency) {
-						$rate_input.closest('.eac-field').hide();
-					} else {
-						$rate_input.closest('.eac-field').show();
-					}
-				}
-
-				// If amount input is exists, then set the amount input format.
-				if ($amount_input.length) {
-					$amount_input.inputmask('decimal', {
-						alias: 'numeric',
-						groupSeparator: currency_data.thousand_sep,
-						autoGroup: true,
-						digits: currency_data.precision,
-						radixPoint: currency_data.decimal_sep,
-						digitsOptional: false,
-						allowMinus: true,
-						rightAlign: false,
-						prefix: currency_data.position === 'before' ? currency_data.symbol : '',
-						suffix: currency_data.position === 'after' ? currency_data.symbol : '',
-					});
-				}
-
-				// If there is any currency field, then we will update the price input mask when the currency field value changed
-				if ($currency_input.length) {
-					$currency_input.on('change', function () {
-						$(document).trigger('init-price-input');
-					});
-				}
-			});
-
-		},
-		init_tooltip: function () {
-			$('.eac-tooltip').tooltip({
-				tooltipClass: 'eac-ui-tooltip',
-				position: {
-					my: 'center top',
-					at: 'center bottom+10',
-					collision: 'flipfit',
-				},
-				hide: {
-					duration: 200,
-				},
-				show: {
-					duration: 200,
-				},
-			});
-		},
-		handle_delete: function () {
-			// confirmation alert.
-			if (!confirm(eac_admin_vars.i18n.delete_confirmation)) {
-				e.preventDefault();
-				return false;
-			}
-		},
-		block_form: function () {
-			var $form = $(this);
-			var $submit = $('[form="' + $form.attr('id') + '"]');
-			$submit.attr('disabled', 'disabled');
-			$form.block({
-				message: null,
-				overlayCSS: {
-					background: '#fff',
-					opacity: 0.6,
-				},
-			});
-		},
-		unblock_form: function () {
-			var $form = $(this);
+		block_form: function ($form) {
 			var $submit = $('[form="' + $form.attr('id') + '"]');
 			$submit.removeAttr('disabled');
 			$form.unblock();
 		},
-		submit_form: function (e) {
-			e.preventDefault();
-			var $form = $(this);
-			var data = $form.serializeAssoc();
+		unblock_form: function ($form) {
 			var $submit = $('[form="' + $form.attr('id') + '"]');
-			// if submit button is disabled, do nothing.
-			if ($submit.is(':disabled')) {
+			$submit.removeAttr('disabled');
+			$form.unblock();
+		},
+		redirect: function (url) {
+			if ('object' === typeof url) {
+				if ('data' in url) {
+					url = url.data;
+				}
+
+				if (!('redirect' in url)) {
+					return;
+				}
+				url = url.redirect;
+			}
+
+			if (!url) {
 				return;
 			}
-
-			// block the form.
-			$form.trigger('block');
-
-			$.post(eac_admin_vars.ajax_url, data, function (json) {
-				if (json.success) {
-					if ($form.closest('.eac-drawer').length) {
-						$form.closest('.eac-drawer').data('eac_drawer').close();
-					} else {
-						$.eac_redirect(json)
-					}
-				}
-			}).always(function (json) {
-				$form.trigger('unblock');
-				$.eac_notification(json);
-			});
-		},
-		toggle_dropdown: function () {
-			e.preventDefault();
-			e.stopPropagation();
-			$(this).closest('.eac-dropdown').toggleClass('is--open');
-
-			$(document).on('click', function () {
-				$('.eac-dropdown').removeClass('is--open');
-			});
-		},
-		toggle_tax_fields: function () {
-			var $this = $(this);
-			var $form = $this.closest('.eac-form');
-			var $tax_fields = $form.find('.eac-field--tax_ids');
-			if ($this.val() === 'yes') {
-				$tax_fields.show();
-			} else {
-				$tax_fields.hide();
+			url = url.trim();
+			if (!url) {
+				return false;
 			}
+			var ua = navigator.userAgent.toLowerCase(),
+				isIE = ua.indexOf('msie') !== -1,
+				version = parseInt(ua.substr(4, 2), 10);
+
+			// Internet Explorer 8 and lower
+			if (isIE && version < 9) {
+				var link = document.createElement('a');
+				link.href = url;
+				document.body.appendChild(link);
+				return link.click();
+			}
+			// All other browsers can use the standard window.location.href (they don't lose HTTP_REFERER like Internet Explorer 8 & lower does)
+			window.location.href = url;
+		},
+		show_notification: function (message, type, options) {
+			var defaults = {
+				appendTo: 'body',
+				stack: false,
+				customClass: false,
+				type: 'success',
+				offset: {
+					from: 'bottom',
+					amount: 50,
+				},
+				align: 'right',
+				minWidth: 250,
+				maxWidth: 450,
+				delay: 4000,
+				spacing: 10,
+			};
+			if ('object' === typeof message) {
+				if ('data' in message) {
+					if (message.success && true === message.success) {
+						type = 'success';
+					} else {
+						type = 'error';
+					}
+					message = message.data;
+				}
+
+				if (!('message' in message)) {
+					return;
+				}
+
+				message = message.message;
+			}
+			if (!message) {
+				return;
+			}
+			message = message.trim();
+			if (!message) {
+				return false;
+			}
+			options = $.extend(
+				true,
+				{},
+				defaults,
+				options
+			);
+
+			var html =
+				'<div class="eac-notification notice notice-' +
+				(type ? type : options.type) +
+				' ' +
+				(options.customClass ? options.customClass : '') +
+				'">';
+			html += message;
+			html += '</div>';
+
+			var offsetSum = options.offset.amount;
+			if (!options.stack) {
+				$('.eac-notification').each(function () {
+					return (offsetSum = Math.max(
+						offsetSum,
+						parseInt($(this).css(options.offset.from)) +
+						this.offsetHeight +
+						options.spacing
+					));
+				});
+			} else {
+				$(options.appendTo)
+					.find('.eac-notification')
+					.each(function () {
+						return (offsetSum = Math.max(
+							offsetSum,
+							parseInt($(this).css(options.offset.from)) +
+							this.offsetHeight +
+							options.spacing
+						));
+					});
+			}
+
+			var css = {
+				position: options.appendTo === 'body' ? 'fixed' : 'absolute',
+				margin: 0,
+				'z-index': '9999',
+				display: 'none',
+				'min-width': options.minWidth,
+				'max-width': options.maxWidth,
+			};
+
+			css[options.offset.from] = offsetSum + 'px';
+
+			var $notice = $(html).css(css).appendTo(options.appendTo);
+
+			switch (options.align) {
+				case 'center':
+					$notice.css({
+						left: '50%',
+						'margin-left': '-' + $notice.outerWidth() / 2 + 'px',
+					});
+					break;
+				case 'left':
+					$notice.css('left', '20px');
+					break;
+				default:
+					$notice.css('right', '20px');
+			}
+
+			if ($notice.fadeIn) {
+				$notice.fadeIn();
+			} else {
+				$notice.css({display: 'block', opacity: 1});
+			}
+
+			function removeAlert() {
+				$.eac_notification.remove($notice);
+			}
+
+			if (options.delay > 0) {
+				setTimeout(removeAlert, options.delay);
+			}
+
+			$notice.click(removeAlert);
+
+			return $notice;
 		},
 	};
 
-	window.eac_admin = eac_admin;
+	// Init select2.
+	$(document).on('init-select2', function () {
+		$(':input.eac-select2').filter(':not(.enhanced)').each(function () {
+			var select2_args = {
+				allowClear: $(this).data('allow_clear') && !$(this).prop('multiple') || true,
+				placeholder: $(this).data('placeholder') || $(this).attr('placeholder') || '',
+				minimumInputLength: $(this).data('minimum_input_length') ? $(this).data('minimum_input_length') : 0,
+				ajax: {
+					url: eac_admin_vars.ajax_url,
+					dataType: 'json',
+					delay: 250,
+					method: 'POST',
+					data: function (params) {
+						return {
+							term: params.term,
+							action: $(this).data('action'),
+							type: $(this).data('type'),
+							_wpnonce: eac_admin_vars.search_nonce,
+							exclude: $(this).data('exclude'),
+							include: $(this).data('include'),
+							limit: $(this).data('limit'),
+						};
+					},
+					processResults: function (data) {
+						data.page = data.page || 1;
+						return data;
+					},
+					cache: true
+				}
+			};
+			// if data action is set then use ajax.
+			if (!$(this).data('action')) {
+				delete select2_args.ajax;
+			}
 
-	eac_admin.init();
+			// if the select2 is within a drawer, then set the parent to the drawer.
+			if ($(this).closest('.eac-form').length) {
+				select2_args.dropdownParent = $(this).closest('.eac-form');
+			}
+			$(this).select2(select2_args).addClass('enhanced');
+		});
+	});
 
+	// Init currency.
+	$(document).on('init-form', function () {
+		// Account form.
+		$('.eac-ajax-form :input[name="currency"]').on('change', function () {
+			var currency = $(this).val();
+			var $form = $(this).closest('form');
+			var $conversion_rate = $(':input[name="conversion_rate"]', $form);
+			eac_admin.input_mask($(':input[name="opening_balance"]', $form), currency);
+			eac_admin.input_mask($(':input[name="amount"]', $form), currency);
+			eac_admin.input_mask($(':input[name="price"]', $form), currency);
+			if ( currency === eac_admin_vars.base_currency ) {
+				$conversion_rate.prop('readonly', true);
+				$conversion_rate.closest('.eac-form-field').addClass('display-none');
+				$conversion_rate.val(1);
+				$('.eac-form-field__addon:last-child', $conversion_rate.closest('.eac-form-field')).text(eac_admin_vars.base_currency);
+			}else {
+				$conversion_rate.prop('readonly', false);
+				$conversion_rate.closest('.eac-form-field').removeClass('display-none');
+				$conversion_rate.val(eac_admin.get_conversion_rate(currency));
+				console.log($('.eac-form-field__addon:last-child', $conversion_rate).text());
+				$('.eac-form-field__addon:last-child', $conversion_rate.closest('.eac-form-field')).text(currency);
+			}
+		}).trigger('change');
+		$('.eac-ajax-form :input[name="from_account_id"], .eac-ajax-form :input[name="account_id"]').on('change', function () {
+			var $form = $(this).closest('form');
+			var account_id = $(this).val();
+			if (!account_id) {
+				$(':input[name="currency"]', $form).val(eac_admin_vars.base_currency).trigger('change');
+				return false;
+			}
+			eac_admin.block_form($form);
+			var data = {
+				action: 'eac_get_account',
+				account_id: account_id,
+				_wpnonce: eac_admin_vars.get_account_nonce,
+			};
+			$.post(eac_admin_vars.ajax_url, data, function (response) {
+				console.log(response);
+				if (response.success) {
+					var currency = response.data.currency;
+					$(':input[name="currency"]', $form).val(currency).trigger('change');
+				}
+			}).always(function () {
+				eac_admin.unblock_form($form);
+			});
+		}).trigger('change');
+	});
+
+	// Init datepicker.
+	$(document).on('init-datepicker', function () {
+		$(':input.eac-datepicker').filter(':not(.enhanced)').each(function () {
+			var datepicker_args = {
+				dateFormat: 'yy-mm-dd',
+				changeMonth: true,
+				changeYear: true,
+				yearRange: '-100:+0',
+			};
+			$(this).datepicker(datepicker_args).addClass('enhanced');
+		});
+		$('#eac_financial_year_start').datepicker({
+			dateFormat: 'mm-dd',
+			changeMonth: true,
+			changeYear: false,
+			yearRange: '-100:+0',
+		});
+	});
+
+	// Init tooltip.
+	$(document).on('init-tooltip', function () {
+		$('.eac-tooltip').tooltip({
+			tooltipClass: 'eac-ui-tooltip',
+			position: {
+				my: 'center top',
+				at: 'center bottom+10',
+				collision: 'flipfit',
+			},
+			hide: {
+				duration: 200,
+			},
+			show: {
+				duration: 200,
+			},
+		});
+	});
+
+	// Init drawer.
+	$(document).on('eac-drawer-ready', function () {
+		eac_init();
+	});
+
+	// Submit form.
+	$(document).on('submit', '.eac-ajax-form', function (e) {
+		e.preventDefault();
+		var $form = $(this);
+		var data = $form.serializeAssoc();
+		var $submit = $('[form="' + $form.attr('id') + '"]');
+		// if submit button is disabled, do nothing.
+		if ($submit.is(':disabled')) {
+			return;
+		}
+
+		// block the form.
+		eac_admin.block_form($form);
+
+		$.post(eac_admin_vars.ajax_url, data, function (json) {
+			if (json.success) {
+				if ($form.closest('.eac-drawer').length) {
+					$form.closest('.eac-drawer').data('eac_drawer').close();
+				} else {
+					eac_admin.redirect(json);
+				}
+			}
+		}).always(function (json) {
+			eac_admin.unblock_form($form);
+			eac_admin.show_notification(json);
+		});
+	});
+
+	function eac_init() {
+		$(document).trigger('init-select2');
+		$(document).trigger('init-datepicker');
+		$(document).trigger('init-tooltip');
+		$(document).trigger('init-form');
+	}
+
+	// Trigger events.
+	$(document).ready(function () {
+		eac_init();
+	});
 
 }(jQuery, window, document));
+
+

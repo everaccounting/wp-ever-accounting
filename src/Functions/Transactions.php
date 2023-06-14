@@ -9,7 +9,7 @@
  */
 
 use EverAccounting\Models\Expense;
-use EverAccounting\Models\Income;
+use EverAccounting\Models\Payment;
 use EverAccounting\Models\Transfer;
 use EverAccounting\Models\Transaction;
 
@@ -23,7 +23,7 @@ defined( 'ABSPATH' ) || exit;
  */
 function eac_get_transaction_types() {
 	$types = array(
-		'income' => esc_html__( 'Income', 'wp-ever-accounting' ),
+		'payment' => esc_html__( 'Payment', 'wp-ever-accounting' ),
 		'expense' => esc_html__( 'Expense', 'wp-ever-accounting' ),
 	);
 
@@ -49,62 +49,62 @@ function eac_get_transaction_statuses() {
 }
 
 /**
- * Get income.
+ * Get payment.
  *
- * @param mixed $income Payment object or ID.
+ * @param mixed $payment Payment object or ID.
  *
  * @since 1.1.6
- * @return Income|null
+ * @return Payment|null
  */
-function eac_get_income( $income ) {
-	return Income::get( $income );
+function eac_get_payment( $payment ) {
+	return Payment::get( $payment );
 }
 
 /**
- *  Create new income.
+ *  Create new payment.
  *
- *  Returns a new income object on success.
+ *  Returns a new payment object on success.
  *
- * @param array $data Income data.
+ * @param array $data payment data.
  * @param bool  $wp_error Optional. Whether to return a WP_Error on failure. Default false.
  *
  * @since 1.1.0
- * @return Income|false|WP_Error Income object on success, false or WP_Error on failure.
+ * @return Payment|false|WP_Error payment object on success, false or WP_Error on failure.
  */
-function eac_insert_income( $data, $wp_error = true ) {
-	return Income::insert( $data, $wp_error );
+function eac_insert_payment( $data, $wp_error = true ) {
+	return Payment::insert( $data, $wp_error );
 }
 
 /**
- * Delete an income.
+ * Delete an payment.
  *
- * @param int $income_id Payment ID.
+ * @param int $payment_id Payment ID.
  *
  * @since 1.1.0
  *
  * @return bool
  */
-function eac_delete_income( $income_id ) {
-	$income = eac_get_income( $income_id );
+function eac_delete_payment( $payment_id ) {
+	$payment = eac_get_payment( $payment_id );
 
-	if ( ! $income ) {
+	if ( ! $payment ) {
 		return false;
 	}
 
-	return $income->delete();
+	return $payment->delete();
 }
 
 /**
- * Get incomes.
+ * Get payments.
  *
  * @param array $args Query arguments.
  * @param bool  $count Optional. Whether to return only the total found accounts for the query.
  *
  * @since 1.1.0
  *
- * @return array|int|Income[] Array of income objects, the total found income for the query, or the total found incomes for the query as int when `$count` is true.
+ * @return array|int|Payment[] Array of payment objects, the total found payment for the query, or the total found payments for the query as int when `$count` is true.
  */
-function eac_get_incomes( $args = array(), $count = false ) {
+function eac_get_payments( $args = array(), $count = false ) {
 	$defaults = array(
 		'limit'   => 20,
 		'offset'  => 0,
@@ -116,16 +116,17 @@ function eac_get_incomes( $args = array(), $count = false ) {
 	$args = wp_parse_args( $args, $defaults );
 
 	if ( $count ) {
-		return Income::count( $args );
+		return Payment::count( $args );
 	}
 
-	return Income::query( $args );
+	return Payment::query( $args );
 }
 
 /**
  * Get expense.
  *
  * @param mixed $expesnse Payment object or ID.
+ *
  * @since 1.1.6
  * @return Expense|null
  */
@@ -172,6 +173,7 @@ function eac_delete_expense( $expense_id ) {
  *
  * @param array $args Query arguments.
  * @param bool  $count Optional. Whether to return only the total found accounts for the query.
+ *
  * @since 1.1.0
  *
  * @return array|int|Expense[] Array of expense objects, the total found expense for the query, or the total found expenses for the query as int when `$count` is true.
@@ -226,6 +228,7 @@ function eac_get_transactions( $args = array(), $count = false ) {
  * Get transfer.
  *
  * @param mixed $transfer Transfer object or ID.
+ *
  * @since 1.1.6
  * @return Transfer|null
  */
@@ -296,12 +299,12 @@ function eac_get_transfers( $args = array(), $count = false ) {
 }
 
 /**
- * Get estimated income for a given period.
+ * Get estimated payment for a given period.
+ *
+ * @param string $period The time period to calculate estimated payment for. Accepts 'month', 'quarter', or 'year'.
+ * @param string $type The type of transaction to calculate estimated payment for. Accepts 'payment' or 'refund'.
  *
  * @since 1.1.0
- *
- * @param string $period The time period to calculate estimated income for. Accepts 'month', 'quarter', or 'year'.
- * @param string $type The type of transaction to calculate estimated income for. Accepts 'income' or 'refund'.
  *
  * @return float
  */
@@ -345,8 +348,6 @@ function eac_get_estimated_transaction_total( $period = 'month', $type = 'paymen
 				$date_format
 			)
 		);
-
-		var_dump( $result );
 
 		// Calculate the average amount of transactions per period.
 		$amounts = wp_list_pluck( $result, 'total_amount' );

@@ -215,7 +215,7 @@ $tax_enabled = $document->is_calculating_tax();
 								'label'       => __( 'Invoice Number', 'wp-ever-accounting' ),
 								'type'        => 'text',
 								'placeholder' => __( '123456789', 'wp-ever-accounting' ),
-								// 'value'       => $document->exists() ? $document->get_document_number( 'edit' ) : $document->get_next_document_number(),
+								// 'value'       => $document->exists() ? $document->get_number( 'edit' ) : $document->get_next_number(),
 								'readonly'    => true,
 								'required'    => true,
 								'disabled'    => ! $document->is_editable(),
@@ -236,11 +236,11 @@ $tax_enabled = $document->is_calculating_tax();
 						);
 						eac_input_field(
 							array(
-								'name'        => 'order_number',
+								'name'        => 'reference',
 								'label'       => __( 'Order Number', 'wp-ever-accounting' ),
 								'type'        => 'text',
 								'placeholder' => __( '123456789', 'wp-ever-accounting' ),
-								'value'       => $document->get_order_number( 'edit' ),
+								'value'       => $document->get_reference( 'edit' ),
 								'class'       => 'eac-col-6',
 							)
 						);
@@ -307,8 +307,8 @@ $tax_enabled = $document->is_calculating_tax();
 										eac_input_field(
 											array(
 												'type'  => 'hidden',
-												'name'  => sprintf( 'items[%s][product_id]', $key ),
-												'value' => $item->get_product_id(),
+												'name'  => sprintf( 'items[%s][item_id]', $key ),
+												'value' => $item->get_item_id(),
 											)
 										);
 										break;
@@ -355,10 +355,10 @@ $tax_enabled = $document->is_calculating_tax();
 				<tr class="new-line-item-row">
 					<td class="eac-document__line-item">
 						<div class="eac-field__group">
-							<select class="eac-field__select eac-select-product" id="add_line_item" data-eac-select2="product" data-placeholder="<?php esc_attr_e( 'Select Item to Add', 'wp-ever-accounting' ); ?>">
+							<select class="eac-field__select eac-select-item" id="add_line_item" data-eac-select2="item" data-placeholder="<?php esc_attr_e( 'Select Item to Add', 'wp-ever-accounting' ); ?>">
 								<option value=""><?php esc_html_e( 'Select Item', 'wp-ever-accounting' ); ?></option>
 							</select>
-							<a class="button" href="<?php echo esc_url( eac_action_url( 'action=get_html_response&html_type=edit_product' ) ); ?>" title="<?php esc_attr_e( 'Add New Product', 'wp-ever-accounting' ); ?>">
+							<a class="button" href="<?php echo esc_url( eac_action_url( 'action=get_html_response&html_type=edit_item' ) ); ?>" title="<?php esc_attr_e( 'Add New Item', 'wp-ever-accounting' ); ?>">
 								<span class="dashicons dashicons-plus"></span>
 							</a>
 						</div>

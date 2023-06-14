@@ -27,15 +27,10 @@ class Customer extends Contact {
 	 * @since 1.0.0
 	 */
 	public function __construct( $data = 0 ) {
-		$args            = array(
-			'type'          => 'customer',
-			'currency_code' => eac_get_base_currency(),
-			'country'       => get_option( 'eac_business_country' ),
-		);
-		$this->core_data = array_merge( $this->core_data, $args );
+		$this->core_data['type'] = self::OBJECT_TYPE;
 		parent::__construct( $data );
 		// after reading check if the contact is a customer.
-		if ( $this->exists() && 'customer' !== $this->get_type() ) {
+		if ( $this->exists() && self::OBJECT_TYPE !== $this->get_type() ) {
 			$this->set_id( 0 );
 			$this->set_defaults();
 		}
@@ -111,13 +106,17 @@ class Customer extends Contact {
 		}
 
 		// Currency is required.
-		if ( empty( $this->get_currency_code() ) ) {
+		if ( empty( $this->get_currency() ) ) {
 			return new \WP_Error( 'missing_required_field', __( 'Currency is required.', 'wp-ever-accounting' ) );
 		}
 
 		// Duplicate email.
 		if ( ! empty( $this->get_email() ) ) {
-			$existing = self::get( $this->get_email(), 'email' );
+			$existing = self::get(
+				array(
+					'email' => $this->get_email(),
+				)
+			);
 			if ( $existing && $existing->get_id() !== $this->get_id() && 'customer' === $existing->get_type() ) {
 				return new \WP_Error( 'duplicate_field', __( 'The email address is already in used.', 'wp-ever-accounting' ) );
 			}
@@ -125,8 +124,12 @@ class Customer extends Contact {
 
 		// Duplicate phone number.
 		if ( ! empty( $this->get_phone() ) ) {
-			$existing = self::get( $this->get_phone(), 'phone' );
-			if ( $existing && $existing->get_id() !== $this->get_id() && 'customer' === $existing->get_type() ) {
+			$existing = self::get(
+				array(
+					'phone' => $this->get_phone(),
+				)
+			);
+			if ( $existing && $existing->get_id() !== $this->get_id() && self::OBJECT_TYPE === $existing->get_type() ) {
 				return new \WP_Error( 'duplicate_field', __( 'The phone number is already in used.', 'wp-ever-accounting' ) );
 			}
 		}
@@ -148,7 +151,7 @@ class Customer extends Contact {
 		global $wpdb;
 		$clauses = parent::prepare_where_query( $clauses, $args );
 
-		$clauses['where'] .= $wpdb->prepare( ' AND type = %s', $this->get_type() );
+		$clauses['where'] .= $wpdb->prepare( ' AND type = %s', self::OBJECT_TYPE );
 
 		return $clauses;
 	}

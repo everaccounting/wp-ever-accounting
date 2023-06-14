@@ -43,4 +43,20 @@ class Invoice extends Document {
 			$this->set_defaults();
 		}
 	}
+
+	/**
+	 * Prepare where query.
+	 *
+	 * @param array $clauses Query clauses.
+	 * @param array $args Array of args to pass to the query method.
+	 *
+	 * @since 1.0.0
+	 * @return array
+	 */
+	protected function prepare_where_query( $clauses, $args = array() ) {
+		global $wpdb;
+		$clauses['where'] .= $wpdb->prepare( " AND {$this->table_alias}.type = %s", 'invoice' ); // phpcs:ignore
+
+		return parent::prepare_where_query( $clauses, $args );
+	}
 }

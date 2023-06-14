@@ -24,7 +24,7 @@ class Frontend extends Singleton {
 	 * @return void
 	 */
 	protected function __construct() {
-		//add_action( 'ever_accounting_endpoint_head', array( __CLASS__, 'output_head' ) );
+		// add_action( 'ever_accounting_endpoint_head', array( __CLASS__, 'output_head' ) );
 	}
 
 	/**

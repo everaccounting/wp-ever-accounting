@@ -163,12 +163,15 @@ function eac_get_formatted_address( $args = array(), $separator = '<br/>' ) {
 		'name'      => '',
 		'company'   => '',
 		'address_1' => '',
+		'address_2' => '',
 		'city'      => '',
 		'state'     => '',
 		'postcode'  => '',
 		'country'   => '',
+		'phone'     => '',
+		'email'     => '',
 	);
-	$format       = apply_filters( 'ever_accounting_address_format', "{name}\n{company}\n{address_1}\n{address_2}\n{city}\n{state}\n{postcode}\n{country}" );
+	$format       = apply_filters( 'ever_accounting_address_format', "<strong>{name}</strong>\n{company}\n{address_1}\n{address_2}\n{city} {state} {postcode}\n{country}\n{phone}\n{email}" );
 	$args         = array_map( 'trim', wp_parse_args( $args, $default_args ) );
 	$countries    = eac_get_countries();
 	$country      = isset( $countries[ $args['country'] ] ) ? $countries[ $args['country'] ] : $args['country'];
@@ -183,6 +186,8 @@ function eac_get_formatted_address( $args = array(), $separator = '<br/>' ) {
 			'{state}'     => $args['state'],
 			'{postcode}'  => $args['postcode'],
 			'{country}'   => $country,
+			'{phone}'     => $args['phone'],
+			'{email}'     => $args['email'],
 		)
 	);
 
@@ -192,6 +197,10 @@ function eac_get_formatted_address( $args = array(), $separator = '<br/>' ) {
 	$formatted_address = preg_replace( '/\n\n+/', "\n", $formatted_address );
 	// Break newlines apart and remove empty lines/trim commas and white space.
 	$address_lines = array_map( 'trim', array_filter( explode( "\n", $formatted_address ) ) );
+	// If Vat is set, add it to the last line.
+	if ( ! empty( $args['vat'] ) ) {
+		$address_lines[ count( $address_lines ) - 1 ] = sprintf( '%s %s', __( 'VAT:', 'wp-ever-accounting' ), $args['vat'] );
+	}
 
 	return implode( $separator, $address_lines );
 }

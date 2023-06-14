@@ -98,7 +98,7 @@ jQuery(function ($) {
 
 			const callback = function (response) {
 				plugin.focus();
-				$(document).trigger('eac_drawer_ready', [plugin.$drawer, plugin]);
+				$(document).trigger('eac-drawer-ready', [plugin.$drawer, plugin]);
 				// If this is a form, then we will remove the submit button and add it to the drawer header.
 				if (plugin.$body.find('form').length > 0) {
 					const $form = plugin.$body.find('form');

@@ -74,7 +74,7 @@ class Bill extends Document {
 			if ( empty( $number ) ) {
 				$number = $this->repository->get_next_number( $this );
 			}
-			$this->set_document_number( $this->generate_number( $number ) );
+			$this->set_number( $this->generate_number( $number ) );
 		}
 	}
 
@@ -183,7 +183,7 @@ class Bill extends Document {
 	 * @since  1.1.0
 	 */
 	public function get_bill_number( $context = 'edit' ) {
-		return $this->get_prop( 'document_number', $context );
+		return $this->get_prop( 'number', $context );
 	}
 
 	/**

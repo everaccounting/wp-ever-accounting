@@ -489,7 +489,7 @@ class Invoice_Legacy extends Document {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @return Income[] Array of payments.
+	 * @return Payment[] Array of payments.
 	 */
 	public function get_payments() {
 		if ( $this->exists() ) {

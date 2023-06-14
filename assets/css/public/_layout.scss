@@ -1,14 +1,23 @@
-.eac-page{
+.eac-page {
 	min-height: 100vh;
+	//font-size: 15px;
+	//line-height: 1.5;
+	//color: #333;
 
-	.admin-bar &{
+	.admin-bar & {
 		min-height: calc(100vh - 32px);
 		margin-top: 32px;
 	}
 }
 
-.eac-page-content{
+.eac-page-content {
 	max-width: 800px;
 	margin: 0 auto;
 	padding: 30px 20px;
+}
+
+
+.eac-container {
+	max-width: 1200px;
+	margin: 0 auto;
 }

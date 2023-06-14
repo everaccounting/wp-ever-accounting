@@ -11,7 +11,7 @@
 
 defined( 'ABSPATH' ) || exit();
 ?>
-<form id="eac-transfer-form" class="eac-form" method="post">
+<form id="eac-transfer-form" class="eac-ajax-form" method="post">
 	<div class="eac-card">
 		<div class="eac-card__header">
 			<h2 class="eac-card__title"><?php esc_html_e( 'Basic Details', 'wp-ever-accounting' ); ?></h2>
@@ -19,26 +19,30 @@ defined( 'ABSPATH' ) || exit();
 		<div class="eac-card__body">
 			<div class="eac-columns">
 				<?php
-				eac_input_field(
+				eac_form_field(
 					array(
-						'type'        => 'account',
+						'type'        => 'select',
 						'name'        => 'from_account_id',
 						'label'       => __( 'From Account', 'wp-ever-accounting' ),
 						'value'       => $transfer->get_from_account_id(),
 						'placeholder' => __( 'Select account', 'wp-ever-accounting' ),
 						'required'    => true,
 						'class'       => 'eac-col-6',
+						'input_class' => 'eac-select2',
+						'attrs'       => 'data-action=eac_json_search&data-type=account',
 					)
 				);
-				eac_input_field(
+				eac_form_field(
 					array(
-						'type'        => 'account',
+						'type'        => 'select',
 						'name'        => 'to_account_id',
 						'label'       => __( 'To Account', 'wp-ever-accounting' ),
 						'value'       => $transfer->get_to_account_id(),
 						'placeholder' => __( 'Select account', 'wp-ever-accounting' ),
 						'required'    => true,
 						'class'       => 'eac-col-6',
+						'input_class' => 'eac-select2',
+						'attrs'       => 'data-action=eac_json_search&data-type=account',
 						'suffix'      => sprintf(
 							'<a class="button" href="%s" title="%s"><span class="dashicons dashicons-plus"></span></a>',
 							esc_url( eac_action_url( 'action=get_html_response&html_type=edit_account' ) ),
@@ -46,9 +50,9 @@ defined( 'ABSPATH' ) || exit();
 						),
 					)
 				);
-				eac_input_field(
+				eac_form_field(
 					array(
-						'type'        => 'price',
+						'type'        => 'decimal',
 						'name'        => 'amount',
 						'label'       => __( 'Amount', 'wp-ever-accounting' ),
 						'placeholder' => '0.00',
@@ -57,7 +61,19 @@ defined( 'ABSPATH' ) || exit();
 						'class'       => 'eac-col-6',
 					)
 				);
-				eac_input_field(
+				eac_form_field(
+					array(
+						'type'        => 'text',
+						'name'        => 'conversion_rate',
+						'label'       => __( 'Conversion Rate', 'wp-ever-accounting' ),
+						'placeholder' => '1.00',
+						'value'       => 1,
+						'required'    => true,
+						'class'       => 'eac-col-6 display-none',
+						'prefix'      => sprintf( '1 %s =', eac_get_base_currency() ),
+					)
+				);
+				eac_form_field(
 					array(
 						'type'        => 'date',
 						'name'        => 'date',
@@ -71,14 +87,15 @@ defined( 'ABSPATH' ) || exit();
 				?>
 			</div>
 		</div>
-		<div class="eac-card__separator"></div>
+	</div>
+	<div class="eac-card">
 		<div class="eac-card__header">
 			<h2 class="eac-card__title"><?php esc_html_e( 'Extra Details', 'wp-ever-accounting' ); ?></h2>
 		</div>
 		<div class="eac-card__body">
 			<div class="eac-columns">
 				<?php
-				eac_input_field(
+				eac_form_field(
 					array(
 						'type'        => 'select',
 						'name'        => 'payment_method',
@@ -89,7 +106,7 @@ defined( 'ABSPATH' ) || exit();
 						'class'       => 'eac-col-6',
 					)
 				);
-				eac_input_field(
+				eac_form_field(
 					array(
 						'type'        => 'text',
 						'name'        => 'reference',
@@ -99,7 +116,7 @@ defined( 'ABSPATH' ) || exit();
 						'class'       => 'eac-col-6',
 					)
 				);
-				eac_input_field(
+				eac_form_field(
 					array(
 						'type'        => 'textarea',
 						'name'        => 'note',
@@ -116,6 +133,7 @@ defined( 'ABSPATH' ) || exit();
 	</div>
 
 	<?php wp_nonce_field( 'eac_edit_transfer' ); ?>
+	<input type="hidden" name="currency" value="<?php echo esc_attr( $transfer->get_currency() ); ?>">
 	<input type="hidden" name="action" value="eac_edit_transfer">
 	<input type="hidden" name="id" value="<?php echo esc_attr( $transfer->get_id() ); ?>">
 </form>

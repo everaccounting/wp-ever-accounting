@@ -108,7 +108,7 @@ class Transactions extends ListTable {
 	 * @since 1.0.2
 	 */
 	public function process_bulk_action( $doaction ) {
-		if ( ! empty( $doaction ) ) {
+		if ( ! empty( $doaction ) && check_admin_referer( 'bulk-' . $this->_args['plural'] ) ) {
 			$id  = eac_get_input_var( 'transaction_id' );
 			$ids = eac_get_input_var( 'transaction_ids' );
 			if ( ! empty( $id ) ) {
@@ -240,8 +240,8 @@ class Transactions extends ListTable {
 	 */
 	public function column_date( $item ) {
 		$type       = $item->get_type();
-		$page       = 'income' === $type ? 'eac-sales' : 'eac-purchases';
-		$tab        = 'income' === $type ? 'incomes' : 'expenses';
+		$page       = 'payment' === $type ? 'eac-sales' : 'eac-purchases';
+		$tab        = 'payment' === $type ? 'payments' : 'expenses';
 		$args       = array(
 			$type . '_id' => $item->get_id(),
 			'page'        => $page,
@@ -284,7 +284,7 @@ class Transactions extends ListTable {
 			case 'amount':
 				// Based on the type show minus or plus.
 				$type = $item->get_type();
-				if ( 'income' === $type ) {
+				if ( 'payment' === $type ) {
 					$value = $item->get_formatted_amount();
 				} else {
 					$value = '-&nbsp;' . $item->get_formatted_amount();
@@ -303,7 +303,7 @@ class Transactions extends ListTable {
 				break;
 			case 'category':
 				$category_id = $item->get_category_id();
-				$category    = eac_get_term( $category_id );
+				$category    = eac_get_category( $category_id );
 				$link        = add_query_arg(
 					array(
 						'category_id' => $category_id,

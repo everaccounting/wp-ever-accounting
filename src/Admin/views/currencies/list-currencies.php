@@ -20,6 +20,7 @@ $tab  = eac_get_input_var( 'tab' );
 	<div class="eac-section-header">
 		<div>
 			<h2><?php esc_html_e( 'Currencies', 'wp-ever-accounting' ); ?></h2>
+			<a href="<?php echo esc_url( admin_url( 'admin.php?page=eac-settings&tab=currencies&action=add' ) ); ?>" class="page-title-action"><?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?></a>
 		</div>
 	</div>
 <?php do_action( 'ever_accounting_currencies_table_top' ); ?>

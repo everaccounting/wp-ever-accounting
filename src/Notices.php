@@ -286,7 +286,7 @@ class Notices extends Singleton {
 		if ( empty( $message ) ) {
 			return;
 		}
-		var_dump( $message );
+
 		// if the notice already dismissed then return.
 		if ( true === self::is_dismissed( $args['id'] ) && self::is_dismissed( $args['id'] ) ) {
 			return;

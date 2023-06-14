@@ -8,7 +8,7 @@
  * @package EverAccounting
  */
 
-use EverAccounting\Models\TaxRate;
+use EverAccounting\Models\Tax;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -49,7 +49,7 @@ function eac_calculate_taxes( $amount, $rates, $inclusive = false ) {
 		'is_compound' => 'no',
 	);
 	foreach ( $rates as $key => $rate ) {
-		if ( is_a( $rate, '\EverAccounting\Models\DocumentTax' ) ) {
+		if ( is_a( $rate, '\EverAccounting\Models\DocumentLineTax' ) ) {
 			$rate = $rate->get_data();
 		} elseif ( is_object( $rate ) ) {
 			$rate = get_object_vars( $rate );
@@ -112,10 +112,10 @@ function eac_calculate_taxes( $amount, $rates, $inclusive = false ) {
  * @since 1.1.0
  *
  * @since 1.1.0
- * @return TaxRate|null
+ * @return Tax|null
  */
-function eac_get_tax_rate( $rate_id ) {
-	return TaxRate::get( $rate_id );
+function eac_get_tax( $rate_id ) {
+	return Tax::get( $rate_id );
 }
 
 /**
@@ -126,10 +126,10 @@ function eac_get_tax_rate( $rate_id ) {
  *
  * @since 1.1.0
  *
- * @return TaxRate|false|int|WP_Error
+ * @return Tax|false|int|WP_Error
  */
-function eac_insert_tax_rate( $args, $wp_error = true ) {
-	return TaxRate::insert( $args, $wp_error );
+function eac_insert_tax( $args, $wp_error = true ) {
+	return Tax::insert( $args, $wp_error );
 }
 
 /**
@@ -140,7 +140,7 @@ function eac_insert_tax_rate( $args, $wp_error = true ) {
  * @since 1.1.0
  * @return bool
  */
-function eac_delete_tax_rate( $rate_id ) {
+function eac_delete_tax( $rate_id ) {
 	$rate = eac_get_tax( $rate_id );
 
 	if ( ! $rate ) {
@@ -158,9 +158,9 @@ function eac_delete_tax_rate( $rate_id ) {
  *
  * @since 1.1.0
  *
- * @return array|int|TaxRate[]
+ * @return array|int|Tax[]
  */
-function eac_get_tax_rates( $args = array(), $count = false ) {
+function eac_get_taxes( $args = array(), $count = false ) {
 	$defaults = array(
 		'limit'   => 20,
 		'offset'  => 0,
@@ -172,8 +172,8 @@ function eac_get_tax_rates( $args = array(), $count = false ) {
 	$args = wp_parse_args( $args, $defaults );
 
 	if ( $count ) {
-		return TaxRate::count( $args );
+		return Tax::count( $args );
 	}
 
-	return TaxRate::query( $args );
+	return Tax::query( $args );
 }

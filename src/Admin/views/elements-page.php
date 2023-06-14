@@ -318,3 +318,8 @@ eac_input_fields(
 	)
 )
 ?>
+Testing alpine js form.
+<div x-data="{text: 'hello'}">
+	<input type="text" x-model="text">
+	<p x-text="text"></p>
+</div>

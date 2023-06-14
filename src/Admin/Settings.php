@@ -276,7 +276,6 @@ class Settings {
 				case 'text':
 				case 'password':
 				case 'datetime':
-				case 'datetime-local':
 				case 'date':
 				case 'month':
 				case 'time':
@@ -330,52 +329,22 @@ class Settings {
 					</tr>
 					<?php
 					break;
+
 				case 'currency':
-				case 'account':
-				case 'customer':
-				case 'vendor':
-				case 'category':
-				case 'product':
-				case 'country':
 				case 'select':
 					$value['value']       = wp_parse_list( $value['value'] );
 					$value['value']       = array_map( 'strval', $value['value'] );
 					$value['placeholder'] = ! empty( $value['placeholder'] ) ? $value['placeholder'] : __( 'Select an option&hellip;', 'wp-ever-accounting' );
-					$callback_map         = array(
-						'account'  => 'eac_get_accounts',
-						'customer' => 'eac_get_customers',
-						'vendor'   => 'eac_get_vendors',
-						'category' => 'eac_get_categories',
-						'item'     => 'eac_get_products',
-						'invoice'  => 'eac_get_invoices',
-						'bill'     => 'eac_get_bills',
-						'payment'  => 'eac_get_payments',
-						'tax'      => 'eac_get_taxes',
-					);
-					if ( array_key_exists( $value['type'], $callback_map ) && is_callable( $callback_map[ $value['type'] ] ) ) {
-						$callback               = $callback_map[ $value['type'] ];
-						$query_args             = isset( $value['query_args'] ) ? wp_parse_args( $value['query_args'] ) : array();
-						$results                = call_user_func( $callback, array_merge( $query_args, array( 'include' => $value['value'] ) ) );
-						$value['options']       = wp_list_pluck( $results, 'formatted_name', 'id' );
-						$attrs[]                = 'data-query-args="' . esc_attr( wp_json_encode( $query_args ) ) . '"';
-						$attrs[]                = 'data-eac-select2="' . esc_attr( $value['type'] ) . '"';
-						$value['input_class'][] = 'eac-select-' . esc_attr( $value['type'] );
-					} elseif ( 'currency' === $value['type'] ) {
-						$results                = eac_get_currencies( 'active' );
-						$value['options']       = wp_list_pluck( $results, 'formatted_name', 'code' );
-						$value['input_class'][] = 'eac-select-currency';
-						$value['select2']       = true;
-					} elseif ( 'country' === $value['type'] ) {
-						$value['options']       = eac_get_countries();
-						$value['input_class'][] = 'eac-select-country';
-						$value['select2']       = true;
-					}
 					if ( ! empty( $value['multiple'] ) ) {
 						$value['name'] .= '[]';
 						$attrs[]        = 'multiple="multiple"';
 					}
-					if ( ! empty( $value['select2'] ) ) {
-						$value['class'] .= ' eac-select2';
+
+					if ( 'currency' === $value['type'] ) {
+						$value['options'] = array();
+						foreach ( eac_get_currencies( [ 'limit' => -1 ] ) as $code => $currency ) {
+							$value['options'][ $code ] = $currency->get_formatted_name();
+						}
 					}
 
 					?>
@@ -392,6 +361,7 @@ class Settings {
 								class="<?php echo esc_attr( $value['class'] ); ?>"
 								<?php echo wp_kses_post( implode( ' ', $attrs ) ); ?>
 							>
+								<option value=""><?php echo esc_html( $value['placeholder'] ); ?></option>
 								<?php foreach ( $value['options'] as $key => $val ) : ?>
 									<option value="<?php echo esc_attr( $key ); ?>" <?php selected( in_array( $key, $value['value'], true ), true ); ?>><?php echo esc_html( $val ); ?></option>
 								<?php endforeach; ?>

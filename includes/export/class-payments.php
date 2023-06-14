@@ -72,7 +72,7 @@ class Payments extends CSV_Exporter {
 	/**
 	 * Take a revenue and generate row data from it for export.
 	 *
-	 * @param \EverAccounting\Models\Income $item Payment object.
+	 * @param \EverAccounting\Models\Payment $item Payment object.
 	 *
 	 * @return array
 	 */

@@ -79,4 +79,6 @@ Thumbs.db
 .wordpress-org
 
 # Build related files
-/assets
+/vendor
+/lib
+/includes

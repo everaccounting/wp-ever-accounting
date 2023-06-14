@@ -46,8 +46,8 @@ abstract class Document_Ok extends Model {
 	protected $core_data = array(
 		'type'            => '',
 		'status'          => 'draft',
-		'document_number' => '',
-		'order_number'    => '',
+		'number' => '',
+		'reference'    => '',
 		'contact_id'      => null,
 		'billing_data'    => array(
 			'name'       => '',
@@ -211,8 +211,8 @@ abstract class Document_Ok extends Model {
 	 *
 	 * @return string
 	 */
-	public function get_document_number( $context = 'edit' ) {
-		return $this->get_prop( 'document_number', $context );
+	public function get_number( $context = 'edit' ) {
+		return $this->get_prop( 'number', $context );
 	}
 
 	/**
@@ -222,8 +222,8 @@ abstract class Document_Ok extends Model {
 	 *
 	 * @since  1.1.0
 	 */
-	public function set_document_number( $value ) {
-		$this->set_prop( 'document_number', eac_clean( $value ) );
+	public function set_number( $value ) {
+		$this->set_prop( 'number', eac_clean( $value ) );
 	}
 
 	/**
@@ -235,8 +235,8 @@ abstract class Document_Ok extends Model {
 	 *
 	 * @return string
 	 */
-	public function get_order_number( $context = 'edit' ) {
-		return $this->get_prop( 'order_number', $context );
+	public function get_reference( $context = 'edit' ) {
+		return $this->get_prop( 'reference', $context );
 	}
 
 	/**
@@ -246,8 +246,8 @@ abstract class Document_Ok extends Model {
 	 *
 	 * @since  1.1.0
 	 */
-	public function set_order_number( $value ) {
-		$this->set_prop( 'order_number', eac_clean( $value ) );
+	public function set_reference( $value ) {
+		$this->set_prop( 'reference', eac_clean( $value ) );
 	}
 
 	/**

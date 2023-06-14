@@ -132,6 +132,6 @@ class Tools extends \EverAccounting\Singleton {
 	 * @return void
 	 */
 	public static function output_settings_page() {
-		include dirname( __FILE__ ) . '/views/settings-page.php';
+		echo '<div id="eac-root"></div>';
 	}
 }

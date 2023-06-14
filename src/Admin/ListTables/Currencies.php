@@ -46,12 +46,8 @@ class Currencies extends ListTable {
 		$search                = $this->get_search();
 		$order_by              = $this->get_orderby( 'status' );
 		$order                 = $this->get_order( 'asc' );
-		$base_currency         = eac_get_base_currency();
 
 		$currencies = eac_get_currencies();
-		if ( isset( $currencies[ $base_currency ] ) ) {
-			unset( $currencies[ $base_currency ] );
-		}
 		// if search string is present, filter the currencies by the search string.
 		if ( ! empty( $search ) ) {
 			$currencies = array_filter(
@@ -107,11 +103,11 @@ class Currencies extends ListTable {
 	 * @return void
 	 */
 	public function no_items() {
-		esc_html_e( 'No currencies found. Note: Base currency is not listed here.', 'wp-ever-accounting' );
+		esc_html_e( 'No currencies found.', 'wp-ever-accounting' );
 	}
 
 	/**
-	 * Adds the order and product filters to the licenses list.
+	 * Adds the order and item filters to the licenses list.
 	 *
 	 * @param string $which The location of the extra table nav markup: 'top' or 'bottom'.
 	 *
@@ -131,9 +127,10 @@ class Currencies extends ListTable {
 	 * @since 1.0.2
 	 */
 	public function process_bulk_action( $doaction ) {
-		if ( ! empty( $doaction ) ) {
+		if ( ! empty( $doaction ) && check_admin_referer( 'bulk-' . $this->_args['plural'] ) ) {
 			$currency   = eac_get_input_var( 'currency' );
 			$currencies = eac_get_input_var( 'currencies' );
+			var_dump($currencies);
 
 			if ( ! empty( $id ) ) {
 				$currencies = wp_parse_list( $currency );
@@ -145,12 +142,10 @@ class Currencies extends ListTable {
 				exit;
 			}
 
-			var_dump( $currencies );
-
 			foreach ( $currencies as $currency ) {
 				switch ( $doaction ) {
 					case 'activate':
-						eac_update_currency(
+						eac_insert_currency(
 							array(
 								'code'   => $currency,
 								'status' => 'active',
@@ -158,7 +153,7 @@ class Currencies extends ListTable {
 						);
 						break;
 					case 'deactivate':
-						eac_update_currency(
+						eac_insert_currency(
 							array(
 								'code'   => $currency,
 								'status' => 'inactive',
@@ -180,8 +175,8 @@ class Currencies extends ListTable {
 					break;
 			}
 
-			// wp_safe_redirect( admin_url( 'admin.php?page=eac-settings&tab=currencies' ) );
-			// exit();
+			wp_safe_redirect( admin_url( 'admin.php?page=eac-settings&tab=currencies' ) );
+			exit();
 		}
 	}
 
@@ -270,8 +265,8 @@ class Currencies extends ListTable {
 		$disable_url = $this->get_current_url( array_merge( $args, array( 'action' => 'disable' ) ) );
 		$actions     = array(
 			'edit'    => sprintf( '<a href="%s">%s</a>', esc_url( $edit_url ), __( 'Edit', 'wp-ever-accounting' ) ),
-			'enable'  => sprintf( '<a href="%s">%s</a>', esc_url( $enable_url ), __( 'Enable', 'wp-ever-accounting' ) ),
-			'disable' => sprintf( '<a href="%s">%s</a>', esc_url( $disable_url ), __( 'Disable', 'wp-ever-accounting' ) ),
+			'enable'  => sprintf( '<a href="%s">%s</a>', esc_url( wp_nonce_url( $enable_url, 'bulk-currencies' ) ), __( 'Enable', 'wp-ever-accounting' ) ),
+			'disable' => sprintf( '<a href="%s">%s</a>', esc_url( wp_nonce_url( $disable_url, 'bulk-currencies' ) ), __( 'Disable', 'wp-ever-accounting' ) ),
 		);
 		if ( 'active' === $item['status'] ) {
 			unset( $actions['enable'] );
@@ -294,7 +289,7 @@ class Currencies extends ListTable {
 	public function column_default( $item, $column_name ) {
 		switch ( $column_name ) {
 			case 'rate':
-				$value = empty( $item['rate'] ) ? '&mdash;' : esc_html( eac_convert_money( $item['rate'], eac_get_base_currency(), $item['rate'], null, true ) );
+				$value = empty( $item['rate'] ) ? '&mdash;' : esc_html( eac_sanitize_number( $item['rate'], 8 ) );
 				break;
 			case 'status':
 				$value = esc_html( $item['status'] );

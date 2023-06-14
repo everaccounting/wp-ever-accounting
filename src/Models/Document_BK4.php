@@ -79,7 +79,7 @@ abstract class Document_BK4 extends Model {
 		'type'           => '',
 		'status'         => 'draft',
 		'doc_number'     => '', // Document number, invoice number, bill number, estimate number, etc.
-		'order_number'   => '',
+		'reference'   => '',
 		'contact_id'     => null,
 		'billing_data'   => array(
 			'name'       => '',
@@ -163,7 +163,7 @@ abstract class Document_BK4 extends Model {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @var DocumentTax[]
+	 * @var DocumentLineTax[]
 	 */
 	protected $taxes = null;
 
@@ -278,8 +278,8 @@ abstract class Document_BK4 extends Model {
 	 *
 	 * @return string
 	 */
-	public function get_order_number( $context = 'edit' ) {
-		return $this->get_prop( 'order_number', $context );
+	public function get_reference( $context = 'edit' ) {
+		return $this->get_prop( 'reference', $context );
 	}
 
 	/**
@@ -289,8 +289,8 @@ abstract class Document_BK4 extends Model {
 	 *
 	 * @since  1.1.0
 	 */
-	public function set_order_number( $value ) {
-		$this->set_prop( 'order_number', eac_clean( $value ) );
+	public function set_reference( $value ) {
+		$this->set_prop( 'reference', eac_clean( $value ) );
 	}
 
 	/**
@@ -1768,7 +1768,7 @@ abstract class Document_BK4 extends Model {
 			}
 		}
 		// If there is any taxes that item_id does not match with any item, delete it.
-		$taxes = DocumentTax::query(
+		$taxes = DocumentLineTax::query(
 			array(
 				'document_id' => $this->get_id(),
 				'limit'       => - 1,
@@ -1945,7 +1945,7 @@ abstract class Document_BK4 extends Model {
 			if ( empty( $tax ) ) {
 				continue;
 			}
-			$line_tax = new DocumentTax();
+			$line_tax = new DocumentLineTax();
 			$line_tax->set_document_id( $this->get_id() );
 			$line_tax->set_tax_id( $tax->get_id() );
 			$line_tax->set_item_id( $line_item->get_item_id() );
@@ -1972,11 +1972,11 @@ abstract class Document_BK4 extends Model {
 	 * @param int $item_id Item id.
 	 *
 	 * @since 1.0.0
-	 * @return DocumentTax[]
+	 * @return DocumentLineTax[]
 	 */
 	public function get_taxes( $item_id = null ) {
 		if ( $this->exists() && empty( $this->taxes ) ) {
-			$this->taxes = DocumentTax::query(
+			$this->taxes = DocumentLineTax::query(
 				array(
 					'document_id' => $this->get_id(),
 					'orderby'     => 'id',
@@ -2004,7 +2004,7 @@ abstract class Document_BK4 extends Model {
 	 * Get merged taxes.
 	 *
 	 * @since 1.0.0
-	 * @return DocumentTax[]
+	 * @return DocumentLineTax[]
 	 */
 	public function get_merged_taxes() {
 		$taxes = array();

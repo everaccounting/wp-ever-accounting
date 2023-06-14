@@ -29,14 +29,14 @@ class Expense extends Transaction {
 	 */
 	public function __construct( $data = 0 ) {
 		$this->core_data['type']           = self::OBJECT_TYPE;
-		$this->core_data['account_id']     = get_option( 'eac_expense_account', 0 );
-		$this->core_data['category_id']    = get_option( 'eac_expense_category', 0 );
-		$this->core_data['payment_method'] = get_option( 'eac_expense_method', 'cash' );
+		$this->core_data['account_id']     = get_option( 'eac_expense_account_id', 0 );
+		$this->core_data['category_id']    = get_option( 'eac_expense_category_id', 0 );
+		$this->core_data['payment_method'] = get_option( 'eac_expense_payment_method', 'cash' );
 		$this->core_data['payment_date']   = wp_date( 'Y-m-d' );
 		parent::__construct( $data );
 
 		// after reading check if the contact is a customer.
-		if ( $this->exists() && 'expense' !== $this->get_type() ) {
+		if ( $this->exists() && self::OBJECT_TYPE !== $this->get_type() ) {
 			$this->set_id( 0 );
 			$this->set_defaults();
 		}
@@ -93,7 +93,7 @@ class Expense extends Transaction {
 		// Required fields payment_date,account_id,category_id, payment_method.
 
 		// Check required fields.
-		if ( empty( $this->get_payment_date() ) ) {
+		if ( empty( $this->get_date() ) ) {
 			return new \WP_Error( 'missing_required', __( 'Expense date is required.', 'wp-ever-accounting' ) );
 		}
 
@@ -118,7 +118,10 @@ class Expense extends Transaction {
 	 */
 	protected function prepare_where_query( $clauses, $args = array() ) {
 		global $wpdb;
-		$clauses['where'] .= $wpdb->prepare( " AND {$this->table_alias}.type = %s", 'expense' ); // phpcs:ignore
+		$transfer_table    = Transfer::TABLE_NAME;
+		$clauses['join']  .= " LEFT JOIN  {$wpdb->prefix}{$transfer_table} AS {$transfer_table} ON {$this->table_alias}.id = {$transfer_table}.expense_id"; // phpcs:ignore
+		$clauses['where'] .= " AND {$transfer_table}.expense_id IS NULL"; // phpcs:ignore
+		$clauses['where'] .= $wpdb->prepare( " AND {$this->table_alias}.type = %s", self::OBJECT_TYPE ); // phpcs:ignore
 
 		return parent::prepare_where_query( $clauses, $args );
 	}

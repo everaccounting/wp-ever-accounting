@@ -7,6 +7,8 @@
 	max-width: none;
 	min-width: auto;
 	min-height: 1px;
+	background: #fff;
+	border: 1px solid #e1e2e2;
 
 	&::after {
 		content: ".";
@@ -25,7 +27,6 @@
 		padding: 8px 15px;
 		margin: 0;
 		min-height: 25px;
-		background: #fff;
 
 		p {
 			margin: 0;
@@ -46,15 +47,13 @@
 		}
 	}
 
-	&__body,  &__section {
-		box-sizing: content-box;
+	&__body {
+		box-sizing: border-box;
 		position: relative;
 		padding: 15px;
 		line-height: 1.4;
 		font-size: 13px;
 		flex: 1 1 auto;
-		background: #fff;
-		border: 1px solid #e1e2e2;
 
 		> *:first-child {
 			margin-top: 0;
@@ -71,12 +70,6 @@
 		&.margin-0 {
 			margin: 0;
 		}
-	}
-
-	&__header, &__footer, &__section, &__body {
-		border-left: 1px solid #e1e2e2;
-		border-right: 1px solid #e1e2e2;
-		border-bottom: 1px solid #e1e2e2;
 	}
 
 	&__title, &__subtitle {
@@ -100,10 +93,6 @@
 
 		+ [class*=eac-card__] {
 			border-top: 1px solid #e1e2e2 !important;
-			// if not last child
-			//&:not(:last-child) {
-			//	border-bottom: 0 !important;
-			//}
 		}
 	}
 
@@ -113,12 +102,9 @@
 
 	// any class that contains
 	& > [class*=eac-card__] {
-		&:first-child {
-			border-top: 1px solid #e1e2e2;
-		}
-
-		&:not(:first-child) {
-			border-top: 0;
+		// child expect last item.
+		&:not(:last-child) {
+			border-bottom: 1px solid #e1e2e2;
 		}
 	}
 }
@@ -139,7 +125,7 @@
 		margin-top: 0;
 	}
 
-	.eac-field {
+	.eac-form-field {
 		flex: 0 0 100% !important;
 		max-width: 100% !important;
 	}

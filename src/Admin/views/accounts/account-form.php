@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit();
 
 ?>
 
-<form id="eac-account-form" class="eac-form" method="post">
+<form id="eac-account-form" class="eac-ajax-form" method="post">
 	<div class="eac-card">
 		<div class="eac-card__header">
 			<h2 class="eac-card__title"><?php esc_html_e( 'Account Details', 'wp-ever-accounting' ); ?></h2>
@@ -20,18 +20,18 @@ defined( 'ABSPATH' ) || exit();
 		<div class="eac-card__body">
 			<div class="eac-columns">
 				<?php
-				eac_input_field(
+				eac_form_field(
 					array(
 						'id'          => 'name',
 						'label'       => __( 'Name', 'wp-ever-accounting' ),
 						'type'        => 'text',
 						'placeholder' => __( 'XYZ Bank', 'wp-ever-accounting' ),
 						'value'       => $account->get_name(),
-						'class'       => 'eac-col-12',
+						'class'       => 'eac-col-6',
 						'required'    => true,
 					)
 				);
-				eac_input_field(
+				eac_form_field(
 					array(
 						'id'          => 'number',
 						'label'       => __( 'Number', 'wp-ever-accounting' ),
@@ -42,11 +42,11 @@ defined( 'ABSPATH' ) || exit();
 						'required'    => true,
 					)
 				);
-				eac_input_field(
+				eac_form_field(
 					array(
 						'id'          => 'type',
 						'label'       => __( 'Type', 'wp-ever-accounting' ),
-						'type'        => 'select2',
+						'type'        => 'select',
 						'placeholder' => __( 'Select Type', 'wp-ever-accounting' ),
 						'options'     => eac_get_account_types(),
 						'value'       => $account->get_type(),
@@ -54,40 +54,41 @@ defined( 'ABSPATH' ) || exit();
 						'required'    => true,
 					)
 				);
-				eac_input_field(
+				eac_form_field(
 					array(
-						'id'          => 'currency_code',
+						'id'          => 'currency',
 						'label'       => __( 'Currency', 'wp-ever-accounting' ),
 						'type'        => 'currency',
 						'placeholder' => __( 'Select Account Currency', 'wp-ever-accounting' ),
-						'value'       => $account->get_currency_code(),
+						'value'       => $account->get_currency(),
 						'class'       => 'eac-col-6',
 						'required'    => true,
+						'input_class' => 'eac-select2',
 					)
 				);
-				eac_input_field(
+				eac_form_field(
 					array(
 						'id'          => 'opening_balance',
 						'label'       => __( 'Opening Balance', 'wp-ever-accounting' ),
-						'type'        => 'price',
+						'type'        => 'decimal',
 						'placeholder' => __( '0.00', 'wp-ever-accounting' ),
-						'tooltip'     => __( 'Initial balance of this account. Use . (dot) as decimal separator and no thousand separator.', 'wp-ever-accounting' ),
+						'tooltip'     => __( 'Initial balance of this account.', 'wp-ever-accounting' ),
 						'value'       => $account->get_opening_balance(),
 						'class'       => 'eac-col-6',
-						'required'    => true,
 					)
 				);
 				?>
 			</div>
 		</div>
-		<div class="eac-card__separator"></div>
+	</div>
+	<div class="eac-card">
 		<div class="eac-card__header">
 			<h2 class="eac-card__title"><?php esc_html_e( 'Bank Details', 'wp-ever-accounting' ); ?></h2>
 		</div>
 		<div class="eac-card__body">
 			<div class="eac-columns">
 				<?php
-				eac_input_field(
+				eac_form_field(
 					array(
 						'id'          => 'bank_name',
 						'label'       => __( 'Bank Name', 'wp-ever-accounting' ),
@@ -97,7 +98,7 @@ defined( 'ABSPATH' ) || exit();
 						'class'       => 'eac-col-6',
 					)
 				);
-				eac_input_field(
+				eac_form_field(
 					array(
 						'id'          => 'bank_phone',
 						'label'       => __( 'Bank Phone', 'wp-ever-accounting' ),
@@ -108,7 +109,7 @@ defined( 'ABSPATH' ) || exit();
 					)
 				);
 
-				eac_input_field(
+				eac_form_field(
 					array(
 						'id'          => 'bank_address',
 						'label'       => __( 'Bank Address', 'wp-ever-accounting' ),
@@ -122,7 +123,6 @@ defined( 'ABSPATH' ) || exit();
 			</div>
 		</div>
 	</div>
-
 	<?php wp_nonce_field( 'eac_edit_account' ); ?>
 	<input type="hidden" name="action" value="eac_edit_account">
 	<input type="hidden" name="id" value="<?php echo esc_attr( $account->get_id() ); ?>">

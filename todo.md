@@ -11,3 +11,63 @@
 
 
 
+# Reports
+## Sales Report
+Summary
+- Total Count
+- Total Amount
+- Average Amount
+
+Chart
+- Month vs Amount
+
+Table
+- Month
+- Count
+- Amount
+
+## Expense Report
+Summary
+- Total Count
+- Total Amount
+- Average Amount
+
+Chart
+- Month vs Amount
+
+Table
+- Month
+- Count
+- Amount
+
+## Profit & Loss Report
+Summary
+- Total Income
+- Total Expense
+- Total Profit
+
+Chart
+- Month vs Amount
+
+Table
+- Month
+- Income
+- Expense
+- Profit
+
+
+## Tax Report
+Summary
+- Total Tax Collected
+- Total Tax Paid
+- Total Tax
+
+Chart
+- Month vs Amount
+
+Table
+- Month
+- Tax Collected
+- Tax Paid
+- Tax
+

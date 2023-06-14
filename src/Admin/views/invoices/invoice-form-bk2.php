@@ -257,7 +257,7 @@ $columns = array(
 								'label'       => __( 'Invoice Number', 'wp-ever-accounting' ),
 								'type'        => 'text',
 								'placeholder' => __( '123456789', 'wp-ever-accounting' ),
-								'value'       => $invoice->exists() ? $invoice->get_document_number( 'edit' ) : $invoice->get_next_document_number(),
+								'value'       => $invoice->exists() ? $invoice->get_number( 'edit' ) : $invoice->get_next_number(),
 								'readonly'    => true,
 								'required'    => true,
 								'class'       => 'eac-col-6',
@@ -265,11 +265,11 @@ $columns = array(
 						);
 						eac_input_field(
 							array(
-								'name'        => 'order_number',
+								'name'        => 'reference',
 								'label'       => __( 'Order Number', 'wp-ever-accounting' ),
 								'type'        => 'text',
 								'placeholder' => __( '123456789', 'wp-ever-accounting' ),
-								'value'       => $invoice->get_order_number( 'edit' ),
+								'value'       => $invoice->get_reference( 'edit' ),
 								'class'       => 'eac-col-6',
 							)
 						);

@@ -69,7 +69,7 @@ class Accounts extends CSVExporter {
 
 
 	/**
-	 * Take a product and generate row data from it for export.
+	 * Take a item and generate row data from it for export.
 	 *
 	 * @param \EverAccounting\Models\Account $item Account object.
 	 *

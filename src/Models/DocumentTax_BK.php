@@ -479,7 +479,7 @@ class DocumentTax_BK extends Model {
 	/**
 	 * Is the tax similar to another tax?
 	 *
-	 * @param DocumentTax $tax The tax to compare.
+	 * @param DocumentLineTax $tax The tax to compare.
 	 *
 	 * @since 1.1.0
 	 * @return bool

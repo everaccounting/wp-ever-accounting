@@ -32,9 +32,9 @@ class Rewrites extends Singleton {
 	public function register_endpoints() {
 		$base = $this->get_endpoint_base();
 		// Invoice endpoints.
-		add_rewrite_rule( "^{$base}/invoice/([^/]+)/?$", 'index.php?uuid_key=$matches[1]&eac_page=invoice', 'top' );
+		add_rewrite_rule( "^{$base}/invoice/([^/]+)/?$", 'index.php?uuid=$matches[1]&eac_page=invoice', 'top' );
 		// Payment endpoints.
-		add_rewrite_rule( "^{$base}/payment/([^/]+)/?$", 'index.php?uuid_key=$matches[1]&eac_page=payment', 'top' );
+		add_rewrite_rule( "^{$base}/payment/([^/]+)/?$", 'index.php?uuid=$matches[1]&eac_page=payment', 'top' );
 	}
 
 	/**
@@ -46,7 +46,7 @@ class Rewrites extends Singleton {
 	 * @return array
 	 */
 	public function add_query_vars( $vars ) {
-		$vars[] = 'uuid_key';
+		$vars[] = 'uuid';
 		$vars[] = 'eac_page';
 
 		return $vars;
@@ -61,17 +61,17 @@ class Rewrites extends Singleton {
 	 * @return string
 	 */
 	public function handle_request( $template ) {
-		$page     = get_query_var( 'eac_page' );
-		$uuid_key = get_query_var( 'uuid_key' );
+		$page = get_query_var( 'eac_page' );
+		$uuid = get_query_var( 'uuid' );
 
-
-		// If the page and uuid_key are not set, bail.
-		if ( empty( $page ) || empty( $uuid_key ) ) {
+		// If the page and uuid are not set, bail.
+		if ( empty( $page ) || empty( $uuid ) ) {
 			return $template;
 		}
 
 		switch ( $page ) {
 			case 'invoice':
+				$document = eac_get_invoice( [ 'uuid' => $uuid ] );
 				$template = ever_accounting()->get_template_path() . 'invoice.php';
 				break;
 			case 'payment':

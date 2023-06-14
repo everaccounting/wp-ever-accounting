@@ -186,9 +186,7 @@ abstract class Model {
 			$this->object_read = true;
 		}
 
-		if ( $this->get_id() ) {
-			$this->read();
-		}
+		$this->read();
 	}
 
 	/**
@@ -489,7 +487,7 @@ abstract class Model {
 		$props = array(
 			'id' => $this->get_id(),
 		);
-		foreach ( $this->data as $key => $value ) {
+		foreach ( $this->core_data as $key => $value ) {
 			$props[ $key ] = $this->get_prop( $key, $context );
 		}
 
@@ -790,7 +788,7 @@ abstract class Model {
 
 		if ( false === $wpdb->insert( $this->table, $data, array() ) ) {
 			// translators: %s: database error message.
-			return new \WP_Error( 'db_insert_error', sprintf( __( 'Could not insert item into the database error %s', 'framework-text-domain' ), $wpdb->last_error ) );
+			return new \WP_Error( 'db_insert_error', sprintf( __( 'Could not insert item into the database error %s', 'wp-ever-accounting' ), $wpdb->last_error ) );
 		}
 
 		$this->set_id( $wpdb->insert_id );
@@ -823,7 +821,6 @@ abstract class Model {
 		if ( ! $this->get_id() ) {
 			return false;
 		}
-
 		$data = wp_cache_get( $this->get_id(), static::CACHE_GROUP );
 		if ( false === $data ) {
 			$data = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $this->table WHERE id = %d LIMIT 1;", $this->get_id() ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
@@ -903,7 +900,7 @@ abstract class Model {
 				}
 			}
 			if ( false === $wpdb->update( $this->table, $data, [ 'id' => $this->get_id() ], array(), [ 'id' => '%d' ] ) ) {
-				return new \WP_Error( 'db_update_error', __( 'Could not update item in the database.', 'framework-text-domain' ), $wpdb->last_error );
+				return new \WP_Error( 'db_update_error', __( 'Could not update item in the database.', 'wp-ever-accounting' ), $wpdb->last_error );
 			}
 		}
 
@@ -1183,31 +1180,33 @@ abstract class Model {
 			return false;
 		}
 
-		if ( is_numeric( $id ) ) {
-			$args = array( 'id' => $id );
-		} elseif ( is_array( $id ) ) {
-			$args = $id;
-		} elseif ( is_a( $id, __CLASS__ ) ) {
-			$args = array( 'id' => $id->get_id() );
-		} elseif ( is_object( $id ) ) {
-			$args = get_object_vars( $id );
-		} else {
-			$args = array();
-		}
+		// If It's array, then assume its args.
+		if ( is_array( $id ) ) {
+			$args['no_count'] = true;
+			$args             = $id;
+			$items            = static::query( $args );
+			if ( ! empty( $items ) && is_array( $items ) ) {
+				return reset( $items );
+			}
 
-		// If empty args, then return false.
-		if ( empty( array_filter( $args ) ) ) {
 			return false;
 		}
 
-		$args['no_count'] = true;
-
-		$items = static::query( $args );
-		if ( ! empty( $items ) && is_array( $items ) ) {
-			return reset( $items );
+		if ( is_a( $id, __CLASS__ ) ) {
+			$id = $id->get_id();
+		} elseif ( is_object( $id ) ) {
+			$data = get_object_vars( $id );
+			if ( ! empty( $data['id'] ) ) {
+				$id = $data['id'];
+			}
 		}
 
-		return null;
+		$record = new static( $id );
+		if ( $record->exists() ) {
+			return $record;
+		}
+
+		return false;
 	}
 
 	/**
@@ -1385,6 +1384,21 @@ abstract class Model {
 				$item->set_props( $row );
 				$items[ $key ] = $item;
 			}
+
+			// Based on output prepare the result.
+			if ( ARRAY_A === $args['output'] ) {
+				$items = wp_list_pluck( $items, 'data' );
+			} elseif ( ARRAY_N === $args['output'] ) {
+				$items = wp_list_pluck( $items, 'data' );
+				foreach ( $items as $key => $data ) {
+					$items[ $key ] = array_values( $data );
+				}
+			} elseif ( OBJECT === $args['output'] ) {
+				$items = wp_list_pluck( $items, 'data' );
+				foreach ( $items as $key => $data ) {
+					$items[ $key ] = (object) $data;
+				}
+			}
 		}
 
 		if ( in_array( 'ids', $args['fields'], true ) ) {
@@ -1424,6 +1438,7 @@ abstract class Model {
 			'meta_query'  => array(), // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 			'date_query'  => array(),
 			'fields'      => 'all',
+			'output'      => get_called_class(),
 		);
 
 		$args             = wp_parse_args( $args, $default );

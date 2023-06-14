@@ -8,7 +8,7 @@
  * @package EverAccounting
  */
 
-use EverAccounting\Models\Income;
+use EverAccounting\Models\Payment;
 use EverAccounting\Models\Revenue;
 
 defined( 'ABSPATH' ) || exit;
@@ -31,17 +31,17 @@ function eaccounting_get_transaction_types() {
 /**
  * Get a single payment.
  *
- * @param Income $payment Payment object.
+ * @param Payment $payment Payment object.
  *
  * @since 1.1.0
- *@return Income|null
+ *@return Payment|null
  */
 function eaccounting_get_payment( $payment ) {
 	if ( empty( $payment ) ) {
 		return null;
 	}
 	try {
-		$result = new EverAccounting\Models\Income( $payment );
+		$result = new EverAccounting\Models\Payment( $payment );
 
 		return $result->exists() ? $result : null;
 	} catch ( \Exception $e ) {
@@ -73,7 +73,7 @@ function eaccounting_get_payment( $payment ) {
  * @param bool  $wp_error Optional. Whether to return a WP_Error on failure. Default false.
  *
  * @since 1.1.0
- *@return EverAccounting\Models\Income|\WP_Error|bool
+ *@return EverAccounting\Models\Payment|\WP_Error|bool
  */
 function eaccounting_insert_payment( $args, $wp_error = true ) {
 	// Ensure that we have data.
@@ -85,7 +85,7 @@ function eaccounting_insert_payment( $args, $wp_error = true ) {
 		$args = wp_parse_args( $args, array( 'id' => null ) );
 
 		// Retrieve the expense.
-		$item = new Income( $args['id'] );
+		$item = new Payment( $args['id'] );
 
 		// Load new data.
 		$item->set_props( $args );
@@ -109,7 +109,7 @@ function eaccounting_insert_payment( $args, $wp_error = true ) {
  */
 function eaccounting_delete_payment( $payment_id ) {
 	try {
-		$payment = new EverAccounting\Models\Income( $payment_id );
+		$payment = new EverAccounting\Models\Payment( $payment_id );
 
 		return $payment->exists() ? $payment->delete() : false;
 	} catch ( \Exception $e ) {
@@ -488,7 +488,7 @@ function eaccounting_get_transfers( $args = array() ) {
  * @param array $args Query arguments.
  *
  * @since 1.0.
- *@return array|Income[]|Revenue[]|int
+ *@return array|Payment[]|Revenue[]|int
  */
 function eaccounting_get_transactions( $args = array() ) {
 	// Prepare args.
@@ -646,7 +646,7 @@ function eaccounting_get_transactions( $args = array() ) {
 
 						break;
 					case 'expense':
-						$transaction = new Income();
+						$transaction = new Payment();
 						$transaction->set_props( $item );
 						$transaction->set_object_read( true );
 

@@ -2,15 +2,15 @@
 /**
  * View: Vendor Form
  *
- * @package EverAccounting
  * @since 1.1.6
+ * @package EverAccounting
  * @var \EverAccounting\Models\Vendor $vendor Vendor object.
  */
 
 defined( 'ABSPATH' ) || exit;
 
 ?>
-<form id="eac-vendor-form" class="eac-form" method="post">
+<form id="eac-vendor-form" class="eac-ajax-form" method="post">
 	<div class="eac-card">
 		<div class="eac-card__header">
 			<h2 class="eac-card__title"><?php esc_html_e( 'Basic Details', 'wp-ever-accounting' ); ?></h2>
@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
 		<div class="eac-card__body">
 			<div class="eac-columns">
 				<?php
-				eac_input_field(
+				eac_form_field(
 					array(
 						'id'          => 'name',
 						'label'       => __( 'Name', 'wp-ever-accounting' ),
@@ -28,17 +28,18 @@ defined( 'ABSPATH' ) || exit;
 						'required'    => true,
 					)
 				);
-				eac_input_field(
+				eac_form_field(
 					array(
-						'type'     => 'currency',
-						'id'       => 'currency_code',
-						'label'    => __( 'Currency Code', 'wp-ever-accounting' ),
-						'value'    => $vendor->get_currency_code(),
-						'class'    => 'eac-col-6',
-						'required' => true,
+						'type'        => 'currency',
+						'id'          => 'currency_code',
+						'label'       => __( 'Currency Code', 'wp-ever-accounting' ),
+						'value'       => $vendor->get_currency_code(),
+						'class'       => 'eac-col-6',
+						'required'    => true,
+						'input_class' => 'eac-select2',
 					)
 				);
-				eac_input_field(
+				eac_form_field(
 					array(
 						'id'          => 'email',
 						'label'       => __( 'Email', 'wp-ever-accounting' ),
@@ -47,7 +48,7 @@ defined( 'ABSPATH' ) || exit;
 						'class'       => 'eac-col-6',
 					)
 				);
-				eac_input_field(
+				eac_form_field(
 					array(
 						'id'          => 'phone',
 						'label'       => __( 'Phone', 'wp-ever-accounting' ),
@@ -59,14 +60,15 @@ defined( 'ABSPATH' ) || exit;
 				?>
 			</div>
 		</div>
-		<div class="eac-card__separator"></div>
+	</div>
+	<div class="eac-card">
 		<div class="eac-card__header">
 			<h2 class="eac-card__title"><?php esc_html_e( 'Business Details', 'wp-ever-accounting' ); ?></h2>
 		</div>
 		<div class="eac-card__body">
 			<div class="eac-columns">
 				<?php
-				eac_input_field(
+				eac_form_field(
 					array(
 						'id'          => 'company',
 						'label'       => __( 'Company', 'wp-ever-accounting' ),
@@ -75,7 +77,7 @@ defined( 'ABSPATH' ) || exit;
 						'class'       => 'eac-col-6',
 					)
 				);
-				eac_input_field(
+				eac_form_field(
 					array(
 						'id'          => 'website',
 						'label'       => __( 'Website', 'wp-ever-accounting' ),
@@ -84,7 +86,7 @@ defined( 'ABSPATH' ) || exit;
 						'class'       => 'eac-col-6',
 					)
 				);
-				eac_input_field(
+				eac_form_field(
 					array(
 						'id'          => 'vat_number',
 						'label'       => __( 'VAT Number', 'wp-ever-accounting' ),
@@ -96,14 +98,15 @@ defined( 'ABSPATH' ) || exit;
 				?>
 			</div>
 		</div>
-		<div class="eac-card__separator"></div>
+	</div>
+	<div class="eac-card">
 		<div class="eac-card__header">
 			<h2 class="eac-card__title"><?php esc_html_e( 'Address', 'wp-ever-accounting' ); ?></h2>
 		</div>
 		<div class="eac-card__body">
 			<div class="eac-columns">
 				<?php
-				eac_input_field(
+				eac_form_field(
 					array(
 						'id'          => 'address_1',
 						'label'       => __( 'Address Line 1', 'wp-ever-accounting' ),
@@ -112,7 +115,7 @@ defined( 'ABSPATH' ) || exit;
 						'class'       => 'eac-col-6',
 					)
 				);
-				eac_input_field(
+				eac_form_field(
 					array(
 						'id'          => 'address_2',
 						'label'       => __( 'Address Line 2', 'wp-ever-accounting' ),
@@ -121,7 +124,7 @@ defined( 'ABSPATH' ) || exit;
 						'value'       => $vendor->get_address_2(),
 					)
 				);
-				eac_input_field(
+				eac_form_field(
 					array(
 						'id'          => 'city',
 						'label'       => __( 'City', 'wp-ever-accounting' ),
@@ -130,7 +133,7 @@ defined( 'ABSPATH' ) || exit;
 						'class'       => 'eac-col-6',
 					)
 				);
-				eac_input_field(
+				eac_form_field(
 					array(
 						'id'          => 'state',
 						'label'       => __( 'State', 'wp-ever-accounting' ),
@@ -139,7 +142,7 @@ defined( 'ABSPATH' ) || exit;
 						'class'       => 'eac-col-6',
 					)
 				);
-				eac_input_field(
+				eac_form_field(
 					array(
 						'id'          => 'postcode',
 						'label'       => __( 'Postal Code', 'wp-ever-accounting' ),
@@ -148,21 +151,23 @@ defined( 'ABSPATH' ) || exit;
 						'class'       => 'eac-col-6',
 					)
 				);
-				eac_input_field(
+				eac_form_field(
 					array(
-						'type'  => 'country',
-						'id'    => 'country',
-						'label' => __( 'Country', 'wp-ever-accounting' ),
-						'value' => $vendor->get_country(),
-						'class' => 'eac-col-6',
+						'type'        => 'country',
+						'id'          => 'country',
+						'label'       => __( 'Country', 'wp-ever-accounting' ),
+						'value'       => $vendor->get_country(),
+						'class'       => 'eac-col-6',
+						'input_class' => 'eac-select2',
 					)
 				);
 				?>
 			</div>
 		</div>
-		<?php wp_nonce_field( 'eac_edit_vendor' ); ?>
-		<input type="hidden" name="id" value="<?php echo esc_attr( $vendor->get_id() ); ?>">
-		<input type="hidden" name="action" value="eac_edit_vendor">
+	</div>
+	<?php wp_nonce_field( 'eac_edit_vendor' ); ?>
+	<input type="hidden" name="id" value="<?php echo esc_attr( $vendor->get_id() ); ?>">
+	<input type="hidden" name="action" value="eac_edit_vendor">
 </form>
 
 

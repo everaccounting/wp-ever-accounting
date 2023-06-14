@@ -9,7 +9,7 @@
 
 defined( 'ABSPATH' ) || exit;
 ?>
-<form id="eac-tax-form" class="eac-form" method="post">
+<form id="eac-tax-form" class="eac-ajax-form" method="post">
 	<div class="eac-card">
 		<div class="eac-card__header">
 			<h2 class="eac-card__title"><?php esc_html_e( 'Tax Rate Details', 'wp-ever-accounting' ); ?></h2>
@@ -17,42 +17,50 @@ defined( 'ABSPATH' ) || exit;
 		<div class="eac-card__body">
 			<div class="eac-columns">
 				<?php
-				eac_input_fields(
+				eac_form_field(
 					array(
-						array(
-							'id'       => 'name',
-							'label'    => __( 'Name', 'wp-ever-accounting' ),
-							'value'    => $tax->get_name(),
-							'class'    => 'eac-col-6',
-							'required' => true,
+						'id'          => 'name',
+						'label'       => __( 'Name', 'wp-ever-accounting' ),
+						'placeholder' => __( 'Enter tax rate name', 'wp-ever-accounting' ),
+						'value'       => $tax->get_name(),
+						'class'       => 'eac-col-6',
+						'required'    => true,
+					)
+				);
+				eac_form_field(
+					array(
+						'type'        => 'decimal',
+						'id'          => 'rate',
+						'label'       => __( 'Rate (%)', 'wp-ever-accounting' ),
+						'placeholder' => __( 'Enter tax rate', 'wp-ever-accounting' ),
+						'value'       => $tax->get_rate(),
+						'class'       => 'eac-col-6',
+						'required'    => true,
+					)
+				);
+				eac_form_field(
+					array(
+						'id'          => 'is_compound',
+						'label'       => __( 'Is compound', 'wp-ever-accounting' ),
+						'placeholder' => __( 'Select if tax is compound', 'wp-ever-accounting' ),
+						'value'       => $tax->get_is_compound(),
+						'class'       => 'eac-col-6',
+						'required'    => true,
+						'options'     => array(
+							'yes' => __( 'Yes', 'wp-ever-accounting' ),
+							'no'  => __( 'No', 'wp-ever-accounting' ),
 						),
-						array(
-							'type'     => 'number',
-							'id'       => 'rate',
-							'label'    => __( 'Rate (%)', 'wp-ever-accounting' ),
-							'value'    => $tax->get_rate(),
-							'class'    => 'eac-col-6',
-							'required' => true,
-						),
-						array(
-							'id'       => 'is_compound',
-							'label'    => __( 'Is compound', 'wp-ever-accounting' ),
-							'value'    => $tax->get_is_compound(),
-							'class'    => 'eac-col-6',
-							'required' => true,
-							'options'  => array(
-								'yes' => __( 'Yes', 'wp-ever-accounting' ),
-								'no'  => __( 'No', 'wp-ever-accounting' ),
-							),
-							'type'     => 'select',
-						),
-						array(
-							'id'    => 'description',
-							'label' => __( 'Description', 'wp-ever-accounting' ),
-							'value' => $tax->get_description(),
-							'class' => 'eac-col-12',
-							'type'  => 'textarea',
-						),
+						'type'        => 'select',
+					)
+				);
+				eac_form_field(
+					array(
+						'id'          => 'description',
+						'label'       => __( 'Description', 'wp-ever-accounting' ),
+						'placeholder' => __( 'Enter tax rate description', 'wp-ever-accounting' ),
+						'value'       => $tax->get_description(),
+						'class'       => 'eac-col-12',
+						'type'        => 'textarea',
 					)
 				);
 				?>

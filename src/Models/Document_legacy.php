@@ -44,9 +44,9 @@ abstract class Document_legacy extends Model {
 	 * @var array
 	 */
 	protected $core_data = array(
-		'document_number' => '',
+		'number' => '',
 		'type'            => '',
-		'order_number'    => '',
+		'reference'    => '',
 		'status'          => 'draft',
 		'issue_date'      => null,
 		'due_date'        => null,
@@ -239,8 +239,8 @@ abstract class Document_legacy extends Model {
 	 *
 	 * @return string
 	 */
-	public function get_document_number( $context = 'edit' ) {
-		return $this->get_prop( 'document_number', $context );
+	public function get_number( $context = 'edit' ) {
+		return $this->get_prop( 'number', $context );
 	}
 
 	/**
@@ -263,8 +263,8 @@ abstract class Document_legacy extends Model {
 	 *
 	 * @return string
 	 */
-	public function get_order_number( $context = 'edit' ) {
-		return $this->get_prop( 'order_number', $context );
+	public function get_reference( $context = 'edit' ) {
+		return $this->get_prop( 'reference', $context );
 	}
 
 	/**
@@ -732,23 +732,23 @@ abstract class Document_legacy extends Model {
 	/**
 	 * set the number.
 	 *
-	 * @param string $document_number .
+	 * @param string $number .
 	 *
 	 * @since  1.1.0
 	 */
-	public function set_document_number( $document_number ) {
-		$this->set_prop( 'document_number', eac_clean( $document_number ) );
+	public function set_number( $number ) {
+		$this->set_prop( 'number', eac_clean( $number ) );
 	}
 
 	/**
 	 * set the number.
 	 *
-	 * @param string $order_number Order number.
+	 * @param string $reference Order number.
 	 *
 	 * @since  1.1.0
 	 */
-	public function set_order_number( $order_number ) {
-		$this->set_prop( 'order_number', eac_clean( $order_number ) );
+	public function set_reference( $reference ) {
+		$this->set_prop( 'reference', eac_clean( $reference ) );
 	}
 
 	/**

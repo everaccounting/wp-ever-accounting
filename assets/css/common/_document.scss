@@ -1,0 +1,495 @@
+.eac-document {
+
+	table {
+		border-collapse: collapse;
+		border-spacing: 0;
+		background-color: #fff;
+		table-layout: fixed;
+
+		@media only screen and (max-width: 768px) {
+			table-layout: auto !important;
+		}
+
+		td, th {
+			//padding: .8em 1em;
+			text-align: left;
+			line-height: 1.5em;
+			vertical-align: top;
+		}
+	}
+
+	input[type="number"]::-webkit-outer-spin-button,
+	input[type="number"]::-webkit-inner-spin-button {
+		-webkit-appearance: none;
+		margin: 0;
+	}
+
+	&__title {
+		font-size: 1.75em;
+		text-transform: uppercase;
+		line-height: 1;
+	}
+
+	&__logo {
+		max-width: 250px;
+		max-height: 70px;
+
+		img {
+			display: block;
+			max-width: 100%;
+			height: auto;
+			width: auto;
+			max-height: 70px;
+		}
+	}
+
+	&__meta {
+		width: auto !important;
+		border-collapse: collapse;
+		background-color: transparent;
+		float: right;
+
+		td, th {
+			padding: .2em 0;
+			text-align: right;
+			line-height: 1.5em;
+			vertical-align: top;
+		}
+		th{
+			padding-right: 2em;
+			font-weight: bold;
+			user-select: none;
+			text-align: right;
+		}
+		td{
+
+		}
+	}
+
+	&__items {
+		width: 100%;
+		min-width: 800px;
+		border: 1px solid #ddd;
+
+		thead {
+			border-bottom: 1px solid #ddd;
+
+			th {
+				text-align: left;
+				padding: 1em;
+				font-weight: 400;
+				color: #999;
+				background: #f8f8f8;
+				user-select: none;
+			}
+		}
+
+		tbody, tfoot {
+			tr {
+				border-bottom: 1px solid #ddd;
+
+				&:last-child {
+					border-bottom: 0;
+				}
+
+				.item-description {
+					margin-top: 10px;
+					resize: none;
+					height: 3.5em;
+				}
+			}
+
+			td {
+				padding: 1.5em 1em 1em;
+				text-align: left;
+				line-height: 1.5em;
+				vertical-align: top;
+			}
+
+			textarea,
+			select,
+			input:not([type="checkbox"]):not([type="radio"]) {
+				width: 100%;
+				text-align: inherit;
+			}
+
+			.select2 {
+				width: 100% !important;
+			}
+		}
+
+
+		.line-subtotal {
+			text-align: right;
+		}
+
+		.line-actions {
+			text-align: left;
+
+			> a {
+				display: inline-block;
+				color: #ccc;
+				transition: color 0.1s ease-in;
+				text-decoration: none;
+				cursor: pointer;
+
+				&:hover {
+					color: #444;
+				}
+			}
+
+			th & {
+				text-indent: -9999px;
+			}
+		}
+	}
+
+	&__totals {
+		width: 100%;
+		text-align: right;
+
+		.total-label {
+			font-weight: bold;
+			color: #777;
+			text-align: right;
+
+			input {
+				text-align: right;
+				font-weight: normal;
+				color: inherit;
+			}
+		}
+
+		.total-value {
+			font-weight: bold;
+			color: #333;
+			text-align: right;
+			width: 15em;
+		}
+	}
+}
+
+.eac-document-form121 {
+
+	table {
+		width: 100%;
+		border-collapse: collapse;
+		border-spacing: 0;
+		background-color: #fff;
+		table-layout: fixed;
+
+		@media only screen and (max-width: 768px) {
+			table-layout: auto !important;
+		}
+
+		tr {
+			td, th {
+				padding: 1.5em 1em 1em;
+				text-align: left;
+				line-height: 1.5em;
+				vertical-align: top;
+
+				&:first-child {
+					padding-left: 2em
+				}
+
+				&:last-child {
+					padding-right: 2em;
+				}
+			}
+		}
+	}
+
+	.billing-data {
+		.eac-form-field {
+			margin-bottom: 8px;
+		}
+
+		label {
+			padding: 0 0 3px;
+			margin: 0;
+			color: #777;
+			font-weight: normal;
+		}
+	}
+
+	.eac-panel.items {
+		overflow-x: auto;
+		border: 0;
+		padding: 0;
+		margin-bottom: 0;
+
+		table {
+			border: 1px solid #ddd;
+			table-layout: fixed;
+			min-width: 800px;
+
+			@media only screen and (max-width: 768px) {
+				table-layout: auto !important;
+			}
+
+			thead {
+				border-bottom: 1px solid #ddd;
+
+				th {
+					text-align: left;
+					padding: 1em;
+					font-weight: 400;
+					color: #999;
+					background: #f8f8f8;
+					-webkit-touch-callout: none;
+					-webkit-user-select: none;
+					user-select: none;
+				}
+			}
+
+			tbody, tfoot {
+				tr {
+					border-bottom: 1px solid #ddd;
+
+					&:last-child {
+						border-bottom: 0;
+					}
+
+					.item-description {
+						margin-top: 10px;
+						resize: none;
+						height: 3.5em;
+					}
+				}
+
+				td {
+					padding: 1.5em 1em 1em;
+					text-align: left;
+					line-height: 1.5em;
+					vertical-align: top;
+
+					textarea,
+					select,
+					input:not([type="checkbox"]):not([type="radio"]) {
+						width: 100%;
+						text-align: inherit;
+					}
+
+					// hide arrows on number input.
+					input[type="number"]::-webkit-outer-spin-button,
+					input[type="number"]::-webkit-inner-spin-button {
+						-webkit-appearance: none;
+						margin: 0;
+					}
+
+					.select2 {
+						//width: 100% !important;
+					}
+				}
+			}
+
+			tfoot {
+
+			}
+		}
+
+		// alignments.
+		//.line-price,
+		//.line-quantity,
+		.line-subtotal {
+			text-align: right;
+		}
+	}
+
+	.eac-panel.buttons {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-between;
+		align-items: center;
+		padding: 1em 2em;
+		margin: 0;
+		border-top: 0;
+	}
+
+	.eac-panel.totals {
+		border-top: 0;
+		margin-top: 0;
+
+		table {
+			.total-label {
+				font-weight: bold;
+				color: #777;
+				text-align: right;
+			}
+
+			.total-value {
+				font-weight: bold;
+				color: #333;
+				text-align: right;
+			}
+		}
+	}
+}
+
+
+.eac-document123x {
+
+
+	&__data {
+		width: 100%;
+		box-sizing: border-box;
+		border: 1px solid #ddd;
+		background: #fff;
+
+		&.header {
+			margin-bottom: 2em;
+			padding: 1em 2em;
+		}
+
+		&.items {
+			overflow-x: auto;
+			border: 0;
+		}
+
+		&.buttons {
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: space-between;
+			align-items: center;
+			padding: 1em 2em;
+			border-top: 0;
+			border-bottom: 0;
+		}
+
+		&.totals {
+			width: 100%;
+			padding: 1em 2em;
+			padding-bottom: 2em;
+
+			td {
+				text-align: right;
+			}
+
+			@media only screen and (min-width: 600px) {
+				padding-left: 50%;
+			}
+		}
+
+		&.additional {
+			margin-top: 2em;
+			padding: 1em 2em;
+		}
+	}
+
+	&__items {
+		width: 100%;
+		border-collapse: collapse;
+		border-spacing: 0;
+		background-color: #fff;
+		border: 1px solid #ddd;
+		table-layout: fixed;
+		min-width: 800px;
+
+		@media only screen and (max-width: 768px) {
+			table-layout: auto !important;
+		}
+
+
+		&-head {
+			border-bottom: 1px solid #ddd;
+
+			th {
+				text-align: left;
+				padding: 1em;
+				font-weight: 400;
+				color: #999;
+				background: #f8f8f8;
+				-webkit-touch-callout: none;
+				-webkit-user-select: none;
+				user-select: none;
+
+				&:first-child {
+					padding-left: 2em
+				}
+
+				&:last-child {
+					padding-right: 2em;
+				}
+			}
+		}
+
+		&-lines {
+			td {
+				padding: 1.5em 1em 1em;
+				text-align: left;
+				line-height: 1.5em;
+				vertical-align: top;
+
+				&:first-child {
+					padding-left: 2em
+				}
+
+				&:last-child {
+					padding-right: 2em;
+				}
+
+				textarea,
+				select,
+				input:not([type="checkbox"]):not([type="radio"]) {
+					width: 100%;
+					text-align: inherit;
+				}
+
+				// hide arrows on number input.
+				input[type="number"]::-webkit-outer-spin-button,
+				input[type="number"]::-webkit-inner-spin-button {
+					-webkit-appearance: none;
+					margin: 0;
+				}
+
+				.select2 {
+					//width: 100% !important;
+				}
+			}
+		}
+
+		&-line {
+			border-bottom: 1px solid #ddd;
+
+			&:last-child {
+				border-bottom: 0;
+			}
+
+			.item-description {
+				margin-top: 10px;
+				resize: none;
+				height: 3.5em;
+			}
+		}
+
+
+	}
+
+	&__totals {
+		width: 100%;
+		border-collapse: collapse;
+		border-spacing: 0;
+		background-color: #fff;
+		table-layout: fixed;
+
+		th {
+			text-align: right;
+			padding: 0.75em;
+			user-select: none;
+		}
+
+		td {
+			font-size: 1em !important;
+			width: 14em;
+			margin: 0 0 0 0.5em;
+			box-sizing: border-box;
+			padding: 0.4em;
+
+			span {
+				font-weight: 600;
+			}
+		}
+
+	}
+}

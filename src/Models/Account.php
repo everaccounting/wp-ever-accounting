@@ -44,15 +44,15 @@ class Account extends Model {
 	 * @var array
 	 */
 	protected $core_data = array(
-		'name'            => '',
 		'type'            => 'bank',
+		'name'            => '',
 		'number'          => '',
 		'opening_balance' => 0.0000,
 		'bank_name'       => null,
 		'bank_phone'      => null,
 		'bank_address'    => null,
 		'status'          => 'active',
-		'currency_code'   => 'USD',
+		'currency'        => 'USD',
 		'creator_id'      => null,
 		'updated_at'      => null,
 		'created_at'      => null,
@@ -76,7 +76,7 @@ class Account extends Model {
 	 * @since 1.0.0
 	 */
 	public function __construct( $data = 0 ) {
-		$this->core_data['currency_code'] = eac_get_base_currency();
+		$this->core_data['currency'] = eac_get_base_currency();
 		parent::__construct( $data );
 	}
 
@@ -193,8 +193,8 @@ class Account extends Model {
 	 *
 	 * @return mixed|null
 	 */
-	public function get_currency_code( $context = 'edit' ) {
-		return $this->get_prop( 'currency_code', $context );
+	public function get_currency( $context = 'edit' ) {
+		return $this->get_prop( 'currency', $context );
 	}
 
 	/**
@@ -204,8 +204,8 @@ class Account extends Model {
 	 *
 	 * @since 1.1.0
 	 */
-	public function set_currency_code( $currency ) {
-		$this->set_prop( 'currency_code', strtoupper( $currency ) );
+	public function set_currency( $currency ) {
+		$this->set_prop( 'currency', strtoupper( $currency ) );
 	}
 
 	/**
@@ -386,9 +386,9 @@ class Account extends Model {
 	public function get_balance( $context = 'edit' ) {
 		if ( is_null( $this->get_prop( 'balance' ) ) ) {
 			global $wpdb;
-			$table             = $wpdb->prefix . 'ea_transactions';
+			$table             = $wpdb->prefix . Transaction::TABLE_NAME;
 			$transaction_total = (float) $wpdb->get_var(
-				$wpdb->prepare( "SELECT SUM(CASE WHEN type='payment' then amount WHEN type='expense' then - amount END) as total from {$table} WHERE account_id=%d AND currency_code=%s", $this->get_id(), $this->get_currency_code() )
+				$wpdb->prepare( "SELECT SUM(CASE WHEN type='payment' then amount/conversion_rate WHEN type='expense' then - amount/conversion_rate END) as total from $table} WHERE account_id=%d", $this->get_id() )
 			);
 			$balance           = $this->get_opening_balance() + $transaction_total;
 			$this->set_balance( $balance );
@@ -445,12 +445,16 @@ class Account extends Model {
 		}
 
 		// Currency fields check.
-		if ( empty( $this->get_currency_code() ) ) {
+		if ( empty( $this->get_currency() ) ) {
 			return new \WP_Error( 'missing_required', __( 'Account currency is required.', 'wp-ever-accounting' ) );
 		}
 
 		// Duplicate account number check.
-		$account = $this->get( $this->get_number(), 'number' );
+		$account = $this->get(
+			[
+				'number' => $this->get_number(),
+			]
+		);
 		if ( ! empty( $account ) && $account->get_id() !== $this->get_id() ) {
 			return new \WP_Error( 'duplicate_account_number', __( 'Account number already exists.', 'wp-ever-accounting' ) );
 		}
@@ -484,22 +488,21 @@ class Account extends Model {
 	/**
 	 * Get formatted balance.
 	 *
-	 * @return string
-	 *
 	 * @since 1.0.0
+	 * @return string
 	 */
 	public function get_formatted_balance() {
-		return eac_format_money( $this->get_balance(), $this->get_currency_code() );
+		return eac_format_money( $this->get_balance(), $this->get_currency() );
 	}
 
 	/**
 	 * Get formatted name.
 	 *
-	 * @return string
 	 * @since 1.1.6
+	 * @return string
 	 */
 	public function get_formatted_name() {
-		$name   = sprintf( '%s (%s)', $this->get_name(), $this->get_currency_code() );
+		$name   = sprintf( '%s (%s)', $this->get_name(), $this->get_currency() );
 		$number = $this->get_number();
 
 		return $number ? sprintf( '%s - %s', $number, $name ) : $name;

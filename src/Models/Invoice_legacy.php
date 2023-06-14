@@ -41,7 +41,7 @@ class Invoice_legacy extends Document {
 			if ( empty( $number ) ) {
 				$number = $this->repository->get_next_number( $this );
 			}
-			$this->set_document_number( $this->generate_number( $number ) );
+			$this->set_number( $this->generate_number( $number ) );
 		}
 	}
 
@@ -152,7 +152,7 @@ class Invoice_legacy extends Document {
 	 * @return string
 	 */
 	public function get_invoice_number( $context = 'edit' ) {
-		return $this->get_prop( 'document_number', $context );
+		return $this->get_prop( 'number', $context );
 	}
 
 	/**
@@ -416,7 +416,7 @@ class Invoice_legacy extends Document {
 		$account          = eaccounting_get_account( $args['account_id'] );
 		$currency         = eaccounting_get_currency( $account->get_currency_code() );
 		$converted_amount = eaccounting_price_convert( $amount, $this->get_currency_code(), $currency->get_code(), $this->get_currency_rate(), $currency->get_rate() );
-		$payment          = new Income();
+		$payment          = new Payment();
 		$payment->set_props(
 			array(
 				'payment_date'   => $args['date'],
@@ -447,7 +447,7 @@ class Invoice_legacy extends Document {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @return Income[] Array of payments.
+	 * @return Payment[] Array of payments.
 	 */
 	public function get_payments() {
 		if ( $this->exists() ) {

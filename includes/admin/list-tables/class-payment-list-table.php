@@ -9,7 +9,7 @@
  * @package     EverAccounting
  */
 
-use EverAccounting\Models\Income;
+use EverAccounting\Models\Payment;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -157,7 +157,7 @@ class EverAccounting_Payment_List_Table extends EverAccounting_List_Table {
 	/**
 	 * Renders the checkbox column in the revenues list table.
 	 *
-	 * @param Income $payment The current object.
+	 * @param Payment $payment The current object.
 	 *
 	 * @since  1.0.2
 	 *@return string Displays a checkbox.
@@ -169,8 +169,8 @@ class EverAccounting_Payment_List_Table extends EverAccounting_List_Table {
 	/**
 	 * This function renders most of the columns in the list table.
 	 *
-	 * @param Income $payment The current object.
-	 * @param string $column_name The name of the column.
+	 * @param Payment $payment The current object.
+	 * @param string  $column_name The name of the column.
 	 *
 	 * @since 1.0.2
 	 *@return string The column value.

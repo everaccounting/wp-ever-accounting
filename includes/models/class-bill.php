@@ -463,7 +463,7 @@ class Bill_Legacy extends Document {
 		$account          = eaccounting_get_account( $args['account_id'] );
 		$currency         = eaccounting_get_currency( $account->get_currency_code() );
 		$converted_amount = eaccounting_price_convert( $amount, $this->get_currency_code(), $currency->get_code(), $this->get_currency_rate(), $currency->get_rate() );
-		$expense          = new Income();
+		$expense          = new Payment();
 		$expense->set_props(
 			array(
 				'payment_date'   => $args['date'],
@@ -493,7 +493,7 @@ class Bill_Legacy extends Document {
 	 * Get payments.
 	 *
 	 * @since 1.1.0
-	 *@return Income[]
+	 *@return Payment[]
 	 */
 	public function get_payments() {
 		if ( $this->exists() ) {

@@ -81,7 +81,7 @@ class Invoices extends ListTable {
 
 
 	/**
-	 * Adds the order and product filters to the licenses list.
+	 * Adds the order and item filters to the licenses list.
 	 *
 	 * @param string $which The location of the extra table nav markup: 'top' or 'bottom'.
 	 *
@@ -109,7 +109,7 @@ class Invoices extends ListTable {
 	 * @since 1.0.2
 	 */
 	public function process_bulk_action( $doaction ) {
-		if ( ! empty( $doaction ) ) {
+		if ( ! empty( $doaction ) && check_admin_referer( 'bulk-' . $this->_args['plural'] ) ) {
 			$id  = eac_get_input_var( 'invoice_id' );
 			$ids = eac_get_input_var( 'invoice_ids', array() );
 			if ( ! empty( $id ) ) {

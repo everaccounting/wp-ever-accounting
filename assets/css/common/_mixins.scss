@@ -3,69 +3,119 @@
 	margin: 0 auto;
 }
 
-@mixin generate-utility($utility, $infix, $is-rfs-media-query: false) {
-	$values: map-get($utility, values);
+@mixin generate-utilities($utilities) {
+	$grid-breakpoints: (
+		xs: 0,
+		sm: 576px,
+		md: 768px,
+		lg: 992px,
+	) !default;
 
-	// If the values are a list or string, convert it into a map
-	@if type-of($values) == "string" or type-of(nth($values, 1)) != "list" {
-		$values: zip($values, $values);
-	}
+	@each $utility, $config in $utilities {
+		$values: map-get($config, values);
 
-	@each $key, $value in $values {
-		$properties: map-get($utility, property);
-
-		// Multiple properties are possible, for example with vertical or horizontal margins or paddings
-		@if type-of($properties) == "string" {
-			$properties: append((), $properties);
+		// If the values are a list or string, convert it into a map
+		@if type-of($values) == "string" or type-of(nth($values, 1)) != "list" {
+			$values: zip($values, $values);
 		}
 
-		// Use custom class if present
-		$property-class: if(map-has-key($utility, class), map-get($utility, class), nth($properties, 1));
-		$property-class: if($property-class == null, "", $property-class);
-
-		// State params to generate pseudo-classes
-		$state: if(map-has-key($utility, state), map-get($utility, state), ());
-
-		$infix: if($property-class == "" and str-slice($infix, 1, 1) == "-", str-slice($infix, 2), $infix);
-
-		// Don't prefix if value key is null (eg. with shadow class)
-		$property-class-modifier: if($key, if($property-class == "" and $infix == "", "", "-") + $key, "");
-
-		@if map-get($utility, rfs) {
-			// Inside the media query
-			@if $is-rfs-media-query {
-				$val: rfs-value($value);
-
-				// Do not render anything if fluid and non fluid values are the same
-				$value: if($val == rfs-fluid-value($value), null, $val);
-			}
-			@else {
-				$value: rfs-fluid-value($value);
-			}
-		}
-
-		$is-rtl: map-get($utility, rtl);
-
-		@if $value != null {
-			@if $is-rtl == false {
-				/* rtl:begin:remove */
-			}
-			.#{$property-class + $infix + $property-class-modifier} {
-				@each $property in $properties {
-					#{$property}: $value if($enable-important-utilities, !important, null);
-				}
+		@each $key, $value in $values {
+			$properties: map-get($config, property);
+			// Multiple properties are possible, for example with vertical or horizontal margins or paddings
+			@if type-of($properties) == "string" {
+				$properties: append((), $properties);
 			}
 
-			@each $pseudo in $state {
-				.#{$property-class + $infix + $property-class-modifier}-#{$pseudo}:#{$pseudo} {
+			$class: if(map-has-key($config, class), map-get($config, class), nth($properties, 1));
+			$class: if($class == null, "", $class);
+
+			// State params to generate pseudo-classes
+			$state: if(map-has-key($config, state), map-get($config, state), ());
+
+			// Don't prefix if value key is null (eg. with shadow class)
+			$modifier: if($key, if($class == "", "", "-") + $key, "");
+
+			@if $value != null {
+
+				// Generate utility classes
+				.#{ $class}#{ $modifier} {
 					@each $property in $properties {
-						#{$property}: $value if($enable-important-utilities, !important, null);
+						#{$property}: $value;
 					}
 				}
-			}
-			@if $is-rtl == false {
-				/* rtl:end:remove */
+
+				// Generate responsive utility classes
+				@if map-has-key($config, responsive) and map-get($config, responsive) {
+					@each $breakpoint, $breakpoint-width in $grid-breakpoints {
+						@if $breakpoint != "xs" {
+							@media (min-width: $breakpoint-width) {
+								.#{ $class}#{ $modifier}-#{$breakpoint} {
+									@each $property in $properties {
+										#{$property}: $value;
+									}
+								}
+							}
+						}
+					}
+				}
+
+				// Generate pseudo-classes
+				@each $pseudo in $state {
+					.#{ $class}#{ $modifier}-#{$pseudo}:#{$pseudo} {
+						@each $property in $properties {
+							#{$property}: $value;
+						}
+					}
+				}
+
+				//.#{ $root + $class + $modifier} {
+				//	@each $property in $properties {
+				//		#{$property}: $value;
+				//	}
+				//}
+
+				//@each $pseudo in $state {
+				//	.#{$root + $class + $modifier}-#{$pseudo}:#{$pseudo} {
+				//		@each $property in $properties {
+				//			#{$property}: $value;
+				//		}
+				//	}
+				//}
+
+				// Generate responsive utility classes
+				//@if map-has-key($config, responsive) and map-get($config, responsive) {
+				//	@each $breakpoint, $breakpoint-width in $grid-breakpoints {
+				//		@if $breakpoint != "xs" {
+				//			@media (min-width: $breakpoint-width) {
+				//				@each $value, $prop in $values {
+				//					.#{$root + $class + $modifier}-#{$breakpoint}-#{$value} {
+				//						@each $property in $properties {
+				//							#{$property}: $prop;
+				//						}
+				//					}
+				//				}
+				//			}
+				//		}
+				//	}
+				//}
 			}
 		}
+
 	}
+
+}
+
+
+// make a function that takes base color code and mix white with a percentage
+@function lighter($color, $percentage) {
+	@return mix(white, $color, $percentage);
+}
+
+@function darker($color, $percentage) {
+	@return mix(black, $color, $percentage);
+}
+
+@function invert($color, $amount: 100%) {
+	$inverse: change-color($color, $hue: hue($color) + 180);
+	@return mix($inverse, $color, $amount);
 }

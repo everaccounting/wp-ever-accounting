@@ -18,7 +18,7 @@ class Tax extends \EverAccounting\Admin\SettingsTab {
 	 * @since 1.0.0
 	 */
 	public function __construct() {
-		$this->id    = 'tax';
+		$this->id    = 'taxes';
 		$this->label = __( 'Taxes', 'wp-ever-accounting' );
 
 		parent::__construct();
@@ -40,8 +40,8 @@ class Tax extends \EverAccounting\Admin\SettingsTab {
 	 */
 	protected function get_own_sections() {
 		$sections = array(
-			''      => __( 'Tax', 'wp-ever-accounting' ),
-			'taxes' => __( 'Tax Rates', 'wp-ever-accounting' ),
+			''      => __( 'Options', 'wp-ever-accounting' ),
+			'rates' => __( 'Rates', 'wp-ever-accounting' ),
 		);
 
 		return $sections;
@@ -59,6 +59,13 @@ class Tax extends \EverAccounting\Admin\SettingsTab {
 				'title' => __( 'Tax options', 'wp-ever-accounting' ),
 				'type'  => 'title',
 				'id'    => 'tax_options',
+			),
+			array(
+				'title'   => __( 'Enable Taxes', 'wp-ever-accounting' ),
+				'desc'    => __( 'Enable tax rates and calculations.', 'wp-ever-accounting' ),
+				'id'      => 'eac_enabled_tax',
+				'type'    => 'checkbox',
+				'default' => 'no',
 			),
 			array(
 				'title'   => __( 'Rounding', 'wp-ever-accounting' ),

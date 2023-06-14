@@ -45,8 +45,8 @@ abstract class Document_BK extends Model {
 	 */
 	protected $core_data = array(
 		'type'            => '',
-		'document_number' => '',
-		'order_number'    => '',
+		'number' => '',
+		'reference'    => '',
 		'status'          => 'draft',
 		'contact_id'      => null,
 		'discount_type'   => 'percentage',
@@ -120,7 +120,7 @@ abstract class Document_BK extends Model {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @var DocumentTax[]
+	 * @var DocumentLineTax[]
 	 */
 	protected $taxes = array();
 
@@ -152,19 +152,19 @@ abstract class Document_BK extends Model {
 	 *
 	 * @return string
 	 */
-	public function get_document_number( $context = 'edit' ) {
-		return $this->get_prop( 'document_number', $context );
+	public function get_number( $context = 'edit' ) {
+		return $this->get_prop( 'number', $context );
 	}
 
 	/**
 	 * set documents number.
 	 *
-	 * @param string $document_number Document number.
+	 * @param string $number Document number.
 	 *
 	 * @since  1.1.0
 	 */
-	public function set_document_number( $document_number ) {
-		$this->set_prop( 'document_number', eac_clean( $document_number ) );
+	public function set_number( $number ) {
+		$this->set_prop( 'number', eac_clean( $number ) );
 	}
 
 	/**
@@ -198,19 +198,19 @@ abstract class Document_BK extends Model {
 	 *
 	 * @return string
 	 */
-	public function get_order_number( $context = 'edit' ) {
-		return $this->get_prop( 'order_number', $context );
+	public function get_reference( $context = 'edit' ) {
+		return $this->get_prop( 'reference', $context );
 	}
 
 	/**
 	 * Set order number.
 	 *
-	 * @param string $order_number Order number.
+	 * @param string $reference Order number.
 	 *
 	 * @since  1.1.0
 	 */
-	public function set_order_number( $order_number ) {
-		$this->set_prop( 'order_number', eac_clean( $order_number ) );
+	public function set_reference( $reference ) {
+		$this->set_prop( 'reference', eac_clean( $reference ) );
 	}
 
 	/**
@@ -1651,11 +1651,11 @@ abstract class Document_BK extends Model {
 	 * @param int $item_id Item id.
 	 *
 	 * @since 1.0.0
-	 * @return DocumentTax[]
+	 * @return DocumentLineTax[]
 	 */
 	public function get_taxes( $item_id = null ) {
 		if ( $this->exists() && empty( $this->taxes ) ) {
-			$this->taxes = DocumentTax::query(
+			$this->taxes = DocumentLineTax::query(
 				array(
 					'document_id' => $this->get_id(),
 					'orderby'     => 'id',
@@ -1683,13 +1683,13 @@ abstract class Document_BK extends Model {
 	 * Get payments.
 	 *
 	 * @since 1.0.0
-	 * @return Income[]
+	 * @return Payment[]
 	 */
 	public function get_payments() {
 		// Get payments only if the amount is positive.
 		$payments = array();
 		if ( $this->exists() ) {
-			$payments = Income::query(
+			$payments = Payment::query(
 				array(
 					'document_id' => $this->get_id(),
 					'orderby'     => 'id',
@@ -1713,12 +1713,12 @@ abstract class Document_BK extends Model {
 	 * Get refund payments.
 	 *
 	 * @since 1.0.0
-	 * @return  Income[] $payments Payments.
+	 * @return  Payment[] $payments Payments.
 	 */
 	public function get_refunds() {
 		$refunds = array();
 		if ( $this->exists() ) {
-			$refunds = Income::query(
+			$refunds = Payment::query(
 				array(
 					'document_id' => $this->get_id(),
 					'orderby'     => 'id',
@@ -1869,7 +1869,7 @@ abstract class Document_BK extends Model {
 				$default_tax_data = wp_parse_args( $data, $default_tax_data );
 			}
 			$tax_data     = wp_parse_args( $tax_data, $default_tax_data );
-			$document_tax = new DocumentTax();
+			$document_tax = new DocumentLineTax();
 			$document_tax->set_document_id( $this->get_id() );
 			$document_tax->set_tax_id( $tax_data['id'] );
 			$document_tax->set_item_id( $line_item->get_item_id() );
@@ -2480,13 +2480,13 @@ abstract class Document_BK extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	public function get_next_document_number() {
+	public function get_next_number() {
 		global $wpdb;
 		// take the first 3 letters of the document type and make it uppercase.
 		$prefix = strtoupper( substr( $this->get_type(), 0, 3 ) );
 		$length = 6;
 		// Use regular expression to extract the number from the the column.
-		$number = (int) $wpdb->get_var( $wpdb->prepare( "SELECT MAX(REGEXP_REPLACE(document_number, '[^0-9]', '')) FROM {$this->table} WHERE type = %s", $this->get_type() ) );
+		$number = (int) $wpdb->get_var( $wpdb->prepare( "SELECT MAX(REGEXP_REPLACE(number, '[^0-9]', '')) FROM {$this->table} WHERE type = %s", $this->get_type() ) );
 		$number ++;
 
 		// Pad the number with zeros.

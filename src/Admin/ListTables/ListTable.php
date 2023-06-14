@@ -316,20 +316,15 @@ class ListTable extends \WP_List_Table {
 	 *
 	 * @return void
 	 */
-	public function category_filter( $type = 'product_cat' ) {
+	public function category_filter( $type = 'item_category' ) {
 		$category_id = eac_get_input_var( 'category_id' );
-		$categories  = eac_get_terms(
-			array(
-				'include' => $category_id,
-				'type'    => $type,
-			)
-		);
+		$category    = eac_get_category( $category_id );
 		?>
-		<select class="eac-input__select" name="category_id" id="category-filter" data-eac-select2="category" data-subtime="<?php echo esc_attr( $type ); ?>" data-placeholder="<?php esc_attr_e( 'Filter by category', 'wp-ever-accounting' ); ?>">
+		<select class="eac-select2" name="category_id" id="category-filter" data-action="eac_json_search" data-type="<?php echo esc_attr( $type ); ?>" data-placeholder="<?php esc_attr_e( 'Filter by category', 'wp-ever-accounting' ); ?>">
 			<option value=""><?php esc_html_e( 'All categories', 'wp-ever-accounting' ); ?></option>
-			<?php foreach ( $categories as $category ) : ?>
-				<option value="<?php echo esc_attr( $category->get_id() ); ?>" <?php selected( $category_id, $category->get_id() ); ?>><?php echo esc_html( $category->get_name() ); ?></option>
-			<?php endforeach; ?>
+			<?php if ( $category ) : ?>
+				<option value="<?php echo esc_attr( $category->get_id() ); ?>" selected="selected"><?php echo esc_html( $category->get_formatted_name() ); ?></option>
+			<?php endif; ?>
 		</select>
 		<?php
 	}
@@ -367,32 +362,6 @@ class ListTable extends \WP_List_Table {
 	 * @return void
 	 */
 	public function item_category_filter() {
-		$category_id = eac_get_input_var( 'category_id' );
-		$categories  = eac_get_categories(
-			array(
-				'include' => $category_id,
-				'type'    => 'item',
-			)
-		);
-		?>
-		<select class="eac-select__item-category" name="category_id" id="item-category-filter">
-			<option value=""><?php esc_html_e( 'All item categories', 'wp-ever-accounting' ); ?></option>
-			<?php foreach ( $categories as $category ) : ?>
-				<option value="<?php echo esc_attr( $category->get_id() ); ?>" <?php selected( $category_id, $category->get_id() ); ?>><?php echo esc_html( $category->get_name() ); ?></option>
-			<?php endforeach; ?>
-		</select>
-		<?php
-	}
-
-	/**
-	 * Terms filter
-	 *
-	 * @param string $group Group of terms.
-	 * @param string $placeholder Placeholder text.
-	 *
-	 * @since 1.1.6
-	 */
-	public function terms_filter( $group = 'product_ca', $placeholder = '' ) {
 		$category_id = eac_get_input_var( 'category_id' );
 		$categories  = eac_get_categories(
 			array(

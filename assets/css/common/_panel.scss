@@ -7,124 +7,16 @@
 	max-width: none;
 	min-width: auto;
 	min-height: 1px;
+	background: #fff;
 	border: 1px solid #e1e2e2;
 	padding: 15px;
 	font-size: inherit;
+	line-height: inherit;
 
-	&.is--content-between {
-		justify-content: space-between;
-	}
-
-	&.is--content-stretch {
-		justify-content: stretch;
-	}
-
-	&.is--content-center {
-		justify-content: center;
-	}
-
-	&.is--direction-row {
-		flex-direction: row;
-	}
-
-	&.is--direction-column {
-		flex-direction: column;
-	}
-
-	&.is--align-center {
-		align-items: center;
-	}
-
-	// Alignment.
-	&.is--align-left {
-		align-items: flex-start;
-	}
-
-	&.is--align-right {
-		align-items: flex-end;
-	}
-
-	&.is--align-stretch {
-		align-items: stretch;
-	}
-
-	&.is--align-center {
-		align-items: center;
-	}
-
-	// padding and margin.
-	&.is--padding-0 {
+	&__title, h2{
 		padding: 0;
+		margin: 0;
+		font-size: 1.2em;
+		font-weight: normal;
 	}
-
-	&.is--padding-small {
-		padding: 8px 15px;
-	}
-
-	&.is--padding-medium {
-		padding: 15px;
-	}
-
-	&.is--padding-large {
-		padding: 20px;
-	}
-
-	&.is--padding-xlarge {
-		padding: 30px;
-	}
-
-	&.is--margin-0 {
-		margin-top: 0;
-		margin-bottom: 0;
-	}
-
-	// border.
-	&.is--border-0 {
-		border: 0;
-	}
-
-	// Hover.
-	&.has--hover {
-		transition: background .1s ease-in-out;
-		cursor: pointer;
-
-		&:hover {
-			background: #f6f7f7;
-		}
-	}
-
-	// Default.
-	&:not(.is--transparent) {
-		background: #fff;
-	}
-
-	&:not(.is--no-flex) {
-		display: flex;
-		flex-direction: column;
-		align-items: stretch;
-	}
-
-	& > *:first-child {
-		margin-top: 0;
-	}
-
-	& > *:last-child {
-		margin-bottom: 0;
-	}
-
-	// If panels.
-	.eac-panels & {
-		&:not(:first-child) {
-			margin-top: 0;
-			border-top: 0;
-		}
-
-		&:not(:last-child) {
-			margin-bottom: 0;
-		}
-	}
-
 }
-
-// If the layout is panel after panel then the top border of the next panels will be removed.
-// This is done by removing the top border of the panel and adding a top border to the panel header.

@@ -36,7 +36,7 @@ class Admin extends \EverAccounting\Singleton {
 		require_once __DIR__ . '/Functions.php';
 		Actions::instantiate();
 		Extensions::instantiate();
-		Products::instantiate();
+		Items::instantiate();
 		Banking::instantiate();
 		Misc::instantiate();
 		Overview::instantiate();

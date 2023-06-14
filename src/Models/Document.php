@@ -86,7 +86,7 @@ abstract class Document extends Model {
 	protected $core_data = array(
 		'type'            => 'invoice',
 		'status'          => 'draft',
-		'document_number' => '', // Document number, invoice number, bill number, estimate number, etc.
+		'number'          => '', // Document number, invoice number, bill number, estimate number, etc.
 		'contact_id'      => null,
 		'subtotal'        => 0.00,
 		'discount_total'  => 0.00,
@@ -127,7 +127,7 @@ abstract class Document extends Model {
 			'email'     => '',
 			'phone'     => '',
 		),
-		'order_number'    => '',
+		'reference'       => '',
 		'document_note'   => '',
 		'issued_at'       => null,
 		'due_at'          => null,
@@ -139,7 +139,7 @@ abstract class Document extends Model {
 		'currency_rate'   => 1.00,
 		'parent_id'       => null,
 		'creator_id'      => null,
-		'uuid_key'        => '',
+		'uuid'        => '',
 		'updated_at'      => null,
 		'created_at'      => null,
 	);
@@ -239,12 +239,12 @@ abstract class Document extends Model {
 	 *
 	 * @return string
 	 */
-	public function get_document_number( $context = 'edit' ) {
-		if ( ! $this->exists() && empty( $this->data['document_number'] ) ) {
-			$this->set_document_number( $this->get_next_document_number() );
+	public function get_number( $context = 'edit' ) {
+		if ( ! $this->exists() && empty( $this->data['number'] ) ) {
+			$this->set_number( $this->get_next_number() );
 		}
 
-		return $this->get_prop( 'document_number', $context );
+		return $this->get_prop( 'number', $context );
 	}
 
 	/**
@@ -254,8 +254,8 @@ abstract class Document extends Model {
 	 *
 	 * @since  1.1.0
 	 */
-	public function set_document_number( $value ) {
-		$this->set_prop( 'document_number', eac_clean( $value ) );
+	public function set_number( $value ) {
+		$this->set_prop( 'number', eac_clean( $value ) );
 	}
 
 	/**
@@ -1278,8 +1278,8 @@ abstract class Document extends Model {
 	 *
 	 * @return string
 	 */
-	public function get_order_number( $context = 'edit' ) {
-		return $this->get_prop( 'order_number', $context );
+	public function get_reference( $context = 'edit' ) {
+		return $this->get_prop( 'reference', $context );
 	}
 
 	/**
@@ -1289,8 +1289,8 @@ abstract class Document extends Model {
 	 *
 	 * @since  1.1.0
 	 */
-	public function set_order_number( $value ) {
-		$this->set_prop( 'order_number', eac_clean( $value ) );
+	public function set_reference( $value ) {
+		$this->set_prop( 'reference', eac_clean( $value ) );
 	}
 
 	/**
@@ -1515,17 +1515,17 @@ abstract class Document extends Model {
 	 *
 	 * @return string
 	 */
-	public function get_uuid_key( $context = 'edit' ) {
-		return $this->get_prop( 'uuid_key', $context );
+	public function get_uuid( $context = 'edit' ) {
+		return $this->get_prop( 'uuid', $context );
 	}
 
 	/**
-	 * Set the uuid_key.
+	 * Set the uuid.
 	 *
-	 * @param string $key uuid_key.
+	 * @param string $key uuid.
 	 */
-	public function set_uuid_key( $key ) {
-		$this->set_prop( 'uuid_key', $key );
+	public function set_uuid( $key ) {
+		$this->set_prop( 'uuid', $key );
 	}
 
 	/**
@@ -1597,6 +1597,7 @@ abstract class Document extends Model {
 						'orderby'     => 'id',
 						'order'       => 'ASC',
 						'limit'       => - 1,
+						'no_count'    => true,
 					)
 				);
 			}
@@ -1752,7 +1753,7 @@ abstract class Document extends Model {
 	 * Get merged taxes.
 	 *
 	 * @since 1.0.0
-	 * @return DocumentTax[]
+	 * @return DocumentLineTax[]
 	 */
 	public function get_taxes() {
 		$taxes = array();
@@ -2230,9 +2231,9 @@ abstract class Document extends Model {
 		}
 
 		// check if the document number is already exists.
-		if ( empty( $this->get_document_number() ) ) {
-			$next_number = $this->get_next_document_number();
-			$this->set_document_number( $next_number );
+		if ( empty( $this->get_number() ) ) {
+			$next_number = $this->get_next_number();
+			$this->set_number( $next_number );
 		}
 
 		// If date created is not set, set it to now.
@@ -2378,12 +2379,12 @@ abstract class Document extends Model {
 	 * @since 1.1.6
 	 * @return string
 	 */
-	public function get_max_document_number() {
+	public function get_max_number() {
 		global $wpdb;
 
 		return (int) $wpdb->get_var(
 			$wpdb->prepare(
-				"SELECT MAX(REGEXP_REPLACE(document_number, '[^0-9]', '')) FROM {$this->table} WHERE type = %s",
+				"SELECT MAX(REGEXP_REPLACE(number, '[^0-9]', '')) FROM {$this->table} WHERE type = %s",
 				$this->get_type()
 			)
 		);
@@ -2395,7 +2396,7 @@ abstract class Document extends Model {
 	 * @since 1.1.6
 	 * @return string
 	 */
-	public function get_document_number_prefix() {
+	public function get_number_prefix() {
 		// First 3 letters of the document type.
 		return strtoupper( substr( $this->get_type(), 0, 3 ) ) . '-';
 	}
@@ -2406,9 +2407,9 @@ abstract class Document extends Model {
 	 * @since 1.1.6
 	 * @return string
 	 */
-	public function get_next_document_number() {
-		$number = $this->get_max_document_number();
-		$prefix = $this->get_document_number_prefix();
+	public function get_next_number() {
+		$number = $this->get_max_number();
+		$prefix = $this->get_number_prefix();
 		$number = absint( $number ) + 1;
 
 		return implode( '', [ $prefix, $number ] );
@@ -2418,7 +2419,7 @@ abstract class Document extends Model {
 	 * Get merged taxes.
 	 *
 	 * @since 1.0.0
-	 * @return DocumentTax[]
+	 * @return DocumentLineTax[]
 	 */
 	public function get_merged_taxes() {
 		$taxes = array();

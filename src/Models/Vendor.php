@@ -62,7 +62,7 @@ class Vendor extends Contact {
 	 * @param string $value due amount.
 	 */
 	public function set_total_due( $value ) {
-		$this->set_meta( 'total_due', eaccounting_price( $value, null, true ) );
+		$this->set_meta( 'total_due', eac_money( $value, null, true ) );
 	}
 
 	/**

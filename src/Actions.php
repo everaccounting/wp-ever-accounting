@@ -17,6 +17,7 @@ class Actions extends Singleton {
 	protected function __construct() {
 		// when base currency is changed.
 		add_action( 'update_option_eac_base_currency', array( $this, 'update_base_currency' ), 10, 2 );
+		// when a payment is made or deleted
 	}
 
 	/**

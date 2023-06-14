@@ -19,16 +19,16 @@ class Menus extends \EverAccounting\Singleton {
 	 */
 	protected function __construct() {
 		add_action( 'admin_menu', array( __CLASS__, 'main_menu' ), 1 );
-		add_action( 'admin_menu', array( __CLASS__, 'products_menu' ), 20 );
+		add_action( 'admin_menu', array( __CLASS__, 'items_menu' ), 20 );
 		add_action( 'admin_menu', array( __CLASS__, 'sales_menu' ), 30 );
 		add_action( 'admin_menu', array( __CLASS__, 'purchases_menu' ), 40 );
 		add_action( 'admin_menu', array( __CLASS__, 'banking_menu' ), 50 );
-		add_action( 'admin_menu', array( __CLASS__, 'tools_menu' ), 600 );
-		add_action( 'admin_menu', array( __CLASS__, 'reports_menu' ), 700 );
+		add_action( 'admin_menu', array( __CLASS__, 'reports_menu' ), 600 );
+		add_action( 'admin_menu', array( __CLASS__, 'tools_menu' ), 700 );
 		add_action( 'admin_menu', array( __CLASS__, 'settings_menu' ), 999 );
-		add_action( 'admin_menu', array( __CLASS__, 'extensions_menu' ), 9999 );
+		//add_action( 'admin_menu', array( __CLASS__, 'extensions_menu' ), 9999 );
 
-		add_action( 'in_admin_header', array( __CLASS__, 'plugin_header' ) );
+		add_action( 'in_admin_header', array( __CLASS__, 'in_admin_header' ) );
 	}
 
 	/**
@@ -68,18 +68,18 @@ class Menus extends \EverAccounting\Singleton {
 	 *
 	 * @since 1.0.0
 	 */
-	public static function products_menu() {
-		$tabs = eac_get_products_tabs();
+	public static function items_menu() {
+		$tabs = eac_get_items_tabs();
 		if ( empty( $tabs ) ) {
 			return;
 		}
 		add_submenu_page(
 			'ever-accounting',
-			__( 'Products', 'wp-ever-accounting' ),
-			__( 'Products', 'wp-ever-accounting' ),
+			__( 'Items', 'wp-ever-accounting' ),
+			__( 'Items', 'wp-ever-accounting' ),
 			'manage_options',
-			'eac-products',
-			array( Products::class, 'output' )
+			'eac-items',
+			array( Items::class, 'output' )
 		);
 	}
 
@@ -244,7 +244,7 @@ class Menus extends \EverAccounting\Singleton {
 	 * @since 1.0.0
 	 * @returns void
 	 */
-	public static function plugin_header() {
+	public static function in_admin_header() {
 		if ( ! eac_is_admin_page() ) {
 			return;
 		}
@@ -270,16 +270,16 @@ class Menus extends \EverAccounting\Singleton {
 				'url'     => '#',
 				'submenu' => array(
 					array(
-						'title' => __( 'Income', 'wp-ever-accounting' ),
-						'url'   => eac_action_url( 'action=get_html_response&html_type=edit_income' ),
+						'title' => __( 'Payment', 'wp-ever-accounting' ),
+						'url'   => eac_action_url( 'action=get_html_response&html_type=edit_payment' ),
 					),
 					array(
 						'title' => __( 'Expense', 'wp-ever-accounting' ),
 						'url'   => eac_action_url( 'action=get_html_response&html_type=edit_expense' ),
 					),
 					array(
-						'title' => __( 'Proudct', 'wp-ever-accounting' ),
-						'url'   => eac_action_url( 'action=get_html_response&html_type=edit_product' ),
+						'title' => __( 'Item', 'wp-ever-accounting' ),
+						'url'   => eac_action_url( 'action=get_html_response&html_type=edit_item' ),
 					),
 					array(
 						'title' => __( 'Invoice', 'wp-ever-accounting' ),
@@ -302,21 +302,21 @@ class Menus extends \EverAccounting\Singleton {
 			),
 		);
 		?>
-		<div class="eac-header">
-			<div class="eac-header__wrapper">
-				<div class="eac-header__logo">
+		<div class="eac-admin-header">
+			<div class="eac-admin-header__wrapper">
+				<div class="eac-admin-header__logo">
 					<a href="<?php echo esc_url( admin_url( 'admin.php?page=ever-accounting' ) ); ?>">
 						<?php echo eac_get_svg_icon( 'logo', 40 ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 					</a>
 				</div>
-				<h1 class="eac-header__title"><?php esc_html_e( 'Ever Accounting', 'wp-ever-accounting' ); ?></h1>
+				<h1 class="eac-admin-header__title"><?php esc_html_e( 'Ever Accounting', 'wp-ever-accounting' ); ?></h1>
 				<?php if ( ! empty( $menus ) ) : ?>
-					<ul class="eac-header__menu">
+					<ul class="eac-admin-header__menu">
 						<?php foreach ( $menus as $menu ) : ?>
 							<li>
 								<a href="<?php echo esc_url( $menu['url'] ); ?>">
 									<?php if ( ! empty( $menu['icon'] ) ) : ?>
-										<i class="eac-header__menu-icon <?php echo esc_attr( $menu['icon'] ); ?>"></i>
+										<i class="eac-admin-header__menu-icon <?php echo esc_attr( $menu['icon'] ); ?>"></i>
 									<?php endif; ?>
 									<?php if ( ! empty( $menu['title'] ) ) : ?>
 										<?php echo esc_html( $menu['title'] ); ?>

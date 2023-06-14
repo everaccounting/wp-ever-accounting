@@ -108,7 +108,7 @@ class Transfers extends ListTable {
 	 * @since 1.0.2
 	 */
 	public function process_bulk_action( $doaction ) {
-		if ( ! empty( $doaction ) ) {
+		if ( ! empty( $doaction ) && check_admin_referer( 'bulk-' . $this->_args['plural'] ) ) {
 			$id  = eac_get_input_var( 'transfer_id' );
 			$ids = eac_get_input_var( 'transfer_ids' );
 			if ( ! empty( $id ) ) {

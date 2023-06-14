@@ -20,9 +20,9 @@ $current_section = ! empty( $section ) && array_key_exists( $section, $sections 
 $section_keys    = array_keys( $sections );
 ?>
 
-	<div class="wrap eac-page">
+	<div class="wrap eac-admin-page">
 		<?php if ( isset( $tabs ) && ! empty( $tabs ) && count( $tabs ) > 1 ) : ?>
-			<nav class="nav-tab-wrapper eac-page__nav">
+			<nav class="nav-tab-wrapper eac-admin-page__nav">
 				<?php
 				foreach ( $tabs as $name => $label ) {
 					echo sprintf(

@@ -52,24 +52,24 @@ class Transaction extends Model {
 	 * @var array
 	 */
 	protected $core_data = array(
-		'type'           => 'income',
-		'voucher_number' => '',
-		'payment_date'   => null,
+		'type'           => 'payment',
+		'number'         => '',
+		'date'           => null,
 		'amount'         => 0.00,
-		'currency_rate'  => 1,    // exchange rate of transaction currency to base currency.
-		'currency_code'  => '',   // currency code of the transaction.
+		'reference'      => '',   // reference number or other identifier for the transaction.
+		'note'           => '',   // additional notes about the transaction.
 		'account_id'     => null, // ID of the account associated with the transaction.
 		'document_id'    => null, // ID of the document associated with the transaction.
 		'contact_id'     => null, // ID of the contact associated with the transaction.
 		'category_id'    => null, // ID of the category associated with the transaction.
-		'payment_note'   => '',   // additional notes about the transaction.
 		'payment_method' => '',   // method of payment used for the transaction.
-		'reference'      => '',   // reference number or other identifier for the transaction.
 		'attachment_id'  => null, // ID of any attachments associated with the transaction.
+		'currency'       => '',   // currency code of the transaction.
+		'exchange_rate'  => 1,    // exchange rate of transaction currency to base currency.
 		'parent_id'      => 0,    // ID of the parent transaction, if any.
 		'reconciled'     => 0,    // whether the transaction has been reconciled.
 		'creator_id'     => null, // ID of the user who created the transaction.
-		'uuid_key'       => '',   // token used for payment processing, if any.
+		'uuid'           => '',   // token used for payment processing, if any.
 		'updated_at'     => null, // date and time the transaction was last updated.
 		'created_at'     => null, // date and time the transaction was created.
 	);
@@ -82,8 +82,8 @@ class Transaction extends Model {
 	 * @since 1.0.0
 	 */
 	public function __construct( $data = 0 ) {
-		$this->core_data['uuid_key']      = eac_generate_uuid();
-		$this->core_data['currency_code'] = eac_get_base_currency();
+		$this->core_data['uuid']     = eac_generate_uuid();
+		$this->core_data['currency'] = eac_get_base_currency();
 		parent::__construct( $data );
 	}
 
@@ -129,12 +129,12 @@ class Transaction extends Model {
 	 * @since 1.1.0
 	 * @return mixed|null
 	 */
-	public function get_voucher_number( $context = 'edit' ) {
-		if ( ! $this->exists() && empty( $this->data['voucher_number'] ) ) {
-			$this->set_voucher_number( $this->get_next_voucher_number() );
+	public function get_number( $context = 'edit' ) {
+		if ( ! $this->exists() && empty( $this->data['number'] ) ) {
+			$this->set_number( $this->get_next_number() );
 		}
 
-		return $this->get_prop( 'voucher_number', $context );
+		return $this->get_prop( 'number', $context );
 	}
 
 	/**
@@ -144,8 +144,8 @@ class Transaction extends Model {
 	 *
 	 * @since 1.1.0
 	 */
-	public function set_voucher_number( $value ) {
-		$this->set_prop( 'voucher_number', $value );
+	public function set_number( $value ) {
+		$this->set_prop( 'number', $value );
 	}
 
 	/**
@@ -156,8 +156,8 @@ class Transaction extends Model {
 	 * @since 1.0.2
 	 * @return string
 	 */
-	public function get_payment_date( $context = 'edit' ) {
-		return $this->get_date_prop( 'payment_date', $context, 'Y-m-d' );
+	public function get_date( $context = 'edit' ) {
+		return $this->get_date_prop( 'date', $context, 'Y-m-d' );
 	}
 
 	/**
@@ -167,8 +167,8 @@ class Transaction extends Model {
 	 *
 	 * @since 1.0.2
 	 */
-	public function set_payment_date( $value ) {
-		$this->set_date_prop( 'payment_date', $value );
+	public function set_date( $value ) {
+		$this->set_date_prop( 'date', $value );
 	}
 
 	/**
@@ -202,8 +202,8 @@ class Transaction extends Model {
 	 * @since 1.0.2
 	 * @return mixed|null
 	 */
-	public function get_currency_code( $context = 'edit' ) {
-		return $this->get_prop( 'currency_code', $context );
+	public function get_currency( $context = 'edit' ) {
+		return $this->get_prop( 'currency', $context );
 	}
 
 	/**
@@ -213,8 +213,8 @@ class Transaction extends Model {
 	 *
 	 * @since 1.0.2
 	 */
-	public function set_currency_code( $value ) {
-		$this->set_prop( 'currency_code', eac_clean( $value ) );
+	public function set_currency( $value ) {
+		$this->set_prop( 'currency', eac_clean( $value ) );
 	}
 
 
@@ -226,8 +226,8 @@ class Transaction extends Model {
 	 * @since 1.0.2
 	 * @return mixed|null
 	 */
-	public function get_currency_rate( $context = 'edit' ) {
-		return $this->get_prop( 'currency_rate', $context );
+	public function get_conversion_rate( $context = 'edit' ) {
+		return $this->get_prop( 'conversion_rate', $context );
 	}
 
 	/**
@@ -237,8 +237,8 @@ class Transaction extends Model {
 	 *
 	 * @since 1.0.2
 	 */
-	public function set_currency_rate( $value ) {
-		$this->set_prop( 'currency_rate', eac_format_decimal( $value, 8 ) );
+	public function set_conversion_rate( $value ) {
+		$this->set_prop( 'conversion_rate', eac_format_decimal( $value, 8 ) );
 	}
 
 	/**
@@ -358,8 +358,8 @@ class Transaction extends Model {
 	 * @since 1.0.2
 	 * @return mixed|null
 	 */
-	public function get_payment_note( $context = 'edit' ) {
-		return $this->get_prop( 'payment_note', $context );
+	public function get_note( $context = 'edit' ) {
+		return $this->get_prop( 'note', $context );
 	}
 
 	/**
@@ -369,8 +369,8 @@ class Transaction extends Model {
 	 *
 	 * @since 1.0.2
 	 */
-	public function set_payment_note( $value ) {
-		$this->set_prop( 'payment_note', eac_clean( $value ) );
+	public function set_note( $value ) {
+		$this->set_prop( 'note', eac_clean( $value ) );
 	}
 
 	/**
@@ -518,17 +518,17 @@ class Transaction extends Model {
 	 *
 	 * @return string
 	 */
-	public function get_uuid_key( $context = 'edit' ) {
-		return $this->get_prop( 'uuid_key', $context );
+	public function get_uuid( $context = 'edit' ) {
+		return $this->get_prop( 'uuid', $context );
 	}
 
 	/**
-	 * Set the uuid_key.
+	 * Set the uuid.
 	 *
-	 * @param string $uuid_key uuid_key.
+	 * @param string $uuid uuid.
 	 */
-	public function set_uuid_key( $uuid_key ) {
-		$this->set_prop( 'uuid_key', $uuid_key );
+	public function set_uuid( $uuid ) {
+		$this->set_prop( 'uuid', $uuid );
 	}
 
 	/**
@@ -591,15 +591,8 @@ class Transaction extends Model {
 			return new \WP_Error( 'missing_required', __( 'Account is required.', 'wp-ever-accounting' ) );
 		}
 
-		// When the currency code is changed, we need to update the currency rate.
-		if ( ! $this->exists() || array_key_exists( 'currency_code', $this->get_changes() ) ) {
-			$currency_rate = eac_get_currency_rate( $this->get_currency_code() );
-			$this->set_currency_rate( $currency_rate );
-			$this->set_amount( eac_sanitize_money( $this->get_amount(), $this->get_currency_code() ) );
-		}
-
-		if ( empty( $this->get_uuid_key() ) ) {
-			$this->set_uuid_key( eac_generate_uuid() );
+		if ( empty( $this->get_uuid() ) ) {
+			$this->set_uuid( eac_generate_uuid() );
 		}
 
 		// Creator ID.
@@ -618,8 +611,8 @@ class Transaction extends Model {
 		}
 
 		// if number is not set, set it to the next available number from database based on type.
-		if ( empty( $this->get_voucher_number() ) ) {
-			$this->set_voucher_number( $this->get_next_voucher_number() );
+		if ( empty( $this->get_number() ) ) {
+			$this->set_number( $this->get_next_number() );
 		}
 
 		return parent::save();
@@ -638,7 +631,7 @@ class Transaction extends Model {
 		if ( ! empty( $args['orderby'] ) && 'amount' === $args['orderby'] ) {
 			$order = strtoupper( $args['order'] );
 			// divide by currency rate to get the amount in the account currency and then cast to decimal and order by.
-			$clauses['orderby'] = 'CAST( ' . $this->table_alias . '.amount / ' . $this->table_alias . '.currency_rate AS DECIMAL( 20, 2 ) ) ' . $order . ' ';
+			$clauses['orderby'] = 'CAST( ' . $this->table_alias . '.amount / ' . $this->table_alias . '.conversion_rate AS DECIMAL( 20, 2 ) ) ' . $order . ' ';
 		}
 
 		return parent::prepare_order_by_query( $clauses, $args );
@@ -659,12 +652,12 @@ class Transaction extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	public function get_max_voucher_number() {
+	public function get_max_number() {
 		global $wpdb;
 
 		return (int) $wpdb->get_var(
 			$wpdb->prepare(
-				"SELECT MAX(REGEXP_REPLACE(voucher_number, '[^0-9]', '')) FROM {$this->table} WHERE type = %s",
+				"SELECT MAX(REGEXP_REPLACE(number, '[^0-9]', '')) FROM {$this->table} WHERE type = %s",
 				$this->get_type()
 			)
 		);
@@ -676,7 +669,7 @@ class Transaction extends Model {
 	 * @since 1.0.2
 	 * @return string
 	 */
-	public function get_voucher_number_prefix() {
+	public function get_number_prefix() {
 		return strtoupper( substr( $this->get_type(), 0, 3 ) ) . '-';
 	}
 
@@ -686,7 +679,7 @@ class Transaction extends Model {
 	 * @since 1.0.0
 	 * @return int
 	 */
-	public function get_voucher_number_digits() {
+	public function get_number_digits() {
 		return 6;
 	}
 
@@ -696,13 +689,13 @@ class Transaction extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	public function get_next_voucher_number() {
-		$number = $this->get_max_voucher_number();
-		$prefix = $this->get_voucher_number_prefix();
+	public function get_next_number() {
+		$number = $this->get_max_number();
+		$prefix = $this->get_number_prefix();
 		$number = absint( $number ) + 1;
 
 		// Pad the number with zeros.
-		$number = str_pad( $number, $this->get_voucher_number_digits(), '0', STR_PAD_LEFT );
+		$number = str_pad( $number, $this->get_number_digits(), '0', STR_PAD_LEFT );
 
 		return implode( '', [ $prefix, $number ] );
 	}
@@ -714,6 +707,6 @@ class Transaction extends Model {
 	 * @return string
 	 */
 	public function get_formatted_amount() {
-		return eac_format_money( $this->get_amount(), $this->get_currency_code() );
+		return eac_format_money( $this->get_amount(), $this->get_currency() );
 	}
 }

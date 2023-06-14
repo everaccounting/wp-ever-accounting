@@ -92,6 +92,7 @@ class Plugin extends BasePlugin {
 		Notices::instantiate();
 		Actions::instantiate();
 		Cache::instantiate();
+		API::instantiate();
 
 		// If frontend.
 		if ( self::is_request( 'frontend' ) ) {
@@ -106,32 +107,4 @@ class Plugin extends BasePlugin {
 		do_action( 'ever_accounting_init' );
 	}
 
-
-	/**
-	 * Add the required rewrite rules
-	 *
-	 * @return void
-	 */
-	public function add_rewrite_rules() {
-		$types       = array( 'payment', 'expense', 'invoice', 'bill' );
-		$regex       = '^eac/(' . implode( '|', $types ) . ')/([^/]+)/?([^/]*)/?$';
-		$replacement = 'index.php?eac=true&type=$1&token=$2&output=$3';
-		add_rewrite_rule( $regex, $replacement, 'top' );
-	}
-
-	/**
-	 * Register our query vars
-	 *
-	 * @param array $vars The query vars.
-	 *
-	 * @return array
-	 */
-	public function register_query_var( $vars ) {
-		$vars[] = 'eac';
-		$vars[] = 'type';
-		$vars[] = 'token';
-		$vars[] = 'output';
-
-		return $vars;
-	}
 }

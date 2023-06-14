@@ -45,7 +45,7 @@ class Transfer extends Model {
 	 * @var array
 	 */
 	protected $core_data = array(
-		'income_id'   => null,
+		'payment_id'   => null,
 		'expense_id'   => null,
 		'creator_id'   => null,
 		'date_created' => null,
@@ -87,19 +87,19 @@ class Transfer extends Model {
 	 *
 	 * @return mixed|null
 	 */
-	public function get_income_id( $context = 'edit' ) {
-		return $this->get_prop( 'income_id', $context );
+	public function get_payment_id( $context = 'edit' ) {
+		return $this->get_prop( 'payment_id', $context );
 	}
 
 	/**
-	 * Set income ID.
+	 * Set payment ID.
 	 *
 	 * @param int $value Payment ID.
 	 *
 	 * @since 1.0.2
 	 */
-	public function set_income_id( $value ) {
-		$this->set_prop( 'income_id', absint( $value ) );
+	public function set_payment_id( $value ) {
+		$this->set_prop( 'payment_id', absint( $value ) );
 	}
 
 	/**
@@ -309,7 +309,7 @@ class Transfer extends Model {
 	}
 
 	/**
-	 * get currency_code.
+	 * get currency.
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
@@ -317,8 +317,8 @@ class Transfer extends Model {
 	 *
 	 * @return string
 	 */
-	public function get_currency_code( $context = 'edit' ) {
-		return $this->get_prop( 'currency_code', $context );
+	public function get_currency( $context = 'edit' ) {
+		return $this->get_prop( 'currency', $context );
 	}
 
 	/**
@@ -430,12 +430,12 @@ class Transfer extends Model {
 	protected function prepare_join_query( $clauses, $args = array() ) {
 		global $wpdb;
 		$clauses          = parent::prepare_join_query( $clauses, $args );
-		$clauses['join'] .= " LEFT JOIN {$wpdb->prefix}ea_transactions AS income ON {$this->table_alias}.income_id = income.id";
+		$clauses['join'] .= " LEFT JOIN {$wpdb->prefix}ea_transactions AS payment ON {$this->table_alias}.payment_id = payment.id";
 		$clauses['join'] .= " LEFT JOIN {$wpdb->prefix}ea_transactions AS expense ON {$this->table_alias}.expense_id = expense.id";
 
 		// If selected all fields, then select all fields from payment and expense tables.
 		if ( strpos( $clauses['select'], '*' ) !== false ) {
-			$clauses['select'] .= ', income.account_id AS from_account_id';
+			$clauses['select'] .= ', payment.account_id AS from_account_id';
 			$clauses['select'] .= ', expense.account_id AS to_account_id, expense.amount, expense.payment_date date, expense.payment_method, expense.payment_note, expense.reference';
 		}
 
@@ -454,7 +454,7 @@ class Transfer extends Model {
 	protected function read() {
 		$transfer = parent::read();
 		if ( $transfer ) {
-			$payment = Income::get( $this->get_income_id() );
+			$payment = Payment::get( $this->get_payment_id() );
 			$expense = Expense::get( $this->get_expense_id() );
 			if ( $payment && $expense ) {
 				$this->data['from_account_id'] = $payment->get_account_id();
@@ -477,7 +477,7 @@ class Transfer extends Model {
 	 * @return array|false true on success, false on failure.
 	 */
 	public function delete() {
-		$payment = Income::get( $this->get_payment_id() );
+		$payment = Payment::get( $this->get_payment_id() );
 		$expense = Expense::get( $this->get_expense_id() );
 		$deleted = parent::delete();
 		if ( $deleted && $payment && $expense ) {
@@ -565,13 +565,13 @@ class Transfer extends Model {
 			$this->set_expense_id( $expense->get_id() );
 
 			$amount = $this->get_amount();
-			if ( $from_account->get_currency_code() !== $to_account->get_currency_code() ) {
-				$expense_currency_rate = eac_get_currency_rate( $from_account->get_currency_code() );
-				$payment_currency_rate = eac_get_currency_rate( $to_account->get_currency_code() );
-				$amount                = eac_convert_price( $amount, $from_account->get_currency_code(), $to_account->get_currency_code(), $expense_currency_rate, $payment_currency_rate );
+			if ( $from_account->get_currency() !== $to_account->get_currency() ) {
+				$expense_currency_rate = eac_get_currency_rate( $from_account->get_currency() );
+				$payment_currency_rate = eac_get_currency_rate( $to_account->get_currency() );
+				$amount                = eac_convert_price( $amount, $from_account->get_currency(), $to_account->get_currency(), $expense_currency_rate, $payment_currency_rate );
 			}
 
-			$payment = new Income( $this->get_payment_id() );
+			$payment = new Payment( $this->get_payment_id() );
 			$payment->set_props(
 				array(
 					'account_id'     => $this->get_to_account_id(),
@@ -615,6 +615,6 @@ class Transfer extends Model {
 	 * @return string
 	 */
 	public function get_formatted_amount() {
-		return eac_format_money( $this->get_amount(), $this->get_currency_code() );
+		return eac_format_money( $this->get_amount(), $this->get_currency() );
 	}
 }

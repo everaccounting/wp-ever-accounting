@@ -10,7 +10,7 @@
 defined( 'ABSPATH' ) || exit;
 ?>
 
-<form id="eac-currency-form" class="eac-form" method="post">
+<form id="eac-currency-form" class="eac-ajax-form" method="post">
 	<div class="eac-card">
 		<div class="eac-card__header">
 			<h2 class="eac-card__title"><?php esc_html_e( 'Currency Details', 'wp-ever-accounting' ); ?></h2>
@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
 		<div class="eac-card__body">
 			<div class="eac-columns">
 				<?php
-				eac_input_field(
+				eac_form_field(
 					array(
 						'id'       => 'code',
 						'label'    => __( 'Code', 'wp-ever-accounting' ),
@@ -28,7 +28,7 @@ defined( 'ABSPATH' ) || exit;
 						'readonly' => true,
 					)
 				);
-				eac_input_field(
+				eac_form_field(
 					array(
 						'id'       => 'name',
 						'label'    => __( 'Name', 'wp-ever-accounting' ),
@@ -38,7 +38,7 @@ defined( 'ABSPATH' ) || exit;
 						'required' => true,
 					)
 				);
-				eac_input_field(
+				eac_form_field(
 					array(
 						'id'       => 'symbol',
 						'label'    => __( 'Symbol', 'wp-ever-accounting' ),
@@ -48,7 +48,7 @@ defined( 'ABSPATH' ) || exit;
 						'required' => true,
 					)
 				);
-				eac_input_field(
+				eac_form_field(
 					array(
 						'id'       => 'rate',
 						'label'    => __( 'Rate', 'wp-ever-accounting' ),
@@ -64,36 +64,38 @@ defined( 'ABSPATH' ) || exit;
 				?>
 			</div>
 		</div>
-		<div class="eac-card__separator"></div>
-		<div class="eac-card__section">
+	</div>
+
+	<div class="eac-card">
+		<div class="eac-card__header">
 			<h2 class="eac-card__title"><?php esc_html_e( 'More Details', 'wp-ever-accounting' ); ?></h2>
 		</div>
 		<div class="eac-card__body">
 			<div class="eac-columns">
 				<?php
-				eac_input_field(
+				eac_form_field(
 					array(
-						'id'       => 'thousand_sep',
+						'id'       => 'thousand_separator',
 						'label'    => __( 'Thousand Separator', 'wp-ever-accounting' ),
 						'type'     => 'text',
-						'value'    => $currency_data['thousand_sep'],
+						'value'    => $currency_data['thousand_separator'],
 						'class'    => 'eac-col-6',
 						'required' => true,
 					)
 				);
 
-				eac_input_field(
+				eac_form_field(
 					array(
-						'id'       => 'decimal_sep',
+						'id'       => 'decimal_separator',
 						'label'    => __( 'Decimal Separator', 'wp-ever-accounting' ),
 						'type'     => 'text',
-						'value'    => $currency_data['decimal_sep'],
+						'value'    => $currency_data['decimal_separator'],
 						'class'    => 'eac-col-6',
 						'required' => true,
 					)
 				);
 
-				eac_input_field(
+				eac_form_field(
 					array(
 						'id'       => 'precision',
 						'label'    => __( 'Number of Decimals', 'wp-ever-accounting' ),
@@ -104,7 +106,7 @@ defined( 'ABSPATH' ) || exit;
 					)
 				);
 
-				eac_input_field(
+				eac_form_field(
 					array(
 						'id'       => 'position',
 						'label'    => __( 'Symbol Position', 'wp-ever-accounting' ),

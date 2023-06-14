@@ -4,18 +4,18 @@ defined( 'ABSPATH' ) || exit;
 
 require_once __DIR__ . '/Functions/Accounts.php';
 require_once __DIR__ . '/Functions/Contacts.php';
+require_once __DIR__ . '/Functions/Categories.php';
 require_once __DIR__ . '/Functions/Currencies.php';
 require_once __DIR__ . '/Functions/Deprecated.php';
 require_once __DIR__ . '/Functions/Documents.php';
 require_once __DIR__ . '/Functions/Formatters.php';
+require_once __DIR__ . '/Functions/Items.php';
 require_once __DIR__ . '/Functions/Media.php';
 require_once __DIR__ . '/Functions/Misc.php';
 require_once __DIR__ . '/Functions/Notes.php';
-require_once __DIR__ . '/Functions/Products.php';
 require_once __DIR__ . '/Functions/Reports.php';
 require_once __DIR__ . '/Functions/Taxes.php';
 require_once __DIR__ . '/Functions/Templates.php';
-require_once __DIR__ . '/Functions/Terms.php';
 require_once __DIR__ . '/Functions/Transactions.php';
 
 /**
@@ -28,7 +28,7 @@ require_once __DIR__ . '/Functions/Transactions.php';
 function eac_get_base_currency() {
 	$currency = get_option( 'eac_base_currency', 'USD' );
 
-	return apply_filters( 'ever_accounting_base_currency', $currency );
+	return apply_filters( 'ever_accounting_base_currency', strtoupper( $currency ) );
 }
 
 /**
@@ -101,7 +101,7 @@ function eac_round_number( $val, $precision = 6, $mode = PHP_ROUND_HALF_UP ) {
  *
  * @return int|float|null
  */
-function eac_format_decimal( $number, $decimals = 4, $trim_zeros = false ) {
+function eac_format_decimal( $number, $decimals = 4, $trim_zeros = true ) {
 
 	// Convert multiple dots to just one.
 	$number = preg_replace( '/\.(?![^.]+$)|[^0-9.-]/', '', eac_clean( $number ) );
@@ -125,14 +125,12 @@ function eac_format_decimal( $number, $decimals = 4, $trim_zeros = false ) {
  *
  * @param string $amount Amount.
  * @param string $from_code If not passed will be used default currency.
- * @param bool   $to_base Convert to base currency.
  *
  * @since 1.0.2
  *
  * @return float|int
  */
-function eac_sanitize_money( $amount, $from_code = null, $to_base = false ) {
-	$currencies    = eac_get_currencies();
+function eac_sanitize_money( $amount, $from_code = null ) {
 	$base_currency = eac_get_base_currency();
 	// Get the base currency if not passed.
 	if ( is_null( $from_code ) ) {
@@ -140,16 +138,17 @@ function eac_sanitize_money( $amount, $from_code = null, $to_base = false ) {
 	}
 
 	if ( ! is_numeric( $amount ) ) {
+		$currency = eac_get_currency( $from_code );
 		// Retrieve the thousand and decimal separator from currency object.
-		$thousand_sep = $currencies[ $from_code ]['thousand_sep'] || ','; // Default to comma.
-		$decimal_sep  = $currencies[ $from_code ]['decimal_sep'] || '.'; // Default to dot.
-		$symbol       = $currencies[ $from_code ]['symbol'] || ''; // Default to empty string.
+		$thousand_separator = $currency ? $currency->get_thousand_separator() : ',';
+		$decimal_separator  = $currency ? $currency->get_decimal_separator() : '.';
+		$symbol             = $currency ? $currency->get_symbol() : '$';
 		// Remove currency symbol from amount.
 		$amount = str_replace( $symbol, '', $amount );
 		// Remove any non-numeric characters except a thousand and decimal separators.
-		$amount = preg_replace( '/[^0-9\\' . $thousand_sep . '\\' . $decimal_sep . '\-\+]/', '', $amount );
+		$amount = preg_replace( '/[^0-9\\' . $thousand_separator . '\\' . $decimal_separator . '\-\+]/', '', $amount );
 		// Replace a thousand and decimal separators with empty string and dot respectively.
-		$amount = str_replace( array( $thousand_sep, $decimal_sep ), array( '', '.' ), $amount );
+		$amount = str_replace( array( $thousand_separator, $decimal_separator ), array( '', '.' ), $amount );
 		// Convert to int if amount is a whole number, otherwise convert to float.
 		if ( preg_match( '/^([\-\+])?\d+$/', $amount ) ) {
 			$amount = (int) $amount;
@@ -158,14 +157,6 @@ function eac_sanitize_money( $amount, $from_code = null, $to_base = false ) {
 		} else {
 			$amount = 0;
 		}
-	}
-
-	// Convert to base currency if needed.
-	if ( $to_base && $from_code !== $base_currency && 0 !== $amount ) {
-		$from_rate = eac_get_currency_rate( $from_code );
-		$precision = eac_get_currency_precision( $from_code );
-		// Divide by rate.
-		$amount = round( $amount / $from_rate, $precision, PHP_ROUND_HALF_UP );
 	}
 
 	return $amount;
@@ -183,19 +174,18 @@ function eac_sanitize_money( $amount, $from_code = null, $to_base = false ) {
  * @return string
  */
 function eac_format_money( $amount, $code = null ) {
-	if ( ! is_numeric( $amount ) ) {
-		$amount = eac_sanitize_money( $amount, $code );
-	}
-
 	if ( is_null( $code ) ) {
 		$code = eac_get_base_currency();
 	}
-
-	$precision    = eac_get_currency_precision( $code );
-	$thousand_sep = eac_get_currency_thousand_separator( $code );
-	$decimal_sep  = eac_get_currency_decimal_separator( $code );
-	$position     = eac_get_currency_position( $code );
-	$symbol       = eac_get_currency_symbol( $code );
+	if ( ! is_numeric( $amount ) ) {
+		$amount = eac_sanitize_money( $amount, $code );
+	}
+	$currency     = eac_get_currency( $code );
+	$precision    = $currency ? $currency->get_precision() : 2;
+	$thousand_sep = $currency ? $currency->get_thousand_separator() : ',';
+	$decimal_sep  = $currency ? $currency->get_decimal_separator() : '.';
+	$position     = $currency ? $currency->get_position() : 'before';
+	$symbol       = $currency ? $currency->get_symbol() : '$';
 	$prefix       = 'before' === $position ? $symbol : '';
 	$suffix       = 'after' === $position ? $symbol : '';
 	$is_negative  = $amount < 0;
@@ -217,19 +207,15 @@ function eac_format_money( $amount, $code = null ) {
  *
  * @return float|int|string
  */
-function eac_money_from_base( $amount, $to, $to_rate = null ) {
+function eac_convert_money_from_base( $amount, $to, $to_rate ) {
 	$default = eac_get_base_currency();
 	$amount  = eac_sanitize_money( $amount, $to );
 	// No need to convert same currency.
 	if ( $default === $to ) {
 		return $amount;
 	}
-
-	if ( is_null( $to_rate ) ) {
-		$to_rate = eac_get_currency_rate( $to );
-	}
-
-	$precision = eac_get_currency_precision( $to );
+	$currency  = eac_get_currency( $to );
+	$precision = $currency ? $currency->get_precision() : 2;
 
 	// First check if mathematically possible.
 	if ( 0 === $to_rate ) {
@@ -252,7 +238,7 @@ function eac_money_from_base( $amount, $to, $to_rate = null ) {
  *
  * @return float|int|string
  */
-function eac_money_to_base( $amount, $from, $from_rate = null, $formatted = false ) {
+function eac_convert_money_to_base( $amount, $from, $from_rate, $formatted = false ) {
 	$default = eac_get_base_currency();
 	$amount  = eac_sanitize_money( $amount, $from );
 	// No need to convert same currency.
@@ -260,17 +246,14 @@ function eac_money_to_base( $amount, $from, $from_rate = null, $formatted = fals
 		return $amount;
 	}
 
-	if ( is_null( $from_rate ) ) {
-		$from_rate = eac_get_currency_rate( $from );
-	}
-	$precision = eac_get_currency_precision( $default );
-
 	// First check if mathematically possible.
 	if ( 0 === $from_rate ) {
 		$amount = 0;
 	} else {
 		// Divide by rate.
-		$amount = round( $amount / $from_rate, $precision, PHP_ROUND_HALF_UP );
+		$currency  = eac_get_currency( $from );
+		$precision = $currency ? $currency->get_precision() : 2;
+		$amount    = round( $amount / $from_rate, $precision, PHP_ROUND_HALF_UP );
 	}
 
 	if ( $formatted ) {
@@ -294,28 +277,22 @@ function eac_money_to_base( $amount, $from, $from_rate = null, $formatted = fals
  *
  * @return float|int|string
  */
-function eac_convert_money( $amount, $from, $to = null, $to_rate = null, $from_rate = null, $formatted = false ) {
-	if ( is_null( $to ) ) {
-		$to = eac_get_base_currency();
-	}
-	if ( is_null( $from_rate ) ) {
-		$from_rate = eac_get_currency_rate( $from );
-	}
-	if ( is_null( $to_rate ) ) {
-		$to_rate = eac_get_currency_rate( $to );
-	}
+function eac_convert_money( $amount, $from, $to, $to_rate, $from_rate, $formatted = false ) {
+
 	if ( ! is_numeric( $amount ) ) {
 		$amount = eac_sanitize_money( $amount, $from );
 	}
 
 	// No need to convert same currency.
 	if ( $from !== $to && $amount > 0 && $from_rate > 0 ) {
-		$precision = eac_get_currency_precision( $to );
+		$currency  = eac_get_currency( $to );
+		$precision = $currency ? $currency->get_precision() : 2;
 		$amount    = round( $amount / $from_rate, $precision, PHP_ROUND_HALF_UP );
 	}
 
 	if ( $amount > 0 && $to_rate > 0 ) {
-		$precision = eac_get_currency_precision( $to );
+		$currency  = eac_get_currency( $to );
+		$precision = $currency ? $currency->get_precision() : 2;
 		$amount    = round( $amount * $to_rate, $precision, PHP_ROUND_HALF_UP );
 	}
 
@@ -378,32 +355,317 @@ function eac_get_payment_methods() {
 }
 
 /**
- * Get time zone.
+ * Get formatted company address.
  *
  * @since 1.1.6
  * @return string
  */
-function eac_get_timezone() {
-	// Default return value.
-	$retval = 'UTC';
-
-	// Get some useful values.
-	$timezone   = get_option( 'timezone_string' );
-	$gmt_offset = get_option( 'gmt_offset', 0 ) * HOUR_IN_SECONDS;
-
-	// Use timezone string if it's available.
-	if ( ! empty( $timezone ) ) {
-		$retval = $timezone;
-
-		// Use GMT offset to calculate.
-	} elseif ( is_numeric( $gmt_offset ) ) {
-		$hours   = abs( floor( $gmt_offset / HOUR_IN_SECONDS ) );
-		$minutes = abs( floor( ( $gmt_offset / MINUTE_IN_SECONDS ) % MINUTE_IN_SECONDS ) );
-		$math    = ( $gmt_offset >= 0 ) ? '+' : '-';
-		$value   = ! empty( $minutes ) ? "{$hours}:{$minutes}" : $hours;
-		$retval  = "GMT{$math}{$value}";
-	}
-
-	return $retval;
+function eac_get_formatted_company_address() {
+	return eac_get_formatted_address(
+		array(
+			'name'      => get_option( 'eac_business_name', get_bloginfo( 'name' ) ),
+			'address_1' => get_option( 'eac_business_address_1' ),
+			'address_2' => get_option( 'eac_business_address_2' ),
+			'city'      => get_option( 'eac_business_city' ),
+			'state'     => get_option( 'eac_business_state' ),
+			'postcode'  => get_option( 'eac_business_postcode' ),
+			'country'   => get_option( 'eac_business_country' ),
+			'phone'     => get_option( 'eac_business_phone' ),
+			'email'     => get_option( 'eac_business_email' ),
+		)
+	);
 }
 
+/**
+ * Form field.
+ *
+ * @param array $field Field arguments.
+ *
+ * @since 1.1.6
+ * @return void|string String when 'return' argument is passed as true.
+ */
+function eac_form_field( $field ) {
+	$default_args = array(
+		'type'        => 'text',
+		'name'        => '',
+		'id'          => '',
+		'label'       => '',
+		'desc'        => '',
+		'tooltip'     => '',
+		'placeholder' => '',
+		'required'    => false,
+		'readonly'    => false,
+		'disabled'    => false,
+		'autofocus'   => false,
+		'class'       => '',
+		'style'       => '',
+		'input_class' => '',
+		'input_style' => '',
+		'options'     => [],
+		'attrs'       => [],
+		'default'     => '',
+		'suffix'      => '',
+		'prefix'      => '',
+	);
+
+	$field = wp_parse_args( $field, $default_args );
+
+	/**
+	 * Filter the arguments of a form field before it is rendered.
+	 *
+	 * @param array $field Arguments used to render the form field.
+	 *
+	 * @since 1.1.6
+	 */
+	$field = apply_filters( 'ever_accounting_form_field_args', $field );
+
+	// Set default name and ID attributes if not provided.
+	$field['name']        = empty( $field['name'] ) ? $field['id'] : $field['name'];
+	$field['id']          = empty( $field['id'] ) ? $field['name'] : $field['id'];
+	$field['value']       = empty( $field['value'] ) ? $field['default'] : $field['value'];
+	$field['attrs']       = array_filter( array_unique( wp_parse_args( $field['attrs'] ) ) );
+	$field['class']       = array_filter( array_unique( wp_parse_list( $field['class'] ) ) );
+	$field['class']       = implode( ' ', $field['class'] );
+	$field['input_class'] = array_filter( array_unique( wp_parse_list( $field['input_class'] ) ) );
+	$field['input_class'] = implode( ' ', $field['input_class'] );
+
+	// Custom input attribute handling.
+	$attrs = array();
+	foreach ( [ 'readonly', 'disabled', 'required', 'autofocus' ] as $attr_key ) {
+		if ( isset( $field[ $attr_key ] ) && ! empty( $field[ $attr_key ] ) ) {
+			$field['attrs'][ $attr_key ] = $attr_key;
+		}
+	}
+	if ( ! empty( $field['input_style'] ) ) {
+		$field['attrs']['style'] = $field['input_style'];
+	}
+	if ( ! empty( $field['placeholder'] ) ) {
+		$field['attrs']['placeholder'] = $field['placeholder'];
+	}
+	foreach ( $field['attrs'] as $attr_key => $attr_value ) {
+		if ( empty( $attr_key ) || empty( $attr_value ) ) {
+			continue;
+		}
+		$attrs[] = esc_attr( $attr_key ) . '="' . esc_attr( $attr_value ) . '"';
+	}
+
+	switch ( $field['type'] ) {
+		case 'text':
+		case 'email':
+		case 'number':
+		case 'password':
+		case 'hidden':
+		case 'url':
+			$input = sprintf(
+				'<input type="%1$s" name="%2$s" id="%3$s" class="%4$s" value="%5$s" %6$s>',
+				esc_attr( $field['type'] ),
+				esc_attr( $field['name'] ),
+				esc_attr( $field['id'] ),
+				esc_attr( $field['input_class'] ),
+				esc_attr( $field['value'] ),
+				wp_kses_post( implode( ' ', $attrs ) )
+			);
+			break;
+
+		case 'textarea':
+			$rows  = ! empty( $field['rows'] ) ? absint( $field['rows'] ) : 4;
+			$cols  = ! empty( $field['cols'] ) ? absint( $field['cols'] ) : 50;
+			$input = sprintf(
+				'<textarea name="%s" id="%s" class="%s" placeholder="%s" rows="%s" cols="%s" %s>%s</textarea>',
+				esc_attr( $field['name'] ),
+				esc_attr( $field['id'] ),
+				esc_attr( $field['input_class'] ),
+				esc_attr( $field['placeholder'] ),
+				esc_attr( $rows ),
+				esc_attr( $cols ),
+				implode( ' ', $attrs ),
+				esc_textarea( $field['value'] )
+			);
+			break;
+
+		case 'currency':
+		case 'country':
+		case 'select':
+			$field['value']       = wp_parse_list( $field['value'] );
+			$field['value']       = array_map( 'strval', $field['value'] );
+			$field['placeholder'] = ! empty( $field['placeholder'] ) ? $field['placeholder'] : __( 'Select an option&hellip;', 'wp-ever-accounting' );
+			if ( ! empty( $field['multiple'] ) ) {
+				$field['name'] .= '[]';
+				$attrs[]       = 'multiple="multiple"';
+			}
+
+			if ( 'currency' === $field['type'] ) {
+				foreach ( eac_get_currencies() as $code => $currency ) {
+					$field['options'][ $code ] = sprintf( '%s (%s)', $currency['name'], $currency['symbol'] );
+				}
+			} elseif ( 'country' === $field['type'] ) {
+				$field['options'] = eac_get_countries();
+			}
+
+			$options = sprintf( '<option value="">%s</option>', esc_html( $field['placeholder'] ) );
+			foreach ( $field['options'] as $value => $option_label ) {
+				$options .= sprintf( '<option value="%s" %s>%s</option>', esc_attr( $value ), selected( in_array( (string) $value, $field['value'], true ), true, false ), esc_html( $option_label ) );
+			}
+
+			$input = sprintf(
+				'<select name="%s" id="%s" class="%s" %s>%s</select>',
+				$field['name'],
+				$field['id'],
+				esc_attr( $field['input_class'] ),
+				implode( ' ', $attrs ),
+				$options
+			);
+			break;
+
+		case 'wp_editor':
+			$settings = isset( $field['settings'] ) ? $field['settings'] : array();
+			ob_start();
+			wp_editor(
+				$field['value'],
+				$field['id'],
+				wp_parse_args(
+					$settings,
+					array(
+						'textarea_name'    => $field['name'],
+						'textarea_rows'    => 5,
+						'teeny'            => true,
+						'media_buttons'    => false,
+						'quicktags'        => false,
+						'drag_drop_upload' => false,
+						'editor_class'     => 'eac-form-field__control',
+					)
+				)
+			);
+			$input = ob_get_clean();
+			break;
+
+		case 'radio':
+			$input = '';
+			if ( ! empty( $field['options'] ) ) {
+				$input = '<fieldset class="eac-form-field__radios">';
+				foreach ( $field['options'] as $option_key => $option_value ) {
+					$option_key = (string) $option_key;
+					$checked    = checked( $option_key, $field['value'], false );
+					$input      .= sprintf(
+						'<label><input type="radio" name="%1$s" id="%2$s" class="%3$s" value="%4$s" %5$s %6$s>%7$s</label>',
+						esc_attr( $field['name'] ),
+						esc_attr( $field['id'] . '-' . $option_key ),
+						esc_attr( $field['input_class'] ),
+						esc_attr( $option_key ),
+						$checked,
+						wp_kses_post( implode( ' ', $attrs ) ),
+						esc_html( $option_value )
+					);
+				}
+				$input .= '</fieldset>';
+			}
+			break;
+
+		case 'checkbox':
+			$input = sprintf(
+				'<label><input type="checkbox" name="%1$s" id="%2$s" class="%3$s" value="1" %4$s %5$s>%6$s</label>',
+				esc_attr( $field['name'] ),
+				esc_attr( $field['id'] ),
+				esc_attr( $field['input_class'] ),
+				checked( $field['value'], 'yes', false ),
+				wp_kses_post( implode( ' ', $attrs ) ),
+				wp_kses_post( $field['desc'] )
+			);
+
+			break;
+
+		case 'date':
+		case 'time':
+			$field['input_class'] .= ' eac-datepicker';
+			$input                = sprintf(
+				'<input type="text" name="%1$s" id="%2$s" class="%3$s" value="%4$s" %5$s>',
+				esc_attr( $field['name'] ),
+				esc_attr( $field['id'] ),
+				esc_attr( $field['input_class'] ),
+				esc_attr( $field['value'] ),
+				wp_kses_post( implode( ' ', $attrs ) )
+			);
+			break;
+
+		case 'decimal':
+		case 'money':
+			$field['input_class'] .= ' eac_input_decimal';
+			$input                = sprintf(
+				'<input type="text" inputmode="decimal" name="%1$s" id="%2$s" class="%3$s" value="%4$s" %5$s>',
+				esc_attr( $field['name'] ),
+				esc_attr( $field['id'] ),
+				esc_attr( $field['input_class'] ),
+				esc_attr( $field['value'] ),
+				wp_kses_post( implode( ' ', $attrs ) )
+			);
+			break;
+
+		case 'file':
+			$field['input_class'] .= ' eac_input_file';
+			$allowed_types        = ! empty( $field['allowed_types'] ) ? $field['allowed_types'] : 'image';
+			$input                = sprintf(
+				'<input type="file" name="%1$s" id="%2$s" class="%3$s" value="%4$s" %5$s accept="%6$s">',
+				esc_attr( $field['name'] ),
+				esc_attr( $field['id'] ),
+				esc_attr( $field['input_class'] ),
+				esc_attr( $field['value'] ),
+				wp_kses_post( implode( ' ', $attrs ) ),
+				esc_attr( $allowed_types )
+			);
+			break;
+		default:
+			$input = '';
+			break;
+	}
+
+	if ( ! empty( $field['prefix'] ) || ! empty( $field['suffix'] ) && ! empty( $input ) ) {
+		if ( ! empty( $field['prefix'] ) && ! preg_match( '/<[^>]+>/', $field['prefix'] ) ) {
+			$field['prefix'] = '<span class="eac-form-field__addon">' . $field['prefix'] . '</span>';
+		}
+
+		if ( ! empty( $field['suffix'] ) && ! preg_match( '/<[^>]+>/', $field['suffix'] ) ) {
+			$field['suffix'] = '<span class="eac-form-field__addon">' . $field['suffix'] . '</span>';
+		}
+		$input = sprintf(
+			'<div class="eac-form-field__group">%s%s%s</div>',
+			$field['prefix'],
+			$input,
+			$field['suffix']
+		);
+	}
+
+	if ( ! empty( $input ) ) {
+		if ( ! empty( $field['label'] ) ) {
+			$label = '<label for="' . esc_attr( $field['id'] ) . '" class="eac-form-field__label">' . esc_html( $field['label'] );
+			if ( true === $field['required'] ) {
+				$label .= '&nbsp;<abbr class="eac-form-field__required" title="' . esc_attr__( 'required', 'wp-ever-accounting' ) . '">*</abbr>';
+			}
+			if ( ! empty( $field['tooltip'] ) ) {
+				$label .= eac_tooltip( $field['tooltip'] );
+			}
+			$label .= '</label>';
+			$input = $label . $input;
+		}
+
+		if ( ! empty( $field['desc'] ) && ! in_array( $field['type'], array( 'checkbox', 'switch' ), true ) ) {
+			$input .= '<p class="eac-form-field__desc">' . esc_html( $field['desc'] ) . '</p>';
+		}
+
+		$input = sprintf(
+			'<div class="eac-form-field field-%1$s %2$s" id="field-%3$s" style="%4$s">%5$s</div>',
+			esc_attr( $field['type'] ),
+			esc_attr( $field['class'] ),
+			esc_attr( $field['id'] ),
+			esc_attr( $field['style'] ),
+			$input
+		);
+	}
+
+	/**
+	 * Filter the output of the field.
+	 *
+	 * @param string $output The field HTML.
+	 * @param array  $field The field arguments.
+	 */
+	echo apply_filters( 'ever_accounting_form_field_html', $input, $field ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+}

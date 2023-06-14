@@ -22,11 +22,11 @@ $title = $tax->exists() ? __( 'Update Rate', 'wp-ever-accounting' ) : __( 'Add R
 	<div class="eac-section-header">
 		<div>
 			<h2><?php echo esc_html( $title ); ?></h2>
-			<a href="<?php echo esc_url( admin_url( 'admin.php?page=eac-settings&tab=tax&section=taxes' ) ); ?>"><span class="dashicons dashicons-undo"></span></a>
+			<a href="<?php echo esc_url( admin_url( 'admin.php?page=eac-settings&tab=taxes&section=rates' ) ); ?>"><span class="dashicons dashicons-undo"></span></a>
 		</div>
 		<div>
 			<?php if ( $tax->exists() ) : ?>
-				<a href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin.php?page=eac-settings&tab=tax&section=taxes&action=delete&tax_id=' . $tax->get_id() ), 'bulk-tax' ) ); ?>" class="del">
+				<a href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin.php?page=eac-settings&tab=taxes&section=rates&action=delete&tax_id=' . $tax->get_id() ), 'bulk-tax' ) ); ?>" class="del">
 					<?php esc_html_e( 'Delete', 'wp-ever-accounting' ); ?>
 				</a>
 			<?php endif; ?>

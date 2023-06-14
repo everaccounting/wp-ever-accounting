@@ -46,41 +46,33 @@ class Contact extends Model {
 	const META_TYPE = 'ea_contact';
 
 	/**
-	 * This only needs set if you are using a custom metadata type
-	 * This should be the name of the field your table uses for associating meta with objects.
-	 *
-	 * @since 1.0.0
-	 * @var string
-	 */
-	protected $meta_object_id_field = 'contact_id';
-
-	/**
 	 * Core data for this object. Name value pairs (name + default value).
 	 *
 	 * @since 1.0.0
 	 * @var array
 	 */
 	protected $core_data = array(
-		'user_id'       => null,
-		'name'          => '',
-		'company'       => '',
-		'email'         => '',
-		'phone'         => '',
-		'address_1'     => '',
-		'address_2'     => '',
-		'city'          => '',
-		'state'         => '',
-		'postcode'      => '',
-		'country'       => '',
-		'website'       => '',
-		'vat_number'    => '',
-		'currency_code' => '',
-		'type'          => 'contact',
-		'status'        => 'active',
-		'thumbnail_id'  => null,
-		'creator_id'    => null,
-		'updated_at'    => null,
-		'created_at'    => null,
+		'type'         => 'contact',
+		'name'         => '',
+		'company'      => '',
+		'email'        => '',
+		'phone'        => '',
+		'address_1'    => '',
+		'address_2'    => '',
+		'city'         => '',
+		'state'        => '',
+		'postcode'     => '',
+		'country'      => '',
+		'website'      => '',
+		'vat_number'   => '',
+		'tax_number'   => '',
+		'status'       => 'active',
+		'thumbnail_id' => null,
+		'user_id'      => null,
+		'currency'     => '',
+		'creator_id'   => null,
+		'updated_at'   => null,
+		'created_at'   => null,
 	);
 
 	/**
@@ -91,8 +83,8 @@ class Contact extends Model {
 	 * @since 1.0.0
 	 */
 	public function __construct( $data = 0 ) {
-		$this->core_data['country']       = eac_get_base_country();
-		$this->core_data['currency_code'] = eac_get_base_currency();
+		$this->core_data['country']  = eac_get_base_country();
+		$this->core_data['currency'] = eac_get_base_currency();
 		parent::__construct( $data );
 	}
 
@@ -430,7 +422,6 @@ class Contact extends Model {
 		$this->set_prop( 'vat_number', eac_clean( $value ) );
 	}
 
-
 	/**
 	 * Get the currency code of the contact.
 	 *
@@ -440,21 +431,19 @@ class Contact extends Model {
 	 *
 	 * @return string
 	 */
-	public function get_currency_code( $context = 'edit' ) {
-		return $this->get_prop( 'currency_code', $context );
+	public function get_currency( $context = 'edit' ) {
+		return $this->get_prop( 'currency', $context );
 	}
 
 	/**
-	 * Set contact's currency_code.
+	 * Set contact's currency.
 	 *
 	 * @param string $value Currency code.
 	 *
 	 * @since 1.0.2
 	 */
-	public function set_currency_code( $value ) {
-		if ( eac_get_currency_rate( $value ) ) {
-			$this->set_prop( 'currency_code', eac_clean( $value ) );
-		}
+	public function set_currency( $value ) {
+		$this->set_prop( 'currency', eac_clean( $value ) );
 	}
 
 	/**
@@ -595,7 +584,6 @@ class Contact extends Model {
 	 * @return true|\WP_Error True on success, WP_Error on failure.
 	 */
 	public function save() {
-
 		// Creator ID.
 		if ( empty( $this->get_creator_id() ) && ! $this->exists() && is_user_logged_in() ) {
 			$this->set_creator_id( get_current_user_id() );
