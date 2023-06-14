@@ -10,7 +10,7 @@ defined( 'ABSPATH' ) || exit;
  * @since 0.0.1
  * @package EverAccounting\API
  */
-abstract class TransactionsController {
+abstract class TransactionsController extends Controller {
 
 	/**
 	 * Retrieves the item's schema, conforming to JSON Schema.
