@@ -1,91 +1,27 @@
-import {Space, Table, Tag} from '@eac/components';
-
-const columns = [
-	{
-		title: 'Name',
-		dataIndex: 'name',
-		key: 'name',
-		render: (text) => <a>{text}</a>,
-		filterSearch: true,
-		onFilter: (value, record) => record.name.includes(value),
-		filters: [
-			{
-				text: 'Joe',
-				value: 'Joe',
-			},
-		],
-	},
-	{
-		title: 'Age',
-		dataIndex: 'age',
-		key: 'age',
-	},
-	{
-		title: 'Address',
-		dataIndex: 'address',
-		key: 'address',
-	},
-	{
-		title: 'Tags',
-		key: 'tags',
-		dataIndex: 'tags',
-		render: (_, {tags}) => (
-			<>
-				{tags.map((tag) => {
-					let color = tag.length > 5 ? 'geekblue' : 'green';
-					if (tag === 'loser') {
-						color = 'volcano';
-					}
-					return (
-						<Tag color={color} key={tag}>
-							{tag.toUpperCase()}
-						</Tag>
-					);
-				})}
-			</>
-		),
-	},
-	{
-		title: 'Action',
-		key: 'action',
-		render: (_, record) => (
-			<Space size="middle">
-				<a>Invite {record.name}</a>
-				<a>Delete</a>
-			</Space>
-		),
-	},
-];
-const data = [
-	{
-		key: '1',
-		name: 'John Brown',
-		age: 32,
-		address: 'New York No. 1 Lake Park',
-		tags: ['nice', 'developer'],
-	},
-	{
-		key: '2',
-		name: 'Jim Green',
-		age: 42,
-		address: 'London No. 1 Lake Park',
-		tags: ['loser'],
-	},
-	{
-		key: '3',
-		name: 'Joe Black',
-		age: 32,
-		address: 'Sydney No. 1 Lake Park',
-		tags: ['cool', 'teacher'],
-	},
-];
+import { lazy, Suspense } from 'react';
+import { getHistory, getQuery } from '@eac/navigation';
+import {
+	unstable_HistoryRouter as HistoryRouter,
+	Route,
+	Routes,
+	useLocation,
+	useMatch,
+	useParams,
+} from 'react-router-dom';
+const Dashboard = lazy(() => import('./pages/dashboard'));
 export function App() {
+	const path = document.location.pathname;
+	const basename = path.substring(0, path.lastIndexOf('/'));
 	return (
-		<>
-			Hello World!
-			<Table columns={columns} dataSource={data}/>
-		</>
-	)
+		<div>
+			<HistoryRouter history={getHistory()}>
+				<Routes basename={basename}>
+					<Route path="/dashboard" element={<Dashboard />} />
+					<Route path="/" element={<Dashboard />} />
+				</Routes>
+			</HistoryRouter>
+		</div>
+	);
 }
 
 export default App;

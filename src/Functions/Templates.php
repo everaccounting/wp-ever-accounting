@@ -178,7 +178,7 @@ function eac_dropdown_menu( $items, $args = array() ) {
 		'button_attrs'  => array(),
 	);
 
-	$args                 = wp_parse_args( $args, $defaults );
+	$args                  = wp_parse_args( $args, $defaults );
 	$args['button_class'] .= ' eac-dropdown__button';
 
 	if ( ! empty( $args['button_css'] ) ) {

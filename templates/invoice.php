@@ -10,12 +10,12 @@
  */
 
 defined( 'ABSPATH' ) || exit;
-//$document = \EverAccounting\Models\Invoice::get(
-//	array(
-//		'type'     => 'invoice',
-//		'uuid_key' => $uuid_key,
-//	)
-//);
+// $document = \EverAccounting\Models\Invoice::get(
+// array(
+// 'type'     => 'invoice',
+// 'uuid_key' => $uuid_key,
+// )
+// );
 
 eac_get_header();
 

@@ -2,7 +2,7 @@
 
 namespace EverAccounting;
 
-defined('ABSPATH') || exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Class API

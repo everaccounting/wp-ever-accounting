@@ -248,9 +248,9 @@ function eac_get_random_color( $key = null ) {
  * @since 1.0.0
  */
 function eac_get_sales_summary() {
-	$summery      = [];
+	$summery       = [];
 	$total_payment = 0;
-	$date         = wp_date( 'M, y' );
+	$date          = wp_date( 'M, y' );
 	$payments      = eac_get_payment_report();
 
 	if ( ! empty( $payments ) && isset( $payments['months'] ) && isset( $payments['months'][ $date ] ) ) {
@@ -289,7 +289,7 @@ function eac_get_purchases_summary() {
  */
 function eac_get_profits_summary() {
 	$summery = [];
-	$payment  = eac_get_sales_summary();
+	$payment = eac_get_sales_summary();
 	$expense = eac_get_purchases_summary();
 
 	$summery['total'] = $payment['total'] - $expense['total'];

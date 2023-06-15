@@ -56,11 +56,11 @@ defined( 'ABSPATH' ) || exit();
 				);
 				eac_form_field(
 					array(
-						'id'          => 'currency',
+						'id'          => 'currency_code',
 						'label'       => __( 'Currency', 'wp-ever-accounting' ),
 						'type'        => 'currency',
 						'placeholder' => __( 'Select Account Currency', 'wp-ever-accounting' ),
-						'value'       => $account->get_currency(),
+						'value'       => $account->get_currency_code(),
 						'class'       => 'eac-col-6',
 						'required'    => true,
 						'input_class' => 'eac-select2',

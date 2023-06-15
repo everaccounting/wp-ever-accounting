@@ -34,9 +34,6 @@ class Misc extends \EverAccounting\Singleton {
 	 */
 	public static function add_settings_tabs( $tabs ) {
 		$tabs['categories'] = __( 'Categories', 'wp-ever-accounting' );
-
-		// $tabs['currencies'] = __( 'Currencies', 'wp-ever-accounting' );
-
 		return $tabs;
 	}
 
@@ -68,52 +65,19 @@ class Misc extends \EverAccounting\Singleton {
 		if ( 'currencies' !== $section ) {
 			return;
 		}
-		$currencies = get_option( 'eac_currencies', array() );
-		?>
-		<table id="eac-currencies" class="widefat fixed table">
-			<thead>
-			<tr>
-				<th><?php _e( 'Currency', 'wp-ever-accounting' ); ?></th>
-				<th><?php _e( 'Conversion rate', 'wp-ever-accounting' ); ?></th>
-				<th><?php _e( 'Symbol', 'wp-ever-accounting' ); ?></th>
-				<th><?php _e( 'Position', 'wp-ever-accounting' ); ?></th>
-				<th><?php _e( 'Thousand Separator', 'wp-ever-accounting' ); ?></th>
-				<th><?php _e( 'Decimal Separator', 'wp-ever-accounting' ); ?></th>
-				<th><?php _e( 'Decimal Places', 'wp-ever-accounting' ); ?></th>
-				<th><?php _e( 'Actions', 'wp-ever-accounting' ); ?></th>
-			</tr>
-			</thead>
-			<tbody>
-			<?php foreach ( $currencies as $currency ) : ?>
-				<tr>
-						<?php foreach ( $currency as $key => $value ) : ?>
-							<td>
-								<?php
-								switch ( $key ) {
-									case 'symbol':
-										echo eac_get_currency_symbol( $currency['code'] );
-										break;
-									case 'position':
-										echo eac_get_currency_position( $currency['code'] );
-										break;
-									default:
-										echo $value;
-								}
-								?>
-							</td>
-						<?php endforeach; ?>
-				</tr>
-			<?php endforeach; ?>
-			</tbody>
-			<tfoot>
-			<tr>
-				<th colspan="8">
-					<a href="<?php echo esc_url( admin_url( 'admin.php?page=ever-accounting-settings&tab=currencies&action=add' ) ); ?>"
-					   class="button button-primary"><?php _e( 'Add Currency', 'wp-ever-accounting' ); ?></a>
-				</th>
-			</tfoot>
-		</table>
-		<?php
+		$action      = eac_get_input_var( 'action' );
+		$currency_id = eac_get_input_var( 'currency_id' );
+		if ( 'edit' === $action && ! eac_get_currency( $currency_id ) ) {
+			wp_safe_redirect( remove_query_arg( array( 'action', 'currency_id' ) ) );
+			exit();
+		}
+		if ( 'add' === $action ) {
+			include dirname( __FILE__ ) . '/views/currencies/add-currency.php';
+		} elseif ( 'edit' === $action ) {
+			include dirname( __FILE__ ) . '/views/currencies/edit-currency.php';
+		} else {
+			include dirname( __FILE__ ) . '/views/currencies/list-currencies.php';
+		}
 	}
 
 	/**

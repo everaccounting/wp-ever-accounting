@@ -125,7 +125,7 @@ class Taxes extends ListTable {
 			foreach ( $ids as $id ) { // Check the permissions on each.
 				switch ( $doaction ) {
 					case 'enable':
-						eac_insert_tax_rate(
+						eac_insert_tax(
 							array(
 								'id'     => $id,
 								'status' => 'active',
@@ -133,7 +133,7 @@ class Taxes extends ListTable {
 						);
 						break;
 					case 'disable':
-						eac_insert_tax_rate(
+						eac_insert_tax(
 							array(
 								'id'     => $id,
 								'status' => 'inactive',
@@ -141,7 +141,7 @@ class Taxes extends ListTable {
 						);
 						break;
 					case 'delete':
-						eac_delete_tax_rate( $id );
+						eac_delete_tax( $id );
 						break;
 				}
 			}
@@ -149,18 +149,18 @@ class Taxes extends ListTable {
 			// Based on the action add notice.
 			switch ( $doaction ) {
 				case 'enable':
-					$notice = __( 'Tax rate(s) enabled successfully.', 'wp-ever-accounting' );
+					$notice = __( 'Tax(s) enabled successfully.', 'wp-ever-accounting' );
 					break;
 				case 'disable':
-					$notice = __( 'Tax rate(s) disabled successfully.', 'wp-ever-accounting' );
+					$notice = __( 'Tax(s) disabled successfully.', 'wp-ever-accounting' );
 					break;
 				case 'delete':
-					$notice = __( 'Tax rate(s) deleted successfully.', 'wp-ever-accounting' );
+					$notice = __( 'Tax(s) deleted successfully.', 'wp-ever-accounting' );
 					break;
 			}
 			eac_add_notice( $notice, 'success' );
 
-			wp_safe_redirect( admin_url( 'admin.php?page=eac-settings&tab=tax&section=tax-rates' ) );
+			wp_safe_redirect( admin_url( 'admin.php?page=eac-settings&tab=taxes&section=rates' ) );
 			exit();
 		}
 
@@ -256,8 +256,8 @@ class Taxes extends ListTable {
 		$actions     = array(
 			'id'      => sprintf( '<strong>#%d</strong>', esc_attr( $item->get_id() ) ),
 			'edit'    => sprintf( '<a href="%s">%s</a>', esc_url( $edit_url ), __( 'Edit', 'wp-ever-accounting' ) ),
-			'enable'  => sprintf( '<a href="%s">%s</a>', esc_url( wp_nonce_url( $enable_url, 'bulk-accounts' ) ), __( 'Enable', 'wp-ever-accounting' ) ),
-			'disable' => sprintf( '<a href="%s">%s</a>', esc_url( wp_nonce_url( $disable_url, 'bulk-accounts' ) ), __( 'Disable', 'wp-ever-accounting' ) ),
+			'enable'  => sprintf( '<a href="%s">%s</a>', esc_url( wp_nonce_url( $enable_url, 'bulk-taxes' ) ), __( 'Enable', 'wp-ever-accounting' ) ),
+			'disable' => sprintf( '<a href="%s">%s</a>', esc_url( wp_nonce_url( $disable_url, 'bulk-taxes' ) ), __( 'Disable', 'wp-ever-accounting' ) ),
 		);
 		if ( 'active' === $item->get_status() ) {
 			unset( $actions['enable'] );

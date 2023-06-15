@@ -140,7 +140,7 @@ function eac_sanitize_money( $amount, $from_code = null ) {
 	if ( ! is_numeric( $amount ) ) {
 		$currency = eac_get_currency( $from_code );
 		// Retrieve the thousand and decimal separator from currency object.
-		$thousand_separator = $currency ? $currency->get_thousand_separator() : ',';
+		$thousand_separator = $currency ? $currency->get_thousands_separator() : ',';
 		$decimal_separator  = $currency ? $currency->get_decimal_separator() : '.';
 		$symbol             = $currency ? $currency->get_symbol() : '$';
 		// Remove currency symbol from amount.
@@ -182,7 +182,7 @@ function eac_format_money( $amount, $code = null ) {
 	}
 	$currency     = eac_get_currency( $code );
 	$precision    = $currency ? $currency->get_precision() : 2;
-	$thousand_sep = $currency ? $currency->get_thousand_separator() : ',';
+	$thousand_sep = $currency ? $currency->get_thousands_separator() : ',';
 	$decimal_sep  = $currency ? $currency->get_decimal_separator() : '.';
 	$position     = $currency ? $currency->get_position() : 'before';
 	$symbol       = $currency ? $currency->get_symbol() : '$';
@@ -491,12 +491,12 @@ function eac_form_field( $field ) {
 			$field['placeholder'] = ! empty( $field['placeholder'] ) ? $field['placeholder'] : __( 'Select an option&hellip;', 'wp-ever-accounting' );
 			if ( ! empty( $field['multiple'] ) ) {
 				$field['name'] .= '[]';
-				$attrs[]       = 'multiple="multiple"';
+				$attrs[]        = 'multiple="multiple"';
 			}
 
 			if ( 'currency' === $field['type'] ) {
-				foreach ( eac_get_currencies() as $code => $currency ) {
-					$field['options'][ $code ] = sprintf( '%s (%s)', $currency['name'], $currency['symbol'] );
+				foreach ( eac_get_currencies( [ 'limit' => -1 ] ) as $code => $currency ) {
+					$field['options'][ $code ] = esc_html( $currency->get_formatted_name() );
 				}
 			} elseif ( 'country' === $field['type'] ) {
 				$field['options'] = eac_get_countries();
@@ -546,7 +546,7 @@ function eac_form_field( $field ) {
 				foreach ( $field['options'] as $option_key => $option_value ) {
 					$option_key = (string) $option_key;
 					$checked    = checked( $option_key, $field['value'], false );
-					$input      .= sprintf(
+					$input     .= sprintf(
 						'<label><input type="radio" name="%1$s" id="%2$s" class="%3$s" value="%4$s" %5$s %6$s>%7$s</label>',
 						esc_attr( $field['name'] ),
 						esc_attr( $field['id'] . '-' . $option_key ),
@@ -577,7 +577,7 @@ function eac_form_field( $field ) {
 		case 'date':
 		case 'time':
 			$field['input_class'] .= ' eac-datepicker';
-			$input                = sprintf(
+			$input                 = sprintf(
 				'<input type="text" name="%1$s" id="%2$s" class="%3$s" value="%4$s" %5$s>',
 				esc_attr( $field['name'] ),
 				esc_attr( $field['id'] ),
@@ -590,7 +590,7 @@ function eac_form_field( $field ) {
 		case 'decimal':
 		case 'money':
 			$field['input_class'] .= ' eac_input_decimal';
-			$input                = sprintf(
+			$input                 = sprintf(
 				'<input type="text" inputmode="decimal" name="%1$s" id="%2$s" class="%3$s" value="%4$s" %5$s>',
 				esc_attr( $field['name'] ),
 				esc_attr( $field['id'] ),
@@ -602,8 +602,8 @@ function eac_form_field( $field ) {
 
 		case 'file':
 			$field['input_class'] .= ' eac_input_file';
-			$allowed_types        = ! empty( $field['allowed_types'] ) ? $field['allowed_types'] : 'image';
-			$input                = sprintf(
+			$allowed_types         = ! empty( $field['allowed_types'] ) ? $field['allowed_types'] : 'image';
+			$input                 = sprintf(
 				'<input type="file" name="%1$s" id="%2$s" class="%3$s" value="%4$s" %5$s accept="%6$s">',
 				esc_attr( $field['name'] ),
 				esc_attr( $field['id'] ),
@@ -644,7 +644,7 @@ function eac_form_field( $field ) {
 				$label .= eac_tooltip( $field['tooltip'] );
 			}
 			$label .= '</label>';
-			$input = $label . $input;
+			$input  = $label . $input;
 		}
 
 		if ( ! empty( $field['desc'] ) && ! in_array( $field['type'], array( 'checkbox', 'switch' ), true ) ) {

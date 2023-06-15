@@ -5,7 +5,7 @@ const defaultConfig = require('@wordpress/scripts/config/webpack.config');
 const DependencyExtractionWebpackPlugin = require('@wordpress/dependency-extraction-webpack-plugin');
 const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
 const MiniCSSExtractPlugin = require('mini-css-extract-plugin');
-const {CleanWebpackPlugin} = require('clean-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const WebpackRTLPlugin = require('webpack-rtl-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const path = require('path');
@@ -16,22 +16,29 @@ module.exports = {
 	...defaultConfig,
 	devtool: isProduction ? false : 'source-map',
 	entry: {
-		'app': './client/app/index.js',
-		...glob.sync('./client/packages/*/index.js').reduce((memo, filepath) => {
-			const name = filepath.replace('./client/packages/', '').replace('/index.js', '');
-			return {
-				...memo,
-				[`${name}`]: {
-					import: filepath,
-					library: {
-						name: ['eac', name.replace(/-([a-z])/g, (match, letter) =>
-							letter.toUpperCase()
-						)],
-						type: 'window'
+		app: './client/app/index.js',
+		...glob
+			.sync('./client/packages/*/index.js')
+			.reduce((memo, filepath) => {
+				const name = filepath
+					.replace('./client/packages/', '')
+					.replace('/index.js', '');
+				return {
+					...memo,
+					[`${name}`]: {
+						import: filepath,
+						library: {
+							name: [
+								'eac',
+								name.replace(/-([a-z])/g, (match, letter) =>
+									letter.toUpperCase()
+								),
+							],
+							type: 'window',
+						},
 					},
-				}
-			}
-		}, {}),
+				};
+			}, {}),
 	},
 	output: {
 		clean: true,
@@ -44,15 +51,17 @@ module.exports = {
 	resolve: {
 		...defaultConfig.resolve,
 		alias: {
-			'@eac': path.resolve(__dirname, 'assets/packages'),
+			'@eac': path.resolve(__dirname, 'client/packages'),
+			'~': path.resolve(__dirname, 'client/app'),
 			...defaultConfig.resolve.alias,
 		},
-		modules: [path.resolve(__dirname, 'assets/packages'), 'node_modules'],
+		modules: [path.resolve(__dirname, 'client/packages'), 'node_modules'],
 	},
 	externals: {
 		lodash: 'lodash',
 		jquery: 'jQuery',
-		$: 'jQuery'
+		$: 'jQuery',
+		classNames: 'classNames',
 	},
 	performance: {
 		maxAssetSize: (isProduction ? 100 : 10000) * 1024,
@@ -89,31 +98,12 @@ module.exports = {
 				},
 				default: false,
 			},
+			maxAsyncRequests: Infinity,
 		},
 	},
 	module: {
 		rules: [
-			{
-				test: /\.less$/,
-				use: [{
-					loader: 'style-loader',
-				}, {
-					loader: 'css-loader', // translates CSS into CommonJS
-				}, {
-					loader: 'less-loader', // compiles Less to CSS
-					options: {
-						lessOptions: { // If you are using less-loader@5 please spread the lessOptions to options directly
-							modifyVars: {
-								'primary-color': '#2271b1',
-								'link-color': '#2271b1',
-								'border-radius-base': '2px',
-							},
-							javascriptEnabled: true,
-						},
-					},
-				}]
-			},
-				...defaultConfig.module.rules,
+			...defaultConfig.module.rules,
 			{
 				test: /\.svg$/,
 				issuer: /\.(j|t)sx?$/,
@@ -147,7 +137,7 @@ module.exports = {
 				![
 					'MiniCssExtractPlugin',
 					'DependencyExtractionWebpackPlugin',
-					'LiveReloadPlugin'
+					'LiveReloadPlugin',
 				].includes(plugin.constructor.name)
 		),
 		// During rebuilds, all webpack assets that are not used anymore will be
@@ -187,23 +177,23 @@ module.exports = {
 
 		new DependencyExtractionWebpackPlugin({
 			injectPolyfill: true,
-			requestToExternal(request) {
-				if (request.startsWith('@eac/')) {
-					const handle = request.replace('@eac/', '');
-					return [
-						'eac',
-						handle.replace(/-([a-z])/g, (_, letter) =>
-							letter.toUpperCase()
-						),
-					];
-				}
-			},
-			requestToHandle(request) {
-				if (request.startsWith('@eac/')) {
-					const handle = request.replace('@eac/', '');
-					return 'eac-' + handle;
-				}
-			},
+			// requestToExternal(request) {
+			// 	if (request.startsWith('@eac/')) {
+			// 		const handle = request.replace('@eac/', '');
+			// 		return [
+			// 			'eac',
+			// 			handle.replace(/-([a-z])/g, (_, letter) =>
+			// 				letter.toUpperCase()
+			// 			),
+			// 		];
+			// 	}
+			// },
+			// requestToHandle(request) {
+			// 	if (request.startsWith('@eac/')) {
+			// 		const handle = request.replace('@eac/', '');
+			// 		return 'eac-' + handle;
+			// 	}
+			// },
 		}),
 	].filter(Boolean),
 };

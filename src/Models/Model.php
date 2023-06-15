@@ -2443,7 +2443,7 @@ abstract class Model {
 		}
 
 		if ( is_string( $value ) ) {
-			return (int) preg_replace( '/[^0-9]/', '', $value );
+			return $this->string_to_int( $this->string_to_bool( $value ) );
 		}
 
 		return 0;

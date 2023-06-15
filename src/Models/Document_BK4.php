@@ -79,7 +79,7 @@ abstract class Document_BK4 extends Model {
 		'type'           => '',
 		'status'         => 'draft',
 		'doc_number'     => '', // Document number, invoice number, bill number, estimate number, etc.
-		'reference'   => '',
+		'reference'      => '',
 		'contact_id'     => null,
 		'billing_data'   => array(
 			'name'       => '',

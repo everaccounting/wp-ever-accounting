@@ -330,7 +330,6 @@ class Settings {
 					<?php
 					break;
 
-				case 'currency':
 				case 'select':
 					$value['value']       = wp_parse_list( $value['value'] );
 					$value['value']       = array_map( 'strval', $value['value'] );

@@ -52,27 +52,27 @@ class Contact extends Model {
 	 * @var array
 	 */
 	protected $core_data = array(
-		'type'         => 'contact',
-		'name'         => '',
-		'company'      => '',
-		'email'        => '',
-		'phone'        => '',
-		'address_1'    => '',
-		'address_2'    => '',
-		'city'         => '',
-		'state'        => '',
-		'postcode'     => '',
-		'country'      => '',
-		'website'      => '',
-		'vat_number'   => '',
-		'tax_number'   => '',
-		'status'       => 'active',
-		'thumbnail_id' => null,
-		'user_id'      => null,
-		'currency'     => '',
-		'creator_id'   => null,
-		'updated_at'   => null,
-		'created_at'   => null,
+		'type'          => 'contact',
+		'name'          => '',
+		'company'       => '',
+		'email'         => '',
+		'phone'         => '',
+		'address_1'     => '',
+		'address_2'     => '',
+		'city'          => '',
+		'state'         => '',
+		'postcode'      => '',
+		'country'       => '',
+		'website'       => '',
+		'vat_number'    => '',
+		'tax_number'    => '',
+		'status'        => 'active',
+		'thumbnail_id'  => null,
+		'user_id'       => null,
+		'currency_code' => '',
+		'creator_id'    => null,
+		'updated_at'    => null,
+		'created_at'    => null,
 	);
 
 	/**
@@ -83,8 +83,8 @@ class Contact extends Model {
 	 * @since 1.0.0
 	 */
 	public function __construct( $data = 0 ) {
-		$this->core_data['country']  = eac_get_base_country();
-		$this->core_data['currency'] = eac_get_base_currency();
+		$this->core_data['country']       = eac_get_base_country();
+		$this->core_data['currency_code'] = eac_get_base_currency();
 		parent::__construct( $data );
 	}
 
@@ -423,6 +423,30 @@ class Contact extends Model {
 	}
 
 	/**
+	 * Get contact's tax_number.
+	 *
+	 * @param string $context What the value is for. Valid values are view and edit.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @return string
+	 */
+	public function get_tax_number( $context = 'edit' ) {
+		return $this->get_prop( 'tax_number', $context );
+	}
+
+	/**
+	 * Set contact's tax_number.
+	 *
+	 * @param string $value Tax number.
+	 *
+	 * @since 1.1.0
+	 */
+	public function set_tax_number( $value ) {
+		$this->set_prop( 'tax_number', eac_clean( $value ) );
+	}
+
+	/**
 	 * Get the currency code of the contact.
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
@@ -431,8 +455,8 @@ class Contact extends Model {
 	 *
 	 * @return string
 	 */
-	public function get_currency( $context = 'edit' ) {
-		return $this->get_prop( 'currency', $context );
+	public function get_currency_code( $context = 'edit' ) {
+		return $this->get_prop( 'currency_code', $context );
 	}
 
 	/**
@@ -442,8 +466,8 @@ class Contact extends Model {
 	 *
 	 * @since 1.0.2
 	 */
-	public function set_currency( $value ) {
-		$this->set_prop( 'currency', eac_clean( $value ) );
+	public function set_currency_code( $value ) {
+		$this->set_prop( 'currency_code', eac_clean( $value ) );
 	}
 
 	/**

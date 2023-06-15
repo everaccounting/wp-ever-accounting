@@ -7,18 +7,18 @@
  */
 
 defined( 'ABSPATH' ) || exit();
-//$data     = eac_get_expense_report();
-//$labels   = array();
-//$datasets = array();
-//foreach ( $data['categories'] as $category_id => $category ) {
-//	$category = eac_get_category( $category_id );
-//	$name     = $category && $category->get_name() ? esc_html( $category->get_name() ) : esc_html__( 'Uncategorized', 'wp-ever-accounting' );
-//	$datasets[] = array(
-//		'label'           => $name,
-//		'backgroundColor' => eac_get_random_color( $name ),
-//		'data'            => array_values( $category ),
-//	);
-//}
+// $data     = eac_get_expense_report();
+// $labels   = array();
+// $datasets = array();
+// foreach ( $data['categories'] as $category_id => $category ) {
+// $category = eac_get_category( $category_id );
+// $name     = $category && $category->get_name() ? esc_html( $category->get_name() ) : esc_html__( 'Uncategorized', 'wp-ever-accounting' );
+// $datasets[] = array(
+// 'label'           => $name,
+// 'backgroundColor' => eac_get_random_color( $name ),
+// 'data'            => array_values( $category ),
+// );
+// }
 
 ?>
 <div class="eac-card">

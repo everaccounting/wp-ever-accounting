@@ -52,7 +52,7 @@ class Account extends Model {
 		'bank_phone'      => null,
 		'bank_address'    => null,
 		'status'          => 'active',
-		'currency'        => 'USD',
+		'currency_code'   => 'USD',
 		'creator_id'      => null,
 		'updated_at'      => null,
 		'created_at'      => null,
@@ -76,7 +76,7 @@ class Account extends Model {
 	 * @since 1.0.0
 	 */
 	public function __construct( $data = 0 ) {
-		$this->core_data['currency'] = eac_get_base_currency();
+		$this->core_data['currency_code'] = eac_get_base_currency();
 		parent::__construct( $data );
 	}
 
@@ -193,8 +193,8 @@ class Account extends Model {
 	 *
 	 * @return mixed|null
 	 */
-	public function get_currency( $context = 'edit' ) {
-		return $this->get_prop( 'currency', $context );
+	public function get_currency_code( $context = 'edit' ) {
+		return $this->get_prop( 'currency_code', $context );
 	}
 
 	/**
@@ -204,8 +204,8 @@ class Account extends Model {
 	 *
 	 * @since 1.1.0
 	 */
-	public function set_currency( $currency ) {
-		$this->set_prop( 'currency', strtoupper( $currency ) );
+	public function set_currency_code( $currency ) {
+		$this->set_prop( 'currency_code', strtoupper( $currency ) );
 	}
 
 	/**
@@ -445,7 +445,7 @@ class Account extends Model {
 		}
 
 		// Currency fields check.
-		if ( empty( $this->get_currency() ) ) {
+		if ( empty( $this->get_currency_code() ) ) {
 			return new \WP_Error( 'missing_required', __( 'Account currency is required.', 'wp-ever-accounting' ) );
 		}
 
@@ -492,7 +492,7 @@ class Account extends Model {
 	 * @return string
 	 */
 	public function get_formatted_balance() {
-		return eac_format_money( $this->get_balance(), $this->get_currency() );
+		return eac_format_money( $this->get_balance(), $this->get_currency_code() );
 	}
 
 	/**
@@ -502,7 +502,7 @@ class Account extends Model {
 	 * @return string
 	 */
 	public function get_formatted_name() {
-		$name   = sprintf( '%s (%s)', $this->get_name(), $this->get_currency() );
+		$name   = sprintf( '%s (%s)', $this->get_name(), $this->get_currency_code() );
 		$number = $this->get_number();
 
 		return $number ? sprintf( '%s - %s', $number, $name ) : $name;

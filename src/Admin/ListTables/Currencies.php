@@ -2,6 +2,8 @@
 
 namespace EverAccounting\Admin\ListTables;
 
+use EverAccounting\Models\Currency;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -10,6 +12,7 @@ defined( 'ABSPATH' ) || exit;
  * @package EverAccounting\Admin\ListTables
  */
 class Currencies extends ListTable {
+
 	/**
 	 * Get things started
 	 *
@@ -33,59 +36,26 @@ class Currencies extends ListTable {
 	/**
 	 * Retrieve all the data for the table.
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 	public function prepare_items() {
-		$current_page          = $this->get_pagenum();
-		$per_page              = $this->get_items_per_page( 'currencies_per_page', 20 );
 		$columns               = $this->get_columns();
 		$sortable              = $this->get_sortable_columns();
 		$hidden                = $this->get_hidden_columns();
 		$this->_column_headers = array( $columns, $hidden, $sortable );
-		$search                = $this->get_search();
-		$order_by              = $this->get_orderby( 'status' );
-		$order                 = $this->get_order( 'asc' );
 
-		$currencies = eac_get_currencies();
-		// if search string is present, filter the currencies by the search string.
-		if ( ! empty( $search ) ) {
-			$currencies = array_filter(
-				$currencies,
-				function ( $currency ) use ( $search ) {
-					return false !== stripos( $currency['name'], $search ) || false !== stripos( $currency['code'], $search );
-				}
-			);
-		}
+		$args = array(
+			'limit'   => $this->get_per_page(),
+			'offset'  => $this->get_offset(),
+			'status'  => $this->get_status(),
+			'search'  => $this->get_search(),
+			'order'   => $this->get_order( 'ASC' ),
+			'orderby' => $this->get_orderby( 'status' ),
+		);
 
-		// if order by is present, sort the currencies by the order by.
-		if ( ! empty( $order_by ) ) {
-			usort(
-				$currencies,
-				function ( $a, $b ) use ( $order_by, $order ) {
-					if ( 'asc' === $order ) {
-						if ( $a[ $order_by ] === $b[ $order_by ] ) {
-							return 0;
-						}
-
-						return ( $a[ $order_by ] < $b[ $order_by ] ) ? - 1 : 1;
-					}
-
-					if ( $a[ $order_by ] === $b[ $order_by ] ) {
-						return 0;
-					}
-
-					return ( $a[ $order_by ] > $b[ $order_by ] ) ? - 1 : 1;
-				}
-			);
-		}
-
-		// Handle pagination.
-		$count_total = count( $currencies );
-		$currencies  = array_slice( $currencies, ( ( $current_page - 1 ) * $per_page ), $per_page );
-
-		$this->items       = $currencies;
-		$this->total_count = $count_total;
+		$this->items       = eac_get_currencies( $args );
+		$this->total_count = eac_get_currencies( $args, true );
 
 		$this->set_pagination_args(
 			array(
@@ -99,8 +69,8 @@ class Currencies extends ListTable {
 	/**
 	 * No items found text.
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 	public function no_items() {
 		esc_html_e( 'No currencies found.', 'wp-ever-accounting' );
@@ -128,26 +98,25 @@ class Currencies extends ListTable {
 	 */
 	public function process_bulk_action( $doaction ) {
 		if ( ! empty( $doaction ) && check_admin_referer( 'bulk-' . $this->_args['plural'] ) ) {
-			$currency   = eac_get_input_var( 'currency' );
-			$currencies = eac_get_input_var( 'currencies' );
-			var_dump($currencies);
+			$currency_id  = eac_get_input_var( 'currency_id' );
+			$currency_ids = eac_get_input_var( 'currency_ids' );
 
 			if ( ! empty( $id ) ) {
-				$currencies = wp_parse_list( $currency );
-				$doaction   = ( - 1 !== $_REQUEST['action'] ) ? $_REQUEST['action'] : $_REQUEST['action2']; // phpcs:ignore
+				$currency_ids = wp_parse_list( $currency_id );
+				$doaction = (-1 !== $_REQUEST['action']) ? $_REQUEST['action'] : $_REQUEST['action2']; // phpcs:ignore
 			} elseif ( ! empty( $ids ) ) {
-				$currencies = array_map( 'sanitize_text_field', $currencies );
+				$currency_ids = array_map( 'absint', $currency_ids );
 			} elseif ( wp_get_referer() ) {
 				wp_safe_redirect( wp_get_referer() );
 				exit;
 			}
 
-			foreach ( $currencies as $currency ) {
+			foreach ( $currency_ids as $currency_id ) {
 				switch ( $doaction ) {
 					case 'activate':
 						eac_insert_currency(
 							array(
-								'code'   => $currency,
+								'code'   => $currency_id,
 								'status' => 'active',
 							)
 						);
@@ -155,11 +124,13 @@ class Currencies extends ListTable {
 					case 'deactivate':
 						eac_insert_currency(
 							array(
-								'code'   => $currency,
+								'code'   => $currency_id,
 								'status' => 'inactive',
 							)
 						);
 						break;
+					case 'delete':
+						eac_delete_currency( $currency_id );
 				}
 			}
 
@@ -175,7 +146,7 @@ class Currencies extends ListTable {
 					break;
 			}
 
-			wp_safe_redirect( admin_url( 'admin.php?page=eac-settings&tab=currencies' ) );
+			wp_safe_redirect( admin_url( 'admin.php?page=eac-settings&section=currencies' ) );
 			exit();
 		}
 	}
@@ -184,34 +155,34 @@ class Currencies extends ListTable {
 	/**
 	 * Define which columns to show on this screen.
 	 *
-	 * @since 1.0.2
 	 * @return array
+	 * @since 1.0.2
 	 */
 	public function get_columns() {
-		return array(
-			'cb'     => '<input type="checkbox" />',
-			'name'   => __( 'Name', 'wp-ever-accounting' ),
-			'code'   => __( 'Code', 'wp-ever-accounting' ),
-			'symbol' => __( 'Symbol', 'wp-ever-accounting' ),
-			'rate'   => __( 'Rate', 'wp-ever-accounting' ),
-			'status' => __( 'Status', 'wp-ever-accounting' ),
-		);
+		 return array(
+			 'cb'     => '<input type="checkbox" />',
+			 'name'   => __( 'Name', 'wp-ever-accounting' ),
+			 'code'   => __( 'Code', 'wp-ever-accounting' ),
+			 'symbol' => __( 'Symbol', 'wp-ever-accounting' ),
+			 'rate'   => __( 'Rate', 'wp-ever-accounting' ),
+			 'status' => __( 'Status', 'wp-ever-accounting' ),
+		 );
 	}
 
 	/**
 	 * Define sortable columns.
 	 *
-	 * @since 1.0.2
 	 * @return array
+	 * @since 1.0.2
 	 */
 	protected function get_sortable_columns() {
-		return array(
-			'name'   => array( 'name', true ),
-			'code'   => array( 'code', true ),
-			'symbol' => array( 'symbol', true ),
-			'rate'   => array( 'rate', true ),
-			'status' => array( 'status', true ),
-		);
+		 return array(
+			 'name'   => array( 'name', true ),
+			 'code'   => array( 'code', true ),
+			 'symbol' => array( 'symbol', true ),
+			 'rate'   => array( 'rate', true ),
+			 'status' => array( 'status', true ),
+		 );
 	}
 
 	/**
@@ -223,77 +194,87 @@ class Currencies extends ListTable {
 	 */
 	public function get_bulk_actions() {
 		return array(
-			'enable'  => __( 'Enable', 'wp-ever-accounting' ),
-			'disable' => __( 'Disable', 'wp-ever-accounting' ),
+			'activate'   => __( 'Activate', 'wp-ever-accounting' ),
+			'deactivate' => __( 'Deactivate', 'wp-ever-accounting' ),
 		);
 	}
 
 	/**
 	 * Define primary column.
 	 *
-	 * @since 1.0.2
 	 * @return string
+	 * @since 1.0.2
 	 */
 	public function get_primary_column_name() {
-		return 'name';
+		 return 'name';
 	}
 
 	/**
 	 * Renders the checkbox column in the customers list table.
 	 *
-	 * @param array $item The current account object.
+	 * @param Currency $item The current account object.
 	 *
-	 * @since  1.0.2
 	 * @return string Displays a checkbox.
+	 * @since  1.0.2
 	 */
 	public function column_cb( $item ) {
-		return sprintf( '<input type="checkbox" name="currencies[]" value="%s"/>', esc_attr( $item['code'] ) );
+		return sprintf( '<input type="checkbox" name="currency_id[]" value="%s" %s/>', esc_attr( $item->get_id() ), disabled( $item->get_code(), eac_get_base_currency(), false ) );
 	}
 
 	/**
 	 * Renders the name column in the accounts list table.
 	 *
-	 * @param array $item The current account object.
+	 * @param Currency $item The current account object.
 	 *
-	 * @since  1.0.2
 	 * @return string Displays a checkbox.
+	 * @since  1.0.2
 	 */
 	public function column_name( $item ) {
-		$args        = array( 'currency' => $item['code'] );
-		$edit_url    = $this->get_current_url( array_merge( $args, array( 'action' => 'edit' ) ) );
-		$enable_url  = $this->get_current_url( array_merge( $args, array( 'action' => 'enable' ) ) );
-		$disable_url = $this->get_current_url( array_merge( $args, array( 'action' => 'disable' ) ) );
-		$actions     = array(
-			'edit'    => sprintf( '<a href="%s">%s</a>', esc_url( $edit_url ), __( 'Edit', 'wp-ever-accounting' ) ),
-			'enable'  => sprintf( '<a href="%s">%s</a>', esc_url( wp_nonce_url( $enable_url, 'bulk-currencies' ) ), __( 'Enable', 'wp-ever-accounting' ) ),
-			'disable' => sprintf( '<a href="%s">%s</a>', esc_url( wp_nonce_url( $disable_url, 'bulk-currencies' ) ), __( 'Disable', 'wp-ever-accounting' ) ),
+		$args           = array( 'currency_id' => $item->get_id() );
+		$edit_url       = $this->get_current_url( array_merge( $args, array( 'action' => 'edit' ) ) );
+		$activate_url   = $this->get_current_url( array_merge( $args, array( 'action' => 'activate' ) ) );
+		$deactivate_url = $this->get_current_url( array_merge( $args, array( 'action' => 'deactivate' ) ) );
+		$delete_url     = $this->get_current_url( array_merge( $args, array( 'action' => 'delete' ) ) );
+		$actions        = array(
+			'edit'       => sprintf( '<a href="%s">%s</a>', esc_url( $edit_url ), __( 'Edit', 'wp-ever-accounting' ) ),
+			'activate'   => sprintf( '<a href="%s">%s</a>', esc_url( wp_nonce_url( $activate_url, 'bulk-currencies' ) ), __( 'Enable', 'wp-ever-accounting' ) ),
+			'deactivate' => sprintf( '<a href="%s">%s</a>', esc_url( wp_nonce_url( $deactivate_url, 'bulk-currencies' ) ), __( 'Disable', 'wp-ever-accounting' ) ),
+			'delete'     => sprintf( '<a href="%s">%s</a>', esc_url( wp_nonce_url( $delete_url, 'bulk-currencies' ) ), __( 'Delete', 'wp-ever-accounting' ) ),
 		);
-		if ( 'active' === $item['status'] ) {
-			unset( $actions['enable'] );
+
+		if ( 'active' === $item->get_status() ) {
+			unset( $actions['activate'] );
 		} else {
-			unset( $actions['disable'] );
+			unset( $actions['deactivate'] );
 		}
 
-		return sprintf( '<a href="%s">%s</a> %s', esc_url( $edit_url ), esc_html( $item['name'] ), $this->row_actions( $actions ) );
+		// if not base then show enable/disable and delete link.
+		if ( $item->get_code() == eac_get_base_currency() ) {
+			unset( $actions['delete'] );
+			unset( $actions['activate'] );
+			unset( $actions['deactivate'] );
+		}
+
+		return sprintf( '<a href="%s">%s</a> %s', esc_url( $edit_url ), esc_html( $item->get_name() ), $this->row_actions( $actions ) );
 	}
 
 	/**
 	 * This function renders most of the columns in the list table.
 	 *
-	 * @param array  $item The current account object.
-	 * @param string $column_name The name of the column.
+	 * @param Currency $item The current account object.
+	 * @param string   $column_name The name of the column.
 	 *
-	 * @since 1.0.2
 	 * @return string The column value.
+	 * @since 1.0.2
 	 */
 	public function column_default( $item, $column_name ) {
 		switch ( $column_name ) {
 			case 'rate':
-				$value = empty( $item['rate'] ) ? '&mdash;' : esc_html( eac_sanitize_number( $item['rate'], 8 ) );
+				$value = esc_html( eac_sanitize_number( $item->get_rate(), 8 ) );
 				break;
 			case 'status':
-				$value = esc_html( $item['status'] );
-				$value = $value ? sprintf( '<span class="eac-status-label %s">%s</span>', esc_attr( $item['status'] ), $value ) : '&mdash;';
+				$value = esc_html( $item->get_status( 'view' ) );
+				$value = $value ? sprintf( '<span class="eac-status-label %s">%s</span>', esc_attr( $item->get_status() ), $value ) : '&mdash;';
 				break;
 			default:
 				$value = parent::column_default( $item, $column_name );

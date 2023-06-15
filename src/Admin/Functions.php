@@ -182,7 +182,7 @@ function eac_get_tools_tabs() {
  */
 function eac_get_reports_tabs() {
 	$tabs = array(
-		'payments'  => __( 'Payments', 'wp-ever-accounting' ),
+		'payments' => __( 'Payments', 'wp-ever-accounting' ),
 		'expenses' => __( 'Expenses', 'wp-ever-accounting' ),
 		'profits'  => __( 'Profits', 'wp-ever-accounting' ),
 		'taxes'    => __( 'Taxes', 'wp-ever-accounting' ),

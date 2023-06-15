@@ -101,8 +101,9 @@ class Scripts extends Singleton {
 		ever_accounting()->register_script( 'eac-drawer', 'js/admin/eac-drawer.min.js', array( 'jquery' ) );
 		ever_accounting()->register_script( 'eac-plugins', 'js/admin/eac-plugins.min.js', array( 'jquery', 'eac-select2', 'eac-inputmask', 'eac-tiptip', 'eac-drawer', 'eac-blockui', 'eac-inputmask' ) );
 		ever_accounting()->register_script( 'eac-admin', 'js/admin/eac-admin.min.js', array( 'jquery', 'eac-plugins' ) );
-		ever_accounting()->enqueue_script( 'eac-components', 'client/components.js' );
-		ever_accounting()->register_script( 'eac-app', 'client/app.js', ['eac-components'] );
+		// ever_accounting()->enqueue_script( 'eac-navigation', 'client/navigation.js' );
+		// ever_accounting()->enqueue_script( 'eac-components', 'client/components.js' );
+		// ever_accounting()->register_script( 'eac-app', 'client/app.js', [ 'eac-components' ] );
 
 		// Admin scripts for Accounting pages only.
 		if ( in_array( $screen_id, eac_get_screen_ids(), true ) ) {
@@ -111,7 +112,6 @@ class Scripts extends Singleton {
 			wp_enqueue_script( 'jquery-ui-tooltip' );
 			wp_enqueue_script( 'wp-color-picker' );
 			wp_enqueue_script( 'eac-admin' );
-			wp_enqueue_script( 'eac-app' );
 
 			$vars = array(
 				'site_url'          => site_url(),
@@ -130,7 +130,7 @@ class Scripts extends Singleton {
 			);
 
 			wp_localize_script( 'eac-admin', 'eac_admin_vars', $vars );
-//			wp_localize_script( 'eac-app', 'eac_admin_vars', $vars );
+
 		}
 
 		// if reports page.

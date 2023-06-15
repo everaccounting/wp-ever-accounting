@@ -78,8 +78,8 @@ abstract class Document_BK7 extends Model {
 	protected $core_data = array(
 		'type'            => '',
 		'status'          => 'draft',
-		'number' => '', // Document number, invoice number, bill number, estimate number, etc.
-		'reference'    => '',
+		'number'          => '', // Document number, invoice number, bill number, estimate number, etc.
+		'reference'       => '',
 		'contact_id'      => null,
 		'billing_data'    => array(
 			'name'       => '',

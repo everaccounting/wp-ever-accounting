@@ -8,20 +8,19 @@
  */
 
 defined( 'ABSPATH' ) || exit;
-$currencies     = eac_get_currencies();
-$iso_currencies = eac_get_iso_currencies();
-$iso_currencies = array_diff_key( $iso_currencies, $currencies );
-$iso_currencies = array_map(
-	function ( $currency ) {
-		return $currency['name'] . ' (' . $currency['symbol'] . ')';
-	},
-	$iso_currencies
-);
+$currencies = eac_get_currencies( [ 'limit' => -1 ] );
+$info       = eac_get_currencies_info();
+foreach ( $currencies as $currency ) {
+	if ( isset( $info[ $currency->get_code() ] ) ) {
+		unset( $info[ $currency->get_code() ] );
+	}
+}
 ?>
 <div class="eac-section-header">
 	<div>
 		<h2><?php echo esc_html( __( 'Add Currency', 'wp-ever-accounting' ) ); ?></h2>
-		<a href="<?php echo esc_url( admin_url( 'admin.php?page=eac-settings&tab=currencies' ) ); ?>"><span class="dashicons dashicons-undo"></span></a>
+		<a href="<?php echo esc_url( admin_url( 'admin.php?page=eac-settings&tab=currencies' ) ); ?>"><span
+				class="dashicons dashicons-undo"></span></a>
 	</div>
 	<div>
 		<?php submit_button( __( 'Add Currency', 'wp-ever-accounting' ), 'primary', 'submit', false, array( 'form' => 'eac-add-currency-form' ) ); ?>
@@ -41,11 +40,12 @@ $iso_currencies = array_map(
 						'type'        => 'select',
 						'id'          => 'code',
 						'label'       => __( 'Code', 'wp-ever-accounting' ),
+						'placeholder' => __( 'Select a currency', 'wp-ever-accounting' ),
 						'class'       => 'eac-col-6',
-						'input_class' => 'eac_select2',
+						'input_class' => 'eac-select2',
 						'required'    => true,
 						'readonly'    => true,
-						'options'     => $iso_currencies,
+						'options'     => wp_list_pluck( $info, 'name', 'code' ),
 					)
 				);
 				eac_form_field(

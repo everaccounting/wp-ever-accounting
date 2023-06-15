@@ -46,7 +46,7 @@ class Sales extends \EverAccounting\Singleton {
 	 * @return void
 	 */
 	public static function output_payments_content() {
-		$action    = eac_get_input_var( 'action' );
+		$action     = eac_get_input_var( 'action' );
 		$payment_id = eac_get_input_var( 'payment_id' );
 		if ( eac_is_input_var_set( 'payment_id' ) && empty( eac_get_payment( $payment_id ) ) ) {
 			wp_safe_redirect( admin_url( 'admin.php?page=eac-sales&tab=payments' ) );

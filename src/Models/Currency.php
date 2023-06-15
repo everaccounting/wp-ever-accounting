@@ -45,17 +45,18 @@ class Currency extends Model {
 	 * @var array
 	 */
 	protected $core_data = array(
-		'code'               => '',
-		'name'               => '',
-		'rate'               => 1,
-		'precision'          => 0,
-		'symbol'             => '',
-		'thousand_separator' => ',',
-		'decimal_separator'  => '.',
-		'position'           => 'before',
-		'status'             => 'active',
-		'updated_at'         => '',
-		'created_at'         => '',
+		'code'                => '',
+		'rate'                => 1,
+		'name'                => '',
+		'precision'           => 0,
+		'symbol'              => '',
+		'decimal_separator'   => '.',
+		'thousands_separator' => ',',
+		'position'            => 'before',
+		'auto_update'         => 0,
+		'status'              => 'active',
+		'updated_at'          => '',
+		'created_at'          => '',
 	);
 
 	/**
@@ -68,9 +69,19 @@ class Currency extends Model {
 	public function __construct( $data = 0 ) {
 		parent::__construct( $data );
 		if ( ! is_numeric( $data ) && strlen( $data ) === 3 ) {
+			$info = include ever_accounting()->get_dir_path( 'i18n/currencies.php' );
 			$this->set_code( $data );
 			$this->object_read = false;
 			$this->read();
+
+			if ( ! $this->get_id() && isset( $info[ $data ] ) ) {
+				// set props will take care of rest.
+				$this->set_props(
+					array(
+						'code' => $data,
+					)
+				);
+			}
 		}
 	}
 
@@ -155,7 +166,7 @@ class Currency extends Model {
 	 * @since 1.0.2
 	 */
 	public function set_rate( $value ) {
-		$this->set_prop( 'rate', eac_format_decimal( $value, 7 ) );
+		$this->set_prop( 'rate', eac_format_decimal( $value, 8 ) );
 	}
 
 	/**
@@ -183,30 +194,6 @@ class Currency extends Model {
 	}
 
 	/**
-	 * Get thousand sep.
-	 *
-	 * @param string $context What the value is for. Valid values are view and edit.
-	 *
-	 * @since 1.0.2
-	 *
-	 * @return string
-	 */
-	public function get_thousand_separator( $context = 'edit' ) {
-		return $this->get_prop( 'thousand_separator', $context );
-	}
-
-	/**
-	 * Set the thousand sep.
-	 *
-	 * @param string $sep A Thousand sep.
-	 *
-	 * @since 1.0.2
-	 */
-	public function set_thousand_separator( $sep ) {
-		$this->set_prop( 'thousand_separator', sanitize_text_field( $sep ) );
-	}
-
-	/**
 	 * Get decimal sep.
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
@@ -228,6 +215,30 @@ class Currency extends Model {
 	 */
 	public function set_decimal_separator( $sep ) {
 		$this->set_prop( 'decimal_separator', sanitize_text_field( $sep ) );
+	}
+
+	/**
+	 * Get thousand sep.
+	 *
+	 * @param string $context What the value is for. Valid values are view and edit.
+	 *
+	 * @since 1.0.2
+	 *
+	 * @return string
+	 */
+	public function get_thousands_separator( $context = 'edit' ) {
+		return $this->get_prop( 'thousands_separator', $context );
+	}
+
+	/**
+	 * Set the thousand sep.
+	 *
+	 * @param string $sep A Thousand sep.
+	 *
+	 * @since 1.0.2
+	 */
+	public function set_thousands_separator( $sep ) {
+		$this->set_prop( 'thousands_separator', sanitize_text_field( $sep ) );
 	}
 
 	/**
@@ -280,6 +291,30 @@ class Currency extends Model {
 	 */
 	public function set_position( $position ) {
 		$this->set_prop( 'position', sanitize_text_field( $position ) );
+	}
+
+	/**
+	 * Get if the currency is auto updated.
+	 *
+	 * @param string $context What the value is for. Valid values are view and edit.
+	 *
+	 * @since 1.0.2
+	 *
+	 * @return int
+	 */
+	public function get_auto_update( $context = 'edit' ) {
+		return $this->get_prop( 'auto_update', $context );
+	}
+
+	/**
+	 * Set if the currency is auto updated.
+	 *
+	 * @param int $auto_update Currency auto update.
+	 *
+	 * @since 1.0.2
+	 */
+	public function set_auto_update( $auto_update ) {
+		$this->set_prop( 'auto_update', $this->string_to_int( $auto_update ) );
 	}
 
 	/**
@@ -383,7 +418,7 @@ class Currency extends Model {
 		$info = include ever_accounting()->get_dir_path( 'i18n/currencies.php' );
 		$code = isset( $props['code'] ) ? $props['code'] : $this->get_code();
 		if ( isset( $info[ $code ] ) ) {
-			$props = array_merge( $info[ $code ], $props );
+			$props = wp_parse_args( $props, $info[ $code ] );
 		}
 
 		parent::set_props( $props );
@@ -406,6 +441,8 @@ class Currency extends Model {
 				$id = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$wpdb->prefix}$this->table WHERE code = %s", $this->get_code() ) );
 				wp_cache_set( $this->get_code(), $id, static::CACHE_GROUP );
 			}
+
+			$this->set_id( $id );
 		}
 
 		$data = parent::read();

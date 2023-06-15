@@ -39,9 +39,9 @@ class General extends \EverAccounting\Admin\SettingsTab {
 	 */
 	protected function get_own_sections() {
 		$sections = array(
-			''           => __( 'General', 'wp-ever-accounting' ),
+			''           => __( 'Company', 'wp-ever-accounting' ),
 			'currencies' => __( 'Currencies', 'wp-ever-accounting' ),
-			//'defaults' => __( 'Defaults', 'wp-ever-accounting' ),
+			// 'defaults' => __( 'Defaults', 'wp-ever-accounting' ),
 		);
 
 		return $sections;
@@ -54,18 +54,23 @@ class General extends \EverAccounting\Admin\SettingsTab {
 	 * @return array
 	 */
 	protected function get_settings_for_default_section() {
+		$currencies_options = array();
+		$currency_info = eac_get_currencies_info();
+		foreach ( $currency_info as $currency_code => $currency ) {
+			$currencies_options[ $currency_code ] = sprintf( '%s (%s)', $currency['name'], $currency['symbol'] );
+		}
 
 		return array(
 			array(
-				'title' => __( 'General Settings', 'wp-ever-accounting' ),
-				'desc'  => __( 'General details about your business. These will be used in the records you create.', 'wp-ever-accounting' ),
+				'title' => __( 'Company Information', 'wp-ever-accounting' ),
+				'desc'  => __( 'General details about your company. These will be used in the records you create.', 'wp-ever-accounting' ),
 				'type'  => 'title',
 				'id'    => 'general_settings',
 			),
 			array(
-				'title'       => __( 'Business Name', 'wp-ever-accounting' ),
-				'desc'        => __( 'The name of your business. This will be used in the invoice, bill, and other documents.', 'wp-ever-accounting' ),
-				'id'          => 'eac_business_name',
+				'title'       => __( 'Company Name', 'wp-ever-accounting' ),
+				'desc'        => __( 'The name of your company. This will be used in the invoice, bill, and other documents.', 'wp-ever-accounting' ),
+				'id'          => 'eac_company_name',
 				'type'        => 'text',
 				'placeholder' => 'e.g. XYZ Company',
 				'default'     => '',
@@ -73,8 +78,8 @@ class General extends \EverAccounting\Admin\SettingsTab {
 			),
 			array(
 				'title'       => __( 'Email', 'wp-ever-accounting' ),
-				'desc'        => __( 'The email address of your business. This will be used in the invoice, bill, and other documents.', 'wp-ever-accounting' ),
-				'id'          => 'eac_business_email',
+				'desc'        => __( 'The email address of your company. This will be used in the invoice, bill, and other documents.', 'wp-ever-accounting' ),
+				'id'          => 'eac_company_email',
 				'type'        => 'email',
 				'placeholder' => get_option( 'admin_email' ),
 				'default'     => get_option( 'admin_email' ),
@@ -82,8 +87,8 @@ class General extends \EverAccounting\Admin\SettingsTab {
 			),
 			array(
 				'title'       => __( 'Phone', 'wp-ever-accounting' ),
-				'desc'        => __( 'The phone number of your business. This will be used in the invoice, bill, and other documents.', 'wp-ever-accounting' ),
-				'id'          => 'eac_business_phone',
+				'desc'        => __( 'The phone number of your company. This will be used in the invoice, bill, and other documents.', 'wp-ever-accounting' ),
+				'id'          => 'eac_company_phone',
 				'type'        => 'text',
 				'placeholder' => 'e.g. +1 123 456 7890',
 				'default'     => '',
@@ -91,8 +96,8 @@ class General extends \EverAccounting\Admin\SettingsTab {
 			),
 			array(
 				'title'       => __( 'Logo', 'wp-ever-accounting' ),
-				'desc'        => __( 'The logo of your business. This will be used in the invoice, bill, and other documents.', 'wp-ever-accounting' ),
-				'id'          => 'eac_business_logo',
+				'desc'        => __( 'The logo of your company. This will be used in the invoice, bill, and other documents.', 'wp-ever-accounting' ),
+				'id'          => 'eac_company_logo',
 				'type'        => 'text',
 				'placeholder' => 'e.g. http://example.com/logo.png',
 				'default'     => '',
@@ -100,8 +105,8 @@ class General extends \EverAccounting\Admin\SettingsTab {
 			),
 			array(
 				'title'       => __( 'VAT Number', 'wp-ever-accounting' ),
-				'desc'        => __( 'The vat number of your business. This will be used in the invoice, bill, and other documents.', 'wp-ever-accounting' ),
-				'id'          => 'eac_business_vat_number',
+				'desc'        => __( 'The vat number of your company. This will be used in the invoice, bill, and other documents.', 'wp-ever-accounting' ),
+				'id'          => 'eac_company_vat_number',
 				'type'        => 'text',
 				'placeholder' => 'e.g. 123456789',
 				'default'     => '',
@@ -109,162 +114,22 @@ class General extends \EverAccounting\Admin\SettingsTab {
 			),
 			array(
 				'title'       => __( 'Tax Number', 'wp-ever-accounting' ),
-				'desc'        => __( 'The tax number of your business. This will be used in the invoice, bill, and other documents.', 'wp-ever-accounting' ),
-				'id'          => 'eac_business_tax_number',
+				'desc'        => __( 'The tax number of your company. This will be used in the invoice, bill, and other documents.', 'wp-ever-accounting' ),
+				'id'          => 'eac_company_tax_number',
 				'type'        => 'text',
 				'placeholder' => 'e.g. 123456789',
 				'default'     => '',
 				'desc_tip'    => true,
 			),
 			array(
-				'type' => 'sectionend',
-				'id'   => 'general_settings',
-			),
-			array(
-				'title' => __( 'Business Address', 'wp-ever-accounting' ),
-				'desc'  => __( 'Business address details. The address will be used in the invoices, bills, and other records that you issue.', 'wp-ever-accounting' ),
-				'type'  => 'title',
-				'id'    => 'business_address',
-			),
-			array(
-				'title'       => __( 'Address Line 1', 'wp-ever-accounting' ),
-				'desc'        => __( 'The street address of your business.', 'wp-ever-accounting' ),
-				'id'          => 'eac_business_address_1',
-				'type'        => 'text',
-				'placeholder' => 'e.g. 123 Main Street',
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-			array(
-				'title'       => __( 'Address Line 2', 'wp-ever-accounting' ),
-				'desc'        => __( 'An additional, optional address line for your business location.', 'wp-ever-accounting' ),
-				'id'          => 'eac_business_address_2',
-				'type'        => 'text',
-				'placeholder' => 'e.g. Suite 100',
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-			array(
-				'title'       => __( 'City', 'wp-ever-accounting' ),
-				'desc'        => __( 'The city in which your business is located. This will be used in the invoice, bill, and other documents.', 'wp-ever-accounting' ),
-				'id'          => 'eac_business_city',
-				'type'        => 'text',
-				'placeholder' => 'e.g. New York',
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-			array(
-				'title'       => __( 'State', 'wp-ever-accounting' ),
-				'desc'        => __( 'The state in which your business is located.', 'wp-ever-accounting' ),
-				'id'          => 'eac_business_state',
-				'type'        => 'text',
-				'placeholder' => 'e.g. New York',
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-			array(
-				'title'       => __( 'Postcode / ZIP', 'wp-ever-accounting' ),
-				'desc'        => __( 'The postcode or ZIP code of your business if any. This will be used in the invoice, bill, and other documents.', 'wp-ever-accounting' ),
-				'id'          => 'eac_business_postcode',
-				'type'        => 'text',
-				'placeholder' => 'e.g. 10001',
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-			array(
-				'title'       => __( 'Country', 'wp-ever-accounting' ),
-				'desc'        => __( 'The country in which your business is located.', 'wp-ever-accounting' ),
-				'id'          => 'eac_business_country',
-				'type'        => 'select',
-				'options'     => eac_get_countries(),
-				'class'       => 'eac-select2',
-				'default'     => 'US',
-				'placeholder' => __( 'Select a country&hellip;', 'wp-ever-accounting' ),
-				'desc_tip'    => true,
-			),
-			array(
-				'type' => 'sectionend',
-				'id'   => 'business_address',
-			),
-			array(
-				'title' => __( 'Currency options', 'wp-ever-accounting' ),
-				'type'  => 'title',
-				'desc'  => __( 'The following options affect how currency is displayed.', 'wp-ever-accounting' ),
-				'id'    => 'currency_options',
-			),
-			// enable disable multi currency.
-			array(
-				'title'   => __( 'Multi Currency', 'wp-ever-accounting' ),
-				'id'      => 'eac_multi_currency',
-				'type'    => 'checkbox',
-				'default' => 'no',
-				'desc'    => __( 'Enabling this will allow you to record transactions in multiple currencies.', 'wp-ever-accounting' ),
-			),
-			array(
 				'title'    => __( 'Base Currency', 'wp-ever-accounting' ),
 				'id'       => 'eac_base_currency',
-				'type'     => 'currency',
+				'type'     => 'select',
 				'default'  => 'USD',
 				'class'    => 'eac-select2',
+				'options'  => $currencies_options,
 				'disabled' => ! empty( eac_get_transactions() ),
 				'desc_tip' => __( 'Base currency can not be changed once you have recorded any transaction.', 'wp-ever-accounting' ),
-			),
-			array(
-				'title'    => __( 'Currency position', 'wp-ever-accounting' ),
-				'desc'     => __( 'This controls the position of the currency symbol.', 'wp-ever-accounting' ),
-				'id'       => 'eac_currency_position',
-				'default'  => 'before',
-				'type'     => 'select',
-				'options'  => array(
-					'before' => __( 'Before - $10', 'wp-ever-accounting' ),
-					'after'  => __( 'After - 10$', 'wp-ever-accounting' ),
-				),
-				'desc_tip' => true,
-			),
-
-			array(
-				'title'    => __( 'Thousand separator', 'wp-ever-accounting' ),
-				'desc'     => __( 'This sets the thousand separator of displayed prices.', 'wp-ever-accounting' ),
-				'id'       => 'eac_currency_thousand_separator',
-				'css'      => 'width:50px;',
-				'default'  => ',',
-				'type'     => 'text',
-				'desc_tip' => true,
-			),
-
-			array(
-				'title'    => __( 'Decimal separator', 'wp-ever-accounting' ),
-				'desc'     => __( 'This sets the decimal separator of displayed prices.', 'wp-ever-accounting' ),
-				'id'       => 'eac_currency_decimal_separator',
-				'css'      => 'width:50px;',
-				'default'  => '.',
-				'type'     => 'text',
-				'desc_tip' => true,
-			),
-
-			array(
-				'title'             => __( 'Number of decimals', 'wp-ever-accounting' ),
-				'desc'              => __( 'This sets the number of decimal points shown in displayed prices.', 'wp-ever-accounting' ),
-				'id'                => 'eac_currency_precision',
-				'css'               => 'width:50px;',
-				'default'           => '2',
-				'desc_tip'          => true,
-				'type'              => 'number',
-				'custom_attributes' => array(
-					'min'  => 0,
-					'step' => 1,
-				),
-			),
-
-			array(
-				'type' => 'sectionend',
-				'id'   => 'currency_options',
-			),
-			array(
-				'title' => __( 'Other Settings', 'wp-ever-accounting' ),
-				'desc'  => __( 'Company specific other settings.', 'wp-ever-accounting' ),
-				'type'  => 'title',
-				'id'    => 'other_settings',
 			),
 			array(
 				'title'       => __( 'Financial Year Start', 'wp-ever-accounting' ),
@@ -277,8 +142,74 @@ class General extends \EverAccounting\Admin\SettingsTab {
 			),
 			array(
 				'type' => 'sectionend',
-				'id'   => 'other_settings',
+				'id'   => 'general_settings',
 			),
+			array(
+				'title' => __( 'Company Address', 'wp-ever-accounting' ),
+				'desc'  => __( 'Business address details. The address will be used in the invoices, bills, and other records that you issue.', 'wp-ever-accounting' ),
+				'type'  => 'title',
+				'id'    => 'company_address',
+			),
+			array(
+				'title'       => __( 'Address Line 1', 'wp-ever-accounting' ),
+				'desc'        => __( 'The street address of your company.', 'wp-ever-accounting' ),
+				'id'          => 'eac_company_address_1',
+				'type'        => 'text',
+				'placeholder' => 'e.g. 123 Main Street',
+				'default'     => '',
+				'desc_tip'    => true,
+			),
+			array(
+				'title'       => __( 'Address Line 2', 'wp-ever-accounting' ),
+				'desc'        => __( 'An additional, optional address line for your company location.', 'wp-ever-accounting' ),
+				'id'          => 'eac_company_address_2',
+				'type'        => 'text',
+				'placeholder' => 'e.g. Suite 100',
+				'default'     => '',
+				'desc_tip'    => true,
+			),
+			array(
+				'title'       => __( 'City', 'wp-ever-accounting' ),
+				'desc'        => __( 'The city in which your company is located. This will be used in the invoice, bill, and other documents.', 'wp-ever-accounting' ),
+				'id'          => 'eac_company_city',
+				'type'        => 'text',
+				'placeholder' => 'e.g. Manhattan',
+				'default'     => '',
+				'desc_tip'    => true,
+			),
+			array(
+				'title'       => __( 'State', 'wp-ever-accounting' ),
+				'desc'        => __( 'The state in which your company is located.', 'wp-ever-accounting' ),
+				'id'          => 'eac_company_state',
+				'type'        => 'text',
+				'placeholder' => 'e.g. New York',
+				'default'     => '',
+				'desc_tip'    => true,
+			),
+			array(
+				'title'       => __( 'Postcode / ZIP', 'wp-ever-accounting' ),
+				'desc'        => __( 'The postcode or ZIP code of your company if any. This will be used in the invoice, bill, and other documents.', 'wp-ever-accounting' ),
+				'id'          => 'eac_company_postcode',
+				'type'        => 'text',
+				'placeholder' => 'e.g. 10001',
+				'default'     => '',
+				'desc_tip'    => true,
+			),
+			array(
+				'title'       => __( 'Country', 'wp-ever-accounting' ),
+				'desc'        => __( 'The country in which your company is located.', 'wp-ever-accounting' ),
+				'id'          => 'eac_company_country',
+				'type'        => 'select',
+				'options'     => eac_get_countries(),
+				'class'       => 'eac-select2',
+				'default'     => 'US',
+				'placeholder' => __( 'Select a country&hellip;', 'wp-ever-accounting' ),
+				'desc_tip'    => true,
+			),
+			array(
+				'type' => 'sectionend',
+				'id'   => 'company_address',
+			)
 		);
 	}
 

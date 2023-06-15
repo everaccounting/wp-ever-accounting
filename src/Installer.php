@@ -91,13 +91,23 @@ class Installer extends Singleton {
 
 		// Create the tables.
 		self::create_tables();
-//		self::save_defaults();
-//		self::create_currencies();
-//		self::create_accounts();
-//		self::create_terms();
-//		self::create_roles();
-//		self::schedule_events();
+		self::save_defaults();
+		self::create_currencies();
+		self::create_accounts();
+		self::create_categories();
+		self::create_roles();
+		self::schedule_events();
 		flush_rewrite_rules();
+	}
+
+	/**
+	 * Check if install is new.
+	 *
+	 * @since 1.1.6
+	 * @return bool
+	 */
+	public static function is_new_install() {
+		return count( eac_get_transactions() ) === 0;
 	}
 
 	/**
@@ -138,14 +148,14 @@ class Installer extends Singleton {
 			`bank_name` VARCHAR(191) DEFAULT NULL,
 			`bank_phone` VARCHAR(20) DEFAULT NULL,
 			`bank_address` VARCHAR(191) DEFAULT NULL,
-			`currency` varchar(3) NOT NULL DEFAULT 'USD',
+			`currency_code` varchar(3) NOT NULL DEFAULT 'USD',
 			`status` ENUM('active','inactive') NOT NULL DEFAULT 'active',
 			`creator_id` INT(11) DEFAULT NULL,
 			`updated_at` DATETIME NULL DEFAULT NULL,
 			`created_at` DATETIME NULL DEFAULT NULL,
 			PRIMARY KEY (`id`),
 			KEY `type` (`type`),
-			KEY `currency` (`currency`),
+			KEY `currency_code` (`currency_code`),
 			KEY `status` (`status`),
 			UNIQUE KEY (`number`)
 		    ) $collate",
@@ -189,11 +199,11 @@ class Installer extends Singleton {
 			`postcode` VARCHAR(20) DEFAULT NULL,
 			`country` VARCHAR(3) DEFAULT NULL,
 			`vat_number` VARCHAR(50) DEFAULT NULL,
-			'tax_number' VARCHAR(50) DEFAULT NULL,
+			`tax_number` VARCHAR(50) DEFAULT NULL,
 			`status` ENUM('active','inactive') NOT NULL DEFAULT 'active',
 			`thumbnail_id` BIGINT(20) UNSIGNED DEFAULT NULL,
-    		 `user_id` INT(11) DEFAULT NULL,
-    		`currency` varchar(3) NOT NULL DEFAULT 'USD',
+    		`user_id` INT(11) DEFAULT NULL,
+    		`currency_code` varchar(3) NOT NULL DEFAULT 'USD',
 			`creator_id` INT(11) DEFAULT NULL,
 		   	`updated_at` DATETIME NULL DEFAULT NULL,
 		    `created_at` DATETIME NULL DEFAULT NULL,
@@ -204,18 +214,18 @@ class Installer extends Singleton {
 		    KEY `phone`(`phone`),
 		    KEY `status`(`status`),
 		    KEY `type`(`type`),
-    		KEY `currency_code`(`currency_code`),
+    		KEY `currency_code`(`currency_code`)
             ) $collate",
 
 			"CREATE TABLE {$wpdb->prefix}ea_currencies(
 			`id` bigINT(20) NOT NULL AUTO_INCREMENT,
 		    `code` VARCHAR(191) NOT NULL COMMENT 'Currency Code',
-		    `name` VARCHAR(191) NOT NULL COMMENT 'Currency Name',
 		    `rate` DOUBLE(15,4) NOT NULL DEFAULT '0.0000',
+		    `name` VARCHAR(191) NOT NULL COMMENT 'Currency Name',
 		    `precision` INT(2) NOT NULL DEFAULT 0,
 		    `symbol` VARCHAR(5) NOT NULL COMMENT 'Currency Symbol',
 		    `position` ENUM('before','after') NOT NULL DEFAULT 'before',
-		    `thousand_separator` VARCHAR(5) NOT NULL DEFAULT ',',
+		    `thousands_separator` VARCHAR(5) NOT NULL DEFAULT ',',
 		    `decimal_separator` VARCHAR(5) NOT NULL DEFAULT '.',
 		    `auto_update` TINYINT(1) NOT NULL DEFAULT 0,
 		    `status` ENUM('active','inactive') NOT NULL DEFAULT 'active',
@@ -246,10 +256,11 @@ class Installer extends Singleton {
   			`fee_tax` double(15,4) NOT NULL DEFAULT 0.00,
   			`tax_total` double(15,4) NOT NULL DEFAULT 0.00,
   			`total` double(15,4) NOT NULL DEFAULT 0.00,
+  			`currency_code` varchar(3) NOT NULL DEFAULT 'USD',
+  			`exchange_rate` double(15,8) NOT NULL DEFAULT 1.0000,
   			`taxable` ENUM('yes','no') NOT NULL DEFAULT 'yes',
   			`taxable_shipping` ENUM('yes','no') NOT NULL DEFAULT 'yes',
   			`taxable_fee` ENUM('yes','no') NOT NULL DEFAULT 'yes',
-  			`currency` varchar(3) NOT NULL DEFAULT 'USD',
 		  	`updated_at` DATETIME NULL DEFAULT NULL,
 		    `created_at` DATETIME NULL DEFAULT NULL,
 		    PRIMARY KEY (`id`),
@@ -389,7 +400,6 @@ class Installer extends Singleton {
             `price` double(15,4) NOT NULL,
 			`category_id` int(11) DEFAULT NULL,
   			`taxable` ENUM('yes', 'no') DEFAULT 'yes',
-  			`tax_ids` TEXT DEFAULT NULL,
   			`thumbnail_id` BIGINT(20) UNSIGNED DEFAULT NULL,
 			`status` ENUM('active','inactive') NOT NULL DEFAULT 'active',
 		  	`updated_at` DATETIME NULL DEFAULT NULL,
@@ -416,6 +426,8 @@ class Installer extends Singleton {
             `number` VARCHAR(30) DEFAULT NULL,
 		  	`date` date NOT NULL,
 		  	`amount` DOUBLE(15,4) NOT NULL,
+		  	`currency_code` varchar(3) NOT NULL DEFAULT 'USD',
+		  	`exchange_rate` double(15,8) NOT NULL DEFAULT 1,
 		  	`reference` VARCHAR(191) DEFAULT NULL,
 		  	`note` text DEFAULT NULL,
             `account_id` INT(11) NOT NULL,
@@ -424,8 +436,6 @@ class Installer extends Singleton {
 		  	`category_id` INT(11) NOT NULL,
 	  		`payment_method` VARCHAR(100) DEFAULT NULL,
 			`attachment_id` INT(11) DEFAULT NULL,
-			`currency` varchar(3) NOT NULL DEFAULT 'USD',
-		  	`conversion_rate` double(15,8) NOT NULL DEFAULT 1,
 		  	`parent_id` INT(11) DEFAULT NULL,
 		    `reconciled` tinyINT(1) NOT NULL DEFAULT '0',
 		    `creator_id` INT(11) DEFAULT NULL,
@@ -435,8 +445,8 @@ class Installer extends Singleton {
 		    PRIMARY KEY (`id`),
 		    KEY `number` (`number`),
 		    KEY `amount` (`amount`),
-		    KEY `currency` (`currency`),
-		    KEY `conversion_rate` (`conversion_rate`),
+		    KEY `currency_code` (`currency_code`),
+		    KEY `exchange_rate` (`exchange_rate`),
 		    KEY `type` (`type`),
 		    KEY `account_id` (`account_id`),
 		    KEY `document_id` (`document_id`),
@@ -496,54 +506,19 @@ class Installer extends Singleton {
 	 * @returns void
 	 */
 	public static function create_currencies() {
-		// migrate currency.
-		$currencies        = include ever_accounting()->get_dir_path( 'i18n/currencies.php' );
-		$active_currencies = array( 'BDT', 'USD', 'EUR', 'GBP', 'INR', 'AUD', 'CAD', 'SGD', 'CHF', 'MYR', 'JPY', 'CNY' );
-		$legacy_settings   = get_option( 'eaccounting_settings', array() );
-		$is_new            = empty( get_option( 'eac_currencies' ) );
-		if ( ! empty( $legacy_settings ) && $is_new ) {
-			$legacy_base = isset( $legacy_settings['base_currency'] ) ? $legacy_settings['base_currency'] : 'USD';
-			update_option( 'eac_base_currency', $legacy_base );
-			$legacy_currencies = get_option( 'eaccounting_currencies', array() );
-			$legacy_currencies = wp_list_pluck( $legacy_currencies, 'code' );
-			if ( ! empty( $legacy_currencies ) ) {
-				$active_currencies = $legacy_currencies;
-			}
+		// If there is no currency, create default currency.
+		if ( self::is_new_install() ) {
+			$default_currency = eac_get_base_currency();
+			$currency         = array(
+				'name'       => __( 'US Dollar', 'wp-ever-accounting' ),
+				'code'       => $default_currency,
+				'symbol'     => '$',
+				'precision'  => 2,
+				'rate'       => 1,
+				'created_at' => current_time( 'mysql' ),
+			);
+			eac_insert_currency( $currency );
 		}
-
-		// This part must go after the above migration.
-		$base_currency = eac_get_base_currency();
-		// Make sure base currency is active.
-		if ( ! in_array( $base_currency, $active_currencies, true ) ) {
-			$active_currencies[] = $base_currency;
-		}
-
-		if ( 'USD' !== $base_currency && isset( $currencies[ $base_currency ] ) ) {
-			$new_rate = $currencies[ $base_currency ]['rate'];
-			foreach ( $currencies as $code => $currency ) {
-				if ( isset( $currency['rate'] ) ) {
-					$currencies[ $code ]['rate'] = $currency['rate'] / $new_rate;
-				}
-			}
-		}
-		$currencies[ $base_currency ]['rate'] = 1;
-		// Set all currency status as inactive.
-		foreach ( $currencies as $code => &$currency ) {
-			$status             = in_array( $code, $active_currencies, true ) ? 'active' : 'inactive';
-			$currency['status'] = $status;
-			// If base currency the set a flag.
-			if ( $base_currency === $code ) {
-				$currency['base'] = 'yes';
-			}
-		}
-		// sort by name.
-		uasort(
-			$currencies,
-			function ( $a, $b ) {
-				return strcasecmp( $a['name'], $b['name'] );
-			}
-		);
-		add_option( 'eac_currencies', $currencies );
 	}
 
 	/**
@@ -553,16 +528,14 @@ class Installer extends Singleton {
 	 * @returns void
 	 */
 	public static function create_accounts() {
-		$default_currency = eac_get_base_currency();
-		global $wpdb;
-		$accounts = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}ea_accounts" );
-		if ( empty( $accounts ) ) {
+		if ( empty( self::is_new_install() ) ) {
+			$base_currency = eac_get_base_currency();
 			// Create few dummy accounts.
 			$accounts = array(
 				array(
 					'name'       => __( 'Cash', 'wp-ever-accounting' ),
 					'number'     => '1000',
-					'currency'   => $default_currency,
+					'currency'   => $base_currency,
 					'balance'    => 0,
 					'status'     => 'active',
 					'created_at' => current_time( 'mysql' ),
@@ -571,7 +544,7 @@ class Installer extends Singleton {
 					'name'       => __( 'Bank', 'wp-ever-accounting' ),
 					'number'     => '1001',
 					'type'       => 'bank',
-					'currency'   => $default_currency,
+					'currency'   => $base_currency,
 					'balance'    => 0,
 					'status'     => 'active',
 					'created_at' => current_time( 'mysql' ),
@@ -594,43 +567,42 @@ class Installer extends Singleton {
 	 * @since 1.1.6
 	 * @returns void
 	 */
-	public static function create_terms() {
-		$terms = get_terms();
-		if ( empty( $terms ) ) {
+	public static function create_categories() {
+		if ( empty( self::is_new_install() ) ) {
 			$terms = array(
 				array(
 					'name'   => __( 'Deposit', 'wp-ever-accounting' ),
-					'type'   => 'payment_cat',
+					'type'   => 'payment',
 					'status' => 'active',
 				),
 				array(
 					'name'   => __( 'Sales', 'wp-ever-accounting' ),
-					'type'   => 'payment_cat',
+					'type'   => 'payment',
 					'status' => 'active',
 				),
 				array(
 					'name'   => __( 'Other', 'wp-ever-accounting' ),
-					'type'   => 'payment_cat',
+					'type'   => 'payment',
 					'status' => 'active',
 				),
 				array(
 					'name'   => __( 'Withdrawal', 'wp-ever-accounting' ),
-					'type'   => 'expense_cat',
+					'type'   => 'expense',
 					'status' => 'active',
 				),
 				array(
 					'name'   => __( 'Purchase', 'wp-ever-accounting' ),
 					'type'   => 'expense',
-					'status' => 'expense_cat',
+					'status' => 'active',
 				),
 				array(
-					'name'   => __( 'Other', 'wp-ever-accounting' ),
-					'type'   => 'expense',
-					'status' => 'expense_cat',
+					'name'   => __( 'Uncategorized', 'wp-ever-accounting' ),
+					'type'   => 'item',
+					'status' => 'active',
 				),
 			);
 			foreach ( $terms as $term ) {
-				eac_insert_term( $term );
+				eac_insert_category( $term );
 			}
 		}
 	}
@@ -756,21 +728,21 @@ class Installer extends Singleton {
 
 		$tables = array(
 			"{$wpdb->prefix}ea_accounts",
+			"{$wpdb->prefix}ea_categories",
+			"{$wpdb->prefix}ea_categories",
 			"{$wpdb->prefix}ea_contactmeta",
 			"{$wpdb->prefix}ea_contacts",
-			"{$wpdb->prefix}ea_categories",
-			"{$wpdb->prefix}ea_document_items",
+			"{$wpdb->prefix}ea_currencies",
 			"{$wpdb->prefix}ea_document_item_taxes",
+			"{$wpdb->prefix}ea_document_items",
 			"{$wpdb->prefix}ea_documentmeta",
 			"{$wpdb->prefix}ea_documents",
-			"{$wpdb->prefix}ea_notes",
 			"{$wpdb->prefix}ea_items",
-			"{$wpdb->prefix}ea_termmeta",
-			"{$wpdb->prefix}ea_terms",
+			"{$wpdb->prefix}ea_notes",
+			"{$wpdb->prefix}ea_taxes",
 			"{$wpdb->prefix}ea_transactionmeta",
 			"{$wpdb->prefix}ea_transactions",
 			"{$wpdb->prefix}ea_transfers",
-			"{$wpdb->prefix}ea_taxes",
 		);
 
 		$tables = apply_filters( 'ever_accounting_tables', $tables );

@@ -59,33 +59,18 @@ defined( 'ABSPATH' ) || exit();
 						'class'       => 'eac-col-6',
 					)
 				);
-				// currency.
-				eac_form_field(
-					array(
-						'type'        => 'currency',
-						'name'        => 'currency',
-						'label'       => __( 'Currency', 'wp-ever-accounting' ),
-						'value'       => $expense->get_currency(),
-						'options'     => [],
-						'placeholder' => __( 'Select currency', 'wp-ever-accounting' ),
-						'required'    => true,
-						'input_class' => 'eac-select2',
-						'class'       => 'eac-col-6',
-						'style'       => eac_is_multi_currency() ? '' : 'display:none',
-					)
-				);
 				// Conversion Rate.
 				eac_form_field(
 					array(
 						'type'        => 'text',
-						'name'        => 'conversion_rate',
-						'label'       => __( 'Conversion Rate', 'wp-ever-accounting' ),
+						'name'        => 'exchange_rate',
+						'label'       => __( 'Exchange Rate', 'wp-ever-accounting' ),
 						'placeholder' => '1.00',
-						'value'       => $expense->get_conversion_rate(),
+						'value'       => $expense->get_exchange_rate(),
 						'required'    => true,
 						'class'       => 'eac-col-6 display-none',
 						'prefix'      => sprintf( '1 %s =', eac_get_base_currency() ),
-						'style'       => eac_is_multi_currency() ? '' : 'display:none',
+						'style'       => count( eac_get_currencies() ) > 1 ? '' : 'display:none',
 					)
 				);
 				eac_form_field(
@@ -186,6 +171,7 @@ defined( 'ABSPATH' ) || exit();
 	</div>
 
 	<?php wp_nonce_field( 'eac_edit_expense' ); ?>
+	<input type="hidden" name="currency" value="<?php echo esc_attr( $expense->get_currency_code() ); ?>">
 	<input type="hidden" name="action" value="eac_edit_expense">
 	<input type="hidden" name="id" value="<?php echo esc_attr( $expense->get_id() ); ?>">
 </form>

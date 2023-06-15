@@ -116,7 +116,7 @@ class Payment extends Transaction {
 	 */
 	protected function prepare_where_query( $clauses, $args = array() ) {
 		global $wpdb;
-		$transfer_table   = Transfer::TABLE_NAME;
+		$transfer_table    = Transfer::TABLE_NAME;
 		$clauses['join']  .= " LEFT JOIN  {$wpdb->prefix}{$transfer_table} AS {$transfer_table} ON {$this->table_alias}.id = {$transfer_table}.payment_id"; // phpcs:ignore
 		$clauses['where'] .= " AND {$transfer_table}.payment_id IS NULL"; // phpcs:ignore
 		$clauses['where'] .= $wpdb->prepare( " AND {$this->table_alias}.type = %s", 'payment' ); // phpcs:ignore

@@ -69,15 +69,15 @@ $accounts = eac_get_accounts(
 				eac_form_field(
 					array(
 						'type'        => 'text',
-						'name'        => 'conversion_rate',
-						'label'       => __( 'Conversion Rate', 'wp-ever-accounting' ),
+						'name'        => 'exchange_rate',
+						'label'       => __( 'Exchange Rate', 'wp-ever-accounting' ),
 						'placeholder' => '1.00',
-						'value'       => $payment->get_conversion_rate(),
+						'value'       => $payment->get_exchange_rate(),
 						'required'    => true,
 						'class'       => 'eac-col-6 display-none',
 						'prefix'      => sprintf( '1 %s =', eac_get_base_currency() ),
-						'suffix'      => sprintf( '%s', $payment->get_currency() ),
-						'style'       => eac_is_multi_currency() ? '' : 'display:none',
+						'suffix'      => sprintf( '%s', $payment->get_currency_code() ),
+						'style'       => count( eac_get_currencies() ) > 1 ? '' : 'display:none',
 					)
 				);
 				eac_form_field(
@@ -178,7 +178,7 @@ $accounts = eac_get_accounts(
 	</div>
 
 	<?php wp_nonce_field( 'eac_edit_payment' ); ?>
-	<input type="hidden" name="currency" value="<?php echo esc_attr( eac_get_base_currency() ); ?>">
+	<input type="hidden" name="currency" value="<?php echo esc_attr( $payment->get_currency_code() ); ?>">
 	<input type="hidden" name="action" value="eac_edit_payment">
 	<input type="hidden" name="id" value="<?php echo esc_attr( $payment->get_id() ); ?>">
 </form>

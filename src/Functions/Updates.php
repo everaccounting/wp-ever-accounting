@@ -119,7 +119,7 @@ function eac_update_1_1_6() {
 		$wpdb->query( "ALTER TABLE $table_name DROP `enabled`" );
 	}
 
-	//update income type to payment.
+	// update income type to payment.
 	$wpdb->query( "UPDATE $table_name SET type = 'payment' WHERE type = 'income'" );
 
 	$table_name = $wpdb->prefix . 'ea_document_items';

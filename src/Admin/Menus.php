@@ -26,7 +26,7 @@ class Menus extends \EverAccounting\Singleton {
 		add_action( 'admin_menu', array( __CLASS__, 'reports_menu' ), 600 );
 		add_action( 'admin_menu', array( __CLASS__, 'tools_menu' ), 700 );
 		add_action( 'admin_menu', array( __CLASS__, 'settings_menu' ), 999 );
-		//add_action( 'admin_menu', array( __CLASS__, 'extensions_menu' ), 9999 );
+		// add_action( 'admin_menu', array( __CLASS__, 'extensions_menu' ), 9999 );
 
 		add_action( 'in_admin_header', array( __CLASS__, 'in_admin_header' ) );
 	}

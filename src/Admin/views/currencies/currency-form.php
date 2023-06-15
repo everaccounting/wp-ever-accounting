@@ -4,8 +4,10 @@
  *
  * @since 1.0.0
  * @package EverAccounting
- * @var array $currency_data Currency data.
+ * @var Currency $currency Currency data.
  */
+
+use EverAccounting\Models\Currency;
 
 defined( 'ABSPATH' ) || exit;
 ?>
@@ -22,7 +24,7 @@ defined( 'ABSPATH' ) || exit;
 					array(
 						'id'       => 'code',
 						'label'    => __( 'Code', 'wp-ever-accounting' ),
-						'value'    => $currency_data['code'],
+						'value'    => $currency->get_code(),
 						'class'    => 'eac-col-6',
 						'required' => true,
 						'readonly' => true,
@@ -33,17 +35,7 @@ defined( 'ABSPATH' ) || exit;
 						'id'       => 'name',
 						'label'    => __( 'Name', 'wp-ever-accounting' ),
 						'type'     => 'text',
-						'value'    => $currency_data['name'],
-						'class'    => 'eac-col-6',
-						'required' => true,
-					)
-				);
-				eac_form_field(
-					array(
-						'id'       => 'symbol',
-						'label'    => __( 'Symbol', 'wp-ever-accounting' ),
-						'type'     => 'text',
-						'value'    => $currency_data['symbol'],
+						'value'    => $currency->get_name(),
 						'class'    => 'eac-col-6',
 						'required' => true,
 					)
@@ -51,14 +43,23 @@ defined( 'ABSPATH' ) || exit;
 				eac_form_field(
 					array(
 						'id'       => 'rate',
-						'label'    => __( 'Rate', 'wp-ever-accounting' ),
-						'type'     => 'number',
-						'value'    => $currency_data['rate'],
+						'label'    => __( 'Exchange Rate', 'wp-ever-accounting' ),
+						'type'     => 'decimal',
+						'value'    => $currency->get_rate(),
 						'class'    => 'eac-col-6',
 						'required' => true,
 						// translators: %s is the base currency.
 						'prefix'   => sprintf( __( '1 %s =', 'wp-ever-accounting' ), eac_get_base_currency() ),
-						'suffix'   => $currency_data['symbol'],
+					)
+				);
+				eac_form_field(
+					array(
+						'id'       => 'symbol',
+						'label'    => __( 'Symbol', 'wp-ever-accounting' ),
+						'type'     => 'text',
+						'value'    => $currency->get_symbol(),
+						'class'    => 'eac-col-6',
+						'required' => true,
 					)
 				);
 				?>
@@ -75,10 +76,10 @@ defined( 'ABSPATH' ) || exit;
 				<?php
 				eac_form_field(
 					array(
-						'id'       => 'thousand_separator',
+						'id'       => 'thousands_separator',
 						'label'    => __( 'Thousand Separator', 'wp-ever-accounting' ),
 						'type'     => 'text',
-						'value'    => $currency_data['thousand_separator'],
+						'value'    => $currency->get_thousands_separator(),
 						'class'    => 'eac-col-6',
 						'required' => true,
 					)
@@ -89,7 +90,7 @@ defined( 'ABSPATH' ) || exit;
 						'id'       => 'decimal_separator',
 						'label'    => __( 'Decimal Separator', 'wp-ever-accounting' ),
 						'type'     => 'text',
-						'value'    => $currency_data['decimal_separator'],
+						'value'    => $currency->get_decimal_separator(),
 						'class'    => 'eac-col-6',
 						'required' => true,
 					)
@@ -100,7 +101,7 @@ defined( 'ABSPATH' ) || exit;
 						'id'       => 'precision',
 						'label'    => __( 'Number of Decimals', 'wp-ever-accounting' ),
 						'type'     => 'number',
-						'value'    => $currency_data['precision'],
+						'value'    => $currency->get_precision(),
 						'class'    => 'eac-col-6',
 						'required' => true,
 					)
@@ -111,7 +112,7 @@ defined( 'ABSPATH' ) || exit;
 						'id'       => 'position',
 						'label'    => __( 'Symbol Position', 'wp-ever-accounting' ),
 						'type'     => 'select',
-						'value'    => $currency_data['position'],
+						'value'    => $currency->get_position(),
 						'class'    => 'eac-col-6',
 						'required' => true,
 						'options'  => array(
@@ -126,6 +127,7 @@ defined( 'ABSPATH' ) || exit;
 	</div>
 
 	<?php wp_nonce_field( 'eac_edit_currency' ); ?>
+	<input type="hidden" name="id" value="<?php echo esc_attr( $currency->get_id() ); ?>">
 	<input type="hidden" name="action" value="eac_edit_currency">
 </form>
 

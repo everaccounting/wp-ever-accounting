@@ -139,7 +139,7 @@ abstract class Document extends Model {
 		'currency_rate'   => 1.00,
 		'parent_id'       => null,
 		'creator_id'      => null,
-		'uuid'        => '',
+		'uuid'            => '',
 		'updated_at'      => null,
 		'created_at'      => null,
 	);
@@ -2367,7 +2367,7 @@ abstract class Document extends Model {
 		foreach ( $items as $item ) {
 			$caller = "get_{$column}";
 			$amount = is_callable( array( $item, $caller ) ) ? $item->$caller() : 0;
-			$total  += $round ? round( $amount, 2 ) : $amount;
+			$total += $round ? round( $amount, 2 ) : $amount;
 		}
 
 		return $round ? round( $total, 2 ) : $total;

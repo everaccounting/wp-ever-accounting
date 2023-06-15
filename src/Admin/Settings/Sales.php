@@ -38,21 +38,138 @@ class Sales extends \EverAccounting\Admin\SettingsTab {
 	 */
 	protected function get_own_sections() {
 		$sections = array(
-			''         => __( 'Invoices', 'wp-ever-accounting' ),
-			'payments' => __( 'Payments', 'wp-ever-accounting' ),
+			''         => __( 'Options', 'wp-ever-accounting' ),
+			'invoices' => __( 'Invoices', 'wp-ever-accounting' )
 		);
 
 		return $sections;
 	}
 
+	/**
+	 * Get settings or the default section.
+	 *
+	 * @return array
+	 * @since 1.0.0
+	 */
+	protected function get_settings_for_default_section() {
+		$payment_accounts   = eac_get_accounts( array( 'include' => get_option( 'eac_default_payment_account' ) ) );
+		$payment_categories = eac_get_categories( array( 'include' => get_option( 'eac_default_payment_category' ) ) );
+		return array(
+			// Sales defaults section.
+			array(
+				'title' => __( 'Default Settings', 'wp-ever-accounting' ),
+				'type'  => 'title',
+				'desc'  => __( 'Default values will be automatically filled in when you create a new sale related record.', 'wp-ever-accounting' ),
+				'id'    => 'sales_defaults',
+			),
+			// Default payment account.
+			array(
+				'title'       => __( 'Sales Account', 'wp-ever-accounting' ),
+				'desc'        => __( 'The default account to which the payments will be credited.', 'wp-ever-accounting' ),
+				'id'          => 'eac_default_sales_account',
+				'type'        => 'select',
+				'options'     => wp_list_pluck( $payment_accounts, 'formatted_name', 'id' ),
+				'default'     => '',
+				'placeholder' => __( 'Select an account&hellip;', 'wp-ever-accounting' ),
+				'desc_tip'    => true,
+				'class'       => 'eac-select2',
+				'attrs'       => array(
+					'data-action' => 'eac_json_search',
+					'data-type'   => 'account',
+				),
+			),
+			// Default payment method.
+			// Default category.
+			array(
+				'title'       => __( 'Sales Category', 'wp-ever-accounting' ),
+				'desc'        => __( 'The default category for sales.', 'wp-ever-accounting' ),
+				'id'          => 'eac_default_sales_category',
+				'type'        => 'select',
+				'default'     => '',
+				'options'     => wp_list_pluck( $payment_categories, 'formatted_name', 'id' ),
+				'placeholder' => __( 'Select a category&hellip;', 'wp-ever-accounting' ),
+				'desc_tip'    => true,
+				'class'       => 'eac-select2',
+				'attrs'       => array(
+					'data-action' => 'eac_json_search',
+					'data-type'   => 'payment_category',
+				),
+			),
+			//tax.
+			array(
+				'title'       => __( 'Sales Taxes', 'wp-ever-accounting' ),
+				'desc'        => __( 'The default tax for sales.', 'wp-ever-accounting' ),
+				'id'          => 'eac_default_sales_taxes',
+				'type'        => 'select',
+				'default'     => '',
+				'multiple'    => true,
+				'class'       => 'eac-select2',
+				'options'     => wp_list_pluck( eac_get_taxes(), 'formatted_name', 'id' ),
+				'placeholder' => __( 'Select a tax&hellip;', 'wp-ever-accounting' ),
+				'desc_tip'    => true,
+				'attrs'       => array(
+					'data-action' => 'eac_json_search',
+					'data-type'   => 'tax',
+				),
+			),
+			array(
+				'title'       => __( 'Payment Method', 'wp-ever-accounting' ),
+				'desc'        => __( 'The default payment method for sales.', 'wp-ever-accounting' ),
+				'id'          => 'eac_default_sales_payment_method',
+				'type'        => 'select',
+				'options'     => eac_get_payment_methods(),
+				'default'     => '',
+				'class'       => 'eac-select2',
+				'placeholder' => __( 'Select a payment method&hellip;', 'wp-ever-accounting' ),
+				'desc_tip'    => true,
+			),
+			// end of sales defaults section.
+			array(
+				'type' => 'sectionend',
+				'id'   => 'sales_defaults',
+			),
+			// payment settings section
+			array(
+				'title' => __( 'Payment Settings', 'wp-ever-accounting' ),
+				'desc'  => __( 'Customize how your payment number gets generated automatically when you create a new payment.', 'wp-ever-accounting' ),
+				'type'  => 'title',
+				'id'    => 'payment_settings',
+			),
+			// prefix.
+			array(
+				'title'       => __( 'Number Prefix', 'wp-ever-accounting' ),
+				'desc'        => __( 'The prefix of the payment number.', 'wp-ever-accounting' ),
+				'id'          => 'eac_payment_prefix',
+				'type'        => 'text',
+				'placeholder' => 'e.g. PAY-',
+				'default'     => 'PAY-',
+				'desc_tip'    => true,
+			),
+			// minimum digits of payment number.
+			array(
+				'title'       => __( 'Minimum Digits', 'wp-ever-accounting' ),
+				'desc'        => __( 'The minimum digits of the payment number.', 'wp-ever-accounting' ),
+				'id'          => 'eac_payment_digits',
+				'type'        => 'number',
+				'placeholder' => 'e.g. 4',
+				'default'     => 4,
+				'desc_tip'    => true,
+			),
+			// end payment settings section
+			array(
+				'type' => 'sectionend',
+				'id'   => 'payment_settings',
+			),
+		);
+	}
 
 	/**
 	 * Get settings or the default section.
 	 *
-	 * @since 1.0.0
 	 * @return array
+	 * @since 1.0.0
 	 */
-	protected function get_settings_for_default_section() {
+	protected function get_settings_for_invoices_section() {
 		return array(
 			// invoice settings section
 			array(
@@ -188,48 +305,4 @@ class Sales extends \EverAccounting\Admin\SettingsTab {
 			),
 		);
 	}
-
-	/**
-	 * Get payments settings array.
-	 *
-	 * @since 1.0.0
-	 * @return array
-	 */
-	public function get_settings_for_payments_section() {
-		return array(
-			// payment settings section
-			array(
-				'title' => __( 'Payment Settings', 'wp-ever-accounting' ),
-				'desc'  => __( 'Customize how your payment number gets generated automatically when you create a new payment.', 'wp-ever-accounting' ),
-				'type'  => 'title',
-				'id'    => 'payment_settings',
-			),
-			// prefix.
-			array(
-				'title'       => __( 'Number Prefix', 'wp-ever-accounting' ),
-				'desc'        => __( 'The prefix of the payment number.', 'wp-ever-accounting' ),
-				'id'          => 'eac_payment_prefix',
-				'type'        => 'text',
-				'placeholder' => 'e.g. PAY-',
-				'default'     => 'PAY-',
-				'desc_tip'    => true,
-			),
-			// minimum digits of payment number.
-			array(
-				'title'       => __( 'Minimum Digits', 'wp-ever-accounting' ),
-				'desc'        => __( 'The minimum digits of the payment number.', 'wp-ever-accounting' ),
-				'id'          => 'eac_payment_digits',
-				'type'        => 'number',
-				'placeholder' => 'e.g. 4',
-				'default'     => 4,
-				'desc_tip'    => true,
-			),
-			// end payment settings section
-			array(
-				'type' => 'sectionend',
-				'id'   => 'payment_settings',
-			),
-		);
-	}
-
 }

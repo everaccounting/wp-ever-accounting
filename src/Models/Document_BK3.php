@@ -45,8 +45,8 @@ abstract class Document_BK3 extends Model {
 	 */
 	protected $core_data = array(
 		'type'             => '',
-		'number'  => '',
-		'reference'     => '',
+		'number'           => '',
+		'reference'        => '',
 		'status'           => 'draft',
 		'subtotal'         => 0.00,
 		'subtotal_tax'     => 0.00,

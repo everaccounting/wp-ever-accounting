@@ -11,7 +11,7 @@
 defined( 'ABSPATH' ) || exit();
 
 $payment = new \EverAccounting\Models\Payment( $payment_id );
-$title  = $payment->exists() ? __( 'Update Payment', 'wp-ever-accounting' ) : __( 'Add Payment', 'wp-ever-accounting' );
+$title   = $payment->exists() ? __( 'Update Payment', 'wp-ever-accounting' ) : __( 'Add Payment', 'wp-ever-accounting' );
 ?>
 	<div class="eac-section-header">
 		<div>

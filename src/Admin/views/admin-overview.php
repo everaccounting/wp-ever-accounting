@@ -8,10 +8,10 @@
  */
 
 defined( 'ABSPATH' ) || exit();
-$profit_report     = eac_get_profit_report();
-$recent_payments    = eac_get_payments( array( 'limit' => 5 ) );
-$recent_expenses   = eac_get_expenses( array( 'limit' => 5 ) );
-$bank_accounts     = eac_get_accounts(
+$profit_report   = eac_get_profit_report();
+$recent_payments = eac_get_payments( array( 'limit' => 5 ) );
+$recent_expenses = eac_get_expenses( array( 'limit' => 5 ) );
+$bank_accounts   = eac_get_accounts(
 	array(
 		'type'  => 'bank',
 		'limit' => 5,
@@ -23,9 +23,9 @@ $bank_accounts     = eac_get_accounts(
 	<h2><?php esc_html_e( 'Overview', 'wp-ever-accounting' ); ?></h2>
 </div>
 
-<?php include __DIR__ . '/overview/summaries.php'; ?>
+<?php require __DIR__ . '/overview/summaries.php'; ?>
 
-<?php include __DIR__ . '/overview/cashflow-chart.php'; ?>
+<?php require __DIR__ . '/overview/cashflow-chart.php'; ?>
 
 <div class="eac-columns">
 	<div class="eac-col-6">
@@ -38,7 +38,7 @@ $bank_accounts     = eac_get_accounts(
 		</div>
 	</div>
 	<div class="eac-col-6">
-		<?php include __DIR__ . '/overview/expense-chart.php'; ?>
+		<?php require __DIR__ . '/overview/expense-chart.php'; ?>
 	</div>
 </div>
 <div class="eac-columns">

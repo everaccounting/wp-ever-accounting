@@ -94,6 +94,15 @@ defined( 'ABSPATH' ) || exit;
 						'class'       => 'eac-col-6',
 					)
 				);
+				eac_form_field(
+					array(
+						'id'          => 'tax_number',
+						'label'       => __( 'Tax Number', 'wp-ever-accounting' ),
+						'placeholder' => __( '123456789', 'wp-ever-accounting' ),
+						'value'       => $customer->get_tax_number(),
+						'class'       => 'eac-col-6',
+					)
+				);
 				?>
 			</div>
 		</div>

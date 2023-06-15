@@ -7,20 +7,23 @@
  * @subpackage  Admin/View/Currencies
  */
 
+use EverAccounting\Admin\ListTables\Currencies;
+
 defined( 'ABSPATH' ) || exit();
 
-$list_table = new \EverAccounting\Admin\ListTables\Currencies();
+$list_table = new Currencies();
 $action     = $list_table->current_action();
 $list_table->process_bulk_action( $action );
 $list_table->prepare_items();
-$page = eac_get_input_var( 'page' );
-$tab  = eac_get_input_var( 'tab' );
+$page    = eac_get_input_var( 'page' );
+$tab     = eac_get_input_var( 'tab' );
+$section = eac_get_input_var( 'section' );
 
 ?>
 	<div class="eac-section-header">
 		<div>
 			<h2><?php esc_html_e( 'Currencies', 'wp-ever-accounting' ); ?></h2>
-			<a href="<?php echo esc_url( admin_url( 'admin.php?page=eac-settings&tab=currencies&action=add' ) ); ?>" class="page-title-action"><?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?></a>
+			<a href="<?php echo esc_url( admin_url( 'admin.php?page=eac-settings&section=currencies&action=add' ) ); ?>" class="page-title-action"><?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?></a>
 		</div>
 	</div>
 <?php do_action( 'ever_accounting_currencies_table_top' ); ?>
@@ -29,6 +32,7 @@ $tab  = eac_get_input_var( 'tab' );
 		<?php $list_table->display(); ?>
 		<input type="hidden" name="page" value="<?php echo esc_attr( $page ); ?>"/>
 		<input type="hidden" name="tab" value="<?php echo esc_attr( $tab ); ?>"/>
+		<input type="hidden" name="section" value="<?php echo esc_attr( $section ); ?>"/>
 	</form>
 <?php
 do_action( 'ever_accounting_currencies_table_bottom' );

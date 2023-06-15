@@ -56,6 +56,8 @@ class Transaction extends Model {
 		'number'         => '',
 		'date'           => null,
 		'amount'         => 0.00,
+		'currency_code'  => 'USD',   // currency code of the transaction.
+		'exchange_rate'  => 1,    // exchange rate of transaction currency to base currency.
 		'reference'      => '',   // reference number or other identifier for the transaction.
 		'note'           => '',   // additional notes about the transaction.
 		'account_id'     => null, // ID of the account associated with the transaction.
@@ -64,8 +66,6 @@ class Transaction extends Model {
 		'category_id'    => null, // ID of the category associated with the transaction.
 		'payment_method' => '',   // method of payment used for the transaction.
 		'attachment_id'  => null, // ID of any attachments associated with the transaction.
-		'currency'       => '',   // currency code of the transaction.
-		'exchange_rate'  => 1,    // exchange rate of transaction currency to base currency.
 		'parent_id'      => 0,    // ID of the parent transaction, if any.
 		'reconciled'     => 0,    // whether the transaction has been reconciled.
 		'creator_id'     => null, // ID of the user who created the transaction.
@@ -82,8 +82,8 @@ class Transaction extends Model {
 	 * @since 1.0.0
 	 */
 	public function __construct( $data = 0 ) {
-		$this->core_data['uuid']     = eac_generate_uuid();
-		$this->core_data['currency'] = eac_get_base_currency();
+		$this->core_data['uuid']          = eac_generate_uuid();
+		$this->core_data['currency_code'] = eac_get_base_currency();
 		parent::__construct( $data );
 	}
 
@@ -194,6 +194,7 @@ class Transaction extends Model {
 		$this->set_prop( 'amount', eac_format_decimal( $value, 4 ) );
 	}
 
+
 	/**
 	 * Currency code.
 	 *
@@ -202,8 +203,8 @@ class Transaction extends Model {
 	 * @since 1.0.2
 	 * @return mixed|null
 	 */
-	public function get_currency( $context = 'edit' ) {
-		return $this->get_prop( 'currency', $context );
+	public function get_currency_code( $context = 'edit' ) {
+		return $this->get_prop( 'currency_code', $context );
 	}
 
 	/**
@@ -213,10 +214,9 @@ class Transaction extends Model {
 	 *
 	 * @since 1.0.2
 	 */
-	public function set_currency( $value ) {
-		$this->set_prop( 'currency', eac_clean( $value ) );
+	public function set_currency_code( $value ) {
+		$this->set_prop( 'currency_code', eac_clean( $value ) );
 	}
-
 
 	/**
 	 * Currency rate.
@@ -226,8 +226,8 @@ class Transaction extends Model {
 	 * @since 1.0.2
 	 * @return mixed|null
 	 */
-	public function get_conversion_rate( $context = 'edit' ) {
-		return $this->get_prop( 'conversion_rate', $context );
+	public function get_exchange_rate( $context = 'edit' ) {
+		return $this->get_prop( 'exchange_rate', $context );
 	}
 
 	/**
@@ -237,8 +237,54 @@ class Transaction extends Model {
 	 *
 	 * @since 1.0.2
 	 */
-	public function set_conversion_rate( $value ) {
-		$this->set_prop( 'conversion_rate', eac_format_decimal( $value, 8 ) );
+	public function set_exchange_rate( $value ) {
+		$this->set_prop( 'exchange_rate', eac_format_decimal( $value, 8 ) );
+	}
+
+	/**
+	 * Transaction reference.
+	 *
+	 * @param string $context What the value is for. Valid values are view and edit.
+	 *
+	 * @since 1.0.2
+	 * @return mixed|null
+	 */
+	public function get_reference( $context = 'edit' ) {
+		return $this->get_prop( 'reference', $context );
+	}
+
+	/**
+	 * Set reference.
+	 *
+	 * @param string $value Reference.
+	 *
+	 * @since 1.0.2
+	 */
+	public function set_reference( $value ) {
+		$this->set_prop( 'reference', eac_clean( $value ) );
+	}
+
+	/**
+	 * Description.
+	 *
+	 * @param string $context What the value is for. Valid values are view and edit.
+	 *
+	 * @since 1.0.2
+	 * @return mixed|null
+	 */
+	public function get_note( $context = 'edit' ) {
+		return $this->get_prop( 'note', $context );
+	}
+
+	/**
+	 * Set note.
+	 *
+	 * @param string $value Description.
+	 *
+	 * @since 1.0.2
+	 */
+	public function set_note( $value ) {
+		$this->set_prop( 'note', eac_clean( $value ) );
 	}
 
 	/**
@@ -337,7 +383,6 @@ class Transaction extends Model {
 		return $this->get_prop( 'category_id', $context );
 	}
 
-
 	/**
 	 * Set category id.
 	 *
@@ -347,30 +392,6 @@ class Transaction extends Model {
 	 */
 	public function set_category_id( $value ) {
 		$this->set_prop( 'category_id', absint( $value ) );
-	}
-
-
-	/**
-	 * Description.
-	 *
-	 * @param string $context What the value is for. Valid values are view and edit.
-	 *
-	 * @since 1.0.2
-	 * @return mixed|null
-	 */
-	public function get_note( $context = 'edit' ) {
-		return $this->get_prop( 'note', $context );
-	}
-
-	/**
-	 * Set note.
-	 *
-	 * @param string $value Description.
-	 *
-	 * @since 1.0.2
-	 */
-	public function set_note( $value ) {
-		$this->set_prop( 'note', eac_clean( $value ) );
 	}
 
 	/**
@@ -396,29 +417,6 @@ class Transaction extends Model {
 		if ( array_key_exists( $value, eac_get_payment_methods() ) ) {
 			$this->set_prop( 'payment_method', $value );
 		}
-	}
-
-	/**
-	 * Transaction reference.
-	 *
-	 * @param string $context What the value is for. Valid values are view and edit.
-	 *
-	 * @since 1.0.2
-	 * @return mixed|null
-	 */
-	public function get_reference( $context = 'edit' ) {
-		return $this->get_prop( 'reference', $context );
-	}
-
-	/**
-	 * Set reference.
-	 *
-	 * @param string $value Reference.
-	 *
-	 * @since 1.0.2
-	 */
-	public function set_reference( $value ) {
-		$this->set_prop( 'reference', eac_clean( $value ) );
 	}
 
 	/**
@@ -488,7 +486,7 @@ class Transaction extends Model {
 	 * @since 1.0.2
 	 */
 	public function set_reconciled( $value ) {
-		$this->set_prop( 'reconciled', absint( $value ) );
+		$this->set_prop( 'reconciled', $this->string_to_int( $value ) );
 	}
 
 	/**
@@ -615,6 +613,8 @@ class Transaction extends Model {
 			$this->set_number( $this->get_next_number() );
 		}
 
+		// todo if document id is set, the amount should be the same as the document amount.
+
 		return parent::save();
 	}
 
@@ -631,7 +631,7 @@ class Transaction extends Model {
 		if ( ! empty( $args['orderby'] ) && 'amount' === $args['orderby'] ) {
 			$order = strtoupper( $args['order'] );
 			// divide by currency rate to get the amount in the account currency and then cast to decimal and order by.
-			$clauses['orderby'] = 'CAST( ' . $this->table_alias . '.amount / ' . $this->table_alias . '.conversion_rate AS DECIMAL( 20, 2 ) ) ' . $order . ' ';
+			$clauses['orderby'] = 'CAST( ' . $this->table_alias . '.amount / ' . $this->table_alias . '.exchange_rate AS DECIMAL( 20, 4 ) ) ' . $order . ' ';
 		}
 
 		return parent::prepare_order_by_query( $clauses, $args );
@@ -707,6 +707,6 @@ class Transaction extends Model {
 	 * @return string
 	 */
 	public function get_formatted_amount() {
-		return eac_format_money( $this->get_amount(), $this->get_currency() );
+		return eac_format_money( $this->get_amount(), $this->get_currency_code() );
 	}
 }
