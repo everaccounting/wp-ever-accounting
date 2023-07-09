@@ -5,9 +5,8 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Retrieves key/label pairs of date filter options for use in a drop-down.
  *
- * @since 1.1.6
- *
  * @return array Key/label pairs of date filter options.
+ * @since 1.1.6
  */
 function eac_get_dates_filter_options() {
 	$options = array(
@@ -33,9 +32,8 @@ function eac_get_dates_filter_options() {
  *
  * @param string $date_filter Date filter.
  *
- * @since 1.1.6
- *
  * @return array
+ * @since 1.1.6
  */
 function eac_parse_date_range_filter( $date_filter = '' ) {
 	switch ( $date_filter ) {
@@ -92,16 +90,15 @@ function eac_parse_date_range_filter( $date_filter = '' ) {
  *
  * @param string $year Year.
  *
- * @since 1.1.6
- *
  * @return string
+ * @since 1.1.6
  */
-function eac_get_financial_start_date( $year = '' ) {
+function eac_get_year_start_date( $year = '' ) {
 	if ( empty( $year ) ) {
 		$year = wp_date( 'Y' );
 	}
 
-	$year_start = get_option( 'eac_financial_year_start', '01-01' );
+	$year_start = get_option( 'eac_year_start_date', '01-01' );
 	$dates      = explode( '-', $year_start );
 	$day        = ! empty( $dates[0] ) ? $dates[0] : '01';
 	$month      = ! empty( $dates[1] ) ? $dates[1] : '01';
@@ -115,16 +112,15 @@ function eac_get_financial_start_date( $year = '' ) {
  *
  * @param string $year Year.
  *
- * @since 1.1.6
- *
  * @return string
+ * @since 1.1.6
  */
-function eac_get_financial_end_date( $year = '' ) {
+function eac_get_year_end_date( $year = '' ) {
 	if ( empty( $year ) ) {
 		$year = wp_date( 'Y' );
 	}
 
-	$start_date = eac_get_financial_start_date( $year );
+	$start_date = eac_get_year_start_date( $year );
 	// if the year is current year, then end date is today.
 
 	if ( wp_date( 'Y' ) === $year ) {
@@ -141,9 +137,8 @@ function eac_get_financial_end_date( $year = '' ) {
  * @param string $end_date End date.
  * @param string $format Format.
  *
- * @since 1.0.0
- *
  * @return array
+ * @since 1.0.0
  */
 function eac_get_months_in_range( $start_date, $end_date, $format = 'F,y' ) {
 	$months   = array();
@@ -164,9 +159,8 @@ function eac_get_months_in_range( $start_date, $end_date, $format = 'F,y' ) {
  * @param string $start_date Start date.
  * @param string $end_date End date.
  *
- * @since 1.0.0
- *
  * @return array
+ * @since 1.0.0
  */
 function eac_get_date_range( $start_date, $end_date ) {
 	$dates    = array();
@@ -182,14 +176,44 @@ function eac_get_date_range( $start_date, $end_date ) {
 }
 
 /**
+ * Get the comparison date start and end date based on the start and end date.
+ *
+ * @param string $start_date Start date.
+ * @param string $end_date End date.
+ *
+ * @return array
+ */
+function eac_get_comparison_dates( $start_date, $end_date ) {
+	// first check the date gap between start and end date. then set the previous start and end date.
+	$gap = count( eac_get_date_range( $start_date, $end_date ) );
+	// if the gap is less than 7 days, then set the previous start and end date as 7 days before.
+	if ( $gap <= 7 ) {
+		$previous_start_date = wp_date( 'Y-m-d', strtotime( $start_date . ' -7 days' ) );
+		$previous_end_date   = wp_date( 'Y-m-d', strtotime( $end_date . ' -7 days' ) );
+	} elseif ( $gap <= 30 ) {
+		$previous_start_date = wp_date( 'Y-m-d', strtotime( $start_date . ' -1 month' ) );
+		$previous_end_date   = wp_date( 'Y-m-d', strtotime( $end_date . ' -1 month' ) );
+	} elseif ( $gap <= 90 ) {
+		$previous_start_date = wp_date( 'Y-m-d', strtotime( $start_date . ' -3 months' ) );
+		$previous_end_date   = wp_date( 'Y-m-d', strtotime( $end_date . ' -3 months' ) );
+	} elseif ( $gap <= 180 ) {
+		$previous_start_date = wp_date( 'Y-m-d', strtotime( $start_date . ' -6 months' ) );
+		$previous_end_date   = wp_date( 'Y-m-d', strtotime( $end_date . ' -6 months' ) );
+	} else {
+		$previous_start_date = wp_date( 'Y-m-d', strtotime( $start_date . ' -1 year' ) );
+		$previous_end_date   = wp_date( 'Y-m-d', strtotime( $end_date . ' -1 year' ) );
+	}
+
+}
+
+/**
  * Get reporting colors.
  * Get some colors for reporting charts.
  *
  * @param string $key Key.
  *
- * @since 1.1.6
- *
  * @return array
+ * @since 1.1.6
  */
 function eac_get_random_color( $key = null ) {
 	static $picked = array();
@@ -303,30 +327,30 @@ function eac_get_profits_summary() {
  * @param int  $year Year.
  * @param bool $force Force to get report from database.
  *
- * @since 1.0.0
  * @return array
+ * @since 1.0.0
  */
 function eac_get_payment_report( $year = null, $force = false ) {
 	global $wpdb;
 	$reports     = get_transient( 'eac_payment_reports' );
 	$reports     = ! is_array( $reports ) ? array() : $reports;
 	$year        = empty( $year ) ? wp_date( 'Y' ) : $year;
-	$start_date  = eac_get_financial_start_date( $year );
-	$end_date    = eac_get_financial_end_date( $year );
+	$start_date  = eac_get_year_start_date( $year );
+	$end_date    = eac_get_year_end_date( $year );
 	$date_format = 'M, y';
 
 	if ( $force || empty( $reports[ $year ] ) ) {
 		$transactions = $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT (t.amount/t.currency_rate) amount, MONTH(t.payment_date) AS month, YEAR(t.payment_date) AS year, t.category_id
+				"SELECT (t.amount/t.exchange_rate) amount, MONTH(t.date) AS month, YEAR(t.date) AS year, t.category_id
 		FROM {$wpdb->prefix}ea_transactions AS t
 		LEFT JOIN {$wpdb->prefix}ea_transfers AS it ON t.id = it.payment_id
 		LEFT JOIN {$wpdb->prefix}ea_transfers AS et ON t.id = et.expense_id
 		WHERE t.type = 'payment'
 		AND it.payment_id IS NULL
 		AND et.expense_id IS NULL
-		AND t.payment_date BETWEEN %s AND %s
-		ORDER BY t.payment_date ASC",
+		AND t.date BETWEEN %s AND %s
+		ORDER BY t.date ASC",
 				$start_date,
 				$end_date
 			)
@@ -390,30 +414,30 @@ function eac_get_payment_report( $year = null, $force = false ) {
  * @param int  $year Year.
  * @param bool $force Force to get report from database.
  *
- * @since 1.0.0
  * @return array
+ * @since 1.0.0
  */
 function eac_get_expense_report( $year = null, $force = false ) {
 	global $wpdb;
 	$reports     = get_transient( 'eac_expense_reports' );
 	$reports     = ! is_array( $reports ) ? array() : $reports;
 	$year        = empty( $year ) ? wp_date( 'Y' ) : $year;
-	$start_date  = eac_get_financial_start_date( $year );
-	$end_date    = eac_get_financial_end_date( $year );
-	$date_format = 'F, y';
+	$start_date  = eac_get_year_start_date( $year );
+	$end_date    = eac_get_year_end_date( $year );
+	$date_format = 'M, y';
 
 	if ( $force || ! isset( $reports[ $year ] ) ) {
 		$transactions = $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT (t.amount/t.currency_rate) amount, MONTH(t.payment_date) AS month, YEAR(t.payment_date) AS year, t.category_id
+				"SELECT (t.amount/t.exchange_rate) amount, MONTH(t.date) AS month, YEAR(t.date) AS year, t.category_id
 		FROM {$wpdb->prefix}ea_transactions AS t
 		LEFT JOIN {$wpdb->prefix}ea_transfers AS it ON t.id = it.payment_id
 		LEFT JOIN {$wpdb->prefix}ea_transfers AS et ON t.id = et.expense_id
 		WHERE t.type = 'expense'
 		AND it.payment_id IS NULL
 		AND et.expense_id IS NULL
-		AND t.payment_date BETWEEN %s AND %s
-		ORDER BY t.payment_date ASC",
+		AND t.date BETWEEN %s AND %s
+		ORDER BY t.date ASC",
 				$start_date,
 				$end_date
 			)
@@ -478,28 +502,28 @@ function eac_get_expense_report( $year = null, $force = false ) {
  * @param int  $year Year.
  * @param bool $force Force to get report from database.
  *
- * @since 1.0.0
  * @return array
+ * @since 1.0.0
  */
-function eac_get_profit_report( $year = null, $force = false ) {
+function eac_get_profit_report( $year = null, $force = true ) {
 	global $wpdb;
 	$reports     = get_transient( 'eac_profit_reports' );
 	$reports     = ! is_array( $reports ) ? array() : $reports;
 	$year        = empty( $year ) ? wp_date( 'Y' ) : $year;
-	$start_date  = eac_get_financial_start_date( $year );
-	$end_date    = eac_get_financial_end_date( $year );
-	$date_format = 'F, y';
+	$start_date  = eac_get_year_start_date( $year );
+	$end_date    = eac_get_year_end_date( $year );
+	$date_format = 'M, y';
 	if ( $force || ! isset( $reports[ $year ] ) ) {
 		$transactions = $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT (t.amount/t.currency_rate) amount, MONTH(t.payment_date) AS month, YEAR(t.payment_date) AS year, t.category_id, t.type
+				"SELECT (t.amount/t.exchange_rate) amount, MONTH(t.date) AS month, YEAR(t.date) AS year, t.category_id, t.type
 		FROM {$wpdb->prefix}ea_transactions AS t
 		LEFT JOIN {$wpdb->prefix}ea_transfers AS it ON t.id = it.payment_id
 		LEFT JOIN {$wpdb->prefix}ea_transfers AS et ON t.id = et.expense_id
-		WHERE it.income_id IS NULL
+		WHERE it.payment_id IS NULL
 		AND et.expense_id IS NULL
-		AND t.payment_date BETWEEN %s AND %s
-		ORDER BY t.payment_date ASC",
+		AND t.date BETWEEN %s AND %s
+		ORDER BY t.date ASC",
 				$start_date,
 				$end_date
 			)
@@ -514,7 +538,7 @@ function eac_get_profit_report( $year = null, $force = false ) {
 			'daily_avg'    => 0,
 			'month_avg'    => 0,
 			'date_count'   => $date_count,
-			'incomes'      => $months,
+			'payments'     => $months,
 			'expenses'     => $months,
 			'profits'      => $months,
 		);
@@ -530,10 +554,10 @@ function eac_get_profit_report( $year = null, $force = false ) {
 			$data['total_count'] ++;
 
 			// Now based on type add or subtract.
-			if ( 'income' === $type ) {
-				$data['total_profit']           += round( $amount, 2 );
-				$data['incomes'][ $month_year ] += round( $amount, 2 );
-				$data['profits'][ $month_year ] += round( $amount, 2 );
+			if ( 'payment' === $type ) {
+				$data['total_profit']            += round( $amount, 2 );
+				$data['payments'][ $month_year ] += round( $amount, 2 );
+				$data['profits'][ $month_year ]  += round( $amount, 2 );
 			} else {
 				$data['total_profit']            -= round( $amount, 2 );
 				$data['expenses'][ $month_year ] += round( $amount, 2 );

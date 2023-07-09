@@ -3,6 +3,7 @@
 namespace EverAccounting\API;
 
 use EverAccounting\Models\Category;
+use function cli\err;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -27,8 +28,8 @@ class CategoriesController extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
 	 * @return true|\WP_Error True if the request has read access, WP_Error object otherwise.
+	 * @since 1.2.1
 	 */
 	public function get_items_permissions_check( $request ) {
 		if ( ! current_user_can( 'eac_manage_category' ) ) {
@@ -47,8 +48,8 @@ class CategoriesController extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
 	 * @return true|\WP_Error True if the request has read access, WP_Error object otherwise.
+	 * @since 1.2.1
 	 */
 	public function create_item_permissions_check( $request ) {
 		if ( ! current_user_can( 'eac_manage_category' ) ) {
@@ -67,8 +68,8 @@ class CategoriesController extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
 	 * @return true|\WP_Error True if the request has read access, WP_Error object otherwise.
+	 * @since 1.2.1
 	 */
 	public function get_item_permissions_check( $request ) {
 		$category = eac_get_category( $request['id'] );
@@ -89,8 +90,8 @@ class CategoriesController extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
 	 * @return true|\WP_Error True if the request has read access, WP_Error object otherwise.
+	 * @since 1.2.1
 	 */
 	public function update_item_permissions_check( $request ) {
 		$category = eac_get_category( $request['id'] );
@@ -111,8 +112,8 @@ class CategoriesController extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
 	 * @return true|\WP_Error True if the request has read access, WP_Error object otherwise.
+	 * @since 1.2.1
 	 */
 	public function delete_item_permissions_check( $request ) {
 		$category = eac_get_category( $request['id'] );
@@ -133,23 +134,30 @@ class CategoriesController extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
+	 * @since 1.2.1
 	 */
 	public function get_items( $request ) {
 		$params = $this->get_collection_params();
+		$args   = array();
 		foreach ( $params as $key => $value ) {
 			if ( isset( $request[ $key ] ) ) {
 				$args[ $key ] = $request[ $key ];
 			}
 		}
+		foreach ( ( new Category() )->get_core_data_keys() as $key ) {
+			if ( isset( $request[ $key ] ) ) {
+				$args[ $key ] = $request[ $key ];
+			}
+		}
+
 
 		/**
 		 * Filters the query arguments for a request.
 		 *
 		 * Enables adding extra arguments or setting defaults for a category request.
 		 *
-		 * @param array            $args Key value array of query var to query value.
+		 * @param array $args Key value array of query var to query value.
 		 * @param \WP_REST_Request $request The request used.
 		 *
 		 * @since 1.2.1
@@ -159,16 +167,7 @@ class CategoriesController extends Controller {
 		$categories = eac_get_categories( $args );
 		$total      = eac_get_categories( $args, true );
 		$page       = isset( $request['page'] ) ? absint( $request['page'] ) : 1;
-		$max_pages  = ceil( $total / (int) $args['number'] );
-
-		// If requesting page is greater than max pages, return empty array.
-		if ( $page > $max_pages ) {
-			return new \WP_Error(
-				'rest_account_invalid_page_number',
-				__( 'The page number requested is larger than the number of pages available.', 'wp-ever-accounting' ),
-				array( 'status' => 400 )
-			);
-		}
+		$max_pages  = ceil( $total / (int) $args['per_page'] );
 
 		$results = array();
 		foreach ( $categories as $category ) {
@@ -209,8 +208,8 @@ class CategoriesController extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
+	 * @since 1.2.1
 	 */
 	public function get_item( $request ) {
 		$category = eac_get_category( $request['id'] );
@@ -224,13 +223,13 @@ class CategoriesController extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
+	 * @since 1.2.1
 	 */
 	public function create_item( $request ) {
 		if ( ! empty( $request['id'] ) ) {
 			return new \WP_Error(
-				'rest_account_exists',
+				'rest_exists',
 				__( 'Cannot create existing category.', 'wp-ever-accounting' ),
 				array( 'status' => 400 )
 			);
@@ -261,8 +260,8 @@ class CategoriesController extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
+	 * @since 1.2.1
 	 */
 	public function update_item( $request ) {
 		$category = eac_get_category( $request['id'] );
@@ -270,10 +269,9 @@ class CategoriesController extends Controller {
 		if ( is_wp_error( $data ) ) {
 			return $data;
 		}
-
-		$category = eac_insert_category( $category->get_id(), $data );
-		if ( is_wp_error( $category ) ) {
-			return $category;
+		$saved = $category->set_data( $data )->save();
+		if ( is_wp_error( $saved ) ) {
+			return $saved;
 		}
 
 		$response = $this->prepare_item_for_response( $category, $request );
@@ -287,8 +285,8 @@ class CategoriesController extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
+	 * @since 1.2.1
 	 */
 	public function delete_item( $request ) {
 		$category = eac_get_category( $request['id'] );
@@ -297,7 +295,7 @@ class CategoriesController extends Controller {
 
 		if ( ! eac_delete_category( $category->get_id() ) ) {
 			return new \WP_Error(
-				'rest_account_cannot_delete',
+				'rest_cannot_delete',
 				__( 'The category cannot be deleted.', 'wp-ever-accounting' ),
 				array( 'status' => 500 )
 			);
@@ -317,19 +315,19 @@ class CategoriesController extends Controller {
 	/**
 	 * Prepares a single category output for response.
 	 *
-	 * @param Category         $category Category object.
+	 * @param Category $category Category object.
 	 * @param \WP_REST_Request $request Request object.
 	 *
-	 * @since 1.2.1
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
+	 * @since 1.2.1
 	 */
 	public function prepare_item_for_response( $category, $request ) {
 		$data = [];
 
 		foreach ( array_keys( $this->get_schema_properties() ) as $key ) {
 			switch ( $key ) {
-				case 'created_at':
-				case 'updated_at':
+				case 'date_created':
+				case 'date_updated':
 					$value = $this->prepare_date_response( $category->$key );
 					break;
 				default:
@@ -350,8 +348,8 @@ class CategoriesController extends Controller {
 		 * Filter category data returned from the REST API.
 		 *
 		 * @param \WP_REST_Response $response The response object.
-		 * @param Category          $category Category object used to create response.
-		 * @param \WP_REST_Request  $request Request object.
+		 * @param Category $category Category object used to create response.
+		 * @param \WP_REST_Request $request Request object.
 		 */
 		return apply_filters( 'ever_accounting_rest_prepare_category', $response, $category, $request );
 	}
@@ -361,8 +359,8 @@ class CategoriesController extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Request object.
 	 *
-	 * @since 1.2.1
 	 * @return array|\WP_Error Category object or WP_Error.
+	 * @since 1.2.1
 	 */
 	protected function prepare_item_for_database( $request ) {
 		$schema    = $this->get_item_schema();
@@ -383,7 +381,7 @@ class CategoriesController extends Controller {
 		/**
 		 * Filters category before it is inserted via the REST API.
 		 *
-		 * @param array            $props Category props.
+		 * @param array $props Category props.
 		 * @param \WP_REST_Request $request Request object.
 		 */
 		return apply_filters( 'ever_accounting_rest_pre_insert_category', $props, $request );
@@ -392,7 +390,7 @@ class CategoriesController extends Controller {
 	/**
 	 * Prepare links for the request.
 	 *
-	 * @param Category         $category Object data.
+	 * @param Category $category Object data.
 	 * @param \WP_REST_Request $request Request category.
 	 *
 	 * @return array Links for the given category.
@@ -411,8 +409,8 @@ class CategoriesController extends Controller {
 	/**
 	 * Retrieves the item's schema, conforming to JSON Schema.
 	 *
-	 * @since 1.1.2
 	 * @return array Item schema data.
+	 * @since 1.1.2
 	 */
 	public function get_item_schema() {
 		$schema = array(
@@ -420,7 +418,7 @@ class CategoriesController extends Controller {
 			'title'      => __( 'Category', 'wp-ever-accounting' ),
 			'type'       => 'object',
 			'properties' => array(
-				'id'          => array(
+				'id'           => array(
 					'description' => __( 'Unique identifier for the category.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'embed', 'edit' ),
@@ -429,36 +427,36 @@ class CategoriesController extends Controller {
 						'sanitize_callback' => 'intval',
 					),
 				),
-				'name'        => array(
+				'name'         => array(
 					'description' => __( 'Category name.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'edit' ),
 					'required'    => true,
 				),
-				'description' => array(
-					'description' => __( 'Category description.', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
-				),
-				'type'        => array(
+				'type'         => array(
 					'description' => __( 'Category type.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'enum'        => array_keys( eac_get_category_types() ),
 					'context'     => array( 'view', 'edit' ),
 					'required'    => true,
 				),
-				'parent_id'   => array(
+				'description'  => array(
+					'description' => __( 'Category description.', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'context'     => array( 'view', 'edit' ),
+				),
+				'parent_id'    => array(
 					'description' => __( 'Parent category ID.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'edit' ),
 				),
-				'updated_at'  => array(
+				'date_updated' => array(
 					'description' => __( "The date the category was last updated, in the site's timezone.", 'wp-ever-accounting' ),
 					'type'        => 'date-time',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
-				'created_at'  => array(
+				'date_created' => array(
 					'description' => __( "The date the category was created, in the site's timezone.", 'wp-ever-accounting' ),
 					'type'        => 'date-time',
 					'context'     => array( 'view', 'edit' ),

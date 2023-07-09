@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
  * @since 0.0.1
  * @package EverAccounting\API
  */
-class VendorsController extends Controller {
+class VendorsController extends ContactsController {
 	/**
 	 * Route base.
 	 *
@@ -138,6 +138,7 @@ class VendorsController extends Controller {
 	 */
 	public function get_items( $request ) {
 		$params = $this->get_collection_params();
+		$args   = array();
 		foreach ( $params as $key => $value ) {
 			if ( isset( $request[ $key ] ) ) {
 				$args[ $key ] = $request[ $key ];
@@ -156,19 +157,11 @@ class VendorsController extends Controller {
 		 */
 		$args = apply_filters( 'ever_accounting_rest_vendor_query', $args, $request );
 
-		$vendors = eac_get_vendors( $args );
-		$total      = eac_get_vendors( $args, true );
-		$page       = isset( $request['page'] ) ? absint( $request['page'] ) : 1;
-		$max_pages  = ceil( $total / (int) $args['number'] );
+		$vendors   = eac_get_vendors( $args );
+		$total     = eac_get_vendors( $args, true );
+		$page      = isset( $request['page'] ) ? absint( $request['page'] ) : 1;
+		$max_pages = ceil( $total / (int) $args['per_page'] );
 
-		// If requesting page is greater than max pages, return empty array.
-		if ( $page > $max_pages ) {
-			return new \WP_Error(
-				'rest_account_invalid_page_number',
-				__( 'The page number requested is larger than the number of pages available.', 'wp-ever-accounting' ),
-				array( 'status' => 400 )
-			);
-		}
 
 		$results = array();
 		foreach ( $vendors as $vendor ) {
@@ -214,7 +207,7 @@ class VendorsController extends Controller {
 	 */
 	public function get_item( $request ) {
 		$vendor = eac_get_vendor( $request['id'] );
-		$data     = $this->prepare_item_for_response( $vendor, $request );
+		$data   = $this->prepare_item_for_response( $vendor, $request );
 
 		return rest_ensure_response( $data );
 	}
@@ -230,7 +223,7 @@ class VendorsController extends Controller {
 	public function create_item( $request ) {
 		if ( ! empty( $request['id'] ) ) {
 			return new \WP_Error(
-				'rest_account_exists',
+				'rest_exists',
 				__( 'Cannot create existing vendor.', 'wp-ever-accounting' ),
 				array( 'status' => 400 )
 			);
@@ -266,14 +259,14 @@ class VendorsController extends Controller {
 	 */
 	public function update_item( $request ) {
 		$vendor = eac_get_vendor( $request['id'] );
-		$data     = $this->prepare_item_for_database( $request );
+		$data   = $this->prepare_item_for_database( $request );
 		if ( is_wp_error( $data ) ) {
 			return $data;
 		}
 
-		$vendor = eac_insert_vendor( $vendor->get_id(), $data );
-		if ( is_wp_error( $vendor ) ) {
-			return $vendor;
+		$saved = $vendor->set_data( $data )->save();
+		if ( is_wp_error( $saved ) ) {
+			return $saved;
 		}
 
 		$response = $this->prepare_item_for_response( $vendor, $request );
@@ -297,7 +290,7 @@ class VendorsController extends Controller {
 
 		if ( ! eac_delete_vendor( $vendor->get_id() ) ) {
 			return new \WP_Error(
-				'rest_account_cannot_delete',
+				'rest_cannot_delete',
 				__( 'The vendor cannot be deleted.', 'wp-ever-accounting' ),
 				array( 'status' => 500 )
 			);
@@ -317,7 +310,7 @@ class VendorsController extends Controller {
 	/**
 	 * Prepares a single vendor output for response.
 	 *
-	 * @param vendor         $vendor vendor object.
+	 * @param vendor           $vendor vendor object.
 	 * @param \WP_REST_Request $request Request object.
 	 *
 	 * @since 1.2.1
@@ -328,8 +321,8 @@ class VendorsController extends Controller {
 
 		foreach ( array_keys( $this->get_schema_properties() ) as $key ) {
 			switch ( $key ) {
-				case 'created_at':
-				case 'updated_at':
+				case 'date_created':
+				case 'date_updated':
 					$value = $this->prepare_date_response( $vendor->$key );
 					break;
 				default:
@@ -361,8 +354,8 @@ class VendorsController extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Request object.
 	 *
+	 * @return array|\WP_Error Category object or WP_Error.
 	 * @since 1.2.1
-	 * @return array|\WP_Error vendor object or WP_Error.
 	 */
 	protected function prepare_item_for_database( $request ) {
 		$schema    = $this->get_item_schema();
@@ -392,7 +385,7 @@ class VendorsController extends Controller {
 	/**
 	 * Prepare links for the request.
 	 *
-	 * @param vendor         $vendor Object data.
+	 * @param vendor           $vendor Object data.
 	 * @param \WP_REST_Request $request Request vendor.
 	 *
 	 * @return array Links for the given vendor.
@@ -415,53 +408,8 @@ class VendorsController extends Controller {
 	 * @return array Item schema data.
 	 */
 	public function get_item_schema() {
-		$schema = array(
-			'$schema'    => 'http://json-schema.org/draft-04/schema#',
-			'title'      => __( 'vendor', 'wp-ever-accounting' ),
-			'type'       => 'object',
-			'properties' => array(
-				'id'          => array(
-					'description' => __( 'Unique identifier for the vendor.', 'wp-ever-accounting' ),
-					'type'        => 'integer',
-					'context'     => array( 'view', 'embed', 'edit' ),
-					'readonly'    => true,
-					'arg_options' => array(
-						'sanitize_callback' => 'intval',
-					),
-				),
-				'name'        => array(
-					'description' => __( 'vendor name.', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
-					'required'    => true,
-				),
-				'description' => array(
-					'description' => __( 'vendor description.', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
-				),
-				'type'        => array(
-					'description' => __( 'vendor type.', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'enum'        => array_keys( eac_get_vendor_types() ),
-					'context'     => array( 'view', 'edit' ),
-					'required'    => true,
-				),
-				'updated_at'  => array(
-					'description' => __( "The date the vendor was last updated, in the site's timezone.", 'wp-ever-accounting' ),
-					'type'        => 'date-time',
-					'context'     => array( 'view', 'edit' ),
-					'readonly'    => true,
-				),
-				'created_at'  => array(
-					'description' => __( "The date the vendor was created, in the site's timezone.", 'wp-ever-accounting' ),
-					'type'        => 'date-time',
-					'context'     => array( 'view', 'edit' ),
-					'readonly'    => true,
-				),
-			),
-		);
-
+		$schema = parent::get_item_schema();
+		$schema['title'] = __( 'vendor', 'wp-ever-accounting' );
 		/**
 		 * Filters the vendor's schema.
 		 *
@@ -473,5 +421,4 @@ class VendorsController extends Controller {
 
 		return $this->add_additional_fields_schema( $schema );
 	}
-
 }

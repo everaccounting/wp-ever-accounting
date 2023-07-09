@@ -55,11 +55,11 @@ class Menus extends \EverAccounting\Singleton {
 
 		add_submenu_page(
 			'ever-accounting',
-			__( 'Overview', 'wp-ever-accounting' ),
-			__( 'Overview', 'wp-ever-accounting' ),
+			__( 'Dashboard', 'wp-ever-accounting' ),
+			__( 'Dashboard', 'wp-ever-accounting' ),
 			'manage_accounting',
 			'ever-accounting',
-			array( Overview::class, 'output' )
+			array( Dashboard::class, 'output' )
 		);
 	}
 

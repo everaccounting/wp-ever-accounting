@@ -29,7 +29,7 @@ defined( 'ABSPATH' ) || exit;
 				);
 				eac_form_field(
 					array(
-						'type'        => 'decimal',
+						'data_type'   => 'decimal',
 						'id'          => 'rate',
 						'label'       => __( 'Rate (%)', 'wp-ever-accounting' ),
 						'placeholder' => __( 'Enter tax rate', 'wp-ever-accounting' ),

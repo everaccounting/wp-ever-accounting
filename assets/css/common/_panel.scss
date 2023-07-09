@@ -9,14 +9,64 @@
 	min-height: 1px;
 	background: #fff;
 	border: 1px solid #e1e2e2;
-	padding: 15px;
+	padding: 1em;
 	font-size: inherit;
 	line-height: inherit;
 
-	&__title, h2{
+	&__title, h2, h3, h4 {
 		padding: 0;
 		margin: 0;
 		font-size: 1.2em;
 		font-weight: normal;
+	}
+
+	&__group {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		min-height: 25px;
+		box-sizing: border-box;
+		flex-wrap: nowrap;
+		gap: 10px;
+		margin-bottom: 1em;
+
+		& > img {
+			width: 54px;
+			height: 54px;
+			border-radius: 6px;
+			-o-object-fit: cover;
+			object-fit: cover;
+		}
+
+		& > div {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+		}
+	}
+
+	&.is-large {
+		padding: 3em 4em;
+	}
+
+	&.is-medium {
+		padding: 1em 2em;
+	}
+
+	&.is-small {
+		padding: 0.5em 1em;
+	}
+
+	&:has(table) {
+		padding: 0;
+	}
+
+	& > table {
+		border: 0;
+		box-shadow: none;
+
+		th {
+			border-bottom-color: #e1e2e2;
+		}
 	}
 }

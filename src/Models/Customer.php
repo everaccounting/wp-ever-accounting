@@ -17,7 +17,7 @@ class Customer extends Contact {
 	 * @since 1.0.0
 	 * @var string
 	 */
-	const OBJECT_TYPE = 'customer';
+	public $object_type = 'customer';
 
 	/**
 	 * Model constructor.
@@ -27,13 +27,90 @@ class Customer extends Contact {
 	 * @since 1.0.0
 	 */
 	public function __construct( $data = 0 ) {
-		$this->core_data['type'] = self::OBJECT_TYPE;
+		$this->core_data['type'] = $this->object_type;
 		parent::__construct( $data );
 		// after reading check if the contact is a customer.
-		if ( $this->exists() && self::OBJECT_TYPE !== $this->get_type() ) {
+		if ( $this->exists() && $this->object_type !== $this->get_type() ) {
 			$this->set_id( 0 );
 			$this->set_defaults();
 		}
+	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| CRUD methods
+	|--------------------------------------------------------------------------
+	| Methods which create, read, update and delete discounts from the database.
+	*/
+
+	/**
+	 * Saves an object in the database.
+	 *
+	 * @since 1.0.0
+	 * @return true|\WP_Error True on success, WP_Error on failure.
+	 */
+	public function save() {
+		// Name is required.
+		if ( empty( $this->get_name() ) ) {
+			return new \WP_Error( 'missing_required', __( 'Name is required.', 'wp-ever-accounting' ) );
+		}
+
+		// Currency is required.
+		if ( empty( $this->get_currency_code() ) ) {
+			return new \WP_Error( 'missing_required', __( 'Currency is required.', 'wp-ever-accounting' ) );
+		}
+
+		// Duplicate email.
+		if ( ! empty( $this->get_email() ) ) {
+			$existing = self::get(
+				array(
+					'email' => $this->get_email(),
+				)
+			);
+			if ( $existing && $existing->get_id() !== $this->get_id() && 'customer' === $existing->get_type() ) {
+				return new \WP_Error( 'duplicate_field', __( 'The email address is already in used.', 'wp-ever-accounting' ) );
+			}
+		}
+
+		// Duplicate phone number.
+		if ( ! empty( $this->get_phone() ) ) {
+			$existing = self::get(
+				array(
+					'phone' => $this->get_phone(),
+				)
+			);
+			if ( $existing && $existing->get_id() !== $this->get_id() && $this->object_type === $existing->get_type() ) {
+				return new \WP_Error( 'duplicate_field', __( 'The phone number is already in used.', 'wp-ever-accounting' ) );
+			}
+		}
+
+		return parent::save();
+	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| Query Methods
+	|--------------------------------------------------------------------------
+	|
+	| Methods for reading and manipulating the object properties.
+	|
+	*/
+	/**
+	 * Prepare where query.
+	 *
+	 * @param array $clauses Query clauses.
+	 * @param array $args Array of args to pass to the query method.
+	 *
+	 * @since 1.0.0
+	 * @return array
+	 */
+	protected function prepare_where_query( $clauses, $args = array() ) {
+		global $wpdb;
+		$clauses = parent::prepare_where_query( $clauses, $args );
+
+		$clauses['where'] .= $wpdb->prepare( ' AND type = %s', $this->object_type );
+
+		return $clauses;
 	}
 
 	/*
@@ -83,77 +160,6 @@ class Customer extends Contact {
 	 */
 	public function set_total_paid( $value ) {
 		$this->set_meta( 'total_paid', eac_format_decimal( $value ) );
-	}
-
-	/*
-	|--------------------------------------------------------------------------
-	| CRUD methods
-	|--------------------------------------------------------------------------
-	|
-	| Methods which create, read, update and delete discounts from the database.
-	|
-	*/
-	/**
-	 * Saves an object in the database.
-	 *
-	 * @since 1.0.0
-	 * @return true|\WP_Error True on success, WP_Error on failure.
-	 */
-	public function save() {
-		// Name is required.
-		if ( empty( $this->get_name() ) ) {
-			return new \WP_Error( 'missing_required_field', __( 'Name is required.', 'wp-ever-accounting' ) );
-		}
-
-		// Currency is required.
-		if ( empty( $this->get_currency() ) ) {
-			return new \WP_Error( 'missing_required_field', __( 'Currency is required.', 'wp-ever-accounting' ) );
-		}
-
-		// Duplicate email.
-		if ( ! empty( $this->get_email() ) ) {
-			$existing = self::get(
-				array(
-					'email' => $this->get_email(),
-				)
-			);
-			if ( $existing && $existing->get_id() !== $this->get_id() && 'customer' === $existing->get_type() ) {
-				return new \WP_Error( 'duplicate_field', __( 'The email address is already in used.', 'wp-ever-accounting' ) );
-			}
-		}
-
-		// Duplicate phone number.
-		if ( ! empty( $this->get_phone() ) ) {
-			$existing = self::get(
-				array(
-					'phone' => $this->get_phone(),
-				)
-			);
-			if ( $existing && $existing->get_id() !== $this->get_id() && self::OBJECT_TYPE === $existing->get_type() ) {
-				return new \WP_Error( 'duplicate_field', __( 'The phone number is already in used.', 'wp-ever-accounting' ) );
-			}
-		}
-
-		return parent::save();
-	}
-
-
-	/**
-	 * Prepare where query.
-	 *
-	 * @param array $clauses Query clauses.
-	 * @param array $args Array of args to pass to the query method.
-	 *
-	 * @since 1.0.0
-	 * @return array
-	 */
-	protected function prepare_where_query( $clauses, $args = array() ) {
-		global $wpdb;
-		$clauses = parent::prepare_where_query( $clauses, $args );
-
-		$clauses['where'] .= $wpdb->prepare( ' AND type = %s', self::OBJECT_TYPE );
-
-		return $clauses;
 	}
 
 	/*

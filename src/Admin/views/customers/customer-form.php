@@ -29,13 +29,23 @@ defined( 'ABSPATH' ) || exit;
 				);
 				eac_form_field(
 					array(
-						'type'        => 'currency',
 						'id'          => 'currency_code',
+						'type'        => 'select',
 						'label'       => __( 'Currency Code', 'wp-ever-accounting' ),
 						'value'       => $customer->get_currency_code(),
 						'class'       => 'eac-col-6',
 						'required'    => true,
 						'input_class' => 'eac-select2',
+						'options'     => wp_list_pluck(
+							eac_get_currencies(
+								[
+									'status' => 'active',
+									'limit'  => - 1,
+								]
+							),
+							'formatted_name',
+							'code'
+						),
 					)
 				);
 				eac_form_field(
@@ -91,15 +101,6 @@ defined( 'ABSPATH' ) || exit;
 						'label'       => __( 'VAT Number', 'wp-ever-accounting' ),
 						'placeholder' => __( '123456789', 'wp-ever-accounting' ),
 						'value'       => $customer->get_vat_number(),
-						'class'       => 'eac-col-6',
-					)
-				);
-				eac_form_field(
-					array(
-						'id'          => 'tax_number',
-						'label'       => __( 'Tax Number', 'wp-ever-accounting' ),
-						'placeholder' => __( '123456789', 'wp-ever-accounting' ),
-						'value'       => $customer->get_tax_number(),
 						'class'       => 'eac-col-6',
 					)
 				);

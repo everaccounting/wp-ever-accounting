@@ -29,6 +29,12 @@ class API extends Singleton {
 			'ever_accounting_rest_handlers',
 			array(
 				'EverAccounting\API\AccountsController',
+				'EverAccounting\API\CategoriesController',
+				'EverAccounting\API\CurrenciesController',
+				'EverAccounting\API\CustomersController',
+				'EverAccounting\API\TaxesController',
+				'EverAccounting\API\VendorsController',
+				'EverAccounting\API\ItemsController',
 			)
 		);
 		foreach ( $rest_handlers as $controller ) {

@@ -1,0 +1,7758 @@
+[
+  {
+    "Account Name": "Buckeye State Bank",
+    "BankAddress": "101 N. Main Street",
+    "City": "Degraff",
+    "State": "OH",
+    "Zip": "43318"
+  },
+  {
+    "Account Name": "Chiron RCAF",
+    "BankAddress": " LLC.",
+    "City": "1419 Lake Pointe Pkwy",
+    "State": "Sugar Land",
+    "Zip": "TX"
+  },
+  {
+    "Account Name": "BancFirst",
+    "BankAddress": "P.O. Box 26788",
+    "City": "Oklahoma City",
+    "State": "OK",
+    "Zip": "73126"
+  },
+  {
+    "Account Name": "First Financial Federal Credit Union Of Maryland",
+    "BankAddress": "1215 York Road",
+    "City": "Lutherville",
+    "State": "MD",
+    "Zip": "21093"
+  },
+  {
+    "Account Name": "Columbia Bank",
+    "BankAddress": "721 2nd Ave",
+    "City": "Seattle",
+    "State": "WA",
+    "Zip": "98104"
+  },
+  {
+    "Account Name": "Citizens Community Federal",
+    "BankAddress": "2174 Eastridge Center",
+    "City": "Eau Claire",
+    "State": "WI",
+    "Zip": "54701"
+  },
+  {
+    "Account Name": "Credit Union Advantage",
+    "BankAddress": "22250 Providence Drive",
+    "City": "Southfield",
+    "State": "MI",
+    "Zip": "48075"
+  },
+  {
+    "Account Name": "America First Credit Union",
+    "BankAddress": "1344 W 4675 S Riverdale",
+    "City": "Riverdale",
+    "State": "UT",
+    "Zip": "84405"
+  },
+  {
+    "Account Name": "Patriot Federal Credit Union",
+    "BankAddress": "800 Wayne Ave.",
+    "City": "Chambersburg",
+    "State": "PA",
+    "Zip": "17201"
+  },
+  {
+    "Account Name": "LA HEALTHCARE FCU",
+    "BankAddress": "PO BOX 17159",
+    "City": "LOS ANGELES",
+    "State": "CA",
+    "Zip": "90017"
+  },
+  {
+    "Account Name": "MIDFLORIDA CREDIT UNION",
+    "BankAddress": "PO BOX 8008",
+    "City": "LAKELAND",
+    "State": "FL",
+    "Zip": "33802"
+  },
+  {
+    "Account Name": "Velocity Community Credit Union",
+    "BankAddress": "PO Box 30669",
+    "City": "Palm Beach Gardens",
+    "State": "FL",
+    "Zip": "33420"
+  },
+  {
+    "Account Name": "First Service Federal Credit Union (OH)",
+    "BankAddress": "100 Main St",
+    "City": "Groveport",
+    "State": "OH",
+    "Zip": "43125"
+  },
+  {
+    "Account Name": "Lone Star National Bank",
+    "BankAddress": "P.O. Box 1127",
+    "City": "Pharr",
+    "State": "TX",
+    "Zip": "78577"
+  },
+  {
+    "Account Name": "Jefferson Financial Credit Union",
+    "BankAddress": "7701 Airline Dr",
+    "City": "Metairie",
+    "State": "LA",
+    "Zip": "70003"
+  },
+  {
+    "Account Name": "NUTMEG STATE FEDERAL CREDIT UNION",
+    "BankAddress": "PO BOX 20270",
+    "City": "LEHIGH VALLEY",
+    "State": "PA",
+    "Zip": "18002"
+  },
+  {
+    "Account Name": "Financial Partners CU",
+    "BankAddress": "PO BX 7005",
+    "City": "Downey",
+    "State": "CA",
+    "Zip": "90241"
+  },
+  {
+    "Account Name": "Bell State Bank & Trust",
+    "BankAddress": "3100 13th Avenue South",
+    "City": "Fargo",
+    "State": "ND",
+    "Zip": "58103"
+  },
+  {
+    "Account Name": "Texas National Bank",
+    "BankAddress": "PO Box 977",
+    "City": "Bullard",
+    "State": "TX",
+    "Zip": "75757"
+  },
+  {
+    "Account Name": "Farmers & Merchants Bank",
+    "BankAddress": "41 S First Street",
+    "City": "Miamisburg",
+    "State": "OH",
+    "Zip": "45342"
+  },
+  {
+    "Account Name": "Western Federal Credit Union",
+    "BankAddress": "PO Box 10065",
+    "City": "Manhattan Beach",
+    "State": "CA",
+    "Zip": "90267-7565"
+  },
+  {
+    "Account Name": "Hillsboro Bank",
+    "BankAddress": "509 W ALEXANDER ST",
+    "City": "PLANT CITY",
+    "State": "FL",
+    "Zip": "33566"
+  },
+  {
+    "Account Name": "Advia Credit Union",
+    "BankAddress": "550 S. Riverview Drive",
+    "City": "Parchment",
+    "State": "MI",
+    "Zip": "49004"
+  },
+  {
+    "Account Name": "First Service Credit Union (TX)",
+    "BankAddress": "9621 W Sam Houston Pkwy N",
+    "City": "Houston",
+    "State": "TX",
+    "Zip": "77064"
+  },
+  {
+    "Account Name": "BCU",
+    "BankAddress": "PO BOX 660308",
+    "City": "Sacramento",
+    "State": "CA",
+    "Zip": "95866"
+  },
+  {
+    "Account Name": "Lake Trust Credit Union",
+    "BankAddress": "4605 S. Old US Highway 23",
+    "City": "Brighton",
+    "State": "MI",
+    "Zip": "48114"
+  },
+  {
+    "Account Name": "Canyon State Credit Union",
+    "BankAddress": "3440 W. Deer Valley Rd.",
+    "City": "Phoenix",
+    "State": "AZ",
+    "Zip": "85027"
+  },
+  {
+    "Account Name": "VisionBank",
+    "BankAddress": "3000 25th Street S.",
+    "City": "Fargo",
+    "State": "ND",
+    "Zip": "58103"
+  },
+  {
+    "Account Name": "Enterprise Bank",
+    "BankAddress": "12800 W Center Rd",
+    "City": "Omaha",
+    "State": "NE",
+    "Zip": "68144"
+  },
+  {
+    "Account Name": "Allstate Leasing",
+    "BankAddress": "1 Olympic Place Suite 1010",
+    "City": "Towson",
+    "State": "MD",
+    "Zip": "21204"
+  },
+  {
+    "Account Name": "ANECA Federal Credit Union",
+    "BankAddress": "4361 Youree Dr",
+    "City": "Shreveport",
+    "State": "LA",
+    "Zip": "71105"
+  },
+  {
+    "Account Name": "Rivermark Community Credit Union",
+    "BankAddress": "PO Box 4044",
+    "City": "Beaverton",
+    "State": "OR",
+    "Zip": "97076-4044"
+  },
+  {
+    "Account Name": "Oregon State Credit Union",
+    "BankAddress": "PO Box 306",
+    "City": "Corvallis",
+    "State": "OR",
+    "Zip": "97339-0306"
+  },
+  {
+    "Account Name": "Service Credit Union",
+    "BankAddress": "3003 Lafayette Rd",
+    "City": "Portsmouth",
+    "State": "NH",
+    "Zip": "3802"
+  },
+  {
+    "Account Name": "Pioneer Bank",
+    "BankAddress": "320 Stadium Rd.",
+    "City": "STE 100",
+    "State": "MN",
+    "Zip": "56001"
+  },
+  {
+    "Account Name": "American Heritage Federal Credit Union",
+    "BankAddress": "2060 Red Lion Road",
+    "City": "Philadelphia",
+    "State": "PA",
+    "Zip": "19115"
+  },
+  {
+    "Account Name": "Republic Bank",
+    "BankAddress": "One Greentree Center 10000 Lincoln Drive East",
+    "City": " Ste. 104",
+    "State": "Marlton",
+    "Zip": "NJ"
+  },
+  {
+    "Account Name": "Tulsa Federal Credit Union",
+    "BankAddress": "9323 E 21ST STREET",
+    "City": "Tulsa",
+    "State": "OK",
+    "Zip": "74129"
+  },
+  {
+    "Account Name": "LA Financial CU",
+    "BankAddress": "P.O. Box 296",
+    "City": "Pasadena",
+    "State": "CA",
+    "Zip": "91102"
+  },
+  {
+    "Account Name": "First Citizens' Federal Credit Union (MA)",
+    "BankAddress": "200 MILL RD # 100",
+    "City": "FAIRHAVEN",
+    "State": "MA",
+    "Zip": "2719"
+  },
+  {
+    "Account Name": "JACOM CU",
+    "BankAddress": "3037 W JEFFERSON BLVD",
+    "City": "LOS ANGELES",
+    "State": "CA",
+    "Zip": "90018"
+  },
+  {
+    "Account Name": "Corporate America Family Credit Union",
+    "BankAddress": "2075 Big Timber Road",
+    "City": "Elgin",
+    "State": "IL",
+    "Zip": "60123"
+  },
+  {
+    "Account Name": "First National Bank",
+    "BankAddress": "4140 East State Street",
+    "City": "Hermitage",
+    "State": "PA",
+    "Zip": "16148"
+  },
+  {
+    "Account Name": "TransWest Credit Union",
+    "BankAddress": "P.O. Box 65218",
+    "City": "Salt Lake City",
+    "State": "UT",
+    "Zip": "84165-0218"
+  },
+  {
+    "Account Name": "Aloha Pacific FCU",
+    "BankAddress": "832 South Hotel Street",
+    "City": "Honolulu",
+    "State": "HI",
+    "Zip": "96813"
+  },
+  {
+    "Account Name": "Inspirus Credit Union",
+    "BankAddress": "PO Box 576",
+    "City": "Seattle",
+    "State": "WA",
+    "Zip": "98111"
+  },
+  {
+    "Account Name": "Central National Bank",
+    "BankAddress": "5400 Bosque",
+    "City": "Waco",
+    "State": "TX",
+    "Zip": "76710"
+  },
+  {
+    "Account Name": "Zions Credit Corporation",
+    "BankAddress": "PO Box 3954",
+    "City": "Salt Lake City",
+    "State": "UT",
+    "Zip": "84110"
+  },
+  {
+    "Account Name": "Granite State Credit Union",
+    "BankAddress": "PO Box 6420",
+    "City": "Manchester",
+    "State": "NH",
+    "Zip": "3108"
+  },
+  {
+    "Account Name": "MASS MUTUAL FCU",
+    "BankAddress": "1295 STATE ST",
+    "City": "SPRINGFIELD",
+    "State": "MA",
+    "Zip": "1111"
+  },
+  {
+    "Account Name": "Helm Bank USA",
+    "BankAddress": " Inc.",
+    "City": "999 Brickell Avenue",
+    "State": "Miami",
+    "Zip": "FL"
+  },
+  {
+    "Account Name": "Alta Vista Credit Union",
+    "BankAddress": "1425 W Lugonia Ave",
+    "City": "Redlands",
+    "State": "CA",
+    "Zip": "92374"
+  },
+  {
+    "Account Name": "Mike Albert Limited",
+    "BankAddress": "10340 Evendale Drive",
+    "City": "Cincinnati",
+    "State": "Ohio",
+    "Zip": "45241"
+  },
+  {
+    "Account Name": "American Bank Trust",
+    "BankAddress": "PO Box 688",
+    "City": "Boiling Green",
+    "State": "KY",
+    "Zip": "42102"
+  },
+  {
+    "Account Name": "Community National Bank & Trust of Texas",
+    "BankAddress": "1901 Wall St.",
+    "City": "Weatherford",
+    "State": "TX",
+    "Zip": "76086"
+  },
+  {
+    "Account Name": "Cornerstone National Bank",
+    "BankAddress": "1 West NW HWY",
+    "City": "Palatine",
+    "State": "IL",
+    "Zip": "60067"
+  },
+  {
+    "Account Name": "FirstMerit Bank",
+    "BankAddress": "401 W North Water St",
+    "City": "New London",
+    "State": "WI",
+    "Zip": "54961"
+  },
+  {
+    "Account Name": "UNIFY Financial Credit Union",
+    "BankAddress": "1899 Western Way",
+    "City": "Torrance",
+    "State": "CA",
+    "Zip": "90501"
+  },
+  {
+    "Account Name": "Kia Motors Finance",
+    "BankAddress": "PO Box 650805",
+    "City": "Dallas",
+    "State": "TX",
+    "Zip": "75265-0805"
+  },
+  {
+    "Account Name": "Insight Credit Union",
+    "BankAddress": "Po Box 4900",
+    "City": "Orlando",
+    "State": "FL",
+    "Zip": "32802"
+  },
+  {
+    "Account Name": "NW Preferred Federal Credit Union",
+    "BankAddress": "PO Box 231269",
+    "City": "Tigard",
+    "State": "OR",
+    "Zip": "97281"
+  },
+  {
+    "Account Name": "CoVantage Credit Union",
+    "BankAddress": "PO BOX 107",
+    "City": "Antigo",
+    "State": "WI",
+    "Zip": "54409"
+  },
+  {
+    "Account Name": "Beacon Credit Union",
+    "BankAddress": "PO Box 4319",
+    "City": "Lynchburg",
+    "State": "VA",
+    "Zip": "24502"
+  },
+  {
+    "Account Name": "IBMSECU",
+    "BankAddress": "P.O. Box 5090",
+    "City": "Boca Raton",
+    "State": "FL",
+    "Zip": "33431-0890"
+  },
+  {
+    "Account Name": "ALTAONE FCU",
+    "BankAddress": "PO Bx 277851",
+    "City": "Sacramento",
+    "State": "CA",
+    "Zip": "95827"
+  },
+  {
+    "Account Name": "Harvard University Employees Credit Union",
+    "BankAddress": "104 Mt Auburn St 4th FL",
+    "City": "Cambridge",
+    "State": "MA",
+    "Zip": "2138"
+  },
+  {
+    "Account Name": "Bank of America",
+    "BankAddress": "PO Box 2759",
+    "City": "Jacksonville",
+    "State": "FL",
+    "Zip": "32203"
+  },
+  {
+    "Account Name": "Bank of Arizona",
+    "BankAddress": "16767 North Perimeter Drive Ste 200",
+    "City": "Scottsdale",
+    "State": "AZ",
+    "Zip": "85260"
+  },
+  {
+    "Account Name": "Bank of Hawaii",
+    "BankAddress": "PO Box 2715",
+    "City": "Honolulu",
+    "State": "HI",
+    "Zip": "96803"
+  },
+  {
+    "Account Name": "Bank of Houston",
+    "BankAddress": "750 Bering Drive",
+    "City": " Suite 100",
+    "State": "Houston",
+    "Zip": "TX"
+  },
+  {
+    "Account Name": "Bank of Santa Clarita",
+    "BankAddress": "23780 Magic Mountain Parkway",
+    "City": "Santa Clarita",
+    "State": "CA",
+    "Zip": "91355"
+  },
+  {
+    "Account Name": "Bank of the West",
+    "BankAddress": "PO Box 5167",
+    "City": "San Ramon",
+    "State": "CA",
+    "Zip": "94583"
+  },
+  {
+    "Account Name": "Bank United",
+    "BankAddress": "P.O. Box 20667",
+    "City": "Lehigh Valley",
+    "State": "PA",
+    "Zip": "18002"
+  },
+  {
+    "Account Name": "Bank Fund Staff Federal Credit Union",
+    "BankAddress": "1725 I Street NW",
+    "City": " Suite 150",
+    "State": "Washington",
+    "Zip": "DC"
+  },
+  {
+    "Account Name": "Barksdale Federal Credit Union",
+    "BankAddress": "P.O. Box 9",
+    "City": "Barksdale AFB",
+    "State": "LA",
+    "Zip": "71110-9989"
+  },
+  {
+    "Account Name": "Baxter Credit Union/CUNA MUTUAL GROUP",
+    "BankAddress": "PO BOX 5001",
+    "City": "Waverly",
+    "State": "IA",
+    "Zip": "50677"
+  },
+  {
+    "Account Name": "BB&T",
+    "BankAddress": "10260 Baltimore Ave",
+    "City": " 2nd Floor",
+    "State": "College Park",
+    "Zip": "MD"
+  },
+  {
+    "Account Name": "BBCN",
+    "BankAddress": "253 N Western Ave FL 2",
+    "City": "Los Angeles",
+    "State": "CA",
+    "Zip": "90004"
+  },
+  {
+    "Account Name": "BBVA Compass Bank",
+    "BankAddress": "PO BOX 10343",
+    "City": "Birmingham",
+    "State": "AL",
+    "Zip": "35203"
+  },
+  {
+    "Account Name": "Bellco Credit Union",
+    "BankAddress": "PO Box 6612",
+    "City": "Greenwood Village",
+    "State": "CO",
+    "Zip": "80155-6611"
+  },
+  {
+    "Account Name": "Benchmark Federal Credit Union",
+    "BankAddress": "P.O Box 2387",
+    "City": "West Chester",
+    "State": "PA",
+    "Zip": "19380"
+  },
+  {
+    "Account Name": "Beth Page Federal Credit Union",
+    "BankAddress": "PO Box 127",
+    "City": "Bethpage",
+    "State": "NY",
+    "Zip": "11714"
+  },
+  {
+    "Account Name": "Big Valley FCU Main Office",
+    "BankAddress": "3111 Wissemann Drive",
+    "City": "Sacramento",
+    "State": "CA",
+    "Zip": "95826"
+  },
+  {
+    "Account Name": "BMI Credit Union",
+    "BankAddress": "PO Box 3670",
+    "City": "Dublin",
+    "State": "OH",
+    "Zip": "43016"
+  },
+  {
+    "Account Name": "BMO Harris Bank N.A.",
+    "BankAddress": "111 W Monrow St FL 17",
+    "City": "Chicago",
+    "State": "IL",
+    "Zip": "60603"
+  },
+  {
+    "Account Name": "BNY Mellon Trust Co. N.A.",
+    "BankAddress": "20 Oak Hollow Road Ste125",
+    "City": "Southfield",
+    "State": "MI",
+    "Zip": "48033"
+  },
+  {
+    "Account Name": "Boeing Employees Credit Union (BECU)",
+    "BankAddress": "PO Box 97050",
+    "City": "Seattle",
+    "State": "WA",
+    "Zip": "98124-9750"
+  },
+  {
+    "Account Name": "Boston Scientific Financial Service Center",
+    "BankAddress": "47215 Lakeview Blvd",
+    "City": "Fremont",
+    "State": "CA",
+    "Zip": "94538"
+  },
+  {
+    "Account Name": "Boulder Valley Credit Union",
+    "BankAddress": "5505 Arapahoe Ave",
+    "City": "Boulder",
+    "State": "CO",
+    "Zip": "80303"
+  },
+  {
+    "Account Name": "BP Federal Credit Union",
+    "BankAddress": "580 West Lake Park Blvd suite 150",
+    "City": "Houston",
+    "State": "TX",
+    "Zip": "77079"
+  },
+  {
+    "Account Name": "Branch Bank and Trust Co.",
+    "BankAddress": "PO Box 1290",
+    "City": "Whiteville",
+    "State": "NC",
+    "Zip": "28472"
+  },
+  {
+    "Account Name": "Bridgewater Credit Union",
+    "BankAddress": "75 Main St",
+    "City": "Bridgewater",
+    "State": "MA",
+    "Zip": "2324"
+  },
+  {
+    "Account Name": "BROADWAY NATIONAL BANK",
+    "BankAddress": "1177 N.E. LOOP 410",
+    "City": "San Antonio",
+    "State": "TX",
+    "Zip": "78209"
+  },
+  {
+    "Account Name": "Broomfield Community Finance Credit Union",
+    "BankAddress": "6855 West 119 Ave",
+    "City": "Broomfield",
+    "State": "CO",
+    "Zip": "80020"
+  },
+  {
+    "Account Name": "Burbank City Credit Union",
+    "BankAddress": "1800 W. Magnolia Blvd",
+    "City": "Burbank",
+    "State": "CA",
+    "Zip": "91506"
+  },
+  {
+    "Account Name": "C.A.H.P. Credit Union",
+    "BankAddress": "PO Box 276507",
+    "City": "Sacramento",
+    "State": "CA",
+    "Zip": "95827"
+  },
+  {
+    "Account Name": "Caisse Populaire Desjardins le Manoir",
+    "BankAddress": "4771 Boulevard Laurier",
+    "City": "Terrebonne",
+    "State": "Quecec",
+    "Zip": "J7M 1S9"
+  },
+  {
+    "Account Name": "California Bank and Trust",
+    "BankAddress": "P.O. Box 1507",
+    "City": "Salt Lake City",
+    "State": "UT",
+    "Zip": "84110"
+  },
+  {
+    "Account Name": "1st (First) Source Bank",
+    "BankAddress": "PO BOX 783",
+    "City": "South Bend",
+    "State": "IN",
+    "Zip": "46624"
+  },
+  {
+    "Account Name": "1st United Services Credit Union",
+    "BankAddress": "5901 Gibraltar Dr N",
+    "City": "Pleasanton",
+    "State": "CA",
+    "Zip": "94588"
+  },
+  {
+    "Account Name": "20th Century Fox Credit Union",
+    "BankAddress": "1901 Avenue of the Stars",
+    "City": " Suite 120",
+    "State": "Los Angeles",
+    "Zip": "CA"
+  },
+  {
+    "Account Name": "3Rivers Federal Credit Union",
+    "BankAddress": "P.O. Box 2573",
+    "City": "Fort Wayne",
+    "State": "IN",
+    "Zip": "46801"
+  },
+  {
+    "Account Name": "A Plus Federal Credit Union",
+    "BankAddress": "PO Box 14867",
+    "City": "Austin",
+    "State": "TX",
+    "Zip": "78761"
+  },
+  {
+    "Account Name": "AAFCU (American Airlines Federal Credit Union)",
+    "BankAddress": "PO BX 619001 MD2100",
+    "City": "DFW AIRPORT",
+    "State": "TX",
+    "Zip": "75261"
+  },
+  {
+    "Account Name": "Abbott Laboratories Employees Credit Union",
+    "BankAddress": "401 N Riverside Dr Ste 1A",
+    "City": "Gurnee",
+    "State": "IL",
+    "Zip": "60031"
+  },
+  {
+    "Account Name": "Aberdeen Proving Ground Federal Credit Union",
+    "BankAddress": "APGFCU PO Box 1176",
+    "City": "Aberdeen",
+    "State": "MD",
+    "Zip": "21001-6176"
+  },
+  {
+    "Account Name": "Abri CU",
+    "BankAddress": "122 E. 9th St",
+    "City": "Lockport",
+    "State": "IL",
+    "Zip": "60441"
+  },
+  {
+    "Account Name": "ACF Property Management Inc.",
+    "BankAddress": "12411 Ventura Blvd",
+    "City": "Studio City",
+    "State": "CA",
+    "Zip": "91604"
+  },
+  {
+    "Account Name": "Achieva Credit Union",
+    "BankAddress": "PO Box 2650",
+    "City": "Largo",
+    "State": "FL",
+    "Zip": "33779"
+  },
+  {
+    "Account Name": "Actor's Federal Credit Union",
+    "BankAddress": "165 West 46th St",
+    "City": "New York",
+    "State": "NY",
+    "Zip": "10036"
+  },
+  {
+    "Account Name": "Adirondack Bank",
+    "BankAddress": "185 Genesee St",
+    "City": "Utica",
+    "State": "NY",
+    "Zip": "13501"
+  },
+  {
+    "Account Name": "Advance Financial Federal Credit Union",
+    "BankAddress": "4035 Alder Street",
+    "City": "East Chicago",
+    "State": "IN",
+    "Zip": "46312"
+  },
+  {
+    "Account Name": "Advancial Federal Credit Union",
+    "BankAddress": "1845 Woodall Rogers Fwy",
+    "City": " Ste. 1300",
+    "State": "Dallas",
+    "Zip": "TX"
+  },
+  {
+    "Account Name": "Advantage Funding Commercial Capital Corp",
+    "BankAddress": "1111 Marcus Ave",
+    "City": " Suite M27",
+    "State": "Lake Success",
+    "Zip": "NY"
+  },
+  {
+    "Account Name": "Advantage West Credit Union",
+    "BankAddress": "PO Box 15115",
+    "City": "Tucson",
+    "State": "AZ",
+    "Zip": "85708"
+  },
+  {
+    "Account Name": "Advantis Credit Union",
+    "BankAddress": "PO Box 14220",
+    "City": "Portland",
+    "State": "OR",
+    "Zip": "97293"
+  },
+  {
+    "Account Name": "Aerospace Federal Credit Union",
+    "BankAddress": "2310 E. El Segundo Blvd",
+    "City": "El Segundo",
+    "State": "CA",
+    "Zip": "90245"
+  },
+  {
+    "Account Name": "Affinity Federal Credit Union",
+    "BankAddress": "73 Mountainview Blvd",
+    "City": "Basking Ridge",
+    "State": "NJ",
+    "Zip": "7920"
+  },
+  {
+    "Account Name": "Aftra Sag FCU",
+    "BankAddress": "134 N Kenwood St",
+    "City": "Burbank",
+    "State": "CA",
+    "Zip": "91505"
+  },
+  {
+    "Account Name": "Alarion Bank",
+    "BankAddress": "4373 Newberry Rd",
+    "City": "Gainesville",
+    "State": "FL",
+    "Zip": "32607"
+  },
+  {
+    "Account Name": "AlaskaUSA Federal Credit Union",
+    "BankAddress": "PO Box 196613",
+    "City": "Anchorage",
+    "State": "AK",
+    "Zip": "99519"
+  },
+  {
+    "Account Name": "Alcoa Tenn Federal Credit Union",
+    "BankAddress": "124 N Hall Rd",
+    "City": "Alcoa",
+    "State": "TN",
+    "Zip": "37701"
+  },
+  {
+    "Account Name": "Allegacy Federal Credit Union",
+    "BankAddress": "PO Box 981",
+    "City": "Bangor",
+    "State": "PA",
+    "Zip": "18013"
+  },
+  {
+    "Account Name": "Allegiance Credit Union",
+    "BankAddress": "4235 N Meridian",
+    "City": "Oklahoma City",
+    "State": "OK",
+    "Zip": "73112"
+  },
+  {
+    "Account Name": "Alpha Leasing Company Inc.",
+    "BankAddress": "215 S Hurstbourne Pkwy Ste 103",
+    "City": "Louisville",
+    "State": "KY",
+    "Zip": "40222"
+  },
+  {
+    "Account Name": "Altura Credit Union",
+    "BankAddress": "3451 14th Street",
+    "City": "Riverside",
+    "State": "CA",
+    "Zip": "92501"
+  },
+  {
+    "Account Name": "Amazon Leasing",
+    "BankAddress": " Inc.",
+    "City": "11501 Presilla Rd",
+    "State": "Camarillo",
+    "Zip": "CA"
+  },
+  {
+    "Account Name": "Amegy Bank National Association",
+    "BankAddress": "PO Box 1507",
+    "City": "Salt Lake City",
+    "State": "UT",
+    "Zip": "84110"
+  },
+  {
+    "Account Name": "American Alliance Federal Credit Union",
+    "BankAddress": "PO Box 619001",
+    "City": "DFW Airport",
+    "State": "TX",
+    "Zip": "75261"
+  },
+  {
+    "Account Name": "American Bank of Texas",
+    "BankAddress": "PO Box 346",
+    "City": "Denison",
+    "State": "TX",
+    "Zip": "75021"
+  },
+  {
+    "Account Name": "American Chartered Bank",
+    "BankAddress": "700 W Euclid Ave",
+    "City": "Palatine",
+    "State": "IL",
+    "Zip": "60067"
+  },
+  {
+    "Account Name": "American Eagle Federal Credit Union",
+    "BankAddress": "P O Box 279874",
+    "City": "Sacramento",
+    "State": "CA",
+    "Zip": "95827-9684"
+  },
+  {
+    "Account Name": "Banner Bank",
+    "BankAddress": "10 South First Avenue PO BOX 907",
+    "City": "Walla Walla",
+    "State": "WA",
+    "Zip": "99362-0265"
+  },
+  {
+    "Account Name": "America's First Federal Credit Union",
+    "BankAddress": "PO Box 11349",
+    "City": "Birmingham",
+    "State": "AL",
+    "Zip": "35202"
+  },
+  {
+    "Account Name": "Amplify Credit Union",
+    "BankAddress": "PO Box 85300",
+    "City": "Austin",
+    "State": "TX",
+    "Zip": "78708"
+  },
+  {
+    "Account Name": "Andover State Bank",
+    "BankAddress": "PO Box 278",
+    "City": "Andover",
+    "State": "KS",
+    "Zip": "67002"
+  },
+  {
+    "Account Name": "Andrews Federal Credit Union",
+    "BankAddress": "5711 Allentown Rd",
+    "City": "Suitland",
+    "State": "MD",
+    "Zip": "20746"
+  },
+  {
+    "Account Name": "APCI Federal Credit Union",
+    "BankAddress": "PO Box 20147",
+    "City": "Lehigh Valley",
+    "State": "PA",
+    "Zip": "18002"
+  },
+  {
+    "Account Name": "APL Federal Credit Union",
+    "BankAddress": "PO Box 418",
+    "City": "Laurel",
+    "State": "MD",
+    "Zip": "20725"
+  },
+  {
+    "Account Name": "Apple Federal Credit Union",
+    "BankAddress": "PO Box 278118",
+    "City": "Sacramento",
+    "State": "CA",
+    "Zip": "95827"
+  },
+  {
+    "Account Name": "Arizona Federal Credit Union",
+    "BankAddress": "PO Box 277083",
+    "City": "Sacramento",
+    "State": "CA",
+    "Zip": "95827"
+  },
+  {
+    "Account Name": "Arlington Community Federal Credit Union",
+    "BankAddress": "PO Box 40070",
+    "City": "Arlington",
+    "State": "VA",
+    "Zip": "22204"
+  },
+  {
+    "Account Name": "Arrowhead Central Credit Union.",
+    "BankAddress": "PO Box 735",
+    "City": "San Bernardino",
+    "State": "CA",
+    "Zip": "94202"
+  },
+  {
+    "Account Name": "Arvest Bank",
+    "BankAddress": "406 South Walton Blvd",
+    "City": "Bentonville",
+    "State": "AR",
+    "Zip": "72712"
+  },
+  {
+    "Account Name": "Aspire FCU",
+    "BankAddress": "67 Walnut Ave",
+    "City": " Suite 401",
+    "State": "Clark",
+    "Zip": "NJ"
+  },
+  {
+    "Account Name": "Associated Credit Union",
+    "BankAddress": "6251 Crooked Creek Rd",
+    "City": "Norcross",
+    "State": "GA",
+    "Zip": "30092"
+  },
+  {
+    "Account Name": "Austin Telco Federal Credit Union",
+    "BankAddress": "8929 Shoal Creek Blvd",
+    "City": "Austin",
+    "State": "TX",
+    "Zip": "78757"
+  },
+  {
+    "Account Name": "Bakersfield City Employees Federal Credit Union",
+    "BankAddress": "2817 16th Street",
+    "City": "Bakersfield",
+    "State": "CA",
+    "Zip": "93301"
+  },
+  {
+    "Account Name": "California Coast Credit Union",
+    "BankAddress": "PO Box 502080",
+    "City": "San Diego",
+    "State": "CA",
+    "Zip": "92105"
+  },
+  {
+    "Account Name": "Caltech Employees Federal Credit Union",
+    "BankAddress": "528 Foothill Blvd",
+    "City": "La Canada Flintridge",
+    "State": "CA",
+    "Zip": "91012"
+  },
+  {
+    "Account Name": "Campus USA Credit Union",
+    "BankAddress": "PO Box 147029",
+    "City": "Gainesville",
+    "State": "FL",
+    "Zip": "32614"
+  },
+  {
+    "Account Name": "Capital Area Realtors FCU",
+    "BankAddress": "107 W Edmonston Dr",
+    "City": "Rockville",
+    "State": "MD",
+    "Zip": "20852"
+  },
+  {
+    "Account Name": "Capital One N.A.",
+    "BankAddress": "PO BX 660070",
+    "City": "Sacramento",
+    "State": "CA",
+    "Zip": "95866"
+  },
+  {
+    "Account Name": "Capstar",
+    "BankAddress": "201 45th Ave N Suite #950",
+    "City": "Nashville",
+    "State": "TN",
+    "Zip": "37219"
+  },
+  {
+    "Account Name": "Carrolton Bank",
+    "BankAddress": "7911 Forsyth Blvd",
+    "City": "Clayton",
+    "State": "MO",
+    "Zip": "63105"
+  },
+  {
+    "Account Name": "Castparts Employees Federal Credit Union",
+    "BankAddress": "8120 SE Luther Rd",
+    "City": "Portland",
+    "State": "OR",
+    "Zip": "97206"
+  },
+  {
+    "Account Name": "CBS Credit Union",
+    "BankAddress": "12001 Ventura Place #204",
+    "City": "Studio City",
+    "State": "CA",
+    "Zip": "91604"
+  },
+  {
+    "Account Name": "Central Bank",
+    "BankAddress": "6640 Shady Oak Rd",
+    "City": "Eden Prairie",
+    "State": "MN",
+    "Zip": "55344"
+  },
+  {
+    "Account Name": "Central Credit Union of Illinois",
+    "BankAddress": "1001 Mannheim Rd",
+    "City": "Bellwood",
+    "State": "IL",
+    "Zip": "60104"
+  },
+  {
+    "Account Name": "Central One Federal Credit Union",
+    "BankAddress": "714 Main St",
+    "City": "Shrewsbury",
+    "State": "MA",
+    "Zip": "1545"
+  },
+  {
+    "Account Name": "Central Pacific Bank",
+    "BankAddress": "PO Box 3590",
+    "City": "Honolulu",
+    "State": "HI",
+    "Zip": "96811"
+  },
+  {
+    "Account Name": "CFCU DBA Spectrum Credit Union",
+    "BankAddress": "P.O. Box 2069",
+    "City": "Oakland",
+    "State": "CA",
+    "Zip": "94604"
+  },
+  {
+    "Account Name": "Charlotte Metro Credit Union",
+    "BankAddress": "718 Central Ave",
+    "City": "Charlotte",
+    "State": "NC",
+    "Zip": "28204"
+  },
+  {
+    "Account Name": "Chartway FCU",
+    "BankAddress": "160 Newtown Rd",
+    "City": "Virginia Beach",
+    "State": "VA",
+    "Zip": "23462"
+  },
+  {
+    "Account Name": "Chemical Bank",
+    "BankAddress": "4595 32nd Ave",
+    "City": "Hudsonville",
+    "State": "MI",
+    "Zip": "49426"
+  },
+  {
+    "Account Name": "Chevron Federal Credit Union",
+    "BankAddress": "PO Box 2069",
+    "City": "Oakland",
+    "State": "CA",
+    "Zip": "94604"
+  },
+  {
+    "Account Name": "Sutton Leasing",
+    "BankAddress": "3555 East 14 Mile Rd",
+    "City": "Stirling Heights",
+    "State": "MI",
+    "Zip": "48310"
+  },
+  {
+    "Account Name": "TD Canada Trust",
+    "BankAddress": "381 King Street West",
+    "City": "Kitchener",
+    "State": "ON",
+    "Zip": "N2G 1B8"
+  },
+  {
+    "Account Name": "Teacher's Federal Credit Union",
+    "BankAddress": "P.O Box 924182",
+    "City": "Fort Worth",
+    "State": "TX",
+    "Zip": "76124"
+  },
+  {
+    "Account Name": "Technology Credit Union",
+    "BankAddress": "P.O Box 1409",
+    "City": "San Jose",
+    "State": "CA",
+    "Zip": "95109"
+  },
+  {
+    "Account Name": "TEG Federal Credit Union",
+    "BankAddress": "1 Commerce St",
+    "City": "Poughkeepsie",
+    "State": "NY",
+    "Zip": "12603"
+  },
+  {
+    "Account Name": "Telhio Credit Union",
+    "BankAddress": "96 North 4th St",
+    "City": "Columbus",
+    "State": "OH",
+    "Zip": "43215"
+  },
+  {
+    "Account Name": "Texans Credit Union",
+    "BankAddress": "777 E Campbell Rd",
+    "City": "Richardson",
+    "State": "TX",
+    "Zip": "75081"
+  },
+  {
+    "Account Name": "Texas Capital Bank",
+    "BankAddress": "2350 Lakeside Blvd",
+    "City": "Richardson",
+    "State": "TX",
+    "Zip": "75082"
+  },
+  {
+    "Account Name": "Texas Dow Employees Credit Union",
+    "BankAddress": "1001 FM 2004",
+    "City": "Lake Jackson",
+    "State": "TX",
+    "Zip": "77566-4012"
+  },
+  {
+    "Account Name": "Texas Star Bank",
+    "BankAddress": "P.O Box 608",
+    "City": " 177 E Jefferson",
+    "State": "Van Alstyne",
+    "Zip": "TX"
+  },
+  {
+    "Account Name": "Texell Credit Union",
+    "BankAddress": "P.O Box 983",
+    "City": "Temple",
+    "State": "TX",
+    "Zip": "765030"
+  },
+  {
+    "Account Name": "The Coca-Cola Company Family Federal Credit Union",
+    "BankAddress": "P.O Box 22047",
+    "City": "Lehigh Valley",
+    "State": "PA",
+    "Zip": "18002"
+  },
+  {
+    "Account Name": "The Huntington National Bank",
+    "BankAddress": "41 S High Street HC0220",
+    "City": "Columbus",
+    "State": "OH",
+    "Zip": "43287"
+  },
+  {
+    "Account Name": "The National Bank of Central Texas",
+    "BankAddress": "P. O Box 779",
+    "City": "Gatesville",
+    "State": "TX",
+    "Zip": "76528"
+  },
+  {
+    "Account Name": "The Private Bank at Bank of Albuquerque",
+    "BankAddress": "6565 America's Parkway Two Park Square",
+    "City": "Albuquerque",
+    "State": "NM",
+    "Zip": "87110"
+  },
+  {
+    "Account Name": "The University of Michigan Credit Union",
+    "BankAddress": "P.O Box 7850",
+    "City": "Ann Arbor",
+    "State": "MI",
+    "Zip": "48107"
+  },
+  {
+    "Account Name": "Think Mutual Bank",
+    "BankAddress": "P.O Box 7194",
+    "City": "Rochester",
+    "State": "MN",
+    "Zip": "55903"
+  },
+  {
+    "Account Name": "Tinker Federal Credit Union",
+    "BankAddress": "P. O Box 45750",
+    "City": "Tinker AFB",
+    "State": "OK",
+    "Zip": "73145"
+  },
+  {
+    "Account Name": "Tolleson Private Bank",
+    "BankAddress": "5550 Preston Road",
+    "City": " Sutie B",
+    "State": "",
+    "Zip": ""
+  },
+  {
+    "Account Name": "Torrance Community Credit Union",
+    "BankAddress": "2377 Crenshaw Blvd Ste 150",
+    "City": "Torrance",
+    "State": "CA",
+    "Zip": "90501"
+  },
+  {
+    "Account Name": "Tower Federal Credit Union",
+    "BankAddress": "7901 Sandy Spring Rd",
+    "City": "Laurel",
+    "State": "MD",
+    "Zip": "20707"
+  },
+  {
+    "Account Name": "Transportation Federal Credit Union",
+    "BankAddress": "1600 Cameron Street",
+    "City": "Alexandria",
+    "State": "VA",
+    "Zip": "22314"
+  },
+  {
+    "Account Name": "Triangle Credit Union",
+    "BankAddress": "33 Franklin St",
+    "City": "Nashua",
+    "State": "NH",
+    "Zip": "3064"
+  },
+  {
+    "Account Name": "Tri-Cities Community Federal Credit Union",
+    "BankAddress": "2626 W Kennewick Ave",
+    "City": "Kennewich",
+    "State": "WA",
+    "Zip": "99336"
+  },
+  {
+    "Account Name": "Tropical Financial Credit Union",
+    "BankAddress": "P.O Box 829517",
+    "City": "Pembroke Pines",
+    "State": "FL",
+    "Zip": "33082-9917"
+  },
+  {
+    "Account Name": "Truckers Bank Plan",
+    "BankAddress": "P.O Box 783",
+    "City": "South Bend",
+    "State": "IN",
+    "Zip": "44624"
+  },
+  {
+    "Account Name": "Truliant Federal Credit Union",
+    "BankAddress": "P.O. Box 26000",
+    "City": "Winston-Salem",
+    "State": "NC",
+    "Zip": "27114-6000"
+  },
+  {
+    "Account Name": "Trumark Financial",
+    "BankAddress": "1000 Northbrook Dr",
+    "City": "Trevose",
+    "State": "PA",
+    "Zip": "19053"
+  },
+  {
+    "Account Name": "Trustmark Bank",
+    "BankAddress": "945 Bunker Hill Rd Suite 200",
+    "City": "Houston",
+    "State": "TX",
+    "Zip": "77024"
+  },
+  {
+    "Account Name": "Truwest Credit Union",
+    "BankAddress": "1667 N Priest Dr",
+    "City": "Tempe",
+    "State": "AZ",
+    "Zip": "85281"
+  },
+  {
+    "Account Name": "Tustin Community Bank",
+    "BankAddress": "13891 Newport Ave",
+    "City": "Tustin",
+    "State": "CA",
+    "Zip": "92780"
+  },
+  {
+    "Account Name": "Tyndall Federal Credit Union",
+    "BankAddress": "PO Box 59760",
+    "City": "Panama City",
+    "State": "FL",
+    "Zip": "32405"
+  },
+  {
+    "Account Name": "U of I Employees Credit Union",
+    "BankAddress": "PO Box 500 Champaign",
+    "City": "Chicago",
+    "State": "IL",
+    "Zip": "61824"
+  },
+  {
+    "Account Name": "U.S. Senate Federal Credit Union",
+    "BankAddress": "2111 Eisenhower Ave",
+    "City": "Alexandria",
+    "State": "VA",
+    "Zip": "22314"
+  },
+  {
+    "Account Name": "UBI Federal Credit Union",
+    "BankAddress": "120 Woodford Ave",
+    "City": "Plainville",
+    "State": "CT",
+    "Zip": "6062"
+  },
+  {
+    "Account Name": "UBS",
+    "BankAddress": "Elias Canetti-Strasse 2",
+    "City": " DINO CV3P",
+    "State": "",
+    "Zip": "Postfach"
+  },
+  {
+    "Account Name": "UMB Bank",
+    "BankAddress": "Mail Stop #1170207",
+    "City": "Kansas City",
+    "State": "MO",
+    "Zip": "64106"
+  },
+  {
+    "Account Name": "Umpqua Bank",
+    "BankAddress": "PO Box 1580",
+    "City": "Roseburg",
+    "State": "OR",
+    "Zip": "97470"
+  },
+  {
+    "Account Name": "Uncle CU",
+    "BankAddress": "2100 Las Positas CT",
+    "City": "Livermore",
+    "State": "CA",
+    "Zip": "94551"
+  },
+  {
+    "Account Name": "Union First Market Bank",
+    "BankAddress": "9665 Sliding Hill Rd",
+    "City": "Ashland",
+    "State": "VA",
+    "Zip": "23005"
+  },
+  {
+    "Account Name": "Union Leasing Trust",
+    "BankAddress": "425 N. Martingale Road Suite #1250",
+    "City": "Schaumburg",
+    "State": "IL",
+    "Zip": "60173"
+  },
+  {
+    "Account Name": "Union Savings Bank",
+    "BankAddress": " First Lienholder",
+    "City": "225 Main St",
+    "State": "Danbury",
+    "Zip": "CT"
+  },
+  {
+    "Account Name": "UNITED HERITAGE CREDIT UNION",
+    "BankAddress": "PO Box 1648",
+    "City": "Austin",
+    "State": "TX",
+    "Zip": "78767"
+  },
+  {
+    "Account Name": "United Investors FCU",
+    "BankAddress": "16 W Elizabeth Ave",
+    "City": "Linden",
+    "State": "NJ",
+    "Zip": "7036"
+  },
+  {
+    "Account Name": "United States Senate Federal Credit Union",
+    "BankAddress": "GAO Branch",
+    "City": "Washington",
+    "State": "CD",
+    "Zip": "20548"
+  },
+  {
+    "Account Name": "United Teletech Financial Federal Credit Union",
+    "BankAddress": "205 Hance Ave",
+    "City": "Tinton Falls",
+    "State": "NJ",
+    "Zip": "7724"
+  },
+  {
+    "Account Name": "Unitus Community Credit Union",
+    "BankAddress": "PO Box 1937",
+    "City": "Portland",
+    "State": "OR",
+    "Zip": "97207"
+  },
+  {
+    "Account Name": "Unity One Federal Credit Union",
+    "BankAddress": "6701 Burlington Blvd",
+    "City": "Fort Worth",
+    "State": "TX",
+    "Zip": "76131"
+  },
+  {
+    "Account Name": "Universal City Studios Credit Union (UCSCU)",
+    "BankAddress": "100 universal City Plaza Bldg 1320",
+    "City": "Universal City",
+    "State": "CA",
+    "Zip": "91608"
+  },
+  {
+    "Account Name": "University Credit Union",
+    "BankAddress": "1500 S. Sepulveda Blvd",
+    "City": "Los Angeles",
+    "State": "CA",
+    "Zip": "90025"
+  },
+  {
+    "Account Name": "Mountain America Credit Union",
+    "BankAddress": "735 S State ST 3rd fl",
+    "City": "Salt Lake City",
+    "State": "UT",
+    "Zip": "84111"
+  },
+  {
+    "Account Name": "EECU",
+    "BankAddress": "P.O. Box 5242",
+    "City": "Fresno",
+    "State": "CA",
+    "Zip": "93755"
+  },
+  {
+    "Account Name": "Police and Fire Federal Credit Union",
+    "BankAddress": "901 Arch Street",
+    "City": "Philadelphia",
+    "State": "PA",
+    "Zip": "19107"
+  },
+  {
+    "Account Name": "Port of Seattle Credit Union",
+    "BankAddress": "17801 International Blvd",
+    "City": "Seattle",
+    "State": "Wa",
+    "Zip": "98158"
+  },
+  {
+    "Account Name": "Porter federal credit union",
+    "BankAddress": "850 East Harvard Ave Suite G 45",
+    "City": "Denver",
+    "State": "CO",
+    "Zip": "80210"
+  },
+  {
+    "Account Name": "Premier America Credit Union",
+    "BankAddress": "P.O Box 2178",
+    "City": "Chatsworth",
+    "State": "CA",
+    "Zip": "91311"
+  },
+  {
+    "Account Name": "Premier Community Credit Union",
+    "BankAddress": "P.O. Box 8929",
+    "City": "Stockton",
+    "State": "CA",
+    "Zip": "95208-0929"
+  },
+  {
+    "Account Name": "PREMIER AMERICA CREDIT UNION",
+    "BankAddress": "19867 PRAIRIE ST",
+    "City": "CHATSWORTH",
+    "State": "CA",
+    "Zip": "91311"
+  },
+  {
+    "Account Name": "Premier Members FCU",
+    "BankAddress": "5495 Arapahoe Ave",
+    "City": "Boulder",
+    "State": "CO",
+    "Zip": "803303"
+  },
+  {
+    "Account Name": "PremierOne Credit Union",
+    "BankAddress": "140 Asbury St",
+    "City": "San Jose",
+    "State": "CA",
+    "Zip": "95110"
+  },
+  {
+    "Account Name": "PrimeWay Federal Credit Union",
+    "BankAddress": "9597 Jones Road # 324",
+    "City": "Houston",
+    "State": "TX",
+    "Zip": "77065"
+  },
+  {
+    "Account Name": "Prince Georges County Federal Credit Union",
+    "BankAddress": "15201 Hall Road",
+    "City": "Bowie",
+    "State": "MD",
+    "Zip": "20721"
+  },
+  {
+    "Account Name": "Prior Lake State Bank",
+    "BankAddress": "16677 Duluth Ave SE",
+    "City": "Prior Lake",
+    "State": "MN",
+    "Zip": "55372"
+  },
+  {
+    "Account Name": "Prosperity Bank",
+    "BankAddress": "3945 Little York Road",
+    "City": "Houston",
+    "State": "TX",
+    "Zip": "77093"
+  },
+  {
+    "Account Name": "Prosperity Bank of Texas",
+    "BankAddress": "14060 Southwest Freeway",
+    "City": "Sugar Land",
+    "State": "TX",
+    "Zip": "77478"
+  },
+  {
+    "Account Name": "Provident Credit Union",
+    "BankAddress": "P.O. Box 8007",
+    "City": "Redwood City",
+    "State": "CA",
+    "Zip": "94063"
+  },
+  {
+    "Account Name": "Justice Federal Credit Union",
+    "BankAddress": "5175 Parkstone Drive",
+    "City": " Suite 200",
+    "State": "Chantilly",
+    "Zip": "VA"
+  },
+  {
+    "Account Name": "Kaiser Credit Union",
+    "BankAddress": "173 Plaza Drive Suite 1001",
+    "City": "Vallejo",
+    "State": "CA",
+    "Zip": "94591"
+  },
+  {
+    "Account Name": "Kern Schools Federal Credit Union",
+    "BankAddress": "P.O. Box 9506",
+    "City": "Bakersfield",
+    "State": "CA",
+    "Zip": "93389-9506"
+  },
+  {
+    "Account Name": "Key Bank N.A.",
+    "BankAddress": "P.O. Box 16430",
+    "City": "Boise",
+    "State": "ID",
+    "Zip": "83715-6430"
+  },
+  {
+    "Account Name": "Key Corp",
+    "BankAddress": "4910 Tiederman Rd",
+    "City": "Brooklyn",
+    "State": "OH",
+    "Zip": "44144"
+  },
+  {
+    "Account Name": "Keypoint Credit Union",
+    "BankAddress": "P.O. Box 2698",
+    "City": "Santa Clara",
+    "State": "CA",
+    "Zip": "95055"
+  },
+  {
+    "Account Name": "Kinecta Federal Credit Union",
+    "BankAddress": "1440 Rosecrans Ave",
+    "City": "Manhattan Beach",
+    "State": "CA",
+    "Zip": "90266"
+  },
+  {
+    "Account Name": "Kirtland Federal CU",
+    "BankAddress": "P.O. Box 80570",
+    "City": "Albuquerque",
+    "State": "NM",
+    "Zip": "87198"
+  },
+  {
+    "Account Name": "Kitsap Credit Union",
+    "BankAddress": "P.O. Box 990",
+    "City": "Bremerton",
+    "State": "WA",
+    "Zip": "98337"
+  },
+  {
+    "Account Name": "Public Employees Credit Union",
+    "BankAddress": "P.O. Box 2205",
+    "City": "Austin",
+    "State": "TX",
+    "Zip": "78768"
+  },
+  {
+    "Account Name": "Public Service Credit Union",
+    "BankAddress": "7055 East Evans",
+    "City": "Denver",
+    "State": "CO",
+    "Zip": "80224"
+  },
+  {
+    "Account Name": "Pulaski Bank",
+    "BankAddress": "12300 Olive Blvd",
+    "City": "St. Louis",
+    "State": "MO",
+    "Zip": "63141"
+  },
+  {
+    "Account Name": "Qualstar Credit Union",
+    "BankAddress": "P.O. Box 96730",
+    "City": "Bellevue",
+    "State": "WA",
+    "Zip": "98009"
+  },
+  {
+    "Account Name": "Qualtrust Credit Union",
+    "BankAddress": "P.O. Box 165448",
+    "City": "Irving",
+    "State": "TX",
+    "Zip": "75016-5448"
+  },
+  {
+    "Account Name": "Quincy Credit Union",
+    "BankAddress": "100 Quincy Ave",
+    "City": "Quincy",
+    "State": "MA",
+    "Zip": "2169"
+  },
+  {
+    "Account Name": "Randolph Brooks Federal Credit Union",
+    "BankAddress": "P.O. Box 2097",
+    "City": "Universal City",
+    "State": "TX",
+    "Zip": "78148"
+  },
+  {
+    "Account Name": "RCB Bank of Nichols Hills",
+    "BankAddress": "7400 North Western",
+    "City": "Oklahoma City",
+    "State": "OK",
+    "Zip": "73116"
+  },
+  {
+    "Account Name": "Red Canoe Credit Union",
+    "BankAddress": "P.O. box 3020",
+    "City": " 1418 15th Ave",
+    "State": "Longview",
+    "Zip": "WA"
+  },
+  {
+    "Account Name": "Redstone Federal Credit Union",
+    "BankAddress": "220 Wynn Dr",
+    "City": "Huntsville",
+    "State": "AL",
+    "Zip": "35893"
+  },
+  {
+    "Account Name": "Redwood Credit Union",
+    "BankAddress": "1129 A South Cloverdale Blvd",
+    "City": "Cloverdale",
+    "State": "CA",
+    "Zip": "95425"
+  },
+  {
+    "Account Name": "Regions Bank",
+    "BankAddress": "P.O. Box 276357",
+    "City": "Sacramento",
+    "State": "CA",
+    "Zip": "95827"
+  },
+  {
+    "Account Name": "Resource One Credit Union",
+    "BankAddress": "P.O. Box 660077",
+    "City": "Dallas",
+    "State": "TX",
+    "Zip": "75266-0077"
+  },
+  {
+    "Account Name": "Rhode Island Credit Union",
+    "BankAddress": "160 Francis St",
+    "City": "Providence",
+    "State": "RI",
+    "Zip": "2903"
+  },
+  {
+    "Account Name": "Rio Bank",
+    "BankAddress": "P.O. box 4169",
+    "City": "McAllen",
+    "State": "TX",
+    "Zip": "78502"
+  },
+  {
+    "Account Name": "Rockland Federal Credit Union",
+    "BankAddress": "241 Union St",
+    "City": "Rockland",
+    "State": "MA",
+    "Zip": "2370"
+  },
+  {
+    "Account Name": "Royal Bank of Canada",
+    "BankAddress": "155 Wellington Street West",
+    "City": " BSC 3rd Floor",
+    "State": "Toronto",
+    "Zip": "ON"
+  },
+  {
+    "Account Name": "S&T Bank",
+    "BankAddress": "P.O. Box 1907",
+    "City": "Indiana",
+    "State": "PA",
+    "Zip": "15701"
+  },
+  {
+    "Account Name": "Sacramento Credit Union",
+    "BankAddress": "P.O. Box 2351",
+    "City": "Sacramento",
+    "State": "CA",
+    "Zip": "95812"
+  },
+  {
+    "Account Name": "Safe America Credit Union",
+    "BankAddress": "P.O. Box 11269",
+    "City": "Pleasanton",
+    "State": "CA",
+    "Zip": "94588"
+  },
+  {
+    "Account Name": "Salal Credit Union",
+    "BankAddress": "P.O. Box 19340",
+    "City": "Seattle",
+    "State": "WA",
+    "Zip": "98109"
+  },
+  {
+    "Account Name": "San Antonio Citizens Federal Credit Union",
+    "BankAddress": "12542 Curley Street",
+    "City": "San Antonio",
+    "State": "FL",
+    "Zip": "33576"
+  },
+  {
+    "Account Name": "San Antonio Credit Union",
+    "BankAddress": "P.O. Box 1356",
+    "City": "San Antonio",
+    "State": "TX",
+    "Zip": "78295-1356"
+  },
+  {
+    "Account Name": "San Diego County Credit Union",
+    "BankAddress": "6545 Sequence Dr",
+    "City": "San Diego",
+    "State": "CA",
+    "Zip": "92121"
+  },
+  {
+    "Account Name": "San DiegoFederal Fire Fighters Credit Union",
+    "BankAddress": "4926 La Cuenta Dr",
+    "City": "San Diego",
+    "State": "CA",
+    "Zip": "92124"
+  },
+  {
+    "Account Name": "San Francisco Federal Credit Union",
+    "BankAddress": "770 Golden Gate Ave",
+    "City": "San Francisco",
+    "State": "CA",
+    "Zip": "94102"
+  },
+  {
+    "Account Name": "SAN FRANCISCO FIRE CR UN",
+    "BankAddress": "3201 California St",
+    "City": "San Francisco",
+    "State": "CA",
+    "Zip": "94118"
+  },
+  {
+    "Account Name": "San Francisco Police CU",
+    "BankAddress": "2550 Irving St",
+    "City": "San Francisco",
+    "State": "CA",
+    "Zip": "94122"
+  },
+  {
+    "Account Name": "San Mateo Credit Union",
+    "BankAddress": "P.O. Box 910",
+    "City": "Redwood City",
+    "State": "CA",
+    "Zip": "94064"
+  },
+  {
+    "Account Name": "Sandia Area Federal Credit Union",
+    "BankAddress": "P.O. Box 18044",
+    "City": "Albuquerque",
+    "State": "NM",
+    "Zip": "87185"
+  },
+  {
+    "Account Name": "Sandia Laboratory Federal Credit Union",
+    "BankAddress": "P.O. Box 23040",
+    "City": "Albuquerque",
+    "State": "NM",
+    "Zip": "87192-1040"
+  },
+  {
+    "Account Name": "Santa Clara County Federal Credit Union",
+    "BankAddress": "852 North 1st St",
+    "City": "San Jose",
+    "State": "CA",
+    "Zip": "95112"
+  },
+  {
+    "Account Name": "SCBT",
+    "BankAddress": "P.O. Box 100113",
+    "City": "Columbia",
+    "State": "SC",
+    "Zip": "29202-3113"
+  },
+  {
+    "Account Name": "SCE FCU",
+    "BankAddress": "PO Box 8017",
+    "City": "El Monte",
+    "State": "CA",
+    "Zip": "91734"
+  },
+  {
+    "Account Name": "SCHLUMBERGER E C U",
+    "BankAddress": "225 Schlumberger Dr",
+    "City": "Sugar Land",
+    "State": "TX",
+    "Zip": "77478"
+  },
+  {
+    "Account Name": "School Employees Credit Union of Washington",
+    "BankAddress": "P.O. Box 576",
+    "City": "Seattle",
+    "State": "WA",
+    "Zip": "98111"
+  },
+  {
+    "Account Name": "Firefighters First CU",
+    "BankAddress": "PO BOX 60890",
+    "City": "Los Angeles",
+    "State": "CA",
+    "Zip": "90060"
+  },
+  {
+    "Account Name": "Glenview Credit Union",
+    "BankAddress": "1631 N Waukegan Rd",
+    "City": "Glenview",
+    "State": "IL",
+    "Zip": "60025"
+  },
+  {
+    "Account Name": "GNC Federal Credit Union",
+    "BankAddress": "201 South Jefferson St",
+    "City": "New Castle",
+    "State": "PA",
+    "Zip": "16101"
+  },
+  {
+    "Account Name": "Go Federal Credit Union",
+    "BankAddress": "5429 LBJ Freeway Suite 100",
+    "City": "Dallas",
+    "State": "TX",
+    "Zip": "75240"
+  },
+  {
+    "Account Name": "Golden 1 Credit Union",
+    "BankAddress": "P.O. Box 15966",
+    "City": "Sacramento",
+    "State": "CA",
+    "Zip": "95852"
+  },
+  {
+    "Account Name": "GP Community FCU",
+    "BankAddress": "154 The Ninety Road",
+    "City": "Morrisonville",
+    "State": "NY",
+    "Zip": "12962"
+  },
+  {
+    "Account Name": "Grand Bank of Texas",
+    "BankAddress": "P.O. Box 1100",
+    "City": "Marble Falls",
+    "State": "TX",
+    "Zip": "78654"
+  },
+  {
+    "Account Name": "Great Basin Credit Union",
+    "BankAddress": "9770 South Virgina St",
+    "City": "Reno",
+    "State": "NV",
+    "Zip": "89511"
+  },
+  {
+    "Account Name": "Great Lakes Credit Union",
+    "BankAddress": "2525 Green Bay Road",
+    "City": "North Chicago",
+    "State": "IL",
+    "Zip": "60064"
+  },
+  {
+    "Account Name": "Greater Nevada Credit Union",
+    "BankAddress": "P.O Box 3239",
+    "City": "Carson City",
+    "State": "NV",
+    "Zip": "89702"
+  },
+  {
+    "Account Name": "Greater Texas Federal Credit Union",
+    "BankAddress": "6411 North Lamar Blvd",
+    "City": "Austin",
+    "State": "TX",
+    "Zip": "78752"
+  },
+  {
+    "Account Name": "Grow Financial Federal Credit Union",
+    "BankAddress": "P.O. Box 89909",
+    "City": "Tampa",
+    "State": "FL",
+    "Zip": "33689-0415"
+  },
+  {
+    "Account Name": "Hanscom Federal Credit Union",
+    "BankAddress": "1610 Eglin St",
+    "City": "Hanscom AFB",
+    "State": "MA",
+    "Zip": "1731"
+  },
+  {
+    "Account Name": "Harbor Federal Credit Union",
+    "BankAddress": "P.O. Box 5159",
+    "City": "Toramce",
+    "State": "CA",
+    "Zip": "90510"
+  },
+  {
+    "Account Name": "Hastings City Bank",
+    "BankAddress": "150 West Court St",
+    "City": "Hastings",
+    "State": "MI",
+    "Zip": "49058"
+  },
+  {
+    "Account Name": "HawaiiUSA Federal Credit Union",
+    "BankAddress": "1226 College Walk",
+    "City": "Honolulu",
+    "State": "HI",
+    "Zip": "96817"
+  },
+  {
+    "Account Name": "Health Associates Federal Credit Union",
+    "BankAddress": "530 S Main St Suite 100",
+    "City": "Orange",
+    "State": "CA",
+    "Zip": "92868"
+  },
+  {
+    "Account Name": "Healthcare Employees Credit Union",
+    "BankAddress": "29 Emmons Drive Suite C40",
+    "City": "Princeton",
+    "State": "NJ",
+    "Zip": "8540"
+  },
+  {
+    "Account Name": "Heinz-DelMonte Federal Credit Union",
+    "BankAddress": "P.O. Box 57",
+    "City": "Pittsburg",
+    "State": "PA",
+    "Zip": "15230"
+  },
+  {
+    "Account Name": "Heritage Bank Commerce",
+    "BankAddress": "150 Almaden Blvd",
+    "City": "San Jose",
+    "State": "CA",
+    "Zip": "95113"
+  },
+  {
+    "Account Name": "Heritage Community Credit Union",
+    "BankAddress": "P.O. Box 790",
+    "City": "Rancho Cordova",
+    "State": "CA",
+    "Zip": "95741-0790"
+  },
+  {
+    "Account Name": "Hickam Federal Credit Union",
+    "BankAddress": "P.O. Box 30025",
+    "City": "Honolulu",
+    "State": "HI",
+    "Zip": "96820-0025"
+  },
+  {
+    "Account Name": "HMSA Employee's Federal Credit Union",
+    "BankAddress": "P.O. Box 860",
+    "City": "Honolulu",
+    "State": "HI",
+    "Zip": "96808"
+  },
+  {
+    "Account Name": "Honolulu Federal Credit Union",
+    "BankAddress": "P.O. Box 2428",
+    "City": "Honolulu",
+    "State": "HI",
+    "Zip": "96804"
+  },
+  {
+    "Account Name": "Horizon Bank",
+    "BankAddress": "600 Congress Ave Suite G-260",
+    "City": "Austin",
+    "State": "TX",
+    "Zip": "78701"
+  },
+  {
+    "Account Name": "Houston Federal Credit Union",
+    "BankAddress": "1632 Kensington Dr",
+    "City": "Sugar Land",
+    "State": "TX",
+    "Zip": "77479"
+  },
+  {
+    "Account Name": "Hughes Federal Credit Union",
+    "BankAddress": "P.O. Box 11900",
+    "City": "Tucson",
+    "State": "AZ",
+    "Zip": "85734"
+  },
+  {
+    "Account Name": "IAA Credit Union",
+    "BankAddress": "P.O. Box 2901",
+    "City": "Bloomington",
+    "State": "IL",
+    "Zip": "61702-2901"
+  },
+  {
+    "Account Name": "Iberia Bank",
+    "BankAddress": "P.O. Box 12440",
+    "City": "New Iberia",
+    "State": "LA",
+    "Zip": "70562"
+  },
+  {
+    "Account Name": "IBEW United Workers Federal Credit Union",
+    "BankAddress": "P.O Box 16877",
+    "City": "Portland",
+    "State": "OR",
+    "Zip": "97292"
+  },
+  {
+    "Account Name": "IBM Southeast EFCU",
+    "BankAddress": "P.O. box 5090",
+    "City": "Boca Raton",
+    "State": "FL",
+    "Zip": "33431"
+  },
+  {
+    "Account Name": "Icon",
+    "BankAddress": "1010 N. Whitewater Park Blvd",
+    "City": "Boise",
+    "State": "UT",
+    "Zip": "83703"
+  },
+  {
+    "Account Name": "Idaho Central Credit Union",
+    "BankAddress": "P.O. Box 2469",
+    "City": "Pocatello",
+    "State": "ID",
+    "Zip": "83206"
+  },
+  {
+    "Account Name": "Indiana Members Credit Union",
+    "BankAddress": "5103 S Madison Ave",
+    "City": "Indianapolis",
+    "State": "IN",
+    "Zip": "46227"
+  },
+  {
+    "Account Name": "Industrial Bank",
+    "BankAddress": "1900 John Hanson Lane",
+    "City": "Oxon Hill",
+    "State": "MD",
+    "Zip": "20745"
+  },
+  {
+    "Account Name": "Infinity Federal Credit Union",
+    "BankAddress": "202 Larrabee Road",
+    "City": "Westbrook",
+    "State": "ME",
+    "Zip": "4092"
+  },
+  {
+    "Account Name": "Inter-Guild Credit Union",
+    "BankAddress": "817 North Vine St",
+    "City": "Hollywood",
+    "State": "CA",
+    "Zip": "90038"
+  },
+  {
+    "Account Name": "International Bank of Commerce",
+    "BankAddress": "130 East Travis",
+    "City": "San Antonio",
+    "State": "TX",
+    "Zip": "78205"
+  },
+  {
+    "Account Name": "InTouch Credit Union",
+    "BankAddress": "PO Box 250169",
+    "City": "Plano",
+    "State": "TX",
+    "Zip": "75025"
+  },
+  {
+    "Account Name": "Jimmy Fung",
+    "BankAddress": "12018 Terraza Cove Ln",
+    "City": "Houston",
+    "State": "TX",
+    "Zip": "77041"
+  },
+  {
+    "Account Name": "JPMorgan Chase Bank NA (JP Morgan Chase Bank",
+    "BankAddress": " N.A.)",
+    "City": "PO Box 901033",
+    "State": "Fort Worth",
+    "Zip": "TX"
+  },
+  {
+    "Account Name": "JSC Federal Credit Union",
+    "BankAddress": "P.O. Box 58346",
+    "City": "Houston",
+    "State": "TX",
+    "Zip": "77258"
+  },
+  {
+    "Account Name": "CIBC",
+    "BankAddress": "",
+    "City": "",
+    "State": "",
+    "Zip": ""
+  },
+  {
+    "Account Name": "Citadel",
+    "BankAddress": "520 Eagleview Blvd",
+    "City": "Exton",
+    "State": "PA",
+    "Zip": "19341"
+  },
+  {
+    "Account Name": "Citizens Bank",
+    "BankAddress": "PO Box 7",
+    "City": "Frostproof",
+    "State": "FL",
+    "Zip": "33843"
+  },
+  {
+    "Account Name": "Citizens Equity First Credit Union (CEFCU)",
+    "BankAddress": "PO Box 1715",
+    "City": "Peoria",
+    "State": "IL",
+    "Zip": "61656"
+  },
+  {
+    "Account Name": "City County Credit Union of Fort Lauderdale",
+    "BankAddress": "1982 N State Rd 7",
+    "City": "Margate",
+    "State": "FL",
+    "Zip": "33063"
+  },
+  {
+    "Account Name": "City National Bank",
+    "BankAddress": "15260 Ventura Blvd",
+    "City": " Suite 1600",
+    "State": "Sherman Oaks",
+    "Zip": "CA"
+  },
+  {
+    "Account Name": "Clackamas Federal Credit Union",
+    "BankAddress": "PO Box 2020",
+    "City": "Oregon",
+    "State": "OR",
+    "Zip": "97045"
+  },
+  {
+    "Account Name": "Clark County Credit Union",
+    "BankAddress": "PO Box 36490",
+    "City": "Las Vegas",
+    "State": "NV",
+    "Zip": "89133"
+  },
+  {
+    "Account Name": "CNLBank",
+    "BankAddress": "P.O. Box 4971",
+    "City": "Orlando",
+    "State": "FL",
+    "Zip": "32802"
+  },
+  {
+    "Account Name": "Coastal Federal Credit Union",
+    "BankAddress": "PO Box 690010",
+    "City": "San Antonio",
+    "State": "TX",
+    "Zip": "78269"
+  },
+  {
+    "Account Name": "Coasthills FCU",
+    "BankAddress": "PO Box 200",
+    "City": "Lompoc",
+    "State": "CA",
+    "Zip": "94348"
+  },
+  {
+    "Account Name": "Coca-Cola Company Family Federal Credit Union",
+    "BankAddress": "PO Box 22047",
+    "City": "Lehigh Valley",
+    "State": "PA",
+    "Zip": "18002"
+  },
+  {
+    "Account Name": "Colorado Credit Union",
+    "BankAddress": "PO Box 270010",
+    "City": "Littleton",
+    "State": "CO",
+    "Zip": "80127"
+  },
+  {
+    "Account Name": "Comerica Bank",
+    "BankAddress": "4751 Wilshire Blvd Suite 120",
+    "City": "Los Angeles",
+    "State": "CA",
+    "Zip": "90010"
+  },
+  {
+    "Account Name": "Commerce Bank",
+    "BankAddress": "PO Box 326",
+    "City": "Pittsburg",
+    "State": "KS",
+    "Zip": "66762"
+  },
+  {
+    "Account Name": "Commonwealth Central Credit Union",
+    "BankAddress": "PO Box 641690",
+    "City": "San Jose",
+    "State": "CA",
+    "Zip": "95164"
+  },
+  {
+    "Account Name": "Commonwealth One Federal Credit Union",
+    "BankAddress": "4875 Eisenhower Ave",
+    "City": "Alexandira",
+    "State": "VA",
+    "Zip": "22304"
+  },
+  {
+    "Account Name": "Community America Credit Union",
+    "BankAddress": "PO Box 15950",
+    "City": "Lenexa",
+    "State": "MO",
+    "Zip": "66285"
+  },
+  {
+    "Account Name": "Community Bank",
+    "BankAddress": "5550 Topanga Canyon Blvd",
+    "City": " Suite 100",
+    "State": "Woodland Hills",
+    "Zip": "CA"
+  },
+  {
+    "Account Name": "Community Trust Credit Union",
+    "BankAddress": "1313 Skokie Hwy",
+    "City": "Gurnee",
+    "State": "IL",
+    "Zip": "60031"
+  },
+  {
+    "Account Name": "Congressional Federal Credit Union",
+    "BankAddress": "P.O. Box 23267",
+    "City": "Washington",
+    "State": "DC",
+    "Zip": "20026-3267"
+  },
+  {
+    "Account Name": "Consumers Credit Union",
+    "BankAddress": "P.O. Box 9119",
+    "City": "Waukegan",
+    "State": "IL",
+    "Zip": "60079-9119"
+  },
+  {
+    "Account Name": "CorePlus Federal Credit Union",
+    "BankAddress": "16 South Main Street",
+    "City": "Putnam",
+    "State": "CT",
+    "Zip": "6260"
+  },
+  {
+    "Account Name": "Cornerstone Financial Credit Union",
+    "BankAddress": "P.O Box 120729",
+    "City": "Nashville",
+    "State": "TN",
+    "Zip": "37212"
+  },
+  {
+    "Account Name": "CPM Federal Credit Union",
+    "BankAddress": "1066 E. Montague Ave",
+    "City": "N Charleston",
+    "State": "SC",
+    "Zip": "29405"
+  },
+  {
+    "Account Name": "Credit Union 1",
+    "BankAddress": "1941 Abbott Rd",
+    "City": "Anchorage",
+    "State": "AK",
+    "Zip": "99507"
+  },
+  {
+    "Account Name": "Credit Union of America",
+    "BankAddress": "P.O. Box 660493",
+    "City": "Dallas",
+    "State": "TX",
+    "Zip": "75266-0493"
+  },
+  {
+    "Account Name": "Credit Union of Colorado",
+    "BankAddress": "1390 Logan St",
+    "City": "Denver",
+    "State": "CO",
+    "Zip": "80203"
+  },
+  {
+    "Account Name": "Credit Union of Denver",
+    "BankAddress": "1075 Acuma Street",
+    "City": "Denver",
+    "State": "CO",
+    "Zip": "80204"
+  },
+  {
+    "Account Name": "Credit Union of Georgia",
+    "BankAddress": "P.O Box 2148",
+    "City": "Woodstock",
+    "State": "GA",
+    "Zip": "30188"
+  },
+  {
+    "Account Name": "Credit Union of Southern California",
+    "BankAddress": "8028 Greenleaf Ave",
+    "City": "Whittier",
+    "State": "CA",
+    "Zip": "90602"
+  },
+  {
+    "Account Name": "Dade County Federal Credit Union",
+    "BankAddress": "1500 NW 107 Ave",
+    "City": "Miami",
+    "State": "FL",
+    "Zip": "33523"
+  },
+  {
+    "Account Name": "Delta Community Credit Union",
+    "BankAddress": "1025 Virginia Ave",
+    "City": "Atlanta",
+    "State": "GA",
+    "Zip": "30354"
+  },
+  {
+    "Account Name": "DEPARTMENT FEDERAL CREDIT UNION",
+    "BankAddress": "1101 2nd St NE",
+    "City": "Washington",
+    "State": "DC",
+    "Zip": "20002"
+  },
+  {
+    "Account Name": "Desert Schools Federal Credit Union",
+    "BankAddress": "P.O. box 2945",
+    "City": "Phoenix",
+    "State": "AZ",
+    "Zip": "85062"
+  },
+  {
+    "Account Name": "DFCU Financial (Dearborn Federal)",
+    "BankAddress": "P.O. Box 660250",
+    "City": "Sacramento",
+    "State": "CA",
+    "Zip": "95866"
+  },
+  {
+    "Account Name": "Digital Federal Credit Union",
+    "BankAddress": "PO Box 25166",
+    "City": "Lehigh Valley",
+    "State": "PA",
+    "Zip": "18002-5166"
+  },
+  {
+    "Account Name": "Discount Credit Union",
+    "BankAddress": "P.O. Box 9130",
+    "City": "Malborough",
+    "State": "MA",
+    "Zip": "1752"
+  },
+  {
+    "Account Name": "Downey Federal Credit Union",
+    "BankAddress": "8237 Third Street P.O. Box 4639",
+    "City": "Downey",
+    "State": "CA",
+    "Zip": "90241-1639"
+  },
+  {
+    "Account Name": "DuPage Credit Union",
+    "BankAddress": "P.O. Box 3930",
+    "City": "Naperville",
+    "State": "IL",
+    "Zip": "60567"
+  },
+  {
+    "Account Name": "Eclipse Bank",
+    "BankAddress": "3827 Shelbyville Rd",
+    "City": "Louisville",
+    "State": "KY",
+    "Zip": "40207"
+  },
+  {
+    "Account Name": "Educational Employees Credit Union",
+    "BankAddress": "P.O Box 1777",
+    "City": "Fortworth",
+    "State": "TX",
+    "Zip": "76101"
+  },
+  {
+    "Account Name": "Elevations Credit Union",
+    "BankAddress": "P.O Box 9004",
+    "City": "Boulder",
+    "State": "CO",
+    "Zip": "80301"
+  },
+  {
+    "Account Name": "Eli Lilly Federal Credit Union",
+    "BankAddress": "225 South East St Suite 300",
+    "City": "Indianapolis",
+    "State": "IN",
+    "Zip": "46202"
+  },
+  {
+    "Account Name": "Endura Financial Federal Credit Union",
+    "BankAddress": "820 N Lilac Drive",
+    "City": "Minneapolis",
+    "State": "MN",
+    "Zip": "55422"
+  },
+  {
+    "Account Name": "Energy Plus Credit Union",
+    "BankAddress": "1230 West Morris St",
+    "City": "Indianapolis",
+    "State": "IN",
+    "Zip": "46221"
+  },
+  {
+    "Account Name": "Ent Federal Credit Union",
+    "BankAddress": "7250 Campus Drive",
+    "City": "Colorado Springs",
+    "State": "CO",
+    "Zip": "80920"
+  },
+  {
+    "Account Name": "Enterprise Bank",
+    "BankAddress": "818 West 7th St Suite 220",
+    "City": "Los Angeles",
+    "State": "CA",
+    "Zip": "90017"
+  },
+  {
+    "Account Name": "F&A Federal Credit Union (F/A FCU)",
+    "BankAddress": "PO BX 30831",
+    "City": "Los Angeles",
+    "State": "CA",
+    "Zip": "90030"
+  },
+  {
+    "Account Name": "Fairfax County Federal Credit Union",
+    "BankAddress": "4201 Members Way",
+    "City": "Fairfax",
+    "State": "VA",
+    "Zip": "22030"
+  },
+  {
+    "Account Name": "University Federal Credit Union",
+    "BankAddress": "PO Box 9350",
+    "City": "Austin",
+    "State": "TX",
+    "Zip": "78766"
+  },
+  {
+    "Account Name": "University of Hawaii FCU",
+    "BankAddress": "PO Box 22070",
+    "City": "Honolulu",
+    "State": "HI",
+    "Zip": "96823"
+  },
+  {
+    "Account Name": "University of Iowa Community Credit Union",
+    "BankAddress": "500 Iowa Ave",
+    "City": "Iowa City",
+    "State": "IA",
+    "Zip": "52240"
+  },
+  {
+    "Account Name": "University of Michigan Credit Union",
+    "BankAddress": "PO Box 7850",
+    "City": "Ann Arbor",
+    "State": "MI",
+    "Zip": "48107"
+  },
+  {
+    "Account Name": "University of Southern California Credit Union",
+    "BankAddress": "Campus Center Brank (University Park Campus) 3601 Trousdale Pkwy",
+    "City": " Stu 106",
+    "State": "Los Angeles",
+    "Zip": "CA"
+  },
+  {
+    "Account Name": "University of Toledo Federal Credit Union",
+    "BankAddress": "5248 Hill Ave",
+    "City": "Toledo",
+    "State": "OH",
+    "Zip": "73615-5868"
+  },
+  {
+    "Account Name": "University Of Utah Federal Credit Union",
+    "BankAddress": "505 Wakara Way",
+    "City": "Salt Lake City",
+    "State": "UT",
+    "Zip": "84108"
+  },
+  {
+    "Account Name": "US Bank Equipment Finance",
+    "BankAddress": "1310 Madrid St",
+    "City": "Marshall",
+    "State": "MN",
+    "Zip": "56258"
+  },
+  {
+    "Account Name": "[No longer in use] US Bank Private Financial Services",
+    "BankAddress": "555 SW Oak St",
+    "City": " Suite 400",
+    "State": "Portland",
+    "Zip": "OR"
+  },
+  {
+    "Account Name": "US Federal Credit Union",
+    "BankAddress": "1400 Riverwood DR",
+    "City": "Burnsville",
+    "State": "MN",
+    "Zip": "55337"
+  },
+  {
+    "Account Name": "USAA Federal Savings Bank",
+    "BankAddress": "PO Box 25145",
+    "City": "Lehigh Valley",
+    "State": "PA",
+    "Zip": "18002-5145"
+  },
+  {
+    "Account Name": "USALLIANCE FEDERAL CREDIT UNION",
+    "BankAddress": "411 Theodore Fremd Avenue",
+    "City": " Suite 350",
+    "State": "Rye",
+    "Zip": "NY"
+  },
+  {
+    "Account Name": "USC Credit Union",
+    "BankAddress": "P.O Box 512718",
+    "City": "Los Angeles",
+    "State": "CA",
+    "Zip": "90051"
+  },
+  {
+    "Account Name": "USE Credit Union",
+    "BankAddress": "10120 Pacifica Heights Blvd",
+    "City": " Suite 100",
+    "State": "San Diego",
+    "Zip": "CA"
+  },
+  {
+    "Account Name": "USF Federal Credit Union",
+    "BankAddress": "13302 USF Palm Dr",
+    "City": "Tampa",
+    "State": "FL",
+    "Zip": "33612"
+  },
+  {
+    "Account Name": "Utah Community Credit Union",
+    "BankAddress": "105 E. State Rd",
+    "City": "Pleasant Grove",
+    "State": "UT",
+    "Zip": "84062"
+  },
+  {
+    "Account Name": "Valley Educators Credit Union",
+    "BankAddress": "910 Main St",
+    "City": "Alamosa",
+    "State": "CO",
+    "Zip": "81101"
+  },
+  {
+    "Account Name": "Valley Isle Community Federal Credit Union",
+    "BankAddress": "160 Pa'ahana St",
+    "City": "Kahului",
+    "State": "HI",
+    "Zip": "96732"
+  },
+  {
+    "Account Name": "Valley National",
+    "BankAddress": "199 Moonachie Rd",
+    "City": "Moonachi",
+    "State": "NJ",
+    "Zip": "7074"
+  },
+  {
+    "Account Name": "Vancity savings credit union",
+    "BankAddress": "Unit 150 32555 London Ave",
+    "City": "Mission",
+    "State": "BC",
+    "Zip": "V2V-6M7"
+  },
+  {
+    "Account Name": "Vanderbilt University Credit Union",
+    "BankAddress": "PO Box 128426",
+    "City": "Nashville",
+    "State": "TN",
+    "Zip": "37212"
+  },
+  {
+    "Account Name": "Vantage West Credit Union",
+    "BankAddress": "PO Box 15115",
+    "City": "Tucson",
+    "State": "AZ",
+    "Zip": "85708"
+  },
+  {
+    "Account Name": "Ventura County Credit Union",
+    "BankAddress": "PO Box 6920",
+    "City": "Ventura",
+    "State": "CA",
+    "Zip": "93006"
+  },
+  {
+    "Account Name": "Veridian CU",
+    "BankAddress": "PO Box 6000",
+    "City": "Waterloo",
+    "State": "IA",
+    "Zip": "50704"
+  },
+  {
+    "Account Name": "Veritas Federal Credit Union",
+    "BankAddress": "1 Nissan Way",
+    "City": " Nissan Americas Buliding 1-220",
+    "State": "Franklin",
+    "Zip": "TN"
+  },
+  {
+    "Account Name": "Verity Credit Union",
+    "BankAddress": "11027 Meridian Ave Suite 101",
+    "City": "Seattle",
+    "State": "WA",
+    "Zip": "98133"
+  },
+  {
+    "Account Name": "Virginia Credit Union",
+    "BankAddress": "P O Box 90010",
+    "City": "Richmond",
+    "State": "VA",
+    "Zip": "23225"
+  },
+  {
+    "Account Name": "Virginia Partners Bank",
+    "BankAddress": "PO Box 8029",
+    "City": "Fredericksburg",
+    "State": "VA",
+    "Zip": "22404"
+  },
+  {
+    "Account Name": "Visions Federal Credit Union",
+    "BankAddress": "24 McKinley Ave",
+    "City": "Endicott",
+    "State": "NY",
+    "Zip": "13760"
+  },
+  {
+    "Account Name": "Vystar Credit Union",
+    "BankAddress": "4949 Landing Blvd",
+    "City": "Jacksonville",
+    "State": "FL",
+    "Zip": "32210"
+  },
+  {
+    "Account Name": "Washington State Employees Credit Union",
+    "BankAddress": "P.O Box WSECU",
+    "City": "Olympia",
+    "State": "WA",
+    "Zip": "98507"
+  },
+  {
+    "Account Name": "Water and Power Community Credit Union",
+    "BankAddress": "P. O Box 25341",
+    "City": "Fort Worth",
+    "State": "TX",
+    "Zip": "76124"
+  },
+  {
+    "Account Name": "Waukegan Municipal Employees Credit Union",
+    "BankAddress": "100 N Martin Luther King Dr",
+    "City": "Waukegan",
+    "State": "IL",
+    "Zip": "60085"
+  },
+  {
+    "Account Name": "Wells Fargo Equipment Finance",
+    "BankAddress": "733 Marquette Ave",
+    "City": " Ste 700",
+    "State": "Minneapolis",
+    "Zip": "MN"
+  },
+  {
+    "Account Name": "WesCom Credit Union",
+    "BankAddress": "123 S Marengo Ave",
+    "City": "Pasadena",
+    "State": "CA",
+    "Zip": "91101"
+  },
+  {
+    "Account Name": "Unity Federal Credit Union",
+    "BankAddress": "PO Box 10018",
+    "City": "Manhattan Beach",
+    "State": "CA",
+    "Zip": "90267"
+  },
+  {
+    "Account Name": "Westerra Credit Union",
+    "BankAddress": "3700 E. Alameda Ave",
+    "City": "Denver",
+    "State": "CO",
+    "Zip": "80209"
+  },
+  {
+    "Account Name": "weststar credit union",
+    "BankAddress": "P.O. Box 94138",
+    "City": "Las Vegas",
+    "State": "NV",
+    "Zip": "89193"
+  },
+  {
+    "Account Name": "Whatcom Educational Credit Union",
+    "BankAddress": "600 East Holly Street",
+    "City": "Bellingham",
+    "State": "WA",
+    "Zip": "98225"
+  },
+  {
+    "Account Name": "Whidbey Island Bank",
+    "BankAddress": "450 SW Bayshore Drive",
+    "City": "Oak Harbor",
+    "State": "WA",
+    "Zip": "98277"
+  },
+  {
+    "Account Name": "WHITE RAVEN LEASING LLC",
+    "BankAddress": "450 Sutter Street STE 1315",
+    "City": "San Francisco",
+    "State": "CA",
+    "Zip": "94108"
+  },
+  {
+    "Account Name": "Whitney Bank",
+    "BankAddress": "1250 Poydras St",
+    "City": "New Orleans",
+    "State": "LA",
+    "Zip": "70113"
+  },
+  {
+    "Account Name": "Wings Financial Credit Union",
+    "BankAddress": "14985 Glazier Ave Suite 100",
+    "City": "Apple Valley",
+    "State": "MN",
+    "Zip": "55124-6539"
+  },
+  {
+    "Account Name": "Woodside Credit LLC",
+    "BankAddress": "PO Box 12379",
+    "City": "Newport Beach",
+    "State": "CA",
+    "Zip": "92658"
+  },
+  {
+    "Account Name": "Workers Credit Union",
+    "BankAddress": "815 Main St",
+    "City": "Fitchburg",
+    "State": "MA",
+    "Zip": "1420"
+  },
+  {
+    "Account Name": "Wright-Patt Credit Union",
+    "BankAddress": "2455 Executive Park Blvd",
+    "City": "Fairborn",
+    "State": "OH",
+    "Zip": "45324"
+  },
+  {
+    "Account Name": "Xceed Financial Credit Union",
+    "BankAddress": "888 North Nash St",
+    "City": "El Segundo",
+    "State": "CA",
+    "Zip": "90245"
+  },
+  {
+    "Account Name": "Zions Credit Corporation",
+    "BankAddress": "PO BOX 3954",
+    "City": "Salt Lake City",
+    "State": "UT",
+    "Zip": "84110"
+  },
+  {
+    "Account Name": "MemberSource Credit Union",
+    "BankAddress": "10100 Richmond Ave",
+    "City": "Houston",
+    "State": "TX",
+    "Zip": "77042"
+  },
+  {
+    "Account Name": "Mendo Lake Credit Union",
+    "BankAddress": "526 S State St",
+    "City": "Ukiah",
+    "State": "CA",
+    "Zip": "95482"
+  },
+  {
+    "Account Name": "Merck Sharp & Dohme Federal Credit Union",
+    "BankAddress": "335 West Butler Ave",
+    "City": "Chalfotn",
+    "State": "PA",
+    "Zip": "18917-2329"
+  },
+  {
+    "Account Name": "Meriwest Credit Union",
+    "BankAddress": "5615 Chesboro Ave",
+    "City": "San Jose",
+    "State": "CA",
+    "Zip": "95123"
+  },
+  {
+    "Account Name": "Michigan State University Federal Credit Union",
+    "BankAddress": "3777 West Rd",
+    "City": "East Lansing",
+    "State": "MI",
+    "Zip": "48823"
+  },
+  {
+    "Account Name": "MidFirst Bank",
+    "BankAddress": "501 NW Frand Blvd",
+    "City": "Oklahoma City",
+    "State": "OK",
+    "Zip": "73118"
+  },
+  {
+    "Account Name": "Mission Federal Credit Union",
+    "BankAddress": "P.O. Box 919023",
+    "City": "San Diego",
+    "State": "CA",
+    "Zip": "92191"
+  },
+  {
+    "Account Name": "Missouri Bank",
+    "BankAddress": "1044 Main St",
+    "City": "Kansas City",
+    "State": "MO",
+    "Zip": "64105"
+  },
+  {
+    "Account Name": "Missouri Credit Union",
+    "BankAddress": "P.O. Box 1795",
+    "City": "Columbia",
+    "State": "MO",
+    "Zip": "65205"
+  },
+  {
+    "Account Name": "MIT Federal Credit Union",
+    "BankAddress": "700 Technology Sq",
+    "City": "Cambridge",
+    "State": "MA",
+    "Zip": "2139"
+  },
+  {
+    "Account Name": "Monterey Credit Union",
+    "BankAddress": "P.O. Box 3288",
+    "City": "Monterey",
+    "State": "CA",
+    "Zip": "93942"
+  },
+  {
+    "Account Name": "Morgan Stanley",
+    "BankAddress": "P.O. Box 901033",
+    "City": "Fort Worth",
+    "State": "TX",
+    "Zip": "76101-2033"
+  },
+  {
+    "Account Name": "Mountain Crest Credit Union",
+    "BankAddress": "3710 168th St NE Suite A108",
+    "City": "Arlingtron",
+    "State": "WA",
+    "Zip": "98223"
+  },
+  {
+    "Account Name": "Mountian America Credit Union",
+    "BankAddress": "7181 S. Campus View Dr",
+    "City": "West Jordan",
+    "State": "UT",
+    "Zip": "84084"
+  },
+  {
+    "Account Name": "Musicians interguild credit union",
+    "BankAddress": "817 N. Vine St",
+    "City": "Hollywood",
+    "State": "CA",
+    "Zip": "90038"
+  },
+  {
+    "Account Name": "NASA Federal Credit Union",
+    "BankAddress": "P.O. box 1538",
+    "City": "Bowie",
+    "State": "MD",
+    "Zip": "20717-1538"
+  },
+  {
+    "Account Name": "National 1st credit union",
+    "BankAddress": "P.O. box 61867",
+    "City": "Sunnyvale",
+    "State": "CA",
+    "Zip": "94088"
+  },
+  {
+    "Account Name": "Access National Bank",
+    "BankAddress": "1800 Robert Fulton Drive",
+    "City": "Reston",
+    "State": "VA",
+    "Zip": "20191"
+  },
+  {
+    "Account Name": "National Bank of Arizona",
+    "BankAddress": "P.O. Box 1507",
+    "City": "Salt Lake City",
+    "State": "UT",
+    "Zip": "84110"
+  },
+  {
+    "Account Name": "National Bank of Coxsackie",
+    "BankAddress": "3-7 Reed St",
+    "City": "Coxsackie",
+    "State": "NY",
+    "Zip": "12051"
+  },
+  {
+    "Account Name": "Naval Research Lab. Federal Credit Union",
+    "BankAddress": "P.O. Box 1023",
+    "City": "Oxen Hill",
+    "State": "MD",
+    "Zip": "20750"
+  },
+  {
+    "Account Name": "Naval Surface Warfare Credit Union",
+    "BankAddress": "P.O. Box 519",
+    "City": "Dahlgren",
+    "State": "VA",
+    "Zip": "22448"
+  },
+  {
+    "Account Name": "Navigant Credit Union",
+    "BankAddress": "1005 Douglas Pike",
+    "City": "Smithfield",
+    "State": "RI",
+    "Zip": "02917-1206"
+  },
+  {
+    "Account Name": "Chesapeake Funding LLC",
+    "BankAddress": "940 Ridgebrook Road",
+    "City": "Sparks",
+    "State": "MD",
+    "Zip": "21152-939"
+  },
+  {
+    "Account Name": "Energy Federal Credit Union",
+    "BankAddress": "805 King Farm Boulevard Ste. 110",
+    "City": "Rockville",
+    "State": "MD",
+    "Zip": "20850"
+  },
+  {
+    "Account Name": "Fairmont Federal Credit Union",
+    "BankAddress": "P.O Box 2139",
+    "City": "Fairmont",
+    "State": "WV",
+    "Zip": "26555-2139"
+  },
+  {
+    "Account Name": "Family Savings Credit Union",
+    "BankAddress": "711 E. Meighan Blvd",
+    "City": "Gadsen",
+    "State": "AL",
+    "Zip": "35903"
+  },
+  {
+    "Account Name": "Farmers Insurance Group FCU",
+    "BankAddress": "P.O. Box 36911",
+    "City": "Los Angeles",
+    "State": "CA",
+    "Zip": "90036"
+  },
+  {
+    "Account Name": "FedChoice Federal Credit Union",
+    "BankAddress": "10001 Willowdale Road",
+    "City": "Lanham",
+    "State": "MD",
+    "Zip": "20706"
+  },
+  {
+    "Account Name": "Fibre Federal Credit Union",
+    "BankAddress": "P.O. Box 1234",
+    "City": "Longview",
+    "State": "WA",
+    "Zip": "98632"
+  },
+  {
+    "Account Name": "Fifth Third Bank",
+    "BankAddress": "P.O. Box 997548",
+    "City": "Sacramento",
+    "State": "CA",
+    "Zip": "95899"
+  },
+  {
+    "Account Name": "Financial Center CU ELT#K51",
+    "BankAddress": "P.O. box 208005",
+    "City": "Stockton",
+    "State": "CA",
+    "Zip": "95208"
+  },
+  {
+    "Account Name": "Financial Federal Credit Union",
+    "BankAddress": "1616-D Rockville Pike",
+    "City": "Rockville",
+    "State": "MD",
+    "Zip": "20852"
+  },
+  {
+    "Account Name": "Financial Partners Credit Union",
+    "BankAddress": "P.O. Box 7005",
+    "City": "Downey",
+    "State": "CA",
+    "Zip": "90241"
+  },
+  {
+    "Account Name": "Financial Plus Credit Union",
+    "BankAddress": "2813 Plaza Drive",
+    "City": "Peru",
+    "State": "IL",
+    "Zip": "61354"
+  },
+  {
+    "Account Name": "Financial Resources Federal Credit Union",
+    "BankAddress": "520 Route 22 East",
+    "City": "Bridgewater",
+    "State": "NJ",
+    "Zip": "8807"
+  },
+  {
+    "Account Name": "First American Bank and Trust",
+    "BankAddress": "P.O. Box 1688",
+    "City": "Athens",
+    "State": "GA",
+    "Zip": "30603-1688"
+  },
+  {
+    "Account Name": "First Atlantic Credit Union",
+    "BankAddress": "468 Industrial Way West",
+    "City": "Eatontown",
+    "State": "NJ",
+    "Zip": "7724"
+  },
+  {
+    "Account Name": "First Bank",
+    "BankAddress": "1000 Taraval Street",
+    "City": "San Francisco",
+    "State": "CA",
+    "Zip": "94116"
+  },
+  {
+    "Account Name": "First Capital Federal Credit Union",
+    "BankAddress": "P.O. Box 7746",
+    "City": "York",
+    "State": "PA",
+    "Zip": "17404"
+  },
+  {
+    "Account Name": "First Citizens Bank and Trust Company",
+    "BankAddress": "PO BX 29519",
+    "City": "Raleigh",
+    "State": "NC",
+    "Zip": "27626"
+  },
+  {
+    "Account Name": "First City Credit Union",
+    "BankAddress": "717 W. Temple Street",
+    "City": "Los Angeles",
+    "State": "CA",
+    "Zip": "90012"
+  },
+  {
+    "Account Name": "First Command Bank",
+    "BankAddress": "1 FirstComm Plaza",
+    "City": "Fortworth",
+    "State": "TX",
+    "Zip": "76109"
+  },
+  {
+    "Account Name": "First Commercial Bank",
+    "BankAddress": "1601 S Kelly Ave",
+    "City": "Edmond",
+    "State": "OK",
+    "Zip": "73013"
+  },
+  {
+    "Account Name": "First Common Wealth Bank",
+    "BankAddress": "2210 Ardmore Blvd",
+    "City": "Pittsburgh",
+    "State": "PA",
+    "Zip": "15221"
+  },
+  {
+    "Account Name": "First Community Bank",
+    "BankAddress": "24 W Gartner Rd",
+    "City": "Naperville",
+    "State": "IL",
+    "Zip": "60564"
+  },
+  {
+    "Account Name": "First Connecticut Credit Union",
+    "BankAddress": "159 South Turnpike Road",
+    "City": "Wallingford",
+    "State": "CT",
+    "Zip": "6492"
+  },
+  {
+    "Account Name": "First Credit Union",
+    "BankAddress": "25 S Arizona PL STE 111",
+    "City": "Chandler",
+    "State": "AZ",
+    "Zip": "85225"
+  },
+  {
+    "Account Name": "First Entertainment Credit Union",
+    "BankAddress": "P.O. Box 100",
+    "City": "Hollywood",
+    "State": "CA",
+    "Zip": "90078"
+  },
+  {
+    "Account Name": "First Federal Credit Union",
+    "BankAddress": "(San Rafael) 1030 3rd St",
+    "City": "San Rafael",
+    "State": "CA",
+    "Zip": "94901"
+  },
+  {
+    "Account Name": "First Financial Credit Union",
+    "BankAddress": "1600 W Cameron Ave",
+    "City": "West Covina",
+    "State": "CA",
+    "Zip": "91790"
+  },
+  {
+    "Account Name": "First Guaranty Bank",
+    "BankAddress": "799 West Summers Drive",
+    "City": "Abbeville",
+    "State": "LA",
+    "Zip": "70510"
+  },
+  {
+    "Account Name": "FIRST HAWAIIAN LEASING",
+    "BankAddress": " INC.",
+    "City": "P.O. Box 1240",
+    "State": "Honolulu",
+    "Zip": "HI"
+  },
+  {
+    "Account Name": "First Northern Credit Union",
+    "BankAddress": "230 W Monroe St. Suite 2850",
+    "City": "Chicago",
+    "State": "IL",
+    "Zip": "60606"
+  },
+  {
+    "Account Name": "First State Bank of East Detroit",
+    "BankAddress": "24300 Little Mack",
+    "City": "St. Clair Shores",
+    "State": "MI",
+    "Zip": "48080"
+  },
+  {
+    "Account Name": "First Technology Federal Credit Union",
+    "BankAddress": "P.O. Box 276181",
+    "City": "Sacramento",
+    "State": "CA",
+    "Zip": "95827-6181"
+  },
+  {
+    "Account Name": "First Tennesse Bank",
+    "BankAddress": "P.O. Box 31",
+    "City": "Memphis",
+    "State": "TN",
+    "Zip": "38101"
+  },
+  {
+    "Account Name": "FirstAtlantic Bank",
+    "BankAddress": "1325 Hendricks Ave",
+    "City": "Jacksonville",
+    "State": "FL",
+    "Zip": "32207"
+  },
+  {
+    "Account Name": "FIRSTMARK CREDIT UNION",
+    "BankAddress": "PO BOX 701650",
+    "City": "San Antonio",
+    "State": "TX",
+    "Zip": "78270"
+  },
+  {
+    "Account Name": "Fiscal Credit Union",
+    "BankAddress": "310 E Colorado St",
+    "City": "Glendale",
+    "State": "CA",
+    "Zip": "91205"
+  },
+  {
+    "Account Name": "Fitzsimons Credit Union",
+    "BankAddress": "2201 N Fitzsimons Parkway",
+    "City": "Aurora",
+    "State": "CO",
+    "Zip": "80045"
+  },
+  {
+    "Account Name": "Flagstar Bank",
+    "BankAddress": "5151 Corporate Dr",
+    "City": "Troy",
+    "State": "MI",
+    "Zip": "48098"
+  },
+  {
+    "Account Name": "Florida Central Credit Union",
+    "BankAddress": "P.O. Box 18605",
+    "City": "Tampa",
+    "State": "FL",
+    "Zip": "33679-8605"
+  },
+  {
+    "Account Name": "Foothill Federal Credit Union",
+    "BankAddress": "30 S First Ave",
+    "City": "Arcadia",
+    "State": "CA",
+    "Zip": "91006"
+  },
+  {
+    "Account Name": "Four Four Credit Union",
+    "BankAddress": "P.O. Box 442",
+    "City": "Saint Louis",
+    "State": "MO",
+    "Zip": "63166"
+  },
+  {
+    "Account Name": "Franklin Mint Federal Credit Union",
+    "BankAddress": "P.O. Box 1907",
+    "City": "Media",
+    "State": "PA",
+    "Zip": "19063-8907"
+  },
+  {
+    "Account Name": "FRMRS INSURANCE GRP FCU",
+    "BankAddress": "P.O. Box 36911",
+    "City": "Los Angeles",
+    "State": "CA",
+    "Zip": "90036"
+  },
+  {
+    "Account Name": "FST Entertainment CU",
+    "BankAddress": "P.O Box 100",
+    "City": "Hollywood",
+    "State": "CA",
+    "Zip": "90078"
+  },
+  {
+    "Account Name": "Garden Savings Federal Credit Union",
+    "BankAddress": "129 Littleton Rd",
+    "City": "Parsippany",
+    "State": "NJ",
+    "Zip": "7054"
+  },
+  {
+    "Account Name": "GE Title Agent LLC",
+    "BankAddress": "P.O Box 35707",
+    "City": "Billings",
+    "State": "MT",
+    "Zip": "59107"
+  },
+  {
+    "Account Name": "General Electric Capital Corporation",
+    "BankAddress": "P.O Box 35707",
+    "City": "Billings",
+    "State": "MT",
+    "Zip": "59107"
+  },
+  {
+    "Account Name": "Georgia United Credit Union",
+    "BankAddress": "6705 Sugarloaf Pkwy",
+    "City": "Duluth",
+    "State": "GA",
+    "Zip": "30097"
+  },
+  {
+    "Account Name": "Georgia's Own Credit Union",
+    "BankAddress": "P.O. Box 105205",
+    "City": "Atlanta",
+    "State": "GA",
+    "Zip": "30348"
+  },
+  {
+    "Account Name": "Gesa Federal Credit Union",
+    "BankAddress": "P.O. Box 500",
+    "City": "Richland",
+    "State": "WA",
+    "Zip": "99352"
+  },
+  {
+    "Account Name": "Glass Cap Federal Credit Union",
+    "BankAddress": "241 Noth Pittsburgh St",
+    "City": "Connellsville",
+    "State": "PA",
+    "Zip": "15425"
+  },
+  {
+    "Account Name": "Kleinbank",
+    "BankAddress": "600 West 78th St PO 399",
+    "City": "Chanhassen",
+    "State": "NM",
+    "Zip": "55317"
+  },
+  {
+    "Account Name": "KU Credit Union",
+    "BankAddress": "12512 West 82nd Terr #104",
+    "City": "Shawnee Mission",
+    "State": "KS",
+    "Zip": "66216"
+  },
+  {
+    "Account Name": "KUMC Credit Union",
+    "BankAddress": "12510 W 62nd Terrace Suite 104",
+    "City": "Shawnee",
+    "State": "KS",
+    "Zip": "66216"
+  },
+  {
+    "Account Name": "La Loma FCU",
+    "BankAddress": "PO BX 906",
+    "City": "Loma Linda",
+    "State": "CA",
+    "Zip": "92354"
+  },
+  {
+    "Account Name": "LaFayette Federal Credit Union",
+    "BankAddress": "3535 University Blvd West",
+    "City": "Kensignton",
+    "State": "MD",
+    "Zip": "20895"
+  },
+  {
+    "Account Name": "Landmark Credit Union",
+    "BankAddress": "P.O. Box 510870",
+    "City": "New Berlin",
+    "State": "WI",
+    "Zip": "53151"
+  },
+  {
+    "Account Name": "Langley Federal Credit Union",
+    "BankAddress": "P.O. Box 7463",
+    "City": "Hampton",
+    "State": "VA",
+    "Zip": "23666-0463"
+  },
+  {
+    "Account Name": "LAPFCU",
+    "BankAddress": "16150 Sherman Way",
+    "City": "Van Nuys",
+    "State": "CA",
+    "Zip": "91410"
+  },
+  {
+    "Account Name": "Las Colinas Federal Credit Union",
+    "BankAddress": "555 Cimarron Trail",
+    "City": "Irving",
+    "State": "TX",
+    "Zip": "75063"
+  },
+  {
+    "Account Name": "LBS Financial Credit Union",
+    "BankAddress": "PO Box 4860",
+    "City": "Long Beach",
+    "State": "CA",
+    "Zip": "90804"
+  },
+  {
+    "Account Name": "Legacy Texas Bank",
+    "BankAddress": "P.O. Box 869111",
+    "City": "Richardson",
+    "State": "TX",
+    "Zip": "75086"
+  },
+  {
+    "Account Name": "Lehigh Valley Federal Credit Union",
+    "BankAddress": "2218 Walbert Ave",
+    "City": "Allentown",
+    "State": "PA",
+    "Zip": "18104"
+  },
+  {
+    "Account Name": "Lessors Inc.",
+    "BankAddress": "1056 Gemini Rd",
+    "City": "Eagan",
+    "State": "MN",
+    "Zip": "55121"
+  },
+  {
+    "Account Name": "LGE Community Credit Union",
+    "BankAddress": "P.O. Box 1188",
+    "City": "Marietta",
+    "State": "GA",
+    "Zip": "30061"
+  },
+  {
+    "Account Name": "Liberty National Bank",
+    "BankAddress": "100 E Franklin St",
+    "City": "Kenton",
+    "State": "OH",
+    "Zip": "43326"
+  },
+  {
+    "Account Name": "Logix Federal Credit Union",
+    "BankAddress": "P.O. Box 6759",
+    "City": "Burbank",
+    "State": "CA",
+    "Zip": "91510"
+  },
+  {
+    "Account Name": "Long Beach City Employees Federal Credit Union",
+    "BankAddress": "2801 Temple Ave",
+    "City": "Signal Hill",
+    "State": "CA",
+    "Zip": "90755"
+  },
+  {
+    "Account Name": "Los Angeles Federal Credit Union",
+    "BankAddress": "P.O. Box 53032",
+    "City": "Los Angeles",
+    "State": "CA",
+    "Zip": "90053"
+  },
+  {
+    "Account Name": "M&T",
+    "BankAddress": "P.O. Box 64679",
+    "City": "Baltimore",
+    "State": "MD",
+    "Zip": "21264-4679"
+  },
+  {
+    "Account Name": "Maps Credit Union",
+    "BankAddress": "P.O. Box 12398",
+    "City": "Salem",
+    "State": "OR",
+    "Zip": "97309"
+  },
+  {
+    "Account Name": "Matadors Community Credit Union",
+    "BankAddress": "P.O. Box 1052",
+    "City": "Northridge",
+    "State": "CA",
+    "Zip": "91328"
+  },
+  {
+    "Account Name": "Mattel Federal Credit Union",
+    "BankAddress": "333 Continental Blvd",
+    "City": "El Segundo",
+    "State": "CA",
+    "Zip": "90245"
+  },
+  {
+    "Account Name": "MB Financial Bank",
+    "BankAddress": "6111 North River Rd",
+    "City": "Rosemont",
+    "State": "IL",
+    "Zip": "60018"
+  },
+  {
+    "Account Name": "McKesson Employees' Federal Credit Union",
+    "BankAddress": "One Post St",
+    "City": "San Francisco",
+    "State": "CA",
+    "Zip": "94104"
+  },
+  {
+    "Account Name": "Mechanics Bank",
+    "BankAddress": "725 Alfred Nobel Dr",
+    "City": "Hercules",
+    "State": "CA",
+    "Zip": "94547"
+  },
+  {
+    "Account Name": "Member 1st FCU",
+    "BankAddress": "P.O. Box 40",
+    "City": "Mechanicsburg",
+    "State": "PA",
+    "Zip": "17055"
+  },
+  {
+    "Account Name": "Members heritage federal credit union",
+    "BankAddress": "440 Park Place",
+    "City": "Lexington",
+    "State": "KY",
+    "Zip": ""
+  },
+  {
+    "Account Name": "PNC EQUIPMENT FINANCE",
+    "BankAddress": " LLC",
+    "City": "995 DALTON AVE",
+    "State": "CINCINNATI",
+    "Zip": "OH"
+  },
+  {
+    "Account Name": "Enterprise Bank and Trust",
+    "BankAddress": "222 Merrimack St.",
+    "City": "Lowell",
+    "State": "MA",
+    "Zip": "1852"
+  },
+  {
+    "Account Name": "Brazos Valley Schools Credit Union",
+    "BankAddress": "2308 First Street",
+    "City": "Rosenberg",
+    "State": "TX",
+    "Zip": "77471"
+  },
+  {
+    "Account Name": "First Fidelity Bank",
+    "BankAddress": "P.O. Box 32282",
+    "City": "Oklahoma City",
+    "State": "OK",
+    "Zip": "73123"
+  },
+  {
+    "Account Name": "San Mateo City Employees FCU",
+    "BankAddress": "330 W 20th Ave",
+    "City": "San Mateo",
+    "State": "CA",
+    "Zip": "94403"
+  },
+  {
+    "Account Name": "Bank of America Financial Center",
+    "BankAddress": "100 N Tryon St #170",
+    "City": "Charlotte",
+    "State": "NC",
+    "Zip": "28202"
+  },
+  {
+    "Account Name": "Citadel Federal Credit Union",
+    "BankAddress": "522 E King Rd",
+    "City": "Paoli",
+    "State": "PA",
+    "Zip": "19301"
+  },
+  {
+    "Account Name": "PWC Equipment Finance",
+    "BankAddress": "995 Dalton Avenue",
+    "City": "Cincinnati",
+    "State": "OH",
+    "Zip": "45203"
+  },
+  {
+    "Account Name": "Randolph-Brooks Federal Credit Union",
+    "BankAddress": "P.O. Box 2097",
+    "City": "Universal City",
+    "State": "Texas",
+    "Zip": "78148-2097"
+  },
+  {
+    "Account Name": "South State Bank",
+    "BankAddress": "PO Box 100113",
+    "City": "Columbia",
+    "State": "SC",
+    "Zip": "29202-3113"
+  },
+  {
+    "Account Name": "Union Bank",
+    "BankAddress": "PO BX 85643",
+    "City": "San Diego",
+    "State": "CA",
+    "Zip": "92186"
+  },
+  {
+    "Account Name": "Clearpath FCU",
+    "BankAddress": "340 Arden Ave.",
+    "City": "Glendale",
+    "State": "CA",
+    "Zip": "91203"
+  },
+  {
+    "Account Name": "Rocky Mountain Credit Union",
+    "BankAddress": "PO BOX 790063",
+    "City": "San Antonio",
+    "State": "TX",
+    "Zip": "78279-0063"
+  },
+  {
+    "Account Name": "Motorola Employees Credit Union",
+    "BankAddress": "PO BOX 255608",
+    "City": "Sacramento",
+    "State": "CA",
+    "Zip": "95865-5608"
+  },
+  {
+    "Account Name": "Air Academy Federal Credit Union",
+    "BankAddress": "P.O. Box 62910",
+    "City": "Colorado Springs",
+    "State": "CO",
+    "Zip": "80962-2910"
+  },
+  {
+    "Account Name": "General Electric Credit Union",
+    "BankAddress": "10485 Reading Rd",
+    "City": "Cincinnati",
+    "State": "OH",
+    "Zip": "45241"
+  },
+  {
+    "Account Name": "JPMorgan Chase Bank",
+    "BankAddress": " NA (WLO",
+    "City": " Chicago)",
+    "State": "P.O. Box 6026",
+    "Zip": "Chicago"
+  },
+  {
+    "Account Name": "Capital One Auto Finance",
+    "BankAddress": "P.O. Box 660068",
+    "City": "Sacramento",
+    "State": "CA",
+    "Zip": "95866"
+  },
+  {
+    "Account Name": "Liberty One Credit Union",
+    "BankAddress": "1100 Commerce STE 615",
+    "City": "Dallas",
+    "State": "TX",
+    "Zip": "75242"
+  },
+  {
+    "Account Name": "Benchmark Bank",
+    "BankAddress": "5700 Legacy Dr. Ste. 10",
+    "City": "Plano",
+    "State": "TX",
+    "Zip": "75024"
+  },
+  {
+    "Account Name": "New Mexico Bank and Trust",
+    "BankAddress": "3002 Louisiana Blvd NE",
+    "City": "Albuquerque",
+    "State": "NM",
+    "Zip": "87110"
+  },
+  {
+    "Account Name": "Polish And Slavic Credit Union",
+    "BankAddress": "4147 N Harlem Avenue",
+    "City": "Norridge",
+    "State": "IL",
+    "Zip": "60706"
+  },
+  {
+    "Account Name": "Vermont State Employees Credit Union",
+    "BankAddress": "PO Box 67",
+    "City": "Montpelier",
+    "State": "VT",
+    "Zip": "5601"
+  },
+  {
+    "Account Name": "MECU of Baltimore",
+    "BankAddress": "7 East Redwood Street",
+    "City": "Baltimore",
+    "State": "MD",
+    "Zip": "21202"
+  },
+  {
+    "Account Name": "Los Angeles Police Federal Credit Union",
+    "BankAddress": "PO BX 10188",
+    "City": "Van Nuys",
+    "State": "CA",
+    "Zip": "91499"
+  },
+  {
+    "Account Name": "STAR Financial Bank",
+    "BankAddress": "P.O. Box 11409",
+    "City": "Fort Wayne",
+    "State": "IN",
+    "Zip": "46897"
+  },
+  {
+    "Account Name": "Family Trust FCU",
+    "BankAddress": "PO Box 10233",
+    "City": "Rock Hill",
+    "State": "SC",
+    "Zip": "29731"
+  },
+  {
+    "Account Name": "Wells Fargo Bank",
+    "BankAddress": " N.A. (3rd party)",
+    "City": "PO Box 53439",
+    "State": "Phoenix",
+    "Zip": "AZ"
+  },
+  {
+    "Account Name": "Credit Union of New Jersey",
+    "BankAddress": "PO Box 7921",
+    "City": "Ewing",
+    "State": "NJ",
+    "Zip": "08628-3010"
+  },
+  {
+    "Account Name": "The Union Bank Co.",
+    "BankAddress": "100 S. High St.",
+    "City": "Columbus Grove",
+    "State": "OH",
+    "Zip": "45830"
+  },
+  {
+    "Account Name": "SchoolsFirst Federal Credit Union (Schools First FCU)",
+    "BankAddress": "P.O. Box 11547",
+    "City": "Santa Ana",
+    "State": "CA",
+    "Zip": "92711-1547"
+  },
+  {
+    "Account Name": "Scott Credit Union",
+    "BankAddress": "P.O. Box 690590",
+    "City": "San Antonio",
+    "State": "TX",
+    "Zip": "78269"
+  },
+  {
+    "Account Name": "Scott Rabideau",
+    "BankAddress": "P.O. Box 311",
+    "City": "Harrisville",
+    "State": "RI",
+    "Zip": "2830"
+  },
+  {
+    "Account Name": "Seattle Metropolitan Credit Union",
+    "BankAddress": "P.O. Box 780",
+    "City": "Seattle",
+    "State": "WA",
+    "Zip": "98111"
+  },
+  {
+    "Account Name": "Security Service Federal Credit Union",
+    "BankAddress": "16211 La Cantera Parkway",
+    "City": "San Antonio",
+    "State": "TX",
+    "Zip": "78256"
+  },
+  {
+    "Account Name": "SELCO COMMUNITY CREDIT UNION",
+    "BankAddress": "P.O. Box 7487",
+    "City": "Springfield",
+    "State": "OR",
+    "Zip": "97475"
+  },
+  {
+    "Account Name": "Sequoia Hospital Employees Federal Credit Union",
+    "BankAddress": "770 Marshall St Suite 200",
+    "City": "Redwood City",
+    "State": "CA",
+    "Zip": "94063"
+  },
+  {
+    "Account Name": "SESLOC FCU",
+    "BankAddress": "P.O. Box 5360",
+    "City": "San Luis Obispo",
+    "State": "CA",
+    "Zip": "93403"
+  },
+  {
+    "Account Name": "Shaker Auto Lease",
+    "BankAddress": "",
+    "City": "",
+    "State": "",
+    "Zip": ""
+  },
+  {
+    "Account Name": "SharePlus Federal Bank",
+    "BankAddress": "5224 W Plano Parkway",
+    "City": "Plano",
+    "State": "TX",
+    "Zip": "75093"
+  },
+  {
+    "Account Name": "Sharon Credit Union",
+    "BankAddress": "30 Pond St",
+    "City": "Sharon",
+    "State": "MA",
+    "Zip": "2067"
+  },
+  {
+    "Account Name": "Shell Federal Credit Union",
+    "BankAddress": "301 E 13th St",
+    "City": "Deer Park",
+    "State": "TX",
+    "Zip": "77536"
+  },
+  {
+    "Account Name": "Signature Financial",
+    "BankAddress": " LLC",
+    "City": "225 Broad Hollow Rd",
+    "State": "Melville",
+    "Zip": "NY"
+  },
+  {
+    "Account Name": "Simmons First National Bank",
+    "BankAddress": "33333 E Battlefield",
+    "City": "Springfield",
+    "State": "MO",
+    "Zip": "65804"
+  },
+  {
+    "Account Name": "Simplicity Bank",
+    "BankAddress": "P.O. Box 6107",
+    "City": "Covnina",
+    "State": "CA",
+    "Zip": "91722"
+  },
+  {
+    "Account Name": "SJCU",
+    "BankAddress": "140 Ashbury St",
+    "City": "San Jose",
+    "State": "CA",
+    "Zip": "95110"
+  },
+  {
+    "Account Name": "Skyone FCU",
+    "BankAddress": "14600 Aviation Blvd",
+    "City": "Hawthorne",
+    "State": "CA",
+    "Zip": "90250"
+  },
+  {
+    "Account Name": "Sno Falls Credit Union",
+    "BankAddress": "P.O. Box 1978",
+    "City": "Snoqualmie",
+    "State": "WA",
+    "Zip": "98065"
+  },
+  {
+    "Account Name": "Sound Credit Union",
+    "BankAddress": "P.O. Box 1595",
+    "City": "Tacoma",
+    "State": "WA",
+    "Zip": "98401"
+  },
+  {
+    "Account Name": "South Bay Credit Union",
+    "BankAddress": "2304 Artesia Blvd",
+    "City": "Redondo Beach",
+    "State": "CA",
+    "Zip": "92078"
+  },
+  {
+    "Account Name": "South Carolina Bank & Trust",
+    "BankAddress": "P.O Box 100113",
+    "City": "Columbia",
+    "State": "SC",
+    "Zip": "29202-3113"
+  },
+  {
+    "Account Name": "South Florida Educational Federal Credit Union",
+    "BankAddress": "7800 SW 117th Ave",
+    "City": "Miami",
+    "State": "FL",
+    "Zip": "33183"
+  },
+  {
+    "Account Name": "South Jersey Federal Credit Union",
+    "BankAddress": "1615 Hurffville Rd",
+    "City": " P.O. Box 5530",
+    "State": "Deptford",
+    "Zip": "NJ"
+  },
+  {
+    "Account Name": "Southern Credit Union",
+    "BankAddress": "P.O Box 1509",
+    "City": "Fayetteville",
+    "State": "GA",
+    "Zip": "30214"
+  },
+  {
+    "Account Name": "Southland Credit Union",
+    "BankAddress": "P.O. Box 7022",
+    "City": "Downey",
+    "State": "CA",
+    "Zip": "90241-7022"
+  },
+  {
+    "Account Name": "Southwest Airlines Federal Credit Union",
+    "BankAddress": "2430 Shorecrest",
+    "City": "Dallas",
+    "State": "TX",
+    "Zip": "75235"
+  },
+  {
+    "Account Name": "Sovereign Bank",
+    "BankAddress": "P.O. Box 16255",
+    "City": "Reading",
+    "State": "PA",
+    "Zip": "19612"
+  },
+  {
+    "Account Name": "Space City Credit Union",
+    "BankAddress": "3101 Harrisburg Blvd",
+    "City": "Houston",
+    "State": "TX",
+    "Zip": "77003"
+  },
+  {
+    "Account Name": "Space Coast Credit Union",
+    "BankAddress": "P.O Box 419001",
+    "City": "Melborne",
+    "State": "FL",
+    "Zip": "32940-9001"
+  },
+  {
+    "Account Name": "Sperry Federal Credit Union",
+    "BankAddress": "2400 Jericho Turnpike",
+    "City": "Garden City Park",
+    "State": "NY",
+    "Zip": "11040"
+  },
+  {
+    "Account Name": "Spire Federal Credit Union",
+    "BankAddress": "2025 Larpenteur Ave W",
+    "City": "Falcon Hegiths",
+    "State": "MN",
+    "Zip": "55113"
+  },
+  {
+    "Account Name": "Spokane Federal Credit Union",
+    "BankAddress": "P.O. Box 2519",
+    "City": "Spokane",
+    "State": "WA",
+    "Zip": "99220-2519"
+  },
+  {
+    "Account Name": "Spokane Teachers Credit Union",
+    "BankAddress": "P.O. Box 1954",
+    "City": "Spokane",
+    "State": "WA",
+    "Zip": "99210"
+  },
+  {
+    "Account Name": "SRI Federal Credit Union",
+    "BankAddress": "333 Ravenswood Ave",
+    "City": "Menlo Park",
+    "State": "CA",
+    "Zip": "94025"
+  },
+  {
+    "Account Name": "St. Agnes Federal Credit Union",
+    "BankAddress": "900 Caton Ave",
+    "City": "Baltimore",
+    "State": "MD",
+    "Zip": "21229"
+  },
+  {
+    "Account Name": "St. Joseph's Federal Credit Union",
+    "BankAddress": "3541 Youree Dr",
+    "City": "Shreveport",
+    "State": "LA",
+    "Zip": "71105"
+  },
+  {
+    "Account Name": "St. Mary's Bank",
+    "BankAddress": "48 Perimeter Rd",
+    "City": "Manchester",
+    "State": "NH",
+    "Zip": "3103"
+  },
+  {
+    "Account Name": "Stamford Federal Credit Union",
+    "BankAddress": "888 Washington Blvd",
+    "City": "Stamford",
+    "State": "CT",
+    "Zip": "6901"
+  },
+  {
+    "Account Name": "Stanford Federal Credit Union",
+    "BankAddress": "P.O Box 10690",
+    "City": "Palo Alto",
+    "State": "CA",
+    "Zip": "94303"
+  },
+  {
+    "Account Name": "Star One Credit Union",
+    "BankAddress": "PO Box 3643",
+    "City": "Sunnyvalle",
+    "State": "CA",
+    "Zip": "94089"
+  },
+  {
+    "Account Name": "State Department Federal Credit Union",
+    "BankAddress": "1630 King St",
+    "City": "Alexandria",
+    "State": "VA",
+    "Zip": "22314"
+  },
+  {
+    "Account Name": "State Employees Credit Union Of Maryland",
+    "BankAddress": "971 Corporate Blvd",
+    "City": "Linthicum",
+    "State": "MD",
+    "Zip": "21090-2337"
+  },
+  {
+    "Account Name": "State Farm Bank",
+    "BankAddress": "P.O. Box 5961",
+    "City": "Madison",
+    "State": "WI",
+    "Zip": "53705"
+  },
+  {
+    "Account Name": "State Farm Federal Credit Union",
+    "BankAddress": "3 State Farm Plaza K-1",
+    "City": "Bloomington",
+    "State": "IL",
+    "Zip": "61791"
+  },
+  {
+    "Account Name": "Stevan A Hammond",
+    "BankAddress": "1555 Regal Row",
+    "City": "Dallas",
+    "State": "TX",
+    "Zip": "75247"
+  },
+  {
+    "Account Name": "Suffolk Federal Credit Union",
+    "BankAddress": "P.O. Box 9005",
+    "City": "Medford",
+    "State": "NY",
+    "Zip": "11763"
+  },
+  {
+    "Account Name": "Summit Credit Union",
+    "BankAddress": "P.O. box 8046",
+    "City": "Madison",
+    "State": "WI",
+    "Zip": "53708"
+  },
+  {
+    "Account Name": "SUNCOAST CREDIT UNION (Formerly: Suncoast Schools)",
+    "BankAddress": "P.O box 11904",
+    "City": "Tampa",
+    "State": "FL",
+    "Zip": "33680"
+  },
+  {
+    "Account Name": "SunTrust Bank",
+    "BankAddress": "P.O. Box 305053",
+    "City": "Nashville",
+    "State": "TN",
+    "Zip": "37230"
+  },
+  {
+    "Account Name": "Susquehanna Bank",
+    "BankAddress": "One Centre Drive",
+    "City": "Jamesburg",
+    "State": "NJ",
+    "Zip": "8831"
+  },
+  {
+    "Account Name": "American Airlines Credit Union",
+    "BankAddress": "MD 2100 PO Box 619001",
+    "City": "DFW Airport",
+    "State": "TX",
+    "Zip": "75261"
+  },
+  {
+    "Account Name": "Kaiperm (Diablo) FCU",
+    "BankAddress": "PO BX 4156",
+    "City": "Walnut Creek",
+    "State": "CA",
+    "Zip": "94596"
+  },
+  {
+    "Account Name": "Unverified Partner",
+    "BankAddress": "",
+    "City": "",
+    "State": "",
+    "Zip": ""
+  },
+  {
+    "Account Name": "Navy Federal Credit Union",
+    "BankAddress": "P.O. Box 25109",
+    "City": "Lehigh Valley",
+    "State": "PA",
+    "Zip": "18002-5109"
+  },
+  {
+    "Account Name": "NBC Federal Credit Union",
+    "BankAddress": "3000 W. Alameda Ave",
+    "City": "Burbank",
+    "State": "CA",
+    "Zip": "91523"
+  },
+  {
+    "Account Name": "Neches Huntsman FCU",
+    "BankAddress": "2623 Nederland Ave",
+    "City": "Nederland",
+    "State": "TX",
+    "Zip": "77627"
+  },
+  {
+    "Account Name": "Nevada State Bank",
+    "BankAddress": "P.O. Box 1507",
+    "City": "Salt Lake City",
+    "State": "UT",
+    "Zip": "84110"
+  },
+  {
+    "Account Name": "New England Federal Credit Union",
+    "BankAddress": "141 Harvest Lane P.O. Box 527",
+    "City": "Williston",
+    "State": "VT",
+    "Zip": "5495"
+  },
+  {
+    "Account Name": "Nizari Progressive Federal Credit Union",
+    "BankAddress": "11770 University Blvd",
+    "City": "Sugarland",
+    "State": "TX",
+    "Zip": "77478"
+  },
+  {
+    "Account Name": "Nordstrom Federal Credit Union",
+    "BankAddress": "P.O. Box 1130",
+    "City": "Seattle",
+    "State": "WA",
+    "Zip": "98111"
+  },
+  {
+    "Account Name": "North Carolina State Employees Credit Union",
+    "BankAddress": "PO Box 27528",
+    "City": "Raleigh",
+    "State": "NC",
+    "Zip": "27611"
+  },
+  {
+    "Account Name": "North Island Credit Union",
+    "BankAddress": "P.O. Box 85833",
+    "City": "San Diego",
+    "State": "CA",
+    "Zip": "92186"
+  },
+  {
+    "Account Name": "Northeast Credit Union",
+    "BankAddress": "100 Borthwick Ave",
+    "City": "Portsmouth",
+    "State": "NH",
+    "Zip": "3801"
+  },
+  {
+    "Account Name": "Northrop Gardena",
+    "BankAddress": "P.O. Box 47009",
+    "City": "Gardena",
+    "State": "CA",
+    "Zip": "90247-6809"
+  },
+  {
+    "Account Name": "Northrop Grumman Federal Credit Union",
+    "BankAddress": "879 W 190th St",
+    "City": "Gardena",
+    "State": "CA",
+    "Zip": "90248"
+  },
+  {
+    "Account Name": "Northstar Bank of Texas",
+    "BankAddress": "400 N Carroll Blvd",
+    "City": "Denton",
+    "State": "TX",
+    "Zip": "76201"
+  },
+  {
+    "Account Name": "Northwest Federal Credit Union",
+    "BankAddress": "P.O. Box 1229",
+    "City": "Herndon",
+    "State": "VA",
+    "Zip": "20172-1229"
+  },
+  {
+    "Account Name": "Norway Savings Bank",
+    "BankAddress": "P.O. Box 347",
+    "City": " 261 Main St",
+    "State": "Norway",
+    "Zip": "ME"
+  },
+  {
+    "Account Name": "NuVision Federal Credit Union",
+    "BankAddress": "7812 Edinger Ave",
+    "City": "Huntington Beach",
+    "State": "CA",
+    "Zip": "92647"
+  },
+  {
+    "Account Name": "O Bee Credit Union",
+    "BankAddress": "3900 Cleveland Ave SE",
+    "City": "Tumwater",
+    "State": "WA",
+    "Zip": "98501"
+  },
+  {
+    "Account Name": "Oklahoma Employees Credit Union",
+    "BankAddress": "P.O. Box 24027",
+    "City": "Oklahoma City",
+    "State": "OK",
+    "Zip": "73124"
+  },
+  {
+    "Account Name": "Omaha Federal Credit Union",
+    "BankAddress": "3001 S. 82nd Ave",
+    "City": "Omaha",
+    "State": "NE",
+    "Zip": "68124-3258"
+  },
+  {
+    "Account Name": "On Point Credit Union",
+    "BankAddress": "PO Box 3750",
+    "City": "Portland",
+    "State": "OR",
+    "Zip": "97208"
+  },
+  {
+    "Account Name": "One Nevada CU",
+    "BankAddress": "2645 S Mojave Rd",
+    "City": "Las Vegas",
+    "State": "NV",
+    "Zip": "89121"
+  },
+  {
+    "Account Name": "Orange County's Credit Union",
+    "BankAddress": "P.O. Box 11777",
+    "City": "Santa Ana",
+    "State": "CA",
+    "Zip": "92711"
+  },
+  {
+    "Account Name": "Oregon Community Credit Union",
+    "BankAddress": "P.O. Box 25601",
+    "City": "Fort Worth",
+    "State": "TX",
+    "Zip": "76124"
+  },
+  {
+    "Account Name": "Orion FCU",
+    "BankAddress": "7845 HWY 64",
+    "City": "Memphis",
+    "State": "TN",
+    "Zip": "38133"
+  },
+  {
+    "Account Name": "Pace Savings and CU",
+    "BankAddress": "8111 Jane St Unit 1",
+    "City": "Vaughan",
+    "State": "ON",
+    "Zip": "L4K 4L7"
+  },
+  {
+    "Account Name": "Pacific Marine Credit Union",
+    "BankAddress": "1278 Rocky Point Drive",
+    "City": "Oceanside",
+    "State": "CA",
+    "Zip": "92056"
+  },
+  {
+    "Account Name": "Pacific NW Federal Credit union",
+    "BankAddress": "12106 NE Marx",
+    "City": "Portland",
+    "State": "OR",
+    "Zip": "97220"
+  },
+  {
+    "Account Name": "Pacific Oaks Federal Credit Union",
+    "BankAddress": "761 Daily Drive Suite 200",
+    "City": "Camarillo",
+    "State": "CA",
+    "Zip": "93010"
+  },
+  {
+    "Account Name": "Pacific Postal Credit Union",
+    "BankAddress": "1040 Leigh Av",
+    "City": "San Jose",
+    "State": "CA",
+    "Zip": "95126"
+  },
+  {
+    "Account Name": "Pacific Resource Credit Union",
+    "BankAddress": "333 South Hope St",
+    "City": " Concourse Level",
+    "State": "Los Angeles",
+    "Zip": "CA"
+  },
+  {
+    "Account Name": "Pacific Service Credit Union",
+    "BankAddress": "P.O. Box 8191",
+    "City": "Walnut Creek",
+    "State": "CA",
+    "Zip": "94596"
+  },
+  {
+    "Account Name": "Pacoina Federal Credit Union",
+    "BankAddress": "13168 Van Nuys Blvd",
+    "City": "Pacoina",
+    "State": "CA",
+    "Zip": "91331"
+  },
+  {
+    "Account Name": "Partner Colorado CU",
+    "BankAddress": "6221 Sheridan Blvd",
+    "City": "Arvada",
+    "State": "CO",
+    "Zip": "80003"
+  },
+  {
+    "Account Name": "Partners Federal Credit Union",
+    "BankAddress": "2411 W. Olive Ave",
+    "City": "Burbank",
+    "State": "CA",
+    "Zip": "91506"
+  },
+  {
+    "Account Name": "Patelco Credit Union",
+    "BankAddress": "5050 Hopyard Rd 16",
+    "City": "Pleasanton",
+    "State": "CA",
+    "Zip": "94588"
+  },
+  {
+    "Account Name": "Patriots Federal Credit Union",
+    "BankAddress": "26970 Aliso Viejo Pkwy",
+    "City": " Suite 150",
+    "State": "Aliso Viejo",
+    "Zip": "CA"
+  },
+  {
+    "Account Name": "Paula Couture",
+    "BankAddress": "43 Eliot Rd",
+    "City": "Arlingtron",
+    "State": "MA",
+    "Zip": "2474"
+  },
+  {
+    "Account Name": "Peck Leasing Ltd.",
+    "BankAddress": "15405 Los Gatos Blvd",
+    "City": " Suite 203",
+    "State": "Los Gatos",
+    "Zip": "CA"
+  },
+  {
+    "Account Name": "PedFed",
+    "BankAddress": "P.O. Box 255483",
+    "City": "Sacramento",
+    "State": "CA",
+    "Zip": "95865"
+  },
+  {
+    "Account Name": "Pegasus Bank",
+    "BankAddress": "4515 West Mockingbird Lane",
+    "City": "Dallas",
+    "State": "TX",
+    "Zip": "75209"
+  },
+  {
+    "Account Name": "Pennsylvania State Employees Credit Union (PSECU)",
+    "BankAddress": "PO BX 67013",
+    "City": "Harrisburg",
+    "State": "PA",
+    "Zip": "17106"
+  },
+  {
+    "Account Name": "Pentagon Federal Credit Union (PenFed)",
+    "BankAddress": "PO Box 255483",
+    "City": "Sacramento",
+    "State": "CA",
+    "Zip": "95865"
+  },
+  {
+    "Account Name": "Peoples Trust FCU",
+    "BankAddress": "P.O. Box 4511",
+    "City": "Houston",
+    "State": "TX",
+    "Zip": "77210"
+  },
+  {
+    "Account Name": "Philadelphia Federal Credit Union",
+    "BankAddress": "12800 Townsend Rd",
+    "City": "Philadelphia",
+    "State": "PA",
+    "Zip": "19154-1003"
+  },
+  {
+    "Account Name": "Piedmont Plus Federal C",
+    "BankAddress": "1968 Peach Tree Rd",
+    "City": "Atlanta",
+    "State": "GA",
+    "Zip": "30309"
+  },
+  {
+    "Account Name": "Pinnacle Bank",
+    "BankAddress": "P.O. Box 182",
+    "City": "Fremont",
+    "State": "NE",
+    "Zip": "68026"
+  },
+  {
+    "Account Name": "Plains Capital Bank",
+    "BankAddress": "3707 Camp Bowie Blvd",
+    "City": "Fort Worth",
+    "State": "TX",
+    "Zip": "76107"
+  },
+  {
+    "Account Name": "Platinum Federal Credit Union",
+    "BankAddress": "1059 Mistletoe Rd",
+    "City": "Decatur",
+    "State": "GA",
+    "Zip": ""
+  },
+  {
+    "Account Name": "PNC Bank",
+    "BankAddress": "2790 Liberty Ave",
+    "City": "Pittsburgh",
+    "State": "PA",
+    "Zip": "15222"
+  },
+  {
+    "Account Name": "Point Loma Credit Union",
+    "BankAddress": "9420 Farnham",
+    "City": "San Diego",
+    "State": "CA",
+    "Zip": "92123"
+  },
+  {
+    "Account Name": "First Hawaiian Bank",
+    "BankAddress": "P.O.Box 3200",
+    "City": "Honolulu",
+    "State": "HI",
+    "Zip": "96847"
+  },
+  {
+    "Account Name": "Electro Savings Credit Union",
+    "BankAddress": "1805 Craigshire Road",
+    "City": "St. Louis",
+    "State": "MO",
+    "Zip": "63146"
+  },
+  {
+    "Account Name": "ORNL FEDERAL CREDIT UNION",
+    "BankAddress": "PO BOX 3000",
+    "City": "WILMINGTON",
+    "State": "OH",
+    "Zip": "45177"
+  },
+  {
+    "Account Name": "First United Bank",
+    "BankAddress": "1700 N Redbud Blvd. Ste. 130",
+    "City": "McKinney",
+    "State": "TX",
+    "Zip": "75069"
+  },
+  {
+    "Account Name": "American First Credit Union",
+    "BankAddress": "PO BX 7001",
+    "City": "La Habra",
+    "State": "CA",
+    "Zip": "90632"
+  },
+  {
+    "Account Name": "California Republic Bank Auto",
+    "BankAddress": "P.O. Box 278852",
+    "City": "Sacramento",
+    "State": "CA",
+    "Zip": "95827-8852"
+  },
+  {
+    "Account Name": "Point West Credit Union",
+    "BankAddress": "718 NE 12th Ave",
+    "City": "Portland",
+    "State": "OR",
+    "Zip": "97232"
+  },
+  {
+    "Account Name": "Vibe Credit Union",
+    "BankAddress": "44575 W. Twelve Mile Road",
+    "City": "Novi",
+    "State": "MI",
+    "Zip": "48377"
+  },
+  {
+    "Account Name": "Stark Leasing Company Inc.",
+    "BankAddress": "6345 Sommer Awning Blvd",
+    "City": "Indianapolis",
+    "State": "IN",
+    "Zip": "46220"
+  },
+  {
+    "Account Name": "PEN AIR FEDERAL CREDIT UNION",
+    "BankAddress": "1495 E NINE MILE RD",
+    "City": "PENSACOLA",
+    "State": "FL",
+    "Zip": "32514"
+  },
+  {
+    "Account Name": "PEOPLES ENERGY CREDIT UNION",
+    "BankAddress": "200 E. RANDOLPH DR",
+    "City": " 22nd Floor",
+    "State": "Chicago",
+    "Zip": "IL"
+  },
+  {
+    "Account Name": "TRENTON NEW JERSEY POLICE FEDERAL CREDIT UNION",
+    "BankAddress": "2733 NOTTINGHAM WAY STE U8",
+    "City": "HAMILTON",
+    "State": "NJ",
+    "Zip": "8619"
+  },
+  {
+    "Account Name": "ANHEUSER-BUSCH EMPLOYEES' CREDIT UNION",
+    "BankAddress": "1001 Lynch Street",
+    "City": "St. Louis",
+    "State": "MO",
+    "Zip": "63118"
+  },
+  {
+    "Account Name": "Americas Christian CU",
+    "BankAddress": "PO BX 5100",
+    "City": "Glendora",
+    "State": "CA",
+    "Zip": "91740"
+  },
+  {
+    "Account Name": "United Catholics FCU",
+    "BankAddress": "PO BX 210",
+    "City": "West Covina",
+    "State": "CA",
+    "Zip": "91793"
+  },
+  {
+    "Account Name": "MainStreet Bank",
+    "BankAddress": "10089 Fairfax Blvd",
+    "City": "Fairfax",
+    "State": "VA",
+    "Zip": "22030"
+  },
+  {
+    "Account Name": "NASSAU EDUCATORS FEDERAL CREDIT UNION",
+    "BankAddress": "1000 CORPORATE DR",
+    "City": "WESTBURY",
+    "State": "NY",
+    "Zip": "11590"
+  },
+  {
+    "Account Name": "El Monte CCU (El Monte Community Credit Union)",
+    "BankAddress": "11718 Ramona Blvd.",
+    "City": "El Monte",
+    "State": "CA",
+    "Zip": "91732"
+  },
+  {
+    "Account Name": "FIRST GREEN BANK",
+    "BankAddress": "18251 US HWY 441",
+    "City": "MOUNT DORA",
+    "State": "FL",
+    "Zip": "32757"
+  },
+  {
+    "Account Name": "Anderson Brothers Bank",
+    "BankAddress": "101 N. Main PO Box 310",
+    "City": "Mullins",
+    "State": "SC",
+    "Zip": "29574"
+  },
+  {
+    "Account Name": "KEESLER FEDERAL CREDIT UNION",
+    "BankAddress": "PO BOX 7001",
+    "City": "BILOXI",
+    "State": "MS",
+    "Zip": "39534"
+  },
+  {
+    "Account Name": "MAYO EMPLOYEES FEDERAL CREDIT UNION",
+    "BankAddress": "130 23RD AVE SW",
+    "City": "ROCHESTER",
+    "State": "MN",
+    "Zip": "55902"
+  },
+  {
+    "Account Name": "HFC ACCEPTANCE LLC/COMERICA BANK",
+    "BankAddress": "411 W LAFAYETTE MC 3519",
+    "City": "DETROIT",
+    "State": "MI",
+    "Zip": "48226"
+  },
+  {
+    "Account Name": "COMMUNITY BANK OF THE SOUTH",
+    "BankAddress": "3016 Atlanta Road",
+    "City": "Smyrna",
+    "State": "GA",
+    "Zip": "30080"
+  },
+  {
+    "Account Name": "Bank of Kansas City",
+    "BankAddress": "12112 Metcalf Ave",
+    "City": "Overland Park",
+    "State": "KS",
+    "Zip": "66213"
+  },
+  {
+    "Account Name": "CBC FEDERAL CREDIT UNION",
+    "BankAddress": "2151 E GONZALES RD",
+    "City": "OXNARD",
+    "State": "CA",
+    "Zip": "93036"
+  },
+  {
+    "Account Name": "Dow Northeast Employees Federal Credit Union",
+    "BankAddress": "100 S. Independence Mall West",
+    "City": "Philadelphia",
+    "State": "PA",
+    "Zip": "19106"
+  },
+  {
+    "Account Name": "ST MARYS CREDIT UNION",
+    "BankAddress": "PO BOX 729",
+    "City": "MARLBOROUGH",
+    "State": "MA",
+    "Zip": "1752"
+  },
+  {
+    "Account Name": "North Dallas Bank & Trust Co.",
+    "BankAddress": "P.O. Box 679001",
+    "City": "Dallas",
+    "State": "TX",
+    "Zip": "75367-9001"
+  },
+  {
+    "Account Name": "FIRST PEOPLES COMMUNITY FCU",
+    "BankAddress": "PO BOX 1377",
+    "City": "CUMBERLAND",
+    "State": "MD",
+    "Zip": "21501"
+  },
+  {
+    "Account Name": "Austin Bank",
+    "BankAddress": "200 E. Commerce",
+    "City": "Jacksonville",
+    "State": "TX",
+    "Zip": "75766"
+  },
+  {
+    "Account Name": "MATANUSKA VALLEY FEDERAL CREDIT UNION",
+    "BankAddress": "1020 S BAILEY ST",
+    "City": "PALMER",
+    "State": "AK",
+    "Zip": "99645"
+  },
+  {
+    "Account Name": "Century Federal Credit Union",
+    "BankAddress": "1240 E. 9th St",
+    "City": "Cleveland",
+    "State": "OH",
+    "Zip": "44199"
+  },
+  {
+    "Account Name": "COMMUNITY FIRST CREDIT UNION OF FLORIDA",
+    "BankAddress": "P O BOX 41209",
+    "City": "JACKSONVILLE",
+    "State": "FL",
+    "Zip": "32203"
+  },
+  {
+    "Account Name": "Bear State Bank",
+    "BankAddress": "P O Box 550",
+    "City": "Harrison",
+    "State": "AZ",
+    "Zip": "72602"
+  },
+  {
+    "Account Name": "TruStone Financial",
+    "BankAddress": "14601 27th Ave N Suite 104",
+    "City": "Plymouth",
+    "State": "MN",
+    "Zip": "55447"
+  },
+  {
+    "Account Name": "Vibrant Credit Union",
+    "BankAddress": "1900 52ND AVE",
+    "City": "Moline",
+    "State": "IL",
+    "Zip": "61265"
+  },
+  {
+    "Account Name": "INNOVATIONS FEDERAL CREDIT UNION",
+    "BankAddress": "PO BOX 924422",
+    "City": "FT WORTH",
+    "State": "TX",
+    "Zip": "76124"
+  },
+  {
+    "Account Name": "First Community Credit Union (Oregon)",
+    "BankAddress": "150 E. Johnson Ave.",
+    "City": "Coos Bay",
+    "State": "OR",
+    "Zip": "97420"
+  },
+  {
+    "Account Name": "Alliant Credit Union (DO NOT USE OUTSIDE OF MASSACHUSETTS)",
+    "BankAddress": "11545 W. Touhy Avenue",
+    "City": "Chicago",
+    "State": "IL",
+    "Zip": "60666"
+  },
+  {
+    "Account Name": "OHIO HEALTHCARE FCU",
+    "BankAddress": "3955 W DUBLIN GRANVILLE RD",
+    "City": "DUBLIN",
+    "State": "OH",
+    "Zip": "43017"
+  },
+  {
+    "Account Name": "SOUTH CAROLINA FEDERAL CREDIT UNION",
+    "BankAddress": "PO BOX 190012",
+    "City": "NORTH CHARLESTON",
+    "State": "SC",
+    "Zip": "29419"
+  },
+  {
+    "Account Name": "Mutual of Omaha Bank",
+    "BankAddress": "1665 W Alameda",
+    "City": " Ste 101",
+    "State": "Tempe",
+    "Zip": "AZ"
+  },
+  {
+    "Account Name": "ONPOINT COMMUNITY CU",
+    "BankAddress": "PO BX 3750",
+    "City": "PORTLAND",
+    "State": "OR",
+    "Zip": "97208"
+  },
+  {
+    "Account Name": "IQ CU",
+    "BankAddress": "PO BOX 1739",
+    "City": "VANCOUVER",
+    "State": "WA",
+    "Zip": "98668"
+  },
+  {
+    "Account Name": "Vantage Bank Texas",
+    "BankAddress": "45 NE Loop 410",
+    "City": " Ste #190",
+    "State": "San Antonio",
+    "Zip": "TX"
+  },
+  {
+    "Account Name": "CORNING CREDIT UNION",
+    "BankAddress": "ONE CREDIT UNION PLAZA",
+    "City": "CORNING",
+    "State": "NY",
+    "Zip": "14830"
+  },
+  {
+    "Account Name": "GECU",
+    "BankAddress": "PO Box 20998",
+    "City": "El Paso",
+    "State": "TX",
+    "Zip": "79998"
+  },
+  {
+    "Account Name": "Woburn Municipal Federal Credit Union",
+    "BankAddress": "8 Cedar Street",
+    "City": "Woburn",
+    "State": "MA",
+    "Zip": "1801"
+  },
+  {
+    "Account Name": "Long Beach Financial",
+    "BankAddress": "P.O. Box 4860",
+    "City": "Long Beach",
+    "State": "CA",
+    "Zip": "90804"
+  },
+  {
+    "Account Name": "BMW BANK OF NORTH AMERICA",
+    "BankAddress": "5550 BRITTON PKWY",
+    "City": "HILLIARD",
+    "State": "OH",
+    "Zip": "43026"
+  },
+  {
+    "Account Name": "Credit Union One",
+    "BankAddress": "400 E Nine Mile",
+    "City": "Ferndale",
+    "State": "MI",
+    "Zip": "48220"
+  },
+  {
+    "Account Name": "BANK OF THE OZARKS",
+    "BankAddress": "PO Box 242208",
+    "City": "Little Rock",
+    "State": "AR",
+    "Zip": "72223"
+  },
+  {
+    "Account Name": "FOUNDERS FEDERAL CREDIT UNION",
+    "BankAddress": "737 PLANTATION RD",
+    "City": "LANCASTER",
+    "State": "SC",
+    "Zip": "29720"
+  },
+  {
+    "Account Name": "Metabank",
+    "BankAddress": "121 E. Fifth St. P.O. Box 1307",
+    "City": "Storm Lake",
+    "State": "IA",
+    "Zip": "50588"
+  },
+  {
+    "Account Name": "Christian Community CU",
+    "BankAddress": "PO BX 3012",
+    "City": "covina",
+    "State": "CA",
+    "Zip": "91722"
+  },
+  {
+    "Account Name": "COMMUNITY CREDIT UNION OF LYNN",
+    "BankAddress": "1 ANDREW ST",
+    "City": "LYNN",
+    "State": "MA",
+    "Zip": "1901"
+  },
+  {
+    "Account Name": "Jordan Credit Union",
+    "BankAddress": "P.O. Box 1888",
+    "City": "Sandy",
+    "State": "UT",
+    "Zip": "84091"
+  },
+  {
+    "Account Name": "First Tech Federal Credit Union",
+    "BankAddress": "PO Box 2100",
+    "City": "Beaverton",
+    "State": "OR",
+    "Zip": "97075"
+  },
+  {
+    "Account Name": "Houston Police Federal CU",
+    "BankAddress": "1600 Memorial Dr",
+    "City": "Houston",
+    "State": "TX",
+    "Zip": "77001"
+  },
+  {
+    "Account Name": "Operating Engineers FCU",
+    "BankAddress": "PO Bx 5073",
+    "City": "LIVERMORE",
+    "State": "CA",
+    "Zip": "94551"
+  },
+  {
+    "Account Name": "CBS Employees FCU",
+    "BankAddress": "12001 Ventura Place Suite #204",
+    "City": "Studio City",
+    "State": "CA",
+    "Zip": "91604"
+  },
+  {
+    "Account Name": "Community Credit Union of Southern Humboldt",
+    "BankAddress": "757 Redwood Drive",
+    "City": "Garberville",
+    "State": "CA",
+    "Zip": "95542"
+  },
+  {
+    "Account Name": "Digital Federal Credit Union (DCU)",
+    "BankAddress": "PO BOX 25166",
+    "City": "LEHIGH VALLEY",
+    "State": "PA",
+    "Zip": "18002"
+  },
+  {
+    "Account Name": "Buffalo Metropolitan Federal Credit Union",
+    "BankAddress": "62 S. Elmwood Ave.",
+    "City": "Buffalo",
+    "State": "NY",
+    "Zip": "14202-2609"
+  },
+  {
+    "Account Name": "FSG Bank",
+    "BankAddress": "PO Box 97",
+    "City": "Gainesboro",
+    "State": "TN",
+    "Zip": "38562"
+  },
+  {
+    "Account Name": "Deere Employees Credit Union",
+    "BankAddress": "PO BOX 339",
+    "City": "Moline",
+    "State": "IL",
+    "Zip": "61266"
+  },
+  {
+    "Account Name": "Educational Systems Federal Credit Union",
+    "BankAddress": "PO Box 179",
+    "City": "Greenbelt",
+    "State": "MD",
+    "Zip": "20768"
+  },
+  {
+    "Account Name": "California Credit Union",
+    "BankAddress": "PO BX 29100",
+    "City": "Glendale",
+    "State": "CA",
+    "Zip": "91209-9100"
+  },
+  {
+    "Account Name": "ARIZONA CENTRAL CREDIT UNION",
+    "BankAddress": "PO BOX 255388",
+    "City": "SACRAMENTO",
+    "State": "CA",
+    "Zip": "95865"
+  },
+  {
+    "Account Name": "TMH FEDERAL CREDIT UNION",
+    "BankAddress": "345 S MAGNOLIA DR STE F-1",
+    "City": "TALLAHASSEE",
+    "State": "FL",
+    "Zip": "32301"
+  },
+  {
+    "Account Name": "Genisys Credit Union",
+    "BankAddress": "PO Box 436034",
+    "City": "Pontiac",
+    "State": "MI",
+    "Zip": "48343"
+  },
+  {
+    "Account Name": "Lafayette Schools Credit Union",
+    "BankAddress": "PO BOX 92437",
+    "City": "Fort Worth",
+    "State": "TX",
+    "Zip": "76124"
+  },
+  {
+    "Account Name": "Cambridge Savings Bank",
+    "BankAddress": "1374 Massachusetts Avenue",
+    "City": "Cambridge",
+    "State": "MA",
+    "Zip": "2138"
+  },
+  {
+    "Account Name": "Guaranty Bank & Trust",
+    "BankAddress": "201 South Jefferson Ave.",
+    "City": "Mt Pleasant",
+    "State": "TX",
+    "Zip": "75455"
+  },
+  {
+    "Account Name": "First National Funding Corporation",
+    "BankAddress": "12501 Chandler Blvd # 204",
+    "City": "Valley Village",
+    "State": "CA",
+    "Zip": "91607"
+  },
+  {
+    "Account Name": "First American Bank N.A.",
+    "BankAddress": "2424 Monetary Blvd. Suite 107",
+    "City": "Hudson",
+    "State": "WI",
+    "Zip": "54016"
+  },
+  {
+    "Account Name": "Avista Credit Union",
+    "BankAddress": "P.O. Box 3727",
+    "City": " MSC 36",
+    "State": "Spokane",
+    "Zip": "WA"
+  },
+  {
+    "Account Name": "MVB Bank",
+    "BankAddress": "113 Platinum Dr.",
+    "City": "Bridgeport",
+    "State": "WV",
+    "Zip": "26330"
+  },
+  {
+    "Account Name": "PrimeWay Federal CU",
+    "BankAddress": "PO Box 278922",
+    "City": "Sacramento",
+    "State": "California",
+    "Zip": "95827- 8922"
+  },
+  {
+    "Account Name": "Texas Republic Bank",
+    "BankAddress": " N.A.",
+    "City": "2595 Preston Road",
+    "State": " Suite 100",
+    "Zip": "Frisco"
+  },
+  {
+    "Account Name": "PrimeWay FCU",
+    "BankAddress": "12811 North West Freeway",
+    "City": "Houston",
+    "State": "TX",
+    "Zip": "77040"
+  },
+  {
+    "Account Name": "MUTUAL SECURITY CREDIT UNION",
+    "BankAddress": "PO BOX 2489",
+    "City": "SHELTON",
+    "State": "CT",
+    "Zip": "6484"
+  },
+  {
+    "Account Name": "Puget Sound Cooperative Credit Union (PSCCU)",
+    "BankAddress": "600 108th Ave NE Suite 1035",
+    "City": "Bellevue",
+    "State": "WA",
+    "Zip": "98004-5129"
+  },
+  {
+    "Account Name": "CinemaCar Leasing",
+    "BankAddress": "45 OLD Hook Road",
+    "City": "Westwood",
+    "State": "NJ",
+    "Zip": "7675"
+  },
+  {
+    "Account Name": "First Interstate Bank",
+    "BankAddress": "401 N 31st St",
+    "City": "Billings",
+    "State": "MT",
+    "Zip": "59101"
+  },
+  {
+    "Account Name": "Point Breeze Credit Union (Rosedale Office)",
+    "BankAddress": "2 Philadelphia Court",
+    "City": "Baltimore",
+    "State": "MD",
+    "Zip": "21237"
+  },
+  {
+    "Account Name": "Smart Financial Credit Union",
+    "BankAddress": "PO Box 920719",
+    "City": "Houston",
+    "State": "TX",
+    "Zip": "77292"
+  },
+  {
+    "Account Name": "The Rushcap Group",
+    "BankAddress": " Inc",
+    "City": "160 Summit Ave.",
+    "State": "Mont Vale",
+    "Zip": "NJ"
+  },
+  {
+    "Account Name": "Westtown Leasing Corporation",
+    "BankAddress": "409 Hidden Valley Road",
+    "City": "Media",
+    "State": "PA",
+    "Zip": "19063"
+  },
+  {
+    "Account Name": "HEALTHCARE ASSOCIATES CREDIT UNION",
+    "BankAddress": "PO BOX 3053",
+    "City": "NAPERVILLE",
+    "State": "IL",
+    "Zip": "60566"
+  },
+  {
+    "Account Name": "Wheels Inc",
+    "BankAddress": "666 Garland Place",
+    "City": "IL",
+    "State": "IL",
+    "Zip": "60016"
+  },
+  {
+    "Account Name": "MICHIGAN SCHOOLS AND GOVERNMENT CREDIT UNION",
+    "BankAddress": "40400 Garfield Road",
+    "City": "Clinton Township",
+    "State": "MI",
+    "Zip": "48038"
+  },
+  {
+    "Account Name": "VONS FCU",
+    "BankAddress": "4455 ARDEN DR",
+    "City": "EL MONTE",
+    "State": "CA",
+    "Zip": "91731"
+  },
+  {
+    "Account Name": "LAKE MICHIGAN CREDIT UNION",
+    "BankAddress": "PO BOX 2848",
+    "City": "GRAND RAPIDS",
+    "State": "MI",
+    "Zip": "49501"
+  },
+  {
+    "Account Name": "Santander Bank NA",
+    "BankAddress": "3 Huntington Quad 101N",
+    "City": "Melville",
+    "State": "NY",
+    "Zip": "11747"
+  },
+  {
+    "Account Name": "MERCANTILE BANK OF MICHIGAN",
+    "BankAddress": "PO BOX 2208",
+    "City": "GRAND RAPIDS",
+    "State": "MI",
+    "Zip": "49501"
+  },
+  {
+    "Account Name": "County Schools FCU",
+    "BankAddress": "4591 Market St.",
+    "City": "Ventura",
+    "State": "CA",
+    "Zip": "93003"
+  },
+  {
+    "Account Name": "CENTRAL ALLIANCE CREDIT UNION",
+    "BankAddress": "625 DEERWOOD AVE",
+    "City": "NEENAH",
+    "State": "WI",
+    "Zip": "54956"
+  },
+  {
+    "Account Name": "Helena Community Credit Union",
+    "BankAddress": "PO Box 159",
+    "City": "Helena",
+    "State": "MT",
+    "Zip": "59624"
+  },
+  {
+    "Account Name": "FedFinancial Federal Credit Union",
+    "BankAddress": "1616-D Rockville Pike",
+    "City": "Rockville",
+    "State": "MD",
+    "Zip": "20852"
+  },
+  {
+    "Account Name": "POWERCO FEDERAL CREDIT UNION",
+    "BankAddress": "241 RALPH MCGILL BLVD NE",
+    "City": "ATLANTA",
+    "State": "GA",
+    "Zip": "30308"
+  },
+  {
+    "Account Name": "Neighborhood Credit Union",
+    "BankAddress": "PO Box 276954",
+    "City": "Sacramento",
+    "State": "CA",
+    "Zip": "95827"
+  },
+  {
+    "Account Name": "California State & Federal Employees Credit Union (#20)",
+    "BankAddress": "PO BOX 1268",
+    "City": "Eureka",
+    "State": "CA",
+    "Zip": "95502"
+  },
+  {
+    "Account Name": "CINCO FFCCU",
+    "BankAddress": "49 William Howard Taft Rd.",
+    "City": "Cincinnati",
+    "State": "OH",
+    "Zip": "45219"
+  },
+  {
+    "Account Name": "Citizens National Bank (Hillsboro TX)",
+    "BankAddress": "PO Box 404",
+    "City": "Hillsboro",
+    "State": "TX",
+    "Zip": "76645-0404"
+  },
+  {
+    "Account Name": "SMW 104 FCU",
+    "BankAddress": "PO Box 2278",
+    "City": "San Leandro",
+    "State": "CA",
+    "Zip": "94577"
+  },
+  {
+    "Account Name": "Communication FCU",
+    "BankAddress": "4141 NW Expressway Suite 200",
+    "City": "Oklahoma City",
+    "State": "OK",
+    "Zip": "73116"
+  },
+  {
+    "Account Name": "Heritage Bank of Nevada",
+    "BankAddress": "2330 S. Virginia St.",
+    "City": "Reno",
+    "State": "NV",
+    "Zip": "89502"
+  },
+  {
+    "Account Name": "Emkay Inc.",
+    "BankAddress": "805 W. Thorndale Ave",
+    "City": "Itasca",
+    "State": "IL",
+    "Zip": "60143"
+  },
+  {
+    "Account Name": "Nationwide Bank",
+    "BankAddress": "6400 Main St. Ste. 201",
+    "City": "Amherst",
+    "State": "NY",
+    "Zip": "14221"
+  },
+  {
+    "Account Name": "DUKE UNIVERSITY FEDERAL CREDIT UNION",
+    "BankAddress": "2200 W MAIN ST STE L100",
+    "City": "DURHAM",
+    "State": "NC",
+    "Zip": "27705"
+  },
+  {
+    "Account Name": "Wells Fargo NA",
+    "BankAddress": "PO Box 997517",
+    "City": "Sacramento",
+    "State": "CA",
+    "Zip": "95899-7517"
+  },
+  {
+    "Account Name": "Generations Community Federal Credit Union",
+    "BankAddress": "PO Box 791870",
+    "City": "San Antonio",
+    "State": "TX",
+    "Zip": "78279"
+  },
+  {
+    "Account Name": "NIH Federal Credit Union",
+    "BankAddress": "PO Box 6475",
+    "City": "Rockville",
+    "State": "MD",
+    "Zip": "20849"
+  },
+  {
+    "Account Name": "Schools Financial Credit Union",
+    "BankAddress": "P.O. Box 526001",
+    "City": "Sacramento",
+    "State": "CA",
+    "Zip": "95852"
+  },
+  {
+    "Account Name": "Doering Leasing Co.",
+    "BankAddress": "Doering Leasing Co. 15300 w Capitol drive",
+    "City": "Brookfield",
+    "State": "WI",
+    "Zip": "53005"
+  },
+  {
+    "Account Name": "Alliant Credit Union",
+    "BankAddress": "PO Box 255388",
+    "City": "Sacramento",
+    "State": "CA",
+    "Zip": "95865"
+  },
+  {
+    "Account Name": "PA Central Federal Credit Union",
+    "BankAddress": "959 East Park Drive",
+    "City": "Harrisburg",
+    "State": "PA",
+    "Zip": "17111"
+  },
+  {
+    "Account Name": "SAFE Credit Union",
+    "BankAddress": "2295 Iron Point Road Ste 100",
+    "City": "Folsom",
+    "State": "CA",
+    "Zip": "95630"
+  },
+  {
+    "Account Name": "Kern FCU",
+    "BankAddress": "PO BX 1667",
+    "City": "Bakersfield",
+    "State": "CA",
+    "Zip": "93302"
+  },
+  {
+    "Account Name": "Oregonians Credit Union",
+    "BankAddress": "6915 SE Lake Road",
+    "City": "Milwaukie",
+    "State": "OR",
+    "Zip": "97267"
+  },
+  {
+    "Account Name": "Sea West Coast Guard FCU",
+    "BankAddress": "PO BX 4949",
+    "City": "oakland",
+    "State": "CA",
+    "Zip": "94605"
+  },
+  {
+    "Account Name": "Evan Paul Auto Capital",
+    "BankAddress": "1805 PLACENTIA AVE.",
+    "City": "COSTA MESA",
+    "State": "CA",
+    "Zip": "92627"
+  },
+  {
+    "Account Name": "Technicolor Federal Credit Union",
+    "BankAddress": "434 W. Alameda Ave",
+    "City": "Burbank",
+    "State": "CA",
+    "Zip": "91506"
+  },
+  {
+    "Account Name": "OU Federal Credit Union",
+    "BankAddress": "PO Box GG",
+    "City": "Norman",
+    "State": "OK",
+    "Zip": "73070"
+  },
+  {
+    "Account Name": "Knoxville TVA ECU",
+    "BankAddress": "PO BX 15994",
+    "City": "Knoxville",
+    "State": "TN",
+    "Zip": "37901"
+  },
+  {
+    "Account Name": "Marquette Community Federal Credit Union",
+    "BankAddress": "1230 W Washington St.",
+    "City": "Marquette",
+    "State": "MI",
+    "Zip": "49855"
+  },
+  {
+    "Account Name": "Alliance CU",
+    "BankAddress": "PO BOX 18460",
+    "City": "SAN JOSE",
+    "State": "CA",
+    "Zip": "95158"
+  },
+  {
+    "Account Name": "M2 Lease Funds",
+    "BankAddress": " LLC",
+    "City": "175 N Patrick Blvd",
+    "State": " Ste 140",
+    "Zip": "Brookfield"
+  },
+  {
+    "Account Name": "Utah First Federal Credit Union",
+    "BankAddress": "PO Box 2197",
+    "City": "Salt Lake City",
+    "State": "UT",
+    "Zip": "84110"
+  },
+  {
+    "Account Name": "TRAVIS CU",
+    "BankAddress": "PO BX 2069",
+    "City": "VACAVILLE",
+    "State": "CA",
+    "Zip": "95696"
+  },
+  {
+    "Account Name": "AFFINITY PLUS FCU",
+    "BankAddress": "PO BOX 20650",
+    "City": "LEHIGH VALLEY",
+    "State": "PA",
+    "Zip": "18002"
+  },
+  {
+    "Account Name": "Illinois Community Credit Union",
+    "BankAddress": "1500 Barber Greene Rd.",
+    "City": "DeKalb",
+    "State": "IL",
+    "Zip": "60178"
+  },
+  {
+    "Account Name": "Hiway Federal Credit Union",
+    "BankAddress": "111 Empire Drive",
+    "City": "St. Paul",
+    "State": "MN",
+    "Zip": "55103"
+  },
+  {
+    "Account Name": "RTP Federal Credit Union",
+    "BankAddress": "P.O. Box 12807",
+    "City": "Research Triangle Park",
+    "State": "NC",
+    "Zip": "27709"
+  },
+  {
+    "Account Name": "ALTRA FEDERAL CREDIT UNION",
+    "BankAddress": "1700 OAK FOREST DR",
+    "City": "ONALASKA",
+    "State": "WI",
+    "Zip": "54650"
+  },
+  {
+    "Account Name": "McGraw-Hill Federal Credit Union",
+    "BankAddress": "120 Windsor Center Drive",
+    "City": "East Windsor",
+    "State": "NJ",
+    "Zip": "8520"
+  },
+  {
+    "Account Name": "First Community Credit Union",
+    "BankAddress": "P.O. Box 1030",
+    "City": "Chesterfield",
+    "State": "MO",
+    "Zip": "83006"
+  },
+  {
+    "Account Name": "TrustMark National Bank",
+    "BankAddress": "7980 HWY 51 N",
+    "City": "Millington",
+    "State": "TN",
+    "Zip": "38053"
+  },
+  {
+    "Account Name": "DEXSTA FEDERAL CREDIT UNION",
+    "BankAddress": "300 FOULK RD STE 100",
+    "City": "WILMINGTON",
+    "State": "DE",
+    "Zip": "19803"
+  },
+  {
+    "Account Name": "LINN AREA CREDIT UNION",
+    "BankAddress": "3015 BLAIRS FERRY RD NE",
+    "City": "CEDAR RAPIDS",
+    "State": "IA",
+    "Zip": "52402"
+  },
+  {
+    "Account Name": "SunTrust Leasing Corporation",
+    "BankAddress": "211 Perimeter Center Pkwy Suite 100",
+    "City": "Atlanta",
+    "State": "GA",
+    "Zip": "30346"
+  },
+  {
+    "Account Name": "My Credit Union",
+    "BankAddress": "PO BX 5824",
+    "City": "REDWOOD CITY",
+    "State": "CA",
+    "Zip": "94063"
+  },
+  {
+    "Account Name": "Liberty Bay Credit Union",
+    "BankAddress": "350 Granite Street Suite 1102",
+    "City": "Braintree",
+    "State": "MA",
+    "Zip": "02184-4999"
+  },
+  {
+    "Account Name": "DEPARTMENT OF LABOR FCU",
+    "BankAddress": "P. O. BOX 50",
+    "City": "MERRIFIELD",
+    "State": "VA",
+    "Zip": "22116"
+  },
+  {
+    "Account Name": "SAC Federal Credit Union",
+    "BankAddress": "7148 Towne Center Parkway",
+    "City": "Papillion",
+    "State": "NE",
+    "Zip": "68046"
+  },
+  {
+    "Account Name": "Charter Oak Credit Union",
+    "BankAddress": "1055 Hartford Turnpike",
+    "City": "Waterford",
+    "State": "CT",
+    "Zip": "6385"
+  },
+  {
+    "Account Name": "Harborstone Credit Union",
+    "BankAddress": "PO Box 4207",
+    "City": "Tacoma",
+    "State": "WA",
+    "Zip": "98438-0207"
+  },
+  {
+    "Account Name": "Parsons FCU",
+    "BankAddress": "100 W. Walnut Street",
+    "City": "Pasadena",
+    "State": "CA",
+    "Zip": "91124"
+  },
+  {
+    "Account Name": "POPA FCU",
+    "BankAddress": "13304 Alondra Blvd 1st FLR",
+    "City": "Cerritos",
+    "State": "CA",
+    "Zip": "90703"
+  },
+  {
+    "Account Name": "FAIRWINDS CREDIT UNION",
+    "BankAddress": "3075 NORTH ALAFAYA TRAIL",
+    "City": "ORLANDO",
+    "State": "FL",
+    "Zip": "32826"
+  },
+  {
+    "Account Name": "Sharonview Federal Credit Union",
+    "BankAddress": "PO Box 2070",
+    "City": "Fort Mill",
+    "State": "SC",
+    "Zip": "29716"
+  },
+  {
+    "Account Name": "Columbia Credit Union",
+    "BankAddress": "PO Box 324",
+    "City": "Vancouver",
+    "State": "WA",
+    "Zip": "98666"
+  },
+  {
+    "Account Name": "Ascend Federal Credit Union",
+    "BankAddress": "P.O. Box 1210 520 Airpark Dr.",
+    "City": "Tullahoma",
+    "State": "TN",
+    "Zip": "37388"
+  },
+  {
+    "Account Name": "REALTORS FCU",
+    "BankAddress": "PO BOX 277472",
+    "City": "SACRAMENTO",
+    "State": "CA",
+    "Zip": "95827"
+  },
+  {
+    "Account Name": "SOUTHLAND CU",
+    "BankAddress": "PO BX 3003",
+    "City": "LOS ALAMITOS",
+    "State": "CA",
+    "Zip": "90720"
+  },
+  {
+    "Account Name": "AMERICAN 1 CREDIT UNION",
+    "BankAddress": "718 E MICHIGAN AVE",
+    "City": "JACKSON",
+    "State": "MI",
+    "Zip": "49201"
+  },
+  {
+    "Account Name": "TEXAS BANK AND TRUST COMPANY",
+    "BankAddress": "PO BOX 3188",
+    "City": "LONGVIEW",
+    "State": "TX",
+    "Zip": "75606"
+  },
+  {
+    "Account Name": "Red River Federal Credit Union",
+    "BankAddress": "P.O. Box 5909",
+    "City": "Texarkana",
+    "State": "TX",
+    "Zip": "75505"
+  },
+  {
+    "Account Name": "Halliburton Employees’ FCU",
+    "BankAddress": "703 S 9th St",
+    "City": "Duncan",
+    "State": "OK",
+    "Zip": "73533"
+  },
+  {
+    "Account Name": "Kamehameha Credit Union",
+    "BankAddress": "1620 N School St #116",
+    "City": "Honolulu",
+    "State": "HI",
+    "Zip": "96817"
+  },
+  {
+    "Account Name": "Baxter Credit Union",
+    "BankAddress": "340 N. Milwaukee Ave",
+    "City": "VERNON HILLS",
+    "State": "IL",
+    "Zip": "60061"
+  },
+  {
+    "Account Name": "BECU",
+    "BankAddress": "P.O. Box 97050",
+    "City": "Seattle",
+    "State": "WA",
+    "Zip": "98124"
+  },
+  {
+    "Account Name": "UNITED SA FEDERAL CREDIT UNION",
+    "BankAddress": "5500 UTSA BLVD",
+    "City": "SAN ANTONIO",
+    "State": "TX",
+    "Zip": "78249"
+  },
+  {
+    "Account Name": "First Bank",
+    "BankAddress": "600 James South McDonald Blvd",
+    "City": "Hazelwood",
+    "State": "MO",
+    "Zip": "63042"
+  },
+  {
+    "Account Name": "Arizona State Credit Union",
+    "BankAddress": "2355 W. Pinnacle Peak Rd.",
+    "City": "Phoenix",
+    "State": "AZ",
+    "Zip": "95027"
+  },
+  {
+    "Account Name": "Police Federal Credit Union",
+    "BankAddress": "9100 Presidential Parkway",
+    "City": "Upper Marlboro",
+    "State": "MD",
+    "Zip": "20772"
+  },
+  {
+    "Account Name": "Evansville Teachers Federal Credit Union",
+    "BankAddress": "4401 Theater Drive",
+    "City": "Evansville",
+    "State": "IN",
+    "Zip": "47716"
+  },
+  {
+    "Account Name": "Sea Air FCU",
+    "BankAddress": "PO BX 2648",
+    "City": "SEAL BEACH",
+    "State": "CA",
+    "Zip": "90740"
+  },
+  {
+    "Account Name": "US Bank Commercial Collateral",
+    "BankAddress": "P.O. Box 3487",
+    "City": "Oshkosh",
+    "State": "WI",
+    "Zip": "54903"
+  },
+  {
+    "Account Name": "Cyprus Federal Credit Union",
+    "BankAddress": "3876 W Center View Way",
+    "City": "West Jordan",
+    "State": "UT",
+    "Zip": "84084"
+  },
+  {
+    "Account Name": "Peace Officers Professional Associations Federal Credit Union",
+    "BankAddress": "13304 Alondra Blvd",
+    "City": "Cerritos",
+    "State": "CA",
+    "Zip": "90703"
+  },
+  {
+    "Account Name": "KH Network Credit Union",
+    "BankAddress": "7740 Paragon Rd",
+    "City": "Dayton",
+    "State": "OH",
+    "Zip": "45459-4050"
+  },
+  {
+    "Account Name": "SharronView Federal Credit Union",
+    "BankAddress": "PO Box 2070",
+    "City": "",
+    "State": "Fort Mill",
+    "Zip": "SC"
+  },
+  {
+    "Account Name": "Teutopolis State Bank",
+    "BankAddress": "106 E Main P.O. Box 249",
+    "City": "Teutopolis",
+    "State": "IL",
+    "Zip": "62467"
+  },
+  {
+    "Account Name": "Royal Credit Union",
+    "BankAddress": "200 Riverfront Terrace",
+    "City": "Eau Claire",
+    "State": "WI",
+    "Zip": "54703"
+  },
+  {
+    "Account Name": "AgFed Credit Union",
+    "BankAddress": "PO Box 3419",
+    "City": "Alexandria",
+    "State": "VA",
+    "Zip": "22302"
+  },
+  {
+    "Account Name": "Nusenda Credit Union",
+    "BankAddress": "P.O. Box 8530",
+    "City": "Albuquerque",
+    "State": "NM",
+    "Zip": "87198"
+  },
+  {
+    "Account Name": "Bay FCU",
+    "BankAddress": "3333 Clares St.",
+    "City": "Capitola",
+    "State": "CA",
+    "Zip": "95010"
+  },
+  {
+    "Account Name": "Healthcare Systems Federal Credit Union",
+    "BankAddress": "3300 Gallows Road",
+    "City": "Falls Church",
+    "State": "VA",
+    "Zip": "22042"
+  },
+  {
+    "Account Name": "Western Alliance Bank",
+    "BankAddress": "2701 E Camelback Rd Suite 110",
+    "City": "Pheonix",
+    "State": "AZ",
+    "Zip": "85016"
+  },
+  {
+    "Account Name": "REDSTONE FEDERAL CREDIT UNION",
+    "BankAddress": "220 WYNN DR.",
+    "City": "HUNTSVILLE",
+    "State": "AL",
+    "Zip": "35893"
+  },
+  {
+    "Account Name": "Collins Community Credit Union",
+    "BankAddress": "1150 42nd St NE",
+    "City": "Cedar Rapids",
+    "State": "IA",
+    "Zip": "52402"
+  },
+  {
+    "Account Name": "First Financial Bank",
+    "BankAddress": " N.A.",
+    "City": "Po Box 701",
+    "State": "Abilene",
+    "Zip": "TX"
+  },
+  {
+    "Account Name": "Peach State Federal Credit Union",
+    "BankAddress": "455 Buford Hwy",
+    "City": "Suwanee",
+    "State": "GA",
+    "Zip": "30024"
+  },
+  {
+    "Account Name": "Signature Financial and Leasing",
+    "BankAddress": " LLC",
+    "City": "225 Broad Hollow Road #132W",
+    "State": "Melville",
+    "Zip": "NY"
+  },
+  {
+    "Account Name": "OneAZ Credit Union",
+    "BankAddress": "2355 W. Pinnacle Peak Rd.",
+    "City": "Phoenix",
+    "State": "AZ",
+    "Zip": "85027"
+  },
+  {
+    "Account Name": "BankCherokee",
+    "BankAddress": "607 S. Smith Avenue",
+    "City": "Saint Paul",
+    "State": "MN",
+    "Zip": "55107"
+  },
+  {
+    "Account Name": "San Diego Metropolitan Credit Union",
+    "BankAddress": "PO BX 719099",
+    "City": "San Diego",
+    "State": "CA",
+    "Zip": "92171"
+  },
+  {
+    "Account Name": "Healthcare Systems Federal Credit Union",
+    "BankAddress": "3300 Gallows Road",
+    "City": "Falls Church",
+    "State": "VA",
+    "Zip": "22042"
+  },
+  {
+    "Account Name": "COMMUNITY FINANCIAL CREDIT UNION",
+    "BankAddress": "PO BOX 8050",
+    "City": "PLYMOUTH",
+    "State": "MI",
+    "Zip": "48170"
+  },
+  {
+    "Account Name": "Valley National Bank",
+    "BankAddress": "1445 Valley Rd",
+    "City": "Wayne",
+    "State": "NJ",
+    "Zip": "7470"
+  },
+  {
+    "Account Name": "Catholic & Community Credit Union",
+    "BankAddress": "1109 Hartman Ln.",
+    "City": "Shiloh",
+    "State": "IL",
+    "Zip": "62221"
+  },
+  {
+    "Account Name": "Rock Canyon Bank",
+    "BankAddress": "94 East Tabernacle",
+    "City": "St. George",
+    "State": "Utah",
+    "Zip": "84770"
+  },
+  {
+    "Account Name": "American United FCU",
+    "BankAddress": "PO Box 1030",
+    "City": "West Jordan",
+    "State": "UT",
+    "Zip": "84084"
+  },
+  {
+    "Account Name": "Synovus Bank-575",
+    "BankAddress": "P O Box 200016",
+    "City": "Kennesaw",
+    "State": "GA",
+    "Zip": "30156"
+  },
+  {
+    "Account Name": "ARMY AVIATION CENTER FEDERAL CREDIT UNION",
+    "BankAddress": "P O DRAWER 8",
+    "City": "DALEVILLE",
+    "State": "AL",
+    "Zip": "36322"
+  },
+  {
+    "Account Name": "Freedom 1st Credit Union",
+    "BankAddress": "205 N. Barron St",
+    "City": "Eaton",
+    "State": "OH",
+    "Zip": "45320"
+  },
+  {
+    "Account Name": "Abbey Credit Union",
+    "BankAddress": " Inc.",
+    "City": "800 Falls Creek Dr.",
+    "State": "Vandalia",
+    "Zip": "OH"
+  },
+  {
+    "Account Name": "Coast Hills Credit Union",
+    "BankAddress": "7880 Constellation Road",
+    "City": "Vandenberg Village",
+    "State": "CA",
+    "Zip": "93436"
+  },
+  {
+    "Account Name": "Essex Bank",
+    "BankAddress": "9954 Mayland Drive",
+    "City": "Richmond",
+    "State": "VA",
+    "Zip": "23233"
+  },
+  {
+    "Account Name": "Treasury Department Federal Credit Union",
+    "BankAddress": "PO BOX 27301",
+    "City": "Washington",
+    "State": "DC",
+    "Zip": "20038-7301"
+  },
+  {
+    "Account Name": "Montgomery Country Employees Federal Credit Union",
+    "BankAddress": "19785 Crystal Rock Dr. Suite 201",
+    "City": "Germantown",
+    "State": "MD",
+    "Zip": "20874"
+  },
+  {
+    "Account Name": "BANK OF AMERICA",
+    "BankAddress": " N.A",
+    "City": "70 Batterson Park Road",
+    "State": "Farmington",
+    "Zip": "CT"
+  },
+  {
+    "Account Name": "Union National Bank",
+    "BankAddress": "101 East Chicago Street",
+    "City": "Elgin",
+    "State": "IL",
+    "Zip": "60120"
+  },
+  {
+    "Account Name": "Midwest Members CU",
+    "BankAddress": "101 Wesley Dr",
+    "City": "Wood River",
+    "State": "IL",
+    "Zip": "62095"
+  },
+  {
+    "Account Name": "Montgomery County Employees Federal Credit Union",
+    "BankAddress": "19785 Crystal Rock Dr. Suite 201",
+    "City": "Germantown",
+    "State": "MD",
+    "Zip": "20874"
+  },
+  {
+    "Account Name": "Leominster Credit Union",
+    "BankAddress": "20 Adams St.",
+    "City": "Leominster",
+    "State": "MA",
+    "Zip": "01453-5668"
+  },
+  {
+    "Account Name": "Bank Orion",
+    "BankAddress": "5301 44th Ave Dr.",
+    "City": "Moline",
+    "State": "IL",
+    "Zip": "61265"
+  },
+  {
+    "Account Name": "Dow Chemical Employees' Credit Union",
+    "BankAddress": "PO Box 5639",
+    "City": "Midland",
+    "State": "MI",
+    "Zip": "48641"
+  },
+  {
+    "Account Name": "New Resource Bank",
+    "BankAddress": "255 California Street",
+    "City": " Suite 600",
+    "State": "San Francisco",
+    "Zip": "CA"
+  },
+  {
+    "Account Name": "Webster First Federal Credit Union",
+    "BankAddress": "271 Greenwood St PO BOX 70505",
+    "City": "Worcester",
+    "State": "MA",
+    "Zip": "1607"
+  },
+  {
+    "Account Name": "FedEx Employees Credit Association",
+    "BankAddress": "2731 Nonconnah Blvd",
+    "City": "Memphis",
+    "State": "TN",
+    "Zip": "38132"
+  },
+  {
+    "Account Name": "Western Alliance Equipment Finance Inc.",
+    "BankAddress": "1 East Washington Street",
+    "City": " Suite 1400",
+    "State": "Phoenix",
+    "Zip": "AZ"
+  },
+  {
+    "Account Name": "Vantage Credit Union",
+    "BankAddress": "29 Ofallon Square",
+    "City": "O'Fallon",
+    "State": "MO",
+    "Zip": "63366"
+  },
+  {
+    "Account Name": "Power Financial Credit Union",
+    "BankAddress": "33004 S Dixie Hwy",
+    "City": "Homestead",
+    "State": "FL",
+    "Zip": "33034"
+  },
+  {
+    "Account Name": "USX Federal Credit Union",
+    "BankAddress": "1293 Freedom Road PO Box 1728",
+    "City": "Cranberry Township",
+    "State": "PA",
+    "Zip": "16066"
+  },
+  {
+    "Account Name": "Fed Financial Credit Union",
+    "BankAddress": "11233 Lockwood Drive",
+    "City": "Silver Spring",
+    "State": "MD",
+    "Zip": "21703"
+  },
+  {
+    "Account Name": "Farmers State Bank",
+    "BankAddress": "131 Tower Park Drive",
+    "City": " Suite 100",
+    "State": "Waterloo",
+    "Zip": "IA"
+  },
+  {
+    "Account Name": "GCS CU",
+    "BankAddress": "3970 Maryville Rd",
+    "City": "Granite City",
+    "State": "IL",
+    "Zip": "62040"
+  },
+  {
+    "Account Name": "Idaho Trust Bank",
+    "BankAddress": "888 W. Broad Street.",
+    "City": "Boise",
+    "State": "ID",
+    "Zip": "83702"
+  },
+  {
+    "Account Name": "Alcon Employees Federal Credit Union",
+    "BankAddress": "6201 South Freeway",
+    "City": "Fort Worth",
+    "State": "TX",
+    "Zip": "76134"
+  },
+  {
+    "Account Name": "SunState Federal Credit Union",
+    "BankAddress": "4065 SE 2nd Place",
+    "City": "Gainesville",
+    "State": "FL",
+    "Zip": "32615"
+  },
+  {
+    "Account Name": "Robins Fncl CU",
+    "BankAddress": "PO BOX 6849",
+    "City": "Warner Robins",
+    "State": "GA",
+    "Zip": "31095"
+  },
+  {
+    "Account Name": "HAPO CU",
+    "BankAddress": "601 Williams Blvd",
+    "City": "Richland",
+    "State": "WA",
+    "Zip": "99354"
+  },
+  {
+    "Account Name": "Northwell Health FCU",
+    "BankAddress": "350 Jericho Turnpike",
+    "City": "Jericho",
+    "State": "NY",
+    "Zip": "11753"
+  },
+  {
+    "Account Name": "Grant County State Bank",
+    "BankAddress": "1717 W. Kem Road",
+    "City": "Marion",
+    "State": "IN",
+    "Zip": "46952"
+  },
+  {
+    "Account Name": "1st Choice Credit Union",
+    "BankAddress": "315 Auburn Avenue",
+    "City": "Atlanta",
+    "State": "GA",
+    "Zip": "30303"
+  },
+  {
+    "Account Name": "Extra Credit Union",
+    "BankAddress": "6611 Chicago Road",
+    "City": "Warren",
+    "State": "MI",
+    "Zip": "48092"
+  },
+  {
+    "Account Name": "University Credit Union",
+    "BankAddress": "13241 SW 136th Street",
+    "City": "Miami",
+    "State": "FL",
+    "Zip": "33186"
+  },
+  {
+    "Account Name": "PELCO",
+    "BankAddress": " LLC",
+    "City": "825 Steneri Way",
+    "State": "Sparks",
+    "Zip": "NV"
+  },
+  {
+    "Account Name": "COMMUNITY CREDIT UNION OF FLORIDA",
+    "BankAddress": "1030 SOUTH US 1",
+    "City": "ROCKLEDGE",
+    "State": "FL",
+    "Zip": "32955"
+  },
+  {
+    "Account Name": "Plastiq",
+    "BankAddress": "1475 Folsom St.",
+    "City": "San Francisco",
+    "State": "CA",
+    "Zip": "94103"
+  },
+  {
+    "Account Name": "Day Air Credit Union",
+    "BankAddress": "3501 Wilmington Pike",
+    "City": "Kettering",
+    "State": "OH",
+    "Zip": "45429"
+  },
+  {
+    "Account Name": "Priority One Credit Union",
+    "BankAddress": "1631 Huntington Drive",
+    "City": "South Pasadena",
+    "State": "CA",
+    "Zip": "91030"
+  },
+  {
+    "Account Name": "Gold Coast Credit Union",
+    "BankAddress": "PO Box 16719",
+    "City": "West Palm Beach",
+    "State": "FL",
+    "Zip": "33416"
+  },
+  {
+    "Account Name": "BOKF",
+    "BankAddress": " NA DBA Mobank",
+    "City": "PO Box 22117",
+    "State": "Tulsa",
+    "Zip": "OK"
+  },
+  {
+    "Account Name": "Augusta VAH Federal Credit Union",
+    "BankAddress": "1267 Augusta West Parkway",
+    "City": "Augusta",
+    "State": "GA",
+    "Zip": "30909"
+  },
+  {
+    "Account Name": "Investment Savings Bank (ISB)",
+    "BankAddress": "1201 8th Avenue PO Box 1965",
+    "City": "Altoona",
+    "State": "PA",
+    "Zip": "16602"
+  },
+  {
+    "Account Name": "United Security Bank",
+    "BankAddress": "855 M Street",
+    "City": " Suite 130",
+    "State": "Fresno",
+    "Zip": "CA"
+  },
+  {
+    "Account Name": "ATLANTA POSTAL CREDIT UNION",
+    "BankAddress": "3900 CROWN RD",
+    "City": "ATLANTA",
+    "State": "GA",
+    "Zip": "30380"
+  },
+  {
+    "Account Name": "ST PAUL FEDERAL CREDIT UNION",
+    "BankAddress": "1330 CONWAY ST STE 200",
+    "City": "SAINT PAUL",
+    "State": "MN",
+    "Zip": "55106"
+  },
+  {
+    "Account Name": "XCEL Federal Credit Union",
+    "BankAddress": "P.O. BOX 2618",
+    "City": "Secaucus",
+    "State": "NJ",
+    "Zip": "7096"
+  },
+  {
+    "Account Name": "ProFed Federal Credit Union",
+    "BankAddress": "PO BOX 5466",
+    "City": "Fort Wayne",
+    "State": "IN",
+    "Zip": "46895"
+  },
+  {
+    "Account Name": "American Business Bank",
+    "BankAddress": "523 W. 6th Street",
+    "City": " STE 900",
+    "State": "Los Angeles",
+    "Zip": "CA"
+  },
+  {
+    "Account Name": "NEFCU",
+    "BankAddress": "PO Box 924302",
+    "City": "Ft Worth",
+    "State": "TX",
+    "Zip": "76124"
+  },
+  {
+    "Account Name": "Heritage Bank",
+    "BankAddress": "PO Box 1578",
+    "City": "Olympia",
+    "State": "WA",
+    "Zip": "98507"
+  },
+  {
+    "Account Name": "Guaranty Bank | Springfield",
+    "BankAddress": " MO",
+    "City": "1341 West Battlefield",
+    "State": "Springfield",
+    "Zip": "MO"
+  },
+  {
+    "Account Name": "Heritage Bank",
+    "BankAddress": "PO Box 1578",
+    "City": "Olympia",
+    "State": "WA",
+    "Zip": "98507"
+  },
+  {
+    "Account Name": "Autoflex Leasing",
+    "BankAddress": "558 S Central Expy.",
+    "City": "Richardson",
+    "State": "TX",
+    "Zip": "75080"
+  },
+  {
+    "Account Name": "Security Credit Union",
+    "BankAddress": "P. O. Box 5160",
+    "City": "Flint",
+    "State": "MI",
+    "Zip": "48505-0160"
+  },
+  {
+    "Account Name": "BrightStar Credit Union",
+    "BankAddress": "PO Box 8966",
+    "City": "Ft Lauderdale",
+    "State": "FL",
+    "Zip": "33310-8966"
+  },
+  {
+    "Account Name": "Grand Bank",
+    "BankAddress": "4200 E. Skelly Dr. STE 200",
+    "City": "Tulsa",
+    "State": "OK",
+    "Zip": "74135"
+  },
+  {
+    "Account Name": "Stonegate Bank",
+    "BankAddress": "400 North Federal Highway",
+    "City": "Pompano Beach",
+    "State": "FL",
+    "Zip": "33062"
+  },
+  {
+    "Account Name": "North East Arkansas Federal Credit Union",
+    "BankAddress": "2704 Fair Park Blvd",
+    "City": "Jonesboro",
+    "State": "AR",
+    "Zip": "72401"
+  },
+  {
+    "Account Name": "Alliance Bank (Red Wing)",
+    "BankAddress": "840 Technology Drive",
+    "City": "Red Wing",
+    "State": "MN",
+    "Zip": "55066"
+  },
+  {
+    "Account Name": "stella yoo",
+    "BankAddress": "",
+    "City": "",
+    "State": "",
+    "Zip": ""
+  },
+  {
+    "Account Name": "Miami Firefighters Credit Union",
+    "BankAddress": "1111 NW 7 Street",
+    "City": "Miami",
+    "State": "FL",
+    "Zip": "33136"
+  },
+  {
+    "Account Name": "OnPoint Community Credit Union",
+    "BankAddress": "PO BOX 3750",
+    "City": "Portland",
+    "State": "OR",
+    "Zip": "97208"
+  },
+  {
+    "Account Name": "Teachers Federal Credit Union",
+    "BankAddress": "102 Motor Parkway",
+    "City": "Hauppauge",
+    "State": "NY",
+    "Zip": "11788"
+  },
+  {
+    "Account Name": "Foothills Bank",
+    "BankAddress": "122 N Cortez Ste 202",
+    "City": "Prescott",
+    "State": "AZ",
+    "Zip": "86301"
+  },
+  {
+    "Account Name": "Texas Community Bank",
+    "BankAddress": "6721 McPherson Road",
+    "City": "Laredo",
+    "State": "TX",
+    "Zip": "78045"
+  },
+  {
+    "Account Name": "Allied First Bank",
+    "BankAddress": "3201 Orchard Road",
+    "City": "Oswego",
+    "State": "IL",
+    "Zip": "60543"
+  },
+  {
+    "Account Name": "Glacier Hills Credit Union",
+    "BankAddress": "2150 S Main St",
+    "City": "West Bend",
+    "State": "WI",
+    "Zip": "53095"
+  },
+  {
+    "Account Name": "USPS FCU",
+    "BankAddress": "7905 Malcolm Road Suite 311",
+    "City": "Clinton",
+    "State": "MD",
+    "Zip": "20735"
+  },
+  {
+    "Account Name": "Gulf Coast Bank",
+    "BankAddress": "4310 Johnston St",
+    "City": "Lafayette",
+    "State": "LA",
+    "Zip": "70506"
+  },
+  {
+    "Account Name": "U.S. Bank N.A. (Third Party)",
+    "BankAddress": "P.O. Box 342",
+    "City": "Oshkosh",
+    "State": "WI",
+    "Zip": "54903"
+  },
+  {
+    "Account Name": "Heritage Bank of Commerce",
+    "BankAddress": "150 Almaden Blvd",
+    "City": "San Jose",
+    "State": "CA",
+    "Zip": "95113"
+  },
+  {
+    "Account Name": "Simmons First Auto",
+    "BankAddress": " Inc.",
+    "City": "PO Box 5639",
+    "State": "Pine Bluff",
+    "Zip": "AR"
+  },
+  {
+    "Account Name": "Dallas FCU",
+    "BankAddress": "1300 Young Street",
+    "City": "STE. 100",
+    "State": "Dallas",
+    "Zip": "TX"
+  },
+  {
+    "Account Name": "DoverPhila Federal Credit Union",
+    "BankAddress": "119 Fillmore Ave",
+    "City": "Dover",
+    "State": "OH",
+    "Zip": "44622"
+  },
+  {
+    "Account Name": "Honda Federal Credit Union",
+    "BankAddress": "19775 State Route 739",
+    "City": "Marysville",
+    "State": "OH",
+    "Zip": "43040"
+  },
+  {
+    "Account Name": "M&T Bank (3rd Party Leases)",
+    "BankAddress": "PO BOX 17292",
+    "City": "Baltimore",
+    "State": "MD",
+    "Zip": "21203"
+  },
+  {
+    "Account Name": "Bank of Tyler A Div of Huntington State Bank",
+    "BankAddress": "2120 S. First St.",
+    "City": "Lufkin",
+    "State": "TX",
+    "Zip": "75901"
+  },
+  {
+    "Account Name": "Lakestone Bank & Trust",
+    "BankAddress": "83 W. Nepessing St. – PO Box 660",
+    "City": "Lapeer",
+    "State": "MI",
+    "Zip": "49446"
+  },
+  {
+    "Account Name": "BancorpSouth Bank",
+    "BankAddress": "PO BOX 4360",
+    "City": "TUPELO",
+    "State": "MS",
+    "Zip": "38802"
+  },
+  {
+    "Account Name": "Dollar Bank",
+    "BankAddress": " FSB",
+    "City": "300 W. Tuscarawas",
+    "State": "Canton",
+    "Zip": "OH"
+  },
+  {
+    "Account Name": "New Omni Bank",
+    "BankAddress": " NA",
+    "City": "1235 S Garfield Ave",
+    "State": "Alhambra",
+    "Zip": "CA"
+  },
+  {
+    "Account Name": "Gulf Credit Union",
+    "BankAddress": "PO Box 848",
+    "City": "Groves",
+    "State": "TX",
+    "Zip": "77619"
+  },
+  {
+    "Account Name": "Premier Financial Services",
+    "BankAddress": "47 Sherman Hill Road",
+    "City": "Woodbury",
+    "State": "CT",
+    "Zip": "6798"
+  },
+  {
+    "Account Name": "Auto Club Trust",
+    "BankAddress": " FSB",
+    "City": "PO Box 1712",
+    "State": "Cockeysville",
+    "Zip": "MD"
+  },
+  {
+    "Account Name": "First National Bank Alaska",
+    "BankAddress": "P.O. Box 100720",
+    "City": "Anchorage",
+    "State": "AK",
+    "Zip": "99510"
+  },
+  {
+    "Account Name": "U MASS FIVE COLLEGE FED CU",
+    "BankAddress": "200 WEST GATE CTR DR",
+    "City": "HADLEY",
+    "State": "MA",
+    "Zip": "1060"
+  },
+  {
+    "Account Name": "Leyden Credit Union",
+    "BankAddress": "2701 North 25th Avenue",
+    "City": "Franklin Park",
+    "State": "IL",
+    "Zip": "60131"
+  },
+  {
+    "Account Name": "CrossFirst Bank",
+    "BankAddress": "5001 Gaillardia Corporate Place",
+    "City": "Oklahoma City",
+    "State": "OK",
+    "Zip": "73142"
+  },
+  {
+    "Account Name": "Fidelity State Bank & Trust Company",
+    "BankAddress": "600 South Kansas Avenue",
+    "City": "Topeka",
+    "State": "KS",
+    "Zip": "66603"
+  },
+  {
+    "Account Name": "Horizon Bank (Michigan",
+    "BankAddress": " Indiana)",
+    "City": "502 Franklin Square",
+    "State": "Michigan City",
+    "Zip": "IN"
+  },
+  {
+    "Account Name": "Mocse Federal Credit Union",
+    "BankAddress": "3600 Coffee Road",
+    "City": "Modesto",
+    "State": "CA - California",
+    "Zip": "95355"
+  },
+  {
+    "Account Name": "Verus Bank of Commerce",
+    "BankAddress": "3700 S College Ave",
+    "City": " Unit 102",
+    "State": "Fort Collins",
+    "Zip": "CO"
+  },
+  {
+    "Account Name": "Port Washington State Bank",
+    "BankAddress": "201 Regal Drive PO Box 247",
+    "City": "Fredonia",
+    "State": "WI",
+    "Zip": "53021"
+  },
+  {
+    "Account Name": "SANTA CRUZ CMNTY CU",
+    "BankAddress": "324 FRONT ST",
+    "City": "SANTA CRUZ",
+    "State": "Ca",
+    "Zip": "95060"
+  },
+  {
+    "Account Name": "United Community Bank",
+    "BankAddress": "27 Bull Street",
+    "City": "Savannah",
+    "State": "GA",
+    "Zip": "31401"
+  },
+  {
+    "Account Name": "Riegel Federal Credit Union",
+    "BankAddress": "515 Milford-Warren Glen Rd",
+    "City": "Milford",
+    "State": "NJ",
+    "Zip": "8848"
+  },
+  {
+    "Account Name": "OUR Credit Union-Rochester Rd",
+    "BankAddress": "6693 Rochester Rd",
+    "City": "Troy",
+    "State": "MI",
+    "Zip": "48085"
+  },
+  {
+    "Account Name": "Alden Credit Union",
+    "BankAddress": "710 Gratan St",
+    "City": "Chicopee",
+    "State": "MA",
+    "Zip": "1020"
+  },
+  {
+    "Account Name": "MERCY CREDIT UNION",
+    "BankAddress": "1444 E SUNSHINE ST",
+    "City": "SPRINGFIELD",
+    "State": "MO",
+    "Zip": "65804"
+  },
+  {
+    "Account Name": "First Commonwealth FCU",
+    "BankAddress": "P.O. Box 20450",
+    "City": "Lehigh Valley",
+    "State": "PA",
+    "Zip": "18002-0450"
+  },
+  {
+    "Account Name": "Mid Atlantic Federal Credit Union.",
+    "BankAddress": "P.O. Box 2270",
+    "City": "Germantown",
+    "State": "MD",
+    "Zip": "20875"
+  },
+  {
+    "Account Name": "SANTANDER BANK N.A.",
+    "BankAddress": "PO BOX 961272",
+    "City": "FORT WORTH",
+    "State": "TX",
+    "Zip": "76161"
+  },
+  {
+    "Account Name": "Miramar Federal Credit Union",
+    "BankAddress": "9494 Miramar Road",
+    "City": "San Diego",
+    "State": "CA",
+    "Zip": "92126"
+  },
+  {
+    "Account Name": "State Bank and Trust Company",
+    "BankAddress": "401 Clinton St",
+    "City": "Defiance",
+    "State": "OH",
+    "Zip": "43512"
+  },
+  {
+    "Account Name": "UW Credit Union",
+    "BankAddress": "PO BOX 44963",
+    "City": "Madison",
+    "State": "WI",
+    "Zip": "53744"
+  },
+  {
+    "Account Name": "Family Security Credit Union",
+    "BankAddress": "2204 Family Security Place",
+    "City": " SW",
+    "State": "Decatur",
+    "Zip": "AL"
+  },
+  {
+    "Account Name": "Kemba Credit Union",
+    "BankAddress": "P. O. Box 14090",
+    "City": "Cincinnati",
+    "State": "OH",
+    "Zip": "45250"
+  },
+  {
+    "Account Name": "Birmingham Bloomfield Credit Union",
+    "BankAddress": "576 E. Lincoln",
+    "City": "Birmingham",
+    "State": "MI",
+    "Zip": "48009"
+  },
+  {
+    "Account Name": "ConnectOne Bank",
+    "BankAddress": "2455 Morris Avenue",
+    "City": "Union",
+    "State": "NJ",
+    "Zip": "7083"
+  },
+  {
+    "Account Name": "Heartland Bank and Trust Company",
+    "BankAddress": "3501 W. War Memorial Drive",
+    "City": "Peoria",
+    "State": "IL",
+    "Zip": "61615"
+  },
+  {
+    "Account Name": "Members Alliance Credit Union",
+    "BankAddress": "2550 S Alpine Rd.",
+    "City": "Rockford",
+    "State": "IL",
+    "Zip": "61108"
+  },
+  {
+    "Account Name": "America's Christian Credit Union",
+    "BankAddress": "2100 E. Route 66",
+    "City": " Suite 100",
+    "State": "Glendora",
+    "Zip": "CA"
+  },
+  {
+    "Account Name": "Jersey Shore State Bank",
+    "BankAddress": "300 Market St.",
+    "City": "Williamsport",
+    "State": "PA",
+    "Zip": "17701"
+  },
+  {
+    "Account Name": "Class Act Federal Credit Union",
+    "BankAddress": "3620 Fern Valley Rd.",
+    "City": "Louisville",
+    "State": "KY",
+    "Zip": "40219"
+  },
+  {
+    "Account Name": "GFA Federal Credit Union",
+    "BankAddress": "229 Parker Street PO Box 468",
+    "City": "Gardner",
+    "State": "MA",
+    "Zip": "01440-0468"
+  },
+  {
+    "Account Name": "Itasca Bank & Trust Co.",
+    "BankAddress": "308 W Irving Park Rd.",
+    "City": "Itasca",
+    "State": "IL",
+    "Zip": "60143"
+  },
+  {
+    "Account Name": "The Partnership FCU",
+    "BankAddress": "3268 Progress Way Bldg. 12 MSC-5120",
+    "City": "Wilmington",
+    "State": "OH",
+    "Zip": "45177-7700"
+  },
+  {
+    "Account Name": "Pinellas Federal Credit Union",
+    "BankAddress": "P O Box 2300",
+    "City": "Largo",
+    "State": "FL",
+    "Zip": "33779"
+  },
+  {
+    "Account Name": "Northwest Consumers Federal Credit Union",
+    "BankAddress": "2948 Garfield Rd. North",
+    "City": "Traverse City",
+    "State": "MI",
+    "Zip": "49686"
+  },
+  {
+    "Account Name": "Mutual Federal",
+    "BankAddress": " a division of First Bank Richmond",
+    "City": "2601 Michigan Street",
+    "State": "Sidney",
+    "Zip": "OH"
+  },
+  {
+    "Account Name": "SERVISFIRST BANK",
+    "BankAddress": "850 SHADES CREEK PKWY STE 200",
+    "City": "BIRMINGHAM",
+    "State": "AL",
+    "Zip": "35209"
+  },
+  {
+    "Account Name": "E-Central Credit Union",
+    "BankAddress": "990 S. Fair Oaks Ave",
+    "City": "Pasadena",
+    "State": "CA",
+    "Zip": "91105"
+  },
+  {
+    "Account Name": "North Brookfield Savings Bank",
+    "BankAddress": "35 Summer St.",
+    "City": "North Brookfield",
+    "State": "MA",
+    "Zip": "1535"
+  },
+  {
+    "Account Name": "Key Bank N. A. (OH)",
+    "BankAddress": "4910 Tiedeman Rd",
+    "City": " 5th Floor",
+    "State": "Brooklyn",
+    "Zip": "OH"
+  },
+  {
+    "Account Name": "Connections Credit Union",
+    "BankAddress": "249 N 9th St.",
+    "City": "Boise",
+    "State": "ID",
+    "Zip": "83702"
+  },
+  {
+    "Account Name": "Northwest Adventist Federal Credit Union",
+    "BankAddress": "10333 Southeast Main Street",
+    "City": "Portland",
+    "State": "OR",
+    "Zip": "97216"
+  },
+  {
+    "Account Name": "Associated Healthcare Credit Union",
+    "BankAddress": "360 Sherman St. STE 360",
+    "City": "St. Paul",
+    "State": "MN",
+    "Zip": "55102"
+  },
+  {
+    "Account Name": "Credit Union of Texas",
+    "BankAddress": "8131 LBJ Freeway STE 500",
+    "City": "Dallas",
+    "State": "TX",
+    "Zip": "75251"
+  },
+  {
+    "Account Name": "Mount Olive Baptist Church Federal Credit Union",
+    "BankAddress": "514 N. L. Robinson Dr.",
+    "City": "Arlington",
+    "State": "TX",
+    "Zip": "76011"
+  },
+  {
+    "Account Name": "Frost Bank",
+    "BankAddress": "100 W Houston Street",
+    "City": "San Antonio",
+    "State": "TX",
+    "Zip": "78205"
+  },
+  {
+    "Account Name": "Commonwealth Bank & Trust",
+    "BankAddress": "4350 Brownsboro Rd.",
+    "City": " # 310",
+    "State": "Louisville",
+    "Zip": "KY"
+  },
+  {
+    "Account Name": "ALPINE BANK",
+    "BankAddress": "400 7th St. S.",
+    "City": "Rifle",
+    "State": "CO",
+    "Zip": "81650"
+  },
+  {
+    "Account Name": "Illinois State Police Federal Credit Union",
+    "BankAddress": "730 Engineering Avenue",
+    "City": "Springfield",
+    "State": "IL",
+    "Zip": "62703"
+  },
+  {
+    "Account Name": "United Bank (in CT and MA)",
+    "BankAddress": "855 Enfield St",
+    "City": "Enfield",
+    "State": "CT",
+    "Zip": "6082"
+  },
+  {
+    "Account Name": "BOKF",
+    "BankAddress": " NA dba Bank of Albuquerque",
+    "City": "PO Box 22117",
+    "State": "Tulsa",
+    "Zip": "OK"
+  },
+  {
+    "Account Name": "GSA Federal Credit Union",
+    "BankAddress": "P.O. Box 27559",
+    "City": "Washington",
+    "State": "DC",
+    "Zip": "20038"
+  },
+  {
+    "Account Name": "Aurora Federal Credit Union",
+    "BankAddress": "6 Abilene St",
+    "City": "Aurora",
+    "State": "CO",
+    "Zip": "80011"
+  },
+  {
+    "Account Name": "Safe 1 Credit Union",
+    "BankAddress": "1400 Mill Rock Way",
+    "City": "Bakersfield",
+    "State": "CA",
+    "Zip": "93311"
+  },
+  {
+    "Account Name": "FIRST FLORIDA CREDIT UNION",
+    "BankAddress": "500 WEST 1ST ST",
+    "City": "JACKSONVILLE",
+    "State": "FL",
+    "Zip": "32202"
+  },
+  {
+    "Account Name": "PremierOne CU",
+    "BankAddress": "140 Asbury St.",
+    "City": "San Jose",
+    "State": "CA",
+    "Zip": "95110"
+  },
+  {
+    "Account Name": "F&M Bank",
+    "BankAddress": "1216 Piedmont Rd N.",
+    "City": "Piedmont",
+    "State": "OK",
+    "Zip": "73078"
+  },
+  {
+    "Account Name": "Eastman Credit Union",
+    "BankAddress": "PO Box 1040",
+    "City": "Wilmington",
+    "State": "OH",
+    "Zip": "45177"
+  },
+  {
+    "Account Name": "Adventure Credit Union",
+    "BankAddress": "P.O. Box 895",
+    "City": "Grand Rapids",
+    "State": "MI",
+    "Zip": "49518-0895"
+  },
+  {
+    "Account Name": "BOSTON FIREFIGHTERS CREDIT UNION",
+    "BankAddress": "60 HALLET ST",
+    "City": "DORCHESTER",
+    "State": "MA",
+    "Zip": "2124"
+  },
+  {
+    "Account Name": "Professional Fire Fighters Credit Union",
+    "BankAddress": "9410 Healthplex Drive",
+    "City": "Shreveport",
+    "State": "LA",
+    "Zip": "71106"
+  },
+  {
+    "Account Name": "Pinnacle Bank (TN)",
+    "BankAddress": "150 3rd Avenue South",
+    "City": "Nashville",
+    "State": "TN",
+    "Zip": "37201"
+  },
+  {
+    "Account Name": "Sikorsky Financial Credit Union Inc.",
+    "BankAddress": "1000 Oronoque Lane",
+    "City": "Stratford",
+    "State": "CT",
+    "Zip": "6614"
+  },
+  {
+    "Account Name": "Greer State Bank",
+    "BankAddress": "PO Box 1029",
+    "City": "Greer",
+    "State": "SC",
+    "Zip": "29652"
+  },
+  {
+    "Account Name": "Eagle Community CU",
+    "BankAddress": "PO BX 5196",
+    "City": "Lake Forest",
+    "State": "CA",
+    "Zip": "92609"
+  },
+  {
+    "Account Name": "Silver State Schools Credit Union",
+    "BankAddress": "PO BX 12037",
+    "City": "LAS VEGAS",
+    "State": "NV",
+    "Zip": "89112"
+  },
+  {
+    "Account Name": "Alliance Bank",
+    "BankAddress": "55 E 5th St.",
+    "City": "St. Paul",
+    "State": "MN",
+    "Zip": "55101"
+  },
+  {
+    "Account Name": "Nextgear Capital Inc.",
+    "BankAddress": "1320 City Center Dr 100A",
+    "City": "Carmel",
+    "State": "IN",
+    "Zip": "46032"
+  },
+  {
+    "Account Name": "SEACOAST NATIONAL BANK",
+    "BankAddress": "815 COLORADO AVE STE 250",
+    "City": "STUART",
+    "State": "FL",
+    "Zip": "34994"
+  },
+  {
+    "Account Name": "Ukrainian Selfreliance Federal Credit Union",
+    "BankAddress": "1729 Cottman Avenue",
+    "City": "Philadelphia",
+    "State": "PA",
+    "Zip": "19111"
+  },
+  {
+    "Account Name": "Alpine Credit Union",
+    "BankAddress": "1510 N State St.",
+    "City": "Orem",
+    "State": "UT",
+    "Zip": "84057"
+  },
+  {
+    "Account Name": "The Wirt-Rivette Group",
+    "BankAddress": "3520 Davenport Ave.",
+    "City": "Saginaw",
+    "State": "MI",
+    "Zip": "48602"
+  },
+  {
+    "Account Name": "RTN Federal Credit Union",
+    "BankAddress": "600 Main Street",
+    "City": "Waltham",
+    "State": "MA",
+    "Zip": "2452"
+  },
+  {
+    "Account Name": "SANTANDER BANK",
+    "BankAddress": " NA",
+    "City": "450 PENN ST",
+    "State": "READING",
+    "Zip": "FL"
+  },
+  {
+    "Account Name": "VA DESERT PACIFIC FCU",
+    "BankAddress": "5901 E 7TH ST",
+    "City": " BLDG 4",
+    "State": "LONG BEACH",
+    "Zip": "CA"
+  },
+  {
+    "Account Name": "South Metro Federal Credit Union",
+    "BankAddress": "2573 Credit Union Drive",
+    "City": "Prior Lake",
+    "State": "MN",
+    "Zip": "55372"
+  },
+  {
+    "Account Name": "San Francisco Fire Cr Un",
+    "BankAddress": "3201 California Street",
+    "City": "San Francisco",
+    "State": "CA",
+    "Zip": "94118"
+  },
+  {
+    "Account Name": "Suntrust Bank DBA Lightstream",
+    "BankAddress": "PO BOX 22530",
+    "City": "Lehigh Valley",
+    "State": "PA",
+    "Zip": "18002"
+  },
+  {
+    "Account Name": "First Bank",
+    "BankAddress": "201 Vernon Street",
+    "City": "Roseville",
+    "State": "CA",
+    "Zip": "95678"
+  },
+  {
+    "Account Name": "Digital FCU",
+    "BankAddress": "220 Donald Lynch Blvd",
+    "City": "marlborough",
+    "State": "MA",
+    "Zip": "1752"
+  },
+  {
+    "Account Name": "Vectra Bank",
+    "BankAddress": "2000 S. Colorado Blvd Suite 2-1200",
+    "City": "Denver",
+    "State": "CO",
+    "Zip": "80222"
+  },
+  {
+    "Account Name": "City National Bank of Colorado City",
+    "BankAddress": "228 Elm Street",
+    "City": "Colorado City",
+    "State": "TX",
+    "Zip": "79512"
+  },
+  {
+    "Account Name": "Travis County Credit Union",
+    "BankAddress": "1101 North Interstate 35",
+    "City": "Austin",
+    "State": "TX",
+    "Zip": "78702"
+  },
+  {
+    "Account Name": "BAYER HERITAGE FEDERAL CREDIT UNION",
+    "BankAddress": "17612 ENERGY RD",
+    "City": "PROCTOR",
+    "State": "WV",
+    "Zip": "26055"
+  },
+  {
+    "Account Name": "MARRIOTT EMPLOYEES' FEDERAL CREDIT UNION",
+    "BankAddress": "PO BOX 6006",
+    "City": "BETHESDA",
+    "State": "MD",
+    "Zip": "20827"
+  },
+  {
+    "Account Name": "Valley Communities Credit Union",
+    "BankAddress": "PO Box 127",
+    "City": "Mosinee",
+    "State": "WI",
+    "Zip": "54455"
+  },
+  {
+    "Account Name": "Dutch Point Credit Union",
+    "BankAddress": "195 Silas Deane Highway",
+    "City": "Wethersfield",
+    "State": "CT",
+    "Zip": "6109"
+  },
+  {
+    "Account Name": "BFG Federal Credit Union",
+    "BankAddress": "445 S. Main St",
+    "City": "Akron",
+    "State": "OH",
+    "Zip": "44311"
+  },
+  {
+    "Account Name": "Gerber Federal Credit Union",
+    "BankAddress": "PO Box 116",
+    "City": "Fremont",
+    "State": "MI",
+    "Zip": "49412"
+  },
+  {
+    "Account Name": "OE Federal Credit Union",
+    "BankAddress": "PO Box 5073",
+    "City": "Livermore",
+    "State": "CA",
+    "Zip": "94551"
+  },
+  {
+    "Account Name": "Rancho FCU",
+    "BankAddress": "PO BX 2728",
+    "City": "Downey",
+    "State": "CA",
+    "Zip": "90242"
+  },
+  {
+    "Account Name": "First International Bank & Trust",
+    "BankAddress": "1350 13th Ave E",
+    "City": "West Fargo",
+    "State": "ND",
+    "Zip": "58078"
+  },
+  {
+    "Account Name": "Andigo (Formerly MECU)",
+    "BankAddress": "1205 East Algonquin Road",
+    "City": "Schaumburg",
+    "State": "IL",
+    "Zip": "60196"
+  },
+  {
+    "Account Name": "Home City Federal Savings Bank",
+    "BankAddress": "2454 North Limestone Street",
+    "City": "Springfield",
+    "State": "Ohio",
+    "Zip": "45503"
+  },
+  {
+    "Account Name": "River Valley Credit Union",
+    "BankAddress": "2098 S. Alex Rd",
+    "City": "Dayton",
+    "State": "OH",
+    "Zip": "45449"
+  },
+  {
+    "Account Name": "Starion Bank",
+    "BankAddress": "333 N 4th Street",
+    "City": "Bismarck",
+    "State": "ND",
+    "Zip": "58502"
+  },
+  {
+    "Account Name": "CME Federal Credit Union",
+    "BankAddress": "P.O. Box 267121",
+    "City": "Columbus",
+    "State": "OH",
+    "Zip": "43226"
+  },
+  {
+    "Account Name": "Mutual Credit Union",
+    "BankAddress": "PO Box 25",
+    "City": "Vicksburg",
+    "State": "MS",
+    "Zip": "39181"
+  },
+  {
+    "Account Name": "Mokelumne Federal Credit Union",
+    "BankAddress": "10628 TRINITY PARKWAY",
+    "City": " SUITE A",
+    "State": "Stockton",
+    "Zip": "CA"
+  },
+  {
+    "Account Name": "1st Northern California Credit Union",
+    "BankAddress": "P.O. Box 509",
+    "City": "Martinez",
+    "State": "CA",
+    "Zip": "94553-0144"
+  },
+  {
+    "Account Name": "Allied Healthcare FCU",
+    "BankAddress": "PO BX 93124",
+    "City": "Long Beach",
+    "State": "CA",
+    "Zip": "90809"
+  },
+  {
+    "Account Name": "IH Mississippi Valley Credit Union",
+    "BankAddress": "PO BOX 1010",
+    "City": "Moline",
+    "State": "IL",
+    "Zip": "51255-1010"
+  },
+  {
+    "Account Name": "OCALA COMMUNITY CREDIT UNION",
+    "BankAddress": "2675 SE 36TH AVE",
+    "City": "OCALA",
+    "State": "FL",
+    "Zip": "34471"
+  },
+  {
+    "Account Name": "Chemcel Federal Credit Union",
+    "BankAddress": "7001 Saratoga Blvd",
+    "City": "Corpus Christi",
+    "State": "TX",
+    "Zip": "78414"
+  },
+  {
+    "Account Name": "Millennium Bank",
+    "BankAddress": "2077 Miner St.",
+    "City": "Des Plaines",
+    "State": "IL",
+    "Zip": "60016"
+  },
+  {
+    "Account Name": "Numerica Credit Union",
+    "BankAddress": "P.O. Box 4000",
+    "City": "Spokane Valley",
+    "State": "WA",
+    "Zip": "99037"
+  },
+  {
+    "Account Name": "Muncy Bank and Trust",
+    "BankAddress": "2 N Main St",
+    "City": "Muncy",
+    "State": "PA",
+    "Zip": "17756"
+  },
+  {
+    "Account Name": "Elements Financial CU",
+    "BankAddress": "PO Box 7123",
+    "City": "Indianapolis",
+    "State": "IN",
+    "Zip": "46207"
+  },
+  {
+    "Account Name": "Purdue Federal Credit Union",
+    "BankAddress": "PO BOX 1950",
+    "City": "WEST LAFAYETTE",
+    "State": "IN",
+    "Zip": "47906"
+  },
+  {
+    "Account Name": "Enterprise Holding",
+    "BankAddress": " LLC.",
+    "City": "600 Corporate Park Drive",
+    "State": "St. Louis",
+    "Zip": "MO"
+  },
+  {
+    "Account Name": "Palmetto Trust Federal Credit Union",
+    "BankAddress": "Post Office Box 2028",
+    "City": "Columbia",
+    "State": "South Carolina",
+    "Zip": "29202-2028"
+  },
+  {
+    "Account Name": "Family First Federal Credit Union",
+    "BankAddress": "2520 Browncroft Blvd",
+    "City": "Rochester",
+    "State": "NY",
+    "Zip": "14625"
+  },
+  {
+    "Account Name": "First American Commercial Bancorp",
+    "BankAddress": " Inc.",
+    "City": "255 Woodcliff Dr.",
+    "State": "Fairport",
+    "Zip": "NY"
+  },
+  {
+    "Account Name": "Reliant Community Credit Union",
+    "BankAddress": "PO Box 40",
+    "City": "Sodus",
+    "State": "NY",
+    "Zip": "14551-0040"
+  },
+  {
+    "Account Name": "CenterState Bank of Fl N.A.",
+    "BankAddress": "Po Box 9602",
+    "City": "Winter Haven",
+    "State": "FL",
+    "Zip": "33883"
+  },
+  {
+    "Account Name": "Island Federal Credit Union",
+    "BankAddress": "120 Motor Parkway",
+    "City": "Hauppauge",
+    "State": "NY",
+    "Zip": "11788-5160"
+  },
+  {
+    "Account Name": "Greater TEXAS Federal Credit Union",
+    "BankAddress": "6411 North Lamar Blvd.",
+    "City": "Austin",
+    "State": "TX",
+    "Zip": "78752"
+  },
+  {
+    "Account Name": "First National Bank of Louisiana",
+    "BankAddress": "128 N Parkerson Ave.",
+    "City": "Crowley",
+    "State": "LA",
+    "Zip": "70526"
+  },
+  {
+    "Account Name": "First National Bank of Bastrop",
+    "BankAddress": "489 Highway 71 West",
+    "City": " P.O. Drawer F",
+    "State": "Bastrop",
+    "Zip": "TX"
+  },
+  {
+    "Account Name": "GTE FEDERAL CREDIT UNION",
+    "BankAddress": "PO BOX 172599",
+    "City": "TAMPA",
+    "State": "FL",
+    "Zip": "33672"
+  },
+  {
+    "Account Name": "American Bank",
+    "BankAddress": "800 N Shoreline Blvd.",
+    "City": " 100 S Tower",
+    "State": "Corpus Christi",
+    "Zip": "TX"
+  },
+  {
+    "Account Name": "NuVision FCU",
+    "BankAddress": "7812 Edinger Avenue",
+    "City": "Huntington Beach",
+    "State": "CA - California",
+    "Zip": "92647"
+  },
+  {
+    "Account Name": "BCM Federal Credit Union",
+    "BankAddress": "One Baylor Plaza",
+    "City": "Houston",
+    "State": "TX",
+    "Zip": "77030"
+  },
+  {
+    "Account Name": "Peoples United Bank",
+    "BankAddress": "125 Daniel Webster Highway",
+    "City": "Nashua",
+    "State": "NH",
+    "Zip": "3060"
+  },
+  {
+    "Account Name": "Third Coast Bank SSB",
+    "BankAddress": "20202 Highway 59 North Suite 190",
+    "City": "Humble",
+    "State": "TX",
+    "Zip": "77338"
+  },
+  {
+    "Account Name": "ZB",
+    "BankAddress": " N.A.DBA Amegy Bank",
+    "City": "PO Box 692425",
+    "State": "San Antonio",
+    "Zip": "TX"
+  },
+  {
+    "Account Name": "Glendale Area Schools Federal Credit Union",
+    "BankAddress": "1800 Broadview Drive",
+    "City": "Glendale",
+    "State": "CA",
+    "Zip": "91208"
+  },
+  {
+    "Account Name": "DATCU Credit Union",
+    "BankAddress": "PO Box 827",
+    "City": "Denton",
+    "State": "TX",
+    "Zip": "76201"
+  },
+  {
+    "Account Name": "Chicago Patrolmen’s Federal Credit Union",
+    "BankAddress": "1407 W. Washington Blvd.",
+    "City": "Chicago",
+    "State": "IL",
+    "Zip": "60607"
+  },
+  {
+    "Account Name": "State Employee Federal Credit Union",
+    "BankAddress": "700 Patroon Creek Blvd",
+    "City": "Albany",
+    "State": "NY",
+    "Zip": "12206"
+  },
+  {
+    "Account Name": "FSU Credit Union",
+    "BankAddress": "PO Box 182499",
+    "City": "Tallahassee",
+    "State": "FL",
+    "Zip": "32318-0022"
+  },
+  {
+    "Account Name": "Goldenwest Credit Union",
+    "BankAddress": "5025 South Adams Ave",
+    "City": "South Ogden",
+    "State": "UT",
+    "Zip": "84403"
+  },
+  {
+    "Account Name": "Security Plus FCU",
+    "BankAddress": "1514 Woodlawn Dr",
+    "City": "Baltimore",
+    "State": "MD",
+    "Zip": "21207"
+  },
+  {
+    "Account Name": "Burns & McDonnell Credit Union",
+    "BankAddress": "9400 AWard Pkwy Suite 624",
+    "City": "Kansas City",
+    "State": "MO",
+    "Zip": "64114"
+  },
+  {
+    "Account Name": "Medford Municipal Employees Federal Credit Union",
+    "BankAddress": "85 George P. Hassett Drive",
+    "City": " Room 200",
+    "State": "Medford",
+    "Zip": "MA"
+  },
+  {
+    "Account Name": "Cooperative Federal Credit Union",
+    "BankAddress": "39 Broadway",
+    "City": "Woodridge",
+    "State": "NY",
+    "Zip": "12789"
+  },
+  {
+    "Account Name": "CITIZENS BUSINESS BANK",
+    "BankAddress": "3110 INLAND EMPIRE BLVD B",
+    "City": "ONTARIO",
+    "State": "CA",
+    "Zip": "91764"
+  },
+  {
+    "Account Name": "Plaza Bank",
+    "BankAddress": "18200 Von Karman Ave Ste 500",
+    "City": "Irvine",
+    "State": "CA",
+    "Zip": "92612"
+  },
+  {
+    "Account Name": "AC AUTOPAY",
+    "BankAddress": " LLC",
+    "City": "PO BOX 40409",
+    "State": "DENVER",
+    "Zip": "CO"
+  },
+  {
+    "Account Name": "Atlas Leasing",
+    "BankAddress": " Inc",
+    "City": "500 N. Federal Hwy",
+    "State": "Pompano Beach",
+    "Zip": "FL"
+  },
+  {
+    "Account Name": "UARK Federal Credit Union",
+    "BankAddress": "PO BOX 10260",
+    "City": "Fayetteville",
+    "State": "AR",
+    "Zip": "72703"
+  },
+  {
+    "Account Name": "FRANKLIN JOHNSTOWN FEDERAL CREDIT UNION",
+    "BankAddress": "310 BLOOMFIELD STREET",
+    "City": "JOHNSTOWN",
+    "State": "PA",
+    "Zip": "15904"
+  },
+  {
+    "Account Name": "allU.S. Credit Union",
+    "BankAddress": "1410 N Main St.",
+    "City": "Salinas",
+    "State": "CA",
+    "Zip": "93906"
+  },
+  {
+    "Account Name": "Heritage South Credit Union",
+    "BankAddress": "PO Box 128",
+    "City": "Sylacauga",
+    "State": "AL",
+    "Zip": "35150"
+  },
+  {
+    "Account Name": "Security Trust & Savings Bank",
+    "BankAddress": "601 Lake Ave",
+    "City": "Storm Lake",
+    "State": "IA",
+    "Zip": "50588"
+  },
+  {
+    "Account Name": "CONNECT CREDIT UNION",
+    "BankAddress": "3400 W COMMERCIAL BLVD",
+    "City": "FT LAUDERDALE",
+    "State": "FL",
+    "Zip": "33309"
+  },
+  {
+    "Account Name": "Maine State Credit Union",
+    "BankAddress": "PO Box 5659",
+    "City": "Augusta",
+    "State": "Maine",
+    "Zip": "4332"
+  },
+  {
+    "Account Name": "ARI",
+    "BankAddress": "4001 Leadenhall Road P.O. Box 5039",
+    "City": "Mount Laurel",
+    "State": "NJ",
+    "Zip": "8054"
+  },
+  {
+    "Account Name": "Fayette Federal Employees Federal Credit Union",
+    "BankAddress": "364 Morgantowm Street",
+    "City": "Uniontown",
+    "State": "PA",
+    "Zip": "15401"
+  },
+  {
+    "Account Name": "Dupaco Community Credit Union",
+    "BankAddress": "3299 Hillcrest Road",
+    "City": "Dubuque",
+    "State": "IA",
+    "Zip": "52004"
+  },
+  {
+    "Account Name": "Essex County Teachers Federal Credit Union",
+    "BankAddress": "125 Franklin St",
+    "City": "Bloomfield",
+    "State": "NJ",
+    "Zip": "7003"
+  },
+  {
+    "Account Name": "Donlen Corporation",
+    "BankAddress": "3000 Lakeside Drive",
+    "City": "Bannockbum",
+    "State": "IL",
+    "Zip": "60015"
+  },
+  {
+    "Account Name": "Elements Fleet Management",
+    "BankAddress": "940 Ridgebrook Road",
+    "City": "Sparks",
+    "State": "MD",
+    "Zip": "21152-9390"
+  },
+  {
+    "Account Name": "LAUNCH FCU",
+    "BankAddress": "300 S PLUMOSA ST",
+    "City": "MERRITT",
+    "State": "FL",
+    "Zip": "32952"
+  },
+  {
+    "Account Name": "Century Bank of Georgia",
+    "BankAddress": "215 E Main St",
+    "City": "Cartersville",
+    "State": "GA",
+    "Zip": "30120"
+  },
+  {
+    "Account Name": "New South Credit Union",
+    "BankAddress": "3261 N. Mall Rd",
+    "City": "Knoxville",
+    "State": "TN",
+    "Zip": "37924"
+  },
+  {
+    "Account Name": "BOKF",
+    "BankAddress": " Na DBA Bank of Texas",
+    "City": "PO Box 22117",
+    "State": "Tulsa",
+    "Zip": "OK"
+  },
+  {
+    "Account Name": "Tri-State Bank of Memphis",
+    "BankAddress": "180 S. Main St.",
+    "City": "Memphis",
+    "State": "TN",
+    "Zip": "88108"
+  },
+  {
+    "Account Name": "LeasePlan USA",
+    "BankAddress": "1165 Sanctuary Parkway",
+    "City": "Alpharetta",
+    "State": "GA",
+    "Zip": "30009"
+  },
+  {
+    "Account Name": "Ardent Credit Union",
+    "BankAddress": "1500 Spring Garden Street",
+    "City": "Philadelphia",
+    "State": "PA",
+    "Zip": "19130"
+  },
+  {
+    "Account Name": "Bank of Coushatta",
+    "BankAddress": "PO Box 1360",
+    "City": "Coushatta",
+    "State": "LA",
+    "Zip": "71019"
+  },
+  {
+    "Account Name": "American National Bank of Texas",
+    "BankAddress": "1101 East Plano Parkway",
+    "City": " STE E",
+    "State": "Plano",
+    "Zip": "TX"
+  },
+  {
+    "Account Name": "Fresno County Federal Credit Union",
+    "BankAddress": "P.O. Box 8027",
+    "City": "Fresno",
+    "State": "CA - California",
+    "Zip": "93747"
+  },
+  {
+    "Account Name": "Trinity Capital Bank of Texas",
+    "BankAddress": "1301 N. Riverfront Blvd. Ste. 100",
+    "City": "Dallas",
+    "State": "TX",
+    "Zip": "75207"
+  },
+  {
+    "Account Name": "Cascade Federal Credit Union",
+    "BankAddress": "18020 80th Ave S",
+    "City": "Kent",
+    "State": "WA",
+    "Zip": "98032"
+  },
+  {
+    "Account Name": "Valley First Credit Union",
+    "BankAddress": "PO Box 1411",
+    "City": "Modesto",
+    "State": "CA",
+    "Zip": "95353-1411"
+  },
+  {
+    "Account Name": "FAST Credit Union",
+    "BankAddress": "312 W. 7th Street",
+    "City": "Hanford",
+    "State": "CA",
+    "Zip": "93230"
+  },
+  {
+    "Account Name": "SB1 Federal Credit Union",
+    "BankAddress": "1500 Spring Garden Street",
+    "City": "Philadelphia",
+    "State": "PA",
+    "Zip": "19103"
+  },
+  {
+    "Account Name": "The Business Bank of St. Louis",
+    "BankAddress": "8000 Maryland Avenue",
+    "City": "Clayton",
+    "State": "MO",
+    "Zip": "63105"
+  },
+  {
+    "Account Name": "Rivermark Community Credit Union",
+    "BankAddress": "P.O. Box 4044",
+    "City": "Beaverton",
+    "State": "OR",
+    "Zip": "97076-4044"
+  },
+  {
+    "Account Name": "Frederick County Bank",
+    "BankAddress": "7 North Market Street",
+    "City": "Frederick",
+    "State": "MD",
+    "Zip": "21071"
+  },
+  {
+    "Account Name": "Firefly Credit Union",
+    "BankAddress": "1400 Riverwood Drive",
+    "City": "Burnsville",
+    "State": "MN",
+    "Zip": "55337"
+  },
+  {
+    "Account Name": "Clarkston Brandon Community Credit Union",
+    "BankAddress": "8055 Ortonville Rd.",
+    "City": "Clarkston",
+    "State": "MI",
+    "Zip": "48348"
+  },
+  {
+    "Account Name": "VYSTAR CREDIT UNION",
+    "BankAddress": "PO BOX 45085",
+    "City": "JACKSONVILLE",
+    "State": "FL",
+    "Zip": "32232"
+  }
+]

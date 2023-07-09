@@ -59,50 +59,124 @@ $actions = apply_filters( 'eac_payment_actions', $actions, $payment_id );
 
 <div class="eac-columns">
 	<div class="eac-col-9">
-		<div class="eac-document">
-			<div class="eac-panel padding-6 margin-0">
-				<div class="eac-document__title">Payment Receipt</div>
-
-				<div class="eac-columns display-flex align-items-center border-bottom padding-bottom-3 margin-bottom-3">
-					<div class="eac-col-6">
-						<div class="eac-document__logo">
-							<img src="https://byteever.com/wp-content/plugins/wp-ever-accounting/dist/images/document-logo.png" alt="ByteEver">
-						</div>
-					</div>
-					<div class="eac-col-6 text-end-md">
-						<address>
-							<?php echo wp_kses_post( eac_get_formatted_company_address() ); ?>
-						</address>
-					</div>
-				</div>
-
-
-				<div class="eac-document__title text-center margin-y-3">Payment Receipt</div>
-
-				<div class="eac-columns margin-bottom-6">
-					<div class="eac-col-6">
-						<strong>Received from:</strong><br>
-						<div class="eac-document__address">
-							<?php echo wp_kses_post( eac_get_formatted_company_address() ); ?>
-						</div>
-					</div>
-					<div class="eac-col-6 text-end-md">
-						<div class="eac-document__address">
-							<?php echo wp_kses_post( eac_get_formatted_company_address() ); ?>
-						</div>
-					</div>
-				</div>
-
-			</div>
-		</div>
+		<?php eac_display_payment( $payment_id ); ?>
 	</div>
 	<div class="eac-col-3">
-		<div class="eac-card margin-top-0" style="margin-top: 0 !important;">
+		<div class="eac-card">
 			<div class="eac-card__header">
-				<div class="eac-card__title"><?php esc_html_e( 'Notes', 'wp-ever-accounting' ); ?></div>
+				<h3 class="eac-card__title"><?php esc_html_e( 'Notes', 'wc-serial-numbers' ); ?></h3>
 			</div>
 			<div class="eac-card__body">
-				Lorem ipsum dolor sit amet, consectetur adipisicing elit. Perspiciatis, sed.
+				<form action="">
+					<div class="eac-form-field">
+						<label for="note"><?php esc_html_e( 'Add Note', 'wc-serial-numbers' ); ?></label>
+						<textarea name="note" id="note" cols="30" rows="2" required="required" placeholder="Enter Note"></textarea>
+					</div>
+					<input type="hidden" name="object_id" value="<?php echo esc_attr( $payment_id ); ?>">
+					<input type="hidden" name="object_type" value="payment">
+					<?php wp_nonce_field( 'wcsn_add_note' ); ?>
+					<button class="button"><?php esc_html_e( 'Add Note', 'wc-serial-numbers' ); ?></button>
+				</form>
+			</div>
+
+			<div class="eac-card__body">
+				<ul id="payment-notes" class="eac-notes">
+					<li class="note">
+						<div class="note__header">
+							<div class="note__author">
+								<?php echo get_avatar( get_current_user_id(), 32 ); ?>
+								<span
+									class="note__author-name"><?php echo get_the_author_meta( 'display_name', get_current_user_id() ); ?></span>
+							</div>
+							<div class="note__date">
+								<?php echo date_i18n( 'M d, Y', strtotime( current_time( 'mysql' ) ) ); ?>
+							</div>
+						</div>
+						<div class="note__content">
+							<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium, quibusdam.</p>
+						</div>
+						<div class="note__actions">
+							<a href="#"
+							   class="note__action"><?php esc_html_e( 'Delete', 'wc-serial-numbers' ); ?></a>
+						</div>
+					</li>
+					<li class="note">
+						<div class="note__header">
+							<div class="note__author">
+								<?php echo get_avatar( get_current_user_id(), 32 ); ?>
+								<span
+									class="note__author-name"><?php echo get_the_author_meta( 'display_name', get_current_user_id() ); ?></span>
+							</div>
+							<div class="note__date">
+								<?php echo date_i18n( 'M d, Y', strtotime( current_time( 'mysql' ) ) ); ?>
+							</div>
+						</div>
+						<div class="note__content">
+							<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium, quibusdam.</p>
+						</div>
+						<div class="note__actions">
+							<a href="#"
+							   class="note__action"><?php esc_html_e( 'Delete', 'wc-serial-numbers' ); ?></a>
+						</div>
+					</li>
+					<li class="note">
+						<div class="note__header">
+							<div class="note__author">
+								<?php echo get_avatar( get_current_user_id(), 32 ); ?>
+								<span
+									class="note__author-name"><?php echo get_the_author_meta( 'display_name', get_current_user_id() ); ?></span>
+							</div>
+							<div class="note__date">
+								<?php echo date_i18n( 'M d, Y', strtotime( current_time( 'mysql' ) ) ); ?>
+							</div>
+						</div>
+						<div class="note__content">
+							<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium, quibusdam.</p>
+						</div>
+						<div class="note__actions">
+							<a href="#"
+							   class="note__action"><?php esc_html_e( 'Delete', 'wc-serial-numbers' ); ?></a>
+						</div>
+					</li>
+					<li class="note">
+						<div class="note__header">
+							<div class="note__author">
+								<?php echo get_avatar( get_current_user_id(), 32 ); ?>
+								<span
+									class="note__author-name"><?php echo get_the_author_meta( 'display_name', get_current_user_id() ); ?></span>
+							</div>
+							<div class="note__date">
+								<?php echo date_i18n( 'M d, Y', strtotime( current_time( 'mysql' ) ) ); ?>
+							</div>
+						</div>
+						<div class="note__content">
+							<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium, quibusdam.</p>
+						</div>
+						<div class="note__actions">
+							<a href="#"
+							   class="note__action"><?php esc_html_e( 'Delete', 'wc-serial-numbers' ); ?></a>
+						</div>
+					</li>
+					<li class="note">
+						<div class="note__header">
+							<div class="note__author">
+								<?php echo get_avatar( get_current_user_id(), 32 ); ?>
+								<span
+									class="note__author-name"><?php echo get_the_author_meta( 'display_name', get_current_user_id() ); ?></span>
+							</div>
+							<div class="note__date">
+								<?php echo date_i18n( 'M d, Y', strtotime( current_time( 'mysql' ) ) ); ?>
+							</div>
+						</div>
+						<div class="note__content">
+							<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium, quibusdam.</p>
+						</div>
+						<div class="note__actions">
+							<a href="#"
+							   class="note__action"><?php esc_html_e( 'Delete', 'wc-serial-numbers' ); ?></a>
+						</div>
+					</li>
+				</ul>
 			</div>
 		</div>
 	</div>

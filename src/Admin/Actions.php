@@ -3,6 +3,7 @@
 namespace EverAccounting\Admin;
 
 use EverAccounting\Models\Account;
+use EverAccounting\Models\Bill;
 use EverAccounting\Models\Category;
 use EverAccounting\Models\Currency;
 use EverAccounting\Models\Customer;
@@ -35,9 +36,10 @@ class Actions extends Singleton {
 		// AJAX actions.
 		add_action( 'wp_ajax_eac_get_html_response', array( __CLASS__, 'get_html_response' ) );
 		add_action( 'wp_ajax_eac_json_search', array( __CLASS__, 'eac_json_search' ) );
-		add_action( 'wp_ajax_eac_get_contact_details', array( __CLASS__, 'get_contact_details' ) );
+		add_action( 'wp_ajax_eac_get_contact', array( __CLASS__, 'get_contact' ) );
 		add_action( 'wp_ajax_eac_get_account', array( __CLASS__, 'get_account' ) );
-		add_action( 'wp_ajax_eac_get_item_details', array( __CLASS__, 'get_item_details' ) );
+		add_action( 'wp_ajax_eac_get_currency', array( __CLASS__, 'get_currency' ) );
+		add_action( 'wp_ajax_eac_get_item_detail', array( __CLASS__, 'get_item_detail' ) );
 		add_action( 'wp_ajax_eac_edit_customer', array( __CLASS__, 'edit_customer' ) );
 		add_action( 'wp_ajax_eac_edit_vendor', array( __CLASS__, 'edit_vendor' ) );
 		add_action( 'wp_ajax_eac_edit_account', array( __CLASS__, 'edit_account' ) );
@@ -49,15 +51,18 @@ class Actions extends Singleton {
 		add_action( 'wp_ajax_eac_edit_transfer', array( __CLASS__, 'edit_transfer' ) );
 		add_action( 'wp_ajax_eac_edit_tax', array( __CLASS__, 'edit_tax' ) );
 		add_action( 'wp_ajax_eac_edit_invoice', array( __CLASS__, 'edit_invoice' ) );
-		add_action( 'wp_ajax_eac_calculate_invoice', array( __CLASS__, 'calculate_invoice' ) );
+		add_action( 'wp_ajax_eac_calculate_bill_totals', array( __CLASS__, 'calculate_bill_totals' ) );
+		add_action( 'wp_ajax_eac_calculate_invoice_totals', array( __CLASS__, 'calculate_invoice_totals' ) );
 		add_action( 'admin_post_eac_export_data', array( __CLASS__, 'export_data' ) );
+
+		add_action( 'ever_accounting_before_invoice_actions', array( __CLASS__, 'before_invoice_actions' ), 10, 2 );
 	}
 
 	/**
 	 * Get modal content.
 	 *
-	 * @since 1.1.6
 	 * @return void
+	 * @since 1.1.6
 	 */
 	public static function get_html_response() {
 		check_ajax_referer( 'eac_get_html_response' );
@@ -120,6 +125,14 @@ class Actions extends Singleton {
 				$tax = new Tax( $id );
 				require __DIR__ . '/views/taxes/tax-form.php';
 				break;
+			case 'invoice_payment':
+				$document = new Invoice( $id );
+				require __DIR__ . '/views/invoices/invoice-payment.php';
+				break;
+			case 'send_invoice':
+				$document = new Invoice( $id );
+				require __DIR__ . '/views/invoices/send-invoice.php';
+				break;
 			default:
 				do_action( 'eac_get_html_response', $html_type );
 				break;
@@ -131,8 +144,8 @@ class Actions extends Singleton {
 	/**
 	 * Json search.
 	 *
-	 * @since 1.1.6
 	 * @return void
+	 * @since 1.1.6
 	 */
 	public static function eac_json_search() {
 		check_ajax_referer( 'eac_json_search' );
@@ -265,7 +278,7 @@ class Actions extends Singleton {
 				foreach ( $invoices as $invoice ) {
 					$results[] = array(
 						'id'   => $invoice->get_id(),
-						'text' => $invoice->get_invoice_number(),
+						'text' => $invoice->get_formatted_name(),
 					);
 				}
 				break;
@@ -323,10 +336,10 @@ class Actions extends Singleton {
 	/**
 	 * Get contact details.
 	 *
-	 * @since 1.1.6
 	 * @return void
+	 * @since 1.1.6
 	 */
-	public static function get_contact_details() {
+	public static function get_contact() {
 		$contact_id = eac_get_input_var( 'contact_id', 0, 'post' );
 		$contact    = eac_get_contact( $contact_id );
 		if ( ! $contact ) {
@@ -345,8 +358,8 @@ class Actions extends Singleton {
 	/**
 	 * Get account details.
 	 *
-	 * @since 1.1.6
 	 * @return void
+	 * @since 1.1.6
 	 */
 	public static function get_account() {
 		check_ajax_referer( 'eac_get_account' );
@@ -366,10 +379,33 @@ class Actions extends Singleton {
 	}
 
 	/**
+	 * Get currency details.
+	 *
+	 * @return void
+	 * @since 1.1.6
+	 */
+	public static function get_currency() {
+		check_ajax_referer( 'eac_get_currency' );
+		$currency_code = eac_get_input_var( 'currency_code', '', 'post' );
+		$currency      = eac_get_currency( $currency_code );
+		if ( ! $currency ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Invalid currency!', 'wp-ever-accounting' ),
+				)
+			);
+		}
+
+		wp_send_json_success(
+			$currency->get_data()
+		);
+	}
+
+	/**
 	 * Get contact details.
 	 *
-	 * @since 1.1.6
 	 * @return void
+	 * @since 1.1.6
 	 */
 	public static function get_item_details() {
 		$item_id = eac_get_input_var( 'item_id', 0, 'post' );
@@ -390,8 +426,8 @@ class Actions extends Singleton {
 	/**
 	 * Edit customer.
 	 *
-	 * @since 1.1.6
 	 * @return void
+	 * @since 1.1.6
 	 */
 	public static function edit_customer() {
 		check_admin_referer( 'eac_edit_customer' );
@@ -428,8 +464,8 @@ class Actions extends Singleton {
 	/**
 	 * Edit account.
 	 *
-	 * @since 1.1.6
 	 * @return void
+	 * @since 1.1.6
 	 */
 	public static function edit_account() {
 		check_admin_referer( 'eac_edit_account' );
@@ -466,8 +502,8 @@ class Actions extends Singleton {
 	/**
 	 * Edit item.
 	 *
-	 * @since 1.1.6
 	 * @return void
+	 * @since 1.1.6
 	 */
 	public static function edit_item() {
 		check_admin_referer( 'eac_edit_item' );
@@ -504,8 +540,8 @@ class Actions extends Singleton {
 	/**
 	 * Edit category.
 	 *
-	 * @since 1.1.6
 	 * @return void
+	 * @since 1.1.6
 	 */
 	public static function edit_category() {
 		check_admin_referer( 'eac_edit_category' );
@@ -542,8 +578,8 @@ class Actions extends Singleton {
 	/**
 	 * Edit currency.
 	 *
-	 * @since 1.1.6
 	 * @return void
+	 * @since 1.1.6
 	 */
 	public static function edit_currency() {
 		check_admin_referer( 'eac_edit_currency' );
@@ -573,8 +609,8 @@ class Actions extends Singleton {
 	/**
 	 * Edit payment
 	 *
-	 * @since 1.1.6
 	 * @return void
+	 * @since 1.1.6
 	 */
 	public static function edit_payment() {
 		check_admin_referer( 'eac_edit_payment' );
@@ -611,8 +647,8 @@ class Actions extends Singleton {
 	/**
 	 * Edit Expense
 	 *
-	 * @since 1.1.6
 	 * @return void
+	 * @since 1.1.6
 	 */
 	public static function edit_expense() {
 		check_admin_referer( 'eac_edit_expense' );
@@ -649,8 +685,8 @@ class Actions extends Singleton {
 	/**
 	 * Edit vendor.
 	 *
-	 * @since 1.1.6
 	 * @return void
+	 * @since 1.1.6
 	 */
 	public static function edit_vendor() {
 		check_admin_referer( 'eac_edit_vendor' );
@@ -687,8 +723,8 @@ class Actions extends Singleton {
 	/**
 	 * Edit transfer.
 	 *
-	 * @since 1.1.6
 	 * @return void
+	 * @since 1.1.6
 	 */
 	public static function edit_transfer() {
 		check_admin_referer( 'eac_edit_transfer' );
@@ -725,8 +761,8 @@ class Actions extends Singleton {
 	/**
 	 * Edit tax rate.
 	 *
-	 * @since 1.1.6
 	 * @return void
+	 * @since 1.1.6
 	 */
 	public static function edit_tax() {
 		check_admin_referer( 'eac_edit_tax' );
@@ -763,8 +799,8 @@ class Actions extends Singleton {
 	/**
 	 * Edit document.
 	 *
-	 * @since 1.1.6
 	 * @return void
+	 * @since 1.1.6
 	 */
 	public static function edit_invoice() {
 		check_ajax_referer( 'eac_edit_invoice' );
@@ -772,7 +808,7 @@ class Actions extends Singleton {
 		$posted   = eac_clean( wp_unslash( $_POST ) );
 		$posted   = wp_parse_args( $posted );
 		$document = new Invoice( $posted['id'] );
-		$document->set_props( $posted );
+		$document->set_data( $posted );
 
 		$message  = __( 'Invoice updated successfully!', 'wp-ever-accounting' );
 		$update   = ! empty( $posted['id'] );
@@ -803,10 +839,10 @@ class Actions extends Singleton {
 	/**
 	 * Calculate invoice totals.
 	 *
-	 * @since 1.1.6
 	 * @return void
+	 * @since 1.1.6
 	 */
-	public static function calculate_invoice() {
+	public static function calculate_invoice_totals() {
 		check_ajax_referer( 'eac_edit_invoice' );
 		$posted = wp_parse_args( $_POST );
 		$posted = eac_clean( $posted );
@@ -819,17 +855,42 @@ class Actions extends Singleton {
 			}
 		}
 		$document = new Invoice( $posted['id'] );
-		$document->set_props( $posted );
+		$document->set_data( $posted );
 		$document->calculate_totals();
 		include __DIR__ . '/views/invoices/invoice-form.php';
 		exit();
 	}
 
 	/**
+	 * Calculate invoice totals.
+	 *
+	 * @return void
+	 * @since 1.1.6
+	 */
+	public static function calculate_bill_totals() {
+		check_ajax_referer( 'eac_edit_bill' );
+		$posted = wp_parse_args( $_POST );
+		$posted = eac_clean( $posted );
+		if ( ! isset( $posted['items'] ) ) {
+			$posted['items'] = array();
+		}
+		foreach ( $posted['items'] as $key => $item ) {
+			if ( ! isset( $item['tax_ids'] ) ) {
+				$posted['items'][ $key ]['tax_ids'] = '';
+			}
+		}
+		$document = new Bill( $posted['id'] );
+		$document->set_data( $posted );
+		$document->calculate_totals();
+		include __DIR__ . '/views/bills/bill-form.php';
+		exit();
+	}
+
+	/**
 	 * Export data.
 	 *
-	 * @since 1.1.6
 	 * @return void
+	 * @since 1.1.6
 	 */
 	public static function export_data() {
 		check_admin_referer( 'eac_export_data' );
@@ -856,5 +917,24 @@ class Actions extends Singleton {
 
 		wp_safe_redirect( wp_get_referer() );
 		exit();
+	}
+
+	/**
+	 * Before invoice actions.
+	 *
+	 * @param int     $invoice_id Invoice ID.
+	 * @param Invoice $invoice Invoice object.
+	 *
+	 * @return void
+	 * @since 1.1.6
+	 */
+	public static function before_invoice_actions( $invoice_id, $invoice ) {
+//		if( $invoice->is_status('draft')){
+			echo sprintf( '<a href="%s" class="button">%s</a>', esc_url( eac_action_url( array( 'action' => 'mark_sent', 'id' => $invoice_id ), false ) ), esc_html__( 'Mark as Sent', 'wp-ever-accounting' ) );
+			echo sprintf( '<a href="%s" class="button button-primary">%s</a>', esc_url( eac_action_url( array( 'action' => 'get_html_response', 'html_type' => 'send_invoice', 'id' => $invoice_id ), true ) ), esc_html__( 'Send Invoice', 'wp-ever-accounting' ) );
+//		}
+		if ( $invoice->is_status( 'sent' ) && ! $invoice->is_paid() ) {
+			echo sprintf( '<a href="%s" class="button">%s</a>', esc_url( eac_action_url( array( 'action' => 'record_payment', 'id' => $invoice_id ), false ) ), esc_html__( 'Record Payment', 'wp-ever-accounting' ) );
+		}
 	}
 }

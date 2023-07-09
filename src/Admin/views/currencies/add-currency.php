@@ -8,12 +8,16 @@
  */
 
 defined( 'ABSPATH' ) || exit;
-$currencies = eac_get_currencies( [ 'limit' => -1 ] );
+$currencies = eac_get_currencies( [ 'limit' => - 1 ] );
 $info       = eac_get_currencies_info();
 foreach ( $currencies as $currency ) {
 	if ( isset( $info[ $currency->get_code() ] ) ) {
 		unset( $info[ $currency->get_code() ] );
 	}
+}
+$options = array();
+foreach ( $info as $code => $currency ) {
+	$options[ $code ] = sprintf( '%s (%s)', $currency['name'], $code );
 }
 ?>
 <div class="eac-section-header">
@@ -45,19 +49,19 @@ foreach ( $currencies as $currency ) {
 						'input_class' => 'eac-select2',
 						'required'    => true,
 						'readonly'    => true,
-						'options'     => wp_list_pluck( $info, 'name', 'code' ),
+						'options'     => $options,
 					)
 				);
 				eac_form_field(
 					array(
-						'id'       => 'rate',
-						'label'    => __( 'Rate', 'wp-ever-accounting' ),
-						'type'     => 'decimal',
-						'value'    => '',
-						'class'    => 'eac-col-6',
-						'required' => true,
+						'id'        => 'exchange_rate',
+						'label'     => __( 'Exchange Rate', 'wp-ever-accounting' ),
+						'data_type' => 'decimal',
+						'value'     => '',
+						'class'     => 'eac-col-6',
+						'required'  => true,
 						// translators: %s is the base currency.
-						'prefix'   => sprintf( __( '1 %s =', 'wp-ever-accounting' ), eac_get_base_currency() ),
+						'prefix'    => sprintf( __( '1 %s =', 'wp-ever-accounting' ), eac_get_base_currency() ),
 					)
 				);
 				?>

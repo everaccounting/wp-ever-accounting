@@ -178,12 +178,11 @@ function eac_get_bill_statuses() {
 function eac_get_invoice_statuses() {
 	$statuses = array(
 		'draft'     => esc_html__( 'Draft', 'wp-ever-accounting' ),
-		'pending'   => esc_html__( 'Pending', 'wp-ever-accounting' ),
+		'sent'      => esc_html__( 'Sent', 'wp-ever-accounting' ),
 		'partial'   => esc_html__( 'Partial', 'wp-ever-accounting' ),
 		'paid'      => esc_html__( 'Paid', 'wp-ever-accounting' ),
 		'overdue'   => esc_html__( 'Overdue', 'wp-ever-accounting' ),
 		'cancelled' => esc_html__( 'Cancelled', 'wp-ever-accounting' ),
-		'refunded'  => esc_html__( 'Refunded', 'wp-ever-accounting' ),
 	);
 
 	return apply_filters( 'ever_accounting_invoice_statuses', $statuses );

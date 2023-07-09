@@ -8,19 +8,8 @@
 
 defined( 'ABSPATH' ) || exit;
 
-/**
- * Get random color for chart.
- * It accepts a key and returns a color.
- * Then saved the color in a global variable.
- * If same key is passed again, it will return the same color.
- *
- * @param string $key Key to get color.
- *
- * @since 1.0.0
- *
- * @return string
- */
 $datasets = array();
+$currency = eac_get_currency();
 $years    = range( wp_date( 'Y' ), 2015 );
 $year     = eac_get_input_var( 'year', wp_date( 'Y' ) );
 $data     = eac_get_payment_report( $year );
@@ -36,9 +25,17 @@ foreach ( $data['categories'] as $category_id => $datum ) {
 	}
 	$datasets[ $category_id ]['data'] = array_values( $datum );
 }
+$datasets['total'] = array(
+	'type'            => 'line',
+	'fill'            => false,
+	'label'           => esc_html__( 'Total', 'wp-ever-accounting' ),
+	'backgroundColor' => '#3644ff',
+	'borderColor'     => '#3644ff',
+	'data'            => array_values( $data['months'] ),
+);
 ?>
 
-<div class="eac-panel is--space-between">
+<div class="eac-panel align-items-center display-flex justify-content-between">
 	<h3 class="eac-panel__title">
 		<?php echo esc_html__( 'Payment Report', 'wp-ever-accounting' ); ?>
 	</h3>
@@ -95,9 +92,9 @@ foreach ( $data['categories'] as $category_id => $datum ) {
 	<div class="eac-card__header">
 		<h3 class="eac-card__title"><?php esc_html_e( 'Payments by Months', 'wp-ever-accounting' ); ?></h3>
 	</div>
-	<div class="eac-card__body is--padding-0">
+	<div class="eac-card__body padding-0">
 		<div class="eac-overflow-x">
-			<table class="widefat striped fixed is--border-0">
+			<table class="widefat striped eac-report-table border-0">
 				<thead>
 				<tr>
 					<th><?php esc_html_e( 'Month', 'wp-ever-accounting' ); ?></th>
@@ -107,7 +104,8 @@ foreach ( $data['categories'] as $category_id => $datum ) {
 				</tr>
 				</thead>
 				<tbody>
-				<?php foreach ( $data['categories'] as $category_id => $datum ) : ?>
+				<?php if ( ! empty( $data['categories'] ) ) : ?>
+					<?php foreach ( $data['categories'] as $category_id => $datum ) : ?>
 					<tr>
 						<td>
 							<?php
@@ -121,6 +119,13 @@ foreach ( $data['categories'] as $category_id => $datum ) {
 						<?php endforeach; ?>
 					</tr>
 				<?php endforeach; ?>
+				<?php else : ?>
+					<tr>
+						<td colspan="<?php echo count( $data['months'] ) + 1; ?>">
+							<?php esc_html_e( 'No data found', 'wp-ever-accounting' ); ?>
+						</td>
+					</tr>
+				<?php endif; ?>
 				</tbody>
 				<tfoot>
 				<tr>
@@ -139,6 +144,7 @@ foreach ( $data['categories'] as $category_id => $datum ) {
 <script type="text/javascript">
 	window.onload = function () {
 		var ctx = document.getElementById("eac-payment-chart").getContext('2d');
+		var symbol = "<?php echo esc_html( $currency ? $currency->get_symbol() : '' ); ?>";
 		var myChart = new Chart(ctx, {
 			type: 'bar',
 			minHeight: 500,
@@ -159,34 +165,34 @@ foreach ( $data['categories'] as $category_id => $datum ) {
 					titleFontColor: "#ffffff",
 					callbacks: {
 						label: function (tooltipItem, data) {
-							let label = data.labels[tooltipItem.index];
 							let value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
-							console.log(label);
-							console.log(value);
-							// return tooltipItem.yLabel.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
-							// return label + ': ' + value.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
-							return tooltipItem.yLabel;
+							let datasetLabel = data.datasets[tooltipItem.datasetIndex].label || '';
+							return datasetLabel + ': ' + value.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') + symbol;
 						}
 					}
 				},
 				scales: {
 					xAxes: [{
-						stacked: true,
+						stacked: false,
 						gridLines: {
-							display: false,
+							display: true,
 						}
 					}],
 					yAxes: [{
-						stacked: true,
+						stacked: false,
 						ticks: {
 							beginAtZero: true,
+							callback: function (value, index, ticks) {
+								return Number(value).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') + symbol;
+							}
 						},
 						type: 'linear',
+						barPercentage: 0.4
 					}]
 				},
 				responsive: true,
 				maintainAspectRatio: false,
-				legend: {position: 'top'},
+				legend: {display: false},
 			}
 		});
 	}

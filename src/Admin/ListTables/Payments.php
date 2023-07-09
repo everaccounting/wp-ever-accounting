@@ -52,7 +52,7 @@ class Payments extends ListTable {
 			'status'      => $this->get_status(),
 			'search'      => $this->get_search(),
 			'order'       => $this->get_order( 'DESC' ),
-			'orderby'     => $this->get_orderby( 'payment_date' ),
+			'orderby'     => $this->get_orderby( 'date' ),
 			'account_id'  => eac_get_input_var( 'account_id' ),
 			'category_id' => eac_get_input_var( 'category_id' ),
 			'contact_id'  => eac_get_input_var( 'customer_id' ),
@@ -123,21 +123,21 @@ class Payments extends ListTable {
 				exit;
 			}
 
-			foreach ( $ids as $id ) { // Check the permissions on each.
-				switch ( $doaction ) {
-					case 'delete':
-						eac_delete_payment( $id );
-						break;
-				}
-			}
-
-			// Based on the action add notice.
 			switch ( $doaction ) {
 				case 'delete':
-					$notice = __( 'Payment(s) deleted successfully.', 'wp-ever-accounting' );
+					$changed = 0;
+
+					foreach ( $ids as $id ) {
+						if ( eac_delete_payment( $id ) ) {
+							$changed ++;
+						}
+					}
+
+					eac_add_notice( sprintf( __( '%s payment(s) deleted successfully.', 'wp-ever-accounting' ), number_format_i18n( $changed ) ), 'success' );
+
 					break;
+
 			}
-			eac_add_notice( $notice, 'success' );
 
 			wp_safe_redirect( admin_url( 'admin.php?page=eac-sales&tab=payments' ) );
 			exit();
@@ -232,10 +232,10 @@ class Payments extends ListTable {
 		$actions    = array(
 			'id'     => sprintf( '<strong>#%d</strong>', esc_attr( $item->get_id() ) ),
 			'edit'   => sprintf( '<a href="%s">%s</a>', esc_url( $edit_url ), __( 'Edit', 'wp-ever-accounting' ) ),
-			'delete' => sprintf( '<a href="%s" class="del">%s</a>', esc_url( wp_nonce_url( $delete_url, 'bulk-accounts' ) ), __( 'Delete', 'wp-ever-accounting' ) ),
+			'delete' => sprintf( '<a href="%s" class="del">%s</a>', esc_url( wp_nonce_url( $delete_url, 'bulk-payments' ) ), __( 'Delete', 'wp-ever-accounting' ) ),
 		);
 
-		return sprintf( '<a href="%s">%s</a> %s', esc_url( $edit_url ), esc_html( $item->get_date() ), $this->row_actions( $actions ) );
+		return sprintf( '<a href="%s">%s</a> %s', esc_url( $view_url ), esc_html( $item->get_date() ), $this->row_actions( $actions ) );
 	}
 
 	/**

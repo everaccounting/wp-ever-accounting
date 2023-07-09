@@ -1,20 +1,31 @@
 /*------------------------------------------------------------------------------
 Dropdown
 ------------------------------------------------------------------------------*/
-
 .eac-dropdown {
+	$root: #{&};
 	display: inline-block;
 	position: relative;
 	box-sizing: border-box;
 	vertical-align: top;
 
+	&__button {
+		display: inline-flex !important;
+		align-items: center;
+		vertical-align: middle;
+		line-height: 1;
+		font-size: 14px;
+	}
+
 	&__menu {
-		display: none;
+		transition: 120ms all 60ms ease-out;
+		transform: rotateX(-90deg) translateX(-50%);
+		transform-origin: top center;
+		visibility: hidden;
+		opacity: 0.3;
 		position: absolute;
-		right: 0;
-		left: auto;
-		margin: 0;
-		margin-top: 3px;
+		right: auto;
+		left: 0;
+		margin: 3px 0 0;
 		border-radius: 3px;
 		text-align: left;
 		box-shadow: 0 50px 100px rgba(50, 50, 93, .1), 0 15px 35px rgba(50, 50, 93, .15), 0 5px 15px rgba(0, 0, 0, .1);
@@ -25,7 +36,6 @@ Dropdown
 		z-index: 99;
 		background-color: #ffffff;
 		padding: 0;
-
 
 		li {
 			display: block;
@@ -58,21 +68,23 @@ Dropdown
 				}
 			}
 		}
-
-		.ea-dropdown.active & {
-			display: block;
-		}
 	}
 
-	&.is--open {
-		> .eac-dropdown__menu {
-			display: block;
-		}
-	}
+	&:hover,
+	&:focus-within & {
+		#{$root}__menu {
+			opacity: 1;
+			transform: rotateX(0) translateX(-50%);
+			visibility: visible;
 
-	.dashicons {
-		vertical-align: middle;
-		line-height: 1;
-		font-size: 16px;
+			a {
+				opacity: 1;
+			}
+		}
+
+		&:after {
+			opacity: 1;
+		}
 	}
 }
+

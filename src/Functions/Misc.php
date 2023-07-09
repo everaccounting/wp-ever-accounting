@@ -262,7 +262,7 @@ function eac_get_countries() {
  * @return array
  */
 function eac_get_currencies_info() {
-	return include ever_accounting()->get_dir_path( 'i18n/currencies.php' );
+	return include EAC()->get_dir_path( 'i18n/currencies.php' );
 }
 
 /**

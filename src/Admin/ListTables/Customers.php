@@ -118,44 +118,53 @@ class Customers extends ListTable {
 				exit;
 			}
 
-			foreach ( $ids as $id ) { // Check the permissions on each.
-				switch ( $doaction ) {
-					case 'delete':
-						eac_delete_account( $id );
-						break;
-					case 'enable':
-						eac_insert_customer(
-							array(
-								'id'     => $id,
-								'status' => 'active',
-							)
-						);
-						break;
-					case 'disable':
-						eac_insert_customer(
-							array(
-								'id'     => $id,
-								'status' => 'inactive',
-							)
-						);
-						break;
-				}
-			}
-
-			// Based on the action add notice.
 			switch ( $doaction ) {
-				case 'delete':
-					$notice = __( 'Customer(s) deleted successfully.', 'wp-ever-accounting' );
-					break;
-				case 'enable':
-					$notice = __( 'Customer(s) enabled successfully.', 'wp-ever-accounting' );
-					break;
-				case 'disable':
-					$notice = __( 'Customer(s) disabled successfully.', 'wp-ever-accounting' );
-					break;
-			}
-			eac_add_notice( $notice, 'success' );
+				case 'activate':
+					$changed = 0;
 
+					foreach ( $ids as $id ) {
+						$args = array(
+							'id'     => $id,
+							'status' => 'active',
+						);
+						if ( eac_insert_customer( $args ) ) {
+							$changed ++;
+						}
+					}
+					eac_add_notice( sprintf( __( '%s customer(s) activated successfully.', 'wp-ever-accounting' ), number_format_i18n( $changed ) ), 'success' );
+
+					break;
+
+				case 'deactivate':
+					$changed = 0;
+
+					foreach ( $ids as $id ) {
+						$args = array(
+							'id'     => $id,
+							'status' => 'inactive',
+						);
+						if ( eac_insert_customer( $args ) ) {
+							$changed ++;
+						}
+					}
+					eac_add_notice( sprintf( __( '%s customer(s) deactivated successfully.', 'wp-ever-accounting' ), number_format_i18n( $changed ) ), 'success' );
+
+					break;
+
+				case 'delete':
+					$changed = 0;
+
+					foreach ( $ids as $id ) {
+						if ( eac_delete_customer( $id ) ) {
+							$changed ++;
+						}
+					}
+
+					eac_add_notice( sprintf( __( '%s customer(s) deleted successfully.', 'wp-ever-accounting' ), number_format_i18n( $changed ) ), 'success' );
+
+					break;
+
+			}
 			wp_safe_redirect( admin_url( 'admin.php?page=eac-sales&tab=customers' ) );
 			exit();
 		}
@@ -205,9 +214,9 @@ class Customers extends ListTable {
 	 */
 	public function get_bulk_actions() {
 		return array(
-			'delete'  => __( 'Delete', 'wp-ever-accounting' ),
-			'enable'  => __( 'Enable', 'wp-ever-accounting' ),
-			'disable' => __( 'Disable', 'wp-ever-accounting' ),
+			'activate'   => __( 'Activate', 'wp-ever-accounting' ),
+			'deactivate' => __( 'Deactivate', 'wp-ever-accounting' ),
+			'delete'     => __( 'Delete', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -244,14 +253,14 @@ class Customers extends ListTable {
 	public function column_name( $item ) {
 		$args        = array( 'customer_id' => $item->get_id() );
 		$edit_url    = $this->get_current_url( array_merge( $args, array( 'action' => 'edit' ) ) );
-		$enable_url  = $this->get_current_url( array_merge( $args, array( 'action' => 'enable' ) ) );
-		$disable_url = $this->get_current_url( array_merge( $args, array( 'action' => 'disable' ) ) );
+		$enable_url  = $this->get_current_url( array_merge( $args, array( 'action' => 'activate' ) ) );
+		$disable_url = $this->get_current_url( array_merge( $args, array( 'action' => 'deactivate' ) ) );
 		$delete_url  = $this->get_current_url( array_merge( $args, array( 'action' => 'delete' ) ) );
 		$actions     = array(
 			'id'      => sprintf( '<strong>#%d</strong>', esc_attr( $item->get_id() ) ),
 			'edit'    => sprintf( '<a href="%s">%s</a>', esc_url( $edit_url ), __( 'Edit', 'wp-ever-accounting' ) ),
-			'enable'  => sprintf( '<a href="%s">%s</a>', esc_url( wp_nonce_url( $enable_url, 'bulk-customers' ) ), __( 'Enable', 'wp-ever-accounting' ) ),
-			'disable' => sprintf( '<a href="%s">%s</a>', esc_url( wp_nonce_url( $disable_url, 'bulk-customers' ) ), __( 'Disable', 'wp-ever-accounting' ) ),
+			'enable'  => sprintf( '<a href="%s">%s</a>', esc_url( wp_nonce_url( $enable_url, 'bulk-customers' ) ), __( 'Activate', 'wp-ever-accounting' ) ),
+			'disable' => sprintf( '<a href="%s">%s</a>', esc_url( wp_nonce_url( $disable_url, 'bulk-customers' ) ), __( 'Deactivate', 'wp-ever-accounting' ) ),
 			'delete'  => sprintf( '<a href="%s" class="del">%s</a>', esc_url( wp_nonce_url( $delete_url, 'bulk-customers' ) ), __( 'Delete', 'wp-ever-accounting' ) ),
 		);
 		if ( 'active' === $item->get_status() ) {

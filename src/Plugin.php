@@ -7,6 +7,20 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Class Plugin.
  *
+ * @property-read Models\Category $categories
+ * @property-read Models\Tax $taxes
+ * @property-read Models\Currency $currencies
+ * @property-read Models\Account $accounts
+ * @property-read Models\Transfer $transfers
+ * @property-read Models\Payment $payments
+ * @property-read Models\Expense $expenses
+ * @property-read Models\Invoice $invoices
+ * @property-read Models\Bill $bills
+ * @property-read Models\Customer $customers
+ * @property-read Models\Vendor $vendors
+ * @property-read Models\Item $items
+ *
+ *
  * @since   1.1.6
  * @package EverAccounting
  */
@@ -29,6 +43,36 @@ class Plugin extends BasePlugin {
 		$this->define_constants();
 		$this->includes();
 		$this->init_hooks();
+	}
+
+	/**
+	 * Magic method to get property.
+	 *
+	 * @param string $name Property name.
+	 *
+	 * @since 1.1.6
+	 */
+	public function __get( $name ) {
+		$properties = array(
+			'categories' => Models\Category::class,
+			'taxes'      => Models\Tax::class,
+			'currencies' => Models\Currency::class,
+			'accounts'   => Models\Account::class,
+			'transfers'  => Models\Transfer::class,
+			'payments'   => Models\Payment::class,
+			'expenses'   => Models\Expense::class,
+			'invoices'   => Models\Invoice::class,
+			'bills'      => Models\Bill::class,
+			'customers'  => Models\Customer::class,
+			'vendors'    => Models\Vendor::class,
+			'items'      => Models\Item::class,
+		);
+
+		if ( isset( $properties[ $name ] ) ) {
+			return $properties[ $name ]::get_instance();
+		}
+
+		return null;
 	}
 
 	/**
@@ -57,8 +101,8 @@ class Plugin extends BasePlugin {
 	/**
 	 * Include all required files
 	 *
-	 * @since 1.0.0
 	 * @return void
+	 * @since 1.0.0
 	 */
 	public function includes() {
 		require_once __DIR__ . '/Functions.php';
@@ -67,8 +111,8 @@ class Plugin extends BasePlugin {
 	/**
 	 * Hook into actions and filters.
 	 *
-	 * @since 1.0.0
 	 * @return void
+	 * @since 1.0.0
 	 */
 	protected function init_hooks() {
 		register_activation_hook( $this->get_file(), array( Installer::class, 'install' ) );
@@ -78,8 +122,8 @@ class Plugin extends BasePlugin {
 	/**
 	 * Init plugin when WordPress Initialises.
 	 *
-	 * @since 1.0.0
 	 * @return void
+	 * @since 1.0.0
 	 */
 	public function init() {
 		// Before init action.
@@ -93,6 +137,7 @@ class Plugin extends BasePlugin {
 		Actions::instantiate();
 		Cache::instantiate();
 		API::instantiate();
+		Shortcodes::instantiate();
 
 		// If frontend.
 		if ( self::is_request( 'frontend' ) ) {
@@ -106,5 +151,4 @@ class Plugin extends BasePlugin {
 		// Init action.
 		do_action( 'ever_accounting_init' );
 	}
-
 }

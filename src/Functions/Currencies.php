@@ -11,7 +11,11 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 1.1.0
  */
-function eac_get_currency( $currency ) {
+function eac_get_currency( $currency = null ) {
+	if ( empty( $currency ) ) {
+		$currency = eac_get_base_currency();
+	}
+
 	return Currency::get( $currency );
 }
 
@@ -21,8 +25,8 @@ function eac_get_currency( $currency ) {
  * @param array $data Currency data.
  * @param bool  $wp_error Whether to return false or WP_Error on failure.
  *
- * @since 1.1.0
  * @return int|\WP_Error|Currency|bool The value 0 or WP_Error on failure. The Currency object on success.
+ * @since 1.1.0
  */
 function eac_insert_currency( $data = array(), $wp_error = true ) {
 	return Currency::insert( $data, $wp_error );
@@ -33,8 +37,8 @@ function eac_insert_currency( $data = array(), $wp_error = true ) {
  *
  * @param int $currency Currency ID.
  *
- * @since 1.1.0
  * @return bool
+ * @since 1.1.0
  */
 function eac_delete_currency( $currency ) {
 	$currency = eac_get_currency( $currency );
@@ -51,8 +55,8 @@ function eac_delete_currency( $currency ) {
  * @param array $args Query arguments.
  * @param bool  $count Whether to return the count of items.
  *
- * @since 1.1.0
  * @return int|array|Currency[]
+ * @since 1.1.0
  */
 function eac_get_currencies( $args = array(), $count = false ) {
 	$defaults = array(

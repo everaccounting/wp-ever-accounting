@@ -1,4 +1,798 @@
 .eac-document {
+	line-height: 1.6;
+	position: relative;
+	box-sizing: border-box;
+	width: 100%;
+	min-height: 60vh;
+	font-size: 13px;
+
+
+	h4 {
+		color: #666;
+		margin: 0 0 0.25rem;
+		font-size: 0.85rem;
+		font-weight: 600;
+	}
+
+	p {
+		&:last-child {
+			margin-bottom: 0;
+		}
+
+		&:nth-child(1) {
+			margin-top: 0;
+		}
+	}
+
+	&__header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1.5rem;
+		margin-bottom: 1rem;
+		padding-bottom: 1rem;
+		line-height: 1;
+	}
+
+	&__logo {
+		max-width: 200px;
+		max-height: 55px;
+		height: 55px;
+		font-size: 2rem;
+
+		img {
+			display: block;
+			max-width: 100%;
+			height: auto;
+			width: auto;
+			max-height: 70px;
+		}
+
+		h2 {
+			font-size: 1.75rem;
+			margin: 0;
+			padding: 0;
+			color: #333;
+		}
+
+		a {
+			color: #333;
+			text-decoration: none;
+		}
+	}
+
+	&__title {
+		text-align: right;
+		text-transform: uppercase;
+
+		&-text {
+			font-size: 1.75rem;
+			line-height: 1.5;
+			margin: 0 0 0.25rem;
+			padding: 0;
+			color: #333;
+
+			&.is-medium {
+				font-size: 1.45rem;
+			}
+		}
+
+		&-meta {
+			font-size: 1rem;
+			color: #666;
+		}
+	}
+
+	&__section {
+		margin-bottom: 1.5rem;
+		padding-bottom: 1.5rem;
+
+		&.document-details {
+			display: grid;
+			gap: 20px;
+			grid-template-columns: 1fr 1fr auto;
+			grid-template-areas: "a b c";
+			grid-auto-columns: minmax(0, 5fr);
+			grid-auto-flow: column;
+			justify-content: space-between;
+
+			a {
+				color: inherit;
+			}
+		}
+
+		&.document-items {
+			margin-bottom: 0;
+			padding-bottom: 0;
+			overflow-x: auto;
+		}
+
+		&.document-totals {
+			margin-top: 0.5rem;
+			display: grid;
+			grid-template-columns: 2fr 1fr;
+			padding-top: 0;
+			gap: 80px;
+			page-break-inside: auto;
+			overflow: visible !important;
+			position: relative;
+		}
+
+		&.document-notes {
+			margin-top: 0.5rem;
+		}
+	}
+
+	&__data {
+		text-align: right;
+		padding-top: 20px;
+
+		> div {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+
+			& > span {
+				padding: 0.25rem 0.75rem;
+				break-inside: avoid;
+				text-wrap: avoid;
+				white-space: nowrap;
+			}
+
+			&:last-child,
+			&:first-child {
+				span {
+					padding-bottom: 0;
+				}
+			}
+		}
+	}
+
+	&__items {
+		width: 100%;
+		border-collapse: collapse;
+		border-spacing: 0;
+		table-layout: fixed;
+		text-align: left;
+		border: 1px solid #333;
+		color: #333;
+
+		.line-subtotal, .line-quantity, .line-price, .line-tax {
+			text-align: right;
+		}
+
+		.line-description {
+			margin-top: 10px;
+			padding: 0;
+			color: #666;
+			position: relative;
+			padding-left: 1.5em;
+
+			// add a dash to the beginning of the description and adjust the padding.
+			&:before {
+				content: "-";
+				display: inline-block;
+				width: 1em;
+				margin-right: 0.5em;
+				color: inherit;
+				position: absolute;
+				left: 0;
+			}
+		}
+
+		.line-quantity-unit {
+			color: #666;
+			font-size: 0.85em;
+
+		}
+
+		@media only screen and (max-width: 768px) {
+			table-layout: auto !important;
+		}
+
+		th,
+		td {
+			padding: 0.5rem 0.75rem;
+			vertical-align: top;
+		}
+
+		thead {
+			border-bottom: 1px solid #333;
+
+			th {
+				font-weight: 400;
+				color: #ffffff;
+				background: #333333;
+				user-select: none;
+				vertical-align: middle;
+			}
+		}
+
+		tbody, tfoot {
+			tr {
+				border-bottom: 1px solid #333;
+
+				&:last-child {
+					border-bottom: 0;
+				}
+			}
+		}
+	}
+
+	&__totals {
+		text-align: right;
+
+		> div {
+			display: grid;
+			grid-template-columns: 1fr 2fr;
+
+			& > span {
+				padding: 0.25rem 0.75rem;
+				break-inside: avoid;
+				text-wrap: avoid;
+				//disable word wrap
+				white-space: nowrap;
+			}
+
+			&:last-child,
+			&:first-child {
+				span {
+					padding-bottom: 0;
+				}
+			}
+		}
+	}
+
+	&__notes {
+		margin-top: 1rem;
+
+		p {
+			margin-top: 0;
+			margin-bottom: 1em;
+		}
+	}
+
+	&__footer {
+		margin-top: 1.5rem;
+		padding-top: 1.5rem;
+		border-top: 1px solid #666;
+	}
+}
+
+
+.eac-document-form {
+	input[type="number"]::-webkit-outer-spin-button,
+	input[type="number"]::-webkit-inner-spin-button {
+		-webkit-appearance: none;
+		margin: 0;
+	}
+
+	textarea,
+	select,
+	input:not([type="checkbox"]):not([type="radio"]) {
+		width: 100%;
+		text-align: inherit;
+	}
+
+	&__section {
+		&.document-info {
+			h3 {
+				color: #333;
+				margin: 1.33em 0 0;
+				font-size: 14px;
+				margin-bottom: 20px;
+
+				span {
+					display: block;
+
+					a {
+						font-size: 13px;
+						display: inline-block;
+						font-weight: 400;
+					}
+				}
+			}
+
+			a.edit_billing_address {
+				width: 14px;
+				height: 0;
+				padding: 14px 0 0;
+				margin: 0 0 0 6px;
+				overflow: hidden;
+				position: relative;
+				color: #999;
+				border: 0;
+				float: right;
+
+				&:after {
+					font-family: Dashicons;
+					content: "\f464";
+					position: absolute;
+					top: 0;
+					left: 0;
+					text-align: center;
+					vertical-align: top;
+					line-height: 14px;
+					font-size: 14px;
+					font-weight: 400;
+				}
+			}
+
+			p {
+				font-size: 13px;
+				line-height: 1.5;
+				margin: 0 0 10px;
+				padding: 0;
+
+				strong {
+					display: block;
+				}
+			}
+
+			.billing-fields,
+			.billing-data {
+				color: #777;
+			}
+		}
+
+		&.document-actions {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+
+		&.document-totals {
+			display: grid;
+			grid-template-columns: 2fr 1fr;
+			gap: 80px;
+			padding: 1em 4em 4em;
+		}
+	}
+
+	&__items {
+		border-collapse: collapse;
+		border-spacing: 0;
+		background-color: #fff;
+		table-layout: fixed;
+		width: 100%;
+		min-width: 780px;
+		border: 1px solid #ddd;
+		border-left: 0;
+		border-right: 0;
+
+
+		@media only screen and (max-width: 768px) {
+			table-layout: auto !important;
+		}
+
+		td, th {
+			padding: 1.5em 1em 1em;
+			vertical-align: top;
+
+
+			&:first-child {
+				padding-left: 2em;
+			}
+
+			&:last-child {
+				padding-right: 2em;
+			}
+		}
+
+		thead {
+			border-bottom: 1px solid #ddd;
+
+			th {
+				text-align: left;
+				padding: 0.8em 1em;
+				font-weight: 400;
+				color: #999;
+				background: #f8f8f8;
+				user-select: none;
+			}
+		}
+
+		tbody, tfoot {
+			tr {
+				border-bottom: 1px solid #ddd;
+
+				&:last-child {
+					border-bottom: 0;
+				}
+			}
+		}
+
+		.line-price,
+		.line-quantity {
+			width: 10%;
+			text-align: right;
+		}
+
+		.line-tax {
+			width: 20%;
+		}
+
+		.line-subtotal {
+			width: 15%;
+		}
+
+
+		.item-description {
+			margin-top: 10px;
+			padding: 2px 6px;
+			resize: none;
+			height: 3.5em;
+		}
+
+		.line-subtotal {
+			text-align: right !important;
+		}
+
+		.line-actions {
+			text-align: left;
+			width: 20px;
+
+			> a {
+				display: inline-block;
+				color: #ccc;
+				transition: color 0.1s ease-in;
+				text-decoration: none;
+				cursor: pointer;
+
+				&:hover {
+					color: #444;
+				}
+			}
+
+			th & {
+				text-indent: -9999px;
+			}
+		}
+
+	}
+
+	&__totals {
+		text-align: right;
+
+		> div {
+			display: grid;
+			grid-template-columns: 1fr 2fr;
+
+			& > span {
+				padding: 0.25rem 0.75rem;
+				break-inside: avoid;
+				text-wrap: avoid;
+				//disable word wrap
+				white-space: nowrap;
+			}
+
+			&:last-child,
+			&:first-child {
+				span {
+					padding-bottom: 0;
+				}
+			}
+		}
+	}
+}
+
+
+.eac-document123 {
+
+	table {
+		border-collapse: collapse;
+		border-spacing: 0;
+		background-color: #fff;
+		table-layout: fixed;
+
+		@media only screen and (max-width: 768px) {
+			table-layout: auto !important;
+		}
+
+
+		td, th {
+			padding: 10px 15px;
+			text-align: left;
+			vertical-align: top;
+
+			&:first-child {
+				padding-left: 1em;
+			}
+
+			&:last-child {
+				padding-right: 1em;
+			}
+		}
+	}
+
+	&__title {
+		font-size: 1.75em;
+		text-transform: uppercase;
+		line-height: 1;
+	}
+
+	&__logo {
+		max-width: 250px;
+		max-height: 70px;
+
+		img {
+			display: block;
+			max-width: 100%;
+			height: auto;
+			width: auto;
+			max-height: 70px;
+		}
+	}
+
+	&__meta {
+		width: auto !important;
+		border-collapse: collapse;
+		background-color: transparent;
+		float: right;
+
+		td, th {
+			padding: .2em 0;
+			text-align: right;
+			line-height: 1.5em;
+			vertical-align: top;
+		}
+
+		th {
+			padding-right: 2em;
+			font-weight: bold;
+			user-select: none;
+			text-align: right;
+		}
+
+		td {
+
+		}
+	}
+
+	&__items {
+		width: 100%;
+		min-width: 780px;
+		border: 1px solid #ddd;
+
+		thead {
+			border-bottom: 1px solid #ddd;
+
+			th {
+				text-align: left;
+				padding: 0.8em 1em;
+				font-weight: 400;
+				color: #999;
+				background: #f8f8f8;
+				user-select: none;
+			}
+		}
+
+		tbody, tfoot {
+			tr {
+				border-bottom: 1px solid #ddd;
+
+				&:last-child {
+					border-bottom: 0;
+				}
+			}
+		}
+
+		tr {
+			td, th {
+				padding: 1.5em 1em 1em;
+				text-align: left;
+				line-height: 1.5em;
+				vertical-align: top;
+
+				&:first-child {
+					padding-left: 2em
+				}
+
+				&:last-child {
+					padding-right: 2em;
+				}
+			}
+		}
+	}
+
+	.item-description {
+		margin-top: 10px;
+		padding: 0;
+		color: #777;
+	}
+
+	.line-subtotal {
+		text-align: right !important;
+	}
+
+	&__totals {
+		width: 100%;
+		text-align: right;
+
+		td {
+			// less space between total label and value
+			padding-top: 0.5em !important;
+			padding-bottom: 0.5em !important;
+		}
+
+		.total-label {
+			//font-weight: bold;
+			color: #777;
+			text-align: right;
+		}
+
+		.total-value {
+			//font-weight: bold;
+			color: #333;
+			text-align: right;
+			width: 15em;
+		}
+	}
+
+	// if the document has form tag then we need to override the styles.
+	&.eac-document-form {
+		input[type="number"]::-webkit-outer-spin-button,
+		input[type="number"]::-webkit-inner-spin-button {
+			-webkit-appearance: none;
+			margin: 0;
+		}
+
+		.customer-data-column {
+			h3 {
+				color: #333;
+				margin: 1.33em 0 0;
+				font-size: 14px;
+				margin-bottom: 20px;
+
+				span {
+					display: block;
+
+					a {
+						font-size: 13px;
+						display: inline-block;
+						font-weight: 400;
+					}
+				}
+			}
+
+			a.edit_billing_address {
+				width: 14px;
+				height: 0;
+				padding: 14px 0 0;
+				margin: 0 0 0 6px;
+				overflow: hidden;
+				position: relative;
+				color: #999;
+				border: 0;
+				float: right;
+
+				&:after {
+					font-family: Dashicons;
+					content: "\f464";
+					position: absolute;
+					top: 0;
+					left: 0;
+					text-align: center;
+					vertical-align: top;
+					line-height: 14px;
+					font-size: 14px;
+					font-weight: 400;
+				}
+			}
+
+			p {
+				font-size: 13px;
+				line-height: 1.5;
+				margin: 0 0 10px;
+				padding: 0;
+
+				strong {
+					display: block;
+				}
+			}
+
+			.billing-fields,
+			.billing-data {
+				color: #777;
+			}
+		}
+
+		.eac-document__items {
+			td {
+				padding: 1em;
+				text-align: left;
+				line-height: 1.5em;
+				vertical-align: top;
+			}
+
+			textarea,
+			select,
+			input:not([type="checkbox"]):not([type="radio"]) {
+				width: 100%;
+				text-align: inherit;
+			}
+
+			.item-description {
+				padding: 2px 6px;
+				margin-top: 10px;
+				resize: none;
+				height: 3.5em;
+			}
+		}
+
+		.line-actions {
+			text-align: left;
+			width: 20px;
+
+			> a {
+				display: inline-block;
+				color: #ccc;
+				transition: color 0.1s ease-in;
+				text-decoration: none;
+				cursor: pointer;
+
+				&:hover {
+					color: #444;
+				}
+			}
+
+			th & {
+				text-indent: -9999px;
+			}
+		}
+	}
+}
+
+form.eac-document_v3 {
+	input[type="number"]::-webkit-outer-spin-button,
+	input[type="number"]::-webkit-inner-spin-button {
+		-webkit-appearance: none;
+		margin: 0;
+	}
+
+	.eac-document__items {
+		td {
+			padding: 1.5em 1em 1em;
+			text-align: left;
+			line-height: 1.5em;
+			vertical-align: top;
+		}
+
+		textarea,
+		select,
+		input:not([type="checkbox"]):not([type="radio"]) {
+			width: 100%;
+			text-align: inherit;
+		}
+
+		.item-description {
+			margin-top: 10px;
+			resize: none;
+			height: 3.5em;
+		}
+	}
+
+	.line-actions {
+		text-align: left;
+
+		> a {
+			display: inline-block;
+			color: #ccc;
+			transition: color 0.1s ease-in;
+			text-decoration: none;
+			cursor: pointer;
+
+			&:hover {
+				color: #444;
+			}
+		}
+
+		th & {
+			text-indent: -9999px;
+		}
+	}
+}
+
+.eac-document_v2 {
 
 	table {
 		border-collapse: collapse;
@@ -55,13 +849,15 @@
 			line-height: 1.5em;
 			vertical-align: top;
 		}
-		th{
+
+		th {
 			padding-right: 2em;
 			font-weight: bold;
 			user-select: none;
 			text-align: right;
 		}
-		td{
+
+		td {
 
 		}
 	}
@@ -167,6 +963,70 @@
 			width: 15em;
 		}
 	}
+
+	// If the document class with a form tag.
+	@at-root form#{&} {
+		.customer-data-column {
+			h3 {
+				color: #333;
+				margin: 1.33em 0 0;
+				font-size: 14px;
+				margin-bottom: 20px;
+
+				span {
+					display: block;
+
+					a {
+						font-size: 13px;
+						display: inline-block;
+						font-weight: 400;
+					}
+				}
+			}
+
+			a.edit_billing_address {
+				width: 14px;
+				height: 0;
+				padding: 14px 0 0;
+				margin: 0 0 0 6px;
+				overflow: hidden;
+				position: relative;
+				color: #999;
+				border: 0;
+				float: right;
+
+				&:after {
+					font-family: Dashicons;
+					content: "\f464";
+					position: absolute;
+					top: 0;
+					left: 0;
+					text-align: center;
+					vertical-align: top;
+					line-height: 14px;
+					font-size: 14px;
+					font-weight: 400;
+				}
+			}
+
+			p {
+				font-size: 13px;
+				line-height: 1.5;
+				margin: 0 0 10px;
+				padding: 0;
+
+				strong {
+					display: block;
+				}
+			}
+
+			.billing-fields,
+			.billing-data {
+				color: #777;
+			}
+		}
+	}
+
 }
 
 .eac-document-form121 {
@@ -326,7 +1186,6 @@
 		}
 	}
 }
-
 
 .eac-document123x {
 

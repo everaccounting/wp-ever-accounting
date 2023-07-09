@@ -41,7 +41,6 @@ class General extends \EverAccounting\Admin\SettingsTab {
 		$sections = array(
 			''           => __( 'Company', 'wp-ever-accounting' ),
 			'currencies' => __( 'Currencies', 'wp-ever-accounting' ),
-			// 'defaults' => __( 'Defaults', 'wp-ever-accounting' ),
 		);
 
 		return $sections;
@@ -54,12 +53,6 @@ class General extends \EverAccounting\Admin\SettingsTab {
 	 * @return array
 	 */
 	protected function get_settings_for_default_section() {
-		$currencies_options = array();
-		$currency_info = eac_get_currencies_info();
-		foreach ( $currency_info as $currency_code => $currency ) {
-			$currencies_options[ $currency_code ] = sprintf( '%s (%s)', $currency['name'], $currency['symbol'] );
-		}
-
 		return array(
 			array(
 				'title' => __( 'Company Information', 'wp-ever-accounting' ),
@@ -73,7 +66,7 @@ class General extends \EverAccounting\Admin\SettingsTab {
 				'id'          => 'eac_company_name',
 				'type'        => 'text',
 				'placeholder' => 'e.g. XYZ Company',
-				'default'     => '',
+				'default'     => esc_html( get_bloginfo( 'name' ) ),
 				'desc_tip'    => true,
 			),
 			array(
@@ -127,14 +120,23 @@ class General extends \EverAccounting\Admin\SettingsTab {
 				'type'     => 'select',
 				'default'  => 'USD',
 				'class'    => 'eac-select2',
-				'options'  => $currencies_options,
+				'options'  => wp_list_pluck(
+					eac_get_currencies(
+						[
+							'status' => 'active',
+							'limit'  => -1,
+						]
+					),
+					'formatted_name',
+					'code'
+				),
 				'disabled' => ! empty( eac_get_transactions() ),
 				'desc_tip' => __( 'Base currency can not be changed once you have recorded any transaction.', 'wp-ever-accounting' ),
 			),
 			array(
 				'title'       => __( 'Financial Year Start', 'wp-ever-accounting' ),
 				'desc'        => __( 'The start date of your financial year.', 'wp-ever-accounting' ),
-				'id'          => 'eac_financial_year_start',
+				'id'          => 'eac_year_start_date',
 				'type'        => 'text',
 				'placeholder' => 'e.g. 01-01',
 				'default'     => '01-01',
@@ -209,156 +211,7 @@ class General extends \EverAccounting\Admin\SettingsTab {
 			array(
 				'type' => 'sectionend',
 				'id'   => 'company_address',
-			)
-		);
-	}
-
-	/**
-	 * Get defaults section settings array.
-	 *
-	 * @since 1.0.0
-	 * @return array
-	 */
-	public function get_settings_for_defaults_section() {
-		$payment_accounts   = eac_get_accounts( array( 'include' => get_option( 'eac_default_payment_account' ) ) );
-		$expense_accounts   = eac_get_accounts( array( 'include' => get_option( 'eac_default_expense_account' ) ) );
-		$payment_categories = eac_get_categories( array( 'include' => get_option( 'eac_default_payment_category' ) ) );
-		$expense_categories = eac_get_categories( array( 'include' => get_option( 'eac_default_expense_category' ) ) );
-
-		return array(
-			// Sales defaults section.
-			array(
-				'title' => __( 'Sales Defaults', 'wp-ever-accounting' ),
-				'type'  => 'title',
-				'desc'  => __( 'Default settings for sales.', 'wp-ever-accounting' ),
-				'id'    => 'sales_defaults',
-			),
-			// Default payment account.
-			array(
-				'title'       => __( 'Default Payment Account', 'wp-ever-accounting' ),
-				'desc'        => __( 'The default account to which the payments will be credited.', 'wp-ever-accounting' ),
-				'id'          => 'eac_default_payment_account',
-				'type'        => 'select',
-				'options'     => wp_list_pluck( $payment_accounts, 'formatted_name', 'id' ),
-				'default'     => '',
-				'placeholder' => __( 'Select an account&hellip;', 'wp-ever-accounting' ),
-				'desc_tip'    => true,
-				'class'       => 'eac_select2',
-				'attrs'       => array(
-					'data-action' => 'eac_json_search',
-					'data-type'   => 'account',
-				),
-			),
-			// Default payment method.
-			array(
-				'title'       => __( 'Default Payment Method', 'wp-ever-accounting' ),
-				'desc'        => __( 'The default payment method for sales.', 'wp-ever-accounting' ),
-				'id'          => 'eac_default_payment_method',
-				'type'        => 'select',
-				'options'     => eac_get_payment_methods(),
-				'default'     => '',
-				'placeholder' => __( 'Select a payment method&hellip;', 'wp-ever-accounting' ),
-				'desc_tip'    => true,
-			),
-			// Default category.
-			array(
-				'title'       => __( 'Default Category', 'wp-ever-accounting' ),
-				'desc'        => __( 'The default category for sales.', 'wp-ever-accounting' ),
-				'id'          => 'eac_default_category',
-				'type'        => 'select',
-				'default'     => '',
-				'options'     => wp_list_pluck( $payment_categories, 'formatted_name', 'id' ),
-				'placeholder' => __( 'Select a category&hellip;', 'wp-ever-accounting' ),
-				'desc_tip'    => true,
-				'class'       => 'eac_select2',
-				'attrs'       => array(
-					'data-action' => 'eac_json_search',
-					'data-type'   => 'payment_category',
-				),
-			),
-			// end of sales defaults section.
-			array(
-				'type' => 'sectionend',
-				'id'   => 'sales_defaults',
-			),
-			// Purchase defaults section.
-			array(
-				'title' => __( 'Purchase Defaults', 'wp-ever-accounting' ),
-				'type'  => 'title',
-				'desc'  => __( 'Default settings for purchases.', 'wp-ever-accounting' ),
-				'id'    => 'purchase_defaults',
-			),
-			// Default payment account.
-			array(
-				'title'       => __( 'Default expense Account', 'wp-ever-accounting' ),
-				'desc'        => __( 'The default account to which the expense will be debited.', 'wp-ever-accounting' ),
-				'id'          => 'eac_default_expense_account',
-				'type'        => 'select',
-				'options'     => wp_list_pluck( $expense_accounts, 'formatted_name', 'id' ),
-				'default'     => '',
-				'placeholder' => __( 'Select an account&hellip;', 'wp-ever-accounting' ),
-				'desc_tip'    => true,
-				'class'       => 'eac_select2',
-				'attrs'       => array(
-					'data-action' => 'eac_json_search',
-					'data-type'   => 'account',
-				),
-			),
-			// Default payment method.
-			array(
-				'title'       => __( 'Default Payment Method', 'wp-ever-accounting' ),
-				'desc'        => __( 'The default payment method for purchases.', 'wp-ever-accounting' ),
-				'id'          => 'eac_default_expense_method',
-				'type'        => 'select',
-				'options'     => eac_get_payment_methods(),
-				'default'     => '',
-				'placeholder' => __( 'Select a payment method&hellip;', 'wp-ever-accounting' ),
-				'desc_tip'    => true,
-			),
-			// Default category.
-			array(
-				'title'       => __( 'Default Category', 'wp-ever-accounting' ),
-				'desc'        => __( 'The default category for purchases.', 'wp-ever-accounting' ),
-				'id'          => 'eac_default_expense_category',
-				'type'        => 'select',
-				'options'     => wp_list_pluck( $expense_categories, 'formatted_name', 'id' ),
-				'placeholder' => __( 'Select a category&hellip;', 'wp-ever-accounting' ),
-				'desc_tip'    => true,
-				'class'       => 'eac_select2',
-				'attrs'       => array(
-					'data-action' => 'eac_json_search',
-					'data-type'   => 'expense_category',
-				),
-			),
-			// end of purchase defaults section.
-			array(
-				'type' => 'sectionend',
-				'id'   => 'purchase_defaults',
-			),
-			// Misc defaults section.
-			array(
-				'title' => __( 'Misc Defaults', 'wp-ever-accounting' ),
-				'type'  => 'title',
-				'desc'  => __( 'Miscellaneous default settings.', 'wp-ever-accounting' ),
-				'id'    => 'misc_defaults',
-			),
-			// Record per page.
-			array(
-				'title'       => __( 'Records per page', 'wp-ever-accounting' ),
-				'desc'        => __( 'The number of records to show per page.', 'wp-ever-accounting' ),
-				'id'          => 'eac_records_per_page',
-				'type'        => 'number',
-				'default'     => 20,
-				'placeholder' => __( 'Enter a number&hellip;', 'wp-ever-accounting' ),
-				'desc_tip'    => true,
-			),
-			// end of misc defaults section.
-			array(
-				'type' => 'sectionend',
-				'id'   => 'misc_defaults',
 			),
 		);
 	}
-
-
 }

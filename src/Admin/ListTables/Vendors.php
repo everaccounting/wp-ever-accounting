@@ -118,44 +118,52 @@ class Vendors extends ListTable {
 				exit;
 			}
 
-			foreach ( $ids as $id ) { // Check the permissions on each.
-				switch ( $doaction ) {
-					case 'delete':
-						eac_delete_vendor( $id );
-						break;
-					case 'enable':
-						eac_insert_vendor(
-							array(
-								'id'     => $id,
-								'status' => 'active',
-							)
-						);
-						break;
-					case 'disable':
-						eac_insert_vendor(
-							array(
-								'id'     => $id,
-								'status' => 'inactive',
-							)
-						);
-						break;
-				}
-			}
-
-			// Based on the action add notice.
 			switch ( $doaction ) {
+				case 'activate':
+					$changed = 0;
+
+					foreach ( $ids as $id ) {
+						$args = array(
+							'id'     => $id,
+							'status' => 'active',
+						);
+						if ( eac_insert_vendor( $args ) ) {
+							$changed ++;
+						}
+					}
+					eac_add_notice( sprintf( __( '%s vendor(s) activated successfully.', 'wp-ever-accounting' ), number_format_i18n( $changed ) ), 'success' );
+
+					break;
+
+				case 'deactivate':
+					$changed = 0;
+
+					foreach ( $ids as $id ) {
+						$args = array(
+							'id'     => $id,
+							'status' => 'inactive',
+						);
+						if ( eac_insert_vendor( $args ) ) {
+							$changed ++;
+						}
+					}
+					eac_add_notice( sprintf( __( '%s vendor(s) deactivated successfully.', 'wp-ever-accounting' ), number_format_i18n( $changed ) ), 'success' );
+
+					break;
+
 				case 'delete':
-					$notice = __( 'Vendor(s) deleted successfully.', 'wp-ever-accounting' );
-					eac_add_notice( $notice, 'success' );
+					$changed = 0;
+
+					foreach ( $ids as $id ) {
+						if ( eac_delete_vendor( $id ) ) {
+							$changed ++;
+						}
+					}
+
+					eac_add_notice( sprintf( __( '%s vendor(s) deleted successfully.', 'wp-ever-accounting' ), number_format_i18n( $changed ) ), 'success' );
+
 					break;
-				case 'enable':
-					$notice = __( 'Vendor(s) enabled successfully.', 'wp-ever-accounting' );
-					eac_add_notice( $notice, 'success' );
-					break;
-				case 'disable':
-					$notice = __( 'Vendor(s) disabled successfully.', 'wp-ever-accounting' );
-					eac_add_notice( $notice, 'success' );
-					break;
+
 			}
 
 			wp_safe_redirect( admin_url( 'admin.php?page=eac-purchases&tab=vendors' ) );
@@ -207,9 +215,9 @@ class Vendors extends ListTable {
 	 */
 	public function get_bulk_actions() {
 		return array(
-			'delete'  => __( 'Delete', 'wp-ever-accounting' ),
-			'enable'  => __( 'Enable', 'wp-ever-accounting' ),
-			'disable' => __( 'Disable', 'wp-ever-accounting' ),
+			'activate'   => __( 'Activate', 'wp-ever-accounting' ),
+			'deactivate' => __( 'Deactivate', 'wp-ever-accounting' ),
+			'delete'     => __( 'Delete', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -246,14 +254,14 @@ class Vendors extends ListTable {
 	public function column_name( $item ) {
 		$args        = array( 'vendor_id' => $item->get_id() );
 		$edit_url    = $this->get_current_url( array_merge( $args, array( 'action' => 'edit' ) ) );
-		$enable_url  = $this->get_current_url( array_merge( $args, array( 'action' => 'enable' ) ) );
-		$disable_url = $this->get_current_url( array_merge( $args, array( 'action' => 'disable' ) ) );
+		$enable_url  = $this->get_current_url( array_merge( $args, array( 'action' => 'activate' ) ) );
+		$disable_url = $this->get_current_url( array_merge( $args, array( 'action' => 'deactivate' ) ) );
 		$delete_url  = $this->get_current_url( array_merge( $args, array( 'action' => 'delete' ) ) );
 		$actions     = array(
 			'id'      => sprintf( '<strong>#%d</strong>', esc_attr( $item->get_id() ) ),
 			'edit'    => sprintf( '<a href="%s">%s</a>', esc_url( $edit_url ), __( 'Edit', 'wp-ever-accounting' ) ),
-			'enable'  => sprintf( '<a href="%s">%s</a>', esc_url( wp_nonce_url( $enable_url, 'bulk-vendors' ) ), __( 'Enable', 'wp-ever-accounting' ) ),
-			'disable' => sprintf( '<a href="%s">%s</a>', esc_url( wp_nonce_url( $disable_url, 'bulk-vendors' ) ), __( 'Disable', 'wp-ever-accounting' ) ),
+			'enable'  => sprintf( '<a href="%s">%s</a>', esc_url( wp_nonce_url( $enable_url, 'bulk-vendors' ) ), __( 'Activate', 'wp-ever-accounting' ) ),
+			'disable' => sprintf( '<a href="%s">%s</a>', esc_url( wp_nonce_url( $disable_url, 'bulk-vendors' ) ), __( 'Deactivate', 'wp-ever-accounting' ) ),
 			'delete'  => sprintf( '<a href="%s" class="del">%s</a>', esc_url( wp_nonce_url( $delete_url, 'bulk-vendors' ) ), __( 'Delete', 'wp-ever-accounting' ) ),
 		);
 		if ( 'active' === $item->get_status() ) {

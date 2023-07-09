@@ -38,7 +38,7 @@
 	//}
 }
 
-.eac-columns {
+.eac-columns, .eac-row {
 	box-sizing: border-box;
 	display: flex;
 	flex-wrap: wrap;
@@ -157,23 +157,6 @@
 			-ms-flex: 0 0 100%;
 			flex: 0 0 100%;
 			max-width: 100%;
-		}
-
-		.eac-col-offset-0 {
-			margin-left: 0;
-		}
-
-		.eac-col-offset-1 {
-			margin-left: 8.33333%;
-		}
-		.eac-col-offset-2 {
-			margin-left: 16.66667%;
-		}
-		.eac-col-offset-3 {
-			margin-left: 25%;
-		}
-		.eac-col-offset-4 {
-			margin-left: 33.33333%;
 		}
 	}
 }

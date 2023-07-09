@@ -52,7 +52,7 @@ class Expenses extends ListTable {
 			'status'      => $this->get_status(),
 			'search'      => $this->get_search(),
 			'order'       => $this->get_order( 'DESC' ),
-			'orderby'     => $this->get_orderby( 'payment_date' ),
+			'orderby'     => $this->get_orderby( 'date' ),
 			'account_id'  => eac_get_input_var( 'account_id' ),
 			'category_id' => eac_get_input_var( 'category_id' ),
 			'contact_id'  => eac_get_input_var( 'vendor_id' ),
@@ -123,21 +123,21 @@ class Expenses extends ListTable {
 				exit;
 			}
 
-			foreach ( $ids as $id ) { // Check the permissions on each.
-				switch ( $doaction ) {
-					case 'delete':
-						eac_delete_expense( $id );
-						break;
-				}
-			}
-
-			// Based on the action add notice.
 			switch ( $doaction ) {
 				case 'delete':
-					$notice = __( 'Expense(s) deleted successfully.', 'wp-ever-accounting' );
+					$changed = 0;
+
+					foreach ( $ids as $id ) {
+						if ( eac_delete_expense( $id ) ) {
+							$changed ++;
+						}
+					}
+
+					eac_add_notice( sprintf( __( '%s expense(s) deleted successfully.', 'wp-ever-accounting' ), number_format_i18n( $changed ) ), 'success' );
+
 					break;
+
 			}
-			eac_add_notice( $notice, 'success' );
 
 			wp_safe_redirect( admin_url( 'admin.php?page=eac-purchases&tab=expenses' ) );
 			exit();
@@ -227,15 +227,16 @@ class Expenses extends ListTable {
 	public function column_date( $item ) {
 		$args       = array( 'expense_id' => $item->get_id() );
 		$edit_url   = $this->get_current_url( array_merge( $args, array( 'action' => 'edit' ) ) );
+		$view_url   = $this->get_current_url( array_merge( $args, array( 'action' => 'view' ) ) );
 		$delete_url = $this->get_current_url( array_merge( $args, array( 'action' => 'delete' ) ) );
 		$actions    = array(
 			'id'     => sprintf( '<strong>#%d</strong>', esc_attr( $item->get_id() ) ),
 			'edit'   => sprintf( '<a href="%s">%s</a>', esc_url( $edit_url ), __( 'Edit', 'wp-ever-accounting' ) ),
-			'delete' => sprintf( '<a href="%s" class="del">%s</a>', esc_url( wp_nonce_url( $delete_url, 'bulk-accounts' ) ), __( 'Delete', 'wp-ever-accounting' ) ),
+			'delete' => sprintf( '<a href="%s" class="del">%s</a>', esc_url( wp_nonce_url( $delete_url, 'bulk-expenses' ) ), __( 'Delete', 'wp-ever-accounting' ) ),
 		);
-		$date       = $item->get_payment_date();
+		$date       = $item->get_date();
 
-		return sprintf( '<a href="%s">%s</a> %s', esc_url( $edit_url ), esc_html( $date ), $this->row_actions( $actions ) );
+		return sprintf( '<a href="%s">%s</a> %s', esc_url( $view_url ), esc_html( $date ), $this->row_actions( $actions ) );
 	}
 
 	/**
@@ -250,7 +251,7 @@ class Expenses extends ListTable {
 	public function column_default( $item, $column_name ) {
 		switch ( $column_name ) {
 			case 'date':
-				$value = $item->get_payment_date();
+				$value = $item->get_date();
 				break;
 			case 'amount':
 				$value = $item->get_formatted_amount();

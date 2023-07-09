@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit();
 			<div class="eac-columns">
 				<div class="eac-col-6">
 					<?php
-					eac_input_field(
+					eac_form_field(
 						array(
 							'label'   => __( 'Filter by status', 'wp-ever-accounting' ),
 							'type'    => 'select',
@@ -32,7 +32,7 @@ defined( 'ABSPATH' ) || exit();
 							),
 						)
 					);
-					eac_input_field(
+					eac_form_field(
 						array(
 							'type'        => 'category',
 							'subtype'     => 'item',
@@ -40,6 +40,8 @@ defined( 'ABSPATH' ) || exit();
 							'placeholder' => __( 'Export all categories', 'wp-ever-accounting' ),
 							'label'       => __( 'Filter by category', 'wp-ever-accounting' ),
 							'default'     => '',
+							'input_class' => 'eac-select2',
+							'attrs'       => 'data-action=eac_json_search&data-type=item_category&data-allow_clear=true',
 						)
 					);
 					?>

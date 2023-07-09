@@ -156,7 +156,6 @@ class Invoices extends ListTable {
 			'cb'        => '<input type="checkbox" />',
 			'date'      => __( 'Date', 'wp-ever-accounting' ),
 			'amount'    => __( 'Amount', 'wp-ever-accounting' ),
-			'category'  => __( 'Category', 'wp-ever-accounting' ),
 			'customer'  => __( 'Customer', 'wp-ever-accounting' ),
 			'reference' => __( 'Reference', 'wp-ever-accounting' ),
 			'status'    => __( 'Status', 'wp-ever-accounting' ),
@@ -171,9 +170,8 @@ class Invoices extends ListTable {
 	 */
 	protected function get_sortable_columns() {
 		return array(
-			'date'      => array( 'invoice_date', true ),
+			'date'      => array( 'issue_date', true ),
 			'amount'    => array( 'amount', false ),
-			'category'  => array( 'category_id', false ),
 			'customer'  => array( 'contact_id', false ),
 			'reference' => array( 'reference', false ),
 			'status'    => array( 'status', false ),
@@ -226,14 +224,15 @@ class Invoices extends ListTable {
 	public function column_date( $item ) {
 		$args       = array( 'invoice_id' => $item->get_id() );
 		$edit_url   = $this->get_current_url( array_merge( $args, array( 'action' => 'edit' ) ) );
+		$view_url   = $this->get_current_url( array_merge( $args, array( 'action' => 'view' ) ) );
 		$delete_url = $this->get_current_url( array_merge( $args, array( 'action' => 'delete' ) ) );
 		$actions    = array(
 			'id'     => sprintf( '<strong>#%d</strong>', esc_attr( $item->get_id() ) ),
 			'edit'   => sprintf( '<a href="%s">%s</a>', esc_url( $edit_url ), __( 'Edit', 'wp-ever-accounting' ) ),
 			'delete' => sprintf( '<a href="%s" class="del">%s</a>', esc_url( wp_nonce_url( $delete_url, 'bulk-accounts' ) ), __( 'Delete', 'wp-ever-accounting' ) ),
 		);
-		$date       = $item->get_issued_at();
-		return sprintf( '<a href="%s">%s</a> %s', esc_url( $edit_url ), esc_html( $date ), $this->row_actions( $actions ) );
+		$date       = $item->get_issue_date();
+		return sprintf( '<a href="%s">%s</a> %s', esc_url( $view_url ), esc_html( $date ), $this->row_actions( $actions ) );
 	}
 
 	/**
@@ -250,17 +249,6 @@ class Invoices extends ListTable {
 			case 'amount':
 				$value = $item->get_formatted_total();
 				$value = ! empty( $value ) ? $value : '&mdash;';
-				break;
-			case 'category123':
-				$category_id = $item->get_category_id();
-				$category    = eac_get_category( $category_id );
-				$link        = add_query_arg(
-					array(
-						'category_id' => $category_id,
-						'filter'      => 'yes',
-					)
-				);
-				$value       = $category ? sprintf( '<a href="%s">%s</a>', esc_url( $link ), esc_html( $category->get_name() ) ) : '&mdash;';
 				break;
 			case 'customer':
 				$contact_id = $item->get_contact_id();

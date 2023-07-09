@@ -8,8 +8,8 @@ defined( 'ABSPATH' ) || exit;
  *
  * @param string|array $var Data to sanitize.
  *
- * @since 1.1.6
  * @return string|array
+ * @since 1.1.6
  */
 function eac_clean( $var ) {
 	if ( is_array( $var ) ) {
@@ -25,9 +25,9 @@ function eac_clean( $var ) {
  * @param string $tip Help tip text.
  * @param bool   $allow_html Allow sanitized HTML if true or escape.
  *
- * @since 1.0.2
- * @since 1.1.6 Renamed from eaccounting_tooltip() to eac_tooltip().
  * @return string
+ * @since 1.1.6 Renamed from eaccounting_tooltip() to eac_tooltip().
+ * @since 1.0.2
  */
 function eac_tooltip( $tip, $allow_html = false ) {
 	if ( $allow_html ) {
@@ -45,8 +45,8 @@ function eac_tooltip( $tip, $allow_html = false ) {
  *
  * @param string $var Data to sanitize.
  *
- * @since 1.1.6
  * @return string
+ * @since 1.1.6
  */
 function eac_sanitize_tooltip( $var ) {
 	return htmlspecialchars(
@@ -75,8 +75,8 @@ function eac_sanitize_tooltip( $var ) {
  * @param string $method Request method. Possible values: get, post, request.
  * @param string $sanitizer Sanitizer function.
  *
- * @since 1.1.6
  * @return mixed
+ * @since 1.1.6
  */
 function eac_get_input_var( $var, $default = null, $method = 'get', $sanitizer = 'eac_clean' ) {
 	$method = strtolower( $method );
@@ -98,8 +98,8 @@ function eac_get_input_var( $var, $default = null, $method = 'get', $sanitizer =
  * @param string $var Input variable.
  * @param string $method Request method.
  *
- * @since 1.1.6
  * @return bool
+ * @since 1.1.6
  */
 function eac_is_input_var_set( $var, $method = 'get' ) {
 	$method = strtolower( $method );
@@ -142,8 +142,8 @@ function eac_action_url( $args = array(), $ajax = true, $nonce = true ) {
  *
  * @param string $number Number to check.
  *
- * @since 1.1.6
  * @return bool
+ * @since 1.1.6
  */
 function eac_is_empty_number( $number ) {
 	// convert to double to remove trailing zeros.
@@ -168,10 +168,8 @@ function eac_get_formatted_address( $args = array(), $separator = '<br/>' ) {
 		'state'     => '',
 		'postcode'  => '',
 		'country'   => '',
-		'phone'     => '',
-		'email'     => '',
 	);
-	$format       = apply_filters( 'ever_accounting_address_format', "<strong>{name}</strong>\n{company}\n{address_1}\n{address_2}\n{city} {state} {postcode}\n{country}\n{phone}\n{email}" );
+	$format       = apply_filters( 'ever_accounting_address_format', "{name}\n{company}\n{address_1}\n{address_2}\n{city} {state} {postcode}\n{country}" );
 	$args         = array_map( 'trim', wp_parse_args( $args, $default_args ) );
 	$countries    = eac_get_countries();
 	$country      = isset( $countries[ $args['country'] ] ) ? $countries[ $args['country'] ] : $args['country'];
@@ -186,8 +184,6 @@ function eac_get_formatted_address( $args = array(), $separator = '<br/>' ) {
 			'{state}'     => $args['state'],
 			'{postcode}'  => $args['postcode'],
 			'{country}'   => $country,
-			'{phone}'     => $args['phone'],
-			'{email}'     => $args['email'],
 		)
 	);
 
@@ -197,9 +193,22 @@ function eac_get_formatted_address( $args = array(), $separator = '<br/>' ) {
 	$formatted_address = preg_replace( '/\n\n+/', "\n", $formatted_address );
 	// Break newlines apart and remove empty lines/trim commas and white space.
 	$address_lines = array_map( 'trim', array_filter( explode( "\n", $formatted_address ) ) );
+	$address_lines = array_filter( $address_lines );
+	// If phone is set, add it to the last line.
+	if ( ! empty( $args['phone'] ) ) {
+		// it should click to call on mobile.
+		$address_lines[] = eac_make_phone_clickable( $args['phone'] );
+	}
+	// If email is set, add it to the last line.
+	if ( ! empty( $args['email'] ) ) {
+		$address_lines[] = sprintf( '<a href="mailto:%s">%s</a>', $args['email'], $args['email'] );
+	}
 	// If Vat is set, add it to the last line.
 	if ( ! empty( $args['vat'] ) ) {
 		$address_lines[ count( $address_lines ) - 1 ] = sprintf( '%s %s', __( 'VAT:', 'wp-ever-accounting' ), $args['vat'] );
+	}
+	if ( ! empty( $args['tax'] ) ) {
+		$address_lines[ count( $address_lines ) - 1 ] = sprintf( '%s %s', __( 'Tax ID:', 'wp-ever-accounting' ), $args['tax_id'] );
 	}
 
 	return implode( $separator, $address_lines );

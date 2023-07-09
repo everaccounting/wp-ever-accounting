@@ -12,7 +12,6 @@ function eac_get_screen_ids() {
 	$screen_id  = sanitize_title( __( 'Accounting', 'wp-ever-accounting' ) );
 	$screen_ids = array(
 		'toplevel_page_' . $screen_id,
-		$screen_id . '_page_eac-transactions',
 		$screen_id . '_page_eac-sales',
 		$screen_id . '_page_eac-purchases',
 		$screen_id . '_page_eac-banking',
@@ -74,13 +73,13 @@ function eac_is_admin_page( $page = null ) {
  * @since 1.1.6
  * @return array
  */
-function eac_get_overview_tabs() {
+function eac_get_dashboard_tabs() {
 	$tabs = array();
 	if ( current_user_can( 'manage_accounting' ) ) {
-		$tabs['overview'] = __( 'Overview', 'wp-ever-accounting' );
+		$tabs['dashboard'] = __( 'Dashboard', 'wp-ever-accounting' );
 	}
 
-	return apply_filters( 'ever_accounting_overview_tabs', $tabs );
+	return apply_filters( 'ever_accounting_dashboard_tabs', $tabs );
 }
 
 /**
@@ -165,12 +164,10 @@ function eac_get_banking_tabs() {
  * @return array
  */
 function eac_get_tools_tabs() {
-	$tabs             = array();
-	$tabs['import']   = __( 'Import', 'wp-ever-accounting' );
-	$tabs['export']   = __( 'Export', 'wp-ever-accounting' );
-	$tabs['elements'] = __( 'Elements', 'wp-ever-accounting' );
-	$tabs['settings'] = __( 'Settings', 'wp-ever-accounting' );
-
+	$tabs           = array();
+	$tabs['import'] = __( 'Import', 'wp-ever-accounting' );
+	$tabs['export'] = __( 'Export', 'wp-ever-accounting' );
+	$tabs['react']  = __( 'React', 'wp-ever-accounting' );
 	return apply_filters( 'ever_accounting_tools_tabs', $tabs );
 }
 

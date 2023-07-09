@@ -1,24 +1,24 @@
 export {
-	// Alert,
+	Alert,
 	Avatar,
-	// Button,
+	Button,
 	Checkbox,
 	Card,
-	// Collapse,
-	// DatePicker,
+	Collapse,
+	DatePicker,
 	Drawer,
 	Empty,
 	Form,
 	Input,
 	InputNumber,
 	List,
-	// Popconfirm,
-	// Popover,
+	Popconfirm,
+	Popover,
 	Radio,
 	Select,
 	Switch,
-	// TimePicker,
-	// Tooltip,
+	TimePicker,
+	Tooltip,
 	Tag,
 	Upload,
 	message,
@@ -26,3 +26,7 @@ export {
 	Space,
 	Table,
 } from 'antd';
+
+// export rc-table.
+// export { default as Table } from 'rc-table';
+// export { default as Drawer } from 'rc-drawer';

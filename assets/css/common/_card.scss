@@ -1,7 +1,7 @@
 .eac-card {
 	display: block;
 	position: relative;
-	margin: 20px auto 10px;
+	margin: 0 0 1.5em;
 	box-sizing: border-box;
 	width: 100%;
 	max-width: none;
@@ -20,11 +20,11 @@
 		overflow: hidden;
 	}
 
-	&__header, &__footer{
+	& > &__header, & > &__footer {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		padding: 8px 15px;
+		padding: 0.5em 1em;
 		margin: 0;
 		min-height: 25px;
 
@@ -47,57 +47,48 @@
 		}
 	}
 
-	&__body {
-		box-sizing: border-box;
-		position: relative;
-		padding: 15px;
-		line-height: 1.4;
-		font-size: 13px;
-		flex: 1 1 auto;
-
-		> *:first-child {
-			margin-top: 0;
-		}
-
-		> *:last-child {
-			margin-bottom: 0;
-		}
-
-		&.padding-0 {
-			padding: 0;
-		}
-
-		&.margin-0 {
-			margin: 0;
-		}
-	}
-
-	&__title, &__subtitle {
+	 &__title, &__subtitle {
 		padding: 0;
 		margin: 0;
 		font-size: 1.2em;
 	}
 
-	&__title, h2{
+	&__title, h2 {
 		font-weight: normal;
+		line-height: 1.4;
 	}
 
 	&__subtitle {
-		font-size: 1em;
+		font-size: 0.8em;
 	}
 
-	&__separator {
-		margin: 0;
-		padding: 0;
-		height: 20px;
+	& > &__body {
+		box-sizing: border-box;
+		position: relative;
+		padding: 1em;
+		line-height: 1.4;
+		flex: 1 1 auto;
 
-		+ [class*=eac-card__] {
-			border-top: 1px solid #e1e2e2 !important;
+		& > *:first-child {
+			margin-top: 0;
 		}
-	}
 
-	&:first-child {
-		margin-top: 20px;
+		& > *:last-child {
+			margin-bottom: 0;
+		}
+
+		&:has(table) {
+			padding: 0;
+		}
+
+		& > table {
+			border: 0;
+			box-shadow: none;
+
+			thead th {
+				border-bottom-color: #e1e2e2;
+			}
+		}
 	}
 
 	// any class that contains
@@ -128,5 +119,20 @@
 	.eac-form-field {
 		flex: 0 0 100% !important;
 		max-width: 100% !important;
+	}
+}
+
+.eac-card table {
+	box-shadow: none;
+	border: none;
+
+	thead {
+		th {
+			border-bottom: 1px solid #e1e2e2
+		}
+	}
+
+	td, th {
+		font-size: inherit;
 	}
 }

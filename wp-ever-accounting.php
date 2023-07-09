@@ -65,8 +65,8 @@ spl_autoload_register( 'eac_autoloader' );
  * @since 1.1.6 renamed from eaccounting() to EverAccounting().
  * @return EverAccounting\Plugin
  */
-function ever_accounting() {
+function EAC() {
 	return \EverAccounting\Plugin::create( __FILE__ );
 }
 
-ever_accounting();
+EAC();

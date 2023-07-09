@@ -37,7 +37,9 @@
     "codeception/util-universalframework": "^1.0",
     "lucatume/wp-browser": "^3.1",
     "roave/security-advisories": "dev-latest",
-    "byteever/byteever-sniffs": "dev-master"
+    "byteever/byteever-sniffs": "dev-master",
+    "coenjacobs/mozart": "^0.7.1",
+    "setasign/tfpdf": "1.33"
   },
   "autoload": {},
   "autoload-dev": {},
@@ -50,6 +52,14 @@
     }
   },
   "scripts": {
+    "post-install-cmd": [
+      "\"vendor/bin/mozart\" compose",
+      "composer dump-autoload"
+    ],
+    "post-update-cmd": [
+      "\"vendor/bin/mozart\" compose",
+      "composer dump-autoload"
+    ],
     "phpcs": "@php ./vendor/bin/phpcs --standard=phpcs.xml -s -v",
     "phpcbf": "@php ./vendor/bin/phpcbf --standard=phpcs.xml -v",
     "selenium:start": "selenium-server -port 4444",
@@ -66,5 +76,16 @@
     "test:generate": "@php ./vendor/bin/codecept generate:scenarios",
     "codecept": "@php ./vendor/bin/codecept"
   },
-  "extra": {}
+  "extra": {
+    "mozart": {
+      "dep_namespace": "EverAccounting\\",
+      "dep_directory": "/lib/",
+      "classmap_directory": "/lib/classes/",
+      "classmap_prefix": "EverAccounting_",
+      "delete_vendor_directories": true,
+      "packages": [
+        "setasign/tfpdf"
+      ]
+    }
+  }
 }

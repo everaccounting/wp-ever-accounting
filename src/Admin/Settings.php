@@ -54,8 +54,8 @@ class Settings {
 	/**
 	 * Get settings pages.
 	 *
-	 * @since 1.1.6
 	 * @return array
+	 * @since 1.1.6
 	 */
 	public static function get_tabs() {
 		if ( is_null( self::$tabs ) ) {
@@ -74,8 +74,8 @@ class Settings {
 	/**
 	 * Save settings.
 	 *
-	 * @since 1.0.0
 	 * @return void
+	 * @since 1.0.0
 	 */
 	public static function save() {
 		global $current_tab;
@@ -105,8 +105,8 @@ class Settings {
 	/**
 	 * Output settings.
 	 *
-	 * @since 1.1.6
 	 * @return void
+	 * @since 1.1.6
 	 */
 	public static function output() {
 		global $current_section, $current_tab;
@@ -133,8 +133,8 @@ class Settings {
 	 *
 	 * @param array $options Options array.
 	 *
-	 * @since 1.1.6
 	 * @return void
+	 * @since 1.1.6
 	 */
 	public static function output_fields( $options ) {
 		foreach ( $options as $value ) {
@@ -287,7 +287,8 @@ class Settings {
 					?>
 					<tr valign="top">
 						<th scope="row" class="titledesc">
-							<label for="<?php echo esc_attr( $value['name'] ); ?>"><?php echo esc_html( $value['title'] ); ?><?php echo wp_kses_post( $tooltip ); ?></label>
+							<label
+								for="<?php echo esc_attr( $value['name'] ); ?>"><?php echo esc_html( $value['title'] ); ?><?php echo wp_kses_post( $tooltip ); ?></label>
 						</th>
 						<td class="forminp forminp-<?php echo esc_attr( $value['type'] ); ?>">
 							<input
@@ -312,7 +313,8 @@ class Settings {
 					?>
 					<tr valign="top">
 						<th scope="row" class="titledesc">
-							<label for="<?php echo esc_attr( $value['name'] ); ?>"><?php echo esc_html( $value['title'] ); ?><?php echo wp_kses_post( $tooltip ); ?></label>
+							<label
+								for="<?php echo esc_attr( $value['name'] ); ?>"><?php echo esc_html( $value['title'] ); ?><?php echo wp_kses_post( $tooltip ); ?></label>
 						</th>
 						<td class="forminp forminp-<?php echo esc_attr( $value['type'] ); ?>">
 						<textarea
@@ -338,18 +340,11 @@ class Settings {
 						$value['name'] .= '[]';
 						$attrs[]        = 'multiple="multiple"';
 					}
-
-					if ( 'currency' === $value['type'] ) {
-						$value['options'] = array();
-						foreach ( eac_get_currencies( [ 'limit' => -1 ] ) as $code => $currency ) {
-							$value['options'][ $code ] = $currency->get_formatted_name();
-						}
-					}
-
 					?>
 					<tr valign="top">
 						<th scope="row" class="titledesc">
-							<label for="<?php echo esc_attr( $value['name'] ); ?>"><?php echo esc_html( $value['title'] ); ?><?php echo wp_kses_post( $tooltip ); ?></label>
+							<label
+								for="<?php echo esc_attr( $value['name'] ); ?>"><?php echo esc_html( $value['title'] ); ?><?php echo wp_kses_post( $tooltip ); ?></label>
 						</th>
 						<td class="forminp forminp-<?php echo esc_attr( $value['type'] ); ?>">
 							<select
@@ -362,7 +357,8 @@ class Settings {
 							>
 								<option value=""><?php echo esc_html( $value['placeholder'] ); ?></option>
 								<?php foreach ( $value['options'] as $key => $val ) : ?>
-									<option value="<?php echo esc_attr( $key ); ?>" <?php selected( in_array( $key, $value['value'], true ), true ); ?>><?php echo esc_html( $val ); ?></option>
+									<option
+										value="<?php echo esc_attr( $key ); ?>" <?php selected( in_array( (string) $key, $value['value'], true ), true ); ?>><?php echo esc_html( $val ); ?></option>
 								<?php endforeach; ?>
 							</select>
 							<?php echo wp_kses_post( $suffix ); ?>
@@ -377,13 +373,16 @@ class Settings {
 					?>
 					<tr valign="top">
 						<th scope="row" class="titledesc">
-							<label for="<?php echo esc_attr( $value['name'] ); ?>"><?php echo esc_html( $value['title'] ); ?><?php echo wp_kses_post( $tooltip ); ?></label>
+							<label
+								for="<?php echo esc_attr( $value['name'] ); ?>"><?php echo esc_html( $value['title'] ); ?><?php echo wp_kses_post( $tooltip ); ?></label>
 						</th>
 						<td class="forminp forminp-<?php echo esc_attr( $value['type'] ); ?>">
 							<fieldset>
-								<legend class="screen-reader-text"><span><?php echo esc_html( $value['title'] ); ?></span></legend>
+								<legend class="screen-reader-text">
+									<span><?php echo esc_html( $value['title'] ); ?></span></legend>
 								<?php foreach ( $value['options'] as $key => $val ) : ?>
-									<label for="<?php echo esc_attr( $value['name'] ); ?>_<?php echo esc_attr( $key ); ?>">
+									<label
+										for="<?php echo esc_attr( $value['name'] ); ?>_<?php echo esc_attr( $key ); ?>">
 										<input
 											name="<?php echo esc_attr( $value['name'] ); ?>"
 											id="<?php echo esc_attr( $value['name'] ); ?>_<?php echo esc_attr( $key ); ?>"
@@ -408,11 +407,13 @@ class Settings {
 					?>
 					<tr valign="top">
 						<th scope="row" class="titledesc">
-							<label for="<?php echo esc_attr( $value['name'] ); ?>"><?php echo esc_html( $value['title'] ); ?><?php echo wp_kses_post( $tooltip ); ?></label>
+							<label
+								for="<?php echo esc_attr( $value['name'] ); ?>"><?php echo esc_html( $value['title'] ); ?><?php echo wp_kses_post( $tooltip ); ?></label>
 						</th>
 						<td class="forminp forminp-<?php echo esc_attr( $value['type'] ); ?>">
 							<fieldset>
-								<legend class="screen-reader-text"><span><?php echo esc_html( $value['title'] ); ?></span></legend>
+								<legend class="screen-reader-text">
+									<span><?php echo esc_html( $value['title'] ); ?></span></legend>
 								<label for="<?php echo esc_attr( $value['name'] ); ?>">
 									<input
 										name="<?php echo esc_attr( $value['name'] ); ?>"
@@ -436,13 +437,16 @@ class Settings {
 					?>
 					<tr valign="top">
 						<th scope="row" class="titledesc">
-							<label for="<?php echo esc_attr( $value['name'] ); ?>"><?php echo esc_html( $value['title'] ); ?><?php echo wp_kses_post( $tooltip ); ?></label>
+							<label
+								for="<?php echo esc_attr( $value['name'] ); ?>"><?php echo esc_html( $value['title'] ); ?><?php echo wp_kses_post( $tooltip ); ?></label>
 						</th>
 						<td class="forminp forminp-<?php echo esc_attr( $value['type'] ); ?>">
 							<fieldset>
-								<legend class="screen-reader-text"><span><?php echo esc_html( $value['title'] ); ?></span></legend>
+								<legend class="screen-reader-text">
+									<span><?php echo esc_html( $value['title'] ); ?></span></legend>
 								<?php foreach ( $value['options'] as $key => $val ) : ?>
-									<label for="<?php echo esc_attr( $value['name'] ); ?>_<?php echo esc_attr( $key ); ?>">
+									<label
+										for="<?php echo esc_attr( $value['name'] ); ?>_<?php echo esc_attr( $key ); ?>">
 										<input
 											name="<?php echo esc_attr( $value['name'] ); ?>[]"
 											id="<?php echo esc_attr( $value['name'] ); ?>_<?php echo esc_attr( $key ); ?>"
@@ -468,11 +472,13 @@ class Settings {
 					?>
 					<tr valign="top">
 						<th scope="row" class="titledesc">
-							<label for="<?php echo esc_attr( $value['name'] ); ?>"><?php echo esc_html( $value['title'] ); ?><?php echo wp_kses_post( $tooltip ); ?></label>
+							<label
+								for="<?php echo esc_attr( $value['name'] ); ?>"><?php echo esc_html( $value['title'] ); ?><?php echo wp_kses_post( $tooltip ); ?></label>
 						</th>
 						<td class="forminp forminp-<?php echo esc_attr( $value['type'] ); ?>">
 							<fieldset>
-								<legend class="screen-reader-text"><span><?php echo esc_html( $value['title'] ); ?></span></legend>
+								<legend class="screen-reader-text">
+									<span><?php echo esc_html( $value['title'] ); ?></span></legend>
 								<input
 									name="<?php echo esc_attr( $value['name'] ); ?>"
 									id="<?php echo esc_attr( $value['name'] ); ?>"
@@ -503,12 +509,14 @@ class Settings {
 					?>
 					<tr valign="top">
 						<th scope="row" class="titledesc">
-							<label for="<?php echo esc_attr( $value['name'] ); ?>"><?php echo esc_html( $value['title'] ); ?></label>
+							<label
+								for="<?php echo esc_attr( $value['name'] ); ?>"><?php echo esc_html( $value['title'] ); ?></label>
 							<?php echo wp_kses_post( $tooltip ); ?>
 						</th>
 						<td class="forminp forminp-<?php echo esc_attr( $value['type'] ); ?>">
 							<fieldset>
-								<legend class="screen-reader-text"><span><?php echo esc_html( $value['title'] ); ?></span></legend>
+								<legend class="screen-reader-text">
+									<span><?php echo esc_html( $value['title'] ); ?></span></legend>
 								<input
 									name="<?php echo esc_attr( $value['name'] ); ?>"
 									id="<?php echo esc_attr( $value['name'] ); ?>"
@@ -522,7 +530,8 @@ class Settings {
 								/>&nbsp;
 								<select name="<?php echo esc_attr( $value['name'] ); ?>[period]" style="width: auto;">
 									<?php foreach ( $periods as $period => $label ) : ?>
-										<option value="<?php echo esc_attr( $period ); ?>" <?php selected( $period, $value['period'] ); ?>><?php echo esc_html( $label ); ?></option>
+										<option
+											value="<?php echo esc_attr( $period ); ?>" <?php selected( $period, $value['period'] ); ?>><?php echo esc_html( $label ); ?></option>
 									<?php endforeach; ?>
 								</select>
 								<?php echo wp_kses_post( $description ); ?>
@@ -536,7 +545,8 @@ class Settings {
 					?>
 					<tr valign="top">
 						<th scope="row" class="titledesc">
-							<label for="<?php echo esc_attr( $value['name'] ); ?>"><?php echo esc_html( $value['title'] ); ?><?php echo wp_kses_post( $tooltip ); ?></label>
+							<label
+								for="<?php echo esc_attr( $value['name'] ); ?>"><?php echo esc_html( $value['title'] ); ?><?php echo wp_kses_post( $tooltip ); ?></label>
 						</th>
 						<td class="forminp forminp-<?php echo esc_attr( $value['type'] ); ?>">
 							<?php wp_editor( $value['value'], $value['name'], array( 'textarea_name' => $value['name'] ) ); ?>
@@ -550,7 +560,8 @@ class Settings {
 					?>
 					<tr valign="top">
 						<th scope="row" class="titledesc">
-							<label for="<?php echo esc_attr( $value['name'] ); ?>"><?php echo esc_html( $value['title'] ); ?><?php echo wp_kses_post( $tooltip ); ?></label>
+							<label
+								for="<?php echo esc_attr( $value['name'] ); ?>"><?php echo esc_html( $value['title'] ); ?><?php echo wp_kses_post( $tooltip ); ?></label>
 						</th>
 						<td class="forminp forminp-<?php echo esc_attr( $value['type'] ); ?>">
 							<?php call_user_func( $value['callback'], $value ); ?>
@@ -563,7 +574,8 @@ class Settings {
 					?>
 					<tr valign="top">
 						<th scope="row" class="titledesc">
-							<label for="<?php echo esc_attr( $value['name'] ); ?>"><?php echo esc_html( $value['title'] ); ?><?php echo wp_kses_post( $tooltip ); ?></label>
+							<label
+								for="<?php echo esc_attr( $value['name'] ); ?>"><?php echo esc_html( $value['title'] ); ?><?php echo wp_kses_post( $tooltip ); ?></label>
 						</th>
 						<td class="forminp forminp-<?php echo esc_attr( $value['type'] ); ?>">
 							<?php echo wp_kses_post( $value['html'] ); ?>
@@ -590,8 +602,8 @@ class Settings {
 	 * @param string $option_name Option name.
 	 * @param mixed  $default Default value.
 	 *
-	 * @since 1.0.0
 	 * @return mixed
+	 * @since 1.0.0
 	 */
 	public static function get_option( $option_name, $default = '' ) {
 		// Array value.
@@ -670,18 +682,8 @@ class Settings {
 				case 'textarea':
 					$value = wp_kses_post( trim( $raw_value ) );
 					break;
-				case 'multiselect':
-					$value = array_filter( array_map( 'ea_clean', (array) $raw_value ) );
-					break;
 				case 'select':
-				case 'checkboxes':
-					$allowed_values = empty( $option['options'] ) ? array() : array_map( 'strval', array_keys( $option['options'] ) );
-					if ( empty( $option['default'] ) && empty( $allowed_values ) ) {
-						$value = null;
-						break;
-					}
-					$default = ( empty( $option['default'] ) ? $allowed_values[0] : $option['default'] );
-					$value   = in_array( $raw_value, $allowed_values, true ) ? $raw_value : $default;
+					$value = eac_clean( $raw_value );
 					break;
 				default:
 					$value = eac_clean( $raw_value );
@@ -740,8 +742,8 @@ class Settings {
 	 *
 	 * @param array $value The form field value array.
 	 *
-	 * @since  1.0.0
 	 * @return array The description and tip as a 2 element array.
+	 * @since  1.0.0
 	 */
 	public static function get_field_description( $value ) {
 		$description = '';

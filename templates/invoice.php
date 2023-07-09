@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
 // )
 // );
 
-eac_get_header();
+get_header( 'eac' );
 
 /**
  * ever_accounting_before_main_content hook.

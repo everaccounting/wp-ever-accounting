@@ -505,7 +505,7 @@ class WpunitTester extends \Codeception\Actor {
 		$data = wp_parse_args( $data, $default );
 
 		if ( $create ) {
-			$doc_tax = new \EverAccounting\Models\DocumentLineTax($data['id']);
+			$doc_tax = new \EverAccounting\Models\DocumentItemTax($data['id']);
 			$doc_tax->set_props($data);
 			$error =  $doc_tax->save();
 			if ( is_wp_error( $error ) ) {

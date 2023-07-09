@@ -19,7 +19,7 @@ class Contact extends Model {
 	 * @since 1.0.0
 	 * @var string
 	 */
-	const TABLE_NAME = 'ea_contacts';
+	public $table_name = 'ea_contacts';
 
 	/**
 	 * Object type.
@@ -27,15 +27,7 @@ class Contact extends Model {
 	 * @since 1.0.0
 	 * @var string
 	 */
-	const OBJECT_TYPE = 'contact';
-
-	/**
-	 * Cache group.
-	 *
-	 * @since 1.0.0
-	 * @var string
-	 */
-	const CACHE_GROUP = 'ea_contacts';
+	public $object_type = 'contact';
 
 	/**
 	 * Meta type declaration for the object.
@@ -43,7 +35,7 @@ class Contact extends Model {
 	 * @since 1.0.0
 	 * @var string
 	 */
-	const META_TYPE = 'ea_contact';
+	public $meta_type = 'ea_contact';
 
 	/**
 	 * Core data for this object. Name value pairs (name + default value).
@@ -52,8 +44,9 @@ class Contact extends Model {
 	 * @var array
 	 */
 	protected $core_data = array(
-		'type'          => 'contact',
+		'id'            => null,
 		'name'          => '',
+		'type'          => '',
 		'company'       => '',
 		'email'         => '',
 		'phone'         => '',
@@ -65,14 +58,15 @@ class Contact extends Model {
 		'country'       => '',
 		'website'       => '',
 		'vat_number'    => '',
-		'tax_number'    => '',
-		'status'        => 'active',
+		'vat_exempt'    => 0,
+		'currency_code' => '',
 		'thumbnail_id'  => null,
 		'user_id'       => null,
-		'currency_code' => '',
+		'status'        => 'active',
+		'uuid'          => '',
 		'creator_id'    => null,
-		'updated_at'    => null,
-		'created_at'    => null,
+		'date_updated'  => null,
+		'date_created'  => null,
 	);
 
 	/**
@@ -85,7 +79,58 @@ class Contact extends Model {
 	public function __construct( $data = 0 ) {
 		$this->core_data['country']       = eac_get_base_country();
 		$this->core_data['currency_code'] = eac_get_base_currency();
+		$this->core_data['uuid']          = wp_generate_uuid4();
 		parent::__construct( $data );
+	}
+
+	/**
+	 * When the object is cloned, make sure meta is duplicated correctly.
+	 *
+	 * @since 1.0.0
+	 */
+	public function __clone() {
+		parent::__clone();
+		$this->set_name( $this->get_name() . ' ' . __( '(Copy)', 'wp-ever-accounting' ) );
+		$this->set_email( '' );
+		$this->set_phone( '' );
+		$this->set_uuid( eac_generate_uuid() );
+	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| CRUD methods
+	|--------------------------------------------------------------------------
+	|
+	| Methods which create, read, update and delete discounts from the database.
+	|
+	*/
+	/**
+	 * Saves an object in the database.
+	 *
+	 * @return true|\WP_Error True on success, WP_Error on failure.
+	 * @since 1.0.0
+	 */
+	public function save() {
+		// Creator ID.
+		if ( empty( $this->get_creator_id() ) && ! $this->exists() && is_user_logged_in() ) {
+			$this->set_creator_id( get_current_user_id() );
+		}
+
+		// If It's update, set the updated date.
+		if ( $this->exists() ) {
+			$this->set_date_updated( current_time( 'mysql' ) );
+		}
+
+		// If date created is not set, set it to now.
+		if ( empty( $this->get_date_created() ) ) {
+			$this->set_date_created( current_time( 'mysql' ) );
+		}
+
+		if ( empty( $this->get_uuid() ) ) {
+			$this->set_uuid( eac_generate_uuid() );
+		}
+
+		return parent::save();
 	}
 
 	/*
@@ -97,13 +142,33 @@ class Contact extends Model {
 	|
 	*/
 	/**
+	 * Get id.
+	 *
+	 * @return int
+	 * @since 1.0.0
+	 */
+	public function get_id() {
+		return (int) $this->get_prop( 'id' );
+	}
+
+	/**
+	 * Set id.
+	 *
+	 * @param int $id
+	 *
+	 * @since 1.0.0
+	 */
+	public function set_id( $id ) {
+		$this->set_prop( 'id', absint( $id ) );
+	}
+
+	/**
 	 * Get contact's wp user ID.
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @return int|null
+	 * @since 1.0.2
 	 */
 	public function get_user_id( $context = 'edit' ) {
 		return $this->get_prop( 'user_id', $context );
@@ -126,9 +191,8 @@ class Contact extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @return string
+	 * @since 1.0.2
 	 */
 	public function get_name( $context = 'edit' ) {
 		return $this->get_prop( 'name', $context );
@@ -151,9 +215,8 @@ class Contact extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @return string
+	 * @since 1.0.2
 	 */
 	public function get_company( $context = 'edit' ) {
 		return $this->get_prop( 'company', $context );
@@ -177,9 +240,8 @@ class Contact extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @return string
+	 * @since 1.0.2
 	 */
 	public function get_email( $context = 'edit' ) {
 		return $this->get_prop( 'email', $context );
@@ -204,9 +266,8 @@ class Contact extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @return string
+	 * @since 1.0.2
 	 */
 	public function get_phone( $context = 'edit' ) {
 		return $this->get_prop( 'phone', $context );
@@ -228,9 +289,8 @@ class Contact extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @return string
+	 * @since 1.0.2
 	 */
 	public function get_website( $context = 'edit' ) {
 		return $this->get_prop( 'website', $context );
@@ -252,9 +312,8 @@ class Contact extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @return string
+	 * @since 1.0.2
 	 */
 	public function get_address_1( $context = 'edit' ) {
 		return $this->get_prop( 'address_1', $context );
@@ -276,9 +335,8 @@ class Contact extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @return string
+	 * @since 1.0.2
 	 */
 	public function get_address_2( $context = 'edit' ) {
 		return $this->get_prop( 'address_2', $context );
@@ -300,9 +358,8 @@ class Contact extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @return string
+	 * @since 1.0.2
 	 */
 	public function get_city( $context = 'edit' ) {
 		return $this->get_prop( 'city', $context );
@@ -326,9 +383,8 @@ class Contact extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @return string
+	 * @since 1.0.2
 	 */
 	public function get_state( $context = 'edit' ) {
 		return $this->get_prop( 'state', $context );
@@ -351,9 +407,8 @@ class Contact extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @return string
+	 * @since 1.0.2
 	 */
 	public function get_postcode( $context = 'edit' ) {
 		return $this->get_prop( 'postcode', $context );
@@ -376,9 +431,8 @@ class Contact extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @return string
+	 * @since 1.0.2
 	 */
 	public function get_country( $context = 'edit' ) {
 		return $this->get_prop( 'country', $context );
@@ -403,9 +457,8 @@ class Contact extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @return string
+	 * @since 1.0.2
 	 */
 	public function get_vat_number( $context = 'edit' ) {
 		return $this->get_prop( 'vat_number', $context );
@@ -423,27 +476,25 @@ class Contact extends Model {
 	}
 
 	/**
-	 * Get contact's tax_number.
+	 * Get vat exempt status of the contact.
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @return string
 	 */
-	public function get_tax_number( $context = 'edit' ) {
-		return $this->get_prop( 'tax_number', $context );
+	public function get_vat_exempt( $context = 'edit' ) {
+		return $this->get_prop( 'vat_exempt', $context );
 	}
 
 	/**
-	 * Set contact's tax_number.
+	 * Set vat exempt status of the contact.
 	 *
-	 * @param string $value Tax number.
+	 * @param string $value Vat exempt status.
 	 *
-	 * @since 1.1.0
+	 * @since 1.0.2
 	 */
-	public function set_tax_number( $value ) {
-		$this->set_prop( 'tax_number', eac_clean( $value ) );
+	public function set_vat_exempt( $value ) {
+		$this->set_prop( 'vat_exempt', $this->string_to_int( $value ) );
 	}
 
 	/**
@@ -451,9 +502,8 @@ class Contact extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @return string
+	 * @since 1.0.2
 	 */
 	public function get_currency_code( $context = 'edit' ) {
 		return $this->get_prop( 'currency_code', $context );
@@ -475,9 +525,8 @@ class Contact extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @return string
+	 * @since 1.0.2
 	 */
 	public function get_type( $context = 'edit' ) {
 		return $this->get_prop( 'type', $context );
@@ -501,8 +550,8 @@ class Contact extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @since 1.0.2
 	 * @return string
+	 * @since 1.0.2
 	 */
 	public function get_status( $context = 'edit' ) {
 		return $this->get_prop( 'status', $context );
@@ -522,14 +571,23 @@ class Contact extends Model {
 	}
 
 	/**
-	 * Is the category enabled?
+	 * Get the unique_hash.
 	 *
-	 * @since 1.0.2
+	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
-	 * @return bool
+	 * @return string
 	 */
-	public function is_enabled() {
-		return 'active' === $this->get_status();
+	public function get_uuid( $context = 'edit' ) {
+		return $this->get_prop( 'uuid', $context );
+	}
+
+	/**
+	 * Set the uuid.
+	 *
+	 * @param string $key uuid.
+	 */
+	public function set_uuid( $key ) {
+		$this->set_prop( 'uuid', $key );
 	}
 
 	/**
@@ -559,17 +617,17 @@ class Contact extends Model {
 	 *
 	 * @return string
 	 */
-	public function get_updated_at( $context = 'edit' ) {
-		return $this->get_prop( 'updated_at', $context );
+	public function get_date_updated( $context = 'edit' ) {
+		return $this->get_prop( 'date_updated', $context );
 	}
 
 	/**
 	 * Set the date updated.
 	 *
-	 * @param string $updated_at date updated.
+	 * @param string $date date updated.
 	 */
-	public function set_updated_at( $updated_at ) {
-		$this->set_date_prop( 'updated_at', $updated_at );
+	public function set_date_updated( $date ) {
+		$this->set_date_prop( 'date_updated', $date );
 	}
 
 	/**
@@ -579,51 +637,44 @@ class Contact extends Model {
 	 *
 	 * @return string
 	 */
-	public function get_created_at( $context = 'edit' ) {
-		return $this->get_prop( 'created_at', $context );
+	public function get_date_created( $context = 'edit' ) {
+		return $this->get_prop( 'date_created', $context );
 	}
 
 	/**
 	 * Set the date created.
 	 *
-	 * @param string $created_at date created.
+	 * @param string $date_created date created.
 	 */
-	public function set_created_at( $created_at ) {
-		$this->set_date_prop( 'created_at', $created_at );
+	public function set_date_created( $date_created ) {
+		$this->set_date_prop( 'date_created', $date_created );
 	}
-
 
 	/*
 	|--------------------------------------------------------------------------
-	| CRUD methods
+	| Conditionals methods
 	|--------------------------------------------------------------------------
-	|
-	| Methods which create, read, update and delete discounts from the database.
-	|
+	| Methods that check an object's status, typically based on internal or meta data.
 	*/
+
 	/**
-	 * Saves an object in the database.
+	 * Is the category active?
 	 *
-	 * @since 1.0.0
-	 * @return true|\WP_Error True on success, WP_Error on failure.
+	 * @return bool
+	 * @since 1.0.2
 	 */
-	public function save() {
-		// Creator ID.
-		if ( empty( $this->get_creator_id() ) && ! $this->exists() && is_user_logged_in() ) {
-			$this->set_creator_id( get_current_user_id() );
-		}
+	public function is_active() {
+		return 'active' === $this->get_status();
+	}
 
-		// If It's update, set the updated date.
-		if ( $this->exists() ) {
-			$this->set_updated_at( current_time( 'mysql' ) );
-		}
-
-		// If date created is not set, set it to now.
-		if ( empty( $this->get_created_at() ) ) {
-			$this->set_created_at( current_time( 'mysql' ) );
-		}
-
-		return parent::save();
+	/**
+	 * Is the vat exempt?
+	 *
+	 * @return bool
+	 * @since 1.0.2
+	 */
+	public function is_vat_exempt() {
+		return ! empty( $this->get_vat_number() );
 	}
 
 	/*
@@ -637,10 +688,31 @@ class Contact extends Model {
 	/**
 	 * Get formatted name.
 	 *
-	 * @since 1.1.6
 	 * @return string
+	 * @since 1.1.6
 	 */
 	public function get_formatted_name() {
 		return sprintf( '%s (#%s)', $this->get_name(), $this->get_id() );
+	}
+
+	/**
+	 * Get formatted address.
+	 *
+	 * @return string
+	 * @since 1.0.0
+	 */
+	public function get_formatted_address() {
+		$data = array(
+			'name'      => $this->get_name(),
+			'company'   => $this->get_company(),
+			'address_1' => $this->get_address_1(),
+			'address_2' => $this->get_address_2(),
+			'city'      => $this->get_city(),
+			'state'     => $this->get_state(),
+			'postcode'  => $this->get_postcode(),
+			'country'   => $this->get_country(),
+		);
+
+		return eac_get_formatted_address( $data );
 	}
 }

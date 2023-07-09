@@ -30,13 +30,23 @@ defined( 'ABSPATH' ) || exit;
 				);
 				eac_form_field(
 					array(
-						'type'        => 'currency',
+						'type'        => 'select',
 						'id'          => 'currency_code',
 						'label'       => __( 'Currency Code', 'wp-ever-accounting' ),
 						'value'       => $vendor->get_currency_code(),
 						'class'       => 'eac-col-6',
 						'required'    => true,
 						'input_class' => 'eac-select2',
+						'options'     => wp_list_pluck(
+							eac_get_currencies(
+								[
+									'status' => 'active',
+									'limit'  => - 1,
+								]
+							),
+							'formatted_name',
+							'code'
+						),
 					)
 				);
 				eac_form_field(

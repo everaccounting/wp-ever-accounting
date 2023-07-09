@@ -122,44 +122,53 @@ class Taxes extends ListTable {
 				exit;
 			}
 
-			foreach ( $ids as $id ) { // Check the permissions on each.
-				switch ( $doaction ) {
-					case 'enable':
-						eac_insert_tax(
-							array(
-								'id'     => $id,
-								'status' => 'active',
-							)
-						);
-						break;
-					case 'disable':
-						eac_insert_tax(
-							array(
-								'id'     => $id,
-								'status' => 'inactive',
-							)
-						);
-						break;
-					case 'delete':
-						eac_delete_tax( $id );
-						break;
-				}
-			}
-
-			// Based on the action add notice.
 			switch ( $doaction ) {
-				case 'enable':
-					$notice = __( 'Tax(s) enabled successfully.', 'wp-ever-accounting' );
-					break;
-				case 'disable':
-					$notice = __( 'Tax(s) disabled successfully.', 'wp-ever-accounting' );
-					break;
-				case 'delete':
-					$notice = __( 'Tax(s) deleted successfully.', 'wp-ever-accounting' );
-					break;
-			}
-			eac_add_notice( $notice, 'success' );
+				case 'activate':
+					$changed = 0;
 
+					foreach ( $ids as $id ) {
+						$args = array(
+							'id'     => $id,
+							'status' => 'active',
+						);
+						if ( eac_insert_tax( $args ) ) {
+							$changed ++;
+						}
+					}
+					eac_add_notice( sprintf( __( '%s tax(s) activated successfully.', 'wp-ever-accounting' ), number_format_i18n( $changed ) ), 'success' );
+
+					break;
+
+				case 'deactivate':
+					$changed = 0;
+
+					foreach ( $ids as $id ) {
+						$args = array(
+							'id'     => $id,
+							'status' => 'inactive',
+						);
+						if ( eac_insert_tax( $args ) ) {
+							$changed ++;
+						}
+					}
+					eac_add_notice( sprintf( __( '%s tax(s) deactivated successfully.', 'wp-ever-accounting' ), number_format_i18n( $changed ) ), 'success' );
+
+					break;
+
+				case 'delete':
+					$changed = 0;
+
+					foreach ( $ids as $id ) {
+						if ( eac_delete_tax( $id ) ) {
+							$changed ++;
+						}
+					}
+
+					eac_add_notice( sprintf( __( '%s tax(s) deleted successfully.', 'wp-ever-accounting' ), number_format_i18n( $changed ) ), 'success' );
+
+					break;
+
+			}
 			wp_safe_redirect( admin_url( 'admin.php?page=eac-settings&tab=taxes&section=rates' ) );
 			exit();
 		}
@@ -209,8 +218,9 @@ class Taxes extends ListTable {
 	 */
 	public function get_bulk_actions() {
 		return array(
-			'enable'  => __( 'Enable', 'wp-ever-accounting' ),
-			'disable' => __( 'Disable', 'wp-ever-accounting' ),
+			'activate'   => __( 'Activate', 'wp-ever-accounting' ),
+			'deactivate' => __( 'Deactivate', 'wp-ever-accounting' ),
+			'delete'     => __( 'Delete', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -251,13 +261,13 @@ class Taxes extends ListTable {
 			'section' => $section,
 		);
 		$edit_url    = $this->get_current_url( array_merge( $args, array( 'action' => 'edit' ) ) );
-		$enable_url  = $this->get_current_url( array_merge( $args, array( 'action' => 'enable' ) ) );
-		$disable_url = $this->get_current_url( array_merge( $args, array( 'action' => 'disable' ) ) );
+		$enable_url  = $this->get_current_url( array_merge( $args, array( 'action' => 'activate' ) ) );
+		$disable_url = $this->get_current_url( array_merge( $args, array( 'action' => 'deactivate' ) ) );
 		$actions     = array(
 			'id'      => sprintf( '<strong>#%d</strong>', esc_attr( $item->get_id() ) ),
 			'edit'    => sprintf( '<a href="%s">%s</a>', esc_url( $edit_url ), __( 'Edit', 'wp-ever-accounting' ) ),
-			'enable'  => sprintf( '<a href="%s">%s</a>', esc_url( wp_nonce_url( $enable_url, 'bulk-taxes' ) ), __( 'Enable', 'wp-ever-accounting' ) ),
-			'disable' => sprintf( '<a href="%s">%s</a>', esc_url( wp_nonce_url( $disable_url, 'bulk-taxes' ) ), __( 'Disable', 'wp-ever-accounting' ) ),
+			'enable'  => sprintf( '<a href="%s">%s</a>', esc_url( wp_nonce_url( $enable_url, 'bulk-taxes' ) ), __( 'Activate', 'wp-ever-accounting' ) ),
+			'disable' => sprintf( '<a href="%s">%s</a>', esc_url( wp_nonce_url( $disable_url, 'bulk-taxes' ) ), __( 'Deactivate', 'wp-ever-accounting' ) ),
 		);
 		if ( 'active' === $item->get_status() ) {
 			unset( $actions['enable'] );

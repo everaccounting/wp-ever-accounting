@@ -138,11 +138,14 @@ class ItemsController extends Controller {
 	 */
 	public function get_items( $request ) {
 		$params = $this->get_collection_params();
+		$args   = array();
 		foreach ( $params as $key => $value ) {
 			if ( isset( $request[ $key ] ) ) {
 				$args[ $key ] = $request[ $key ];
 			}
 		}
+
+		$args['type']      = sanitize_key( $request['type'] );
 
 		/**
 		 * Filters the query arguments for a request.
@@ -159,16 +162,7 @@ class ItemsController extends Controller {
 		$items     = eac_get_items( $args );
 		$total     = eac_get_items( $args, true );
 		$page      = isset( $request['page'] ) ? absint( $request['page'] ) : 1;
-		$max_pages = ceil( $total / (int) $args['number'] );
-
-		// If requesting page is greater than max pages, return empty array.
-		if ( $page > $max_pages ) {
-			return new \WP_Error(
-				'rest_account_invalid_page_number',
-				__( 'The page number requested is larger than the number of pages available.', 'wp-ever-accounting' ),
-				array( 'status' => 400 )
-			);
-		}
+		$max_pages = ceil( $total / (int) $args['per_page'] );
 
 		$results = array();
 		foreach ( $items as $item ) {
@@ -231,7 +225,7 @@ class ItemsController extends Controller {
 	public function create_item( $request ) {
 		if ( ! empty( $request['id'] ) ) {
 			return new \WP_Error(
-				'rest_account_exists',
+				'rest_exists',
 				__( 'Cannot create existing item.', 'wp-ever-accounting' ),
 				array( 'status' => 400 )
 			);
@@ -297,7 +291,7 @@ class ItemsController extends Controller {
 
 		if ( ! eac_delete_item( $item->get_id() ) ) {
 			return new \WP_Error(
-				'rest_account_cannot_delete',
+				'rest_cannot_delete',
 				__( 'The item cannot be deleted.', 'wp-ever-accounting' ),
 				array( 'status' => 500 )
 			);
@@ -328,8 +322,8 @@ class ItemsController extends Controller {
 
 		foreach ( array_keys( $this->get_schema_properties() ) as $key ) {
 			switch ( $key ) {
-				case 'created_at':
-				case 'updated_at':
+				case 'date_created':
+				case 'date_updated':
 					$value = $this->prepare_date_response( $item->$key );
 					break;
 				default:
@@ -406,6 +400,117 @@ class ItemsController extends Controller {
 				'href' => rest_url( sprintf( '/%s/%s', $this->namespace, $this->rest_base ) ),
 			),
 		);
+	}
+
+	/**
+	 * Retrieves the item's schema, conforming to JSON Schema.
+	 *
+	 * @return array Item schema data.
+	 * @since 1.1.2
+	 */
+	public function get_item_schema() {
+		$schema = array(
+			'$schema'    => 'http://json-schema.org/draft-04/schema#',
+			'title'      => __( 'Item', 'wp-ever-accounting' ),
+			'type'       => 'object',
+			'properties' => array(
+				'id'           => array(
+					'description' => __( 'Unique identifier for the item.', 'wp-ever-accounting' ),
+					'type'        => 'integer',
+					'context'     => array( 'view', 'embed', 'edit' ),
+					'readonly'    => true,
+					'arg_options' => array(
+						'sanitize_callback' => 'intval',
+					),
+				),
+				'name'         => array(
+					'description' => __( 'Item name.', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'context'     => array( 'view', 'edit' ),
+					'required'    => true,
+				),
+				'type'         => array(
+					'description' => __( 'Item type.', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'enum'        => array_keys( eac_get_item_types() ),
+					'context'     => array( 'view', 'edit' ),
+					'required'    => true,
+				),
+				'description'  => array(
+					'description' => __( 'Item description.', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'context'     => array( 'view', 'edit' ),
+				),
+				'unit'         => array(
+					'description' => __( 'Measurement unit for the .', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'context'     => array( 'view', 'edit' ),
+				),
+				'price'        => array(
+					'description' => __( 'Item price.', 'wp-ever-accounting' ),
+					'type'        => 'number',
+					'context'     => array( 'view', 'edit' ),
+				),
+				'cost'         => array(
+					'description' => __( 'Item cost.', 'wp-ever-accounting' ),
+					'type'        => 'number',
+					'context'     => array( 'view', 'edit' ),
+				),
+				'taxable'      => array(
+					'description' => __( 'Whether or not the item is taxable.', 'wp-ever-accounting' ),
+					'type'        => 'boolean',
+					'context'     => array( 'view', 'edit' ),
+				),
+				'tax_ids'      => array(
+					'description' => __( 'Tax IDs for the item.', 'wp-ever-accounting' ),
+					'type'        => 'array',
+					'context'     => array( 'view', 'edit' ),
+					'items'       => array(
+						'type' => 'integer',
+					),
+				),
+				'category_id'=> array(
+					'description' => __( 'Category ID for the item.', 'wp-ever-accounting' ),
+					'type'        => 'integer',
+					'context'     => array( 'view', 'edit' ),
+				),
+				'thumbnail_id' => array(
+					'description' => __( 'Thumbnail ID for the item.', 'wp-ever-accounting' ),
+					'type'        => 'integer',
+					'context'     => array( 'view', 'edit' ),
+				),
+				'status'       => array(
+					'description' => __( 'Item status.', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'enum'        => array( 'active', 'inactive'),
+					'context'     => array( 'view', 'edit' ),
+					'required'    => true,
+				),
+				'date_updated' => array(
+					'description' => __( "The date the item was last updated, in the site's timezone.", 'wp-ever-accounting' ),
+					'type'        => 'date-time',
+					'context'     => array( 'view', 'edit' ),
+					'readonly'    => true,
+				),
+				'date_created' => array(
+					'description' => __( "The date the item was created, in the site's timezone.", 'wp-ever-accounting' ),
+					'type'        => 'date-time',
+					'context'     => array( 'view', 'edit' ),
+					'readonly'    => true,
+				),
+			),
+		);
+
+		/**
+		 * Filters the item's schema.
+		 *
+		 * @param array $schema Item schema data.
+		 *
+		 * @since 1.2.1
+		 */
+		$schema = apply_filters( 'ever_accounting_rest_item_schema', $schema );
+
+		return $this->add_additional_fields_schema( $schema );
 	}
 
 }

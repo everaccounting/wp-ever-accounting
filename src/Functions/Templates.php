@@ -55,11 +55,11 @@ function eac_get_template_part( $slug, $name = null ) {
  */
 function eac_locate_template( $template_name, $template_path = '', $default_path = '' ) {
 	if ( ! $template_path ) {
-		$template_path = ever_accounting()->get_template_path();
+		$template_path = EAC()->get_template_path();
 	}
 
 	if ( ! $default_path ) {
-		$default_path = ever_accounting()->get_template_path();
+		$default_path = EAC()->get_template_path();
 	}
 
 	// Look within passed path within the theme - this is priority.
@@ -89,7 +89,7 @@ function eac_locate_template( $template_name, $template_path = '', $default_path
  * @param string $default_path Default path. (default: '').
  */
 function eac_get_template( $template_name, $args = array(), $template_path = '', $default_path = '' ) {
-	$template = eaccounting_locate_template( $template_name, $template_path, $default_path );
+	$template = eac_locate_template( $template_name, $template_path, $default_path );
 
 	// Allow 3rd party plugin filter template file from their plugin.
 	$filter_template = apply_filters( 'ever_accounting_get_template', $template, $template_name, $args, $template_path, $default_path );
@@ -126,9 +126,9 @@ function eac_get_template( $template_name, $args = array(), $template_path = '',
  * @param string $template_path Template path. (default: '').
  * @param string $default_path Default path. (default: '').
  *
- * @see   eaccounting_get_template
- * @since 1.0.2
  * @return string
+ * @since 1.0.2
+ * @see   eaccounting_get_template
  */
 function eac_get_template_html( $template_name, $args = array(), $template_path = '', $default_path = '' ) {
 	ob_start();
@@ -140,8 +140,8 @@ function eac_get_template_html( $template_name, $args = array(), $template_path 
 /**
  * Output endpoint header.
  *
- * @since 1.1.6
  * @return void
+ * @since 1.1.6
  */
 function eac_get_header() {
 	eac_get_template_part( 'header' );
@@ -150,8 +150,8 @@ function eac_get_header() {
 /**
  * Output endpoint footer.
  *
- * @since 1.1.6
  * @return void
+ * @since 1.1.6
  */
 function eac_get_footer() {
 	eac_get_template_part( 'footer' );
@@ -163,9 +163,8 @@ function eac_get_footer() {
  * @param array $items Array of actions.
  * @param array $args Array of arguments.
  *
- * @since 1.1.6
- *
  * @return void
+ * @since 1.1.6
  */
 function eac_dropdown_menu( $items, $args = array() ) {
 	$defaults = array(
@@ -194,7 +193,8 @@ function eac_dropdown_menu( $items, $args = array() ) {
 	}
 	?>
 	<div class="eac-dropdown">
-		<button class="<?php echo esc_attr( $args['button_class'] ); ?>" id="<?php echo esc_attr( $args['button_id'] ); ?>" <?php echo wp_kses_post( implode( ' ', $attrs ) ); ?>>
+		<button class="<?php echo esc_attr( $args['button_class'] ); ?>"
+				id="<?php echo esc_attr( $args['button_id'] ); ?>" <?php echo wp_kses_post( implode( ' ', $attrs ) ); ?>>
 			<?php if ( $args['button_icon'] ) : ?>
 				<span class="dashicons <?php echo esc_attr( $args['button_icon'] ); ?>"></span>
 			<?php endif; ?>
@@ -213,10 +213,76 @@ function eac_dropdown_menu( $items, $args = array() ) {
 						<?php $item_attrs[] = $attr . '="' . esc_attr( $value ) . '"'; ?>
 					<?php endforeach; ?>
 				<?php endif; ?>
-				<li><a href="<?php echo esc_url( $item['url'] ); ?>" <?php echo wp_kses_post( implode( ' ', $item_attrs ) ); ?>><?php echo esc_html( $item['text'] ); ?></a></li>
+				<li>
+					<a href="<?php echo esc_url( $item['url'] ); ?>" <?php echo wp_kses_post( implode( ' ', $item_attrs ) ); ?>><?php echo esc_html( $item['text'] ); ?></a>
+				</li>
 			<?php endforeach; ?>
 		</ul>
 	</div>
 
 	<?php
+}
+
+/**
+ * Display payment.
+ *
+ * @param int $payment_id Payment ID.
+ *
+ * @return void
+ * @since  1.1.6
+ */
+function eac_display_payment( $payment_id ) {
+	$payment = eac_get_payment( $payment_id );
+	if ( ! $payment ) {
+		return;
+	}
+	eac_get_template( 'content-payment.php', array( 'payment' => $payment ) );
+}
+
+/**
+ * Display expense.
+ *
+ * @param int $expense_id Expense ID.
+ *
+ * @return void
+ * @since  1.1.6
+ */
+function eac_display_expense( $expense_id ) {
+	$expense = eac_get_expense( $expense_id );
+	if ( ! $expense ) {
+		return;
+	}
+	eac_get_template( 'content-expense.php', array( 'expense' => $expense ) );
+}
+
+/**
+ * Display invoice.
+ *
+ * @param int $invoice_id Invoice ID.
+ *
+ * @return void
+ * @since  1.1.6
+ */
+function eac_display_invoice( $invoice_id ) {
+	$invoice = eac_get_invoice( $invoice_id );
+	if ( ! $invoice ) {
+		return;
+	}
+	eac_get_template( 'content-invoice.php', array( 'invoice' => $invoice ) );
+}
+
+/**
+ * Display bill.
+ *
+ * @param int $bill_id Bill ID.
+ *
+ * @return void
+ * @since  1.1.6
+ */
+function eac_display_bill( $bill_id ) {
+	$bill = eac_get_bill( $bill_id );
+	if ( ! $bill ) {
+		return;
+	}
+	eac_get_template( 'content-bill.php', array( 'bill' => $bill ) );
 }

@@ -21,9 +21,8 @@ require_once __DIR__ . '/Functions/Transactions.php';
 /**
  * Get base currency code
  *
- * @since 1.0.2
- *
  * @return string
+ * @since 1.0.2
  */
 function eac_get_base_currency() {
 	$currency = get_option( 'eac_base_currency', 'USD' );
@@ -34,9 +33,8 @@ function eac_get_base_currency() {
 /**
  * Get base country.
  *
- * @since 1.0.2
- *
  * @return string
+ * @since 1.0.2
  */
 function eac_get_base_country() {
 	$country = get_option( 'eac_company_country', 'US' );
@@ -51,9 +49,8 @@ function eac_get_base_country() {
  *
  * @param bool|int $decimals Allow decimal. If true, then allow decimal. If false, then only allow integers. If a number, then allow that many decimal places.
  *
- * @since 1.0.2
- *
  * @return int|float|null
+ * @since 1.0.2
  */
 function eac_sanitize_number( $number, $decimals = 2 ) {
 	// Convert multiple dots to just one.
@@ -97,9 +94,8 @@ function eac_round_number( $val, $precision = 6, $mode = PHP_ROUND_HALF_UP ) {
  * @param int    $decimals Number of decimals.
  * @param bool   $trim_zeros Trim zeros.
  *
- * @since 1.0.2
- *
  * @return int|float|null
+ * @since 1.0.2
  */
 function eac_format_decimal( $number, $decimals = 4, $trim_zeros = true ) {
 
@@ -126,9 +122,8 @@ function eac_format_decimal( $number, $decimals = 4, $trim_zeros = true ) {
  * @param string $amount Amount.
  * @param string $from_code If not passed will be used default currency.
  *
- * @since 1.0.2
- *
  * @return float|int
+ * @since 1.0.2
  */
 function eac_sanitize_money( $amount, $from_code = null ) {
 	$base_currency = eac_get_base_currency();
@@ -140,9 +135,9 @@ function eac_sanitize_money( $amount, $from_code = null ) {
 	if ( ! is_numeric( $amount ) ) {
 		$currency = eac_get_currency( $from_code );
 		// Retrieve the thousand and decimal separator from currency object.
-		$thousand_separator = $currency ? $currency->get_thousands_separator() : ',';
+		$thousand_separator = $currency ? $currency->get_thousand_separator() : '';
 		$decimal_separator  = $currency ? $currency->get_decimal_separator() : '.';
-		$symbol             = $currency ? $currency->get_symbol() : '$';
+		$symbol             = $currency ? $currency->get_symbol() : '';
 		// Remove currency symbol from amount.
 		$amount = str_replace( $symbol, '', $amount );
 		// Remove any non-numeric characters except a thousand and decimal separators.
@@ -169,9 +164,8 @@ function eac_sanitize_money( $amount, $from_code = null ) {
  *
  * @param string $code If not passed will be used default currency.
  *
- * @since 1.0.2
- *
  * @return string
+ * @since 1.0.2
  */
 function eac_format_money( $amount, $code = null ) {
 	if ( is_null( $code ) ) {
@@ -182,10 +176,10 @@ function eac_format_money( $amount, $code = null ) {
 	}
 	$currency     = eac_get_currency( $code );
 	$precision    = $currency ? $currency->get_precision() : 2;
-	$thousand_sep = $currency ? $currency->get_thousands_separator() : ',';
+	$thousand_sep = $currency ? $currency->get_thousand_separator() : '';
 	$decimal_sep  = $currency ? $currency->get_decimal_separator() : '.';
 	$position     = $currency ? $currency->get_position() : 'before';
-	$symbol       = $currency ? $currency->get_symbol() : '$';
+	$symbol       = $currency ? $currency->get_symbol() : '';
 	$prefix       = 'before' === $position ? $symbol : '';
 	$suffix       = 'after' === $position ? $symbol : '';
 	$is_negative  = $amount < 0;
@@ -203,11 +197,10 @@ function eac_format_money( $amount, $code = null ) {
  * @param string $to Convert to currency code.
  * @param string $to_rate Convert to currency rate.
  *
- * @since 1.0.2
- *
  * @return float|int|string
+ * @since 1.0.2
  */
-function eac_convert_money_from_base( $amount, $to, $to_rate ) {
+function eac_convert_money_from_base( $amount, $to, $to_rate = null ) {
 	$default = eac_get_base_currency();
 	$amount  = eac_sanitize_money( $amount, $to );
 	// No need to convert same currency.
@@ -216,6 +209,9 @@ function eac_convert_money_from_base( $amount, $to, $to_rate ) {
 	}
 	$currency  = eac_get_currency( $to );
 	$precision = $currency ? $currency->get_precision() : 2;
+	if ( is_null( $to_rate ) ) {
+		$to_rate = $currency ? $currency->get_exchange_rate() : 1;
+	}
 
 	// First check if mathematically possible.
 	if ( 0 === $to_rate ) {
@@ -234,16 +230,20 @@ function eac_convert_money_from_base( $amount, $to, $to_rate ) {
  * @param string $from_rate Convert from currency rate.
  * @param bool   $formatted Whether to format the price or not.
  *
- * @since 1.0.2
- *
  * @return float|int|string
+ * @since 1.0.2
  */
-function eac_convert_money_to_base( $amount, $from, $from_rate, $formatted = false ) {
-	$default = eac_get_base_currency();
-	$amount  = eac_sanitize_money( $amount, $from );
+function eac_convert_money_to_base( $amount, $from, $from_rate = null, $formatted = false ) {
+	$base          = eac_get_base_currency();
+	$from_currency = eac_get_currency( $from );
+	$amount        = eac_sanitize_money( $amount, $from );
 	// No need to convert same currency.
-	if ( $default === $from ) {
+	if ( $base === $from ) {
 		return $amount;
+	}
+
+	if ( empty( $from_rate ) ) {
+		$from_rate = $from_currency ? $from_currency->get_exchange_rate() : 1;
 	}
 
 	// First check if mathematically possible.
@@ -251,13 +251,12 @@ function eac_convert_money_to_base( $amount, $from, $from_rate, $formatted = fal
 		$amount = 0;
 	} else {
 		// Divide by rate.
-		$currency  = eac_get_currency( $from );
-		$precision = $currency ? $currency->get_precision() : 2;
+		$precision = $from_currency ? $from_currency->get_precision() : 2;
 		$amount    = round( $amount / $from_rate, $precision, PHP_ROUND_HALF_UP );
 	}
 
 	if ( $formatted ) {
-		$amount = eac_format_money( $amount, $default );
+		$amount = eac_format_money( $amount, $base );
 	}
 
 	return $amount;
@@ -269,18 +268,27 @@ function eac_convert_money_to_base( $amount, $from, $from_rate, $formatted = fal
  * @param string      $amount Amount.
  * @param string      $from Convert from currency code.
  * @param string|null $to Convert to currency code.
- * @param string|null $to_rate Convert to currency rate.
  * @param string|null $from_rate Convert from currency rate.
+ * @param string|null $to_rate Convert to currency rate.
  * @param bool        $formatted Whether to format the price or not.
  *
- * @since 1.0.2
- *
  * @return float|int|string
+ * @since 1.0.2
  */
-function eac_convert_money( $amount, $from, $to, $to_rate, $from_rate, $formatted = false ) {
+function eac_convert_money( $amount, $from, $to, $from_rate = null, $to_rate = null, $formatted = false ) {
 
 	if ( ! is_numeric( $amount ) ) {
 		$amount = eac_sanitize_money( $amount, $from );
+	}
+
+	if ( empty( $from_rate ) ) {
+		$from_currency = eac_get_currency( $from );
+		$from_rate     = $from_currency ? $from_currency->get_exchange_rate() : 1;
+	}
+
+	if ( empty( $to_rate ) ) {
+		$to_currency = eac_get_currency( $to );
+		$to_rate     = $to_currency ? $to_currency->get_exchange_rate() : 1;
 	}
 
 	// No need to convert same currency.
@@ -310,9 +318,8 @@ function eac_convert_money( $amount, $from, $to, $to_rate, $from_rate, $formatte
  * @param string $type Type.
  * @param array  $args Args.
  *
- * @since 1.1.6
- *
  * @return void
+ * @since 1.1.6
  */
 function eac_add_notice( $message, $type = 'success', $args = array() ) {
 	\EverAccounting\Notices::add_notice( $message, $type, $args );
@@ -325,9 +332,8 @@ function eac_add_notice( $message, $type = 'success', $args = array() ) {
  * @param string $type Type.
  * @param array  $args Args.
  *
- * @since 1.1.6
- *
  * @return void
+ * @since 1.1.6
  */
 function eac_add_message( $message, $type = 'success', $args = array() ) {
 	\EverAccounting\Notices::add_message( $message, $type, $args );
@@ -336,8 +342,8 @@ function eac_add_message( $message, $type = 'success', $args = array() ) {
 /**
  * Get payment methods.
  *
- * @since 1.0.2
  * @return array
+ * @since 1.0.2
  */
 function eac_get_payment_methods() {
 	return apply_filters(
@@ -357,21 +363,21 @@ function eac_get_payment_methods() {
 /**
  * Get formatted company address.
  *
- * @since 1.1.6
  * @return string
+ * @since 1.1.6
  */
 function eac_get_formatted_company_address() {
 	return eac_get_formatted_address(
 		array(
-			'name'      => get_option( 'eac_business_name', get_bloginfo( 'name' ) ),
-			'address_1' => get_option( 'eac_business_address_1' ),
-			'address_2' => get_option( 'eac_business_address_2' ),
-			'city'      => get_option( 'eac_business_city' ),
-			'state'     => get_option( 'eac_business_state' ),
-			'postcode'  => get_option( 'eac_business_postcode' ),
-			'country'   => get_option( 'eac_business_country' ),
-			'phone'     => get_option( 'eac_business_phone' ),
-			'email'     => get_option( 'eac_business_email' ),
+			'name'      => get_option( 'eac_company_name', get_bloginfo( 'name' ) ),
+			'address_1' => get_option( 'eac_company_address_1' ),
+			'address_2' => get_option( 'eac_company_address_2' ),
+			'city'      => get_option( 'eac_company_city' ),
+			'state'     => get_option( 'eac_company_state' ),
+			'postcode'  => get_option( 'eac_company_postcode' ),
+			'country'   => get_option( 'eac_company_country' ),
+			'phone'     => get_option( 'eac_company_phone' ),
+			'email'     => get_option( 'eac_company_email' ),
 		)
 	);
 }
@@ -381,8 +387,8 @@ function eac_get_formatted_company_address() {
  *
  * @param array $field Field arguments.
  *
- * @since 1.1.6
  * @return void|string String when 'return' argument is passed as true.
+ * @since 1.1.6
  */
 function eac_form_field( $field ) {
 	$default_args = array(
@@ -448,6 +454,19 @@ function eac_form_field( $field ) {
 		}
 		$attrs[] = esc_attr( $attr_key ) . '="' . esc_attr( $attr_value ) . '"';
 	}
+	$data_type = isset( $field['data_type'] ) ? $field['data_type'] : '';
+
+	switch ( $data_type ) {
+		case 'decimal':
+			$field['input_class'] .= ' eac-input-decimal';
+			break;
+		case 'time':
+			$field['input_class'] .= ' eac-timepicker';
+			break;
+		case 'date':
+			$field['input_class'] .= ' eac-datepicker';
+			break;
+	}
 
 	switch ( $field['type'] ) {
 		case 'text':
@@ -483,7 +502,6 @@ function eac_form_field( $field ) {
 			);
 			break;
 
-		case 'currency':
 		case 'country':
 		case 'select':
 			$field['value']       = wp_parse_list( $field['value'] );
@@ -494,11 +512,7 @@ function eac_form_field( $field ) {
 				$attrs[]        = 'multiple="multiple"';
 			}
 
-			if ( 'currency' === $field['type'] ) {
-				foreach ( eac_get_currencies( [ 'limit' => -1 ] ) as $code => $currency ) {
-					$field['options'][ $code ] = esc_html( $currency->get_formatted_name() );
-				}
-			} elseif ( 'country' === $field['type'] ) {
+			if ( 'country' === $field['type'] ) {
 				$field['options'] = eac_get_countries();
 			}
 
@@ -506,7 +520,6 @@ function eac_form_field( $field ) {
 			foreach ( $field['options'] as $value => $option_label ) {
 				$options .= sprintf( '<option value="%s" %s>%s</option>', esc_attr( $value ), selected( in_array( (string) $value, $field['value'], true ), true, false ), esc_html( $option_label ) );
 			}
-
 			$input = sprintf(
 				'<select name="%s" id="%s" class="%s" %s>%s</select>',
 				$field['name'],
@@ -574,34 +587,8 @@ function eac_form_field( $field ) {
 
 			break;
 
-		case 'date':
-		case 'time':
-			$field['input_class'] .= ' eac-datepicker';
-			$input                 = sprintf(
-				'<input type="text" name="%1$s" id="%2$s" class="%3$s" value="%4$s" %5$s>',
-				esc_attr( $field['name'] ),
-				esc_attr( $field['id'] ),
-				esc_attr( $field['input_class'] ),
-				esc_attr( $field['value'] ),
-				wp_kses_post( implode( ' ', $attrs ) )
-			);
-			break;
-
-		case 'decimal':
-		case 'money':
-			$field['input_class'] .= ' eac_input_decimal';
-			$input                 = sprintf(
-				'<input type="text" inputmode="decimal" name="%1$s" id="%2$s" class="%3$s" value="%4$s" %5$s>',
-				esc_attr( $field['name'] ),
-				esc_attr( $field['id'] ),
-				esc_attr( $field['input_class'] ),
-				esc_attr( $field['value'] ),
-				wp_kses_post( implode( ' ', $attrs ) )
-			);
-			break;
-
 		case 'file':
-			$field['input_class'] .= ' eac_input_file';
+			$field['input_class'] .= ' eac-input-file';
 			$allowed_types         = ! empty( $field['allowed_types'] ) ? $field['allowed_types'] : 'image';
 			$input                 = sprintf(
 				'<input type="file" name="%1$s" id="%2$s" class="%3$s" value="%4$s" %5$s accept="%6$s">',
@@ -636,9 +623,9 @@ function eac_form_field( $field ) {
 
 	if ( ! empty( $input ) ) {
 		if ( ! empty( $field['label'] ) ) {
-			$label = '<label for="' . esc_attr( $field['id'] ) . '" class="eac-form-field__label">' . esc_html( $field['label'] );
+			$label = '<label for="' . esc_attr( $field['id'] ) . '">' . esc_html( $field['label'] );
 			if ( true === $field['required'] ) {
-				$label .= '&nbsp;<abbr class="eac-form-field__required" title="' . esc_attr__( 'required', 'wp-ever-accounting' ) . '">*</abbr>';
+				$label .= '&nbsp;<abbr title="' . esc_attr__( 'required', 'wp-ever-accounting' ) . '">*</abbr>';
 			}
 			if ( ! empty( $field['tooltip'] ) ) {
 				$label .= eac_tooltip( $field['tooltip'] );
@@ -648,7 +635,7 @@ function eac_form_field( $field ) {
 		}
 
 		if ( ! empty( $field['desc'] ) && ! in_array( $field['type'], array( 'checkbox', 'switch' ), true ) ) {
-			$input .= '<p class="eac-form-field__desc">' . esc_html( $field['desc'] ) . '</p>';
+			$input .= '<p class="description">' . esc_html( $field['desc'] ) . '</p>';
 		}
 
 		$input = sprintf(
@@ -665,7 +652,20 @@ function eac_form_field( $field ) {
 	 * Filter the output of the field.
 	 *
 	 * @param string $output The field HTML.
-	 * @param array  $field The field arguments.
+	 * @param array $field The field arguments.
 	 */
 	echo apply_filters( 'ever_accounting_form_field_html', $input, $field ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+}
+/**
+ * Form fields.
+ *
+ * @param array $fields Fields arguments.
+ *
+ * @return void
+ * @since 1.1.6
+ */
+function eac_form_fields( $fields ) {
+	foreach ( $fields as $field ) {
+		eac_form_field( $field );
+	}
 }

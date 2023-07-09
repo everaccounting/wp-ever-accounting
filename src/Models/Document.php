@@ -51,7 +51,7 @@ abstract class Document extends Model {
 	 * @since 1.0.0
 	 * @var string
 	 */
-	const TABLE_NAME = 'ea_documents';
+	public $table_name = 'ea_documents';
 
 	/**
 	 * Object type.
@@ -59,15 +59,7 @@ abstract class Document extends Model {
 	 * @since 1.0.0
 	 * @var string
 	 */
-	const OBJECT_TYPE = 'document';
-
-	/**
-	 * Cache group.
-	 *
-	 * @since 1.0.0
-	 * @var string
-	 */
-	const CACHE_GROUP = 'ea_documents';
+	public $object_type = 'document';
 
 	/**
 	 * Meta type declaration for the object.
@@ -75,7 +67,7 @@ abstract class Document extends Model {
 	 * @since 1.0.0
 	 * @var string
 	 */
-	const META_TYPE = 'ea_document';
+	public $meta_type = 'ea_document';
 
 	/**
 	 * Core data for this object. Name value pairs (name + default value).
@@ -84,24 +76,21 @@ abstract class Document extends Model {
 	 * @var array
 	 */
 	protected $core_data = array(
-		'type'            => 'invoice',
-		'status'          => 'draft',
+		'id'              => null,
+		'type'            => '',
+		'status'          => 'draft', // draft, sent, viewed, paid, cancelled, refunded.
 		'number'          => '', // Document number, invoice number, bill number, estimate number, etc.
 		'contact_id'      => null,
-		'subtotal'        => 0.00,
+		'items_total'     => 0.00,
 		'discount_total'  => 0.00,
 		'shipping_total'  => 0.00,
 		'fees_total'      => 0.00,
 		'tax_total'       => 0.00,
 		'total'           => 0.00,
 		'total_paid'      => 0.00,
-		'total_refunded'  => 0.00,
+		'balance'         => 0.00,
 		'discount_type'   => 'fixed',
 		'discount_amount' => 0.00,
-		'shipping_amount' => 0.00,
-		'fees_amount'     => 0.00,
-		'tax_inclusive'   => 'no',
-		'vat_exempt'      => 'no',
 		'billing_data'    => array(
 			'name'       => '',
 			'company'    => '',
@@ -115,33 +104,22 @@ abstract class Document extends Model {
 			'phone'      => '',
 			'vat_number' => '',
 		),
-		'shipping_data'   => array(
-			'name'      => '',
-			'company'   => '',
-			'address_1' => '',
-			'address_2' => '',
-			'city'      => '',
-			'state'     => '',
-			'postcode'  => '',
-			'country'   => '',
-			'email'     => '',
-			'phone'     => '',
-		),
 		'reference'       => '',
-		'document_note'   => '',
-		'issued_at'       => null,
-		'due_at'          => null,
-		'sent_at'         => null,
-		'viewed_at'       => null,
-		'paid_at'         => null,
-		'created_via'     => '',
+		'note'            => '',
+		'tax_inclusive'   => '0',
+		'vat_exempt'      => '0',
+		'issue_date'      => null,
+		'due_date'        => null,
+		'sent_date'       => null,
+		'payment_date'    => null,
 		'currency_code'   => '',
-		'currency_rate'   => 1.00,
+		'exchange_rate'   => 1.00,
 		'parent_id'       => null,
-		'creator_id'      => null,
 		'uuid'            => '',
-		'updated_at'      => null,
-		'created_at'      => null,
+		'created_via'     => 'manual',
+		'creator_id'      => null,
+		'date_updated'    => null,
+		'date_created'    => null,
 	);
 
 	/**
@@ -170,20 +148,176 @@ abstract class Document extends Model {
 	 * @since 1.0.0
 	 */
 	public function __construct( $data = 0 ) {
-		$this->core_data['tax_inclusive'] = eac_price_includes_tax() ? 'yes' : 'no';
-		$this->core_data['document_key']  = eac_generate_uuid();
+		$this->core_data['tax_inclusive'] = eac_price_includes_tax() ? 1 : 0;
 		$this->core_data['currency_code'] = eac_get_base_currency();
 		$this->core_data['creator_id']    = get_current_user_id();
-		$this->core_data['created_at']    = wp_date( 'Y-m-d H:i:s' );
+		$this->core_data['date_created']  = wp_date( 'Y-m-d H:i:s' );
+		$this->core_data['uuid']          = wp_generate_uuid4();
 		parent::__construct( $data );
 	}
 
+	/**
+	 * Returns all data for this object.
+	 *
+	 * @return array
+	 * @since  1.0.0
+	 */
+	public function get_data() {
+		$data          = parent::get_data();
+		$items         = $this->get_items();
+		$data['items'] = array();
+		foreach ( $items as $item ) {
+			$data['items'][] = $item->get_data();
+		}
+
+		return $data;
+	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| CRUD methods
+	|--------------------------------------------------------------------------
+	|
+	| Methods which create, read, update and delete discounts from the database.
+	|
+	*/
+	/**
+	 * Saves an object in the database.
+	 *
+	 * @return true|\WP_Error True on success, WP_Error on failure.
+	 * @throws \Exception When the invoice is already paid.
+	 * @since 1.0.0
+	 */
+	public function save() {
+		global $wpdb;
+		$this->calculate_totals();
+		error_log( print_r( $this->get_changes(), true ) );
+
+		// contact id is required.
+		if ( empty( $this->get_contact_id() ) ) {
+			return new \WP_Error( 'missing_required', __( 'Contact ID is required.', 'wp-ever-accounting' ) );
+		}
+
+		if ( empty( $this->get_type() ) ) {
+			return new \WP_Error( 'missing_required', __( 'Type is required.', 'wp-ever-accounting' ) );
+		}
+
+		if ( empty( $this->get_status() ) ) {
+			return new \WP_Error( 'missing_required', __( 'Status is required.', 'wp-ever-accounting' ) );
+		}
+
+		// Once the invoice is paid, contact can't be changed.
+		if ( $this->get_total_paid() > 0 && in_array( 'contact_id', $this->changes, true ) ) {
+			return new \WP_Error( 'invalid-argument', __( 'Contact can\'t be changed once the document is paid.', 'wp-ever-accounting' ) );
+		}
+
+		// check if the document number is already exists.
+		if ( empty( $this->get_number() ) ) {
+			$next_number = $this->get_next_number();
+			$this->set_number( $next_number );
+		}
+
+		// If date created is not set, set it to now.
+		if ( empty( $this->get_date_created() ) ) {
+			$this->set_date_created( current_time( 'mysql' ) );
+		}
+
+		// If It's update, set the updated date.
+		if ( $this->exists() ) {
+			$this->set_date_updated( current_time( 'mysql' ) );
+		}
+
+		// uuid is required.
+		if ( empty( $this->get_uuid() ) ) {
+			$this->set_uuid( wp_generate_uuid4() );
+		}
+
+		try {
+			$wpdb->query( 'START TRANSACTION' );
+			$saved = parent::save();
+			if ( is_wp_error( $saved ) ) {
+				throw new \Exception( $saved->get_error_message() );
+			}
+
+			foreach ( $this->get_items() as $item ) {
+				$item->set_document_id( $this->get_id() );
+				$saved = $item->save();
+				if ( is_wp_error( $saved ) ) {
+					throw new \Exception( $saved->get_error_message() );
+				}
+			}
+
+			foreach ( $this->deletable as $deletable ) {
+				if ( $deletable->exists() && ! $deletable->delete() ) {
+					// translators: %s: error message.
+					throw new \Exception( sprintf( __( 'Error while deleting items. error: %s', 'wp-ever-accounting' ), $wpdb->last_error ) );
+				}
+			}
+
+			$wpdb->query( 'COMMIT' );
+
+			return true;
+		} catch ( \Exception $e ) {
+			$wpdb->query( 'ROLLBACK' );
+
+			return new \WP_Error( 'db-error', $e->getMessage() );
+		}
+	}
+
+	/**
+	 * Deletes an object from the database.
+	 *
+	 * @param bool $force_delete Whether to bypass trash and force deletion. Default false.
+	 *
+	 * @return bool|\WP_Error True on success, false or WP_Error on failure.
+	 * @since 1.0.0
+	 */
+	public function delete( $force_delete = false ) {
+		$deleted = parent::delete( $force_delete );
+
+		if ( $deleted ) {
+			foreach ( $this->get_items() as $item ) {
+				$item->delete( $force_delete );
+			}
+
+			foreach ( $this->get_taxes() as $tax ) {
+				$tax->delete( $force_delete );
+			}
+
+			foreach ( $this->get_notes() as $note ) {
+				$note->delete( $force_delete );
+			}
+		}
+
+		return $deleted;
+	}
 	/*
 	|--------------------------------------------------------------------------
 	| Crud Getters and Setters
 	|--------------------------------------------------------------------------
 	| These methods are used to get and set the core data of the document.
 	*/
+	/**
+	 * Get id.
+	 *
+	 * @return int
+	 * @since 1.0.0
+	 */
+	public function get_id() {
+		return (int) $this->get_prop( 'id' );
+	}
+
+	/**
+	 * Set id.
+	 *
+	 * @param int $id
+	 *
+	 * @since 1.0.0
+	 */
+	public function set_id( $id ) {
+		$this->set_prop( 'id', absint( $id ) );
+	}
+
 	/**
 	 * Get internal type.
 	 *
@@ -211,9 +345,8 @@ abstract class Document extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
-	 * @since  1.1.0
-	 *
 	 * @return string
+	 * @since  1.1.0
 	 */
 	public function get_status( $context = 'edit' ) {
 		return $this->get_prop( 'status', $context );
@@ -235,9 +368,8 @@ abstract class Document extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
-	 * @since  1.1.0
-	 *
 	 * @return string
+	 * @since  1.1.0
 	 */
 	public function get_number( $context = 'edit' ) {
 		if ( ! $this->exists() && empty( $this->data['number'] ) ) {
@@ -263,9 +395,8 @@ abstract class Document extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
-	 * @since  1.1.0
-	 *
 	 * @return int
+	 * @since  1.1.0
 	 */
 	public function get_contact_id( $context = 'edit' ) {
 		return $this->get_prop( 'contact_id', $context );
@@ -283,26 +414,26 @@ abstract class Document extends Model {
 	}
 
 	/**
-	 * Get subtotal.
+	 * Get item_total.
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
-	 * @since  1.1.0
 	 * @return float
+	 * @since  1.1.0
 	 */
-	public function get_subtotal( $context = 'edit' ) {
-		return $this->get_prop( 'subtotal', $context );
+	public function get_items_total( $context = 'edit' ) {
+		return $this->get_prop( 'items_total', $context );
 	}
 
 	/**
-	 * Set subtotal.
+	 * Set item_total.
 	 *
 	 * @param float $value Subtotal.
 	 *
 	 * @since  1.1.0
 	 */
-	public function set_subtotal( $value ) {
-		$this->set_prop( 'subtotal', eac_sanitize_number( $value ) );
+	public function set_items_total( $value ) {
+		$this->set_prop( 'items_total', eac_sanitize_number( $value ) );
 	}
 
 	/**
@@ -310,8 +441,8 @@ abstract class Document extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
-	 * @since  1.1.0
 	 * @return float
+	 * @since  1.1.0
 	 */
 	public function get_discount_total( $context = 'edit' ) {
 		return $this->get_prop( 'discount_total', $context );
@@ -333,8 +464,8 @@ abstract class Document extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
-	 * @since 1.1.0
 	 * @return float
+	 * @since 1.1.0
 	 */
 	public function get_shipping_total( $context = 'edit' ) {
 		return $this->get_prop( 'shipping_total', $context );
@@ -356,8 +487,8 @@ abstract class Document extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
-	 * @since 1.1.0
 	 * @return float
+	 * @since 1.1.0
 	 */
 	public function get_fees_total( $context = 'edit' ) {
 		return $this->get_prop( 'fees_total', $context );
@@ -379,8 +510,8 @@ abstract class Document extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
-	 * @since 1.1.0
 	 * @return float
+	 * @since 1.1.0
 	 */
 	public function get_tax_total( $context = 'edit' ) {
 		return $this->get_prop( 'tax_total', $context );
@@ -402,8 +533,8 @@ abstract class Document extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
-	 * @since 1.1.0
 	 * @return float
+	 * @since 1.1.0
 	 */
 	public function get_total( $context = 'edit' ) {
 		return $this->get_prop( 'total', $context );
@@ -425,8 +556,8 @@ abstract class Document extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
-	 * @since 1.1.0
 	 * @return float
+	 * @since 1.1.0
 	 */
 	public function get_total_paid( $context = 'edit' ) {
 		return $this->get_prop( 'total_paid', $context );
@@ -444,26 +575,27 @@ abstract class Document extends Model {
 	}
 
 	/**
-	 * Get total refunded
+	 * Get balance due.
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
-	 * @since 1.1.0
 	 * @return float
+	 * @since 1.1.0
 	 */
-	public function get_total_refunded( $context = 'edit' ) {
-		return $this->get_prop( 'total_refunded', $context );
+	public function get_balance( $context = 'edit' ) {
+		return $this->get_prop( 'balance', $context );
 	}
 
 	/**
-	 * Set total refunded
+	 * Set balance due.
 	 *
-	 * @param float $total_refunded Total refunded.
+	 * @param float $balance Total refunded.
 	 *
 	 * @since  1.1.0
 	 */
-	public function set_total_refunded( $total_refunded ) {
-		$this->set_prop( 'total_refunded', eac_sanitize_number( $total_refunded, 4 ) );
+	public function set_balance( $balance ) {
+		$balance = $balance < 0 ? 0 : $balance;
+		$this->set_prop( 'balance', eac_sanitize_number( $balance, 4 ) );
 	}
 
 	/**
@@ -471,8 +603,8 @@ abstract class Document extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
-	 * @since  1.1.0
 	 * @return string
+	 * @since  1.1.0
 	 */
 	public function get_discount_amount( $context = 'edit' ) {
 		return (float) $this->get_prop( 'discount_amount', $context );
@@ -494,8 +626,8 @@ abstract class Document extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
-	 * @since  1.1.0
 	 * @return string
+	 * @since  1.1.0
 	 */
 	public function get_discount_type( $context = 'edit' ) {
 		$type = $this->get_prop( 'discount_type', $context );
@@ -521,118 +653,12 @@ abstract class Document extends Model {
 	}
 
 	/**
-	 * Get shipping cost.
-	 *
-	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
-	 *
-	 * @since  1.1.0
-	 * @return string
-	 */
-	public function get_shipping_amount( $context = 'edit' ) {
-		return (float) $this->get_prop( 'shipping_amount', $context );
-	}
-
-	/**
-	 * Set shipping cost.
-	 *
-	 * @param string $value Discount cost.
-	 *
-	 * @since  1.1.0
-	 */
-	public function set_shipping_amount( $value ) {
-		$this->set_prop( 'shipping_amount', eac_sanitize_number( $value, 4 ) );
-	}
-
-	/**
-	 * Get fees amount.
-	 *
-	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
-	 *
-	 * @since  1.1.0
-	 * @return string
-	 */
-	public function get_fees_amount( $context = 'edit' ) {
-		return (float) $this->get_prop( 'fees_amount', $context );
-	}
-
-	/**
-	 * Set fees amount.
-	 *
-	 * @param string $value Discount amount.
-	 *
-	 * @since  1.1.0
-	 */
-	public function set_fees_amount( $value ) {
-		$this->set_prop( 'fees_amount', eac_sanitize_number( $value, 4 ) );
-	}
-
-	/**
-	 * Get tax inclusive or not.
-	 *
-	 * @param string $context View or edit context.
-	 *
-	 * @since 1.1.0
-	 *
-	 * @return mixed|null
-	 */
-	public function get_tax_inclusive( $context = 'edit' ) {
-		$enabled = $this->get_prop( 'tax_inclusive', $context );
-		if ( empty( $enabled ) ) {
-			$enabled = eac_price_includes_tax();
-		}
-
-		return $enabled;
-	}
-
-	/**
-	 * Set tax inclusive or not.
-	 *
-	 * @param bool $value Tax inclusive or not.
-	 *
-	 * @since  1.1.0
-	 */
-	public function set_tax_inclusive( $value ) {
-		if ( ! in_array( $value, array( 'yes', 'no' ), true ) ) {
-			$value = 'no';
-		}
-		$this->set_prop( 'tax_inclusive', eac_clean( $value ) );
-	}
-
-	/**
-	 * Get var exempt or not.
-	 *
-	 * @param string $context View or edit context.
-	 *
-	 * @since 1.1.0
-	 *
-	 * @return mixed|null
-	 */
-	public function get_vat_exempt( $context = 'edit' ) {
-		return $this->get_prop( 'vat_exempt', $context );
-	}
-
-	/**
-	 * Set tax inclusive or not.
-	 *
-	 * @param bool $value Tax inclusive or not.
-	 *
-	 * @since  1.1.0
-	 */
-	public function set_vat_exempt( $value ) {
-		if ( ! in_array( $value, array( 'yes', 'no' ), true ) ) {
-			$value = 'no';
-		}
-		$this->set_prop( 'vat_exempt', eac_clean( $value ) );
-	}
-
-	/**
 	 * Get billing.
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
-	 * @since  1.1.0
-	 *
 	 * @return string
+	 * @since  1.1.0
 	 */
 	public function get_billing_data( $context = 'edit' ) {
 		return $this->get_prop( 'billing_data', $context );
@@ -655,9 +681,8 @@ abstract class Document extends Model {
 	 * @param string $prop Name of prop to get.
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @since  1.1.0
-	 *
 	 * @return mixed
+	 * @since  1.1.0
 	 */
 	protected function get_billing_prop( $prop, $context = 'view' ) {
 		$value = null;
@@ -677,19 +702,19 @@ abstract class Document extends Model {
 	 * Sets a prop for a setter method.
 	 *
 	 * @param string $prop Name of prop to set.
-	 * @param mixed  $value Value of the prop.
+	 * @param mixed $value Value of the prop.
 	 *
 	 * @since 1.1.0
 	 */
 	protected function set_billing_prop( $prop, $value ) {
-		if ( array_key_exists( $prop, $this->data['billing_data'] ) ) {
-			if ( true === $this->object_read ) {
-				if ( $value !== $this->data['billing_data'][ $prop ] || ( isset( $this->changes['billing_data'] ) && array_key_exists( $prop, $this->changes['billing_data'] ) ) ) {
-					$this->changes['billing_data'][ $prop ] = $value;
-				}
-			} else {
-				$this->data['billing_data'][ $prop ] = $value;
+		if ( array_key_exists( $prop, $this->data['billing_data'] ) && true === $this->object_read ) {
+			if ( $value !== $this->data['billing_data'][ $prop ] || ( isset( $this->changes['billing_data'] ) && array_key_exists( $prop, $this->changes['billing_data'] ) ) ) {
+				$this->changes['billing_data'][ $prop ] = $value;
 			}
+		} else if (true === $this->object_read) {
+			$this->changes['billing_data'][ $prop ] = $value;
+		}else{
+			$this->data['billing_data'][ $prop ] = $value;
 		}
 	}
 
@@ -699,9 +724,8 @@ abstract class Document extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
-	 * @since  1.1.0
-	 *
 	 * @return string
+	 * @since  1.1.0
 	 */
 	public function get_billing_name( $context = 'edit' ) {
 		return $this->get_billing_prop( 'name', $context );
@@ -723,9 +747,8 @@ abstract class Document extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @return string
+	 * @since 1.1.0
 	 */
 	public function get_billing_company( $context = 'edit' ) {
 		return $this->get_billing_prop( 'company', $context );
@@ -747,9 +770,8 @@ abstract class Document extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
-	 * @since  1.1.0
-	 *
 	 * @return string
+	 * @since  1.1.0
 	 */
 	public function get_billing_address_1( $context = 'edit' ) {
 		return $this->get_billing_prop( 'address_1', $context );
@@ -772,9 +794,8 @@ abstract class Document extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
-	 * @since  1.1.0
-	 *
 	 * @return string
+	 * @since  1.1.0
 	 */
 	public function get_billing_address_2( $context = 'edit' ) {
 		return $this->get_billing_prop( 'address_2', $context );
@@ -796,9 +817,8 @@ abstract class Document extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @return string
+	 * @since 1.1.0
 	 */
 	public function get_billing_city( $context = 'edit' ) {
 		return $this->get_billing_prop( 'city', $context );
@@ -820,9 +840,8 @@ abstract class Document extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @return string
+	 * @since 1.1.0
 	 */
 	public function get_billing_state( $context = 'edit' ) {
 		return $this->get_billing_prop( 'state', $context );
@@ -844,9 +863,8 @@ abstract class Document extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @return string
+	 * @since 1.1.0
 	 */
 	public function get_billing_postcode( $context = 'edit' ) {
 		return $this->get_billing_prop( 'postcode', $context );
@@ -868,9 +886,8 @@ abstract class Document extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @return string
+	 * @since 1.1.0
 	 */
 	public function get_billing_country( $context = 'edit' ) {
 		return $this->get_billing_prop( 'country', $context );
@@ -892,9 +909,8 @@ abstract class Document extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @return string
+	 * @since 1.1.0
 	 */
 	public function get_billing_phone( $context = 'edit' ) {
 		return $this->get_billing_prop( 'phone', $context );
@@ -916,9 +932,8 @@ abstract class Document extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @return string
+	 * @since 1.1.0
 	 */
 	public function get_billing_email( $context = 'edit' ) {
 		return $this->get_billing_prop( 'email', $context );
@@ -940,9 +955,8 @@ abstract class Document extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
-	 * @since  1.1.0
-	 *
 	 * @return string
+	 * @since  1.1.0
 	 */
 	public function get_billing_vat_number( $context = 'edit' ) {
 		return $this->get_billing_prop( 'vat_number', $context );
@@ -960,323 +974,35 @@ abstract class Document extends Model {
 	}
 
 	/**
-	 * Get shipping_data.
+	 * Get billing tax number.
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
-	 * @since  1.1.0
-	 *
 	 * @return string
+	 * @since  1.1.0
 	 */
-	public function get_shipping_data( $context = 'edit' ) {
-		return $this->get_prop( 'shipping_data', $context );
+	public function get_billing_tax_number( $context = 'edit' ) {
+		return $this->get_billing_prop( 'tax_number', $context );
 	}
 
 	/**
-	 * set the shipping_data.
+	 * Set billing tax number.
 	 *
-	 * @param int $data .
+	 * @param string $tax Billing tax number.
 	 *
 	 * @since  1.1.0
 	 */
-	public function set_shipping_data( $data ) {
-		$this->set_prop( 'shipping_data', maybe_unserialize( $data ) );
+	public function set_billing_tax_number( $tax ) {
+		$this->set_billing_prop( 'tax_number', eac_clean( $tax ) );
 	}
-
-	/**
-	 * Gets a prop for a getter method.
-	 *
-	 * @param string $prop Name of prop to get.
-	 * @param string $context What the value is for. Valid values are view and edit.
-	 *
-	 * @since  1.1.0
-	 *
-	 * @return mixed
-	 */
-	protected function get_shipping_prop( $prop, $context = 'view' ) {
-		$value = null;
-
-		if ( array_key_exists( $prop, $this->data['shipping_data'] ) ) {
-			$value = isset( $this->changes['shipping_data'][ $prop ] ) ? $this->changes['shipping_data'][ $prop ] : $this->data['shipping_data'][ $prop ];
-
-			if ( 'view' === $context ) {
-				$value = apply_filters( $this->get_hook_prefix() . 'shipping_' . $prop, $value, $this );
-			}
-		}
-
-		return $value;
-	}
-
-	/**
-	 * Sets a prop for a setter method.
-	 *
-	 * @param string $prop Name of prop to set.
-	 * @param mixed  $value Value of the prop.
-	 *
-	 * @since 1.1.0
-	 */
-	protected function set_shipping_prop( $prop, $value ) {
-		if ( array_key_exists( $prop, $this->data['shipping_data'] ) ) {
-			if ( true === $this->object_read ) {
-				if ( $value !== $this->data['shipping_data'][ $prop ] || ( isset( $this->changes['shipping_data'] ) && array_key_exists( $prop, $this->changes['shipping_data'] ) ) ) {
-					$this->changes['shipping_data'][ $prop ] = $value;
-				}
-			} else {
-				$this->data['shipping'][ $prop ] = $value;
-			}
-		}
-	}
-
-	/**
-	 * Get shipping name.
-	 *
-	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
-	 *
-	 * @since  1.1.0
-	 *
-	 * @return string
-	 */
-	public function get_shipping_name( $context = 'edit' ) {
-		return $this->get_shipping_prop( 'name', $context );
-	}
-
-	/**
-	 * Set shipping name.
-	 *
-	 * @param string $name Billing name.
-	 *
-	 * @since  1.1.0
-	 */
-	public function set_shipping_name( $name ) {
-		$this->set_shipping_prop( 'name', eac_clean( $name ) );
-	}
-
-	/**
-	 * Get shipping company name.
-	 *
-	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
-	 *
-	 * @since 1.1.0
-	 *
-	 * @return string
-	 */
-	public function get_shipping_company( $context = 'edit' ) {
-		return $this->get_shipping_prop( 'company', $context );
-	}
-
-	/**
-	 * Set shipping company name.
-	 *
-	 * @param string $company Billing company name.
-	 *
-	 * @since  1.1.0
-	 */
-	public function set_shipping_company( $company ) {
-		$this->set_shipping_prop( 'company', eac_clean( $company ) );
-	}
-
-	/**
-	 * Get shipping address_1 address.
-	 *
-	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
-	 *
-	 * @since  1.1.0
-	 *
-	 * @return string
-	 */
-	public function get_shipping_address_1( $context = 'edit' ) {
-		return $this->get_shipping_prop( 'address_1', $context );
-	}
-
-	/**
-	 * Set shipping address_1 address.
-	 *
-	 * @param string $address_1 Billing address_1 address.
-	 *
-	 * @since  1.1.0
-	 */
-	public function set_shipping_address_1( $address_1 ) {
-		$this->set_shipping_prop( 'address_1', eac_clean( $address_1 ) );
-	}
-
-
-	/**
-	 * Get shipping address_2 address.
-	 *
-	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
-	 *
-	 * @since  1.1.0
-	 *
-	 * @return string
-	 */
-	public function get_shipping_address_2( $context = 'edit' ) {
-		return $this->get_shipping_prop( 'address_2', $context );
-	}
-
-	/**
-	 * Set shipping address_2 address.
-	 *
-	 * @param string $address_2 Billing address_2 address.
-	 *
-	 * @since  1.1.0
-	 */
-	public function set_shipping_address_2( $address_2 ) {
-		$this->set_shipping_prop( 'address_2', eac_clean( $address_2 ) );
-	}
-
-	/**
-	 * Get shipping city address.
-	 *
-	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
-	 *
-	 * @since 1.1.0
-	 *
-	 * @return string
-	 */
-	public function get_shipping_city( $context = 'edit' ) {
-		return $this->get_shipping_prop( 'city', $context );
-	}
-
-	/**
-	 * Set shipping city address.
-	 *
-	 * @param string $city Billing city address.
-	 *
-	 * @since  1.1.0
-	 */
-	public function set_shipping_city( $city ) {
-		$this->set_shipping_prop( 'city', eac_clean( $city ) );
-	}
-
-	/**
-	 * Get shipping state address.
-	 *
-	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
-	 *
-	 * @since 1.1.0
-	 *
-	 * @return string
-	 */
-	public function get_shipping_state( $context = 'edit' ) {
-		return $this->get_shipping_prop( 'state', $context );
-	}
-
-	/**
-	 * Set shipping state address.
-	 *
-	 * @param string $state Billing state address.
-	 *
-	 * @since  1.1.0
-	 */
-	public function set_shipping_state( $state ) {
-		$this->set_shipping_prop( 'state', eac_clean( $state ) );
-	}
-
-	/**
-	 * Get shipping postcode code address.
-	 *
-	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
-	 *
-	 * @since 1.1.0
-	 *
-	 * @return string
-	 */
-	public function get_shipping_postcode( $context = 'edit' ) {
-		return $this->get_shipping_prop( 'postcode', $context );
-	}
-
-	/**
-	 * Set shipping postcode code address.
-	 *
-	 * @param string $postcode Billing postcode code address.
-	 *
-	 * @since  1.1.0
-	 */
-	public function set_shipping_postcode( $postcode ) {
-		$this->set_shipping_prop( 'postcode', eac_clean( $postcode ) );
-	}
-
-	/**
-	 * Get shipping country address.
-	 *
-	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
-	 *
-	 * @since 1.1.0
-	 *
-	 * @return string
-	 */
-	public function get_shipping_country( $context = 'edit' ) {
-		return $this->get_shipping_prop( 'country', $context );
-	}
-
-	/**
-	 * Set shipping country address.
-	 *
-	 * @param string $country Billing country address.
-	 *
-	 * @since  1.1.0
-	 */
-	public function set_shipping_country( $country ) {
-		$this->set_shipping_prop( 'country', eac_clean( $country ) );
-	}
-
-	/**
-	 * Get shipping phone number.
-	 *
-	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
-	 *
-	 * @since 1.1.0
-	 *
-	 * @return string
-	 */
-	public function get_shipping_phone( $context = 'edit' ) {
-		return $this->get_shipping_prop( 'phone', $context );
-	}
-
-	/**
-	 * Set shipping phone number.
-	 *
-	 * @param string $phone Billing phone number.
-	 *
-	 * @since  1.1.0
-	 */
-	public function set_shipping_phone( $phone ) {
-		$this->set_shipping_prop( 'phone', eac_clean( $phone ) );
-	}
-
-	/**
-	 * Get shipping email address.
-	 *
-	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
-	 *
-	 * @since 1.1.0
-	 *
-	 * @return string
-	 */
-	public function get_shipping_email( $context = 'edit' ) {
-		return $this->get_shipping_prop( 'email', $context );
-	}
-
-	/**
-	 * Set shipping email address.
-	 *
-	 * @param string $email Billing email address.
-	 *
-	 * @since  1.1.0
-	 */
-	public function set_shipping_email( $email ) {
-		$this->set_shipping_prop( 'email', eac_clean( $email ) );
-	}
-
 
 	/**
 	 * Get order number.
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
-	 * @since  1.1.0
-	 *
 	 * @return string
+	 * @since  1.1.0
 	 */
 	public function get_reference( $context = 'edit' ) {
 		return $this->get_prop( 'reference', $context );
@@ -1298,23 +1024,69 @@ abstract class Document extends Model {
 	 *
 	 * @param string $context View or edit context.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @return mixed|null
+	 * @since 1.1.0
 	 */
-	public function get_document_note( $context = 'edit' ) {
-		return $this->get_prop( 'document_note', $context );
+	public function get_note( $context = 'edit' ) {
+		return $this->get_prop( 'note', $context );
 	}
 
 	/**
-	 * Set document_note
+	 * Set note
 	 *
 	 * @param string $note Notes.
 	 *
 	 * @since  1.1.0
 	 */
-	public function set_document_note( $note ) {
-		$this->set_prop( 'document_note', eac_clean( $note ) );
+	public function set_note( $note ) {
+		$this->set_prop( 'note', eac_clean( $note ) );
+	}
+
+
+	/**
+	 * Get tax inclusive or not.
+	 *
+	 * @param string $context View or edit context.
+	 *
+	 * @return mixed|null
+	 * @since 1.1.0
+	 */
+	public function get_tax_inclusive( $context = 'edit' ) {
+		return $this->get_prop( 'tax_inclusive', $context );
+	}
+
+	/**
+	 * Set tax inclusive or not.
+	 *
+	 * @param bool $value Tax inclusive or not.
+	 *
+	 * @since  1.1.0
+	 */
+	public function set_tax_inclusive( $value ) {
+		$this->set_prop( 'tax_inclusive', $this->string_to_int( $value ) );
+	}
+
+	/**
+	 * Get var exempt or not.
+	 *
+	 * @param string $context View or edit context.
+	 *
+	 * @return mixed|null
+	 * @since 1.1.0
+	 */
+	public function get_vat_exempt( $context = 'edit' ) {
+		return $this->get_prop( 'vat_exempt', $context );
+	}
+
+	/**
+	 * Set tax inclusive or not.
+	 *
+	 * @param bool $value Tax inclusive or not.
+	 *
+	 * @since  1.1.0
+	 */
+	public function set_vat_exempt( $value ) {
+		$this->set_prop( 'vat_exempt', $this->string_to_int( $value ) );
 	}
 
 
@@ -1325,17 +1097,17 @@ abstract class Document extends Model {
 	 *
 	 * @return string
 	 */
-	public function get_issued_at( $context = 'edit' ) {
-		return $this->get_date_prop( 'issued_at', $context, 'Y-m-d' );
+	public function get_issue_date( $context = 'edit' ) {
+		return $this->get_date_prop( 'issue_date', $context, 'Y-m-d' );
 	}
 
 	/**
 	 * Set the date issued.
 	 *
-	 * @param string $issued_at date issued.
+	 * @param string $date date issued.
 	 */
-	public function set_issued_at( $issued_at ) {
-		$this->set_date_prop( 'issued_at', $issued_at );
+	public function set_issue_date( $date ) {
+		$this->set_date_prop( 'issue_date', $date );
 	}
 
 	/**
@@ -1345,17 +1117,17 @@ abstract class Document extends Model {
 	 *
 	 * @return string
 	 */
-	public function get_due_at( $context = 'edit' ) {
-		return $this->get_date_prop( 'due_at', $context, 'Y-m-d' );
+	public function get_due_date( $context = 'edit' ) {
+		return $this->get_date_prop( 'due_date', $context, 'Y-m-d' );
 	}
 
 	/**
 	 * Set the date due.
 	 *
-	 * @param string $due_at date due.
+	 * @param string $date date due.
 	 */
-	public function set_due_at( $due_at ) {
-		$this->set_date_prop( 'due_at', $due_at );
+	public function set_due_date( $date ) {
+		$this->set_date_prop( 'due_date', $date );
 	}
 
 	/**
@@ -1365,37 +1137,17 @@ abstract class Document extends Model {
 	 *
 	 * @return string
 	 */
-	public function get_sent_at( $context = 'edit' ) {
-		return $this->get_date_prop( 'sent_at', $context, 'Y-m-d' );
+	public function get_sent_date( $context = 'edit' ) {
+		return $this->get_date_prop( 'sent_date', $context, 'Y-m-d' );
 	}
 
 	/**
 	 * Set the date sent.
 	 *
-	 * @param string $sent_at date sent.
+	 * @param string $date date sent.
 	 */
-	public function set_sent_at( $sent_at ) {
-		$this->set_date_prop( 'sent_at', $sent_at );
-	}
-
-	/**
-	 * Get the date viewed.
-	 *
-	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
-	 *
-	 * @return string
-	 */
-	public function get_viewed_at( $context = 'edit' ) {
-		return $this->get_date_prop( 'viewed_at', $context, 'Y-m-d' );
-	}
-
-	/**
-	 * Set the date viewed.
-	 *
-	 * @param string $viewed_at date viewed.
-	 */
-	public function set_viewed_at( $viewed_at ) {
-		$this->set_date_prop( 'viewed_at', $viewed_at );
+	public function set_sent_date( $date ) {
+		$this->set_date_prop( 'sent_date', $date );
 	}
 
 	/**
@@ -1405,17 +1157,17 @@ abstract class Document extends Model {
 	 *
 	 * @return string
 	 */
-	public function get_paid_at( $context = 'edit' ) {
-		return $this->get_date_prop( 'paid_at', $context, 'Y-m-d' );
+	public function get_payment_date( $context = 'edit' ) {
+		return $this->get_date_prop( 'payment_date', $context, 'Y-m-d' );
 	}
 
 	/**
 	 * Set the date paid.
 	 *
-	 * @param string $paid_at date paid.
+	 * @param string $date date paid.
 	 */
-	public function set_paid_at( $paid_at ) {
-		$this->set_date_prop( 'paid_at', $paid_at );
+	public function set_payment_date( $date ) {
+		$this->set_date_prop( 'payment_date', $date );
 	}
 
 	/**
@@ -1443,9 +1195,8 @@ abstract class Document extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
-	 * @since  1.1.0
-	 *
 	 * @return string
+	 * @since  1.1.0
 	 */
 	public function get_currency_code( $context = 'edit' ) {
 		return $this->get_prop( 'currency_code', $context );
@@ -1467,22 +1218,22 @@ abstract class Document extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @since 1.0.2
 	 * @return mixed|null
+	 * @since 1.0.2
 	 */
-	public function get_currency_rate( $context = 'edit' ) {
-		return $this->get_prop( 'currency_rate', $context );
+	public function get_exchange_rate( $context = 'edit' ) {
+		return $this->get_prop( 'exchange_rate', $context );
 	}
 
 	/**
-	 * Set currency rate.
+	 * Set exchange rate.
 	 *
 	 * @param string $value Currency rate.
 	 *
 	 * @since 1.0.2
 	 */
-	public function set_currency_rate( $value ) {
-		$this->set_prop( 'currency_rate', eac_format_decimal( $value, 8 ) );
+	public function set_exchange_rate( $value ) {
+		$this->set_prop( 'exchange_rate', eac_format_decimal( $value, 8 ) );
 	}
 
 	/**
@@ -1490,8 +1241,8 @@ abstract class Document extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @since 1.0.2
 	 * @return mixed|null
+	 * @since 1.0.2
 	 */
 	public function get_parent_id( $context = 'edit' ) {
 		return $this->get_prop( 'parent_id', $context );
@@ -1535,17 +1286,17 @@ abstract class Document extends Model {
 	 *
 	 * @return string
 	 */
-	public function get_updated_at( $context = 'edit' ) {
-		return $this->get_prop( 'updated_at', $context );
+	public function get_date_updated( $context = 'edit' ) {
+		return $this->get_prop( 'date_updated', $context );
 	}
 
 	/**
 	 * Set the date updated.
 	 *
-	 * @param string $updated_at date updated.
+	 * @param string $date date updated.
 	 */
-	public function set_updated_at( $updated_at ) {
-		$this->set_date_prop( 'updated_at', $updated_at );
+	public function set_date_updated( $date ) {
+		$this->set_date_prop( 'date_updated', $date );
 	}
 
 	/**
@@ -1555,25 +1306,18 @@ abstract class Document extends Model {
 	 *
 	 * @return string
 	 */
-	public function get_created_at( $context = 'edit' ) {
-		return $this->get_prop( 'created_at', $context );
+	public function get_date_created( $context = 'edit' ) {
+		return $this->get_date_prop( 'date_created', $context );
 	}
 
 	/**
 	 * Set the date created.
 	 *
-	 * @param string $created_at date created.
+	 * @param string $date date created.
 	 */
-	public function set_created_at( $created_at ) {
-		$this->set_date_prop( 'created_at', $created_at );
+	public function set_date_created( $date ) {
+		$this->set_date_prop( 'date_created', $date );
 	}
-
-	/*
-	|--------------------------------------------------------------------------
-	|  Meta properties
-	|--------------------------------------------------------------------------
-	| These are the meta properties for the document.
-	*/
 
 	/*
 	|--------------------------------------------------------------------------
@@ -1586,7 +1330,7 @@ abstract class Document extends Model {
 	 *
 	 * @return DocumentItem[]
 	 */
-	public function get_items() {
+	public function get_items( $type = null ) {
 		if ( is_null( $this->items ) ) {
 			$this->items = array();
 
@@ -1601,6 +1345,20 @@ abstract class Document extends Model {
 					)
 				);
 			}
+		}
+
+		// Filter by type.
+		if ( ! empty( $type ) && 'all' !== $type ) {
+			return array_filter(
+				$this->items,
+				function ( $item ) use ( $type ) {
+					if ( 'line_item' === $type ) {
+						return 'standard' === $item->get_type();
+					}
+
+					return $item->get_type() === $type;
+				}
+			);
 		}
 
 		return $this->items;
@@ -1670,38 +1428,51 @@ abstract class Document extends Model {
 	 * @return void
 	 */
 	public function add_item( $data ) {
-		$tax_enabled = $this->is_calculating_tax() ? 'yes' : 'no';
 		$default     = array(
-			'id'               => 0, // line id.
-			'product_id'       => 0, // item id not line id be careful.
-			'name'             => '',
-			'description'      => '',
-			'unit'             => '',
-			'price'            => 0,
-			'quantity'         => 1,
-			'taxable'          => $tax_enabled,
-			'taxable_shipping' => $tax_enabled,
-			'taxable_fee'      => $tax_enabled,
-			'tax_ids'          => '',
+			'id'          => 0, // line id.
+			'item_id'     => 0, // item id not line id be careful.
+			'type'        => 'item', // 'line_item', 'fee', 'shipping
+			'name'        => '',
+			'description' => '',
+			'unit'        => '',
+			'price'       => 0,
+			'quantity'    => 1,
+			'taxable'     => $this->is_calculating_tax(),
+			'tax_ids'     => '',
 		);
 
 		if ( is_object( $data ) ) {
 			$data = $data instanceof \stdClass ? get_object_vars( $data ) : $data->get_data();
 		} elseif ( is_numeric( $data ) ) {
-			$data = array( 'product_id' => $data );
+			$data = array( 'item_id' => $data );
 		}
 
 		// The data must be a line item with id or a new array with product_id and additional data.
-		if ( ! isset( $data['id'] ) && ! isset( $data['product_id'] ) ) {
+		if ( ! isset( $data['id'] ) && ! isset( $data['item_id'] ) ) {
 			return;
 		}
 
-		if ( ! empty( $data['product_id'] ) ) {
-			$product       = eac_get_product( $data['product_id'] );
+		if ( ! empty( $data['item_id'] ) ) {
+			$product       = eac_get_item( $data['item_id'] );
 			$product_data  = $product ? $product->get_data() : array();
-			$accepted_keys = array( 'name', 'description', 'unit', 'price', 'taxable', 'taxable_shipping', 'taxable_fee', 'tax_ids' );
-			$product_data  = wp_array_slice_assoc( $product_data, $accepted_keys );
-			$data          = wp_parse_args( $data, $product_data );
+			$accepted_keys = array(
+				'name',
+				'type',
+				'description',
+				'unit',
+				'price',
+				'taxable',
+				'tax_ids',
+			);
+			// if the currency is not the as the base currency, we need to convert the price.
+
+			if ( eac_get_base_currency() !== $this->get_currency_code() ) {
+				$price                 = eac_convert_money( $product_data['price'], eac_get_base_currency(), $this->get_currency_code() );
+				$product_data['price'] = $price;
+			}
+
+			$product_data = wp_array_slice_assoc( $product_data, $accepted_keys );
+			$data         = wp_parse_args( $data, $product_data );
 		}
 
 		$data                = wp_parse_args( $data, $default );
@@ -1712,11 +1483,11 @@ abstract class Document extends Model {
 		$data['tax_ids']     = wp_parse_id_list( $data['tax_ids'] );
 
 		$item = new DocumentItem( $data['id'] );
-		$item->set_props( $data );
+		$item->set_data( $data );
 		$item->set_document_id( $this->get_id() );
 
 		// if product id is not set then it is not product item.
-		if ( empty( $item->get_product_id() ) || empty( $item->get_quantity() ) ) {
+		if ( empty( $item->get_item_id() ) || empty( $item->get_quantity() ) ) {
 			return;
 		}
 
@@ -1724,7 +1495,7 @@ abstract class Document extends Model {
 		foreach ( $this->deletable as $key => $deletable_item ) {
 			if ( $deletable_item->is_similar( $item ) ) {
 				unset( $this->deletable[ $key ] );
-				$deletable_item->set_props( $data );
+				$deletable_item->set_data( $data );
 				$this->items[] = $deletable_item;
 
 				return;
@@ -1743,6 +1514,19 @@ abstract class Document extends Model {
 		$this->items[] = $item;
 	}
 
+	/**
+	 * Delete items.
+	 *
+	 * @since 1.1.6
+	 *
+	 * return void
+	 */
+	public function delete_items() {
+		foreach ( $this->get_items() as $item ) {
+			$item->delete();
+		}
+	}
+
 	/*
 	|--------------------------------------------------------------------------
 	|  Taxes related methods
@@ -1752,8 +1536,8 @@ abstract class Document extends Model {
 	/**
 	 * Get merged taxes.
 	 *
+	 * @return DocumentItemTax[]
 	 * @since 1.0.0
-	 * @return DocumentLineTax[]
 	 */
 	public function get_taxes() {
 		$taxes = array();
@@ -1773,31 +1557,119 @@ abstract class Document extends Model {
 
 	/*
 	|--------------------------------------------------------------------------
+	|  Notes related methods
+	|--------------------------------------------------------------------------
+	| These methods are related to notes.
+	*/
+	/**
+	 * Get notes.
+	 *
+	 * @param array $args Query arguments.
+	 *
+	 * @return Note[]
+	 * @since 1.0.0
+	 */
+	public function get_notes( $args = array() ) {
+		$args = array_merge(
+			array(
+				'document_id' => $this->get_id(),
+				'limit'       => - 1,
+			),
+			$args
+		);
+
+		return eac_get_notes( $args );
+	}
+
+	/**
+	 * Remove notes.
+	 *
+	 * @return void
+	 * @since 1.0.0
+	 */
+	public function delete_notes() {
+		foreach ( $this->get_notes() as $note ) {
+			$note->delete();
+		}
+	}
+
+	/**
+	 * Add note.
+	 *
+	 * @param array $data Note data.
+	 *
+	 * @return int| \WP_Error Note ID on success, WP_Error otherwise.
+	 * @since 1.0.0
+	 */
+	public function add_note( $data ) {
+		$data = wp_parse_args(
+			$data,
+			array(
+				'object_id'    => $this->get_id(),
+				'content'      => '',
+				'creator_id'   => get_current_user_id(),
+				'date_created' => current_time( 'mysql' ),
+			)
+		);
+
+		if ( empty( $data['note'] ) ) {
+			return new \WP_Error( 'missing_required', __( 'Note is required.', 'wp-ever-accounting' ) );
+		}
+
+		$note = new Note();
+		$saved = $note->set_data($data)->save();
+		if ( is_wp_error( $saved ) ) {
+			return $saved;
+		}
+
+		return $note->get_id();
+	}
+	/*
+	|--------------------------------------------------------------------------
 	| Calculations
 	|--------------------------------------------------------------------------
 	| This section contains methods for calculating totals.
 	*/
+
 	/**
 	 * Prepare object for database.
 	 * This method is called before saving the object to the database.
 	 *
-	 * @since 1.0.0
 	 * @return void
+	 * @since 1.0.0
 	 */
 	public function calculate_totals() {
+		$this->calculate_item_prices();
 		$this->calculate_item_subtotals();
 		$this->calculate_item_discounts();
-		$this->calculate_item_shipping();
-		$this->calculate_item_fees();
 		$this->calculate_item_taxes();
 		$this->calculate_item_totals();
 
-		$this->set_subtotal( $this->get_items_totals( 'subtotal', true ) );
-		$this->set_discount_total( $this->get_items_totals( 'discount', true ) );
-		$this->set_shipping_total( $this->get_items_totals( 'shipping', true ) );
-		$this->set_fees_total( $this->get_items_totals( 'fee', true ) );
-		$this->set_tax_total( $this->get_items_totals( 'tax', true ) );
-		$this->set_total( $this->get_items_totals( 'total', true ) );
+		$this->set_items_total( $this->get_items_totals( 'standard', 'subtotal', true ) );
+		$this->set_discount_total( $this->get_items_totals( 'standard', 'discount', true ) );
+		$this->set_shipping_total( $this->get_items_totals( 'shipping', 'subtotal', true ) );
+		$this->set_fees_total( $this->get_items_totals( 'fee', 'subtotal', true ) );
+		$this->set_tax_total( $this->get_items_totals( 'all', 'tax_total', true ) );
+		$this->set_total( $this->get_items_totals( 'all', 'total', true ) );
+		$this->set_balance( $this->get_total() - $this->get_total_paid() );
+	}
+
+
+	/**
+	 * Convert totals to selected currency.
+	 *
+	 * @return void
+	 * @since 1.0.0
+	 */
+	protected function calculate_item_prices() {
+		// if the currency is changed, we need to convert the totals.
+		if ( ! array_key_exists( 'currency_code', $this->get_changes() ) ) {
+			return;
+		}
+		foreach ( $this->get_items() as $item ) {
+			$price = eac_convert_money( $item->get_price(), $this->data['currency_code'], $this->get_currency_code() );
+			$item->set_price( $price );
+		}
 	}
 
 	/**
@@ -1831,9 +1703,11 @@ abstract class Document extends Model {
 	 * @return void
 	 */
 	protected function calculate_item_discounts() {
-		$items           = $this->get_items();
+		$items           = $this->get_items( 'standard' );
 		$discount_amount = $this->get_discount_amount();
 		$discount_type   = $this->get_discount_type();
+
+		// sort the items array by price.
 
 		// Reset item discounts.
 		foreach ( $items as $item ) {
@@ -1858,61 +1732,6 @@ abstract class Document extends Model {
 		}
 	}
 
-	/**
-	 * Calculate item shipping.
-	 *
-	 * @return void
-	 */
-	protected function calculate_item_shipping() {
-		$items           = $this->get_items();
-		$shipping_amount = $this->get_shipping_amount();
-
-		// Reset item shipping.
-		foreach ( $items as $item ) {
-			$item->set_shipping( 0 );
-		}
-
-		if ( $shipping_amount > 0 ) {
-			$this->apply_shipping_cost( $shipping_amount, $items );
-		}
-
-		foreach ( $items as $item ) {
-			$shipping_tax = 0;
-			if ( $item->get_shipping() > 0 && $item->is_taxable_shipping() ) {
-				$shipping_tax = array_sum( eac_calculate_taxes( $item->get_shipping(), $item->get_taxes(), false ) );
-			}
-
-			$item->set_shipping_tax( $shipping_tax );
-		}
-	}
-
-	/**
-	 * Calculate item fees.
-	 *
-	 * @return void
-	 */
-	protected function calculate_item_fees() {
-		$items       = $this->get_items();
-		$fees_amount = $this->get_fees_amount();
-
-		// Reset item fees.
-		foreach ( $items as $item ) {
-			$item->set_fee( 0 );
-		}
-
-		if ( $fees_amount > 0 ) {
-			$this->apply_fees_amount( $fees_amount, $items );
-		}
-
-		foreach ( $items as $item ) {
-			$fees_tax = 0;
-			if ( $item->get_fee() > 0 && $item->is_taxable_fee() ) {
-				$fees_tax = array_sum( eac_calculate_taxes( $item->get_fee(), $item->get_taxes(), false ) );
-			}
-
-			$item->set_fee_tax( $fees_tax );
-		}
-	}
 
 	/**
 	 * Calculate item taxes.
@@ -1923,7 +1742,7 @@ abstract class Document extends Model {
 		$items = $this->get_items();
 		// Calculate item taxes.
 		foreach ( $items as $item ) {
-			$taxable_amount = $item->get_subtotal() + $item->get_shipping() + $item->get_fee() - $item->get_discount();
+			$taxable_amount = $item->get_subtotal() - $item->get_discount();
 			$taxable_amount = max( 0, $taxable_amount );
 			$taxes          = eac_calculate_taxes( $taxable_amount, $item->get_taxes(), false );
 			$line_tax       = 0;
@@ -1932,7 +1751,7 @@ abstract class Document extends Model {
 				$tax->set_amount( $amount );
 				$line_tax += $amount;
 			}
-			$item->set_tax( $line_tax );
+			$item->set_tax_total( $line_tax );
 		}
 
 	}
@@ -1944,31 +1763,21 @@ abstract class Document extends Model {
 	 */
 	protected function calculate_item_totals() {
 		foreach ( $this->get_items() as $item ) {
-			$total = $item->get_subtotal() + $item->get_tax() + $item->get_shipping() + $item->get_fee() - $item->get_discount();
+			$total = $item->get_subtotal() + $item->get_tax_total() - $item->get_discount();
 			$total = max( 0, $total );
 			$item->set_total( $total );
 		}
 	}
 
 	/**
-	 * Convert totals to selected currency.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	protected function convert_totals() {
-	}
-
-
-	/**
 	 * Apply discounts.
 	 *
-	 * @param float  $amount Discount amount.
-	 * @param array  $items Items.
+	 * @param float $amount Discount amount.
+	 * @param array $items Items.
 	 * @param string $type Discount type.
 	 *
-	 * @since 1.0.0
 	 * @return float Total discount.
+	 * @since 1.0.0
 	 */
 	public function apply_discount( $amount = 0, $items = array(), $type = 'fixed' ) {
 		$total_discounted = 0;
@@ -1984,11 +1793,11 @@ abstract class Document extends Model {
 	/**
 	 * Apply fixed discount.
 	 *
-	 * @param float          $amount Discount amount.
+	 * @param float $amount Discount amount.
 	 * @param DocumentItem[] $items Items.
 	 *
-	 * @since 1.0.0
 	 * @return float Total discounted.
+	 * @since 1.0.0
 	 */
 	public function apply_fixed_discount( $amount, $items ) {
 		$total_discount = 0;
@@ -2030,7 +1839,7 @@ abstract class Document extends Model {
 	/**
 	 * Apply percentage discount.
 	 *
-	 * @param float          $amount Discount amount.
+	 * @param float $amount Discount amount.
 	 * @param DocumentItem[] $items Items.
 	 */
 	public function apply_percentage_discount( $amount, $items ) {
@@ -2064,11 +1873,11 @@ abstract class Document extends Model {
 	/**
 	 * Apply remainder discount.
 	 *
-	 * @param float          $amount Discount amount.
+	 * @param float $amount Discount amount.
 	 * @param DocumentItem[] $items Items.
 	 *
-	 * @since 1.0.0
 	 * @return float
+	 * @since 1.0.0
 	 */
 	public function apply_discount_remainder( $amount, $items ) {
 		$total_discount = 0;
@@ -2091,335 +1900,32 @@ abstract class Document extends Model {
 		return $total_discount;
 	}
 
-	/**
-	 * Apply shipping.
-	 *
-	 * @param float $amount Shipping amount.
-	 * @param array $items Items.
-	 *
-	 * @since 1.0.0
-	 * @return float Total shipping.
-	 */
-	public function apply_shipping_cost( $amount = 0, $items = array() ) {
-		$total_shipping = 0;
-		$item_count     = 0;
 
-		foreach ( $this->get_items() as $item ) {
-			$item_count += (float) $item->get_quantity();
-		}
-
-		if ( $amount <= 0 || empty( $items ) || $item_count <= 0 ) {
-			return $total_shipping;
-		}
-
-		$per_item_shipping = $amount / $item_count;
-		if ( $per_item_shipping > 0 ) {
-			foreach ( $items as $item ) {
-				$shipping = $per_item_shipping * (float) $item->get_quantity();
-				$item->set_shipping( $item->get_shipping() + $shipping );
-
-				$total_shipping += $shipping;
-			}
-
-			// If there is still shipping remaining, repeat the process.
-			if ( $total_shipping > 0 && $total_shipping < $amount ) {
-				$total_shipping += $this->apply_shipping_cost( $amount - $total_shipping, $items );
-			}
-		} elseif ( $amount > 0 ) {
-			foreach ( $items as $item ) {
-				$quantity = $item->get_quantity();
-				for ( $i = 0; $i < $quantity; $i ++ ) {
-					$shipping = min( $amount, 1 );
-					$item->set_shipping( $item->get_shipping() + $shipping );
-					$total_shipping += $shipping;
-					if ( $total_shipping >= $amount ) {
-						break 2;
-					}
-				}
-			}
-		}
-
-		return $total_shipping;
-	}
-
-	/**
-	 * Apply fees amounts.
-	 *
-	 * @param float $amount Shipping amount.
-	 * @param array $items Items.
-	 *
-	 * @since 1.0.0
-	 * @return float Total fee amount.
-	 */
-	public function apply_fees_amount( $amount = 0, $items = array() ) {
-		$total_fees = 0;
-		$item_count = 0;
-
-		foreach ( $items as $item ) {
-			$item_count += (float) $item->get_quantity();
-		}
-
-		if ( $amount <= 0 || empty( $items ) || $item_count <= 0 ) {
-			return $total_fees;
-		}
-
-		$per_item_fee = $amount / $item_count;
-		if ( $per_item_fee > 0 ) {
-			foreach ( $items as $item ) {
-				$fee = $per_item_fee * (float) $item->get_quantity();
-				$item->set_fee( $item->get_fee() + $fee );
-
-				$total_fees += $fee;
-			}
-
-			// If there is still fees remaining, repeat the process.
-			if ( $total_fees > 0 && $total_fees < $amount ) {
-				$total_fees += $this->apply_fees_amount( $amount - $total_fees, $items );
-			}
-		} elseif ( $amount > 0 ) {
-			foreach ( $items as $item ) {
-				$quantity = $item->get_quantity();
-				for ( $i = 0; $i < $quantity; $i ++ ) {
-					$fee = min( $amount, 1 );
-					$item->set_fee( $item->get_fee() + $fee );
-					$total_fees += $fee;
-					if ( $total_fees >= $amount ) {
-						break 2;
-					}
-				}
-			}
-		}
-
-		return $total_fees;
-	}
-
-	/*
-	|--------------------------------------------------------------------------
-	| CRUD methods
-	|--------------------------------------------------------------------------
-	|
-	| Methods which create, read, update and delete discounts from the database.
-	|
-	*/
-	/**
-	 * Saves an object in the database.
-	 *
-	 * @throws \Exception When the invoice is already paid.
-	 * @since 1.0.0
-	 * @return true|\WP_Error True on success, WP_Error on failure.
-	 */
-	public function save() {
-		global $wpdb;
-		$this->calculate_totals();
-
-		// contact id is required.
-		if ( empty( $this->get_contact_id() ) ) {
-			return new \WP_Error( 'missing_required', __( 'Contact ID is required.', 'wp-ever-accounting' ) );
-		}
-
-		if ( empty( $this->get_type() ) ) {
-			return new \WP_Error( 'missing_required', __( 'Type is required.', 'wp-ever-accounting' ) );
-		}
-
-		if ( empty( $this->get_status() ) ) {
-			return new \WP_Error( 'missing_required', __( 'Status is required.', 'wp-ever-accounting' ) );
-		}
-
-		// Once the invoice is paid, contact can't be changed.
-		if ( $this->get_total_paid() > 0 && in_array( 'contact_id', $this->changes, true ) ) {
-			return new \WP_Error( 'invalid-argument', __( 'Contact can\'t be changed once the document is paid.', 'wp-ever-accounting' ) );
-		}
-
-		// check if the document number is already exists.
-		if ( empty( $this->get_number() ) ) {
-			$next_number = $this->get_next_number();
-			$this->set_number( $next_number );
-		}
-
-		// If date created is not set, set it to now.
-		if ( empty( $this->get_created_at() ) ) {
-			$this->set_created_at( current_time( 'mysql' ) );
-		}
-
-		// If It's update, set the updated date.
-		if ( $this->exists() ) {
-			$this->set_updated_at( current_time( 'mysql' ) );
-		}
-
-		try {
-			$wpdb->query( 'START TRANSACTION' );
-			$saved = parent::save();
-			if ( is_wp_error( $saved ) ) {
-				throw new \Exception( $saved->get_error_message() );
-			}
-
-			foreach ( $this->get_items() as $item ) {
-				$item->set_document_id( $this->get_id() );
-				$saved = $item->save();
-				if ( is_wp_error( $saved ) ) {
-					throw new \Exception( $saved->get_error_message() );
-				}
-			}
-
-			foreach ( $this->deletable as $deletable ) {
-				if ( $deletable->exists() && ! $deletable->delete() ) {
-					// translators: %s: error message.
-					throw new \Exception( sprintf( __( 'Error while deleting items. error: %s', 'wp-ever-accounting' ), $wpdb->last_error ) );
-				}
-			}
-
-			$wpdb->query( 'COMMIT' );
-
-			return true;
-		} catch ( \Exception $e ) {
-			$wpdb->query( 'ROLLBACK' );
-
-			return new \WP_Error( 'db-error', $e->getMessage() );
-		}
-	}
-
-	/**
-	 * Returns all data for this object.
-	 *
-	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
-	 *
-	 * @since  1.0.0
-	 * @return array
-	 */
-	public function get_data( $context = 'edit' ) {
-		$props          = $this->get_props( $context );
-		$items          = $this->get_items();
-		$props['items'] = array();
-		foreach ( $items as $item ) {
-			$props['items'][] = $item->get_data( $context );
-		}
-		if ( static::META_TYPE ) {
-			$props['metadata'] = $this->get_metadata();
-		}
-
-		return $props;
-	}
-
-	/*
-	|--------------------------------------------------------------------------
-	| Conditionals methods
-	|--------------------------------------------------------------------------
-	| Methods that check an object's status, typically based on internal or meta data.
-	*/
-	/**
-	 * Is price inclusive of tax.
-	 *
-	 * @since 1.0.0
-	 * @return bool
-	 */
-	public function is_tax_inclusive() {
-		return 'yes' === $this->get_tax_inclusive();
-	}
-
-	/**
-	 * Is vat exempt.
-	 *
-	 * @since 1.0.0
-	 * @return bool
-	 */
-	public function is_vat_exempt() {
-		return 'yes' === $this->get_vat_exempt();
-	}
-
-	/**
-	 * Is calculating tax.
-	 *
-	 * @since 1.0.0
-	 * @return bool
-	 */
-	public function is_calculating_tax() {
-		return 'yes' !== eac_tax_enabled() || ! $this->is_vat_exempt();
-	}
-
-	/**
-	 * is editable.
-	 *
-	 * @since 1.0.0
-	 * @return bool
-	 */
-	public function is_editable() {
-		return $this->get_total_paid() <= 0;
-	}
-
-	/*
-	|--------------------------------------------------------------------------
-	| Helper methods.
-	|--------------------------------------------------------------------------
-	| Utility methods which don't directly relate to this object but may be
-	| used by this object.
-	*/
 	/**
 	 * Get totals.
 	 *
+	 * @param string $type Type of items.
 	 * @param string $column Column name.
-	 * @param bool   $round Round the value or not.
+	 * @param bool $round Round the value or not.
 	 *
 	 * @since 1.0.0
 	 */
-	public function get_items_totals( $column = 'total', $round = false ) {
-		$items = $this->get_items();
+	public function get_items_totals( $type, $column = 'total', $round = false ) {
+		$items = $this->get_items( $type );
 		$total = 0;
 		foreach ( $items as $item ) {
 			$caller = "get_{$column}";
 			$amount = is_callable( array( $item, $caller ) ) ? $item->$caller() : 0;
-			$total += $round ? round( $amount, 2 ) : $amount;
+			$total  += $round ? round( $amount, 2 ) : $amount;
 		}
-
 		return $round ? round( $total, 2 ) : $total;
-	}
-
-	/**
-	 * Get next doc number.
-	 *
-	 * @since 1.1.6
-	 * @return string
-	 */
-	public function get_max_number() {
-		global $wpdb;
-
-		return (int) $wpdb->get_var(
-			$wpdb->prepare(
-				"SELECT MAX(REGEXP_REPLACE(number, '[^0-9]', '')) FROM {$this->table} WHERE type = %s",
-				$this->get_type()
-			)
-		);
-	}
-
-	/**
-	 * Get document number prefix.
-	 *
-	 * @since 1.1.6
-	 * @return string
-	 */
-	public function get_number_prefix() {
-		// First 3 letters of the document type.
-		return strtoupper( substr( $this->get_type(), 0, 3 ) ) . '-';
-	}
-
-	/**
-	 * Get formatted document number.
-	 *
-	 * @since 1.1.6
-	 * @return string
-	 */
-	public function get_next_number() {
-		$number = $this->get_max_number();
-		$prefix = $this->get_number_prefix();
-		$number = absint( $number ) + 1;
-
-		return implode( '', [ $prefix, $number ] );
 	}
 
 	/**
 	 * Get merged taxes.
 	 *
+	 * @return DocumentItemTax[]
 	 * @since 1.0.0
-	 * @return DocumentLineTax[]
 	 */
 	public function get_merged_taxes() {
 		$taxes = array();
@@ -2435,21 +1941,170 @@ abstract class Document extends Model {
 		return $taxes;
 	}
 
+	/*
+	|--------------------------------------------------------------------------
+	| Conditionals methods
+	|--------------------------------------------------------------------------
+	| Methods that check an object's status, typically based on internal or meta data.
+	*/
+
+	/**
+	 * Is price inclusive of tax.
+	 *
+	 * @return bool
+	 * @since 1.0.0
+	 */
+	public function is_tax_inclusive() {
+		return 'yes' === $this->get_tax_inclusive();
+	}
+
+	/**
+	 * Is vat exempt.
+	 *
+	 * @return bool
+	 * @since 1.0.0
+	 */
+	public function is_vat_exempt() {
+		return (bool) $this->get_vat_exempt();
+	}
+
+	/**
+	 * Is calculating tax.
+	 *
+	 * @return bool
+	 * @since 1.0.0
+	 */
+	public function is_calculating_tax() {
+		return 'yes' !== eac_tax_enabled() && ! $this->is_vat_exempt();
+	}
+
+	/**
+	 * is editable.
+	 *
+	 * @return bool
+	 * @since 1.0.0
+	 */
+	public function is_editable() {
+		return $this->get_total_paid() <= 0;
+	}
+
+	/**
+	 * Checks if the invoice has a given status.
+	 *
+	 * @param string $status Status to check.
+	 *
+	 * @return bool
+	 * @since 1.1.0
+	 */
+	public function is_status( $status ) {
+		return $this->get_status() === $status;
+	}
+
+	/**
+	 * Returns if an order has been paid for based on the order status.
+	 *
+	 * @return bool
+	 * @since 1.10
+	 */
+	public function is_paid() {
+		return $this->is_status( 'paid' );
+	}
+
+	/**
+	 * Checks if the invoice is draft.
+	 *
+	 * @return bool
+	 * @since 1.1.0
+	 */
+	public function is_draft() {
+		return $this->is_status( 'draft' );
+	}
+
+	/**
+	 * Checks if an order needs payment, based on status and order total.
+	 *
+	 * @return bool
+	 */
+	public function needs_payment() {
+		return ! $this->is_status( 'paid' ) && $this->get_total() > 0;
+	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| Helper methods.
+	|--------------------------------------------------------------------------
+	| Utility methods which don't directly relate to this object but may be
+	| used by this object.
+	*/
+	/**
+	 * Set billing vat exempt.
+	 *
+	 * @param bool $vat_exempt Vat exempt.
+	 *
+	 * @return void
+	 */
+	public function set_billing_vat_exempt( $vat_exempt ) {
+		$this->set_vat_exempt( $vat_exempt );
+	}
+
+	/**
+	 * Get next doc number.
+	 *
+	 * @return string
+	 * @since 1.1.6
+	 */
+	public function get_max_number() {
+		global $wpdb;
+
+		return (int) $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT MAX(REGEXP_REPLACE(number, '[^0-9]', '')) FROM {$wpdb->{$this->table_name}} WHERE type = %s",
+				$this->get_type()
+			)
+		);
+	}
+
+	/**
+	 * Get document number prefix.
+	 *
+	 * @return string
+	 * @since 1.1.6
+	 */
+	public function get_number_prefix() {
+		// First 3 letters of the document type.
+		return strtoupper( substr( $this->get_type(), 0, 3 ) ) . '-';
+	}
+
+	/**
+	 * Get formatted document number.
+	 *
+	 * @return string
+	 * @since 1.1.6
+	 */
+	public function get_next_number() {
+		$number = $this->get_max_number();
+		$prefix = $this->get_number_prefix();
+		$number = absint( $number ) + 1;
+
+		return implode( '', [ $prefix, $number ] );
+	}
+
+
 	/**
 	 * Get formatted subtotal.
 	 *
-	 * @since 1.0.0
 	 * @return string
+	 * @since 1.0.0
 	 */
-	public function get_formatted_subtotal() {
-		return eac_format_money( $this->get_subtotal(), $this->get_currency_code() );
+	public function get_formatted_items_total() {
+		return eac_format_money( $this->get_items_total(), $this->get_currency_code() );
 	}
 
 	/**
 	 * Get formatted discount.
 	 *
-	 * @since 1.0.0
 	 * @return string
+	 * @since 1.0.0
 	 */
 	public function get_formatted_discount_total() {
 		return eac_format_money( $this->get_discount_total(), $this->get_currency_code() );
@@ -2458,8 +2113,8 @@ abstract class Document extends Model {
 	/**
 	 * Get formatted shipping total.
 	 *
-	 * @since 1.0.0
 	 * @return string
+	 * @since 1.0.0
 	 */
 	public function get_formatted_shipping_total() {
 		return eac_format_money( $this->get_shipping_total(), $this->get_currency_code() );
@@ -2468,8 +2123,8 @@ abstract class Document extends Model {
 	/**
 	 * Get formatted fee total.
 	 *
-	 * @since 1.0.0
 	 * @return string
+	 * @since 1.0.0
 	 */
 	public function get_formatted_fees_total() {
 		return eac_format_money( $this->get_fees_total(), $this->get_currency_code() );
@@ -2478,8 +2133,8 @@ abstract class Document extends Model {
 	/**
 	 * Get formatted tax total.
 	 *
-	 * @since 1.0.0
 	 * @return string
+	 * @since 1.0.0
 	 */
 	public function get_formatted_tax_total() {
 		return eac_format_money( $this->get_tax_total(), $this->get_currency_code() );
@@ -2488,14 +2143,14 @@ abstract class Document extends Model {
 	/**
 	 * Get formatted itemized list of taxes.
 	 *
-	 * @since 1.0.0
 	 * @return array
+	 * @since 1.0.0
 	 */
 	public function get_formatted_itemized_taxes() {
 		$taxes = $this->get_merged_taxes();
 		$list  = array();
 		foreach ( $taxes as $tax ) {
-			if ( $tax->get_total() > 0 ) {
+			if ( $tax->get_amount() > 0 ) {
 				$list[ $tax->get_label() ] = $tax->get_formatted_total();
 			}
 		}
@@ -2506,8 +2161,8 @@ abstract class Document extends Model {
 	/**
 	 * Get formatted total.
 	 *
-	 * @since 1.0.0
 	 * @return string
+	 * @since 1.0.0
 	 */
 	public function get_formatted_total() {
 		return eac_format_money( $this->get_total(), $this->get_currency_code() );
@@ -2518,17 +2173,17 @@ abstract class Document extends Model {
 	 *
 	 * @param bool $itemized_taxes Whether to return itemized taxes.
 	 *
-	 * @since 1.0.0
 	 * @return array
+	 * @since 1.0.0
 	 */
 	public function get_formatted_totals( $itemized_taxes = false ) {
 		$totals = array(
-			'subtotal' => $this->get_formatted_subtotal(),
-			'discount' => $this->get_formatted_discount_total(),
-			'shipping' => $this->get_formatted_shipping_total(),
-			'fees'     => $this->get_formatted_fees_total(),
-			'taxes'    => $itemized_taxes ? $this->get_formatted_itemized_taxes() : $this->get_formatted_tax_total(),
-			'total'    => $this->get_formatted_total(),
+			'items_total' => $this->get_formatted_items_total(),
+			'discount'    => $this->get_formatted_discount_total(),
+			'shipping'    => $this->get_formatted_shipping_total(),
+			'fees'        => $this->get_formatted_fees_total(),
+			'taxes'       => $itemized_taxes ? $this->get_formatted_itemized_taxes() : $this->get_formatted_tax_total(),
+			'total'       => $this->get_formatted_total(),
 		);
 
 		return $totals;
@@ -2537,8 +2192,8 @@ abstract class Document extends Model {
 	/**
 	 * Get formatted billing address.
 	 *
-	 * @since 1.0.0
 	 * @return string
+	 * @since 1.0.0
 	 */
 	public function get_formatted_billing_address() {
 		$data = array(
@@ -2553,6 +2208,25 @@ abstract class Document extends Model {
 		);
 
 		return eac_get_formatted_address( $data );
+	}
+
+	/**
+	 * Get formatted invoice name.
+	 *
+	 * @return string
+	 * @since 1.0.0
+	 */
+	public function get_formatted_name() {
+		// example: #INV-0001 (Paid) - John Doe
+		$invoice_name = $this->get_number();
+		if ( $this->is_paid() ) {
+			$invoice_name .= ' (' . __( 'Paid', 'easy-appointments' ) . ')';
+		}
+		if ( ! empty( $this->get_billing_name() ) ) {
+			$invoice_name .= ' - ' . $this->get_billing_name();
+		}
+
+		return $invoice_name;
 	}
 }
 

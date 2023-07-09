@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit();
 			<div class="eac-columns">
 				<div class="eac-col-6">
 					<?php
-					eac_input_field(
+					eac_form_field(
 						array(
 							'label'   => __( 'Filter by status', 'wp-ever-accounting' ),
 							'type'    => 'select',
@@ -32,13 +32,12 @@ defined( 'ABSPATH' ) || exit();
 							),
 						)
 					);
-					eac_input_field(
+					eac_form_field(
 						array(
 							'type'        => 'country',
 							'name'        => 'country',
 							'placeholder' => __( 'Export all countries', 'wp-ever-accounting' ),
 							'label'       => __( 'Filter by country', 'wp-ever-accounting' ),
-							'subtype'     => 'item',
 							'default'     => '',
 						)
 					)

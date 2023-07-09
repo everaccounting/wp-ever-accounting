@@ -36,8 +36,8 @@ class Categories extends ListTable {
 	/**
 	 * Retrieve all the data for the table.
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 	public function prepare_items() {
 		$columns               = $this->get_columns();
@@ -68,8 +68,8 @@ class Categories extends ListTable {
 	/**
 	 * No items found text.
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 	public function no_items() {
 		esc_html_e( 'No categories found.', 'wp-ever-accounting' );
@@ -122,44 +122,52 @@ class Categories extends ListTable {
 				exit;
 			}
 
-			foreach ( $ids as $id ) { // Check the permissions on each.
-				switch ( $doaction ) {
-					case 'delete':
-						eac_delete_category( $id );
-						break;
-					case 'enable':
-						eac_insert_category(
-							array(
-								'id'     => $id,
-								'status' => 'active',
-							)
-						);
-						break;
-					case 'disable':
-						eac_insert_category(
-							array(
-								'id'     => $id,
-								'status' => 'inactive',
-							)
-						);
-						break;
-				}
-			}
-
-			// Based on the action add notice.
 			switch ( $doaction ) {
+				case 'activate':
+					$changed = 0;
+
+					foreach ( $ids as $id ) {
+						$args = array(
+							'id'     => $id,
+							'status' => 'active',
+						);
+						if ( eac_insert_category( $args ) ) {
+							$changed ++;
+						}
+					}
+					eac_add_notice( sprintf( __( '%s category(s) activated successfully.', 'wp-ever-accounting' ), number_format_i18n( $changed ) ), 'success' );
+
+					break;
+
+				case 'deactivate':
+					$changed = 0;
+
+					foreach ( $ids as $id ) {
+						$args = array(
+							'id'     => $id,
+							'status' => 'inactive',
+						);
+						if ( eac_insert_category( $args ) ) {
+							$changed ++;
+						}
+					}
+					eac_add_notice( sprintf( __( '%s category(s) deactivated successfully.', 'wp-ever-accounting' ), number_format_i18n( $changed ) ), 'success' );
+
+					break;
+
 				case 'delete':
-					$notice = __( 'Category(s) deleted successfully.', 'wp-ever-accounting' );
-					eac_add_notice( $notice, 'success' );
+					$changed = 0;
+
+					foreach ( $ids as $id ) {
+						if ( eac_delete_category( $id ) ) {
+							$changed ++;
+						}
+					}
+
+					eac_add_notice( sprintf( __( '%s category(s) deleted successfully.', 'wp-ever-accounting' ), number_format_i18n( $changed ) ), 'success' );
+
 					break;
-				case 'enable':
-					$notice = __( 'Category(s) enabled successfully.', 'wp-ever-accounting' );
-					eac_add_notice( $notice, 'success' );
-					break;
-				case 'disable':
-					$notice = __( 'Category(s) disabled successfully.', 'wp-ever-accounting' );
-					eac_add_notice( $notice, 'success' );
-					break;
+
 			}
 
 			wp_safe_redirect( admin_url( 'admin.php?page=eac-settings&tab=categories' ) );
@@ -172,8 +180,8 @@ class Categories extends ListTable {
 	/**
 	 * Define which columns to show on this screen.
 	 *
-	 * @since 1.0.2
 	 * @return array
+	 * @since 1.0.2
 	 */
 	public function get_columns() {
 		return array(
@@ -188,8 +196,8 @@ class Categories extends ListTable {
 	/**
 	 * Define sortable columns.
 	 *
-	 * @since 1.0.2
 	 * @return array
+	 * @since 1.0.2
 	 */
 	protected function get_sortable_columns() {
 		return array(
@@ -209,17 +217,17 @@ class Categories extends ListTable {
 	 */
 	public function get_bulk_actions() {
 		return array(
-			'delete'  => __( 'Delete', 'wp-ever-accounting' ),
-			'enable'  => __( 'Enable', 'wp-ever-accounting' ),
-			'disable' => __( 'Disable', 'wp-ever-accounting' ),
+			'activate'   => __( 'Activate', 'wp-ever-accounting' ),
+			'deactivate' => __( 'Deactivate', 'wp-ever-accounting' ),
+			'delete'     => __( 'Delete', 'wp-ever-accounting' ),
 		);
 	}
 
 	/**
 	 * Define primary column.
 	 *
-	 * @since 1.0.2
 	 * @return string
+	 * @since 1.0.2
 	 */
 	public function get_primary_column_name() {
 		return 'name';
@@ -230,8 +238,8 @@ class Categories extends ListTable {
 	 *
 	 * @param Category $item The current account object.
 	 *
-	 * @since  1.0.2
 	 * @return string Displays a checkbox.
+	 * @since  1.0.2
 	 */
 	public function column_cb( $item ) {
 		return sprintf( '<input type="checkbox" name="category_ids[]" value="%d"/>', esc_attr( $item->get_id() ) );
@@ -242,20 +250,20 @@ class Categories extends ListTable {
 	 *
 	 * @param Category $item The current account object.
 	 *
-	 * @since  1.0.2
 	 * @return string Displays a checkbox.
+	 * @since  1.0.2
 	 */
 	public function column_name( $item ) {
 		$args        = array( 'category_id' => $item->get_id() );
 		$edit_url    = $this->get_current_url( array_merge( $args, array( 'action' => 'edit' ) ) );
-		$enable_url  = $this->get_current_url( array_merge( $args, array( 'action' => 'enable' ) ) );
-		$disable_url = $this->get_current_url( array_merge( $args, array( 'action' => 'disable' ) ) );
+		$enable_url  = $this->get_current_url( array_merge( $args, array( 'action' => 'activate' ) ) );
+		$disable_url = $this->get_current_url( array_merge( $args, array( 'action' => 'deactivate' ) ) );
 		$delete_url  = $this->get_current_url( array_merge( $args, array( 'action' => 'delete' ) ) );
 		$actions     = array(
 			'id'      => sprintf( '<strong>#%d</strong>', esc_attr( $item->get_id() ) ),
 			'edit'    => sprintf( '<a href="%s">%s</a>', esc_url( $edit_url ), __( 'Edit', 'wp-ever-accounting' ) ),
-			'enable'  => sprintf( '<a href="%s">%s</a>', esc_url( wp_nonce_url( $enable_url, 'bulk-categories' ) ), __( 'Enable', 'wp-ever-accounting' ) ),
-			'disable' => sprintf( '<a href="%s">%s</a>', esc_url( wp_nonce_url( $disable_url, 'bulk-categories' ) ), __( 'Disable', 'wp-ever-accounting' ) ),
+			'enable'  => sprintf( '<a href="%s">%s</a>', esc_url( wp_nonce_url( $enable_url, 'bulk-categories' ) ), __( 'Activate', 'wp-ever-accounting' ) ),
+			'disable' => sprintf( '<a href="%s">%s</a>', esc_url( wp_nonce_url( $disable_url, 'bulk-categories' ) ), __( 'Deactivate', 'wp-ever-accounting' ) ),
 			'delete'  => sprintf( '<a href="%s" class="del">%s</a>', esc_url( wp_nonce_url( $delete_url, 'bulk-categories' ) ), __( 'Delete', 'wp-ever-accounting' ) ),
 		);
 		if ( 'active' === $item->get_status() ) {
@@ -273,8 +281,8 @@ class Categories extends ListTable {
 	 * @param Category $item The current account object.
 	 * @param string   $column_name The name of the column.
 	 *
-	 * @since 1.0.2
 	 * @return string The column value.
+	 * @since 1.0.2
 	 */
 	public function column_default( $item, $column_name ) {
 		switch ( $column_name ) {

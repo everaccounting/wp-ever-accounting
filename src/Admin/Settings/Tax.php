@@ -63,7 +63,7 @@ class Tax extends \EverAccounting\Admin\SettingsTab {
 			array(
 				'title'   => __( 'Enable Taxes', 'wp-ever-accounting' ),
 				'desc'    => __( 'Enable tax rates and calculations.', 'wp-ever-accounting' ),
-				'id'      => 'eac_enabled_tax',
+				'id'      => 'eac_tax_enabled',
 				'type'    => 'checkbox',
 				'default' => 'no',
 			),

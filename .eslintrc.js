@@ -1,5 +1,5 @@
 const eslintConfig = {
-	extends: [ 'plugin:@wordpress/eslint-plugin/recommended' ],
+	extends: ['plugin:@wordpress/eslint-plugin/recommended'],
 	env: {
 		browser: true,
 		es6: true,
@@ -8,11 +8,13 @@ const eslintConfig = {
 		'import/no-unresolved': [
 			2,
 			{
-				ignore: [ '^@wordpress/' ],
+				ignore: ['^@wordpress/'],
 			},
 		],
 		'import/no-extraneous-dependencies': 0,
 		'no-console': 0,
+		'object-shorthand': 0,
+		camelcase: 0,
 	},
 	globals: {
 		ajaxurl: true,
@@ -22,8 +24,8 @@ const eslintConfig = {
 		module: true,
 		process: true,
 		window: true,
-		eaccounting: true,
-		eaccounting_i18n: true,
+		eac_vars: true,
+		_: true,
 	},
 };
 

@@ -156,10 +156,9 @@ class Bills extends ListTable {
 			'cb'        => '<input type="checkbox" />',
 			'date'      => __( 'Date', 'wp-ever-accounting' ),
 			'amount'    => __( 'Amount', 'wp-ever-accounting' ),
-			'account'   => __( 'Account', 'wp-ever-accounting' ),
-			'category'  => __( 'Category', 'wp-ever-accounting' ),
-			'customer'  => __( 'Customer', 'wp-ever-accounting' ),
+			'vendor'  => __( 'Vendor', 'wp-ever-accounting' ),
 			'reference' => __( 'Reference', 'wp-ever-accounting' ),
+			'status'    => __( 'Status', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -171,12 +170,11 @@ class Bills extends ListTable {
 	 */
 	protected function get_sortable_columns() {
 		return array(
-			'date'      => array( 'bill_date', true ),
+			'date'      => array( 'issue_date', true ),
 			'amount'    => array( 'amount', false ),
-			'account'   => array( 'account_id', false ),
-			'category'  => array( 'category_id', false ),
-			'customer'  => array( 'contact_id', false ),
+			'vendor'  => array( 'contact_id', false ),
 			'reference' => array( 'reference', false ),
+			'status'    => array( 'status', false ),
 		);
 	}
 
@@ -226,14 +224,15 @@ class Bills extends ListTable {
 	public function column_date( $item ) {
 		$args       = array( 'bill_id' => $item->get_id() );
 		$edit_url   = $this->get_current_url( array_merge( $args, array( 'action' => 'edit' ) ) );
+		$view_url   = $this->get_current_url( array_merge( $args, array( 'action' => 'view' ) ) );
 		$delete_url = $this->get_current_url( array_merge( $args, array( 'action' => 'delete' ) ) );
 		$actions    = array(
 			'id'     => sprintf( '<strong>#%d</strong>', esc_attr( $item->get_id() ) ),
 			'edit'   => sprintf( '<a href="%s">%s</a>', esc_url( $edit_url ), __( 'Edit', 'wp-ever-accounting' ) ),
 			'delete' => sprintf( '<a href="%s" class="del">%s</a>', esc_url( wp_nonce_url( $delete_url, 'bulk-accounts' ) ), __( 'Delete', 'wp-ever-accounting' ) ),
 		);
-		$amount     = $item->get_formatted_amount();
-		return sprintf( '<a href="%s">%s</a> %s', esc_url( $edit_url ), esc_html( $amount ), $this->row_actions( $actions ) );
+		$date     = $item->get_issue_date();
+		return sprintf( '<a href="%s">%s</a> %s', esc_url( $view_url ), esc_html( $date ), $this->row_actions( $actions ) );
 	}
 
 	/**
@@ -247,6 +246,25 @@ class Bills extends ListTable {
 	 */
 	public function column_default( $item, $column_name ) {
 		switch ( $column_name ) {
+			case 'amount':
+				$value = $item->get_formatted_total();
+				$value = ! empty( $value ) ? $value : '&mdash;';
+				break;
+			case 'customer':
+				$contact_id = $item->get_contact_id();
+				$contact    = eac_get_customer( $contact_id );
+				$link       = add_query_arg(
+					array(
+						'customer_id' => $contact_id,
+						'filter'      => 'yes',
+					)
+				);
+				$value      = $contact ? sprintf( '<a href="%s">%s</a>', esc_url( $link ), esc_html( $contact->get_name() ) ) : '&mdash;';
+				break;
+			case 'status':
+				$value = esc_html( $item->get_status( 'view' ) );
+				$value = $value ? sprintf( '<span class="eac-status-label %s">%s</span>', esc_attr( $item->get_status() ), $value ) : '&mdash;';
+				break;
 			default:
 				$value = parent::column_default( $item, $column_name );
 				break;

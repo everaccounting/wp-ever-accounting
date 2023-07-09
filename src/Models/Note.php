@@ -19,7 +19,7 @@ class Note extends Model {
 	 * @since 1.0.0
 	 * @var string
 	 */
-	const TABLE_NAME = 'ea_notes';
+	public $table_name = 'ea_notes';
 
 	/**
 	 * Object type.
@@ -27,15 +27,7 @@ class Note extends Model {
 	 * @since 1.0.0
 	 * @var string
 	 */
-	const OBJECT_TYPE = 'note';
-
-	/**
-	 * Cache group.
-	 *
-	 * @since 1.0.0
-	 * @var string
-	 */
-	const CACHE_GROUP = 'ea_notes';
+	public $object_type = 'note';
 
 	/**
 	 * Item Data array.
@@ -45,9 +37,13 @@ class Note extends Model {
 	 * @var array
 	 */
 	protected $core_data = array(
-		'note'         => '',
-		'creator_id'   => '',
-		'date_created' => null,
+		'id'            => null,
+		'object_id'     => null,
+		'object_type'   => '',
+		'content'       => '',
+		'note_metadata' => array(),
+		'creator_id'    => null,
+		'date_created'  => null,
 	);
 
 	/*
@@ -59,13 +55,33 @@ class Note extends Model {
 	|
 	*/
 	/**
-	 * Return the parent id.
+	 * Get id.
 	 *
-	 * @since  1.1.0
+	 * @return int
+	 * @since 1.0.0
+	 */
+	public function get_id() {
+		return (int) $this->get_prop( 'id' );
+	}
+
+	/**
+	 * Set id.
+	 *
+	 * @param int $id
+	 *
+	 * @since 1.0.0
+	 */
+	public function set_id( $id ) {
+		$this->set_prop( 'id', absint( $id ) );
+	}
+
+	/**
+	 * Return the parent id.
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
 	 * @return string
+	 * @since  1.1.0
 	 */
 	public function get_parent_id( $context = 'edit' ) {
 		return $this->get_prop( 'parent_id', $context );
@@ -74,9 +90,9 @@ class Note extends Model {
 	/**
 	 * set the id.
 	 *
-	 * @since  1.1.0
-	 *
 	 * @param int $parent_id .
+	 *
+	 * @since  1.1.0
 	 */
 	public function set_parent_id( $parent_id ) {
 		$this->set_prop( 'parent_id', absint( $parent_id ) );
@@ -85,11 +101,10 @@ class Note extends Model {
 	/**
 	 * Return the type of parent
 	 *
-	 * @since  1.1.0
-	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
 	 * @return string
+	 * @since  1.1.0
 	 */
 	public function get_type( $context = 'edit' ) {
 		return $this->get_prop( 'type', $context );
@@ -98,9 +113,9 @@ class Note extends Model {
 	/**
 	 * set the id.
 	 *
-	 * @since  1.1.0
-	 *
 	 * @param string $type .
+	 *
+	 * @since  1.1.0
 	 */
 	public function set_type( $type ) {
 		$this->set_prop( 'type', eac_clean( $type ) );
@@ -109,59 +124,56 @@ class Note extends Model {
 	/**
 	 * Return the note.
 	 *
-	 * @since  1.1.0
-	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
 	 * @return string
+	 * @since  1.1.0
 	 */
-	public function get_note( $context = 'edit' ) {
-		return $this->get_prop( 'note', $context );
+	public function get_content( $context = 'edit' ) {
+		return $this->get_prop( 'content', $context );
 	}
 
 	/**
-	 * set the note.
+	 * set the content.
+	 *
+	 * @param string $content .
 	 *
 	 * @since  1.1.0
-	 *
-	 * @param string $note .
 	 */
-	public function set_note( $note ) {
-		$this->set_prop( 'note', eaccounting_sanitize_textarea( $note ) );
+	public function set_content( $content ) {
+		$this->set_prop( 'content', sanitize_textarea_field( $content ) );
 	}
 
 	/**
 	 * Return highlight.
 	 *
-	 * @since  1.1.0
-	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
 	 * @return string
+	 * @since  1.1.0
 	 */
-	public function get_extra( $context = 'edit' ) {
-		return $this->get_prop( 'extra', $context );
+	public function get_note_metadata( $context = 'edit' ) {
+		return $this->get_prop( 'note_metadata', $context );
 	}
 
 	/**
 	 * set the note.
 	 *
-	 * @since  1.1.0
-	 *
 	 * @param string $extra .
+	 *
+	 * @since  1.1.0
 	 */
-	public function set_extra( $extra ) {
-		$this->set_prop( 'extra', eac_clean( $extra ) );
+	public function set_note_metadata( $extra ) {
+		$this->set_prop( 'note_metadata', eac_clean( $extra ) );
 	}
 
 	/**
 	 * Return creator id.
 	 *
-	 * @since  1.1.0
-	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
 	 * @return string
+	 * @since  1.1.0
 	 */
 	public function get_creator_id( $context = 'edit' ) {
 		return $this->get_prop( 'creator_id', $context );
@@ -170,9 +182,9 @@ class Note extends Model {
 	/**
 	 * Set object creator id.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param int $creator_id Creator id.
+	 *
+	 * @since 1.0.2
 	 */
 	public function set_creator_id( $creator_id = null ) {
 		$this->set_prop( 'creator_id', absint( $creator_id ) );
@@ -183,9 +195,8 @@ class Note extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @return mixed|null
+	 * @since 1.0.2
 	 */
 	public function get_date_created( $context = 'edit' ) {
 		return $this->get_prop( 'date_created', $context );
@@ -213,8 +224,8 @@ class Note extends Model {
 	/**
 	 * Saves an object in the database.
 	 *
-	 * @since 1.0.0
 	 * @return true|\WP_Error True on success, WP_Error on failure.
+	 * @since 1.0.0
 	 */
 	public function save() {
 		// If date created is not set, set it to now.

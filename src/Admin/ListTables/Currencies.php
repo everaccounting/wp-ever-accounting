@@ -97,58 +97,74 @@ class Currencies extends ListTable {
 	 * @since 1.0.2
 	 */
 	public function process_bulk_action( $doaction ) {
+
 		if ( ! empty( $doaction ) && check_admin_referer( 'bulk-' . $this->_args['plural'] ) ) {
-			$currency_id  = eac_get_input_var( 'currency_id' );
-			$currency_ids = eac_get_input_var( 'currency_ids' );
+			$id  = eac_get_input_var( 'currency_id' );
+			$ids = eac_get_input_var( 'currency_ids' );
 
 			if ( ! empty( $id ) ) {
-				$currency_ids = wp_parse_list( $currency_id );
-				$doaction = (-1 !== $_REQUEST['action']) ? $_REQUEST['action'] : $_REQUEST['action2']; // phpcs:ignore
+				$ids      = wp_parse_list( $id );
+				$doaction = ( - 1 !== $_REQUEST['action'] ) ? $_REQUEST['action'] : $_REQUEST['action2']; // phpcs:ignore
 			} elseif ( ! empty( $ids ) ) {
-				$currency_ids = array_map( 'absint', $currency_ids );
+				$ids = array_map( 'absint', $ids );
 			} elseif ( wp_get_referer() ) {
 				wp_safe_redirect( wp_get_referer() );
 				exit;
 			}
 
-			foreach ( $currency_ids as $currency_id ) {
-				switch ( $doaction ) {
-					case 'activate':
-						eac_insert_currency(
-							array(
-								'code'   => $currency_id,
-								'status' => 'active',
-							)
-						);
-						break;
-					case 'deactivate':
-						eac_insert_currency(
-							array(
-								'code'   => $currency_id,
-								'status' => 'inactive',
-							)
-						);
-						break;
-					case 'delete':
-						eac_delete_currency( $currency_id );
-				}
-			}
-
-			// Based on the action add notice.
 			switch ( $doaction ) {
-				case 'enable':
-					$notice = __( 'Currency(s) enabled successfully.', 'wp-ever-accounting' );
-					eac_add_notice( $notice, 'success' );
+				case 'activate':
+					$changed = 0;
+
+					foreach ( $ids as $id ) {
+						$args = array(
+							'id'     => $id,
+							'status' => 'active',
+						);
+						if ( eac_insert_currency( $args ) ) {
+							$changed ++;
+						}
+					}
+					eac_add_notice( sprintf( __( '%s currency(s) activated successfully.', 'wp-ever-accounting' ), number_format_i18n( $changed ) ), 'success' );
+
 					break;
-				case 'disable':
-					$notice = __( 'Currency(s) disabled successfully.', 'wp-ever-accounting' );
-					eac_add_notice( $notice, 'success' );
+
+				case 'deactivate':
+					$changed = 0;
+
+					foreach ( $ids as $id ) {
+						$args = array(
+							'id'     => $id,
+							'status' => 'inactive',
+						);
+						if ( eac_insert_currency( $args ) ) {
+							$changed ++;
+						}
+					}
+					eac_add_notice( sprintf( __( '%s currency(s) deactivated successfully.', 'wp-ever-accounting' ), number_format_i18n( $changed ) ), 'success' );
+
 					break;
+
+				case 'delete':
+					$changed = 0;
+
+					foreach ( $ids as $id ) {
+						if ( eac_delete_currency( $id ) ) {
+							$changed ++;
+						}
+					}
+
+					eac_add_notice( sprintf( __( '%s currency(s) deleted successfully.', 'wp-ever-accounting' ), number_format_i18n( $changed ) ), 'success' );
+
+					break;
+
 			}
 
 			wp_safe_redirect( admin_url( 'admin.php?page=eac-settings&section=currencies' ) );
 			exit();
 		}
+
+		parent::process_bulk_actions( $doaction );
 	}
 
 
@@ -159,14 +175,14 @@ class Currencies extends ListTable {
 	 * @since 1.0.2
 	 */
 	public function get_columns() {
-		 return array(
-			 'cb'     => '<input type="checkbox" />',
-			 'name'   => __( 'Name', 'wp-ever-accounting' ),
-			 'code'   => __( 'Code', 'wp-ever-accounting' ),
-			 'symbol' => __( 'Symbol', 'wp-ever-accounting' ),
-			 'rate'   => __( 'Rate', 'wp-ever-accounting' ),
-			 'status' => __( 'Status', 'wp-ever-accounting' ),
-		 );
+		return array(
+			'cb'            => '<input type="checkbox" />',
+			'name'          => __( 'Name', 'wp-ever-accounting' ),
+			'code'          => __( 'Code', 'wp-ever-accounting' ),
+			'symbol'        => __( 'Symbol', 'wp-ever-accounting' ),
+			'exchange_rate' => __( 'Exchange Rate', 'wp-ever-accounting' ),
+			'status'        => __( 'Status', 'wp-ever-accounting' ),
+		);
 	}
 
 	/**
@@ -176,13 +192,13 @@ class Currencies extends ListTable {
 	 * @since 1.0.2
 	 */
 	protected function get_sortable_columns() {
-		 return array(
-			 'name'   => array( 'name', true ),
-			 'code'   => array( 'code', true ),
-			 'symbol' => array( 'symbol', true ),
-			 'rate'   => array( 'rate', true ),
-			 'status' => array( 'status', true ),
-		 );
+		return array(
+			'name'          => array( 'name', true ),
+			'code'          => array( 'code', true ),
+			'symbol'        => array( 'symbol', true ),
+			'exchange_rate' => array( 'exchange_rate', true ),
+			'status'        => array( 'status', true ),
+		);
 	}
 
 	/**
@@ -206,7 +222,7 @@ class Currencies extends ListTable {
 	 * @since 1.0.2
 	 */
 	public function get_primary_column_name() {
-		 return 'name';
+		return 'name';
 	}
 
 	/**
@@ -237,9 +253,9 @@ class Currencies extends ListTable {
 		$delete_url     = $this->get_current_url( array_merge( $args, array( 'action' => 'delete' ) ) );
 		$actions        = array(
 			'edit'       => sprintf( '<a href="%s">%s</a>', esc_url( $edit_url ), __( 'Edit', 'wp-ever-accounting' ) ),
-			'activate'   => sprintf( '<a href="%s">%s</a>', esc_url( wp_nonce_url( $activate_url, 'bulk-currencies' ) ), __( 'Enable', 'wp-ever-accounting' ) ),
+			'activate'   => sprintf( '<a href="%s">%s</a>', esc_url( wp_nonce_url( $activate_url, 'bulk-currencies' ) ), __( 'Activate', 'wp-ever-accounting' ) ),
 			'deactivate' => sprintf( '<a href="%s">%s</a>', esc_url( wp_nonce_url( $deactivate_url, 'bulk-currencies' ) ), __( 'Disable', 'wp-ever-accounting' ) ),
-			'delete'     => sprintf( '<a href="%s">%s</a>', esc_url( wp_nonce_url( $delete_url, 'bulk-currencies' ) ), __( 'Delete', 'wp-ever-accounting' ) ),
+			'delete'     => sprintf( '<a href="%s">%s</a>', esc_url( wp_nonce_url( $delete_url, 'bulk-currencies' ) ), __( 'Deactivate', 'wp-ever-accounting' ) ),
 		);
 
 		if ( 'active' === $item->get_status() ) {
@@ -269,8 +285,8 @@ class Currencies extends ListTable {
 	 */
 	public function column_default( $item, $column_name ) {
 		switch ( $column_name ) {
-			case 'rate':
-				$value = esc_html( eac_sanitize_number( $item->get_rate(), 8 ) );
+			case 'exchange_rate':
+				$value = esc_html( eac_sanitize_number( $item->get_exchange_rate(), 8 ) );
 				break;
 			case 'status':
 				$value = esc_html( $item->get_status( 'view' ) );

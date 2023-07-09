@@ -16,7 +16,7 @@ wp_clear_scheduled_hook( 'eac_daily_scheduled_event' );
 wp_clear_scheduled_hook( 'eac_weekly_scheduled_event' );
 
 /*
- * Only remove ALL product and page data if EACCOUNTING_REMOVE_ALL_DATA constant is set to true in user's
+ * Only remove ALL product and page data if EAC_REMOVE_ALL_DATA constant is set to true in user's
  * wp-config.php. This is to prevent data loss when deleting the plugin from the backend
  * and to ensure only the site owner can perform this action.
  */
@@ -30,7 +30,7 @@ if ( defined( 'EAC_REMOVE_ALL_DATA' ) && true === EAC_REMOVE_ALL_DATA ) {
 	\EverAccounting\Install::drop_tables();
 
 	// Delete options.
-	$wpdb->query( "DELETE FROM $wpdb->options WHERE option_name LIKE 'eaccounting\_%';" );
+	$wpdb->query( "DELETE FROM $wpdb->options WHERE option_name LIKE 'eac\_%';" );
 
 	// Clear any cached data that has been removed.
 	wp_cache_flush();

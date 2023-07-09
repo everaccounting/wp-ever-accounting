@@ -9,9 +9,27 @@
  */
 
 defined( 'ABSPATH' ) || exit();
-$accounts = eac_get_accounts(
+$accounts   = eac_get_accounts(
 	array(
 		'include'  => $payment->get_account_id(),
+		'no_count' => true,
+	)
+);
+$categories = eac_get_categories(
+	array(
+		'include'  => $payment->get_category_id(),
+		'no_count' => true,
+	)
+);
+$customers  = eac_get_customers(
+	array(
+		'include'  => $payment->get_customer_id(),
+		'no_count' => true,
+	)
+);
+$invoices   = eac_get_invoices(
+	array(
+		'include'  => $payment->get_document_id(),
 		'no_count' => true,
 	)
 );
@@ -26,7 +44,7 @@ $accounts = eac_get_accounts(
 				<?php
 				eac_form_field(
 					array(
-						'type'        => 'date',
+						'data_type'   => 'date',
 						'name'        => 'date',
 						'label'       => __( 'Date', 'wp-ever-accounting' ),
 						'placeholder' => 'YYYY-MM-DD',
@@ -41,6 +59,7 @@ $accounts = eac_get_accounts(
 						'name'        => 'account_id',
 						'label'       => __( 'Account', 'wp-ever-accounting' ),
 						'value'       => $payment->get_account_id(),
+						'default'     => filter_input( INPUT_GET, 'account_id', FILTER_SANITIZE_NUMBER_INT ),
 						'placeholder' => __( 'Select account', 'wp-ever-accounting' ),
 						'options'     => wp_list_pluck( $accounts, 'formatted_name', 'id' ),
 						'required'    => true,
@@ -56,7 +75,6 @@ $accounts = eac_get_accounts(
 				);
 				eac_form_field(
 					array(
-						'type'        => 'decimal',
 						'name'        => 'amount',
 						'label'       => __( 'Amount', 'wp-ever-accounting' ),
 						'placeholder' => '0.00',
@@ -68,7 +86,7 @@ $accounts = eac_get_accounts(
 				// Conversion Rate.
 				eac_form_field(
 					array(
-						'type'        => 'text',
+						'data_type'   => 'decimal',
 						'name'        => 'exchange_rate',
 						'label'       => __( 'Exchange Rate', 'wp-ever-accounting' ),
 						'placeholder' => '1.00',
@@ -86,6 +104,7 @@ $accounts = eac_get_accounts(
 						'name'        => 'category_id',
 						'label'       => __( 'Category', 'wp-ever-accounting' ),
 						'value'       => $payment->get_category_id(),
+						'options'     => wp_list_pluck( $categories, 'formatted_name', 'id' ),
 						'placeholder' => __( 'Select category', 'wp-ever-accounting' ),
 						'required'    => true,
 						'input_class' => 'eac-select2',
@@ -104,6 +123,8 @@ $accounts = eac_get_accounts(
 						'name'        => 'contact_id',
 						'label'       => __( 'Customer', 'wp-ever-accounting' ),
 						'value'       => $payment->get_customer_id(),
+						'options'     => wp_list_pluck( $customers, 'formatted_name', 'id' ),
+						'default'     => filter_input( INPUT_GET, 'customer_id', FILTER_SANITIZE_NUMBER_INT ),
 						'placeholder' => __( 'Select customer', 'wp-ever-accounting' ),
 						'input_class' => 'eac-select2',
 						'attrs'       => 'data-action=eac_json_search&data-type=customer',
@@ -121,11 +142,13 @@ $accounts = eac_get_accounts(
 						'name'        => 'document_id',
 						'label'       => __( 'Invoice', 'wp-ever-accounting' ),
 						'value'       => $payment->get_document_id(),
+						'default'     => filter_input( INPUT_GET, 'document_id', FILTER_SANITIZE_NUMBER_INT ),
+						'options'     => wp_list_pluck( $invoices, 'formatted_name', 'id' ),
 						'placeholder' => __( 'Select invoice', 'wp-ever-accounting' ),
 						'required'    => false,
 						'class'       => 'eac-col-6',
 						'input_class' => 'eac-select2',
-						'attrs'       => 'data-action=eac_json_search&data-type=document',
+						'attrs'       => 'data-action=eac_json_search&data-type=invoice',
 					)
 				);
 				eac_form_field(
@@ -178,7 +201,7 @@ $accounts = eac_get_accounts(
 	</div>
 
 	<?php wp_nonce_field( 'eac_edit_payment' ); ?>
-	<input type="hidden" name="currency" value="<?php echo esc_attr( $payment->get_currency_code() ); ?>">
+	<input type="hidden" name="currency_code" value="<?php echo esc_attr( $payment->get_currency_code() ); ?>">
 	<input type="hidden" name="action" value="eac_edit_payment">
 	<input type="hidden" name="id" value="<?php echo esc_attr( $payment->get_id() ); ?>">
 </form>

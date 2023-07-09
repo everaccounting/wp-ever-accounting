@@ -5,73 +5,34 @@ namespace EverAccounting\Models;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class Model.
+ * Model class.
  *
- * @since   1.0.0
- * @package EverAccounting
+ * @since 1.0.0
  */
 abstract class Model {
 	/**
-	 * Table name.
+	 * The primary key for the model.
 	 *
-	 * This is also used as table alias.
+	 * @var string
+	 * @since 1.0.0
+	 */
+	protected $primary_key = 'id';
+
+	/**
+	 * The table associated with the model.
+	 *
+	 * @var string
+	 * @since 1.0.0
+	 */
+	protected $table_name = '';
+
+	/**
+	 * Object type.
 	 *
 	 * @since 1.0.0
 	 * @var string
 	 */
-	const TABLE_NAME = 'table_name';
-
-	/**
-	 * Type of the object.
-	 *
-	 * This is used for hooks.
-	 *
-	 * @since 1.0.0
-	 * @var string
-	 */
-	const OBJECT_TYPE = 'object_type';
-
-	/**
-	 * Cache group.
-	 *
-	 * @since 1.0.0
-	 * @var string
-	 */
-	const CACHE_GROUP = 'cache_group';
-
-	/**
-	 * Meta type declaration for the object.
-	 *
-	 * @since 1.0.0
-	 * @var string
-	 */
-	const META_TYPE = false;
-
-	/**
-	 * id for this object.
-	 *
-	 * @since 1.0.0
-	 * @var int ID.
-	 */
-	protected $id = 0;
-
-	/**
-	 * Table with prefix.
-	 *
-	 * @since 1.0.0
-	 * @var string
-	 */
-	protected $table = null;
-
-	/**
-	 * Table alias.
-	 *
-	 * Never set this directly. It is automatically generated from the table name.
-	 *
-	 * @since 1.0.0
-	 * @var string
-	 */
-	protected $table_alias = null;
+	protected $object_type = null;
 
 	/**
 	 * Core data for this object. Name value pairs (name + default value).
@@ -94,30 +55,12 @@ abstract class Model {
 	protected $extra_data = array();
 
 	/**
-	 * Meta data for this object. Name value pairs (name + default value).
-	 *
-	 * For core meta data, use the $metadata array.
-	 *
-	 * @since 1.0.0
-	 * @var array Meta data.
-	 */
-	protected $metadata = array();
-
-	/**
 	 * All data for this object. Name value pairs (name + default value).
 	 *
 	 * @since 1.0.0
 	 * @var array All data.
 	 */
 	protected $data = array();
-
-	/**
-	 * Model changes.
-	 *
-	 * @since 1.0.0
-	 * @var array
-	 */
-	protected $changes = array();
 
 	/**
 	 * This is false until the object is read from the DB.
@@ -128,6 +71,24 @@ abstract class Model {
 	protected $object_read = false;
 
 	/**
+	 * Meta type.
+	 *
+	 * @since 1.0.0
+	 * @var string
+	 */
+	protected $meta_type = null;
+
+	/**
+	 * Meta data for this object. Name value pairs (name + default value).
+	 *
+	 * For core meta data, use the $metadata array.
+	 *
+	 * @since 1.0.0
+	 * @var array Meta data.
+	 */
+	protected $metadata = array();
+
+	/**
 	 * This is false until the metadata is read from the DB.
 	 *
 	 * @since 1.0.0
@@ -136,24 +97,20 @@ abstract class Model {
 	protected $metadata_read = false;
 
 	/**
-	 * Search columns.
-	 *
-	 * null means all columns.
-	 *
-	 * @since 1.0.0
-	 * @var array|null
-	 */
-	protected $search_columns = null;
-
-	/**
-	 * Core meta keys.
-	 *
-	 * These are must be saved in the meta table even if they are empty.
+	 * Model changes.
 	 *
 	 * @since 1.0.0
 	 * @var array
 	 */
-	protected $core_meta_keys = array();
+	protected $changes = array();
+
+	/**
+	 * Cache group.
+	 *
+	 * @since 1.0.0
+	 * @var string
+	 */
+	public $cache_group = null;
 
 	/**
 	 * Model constructor.
@@ -164,47 +121,67 @@ abstract class Model {
 	 */
 	public function __construct( $data = 0 ) {
 		global $wpdb;
-		$called_class      = get_called_class();
-		$this->table_alias = static::TABLE_NAME;
-		$this->table       = $wpdb->prefix . static::TABLE_NAME;
-		$this->data        = array_merge( $this->core_data, $this->extra_data );
+		$table_name          = $this->table_name;
+		$this->data          = array_merge( $this->core_data, $this->extra_data );
+		$wpdb->{$table_name} = $wpdb->prefix . $table_name;
+		$wpdb->tables[]      = $table_name;
 
-		if ( static::META_TYPE ) {
-			$metatype          = static::META_TYPE . 'meta';
-			$wpdb->{$metatype} = $wpdb->prefix . $metatype;
+		// if cache group is not set, use table name.
+		if ( ! $this->cache_group ) {
+			$this->cache_group = $table_name;
 		}
 
-		if ( is_scalar( $data ) ) {
-			$this->set_id( $data );
-		} elseif ( $data instanceof $called_class ) {
-			$this->set_id( $data->get_id() );
-		} elseif ( is_object( $data ) && ! empty( $data->id ) ) {
-			$this->set_id( $data->id );
-		} elseif ( is_array( $data ) && ! empty( $data[ $data->id ] ) ) {
-			$this->set_id( $data[ $data->id ] );
-		} else {
-			$this->object_read = true;
+		if ( ! empty( $this->meta_type ) ) {
+			$meta_table          = $this->meta_type . 'meta';
+			$wpdb->{$meta_table} = $wpdb->prefix . $meta_table;
+			$wpdb->tables[]      = $meta_table;
 		}
 
-		$this->read();
+		$this->init( $data );
 	}
 
 	/**
-	 * Remove meta-type from database.
+	 * Initialize object data from database.
+	 *
+	 * @param int|object|array $data Object ID, post object, or array of data.
+	 *
+	 * @since 1.0.0
+	 */
+	protected function init( $data ) {
+		$called_class = get_called_class();
+		if ( is_scalar( $data ) ) {
+			$this->read( $data );
+		} elseif ( $data instanceof $called_class ) {
+			$this->set_data( $data->get_data() );
+			$this->set_object_read( true );
+		} elseif ( is_array( $data ) ) {
+			$this->set_data( $data );
+			$this->set_object_read( true );
+		} elseif ( is_object( $data ) ) {
+			$this->set_data( get_object_vars( $data ) );
+			$this->set_object_read( true );
+		} else {
+			$this->set_object_read( true );
+		}
+	}
+
+	/**
+	 * Destroy the object.
 	 *
 	 * @since 1.0.0
 	 */
 	public function __destruct() {
+		$this->set_defaults();
 	}
 
 	/**
 	 * Only store the object primary key to avoid serializing the data object instance.
 	 *
-	 * @since 1.0.0
 	 * @return array
+	 * @since 1.0.0
 	 */
 	public function __sleep() {
-		return array( 'id' );
+		return array( 'data' );
 	}
 
 	/**
@@ -216,9 +193,9 @@ abstract class Model {
 	 */
 	public function __wakeup() {
 		try {
-			$this->__construct( $this->get_id() );
+			$this->__construct( $this->get_prop( $this->primary_key ) );
 		} catch ( \Exception $e ) {
-			$this->set_id( 0 );
+			$this->set_prop( $this->primary_key, null );
 			$this->set_object_read( true );
 		}
 	}
@@ -229,16 +206,16 @@ abstract class Model {
 	 * @since 1.0.0
 	 */
 	public function __clone() {
-		$this->set_id( 0 );
-		if ( static::META_TYPE ) {
-			$this->read_metadata();
-			foreach ( $this->metadata as $key => $value ) {
-				if ( isset( $value->id ) ) {
-					$value->id = null;
-				}
-				$this->metadata[ $key ] = clone $value;
+		foreach ( $this->read_metadata() as $key => $meta_datum ) {
+			if ( isset( $meta_datum->id ) ) {
+				$meta_datum->id = null;
 			}
+			$this->metadata[ $key ] = clone $meta_datum;
 		}
+
+		$this->set_prop( $this->primary_key, 0 );
+
+		return $this;
 	}
 
 	/**
@@ -246,17 +223,11 @@ abstract class Model {
 	 *
 	 * @param string $key Field to check if set.
 	 *
-	 * @since 1.0.0
 	 * @return bool Whether the given field is set.
+	 * @since 1.0.0
 	 */
 	public function __isset( $key ) {
-		// If there is a getter function for this field, use it.
-		$getter = 'get_' . $key;
-		if ( method_exists( $this, $getter ) ) {
-			return null !== $this->$getter();
-		}
-
-		return ! empty( $this->get_prop( $key ) );
+		return isset( $this->data[ $key ] );
 	}
 
 	/**
@@ -267,14 +238,7 @@ abstract class Model {
 	 * @since 1.0.0
 	 */
 	public function __unset( $key ) {
-		// If there is a setter function for this field, use it.
-		$setter = 'set_' . $key;
-		if ( method_exists( $this, $setter ) ) {
-			$this->$setter( null );
-
-			return;
-		}
-		$this->set_prop( $key, '' );
+		$this->__set( $key, null );
 	}
 
 	/**
@@ -288,6 +252,10 @@ abstract class Model {
 	 * @since  1.0.0
 	 */
 	public function __set( $key, $value ) {
+		// Check if key have set_ prefix if yes then remove it.
+		if ( 0 === strpos( $key, 'set_' ) ) {
+			$key = substr( $key, 4 );
+		}
 		// If there is a setter function for this field, use it.
 		$setter = 'set_' . $key;
 		if ( method_exists( $this, $setter ) ) {
@@ -303,10 +271,14 @@ abstract class Model {
 	 *
 	 * @param string $key Key to get.
 	 *
-	 * @since  1.0.0
 	 * @return mixed|null
+	 * @since  1.0.0
 	 */
 	public function __get( $key ) {
+		// Check if key have get_ prefix if yes then remove it.
+		if ( 0 === strpos( $key, 'get_' ) ) {
+			$key = substr( $key, 4 );
+		}
 		// Check if we have a helper method for that.
 		if ( method_exists( $this, 'get_' . $key ) ) {
 			return $this->{'get_' . $key}( 'edit' );
@@ -318,8 +290,8 @@ abstract class Model {
 	/**
 	 * Change data to JSON format.
 	 *
-	 * @since  1.0.0
 	 * @return string Model in JSON format.
+	 * @since  1.0.0
 	 */
 	public function __toString() {
 		$json = wp_json_encode( $this->get_data() );
@@ -327,411 +299,15 @@ abstract class Model {
 		return ! $json ? '{}' : $json;
 	}
 
-	/*
-	|--------------------------------------------------------------------------
-	| Getters and Setters
-	|--------------------------------------------------------------------------
-	|
-	| Methods for getting and setting data.
-	|
-	*/
 	/**
-	 * Returns the unique ID for this object.
+	 * Static method for creating a new instance of the model.
 	 *
-	 * @since  1.0.0
-	 * @return int
-	 */
-	public function get_id() {
-		return $this->id;
-	}
-
-	/**
-	 * Set id of the object.
-	 *
-	 * @param int $id ID.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	protected function set_id( $id ) {
-		$this->id = absint( $id );
-	}
-
-	/**
-	 * Gets a prop for a getter method.
-	 *
-	 * Gets the value from either current pending changes, or the data itself.
-	 * Context controls what happens to the value before it's returned.
-	 *
-	 * @param string $prop Name of prop to get.
-	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
-	 *
-	 * @since  1.0.0
-	 * @return mixed
-	 */
-	protected function get_prop( $prop, $context = 'edit' ) {
-		$value = null;
-		if ( array_key_exists( $prop, $this->data ) ) {
-			$value = isset( $this->changes[ $prop ] ) ? $this->changes[ $prop ] : $this->data[ $prop ];
-		} elseif ( 'id' === $prop ) {
-			$value = $this->get_id();
-		}
-
-		if ( 'view' === $context ) {
-			$value = apply_filters( $this->get_hook_prefix() . '_get_' . $prop, $value, $this );
-		}
-
-		return $value;
-	}
-
-	/**
-	 * Set a prop for a write/batch operation. This should not update anything in the database itself and should only change what is stored in the class object.
-	 *
-	 * @param string $prop Name of prop to set.
-	 * @param mixed  $value Value of prop.
-	 *
-	 * @since  1.0.0
-	 */
-	protected function set_prop( $prop, $value ) {
-		if ( array_key_exists( $prop, $this->data ) ) {
-			if ( true === $this->object_read ) {
-				if ( $value !== $this->data[ $prop ] || array_key_exists( $prop, $this->changes ) ) {
-					$this->changes[ $prop ] = $value;
-				}
-			} else {
-				$this->data[ $prop ] = $value;
-			}
-		}
-	}
-
-	/**
-	 * Get date prop
-	 *
-	 * @param string $prop Name of prop to get.
-	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
-	 * @param string $format Date format.
-	 *
-	 * @since 1.0.0
-	 * @return string|null
-	 */
-	public function get_date_prop( $prop, $context = 'edit', $format = 'Y-m-d H:i:s' ) {
-		$datetime = $this->sanitize_date( $this->get_prop( $prop ) );
-
-		$value = $datetime ? date( $format, strtotime( $datetime ) ) : null; // @codingStandardsIgnoreLine - date() is ok here.
-
-		if ( 'view' === $context ) {
-			$value = apply_filters( $this->get_hook_prefix() . '_get_' . $prop, $value, $this );
-		}
-
-		return $value;
-	}
-
-	/**
-	 * Sets a date prop whilst handling formatting and datetime objects.
-	 *
-	 * @param string         $prop Name of prop to set.
-	 * @param string|integer $value Value of the prop.
-	 * @param string         $format Date format.
-	 *
+	 * @return static
 	 * @since 1.0.0
 	 */
-	public function set_date_prop( $prop, $value, $format = 'Y-m-d H:i:s' ) {
-		$date = $this->sanitize_date( $value );
-		if ( ! empty( $date ) ) {
-			$date = date( $format, strtotime( $date ) ); // @codingStandardsIgnoreLine - date() is ok here.
-		}
-		$this->set_prop( $prop, $date );
+	public static function get_instance() {
+		return new static();
 	}
-
-	/**
-	 * Get Boolean prop.
-	 *
-	 * @param string $prop Name of prop to get.
-	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
-	 *
-	 * @since 1.0.0
-	 * @return bool
-	 */
-	public function get_boolean_prop( $prop, $context = 'edit' ) {
-		$value = (bool) $this->string_to_bool( $this->get_prop( $prop ) );
-
-		if ( 'view' === $context ) {
-			$value = apply_filters( $this->get_hook_prefix() . '_get_' . $prop, $value, $this );
-		}
-
-		return $value;
-	}
-
-	/**
-	 * Set Boolean prop.
-	 *
-	 * @param string $prop Name of prop to set.
-	 * @param bool   $value Value of the prop.
-	 *
-	 * @since 1.0.0
-	 */
-	public function set_boolean_prop( $prop, $value ) {
-		$this->set_prop( $prop, $this->bool_to_string( $value ) );
-	}
-
-
-	/**
-	 * Get all props for an object.
-	 *
-	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
-	 *
-	 * @since  1.0.0
-	 * @return array
-	 */
-	public function get_props( $context = 'edit' ) {
-		$props = array(
-			'id' => $this->get_id(),
-		);
-		foreach ( $this->core_data as $key => $value ) {
-			$props[ $key ] = $this->get_prop( $key, $context );
-		}
-
-		return $props;
-	}
-
-	/**
-	 * Set a collection of props in one go, collect any errors, and return the result.
-	 * Only sets using public methods.
-	 *
-	 * @param array|object $props Key value pairs to set. Key is the prop and should map to a setter function name.
-	 *
-	 * @since  1.0.0
-	 * @return void
-	 */
-	public function set_props( $props ) {
-		if ( is_object( $props ) ) {
-			$props = get_object_vars( $props );
-		}
-		if ( ! is_array( $props ) ) {
-			return;
-		}
-
-		foreach ( $props as $prop => $value ) {
-			$prop = preg_replace( '/^[^a-zA-Z]+/', '', $prop );
-			// If the property name is id, then we will skip it.
-			if ( 'id' === $prop ) {
-				continue;
-			}
-			// if value is array, call the same function for each item.
-			if ( 'metadata' === $prop && is_array( $value ) ) {
-				$this->set_props( $value );
-
-				return;
-			} elseif ( is_callable( array( $this, "set_$prop" ) ) ) {
-				$this->{"set_$prop"}( $value );
-			} else {
-				$this->set_prop( $prop, $value );
-			}
-		}
-	}
-
-	/**
-	 * Returns all data for this object.
-	 *
-	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
-	 *
-	 * @since  1.0.0
-	 * @return array
-	 */
-	public function get_data( $context = 'edit' ) {
-		$props = $this->get_props( $context );
-		if ( static::META_TYPE ) {
-			$props['metadata'] = $this->get_metadata();
-		}
-
-		return $props;
-	}
-
-	/**
-	 * Get Meta data.
-	 *
-	 * @since 1.0.0
-	 * @return array
-	 */
-	public function get_metadata() {
-		$this->read_metadata();
-		$metadata = array();
-		// Loop over the metadata and get the values. Values could be single or multiple.
-		foreach ( $this->metadata as $meta ) {
-			$metadata[ $meta->key ][] = $meta->value;
-		}
-
-		return $metadata;
-	}
-
-	/**
-	 * Set object read property.
-	 *
-	 * @param boolean $read Should read?.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	public function set_object_read( $read = true ) {
-		$this->object_read = (bool) $read;
-	}
-
-	/**
-	 * Get object read property.
-	 *
-	 * @since 1.0.0
-	 * @return boolean
-	 */
-	public function get_object_read() {
-		return $this->object_read;
-	}
-
-	/**
-	 * Get meta data.
-	 *
-	 * @param string $key Meta key.
-	 * @param bool   $single Single.
-	 *
-	 * @since 1.0.0
-	 * @return array|mixed|null
-	 */
-	public function get_meta( $key, $single = true ) {
-		if ( static::META_TYPE ) {
-			$this->read_metadata();
-			$meta = array_filter(
-				$this->metadata,
-				function ( $meta ) use ( $key ) {
-					return $meta->key === $key;
-				}
-			);
-
-			if ( $single ) {
-				$meta = current( $meta );
-
-				return $meta ? $meta->value : null;
-			}
-
-			// get all values without keys.
-			return array_values(
-				array_map(
-					function ( $meta ) {
-						return $meta->value;
-					},
-					$meta
-				)
-			);
-		}
-
-		return null;
-	}
-
-	/**
-	 * Set meta data.
-	 *
-	 * @param string $key Meta key.
-	 * @param string $value Meta value.
-	 * @param bool   $single Single.
-	 *
-	 * @since 1.0.0
-	 */
-	public function set_meta( $key, $value, $single = true ) {
-		if ( static::META_TYPE ) {
-			$this->read_metadata();
-			$meta = array_filter(
-				$this->metadata,
-				function ( $meta ) use ( $key ) {
-					return $meta->key === $key;
-				}
-			);
-
-			if ( $single ) {
-				$meta = array_map(
-					function ( $meta ) {
-						$meta->value = null;
-
-						return $meta;
-					},
-					$meta
-				);
-			}
-
-			if ( ! empty( $meta ) && $single ) {
-				$index                 = array_search( reset( $meta ), $this->metadata, true );
-				$meta[ $index ]->value = $value;
-			} else {
-				$this->metadata[] = (object) array(
-					'id'      => null,
-					'initial' => null,
-					'key'     => $key,
-					'value'   => $value,
-				);
-			}
-		}
-	}
-
-	/**
-	 * Delete meta data.
-	 *
-	 * @param string $key Meta key.
-	 * @param string $value Meta value.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	public function delete_meta( $key, $value = null ) {
-		if ( static::META_TYPE ) {
-			$this->read_metadata();
-
-			// If value is not set, delete all meta with the key. Otherwise, delete only the meta with the key and value.
-			if ( is_null( $value ) ) {
-				$this->metadata = array_filter(
-					$this->metadata,
-					function ( $meta ) use ( $key ) {
-						if ( $meta->key === $key ) {
-							$meta->value = null;
-						}
-
-						return $meta;
-					}
-				);
-			} else {
-				$this->metadata = array_filter(
-					$this->metadata,
-					function ( $meta ) use ( $key, $value ) {
-						if ( $meta->key === $key && $this->is_equal( $meta->value, $value ) ) {
-							$meta->value = null;
-						}
-
-						return $meta;
-					}
-				);
-			}
-		}
-	}
-
-	/**
-	 * Return data changes only.
-	 *
-	 * @since 1.0.0
-	 * @return array
-	 */
-	public function get_changes() {
-		return $this->changes;
-	}
-
-	/**
-	 * Set change.
-	 *
-	 * @param string $key Key.
-	 * @param mixed  $value Value.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	public function set_change( $key, $value ) {
-		$this->changes[ $key ] = $value;
-	}
-
 
 	/*
 	|--------------------------------------------------------------------------
@@ -746,6 +322,54 @@ abstract class Model {
 	| on if the order exists yet).
 	|
 	*/
+	/**
+	 * Retrieve the object from database instance.
+	 *
+	 * @param int|string $key Unique identifier for the object.
+	 *
+	 * @return object|false Object, false otherwise.
+	 * @since 1.0.0
+	 *
+	 * @global \wpdb $wpdb WordPress database abstraction object.
+	 */
+	protected function read( $key ) {
+		global $wpdb;
+		$this->set_defaults();
+
+		// Bail early if no id is set.
+		if ( empty( $key ) ) {
+			return false;
+		}
+
+		$data = $this->get_cache( $key );
+		if ( false === $data ) {
+			$data = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->{$this->table_name}} WHERE {$this->primary_key} = %s LIMIT 1;", esc_sql( $key ) ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			if ( empty( $data ) ) {
+				return false;
+			}
+			foreach ( $data as $key => $value ) {
+				if ( is_serialized( $value ) ) {
+					$data->$key = maybe_unserialize( $value );
+				}
+			}
+
+			$this->set_cache( $data->{$this->primary_key}, $data );
+		}
+
+		/**
+		 * Filters the data retrieved from the database.
+		 *
+		 * @param array $data Data retrieved from the database.
+		 * @param static $object Model object.
+		 *
+		 * @since 1.0.0
+		 */
+		$data = apply_filters( $this->get_hook_prefix() . '_db_data', (array) $data, $this );
+		$this->set_data( $data );
+		$this->set_object_read( true );
+
+		return $data;
+	}
 
 	/**
 	 *  Create an item in the database.
@@ -753,8 +377,8 @@ abstract class Model {
 	 * This method is not meant to call publicly instead call save
 	 * which will conditionally decide which method to call.
 	 *
-	 * @since 1.0.0
 	 * @return \WP_Error|true True on success, WP_Error on failure.
+	 * @since 1.0.0
 	 * @global \wpdb $wpdb WordPress database abstraction object.
 	 */
 	protected function create() {
@@ -779,19 +403,18 @@ abstract class Model {
 		/**
 		 * Filters the data to be inserted into the database.
 		 *
-		 * @param array  $data Data to be inserted.
+		 * @param array $data Data to be inserted.
 		 * @param static $object Model object.
 		 *
 		 * @since 1.0.0
 		 */
 		$data = apply_filters( $this->get_hook_prefix() . '_insert_data', $data, $this );
-
-		if ( false === $wpdb->insert( $this->table, $data, array() ) ) {
+		if ( false === $wpdb->insert( $wpdb->{$this->table_name}, $data ) ) {
 			// translators: %s: database error message.
 			return new \WP_Error( 'db_insert_error', sprintf( __( 'Could not insert item into the database error %s', 'wp-ever-accounting' ), $wpdb->last_error ) );
 		}
 
-		$this->set_id( $wpdb->insert_id );
+		$this->set_prop( $this->primary_key, $wpdb->insert_id );
 		$this->set_object_read( true );
 
 		/**
@@ -807,61 +430,13 @@ abstract class Model {
 	}
 
 	/**
-	 * Retrieve the object from database instance.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return object|false Object, false otherwise.
-	 * @global \wpdb $wpdb WordPress database abstraction object.
-	 */
-	protected function read() {
-		global $wpdb;
-		$this->set_defaults();
-		// Bail early if no id is set.
-		if ( ! $this->get_id() ) {
-			return false;
-		}
-		$data = wp_cache_get( $this->get_id(), static::CACHE_GROUP );
-		if ( false === $data ) {
-			$data = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $this->table WHERE id = %d LIMIT 1;", $this->get_id() ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		}
-		if ( ! $data ) {
-			$this->set_id( 0 );
-
-			return false;
-		}
-		$id = isset( $data->ID ) ? $data->ID : $data->id; // Support both ID and id.
-		wp_cache_add( $id, $data, static::CACHE_GROUP );
-
-		foreach ( $data as $key => $value ) {
-			if ( is_serialized( $value ) ) {
-				$data->$key = maybe_unserialize( $value );
-			}
-		}
-
-		/**
-		 * Filters the data retrieved from the database.
-		 *
-		 * @param array  $data Data retrieved from the database.
-		 * @param static $object Model object.
-		 *
-		 * @since 1.0.0
-		 */
-		$data = apply_filters( $this->get_hook_prefix() . '_db_data', (array) $data, $this );
-		$this->set_props( $data );
-		$this->set_object_read( true );
-
-		return $data;
-	}
-
-	/**
 	 *  Update an object in the database.
 	 *
 	 * This method is not meant to call publicly instead call save
 	 * which will conditionally decide which method to call.
 	 *
-	 * @since 1.0.0
 	 * @return \WP_Error|true True on success, WP_Error on failure.
+	 * @since 1.0.0
 	 * @global \wpdb $wpdb WordPress database abstraction object.
 	 */
 	protected function update() {
@@ -871,22 +446,23 @@ abstract class Model {
 		if ( empty( $changes ) ) {
 			return true;
 		}
+
 		/**
 		 * Fires immediately before an existing item is updated in the database.
 		 *
 		 * @param static $item Model object.
-		 * @param array  $changes The data will be updated.
+		 * @param array $changes The data will be updated.
 		 *
 		 * @since 1.0.0
 		 */
 		do_action( $this->get_hook_prefix() . '_pre_update', $this, $changes );
 
-		$data = wp_array_slice_assoc( $changes, $this->get_columns() );
+		$data = wp_array_slice_assoc( $changes, $this->get_core_data_keys() );
 
 		/**
 		 * Filters the data to be updated in the database.
 		 *
-		 * @param array  $data Data to be updated.
+		 * @param array $data Data to be updated.
 		 * @param static $object Model object.
 		 *
 		 * @since 1.0.0
@@ -899,7 +475,7 @@ abstract class Model {
 					$data[ $key ] = maybe_serialize( $value );
 				}
 			}
-			if ( false === $wpdb->update( $this->table, $data, [ 'id' => $this->get_id() ], array(), [ 'id' => '%d' ] ) ) {
+			if ( false === $wpdb->update( $wpdb->{$this->table_name}, $data, [ $this->primary_key => $this->get_prop( $this->primary_key ) ] ) ) {
 				return new \WP_Error( 'db_update_error', __( 'Could not update item in the database.', 'wp-ever-accounting' ), $wpdb->last_error );
 			}
 		}
@@ -908,7 +484,7 @@ abstract class Model {
 		 * Fires immediately after an existing item is updated in the database.
 		 *
 		 * @param static $item Model object.
-		 * @param array  $changes The data will be updated.
+		 * @param array $changes The data will be updated.
 		 *
 		 * @since 1.0.0
 		 */
@@ -920,8 +496,8 @@ abstract class Model {
 	/**
 	 * Deletes the object from database.
 	 *
-	 * @since 1.0.0
 	 * @return array|false true on success, false on failure.
+	 * @since 1.0.0
 	 */
 	public function delete() {
 		if ( ! $this->exists() ) {
@@ -934,7 +510,7 @@ abstract class Model {
 		 * Filters whether an item delete should take place.
 		 *
 		 * @param static $item Model object.
-		 * @param array  $data Model data array.
+		 * @param array $data Model data array.
 		 *
 		 * @since 1.0.0
 		 */
@@ -947,20 +523,18 @@ abstract class Model {
 		 * Fires before an item is deleted.
 		 *
 		 * @param static $item Model object.
-		 * @param array  $data Model data array.
+		 * @param array $data Model data array.
 		 *
 		 * @since 1.0.0
 		 */
 		do_action( $this->get_hook_prefix() . '_pre_delete', $this, $data );
 
 		global $wpdb;
-
 		$wpdb->delete(
-			$this->table,
+			$wpdb->{$this->table_name},
 			array(
-				'id' => $this->get_id(),
-			),
-			array( '%d' )
+				$this->primary_key => $this->get_prop( $this->primary_key ),
+			)
 		);
 
 		$this->delete_metadata();
@@ -969,14 +543,13 @@ abstract class Model {
 		 * Fires after a item is deleted.
 		 *
 		 * @param static $item Model object.
-		 * @param array  $data Model data array.
+		 * @param array $data Model data array.
 		 *
 		 * @since 1.0.0
 		 */
 		do_action( $this->get_hook_prefix() . '_deleted', $this, $data );
 
-		wp_cache_delete( $this->get_id(), static::CACHE_GROUP );
-		wp_cache_set( 'last_changed', microtime(), static::CACHE_GROUP );
+		$this->flush_cache();
 		$this->set_defaults();
 
 		return $data;
@@ -985,8 +558,8 @@ abstract class Model {
 	/**
 	 * Saves an object in the database.
 	 *
-	 * @since 1.0.0
 	 * @return true|\WP_Error True on success, WP_Error on failure.
+	 * @since 1.0.0
 	 */
 	public function save() {
 
@@ -1025,13 +598,12 @@ abstract class Model {
 		$this->apply_changes();
 
 		// Clear cache.
-		wp_cache_delete( $this->get_id(), static::CACHE_GROUP );
-		wp_cache_set( 'last_changed', microtime(), static::CACHE_GROUP );
+		$this->flush_cache();
 
 		/**
 		 * Fires immediately after a key is inserted or updated in the database.
 		 *
-		 * @param int    $id Key id.
+		 * @param int $id Key id.
 		 * @param static $object The object.
 		 *
 		 * @since 1.0.0
@@ -1041,84 +613,53 @@ abstract class Model {
 		return true;
 	}
 
-
 	/**
-	 * Get meta data.
+	 * Get raw metadata.
 	 *
+	 * @param bool $force Force to read metadata.
+	 *
+	 * @return array
 	 * @since 1.0.0
-	 * @return void
 	 */
-	protected function read_metadata() {
-		global $wpdb;
-		if ( static::META_TYPE && $this->exists() && ! $this->metadata_read ) {
-			// Read metadata based on meta type.
-			$table           = $wpdb->prefix . static::META_TYPE . 'meta';
-			$object_id_field = static::META_TYPE . '_id';
-			$meta_id_field   = 'user' === static::META_TYPE ? 'umeta_id' : 'meta_id';
-			$cache_key       = static::META_TYPE . '_meta';
-			$cache_group     = static::META_TYPE . '_meta';
-			$metas           = wp_cache_get( $this->get_id(), $cache_key, $cache_group );
-			if ( false === $metas ) {
-				$metas = $wpdb->get_results(
-					$wpdb->prepare(
-						"SELECT $meta_id_field as meta_id, meta_key, meta_value FROM $table WHERE $object_id_field = %d", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $object_id_field is a prepared value.
-						$this->get_id()
-					)
-				);
-				wp_cache_set( $this->get_id(), $metas, $cache_key, $cache_group );
-			}
+	protected function read_metadata( $force = false ) {
+		if ( $this->meta_type && $this->exists() && ( $force || ! $this->metadata_read ) ) {
+			global $wpdb;
+			$object_id = $this->get_prop( $this->primary_key );
+			// replace meta from the end of the meta table name. Then add id.
+			$object_id_field = $this->meta_type . '_id';
+			$meta_id_field   = 'user' === $this->meta_type ? 'umeta_id' : 'meta_id';
+			$metadata        = wp_cache_get( "meta:$object_id", $this->cache_group );
 
-			if ( $metas ) {
-				foreach ( $metas as $meta_item ) {
-					$this->metadata[] = (object) array(
-						'id'      => $meta_item->meta_id,
-						'key'     => $meta_item->meta_key,
-						'initial' => maybe_unserialize( $meta_item->meta_value ),
-						'value'   => maybe_unserialize( $meta_item->meta_value ),
-					);
-				}
+			if ( false === $metadata ) {
+				$table    = $wpdb->prefix . $this->meta_type . 'meta';
+				$metadata = $wpdb->get_results( $wpdb->prepare( "SELECT $meta_id_field as meta_id, meta_key, meta_value FROM {$table} WHERE $object_id_field = %d ORDER BY $meta_id_field ASC", $object_id ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				wp_cache_set( "meta:$object_id", $metadata, $this->cache_group );
 			}
-
+			/**
+			 * Filters the meta data for a specific meta object.
+			 *
+			 * @param array $metadata Array of metadata for the given object.
+			 * @param static $object Object object.
+			 *
+			 * @since 1.0.0
+			 */
+			$metadata = apply_filters( $this->get_hook_prefix() . '_metadata', $metadata, $this );
 			$this->metadata_read = true;
-		}
-
-		// If you must exist meta keys are not set, then initialize with empty array.
-		if ( static::META_TYPE && ! empty( $this->core_meta_keys ) ) {
-			foreach ( $this->core_meta_keys as $key ) {
-				$keys = wp_list_pluck( $this->metadata, 'key' );
-				if ( ! in_array( $key, $keys, true ) ) {
-					$this->metadata[] = (object) array(
-						'id'      => null,
-						'initial' => null,
-						'key'     => $key,
-						'value'   => null,
+			$this->metadata      = array_map(
+				function ( $meta ) {
+					return (object) array(
+						'id'      => $meta->meta_id,
+						'key'     => $meta->meta_key,
+						'initial' => maybe_unserialize( $meta->meta_value ),
+						'value'   => maybe_unserialize( $meta->meta_value ),
 					);
-				}
-			}
-		}
-	}
-
-
-	/**
-	 * Delete all meta data.
-	 *
-	 * @since 1.0.0
-	 */
-	protected function delete_metadata() {
-		global $wpdb;
-		if ( static::META_TYPE && $this->exists() ) {
-			$table           = $wpdb->prefix . static::META_TYPE . 'meta';
-			$object_id_field = static::META_TYPE . '_id';
-			$cache_key       = static::META_TYPE . '_meta';
-			$wpdb->delete(
-				$table,
-				array(
-					$object_id_field => $this->get_id(),
-				)
+				},
+				$metadata
 			);
-			$this->metadata = array();
-			wp_cache_delete( $this->get_id(), $cache_key );
+
 		}
+
+		return $this->metadata;
 	}
 
 	/**
@@ -1127,33 +668,54 @@ abstract class Model {
 	 * @since 1.0.0
 	 */
 	public function save_metadata() {
-		if ( static::META_TYPE && $this->exists() ) {
-			$this->read_metadata();
+		if ( $this->meta_type && $this->exists() ) {
 			// Get changed meta data.
 			$changed_metadata = array_filter(
-				$this->metadata,
+				$this->read_metadata(),
 				function ( $meta ) {
 					return ! $this->is_equal( $meta->initial, $meta->value );
 				}
 			);
-
-			// If id is not set, we need to add the metadata. if id is set, we need to update the metadata. if value is null, we need to delete the meta data.
+			// If id is not set, we need to add the metadata. if id is set, we need to update the metadata. if value is null, we need to delete the metadata.
 			foreach ( $changed_metadata as $key => $meta ) {
 				if ( is_null( $meta->id ) && ! empty( $meta->value ) ) {
-					$meta_id                         = add_metadata( static::META_TYPE, $this->get_id(), $meta->key, $meta->value );
+					$meta_id                         = add_metadata( $this->meta_type, $this->get_prop( $this->primary_key ), $meta->key, $meta->value );
 					$this->metadata[ $key ]->id      = $meta_id;
 					$this->metadata[ $key ]->initial = $meta->value;
-				} elseif ( empty( $meta->value ) && ! in_array( $meta->key, $this->core_meta_keys, true ) && ! is_null( $meta->id ) ) {
-					delete_metadata_by_mid( static::META_TYPE, $meta->id );
+				} elseif ( empty( $meta->value ) && ! is_null( $meta->id ) ) {
+					delete_metadata_by_mid( $this->meta_type, $meta->id );
 					unset( $this->metadata[ $key ] );
 				} elseif ( ! is_null( $meta->id ) && ! $this->is_equal( $meta->initial, $meta->value ) ) {
-					update_metadata_by_mid( static::META_TYPE, $meta->id, $meta->value );
+					update_metadata_by_mid( $this->meta_type, $meta->id, $meta->value );
 					$this->metadata[ $key ]->initial = $meta->value;
 				}
 			}
 
 			// Clear cache.
-			wp_cache_delete( $this->get_id(), static::META_TYPE . '_meta' );
+			$object_id = $this->get_prop( $this->primary_key );
+			wp_cache_delete( "meta:$object_id", $this->cache_group );
+		}
+	}
+
+	/**
+	 * Delete all meta data.
+	 *
+	 * @since 1.0.0
+	 */
+	protected function delete_metadata() {
+		global $wpdb;
+		if ( $this->meta_type && $this->exists() ) {
+			$object_id       = $this->get_prop( $this->primary_key );
+			$object_id_field = $this->meta_type . '_id';
+			$table           = $wpdb->prefix . $this->meta_type . 'meta';
+			$wpdb->delete(
+				$table,
+				array(
+					$object_id_field => $object_id,
+				)
+			);
+
+			$this->metadata = array();
 		}
 	}
 
@@ -1165,48 +727,16 @@ abstract class Model {
 	| Methods for reading and manipulating the object properties.
 	|
 	*/
-
 	/**
 	 * Retrieve the object instance.
 	 *
-	 * @param int|array|static $id Object ID or array of arguments.
-	 *
-	 * @since 1.0.0
+	 * @param int|array|static $data Object ID or array of arguments.
 	 *
 	 * @return static|false Object instance on success, false on failure.
+	 * @since 1.0.0
 	 */
-	public static function get( $id ) {
-		if ( empty( $id ) ) {
-			return false;
-		}
-
-		// If It's array, then assume its args.
-		if ( is_array( $id ) ) {
-			$args['no_count'] = true;
-			$args             = $id;
-			$items            = static::query( $args );
-			if ( ! empty( $items ) && is_array( $items ) ) {
-				return reset( $items );
-			}
-
-			return false;
-		}
-
-		if ( is_a( $id, __CLASS__ ) ) {
-			$id = $id->get_id();
-		} elseif ( is_object( $id ) ) {
-			$data = get_object_vars( $id );
-			if ( ! empty( $data['id'] ) ) {
-				$id = $data['id'];
-			}
-		}
-
-		$record = new static( $id );
-		if ( $record->exists() ) {
-			return $record;
-		}
-
-		return false;
+	public static function get( $data ) {
+		return static::get_instance()->find( $data );
 	}
 
 	/**
@@ -1215,7 +745,7 @@ abstract class Model {
 	 * @param array|object $data Model to insert or update.
 	 * @param boolean      $wp_error Optional. Whether to return a WP_Error on failure. Default false.
 	 *
-	 * @return static|false Object, false otherwise.
+	 * @return static|false|\WP_Error Object instance (success), false (failure), or WP_Error.
 	 */
 	public static function insert( $data, $wp_error = true ) {
 		if ( is_object( $data ) ) {
@@ -1225,13 +755,16 @@ abstract class Model {
 		if ( ! is_array( $data ) || empty( $data ) ) {
 			return false;
 		}
-
-		if ( ! isset( $data['id'] ) ) {
-			$data['id'] = null;
-		}
-		$class  = new \ReflectionClass( get_called_class() );
-		$object = $class->newInstance( $data['id'] );
-		$object->set_props( $data );
+		/**
+		 * Variable type hints.
+		 *
+		 * @var $object static The object instance.
+		 */
+		$primary_key = ( new static() )->get_primary_key();
+		$class       = new \ReflectionClass( get_called_class() );
+		$id          = isset( $data[ $primary_key ] ) ? $data[ $primary_key ] : 0;
+		$object      = $class->newInstance( $id );
+		$object->set_data( $data );
 		$save = $object->save();
 
 		if ( is_wp_error( $save ) ) {
@@ -1244,14 +777,25 @@ abstract class Model {
 
 		return $object->exists() ? $object : false;
 	}
+	/**
+	 * Query for objects.
+	 *
+	 * @param array $args Array of args to pass to the query method.
+	 *
+	 * @return int|static[]|object[]|int[]|string[] Query results.
+	 * @since 1.0.0
+	 */
+	public static function query( $args = array() ) {
+		return ( new static() )->all( $args );
+	}
 
 	/**
 	 * Get count of objects.
 	 *
 	 * @param array $args Array of args to pass to the query method.
 	 *
-	 * @since 1.0.0
 	 * @return int Count of objects.
+	 * @since 1.0.0
 	 */
 	public static function count( $args = array() ) {
 		$args['count'] = true;
@@ -1260,15 +804,43 @@ abstract class Model {
 	}
 
 	/**
-	 * Query for objects.
+	 * Retrieve the object instance.
 	 *
-	 * @param array $args Array of args to pass to the query method.
+	 * @param int|array|static $data Object ID or array of arguments.
 	 *
+	 * @return static|false Object instance on success, false on failure.
 	 * @since 1.0.0
-	 * @return int|static[]|object[]|int[]|string[] Query results.
 	 */
-	public static function query( $args = array() ) {
-		return ( new static() )->all( $args );
+	public function find( $data ) {
+		if ( empty( $data ) ) {
+			return false;
+		}
+
+		// If It's array, then assume its args.
+		if ( is_array( $data ) ) {
+			$args['no_count'] = true;
+			$args             = $data;
+			$items            = $this->all( $args );
+			if ( ! empty( $items ) && is_array( $items ) ) {
+				return reset( $items );
+			}
+
+			return false;
+		}
+
+		if ( is_a( $data, __CLASS__ ) ) {
+			$data = $data->get_prop( $this->primary_key );
+		} elseif ( is_object( $data ) ) {
+			$data = get_object_vars( $data );
+			$data = ! empty( $data[ $this->primary_key ] ) ? $data[ $this->primary_key ] : null;
+		}
+
+		$record = new static( $data );
+		if ( $record->exists() ) {
+			return $record;
+		}
+
+		return false;
 	}
 
 	/**
@@ -1276,8 +848,8 @@ abstract class Model {
 	 *
 	 * @param array $args Array of args to pass to the query method.
 	 *
-	 * @since 1.0.0
 	 * @return int|static[]|object[]|int[]|string[] Query results.
+	 * @since 1.0.0
 	 */
 	public function all( $args = array() ) {
 		global $wpdb;
@@ -1287,9 +859,9 @@ abstract class Model {
 		unset( $args['count'], $args['no_count'] );
 		$clauses      = $this->get_query_clauses( $args );
 		$clauses      = $this->prepare_query_clauses( $clauses, $args );
-		$last_changed = wp_cache_get_last_changed( static::CACHE_GROUP );
-		$cache_key    = static::CACHE_GROUP . ':' . md5( wp_json_encode( $clauses ) ) . ':' . $last_changed;
-		$result       = wp_cache_get( $cache_key, static::CACHE_GROUP );
+		$last_changed = wp_cache_get_last_changed( $this->cache_group );
+		$cache_key    = $this->cache_group . ':' . md5( wp_json_encode( $clauses ) ) . ':' . $last_changed;
+		$result       = wp_cache_get( $cache_key, $this->cache_group );
 
 		if ( false === $result ) {
 			// Go through each clause and add it to the query.
@@ -1329,8 +901,8 @@ abstract class Model {
 				 * Filter the query result items.
 				 *
 				 * @param string $sql SQL for finding the item count.
-				 * @param array  $items Query items.
-				 * @param array  $args Query arguments.
+				 * @param array $items Query items.
+				 * @param array $args Query arguments.
 				 *
 				 * @since 1.0.0
 				 */
@@ -1353,7 +925,7 @@ abstract class Model {
 				'total' => $total,
 			];
 
-			wp_cache_add( $cache_key, $result, static::CACHE_GROUP );
+			wp_cache_add( $cache_key, $result, $this->cache_group );
 		}
 
 		$items = isset( $result->items ) ? $result->items : array();
@@ -1365,7 +937,7 @@ abstract class Model {
 				 * Filter the query result item.
 				 *
 				 * @param object $row Query item.
-				 * @param array  $args Query arguments.
+				 * @param array $args Query arguments.
 				 *
 				 * @since 1.0.0
 				 */
@@ -1376,12 +948,8 @@ abstract class Model {
 					}
 				}
 
-				$id = isset( $row->ID ) ? $row->ID : $row->id;
-				wp_cache_add( $id, $row, static::CACHE_GROUP );
-
-				$item = new static( $id );
-				$item->set_object_read( true );
-				$item->set_props( $row );
+				$this->set_cache( $row->{$this->primary_key}, $row );
+				$item          = new static( $row );
 				$items[ $key ] = $item;
 			}
 
@@ -1419,8 +987,8 @@ abstract class Model {
 	 *
 	 * @param array $args Array of args to pass to the query method.
 	 *
-	 * @since 1.0.0
 	 * @return array
+	 * @since 1.0.0
 	 */
 	protected function prepare_query_args( $args = array() ) {
 		$default = array(
@@ -1464,8 +1032,8 @@ abstract class Model {
 	 *
 	 * @param array $args Array of args to pass to the query method.
 	 *
-	 * @since 1.0.0
 	 * @return array
+	 * @since 1.0.0
 	 */
 	protected function get_query_clauses( $args = array() ) {
 		// Query clauses.
@@ -1482,8 +1050,8 @@ abstract class Model {
 		/**
 		 * Filter the query clauses before setting up the query.
 		 *
-		 * @param array  $clauses Query clauses.
-		 * @param array  $args Query arguments.
+		 * @param array $clauses Query clauses.
+		 * @param array $args Query arguments.
 		 * @param static $this Current instance of the class.
 		 *
 		 * @since 1.0.0
@@ -1497,19 +1065,19 @@ abstract class Model {
 	 * @param array $clauses Query clauses.
 	 * @param array $args Query arguments.
 	 *
-	 * @since 1.0.0
 	 * @return array
+	 * @since 1.0.0
 	 */
 	protected function prepare_query_clauses( $clauses, $args = array() ) {
 		/**
 		 * Filter the query clauses before setting up the query.
 		 *
-		 * @param array  $clauses Query clauses.
-		 * @param array  $args Query arguments.
+		 * @param array $clauses Query clauses.
+		 * @param array $args Query arguments.
 		 * @param static $this Current instance of the class.
 		 *
-		 * @since 1.0.0
 		 * @return array
+		 * @since 1.0.0
 		 */
 		$clauses = apply_filters( $this->get_hook_prefix() . '_pre_setup_query_clauses', $clauses, $args, $this );
 
@@ -1525,12 +1093,12 @@ abstract class Model {
 		/**
 		 * Filter the query clauses after setting up the query.
 		 *
-		 * @param array  $clauses Query clauses.
-		 * @param array  $args Query arguments.
+		 * @param array $clauses Query clauses.
+		 * @param array $args Query arguments.
 		 * @param static $this Current instance of the class.
 		 *
-		 * @since 1.0.0
 		 * @return array
+		 * @since 1.0.0
 		 */
 		return apply_filters( $this->get_hook_prefix() . '_setup_query_clauses', $clauses, $args, $this );
 	}
@@ -1541,25 +1109,25 @@ abstract class Model {
 	 * @param array $clauses Query clauses.
 	 * @param array $args Array of args to pass to the query method.
 	 *
-	 * @since 1.0.0
 	 * @return array
+	 * @since 1.0.0
 	 */
 	protected function prepare_select_query( $clauses, $args = array() ) {
 		foreach ( $args['fields'] as $field ) {
 			if ( 'all' === $field ) {
-				$clauses['select'] .= $this->table_alias . '.*';
+				$clauses['select'] .= $this->table_name . '.*';
 			} elseif ( 'ids' === $field ) {
-				$clauses['select'] .= $this->table_alias . '.id';
-			} elseif ( in_array( $field, $this->get_columns(), true ) ) {
-				$clauses['select'] .= "{$this->table_alias}.{$field}";
+				$clauses['select'] .= $this->table_name . '.id';
+			} elseif ( in_array( $field, $this->get_core_data_keys(), true ) ) {
+				$clauses['select'] .= "{$this->table_name}.{$field}";
 			}
 		}
 
 		/**
 		 * Filter the select clause before setting up the query.
 		 *
-		 * @param array  $clauses Query clauses.
-		 * @param array  $args Query arguments.
+		 * @param array $clauses Query clauses.
+		 * @param array $args Query arguments.
 		 * @param static $this Current instance of the class.
 		 *
 		 * @since 1.0.0
@@ -1573,18 +1141,18 @@ abstract class Model {
 	 * @param array $clauses Query clauses.
 	 * @param array $args Array of args to pass to the query method.
 	 *
-	 * @since 1.0.0
 	 * @return array
+	 * @since 1.0.0
 	 */
 	protected function prepare_from_query( $clauses, $args = array() ) {
-
-		$clauses['from'] .= "{$this->table} as {$this->table_alias}";
+		global $wpdb;
+		$clauses['from'] .= "{$wpdb->{$this->table_name}} as {$this->table_name}";
 
 		/**
 		 * Filter the from clause before setting up the query.
 		 *
-		 * @param array  $clauses Query clauses.
-		 * @param array  $args Query arguments.
+		 * @param array $clauses Query clauses.
+		 * @param array $args Query arguments.
 		 * @param static $this Current instance of the class.
 		 *
 		 * @since 1.0.0
@@ -1598,16 +1166,16 @@ abstract class Model {
 	 * @param array $clauses Query clauses.
 	 * @param array $args Array of args to pass to the query method.
 	 *
-	 * @since 1.0.0
 	 * @return array
+	 * @since 1.0.0
 	 */
 	protected function prepare_where_query( $clauses, $args = array() ) {
 		global $wpdb;
 		/**
 		 * Filter the where clause before setting up the query.
 		 *
-		 * @param array  $clauses Query clauses.
-		 * @param array  $args Query arguments.
+		 * @param array $clauses Query clauses.
+		 * @param array $args Query arguments.
 		 * @param static $this Current instance of the class.
 		 *
 		 * @since 1.0.0
@@ -1619,7 +1187,7 @@ abstract class Model {
 		// Include clause.
 		if ( ! empty( $args['include'] ) ) {
 			$query_where[] = array(
-				'column'  => "{$this->table_alias}.id",
+				'column'  => "{$this->table_name}.id",
 				'value'   => $args['include'],
 				'compare' => 'IN',
 			);
@@ -1628,131 +1196,131 @@ abstract class Model {
 		// Exclude clause.
 		if ( ! empty( $args['exclude'] ) ) {
 			$query_where[] = array(
-				'column'  => "{$this->table_alias}.id",
+				'column'  => "{$this->table_name}.id",
 				'value'   => $args['exclude'],
 				'compare' => 'NOT IN',
 			);
 		}
 
-		foreach ( $this->get_columns() as $column ) {
+		foreach ( $this->get_core_data_keys() as $column ) {
 			// equals clause.
 			if ( ! empty( $args[ $column ] ) ) {
 				$query_where[] = [
-					'column'  => "{$this->table_alias}.{$column}",
+					'column'  => "{$this->table_name}.{$column}",
 					'value'   => $args[ $column ],
 					'compare' => false !== strpos( $column, '_ids' ) ? 'FIND_IN_SET' : '=', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 				];
 			} elseif ( ! empty( $args[ $column . '__in' ] ) ) {
 				$query_where[] = [
-					'column'  => "{$this->table_alias}.{$column}",
+					'column'  => "{$this->table_name}.{$column}",
 					'value'   => $args[ $column . '__in' ],
 					'compare' => false !== strpos( $column, '_ids' ) ? 'FIND_IN_SET' : 'IN', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 				];
 			} elseif ( ! empty( $args[ $column . '__not_in' ] ) ) {
 				// __not_in clause.
 				$query_where[] = [
-					'column'  => "{$this->table_alias}.{$column}",
+					'column'  => "{$this->table_name}.{$column}",
 					'value'   => $args[ $column . '__not_in' ],
 					'compare' => false !== strpos( $column, '_ids' ) ? 'NOT_IN_SET' : 'NOT IN', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 				];
 			} elseif ( ! empty( $args[ $column . '__between' ] ) ) {
 				// __between clause.
 				$query_where[] = [
-					'column'  => "{$this->table_alias}.{$column}",
+					'column'  => "{$this->table_name}.{$column}",
 					'value'   => $args[ $column . '__between' ],
 					'compare' => 'BETWEEN',
 				];
 			} elseif ( ! empty( $args[ $column . '__not_between' ] ) ) {
 				// __not_between clause.
 				$query_where[] = [
-					'column'  => "{$this->table_alias}.{$column}",
+					'column'  => "{$this->table_name}.{$column}",
 					'value'   => $args[ $column . '__not_between' ],
 					'compare' => 'NOT BETWEEN',
 				];
 			} elseif ( ! empty( $args[ $column . '__exists' ] ) ) {
 				// __exists clause.
 				$query_where[] = [
-					'column'  => "{$this->table_alias}.{$column}",
+					'column'  => "{$this->table_name}.{$column}",
 					'compare' => 'EXISTS',
 				];
 			} elseif ( ! empty( $args[ $column . '__not_exists' ] ) ) {
 				// __not_exists clause.
 				$query_where[] = [
-					'column'  => "{$this->table_alias}.{$column}",
+					'column'  => "{$this->table_name}.{$column}",
 					'compare' => 'NOT EXISTS',
 				];
 			} elseif ( ! empty( $args[ $column . '__like' ] ) ) {
 				// __like clause.
 				$query_where[] = [
-					'column'  => "{$this->table_alias}.{$column}",
+					'column'  => "{$this->table_name}.{$column}",
 					'value'   => $args[ $column . '__like' ],
 					'compare' => 'LIKE',
 				];
 			} elseif ( ! empty( $args[ $column . '__not_like' ] ) ) {
 				// __not_like clause.
 				$query_where[] = [
-					'column'  => "{$this->table_alias}.{$column}",
+					'column'  => "{$this->table_name}.{$column}",
 					'value'   => $args[ $column . '__not_like' ],
 					'compare' => 'NOT LIKE',
 				];
 			} elseif ( ! empty( $args[ $column . '__starts_with' ] ) ) {
 				// __starts_with clause.
 				$query_where[] = [
-					'column'  => "{$this->table_alias}.{$column}",
+					'column'  => "{$this->table_name}.{$column}",
 					'value'   => $args[ $column . '__starts_with' ],
 					'compare' => 'LIKE',
 				];
 			} elseif ( ! empty( $args[ $column . '__ends_with' ] ) ) {
 				// __ends_with clause.
 				$query_where[] = [
-					'column'  => "{$this->table_alias}.{$column}",
+					'column'  => "{$this->table_name}.{$column}",
 					'value'   => $args[ $column . '__ends_with' ],
 					'compare' => 'ENDS WITH',
 				];
 			} elseif ( ! empty( $args[ $column . '__is_null' ] ) ) {
 				// __is_null clause.
 				$query_where[] = [
-					'column'  => "{$this->table_alias}.{$column}",
+					'column'  => "{$this->table_name}.{$column}",
 					'compare' => 'IS NULL',
 				];
 			} elseif ( ! empty( $args[ $column . '__is_not_null' ] ) ) {
 				// __is_not_null clause.
 				$query_where[] = [
-					'column'  => "{$this->table_alias}.{$column}",
+					'column'  => "{$this->table_name}.{$column}",
 					'compare' => 'IS NOT NULL',
 				];
 			} elseif ( ! empty( $args[ $column . '__gt' ] ) ) {
 				// __gt clause.
 				$query_where[] = [
-					'column'  => "{$this->table_alias}.{$column}",
+					'column'  => "{$this->table_name}.{$column}",
 					'value'   => $args[ $column . '__gt' ],
 					'compare' => 'GREATER THAN',
 				];
 			} elseif ( ! empty( $args[ $column . '__lt' ] ) ) {
 				// __lt clause.
 				$query_where[] = [
-					'column'  => "{$this->table_alias}.{$column}",
+					'column'  => "{$this->table_name}.{$column}",
 					'value'   => $args[ $column . '__lt' ],
 					'compare' => 'LESS THAN',
 				];
 			} elseif ( ! empty( $args[ $column . '__find_in_set' ] ) ) {
 				// find_in_set clause.
 				$query_where[] = [
-					'column'  => "{$this->table_alias}.{$column}",
+					'column'  => "{$this->table_name}.{$column}",
 					'compare' => 'FIND_IN_SET',
 					'value'   => $args[ $column . '__find_in_set' ],
 				];
 			} elseif ( ! empty( $args[ $column . '__find_not_in_set' ] ) ) {
 				// find_in_set clause.
 				$query_where[] = [
-					'column'  => "{$this->table_alias}.{$column}",
+					'column'  => "{$this->table_name}.{$column}",
 					'compare' => 'NOT_IN_SET',
 					'value'   => $args[ $column . '__find_not_in_set' ],
 				];
 			} elseif ( ! empty( $args[ $column . '__regexp' ] ) ) {
 				// __regexp clause.
 				$query_where[] = [
-					'column'  => "{$this->table_alias}.{$column}",
+					'column'  => "{$this->table_name}.{$column}",
 					'value'   => $args[ $column . '__regexp' ],
 					'compare' => 'REGEXP',
 				];
@@ -1781,7 +1349,7 @@ abstract class Model {
 			$where_value   = $where_clause['value'];
 			$where_compare = strtoupper( $where_clause['compare'] );
 			// Column is not valid or empty. Skip.
-			if ( empty( $where_column ) || ! $this->is_valid_column( str_replace( "{$this->table_alias}.", '', $where_column ) ) ) {
+			if ( empty( $where_column ) || ! in_array( str_replace( "{$this->table_name}.", '', $where_column ), $this->get_core_data_keys(), true ) ) {
 				continue;
 			}
 			// Validate value.
@@ -1821,7 +1389,7 @@ abstract class Model {
 					break;
 				case 'EXISTS':
 				case 'NOT EXISTS':
-					$format            = "AND ( $where_compare (SELECT 1 FROM {$this->table} WHERE  $where_column = %s) )";
+					$format            = "AND ( $where_compare (SELECT 1 FROM {$this->table_name} WHERE  $where_column = %s) )";
 					$clauses['where'] .= $wpdb->prepare( $format, $where_value ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 					break;
 				case 'RLIKE':
@@ -1881,8 +1449,8 @@ abstract class Model {
 		/**
 		 * Filter the where clause before setting up the query.
 		 *
-		 * @param array  $clauses Query clauses.
-		 * @param array  $args Query arguments.
+		 * @param array $clauses Query clauses.
+		 * @param array $args Query arguments.
 		 * @param static $this Current instance of the class.
 		 *
 		 * @since 1.0.0
@@ -1896,35 +1464,35 @@ abstract class Model {
 	 * @param array $clauses Query clauses.
 	 * @param array $args Array of args to pass to the query method.
 	 *
-	 * @since 1.0.0
 	 * @return array
+	 * @since 1.0.0
 	 */
 	protected function prepare_meta_query( $clauses, $args = array() ) {
-		if ( ! static::META_TYPE ) {
+		if ( ! $this->meta_type ) {
 			return $clauses;
 		}
 
 		/**
 		 * Filter the meta query before setting up the query.
 		 *
-		 * @param array  $clauses Query clauses.
-		 * @param array  $args Query arguments.
+		 * @param array $clauses Query clauses.
+		 * @param array $args Query arguments.
 		 * @param static $this Current instance of the class.
 		 *
-		 * @since 1.0.0
 		 * @return array
+		 * @since 1.0.0
 		 */
 		$clauses = apply_filters( $this->get_hook_prefix() . '_pre_setup_meta_query', $clauses, $args, $this );
 
-		if ( ! empty( $args['meta_query'] ) ) {
-			$meta_query = new \WP_Meta_Query( $args['meta_query'] );
+		if ( ! empty( $args['meta_key'] ) || ! empty( $args['meta_query'] ) ) {
+			$meta_query = new \WP_Meta_Query();
 			$meta_query->parse_query_vars( $args );
 			if ( ! empty( $meta_query->queries ) ) {
-				$meta_clauses      = $meta_query->get_sql( static::META_TYPE, $this->table_alias, 'id' );
+				$meta_clauses      = $meta_query->get_sql( $this->meta_type, $this->table_name, 'id' );
 				$clauses['join']  .= $meta_clauses['join'];
 				$clauses['where'] .= $meta_clauses['where'];
 				if ( $meta_query->has_or_relation() ) {
-					$clauses['groupby'] .= empty( $clauses['groupby'] ) ? $this->table_alias . '.id' : ', ' . $this->table_alias . '.id';
+					$clauses['groupby'] .= empty( $clauses['groupby'] ) ? $this->table_name . '.id' : ', ' . $this->table_name . '.id';
 				}
 			}
 		}
@@ -1932,12 +1500,12 @@ abstract class Model {
 		/**
 		 * Filter the meta query after setting up the query.
 		 *
-		 * @param array  $clauses Query clauses.
-		 * @param array  $args Query arguments.
+		 * @param array $clauses Query clauses.
+		 * @param array $args Query arguments.
 		 * @param static $this Current instance of the class.
 		 *
-		 * @since 1.0.0
 		 * @return array
+		 * @since 1.0.0
 		 */
 		return apply_filters( $this->get_hook_prefix() . '_setup_meta_query', $clauses, $args, $this );
 	}
@@ -1948,19 +1516,19 @@ abstract class Model {
 	 * @param array $clauses Query clauses.
 	 * @param array $args Array of args to pass to the query method.
 	 *
-	 * @since 1.0.0
 	 * @return array
+	 * @since 1.0.0
 	 */
 	protected function prepare_date_query( $clauses, $args = array() ) {
 		/**
 		 * Filter the date query before setting up the query.
 		 *
-		 * @param array  $clauses Query clauses.
-		 * @param array  $args Query arguments.
+		 * @param array $clauses Query clauses.
+		 * @param array $args Query arguments.
 		 * @param static $this Current instance of the class.
 		 *
-		 * @since 1.0.0
 		 * @return array
+		 * @since 1.0.0
 		 */
 		$clauses = apply_filters( $this->get_hook_prefix() . '_pre_setup_date_query', $clauses, $args, $this );
 
@@ -1972,7 +1540,7 @@ abstract class Model {
 				function ( $cols ) use ( $wp_columns ) {
 					$wp_columns = $cols;
 
-					return $this->get_columns();
+					return $this->get_core_data_keys();
 				}
 			);
 
@@ -1987,7 +1555,7 @@ abstract class Model {
 					)
 				);
 
-				if ( empty( $date_query['column'] ) || ! in_array( $date_query['column'], $this->get_columns(), true ) ) {
+				if ( empty( $date_query['column'] ) || ! in_array( $date_query['column'], $this->get_core_data_keys(), true ) ) {
 					continue;
 				}
 
@@ -2009,12 +1577,12 @@ abstract class Model {
 		/**
 		 * Filter the date query after setting up the query.
 		 *
-		 * @param array  $clauses Query clauses.
-		 * @param array  $args Query arguments.
-		 * @param static $this Current instance of the class.
+		 * @param array $clauses Query clauses.
+		 * @param array $args Query arguments.
+		 * @param static $object Current instance of the class.
 		 *
-		 * @since 1.0.0
 		 * @return array
+		 * @since 1.0.0
 		 */
 		return apply_filters( $this->get_hook_prefix() . '_setup_date_query', $clauses, $args, $this );
 	}
@@ -2025,20 +1593,20 @@ abstract class Model {
 	 * @param array $clauses Query clauses.
 	 * @param array $args Array of args to pass to the query method.
 	 *
-	 * @since 1.0.0
 	 * @return array
+	 * @since 1.0.0
 	 */
 	protected function prepare_search_query( $clauses, $args = array() ) {
 		global $wpdb;
 		/**
 		 * Filter the search query before setting up the query.
 		 *
-		 * @param array  $clauses Query clauses.
-		 * @param array  $args Query arguments.
+		 * @param array $clauses Query clauses.
+		 * @param array $args Query arguments.
 		 * @param static $this Current instance of the class.
 		 *
-		 * @since 1.0.0
 		 * @return array
+		 * @since 1.0.0
 		 */
 		$clauses = apply_filters( $this->get_hook_prefix() . '_pre_setup_search_query', $clauses, $args, $this );
 
@@ -2047,25 +1615,24 @@ abstract class Model {
 			if ( ! empty( $args['search_columns'] ) ) {
 				$search_columns = wp_parse_list( $args['search_columns'] );
 			} else {
-				$search_columns = is_null( $this->search_columns ) ? $this->get_columns() : $this->search_columns;
 				/**
 				 * Filter the columns to search in when performing a search query.
 				 *
-				 * @param array  $search_columns Array of columns to search in.
-				 * @param array  $args Query arguments.
-				 * @param static $instance Current instance of the class.
+				 * @param array $search_columns Array of columns to search in.
+				 * @param array $args Query arguments.
+				 * @param static $object Current instance of the class.
 				 *
-				 * @since 1.0.0
 				 * @return array
+				 * @since 1.0.0
 				 */
-				$search_columns = apply_filters( $this->get_hook_prefix() . '_search_columns', $search_columns, $args, $this );
+				$search_columns = apply_filters( $this->get_hook_prefix() . '_search_columns', $this->get_searchable_keys(), $args, $this );
 			}
 			$search_columns = array_filter( array_unique( $search_columns ) );
 			$like           = '%' . $wpdb->esc_like( $search ) . '%';
 
 			$search_clauses = array();
 			foreach ( $search_columns as $column ) {
-				$search_clauses[] = $wpdb->prepare( $this->table_alias . '.' . $column . ' LIKE %s', $like ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+				$search_clauses[] = $wpdb->prepare( $this->table_name . '.' . $column . ' LIKE %s', $like ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 			}
 
 			if ( ! empty( $search_clauses ) ) {
@@ -2076,12 +1643,12 @@ abstract class Model {
 		/**
 		 * Filter the search query after setting up the query.
 		 *
-		 * @param array  $clauses Query clauses.
-		 * @param array  $args Query arguments.
+		 * @param array $clauses Query clauses.
+		 * @param array $args Query arguments.
 		 * @param static $this Current instance of the class.
 		 *
-		 * @since 1.0.0
 		 * @return array
+		 * @since 1.0.0
 		 */
 		return apply_filters( $this->get_hook_prefix() . '_setup_search_query', $clauses, $args, $this );
 	}
@@ -2092,19 +1659,19 @@ abstract class Model {
 	 * @param array $clauses Query clauses.
 	 * @param array $args Array of args to pass to the query method.
 	 *
-	 * @since 1.0.0
 	 * @return array
+	 * @since 1.0.0
 	 */
 	protected function prepare_join_query( $clauses, $args = array() ) {
 		/**
 		 * Filter the join query before setting up the query.
 		 *
-		 * @param array  $clauses Query clauses.
-		 * @param array  $args Query arguments.
-		 * @param static $this Current instance of the class.
+		 * @param array $clauses Query clauses.
+		 * @param array $args Query arguments.
+		 * @param static $object Current instance of the class.
 		 *
-		 * @since 1.0.0
 		 * @return array
+		 * @since 1.0.0
 		 */
 
 		$clauses = apply_filters( $this->get_hook_prefix() . '_pre_setup_join_query', $clauses, $args, $this );
@@ -2112,12 +1679,12 @@ abstract class Model {
 		/**
 		 * Filter the join query after setting up the query.
 		 *
-		 * @param array  $clauses Query clauses.
-		 * @param array  $args Query arguments.
+		 * @param array $clauses Query clauses.
+		 * @param array $args Query arguments.
 		 * @param static $this Current instance of the class.
 		 *
-		 * @since 1.0.0
 		 * @return array
+		 * @since 1.0.0
 		 */
 		return apply_filters( $this->get_hook_prefix() . '_setup_join_query', $clauses, $args, $this );
 	}
@@ -2128,31 +1695,31 @@ abstract class Model {
 	 * @param array $clauses Query clauses.
 	 * @param array $args Array of args to pass to the query method.
 	 *
-	 * @since 1.0.0
 	 * @return array
+	 * @since 1.0.0
 	 */
 	protected function prepare_group_by_query( $clauses, $args = array() ) {
 		/**
 		 * Filter the group by query before setting up the query.
 		 *
-		 * @param array  $clauses Query clauses.
-		 * @param array  $args Query arguments.
-		 * @param static $this Current instance of the class.
+		 * @param array $clauses Query clauses.
+		 * @param array $args Query arguments.
+		 * @param static $object Current instance of the class.
 		 *
-		 * @since 1.0.0
 		 * @return array
+		 * @since 1.0.0
 		 */
 		$clauses = apply_filters( $this->get_hook_prefix() . '_pre_setup_group_by_query', $clauses, $args, $this );
 
 		/**
 		 * Filter the group by query after setting up the query.
 		 *
-		 * @param array  $clauses Query clauses.
-		 * @param array  $args Query arguments.
-		 * @param static $this Current instance of the class.
+		 * @param array $clauses Query clauses.
+		 * @param array $args Query arguments.
+		 * @param static $object Current instance of the class.
 		 *
-		 * @since 1.0.0
 		 * @return array
+		 * @since 1.0.0
 		 */
 		return apply_filters( $this->get_hook_prefix() . '_setup_group_by_query', $clauses, $args, $this );
 	}
@@ -2163,31 +1730,31 @@ abstract class Model {
 	 * @param array $clauses Query clauses.
 	 * @param array $args Array of args to pass to the query method.
 	 *
-	 * @since 1.0.0
 	 * @return array
+	 * @since 1.0.0
 	 */
 	protected function prepare_having_query( $clauses, $args = array() ) {
 		/**
 		 * Filter the having query before setting up the query.
 		 *
-		 * @param array  $clauses Query clauses.
-		 * @param array  $args Query arguments.
-		 * @param static $this Current instance of the class.
+		 * @param array $clauses Query clauses.
+		 * @param array $args Query arguments.
+		 * @param static $object Current instance of the class.
 		 *
-		 * @since 1.0.0
 		 * @return array
+		 * @since 1.0.0
 		 */
 		$clauses = apply_filters( $this->get_hook_prefix() . '_pre_setup_having_query', $clauses, $args, $this );
 
 		/**
 		 * Filter the having query after setting up the query.
 		 *
-		 * @param array  $clauses Query clauses.
-		 * @param array  $args Query arguments.
-		 * @param static $this Current instance of the class.
+		 * @param array $clauses Query clauses.
+		 * @param array $args Query arguments.
+		 * @param static $object Current instance of the class.
 		 *
-		 * @since 1.0.0
 		 * @return array
+		 * @since 1.0.0
 		 */
 		return apply_filters( $this->get_hook_prefix() . '_setup_having_query', $clauses, $args, $this );
 
@@ -2199,19 +1766,19 @@ abstract class Model {
 	 * @param array $clauses Query clauses.
 	 * @param array $args Array of args to pass to the query method.
 	 *
-	 * @since 1.0.0
 	 * @return array
+	 * @since 1.0.0
 	 */
 	protected function prepare_order_by_query( $clauses, $args = array() ) {
 		/**
 		 * Filter the order by query before setting up the query.
 		 *
-		 * @param array  $clauses Query clauses.
-		 * @param array  $args Query arguments.
-		 * @param static $this Current instance of the class.
+		 * @param array $clauses Query clauses.
+		 * @param array $args Query arguments.
+		 * @param static $object Current instance of the class.
 		 *
-		 * @since 1.0.0
 		 * @return array
+		 * @since 1.0.0
 		 */
 		$clauses = apply_filters( $this->get_hook_prefix() . '_pre_setup_order_by_query', $clauses, $args, $this );
 
@@ -2238,24 +1805,24 @@ abstract class Model {
 					}
 				}
 				foreach ( $orderby as $key => $value ) {
-					if ( in_array( $key, $this->get_columns(), true ) ) {
-						$clauses['orderby'] .= "{$this->table_alias}.$key $value";
+					if ( in_array( $key, $this->get_core_data_keys(), true ) ) {
+						$clauses['orderby'] .= "{$this->table_name}.$key $value";
 					}
 				}
 			} else {
-				$clauses['orderby'] .= "{$this->table_alias}.id {$args['order']}";
+				$clauses['orderby'] .= "{$this->table_name}.id {$args['order']}";
 			}
 		}
 
 		/**
 		 * Filter the order by query after setting up the query.
 		 *
-		 * @param array  $clauses Query clauses.
-		 * @param array  $args Query arguments.
-		 * @param static $this Current instance of the class.
+		 * @param array $clauses Query clauses.
+		 * @param array $args Query arguments.
+		 * @param static $object Current instance of the class.
 		 *
-		 * @since 1.0.0
 		 * @return array
+		 * @since 1.0.0
 		 */
 		return apply_filters( $this->get_hook_prefix() . '_setup_order_by_query', $clauses, $args, $this );
 	}
@@ -2266,19 +1833,19 @@ abstract class Model {
 	 * @param array $clauses Query clauses.
 	 * @param array $args Array of args to pass to the query method.
 	 *
-	 * @since 1.0.0
 	 * @return array
+	 * @since 1.0.0
 	 */
 	protected function prepare_limit_query( $clauses, $args = array() ) {
 		/**
 		 * Filter the limit query before setting up the query.
 		 *
-		 * @param array  $clauses Query clauses.
-		 * @param array  $args Query arguments.
-		 * @param static $instance Current instance of the class.
+		 * @param array $clauses Query clauses.
+		 * @param array $args Query arguments.
+		 * @param static $object Current instance of the class.
 		 *
-		 * @since 1.0.0
 		 * @return array
+		 * @since 1.0.0
 		 */
 		$clauses = apply_filters( $this->get_hook_prefix() . '_pre_setup_limit_query', $clauses, $args, $this );
 
@@ -2302,45 +1869,478 @@ abstract class Model {
 		/**
 		 * Filter the limit query after setting up the query.
 		 *
-		 * @param array  $clauses Query clauses.
-		 * @param array  $args Query arguments.
-		 * @param static $instance Current instance of the class.
+		 * @param array $clauses Query clauses.
+		 * @param array $args Query arguments.
+		 * @param static $object Current instance of the class.
 		 *
-		 * @since 1.0.0
 		 * @return array
+		 * @since 1.0.0
 		 */
 		return apply_filters( $this->get_hook_prefix() . '_setup_limit_query', $clauses, $args, $this );
+	}
+
+
+	/*
+	|--------------------------------------------------------------------------
+	| Getters and Setters
+	|--------------------------------------------------------------------------
+	| Methods to get and set the model's properties.
+	*/
+
+	/**
+	 * Gets a prop for a getter method.
+	 *
+	 * Gets the value from either current pending changes, or the data itself.
+	 * Context controls what happens to the value before it's returned.
+	 *
+	 * @param string $prop Name of prop to get.
+	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
+	 *
+	 * @return mixed
+	 * @since  1.0.0
+	 */
+	protected function get_prop( $prop, $context = 'edit' ) {
+		$value = null;
+		if ( array_key_exists( $prop, $this->data ) ) {
+			$value = isset( $this->changes[ $prop ] ) ? $this->changes[ $prop ] : $this->data[ $prop ];
+		}
+
+		if ( 'view' === $context ) {
+			$value = apply_filters( $this->get_hook_prefix() . '_get_' . $prop, $value, $this );
+		}
+
+		return $value;
+	}
+
+	/**
+	 * Sets a prop for a setter method.
+	 *
+	 * Sets the value to the changes array, and if the model is read, also sets the value to the data array.
+	 *
+	 * @param string $prop Name of prop to set.
+	 * @param mixed  $value Value to set.
+	 *
+	 * @since 1.0.0
+	 */
+	protected function set_prop( $prop, $value ) {
+		if ( array_key_exists( $prop, $this->data ) ) {
+			if ( true === $this->object_read ) {
+				if ( $value !== $this->data[ $prop ] || array_key_exists( $prop, $this->changes ) ) {
+					$this->changes[ $prop ] = $value;
+				}
+			} else {
+				$this->data[ $prop ] = $value;
+			}
+		}
+	}
+
+	/**
+	 * Set the model's data.
+	 *
+	 * @param array|object $props Array or object of properties to set.
+	 *
+	 * @return static
+	 * @since 1.0.0
+	 */
+	public function set_data( $props ) {
+		if ( is_object( $props ) ) {
+			$props = get_object_vars( $props );
+		}
+		if ( ! is_array( $props ) ) {
+			return $this;
+		}
+
+		foreach ( $props as $prop => $value ) {
+			$prop = preg_replace( '/^[^a-zA-Z]+/', '', $prop );
+			// If the property name is id, then we will skip it.
+			// if value is array, call the same function for each item.
+			if ( 'metadata' === $prop && is_array( $value ) ) {
+				$this->set_data( $value );
+
+				return $this;
+			} elseif ( is_callable( array( $this, "set_$prop" ) ) ) {
+				$this->{"set_$prop"}( $value );
+			} else {
+				$this->set_prop( $prop, $value );
+			}
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Get the model's data.
+	 *
+	 * @return array
+	 * @since 1.0.0
+	 */
+	public function get_data() {
+		$data = array();
+		foreach ( $this->data as $key => $value ) {
+			if ( is_object( $value ) && method_exists( $value, 'get_data' ) ) {
+				$data[ $key ] = $value->get_data();
+			} else {
+				$data[ $key ] = $this->get_prop( $key, 'edit' );
+			}
+		}
+
+		return $data;
+	}
+
+	/**
+	 * Get meta data.
+	 *
+	 * @return array
+	 * @since 1.0.0
+	 */
+	public function get_metadata() {
+		$metadata = $this->read_metadata();
+		$meta     = array();
+		foreach ( $metadata as $meta_value ) {
+			if ( ! is_null( $meta_value->value ) ) {
+				$meta[ $meta_value->key ][] = $meta_value->value;
+			}
+		}
+
+		return $meta;
+	}
+
+	/**
+	 * Get meta data.
+	 *
+	 * @param string $key Meta key.
+	 * @param bool   $single Single.
+	 *
+	 * @return array|mixed|null
+	 * @since 1.0.0
+	 */
+	public function get_meta( $key, $single = true ) {
+		$meta = array_filter(
+			$this->read_metadata(),
+			function ( $meta ) use ( $key ) {
+				return $meta->key === $key;
+			}
+		);
+
+		if ( $single ) {
+			$meta = current( $meta );
+
+			return $meta ? $meta->value : null;
+		}
+
+		// get all values without keys.
+		return array_values(
+			array_map(
+				function ( $meta ) {
+					return $meta->value;
+				},
+				$meta
+			)
+		);
+	}
+
+	/**
+	 * Set meta data.
+	 *
+	 * @param string $key Meta key.
+	 * @param string $value Meta value.
+	 * @param bool   $single Single.
+	 *
+	 * @since 1.0.0
+	 */
+	public function set_meta( $key, $value, $single = true ) {
+		$meta = array_filter(
+			$this->read_metadata(),
+			function ( $meta ) use ( $key ) {
+				return $meta->key === $key;
+			}
+		);
+
+		if ( $single ) {
+			$meta = array_map(
+				function ( $meta ) {
+					$meta->value = null;
+
+					return $meta;
+				},
+				$meta
+			);
+		}
+
+		if ( ! empty( $meta ) && $single ) {
+			$index                 = array_search( reset( $meta ), $this->metadata, true );
+			$meta[ $index ]->value = $value;
+		} else {
+			$this->metadata[] = (object) array(
+				'id'      => null,
+				'initial' => null,
+				'key'     => $key,
+				'value'   => $value,
+			);
+		}
+	}
+
+	/**
+	 * Delete meta data.
+	 *
+	 * @param string $key Meta key.
+	 * @param string $value Meta value.
+	 *
+	 * @return void
+	 * @since 1.0.0
+	 */
+	public function delete_meta( $key, $value = null ) {
+		if ( is_null( $value ) ) {
+			$this->metadata = array_filter(
+				$this->read_metadata(),
+				function ( $meta ) use ( $key ) {
+					if ( $meta->key === $key ) {
+						$meta->value = null;
+					}
+
+					return $meta;
+				}
+			);
+		} else {
+			$this->metadata = array_filter(
+				$this->read_metadata(),
+				function ( $meta ) use ( $key, $value ) {
+					if ( $meta->key === $key && $this->is_equal( $meta->value, $value ) ) {
+						$meta->value = null;
+					}
+
+					return $meta;
+				}
+			);
+		}
 	}
 
 	/*
 	|--------------------------------------------------------------------------
 	| Helpers
 	|--------------------------------------------------------------------------
-	|
 	| Methods which do not modify class properties but are used by the class.
-	|
 	*/
+
+	/**
+	 * Get primary key.
+	 *
+	 * @return string
+	 * @since 1.0.0
+	 */
+	public function get_primary_key() {
+		return $this->primary_key;
+	}
+
+	/**
+	 * Get table name.
+	 *
+	 * @return string
+	 * @since 1.0.0
+	 */
+	public function get_table_name() {
+		return $this->table_name;
+	}
+
+	/**
+	 * Get meta type.
+	 *
+	 * @return string
+	 * @since 1.0.0
+	 */
+	public function get_meta_type() {
+		return $this->meta_type;
+	}
+
+	/**
+	 * Get object type.
+	 *
+	 * @return string
+	 * @since 1.0.0
+	 */
+	public function get_object_type() {
+		return $this->object_type;
+	}
+
+	/**
+	 * Get cache group.
+	 *
+	 * @return string
+	 * @since 1.0.0
+	 */
+	public function get_cache_group() {
+		return $this->cache_group;
+	}
+
+
+	/**
+	 * Get searchable keys.
+	 *
+	 * @return array
+	 * @since 1.0.0
+	 */
+	public function get_searchable_keys() {
+		return $this->get_core_data_keys();
+	}
+
+	/**
+	 * Get core data.
+	 *
+	 * @return array
+	 * @since 1.0.0
+	 */
+	public function get_core_data() {
+		return wp_array_slice_assoc( $this->get_data(), $this->get_core_data_keys() );
+	}
+
+	/**
+	 * Get extra data.
+	 *
+	 * @return array
+	 * @since 1.0.0
+	 */
+	public function get_extra_data() {
+		return wp_array_slice_assoc( $this->get_data(), array_keys( $this->extra_data ) );
+	}
+
+	/**
+	 * Get core data keys.
+	 *
+	 * @return array
+	 * @since 1.0.0
+	 */
+	public function get_core_data_keys() {
+		return array_keys( $this->core_data );
+	}
+
+	/**
+	 * Return data changes only.
+	 *
+	 * @return array
+	 * @since 1.0.0
+	 */
+	public function get_changes() {
+		return $this->changes;
+	}
+
+	/**
+	 * Set object read property.
+	 *
+	 * @param boolean $read Should read?.
+	 *
+	 * @return void
+	 * @since 1.0.0
+	 */
+	public function set_object_read( $read = true ) {
+		$this->object_read = (bool) $read;
+	}
+
+	/**
+	 * Get object read property.
+	 *
+	 * @return boolean
+	 * @since 1.0.0
+	 */
+	public function is_object_read() {
+		return true === $this->object_read;
+	}
+
+	/**
+	 * Get cache.
+	 *
+	 * @param int|string $key Primary key.
+	 *
+	 * @return mixed|false Value on success, false on failure.
+	 */
+	protected function get_cache( $key ) {
+		return wp_cache_get( $key, $this->cache_group );
+	}
+
+	/**
+	 * Set cache.
+	 *
+	 * @param string|int $key Key.
+	 * @param mixed      $value Value.
+	 */
+	protected function set_cache( $key, $value ) {
+		if ( ! empty( $value ) ) {
+			wp_cache_set( $key, $value, $this->cache_group );
+		}
+	}
+
+	/**
+	 * Delete cache.
+	 *
+	 * @param string|int $key Key.
+	 */
+	protected function delete_cache( $key ) {
+		wp_cache_delete( $key, $this->cache_group );
+	}
+
+	/**
+	 * Flush cache.
+	 *
+	 * @return void
+	 * @since 1.0.0
+	 */
+	public function flush_cache() {
+		wp_cache_flush_group( $this->cache_group );
+		wp_cache_set( 'last_changed', microtime(), $this->cache_group );
+	}
 
 	/**
 	 * Get the hook prefix.
 	 *
-	 * @since 1.0.0
 	 * @return string
+	 * @since 1.0.0
 	 */
 	public function get_hook_prefix() {
-		return 'ever_accounting_' . static::OBJECT_TYPE;
+		return 'ever_accounting_' . $this->object_type;
 	}
 
 	/**
 	 * Checks if the object is saved in the database
 	 *
-	 * @since 1.0.0
 	 * @return bool
+	 * @since 1.0.0
 	 */
 	public function exists() {
-		$id = $this->get_id();
+		return ! empty( $this->get_prop( $this->primary_key ) );
+	}
 
-		return ! empty( $id );
+	/**
+	 * Merge changes with data and clear.
+	 *
+	 * @since 1.0.0
+	 */
+	protected function apply_changes() {
+		$this->data    = array_replace_recursive( $this->data, $this->changes );
+		$this->changes = array();
+
+		if ( $this->meta_type && ! empty( $this->metadata ) ) {
+			$this->metadata = array_map(
+				function ( $meta ) {
+					$meta->initial = $meta->value;
+
+					return $meta;
+				},
+				$this->metadata
+			);
+		}
+	}
+
+	/**
+	 * Reset data.
+	 *
+	 * @return void
+	 * @since 1.0.0
+	 */
+	protected function set_defaults() {
+		$this->data          = array_merge_recursive( $this->core_data, $this->extra_data );
+		$this->changes       = array();
+		$this->object_read   = false;
+		$this->metadata_read = false;
+		$this->metadata      = array();
 	}
 
 	/**
@@ -2350,8 +2350,8 @@ abstract class Model {
 	 * @param mixed $data1 First data to compare.
 	 * @param mixed $data2 Second data to compare.
 	 *
-	 * @since 1.0.0
 	 * @return bool
+	 * @since 1.0.0
 	 */
 	public function is_equal( $data1, $data2 ) {
 		$temp = array( $data1, $data2 );
@@ -2366,13 +2366,14 @@ abstract class Model {
 		return $temp[0] === $temp[1];
 	}
 
+
 	/**
 	 * Convert string to boolean.
 	 *
 	 * @param string $value Value to convert.
 	 *
-	 * @since 1.0.0
 	 * @return bool
+	 * @since 1.0.0
 	 */
 	public function string_to_bool( $value ) {
 		if ( is_bool( $value ) ) {
@@ -2385,7 +2386,7 @@ abstract class Model {
 
 		if ( is_string( $value ) ) {
 			$value = strtolower( $value );
-			if ( 'true' === $value || 'yes' === $value || '1' === $value ) {
+			if ( 'true' === $value || 'yes' === $value || '1' === $value || 'on' === $value || 'enabled' === $value || 'active' === $value ) {
 				return true;
 			}
 		}
@@ -2398,8 +2399,8 @@ abstract class Model {
 	 *
 	 * @param bool $value Value to convert.
 	 *
-	 * @since 1.0.0
 	 * @return string
+	 * @since 1.0.0
 	 */
 	public function bool_to_string( $value ) {
 		if ( is_string( $value ) ) {
@@ -2426,8 +2427,8 @@ abstract class Model {
 	 *
 	 * @param string $value Value to convert.
 	 *
-	 * @since 1.0.0
 	 * @return int
+	 * @since 1.0.0
 	 */
 	public function string_to_int( $value ) {
 		if ( is_int( $value ) ) {
@@ -2443,7 +2444,7 @@ abstract class Model {
 		}
 
 		if ( is_string( $value ) ) {
-			return $this->string_to_int( $this->string_to_bool( $value ) );
+			return $this->string_to_bool( $value );
 		}
 
 		return 0;
@@ -2454,8 +2455,8 @@ abstract class Model {
 	 *
 	 * @param string $date Date to check.
 	 *
-	 * @since 1.0.0
 	 * @return bool
+	 * @since 1.0.0
 	 */
 	public function is_date_valid( $date ) {
 		if ( empty( preg_replace( '/[^0-9]/', '', $date ) ) ) {
@@ -2471,8 +2472,8 @@ abstract class Model {
 	 *
 	 * @param string $date Date.
 	 *
-	 * @since 1.0.0
 	 * @return string|null
+	 * @since 1.0.0
 	 */
 	public function sanitize_date( $date ) {
 		if ( empty( $date ) || '0000-00-00 00:00:00' === $date || '0000-00-00' === $date ) {
@@ -2504,81 +2505,60 @@ abstract class Model {
 	}
 
 	/**
-	 * Merge changes with data and clear.
+	 * Get date prop
 	 *
+	 * @param string $prop Name of prop to get.
+	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
+	 * @param string $format Date format.
+	 *
+	 * @return string|null
 	 * @since 1.0.0
 	 */
-	protected function apply_changes() {
-		$this->data    = array_replace_recursive( $this->data, $this->changes );
-		$this->changes = array();
+	public function get_date_prop( $prop, $context = 'edit', $format = 'Y-m-d H:i:s' ) {
+		$datetime = $this->sanitize_date( $this->get_prop( $prop ) );
 
-		if ( static::META_TYPE && ! empty( $this->metadata ) ) {
-			$this->metadata = array_map(
-				function ( $meta ) {
-					$meta->initial = $meta->value;
+		$value = $datetime ? date( $format, strtotime( $datetime ) ) : null; // @codingStandardsIgnoreLine - date() is ok here.
 
-					return $meta;
-				},
-				$this->metadata
-			);
+		if ( 'view' === $context ) {
+			$value = apply_filters( $this->get_hook_prefix() . '_get_' . $prop, $value, $this );
 		}
+
+		return $value;
 	}
 
 	/**
-	 * Is valid column.
+	 * Sets a date prop whilst handling formatting and datetime objects.
 	 *
-	 * @param string $column Column name.
+	 * @param string         $prop Name of prop to set.
+	 * @param string|integer $value Value of the prop.
+	 * @param string         $format Date format.
 	 *
 	 * @since 1.0.0
+	 */
+	public function set_date_prop( $prop, $value, $format = 'Y-m-d H:i:s' ) {
+		$date = $this->sanitize_date( $value );
+		if ( ! empty( $date ) ) {
+			$date = date( $format, strtotime( $date ) ); // @codingStandardsIgnoreLine - date() is ok here.
+		}
+		$this->set_prop( $prop, $date );
+	}
+
+	/**
+	 * Get Boolean prop.
+	 *
+	 * @param string $prop Name of prop to get.
+	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
+	 *
 	 * @return bool
-	 */
-	protected function is_valid_column( $column ) {
-		return in_array( $column, $this->get_columns(), true );
-	}
-
-	/**
-	 * Get core data.
-	 *
 	 * @since 1.0.0
-	 * @return array
 	 */
-	public function get_core_data() {
-		return wp_array_slice_assoc( array_replace_recursive( $this->data, $this->changes ), array_keys( $this->core_data ) );
-	}
+	public function get_boolean_prop( $prop, $context = 'edit' ) {
+		$value = (bool) $this->string_to_bool( $this->get_prop( $prop ) );
 
-	/**
-	 * Get core data keys.
-	 *
-	 * @since 1.0.0
-	 * @return array
-	 */
-	public function get_columns() {
-		return array_merge( array( 'id' ), array_keys( $this->core_data ) );
-	}
+		if ( 'view' === $context ) {
+			$value = apply_filters( $this->get_hook_prefix() . '_get_' . $prop, $value, $this );
+		}
 
-	/**
-	 * Set all props to default values.
-	 *
-	 * @since 1.0.0
-	 * @return static
-	 */
-	public function set_defaults() {
-		$this->data          = array_merge_recursive( $this->core_data, $this->extra_data );
-		$this->changes       = array();
-		$this->object_read   = false;
-		$this->metadata_read = false;
-		$this->metadata      = array();
-
-		return $this;
-	}
-
-	/**
-	 * Reset cached data.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	public static function remove_cache() {
-		wp_cache_delete( static::CACHE_GROUP );
+		return $value;
 	}
 }

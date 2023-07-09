@@ -31,7 +31,7 @@ $section = eac_get_input_var( 'section' );
 		<?php $list_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'search' ); ?>
 		<?php $list_table->display(); ?>
 		<input type="hidden" name="page" value="<?php echo esc_attr( $page ); ?>"/>
-		<input type="hidden" name="tab" value="<?php echo esc_attr( $tab ); ?>"/>
+		<input type="hidden" name="tab" value="general"/>
 		<input type="hidden" name="section" value="<?php echo esc_attr( $section ); ?>"/>
 	</form>
 <?php

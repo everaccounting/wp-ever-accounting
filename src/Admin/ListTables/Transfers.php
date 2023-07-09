@@ -51,8 +51,8 @@ class Transfers extends ListTable {
 			'offset'     => $this->get_offset(),
 			'status'     => $this->get_status(),
 			'search'     => $this->get_search(),
-			'order'      => $this->get_order( 'ASC' ),
-			'orderby'    => $this->get_orderby( 'date_paid' ),
+			'order'      => $this->get_order( 'desc' ),
+			'orderby'    => $this->get_orderby( 'created_at' ),
 			'account_id' => eac_get_input_var( 'account_id' ),
 		);
 
@@ -121,21 +121,21 @@ class Transfers extends ListTable {
 				exit;
 			}
 
-			foreach ( $ids as $id ) { // Check the permissions on each.
-				switch ( $doaction ) {
-					case 'delete':
-						eac_delete_transfer( $id );
-						break;
-				}
-			}
-
-			// Based on the action add notice.
 			switch ( $doaction ) {
 				case 'delete':
-					$notice = __( 'Transfer(s) deleted successfully.', 'wp-ever-accounting' );
+					$changed = 0;
+
+					foreach ( $ids as $id ) {
+						if ( eac_delete_transfer( $id ) ) {
+							$changed ++;
+						}
+					}
+
+					eac_add_notice( sprintf( __( '%s transfer(s) deleted successfully.', 'wp-ever-accounting' ), number_format_i18n( $changed ) ), 'success' );
+
 					break;
+
 			}
-			eac_add_notice( $notice, 'success' );
 
 			wp_safe_redirect( admin_url( 'admin.php?page=eac-banking&tab=transfers' ) );
 			exit();
@@ -227,7 +227,7 @@ class Transfers extends ListTable {
 		$actions    = array(
 			'id'     => sprintf( '<strong>#%d</strong>', esc_attr( $item->get_id() ) ),
 			'edit'   => sprintf( '<a href="%s">%s</a>', esc_url( $edit_url ), __( 'Edit', 'wp-ever-accounting' ) ),
-			'delete' => sprintf( '<a href="%s" class="del">%s</a>', esc_url( wp_nonce_url( $delete_url, 'bulk-accounts' ) ), __( 'Delete', 'wp-ever-accounting' ) ),
+			'delete' => sprintf( '<a href="%s" class="del">%s</a>', esc_url( wp_nonce_url( $delete_url, 'bulk-transfers' ) ), __( 'Delete', 'wp-ever-accounting' ) ),
 		);
 		return sprintf( '<a href="%s">%s</a> %s', esc_url( $edit_url ), esc_html( $item->get_date() ), $this->row_actions( $actions ) );
 	}

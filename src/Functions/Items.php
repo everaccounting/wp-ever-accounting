@@ -7,8 +7,8 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Get item units
  *
- * @since 1.1.6
  * @return array
+ * @since 1.1.6
  */
 function eac_get_unit_types() {
 	return apply_filters(
@@ -45,15 +45,16 @@ function eac_get_unit_types() {
 /**
  * Get item types.
  *
- * @since 1.1.6
  * @return array
+ * @since 1.1.6
  */
 function eac_get_item_types() {
 	return apply_filters(
 		'ever_accounting_item_types',
 		array(
-			'product' => __( 'Product', 'wp-ever-accounting' ),
-			'service' => __( 'Service', 'wp-ever-accounting' ),
+			'standard' => __( 'Standard', 'wp-ever-accounting' ),
+			'shipping' => __( 'Shipping', 'wp-ever-accounting' ),
+			'fee'      => __( 'Fee', 'wp-ever-accounting' ),
 		)
 	);
 }
@@ -63,8 +64,8 @@ function eac_get_item_types() {
  *
  * @param mixed $item Product object.
  *
- * @since 1.1.0
  * @return Item|null
+ * @since 1.1.0
  */
 function eac_get_item( $item ) {
 	return Item::get( $item );
@@ -78,8 +79,8 @@ function eac_get_item( $item ) {
  * @param array $data Product data.
  * @param bool  $wp_error Optional. Whether to return a WP_Error on failure. Default false.
  *
- * @since 1.1.0
  * @return Item|WP_Error|bool
+ * @since 1.1.0
  */
 function eac_insert_item( $data, $wp_error = true ) {
 	return Item::insert( $data, $wp_error );
@@ -90,8 +91,8 @@ function eac_insert_item( $data, $wp_error = true ) {
  *
  * @param int $item_id Product ID.
  *
- * @since 1.1.0
  * @return bool
+ * @since 1.1.0
  */
 function eac_delete_item( $item_id ) {
 	$item = eac_get_item( $item_id );
@@ -108,8 +109,8 @@ function eac_delete_item( $item_id ) {
  * @param array $args Query arguments.
  * @param bool  $count Return only the total found items.
  *
- * @since 1.1.0
  * @return array|int|Item[]
+ * @since 1.1.0
  */
 function eac_get_items( $args = array(), $count = false ) {
 	$defaults = array(

@@ -39,7 +39,7 @@ class Sales extends \EverAccounting\Admin\SettingsTab {
 	protected function get_own_sections() {
 		$sections = array(
 			''         => __( 'Options', 'wp-ever-accounting' ),
-			'invoices' => __( 'Invoices', 'wp-ever-accounting' )
+			'invoices' => __( 'Invoices', 'wp-ever-accounting' ),
 		);
 
 		return $sections;
@@ -52,8 +52,9 @@ class Sales extends \EverAccounting\Admin\SettingsTab {
 	 * @since 1.0.0
 	 */
 	protected function get_settings_for_default_section() {
-		$payment_accounts   = eac_get_accounts( array( 'include' => get_option( 'eac_default_payment_account' ) ) );
-		$payment_categories = eac_get_categories( array( 'include' => get_option( 'eac_default_payment_category' ) ) );
+		$payment_accounts   = eac_get_accounts( array( 'include' => get_option( 'eac_default_sales_account_id' ) ) );
+		$payment_categories = eac_get_categories( array( 'include' => get_option( 'eac_default_sales_category_id' ) ) );
+
 		return array(
 			// Sales defaults section.
 			array(
@@ -66,7 +67,7 @@ class Sales extends \EverAccounting\Admin\SettingsTab {
 			array(
 				'title'       => __( 'Sales Account', 'wp-ever-accounting' ),
 				'desc'        => __( 'The default account to which the payments will be credited.', 'wp-ever-accounting' ),
-				'id'          => 'eac_default_sales_account',
+				'id'          => 'eac_default_sales_account_id',
 				'type'        => 'select',
 				'options'     => wp_list_pluck( $payment_accounts, 'formatted_name', 'id' ),
 				'default'     => '',
@@ -83,7 +84,7 @@ class Sales extends \EverAccounting\Admin\SettingsTab {
 			array(
 				'title'       => __( 'Sales Category', 'wp-ever-accounting' ),
 				'desc'        => __( 'The default category for sales.', 'wp-ever-accounting' ),
-				'id'          => 'eac_default_sales_category',
+				'id'          => 'eac_default_sales_category_id',
 				'type'        => 'select',
 				'default'     => '',
 				'options'     => wp_list_pluck( $payment_categories, 'formatted_name', 'id' ),
@@ -95,7 +96,7 @@ class Sales extends \EverAccounting\Admin\SettingsTab {
 					'data-type'   => 'payment_category',
 				),
 			),
-			//tax.
+			// tax.
 			array(
 				'title'       => __( 'Sales Taxes', 'wp-ever-accounting' ),
 				'desc'        => __( 'The default tax for sales.', 'wp-ever-accounting' ),

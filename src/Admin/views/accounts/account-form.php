@@ -58,19 +58,29 @@ defined( 'ABSPATH' ) || exit();
 					array(
 						'id'          => 'currency_code',
 						'label'       => __( 'Currency', 'wp-ever-accounting' ),
-						'type'        => 'currency',
+						'type'        => 'select',
 						'placeholder' => __( 'Select Account Currency', 'wp-ever-accounting' ),
 						'value'       => $account->get_currency_code(),
 						'class'       => 'eac-col-6',
 						'required'    => true,
 						'input_class' => 'eac-select2',
+						'options'     => wp_list_pluck(
+							eac_get_currencies(
+								[
+									'status' => 'active',
+									'limit'  => - 1,
+								]
+							),
+							'formatted_name',
+							'code'
+						),
 					)
 				);
 				eac_form_field(
 					array(
 						'id'          => 'opening_balance',
 						'label'       => __( 'Opening Balance', 'wp-ever-accounting' ),
-						'type'        => 'decimal',
+						'type'        => 'text',
 						'placeholder' => __( '0.00', 'wp-ever-accounting' ),
 						'tooltip'     => __( 'Initial balance of this account.', 'wp-ever-accounting' ),
 						'value'       => $account->get_opening_balance(),

@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
  * @return bool
  */
 function eac_tax_enabled() {
-	return apply_filters( 'ever_accounting_tax_enabled', get_option( 'eac_enabled_tax', 'no' ) === 'yes' );
+	return apply_filters( 'ever_accounting_tax_enabled', get_option( 'eac_tax_enabled', 'no' ) === 'yes' );
 }
 
 /**
@@ -44,18 +44,18 @@ function eac_price_includes_tax() {
  */
 function eac_calculate_taxes( $amount, $rates, $inclusive = false ) {
 	$default_data = array(
-		'rate_id'     => 0,
+		'tax_id'      => 0,
 		'rate'        => 0,
 		'is_compound' => 'no',
 	);
 	foreach ( $rates as $key => $rate ) {
-		if ( is_a( $rate, '\EverAccounting\Models\DocumentLineTax' ) ) {
+		if ( is_a( $rate, '\EverAccounting\Models\DocumentItemTax' ) ) {
 			$rate = $rate->get_data();
 		} elseif ( is_object( $rate ) ) {
 			$rate = get_object_vars( $rate );
 		}
 		// If rate id is not set, use then continue.
-		if ( empty( $rate['rate_id'] ) ) {
+		if ( empty( $rate['tax_id'] ) ) {
 			unset( $rates[ $key ] );
 			continue;
 		}
@@ -101,21 +101,21 @@ function eac_calculate_taxes( $amount, $rates, $inclusive = false ) {
 		}
 	}
 
-	return wp_list_pluck( $rates, 'amount', 'rate_id' );
+	return wp_list_pluck( $rates, 'amount', 'tax_id' );
 }
 
 /**
  * Get tax rate.
  *
- * @param int $rate_id Tax rate ID.
+ * @param mixed $data Tax rate ID.
  *
  * @since 1.1.0
  *
  * @since 1.1.0
  * @return Tax|null
  */
-function eac_get_tax( $rate_id ) {
-	return Tax::get( $rate_id );
+function eac_get_tax( $data ) {
+	return Tax::get( $data );
 }
 
 /**

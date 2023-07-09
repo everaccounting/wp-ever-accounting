@@ -19,7 +19,7 @@ class Media extends Model {
 	 * @since 1.0.0
 	 * @var string
 	 */
-	const TABLE_NAME = 'ea_media';
+	public $table_name = 'ea_media';
 
 	/**
 	 * Object type.
@@ -27,7 +27,7 @@ class Media extends Model {
 	 * @since 1.0.0
 	 * @var string
 	 */
-	const OBJECT_TYPE = 'media';
+	public $object_type = 'media';
 
 	/**
 	 * Cache group.

@@ -414,9 +414,6 @@ class BasePlugin {
 		$ver  = $asset['version'];
 
 		wp_register_script( $handle, $url, $deps, $ver, $in_footer );
-
-		// Add script to the list of registered scripts.
-		$this->scripts[] = $handle;
 	}
 
 	/**

@@ -28,12 +28,12 @@ $utilities: (
 	),
 	"display": (
 		property: display,
-		class: display,
+		class: d,
 		values: inline inline-block block flex inline-flex none
 	),
 	"max-width": (
 		property: max-width,
-		class: max-width,
+		class: mw,
 		values: (
 			50: 50%,
 			100: 100%,
@@ -44,7 +44,7 @@ $utilities: (
 	),
 	"max-height": (
 		property: max-height,
-		class: max-height,
+		class: mh,
 		values: (100: 100%)
 	),
 	// Flex Utility Classes
@@ -114,82 +114,72 @@ $utilities: (
 	"margin": (
 		responsive: true,
 		property: margin,
-		class: margin,
+		class: m,
 		values: map-merge($spacers, (auto: auto))
 	),
 	"margin-x": (
 		responsive: true,
 		property: margin-right margin-left,
-		class: margin-x,
+		class: mx,
 		values: map-merge($spacers, (auto: auto))
 	),
 	"margin-y": (
 		responsive: true,
 		property: margin-top margin-bottom,
-		class: margin-y,
+		class: my,
 		values: map-merge($spacers, (auto: auto))
 	),
 	"margin-top": (
 		responsive: true,
 		property: margin-top,
-		class: margin-top,
+		class: mt,
 		values: map-merge($spacers, (auto: auto))
 	),
 	"margin-bottom": (
 		responsive: true,
 		property: margin-bottom,
-		class: margin-bottom,
+		class: mb,
 		values: map-merge($spacers, (auto: auto))
 	),
 	"margin-start": (
 		property: margin-left,
-		class: margin-start,
+		class: m-start,
 		values: map-merge($spacers, (auto: auto))
 	),
 	// Padding utilities
 	"padding": (
 		responsive: true,
 		property: padding,
-		class: padding,
+		class: p,
 		values: $spacers
 	),
 	"padding-x": (
 		responsive: true,
 		property: padding-right padding-left,
-		class: padding-x,
+		class: px,
 		values: $spacers
 	),
 	"padding-y": (
 		responsive: true,
 		property: padding-top padding-bottom,
-		class: padding-y,
+		class: py,
 		values: $spacers
 	),
 	"padding-top": (
 		responsive: true,
 		property: padding-top,
-		class: padding-top,
+		class: pt,
 		values: $spacers
 	),
 	"padding-bottom": (
 		responsive: true,
 		property: padding-bottom,
-		class: padding-bottom,
+		class: pb,
 		values: $spacers
-	),
-	"text-align": (
-		responsive: true,
-		property: text-align,
-		class: text,
-		values: (
-			start: left,
-			end: right,
-			center: center,
-		)
 	),
 	"border" : (
 		property: border,
-		class: border,
+		class: b,
 		values: (
 			null: 1px solid #e1e2e2,
 			0: 0,
@@ -197,7 +187,7 @@ $utilities: (
 	),
 	"border-top" : (
 		property: border-top,
-		class: border-top,
+		class: bt,
 		values: (
 			null: 1px solid #e1e2e2,
 			0: 0,
@@ -205,7 +195,7 @@ $utilities: (
 	),
 	"border-bottom" : (
 		property: border-bottom,
-		class: border-bottom,
+		class: bb,
 		values: (
 			null: 1px solid #e1e2e2,
 			0: 0,
@@ -213,7 +203,7 @@ $utilities: (
 	),
 	"border-start" : (
 		property: border-left,
-		class: border-start,
+		class: b-start,
 		values: (
 			null: 1px solid #e1e2e2,
 			0: 0,
@@ -221,28 +211,19 @@ $utilities: (
 	),
 	"border-end" : (
 		property: border-right,
-		class: border-end,
+		class: b-end,
 		values: (
 			null: 1px solid #e1e2e2,
 			0: 0,
 		)
 	),
-	//"background-color": (
-	//	property: background,
-	//	class: background,
-	//	values: (
-	//		transparent: transparent,
-	//		white: '#fff',
-	//	)
-	//),
 );
-// generate generate-utilities using generate-utilities mixins.
 @include generate-utilities($utilities);
 
 
 /*------------------------------------------------------------------------------
 Overflows
 ------------------------------------------------------------------------------*/
-.overflow-x {
+.eac-overflow-x {
 	overflow-x: auto;
 }

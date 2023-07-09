@@ -20,7 +20,7 @@ class Item extends Model {
 	 * @since 1.0.0
 	 * @var string
 	 */
-	const TABLE_NAME = 'ea_items';
+	public $table_name = 'ea_items';
 
 	/**
 	 * Object type.
@@ -28,15 +28,7 @@ class Item extends Model {
 	 * @since 1.0.0
 	 * @var string
 	 */
-	const OBJECT_TYPE = 'item';
-
-	/**
-	 * Cache group.
-	 *
-	 * @since 1.0.0
-	 * @var string
-	 */
-	const CACHE_GROUP = 'ea_items';
+	public $object_type = 'item';
 
 	/**
 	 * Core data for this object. Name value pairs (name + default value).
@@ -45,17 +37,19 @@ class Item extends Model {
 	 * @var array
 	 */
 	protected $core_data = array(
-		'name'        => '',
-		'type'        => '',
-		'price'       => 0.0000,
-		'unit'        => 'unit',
-		'description' => '',
-		'category_id' => null,
-		'taxable'     => 'no',
-		'tax_ids'     => '',
-		'status'      => 'active',
-		'updated_at'  => null,
-		'created_at'  => null,
+		'id'           => null,
+		'name'         => '',
+		'type'         => 'standard',
+		'description'  => '',
+		'price'        => 0.0000,
+		'cost'         => 0.0000,
+		'unit'         => '',
+		'taxable'      => 0,
+		'tax_ids'      => '',
+		'category_id'  => null,
+		'status'       => 'active',
+		'date_updated' => null,
+		'date_created' => null,
 	);
 
 	/**
@@ -66,8 +60,46 @@ class Item extends Model {
 	 * @since 1.0.0
 	 */
 	public function __construct( $data = 0 ) {
-		$this->core_data['taxable'] = eac_tax_enabled();
+		$this->core_data['taxable'] = $this->string_to_int( eac_tax_enabled() );
 		parent::__construct( $data );
+	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| CRUD methods
+	|--------------------------------------------------------------------------
+	|
+	| Methods which create, read, update and delete discounts from the database.
+	|
+	*/
+	/**
+	 * Saves an object in the database.
+	 *
+	 * @return true|\WP_Error True on success, WP_Error on failure.
+	 * @since 1.0.0
+	 */
+	public function save() {
+		// Required fields check.
+		if ( empty( $this->get_name() ) ) {
+			return new \WP_Error( 'required_missing', __( 'Item name is required.', 'wp-ever-accounting' ) );
+		}
+
+		// If date created is not set, set it to now.
+		if ( empty( $this->get_date_created() ) ) {
+			$this->set_date_created( current_time( 'mysql' ) );
+		}
+
+		// type.
+		if ( empty( $this->get_type() ) ) {
+			$this->set_type( 'standard' );
+		}
+
+		// If It's update, set the updated date.
+		if ( $this->exists() ) {
+			$this->set_date_updated( current_time( 'mysql' ) );
+		}
+
+		return parent::save();
 	}
 
 	/*
@@ -79,13 +111,33 @@ class Item extends Model {
 	|
 	*/
 	/**
+	 * Get id.
+	 *
+	 * @return int
+	 * @since 1.0.0
+	 */
+	public function get_id() {
+		return (int) $this->get_prop( 'id' );
+	}
+
+	/**
+	 * Set id.
+	 *
+	 * @param int $id
+	 *
+	 * @since 1.0.0
+	 */
+	public function set_id( $id ) {
+		$this->set_prop( 'id', absint( $id ) );
+	}
+
+	/**
 	 * Get the type.
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @return mixed|null
+	 * @since 1.0.2
 	 */
 	public function get_type( $context = 'edit' ) {
 		return $this->get_prop( 'type', $context );
@@ -111,8 +163,8 @@ class Item extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @since 1.1.0
 	 * @return mixed|null
+	 * @since 1.1.0
 	 */
 	public function get_name( $context = 'edit' ) {
 		return $this->get_prop( 'name', $context );
@@ -134,8 +186,8 @@ class Item extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @since 1.1.0
 	 * @return mixed|null
+	 * @since 1.1.0
 	 */
 	public function get_price( $context = 'edit' ) {
 		return $this->get_prop( 'price', $context );
@@ -157,8 +209,8 @@ class Item extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @since 1.1.0
 	 * @return mixed|null
+	 * @since 1.1.0
 	 */
 	public function get_unit( $context = 'edit' ) {
 		return $this->get_prop( 'unit', $context );
@@ -180,8 +232,8 @@ class Item extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @since 1.1.0
 	 * @return mixed|null
+	 * @since 1.1.0
 	 */
 	public function get_description( $context = 'edit' ) {
 		return $this->get_prop( 'description', $context );
@@ -203,8 +255,8 @@ class Item extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @since 1.1.0
 	 * @return mixed|null
+	 * @since 1.1.0
 	 */
 	public function get_category_id( $context = 'edit' ) {
 		return $this->get_prop( 'category_id', $context );
@@ -226,8 +278,8 @@ class Item extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @since 1.1.0
 	 * @return string
+	 * @since 1.1.0
 	 */
 	public function get_taxable( $context = 'edit' ) {
 		return $this->get_prop( 'taxable', $context );
@@ -241,8 +293,7 @@ class Item extends Model {
 	 * @since 1.1.0
 	 */
 	public function set_taxable( $taxable ) {
-		$taxable = $this->bool_to_string( $taxable );
-		$this->set_prop( 'taxable', $this->bool_to_string( $taxable ) );
+		$this->set_prop( 'taxable', $this->string_to_int( $taxable ) );
 	}
 
 	/**
@@ -250,8 +301,8 @@ class Item extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @since 1.1.0
 	 * @return mixed|null
+	 * @since 1.1.0
 	 */
 	public function get_tax_ids( $context = 'edit' ) {
 		$tax_ids = $this->get_prop( 'tax_ids', $context );
@@ -289,8 +340,8 @@ class Item extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @since 1.0.2
 	 * @return string
+	 * @since 1.0.2
 	 */
 	public function get_status( $context = 'edit' ) {
 		return $this->get_prop( 'status', $context );
@@ -316,17 +367,17 @@ class Item extends Model {
 	 *
 	 * @return string
 	 */
-	public function get_updated_at( $context = 'edit' ) {
-		return $this->get_prop( 'updated_at', $context );
+	public function get_date_updated( $context = 'edit' ) {
+		return $this->get_prop( 'date_updated', $context );
 	}
 
 	/**
 	 * Set the date updated.
 	 *
-	 * @param string $updated_at date updated.
+	 * @param string $date date updated.
 	 */
-	public function set_updated_at( $updated_at ) {
-		$this->set_date_prop( 'updated_at', $updated_at );
+	public function set_date_updated( $date ) {
+		$this->set_date_prop( 'date_updated', $date );
 	}
 
 	/**
@@ -336,56 +387,17 @@ class Item extends Model {
 	 *
 	 * @return string
 	 */
-	public function get_created_at( $context = 'edit' ) {
-		return $this->get_prop( 'created_at', $context );
+	public function get_date_created( $context = 'edit' ) {
+		return $this->get_prop( 'date_created', $context );
 	}
 
 	/**
 	 * Set the date created.
 	 *
-	 * @param string $created_at date created.
+	 * @param string $date_created date created.
 	 */
-	public function set_created_at( $created_at ) {
-		$this->set_date_prop( 'created_at', $created_at );
-	}
-
-
-	/*
-	|--------------------------------------------------------------------------
-	| CRUD methods
-	|--------------------------------------------------------------------------
-	|
-	| Methods which create, read, update and delete discounts from the database.
-	|
-	*/
-	/**
-	 * Saves an object in the database.
-	 *
-	 * @since 1.0.0
-	 * @return true|\WP_Error True on success, WP_Error on failure.
-	 */
-	public function save() {
-		// Required fields check.
-		if ( empty( $this->get_name() ) ) {
-			return new \WP_Error( 'required_missing', __( 'Item name is required.', 'wp-ever-accounting' ) );
-		}
-
-		// If date created is not set, set it to now.
-		if ( empty( $this->get_created_at() ) ) {
-			$this->set_created_at( current_time( 'mysql' ) );
-		}
-
-		// type.
-		if ( empty( $this->get_type() ) ) {
-			$this->set_type( 'product' );
-		}
-
-		// If It's update, set the updated date.
-		if ( $this->exists() ) {
-			$this->set_updated_at( current_time( 'mysql' ) );
-		}
-
-		return parent::save();
+	public function set_date_created( $date_created ) {
+		$this->set_date_prop( 'date_created', $date_created );
 	}
 
 	/*
@@ -409,19 +421,18 @@ class Item extends Model {
 	/**
 	 * Is taxable?
 	 *
-	 * @since 1.0.0
 	 * @return bool
+	 * @since 1.0.0
 	 */
 	public function is_taxable() {
-		return 'yes' === $this->get_taxable();
+		return (bool) $this->get_taxable();
 	}
 
 	/**
 	 * Is the enabled?
 	 *
-	 * @since 1.0.2
-	 *
 	 * @return bool
+	 * @since 1.0.2
 	 */
 	public function is_enabled() {
 		return 'active' === $this->get_status();
@@ -430,8 +441,8 @@ class Item extends Model {
 	/**
 	 * Get formatted name.
 	 *
-	 * @since 1.1.6
 	 * @return string
+	 * @since 1.1.6
 	 */
 	public function get_formatted_name() {
 		return sprintf( '%s (#%s)', $this->get_name(), $this->get_id() );

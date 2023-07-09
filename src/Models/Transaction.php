@@ -19,7 +19,7 @@ class Transaction extends Model {
 	 * @since 1.0.0
 	 * @var string
 	 */
-	const TABLE_NAME = 'ea_transactions';
+	public $table_name = 'ea_transactions';
 
 	/**
 	 * Object type.
@@ -27,15 +27,7 @@ class Transaction extends Model {
 	 * @since 1.0.0
 	 * @var string
 	 */
-	const OBJECT_TYPE = 'transaction';
-
-	/**
-	 * Cache group.
-	 *
-	 * @since 1.0.0
-	 * @var string
-	 */
-	const CACHE_GROUP = 'ea_transactions';
+	public $object_type = 'transaction';
 
 	/**
 	 * Meta type declaration for the object.
@@ -43,7 +35,7 @@ class Transaction extends Model {
 	 * @since 1.0.0
 	 * @var string
 	 */
-	const META_TYPE = 'transaction';
+	public $meta_type = 'ea_transaction';
 
 	/**
 	 * Core data for this object. Name value pairs (name + default value).
@@ -52,7 +44,8 @@ class Transaction extends Model {
 	 * @var array
 	 */
 	protected $core_data = array(
-		'type'           => 'payment',
+		'id'             => null,
+		'type'           => '',
 		'number'         => '',
 		'date'           => null,
 		'amount'         => 0.00,
@@ -60,18 +53,19 @@ class Transaction extends Model {
 		'exchange_rate'  => 1,    // exchange rate of transaction currency to base currency.
 		'reference'      => '',   // reference number or other identifier for the transaction.
 		'note'           => '',   // additional notes about the transaction.
+		'payment_method' => '',   // method of payment used for the transaction.
 		'account_id'     => null, // ID of the account associated with the transaction.
 		'document_id'    => null, // ID of the document associated with the transaction.
 		'contact_id'     => null, // ID of the contact associated with the transaction.
 		'category_id'    => null, // ID of the category associated with the transaction.
-		'payment_method' => '',   // method of payment used for the transaction.
 		'attachment_id'  => null, // ID of any attachments associated with the transaction.
 		'parent_id'      => 0,    // ID of the parent transaction, if any.
 		'reconciled'     => 0,    // whether the transaction has been reconciled.
-		'creator_id'     => null, // ID of the user who created the transaction.
 		'uuid'           => '',   // token used for payment processing, if any.
-		'updated_at'     => null, // date and time the transaction was last updated.
-		'created_at'     => null, // date and time the transaction was created.
+		'created_via'    => 'manual',   // how the transaction was created, e.g. 'import', 'manual', 'api
+		'creator_id'     => null, // ID of the user who created the transaction.
+		'date_updated'   => null, // date and time the transaction was last updated.
+		'date_created'   => null, // date and time the transaction was created.
 	);
 
 	/**
@@ -82,7 +76,7 @@ class Transaction extends Model {
 	 * @since 1.0.0
 	 */
 	public function __construct( $data = 0 ) {
-		$this->core_data['uuid']          = eac_generate_uuid();
+		$this->core_data['uuid']          = wp_generate_uuid4();
 		$this->core_data['currency_code'] = eac_get_base_currency();
 		parent::__construct( $data );
 	}
@@ -95,14 +89,34 @@ class Transaction extends Model {
 	| Methods for getting and setting data.
 	|
 	*/
+	/**
+	 * Get id.
+	 *
+	 * @return int
+	 * @since 1.0.0
+	 */
+	public function get_id() {
+		return (int) $this->get_prop( 'id' );
+	}
+
+	/**
+	 * Set id.
+	 *
+	 * @param int $id
+	 *
+	 * @since 1.0.0
+	 */
+	public function set_id( $id ) {
+		$this->set_prop( 'id', absint( $id ) );
+	}
 
 	/**
 	 * Transaction type.
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @since 1.0.2
 	 * @return mixed|null
+	 * @since 1.0.2
 	 */
 	public function get_type( $context = 'edit' ) {
 		return $this->get_prop( 'type', $context );
@@ -126,8 +140,8 @@ class Transaction extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @since 1.1.0
 	 * @return mixed|null
+	 * @since 1.1.0
 	 */
 	public function get_number( $context = 'edit' ) {
 		if ( ! $this->exists() && empty( $this->data['number'] ) ) {
@@ -153,8 +167,8 @@ class Transaction extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @since 1.0.2
 	 * @return string
+	 * @since 1.0.2
 	 */
 	public function get_date( $context = 'edit' ) {
 		return $this->get_date_prop( 'date', $context, 'Y-m-d' );
@@ -176,8 +190,8 @@ class Transaction extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @since 1.0.2
 	 * @return mixed|null
+	 * @since 1.0.2
 	 */
 	public function get_amount( $context = 'edit' ) {
 		return $this->get_prop( 'amount', $context );
@@ -200,8 +214,8 @@ class Transaction extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @since 1.0.2
 	 * @return mixed|null
+	 * @since 1.0.2
 	 */
 	public function get_currency_code( $context = 'edit' ) {
 		return $this->get_prop( 'currency_code', $context );
@@ -223,8 +237,8 @@ class Transaction extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @since 1.0.2
 	 * @return mixed|null
+	 * @since 1.0.2
 	 */
 	public function get_exchange_rate( $context = 'edit' ) {
 		return $this->get_prop( 'exchange_rate', $context );
@@ -246,8 +260,8 @@ class Transaction extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @since 1.0.2
 	 * @return mixed|null
+	 * @since 1.0.2
 	 */
 	public function get_reference( $context = 'edit' ) {
 		return $this->get_prop( 'reference', $context );
@@ -269,8 +283,8 @@ class Transaction extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @since 1.0.2
 	 * @return mixed|null
+	 * @since 1.0.2
 	 */
 	public function get_note( $context = 'edit' ) {
 		return $this->get_prop( 'note', $context );
@@ -292,8 +306,8 @@ class Transaction extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @since 1.0.2
 	 * @return mixed|null
+	 * @since 1.0.2
 	 */
 	public function get_account_id( $context = 'edit' ) {
 		return $this->get_prop( 'account_id', $context );
@@ -316,8 +330,8 @@ class Transaction extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @since 1.0.2
 	 * @return mixed|null
+	 * @since 1.0.2
 	 */
 	public function get_document_id( $context = 'edit' ) {
 		return $this->get_prop( 'document_id', $context );
@@ -340,8 +354,8 @@ class Transaction extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @since 1.0.2
 	 * @return mixed|null
+	 * @since 1.0.2
 	 */
 	public function get_contact_id( $context = 'edit' ) {
 		return $this->get_prop( 'contact_id', $context );
@@ -364,8 +378,8 @@ class Transaction extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @since 1.0.2
 	 * @return mixed|null
+	 * @since 1.0.2
 	 */
 	public function get_customer_id( $context = 'edit' ) {
 		return $this->get_contact_id( $context );
@@ -376,8 +390,8 @@ class Transaction extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @since 1.0.2
 	 * @return mixed|null
+	 * @since 1.0.2
 	 */
 	public function get_category_id( $context = 'edit' ) {
 		return $this->get_prop( 'category_id', $context );
@@ -399,8 +413,8 @@ class Transaction extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @since 1.0.2
 	 * @return mixed|null
+	 * @since 1.0.2
 	 */
 	public function get_payment_method( $context = 'edit' ) {
 		return $this->get_prop( 'payment_method', $context );
@@ -424,8 +438,8 @@ class Transaction extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @since 1.0.2
 	 * @return mixed|null
+	 * @since 1.0.2
 	 */
 	public function get_attachment_id( $context = 'edit' ) {
 		return $this->get_prop( 'attachment_id', $context );
@@ -447,8 +461,8 @@ class Transaction extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @since 1.0.2
 	 * @return mixed|null
+	 * @since 1.0.2
 	 */
 	public function get_parent_id( $context = 'edit' ) {
 		return $this->get_prop( 'parent_id', $context );
@@ -470,8 +484,8 @@ class Transaction extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @since 1.0.2
 	 * @return bool
+	 * @since 1.0.2
 	 */
 	public function get_reconciled( $context = 'edit' ) {
 		return (bool) $this->get_prop( 'reconciled', $context );
@@ -536,17 +550,17 @@ class Transaction extends Model {
 	 *
 	 * @return string
 	 */
-	public function get_updated_at( $context = 'edit' ) {
-		return $this->get_prop( 'updated_at', $context );
+	public function get_date_updated( $context = 'edit' ) {
+		return $this->get_prop( 'date_updated', $context );
 	}
 
 	/**
 	 * Set the date updated.
 	 *
-	 * @param string $updated_at date updated.
+	 * @param string $date_updated date updated.
 	 */
-	public function set_updated_at( $updated_at ) {
-		$this->set_date_prop( 'updated_at', $updated_at );
+	public function set_date_updated( $date_updated ) {
+		$this->set_date_prop( 'date_updated', $date_updated );
 	}
 
 	/**
@@ -556,17 +570,17 @@ class Transaction extends Model {
 	 *
 	 * @return string
 	 */
-	public function get_created_at( $context = 'edit' ) {
-		return $this->get_prop( 'created_at', $context );
+	public function get_date_created( $context = 'edit' ) {
+		return $this->get_prop( 'date_created', $context );
 	}
 
 	/**
 	 * Set the date created.
 	 *
-	 * @param string $created_at date created.
+	 * @param string $date_created date created.
 	 */
-	public function set_created_at( $created_at ) {
-		$this->set_date_prop( 'created_at', $created_at );
+	public function set_date_created( $date_created ) {
+		$this->set_date_prop( 'date_created', $date_created );
 	}
 
 	/*
@@ -580,8 +594,8 @@ class Transaction extends Model {
 	/**
 	 * Saves an object in the database.
 	 *
-	 * @since 1.0.0
 	 * @return true|\WP_Error True on success, WP_Error on failure.
+	 * @since 1.0.0
 	 */
 	public function save() {
 		// We must have an account id.
@@ -600,12 +614,12 @@ class Transaction extends Model {
 
 		// If It's update, set the updated date.
 		if ( $this->exists() ) {
-			$this->set_updated_at( current_time( 'mysql' ) );
+			$this->set_date_updated( current_time( 'mysql' ) );
 		}
 
 		// If date created is not set, set it to now.
-		if ( empty( $this->get_created_at() ) ) {
-			$this->set_created_at( current_time( 'mysql' ) );
+		if ( empty( $this->get_date_created() ) ) {
+			$this->set_date_created( current_time( 'mysql' ) );
 		}
 
 		// if number is not set, set it to the next available number from database based on type.
@@ -613,7 +627,18 @@ class Transaction extends Model {
 			$this->set_number( $this->get_next_number() );
 		}
 
-		// todo if document id is set, the amount should be the same as the document amount.
+		// If the currency code is not as same as the account currency code, convert the amount to the account currency.
+		$account = eac_get_account( $this->get_account_id() );
+		if ( empty( $account ) ) {
+			return new \WP_Error( 'invalid_account', __( 'Invalid account.', 'wp-ever-accounting' ) );
+		}
+		if ( $this->get_currency_code() !== $account->get_currency_code() ) {
+			$this->set_amount( eac_convert_money( $this->get_amount(), $this->get_currency_code(), $account->get_currency_code() ) );
+		}
+
+		if ( empty( $this->get_uuid() ) ) {
+			$this->set_uuid( eac_generate_uuid() );
+		}
 
 		return parent::save();
 	}
@@ -624,14 +649,14 @@ class Transaction extends Model {
 	 * @param array $clauses Query clauses.
 	 * @param array $args Array of args to pass to the query method.
 	 *
-	 * @since 1.0.0
 	 * @return array
+	 * @since 1.0.0
 	 */
 	protected function prepare_order_by_query( $clauses, $args = array() ) {
 		if ( ! empty( $args['orderby'] ) && 'amount' === $args['orderby'] ) {
 			$order = strtoupper( $args['order'] );
 			// divide by currency rate to get the amount in the account currency and then cast to decimal and order by.
-			$clauses['orderby'] = 'CAST( ' . $this->table_alias . '.amount / ' . $this->table_alias . '.exchange_rate AS DECIMAL( 20, 4 ) ) ' . $order . ' ';
+			$clauses['orderby'] = 'CAST( ' . $this->table_name . '.amount / ' . $this->table_name . '.exchange_rate AS DECIMAL( 20, 4 ) ) ' . $order . ' ';
 		}
 
 		return parent::prepare_order_by_query( $clauses, $args );
@@ -649,15 +674,15 @@ class Transaction extends Model {
 	/**
 	 * Get max voucher number.
 	 *
-	 * @since 1.0.0
 	 * @return string
+	 * @since 1.0.0
 	 */
 	public function get_max_number() {
 		global $wpdb;
 
 		return (int) $wpdb->get_var(
 			$wpdb->prepare(
-				"SELECT MAX(REGEXP_REPLACE(number, '[^0-9]', '')) FROM {$this->table} WHERE type = %s",
+				"SELECT MAX(REGEXP_REPLACE(number, '[^0-9]', '')) FROM {$wpdb->{$this->table_name}} WHERE type = %s",
 				$this->get_type()
 			)
 		);
@@ -666,8 +691,8 @@ class Transaction extends Model {
 	/**
 	 * Get voucher number prefix.
 	 *
-	 * @since 1.0.2
 	 * @return string
+	 * @since 1.0.2
 	 */
 	public function get_number_prefix() {
 		return strtoupper( substr( $this->get_type(), 0, 3 ) ) . '-';
@@ -676,8 +701,8 @@ class Transaction extends Model {
 	/**
 	 * Get voucher number digits.
 	 *
-	 * @since 1.0.0
 	 * @return int
+	 * @since 1.0.0
 	 */
 	public function get_number_digits() {
 		return 6;
@@ -686,8 +711,8 @@ class Transaction extends Model {
 	/**
 	 * Set next transaction number.
 	 *
-	 * @since 1.0.0
 	 * @return string
+	 * @since 1.0.0
 	 */
 	public function get_next_number() {
 		$number = $this->get_max_number();
@@ -703,10 +728,36 @@ class Transaction extends Model {
 	/**
 	 * Get formatted amount.
 	 *
-	 * @since 1.0.2
 	 * @return string
+	 * @since 1.0.2
 	 */
 	public function get_formatted_amount() {
 		return eac_format_money( $this->get_amount(), $this->get_currency_code() );
+	}
+
+	/**
+	 * Get formatted address.
+	 *
+	 * @return string
+	 * @since 1.1.6
+	 */
+	public function get_formatted_address() {
+		$contact = eac_get_contact( $this->get_contact_id() );
+		if ( empty( $contact ) ) {
+			return '';
+		}
+
+		return eac_get_formatted_address(
+			array(
+				'name'      => $contact->get_name(),
+				'company'   => $contact->get_company(),
+				'address_1' => $contact->get_address_1(),
+				'address_2' => $contact->get_address_2(),
+				'city'      => $contact->get_city(),
+				'state'     => $contact->get_state(),
+				'postcode'  => $contact->get_postcode(),
+				'country'   => $contact->get_country(),
+			)
+		);
 	}
 }

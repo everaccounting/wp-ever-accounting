@@ -42,14 +42,15 @@ defined( 'ABSPATH' ) || exit;
 				);
 				eac_form_field(
 					array(
-						'id'       => 'rate',
-						'label'    => __( 'Exchange Rate', 'wp-ever-accounting' ),
-						'type'     => 'decimal',
-						'value'    => $currency->get_rate(),
-						'class'    => 'eac-col-6',
-						'required' => true,
+						'id'        => 'exchange_rate',
+						'label'     => __( 'Exchange Rate', 'wp-ever-accounting' ),
+						'data_type' => 'decimal',
+						'value'     => $currency->is_base_currency() ? 1 : $currency->get_exchange_rate(),
+						'class'     => 'eac-col-6',
+						'readonly'  => $currency->is_base_currency() ? 'readonly' : false,
+						'required'  => true,
 						// translators: %s is the base currency.
-						'prefix'   => sprintf( __( '1 %s =', 'wp-ever-accounting' ), eac_get_base_currency() ),
+						'prefix'    => sprintf( __( '1 %s =', 'wp-ever-accounting' ), eac_get_base_currency() ),
 					)
 				);
 				eac_form_field(
@@ -76,10 +77,10 @@ defined( 'ABSPATH' ) || exit;
 				<?php
 				eac_form_field(
 					array(
-						'id'       => 'thousands_separator',
+						'id'       => 'thousand_separator',
 						'label'    => __( 'Thousand Separator', 'wp-ever-accounting' ),
 						'type'     => 'text',
-						'value'    => $currency->get_thousands_separator(),
+						'value'    => $currency->get_thousand_separator(),
 						'class'    => 'eac-col-6',
 						'required' => true,
 					)

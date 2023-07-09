@@ -53,8 +53,8 @@ class Purchases extends \EverAccounting\Admin\SettingsTab {
 	 * @since 1.0.0
 	 */
 	protected function get_settings_for_default_section() {
-		$expense_accounts   = eac_get_accounts( array( 'include' => get_option( 'eac_default_expense_account' ) ) );
-		$expense_categories = eac_get_categories( array( 'include' => get_option( 'eac_default_expense_category' ) ) );
+		$expense_accounts   = eac_get_accounts( array( 'include' => get_option( 'eac_default_expenses_account_id' ) ) );
+		$expense_categories = eac_get_categories( array( 'include' => get_option( 'eac_default_expense_category_id' ) ) );
 
 		return array(
 			// Purchase defaults section.
@@ -68,7 +68,7 @@ class Purchases extends \EverAccounting\Admin\SettingsTab {
 			array(
 				'title'       => __( 'Purchases Account', 'wp-ever-accounting' ),
 				'desc'        => __( 'The default account to which the expense will be debited.', 'wp-ever-accounting' ),
-				'id'          => 'eac_default_expenses_account',
+				'id'          => 'eac_default_expenses_account_id',
 				'type'        => 'select',
 				'options'     => wp_list_pluck( $expense_accounts, 'formatted_name', 'id' ),
 				'default'     => '',
@@ -84,7 +84,7 @@ class Purchases extends \EverAccounting\Admin\SettingsTab {
 			array(
 				'title'       => __( 'Purchases Category', 'wp-ever-accounting' ),
 				'desc'        => __( 'The default category for purchases.', 'wp-ever-accounting' ),
-				'id'          => 'eac_default_purchases_category',
+				'id'          => 'eac_default_expense_category_id',
 				'type'        => 'select',
 				'options'     => wp_list_pluck( $expense_categories, 'formatted_name', 'id' ),
 				'placeholder' => __( 'Select a category&hellip;', 'wp-ever-accounting' ),
@@ -95,7 +95,7 @@ class Purchases extends \EverAccounting\Admin\SettingsTab {
 					'data-type'   => 'expense_category',
 				),
 			),
-			//tax.
+			// tax.
 			array(
 				'title'       => __( 'Purchases Taxes', 'wp-ever-accounting' ),
 				'desc'        => __( 'The default tax for purchases.', 'wp-ever-accounting' ),

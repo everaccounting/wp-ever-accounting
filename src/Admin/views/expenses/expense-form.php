@@ -9,7 +9,18 @@
  */
 
 defined( 'ABSPATH' ) || exit();
-
+$accounts   = eac_get_accounts(
+	array(
+		'include'  => $expense->get_account_id(),
+		'no_count' => true,
+	)
+);
+$categories = eac_get_categories(
+	array(
+		'include'  => $expense->get_category_id(),
+		'no_count' => true,
+	)
+);
 ?>
 <form id="eac-expense-form" class="eac-ajax-form" method="post">
 	<div class="eac-card">
@@ -21,7 +32,7 @@ defined( 'ABSPATH' ) || exit();
 				<?php
 				eac_form_field(
 					array(
-						'type'        => 'date',
+						'data_type'   => 'date',
 						'name'        => 'date',
 						'label'       => __( 'Date', 'wp-ever-accounting' ),
 						'placeholder' => 'YYYY-MM-DD',
@@ -37,6 +48,7 @@ defined( 'ABSPATH' ) || exit();
 						'label'       => __( 'Account', 'wp-ever-accounting' ),
 						'value'       => $expense->get_account_id(),
 						'placeholder' => __( 'Select account', 'wp-ever-accounting' ),
+						'options'     => wp_list_pluck( $accounts, 'formatted_name', 'id' ),
 						'required'    => true,
 						'class'       => 'eac-col-6',
 						'input_class' => 'eac-select2',
@@ -70,6 +82,7 @@ defined( 'ABSPATH' ) || exit();
 						'required'    => true,
 						'class'       => 'eac-col-6 display-none',
 						'prefix'      => sprintf( '1 %s =', eac_get_base_currency() ),
+						'suffix'      => sprintf( '%s', $expense->get_currency_code() ),
 						'style'       => count( eac_get_currencies() ) > 1 ? '' : 'display:none',
 					)
 				);
@@ -80,6 +93,7 @@ defined( 'ABSPATH' ) || exit();
 						'label'       => __( 'Category', 'wp-ever-accounting' ),
 						'value'       => $expense->get_category_id(),
 						'placeholder' => __( 'Select category', 'wp-ever-accounting' ),
+						'options'     => wp_list_pluck( $categories, 'formatted_name', 'id' ),
 						'required'    => true,
 						'class'       => 'eac-col-6',
 						'input_class' => 'eac-select2',
@@ -171,7 +185,7 @@ defined( 'ABSPATH' ) || exit();
 	</div>
 
 	<?php wp_nonce_field( 'eac_edit_expense' ); ?>
-	<input type="hidden" name="currency" value="<?php echo esc_attr( $expense->get_currency_code() ); ?>">
+	<input type="hidden" name="currency_code" value="<?php echo esc_attr( $expense->get_currency_code() ); ?>">
 	<input type="hidden" name="action" value="eac_edit_expense">
 	<input type="hidden" name="id" value="<?php echo esc_attr( $expense->get_id() ); ?>">
 </form>

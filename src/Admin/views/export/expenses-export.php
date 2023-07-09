@@ -19,14 +19,15 @@ defined( 'ABSPATH' ) || exit();
 			<div class="eac-columns">
 				<div class="eac-col-6">
 					<?php
-					eac_input_field(
+					eac_form_field(
 						array(
-							'type'        => 'category',
-							'subtype'     => 'expense',
+							'type'        => 'select',
 							'name'        => 'category_id',
 							'placeholder' => __( 'Export all categories', 'wp-ever-accounting' ),
 							'label'       => __( 'Filter by category', 'wp-ever-accounting' ),
 							'default'     => '',
+							'input_class' => 'eac-select2',
+							'attrs'       => 'data-action=eac_json_search&data-type=expense_category&data-allow_clear=true',
 						)
 					)
 					?>

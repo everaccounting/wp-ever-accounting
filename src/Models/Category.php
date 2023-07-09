@@ -19,7 +19,7 @@ class Category extends Model {
 	 * @since 1.0.0
 	 * @var string
 	 */
-	const TABLE_NAME = 'ea_categories';
+	public $table_name = 'ea_categories';
 
 	/**
 	 * Object type.
@@ -27,15 +27,7 @@ class Category extends Model {
 	 * @since 1.0.0
 	 * @var string
 	 */
-	const OBJECT_TYPE = 'category';
-
-	/**
-	 * Cache group.
-	 *
-	 * @since 1.0.0
-	 * @var string
-	 */
-	const CACHE_GROUP = 'ea_categories';
+	public $object_type = 'category';
 
 	/**
 	 * Core data for this object. Name value pairs (name + default value).
@@ -44,14 +36,75 @@ class Category extends Model {
 	 * @var array
 	 */
 	protected $core_data = array(
-		'name'        => '',
-		'type'        => '',
-		'description' => '',
-		'status'      => 'active',
-		'parent_id'   => null,
-		'updated_at'  => '',
-		'created_at'  => '',
+		'id'           => null,
+		'name'         => '',
+		'type'         => '',
+		'description'  => '',
+		'status'       => 'active',
+		'date_updated' => null,
+		'date_created' => null,
 	);
+
+	/**
+	 * When the object is cloned, make sure meta is duplicated correctly.
+	 *
+	 * @since 1.0.0
+	 */
+	public function __clone() {
+		parent::__clone();
+		$this->set_name( $this->get_name() . ' ' . __( '(Copy)', 'wp-ever-accounting' ) );
+		$this->set_date_updated( null );
+		$this->set_date_created( current_time( 'mysql' ) );
+	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| CRUD methods
+	|--------------------------------------------------------------------------
+	|
+	| Methods which create, read, update and delete discounts from the database.
+	|
+	*/
+	/**
+	 * Saves an object in the database.
+	 *
+	 * @return true|\WP_Error True on success, WP_Error on failure.
+	 * @since 1.0.0
+	 */
+	public function save() {
+		// Required fields check.
+		if ( empty( $this->get_name() ) ) {
+			return new \WP_Error( 'missing_required', __( 'Category name is required.', 'wp-ever-accounting' ) );
+		}
+
+		// Type check.
+		if ( empty( $this->get_type() ) ) {
+			return new \WP_Error( 'missing_required', __( 'Category type is required.', 'wp-ever-accounting' ) );
+		}
+
+		// Duplicate check.
+		$category = $this->get(
+			array(
+				'name' => $this->get_name(),
+				'type' => $this->get_type(),
+			)
+		);
+		if ( $category && $category->get_id() !== $this->get_id() ) {
+			return new \WP_Error( 'duplicate-error', __( 'Category name already exists.', 'wp-ever-accounting' ) );
+		}
+
+		// If date created is not set, set it to now.
+		if ( empty( $this->get_date_created() ) ) {
+			$this->set_date_created( current_time( 'mysql' ) );
+		}
+
+		// If It's update, set the updated date.
+		if ( $this->exists() ) {
+			$this->set_date_updated( current_time( 'mysql' ) );
+		}
+
+		return parent::save();
+	}
 
 	/*
 	|--------------------------------------------------------------------------
@@ -63,13 +116,33 @@ class Category extends Model {
 	*/
 
 	/**
+	 * Get id.
+	 *
+	 * @return int
+	 * @since 1.0.0
+	 */
+	public function get_id() {
+		return (int) $this->get_prop( 'id' );
+	}
+
+	/**
+	 * Set id.
+	 *
+	 * @param int $id
+	 *
+	 * @since 1.0.0
+	 */
+	public function set_id( $id ) {
+		$this->set_prop( 'id', absint( $id ) );
+	}
+
+	/**
 	 * Get category name.
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @return mixed|null
+	 * @since 1.0.2
 	 */
 	public function get_name( $context = 'edit' ) {
 		return $this->get_prop( 'name', $context );
@@ -91,9 +164,8 @@ class Category extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @return mixed|null
+	 * @since 1.0.2
 	 */
 	public function get_type( $context = 'edit' ) {
 		return $this->get_prop( 'type', $context );
@@ -117,9 +189,8 @@ class Category extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @return mixed|null
+	 * @since 1.0.2
 	 */
 	public function get_description( $context = 'edit' ) {
 		return $this->get_prop( 'description', $context );
@@ -141,8 +212,8 @@ class Category extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @since 1.0.2
 	 * @return string
+	 * @since 1.0.2
 	 */
 	public function get_status( $context = 'edit' ) {
 		return $this->get_prop( 'status', $context );
@@ -162,14 +233,22 @@ class Category extends Model {
 	}
 
 	/**
-	 * Is the category active?
+	 * Get created via.
 	 *
-	 * @since 1.0.2
-	 *
-	 * @return bool
+	 * @param  string $context What the value is for. Valid values are view and edit.
+	 * @return string
 	 */
-	public function is_active() {
-		return 'active' === $this->get_status();
+	public function get_created_via( $context = 'view' ) {
+		return $this->get_prop( 'created_via', $context );
+	}
+
+	/**
+	 * Set created via.
+	 *
+	 * @param string $value Created via.
+	 */
+	public function set_created_via( $value ) {
+		$this->set_prop( 'created_via', $value );
 	}
 
 	/**
@@ -179,17 +258,17 @@ class Category extends Model {
 	 *
 	 * @return string
 	 */
-	public function get_updated_at( $context = 'edit' ) {
-		return $this->get_prop( 'updated_at', $context );
+	public function get_date_updated( $context = 'edit' ) {
+		return $this->get_prop( 'date_updated', $context );
 	}
 
 	/**
 	 * set the date updated.
 	 *
-	 * @param string $updated_at date updated.
+	 * @param string $date date updated.
 	 */
-	public function set_updated_at( $updated_at ) {
-		$this->set_date_prop( 'updated_at', $updated_at );
+	public function set_date_updated( $date ) {
+		$this->set_date_prop( 'date_updated', $date );
 	}
 
 	/**
@@ -199,66 +278,47 @@ class Category extends Model {
 	 *
 	 * @return string
 	 */
-	public function get_created_at( $context = 'edit' ) {
-		return $this->get_prop( 'created_at', $context );
+	public function get_date_created( $context = 'edit' ) {
+		return $this->get_prop( 'date_created', $context );
 	}
 
 	/**
 	 * set the date created.
 	 *
-	 * @param string $created_at date created.
+	 * @param string $date date created.
 	 */
-	public function set_created_at( $created_at ) {
-		$this->set_date_prop( 'created_at', $created_at );
+	public function set_date_created( $date ) {
+		$this->set_date_prop( 'date_created', $date );
 	}
+
 
 	/*
 	|--------------------------------------------------------------------------
-	| CRUD methods
+	| Conditionals methods
 	|--------------------------------------------------------------------------
-	|
-	| Methods which create, read, update and delete discounts from the database.
-	|
+	| Methods that check an object's status, typically based on internal or meta data.
 	*/
+
 	/**
-	 * Saves an object in the database.
+	 * Is the category active?
 	 *
-	 * @since 1.0.0
-	 * @return true|\WP_Error True on success, WP_Error on failure.
+	 * @return bool
+	 * @since 1.0.2
 	 */
-	public function save() {
-		// Required fields check.
-		if ( empty( $this->get_name() ) ) {
-			return new \WP_Error( 'missing_required', __( 'Category name is required.', 'wp-ever-accounting' ) );
-		}
+	public function is_active() {
+		return 'active' === $this->get_status();
+	}
 
-		// Type check.
-		if ( empty( $this->get_type() ) ) {
-			return new \WP_Error( 'missing_required', __( 'Category type is required.', 'wp-ever-accounting' ) );
-		}
-
-		// Duplicate check.
-		$category = $this->get(
-			array(
-				'name' => $this->get_name(),
-				'type' => $this->get_type(),
-			)
-		);
-		if ( $category->get_id() !== $this->get_id() ) {
-			return new \WP_Error( 'duplicate-error', __( 'Category name already exists.', 'wp-ever-accounting' ) );
-		}
-
-		// If date created is not set, set it to now.
-		if ( empty( $this->get_created_at() ) ) {
-			$this->set_created_at( current_time( 'mysql' ) );
-		}
-
-		// If It's update, set the updated date.
-		if ( $this->exists() ) {
-			$this->set_updated_at( current_time( 'mysql' ) );
-		}
-
-		return parent::save();
+	/**
+	 * Check if order has been created via admin, checkout, or in another way.
+	 *
+	 * @param string $modes Created via.
+	 *
+	 * @since 1.5.6
+	 * @return bool
+	 */
+	public function is_created_via( $modes ) {
+		return $modes === $this->get_created_via();
 	}
 
 	/*

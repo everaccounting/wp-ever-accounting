@@ -39,7 +39,7 @@ class Admin extends \EverAccounting\Singleton {
 		Items::instantiate();
 		Banking::instantiate();
 		Misc::instantiate();
-		Overview::instantiate();
+		Dashboard::instantiate();
 		Purchases::instantiate();
 		Reports::instantiate();
 		Sales::instantiate();

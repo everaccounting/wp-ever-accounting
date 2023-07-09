@@ -19,7 +19,7 @@ class Account extends Model {
 	 * @since 1.0.0
 	 * @var string
 	 */
-	const TABLE_NAME = 'ea_accounts';
+	public $table_name = 'ea_accounts';
 
 	/**
 	 * Object type.
@@ -27,15 +27,7 @@ class Account extends Model {
 	 * @since 1.0.0
 	 * @var string
 	 */
-	const OBJECT_TYPE = 'account';
-
-	/**
-	 * Cache group.
-	 *
-	 * @since 1.0.0
-	 * @var string
-	 */
-	const CACHE_GROUP = 'ea_accounts';
+	public $object_type = 'account';
 
 	/**
 	 * Core data for this object. Name value pairs (name + default value).
@@ -44,18 +36,20 @@ class Account extends Model {
 	 * @var array
 	 */
 	protected $core_data = array(
-		'type'            => 'bank',
-		'name'            => '',
+		'id'              => null,
+		'name'            => '', // Unique and required.
+		'type'            => 'bank', //
 		'number'          => '',
 		'opening_balance' => 0.0000,
 		'bank_name'       => null,
 		'bank_phone'      => null,
 		'bank_address'    => null,
-		'status'          => 'active',
 		'currency_code'   => 'USD',
+		'status'          => 'active',
+		'uuid'            => null,
 		'creator_id'      => null,
-		'updated_at'      => null,
-		'created_at'      => null,
+		'date_updated'    => null,
+		'date_created'    => null,
 	);
 
 	/**
@@ -77,39 +71,115 @@ class Account extends Model {
 	 */
 	public function __construct( $data = 0 ) {
 		$this->core_data['currency_code'] = eac_get_base_currency();
+		$this->core_data['uuid']          = wp_generate_uuid4();
+		$this->core_data['creator_id']    = get_current_user_id();
+		$this->core_data['date_created']  = current_time( 'mysql' );
 		parent::__construct( $data );
+	}
+
+	/**
+	 * When the object is cloned, make sure meta is duplicated correctly.
+	 *
+	 * @since 1.0.0
+	 */
+	public function __clone() {
+		parent::__clone();
+		$this->set_number( '' );
+		$this->set_name( $this->get_name() . ' ' . __( '(Copy)', 'wp-ever-accounting' ) );
+		$this->set_uuid( wp_generate_uuid4() );
+		$this->set_date_updated( null );
+		$this->set_date_created( current_time( 'mysql' ) );
+	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| CRUD methods
+	|--------------------------------------------------------------------------
+	|
+	| Methods which create, read, update and delete discounts from the database.
+	|
+	*/
+	/**
+	 * Saves an object in the database.
+	 *
+	 * @return true|\WP_Error True on success, WP_Error on failure.
+	 * @since 1.0.0
+	 */
+	public function save() {
+		// Required fields check.
+		if ( empty( $this->get_name() ) ) {
+			return new \WP_Error( 'missing_required', __( 'Account name is required.', 'wp-ever-accounting' ) );
+		}
+
+		// Number fields check.
+		if ( empty( $this->get_number() ) ) {
+			return new \WP_Error( 'missing_required', __( 'Account number is required.', 'wp-ever-accounting' ) );
+		}
+
+		// Currency fields check.
+		if ( empty( $this->get_currency_code() ) ) {
+			return new \WP_Error( 'missing_required', __( 'Account currency is required.', 'wp-ever-accounting' ) );
+		}
+
+		// Duplicate account number check.
+		$account = $this->find(
+			[
+				'number' => $this->get_number(),
+			]
+		);
+		if ( ! empty( $account ) && $account->get_id() !== $this->get_id() ) {
+			return new \WP_Error( 'duplicate_account_number', __( 'Account number already exists.', 'wp-ever-accounting' ) );
+		}
+
+		// Creator ID.
+		if ( empty( $this->get_creator_id() ) && ! $this->exists() && is_user_logged_in() ) {
+			$this->set_creator_id( get_current_user_id() );
+		}
+
+		// If It's update, set the updated date.
+		if ( $this->exists() ) {
+			$this->set_date_updated( current_time( 'mysql' ) );
+		}
+
+		// If date created is not set, set it to now.
+		if ( empty( $this->get_date_created() ) ) {
+			$this->set_date_created( current_time( 'mysql' ) );
+		}
+		// If uuid is not set, set it to now.
+		if ( empty( $this->get_uuid() ) ) {
+			$this->set_uuid( wp_generate_uuid4() );
+		}
+
+		return parent::save();
 	}
 
 	/*
 	|--------------------------------------------------------------------------
 	| Getters and Setters
 	|--------------------------------------------------------------------------
-	|
 	| Methods for getting and setting data.
 	|
 	*/
+
 	/**
-	 * Return the account name.
+	 * Get id.
 	 *
-	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
-	 *
-	 * @since  1.1.0
-	 *
-	 * @return string
+	 * @return int
+	 * @since 1.0.0
 	 */
-	public function get_name( $context = 'edit' ) {
-		return $this->get_prop( 'name', $context );
+	public function get_id() {
+		return (int) $this->get_prop( 'id' );
 	}
 
 	/**
-	 * Set account name.
+	 * Set id.
 	 *
-	 * @param string $name Account name.
+	 * @param int $id
 	 *
-	 * @since 1.1.0
+	 * @since 1.0.0
 	 */
-	public function set_name( $name ) {
-		$this->set_prop( 'name', sanitize_text_field( $name ) );
+	public function set_id( $id ) {
+		$this->set_prop( 'id', absint( $id ) );
 	}
 
 	/**
@@ -117,9 +187,8 @@ class Account extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
-	 * @since  1.1.0
-	 *
 	 * @return string
+	 * @since  1.1.0
 	 */
 	public function get_type( $context = 'edit' ) {
 		return $this->get_prop( 'type', $context );
@@ -137,13 +206,35 @@ class Account extends Model {
 	}
 
 	/**
+	 * Return the account name.
+	 *
+	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
+	 *
+	 * @return string
+	 * @since  1.1.0
+	 */
+	public function get_name( $context = 'edit' ) {
+		return $this->get_prop( 'name', $context );
+	}
+
+	/**
+	 * Set account name.
+	 *
+	 * @param string $name Account name.
+	 *
+	 * @since 1.1.0
+	 */
+	public function set_name( $name ) {
+		$this->set_prop( 'name', sanitize_text_field( $name ) );
+	}
+
+	/**
 	 * Returns the account number.
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @return mixed|null
+	 * @since 1.1.0
 	 */
 	public function get_number( $context = 'edit' ) {
 		return $this->get_prop( 'number', $context );
@@ -165,9 +256,8 @@ class Account extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @return mixed|null
+	 * @since 1.1.0
 	 */
 	public function get_opening_balance( $context = 'edit' ) {
 		return $this->get_prop( 'opening_balance', $context );
@@ -189,9 +279,8 @@ class Account extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @return mixed|null
+	 * @since 1.1.0
 	 */
 	public function get_currency_code( $context = 'edit' ) {
 		return $this->get_prop( 'currency_code', $context );
@@ -213,9 +302,8 @@ class Account extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @return mixed|null
+	 * @since 1.1.0
 	 */
 	public function get_bank_name( $context = 'edit' ) {
 		return $this->get_prop( 'bank_name', $context );
@@ -237,9 +325,8 @@ class Account extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @return mixed|null
+	 * @since 1.1.0
 	 */
 	public function get_bank_phone( $context = 'edit' ) {
 		return $this->get_prop( 'bank_phone', $context );
@@ -261,9 +348,8 @@ class Account extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @return mixed|null
+	 * @since 1.1.0
 	 */
 	public function get_bank_address( $context = 'edit' ) {
 		return $this->get_prop( 'bank_address', $context );
@@ -285,8 +371,8 @@ class Account extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @since 1.0.2
 	 * @return string
+	 * @since 1.0.2
 	 */
 	public function get_status( $context = 'edit' ) {
 		return $this->get_prop( 'status', $context );
@@ -304,17 +390,45 @@ class Account extends Model {
 			$this->set_prop( 'status', $value );
 		}
 	}
+	/**
+	 * Get the unique_hash.
+	 *
+	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
+	 *
+	 * @return string
+	 */
+	public function get_uuid( $context = 'edit' ) {
+		return $this->get_prop( 'uuid', $context );
+	}
 
 	/**
-	 * Is the category enabled?
+	 * Set the uuid.
 	 *
-	 * @since 1.0.2
-	 *
-	 * @return bool
+	 * @param string $key uuid.
 	 */
-	public function is_enabled() {
-		return 'active' === $this->get_status();
+	public function set_uuid( $key ) {
+		$this->set_prop( 'uuid', sanitize_key( $key ) );
 	}
+
+	/**
+	 * Get created via.
+	 *
+	 * @param  string $context What the value is for. Valid values are view and edit.
+	 * @return string
+	 */
+	public function get_created_via( $context = 'view' ) {
+		return $this->get_prop( 'created_via', $context );
+	}
+
+	/**
+	 * Set created via.
+	 *
+	 * @param string $value Created via.
+	 */
+	public function set_created_via( $value ) {
+		$this->set_prop( 'created_via', $value );
+	}
+
 
 	/**
 	 * Get the creator id.
@@ -343,17 +457,17 @@ class Account extends Model {
 	 *
 	 * @return string
 	 */
-	public function get_updated_at( $context = 'edit' ) {
-		return $this->get_prop( 'updated_at', $context );
+	public function get_date_updated( $context = 'edit' ) {
+		return $this->get_prop( 'date_updated', $context );
 	}
 
 	/**
 	 * Set the date updated.
 	 *
-	 * @param string $updated_at date updated.
+	 * @param string $date date updated.
 	 */
-	public function set_updated_at( $updated_at ) {
-		$this->set_date_prop( 'updated_at', $updated_at );
+	public function set_date_updated( $date ) {
+		$this->set_date_prop( 'date_updated', $date );
 	}
 
 	/**
@@ -363,18 +477,25 @@ class Account extends Model {
 	 *
 	 * @return string
 	 */
-	public function get_created_at( $context = 'edit' ) {
-		return $this->get_prop( 'created_at', $context );
+	public function get_date_created( $context = 'edit' ) {
+		return $this->get_prop( 'date_created', $context );
 	}
 
 	/**
 	 * Set the date created.
 	 *
-	 * @param string $created_at date created.
+	 * @param string $date date created.
 	 */
-	public function set_created_at( $created_at ) {
-		$this->set_date_prop( 'created_at', $created_at );
+	public function set_date_created( $date ) {
+		$this->set_date_prop( 'date_created', $date );
 	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| Extra data methods
+	|--------------------------------------------------------------------------
+	| These methods are used to retrieve and update extra data.
+	*/
 
 	/**
 	 * Get balance.
@@ -386,9 +507,9 @@ class Account extends Model {
 	public function get_balance( $context = 'edit' ) {
 		if ( is_null( $this->get_prop( 'balance' ) ) ) {
 			global $wpdb;
-			$table             = $wpdb->prefix . Transaction::TABLE_NAME;
+			$table             = $wpdb->prefix . 'ea_transactions';
 			$transaction_total = (float) $wpdb->get_var(
-				$wpdb->prepare( "SELECT SUM(CASE WHEN type='payment' then amount/conversion_rate WHEN type='expense' then - amount/conversion_rate END) as total from $table} WHERE account_id=%d", $this->get_id() )
+				$wpdb->prepare( "SELECT SUM(CASE WHEN type='payment' then amount WHEN type='expense' then - amount END) as total from $table WHERE account_id=%d AND currency_code=%s", $this->get_id(), $this->get_currency_code() )
 			);
 			$balance           = $this->get_opening_balance() + $transaction_total;
 			$this->set_balance( $balance );
@@ -410,71 +531,31 @@ class Account extends Model {
 
 	/*
 	|--------------------------------------------------------------------------
-	| Non-CRUD Getters and Setters
+	| Conditionals methods
 	|--------------------------------------------------------------------------
-	|
-	| Methods for getting and setting data which is not directly related to
-	| the object's database row. These should not update anything in the
-	| database itself and should only change what is stored in the class
-	| object.
+	| Methods that check an object's status, typically based on internal or meta data.
 	*/
 
-	/*
-	|--------------------------------------------------------------------------
-	| CRUD methods
-	|--------------------------------------------------------------------------
-	|
-	| Methods which create, read, update and delete discounts from the database.
-	|
-	*/
 	/**
-	 * Saves an object in the database.
+	 * Is the category active?
 	 *
-	 * @since 1.0.0
-	 * @return true|\WP_Error True on success, WP_Error on failure.
+	 * @return bool
+	 * @since 1.0.2
 	 */
-	public function save() {
-		// Required fields check.
-		if ( empty( $this->get_name() ) ) {
-			return new \WP_Error( 'missing_required', __( 'Account name is required.', 'wp-ever-accounting' ) );
-		}
+	public function is_active() {
+		return 'active' === $this->get_status();
+	}
 
-		// Number fields check.
-		if ( empty( $this->get_number() ) ) {
-			return new \WP_Error( 'missing_required', __( 'Account number is required.', 'wp-ever-accounting' ) );
-		}
-
-		// Currency fields check.
-		if ( empty( $this->get_currency_code() ) ) {
-			return new \WP_Error( 'missing_required', __( 'Account currency is required.', 'wp-ever-accounting' ) );
-		}
-
-		// Duplicate account number check.
-		$account = $this->get(
-			[
-				'number' => $this->get_number(),
-			]
-		);
-		if ( ! empty( $account ) && $account->get_id() !== $this->get_id() ) {
-			return new \WP_Error( 'duplicate_account_number', __( 'Account number already exists.', 'wp-ever-accounting' ) );
-		}
-
-		// Creator ID.
-		if ( empty( $this->get_creator_id() ) && ! $this->exists() && is_user_logged_in() ) {
-			$this->set_creator_id( get_current_user_id() );
-		}
-
-		// If It's update, set the updated date.
-		if ( $this->exists() ) {
-			$this->set_updated_at( current_time( 'mysql' ) );
-		}
-
-		// If date created is not set, set it to now.
-		if ( empty( $this->get_created_at() ) ) {
-			$this->set_created_at( current_time( 'mysql' ) );
-		}
-
-		return parent::save();
+	/**
+	 * Check if order has been created via admin, checkout, or in another way.
+	 *
+	 * @param string $modes Created via.
+	 *
+	 * @since 1.5.6
+	 * @return bool
+	 */
+	public function is_created_via( $modes ) {
+		return $modes === $this->get_created_via();
 	}
 
 	/*
@@ -486,10 +567,35 @@ class Account extends Model {
 	*/
 
 	/**
+	 * Get currency
+	 *
+	 * @return Currency
+	 * @since 1.0.0
+	 */
+	public function get_currency() {
+		return Currency::get( $this->get_currency_code() );
+	}
+
+	/**
+	 * Get currency rate.
+	 *
+	 * @return string
+	 * @since 1.0.0
+	 */
+	public function get_exchange_rate() {
+		$currency = $this->get_currency();
+		if ( $currency ) {
+			return $currency->get_exchange_rate();
+		}
+
+		return 1;
+	}
+
+	/**
 	 * Get formatted balance.
 	 *
-	 * @since 1.0.0
 	 * @return string
+	 * @since 1.0.0
 	 */
 	public function get_formatted_balance() {
 		return eac_format_money( $this->get_balance(), $this->get_currency_code() );
@@ -498,8 +604,8 @@ class Account extends Model {
 	/**
 	 * Get formatted name.
 	 *
-	 * @since 1.1.6
 	 * @return string
+	 * @since 1.1.6
 	 */
 	public function get_formatted_name() {
 		$name   = sprintf( '%s (%s)', $this->get_name(), $this->get_currency_code() );

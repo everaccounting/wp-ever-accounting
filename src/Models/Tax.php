@@ -17,7 +17,7 @@ class Tax extends Model {
 	 * @since 1.0.0
 	 * @var string
 	 */
-	const TABLE_NAME = 'ea_taxes';
+	public $table_name = 'ea_taxes';
 
 	/**
 	 * Object type.
@@ -25,15 +25,7 @@ class Tax extends Model {
 	 * @since 1.0.0
 	 * @var string
 	 */
-	const OBJECT_TYPE = 'tax';
-
-	/**
-	 * Cache group.
-	 *
-	 * @since 1.0.0
-	 * @var string
-	 */
-	const CACHE_GROUP = 'ea_taxes';
+	public $object_type = 'tax';
 
 	/**
 	 * Item Data array.
@@ -43,15 +35,50 @@ class Tax extends Model {
 	 * @var array
 	 */
 	protected $core_data = array(
-		'name'        => '',
-		'rate'        => 0,
-		'is_compound' => 'no',
-		'description' => '',
-		'status'      => 'active',
-		'created_at'  => null,
-		'updated_at'  => null,
+		'id'           => null,
+		'name'         => '',
+		'rate'         => 0,
+		'is_compound'  => 0,
+		'description'  => '',
+		'status'       => 'active',
+		'date_created' => null,
+		'date_updated' => null,
 	);
 
+
+	/*
+	|--------------------------------------------------------------------------
+	| CRUD methods
+	|--------------------------------------------------------------------------
+	| Methods which create, read, update and delete discounts from the database.
+	*/
+	/**
+	 * Saves an object in the database.
+	 *
+	 * @return true|\WP_Error True on success, WP_Error on failure.
+	 * @since 1.0.0
+	 */
+	public function save() {
+		if ( empty( $this->get_name() ) ) {
+			return new \WP_Error( 'missing_required', __( 'Tax name is required', 'easy-appointments' ) );
+		}
+
+		if ( empty( $this->get_rate() ) ) {
+			return new \WP_Error( 'missing_required', __( 'Tax rate is required', 'easy-appointments' ) );
+		}
+
+		// If It's update, set the updated date.
+		if ( $this->exists() ) {
+			$this->set_date_updated( current_time( 'mysql' ) );
+		}
+
+		// If date created is not set, set it to now.
+		if ( empty( $this->get_date_created() ) ) {
+			$this->set_date_created( current_time( 'mysql' ) );
+		}
+
+		return parent::save();
+	}
 	/*
 	|--------------------------------------------------------------------------
 	| Getters and Setters
@@ -61,13 +88,34 @@ class Tax extends Model {
 	|
 	*/
 	/**
+	 * Get id.
+	 *
+	 * @return int
+	 * @since 1.0.0
+	 */
+	public function get_id() {
+		return (int) $this->get_prop( 'id' );
+	}
+
+	/**
+	 * Set id.
+	 *
+	 * @param int $id
+	 *
+	 * @since 1.0.0
+	 */
+	public function set_id( $id ) {
+		$this->set_prop( 'id', absint( $id ) );
+	}
+
+	/**
 	 * Get tax name
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
+	 * @return string
 	 * @since  1.1.0
 	 *
-	 * @return string
 	 */
 	public function get_name( $context = 'edit' ) {
 		return $this->get_prop( 'name', $context );
@@ -78,9 +126,9 @@ class Tax extends Model {
 	 *
 	 * @param string $name Tax name.
 	 *
+	 * @return void
 	 * @since  1.1.0
 	 *
-	 * @return void
 	 */
 	public function set_name( $name ) {
 		$this->set_prop( 'name', $name );
@@ -91,9 +139,9 @@ class Tax extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
+	 * @return float
 	 * @since  1.1.0
 	 *
-	 * @return float
 	 */
 	public function get_rate( $context = 'edit' ) {
 		return $this->get_prop( 'rate', $context );
@@ -104,9 +152,9 @@ class Tax extends Model {
 	 *
 	 * @param string $rate Tax rate.
 	 *
+	 * @return void
 	 * @since  1.1.0
 	 *
-	 * @return void
 	 */
 	public function set_rate( $rate ) {
 		$this->set_prop( 'rate', floatval( $rate ) );
@@ -117,9 +165,9 @@ class Tax extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
+	 * @return string
 	 * @since  1.1.0
 	 *
-	 * @return string
 	 */
 	public function get_is_compound( $context = 'edit' ) {
 		return $this->get_prop( 'is_compound', $context );
@@ -130,17 +178,12 @@ class Tax extends Model {
 	 *
 	 * @param string $type Tax type.
 	 *
+	 * @return void
 	 * @since  1.1.0
 	 *
-	 * @return void
 	 */
 	public function set_is_compound( $type ) {
-		$types = array( 'yes', 'no' );
-		if ( ! in_array( $type, $types, true ) ) {
-			$type = 'no';
-		}
-
-		$this->set_prop( 'is_compound', $type );
+		$this->set_prop( 'is_compound', $this->string_to_int( $type ) );
 	}
 
 	/**
@@ -148,9 +191,9 @@ class Tax extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
+	 * @return string
 	 * @since  1.1.0
 	 *
-	 * @return string
 	 */
 	public function get_description( $context = 'edit' ) {
 		return $this->get_prop( 'description', $context );
@@ -161,9 +204,9 @@ class Tax extends Model {
 	 *
 	 * @param string $description Tax description.
 	 *
+	 * @return void
 	 * @since  1.1.0
 	 *
-	 * @return void
 	 */
 	public function set_description( $description ) {
 		$this->set_prop( 'description', $description );
@@ -174,8 +217,8 @@ class Tax extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @since 1.0.2
 	 * @return string
+	 * @since 1.0.2
 	 */
 	public function get_status( $context = 'edit' ) {
 		return $this->get_prop( 'status', $context );
@@ -202,17 +245,17 @@ class Tax extends Model {
 	 *
 	 * @return string
 	 */
-	public function get_updated_at( $context = 'edit' ) {
-		return $this->get_prop( 'updated_at', $context );
+	public function get_date_updated( $context = 'edit' ) {
+		return $this->get_prop( 'date_updated', $context );
 	}
 
 	/**
 	 * Set the date updated.
 	 *
-	 * @param string $updated_at date updated.
+	 * @param string $date date updated.
 	 */
-	public function set_updated_at( $updated_at ) {
-		$this->set_date_prop( 'updated_at', $updated_at );
+	public function set_date_updated( $date ) {
+		$this->set_date_prop( 'date_updated', $date );
 	}
 
 	/**
@@ -222,17 +265,17 @@ class Tax extends Model {
 	 *
 	 * @return string
 	 */
-	public function get_created_at( $context = 'edit' ) {
-		return $this->get_prop( 'created_at', $context );
+	public function get_date_created( $context = 'edit' ) {
+		return $this->get_prop( 'date_created', $context );
 	}
 
 	/**
 	 * Set the date created.
 	 *
-	 * @param string $created_at date created.
+	 * @param string $date_created date created.
 	 */
-	public function set_created_at( $created_at ) {
-		$this->set_date_prop( 'created_at', $created_at );
+	public function set_date_created( $date_created ) {
+		$this->set_date_prop( 'date_created', $date_created );
 	}
 
 	/*
@@ -241,41 +284,6 @@ class Tax extends Model {
 	|--------------------------------------------------------------------------
 	| Extra props are used to store additional data in the database.
 	*/
-
-
-	/*
-	|--------------------------------------------------------------------------
-	| CRUD methods
-	|--------------------------------------------------------------------------
-	| Methods which create, read, update and delete discounts from the database.
-	*/
-	/**
-	 * Saves an object in the database.
-	 *
-	 * @since 1.0.0
-	 * @return true|\WP_Error True on success, WP_Error on failure.
-	 */
-	public function save() {
-		if ( empty( $this->get_name() ) ) {
-			return new \WP_Error( 'missing_required', __( 'Tax name is required', 'easy-appointments' ) );
-		}
-
-		if ( empty( $this->get_rate() ) ) {
-			return new \WP_Error( 'missing_required', __( 'Tax rate is required', 'easy-appointments' ) );
-		}
-
-		// If It's update, set the updated date.
-		if ( $this->exists() ) {
-			$this->set_updated_at( current_time( 'mysql' ) );
-		}
-
-		// If date created is not set, set it to now.
-		if ( empty( $this->get_created_at() ) ) {
-			$this->set_created_at( current_time( 'mysql' ) );
-		}
-
-		return parent::save();
-	}
 
 	/*
 	|--------------------------------------------------------------------------
@@ -294,8 +302,8 @@ class Tax extends Model {
 	/**
 	 * Is this tax a compound tax?
 	 *
-	 * @since 1.1.0
 	 * @return bool
+	 * @since 1.1.0
 	 */
 	public function is_compound() {
 		return 'yes' === $this->get_is_compound();
@@ -311,8 +319,8 @@ class Tax extends Model {
 	/**
 	 * Get formatted name.
 	 *
-	 * @since 1.1.6
 	 * @return string
+	 * @since 1.1.6
 	 */
 	public function get_formatted_name() {
 		return sprintf( '%1$s (%2$d%%)', $this->get_name(), $this->get_rate() );

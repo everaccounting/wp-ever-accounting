@@ -14,7 +14,7 @@ const isProduction = process.env.NODE_ENV === 'production';
 
 module.exports = {
 	...defaultConfig,
-	devtool: isProduction ? false : 'source-map',
+	devtool: isProduction ? false : 'inline-source-map',
 	entry: {
 		app: './client/app/index.js',
 		...glob
@@ -51,7 +51,15 @@ module.exports = {
 	resolve: {
 		...defaultConfig.resolve,
 		alias: {
-			'@eac': path.resolve(__dirname, 'client/packages'),
+			'@eac/components': path.resolve(
+				__dirname,
+				'client/packages/components'
+			),
+			'@eac/navigation': path.resolve(
+				__dirname,
+				'client/packages/navigation'
+			),
+			'@eac/store': path.resolve(__dirname, 'client/packages/store'),
 			'~': path.resolve(__dirname, 'client/app'),
 			...defaultConfig.resolve.alias,
 		},

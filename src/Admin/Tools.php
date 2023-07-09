@@ -19,14 +19,13 @@ class Tools extends \EverAccounting\Singleton {
 	 */
 	protected function __construct() {
 		add_action( 'ever_accounting_tools_export_content', array( __CLASS__, 'output_accounts_export_form' ) );
-		add_action( 'ever_accounting_tools_export_content', array( __CLASS__, 'output_categories_export_form' ) );
-		add_action( 'ever_accounting_tools_export_content', array( __CLASS__, 'output_customers_export_form' ) );
-		add_action( 'ever_accounting_tools_export_content', array( __CLASS__, 'output_expenses_export_form' ) );
-		add_action( 'ever_accounting_tools_export_content', array( __CLASS__, 'output_items_export_form' ) );
 		add_action( 'ever_accounting_tools_export_content', array( __CLASS__, 'output_payments_export_form' ) );
+		add_action( 'ever_accounting_tools_export_content', array( __CLASS__, 'output_expenses_export_form' ) );
+		add_action( 'ever_accounting_tools_export_content', array( __CLASS__, 'output_customers_export_form' ) );
 		add_action( 'ever_accounting_tools_export_content', array( __CLASS__, 'output_vendors_export_form' ) );
-		add_action( 'ever_accounting_tools_elements_content', array( __CLASS__, 'output_elements_page' ) );
-		add_action( 'ever_accounting_tools_settings_content', array( __CLASS__, 'output_settings_page' ) );
+		add_action( 'ever_accounting_tools_export_content', array( __CLASS__, 'output_categories_export_form' ) );
+		add_action( 'ever_accounting_tools_export_content', array( __CLASS__, 'output_items_export_form' ) );
+		add_action( 'ever_accounting_tools_react_content', array( __CLASS__, 'output_react_tools' ) );
 	}
 
 	/**
@@ -116,22 +115,12 @@ class Tools extends \EverAccounting\Singleton {
 	}
 
 	/**
-	 * Output the elements page.
+	 * Output the react tools.
 	 *
 	 * @since 1.0.0
 	 * @return void
 	 */
-	public static function output_elements_page() {
-		include dirname( __FILE__ ) . '/views/elements-page.php';
-	}
-
-	/**
-	 * Output the settings page.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	public static function output_settings_page() {
+	public static function output_react_tools() {
 		echo '<div id="eac-root"></div>';
 	}
 }

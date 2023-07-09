@@ -12,275 +12,451 @@ use EverAccounting\Models\Invoice;
 
 defined( 'ABSPATH' ) || exit();
 $tax_enabled = $document->is_calculating_tax();
+$customers   = eac_get_customers( array( 'include' => $document->get_contact_id() ) );
+$currencies  = eac_get_currencies( array( 'limit' => - 1 ) );
+$columns     = array(
+	'item'     => __( 'Item', 'wp-ever-accounting' ),
+	'price'    => __( 'Price', 'wp-ever-accounting' ),
+	'quantity' => __( 'Quantity', 'wp-ever-accounting' ),
+	'tax'      => __( 'Tax', 'wp-ever-accounting' ),
+	'subtotal' => __( 'Subtotal', 'wp-ever-accounting' ),
+	'actions'  => '&nbsp;',
+);
+
+// If not collecting tax, remove the tax column.
+if ( ! $document->is_calculating_tax() ) {
+	unset( $columns['tax'] );
+}
 ?>
-<form id="eac-invoice-form" class="eac-invoice-form eac-document" method="post">
+<form id="eac-invoice-form" class="eac-document-form eac-ajax-form" method="post" autocomplete="off">
 
 	<div class="eac-panel">
-		<div class="eac-columns">
+		<div class="eac-document-form__section document-info eac-row px-4 py-4">
 			<div class="eac-col-6">
-				<div class="eac-form-field">
-					<label class="eac-form-field__label" for="customer_id">
-						<?php esc_html_e( 'Customer', 'ever-accounting' ); ?>
-						<abbr title="required">*</abbr>
-					</label>
-					<div class="eac-form-field__group">
-						<select class="eac_ajax_search" name="customer_id" id="customer_id" data-placeholder="<?php esc_attr_e( 'Select a customer', 'wp-ever-accounting' ); ?>" data-allow_clear="true" data-type="customer" required>
-							<?php if ( $document->get_contact_id() ) : ?>
-								<option value="<?php echo esc_attr( $document->get_contact_id() ); ?>" selected="selected"><?php echo esc_html( $document->get_billing_name() ); ?></option>
-							<?php endif; ?>
-						</select>
-						<a class="button" href="<?php esc_attr( eac_action_url( 'action=get_html_response&html_type=edit_customer' ) ); ?>" title="<?php esc_attr_e( 'Add customer', 'wp-ever-accounting' ); ?>">
-							<span class="dashicons dashicons-plus"></span>
-						</a>
-					</div>
+				<?php
+				eac_form_field(
+					array(
+						'type'        => 'select',
+						'id'          => 'customer_id',
+						'name'        => 'contact_id',
+						'label'       => __( 'Customer', 'ever-accounting' ),
+						'options'     => wp_list_pluck( $customers, 'formatted_name', 'id' ),
+						'value'       => $document->get_contact_id(),
+						'placeholder' => __( 'Select a customer', 'ever-accounting' ),
+						'input_class' => 'eac-select2',
+						'attrs'       => 'data-action=eac_json_search&data-type=customer',
+						'required'    => true,
+						'suffix'      => sprintf(
+							'<a class="button" href="%s" title="%s"><span class="dashicons dashicons-plus"></span></a>',
+							esc_url( eac_action_url( 'action=get_html_response&html_type=edit_customer' ) ),
+							__( 'Add Customer', 'wp-ever-accounting' )
+						),
+					)
+				);
+				?>
+				<h3>
+					<?php esc_html_e( 'Billing', 'ever-accounting' ); ?>
+					<a href="#" class="edit_billing_address"><?php esc_html_e( 'Edit', 'ever-accounting' ); ?></a>
+					<span>
+						<a href="#" class="load_billing_address"
+						   style="display: none;"><?php esc_html_e( 'Load billing address', 'ever-accounting' ); ?></a>
+					</span>
+				</h3>
+
+				<div class="eac-columns billing-fields d-none">
+					<?php
+					eac_form_fields(
+						array(
+							array(
+								'type'        => 'text',
+								'id'          => 'billing_name',
+								'label'       => __( 'Name', 'wp-ever-accounting' ),
+								'value'       => $document->get_billing_name(),
+								'placeholder' => __( 'John Doe', 'wp-ever-accounting' ),
+								'class'       => 'eac-col-6',
+							),
+							array(
+								'type'        => 'text',
+								'id'          => 'billing_company',
+								'label'       => __( 'Company', 'wp-ever-accounting' ),
+								'value'       => $document->get_billing_company(),
+								'placeholder' => __( 'XYZ Corp', 'wp-ever-accounting' ),
+								'class'       => 'eac-col-6',
+							),
+							array(
+								'type'        => 'text',
+								'id'          => 'billing_address_1',
+								'label'       => __( 'Address 1', 'wp-ever-accounting' ),
+								'value'       => $document->get_billing_address_1(),
+								'placeholder' => __( '123 Main St', 'wp-ever-accounting' ),
+								'class'       => 'eac-col-6',
+							),
+							array(
+								'type'        => 'text',
+								'id'          => 'billing_address_2',
+								'label'       => __( 'Address 2', 'wp-ever-accounting' ),
+								'value'       => $document->get_billing_address_2(),
+								'placeholder' => __( 'Suite 100', 'wp-ever-accounting' ),
+								'class'       => 'eac-col-6',
+							),
+							array(
+								'type'        => 'text',
+								'id'          => 'billing_city',
+								'label'       => __( 'City', 'wp-ever-accounting' ),
+								'value'       => $document->get_billing_city(),
+								'placeholder' => __( 'New York', 'wp-ever-accounting' ),
+								'class'       => 'eac-col-6',
+							),
+							array(
+								'type'        => 'text',
+								'id'          => 'billing_state',
+								'label'       => __( 'State', 'wp-ever-accounting' ),
+								'value'       => $document->get_billing_state(),
+								'placeholder' => __( 'NY', 'wp-ever-accounting' ),
+								'class'       => 'eac-col-6',
+							),
+							array(
+								'type'        => 'text',
+								'id'          => 'billing_postcode',
+								'label'       => __( 'Postcode', 'wp-ever-accounting' ),
+								'value'       => $document->get_billing_postcode(),
+								'placeholder' => __( '10001', 'wp-ever-accounting' ),
+								'class'       => 'eac-col-6',
+							),
+							array(
+								'type'        => 'select',
+								'id'          => 'billing_country',
+								'label'       => __( 'Country', 'wp-ever-accounting' ),
+								'options'     => eac_get_countries(),
+								'value'       => $document->get_billing_country(),
+								'placeholder' => __( 'Select a country', 'wp-ever-accounting' ),
+								'class'       => 'eac-col-6',
+							),
+							array(
+								'type'        => 'text',
+								'id'          => 'billing_phone',
+								'label'       => __( 'Phone', 'wp-ever-accounting' ),
+								'value'       => $document->get_billing_phone(),
+								'placeholder' => __( '555-555-5555', 'wp-ever-accounting' ),
+								'class'       => 'eac-col-6',
+							),
+							array(
+								'type'        => 'email',
+								'id'          => 'billing_email',
+								'label'       => __( 'Email', 'wp-ever-accounting' ),
+								'value'       => $document->get_billing_email(),
+								'placeholder' => 'john@doe.com',
+								'class'       => 'eac-col-6',
+							),
+							// vat number.
+							array(
+								'type'        => 'text',
+								'id'          => 'billing_vat_number',
+								'label'       => __( 'VAT Number', 'wp-ever-accounting' ),
+								'value'       => $document->get_billing_vat_number(),
+								'placeholder' => __( 'VAT Number', 'wp-ever-accounting' ),
+								'class'       => 'eac-col-6',
+							),
+							// vat exempt.
+							array(
+								'type'        => 'select',
+								'id'          => 'billing_vat_exempt',
+								'label'       => __( 'VAT Exempt', 'wp-ever-accounting' ),
+								'value'       => $document->get_vat_exempt(),
+								'options'     => array(
+									'1' => __( 'Yes', 'wp-ever-accounting' ),
+									'0'  => __( 'No', 'wp-ever-accounting' ),
+								),
+								'class'       => 'eac-col-6',
+								'input_class' => 'trigger-update',
+							),
+						)
+					);
+					?>
 				</div>
+
 				<div class="eac-columns billing-data">
-					<div class="eac-form-field eac-col-6">
-						<label for="billing_name" class="eac-form-field__label">
-							<?php esc_html_e( 'Name', 'wp-ever-accounting' ); ?>
-						</label>
-						<input type="text" name="billing_name" id="billing_name" value="<?php echo esc_attr( $document->get_billing_name() ); ?>"/>
+					<div class="eac-col-6">
+						<?php
+						if ( $document->get_formatted_billing_address() ) {
+							echo $document->get_formatted_billing_address();
+						} else {
+							echo '<p><strong>' . esc_html__( 'Address:', 'wp-ever-accounting' ) . '</strong> ' . esc_html__( 'No address set.', 'wp-ever-accounting' ) . '</p>';
+						}
+						?>
 					</div>
-					<div class="eac-form-field eac-col-6">
-						<label for="billing_email" class="eac-form-field__label">
-							<?php esc_html_e( 'Email', 'wp-ever-accounting' ); ?>
-						</label>
-						<input type="email" name="billing_email" id="billing_email" value="<?php echo esc_attr( $document->get_billing_email() ); ?>"/>
-					</div>
-					<div class="eac-form-field eac-col-6">
-						<label for="billing_phone" class="eac-form-field__label">
-							<?php esc_html_e( 'Phone', 'wp-ever-accounting' ); ?>
-						</label>
-						<input type="text" name="billing_phone" id="billing_phone" value="<?php echo esc_attr( $document->get_billing_phone() ); ?>"/>
-					</div>
-					<div class="eac-form-field eac-col-6">
-						<label for="billing_vat_number" class="eac-form-field__label">
-							<?php esc_html_e( 'Vat Number', 'wp-ever-accounting' ); ?>
-						</label>
-						<input type="text" name="billing_vat_number" id="billing_vat_number" value="<?php echo esc_attr( $document->get_billing_vat_number() ); ?>"/>
-					</div>
-					<div class="eac-form-field eac-col-6">
-						<label for="billing_address_1" class="eac-form-field__label">
-							<?php esc_html_e( 'Address', 'wp-ever-accounting' ); ?>
-						</label>
-						<input type="text" name="billing_address_1" id="billing_address_1" value="<?php echo esc_attr( $document->get_billing_address_1() ); ?>"/>
-					</div>
-					<div class="eac-form-field eac-col-6">
-						<label for="billing_address_2" class="eac-form-field__label">
-							<?php esc_html_e( 'Address', 'wp-ever-accounting' ); ?>
-						</label>
-						<input type="text" name="billing_address_2" id="billing_address_2" value="<?php echo esc_attr( $document->get_billing_address_2() ); ?>"/>
-					</div>
-					<div class="eac-form-field eac-col-6">
-						<label for="billing_city" class="eac-form-field__label">
-							<?php esc_html_e( 'City', 'wp-ever-accounting' ); ?>
-						</label>
-						<input type="text" name="billing_city" id="billing_city" value="<?php echo esc_attr( $document->get_billing_city() ); ?>"/>
-					</div>
-					<div class="eac-form-field eac-col-6">
-						<label for="billing_state" class="eac-form-field__label">
-							<?php esc_html_e( 'State', 'wp-ever-accounting' ); ?>
-						</label>
-						<input type="text" name="billing_state" id="billing_state" value="<?php echo esc_attr( $document->get_billing_state() ); ?>"/>
-					</div>
-					<div class="eac-form-field eac-col-6">
-						<label for="billing_postcode" class="eac-form-field__label">
-							<?php esc_html_e( 'Postcode', 'wp-ever-accounting' ); ?>
-						</label>
-						<input type="text" name="billing_postcode" id="billing_postcode" value="<?php echo esc_attr( $document->get_billing_postcode() ); ?>"/>
-					</div>
-					<div class="eac-form-field eac-col-6">
-						<label for="billing_country" class="eac-form-field__label">
-							<?php esc_html_e( 'Country', 'wp-ever-accounting' ); ?>
-						</label>
-						<select class="eac-select2" name="billing_country" id="billing_country" data-placeholder="<?php esc_attr_e( 'Select a country', 'wp-ever-accounting' ); ?>">
-							<option value=""></option>
-							<?php foreach ( eac_get_countries() as $key => $value ) : ?>
-								<option value="<?php echo esc_attr( $key ); ?>" <?php selected( $document->get_billing_country(), $key ); ?>><?php echo esc_html( $value ); ?></option>
-							<?php endforeach; ?>
-						</select>
+					<div class="eac-col-6">
+						<?php
+						if ( $document->get_billing_phone() ) {
+							echo '<p><strong>' . esc_html__( 'Phone:', 'wp-ever-accounting' ) . '</strong> ' . wp_kses_post( eac_make_phone_clickable( $document->get_billing_phone() ) ) . '</p>';
+						}
+						if ( $document->get_billing_email() ) {
+							echo '<p><strong>' . esc_html__( 'Email:', 'wp-ever-accounting' ) . '</strong> ' . wp_kses_post( '<a href="mailto:' . $document->get_billing_email() . '">' . $document->get_billing_email() . '</a>' ) . '</p>';
+						}
+						if ( $document->get_billing_vat_number() ) {
+							echo '<p><strong>' . esc_html__( 'VAT:', 'wp-ever-accounting' ) . '</strong> ' . esc_html( $document->get_billing_vat_number() ) . '</p>';
+						}
+						?>
 					</div>
 				</div>
 			</div>
 			<div class="eac-col-6">
-				<div class="eac-columns document-data">
-					<div class="eac-form-field eac-col-6">
-						<label for="issued_at" class="eac-form-field__label">
-							<?php esc_html_e( 'Issue Date', 'wp-ever-accounting' ); ?>
-							<abbr title="required">*</abbr>
-						</label>
-						<input type="text" class="eac-datepicker" name="issued_at" id="issued_at" value="<?php echo esc_attr( $document->get_issued_at() ); ?>" required/>
-					</div>
-					<div class="eac-form-field eac-col-6">
-						<label for="due_at" class="eac-form-field__label">
-							<?php esc_html_e( 'Due Date', 'wp-ever-accounting' ); ?>
-							<abbr title="required">*</abbr>
-						</label>
-						<input type="text" class="eac-datepicker" name="due_at" id="due_at" value="<?php echo esc_attr( $document->get_due_at() ); ?>" required/>
-					</div>
-					<div class="eac-form-field eac-col-6">
-						<label for="number" class="eac-form-field__label">
-							<?php esc_html_e( 'Invoice Number', 'wp-ever-accounting' ); ?>
-							<abbr title="required">*</abbr>
-						</label>
-						<input type="text" name="number" id="number" value="<?php echo esc_attr( $document->get_number() ); ?>" required/>
-					</div>
-					<div class="eac-form-field eac-col-6">
-						<label for="reference" class="eac-form-field__label">
-							<?php esc_html_e( 'Reference', 'wp-ever-accounting' ); ?>
-						</label>
-						<input type="text" name="reference" id="reference" value="<?php echo esc_attr( $document->get_reference() ); ?>"/>
-					</div>
-					<div class="eac-form-field eac-col-6">
-						<label for="currency_code" class="eac-form-field__label">
-							<?php esc_html_e( 'Currency', 'wp-ever-accounting' ); ?>
-							<abbr title="required">*</abbr>
-						</label>
-						<select class="eac-select2" name="currency_code" id="currency_code" required>
-							<?php foreach ( eac_get_currencies() as $currency ) : ?>
-								<option value="<?php echo esc_attr( $currency['code'] ); ?>" <?php selected( $currency['code'], $document->get_currency_code() ); ?>>
-									<?php echo esc_html( $currency['formatted_name'] ); ?>
-								</option>
-							<?php endforeach; ?>
-						</select>
-					</div>
+				<div class="eac-row document-data">
+					<?php
+					eac_form_field(
+						array(
+							'data_type'   => 'date',
+							'id'          => 'issued_at',
+							'name'        => 'issued_at',
+							'label'       => __( 'Issue Date', 'ever-accounting' ),
+							'placeholder' => 'YYYY-MM-DD',
+							'value'       => $document->get_issue_date(),
+							'required'    => true,
+							'class'       => 'eac-col-6',
+						)
+					);
+					eac_form_field(
+						array(
+							'data_type'   => 'date',
+							'id'          => 'due_at',
+							'name'        => 'due_at',
+							'label'       => __( 'Due Date', 'ever-accounting' ),
+							'placeholder' => 'YYYY-MM-DD',
+							'value'       => $document->get_due_date(),
+							'required'    => true,
+							'class'       => 'eac-col-6',
+						)
+					);
+					eac_form_field(
+						array(
+							'id'          => 'document_number',
+							'name'        => 'number',
+							'label'       => __( 'Invoice Number', 'ever-accounting' ),
+							'placeholder' => 'INV-0001',
+							'value'       => $document->get_number(),
+							'required'    => true,
+							'class'       => 'eac-col-6',
+						)
+					);
+					eac_form_field(
+						array(
+							'id'          => 'reference',
+							'label'       => __( 'Reference', 'ever-accounting' ),
+							'placeholder' => 'REF-0001',
+							'value'       => $document->get_reference(),
+							'class'       => 'eac-col-6',
+							// limit to 20 characters.
+							'attrs'       => array(
+								'maxlength' => 15,
+							),
+						)
+					);
+					// discount.
+					eac_form_field(
+						array(
+							'data_type'   => 'decimal',
+							'id'          => 'discount_amount',
+							'label'       => __( 'Discount', 'ever-accounting' ),
+							'placeholder' => '0.00',
+							'value'       => $document->get_discount_amount(),
+							'class'       => 'eac-col-6',
+							'input_class' => 'trigger-update',
+						)
+					);
+					eac_form_field(
+						array(
+							'id'          => 'discount_type',
+							'name'        => 'discount_type',
+							'type'        => 'select',
+							'label'       => __( 'Discount Type', 'ever-accounting' ),
+							'options'     => array(
+								'percent' => __( 'Percent (%)', 'ever-accounting' ),
+								'fixed'   => __( 'Fixed Amount', 'ever-accounting' ),
+							),
+							'value'       => $document->get_discount_type(),
+							'class'       => 'eac-col-6',
+							'input_class' => 'trigger-update',
+						)
+					);
+					// currency.
+					eac_form_field(
+						array(
+							'type'        => 'select',
+							'id'          => 'currency_code',
+							'label'       => __( 'Currency', 'ever-accounting' ),
+							'placeholder' => __( 'Select a currency', 'ever-accounting' ),
+							'value'       => $document->get_currency_code(),
+							'options'     => wp_list_pluck( $currencies, 'formatted_name', 'code' ),
+							'required'    => true,
+							'input_class' => 'eac-select2 trigger-update',
+							'class'       => 'eac-col-6',
+							'style'       => count( eac_get_currencies() ) > 1 ? '' : 'display:none',
+						)
+					);
+					eac_form_field(
+						array(
+							'data_type'   => 'decimal',
+							'name'        => 'exchange_rate',
+							'label'       => __( 'Exchange Rate', 'wp-ever-accounting' ),
+							'placeholder' => '1.00',
+							'value'       => 1,
+							'required'    => true,
+							'class'       => 'eac-col-6 display-none',
+							'prefix'      => sprintf( '1 %s =', eac_get_base_currency() ),
+							'suffix'      => sprintf( '%s', $document->get_currency_code() ),
+							'style'       => $document->get_currency_code() === eac_get_base_currency() ? 'display:none' : '',
+							'input_class' => 'trigger-update',
+						)
+					);
+					?>
 				</div>
 			</div>
 		</div>
-	</div>
+		<div class="eac-document-form__section document-items">
+			<table class="eac-document-form__items">
+				<thead>
+				<tr>
+					<?php foreach ( $columns as $key => $label ) : ?>
+						<?php if ( 'item' === $key ) : ?>
+							<th class="line-<?php echo esc_attr( $key ); ?>"
+								colspan="2"><?php echo esc_html( $label ); ?></th>
+						<?php else : ?>
+							<th class="line-<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $label ); ?></th>
+						<?php endif; ?>
+					<?php endforeach; ?>
+				</thead>
+				<tbody>
+				<?php foreach ( $document->get_items() as $item_key => $item ) : ?>
+				<tr>
+					<?php foreach ( $columns as $key => $label ) : ?>
+						<?php if ( 'item' === $key ) : ?>
+							<td class="line-<?php echo esc_attr( $key ); ?>-name" colspan="2">
+								<?php
+								echo sprintf( '<input type="hidden" name="items[%s][id]" value="%s"/>', esc_attr( $item_key ), esc_attr( $item->get_id() ) );
+								echo sprintf( '<input type="hidden" name="items[%s][item_id]" value="%s"/>', esc_attr( $item_key ), esc_attr( $item->get_item_id() ) );
+								echo sprintf( '<input class="item-name" type="text" name="items[%s][name]" value="%s" readonly/>', esc_attr( $item_key ), esc_attr( $item->get_name() ) );
+								echo sprintf( '<textarea class="item-description" name="items[%s][description]" placeholder="%s" maxlength="160">%s</textarea>', esc_attr( $item_key ), esc_attr__( 'Description', 'wp-ever-accounting' ), esc_textarea( $item->get_description() ) );
+								?>
+							</td>
+						<?php else : ?>
+							<td class="line-<?php echo esc_attr( $key ); ?>">
+								<?php
+								switch ( $key ) {
+									case 'price':
+										echo sprintf( '<input class="line-price trigger-update" type="number" name="items[%s][price]" value="%s" placeholder="%s" />', esc_attr( $item_key ), esc_attr( $item->get_price() ), esc_attr__( 'Price', 'wp-ever-accounting' ) );
+										break;
+									case 'quantity':
+										echo sprintf( '<input class="line-quantity trigger-update" type="number" name="items[%s][quantity]" value="%s" placeholder="%s" />', esc_attr( $item_key ), esc_attr( $item->get_quantity() ), esc_attr__( 'Quantity', 'wp-ever-accounting' ) );
+										break;
+									case 'tax':
+										echo sprintf( '<select class="item-tax trigger-update eac-select2" name="items[%s][tax_ids]" data-action="eac_json_search" data-type="tax" multiple="multiple" data-placeholder="%s">', esc_attr( $item_key ), esc_attr__( 'Select tax', 'wp-ever-accounting' ) );
+										foreach ( $item->get_taxes() as $tax ) {
+											printf( '<option value="%s" %s>%s</option>', esc_attr( $tax->get_tax_id() ), selected( $tax->get_id(), $tax->get_id(), false ), esc_html( $tax->get_name() ) );
+										}
+										echo '</select>';
 
-	<div class="eac-panel overflow-x margin-bottom-0 padding-0 border-0">
-		<table class="eac-document__items" cellpadding="0" cellspacing="0">
-			<thead>
-			<tr>
-				<th class="line-item" colspan="2"><?php esc_html_e( 'Item', 'wp-ever-accounting' ); ?></th>
-				<th class="line-price" width="10%"><?php esc_html_e( 'Price', 'wp-ever-accounting' ); ?></th>
-				<th class="line-quantity" width="10%"><?php esc_html_e( 'Quantity', 'wp-ever-accounting' ); ?></th>
-				<?php if ( $tax_enabled ) : ?>
-					<th class="line-taxes" width="20%"><?php esc_html_e( 'Taxes', 'wp-ever-accounting' ); ?></th>
-				<?php endif; ?>
-				<th class="line-subtotal" width="10%"><?php esc_html_e( 'Subtotal', 'wp-ever-accounting' ); ?></th>
-				<th class="line-actions" width="1%">&nbsp</th>
-			</tr>
-			</thead>
-			<tbody>
-			<?php foreach ( $document->get_items() as $key => $item ) : ?>
-				<tr data-item_id="<?php echo esc_attr( $item->get_id() ); ?>">
+										break;
+									case 'subtotal':
+										echo esc_html( eac_format_money( $item->get_subtotal(), $document->get_currency_code() ) );
+										break;
+									case 'actions':
+										echo '<a href="#" class="remove-line-item"><span class="dashicons dashicons-trash"></span></a>';
+									default:
+										// code...
+										break;
+								}
+								?>
+							</td>
+
+						<?php endif; ?>
+					<?php endforeach; ?>
+					<?php endforeach; ?>
+				</tr>
+				<tr>
 					<td class="line-item" colspan="2">
-						<input type="hidden" name="items[<?php echo esc_attr( $key ); ?>][id]" value="<?php echo esc_attr( $item->get_id() ); ?>"/>
-						<input type="hidden" name="items[<?php echo esc_attr( $key ); ?>][product_id]" value="<?php echo esc_attr( $item->get_product_id() ); ?>"/>
-						<input class="item-name" type="text" name="items[<?php echo esc_attr( $key ); ?>][name]" value="<?php echo esc_attr( $item->get_name() ); ?>" readonly/>
-						<textarea class="item-description" name="items[<?php echo esc_attr( $key ); ?>][description]" placeholder="<?php esc_attr_e( 'Description', 'wp-ever-accounting' ); ?>" maxlength="160"><?php echo esc_textarea( $item->get_description() ); ?></textarea>
-					</td>
-					<td class="line-price">
-						<input class="item-price" type="number" name="items[<?php echo esc_attr( $key ); ?>][price]" value="<?php echo esc_attr( eac_sanitize_money( $item->get_price(), $document->get_currency_code() ) ); ?>"/>
-					</td>
-					<td class="line-quantity">
-						<div class="eac-field__group">
-							<input class="item-quantity" type="number" name="items[<?php echo esc_attr( $key ); ?>][quantity]" value="<?php echo esc_attr( eac_sanitize_number( $item->get_quantity(), 2 ) ); ?>"/>
+						<div class="eac-form-field__group">
+							<select class="trigger-update eac-select2" data-action="eac_json_search" data-type="item" name="items[<?php echo PHP_INT_MAX; ?>][item_id]" data-placeholder="<?php esc_attr_e( 'Select an item', 'wp-ever-accounting' ); ?>">
+								<option></option>
+							</select>
+							<a class="button" href="<?php echo esc_url( eac_action_url( 'action=get_html_response&html_type=edit_item' ) ); ?>" title="<?php esc_attr_e( 'Add New Item', 'wp-ever-accounting' ); ?>">
+								<span class="dashicons dashicons-plus"></span>
+							</a>
 						</div>
 					</td>
-					<?php if ( $tax_enabled ) : ?>
-						<td class="line-taxes">
-							<select class="item-taxes eac_ajax_search" name="items[<?php echo esc_attr( $key ); ?>][tax_ids]" data-eac-select2="tax" multiple="multiple" data-placeholder="<?php esc_attr_e( 'Select taxes', 'wp-ever-accounting' ); ?>" data-type="tax">
-								<?php foreach ( $item->get_taxes() as $item_tax ) : ?>
-									<option value="<?php echo esc_attr( $item_tax->get_tax_id() ); ?>" selected="selected"><?php echo esc_html( $item_tax->get_name() ); ?></option>
-								<?php endforeach; ?>
-							</select>
-						</td>
-					<?php endif; ?>
-					<td class="line-subtotal">
-						<?php echo esc_html( eac_format_money( $item->get_subtotal(), $document->get_currency_code() ) ); ?>
-					</td>
-					<td class="line-actions">
-						<a class="remove-line-item" data-item_id="<?php echo esc_attr( $item->get_id() ); ?>">
-							<span class="dashicons dashicons-trash"></span>
-						</a>
-					</td>
 				</tr>
-			<?php endforeach; ?>
-			<tr id="new-line" class="<?php echo empty( $document->get_items() ) ? '' : 'display-none'; ?>">
-				<td class="line-item" colspan="2">
-					<div class="eac-form-field__group">
-						<select class="select-new-item eac_ajax_search" data-tyoe="item" data-placeholder="<?php esc_attr_e( 'Select line item', 'wp-ever-accounting' ); ?>">
-							<option></option>
-						</select>
-						<a class="button" href="<?php echo esc_url( eac_action_url( 'action=get_html_response&html_type=edit_product' ) ); ?>" title="<?php esc_attr_e( 'Add New Item', 'wp-ever-accounting' ); ?>">
-							<span class="dashicons dashicons-plus"></span>
-						</a>
+				</tbody>
+			</table>
+		</div>
+		<?php if ( $document->is_editable() ) : ?>
+			<div class="eac-document-form__section document-actions bb px-4 py-2">
+				<a class="button text-start add-line-item" type="button"><?php esc_html_e( 'Add Line Item', 'wp-ever-accounting' ); ?></a>
+				<a class="button text-end calculate-totals" type="button"><?php esc_html_e( 'Recalculate', 'wp-ever-accounting' ); ?></a>
+			</div>
+		<?php endif; ?>
+
+		<div class="eac-document-form__section document-totals">
+			<div>
+			</div>
+			<div class="eac-document__totals">
+				<div>
+					<span><?php esc_html_e( 'Subtotal', 'wp-ever-accounting' ); ?></span>
+					<span><?php echo esc_html( $document->get_formatted_items_total() ); ?></span>
+				</div>
+				<?php if ( ! empty( absint( $document->get_discount_total() ) ) ) : ?>
+					<div>
+						<span><?php esc_html_e( 'Discount', 'wp-ever-accounting' ); ?></span>
+						<span>&minus;<?php echo esc_html( $document->get_formatted_discount_total() ); ?>
+						</span>
 					</div>
-				</td>
-			</tr>
-			</tbody>
-		</table>
-	</div>
-
-	<div class="eac-panel align-items-center display-flex justify-content-between border-top-0 margin-0">
-		<button class="button add-line-item"><?php esc_html_e( 'Add Line Item', 'wp-ever-accounting' ); ?></button>
-		<button class="button calculate-totals"><?php esc_html_e( 'Recalculate', 'wp-ever-accounting' ); ?></button>
-	</div>
-
-	<div class="eac-panel margin-0 border-top-0">
-		<table class="eac-document__totals" cellpadding="0" cellspacing="0">
-			<tbody>
-			<tr>
-				<td class="total-label"><?php esc_html_e( 'Subtotal', 'wp-ever-accounting' ); ?></td>
-				<td class="total-value"><?php echo esc_html( eac_format_money( $document->get_subtotal(), $document->get_currency_code() ) ); ?></td>
-			</tr>
-
-			<tr>
-				<td class="total-label">
-					<?php esc_html_e( 'Discount', 'wp-ever-accounting' ); ?>
-					<div class="eac-form-field__group display-inline-flex" style="max-width: 120px; margin-left: 10px; margin-bottom: 0; font-weight: normal;color: inherit;">
-						<select class="discount-type form-field__addon" name="discount_type" style="max-width: 50px;">
-							<option value="fixed" <?php selected( $document->get_discount_type(), 'fixed' ); ?>>$</option>
-							<option value="percentage" <?php selected( $document->get_discount_type(), 'percentage' ); ?>>%</option>
-						</select>
-						<input class="discount_amount" type="number" name="discount_amount" value="<?php echo esc_attr( $document->get_discount_amount() ); ?>" style="max-width: 70px;"/>
+				<?php endif; ?>
+				<?php if ( ! empty( absint( $document->get_shipping_total() ) ) ) : ?>
+					<div>
+						<span><?php esc_html_e( 'Shipping', 'wp-ever-accounting' ); ?></span>
+						<span><?php echo esc_html( $document->get_formatted_shipping_total() ); ?></span>
 					</div>
-				</td>
-				<td class="total-value">
-					<?php echo esc_html( eac_format_money( $document->get_discount_total(), $document->get_currency_code() ) ); ?>
-				</td>
-			</tr>
-
-			<tr>
-				<td class="total-label">
-					<?php esc_html_e( 'Shipping', 'wp-ever-accounting' ); ?>
-					<input class="shipping_amount" type="number" name="shipping_amount" value="<?php echo esc_attr( $document->get_shipping_amount() ); ?>" style="max-width: 120px; margin-left: 10px;"/>
-				</td>
-				<td class="total-value"><?php echo esc_html( eac_format_money( $document->get_shipping_total(), $document->get_currency_code() ) ); ?></td>
-			</tr>
-
-			<tr>
-				<td class="total-label">
-					<?php esc_html_e( 'Fees', 'wp-ever-accounting' ); ?>
-					<input class="fees_amount" type="number" name="fees_amount" value="<?php echo esc_attr( $document->get_fees_amount() ); ?>" style="max-width: 120px; margin-left: 10px;"/>
-				</td>
-				<td class="total-value"><?php echo esc_html( eac_format_money( $document->get_fees_total(), $document->get_currency_code() ) ); ?></td>
-			</tr>
-
-			<?php if ( $tax_enabled ) : ?>
-				<?php foreach ( $document->get_taxes() as $tax ) : ?>
-					<tr>
-						<td class="total-label"><?php echo esc_html( $tax->get_name() ); ?></td>
-						<td class="total-value"><?php echo esc_html( eac_format_money( $tax->get_amount(), $document->get_currency_code() ) ); ?></td>
-					</tr>
-				<?php endforeach; ?>
-			<?php endif; ?>
-			<tr>
-				<td class="total-label"><?php esc_html_e( 'Total', 'wp-ever-accounting' ); ?></td>
-				<td class="total-value"><?php echo esc_html( eac_format_money( $document->get_total(), $document->get_currency_code() ) ); ?></td>
-			</tr>
-			</tbody>
-		</table>
+				<?php endif; ?>
+				<?php if ( ! empty( absint( $document->get_fees_total() ) ) ) : ?>
+					<div>
+						<span><?php esc_html_e( 'Fees', 'wp-ever-accounting' ); ?></span>
+						<span><?php echo esc_html( $document->get_formatted_fees_total() ); ?></span>
+					</div>
+				<?php endif; ?>
+				<?php if ( ! empty( absint( $document->get_tax_total() ) ) ) : ?>
+					<?php if ( 'single' === get_option( 'eac_tax_display_totals' ) ) : ?>
+						<div>
+							<span><?php esc_html_e( 'Tax', 'wp-ever-accounting' ); ?></span>
+							<span><?php echo esc_html( $document->get_formatted_tax_total() ); ?></span>
+						</div>
+					<?php else : ?>
+						<?php foreach ( $document->get_formatted_itemized_taxes() as $label => $amount ) : ?>
+							<div>
+								<span><?php echo esc_html( $label ); ?></span>
+								<span><?php echo esc_html( $amount ); ?></span>
+							</div>
+						<?php endforeach; ?>
+					<?php endif; ?>
+				<?php endif; ?>
+				<div>
+					<span><?php esc_html_e( 'Total', 'wp-ever-accounting' ); ?></span>
+					<span><?php echo esc_html( $document->get_formatted_total() ); ?></span>
+				</div>
+			</div>
+		</div>
 	</div>
 
 	<div class="eac-panel">
-		<div class="eac-form-field">
-			<label class="eac-form-field__label" for="document_note"><?php esc_html_e( 'Notes', 'wp-ever-accounting' ); ?></label>
-			<textarea name="document_note" id="document_note" rows="3"><?php echo esc_html( $document->get_document_note() ); ?></textarea>
-		</div>
+		<?php
+		eac_form_field(
+			array(
+				'id'          => 'note',
+				'label'       => __( 'Note', 'wp-ever-accounting' ),
+				'type'        => 'textarea',
+				'value'       => $document->get_note(),
+				'placeholder' => __( 'Enter a note', 'wp-ever-accounting' ),
+				'rows'        => 5,
+			)
+		)
+		?>
 	</div>
 
 	<?php wp_nonce_field( 'eac_edit_invoice' ); ?>

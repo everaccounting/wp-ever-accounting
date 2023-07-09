@@ -34,7 +34,7 @@ $taxes      = eac_get_taxes( array( 'include' => $item->get_tax_ids() ) );
 				);
 				eac_form_field(
 					array(
-						'type'        => 'money',
+						'type'        => 'text',
 						'name'        => 'price',
 						'label'       => __( 'Price', 'wp-ever-accounting' ),
 						'value'       => eac_sanitize_money( $item->get_price() ),
@@ -75,8 +75,9 @@ $taxes      = eac_get_taxes( array( 'include' => $item->get_tax_ids() ) );
 						'label'       => __( 'Type', 'wp-ever-accounting' ),
 						'value'       => $item->get_type(),
 						'options'     => eac_get_item_types(),
-						'placeholder' => __( 'Select item type', 'wp-ever-accounting' ),
+						'placeholder' => __( 'Select type', 'wp-ever-accounting' ),
 						'class'       => 'eac-col-6',
+						'input_class' => 'eac-select2',
 					)
 				);
 				// unit.
@@ -84,12 +85,10 @@ $taxes      = eac_get_taxes( array( 'include' => $item->get_tax_ids() ) );
 					array(
 						'type'        => 'select',
 						'name'        => 'unit',
-						'select2'     => true,
 						'label'       => __( 'Unit', 'wp-ever-accounting' ),
 						'value'       => $item->get_unit(),
-						'default'     => 'unit',
 						'options'     => eac_get_unit_types(),
-						'placeholder' => __( 'Select item measurement unit', 'wp-ever-accounting' ),
+						'placeholder' => __( 'Select measurement unit', 'wp-ever-accounting' ),
 						'class'       => 'eac-col-6',
 						'input_class' => 'eac-select2',
 					)
@@ -110,12 +109,12 @@ $taxes      = eac_get_taxes( array( 'include' => $item->get_tax_ids() ) );
 					eac_form_field(
 						array(
 							'type'        => 'select',
-							'name'        => 'is_taxable',
+							'name'        => 'taxable',
 							'label'       => __( 'Taxable', 'wp-ever-accounting' ),
 							'value'       => $item->get_taxable(),
 							'options'     => array(
-								'yes' => __( 'Yes', 'wp-ever-accounting' ),
-								'no'  => __( 'No', 'wp-ever-accounting' ),
+								'1' => __( 'Yes', 'wp-ever-accounting' ),
+								'0'  => __( 'No', 'wp-ever-accounting' ),
 							),
 							'placeholder' => __( 'Select taxable status', 'wp-ever-accounting' ),
 							'class'       => 'eac-col-6',
@@ -131,7 +130,7 @@ $taxes      = eac_get_taxes( array( 'include' => $item->get_tax_ids() ) );
 							'value'       => $item->get_tax_ids(),
 							'options'     => wp_list_pluck( $taxes, 'formatted_name', 'id' ),
 							'input_class' => 'eac-select2',
-							'attrs'       => 'data-action=eac_json_search&type=tax',
+							'attrs'       => 'data-action=eac_json_search&data-type=tax',
 							'placeholder' => __( 'Select tax rate', 'wp-ever-accounting' ),
 							'class'       => 'eac-col-6',
 							'tooltip'     => __( 'The selected tax rates will be applied to this item.', 'wp-ever-accounting' ),
@@ -159,7 +158,7 @@ $taxes      = eac_get_taxes( array( 'include' => $item->get_tax_ids() ) );
 	</div>
 
 	<?php wp_nonce_field( 'eac_edit_item' ); ?>
-	<input type="hidden" name="currency" value="<?php echo esc_attr( eac_get_base_currency() ); ?>">
+	<input type="hidden" name="currency_code" value="<?php echo esc_attr( eac_get_base_currency() ); ?>">
 	<input type="hidden" name="action" value="eac_edit_item">
 	<input type="hidden" name="id" value="<?php echo esc_attr( $item->get_id() ); ?>">
 </form>
