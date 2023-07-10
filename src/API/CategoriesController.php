@@ -3,7 +3,6 @@
 namespace EverAccounting\API;
 
 use EverAccounting\Models\Category;
-use function cli\err;
 
 defined( 'ABSPATH' ) || exit;
 

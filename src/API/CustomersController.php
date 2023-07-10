@@ -144,7 +144,11 @@ class CustomersController extends ContactsController {
 				$args[ $key ] = $request[ $key ];
 			}
 		}
-
+		foreach ( ( new Customer() )->get_core_data_keys() as $key ) {
+			if ( isset( $request[ $key ] ) ) {
+				$args[ $key ] = $request[ $key ];
+			}
+		}
 		/**
 		 * Filters the query arguments for a request.
 		 *

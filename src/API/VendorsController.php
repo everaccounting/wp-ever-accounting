@@ -67,8 +67,8 @@ class VendorsController extends ContactsController {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
 	 * @return true|\WP_Error True if the request has read access, WP_Error object otherwise.
+	 * @since 1.2.1
 	 */
 	public function get_item_permissions_check( $request ) {
 		$vendor = eac_get_vendor( $request['id'] );
@@ -89,8 +89,8 @@ class VendorsController extends ContactsController {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
 	 * @return true|\WP_Error True if the request has read access, WP_Error object otherwise.
+	 * @since 1.2.1
 	 */
 	public function update_item_permissions_check( $request ) {
 		$vendor = eac_get_vendor( $request['id'] );
@@ -111,8 +111,8 @@ class VendorsController extends ContactsController {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
 	 * @return true|\WP_Error True if the request has read access, WP_Error object otherwise.
+	 * @since 1.2.1
 	 */
 	public function delete_item_permissions_check( $request ) {
 		$vendor = eac_get_vendor( $request['id'] );
@@ -133,8 +133,8 @@ class VendorsController extends ContactsController {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
+	 * @since 1.2.1
 	 */
 	public function get_items( $request ) {
 		$params = $this->get_collection_params();
@@ -144,6 +144,12 @@ class VendorsController extends ContactsController {
 				$args[ $key ] = $request[ $key ];
 			}
 		}
+		foreach ( ( new Vendor() )->get_core_data_keys() as $key ) {
+			if ( isset( $request[ $key ] ) ) {
+				$args[ $key ] = $request[ $key ];
+			}
+		}
+
 
 		/**
 		 * Filters the query arguments for a request.
@@ -161,7 +167,6 @@ class VendorsController extends ContactsController {
 		$total     = eac_get_vendors( $args, true );
 		$page      = isset( $request['page'] ) ? absint( $request['page'] ) : 1;
 		$max_pages = ceil( $total / (int) $args['per_page'] );
-
 
 		$results = array();
 		foreach ( $vendors as $vendor ) {
@@ -202,8 +207,8 @@ class VendorsController extends ContactsController {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
+	 * @since 1.2.1
 	 */
 	public function get_item( $request ) {
 		$vendor = eac_get_vendor( $request['id'] );
@@ -217,8 +222,8 @@ class VendorsController extends ContactsController {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
+	 * @since 1.2.1
 	 */
 	public function create_item( $request ) {
 		if ( ! empty( $request['id'] ) ) {
@@ -263,7 +268,6 @@ class VendorsController extends ContactsController {
 		if ( is_wp_error( $data ) ) {
 			return $data;
 		}
-
 		$saved = $vendor->set_data( $data )->save();
 		if ( is_wp_error( $saved ) ) {
 			return $saved;

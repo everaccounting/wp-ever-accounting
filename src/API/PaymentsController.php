@@ -410,13 +410,6 @@ class PaymentsController extends TransactionsController {
 					'context'     => array( 'view', 'edit' ),
 					'required'    => true,
 				),
-				'type'         => array(
-					'description' => __( 'Payment type.', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'enum'        => array_keys(  eac_get_category_types() ),
-					'context'     => array( 'view', 'edit' ),
-					'required'    => true,
-				),
 				'description'  => array(
 					'description' => __( 'Payment description.', 'wp-ever-accounting' ),
 					'type'        => 'string',
