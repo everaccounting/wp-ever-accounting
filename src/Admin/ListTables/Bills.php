@@ -250,9 +250,9 @@ class Bills extends ListTable {
 				$value = $item->get_formatted_total();
 				$value = ! empty( $value ) ? $value : '&mdash;';
 				break;
-			case 'customer':
+			case 'vendor':
 				$contact_id = $item->get_contact_id();
-				$contact    = eac_get_customer( $contact_id );
+				$contact    = eac_get_vendor( $contact_id );
 				$link       = add_query_arg(
 					array(
 						'customer_id' => $contact_id,

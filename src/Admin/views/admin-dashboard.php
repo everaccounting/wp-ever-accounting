@@ -58,7 +58,7 @@ $accounts      = eac_get_accounts(
 						<?php foreach ( $payments as $payment ) : ?>
 							<tr>
 								<td><?php echo esc_html( date_i18n( get_option( 'date_format' ), strtotime( $payment->date ) ) ); ?></td>
-								<td><?php echo esc_html( eac_format_money( $payment->amount ) ); ?></td>
+								<td><?php echo esc_html( $payment->get_formatted_amount() ); ?></td>
 								<td>
 									<?php
 									$category      = eac_get_category( $payment->get_category_id() );
@@ -142,7 +142,7 @@ $accounts      = eac_get_accounts(
 						<?php foreach ( $accounts as $account ) : ?>
 							<tr>
 								<td><?php echo esc_html( $account->name ); ?></td>
-								<td><?php echo esc_html( eac_format_money( $account->balance ) ); ?></td>
+								<td><?php echo esc_html( $account->get_formatted_balance() ); ?></td>
 							</tr>
 						<?php endforeach; ?>
 					<?php else : ?>

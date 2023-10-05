@@ -1,38 +1,37 @@
-module.exports = function ( grunt ) {
+module.exports = function (grunt) {
 	'use strict';
 	const sass = require('node-sass');
 	// Project configuration
-	grunt.initConfig( {
+	grunt.initConfig({
 		// Setting folder templates.
 		dirs: {
 			css: 'assets/css',
 			fonts: 'assets/fonts',
 			images: 'assets/images',
-			js: 'assets/js'
+			js: 'assets/js',
 		},
 		// Minify .js files.
 		uglify: {
 			options: {
 				ie8: true,
 				parse: {
-					strict: false
+					strict: false,
 				},
 				output: {
-					comments: /@license|@preserve|^!/
-				}
+					comments: /@license|@preserve|^!/,
+				},
 			},
 			dist: {
-				files: [{
-					expand: true,
-					cwd: '<%= dirs.js %>/',
-					src: [
-						'**/*.js',
-						'!**/*.min.js'
-					],
-					dest: '<%= dirs.js %>/',
-					ext: '.min.js'
-				}]
-			}
+				files: [
+					{
+						expand: true,
+						cwd: '<%= dirs.js %>/',
+						src: ['**/*.js', '!**/*.min.js'],
+						dest: '<%= dirs.js %>/',
+						ext: '.min.js',
+					},
+				],
+			},
 		},
 
 		// Compile all .scss files.
@@ -40,31 +39,29 @@ module.exports = function ( grunt ) {
 			options: {
 				implementation: sass,
 				sourceMap: false,
-				outputStyle: 'compressed'
+				outputStyle: 'compressed',
 			},
 			dist: {
-				files: [{
-					expand: true,
-					cwd: '<%= dirs.css %>/',
-					src: ['*.scss'],
-					dest: '<%= dirs.css %>/',
-					ext: '.css'
-				}]
-			}
+				files: [
+					{
+						expand: true,
+						cwd: '<%= dirs.css %>/',
+						src: ['*.scss'],
+						dest: '<%= dirs.css %>/',
+						ext: '.css',
+					},
+				],
+			},
 		},
 		// Autoprefixer.
 		postcss: {
 			options: {
 				map: true,
-				processors: [
-					require('autoprefixer')
-				]
+				processors: [require('autoprefixer')],
 			},
 			dist: {
-				src: [
-					'<%= dirs.css %>/*.css'
-				]
-			}
+				src: ['<%= dirs.css %>/*.css'],
+			},
 		},
 		// Minify all .css files.
 		cssmin: {
@@ -73,8 +70,8 @@ module.exports = function ( grunt ) {
 				cwd: '<%= dirs.css %>/',
 				src: ['*.css', '!*.min.css'],
 				dest: '<%= dirs.css %>/',
-				ext: '.min.css'
-			}
+				ext: '.min.css',
+			},
 		},
 
 		// Check textdomain errors.
@@ -95,19 +92,19 @@ module.exports = function ( grunt ) {
 					'_n:1,2,4d',
 					'_nx:1,2,4c,5d',
 					'_n_noop:1,2,3d',
-					'_nx_noop:1,2,3c,4d'
-				]
+					'_nx_noop:1,2,3c,4d',
+				],
 			},
 			files: {
 				src: [
-					'**/*.php',               // Include all files
-					'!node_modules/**',       // Exclude node_modules/
-					'!tests/**',              // Exclude tests/
-					'!vendor/**',             // Exclude vendor/
-					'!tmp/**'                 // Exclude tmp/
+					'**/*.php', // Include all files
+					'!node_modules/**', // Exclude node_modules/
+					'!tests/**', // Exclude tests/
+					'!vendor/**', // Exclude vendor/
+					'!tmp/**', // Exclude tmp/
 				],
-				expand: true
-			}
+				expand: true,
+			},
 		},
 
 		// Generate POT files.
@@ -116,40 +113,36 @@ module.exports = function ( grunt ) {
 				type: 'wp-plugin',
 				domainPath: 'i18n/languages',
 				potHeaders: {
-					'language-team': 'LANGUAGE <EMAIL@ADDRESS>'
-				}
+					'language-team': 'LANGUAGE <EMAIL@ADDRESS>',
+				},
 			},
 			dist: {
 				options: {
 					potFilename: 'wp-ever-accounting.pot',
-					exclude: [
-						'vendor/.*',
-						'tests/.*',
-						'tmp/.*'
-					]
-				}
-			}
+					exclude: ['vendor/.*', 'tests/.*', 'tmp/.*'],
+				},
+			},
 		},
 
 		// Watch changes for assets.
 		watch: {
 			css: {
 				files: ['<%= dirs.css %>/**/*.scss'],
-				tasks: ['sass', 'postcss', 'cssmin' ]
+				tasks: ['sass', 'postcss', 'cssmin'],
 			},
 			js: {
 				files: [
 					'<%= dirs.js %>/*js',
 					'<%= dirs.js %>/**/*js',
 					'!<%= dirs.js %>/*.min.js',
-					'!<%= dirs.js %>/**/*.min.js'
+					'!<%= dirs.js %>/**/*.min.js',
 				],
-				tasks: ['uglify']
-			}
+				tasks: ['uglify'],
+			},
 		},
-	} );
+	});
 
 	grunt.registerTask('build', ['uglify', 'sass', 'postcss', 'cssmin']);
 	// Saves having to declare each dependency
-	require( 'matchdep' ).filterDev( 'grunt-*' ).forEach( grunt.loadNpmTasks );
+	require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 };

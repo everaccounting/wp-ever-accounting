@@ -293,7 +293,7 @@ class Notices extends Singleton {
 		}
 
 		// Check if the notice is already added.
-		$notice_ids = wp_list_pluck( self::get_instance()->notices, 'id' );
+		$notice_ids = wp_list_pluck( self::instance()->notices, 'id' );
 		$notice     = array(
 			'id'      => $args['id'],
 			'message' => $message,
@@ -302,7 +302,7 @@ class Notices extends Singleton {
 		);
 		// if the notice is not already added.
 		if ( ! in_array( $args['id'], $notice_ids, true ) ) {
-			self::get_instance()->notices[] = $notice;
+			self::instance()->notices[] = $notice;
 		}
 	}
 
@@ -321,7 +321,7 @@ class Notices extends Singleton {
 			return;
 		}
 
-		$message_ids = wp_list_pluck( self::get_instance()->messages, 'id' );
+		$message_ids = wp_list_pluck( self::instance()->messages, 'id' );
 		$message     = array(
 			'id'      => $args['id'],
 			'message' => $message,
@@ -329,7 +329,7 @@ class Notices extends Singleton {
 			'args'    => $args,
 		);
 		if ( ! in_array( $args['id'], $message_ids, true ) ) {
-			self::get_instance()->messages[] = $message;
+			self::instance()->messages[] = $message;
 		}
 	}
 }

@@ -179,8 +179,6 @@ class Money {
 		if ( empty( $code ) ) {
 			$code = eac_get_base_currency();
 		}
-		var_dump( $code );
 		$money = new Money( $code );
-		var_dump( $money );
 	}
 }

@@ -23,10 +23,10 @@ $company_name = get_option( 'eac_company_name', get_bloginfo( 'name' ) );
 $logo         = get_option( 'eac_company_logo', '' );
 
 ?>
-<div class="eac-panel is-large eac-document is--expense margin-top-0">
+<div class="eac-panel is-large eac-document is--expense mt-0">
 	<div class="eac-document__header">
 		<div class="eac-document__logo">
-			<a href="https://pluginever.com">
+			<a href="<?php echo esc_url( home_url( '/' ) ); ?>">
 				<?php if ( $logo ) : ?>
 					<img src="<?php echo esc_url( $logo ); ?>" alt="<?php echo esc_attr( $company_name ); ?>">
 				<?php else : ?>
@@ -52,7 +52,7 @@ $logo         = get_option( 'eac_company_logo', '' );
 				<?php if ( $expense->get_customer_id() ) : ?>
 					<?php echo wp_kses_post( $expense->get_formatted_address() ); ?>
 				<?php else : ?>
-					<p class="margin-top-0"><?php esc_html_e( 'Vendor details not found.', 'wp-ever-accounting' ); ?></p>
+					<p class="mt-0"><?php esc_html_e( 'Vendor details not found.', 'wp-ever-accounting' ); ?></p>
 				<?php endif; ?>
 			</div>
 		</div>

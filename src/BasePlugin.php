@@ -69,7 +69,7 @@ class BasePlugin {
 	 *
 	 * @return static
 	 */
-	final public static function get_instance() {
+	final public static function instance() {
 		if ( null === static::$instance ) {
 			_doing_it_wrong( __FUNCTION__, 'Plugin instance called before initiating the instance.', '1.0.0' );
 		}

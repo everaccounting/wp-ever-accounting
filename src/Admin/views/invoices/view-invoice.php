@@ -71,7 +71,9 @@ $actions = apply_filters( 'eac_invoice_actions', $actions, $invoice_id );
 </div>
 <div class="eac-columns">
 	<div class="eac-col-9">
-		<?php eac_display_invoice( $document->get_id() ); ?>
+		<div id="invoice">
+			<?php eac_display_invoice( $document->get_id() ); ?>
+		</div>
 		<div class="eac-card">
 			<div class="eac-card__header">
 				<h2 class="eac-card__title"><?php esc_html_e( 'Payments', 'wp-ever-accounting' ); ?></h2>
@@ -101,7 +103,7 @@ $actions = apply_filters( 'eac_invoice_actions', $actions, $invoice_id );
 									</a>
 								</td>
 								<td class="payment-date"><?php echo esc_html( $payment->get_date() ); ?></td>
-								<td class="payment-amount"><?php echo esc_html( $payment->get_amount() ); ?></td>
+								<td class="payment-amount"><?php echo esc_html( $payment->get_formatted_amount() ); ?></td>
 								<td class="payment-method"><?php echo esc_html( $payment->get_payment_method() ); ?></td>
 								<td class="payment-reference"><?php echo esc_html( $payment->get_reference() ); ?></td>
 							</tr>
@@ -138,6 +140,10 @@ $actions = apply_filters( 'eac_invoice_actions', $actions, $invoice_id );
 							<td class="history-date"><?php echo esc_html( $document->get_payment_date() ); ?></td>
 						</tr>
 					<?php endif; ?>
+					<tr>
+						<th class="history-action"><?php esc_html_e( 'Status', 'wp-ever-accounting' ); ?></th>
+						<td class="history-date"><?php echo esc_html( $document->get_status_label() ); ?></td>
+					</tr>
 					</tbody>
 				</table>
 			</div>

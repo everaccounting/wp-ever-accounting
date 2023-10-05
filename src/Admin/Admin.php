@@ -34,16 +34,16 @@ class Admin extends \EverAccounting\Singleton {
 	 */
 	public function includes() {
 		require_once __DIR__ . '/Functions.php';
-		Actions::instantiate();
-		Extensions::instantiate();
-		Items::instantiate();
-		Banking::instantiate();
-		Misc::instantiate();
-		Dashboard::instantiate();
-		Purchases::instantiate();
-		Reports::instantiate();
-		Sales::instantiate();
-		Tools::instantiate();
+		Actions::instance();
+		Extensions::instance();
+		Items::instance();
+		Banking::instance();
+		Misc::instance();
+		Dashboard::instance();
+		Purchases::instance();
+		Reports::instance();
+		Sales::instance();
+		Tools::instance();
 	}
 
 	/**
@@ -53,7 +53,7 @@ class Admin extends \EverAccounting\Singleton {
 	 * @return void
 	 */
 	public function init() {
-		Menus::instantiate();
+		Menus::instance();
 	}
 
 	/**

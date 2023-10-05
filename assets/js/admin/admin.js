@@ -176,7 +176,17 @@
 				});
 			})
 			.on('init-form', '#eac-bill-form', function () {
-
+				var $form = $(this);
+				$(':input[name="contact_id"]', $form).on('change', function () {
+					const contact_id = $(this).val();
+					eac.api.getVendor(contact_id).then(function (contact) {
+						$.each(contact, function (key, value) {
+							console.log(key, value);
+							$(':input[name="billing_' + key + '"]', $form).val(value);
+						});
+						$form.trigger('update');
+					});
+				});
 			})
 			.on('init-form', '.eac-document-form', function () {
 				var $form = $(this);

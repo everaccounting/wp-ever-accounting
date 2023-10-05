@@ -21,6 +21,18 @@ $categories = eac_get_categories(
 		'no_count' => true,
 	)
 );
+$vendors  = eac_get_vendors(
+	array(
+		'include'  => $expense->get_vendor_id(),
+		'no_count' => true,
+	)
+);
+$bills   = eac_get_bills(
+	array(
+		'include'  => $expense->get_document_id(),
+		'no_count' => true,
+	)
+);
 ?>
 <form id="eac-expense-form" class="eac-ajax-form" method="post">
 	<div class="eac-card">
@@ -111,14 +123,16 @@ $categories = eac_get_categories(
 						'name'        => 'vendor_id',
 						'label'       => __( 'Vendor', 'wp-ever-accounting' ),
 						'value'       => $expense->get_vendor_id(),
+						'options'     => wp_list_pluck( $vendors, 'formatted_name', 'id' ),
+						'default'     => filter_input( INPUT_GET, 'vendor_id', FILTER_SANITIZE_NUMBER_INT ),
 						'placeholder' => __( 'Select vendor', 'wp-ever-accounting' ),
 						'class'       => 'eac-col-6',
 						'input_class' => 'eac-select2',
 						'attrs'       => 'data-action=eac_json_search&data-type=vendor',
 						'suffix'      => sprintf(
 							'<a class="button" href="%s" title="%s"><span class="dashicons dashicons-plus"></span></a>',
-							esc_url( eac_action_url( 'action=get_html_response&html_type=edit_customer' ) ),
-							__( 'Add customer', 'wp-ever-accounting' )
+							esc_url( eac_action_url( 'action=get_html_response&html_type=edit_vendor' ) ),
+							__( 'Add vendor', 'wp-ever-accounting' )
 						),
 					)
 				);
@@ -126,9 +140,10 @@ $categories = eac_get_categories(
 					array(
 						'type'        => 'select',
 						'name'        => 'document_id',
-						'label'       => __( 'Invoice', 'wp-ever-accounting' ),
+						'label'       => __( 'Bill', 'wp-ever-accounting' ),
 						'value'       => $expense->get_document_id(),
-						'placeholder' => __( 'Select invoice', 'wp-ever-accounting' ),
+						'options'     => wp_list_pluck( $bills, 'formatted_name', 'id' ),
+						'placeholder' => __( 'Select bill', 'wp-ever-accounting' ),
 						'required'    => false,
 						'class'       => 'eac-col-6',
 						'input_class' => 'eac-select2',

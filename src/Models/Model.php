@@ -305,7 +305,7 @@ abstract class Model {
 	 * @return static
 	 * @since 1.0.0
 	 */
-	public static function get_instance() {
+	public static function instance() {
 		return new static();
 	}
 
@@ -736,7 +736,7 @@ abstract class Model {
 	 * @since 1.0.0
 	 */
 	public static function get( $data ) {
-		return static::get_instance()->find( $data );
+		return static::instance()->find( $data );
 	}
 
 	/**

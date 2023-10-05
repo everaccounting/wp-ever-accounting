@@ -52,9 +52,9 @@ function eac_get_item_types() {
 	return apply_filters(
 		'ever_accounting_item_types',
 		array(
-			'standard' => __( 'Standard', 'wp-ever-accounting' ),
-			'shipping' => __( 'Shipping', 'wp-ever-accounting' ),
-			'fee'      => __( 'Fee', 'wp-ever-accounting' ),
+			'standard' => __( 'Standard Item', 'wp-ever-accounting' ),
+			'shipping' => __( 'Shipping Fee', 'wp-ever-accounting' ),
+			'fee'      => __( 'Fee Item', 'wp-ever-accounting' ),
 		)
 	);
 }

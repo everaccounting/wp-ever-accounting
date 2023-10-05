@@ -36,13 +36,13 @@ class Transfer extends Model {
 	 * @var array
 	 */
 	protected $core_data = array(
-		'id'         => null,
-		'payment_id' => null,
-		'expense_id' => null,
-		'uuid'       => null,
-		'creator_id' => null,
-		'updated_at' => null,
-		'created_at' => null,
+		'id'           => null,
+		'payment_id'   => null,
+		'expense_id'   => null,
+		'uuid'         => null,
+		'creator_id'   => null,
+		'date_updated' => null,
+		'date_created' => null,
 	);
 
 	/**
@@ -72,9 +72,9 @@ class Transfer extends Model {
 	 * @since 1.0.0
 	 */
 	public function __construct( $data = 0 ) {
-		$this->core_data['created_at'] = wp_date( 'Y-m-d H:i:s' );
-		$this->core_data['uuid']       = eac_generate_uuid();
-		$this->extra_data['date']      = wp_date( 'Y-m-d' );
+		$this->core_data['date_created'] = wp_date( 'Y-m-d H:i:s' );
+		$this->core_data['uuid']         = eac_generate_uuid();
+		$this->extra_data['date']        = wp_date( 'Y-m-d' );
 		parent::__construct( $data );
 	}
 
@@ -98,8 +98,8 @@ class Transfer extends Model {
 	 * @param array $clauses Query clauses.
 	 * @param array $args Array of args to pass to the query method.
 	 *
-	 * @return array
 	 * @since 1.0.0
+	 * @return array
 	 */
 	protected function prepare_join_query( $clauses, $args = array() ) {
 		global $wpdb;
@@ -123,10 +123,10 @@ class Transfer extends Model {
 	 *
 	 * @param int|string $key Unique identifier for the object.
 	 *
-	 * @return object|false Object, false otherwise.
 	 * @since 1.0.0
 	 *
-	 * @global \wpdb $wpdb WordPress database abstraction object.
+	 * @return object|false Object, false otherwise.
+	 * @global \wpdb     $wpdb WordPress database abstraction object.
 	 */
 	protected function read( $key ) {
 		$transfer = parent::read( $key );
@@ -152,8 +152,8 @@ class Transfer extends Model {
 	/**
 	 * Deletes the object from database.
 	 *
-	 * @return array|false true on success, false on failure.
 	 * @since 1.0.0
+	 * @return array|false true on success, false on failure.
 	 */
 	public function delete() {
 		$payment = Payment::get( $this->get_payment_id() );
@@ -172,9 +172,9 @@ class Transfer extends Model {
 	/**
 	 * Saves an object in the database.
 	 *
-	 * @return static|\WP_Error Object instance on success, WP_Error on failure.
 	 * @throws \Exception When the object cannot be saved.
 	 * @since 1.0.0
+	 * @return static|\WP_Error Object instance on success, WP_Error on failure.
 	 */
 	public function save() {
 		global $wpdb;
@@ -296,8 +296,8 @@ class Transfer extends Model {
 	/**
 	 * Get id.
 	 *
-	 * @return int
 	 * @since 1.0.0
+	 * @return int
 	 */
 	public function get_id() {
 		return (int) $this->get_prop( 'id' );
@@ -319,8 +319,8 @@ class Transfer extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @return mixed|null
 	 * @since 1.0.2
+	 * @return mixed|null
 	 */
 	public function get_payment_id( $context = 'edit' ) {
 		return $this->get_prop( 'payment_id', $context );
@@ -342,8 +342,8 @@ class Transfer extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @return mixed|null
 	 * @since 1.0.2
+	 * @return mixed|null
 	 */
 	public function get_expense_id( $context = 'edit' ) {
 		return $this->get_prop( 'expense_id', $context );
@@ -407,17 +407,17 @@ class Transfer extends Model {
 	 *
 	 * @return string
 	 */
-	public function get_updated_at( $context = 'edit' ) {
-		return $this->get_prop( 'updated_at', $context );
+	public function get_date_updated( $context = 'edit' ) {
+		return $this->get_prop( 'date_updated', $context );
 	}
 
 	/**
 	 * Set the date updated.
 	 *
-	 * @param string $updated_at date updated.
+	 * @param string $date date updated.
 	 */
-	public function set_updated_at( $updated_at ) {
-		$this->set_date_prop( 'updated_at', $updated_at );
+	public function set_date_updated( $date ) {
+		$this->set_date_prop( 'date_updated', $date );
 	}
 
 	/**
@@ -427,17 +427,17 @@ class Transfer extends Model {
 	 *
 	 * @return string
 	 */
-	public function get_created_at( $context = 'edit' ) {
-		return $this->get_prop( 'created_at', $context );
+	public function get_date_created( $context = 'edit' ) {
+		return $this->get_prop( 'date_created', $context );
 	}
 
 	/**
 	 * Set the date created.
 	 *
-	 * @param string $created_at date created.
+	 * @param string $date date created.
 	 */
-	public function set_created_at( $created_at ) {
-		$this->set_date_prop( 'created_at', $created_at );
+	public function set_date_created( $date ) {
+		$this->set_date_prop( 'date_created', $date );
 	}
 
 	/*
@@ -453,8 +453,8 @@ class Transfer extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @return mixed|null
 	 * @since 1.0.2
+	 * @return mixed|null
 	 */
 	public function get_from_account_id( $context = 'edit' ) {
 		return $this->get_prop( 'from_account_id', $context );
@@ -465,8 +465,8 @@ class Transfer extends Model {
 	 *
 	 * @param int $value From account ID.
 	 *
-	 * @return void
 	 * @since 1.0.2
+	 * @return void
 	 */
 	public function set_from_account_id( $value ) {
 		$this->set_prop( 'from_account_id', absint( $value ) );
@@ -477,8 +477,8 @@ class Transfer extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @return mixed|null
 	 * @since 1.0.2
+	 * @return mixed|null
 	 */
 	public function get_to_account_id( $context = 'edit' ) {
 		return $this->get_prop( 'to_account_id', $context );
@@ -489,8 +489,8 @@ class Transfer extends Model {
 	 *
 	 * @param int $value To account ID.
 	 *
-	 * @return void
 	 * @since 1.0.2
+	 * @return void
 	 */
 	public function set_to_account_id( $value ) {
 		$this->set_prop( 'to_account_id', absint( $value ) );
@@ -501,8 +501,8 @@ class Transfer extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @return mixed|null
 	 * @since 1.0.2
+	 * @return mixed|null
 	 */
 	public function get_amount( $context = 'edit' ) {
 		return $this->get_prop( 'amount', $context );
@@ -513,8 +513,8 @@ class Transfer extends Model {
 	 *
 	 * @param float $value Amount.
 	 *
-	 * @return void
 	 * @since 1.0.2
+	 * @return void
 	 */
 	public function set_amount( $value ) {
 		$this->set_prop( 'amount', $value );
@@ -525,8 +525,8 @@ class Transfer extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @return mixed|null
 	 * @since 1.0.2
+	 * @return mixed|null
 	 */
 	public function get_currency_code( $context = 'edit' ) {
 		return $this->get_prop( 'currency_code', $context );
@@ -548,8 +548,8 @@ class Transfer extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @return mixed|null
 	 * @since 1.0.2
+	 * @return mixed|null
 	 */
 	public function get_exchange_rate( $context = 'edit' ) {
 		return $this->get_prop( 'exchange_rate', $context );
@@ -571,8 +571,8 @@ class Transfer extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @return string
 	 * @since 1.0.2
+	 * @return string
 	 */
 	public function get_date( $context = 'edit' ) {
 		return $this->get_prop( 'date', $context );
@@ -583,8 +583,8 @@ class Transfer extends Model {
 	 *
 	 * @param string $value Date.
 	 *
-	 * @return void
 	 * @since 1.0.2
+	 * @return void
 	 */
 	public function set_date( $value ) {
 		$this->set_date_prop( 'date', $value, 'Y-m-d' );
@@ -595,8 +595,8 @@ class Transfer extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @return mixed|null
 	 * @since 1.0.2
+	 * @return mixed|null
 	 */
 	public function get_payment_method( $context = 'edit' ) {
 		return $this->get_prop( 'payment_method', $context );
@@ -607,8 +607,8 @@ class Transfer extends Model {
 	 *
 	 * @param string $value Expense method.
 	 *
-	 * @return void
 	 * @since 1.0.2
+	 * @return void
 	 */
 	public function set_payment_method( $value ) {
 		$this->set_prop( 'payment_method', $value );
@@ -619,8 +619,8 @@ class Transfer extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @return mixed|null
 	 * @since 1.0.2
+	 * @return mixed|null
 	 */
 	public function get_reference( $context = 'edit' ) {
 		return $this->get_prop( 'reference', $context );
@@ -631,8 +631,8 @@ class Transfer extends Model {
 	 *
 	 * @param string $value Reference.
 	 *
-	 * @return void
 	 * @since 1.0.2
+	 * @return void
 	 */
 	public function set_reference( $value ) {
 		$this->set_prop( 'reference', $value );
@@ -643,8 +643,8 @@ class Transfer extends Model {
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @return mixed|null
 	 * @since 1.0.2
+	 * @return mixed|null
 	 */
 	public function get_note( $context = 'edit' ) {
 		return $this->get_prop( 'note', $context );
@@ -655,8 +655,8 @@ class Transfer extends Model {
 	 *
 	 * @param string $value Description.
 	 *
-	 * @return void
 	 * @since 1.0.2
+	 * @return void
 	 */
 	public function set_note( $value ) {
 		$this->set_prop( 'note', $value );
@@ -669,8 +669,8 @@ class Transfer extends Model {
 	/**
 	 * Get formatted transaction amount.
 	 *
-	 * @return string
 	 * @since 1.0.2
+	 * @return string
 	 */
 	public function get_formatted_amount() {
 		return eac_format_money( $this->get_amount(), $this->get_currency_code() );

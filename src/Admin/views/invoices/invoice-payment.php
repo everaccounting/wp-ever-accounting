@@ -14,4 +14,4 @@ $payment->set_document_id( $document->get_id() );
 $payment->set_amount( $document->get_total() );
 $payment->set_date( current_time( 'mysql' ) );
 $payment->set_customer_id( $document->get_contact_id() );
-require dirname( __DIR__ ) . '/payments/payment-form.php';
+include dirname( __DIR__ ) . '/payments/payment-form.php';

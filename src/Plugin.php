@@ -7,19 +7,6 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Class Plugin.
  *
- * @property-read Models\Category $categories
- * @property-read Models\Tax $taxes
- * @property-read Models\Currency $currencies
- * @property-read Models\Account $accounts
- * @property-read Models\Transfer $transfers
- * @property-read Models\Payment $payments
- * @property-read Models\Expense $expenses
- * @property-read Models\Invoice $invoices
- * @property-read Models\Bill $bills
- * @property-read Models\Customer $customers
- * @property-read Models\Vendor $vendors
- * @property-read Models\Item $items
- *
  *
  * @since   1.1.6
  * @package EverAccounting
@@ -43,36 +30,6 @@ class Plugin extends BasePlugin {
 		$this->define_constants();
 		$this->includes();
 		$this->init_hooks();
-	}
-
-	/**
-	 * Magic method to get property.
-	 *
-	 * @param string $name Property name.
-	 *
-	 * @since 1.1.6
-	 */
-	public function __get( $name ) {
-		$properties = array(
-			'categories' => Models\Category::class,
-			'taxes'      => Models\Tax::class,
-			'currencies' => Models\Currency::class,
-			'accounts'   => Models\Account::class,
-			'transfers'  => Models\Transfer::class,
-			'payments'   => Models\Payment::class,
-			'expenses'   => Models\Expense::class,
-			'invoices'   => Models\Invoice::class,
-			'bills'      => Models\Bill::class,
-			'customers'  => Models\Customer::class,
-			'vendors'    => Models\Vendor::class,
-			'items'      => Models\Item::class,
-		);
-
-		if ( isset( $properties[ $name ] ) ) {
-			return $properties[ $name ]::get_instance();
-		}
-
-		return null;
 	}
 
 	/**
@@ -130,22 +87,22 @@ class Plugin extends BasePlugin {
 		do_action( 'before_ever_accounting_init' );
 
 		// Load class instances.
-		Installer::instantiate();
-		Rewrites::instantiate();
-		Scripts::instantiate();
-		Notices::instantiate();
-		Actions::instantiate();
-		Cache::instantiate();
-		API::instantiate();
-		Shortcodes::instantiate();
+		Installer::instance();
+		Rewrites::instance();
+		Scripts::instance();
+		Notices::instance();
+		Actions::instance();
+		Cache::instance();
+		API::instance();
+		Shortcodes::instance();
 
 		// If frontend.
 		if ( self::is_request( 'frontend' ) ) {
-			Frontend\Frontend::instantiate();
+			Frontend\Frontend::instance();
 		}
 
 		if ( self::is_request( 'admin' ) ) {
-			Admin\Admin::instantiate();
+			Admin\Admin::instance();
 		}
 
 		// Init action.

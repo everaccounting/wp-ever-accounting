@@ -442,7 +442,7 @@ function eac_form_field( $field ) {
 			$field['attrs'][ $attr_key ] = $attr_key;
 		}
 	}
-	if ( ! empty( $field['input_style'] ) ) {
+		if ( ! empty( $field['input_style'] ) ) {
 		$field['attrs']['style'] = $field['input_style'];
 	}
 	if ( ! empty( $field['placeholder'] ) ) {

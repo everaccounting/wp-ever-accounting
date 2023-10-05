@@ -34,7 +34,7 @@ class Frontend extends Singleton {
 	 * @return void
 	 */
 	public static function output_head() {
-		$title = Rewrites::instantiate()->get_endpoint_title();
+		$title = Rewrites::instance()->get_endpoint_title();
 		echo sprintf( '<title>%s</title>', esc_html( $title ) );
 		// enqueue styles and scripts.
 		EAC()->enqueue_style( 'eac-frontend', 'css/frontend.min.css' );

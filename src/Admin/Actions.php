@@ -51,20 +51,28 @@ class Actions extends Singleton {
 		add_action( 'wp_ajax_eac_edit_transfer', array( __CLASS__, 'edit_transfer' ) );
 		add_action( 'wp_ajax_eac_edit_tax', array( __CLASS__, 'edit_tax' ) );
 		add_action( 'wp_ajax_eac_edit_invoice', array( __CLASS__, 'edit_invoice' ) );
+		add_action( 'wp_ajax_eac_edit_bill', array( __CLASS__, 'edit_bill' ) );
 		add_action( 'wp_ajax_eac_calculate_bill_totals', array( __CLASS__, 'calculate_bill_totals' ) );
 		add_action( 'wp_ajax_eac_calculate_invoice_totals', array( __CLASS__, 'calculate_invoice_totals' ) );
 		add_action( 'admin_post_eac_export_data', array( __CLASS__, 'export_data' ) );
 
+		// Invoice actions.
+		add_action( 'admin_post_eac_mark_invoice_sent', array( __CLASS__, 'mark_invoice_sent' ) );
 		add_action( 'ever_accounting_before_invoice_actions', array( __CLASS__, 'before_invoice_actions' ), 10, 2 );
+
+		// Bill actions.
+		add_action( 'admin_post_eac_mark_bill_received', array( __CLASS__, 'mark_bill_received' ) );
+		add_action( 'ever_accounting_before_bill_actions', array( __CLASS__, 'before_bill_actions' ), 10, 2 );
 	}
 
 	/**
 	 * Get modal content.
 	 *
-	 * @return void
 	 * @since 1.1.6
+	 * @return void
 	 */
 	public static function get_html_response() {
+		error_log( __METHOD__ );
 		check_ajax_referer( 'eac_get_html_response' );
 		$id        = isset( $_GET['id'] ) ? absint( wp_unslash( $_GET['id'] ) ) : 0;
 		$html_type = isset( $_GET['html_type'] ) ? sanitize_text_field( wp_unslash( $_GET['html_type'] ) ) : '';
@@ -73,70 +81,75 @@ class Actions extends Singleton {
 			case 'edit_item_category':
 				$category       = new Category( $id );
 				$category->type = 'item';
-				require __DIR__ . '/views/categories/category-form.php';
+				include __DIR__ . '/views/categories/category-form.php';
 				break;
 			case 'edit_payment_category':
 				$category       = new Category( $id );
 				$category->type = 'payment';
-				require __DIR__ . '/views/categories/category-form.php';
+				include __DIR__ . '/views/categories/category-form.php';
 				break;
 			case 'edit_expense_category':
 				$category       = new Category( $id );
 				$category->type = 'expense';
-				require __DIR__ . '/views/categories/category-form.php';
+				include __DIR__ . '/views/categories/category-form.php';
 				break;
 			case 'edit_category':
 				$category = new Category( $id );
-				require __DIR__ . '/views/categories/category-form.php';
+				include __DIR__ . '/views/categories/category-form.php';
 				break;
 			case 'edit_account':
 				$account = new Account( $id );
-				require __DIR__ . '/views/accounts/account-form.php';
+				include __DIR__ . '/views/accounts/account-form.php';
 				break;
 			case 'edit_transfer':
 				$transfer = new Transfer( $id );
-				require __DIR__ . '/views/transfers/transfer-form.php';
+				include __DIR__ . '/views/transfers/transfer-form.php';
 				break;
 			case 'edit_vendor':
 				$vendor = new Vendor( $id );
-				require __DIR__ . '/views/vendors/vendor-form.php';
+				include __DIR__ . '/views/vendors/vendor-form.php';
 				break;
 			case 'edit_customer':
 				$customer = new Customer( $id );
-				require __DIR__ . '/views/customers/customer-form.php';
+				include __DIR__ . '/views/customers/customer-form.php';
 				break;
 			case 'edit_payment':
 				$payment = new Payment( $id );
-				require __DIR__ . '/views/payments/payment-form.php';
+				include __DIR__ . '/views/payments/payment-form.php';
 				break;
 			case 'edit_expense':
 				$expense = new Expense( $id );
-				require __DIR__ . '/views/expenses/expense-form.php';
+				include __DIR__ . '/views/expenses/expense-form.php';
 				break;
 			case 'edit_item':
 				$item = new Item( $id );
-				require __DIR__ . '/views/items/item-form.php';
+				include __DIR__ . '/views/items/item-form.php';
 				break;
 			case 'edit_currency':
 				$currency = new Currency( $id );
-				require __DIR__ . '/views/currencies/currency-form.php';
+				include __DIR__ . '/views/currencies/currency-form.php';
 				break;
 			case 'edit_tax':
 				$tax = new Tax( $id );
-				require __DIR__ . '/views/taxes/tax-form.php';
+				include __DIR__ . '/views/taxes/tax-form.php';
 				break;
 			case 'invoice_payment':
 				$document = new Invoice( $id );
-				require __DIR__ . '/views/invoices/invoice-payment.php';
+				include __DIR__ . '/views/invoices/invoice-payment.php';
 				break;
 			case 'send_invoice':
 				$document = new Invoice( $id );
-				require __DIR__ . '/views/invoices/send-invoice.php';
+				include __DIR__ . '/views/invoices/send-invoice.php';
+				break;
+			case 'bill_payment':
+				$document = new Bill( $id );
+				include __DIR__ . '/views/bills/bill-payment.php';
 				break;
 			default:
 				do_action( 'eac_get_html_response', $html_type );
 				break;
 		}
+		error_log( $html_type );
 		echo ob_get_clean(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		wp_die();
 	}
@@ -144,8 +157,8 @@ class Actions extends Singleton {
 	/**
 	 * Json search.
 	 *
-	 * @return void
 	 * @since 1.1.6
+	 * @return void
 	 */
 	public static function eac_json_search() {
 		check_ajax_referer( 'eac_json_search' );
@@ -336,8 +349,8 @@ class Actions extends Singleton {
 	/**
 	 * Get contact details.
 	 *
-	 * @return void
 	 * @since 1.1.6
+	 * @return void
 	 */
 	public static function get_contact() {
 		$contact_id = eac_get_input_var( 'contact_id', 0, 'post' );
@@ -358,8 +371,8 @@ class Actions extends Singleton {
 	/**
 	 * Get account details.
 	 *
-	 * @return void
 	 * @since 1.1.6
+	 * @return void
 	 */
 	public static function get_account() {
 		check_ajax_referer( 'eac_get_account' );
@@ -381,8 +394,8 @@ class Actions extends Singleton {
 	/**
 	 * Get currency details.
 	 *
-	 * @return void
 	 * @since 1.1.6
+	 * @return void
 	 */
 	public static function get_currency() {
 		check_ajax_referer( 'eac_get_currency' );
@@ -404,8 +417,8 @@ class Actions extends Singleton {
 	/**
 	 * Get contact details.
 	 *
-	 * @return void
 	 * @since 1.1.6
+	 * @return void
 	 */
 	public static function get_item_details() {
 		$item_id = eac_get_input_var( 'item_id', 0, 'post' );
@@ -426,8 +439,8 @@ class Actions extends Singleton {
 	/**
 	 * Edit customer.
 	 *
-	 * @return void
 	 * @since 1.1.6
+	 * @return void
 	 */
 	public static function edit_customer() {
 		check_admin_referer( 'eac_edit_customer' );
@@ -464,8 +477,8 @@ class Actions extends Singleton {
 	/**
 	 * Edit account.
 	 *
-	 * @return void
 	 * @since 1.1.6
+	 * @return void
 	 */
 	public static function edit_account() {
 		check_admin_referer( 'eac_edit_account' );
@@ -502,8 +515,8 @@ class Actions extends Singleton {
 	/**
 	 * Edit item.
 	 *
-	 * @return void
 	 * @since 1.1.6
+	 * @return void
 	 */
 	public static function edit_item() {
 		check_admin_referer( 'eac_edit_item' );
@@ -540,8 +553,8 @@ class Actions extends Singleton {
 	/**
 	 * Edit category.
 	 *
-	 * @return void
 	 * @since 1.1.6
+	 * @return void
 	 */
 	public static function edit_category() {
 		check_admin_referer( 'eac_edit_category' );
@@ -578,8 +591,8 @@ class Actions extends Singleton {
 	/**
 	 * Edit currency.
 	 *
-	 * @return void
 	 * @since 1.1.6
+	 * @return void
 	 */
 	public static function edit_currency() {
 		check_admin_referer( 'eac_edit_currency' );
@@ -609,8 +622,8 @@ class Actions extends Singleton {
 	/**
 	 * Edit payment
 	 *
-	 * @return void
 	 * @since 1.1.6
+	 * @return void
 	 */
 	public static function edit_payment() {
 		check_admin_referer( 'eac_edit_payment' );
@@ -647,8 +660,8 @@ class Actions extends Singleton {
 	/**
 	 * Edit Expense
 	 *
-	 * @return void
 	 * @since 1.1.6
+	 * @return void
 	 */
 	public static function edit_expense() {
 		check_admin_referer( 'eac_edit_expense' );
@@ -685,8 +698,8 @@ class Actions extends Singleton {
 	/**
 	 * Edit vendor.
 	 *
-	 * @return void
 	 * @since 1.1.6
+	 * @return void
 	 */
 	public static function edit_vendor() {
 		check_admin_referer( 'eac_edit_vendor' );
@@ -723,8 +736,8 @@ class Actions extends Singleton {
 	/**
 	 * Edit transfer.
 	 *
-	 * @return void
 	 * @since 1.1.6
+	 * @return void
 	 */
 	public static function edit_transfer() {
 		check_admin_referer( 'eac_edit_transfer' );
@@ -761,8 +774,8 @@ class Actions extends Singleton {
 	/**
 	 * Edit tax rate.
 	 *
-	 * @return void
 	 * @since 1.1.6
+	 * @return void
 	 */
 	public static function edit_tax() {
 		check_admin_referer( 'eac_edit_tax' );
@@ -799,8 +812,8 @@ class Actions extends Singleton {
 	/**
 	 * Edit document.
 	 *
-	 * @return void
 	 * @since 1.1.6
+	 * @return void
 	 */
 	public static function edit_invoice() {
 		check_ajax_referer( 'eac_edit_invoice' );
@@ -839,8 +852,8 @@ class Actions extends Singleton {
 	/**
 	 * Calculate invoice totals.
 	 *
-	 * @return void
 	 * @since 1.1.6
+	 * @return void
 	 */
 	public static function calculate_invoice_totals() {
 		check_ajax_referer( 'eac_edit_invoice' );
@@ -862,10 +875,50 @@ class Actions extends Singleton {
 	}
 
 	/**
+	 * Edit document.
+	 *
+	 * @since 1.1.6
+	 * @return void
+	 */
+	public static function edit_bill() {
+		check_ajax_referer( 'eac_edit_bill' );
+		$referer  = wp_get_referer();
+		$posted   = eac_clean( wp_unslash( $_POST ) );
+		$posted   = wp_parse_args( $posted );
+		$document = new Bill( $posted['id'] );
+		$document->set_data( $posted );
+
+		$message  = __( 'Bill updated successfully!', 'wp-ever-accounting' );
+		$update   = ! empty( $posted['id'] );
+		$redirect = '';
+		if ( ! $update ) {
+			$message  = __( 'Bill created successfully!', 'wp-ever-accounting' );
+			$redirect = remove_query_arg( array( 'action' ), eac_clean( $referer ) );
+		}
+
+		$saved = $document->save();
+		if ( is_wp_error( $saved ) ) {
+			wp_send_json_error(
+				array(
+					'message' => $saved->get_error_message(),
+				)
+			);
+		}
+
+		wp_send_json_success(
+			array(
+				'message'  => $message,
+				'redirect' => $redirect,
+				'item'     => $document->get_data(),
+			)
+		);
+	}
+
+	/**
 	 * Calculate invoice totals.
 	 *
-	 * @return void
 	 * @since 1.1.6
+	 * @return void
 	 */
 	public static function calculate_bill_totals() {
 		check_ajax_referer( 'eac_edit_bill' );
@@ -889,8 +942,8 @@ class Actions extends Singleton {
 	/**
 	 * Export data.
 	 *
-	 * @return void
 	 * @since 1.1.6
+	 * @return void
 	 */
 	public static function export_data() {
 		check_admin_referer( 'eac_export_data' );
@@ -920,21 +973,95 @@ class Actions extends Singleton {
 	}
 
 	/**
+	 * Mark invoice as sent.
+	 *
+	 * @since 1.1.6
+	 * @return void
+	 */
+	public static function mark_invoice_sent() {
+		check_admin_referer( 'eac_mark_invoice_sent' );
+		$invoice_id = eac_get_input_var( 'id', 0, 'get' );
+		$invoice    = new Invoice( $invoice_id );
+		if ( ! $invoice->get_id() ) {
+			eac_add_notice( __( 'Invalid invoice!', 'wp-ever-accounting' ), 'error' );
+			wp_safe_redirect( wp_get_referer() );
+			exit();
+		}
+		$invoice->set_status( 'sent' );
+		$sent = $invoice->save();
+		if ( is_wp_error( $sent ) ) {
+			eac_add_notice( $sent->get_error_message(), 'error' );
+			wp_safe_redirect( wp_get_referer() );
+			exit();
+		}
+		eac_add_notice( __( 'Invoice marked as sent!', 'wp-ever-accounting' ), 'success' );
+		wp_safe_redirect( wp_get_referer() );
+		exit();
+	}
+
+	/**
 	 * Before invoice actions.
 	 *
 	 * @param int     $invoice_id Invoice ID.
 	 * @param Invoice $invoice Invoice object.
 	 *
-	 * @return void
 	 * @since 1.1.6
+	 * @return void
 	 */
 	public static function before_invoice_actions( $invoice_id, $invoice ) {
-//		if( $invoice->is_status('draft')){
-			echo sprintf( '<a href="%s" class="button">%s</a>', esc_url( eac_action_url( array( 'action' => 'mark_sent', 'id' => $invoice_id ), false ) ), esc_html__( 'Mark as Sent', 'wp-ever-accounting' ) );
+		if ( $invoice->is_status( 'draft' ) ) {
+			echo sprintf( '<a href="%s" class="button">%s</a>', esc_url( eac_action_url( array( 'action' => 'eac_mark_invoice_sent', 'id' => $invoice_id ), false ) ), esc_html__( 'Mark as Sent', 'wp-ever-accounting' ) );
 			echo sprintf( '<a href="%s" class="button button-primary">%s</a>', esc_url( eac_action_url( array( 'action' => 'get_html_response', 'html_type' => 'send_invoice', 'id' => $invoice_id ), true ) ), esc_html__( 'Send Invoice', 'wp-ever-accounting' ) );
-//		}
-		if ( $invoice->is_status( 'sent' ) && ! $invoice->is_paid() ) {
-			echo sprintf( '<a href="%s" class="button">%s</a>', esc_url( eac_action_url( array( 'action' => 'record_payment', 'id' => $invoice_id ), false ) ), esc_html__( 'Record Payment', 'wp-ever-accounting' ) );
+		}
+
+		if ( ! $invoice->is_draft() && ! $invoice->is_paid() ) {
+			echo sprintf( '<a href="%s" class="button">%s</a>', esc_url( eac_action_url( array( 'action' => 'get_html_response', 'html_type' => 'invoice_payment', 'id' => $invoice_id ), true ) ), esc_html__( 'Record Payment', 'wp-ever-accounting' ) );
+		}
+	}
+
+
+	/**
+	 * Mark bill as received.
+	 *
+	 * @since 1.1.6
+	 * @return void
+	 */
+	public static function mark_bill_received() {
+		check_admin_referer( 'eac_mark_bill_received' );
+		$bill_id = eac_get_input_var( 'id', 0, 'get' );
+		$bill    = new Bill( $bill_id );
+		if ( ! $bill->get_id() ) {
+			eac_add_notice( __( 'Invalid bill!', 'wp-ever-accounting' ), 'error' );
+			wp_safe_redirect( wp_get_referer() );
+			exit();
+		}
+		$bill->set_status( 'received' );
+		$sent = $bill->save();
+		if ( is_wp_error( $sent ) ) {
+			eac_add_notice( $sent->get_error_message(), 'error' );
+			wp_safe_redirect( wp_get_referer() );
+			exit();
+		}
+		eac_add_notice( __( 'Bill marked as received!', 'wp-ever-accounting' ), 'success' );
+		wp_safe_redirect( wp_get_referer() );
+		exit();
+	}
+
+	/**
+	 * Before bill actions.
+	 *
+	 * @param int  $bill_id Bill ID.
+	 * @param Bill $bill Bill object.
+	 *
+	 * @since 1.1.6
+	 * @return void
+	 */
+	public static function before_bill_actions( $bill_id, $bill ) {
+		if ( $bill->is_status( 'draft' ) ) {
+			echo sprintf( '<a href="%s" class="button">%s</a>', esc_url( eac_action_url( array( 'action' => 'eac_mark_bill_received', 'id' => $bill_id ), false ) ), esc_html__( 'Mark as Received', 'wp-ever-accounting' ) );
+		}
+		if ( $bill->is_status( 'received' ) && ! $bill->is_paid() ) {
+			echo sprintf( '<a href="%s" class="button">%s</a>', esc_url( eac_action_url( array( 'action' => 'get_html_response', 'html_type' => 'bill_payment', 'id' => $bill_id ), true ) ), esc_html__( 'Record Payment', 'wp-ever-accounting' ) );
 		}
 	}
 }

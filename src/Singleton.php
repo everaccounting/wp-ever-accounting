@@ -19,24 +19,12 @@ abstract class Singleton {
 	private static $instance = array();
 
 	/**
-	 * Gets the single instance of the class.
-	 * This method is used to create a new instance of the class.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return static
-	 */
-	final public static function get_instance() {
-		return static::instantiate();
-	}
-
-	/**
 	 * Initializes the class.
 	 *
 	 * @since 1.0.0
 	 * @return static
 	 */
-	final public static function instantiate() {
+	final public static function instance() {
 		$class = get_called_class();
 		if ( ! isset( self::$instance[ $class ] ) ) {
 			self::$instance[ $class ] = new static( ...func_get_args() );

@@ -191,7 +191,6 @@ abstract class Document extends Model {
 	public function save() {
 		global $wpdb;
 		$this->calculate_totals();
-		error_log( print_r( $this->get_changes(), true ) );
 
 		// contact id is required.
 		if ( empty( $this->get_contact_id() ) ) {
@@ -1511,6 +1510,7 @@ abstract class Document extends Model {
 			}
 		}
 
+
 		$this->items[] = $item;
 	}
 
@@ -2021,6 +2021,16 @@ abstract class Document extends Model {
 	}
 
 	/**
+	 * Has due date.
+	 *
+	 * @return bool
+	 * @since 1.1.0
+	 */
+	public function has_due_date() {
+		return ! empty( $this->sanitize_date( $this->get_due_date() ) );
+	}
+
+	/**
 	 * Checks if an order needs payment, based on status and order total.
 	 *
 	 * @return bool
@@ -2166,6 +2176,26 @@ abstract class Document extends Model {
 	 */
 	public function get_formatted_total() {
 		return eac_format_money( $this->get_total(), $this->get_currency_code() );
+	}
+
+	/**
+	 * Get formatted total paid.
+	 *
+	 * @return string
+	 * @since 1.0.0
+	 */
+	public function get_formatted_total_paid() {
+		return eac_format_money( $this->get_total_paid(), $this->get_currency_code() );
+	}
+
+	/**
+	 * Get formatted balance.
+	 *
+	 * @return string
+	 * @since 1.0.0
+	 */
+	public function get_formatted_balance() {
+		return eac_format_money( $this->get_balance(), $this->get_currency_code() );
 	}
 
 	/**

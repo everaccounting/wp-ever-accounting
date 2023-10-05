@@ -35,7 +35,7 @@ $datasets['total'] = array(
 );
 ?>
 
-<div class="eac-panel align-items-center display-flex justify-content-between">
+<div class="eac-panel align-items-center d-flex justify-content-between">
 	<h3 class="eac-panel__title">
 		<?php echo esc_html__( 'Payment Report', 'wp-ever-accounting' ); ?>
 	</h3>

@@ -17,32 +17,25 @@
 
 defined( 'ABSPATH' ) || exit();
 
-/**
- * Autoload function.
- *
- * @param string $class_name Class name.
- *
- * @since 1.1.6
- * @return void
- */
-function eac_autoloader( $class_name ) {
+// Autoload function.
+spl_autoload_register( function ( $class ) {
+	$prefix = 'EverAccounting\\';
+	$len    = strlen( $prefix );
+
 	// Bail out if the class name doesn't start with our prefix.
-	if ( strpos( $class_name, 'EverAccounting\\' ) !== 0 ) {
+	if ( strncmp( $prefix, $class, $len ) !== 0 ) {
 		return;
 	}
 
 	// Remove the prefix from the class name.
-	$class_name = substr( $class_name, strlen( 'EverAccounting\\' ) );
-
+	$relative_class = substr( $class, $len );
 	// Replace the namespace separator with the directory separator.
-	$class_name = str_replace( '\\', DIRECTORY_SEPARATOR, $class_name );
+	$file = str_replace( '\\', DIRECTORY_SEPARATOR, $relative_class ) . '.php';
 
-	// Add the .php extension.
-	$class_name = $class_name . '.php';
-
+	// Look for the file in the src and lib directories.
 	$file_paths = array(
-		__DIR__ . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . $class_name,
-		__DIR__ . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . $class_name,
+		__DIR__ . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . $file,
+		__DIR__ . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . $file,
 	);
 
 	foreach ( $file_paths as $file_path ) {
@@ -51,9 +44,7 @@ function eac_autoloader( $class_name ) {
 			break;
 		}
 	}
-}
-
-spl_autoload_register( 'eac_autoloader' );
+} );
 
 
 /**
