@@ -18,149 +18,130 @@ class Scripts extends Singleton {
 	 * @since 1.1.6
 	 */
 	protected function __construct() {
-		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
-		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'admin_styles' ) );
+		add_action( 'init', array( $this, 'register_styles' ) );
+		add_action( 'init', array( $this, 'register_scripts' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
 	}
 
 	/**
-	 * Enqueue scripts.
+	 * Register styles.
 	 *
-	 * @return void
 	 * @since 1.1.6
-	 */
-	public function enqueue_scripts() {
-		EAC()->register_script( 'eac-public-script', 'js/public.min.js', array( 'jquery' ) );
-		if ( empty( get_query_var( 'eac_page' ) ) ) {
-			return;
-		}
-		wp_enqueue_script('eac-public-script');
-	}
-
-	/**
-	 * Enqueue styles.
-	 *
 	 * @return void
-	 * @since 1.1.6
 	 */
-	public function enqueue_styles() {
-		EAC()->register_style( 'eac-public-style', 'css/public.min.css');
-		if ( empty( get_query_var( 'eac_page' ) ) ) {
-			return;
-		}
-		// wp install style.
-		wp_enqueue_style( 'eac-public-style' );
-		wp_enqueue_style( 'common' );
-	}
-
-	/**
-	 * Enqueue styles.
-	 *
-	 * @return void
-	 * @since 1.1.6
-	 */
-	public function admin_styles() {
-		$screen    = get_current_screen();
-		$screen_id = $screen ? $screen->id : '';
-		// Register admin styles.
-		EAC()->register_style( 'jquery-select2-style', 'css/select2.min.css' );
-		EAC()->register_style( 'jquery-ui-style', 'css/jquery-ui.min.css' );
-		EAC()->register_style( 'eac-settings-style', 'css/settings.min.css' );
-		EAC()->register_style(
-			'eac-admin-style',
-			'css/admin.min.css',
-			array(
-				'dashicons',
-				'jquery-ui-style',
-				'jquery-select2-style',
-			)
-		);
-
-		// Add RTL support for admin styles.
-		wp_style_add_data( 'eac-admin-style', 'rtl', 'replace' );
-
-		// Admin styles for Accounting pages only.
-		if ( in_array( $screen_id, eac_get_screen_ids(), true ) ) {
-			wp_enqueue_style( 'eac-admin-style' );
-			wp_enqueue_style( 'jquery-ui-style' );
-			wp_enqueue_style( 'eac-settings-style' );
-		}
-	}
-
-	/**
-	 * Enqueue scripts.
-	 *
-	 * @param string $hook Hook name.
-	 *
-	 * @return void
-	 * @since 1.1.6
-	 */
-	public function enqueue_admin_scripts( $hook ) {
-		$screen    = get_current_screen();
-		$screen_id = $screen ? $screen->id : '';
-		// 3rd parties.
-		EAC()->register_script( 'eac-select2', 'js/select2/select2.min.js', array( 'jquery' ) );
-		EAC()->register_script( 'eac-blockui', 'js/blockui/blockUI.min.js', array( 'jquery' ) );
-		EAC()->register_script( 'eac-inputmask', 'js/inputmask/inputmask.min.js', array( 'jquery' ) );
-		EAC()->register_script( 'eac-chartjs', 'js/chartjs/chartjs-bundle.min.js', array( 'jquery' ) );
-		EAC()->register_script( 'eac-printthis', 'js/printthis/printThis.min.js', array( 'jquery' ) );
-		EAC()->register_script( 'eac-tiptip', 'js/tiptip/tipTip.min.js', array( 'jquery' ) );
-
-		// core plugins.
-		EAC()->register_script( 'eac-drawer', 'js/admin/eac-drawer.min.js', array( 'jquery' ) );
-		EAC()->register_script( 'eac-core', 'js/common/core.min.js', array(
-			'jquery',
-			'eac-select2',
-			'eac-tiptip',
-			'eac-drawer',
-			'eac-blockui',
-			'eac-inputmask',
+	public function register_styles() {
+		$styles = apply_filters( 'ever_accounting_styles', array(
+			'eac-components' => array(
+				'src' => 'components/style.css',
+			),
+			'eac-admin'      => array(
+				'src' => 'admin/style.css',
+			),
+			'eac-public'     => array(
+				'src' => 'public/style.css',
+			),
+			'eac-wizard'     => array(
+				'src' => 'wizard/style.css',
+			),
 		) );
-		EAC()->register_script(
-			'eac-admin',
-			'js/admin/admin.min.js',
-			array(
-				'jquery',
-				'eac-core',
-			)
+
+		foreach ( $styles as $handle => $style ) {
+			$style = wp_parse_args( $style, array(
+				'src' => '',
+				'deps' => array(),
+			) );
+			if ( ! preg_match( '/^(http|https):\/\//', $style['src'] ) ) {
+				$url  = path_join( EAC_DIST_URL, $style['src'] );
+				$path = path_join( EAC_DIST_DIR, $style['src'] );
+			} else {
+				$url  = $style['src'];
+				$path = str_replace( plugin_dir_url( __DIR__ ), plugin_dir_path( __DIR__ ), $style['src'] );
+			}
+			$php_file = str_replace( '.css', '.asset.php', $path );
+			$asset    = $php_file && file_exists( $php_file ) ? require $php_file : [ 'version' => EAC_VERSION ];
+			$ver      = $asset['version'];
+
+			wp_register_style( $handle, $url, $style['deps'], $ver );
+
+			//set rtl support.
+			wp_style_add_data( $handle, 'rtl', 'replace' );
+		}
+	}
+
+	/**
+	 * Register scripts.
+	 *
+	 * @since 1.1.6
+	 * @return void
+	 */
+	public function register_scripts() {
+		$scripts = apply_filters( 'ever_accounting_scripts', array(
+			'eac-components' => array(
+				'src' => 'components/index.js',
+			),
+			'eac-data'       => array(
+				'src' => 'data/index.js',
+			),
+			'eac-admin'      => array(
+				'src'  => 'admin/index.js'
+			),
+		) );
+
+		foreach ( $scripts as $handle => $script ) {
+			$script = wp_parse_args( $script, array(
+				'src'       => '',
+				'deps'      => array(),
+				'in_footer' => false,
+			) );
+			if ( ! preg_match( '/^(http|https):\/\//', $script['src'] ) ) {
+				$url  = path_join( EAC_DIST_URL, $script['src'] );
+				$path = path_join( EAC_DIST_DIR, $script['src'] );
+			} else {
+				$url  = $script['src'];
+				$path = str_replace( plugin_dir_url( __DIR__ ), plugin_dir_path( __DIR__ ), $script['src'] );
+			}
+			$php_file = str_replace( '.js', '.asset.php', $path );
+			$asset    = $php_file && file_exists( $php_file ) ? require $php_file : [
+				'dependencies' => [],
+				'version'      => EAC_VERSION,
+			];
+
+			$deps = array_merge( $asset['dependencies'], $script['deps'] );
+			$ver  = $asset['version'];
+
+			wp_register_script( $handle, $url, $deps, $ver, $script['in_footer'] );
+
+			//set script translation.
+			wp_set_script_translations( $handle, 'wp-ever-accounting' );
+		}
+	}
+
+	/**
+	 * Enqueue admin scripts.
+	 *
+	 * @since 1.1.6
+	 * @return void
+	 */
+	public function enqueue_admin_scripts() {
+		if ( ! isset( $_GET['page'] ) || $_GET['page'] !== 'accounting' ) {
+			return;
+		}
+
+		wp_enqueue_script( 'eac-admin' );
+		wp_enqueue_style( 'eac-admin' );
+
+		$vars = array(
+			'site_url'   => site_url(),
+			'admin_url'  => admin_url(),
+			'asset_url'  => EAC_DIST_URL,
+			'plugin_url' => EAC_PLUGIN_URL,
+			'ajax_url'   => admin_url( 'admin-ajax.php' ),
+			'rest_url'   => rest_url(),
+			'rest_nonce' => wp_create_nonce( 'wp_rest' ),
+			'admin_slug' => 'accounting',
 		);
 
-		// Admin scripts for Accounting pages only.
-		if ( in_array( $screen_id, eac_get_screen_ids(), true ) ) {
-			wp_enqueue_editor();
-			wp_enqueue_script( 'jquery-ui-datepicker' );
-			wp_enqueue_script( 'jquery-ui-tooltip' );
-			wp_enqueue_script( 'wp-color-picker' );
-			wp_enqueue_script( 'eac-admin' );
-
-			$vars = array(
-				'site_url'           => site_url(),
-				'admin_url'          => admin_url(),
-				'asset_url'          => EAC()->get_dir_url( '/assets' ),
-				'plugin_url'         => EAC()->get_dir_url(),
-				'ajax_url'           => admin_url( 'admin-ajax.php' ),
-				'rest_url'           => rest_url(),
-				'rest_nonce'         => wp_create_nonce( 'wp_rest' ),
-				'search_nonce'       => wp_create_nonce( 'eac_json_search' ),
-				'get_account_nonce'  => wp_create_nonce( 'eac_get_account' ),
-				'get_currency_nonce' => wp_create_nonce( 'eac_get_currency' ),
-				'base_currency_code' => eac_get_base_currency(),
-				'i18n'               => array(
-					'no_matches'     => __( 'No matches found', 'wp-ever-accounting' ),
-					'error'          => __( 'There was an error', 'wp-ever-accounting' ),
-					'confirm_delete' => __( 'Are you sure you want to delete this?', 'wp-ever-accounting' ),
-				),
-			);
-
-			wp_localize_script( 'eac-common', 'eac_vars', $vars );
-			wp_localize_script( 'eac-admin', 'eac_admin_vars', $vars );
-		}
-
-		// if reports page.
-		if ( strpos( $hook, 'eac-reports' ) !== false || strpos( $hook, 'ever-accounting' ) !== false ) {
-			wp_enqueue_script( 'eac-chartjs' );
-		}
+		wp_localize_script( 'eac-admin', 'eac_vars', $vars );
 	}
 
 }

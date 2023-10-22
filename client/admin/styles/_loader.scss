@@ -1,0 +1,33 @@
+.eac-app-loading {
+	width: 100%;
+	height: 100vh;
+	z-index: 9999;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+
+	&__spinner {
+		width: 30px;
+		height: 30px;
+		border-radius: 50%;
+		border: 10px solid #f3f3f3;
+		border-top: 10px solid #000;
+		animation: spin 2s linear infinite;
+		margin-bottom: 10px;
+	}
+
+	&__text {
+		font-size: 20px;
+		font-weight: 600;
+	}
+}
+
+@keyframes spin {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}

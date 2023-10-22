@@ -53,6 +53,7 @@ class Admin extends \EverAccounting\Singleton {
 	 * @return void
 	 */
 	public function init() {
+		MenusLegacy::instance();
 		Menus::instance();
 	}
 

@@ -1,98 +1,61 @@
 {
   "name": "wp-ever-accounting",
-  "title": "WP Ever Accounting",
   "version": "1.1.5",
+  "private": true,
   "description": "The Best WordPress Accounting Plugin ever made!",
-  "author": {
-    "name": "Sultan Nasir Uddin",
-    "email": "sultan@byteever.com",
-    "url": "https://www.byteever.com"
-  },
+  "author": "Ever Accounting",
   "license": "GPL-2.0-or-later",
-  "keywords": [],
+  "keywords": [
+    "WordPress",
+    "plugin",
+    "accounting",
+    "invoice"
+  ],
   "homepage": "https://www.wpeveraccounting.com",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/everaccounting/wp-ever-accounting.git"
   },
-  "bugs": {
-    "url": "https://github.com/everaccounting/wp-ever-accounting/issues"
+  "engines": {
+    "node": ">=18.0.0"
   },
-  "main": "index.js",
-  "prettier": "@wordpress/prettier-config",
-  "dependencies": {
-    "@ant-design/icons": "^5.1.4",
-    "@automattic/interpolate-components": "^1.2.1",
-    "@babel/plugin-proposal-class-properties": "^7.18.6",
-    "@lodder/time-grunt": "^4.0.0",
-    "@wordpress/babel-plugin-makepot": "^5.12.0",
-    "@wordpress/prettier-config": "^1.4.0",
-    "@wordpress/scripts": "^25.4.0",
-    "antd": "^5.3.0",
-    "babel-plugin-import": "^1.13.6",
-    "babel-plugin-styled-components": "^2.1.3",
-    "chart.js": "^2.9.4",
-    "classnames": "^2.3.2",
-    "clean-webpack-plugin": "^4.0.0",
-    "copy-webpack-plugin": "^11.0.0",
-    "equivalent-key-map": "^0.2.2",
-    "history": "^5.3.0",
-    "locutus": "^2.0.16",
-    "memize": "^2.1.0",
-    "mini-css-extract-plugin": "^2.6.1",
-    "moment": "^2.29.4",
-    "rc-drawer": "^6.3.0",
-    "rc-table": "^7.32.1",
-    "react-dom": "^18.2.0",
-    "react-router-dom": "^6.9.0",
-    "rememo": "^4.0.2",
-    "webpack-remove-empty-scripts": "^0.8.1",
-    "webpack-rtl-plugin": "^2.0.0"
-  },
+  "workspaces": [
+    "packages/*"
+  ],
   "devDependencies": {
-    "@wordpress/compose": "^6.13.0",
-    "@wordpress/data": "^9.6.0",
-    "@wordpress/url": "^3.37.0",
-    "autoprefixer": "^9.8.6",
-    "deep-freeze": "^0.0.1",
-    "fast-deep-equal": "^3.1.3",
-    "grunt": "^1.6.1",
-    "grunt-checktextdomain": "^1.0.1",
-    "grunt-contrib-concat": "^2.1.0",
-    "grunt-contrib-cssmin": "^4.0.0",
-    "grunt-contrib-uglify": "^5.2.2",
-    "grunt-contrib-watch": "^1.1.0",
-    "grunt-postcss": "^0.9.0",
-    "grunt-prompt": "^1.3.3",
-    "grunt-sass": "^3.1.0",
-    "less-loader": "^11.1.3",
-    "matchdep": "^2.0.0",
-    "node-sass": "^7.0.3",
-    "postcss": "^8.4.23"
+    "@automattic/webpack-rtl-plugin": "^6.0.0",
+    "@babel/plugin-transform-runtime": "^7.23.2",
+    "@wordpress/babel-preset-default": "^7.28.0",
+    "@wordpress/browserslist-config": "^5.27.0",
+    "@wordpress/eslint-plugin": "^17.1.0",
+    "@wordpress/prettier-config": "^3.1.0",
+    "@wordpress/scripts": "^26.15.0",
+    "@wordpress/stylelint-config": "^21.27.0",
+    "autoprefixer": "^10.4.16",
+    "browser-sync-webpack-plugin": "^2.3.0",
+    "cssnano": "^6.0.1",
+    "glob": "^10.3.10",
+    "lerna": "^7.4.1",
+    "moment-timezone-data-webpack-plugin": "^1.5.1",
+    "postcss-import": "^15.1.0",
+    "tailwindcss": "^3.3.3"
+  },
+  "dependencies": {
+    "@eac/components": "file:packages/components",
+    "@eac/data": "file:packages/data",
+    "react-router-dom": "^6.17.0"
   },
   "scripts": {
-    "watch": "grunt watch",
     "build": "wp-scripts build",
-    "check-engines": "wp-scripts check-engines",
-    "check-licenses": "wp-scripts check-licenses",
-    "format": "wp-scripts format",
-    "lint:css": "wp-scripts lint-style",
-    "lint:js": "wp-scripts lint-js",
-    "lint:md:docs": "wp-scripts lint-md-docs",
-    "lint:pkg-json": "wp-scripts lint-pkg-json",
-    "packages-update": "wp-scripts packages-update",
-    "plugin-zip": "wp-scripts plugin-zip",
     "start": "wp-scripts start",
-    "test:e2e": "wp-scripts test-e2e",
-    "test:unit": "wp-scripts test-unit-js"
-  },
-  "browserslist": [
-    "last 1 version",
-    "> 1%",
-    "IE 10"
-  ],
-  "stylelint": {
-    "extends": "@wordpress/stylelint-config",
-    "defaultSeverity": "warning"
+    "lint": "npm run lint:js && npm run lint:css",
+    "lint:css": "stylelint '**/*.scss'",
+    "lint:css-fix": "stylelint '**/*.scss' --fix --ip 'storybook/wordpress'",
+    "lint:js": "wp-scripts lint-js ./packages ./client --ext=js,ts,tsx",
+    "lint:js:packages": "wp-scripts lint-js ./packages --ext=js,ts,tsx",
+    "lint:js:client": "wp-scripts lint-js ./client --ext=js,ts,tsx",
+    "lint:js-fix": "npm run lint:js --fix --ext=js,ts,tsx",
+    "reformat-files": "wp-scripts format-js -- --ignore-path .eslintignore",
+    "packages-update": "wp-scripts packages-update && lerna run packages-update"
   }
 }
