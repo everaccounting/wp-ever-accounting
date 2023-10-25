@@ -18,9 +18,12 @@ class Scripts extends Singleton {
 	 * @since 1.1.6
 	 */
 	protected function __construct() {
-		add_action( 'init', array( $this, 'register_styles' ) );
-		add_action( 'init', array( $this, 'register_scripts' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'register_styles' ), - 1 );
+		add_action( 'wp_enqueue_scripts', array( $this, 'register_styles' ), - 1 );
+		add_action( 'admin_enqueue_scripts', array( $this, 'register_scripts' ), - 1 );
+		add_action( 'wp_enqueue_scripts', array( $this, 'register_scripts' ), - 1 );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_asset_data' ) );
 	}
 
 	/**
@@ -32,27 +35,27 @@ class Scripts extends Singleton {
 	public function register_styles() {
 		$styles = apply_filters( 'ever_accounting_styles', array(
 			'eac-components' => array(
-				'src' => 'components/style.css',
+				'src' => 'packages/components/style.css',
 			),
 			'eac-admin'      => array(
-				'src' => 'admin/style.css',
+				'src' => 'client/admin/style.css',
 			),
 			'eac-public'     => array(
-				'src' => 'public/style.css',
+				'src' => 'client/public/style.css',
 			),
 			'eac-wizard'     => array(
-				'src' => 'wizard/style.css',
+				'src' => 'client/wizard/style.css',
 			),
 		) );
 
 		foreach ( $styles as $handle => $style ) {
 			$style = wp_parse_args( $style, array(
-				'src' => '',
+				'src'  => '',
 				'deps' => array(),
 			) );
 			if ( ! preg_match( '/^(http|https):\/\//', $style['src'] ) ) {
-				$url  = path_join( EAC_DIST_URL, $style['src'] );
-				$path = path_join( EAC_DIST_DIR, $style['src'] );
+				$url  = path_join( EAC_ASSETS_URL, $style['src'] );
+				$path = path_join( EAC_ASSETS_DIR, $style['src'] );
 			} else {
 				$url  = $style['src'];
 				$path = str_replace( plugin_dir_url( __DIR__ ), plugin_dir_path( __DIR__ ), $style['src'] );
@@ -77,13 +80,14 @@ class Scripts extends Singleton {
 	public function register_scripts() {
 		$scripts = apply_filters( 'ever_accounting_scripts', array(
 			'eac-components' => array(
-				'src' => 'components/index.js',
+				'src' => 'packages/components/index.js',
 			),
 			'eac-data'       => array(
-				'src' => 'data/index.js',
+				'src' => 'packages/data/index.js',
 			),
 			'eac-admin'      => array(
-				'src'  => 'admin/index.js'
+				'src'  => 'client/admin/index.js',
+				'deps' => array( 'eac-components', 'eac-data' ),
 			),
 		) );
 
@@ -91,11 +95,11 @@ class Scripts extends Singleton {
 			$script = wp_parse_args( $script, array(
 				'src'       => '',
 				'deps'      => array(),
-				'in_footer' => false,
+				'in_footer' => true,
 			) );
 			if ( ! preg_match( '/^(http|https):\/\//', $script['src'] ) ) {
-				$url  = path_join( EAC_DIST_URL, $script['src'] );
-				$path = path_join( EAC_DIST_DIR, $script['src'] );
+				$url  = path_join( EAC_ASSETS_URL, $script['src'] );
+				$path = path_join( EAC_ASSETS_DIR, $script['src'] );
 			} else {
 				$url  = $script['src'];
 				$path = str_replace( plugin_dir_url( __DIR__ ), plugin_dir_path( __DIR__ ), $script['src'] );
@@ -129,19 +133,54 @@ class Scripts extends Singleton {
 
 		wp_enqueue_script( 'eac-admin' );
 		wp_enqueue_style( 'eac-admin' );
-
-		$vars = array(
-			'site_url'   => site_url(),
-			'admin_url'  => admin_url(),
-			'asset_url'  => EAC_DIST_URL,
-			'plugin_url' => EAC_PLUGIN_URL,
-			'ajax_url'   => admin_url( 'admin-ajax.php' ),
-			'rest_url'   => rest_url(),
-			'rest_nonce' => wp_create_nonce( 'wp_rest' ),
-			'admin_slug' => 'accounting',
-		);
-
-		wp_localize_script( 'eac-admin', 'eac_vars', $vars );
 	}
 
+
+	/**
+	 * Callback for enqueuing asset data via the WP api.
+	 *
+	 * Note: while this is hooked into print/admin_print_scripts, it still only
+	 * happens if the script attached to `wc-settings` handle is enqueued. This
+	 * is done to allow for any potentially expensive data generation to only
+	 * happen for routes that need it.
+	 */
+	public function enqueue_asset_data() {
+		if ( wp_script_is( 'eac-admin', 'enqueued' ) ) {
+			$data   = rawurlencode( wp_json_encode( $this->get_asset_data() ) );
+			$script = "var eacAssetData = JSON.parse( decodeURIComponent( '" . esc_js( $data ) . "' ) );";
+			wp_add_inline_script(
+				'eac-admin',
+				$script,
+				'before'
+			);
+		}
+	}
+
+	/**
+	 * Get asset data.
+	 *
+	 * @since 1.1.6
+	 * @return array
+	 */
+	public function get_asset_data() {
+		$data = array(
+			'adminUrl'           => admin_url(),
+			'countries'          => array(),
+			'currentUserId'      => get_current_user_id(),
+			'currentUserIsAdmin' => current_user_can( 'manage_options' ),
+			'homeUrl'            => esc_url( home_url( '/' ) ),
+			'siteTitle'          => get_bloginfo( 'name' ),
+			'assetUrl'           => plugins_url( 'assets/', EAC_PLUGIN_FILE ),
+			'version'            => defined( 'EAC_VERSION' ) ? EAC_VERSION : '',
+			'wpLoginUrl'         => wp_login_url(),
+			'wpVersion'          => get_bloginfo( 'version' ),
+			'adminSlug'          => 'accounting',
+			'ajaxUrl'            => admin_url( 'admin-ajax.php' ),
+			'restUrl'            => rest_url(),
+			'restNonce'          => wp_create_nonce( 'wp_rest' ),
+			'currencies'         => array(),
+		);
+
+		return apply_filters( 'ever_accounting_asset_data', $data );
+	}
 }

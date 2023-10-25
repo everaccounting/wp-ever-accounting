@@ -1,7 +1,12 @@
 /**
+ * WordPress dependencies
+ */
+import { useSelect, useDispatch } from '@wordpress/data';
+import { useState } from '@wordpress/element';
+/**
  * External dependencies
  */
-import { ENTITIES_STORE_NAME } from '@eac/data';
+import { ENTITIES_STORE_NAME, useUser } from '@eac/data';
 
 /**
  * Internal dependencies
@@ -9,12 +14,18 @@ import { ENTITIES_STORE_NAME } from '@eac/data';
 import './style.scss';
 
 export function App() {
-	// const entities = useSelect( ( select ) => {
-	// 	return select( ENTITIES_STORE_NAME ).getRecords( 'item' );
+	// const currentUser = useSelect( ( select ) => {
+	// 	console.log( select( 'core' ) );
+	// 	// return select( 'core' ).getEntityRecord( 'root', 'user', 1 );
 	// }, [] );
-	console.log( ENTITIES_STORE_NAME );
-	// console.log( entities );
-	return <div className="text-3xl font-bold underline">Hello world!</div>;
+
+	// console.log( currentUser );
+
+	return (
+		<div className="eac-admin-app">
+			<h1>WP Ever Accounting</h1>
+		</div>
+	);
 }
 
 export default App;

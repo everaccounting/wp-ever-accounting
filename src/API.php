@@ -35,6 +35,7 @@ class API extends Singleton {
 				'EverAccounting\API\TaxesController',
 				'EverAccounting\API\VendorsController',
 				'EverAccounting\API\ItemsController',
+				'EverAccounting\API\SettingsController',
 			)
 		);
 		foreach ( $rest_handlers as $controller ) {

@@ -3,6 +3,7 @@
  */
 const glob = require( 'glob' );
 const path = require( 'path' );
+const BrowserSyncPlugin = require( 'browser-sync-webpack-plugin' );
 
 /**
  * Internal dependencies
@@ -13,7 +14,8 @@ const PACKAGE_NAMESPACE = '@eac/';
 
 module.exports = [
 	// App config.
-	baseConfig( {
+	{
+		...baseConfig,
 		entry: glob.sync( './client/*/index.js' ).reduce( ( memo, filepath ) => {
 			const name = filepath.replace( 'client/', '' ).replace( '/index.js', '' );
 			return {
@@ -21,10 +23,39 @@ module.exports = [
 				[ name ]: path.resolve( __dirname, filepath ),
 			};
 		}, {} ),
-		browserSync: true,
-	} ),
+		output: {
+			...baseConfig.output,
+			path: path.resolve( __dirname, 'assets/client' ),
+		},
+		plugins: [
+			...baseConfig.plugins,
+			// Browser sync.
+			process.env.NODE_ENV !== 'production' &&
+				new BrowserSyncPlugin(
+					{
+						host: 'localhost',
+						port: 3000,
+						proxy: 'http://accounting.test',
+						open: false,
+						files: [
+							'**/**/*.php',
+							'dist/**/*.js',
+							'dist/**/*.css',
+							'dist/**/*.svg',
+							'dist/**/*.{jpg,jpeg,png,gif}',
+							'dist/**/*.{eot,ttf,woff,woff2,svg}',
+						],
+					},
+					{
+						injectCss: true,
+						reload: false,
+					}
+				),
+		],
+	},
 	// Packages config.
-	baseConfig( {
+	{
+		...baseConfig,
 		entry: Object.keys( dependencies )
 			.filter( ( dependency ) => dependency.startsWith( PACKAGE_NAMESPACE ) )
 			.map( ( packageName ) => packageName.replace( PACKAGE_NAMESPACE, '' ) )
@@ -40,5 +71,9 @@ module.exports = [
 					},
 				};
 			}, {} ),
-	} ),
+		output: {
+			...baseConfig.output,
+			path: path.resolve( __dirname, 'assets/packages' ),
+		},
+	},
 ];

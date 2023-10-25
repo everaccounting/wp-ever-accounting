@@ -52,8 +52,6 @@ class Plugin extends BasePlugin {
 		define( 'EAC_LOG_DIR', $upload_dir['basedir'] . '/ever-accounting-logs/' );
 		define( 'EAC_ASSETS_URL', $this->get_assets_url() );
 		define( 'EAC_ASSETS_DIR', $this->get_assets_path() );
-		define( 'EAC_DIST_URL', $this->get_dir_url() . 'dist' );
-		define( 'EAC_DIST_DIR', $this->get_dir_path() . 'dist' );
 		define( 'EAC_TEMPLATES_DIR', EAC_PLUGIN_FILE . '/templates' );
 	}
 
@@ -107,6 +105,11 @@ class Plugin extends BasePlugin {
 		if ( self::is_request( 'admin' ) ) {
 			Admin\Admin::instance();
 		}
+
+
+		// New services.
+		new Services\Users();
+		new Services\Settings();
 
 		// Init action.
 		do_action( 'ever_accounting_init' );

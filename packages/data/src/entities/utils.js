@@ -1,4 +1,15 @@
 /**
+ * External dependencies
+ */
+import { pickBy } from 'lodash';
+import fastDeepEqual from 'fast-deep-equal/es6';
+
+/**
+ * WordPress dependencies
+ */
+import { addQueryArgs } from '@wordpress/url';
+
+/**
  * A higher-order reducer creator which invokes the original reducer only if
  * the dispatching action matches the given predicate, **OR** if state is
  * initializing (undefined).
@@ -78,8 +89,46 @@ function withWeakMapCache( fn ) {
 }
 
 /**
+ * Sets the value at path of object.
+ * If a portion of path doesn’t exist, it’s created.
+ * Arrays are created for missing index properties while objects are created
+ * for all other missing properties.
+ *
+ * This function intentionally mutates the input object.
+ *
+ * Inspired by _.set().
+ *
+ * @see https://lodash.com/docs/4.17.15#set
+ *
+ * @param {Object} object Object to modify
+ * @param {Array}  path   Path of the property to set.
+ * @param {*}      value  Value to set.
+ */
+export const setNestedValue = ( object, path, value ) => {
+	if ( ! object || typeof object !== 'object' ) {
+		return object;
+	}
+
+	path.reduce( ( acc, key, idx ) => {
+		if ( acc[ key ] === undefined ) {
+			if ( Number.isInteger( path[ idx + 1 ] ) ) {
+				acc[ key ] = [];
+			} else {
+				acc[ key ] = {};
+			}
+		}
+		if ( idx === path.length - 1 ) {
+			acc[ key ] = value;
+		}
+		return acc[ key ];
+	}, object );
+
+	return object;
+};
+
+/**
  * Given a query object, returns an object of parts, including pagination
- * details (`page` and `perPage`, or default values). All other properties are
+ * details (`page` and `per_page`, or default values). All other properties are
  * encoded into a stable (idempotent) `stableKey` value.
  *
  * @param {Object} query Optional query object.
@@ -88,33 +137,29 @@ function withWeakMapCache( fn ) {
  */
 export const getQueryParts = withWeakMapCache( ( query ) => {
 	const parts = {
+		stableKey: '',
 		page: 1,
-		perPage: 10,
+		perPage: 20,
 		fields: null,
 		include: null,
 		context: 'default',
 	};
-
-	// Ensure stable key by sorting keys. Also more efficient for iterating.
-	const keys = Object.keys( query ).sort();
-
+	const keys = Object.keys( pickBy( query ) ).sort();
 	for ( let i = 0; i < keys.length; i++ ) {
 		const key = keys[ i ];
 		let value = query[ key ];
-
 		switch ( key ) {
+			case 'paged':
 			case 'page':
 				parts[ key ] = Number( value );
 				break;
-
 			case 'per_page':
+			case 'perPage':
 				parts.perPage = Number( value );
 				break;
-
 			case 'context':
 				parts.context = value;
 				break;
-
 			default:
 				// While in theory, we could exclude "_fields" from the stableKey
 				// because two request with different fields have the same results
@@ -136,53 +181,83 @@ export const getQueryParts = withWeakMapCache( ( query ) => {
 					// Normalize value for `stableKey`.
 					value = parts.include.join();
 				}
+
+				// While it could be any deterministic string, for simplicity's
+				// sake mimic querystring encoding for stable key.
+				//
+				// TODO: For consistency with PHP implementation, addQueryArgs
+				// should accept a key value pair, which may optimize its
+				// implementation for our use here, vs. iterating an object
+				// with only a single key.
+				parts.stableKey += ( parts.stableKey ? '&' : '' ) + addQueryArgs( '', { [ key ]: value } ).slice( 1 );
 		}
 	}
 
 	return parts;
 } );
 
-export const getStableQueryKey = ( query = {} ) => {
-	// Remove all the null, empty string, undefined, false, 0 values.
-	const filteredQuery = Object.keys( query )
-		.filter( ( key ) => {
-			const value = query[ key ];
-			return value !== null && value !== '' && value !== undefined && value !== false && value !== 0;
-		} )
-		.sort();
+/**
+ * Given the current and next item entity record, returns the minimally "modified"
+ * result of the next item, preferring value references from the original item
+ * if equal. If all values match, the original item is returned.
+ *
+ * @param {Object} item     Original item.
+ * @param {Object} nextItem Next item.
+ *
+ * @return {Object} Minimally modified merged item.
+ */
+export const conservativeMapItem = ( item, nextItem ) => {
+	// Return next item in its entirety if there is no original item.
+	if ( ! item ) {
+		return nextItem;
+	}
 
-	// Join the remaining keys with '&'.
-	return filteredQuery.join( '&' );
+	let hasChanges = false;
+	const result = {};
+	for ( const key in nextItem ) {
+		if ( fastDeepEqual( item[ key ], nextItem[ key ] ) ) {
+			result[ key ] = item[ key ];
+		} else {
+			hasChanges = true;
+			result[ key ] = nextItem[ key ];
+		}
+	}
+
+	if ( ! hasChanges ) {
+		return item;
+	}
+
+	// Only at this point, backfill properties from the original item which
+	// weren't explicitly set into the result above. This is an optimization
+	// to allow `hasChanges` to return early.
+	for ( const key in item ) {
+		if ( ! result.hasOwnProperty( key ) ) {
+			result[ key ] = item[ key ];
+		}
+	}
+
+	return result;
 };
 
 /**
- * Higher-order reducer creator which creates a combined reducer object, keyed
- * by a property on the action object.
+ * Helper function to filter out entities with certain IDs.
+ * Entities are keyed by their ID.
  *
- * @param {string} actionProperty Action property by which to key object.
+ * @param {Object} records Entity objects, keyed by entity ID.
+ * @param {Array}  ids     Entity IDs to filter out.
  *
- * @return {Function} Higher-order reducer.
+ * @return {Object} Filtered records.
  */
-export const onSubKey =
-	( actionProperty ) =>
-	( reducer ) =>
-	( state = {}, action ) => {
-		// Retrieve subkey from action. Do not track if undefined; useful for cases
-		// where reducer is scoped by action shape.
-		const key = action[ actionProperty ];
-		if ( key === undefined ) {
-			return state;
-		}
-
-		// Avoid updating state if unchanged. Note that this also accounts for a
-		// reducer which returns undefined on a key which is not yet tracked.
-		const nextKeyState = reducer( state[ key ], action );
-		if ( nextKeyState === state[ key ] ) {
-			return state;
-		}
-
-		return {
-			...state,
-			[ key ]: nextKeyState,
-		};
-	};
+export const removeRecordsById = ( records, ids ) => {
+	return Object.fromEntries(
+		Object.entries( records ).filter(
+			( [ id ] ) =>
+				! ids.some( ( itemId ) => {
+					if ( Number.isInteger( itemId ) ) {
+						return itemId === +id;
+					}
+					return itemId === id;
+				} )
+		)
+	);
+};

@@ -16,10 +16,10 @@ import App from './app';
 import './style.scss';
 
 // eslint-disable-next-line no-undef
-__webpack_public_path__ = eac_vars.asset_url + '/client/';
+__webpack_public_path__ = eacAssetData.assetUrl + 'client/';
 
 domReady( () => {
-	const domNode = document.getElementById( 'eac-app' );
+	const domNode = document.getElementById( 'eac-admin-root' );
 	if ( ! domNode ) {
 		return;
 	}

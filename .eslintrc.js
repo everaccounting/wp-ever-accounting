@@ -8,10 +8,7 @@ const eslintConfig = {
 		'@wordpress/dependency-group': 'warn',
 		'@wordpress/i18n-translator-comments': 'warn',
 		'@wordpress/valid-sprintf': 'warn',
-		'import/no-extraneous-dependencies': [
-			'warn',
-			{ devDependencies: true, optionalDependencies: false, peerDependencies: true },
-		],
+		'import/no-extraneous-dependencies': [ 'warn', { devDependencies: true, optionalDependencies: false, peerDependencies: true } ],
 		'import/no-unresolved': [ 2, { ignore: [ '^@wordpress/', '^lodash-es', '^react', '^react-dom' ] } ],
 		'no-console': 0,
 		camelcase: 0,
@@ -24,7 +21,7 @@ const eslintConfig = {
 		module: true,
 		process: true,
 		window: true,
-		eac_vars: true,
+		eacAssetData: true,
 	},
 };
 

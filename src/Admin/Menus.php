@@ -136,7 +136,7 @@ class Menus extends \EverAccounting\Singleton {
 	public static function page_wrapper() {
 		?>
         <div class="wrap">
-            <div id="eac-app" class="eac-app">
+            <div id="eac-admin-root" class="eac-app">
                 <div class="eac-app-loading">
                     <span class="eac-app-loading__spinner"></span>
                     <span class="eac-app-loading__text"><?php esc_html_e( 'Loading...', 'ever-accounting-client' ); ?></span>

@@ -54,4 +54,5 @@ lib
 
 
 # Build
-dist
+assets/client
+assets/packages

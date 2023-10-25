@@ -9,21 +9,21 @@ import PropTypes from 'prop-types';
  */
 import './style.scss';
 
-function SectionHeader(props) {
+function SectionHeader( props ) {
 	const { children, menu, title, actions, isCard, ...restProps } = props;
-	const classes = classNames('eac-section-header', props.className, {
-		'is--card': isCard,
-	});
+	const classes = classNames( 'eac-section-header', props.className, {
+		'eac-section-header--card': isCard,
+	} );
 
 	return (
-		<div className={classes} {...restProps}>
+		<div className={ classes } { ...restProps }>
 			<div className="eac-section-header__title">
-				{title && <h2>{title}</h2>}
-				{children}
+				{ title && <h2>{ title }</h2> }
+				{ children }
 			</div>
-			{actions && <div className="eac-section-header__actions">{actions}</div>}
+			{ actions && <div className="eac-section-header__actions">{ actions }</div> }
 
-			{menu && <div className="eac-section-header__menu">{menu}</div>}
+			{ menu && <div className="eac-section-header__menu">{ menu }</div> }
 		</div>
 	);
 }
@@ -40,7 +40,7 @@ SectionHeader.propTypes = {
 	/**
 	 * The title to use for this card.
 	 */
-	title: PropTypes.oneOfType([PropTypes.string, PropTypes.node]).isRequired,
+	title: PropTypes.oneOfType( [ PropTypes.string, PropTypes.node ] ).isRequired,
 };
 
 export default SectionHeader;

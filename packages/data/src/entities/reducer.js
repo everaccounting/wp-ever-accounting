@@ -5,16 +5,15 @@ import { combineReducers } from '@wordpress/data';
 import { compose } from '@wordpress/compose';
 
 /**
- * External dependencies
- */
-import fastDeepEqual from 'fast-deep-equal/es6';
-
-/**
  * Internal dependencies
  */
-import { defaultEntities } from './entities';
-import { ifMatchingAction, replaceAction, getQueryParts, getStableQueryKey } from './utils';
-import { DEFAULT_PRIMARY_KEY } from './constants';
+import { defaultEntitiesConfig } from './entities';
+import { ifMatchingAction, replaceAction, getQueryParts, conservativeMapItem, removeRecordsById } from './utils';
+import { DEFAULT_KEY } from './constants';
+/**
+ * External dependencies
+ */
+import { filter, forEach } from 'lodash';
 
 /**
  * Reducer keeping track of the registered entities.
@@ -24,10 +23,10 @@ import { DEFAULT_PRIMARY_KEY } from './constants';
  *
  * @return {Object} Updated state.
  */
-export function entities( state = defaultEntities, action ) {
+export function entitiesConfig( state = defaultEntitiesConfig, action ) {
 	switch ( action.type ) {
 		case 'ADD_ENTITIES':
-			return [ ...state, ...action.entities.filter( ( entity ) => entity.name ) ];
+			return [ ...state, ...action.entities ];
 	}
 
 	return state;
@@ -36,136 +35,116 @@ export function entities( state = defaultEntities, action ) {
 /**
  * Higher Order Reducer for a given entity config. It supports:
  *
+ *  - Items
+ *  - Queries
+ *  - Counts
+ *  - Edits
  *  - Fetching
- *  - Editing
  *  - Saving
+ *  - Deleting
  *
- * @param {Object} entity Entity config.
+ * @param {Object} entityConfig Entity config.
  *
  * @return {Function} Reducer.
  */
-export function records( entity ) {
+function entity( entityConfig ) {
 	return compose( [
 		// Limit to matching action type, so we don't attempt to replace action on
 		// an unhandled action.
-		ifMatchingAction( ( action ) => action.name && action.name === entity.name ),
+		ifMatchingAction( ( action ) => action.name && action.name === entityConfig.name ),
 		// Inject the entity config into the action.
 		replaceAction( ( action ) => {
 			return {
 				...action,
-				primaryKey: entity.primaryKey || DEFAULT_PRIMARY_KEY,
+				key: entityConfig.key || DEFAULT_KEY,
 			};
 		} ),
 	] )(
 		combineReducers( {
-			data: ( state = {}, action ) => {
+			items: ( state = {}, action ) => {
 				switch ( action.type ) {
 					case 'RECEIVE_RECORDS':
-						state = {
-							...state,
-							...action.records.reduce( ( memo, record ) => {
-								const id = record[ action.primaryKey ];
-								if ( ! id ) {
-									return memo;
-								}
-
-								return {
-									...memo,
-									[ id ]: {
-										...state[ id ],
-										...record,
-									},
-								};
-							}, {} ),
-						};
-				}
-				return state;
-			},
-			counts: ( state = {}, action ) => {
-				const stableKey = getStableQueryKey( action.query );
-				switch ( action.type ) {
-					case 'RECEIVE_RECORDS_COUNT':
+						const { key = DEFAULT_KEY } = action;
+						const { context } = getQueryParts( action.query );
 						return {
 							...state,
-							[ stableKey ]: parseInt( action.count, 10 ),
+							[ context ]: {
+								...state[ context ],
+								...action.records.reduce( ( accumulator, value ) => {
+									const recordId = value[ key ];
+									accumulator[ recordId ] = conservativeMapItem( state?.[ context ]?.[ recordId ], value );
+									return accumulator;
+								}, {} ),
+							},
 						};
+
+					case 'REMOVE_RECORDS':
+						return Object.fromEntries(
+							Object.entries( state ).map( ( [ recordId, contextState ] ) => [ recordId, removeRecordsById( contextState, action.recordIds ) ] )
+						);
 				}
 				return state;
 			},
 			queries: ( state = {}, action ) => {
+				switch ( action.type ) {
+					case 'RECEIVE_RECORDS':
+						const { stableKey, context } = getQueryParts( action.query );
+						const ids = action.records.reduce( ( accumulator, value ) => {
+							const recordId = value[ entityConfig.key ];
+							accumulator.push( recordId );
+							return accumulator;
+						}, [] );
+						console.log( 'RECEIVE_RECORDS', { stableKey, context, ids } );
+						return {
+							...state,
+							[ context ]: {
+								...state[ context ],
+								[ stableKey ]: {
+									data: ids,
+									error: action.error || null,
+								},
+							},
+						};
+
+					case 'REMOVE_RECORDS':
+						const newState = { ...state };
+						const removedRecords = action.recordIds.reduce( ( result, itemId ) => {
+							result[ itemId ] = true;
+							return result;
+						}, {} );
+						forEach( newState, ( queryRecords, key ) => {
+							newState[ key ] = filter( queryRecords, ( queryId ) => {
+								return ! removedRecords[ queryId ];
+							} );
+						} );
+						return newState;
+				}
+				return state;
+			},
+			counts: ( state = {}, action ) => {
+				const { stableKey, context } = getQueryParts( action.query );
+				switch ( action.type ) {
+					case 'RECEIVE_RECORDS_COUNT':
+						return {
+							...state,
+							[ context ]: {
+								...state[ context ],
+								[ stableKey ]: {
+									data: action.count,
+									error: action.error || null,
+								},
+							},
+						};
+				}
 				return state;
 			},
 			edits: ( state = {}, action ) => {
-				switch ( action.type ) {
-					case 'RECEIVE_RECORDS':
-						const nextState = { ...state };
-						for ( const record of action.records ) {
-							const recordId = record[ action.key ];
-							const edits = nextState[ recordId ];
-							if ( ! edits ) {
-								continue;
-							}
-							const nextEdits = Object.keys( edits ).reduce( ( acc, key ) => {
-								// If the edited value is still different to the persisted value,
-								// keep the edited value in edits.
-								if (
-									// Edits are the "raw" attribute values, but records may have
-									// objects with more properties, so we use `get` here for the
-									// comparison.
-									! fastDeepEqual( edits[ key ], record[ key ]?.raw ?? record[ key ] ) &&
-									// Sometimes the server alters the sent value which means
-									// we need to also remove the edits before the api request.
-									( ! action.persistedEdits ||
-										! fastDeepEqual( edits[ key ], action.persistedEdits[ key ] ) )
-								) {
-									acc[ key ] = edits[ key ];
-								}
-								return acc;
-							}, {} );
-
-							if ( Object.keys( nextEdits ).length ) {
-								nextState[ recordId ] = nextEdits;
-							} else {
-								delete nextState[ recordId ];
-							}
-						}
-
-						return nextState;
-				}
 				return state;
 			},
 			saving: ( state = {}, action ) => {
-				switch ( action.type ) {
-					case 'SAVE_RECORD_START':
-					case 'SAVE_RECORD_FINISH':
-						return {
-							...state,
-							[ action.recordId ]: {
-								pending: action.type === 'SAVE_RECORD_START',
-								error: action.error,
-							},
-						};
-				}
 				return state;
 			},
 			deleting: ( state = {}, action ) => {
-				switch ( action.type ) {
-					case 'DELETE_RECORD_START':
-					case 'DELETE_RECORD_FINISH':
-						return {
-							...state,
-							[ action.recordId ]: {
-								pending: action.type === 'DELETE_RECORD_START',
-								error: action.error || null,
-							},
-						};
-				}
-				return state;
-			},
-			requesting: ( state = {}, action ) => {
-				return state;
-			},
-			errors: ( state = {}, action ) => {
 				return state;
 			},
 		} )
@@ -181,29 +160,29 @@ export function records( entity ) {
  * @return {Object} Updated state.
  */
 export const reducer = ( state = {}, action ) => {
-	const newEntities = entities( state.entities, action );
+	const newConfig = entitiesConfig( state.config, action );
 	// Generates a dynamic reducer for the entities.
 	let entitiesDataReducer = state.reducer;
-	if ( ! entitiesDataReducer || newEntities !== state.entities ) {
+	if ( ! entitiesDataReducer || newConfig !== state.config ) {
 		entitiesDataReducer = combineReducers(
-			Object.values( newEntities ).reduce(
-				( memo, entity ) => ( {
+			Object.values( newConfig ).reduce(
+				( memo, entityConfig ) => ( {
 					...memo,
-					[ entity.name ]: records( entity ),
+					[ entityConfig.name ]: entity( entityConfig ),
 				} ),
 				{}
 			)
 		);
 	}
 
-	const newRecords = entitiesDataReducer( state.records, action );
-	if ( newRecords === state.records && newEntities === state.entities && entitiesDataReducer === state.reducer ) {
+	const newData = entitiesDataReducer( state.records, action );
+	if ( newData === state.records && newConfig === state.config && entitiesDataReducer === state.reducer ) {
 		return state;
 	}
 
 	return {
-		records: newRecords,
-		entities: newEntities,
+		records: newData,
+		config: newConfig,
 		reducer: entitiesDataReducer,
 	};
 };

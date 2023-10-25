@@ -71,3 +71,9 @@ Table
 - Tax Paid
 - Tax
 
+
+## PHP Plan
+- Make everything service based.
+- Add WooCommerce action scheduler.
+- Enhance the API.
+- Handle different scripts for different pages.

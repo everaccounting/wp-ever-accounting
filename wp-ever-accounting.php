@@ -53,7 +53,7 @@ spl_autoload_register( function ( $class ) {
  * Ensures only one instance of EverAccounting is loaded or can be loaded.
  *
  * @since 1.0.0
- * @since 1.1.6 renamed from eaccounting() to EverAccounting().
+ * @since 1.1.6 renamed from eaccounting() to EAC().
  * @return EverAccounting\Plugin
  */
 function EAC() {

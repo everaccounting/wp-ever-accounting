@@ -3,7 +3,6 @@
  */
 import { get } from 'lodash';
 import createSelector from 'rememo';
-
 /**
  * Internal dependencies
  */
@@ -17,24 +16,9 @@ import { getQueryParts } from './utils';
  *
  * @return {Object} Entity config.
  */
-export function getEntity( state, name ) {
-	return get( state, [ 'entities' ], [] ).find( ( entity ) => entity.name === name );
-}
-
-/**
- * Returns items for a given query, or null if the items are not known. Caches
- * result both per state (by reference) and per query (by deep equality).
- * The caching approach is intended to be durable to query objects which are
- * deeply but not referentially equal, since otherwise:
- *
- * `getQueriedItems( state, {} ) !== getQueriedItems( state, {} )`
- *
- * @param {Object}  state State object.
- * @param {?Object} query Optional query.
- *
- * @return {?Array} Query items.
- */
-export const getQueriedItems = createSelector( ( state, query = {} ) => {} );
+export const getConfig = ( state, name ) => {
+	return get( state, [ 'config' ], [] ).find( ( entity ) => entity.name === name );
+};
 
 /**
  * Returns the Entity's records.
@@ -46,11 +30,12 @@ export const getQueriedItems = createSelector( ( state, query = {} ) => {} );
  *
  * @return {Array} Records.
  */
-export const getRecords = ( state, name, query ) => {
-	const queriedState = state.records?.[ name ]?.queries;
-	if ( ! queriedState ) {
+export const getRecords = createSelector( ( state, name, query ) => {
+	const { stableKey, context } = getQueryParts( query );
+	const ids = state?.records?.[ name ]?.queries?.[ context ]?.[ stableKey ]?.data;
+	if ( ! ids ) {
 		return null;
 	}
-	const { stableKey, page, perPage, include, fields } = getQueryParts( query );
-	const ids = queriedState[ stableKey ]?.ids;
-};
+	return ids.map( ( id ) => state.records[ name ].items[ context ][ id ] ).filter( ( item ) => item !== undefined );
+} );
+
