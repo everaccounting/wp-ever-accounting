@@ -11,11 +11,11 @@ import { useEffect } from '@wordpress/element';
  */
 import classNames from 'classnames';
 
-function Spinner({ active, className, text, fullscreen, children, props }) {
-	const disableScroll = () => document.body.style.setProperty('overflow', 'hidden');
-	const enableScroll = () => document.body.style.setProperty('overflow', 'auto');
-	useEffect(() => {
-		if (fullscreen) {
+function Spinner( { active, className, text, fullscreen, children, props } ) {
+	const disableScroll = () => document.body.style.setProperty( 'overflow', 'hidden' );
+	const enableScroll = () => document.body.style.setProperty( 'overflow', 'auto' );
+	useEffect( () => {
+		if ( fullscreen ) {
 			disableScroll();
 		} else {
 			enableScroll();
@@ -24,10 +24,10 @@ function Spinner({ active, className, text, fullscreen, children, props }) {
 		return () => {
 			enableScroll();
 		};
-	}, [fullscreen]);
+	}, [ fullscreen ] );
 
 	const getStyle = () => {
-		if (fullscreen && active) {
+		if ( fullscreen && active ) {
 			return {
 				position: 'fixed',
 				top: 0,
@@ -37,7 +37,7 @@ function Spinner({ active, className, text, fullscreen, children, props }) {
 				zIndex: 99999,
 			};
 		}
-		if (active) {
+		if ( active ) {
 			return {
 				position: 'relative',
 			};
@@ -46,10 +46,10 @@ function Spinner({ active, className, text, fullscreen, children, props }) {
 	};
 
 	return (
-		<div style={{ ...getStyle() }}>
-			{active && (
+		<div style={ { ...getStyle() } }>
+			{ active && (
 				<div
-					style={{
+					style={ {
 						display: 'block',
 						position: 'absolute',
 						zIndex: 657,
@@ -59,28 +59,28 @@ function Spinner({ active, className, text, fullscreen, children, props }) {
 						right: 0,
 						bottom: 0,
 						left: 0,
-					}}
+					} }
 				>
 					<div
-						className={classNames('eac-spinner', className, {
+						className={ classNames( 'eac-spinner', className, {
 							'is-full-screen': fullscreen,
 							'is-active': active,
-						})}
-						style={{
+						} ) }
+						style={ {
 							position: 'absolute',
 							display: 'inline-block',
 							left: 0,
-						}}
-						{...props}
+						} }
+						{ ...props }
 					>
 						<svg className="circular" viewBox="25 25 50 50">
 							<circle className="path" cx="50" cy="50" r="20" fill="none" />
 						</svg>
-						{text && <p className="eac-spinner__text">{text}</p>}
+						{ text && <p className="eac-spinner__text">{ text }</p> }
 					</div>
 				</div>
-			)}
-			{children}
+			) }
+			{ children }
 		</div>
 	);
 }
