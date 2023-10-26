@@ -1,1 +1,1 @@
-export const STORE_NAME = 'core';
+export const STORE_NAME = 'eac/user';

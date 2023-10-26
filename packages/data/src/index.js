@@ -1,4 +1,5 @@
 // export * from './entities';
 // export * from './user';
 export * from './settings';
-// export * from './data';
+export * from './user';
+export * from './data';

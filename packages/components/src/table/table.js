@@ -20,15 +20,15 @@ import PropTypes from 'prop-types';
 import './style.scss';
 import TableHeader from './header';
 
-const getValueByPath = (data, path) => {
-	if (typeof path !== 'string') return null;
-	return path.split('.').reduce((pre, cur) => (pre || {})[cur], data);
+const getValueByPath = ( data, path ) => {
+	if ( typeof path !== 'string' ) return null;
+	return path.split( '.' ).reduce( ( pre, cur ) => ( pre || {} )[ cur ], data );
 };
-const defaultRender = (row, column) => {
-	return getValueByPath(row, column.property);
+const defaultRender = ( row, column ) => {
+	return getValueByPath( row, column.property );
 };
 
-function Table(props) {
+function Table( props ) {
 	const {
 		className,
 		data: data,
@@ -40,7 +40,7 @@ function Table(props) {
 		showSummary = false,
 		summaryText,
 		summaryMethod,
-		emptyText = __('No Data', 'wp-ever-accounting'),
+		emptyText = __( 'No Data', 'wp-ever-accounting' ),
 		rowClassName,
 		rowStyle,
 		defaultSort,
@@ -51,14 +51,14 @@ function Table(props) {
 		query = {},
 		...restProps
 	} = props;
-	const container = useRef(null);
-	const [expandedRows, setExpandedRows] = useState([]);
-	const [selected, setSelected] = useState([]);
-	const hasData = useMemo(() => data && data.length > 0, [data]);
+	const container = useRef( null );
+	const [ expandedRows, setExpandedRows ] = useState( [] );
+	const [ selected, setSelected ] = useState( [] );
+	const hasData = useMemo( () => data && data.length > 0, [ data ] );
 	const { orderby, order } = query;
 	const sort = { orderby, order };
-	const columns = useMemo(() => {
-		return _columns.map((column, index) => {
+	const columns = useMemo( () => {
+		return _columns.map( ( column, index ) => {
 			const align = column.align ? 'is--' + column.align : null;
 			return {
 				sortable: false,
@@ -68,39 +68,39 @@ function Table(props) {
 				minWidth: column?.minWidth || null,
 				property: column.property || column.key,
 				render: column.render || defaultRender,
-				align: align,
+				align,
 				headerAlign: column.headerAlign ? 'is--' + column.headerAlign : align,
 				renderHeader: column.renderHeader || null,
 			};
-		});
-	}, [_columns]);
-	const dispatchEvent = (name, ...args) => (props[name] || noop)(...args);
-	const classes = classNames('eac-table', className);
+		} );
+	}, [ _columns ] );
+	const dispatchEvent = ( name, ...args ) => ( props[ name ] || noop )( ...args );
+	const classes = classNames( 'eac-table', className );
 	return (
-		<div className={classes} ref={container} role="group">
+		<div className={ classes } ref={ container } role="group">
 			<table className="eac-table__table">
-				{caption && <caption className="eac-table__caption">{caption}</caption>}
+				{ caption && <caption className="eac-table__caption">{ caption }</caption> }
 				<colgroup>
-					{columns.map((column, index) => (
+					{ columns.map( ( column, index ) => (
 						<col
-							width={column.width ? column.width : null}
-							style={{
+							width={ column.width ? column.width : null }
+							style={ {
 								minWidth: column.minWidth ? column.minWidth : null,
 								maxWidth: column.maxWidth ? column.maxWidth : null,
 								width: column.width ? column.width : null,
-							}}
-							key={index}
+							} }
+							key={ index }
 						/>
-					))}
+					) ) }
 				</colgroup>
 				<thead>
 					<TableHeader
-						columns={columns}
-						sort={sort}
-						onSort={handleSort}
-						isAllSelected={isAllSelected}
-						isRequesting={isRequesting}
-						onSelectAll={handleSelectAll}
+						columns={ columns }
+						sort={ sort }
+						onSort={ handleSort }
+						isAllSelected={ isAllSelected }
+						isRequesting={ isRequesting }
+						onSelectAll={ handleSelectAll }
 					/>
 				</thead>
 			</table>
@@ -110,16 +110,16 @@ function Table(props) {
 
 Table.propTypes = {
 	// Data record array to be displayed.
-	data: PropTypes.arrayOf(PropTypes.object),
+	data: PropTypes.arrayOf( PropTypes.object ),
 	// An array of columns, as objects.
 	columns: PropTypes.arrayOf(
-		PropTypes.shape({
+		PropTypes.shape( {
 			// type of the column. If set to selection, the column will display checkbox. If set to index, the column will display index of the row (staring from 1). If set to expand, the column will display expand icon.
-			type: PropTypes.oneOf(['selection', 'index', 'expandable']),
+			type: PropTypes.oneOf( [ 'selection', 'index', 'expandable' ] ),
 			//alignment of the table cell. If omitted, the value of the above align attribute will be applied.
-			align: PropTypes.oneOf(['left', 'center', 'right']),
+			align: PropTypes.oneOf( [ 'left', 'center', 'right' ] ),
 			//alignment of the table header. If omitted, the value of the above align attribute will be applied.
-			headerAlign: PropTypes.oneOf(['left', 'center', 'right']),
+			headerAlign: PropTypes.oneOf( [ 'left', 'center', 'right' ] ),
 			//classname
 			className: PropTypes.string,
 			//Span of this column's title
@@ -127,7 +127,7 @@ Table.propTypes = {
 			// column's key. If you need to use the onFilterChange event, you need this attribute to identify which column is being filtered.
 			key: PropTypes.string,
 			// Display field of the data record, support nest path by string array
-			property: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
+			property: PropTypes.oneOfType( [ PropTypes.string, PropTypes.arrayOf( PropTypes.string ) ] ),
 			//is sortable or not
 			sortable: PropTypes.bool,
 			// Title of this column
@@ -144,12 +144,12 @@ Table.propTypes = {
 			selectable: PropTypes.func,
 			//an array of data filtering options. For each element in this array, text and value are required.
 			filters: PropTypes.arrayOf(
-				PropTypes.shape({
+				PropTypes.shape( {
 					//display text of the option
 					text: PropTypes.string,
 					//value of the option
 					value: PropTypes.string,
-				})
+				} )
 			),
 			//Customized filter icon.
 			filterIcon: PropTypes.func,
@@ -157,7 +157,7 @@ Table.propTypes = {
 			filterMultiple: PropTypes.bool,
 			//data filtering method. If filterMultiple is on, this method will be called multiple times for each row, and a row will display if one of the calls returns true.
 			filterMethod: PropTypes.func,
-		})
+		} )
 	),
 	//Whether to show all table borders.
 	bordered: PropTypes.bool,
@@ -166,7 +166,7 @@ Table.propTypes = {
 	// Caption of table.
 	caption: PropTypes.string,
 	//Row's unique key, could be a string or function that returns a string.
-	rowKey: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
+	rowKey: PropTypes.oneOfType( [ PropTypes.string, PropTypes.func ] ),
 	// whether to display a summary row.
 	showSummary: PropTypes.bool,
 	//displayed text for the first column of summary row/.
@@ -176,16 +176,16 @@ Table.propTypes = {
 	//Displayed text when data is empty.
 	emptyText: PropTypes.string,
 	//function that returns custom style for a row, or a string assigning custom style for every row.
-	rowClassName: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+	rowClassName: PropTypes.oneOfType( [ PropTypes.func, PropTypes.string ] ),
 	//function that returns custom style for a row, or a string assigning custom style for every row.
-	rowStyle: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+	rowStyle: PropTypes.oneOfType( [ PropTypes.func, PropTypes.string ] ),
 	//set the default sort column and order. property prop is used to set default sort column, property order is used to set default sort order.
-	defaultSort: PropTypes.shape({
+	defaultSort: PropTypes.shape( {
 		//default sort column
 		property: PropTypes.string,
 		//default sort order
-		order: PropTypes.oneOf(['asc', 'desc']),
-	}),
+		order: PropTypes.oneOf( [ 'asc', 'desc' ] ),
+	} ),
 	//triggers when Table's sorting changes.
 	onSort: PropTypes.func,
 	//used in multiple selection Table, toggle if a certain row is selected. With the second parameter, you can directly set if this row is selected

@@ -39,6 +39,7 @@ class Scripts extends Singleton {
 			),
 			'eac-admin'      => array(
 				'src' => 'client/admin/style.css',
+				'deps' => array( 'eac-components' )
 			),
 			'eac-public'     => array(
 				'src' => 'client/public/style.css',
@@ -145,11 +146,11 @@ class Scripts extends Singleton {
 	 * happen for routes that need it.
 	 */
 	public function enqueue_asset_data() {
-		if ( wp_script_is( 'eac-admin', 'enqueued' ) ) {
+		if ( wp_script_is( 'eac-data', 'enqueued' ) ) {
 			$data   = rawurlencode( wp_json_encode( $this->get_asset_data() ) );
 			$script = "var eacAssetData = JSON.parse( decodeURIComponent( '" . esc_js( $data ) . "' ) );";
 			wp_add_inline_script(
-				'eac-admin',
+				'eac-data',
 				$script,
 				'before'
 			);

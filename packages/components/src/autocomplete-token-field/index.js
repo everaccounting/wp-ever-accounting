@@ -18,15 +18,15 @@ import './style.scss';
  * An multi-selecting, api-driven autocomplete input suitable for use in block attributes.
  */
 class AutocompleteTokenField extends Component {
-	constructor(props) {
-		super(props);
+	constructor( props ) {
+		super( props );
 		this.state = {
 			suggestions: [],
 			validValues: {},
 			loading: this.isFetchingInfoOnLoad(),
 		};
 
-		this.debouncedUpdateSuggestions = debounce(this.updateSuggestions, 500);
+		this.debouncedUpdateSuggestions = debounce( this.updateSuggestions, 500 );
 	}
 
 	/**
@@ -34,7 +34,7 @@ class AutocompleteTokenField extends Component {
 	 */
 	isFetchingInfoOnLoad = () => {
 		const { tokens, fetchSavedInfo } = this.props;
-		return Boolean(tokens.length && fetchSavedInfo);
+		return Boolean( tokens.length && fetchSavedInfo );
 	};
 
 	/**
@@ -42,18 +42,18 @@ class AutocompleteTokenField extends Component {
 	 * the tokens with the correct labels.
 	 */
 	componentDidMount() {
-		if (this.isFetchingInfoOnLoad()) {
+		if ( this.isFetchingInfoOnLoad() ) {
 			const { tokens, fetchSavedInfo } = this.props;
 
-			fetchSavedInfo(tokens).then((results) => {
+			fetchSavedInfo( tokens ).then( ( results ) => {
 				const { validValues } = this.state;
 
-				results.forEach((suggestion) => {
-					validValues[suggestion.value] = suggestion.label;
-				});
+				results.forEach( ( suggestion ) => {
+					validValues[ suggestion.value ] = suggestion.label;
+				} );
 
-				this.setState({ validValues, loading: false });
-			});
+				this.setState( { validValues, loading: false } );
+			} );
 		}
 	}
 
@@ -71,12 +71,9 @@ class AutocompleteTokenField extends Component {
 	 * @param {Array} values Array of values (ids, etc.).
 	 * @return {Array} array of valid labels corresponding to the values.
 	 */
-	getLabelsForValues(values) {
+	getLabelsForValues( values ) {
 		const { validValues } = this.state;
-		return values.reduce(
-			(accumulator, value) => (validValues[value] ? [...accumulator, validValues[value]] : accumulator),
-			[]
-		);
+		return values.reduce( ( accumulator, value ) => ( validValues[ value ] ? [ ...accumulator, validValues[ value ] ] : accumulator ), [] );
 	}
 
 	/**
@@ -85,9 +82,9 @@ class AutocompleteTokenField extends Component {
 	 * @param {Array} labels Array of labels from the tokens.
 	 * @return {Array} Array of valid values corresponding to the labels.
 	 */
-	getValuesForLabels(labels) {
+	getValuesForLabels( labels ) {
 		const { validValues } = this.state;
-		return labels.map((label) => Object.keys(validValues).find((key) => validValues[key] === label));
+		return labels.map( ( label ) => Object.keys( validValues ).find( ( key ) => validValues[ key ] === label ) );
 	}
 
 	/**
@@ -95,51 +92,51 @@ class AutocompleteTokenField extends Component {
 	 *
 	 * @param {string} input Input to fetch suggestions for
 	 */
-	updateSuggestions(input) {
+	updateSuggestions( input ) {
 		const { fetchSuggestions } = this.props;
-		if (!fetchSuggestions) {
+		if ( ! fetchSuggestions ) {
 			return;
 		}
 
-		this.setState({ loading: true }, () => {
-			const request = fetchSuggestions(input);
+		this.setState( { loading: true }, () => {
+			const request = fetchSuggestions( input );
 			request
-				.then((suggestions) => {
+				.then( ( suggestions ) => {
 					// A fetch Promise doesn't have an abort option. It's mimicked by
 					// comparing the request reference in on the instance, which is
 					// reset or deleted on subsequent requests or unmounting.
-					if (this.suggestionsRequest !== request) {
+					if ( this.suggestionsRequest !== request ) {
 						return;
 					}
 
 					const { validValues } = this.state;
 					const currentSuggestions = [];
 
-					suggestions.forEach((suggestion) => {
-						const duplicatedSuggestionIndex = currentSuggestions.indexOf(suggestion.label);
-						if (duplicatedSuggestionIndex >= 0) {
-							suggestion.label = `${suggestion.label} (${suggestion.value})`;
+					suggestions.forEach( ( suggestion ) => {
+						const duplicatedSuggestionIndex = currentSuggestions.indexOf( suggestion.label );
+						if ( duplicatedSuggestionIndex >= 0 ) {
+							suggestion.label = `${ suggestion.label } (${ suggestion.value })`;
 						}
-						currentSuggestions.push(suggestion.label);
-						validValues[suggestion.value] = suggestion.label;
-					});
+						currentSuggestions.push( suggestion.label );
+						validValues[ suggestion.value ] = suggestion.label;
+					} );
 
-					this.setState({
+					this.setState( {
 						suggestions: currentSuggestions,
 						validValues,
 						loading: false,
-					});
-				})
-				.catch(() => {
-					if (this.suggestionsRequest === request) {
-						this.setState({
+					} );
+				} )
+				.catch( () => {
+					if ( this.suggestionsRequest === request ) {
+						this.setState( {
 							loading: false,
-						});
+						} );
 					}
-				});
+				} );
 
 			this.suggestionsRequest = request;
-		});
+		} );
 	}
 
 	/**
@@ -147,9 +144,9 @@ class AutocompleteTokenField extends Component {
 	 *
 	 * @param {Array} tokenStrings An array of token label strings.
 	 */
-	handleOnChange(tokenStrings) {
+	handleOnChange( tokenStrings ) {
 		const { onChange } = this.props;
-		onChange(this.getValuesForLabels(tokenStrings));
+		onChange( this.getValuesForLabels( tokenStrings ) );
 	}
 
 	/**
@@ -159,7 +156,7 @@ class AutocompleteTokenField extends Component {
 	 */
 	getTokens() {
 		const { tokens } = this.props;
-		return this.getLabelsForValues(tokens);
+		return this.getLabelsForValues( tokens );
 	}
 
 	/**
@@ -172,14 +169,14 @@ class AutocompleteTokenField extends Component {
 		return (
 			<div className="autocomplete-tokenfield">
 				<FormTokenField
-					value={this.getTokens()}
-					suggestions={suggestions}
-					onChange={(tokens) => this.handleOnChange(tokens)}
-					onInputChange={(input) => this.debouncedUpdateSuggestions(input)}
-					label={label}
+					value={ this.getTokens() }
+					suggestions={ suggestions }
+					onChange={ ( tokens ) => this.handleOnChange( tokens ) }
+					onInputChange={ ( input ) => this.debouncedUpdateSuggestions( input ) }
+					label={ label }
 				/>
-				{loading && <Spinner />}
-				{help && <p className="autocomplete-tokenfield__help">{help}</p>}
+				{ loading && <Spinner /> }
+				{ help && <p className="autocomplete-tokenfield__help">{ help }</p> }
 			</div>
 		);
 	}

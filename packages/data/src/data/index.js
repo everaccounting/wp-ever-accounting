@@ -1,4 +1,4 @@
-export const data = global.eacAssetData || {};
+export const data = window.eacAssetData || {};
 
 /**
  * Retrieves a data value from the data state.
@@ -13,7 +13,6 @@ export const getData = ( name, fallback = false, filter = ( val ) => val ) => {
 
 	return filter( value, fallback );
 };
-
 
 export const ADMIN_URL = getData( 'adminUrl' );
 export const COUNTRIES = getData( 'countries' );

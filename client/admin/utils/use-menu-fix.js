@@ -2,16 +2,6 @@
  * External dependencies
  */
 import { useLocation } from 'react-router-dom';
-/**
- * WordPress dependencies
- */
-import { SlotFillProvider, Popover, Slot } from '@wordpress/components';
-import { useEffect } from '@wordpress/element';
-/**
- * Internal dependencies
- */
-import Routes from './routes';
-import { Header, Footer, Main } from './layout';
 
 const useMenuFix = () => {
 	const location = useLocation();
@@ -47,28 +37,4 @@ const useMenuFix = () => {
 	} );
 	return null;
 };
-
-export function App() {
-	const location = useLocation();
-	useMenuFix();
-
-	useEffect( () => {
-		window.document.documentElement.scrollTop = 0;
-	}, [ location ] );
-
-	return (
-		<div className="eac-layout">
-			<SlotFillProvider>
-				<Header />
-				<Main>
-					<Routes />
-				</Main>
-				<Footer />
-				<Slot name="app-footer" />
-				<Popover.Slot />
-			</SlotFillProvider>
-		</div>
-	);
-}
-
-export default App;
+export default useMenuFix;
