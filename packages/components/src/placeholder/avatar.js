@@ -7,15 +7,15 @@ import classNames from 'classnames';
  */
 import Element from './element';
 
-function Avatar({ className, active, shape = 'circle', size = 'default', ...props }) {
-	const classes = classNames('eac-placeholder-avatar', className, {
+function Avatar( { className, active, shape = 'circle', size = 'default', ...props } ) {
+	const classes = classNames( 'eac-placeholder-avatar', className, {
 		'eac-placeholder--active': active,
 		'eac-placeholder--element': active,
-	});
+	} );
 
 	return (
-		<div className={classes}>
-			<Element prefixCls="eac-placeholder-avatar" shape={shape} size={size} {...props} />
+		<div className={ classes }>
+			<Element prefixCls="eac-placeholder-avatar" shape={ shape } size={ size } { ...props } />
 		</div>
 	);
 }

@@ -39,7 +39,7 @@ class Scripts extends Singleton {
 			),
 			'eac-admin'      => array(
 				'src' => 'client/admin/style.css',
-				'deps' => array( 'eac-components' )
+				'deps' => array( 'eac-components', 'wp-components' )
 			),
 			'eac-public'     => array(
 				'src' => 'client/public/style.css',

@@ -7,17 +7,17 @@ import { useMemo } from '@wordpress/element';
  */
 import classNames from 'classnames';
 
-function Element(props) {
+function Element( props ) {
 	const { className, style, size, shape } = props;
-	const sizeCls = classNames({
-		[`${className}--lg`]: size === 'large',
-		[`${className}--sm`]: size === 'small',
-	});
+	const sizeCls = classNames( {
+		[ `${ className }--lg` ]: size === 'large',
+		[ `${ className }--sm` ]: size === 'small',
+	} );
 
-	const shapeCls = classNames({
-		[`${className}--circle`]: shape === 'circle',
-		[`${className}--square`]: shape === 'square',
-	});
+	const shapeCls = classNames( {
+		[ `${ className }--circle` ]: shape === 'circle',
+		[ `${ className }--square` ]: shape === 'square',
+	} );
 
 	const sizeStyle = useMemo(
 		() =>
@@ -25,13 +25,13 @@ function Element(props) {
 				? {
 						width: size,
 						height: size,
-						lineHeight: `${size}px`,
+						lineHeight: `${ size }px`,
 				  }
 				: {},
-		[size]
+		[ size ]
 	);
 
-	return <span className={classNames(className, sizeCls, shapeCls)} style={{ ...sizeStyle, ...style }} />;
+	return <span className={ classNames( className, sizeCls, shapeCls ) } style={ { ...sizeStyle, ...style } } />;
 }
 
 export default Element;
