@@ -38,7 +38,7 @@ class AutocompleteTokenField extends Component {
 	};
 
 	/**
-	 * When the component loads, fetch information about the tokens so we can populate
+	 * When the component loads, fetch information about the tokens, so we can populate
 	 * the tokens with the correct labels.
 	 */
 	componentDidMount() {

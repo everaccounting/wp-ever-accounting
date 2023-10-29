@@ -58,32 +58,30 @@ export function receiveSettingsError( errors, time = new Date() ) {
 /**
  * Action triggered to edit an option.
  *
- * @param {Object} options Settings to edit.
+ * @param {string} name  Option name.
+ * @param {*}      value Option value.
  *
  * @return {Object} Action object.
  */
-export const editSettings =
-	( options = {} ) =>
+export const editOption =
+	( name, value ) =>
 	async ( { dispatch, resolveSelect } ) => {
 		try {
-			// if settings is not an object or array then throw error.
 			const settings = await resolveSelect.getSettings();
-			const editedSettings = Object.keys( options ).reduce( ( memo, name ) => {
-				if ( settings[ name ] && settings[ name ].value !== options[ name ] ) {
-					return [
-						...memo,
-						{
-							name,
-							...settings[ name ],
-							update: options[ name ],
-							dirty: true,
-							error: null,
-						},
-					];
-				}
-				return memo;
-			}, [] );
-			await dispatch( receiveSettings( editedSettings ) );
+			const setting = Object.keys( settings ).find( ( single ) => single === name );
+			if ( ! setting ) {
+				return;
+			}
+			await dispatch(
+				receiveSettings( [
+					{
+						...settings[ name ],
+						update: value,
+						dirty: true,
+						error: null,
+					},
+				] )
+			);
 		} catch ( error ) {
 			throw error;
 		}
@@ -96,23 +94,25 @@ export const editSettings =
  *
  * @return {Object} Action object.
  */
-export const saveSettings =
+export const saveOptions =
 	( options = {} ) =>
 	async ( { dispatch, resolveSelect } ) => {
 		try {
-			await dispatch( editSettings( options ) );
-			const dirtySettings = await resolveSelect.getDirtySettings();
-			if ( ! dirtySettings ) {
+			await resolveSelect.getSettings();
+			// loop through the options and call editOption for each option.
+			for ( const [ name, value ] of Object.entries( options ) ) {
+				await dispatch( editOption( name, value ) );
+			}
+			const settings = await resolveSelect.getDirtyOptions();
+			if ( ! settings ) {
 				return;
 			}
-			await dispatch( setRequestingSettings( Object.keys( dirtySettings ) ) );
 			const response = await apiFetch( {
 				path: `${ NAMESPACE }/settings`,
 				method: 'POST',
-				data: dirtySettings,
+				data: settings,
 			} );
 			await dispatch( receiveSettings( response ) );
-			// now update the settings.
 		} catch ( error ) {
 			// if error has data.params then set the error for the setting.
 			if ( error?.data?.params ) {

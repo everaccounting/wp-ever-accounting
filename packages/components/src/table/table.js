@@ -1,121 +1,129 @@
 /**
  * WordPress dependencies
  */
-import { Button, Icon, CheckboxControl } from '@wordpress/components';
-import { useEffect, useMemo, useRef, useState, Fragment } from '@wordpress/element';
+import { Fragment, forwardRef, useMemo, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
 /**
  * External dependencies
  */
+import { noop } from 'lodash';
 import classNames from 'classnames';
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { get, noop } from 'lodash';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import PropTypes from 'prop-types';
 
 /**
  * Internal dependencies
  */
-import './style.scss';
-import TableHeader from './header';
-
-const getValueByPath = ( data, path ) => {
-	if ( typeof path !== 'string' ) return null;
-	return path.split( '.' ).reduce( ( pre, cur ) => ( pre || {} )[ cur ], data );
-};
-const defaultRender = ( row, column ) => {
-	return getValueByPath( row, column.property );
-};
+import usePagination from '../pagination/use-pagination';
+import Placeholder from '../placeholder';
+import TableHeader from './table-header';
+import TableRows from './table-rows';
+import TableSummery from './table-summery';
+import { normalizeColumns } from './utils';
+// import './style.scss';
+import Element from '../placeholder/element';
+import Button from '../placeholder/button';
 
 function Table( props ) {
-	const {
-		className,
-		data: data,
-		columns: _columns,
-		loading = false,
-		bordered = false,
-		caption,
-		rowKey = 'id',
-		showSummary = false,
-		summaryText,
-		summaryMethod,
-		emptyText = __( 'No Data', 'wp-ever-accounting' ),
-		rowClassName,
-		rowStyle,
-		defaultSort,
-		onSort,
-		onSelectChange,
-		onExpand,
-		renderExpanded,
-		query = {},
-		...restProps
-	} = props;
-	const container = useRef( null );
+	const { className, columns: _columns, dataSource = [], showSummary, caption, ...restProps } = props;
+	const columns = useMemo( () => normalizeColumns( _columns ), [ _columns ] );
+	const hasData = useMemo( () => dataSource && dataSource.length > 0, [ dataSource ] );
 	const [ expandedRows, setExpandedRows ] = useState( [] );
-	const [ selected, setSelected ] = useState( [] );
-	const hasData = useMemo( () => data && data.length > 0, [ data ] );
-	const { orderby, order } = query;
-	const sort = { orderby, order };
-	const columns = useMemo( () => {
-		return _columns.map( ( column, index ) => {
-			const align = column.align ? 'is--' + column.align : null;
-			return {
-				sortable: false,
-				...column,
-				key: column.key || index,
-				width: column?.width || null,
-				minWidth: column?.minWidth || null,
-				property: column.property || column.key,
-				render: column.render || defaultRender,
-				align,
-				headerAlign: column.headerAlign ? 'is--' + column.headerAlign : align,
-				renderHeader: column.renderHeader || null,
-			};
-		} );
-	}, [ _columns ] );
+	const [ selectedRows, setSelectedRows ] = useState( [] );
+	const isAllSelected = useMemo( () => selectedRows.length === dataSource.length, [ selectedRows, dataSource ] );
+	const onToggleExpanded = ( row ) => {
+		const expanded = expandedRows.includes( row ) ? expandedRows.filter( ( r ) => r !== row ) : [ ...expandedRows, row ];
+		setExpandedRows( expanded );
+		dispatchEvent( 'onExpand', expanded );
+	};
+	const onSelectAll = ( checked ) => {
+		setSelectedRows( checked ? dataSource : [] );
+		dispatchEvent( 'onSelectAll', checked );
+		dispatchEvent( 'onSelectChange', checked ? dataSource : [] );
+	};
+	const onSelectChange = ( checked, row ) => {
+		const selected = selectedRows.includes( row ) ? selectedRows.filter( ( r ) => r !== row ) : [ ...selectedRows, row ];
+		setSelectedRows( selected );
+		dispatchEvent( 'onSelectChange', selected );
+	};
+
 	const dispatchEvent = ( name, ...args ) => ( props[ name ] || noop )( ...args );
-	const classes = classNames( 'eac-table', className );
+
+	const classes = classNames( 'eac-table', className, {
+		'eac-table--empty': ! hasData,
+		'eac-table--bordered': !! props.bordered,
+		'eac-table--striped': !! props.striped,
+		'eac-table--loading': !! props.loading,
+	} );
+
 	return (
-		<div className={ classes } ref={ container } role="group">
-			<table className="eac-table__table">
-				{ caption && <caption className="eac-table__caption">{ caption }</caption> }
-				<colgroup>
-					{ columns.map( ( column, index ) => (
-						<col
-							width={ column.width ? column.width : null }
-							style={ {
-								minWidth: column.minWidth ? column.minWidth : null,
-								maxWidth: column.maxWidth ? column.maxWidth : null,
-								width: column.width ? column.width : null,
-							} }
-							key={ index }
-						/>
-					) ) }
-				</colgroup>
-				<thead>
-					<TableHeader
-						columns={ columns }
-						sort={ sort }
-						onSort={ handleSort }
-						isAllSelected={ isAllSelected }
-						isRequesting={ isRequesting }
-						onSelectAll={ handleSelectAll }
-					/>
-				</thead>
-			</table>
-		</div>
+		<Fragment>
+			<div className={ classes } role="group">
+				<table>
+					{ caption && <caption className="eac-table__caption">{ caption }</caption> }
+					<colgroup>
+						{ columns.map( ( column, index ) => (
+							<col
+								width={ column.width ? column.width : null }
+								style={ {
+									minWidth: column.minWidth ? column.minWidth : null,
+									maxWidth: column.maxWidth ? column.maxWidth : null,
+									width: column.width ? column.width : null,
+								} }
+								key={ index }
+							/>
+						) ) }
+					</colgroup>
+					<thead>
+						<TableHeader { ...restProps } columns={ columns } isAllSelected={ isAllSelected } onSelectAll={ onSelectAll } />
+					</thead>
+					<tbody>
+						{ hasData ? (
+							<TableRows
+								{ ...restProps }
+								columns={ columns }
+								dataSource={ dataSource }
+								selectedRows={ selectedRows }
+								onSelectChange={ onSelectChange }
+								onToggleExpanded={ onToggleExpanded }
+							/>
+						) : (
+							<tr>
+								<td className="eac-table__cell eac-table__cell--empty" colSpan={ columns.length }>
+									{ props.emptyText }
+								</td>
+							</tr>
+						) }
+						{ props.loading &&
+							Array.from( { length: 10 }, ( _, index ) => (
+								<tr key={ index }>
+									{ columns.map( ( column, i ) => (
+										<td key={ i } className="eac-table__cell eac-table__cell--loading">
+											Loading
+										</td>
+									) ) }
+								</tr>
+							) ) }
+						{ showSummary && <TableSummery { ...restProps } columns={ columns } dataSource={ dataSource } /> }
+					</tbody>
+				</table>
+			</div>
+		</Fragment>
 	);
 }
 
 Table.propTypes = {
-	// Data record array to be displayed.
-	data: PropTypes.arrayOf( PropTypes.object ),
 	// An array of columns, as objects.
 	columns: PropTypes.arrayOf(
 		PropTypes.shape( {
+			// Title of this column
+			title: PropTypes.string,
+			// column's key. If you need to use the onFilterChange event, you need this attribute to identify which column is being filtered.
+			key: PropTypes.string,
+			// Display field of the data record, support nest path by string array
+			property: PropTypes.oneOfType( [ PropTypes.string, PropTypes.arrayOf( PropTypes.string ) ] ),
 			// type of the column. If set to selection, the column will display checkbox. If set to index, the column will display index of the row (staring from 1). If set to expand, the column will display expand icon.
-			type: PropTypes.oneOf( [ 'selection', 'index', 'expandable' ] ),
+			type: PropTypes.oneOf( [ 'selection', 'expandable' ] ),
 			//alignment of the table cell. If omitted, the value of the above align attribute will be applied.
 			align: PropTypes.oneOf( [ 'left', 'center', 'right' ] ),
 			//alignment of the table header. If omitted, the value of the above align attribute will be applied.
@@ -124,14 +132,8 @@ Table.propTypes = {
 			className: PropTypes.string,
 			//Span of this column's title
 			colSpan: PropTypes.number,
-			// column's key. If you need to use the onFilterChange event, you need this attribute to identify which column is being filtered.
-			key: PropTypes.string,
-			// Display field of the data record, support nest path by string array
-			property: PropTypes.oneOfType( [ PropTypes.string, PropTypes.arrayOf( PropTypes.string ) ] ),
 			//is sortable or not
 			sortable: PropTypes.bool,
-			// Title of this column
-			title: PropTypes.string,
 			//column width
 			width: PropTypes.number,
 			//with width has a fixed width, while columns with minWidth
@@ -142,6 +144,8 @@ Table.propTypes = {
 			renderHeader: PropTypes.func,
 			//function that determines if a certain row can be selected, works when type is 'selection'
 			selectable: PropTypes.func,
+			//whether to display a filter icon in the column header. Click the icon to display a list of filtering options.
+			filterable: PropTypes.bool,
 			//an array of data filtering options. For each element in this array, text and value are required.
 			filters: PropTypes.arrayOf(
 				PropTypes.shape( {
@@ -159,33 +163,14 @@ Table.propTypes = {
 			filterMethod: PropTypes.func,
 		} )
 	),
-	//Whether to show all table borders.
-	bordered: PropTypes.bool,
-	//Loading status of table.
-	loading: PropTypes.bool,
-	// Caption of table.
-	caption: PropTypes.string,
+	// Data record array to be displayed.
+	dataSource: PropTypes.arrayOf( PropTypes.object ),
 	//Row's unique key, could be a string or function that returns a string.
 	rowKey: PropTypes.oneOfType( [ PropTypes.string, PropTypes.func ] ),
-	// whether to display a summary row.
-	showSummary: PropTypes.bool,
-	//displayed text for the first column of summary row/.
-	summaryText: PropTypes.string,
-	//custom summary method.
-	summaryMethod: PropTypes.func,
-	//Displayed text when data is empty.
-	emptyText: PropTypes.string,
-	//function that returns custom style for a row, or a string assigning custom style for every row.
-	rowClassName: PropTypes.oneOfType( [ PropTypes.func, PropTypes.string ] ),
 	//function that returns custom style for a row, or a string assigning custom style for every row.
 	rowStyle: PropTypes.oneOfType( [ PropTypes.func, PropTypes.string ] ),
-	//set the default sort column and order. property prop is used to set default sort column, property order is used to set default sort order.
-	defaultSort: PropTypes.shape( {
-		//default sort column
-		property: PropTypes.string,
-		//default sort order
-		order: PropTypes.oneOf( [ 'asc', 'desc' ] ),
-	} ),
+	//function that returns custom style for a row, or a string assigning custom style for every row.
+	rowClassName: PropTypes.oneOfType( [ PropTypes.func, PropTypes.string ] ),
 	//triggers when Table's sorting changes.
 	onSort: PropTypes.func,
 	//used in multiple selection Table, toggle if a certain row is selected. With the second parameter, you can directly set if this row is selected
@@ -196,6 +181,32 @@ Table.propTypes = {
 	renderExpanded: PropTypes.func,
 	// Current query string represented in object form.
 	query: PropTypes.object,
+	// whether to display a summary row.
+	showSummary: PropTypes.bool,
+	//displayed text for the first column of summary row/.
+	summaryText: PropTypes.string,
+	//custom summary method.
+	renderSummary: PropTypes.func,
+	//Whether to show all table borders.
+	bordered: PropTypes.bool,
+	//Loading status of table.
+	loading: PropTypes.bool,
+};
+
+Table.defaultProps = {
+	emptyText: __( 'No Data', 'wp-ever-accounting' ),
+	loading: false,
+	columns: [],
+	dataSource: [],
+	query: {},
+	showSummary: false,
+	renderSummary: () => {},
+	pagination: false,
+	onHeaderRow: noop,
+	onSort: noop,
+	onFilterChange: noop,
+	onExpand: noop,
+	onSelect: noop,
 };
 
 export default Table;

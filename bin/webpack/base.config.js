@@ -39,10 +39,7 @@ module.exports = {
 		rules: [ ...defaults.module.rules ].filter( Boolean ),
 	},
 	plugins: [
-		...defaults.plugins.filter(
-			( plugin ) =>
-				! [ 'DependencyExtractionWebpackPlugin', 'MiniCssExtractPlugin' ].includes( plugin.constructor.name )
-		),
+		...defaults.plugins.filter( ( plugin ) => ! [ 'DependencyExtractionWebpackPlugin', 'MiniCssExtractPlugin' ].includes( plugin.constructor.name ) ),
 
 		// Extracts CSS into separate files.
 		new MiniCssExtractPlugin( {
@@ -65,12 +62,7 @@ module.exports = {
 			injectPolyfill: true,
 			requestToExternal( request ) {
 				if ( request.startsWith( PACKAGE_NAMESPACE ) ) {
-					return [
-						'eac',
-						request
-							.substring( PACKAGE_NAMESPACE.length )
-							.replace( /-([a-z])/g, ( _, letter ) => letter.toUpperCase() ),
-					];
+					return [ 'eac', request.substring( PACKAGE_NAMESPACE.length ).replace( /-([a-z])/g, ( _, letter ) => letter.toUpperCase() ) ];
 				}
 			},
 			requestToHandle( request ) {

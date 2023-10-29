@@ -1,5 +1,2 @@
-/**
- * Internal dependencies
- */
-import Pagination from './pagination';
-export default Pagination;
+export { default as Pagination } from './pagination';
+export * from './use-pagination';

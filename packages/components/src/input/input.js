@@ -1,11 +1,17 @@
 /**
  * WordPress dependencies
  */
-import { TextControl } from '@wordpress/components';
+// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
+import { __experimentalInputControl as InputControl } from '@wordpress/components';
 import { forwardRef } from '@wordpress/element';
 
+/**
+ * Internal dependencies
+ */
+import './style.scss';
+
 const Input = forwardRef( ( props, ref ) => {
-	return <TextControl { ...props } ref={ ref } />;
+	return <InputControl { ...props } ref={ ref } />;
 } );
 
 export default Input;

@@ -272,8 +272,7 @@ function Dashboard( props ) {
 	console.log( props );
 	return (
 		<>
-			<SectionHeader title={ <>{ __( 'Dashboard', 'wp-ever-accounting' ) }</> } actions="test" menu="menu" isCard={ true }>
-			</SectionHeader>
+			<SectionHeader title={ <>{ __( 'Dashboard', 'wp-ever-accounting' ) }</> } actions="test" menu="menu" isCard={ true }></SectionHeader>
 		</>
 	);
 }

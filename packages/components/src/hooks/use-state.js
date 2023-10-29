@@ -1,0 +1,28 @@
+/**
+ * WordPress dependencies
+ */
+import { useEffect, useState, useRef } from '@wordpress/element';
+/**
+ * Same as React.useState but `setState` accept `ignoreDestroy` param to not to setState after destroyed.
+ * We do not make this auto is to avoid real memory leak.
+ * Developer should confirm it's safe to ignore themselves.
+ *
+ * @param {*} defaultValue
+ */
+export default function useSafeState( defaultValue ) {
+	const destroyRef = useRef( false );
+	const [ value, setValue ] = useState( defaultValue );
+	useEffect( () => {
+		destroyRef.current = false;
+		return () => {
+			destroyRef.current = true;
+		};
+	}, [] );
+	function safeSetState( updater, ignoreDestroy ) {
+		if ( ignoreDestroy && destroyRef.current ) {
+			return;
+		}
+		setValue( updater );
+	}
+	return [ value, safeSetState ];
+}

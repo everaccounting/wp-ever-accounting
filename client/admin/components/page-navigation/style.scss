@@ -1,0 +1,10 @@
+.eac-admin {
+  // disable focus outline for navtabs.
+  .eac-nav{
+    margin-bottom: 20px;
+    .nav-tab:focus{
+      outline: none;
+      box-shadow: none;
+    }
+  }
+}

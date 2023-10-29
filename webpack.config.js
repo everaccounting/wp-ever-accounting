@@ -52,6 +52,13 @@ module.exports = [
 					}
 				),
 		],
+		resolve: {
+			...baseConfig.resolve,
+			alias: {
+				...baseConfig.resolve.alias,
+				'~': path.resolve( __dirname + '/client/admin' ),
+			},
+		},
 	},
 	// Packages config.
 	{

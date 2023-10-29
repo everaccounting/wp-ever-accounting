@@ -2,7 +2,7 @@
  * WordPress dependencies
  */
 import { registerStore } from '@wordpress/data';
-// import controls from '@wordpress/data-controls';
+import controls from '@wordpress/data-controls';
 
 /**
  * Internal dependencies
@@ -11,7 +11,6 @@ import reducer from './reducer';
 import * as selectors from './selectors';
 import * as actions from './actions';
 import * as resolvers from './resolvers';
-import defaultControls from '../controls';
 import { STORE_NAME } from './constants';
 
 const storeConfig = {
@@ -19,7 +18,7 @@ const storeConfig = {
 	actions,
 	selectors,
 	resolvers,
-	controls: defaultControls,
+	controls,
 };
 
 registerStore( STORE_NAME, storeConfig );

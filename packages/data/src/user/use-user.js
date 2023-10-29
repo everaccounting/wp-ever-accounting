@@ -23,7 +23,8 @@ export default function useUser() {
 	const mutations = useMemo(
 		() => ( {
 			userCan: ( capability ) => {
-				return userData?.user?.capabilities?.includes( capability );
+				const capabilities = userData?.user?.capabilities || {};
+				return Object.keys( capabilities ).includes( capability );
 			},
 		} ),
 		[ userData ]
@@ -32,6 +33,7 @@ export default function useUser() {
 	return {
 		...userData,
 		...mutations,
+		userData: userData.user,
 		isRequesting: userData.isRequesting,
 	};
 }

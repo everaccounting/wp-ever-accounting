@@ -10,9 +10,9 @@ import PropTypes from 'prop-types';
 import './style.scss';
 
 function SectionHeader( props ) {
-	const { children, menu, title, actions, isCard, ...restProps } = props;
+	const { children, menu, title, actions, card, ...restProps } = props;
 	const classes = classNames( 'eac-section-header', props.className, {
-		'eac-section-header--card': isCard,
+		'eac-section-header--card': card,
 	} );
 
 	return (

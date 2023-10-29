@@ -1,0 +1,33 @@
+.eac-table {
+  .eac-table__section {
+    display: flex;
+    justify-content: space-between;
+    padding-block: 16px;
+    padding-inline: 0;
+  }
+
+  .eac-table__section-col {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+    flex: 1;
+    gap: 8px;
+
+    &.eac-table__section-col--left {
+      justify-content: flex-start;
+    }
+
+    &.eac-table__section-col--right {
+      justify-content: flex-end;
+    }
+  }
+
+  .eac-table__search {
+    flex: 1;
+
+    input {
+      background-color: #fff !important;
+    }
+  }
+}

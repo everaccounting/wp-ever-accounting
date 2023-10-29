@@ -1,0 +1,160 @@
+.eac-table {
+	overflow: hidden;
+	width: 100%;
+	max-width: 100%;
+	font-size: 14px;
+	overflow-x: auto;
+	background-color: #fff;
+	box-sizing: border-box;
+
+	&::before {
+		left: 0;
+		bottom: 0;
+		width: 100%;
+		height: 1px;
+		background: linear-gradient(90deg, #fff, hsla(0, 0%, 100%, 0));
+	}
+
+	&::after {
+		top: 0;
+		right: 0;
+		width: 1px;
+		height: 100%;
+		background: linear-gradient(90deg, hsla(0, 0%, 100%, 0), #fff);
+	}
+
+	&.is-scrollable-right::after,
+	&.is-scrollable-left::before {
+		opacity: 1;
+	}
+
+	&.is--striped {
+		tbody {
+			tr:nth-child(odd) {
+				background-color: var(--eac--color-gray-100);
+			}
+		}
+	}
+
+	&.is--bordered {
+		border: 1px solid var(--eac--color-border);
+	}
+
+	table {
+		border-collapse: collapse;
+		width: 100%;
+	}
+
+	table {
+		border-collapse: collapse;
+		width: 100%;
+	}
+
+	thead {
+		font-weight: 500;
+	}
+
+	tbody {
+		tr {
+			&:hover,
+			&:focus-within {
+				background-color: var(--eac--color-gray-100);
+
+				td,
+				th {
+					background: transparent;
+				}
+			}
+		}
+	}
+
+	#{&}__cell {
+		padding: 12px 24px;
+		min-width: 0;
+		box-sizing: border-box;
+		text-overflow: ellipsis;
+		vertical-align: middle;
+		position: relative;
+		font-size: 13px;
+		text-align: left;
+		white-space: nowrap;
+		border-bottom: 1px solid var(--eac--color-border);
+
+		&.is--right {
+			text-align: right
+		}
+
+		&.is--center {
+			text-align: center
+		}
+
+		&.is--sorted {
+			background-color: var(--eac--color-gray-100);
+		}
+
+		&:is(th) {
+			background-color: var(--eac--color-gosht-white);
+			font-weight: 700;
+			white-space: nowrap;
+			overflow: hidden;
+			user-select: none;
+		}
+
+		&.is--index-column,
+		&.is--selection-column,
+		&.is--expandable-column {
+			width: 33px;
+			max-width: 33px;
+			padding-left: var(--eac--gap);
+
+			& + th {
+				border-left: 0;
+			}
+		}
+
+		> a:only-child {
+			display: block;
+		}
+
+		a {
+			&:hover,
+			&:focus {
+				color: var(--eac--color-accent);
+			}
+		}
+
+		.components-button {
+			height: auto;
+			width: 100%;
+			padding: 0;
+			vertical-align: middle;
+			line-height: 1;
+			border: none;
+			background: transparent !important;
+			box-shadow: none !important;
+			align-items: center;
+			gap: 8px;
+
+			// @todo Add interactive styles
+			&:hover {
+				box-shadow: none !important;
+			}
+
+			&:active {
+				box-shadow: none !important;
+			}
+		}
+
+		.components-checkbox-control {
+			.components-base-control__field {
+				margin: 0;
+			}
+
+			.components-checkbox-control__input-container,
+			.components-checkbox-control__input[type=checkbox] {
+				width: 16px;
+				height: 16px;
+			}
+		}
+	}
+}

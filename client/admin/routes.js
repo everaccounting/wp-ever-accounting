@@ -6,9 +6,11 @@ import { lazy, cloneElement, Suspense } from '@wordpress/element';
 /**
  * External dependencies
  */
-import { Navigate, useRoutes } from 'react-router-dom';
+import { Navigate, useRoutes, useLocation } from 'react-router-dom';
 import { Spinner } from '@wordpress/components';
 import { applyFilters } from '@wordpress/hooks';
+
+import { useUser } from '@eac/data';
 
 const Dashboard = lazy( () => import( './pages/dashboard' ) );
 
@@ -41,11 +43,14 @@ const Addons = lazy( () => import( './pages/addons' ) );
 const Help = lazy( () => import( './pages/help' ) );
 
 export function Routes() {
+	const location = useLocation();
+	const { userCan, userData } = useUser();
 	const routes = applyFilters( 'wp-ever-accounting/routes', [
 		{
 			path: '/',
 			name: __( 'Dashboard', 'wp-ever-accounting' ),
 			element: <Dashboard />,
+			capability: 'manage_options',
 		},
 		{
 			path: '/items',
@@ -139,26 +144,36 @@ export function Routes() {
 			path: '/reports',
 			name: __( 'Reports', 'wp-ever-accounting' ),
 			element: <Reports />,
+			capability: 'manage_options',
 		},
 		{
 			path: '/tools',
 			name: __( 'Tools', 'wp-ever-accounting' ),
 			element: <Tools />,
+			capability: 'manage_options',
 		},
 		{
 			path: '/settings/*',
 			name: __( 'Settings', 'wp-ever-accounting' ),
 			element: <Settings />,
+			capability: 'manage_options',
 		},
 		{
 			path: '/addons/*',
 			name: __( 'Addons', 'wp-ever-accounting' ),
 			element: <Addons />,
+			capability: 'manage_options',
 		},
 		{
 			path: '/help',
 			name: __( 'Help', 'wp-ever-accounting' ),
 			element: <Help />,
+			capability: 'manage_options',
+		},
+		// 404.
+		{
+			path: '*',
+			element: <Navigate to="/" />,
 		},
 	] )
 		.map( ( route ) => {
@@ -168,6 +183,8 @@ export function Routes() {
 					...route,
 					element: cloneElement( route.element, {
 						routes: route,
+						userData,
+						location,
 					} ),
 				};
 			}
@@ -184,8 +201,11 @@ export function Routes() {
 
 			return route;
 		} );
-	const router = useRoutes( routes );
 
+	//recursively loop though all array item and check capability if it does not meet then exclude that item.
+
+	// set the value of the router context to the routes array.
+	const router = useRoutes( routes );
 	return <Suspense fallback={ <Spinner /> }>{ router }</Suspense>;
 }
 

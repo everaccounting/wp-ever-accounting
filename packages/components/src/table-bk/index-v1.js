@@ -20,7 +20,7 @@ import {
 import EllipsisMenu from '../ellipsis-menu';
 import MenuItem from '../ellipsis-menu/menu-item';
 import MenuTitle from '../ellipsis-menu/menu-title';
-import { Pagination } from '../pagination';
+import { Pagination_v1 } from '../pagination';
 import Table from './table';
 import TablePlaceholder from './placeholder';
 import TableSummary, { TableSummaryPlaceholder } from './summary';

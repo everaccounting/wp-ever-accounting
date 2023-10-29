@@ -1,115 +1,131 @@
 /**
+ * WordPress dependencies
+ */
+import { SelectControl, TextControl, Button } from '@wordpress/components';
+import { next, previous, chevronLeft, chevronRight } from '@wordpress/icons';
+import { forwardRef, useState, useEffect } from '@wordpress/element';
+import { __, sprintf } from '@wordpress/i18n';
+
+/**
  * External dependencies
  */
 import classNames from 'classnames';
+
 /**
- * WordPress dependencies
+ * Internal dependencies
  */
-import { Button, TextControl, SelectControl } from '@wordpress/components';
-import { __, sprintf } from '@wordpress/i18n';
+import './style.scss';
 
-const NavLink = ( props ) => {
-	const { label, className, enabled = true, onClick, ...rest } = props;
-	return (
-		<Button isSecondary={ true } className={ className } disabled={ ! enabled } onClick={ onClick } { ...rest }>
-			{ label }
-			<span className="screen-reader-text">{ label }</span>
-		</Button>
-	);
-};
+const toInt = ( value ) => parseInt( value, 10 );
 
-const Total = ( props ) => {
-	return typeof props.total === 'number' ? (
-		<span className="el-pagination__total">{ sprintf( __( '%d items', 'wp-ever-accounting' ), props.total ) }</span>
-	) : (
-		<span />
-	);
-};
+const Pagination = forwardRef( ( { className, disable, total, showTotal = true, showPageSize = true, pageSizes = [ 10, 20, 50, 100 ], ...props }, ref ) => {
+	const [ page, setPage ] = useState( 1 );
+	const [ perPage, setPerPage ] = useState( props.defaultPerPage || 20 );
+	const dispatchEvent = ( name, ...args ) => props[ name ]?.( ...args );
 
-const Jumper = ( props ) => {
-	const { maxPages } = props;
-	return (
-		<span className="el-pagination__jump">
-			<input
-				className="el-pagination__editor is-in-pagination"
-				type="number"
-				min={ 1 }
-				max={ maxPages }
-				value={ props.currentPage }
-				onChange={ ( e ) => props.setPageChanged( e.target.value ) }
-			/>
-		</span>
-	);
-};
+	// If the page or page props are not provided then work with the state otherwise use the props.
+	useEffect( () => {
+		if ( props.page ) {
+			setPage( toInt( props.page ) );
+		}
+		if ( props.perPage ) {
+			setPerPage( toInt( props.perPage ) );
+		}
+	}, [ props.page, props.perPage ] );
 
-const Sizes = ( props ) => {
-	const { pageSize, pageSizes } = props;
-	if ( pageSizes.indexOf( pageSize ) === -1 ) {
-		return null;
-	}
-
-	return (
-		<SelectControl
-			className="el-pagination__sizes"
-			value={ pageSize }
-			options={ pageSizes.map( ( item ) => {
-				return { value: item, label: item };
-			} ) }
-			onChange={ ( value ) => props.sizeChange( value ) }
-		/>
-	);
-};
-
-const Pagination = ( props ) => {
-	const { currentPage: _currentPage = 1, pageSizes = [ 10, 20, 30, 40, 50, 100 ], pageSize = 20, total, onChange } = props;
-	const onePage = total <= pageSize;
-	const currentPage = parseInt( _currentPage, 10 );
-	const maxPages = Math.ceil( parseInt( total, 10 ) / parseInt( pageSize, 10 ) );
-	const setPageChanged = ( page ) => {
-		// page = parseInt(page, 10);
-		// if (page !== currentPage && !isNaN(page) && page > 0 && page <= maxPages) {
-		// 	console.log('page', page);
-		// }
-		console.log( 'page', page );
+	const handlePageChange = ( currentPage ) => {
+		setPage( currentPage );
+		dispatchEvent( 'onPageChange', currentPage );
+		dispatchEvent( 'onChange', { page: currentPage, perPage } );
 	};
 
-	const classes = classNames( {
-		'el-pagination': true,
-		'el-pagination__rightwrapper': false,
-	} );
-	console.log( currentPage, maxPages, classes );
+	const handlePageSizeChange = ( currentPageSize ) => {
+		setPerPage( currentPageSize );
+		dispatchEvent( 'onPageSizeChange', currentPageSize );
+		dispatchEvent( 'onChange', { page, perPage: currentPageSize } );
+	};
+
+	const maxPage = Math.floor( ( total - 1 ) / perPage ) + 1;
+	const classes = classNames( 'eac-pagination', className );
+	const currentPage = Math.min( page, maxPage ) || 1;
 
 	return (
-		<div className={ classes }>
-			<NavLink label="«" className="first-page" enabled={ currentPage > 0 && currentPage !== 1 } onClick={ () => setPageChanged( 1 ) } />
-			&nbsp;
-			<NavLink
-				icon="arrow-left"
-				className="prev-page"
-				enabled={ currentPage > 0 && currentPage !== 1 }
-				onClick={ () => setPageChanged( currentPage - 1 ) }
-			/>
-			&nbsp;
-			<Jumper maxPages={ maxPages } currentPage={ currentPage } setPageChanged={ setPageChanged } />
-			<NavLink
-				label="›"
-				icon="arrow-right"
-				className="next-page"
-				enabled={ currentPage < maxPages }
-				onClick={ () => setPageChanged( currentPage + 1 ) }
-			/>
-			&nbsp;
-			<NavLink
-				// label="»"
-				icon="arrow-right"
-				className="last-page"
-				enabled={ currentPage < maxPages - 1 }
-				onClick={ () => setPageChanged( maxPages ) }
-			/>
-			<Total total={ total } />
-			<Sizes pageSize={ pageSize } pageSizes={ pageSizes } sizeChange={ setPageChanged } />
-		</div>
+		<ul className={ classes } ref={ ref }>
+			{ showTotal && (
+				<li className="eac-pagination__item eac-pagination__total">
+					<span className="eac-pagination__total-text">{ sprintf( __( 'Total %d items' ), total ) }</span>
+				</li>
+			) }
+			<li className="eac-pagination__item eac-pagination__first">
+				<Button
+					className="eac-pagination__button"
+					icon={ previous }
+					aria-label={ __( 'First page' ) }
+					disabled={ disable || page === 1 }
+					onClick={ () => handlePageChange( 1 ) }
+				>
+					<span className="screen-reader-text">{ __( 'First page' ) }</span>
+				</Button>
+			</li>
+			<li className="eac-pagination__item eac-pagination__previous">
+				<Button
+					className="eac-pagination__button"
+					icon={ chevronLeft }
+					aria-label={ __( 'Previous page' ) }
+					disabled={ disable || page === 1 }
+					onClick={ () => handlePageChange( page - 1 ) }
+				>
+					<span className="screen-reader-text">{ __( 'Previous page' ) }</span>
+				</Button>
+			</li>
+			<li className="eac-pagination__item eac-pagination__goto">
+				<TextControl
+					className="eac-pagination__goto-input"
+					type="number"
+					min="1"
+					max={ maxPage }
+					step="1"
+					value={ currentPage }
+					disabled={ disable }
+					onChange={ ( value ) => handlePageChange( value ) }
+				/>
+			</li>
+			<li className="eac-pagination__item eac-pagination__next">
+				<Button
+					className="eac-pagination__button"
+					icon={ chevronRight }
+					aria-label={ __( 'Next page' ) }
+					disabled={ disable || page === maxPage }
+					onClick={ () => handlePageChange( page + 1 ) }
+				>
+					<span className="screen-reader-text">{ __( 'Next page' ) }</span>
+				</Button>
+			</li>
+			<li className="eac-pagination__item eac-pagination__last">
+				<Button
+					className="eac-pagination__button"
+					icon={ next }
+					aria-label={ __( 'Last page' ) }
+					disabled={ disable || page === maxPage }
+					onClick={ () => handlePageChange( parseInt( maxPage, 10 ) ) }
+				>
+					<span className="screen-reader-text">{ __( 'Last page' ) }</span>
+				</Button>
+			</li>
+			{ showPageSize && (
+				<li className="eac-pagination__item eac-pagination__size">
+					<SelectControl
+						className="eac-pagination__size-select"
+						options={ pageSizes.map( ( size ) => ( { label: sprintf( __( '%d / Page' ), size ), value: size } ) ) }
+						disabled={ disable }
+						value={ perPage }
+						onChange={ ( value ) => handlePageSizeChange( parseInt( value, 10 ) ) }
+					/>
+				</li>
+			) }
+		</ul>
 	);
-};
-
+} );
 export default Pagination;
+
+export * from './use-pagination';

@@ -12,6 +12,6 @@ Input.Checkbox = Checkbox;
 Input.Radio = Radio;
 Input.Select = Select;
 Input.Textarea = Textarea;
-Input.Toggle = Toggle;
+Input.Switch = Toggle;
 
 export default Input;

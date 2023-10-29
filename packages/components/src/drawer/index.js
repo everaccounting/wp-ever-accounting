@@ -15,7 +15,7 @@ import './style.scss';
 import DrawerPanel from './drawer-panel';
 const defaultPushState = { distance: 180 };
 
-function Drawer(props) {
+function Drawer( props ) {
 	const {
 		width,
 		height,
@@ -35,12 +35,12 @@ function Drawer(props) {
 	} = props;
 
 	const getContainer = getContainer ?? document.body;
-	const classes = classNames('eac-drawer', {
-		'no-mask': !mask,
-	});
+	const classes = classNames( 'eac-drawer', {
+		'no-mask': ! mask,
+	} );
 
-	const mergedWidth = useMemo(() => width ?? (size === 'large' ? 736 : 378), [width, size]);
-	const mergedHeight = useMemo(() => height ?? (size === 'large' ? 736 : 378), [height, size]);
+	const mergedWidth = useMemo( () => width ?? ( size === 'large' ? 736 : 378 ), [ width, size ] );
+	const mergedHeight = useMemo( () => height ?? ( size === 'large' ? 736 : 378 ), [ height, size ] );
 	const maskMotion = {
 		motionName: 'eac-drawer-mask-motion',
 		motionAppear: true,
@@ -49,33 +49,33 @@ function Drawer(props) {
 		motionDeadline: 500,
 	};
 
-	const panelMotion = (motionPlacement) => ({
-		motionName: `eac-drawer-panel-motion-${motionPlacement}`,
+	const panelMotion = ( motionPlacement ) => ( {
+		motionName: `eac-drawer-panel-motion-${ motionPlacement }`,
 		motionAppear: true,
 		motionEnter: true,
 		motionLeave: true,
 		motionDeadline: 500,
-	});
+	} );
 
 	return (
 		<RcDrawer
 			prefixCls="eac-drawer"
-			onClose={onClose}
-			maskMotion={maskMotion}
-			motion={panelMotion}
-			{...rest}
-			open={open ?? visible}
-			mask={mask}
-			push={push}
-			width={mergedWidth}
-			height={mergedHeight}
-			style={style}
-			className={className}
-			rootClassName={classes}
-			getContainer={getContainer}
-			afterOpenChange={afterOpenChange ?? afterVisibleChange}
+			onClose={ onClose }
+			maskMotion={ maskMotion }
+			motion={ panelMotion }
+			{ ...rest }
+			open={ open ?? visible }
+			mask={ mask }
+			push={ push }
+			width={ mergedWidth }
+			height={ mergedHeight }
+			style={ style }
+			className={ className }
+			rootClassName={ classes }
+			getContainer={ getContainer }
+			afterOpenChange={ afterOpenChange ?? afterVisibleChange }
 		>
-			<DrawerPanel {...rest} onClose={onClose} />
+			<DrawerPanel { ...rest } onClose={ onClose } />
 		</RcDrawer>
 	);
 }

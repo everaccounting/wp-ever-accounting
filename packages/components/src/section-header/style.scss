@@ -1,5 +1,4 @@
 .eac-section-header {
-	padding: 13px 0;
 	border-bottom: none;
 	display: flex;
 	justify-content: space-between;
@@ -8,7 +7,7 @@
 
 	h2, h3 {
 		margin: 0 16px 0 0;
-		line-height: 1.7;
+		line-height: 1.2;
 		font-size: 1.5em;
 		font-weight: 600;
 	}
@@ -47,7 +46,7 @@
 		padding: var(--eac--gap-smaller) var(--eac--gap-large);
 		border: 1px solid var(--eac--color-border);
 		h2, h3 {
-			font-size: 14px;
+			font-size: 16px;
 		}
 	}
 }
