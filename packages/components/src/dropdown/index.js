@@ -1,31 +1,55 @@
 /**
- * External dependencies
- */
-import PropTypes from 'prop-types';
-import classnames from 'classnames';
-/**
  * WordPress dependencies
  */
-import { Button } from '@wordpress/components';
-import { createElement, useState } from '@wordpress/element';
-import { decodeEntities } from '@wordpress/html-entities';
-
+import { Button, Dropdown as DropdownComponent } from '@wordpress/components';
 /**
- * Internal dependencies
+ * External dependencies
  */
-import { useMergedState } from '../hooks';
+import classnames from 'classnames';
 
-function Dropdown( { className, ...props } ) {
-	const [ isOpen, setIsOpen ] = useMergedState( props.isOpen || false );
-	const classes = classnames( 'eac-dropdown', props.className, {
+const Dropdown = ( props ) => {
+	const {
+		label,
+		icon = 'ellipsis',
+		splitButton,
+		children,
+		menu,
+		isOpen,
+		...otherProps
+	} = props;
+	const classes = classnames( 'eac-dropdown', {
 		'eac-dropdown--open': isOpen,
 	} );
-	const dispatchEvent = ( name, ...args ) => {
-		const fn = props[ name ];
-		if ( fn ) {
-			fn( ...args );
-		}
+
+	// All I want to do is, when menu is passed and clicked on the menu item, the menu should close.
+	// When clicked on child, the menu should not close. we will send the onToggle prop to the child.
+
+	const renderButton = ( { onToggle: onButtonClick, isOpen: _isOpen } ) => {
+		return (
+			<Button
+				className="eac-dropdown__toggle"
+				onClick={ onButtonClick }
+				aria-expanded={ _isOpen }
+				icon={ icon }
+			>
+				{ label }
+			</Button>
+		);
 	};
-}
+
+	const renderContent = ( renderContentArgs ) => {
+		return <>{ children && children( renderContentArgs ) }</>;
+	};
+
+	return (
+		<DropdownComponent
+			className={ classes }
+			contentClassName="eac-dropdown__popover"
+			position="bottom left"
+			renderToggle={ renderButton }
+			renderContent={ renderContent }
+		/>
+	);
+};
 
 export default Dropdown;

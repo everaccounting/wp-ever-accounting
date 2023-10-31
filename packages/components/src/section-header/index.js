@@ -12,7 +12,7 @@ import './style.scss';
 function SectionHeader( props ) {
 	const { children, menu, title, actions, card, ...restProps } = props;
 	const classes = classNames( 'eac-section-header', props.className, {
-		'eac-section-header--card': card,
+		'eac-section-header--card': !! card,
 	} );
 
 	return (

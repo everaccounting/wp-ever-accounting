@@ -1,14 +1,20 @@
 /**
  * External dependencies
  */
-import { SectionHeader, Input, Text } from '@eac/components';
+import {
+	SectionHeader,
+	Input,
+	Text,
+	Badge,
+	DropdownMenu,
+} from '@eac/components';
 
 /**
  * WordPress dependencies
  */
 import { useState } from '@wordpress/element';
 import { useSelect } from '@wordpress/data';
-import { Button } from '@wordpress/components';
+import { Button, Tip } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 
 /**
@@ -28,21 +34,35 @@ function Dashboard( props ) {
 	);
 	return (
 		<>
+			<SectionHeader title={ __( 'Tools', 'wp-ever-accounting' ) }>
+				<DropdownMenu label={ __( 'Filter', 'wp-ever-accounting' ) }>
+					<DropdownMenu.Title> { __( 'Status', 'wp-ever-accounting' ) } </DropdownMenu.Title>
+					<DropdownMenu.Item isCheckbox>
+						{ __( 'Active', 'wp-ever-accounting' ) }
+					</DropdownMenu.Item>
+					<DropdownMenu.Item isCheckbox>
+						{ __( 'Inactive', 'wp-ever-accounting' ) }
+					</DropdownMenu.Item>
+					<DropdownMenu.Item isCheckbox>
+						{ __( 'Draft', 'wp-ever-accounting' ) }
+					</DropdownMenu.Item>
+				</DropdownMenu>
+			</SectionHeader>
 			<ProTable
 				query={ query }
 				onChange={ setSearchParams }
 				headerTitle={
 					<Text size={ 16 } weight={ 600 } as="h2" color="#23282d">
-						{ __( 'Dashboard', 'wp-ever-accounting' ) }
+						{ __( 'Items', 'wp-ever-accounting' ) }
 					</Text>
 				}
 				headerActions={
 					<>
-						<Button isSecondary={ true } size="small">
+						<Button isPrimary={ true } icon="plus">
 							Add Item
 						</Button>
-						<Button isSecondary={ true } size="small">
-							Add Item
+						<Button isSecondary={ true } icon="upload">
+							Import
 						</Button>
 					</>
 				}

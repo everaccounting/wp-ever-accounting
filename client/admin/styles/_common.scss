@@ -1,7 +1,11 @@
 // When using the dashicons icon with a button, the icon is not vertically aligned with the text. This fixes that.
 .components-button {
+	height: 32px;
+
 	.dashicons {
-		margin-right: 5px;
 		line-height: inherit;
+		height: 16px;
+		width: 16px;
+		font-size: 16px;
 	}
 }

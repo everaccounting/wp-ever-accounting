@@ -43,6 +43,7 @@
   "dependencies": {
     "@eac/components": "file:packages/components",
     "@eac/data": "file:packages/data",
+    "@wordpress/icons": "^9.35.0",
     "react-router-dom": "^6.17.0"
   },
   "scripts": {

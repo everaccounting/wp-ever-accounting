@@ -2,7 +2,7 @@
  * WordPress dependencies
  */
 import { useMemo } from '@wordpress/element';
-import { SearchControl } from '@wordpress/components';
+import { SearchControl, Button } from '@wordpress/components';
 /**
  *
  * External dependencies
@@ -11,14 +11,27 @@ import { SearchControl } from '@wordpress/components';
  * External dependencies
  */
 import PropTypes from 'prop-types';
-import { useMergedState } from '@eac/components';
+import { useMergedState, Input, Pagination } from '@eac/components';
 /**
  * Internal dependencies
  */
 import './style.scss';
 
 function PropTable( props ) {
-	const { headerTitle, headerActions, query, data, search, toolbar, toolBarRender, options, onChange, style, className, ...rest } = props;
+	const {
+		headerTitle,
+		headerActions,
+		query,
+		data,
+		search,
+		toolbar,
+		toolBarRender,
+		options,
+		onChange,
+		style,
+		className,
+		...rest
+	} = props;
 	const [ mergedQuery, setMergedQuery ] = useMergedState( {
 		defaultValue: {},
 		value: query,
@@ -49,8 +62,16 @@ function PropTable( props ) {
 	const headerDom =
 		! headerTitle && ! headerActions ? null : (
 			<div className="eac-table__section eac-table__section--header">
-				{ headerTitle && <div className="eac-table__section-col eac-table__section-col--left">{ headerTitle }</div> }
-				{ headerActions && <div className="eac-table__section-col eac-table__section-col--right">{ headerActions }</div> }
+				{ headerTitle && (
+					<div className="eac-table__section-col eac-table__section-col--left">
+						{ headerTitle }
+					</div>
+				) }
+				{ headerActions && (
+					<div className="eac-table__section-col eac-table__section-col--right">
+						{ headerActions }
+					</div>
+				) }
 			</div>
 		);
 
@@ -69,35 +90,90 @@ function PropTable( props ) {
 		);
 	}, [ search, mergedQuery?.search, setMergedQuery ] );
 
-	const realodNode = useMemo( () => {
-		return reload === false ? null : (
-			<Button
-				className="eac-table__reload"
-				onClick={ () => {
-					setMergedQuery( ( prev ) => ( {
-						...prev,
-						reload: true,
-					} ) );
-				} }
-			>
-				Reload
-			</Button>
-		);
-	}, [ reload, setMergedQuery ] );
+	// const realodNode = useMemo( () => {
+	// 	return reload === false ? null : (
+	// 		<Button
+	// 			className="eac-table__reload"
+	// 			onClick={ () => {
+	// 				setMergedQuery( ( prev ) => ( {
+	// 					...prev,
+	// 					reload: true,
+	// 				} ) );
+	// 			} }
+	// 		>
+	// 			Reload
+	// 		</Button>
+	// 	);
+	// }, [ reload, setMergedQuery ] );
 
-	const toolbarDom = toolBarRender === false ? null : <div className="eac-table__section eac-table__section--toolbar">{ searchNode }</div>;
+	const toolbarDom =
+		toolBarRender === false ? null : (
+			<div className="eac-table__section eac-table__section--toolbar">
+				<Button isSecondary={ true } icon="filter" disabled>
+					Actions
+				</Button>
+				{ searchNode }
+				<Button isTertiary={ true } icon="filter" />
+				<Button isTertiary={ true } icon="image-rotate" />
+				<Button isTertiary={ true } icon="admin-generic" />
+			</div>
+		);
 
 	return (
 		<div className="eac-table">
 			{ headerDom }
 			{ toolbarDom }
+			{/*<div className="eac-table__section eac-table__section--filter">*/}
+			{/*	Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad alias doloribus eos id impedit in maxime odit quis similique tempora?*/}
+			{/*</div>*/}
+			{/*<div className="eac-table__section eac-table__section--alert">*/}
+			{/*	Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad alias doloribus eos id impedit in maxime odit quis similique tempora?*/}
+			{/*</div>*/}
 			{ data && (
-				<ul>
-					{ data.map( ( item, index ) => {
-						return <li key={ index }>{ item.name }</li>;
-					} ) }
-				</ul>
+				<div className="eac-table-container">
+					<table>
+						<thead>
+							<tr>
+								<th className="eac-table__cell eac-table__column">
+									Name
+								</th>
+								<th className="eac-table__cell eac-table__column">
+									Price
+								</th>
+								<th className="eac-table__cell eac-table__column">
+									Cost
+								</th>
+								<th className="eac-table__cell eac-table__column">
+									Status
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							{ data.map( ( item, index ) => {
+								return (
+									<tr key={ index }>
+										<td className="eac-table__cell">
+											{ item.name }
+										</td>
+										<td className="eac-table__cell">
+											{ item.price }
+										</td>
+										<td className="eac-table__cell">
+											{ item.cost }
+										</td>
+										<td className="eac-table__cell">
+											{ item.status }
+										</td>
+									</tr>
+								);
+							} ) }
+						</tbody>
+					</table>
+				</div>
 			) }
+			<div className="eac-table__section eac-table__section--pagination">
+				<Pagination total={ 100 } />
+			</div>
 		</div>
 	);
 }
@@ -119,7 +195,10 @@ PropTable.propTypes = {
 			// column's key. If you need to use the onFilterChange event, you need this attribute to identify which column is being filtered.
 			key: PropTypes.string,
 			// Display field of the data record, support nest path by string array
-			property: PropTypes.oneOfType( [ PropTypes.string, PropTypes.arrayOf( PropTypes.string ) ] ),
+			property: PropTypes.oneOfType( [
+				PropTypes.string,
+				PropTypes.arrayOf( PropTypes.string ),
+			] ),
 			// type of the column. If set to selection, the column will display checkbox. If set to index, the column will display index of the row (staring from 1). If set to expand, the column will display expand icon.
 			type: PropTypes.oneOf( [ 'selection', 'expandable' ] ),
 			//alignment of the table cell. If omitted, the value of the above align attribute will be applied.

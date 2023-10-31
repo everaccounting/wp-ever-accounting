@@ -11,5 +11,8 @@ export { default as Table } from './table';
 export { default as TableCard } from './table-card';
 export { default as ImageUpload } from './image-upload';
 export { default as DateTimePicker } from './date-time-picker';
+export { default as Badge } from './badge';
+export { default as Form } from './form';
+export { default as DropdownMenu } from './dropdown-menu';
 export * from './experimental.js';
 export * from './hooks';
