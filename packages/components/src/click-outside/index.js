@@ -54,5 +54,4 @@ function ClickOutside( props ) {
 
 ClickOutside.isOutside = isOutside;
 
-
 export default ClickOutside;

@@ -16,14 +16,31 @@ import Title from './title';
 import './style.scss';
 
 function Placeholder( props ) {
-	const { loading, className, style, children, avatar = false, title = true, paragraph = true, active = true, round } = props;
+	const {
+		loading,
+		className,
+		style,
+		children,
+		avatar = false,
+		title = true,
+		paragraph = true,
+		active = true,
+		round,
+	} = props;
 
-	const getComponentProps = ( prop ) => ( prop && typeof prop === 'object' ? prop : {} );
+	const getComponentProps = ( prop ) =>
+		prop && typeof prop === 'object' ? prop : {};
 	const getAvatarBasicProps = ( hasTitle, hasParagraph ) =>
-		hasTitle && ! hasParagraph ? { size: 'large', shape: 'square' } : { size: 'large', shape: 'circle' };
+		hasTitle && ! hasParagraph
+			? { size: 'large', shape: 'square' }
+			: { size: 'large', shape: 'circle' };
 
 	const getTitleBasicProps = ( hasAvatar, hasParagraph ) =>
-		! hasAvatar && hasParagraph ? { width: '38%' } : hasAvatar && hasParagraph ? { width: '50%' } : {};
+		! hasAvatar && hasParagraph
+			? { width: '38%' }
+			: hasAvatar && hasParagraph
+			? { width: '50%' }
+			: {};
 
 	const getParagraphBasicProps = ( hasAvatar, hasTitle ) => ( {
 		width: ! hasAvatar || ! hasTitle ? '61%' : undefined,

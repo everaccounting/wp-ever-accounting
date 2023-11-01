@@ -7,15 +7,30 @@ import classNames from 'classnames';
  */
 import Element from './element';
 
-function Avatar( { className, active, shape = 'circle', size = 'default', ...props } ) {
-	const classes = classNames( 'eac-placeholder-avatar', className, {
-		'eac-placeholder--active': active,
-		'eac-placeholder--element': active,
-	} );
+function Avatar( {
+	className,
+	active,
+	shape = 'circle',
+	size = 'default',
+	...props
+} ) {
+	const classes = classNames(
+		'eac-placeholder',
+		'eac-placeholder-element',
+		className,
+		{
+			'eac-placeholder--active': active,
+		}
+	);
 
 	return (
 		<div className={ classes }>
-			<Element prefixCls="eac-placeholder-avatar" shape={ shape } size={ size } { ...props } />
+			<Element
+				element="eac-placeholder-avatar"
+				shape={ shape }
+				size={ size }
+				{ ...props }
+			/>
 		</div>
 	);
 }

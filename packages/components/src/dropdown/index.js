@@ -3,51 +3,56 @@
  */
 import { Button, Dropdown as DropdownComponent } from '@wordpress/components';
 /**
- * External dependencies
+ * Internal dependencies
  */
-import classnames from 'classnames';
+import './style.scss';
+import ClickOutside from '../click-outside';
 
 const Dropdown = ( props ) => {
 	const {
 		label,
 		icon = 'ellipsis',
-		splitButton,
+		renderContent: _renderContent,
 		children,
-		menu,
-		isOpen,
+		buttonProps,
 		...otherProps
 	} = props;
-	const classes = classnames( 'eac-dropdown', {
-		'eac-dropdown--open': isOpen,
-	} );
-
-	// All I want to do is, when menu is passed and clicked on the menu item, the menu should close.
-	// When clicked on child, the menu should not close. we will send the onToggle prop to the child.
 
 	const renderButton = ( { onToggle: onButtonClick, isOpen: _isOpen } ) => {
 		return (
-			<Button
-				className="eac-dropdown__toggle"
-				onClick={ onButtonClick }
-				aria-expanded={ _isOpen }
-				icon={ icon }
-			>
-				{ label }
-			</Button>
+			<ClickOutside onOutside={ () => _isOpen ?onButtonClick():null }>
+				<Button
+					className="eac-dropdown__toggle"
+					onClick={ onButtonClick }
+					aria-expanded={ _isOpen }
+					icon={ icon }
+					{ ...buttonProps }
+				>
+					{ label }
+				</Button>
+			</ClickOutside>
 		);
 	};
 
-	const renderContent = ( renderContentArgs ) => {
-		return <>{ children && children( renderContentArgs ) }</>;
+	const renderContent = ( contentProps ) => {
+		return (
+			<>
+				{ children &&
+					( typeof children === 'function'
+						? children( contentProps )
+						: children ) }
+				{ _renderContent && _renderContent( contentProps ) }
+			</>
+		);
 	};
 
 	return (
 		<DropdownComponent
-			className={ classes }
+			className="eac-dropdown"
 			contentClassName="eac-dropdown__popover"
-			position="bottom left"
 			renderToggle={ renderButton }
 			renderContent={ renderContent }
+			{ ...otherProps }
 		/>
 	);
 };

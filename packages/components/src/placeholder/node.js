@@ -4,15 +4,20 @@
 import classNames from 'classnames';
 
 export const Node = ( props ) => {
-	const { className, rootClassName, style, active, children } = props;
+	const { className, style, active, children } = props;
 
-	const classes = classNames( 'eac-placeholder', 'eac-placeholder-element', className, {
-		'eac-placeholder--active': active,
-	} );
+	const classes = classNames(
+		'eac-placeholder',
+		'eac-placeholder-element',
+		className,
+		{
+			'eac-placeholder--active': active,
+		}
+	);
 
 	return (
 		<div className={ classes }>
-			<div className={ classNames( 'eac-placeholder-image', rootClassName ) } style={ style } />
+			<div className="eac-placeholder-image" style={ style } />
 			{ children }
 		</div>
 	);

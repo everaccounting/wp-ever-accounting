@@ -6,10 +6,15 @@ import classNames from 'classnames';
 export const Input = ( props ) => {
 	const { className, block, style, active, children } = props;
 
-	const classes = classNames( 'eac-placeholder', 'eac-placeholder-element', className, {
-		'eac-placeholder--active': active,
-		'eac-placeholder--block': block,
-	} );
+	const classes = classNames(
+		'eac-placeholder',
+		'eac-placeholder-element',
+		className,
+		{
+			'eac-placeholder--active': active,
+			'eac-placeholder--block': block,
+		}
+	);
 
 	return (
 		<div className={ classes }>

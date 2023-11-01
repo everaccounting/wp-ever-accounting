@@ -24,11 +24,15 @@ const useMenuFix = () => {
 	const page = pathname.split( '/' )[ 1 ];
 	const wpNavMenu = document.querySelector( '#adminmenu' );
 	const currentMenu = wpNavMenu.querySelector( '#toplevel_page_accounting' );
-	Array.from( wpNavMenu.getElementsByClassName( 'current' ) ).forEach( function ( item ) {
-		item.classList.remove( 'current' );
-	} );
+	Array.from( wpNavMenu.getElementsByClassName( 'current' ) ).forEach(
+		function ( item ) {
+			item.classList.remove( 'current' );
+		}
+	);
 
-	const submenu = Array.from( wpNavMenu.querySelectorAll( '.wp-has-current-submenu' ) );
+	const submenu = Array.from(
+		wpNavMenu.querySelectorAll( '.wp-has-current-submenu' )
+	);
 	submenu.forEach( function ( element ) {
 		element.classList.remove( 'wp-has-current-submenu' );
 		element.classList.remove( 'wp-menu-open' );
@@ -43,8 +47,14 @@ const useMenuFix = () => {
 		currentMenu.classList.add( 'current' );
 	}
 
-	const pageUrl = pathname === '/' ? 'admin.php?page=accounting#' : 'admin.php?page=accounting#/' + page;
-	const currentItemsSelector = pathname === '/' ? `li > a[href$="${ pageUrl }"], li > a[href*="${ pageUrl }?"]` : `li > a[href*="${ pageUrl }"]`;
+	const pageUrl =
+		pathname === '/'
+			? 'admin.php?page=accounting#'
+			: 'admin.php?page=accounting#/' + page;
+	const currentItemsSelector =
+		pathname === '/'
+			? `li > a[href$="${ pageUrl }"], li > a[href*="${ pageUrl }?"]`
+			: `li > a[href*="${ pageUrl }"]`;
 
 	const currentItems = wpNavMenu.querySelectorAll( currentItemsSelector );
 	Array.from( currentItems ).forEach( function ( item ) {

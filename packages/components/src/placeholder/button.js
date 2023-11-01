@@ -8,15 +8,31 @@ import classNames from 'classnames';
 import Element from './element';
 
 function Button( props ) {
-	const { className, active, block = false, size = 'default', ...otherProps } = props;
-	const classes = classNames( 'eac-placeholder-button', 'eac-placeholder-element', className, {
-		'eac-placeholder--active': active,
-		'eac-placeholder--block': block,
-	} );
+	const {
+		className,
+		active,
+		block = false,
+		size = 'default',
+		...otherProps
+	} = props;
+
+	const classes = classNames(
+		'eac-placeholder',
+		'eac-placeholder-element',
+		className,
+		{
+			'eac-placeholder--active': active,
+			'eac-placeholder--block': block,
+		}
+	);
 
 	return (
 		<div className={ classes }>
-			<Element classPrefix="eac-placeholder-button" size={ size } { ...otherProps } />
+			<Element
+				element="eac-placeholder-button"
+				size={ size }
+				{ ...otherProps }
+			/>
 		</div>
 	);
 }
