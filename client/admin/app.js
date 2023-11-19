@@ -1,75 +1,29 @@
 /**
- * External dependencies
- */
-import { useLocation } from 'react-router-dom';
-/**
  * WordPress dependencies
  */
 import { SlotFillProvider, Popover, Slot } from '@wordpress/components';
-import { useEffect } from '@wordpress/element';
+/**
+ * External dependencies
+ */
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
+import { getHistory } from '@eac/navigation';
+
 /**
  * Internal dependencies
  */
-import Routes from './routes';
+import { useMenuFix } from './hooks';
+import { Routes } from './routes';
 import { Header, Footer, Main } from './layout';
 
-const useMenuFix = () => {
-	const location = useLocation();
-	const pathname = location.pathname;
-	// when anything changed in url, we need to scroll to top.
-	useEffect( () => {
-		window.document.documentElement.scrollTop = 0;
-	}, [ pathname ] );
-
-	const page = pathname.split( '/' )[ 1 ];
-	const wpNavMenu = document.querySelector( '#adminmenu' );
-	const currentMenu = wpNavMenu.querySelector( '#toplevel_page_accounting' );
-	Array.from( wpNavMenu.getElementsByClassName( 'current' ) ).forEach(
-		function ( item ) {
-			item.classList.remove( 'current' );
-		}
-	);
-
-	const submenu = Array.from(
-		wpNavMenu.querySelectorAll( '.wp-has-current-submenu' )
-	);
-	submenu.forEach( function ( element ) {
-		element.classList.remove( 'wp-has-current-submenu' );
-		element.classList.remove( 'wp-menu-open' );
-		element.classList.remove( 'selected' );
-		element.classList.add( 'wp-not-current-submenu' );
-		element.classList.add( 'menu-top' );
-	} );
-	if ( currentMenu ) {
-		currentMenu.classList.remove( 'wp-not-current-submenu' );
-		currentMenu.classList.add( 'wp-has-current-submenu' );
-		currentMenu.classList.add( 'wp-menu-open' );
-		currentMenu.classList.add( 'current' );
-	}
-
-	const pageUrl =
-		pathname === '/'
-			? 'admin.php?page=accounting#'
-			: 'admin.php?page=accounting#/' + page;
-	const currentItemsSelector =
-		pathname === '/'
-			? `li > a[href$="${ pageUrl }"], li > a[href*="${ pageUrl }?"]`
-			: `li > a[href*="${ pageUrl }"]`;
-
-	const currentItems = wpNavMenu.querySelectorAll( currentItemsSelector );
-	Array.from( currentItems ).forEach( function ( item ) {
-		item.parentElement.classList.add( 'current' );
-	} );
-	return null;
-};
-
 export function App() {
+	const navigate = useNavigate();
+	const location = useLocation();
+	const params = useParams();
+	const history = getHistory();
+	history.navigate = navigate;
+	history.location = location;
+	history.params = params;
 	useMenuFix();
-
-	useEffect( () => {
-		window.document.documentElement.scrollTop = 0;
-	}, [] );
-
 	return (
 		<div className="eac-layout">
 			<SlotFillProvider>

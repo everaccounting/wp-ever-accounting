@@ -607,7 +607,7 @@ class Controller extends \WP_REST_Controller {
 	public function get_collection_params() {
 		$params = array(
 			'context'  => $this->get_context_param(),
-			'paged'    => array(
+			'page'    => array(
 				'description'       => __( 'Current page of the collection.', 'wp-ever-accounting' ),
 				'type'              => 'integer',
 				'default'           => 1,

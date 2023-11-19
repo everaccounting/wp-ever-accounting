@@ -2,12 +2,30 @@
  * WordPress dependencies
  */
 import { useSelect } from '@wordpress/data';
+
+/**
+ * Internal dependencies
+ */
 /**
  * External dependencies
  */
-import memoize from 'memoize';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import memoize from 'memize';
 
-export const META_SELECTORS = [ 'getIsResolving', 'hasStartedResolution', 'hasFinishedResolution', 'isResolving', 'getCachedResolvers' ];
+export const Status = {
+	Idle: 'idle',
+	Resolving: 'resolving',
+	Success: 'success',
+	Error: 'error',
+};
+
+export const META_SELECTORS = [
+	'getIsResolving',
+	'hasStartedResolution',
+	'hasFinishedResolution',
+	'isResolving',
+	'getCachedResolvers',
+];
 
 /**
  * Like useSelect, but the selectors return objects containing
@@ -50,14 +68,17 @@ export const META_SELECTORS = [ 'getIsResolving', 'hasStartedResolution', 'hasFi
  * the id.
  * @see useSelect
  *
- * @return {Function} Queried data.
+ * @return {Object} An object containing the data and resolution info.
  */
 export default function useQuerySelect( mapQuerySelect, deps ) {
-	return useSelect( ( select, registry ) => {
-		const resolve = ( store ) => enrichSelectors( select( store ) );
-		return mapQuerySelect( resolve, registry );
+	return useSelect(
+		( select, registry ) => {
+			const resolve = ( store ) => enrichSelectors( select( store ) );
+			return mapQuerySelect( resolve, registry );
+		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, deps );
+		[ deps ]
+	);
 }
 
 /**
@@ -65,7 +86,7 @@ export default function useQuerySelect( mapQuerySelect, deps ) {
  * original return value AND the resolution info.
  *
  * @param {Object} selectors Selectors to enrich
- * @return {Function} Enriched selectors
+ * @return {Object} Enriched selectors
  */
 const enrichSelectors = memoize( ( selectors ) => {
 	const resolvers = {};
@@ -81,18 +102,20 @@ const enrichSelectors = memoize( ( selectors ) => {
 					const isResolving = !! getIsResolving( selectorName, args );
 					const hasResolved = ! isResolving && hasFinishedResolution( selectorName, args );
 					const data = selectors[ selectorName ]( ...args );
+
 					let status;
 					if ( isResolving ) {
-						status = 'RESOLVING' /* Status.Resolving */;
+						status = Status.Resolving;
 					} else if ( hasResolved ) {
 						if ( data ) {
-							status = 'SUCCESS' /* Status.Success */;
+							status = Status.Success;
 						} else {
-							status = 'ERROR' /* Status.Error */;
+							status = Status.Error;
 						}
 					} else {
-						status = 'IDLE' /* Status.Idle */;
+						status = Status.Idle;
 					}
+
 					return {
 						data,
 						status,

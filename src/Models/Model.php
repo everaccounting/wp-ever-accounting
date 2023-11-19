@@ -1851,11 +1851,11 @@ abstract class Model {
 
 		// Limit clause.
 		if ( intval( $args['per_page'] ) > 0 ) {
-			$page = intval( $args['paged'] );
+			$page = intval( $args['page'] );
 			if ( ! $page ) {
 				$page = 1;
 			}
-			// If 'offset' is provided, it takes precedence over 'paged'.
+			// If 'offset' is provided, it takes precedence over 'page'.
 			if ( isset( $args['offset'] ) && is_numeric( $args['offset'] ) ) {
 				$args['offset'] = absint( $args['offset'] );
 				$pgstrt         = $args['offset'] . ', ';

@@ -8,7 +8,6 @@ import domReady from '@wordpress/dom-ready';
  * External dependencies
  */
 import { HashRouter as Router } from 'react-router-dom';
-
 /**
  * Internal dependencies
  */

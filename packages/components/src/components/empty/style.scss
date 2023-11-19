@@ -1,0 +1,32 @@
+.eac-empty {
+	box-sizing: border-box;
+	margin-inline: 8px;
+	font-size: 14px;
+	text-align: center;
+	margin-block: 32px;
+	color: rgba(0, 0, 0, .25);
+
+	&__image {
+		min-height: 40px;
+		margin-bottom: 8px;
+		opacity: 1;
+	}
+
+	&__image img {
+		height: 100%;
+	}
+
+	&__image svg {
+		max-width: 100%;
+		height: 100%;
+		margin: auto;
+	}
+
+	&__description {
+		color: rgba(0, 0, 0, 0.88);
+	}
+
+	&__content {
+		margin-top: 16px;
+	}
+}

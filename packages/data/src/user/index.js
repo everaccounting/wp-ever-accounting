@@ -25,4 +25,4 @@ registerStore( STORE_NAME, storeConfig );
 
 export const USER_STORE_NAME = STORE_NAME;
 
-export { default as useUser } from './use-user';
+export { default as useUser } from './hooks/use-user';

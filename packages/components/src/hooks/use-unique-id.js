@@ -37,3 +37,5 @@ export function useUniqueId( object, prefix, preferredId = '' ) {
 		return prefix ? `${ prefix }-${ id }` : id;
 	}, [ object, preferredId, prefix ] );
 }
+
+export default useUniqueId;

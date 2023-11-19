@@ -13,7 +13,6 @@ function PageNavigation( props ) {
 	const tabs = routes?.children?.filter( ( route ) => route.tab );
 	const isCurrentRoute = ( tab ) => {
 		const path = tab.path.replace( /[^a-zA-Z0-9#\/]/g, '' ).replace( /\/$/, '' );
-		console.log( `${ routes.path }/${ path }` );
 		return pathname.includes( `${ routes.path }/${ path }` );
 	};
 	return (

@@ -3,13 +3,13 @@
  */
 import { __ } from '@wordpress/i18n';
 import { lazy, cloneElement, Suspense } from '@wordpress/element';
+import { Spinner } from '@wordpress/components';
+import { applyFilters } from '@wordpress/hooks';
+
 /**
  * External dependencies
  */
 import { Navigate, useRoutes, useLocation } from 'react-router-dom';
-import { Spinner } from '@wordpress/components';
-import { applyFilters } from '@wordpress/hooks';
-
 import { useUser } from '@eac/data';
 
 const Dashboard = lazy( () => import( './pages/dashboard' ) );
@@ -42,10 +42,8 @@ const Settings = lazy( () => import( './pages/settings' ) );
 const Addons = lazy( () => import( './pages/addons' ) );
 const Help = lazy( () => import( './pages/help' ) );
 
-export function Routes() {
-	const location = useLocation();
-	const { userCan, userData } = useUser();
-	const routes = applyFilters( 'wp-ever-accounting/routes', [
+export const getRoutes = () =>
+	applyFilters( 'wp_ever_accounting_routes', [
 		{
 			path: '/',
 			name: __( 'Dashboard', 'wp-ever-accounting' ),
@@ -170,12 +168,16 @@ export function Routes() {
 			element: <Help />,
 			capability: 'manage_options',
 		},
-		// 404.
 		{
 			path: '*',
 			element: <Navigate to="/" />,
 		},
-	] )
+	] );
+
+export function Routes() {
+	const location = useLocation();
+	const { userCan, userData } = useUser();
+	const routes = getRoutes()
 		.map( ( route ) => {
 			// if element exists, pass route to element as prop.
 			if ( route.element ) {
@@ -195,18 +197,24 @@ export function Routes() {
 			if ( route.children && route.children[ 0 ].path && route.children[ 0 ].path !== '' ) {
 				route.children.unshift( {
 					path: '',
-					element: <Navigate to={ route.children[ 0 ].path.replace( /[^a-zA-Z0-9#\/]/g, '' ).replace( /\/$/, '' ) } />,
+					element: (
+						<Navigate
+							to={ route.children[ 0 ].path.replace( /[^a-zA-Z0-9#\/]/g, '' ).replace( /\/$/, '' ) }
+						/>
+					),
 				} );
 			}
 
 			return route;
 		} );
+	// .filter( ( route ) => {
+	// 	// if the route has a capability, check if the user has that capability.
+	// 	if ( route.capability ) {
+	// 		return userCan( route.capability );
+	// 	}
+	// 	return true;
+	// } );
 
-	//recursively loop though all array item and check capability if it does not meet then exclude that item.
-
-	// set the value of the router context to the routes array.
 	const router = useRoutes( routes );
 	return <Suspense fallback={ <Spinner /> }>{ router }</Suspense>;
 }
-
-export default Routes;

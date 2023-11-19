@@ -38,7 +38,7 @@ class Scripts extends Singleton {
 				'src' => 'packages/components/style.css',
 			),
 			'eac-admin'      => array(
-				'src' => 'client/admin/style.css',
+				'src'  => 'client/admin/style.css',
 				'deps' => array( 'eac-components', 'wp-components' )
 			),
 			'eac-public'     => array(
@@ -86,9 +86,12 @@ class Scripts extends Singleton {
 			'eac-data'       => array(
 				'src' => 'packages/data/index.js',
 			),
+			'eac-navigation' => array(
+				'src' => 'packages/navigation/index.js',
+			),
 			'eac-admin'      => array(
 				'src'  => 'client/admin/index.js',
-				'deps' => array( 'eac-components', 'eac-data' ),
+				'deps' => array( 'eac-components', 'eac-data', 'eac-navigation' ),
 			),
 		) );
 

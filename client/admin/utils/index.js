@@ -3,7 +3,7 @@
  */
 import { useNavigate, useLocation } from 'react-router-dom';
 
-export const toggleQueryParam = ( key, value ) => {
+export const useQueryParam = ( key, value ) => {
 	const navigate = useNavigate();
 	const location = useLocation();
 	const currentPathname = location.pathname;

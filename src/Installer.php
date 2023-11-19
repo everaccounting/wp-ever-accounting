@@ -497,11 +497,11 @@ class Installer extends Singleton {
 	public static function create_currencies() {
 		// If there is no currency, create default currency.
 		if ( empty( eac_get_currencies() ) ) {
-			$default_currency = eac_get_base_currency();
-			$currency         = array(
-				'code' => $default_currency,
-			);
-			eac_insert_currency( $currency );
+//			$default_currency = eac_get_base_currency();
+//			$currency         = array(
+//				'code' => $default_currency,
+//			);
+//			eac_insert_currency( $currency );
 		}
 	}
 

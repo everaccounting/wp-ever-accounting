@@ -1,0 +1,107 @@
+.eac-dropdown {
+	text-align: center;
+
+	.eac-dropdown__toggle {
+		justify-content: center;
+		vertical-align: middle;
+		padding: 0;
+		gap: 8px;
+	}
+
+	.eac-dropdown__button{
+		&.has-icon {
+			padding: 0 8px !important;
+			.eac-dropdown__title{
+				padding: 0 8px !important;
+			}
+		}
+	}
+}
+
+.eac-dropdown__popover {
+	&:not(.is-mobile)::before,
+	&:not(.is-mobile)::after {
+		margin-left: -16px;
+	}
+
+	.components-popover__content {
+		min-width: 182px;
+		padding: 2px;
+		border-radius: 2px;
+		//padding: calc(8px);
+		box-shadow: rgb(204, 204, 204) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 0.7px 1px, rgba(0, 0, 0, 0.1) 0px 1.2px 1.7px -0.2px, rgba(0, 0, 0, 0.1) 0px 2.3px 3.3px -0.5px;
+	}
+
+	.eac-dropdown__title,
+	.components-base-control__label {
+		box-sizing: border-box;
+		display: flex;
+		-webkit-box-align: center;
+		align-items: center;
+		color: rgb(117, 117, 117);
+		font-size: 11px;
+		line-height: 1.4;
+		font-weight: 500;
+		text-transform: uppercase;
+		margin: 4px;
+		padding: 4px 12px;
+	}
+
+	.eac-dropdown__item {
+		box-sizing: border-box;
+		font-size: 13px;
+		font-family: inherit;
+		font-weight: normal;
+		display: flex;
+		align-items: center;
+		position: relative;
+		user-select: none;
+		border-radius: 2px;
+		margin: 4px 0;
+		padding: 6px 12px;
+		outline: none;
+		cursor: pointer;
+		color: #3c434a;
+		min-height: 30px;
+		height: auto;
+		width: 100%;
+
+		&:hover {
+			background-color: rgb(240, 240, 240);
+			color: inherit;
+		}
+
+		&:focus {
+			box-shadow: inset 0 0 0 1px #6c7781, inset 0 0 0 2px #ffffff !important;
+			outline: 2px solid transparent !important;
+			outline-offset: -2px;
+		}
+
+		[role=menuitem] {
+
+		}
+
+		.components-form-toggle {
+			margin-right: 8px;
+		}
+
+		.components-toggle-control .components-base-control__field {
+			margin: 0;
+		}
+
+		.components-base-control {
+			margin: 0;
+		}
+
+		// disable click on input field
+		.components-form-toggle__input {
+			pointer-events: none;
+		}
+	}
+
+	.eac-dropdown__separator {
+		height: 1px;
+		background-color: rgb(204, 204, 204);
+		margin: calc(8px) calc(-8px);
+	}
+}

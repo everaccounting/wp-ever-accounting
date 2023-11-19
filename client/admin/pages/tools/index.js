@@ -1,56 +1,36 @@
 /**
  * External dependencies
  */
-import { Input, SectionHeader } from '@eac/components';
+import { SectionHeader, Drawer, AnimatePresence, Motion, Button, Input } from '@eac/components';
 /**
  * WordPress dependencies
  */
 import { __ } from '@wordpress/i18n';
-import { DropdownMenu } from '@wordpress/components';
-import {
-	more,
-	arrowLeft,
-	arrowRight,
-	arrowUp,
-	arrowDown,
-} from '@wordpress/icons';
+import { useState } from '@wordpress/element';
+
+function AnotherDrawer() {
+	return (
+		<Drawer title={ __( 'Another Drawer', 'wp-ever-accounting' ) } onClose={ () => {} }>
+			<p>Some content</p>
+		</Drawer>
+	);
+}
 
 function Tools() {
+	const [ isOpen, setOpen ] = useState( true );
 	return (
 		<>
-			<SectionHeader card title={ __( 'Tools', 'wp-ever-accounting' ) } />
-			<DropdownMenu
-				className="eac-dropdown-menu"
-				label="Select a direction"
-				toggleProps={ {
-					icon: more,
-					isPrimary: true,
-					className: 'eac-dropdown-menu__toggle',
-					children: <>Title</>,
-				} }
-				controls={ [
-					{
-						title: 'Up',
-						icon: arrowUp,
-						onClick: () => console.log( 'up' ),
-					},
-					{
-						title: 'Right',
-						icon: arrowRight,
-						onClick: () => console.log( 'right' ),
-					},
-					{
-						title: 'Down',
-						icon: arrowDown,
-						onClick: () => console.log( 'down' ),
-					},
-					{
-						title: 'Left',
-						icon: arrowLeft,
-						onClick: () => console.log( 'left' ),
-					},
-				] }
-			/>
+			<SectionHeader title={ __( 'Tools', 'wp-ever-accounting' ) } />
+			<Button onClick={ () => setOpen( ! isOpen ) }>Open</Button>
+			{ isOpen && (
+				<Drawer
+					title={ __( 'Drawer Title', 'wp-ever-accounting' ) }
+					onClose={ () => setOpen( false ) }
+				>
+					<AnotherDrawer />
+					<Input label={ __( 'Input Label', 'wp-ever-accounting' ) } />
+				</Drawer>
+			) }
 		</>
 	);
 }

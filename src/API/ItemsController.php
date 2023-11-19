@@ -497,16 +497,6 @@ class ItemsController extends Controller {
 					'type'        => 'date-time',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
-				),
-				'items' => array(
-					'description' => __( 'List of items.', 'wp-ever-accounting' ),
-					'type'        => 'array',
-					'context'     => array( 'view', 'edit' ),
-					'items'       => array(
-						'type' => 'object',
-						'properties'
-					),
-					'readonly'    => true,
 				)
 			),
 		);

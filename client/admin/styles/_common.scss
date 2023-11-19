@@ -1,11 +1,17 @@
 // When using the dashicons icon with a button, the icon is not vertically aligned with the text. This fixes that.
-.components-button {
-	height: 32px;
+//.components-button {
+//	height: 32px;
+//
+//	.dashicons {
+//		line-height: inherit;
+//		height: 16px;
+//		width: 16px;
+//		font-size: 16px;
+//	}
+//}
 
-	.dashicons {
-		line-height: inherit;
-		height: 16px;
-		width: 16px;
-		font-size: 16px;
-	}
-}
+//.components-dropdown {
+//	.components-button.has-icon {
+//		flex-direction: row-reverse;
+//	}
+//}

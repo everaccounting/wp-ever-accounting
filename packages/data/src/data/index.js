@@ -13,11 +13,18 @@ export const getData = ( name, fallback = false, filter = ( val ) => val ) => {
 
 	return filter( value, fallback );
 };
-
+export const _DEFAULT_CURRENCY = {
+	code: 'USD',
+	name: 'US Dollar',
+	precision: 2,
+	symbol: '$',
+	position: 'before',
+	thousand_separator: ',',
+	decimal_separator: '.',
+	exchange_rate: 1,
+};
 export const ADMIN_URL = getData( 'adminUrl' );
 export const COUNTRIES = getData( 'countries' );
 export const CURRENCY = getData( 'currency' );
-export const CURRENCIES = getData( 'currencies' );
 export const LOCALE = getData( 'locale' );
-export const INVOICE_STATUES = getData( 'invoiceStatuses' );
 export const SITE_TITLE = getData( 'siteTitle' );

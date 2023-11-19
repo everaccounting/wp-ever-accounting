@@ -1,0 +1,109 @@
+.eac-card {
+  background: #fff;
+  box-sizing: border-box;
+  position: relative;
+  min-height: 1px;
+
+  #{&}__header,
+  #{&}__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: border-box;
+
+    p {
+      margin: 0;
+      padding: 0;
+    }
+
+    h2, h3 {
+      margin: 0;
+      padding: 0;
+    }
+
+    input, select, .select2, button {
+      margin-right: 5px;
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+
+    button {
+      height: auto;
+    }
+  }
+
+  #{&}__header {
+    border-bottom: 1px solid #e5e5e5;
+  }
+
+  #{&}__footer {
+    border-top: 1px solid #e5e5e5;
+  }
+
+  #{&}__body {
+    box-sizing: border-box;
+    padding-bottom: 2rem !important;
+  }
+
+  #{&}__tabs {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    border-bottom: 1px solid #e5e5e5;
+
+    button {
+      margin: 0;
+      box-shadow: none !important;
+      outline: none !important;
+      cursor: pointer;
+      position: relative;
+      width: auto;
+      text-decoration: none;
+      color: inherit;
+      flex-direction: row-reverse;
+      gap: 5px;
+      font-size: 14px;
+      line-height: 1.25;
+
+      &:hover {
+        background-color: #f0f0f0;
+      }
+
+      &:after {
+        background: var(--eac--color-accent);
+        border-radius: 0;
+        bottom: 0;
+        content: "";
+        height: calc(var(--wp-admin-border-width-focus) * 0);
+        left: 0;
+        pointer-events: none;
+        position: absolute;
+        right: 0;
+        transition: all .1s linear;
+      }
+
+      &.is--active {
+        &:after {
+          height: calc(var(--wp-admin-border-width-focus) * 1);
+          outline: 2px solid transparent;
+          outline-offset: -1px;
+        }
+      }
+
+      .components-menu-item__item {
+        min-width: unset;
+      }
+    }
+  }
+
+  #{&}__header,
+  #{&}__footer,
+  #{&}__tabs button,
+  #{&}__body {
+    padding: 8px 16px;
+    min-height: 44px;
+  }
+
+}

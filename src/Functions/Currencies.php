@@ -60,8 +60,8 @@ function eac_delete_currency( $currency ) {
  */
 function eac_get_currencies( $args = array(), $count = false ) {
 	$defaults = array(
-		'limit'   => 20,
-		'offset'  => 0,
+//		'limit'   => 20,
+//		'offset'  => 0,
 		'orderby' => 'id',
 		'order'   => 'DESC',
 		'fields'  => 'all',

@@ -24,3 +24,5 @@ const storeConfig = {
 registerStore( STORE_NAME, storeConfig );
 
 export const SETTINGS_STORE_NAME = STORE_NAME;
+
+export * from './hooks';
