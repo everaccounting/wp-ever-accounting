@@ -23,7 +23,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @package EverAccounting\Models
  */
-class Item extends Resource_Model {
+class Item_Legacy extends Resource_Model {
 	use Attachment;
 
 	/**

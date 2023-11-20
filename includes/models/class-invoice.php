@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @package EverAccounting\Models
  */
-class Invoice extends Document {
+class Invoice_Legacy extends Document {
 	/**
 	 * This is the name of this object type.
 	 *
