@@ -9,6 +9,7 @@ import { navigate, getQuery } from '@eac/navigation';
 import { TabPanel } from '@wordpress/components';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
+import Bills from  './purchases/bills'
 
 function Customization() {
 	const query = getQuery();
@@ -38,6 +39,12 @@ function Customization() {
 			label: __( 'Expense' ),
 			content: <div>Expense</div>,
 		},
+		{
+			key: 'purchases',
+			label: __( 'Purchases' ),
+			content: <div><Bills/></div>,
+		},
+
 	];
 	return (
 		<Card
@@ -51,7 +58,7 @@ function Customization() {
 			activeTab={ query?.tab || 'invoice' }
 			onTabChange={ ( tab ) => navigate( { tab } ) }
 		>
-			Hello
+
 		</Card>
 	);
 }
