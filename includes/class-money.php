@@ -307,14 +307,14 @@ class Money {
 	/**
 	 * convert.
 	 *
-	 * @since 1.0.2
-	 *
-	 * @param Currency  $currency    Currency.
+	 * @param Currency  $currency Currency.
 	 * @param int|float $ratio    Conversion ratio.
 	 * @param int       $rounding_mode Rounding mode.
 	 *
 	 * @throws \InvalidArgumentException If ratio is not numeric.
 	 * @throws \OutOfBoundsException If rounding mode is not valid.
+	 *
+	 * @since 1.0.2
 	 *
 	 * @return Money
 	 */

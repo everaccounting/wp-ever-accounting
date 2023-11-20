@@ -1,0 +1,22 @@
+//.components-input-control__container {
+//  .components-input-control__prefix {
+//    padding-left: calc(8px);
+//  }
+//
+//  .components-input-control__suffix {
+//    padding-right: calc(8px);
+//  }
+//
+//}
+
+.eac-field {
+	.components-base-control__help {
+		margin-top: 4px;
+		display: inline-flex;
+		gap: 4px;
+	}
+
+	.eac-field__error {
+		color: #dc3232;
+	}
+}

@@ -301,7 +301,7 @@ abstract class Transaction extends Resource_Model {
 	 */
 	public function get_reconciled( $context = 'edit' ) {
 		return (bool) $this->get_prop( 'reconciled', $context );
-	}
+	}x
 
 	/*
 	|--------------------------------------------------------------------------

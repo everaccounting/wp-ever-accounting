@@ -1,134 +1,63 @@
 {
   "name": "wp-ever-accounting",
-  "title": "WP Ever Accounting",
   "version": "1.1.5",
+  "private": true,
   "description": "The Best WordPress Accounting Plugin ever made!",
-  "author": {
-    "name": "Sultan Nasir Uddin",
-    "email": "sultan@byteever.com",
-    "url": "https://www.byteever.com"
-  },
+  "author": "Ever Accounting",
   "license": "GPL-2.0-or-later",
-  "keywords": [],
+  "keywords": [
+    "WordPress",
+    "plugin",
+    "accounting",
+    "invoice"
+  ],
   "homepage": "https://www.wpeveraccounting.com",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/everaccounting/wp-ever-accounting.git"
   },
-  "bugs": {
-    "url": "https://github.com/everaccounting/wp-ever-accounting/issues"
-  },
   "engines": {
-    "node": ">=12.0.0"
+    "node": ">=18.0.0"
   },
-  "main": "index.js",
-  "dependencies": {
-    "chart.js": "2.9.3",
-    "inputmask": "^5.0.5",
-    "moment": "^2.29.4",
-    "select2": "~4.0"
-  },
+  "workspaces": [
+    "packages/*"
+  ],
   "devDependencies": {
-    "@babel/plugin-proposal-class-properties": "^7.13.0",
-    "@babel/plugin-transform-runtime": "^7.13.10",
-    "@wordpress/babel-plugin-makepot": "^4.0.1",
-    "@wordpress/browserslist-config": "^3.0.1",
-    "@wordpress/components": "^12.0.8",
-    "@wordpress/custom-templated-path-webpack-plugin": "^2.0.1",
-    "@wordpress/dom-ready": "^2.12.1",
-    "@wordpress/element": "^2.19.1",
-    "@wordpress/i18n": "^3.18.0",
-    "@wordpress/scripts": "^13.0.3",
-    "browser-sync": "^2.27.10",
+    "@automattic/webpack-rtl-plugin": "^6.0.0",
+    "@babel/plugin-transform-runtime": "^7.23.2",
+    "@wordpress/babel-preset-default": "^7.28.0",
+    "@wordpress/browserslist-config": "^5.27.0",
+    "@wordpress/eslint-plugin": "^17.1.0",
+    "@wordpress/prettier-config": "^3.1.0",
+    "@wordpress/scripts": "^26.15.0",
+    "@wordpress/stylelint-config": "^21.27.0",
+    "autoprefixer": "^10.4.16",
     "browser-sync-webpack-plugin": "^2.3.0",
-    "caniuse-db": "^1.0.30001196",
-    "copy-webpack-plugin": "^6.4.1",
-    "cross-env": "^7.0.3",
-    "cssnano": "^4.1.10",
-    "eslint-loader": "^4.0.2",
-    "eslint-webpack-plugin": "^2.5.2",
-    "git-clone": "^0.1.0",
-    "grunt-checktextdomain": "^1.0.1",
-    "grunt-contrib-clean": "^2.0.1",
-    "grunt-contrib-compress": "^2.0.0",
-    "grunt-contrib-copy": "^1.0.0",
-    "grunt-wp-i18n": "^1.0.3",
-    "grunt-wp-readme-to-markdown": "^2.0.1",
-    "husky": "^4.3.8",
-    "imagemin-webpack-plugin": "^2.4.2",
-    "lint-staged": "^10.5.4",
-    "matchdep": "^2.0.0",
-    "path": "^0.12.7",
-    "postcss-color-function": "^4.1.0",
-    "postcss-css-variables": "^0.17.0",
-    "postcss-editor-styles": "^0.3.0",
-    "precss": "^4.0.0",
-    "promptly": "^3.2.0",
-    "replace-in-file": "^6.2.0",
-    "stylelint-webpack-plugin": "^2.1.1",
-    "webpack-fix-style-only-entries": "^0.4.0",
-    "webpack-rtl-plugin": "^2.0.0",
-    "webpackbar": "^5.0.0-3"
+    "cssnano": "^6.0.1",
+    "glob": "^10.3.10",
+    "lerna": "^7.4.1",
+    "moment-timezone-data-webpack-plugin": "^1.5.1",
+    "postcss-import": "^15.1.0",
+    "tailwindcss": "^3.3.3"
+  },
+  "dependencies": {
+    "@eac/components": "file:packages/components",
+    "@eac/data": "file:packages/data",
+    "@eac/navigation": "file:packages/react-router-dom",
+    "@wordpress/icons": "^9.35.0",
+    "react-router-dom": "^6.17.0"
   },
   "scripts": {
-    "start": "composer install && npm install && npm -s run watch",
-    "prestart": "php ./bin/update-version.php",
-    "watch": "cross-env NODE_ENV=develop wp-scripts start",
-    "build": "cross-env NODE_ENV=production wp-scripts build  && npm run i18n",
-    "prerelease": "npm install && composer install --no-dev -o",
-    "release": "npm run build",
-    "postrelease": "grunt zip",
-    "i18n": "npm run -s i18n:pot && npm run -s i18n:build",
-    "i18n:pot": "grunt i18n",
-    "i18n:build": "php bin/combine-pot-files.php languages/wp-ever-accounting.po languages/wp-ever-accounting.pot",
-    "lint": "npm run lint:js && npm run lint:css && npm run && npm run lint:php",
-    "lint:js": "wp-scripts lint-js  --fix",
-    "lint:css": "wp-scripts lint-style --fix",
-    "lint:php": "./vendor/bin/phpcs --standard=phpcs.xml $(git ls-files | grep .php$)",
-    "lint:php-fix": "./vendor/bin/phpcbf --standard=phpcs.xml $(git ls-files | grep .php$)",
-    "check-engines": "wp-scripts check-engines",
-    "check-licenses": "wp-scripts check-licenses",
-    "format:js": "wp-scripts format-js",
-    "lint:md:docs": "wp-scripts lint-md-docs",
-    "lint:md:js": "wp-scripts lint-md-js",
-    "lint:pkg-json": "wp-scripts lint-pkg-json",
-    "packages-update": "wp-scripts packages-update",
-    "test:e2e": "wp-scripts test-e2e",
-    "test:unit": "wp-scripts test-unit-js",
-    "create-extension": "node ./bin/create-extension.js"
-  },
-  "husky": {
-    "hooks": {
-      "post-merge": "./bin/post-merge.sh",
-      "pre-commit": "lint-staged",
-      "pre-push": "./bin/pre-push.sh"
-    }
-  },
-  "lint-staged": {
-    "*.php": [
-      "php -d display_errors=1 -l",
-      "./vendor/bin/phpcs --extensions=php --warning-severity=8 -s"
-    ],
-    "*.scss": [
-      "stylelint --syntax=scss --fix"
-    ],
-    "*.{js,jsx}": [
-      "wp-scripts format-js",
-      "wp-scripts lint-js"
-    ],
-    "*.js": [
-      "eslint --fix"
-    ]
-  },
-  "files": [
-    "assets/**/*.{js,scss,php}",
-    "includes/**/*.php",
-    "i18n/**/*.json",
-    "license.txt",
-    "wp-ever-accounting.php"
-  ],
-  "browserslist": [
-    "extends @wordpress/browserslist-config"
-  ],
-  "localhost": "http://accounting.test"
+    "build": "wp-scripts build",
+    "start": "wp-scripts start",
+    "lint": "npm run lint:js && npm run lint:css",
+    "lint:css": "stylelint '**/*.scss'",
+    "lint:css-fix": "stylelint '**/*.scss' --fix --ip 'storybook/wordpress'",
+    "lint:js": "wp-scripts lint-js ./packages ./client --ext=js,ts,tsx",
+    "lint:js:packages": "wp-scripts lint-js ./packages --ext=js,ts,tsx",
+    "lint:js:client": "wp-scripts lint-js ./client --ext=js,ts,tsx",
+    "lint:js-fix": "npm run lint:js --fix --ext=js,ts,tsx",
+    "reformat-files": "wp-scripts format-js -- --ignore-path .eslintignore",
+    "packages-update": "wp-scripts packages-update && lerna run packages-update"
+  }
 }
