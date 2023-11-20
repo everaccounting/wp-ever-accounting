@@ -14,7 +14,6 @@ const Settings = lazy( () => import( './settings' ) );
 function Invoice () {
     return (
         <Settings />
-
     );
 }
 
