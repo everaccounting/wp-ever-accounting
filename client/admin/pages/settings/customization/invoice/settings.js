@@ -61,21 +61,21 @@ function Settings (props) {
                             ) }
                             options={ [
                                 {
-                                    value: 'partial',
+                                    value: 'disable_on_partial_paid',
                                     label: __(
                                         'Disable after partial payment',
                                         'wp-ever-accounting'
                                     ),
                                 },
                                 {
-                                    value: 'paid',
+                                    value: 'disable_on_paid',
                                     label: __(
                                         'Disable after paid',
                                         'wp-ever-accounting'
                                     ),
                                 },
                                 {
-                                    value: 'sent',
+                                    value: 'disable_on_sent',
                                     label: __(
                                         'Disable after sent',
                                         'wp-ever-accounting'
