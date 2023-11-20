@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @package EverAccounting\Models
  */
-class Bill extends Document {
+class Bill_Legacy extends Document {
 	/**
 	 * This is the name of this object type.
 	 *
@@ -492,8 +492,8 @@ class Bill extends Document {
 	/**
 	 * Get payments.
 	 *
-	 * @return Payment[]
 	 * @since 1.1.0
+	 *@return Payment[]
 	 */
 	public function get_payments() {
 		if ( $this->exists() ) {

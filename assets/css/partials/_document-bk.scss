@@ -1,0 +1,341 @@
+.eac-document {
+
+	&__customer-data {
+		p {
+			padding: 0;
+			color: #777;
+		}
+
+		strong {
+			display: block;
+		}
+
+		.eac-field__label {
+			color: #777;
+			font-weight: normal;
+		}
+
+		&.editing {
+
+		}
+	}
+
+	&__billing-edit,
+	&__billing-edit-done {
+		width: 14px;
+		height: 0;
+		padding: 14px 0 0;
+		margin: 0 0 0 6px;
+		overflow: hidden;
+		position: relative;
+		color: #999;
+		border: 0;
+		float: right;
+
+		&:after {
+			font-family: Dashicons;
+			content: "\f464";
+			position: absolute;
+			top: 0;
+			left: 0;
+			text-align: center;
+			vertical-align: top;
+			line-height: 14px;
+			font-size: 14px;
+			font-weight: 400;
+		}
+
+		&:hover {
+			color: #000;
+		}
+	}
+
+	&__billing-edit-done {
+		&:after {
+			content: "\f158";
+		}
+	}
+
+
+	&__items {
+		margin-top: 0;
+		margin-bottom: 0;
+		padding-bottom: 0;
+		border-collapse: collapse;
+		width: 100%;
+		background: #fff;
+		box-sizing: border-box;
+		border-left: 0;
+		border-right: 0;
+		@media only screen and (max-width: 768px) {
+			table-layout: auto !important;
+		}
+
+		tr {
+			border-bottom: 1px solid #ddd;
+
+			&:last-child:not(:first-child) {
+				border-bottom: 0;
+			}
+		}
+
+		th {
+			color: #757575;
+			background: #f8f8f8;
+			user-select: none;
+			font-weight: bold;
+		}
+
+		td {
+			white-space: nowrap;
+			vertical-align: top;
+			@media only screen and (max-width: 420px) {
+				&:first-child {
+					white-space: normal;
+				}
+			}
+		}
+
+		th, td {
+			padding: 0.8em 1em;
+			vertical-align: top;
+			@media only screen and (max-width: 420px) {
+				&:last-child {
+					padding: .8em .5em;
+				}
+			}
+		}
+
+		input,
+		textarea,
+		select {
+			text-align: inherit;
+			width: 100%;
+			margin: 0;
+		}
+
+		label{
+			font-weight: normal;
+			color: #777;
+		}
+
+		.eac-field{
+			margin-top: 0;
+			margin-bottom: 5px;
+
+			.eac-field__control{
+				margin: 0;
+			}
+		}
+	}
+
+	&__line-actions {
+		width: 42px;
+		text-align: left;
+
+		> a {
+			display: inline-block;
+			color: #ccc;
+			transition: color 0.1s ease-in;
+			text-decoration: none;
+
+			&:hover {
+				color: #444;
+			}
+
+			.dashicons {
+				width: 16px;
+				height: 16px;
+				font-size: 16px;
+			}
+		}
+
+		th & {
+			text-indent: -9999px;
+		}
+	}
+
+	&__line-item {
+		text-align: left !important;
+		white-space: unset !important;
+
+		textarea {
+			width: 100%;
+			margin-top: 10px;
+			resize: none;
+		}
+	}
+
+	&__line-quantity,
+	&__line-price,
+	&__line-subtotal {
+		text-align: right;
+		width: 10%;
+	}
+
+	&__line-tax {
+		text-align: left;
+		width: 20%;
+	}
+
+	&__totals {
+		width: 100%;
+
+		td {
+			text-align: right;
+			vertical-align: middle;
+		}
+
+		.label {
+			padding: 0.4em;
+			font-weight: 600;
+		}
+
+		.total {
+			font-size: 1em !important;
+			width: 14em;
+			margin: 0 0 0 .5em;
+			box-sizing: border-box;
+			font-weight: 600;
+			padding: 0.4em;
+		}
+	}
+}
+
+.eac-document-form {
+
+	h3 {
+		font-size: 14px;
+		margin: 0 0 10px;
+		padding: 0;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+
+	.billing-edit {
+		width: 14px;
+		height: 0;
+		padding: 14px 0 0;
+		margin: 0 0 0 6px;
+		overflow: hidden;
+		position: relative;
+		color: #999;
+		border: 0;
+		float: right;
+
+		&:after {
+			font-family: Dashicons;
+			content: "\f464";
+			position: absolute;
+			top: 0;
+			left: 0;
+			text-align: center;
+			vertical-align: top;
+			line-height: 14px;
+			font-size: 14px;
+			font-weight: 400;
+		}
+
+		&:hover {
+			color: #000;
+		}
+	}
+
+	.billing-data, .billing-fields {
+		p {
+			padding: 0;
+			color: #777;
+		}
+
+		strong {
+			display: block;
+		}
+
+		.eac-field__label {
+			color: #777;
+			font-weight: normal;
+		}
+	}
+
+	.document-items {
+		margin-top: 0;
+		margin-bottom: 0;
+		padding-bottom: 0;
+		border-collapse: collapse;
+		width: 100%;
+		background: #fff;
+		table-layout: fixed;
+		box-sizing: border-box;
+		border-left: 0;
+		border-right: 0;
+		text-align: left;
+		@media only screen and (max-width: 768px) {
+			table-layout: auto !important;
+		}
+
+		tr {
+			border-bottom: 1px solid #ddd;
+		}
+
+		th {
+			color: #757575;
+			background: #f8f8f8;
+			user-select: none;
+			font-weight: bold;
+		}
+
+		td {
+			white-space: nowrap;
+			vertical-align: top;
+			@media only screen and (max-width: 420px) {
+				&:first-child {
+					white-space: normal;
+				}
+			}
+		}
+
+		th, td {
+			padding: 0.8em 1em;
+			vertical-align: top;
+			@media only screen and (max-width: 420px) {
+				&:last-child {
+					padding: .8em .5em;
+				}
+			}
+		}
+
+		input,
+		textarea,
+		select {
+			text-align: inherit;
+			width: 100%;
+		}
+	}
+
+	.document-line-actions {
+		width: 42px;
+		text-align: left;
+
+		> a {
+			display: inline-block;
+			color: #ccc;
+			transition: color 0.1s ease-in;
+			text-decoration: none;
+
+			&:hover {
+				color: #444;
+			}
+
+			.dashicons {
+				width: 16px;
+				height: 16px;
+				font-size: 16px;
+			}
+		}
+
+		th & {
+			text-indent: -9999px;
+		}
+	}
+}
