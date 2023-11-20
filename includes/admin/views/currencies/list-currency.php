@@ -34,6 +34,7 @@ $import_url = eaccounting_admin_url(
 <a class="page-title-action" href="<?php echo esc_url( $import_url ); ?>">
 	<?php esc_html_e( 'Import', 'wp-ever-accounting' ); ?>
 </a>
+	<div class="clear"></div>
 <?php do_action( 'eaccounting_currencies_table_top' ); ?>
 	<form id="ea-currency-table" method="get" action="<?php echo esc_url( admin_url( 'admin.php' ) ); ?>">
 		<?php

@@ -1,0 +1,30 @@
+.eac-document {
+	margin: 15px 0;
+	line-height: 1.4;
+	font-size: 13px;
+	flex: 1 1 auto;
+	padding: 30px 50px;
+	border: 1px solid #e1e2e2;
+	background: #fff;
+	box-sizing: border-box;
+
+	&__title {
+		text-align: right;
+		font-size: 1.75em;
+		text-transform: uppercase;
+		line-height: 1;
+	}
+
+	&__logo {
+		max-width: 250px;
+		max-height: 70px;
+
+		img {
+			display: block;
+			max-width: 100%;
+			height: auto;
+			width: auto;
+			max-height: 70px;
+		}
+	}
+}
