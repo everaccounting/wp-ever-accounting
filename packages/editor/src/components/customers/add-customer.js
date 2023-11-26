@@ -14,7 +14,7 @@ function AddCustomer(props) {
 		className,
 		title = __('Add Customer', 'wp-ever-accounting'),
 		submitLabel = __('Add Customer', 'wp-ever-accounting'),
-		values: formValues = {},
+		values: propValues = {},
 		loading,
 		onSubmit, // Custom onSubmit callback.
 		onSuccess, // This callback is called when a record is saved successfully.
@@ -34,7 +34,7 @@ function AddCustomer(props) {
 
 	return (
 		<Form
-			initialValues={formValues}
+			initialValues={propValues}
 			className={className}
 			validations={{
 				name: Form.is.required(),
@@ -62,18 +62,21 @@ function AddCustomer(props) {
 							<Form.Field.Input
 								name="name"
 								label={__('Name', 'wp-ever-accounting')}
+								placeholder={__('John Doe', 'wp-ever-accounting')}
 							/>
 							<Flex isBlock>
 								<FlexItem isBlock>
 									<Form.Field.Input
 										name="email"
 										label={__('Email', 'wp-ever-accounting')}
+										placeholder={__( 'john@company.com', 'wp-ever-accounting' )}
 									/>
 								</FlexItem>
 								<FlexItem isBlock>
 									<Form.Field.Input
 										name="phone"
 										label={__('Phone', 'wp-ever-accounting')}
+										placeholder={__( '+11234567890', 'wp-ever-accounting' )}
 									/>
 								</FlexItem>
 							</Flex>
@@ -85,18 +88,21 @@ function AddCustomer(props) {
 									<Form.Field.Input
 										name="company"
 										label={__('Company', 'wp-ever-accounting')}
+										placeholder={__( 'XYZ Inc.', 'wp-ever-accounting' )}
 									/>
 								</FlexItem>
 								<FlexItem isBlock>
 									<Form.Field.Input
 										name="website"
 										label={__('Website', 'wp-ever-accounting')}
+										placeholder={__( 'https://example.com', 'wp-ever-accounting' )}
 									/>
 								</FlexItem>
 							</Flex>
 							<Form.Field.Input
 								name="vat_number"
 								label={__('VAT Number', 'wp-ever-accounting')}
+								placeholder={__( '123456789', 'wp-ever-accounting' )}
 							/>
 							<hr />
 							<Flex isBlock>
@@ -104,12 +110,14 @@ function AddCustomer(props) {
 									<Form.Field.Input
 										name="address1"
 										label={__('Address Line 1', 'wp-ever-accounting')}
+										placeholder={__( '123 Main St', 'wp-ever-accounting' )}
 									/>
 								</FlexItem>
 								<FlexItem isBlock>
 									<Form.Field.Input
 										name="address2"
 										label={__('Address Line 2', 'wp-ever-accounting')}
+										placeholder={__( 'Apartment, studio, or floor', 'wp-ever-accounting' )}
 									/>
 								</FlexItem>
 							</Flex>
@@ -118,12 +126,14 @@ function AddCustomer(props) {
 									<Form.Field.Input
 										name="city"
 										label={__('City', 'wp-ever-accounting')}
+										placeholder={__( 'New York', 'wp-ever-accounting' )}
 									/>
 								</FlexItem>
 								<FlexItem isBlock>
 									<Form.Field.Input
 										name="state"
 										label={__('State', 'wp-ever-accounting')}
+										placeholder={__( 'NY', 'wp-ever-accounting' )}
 									/>
 								</FlexItem>
 							</Flex>
@@ -132,6 +142,7 @@ function AddCustomer(props) {
 									<Form.Field.Input
 										name="postcode"
 										label={__('Postcode', 'wp-ever-accounting')}
+										placeholder={ __( '10001', 'wp-ever-accounting' )}
 									/>
 								</FlexItem>
 								<FlexItem isBlock>
