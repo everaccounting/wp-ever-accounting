@@ -73,20 +73,17 @@ function AddPayment(props) {
 										label={__('Select Account', 'wp-ever-accounting')}
 										__nextMarginBottom="0"
 										options={[
-											{ label: 'United States', value: 'US' },
-											{ label: 'United Kingdom', value: 'UK' },
+											{ label: '1001-Bank (USD)', value: 'US' },
+											{ label: '1000-Cash (USD)', value: 'UK' },
 										]}
 									/>
 								</FlexItem>
 								<FlexItem isBlock>
-									<Form.Field.Select
+									<Form.Field.Input
 										name="amount"
 										label={__('Amount', 'wp-ever-accounting')}
-										__nextMarginBottom="0"
-										options={[
-											{ label: 'United States', value: 'US' },
-											{ label: 'United Kingdom', value: 'UK' },
-										]}
+										placeholder={__('0.00', 'wp-ever-accounting')}
+
 									/>
 								</FlexItem>
 							</Flex>
@@ -98,9 +95,16 @@ function AddPayment(props) {
 										label={__('Category', 'wp-ever-accounting')}
 										__nextMarginBottom="0"
 										options={[
-											{ label: 'United States', value: 'US' },
-											{ label: 'United Kingdom', value: 'UK' },
+											{ label: 'Select Category', value: ''},
+											{ label: 'Deposit (#1)', value: '1' },
+											{ label: 'Sales (#2)', value: '2' },
+											{ label: 'Other (#3)', value: '3' },
+											{ label: 'Withdrawal (#4)', value: '4' },
+											{ label: 'Purchase (#5)', value: '5' },
+											{ label: 'Uncategorized (#6)', value: '6' },
 										]}
+										placeholder={__('Select Category', 'wp-ever-accounting')}
+
 									/>
 								</FlexItem>
 								 <FlexItem isBlock>
@@ -109,8 +113,8 @@ function AddPayment(props) {
 										label={__('Customer', 'wp-ever-accounting')}
 										__nextMarginBottom="0"
 										options={[
-											{ label: 'United States', value: 'US' },
-											{ label: 'United Kingdom', value: 'UK' },
+											{ label: 'Select Customer', value: '' },
+
 										]}
 									/>
 								</FlexItem>
@@ -123,8 +127,8 @@ function AddPayment(props) {
 									label={__('Invoice', 'wp-ever-accounting')}
 									__nextMarginBottom="0"
 									options={[
-										{ label: 'United States', value: 'US' },
-										{ label: 'United Kingdom', value: 'UK' },
+										{ label: 'Select Invoice', value: '' },
+
 									]}
 									/>
 								</FlexItem>
@@ -134,6 +138,12 @@ function AddPayment(props) {
 										label={__('Payment Method', 'wp-ever-accounting')}
 										__nextMarginBottom="0"
 										options={[
+											{ label: 'Select payment method', value: 'US' },
+											{ label: 'Cash', value: 'UK' },
+											{ label: 'Cheque', value: 'US' },
+											{ label: 'Credit Card', value: 'UK' },
+											{ label: 'United States', value: 'US' },
+											{ label: 'United Kingdom', value: 'UK' },
 											{ label: 'United States', value: 'US' },
 											{ label: 'United Kingdom', value: 'UK' },
 										]}
