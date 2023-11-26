@@ -159,8 +159,8 @@ class EverAccounting_Payment_List_Table extends EverAccounting_List_Table {
 	 *
 	 * @param Payment $payment The current object.
 	 *
-	 * @return string Displays a checkbox.
 	 * @since  1.0.2
+	 *@return string Displays a checkbox.
 	 */
 	public function column_cb( $payment ) {
 		return sprintf( '<input type="checkbox" name="payment_id[]" value="%d"/>', esc_attr( $payment->get_id() ) );
@@ -172,8 +172,8 @@ class EverAccounting_Payment_List_Table extends EverAccounting_List_Table {
 	 * @param Payment $payment The current object.
 	 * @param string  $column_name The name of the column.
 	 *
-	 * @return string The column value.
 	 * @since 1.0.2
+	 *@return string The column value.
 	 */
 	public function column_default( $payment, $column_name ) {
 		$payment_id = $payment->get_id();
