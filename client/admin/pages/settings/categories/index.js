@@ -1,14 +1,19 @@
 /**
  * External dependencies
  */
-import { Text, Panel, Button, List } from '@eac/components';
+import { Text, Card, Button, List, Drawer } from '@eac/components';
 import { navigate, getQuery } from '@eac/navigation';
-import { useEntityRecords } from '@eac/data';
+import { useEntityRecords, useEntityRecord } from '@eac/data';
 /**
  * WordPress dependencies
  */
 import { useMemo } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
+
+/**
+ * Internal dependencies
+ */
+import Edit from './edit';
 
 function Categories() {
 	const params = getQuery();
@@ -19,9 +24,13 @@ function Categories() {
 		};
 	}, [ params ] );
 	const items = useEntityRecords( 'item', query );
+	// console.log( 'List query', query );
+	// console.log( 'List result', items );
+	const categoryId = params?.category;
 	return (
 		<div>
-			<Panel
+			{ categoryId && <Edit categoryId={ categoryId } /> }
+			<Card
 				title={
 					<Text as="h3" size="16" lineHeight="32px">
 						Categories
@@ -29,45 +38,43 @@ function Categories() {
 				}
 				actions={
 					<>
-						<Button variant="primary">Add Category</Button>
+						<Button size="xmall" variant="primary">
+							Add Category
+						</Button>
 					</>
 				}
 			>
-				<Panel.Body>
-					<List
-						bordered={ false }
-						loading={ items.status === 'resolving' }
-						data={ items.records }
-						rowKey="id"
-						renderItem={ ( item ) => (
-							<List.Item
-								actions={ [
-									<Button
-										key="edit"
-										variant="link"
-										onClick={ () =>
-											navigate( { category: item.id }, null, {} )
-										}
-									>
-										{ __( 'Edit' ) }
-									</Button>,
-								] }
-							>
-								<span>{ item.name }</span>
-								<span>{ item.type }</span>
-							</List.Item>
-						) }
-						pagination={ {
-							page: query?.page || 1,
-							perPage: query?.perPage || 20,
-							total: items.recordsCount,
-							onChange: ( page, per_page ) => {
-								navigate( { page, per_page }, null, {} );
-							},
-						} }
-					/>
-				</Panel.Body>
-			</Panel>
+				<List
+					bordered={ false }
+					loading={ items.status === 'resolving' }
+					data={ items.records }
+					rowKey="id"
+					renderItem={ ( item ) => (
+						<List.Item
+							actions={ [
+								<Button
+									key="edit"
+									variant="link"
+									onClick={ () => navigate( { category: item.id }, null, {} ) }
+								>
+									{ __( 'Edit' ) }
+								</Button>,
+							] }
+						>
+							<span>{ item.name }</span>
+							<span>{ item.type }</span>
+						</List.Item>
+					) }
+					pagination={ {
+						page: query?.page || 1,
+						perPage: query?.perPage || 20,
+						total: items.recordsCount,
+						onChange: ( page, per_page ) => {
+							navigate( { page, per_page }, null, {} );
+						},
+					} }
+				/>
+			</Card>
 		</div>
 	);
 }

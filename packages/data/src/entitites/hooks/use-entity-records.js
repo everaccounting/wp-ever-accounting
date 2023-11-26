@@ -63,6 +63,7 @@ export default function useEntityRecords( name, queryArgs = {}, options = { enab
 	const queryAsString = addQueryArgs( '', queryArgs );
 	const { deleteRecord, saveRecord, editRecord: _editRecord } = useDispatch( STORE_NAME );
 	// const record = useEntityRecord( name );
+	console.log('useEntityRecords', name, queryArgs, options );
 
 	const mutations = useMemo(
 		() => ( {
@@ -99,6 +100,8 @@ export default function useEntityRecords( name, queryArgs = {}, options = { enab
 		},
 		[ name, queryArgs ]
 	);
+
+	console.log( records );
 
 	return {
 		records,

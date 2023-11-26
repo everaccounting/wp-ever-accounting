@@ -1,169 +1,180 @@
 .eac-main-header {
-  .eac-layout__wrapper {
-    display: flex;
-    flex: 1;
-    justify-content: space-between;
-    flex-wrap: nowrap;
-    align-items: stretch;
-    min-height: 60px;
+	.eac-layout__wrapper {
+		display: flex;
+		flex: 1;
+		justify-content: space-between;
+		flex-wrap: nowrap;
+		align-items: stretch;
+		min-height: 60px;
 
-    & > * {
-      display: flex;
-      align-items: center;
-    }
-  }
+		& > * {
+			display: flex;
+			align-items: center;
+		}
+	}
 
-  .header__logo {
-    margin-right: 15px;
-    //padding-right: 15px;
-    position: relative;
+	.header__logo {
+		margin-right: 15px;
+		//padding-right: 15px;
+		position: relative;
 
-    a,svg {
-      color: #77b82e;
-      text-decoration: none;
-      overflow: hidden;
+		a, svg {
+			color: #77b82e;
+			text-decoration: none;
+			overflow: hidden;
 
-      &:focus,
-      &:hover {
-        color: #77b82e;
-        outline: none;
-        box-shadow: none;
-      }
-    }
+			&:focus,
+			&:hover {
+				color: #77b82e;
+				outline: none;
+				box-shadow: none;
+			}
+		}
 
-    //&:after {
-    //  position: absolute;
-    //  top: 0;
-    //  right: 0;
-    //  width: 1px;
-    //  margin: 0;
-    //  content: '';
-    //  background: var(--eac--color-border);
-    //  height: 100%;
-    //}
-  }
+		//&:after {
+		//  position: absolute;
+		//  top: 0;
+		//  right: 0;
+		//  width: 1px;
+		//  margin: 0;
+		//  content: '';
+		//  background: var(--eac--color-border);
+		//  height: 100%;
+		//}
+	}
 
-  .header__title {
-    flex: 1;
-    font-size: 1.5em;
-    font-weight: 600;
-    margin: 0;
-  }
+	.header__title {
+		flex: 1;
+		font-size: 1.5em;
+		font-weight: 600;
+		margin: 0;
+	}
 
-  .header__menu {
-    margin: 0;
-    padding: 0;
-    list-style: none;
+	.header__menu {
+		margin: 0;
+		padding: 0;
+		list-style: none;
 
-    > li {
-      display: inline-block;
-      margin: 0;
-      padding: 0;
-      position: relative;
-      height: 100%;
-      &:focus,
-      &:focus-visible{
-        outline: none;
-        box-shadow: none;
-      }
+		> li {
+			display: inline-block;
+			margin: 0;
+			padding: 0;
+			position: relative;
+			height: 100%;
 
-      a {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        position: relative;
-        border: none;
-        outline: none;
-        cursor: pointer;
-        background-color: #fff;
-        height: 100%;
-        color: #757575;
-        white-space: nowrap;
-        text-decoration: none;
-        padding: 0 12px;
-        margin: 0;
-        border-radius: 2px;
-        transition: all .1s linear;
-        font-size: 13px;
+			&:focus,
+			&:focus-visible {
+				outline: none;
+				box-shadow: none;
+			}
 
-        &:hover {
-          background-color: #f0f0f0;
-          box-shadow: none;
-          color: var(--eac--color-accent);
-        }
-        &:focus,
-        &:focus-visible{
-          outline: none;
-          box-shadow: none;
-        }
-      }
+			a {
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
+				position: relative;
+				border: none;
+				outline: none;
+				cursor: pointer;
+				background-color: #fff;
+				height: 100%;
+				color: #757575;
+				white-space: nowrap;
+				text-decoration: none;
+				padding: 0 12px;
+				margin: 0;
+				border-radius: 2px;
+				transition: all .1s linear;
+				font-size: 13px;
 
-      // On hover, show the submenu.
-      &:hover {
-        > ul {
-          display: block;
-        }
-      }
+				&:hover {
+					background-color: #f0f0f0;
+					box-shadow: none;
+					color: var(--eac--color-accent);
+				}
 
-      ul {
-        display: none;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        z-index: 999;
-        min-width: 200px;
-        padding: 0;
-        margin: 0;
-        list-style: none;
-        background-color: #fff;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, .2);
-        border-radius: 0 0 2px 2px;
+				&:focus,
+				&:focus-visible {
+					outline: none;
+					box-shadow: none;
+				}
 
-        li {
-          display: block;
-          position: relative;
-          margin: 0;
-          padding: 0;
+				@media(max-width: 1260px) {
+					flex-direction: row;
+				}
+			}
 
-          a {
-            display: block;
-            padding: 10px 15px;
-            height: auto;
-            color: #757575;
-            text-decoration: none;
-            white-space: nowrap;
-            transition: background-color .1s linear;
+			// On hover, show the submenu.
+			&:hover {
+				> ul {
+					display: block;
+				}
+			}
 
-            &:hover {
-              background-color: #f0f0f0;
-            }
+			ul {
+				display: none;
+				position: absolute;
+				top: 100%;
+				left: 0;
+				z-index: 999;
+				min-width: 200px;
+				padding: 0;
+				margin: 0;
+				list-style: none;
+				background-color: #fff;
+				box-shadow: 0 1px 2px rgba(0, 0, 0, .2);
+				border-radius: 0 0 2px 2px;
+
+				li {
+					display: block;
+					position: relative;
+					margin: 0;
+					padding: 0;
+
+					a {
+						display: block;
+						padding: 10px 15px;
+						height: auto;
+						color: #757575;
+						text-decoration: none;
+						white-space: nowrap;
+						transition: background-color .1s linear;
+
+						&:hover {
+							background-color: #f0f0f0;
+						}
 
 
-          }
+					}
 
-        }
-      }
+				}
+			}
 
-      &.current {
-        a {
-          color: #77b82e;
-          background-color: #f0f0f0;
-          box-shadow: none;
-        }
-      }
-    }
+			&.current {
+				a {
+					color: #77b82e;
+					background-color: #f0f0f0;
+					box-shadow: none;
+				}
+			}
+		}
 
-    &-icon {
-      font-size: 20px;
-      height: 20px;
-      width: 20px;
-      margin-bottom: 4px;
-    }
-  }
+		&-icon {
+			font-size: 20px;
+			height: 20px;
+			width: 20px;
+			margin-bottom: 4px;
+
+			@media(max-width: 1260px) {
+				margin-right: 5px;
+				margin-bottom: 0;
+			}
+		}
+	}
 }
 
 .eac-sub-header {
-  border-top: 1px solid rgba(0, 0, 0, .1);
-  min-height: 30px;
+	border-top: 1px solid rgba(0, 0, 0, .1);
+	min-height: 30px;
 }

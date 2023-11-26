@@ -8,7 +8,6 @@ import PropTypes from 'prop-types';
  */
 import { dispatch } from '@wordpress/data';
 
-
 /**
  * Exposes number format capability through i18n mixin
  *
@@ -20,20 +19,20 @@ import { dispatch } from '@wordpress/data';
  * @param {number} decPoint
  * @param {string} thousandsSep
  */
-export const numberFormat = ( number, decimals, decPoint, thousandsSep ) => {
-	number = ( number + '' ).replace( /[^0-9+\-Ee.]/g, '' );
+export const numberFormat = (number, decimals, decPoint, thousandsSep) => {
+	number = (number + '').replace(/[^0-9+\-Ee.]/g, '');
 	return number;
 };
 
-export function createNoticesFromResponse( response ) {
-	const { createErrorNotice } = dispatch( 'core/notices' );
-	if ( response && response.error_data && response.errors && Object.keys( response.errors ).length ) {
+export function createNoticesFromResponse(response) {
+	const { createErrorNotice } = dispatch('core/notices');
+	if (response && response.error_data && response.errors && Object.keys(response.errors).length) {
 		// Loop over multi-error responses.
-		Object.keys( response.errors ).forEach( ( errorKey ) => {
-			createErrorNotice( response.errors[ errorKey ].join( ' ' ) );
-		} );
-	} else if ( response && response.message ) {
-		createErrorNotice( response.message );
+		Object.keys(response.errors).forEach((errorKey) => {
+			createErrorNotice(response.errors[errorKey].join(' '));
+		});
+	} else if (response && response.message) {
+		createErrorNotice(response.message);
 	}
 }
 
@@ -43,13 +42,13 @@ export function createNoticesFromResponse( response ) {
  * @param {string} str - date string
  * @return {Object|null} - Moment object representing given string
  */
-export function toMoment( str ) {
-	if ( typeof str === 'string' ) {
-		const date = moment( str );
+export function toMoment(str) {
+	if (typeof str === 'string') {
+		const date = moment(str);
 		return date.isValid() ? date : null;
 	}
-	if ( moment.isMoment( str ) ) {
+	if (moment.isMoment(str)) {
 		return str.isValid() ? str : null;
 	}
-	throw new Error( 'toMoment requires a string to be passed as an argument' );
+	throw new Error('toMoment requires a string to be passed as an argument');
 }

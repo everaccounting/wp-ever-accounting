@@ -103,18 +103,18 @@ import { STORE_NAME } from '../constants';
 export default function useEntityRecord( name, recordId, options = { enabled: true } ) {
 	const { editRecord, saveEditedRecord, deleteRecord } = useDispatch( STORE_NAME );
 
-	const mutations = useMemo(
-		() => ( {
-			edit: ( record ) => editRecord( name, recordId, record ),
-			save: ( saveOptions = {} ) =>
-				saveEditedRecord( name, recordId, {
-					throwOnError: true,
-					...saveOptions,
-				} ),
-			delete: () => deleteRecord( name, recordId ),
-		} ),
-		[ editRecord, name, recordId, saveEditedRecord, deleteRecord ]
-	);
+	// const mutations = useMemo(
+	// 	() => ( {
+	// 		edit: ( record ) => editRecord( name, recordId, record ),
+	// 		save: ( saveOptions = {} ) =>
+	// 			saveEditedRecord( name, recordId, {
+	// 				throwOnError: true,
+	// 				...saveOptions,
+	// 			} ),
+	// 		delete: () => deleteRecord( name, recordId ),
+	// 	} ),
+	// 	[ editRecord, name, recordId, saveEditedRecord, deleteRecord ]
+	// );
 
 	const { editedRecord, hasEdits, deleteError, saveError, isSaving, isDeleting } = useSelect(
 		( select ) => ( {
@@ -142,9 +142,6 @@ export default function useEntityRecord( name, recordId, options = { enabled: tr
 
 	const queryError = useQuerySelect(
 		( query ) => {
-			if ( ! options.enabled ) {
-				return null;
-			}
 			return query( STORE_NAME ).getQueryError( name, recordId );
 		},
 		[ name, recordId, options.enabled ]
@@ -158,8 +155,8 @@ export default function useEntityRecord( name, recordId, options = { enabled: tr
 		saveError,
 		isSaving,
 		isDeleting,
-		queryError,
-		...querySelectRest,
-		...mutations,
+		// queryError,
+		// ...querySelectRest,
+		// ...mutations,
 	};
 }

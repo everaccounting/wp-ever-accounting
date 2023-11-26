@@ -3,6 +3,7 @@
  */
 import { StrictMode, createRoot } from '@wordpress/element';
 import domReady from '@wordpress/dom-ready';
+import '@wordpress/notices';
 
 /**
  * External dependencies

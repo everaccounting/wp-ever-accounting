@@ -10,7 +10,6 @@ const MomentTimezoneDataPlugin = require( 'moment-timezone-data-webpack-plugin' 
 const WebpackRTLPlugin = require( '@automattic/webpack-rtl-plugin' );
 const MiniCssExtractPlugin = require( 'mini-css-extract-plugin' );
 const { resolve } = require( 'path' );
-
 /**
  * Internal dependencies
  */
@@ -62,7 +61,12 @@ module.exports = {
 			injectPolyfill: true,
 			requestToExternal( request ) {
 				if ( request.startsWith( PACKAGE_NAMESPACE ) ) {
-					return [ 'eac', request.substring( PACKAGE_NAMESPACE.length ).replace( /-([a-z])/g, ( _, letter ) => letter.toUpperCase() ) ];
+					return [
+						'eac',
+						request
+							.substring( PACKAGE_NAMESPACE.length )
+							.replace( /-([a-z])/g, ( _, letter ) => letter.toUpperCase() ),
+					];
 				}
 			},
 			requestToHandle( request ) {

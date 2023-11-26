@@ -240,7 +240,7 @@ export const getEditedRecord = createSelector(
  */
 export const getQueryError = createSelector( ( state, name, query = {} ) => {
 	const { stableKey, context } = getQueryParts( query );
-	return get( state, [ 'records', name, 'queries', context, stableKey, 'error' ], undefined );
+	//return get( state, [ 'records', name, 'queries', context, stableKey, 'error' ], undefined );
 } );
 
 /**

@@ -5,10 +5,10 @@
  *
  * @return {number} The parsed number value.
  */
-export function getNumber( value ) {
-	const number = Number( value );
+export function getNumber(value) {
+	const number = Number(value);
 
-	return isNaN( number ) ? 0 : number;
+	return isNaN(number) ? 0 : number;
 }
 
 /**
@@ -18,10 +18,10 @@ export function getNumber( value ) {
  *
  * @return {number} The sum of values.
  */
-export function add( ...args ) {
+export function add(...args) {
 	return args.reduce(
 		/** @type {(sum:number, arg: number|string) => number} */
-		( sum, arg ) => sum + getNumber( arg ),
+		(sum, arg) => sum + getNumber(arg),
 		0
 	);
 }
@@ -33,11 +33,11 @@ export function add( ...args ) {
  *
  * @return {number} The difference of the values.
  */
-export function subtract( ...args ) {
+export function subtract(...args) {
 	return args.reduce(
 		/** @type {(diff:number, arg: number|string, index:number) => number} */
-		( diff, arg, index ) => {
-			const value = getNumber( arg );
+		(diff, arg, index) => {
+			const value = getNumber(arg);
 			return index === 0 ? value : diff - value;
 		},
 		0
@@ -51,9 +51,9 @@ export function subtract( ...args ) {
  *
  * @return {number} The number of decimal places.
  */
-function getPrecision( value ) {
-	const split = ( value + '' ).split( '.' );
-	return split[ 1 ] !== undefined ? split[ 1 ].length : 0;
+function getPrecision(value) {
+	const split = (value + '').split('.');
+	return split[1] !== undefined ? split[1].length : 0;
 }
 
 /**
@@ -65,9 +65,9 @@ function getPrecision( value ) {
  *
  * @return {number} The clamped value.
  */
-export function clamp( value, min, max ) {
-	const baseValue = getNumber( value );
-	return Math.max( min, Math.min( baseValue, max ) );
+export function clamp(value, min, max) {
+	const baseValue = getNumber(value);
+	return Math.max(min, Math.min(baseValue, max));
 }
 
 /**
@@ -80,12 +80,12 @@ export function clamp( value, min, max ) {
  *
  * @return {number} The rounded and clamped value.
  */
-export function roundClamp( value = 0, min = Infinity, max = Infinity, step = 1 ) {
-	const baseValue = getNumber( value );
-	const stepValue = getNumber( step );
-	const precision = getPrecision( step );
-	const rounded = Math.round( baseValue / stepValue ) * stepValue;
-	const clampedValue = clamp( rounded, min, max );
+export function roundClamp(value = 0, min = Infinity, max = Infinity, step = 1) {
+	const baseValue = getNumber(value);
+	const stepValue = getNumber(step);
+	const precision = getPrecision(step);
+	const rounded = Math.round(baseValue / stepValue) * stepValue;
+	const clampedValue = clamp(rounded, min, max);
 
-	return precision ? getNumber( clampedValue.toFixed( precision ) ) : clampedValue;
+	return precision ? getNumber(clampedValue.toFixed(precision)) : clampedValue;
 }

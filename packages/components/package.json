@@ -8,13 +8,11 @@
   "main": "src/index.js",
   "dependencies": {
     "@emotion/styled": "^11.11.0",
-    "@wordpress/icons": "^9.35.0",
+    "@wordpress/icons": "^9.37.0",
     "classnames": "^2.3.2",
     "formik": "^2.4.5",
     "lodash": "^4.17.21",
     "prop-types": "^15.8.1",
-    "rc-drawer": "^6.5.2",
-    "rc-motion": "^2.9.0",
-    "styled-components": "^6.1.0"
+    "styled-components": "^6.1.1"
   }
 }

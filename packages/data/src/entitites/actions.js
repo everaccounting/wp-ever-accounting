@@ -119,10 +119,11 @@ export function receiveQueryError( name, error, query = {} ) {
 export const deleteRecord =
 	( name, recordId, query, { fetchRequest = apiFetch } = {} ) =>
 	async ( { select, dispatch } ) => {
-		let error, response;
 		const entity = await select.getEntity( name );
 		if ( ! entity ) {
-			return Promise.reject( `Could not find any entity named "${ name }" please check entities.` );
+			return Promise.reject(
+				`Could not find any entity named "${ name }" please check entities.`
+			);
 		}
 
 		dispatch( {
@@ -133,23 +134,23 @@ export const deleteRecord =
 
 		try {
 			const path = addQueryArgs( `${ entity.baseURL }/${ recordId }`, query );
-			response = await fetchRequest( {
+			const response = await fetchRequest( {
 				path,
 				method: 'DELETE',
 			} );
 			await dispatch( removeRecords( name, recordId, true ) );
-		} catch ( _error ) {
-			error = _error;
+
+			return response;
+		} catch ( error ) {
+			dispatch( {
+				type: 'DELETE_RECORD_FINISH',
+				name,
+				recordId,
+				error,
+			} );
+
+			return Promise.reject( error );
 		}
-
-		dispatch( {
-			type: 'DELETE_RECORD_FINISH',
-			name,
-			recordId,
-			error,
-		} );
-
-		return response;
 	};
 
 /**
@@ -163,11 +164,12 @@ export const deleteRecord =
 export const saveRecord =
 	( name, record, customRequest = apiFetch ) =>
 	async ( { select, dispatch } ) => {
-		let error, response;
 		try {
 			const entity = await select.getEntity( name );
 			if ( ! entity ) {
-				return Promise.reject( `Could not find any entity named "${ name }" please check entities.` );
+				return Promise.reject(
+					`Could not find any entity named "${ name }" please check entities.`
+				);
 			}
 
 			const key = entity?.key ?? DEFAULT_KEY;
@@ -193,20 +195,21 @@ export const saveRecord =
 				method: recordId ? 'PUT' : 'POST',
 				data: record,
 			};
-			response = await customRequest( options );
-			await dispatch( receiveRecords( name, response, undefined, key, invalidateCache, record ) );
-		} catch ( _error ) {
-			error = _error;
+			const response = await customRequest( options );
+			await dispatch(
+				receiveRecords( name, response, undefined, key, invalidateCache, record )
+			);
+
+			return response;
+		} catch ( error ) {
+			dispatch( {
+				type: 'SAVE_RECORD_FINISH',
+				name,
+				record,
+				error,
+			} );
+			return Promise.reject( error );
 		}
-
-		dispatch( {
-			type: 'SAVE_RECORD_FINISH',
-			name,
-			record,
-			error,
-		} );
-
-		return response;
 	};
 
 /**

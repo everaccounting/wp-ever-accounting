@@ -1,0 +1,10 @@
+{
+  "name": "@eac/experimental",
+  "version": "1.0.0",
+  "private": true,
+  "description": "EverAccounting Experimental Components",
+  "author": "EverAccounting",
+  "license": "GPL-3.0-or-later",
+  "main": "src/index.js",
+  "dependencies": {}
+}

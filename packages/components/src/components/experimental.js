@@ -18,6 +18,13 @@ import {
 	__unstableAnimatePresence,
 } from '@wordpress/components';
 
+import {
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
+	__experimentalUseFocusOutside,
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
+	__experimentalUseFocusOutside as useFocusOutsideHook,
+} from '@wordpress/compose';
+
 /**
  * Export experimental components within the components package to prevent a circular
  * dependency with woocommerce/experimental. Only for internal use.
@@ -26,3 +33,4 @@ export const Text = TextComponent || __experimentalText;
 export const Heading = HeadingComponent || __experimentalHeading;
 export const Motion = MotionComponent || __unstableMotion;
 export const AnimatePresence = AnimatePresenceComponent || __unstableAnimatePresence;
+export const useFocusOutside = __experimentalUseFocusOutside || useFocusOutsideHook;

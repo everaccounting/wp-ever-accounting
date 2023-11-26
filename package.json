@@ -24,28 +24,31 @@
   ],
   "devDependencies": {
     "@automattic/webpack-rtl-plugin": "^6.0.0",
-    "@babel/plugin-transform-runtime": "^7.23.2",
-    "@wordpress/babel-preset-default": "^7.28.0",
-    "@wordpress/browserslist-config": "^5.27.0",
-    "@wordpress/eslint-plugin": "^17.1.0",
-    "@wordpress/prettier-config": "^3.1.0",
-    "@wordpress/scripts": "^26.15.0",
-    "@wordpress/stylelint-config": "^21.27.0",
+    "@babel/plugin-transform-runtime": "^7.23.4",
+    "@wordpress/babel-preset-default": "^7.30.0",
+    "@wordpress/browserslist-config": "^5.29.0",
+    "@wordpress/eslint-plugin": "^17.3.0",
+    "@wordpress/prettier-config": "^3.3.0",
+    "@wordpress/scripts": "^26.17.0",
+    "@wordpress/stylelint-config": "^21.29.0",
     "autoprefixer": "^10.4.16",
     "browser-sync-webpack-plugin": "^2.3.0",
     "cssnano": "^6.0.1",
     "glob": "^10.3.10",
-    "lerna": "^7.4.1",
+    "lerna": "^8.0.0",
     "moment-timezone-data-webpack-plugin": "^1.5.1",
     "postcss-import": "^15.1.0",
-    "tailwindcss": "^3.3.3"
+    "tailwindcss": "^3.3.5",
+    "wp-prettier": "^3.0.3"
   },
   "dependencies": {
     "@eac/components": "file:packages/components",
     "@eac/data": "file:packages/data",
-    "@eac/navigation": "file:packages/react-router-dom",
-    "@wordpress/icons": "^9.35.0",
-    "react-router-dom": "^6.17.0"
+    "@eac/editor": "file:packages/editor",
+    "@eac/experimental": "file:packages/experimental",
+    "@eac/navigation": "file:packages/navigation",
+    "@wordpress/icons": "^9.37.0",
+    "react-router-dom": "^6.20.0"
   },
   "scripts": {
     "build": "wp-scripts build",

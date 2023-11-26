@@ -8,6 +8,7 @@ import Checkbox from './checkbox';
 import Textarea from './textarea';
 import Toggle from './toggle';
 
+Input.Text = Input;
 Input.Checkbox = Checkbox;
 Input.Radio = Radio;
 Input.Select = Select;

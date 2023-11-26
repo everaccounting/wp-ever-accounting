@@ -11,10 +11,10 @@ import { useRef, useEffect } from '@wordpress/element';
  * @param {import('react').EffectCallback} effect
  * @param {import('react').DependencyList} deps
  */
-function useUpdateEffect( effect, deps ) {
-	const mounted = useRef( false );
-	useEffect( () => {
-		if ( mounted.current ) {
+function useUpdateEffect(effect, deps) {
+	const mounted = useRef(false);
+	useEffect(() => {
+		if (mounted.current) {
 			return effect();
 		}
 		mounted.current = true;
@@ -24,7 +24,7 @@ function useUpdateEffect( effect, deps ) {
 		// 2. `effect` is missing from the array, and will need to be added carefully to avoid additional warnings
 		// see https://github.com/WordPress/gutenberg/pull/41166
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, deps );
+	}, deps);
 }
 
 export default useUpdateEffect;

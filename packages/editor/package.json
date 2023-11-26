@@ -1,0 +1,12 @@
+{
+  "name": "@eac/editor",
+  "version": "1.0.0",
+  "private": true,
+  "description": "EverAccounting Editor",
+  "author": "EverAccounting",
+  "license": "GPL-3.0-or-later",
+  "main": "src/index.js",
+  "dependencies": {
+    "@eac/components": "^1.0.0"
+  }
+}

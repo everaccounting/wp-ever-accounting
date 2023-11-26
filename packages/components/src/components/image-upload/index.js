@@ -4,91 +4,79 @@
 /**
  * WordPress dependencies
  */
-import { createElement, Component, Fragment } from '@wordpress/element';
+import { useState, Fragment } from '@wordpress/element';
 import { Button } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import classNames from 'classnames';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Icon, upload } from '@wordpress/icons';
-const ImageUpload = ( props ) => {
-	const [ frame, setFrame ] = useState( null );
+const ImageUpload = (props) => {
+	const [frame, setFrame] = useState(null);
 
 	const openModal = () => {
-		if ( frame ) {
+		if (frame) {
 			frame.open();
 			return;
 		}
 
-		const newFrame = wp.media( {
-			title: __( 'Select or upload image', 'woocommerce' ),
+		const newFrame = wp.media({
+			title: __('Select or upload image', 'woocommerce'),
 			button: {
-				text: __( 'Select', 'woocommerce' ),
+				text: __('Select', 'woocommerce'),
 			},
 			library: {
 				type: 'image',
 			},
 			multiple: false,
-		} );
+		});
 
-		newFrame.on( 'select', handleImageSelect );
+		newFrame.on('select', handleImageSelect);
 		newFrame.open();
 
-		setFrame( newFrame );
+		setFrame(newFrame);
 	};
 
 	const handleImageSelect = () => {
 		const { onChange } = props;
-		const attachment = frame.state().get( 'selection' ).first().toJSON();
-		onChange( attachment );
+		const attachment = frame.state().get('selection').first().toJSON();
+		onChange(attachment);
 	};
 
 	const removeImage = () => {
 		const { onChange } = props;
-		onChange( null );
+		onChange(null);
 	};
 
 	const { className, image } = props;
 
 	return (
 		<>
-			{ !! image && (
-				<div
-					className={ classNames(
-						'woocommerce-image-upload',
-						'has-image',
-						className
-					) }
-				>
+			{!!image && (
+				<div className={classNames('woocommerce-image-upload', 'has-image', className)}>
 					<div className="woocommerce-image-upload__image-preview">
-						<img src={ image.url } alt="" />
+						<img src={image.url} alt="" />
 					</div>
 					<Button
 						isSecondary
 						className="woocommerce-image-upload__remove-image"
-						onClick={ removeImage }
+						onClick={removeImage}
 					>
-						{ __( 'Remove image', 'woocommerce' ) }
+						{__('Remove image', 'woocommerce')}
 					</Button>
 				</div>
-			) }
-			{ ! image && (
-				<div
-					className={ classNames(
-						'woocommerce-image-upload',
-						'no-image',
-						className
-					) }
-				>
+			)}
+			{!image && (
+				<div className={classNames('woocommerce-image-upload', 'no-image', className)}>
 					<Button
 						className="woocommerce-image-upload__add-image"
-						onClick={ openModal }
+						onClick={openModal}
 						isSecondary
 					>
-						<Icon icon={ upload } />
-						{ __( 'Add an image', 'woocommerce' ) }
+						<Icon icon={upload} />
+						{__('Add an image', 'woocommerce')}
 					</Button>
 				</div>
-			) }
+			)}
 		</>
 	);
 };

@@ -13,23 +13,25 @@ import { useState } from '@wordpress/element';
  *
  * @return {Array} The controlled value and the value setter.
  */
-export function useControlledValue( { defaultValue, onChange, value: valueProp } ) {
+export function useControlledValue({ defaultValue, onChange, value: valueProp }) {
 	const hasValue = typeof valueProp !== 'undefined';
 	const initialValue = hasValue ? valueProp : defaultValue;
-	const [ state, setState ] = useState( initialValue );
+	const [state, setState] = useState(initialValue);
 	const value = hasValue ? valueProp : state;
 
 	let setValue;
-	if ( hasValue && typeof onChange === 'function' ) {
+	if (hasValue && typeof onChange === 'function') {
 		setValue = onChange;
-	} else if ( ! hasValue && typeof onChange === 'function' ) {
-		setValue = ( nextValue ) => {
-			setState( nextValue );
-			onChange( nextValue );
+	} else if (!hasValue && typeof onChange === 'function') {
+		setValue = (nextValue) => {
+			setState(nextValue);
+			onChange(nextValue);
 		};
 	} else {
 		setValue = setState;
 	}
 
-	return [ value, setValue ];
+	return [value, setValue];
 }
+
+export default useControlledValue;

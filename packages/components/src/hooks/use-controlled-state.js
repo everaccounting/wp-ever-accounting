@@ -38,36 +38,36 @@ const defaultOptions = {
  *
  * @return {Array} The controlled value and the value setter.
  */
-function useControlledState( currentState, options = defaultOptions ) {
+function useControlledState(currentState, options = defaultOptions) {
 	const { initial, fallback } = { ...defaultOptions, ...options };
 
-	const [ internalState, setInternalState ] = useState( currentState );
-	const hasCurrentState = isValueDefined( currentState );
+	const [internalState, setInternalState] = useState(currentState);
+	const hasCurrentState = isValueDefined(currentState);
 
 	/*
 	 * Resets internal state if value every changes from uncontrolled <-> controlled.
 	 */
-	useEffect( () => {
-		if ( hasCurrentState && internalState ) {
-			setInternalState( undefined );
+	useEffect(() => {
+		if (hasCurrentState && internalState) {
+			setInternalState(undefined);
 		}
-	}, [ hasCurrentState, internalState ] );
+	}, [hasCurrentState, internalState]);
 
-	const state = getDefinedValue( [ currentState, internalState, initial ], fallback );
+	const state = getDefinedValue([currentState, internalState, initial], fallback);
 
 	/* eslint-disable jsdoc/no-undefined-types */
 	/** @type {(nextState: T) => void} */
 	const setState = useCallback(
-		( nextState ) => {
-			if ( ! hasCurrentState ) {
-				setInternalState( nextState );
+		(nextState) => {
+			if (!hasCurrentState) {
+				setInternalState(nextState);
 			}
 		},
-		[ hasCurrentState ]
+		[hasCurrentState]
 	);
 	/* eslint-enable jsdoc/no-undefined-types */
 
-	return [ state, setState ];
+	return [state, setState];
 }
 
 export default useControlledState;

@@ -1,4 +1,4 @@
 export { default as useControlledState } from './use-controlled-state';
-export { useControlledValue } from './use-controlled-value';
-export { default as usePrevious } from './use-previous';
-export { default as useUniqueId } from './use-unique-id';
+export { default as useControlledValue } from './use-controlled-value';
+export { default as useOutsideClick } from './use-outside-click';
+export { default as usePreviousValue } from './use-previous-value';

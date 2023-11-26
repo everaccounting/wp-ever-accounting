@@ -9,22 +9,22 @@ import { useCallback, useEffect } from '@wordpress/element';
  * @param {string|boolean} [message] The message to try to get the browser to show.
  * @return {void}
  */
-const useBeforeUnload = ( when, message = true ) => {
+const useBeforeUnload = (when, message = true) => {
 	const handleBeforeUnload = useCallback(
-		( event ) => {
-			( event || window.event ).returnValue = message;
+		(event) => {
+			(event || window.event).returnValue = message;
 			return message;
 		},
-		[ message ]
+		[message]
 	);
 
-	useEffect( () => {
-		if ( when ) {
-			window.addEventListener( 'beforeunload', handleBeforeUnload );
+	useEffect(() => {
+		if (when) {
+			window.addEventListener('beforeunload', handleBeforeUnload);
 		}
 
-		return () => window.removeEventListener( 'beforeunload', handleBeforeUnload );
-	}, [ when, handleBeforeUnload ] );
+		return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+	}, [when, handleBeforeUnload]);
 };
 
 export default useBeforeUnload;

@@ -10,8 +10,8 @@ import { forwardRef } from '@wordpress/element';
  */
 import './style.scss';
 
-const Currency = forwardRef( ( props, ref ) => {
-	return <InputControl { ...props } ref={ ref } />;
-} );
+const Currency = forwardRef((props, ref) => {
+	return <InputControl {...props} ref={ref} />;
+});
 
 export default Currency;

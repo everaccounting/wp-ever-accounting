@@ -13,12 +13,12 @@ import classNames from 'classnames';
  */
 import './style.scss';
 
-const Input = forwardRef( ( { error, ...props }, ref ) => {
-	const classes = classNames( 'eac-input', {
+const Input = forwardRef(({ error, ...props }, ref) => {
+	const classes = classNames('eac-input', {
 		'eac-input--error': error,
-	} );
+	});
 
-	return <InputControl className={ classes } { ...props } ref={ ref } />;
-} );
+	return <InputControl className={classes} {...props} ref={ref} />;
+});
 
 export default Input;

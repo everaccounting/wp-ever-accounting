@@ -19,13 +19,7 @@ const eslintConfig = {
 		'import/no-unresolved': [
 			2,
 			{
-				ignore: [
-					'^@wordpress/',
-					'^lodash-es',
-					'^react',
-					'^react-dom',
-					'^~/',
-				],
+				ignore: [ '^@wordpress/', '^lodash-es', '^react', '^react-dom', '^~/' ],
 			},
 		],
 		'no-console': 0,

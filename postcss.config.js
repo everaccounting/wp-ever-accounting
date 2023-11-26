@@ -7,10 +7,10 @@ module.exports = {
 					annotation: true,
 			  },
 	plugins: [
-		require( 'postcss-import' ),
-		require( 'autoprefixer' ),
+		require('postcss-import'),
+		require('autoprefixer'),
 		// require( 'tailwindcss/nesting' ),
-		require( 'tailwindcss' ),
-		...( process.env.NODE_ENV === 'production' ? [ require( 'cssnano' ) ] : [] ),
+		require('tailwindcss'),
+		...(process.env.NODE_ENV === 'production' ? [require('cssnano')] : []),
 	],
 };

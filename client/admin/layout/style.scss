@@ -6,6 +6,10 @@
 	&__wrapper{
 		max-width: 1260px;
 		margin: 0 auto;
+
+		@media(max-width: 1260px) {
+			padding: 0 20px;
+		}
 	}
 
 	&__header {
