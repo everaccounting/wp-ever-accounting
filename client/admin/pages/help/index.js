@@ -2,7 +2,7 @@
  * External dependencies
  */
 import { SectionHeader, Form } from '@eac/components';
-import { AddCustomer, AddItem } from '@eac/editor';
+import { AddCustomer, AddItem, AddPayment } from '@eac/editor';
 /**
  * WordPress dependencies
  */
@@ -11,7 +11,8 @@ function Help() {
 	return (
 		<>
 			<SectionHeader title={__('Help', 'wp-ever-accounting')} />
-			<AddCustomer />
+
+			<AddPayment />
 		</>
 	);
 }
