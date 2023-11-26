@@ -37,8 +37,10 @@ function AddPayment(props) {
 			initialValues={propValues}
 			className={className}
 			validations={{
-				name: Form.is.required(),
-				type: Form.is.required(),
+				date: Form.is.required(),
+				account: Form.is.required(),
+				amount: Form.is.required(),
+				category: Form.is.required()
 			}}
 			onSubmit={async (values) => {
 				try {
@@ -60,84 +62,26 @@ function AddPayment(props) {
 					<Spinner isActive={loading}>
 						<Space size="medium" direction="vertical" style={{ display: 'flex' }}>
 							<Form.Field.Input
-								name="name"
-								label={__('Name', 'wp-ever-accounting')}
+								name="date"
+								label={__('Date', 'wp-ever-accounting')}
+								placeholder={__('YYYY-MM-DD', 'wp-ever-accounting')}
 							/>
 							<Flex isBlock>
 								<FlexItem isBlock>
-									<Form.Field.Input
-										name="email"
-										label={__('Email', 'wp-ever-accounting')}
-									/>
-								</FlexItem>
-								<FlexItem isBlock>
-									<Form.Field.Input
-										name="phone"
-										label={__('Phone', 'wp-ever-accounting')}
-									/>
-								</FlexItem>
-							</Flex>
-
-							<hr />
-
-							<Flex isBlock>
-								<FlexItem isBlock>
-									<Form.Field.Input
-										name="company"
-										label={__('Company', 'wp-ever-accounting')}
-									/>
-								</FlexItem>
-								<FlexItem isBlock>
-									<Form.Field.Input
-										name="website"
-										label={__('Website', 'wp-ever-accounting')}
-									/>
-								</FlexItem>
-							</Flex>
-							<Form.Field.Input
-								name="vat_number"
-								label={__('VAT Number', 'wp-ever-accounting')}
-							/>
-							<hr />
-							<Flex isBlock>
-								<FlexItem isBlock>
-									<Form.Field.Input
-										name="address1"
-										label={__('Address Line 1', 'wp-ever-accounting')}
-									/>
-								</FlexItem>
-								<FlexItem isBlock>
-									<Form.Field.Input
-										name="address2"
-										label={__('Address Line 2', 'wp-ever-accounting')}
-									/>
-								</FlexItem>
-							</Flex>
-							<Flex isBlock>
-								<FlexItem isBlock>
-									<Form.Field.Input
-										name="city"
-										label={__('City', 'wp-ever-accounting')}
-									/>
-								</FlexItem>
-								<FlexItem isBlock>
-									<Form.Field.Input
-										name="state"
-										label={__('State', 'wp-ever-accounting')}
-									/>
-								</FlexItem>
-							</Flex>
-							<Flex isBlock>
-								<FlexItem isBlock>
-									<Form.Field.Input
-										name="postcode"
-										label={__('Postcode', 'wp-ever-accounting')}
+									<Form.Field.Select
+										name="account"
+										label={__('Select Account', 'wp-ever-accounting')}
+										__nextMarginBottom="0"
+										options={[
+											{ label: 'United States', value: 'US' },
+											{ label: 'United Kingdom', value: 'UK' },
+										]}
 									/>
 								</FlexItem>
 								<FlexItem isBlock>
 									<Form.Field.Select
-										name="country"
-										label={__('Country', 'wp-ever-accounting')}
+										name="amount"
+										label={__('Amount', 'wp-ever-accounting')}
 										__nextMarginBottom="0"
 										options={[
 											{ label: 'United States', value: 'US' },
@@ -146,6 +90,66 @@ function AddPayment(props) {
 									/>
 								</FlexItem>
 							</Flex>
+
+							<Flex isBlock>
+								<FlexItem isBlock>
+									<Form.Field.Select
+										name="category"
+										label={__('Category', 'wp-ever-accounting')}
+										__nextMarginBottom="0"
+										options={[
+											{ label: 'United States', value: 'US' },
+											{ label: 'United Kingdom', value: 'UK' },
+										]}
+									/>
+								</FlexItem>
+								 <FlexItem isBlock>
+									<Form.Field.Select
+										name="customer"
+										label={__('Customer', 'wp-ever-accounting')}
+										__nextMarginBottom="0"
+										options={[
+											{ label: 'United States', value: 'US' },
+											{ label: 'United Kingdom', value: 'UK' },
+										]}
+									/>
+								</FlexItem>
+							</Flex>
+
+							<Flex isBlock>
+								<FlexItem isBlock>
+									<Form.Field.Select
+									name="invoice"
+									label={__('Invoice', 'wp-ever-accounting')}
+									__nextMarginBottom="0"
+									options={[
+										{ label: 'United States', value: 'US' },
+										{ label: 'United Kingdom', value: 'UK' },
+									]}
+									/>
+								</FlexItem>
+								<FlexItem isBlock>
+									<Form.Field.Select
+										name="payment_method"
+										label={__('Payment Method', 'wp-ever-accounting')}
+										__nextMarginBottom="0"
+										options={[
+											{ label: 'United States', value: 'US' },
+											{ label: 'United Kingdom', value: 'UK' },
+										]}
+									/>
+								</FlexItem>
+							</Flex>
+							<hr />
+							<Form.Field.Input
+								name="reference"
+								label={__('Reference', 'wp-ever-accounting')}
+							/>
+							<Form.Field.Textarea
+								name="notes"
+								label={__('Notes', 'wp-ever-accounting')}
+							/>
+
 							{typeof children === 'function'
 								? children({
 									...props,
