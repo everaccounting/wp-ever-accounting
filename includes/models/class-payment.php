@@ -21,7 +21,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @package EverAccounting\Models
  */
-class Payment extends Transaction {
+class Payment_Legacy extends Transaction {
 	use Attachment;
 
 	/**

@@ -21,7 +21,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @package EverAccounting\Models
  */
-class Transfer extends Resource_Model {
+class Transfer_Legacy extends Resource_Model {
 	/**
 	 * This is the name of this object type.
 	 *

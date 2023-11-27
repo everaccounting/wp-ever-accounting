@@ -1,0 +1,82 @@
+.ea-snackbar {
+
+    &__container {
+        box-sizing: border-box;
+        position: fixed;
+        top: 30px;
+        right: 0;
+        z-index: 999999;
+        width: 320px;
+        padding: 0 15px;
+        max-height: calc(100% - 30px);
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    &__notice-container {
+        position: relative;
+        padding-top: 8px;
+    }
+
+    &__notice {
+        margin: 0;
+        border-radius: 2px;
+        color: #444;
+        background-color: #fff;
+        box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+        font-size: 1em;
+        line-height: 1.2em;
+        position: relative;
+        padding: 15px 15px 15px 58px;
+        border-left: 4px solid #fff;
+        border-left-color: #00a0d2;
+        border-top: 1px solid #eee;
+        transition: width 1s ease-in-out;
+
+        &::before {
+            position: absolute;
+            top: 50%;
+            left: 15px;
+            margin-top: -14px;
+            display: block;
+            font-family: "dashicons";
+            width: 28px;
+            height: 28px;
+            font-size: 28px;
+            text-align: center;
+            line-height: 28px;
+            content: "\f348";
+            color: #2f96b4;
+        }
+
+        &.notice-error {
+            border-left-color: #bd362f;
+
+            &::before {
+                content: "\f153";
+                color: #bd362f;
+            }
+        }
+
+        &.notice-success {
+            border-left-color: #51a351;
+
+            &::before {
+                content: "\f147";
+                color: #51a351;
+            }
+        }
+
+        &.notice-warning {
+            border-left-color: #f89406;
+
+            &::before {
+                content: "\f534";
+                color: #f89406;
+            }
+        }
+
+    }
+
+}

@@ -33,8 +33,8 @@ function eaccounting_get_transaction_types() {
  *
  * @param Payment $payment Payment object.
  *
- * @return Payment|null
  * @since 1.1.0
+ *@return Payment|null
  */
 function eaccounting_get_payment( $payment ) {
 	if ( empty( $payment ) ) {
@@ -72,8 +72,8 @@ function eaccounting_get_payment( $payment ) {
  * }
  * @param bool  $wp_error Optional. Whether to return a WP_Error on failure. Default false.
  *
- * @return EverAccounting\Models\Payment|\WP_Error|bool
  * @since 1.1.0
+ *@return EverAccounting\Models\Payment|\WP_Error|bool
  */
 function eaccounting_insert_payment( $args, $wp_error = true ) {
 	// Ensure that we have data.
@@ -487,8 +487,8 @@ function eaccounting_get_transfers( $args = array() ) {
  *
  * @param array $args Query arguments.
  *
- * @return array|Payment[]|Revenue[]|int
  * @since 1.0.
+ *@return array|Payment[]|Revenue[]|int
  */
 function eaccounting_get_transactions( $args = array() ) {
 	// Prepare args.
