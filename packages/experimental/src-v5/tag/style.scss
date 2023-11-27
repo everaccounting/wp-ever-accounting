@@ -1,0 +1,51 @@
+.eac-tag {
+	display: inline-flex;
+	margin: 1px 4px 1px 0;
+	overflow: hidden;
+	vertical-align: middle;
+
+	.eac-tag__text,
+	.eac-tag__remove {
+		display: inline-block;
+		font-size: 12px;
+		line-height: 24px;
+		background: #ddd;
+		transition: all 0.2s cubic-bezier(0.4, 1, 0.4, 1);
+	}
+
+	.eac-tag__text {
+		align-self: center;
+		padding: 0 var(--eac--gap-smaller);
+		border-radius: 2px;
+		color: #1e1e1e;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	&.has-remove .eac-tag__text {
+		padding: 0 2px 0 var(--eac--gap-smaller);
+		border-radius: 2px 0 0 2px;
+	}
+
+	.eac-tag__remove {
+		cursor: pointer;
+		height: inherit;
+		padding: 0 5px 0 0;
+		border-radius: 0 2px 2px 0;
+		color: #1e1e1e;
+		line-height: 10px;
+		text-indent: 0;
+		display: flex;
+		align-items: center;
+
+		&:hover {
+			color: var(--eac--color-red);
+		}
+	}
+
+	button {
+		outline: 0 !important;
+		box-shadow: none !important;
+	}
+}
