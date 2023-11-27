@@ -1150,10 +1150,7 @@ abstract class Document extends Resource_Model {
 	 * @since  1.1.0
 	 */
 	public function set_currency_code( $currency_code ) {
-		if ( eaccounting_sanitize_currency_code( $currency_code ) ) {
-			$this->set_prop( 'currency_code', eaccounting_clean( $currency_code ) );
-		}
-
+		$this->set_prop( 'currency_code', eaccounting_clean( $currency_code ) );
 		if ( $this->get_currency_code() && ( ! $this->exists() || array_key_exists( 'currency_code', $this->changes ) ) ) {
 			$currency = eaccounting_get_currency( $this->get_currency_code() );
 			$this->set_currency_rate( $currency->get_rate() );
