@@ -21,7 +21,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @package EverAccounting\Models
  */
-class Vendor extends Contact {
+class Vendor_Legacy extends Contact {
 	use Attachment;
 	/**
 	 * This is the name of this object type.

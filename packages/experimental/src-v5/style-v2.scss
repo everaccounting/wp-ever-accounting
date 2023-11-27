@@ -1,0 +1,30 @@
+.eac-select-control {
+	position: relative;
+	box-sizing: border-box;
+	font-size: 13px;
+
+	&__container {
+		align-items: center;
+		box-sizing: border-box;
+		border-radius: inherit;
+		display: flex;
+		flex: 1 1 0;
+		position: relative;
+		background-color: #ffffff;
+		width: 100%;
+		line-height: 1;
+		min-height: 30px;
+		padding: 0 8px;
+		cursor: pointer;
+		color: #1e1e1e;
+		border: 1px solid #949494;
+
+		&:focus {
+			border-color: var(--eac--color-accent);
+			// Expand the default border focus style by .5px to be a total of 1.5px.
+			box-shadow: 0 0 0 0.5px var(--eac--color-accent);
+			// Windows High Contrast mode will show this outline, but not the box-shadow.
+			outline: 2px solid transparent;
+		}
+	}
+}

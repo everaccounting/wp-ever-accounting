@@ -15,7 +15,7 @@ use EverAccounting\Models\Category;
 use EverAccounting\Models\Customer;
 wp_enqueue_script( 'ea-print' );
 try {
-	$income = new \EverAccounting\Models\Income( $income_id );
+	$income = new \EverAccounting\Models\Payment( $income_id );
 } catch ( Exception $e ) {
 	wp_die( esc_html( $e->getMessage() ) );
 }
