@@ -73,6 +73,7 @@ function AddPayment(props) {
 										label={__('Select Account', 'wp-ever-accounting')}
 										__nextMarginBottom="0"
 										options={[
+											{ label: 'Select account', value: ''},
 											{ label: '1001-Bank (USD)', value: 'US' },
 											{ label: '1000-Cash (USD)', value: 'UK' },
 										]}
@@ -95,7 +96,7 @@ function AddPayment(props) {
 										label={__('Category', 'wp-ever-accounting')}
 										__nextMarginBottom="0"
 										options={[
-											{ label: 'Select Category', value: ''},
+											{ label: 'Select category', value: ''},
 											{ label: 'Deposit (#1)', value: '1' },
 											{ label: 'Sales (#2)', value: '2' },
 											{ label: 'Other (#3)', value: '3' },
@@ -103,7 +104,6 @@ function AddPayment(props) {
 											{ label: 'Purchase (#5)', value: '5' },
 											{ label: 'Uncategorized (#6)', value: '6' },
 										]}
-										placeholder={__('Select Category', 'wp-ever-accounting')}
 
 									/>
 								</FlexItem>
@@ -113,7 +113,7 @@ function AddPayment(props) {
 										label={__('Customer', 'wp-ever-accounting')}
 										__nextMarginBottom="0"
 										options={[
-											{ label: 'Select Customer', value: '' },
+											{ label: 'Select customer', value: '' },
 
 										]}
 									/>
@@ -127,7 +127,7 @@ function AddPayment(props) {
 									label={__('Invoice', 'wp-ever-accounting')}
 									__nextMarginBottom="0"
 									options={[
-										{ label: 'Select Invoice', value: '' },
+										{ label: 'Select invoice', value: '' },
 
 									]}
 									/>
@@ -139,26 +139,28 @@ function AddPayment(props) {
 										__nextMarginBottom="0"
 										options={[
 											{ label: 'Select payment method', value: 'US' },
-											{ label: 'Cash', value: 'UK' },
-											{ label: 'Cheque', value: 'US' },
-											{ label: 'Credit Card', value: 'UK' },
-											{ label: 'United States', value: 'US' },
-											{ label: 'United Kingdom', value: 'UK' },
-											{ label: 'United States', value: 'US' },
-											{ label: 'United Kingdom', value: 'UK' },
+											{ label: 'Cash', value: 'cash' },
+											{ label: 'Cheque', value: 'check' },
+											{ label: 'Credit Card', value: 'credit_card' },
+											{ label: 'Debit Card', value: 'debit_card' },
+											{ label: 'Bank Transfer', value: 'bank_transfer' },
+											{ label: 'PayPal', value: 'paypal' },
+											{ label: 'Other', value: 'other' },
 										]}
 									/>
 								</FlexItem>
 							</Flex>
 							<hr />
-							<Form.Field.Input
-								name="reference"
-								label={__('Reference', 'wp-ever-accounting')}
-							/>
-							<Form.Field.Textarea
-								name="notes"
-								label={__('Notes', 'wp-ever-accounting')}
-							/>
+								<Form.Field.Input
+									name="reference"
+									label={__('Reference', 'wp-ever-accounting')}
+									placeholder={ __( 'Enter reference', 'wp-ever-accounting' )}
+								/>
+								<Form.Field.Textarea
+									name="notes"
+									label={__('Notes', 'wp-ever-accounting')}
+									placeholder={__( 'Enter description', 'wp-ever-accounting' )}
+								/>
 
 							{typeof children === 'function'
 								? children({
