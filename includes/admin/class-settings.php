@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit();
  * @since   1.0.2
  * @package EverAccounting\Admin
  */
-class Settings {
+class Settings_Legacy {
 	/**
 	 * Contains registered fields.
 	 *
@@ -29,8 +29,8 @@ class Settings {
 	 * Settings constructor.
 	 */
 	public function __construct() {
-		add_action( 'admin_init', array( $this, 'init_settings' ) );
-		add_action( 'admin_init', array( $this, 'register_settings' ) );
+//		add_action( 'admin_init', array( $this, 'init_settings' ) );
+//		add_action( 'admin_init', array( $this, 'register_settings' ) );
 		add_action( 'admin_menu', array( $this, 'register_settings_page' ), 100 );
 	}
 
@@ -881,4 +881,4 @@ class Settings {
 	}
 }
 
-return new Settings();
+//return new Settings();
