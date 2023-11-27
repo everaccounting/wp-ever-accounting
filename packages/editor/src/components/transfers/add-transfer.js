@@ -37,10 +37,11 @@ function AddTransfer(props) {
 			initialValues={propValues}
 			className={className}
 			validations={{
-				date: Form.is.required(),
-				account: Form.is.required(),
+				from_account: Form.is.required(),
+				to_account: Form.is.required(),
 				amount: Form.is.required(),
-				category: Form.is.required()
+				category: Form.is.required(),
+				date: Form.is.required()
 			}}
 			onSubmit={async (values) => {
 				try {
@@ -65,37 +66,31 @@ function AddTransfer(props) {
 							<Flex isBlock>
 								<FlexItem isBlock>
 									<Form.Field.Select
-										name="account"
+										name="from_account"
 										label={__('From Account', 'wp-ever-accounting')}
 										__nextMarginBottom="0"
 										options={[
 											{ label: 'Select account', value: ''},
-
 										]}
 									/>
 								</FlexItem>
 								<FlexItem isBlock>
 									<Form.Field.Select
-										name="account"
+										name="to_account"
 										label={__('To Account', 'wp-ever-accounting')}
 										__nextMarginBottom="0"
 										options={[
 											{ label: 'Select account', value: ''},
-
 										]}
 									/>
 								</FlexItem>
 							</Flex>
 							<Flex isBlock>
 								<FlexItem isBlock>
-									<Form.Field.Select
-										name="account"
-										label={__('From Account', 'wp-ever-accounting')}
-										__nextMarginBottom="0"
-										options={[
-											{ label: 'Select account', value: ''},
-
-										]}
+									<Form.Field.Input
+										name="amount"
+										label={__('Amount', 'wp-ever-accounting')}
+										placeholder={ __( '0.00', 'wp-ever-accounting' )}
 									/>
 								</FlexItem>
 								<FlexItem isBlock>
@@ -106,74 +101,25 @@ function AddTransfer(props) {
 									/>
 								</FlexItem>
 							</Flex>
-							<Form.Field.Input
-								name="date"
-								label={__('Date', 'wp-ever-accounting')}
-								placeholder={__('YYYY-MM-DD', 'wp-ever-accounting')}
+
+							<hr/>
+
+							<Form.Field.Select
+								name="payment_method"
+								label={__('Payment Method', 'wp-ever-accounting')}
+								__nextMarginBottom="0"
+								options={[
+									{ label: 'Select payment method', value: '' },
+									{ label: 'Cash', value: 'cash' },
+									{ label: 'Cheque', value: 'check' },
+									{ label: 'Credit Card', value: 'credit_card' },
+									{ label: 'Debit Card', value: 'debit_card' },
+									{ label: 'Bank Transfer', value: 'bank_transfer' },
+									{ label: 'PayPal', value: 'paypal' },
+									{ label: 'Other', value: 'other' },
+								]}
 							/>
 
-							<Flex isBlock>
-								<FlexItem isBlock>
-									<Form.Field.Select
-										name="category"
-										label={__('Category', 'wp-ever-accounting')}
-										__nextMarginBottom="0"
-										options={[
-											{ label: 'Select category', value: ''},
-											{ label: 'Deposit (#1)', value: '1' },
-											{ label: 'Sales (#2)', value: '2' },
-											{ label: 'Other (#3)', value: '3' },
-											{ label: 'Withdrawal (#4)', value: '4' },
-											{ label: 'Purchase (#5)', value: '5' },
-											{ label: 'Uncategorized (#6)', value: '6' },
-										]}
-
-									/>
-								</FlexItem>
-								<FlexItem isBlock>
-									<Form.Field.Select
-										name="customer"
-										label={__('Customer', 'wp-ever-accounting')}
-										__nextMarginBottom="0"
-										options={[
-											{ label: 'Select customer', value: '' },
-
-										]}
-									/>
-								</FlexItem>
-							</Flex>
-
-							<Flex isBlock>
-								<FlexItem isBlock>
-									<Form.Field.Select
-										name="invoice"
-										label={__('Invoice', 'wp-ever-accounting')}
-										__nextMarginBottom="0"
-										options={[
-											{ label: 'Select invoice', value: '' },
-
-										]}
-									/>
-								</FlexItem>
-								<FlexItem isBlock>
-									<Form.Field.Select
-										name="payment_method"
-										label={__('Payment Method', 'wp-ever-accounting')}
-										__nextMarginBottom="0"
-										options={[
-											{ label: 'Select payment method', value: 'US' },
-											{ label: 'Cash', value: 'cash' },
-											{ label: 'Cheque', value: 'check' },
-											{ label: 'Credit Card', value: 'credit_card' },
-											{ label: 'Debit Card', value: 'debit_card' },
-											{ label: 'Bank Transfer', value: 'bank_transfer' },
-											{ label: 'PayPal', value: 'paypal' },
-											{ label: 'Other', value: 'other' },
-										]}
-									/>
-								</FlexItem>
-							</Flex>
-							<hr />
 							<Form.Field.Input
 								name="reference"
 								label={__('Reference', 'wp-ever-accounting')}
