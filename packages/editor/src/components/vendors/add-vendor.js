@@ -39,6 +39,7 @@ function AddVendor(props) {
 			validations={{
 				name: Form.is.required(),
 				type: Form.is.required(),
+				currency_code: Form.is.required()
 			}}
 			onSubmit={async (values) => {
 				try {
@@ -66,10 +67,14 @@ function AddVendor(props) {
 							/>
 							<Flex isBlock>
 								<FlexItem isBlock>
-									<Form.Field.Input
-										name="email"
-										label={__('Email', 'wp-ever-accounting')}
-										placeholder={__( 'john@company.com', 'wp-ever-accounting' )}
+									<Form.Field.Select
+										name="currency_code"
+										label={__('Currency Code', 'wp-ever-accounting')}
+										__nextMarginBottom="0"
+										options={[
+											{ label: 'Select an option...', value: '' },
+											{ label: 'US Dollar (USD)', value: 'USD' },
+										]}
 									/>
 								</FlexItem>
 								<FlexItem isBlock>
@@ -80,6 +85,11 @@ function AddVendor(props) {
 									/>
 								</FlexItem>
 							</Flex>
+							<Form.Field.Input
+								name="email"
+								label={__('Email', 'wp-ever-accounting')}
+								placeholder={__( 'john@company.com', 'wp-ever-accounting' )}
+							/>
 
 							<hr />
 
