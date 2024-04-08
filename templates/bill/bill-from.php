@@ -6,10 +6,10 @@
  *
  * @var $bill Bill
  * @version 1.1.0
- * @package EverAccounting
+ * @package EverAccounting\Legacy
  */
 
-use EverAccounting\Models\Bill;
+use EverAccounting\Legacy\Models\Bill;
 
 $countries = eaccounting_get_countries();
 defined( 'ABSPATH' ) || exit;

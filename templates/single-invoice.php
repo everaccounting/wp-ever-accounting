@@ -7,7 +7,7 @@
  * @version 1.1.0
  * @var int $invoice_id
  * @var string $key
- * @package EverAccounting
+ * @package EverAccounting\Legacy
  */
 
 defined( 'ABSPATH' ) || exit();
