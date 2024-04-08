@@ -2,9 +2,9 @@
 Contributors: everaccounting,manikmist09
 Tags: accounting, income, expense, invoice, bill, crm, accounts, transfer, customer, vendor, company, SME, Business manager
 Requires at least: 4.4
-Tested up to: 6.1
+Tested up to: 6.5
 Requires PHP: 5.6
-Stable tag: 1.1.5
+Stable tag: 1.1.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -136,6 +136,14 @@ Yes, of course. We do not create products for ourselves. You are always welcome 
 
 
 == Changelog ==
+= 1.1.8 = (6th April 2024)
+* Fix - Compatability with WP v6.5
+* Fix - Few minor bug fixes
+
+= 1.1.6 = (16th August 2023)
+* Fix - Compatability with WP v6.3
+* Fix - Few minor bug fixes
+
 = 1.1.5 = (24th January 2023)
 * Fix: Currency dropdown not showing all currencies.
 * Fix: Customer dropdown not showing all customers.
