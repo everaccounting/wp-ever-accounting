@@ -31,4 +31,4 @@ Thumbs.db
 Desktop.ini
 
 #Override
-!ul/legacy/js/vendor
+!ui/legacy/js/vendor

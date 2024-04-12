@@ -1,6 +1,6 @@
 === WP Ever Accounting - Accounting for small business ===
 Contributors: everaccounting,manikmist09
-Tags: accounting, income, expense, invoice, bill, crm, accounts, transfer, customer, vendor, company, SME, Business manager
+Tags: accounting, invoice, crm, company, SME, Business manager
 Requires at least: 4.4
 Tested up to: 6.5
 Requires PHP: 5.6
@@ -8,7 +8,7 @@ Stable tag: 1.1.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Manage your business finances right from your WordPress dashboard. Keep track of your payments, expenses, send professional invoices in multi-currencies using WP Ever Accounting.
+Keep track of your payments, expenses, send professional invoices in multi-currencies using WP Ever Accounting.
 
 == Description ==
 
