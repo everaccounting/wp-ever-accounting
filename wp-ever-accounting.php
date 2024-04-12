@@ -349,6 +349,16 @@ final class EverAccounting {
 	}
 
 	/**
+	 * Get the assets url.
+	 *
+	 * @since 1.2.0
+	 * @return string
+	 */
+	public function assets_url() {
+		return plugins_url( 'assets/', EACCOUNTING_PLUGIN_FILE );
+	}
+
+	/**
 	 * Get the template path.
 	 *
 	 * @since 1.2.0

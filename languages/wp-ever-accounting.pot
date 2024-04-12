@@ -2,10 +2,10 @@
 # This file is distributed under the GPL2+.
 msgid ""
 msgstr ""
-"Project-Id-Version: Ever Accounting 1.1.5\n"
+"Project-Id-Version: Ever Accounting 1.1.8\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/wp-ever-accounting\n"
-"POT-Creation-Date: 2024-04-08 19:53:30+00:00\n"
+"POT-Creation-Date: 2024-04-12 09:51:57+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -584,7 +584,7 @@ msgid ""
 "some features may not work as expected. Missing tables: %1$s."
 msgstr ""
 
-#: includes/admin/class-release.php:61
+#: includes/admin/class-release.php:60
 #: includes/admin/views/admin-page-release.php:16
 msgid "Best WordPress Accounting Plugin"
 msgstr ""

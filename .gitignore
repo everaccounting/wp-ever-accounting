@@ -1,3 +1,4 @@
+/assets
 node_modules
 bower_components
 release
@@ -30,4 +31,4 @@ Thumbs.db
 Desktop.ini
 
 #Override
-!assets/js/vendor
+!ul/legacy/js/vendor
