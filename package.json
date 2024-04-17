@@ -1,7 +1,7 @@
 {
   "name": "wp-ever-accounting",
   "title": "WP Ever Accounting",
-  "version": "1.1.5",
+  "version": "1.1.9",
   "description": "The Best WordPress Accounting Plugin ever made!",
   "author": {
     "name": "Sultan Nasir Uddin",
@@ -47,7 +47,7 @@
     "wp-prettier": "^2.8.5"
   },
   "scripts": {
-    "build": "wp-scripts build --webpack-src-dir=ui && grunt build",
+    "build": "wp-scripts build && grunt build",
     "check-engines": "wp-scripts check-engines",
     "check-licenses": "wp-scripts check-licenses",
     "format": "wp-scripts format",
