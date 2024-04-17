@@ -34,7 +34,7 @@ jQuery( function ( $ ) {
 						action: plugin.options.ajax_action,
 						_wpnonce: plugin.options.nonce,
 						search: params.term,
-						page: params.page,
+						page: params.page || 1,
 					};
 				},
 				processResults( json ) {
@@ -42,6 +42,7 @@ jQuery( function ( $ ) {
 						plugin.options.map ||
 						'return {text: option.name, id:option.id}';
 					const fn = new Function( 'option', map );
+					console.log(json.data);
 					return {
 						results: json.data.results.map( function ( option ) {
 							return fn( option );

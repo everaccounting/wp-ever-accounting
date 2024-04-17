@@ -30,7 +30,7 @@ $edit_url = add_query_arg(
 	),
 	$back_url
 );
-$logo     = eaccounting()->settings->get( 'company_logo', eaccounting()->plugin_url( '/dist/images/document-logo.png' ) );
+$logo     = eaccounting()->settings->get( 'company_logo', eaccounting()->plugin_url( '/assets/images/document-logo.png' ) );
 ?>
 
 <div class="ea-voucher-page">

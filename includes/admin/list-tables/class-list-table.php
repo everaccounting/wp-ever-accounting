@@ -271,7 +271,7 @@ abstract class EverAccounting_List_Table extends \WP_List_Table {
 	public function get_bulk_actions() {
 		$columns = $this->define_bulk_actions();
 
-		return apply_filters( 'eaccounting_' . $this->list_table_type . '_table_bulk_actions', $columns, $this );
+		return apply_filters( 'eaccounting_' . $this->_args['plural'] . '_table_bulk_actions', $columns, $this );
 	}
 
 	/**

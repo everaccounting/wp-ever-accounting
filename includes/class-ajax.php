@@ -1207,7 +1207,7 @@ class Ajax {
 	 * @return void
 	 */
 	public static function edit_item() {
-		check_admin_referer( 'ea_edit_item' );
+		check_ajax_referer( 'ea_edit_item' );
 		self::check_permission( 'ea_manage_item' );
 		$posted  = eaccounting_clean( wp_unslash( $_REQUEST ) );
 		$created = eaccounting_insert_item( $posted );

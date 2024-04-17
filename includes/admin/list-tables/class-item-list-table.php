@@ -205,7 +205,7 @@ class EverAccounting_Item_List_Table extends EverAccounting_List_Table {
 					)
 				);
 				$thumb_url = wp_get_attachment_thumb_url( $item->get_thumbnail_id() );
-				$thumb_url = empty( $thumb_url ) ? eaccounting()->plugin_url( '/dist/images/placeholder.png' ) : $thumb_url;
+				$thumb_url = empty( $thumb_url ) ? eaccounting()->plugin_url( '/assets/images/placeholder.png' ) : $thumb_url;
 				$value     = '<a href="' . esc_url( $edit_url ) . '"><img src="' . $thumb_url . '" height="36" width="36" alt="' . $item->get_name() . '"></a>';
 				break;
 			case 'name':

@@ -430,9 +430,7 @@ class Collection implements Arrayable {
 	public function sort( $callback = null ) {
 		$items = $this->items;
 
-		$callback && is_callable( $callback )
-			? uasort( $items, $callback )
-			: asort( $items, $callback );
+		$callback && is_callable( $callback ) ? uasort( $items, $callback ) : asort( $items, $callback );
 
 		return new static( $items );
 	}

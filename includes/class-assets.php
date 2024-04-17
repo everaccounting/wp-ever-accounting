@@ -32,7 +32,7 @@ class Assets {
 	 */
 	public function public_styles() {
 		$version = eaccounting()->get_version();
-		wp_register_style( 'ea-public-styles', eaccounting()->plugin_url() . '/dist/css/public.min.css', array( 'common', 'buttons' ), $version );
+		wp_register_style( 'ea-public-styles', eaccounting()->plugin_url() . '/assets/css/public.css', array( 'common', 'buttons' ), $version );
 		wp_print_styles( 'ea-public-styles' );
 	}
 

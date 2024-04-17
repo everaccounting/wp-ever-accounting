@@ -53,7 +53,7 @@ eaccounting_enqueue_js(
 			action:'eaccounting_edit_category',
 			id: $(this).data('id'),
 			enabled: $(this).is(':checked'),
-			nonce: '" . wp_create_nonce( 'ea_edit_category' ) . "',
+			_wpnonce: '" . wp_create_nonce( 'ea_edit_category' ) . "',
 		}, function(json){
 			$.eaccounting_notice(json);
 		});

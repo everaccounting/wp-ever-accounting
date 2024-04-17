@@ -1,6 +1,11 @@
 module.exports = function ( grunt ) {
 	'use strict';
-	const pkg = grunt.file.readJSON( 'package.json' );
+	// Load all grunt tasks matching the `grunt-*` pattern.
+	require( 'load-grunt-tasks' )( grunt );
+
+	// Show elapsed time.
+	require( '@lodder/time-grunt' )( grunt );
+
 	// Project configuration
 	grunt.initConfig( {
 		addtextdomain: {
@@ -72,87 +77,17 @@ module.exports = function ( grunt ) {
 				},
 			},
 		},
-
-		wp_readme_to_markdown: {
-			your_target: {
-				files: {
-					'README.md': 'readme.txt',
-				},
-			},
-		},
-
-		// Clean up build directory
-		clean: {
-			main: [ 'build/' ],
-		},
-		copy: {
-			main: {
-				src: [
-					'**',
-					'!node_modules/**',
-					'!assets/**',
-					'!build/**',
-					'!hookdocs/**',
-					'!**/*.md',
-					'!**/*.map',
-					'!**/*.sh',
-					'!.idea/**',
-					'!bin/**',
-					'!.git/**',
-					'!debug.log',
-					'!none',
-					'!.gitignore',
-					'!.gitmodules',
-					'!phpcs.xml',
-					'!phpunit.xml',
-					'!npm-debug.log',
-					'!plugin-deploy.sh',
-					'!export.sh',
-					'!tests/**',
-					'!.csscomb.json',
-					'!.jshintrc',
-					'!.tmp',
-					'!Gruntfile.js',
-					'!package.json',
-					'!package-lock.json',
-					'!composer.json',
-					'!composer.lock',
-					'!babel.config.js',
-					'!postcss.config.js',
-					'!hookdoc-conf.json',
-					'!webpack.config.js',
-					'!.editorconfig',
-				],
-				dest: 'build/',
-			},
-		},
-
-		compress: {
-			main: {
-				options: {
-					mode: 'zip',
-					archive:
-						'./build/' + pkg.name + '-v' + pkg.version + '.zip',
-				},
-				expand: true,
-				cwd: 'build/',
-				src: [ '**/*' ],
-				dest: pkg.name,
-			},
-		},
 	} );
 
 	// Saves having to declare each dependency
 	require( 'matchdep' ).filterDev( 'grunt-*' ).forEach( grunt.loadNpmTasks );
 
-	grunt.registerTask( 'default', [ 'i18n', 'readme' ] );
-	grunt.registerTask( 'build', [ 'i18n', 'readme' ] );
+	grunt.registerTask( 'default', [ 'i18n' ] );
+	grunt.registerTask( 'build', [ 'i18n' ] );
 	grunt.registerTask( 'i18n', [
 		'addtextdomain',
 		'checktextdomain',
 		'makepot',
 	] );
-	grunt.registerTask( 'readme', [ 'wp_readme_to_markdown' ] );
-	grunt.registerTask( 'zip', [ 'clean', 'copy', 'compress' ] );
 	grunt.util.linefeed = '\n';
 };
