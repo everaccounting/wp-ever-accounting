@@ -4,14 +4,14 @@
  *
  * @since       1.0.2
  * @subpackage  Admin/Banking/Transfers
- * @package     EverAccounting
+ * @package     EAccounting
  */
 
 defined( 'ABSPATH' ) || exit();
 
 $transfer_id = filter_input( INPUT_GET, 'transfer_id', FILTER_VALIDATE_INT );
 try {
-	$transfer = new \EverAccounting\Models\Transfer( $transfer_id );
+	$transfer = new \EAccounting\Models\Transfer( $transfer_id );
 } catch ( Exception $e ) {
 	wp_die( esc_html( $e->getMessage() ) );
 }

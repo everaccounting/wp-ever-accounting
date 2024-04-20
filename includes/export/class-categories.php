@@ -4,12 +4,12 @@
  *
  * @since   1.0.2
  *
- * @package EverAccounting\Export
+ * @package EAccounting\Export
  */
 
-namespace EverAccounting\Export;
+namespace EAccounting\Export;
 
-use EverAccounting\Abstracts\CSV_Exporter;
+use EAccounting\Abstracts\CSV_Exporter;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit();
  *
  * @since   1.0.2
  *
- * @package EverAccounting\Export
+ * @package EAccounting\Export
  */
 class Categories extends CSV_Exporter {
 
@@ -71,7 +71,7 @@ class Categories extends CSV_Exporter {
 	/**
 	 * Take a category and generate row data from it for export.
 	 *
-	 * @param \EverAccounting\Models\Category $item Category object.
+	 * @param \EAccounting\Models\Category $item Category object.
 	 *
 	 * @return array
 	 */

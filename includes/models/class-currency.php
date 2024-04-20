@@ -2,15 +2,15 @@
 /**
  * Handle the currency object.
  *
- * @package     EverAccounting\Models
+ * @package     EAccounting\Models
  * @class       Currency
  * @version     1.0.2
  */
 
-namespace EverAccounting\Models;
+namespace EAccounting\Models;
 
-use EverAccounting\Abstracts\Resource_Model;
-use EverAccounting\Repositories;
+use EAccounting\Abstracts\Resource_Model;
+use EAccounting\Repositories;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since   1.1.0
  *
- * @package EverAccounting\Models
+ * @package EAccounting\Models
  */
 class Currency extends Resource_Model {
 	/**

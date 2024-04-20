@@ -2,12 +2,12 @@
 /**
  * Initializes a temporary data storage engine used by core in various capacities.
  *
- * @package EverAccounting
+ * @package EAccounting
  * @subpackage Utilities
  * @since 1.0.2
  */
 
-namespace EverAccounting\Utilities;
+namespace EAccounting\Utilities;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit();
  * Class Data
  *
  * @since 1.0.2
- * @package EverAccounting\Utilities
+ * @package EAccounting\Utilities
  */
 class Data {
 

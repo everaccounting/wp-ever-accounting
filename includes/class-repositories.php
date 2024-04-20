@@ -7,23 +7,23 @@
  * for handling the object's insert, update, delete.
  *
  * @since 1.1.0
- * @package EverAccounting
+ * @package EAccounting
  */
 
-namespace EverAccounting;
+namespace EAccounting;
 
-use EverAccounting\Abstracts\Resource_Model;
-use EverAccounting\Repositories\Accounts;
-use EverAccounting\Repositories\Categories;
-use EverAccounting\Repositories\Contacts;
-use EverAccounting\Repositories\Currencies;
-use EverAccounting\Repositories\Transactions;
-use EverAccounting\Repositories\Notes;
-use EverAccounting\Repositories\Document_Items;
-use EverAccounting\Repositories\Documents;
-use EverAccounting\Repositories\Items;
-use EverAccounting\Abstracts\Resource_Repository;
-use EverAccounting\Repositories\Transfers;
+use EAccounting\Abstracts\Resource_Model;
+use EAccounting\Repositories\Accounts;
+use EAccounting\Repositories\Categories;
+use EAccounting\Repositories\Contacts;
+use EAccounting\Repositories\Currencies;
+use EAccounting\Repositories\Transactions;
+use EAccounting\Repositories\Notes;
+use EAccounting\Repositories\Document_Items;
+use EAccounting\Repositories\Documents;
+use EAccounting\Repositories\Items;
+use EAccounting\Abstracts\Resource_Repository;
+use EAccounting\Repositories\Transfers;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -32,7 +32,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since   1.1.0
  *
- * @package EverAccounting\Repositories
+ * @package EAccounting\Repositories
  */
 class Repositories {
 	/**

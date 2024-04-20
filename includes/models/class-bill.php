@@ -2,14 +2,14 @@
 /**
  * Handle the Bill object.
  *
- * @package     EverAccounting\Models
+ * @package     EAccounting\Models
  * @class       Bill
  * @version     1.1.0
  */
 
-namespace EverAccounting\Models;
+namespace EAccounting\Models;
 
-use EverAccounting\Abstracts\Document;
+use EAccounting\Abstracts\Document;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since   1.1.0
  *
- * @package EverAccounting\Models
+ * @package EAccounting\Models
  */
 class Bill extends Document {
 	/**

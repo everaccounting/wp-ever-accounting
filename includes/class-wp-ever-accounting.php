@@ -1,13 +1,13 @@
 <?php
 
-use EverAccounting\Logger;
-use EverAccounting\Options;
-use EverAccounting\Utilities;
+use EAccounting\Logger;
+use EAccounting\Options;
+use EAccounting\Utilities;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class EverAccounting
+ * Class EAccounting
  *
  * @since 1.0.0
  * @property-read Utilities $utils
@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
 final class EverAccounting {
 
 	/**
-	 * EverAccounting version.
+	 * EAccounting version.
 	 *
 	 * @var string
 	 */
@@ -40,9 +40,9 @@ final class EverAccounting {
 	protected static $instance = null;
 
 	/**
-	 * Main EverAccounting Instance.
+	 * Main EAccounting Instance.
 	 *
-	 * Ensures only one instance of EverAccounting is loaded or can be loaded.
+	 * Ensures only one instance of EAccounting is loaded or can be loaded.
 	 *
 	 * @since 1.0.0
 	 * @static
@@ -112,7 +112,7 @@ final class EverAccounting {
 	}
 
 	/**
-	 * EverAccounting constructor.
+	 * EAccounting constructor.
 	 */
 	public function __construct() {
 		$this->define_constants();
@@ -215,7 +215,7 @@ final class EverAccounting {
 	 * @return void
 	 */
 	private function init_hooks() {
-		register_activation_hook( EACCOUNTING_PLUGIN_FILE, array( 'EverAccounting\Install', 'install' ) );
+		register_activation_hook( EACCOUNTING_PLUGIN_FILE, array( 'EAccounting\Install', 'install' ) );
 		register_shutdown_function( array( $this, 'log_errors' ) );
 
 		add_action( 'plugins_loaded', array( $this, 'on_plugins_loaded' ), - 1 );

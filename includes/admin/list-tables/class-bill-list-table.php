@@ -3,11 +3,11 @@
  * Bills Admin List Table
  *
  * @since       1.1.0
- * @subpackage  EverAccounting\Admin\ListTables
- * @package     EverAccounting
+ * @subpackage  EAccounting\Admin\ListTables
+ * @package     EAccounting
  */
 
-use EverAccounting\Models\Bill;
+use EAccounting\Models\Bill;
 
 defined( 'ABSPATH' ) || exit();
 

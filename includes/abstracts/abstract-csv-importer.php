@@ -4,10 +4,10 @@
  *
  * @since       1.0.2
  * @subpackage  Abstracts
- * @package     EverAccounting
+ * @package     EAccounting
  */
 
-namespace EverAccounting\Abstracts;
+namespace EAccounting\Abstracts;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit();
  *
  * @since   1.0.
  *
- * @package EverAccounting\Abstracts
+ * @package EAccounting\Abstracts
  */
 abstract class CSV_Importer {
 	/**

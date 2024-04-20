@@ -113,7 +113,7 @@ function eaccounting_reports_income_summary_tab() {
 		}
 
 		$categories = wp_list_pluck( $transactions, 'name', 'category_id' );
-		$date       = new \EverAccounting\DateTime( $start );
+		$date       = new \EAccounting\DateTime( $start );
 		// Dates.
 		for ( $j = 1; $j <= 12; $j ++ ) {
 			$dates[ $j ]                     = $date->format( 'F' );
@@ -142,7 +142,7 @@ function eaccounting_reports_income_summary_tab() {
 				$totals[ $month ]['amount']                               += $transaction->amount;
 			}
 		}
-		$chart = new \EverAccounting\Chart();
+		$chart = new \EAccounting\Chart();
 		$chart->type( 'line' )->width( 0 )->height( 300 )->set_line_options()->labels( array_values( $dates ) )
 			->dataset(
 				array(

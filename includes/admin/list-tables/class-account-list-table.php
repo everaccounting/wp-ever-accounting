@@ -5,11 +5,11 @@
  * Admin account list table, show all the account information.
  *
  * @since       1.0.2
- * @subpackage  EverAccounting\Admin\ListTables
- * @package     EverAccounting
+ * @subpackage  EAccounting\Admin\ListTables
+ * @package     EAccounting
  */
 
-use EverAccounting\Models\Account;
+use EAccounting\Models\Account;
 
 defined( 'ABSPATH' ) || exit();
 

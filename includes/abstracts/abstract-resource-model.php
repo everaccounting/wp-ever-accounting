@@ -4,12 +4,12 @@
  *
  * Handles generic data interaction which is implemented by the different repository classes.
  *
- * @package EverAccounting
+ * @package EAccounting
  */
 
-namespace EverAccounting\Abstracts;
+namespace EAccounting\Abstracts;
 
-use EverAccounting\Repositories\Meta_Data;
+use EAccounting\Repositories\Meta_Data;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since   1.1.0
  *
- * @package EverAccounting\Abstracts
+ * @package EAccounting\Abstracts
  */
 abstract class Resource_Model {
 	/**
@@ -93,7 +93,7 @@ abstract class Resource_Model {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @var \EverAccounting\Abstracts\Resource_Repository
+	 * @var \EAccounting\Abstracts\Resource_Repository
 	 */
 	protected $repository;
 

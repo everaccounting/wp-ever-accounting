@@ -6,8 +6,8 @@
  * related to  the company
  *
  * @since       1.0.2
- * @subpackage  EverAccounting\Admin\ListTables
- * @package     EverAccounting
+ * @subpackage  EAccounting\Admin\ListTables
+ * @package     EAccounting
  */
 
 defined( 'ABSPATH' ) || exit();
@@ -122,7 +122,7 @@ class EverAccounting_Transaction_List_Table extends EverAccounting_List_Table {
 	/**
 	 * This function renders most of the columns in the list table.
 	 *
-	 * @param  \EverAccounting\Abstracts\Transaction $transaction Transaction object.
+	 * @param  \EAccounting\Abstracts\Transaction $transaction Transaction object.
 	 * @param string                                $column_name The name of the column.
 	 *
 	 * @return string The column value.

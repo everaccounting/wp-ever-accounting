@@ -5,11 +5,11 @@
  * Admin item list table, show all the item information.
  *
  * @since       1.1.0
- * @subpackage  EverAccounting\Admin\ListTables
- * @package     EverAccounting
+ * @subpackage  EAccounting\Admin\ListTables
+ * @package     EAccounting
  */
 
-use EverAccounting\Models\Item;
+use EAccounting\Models\Item;
 
 defined( 'ABSPATH' ) || exit();
 

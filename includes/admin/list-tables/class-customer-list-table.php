@@ -4,10 +4,10 @@
  *
  * @since       1.0.2
  * @subpackage  Admin/ListTables
- * @package     EverAccounting
+ * @package     EAccounting
  */
 
-use EverAccounting\Models\Customer;
+use EAccounting\Models\Customer;
 
 defined( 'ABSPATH' ) || exit();
 

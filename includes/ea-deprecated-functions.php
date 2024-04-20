@@ -6,8 +6,8 @@
  *
  * @version  1.1.0
  * @category Core
- * @package  EverAccounting\Functions
- * @author   EverAccounting
+ * @package  EAccounting\Functions
+ * @author   EAccounting
  */
 
 defined( 'ABSPATH' ) || exit;

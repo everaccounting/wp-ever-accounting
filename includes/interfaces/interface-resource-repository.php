@@ -4,10 +4,10 @@
  *
  * @since       1.1.0
  * @subpackage  Interfaces
- * @package     EverAccounting\Includes
+ * @package     EAccounting\Includes
  */
 
-namespace EverAccounting\Interfaces;
+namespace EAccounting\Interfaces;
 
 defined( 'ABSPATH' ) || exit;
 

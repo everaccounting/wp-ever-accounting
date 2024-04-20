@@ -4,7 +4,7 @@
  *
  * @since       1.1.0
  * @subpackage  Admin/Js Templates
- * @package     EverAccounting
+ * @package     EAccounting
  */
 
 defined( 'ABSPATH' ) || exit();

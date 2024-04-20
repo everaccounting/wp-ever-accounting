@@ -1,13 +1,13 @@
 <?php
 /**
- * EverAccounting  Rewrites Event Handlers.
+ * EAccounting  Rewrites Event Handlers.
  *
  * @since       1.1.0
- * @package     EverAccounting
+ * @package     EAccounting
  * @class       Rewrites
  */
 
-namespace EverAccounting;
+namespace EAccounting;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit();
  * Rewrites Handlers.
  *
  * @since       1.1.0
- * @package     EverAccounting
+ * @package     EAccounting
  * @class       Rewrites
  */
 class Rewrites {

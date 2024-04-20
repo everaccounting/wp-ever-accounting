@@ -5,11 +5,11 @@
  * Admin notes list table, show all the note information.
  *
  * @since       1.1.0
- * @subpackage  EverAccounting\Admin\ListTables
- * @package     EverAccounting
+ * @subpackage  EAccounting\Admin\ListTables
+ * @package     EAccounting
  */
 
-use EverAccounting\Models\Note;
+use EAccounting\Models\Note;
 
 defined( 'ABSPATH' ) || exit();
 

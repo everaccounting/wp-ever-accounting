@@ -21,7 +21,7 @@ activate_plugin( 'wp-ever-accounting/wp-ever-accounting.php' );
 echo "Installing WP Ever Accounting...\n";
 
 // Install WP Ever Accounting
-\EverAccounting\Install::install();
+\EAccounting\Install::install();
 
 global $current_user;
 

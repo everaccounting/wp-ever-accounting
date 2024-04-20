@@ -4,7 +4,7 @@
  *
  * Returns an array of currencies.
  *
- * @package EverAccounting\data
+ * @package EAccounting\data
  * @version 1.1.0
  */
 

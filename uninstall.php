@@ -1,10 +1,10 @@
 <?php
 /**
- * EverAccounting Uninstall
+ * EAccounting Uninstall
  *
- * Uninstalling EverAccounting deletes user roles, tables, and options.
+ * Uninstalling EAccounting deletes user roles, tables, and options.
  *
- * @package EverAccounting\Uninstaller
+ * @package EAccounting\Uninstaller
  * @version 1.1.0
  */
 
@@ -24,10 +24,10 @@ if ( defined( 'EACCOUNTING_REMOVE_ALL_DATA' ) && true === EACCOUNTING_REMOVE_ALL
 	global $wpdb;
 
 	// Roles.
-	\EverAccounting\Install::remove_roles();
+	\EAccounting\Install::remove_roles();
 
 	// Tables.
-	\EverAccounting\Install::drop_tables();
+	\EAccounting\Install::drop_tables();
 
 	// Delete options.
 	$wpdb->query( "DELETE FROM $wpdb->options WHERE option_name LIKE 'eaccounting\_%';" );

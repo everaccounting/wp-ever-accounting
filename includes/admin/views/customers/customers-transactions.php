@@ -4,7 +4,7 @@
  * Tab: Customers
  * Section: Transactions
  *
- * @package EverAccounting
+ * @package EAccounting
  */
 
 defined( 'ABSPATH' ) || exit();

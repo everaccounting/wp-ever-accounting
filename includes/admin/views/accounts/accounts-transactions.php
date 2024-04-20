@@ -8,7 +8,7 @@
  *
  * @since       1.0.2
  * @subpackage  Admin/Views/Accounts
- * @package     EverAccounting
+ * @package     EAccounting
  */
 
 defined( 'ABSPATH' ) || exit();

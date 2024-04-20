@@ -1,11 +1,11 @@
 <?php
 
-use EverAccounting\Transaction;
-use EverAccounting\Account;
+use EAccounting\Transaction;
+use EAccounting\Account;
 
 /**
  * Class EverAccounting_Tests_Revenue.
- * @package EverAccounting\Tests\Revenue
+ * @package EAccounting\Tests\Revenue
  */
 class EverAccounting_Tests_Revenue extends EverAccounting_Unit_Test_Case {
 	public function test_create_revenue() {

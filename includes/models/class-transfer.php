@@ -2,15 +2,15 @@
 /**
  * Handle the transfer object.
  *
- * @package     EverAccounting\Models
+ * @package     EAccounting\Models
  * @class       Transfer
  * @version     1.0.2
  */
 
-namespace EverAccounting\Models;
+namespace EAccounting\Models;
 
-use EverAccounting\Abstracts\Resource_Model;
-use EverAccounting\Repositories;
+use EAccounting\Abstracts\Resource_Model;
+use EAccounting\Repositories;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since   1.1.0
  *
- * @package EverAccounting\Models
+ * @package EAccounting\Models
  */
 class Transfer extends Resource_Model {
 	/**
@@ -182,7 +182,7 @@ class Transfer extends Resource_Model {
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @return \EverAccounting\DateTime
+	 * @return \EAccounting\DateTime
 	 */
 	public function get_date( $context = 'edit' ) {
 		return $this->get_prop( 'date', $context );

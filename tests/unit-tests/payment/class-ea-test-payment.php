@@ -1,10 +1,10 @@
 <?php
 
-use EverAccounting\Transaction;
+use EAccounting\Transaction;
 
 /**
  * Class EverAccounting_Tests_Payment.
- * @package EverAccounting\Tests\Payment
+ * @package EAccounting\Tests\Payment
  */
 class EverAccounting_Tests_Payment extends EverAccounting_Unit_Test_Case {
 	public function test_create_payment() {

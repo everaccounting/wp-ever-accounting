@@ -1,10 +1,10 @@
 <?php
 
-use EverAccounting\Currency;
+use EAccounting\Currency;
 
 /**
  * Class EverAccounting_Tests_Currency.
- * @package EverAccounting\Tests\Currency
+ * @package EAccounting\Tests\Currency
  */
 class EverAccounting_Tests_Currency extends EverAccounting_Unit_Test_Case {
 	public function test_create_currency() {

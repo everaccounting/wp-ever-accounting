@@ -1,11 +1,11 @@
 <?php
 /**
- * EverAccounting Core Functions.
+ * EAccounting Core Functions.
  *
  * General core functions available on both the front-end and admin.
  *
  * @since   1.0.0
- * @package EverAccounting
+ * @package EAccounting
  */
 
 defined( 'ABSPATH' ) || exit();
@@ -72,7 +72,7 @@ function eaccounting_get_financial_start( $year = null, $format = 'Y-m-d' ) {
 	$month           = ! empty( $setting[1] ) ? $setting[1] : '01';
 	$year            = empty( $year ) ? (int) wp_date( 'Y' ) : absint( $year );
 
-	$financial_year = new \EverAccounting\DateTime();
+	$financial_year = new \EAccounting\DateTime();
 	$financial_year->setDate( $year, $month, $day );
 
 	return $financial_year->format( $format );
@@ -89,7 +89,7 @@ function eaccounting_get_financial_start( $year = null, $format = 'Y-m-d' ) {
  * @return string
  */
 function eaccounting_get_financial_end( $year = null, $format = 'Y-m-d' ) {
-	$dt = new \EverAccounting\DateTime( eaccounting_get_financial_start( $year, 'Y-m-d' ) );
+	$dt = new \EAccounting\DateTime( eaccounting_get_financial_start( $year, 'Y-m-d' ) );
 	return $dt->addYear( 1 )->subDay( 1 )->date( $format );
 }
 
@@ -107,11 +107,11 @@ function eaccounting_get_financial_end( $year = null, $format = 'Y-m-d' ) {
  * @param string $code Currency code.
  * @param bool   $convert   Convert to default currency.
  *
- * @return \EverAccounting\Money|WP_Error
+ * @return \EAccounting\Money|WP_Error
  */
 function eaccounting_money( $amount, $code = 'USD', $convert = false ) {
 	try {
-		return new \EverAccounting\Money( $amount, $code, $convert );
+		return new \EAccounting\Money( $amount, $code, $convert );
 	} catch ( Exception $e ) {
 		return new \WP_Error( 'invalid_action', $e->getMessage() );
 	}
@@ -313,7 +313,7 @@ function eaccounting_get_payment_methods() {
  * Get the logger of the plugin.
  *
  * @since 1.0.2
- * @return \EverAccounting\Logger
+ * @return \EAccounting\Logger
  */
 function eaccounting_logger() {
 	return eaccounting()->logger;
@@ -325,7 +325,7 @@ function eaccounting_logger() {
  * @since 1.0.2
  */
 function eaccounting_cleanup_logs() {
-	$logger = new \EverAccounting\Logger();
+	$logger = new \EAccounting\Logger();
 	$logger->clear_expired_logs();
 }
 
@@ -350,10 +350,10 @@ function eaccounting_maybe_define_constant( $name, $value ) {
  *
  * @param mixed $items Items.
  *
- * @return \EverAccounting\Collection
+ * @return \EAccounting\Collection
  */
 function eaccounting_collect( $items ) {
-	return new \EverAccounting\Collection( $items );
+	return new \EAccounting\Collection( $items );
 }
 
 
@@ -397,7 +397,7 @@ function eaccounting_get_data( $key ) {
 }
 
 /**
- * Send HTML emails from EverAccounting.
+ * Send HTML emails from EAccounting.
  *
  * @param mixed  $to          Receiver.
  * @param mixed  $subject     Subject.
@@ -521,7 +521,7 @@ function eaccounting_print_js() {
 		$eaccounting_queued_js = preg_replace( '/&#(x)?0*(?(1)27|39);?/i', "'", $eaccounting_queued_js );
 		$eaccounting_queued_js = str_replace( "\r", '', $eaccounting_queued_js );
 
-		$js = "<!-- EverAccounting JavaScript -->\n<script type=\"text/javascript\">\njQuery(function($) { $eaccounting_queued_js });\n</script>\n";
+		$js = "<!-- EAccounting JavaScript -->\n<script type=\"text/javascript\">\njQuery(function($) { $eaccounting_queued_js });\n</script>\n";
 
 		echo apply_filters( 'eaccounting_queued_js', $js );
 
@@ -594,7 +594,7 @@ function eaccounting_get_full_name( $user_id ) {
  * @param string $item_name name of the item to be initialize license.
  */
 function eaccounting_init_license( $file, $item_name ) {
-	if ( is_admin() && class_exists( '\EverAccounting\License' ) ) {
-		$license = new \EverAccounting\License( $file, $item_name );
+	if ( is_admin() && class_exists( '\EAccounting\License' ) ) {
+		$license = new \EAccounting\License( $file, $item_name );
 	}
 }

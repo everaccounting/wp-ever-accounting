@@ -4,10 +4,10 @@
  *
  * @since       1.0.2
  * @subpackage  Admin
- * @package     EverAccounting
+ * @package     EAccounting
  */
 
-namespace EverAccounting\Admin;
+namespace EAccounting\Admin;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit();
  * Class Settings
  *
  * @since   1.0.2
- * @package EverAccounting\Admin
+ * @package EAccounting\Admin
  */
 class Settings {
 	/**

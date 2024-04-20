@@ -6,14 +6,14 @@
  *
  * @since       1.1.0
  * @subpackage  Admin/Views/Items
- * @package     EverAccounting
+ * @package     EAccounting
  * @var int $item_id
  */
 
 defined( 'ABSPATH' ) || exit();
 
 try {
-	$item = new \EverAccounting\Models\Item( $item_id );
+	$item = new \EAccounting\Models\Item( $item_id );
 } catch ( Exception $e ) {
 	wp_die( esc_html( $e->getMessage() ) );
 }

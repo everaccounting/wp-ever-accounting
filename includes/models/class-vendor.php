@@ -2,15 +2,15 @@
 /**
  * Handle the vendor object.
  *
- * @package     EverAccounting\Models
+ * @package     EAccounting\Models
  * @class       Vendor
  * @version     1.0.2
  */
 
-namespace EverAccounting\Models;
+namespace EAccounting\Models;
 
-use EverAccounting\Abstracts\Contact;
-use EverAccounting\Traits\Attachment;
+use EAccounting\Abstracts\Contact;
+use EAccounting\Traits\Attachment;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since   1.1.0
  *
- * @package EverAccounting\Models
+ * @package EAccounting\Models
  */
 class Vendor extends Contact {
 	use Attachment;

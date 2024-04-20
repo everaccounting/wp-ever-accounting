@@ -2,12 +2,12 @@
 
 class EverAccounting_Tests_Money extends EverAccounting_Unit_Test_Case {
 	public function test_format_simple() {
-		$m1 = new \EverAccounting\Money( 1, 'USD' );
-		$m2 = new \EverAccounting\Money( 10, 'USD' );
-		$m3 = new \EverAccounting\Money( 100, 'USD' );
-		$m4 = new \EverAccounting\Money( 1000, 'USD' );
-		$m5 = new \EverAccounting\Money( 10000, 'USD' );
-		$m6 = new \EverAccounting\Money( 100000, 'USD' );
+		$m1 = new \EAccounting\Money( 1, 'USD' );
+		$m2 = new \EAccounting\Money( 10, 'USD' );
+		$m3 = new \EAccounting\Money( 100, 'USD' );
+		$m4 = new \EAccounting\Money( 1000, 'USD' );
+		$m5 = new \EAccounting\Money( 10000, 'USD' );
+		$m6 = new \EAccounting\Money( 100000, 'USD' );
 
 		$this->assertEquals( '0.01', $m1->format_simple() );
 		$this->assertEquals( '0.10', $m2->format_simple() );
@@ -18,12 +18,12 @@ class EverAccounting_Tests_Money extends EverAccounting_Unit_Test_Case {
 	}
 
 	public function test_comparators() {
-		$m1 = new \EverAccounting\Money( 0, 'USD' );
-		$m2 = new \EverAccounting\Money( - 1, 'USD' );
-		$m3 = new \EverAccounting\Money( 1, 'USD' );
-		$m4 = new \EverAccounting\Money( 1, 'USD' );
-		$m5 = new \EverAccounting\Money( 1, 'USD' );
-		$m6 = new \EverAccounting\Money( - 1, 'USD' );
+		$m1 = new \EAccounting\Money( 0, 'USD' );
+		$m2 = new \EAccounting\Money( - 1, 'USD' );
+		$m3 = new \EAccounting\Money( 1, 'USD' );
+		$m4 = new \EAccounting\Money( 1, 'USD' );
+		$m5 = new \EAccounting\Money( 1, 'USD' );
+		$m6 = new \EAccounting\Money( - 1, 'USD' );
 
 		$this->assertTrue( $m1->isZero() );
 		$this->assertTrue( $m2->isNegative() );

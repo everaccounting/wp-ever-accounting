@@ -4,15 +4,15 @@
  *
  * @since       1.0.3
  * @subpackage  Abstracts
- * @package     EverAccounting
+ * @package     EAccounting
  */
 
-namespace EverAccounting\Abstracts;
+namespace EAccounting\Abstracts;
 
 /**
  * Class Assets
  *
- * @package EverAccounting\Abstracts
+ * @package EAccounting\Abstracts
  */
 abstract class Assets {
 	/**

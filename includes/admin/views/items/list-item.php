@@ -6,7 +6,7 @@
  *
  * @since       1.1.0
  * @subpackage  Admin/Items
- * @package     EverAccounting
+ * @package     EAccounting
  */
 
 defined( 'ABSPATH' ) || exit();

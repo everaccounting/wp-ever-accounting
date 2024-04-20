@@ -1,13 +1,13 @@
 <?php
 
-namespace EverAccounting\Abstracts;
+namespace EAccounting\Abstracts;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
  * Class Singleton
  *
- * @package EverAccounting\Abstracts
+ * @package EAccounting\Abstracts
  */
 abstract class Singleton {
 	/**

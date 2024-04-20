@@ -8,11 +8,11 @@
  * @var $item_id int
  * @var $item Document_Item
  * @version 1.1.0
- * @package EverAccounting
+ * @package EAccounting
  */
 
-use EverAccounting\Models\Bill;
-use EverAccounting\Models\Document_Item;
+use EAccounting\Models\Bill;
+use EAccounting\Models\Document_Item;
 
 defined( 'ABSPATH' ) || exit;
 ?>

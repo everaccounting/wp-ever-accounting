@@ -1,14 +1,14 @@
 <?php
 /**
- * EverAccounting Item Functions.
+ * EAccounting Item Functions.
  *
  * All item related function of the plugin.
  *
  * @since   1.1.0
- * @package EverAccounting
+ * @package EAccounting
  */
 
-use EverAccounting\Models\Item;
+use EAccounting\Models\Item;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @param Item $item Item object.
  *
- * @return EverAccounting\Models\Item|null
+ * @return EAccounting\Models\Item|null
  * @since 1.1.0
  */
 function eaccounting_get_item( $item ) {
@@ -25,7 +25,7 @@ function eaccounting_get_item( $item ) {
 		return null;
 	}
 	try {
-		$result = new EverAccounting\Models\Item( $item );
+		$result = new EAccounting\Models\Item( $item );
 
 		return $result->exists() ? $result : null;
 	} catch ( \Exception $e ) {
@@ -86,7 +86,7 @@ function eaccounting_get_item_by_sku( $sku ) {
  * }
  * @param bool  $wp_error Optional. Whether to return a WP_Error on failure. Default false.
  *
- * @return EverAccounting\Models\Item|WP_Error|bool
+ * @return EAccounting\Models\Item|WP_Error|bool
  * @since 1.1.0
  */
 function eaccounting_insert_item( $args, $wp_error = true ) {
@@ -123,7 +123,7 @@ function eaccounting_insert_item( $args, $wp_error = true ) {
  */
 function eaccounting_delete_item( $item_id ) {
 	try {
-		$item = new EverAccounting\Models\Item( $item_id );
+		$item = new EAccounting\Models\Item( $item_id );
 
 		return $item->exists() ? $item->delete() : false;
 	} catch ( \Exception $e ) {
@@ -171,8 +171,8 @@ function eaccounting_get_items( $args = array() ) {
 	);
 	global $wpdb;
 	$qv           = apply_filters( 'eaccounting_get_items_args', $args );
-	$table        = \EverAccounting\Repositories\Items::TABLE;
-	$columns      = \EverAccounting\Repositories\Items::get_columns();
+	$table        = \EAccounting\Repositories\Items::TABLE;
+	$columns      = \EAccounting\Repositories\Items::get_columns();
 	$qv['fields'] = wp_parse_list( $qv['fields'] );
 	foreach ( $qv['fields'] as $index => $field ) {
 		if ( ! in_array( $field, $columns, true ) ) {

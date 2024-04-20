@@ -2,7 +2,7 @@
 /**
  * Admin View: Page - What's New
  *
- * @package     EverAccounting
+ * @package     EAccounting
  */
 
 defined( 'ABSPATH' ) || exit;

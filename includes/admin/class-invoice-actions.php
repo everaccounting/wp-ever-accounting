@@ -6,13 +6,13 @@
  *
  * @version     1.1.10
  * @category    Admin
- * @package     EverAccounting\Admin
- * @author      EverAccounting
+ * @package     EAccounting\Admin
+ * @author      EAccounting
  */
 
-namespace EverAccounting\Admin;
+namespace EAccounting\Admin;
 
-use EverAccounting\Models\Invoice;
+use EAccounting\Models\Invoice;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit();
  * Invoice_Actions class
  *
  * @since 1.1.0
- * @package EverAccounting\Admin
+ * @package EAccounting\Admin
  */
 class Invoice_Actions {
 	/**

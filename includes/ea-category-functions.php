@@ -1,11 +1,11 @@
 <?php
 /**
- * EverAccounting category Functions.
+ * EAccounting category Functions.
  *
  * All category related function of the plugin.
  *
  * @since   1.1.0
- * @package EverAccounting
+ * @package EAccounting
  */
 
 defined( 'ABSPATH' ) || exit();
@@ -46,7 +46,7 @@ function eaccounting_get_category_type( $type ) {
  *
  * @param mixed $category Category ID or object.
  *
- * @return null|EverAccounting\Models\Category
+ * @return null|EAccounting\Models\Category
  * @since 1.1.0
  */
 function eaccounting_get_category( $category ) {
@@ -54,7 +54,7 @@ function eaccounting_get_category( $category ) {
 		return null;
 	}
 	try {
-		$result = new EverAccounting\Models\Category( $category );
+		$result = new EAccounting\Models\Category( $category );
 
 		return $result->exists() ? $result : null;
 	} catch ( \Exception $e ) {
@@ -68,7 +68,7 @@ function eaccounting_get_category( $category ) {
  * @param string $name Category name.
  * @param string $type Category type.
  *
- * @return \EverAccounting\Models\Category|null
+ * @return \EAccounting\Models\Category|null
  * @since 1.1.0
  */
 function eaccounting_get_category_by_name( $name, $type ) {
@@ -109,7 +109,7 @@ function eaccounting_get_category_by_name( $name, $type ) {
  * }
  * @param bool  $wp_error Whether to return false or WP_Error on failure.
  *
- * @return int|\WP_Error|\EverAccounting\Models\Category|bool The value 0 or WP_Error on failure. The Category object on success.
+ * @return int|\WP_Error|\EAccounting\Models\Category|bool The value 0 or WP_Error on failure. The Category object on success.
  * @since 1.1.0
  */
 function eaccounting_insert_category( $data = array(), $wp_error = true ) {
@@ -122,7 +122,7 @@ function eaccounting_insert_category( $data = array(), $wp_error = true ) {
 		$data = wp_parse_args( $data, array( 'id' => null ) );
 
 		// Retrieve the category.
-		$item = new \EverAccounting\Models\Category( $data['id'] );
+		$item = new \EAccounting\Models\Category( $data['id'] );
 
 		// Load new data.
 		$item->set_props( $data );
@@ -150,7 +150,7 @@ function eaccounting_insert_category( $data = array(), $wp_error = true ) {
  */
 function eaccounting_delete_category( $category_id ) {
 	try {
-		$category = new EverAccounting\Models\Category( $category_id );
+		$category = new EAccounting\Models\Category( $category_id );
 
 		return $category->exists() ? $category->delete() : false;
 	} catch ( \Exception $e ) {
@@ -188,8 +188,8 @@ function eaccounting_get_categories( $args = array() ) {
 	);
 
 	$qv           = apply_filters( 'eaccounting_get_categories_args', $args );
-	$table        = \EverAccounting\Repositories\Categories::TABLE;
-	$columns      = \EverAccounting\Repositories\Categories::get_columns();
+	$table        = \EAccounting\Repositories\Categories::TABLE;
+	$columns      = \EAccounting\Repositories\Categories::get_columns();
 	$qv['fields'] = wp_parse_list( $qv['fields'] );
 	$qv['fields'] = wp_parse_list( $qv['fields'] );
 	foreach ( $qv['fields'] as $index => $field ) {

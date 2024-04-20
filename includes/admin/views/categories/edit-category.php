@@ -2,7 +2,7 @@
 /**
  * Admin Category Edit Page.
  *
- * @package     EverAccounting
+ * @package     EAccounting
  * @subpackage  Admin/Settings/Categories
  * @since       1.0.2
  */
@@ -10,7 +10,7 @@
 defined( 'ABSPATH' ) || exit();
 $category_id = filter_input( INPUT_GET, 'category_id', FILTER_VALIDATE_INT );
 try {
-	$category = new \EverAccounting\Models\Category( $category_id );
+	$category = new \EAccounting\Models\Category( $category_id );
 } catch ( Exception $e ) {
 	wp_die( esc_html( $e->getMessage() ) );
 }

@@ -5,11 +5,11 @@
  * Admin payments list table, show all the incoming transactions.
  *
  * @since       1.0.2
- * @subpackage  EverAccounting\Admin\ListTables
- * @package     EverAccounting
+ * @subpackage  EAccounting\Admin\ListTables
+ * @package     EAccounting
  */
 
-use EverAccounting\Models\Payment;
+use EAccounting\Models\Payment;
 
 defined( 'ABSPATH' ) || exit();
 

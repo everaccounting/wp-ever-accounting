@@ -4,10 +4,10 @@
  *
  * @since   1.1.0
  *
- * @package EverAccounting
+ * @package EAccounting
  */
 
-namespace EverAccounting;
+namespace EAccounting;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since   1.1.0
  *
- * @package EverAccounting
+ * @package EAccounting
  */
 class Inflector {
 	/**

@@ -2,10 +2,10 @@
 /**
  * Invoice payment.
  *
- * @package     EverAccounting
+ * @package     EAccounting
  * @subpackage  Admin/Js Templates
  * @since       1.0.2
- * @var \EverAccounting\Models\Invoice $invoice;
+ * @var \EAccounting\Models\Invoice $invoice;
  */
 
 defined( 'ABSPATH' ) || exit();

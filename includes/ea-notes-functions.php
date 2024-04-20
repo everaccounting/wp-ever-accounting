@@ -1,11 +1,11 @@
 <?php
 /**
- * EverAccounting Notes Functions.
+ * EAccounting Notes Functions.
  *
  * All notes related function of the plugin.
  *
  * @since   1.1.0
- * @package EverAccounting
+ * @package EAccounting
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @param mixed $item Note item.
  *
- * @return EverAccounting\Models\Note|null
+ * @return EAccounting\Models\Note|null
  * @since 1.1.0
  */
 function eaccounting_get_note( $item ) {
@@ -23,7 +23,7 @@ function eaccounting_get_note( $item ) {
 		return null;
 	}
 	try {
-		$result = new EverAccounting\Models\Note( $item );
+		$result = new EAccounting\Models\Note( $item );
 
 		return $result->exists() ? $result : null;
 	} catch ( \Exception $e ) {
@@ -38,7 +38,7 @@ function eaccounting_get_note( $item ) {
  * @param bool  $wp_error Return WP_Error on failure.
  * @since 1.1.0
  *
- * @return \EverAccounting\Models\Note|false|int|WP_Error
+ * @return \EAccounting\Models\Note|false|int|WP_Error
  */
 function eaccounting_insert_note( $args, $wp_error = true ) {
 	// Ensure that we have data.
@@ -50,7 +50,7 @@ function eaccounting_insert_note( $args, $wp_error = true ) {
 		$args = wp_parse_args( $args, array( 'id' => null ) );
 
 		// Retrieve the item.
-		$item = new \EverAccounting\Models\Note( $args['id'] );
+		$item = new \EAccounting\Models\Note( $args['id'] );
 
 		// Load new data.
 		$item->set_props( $args );
@@ -74,7 +74,7 @@ function eaccounting_insert_note( $args, $wp_error = true ) {
  */
 function eaccounting_delete_note( $note_id ) {
 	try {
-		$item = new EverAccounting\Models\Note( $note_id );
+		$item = new EAccounting\Models\Note( $note_id );
 
 		return $item->exists() ? $item->delete() : false;
 	} catch ( \Exception $e ) {
@@ -112,8 +112,8 @@ function eaccounting_get_notes( $args = array() ) {
 
 	global $wpdb;
 	$qv           = apply_filters( 'eaccounting_get_documents_args', $args );
-	$table        = \EverAccounting\Repositories\Notes::TABLE;
-	$columns      = \EverAccounting\Repositories\Notes::get_columns();
+	$table        = \EAccounting\Repositories\Notes::TABLE;
+	$columns      = \EAccounting\Repositories\Notes::get_columns();
 	$qv['fields'] = wp_parse_list( $qv['fields'] );
 	foreach ( $qv['fields'] as $index => $field ) {
 		if ( ! in_array( $field, $columns, true ) ) {

@@ -6,7 +6,7 @@
  *
  * @since       1.0.2
  * @subpackage  Admin/Views/Transactions
- * @package     EverAccounting
+ * @package     EAccounting
  */
 
 defined( 'ABSPATH' ) || exit();

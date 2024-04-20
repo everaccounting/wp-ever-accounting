@@ -4,7 +4,7 @@
  * Page: Tools
  * Tab: Export
  *
- * @package     EverAccounting
+ * @package     EAccounting
  * @subpackage  Admin/View/Tools
  * @since       1.0.2
  */

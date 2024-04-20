@@ -7,11 +7,11 @@ module.exports = [
 		...defaultConfig,
 		entry: {
 			...defaultConfig.entry(),
-			'css/admin': './src/legacy/css/admin.scss',
-			'css/public': './src/legacy/css/public.scss',
-			'css/release': './src/legacy/css/release.scss',
-			'css/setup': './src/legacy/css/setup.scss',
-			'css/jquery-ui': './src/legacy/css/jquery-ui/jquery-ui.scss',
+			'css/admin': './ui/legacy/css/admin.scss',
+			'css/public': './ui/legacy/css/public.scss',
+			'css/release': './ui/legacy/css/release.scss',
+			'css/setup': './ui/legacy/css/setup.scss',
+			'css/jquery-ui': './ui/legacy/css/jquery-ui/jquery-ui.scss',
 		},
 		output: {
 			...defaultConfig.output,
@@ -47,11 +47,11 @@ module.exports = [
 			new CopyWebpackPlugin({
 				patterns: [
 					{
-						from: 'src/legacy/js/admin-legacy',
+						from: 'ui/legacy/js/admin-legacy',
 						to: 'js',
 					},
 					{
-						from: 'src/legacy/js/vendor',
+						from: 'ui/legacy/js/vendor',
 						to: 'js',
 					},
 					{
@@ -72,7 +72,7 @@ module.exports = [
 						to: 'js/jquery.inputmask.js',
 					},
 					{
-						from: path.resolve(__dirname, 'src/legacy/images'),
+						from: path.resolve(__dirname, 'ui/legacy/images'),
 						to: path.resolve(__dirname, 'assets/images'),
 					}
 				]

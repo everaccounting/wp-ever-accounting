@@ -2,22 +2,22 @@
 /**
  * Handle the order item object.
  *
- * @package     EverAccounting\Models
+ * @package     EAccounting\Models
  * @class       Document_Item
  * @version     1.1.0
  */
 
-namespace EverAccounting\Models;
+namespace EAccounting\Models;
 
-use EverAccounting\Abstracts\Resource_Model;
-use EverAccounting\Repositories;
+use EAccounting\Abstracts\Resource_Model;
+use EAccounting\Repositories;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
  * Class Document_Item
  *
- * @package EverAccounting\Models
+ * @package EAccounting\Models
  */
 class Document_Item extends Resource_Model {
 	/**

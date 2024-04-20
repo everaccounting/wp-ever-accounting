@@ -4,7 +4,7 @@
  * Page: Banking
  * Tab: Accounts
  *
- * @package     EverAccounting
+ * @package     EAccounting
  * @subpackage  Admin/View/Accounts
  * @since       1.0.2
  *
@@ -14,7 +14,7 @@
 defined( 'ABSPATH' ) || exit();
 
 try {
-	$account = new \EverAccounting\Models\Account( $account_id );
+	$account = new \EAccounting\Models\Account( $account_id );
 } catch ( Exception $e ) {
 	wp_die( esc_html( $e->getMessage() ) );
 }

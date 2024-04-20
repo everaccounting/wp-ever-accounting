@@ -2,7 +2,7 @@
 /**
  * Shows an Bill item
  *
- * @package EverAccounting\Admin
+ * @package EAccounting\Admin
  * @var Bill $bill The item being displayed
  * @var Document_Item $item The item being displayed
  * @var int $item_id The id of the item being displayed
@@ -10,8 +10,8 @@
 
 defined( 'ABSPATH' ) || exit();
 
-use EverAccounting\Models\Document_Item;
-use EverAccounting\Models\Bill;
+use EAccounting\Models\Document_Item;
+use EAccounting\Models\Bill;
 
 defined( 'ABSPATH' ) || exit;
 ?>

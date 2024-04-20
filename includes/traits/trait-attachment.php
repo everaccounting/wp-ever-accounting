@@ -2,10 +2,10 @@
 /**
  * Attachment Trait.
  *
- * @package EverAccounting
+ * @package EAccounting
  */
 
-namespace EverAccounting\Traits;
+namespace EAccounting\Traits;
 
 defined( 'ABSPATH' ) || exit;
 

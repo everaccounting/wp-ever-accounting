@@ -4,17 +4,17 @@
  *
  * @since       1.0.2
  * @subpackage  Abstracts
- * @package     EverAccounting
+ * @package     EAccounting
  */
 
-namespace EverAccounting\Abstracts;
+namespace EAccounting\Abstracts;
 
 defined( 'ABSPATH' ) || exit();
 
 /**
  * Class CSV_Exporter
  *
- * @package EverAccounting\Abstracts
+ * @package EAccounting\Abstracts
  */
 abstract class CSV_Exporter {
 	/**
@@ -277,7 +277,7 @@ abstract class CSV_Exporter {
 	 */
 	protected function format_data( $data ) {
 		if ( ! is_scalar( $data ) ) {
-			if ( is_a( $data, '\EverAccounting\DateTime' ) ) {
+			if ( is_a( $data, '\EAccounting\DateTime' ) ) {
 				$data = $data->date( 'Y-m-d G:i:s' );
 			} else {
 				$data = ''; // Not supported.

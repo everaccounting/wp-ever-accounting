@@ -6,14 +6,14 @@
  *
  * @since       1.0.2
  * @subpackage  Admin/Views/Revenues
- * @package     EverAccounting
+ * @package     EAccounting
  */
 
 defined( 'ABSPATH' ) || exit();
 
 $revenue_id = filter_input( INPUT_GET, 'revenue_id', FILTER_VALIDATE_INT );
 try {
-	$revenue = new \EverAccounting\Models\Revenue( $revenue_id );
+	$revenue = new \EAccounting\Models\Revenue( $revenue_id );
 } catch ( Exception $e ) {
 	wp_die( esc_html( $e->getMessage() ) );
 }

@@ -1,11 +1,11 @@
 <?php
 /**
- * EverAccounting miscellaneous functions.
+ * EAccounting miscellaneous functions.
  *
  * Functions for extra support of the plugin.
  *
  * @since   1.0.2
- * @package EverAccounting
+ * @package EAccounting
  */
 
 defined( 'ABSPATH' ) || exit;

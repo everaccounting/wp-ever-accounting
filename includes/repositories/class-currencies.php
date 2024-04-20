@@ -5,14 +5,14 @@
  * Handle currency insert, update, delete & retrieve from database.
  *
  * @version   1.1.0
- * @package   EverAccounting\Repositories
+ * @package   EAccounting\Repositories
  */
 
-namespace EverAccounting\Repositories;
+namespace EAccounting\Repositories;
 
-use EverAccounting\Abstracts\Resource_Model;
-use EverAccounting\Abstracts\Resource_Repository;
-use EverAccounting\Models\Currency;
+use EAccounting\Abstracts\Resource_Model;
+use EAccounting\Abstracts\Resource_Repository;
+use EAccounting\Models\Currency;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -21,7 +21,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since   1.1.0
  *
- * @package EverAccounting\Repositories
+ * @package EAccounting\Repositories
  */
 class Currencies extends Resource_Repository {
 	/**
@@ -195,7 +195,7 @@ class Currencies extends Resource_Repository {
 	 * Get raw currencies.
 	 *
 	 * @since 1.1.0
-	 * @return \EverAccounting\Collection
+	 * @return \EAccounting\Collection
 	 */
 	public function get_currencies() {
 		$currencies = wp_cache_get( 'ea_currencies', 'ea_currencies' );
@@ -211,7 +211,7 @@ class Currencies extends Resource_Repository {
 	 * Get all the codes.
 	 *
 	 * @since 1.1.0
-	 * @return \EverAccounting\Collection
+	 * @return \EAccounting\Collection
 	 */
 	public function get_codes() {
 		return eaccounting_collect( array_values( eaccounting_get_currency_codes() ) );

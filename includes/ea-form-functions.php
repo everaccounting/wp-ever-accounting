@@ -1,11 +1,11 @@
 <?php
 /**
- * EverAccounting Form Functions
+ * EAccounting Form Functions
  *
  * General form functions available on both the front-end and admin.
  *
  * @since   1.0.2
- * @package EverAccounting
+ * @package EAccounting
  */
 
 defined( 'ABSPATH' ) || exit();

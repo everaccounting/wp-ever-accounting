@@ -4,12 +4,12 @@
  *
  * @since   1.0.2
  *
- * @package EverAccounting\Export
+ * @package EAccounting\Export
  */
 
-namespace EverAccounting\Export;
+namespace EAccounting\Export;
 
-use EverAccounting\Abstracts\CSV_Exporter;
+use EAccounting\Abstracts\CSV_Exporter;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit();
  *
  * @since   1.0.2
  *
- * @package EverAccounting\Export
+ * @package EAccounting\Export
  */
 class Currencies extends CSV_Exporter {
 
@@ -71,7 +71,7 @@ class Currencies extends CSV_Exporter {
 	/**
 	 * Take a currency and generate row data from it for export.
 	 *
-	 * @param \EverAccounting\Models\Currency $item Currency object.
+	 * @param \EAccounting\Models\Currency $item Currency object.
 	 *
 	 * @return array
 	 */

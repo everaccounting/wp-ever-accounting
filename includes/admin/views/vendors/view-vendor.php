@@ -6,7 +6,7 @@
  *
  * @since       1.0.2
  * @subpackage  Admin/Views/Vendors
- * @package     EverAccounting
+ * @package     EAccounting
  * @var int $vendor_id
  */
 

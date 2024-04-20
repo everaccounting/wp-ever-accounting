@@ -8,10 +8,10 @@
  *
  * @since       1.0.2
  * @subpackage  Admin/Views/Accounts
- * @package     EverAccounting
+ * @package     EAccounting
  */
 
-use EverAccounting\Models\Account;
+use EAccounting\Models\Account;
 
 defined( 'ABSPATH' ) || exit();
 

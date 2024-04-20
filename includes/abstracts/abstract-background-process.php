@@ -5,10 +5,10 @@
  * Uses https://github.com/A5hleyRich/wp-background-processing to handle DB
  * updates in the background.
  *
- * @package EverAccounting\Classes
+ * @package EAccounting\Classes
  */
 
-namespace EverAccounting\Abstracts;
+namespace EAccounting\Abstracts;
 
 defined( 'ABSPATH' ) || exit;
 

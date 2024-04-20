@@ -2,19 +2,19 @@
 /**
  * Load assets.
  *
- * @package     EverAccounting
+ * @package     EAccounting
  * @subpackage  Admin
  * @version     1.0.2
  */
 
-namespace EverAccounting\Admin;
+namespace EAccounting\Admin;
 
 defined( 'ABSPATH' ) || exit();
 
 /**
  * Class Assets
  *
- * @package EverAccounting\Admin
+ * @package EAccounting\Admin
  * @since   1.0.2
  */
 class Assets {
@@ -222,4 +222,4 @@ class Assets {
 	}
 }
 
-return new \EverAccounting\Admin\Assets();
+return new \EAccounting\Admin\Assets();

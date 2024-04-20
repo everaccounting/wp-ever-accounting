@@ -6,10 +6,10 @@
  *
  * @var $invoice Invoice
  * @version 1.1.0
- * @package EverAccounting
+ * @package EAccounting
  */
 
-use EverAccounting\Models\Invoice;
+use EAccounting\Models\Invoice;
 
 $countries = eaccounting_get_countries();
 defined( 'ABSPATH' ) || exit;

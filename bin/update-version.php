@@ -2,7 +2,7 @@
 /**
  * Updates PHP versions to match those in package.json before start or build.
  *
- * @package EverAccounting
+ * @package EAccounting
  */
 
 $package_json = file_get_contents( 'package.json' );

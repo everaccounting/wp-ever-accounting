@@ -2,7 +2,7 @@
 /**
  * List tables.
  *
- * @package    EverAccounting
+ * @package    EAccounting
  * @subpackage Abstracts
  * @version    1.0.2
  */

@@ -2,19 +2,19 @@
 /**
  * Shows whats new.
  *
- * @package    EverAccounting
+ * @package    EAccounting
  * @subpackage Admin
  * @version    1.1.0
  */
 
-namespace EverAccounting\Admin;
+namespace EAccounting\Admin;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
  * Class Release
  *
- * @package EverAccounting\Admin
+ * @package EAccounting\Admin
  */
 class Release {
 
