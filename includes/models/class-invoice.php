@@ -2,14 +2,14 @@
 /**
  * Handle the invoice object.
  *
- * @package     EverAccounting\Models
+ * @package     EAccounting\Models
  * @class       Invoice
  * @version     1.1.0
  */
 
-namespace EverAccounting\Models;
+namespace EAccounting\Models;
 
-use \EverAccounting\Abstracts\Document;
+use \EAccounting\Abstracts\Document;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since   1.1.0
  *
- * @package EverAccounting\Models
+ * @package EAccounting\Models
  */
 class Invoice extends Document {
 	/**

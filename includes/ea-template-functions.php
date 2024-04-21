@@ -1,14 +1,14 @@
 <?php
 /**
- * EverAccounting Template functions.
+ * EAccounting Template functions.
  *
  * Functions related to templates.
  *
  * @since   1.1.0
- * @package EverAccounting
+ * @package EAccounting
  */
 
-use EverAccounting\Models\Invoice;
+use EAccounting\Models\Invoice;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -263,7 +263,7 @@ add_action( 'eaccounting_public_before_invoice', 'eaccounting_public_invoice_act
 /**
  * Output bill actions.
  *
- * @param \EverAccounting\Models\Bill $bill Bill.
+ * @param \EAccounting\Models\Bill $bill Bill.
  *
  * @since 1.0.0
  * @return void

@@ -1,9 +1,9 @@
 <?php
 /**
- * EverAccounting Formatting Functions for formatting data.
+ * EAccounting Formatting Functions for formatting data.
  *
  * @since   1.0.2
- * @package EverAccounting
+ * @package EAccounting
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -132,7 +132,7 @@ function eaccounting_sanitize_tooltip( $var ) {
 
 
 /**
- * EverAccounting date format - Allows to change date format for everything.
+ * EAccounting date format - Allows to change date format for everything.
  *
  * @since 1.0.2
  * @return string
@@ -142,7 +142,7 @@ function eaccounting_date_format() {
 }
 
 /**
- * EverAccounting Time Format - Allows to change time format for everything.
+ * EAccounting Time Format - Allows to change time format for everything.
  *
  * @since 1.0.2
  * @return string

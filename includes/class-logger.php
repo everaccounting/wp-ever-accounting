@@ -2,12 +2,12 @@
 /**
  * Handles logging for the plugin.
  *
- * @package        EverAccounting
+ * @package        EAccounting
  * @class          EverAccounting_Logger
  * @version        1.0.2
  */
 
-namespace EverAccounting;
+namespace EAccounting;
 
 defined( 'ABSPATH' ) || exit;
 

@@ -6,10 +6,10 @@
  *
  * @since   1.1.0
  *
- * @package EverAccounting\Abstracts
+ * @package EAccounting\Abstracts
  */
 
-namespace EverAccounting\Abstracts;
+namespace EAccounting\Abstracts;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since   1.1.0
  *
- * @package EverAccounting\Abstracts
+ * @package EAccounting\Abstracts
  */
 abstract class Resource_Repository {
 	/**

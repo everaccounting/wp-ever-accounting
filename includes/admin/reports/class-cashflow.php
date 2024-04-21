@@ -4,20 +4,20 @@
  *
  * Extended by reports to show charts and stats in admin.
  *
- * @author      EverAccounting
+ * @author      EAccounting
  * @category    Admin
- * @package     EverAccounting\Admin
+ * @package     EAccounting\Admin
  * @version     1.1.0
  */
 
-namespace EverAccounting\Admin\Report;
+namespace EAccounting\Admin\Report;
 
 defined( 'ABSPATH' ) || exit();
 
 /**
  * Cashflow Class
  *
- * @package EverAccounting\Admin\Report
+ * @package EAccounting\Admin\Report
  */
 class CashFlow extends Report {
 	/**

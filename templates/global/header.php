@@ -5,7 +5,7 @@
  * This template can be overridden by copying it to yourtheme/eaccounting/global/head.php.
  *
  * @version 1.1.0
- * @package EverAccounting
+ * @package EAccounting
  */
 
 defined( 'ABSPATH' ) || exit;

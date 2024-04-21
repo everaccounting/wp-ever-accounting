@@ -4,12 +4,12 @@
  *
  * @since   1.1.0
  *
- * @package EverAccounting\Import
+ * @package EAccounting\Import
  */
 
-namespace EverAccounting\Import;
+namespace EAccounting\Import;
 
-use EverAccounting\Abstracts\CSV_Importer;
+use EAccounting\Abstracts\CSV_Importer;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit();
  *
  * @since   1.1.0
  *
- * @package EverAccounting\Import
+ * @package EAccounting\Import
  */
 class Items extends CSV_Importer {
 	/**

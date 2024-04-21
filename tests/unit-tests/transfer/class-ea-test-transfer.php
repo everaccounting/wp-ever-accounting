@@ -1,10 +1,10 @@
 <?php
 
-use EverAccounting\Transfer;
+use EAccounting\Transfer;
 
 /**
  * Class EverAccounting_Tests_transfer.
- * @package EverAccounting\Tests\Category
+ * @package EAccounting\Tests\Category
  */
 class EverAccounting_Tests_transfer extends EverAccounting_Unit_Test_Case {
 	public function test_create_transfer() {

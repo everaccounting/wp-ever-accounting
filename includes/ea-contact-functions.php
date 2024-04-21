@@ -1,11 +1,11 @@
 <?php
 /**
- * EverAccounting Contact Functions.
+ * EAccounting Contact Functions.
  *
  * Contact related functions.
  *
  * @since   1.1.0
- * @package EverAccounting
+ * @package EAccounting
  */
 
 defined( 'ABSPATH' ) || exit();
@@ -47,7 +47,7 @@ function eaccounting_get_contact_type( $type ) {
  *
  * @param mixed $customer Customer ID or object.
  *
- * @return \EverAccounting\Models\Customer|null
+ * @return \EAccounting\Models\Customer|null
  * @since 1.1.0
  */
 function eaccounting_get_customer( $customer ) {
@@ -55,7 +55,7 @@ function eaccounting_get_customer( $customer ) {
 		return null;
 	}
 	try {
-		$result = new EverAccounting\Models\Customer( $customer );
+		$result = new EAccounting\Models\Customer( $customer );
 
 		return $result->exists() ? $result : null;
 	} catch ( \Exception $e ) {
@@ -70,7 +70,7 @@ function eaccounting_get_customer( $customer ) {
  *
  * @param string $email Customer email.
  *
- * @return \EverAccounting\Models\Customer | null
+ * @return \EAccounting\Models\Customer | null
  */
 function eaccounting_get_customer_by_email( $email ) {
 	global $wpdb;
@@ -120,7 +120,7 @@ function eaccounting_get_customer_by_email( $email ) {
  * }
  * @param bool  $wp_error Optional. Whether to return a WP_Error on failure. Default false.
  *
- * @return EverAccounting\Models\Customer|\WP_Error|bool
+ * @return EAccounting\Models\Customer|\WP_Error|bool
  * @since 1.1.0
  */
 function eaccounting_insert_customer( $args, $wp_error = true ) {
@@ -133,7 +133,7 @@ function eaccounting_insert_customer( $args, $wp_error = true ) {
 		$args = wp_parse_args( $args, array( 'id' => null ) );
 
 		// Retrieve the customer.
-		$item = new \EverAccounting\Models\Customer( $args['id'] );
+		$item = new \EAccounting\Models\Customer( $args['id'] );
 
 		// Load new data.
 		$item->set_props( $args );
@@ -157,7 +157,7 @@ function eaccounting_insert_customer( $args, $wp_error = true ) {
  */
 function eaccounting_delete_customer( $customer_id ) {
 	try {
-		$customer = new EverAccounting\Models\Customer( $customer_id );
+		$customer = new EAccounting\Models\Customer( $customer_id );
 
 		return $customer->exists() ? $customer->delete() : false;
 	} catch ( \Exception $e ) {
@@ -197,7 +197,7 @@ function eaccounting_get_customers( $args = array() ) {
  *
  * @param mixed $vendor Vendor ID or object.
  *
- * @return \EverAccounting\Models\Vendor|null
+ * @return \EAccounting\Models\Vendor|null
  * @since 1.1.0
  */
 function eaccounting_get_vendor( $vendor ) {
@@ -205,7 +205,7 @@ function eaccounting_get_vendor( $vendor ) {
 		return null;
 	}
 	try {
-		$result = new EverAccounting\Models\Vendor( $vendor );
+		$result = new EAccounting\Models\Vendor( $vendor );
 
 		return $result->exists() ? $result : null;
 	} catch ( \Exception $e ) {
@@ -220,7 +220,7 @@ function eaccounting_get_vendor( $vendor ) {
  *
  * @param string $email Vendor email.
  *
- * @return \EverAccounting\Models\Vendor
+ * @return \EAccounting\Models\Vendor
  */
 function eaccounting_get_vendor_by_email( $email ) {
 	global $wpdb;
@@ -271,7 +271,7 @@ function eaccounting_get_vendor_by_email( $email ) {
  * }
  * @param bool  $wp_error Optional. Whether to return a WP_Error on failure. Default false.
  *
- * @return EverAccounting\Models\Vendor|\WP_Error|bool
+ * @return EAccounting\Models\Vendor|\WP_Error|bool
  * @since 1.1.0
  */
 function eaccounting_insert_vendor( $args, $wp_error = true ) {
@@ -284,7 +284,7 @@ function eaccounting_insert_vendor( $args, $wp_error = true ) {
 		$args = wp_parse_args( $args, array( 'id' => null ) );
 
 		// Retrieve the vendor.
-		$item = new \EverAccounting\Models\Vendor( $args['id'] );
+		$item = new \EAccounting\Models\Vendor( $args['id'] );
 
 		// Load new data.
 		$item->set_props( $args );
@@ -308,7 +308,7 @@ function eaccounting_insert_vendor( $args, $wp_error = true ) {
  */
 function eaccounting_delete_vendor( $vendor_id ) {
 	try {
-		$vendor = new EverAccounting\Models\Vendor( $vendor_id );
+		$vendor = new EAccounting\Models\Vendor( $vendor_id );
 
 		return $vendor->exists() ? $vendor->delete() : false;
 	} catch ( \Exception $e ) {
@@ -389,8 +389,8 @@ function eaccounting_get_contacts( $args = array() ) {
 	);
 	global $wpdb;
 	$qv           = apply_filters( 'eaccounting_get_contact_args', $args );
-	$table        = \EverAccounting\Repositories\Contacts::TABLE;
-	$columns      = \EverAccounting\Repositories\Contacts::get_columns();
+	$table        = \EAccounting\Repositories\Contacts::TABLE;
+	$columns      = \EAccounting\Repositories\Contacts::get_columns();
 	$qv['fields'] = wp_parse_list( $qv['fields'] );
 	foreach ( $qv['fields'] as $index => $field ) {
 		if ( ! in_array( $field, $columns, true ) ) {

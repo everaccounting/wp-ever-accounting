@@ -4,13 +4,13 @@
  *
  * @version     1.1.0
  * @subpackage  Classes
- * @package     EverAccounting
+ * @package     EAccounting
  */
 
-use EverAccounting\Models\Account;
-use EverAccounting\Models\Category;
-use EverAccounting\Models\Payment;
-use EverAccounting\Models\Revenue;
+use EAccounting\Models\Account;
+use EAccounting\Models\Category;
+use EAccounting\Models\Payment;
+use EAccounting\Models\Revenue;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -132,7 +132,7 @@ class Controller {
 	 * Update customer total paid
 	 *
 	 * @param int                                   $transaction_id transaction id.
-	 * @param \EverAccounting\Abstracts\Transaction $transaction transaction.
+	 * @param \EAccounting\Abstracts\Transaction $transaction transaction.
 	 *
 	 * @since 1.1.0
 	 */
@@ -175,7 +175,7 @@ class Controller {
 	 * Update vendor total paid
 	 *
 	 * @param int                                   $transaction_id transaction id.
-	 * @param \EverAccounting\Abstracts\Transaction $transaction transaction.
+	 * @param \EAccounting\Abstracts\Transaction $transaction transaction.
 	 *
 	 * @since 1.1.0
 	 */

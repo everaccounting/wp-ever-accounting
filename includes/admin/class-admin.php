@@ -1,13 +1,13 @@
 <?php
 /**
- * EverAccounting Admin.
+ * EAccounting Admin.
  *
- * @package     EverAccounting
+ * @package     EAccounting
  * @subpackage  Admin
  * @version     1.0.2
  */
 
-namespace EverAccounting\Admin;
+namespace EAccounting\Admin;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -133,7 +133,7 @@ class Admin {
 	}
 
 	/**
-	 * Change the admin footer text on EverAccounting admin pages.
+	 * Change the admin footer text on EAccounting admin pages.
 	 *
 	 * @since  1.0.2
 	 *
@@ -151,7 +151,7 @@ class Admin {
 		// Set only EA pages.
 		$ea_pages = array_diff( $ea_pages, array( 'profile', 'user-edit' ) );
 
-		// Check to make sure we're on a EverAccounting admin page.
+		// Check to make sure we're on a EAccounting admin page.
 		if ( isset( $current_screen->id ) && apply_filters( 'eaccounting_display_admin_footer_text', in_array( $current_screen->id, $ea_pages, true ) ) ) {
 			// Change the footer text.
 			if ( ! get_option( 'eaccounting_admin_footer_text_rated' ) ) {

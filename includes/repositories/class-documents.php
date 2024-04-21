@@ -5,14 +5,14 @@
  * Handle invoice insert, update, delete & retrieve from database.
  *
  * @version   1.1.0
- * @package   EverAccounting\Repositories
+ * @package   EAccounting\Repositories
  */
 
-namespace EverAccounting\Repositories;
+namespace EAccounting\Repositories;
 
-use EverAccounting\Abstracts\Resource_Repository;
-use EverAccounting\Abstracts\Document;
-use EverAccounting\Models\Document_Item;
+use EAccounting\Abstracts\Resource_Repository;
+use EAccounting\Abstracts\Document;
+use EAccounting\Models\Document_Item;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -21,7 +21,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since   1.1.0
  *
- * @package EverAccounting\Repositories
+ * @package EAccounting\Repositories
  */
 class Documents extends Resource_Repository {
 	/**
@@ -175,7 +175,7 @@ class Documents extends Resource_Repository {
 	/**
 	 * Delete items.
 	 *
-	 * @param \EverAccounting\Abstracts\Resource_Model $item Item object.
+	 * @param \EAccounting\Abstracts\Resource_Model $item Item object.
 	 * @since 1.1.0
 	 */
 	public function delete( &$item ) {

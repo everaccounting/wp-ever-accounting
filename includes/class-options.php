@@ -2,15 +2,15 @@
 /**
  * Options for plugin
  *
- * @package EverAccounting
+ * @package EAccounting
  */
 
-namespace EverAccounting;
+namespace EAccounting;
 
 /**
  * Class Options
  *
- * @package EverAccounting
+ * @package EAccounting
  */
 class Options {
 	/**

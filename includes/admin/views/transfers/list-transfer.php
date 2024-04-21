@@ -4,7 +4,7 @@
  *
  * @since       1.0.2
  * @subpackage  Admin/Banking/Transfers
- * @package     EverAccounting
+ * @package     EAccounting
  */
 
 defined( 'ABSPATH' ) || exit();

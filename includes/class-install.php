@@ -3,17 +3,17 @@
  * Main Plugin Install Class.
  *
  * @since       1.0.2
- * @package     EverAccounting
+ * @package     EAccounting
  */
 
-namespace EverAccounting;
+namespace EAccounting;
 
 defined( 'ABSPATH' ) || exit();
 
 /**
  * Class Install
  *
- * @package EverAccounting
+ * @package EAccounting
  * @since 1.0.2
  */
 class Install {
@@ -43,7 +43,7 @@ class Install {
 	}
 
 	/**
-	 * Check EverAccounting version and run the updater is required.
+	 * Check EAccounting version and run the updater is required.
 	 * This check is done on all requests and runs if the versions do not match.
 	 *
 	 * @return void
@@ -135,7 +135,7 @@ class Install {
 	}
 
 	/**
-	 * Install EverAccounting.
+	 * Install EAccounting.
 	 *
 	 * @return void
 	 * @since 1.0.2
@@ -157,7 +157,7 @@ class Install {
 		require_once dirname( __FILE__ ) . '/class-settings.php';
 
 		if ( ! eaccounting()->settings ) {
-			eaccounting()->settings = new \EverAccounting\Settings();
+			eaccounting()->settings = new \EAccounting\Settings();
 		}
 
 		self::remove_admin_notices();
@@ -189,7 +189,7 @@ class Install {
 		global $wpdb;
 		$missing_tables = array();
 		$tables         = self::get_tables();
-		$notices        = \EverAccounting\Admin\Notices::init();
+		$notices        = \EAccounting\Admin\Notices::init();
 		foreach ( $tables as $table ) {
 			if ( ! $wpdb->get_var( "SHOW TABLES LIKE '$table'" ) ) {
 				$missing_tables[] = $table;
@@ -644,11 +644,11 @@ class Install {
 	}
 
 	/**
-	 * Return a list of EverAccounting tables.
-	 * Used to make sure all EverAccounting tables are dropped when uninstalling the plugin
+	 * Return a list of EAccounting tables.
+	 * Used to make sure all EAccounting tables are dropped when uninstalling the plugin
 	 * in a single site or multi site environment.
 	 *
-	 * @return array EverAccounting tables.
+	 * @return array EAccounting tables.
 	 */
 	public static function get_tables() {
 		global $wpdb;
@@ -672,7 +672,7 @@ class Install {
 	}
 
 	/**
-	 * Drop EverAccounting tables.
+	 * Drop EAccounting tables.
 	 *
 	 * @return void
 	 */
@@ -774,7 +774,7 @@ class Install {
 	}
 
 	/**
-	 * Remove EverAccounting roles.
+	 * Remove EAccounting roles.
 	 *
 	 * @return void
 	 * @since 1.0.2

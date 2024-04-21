@@ -3,24 +3,24 @@
  * Abstract class for document object.
  *
  * @version     1.1.0
- * @package     EverAccounting\Abstracts
+ * @package     EAccounting\Abstracts
  * @class       Document
  */
 
-namespace EverAccounting\Abstracts;
+namespace EAccounting\Abstracts;
 
-use EverAccounting\Repositories;
-use EverAccounting\Models\Document_Item;
-use EverAccounting\Repositories\Documents;
-use EverAccounting\Traits\Attachment;
-use EverAccounting\Traits\CurrencyTrait;
+use EAccounting\Repositories;
+use EAccounting\Models\Document_Item;
+use EAccounting\Repositories\Documents;
+use EAccounting\Traits\Attachment;
+use EAccounting\Traits\CurrencyTrait;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
  * Class Document
  *
- * @package EverAccounting\Abstracts
+ * @package EAccounting\Abstracts
  */
 abstract class Document extends Resource_Model {
 	use Attachment;

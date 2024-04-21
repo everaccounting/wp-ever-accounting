@@ -4,15 +4,15 @@
  *
  * Functions used for displaying bill related pages.
  *
- * @author      EverAccounting
+ * @author      EAccounting
  * @category    Admin
- * @package     EverAccounting\Admin
+ * @package     EAccounting\Admin
  * @version     1.1.10
  */
 
-namespace EverAccounting\Admin;
+namespace EAccounting\Admin;
 
-use EverAccounting\Models\Bill;
+use EAccounting\Models\Bill;
 use PHPUnit\Runner\Exception;
 
 defined( 'ABSPATH' ) || exit();
@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit();
 /**
  * Class Bill_Actions
  *
- * @package EverAccounting\Admin
+ * @package EAccounting\Admin
  */
 class Bill_Actions {
 	/**

@@ -7,12 +7,12 @@
  *
  * @since       1.1.0
  * @subpackage  Admin/Views/Bills
- * @package     EverAccounting
+ * @package     EAccounting
  *
  * @var Bill $bill
  */
 
-use EverAccounting\Models\Bill;
+use EAccounting\Models\Bill;
 
 defined( 'ABSPATH' ) || exit();
 

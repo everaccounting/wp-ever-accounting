@@ -1,10 +1,10 @@
 <?php
 /**
- * EverAccounting Updates
+ * EAccounting Updates
  *
  * Functions for updating data.
  *
- * @package EverAccounting/Functions
+ * @package EAccounting/Functions
  * @version 1.0.2
  */
 
@@ -31,8 +31,8 @@ function eaccounting_remove_background_updater( $action ) {
 }
 
 function eaccounting_update_1_0_2() {
-	\EverAccounting\Install::create_tables();
-	\EverAccounting\Install::create_roles();
+	\EAccounting\Install::create_tables();
+	\EAccounting\Install::create_roles();
 
 	global $wpdb;
 	$prefix          = $wpdb->prefix;
@@ -360,7 +360,7 @@ function eaccounting_update_1_1_0() {
 		$wp_roles->add_cap( 'administrator', 'ea_manage_bill' );
 	}
 
-	\EverAccounting\Install::install();
+	\EAccounting\Install::install();
 
 	// todo upload transaction files as attachment then update transaction table and delete attachment column
 	flush_rewrite_rules();

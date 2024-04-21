@@ -3,13 +3,13 @@
  *
  * Handle the money object
  *
- * @package        EverAccounting
+ * @package        EAccounting
  * @version        1.0.2
  */
 
-namespace EverAccounting;
+namespace EAccounting;
 
-use EverAccounting\Models\Currency;
+use EAccounting\Models\Currency;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  * Class Money
  *
  * @since   1.0.2
- * @package EverAccounting
+ * @package EAccounting
  */
 class Money {
 	const ROUND_HALF_UP   = PHP_ROUND_HALF_UP;

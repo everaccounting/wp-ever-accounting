@@ -3,11 +3,11 @@
  * Shows notes
  * Used in view invoice page.
  *
- * @package EverAccounting\Admin
+ * @package EAccounting\Admin
  * @var Invoice $invoice The item being used
  */
 
-use EverAccounting\Models\Invoice;
+use EAccounting\Models\Invoice;
 
 defined( 'ABSPATH' ) || exit();
 

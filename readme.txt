@@ -4,7 +4,7 @@ Tags: accounting, invoice, crm, company, SME, Business manager
 Requires at least: 4.4
 Tested up to: 6.5
 Requires PHP: 5.6
-Stable tag: 1.1.9
+Stable tag: 1.2.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -136,6 +136,9 @@ Yes, of course. We do not create products for ourselves. You are always welcome 
 
 
 == Changelog ==
+= 1.2.0 = (21th April 2024)
+* Enhance - Optimize plugin code & structure.
+
 = 1.1.9 = (17th April 2024)
 * Fix - Showing duplicate items in dropdown.
 * Fix - Activate/Deactivate toggle not working.

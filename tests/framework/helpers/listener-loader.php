@@ -2,7 +2,7 @@
 /**
  * Listener loader.
  *
- * @package EverAccounting\UnitTests
+ * @package EAccounting\UnitTests
  */
 
 $wp_tests_dir = getenv( 'WP_TESTS_DIR' ) ? getenv( 'WP_TESTS_DIR' ) : sys_get_temp_dir() . '/wordpress-tests-lib';

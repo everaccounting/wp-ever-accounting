@@ -2,11 +2,11 @@
 /**
  * Load Public assets.
  *
- * @package     EverAccounting
+ * @package     EAccounting
  * @version     1.0.2
  */
 
-namespace EverAccounting;
+namespace EAccounting;
 
 defined( 'ABSPATH' ) || exit();
 

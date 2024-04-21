@@ -1,13 +1,13 @@
 <?php
 /**
- * EverAccounting Wrapper for PHP DateTime which adds support for gmt/utc offset when a timezone is absent.
+ * EAccounting Wrapper for PHP DateTime which adds support for gmt/utc offset when a timezone is absent.
  *
  * @since   1.0.2
  *
- * @package EverAccounting
+ * @package EAccounting
  */
 
-namespace EverAccounting;
+namespace EAccounting;
 
 use DateTime as DT;
 
@@ -45,7 +45,7 @@ class DateTime extends DT {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @return \EverAccounting\DateTime
+	 * @return \EAccounting\DateTime
 	 */
 	public function copy() {
 		return clone $this;

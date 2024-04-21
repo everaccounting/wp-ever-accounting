@@ -2,7 +2,7 @@
 /**
  * Command line script for merging two .pot files.
  *
- * @package EverAccounting Admin
+ * @package EAccounting Admin
  */
 
 /**

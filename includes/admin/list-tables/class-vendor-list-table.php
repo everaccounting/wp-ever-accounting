@@ -3,11 +3,11 @@
  * Vendor Admin List Table.
  *
  * @since       1.0.2
- * @subpackage  EverAccounting\Admin\ListTables
- * @package     EverAccounting
+ * @subpackage  EAccounting\Admin\ListTables
+ * @package     EAccounting
  */
 
-use EverAccounting\Models\Vendor;
+use EAccounting\Models\Vendor;
 
 defined( 'ABSPATH' ) || exit();
 

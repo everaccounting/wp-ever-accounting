@@ -3,10 +3,10 @@
  * This class handles building pretty report graphs
  *
  * @since       1.0.2
- * @package     EverAccounting
+ * @package     EAccounting
  */
 
-namespace EverAccounting;
+namespace EAccounting;
 
 defined( 'ABSPATH' ) || exit();
 

@@ -2,9 +2,9 @@
 /**
  * Bill items.
  *
- * @var $bill \EverAccounting\Models\Bill
+ * @var $bill \EAccounting\Models\Bill
  * @var $mode    string
- * @package EverAccounting\Admin
+ * @package EAccounting\Admin
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -46,7 +46,7 @@ $quantity_label = eaccounting()->settings->get( 'bill_quantity_label', __( 'Quan
 			<script type="text/template" id="ea-bill-line-template">
 				<?php
 				$item_id = 9999;
-				$item    = new \EverAccounting\Models\Document_Item();
+				$item    = new \EAccounting\Models\Document_Item();
 				require __DIR__ . '/bill-item.php';
 				?>
 			</script>

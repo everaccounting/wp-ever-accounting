@@ -6,10 +6,10 @@
  *
  * @var $bill Bill
  * @version 1.1.0
- * @package EverAccounting
+ * @package EAccounting
  */
 
-use EverAccounting\Models\Bill;
+use EAccounting\Models\Bill;
 
 defined( 'ABSPATH' ) || exit;
 $items          = $bill->get_items();

@@ -10,7 +10,7 @@ class EverAccounting_Helper_Transaction {
 	/**
 	 * Create a mock account for testing purposes.
 	 *
-	 * @return array|\EverAccounting\Transaction|WP_Error
+	 * @return array|\EAccounting\Transaction|WP_Error
 	 */
 	public static function create_transaction( $amount = 50, $payment_method = 'cash', $type = 'expense' ) {
 		$category = EverAccounting_Helper_Category::create_category( 'Expense', 'expense' );

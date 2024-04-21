@@ -1,11 +1,11 @@
 <?php
 /**
- * EverAccounting account Functions.
+ * EAccounting account Functions.
  *
  * All account related function of the plugin.
  *
  * @since   1.1.0
- * @package EverAccounting
+ * @package EAccounting
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -17,14 +17,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * @param mixed $account Account ID or object.
  *
- * @return EverAccounting\Models\Account|null
+ * @return EAccounting\Models\Account|null
  */
 function eaccounting_get_account( $account ) {
 	if ( empty( $account ) ) {
 		return null;
 	}
 	try {
-		$result = new EverAccounting\Models\Account( $account );
+		$result = new EAccounting\Models\Account( $account );
 
 		return $result->exists() ? $result : null;
 	} catch ( \Exception $e ) {
@@ -85,7 +85,7 @@ function eaccounting_get_account_currency_code( $account ) {
  * }
  * @param bool  $wp_error Optional. Whether to return a WP_Error on failure. Default false.
  *
- * @return EverAccounting\Models\Account|\WP_Error|bool
+ * @return EAccounting\Models\Account|\WP_Error|bool
  * @throws \Exception When account is not created.
  */
 function eaccounting_insert_account( $data, $wp_error = true ) {
@@ -99,7 +99,7 @@ function eaccounting_insert_account( $data, $wp_error = true ) {
 		$data = wp_parse_args( $data, array( 'id' => null ) );
 
 		// Retrieve the account.
-		$item = new \EverAccounting\Models\Account( $data['id'] );
+		$item = new \EAccounting\Models\Account( $data['id'] );
 
 		// check if already account number exists for another user.
 		$number           = ! empty( $data['number'] ) ? $data['number'] : $item->get_number();
@@ -135,7 +135,7 @@ function eaccounting_insert_account( $data, $wp_error = true ) {
  */
 function eaccounting_delete_account( $account_id ) {
 	try {
-		$account = new EverAccounting\Models\Account( $account_id );
+		$account = new EAccounting\Models\Account( $account_id );
 
 		return $account->exists() ? $account->delete() : false;
 	} catch ( \Exception $e ) {
@@ -198,8 +198,8 @@ function eaccounting_get_accounts( $args = array() ) {
 	);
 
 	$qv           = apply_filters( 'eaccounting_get_accounts_args', $args );
-	$table        = \EverAccounting\Repositories\Accounts::TABLE;
-	$columns      = \EverAccounting\Repositories\Accounts::get_columns();
+	$table        = \EAccounting\Repositories\Accounts::TABLE;
+	$columns      = \EAccounting\Repositories\Accounts::get_columns();
 	$qv['fields'] = wp_parse_list( $qv['fields'] );
 	foreach ( $qv['fields'] as $index => $field ) {
 		if ( ! in_array( $field, $columns, true ) ) {

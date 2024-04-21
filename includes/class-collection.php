@@ -2,21 +2,21 @@
 /**
  * Handle the collection.
  *
- * @package     EverAccounting
+ * @package     EAccounting
  * @class       Collection
  * @version     1.0.2
  */
 
-namespace EverAccounting;
+namespace EAccounting;
 
-use EverAccounting\Interfaces\Arrayable;
+use EAccounting\Interfaces\Arrayable;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
  * Class Collection
  *
- * @package EverAccounting
+ * @package EAccounting
  */
 class Collection implements Arrayable {
 	/**
@@ -29,9 +29,10 @@ class Collection implements Arrayable {
 	/**
 	 * Create a new collection.
 	 *
+	 * @param mixed $items Items.
+	 *
 	 * @since 1.0.2
 	 *
-	 * @param mixed $items Items.
 	 */
 	public function __construct( $items = array() ) {
 		if ( $items instanceof Collection ) {
@@ -58,9 +59,9 @@ class Collection implements Arrayable {
 	/**
 	 * Create a new collection instance if the value isn't one already.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param mixed $items Items.
+	 *
+	 * @since 1.0.2
 	 *
 	 * @return static
 	 */
@@ -82,9 +83,9 @@ class Collection implements Arrayable {
 	/**
 	 * Execute a callback over each item.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param callable $callback Callback.
+	 *
+	 * @since 1.0.2
 	 *
 	 * @return object
 	 */
@@ -95,9 +96,9 @@ class Collection implements Arrayable {
 	/**
 	 * Run a filter over each of the items.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param callable $callback Callback.
+	 *
+	 * @since 1.0.2
 	 *
 	 * @return static
 	 */
@@ -108,11 +109,11 @@ class Collection implements Arrayable {
 	/**
 	 * Filter items by the given key value pair.
 	 *
-	 * @since 1.0.2
-	 *
-	 * @param string $key    Key.
+	 * @param string $key Key.
 	 * @param mixed  $value Value.
-	 * @param bool   $strict    Strict.
+	 * @param bool   $strict Strict.
+	 *
+	 * @since 1.0.2
 	 *
 	 * @return static
 	 */
@@ -127,10 +128,10 @@ class Collection implements Arrayable {
 	/**
 	 * Filter items by the given key value pair using loose comparison.
 	 *
-	 * @since 1.0.2
-	 * @param string $key   Key.
+	 * @param string $key Key.
 	 * @param mixed  $value Value.
 	 *
+	 * @since 1.0.2
 	 * @return static
 	 */
 	public function where_loose( $key, $value ) {
@@ -151,9 +152,9 @@ class Collection implements Arrayable {
 	/**
 	 * Remove an item from the collection by key.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param mixed $key Key.
+	 *
+	 * @since 1.0.2
 	 *
 	 * @return void
 	 */
@@ -164,10 +165,10 @@ class Collection implements Arrayable {
 	/**
 	 * Get an item from the collection by key.
 	 *
-	 * @since 1.0.2
-	 * @param mixed $key    Key.
+	 * @param mixed $key Key.
 	 * @param mixed $default Default.
 	 *
+	 * @since 1.0.2
 	 * @return mixed
 	 */
 	public function get( $key, $default = null ) {
@@ -181,9 +182,9 @@ class Collection implements Arrayable {
 	/**
 	 * Determine if an item exists in the collection by key.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param mixed $key Key.
+	 *
+	 * @since 1.0.2
 	 *
 	 * @return bool
 	 */
@@ -234,9 +235,9 @@ class Collection implements Arrayable {
 	/**
 	 * Run a map over each of the items.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param callable $callback Callback.
+	 *
+	 * @since 1.0.2
 	 *
 	 * @return static
 	 */
@@ -258,9 +259,9 @@ class Collection implements Arrayable {
 	/**
 	 * Push an item onto the beginning of the collection.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param mixed $value Value.
+	 *
+	 * @since 1.0.2
 	 *
 	 * @return void
 	 */
@@ -271,9 +272,9 @@ class Collection implements Arrayable {
 	/**
 	 * Push an item onto the end of the collection.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param mixed $value Value.
+	 *
+	 * @since 1.0.2
 	 *
 	 * @return void
 	 */
@@ -284,10 +285,10 @@ class Collection implements Arrayable {
 	/**
 	 * Put an item in the collection by key.
 	 *
-	 * @since 1.0.2
-	 * @param mixed $key  Key.
+	 * @param mixed $key Key.
 	 * @param mixed $value Value.
 	 *
+	 * @since 1.0.2
 	 * @return void
 	 */
 	public function put( $key, $value ) {
@@ -297,9 +298,9 @@ class Collection implements Arrayable {
 	/**
 	 * Get one or more items randomly from the collection.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param int $amount Amount.
+	 *
+	 * @since 1.0.2
 	 *
 	 * @return mixed
 	 */
@@ -316,24 +317,25 @@ class Collection implements Arrayable {
 	/**
 	 * Merge the collection with the given items.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param Arrayable|array $items Items.
+	 *
+	 * @since 1.0.2
 	 *
 	 * @return static
 	 */
 	public function merge( $items ) {
 		$items = new static( $items );
+
 		return new static( array_merge( $this->items, $items->all() ) );
 	}
 
 	/**
 	 * Reduce the collection to a single value.
 	 *
-	 * @since 1.0.2
 	 * @param callable $callback Callback.
 	 * @param mixed    $initial Initial.
 	 *
+	 * @since 1.0.2
 	 * @return mixed
 	 */
 	public function reduce( $callback, $initial = null ) {
@@ -343,9 +345,9 @@ class Collection implements Arrayable {
 	/**
 	 * Create a collection of all elements that do not pass a given truth test.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param callable|mixed $callback Callback.
+	 *
+	 * @since 1.0.2
 	 *
 	 * @return static
 	 */
@@ -368,9 +370,9 @@ class Collection implements Arrayable {
 	/**
 	 * Reverse items order.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param bool $preserve_keys Preserve keys.
+	 *
+	 * @since 1.0.2
 	 *
 	 * @return static
 	 */
@@ -381,9 +383,9 @@ class Collection implements Arrayable {
 	/**
 	 * Determine if the given value is callable, but not a string.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param mixed $value Value.
+	 *
+	 * @since 1.0.2
 	 *
 	 * @return bool
 	 */
@@ -394,9 +396,10 @@ class Collection implements Arrayable {
 	/**
 	 * Search the collection for a given value and return the corresponding key if successful.
 	 *
-	 * @since 1.0.2
 	 * @param mixed $value Value.
 	 * @param bool  $strict Strict.
+	 *
+	 * @since 1.0.2
 	 * @return mixed
 	 */
 	public function search( $value, $strict = false ) {
@@ -421,16 +424,20 @@ class Collection implements Arrayable {
 	 *  return $a[key] < $b[key]; //DESC
 	 * }
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param callable|int|null $callback Callback.
+	 *
+	 * @since 1.0.2
 	 *
 	 * @return static
 	 */
 	public function sort( $callback = null ) {
 		$items = $this->items;
 
-		$callback && is_callable( $callback ) ? uasort( $items, $callback ) : asort( $items, $callback );
+		if ( $callback && is_callable( $callback ) ) {
+			uasort( $items, $callback );
+		} else {
+			asort( $items );
+		}
 
 		return new static( $items );
 	}
@@ -453,9 +460,9 @@ class Collection implements Arrayable {
 	/**
 	 * Take the first or last {$limit} items.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param int $limit Limit.
+	 *
+	 * @since 1.0.2
 	 *
 	 * @return static
 	 */
@@ -471,11 +478,11 @@ class Collection implements Arrayable {
 	 * Slice the underlying collection array.
 	 * equivalent of offset.
 	 *
-	 * @since 1.0.2
 	 * @param int  $offset Offset.
 	 * @param int  $length Length.
 	 * @param bool $preserve_keys Preserve keys.
 	 *
+	 * @since 1.0.2
 	 * @return static
 	 */
 	public function slice( $offset, $length = null, $preserve_keys = false ) {
@@ -485,11 +492,11 @@ class Collection implements Arrayable {
 	/**
 	 * Splice portion of the underlying collection array.
 	 *
-	 * @since 1.0.2
-	 * @param int   $offset     Offset.
+	 * @param int   $offset Offset.
 	 * @param int   $length Length.
-	 * @param mixed $replacement    Replacement.
+	 * @param mixed $replacement Replacement.
 	 *
+	 * @since 1.0.2
 	 * @return static
 	 */
 	public function splice( $offset, $length = 0, $replacement = array() ) {
@@ -532,9 +539,9 @@ class Collection implements Arrayable {
 	/**
 	 * Determine if an item exists at an offset.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param mixed $key Key.
+	 *
+	 * @since 1.0.2
 	 *
 	 * @return bool
 	 */
@@ -545,9 +552,9 @@ class Collection implements Arrayable {
 	/**
 	 * Get an item at a given offset.
 	 *
-	 * @since 1.0.2
+	 * @param mixed $key Key.
 	 *
-	 * @param mixed $key    Key.
+	 * @since 1.0.2
 	 *
 	 * @return mixed
 	 */
@@ -558,10 +565,10 @@ class Collection implements Arrayable {
 	/**
 	 * Set the item at a given offset.
 	 *
-	 * @since 1.0.2
-	 * @param mixed $key  Key.
+	 * @param mixed $key Key.
 	 * @param mixed $value Value.
 	 *
+	 * @since 1.0.2
 	 * @return void
 	 */
 	public function offsetSet( $key, $value ) {
@@ -599,10 +606,10 @@ class Collection implements Arrayable {
 	/**
 	 * Chunk the underlying collection array.
 	 *
-	 * @since 1.0.2
 	 * @param int  $size Size.
 	 * @param bool $preserve_keys Preserve keys.
 	 *
+	 * @since 1.0.2
 	 * @return static
 	 */
 	public function chunk( $size, $preserve_keys = false ) {
@@ -618,9 +625,9 @@ class Collection implements Arrayable {
 	/**
 	 * Unset the item at a given offset.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param string $key Key.
+	 *
+	 * @since 1.0.2
 	 *
 	 * @return void
 	 */
@@ -631,11 +638,11 @@ class Collection implements Arrayable {
 	/**
 	 * Get data.
 	 *
-	 * @since 1.0.2
-	 *
-	 * @param  array|object $target Target.
+	 * @param array|object $target Target.
 	 * @param string       $key Key.
 	 * @param null         $default Default.
+	 *
+	 * @since 1.0.2
 	 *
 	 * @return array
 	 */

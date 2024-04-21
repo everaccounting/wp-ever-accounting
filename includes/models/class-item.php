@@ -2,17 +2,17 @@
 /**
  * Handle the item object.
  *
- * @package     EverAccounting\Models
+ * @package     EAccounting\Models
  * @class       Item
  * @version     1.1.0
  */
 
-namespace EverAccounting\Models;
+namespace EAccounting\Models;
 
-use EverAccounting\Abstracts\Resource_Model;
-use EverAccounting\Repositories;
-use EverAccounting\Traits\Attachment;
-use EverAccounting\Traits\CurrencyTrait;
+use EAccounting\Abstracts\Resource_Model;
+use EAccounting\Repositories;
+use EAccounting\Traits\Attachment;
+use EAccounting\Traits\CurrencyTrait;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -21,7 +21,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since   1.1.0
  *
- * @package EverAccounting\Models
+ * @package EAccounting\Models
  */
 class Item extends Resource_Model {
 	use Attachment;

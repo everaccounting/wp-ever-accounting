@@ -3,14 +3,14 @@
  * Handle the contact object.
  *
  * @version     1.0.2
- * @package     EverAccounting\Models
+ * @package     EAccounting\Models
  * @class       Customer
  */
 
-namespace EverAccounting\Abstracts;
+namespace EAccounting\Abstracts;
 
-use EverAccounting\Abstracts\Resource_Model;
-use EverAccounting\Repositories;
+use EAccounting\Abstracts\Resource_Model;
+use EAccounting\Repositories;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since   1.1.0
  *
- * @package EverAccounting\Models
+ * @package EAccounting\Models
  */
 abstract class Contact extends Resource_Model {
 

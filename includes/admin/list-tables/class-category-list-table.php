@@ -3,11 +3,11 @@
  * Categories Admin List Table.
  *
  * @since       1.0.2
- * @subpackage  EverAccounting\Admin\ListTables
- * @package     EverAccounting
+ * @subpackage  EAccounting\Admin\ListTables
+ * @package     EAccounting
  */
 
-use EverAccounting\Models\Category;
+use EAccounting\Models\Category;
 
 defined( 'ABSPATH' ) || exit();
 

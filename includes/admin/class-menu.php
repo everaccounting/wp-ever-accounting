@@ -2,17 +2,17 @@
 /**
  * Handles admin related menus.
  *
- * @package EverAccounting
+ * @package EAccounting
  */
 
-namespace EverAccounting\Admin;
+namespace EAccounting\Admin;
 
 defined( 'ABSPATH' ) || exit();
 
 /**
  * Class Menu
  *
- * @package EverAccounting\Admin
+ * @package EAccounting\Admin
  */
 class Menu {
 
@@ -512,7 +512,7 @@ class Menu {
 	 */
 	public function render_sales_report_tab() {
 		require_once dirname( __FILE__ ) . '/reports/class-sales.php';
-		$report = new \EverAccounting\Admin\Report\Sales();
+		$report = new \EAccounting\Admin\Report\Sales();
 		$report->output();
 	}
 
@@ -523,7 +523,7 @@ class Menu {
 	 */
 	public function render_expenses_report_tab() {
 		require_once dirname( __FILE__ ) . '/reports/class-expenses.php';
-		$report = new \EverAccounting\Admin\Report\Expenses();
+		$report = new \EAccounting\Admin\Report\Expenses();
 		$report->output();
 	}
 
@@ -534,7 +534,7 @@ class Menu {
 	 */
 	public function render_profits_report_tab() {
 		require_once dirname( __FILE__ ) . '/reports/class-profits.php';
-		$report = new \EverAccounting\Admin\Report\Profits();
+		$report = new \EAccounting\Admin\Report\Profits();
 		$report->output();
 	}
 
@@ -545,7 +545,7 @@ class Menu {
 	 */
 	public function render_cashflow_report_tab() {
 		require_once dirname( __FILE__ ) . '/reports/class-cashflow.php';
-		$report = new \EverAccounting\Admin\Report\CashFlow();
+		$report = new \EAccounting\Admin\Report\CashFlow();
 		$report->output();
 	}
 

@@ -2,19 +2,19 @@
 /**
  * Currency Trait
  *
- * @package EverAccounting
+ * @package EAccounting
  */
 
-namespace EverAccounting\Traits;
+namespace EAccounting\Traits;
 
-use EverAccounting\Models\Currency;
+use EAccounting\Models\Currency;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
  * Trait CurrencyTrait
  *
- * @package EverAccounting\Traits
+ * @package EAccounting\Traits
  */
 trait CurrencyTrait {
 	/**

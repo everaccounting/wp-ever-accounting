@@ -2,7 +2,7 @@
 /**
  * Formatting functions
  *
- * @package EverAccounting\Tests\Formatting
+ * @package EAccounting\Tests\Formatting
  */
 
 /**

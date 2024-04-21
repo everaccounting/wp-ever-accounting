@@ -1,10 +1,10 @@
 <?php
 
-use EverAccounting\Contact;
+use EAccounting\Contact;
 
 /**
  * Class EverAccounting_Tests_Vendor.
- * @package EverAccounting\Tests\Contact
+ * @package EAccounting\Tests\Contact
  */
 
 class EverAccounting_Tests_Vendor extends EverAccounting_Unit_Test_Case {

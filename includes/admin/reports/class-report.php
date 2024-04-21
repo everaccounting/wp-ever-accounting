@@ -6,11 +6,11 @@
  *
  * @version     1.1.0
  * @category    Admin
- * @package     EverAccounting\Admin
- * @author      EverAccounting
+ * @package     EAccounting\Admin
+ * @author      EAccounting
  */
 
-namespace EverAccounting\Admin\Report;
+namespace EAccounting\Admin\Report;
 
 use DatePeriod;
 
@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit();
 /**
  * Report Class
  *
- * @package EverAccounting\Admin\Report
+ * @package EAccounting\Admin\Report
  */
 class Report {
 	/**

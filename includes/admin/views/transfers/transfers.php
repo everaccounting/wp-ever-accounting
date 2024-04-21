@@ -2,7 +2,7 @@
 /**
  * Admin Transfers Page.
  *
- * @package     EverAccounting
+ * @package     EAccounting
  * @subpackage  Admin/Banking/Transfers
  * @since       1.0.2
  */

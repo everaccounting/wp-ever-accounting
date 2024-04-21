@@ -1,17 +1,17 @@
 <?php
 /**
- * EverAccounting  AJAX Event Handlers.
+ * EAccounting  AJAX Event Handlers.
  *
  * @since       1.0.2
- * @package     EverAccounting
+ * @package     EAccounting
  * @class       Ajax
  */
 
-namespace EverAccounting;
+namespace EAccounting;
 
-use EverAccounting\Models\Bill;
-use EverAccounting\Models\Invoice;
-use EverAccounting\Models\Note;
+use EAccounting\Models\Bill;
+use EAccounting\Models\Invoice;
+use EAccounting\Models\Note;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -48,7 +48,7 @@ class Ajax {
 
 
 	/**
-	 * Send headers for EverAccounting Ajax Requests.
+	 * Send headers for EAccounting Ajax Requests.
 	 *
 	 * @since 1.0.2
 	 */
@@ -63,7 +63,7 @@ class Ajax {
 	}
 
 	/**
-	 * Check for EverAccounting Ajax request and fire action.
+	 * Check for EAccounting Ajax request and fire action.
 	 *
 	 * @since 1.0.2
 	 */
@@ -95,7 +95,7 @@ class Ajax {
 			add_action( 'wp_ajax_eaccounting_' . $ajax_event, array( __CLASS__, $ajax_event ) );
 			add_action( 'wp_ajax_nopriv_eaccounting_' . $ajax_event, array( __CLASS__, $ajax_event ) );
 
-			// EverAccounting AJAX can be used for frontend ajax requests.
+			// EAccounting AJAX can be used for frontend ajax requests.
 			add_action( 'eaccounting_ajax_' . $ajax_event, array( __CLASS__, $ajax_event ) );
 		}
 

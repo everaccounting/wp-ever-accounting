@@ -6,10 +6,10 @@
  * SQL updates if nothing changed.
  *
  * @version 1.1.0
- * @package EverAccounting
+ * @package EAccounting
  */
 
-namespace EverAccounting\Repositories;
+namespace EAccounting\Repositories;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since   1.1.0
  *
- * @package EverAccounting\Repositories
+ * @package EAccounting\Repositories
  */
 class Meta_Data implements \JsonSerializable {
 

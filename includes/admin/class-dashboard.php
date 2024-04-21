@@ -1,20 +1,20 @@
 <?php
 /**
- * EverAccounting Admin Overview Page.
+ * EAccounting Admin Overview Page.
  *
- * @package     EverAccounting
+ * @package     EAccounting
  * @subpackage  Admin
  * @version     1.1.0
  */
 
-namespace EverAccounting\Admin;
+namespace EAccounting\Admin;
 
 defined( 'ABSPATH' ) || exit();
 
 /**
  * Class Dashboard
  *
- * @package EverAccounting\Admin
+ * @package EAccounting\Admin
  */
 class Dashboard {
 	/**
@@ -148,7 +148,7 @@ class Dashboard {
 		require_once dirname( __FILE__ ) . '/reports/class-report.php';
 		require_once dirname( __FILE__ ) . '/reports/class-cashflow.php';
 		$year   = date_i18n( 'Y' );
-		$init   = new \EverAccounting\Admin\Report\CashFlow();
+		$init   = new \EAccounting\Admin\Report\CashFlow();
 		$report = $init->get_report( array( 'year' => $year ) );
 		?>
 		<div class="ea-card__inside" style="position: relative; height:300px;">
@@ -262,7 +262,7 @@ class Dashboard {
 	public static function render_incomes_categories() {
 		require_once dirname( __FILE__ ) . '/reports/class-report.php';
 		global $wpdb;
-		$report     = new \EverAccounting\Admin\Report\Report();
+		$report     = new \EAccounting\Admin\Report\Report();
 		$start_date = $report->get_start_date();
 		$end_date   = $report->get_end_date();
 		$sql        = $wpdb->prepare(
@@ -357,7 +357,7 @@ class Dashboard {
 	public static function render_expenses_categories() {
 		require_once dirname( __FILE__ ) . '/reports/class-report.php';
 		global $wpdb;
-		$report     = new \EverAccounting\Admin\Report\Report();
+		$report     = new \EAccounting\Admin\Report\Report();
 		$start_date = $report->get_start_date();
 		$end_date   = $report->get_end_date();
 		$sql        = $wpdb->prepare(

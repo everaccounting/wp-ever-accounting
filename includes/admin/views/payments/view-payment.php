@@ -4,21 +4,21 @@
  *
  * @since       1.1.0
  * @subpackage  Admin/Expenses/Payments
- * @package     EverAccounting
+ * @package     EAccounting
  *
  * @var int $payment_id
  */
 
 defined( 'ABSPATH' ) || exit();
 
-use EverAccounting\Models\Account;
-use EverAccounting\Models\Category;
-use EverAccounting\Models\Vendor;
+use EAccounting\Models\Account;
+use EAccounting\Models\Category;
+use EAccounting\Models\Vendor;
 
 wp_enqueue_script( 'ea-print' );
 
 try {
-	$payment = new \EverAccounting\Models\Payment( $payment_id );
+	$payment = new \EAccounting\Models\Payment( $payment_id );
 } catch ( Exception $e ) {
 	wp_die( esc_html( $e->getMessage() ) );
 }

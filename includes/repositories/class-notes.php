@@ -5,13 +5,13 @@
  * Handle Notes insert, update, delete & retrieve from database.
  *
  * @version   1.1.0
- * @package   EverAccounting\Repositories
+ * @package   EAccounting\Repositories
  */
 
-namespace EverAccounting\Repositories;
+namespace EAccounting\Repositories;
 
-use EverAccounting\Abstracts\Resource_Repository;
-use EverAccounting\Models\Note;
+use EAccounting\Abstracts\Resource_Repository;
+use EAccounting\Models\Note;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since   1.1.0
  *
- * @package EverAccounting\Repositories
+ * @package EAccounting\Repositories
  */
 class Notes extends Resource_Repository {
 	/**

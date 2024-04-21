@@ -5,11 +5,11 @@
  * Admin transfers list table, show all the transfer transactions.
  *
  * @since       1.0.2
- * @subpackage  EverAccounting\Admin\ListTables
- * @package     EverAccounting
+ * @subpackage  EAccounting\Admin\ListTables
+ * @package     EAccounting
  */
 
-use EverAccounting\Models\Transfer;
+use EAccounting\Models\Transfer;
 
 defined( 'ABSPATH' ) || exit();
 

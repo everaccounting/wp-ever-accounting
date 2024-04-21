@@ -2,24 +2,24 @@
 /**
  * Handle the transaction object.
  *
- * @package     EverAccounting\Models
+ * @package     EAccounting\Models
  * @class       Payment
  * @version     1.0.2
  */
 
-namespace EverAccounting\Abstracts;
+namespace EAccounting\Abstracts;
 
-use EverAccounting\Repositories;
-use EverAccounting\Models\Account;
-use EverAccounting\Models\Currency;
-use EverAccounting\Traits\CurrencyTrait;
+use EAccounting\Repositories;
+use EAccounting\Models\Account;
+use EAccounting\Models\Currency;
+use EAccounting\Traits\CurrencyTrait;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
  * Class Transaction
  *
- * @package EverAccounting\Abstracts
+ * @package EAccounting\Abstracts
  */
 abstract class Transaction extends Resource_Model {
 	use CurrencyTrait;

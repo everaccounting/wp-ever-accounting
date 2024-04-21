@@ -6,7 +6,7 @@
  *
  * @since       1.0.2
  * @subpackage  Admin/Views/Vendors
- * @package     EverAccounting
+ * @package     EAccounting
  *
  * @var int $vendor_id
  */
@@ -14,7 +14,7 @@
 defined( 'ABSPATH' ) || exit();
 
 try {
-	$vendor = new \EverAccounting\Models\Vendor( $vendor_id );
+	$vendor = new \EAccounting\Models\Vendor( $vendor_id );
 } catch ( Exception $e ) {
 	wp_die( esc_html( $e->getMessage() ) );
 }

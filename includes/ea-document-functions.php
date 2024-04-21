@@ -1,15 +1,15 @@
 <?php
 /**
- * EverAccounting Document Functions.
+ * EAccounting Document Functions.
  *
  * All document related function of the plugin.
  *
  * @since   1.1.0
- * @package EverAccounting
+ * @package EAccounting
  */
 
-use EverAccounting\Models\Bill;
-use EverAccounting\Models\Invoice;
+use EAccounting\Models\Bill;
+use EAccounting\Models\Invoice;
 defined( 'ABSPATH' ) || exit;
 
 
@@ -20,14 +20,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * @param mixed $invoice Invoice ID or post object.
  *
- * @return EverAccounting\Models\Invoice|null
+ * @return EAccounting\Models\Invoice|null
  */
 function eaccounting_get_invoice( $invoice ) {
 	if ( empty( $invoice ) ) {
 		return null;
 	}
 	try {
-		$result = new EverAccounting\Models\Invoice( $invoice );
+		$result = new EAccounting\Models\Invoice( $invoice );
 
 		return $result->exists() ? $result : null;
 	} catch ( \Exception $e ) {
@@ -55,7 +55,7 @@ function eaccounting_insert_invoice( $args, $wp_error = true ) {
 		$args = wp_parse_args( $args, array( 'id' => null ) );
 
 		// Retrieve the item.
-		$item = new \EverAccounting\Models\Invoice( $args['id'] );
+		$item = new \EAccounting\Models\Invoice( $args['id'] );
 
 		// Load new data.
 		$item->set_props( $args );
@@ -80,7 +80,7 @@ function eaccounting_insert_invoice( $args, $wp_error = true ) {
  */
 function eaccounting_delete_invoice( $invoice_id ) {
 	try {
-		$invoice = new EverAccounting\Models\Invoice( $invoice_id );
+		$invoice = new EAccounting\Models\Invoice( $invoice_id );
 
 		return $invoice->exists() ? $invoice->delete() : false;
 	} catch ( \Exception $e ) {
@@ -114,14 +114,14 @@ function eaccounting_get_invoices( $args = array() ) {
  *
  * @param mixed $bill Bill ID or object.
  *
- * @return EverAccounting\Models\Bill|null
+ * @return EAccounting\Models\Bill|null
  */
 function eaccounting_get_bill( $bill ) {
 	if ( empty( $bill ) ) {
 		return null;
 	}
 	try {
-		$result = new EverAccounting\Models\Bill( $bill );
+		$result = new EAccounting\Models\Bill( $bill );
 
 		return $result->exists() ? $result : null;
 	} catch ( \Exception $e ) {
@@ -149,7 +149,7 @@ function eaccounting_insert_bill( $args, $wp_error = true ) {
 		$args = wp_parse_args( $args, array( 'id' => null ) );
 
 		// Retrieve the item.
-		$item = new \EverAccounting\Models\Bill( $args['id'] );
+		$item = new \EAccounting\Models\Bill( $args['id'] );
 
 		// Load new data.
 		$item->set_props( $args );
@@ -174,7 +174,7 @@ function eaccounting_insert_bill( $args, $wp_error = true ) {
  */
 function eaccounting_delete_bill( $bill_id ) {
 	try {
-		$bill = new EverAccounting\Models\Bill( $bill_id );
+		$bill = new EAccounting\Models\Bill( $bill_id );
 
 		return $bill->exists() ? $bill->delete() : false;
 	} catch ( \Exception $e ) {
@@ -229,8 +229,8 @@ function eaccounting_get_documents( $args = array() ) {
 	);
 	global $wpdb;
 	$qv           = apply_filters( 'eaccounting_get_documents_args', $args );
-	$table        = \EverAccounting\Repositories\Documents::TABLE;
-	$columns      = \EverAccounting\Repositories\Documents::get_columns();
+	$table        = \EAccounting\Repositories\Documents::TABLE;
+	$columns      = \EAccounting\Repositories\Documents::get_columns();
 	$qv['fields'] = wp_parse_list( $qv['fields'] );
 	foreach ( $qv['fields'] as $index => $field ) {
 		if ( ! in_array( $field, $columns, true ) ) {
@@ -357,7 +357,7 @@ function eaccounting_get_documents( $args = array() ) {
 						$document->set_object_read( true );
 						break;
 					case 'bill':
-						$document = new \EverAccounting\Models\Bill();
+						$document = new \EAccounting\Models\Bill();
 						$document->set_props( $item );
 						$document->set_object_read( true );
 						break;

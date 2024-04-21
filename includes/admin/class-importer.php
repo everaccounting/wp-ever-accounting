@@ -2,21 +2,21 @@
 /**
  * Handle import
  *
- * @package     EverAccounting
+ * @package     EAccounting
  * @subpackage  Admin
  * @version     1.0.2
  */
 
-namespace EverAccounting\Admin;
+namespace EAccounting\Admin;
 
-use EverAccounting\Ajax;
+use EAccounting\Ajax;
 
 defined( 'ABSPATH' ) || exit();
 
 /**
  * Class Importer
  *
- * @package EverAccounting/Admin
+ * @package EAccounting/Admin
  */
 class Importer {
 	/**

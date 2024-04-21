@@ -3,11 +3,11 @@
  * Currency Admin List Table.
  *
  * @since       1.0.2
- * @subpackage  EverAccounting\Admin\ListTables
- * @package     EverAccounting
+ * @subpackage  EAccounting\Admin\ListTables
+ * @package     EAccounting
  */
 
-use EverAccounting\Models\Currency;
+use EAccounting\Models\Currency;
 
 defined( 'ABSPATH' ) || exit();
 

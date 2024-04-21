@@ -1,10 +1,10 @@
 <?php
 
-use EverAccounting\Category;
+use EAccounting\Category;
 
 /**
  * Class EverAccounting_Tests_Category.
- * @package EverAccounting\Tests\Category
+ * @package EAccounting\Tests\Category
  */
 class EverAccounting_Tests_Category extends EverAccounting_Unit_Test_Case {
 

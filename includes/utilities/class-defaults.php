@@ -3,10 +3,10 @@
  * Handles the default properties of the company.
  *
  * @since 1.0.2
- * @package EverAccounting
+ * @package EAccounting
  */
 
-namespace EverAccounting\Utilities;
+namespace EAccounting\Utilities;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit();
  * Class Defaults
  *
  * @since 1.0.2
- * @package EverAccounting\Utilities
+ * @package EAccounting\Utilities
  */
 class Defaults {
 

@@ -80,7 +80,7 @@ function eaccounting_reports_income_expense_tab() {
 		);
 		$income_cats  = wp_list_pluck( $income_cats, 'name', 'id' );
 		$expense_cats = wp_list_pluck( $expense_cats, 'name', 'id' );
-		$date         = new \EverAccounting\DateTime( $date_start );
+		$date         = new \EAccounting\DateTime( $date_start );
 
 		// Dates.
 		for ( $j = 1; $j <= 12; $j ++ ) {
@@ -131,7 +131,7 @@ function eaccounting_reports_income_expense_tab() {
 			}
 		}
 
-		$chart = new \EverAccounting\Chart();
+		$chart = new \EAccounting\Chart();
 		$chart->type( 'line' )->width( 0 )->height( 300 )->set_line_options()->labels( array_values( $dates ) )
 			->dataset(
 				array(

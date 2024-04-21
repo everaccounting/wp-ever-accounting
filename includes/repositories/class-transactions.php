@@ -5,13 +5,13 @@
  * Handle transaction insert, update, delete & retrieve from database.
  *
  * @version   1.1.0
- * @package   EverAccounting\Repositories
+ * @package   EAccounting\Repositories
  */
 
-namespace EverAccounting\Repositories;
+namespace EAccounting\Repositories;
 
-use EverAccounting\Abstracts\Resource_Repository;
-use EverAccounting\Abstracts\Transaction;
+use EAccounting\Abstracts\Resource_Repository;
+use EAccounting\Abstracts\Transaction;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since   1.1.0
  *
- * @package EverAccounting\Repositories
+ * @package EAccounting\Repositories
  */
 class Transactions extends Resource_Repository {
 

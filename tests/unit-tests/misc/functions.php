@@ -2,7 +2,7 @@
 /**
  * Misc functions
  *
- * @package EverAccounting\Tests\Misc
+ * @package EAccounting\Tests\Misc
  */
 
 /**

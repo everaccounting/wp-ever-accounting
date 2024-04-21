@@ -1,13 +1,13 @@
 <?php
 /**
- * EverAccounting Settings.
+ * EAccounting Settings.
  *
  * @since       1.0.2
  * @subpackage  Classes
- * @package     EverAccounting
+ * @package     EAccounting
  */
 
-namespace EverAccounting;
+namespace EAccounting;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit();
  * Class Settings
  *
  * @since   1.0.2
- * @package EverAccounting\Admin
+ * @package EAccounting\Admin
  */
 class Settings {
 	/**
@@ -600,7 +600,7 @@ class Settings {
 	 *
 	 * @since 1.0.2
 	 * @return void
-	 * @global      $this ->options Array of all the EverAccounting Options
+	 * @global      $this ->options Array of all the EAccounting Options
 	 */
 	public function checkbox_callback( $args ) {
 		$value = $this->get( $args['id'] );
@@ -622,7 +622,7 @@ class Settings {
 	 *
 	 * @since 1.0.2
 	 * @return void
-	 * @global      $this ->options Array of all the EverAccounting Options
+	 * @global      $this ->options Array of all the EAccounting Options
 	 */
 	public function multicheck_callback( $args ) {
 
@@ -650,7 +650,7 @@ class Settings {
 	 *
 	 * @since 1.0.2
 	 * @return void
-	 * @global      $this ->options Array of all the EverAccounting Options
+	 * @global      $this ->options Array of all the EAccounting Options
 	 */
 	public function radio_callback( $args ) {
 
@@ -683,7 +683,7 @@ class Settings {
 	 *
 	 * @since 1.0.2
 	 * @return void
-	 * @global      $this ->options Array of all the EverAccounting Options
+	 * @global      $this ->options Array of all the EAccounting Options
 	 */
 	public function url_callback( $args ) {
 
@@ -719,7 +719,7 @@ class Settings {
 	 *
 	 * @since 1.0.2
 	 * @return void
-	 * @global      $this ->options Array of all the EverAccounting Options
+	 * @global      $this ->options Array of all the EAccounting Options
 	 */
 	public function number_callback( $args ) {
 
@@ -758,7 +758,7 @@ class Settings {
 	 *
 	 * @since 1.0.2
 	 * @return void
-	 * @global      $this ->options Array of all the EverAccounting Options
+	 * @global      $this ->options Array of all the EAccounting Options
 	 */
 	public function textarea_callback( $args ) {
 
@@ -795,7 +795,7 @@ class Settings {
 	 *
 	 * @since 1.0.2
 	 * @return void
-	 * @global      $this ->options Array of all the EverAccounting Options
+	 * @global      $this ->options Array of all the EAccounting Options
 	 */
 	public function password_callback( $args ) {
 
@@ -831,7 +831,7 @@ class Settings {
 	 *
 	 * @since 1.0.2
 	 * @return void
-	 * @global      $this ->options Array of all the EverAccounting Options
+	 * @global      $this ->options Array of all the EAccounting Options
 	 */
 	public function select_callback( $args ) {
 
@@ -869,7 +869,7 @@ class Settings {
 	 * @since 1.0.2
 	 * @global string $wp_version WordPress Version
 	 *
-	 * @global        $this ->options Array of all the EverAccounting Options
+	 * @global        $this ->options Array of all the EAccounting Options
 	 */
 	public function rich_editor_callback( $args ) {
 
