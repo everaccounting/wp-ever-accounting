@@ -201,7 +201,7 @@ class ItemsTable extends ListTable {
 			$output = ob_get_clean();
 			if ( ! empty( $output ) && $this->has_items() ) {
 				echo $output;
-				submit_button( __( 'Filter' ), '', 'filter_action', false );
+				submit_button( __( 'Filter', 'wp-ever-accounting' ), '', 'filter_action', false );
 			}
 		}
 

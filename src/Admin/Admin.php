@@ -93,13 +93,13 @@ class Admin {
 		if ( in_array( get_current_screen()->id, Utilities::get_screen_ids(), true ) ) {
 			$text = sprintf(
 			/* translators: %s: Plugin name */
-				__( 'Thank you for using %s!', 'plugin-textdomain' ),
+				__( 'Thank you for using %s!', 'wp-ever-accounting' ),
 				'<strong>' . esc_html( EAC()->get_name() ) . '</strong>',
 			);
 			if ( EAC()->get_review_url() ) {
 				$text .= sprintf(
 				/* translators: %s: Plugin name */
-					__( ' Share your appreciation with a five-star review %s.', 'plugin-textdomain' ),
+					__( ' Share your appreciation with a five-star review %s.', 'wp-ever-accounting' ),
 					'<a href="' . esc_url( EAC()->get_review_url() ) . '" target="_blank">here</a>'
 				);
 			}

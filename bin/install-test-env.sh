@@ -104,9 +104,9 @@ install_wp() {
 
 configure_wp() {
     cd $WP_CORE_DIR
-    wp config create --dbname="$DB_NAME" --dbuser="$DB_USER" --dbpass="$DB_PASS" --dbhost="$DB_HOST" --dbprefix="$TEST_TABLE_PREFIX"  --skip-check --force=true
+    wp config create --dbname="$DB_NAME" --dbuser="$DB_USER" --dbpass="$DB_PASS" --dbhost="$DB_HOST" --dbprefix="$TEST_TABLE_PREFIX"  --skip-check --force=true --path=$WP_CORE_DIR
     # If database exists, then
-    wp db drop --yes
+#    wp db drop --yes
     wp db create
     wp core install --url="$WP_DOMAIN" --title="Tests" --admin_user="$ADMIN_USERNAME" --admin_password="$ADMIN_PASSWORD" --admin_email="$ADMIN_EMAIL" --skip-email
     wp rewrite structure '/%year%/%monthnum%/%postname%/'
