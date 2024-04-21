@@ -104,6 +104,7 @@ class Assets {
 			wp_enqueue_script( 'ea-helper' );
 			wp_enqueue_script( 'ea-admin' );
 			wp_enqueue_script( 'ea-form' );
+			wp_enqueue_script( 'jquery-chartjs' );
 
 			wp_localize_script(
 				'ea-select',
@@ -153,9 +154,6 @@ class Assets {
 			}
 
 			// report page.
-			if ( eaccounting_is_admin_page( 'ea-reports' ) ) {
-				wp_enqueue_script( 'jquery-chartjs' );
-			}
 
 			$default_currency = eaccounting()->settings->get( 'default_currency', 'USD' );
 			$default_currency = eaccounting_get_currency( $default_currency );
