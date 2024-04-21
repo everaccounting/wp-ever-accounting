@@ -163,7 +163,6 @@ final class EverAccounting {
 	 * @return void
 	 */
 	public function includes() {
-		require_once EACCOUNTING_ABSPATH . '/vendor/autoload.php';
 
 		// Abstract classes.
 		require_once EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-registry.php';

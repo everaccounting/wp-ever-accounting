@@ -164,10 +164,10 @@ class Assets {
 					'admin_url'  => admin_url(),
 					'asset_url'  => eaccounting()->assets_url(),
 					'plugin_url' => eaccounting()->plugin_url(),
-					'currency'   => eaccounting_get_currency( $default_currency )->get_data(),
+					'currency'   => eaccounting_get_currency( $default_currency )->to_array(),
 					'currencies' => eaccounting_get_currencies(
 						array(
-							'return' => 'raw',
+							'return' => OBJECT,
 							'number' => -1,
 						)
 					),

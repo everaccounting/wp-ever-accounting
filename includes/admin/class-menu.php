@@ -57,7 +57,7 @@ class Menu {
 	 * @since 1.1.0
 	 */
 	public function register_parent_page() {
-		global $menu;
+		global $menu,$admin_page_hooks;
 
 		if ( current_user_can( 'manage_eaccounting' ) ) {
 			$menu[] = array( '', 'read', 'ea-separator', '', 'wp-menu-separator accounting' );
@@ -73,6 +73,7 @@ class Menu {
 			$icons,
 			'54.5'
 		);
+		$admin_page_hooks['eaccounting'] = 'eaccounting';
 		add_submenu_page(
 			'eaccounting',
 			__( 'Overview', 'wp-ever-accounting' ),
