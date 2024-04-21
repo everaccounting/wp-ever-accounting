@@ -51,7 +51,7 @@ module.exports = [
 						to: 'js',
 					},
 					{
-						from: 'ui/legacy/js/vendor',
+						from: 'ui/legacy/js/plugins',
 						to: 'js',
 					},
 					{
