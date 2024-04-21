@@ -34,6 +34,7 @@ bower_components
 phpunit.xml
 phpunit.xml.dist
 tests
+legacy-tests
 .dist
 codeception.yml
 *.yml
@@ -79,4 +80,4 @@ Thumbs.db
 .wordpress-org
 
 # Build related files
-src
+/ui

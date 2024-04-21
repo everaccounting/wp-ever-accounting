@@ -35,9 +35,9 @@ sed -i '' "s/Stable tag: .*/Stable tag: $VERSION/" readme.txt
 sed -i '' "s/Version: .*/Version: $VERSION/" $SLUG.php
 
 # Build the plugin
+composer update --no-dev --optimize-autoloader
 npm install
 npm run build
-composer update --no-dev --optimize-autoloader
 
 # if directory already exists, delete it
 if [ -d "$SVN_DIR" ]; then
