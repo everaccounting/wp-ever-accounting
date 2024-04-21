@@ -9,13 +9,15 @@
 
 namespace EAccounting\Admin;
 
+use EverAccounting\Models\Currency;
+
 defined( 'ABSPATH' ) || exit();
 
 /**
  * Class Assets
  *
- * @package EAccounting\Admin
  * @since   1.0.2
+ * @package EAccounting\Admin
  */
 class Assets {
 	/**
@@ -156,6 +158,7 @@ class Assets {
 			}
 
 			$default_currency = eaccounting()->settings->get( 'default_currency', 'USD' );
+			$default_currency = eaccounting_get_currency( $default_currency );
 			wp_localize_script(
 				'ea-admin',
 				'eaccountingi10n',
@@ -164,11 +167,11 @@ class Assets {
 					'admin_url'  => admin_url(),
 					'asset_url'  => eaccounting()->assets_url(),
 					'plugin_url' => eaccounting()->plugin_url(),
-					'currency'   => eaccounting_get_currency( $default_currency )->to_array(),
+					'currency'   => ( new Currency( $default_currency ) )->to_array(),
 					'currencies' => eaccounting_get_currencies(
 						array(
 							'return' => OBJECT,
-							'number' => -1,
+							'number' => - 1,
 						)
 					),
 				)
@@ -181,12 +184,13 @@ class Assets {
 	/**
 	 * Registers a script according to `wp_register_script`, additionally loading the translations for the file.
 	 *
+	 * @param string $handle Name of the script. Should be unique.
+	 * @param string $src Full URL of the script, or path of the script relative to the WordPress root directory.
+	 * @param array  $dependencies Optional. An array of registered script handles this script depends on. Default empty array.
+	 * @param bool   $has_i18n Optional. Whether to add a script translation call to this file. Default 'true'.
+	 *
 	 * @since 1.0.0
 	 *
-	 * @param string $handle       Name of the script. Should be unique.
-	 * @param string $src          Full URL of the script, or path of the script relative to the WordPress root directory.
-	 * @param array  $dependencies Optional. An array of registered script handles this script depends on. Default empty array.
-	 * @param bool   $has_i18n     Optional. Whether to add a script translation call to this file. Default 'true'.
 	 */
 	protected static function register_react_script( $handle, $src, $dependencies = array(), $has_i18n = true ) {
 		$relative_src = str_replace( plugins_url( '/', EACCOUNTING_PLUGIN_FILE ), '', $src );
@@ -213,7 +217,7 @@ class Assets {
 	 * Returns the appropriate asset url
 	 *
 	 * @param string $filename Filename for asset url (without extension).
-	 * @param string $type     File type (.css or .js).
+	 * @param string $type File type (.css or .js).
 	 *
 	 * @return  string The generated path.
 	 */
