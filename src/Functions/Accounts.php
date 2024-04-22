@@ -81,7 +81,6 @@ function eac_delete_account( $account_id ) {
 function eac_get_accounts( $args = array(), $count = false ) {
 	$defaults = array(
 		'limit'   => 20,
-		'offset'  => 0,
 		'orderby' => 'id',
 		'order'   => 'DESC',
 		'fields'  => 'all',

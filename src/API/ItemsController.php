@@ -161,9 +161,8 @@ class ItemsController extends Controller {
 
 		$items     = eac_get_items( $args );
 		$total     = eac_get_items( $args, true );
-		$page      = isset( $request['page'] ) ? absint( $request['page'] ) : 1;
+		$page      = isset( $request['paged'] ) ? absint( $request['paged'] ) : 1;
 		$max_pages = ceil( $total / (int) $args['per_page'] );
-
 		$results = array();
 		foreach ( $items as $item ) {
 			$data      = $this->prepare_item_for_response( $item, $request );
@@ -496,16 +495,6 @@ class ItemsController extends Controller {
 					'description' => __( "The date the item was created, in the site's timezone.", 'wp-ever-accounting' ),
 					'type'        => 'date-time',
 					'context'     => array( 'view', 'edit' ),
-					'readonly'    => true,
-				),
-				'items' => array(
-					'description' => __( 'List of items.', 'wp-ever-accounting' ),
-					'type'        => 'array',
-					'context'     => array( 'view', 'edit' ),
-					'items'       => array(
-						'type' => 'object',
-						'properties'
-					),
 					'readonly'    => true,
 				)
 			),

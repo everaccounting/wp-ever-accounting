@@ -86,7 +86,6 @@ function eac_delete_customer( $customer_id ) {
 function eac_get_customers( $args = array(), $count = false ) {
 	$defaults = array(
 		'limit'   => 20,
-		'offset'  => 0,
 		'orderby' => 'id',
 		'order'   => 'DESC',
 		'fields'  => 'all',
@@ -157,7 +156,6 @@ function eac_delete_vendor( $vendor_id ) {
 function eac_get_vendors( $args = array(), $count = false ) {
 	$defaults = array(
 		'limit'   => 20,
-		'offset'  => 0,
 		'orderby' => 'id',
 		'order'   => 'DESC',
 		'fields'  => 'all',

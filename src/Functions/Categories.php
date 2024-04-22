@@ -73,7 +73,6 @@ function eac_delete_category( $category_id ) {
 function eac_get_categories( $args = array(), $count = false ) {
 	$defaults = array(
 		'limit'   => 20,
-		'offset'  => 0,
 		'orderby' => 'id',
 		'order'   => 'DESC',
 		'fields'  => 'all',

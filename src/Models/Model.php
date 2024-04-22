@@ -1848,7 +1848,6 @@ abstract class Model {
 		 * @since 1.0.0
 		 */
 		$clauses = apply_filters( $this->get_hook_prefix() . '_pre_setup_limit_query', $clauses, $args, $this );
-
 		// Limit clause.
 		if ( intval( $args['per_page'] ) > 0 ) {
 			$page = intval( $args['paged'] );

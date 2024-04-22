@@ -107,7 +107,6 @@ function eac_delete_payment( $payment_id ) {
 function eac_get_payments( $args = array(), $count = false ) {
 	$defaults = array(
 		'limit'   => 20,
-		'offset'  => 0,
 		'orderby' => 'id',
 		'order'   => 'DESC',
 		'fields'  => 'all',
@@ -181,7 +180,6 @@ function eac_delete_expense( $expense_id ) {
 function eac_get_expenses( $args = array(), $count = false ) {
 	$defaults = array(
 		'limit'   => 20,
-		'offset'  => 0,
 		'orderby' => 'id',
 		'order'   => 'DESC',
 		'fields'  => 'all',
@@ -209,7 +207,6 @@ function eac_get_expenses( $args = array(), $count = false ) {
 function eac_get_transactions( $args = array(), $count = false ) {
 	$defaults = array(
 		'limit'   => 20,
-		'offset'  => 0,
 		'orderby' => 'id',
 		'order'   => 'DESC',
 		'fields'  => 'all',
@@ -283,7 +280,6 @@ function eac_delete_transfer( $transfer_id ) {
 function eac_get_transfers( $args = array(), $count = false ) {
 	$defaults = array(
 		'limit'   => 20,
-		'offset'  => 0,
 		'orderby' => 'id',
 		'order'   => 'DESC',
 		'fields'  => 'all',

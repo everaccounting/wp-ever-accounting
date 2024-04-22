@@ -67,7 +67,6 @@ function eac_delete_invoice( $invoice_id ) {
 function eac_get_invoices( $args = array(), $count = false ) {
 	$defaults = array(
 		'limit'   => 20,
-		'offset'  => 0,
 		'orderby' => 'id',
 		'order'   => 'DESC',
 		'fields'  => 'all',
@@ -137,7 +136,6 @@ function eac_delete_bill( $bill_id ) {
 function eac_get_bills( $args = array(), $count = false ) {
 	$defaults = array(
 		'limit'   => 20,
-		'offset'  => 0,
 		'orderby' => 'id',
 		'order'   => 'DESC',
 		'fields'  => 'all',

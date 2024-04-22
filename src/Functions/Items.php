@@ -115,14 +115,12 @@ function eac_delete_item( $item_id ) {
 function eac_get_items( $args = array(), $count = false ) {
 	$defaults = array(
 		'limit'   => 20,
-		'offset'  => 0,
 		'orderby' => 'id',
 		'order'   => 'DESC',
 		'fields'  => 'all',
 	);
 
 	$args = wp_parse_args( $args, $defaults );
-
 	if ( $count ) {
 		return Item::count( $args );
 	}

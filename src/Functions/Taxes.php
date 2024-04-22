@@ -163,7 +163,6 @@ function eac_delete_tax( $rate_id ) {
 function eac_get_taxes( $args = array(), $count = false ) {
 	$defaults = array(
 		'limit'   => 20,
-		'offset'  => 0,
 		'orderby' => 'id',
 		'order'   => 'DESC',
 		'fields'  => 'all',
