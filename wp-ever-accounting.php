@@ -24,9 +24,9 @@ require_once __DIR__ . '/vendor/autoload.php';
 require_once __DIR__ . '/includes/class-wp-ever-accounting.php';
 
 // migrate plugin version.
-if ( get_option( 'eaccounting_version' ) && ! get_option( 'eac_version' ) ) {
-	update_option( 'eac_version', get_option( 'eaccounting_version' ) );
-}
+//if ( get_option( 'eaccounting_version' ) && ! get_option( 'eac_version' ) ) {
+//	update_option( 'eac_version', get_option( 'eaccounting_version' ) );
+//}
 
 /**
  * Returns the main instance of Plugin.

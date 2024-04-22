@@ -21,7 +21,7 @@ class Installer extends \ByteKit\Core\Installer {
 	 */
 	protected $updates = array(
 		'1.2.1' => array(
-			'eac_currency_update_121',
+			'eac_update_121_currency',
 		)
 	);
 
@@ -38,7 +38,7 @@ class Installer extends \ByteKit\Core\Installer {
 		$this->create_tables();
 		$this->create_currencies();
 		// Implement the plugin installation.
-		$this->plugin->update_db_version( $this->plugin->get_version() );
+		//$this->plugin->update_db_version( $this->plugin->get_version() );
 	}
 
 	/**

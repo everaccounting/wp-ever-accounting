@@ -428,14 +428,14 @@ class Settings {
 					);
 
 					if ( ! in_array(
-						$args['type'],
-						array(
-							'checkbox',
-							'multicheck',
-							'radio',
-						),
-						true
-					) && ! empty( $tooltip ) ) {
+							$args['type'],
+							array(
+								'checkbox',
+								'multicheck',
+								'radio',
+							),
+							true
+						) && ! empty( $tooltip ) ) {
 						$args['title']     = sprintf( '%s<span class="ea-help-tip" title="%s"></span>', esc_html( $args['title'] ), wp_kses_post( $tooltip ) );
 						$args['label_for'] = $args['id'];
 					}
@@ -474,7 +474,7 @@ class Settings {
 		} elseif ( ! empty( $field['desc'] ) ) {
 			$description = '<p class="description">' . wp_kses_post( $field['desc'] ) . '</p>';
 		}
-		$value = eaccounting_get_option( $field['id'], $field['default'] );
+		$value        = eaccounting_get_option( $field['id'], $field['default'] );
 		// Switch based on type.
 		switch ( $field['type'] ) {
 			// Standard text inputs and subtypes like 'number'.
@@ -491,11 +491,11 @@ class Settings {
 			case 'tel':
 				?>
 				<input
-						name="eaccounting_settings[<?php echo esc_attr( $field['id'] ); ?>]" id="<?php echo esc_attr( $field['id'] ); ?>" type="<?php echo esc_attr( $field['type'] ); ?>"
-						style="<?php echo esc_attr( $field['style'] ); ?>"
-						value="<?php echo esc_attr( wp_unslash( $value ) ); ?>"
-						class="<?php echo esc_attr( sprintf( '%s-text %s', $field['size'], $field['input_class'] ) ); ?>"
-						placeholder="<?php echo esc_attr( $field['placeholder'] ); ?>" />
+					name="eaccounting_settings[<?php echo esc_attr( $field['id'] ); ?>]" id="<?php echo esc_attr( $field['id'] ); ?>" type="<?php echo esc_attr( $field['type'] ); ?>"
+					style="<?php echo esc_attr( $field['style'] ); ?>"
+					value="<?php echo esc_attr( wp_unslash( $value ) ); ?>"
+					class="<?php echo esc_attr( sprintf( '%s-text %s', $field['size'], $field['input_class'] ) ); ?>"
+					placeholder="<?php echo esc_attr( $field['placeholder'] ); ?>"/>
 				<?php echo wp_kses_post( $description ); ?>
 				<?php
 				break;
@@ -503,11 +503,11 @@ class Settings {
 				echo wp_kses_post( $description );
 				?>
 				<textarea
-						name="eaccounting_settings[<?php echo esc_attr( $field['id'] ); ?>]"
-						id="<?php echo esc_attr( $field['id'] ); ?>"
-						style="<?php echo esc_attr( $field['style'] ); ?>"
-						class="<?php echo esc_attr( sprintf( '%s-text %s', $field['size'], $field['input_class'] ) ); ?>"
-						placeholder="<?php echo esc_attr( $field['placeholder'] ); ?>"><?php echo esc_textarea( wp_unslash( $value ) ); ?></textarea>
+					name="eaccounting_settings[<?php echo esc_attr( $field['id'] ); ?>]"
+					id="<?php echo esc_attr( $field['id'] ); ?>"
+					style="<?php echo esc_attr( $field['style'] ); ?>"
+					class="<?php echo esc_attr( sprintf( '%s-text %s', $field['size'], $field['input_class'] ) ); ?>"
+					placeholder="<?php echo esc_attr( $field['placeholder'] ); ?>"><?php echo esc_textarea( wp_unslash( $value ) ); ?></textarea>
 				<?php
 				break;
 			case 'country_select':
@@ -517,22 +517,22 @@ class Settings {
 				}
 				?>
 				<select
-						name="eaccounting_settings[<?php echo esc_attr( $field['id'] ); ?><?php echo ( 'multiselect' === $field['type'] ) ? '[]' : ''; ?>]"
-						id="<?php echo esc_attr( $field['id'] ); ?>"
-						style="<?php echo esc_attr( $field['style'] ); ?>"
-						class="<?php echo esc_attr( sprintf( '%s-text %s', $field['size'], $field['input_class'] ) ); ?>"
+					name="eaccounting_settings[<?php echo esc_attr( $field['id'] ); ?><?php echo ( 'multiselect' === $field['type'] ) ? '[]' : ''; ?>]"
+					id="<?php echo esc_attr( $field['id'] ); ?>"
+					style="<?php echo esc_attr( $field['style'] ); ?>"
+					class="<?php echo esc_attr( sprintf( '%s-text %s', $field['size'], $field['input_class'] ) ); ?>"
 				>
 					<?php
 					foreach ( $field['options'] as $key => $val ) {
 						?>
 						<option value="<?php echo esc_attr( $key ); ?>"
-								<?php
-								if ( is_array( $value ) ) {
-									selected( in_array( (string) $key, $value, true ), true );
-								} else {
-									selected( $value, (string) $key );
-								}
-								?>
+							<?php
+							if ( is_array( $value ) ) {
+								selected( in_array( (string) $key, $value, true ), true );
+							} else {
+								selected( $value, (string) $key );
+							}
+							?>
 						><?php echo esc_html( $val ); ?></option>
 						<?php
 					}
@@ -544,11 +544,11 @@ class Settings {
 				?>
 				<label for="<?php echo esc_attr( $field['id'] ); ?>">
 					<input
-							name="eaccounting_settings[<?php echo esc_attr( $field['id'] ); ?>]"
-							id="<?php echo esc_attr( $field['id'] ); ?>"
-							type="checkbox"
-							value="yes"
-							<?php checked( $value, 'yes' ); ?>
+						name="eaccounting_settings[<?php echo esc_attr( $field['id'] ); ?>]"
+						id="<?php echo esc_attr( $field['id'] ); ?>"
+						type="checkbox"
+						value="yes"
+						<?php checked( $value, 'yes' ); ?>
 					/> <?php echo wp_kses_post( $description ); ?>
 				</label>
 				<?php
@@ -557,7 +557,7 @@ class Settings {
 			case 'radio':
 			case 'multicheck':
 				$value = ! is_array( $value ) ? array() : $value;
-				$type  = 'multicheck' === $field['type'] ? 'checkbox' : $field['type'];
+				$type = 'multicheck' === $field['type'] ? 'checkbox' : $field['type'];
 				?>
 				<fieldset>
 					<?php echo wp_kses_post( $description ); ?>
@@ -568,12 +568,12 @@ class Settings {
 							?>
 							<li>
 								<label><input
-											name="eaccounting_settings[<?php echo esc_attr( $field['id'] ); ?>][<?php echo esc_attr( $key ); ?>]"
-											value="yes"
-											type="<?php echo esc_attr( $type ); ?>"
-											style="<?php echo esc_attr( $field['style'] ); ?>"
-											class="<?php echo esc_attr( $field['class'] ); ?>"
-											<?php checked( 'yes', $checked ); ?>
+										name="eaccounting_settings[<?php echo esc_attr( $field['id'] ); ?>][<?php echo esc_attr( $key ); ?>]"
+										value="yes"
+										type="<?php echo esc_attr( $type ); ?>"
+										style="<?php echo esc_attr( $field['style'] ); ?>"
+										class="<?php echo esc_attr( $field['class'] ); ?>"
+										<?php checked( 'yes', $checked ); ?>
 									/> <?php echo esc_html( $option ); ?></label>
 							</li>
 							<?php
@@ -591,12 +591,12 @@ class Settings {
 				?>
 				<?php echo wp_kses_post( $description ); ?>
 				<input
-						name="eaccounting_settings[<?php echo esc_attr( $field['id'] ); ?>]"
-						id="<?php echo esc_attr( $field['id'] ); ?>"
-						type="text"
-						style="<?php echo esc_attr( $field['style'] ); ?>"
-						value="<?php echo esc_attr( wp_unslash( $value ) ); ?>"
-						class="<?php echo esc_attr( sprintf( '%s-text %s', $field['size'], $field['input_class'] ) ); ?>"
+					name="eaccounting_settings[<?php echo esc_attr( $field['id'] ); ?>]"
+					id="<?php echo esc_attr( $field['id'] ); ?>"
+					type="text"
+					style="<?php echo esc_attr( $field['style'] ); ?>"
+					value="<?php echo esc_attr( wp_unslash( $value ) ); ?>"
+					class="<?php echo esc_attr( sprintf( '%s-text %s', $field['size'], $field['input_class'] ) ); ?>"
 				<span>&nbsp;<button type="button" class="ea_settings_upload_button button-secondary"><?php esc_html_e( 'Upload File', 'wp-ever-accounting' ); ?></button></span>
 				<?php
 				break;
@@ -652,9 +652,9 @@ class Settings {
 		if ( 'ea-settings' === $page ) {
 			$results      = eaccounting_get_categories(
 				array(
-					'number' => - 1,
+					'limit' => - 1,
 					'type'   => $type,
-					'return' => 'raw',
+					'return' => OBJECT,
 				)
 			);
 			$categories[] = __( 'Select category', 'wp-ever-accounting' );
@@ -677,8 +677,8 @@ class Settings {
 		if ( 'ea-settings' === $page ) {
 			$results      = eaccounting_get_currencies(
 				array(
-					'number' => - 1,
-					'return' => 'raw',
+					'limit' => - 1,
+					'return' => OBJECT,
 				)
 			);
 			$currencies[] = __( 'Select currencies', 'wp-ever-accounting' );

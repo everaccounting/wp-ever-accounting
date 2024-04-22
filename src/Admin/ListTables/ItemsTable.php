@@ -191,8 +191,6 @@ class ItemsTable extends ListTable {
 			$has_items = $this->has_items();
 		}
 
-		return;
-
 		echo '<div class="alignleft actions">';
 
 		if ( 'top' === $which ) {

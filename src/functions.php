@@ -12,6 +12,7 @@ defined( 'ABSPATH' ) || exit;
 require_once dirname( __FILE__ ) . '/Functions/categories.php';
 require_once dirname( __FILE__ ) . '/Functions/currencies.php';
 require_once dirname( __FILE__ ) . '/Functions/items.php';
+require_once dirname( __FILE__ ) . '/Functions/updates.php';
 
 /**
  * Get base currency code
