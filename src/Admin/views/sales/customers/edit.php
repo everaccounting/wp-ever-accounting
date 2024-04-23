@@ -1,6 +1,6 @@
 <?php
 /**
- * Add item view.
+ * Edit customer view.
  *
  * @package EverAccounting
  * @var $item \EverAccounting\Models\Item

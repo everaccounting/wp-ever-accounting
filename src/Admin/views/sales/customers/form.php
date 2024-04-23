@@ -1,8 +1,8 @@
 <?php
 /**
- * Admin Customer Form.
+ * Admin Customers Form.
  * Page: Sales
- * Tab: Customer
+ * Tab: Customers
  *
  * @package EverAccounting
  * @version 1.0.0
