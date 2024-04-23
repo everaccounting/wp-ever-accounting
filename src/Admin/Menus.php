@@ -54,6 +54,7 @@ class Menus {
 		add_action( 'ever_accounting_admin_expenses_bills', array( $this, 'render_bills_tab' ) );
 		add_action( 'ever_accounting_admin_expenses_vendors', array( $this, 'render_vendors_tab' ) );
 		add_action( 'ever_accounting_admin_categories', array( $this, 'render_categories_tab' ) );
+		add_action( 'ever_accounting_admin_banking_accounts', array( $this, 'render_accounts_tab' ) );
 	}
 
 	/**
@@ -145,6 +146,7 @@ class Menus {
 				'eac_expenses_payments_per_page',
 				'eac_expenses_bills_per_page',
 				'eac_expenses_vendors_per_page',
+				'eac_banking_accounts_per_page',
 			)
 		);
 		if ( in_array( $option, $options, true ) ) {
@@ -227,6 +229,13 @@ class Menus {
 				$this->list_table = new ListTables\CategoriesTable();
 				$this->list_table->prepare_items();
 				$args['option'] = 'eac_categories_per_page';
+				add_screen_option( 'per_page', $args );
+				break;
+			case 'eac-banking':
+			case 'eac-banking-accounts':
+				$this->list_table = new ListTables\AccountsTable();
+				$this->list_table->prepare_items();
+				$args['option'] = 'eac_banking_accounts_per_page';
 				add_screen_option( 'per_page', $args );
 				break;
 		}
@@ -418,6 +427,27 @@ class Menus {
 			include __DIR__ . '/views/categories/edit.php';
 		} else {
 			include __DIR__ . '/views/categories/categories.php';
+		}
+	}
+
+	/**
+	 * Accounts Tab.
+	 *
+	 * @since 1.0.0
+	 */
+	public function render_accounts_tab() {
+		$edit = Utilities::is_edit_screen();
+//		$account = new Account( $edit );
+//		if ( ! empty( $edit ) && ! $account->exists() ) {
+//			wp_safe_redirect( remove_query_arg( 'edit' ) );
+//			exit();
+//		}
+		if ( Utilities::is_add_screen() ) {
+			include __DIR__ . '/views/banking/accounts/add.php';
+		} elseif ( $edit ) {
+			include __DIR__ . '/views/banking/accounts/edit.php';
+		} else {
+			include __DIR__ . '/views/banking/accounts/accounts.php';
 		}
 	}
 }
