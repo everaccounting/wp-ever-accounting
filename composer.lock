@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:byteever/bytekit-core.git",
-                "reference": "c94bc7c6639ad3fc7bd70e7dc14f923db3933c68"
+                "reference": "b7eb9f1e2c5d9d59e9c430882dcf1af975420b87"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/byteever/bytekit-core/zipball/c94bc7c6639ad3fc7bd70e7dc14f923db3933c68",
-                "reference": "c94bc7c6639ad3fc7bd70e7dc14f923db3933c68",
+                "url": "https://api.github.com/repos/byteever/bytekit-core/zipball/b7eb9f1e2c5d9d59e9c430882dcf1af975420b87",
+                "reference": "b7eb9f1e2c5d9d59e9c430882dcf1af975420b87",
                 "shasum": ""
             },
             "require": {
@@ -100,7 +100,7 @@
                 "source": "https://github.com/byteever/bytekit-core/tree/master",
                 "issues": "https://github.com/byteever/bytekit-core/issues"
             },
-            "time": "2024-04-21T19:28:23+00:00"
+            "time": "2024-04-23T09:45:38+00:00"
         },
         {
             "name": "byteever/bytekit-models",
@@ -108,12 +108,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:byteever/bytekit-models.git",
-                "reference": "0b6d06bafe89abb946a5647d97d568a9131339b6"
+                "reference": "ccb6b99df3506a5f7122a47c63f173a47359926f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/byteever/bytekit-models/zipball/0b6d06bafe89abb946a5647d97d568a9131339b6",
-                "reference": "0b6d06bafe89abb946a5647d97d568a9131339b6",
+                "url": "https://api.github.com/repos/byteever/bytekit-models/zipball/ccb6b99df3506a5f7122a47c63f173a47359926f",
+                "reference": "ccb6b99df3506a5f7122a47c63f173a47359926f",
                 "shasum": ""
             },
             "require": {
@@ -196,7 +196,7 @@
                 "source": "https://github.com/byteever/bytekit-models/tree/master",
                 "issues": "https://github.com/byteever/bytekit-models/issues"
             },
-            "time": "2024-04-22T16:02:36+00:00"
+            "time": "2024-04-23T09:06:54+00:00"
         },
         {
             "name": "woocommerce/action-scheduler",
@@ -1393,16 +1393,16 @@
         },
         {
             "name": "composer/composer",
-            "version": "2.7.3",
+            "version": "2.7.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/composer.git",
-                "reference": "e49be96f3bccd183c9ff1313686c06cf898ba4be"
+                "reference": "a625e50598e12171d3f60b1149eb530690c43474"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/composer/zipball/e49be96f3bccd183c9ff1313686c06cf898ba4be",
-                "reference": "e49be96f3bccd183c9ff1313686c06cf898ba4be",
+                "url": "https://api.github.com/repos/composer/composer/zipball/a625e50598e12171d3f60b1149eb530690c43474",
+                "reference": "a625e50598e12171d3f60b1149eb530690c43474",
                 "shasum": ""
             },
             "require": {
@@ -1487,7 +1487,7 @@
                 "irc": "ircs://irc.libera.chat:6697/composer",
                 "issues": "https://github.com/composer/composer/issues",
                 "security": "https://github.com/composer/composer/security/policy",
-                "source": "https://github.com/composer/composer/tree/2.7.3"
+                "source": "https://github.com/composer/composer/tree/2.7.4"
             },
             "funding": [
                 {
@@ -1503,7 +1503,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-04-19T19:40:57+00:00"
+            "time": "2024-04-22T19:17:03+00:00"
         },
         {
             "name": "composer/metadata-minifier",
@@ -5096,12 +5096,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "a6fb2a760c95f45ccb6a412599770061c330c624"
+                "reference": "fe7bdb4855f65f09a1d37ae8479cbf272aa5025e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/a6fb2a760c95f45ccb6a412599770061c330c624",
-                "reference": "a6fb2a760c95f45ccb6a412599770061c330c624",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/fe7bdb4855f65f09a1d37ae8479cbf272aa5025e",
+                "reference": "fe7bdb4855f65f09a1d37ae8479cbf272aa5025e",
                 "shasum": ""
             },
             "conflict": {
@@ -5209,6 +5209,7 @@
                 "derhansen/fe_change_pwd": "<2.0.5|>=3,<3.0.3",
                 "derhansen/sf_event_mgt": "<4.3.1|>=5,<5.1.1|>=7,<7.4",
                 "desperado/xml-bundle": "<=0.1.7",
+                "devgroup/dotplant": "<2020.09.14-dev",
                 "directmailteam/direct-mail": "<6.0.3|>=7,<7.0.3|>=8,<9.5.2",
                 "doctrine/annotations": "<1.2.7",
                 "doctrine/cache": ">=1,<1.3.2|>=1.4,<1.4.2",
@@ -5837,7 +5838,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-04-19T20:04:33+00:00"
+            "time": "2024-04-22T19:04:31+00:00"
         },
         {
             "name": "sebastian/cli-parser",
@@ -11246,5 +11247,5 @@
         "php": ">=7.0"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }

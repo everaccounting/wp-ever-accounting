@@ -86,12 +86,12 @@ class Plugin extends \ByteKit\Core\Plugin {
 	 * @return void
 	 */
 	public function on_init() {
-		$this->container['installer'] = new Installer();
+//		$this->container['installer'] = new Installer();
 
-//		if ( $this->is_request( 'admin' ) ) {
-//			new Admin\Admin();
-//			new Admin\Menus();
-//		}
+		if ( $this->is_request( 'admin' ) ) {
+			new Admin\Admin();
+			new Admin\Menus();
+		}
 
 		/**
 		 * Fires when the plugin is initialized.

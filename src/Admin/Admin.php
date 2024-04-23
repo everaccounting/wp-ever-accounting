@@ -64,20 +64,19 @@ class Admin {
 			return;
 		}
 		// Early core enqueue.
-		EAC()->scripts()->enqueue_style( 'bytekit-core' );
-		wp_enqueue_script('wp-interactivity');
+		EAC()->scripts->enqueue_style( 'bytekit-core' );
 
 		// Admin scripts.
-		EAC()->scripts()->register_script( 'eac-core', 'js/eac-core.js', array( 'jquery' ), false, true );
-		EAC()->scripts()->add_data( 'eac-core', 'eac_core_js_vars', array(
+		EAC()->scripts->register_script( 'eac-core', 'js/eac-core.js', array( 'jquery' ), false, true );
+		EAC()->scripts->add_data( 'eac-core', 'eac_core_js_vars', array(
 			'ajax_url' => admin_url( 'admin-ajax.php' ),
 			'nonce'    => wp_create_nonce( 'eac_nonce' ),
 			'i18n'     => array(
 				'confirm_delete' => __( 'Are you sure you want to delete this item?', 'wp-ever-accounting' ),
 			),
 		) );
-		EAC()->scripts()->enqueue_script( 'eac-core' );
-		EAC()->scripts()->enqueue_style( 'eac-admin', 'css/eac-admin.css' );
+		EAC()->scripts->enqueue_script( 'eac-core' );
+		EAC()->scripts->enqueue_style( 'eac-admin', 'css/eac-admin.css' );
 		// enqueue wp-interac
 	}
 
@@ -96,11 +95,11 @@ class Admin {
 				__( 'Thank you for using %s!', 'wp-ever-accounting' ),
 				'<strong>' . esc_html( EAC()->get_name() ) . '</strong>',
 			);
-			if ( EAC()->get_review_url() ) {
+			if ( EAC()->review_url ) {
 				$text .= sprintf(
 				/* translators: %s: Plugin name */
 					__( ' Share your appreciation with a five-star review %s.', 'wp-ever-accounting' ),
-					'<a href="' . esc_url( EAC()->get_review_url() ) . '" target="_blank">here</a>'
+					'<a href="' . esc_url( EAC()->review_url ) . '" target="_blank">here</a>'
 				);
 			}
 		}
