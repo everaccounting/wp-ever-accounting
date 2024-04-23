@@ -52,6 +52,7 @@ class Menus {
 		add_action( 'ever_accounting_admin_sales_customers', array( $this, 'render_customers_tab' ) );
 		add_action( 'ever_accounting_admin_expenses_payments', array( $this, 'render_payments_tab' ) );
 		add_action( 'ever_accounting_admin_expenses_bills', array( $this, 'render_bills_tab' ) );
+		add_action( 'ever_accounting_admin_expenses_vendors', array( $this, 'render_vendors_tab' ) );
 	}
 
 	/**
@@ -142,6 +143,7 @@ class Menus {
 				'eac_sales_customers_per_page',
 				'eac_expenses_payments_per_page',
 				'eac_expenses_bills_per_page',
+				'eac_expenses_vendors_per_page',
 			)
 		);
 		if ( in_array( $option, $options, true ) ) {
@@ -211,6 +213,12 @@ class Menus {
 				$this->list_table = new ListTables\BillsTable();
 				$this->list_table->prepare_items();
 				$args['option'] = 'eac_expenses_bills_per_page';
+				add_screen_option( 'per_page', $args );
+				break;
+			case 'eac-expenses-vendors':
+				$this->list_table = new ListTables\VendorsTable();
+				$this->list_table->prepare_items();
+				$args['option'] = 'eac_expenses_vendors_per_page';
 				add_screen_option( 'per_page', $args );
 				break;
 		}
@@ -360,6 +368,27 @@ class Menus {
 			include __DIR__ . '/views/expenses/bills/edit.php';
 		} else {
 			include __DIR__ . '/views/expenses/bills/bills.php';
+		}
+	}
+
+	/**
+	 * Vendors Tab.
+	 *
+	 * @since 1.0.0
+	 */
+	public function render_vendors_tab() {
+		$edit = Utilities::is_edit_screen();
+//		$vendor = new Vendor( $edit );
+//		if ( ! empty( $edit ) && ! $vendor->exists() ) {
+//			wp_safe_redirect( remove_query_arg( 'edit' ) );
+//			exit();
+//		}
+		if ( Utilities::is_add_screen() ) {
+			include __DIR__ . '/views/expenses/vendors/add.php';
+		} elseif ( $edit ) {
+			include __DIR__ . '/views/expenses/vendors/edit.php';
+		} else {
+			include __DIR__ . '/views/expenses/vendors/vendors.php';
 		}
 	}
 }
