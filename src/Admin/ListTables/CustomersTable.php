@@ -2,17 +2,17 @@
 
 namespace EverAccounting\Admin\ListTables;
 
-use EverAccounting\Models\Invoice;
+use EverAccounting\Models\Customer;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class InvoicesTable.
+ * Class CustomersTable.
  *
  * @since 1.0.0
  * @package EverAccounting\Admin\ListTables
  */
-class InvoicesTable extends ListTable {
+class CustomersTable extends ListTable {
 	/**
 	 * Constructor.
 	 *
@@ -26,8 +26,8 @@ class InvoicesTable extends ListTable {
 			wp_parse_args(
 				$args,
 				array(
-					'singular' => 'invoice',
-					'plural'   => 'invoices',
+					'singular' => 'customer',
+					'plural'   => 'customers',
 					'screen'   => get_current_screen(),
 					'args'     => array(),
 				)
@@ -48,7 +48,7 @@ class InvoicesTable extends ListTable {
 			get_hidden_columns( $this->screen ),
 			$this->get_sortable_columns()
 		);
-		$per_page              = $this->get_items_per_page( 'eac_sales_invoices_per_page', 20 );
+		$per_page              = $this->get_items_per_page( 'eac_sales_customers_per_page', 20 );
 		$paged                 = $this->get_pagenum();
 		$search                = $this->get_request_search();
 		$order_by              = $this->get_request_orderby();
@@ -68,9 +68,9 @@ class InvoicesTable extends ListTable {
 		 *
 		 * @since 1.0.0
 		 */
-		$args = apply_filters( 'ever_accounting_invoices_table_query_args', $args );
+		$args = apply_filters( 'ever_accounting_customers_table_query_args', $args );
 
-		// TODO: Need to create invoice query methods.
+		// TODO: Need to create customer query methods.
 		$this->items = array();
 		$total       = 0;
 
@@ -93,13 +93,13 @@ class InvoicesTable extends ListTable {
 	protected function bulk_delete( $ids ) {
 		$performed = [];
 		foreach ( $ids as $id ) {
-			// TODO: Need tp create the invoice delete method.
-//			if ( eac_delete_invoice( $id ) ) {
+			// TODO: Need tp create the customer delete method.
+//			if ( eac_delete_customer( $id ) ) {
 //				$performed[] = $id;
 //			}
 		}
 		if ( ! empty( $performed ) ) {
-			EAC()->flash()->success( sprintf( _n( 'Invoice deleted.', '%s invoices deleted.', count( $performed ), 'wp-ever-accounting' ), count( $performed ) ) );
+			EAC()->flash()->success( sprintf( _n( 'Customer deleted.', '%s customers deleted.', count( $performed ), 'wp-ever-accounting' ), count( $performed ) ) );
 		}
 	}
 
@@ -109,7 +109,7 @@ class InvoicesTable extends ListTable {
 	 * @since 1.0.0
 	 */
 	public function no_items() {
-		esc_html_e( 'No invoices found.', 'wp-ever-accounting' );
+		esc_html_e( 'No customers found.', 'wp-ever-accounting' );
 	}
 
 	/**
@@ -136,9 +136,8 @@ class InvoicesTable extends ListTable {
 	 */
 	protected function get_bulk_actions() {
 		$actions = array(
-			'cancel'  => __( 'Cancel', 'wp-ever-accounting' ),
-			'paid'    => __( 'Paid', 'wp-ever-accounting' ),
-			'pending' => __( 'Pending', 'wp-ever-accounting' ),
+			'enable'  => __( 'Enable', 'wp-ever-accounting' ),
+			'disable' => __( 'Disable', 'wp-ever-accounting' ),
 			'delete'  => __( 'Delete', 'wp-ever-accounting' ),
 		);
 
@@ -154,7 +153,7 @@ class InvoicesTable extends ListTable {
 	 * @since 1.0.0
 	 */
 	protected function extra_tablenav( $which ) {
-		// TODO: Need to include invoicesTable filters 'Select Month', 'Select Account', 'Select Category', 'Select Customer'.
+		// TODO: Need to include customersTable filters 'Select Month', 'Select Account', 'Select Category', 'Select Customer'.
 		static $has_items;
 		if ( ! isset( $has_items ) ) {
 			$has_items = $this->has_items();
@@ -184,13 +183,13 @@ class InvoicesTable extends ListTable {
 	 */
 	public function get_columns() {
 		return array(
-			'cb'           => '<input type="checkbox" />',
-			'number'       => __( 'Number', 'wp-ever-accounting' ),
-			'total'        => __( 'Total', 'wp-ever-accounting' ),
-			'customer'     => __( 'Customer', 'wp-ever-accounting' ),
-			'invoice_date' => __( 'Invoice Date', 'wp-ever-accounting' ),
-			'due_date'     => __( 'Due Date', 'wp-ever-accounting' ),
-			'status'       => __( 'Status', 'wp-ever-accounting' ),
+			'cb'         => '<input type="checkbox" />',
+			'name'       => __( 'Name', 'wp-ever-accounting' ),
+			'contact'    => __( 'Contact', 'wp-ever-accounting' ),
+			'address'    => __( 'Address', 'wp-ever-accounting' ),
+			'paid'       => __( 'Paid', 'wp-ever-accounting' ),
+			'receivable' => __( 'Receivable', 'wp-ever-accounting' ),
+			'enabled'    => __( 'Enabled', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -203,12 +202,10 @@ class InvoicesTable extends ListTable {
 	 */
 	protected function get_sortable_columns() {
 		return array(
-			'number'       => array( 'number', false ),
-			'total'        => array( 'total', false ),
-			'customer'     => array( 'customer', false ),
-			'invoice_date' => array( 'invoice_date', false ),
-			'due_date'     => array( 'due_date', false ),
-			'status'       => array( 'status', false ),
+			'name'    => array( 'name', false ),
+			'contact' => array( 'contact', false ),
+			'address' => array( 'address', false ),
+			'enabled' => array( 'enabled', false ),
 		);
 	}
 
@@ -219,7 +216,7 @@ class InvoicesTable extends ListTable {
 	 * @since 1.0.2
 	 */
 	public function get_primary_column_name() {
-		return 'number';
+		return 'name';
 	}
 
 	/**
@@ -237,52 +234,52 @@ class InvoicesTable extends ListTable {
 	/**
 	 * Renders the date column.
 	 *
-	 * @param Invoice $invoice The current object.
+	 * @param Customer $customer The current object.
 	 *
 	 * @return string Displays the date.
 	 * @since  1.0.0
 	 */
-	public function column_number( $invoice ) {
+	public function column_name( $customer ) {
 		$urls    = array(
-			'edit'    => admin_url( 'admin.php?page=eac-sales&edit=' . $invoice->id ),
-			'delete'  => wp_nonce_url( admin_url( 'admin.php?page=eac-sales&tab=invoices&action=delete&id=' . $invoice->id ), 'bulk-' . $this->_args['plural'] ),
-			'enable'  => wp_nonce_url( admin_url( 'admin.php?page=eac-sales&tab=invoices&action=enable&id=' . $invoice->id ), 'bulk-' . $this->_args['plural'] ),
-			'disable' => wp_nonce_url( admin_url( 'admin.php?page=eac-sales&tab=invoices&action=disable&id=' . $invoice->id ), 'bulk-' . $this->_args['plural'] ),
+			'edit'    => admin_url( 'admin.php?page=eac-sales&edit=' . $customer->id ),
+			'delete'  => wp_nonce_url( admin_url( 'admin.php?page=eac-sales&tab=customers&action=delete&id=' . $customer->id ), 'bulk-' . $this->_args['plural'] ),
+			'enable'  => wp_nonce_url( admin_url( 'admin.php?page=eac-sales&tab=customers&action=enable&id=' . $customer->id ), 'bulk-' . $this->_args['plural'] ),
+			'disable' => wp_nonce_url( admin_url( 'admin.php?page=eac-sales&tab=customers&action=disable&id=' . $customer->id ), 'bulk-' . $this->_args['plural'] ),
 		);
 		$actions = array(
-			'ID'     => sprintf( 'ID: %d', $invoice->id ),
+			'ID'     => sprintf( 'ID: %d', $customer->id ),
 			'delete' => sprintf( '<a class="eac_confirm_delete" href="%s">%s</a>', esc_url( $urls['delete'] ), __( 'Delete', 'wp-ever-accounting' ) ),
 		);
-		if ( $invoice->enabled ) {
+		if ( $customer->enabled ) {
 			$actions['disable'] = sprintf( '<a href="%s">%s</a>', esc_url( $urls['disable'] ), __( 'Disable', 'wp-ever-accounting' ) );
 		} else {
 			$actions['enable'] = sprintf( '<a href="%s">%s</a>', esc_url( $urls['enable'] ), __( 'Enable', 'wp-ever-accounting' ) );
 		}
 
-		return sprintf( '<a href="%1$s">%2$s</a>%3$s', admin_url( 'admin.php?page=eac-sales&tab=invoices&edit=' . $invoice->id ), wp_kses_post( $invoice->name ), $this->row_actions( $actions ) );
+		return sprintf( '<a href="%1$s">%2$s</a>%3$s', admin_url( 'admin.php?page=eac-sales&tab=customers&edit=' . $customer->id ), wp_kses_post( $customer->name ), $this->row_actions( $actions ) );
 	}
 
 	/**
 	 * Renders the actions column.
 	 *
-	 * @param Invoice $invoice The current object.
+	 * @param Customer $customer The current object.
 	 *
 	 * @return string Displays the actions.
 	 * @since  1.0.0
 	 */
-	public function column_actions( $invoice ) {
+	public function column_actions( $customer ) {
 		$urls = array(
-			'edit'    => admin_url( 'admin.php?page=eac-items&edit=' . $invoice->id ),
-			'delete'  => wp_nonce_url( admin_url( 'admin.php?page=eac-sales&tab=invoices&action=delete&id=' . $invoice->id ), 'bulk-' . $this->_args['plural'] ),
-			'enable'  => wp_nonce_url( admin_url( 'admin.php?page=eac-sales&tab=invoices&action=enable&id=' . $invoice->id ), 'bulk-' . $this->_args['plural'] ),
-			'disable' => wp_nonce_url( admin_url( 'admin.php?page=eac-sales&tab=invoices&action=disable&id=' . $invoice->id ), 'bulk-' . $this->_args['plural'] ),
+			'edit'    => admin_url( 'admin.php?page=eac-items&edit=' . $customer->id ),
+			'delete'  => wp_nonce_url( admin_url( 'admin.php?page=eac-sales&tab=customers&action=delete&id=' . $customer->id ), 'bulk-' . $this->_args['plural'] ),
+			'enable'  => wp_nonce_url( admin_url( 'admin.php?page=eac-sales&tab=customers&action=enable&id=' . $customer->id ), 'bulk-' . $this->_args['plural'] ),
+			'disable' => wp_nonce_url( admin_url( 'admin.php?page=eac-sales&tab=customers&action=disable&id=' . $customer->id ), 'bulk-' . $this->_args['plural'] ),
 		);
 
 		$actions = array(
 			//'edit'   => sprintf( '<a href="%s">%s</a>', esc_url( $urls['edit'] ), __( 'Edit', 'wp-ever-accounting' ) ),
 			'delete' => sprintf( '<a class="eac_confirm_delete" href="%s">%s</a>', esc_url( $urls['delete'] ), __( 'Delete', 'wp-ever-accounting' ) ),
 		);
-		if ( $invoice->enabled ) {
+		if ( $customer->enabled ) {
 			$actions['disable'] = sprintf( '<a href="%s">%s</a>', esc_url( $urls['disable'] ), __( 'Disable', 'wp-ever-accounting' ) );
 		} else {
 			$actions['enable'] = sprintf( '<a href="%s">%s</a>', esc_url( $urls['enable'] ), __( 'Enable', 'wp-ever-accounting' ) );
