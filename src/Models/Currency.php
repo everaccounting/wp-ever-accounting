@@ -2,8 +2,6 @@
 
 namespace EverAccounting\Models;
 
-use EverAccounting\Models\Relations\HasMany;
-
 /**
  * Currency model.
  *

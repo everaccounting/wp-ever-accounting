@@ -45,6 +45,20 @@ function eac_insert_category( $data = array(), $wp_error = true ) {
 }
 
 /**
+ * Delete a category.
+ *
+ * @param int $id Category ID.
+ *
+ * @return bool
+ * @since 1.1.0
+ */
+function eac_delete_category( $id ) {
+	$category = eac_get_category( $id );
+
+	return $category ? $category->delete() : false;
+}
+
+/**
  * Get category items.
  *
  * @param array $args Query arguments.

@@ -15,6 +15,13 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
  * @package EverAccounting\Admin\ListTables
  */
 abstract class ListTable extends \WP_List_Table {
+	/**
+	 * Current page URL.
+	 *
+	 * @since 1.0.0
+	 * @var string
+	 */
+	protected $base_url;
 
 	/**
 	 * Return the sortable column specified for this request to order the results by, if any.
@@ -49,13 +56,15 @@ abstract class ListTable extends \WP_List_Table {
 	/**
 	 * Return the status filter for this request, if any.
 	 *
+	 * @param string $default Default status.
+	 *
 	 * @since 1.2.1
 	 * @return string
 	 */
-	protected function get_request_status() {
+	protected function get_request_status( $default = null ) {
 		$status = ( ! empty( $_GET['status'] ) ) ? sanitize_text_field( wp_unslash( $_GET['status'] ) ) : ''; //phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
-		return in_array( $status, array( 'active', 'inactive' ), true ) ? $status : '';
+		return in_array( $status, array( 'active', 'inactive' ), true ) ? $status : $default;
 	}
 
 	/**
@@ -73,7 +82,7 @@ abstract class ListTable extends \WP_List_Table {
 	 * execute the bulk method handler. Regardless if the action is valid or not it will redirect to
 	 * the previous page removing the current arguments that makes this request a bulk action.
 	 */
-	protected function process_bulk_action() {
+	protected function process_actions() {
 		// Detect when a bulk action is being triggered.
 		$action = $this->current_action();
 		if ( ! $action ) {
@@ -110,8 +119,21 @@ abstract class ListTable extends \WP_List_Table {
 	 * @return string The column value.
 	 */
 	public function column_default( $item, $column_name ) {
-		if ( is_object( $item ) && isset( $item->$column_name ) ) {
-			return empty( $item->$column_name ) ? '&mdash;' : wp_kses_post( $item->$column_name );
+		switch ( $column_name ) {
+			case 'status':
+				$statuses = array(
+					'active'   => __( 'Active', 'wp-ever-accounting' ),
+					'inactive' => __( 'Inactive', 'wp-ever-accounting' ),
+				);
+				$status   = isset( $item->$column_name ) ? $item->$column_name : '';
+				$label    = isset( $statuses[ $status ] ) ? $statuses[ $status ] : '';
+
+				return sprintf( '<span class="eac-status is--%1$s">%2$s</span>', esc_attr( $status ), esc_html( $label ) );
+
+			default:
+				if ( is_object( $item ) && isset( $item->$column_name ) ) {
+					return empty( $item->$column_name ) ? '&mdash;' : wp_kses_post( $item->$column_name );
+				}
 		}
 
 		return '&mdash;';

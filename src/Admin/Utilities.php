@@ -64,6 +64,13 @@ class Utilities {
 				),
 			),
 			array(
+				'page_title' => __( 'Categories', 'wp-ever-accounting' ),
+				'menu_title' => __( 'Categories', 'wp-ever-accounting' ),
+				'capability' => 'manage_options',
+				'menu_slug'  => 'eac-categories',
+				'page_hook'  => 'categories',
+			),
+			array(
 				'page_title' => __( 'Tools', 'wp-ever-accounting' ),
 				'menu_title' => __( 'Tools', 'wp-ever-accounting' ),
 				'capability' => 'manage_options',
@@ -76,7 +83,7 @@ class Utilities {
 			),
 		);
 
-		return apply_filters( 'starter_plugin_admin_menus', $menus );
+		return apply_filters( 'ever_accounting_admin_menus', $menus );
 	}
 
 	/**

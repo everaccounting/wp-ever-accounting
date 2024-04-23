@@ -36,11 +36,10 @@ class Category extends Model {
 	 */
 	protected $columns = array(
 		'id',
-		'name',
 		'type',
-		'color',
-		'enabled',
-		'date_created',
+		'name',
+		'description',
+		'status',
 	);
 
 	/**
@@ -50,7 +49,7 @@ class Category extends Model {
 	 * @var array
 	 */
 	protected $data = array(
-		'enabled' => 1,
+		'status' => 'active',
 	);
 
 	/**
@@ -60,12 +59,31 @@ class Category extends Model {
 	 * @return bool
 	 */
 	protected $casts = array(
-		'id'           => 'int',
-		'name'         => 'sanitize_text',
-		'type'         => 'sanitize_key',
-		'enabled'      => 'bool',
-		'date_created' => 'datetime',
+		'id'          => 'int',
+		'name'        => 'sanitize_text',
+		'type'        => 'sanitize_key',
+		'description' => 'sanitize_textarea',
 	);
+
+	/**
+	 * Searchable properties.
+	 *
+	 * @since 1.0.0
+	 * @var array
+	 */
+	protected $searchable = array(
+		'name',
+		'type',
+		'description',
+	);
+
+	/**
+	 * Whether the model should be timestamped.
+	 *
+	 * @since 1.0.0
+	 * @var bool
+	 */
+	public $timestamps = true;
 
 	/**
 	 * Save the object to the database.
@@ -79,14 +97,6 @@ class Category extends Model {
 		}
 		if ( empty( $this->type ) ) {
 			return new \WP_Error( 'missing_required', __( 'Category type is required.', 'wp-ever-accounting' ) );
-		}
-		if ( empty( $this->color ) ) {
-			// make a random hex color.
-			$this->color = '#' . dechex( mt_rand( 0, 0xFFFFFF ) );
-		}
-
-		if ( empty( $this->date_created ) ) {
-			$this->date_created = current_time( 'mysql' );
 		}
 
 		// Duplicate check. Same type and name should not exist.
@@ -116,7 +126,7 @@ class Category extends Model {
 	 * @return void
 	 */
 	protected function set_type_prop( $type ) {
-		$type = !in_array( $type, eac_get_category_types() ) ? 'income' : $type;
+		$type = ! in_array( $type, eac_get_category_types() ) ? 'income' : $type;
 		$this->set_prop_value( 'type', $type );
 	}
 }

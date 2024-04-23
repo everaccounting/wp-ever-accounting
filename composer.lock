@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:byteever/bytekit-core.git",
-                "reference": "b7eb9f1e2c5d9d59e9c430882dcf1af975420b87"
+                "reference": "232f2df859c9733b1283074920e684efce08e630"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/byteever/bytekit-core/zipball/b7eb9f1e2c5d9d59e9c430882dcf1af975420b87",
-                "reference": "b7eb9f1e2c5d9d59e9c430882dcf1af975420b87",
+                "url": "https://api.github.com/repos/byteever/bytekit-core/zipball/232f2df859c9733b1283074920e684efce08e630",
+                "reference": "232f2df859c9733b1283074920e684efce08e630",
                 "shasum": ""
             },
             "require": {
@@ -100,7 +100,7 @@
                 "source": "https://github.com/byteever/bytekit-core/tree/master",
                 "issues": "https://github.com/byteever/bytekit-core/issues"
             },
-            "time": "2024-04-23T09:45:38+00:00"
+            "time": "2024-04-23T16:38:43+00:00"
         },
         {
             "name": "byteever/bytekit-models",
@@ -11247,5 +11247,5 @@
         "php": ">=7.0"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.3.0"
 }

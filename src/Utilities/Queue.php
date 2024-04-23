@@ -13,6 +13,14 @@ defined( 'ABSPATH' ) || exit;
 class Queue {
 
 	/**
+	 * Group for actions.
+	 *
+	 * @since 1.0.0
+	 * @var string
+	 */
+	const GROUP = 'ever-accounting';
+
+	/**
 	 * The single instance of the queue.
 	 *
 	 * @since 1.0.0
@@ -43,7 +51,7 @@ class Queue {
 	 *
 	 * @return string The action ID.
 	 */
-	public function add( $hook, $args = array(), $group = 'eac' ) {
+	public function add( $hook, $args = array(), $group = self::GROUP ) {
 		return $this->schedule_single( time(), $hook, $args, $group );
 	}
 
@@ -57,7 +65,7 @@ class Queue {
 	 *
 	 * @return string The action ID.
 	 */
-	public function schedule_single( $timestamp, $hook, $args = array(), $group = 'eac' ) {
+	public function schedule_single( $timestamp, $hook, $args = array(), $group = self::GROUP ) {
 		return as_schedule_single_action( $timestamp, $hook, $args, $group );
 	}
 
@@ -72,7 +80,7 @@ class Queue {
 	 *
 	 * @return string The action ID.
 	 */
-	public function schedule_recurring( $timestamp, $interval_in_seconds, $hook, $args = array(), $group = 'eac' ) {
+	public function schedule_recurring( $timestamp, $interval_in_seconds, $hook, $args = array(), $group = self::GROUP ) {
 		return as_schedule_recurring_action( $timestamp, $interval_in_seconds, $hook, $args, $group );
 	}
 
@@ -85,7 +93,7 @@ class Queue {
 	 *
 	 * @return bool
 	 */
-	public function is_scheduled( $hook, $args = [], $group = 'eac' ) {
+	public function is_scheduled( $hook, $args = [], $group = self::GROUP ) {
 		if ( ! function_exists( 'as_has_scheduled_action' ) ) {
 			return ! is_null( $this->get_next( $hook, $args ) );
 		}
@@ -114,7 +122,7 @@ class Queue {
 	 *   +------------------------- min (0 - 59)
 	 * @return string The action ID
 	 */
-	public function schedule_cron( $timestamp, $cron_schedule, $hook, $args = array(), $group = 'eac' ) {
+	public function schedule_cron( $timestamp, $cron_schedule, $hook, $args = array(), $group = self::GROUP ) {
 		return as_schedule_cron_action( $timestamp, $cron_schedule, $hook, $args, $group );
 	}
 
@@ -134,7 +142,7 @@ class Queue {
 	 * @param array  $args Args that would have been passed to the job.
 	 * @param string $group The group the job is assigned to (if any).
 	 */
-	public function cancel( $hook, $args = array(), $group = 'eac' ) {
+	public function cancel( $hook, $args = array(), $group = self::GROUP ) {
 		as_unschedule_action( $hook, $args, $group );
 	}
 
@@ -145,7 +153,7 @@ class Queue {
 	 * @param array  $args Args that would have been passed to the job.
 	 * @param string $group The group the job is assigned to (if any).
 	 */
-	public function cancel_all( $hook, $args = array(), $group = 'eac' ) {
+	public function cancel_all( $hook, $args = array(), $group = self::GROUP ) {
 		as_unschedule_all_actions( $hook, $args, $group );
 	}
 
@@ -159,7 +167,7 @@ class Queue {
 	 *
 	 * @return int|null The date and time for the next occurrence, or null if there is no pending, scheduled action for the given hook.
 	 */
-	public function get_next( $hook, $args = null, $group = 'eac' ) {
+	public function get_next( $hook, $args = null, $group = self::GROUP ) {
 		$next_timestamp = as_next_scheduled_action( $hook, $args, $group );
 		if ( is_numeric( $next_timestamp ) ) {
 			return $next_timestamp;
@@ -187,6 +195,7 @@ class Queue {
 	 *        'order' => 'ASC'.
 	 *
 	 * @param string $return_format OBJECT, ARRAY_A, or ids.
+	 *
 	 * @return array
 	 */
 	public function search( $args = array(), $return_format = OBJECT ) {

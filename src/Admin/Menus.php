@@ -2,6 +2,7 @@
 
 namespace EverAccounting\Admin;
 
+use EverAccounting\Models\Category;
 use EverAccounting\Models\Item;
 
 /**
@@ -46,13 +47,13 @@ class Menus {
 		add_filter( 'set-screen-option', array( $this, 'screen_option' ), 10, 3 );
 		add_action( 'current_screen', array( $this, 'setup_list_table' ) );
 		add_action( 'ever_accounting_admin_items', array( $this, 'render_items_tab' ) );
-		add_action( 'ever_accounting_admin_items_categories', array( $this, 'render_items_categories_tab' ) );
 		add_action( 'ever_accounting_admin_sales_revenues', array( $this, 'render_revenues_tab' ) );
 		add_action( 'ever_accounting_admin_sales_invoices', array( $this, 'render_invoices_tab' ) );
 		add_action( 'ever_accounting_admin_sales_customers', array( $this, 'render_customers_tab' ) );
 		add_action( 'ever_accounting_admin_expenses_payments', array( $this, 'render_payments_tab' ) );
 		add_action( 'ever_accounting_admin_expenses_bills', array( $this, 'render_bills_tab' ) );
 		add_action( 'ever_accounting_admin_expenses_vendors', array( $this, 'render_vendors_tab' ) );
+		add_action( 'ever_accounting_admin_categories', array( $this, 'render_categories_tab' ) );
 	}
 
 	/**
@@ -219,6 +220,13 @@ class Menus {
 				$this->list_table = new ListTables\VendorsTable();
 				$this->list_table->prepare_items();
 				$args['option'] = 'eac_expenses_vendors_per_page';
+				add_screen_option( 'per_page', $args );
+				break;
+			case 'eac-categories':
+			case 'eac-categories-categories':
+				$this->list_table = new ListTables\CategoriesTable();
+				$this->list_table->prepare_items();
+				$args['option'] = 'eac_categories_per_page';
 				add_screen_option( 'per_page', $args );
 				break;
 		}
@@ -389,6 +397,27 @@ class Menus {
 			include __DIR__ . '/views/expenses/vendors/edit.php';
 		} else {
 			include __DIR__ . '/views/expenses/vendors/vendors.php';
+		}
+	}
+
+	/**
+	 * Categories Tab.
+	 *
+	 * @since 1.0.0
+	 */
+	public function render_categories_tab() {
+		$edit     = Utilities::is_edit_screen();
+		$category = new Category( $edit );
+		if ( ! empty( $edit ) && ! $category->exists() ) {
+			wp_safe_redirect( remove_query_arg( 'edit' ) );
+			exit();
+		}
+		if ( Utilities::is_add_screen() ) {
+			include __DIR__ . '/views/categories/add.php';
+		} elseif ( $edit ) {
+			include __DIR__ . '/views/categories/edit.php';
+		} else {
+			include __DIR__ . '/views/categories/categories.php';
 		}
 	}
 }

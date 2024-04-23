@@ -17,7 +17,6 @@ class Plugin extends \ByteKit\Core\Plugin {
 	 * @since 1.0.0
 	 */
 	protected function __construct( $data ) {
-//		$this->container['installer'] = Installer::create( $this );
 		$data['id'] = 'eac';
 		parent::__construct( $data );
 		$this->define_constants();
@@ -56,6 +55,7 @@ class Plugin extends \ByteKit\Core\Plugin {
 	 */
 	public function includes() {
 		require_once __DIR__ . '/functions.php';
+//		$this->services->add( 'installer', new Installer() );
 	}
 
 	/**
@@ -86,11 +86,12 @@ class Plugin extends \ByteKit\Core\Plugin {
 	 * @return void
 	 */
 	public function on_init() {
-//		$this->container['installer'] = new Installer();
+		$this->container['installer'] = new Installer();
 
-		if ( $this->is_request( 'admin' ) ) {
+		if ( is_admin() ) {
 			new Admin\Admin();
 			new Admin\Menus();
+			new Admin\Actions();
 		}
 
 		/**
@@ -104,8 +105,8 @@ class Plugin extends \ByteKit\Core\Plugin {
 	/**
 	 * Get queue instance.
 	 *
-	 * @return Utilities\Queue
 	 * @since 1.0.0
+	 * @return Utilities\Queue
 	 */
 	public function queue() {
 		return Utilities\Queue::instance();

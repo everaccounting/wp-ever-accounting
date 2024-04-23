@@ -20,11 +20,15 @@ class Installer {
 	 * @var array
 	 */
 	protected $updates = array(
-		'1.2.1.2' => array(
-//			'eac_update_121_currency',
-			'eac_update_1212',
-			'eac_update_1213'
-		)
+		'1.2.1.4' => array(
+			'eac_update_1214',
+			'eac_update_1214_another',
+		),
+		'1.2.1.5' => array(
+			'eac_update_1215',
+			'eac_update_1215_another',
+		),
+		'1.2.1.7' => 'eac_update_1217'
 	);
 
 	/**
@@ -35,8 +39,7 @@ class Installer {
 	public function __construct() {
 		add_action( 'init', array( $this, 'check_update' ), 5 );
 		add_action( 'eac_run_update_callback', array( $this, 'run_update_callback' ), 10, 2 );
-		add_action( 'eac_update_db_version', 'update_db_version' );
-		add_action( 'admin_notices', array( $this, 'admin_notices' ) );
+		add_action( 'eac_update_db_version', array( $this, 'update_db_version' ) );
 	}
 
 	/**
@@ -51,8 +54,9 @@ class Installer {
 		$db_version      = EAC()->get_db_version();
 		$current_version = EAC()->get_version();
 		$requires_update = version_compare( $db_version, $current_version, '<' );
-		$can_install     = ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) && ! defined( 'IFRAME_REQUEST' ) && ! get_option( 'eac_updating' );
-		if ( $can_install && $requires_update ) {
+		$can_install     = ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) && ! defined( 'IFRAME_REQUEST' );
+		if ( $can_install && $requires_update && ! EAC()->queue()->get_next( 'eac_run_update_callback' ) ) {
+			error_log( 'Updating Ever Accounting' );
 			static::install();
 			$update_versions = array_keys( $this->updates );
 			usort( $update_versions, 'version_compare' );
@@ -80,28 +84,28 @@ class Installer {
 					EAC()->queue()->schedule_single(
 						time() + $loop,
 						'eac_run_update_callback',
-						array( 'callback' => $callback, 'version' => $version ),
-						'eac-update'
+						array( 'callback' => $callback, 'version' => $version )
 					);
+
+					error_log( sprintf( 'Scheduling update callback %s of version %s', $callback, $version ) );
 
 					$loop ++;
 				}
 			}
+			$loop ++;
+		}
+
+		if ( version_compare( EAC()->get_db_version(), EAC()->get_version(), '<' ) &&
+		     ! EAC()->queue()->get_next( 'eac_update_db_version' ) ) {
 			EAC()->queue()->schedule_single(
 				time() + $loop,
 				'eac_update_db_version',
-				array( 'version' => $version ),
-				'eac-update'
+				array(
+					'version' => EAC()->get_version(),
+				)
 			);
-
-			$loop ++;
+			error_log( "Finally scheduling db udpate" );
 		}
-		EAC()->queue()->schedule_single(
-			time() + $loop,
-			'eac_update_db_version',
-			array( 'version' => EAC()->get_version() ),
-			'eac-update'
-		);
 	}
 
 	/**
@@ -116,44 +120,16 @@ class Installer {
 	public function run_update_callback( $callback, $version ) {
 		require_once __DIR__ . '/Functions/updates.php';
 		if ( is_callable( $callback ) ) {
-			$this->run_update_callback_start( $callback, $version );
 			$result = (bool) call_user_func( $callback );
-			$this->run_update_callback_end( $callback, $result, $version );
-		}
-	}
-
-	/**
-	 * Run the update callback start.
-	 *
-	 * @param string $callback The callback to run.
-	 * @param string $version The version of the callback.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	public function run_update_callback_start( $callback, $version ) {
-		update_option( 'eac_updating', $version );
-	}
-
-	/**
-	 * Run the update callback end.
-	 *
-	 * @param string $callback The callback to run.
-	 * @param bool   $result The result of the callback.
-	 * @param string $version The version of the callback.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	public function run_update_callback_end( $callback, $result, $version ) {
-		if ( $result ) {
-			EAC()->queue()->add(
-				'eac_run_update_callback',
-				array(
-					'callback' => $callback,
-					'version'  => $version,
-				)
-			);
+			if ( $result ) {
+				EAC()->queue()->add(
+					'eac_run_update_callback',
+					array(
+						'callback' => $callback,
+						'version'  => $version,
+					)
+				);
+			}
 		}
 	}
 
@@ -166,22 +142,8 @@ class Installer {
 	 * @return void
 	 */
 	public function update_db_version( $version ) {
-		error_log( 'Update complete' );
+		error_log( "Updating db version to $version" );
 		EAC()->update_db_version( $version );
-		delete_option( 'eac_updating' );
-	}
-
-	/**
-	 * Display admin notices.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	public function admin_notices() {
-		$version = get_option( 'eac_updating' );
-		if ( $version ) {
-			printf( '<div class="notice notice-info"><p>%s</p></div>', sprintf( __( '%s is updating to version %s in the background.', 'wp-ever-accounting' ), esc_html( EAC()->get_name() ), esc_html( $version ) ) );
-		}
 	}
 
 	/**
@@ -215,7 +177,7 @@ class Installer {
 
 
 		$tables = "
-CREATE TABLE {$wpdb->prefix}eac_currencies (
+CREATE TABLE {$wpdb->prefix}ea_currencies (
 `id` bigINT(20) NOT NULL AUTO_INCREMENT,
 `code` VARCHAR(191) NOT NULL,
 `name` VARCHAR(191) NOT NULL,
