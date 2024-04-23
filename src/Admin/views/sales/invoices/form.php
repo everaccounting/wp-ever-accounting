@@ -43,15 +43,15 @@ defined( 'ABSPATH' ) || exit;
 						<?php // if ( $invoice->exists() ) : ?>
 						<input type="hidden" name="id" value="<?php echo esc_attr( $invoice->id ); ?>"/>
 						<?php // endif; ?>
-						<input type="hidden" name="action" value="eac_edit_item"/>
-						<?php wp_nonce_field( 'eac_edit_item' ); ?>
+						<input type="hidden" name="action" value="eac_edit_invoice"/>
+						<?php wp_nonce_field( 'eac_edit_invoice' ); ?>
 						<?php // if ( $invoice->exists() ) : ?>
-						<a class="eac_confirm_delete del" href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'action', 'delete', admin_url( 'admin.php?page=eac-items&id=' . $item->id ) ), 'bulk-items' ) ); ?>"><?php esc_html_e( 'Delete', 'wp-ever-accounting' ); ?></a>
+						<a class="eac_confirm_delete del" href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'action', 'delete', admin_url( 'admin.php?page=eac-sales&tab=invoices&id=' . $invoice->id ) ), 'bulk-items' ) ); ?>"><?php esc_html_e( 'Delete', 'wp-ever-accounting' ); ?></a>
 						<?php // endif; ?>
 						<?php // if ( $invoice->exists() ) : ?>
-						<button class="button button-primary"><?php esc_html_e( 'Update Item', 'wp-ever-accounting' ); ?></button>
+						<button class="button button-primary"><?php esc_html_e( 'Update Invoice', 'wp-ever-accounting' ); ?></button>
 						<?php // else : ?>
-						<button class="button button-primary bkit-w-100"><?php esc_html_e( 'Add Item', 'wp-ever-accounting' ); ?></button>
+						<button class="button button-primary bkit-w-100"><?php esc_html_e( 'Add Invoice', 'wp-ever-accounting' ); ?></button>
 						<?php // endif; ?>
 					</div>
 				</div>
