@@ -2,17 +2,17 @@
 
 namespace EverAccounting\Admin\ListTables;
 
-use EverAccounting\Models\Account;
+use EverAccounting\Models\Transfer;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class AccountsTable.
+ * Class TransfersTable.
  *
  * @since 1.0.0
  * @package EverAccounting\Admin\ListTables
  */
-class AccountsTable extends ListTable {
+class TransfersTable extends ListTable {
 	/**
 	 * Constructor.
 	 *
@@ -26,8 +26,8 @@ class AccountsTable extends ListTable {
 			wp_parse_args(
 				$args,
 				array(
-					'singular' => 'account',
-					'plural'   => 'accounts',
+					'singular' => 'transfer',
+					'plural'   => 'transfers',
 					'screen'   => get_current_screen(),
 					'args'     => array(),
 				)
@@ -48,7 +48,7 @@ class AccountsTable extends ListTable {
 			get_hidden_columns( $this->screen ),
 			$this->get_sortable_columns()
 		);
-		$per_page              = $this->get_items_per_page( 'eac_banking_accounts_per_page', 20 );
+		$per_page              = $this->get_items_per_page( 'eac_banking_transfers_per_page', 20 );
 		$paged                 = $this->get_pagenum();
 		$search                = $this->get_request_search();
 		$order_by              = $this->get_request_orderby();
@@ -68,12 +68,12 @@ class AccountsTable extends ListTable {
 		 *
 		 * @since 1.0.0
 		 */
-		$args = apply_filters( 'ever_accounting_accounts_table_query_args', $args );
+		$args = apply_filters( 'ever_accounting_transfers_table_query_args', $args );
 
-		// TODO: Need to create account query methods.
-		//$this->items = eac_get_accounts( $args );
+		// TODO: Need to create transfer query methods.
+		//$this->items = eac_get_transfers( $args );
 		$this->items = array();
-		//$total       = eac_get_accounts( $args, true );
+		//$total       = eac_get_transfers( $args, true );
 		$total = 0;
 
 		$this->set_pagination_args(
@@ -95,13 +95,13 @@ class AccountsTable extends ListTable {
 	protected function bulk_delete( $ids ) {
 		$performed = [];
 		foreach ( $ids as $id ) {
-			// TODO: Need tp create the account delete method.
-//			if ( eac_delete_account( $id ) ) {
+			// TODO: Need tp create the transfer delete method.
+//			if ( eac_delete_transfer( $id ) ) {
 //				$performed[] = $id;
 //			}
 		}
 		if ( ! empty( $performed ) ) {
-			EAC()->flash()->success( sprintf( _n( 'Account deleted.', '%s accounts deleted.', count( $performed ), 'wp-ever-accounting' ), count( $performed ) ) );
+			EAC()->flash()->success( sprintf( _n( 'Transfer deleted.', '%s transfers deleted.', count( $performed ), 'wp-ever-accounting' ), count( $performed ) ) );
 		}
 	}
 
@@ -111,7 +111,7 @@ class AccountsTable extends ListTable {
 	 * @since 1.0.0
 	 */
 	public function no_items() {
-		esc_html_e( 'No accounts found.', 'wp-ever-accounting' );
+		esc_html_e( 'No transfers found.', 'wp-ever-accounting' );
 	}
 
 	/**
@@ -138,9 +138,7 @@ class AccountsTable extends ListTable {
 	 */
 	protected function get_bulk_actions() {
 		$actions = array(
-			'enable'  => __( 'Enable', 'wp-ever-accounting' ),
-			'disable' => __( 'Disable', 'wp-ever-accounting' ),
-			'delete'  => __( 'Delete', 'wp-ever-accounting' ),
+			'delete' => __( 'Delete', 'wp-ever-accounting' ),
 		);
 
 		return $actions;
@@ -155,6 +153,7 @@ class AccountsTable extends ListTable {
 	 * @since 1.0.0
 	 */
 	protected function extra_tablenav( $which ) {
+		// TODO: Need to include transfersTable filters 'Select Month', 'Select Account', 'Select Category', 'Select Customer'.
 		static $has_items;
 		if ( ! isset( $has_items ) ) {
 			$has_items = $this->has_items();
@@ -185,11 +184,12 @@ class AccountsTable extends ListTable {
 	public function get_columns() {
 		return array(
 			'cb'        => '<input type="checkbox" />',
-			'name'      => __( 'Name', 'wp-ever-accounting' ),
-			'balance'   => __( 'Blance', 'wp-ever-accounting' ),
-			'number'    => __( 'Number', 'wp-ever-accounting' ),
-			'bank_name' => __( 'Bank Name', 'wp-ever-accounting' ),
-			'enabled'   => __( 'Enabled', 'wp-ever-accounting' ),
+			'date'      => __( 'Date', 'wp-ever-accounting' ),
+			'amount'    => __( 'Amount', 'wp-ever-accounting' ),
+			'account'   => __( 'Account', 'wp-ever-accounting' ),
+			'category'  => __( 'Category', 'wp-ever-accounting' ),
+			'vendor'    => __( 'Vendor', 'wp-ever-accounting' ),
+			'reference' => __( 'Reference', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -202,11 +202,12 @@ class AccountsTable extends ListTable {
 	 */
 	protected function get_sortable_columns() {
 		return array(
-			'name'      => array( 'name', false ),
-			'balance'   => array( 'balance', false ),
-			'number'    => array( 'number', false ),
-			'bank_name' => array( 'bank_name', false ),
-			'enabled'   => array( 'enabled', false ),
+			'date'      => array( 'date', false ),
+			'amount'    => array( 'amount', false ),
+			'account'   => array( 'account', false ),
+			'category'  => array( 'category', false ),
+			'vendor'    => array( 'vendor', false ),
+			'reference' => array( 'reference', false ),
 		);
 	}
 
@@ -217,7 +218,7 @@ class AccountsTable extends ListTable {
 	 * @since 1.0.2
 	 */
 	public function get_primary_column_name() {
-		return 'name';
+		return 'date';
 	}
 
 	/**
@@ -233,54 +234,54 @@ class AccountsTable extends ListTable {
 	}
 
 	/**
-	 * Renders the name column.
+	 * Renders the date column.
 	 *
-	 * @param Account $account The current object.
+	 * @param Transfer $transfer The current object.
 	 *
-	 * @return string Displays the name.
+	 * @return string Displays the date.
 	 * @since  1.0.0
 	 */
-	public function column_name( $account ) {
+	public function column_date( $transfer ) {
 		$urls    = array(
-			'edit'    => admin_url( 'admin.php?page=eac-expenses&edit=' . $account->id ),
-			'delete'  => wp_nonce_url( admin_url( 'admin.php?page=eac-expenses&tab=accounts&action=delete&id=' . $account->id ), 'bulk-' . $this->_args['plural'] ),
-			'enable'  => wp_nonce_url( admin_url( 'admin.php?page=eac-expenses&tab=accounts&action=enable&id=' . $account->id ), 'bulk-' . $this->_args['plural'] ),
-			'disable' => wp_nonce_url( admin_url( 'admin.php?page=eac-expenses&tab=accounts&action=disable&id=' . $account->id ), 'bulk-' . $this->_args['plural'] ),
+			'edit'    => admin_url( 'admin.php?page=eac-banking&edit=' . $transfer->id ),
+			'delete'  => wp_nonce_url( admin_url( 'admin.php?page=eac-banking&tab=transfers&action=delete&id=' . $transfer->id ), 'bulk-' . $this->_args['plural'] ),
+			'enable'  => wp_nonce_url( admin_url( 'admin.php?page=eac-banking&tab=transfers&action=enable&id=' . $transfer->id ), 'bulk-' . $this->_args['plural'] ),
+			'disable' => wp_nonce_url( admin_url( 'admin.php?page=eac-banking&tab=transfers&action=disable&id=' . $transfer->id ), 'bulk-' . $this->_args['plural'] ),
 		);
 		$actions = array(
-			'ID'     => sprintf( 'ID: %d', $account->id ),
+			'ID'     => sprintf( 'ID: %d', $transfer->id ),
 			'delete' => sprintf( '<a class="eac_confirm_delete" href="%s">%s</a>', esc_url( $urls['delete'] ), __( 'Delete', 'wp-ever-accounting' ) ),
 		);
-		if ( $account->enabled ) {
+		if ( $transfer->enabled ) {
 			$actions['disable'] = sprintf( '<a href="%s">%s</a>', esc_url( $urls['disable'] ), __( 'Disable', 'wp-ever-accounting' ) );
 		} else {
 			$actions['enable'] = sprintf( '<a href="%s">%s</a>', esc_url( $urls['enable'] ), __( 'Enable', 'wp-ever-accounting' ) );
 		}
 
-		return sprintf( '<a href="%1$s">%2$s</a>%3$s', admin_url( 'admin.php?page=eac-expenses&tab=accounts&edit=' . $account->id ), wp_kses_post( $account->name ), $this->row_actions( $actions ) );
+		return sprintf( '<a href="%1$s">%2$s</a>%3$s', admin_url( 'admin.php?page=eac-banking&tab=transfers&edit=' . $transfer->id ), wp_kses_post( $transfer->name ), $this->row_actions( $actions ) );
 	}
 
 	/**
 	 * Renders the actions column.
 	 *
-	 * @param Account $account The current object.
+	 * @param Transfer $transfer The current object.
 	 *
 	 * @return string Displays the actions.
 	 * @since  1.0.0
 	 */
-	public function column_actions( $account ) {
+	public function column_actions( $transfer ) {
 		$urls = array(
-			'edit'    => admin_url( 'admin.php?page=eac-items&edit=' . $account->id ),
-			'delete'  => wp_nonce_url( admin_url( 'admin.php?page=eac-expenses&tab=accounts&action=delete&id=' . $account->id ), 'bulk-' . $this->_args['plural'] ),
-			'enable'  => wp_nonce_url( admin_url( 'admin.php?page=eac-expenses&tab=accounts&action=enable&id=' . $account->id ), 'bulk-' . $this->_args['plural'] ),
-			'disable' => wp_nonce_url( admin_url( 'admin.php?page=eac-expenses&tab=accounts&action=disable&id=' . $account->id ), 'bulk-' . $this->_args['plural'] ),
+			'edit'    => admin_url( 'admin.php?page=eac-items&edit=' . $transfer->id ),
+			'delete'  => wp_nonce_url( admin_url( 'admin.php?page=eac-banking&tab=transfers&action=delete&id=' . $transfer->id ), 'bulk-' . $this->_args['plural'] ),
+			'enable'  => wp_nonce_url( admin_url( 'admin.php?page=eac-banking&tab=transfers&action=enable&id=' . $transfer->id ), 'bulk-' . $this->_args['plural'] ),
+			'disable' => wp_nonce_url( admin_url( 'admin.php?page=eac-banking&tab=transfers&action=disable&id=' . $transfer->id ), 'bulk-' . $this->_args['plural'] ),
 		);
 
 		$actions = array(
 			//'edit'   => sprintf( '<a href="%s">%s</a>', esc_url( $urls['edit'] ), __( 'Edit', 'wp-ever-accounting' ) ),
 			'delete' => sprintf( '<a class="eac_confirm_delete" href="%s">%s</a>', esc_url( $urls['delete'] ), __( 'Delete', 'wp-ever-accounting' ) ),
 		);
-		if ( $account->enabled ) {
+		if ( $transfer->enabled ) {
 			$actions['disable'] = sprintf( '<a href="%s">%s</a>', esc_url( $urls['disable'] ), __( 'Disable', 'wp-ever-accounting' ) );
 		} else {
 			$actions['enable'] = sprintf( '<a href="%s">%s</a>', esc_url( $urls['enable'] ), __( 'Enable', 'wp-ever-accounting' ) );

@@ -1,6 +1,6 @@
 <?php
 /**
- * List of Accounts.
+ * List of Currencies.
  *
  * @package EverAccounting
  * @version 1.0.0
@@ -9,8 +9,8 @@
 defined( 'ABSPATH' ) || exit;
 ?>
 	<h1 class="wp-heading-inline">
-		<?php esc_html_e( 'Accounts', 'wp-ever-accounting' ); ?>
-		<a href="<?php echo esc_attr( admin_url( 'admin.php?page=eac-banking&tab=accounts&add=yes' ) ); ?>" class="page-title-action">
+		<?php esc_html_e( 'Currencies', 'wp-ever-accounting' ); ?>
+		<a href="<?php echo esc_attr( admin_url( 'admin.php?page=eac-banking&tab=currencies&add=yes' ) ); ?>" class="page-title-action">
 			<?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?>
 		</a>
 		<a href="<?php echo esc_attr( admin_url( 'admin.php?page=eac-tools' ) ); ?>" class="page-title-action">
@@ -26,6 +26,6 @@ defined( 'ABSPATH' ) || exit;
 		<?php $this->list_table->views(); ?>
 		<?php $this->list_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'search' ); ?>
 		<?php $this->list_table->display(); ?>
-		<input type="hidden" name="page" value="eac-accounts"/>
+		<input type="hidden" name="page" value="eac-currencies"/>
 	</form>
 <?php
