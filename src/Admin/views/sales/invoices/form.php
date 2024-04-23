@@ -1,8 +1,8 @@
 <?php
 /**
- * Admin Invoice Form.
+ * Admin Invoices Form.
  * Page: Sales
- * Tab: Invoice
+ * Tab: Invoices
  *
  * @package EverAccounting
  * @version 1.0.0

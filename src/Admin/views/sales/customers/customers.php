@@ -1,6 +1,6 @@
 <?php
 /**
- * List of Items
+ * List of Customers.
  *
  * @package EverAccounting
  * @version 1.0.0
