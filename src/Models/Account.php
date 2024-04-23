@@ -64,7 +64,7 @@ class Account extends Model {
 	 * @since 1.0.0
 	 * @var array
 	 */
-	protected $attributes = array(
+	protected $data = array(
 		'balance' => null,
 	);
 
@@ -113,15 +113,15 @@ class Account extends Model {
 	 * @return float|string
 	 */
 	public function get_balance_prop() {
-		if ( null !== $this->balance ) {
-			return $this->balance;
+		if ( null !== $this->get_prop_value( 'balance' ) ) {
+			return $this->get_prop_value( 'balance' );
 		}
 		global $wpdb;
 		$transaction_total = (float) $wpdb->get_var(
 			$wpdb->prepare( "SELECT SUM(CASE WHEN type='income' then amount WHEN type='expense' then - amount END) as total from {$wpdb->prefix}ea_transactions WHERE account_id=%d", $this->id )
 		);
 		$balance           = $this->opening_balance + $transaction_total;
-		$this->attributes['balance'] = $balance;
+		$this->set_prop_value( 'balance', $balance );
 
 		return $balance;
 	}
@@ -133,7 +133,7 @@ class Account extends Model {
 	 * @return Relation
 	 */
 	public function currency() {
-		return $this->has_one( Currency::class, 'currency_code', 'code' );
+		return $this->has_one( Currency::class, 'code', 'currency_code' );
 	}
 
 	/**
@@ -143,6 +143,6 @@ class Account extends Model {
 	 * @return Relation
 	 */
 	public function transactions() {
-		return $this->has_many( Transaction::class  );
+		return $this->has_many( Transaction::class, 'account_id' );
 	}
 }

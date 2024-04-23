@@ -2,6 +2,8 @@
 
 namespace EverAccounting\Models;
 
+use EverAccounting\Models\Relations\HasMany;
+
 /**
  * Currency model.
  *
@@ -63,7 +65,7 @@ class Currency extends Model {
 	 * @since 1.0.0
 	 * @var array
 	 */
-	protected $attributes = array(
+	protected $data = array(
 		'exchange_rate'      => 1,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -101,43 +103,41 @@ class Currency extends Model {
 	 *
 	 * @since 1.0.0
 	 */
-	public function set_position_attribute( $value ) {
-		$value                  = strtolower( $value );
-		$value                  = in_array( $value, array( 'before', 'after' ) ) ? $value : 'before';
-		$this->data['position'] = $value;
+	protected function set_position_prop( $value ) {
+		$value = strtolower( $value );
+		$value = in_array( $value, array( 'before', 'after' ) ) ? $value : 'before';
+		$this->set_prop_value( 'position', $value );
 	}
 
 	/**
 	 * Read a record.
 	 *
-	 * @param int    $value Record ID.
-	 * @param string $column Column name.
-	 * @param string $type Data type.
+	 * @param int|string $key Record ID.
 	 *
 	 * @since 1.0.0
 	 *
 	 * @return object
 	 */
-	protected function read( $value, $column = 'id', $type = '%d' ) {
-		if ( ! is_numeric( $value ) && strlen( $value ) === 3 && false === wp_cache_get( $value, $this->get_cache_group() ) ) {
-			$row = $this->wpdb()->get_row(
+	protected function read( $key ) {
+		if ( ! is_numeric( $key ) && strlen( $key ) === 3 && false === wp_cache_get( $key, $this->get_cache_group() ) ) {
+			$table = $this->wpdb()->prefix . $this->get_table();
+			$row   = $this->wpdb()->get_row(
 				$this->wpdb()->prepare(
-					"SELECT * FROM {$this->get_wpdb_table()} WHERE code = %s",
-					$value
-				),
-				ARRAY_A
+					"SELECT * FROM {$table} WHERE code = %s",
+					$key
+				)
 			);
 			if ( empty( $row ) ) {
 				return null;
 			}
 
-			wp_cache_set( $value, (object) $row, $this->get_cache_group() );
-			wp_cache_set( $row['id'], (object) $row, $this->get_cache_group() );
+			wp_cache_set( $key, $row, $this->get_cache_group() );
+			wp_cache_set( $row->id, $row, $this->get_cache_group() );
 
-			$value = $row['id'];
+			$key = $row->id;
 		}
 
-		return parent::read( $value, $column, $type );
+		return parent::read( $key );
 	}
 
 	/**
@@ -175,5 +175,15 @@ class Currency extends Model {
 		}
 
 		return parent::save();
+	}
+
+	/**
+	 * Get related accounts.
+	 *
+	 * @since 1.0.0
+	 * @return Relation
+	 */
+	public function accounts() {
+		return $this->has_many( Account::class, 'currency_code', 'code' );
 	}
 }

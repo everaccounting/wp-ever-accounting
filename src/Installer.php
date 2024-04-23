@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
  * @since   1.0.0
  * @package WooCommerceKeyManager
  */
-class Installer extends \ByteKit\Core\Installer {
+class Installer {
 	/**
 	 * Update callbacks.
 	 *
@@ -20,10 +20,169 @@ class Installer extends \ByteKit\Core\Installer {
 	 * @var array
 	 */
 	protected $updates = array(
-		'1.2.1' => array(
-			'eac_update_121_currency',
+		'1.2.1.2' => array(
+//			'eac_update_121_currency',
+			'eac_update_1212',
+			'eac_update_1213'
 		)
 	);
+
+	/**
+	 * Construct and initialize the plugin aware trait.
+	 *
+	 * @since 1.0.0
+	 */
+	public function __construct() {
+		add_action( 'init', array( $this, 'check_update' ), 5 );
+		add_action( 'eac_run_update_callback', array( $this, 'run_update_callback' ), 10, 2 );
+		add_action( 'eac_update_db_version', 'update_db_version' );
+		add_action( 'admin_notices', array( $this, 'admin_notices' ) );
+	}
+
+	/**
+	 * Check the plugin version and run the updater if necessary.
+	 *
+	 * This check is done on all requests and runs if the versions do not match.
+	 *
+	 * @since 1.2.1
+	 * @return void
+	 */
+	public function check_update() {
+		$db_version      = EAC()->get_db_version();
+		$current_version = EAC()->get_version();
+		$requires_update = version_compare( $db_version, $current_version, '<' );
+		$can_install     = ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) && ! defined( 'IFRAME_REQUEST' ) && ! get_option( 'eac_updating' );
+		if ( $can_install && $requires_update ) {
+			static::install();
+			$update_versions = array_keys( $this->updates );
+			usort( $update_versions, 'version_compare' );
+			if ( ! is_null( $db_version ) && version_compare( $db_version, end( $update_versions ), '<' ) ) {
+				$this->update();
+			} else {
+				EAC()->update_db_version( $current_version );
+			}
+		}
+	}
+
+	/**
+	 * Update the plugin.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public function update() {
+		$db_version = EAC()->get_db_version();
+		$loop       = 0;
+		foreach ( $this->updates as $version => $callbacks ) {
+			$callbacks = (array) $callbacks;
+			if ( version_compare( $db_version, $version, '<' ) ) {
+				foreach ( $callbacks as $callback ) {
+					EAC()->queue()->schedule_single(
+						time() + $loop,
+						'eac_run_update_callback',
+						array( 'callback' => $callback, 'version' => $version ),
+						'eac-update'
+					);
+
+					$loop ++;
+				}
+			}
+			EAC()->queue()->schedule_single(
+				time() + $loop,
+				'eac_update_db_version',
+				array( 'version' => $version ),
+				'eac-update'
+			);
+
+			$loop ++;
+		}
+		EAC()->queue()->schedule_single(
+			time() + $loop,
+			'eac_update_db_version',
+			array( 'version' => EAC()->get_version() ),
+			'eac-update'
+		);
+	}
+
+	/**
+	 * Run the update callback.
+	 *
+	 * @param string $callback The callback to run.
+	 * @param string $version The version of the callback.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public function run_update_callback( $callback, $version ) {
+		require_once __DIR__ . '/Functions/updates.php';
+		if ( is_callable( $callback ) ) {
+			$this->run_update_callback_start( $callback, $version );
+			$result = (bool) call_user_func( $callback );
+			$this->run_update_callback_end( $callback, $result, $version );
+		}
+	}
+
+	/**
+	 * Run the update callback start.
+	 *
+	 * @param string $callback The callback to run.
+	 * @param string $version The version of the callback.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public function run_update_callback_start( $callback, $version ) {
+		update_option( 'eac_updating', $version );
+	}
+
+	/**
+	 * Run the update callback end.
+	 *
+	 * @param string $callback The callback to run.
+	 * @param bool   $result The result of the callback.
+	 * @param string $version The version of the callback.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public function run_update_callback_end( $callback, $result, $version ) {
+		if ( $result ) {
+			EAC()->queue()->add(
+				'eac_run_update_callback',
+				array(
+					'callback' => $callback,
+					'version'  => $version,
+				)
+			);
+		}
+	}
+
+	/**
+	 * Update the plugin version.
+	 *
+	 * @param string $version The version to update to.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public function update_db_version( $version ) {
+		error_log( 'Update complete' );
+		EAC()->update_db_version( $version );
+		delete_option( 'eac_updating' );
+	}
+
+	/**
+	 * Display admin notices.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public function admin_notices() {
+		$version = get_option( 'eac_updating' );
+		if ( $version ) {
+			printf( '<div class="notice notice-info"><p>%s</p></div>', sprintf( __( '%s is updating to version %s in the background.', 'wp-ever-accounting' ), esc_html( EAC()->get_name() ), esc_html( $version ) ) );
+		}
+	}
 
 	/**
 	 * Install the plugin.
@@ -31,14 +190,13 @@ class Installer extends \ByteKit\Core\Installer {
 	 * @since 1.0.0
 	 * @return void
 	 */
-	public function install() {
+	public static function install() {
 		if ( ! is_blog_installed() ) {
 			return;
 		}
-		$this->create_tables();
-		$this->create_currencies();
-		// Implement the plugin installation.
-		//$this->plugin->update_db_version( $this->plugin->get_version() );
+		self::create_tables();
+		self::create_currencies();
+		EAC()->add_db_version();
 	}
 
 	/**
@@ -47,7 +205,7 @@ class Installer extends \ByteKit\Core\Installer {
 	 * @since 1.0.0
 	 * @return void
 	 */
-	public function create_tables() {
+	public static function create_tables() {
 		global $wpdb;
 		$collate          = $wpdb->has_cap( 'collation' ) ? $wpdb->get_charset_collate() : '';
 		$max_index_length = 191;
@@ -88,7 +246,7 @@ KEY `enabled` (`enabled`)
 	 * @since 1.0.0
 	 * @return void
 	 */
-	public function create_currencies() {
+	public static function create_currencies() {
 		$options = get_option( 'eaccounting_currencies', array() );
 		if ( $options ) {
 			foreach ( $options as $option ) {

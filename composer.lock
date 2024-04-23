@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:byteever/bytekit-core.git",
-                "reference": "a0d8482593ffc2e5f1496a1962e5668e86cae5a2"
+                "reference": "c94bc7c6639ad3fc7bd70e7dc14f923db3933c68"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/byteever/bytekit-core/zipball/a0d8482593ffc2e5f1496a1962e5668e86cae5a2",
-                "reference": "a0d8482593ffc2e5f1496a1962e5668e86cae5a2",
+                "url": "https://api.github.com/repos/byteever/bytekit-core/zipball/c94bc7c6639ad3fc7bd70e7dc14f923db3933c68",
+                "reference": "c94bc7c6639ad3fc7bd70e7dc14f923db3933c68",
                 "shasum": ""
             },
             "require": {
@@ -100,7 +100,7 @@
                 "source": "https://github.com/byteever/bytekit-core/tree/master",
                 "issues": "https://github.com/byteever/bytekit-core/issues"
             },
-            "time": "2024-04-20T11:53:45+00:00"
+            "time": "2024-04-21T19:28:23+00:00"
         },
         {
             "name": "byteever/bytekit-models",
@@ -108,12 +108,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:byteever/bytekit-models.git",
-                "reference": "e768d9e1ee351e0c7a4899cb523014b5ae9fc221"
+                "reference": "0b6d06bafe89abb946a5647d97d568a9131339b6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/byteever/bytekit-models/zipball/e768d9e1ee351e0c7a4899cb523014b5ae9fc221",
-                "reference": "e768d9e1ee351e0c7a4899cb523014b5ae9fc221",
+                "url": "https://api.github.com/repos/byteever/bytekit-models/zipball/0b6d06bafe89abb946a5647d97d568a9131339b6",
+                "reference": "0b6d06bafe89abb946a5647d97d568a9131339b6",
                 "shasum": ""
             },
             "require": {
@@ -196,7 +196,7 @@
                 "source": "https://github.com/byteever/bytekit-models/tree/master",
                 "issues": "https://github.com/byteever/bytekit-models/issues"
             },
-            "time": "2024-04-20T07:51:19+00:00"
+            "time": "2024-04-22T16:02:36+00:00"
         },
         {
             "name": "woocommerce/action-scheduler",

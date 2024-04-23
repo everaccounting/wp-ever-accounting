@@ -49,7 +49,7 @@ class Category extends Model {
 	 * @since 1.0.0
 	 * @var array
 	 */
-	protected $attributes = array(
+	protected $data = array(
 		'enabled' => 1,
 	);
 
@@ -90,7 +90,7 @@ class Category extends Model {
 		}
 
 		// Duplicate check. Same type and name should not exist.
-		$existing = $this->find_where( array(
+		$existing = $this->find( array(
 			'type' => $this->type,
 			'name' => $this->name,
 		) );
@@ -115,11 +115,8 @@ class Category extends Model {
 	 * @since 1.0.0
 	 * @return void
 	 */
-	public function set_type_attribute( $type ) {
-		var_dump($type);
-		var_dump(eac_get_category_types());
-		if ( array_key_exists( $type, eac_get_category_types() ) ) {
-			$this->attributes['type'] = $type;
-		}
+	protected function set_type_prop( $type ) {
+		$type = !in_array( $type, eac_get_category_types() ) ? 'income' : $type;
+		$this->set_prop_value( 'type', $type );
 	}
 }

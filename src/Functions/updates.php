@@ -27,3 +27,18 @@ function eac_update_121_currency() {
 		}
 	}
 }
+
+function eac_update_1212() {
+	error_log( 'Run only once' );
+}
+
+function eac_update_1213() {
+	error_log( 'This will run 5 times' );
+	$times = get_option( 'eac_update_1213', 1 );
+	error_log( 'Times: ' . $times );
+	update_option( 'eac_update_1213', $times + 1 );
+	// if times 5 or less
+	if ( $times <= 5 ) {
+		return true;
+	}
+}

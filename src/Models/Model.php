@@ -9,28 +9,9 @@ namespace EverAccounting\Models;
  * @package EverAccounting
  * @subpackage Models
  */
-abstract class Model extends \ByteKit\Models\Model {
-
+abstract class Model extends \ByteKit\Models\Model{
 	/**
-	 * Magic call function.
-	 *
-	 * @param string $method Method name.
-	 * @param array  $args Method arguments.
-	 *
-	 *
-	 * @return mixed
-	 */
-	public function __call( $method, $args = array() ) {
-		if ( str_starts_with( 'get_', $method ) ) {
-			$attribute = substr( $method, 4 );
-			if ( $this->has_attribute( $attribute ) ) {
-				return $this->get_attribute( $attribute );
-			}
-		}
-	}
-
-	/**
-	 * Get hook prefix.
+	 * Get hook prefix. Default is the object type.
 	 *
 	 * @since 1.0.0
 	 * @return string

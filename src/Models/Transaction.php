@@ -2,6 +2,13 @@
 
 namespace EverAccounting\Models;
 
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Transaction model.
+ *
+ * @since 1.0.0
+ */
 class Transaction extends Model {
 	/**
 	 * The table associated with the model.
@@ -55,7 +62,7 @@ class Transaction extends Model {
 	 * @since 1.0.0
 	 * @var array
 	 */
-	protected $attributes = array(
+	protected $data = array(
 		'type' => 'income',
 	);
 
@@ -97,31 +104,6 @@ class Transaction extends Model {
 		'formatted_amount',
 	);
 
-	/**
-	 * Save the object to the database.
-	 *
-	 * @since 1.0.0
-	 * @return \WP_Error|true True on success, WP_Error on failure.
-	 */
-	public function save() {
-		// If the account_id is changed, update the currency code.
-		if ( $this->is_attribute_changed( 'account_id' ) || ! $this->exists() ) {
-			$account = Account::find( $this->account_id );
-			$this->set_attribute_value( 'currency_code', $account ? $account->currency_code : 'USD' );
-		}
-		// If currency code is changed, update the currency rate.
-		if ( $this->is_attribute_changed( 'currency_code' ) || ! $this->exists() ) {
-			$currency = Currency::find_where(array('code' => $this->currency_code));
-			$this->set_attribute_value( 'currency_rate', $currency ? $currency->rate : 1 );
-		}
-
-
-		if ( empty( $this->date_created ) ) {
-			$this->date_created = current_time( 'mysql' );
-		}
-
-		return parent::save();
-	}
 
 	/**
 	 * Returns the formatted amount.
@@ -129,8 +111,18 @@ class Transaction extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	public function get_formatted_amount_attribute(){
+	public function get_formatted_amount_prop(){
 		return eac_format_money( $this->amount, $this->currency_code );
+	}
+
+	/**
+	 * Related currency.
+	 *
+	 * @since 1.2.1
+	 * @return \ByteKit\Models\Relation
+	 */
+	protected function currency() {
+		return $this->has_one( Currency::class, 'code', 'currency_code' );
 	}
 
 	/**
@@ -140,7 +132,7 @@ class Transaction extends Model {
 	 * @return \ByteKit\Models\Relation
 	 */
 	public function account() {
-		return $this->belongs_to( Account::class, 'account_id' );
+		return $this->belongs_to( Account::class );
 	}
 
 	/**
@@ -159,7 +151,43 @@ class Transaction extends Model {
 	 * @since 1.0.0
 	 * @return \ByteKit\Models\Relation
 	 */
-	public function contact() {
-		return $this->has_one( Contact::class, 'contact_id' );
+	public function customer() {
+		return $this->belongs_to( Contact::class, 'contact_id' );
+	}
+
+	/**
+	 * Transaction related contact.
+	 *
+	 * @since 1.0.0
+	 * @return \ByteKit\Models\Relation
+	 */
+	public function vendor() {
+		return $this->belongs_to( Vendor::class, 'contact_id' );
+	}
+
+	/**
+	 * Save the object to the database.
+	 *
+	 * @since 1.0.0
+	 * @return \WP_Error|true True on success, WP_Error on failure.
+	 */
+	public function save() {
+		// If the account_id is changed, update the currency code.
+		if ( $this->is_prop_changed( 'account_id' ) || ! $this->exists() ) {
+			$account = Account::find( $this->account_id );
+			$this->set_prop_value( 'currency_code', $account ? $account->currency_code : 'USD' );
+		}
+		// If currency code is changed, update the currency rate.
+		if ( $this->is_prop_changed( 'currency_code' ) || ! $this->exists() ) {
+			$currency = Currency::find(array('code' => $this->currency_code));
+			$this->set_prop_value( 'currency_rate', $currency ? $currency->rate : 1 );
+		}
+
+
+		if ( empty( $this->date_created ) ) {
+			$this->date_created = current_time( 'mysql' );
+		}
+
+		return parent::save();
 	}
 }
