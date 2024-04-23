@@ -51,6 +51,7 @@ class Menus {
 		add_action( 'ever_accounting_admin_sales_invoices', array( $this, 'render_invoices_tab' ) );
 		add_action( 'ever_accounting_admin_sales_customers', array( $this, 'render_customers_tab' ) );
 		add_action( 'ever_accounting_admin_expenses_payments', array( $this, 'render_payments_tab' ) );
+		add_action( 'ever_accounting_admin_expenses_bills', array( $this, 'render_bills_tab' ) );
 	}
 
 	/**
@@ -140,6 +141,7 @@ class Menus {
 				'eac_sales_invoices_per_page',
 				'eac_sales_customers_per_page',
 				'eac_expenses_payments_per_page',
+				'eac_expenses_bills_per_page',
 			)
 		);
 		if ( in_array( $option, $options, true ) ) {
@@ -200,9 +202,15 @@ class Menus {
 				break;
 			case 'eac-expenses':
 			case 'eac-expenses-payments':
-				$this->list_table = new ListTables\RevenuesTable();
+				$this->list_table = new ListTables\PaymentsTable();
 				$this->list_table->prepare_items();
 				$args['option'] = 'eac_expenses_payments_per_page';
+				add_screen_option( 'per_page', $args );
+				break;
+			case 'eac-expenses-bills':
+				$this->list_table = new ListTables\BillsTable();
+				$this->list_table->prepare_items();
+				$args['option'] = 'eac_expenses_bills_per_page';
 				add_screen_option( 'per_page', $args );
 				break;
 		}
@@ -320,7 +328,7 @@ class Menus {
 	 */
 	public function render_payments_tab() {
 		$edit = Utilities::is_edit_screen();
-//		$payment = new Customer( $edit );
+//		$payment = new Payment( $edit );
 //		if ( ! empty( $edit ) && ! $payment->exists() ) {
 //			wp_safe_redirect( remove_query_arg( 'edit' ) );
 //			exit();
@@ -331,6 +339,27 @@ class Menus {
 			include __DIR__ . '/views/expenses/payments/edit.php';
 		} else {
 			include __DIR__ . '/views/expenses/payments/payments.php';
+		}
+	}
+
+	/**
+	 * Bills Tab.
+	 *
+	 * @since 1.0.0
+	 */
+	public function render_bills_tab() {
+		$edit = Utilities::is_edit_screen();
+//		$bill = new Bill( $edit );
+//		if ( ! empty( $edit ) && ! $bill->exists() ) {
+//			wp_safe_redirect( remove_query_arg( 'edit' ) );
+//			exit();
+//		}
+		if ( Utilities::is_add_screen() ) {
+			include __DIR__ . '/views/expenses/bills/add.php';
+		} elseif ( $edit ) {
+			include __DIR__ . '/views/expenses/bills/edit.php';
+		} else {
+			include __DIR__ . '/views/expenses/bills/bills.php';
 		}
 	}
 }
