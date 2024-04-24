@@ -20,6 +20,7 @@ defined( 'ABSPATH' ) || exit();
 define( 'EACCOUNTING_BASENAME', plugin_basename( __FILE__ ) );
 define( 'EACCOUNTING_PLUGIN_FILE', __FILE__ );
 
+require_once __DIR__ . '/vendor/autoload.php';
 require_once __DIR__ . '/includes/class-wp-ever-accounting.php';
 
 /**
@@ -33,3 +34,18 @@ function eaccounting() {
 }
 
 eaccounting();
+
+/**
+ * Main instance of EverAccounting.
+ *
+ * Returns the main instance of EverAccounting to prevent the need to use globals.
+ *
+ * @since  1.0.0
+ * @return EverAccounting\Plugin
+ */
+function EAC() {
+	return EverAccounting\Plugin::create( __FILE__ );
+}
+
+// Instantiate the plugin.
+EAC();

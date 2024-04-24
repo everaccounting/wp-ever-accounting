@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @package EAccounting
  */
-class Collection implements Arrayable {
+class Collection implements \EAccounting\Interfaces\Arrayable {
 	/**
 	 * The items contained in the collection.
 	 *
