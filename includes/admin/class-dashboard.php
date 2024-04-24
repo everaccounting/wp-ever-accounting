@@ -289,11 +289,7 @@ class Dashboard {
 				);
 			}
 		}
-		$data  = eaccounting_collect( $data )->sort(
-			function ( $a, $b ) {
-				return $b['amount'] > $a['amount'];
-			}
-		);
+		$data  = eaccounting_collect( $data );
 		$chart = $data->copy()->take( 5 );
 		$rest  = $data->slice( 5 )->all();
 		$total = array_sum( wp_list_pluck( $rest, 'amount' ) );
@@ -384,11 +380,7 @@ class Dashboard {
 				);
 			}
 		}
-		$data  = eaccounting_collect( $data )->sort(
-			function ( $a, $b ) {
-				return $b['amount'] > $a['amount'];
-			}
-		);
+		$data  = eaccounting_collect( $data );
 		$chart = $data->copy()->take( 5 );
 		$rest  = $data->slice( 5 )->all();
 		$total = array_sum( wp_list_pluck( $rest, 'amount' ) );

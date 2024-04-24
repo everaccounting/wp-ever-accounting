@@ -7,6 +7,11 @@ module.exports = [
 		...defaultConfig,
 		entry: {
 			...defaultConfig.entry(),
+			'css/eac-admin': './ui/css/admin/admin.scss',
+			'js/eac-admin': './ui/js/admin/admin.js',
+			'js/eac-core': './ui/js/common/eac-core.js',
+
+			// Legacy
 			'css/admin': './ui/legacy/css/admin.scss',
 			'css/public': './ui/legacy/css/public.scss',
 			'css/release': './ui/legacy/css/release.scss',

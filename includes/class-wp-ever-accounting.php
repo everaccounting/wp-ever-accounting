@@ -163,7 +163,6 @@ final class EverAccounting {
 	 * @return void
 	 */
 	public function includes() {
-		require_once EACCOUNTING_ABSPATH . '/vendor/autoload.php';
 
 		// Abstract classes.
 		require_once EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-registry.php';
@@ -171,7 +170,7 @@ final class EverAccounting {
 		require_once EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-background-process.php';
 
 		// Core classes.
-		require_once EACCOUNTING_ABSPATH . '/includes/class-install.php';
+//		require_once EACCOUNTING_ABSPATH . '/includes/class-install.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/class-utilities.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/class-options.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/class-ajax.php';
@@ -215,7 +214,7 @@ final class EverAccounting {
 	 * @return void
 	 */
 	private function init_hooks() {
-		register_activation_hook( EACCOUNTING_PLUGIN_FILE, array( 'EAccounting\Install', 'install' ) );
+		//register_activation_hook( EACCOUNTING_PLUGIN_FILE, array( 'EAccounting\Install', 'install' ) );
 		register_shutdown_function( array( $this, 'log_errors' ) );
 
 		add_action( 'plugins_loaded', array( $this, 'on_plugins_loaded' ), - 1 );

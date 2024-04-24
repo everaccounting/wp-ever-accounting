@@ -24,7 +24,6 @@ class EverAccounting_Tests_Category extends EverAccounting_Unit_Test_Case {
 		$this->assertNotNull( $category->get_date_created() );
 	}
 
-
 	public function test_update_category() {
 		$category    = eaccounting_insert_category( array(
 			'name'  => 'New Category',
@@ -50,7 +49,6 @@ class EverAccounting_Tests_Category extends EverAccounting_Unit_Test_Case {
 		$this->assertEquals( 'income', $category->get_type() );
 		$this->assertEquals( 'blue', $category->get_color() );
 	}
-
 
 	public function test_delete_category() {
 		$category = EverAccounting_Helper_Category::create_category();
@@ -81,6 +79,7 @@ class EverAccounting_Tests_Category extends EverAccounting_Unit_Test_Case {
 			'type' => 'expense',
 		) );
 		$this->assertEquals( 'Duplicate category name.', $category->get_error_message() );
+		// Duplicate category name.
 
 	}
 }

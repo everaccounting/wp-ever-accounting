@@ -15,8 +15,8 @@ defined( 'ABSPATH' ) || exit();
 /**
  * Return all available currency codes.
  *
- * @return array
  * @since 1.1.0
+ * @return array
  */
 function eaccounting_get_currency_codes() {
 	return eaccounting_get_data( 'currencies' );
@@ -27,8 +27,8 @@ function eaccounting_get_currency_codes() {
  *
  * @param string $code Currency code.
  *
- * @return string
  * @since 1.1.0
+ * @return string
  */
 function eaccounting_sanitize_currency_code( $code ) {
 	$codes = eaccounting_get_currency_codes();
@@ -52,18 +52,11 @@ function eaccounting_sanitize_currency_code( $code ) {
  *
  * @param object|string|int $currency Currency object, code or ID.
  *
- * @return EAccounting\Models\Currency|null
  * @since 1.1.0
+ * @return EverAccounting\Models\Currency|null
  */
 function eaccounting_get_currency( $currency ) {
-	if ( empty( $currency ) ) {
-		return null;
-	}
-	try {
-		return new EAccounting\Models\Currency( $currency );
-	} catch ( \Exception $e ) {
-		return null;
-	}
+	return eac_get_currency( $currency );
 }
 
 /**
@@ -71,13 +64,13 @@ function eaccounting_get_currency( $currency ) {
  *
  * @param string $currency Currency code.
  *
- * @return mixed|null
  * @since 1.1.0
+ * @return mixed|null
  */
 function eaccounting_get_currency_rate( $currency ) {
 	$exist = eaccounting_get_currency( $currency );
 	if ( $exist ) {
-		return $exist->get_rate();
+		return $exist->rate;
 	}
 
 	return 1;
@@ -92,7 +85,7 @@ function eaccounting_get_currency_rate( $currency ) {
  * @param array $args {
  *                                  An array of elements that make up a currency to update or insert.
  *
- * @type int $id The currency ID. If equal to something other than 0,
+ * @type int    $id The currency ID. If equal to something other than 0,
  *                                         the currency with that id will be updated. Default 0.
  *
  * @type string $name The name of the currency . Default empty.
@@ -111,60 +104,32 @@ function eaccounting_get_currency_rate( $currency ) {
  *
  * @type string $thousand_separator The thousand_separator for the currency code. Default ,.
  *
- * @type int $enabled The status of the currency. Default 1.
+ * @type int    $enabled The status of the currency. Default 1.
  *
  * @type string $date_created The date when the currency is created. Default is current time.
  *
  * }
  * @param bool  $wp_error Optional. Whether to return a WP_Error on failure. Default false.
  *
- * @return EAccounting\Models\Currency|\WP_Error|bool
  * @since 1.1.0
+ * @return EAccounting\Models\Currency|\WP_Error|bool
  */
 function eaccounting_insert_currency( $args, $wp_error = true ) {
-	// Ensure that we have data.
-	if ( empty( $args ) ) {
-		return false;
-	}
-	try {
-		// The  id will be provided when updating an item.
-		$args = wp_parse_args(
-			$args,
-			array(
-				'code' => null,
-			)
-		);
-		// Retrieve the currency.
-		$item = new \EAccounting\Models\Currency( $args );
-
-		// Load new data.
-		$item->set_props( $args );
-
-		// Save the item.
-		$item->save();
-
-		return $item;
-	} catch ( \Exception $e ) {
-		return $wp_error ? new WP_Error( 'insert_currency', $e->getMessage(), array( 'status' => $e->getCode() ) ) : 0;
-	}
+	return eac_insert_currency( $args, $wp_error );
 }
 
 /**
  * Delete a currency.
  *
- * @param string $currency_code Currency code.
+ * @param string $code Currency code.
  *
- * @return bool
  * @since 1.1.0
+ * @return bool
  */
-function eaccounting_delete_currency( $currency_code ) {
-	try {
-		$currency = new EAccounting\Models\Currency( $currency_code );
+function eaccounting_delete_currency( $code ) {
+	$currency = eac_get_currency( $code );
 
-		return $currency->exists() ? $currency->delete() : false;
-	} catch ( \Exception $e ) {
-		return false;
-	}
+	return $currency ? $currency->delete() : false;
 }
 
 /**
@@ -172,100 +137,14 @@ function eaccounting_delete_currency( $currency_code ) {
  *
  * @param array $args Query arguments.
  *
- * @return array|int|null
  * @since 1.1.0
+ * @return array|int|null
  */
 function eaccounting_get_currencies( $args = array() ) {
-	$args = wp_parse_args(
-		$args,
-		array(
-			'search'      => '',
-			'fields'      => '*',
-			'orderby'     => 'name',
-			'order'       => 'ASC',
-			'number'      => - 1,
-			'offset'      => 0,
-			'paged'       => 1,
-			'return'      => 'objects',
-			'count_total' => false,
-		)
-	);
-
-	$qv         = apply_filters( 'eaccounting_get_currencies_args', $args );
-	$option     = \EAccounting\Repositories\Currencies::OPTION;
-	$columns    = \EAccounting\Repositories\Currencies::get_columns();
-	$currencies = wp_cache_get( 'ea_currencies', 'ea_currencies' );
-
-	if ( false === $currencies ) {
-		$currencies = get_option( $option, array() );
-		wp_cache_add( 'ea_currencies', $currencies, 'ea_currencies' );
-	}
-	$currencies = eaccounting_collect( $currencies );
-
-	if ( ! empty( $qv['search'] ) ) {
-		$currencies = $currencies->filter(
-			function ( $item ) use ( $qv ) {
-				$search = implode( ' ', array( $item['name'], $item['code'], $item['symbol'] ) );
-				if ( false !== strpos( strtolower( $search ), strtolower( $qv['search'] ) ) ) {
-					return $item;
-				}
-
-				return false;
-			}
-		);
+	if ( ! empty( $args['count_total'] ) ) {
+		$args['count'] = true;
+		unset( $args['count_total'] );
 	}
 
-	if ( ! empty( $qv['include'] ) ) {
-		$includes = wp_parse_list( $qv['include'] );
-		foreach ( $includes as $include ) {
-			$currencies = $currencies->where_loose( 'code', $include );
-		}
-	}
-
-	$qv['fields'] = wp_parse_list( $qv['fields'] );
-	foreach ( $qv['fields'] as $index => $field ) {
-		if ( ! in_array( $field, $columns, true ) ) {
-			unset( $qv['fields'][ $index ] );
-		}
-	}
-
-	$fields        = is_array( $qv['fields'] ) && ! empty( $qv['fields'] ) ? $qv['fields'] : '*';
-	$qv['order']   = isset( $qv['order'] ) ? strtoupper( $qv['order'] ) : 'ASC';
-	$qv['orderby'] = in_array( $qv['orderby'], $columns, true ) ? $qv['orderby'] : 'name';
-
-	$qv['number'] = isset( $qv['number'] ) && $qv['number'] > 0 ? $qv['number'] : - 1;
-	$qv['offset'] = isset( $qv['offset'] ) ? $qv['offset'] : ( $qv['number'] * ( $qv['paged'] - 1 ) );
-	$count_total  = true === $qv['count_total'];
-//	$currencies   = $currencies->sort(
-//		function ( $a, $b ) use ( $qv ) {
-//			if ( 'ASC' === $qv['order'] ) {
-//				return $a[ $qv['orderby'] ] < $b[ $qv['orderby'] ];
-//			}
-//
-//			return $a[ $qv['orderby'] ] > $b[ $qv['orderby'] ];
-//		}
-//	);
-
-	if ( $count_total ) {
-		return $currencies->count();
-	}
-
-	if ( $qv['number'] > 1 ) {
-		$currencies = $currencies->splice( $qv['offset'], $qv['number'] );
-	}
-
-	$results = $currencies->values()->all();
-
-	if ( 'objects' === $qv['return'] ) {
-		$results = array_map( 'eaccounting_get_currency', $results );
-	} else {
-		$results = array_map(
-			function ( $result ) {
-				return (object) $result;
-			},
-			$results
-		);
-	}
-
-	return $results;
+	return eac_get_currencies( $args );
 }

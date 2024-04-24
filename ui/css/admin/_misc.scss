@@ -1,0 +1,57 @@
+// Fix heading styles so when we put buttons in the heading they look good.
+.eac-admin .wp-heading-inline {
+	font-size: 1.5rem;
+	display: flex !important;
+	align-items: center;
+	justify-content: flex-start;
+	gap: 5px;
+	margin-right: 0;
+
+	.page-title-action {
+		top: 0;
+		min-height: 28px;
+		line-height: 2;
+		display: flex;
+		align-items: center;
+
+		.dashicons {
+			height: 1rem;
+			width: 1rem;
+			font-size: 1rem;
+		}
+	}
+}
+
+
+// Back button
+.eac-back-button {
+	display: inline-flex;
+	align-items: center;
+	padding: .25rem .5rem;
+	border-radius: .25rem;
+	background-color: var(--eac-back-button-bg, #f8f9fa);
+	color: var(--eac-back-button-color, #495057);
+	font-size: .875rem;
+	line-height: 1.25rem;
+	text-decoration: none;
+	transition: background-color .15s, color .15s;
+
+	&:hover {
+		background-color: var(--eac-back-button-bg-hover, #e9ecef);
+		color: var(--eac-back-button-color-hover, #495057);
+	}
+
+	&:active {
+		background-color: var(--eac-back-button-bg-active, #dee2e6);
+		color: var(--eac-back-button-color-active, #495057);
+	}
+}
+
+.bkit-wrap{
+	box-sizing: border-box;
+	position: relative;
+	max-width: 1400px;
+	margin-left: auto;
+	margin-right: auto;
+	padding-right: 20px;
+}
