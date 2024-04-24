@@ -117,6 +117,15 @@ class Currency extends Model {
 	}
 
 	/**
+	 * Get exchange_rate property.
+	 *
+	 * @since 1.0.0
+	 */
+	protected function get_exchange_rate_prop() {
+		return eac_get_base_currency() === $this->code ? 1 : $this->get_prop_value( 'exchange_rate' );
+	}
+
+	/**
 	 * Read a record.
 	 *
 	 * @param int|string $key Record ID.

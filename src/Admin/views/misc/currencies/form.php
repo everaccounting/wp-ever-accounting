@@ -19,20 +19,21 @@ defined( 'ABSPATH' ) || exit;
 				</div>
 				<div class="bkit-card__body grid--fields">
 
-					<div class="bkit-form-group">
-						<label for="name">
-							<?php esc_html_e( 'Name', 'wp-ever-accounting' ); ?>
-							<abbr title="required"></abbr>
-						</label>
-						<input type="text" name="name" id="name" value="<?php echo esc_attr( $currency->name ); ?>"/>
-					</div>
 
 					<div class="bkit-form-group">
 						<label for="code">
 							<?php esc_html_e( 'Code', 'wp-ever-accounting' ); ?>
 							<abbr title="required"></abbr>
 						</label>
-						<input type="text" name="code" id="code" value="<?php echo esc_attr( $currency->code ); ?>"/>
+						<input type="text" name="code" id="code" value="<?php echo esc_attr( $currency->code ); ?>" readonly/>
+					</div>
+
+					<div class="bkit-form-group">
+						<label for="name">
+							<?php esc_html_e( 'Name', 'wp-ever-accounting' ); ?>
+							<abbr title="required"></abbr>
+						</label>
+						<input type="text" name="name" id="name" value="<?php echo esc_attr( $currency->name ); ?>"/>
 					</div>
 
 					<div class="bkit-form-group">
@@ -50,21 +51,13 @@ defined( 'ABSPATH' ) || exit;
 						</label>
 						<input type="text" name="exchange_rate" id="exchange_rate" value="<?php echo esc_attr( $currency->exchange_rate ); ?>"/>
 					</div>
-				</div>
-			</div>
-
-			<div class="bkit-card">
-				<div class="bkit-card__header">
-					<h2 class="bkit-card__title"><?php esc_html_e( 'More Details', 'wp-ever-accounting' ); ?></h2>
-				</div>
-				<div class="bkit-card__body grid--fields">
-
 					<div class="bkit-form-group">
 						<label for="thousand_separator">
 							<?php esc_html_e( 'Thousand Separator', 'wp-ever-accounting' ); ?>
 							<abbr title="required"></abbr>
 						</label>
-						<input type="text" name="thousand_separator" id="thousand_separator" value="<?php echo esc_attr( $currency->thousand_separator ); ?>"/>
+						<input type="text" name="thousand_separator" id="thousand_separator" value="<?php echo esc_attr( $currency->thousand_separator ); ?>"
+							   <?php echo eac_get_base_currency() == $currency->code ? 'readonly' : ''; ?>/>
 					</div>
 
 					<div class="bkit-form-group">

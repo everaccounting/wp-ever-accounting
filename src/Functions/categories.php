@@ -28,7 +28,7 @@ function eac_get_category_types() {
  * @since 1.1.0
  */
 function eac_get_category( $category ) {
-	return Category::find_where( $category );
+	return Category::find( $category );
 }
 
 /**
