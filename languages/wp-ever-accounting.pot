@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Ever Accounting 1.2.0\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/wp-ever-accounting\n"
-"POT-Creation-Date: 2024-04-21 14:28:50+00:00\n"
+"POT-Creation-Date: 2024-04-24 04:20:45+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -86,22 +86,22 @@ msgstr ""
 msgid "Thank you for using with Ever Accounting."
 msgstr ""
 
-#: includes/admin/class-assets.php:64 includes/admin/class-menu.php:68
+#: includes/admin/class-assets.php:66 includes/admin/class-menu.php:68
 #: includes/admin/class-menu.php:69 includes/admin/ea-admin-functions.php:115
-#: includes/admin/ea-admin-functions.php:154
-#: includes/admin/ea-admin-functions.php:189
+#: includes/admin/ea-admin-functions.php:155
+#: includes/admin/ea-admin-functions.php:190
 msgid "Accounting"
 msgstr ""
 
-#: includes/admin/class-assets.php:139
+#: includes/admin/class-assets.php:142
 msgid "Could not find the uploaded file, please try again"
 msgstr ""
 
-#: includes/admin/class-assets.php:140
+#: includes/admin/class-assets.php:143
 msgid "  - Select field to preview data -"
 msgstr ""
 
-#: includes/admin/class-assets.php:141
+#: includes/admin/class-assets.php:144
 msgid "(Required)"
 msgstr ""
 
@@ -153,6 +153,7 @@ msgstr ""
 
 #: includes/admin/class-dashboard.php:78
 #: includes/admin/list-tables/class-customer-list-table.php:128
+#: src/Admin/ListTables/CustomersTable.php:191
 msgid "Receivable"
 msgstr ""
 
@@ -179,7 +180,7 @@ msgstr ""
 #: includes/admin/reports/class-cashflow.php:310
 #: includes/admin/reports/income-summary.php:149
 #: includes/ea-category-functions.php:22
-#: includes/ea-transaction-functions.php:24
+#: includes/ea-transaction-functions.php:24 src/Functions/categories.php:16
 msgid "Income"
 msgstr ""
 
@@ -189,7 +190,7 @@ msgstr ""
 #: includes/admin/reports/class-cashflow.php:316
 #: includes/admin/reports/expense-summary.php:148
 #: includes/ea-category-functions.php:21
-#: includes/ea-transaction-functions.php:25
+#: includes/ea-transaction-functions.php:25 src/Functions/categories.php:15
 msgid "Expense"
 msgstr ""
 
@@ -200,17 +201,17 @@ msgstr ""
 msgid "Profit"
 msgstr ""
 
-#: includes/admin/class-dashboard.php:302
-#: includes/admin/class-dashboard.php:397
+#: includes/admin/class-dashboard.php:298
+#: includes/admin/class-dashboard.php:389
 msgid "Others"
 msgstr ""
 
-#: includes/admin/class-dashboard.php:473
+#: includes/admin/class-dashboard.php:465
 msgid "There is no income records."
 msgstr ""
 
-#: includes/admin/class-dashboard.php:482
-#: includes/admin/class-dashboard.php:535
+#: includes/admin/class-dashboard.php:474
+#: includes/admin/class-dashboard.php:527
 #: includes/admin/list-tables/class-payment-list-table.php:109
 #: includes/admin/list-tables/class-revenue-list-table.php:109
 #: includes/admin/list-tables/class-transaction-list-table.php:86
@@ -222,11 +223,16 @@ msgstr ""
 #: includes/admin/views/payments/edit-payment.php:68
 #: includes/admin/views/revenues/edit-revenue.php:64
 #: includes/admin/views/transfers/edit-transfer.php:96
+#: src/Admin/ListTables/PaymentsTable.php:187
+#: src/Admin/ListTables/RevenuesTable.php:187
+#: src/Admin/ListTables/TransactionsTable.php:182
+#: src/Admin/ListTables/TransfersTable.php:187
+#: src/Admin/ListTables/VendorsTable.php:187
 msgid "Date"
 msgstr ""
 
-#: includes/admin/class-dashboard.php:483
-#: includes/admin/class-dashboard.php:536
+#: includes/admin/class-dashboard.php:475
+#: includes/admin/class-dashboard.php:528
 #: includes/admin/list-tables/class-item-list-table.php:129
 #: includes/admin/list-tables/class-payment-list-table.php:112
 #: includes/admin/list-tables/class-revenue-list-table.php:112
@@ -242,11 +248,18 @@ msgstr ""
 #: includes/admin/views/revenues/edit-revenue.php:109
 #: includes/admin/views/revenues/view-income.php:139
 #: includes/models/class-bill.php:74 includes/models/class-invoice.php:74
+#: src/Admin/ListTables/ItemsTable.php:222
+#: src/Admin/ListTables/PaymentsTable.php:190
+#: src/Admin/ListTables/RevenuesTable.php:190
+#: src/Admin/ListTables/TransactionsTable.php:186
+#: src/Admin/ListTables/TransfersTable.php:190
+#: src/Admin/ListTables/VendorsTable.php:190
+#: src/Admin/views/items/items/form.php:35
 msgid "Category"
 msgstr ""
 
-#: includes/admin/class-dashboard.php:484
-#: includes/admin/class-dashboard.php:537
+#: includes/admin/class-dashboard.php:476
+#: includes/admin/class-dashboard.php:529
 #: includes/admin/list-tables/class-payment-list-table.php:110
 #: includes/admin/list-tables/class-revenue-list-table.php:110
 #: includes/admin/list-tables/class-transaction-list-table.php:87
@@ -258,18 +271,23 @@ msgstr ""
 #: includes/admin/views/revenues/edit-revenue.php:86
 #: includes/admin/views/revenues/view-income.php:161
 #: includes/admin/views/transfers/edit-transfer.php:83
+#: src/Admin/ListTables/PaymentsTable.php:188
+#: src/Admin/ListTables/RevenuesTable.php:188
+#: src/Admin/ListTables/TransactionsTable.php:183
+#: src/Admin/ListTables/TransfersTable.php:188
+#: src/Admin/ListTables/VendorsTable.php:188
 msgid "Amount"
 msgstr ""
 
-#: includes/admin/class-dashboard.php:525
+#: includes/admin/class-dashboard.php:517
 msgid "There is no expense records."
 msgstr ""
 
-#: includes/admin/class-dashboard.php:583
+#: includes/admin/class-dashboard.php:575
 msgid "There is not accounts."
 msgstr ""
 
-#: includes/admin/class-dashboard.php:593 includes/admin/class-settings.php:145
+#: includes/admin/class-dashboard.php:585 includes/admin/class-settings.php:145
 #: includes/admin/list-tables/class-payment-list-table.php:111
 #: includes/admin/list-tables/class-revenue-list-table.php:111
 #: includes/admin/list-tables/class-transaction-list-table.php:89
@@ -280,11 +298,15 @@ msgstr ""
 #: includes/admin/views/js/modal-invoice-payment.php:40
 #: includes/admin/views/payments/edit-payment.php:80
 #: includes/admin/views/revenues/edit-revenue.php:75
-#: includes/class-settings.php:166
+#: includes/class-settings.php:166 src/Admin/ListTables/PaymentsTable.php:189
+#: src/Admin/ListTables/RevenuesTable.php:189
+#: src/Admin/ListTables/TransactionsTable.php:185
+#: src/Admin/ListTables/TransfersTable.php:189
+#: src/Admin/ListTables/VendorsTable.php:189
 msgid "Account"
 msgstr ""
 
-#: includes/admin/class-dashboard.php:594
+#: includes/admin/class-dashboard.php:586
 #: includes/admin/list-tables/class-account-list-table.php:127
 msgid "Balance"
 msgstr ""
@@ -397,110 +419,127 @@ msgstr ""
 msgid "Sorry, Invoice does not exist"
 msgstr ""
 
-#: includes/admin/class-menu.php:78 includes/admin/class-menu.php:79
+#: includes/admin/class-menu.php:79 includes/admin/class-menu.php:80
 #: includes/admin/views/admin-page-overview.php:11
 msgid "Overview"
 msgstr ""
 
-#: includes/admin/class-menu.php:92 includes/admin/class-menu.php:93
-#: includes/admin/class-menu.php:187
+#: includes/admin/class-menu.php:93 includes/admin/class-menu.php:94
+#: includes/admin/class-menu.php:188
 #: includes/admin/views/items/edit-item.php:25
-#: includes/admin/views/items/list-item.php:32
+#: includes/admin/views/items/list-item.php:32 src/Admin/Utilities.php:23
+#: src/Admin/Utilities.php:24
+#: src/Admin/views/items/categories/categories.php:12
+#: src/Admin/views/items/items/items.php:12
 msgid "Items"
 msgstr ""
 
-#: includes/admin/class-menu.php:106 includes/admin/class-menu.php:107
-#: includes/admin/class-menu.php:322
+#: includes/admin/class-menu.php:107 includes/admin/class-menu.php:108
+#: includes/admin/class-menu.php:323
 #: includes/admin/reports/class-expenses.php:195
 #: includes/admin/reports/class-profits.php:176
 #: includes/admin/reports/class-sales.php:193 includes/class-install.php:254
+#: src/Admin/Utilities.php:30 src/Admin/Utilities.php:31
 msgid "Sales"
 msgstr ""
 
-#: includes/admin/class-menu.php:120 includes/admin/class-menu.php:121
-#: includes/admin/class-menu.php:323
+#: includes/admin/class-menu.php:121 includes/admin/class-menu.php:122
+#: includes/admin/class-menu.php:324 src/Admin/Utilities.php:42
+#: src/Admin/Utilities.php:43
 msgid "Expenses"
 msgstr ""
 
-#: includes/admin/class-menu.php:134 includes/admin/class-menu.php:135
+#: includes/admin/class-menu.php:135 includes/admin/class-menu.php:136
+#: src/Admin/Utilities.php:54 src/Admin/Utilities.php:55
 msgid "Banking"
 msgstr ""
 
-#: includes/admin/class-menu.php:148 includes/admin/class-menu.php:149
+#: includes/admin/class-menu.php:149 includes/admin/class-menu.php:150
+#: src/Admin/Utilities.php:78 src/Admin/Utilities.php:79
 msgid "Tools"
 msgstr ""
 
-#: includes/admin/class-menu.php:162 includes/admin/class-menu.php:163
+#: includes/admin/class-menu.php:163 includes/admin/class-menu.php:164
 msgid "Reports"
 msgstr ""
 
-#: includes/admin/class-menu.php:204
+#: includes/admin/class-menu.php:205
 #: includes/admin/views/revenues/edit-revenue.php:23
-#: includes/admin/views/revenues/list-revenue.php:32
+#: includes/admin/views/revenues/list-revenue.php:32 src/Admin/Utilities.php:36
+#: src/Admin/views/sales/revenues/revenues.php:12
 msgid "Revenues"
 msgstr ""
 
-#: includes/admin/class-menu.php:207 includes/admin/class-settings.php:171
+#: includes/admin/class-menu.php:208 includes/admin/class-settings.php:171
 #: includes/admin/ea-admin-functions.php:64
 #: includes/admin/views/customers/view-customer.php:23
 #: includes/admin/views/invoices/edit-invoice.php:37
 #: includes/admin/views/invoices/list-invoice.php:25
-#: includes/admin/views/invoices/view-invoice.php:49
+#: includes/admin/views/invoices/view-invoice.php:49 src/Admin/Utilities.php:37
+#: src/Admin/views/sales/invoices/invoices.php:12
 msgid "Invoices"
 msgstr ""
 
-#: includes/admin/class-menu.php:210
+#: includes/admin/class-menu.php:211
 #: includes/admin/views/customers/edit-customer.php:25
 #: includes/admin/views/customers/list-customer.php:32
 #: includes/admin/views/customers/view-customer.php:40
+#: src/Admin/Utilities.php:38 src/Admin/views/sales/customers/customers.php:12
 msgid "Customers"
 msgstr ""
 
-#: includes/admin/class-menu.php:228
+#: includes/admin/class-menu.php:229
 #: includes/admin/views/payments/edit-payment.php:28
-#: includes/admin/views/payments/list-payment.php:32
+#: includes/admin/views/payments/list-payment.php:32 src/Admin/Utilities.php:48
+#: src/Admin/views/expenses/payments/payments.php:12
 msgid "Payments"
 msgstr ""
 
-#: includes/admin/class-menu.php:231 includes/admin/class-settings.php:232
+#: includes/admin/class-menu.php:232 includes/admin/class-settings.php:232
 #: includes/admin/ea-admin-functions.php:65
 #: includes/admin/views/bills/edit-bill.php:28
 #: includes/admin/views/bills/list-bill.php:24
 #: includes/admin/views/bills/view-bill.php:49
-#: includes/admin/views/vendors/view-vendor.php:23
+#: includes/admin/views/vendors/view-vendor.php:23 src/Admin/Utilities.php:49
+#: src/Admin/views/expenses/bills/bills.php:12
 msgid "Bills"
 msgstr ""
 
-#: includes/admin/class-menu.php:234
+#: includes/admin/class-menu.php:235
 #: includes/admin/views/vendors/edit-vendor.php:30
 #: includes/admin/views/vendors/list-vendor.php:32
-#: includes/admin/views/vendors/view-vendor.php:42
+#: includes/admin/views/vendors/view-vendor.php:42 src/Admin/Utilities.php:50
+#: src/Admin/views/expenses/vendors/vendors.php:12
 msgid "Vendors"
 msgstr ""
 
-#: includes/admin/class-menu.php:264
+#: includes/admin/class-menu.php:265
 #: includes/admin/views/accounts/edit-account.php:34
 #: includes/admin/views/accounts/list-account.php:34
-#: includes/admin/views/accounts/view-account.php:48
+#: includes/admin/views/accounts/view-account.php:48 src/Admin/Utilities.php:60
+#: src/Admin/views/banking/accounts/accounts.php:12
 msgid "Accounts"
 msgstr ""
 
-#: includes/admin/class-menu.php:267
+#: includes/admin/class-menu.php:268
 #: includes/admin/views/accounts/view-account.php:22
 #: includes/admin/views/customers/view-customer.php:22
 #: includes/admin/views/transactions/list-transactions.php:18
-#: includes/admin/views/vendors/view-vendor.php:22
+#: includes/admin/views/vendors/view-vendor.php:22 src/Admin/Utilities.php:61
+#: src/Admin/views/banking/transactions/transactions.php:12
 msgid "Transactions"
 msgstr ""
 
-#: includes/admin/class-menu.php:270
+#: includes/admin/class-menu.php:271
 #: includes/admin/views/accounts/view-account.php:23
 #: includes/admin/views/transfers/edit-transfer.php:21
 #: includes/admin/views/transfers/list-transfer.php:23
+#: src/Admin/Utilities.php:62
+#: src/Admin/views/banking/transfers/transfers.php:12
 msgid "Transfers"
 msgstr ""
 
-#: includes/admin/class-menu.php:289 includes/admin/tools/tools.php:52
+#: includes/admin/class-menu.php:290 includes/admin/tools/tools.php:52
 #: includes/admin/views/accounts/list-account.php:36
 #: includes/admin/views/categories/list-category.php:35
 #: includes/admin/views/currencies/list-currency.php:35
@@ -508,11 +547,18 @@ msgstr ""
 #: includes/admin/views/items/list-item.php:37
 #: includes/admin/views/payments/list-payment.php:37
 #: includes/admin/views/revenues/list-revenue.php:37
-#: includes/admin/views/vendors/list-vendor.php:37
+#: includes/admin/views/vendors/list-vendor.php:37 src/Admin/Utilities.php:84
+#: src/Admin/views/banking/accounts/accounts.php:17
+#: src/Admin/views/banking/currencies/currencies.php:17
+#: src/Admin/views/banking/transfers/transfers.php:17
+#: src/Admin/views/expenses/payments/payments.php:17
+#: src/Admin/views/expenses/vendors/vendors.php:17
+#: src/Admin/views/sales/customers/customers.php:17
+#: src/Admin/views/sales/revenues/revenues.php:17
 msgid "Import"
 msgstr ""
 
-#: includes/admin/class-menu.php:292 includes/admin/tools/tools.php:55
+#: includes/admin/class-menu.php:293 includes/admin/tools/tools.php:55
 #: includes/admin/tools/tools.php:94 includes/admin/tools/tools.php:107
 #: includes/admin/tools/tools.php:120 includes/admin/tools/tools.php:133
 #: includes/admin/tools/tools.php:146 includes/admin/tools/tools.php:159
@@ -523,26 +569,29 @@ msgstr ""
 #: includes/admin/views/tools/export.php:75
 #: includes/admin/views/tools/export.php:88
 #: includes/admin/views/tools/export.php:101
-#: includes/admin/views/tools/export.php:114
+#: includes/admin/views/tools/export.php:114 src/Admin/Utilities.php:85
 msgid "Export"
 msgstr ""
 
-#: includes/admin/class-menu.php:324
+#: includes/admin/class-menu.php:325
 msgid "Profits"
 msgstr ""
 
-#: includes/admin/class-menu.php:325
+#: includes/admin/class-menu.php:326
 msgid "Cashflow"
 msgstr ""
 
-#: includes/admin/class-menu.php:559 includes/admin/class-settings.php:298
+#: includes/admin/class-menu.php:560 includes/admin/class-settings.php:298
 #: includes/admin/ea-admin-functions.php:27
 #: includes/admin/views/currencies/edit-currency.php:33
 #: includes/admin/views/currencies/list-currency.php:30
+#: src/Admin/Utilities.php:73
+#: src/Admin/views/banking/currencies/currencies.php:12
+#: src/Admin/views/misc/currencies/currencies.php:15
 msgid "Currencies"
 msgstr ""
 
-#: includes/admin/class-menu.php:560 includes/admin/class-settings.php:295
+#: includes/admin/class-menu.php:561 includes/admin/class-settings.php:295
 #: includes/admin/ea-admin-functions.php:28
 #: includes/admin/reports/class-expenses.php:272
 #: includes/admin/reports/class-profits.php:253
@@ -552,6 +601,7 @@ msgstr ""
 #: includes/admin/reports/income-summary.php:166
 #: includes/admin/views/categories/edit-category.php:21
 #: includes/admin/views/categories/list-category.php:30
+#: src/Admin/Utilities.php:72 src/Admin/views/misc/categories/categories.php:12
 msgid "Categories"
 msgstr ""
 
@@ -619,6 +669,23 @@ msgstr ""
 #: includes/admin/views/vendors/view-vendor.php:150
 #: includes/class-settings.php:78 includes/models/class-customer.php:64
 #: includes/models/class-vendor.php:63
+#: src/Admin/ListTables/AccountsTable.php:188
+#: src/Admin/ListTables/CategoriesTable.php:222
+#: src/Admin/ListTables/CurrenciesTable.php:204
+#: src/Admin/ListTables/CustomersTable.php:187
+#: src/Admin/ListTables/ItemsTable.php:219
+#: src/Admin/views/banking/accounts/form.php:27
+#: src/Admin/views/banking/currencies/form.php:27
+#: src/Admin/views/banking/transfers/form.php:27
+#: src/Admin/views/expenses/bills/form.php:27
+#: src/Admin/views/expenses/payments/form.php:27
+#: src/Admin/views/expenses/vendors/form.php:27
+#: src/Admin/views/items/items/form.php:27
+#: src/Admin/views/misc/categories/form.php:25
+#: src/Admin/views/misc/currencies/form.php:25
+#: src/Admin/views/sales/customers/form.php:27
+#: src/Admin/views/sales/invoices/form.php:27
+#: src/Admin/views/sales/revenues/form.php:27
 msgid "Name"
 msgstr ""
 
@@ -813,8 +880,8 @@ msgstr ""
 #: includes/admin/views/js/modal-add-invoice-item.php:17
 #: includes/class-install.php:384 includes/class-install.php:390
 #: includes/class-settings.php:232 includes/class-settings.php:290
-#: includes/ea-category-functions.php:24 templates/bill/bill-items.php:16
-#: templates/invoice/invoice-items.php:16
+#: includes/ea-category-functions.php:24 src/Functions/categories.php:17
+#: templates/bill/bill-items.php:16 templates/invoice/invoice-items.php:16
 msgid "Item"
 msgstr ""
 
@@ -929,6 +996,7 @@ msgid "Select account"
 msgstr ""
 
 #: includes/admin/class-settings.php:660 includes/class-settings.php:493
+#: src/Admin/views/items/items/form.php:40
 msgid "Select category"
 msgstr ""
 
@@ -942,6 +1010,7 @@ msgstr ""
 
 #: includes/admin/class-settings.php:789 includes/admin/class-settings.php:790
 #: includes/class-install.php:73
+#: vendor/byteever/bytekit-core/src/Plugin.php:533
 msgid "Settings"
 msgstr ""
 
@@ -1016,6 +1085,7 @@ msgstr ""
 
 #: includes/admin/class-setup.php:349
 #: includes/admin/list-tables/class-currency-list-table.php:96
+#: src/Admin/ListTables/CurrenciesTable.php:205
 msgid "Code"
 msgstr ""
 
@@ -1045,15 +1115,15 @@ msgstr ""
 msgid "View Dashboard"
 msgstr ""
 
-#: includes/admin/ea-admin-functions.php:79
+#: includes/admin/ea-admin-functions.php:79 src/Admin/Utilities.php:74
 msgid "Taxes"
 msgstr ""
 
-#: includes/admin/ea-admin-functions.php:439
+#: includes/admin/ea-admin-functions.php:441
 msgid "- Do not import -"
 msgstr ""
 
-#: includes/admin/ea-admin-functions.php:442
+#: includes/admin/ea-admin-functions.php:444
 msgid "- Select field to preview data -"
 msgstr ""
 
@@ -1067,6 +1137,8 @@ msgstr ""
 #: includes/admin/list-tables/class-account-list-table.php:110
 #: includes/admin/views/accounts/edit-account.php:22
 #: includes/admin/views/js/modal-add-account.php:12
+#: src/Admin/views/banking/accounts/add.php:12
+#: src/Admin/views/banking/accounts/form.php:53
 msgid "Add Account"
 msgstr ""
 
@@ -1086,12 +1158,16 @@ msgstr ""
 #: includes/admin/list-tables/class-account-list-table.php:128
 #: includes/admin/list-tables/class-bill-list-table.php:109
 #: includes/admin/list-tables/class-invoice-list-table.php:123
+#: src/Admin/ListTables/AccountsTable.php:190
+#: src/Admin/ListTables/BillsTable.php:190
+#: src/Admin/ListTables/InvoicesTable.php:188
 msgid "Number"
 msgstr ""
 
 #: includes/admin/list-tables/class-account-list-table.php:129
 #: includes/admin/views/accounts/edit-account.php:105
 #: includes/admin/views/accounts/view-account.php:157
+#: src/Admin/ListTables/AccountsTable.php:191
 msgid "Bank Name"
 msgstr ""
 
@@ -1100,6 +1176,9 @@ msgstr ""
 #: includes/admin/list-tables/class-customer-list-table.php:129
 #: includes/admin/list-tables/class-item-list-table.php:130
 #: includes/admin/list-tables/class-vendor-list-table.php:133
+#: src/Admin/ListTables/AccountsTable.php:192
+#: src/Admin/ListTables/CustomersTable.php:192
+#: src/Admin/ListTables/ItemsTable.php:340
 msgid "Enabled"
 msgstr ""
 
@@ -1108,6 +1187,29 @@ msgstr ""
 #: includes/admin/list-tables/class-customer-list-table.php:156
 #: includes/admin/list-tables/class-item-list-table.php:158
 #: includes/admin/list-tables/class-vendor-list-table.php:160
+#: src/Admin/ListTables/AccountsTable.php:141
+#: src/Admin/ListTables/AccountsTable.php:257
+#: src/Admin/ListTables/AccountsTable.php:286
+#: src/Admin/ListTables/BillsTable.php:261
+#: src/Admin/ListTables/BillsTable.php:290
+#: src/Admin/ListTables/CustomersTable.php:139
+#: src/Admin/ListTables/CustomersTable.php:256
+#: src/Admin/ListTables/CustomersTable.php:285
+#: src/Admin/ListTables/InvoicesTable.php:259
+#: src/Admin/ListTables/InvoicesTable.php:288
+#: src/Admin/ListTables/ItemsTable.php:173
+#: src/Admin/ListTables/ItemsTable.php:288
+#: src/Admin/ListTables/ItemsTable.php:316
+#: src/Admin/ListTables/PaymentsTable.php:258
+#: src/Admin/ListTables/PaymentsTable.php:287
+#: src/Admin/ListTables/RevenuesTable.php:258
+#: src/Admin/ListTables/RevenuesTable.php:287
+#: src/Admin/ListTables/TransactionsTable.php:253
+#: src/Admin/ListTables/TransactionsTable.php:282
+#: src/Admin/ListTables/TransfersTable.php:258
+#: src/Admin/ListTables/TransfersTable.php:287
+#: src/Admin/ListTables/VendorsTable.php:258
+#: src/Admin/ListTables/VendorsTable.php:287
 msgid "Enable"
 msgstr ""
 
@@ -1116,6 +1218,29 @@ msgstr ""
 #: includes/admin/list-tables/class-customer-list-table.php:157
 #: includes/admin/list-tables/class-item-list-table.php:159
 #: includes/admin/list-tables/class-vendor-list-table.php:161
+#: src/Admin/ListTables/AccountsTable.php:142
+#: src/Admin/ListTables/AccountsTable.php:255
+#: src/Admin/ListTables/AccountsTable.php:284
+#: src/Admin/ListTables/BillsTable.php:259
+#: src/Admin/ListTables/BillsTable.php:288
+#: src/Admin/ListTables/CustomersTable.php:140
+#: src/Admin/ListTables/CustomersTable.php:254
+#: src/Admin/ListTables/CustomersTable.php:283
+#: src/Admin/ListTables/InvoicesTable.php:257
+#: src/Admin/ListTables/InvoicesTable.php:286
+#: src/Admin/ListTables/ItemsTable.php:174
+#: src/Admin/ListTables/ItemsTable.php:286
+#: src/Admin/ListTables/ItemsTable.php:314
+#: src/Admin/ListTables/PaymentsTable.php:256
+#: src/Admin/ListTables/PaymentsTable.php:285
+#: src/Admin/ListTables/RevenuesTable.php:256
+#: src/Admin/ListTables/RevenuesTable.php:285
+#: src/Admin/ListTables/TransactionsTable.php:251
+#: src/Admin/ListTables/TransactionsTable.php:280
+#: src/Admin/ListTables/TransfersTable.php:256
+#: src/Admin/ListTables/TransfersTable.php:285
+#: src/Admin/ListTables/VendorsTable.php:256
+#: src/Admin/ListTables/VendorsTable.php:285
 msgid "Disable"
 msgstr ""
 
@@ -1144,6 +1269,50 @@ msgstr ""
 #: includes/admin/list-tables/class-vendor-list-table.php:243
 #: includes/admin/views/bills/view-bill.php:33
 #: includes/admin/views/invoices/view-invoice.php:33
+#: src/Admin/ListTables/AccountsTable.php:143
+#: src/Admin/ListTables/AccountsTable.php:252
+#: src/Admin/ListTables/AccountsTable.php:281
+#: src/Admin/ListTables/BillsTable.php:144
+#: src/Admin/ListTables/BillsTable.php:256
+#: src/Admin/ListTables/BillsTable.php:285
+#: src/Admin/ListTables/CategoriesTable.php:193
+#: src/Admin/ListTables/CategoriesTable.php:328
+#: src/Admin/ListTables/CustomersTable.php:141
+#: src/Admin/ListTables/CustomersTable.php:251
+#: src/Admin/ListTables/CustomersTable.php:280
+#: src/Admin/ListTables/InvoicesTable.php:142
+#: src/Admin/ListTables/InvoicesTable.php:254
+#: src/Admin/ListTables/InvoicesTable.php:283
+#: src/Admin/ListTables/ItemsTable.php:172
+#: src/Admin/ListTables/ItemsTable.php:283
+#: src/Admin/ListTables/ItemsTable.php:311
+#: src/Admin/ListTables/PaymentsTable.php:141
+#: src/Admin/ListTables/PaymentsTable.php:253
+#: src/Admin/ListTables/PaymentsTable.php:282
+#: src/Admin/ListTables/RevenuesTable.php:141
+#: src/Admin/ListTables/RevenuesTable.php:253
+#: src/Admin/ListTables/RevenuesTable.php:282
+#: src/Admin/ListTables/TransactionsTable.php:248
+#: src/Admin/ListTables/TransactionsTable.php:277
+#: src/Admin/ListTables/TransfersTable.php:141
+#: src/Admin/ListTables/TransfersTable.php:253
+#: src/Admin/ListTables/TransfersTable.php:282
+#: src/Admin/ListTables/VendorsTable.php:141
+#: src/Admin/ListTables/VendorsTable.php:253
+#: src/Admin/ListTables/VendorsTable.php:282
+#: src/Admin/views/banking/accounts/form.php:48
+#: src/Admin/views/banking/currencies/form.php:48
+#: src/Admin/views/banking/transfers/form.php:48
+#: src/Admin/views/expenses/bills/form.php:48
+#: src/Admin/views/expenses/payments/form.php:48
+#: src/Admin/views/expenses/vendors/form.php:48
+#: src/Admin/views/items/items/form.php:85
+#: src/Admin/views/misc/categories/form.php:78
+#: src/Admin/views/misc/currencies/form.php:78
+#: src/Admin/views/sales/customers/form.php:48
+#: src/Admin/views/sales/invoices/form.php:48
+#: src/Admin/views/sales/revenues/form.php:48
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_ListTable.php:92
 msgid "Delete"
 msgstr ""
 
@@ -1174,6 +1343,7 @@ msgstr ""
 #: includes/admin/views/revenues/view-income.php:33
 #: includes/admin/views/vendors/view-vendor.php:139
 #: templates/invoice/invoice-actions.php:33
+#: vendor/woocommerce/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:35
 msgid "Edit"
 msgstr ""
 
@@ -1213,6 +1383,9 @@ msgstr ""
 #: includes/admin/list-tables/class-customer-list-table.php:403
 #: includes/admin/list-tables/class-item-list-table.php:361
 #: includes/admin/list-tables/class-vendor-list-table.php:406
+#: src/Admin/ListTables/ListTable.php:125
+#: src/Admin/views/misc/categories/form.php:65
+#: src/Admin/views/misc/currencies/form.php:65
 msgid "Active"
 msgstr ""
 
@@ -1221,6 +1394,9 @@ msgstr ""
 #: includes/admin/list-tables/class-customer-list-table.php:404
 #: includes/admin/list-tables/class-item-list-table.php:362
 #: includes/admin/list-tables/class-vendor-list-table.php:407
+#: src/Admin/ListTables/ListTable.php:126
+#: src/Admin/views/misc/categories/form.php:66
+#: src/Admin/views/misc/currencies/form.php:66
 msgid "Inactive"
 msgstr ""
 
@@ -1247,7 +1423,9 @@ msgstr ""
 #: includes/admin/views/invoices/invoice-items.php:138
 #: includes/admin/views/payments/view-payment.php:192
 #: includes/admin/views/revenues/view-income.php:180
-#: templates/bill/bill-totals.php:56 templates/invoice/invoice-totals.php:76
+#: src/Admin/ListTables/BillsTable.php:191
+#: src/Admin/ListTables/InvoicesTable.php:189 templates/bill/bill-totals.php:56
+#: templates/invoice/invoice-totals.php:76
 msgid "Total"
 msgstr ""
 
@@ -1257,11 +1435,16 @@ msgstr ""
 #: includes/admin/views/bills/edit-bill.php:78
 #: includes/admin/views/payments/edit-payment.php:104
 #: includes/ea-contact-functions.php:24 includes/models/class-bill.php:75
+#: src/Admin/ListTables/BillsTable.php:192
+#: src/Admin/ListTables/PaymentsTable.php:191
+#: src/Admin/ListTables/TransfersTable.php:191
+#: src/Admin/ListTables/VendorsTable.php:191 src/Functions/contacts.php:27
 msgid "Vendor"
 msgstr ""
 
 #: includes/admin/list-tables/class-bill-list-table.php:112
 #: includes/admin/views/bills/edit-bill.php:100
+#: src/Admin/ListTables/BillsTable.php:193
 msgid "Bill Date"
 msgstr ""
 
@@ -1269,17 +1452,31 @@ msgstr ""
 #: includes/admin/list-tables/class-invoice-list-table.php:127
 #: includes/admin/views/bills/edit-bill.php:111
 #: includes/admin/views/invoices/edit-invoice.php:106
-#: templates/bill/bill-meta.php:31 templates/invoice/invoice-meta.php:31
+#: src/Admin/ListTables/BillsTable.php:194
+#: src/Admin/ListTables/InvoicesTable.php:192 templates/bill/bill-meta.php:31
+#: templates/invoice/invoice-meta.php:31
 msgid "Due Date"
 msgstr ""
 
 #: includes/admin/list-tables/class-bill-list-table.php:114
 #: includes/admin/list-tables/class-invoice-list-table.php:128
+#: src/Admin/ListTables/BillsTable.php:195
+#: src/Admin/ListTables/CategoriesTable.php:225
+#: src/Admin/ListTables/CurrenciesTable.php:208
+#: src/Admin/ListTables/InvoicesTable.php:193
+#: src/Admin/ListTables/ItemsTable.php:223
+#: src/Admin/views/misc/categories/form.php:62
+#: src/Admin/views/misc/currencies/form.php:62
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_AdminView.php:243
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_ListTable.php:97
 msgid "Status"
 msgstr ""
 
 #: includes/admin/list-tables/class-bill-list-table.php:143
 #: includes/admin/list-tables/class-invoice-list-table.php:157
+#: src/Admin/ListTables/BillsTable.php:141
+#: src/Admin/ListTables/InvoicesTable.php:139
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_ListTable.php:133
 msgid "Cancel"
 msgstr ""
 
@@ -1290,13 +1487,16 @@ msgstr ""
 #: includes/admin/views/bills/bill-items.php:127
 #: includes/admin/views/invoices/invoice-items.php:146
 #: includes/ea-document-functions.php:388
-#: includes/ea-document-functions.php:406 templates/bill/bill-totals.php:63
+#: includes/ea-document-functions.php:406
+#: src/Admin/ListTables/CustomersTable.php:190
+#: src/Admin/ListTables/InvoicesTable.php:140 templates/bill/bill-totals.php:63
 #: templates/invoice/invoice-totals.php:83
 msgid "Paid"
 msgstr ""
 
 #: includes/admin/list-tables/class-bill-list-table.php:145
 #: includes/ea-document-functions.php:386
+#: src/Admin/ListTables/BillsTable.php:143
 msgid "Received"
 msgstr ""
 
@@ -1329,6 +1529,10 @@ msgstr ""
 #: includes/admin/list-tables/class-transaction-list-table.php:88
 #: includes/admin/views/categories/edit-category.php:73
 #: includes/models/class-payment.php:62 includes/models/class-revenue.php:61
+#: src/Admin/ListTables/CategoriesTable.php:224
+#: src/Admin/ListTables/TransactionsTable.php:184
+#: src/Admin/views/misc/categories/form.php:33
+#: src/Admin/views/misc/currencies/form.php:33
 msgid "Type"
 msgstr ""
 
@@ -1348,6 +1552,7 @@ msgstr ""
 
 #: includes/admin/list-tables/class-currency-list-table.php:97
 #: includes/admin/views/currencies/edit-currency.php:112
+#: src/Admin/ListTables/CurrenciesTable.php:206
 msgid "Symbol"
 msgstr ""
 
@@ -1365,11 +1570,14 @@ msgstr ""
 #: includes/admin/list-tables/class-customer-list-table.php:108
 #: includes/admin/views/customers/edit-customer.php:21
 #: includes/admin/views/js/modal-add-customer.php:12
+#: src/Admin/views/sales/customers/add.php:12
+#: src/Admin/views/sales/customers/form.php:53
 msgid "Add Customer"
 msgstr ""
 
 #: includes/admin/list-tables/class-customer-list-table.php:125
 #: includes/admin/list-tables/class-vendor-list-table.php:129
+#: src/Admin/ListTables/CustomersTable.php:188
 msgid "Contact"
 msgstr ""
 
@@ -1377,6 +1585,7 @@ msgstr ""
 #: includes/admin/list-tables/class-vendor-list-table.php:130
 #: includes/admin/views/customers/view-customer.php:187
 #: includes/admin/views/vendors/view-vendor.php:178
+#: src/Admin/ListTables/CustomersTable.php:189
 msgid "Address"
 msgstr ""
 
@@ -1401,16 +1610,21 @@ msgstr ""
 #: includes/admin/views/invoices/edit-invoice.php:72
 #: includes/admin/views/revenues/edit-revenue.php:97
 #: includes/ea-contact-functions.php:23 includes/models/class-invoice.php:75
+#: src/Admin/ListTables/InvoicesTable.php:190
+#: src/Admin/ListTables/RevenuesTable.php:191 src/Functions/contacts.php:26
 msgid "Customer"
 msgstr ""
 
 #: includes/admin/list-tables/class-invoice-list-table.php:126
 #: includes/admin/views/invoices/edit-invoice.php:95
+#: src/Admin/ListTables/InvoicesTable.php:191
 msgid "Invoice Date"
 msgstr ""
 
 #: includes/admin/list-tables/class-invoice-list-table.php:159
 #: includes/ea-document-functions.php:404
+#: src/Admin/ListTables/InvoicesTable.php:141
+#: vendor/woocommerce/action-scheduler/classes/abstracts/ActionScheduler_Store.php:407
 msgid "Pending"
 msgstr ""
 
@@ -1427,14 +1641,20 @@ msgstr ""
 #: includes/admin/list-tables/class-item-list-table.php:110
 #: includes/admin/views/items/edit-item.php:21
 #: includes/admin/views/js/modal-add-item.php:12
+#: src/Admin/views/items/items/add.php:12
+#: src/Admin/views/items/items/form.php:90
 msgid "Add Item"
 msgstr ""
 
 #: includes/admin/list-tables/class-item-list-table.php:127
+#: src/Admin/ListTables/ItemsTable.php:220
+#: src/Admin/views/items/items/form.php:49
 msgid "Sale Price"
 msgstr ""
 
 #: includes/admin/list-tables/class-item-list-table.php:128
+#: src/Admin/ListTables/ItemsTable.php:221
+#: src/Admin/views/items/items/form.php:57
 msgid "Purchase Price"
 msgstr ""
 
@@ -1459,6 +1679,18 @@ msgid "Date Created"
 msgstr ""
 
 #: includes/admin/list-tables/class-note-list-table.php:91
+#: src/Admin/views/banking/accounts/form.php:39
+#: src/Admin/views/banking/currencies/form.php:39
+#: src/Admin/views/banking/transfers/form.php:39
+#: src/Admin/views/expenses/bills/form.php:39
+#: src/Admin/views/expenses/payments/form.php:39
+#: src/Admin/views/expenses/vendors/form.php:39
+#: src/Admin/views/items/items/form.php:76
+#: src/Admin/views/misc/categories/form.php:56
+#: src/Admin/views/misc/currencies/form.php:56
+#: src/Admin/views/sales/customers/form.php:39
+#: src/Admin/views/sales/invoices/form.php:39
+#: src/Admin/views/sales/revenues/form.php:39
 msgid "Actions"
 msgstr ""
 
@@ -1478,6 +1710,8 @@ msgstr ""
 #: includes/admin/views/js/modal-bill-payment.php:13
 #: includes/admin/views/js/modal-invoice-payment.php:13
 #: includes/admin/views/payments/edit-payment.php:23
+#: src/Admin/views/expenses/payments/add.php:12
+#: src/Admin/views/expenses/payments/form.php:53
 msgid "Add Payment"
 msgstr ""
 
@@ -1488,6 +1722,11 @@ msgstr ""
 #: includes/admin/views/payments/edit-payment.php:150
 #: includes/admin/views/revenues/edit-revenue.php:138
 #: includes/admin/views/transfers/edit-transfer.php:116
+#: src/Admin/ListTables/PaymentsTable.php:192
+#: src/Admin/ListTables/RevenuesTable.php:192
+#: src/Admin/ListTables/TransactionsTable.php:187
+#: src/Admin/ListTables/TransfersTable.php:192
+#: src/Admin/ListTables/VendorsTable.php:192
 msgid "Reference"
 msgstr ""
 
@@ -1517,6 +1756,17 @@ msgstr ""
 #: includes/admin/reports/expense-summary.php:72
 #: includes/admin/reports/income-expense.php:51
 #: includes/admin/reports/income-summary.php:74
+#: src/Admin/ListTables/AccountsTable.php:171
+#: src/Admin/ListTables/BillsTable.php:173
+#: src/Admin/ListTables/CustomersTable.php:170
+#: src/Admin/ListTables/InvoicesTable.php:171
+#: src/Admin/ListTables/ItemsTable.php:202
+#: src/Admin/ListTables/PaymentsTable.php:170
+#: src/Admin/ListTables/RevenuesTable.php:170
+#: src/Admin/ListTables/TransactionsTable.php:165
+#: src/Admin/ListTables/TransfersTable.php:170
+#: src/Admin/ListTables/VendorsTable.php:170
+#: vendor/woocommerce/action-scheduler/classes/abstracts/ActionScheduler_Abstract_ListTable.php:541
 msgid "Filter"
 msgstr ""
 
@@ -1537,6 +1787,8 @@ msgstr ""
 
 #: includes/admin/list-tables/class-revenue-list-table.php:94
 #: includes/admin/views/revenues/edit-revenue.php:55
+#: src/Admin/views/sales/revenues/add.php:12
+#: src/Admin/views/sales/revenues/form.php:53
 msgid "Add Revenue"
 msgstr ""
 
@@ -1633,6 +1885,7 @@ msgstr ""
 #: includes/admin/views/revenues/edit-revenue.php:176
 #: includes/admin/views/transfers/edit-transfer.php:157
 #: includes/admin/views/vendors/edit-vendor.php:226
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:284
 msgid "Submit"
 msgstr ""
 
@@ -1975,6 +2228,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/views/accounts/edit-account.php:22
+#: src/Admin/views/banking/accounts/form.php:51
 msgid "Update Account"
 msgstr ""
 
@@ -2006,6 +2260,19 @@ msgstr ""
 #: includes/admin/views/vendors/list-vendor.php:34
 #: includes/admin/views/vendors/view-vendor.php:57
 #: includes/ea-form-functions.php:600
+#: src/Admin/views/banking/accounts/accounts.php:14
+#: src/Admin/views/banking/currencies/currencies.php:14
+#: src/Admin/views/banking/transfers/transfers.php:14
+#: src/Admin/views/expenses/bills/bills.php:14
+#: src/Admin/views/expenses/payments/payments.php:14
+#: src/Admin/views/expenses/vendors/vendors.php:14
+#: src/Admin/views/items/categories/categories.php:14
+#: src/Admin/views/items/items/items.php:14
+#: src/Admin/views/misc/categories/categories.php:14
+#: src/Admin/views/misc/currencies/currencies.php:18
+#: src/Admin/views/sales/customers/customers.php:14
+#: src/Admin/views/sales/invoices/invoices.php:14
+#: src/Admin/views/sales/revenues/revenues.php:14
 msgid "Add New"
 msgstr ""
 
@@ -2100,6 +2367,21 @@ msgstr ""
 #: includes/admin/views/payments/list-payment.php:42
 #: includes/admin/views/revenues/list-revenue.php:42
 #: includes/admin/views/vendors/list-vendor.php:43
+#: src/Admin/views/banking/accounts/accounts.php:27
+#: src/Admin/views/banking/currencies/currencies.php:27
+#: src/Admin/views/banking/transactions/transactions.php:21
+#: src/Admin/views/banking/transfers/transfers.php:27
+#: src/Admin/views/expenses/bills/bills.php:24
+#: src/Admin/views/expenses/payments/payments.php:27
+#: src/Admin/views/expenses/vendors/vendors.php:27
+#: src/Admin/views/items/categories/categories.php:19
+#: src/Admin/views/items/items/items.php:24
+#: src/Admin/views/misc/categories/categories.php:24
+#: src/Admin/views/misc/currencies/currencies.php:29
+#: src/Admin/views/sales/customers/customers.php:24
+#: src/Admin/views/sales/invoices/invoices.php:21
+#: src/Admin/views/sales/revenues/revenues.php:27
+#: vendor/woocommerce/action-scheduler/classes/abstracts/ActionScheduler_Abstract_ListTable.php:786
 msgid "Search"
 msgstr ""
 
@@ -2263,6 +2545,9 @@ msgstr ""
 #: includes/admin/views/invoices/invoice-notes.php:63
 #: includes/admin/views/js/modal-add-category.php:66
 #: includes/admin/views/js/modal-income-category.php:66
+#: src/Admin/views/misc/categories/form.php:83
+#: src/Admin/views/misc/currencies/form.php:83
+#: vendor/woocommerce/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:33
 msgid "Add"
 msgstr ""
 
@@ -2277,10 +2562,13 @@ msgid "Payment"
 msgstr ""
 
 #: includes/admin/views/bills/edit-bill.php:20
+#: src/Admin/views/expenses/bills/form.php:51
 msgid "Update Bill"
 msgstr ""
 
 #: includes/admin/views/bills/edit-bill.php:20
+#: src/Admin/views/expenses/bills/add.php:12
+#: src/Admin/views/expenses/bills/form.php:53
 msgid "Add Bill"
 msgstr ""
 
@@ -2368,6 +2656,7 @@ msgstr ""
 #: includes/admin/views/categories/edit-category.php:51
 #: includes/admin/views/js/modal-add-category.php:19
 #: includes/admin/views/js/modal-income-category.php:19
+#: src/Admin/views/misc/categories/add.php:12
 msgid "Add Category"
 msgstr ""
 
@@ -2397,11 +2686,15 @@ msgid ""
 msgstr ""
 
 #: includes/admin/views/currencies/edit-currency.php:62
+#: src/Admin/views/banking/currencies/form.php:51
 msgid "Update Currency"
 msgstr ""
 
 #: includes/admin/views/currencies/edit-currency.php:62
 #: includes/admin/views/js/modal-add-currency.php:19
+#: src/Admin/views/banking/currencies/add.php:12
+#: src/Admin/views/banking/currencies/form.php:53
+#: src/Admin/views/misc/currencies/add.php:12
 msgid "Add Currency"
 msgstr ""
 
@@ -2447,6 +2740,7 @@ msgid "Thousands Separator"
 msgstr ""
 
 #: includes/admin/views/customers/edit-customer.php:21
+#: src/Admin/views/sales/customers/form.php:51
 msgid "Update Customer"
 msgstr ""
 
@@ -2561,10 +2855,13 @@ msgid "The customer was created at %1$s by %2$s"
 msgstr ""
 
 #: includes/admin/views/invoices/edit-invoice.php:22
+#: src/Admin/views/sales/invoices/form.php:51
 msgid "Update Invoice"
 msgstr ""
 
 #: includes/admin/views/invoices/edit-invoice.php:22
+#: src/Admin/views/sales/invoices/add.php:12
+#: src/Admin/views/sales/invoices/form.php:53
 msgid "Add Invoice"
 msgstr ""
 
@@ -2609,6 +2906,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/views/items/edit-item.php:21
+#: src/Admin/views/items/items/form.php:88
 msgid "Update Item"
 msgstr ""
 
@@ -2650,6 +2948,10 @@ msgstr ""
 #: includes/admin/views/revenues/edit-revenue.php:128
 #: includes/admin/views/revenues/view-income.php:160
 #: includes/admin/views/transfers/edit-transfer.php:126
+#: src/Admin/ListTables/CategoriesTable.php:223
+#: src/Admin/views/items/items/form.php:65
+#: src/Admin/views/misc/categories/form.php:45
+#: src/Admin/views/misc/currencies/form.php:45
 msgid "Description"
 msgstr ""
 
@@ -2710,6 +3012,8 @@ msgstr ""
 
 #: includes/admin/views/js/modal-add-vendor.php:12
 #: includes/admin/views/vendors/edit-vendor.php:26
+#: src/Admin/views/expenses/vendors/add.php:12
+#: src/Admin/views/expenses/vendors/form.php:53
 msgid "Add Vendor"
 msgstr ""
 
@@ -2732,6 +3036,7 @@ msgid "Total amount due:%s"
 msgstr ""
 
 #: includes/admin/views/payments/edit-payment.php:23
+#: src/Admin/views/expenses/payments/form.php:51
 msgid "Update Payment"
 msgstr ""
 
@@ -2818,6 +3123,7 @@ msgid "Reference:"
 msgstr ""
 
 #: includes/admin/views/revenues/edit-revenue.php:55
+#: src/Admin/views/sales/revenues/form.php:51
 msgid "Update Revenue"
 msgstr ""
 
@@ -2859,10 +3165,13 @@ msgid ""
 msgstr ""
 
 #: includes/admin/views/transfers/edit-transfer.php:49
+#: src/Admin/views/banking/transfers/form.php:51
 msgid "Update Transfer"
 msgstr ""
 
 #: includes/admin/views/transfers/edit-transfer.php:49
+#: src/Admin/views/banking/transfers/add.php:12
+#: src/Admin/views/banking/transfers/form.php:53
 msgid "Add Transfer"
 msgstr ""
 
@@ -2875,6 +3184,7 @@ msgid "Unknown vendor ID"
 msgstr ""
 
 #: includes/admin/views/vendors/edit-vendor.php:26
+#: src/Admin/views/expenses/vendors/form.php:51
 msgid "Update Vendor"
 msgstr ""
 
@@ -3026,6 +3336,7 @@ msgid "Payment date is required."
 msgstr ""
 
 #: includes/class-controller.php:231 includes/class-controller.php:277
+#: src/Models/Transfer.php:122
 msgid "Payment method is required."
 msgstr ""
 
@@ -3138,7 +3449,7 @@ msgstr ""
 msgid "Cheatin&#8217; huh?"
 msgstr ""
 
-#: includes/class-wp-ever-accounting.php:248
+#: includes/class-wp-ever-accounting.php:247
 #. translators: 1: error message 2: file name and path 3: line number
 msgid "%1$s in %2$s on line %3$s"
 msgstr ""
@@ -3635,6 +3946,412 @@ msgstr ""
 msgid "Invalid batch class handler file has been supplied."
 msgstr ""
 
+#: legacy-tests/bootstrap.php:33
+msgid "HTTP Requests disabled for unit tests"
+msgstr ""
+
+#: src/Admin/Actions.php:52
+msgid "Category saved successfully."
+msgstr ""
+
+#: src/Admin/Admin.php:75
+msgid "Are you sure you want to delete this item?"
+msgstr ""
+
+#: src/Admin/Admin.php:95
+#. translators: %s: Plugin name
+msgid "Thank you for using %s!"
+msgstr ""
+
+#: src/Admin/Admin.php:101
+#. translators: %s: Plugin name
+msgid " Share your appreciation with a five-star review %s."
+msgstr ""
+
+#: src/Admin/Admin.php:121
+#. translators: 1: Plugin version
+msgid "Version %s"
+msgstr ""
+
+#: src/Admin/ListTables/AccountsTable.php:104
+msgid "Account deleted."
+msgid_plural "%s accounts deleted."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Admin/ListTables/AccountsTable.php:114
+msgid "No accounts found."
+msgstr ""
+
+#: src/Admin/ListTables/AccountsTable.php:189
+msgid "Blance"
+msgstr ""
+
+#: src/Admin/ListTables/BillsTable.php:104
+msgid "Bill deleted."
+msgid_plural "%s bills deleted."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Admin/ListTables/BillsTable.php:114
+msgid "No bills found."
+msgstr ""
+
+#: src/Admin/ListTables/BillsTable.php:142
+msgid "paid"
+msgstr ""
+
+#: src/Admin/ListTables/CategoriesTable.php:97
+msgid "%s category(s) activated successfully."
+msgstr ""
+
+#: src/Admin/ListTables/CategoriesTable.php:117
+msgid "%s category(s) deactivated successfully."
+msgstr ""
+
+#: src/Admin/ListTables/CategoriesTable.php:138
+msgid "%s category(s) deleted successfully."
+msgstr ""
+
+#: src/Admin/ListTables/CategoriesTable.php:148
+msgid "No categories found."
+msgstr ""
+
+#: src/Admin/ListTables/CategoriesTable.php:194
+#: src/Admin/ListTables/CategoriesTable.php:321
+#: src/Admin/ListTables/CurrenciesTable.php:176
+#: src/Admin/ListTables/CurrenciesTable.php:291
+msgid "Activate"
+msgstr ""
+
+#: src/Admin/ListTables/CategoriesTable.php:195
+#: src/Admin/ListTables/CategoriesTable.php:315
+#: src/Admin/ListTables/CurrenciesTable.php:177
+#: src/Admin/ListTables/CurrenciesTable.php:285
+msgid "Deactivate"
+msgstr ""
+
+#: src/Admin/ListTables/CurrenciesTable.php:97
+msgid "%s currency(s) activated successfully."
+msgstr ""
+
+#: src/Admin/ListTables/CurrenciesTable.php:117
+msgid "%s currency(s) deactivated successfully."
+msgstr ""
+
+#: src/Admin/ListTables/CurrenciesTable.php:128
+msgid "No currencies found."
+msgstr ""
+
+#: src/Admin/ListTables/CurrenciesTable.php:207
+msgid "Exchange Rate"
+msgstr ""
+
+#: src/Admin/ListTables/CustomersTable.php:102
+msgid "Customer deleted."
+msgid_plural "%s customers deleted."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Admin/ListTables/CustomersTable.php:112
+msgid "No customers found."
+msgstr ""
+
+#: src/Admin/ListTables/InvoicesTable.php:102
+msgid "Invoice deleted."
+msgid_plural "%s invoices deleted."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Admin/ListTables/InvoicesTable.php:112
+msgid "No invoices found."
+msgstr ""
+
+#: src/Admin/ListTables/ItemsTable.php:96
+msgid "Item enabled."
+msgid_plural "%s items enabled."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Admin/ListTables/ItemsTable.php:116
+msgid "Item disabled."
+msgid_plural "%s items disabled."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Admin/ListTables/ItemsTable.php:136
+msgid "Item deleted."
+msgid_plural "%s items deleted."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Admin/ListTables/ItemsTable.php:146
+msgid "No items found."
+msgstr ""
+
+#: src/Admin/ListTables/ItemsTable.php:340
+msgid "Disabled"
+msgstr ""
+
+#: src/Admin/ListTables/ListTable.php:158
+#: src/Admin/ListTables/ListTable.php:161
+msgid "Filter by category"
+msgstr ""
+
+#: src/Admin/ListTables/PaymentsTable.php:104
+msgid "Payment deleted."
+msgid_plural "%s payments deleted."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Admin/ListTables/PaymentsTable.php:114
+msgid "No payments found."
+msgstr ""
+
+#: src/Admin/ListTables/RevenuesTable.php:104
+msgid "Revenue deleted."
+msgid_plural "%s revenues deleted."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Admin/ListTables/RevenuesTable.php:114
+msgid "No revenues found."
+msgstr ""
+
+#: src/Admin/ListTables/TransactionsTable.php:104
+msgid "Transaction deleted."
+msgid_plural "%s transactions deleted."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Admin/ListTables/TransactionsTable.php:114
+msgid "No transactions found."
+msgstr ""
+
+#: src/Admin/ListTables/TransfersTable.php:104
+msgid "Transfer deleted."
+msgid_plural "%s transfers deleted."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Admin/ListTables/TransfersTable.php:114
+msgid "No transfers found."
+msgstr ""
+
+#: src/Admin/ListTables/VendorsTable.php:104
+msgid "Vendor deleted."
+msgid_plural "%s vendors deleted."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Admin/ListTables/VendorsTable.php:114
+msgid "No vendors found."
+msgstr ""
+
+#: src/Admin/Menus.php:170
+msgid "Per page"
+msgstr ""
+
+#: src/Admin/Utilities.php:66 src/Admin/Utilities.php:67
+msgid "Misc"
+msgstr ""
+
+#: src/Admin/views/banking/accounts/accounts.php:20
+#: src/Admin/views/banking/currencies/currencies.php:20
+#: src/Admin/views/banking/transactions/transactions.php:14
+#: src/Admin/views/banking/transfers/transfers.php:20
+#: src/Admin/views/expenses/bills/bills.php:17
+#: src/Admin/views/expenses/payments/payments.php:20
+#: src/Admin/views/expenses/vendors/vendors.php:20
+#: src/Admin/views/items/items/items.php:17
+#: src/Admin/views/misc/categories/categories.php:17
+#: src/Admin/views/misc/currencies/currencies.php:21
+#: src/Admin/views/sales/revenues/revenues.php:20
+#: vendor/woocommerce/action-scheduler/classes/abstracts/ActionScheduler_Abstract_ListTable.php:668
+#. translators: %s: search query
+msgid "Search results for \"%s\""
+msgstr ""
+
+#: src/Admin/views/banking/accounts/add.php:13
+#: src/Admin/views/banking/accounts/edit.php:13
+#: src/Admin/views/banking/currencies/add.php:13
+#: src/Admin/views/banking/currencies/edit.php:13
+#: src/Admin/views/banking/transfers/add.php:13
+#: src/Admin/views/banking/transfers/edit.php:13
+#: src/Admin/views/expenses/bills/add.php:13
+#: src/Admin/views/expenses/bills/edit.php:13
+#: src/Admin/views/expenses/payments/add.php:13
+#: src/Admin/views/expenses/payments/edit.php:13
+#: src/Admin/views/expenses/vendors/add.php:13
+#: src/Admin/views/expenses/vendors/edit.php:13
+#: src/Admin/views/items/items/add.php:13
+#: src/Admin/views/items/items/edit.php:13
+#: src/Admin/views/misc/categories/add.php:13
+#: src/Admin/views/misc/categories/edit.php:13
+#: src/Admin/views/misc/currencies/add.php:13
+#: src/Admin/views/misc/currencies/edit.php:13
+#: src/Admin/views/sales/customers/add.php:13
+#: src/Admin/views/sales/customers/edit.php:13
+#: src/Admin/views/sales/invoices/add.php:13
+#: src/Admin/views/sales/invoices/edit.php:13
+#: src/Admin/views/sales/revenues/add.php:13
+#: src/Admin/views/sales/revenues/edit.php:13
+msgid "Go back"
+msgstr ""
+
+#: src/Admin/views/banking/accounts/edit.php:12
+msgid "Edit Account"
+msgstr ""
+
+#: src/Admin/views/banking/accounts/form.php:21
+#: src/Admin/views/banking/currencies/form.php:21
+#: src/Admin/views/banking/transfers/form.php:21
+#: src/Admin/views/expenses/bills/form.php:21
+#: src/Admin/views/expenses/payments/form.php:21
+#: src/Admin/views/expenses/vendors/form.php:21
+#: src/Admin/views/items/items/form.php:20
+#: src/Admin/views/sales/customers/form.php:21
+#: src/Admin/views/sales/invoices/form.php:21
+#: src/Admin/views/sales/revenues/form.php:21
+msgid "Item details"
+msgstr ""
+
+#: src/Admin/views/banking/currencies/edit.php:12
+#: src/Admin/views/misc/currencies/edit.php:12
+msgid "Edit Currency"
+msgstr ""
+
+#: src/Admin/views/banking/transfers/edit.php:12
+msgid "Edit Transfer"
+msgstr ""
+
+#: src/Admin/views/expenses/bills/edit.php:12
+msgid "Edit Bill"
+msgstr ""
+
+#: src/Admin/views/expenses/payments/edit.php:12
+msgid "Edit Payment"
+msgstr ""
+
+#: src/Admin/views/expenses/vendors/edit.php:12
+msgid "Edit Vendor"
+msgstr ""
+
+#: src/Admin/views/items/items/edit.php:12
+msgid "Edit Item"
+msgstr ""
+
+#: src/Admin/views/misc/categories/edit.php:12
+msgid "Edit Category"
+msgstr ""
+
+#: src/Admin/views/misc/categories/form.php:18
+#: src/Admin/views/misc/currencies/form.php:18
+msgid "Category Details"
+msgstr ""
+
+#: src/Admin/views/misc/categories/form.php:37
+#: src/Admin/views/misc/currencies/form.php:37
+msgid "Select type"
+msgstr ""
+
+#: src/Admin/views/misc/categories/form.php:81
+#: src/Admin/views/misc/currencies/form.php:81
+msgid "Update"
+msgstr ""
+
+#: src/Admin/views/sales/customers/edit.php:12
+msgid "Edit Customer"
+msgstr ""
+
+#: src/Admin/views/sales/invoices/edit.php:12
+msgid "Edit Invoice"
+msgstr ""
+
+#: src/Admin/views/sales/revenues/edit.php:12
+msgid "Edit Revenue"
+msgstr ""
+
+#: src/Functions/accounts.php:17
+msgid "Bank"
+msgstr ""
+
+#: src/Functions/accounts.php:18
+msgid "Card"
+msgstr ""
+
+#: src/Models/Category.php:97
+msgid "Category name is required."
+msgstr ""
+
+#: src/Models/Category.php:100
+msgid "Category type is required."
+msgstr ""
+
+#: src/Models/Category.php:109
+msgid "Category with same name and type already exists."
+msgstr ""
+
+#: src/Models/Contact.php:188
+msgid "Name is required."
+msgstr ""
+
+#: src/Models/Currency.php:158
+msgid "Currency name is required."
+msgstr ""
+
+#: src/Models/Currency.php:161
+msgid "Currency exchange rate is required."
+msgstr ""
+
+#: src/Models/Currency.php:164
+msgid "Currency code is required."
+msgstr ""
+
+#: src/Models/Currency.php:167
+msgid "Currency symbol is required."
+msgstr ""
+
+#: src/Models/Currency.php:170
+msgid "Currency decimal separator is required."
+msgstr ""
+
+#: src/Models/Currency.php:173
+msgid "Currency thousand separator is required."
+msgstr ""
+
+#: src/Models/Item.php:173
+msgid "Item name is required."
+msgstr ""
+
+#: src/Models/Item.php:176
+msgid "Item price is required."
+msgstr ""
+
+#: src/Models/Tax.php:95
+msgid "Tax name is required."
+msgstr ""
+
+#: src/Models/Tax.php:98
+msgid "Tax rate is required."
+msgstr ""
+
+#: src/Models/Transfer.php:110
+msgid "From account is required."
+msgstr ""
+
+#: src/Models/Transfer.php:113
+msgid "To account is required."
+msgstr ""
+
+#: src/Models/Transfer.php:116
+msgid "Transfer amount is required."
+msgstr ""
+
+#: src/Models/Transfer.php:119
+msgid "Transfer date is required."
+msgstr ""
+
 #: templates/bill/bill-meta.php:26 templates/invoice/invoice-meta.php:26
 msgid "Issue Date"
 msgstr ""
@@ -3654,6 +4371,1092 @@ msgstr ""
 
 #: templates/invoice/invoice.php:24
 msgid "Invoice To:"
+msgstr ""
+
+#: vendor/byteever/bytekit-core/src/Admin/Notices.php:137
+msgid "Dismiss this notice"
+msgstr ""
+
+#: vendor/byteever/bytekit-core/src/Plugin.php:494
+msgid "Documentation"
+msgstr ""
+
+#: vendor/byteever/bytekit-core/src/Plugin.php:501
+msgid "Support"
+msgstr ""
+
+#: vendor/byteever/bytekit-core/src/Plugin.php:508
+msgid "Review"
+msgstr ""
+
+#: vendor/byteever/bytekit-core/src/RestAPI/Controller.php:71
+#. translators: %s: items limit
+msgid "Unable to accept more than %s items for this request."
+msgstr ""
+
+#: vendor/byteever/bytekit-core/src/RestAPI/Controller.php:273
+msgid "List of created resources."
+msgstr ""
+
+#: vendor/byteever/bytekit-core/src/RestAPI/Controller.php:281
+msgid "List of updated resources."
+msgstr ""
+
+#: vendor/byteever/bytekit-core/src/RestAPI/Controller.php:289
+msgid "List of delete resources."
+msgstr ""
+
+#: vendor/byteever/bytekit-core/src/RestAPI/Controller.php:545
+msgid "Current page of the collection."
+msgstr ""
+
+#: vendor/byteever/bytekit-core/src/RestAPI/Controller.php:553
+msgid "Maximum number of items to be returned in result set."
+msgstr ""
+
+#: vendor/byteever/bytekit-core/src/RestAPI/Controller.php:562
+msgid "Limit results to those matching a string."
+msgstr ""
+
+#: vendor/byteever/bytekit-core/src/RestAPI/Controller.php:568
+msgid "Limit result set to specific ids."
+msgstr ""
+
+#: vendor/byteever/bytekit-core/src/RestAPI/Controller.php:575
+msgid "Order sort attribute ascending or descending."
+msgstr ""
+
+#: vendor/byteever/bytekit-core/src/RestAPI/Controller.php:582
+msgid "Sort collection by object attribute."
+msgstr ""
+
+#: vendor/byteever/bytekit-core/src/RestAPI/Controller.php:588
+msgid "Offset the result set by a specific number of items."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/internationalized-plugin.php:11
+msgid "This is a dummy plugin"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:42
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:72
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:80
+msgid "There was an error when reading this WXR file"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:43
+msgid ""
+"Details are shown above. The importer will now try again with a different "
+"parser..."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:84
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:89
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:306
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/parsers.php:495
+msgid "This does not appear to be a WXR file, missing/invalid WXR version number"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:132
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:141
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:192
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:196
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:205
+msgid "Sorry, there has been an error."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:133
+msgid "The file does not exist, please try again."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:176
+msgid "All done."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:176
+msgid "Have fun!"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:177
+msgid "Remember to update the passwords and roles of imported users."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:197
+msgid ""
+"The export file could not be found at <code>%s</code>. It is likely that "
+"this was caused by a permissions problem."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:213
+msgid ""
+"This WXR file (version %s) may not be supported by this version of the "
+"importer. Please consider updating."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:238
+msgid ""
+"Failed to import author %s. Their posts will be attributed to the current "
+"user."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:264
+msgid "Assign Authors"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:265
+msgid ""
+"To make it easier for you to edit and save the imported content, you may "
+"want to reassign the author of the imported item to an existing user of "
+"this site. For example, you may want to import all the entries as "
+"<code>admin</code>s entries."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:267
+msgid ""
+"If a new user is created by WordPress, a new password will be randomly "
+"generated and the new user&#8217;s role will be set as %s. Manually "
+"changing the new user&#8217;s details will be necessary."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:277
+msgid "Import Attachments"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:280
+msgid "Download and import file attachments"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:297
+msgid "Import author:"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:308
+msgid "or create new user with login name:"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:311
+msgid "as a new user:"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:319
+msgid "assign posts to an existing user:"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:321
+msgid "or assign posts to an existing user:"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:322
+msgid "- Select -"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:372
+msgid ""
+"Failed to create new user for %s. Their posts will be attributed to the "
+"current user."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:424
+msgid "Failed to import category %s"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:467
+msgid "Failed to import post tag %s"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:516
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:738
+msgid "Failed to import %s %s"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:605
+msgid "Failed to import &#8220;%s&#8221;: Invalid post type %s"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:642
+msgid "%s &#8220;%s&#8221; already exists."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:704
+msgid "Failed to import %s &#8220;%s&#8221;"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:869
+msgid "Menu item skipped due to missing menu slug"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:876
+msgid "Menu item skipped due to invalid menu slug: %s"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:939
+msgid "Fetching attachments is not enabled"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:952
+msgid "Invalid file type"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:996
+msgid "Remote server did not respond"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1002
+msgid "Remote server returned error response %1$d %2$s"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1009
+msgid "Remote file is incorrect size"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1014
+msgid "Zero size file downloaded"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1020
+msgid "Remote file is too large, limit is %s"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1119
+msgid "Import WordPress"
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1126
+msgid ""
+"A new version of this importer is available. Please update to version %s to "
+"ensure compatibility with newer export files."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1141
+msgid ""
+"Howdy! Upload your WordPress eXtended RSS (WXR) file and we&#8217;ll import "
+"the posts, pages, comments, custom fields, categories, and tags into this "
+"site."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1142
+msgid "Choose a WXR (.xml) file to upload, then click Upload file and import."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/plugins/wordpress-importer/wordpress-importer.php:1216
+msgid ""
+"Import <strong>posts, pages, comments, custom fields, categories, and "
+"tags</strong> from a WordPress export file."
+msgstr ""
+
+#: vendor/lucatume/wp-browser/src/data/themedir1/internationalized-theme/functions.php:7
+msgid "This is a dummy theme"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_ActionFactory.php:233
+msgid "Invalid action - must be a recurring action."
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_ActionFactory.php:324
+#. translators: %1$s is the name of the hook to be enqueued, %2$s is the
+#. exception message.
+msgid "Caught exception while enqueuing action \"%1$s\": %2$s"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_AdminView.php:60
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_AdminView.php:75
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_AdminView.php:76
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_ListTable.php:89
+#: vendor/woocommerce/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:19
+#: vendor/woocommerce/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:30
+msgid "Scheduled Actions"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_AdminView.php:196
+#. translators: 1) is the number of affected actions, 2) is a link to an admin
+#. screen.
+msgid ""
+"<strong>Action Scheduler:</strong> %1$d <a href=\"%2$s\">past-due "
+"action</a> found; something may be wrong. <a "
+"href=\"https://actionscheduler.org/faq/#my-site-has-past-due-actions-what-"
+"can-i-do\" target=\"_blank\">Read documentation &raquo;</a>"
+msgid_plural ""
+"<strong>Action Scheduler:</strong> %1$d <a href=\"%2$s\">past-due "
+"actions</a> found; something may be wrong. <a "
+"href=\"https://actionscheduler.org/faq/#my-site-has-past-due-actions-what-"
+"can-i-do\" target=\"_blank\">Read documentation &raquo;</a>"
+msgstr[0] ""
+msgstr[1] ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_AdminView.php:225
+msgid "About"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_AdminView.php:228
+#. translators: %s is the Action Scheduler version.
+msgid "About Action Scheduler %s"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_AdminView.php:230
+msgid ""
+"Action Scheduler is a scalable, traceable job queue for background "
+"processing large sets of actions. Action Scheduler works by triggering an "
+"action hook to run at some time in the future. Scheduled actions can also "
+"be scheduled to run on a recurring schedule."
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_AdminView.php:238
+msgid "Columns"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_AdminView.php:240
+msgid "Scheduled Action Columns"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_AdminView.php:242
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_ListTable.php:96
+msgid "Hook"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_AdminView.php:242
+msgid "Name of the action hook that will be triggered."
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_AdminView.php:243
+msgid "Action statuses are Pending, Complete, Canceled, Failed"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_AdminView.php:244
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_ListTable.php:98
+msgid "Arguments"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_AdminView.php:244
+msgid "Optional data array passed to the action hook."
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_AdminView.php:245
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_ListTable.php:99
+msgid "Group"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_AdminView.php:245
+msgid "Optional action group."
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_AdminView.php:246
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_ListTable.php:100
+msgid "Recurrence"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_AdminView.php:246
+msgid "The action's schedule frequency."
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_AdminView.php:247
+msgid "Scheduled"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_AdminView.php:247
+msgid "The date/time the action is/was scheduled to run."
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_AdminView.php:248
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_ListTable.php:102
+msgid "Log"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_AdminView.php:248
+msgid "Activity log for the action."
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_DataController.php:133
+#. translators: %d: amount of time
+msgid "Stopped the insanity for %d second"
+msgid_plural "Stopped the insanity for %d seconds"
+msgstr[0] ""
+msgstr[1] ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_DataController.php:137
+msgid "Attempting to reduce used memory..."
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_InvalidActionException.php:21
+#. translators: 1: action ID 2: schedule
+msgid "Action [%1$s] has an invalid schedule: %2$s"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_InvalidActionException.php:40
+#. translators: 1: action ID 2: arguments
+msgid ""
+"Action [%1$s] has invalid arguments. It cannot be JSON decoded to an array. "
+"$args = %2$s"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_ListTable.php:101
+msgid "Scheduled Date"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_ListTable.php:122
+msgid "Claim ID"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_ListTable.php:129
+msgid "Run"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_ListTable.php:130
+msgid "Process the action now as if it were run as part of a queue"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_ListTable.php:134
+msgid "Cancel the action now to avoid it being run in future"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_ListTable.php:144
+#. translators: %s: amount of time
+msgid "%s year"
+msgid_plural "%s years"
+msgstr[0] ""
+msgstr[1] ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_ListTable.php:149
+#. translators: %s: amount of time
+msgid "%s month"
+msgid_plural "%s months"
+msgstr[0] ""
+msgstr[1] ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_ListTable.php:154
+#. translators: %s: amount of time
+msgid "%s week"
+msgid_plural "%s weeks"
+msgstr[0] ""
+msgstr[1] ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_ListTable.php:159
+#. translators: %s: amount of time
+msgid "%s day"
+msgid_plural "%s days"
+msgstr[0] ""
+msgstr[1] ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_ListTable.php:164
+#. translators: %s: amount of time
+msgid "%s hour"
+msgid_plural "%s hours"
+msgstr[0] ""
+msgstr[1] ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_ListTable.php:169
+#. translators: %s: amount of time
+msgid "%s minute"
+msgid_plural "%s minutes"
+msgstr[0] ""
+msgstr[1] ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_ListTable.php:174
+#. translators: %s: amount of time
+msgid "%s second"
+msgid_plural "%s seconds"
+msgstr[0] ""
+msgstr[1] ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_ListTable.php:224
+msgid "Now!"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_ListTable.php:260
+#. translators: %s: time interval
+msgid "Every %s"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_ListTable.php:266
+msgid "Non-repeating"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_ListTable.php:364
+msgid ""
+"It appears one or more database tables were missing. Attempting to "
+"re-create the missing table(s)."
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_ListTable.php:380
+#. translators: %s: amount of claims
+msgid ""
+"Maximum simultaneous queues already in progress (%s queue). No additional "
+"queues will begin processing until the current queues are complete."
+msgid_plural ""
+"Maximum simultaneous queues already in progress (%s queues). No additional "
+"queues will begin processing until the current queues are complete."
+msgstr[0] ""
+msgstr[1] ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_ListTable.php:397
+#. translators: %s: process URL
+msgid ""
+"A new queue has begun processing. <a href=\"%s\">View actions in-progress "
+"&raquo;</a>"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_ListTable.php:400
+#. translators: %d: seconds
+msgid "The next queue will begin processing in approximately %d seconds."
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_ListTable.php:421
+#. translators: %s: action HTML
+msgid "Successfully executed action: %s"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_ListTable.php:425
+#. translators: %s: action HTML
+msgid "Successfully canceled action: %s"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_ListTable.php:429
+#. translators: %s: action HTML
+msgid "Successfully processed change for action: %s"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_ListTable.php:435
+#. translators: 1: action HTML 2: action ID 3: error message
+msgid "Could not process change for action: \"%1$s\" (ID: %2$d). Error: %3$s"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_ListTable.php:471
+msgid "async"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_ListTable.php:485
+#. translators: %s: date interval
+msgid " (%s ago)"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_ListTable.php:488
+#. translators: %s: date interval
+msgid " (%s)"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_ListTable.php:513
+#. translators: 1: action ID 2: exception message.
+msgid "Action Scheduler was unable to delete action %1$d. Reason: %2$s"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_ListTable.php:661
+msgid "Search hook, args and claim ID"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_QueueCleaner.php:60
+#. Translators: %s is the exception message.
+msgid "It was not possible to determine a valid cut-off time: %s."
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_QueueRunner.php:224
+msgid "Every minute"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_WPCommentCleaner.php:103
+#. translators: %s: date interval
+msgid "This data will be deleted in %s."
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_WPCommentCleaner.php:108
+#. translators: 1: next cleanup message 2: github issue URL
+msgid ""
+"Action Scheduler has migrated data to custom tables; however, orphaned log "
+"entries exist in the WordPress Comments table. %1$s <a href=\"%2$s\">Learn "
+"more &raquo;</a>"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_wcSystemStatus.php:111
+msgid "Action Scheduler"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_wcSystemStatus.php:111
+msgid "This section shows details of Action Scheduler."
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_wcSystemStatus.php:114
+msgid "Version:"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_wcSystemStatus.php:118
+msgid "Data store:"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_wcSystemStatus.php:122
+msgid "Action Status"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_wcSystemStatus.php:124
+msgid "Count"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_wcSystemStatus.php:125
+msgid "Oldest Scheduled Date"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/ActionScheduler_wcSystemStatus.php:126
+msgid "Newest Scheduled Date"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_Clean_Command.php:88
+#. translators: %d refers to the total number of batches processed
+msgid "%d batch processed."
+msgid_plural "%d batches processed."
+msgstr[0] ""
+msgstr[1] ""
+
+#: vendor/woocommerce/action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_Clean_Command.php:105
+#. translators: %s refers to the exception error message
+msgid "There was an error deleting an action: %s"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_Clean_Command.php:120
+#. translators: %d refers to the total number of actions deleted
+msgid "%d action deleted."
+msgid_plural "%d actions deleted."
+msgstr[0] ""
+msgstr[1] ""
+
+#: vendor/woocommerce/action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_QueueRunner.php:33
+#: vendor/woocommerce/action-scheduler/classes/WP_CLI/ProgressBar.php:47
+#. translators: %s php class name
+msgid "The %s class can only be run within WP CLI."
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_QueueRunner.php:59
+msgid "There are too many concurrent batches, but the run is forced to continue."
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_QueueRunner.php:61
+msgid "There are too many concurrent batches."
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_QueueRunner.php:93
+#. translators: %d: amount of actions
+msgid "Running %d action"
+msgid_plural "Running %d actions"
+msgstr[0] ""
+msgstr[1] ""
+
+#: vendor/woocommerce/action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_QueueRunner.php:113
+msgid "The claim has been lost. Aborting current batch."
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_QueueRunner.php:138
+#. translators: %s refers to the action ID
+msgid "Started processing action %s"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_QueueRunner.php:155
+#. translators: 1: action ID 2: hook name
+msgid "Completed processing action %1$s with hook: %2$s"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_QueueRunner.php:170
+#. translators: 1: action ID 2: exception message
+msgid "Error processing action %1$s: %2$s"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_Scheduler_command.php:30
+#. translators: %s refers to the schema name
+msgid "Registered schema for %s"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_Scheduler_command.php:152
+#. translators: %d refers to how many scheduled tasks were found to run
+msgid "Found %d scheduled task"
+msgid_plural "Found %d scheduled tasks"
+msgstr[0] ""
+msgstr[1] ""
+
+#: vendor/woocommerce/action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_Scheduler_command.php:169
+#. translators: %d refers to the total number of batches executed
+msgid "%d batch executed."
+msgid_plural "%d batches executed."
+msgstr[0] ""
+msgstr[1] ""
+
+#: vendor/woocommerce/action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_Scheduler_command.php:188
+#. translators: %s refers to the exception error message
+msgid "There was an error running the action scheduler: %s"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/WP_CLI/ActionScheduler_WPCLI_Scheduler_command.php:205
+#. translators: %d refers to the total number of tasks completed
+msgid "%d scheduled task completed."
+msgid_plural "%d scheduled tasks completed."
+msgstr[0] ""
+msgstr[1] ""
+
+#: vendor/woocommerce/action-scheduler/classes/abstracts/ActionScheduler.php:226
+#. translators: %s function name.
+msgid "%s() was called before the Action Scheduler data store was initialized"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/abstracts/ActionScheduler_Abstract_QueueRunner.php:155
+msgid ""
+"This action appears to be consistently failing. A new instance will not be "
+"scheduled."
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:72
+msgid "action created"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:76
+#: vendor/woocommerce/action-scheduler/classes/data-stores/ActionScheduler_DBLogger.php:142
+msgid "action canceled"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:82
+#. translators: %s: context
+msgid "action started via %s"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:84
+msgid "action started"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:92
+#. translators: %s: context
+msgid "action complete via %s"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:94
+msgid "action complete"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:102
+#. translators: 1: context 2: exception message
+msgid "action failed via %1$s: %2$s"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:105
+#. translators: %s: exception message
+msgid "action failed: %s"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:112
+#. translators: %s: amount of time
+msgid ""
+"action marked as failed after %s seconds. Unknown error occurred. Check "
+"server, PHP and database error logs to diagnose cause."
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:118
+#. translators: 1: error message 2: filename 3: line
+msgid "unexpected shutdown: PHP Fatal error %1$s in %2$s on line %3$s"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:123
+msgid "action reset"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:129
+#. translators: %s: context
+msgid "action ignored via %s"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:131
+msgid "action ignored"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:146
+#. translators: %s: exception message
+msgid "There was a failure fetching this action: %s"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:148
+msgid "There was a failure fetching this action"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/abstracts/ActionScheduler_Logger.php:156
+#. translators: %s: exception message
+msgid "There was a failure scheduling the next instance of this action: %s"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/abstracts/ActionScheduler_Store.php:330
+#. translators: %d is a number (maximum length of action arguments).
+msgid ""
+"ActionScheduler_Action::$args too long. To ensure the args column can be "
+"indexed, action args should not be more than %d characters when encoded as "
+"JSON."
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/abstracts/ActionScheduler_Store.php:406
+msgid "Complete"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/abstracts/ActionScheduler_Store.php:408
+msgid "In-progress"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/abstracts/ActionScheduler_Store.php:409
+msgid "Failed"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/abstracts/ActionScheduler_Store.php:410
+msgid "Canceled"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/actions/ActionScheduler_Action.php:50
+#. translators: 1: action hook.
+msgid ""
+"Scheduled action for %1$s will not be executed as no callbacks are "
+"registered."
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:118
+msgid "Database error."
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:126
+#: vendor/woocommerce/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:49
+#: vendor/woocommerce/action-scheduler/classes/migration/ActionScheduler_DBStoreMigrator.php:45
+#. translators: %s: error message
+#. translators: %s: action error message
+#. translators: %s is an error message.
+msgid "Error saving action: %s"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:396
+msgid "Invalid value for select or count parameter. Cannot query actions."
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:454
+msgid ""
+"JSON partial matching not supported in your environment. Please check your "
+"MySQL/MariaDB version."
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:471
+#. translators: %s: provided value type
+msgid ""
+"The value type for the JSON partial matching is not supported. Must be "
+"either integer, boolean, double or string. %s type provided."
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:492
+msgid "Unknown partial args matching value."
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:653
+#: vendor/woocommerce/action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:745
+#: vendor/woocommerce/action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:776
+#: vendor/woocommerce/action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:1086
+#: vendor/woocommerce/action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:1144
+#: vendor/woocommerce/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:515
+#: vendor/woocommerce/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:534
+#: vendor/woocommerce/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:564
+#: vendor/woocommerce/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:987
+#. translators: %s: action ID
+#. translators: %s is the action ID
+msgid "Unidentified action %s"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:910
+#: vendor/woocommerce/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:717
+#. translators: %s: group name(s)
+#. translators: %s is the group name
+msgid "The group \"%s\" does not exist."
+msgid_plural "The groups \"%s\" do not exist."
+msgstr[0] ""
+msgstr[1] ""
+
+#: vendor/woocommerce/action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:945
+#. translators: %s database error.
+msgid "Unable to claim actions. Database error: %s."
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:1043
+#. translators: %d is an id.
+msgid "Unable to release actions from claim id %d."
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:1113
+#: vendor/woocommerce/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:967
+#. translators: 1: action ID. 2: status slug.
+msgid "Unable to update the status of action %1$d to %2$s."
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:1174
+#: vendor/woocommerce/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:904
+msgid "Invalid action ID. No status found."
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:1176
+msgid "Unknown status found for action."
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:101
+msgid "Unable to save action."
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:318
+msgid "Invalid schedule. Cannot save action."
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:696
+msgid "Unable to claim actions. Database error."
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:824
+#. translators: %s: claim ID
+msgid "Unable to unlock claim %s. Database error."
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:852
+#. translators: %s: action ID
+msgid "Unable to unlock claim on action %s. Database error."
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:878
+#. translators: %s: action ID
+msgid "Unable to mark failure on action %s. Database error."
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore.php:1068
+#. translators: %s is the error message
+msgid "%s Support for strings longer than this will be removed in a future version."
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostStatusRegistrar.php:38
+#. translators: %s: count
+msgid "Failed <span class=\"count\">(%s)</span>"
+msgid_plural "Failed <span class=\"count\">(%s)</span>"
+msgstr[0] ""
+msgstr[1] ""
+
+#: vendor/woocommerce/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostStatusRegistrar.php:53
+#. translators: %s: count
+msgid "In-Progress <span class=\"count\">(%s)</span>"
+msgid_plural "In-Progress <span class=\"count\">(%s)</span>"
+msgstr[0] ""
+msgstr[1] ""
+
+#: vendor/woocommerce/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:20
+msgid "Scheduled actions are hooks triggered on a cetain date and time."
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:31
+msgid "Scheduled Action"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:34
+msgid "Add New Scheduled Action"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:36
+msgid "Edit Scheduled Action"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:37
+msgid "New Scheduled Action"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:38
+#: vendor/woocommerce/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:39
+msgid "View Action"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:40
+msgid "Search Scheduled Actions"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:41
+msgid "No actions found"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:42
+msgid "No actions found in trash"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_TaxonomyRegistrar.php:14
+msgid "Action Group"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/migration/ActionMigrator.php:96
+#. translators: %s is an action ID.
+msgid "Unable to remove source migrated action %s"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/migration/Config.php:52
+msgid "Source store must be configured before running a migration"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/migration/Config.php:74
+msgid "Source logger must be configured before running a migration"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/migration/Config.php:96
+msgid "Destination store must be configured before running a migration"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/migration/Config.php:118
+msgid "Destination logger must be configured before running a migration"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/migration/Controller.php:162
+msgid ""
+"Action Scheduler migration in progress. The list of scheduled actions may "
+"be incomplete."
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/migration/Runner.php:82
+#. translators: %d: amount of actions
+msgid "Migrating %d action"
+msgid_plural "Migrating %d actions"
+msgstr[0] ""
+msgstr[1] ""
+
+#: vendor/woocommerce/action-scheduler/classes/migration/Runner.php:107
+#. translators: 1: source action ID 2: source store class 3: destination action
+#. ID 4: destination store class
+msgid "Migrated action with ID %1$d in %2$s to ID %3$d in %4$s"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/functions.php:134
+#. translators: 1: provided value 2: provided type.
+msgid "An integer was expected but \"%1$s\" (%2$s) was received."
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/functions.php:287
+#. translators: %1$s is the name of the hook to be cancelled, %2$s is the
+#. exception message.
+msgid "Caught exception while cancelling action \"%1$s\": %2$s"
+msgstr ""
+
+#: vendor/wp-cli/core-command/src/Core_Command.php:746
+msgid "Wildcard DNS may not be configured correctly."
+msgstr ""
+
+#: vendor/wp-cli/entity-command/src/Site_Command.php:157
+msgid "Uncategorized"
+msgstr ""
+
+#: vendor/wp-cli/export-command/src/WP_Export_XML_Over_HTTP.php:20
+#: vendor/wp-cli/export-command/src/WP_Export_XML_Over_HTTP.php:25
+msgid "Export Error"
+msgstr ""
+
+#: vendor/wp-cli/extension-command/src/WP_CLI/CommandWithUpgrade.php:729
+msgid " Try again"
+msgstr ""
+
+#: vendor/wp-cli/extension-command/src/WP_CLI/CommandWithUpgrade.php:735
+msgid "API error. Try Again."
+msgstr ""
+
+#: vendor/wp-cli/media-command/src/Media_Command.php:145
+msgid "image"
+msgid_plural "images"
+msgstr[0] ""
+msgstr[1] ""
+
+#: vendor/wp-cli/wp-cli/php/utils-wp.php:247
+msgid "Inactive Widgets"
+msgstr ""
+
+#: vendor/wp-cli/wp-cli/php/utils-wp.php:250
+msgid "Drag widgets here to remove them from the sidebar but keep their settings."
 msgstr ""
 
 #. Author URI of the plugin/theme
@@ -3676,4 +5479,72 @@ msgstr ""
 #: includes/class-install.php:705
 msgctxt "User role"
 msgid "Accountant"
+msgstr ""
+
+#: src/Admin/ListTables/CategoriesTable.php:164
+#: src/Admin/ListTables/CurrenciesTable.php:147
+msgctxt "list_table"
+msgid "All <span class=\"count\">(%s)</span>"
+msgid_plural "All <span class=\"count\">(%s)</span>"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Admin/ListTables/CategoriesTable.php:165
+#: src/Admin/ListTables/CurrenciesTable.php:148
+msgctxt "list_table"
+msgid "Active <span class=\"count\">(%s)</span>"
+msgid_plural "Active <span class=\"count\">(%s)</span>"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Admin/ListTables/CategoriesTable.php:166
+#: src/Admin/ListTables/CurrenciesTable.php:149
+msgctxt "list_table"
+msgid "Inactive <span class=\"count\">(%s)</span>"
+msgid_plural "Inactive <span class=\"count\">(%s)</span>"
+msgstr[0] ""
+msgstr[1] ""
+
+#: vendor/woocommerce/action-scheduler/classes/abstracts/ActionScheduler_Abstract_ListTable.php:703
+msgctxt "status labels"
+msgid "All"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/abstracts/ActionScheduler_Abstract_ListTable.php:704
+msgctxt "status labels"
+msgid "Past-due"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/data-stores/ActionScheduler_DBStore.php:939
+msgctxt "database error"
+msgid "unknown"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostStatusRegistrar.php:36
+msgctxt "post"
+msgid "Failed"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostStatusRegistrar.php:51
+msgctxt "post"
+msgid "In-Progress"
+msgstr ""
+
+#: vendor/woocommerce/action-scheduler/classes/data-stores/ActionScheduler_wpPostStore_PostTypeRegistrar.php:32
+msgctxt "Admin menu name"
+msgid "Scheduled Actions"
+msgstr ""
+
+#: vendor/wp-cli/core-command/src/Core_Command.php:488
+#: vendor/wp-cli/core-command/src/Core_Command.php:562
+#. translators: placeholder is blog name
+#. translators: placeholder is user supplied title
+msgctxt "Default network name"
+msgid "%s Sites"
+msgstr ""
+
+#: vendor/wp-cli/entity-command/src/Site_Command.php:160
+#. translators: Default category slug
+msgctxt "Default category slug"
+msgid "Uncategorized"
 msgstr ""

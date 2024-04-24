@@ -141,6 +141,7 @@ class Menus {
 			array(
 				'eac_items_per_page',
 				'eac_categories_per_page',
+				'eac_currencies_per_page',
 				'eac_sales_revenues_per_page',
 				'eac_sales_invoices_per_page',
 				'eac_sales_customers_per_page',
@@ -442,10 +443,9 @@ class Menus {
 			exit();
 		}
 
-		if ( Utilities::is_add_screen() ) {
-			include __DIR__ . '/views/misc/currencies/add.php';
-		} elseif ( $edit ) {
+		if ( $edit ) {
 			include __DIR__ . '/views/misc/currencies/edit.php';
+
 		} else {
 			include __DIR__ . '/views/misc/currencies/currencies.php';
 		}
