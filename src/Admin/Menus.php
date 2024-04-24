@@ -140,7 +140,7 @@ class Menus {
 		$options = apply_filters( 'ever_accounting_screen_options',
 			array(
 				'eac_items_per_page',
-				'eac_items_categories_per_page',
+				'eac_categories_per_page',
 				'eac_sales_revenues_per_page',
 				'eac_sales_invoices_per_page',
 				'eac_sales_customers_per_page',

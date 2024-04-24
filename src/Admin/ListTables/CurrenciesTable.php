@@ -144,9 +144,9 @@ class CurrenciesTable extends ListTable {
 		$current      = $this->get_request_status( 'all' );
 		$status_links = array();
 		$views        = array(
-			'all'      => _nx_noop( 'All <span class="count">(%s)</span>', 'All <span class="count">(%s)</span>', 'wp-ever-accounting' ),
-			'active'   => _nx_noop( 'Active <span class="count">(%s)</span>', 'Active <span class="count">(%s)</span>', 'wp-ever-accounting' ),
-			'inactive' => _nx_noop( 'Inactive <span class="count">(%s)</span>', 'Inactive <span class="count">(%s)</span>', 'wp-ever-accounting' ),
+			'all'      => _nx_noop( 'All <span class="count">(%s)</span>', 'All <span class="count">(%s)</span>', 'list_table', 'wp-ever-accounting' ),
+			'active'   => _nx_noop( 'Active <span class="count">(%s)</span>', 'Active <span class="count">(%s)</span>', 'list_table', 'wp-ever-accounting' ),
+			'inactive' => _nx_noop( 'Inactive <span class="count">(%s)</span>', 'Inactive <span class="count">(%s)</span>', 'list_table', 'wp-ever-accounting' ),
 		);
 		foreach ( $views as $view => $label ) {
 			$link  = $view === 'all' ? $this->base_url : add_query_arg( 'status', $view, $this->base_url );
@@ -188,7 +188,8 @@ class CurrenciesTable extends ListTable {
 	 * @since 1.0.0
 	 * @return void
 	 */
-	protected function extra_tablenav( $which ) {}
+	protected function extra_tablenav( $which ) {
+	}
 
 	/**
 	 * Gets a list of columns for the list table.
@@ -199,7 +200,7 @@ class CurrenciesTable extends ListTable {
 	 */
 	public function get_columns() {
 		return array(
-			'cb'          => '<input type="checkbox" />',
+			'cb'            => '<input type="checkbox" />',
 			'name'          => __( 'Name', 'wp-ever-accounting' ),
 			'code'          => __( 'Code', 'wp-ever-accounting' ),
 			'symbol'        => __( 'Symbol', 'wp-ever-accounting' ),

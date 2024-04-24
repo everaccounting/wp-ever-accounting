@@ -7,7 +7,7 @@ use EverAccounting\Models\Category;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class ItemsTable.
+ * Class CategoriesTable.
  *
  * @since 1.0.0
  * @package EverAccounting\Admin\ListTables
@@ -46,7 +46,7 @@ class CategoriesTable extends ListTable {
 	public function prepare_items() {
 		$this->process_actions();
 		$this->_column_headers = array( $this->get_columns(), get_hidden_columns( $this->screen ), $this->get_sortable_columns() );
-		$per_page              = $this->get_items_per_page( 'eac_items_categories_per_page', 20 );
+		$per_page              = $this->get_items_per_page( 'eac_categories_per_page', 20 );
 		$paged                 = $this->get_pagenum();
 		$search                = isset( $_REQUEST['s'] ) ? wp_unslash( trim( $_REQUEST['s'] ) ) : '';
 		$order_by              = isset( $_REQUEST['orderby'] ) ? wp_unslash( trim( $_REQUEST['orderby'] ) ) : '';
@@ -66,7 +66,7 @@ class CategoriesTable extends ListTable {
 		 *
 		 * @since 1.0.0
 		 */
-		$args = apply_filters( 'ever_accounting_category_table_query_args', $args );
+		$args = apply_filters( 'ever_accounting_categories_table_query_args', $args );
 
 		$this->items = eac_get_categories( $args );
 		$total       = eac_get_categories( $args, true );
@@ -140,7 +140,7 @@ class CategoriesTable extends ListTable {
 	}
 
 	/**
-	 * Outputs 'no users' message.
+	 * Outputs 'no categories' message.
 	 *
 	 * @since 1.0.0
 	 */
@@ -152,9 +152,6 @@ class CategoriesTable extends ListTable {
 	 * Returns an associative array listing all the views that can be used
 	 * with this table.
 	 *
-	 * Provides a list of roles and user count for that role for easy
-	 * filtering of the user table.
-	 *
 	 * @since 1.0.0
 	 *
 	 * @return string[] An array of HTML links keyed by their view.
@@ -164,9 +161,9 @@ class CategoriesTable extends ListTable {
 		$current      = $this->get_request_status( 'all' );
 		$status_links = array();
 		$views        = array(
-			'all'      => _nx_noop( 'All <span class="count">(%s)</span>', 'All <span class="count">(%s)</span>', 'wp-ever-accounting' ),
-			'active'   => _nx_noop( 'Active <span class="count">(%s)</span>', 'Active <span class="count">(%s)</span>', 'wp-ever-accounting' ),
-			'inactive' => _nx_noop( 'Inactive <span class="count">(%s)</span>', 'Inactive <span class="count">(%s)</span>', 'wp-ever-accounting' ),
+			'all'      => _nx_noop( 'All <span class="count">(%s)</span>', 'All <span class="count">(%s)</span>', 'list_table', 'wp-ever-accounting' ),
+			'active'   => _nx_noop( 'Active <span class="count">(%s)</span>', 'Active <span class="count">(%s)</span>', 'list_table', 'wp-ever-accounting' ),
+			'inactive' => _nx_noop( 'Inactive <span class="count">(%s)</span>', 'Inactive <span class="count">(%s)</span>', 'list_table', 'wp-ever-accounting' ),
 		);
 		foreach ( $views as $view => $label ) {
 			$link  = $view === 'all' ? $this->base_url : add_query_arg( 'status', $view, $this->base_url );
