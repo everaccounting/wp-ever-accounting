@@ -9,7 +9,7 @@
 
 defined( 'ABSPATH' ) || exit;
 ?>
-<form method="post" action="<?php echo esc_html( admin_url( 'admin-post.php' ) ); ?>">
+<form id="eac-currency-form" method="post" action="<?php echo esc_html( admin_url( 'admin-post.php' ) ); ?>">
 	<span data-wp-text="name"></span>
 	<div class="bkit-poststuff">
 		<div class="column-1">
@@ -18,7 +18,6 @@ defined( 'ABSPATH' ) || exit;
 					<h2 class="bkit-card__title"><?php esc_html_e( 'Currency Details', 'wp-ever-accounting' ); ?></h2>
 				</div>
 				<div class="bkit-card__body grid--fields">
-
 
 					<div class="bkit-form-group">
 						<label for="code">

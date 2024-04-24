@@ -21,13 +21,14 @@ class Actions {
 	public function __construct() {
 		add_action( 'admin_post_eac_edit_item', array( $this, 'handle_edit_item' ) );
 		add_action( 'admin_post_eac_edit_category', array( $this, 'handle_edit_category' ) );
+		add_action( 'admin_post_eac_edit_currency', array( $this, 'handle_edit_currency' ) );
 	}
 
 	/**
 	 * Edit item.
 	 *
-	 * @since 1.1.6
 	 * @return void
+	 * @since 1.1.6
 	 */
 	public static function handle_edit_item() {
 		check_admin_referer( 'eac_edit_item' );
@@ -72,8 +73,8 @@ class Actions {
 	/**
 	 * Edit category.
 	 *
-	 * @since 1.1.6
 	 * @return void
+	 * @since 1.1.6
 	 */
 	public static function handle_edit_category() {
 		check_admin_referer( 'eac_edit_category' );
@@ -99,6 +100,52 @@ class Actions {
 			EAC()->flash->success( __( 'Category saved successfully.', 'wp-ever-accounting' ) );
 			$referer = add_query_arg( 'edit', $category->id, $referer );
 			$referer = remove_query_arg( array( 'add' ), $referer );
+		}
+
+		wp_safe_redirect( $referer );
+		exit;
+	}
+
+	/**
+	 * Edit currency.
+	 *
+	 * @return void
+	 * @since 1.1.6
+	 */
+	public static function handle_edit_currency() {
+		check_admin_referer( 'eac_edit_currency' );
+		$referer = wp_get_referer();
+//		var_dump($referer);
+		$id                 = isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0;
+		$code               = isset( $_POST['code'] ) ? sanitize_text_field( wp_unslash( $_POST['code'] ) ) : '';
+		$name               = isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '';
+		$symbol             = isset( $_POST['symbol'] ) ? sanitize_text_field( wp_unslash( $_POST['symbol'] ) ) : '';
+		$exchange_rate      = isset( $_POST['exchange_rate'] ) ? floatval( wp_unslash( $_POST['exchange_rate'] ) ) : 0;
+		$thousand_separator = isset( $_POST['thousand_separator'] ) ? sanitize_text_field( wp_unslash( $_POST['thousand_separator'] ) ) : '';
+		$decimal_separator  = isset( $_POST['decimal_separator'] ) ? sanitize_text_field( wp_unslash( $_POST['decimal_separator'] ) ) : '';
+		$precision          = isset( $_POST['precision'] ) ? absint( wp_unslash( $_POST['precision'] ) ) : '';
+		$position           = isset( $_POST['position'] ) ? sanitize_text_field( wp_unslash( $_POST['position'] ) ) : '';
+		$status             = isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : 'active';
+		$currency           = eac_insert_currency(
+			array(
+				'id'                 => $id,
+				'code'               => $code,
+				'name'               => $name,
+				'symbol'             => $symbol,
+				'exchange_rate'      => $exchange_rate,
+				'thousand_separator' => $thousand_separator,
+				'decimal_separator'  => $decimal_separator,
+				'precision'          => $precision,
+				'position'           => $position,
+				'status'             => $status,
+			)
+		);
+
+		if ( is_wp_error( $currency ) ) {
+			EAC()->flash->error( $currency->get_error_message() );
+		} else {
+			EAC()->flash->success( __( 'Currency saved successfully.', 'wp-ever-accounting' ) );
+			$referer = add_query_arg( 'edit', $currency->id, $referer );
 		}
 
 		wp_safe_redirect( $referer );
