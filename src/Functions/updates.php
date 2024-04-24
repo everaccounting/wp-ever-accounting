@@ -22,7 +22,7 @@ function eac_update_121() {
 	$wpdb->query( "UPDATE $table_name SET uuid = UUID()" );
 	$wpdb->query( "ALTER TABLE $table_name ADD UNIQUE KEY `uuid` (`uuid`)" );
 	if ( $wpdb->get_var( "SHOW COLUMNS FROM $table_name LIKE 'enabled'" ) == 'enabled' ) {
-		$wpdb->query( "ALTER TABLE $table_name ADD `status` ENUM('active','inactive') NOT NULL DEFAULT 'active' AFTER `currency_code`" );
+		$wpdb->query( "ALTER TABLE $table_name ADD `status` ENUM('active','inactive') NOT NULL DEFAULT 'active' AFTER `author_id`" );
 		$wpdb->query( "ALTER TABLE $table_name ADD KEY `status` (`status`)" );
 		$wpdb->query( "UPDATE $table_name SET status = 'active' WHERE enabled = 1" );
 		$wpdb->query( "UPDATE $table_name SET status = 'inactive' WHERE enabled = 0" );

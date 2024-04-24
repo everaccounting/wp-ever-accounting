@@ -1,58 +1,8 @@
-// Status Badge
-//.eac-status {
-//	padding: .150rem .625rem;
-//	font-size: .75rem;
-//	line-height: 1rem;
-//	display: inline-flex;
-//	border-radius: 9999px;
-//	align-items: center;
-//	background-color: var(--eac-status-bg, #def7ec);
-//	color: #03543f;
-//
-//	&:before {
-//		content: '';
-//		display: inline-block;
-//		width: .5em;
-//		height: .5em;
-//		border-radius: 9999px;
-//		margin-right: .25rem;
-//		background-color: var(--eac-status-dot-bg, #00a86b);
-//	}
-//
-//	&.is--warning {
-//		--eac-status-bg: #fef3e3;
-//		--eac-status-dot-bg: #f9a825;
-//		color: #7a5e00;
-//	}
-//
-//	&.is--danger,
-//	&.is--disabled {
-//		--eac-status-bg: #fde8e8;
-//		--eac-status-dot-bg: #e55353;
-//		color: #7a5e00;
-//	}
-//
-//	&.is--success,
-//	&.is--enabled {
-//		--eac-status-bg: #def7ec;
-//		--eac-status-dot-bg: #00a86b;
-//		color: #03543f;
-//	}
-//
-//	&.is--info {
-//		--eac-status-bg: #e8f4fd;
-//		--eac-status-dot-bg: #007bff;
-//		color: #004085;
-//	}
-//
-//	&.is--secondary {
-//		--eac-status-bg: #f8f9fa;
-//		--eac-status-dot-bg: #6c757d;
-//		color: #495057;
-//	}
-//}
+/************************************************************
+ * Status
+ ************************************************************/
 
-.eac-status{
+.eac-status {
 	text-transform: uppercase;
 	font-weight: 400;
 	display: inline-block;
@@ -109,4 +59,120 @@
 		background: #007bff;
 		border: 1px solid #007bff;
 	}
+}
+
+
+/************************************************************
+ * Section header
+ ************************************************************/
+.eac-section-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin: 0 0 1em;
+	min-height: 25px;
+	box-sizing: border-box;
+	flex-wrap: wrap;
+	gap: 10px;
+
+	h2, h3 {
+		line-height: 1.7;
+		font-size: 1.5em;
+		margin: 0 .25em 0 0;
+
+		&:last-child {
+			margin-right: 0;
+		}
+	}
+
+	&__subtitle {
+		font-size: 1.25rem;
+		font-weight: 400;
+		margin: 0;
+	}
+
+	& > div {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		box-sizing: border-box;
+		gap: 10px;
+	}
+
+	p {
+		margin: 0;
+		padding: 0;
+	}
+
+	input, select, .select2, button {
+		margin: 0;
+	}
+
+	a {
+		text-decoration: none;
+	}
+
+	.page-title-action,
+	.page-title-action:active,
+	.page-title-action:focus,
+	.page-title-action:hover {
+		top: 0;
+		margin-left: -5px;
+	}
+}
+
+
+/************************************************************
+ * Tooltip
+ ************************************************************/
+.eac-tooltip {
+	color: #666;
+	display: inline-block;
+	font-size: 1.1em;
+	font-style: normal;
+	height: 16px;
+	line-height: 16px;
+	position: relative;
+	vertical-align: middle;
+	width: 16px;
+	padding: 0;
+	margin: 0 0 0 5px;
+	cursor: help;
+
+	&:before {
+		font-family: 'Dashicons';
+		speak: none;
+		font-weight: normal;
+		font-variant: normal;
+		text-transform: none;
+		line-height: 1;
+		-webkit-font-smoothing: antialiased;
+		content: '\f223';
+		text-decoration: none;
+	}
+
+	.eac-input__label & {
+		margin: 0;
+		font-size: 15px;
+		position: absolute;
+		top: 0;
+		right: 15px;
+	}
+}
+
+.eac-ui-tooltip {
+	opacity: 1 !important;
+	font-size: .8em !important;
+	padding: .618em 1em !important;
+	position: absolute;
+	background: #333 !important;
+	border-width: 1px !important;
+	border-radius: 3px !important;
+	box-shadow: 1px 1px 2px 1px rgba(214, 214, 214, 0.5) !important;
+	color: #dedede !important;
+	max-width: 200px !important;
+	text-rendering: optimizeLegibility;
+	text-shadow: none !important;
+	z-index: 9999 !important;
+	margin: -17px 0 0 -8px !important;
 }

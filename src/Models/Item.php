@@ -12,20 +12,23 @@ use ByteKit\Models\Relation;
  * @package EverAccounting
  * @subpackage Models
  *
- * @property int $id ID of the item.
+ * @property int    $id ID of the item.
+ * @property string $type Type of the item.
  * @property string $name Name of the item.
- * @property string $sku SKU of the item.
- * @property int $thumbnail_id Thumbnail ID of the item.
  * @property string $description Description of the item.
- * @property double $sale_price Sale price of the item.
- * @property double $purchase_price Purchase price of the item.
- * @property int $quantity Quantity of the item.
- * @property int $category_id Category ID of the item.
- * @property double $sales_tax Sales tax of the item.
- * @property double $purchase_tax Purchase tax of the item.
- * @property bool $enabled Whether the item is enabled or not.
- * @property int $creator_id Creator ID of the item.
+ * @property double $price Price of the item.
+ * @property double $cost Cost of the item.
+ * @property string $unit Unit of the item.
+ * @property bool   $taxable Whether the item is taxable.
+ * @property string $tax_ids Tax IDs of the item.
+ * @property int    $category_id Category ID of the item.
+ * @property int    $thumbnail_id Thumbnail ID of the item.
+ * @property string $status Status of the item.
+ * @property string $formatted_price Formatted price of the item.
+ * @property string $formatted_cost Formatted cost of the item.
+ * @property Category $category Category of the item.
  * @property string $date_created Date created of the item.
+ * @property string $date_updated Date updated of the item.
  */
 class Item extends Model {
 
@@ -45,19 +48,17 @@ class Item extends Model {
 	 */
 	protected $columns = array(
 		'id',
+		'type',
 		'name',
-		'sku',
-		'thumbnail_id',
 		'description',
-		'sale_price',
-		'purchase_price',
-		'quantity',
+		'price',
+		'cost',
+		'unit',
+		'taxable',
+		'tax_ids',
 		'category_id',
-		'sales_tax',
-		'purchase_tax',
-		'enabled',
-		'creator_id',
-		'date_created',
+		'thumbnail_id',
+		'status'
 	);
 
 	/**
@@ -66,28 +67,24 @@ class Item extends Model {
 	 * @since 1.0.0
 	 * @var array
 	 */
-	protected $attributes = array(
-		'sale_price'     => 0.0000,
-		'purchase_price' => 0.0000,
-		'quantity'       => 1,
-		'enabled'        => true,
+	protected $data = array(
+		'type'   => 'standard',
+		'status' => 'active',
 	);
 
 	/**
 	 * Model's casts data.
 	 *
-	 * @return bool
 	 * @since 1.0.0
+	 * @return bool
 	 */
 	protected $casts = array(
-		'id'             => 'int',
-		'sale_price'     => 'double',
-		'purchase_price' => 'double',
-		'quantity'       => 'int',
-		'category_id'    => 'int',
-		'enabled'        => 'bool',
-		'creator_id'     => 'int',
-		'date_created'   => 'datetime',
+		'id'           => 'int',
+		'price'        => 'double',
+		'cost'         => 'double',
+		'taxable'      => 'bool',
+		'category_id'  => 'int',
+		'thumbnail_id' => 'int',
 	);
 
 	/**
@@ -97,8 +94,8 @@ class Item extends Model {
 	 * @var array
 	 */
 	protected $appends = array(
-		'formatted_sale_price',
-		'formatted_purchase_price',
+		'formatted_price',
+		'formatted_cost',
 	);
 
 	/**
@@ -109,35 +106,42 @@ class Item extends Model {
 	 */
 	protected $searchable = array(
 		'name',
-		'sku',
 		'description',
 	);
 
 	/**
+	 * Whether the model should be timestamped.
+	 *
+	 * @since 1.0.0
+	 * @var bool
+	 */
+	public $timestamps = true;
+
+	/**
 	 * Get formatted sale price.
 	 *
-	 * @return string
 	 * @since 1.0.0
+	 * @return string
 	 */
-	public function get_formatted_sale_price_attribute() {
-		return eac_format_money( $this->sale_price );
+	public function get_formatted_price_prop() {
+		return eac_format_money( $this->price );
 	}
 
 	/**
 	 * Get formatted purchase price.
 	 *
-	 * @return string
 	 * @since 1.0.0
+	 * @return string
 	 */
-	public function get_formatted_purchase_price_attribute() {
-		return eac_format_money( $this->purchase_price );
+	public function get_formatted_cost_prop() {
+		return eac_format_money( $this->cost );
 	}
 
 	/**
 	 * Get items category
 	 *
-	 * @return Relation
 	 * @since 1.2.1
+	 * @return Relation
 	 */
 	public function category() {
 		return $this->has_one( Category::class, 'category_id', 'id' );
@@ -148,8 +152,8 @@ class Item extends Model {
 	 *
 	 * @param array $args Query arguments.
 	 *
-	 * @return mixed
 	 * @since 1.2.1
+	 * @return mixed
 	 */
 	public function categories( $args = array() ) {
 		$args['type']  = 'item';
@@ -161,27 +165,18 @@ class Item extends Model {
 	/**
 	 * Save the object to the database.
 	 *
-	 * @return \WP_Error|true True on success, WP_Error on failure.
 	 * @since 1.0.0
+	 * @return \WP_Error|true True on success, WP_Error on failure.
 	 */
 	public function save() {
 		if ( empty( $this->name ) ) {
 			return new \WP_Error( 'missing_required', __( 'Item name is required.', 'wp-ever-accounting' ) );
 		}
-		if ( empty( $this->quantity ) ) {
-			return new \WP_Error( 'missing_required', __( 'Item quantity is required.', 'wp-ever-accounting' ) );
+		if ( empty( $this->price ) ) {
+			return new \WP_Error( 'missing_required', __( 'Item price is required.', 'wp-ever-accounting' ) );
 		}
-		if ( empty( $this->sale_price ) ) {
-			return new \WP_Error( 'missing_required', __( 'Item sale price is required.', 'wp-ever-accounting' ) );
-		}
-		if ( empty( $this->date_created ) ) {
-			$this->date_created = current_time( 'mysql' );
-		}
-		if ( empty( $this->purchase_price ) ) {
-			$this->purchase_price = $this->sale_price;
-		}
-		if ( empty( $this->creator_id ) && get_current_user_id() ) {
-			$this->creator_id = get_current_user_id();
+		if ( empty( $this->cost ) ) {
+			$this->cost = $this->price;
 		}
 
 		return parent::save();

@@ -2,6 +2,8 @@
 
 namespace EverAccounting\Models;
 
+use ByteKit\Models\Relation;
+
 /**
  * Currency model.
  *
@@ -11,17 +13,15 @@ namespace EverAccounting\Models;
  * @subpackage Models
  *
  * @property int    $id ID of the category.
- * @property string $name Name of the category.
  * @property string $code Code of the currency.
- * @property float  $rate Rate of the currency.
- * @property float  $exchange_rate Exchange rate of the currency.
- * @property int    $number Number of the currency.
- * @property int    $precision Precision of the currency.
- * @property int    $subunit Subunit of the currency.
+ * @property string $name Name of the category.
+ * @property int $precision Precision of the currency.
  * @property string $symbol Symbol of the currency.
+ * @property int $subunit Subunit of the currency.
  * @property string $position Position of the currency.
  * @property string $decimal_separator Decimal separator of the currency.
  * @property string $thousand_separator A Thousand separator of the currency.
+ * @property float  $exchange_rate Exchange rate of the currency.
  * @property string $date_updated Date updated of the currency.
  * @property string $date_created Date created of the currency.
  */
@@ -33,7 +33,7 @@ class Currency extends Model {
 	 * @since 1.0.0
 	 * @var string
 	 */
-	protected $table = 'eac_currencies';
+	protected $table = 'ea_currencies';
 
 	/**
 	 * Table columns.
@@ -45,16 +45,14 @@ class Currency extends Model {
 		'id',
 		'code',
 		'name',
-		'exchange_rate',
 		'precision',
 		'symbol',
 		'subunit',
 		'position',
 		'decimal_separator',
 		'thousand_separator',
-		'enabled',
-		'date_updated',
-		'date_created',
+		'exchange_rate',
+		'status',
 	);
 
 	/**
@@ -64,14 +62,13 @@ class Currency extends Model {
 	 * @var array
 	 */
 	protected $data = array(
-		'exchange_rate'      => 1,
 		'precision'          => 2,
+		'symbol'             => '$',
 		'subunit'            => 100,
 		'position'           => 'before',
 		'decimal_separator'  => '.',
 		'thousand_separator' => ',',
-		'symbol'             => '$',
-		'enabled'            => 1,
+		'status'             => 'active',
 	);
 
 	/**
@@ -82,17 +79,29 @@ class Currency extends Model {
 	 */
 	protected $casts = array(
 		'id'            => 'int',
-		'exchange_rate' => 'float',
 		'precision'     => 'int',
 		'subunit'       => 'int',
-		'enabled'       => 'bool',
-		'date_updated'  => 'datetime',
-		'date_created'  => 'datetime',
+		'exchange_rate' => 'float',
 	);
 
-	protected $aliases = array(
-		'rate' => 'exchange_rate',
+	/**
+	 * Searchable properties.
+	 *
+	 * @since 1.0.0
+	 * @var array
+	 */
+	protected $searchable = array(
+		'name',
+		'code'
 	);
+
+	/**
+	 * Whether the model should be timestamped.
+	 *
+	 * @since 1.0.0
+	 * @var bool
+	 */
+	public $timestamps = true;
 
 	/**
 	 * Set position property.

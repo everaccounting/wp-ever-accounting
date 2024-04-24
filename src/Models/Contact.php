@@ -10,6 +10,29 @@ defined( 'ABSPATH' ) || exit;
  * @since   1.0.0
  * @package EverAccounting\Models
  *
+ * @property int    $id ID of the contact.
+ * @property string $type Type of the contact.
+ * @property string $name Name of the contact.
+ * @property string $company Company of the contact.
+ * @property string $email Email of the contact.
+ * @property string $phone Phone of the contact.
+ * @property string $address_1 Address line 1 of the contact.
+ * @property string $address_2 Address line 2 of the contact.
+ * @property string $city City of the contact.
+ * @property string $state State of the contact.
+ * @property string $postcode Postcode of the contact.
+ * @property string $country Country of the contact.
+ * @property string $vat_number VAT number of the contact.
+ * @property bool   $vat_exempt VAT exempt status of the contact.
+ * @property string $currency_code Currency code of the contact.
+ * @property int    $thumbnail_id Thumbnail ID of the contact.
+ * @property int    $user_id User ID of the contact.
+ * @property string $status Status of the contact.
+ * @property string $created_via Created via of the contact.
+ * @property int    $author_id Author ID of the contact.
+ * @property string $uuid UUID of the contact.
+ * @property string $date_created Date created of the contact.
+ * @property string $date_updated Date updated of the contact.
  */
 class Contact extends Model {
 
@@ -39,25 +62,26 @@ class Contact extends Model {
 	 */
 	protected $columns = array(
 		'id',
-		'user_id',
+		'type',
 		'name',
 		'company',
 		'email',
 		'phone',
-		'birth_date',
-		'street',
+		'address_1',
+		'address_2',
 		'city',
 		'state',
 		'postcode',
 		'country',
-		'website',
 		'vat_number',
+		'vat_exempt',
 		'currency_code',
-		'type',
 		'thumbnail_id',
-		'enabled',
-		'creator_id',
-		'date_created',
+		'user_id',
+		'status',
+		'created_via',
+		'author_id',
+		'uuid',
 	);
 
 	/**
@@ -67,7 +91,7 @@ class Contact extends Model {
 	 * @var array
 	 */
 	protected $data = array(
-		'enabled' => 1,
+		'status' => 'active',
 	);
 
 	/**
@@ -78,11 +102,10 @@ class Contact extends Model {
 	 */
 	protected $casts = array(
 		'id'           => 'int',
+		'vat_exempt'   => 'bool',
 		'user_id'      => 'int',
 		'thumbnail_id' => 'int',
-		'enabled'      => 'bool',
-		'creator_id'   => 'int',
-		'date_created' => 'datetime',
+		'author_id'    => 'int',
 	);
 
 	/**
@@ -104,6 +127,24 @@ class Contact extends Model {
 	protected $hidden = array(
 		'type',
 	);
+
+	/**
+	 * Searchable properties.
+	 *
+	 * @since 1.0.0
+	 * @var array
+	 */
+	protected $searchable = array(
+		'name'
+	);
+
+	/**
+	 * Whether the model should be timestamped.
+	 *
+	 * @since 1.0.0
+	 * @var bool
+	 */
+	public $timestamps = true;
 
 	/**
 	 * Create a new Eloquent model instance.

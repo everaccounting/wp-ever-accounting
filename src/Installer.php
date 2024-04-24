@@ -169,14 +169,56 @@ class Installer {
 	 */
 	public static function create_tables() {
 		global $wpdb;
-		$collate          = $wpdb->has_cap( 'collation' ) ? $wpdb->get_charset_collate() : '';
-		$max_index_length = 191;
+		$collate      = $wpdb->has_cap( 'collation' ) ? $wpdb->get_charset_collate() : '';
+		$index_length = 191;
 
 		// drop old ea_currencies table if exists.
-		$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}ea_currencies" );
+		$table_name = $wpdb->prefix . 'ea_currencies';
+		// if the table does not have exchange_rate column, then drop the table and create it again.
+		if ( $wpdb->get_var( "SHOW COLUMNS FROM $table_name LIKE 'exchange_rate'" ) != 'exchange_rate' ) {
+			$wpdb->query( "DROP TABLE $table_name" );
+		}
 
 
 		$tables = "
+CREATE TABLE {$wpdb->prefix}ea_accounts(
+`id` bigINT(20) NOT NULL AUTO_INCREMENT,
+`type` VARCHAR(50) NOT NULL,
+`name` VARCHAR(191) NOT NULL,
+`number` VARCHAR(100) NOT NULL,
+`opening_balance` DOUBLE(15,4) NOT NULL DEFAULT '0.0000',
+`bank_name` VARCHAR(191) DEFAULT NULL,
+`bank_phone` VARCHAR(20) DEFAULT NULL,
+`bank_address` VARCHAR(191) DEFAULT NULL,
+`currency_code` varchar(3) NOT NULL DEFAULT 'USD',
+`author_id` BIGINT(20) UNSIGNED DEFAULT NULL,
+`thumbnail_id` BIGINT(20) UNSIGNED DEFAULT NULL,
+`status` ENUM('active','inactive') NOT NULL DEFAULT 'active',
+`uuid` VARCHAR(36) NOT NULL,
+`date_updated` DATETIME NULL DEFAULT NULL,
+`date_created` DATETIME NULL DEFAULT NULL,
+PRIMARY KEY (`id`),
+KEY `name` (`name`),
+KEY `type` (`type`),
+UNIQUE KEY (`number`),
+UNIQUE KEY (`uuid`),
+KEY `currency_code` (`currency_code`),
+KEY `status` (`status`)
+) $collate;
+CREATE TABLE {$wpdb->prefix}ea_categories(
+`id` bigINT(20) NOT NULL AUTO_INCREMENT,
+`type` VARCHAR(50) NOT NULL,
+`name` VARCHAR(191) NOT NULL,
+`description` TEXT NULL,
+`status` ENUM('active','inactive') NOT NULL DEFAULT 'active',
+`date_updated` DATETIME NULL DEFAULT NULL,
+`date_created` DATETIME NULL DEFAULT NULL,
+PRIMARY KEY (`id`),
+KEY `name` (`name`),
+KEY `type` (`type`),
+KEY `status` (`status`),
+UNIQUE KEY (`name`, `type`)
+) $collate;
 CREATE TABLE {$wpdb->prefix}ea_currencies (
 `id` bigINT(20) NOT NULL AUTO_INCREMENT,
 `code` VARCHAR(191) NOT NULL,
@@ -188,14 +230,271 @@ CREATE TABLE {$wpdb->prefix}ea_currencies (
 `position` ENUM('before','after') NOT NULL DEFAULT 'before',
 `thousand_separator` VARCHAR(5) NOT NULL DEFAULT ',',
 `decimal_separator` VARCHAR(5) NOT NULL DEFAULT '.',
-`enabled` tinyint(1) NOT NULL DEFAULT '1',
+`status` ENUM('active','inactive') NOT NULL DEFAULT 'active',
 `date_updated` DATETIME NULL DEFAULT NULL,
 `date_created` DATETIME NULL DEFAULT NULL,
 PRIMARY KEY (`id`),
 KEY `name` (`name`),
 UNIQUE KEY `code` (`code`),
 KEY `exchange_rate` (`exchange_rate`),
-KEY `enabled` (`enabled`)
+KEY `status` (`status`)
+) $collate;
+CREATE TABLE {$wpdb->prefix}ea_contactmeta(
+`meta_id` bigINT(20) NOT NULL AUTO_INCREMENT,
+`ea_contact_id` bigint(20) unsigned NOT NULL default '0',
+`meta_key` varchar(255) default NULL,
+`meta_value` longtext,
+ PRIMARY KEY (`meta_id`),
+KEY `ea_contact_id`(`ea_contact_id`),
+KEY `meta_key` (meta_key($index_length))
+) $collate;
+CREATE TABLE {$wpdb->prefix}ea_contacts(
+`id` bigINT(20) NOT NULL AUTO_INCREMENT,
+`type` VARCHAR(30) DEFAULT NULL default 'customer',
+`name` VARCHAR(191) NOT NULL,
+`company` VARCHAR(191) NOT NULL,
+`email` VARCHAR(191) DEFAULT NULL,
+`phone` VARCHAR(50) DEFAULT NULL,
+`website` VARCHAR(191) DEFAULT NULL,
+`address_1` VARCHAR(191) DEFAULT NULL,
+`address_2` VARCHAR(191) DEFAULT NULL,
+`city` VARCHAR(50) DEFAULT NULL,
+`state` VARCHAR(50) DEFAULT NULL,
+`postcode` VARCHAR(20) DEFAULT NULL,
+`country` VARCHAR(3) DEFAULT NULL,
+`vat_number` VARCHAR(50) DEFAULT NULL,
+`vat_exempt` TINYINT(1) NOT NULL DEFAULT '0',
+`currency_code` varchar(3) NOT NULL DEFAULT 'USD',
+`thumbnail_id` BIGINT(20) UNSIGNED DEFAULT NULL,
+`user_id` BIGINT(20) UNSIGNED DEFAULT NULL,
+`status` ENUM('active','inactive') NOT NULL DEFAULT 'active',
+`created_via` VARCHAR(100) DEFAULT 'manual',
+`author_id` BIGINT(20) UNSIGNED DEFAULT NULL,
+`uuid` VARCHAR(36) DEFAULT NULL,
+`date_updated` DATETIME NULL DEFAULT NULL,
+`date_created` DATETIME NULL DEFAULT NULL,
+PRIMARY KEY (`id`),
+KEY `name`(`name`),
+KEY `type`(`type`),
+KEY `email`(`email`),
+KEY `phone`(`phone`),
+KEY `currency_code`(`currency_code`),
+KEY `user_id`(`user_id`),
+UNIQUE KEY (`uuid`),
+KEY `status`(`status`)
+) $collate;
+CREATE TABLE {$wpdb->prefix}ea_document_items(
+`id` bigINT(20) NOT NULL AUTO_INCREMENT,
+`type` VARCHAR(20) NOT NULL default 'standard',
+`name` VARCHAR(191) NOT NULL,
+`description` TEXT NULL,
+`unit` VARCHAR(20) DEFAULT NULL,
+`price` double(15,4) NOT NULL,
+`quantity` double(7,2) NOT NULL DEFAULT 0.00,
+`subtotal` double(15,4) NOT NULL DEFAULT 0.00,
+`subtotal_tax` double(15,4) NOT NULL DEFAULT 0.00,
+`discount` double(15,4) NOT NULL DEFAULT 0.00,
+`discount_tax` double(15,4) NOT NULL DEFAULT 0.00,
+`tax_total` double(15,4) NOT NULL DEFAULT 0.00,
+`total` double(15,4) NOT NULL DEFAULT 0.00,
+`taxable` TINYINT(1) NOT NULL DEFAULT 0,
+`item_id` BIGINT(20) UNSIGNED DEFAULT NULL,
+`document_id` BIGINT(20) UNSIGNED DEFAULT NULL,
+`date_updated` DATETIME NULL DEFAULT NULL,
+`date_created` DATETIME NULL DEFAULT NULL,
+PRIMARY KEY (`id`),
+KEY `name` (`name`),
+KEY `type` (`type`),
+KEY `unit` (`unit`),
+KEY `price` (`price`),
+KEY `quantity` (`quantity`),
+KEY `subtotal` (`subtotal`),
+KEY `discount` (`discount`),
+KEY `total` (`total`),
+KEY `tax_total` (`tax_total`),
+KEY `taxable` (`taxable`),
+KEY `item_id` (`item_id`),
+KEY `document_id` (`document_id`)
+) $collate;
+CREATE TABLE {$wpdb->prefix}ea_document_item_taxes(
+`id` bigINT(20) NOT NULL AUTO_INCREMENT,
+`name` VARCHAR(191) NOT NULL,
+`rate` double(15,4) NOT NULL,
+`is_compound` TINYINT(1) NOT NULL DEFAULT 0,
+`amount` double(15,4) NOT NULL DEFAULT 0.00,
+`item_id` BIGINT(20) UNSIGNED NOT NULL,
+`tax_id` BIGINT(20) UNSIGNED NOT NULL,
+`document_id` BIGINT(20) UNSIGNED NOT NULL,
+`date_updated` DATETIME NULL DEFAULT NULL,
+`date_created` DATETIME NULL DEFAULT NULL,
+PRIMARY KEY (`id`),
+KEY `item_id` (`item_id`),
+KEY `tax_id` (`tax_id`),
+KEY `document_id` (`document_id`)
+) $collate;
+CREATE TABLE {$wpdb->prefix}ea_documentmeta(
+`meta_id` bigINT(20) NOT NULL AUTO_INCREMENT,
+`ea_document_id` bigint(20) unsigned NOT NULL default '0',
+`meta_key` varchar(255) default NULL,
+`meta_value` longtext,
+ PRIMARY KEY (`meta_id`),
+KEY `ea_document_id`(`ea_document_id`),
+KEY `meta_key` (meta_key($index_length))
+) $collate;
+CREATE TABLE {$wpdb->prefix}ea_documents(
+`id` bigINT(20) NOT NULL AUTO_INCREMENT,
+`type` VARCHAR(20) NOT NULL DEFAULT 'invoice',
+`status` VARCHAR(20) DEFAULT NULL DEFAULT 'draft',
+`number` VARCHAR(30) NOT NULL,
+`contact_id` BIGINT(20) UNSIGNED NOT NULL,
+`items_total` DOUBLE(15,4) DEFAULT 0,
+`discount_total` DOUBLE(15,4) DEFAULT 0,
+`shipping_total` DOUBLE(15,4) DEFAULT 0,
+`fees_total` DOUBLE(15,4) DEFAULT 0,
+`tax_total` DOUBLE(15,4) DEFAULT 0,
+`total` DOUBLE(15,4) DEFAULT 0,
+`total_paid` DOUBLE(15,4) DEFAULT 0,
+`balance` DOUBLE(15,4) DEFAULT 0,
+`discount_amount` DOUBLE(15,4) DEFAULT 0,
+`discount_type` VARCHAR(30) DEFAULT NULL,
+`billing_data` TEXT DEFAULT NULL,
+`reference` VARCHAR(30) DEFAULT NULL,
+`note` TEXT DEFAULT NULL,
+`tax_inclusive` TINYINT(1) NOT NULL DEFAULT 0,
+`vat_exempt` TINYINT(1) NOT NULL DEFAULT 0,
+`issue_date` DATETIME NULL DEFAULT NULL,
+`due_date` DATETIME NULL DEFAULT NULL,
+`sent_date` DATETIME NULL DEFAULT NULL,
+`payment_date` DATETIME NULL DEFAULT NULL,
+`currency_code` varchar(3) NOT NULL DEFAULT 'USD',
+`exchange_rate` double(15,4) NOT NULL DEFAULT 1.00,
+`parent_id` BIGINT(20) UNSIGNED NOT NULL,
+`created_via` VARCHAR(100) DEFAULT 'manual',
+`author_id` BIGINT(20) UNSIGNED NOT NULL,
+`uuid` VARCHAR(36) DEFAULT NULL,
+`date_created` DATETIME NULL DEFAULT NULL,
+`date_updated` DATETIME NULL DEFAULT NULL,
+PRIMARY KEY (`id`),
+KEY `number` (`number`),
+KEY `contact_id` (`contact_id`),
+KEY `type` (`type`),
+KEY `status` (`status`),
+KEY `tax_total` (`tax_total`),
+KEY `total` (`total`),
+KEY `total_paid` (`total_paid`),
+KEY `balance` (`balance`),
+UNIQUE KEY `uuid` (`uuid`)
+) $collate;
+CREATE TABLE {$wpdb->prefix}ea_items(
+`id` bigINT(20) NOT NULL AUTO_INCREMENT,
+`type` VARCHAR(50) NOT NULL DEFAULT 'standard',
+`name` VARCHAR(191) NOT NULL,
+`description` TEXT DEFAULT NULL,
+`unit` VARCHAR(50) DEFAULT NULL,
+`price` double(15,4) NOT NULL,
+`cost` double(15,4) NOT NULL,
+`taxable` TINYINT(1) NOT NULL DEFAULT 0,
+`tax_ids` VARCHAR(191) DEFAULT NULL,
+`category_id` int(11) DEFAULT NULL,
+`thumbnail_id` BIGINT(20) UNSIGNED DEFAULT NULL,
+`status` ENUM('active','inactive') NOT NULL DEFAULT 'active',
+`date_created` DATETIME NULL DEFAULT NULL,
+`date_updated` DATETIME NULL DEFAULT NULL,
+PRIMARY KEY (`id`),
+KEY `name` (`name`),
+KEY `type` (`type`),
+KEY `price` (`price`),
+KEY `cost` (`cost`),
+KEY `status` (`status`),
+KEY `unit` (`unit`),
+KEY `category_id` (`category_id`)
+) $collate;
+CREATE TABLE {$wpdb->prefix}ea_notes(
+`id` bigINT(20) NOT NULL AUTO_INCREMENT,
+`object_id`  BIGINT(20) UNSIGNED NOT NULL,
+`object_type` VARCHAR(20) NOT NULL,
+`content` TEXT DEFAULT NULL,
+`note_metadata` longtext DEFAULT NULL,
+`author_id` BIGINT(20) UNSIGNED DEFAULT NULL,
+`date_created` DATETIME NULL DEFAULT NULL,
+`date_updated` DATETIME NULL DEFAULT NULL,
+PRIMARY KEY (`id`),
+KEY `object_id` (`object_id`),
+KEY `object_type` (`object_type`)
+) $collate;
+CREATE TABLE {$wpdb->prefix}ea_taxes(
+`id` bigINT(20) NOT NULL AUTO_INCREMENT,
+`name` VARCHAR(191) NOT NULL,
+`rate` double(15,4) NOT NULL,
+`is_compound` TINYINT(1) NOT NULL DEFAULT 0,
+`description` TEXT DEFAULT NULL ,
+`status` ENUM('active','inactive') NOT NULL DEFAULT 'active',
+`date_created` DATETIME NULL DEFAULT NULL,
+`date_updated` DATETIME NULL DEFAULT NULL,
+ PRIMARY KEY (`id`),
+ KEY `name` (`name`),
+ KEY `rate` (`rate`),
+ KEY `is_compound` (`is_compound`),
+ KEY `status` (`status`)
+ ) $collate;
+ CREATE TABLE {$wpdb->prefix}ea_transactionmeta(
+`meta_id` bigINT(20) NOT NULL AUTO_INCREMENT,
+`ea_transaction_id` bigint(20) unsigned NOT NULL default '0',
+`meta_key` varchar(255) default NULL,
+`meta_value` longtext,
+PRIMARY KEY (`meta_id`),
+KEY `ea_transaction_id`(`ea_transaction_id`),
+KEY `meta_key` (meta_key($index_length))
+) $collate;
+CREATE TABLE {$wpdb->prefix}ea_transactions(
+`type` VARCHAR(20) DEFAULT NULL,
+`id` bigINT(20) NOT NULL AUTO_INCREMENT,
+`number` VARCHAR(30) DEFAULT NULL,
+`date` DATE NOT NULL DEFAULT '0000-00-00',
+`amount` DOUBLE(15,4) NOT NULL,
+`currency_code` varchar(3) NOT NULL DEFAULT 'USD',
+`exchange_rate` double(15,8) NOT NULL DEFAULT 1,
+`reference` VARCHAR(191) DEFAULT NULL,
+`note` text DEFAULT NULL,
+`payment_method` VARCHAR(100) DEFAULT NULL,
+`account_id` BIGINT(20) UNSIGNED NOT NULL,
+`document_id` BIGINT(20) UNSIGNED DEFAULT NULL,
+`contact_id` BIGINT(20) UNSIGNED DEFAULT NULL,
+`category_id` BIGINT(20) UNSIGNED NOT NULL,
+`attachment_id` BIGINT(20) UNSIGNED DEFAULT NULL,
+`parent_id` BIGINT(20) UNSIGNED DEFAULT NULL,
+`reconciled` tinyINT(1) NOT NULL DEFAULT '0',
+`created_via` VARCHAR(100) DEFAULT 'manual',
+`author_id` BIGINT(20) UNSIGNED DEFAULT NULL,
+`uuid` VARCHAR(36) DEFAULT NULL,
+`date_updated` DATETIME NULL DEFAULT NULL,
+`date_created` DATETIME NULL DEFAULT NULL,
+PRIMARY KEY (`id`),
+KEY `type` (`type`),
+KEY `number` (`number`),
+KEY `amount` (`amount`),
+KEY `currency_code` (`currency_code`),
+KEY `exchange_rate` (`exchange_rate`),
+KEY `account_id` (`account_id`),
+KEY `document_id` (`document_id`),
+KEY `category_id` (`category_id`),
+KEY `contact_id` (`contact_id`),
+UNIQUE KEY `uuid` (`uuid`)
+) $collate;
+CREATE TABLE {$wpdb->prefix}ea_transfers(
+`id` bigINT(20) NOT NULL AUTO_INCREMENT,
+`payment_id` BIGINT(20) UNSIGNED NOT NULL,
+`expense_id` BIGINT(20) UNSIGNED NOT NULL,
+`amount` DOUBLE(15,4) NOT NULL,
+`uuid` VARCHAR(36) DEFAULT NULL,
+`creator_id` BIGINT(20) UNSIGNED DEFAULT NULL,
+`date_updated` DATETIME NULL DEFAULT NULL,
+`date_created` DATETIME NULL DEFAULT NULL,
+PRIMARY KEY (`id`),
+KEY `payment_id` (`payment_id`),
+KEY `expense_id` (`expense_id`),
+KEY `amount` (`amount`),
+UNIQUE KEY `uuid` (`uuid`)
 ) $collate;
 ";
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
@@ -220,7 +519,7 @@ KEY `enabled` (`enabled`)
 		$codes      = wp_list_pluck( $currencies, 'code' );
 		foreach ( I18n::get_currencies() as $code => $currency ) {
 			if ( ! in_array( $code, $codes, true ) ) {
-				$currency['enabled'] = 0;
+				$currency['status'] = 'inactive';
 				eac_insert_currency( $currency );
 			}
 		}

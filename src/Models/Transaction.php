@@ -8,8 +8,50 @@ defined( 'ABSPATH' ) || exit;
  * Transaction model.
  *
  * @since 1.0.0
+ * @author  Sultan Nasir Uddin <manikdrmc@gmail.com>
+ * @package EverAccounting
+ * @subpackage Models
+ *
+ * @property int    $id ID of the item.
+ * @property string $type Type of the transaction.
+ * @property string $number Number of the transaction.
+ * @property string $date Date of the transaction.
+ * @property double $amount Amount of the transaction.
+ * @property string $currency_code Currency code of the transaction.
+ * @property double $exchange_rate Exchange rate of the transaction.
+ * @property string $reference Reference of the transaction.
+ * @property string $note Note of the transaction.
+ * @property string $payment_method Payment method of the transaction.
+ * @property int    $account_id Account ID of the transaction.
+ * @property int    $document_id Document ID of the transaction.
+ * @property int    $contact_id Contact ID of the transaction.
+ * @property int    $category_id Category ID of the transaction.
+ * @property int    $attachment_id Attachment ID of the transaction.
+ * @property int    $parent_id Parent ID of the transaction.
+ * @property bool   $reconciled Whether the transaction is reconciled.
+ * @property string $uuid UUID of the transaction.
+ * @property string $created_via Created via of the transaction.
+ * @property int    $author_id Author ID of the transaction.
+ * @property string $date_created Date the transaction was created.
+ * @property string $date_updated Date the transaction was last updated.
+ *
+ * @property string $formatted_amount Formatted amount of the transaction.
+ * @property \EverAccounting\Models\Currency $currency Related currency.
+ * @property \EverAccounting\Models\Account $account Related account.
+ * @property \EverAccounting\Models\Category $category Related category.
+ * @property \EverAccounting\Models\Contact $customer Related customer.
+ * @property \EverAccounting\Models\Vendor $vendor Related vendor.
  */
 class Transaction extends Model {
+
+	/**
+	 * Meta type declaration for the object.
+	 *
+	 * @since 1.0.0
+	 * @var string
+	 */
+	public $meta_type = 'ea_transaction';
+
 	/**
 	 * The table associated with the model.
 	 *
@@ -27,22 +69,24 @@ class Transaction extends Model {
 	protected $columns = array(
 		'id',
 		'type',
-		'payment_date',
+		'number',
+		'date',
 		'amount',
 		'currency_code',
-		'currency_rate',
+		'exchange_rate',
+		'reference',
+		'note',
+		'payment_method',
 		'account_id',
 		'document_id',
 		'contact_id',
 		'category_id',
-		'description',
-		'payment_method',
-		'reference',
 		'attachment_id',
 		'parent_id',
 		'reconciled',
-		'creator_id',
-		'date_created',
+		'uuid',
+		'created_via',
+		'author_id',
 	);
 
 	/**
@@ -63,7 +107,9 @@ class Transaction extends Model {
 	 * @var array
 	 */
 	protected $data = array(
-		'type' => 'income',
+		'type'          => 'income',
+		'exchange_rate' => 1,
+		'created_via'   => 'manual',
 	);
 
 	/**
@@ -87,14 +133,6 @@ class Transaction extends Model {
 	);
 
 	/**
-	 * Field aliases.
-	 *
-	 * @var array
-	 */
-	protected $aliases = array();
-
-
-	/**
 	 * The accessors to append to the model's array form.
 	 *
 	 * @since 1.0.0
@@ -104,6 +142,38 @@ class Transaction extends Model {
 		'formatted_amount',
 	);
 
+	/**
+	 * Searchable properties.
+	 *
+	 * @since 1.0.0
+	 * @var array
+	 */
+	protected $searchable = array(
+		'number',
+		'note',
+	);
+
+	/**
+	 * Whether the model should be timestamped.
+	 *
+	 * @since 1.0.0
+	 * @var bool
+	 */
+	public $timestamps = true;
+
+	/**
+	 * Create a new Eloquent model instance.
+	 *
+	 * @param string|int|array $data Data properties.
+	 *
+	 * @throws \InvalidArgumentException If table name or object type is not set.
+	 * @return void
+	 */
+	public function __construct( $data = null ) {
+		$this->data['type']       = $this->get_object_type();
+		$this->query_args['type'] = $this->get_object_type();
+		parent::__construct( $data );
+	}
 
 	/**
 	 * Returns the formatted amount.
@@ -111,7 +181,7 @@ class Transaction extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	public function get_formatted_amount_prop(){
+	public function get_formatted_amount_prop() {
 		return eac_format_money( $this->amount, $this->currency_code );
 	}
 
@@ -166,6 +236,23 @@ class Transaction extends Model {
 	}
 
 	/**
+	 * Load the object from the database.
+	 *
+	 * @param string|int $id ID of the object.
+	 *
+	 * @since 1.0.0
+	 * @return $this
+	 */
+	protected function load( $id ) {
+		parent::load( $id );
+		if ( $this->get_object_type() !== $this->data['type'] ) {
+			$this->apply_defaults();
+		}
+
+		return $this;
+	}
+
+	/**
 	 * Save the object to the database.
 	 *
 	 * @since 1.0.0
@@ -179,15 +266,9 @@ class Transaction extends Model {
 		}
 		// If currency code is changed, update the currency rate.
 		if ( $this->is_prop_changed( 'currency_code' ) || ! $this->exists() ) {
-			$currency = Currency::find(array('code' => $this->currency_code));
-			$this->set_prop_value( 'currency_rate', $currency ? $currency->rate : 1 );
+			$currency = Currency::find( array( 'code' => $this->currency_code ) );
+			$this->set_prop_value( 'currency_rate', $currency ? $currency->exchange_rate : 1 );
 		}
-
-
-		if ( empty( $this->date_created ) ) {
-			$this->date_created = current_time( 'mysql' );
-		}
-
 		return parent::save();
 	}
 }

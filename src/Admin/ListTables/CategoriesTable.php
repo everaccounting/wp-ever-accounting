@@ -34,7 +34,7 @@ class CategoriesTable extends ListTable {
 			)
 		);
 
-		$this->base_url = admin_url( 'admin.php?page=eac-categories' );
+		$this->base_url = admin_url( 'admin.php?page=eac-misc&tab=categories' );
 	}
 
 	/**

@@ -13,11 +13,12 @@ defined( 'ABSPATH' ) || exit;
  * @subpackage Models
  *
  * @property int    $id ID of the category.
- * @property string $name Name of the category.
  * @property string $type Type of the category.
- * @property string $color Color of the category.
- * @property bool   $enabled Whether the category is enabled or not.
+ * @property string $name Name of the category.
+ * @property string $description Description of the category.
+ * @property string $status Status of the category.
  * @property string $date_created Date created of the category.
+ * @property string $date_updated Date updated of the category.
  */
 class Category extends Model {
 	/**

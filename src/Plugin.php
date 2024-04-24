@@ -65,7 +65,7 @@ class Plugin extends \ByteKit\Core\Plugin {
 	 * @return void
 	 */
 	public function init_hooks() {
-		register_activation_hook( $this->get_file(), array( $this, 'on_activation' ) );
+		register_activation_hook( $this->get_file(), array( Installer::class, 'install' ) );
 		add_action( 'plugins_loaded', array( $this, 'on_init' ), 0 );
 	}
 

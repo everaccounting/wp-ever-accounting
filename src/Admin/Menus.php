@@ -3,6 +3,7 @@
 namespace EverAccounting\Admin;
 
 use EverAccounting\Models\Category;
+use EverAccounting\Models\Currency;
 use EverAccounting\Models\Item;
 
 /**
@@ -53,11 +54,8 @@ class Menus {
 		add_action( 'ever_accounting_admin_expenses_payments', array( $this, 'render_payments_tab' ) );
 		add_action( 'ever_accounting_admin_expenses_bills', array( $this, 'render_bills_tab' ) );
 		add_action( 'ever_accounting_admin_expenses_vendors', array( $this, 'render_vendors_tab' ) );
-		add_action( 'ever_accounting_admin_categories', array( $this, 'render_categories_tab' ) );
-		add_action( 'ever_accounting_admin_banking_accounts', array( $this, 'render_accounts_tab' ) );
-		add_action( 'ever_accounting_admin_banking_transactions', array( $this, 'render_transactions_tab' ) );
-		add_action( 'ever_accounting_admin_banking_transfers', array( $this, 'render_transfers_tab' ) );
-		add_action( 'ever_accounting_admin_banking_currencies', array( $this, 'render_currencies_tab' ) );
+		add_action( 'ever_accounting_admin_misc_categories', array( $this, 'render_categories_tab' ) );
+		add_action( 'ever_accounting_admin_misc_currencies', array( $this, 'render_currencies_tab' ) );
 	}
 
 	/**
@@ -149,10 +147,6 @@ class Menus {
 				'eac_expenses_payments_per_page',
 				'eac_expenses_bills_per_page',
 				'eac_expenses_vendors_per_page',
-				'eac_banking_accounts_per_page',
-				'eac_banking_transactions_per_page',
-				'eac_banking_transfers_per_page',
-				'eac_banking_currencies_per_page',
 			)
 		);
 		if ( in_array( $option, $options, true ) ) {
@@ -230,36 +224,17 @@ class Menus {
 				$args['option'] = 'eac_expenses_vendors_per_page';
 				add_screen_option( 'per_page', $args );
 				break;
-			case 'eac-categories':
-			case 'eac-categories-categories':
+			case 'eac-misc':
+			case 'eac-misc-categories':
 				$this->list_table = new ListTables\CategoriesTable();
 				$this->list_table->prepare_items();
 				$args['option'] = 'eac_categories_per_page';
 				add_screen_option( 'per_page', $args );
 				break;
-			case 'eac-banking':
-			case 'eac-banking-accounts':
-				$this->list_table = new ListTables\AccountsTable();
-				$this->list_table->prepare_items();
-				$args['option'] = 'eac_banking_accounts_per_page';
-				add_screen_option( 'per_page', $args );
-				break;
-			case 'eac-banking-transactions':
-				$this->list_table = new ListTables\TransactionsTable();
-				$this->list_table->prepare_items();
-				$args['option'] = 'eac_banking_transactions_per_page';
-				add_screen_option( 'per_page', $args );
-				break;
-			case 'eac-banking-transfers':
-				$this->list_table = new ListTables\TransfersTable();
-				$this->list_table->prepare_items();
-				$args['option'] = 'eac_banking_transfers_per_page';
-				add_screen_option( 'per_page', $args );
-				break;
-			case 'eac-banking-currencies':
+			case 'eac-misc-currencies':
 				$this->list_table = new ListTables\CurrenciesTable();
 				$this->list_table->prepare_items();
-				$args['option'] = 'eac_banking_currencies_per_page';
+				$args['option'] = 'eac_currencies_per_page';
 				add_screen_option( 'per_page', $args );
 				break;
 		}
@@ -446,62 +421,11 @@ class Menus {
 			exit();
 		}
 		if ( Utilities::is_add_screen() ) {
-			include __DIR__ . '/views/categories/add.php';
+			include __DIR__ . '/views/misc/categories/add.php';
 		} elseif ( $edit ) {
-			include __DIR__ . '/views/categories/edit.php';
+			include __DIR__ . '/views/misc/categories/edit.php';
 		} else {
-			include __DIR__ . '/views/categories/categories.php';
-		}
-	}
-
-	/**
-	 * Accounts Tab.
-	 *
-	 * @since 1.0.0
-	 */
-	public function render_accounts_tab() {
-		$edit = Utilities::is_edit_screen();
-//		$account = new Account( $edit );
-//		if ( ! empty( $edit ) && ! $account->exists() ) {
-//			wp_safe_redirect( remove_query_arg( 'edit' ) );
-//			exit();
-//		}
-		if ( Utilities::is_add_screen() ) {
-			include __DIR__ . '/views/banking/accounts/add.php';
-		} elseif ( $edit ) {
-			include __DIR__ . '/views/banking/accounts/edit.php';
-		} else {
-			include __DIR__ . '/views/banking/accounts/accounts.php';
-		}
-	}
-
-	/**
-	 * Transactions Tab.
-	 *
-	 * @since 1.0.0
-	 */
-	public function render_transactions_tab() {
-		include __DIR__ . '/views/banking/transactions/transactions.php';
-	}
-
-	/**
-	 * Transfers Tab.
-	 *
-	 * @since 1.0.0
-	 */
-	public function render_transfers_tab() {
-		$edit = Utilities::is_edit_screen();
-//		$transfer = new Transfer( $edit );
-//		if ( ! empty( $edit ) && ! $transfer->exists() ) {
-//			wp_safe_redirect( remove_query_arg( 'edit' ) );
-//			exit();
-//		}
-		if ( Utilities::is_add_screen() ) {
-			include __DIR__ . '/views/banking/transfers/add.php';
-		} elseif ( $edit ) {
-			include __DIR__ . '/views/banking/transfers/edit.php';
-		} else {
-			include __DIR__ . '/views/banking/transfers/transfers.php';
+			include __DIR__ . '/views/misc/categories/categories.php';
 		}
 	}
 
@@ -511,18 +435,19 @@ class Menus {
 	 * @since 1.0.0
 	 */
 	public function render_currencies_tab() {
-		$edit = Utilities::is_edit_screen();
-//		$currencie = new Transfer( $edit );
-//		if ( ! empty( $edit ) && ! $currencie->exists() ) {
-//			wp_safe_redirect( remove_query_arg( 'edit' ) );
-//			exit();
-//		}
+		$edit     = Utilities::is_edit_screen();
+		$currency = new Currency( $edit );
+		if ( ! empty( $edit ) && ! $currency->exists() ) {
+			wp_safe_redirect( remove_query_arg( 'edit' ) );
+			exit();
+		}
+
 		if ( Utilities::is_add_screen() ) {
-			include __DIR__ . '/views/banking/currencies/add.php';
+			include __DIR__ . '/views/misc/currencies/add.php';
 		} elseif ( $edit ) {
-			include __DIR__ . '/views/banking/currencies/edit.php';
+			include __DIR__ . '/views/misc/currencies/edit.php';
 		} else {
-			include __DIR__ . '/views/banking/currencies/currencies.php';
+			include __DIR__ . '/views/misc/currencies/currencies.php';
 		}
 	}
 }

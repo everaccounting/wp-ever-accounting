@@ -16,16 +16,19 @@ defined( 'ABSPATH' ) || exit;
  *
  * @property int    $id ID of the category.
  * @property string $name Name of the category.
+ * @property string $type Type of the account.
  * @property string $number Account number.
- * @property string $currency_code Currency code.
  * @property float  $opening_balance Opening balance.
  * @property string $bank_name Bank name.
  * @property string $bank_phone Bank phone.
  * @property string $bank_address Bank address.
+ * @property string $currency_code Currency code.
+ * @property int    $author_id Author ID.
  * @property int    $thumbnail_id Thumbnail ID.
- * @property bool   $enabled Whether the account is enabled.
- * @property int    $creator_id ID of the creator.
+ * @property string $status Status of the account.
+ * @property string $uuid UUID of the account.
  * @property string $date_created Date created.
+ * @property string $date_updated Date updated.
  */
 class Account extends Model {
 
@@ -45,17 +48,18 @@ class Account extends Model {
 	 */
 	protected $columns = array(
 		'id',
+		'type',
 		'name',
 		'number',
-		'currency_code',
 		'opening_balance',
 		'bank_name',
 		'bank_phone',
 		'bank_address',
+		'currency_code',
 		'thumbnail_id',
-		'enabled',
-		'creator_id',
-		'date_created',
+		'author_id',
+		'status',
+		'uuid'
 	);
 
 	/**
@@ -76,12 +80,9 @@ class Account extends Model {
 	 */
 	protected $casts = array(
 		'id'              => 'int',
-		'creator_id'      => 'int',
-		'opening_balance' => 'double',
+		'opening_balance' => 'float',
 		'thumbnail_id'    => 'int',
-		'enabled'         => 'bool',
-		'date_created'    => 'datetime',
-		'balance'         => 'double',
+		'author_id'       => 'int',
 	);
 
 	/**
@@ -103,6 +104,25 @@ class Account extends Model {
 	protected $appends = array(
 		'balance',
 	);
+
+	/**
+	 * Searchable properties.
+	 *
+	 * @since 1.0.0
+	 * @var array
+	 */
+	protected $searchable = array(
+		'name',
+		'bank_name'
+	);
+
+	/**
+	 * Whether the model should be timestamped.
+	 *
+	 * @since 1.0.0
+	 * @var bool
+	 */
+	public $timestamps = true;
 
 	/**
 	 * Get balance.

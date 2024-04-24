@@ -60,15 +60,19 @@ class Utilities {
 					'accounts'     => __( 'Accounts', 'wp-ever-accounting' ),
 					'transactions' => __( 'Transactions', 'wp-ever-accounting' ),
 					'transfers'    => __( 'Transfers', 'wp-ever-accounting' ),
-					'currencies'   => __( 'Currencies', 'wp-ever-accounting' ),
 				),
 			),
 			array(
-				'page_title' => __( 'Categories', 'wp-ever-accounting' ),
-				'menu_title' => __( 'Categories', 'wp-ever-accounting' ),
+				'page_title' => __( 'Misc', 'wp-ever-accounting' ),
+				'menu_title' => __( 'Misc', 'wp-ever-accounting' ),
 				'capability' => 'manage_options',
-				'menu_slug'  => 'eac-categories',
-				'page_hook'  => 'categories',
+				'menu_slug'  => 'eac-misc',
+				'page_hook'  => 'misc',
+				'tabs'       => array(
+					'categories' => __( 'Categories', 'wp-ever-accounting' ),
+					'currencies'   => __( 'Currencies', 'wp-ever-accounting' ),
+					'taxes'      => __( 'Taxes', 'wp-ever-accounting' ),
+				)
 			),
 			array(
 				'page_title' => __( 'Tools', 'wp-ever-accounting' ),

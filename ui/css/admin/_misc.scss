@@ -46,3 +46,12 @@
 		color: var(--eac-back-button-color-active, #495057);
 	}
 }
+
+.bkit-wrap{
+	box-sizing: border-box;
+	position: relative;
+	max-width: 1400px;
+	margin-left: auto;
+	margin-right: auto;
+	padding-right: 20px;
+}
