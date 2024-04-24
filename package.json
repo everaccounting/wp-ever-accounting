@@ -26,6 +26,7 @@
     "chart.js": "^2.9.4",
     "inputmask": "^5.0.5",
     "moment": "^2.29.4",
+    "select-woo": "^1.0.1",
     "select2": "~4.0"
   },
   "devDependencies": {

@@ -33,6 +33,8 @@ class ItemsTable extends ListTable {
 				)
 			)
 		);
+
+		$this->base_url = admin_url( 'admin.php?page=eac-items&tab=items' );
 	}
 
 	/**
@@ -42,7 +44,7 @@ class ItemsTable extends ListTable {
 	 * @return void
 	 */
 	public function prepare_items() {
-		$this->process_bulk_action();
+		$this->process_actions();
 		$this->_column_headers = array( $this->get_columns(), get_hidden_columns( $this->screen ), $this->get_sortable_columns() );
 		$per_page              = $this->get_items_per_page( 'eac_items_per_page', 20 );
 		$paged                 = $this->get_pagenum();
@@ -56,8 +58,9 @@ class ItemsTable extends ListTable {
 			'order_by'    => $order_by,
 			'order'       => $order,
 			'status'      => $this->get_request_status(),
-			'category_id' => isset( $_GET['category_id'] ) ? wp_unslash( trim( $_GET['category_id'] ) ) : '',
+			'category_id' => isset( $_GET['category_id'] ) ? absint( trim( $_GET['category_id'] ) ) : '',
 		);
+
 		/**
 		 * Filter the query arguments for the list table.
 		 *
@@ -78,43 +81,44 @@ class ItemsTable extends ListTable {
 	}
 
 	/**
-	 * handle bulk enable action.
+	 * handle bulk activate action.
 	 *
 	 * @param array $ids List of item IDs.
 	 *
 	 * @since 1.0.0
 	 * @return void
 	 */
-	protected function bulk_enable( $ids ) {
-		$performed = [];
+	protected function bulk_activate( $ids ) {
+		$performed = 0;
 		foreach ( $ids as $id ) {
-			if ( eac_insert_item( array( 'id' => $id, 'enabled' => true ) ) ) {
-				$performed[] = $id;
+			if ( eac_insert_item( array( 'id' => $id, 'status' => 'active' ) ) ) {
+				$performed ++;
 			}
 		}
 		if ( ! empty( $performed ) ) {
-			EAC()->flash()->success( sprintf( _n( 'Item enabled.', '%s items enabled.', count( $performed ), 'wp-ever-accounting' ), count( $performed ) ) );
+			EAC()->flash->success( sprintf( __( '%s item(s) activated successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
 		}
 	}
 
 	/**
-	 * handle bulk disable action.
+	 * handle bulk deactivate action.
 	 *
 	 * @param array $ids List of item IDs.
 	 *
 	 * @since 1.0.0
 	 * @return void
 	 */
-	protected function bulk_disable( $ids ) {
-		$performed = [];
+	protected function bulk_deactivate( $ids ) {
+		$performed = 0;
 		foreach ( $ids as $id ) {
-			if ( eac_insert_item( array( 'id' => $id, 'enabled' => false ) ) ) {
-				$performed[] = $id;
+			if ( eac_insert_item( array( 'id' => $id, 'status' => 'inactive' ) ) ) {
+				$performed ++;
 			}
 		}
 		if ( ! empty( $performed ) ) {
-			EAC()->flash()->success( sprintf( _n( 'Item disabled.', '%s items disabled.', count( $performed ), 'wp-ever-accounting' ), count( $performed ) ) );
+			EAC()->flash->success( sprintf( __( '%s item(s) deactivated successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
 		}
+
 	}
 
 	/**
@@ -126,14 +130,14 @@ class ItemsTable extends ListTable {
 	 * @return void
 	 */
 	protected function bulk_delete( $ids ) {
-		$performed = [];
+		$performed = 0;
 		foreach ( $ids as $id ) {
 			if ( eac_delete_item( $id ) ) {
-				$performed[] = $id;
+				$performed ++;
 			}
 		}
 		if ( ! empty( $performed ) ) {
-			EAC()->flash()->success( sprintf( _n( 'Item deleted.', '%s items deleted.', count( $performed ), 'wp-ever-accounting' ), count( $performed ) ) );
+			EAC()->flash->success( sprintf( __( '%s item(s) deleted successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
 		}
 	}
 
@@ -150,15 +154,34 @@ class ItemsTable extends ListTable {
 	 * Returns an associative array listing all the views that can be used
 	 * with this table.
 	 *
-	 * Provides a list of roles and user count for that role for easy
-	 * filtering of the user table.
-	 *
 	 * @since 1.0.0
 	 *
 	 * @return string[] An array of HTML links keyed by their view.
 	 * @global string $role
 	 */
-	protected function get_views() {}
+	protected function get_views() {
+		$current      = $this->get_request_status( 'all' );
+		$status_links = array();
+		$views        = array(
+			'all'      => _nx_noop( 'All <span class="count">(%s)</span>', 'All <span class="count">(%s)</span>', 'list_table', 'wp-ever-accounting' ),
+			'active'   => _nx_noop( 'Active <span class="count">(%s)</span>', 'Active <span class="count">(%s)</span>', 'list_table', 'wp-ever-accounting' ),
+			'inactive' => _nx_noop( 'Inactive <span class="count">(%s)</span>', 'Inactive <span class="count">(%s)</span>', 'list_table', 'wp-ever-accounting' ),
+		);
+		foreach ( $views as $view => $label ) {
+			$link  = $view === 'all' ? $this->base_url : add_query_arg( 'status', $view, $this->base_url );
+			$args  = 'all' === $view ? array() : array( 'status' => $view );
+			$count = eac_get_items( $args, true );
+			$label = sprintf( _n( $label[0], $label[1], $count, 'wp-ever-accounting' ), number_format_i18n( $count ) );
+
+			$status_links[ $view ] = array(
+				'url'     => $link,
+				'label'   => $label,
+				'current' => $current === $view,
+			);
+		}
+
+		return $this->get_views_links( $status_links );
+	}
 
 	/**
 	 * Retrieves an associative array of bulk actions available on this table.
@@ -169,9 +192,9 @@ class ItemsTable extends ListTable {
 	 */
 	protected function get_bulk_actions() {
 		$actions = array(
-			'delete'  => __( 'Delete', 'wp-ever-accounting' ),
-			'enable'  => __( 'Enable', 'wp-ever-accounting' ),
-			'disable' => __( 'Disable', 'wp-ever-accounting' ),
+			'delete'     => __( 'Delete', 'wp-ever-accounting' ),
+			'activate'   => __( 'Activate', 'wp-ever-accounting' ),
+			'deactivate' => __( 'Deactivate', 'wp-ever-accounting' ),
 		);
 
 		return $actions;
@@ -215,12 +238,12 @@ class ItemsTable extends ListTable {
 	 */
 	public function get_columns() {
 		return array(
-			'cb'             => '<input type="checkbox" />',
-			'name'           => __( 'Name', 'wp-ever-accounting' ),
-			'sale_price'     => __( 'Sale Price', 'wp-ever-accounting' ),
-			'purchase_price' => __( 'Purchase Price', 'wp-ever-accounting' ),
-			'category'       => __( 'Category', 'wp-ever-accounting' ),
-			'status'         => __( 'Status', 'wp-ever-accounting' ),
+			'cb'       => '<input type="checkbox" />',
+			'name'     => __( 'Name', 'wp-ever-accounting' ),
+			'price'    => __( 'Price', 'wp-ever-accounting' ),
+			'type'     => __( 'Type', 'wp-ever-accounting' ),
+			'category' => __( 'Category', 'wp-ever-accounting' ),
+			'status'   => __( 'Status', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -233,11 +256,11 @@ class ItemsTable extends ListTable {
 	 */
 	protected function get_sortable_columns() {
 		return array(
-			'name'           => array( 'name', false ),
-			'sale_price'     => array( 'sale_price', false ),
-			'purchase_price' => array( 'purchase_price', false ),
-			'category'       => array( 'category_id', false ),
-			'status'         => array( 'enabled', false ),
+			'name'     => array( 'name', false ),
+			'price'    => array( 'price', false ),
+			'type'     => array( 'type', false ),
+			'category' => array( 'category_id', false ),
+			'status'   => array( 'status', true ),
 		);
 	}
 
@@ -272,74 +295,90 @@ class ItemsTable extends ListTable {
 	 * @return string Displays the name.
 	 */
 	public function column_name( $item ) {
-		$urls = array(
-			'edit'    => admin_url( 'admin.php?page=eac-items&edit=' . $item->id ),
-			'delete'  => wp_nonce_url( admin_url( 'admin.php?page=eac-items&action=delete&id=' . $item->id ), 'bulk-' . $this->_args['plural'] ),
-			'enable'  => wp_nonce_url( admin_url( 'admin.php?page=eac-items&action=enable&id=' . $item->id ), 'bulk-' . $this->_args['plural'] ),
-			'disable' => wp_nonce_url( admin_url( 'admin.php?page=eac-items&action=disable&id=' . $item->id ), 'bulk-' . $this->_args['plural'] ),
-		);
-		$actions = array(
-			'ID'     => sprintf( 'ID: %d', $item->id ),
-			'delete' => sprintf( '<a class="eac_confirm_delete" href="%s">%s</a>', esc_url( $urls['delete'] ), __( 'Delete', 'wp-ever-accounting' ) ),
-		);
-		if ( $item->enabled ) {
-			$actions['disable'] = sprintf( '<a href="%s">%s</a>', esc_url( $urls['disable'] ), __( 'Disable', 'wp-ever-accounting' ) );
-		} else {
-			$actions['enable'] = sprintf( '<a href="%s">%s</a>', esc_url( $urls['enable'] ), __( 'Enable', 'wp-ever-accounting' ) );
-		}
-		return sprintf( '<a href="%1$s">%2$s</a>%3$s', admin_url( 'admin.php?page=eac-items&edit=' . $item->id ), wp_kses_post( $item->name ), $this->row_actions($actions) );
+		return sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( 'edit', $item->id, $this->base_url ) ), wp_kses_post( $item->name ) );
 	}
 
 	/**
-	 * Renders the actions column.
+	 * Renders the price column.
 	 *
 	 * @param Item $item The current object.
 	 *
 	 * @since  1.0.0
-	 * @return string Displays the actions.
+	 * @return string Displays the price.
 	 */
-	public function column_actions( $item ) {
-		$urls = array(
-			'edit'    => admin_url( 'admin.php?page=eac-items&edit=' . $item->id ),
-			'delete'  => wp_nonce_url( admin_url( 'admin.php?page=eac-items&action=delete&id=' . $item->id ), 'bulk-' . $this->_args['plural'] ),
-			'enable'  => wp_nonce_url( admin_url( 'admin.php?page=eac-items&action=enable&id=' . $item->id ), 'bulk-' . $this->_args['plural'] ),
-			'disable' => wp_nonce_url( admin_url( 'admin.php?page=eac-items&action=disable&id=' . $item->id ), 'bulk-' . $this->_args['plural'] ),
-		);
-
-		$actions = array(
-			//'edit'   => sprintf( '<a href="%s">%s</a>', esc_url( $urls['edit'] ), __( 'Edit', 'wp-ever-accounting' ) ),
-			'delete' => sprintf( '<a class="eac_confirm_delete" href="%s">%s</a>', esc_url( $urls['delete'] ), __( 'Delete', 'wp-ever-accounting' ) ),
-		);
-		if ( $item->enabled ) {
-			$actions['disable'] = sprintf( '<a href="%s">%s</a>', esc_url( $urls['disable'] ), __( 'Disable', 'wp-ever-accounting' ) );
-		} else {
-			$actions['enable'] = sprintf( '<a href="%s">%s</a>', esc_url( $urls['enable'] ), __( 'Enable', 'wp-ever-accounting' ) );
-		}
-
-		return $this->row_actions( $actions, true );
+	public function column_price( $item ) {
+		return esc_html( $item->formatted_price );
 	}
 
 	/**
-	 * This function renders most of the columns in the list table.
+	 * Renders the type column.
 	 *
-	 * @param Object|array $item The current item.
-	 * @param string       $column_name The name of the column.
+	 * @param Item $item The current object.
 	 *
-	 * @since 1.0.0
-	 * @return string The column value.
+	 * @since  1.0.0
+	 * @return string Displays the type.
 	 */
-	public function column_default( $item, $column_name ) {
-		switch ( $column_name ) {
-			case 'sale_price':
-				return empty( $item->sale_price ) ? '&mdash;' : $item->formatted_sale_price;
-			case 'purchase_price':
-				return empty( $item->purchase_price ) ? '&mdash;' : $item->formatted_purchase_price;
-			case 'category':
-				return ! isset( $item->category ) ? '&mdash;' : $item->category->name;
-			case 'status':
-				return sprintf( '<span class="eac-status is--%s">%s</span>', $item->enabled ? 'enabled' : 'disabled', $item->enabled ? __( 'Enabled', 'wp-ever-accounting' ) : __( 'Disabled', 'wp-ever-accounting' ) );
+	public function column_type( $item ) {
+		$types = eac_get_item_types();
+
+		return isset( $types[ $item->type ] ) ? esc_html( $types[ $item->type ] ) : $item->type;
+	}
+
+	/**
+	 * Renders the category column.
+	 *
+	 * @param Item $item The current object.
+	 *
+	 * @since  1.0.0
+	 * @return string Displays the category.
+	 */
+	public function column_category( $item ) {
+		$category = $item->category;
+		if ( $category->exists() ) {
+			return sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( 'category_id', $category->id, $this->base_url ) ), wp_kses_post( $category->name ) );
 		}
 
-		return parent::column_default( $item, $column_name );
+		return '&mdash;';
+	}
+
+	/**
+	 * Generates and displays row actions links.
+	 *
+	 * @param Item   $item The comment object.
+	 * @param string $column_name Current column name.
+	 * @param string $primary Primary column name.
+	 *
+	 * @since 1.0.0
+	 * @return string Row actions output.
+	 */
+	protected function handle_row_actions( $item, $column_name, $primary ) {
+		if ( $primary !== $column_name ) {
+			return null;
+		}
+		$actions = array(
+			'id' => sprintf( '#%d', esc_attr( $item->id ) ),
+		);
+
+		if ( $item->status === 'active' ) {
+			$actions['deactivate'] = sprintf(
+				'<a href="%s">%s</a>',
+				esc_url( wp_nonce_url( add_query_arg( array( 'action' => 'deactivate', 'id' => $item->id ), $this->base_url ), 'bulk-' . $this->_args['plural'] ) ),
+				__( 'Deactivate', 'wp-ever-accounting' )
+			);
+		} else {
+			$actions['activate'] = sprintf(
+				'<a href="%s">%s</a>',
+				esc_url( wp_nonce_url( add_query_arg( array( 'action' => 'activate', 'id' => $item->id ), $this->base_url ), 'bulk-' . $this->_args['plural'] ) ),
+				__( 'Activate', 'wp-ever-accounting' )
+			);
+		}
+
+		$actions['delete'] = sprintf(
+			'<a href="%s" class="del">%s</a>',
+			esc_url( wp_nonce_url( add_query_arg( array( 'action' => 'delete', 'id' => $item->id ), $this->base_url ), 'bulk-' . $this->_args['plural'] ) ),
+			__( 'Delete', 'wp-ever-accounting' )
+		);
+
+		return $this->row_actions( $actions );
 	}
 }

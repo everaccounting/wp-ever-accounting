@@ -8,15 +8,10 @@ module.exports = [
 		entry: {
 			...defaultConfig.entry(),
 			'css/eac-admin': './ui/css/admin/admin.scss',
+			'css/select-woo': './node_modules/select-woo/dist/css/selectWoo.css',
 			'js/eac-admin': './ui/js/admin/admin.js',
 			'js/eac-core': './ui/js/common/eac-core.js',
-
-			// Legacy
-			'css/admin': './ui/legacy/css/admin.scss',
-			'css/public': './ui/legacy/css/public.scss',
-			'css/release': './ui/legacy/css/release.scss',
-			'css/setup': './ui/legacy/css/setup.scss',
-			'css/jquery-ui': './ui/legacy/css/jquery-ui/jquery-ui.scss',
+			'js/select-woo': './node_modules/select-woo/dist/js/selectWoo.js',
 		},
 		output: {
 			...defaultConfig.output,

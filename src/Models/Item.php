@@ -70,6 +70,7 @@ class Item extends Model {
 	protected $data = array(
 		'type'   => 'standard',
 		'status' => 'active',
+		'taxable' => false,
 	);
 
 	/**
@@ -144,22 +145,7 @@ class Item extends Model {
 	 * @return Relation
 	 */
 	public function category() {
-		return $this->has_one( Category::class, 'category_id', 'id' );
-	}
-
-	/**
-	 * Get items categories
-	 *
-	 * @param array $args Query arguments.
-	 *
-	 * @since 1.2.1
-	 * @return mixed
-	 */
-	public function categories( $args = array() ) {
-		$args['type']  = 'item';
-		$args['limit'] = - 1;
-
-		return eac_get_categories( $args );
+		return $this->belongs_to( Category::class, 'category_id');
 	}
 
 	/**
