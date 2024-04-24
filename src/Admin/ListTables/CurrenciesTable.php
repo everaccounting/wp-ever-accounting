@@ -48,15 +48,16 @@ class CurrenciesTable extends ListTable {
 		$this->_column_headers = array( $this->get_columns(), get_hidden_columns( $this->screen ), $this->get_sortable_columns() );
 		$per_page              = $this->get_items_per_page( 'eac_currencies_per_page', 20 );
 		$paged                 = $this->get_pagenum();
-		$search                = isset( $_REQUEST['s'] ) ? wp_unslash( trim( $_REQUEST['s'] ) ) : '';
-		$order_by              = isset( $_REQUEST['orderby'] ) ? wp_unslash( trim( $_REQUEST['orderby'] ) ) : 'status';
-		$order                 = isset( $_REQUEST['order'] ) ? wp_unslash( trim( $_REQUEST['order'] ) ) : '';
+		$search                = $this->get_request_search();
+		$order_by              = $this->get_request_orderby();
+		$order                 = $this->get_request_order();
 		$args                  = array(
 			'limit'    => $per_page,
 			'page'     => $paged,
 			'search'   => $search,
 			'order_by' => $order_by,
 			'order'    => $order,
+			'status'      => $this->get_request_status(),
 		);
 
 		/**

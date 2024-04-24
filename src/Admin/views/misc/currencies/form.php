@@ -28,6 +28,15 @@ defined( 'ABSPATH' ) || exit;
 					</div>
 
 					<div class="bkit-form-group">
+						<label for="exchange_rate">
+							<?php esc_html_e( 'Exchange Rate', 'wp-ever-accounting' ); ?>
+							<abbr title="required"></abbr>
+						</label>
+						<input type="text" name="exchange_rate" id="exchange_rate" value="<?php echo esc_attr( $currency->exchange_rate ); ?>"
+							<?php echo eac_get_base_currency() == $currency->code ? 'readonly' : ''; ?>/>
+					</div>
+
+					<div class="bkit-form-group">
 						<label for="name">
 							<?php esc_html_e( 'Name', 'wp-ever-accounting' ); ?>
 							<abbr title="required"></abbr>
@@ -44,19 +53,11 @@ defined( 'ABSPATH' ) || exit;
 					</div>
 
 					<div class="bkit-form-group">
-						<label for="exchange_rate">
-							<?php esc_html_e( 'Exchange Rate', 'wp-ever-accounting' ); ?>
-							<abbr title="required"></abbr>
-						</label>
-						<input type="text" name="exchange_rate" id="exchange_rate" value="<?php echo esc_attr( $currency->exchange_rate ); ?>"/>
-					</div>
-					<div class="bkit-form-group">
 						<label for="thousand_separator">
 							<?php esc_html_e( 'Thousand Separator', 'wp-ever-accounting' ); ?>
 							<abbr title="required"></abbr>
 						</label>
-						<input type="text" name="thousand_separator" id="thousand_separator" value="<?php echo esc_attr( $currency->thousand_separator ); ?>"
-							   <?php echo eac_get_base_currency() == $currency->code ? 'readonly' : ''; ?>/>
+						<input type="text" name="thousand_separator" id="thousand_separator" value="<?php echo esc_attr( $currency->thousand_separator ); ?>"/>
 					</div>
 
 					<div class="bkit-form-group">
