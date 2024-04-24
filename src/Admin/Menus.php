@@ -4,6 +4,7 @@ namespace EverAccounting\Admin;
 
 use EverAccounting\Models\Category;
 use EverAccounting\Models\Currency;
+use EverAccounting\Models\Tax;
 use EverAccounting\Models\Item;
 
 /**
@@ -56,6 +57,7 @@ class Menus {
 		add_action( 'ever_accounting_admin_purchases_vendors', array( $this, 'render_vendors_tab' ) );
 		add_action( 'ever_accounting_admin_misc_categories', array( $this, 'render_categories_tab' ) );
 		add_action( 'ever_accounting_admin_misc_currencies', array( $this, 'render_currencies_tab' ) );
+		add_action( 'ever_accounting_admin_misc_taxes', array( $this, 'render_taxes_tab' ) );
 	}
 
 	/**
@@ -173,6 +175,7 @@ class Menus {
 				'eac_items_per_page',
 				'eac_categories_per_page',
 				'eac_currencies_per_page',
+				'eac_taxes_per_page',
 				'eac_sales_revenues_per_page',
 				'eac_sales_invoices_per_page',
 				'eac_sales_customers_per_page',
@@ -267,6 +270,12 @@ class Menus {
 				$this->list_table = new ListTables\CurrenciesTable();
 				$this->list_table->prepare_items();
 				$args['option'] = 'eac_currencies_per_page';
+				add_screen_option( 'per_page', $args );
+				break;
+			case 'eac-misc-taxes':
+				$this->list_table = new ListTables\TaxesTable();
+				$this->list_table->prepare_items();
+				$args['option'] = 'eac_taxes_per_page';
 				add_screen_option( 'per_page', $args );
 				break;
 		}
@@ -476,9 +485,30 @@ class Menus {
 
 		if ( $edit ) {
 			include __DIR__ . '/views/misc/currencies/edit.php';
-
 		} else {
 			include __DIR__ . '/views/misc/currencies/currencies.php';
+		}
+	}
+
+	/**
+	 * Taxes Tab.
+	 *
+	 * @since 1.0.0
+	 */
+	public function render_taxes_tab() {
+		$edit     = Utilities::is_edit_screen();
+		$tax = new Tax( $edit );
+		if ( ! empty( $edit ) && ! $tax->exists() ) {
+			wp_safe_redirect( remove_query_arg( 'edit' ) );
+			exit();
+		}
+
+		if ( Utilities::is_add_screen() ) {
+			include __DIR__ . '/views/misc/taxes/add.php';
+		} elseif ( $edit ) {
+			include __DIR__ . '/views/misc/taxes/edit.php';
+		} else {
+			include __DIR__ . '/views/misc/taxes/taxes.php';
 		}
 	}
 }
