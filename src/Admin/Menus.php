@@ -47,6 +47,11 @@ class Menus {
 		add_action( 'current_screen', array( $this, 'setup_list_table' ) );
 		add_action( 'ever_accounting_admin_items', array( $this, 'render_items_tab' ) );
 		add_action( 'ever_accounting_admin_items_categories', array( $this, 'render_items_categories_tab' ) );
+		add_action( 'ever_accounting_admin_sales_revenues', array( $this, 'render_revenues_tab' ) );
+		add_action( 'ever_accounting_admin_sales_invoices', array( $this, 'render_invoices_tab' ) );
+		add_action( 'ever_accounting_admin_sales_customers', array( $this, 'render_customers_tab' ) );
+		add_action( 'ever_accounting_admin_expenses_payments', array( $this, 'render_payments_tab' ) );
+		add_action( 'ever_accounting_admin_expenses_bills', array( $this, 'render_bills_tab' ) );
 	}
 
 	/**
@@ -131,7 +136,12 @@ class Menus {
 		$options = apply_filters( 'ever_accounting_screen_options',
 			array(
 				'eac_items_per_page',
-				'eac_items_categories_per_page'
+				'eac_items_categories_per_page',
+				'eac_sales_revenues_per_page',
+				'eac_sales_invoices_per_page',
+				'eac_sales_customers_per_page',
+				'eac_expenses_payments_per_page',
+				'eac_expenses_bills_per_page',
 			)
 		);
 		if ( in_array( $option, $options, true ) ) {
@@ -169,6 +179,38 @@ class Menus {
 				$this->list_table = new ListTables\CategoriesTable();
 				$this->list_table->prepare_items();
 				$args['option'] = 'eac_items_categories_per_page';
+				add_screen_option( 'per_page', $args );
+				break;
+			case 'eac-sales':
+			case 'eac-sales-revenues':
+				$this->list_table = new ListTables\RevenuesTable();
+				$this->list_table->prepare_items();
+				$args['option'] = 'eac_sales_revenues_per_page';
+				add_screen_option( 'per_page', $args );
+				break;
+			case 'eac-sales-invoices':
+				$this->list_table = new ListTables\InvoicesTable();
+				$this->list_table->prepare_items();
+				$args['option'] = 'eac_sales_invoices_per_page';
+				add_screen_option( 'per_page', $args );
+				break;
+			case 'eac-sales-customers':
+				$this->list_table = new ListTables\CustomersTable();
+				$this->list_table->prepare_items();
+				$args['option'] = 'eac_sales_customers_per_page';
+				add_screen_option( 'per_page', $args );
+				break;
+			case 'eac-expenses':
+			case 'eac-expenses-payments':
+				$this->list_table = new ListTables\PaymentsTable();
+				$this->list_table->prepare_items();
+				$args['option'] = 'eac_expenses_payments_per_page';
+				add_screen_option( 'per_page', $args );
+				break;
+			case 'eac-expenses-bills':
+				$this->list_table = new ListTables\BillsTable();
+				$this->list_table->prepare_items();
+				$args['option'] = 'eac_expenses_bills_per_page';
 				add_screen_option( 'per_page', $args );
 				break;
 		}
@@ -213,6 +255,111 @@ class Menus {
 			include __DIR__ . '/views/items/categories/edit.php';
 		} else {
 			include __DIR__ . '/views/items/categories/categories.php';
+		}
+	}
+
+	/**
+	 * Revenues Tab.
+	 *
+	 * @since 1.0.0
+	 */
+	public function render_revenues_tab() {
+		$edit = Utilities::is_edit_screen();
+//		$revenue = new Revenue( $edit );
+//		if ( ! empty( $edit ) && ! $revenue->exists() ) {
+//			wp_safe_redirect( remove_query_arg( 'edit' ) );
+//			exit();
+//		}
+		if ( Utilities::is_add_screen() ) {
+			include __DIR__ . '/views/sales/revenues/add.php';
+		} elseif ( $edit ) {
+			include __DIR__ . '/views/sales/revenues/edit.php';
+		} else {
+			include __DIR__ . '/views/sales/revenues/revenues.php';
+		}
+	}
+
+	/**
+	 * Invoices Tab.
+	 *
+	 * @since 1.0.0
+	 */
+	public function render_invoices_tab() {
+		$edit = Utilities::is_edit_screen();
+//		$invoice = new Invoice( $edit );
+//		if ( ! empty( $edit ) && ! $invoice->exists() ) {
+//			wp_safe_redirect( remove_query_arg( 'edit' ) );
+//			exit();
+//		}
+		if ( Utilities::is_add_screen() ) {
+			include __DIR__ . '/views/sales/invoices/add.php';
+		} elseif ( $edit ) {
+			include __DIR__ . '/views/sales/invoices/edit.php';
+		} else {
+			include __DIR__ . '/views/sales/invoices/invoices.php';
+		}
+	}
+
+	/**
+	 * Customers Tab.
+	 *
+	 * @since 1.0.0
+	 */
+	public function render_customers_tab() {
+		$edit = Utilities::is_edit_screen();
+//		$customer = new Customer( $edit );
+//		if ( ! empty( $edit ) && ! $customer->exists() ) {
+//			wp_safe_redirect( remove_query_arg( 'edit' ) );
+//			exit();
+//		}
+		if ( Utilities::is_add_screen() ) {
+			include __DIR__ . '/views/sales/customers/add.php';
+		} elseif ( $edit ) {
+			include __DIR__ . '/views/sales/customers/edit.php';
+		} else {
+			include __DIR__ . '/views/sales/customers/customers.php';
+		}
+	}
+
+	/**
+	 * Payments Tab.
+	 *
+	 * @since 1.0.0
+	 */
+	public function render_payments_tab() {
+		$edit = Utilities::is_edit_screen();
+//		$payment = new Payment( $edit );
+//		if ( ! empty( $edit ) && ! $payment->exists() ) {
+//			wp_safe_redirect( remove_query_arg( 'edit' ) );
+//			exit();
+//		}
+		if ( Utilities::is_add_screen() ) {
+			include __DIR__ . '/views/expenses/payments/add.php';
+		} elseif ( $edit ) {
+			include __DIR__ . '/views/expenses/payments/edit.php';
+		} else {
+			include __DIR__ . '/views/expenses/payments/payments.php';
+		}
+	}
+
+	/**
+	 * Bills Tab.
+	 *
+	 * @since 1.0.0
+	 */
+	public function render_bills_tab() {
+		$edit = Utilities::is_edit_screen();
+//		$bill = new Bill( $edit );
+//		if ( ! empty( $edit ) && ! $bill->exists() ) {
+//			wp_safe_redirect( remove_query_arg( 'edit' ) );
+//			exit();
+//		}
+		if ( Utilities::is_add_screen() ) {
+			include __DIR__ . '/views/expenses/bills/add.php';
+		} elseif ( $edit ) {
+			include __DIR__ . '/views/expenses/bills/edit.php';
+		} else {
+			include __DIR__ . '/views/expenses/bills/bills.php';
 		}
 	}
 }

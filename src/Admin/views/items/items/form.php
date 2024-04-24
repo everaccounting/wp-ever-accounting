@@ -9,7 +9,6 @@
 
 defined( 'ABSPATH' ) || exit;
 $state = wp_interactivity_state( 'eac/item', $item->to_array() );
-//var_dump($state);
 ?>
 
 <form method="post" action="<?php echo esc_html( admin_url( 'admin-post.php' ) ); ?>" data-wp-interactive="eac/item">
