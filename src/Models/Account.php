@@ -29,6 +29,10 @@ defined( 'ABSPATH' ) || exit;
  * @property string $uuid UUID of the account.
  * @property string $date_created Date created.
  * @property string $date_updated Date updated.
+ *
+ * @property string $formatted_name Formatted name.
+ * @property float  $balance Balance.
+ * @property string $formatted_balance Formatted balance.
  */
 class Account extends Model {
 
@@ -59,7 +63,7 @@ class Account extends Model {
 		'thumbnail_id',
 		'author_id',
 		'status',
-		'uuid'
+		'uuid',
 	);
 
 	/**
@@ -102,6 +106,8 @@ class Account extends Model {
 	 * @var array
 	 */
 	protected $appends = array(
+		'formatted_name',
+		'formatted_balance',
 		'balance',
 	);
 
@@ -113,7 +119,7 @@ class Account extends Model {
 	 */
 	protected $searchable = array(
 		'name',
-		'bank_name'
+		'bank_name',
 	);
 
 	/**
@@ -123,6 +129,19 @@ class Account extends Model {
 	 * @var bool
 	 */
 	public $timestamps = true;
+
+	/**
+	 * Get formatted name.
+	 *
+	 * @since 1.0.0
+	 * @return string
+	 */
+	public function get_formatted_name_prop() {
+		$name   = sprintf( '%s (%s)', $this->name, $this->currency_code );
+		$number = $this->number;
+
+		return $number ? sprintf( '%s - %s', $number, $name ) : $name;
+	}
 
 	/**
 	 * Get balance.
@@ -144,6 +163,16 @@ class Account extends Model {
 		$this->set_prop_value( 'balance', $balance );
 
 		return $balance;
+	}
+
+	/**
+	 * Get formatted balance.
+	 *
+	 * @since 1.0.0
+	 * @return string
+	 */
+	public function get_formatted_balance_prop() {
+		return eac_format_money( $this->balance, $this->currency_code );
 	}
 
 	/**

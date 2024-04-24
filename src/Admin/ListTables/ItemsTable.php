@@ -157,7 +157,6 @@ class ItemsTable extends ListTable {
 	 * @since 1.0.0
 	 *
 	 * @return string[] An array of HTML links keyed by their view.
-	 * @global string $role
 	 */
 	protected function get_views() {
 		$current      = $this->get_request_status( 'all' );

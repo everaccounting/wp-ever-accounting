@@ -83,6 +83,8 @@ abstract class ListTable extends \WP_List_Table {
 	 * the previous page removing the current arguments that makes this request a bulk action.
 	 */
 	protected function process_actions() {
+		$this->_column_headers = array( $this->get_columns(), get_hidden_columns( $this->screen ), $this->get_sortable_columns() );
+
 		// Detect when a bulk action is being triggered.
 		$action = $this->current_action();
 		if ( ! $action ) {

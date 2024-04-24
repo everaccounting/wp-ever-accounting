@@ -24,6 +24,8 @@ use ByteKit\Models\Relation;
  * @property float  $exchange_rate Exchange rate of the currency.
  * @property string $date_updated Date updated of the currency.
  * @property string $date_created Date created of the currency.
+ *
+ * @property string $formatted_name Formatted name.
  */
 class Currency extends Model {
 
@@ -97,6 +99,16 @@ class Currency extends Model {
 	);
 
 	/**
+	 * The accessors to append to the model's array form.
+	 *
+	 * @since 1.0.0
+	 * @var array
+	 */
+	protected $appends = array(
+		'formatted_name',
+	);
+
+	/**
 	 * Whether the model should be timestamped.
 	 *
 	 * @since 1.0.0
@@ -124,6 +136,16 @@ class Currency extends Model {
 	 */
 	protected function get_exchange_rate_prop() {
 		return eac_get_base_currency() === $this->code ? 1 : $this->get_prop_value( 'exchange_rate' );
+	}
+
+	/**
+	 * Get formatted name.
+	 *
+	 * @return string
+	 * @since 1.0.2
+	 */
+	protected function get_formatted_name_prop() {
+		return sprintf( '%s (%s)', $this->name, $this->code );
 	}
 
 	/**

@@ -26,6 +26,16 @@ defined( 'ABSPATH' ) || exit;
 							<?php esc_html_e( 'Name', 'wp-ever-accounting' ); ?>
 							<abbr title="required"></abbr>
 						</label>
+						<?php
+						eac_input_field(
+							array(
+								'id'       => 'name',
+								'name'     => 'name',
+								'value'    => $item->name,
+								'required' => true,
+							)
+						);
+						?>
 						<input type="text" name="name" id="name" value="<?php echo esc_attr( $item->name ); ?>" required/>
 					</div>
 
@@ -70,7 +80,17 @@ defined( 'ABSPATH' ) || exit;
 						<div class="bkit-input-group">
 							<select name="category_id" id="category_id" class="eac-select2" data-placeholder="<?php esc_attr_e( 'Select category', 'wp-ever-accounting' ); ?>" data-allow-clear="true">
 								<option value=""><?php esc_html_e( 'Select category', 'wp-ever-accounting' ); ?></option>
-								<?php foreach ( eac_get_categories( [ 'limit' => - 1, 'type' => 'item', 'status' => 'active' ] ) as $category ) : ?>
+								<?php
+								foreach (
+									eac_get_categories(
+										array(
+											'limit'  => - 1,
+											'type'   => 'item',
+											'status' => 'active',
+										)
+									) as $category
+								) :
+									?>
 									<option value="<?php echo esc_attr( $category->id ); ?>" <?php selected( $item->category_id, $category->id ); ?>>
 										<?php echo esc_html( $category->name ); ?>
 									</option>
@@ -109,7 +129,16 @@ defined( 'ABSPATH' ) || exit;
 							<?php esc_html_e( 'Taxes', 'wp-ever-accounting' ); ?>
 						</label>
 						<select name="tax_ids[]" id="tax_ids" class="eac-select2" class="eac-select2" multiple>
-							<?php foreach ( eac_get_taxes( [ 'limit' => - 1, 'status' => 'active' ] ) as $tax ) : ?>
+							<?php
+							foreach (
+								eac_get_taxes(
+									array(
+										'limit'  => - 1,
+										'status' => 'active',
+									)
+								) as $tax
+							) :
+								?>
 								<option value="<?php echo esc_attr( $tax->id ); ?>" <?php selected( in_array( $tax->id, $item->tax_ids ), true ); ?>><?php echo esc_html( $tax->name ); ?></option>
 							<?php endforeach; ?>
 						</select>

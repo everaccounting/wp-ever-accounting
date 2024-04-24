@@ -45,13 +45,12 @@ class CategoriesTable extends ListTable {
 	 */
 	public function prepare_items() {
 		$this->process_actions();
-		$this->_column_headers = array( $this->get_columns(), get_hidden_columns( $this->screen ), $this->get_sortable_columns() );
-		$per_page              = $this->get_items_per_page( 'eac_categories_per_page', 20 );
-		$paged                 = $this->get_pagenum();
-		$search                = isset( $_REQUEST['s'] ) ? wp_unslash( trim( $_REQUEST['s'] ) ) : '';
-		$order_by              = isset( $_REQUEST['orderby'] ) ? wp_unslash( trim( $_REQUEST['orderby'] ) ) : '';
-		$order                 = isset( $_REQUEST['order'] ) ? wp_unslash( trim( $_REQUEST['order'] ) ) : '';
-		$args                  = array(
+		$per_page = $this->get_items_per_page( 'eac_categories_per_page', 20 );
+		$paged    = $this->get_pagenum();
+		$search   = isset( $_REQUEST['s'] ) ? wp_unslash( trim( $_REQUEST['s'] ) ) : '';
+		$order_by = isset( $_REQUEST['orderby'] ) ? wp_unslash( trim( $_REQUEST['orderby'] ) ) : '';
+		$order    = isset( $_REQUEST['order'] ) ? wp_unslash( trim( $_REQUEST['order'] ) ) : '';
+		$args     = array(
 			'limit'    => $per_page,
 			'page'     => $paged,
 			'search'   => $search,

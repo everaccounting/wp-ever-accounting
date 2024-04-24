@@ -20,6 +20,7 @@ class Actions {
 	 */
 	public function __construct() {
 		add_action( 'admin_post_eac_edit_item', array( $this, 'handle_edit_item' ) );
+		add_action( 'admin_post_eac_edit_account', array( $this, 'handle_edit_account' ) );
 		add_action( 'admin_post_eac_edit_category', array( $this, 'handle_edit_category' ) );
 		add_action( 'admin_post_eac_edit_currency', array( $this, 'handle_edit_currency' ) );
 		add_action( 'admin_post_eac_edit_tax', array( $this, 'handle_edit_tax' ) );
@@ -69,6 +70,42 @@ class Actions {
 
 		wp_safe_redirect( $referer );
 		exit();
+	}
+
+	/**
+	 * Edit account.
+	 *
+	 * @since 1.1.6
+	 * @return void
+	 */
+	public static function handle_edit_account() {
+		check_admin_referer( 'eac_edit_account' );
+		$referer = wp_get_referer();
+		$account = eac_insert_account(
+			array(
+				'id'              => isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0,
+				'name'            => isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '',
+				'number'          => isset( $_POST['number'] ) ? sanitize_text_field( wp_unslash( $_POST['number'] ) ) : '',
+				'type'            => isset( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '',
+				'currency_code'   => isset( $_POST['currency_code'] ) ? sanitize_text_field( wp_unslash( $_POST['currency_code'] ) ) : '',
+				'opening_balance' => isset( $_POST['opening_balance'] ) ? floatval( wp_unslash( $_POST['opening_balance'] ) ) : 0,
+				'bank_name'       => isset( $_POST['bank_name'] ) ? sanitize_text_field( wp_unslash( $_POST['bank_name'] ) ) : '',
+				'bank_phone'      => isset( $_POST['bank_phone'] ) ? sanitize_text_field( wp_unslash( $_POST['bank_phone'] ) ) : '',
+				'bank_address'    => isset( $_POST['bank_address'] ) ? sanitize_text_field( wp_unslash( $_POST['bank_address'] ) ) : '',
+				'status'          => isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : 'active',
+			)
+		);
+
+		if ( is_wp_error( $account ) ) {
+			EAC()->flash->error( $account->get_error_message() );
+		} else {
+			EAC()->flash->success( __( 'Account saved successfully.', 'wp-ever-accounting' ) );
+			$referer = add_query_arg( 'edit', $account->id, $referer );
+			$referer = remove_query_arg( array( 'add' ), $referer );
+		}
+
+		wp_safe_redirect( $referer );
+		exit;
 	}
 
 	/**
