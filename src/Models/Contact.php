@@ -192,6 +192,14 @@ class Contact extends Model {
 			$this->set_prop_value( 'currency_code', eac_get_base_currency() );
 		}
 
+		if ( empty( $this->uuid ) ) {
+			$this->uuid = wp_generate_uuid4();
+		}
+
+		if ( empty( $this->author_id ) && is_user_logged_in() ) {
+			$this->author_id = get_current_user_id();
+		}
+
 		return parent::save();
 	}
 }

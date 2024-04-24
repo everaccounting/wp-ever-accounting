@@ -165,4 +165,32 @@ class Account extends Model {
 	public function transactions() {
 		return $this->has_many( Transaction::class, 'account_id' );
 	}
+
+	/**
+	 * Save the object to the database.
+	 *
+	 * @since 1.0.0
+	 * @return \WP_Error|true True on success, WP_Error on failure.
+	 */
+	public function save() {
+		if ( empty( $this->name ) ) {
+			return new \WP_Error( 'missing_required', __( 'Account name is required.', 'wp-ever-accounting' ) );
+		}
+		if ( empty( $this->number ) ) {
+			return new \WP_Error( 'missing_required', __( 'Account number rate is required.', 'wp-ever-accounting' ) );
+		}
+		if ( empty( $this->currency_code ) ) {
+			return new \WP_Error( 'missing_required', __( 'Currency code is required.', 'wp-ever-accounting' ) );
+		}
+
+		if ( empty( $this->uuid ) ) {
+			$this->uuid = wp_generate_uuid4();
+		}
+
+		if ( empty( $this->author_id ) && is_user_logged_in() ) {
+			$this->author_id = get_current_user_id();
+		}
+
+		return parent::save();
+	}
 }

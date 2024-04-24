@@ -1,13 +1,5 @@
 <?php
 
-class PluginCest
-{
-    public function _before(AcceptanceTester $I)
-    {
-    }
+class PluginCest {
 
-    // tests
-    public function tryToTest(AcceptanceTester $I)
-    {
-    }
 }

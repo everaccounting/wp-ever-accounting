@@ -49,7 +49,7 @@ class CurrenciesTable extends ListTable {
 		$per_page              = $this->get_items_per_page( 'eac_currencies_per_page', 20 );
 		$paged                 = $this->get_pagenum();
 		$search                = isset( $_REQUEST['s'] ) ? wp_unslash( trim( $_REQUEST['s'] ) ) : '';
-		$order_by              = isset( $_REQUEST['orderby'] ) ? wp_unslash( trim( $_REQUEST['orderby'] ) ) : '';
+		$order_by              = isset( $_REQUEST['orderby'] ) ? wp_unslash( trim( $_REQUEST['orderby'] ) ) : 'status';
 		$order                 = isset( $_REQUEST['order'] ) ? wp_unslash( trim( $_REQUEST['order'] ) ) : '';
 		$args                  = array(
 			'limit'    => $per_page,

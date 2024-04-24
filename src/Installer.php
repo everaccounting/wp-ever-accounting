@@ -169,16 +169,16 @@ class Installer {
 	 */
 	public static function create_tables() {
 		global $wpdb;
+		$wpdb->hide_errors();
 		$collate      = $wpdb->has_cap( 'collation' ) ? $wpdb->get_charset_collate() : '';
 		$index_length = 191;
 
 		// drop old ea_currencies table if exists.
-		$table_name = $wpdb->prefix . 'ea_currencies';
-		// if the table does not have exchange_rate column, then drop the table and create it again.
-		if ( $wpdb->get_var( "SHOW COLUMNS FROM $table_name LIKE 'exchange_rate'" ) != 'exchange_rate' ) {
-			$wpdb->query( "DROP TABLE $table_name" );
+		$currency_table = $wpdb->prefix . 'ea_currencies';
+		if ( $wpdb->get_var( "SHOW TABLES LIKE '{$currency_table}'" ) === $currency_table &&
+		     $wpdb->get_var( "SHOW COLUMNS FROM {$currency_table} LIKE 'exchange_rate'" ) != 'exchange_rate' ) {
+			$wpdb->query( "DROP TABLE $currency_table" );
 		}
-
 
 		$tables = "
 CREATE TABLE {$wpdb->prefix}ea_accounts(
@@ -411,16 +411,16 @@ KEY `category_id` (`category_id`)
 ) $collate;
 CREATE TABLE {$wpdb->prefix}ea_notes(
 `id` bigINT(20) NOT NULL AUTO_INCREMENT,
-`object_id`  BIGINT(20) UNSIGNED NOT NULL,
-`object_type` VARCHAR(20) NOT NULL,
+`parent_id`  BIGINT(20) UNSIGNED NOT NULL,
+`parent_type` VARCHAR(20) NOT NULL,
 `content` TEXT DEFAULT NULL,
 `note_metadata` longtext DEFAULT NULL,
 `author_id` BIGINT(20) UNSIGNED DEFAULT NULL,
 `date_created` DATETIME NULL DEFAULT NULL,
 `date_updated` DATETIME NULL DEFAULT NULL,
 PRIMARY KEY (`id`),
-KEY `object_id` (`object_id`),
-KEY `object_type` (`object_type`)
+KEY `parent_id` (`parent_id`),
+KEY `parent_type` (`parent_type`)
 ) $collate;
 CREATE TABLE {$wpdb->prefix}ea_taxes(
 `id` bigINT(20) NOT NULL AUTO_INCREMENT,
@@ -521,6 +521,15 @@ UNIQUE KEY `uuid` (`uuid`)
 			if ( ! in_array( $code, $codes, true ) ) {
 				$currency['status'] = 'inactive';
 				eac_insert_currency( $currency );
+			}
+		}
+
+		// now if there is any no active currency, make USD active.
+		$active_currencies = eac_get_currencies( [ 'status' => 'active' ] );
+		if ( empty( $active_currencies ) ) {
+			$usd = eac_get_currency( 'USD' );
+			if ( $usd ) {
+				eac_insert_currency( [ 'id' => $usd->id, 'status' => 'active' ] );
 			}
 		}
 	}

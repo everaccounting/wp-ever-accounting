@@ -102,12 +102,36 @@ install_wp() {
 	download https://raw.github.com/markoheijnen/wp-mysqli/master/db.php $WP_CORE_DIR/wp-content/db.php
 }
 
+
+install_db() {
+
+	if [ ${SKIP_DB_CREATE} = "true" ]; then
+		return 0
+	fi
+
+	# parse DB_HOST for port or socket references
+	local PARTS=(${DB_HOST//\:/ })
+	local DB_HOSTNAME=${PARTS[0]};
+	local DB_SOCK_OR_PORT=${PARTS[1]};
+	local EXTRA=""
+
+	if ! [ -z $DB_HOSTNAME ] ; then
+		if [ $(echo $DB_SOCK_OR_PORT | grep -e '^[0-9]\{1,\}$') ]; then
+			EXTRA=" --host=$DB_HOSTNAME --port=$DB_SOCK_OR_PORT --protocol=tcp"
+		elif ! [ -z $DB_SOCK_OR_PORT ] ; then
+			EXTRA=" --socket=$DB_SOCK_OR_PORT"
+		elif ! [ -z $DB_HOSTNAME ] ; then
+			EXTRA=" --host=$DB_HOSTNAME --protocol=tcp"
+		fi
+	fi
+
+	# create database
+	mysqladmin create $DB_NAME --user="$DB_USER" --password="$DB_PASS"$EXTRA
+}
+
 configure_wp() {
     cd $WP_CORE_DIR
     wp config create --dbname="$DB_NAME" --dbuser="$DB_USER" --dbpass="$DB_PASS" --dbhost="$DB_HOST" --dbprefix="$TEST_TABLE_PREFIX"  --skip-check --force=true --path=$WP_CORE_DIR
-    # If database exists, then
-#    wp db drop --yes
-    wp db create
     wp core install --url="$WP_DOMAIN" --title="Tests" --admin_user="$ADMIN_USERNAME" --admin_password="$ADMIN_PASSWORD" --admin_email="$ADMIN_EMAIL" --skip-email
     wp rewrite structure '/%year%/%monthnum%/%postname%/'
 }
@@ -138,15 +162,8 @@ setup_plugin() {
 
 	# Export the db for codeception to use
 	wp db export $PLUGIN_DIR/tests/_data/dump.sql
-
 }
-
-prepare_env_file() {
-	# Copy .env.dist to .env.testing and replace the values of WP_ROOT_FOLDER to ABSOLUTE_PATH_TO_WP_CORE_DIR
-	cp .env.dist .env.testing
-	# Get the root folder of site
-}
-
 install_wp
+install_db
 configure_wp
 setup_plugin

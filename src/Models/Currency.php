@@ -68,6 +68,7 @@ class Currency extends Model {
 		'position'           => 'before',
 		'decimal_separator'  => '.',
 		'thousand_separator' => ',',
+		'exchange_rate'      => 1,
 		'status'             => 'active',
 	);
 

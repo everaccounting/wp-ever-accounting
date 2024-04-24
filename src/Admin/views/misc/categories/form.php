@@ -9,7 +9,7 @@
 
 defined( 'ABSPATH' ) || exit;
 ?>
-<form method="post" action="<?php echo esc_html( admin_url( 'admin-post.php' ) ); ?>">
+<form id="eac-category-form" method="post" action="<?php echo esc_html( admin_url( 'admin-post.php' ) ); ?>">
 	<span data-wp-text="name"></span>
 	<div class="bkit-poststuff">
 		<div class="column-1">
@@ -78,9 +78,9 @@ defined( 'ABSPATH' ) || exit;
 						<a class="eac_confirm_delete del" href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'action', 'delete', admin_url( 'admin.php?page=eac-categories&id=' . $category->id ) ), 'bulk-categories' ) ); ?>"><?php esc_html_e( 'Delete', 'wp-ever-accounting' ); ?></a>
 					<?php endif; ?>
 					<?php if ( $category->exists() ) : ?>
-						<button class="button button-primary"><?php esc_html_e( 'Update', 'wp-ever-accounting' ); ?></button>
+						<input type="submit" class="button button-primary" value="<?php esc_attr_e( 'Update', 'wp-ever-accounting' ); ?>"/>
 					<?php else : ?>
-						<button class="button button-primary bkit-w-100"><?php esc_html_e( 'Add', 'wp-ever-accounting' ); ?></button>
+						<input type="submit" class="button button-primary bkit-w-100" value="<?php esc_attr_e( 'Add', 'wp-ever-accounting' ); ?>"/>
 					<?php endif; ?>
 				</div>
 			</div>

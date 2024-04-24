@@ -122,6 +122,14 @@ class Transfer extends Model {
 			return new \WP_Error( 'missing_required', __( 'Payment method is required.', 'wp-ever-accounting' ) );
 		}
 
+		if ( empty( $this->uuid ) ) {
+			$this->uuid = wp_generate_uuid4();
+		}
+
+		if ( empty( $this->author_id ) && is_user_logged_in() ) {
+			$this->author_id = get_current_user_id();
+		}
+
 		return parent::save();
 	}
 
