@@ -14,9 +14,6 @@ defined( 'ABSPATH' ) || exit;
 			<h2 class="eac-section-header__title">
 				<?php esc_html_e( 'Currencies', 'wp-ever-accounting' ); ?>
 			</h2>
-			<a href="<?php echo esc_attr( admin_url( 'admin.php?page=eac-banking&tab=currencies&add=yes' ) ); ?>" class="page-title-action">
-				<?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?>
-			</a>
 			<?php if ( $this->list_table->get_request_search() ) : ?>
 				<span class="subtitle"><?php echo esc_html( sprintf( __( 'Search results for "%s"', 'wp-ever-accounting' ), esc_html( $this->list_table->get_request_search() ) ) ); ?></span>
 			<?php endif; ?>

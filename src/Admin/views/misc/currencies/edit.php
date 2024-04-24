@@ -1,9 +1,9 @@
 <?php
 /**
- * Edit category view.
+ * Edit currency view.
  *
  * @package EverAccounting
- * @var $category \EverAccounting\Models\Category Category object.
+ * @var $currency \EverAccounting\Models\Currency Currency object.
  */
 
 defined( 'ABSPATH' ) || exit;

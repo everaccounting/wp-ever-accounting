@@ -46,7 +46,7 @@ class CurrenciesTable extends ListTable {
 	public function prepare_items() {
 		$this->process_actions();
 		$this->_column_headers = array( $this->get_columns(), get_hidden_columns( $this->screen ), $this->get_sortable_columns() );
-		$per_page              = $this->get_items_per_page( 'eac_banking_currencies_per_page', 20 );
+		$per_page              = $this->get_items_per_page( 'eac_currencies_per_page', 20 );
 		$paged                 = $this->get_pagenum();
 		$search                = isset( $_REQUEST['s'] ) ? wp_unslash( trim( $_REQUEST['s'] ) ) : '';
 		$order_by              = isset( $_REQUEST['orderby'] ) ? wp_unslash( trim( $_REQUEST['orderby'] ) ) : '';
