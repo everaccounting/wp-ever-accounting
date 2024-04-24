@@ -33,6 +33,8 @@ class AccountsTable extends ListTable {
 				)
 			)
 		);
+
+		$this->base_url = admin_url( 'admin.php?page=eac-banking&tab=accounts' );
 	}
 
 	/**
