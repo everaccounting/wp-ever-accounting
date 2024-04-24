@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Ever Accounting 1.2.0\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/wp-ever-accounting\n"
-"POT-Creation-Date: 2024-04-24 08:13:16+00:00\n"
+"POT-Creation-Date: 2024-04-24 08:31:22+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -677,7 +677,7 @@ msgstr ""
 #: src/Admin/views/banking/transfers/form.php:27
 #: src/Admin/views/items/items/form.php:26
 #: src/Admin/views/misc/categories/form.php:25
-#: src/Admin/views/misc/currencies/form.php:33
+#: src/Admin/views/misc/currencies/form.php:32
 #: src/Admin/views/purchases/bills/form.php:27
 #: src/Admin/views/purchases/payments/form.php:27
 #: src/Admin/views/purchases/vendors/form.php:27
@@ -1089,7 +1089,7 @@ msgstr ""
 #: includes/admin/class-setup.php:349
 #: includes/admin/list-tables/class-currency-list-table.php:96
 #: src/Admin/ListTables/CurrenciesTable.php:205
-#: src/Admin/views/misc/currencies/form.php:25
+#: src/Admin/views/misc/currencies/form.php:24
 msgid "Code"
 msgstr ""
 
@@ -1381,7 +1381,7 @@ msgstr ""
 #: src/Admin/ListTables/ListTable.php:125
 #: src/Admin/views/items/items/form.php:141
 #: src/Admin/views/misc/categories/form.php:65
-#: src/Admin/views/misc/currencies/form.php:106
+#: src/Admin/views/misc/currencies/form.php:105
 msgid "Active"
 msgstr ""
 
@@ -1393,7 +1393,7 @@ msgstr ""
 #: src/Admin/ListTables/ListTable.php:126
 #: src/Admin/views/items/items/form.php:142
 #: src/Admin/views/misc/categories/form.php:66
-#: src/Admin/views/misc/currencies/form.php:107
+#: src/Admin/views/misc/currencies/form.php:106
 msgid "Inactive"
 msgstr ""
 
@@ -1464,7 +1464,7 @@ msgstr ""
 #: src/Admin/ListTables/ItemsTable.php:246
 #: src/Admin/views/items/items/form.php:138
 #: src/Admin/views/misc/categories/form.php:62
-#: src/Admin/views/misc/currencies/form.php:103
+#: src/Admin/views/misc/currencies/form.php:102
 #: vendor/woocommerce/action-scheduler/classes/ActionScheduler_AdminView.php:243
 #: vendor/woocommerce/action-scheduler/classes/ActionScheduler_ListTable.php:97
 msgid "Status"
@@ -1552,7 +1552,7 @@ msgstr ""
 #: includes/admin/list-tables/class-currency-list-table.php:97
 #: includes/admin/views/currencies/edit-currency.php:112
 #: src/Admin/ListTables/CurrenciesTable.php:206
-#: src/Admin/views/misc/currencies/form.php:41
+#: src/Admin/views/misc/currencies/form.php:40
 msgid "Symbol"
 msgstr ""
 
@@ -1679,7 +1679,7 @@ msgstr ""
 #: src/Admin/views/banking/transfers/form.php:39
 #: src/Admin/views/items/items/form.php:132
 #: src/Admin/views/misc/categories/form.php:56
-#: src/Admin/views/misc/currencies/form.php:97
+#: src/Admin/views/misc/currencies/form.php:96
 #: src/Admin/views/purchases/bills/form.php:39
 #: src/Admin/views/purchases/payments/form.php:39
 #: src/Admin/views/purchases/vendors/form.php:39
@@ -2706,7 +2706,7 @@ msgid "Precision"
 msgstr ""
 
 #: includes/admin/views/currencies/edit-currency.php:121
-#: src/Admin/views/misc/currencies/form.php:81
+#: src/Admin/views/misc/currencies/form.php:80
 msgid "Symbol Position"
 msgstr ""
 
@@ -2719,7 +2719,7 @@ msgid "After"
 msgstr ""
 
 #: includes/admin/views/currencies/edit-currency.php:134
-#: src/Admin/views/misc/currencies/form.php:65
+#: src/Admin/views/misc/currencies/form.php:64
 msgid "Decimal Separator"
 msgstr ""
 
@@ -3943,8 +3943,12 @@ msgstr ""
 msgid "Item saved successfully."
 msgstr ""
 
-#: src/Admin/Actions.php:100 src/Admin/Actions.php:139
+#: src/Admin/Actions.php:100
 msgid "Category saved successfully."
+msgstr ""
+
+#: src/Admin/Actions.php:147
+msgid "Currency saved successfully."
 msgstr ""
 
 #: src/Admin/Admin.php:89
@@ -4041,7 +4045,7 @@ msgid "No currencies found."
 msgstr ""
 
 #: src/Admin/ListTables/CurrenciesTable.php:207
-#: src/Admin/views/misc/currencies/form.php:49
+#: src/Admin/views/misc/currencies/form.php:48
 msgid "Exchange Rate"
 msgstr ""
 
@@ -4364,7 +4368,7 @@ msgid "Category Details"
 msgstr ""
 
 #: src/Admin/views/misc/categories/form.php:81
-#: src/Admin/views/misc/currencies/form.php:116
+#: src/Admin/views/misc/currencies/form.php:115
 msgid "Update"
 msgstr ""
 
@@ -4376,23 +4380,23 @@ msgstr ""
 msgid "Currency Details"
 msgstr ""
 
-#: src/Admin/views/misc/currencies/form.php:56
+#: src/Admin/views/misc/currencies/form.php:55
 msgid "Thousand Separator"
 msgstr ""
 
-#: src/Admin/views/misc/currencies/form.php:73
+#: src/Admin/views/misc/currencies/form.php:72
 msgid "Number of Decimals"
 msgstr ""
 
-#: src/Admin/views/misc/currencies/form.php:85
+#: src/Admin/views/misc/currencies/form.php:84
 msgid "Select an option…"
 msgstr ""
 
-#: src/Admin/views/misc/currencies/form.php:86
+#: src/Admin/views/misc/currencies/form.php:85
 msgid "Before amount"
 msgstr ""
 
-#: src/Admin/views/misc/currencies/form.php:87
+#: src/Admin/views/misc/currencies/form.php:86
 msgid "After amount"
 msgstr ""
 
@@ -4528,6 +4532,18 @@ msgstr ""
 msgid "Fee Item"
 msgstr ""
 
+#: src/Models/Account.php:177
+msgid "Account name is required."
+msgstr ""
+
+#: src/Models/Account.php:180
+msgid "Account number rate is required."
+msgstr ""
+
+#: src/Models/Account.php:183 src/Models/Currency.php:174
+msgid "Currency code is required."
+msgstr ""
+
 #: src/Models/Category.php:97
 msgid "Category name is required."
 msgstr ""
@@ -4544,27 +4560,23 @@ msgstr ""
 msgid "Name is required."
 msgstr ""
 
-#: src/Models/Currency.php:167
+#: src/Models/Currency.php:168
 msgid "Currency name is required."
 msgstr ""
 
-#: src/Models/Currency.php:170
+#: src/Models/Currency.php:171
 msgid "Currency exchange rate is required."
 msgstr ""
 
-#: src/Models/Currency.php:173
-msgid "Currency code is required."
-msgstr ""
-
-#: src/Models/Currency.php:176
+#: src/Models/Currency.php:177
 msgid "Currency symbol is required."
 msgstr ""
 
-#: src/Models/Currency.php:179
+#: src/Models/Currency.php:180
 msgid "Currency decimal separator is required."
 msgstr ""
 
-#: src/Models/Currency.php:182
+#: src/Models/Currency.php:183
 msgid "Currency thousand separator is required."
 msgstr ""
 
@@ -4574,6 +4586,14 @@ msgstr ""
 
 #: src/Models/Item.php:162
 msgid "Item price is required."
+msgstr ""
+
+#: src/Models/Note.php:96
+msgid "Missing parent ID."
+msgstr ""
+
+#: src/Models/Note.php:99
+msgid "Missing parent type."
 msgstr ""
 
 #: src/Models/Tax.php:95

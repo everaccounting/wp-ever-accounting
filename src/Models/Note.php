@@ -93,10 +93,10 @@ class Note extends Model {
 	 */
 	public function save() {
 		if ( ! $this->parent_id ) {
-			return new \WP_Error( 'missing_parent_id', __( 'Missing parent ID.', 'ever-accounting' ) );
+			return new \WP_Error( 'missing_parent_id', __( 'Missing parent ID.', 'wp-ever-accounting' ) );
 		}
 		if ( ! $this->parent_type ) {
-			return new \WP_Error( 'missing_parent_type', __( 'Missing parent type.', 'ever-accounting' ) );
+			return new \WP_Error( 'missing_parent_type', __( 'Missing parent type.', 'wp-ever-accounting' ) );
 		}
 
 		if ( empty( $this->author_id ) && is_user_logged_in() ) {
