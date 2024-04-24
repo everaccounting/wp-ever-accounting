@@ -39,11 +39,11 @@ class Utilities {
 				),
 			),
 			array(
-				'page_title' => __( 'Expenses', 'wp-ever-accounting' ),
-				'menu_title' => __( 'Expenses', 'wp-ever-accounting' ),
+				'page_title' => __( 'Purchases', 'wp-ever-accounting' ),
+				'menu_title' => __( 'Purchases', 'wp-ever-accounting' ),
 				'capability' => 'manage_options',
-				'menu_slug'  => 'eac-expenses',
-				'page_hook'  => 'expenses',
+				'menu_slug'  => 'eac-purchases',
+				'page_hook'  => 'purchases',
 				'tabs'       => array(
 					'payments' => __( 'Payments', 'wp-ever-accounting' ),
 					'bills'    => __( 'Bills', 'wp-ever-accounting' ),
@@ -70,7 +70,7 @@ class Utilities {
 				'page_hook'  => 'misc',
 				'tabs'       => array(
 					'categories' => __( 'Categories', 'wp-ever-accounting' ),
-					'currencies'   => __( 'Currencies', 'wp-ever-accounting' ),
+					'currencies' => __( 'Currencies', 'wp-ever-accounting' ),
 					'taxes'      => __( 'Taxes', 'wp-ever-accounting' ),
 				)
 			),
@@ -97,7 +97,11 @@ class Utilities {
 	 * @return array
 	 */
 	public static function get_screen_ids() {
-		$screen_ids = array();
+		$screen_ids = array(
+			'toplevel_page_' . Menus::PARENT_SLUG,
+			Menus::PARENT_SLUG . '_page_dashboard',
+			Menus::PARENT_SLUG . '_page_settings',
+		);
 
 		foreach ( self::get_menus() as $page ) {
 			$screen_ids[] = Menus::PARENT_SLUG . '_page_' . $page['menu_slug'];

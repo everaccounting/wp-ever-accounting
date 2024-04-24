@@ -33,7 +33,7 @@ function eaccounting() {
 	return EverAccounting::instance();
 }
 
-eaccounting();
+//eaccounting();
 
 /**
  * Main instance of EverAccounting.

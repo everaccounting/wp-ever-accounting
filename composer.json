@@ -71,7 +71,7 @@
     "test:acceptance": "vendor/bin/codecept run acceptance --",
     "test:gen:wpunit": "vendor/bin/codecept generate:wpunit wpunit",
     "test:gen:functional": "vendor/bin/codecept generate:wpunit functional",
-    "test:gen:acceptance": "vendor/bin/codecept generate:acceptance acceptance",
+    "test:gen:acceptance": "vendor/bin/codecept generate:cest acceptance",
     "test": "vendor/bin/codecept run functional --"
   },
   "extra": {}

@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Ever Accounting 1.2.0\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/wp-ever-accounting\n"
-"POT-Creation-Date: 2024-04-24 04:20:45+00:00\n"
+"POT-Creation-Date: 2024-04-24 05:49:30+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -89,7 +89,8 @@ msgstr ""
 #: includes/admin/class-assets.php:66 includes/admin/class-menu.php:68
 #: includes/admin/class-menu.php:69 includes/admin/ea-admin-functions.php:115
 #: includes/admin/ea-admin-functions.php:155
-#: includes/admin/ea-admin-functions.php:190
+#: includes/admin/ea-admin-functions.php:190 src/Admin/Menus.php:73
+#: src/Admin/Menus.php:74
 msgid "Accounting"
 msgstr ""
 
@@ -181,6 +182,7 @@ msgstr ""
 #: includes/admin/reports/income-summary.php:149
 #: includes/ea-category-functions.php:22
 #: includes/ea-transaction-functions.php:24 src/Functions/categories.php:16
+#: src/Functions/transactions.php:26
 msgid "Income"
 msgstr ""
 
@@ -191,6 +193,7 @@ msgstr ""
 #: includes/admin/reports/expense-summary.php:148
 #: includes/ea-category-functions.php:21
 #: includes/ea-transaction-functions.php:25 src/Functions/categories.php:15
+#: src/Functions/transactions.php:27
 msgid "Expense"
 msgstr ""
 
@@ -248,13 +251,13 @@ msgstr ""
 #: includes/admin/views/revenues/edit-revenue.php:109
 #: includes/admin/views/revenues/view-income.php:139
 #: includes/models/class-bill.php:74 includes/models/class-invoice.php:74
-#: src/Admin/ListTables/ItemsTable.php:222
+#: src/Admin/ListTables/ItemsTable.php:244
 #: src/Admin/ListTables/PaymentsTable.php:190
 #: src/Admin/ListTables/RevenuesTable.php:190
 #: src/Admin/ListTables/TransactionsTable.php:186
 #: src/Admin/ListTables/TransfersTable.php:190
 #: src/Admin/ListTables/VendorsTable.php:190
-#: src/Admin/views/items/items/form.php:35
+#: src/Admin/views/items/items/form.php:69
 msgid "Category"
 msgstr ""
 
@@ -428,9 +431,7 @@ msgstr ""
 #: includes/admin/class-menu.php:188
 #: includes/admin/views/items/edit-item.php:25
 #: includes/admin/views/items/list-item.php:32 src/Admin/Utilities.php:23
-#: src/Admin/Utilities.php:24
-#: src/Admin/views/items/categories/categories.php:12
-#: src/Admin/views/items/items/items.php:12
+#: src/Admin/Utilities.php:24 src/Admin/views/items/items/items.php:12
 msgid "Items"
 msgstr ""
 
@@ -444,8 +445,7 @@ msgid "Sales"
 msgstr ""
 
 #: includes/admin/class-menu.php:121 includes/admin/class-menu.php:122
-#: includes/admin/class-menu.php:324 src/Admin/Utilities.php:42
-#: src/Admin/Utilities.php:43
+#: includes/admin/class-menu.php:324
 msgid "Expenses"
 msgstr ""
 
@@ -491,7 +491,7 @@ msgstr ""
 #: includes/admin/class-menu.php:229
 #: includes/admin/views/payments/edit-payment.php:28
 #: includes/admin/views/payments/list-payment.php:32 src/Admin/Utilities.php:48
-#: src/Admin/views/expenses/payments/payments.php:12
+#: src/Admin/views/purchases/payments/payments.php:12
 msgid "Payments"
 msgstr ""
 
@@ -501,7 +501,7 @@ msgstr ""
 #: includes/admin/views/bills/list-bill.php:24
 #: includes/admin/views/bills/view-bill.php:49
 #: includes/admin/views/vendors/view-vendor.php:23 src/Admin/Utilities.php:49
-#: src/Admin/views/expenses/bills/bills.php:12
+#: src/Admin/views/purchases/bills/bills.php:12
 msgid "Bills"
 msgstr ""
 
@@ -509,7 +509,7 @@ msgstr ""
 #: includes/admin/views/vendors/edit-vendor.php:30
 #: includes/admin/views/vendors/list-vendor.php:32
 #: includes/admin/views/vendors/view-vendor.php:42 src/Admin/Utilities.php:50
-#: src/Admin/views/expenses/vendors/vendors.php:12
+#: src/Admin/views/purchases/vendors/vendors.php:12
 msgid "Vendors"
 msgstr ""
 
@@ -551,8 +551,8 @@ msgstr ""
 #: src/Admin/views/banking/accounts/accounts.php:17
 #: src/Admin/views/banking/currencies/currencies.php:17
 #: src/Admin/views/banking/transfers/transfers.php:17
-#: src/Admin/views/expenses/payments/payments.php:17
-#: src/Admin/views/expenses/vendors/vendors.php:17
+#: src/Admin/views/purchases/payments/payments.php:17
+#: src/Admin/views/purchases/vendors/vendors.php:17
 #: src/Admin/views/sales/customers/customers.php:17
 #: src/Admin/views/sales/revenues/revenues.php:17
 msgid "Import"
@@ -585,7 +585,7 @@ msgstr ""
 #: includes/admin/ea-admin-functions.php:27
 #: includes/admin/views/currencies/edit-currency.php:33
 #: includes/admin/views/currencies/list-currency.php:30
-#: src/Admin/Utilities.php:73
+#: src/Admin/Settings/General.php:45 src/Admin/Utilities.php:73
 #: src/Admin/views/banking/currencies/currencies.php:12
 #: src/Admin/views/misc/currencies/currencies.php:15
 msgid "Currencies"
@@ -641,7 +641,8 @@ msgstr ""
 
 #: includes/admin/class-settings.php:45 includes/admin/class-settings.php:48
 #: includes/admin/ea-admin-functions.php:26
-#: includes/admin/ea-admin-functions.php:63
+#: includes/admin/ea-admin-functions.php:63 src/Admin/Settings/General.php:24
+#: src/Admin/Settings/Page.php:146
 msgid "General"
 msgstr ""
 
@@ -673,16 +674,16 @@ msgstr ""
 #: src/Admin/ListTables/CategoriesTable.php:222
 #: src/Admin/ListTables/CurrenciesTable.php:204
 #: src/Admin/ListTables/CustomersTable.php:187
-#: src/Admin/ListTables/ItemsTable.php:219
+#: src/Admin/ListTables/ItemsTable.php:241
 #: src/Admin/views/banking/accounts/form.php:27
 #: src/Admin/views/banking/currencies/form.php:27
 #: src/Admin/views/banking/transfers/form.php:27
-#: src/Admin/views/expenses/bills/form.php:27
-#: src/Admin/views/expenses/payments/form.php:27
-#: src/Admin/views/expenses/vendors/form.php:27
-#: src/Admin/views/items/items/form.php:27
+#: src/Admin/views/items/items/form.php:26
 #: src/Admin/views/misc/categories/form.php:25
 #: src/Admin/views/misc/currencies/form.php:25
+#: src/Admin/views/purchases/bills/form.php:27
+#: src/Admin/views/purchases/payments/form.php:27
+#: src/Admin/views/purchases/vendors/form.php:27
 #: src/Admin/views/sales/customers/form.php:27
 #: src/Admin/views/sales/invoices/form.php:27
 #: src/Admin/views/sales/revenues/form.php:27
@@ -700,7 +701,7 @@ msgstr ""
 #: includes/admin/views/js/modal-add-vendor.php:45
 #: includes/admin/views/vendors/edit-vendor.php:104
 #: includes/admin/views/vendors/view-vendor.php:166
-#: includes/class-settings.php:85
+#: includes/class-settings.php:85 src/Admin/Settings/General.php:75
 msgid "Email"
 msgstr ""
 
@@ -713,9 +714,9 @@ msgstr ""
 #: includes/admin/views/customers/view-customer.php:175
 #: includes/admin/views/vendors/edit-vendor.php:123
 #: includes/admin/views/vendors/view-vendor.php:170
-#: includes/class-settings.php:97 templates/bill/bill-from.php:23
-#: templates/bill/company-info.php:36 templates/invoice/company-info.php:36
-#: templates/invoice/invoice-to.php:23
+#: includes/class-settings.php:97 src/Admin/Settings/General.php:102
+#: templates/bill/bill-from.php:23 templates/bill/company-info.php:36
+#: templates/invoice/company-info.php:36 templates/invoice/invoice-to.php:23
 msgid "VAT Number"
 msgstr ""
 
@@ -729,14 +730,14 @@ msgstr ""
 #: includes/admin/class-settings.php:87
 #: includes/admin/views/customers/edit-customer.php:158
 #: includes/admin/views/vendors/edit-vendor.php:161
-#: includes/class-settings.php:107
+#: includes/class-settings.php:107 src/Admin/Settings/General.php:176
 msgid "City"
 msgstr ""
 
 #: includes/admin/class-settings.php:92
 #: includes/admin/views/customers/edit-customer.php:167
 #: includes/admin/views/vendors/edit-vendor.php:170
-#: includes/class-settings.php:112
+#: includes/class-settings.php:112 src/Admin/Settings/General.php:185
 msgid "State"
 msgstr ""
 
@@ -750,11 +751,12 @@ msgstr ""
 #: includes/admin/class-settings.php:102 includes/admin/class-setup.php:279
 #: includes/admin/views/customers/edit-customer.php:185
 #: includes/admin/views/vendors/edit-vendor.php:188
-#: includes/class-settings.php:122
+#: includes/class-settings.php:122 src/Admin/Settings/General.php:203
 msgid "Country"
 msgstr ""
 
 #: includes/admin/class-settings.php:108 includes/class-settings.php:129
+#: src/Admin/Settings/General.php:93
 msgid "Logo"
 msgstr ""
 
@@ -763,6 +765,7 @@ msgid "General Settings"
 msgstr ""
 
 #: includes/admin/class-settings.php:119 includes/class-settings.php:140
+#: src/Admin/Settings/General.php:139
 msgid "Financial Year Start"
 msgstr ""
 
@@ -893,6 +896,8 @@ msgstr ""
 #: includes/admin/class-settings.php:220 includes/admin/class-settings.php:281
 #: includes/class-install.php:385 includes/class-install.php:391
 #: includes/class-settings.php:238 includes/class-settings.php:296
+#: src/Admin/ListTables/ItemsTable.php:242
+#: src/Admin/views/items/items/form.php:47
 msgid "Price"
 msgstr ""
 
@@ -996,7 +1001,7 @@ msgid "Select account"
 msgstr ""
 
 #: includes/admin/class-settings.php:660 includes/class-settings.php:493
-#: src/Admin/views/items/items/form.php:40
+#: src/Admin/views/items/items/form.php:74
 msgid "Select category"
 msgstr ""
 
@@ -1056,7 +1061,7 @@ msgstr ""
 msgid "Company Setup"
 msgstr ""
 
-#: includes/admin/class-setup.php:253
+#: includes/admin/class-setup.php:253 src/Admin/Settings/General.php:66
 msgid "Company Name"
 msgstr ""
 
@@ -1064,7 +1069,7 @@ msgstr ""
 msgid "Company Email"
 msgstr ""
 
-#: includes/admin/class-setup.php:272
+#: includes/admin/class-setup.php:272 src/Admin/Settings/General.php:152
 msgid "Company Address"
 msgstr ""
 
@@ -1116,6 +1121,7 @@ msgid "View Dashboard"
 msgstr ""
 
 #: includes/admin/ea-admin-functions.php:79 src/Admin/Utilities.php:74
+#: src/Admin/views/items/items/form.php:108
 msgid "Taxes"
 msgstr ""
 
@@ -1178,7 +1184,6 @@ msgstr ""
 #: includes/admin/list-tables/class-vendor-list-table.php:133
 #: src/Admin/ListTables/AccountsTable.php:192
 #: src/Admin/ListTables/CustomersTable.php:192
-#: src/Admin/ListTables/ItemsTable.php:340
 msgid "Enabled"
 msgstr ""
 
@@ -1197,9 +1202,6 @@ msgstr ""
 #: src/Admin/ListTables/CustomersTable.php:285
 #: src/Admin/ListTables/InvoicesTable.php:259
 #: src/Admin/ListTables/InvoicesTable.php:288
-#: src/Admin/ListTables/ItemsTable.php:173
-#: src/Admin/ListTables/ItemsTable.php:288
-#: src/Admin/ListTables/ItemsTable.php:316
 #: src/Admin/ListTables/PaymentsTable.php:258
 #: src/Admin/ListTables/PaymentsTable.php:287
 #: src/Admin/ListTables/RevenuesTable.php:258
@@ -1228,9 +1230,6 @@ msgstr ""
 #: src/Admin/ListTables/CustomersTable.php:283
 #: src/Admin/ListTables/InvoicesTable.php:257
 #: src/Admin/ListTables/InvoicesTable.php:286
-#: src/Admin/ListTables/ItemsTable.php:174
-#: src/Admin/ListTables/ItemsTable.php:286
-#: src/Admin/ListTables/ItemsTable.php:314
 #: src/Admin/ListTables/PaymentsTable.php:256
 #: src/Admin/ListTables/PaymentsTable.php:285
 #: src/Admin/ListTables/RevenuesTable.php:256
@@ -1283,9 +1282,8 @@ msgstr ""
 #: src/Admin/ListTables/InvoicesTable.php:142
 #: src/Admin/ListTables/InvoicesTable.php:254
 #: src/Admin/ListTables/InvoicesTable.php:283
-#: src/Admin/ListTables/ItemsTable.php:172
-#: src/Admin/ListTables/ItemsTable.php:283
-#: src/Admin/ListTables/ItemsTable.php:311
+#: src/Admin/ListTables/ItemsTable.php:194
+#: src/Admin/ListTables/ItemsTable.php:334
 #: src/Admin/ListTables/PaymentsTable.php:141
 #: src/Admin/ListTables/PaymentsTable.php:253
 #: src/Admin/ListTables/PaymentsTable.php:282
@@ -1303,12 +1301,12 @@ msgstr ""
 #: src/Admin/views/banking/accounts/form.php:48
 #: src/Admin/views/banking/currencies/form.php:48
 #: src/Admin/views/banking/transfers/form.php:48
-#: src/Admin/views/expenses/bills/form.php:48
-#: src/Admin/views/expenses/payments/form.php:48
-#: src/Admin/views/expenses/vendors/form.php:48
-#: src/Admin/views/items/items/form.php:85
+#: src/Admin/views/items/items/form.php:153
 #: src/Admin/views/misc/categories/form.php:78
 #: src/Admin/views/misc/currencies/form.php:78
+#: src/Admin/views/purchases/bills/form.php:48
+#: src/Admin/views/purchases/payments/form.php:48
+#: src/Admin/views/purchases/vendors/form.php:48
 #: src/Admin/views/sales/customers/form.php:48
 #: src/Admin/views/sales/invoices/form.php:48
 #: src/Admin/views/sales/revenues/form.php:48
@@ -1352,7 +1350,7 @@ msgstr ""
 #: includes/admin/list-tables/class-customer-list-table.php:270
 #: includes/admin/list-tables/class-item-list-table.php:256
 #: includes/admin/list-tables/class-vendor-list-table.php:273
-#: includes/ea-form-functions.php:576
+#: includes/ea-form-functions.php:576 src/Admin/views/items/items/form.php:102
 msgid "No"
 msgstr ""
 
@@ -1361,7 +1359,7 @@ msgstr ""
 #: includes/admin/list-tables/class-customer-list-table.php:270
 #: includes/admin/list-tables/class-item-list-table.php:256
 #: includes/admin/list-tables/class-vendor-list-table.php:273
-#: includes/ea-form-functions.php:577
+#: includes/ea-form-functions.php:577 src/Admin/views/items/items/form.php:101
 msgid "Yes"
 msgstr ""
 
@@ -1384,6 +1382,7 @@ msgstr ""
 #: includes/admin/list-tables/class-item-list-table.php:361
 #: includes/admin/list-tables/class-vendor-list-table.php:406
 #: src/Admin/ListTables/ListTable.php:125
+#: src/Admin/views/items/items/form.php:140
 #: src/Admin/views/misc/categories/form.php:65
 #: src/Admin/views/misc/currencies/form.php:65
 msgid "Active"
@@ -1395,6 +1394,7 @@ msgstr ""
 #: includes/admin/list-tables/class-item-list-table.php:362
 #: includes/admin/list-tables/class-vendor-list-table.php:407
 #: src/Admin/ListTables/ListTable.php:126
+#: src/Admin/views/items/items/form.php:141
 #: src/Admin/views/misc/categories/form.php:66
 #: src/Admin/views/misc/currencies/form.php:66
 msgid "Inactive"
@@ -1464,7 +1464,8 @@ msgstr ""
 #: src/Admin/ListTables/CategoriesTable.php:225
 #: src/Admin/ListTables/CurrenciesTable.php:208
 #: src/Admin/ListTables/InvoicesTable.php:193
-#: src/Admin/ListTables/ItemsTable.php:223
+#: src/Admin/ListTables/ItemsTable.php:245
+#: src/Admin/views/items/items/form.php:137
 #: src/Admin/views/misc/categories/form.php:62
 #: src/Admin/views/misc/currencies/form.php:62
 #: vendor/woocommerce/action-scheduler/classes/ActionScheduler_AdminView.php:243
@@ -1489,8 +1490,8 @@ msgstr ""
 #: includes/ea-document-functions.php:388
 #: includes/ea-document-functions.php:406
 #: src/Admin/ListTables/CustomersTable.php:190
-#: src/Admin/ListTables/InvoicesTable.php:140 templates/bill/bill-totals.php:63
-#: templates/invoice/invoice-totals.php:83
+#: src/Admin/ListTables/InvoicesTable.php:140 src/Functions/transactions.php:43
+#: templates/bill/bill-totals.php:63 templates/invoice/invoice-totals.php:83
 msgid "Paid"
 msgstr ""
 
@@ -1530,7 +1531,9 @@ msgstr ""
 #: includes/admin/views/categories/edit-category.php:73
 #: includes/models/class-payment.php:62 includes/models/class-revenue.php:61
 #: src/Admin/ListTables/CategoriesTable.php:224
+#: src/Admin/ListTables/ItemsTable.php:243
 #: src/Admin/ListTables/TransactionsTable.php:184
+#: src/Admin/views/items/items/form.php:34
 #: src/Admin/views/misc/categories/form.php:33
 #: src/Admin/views/misc/currencies/form.php:33
 msgid "Type"
@@ -1623,7 +1626,7 @@ msgstr ""
 
 #: includes/admin/list-tables/class-invoice-list-table.php:159
 #: includes/ea-document-functions.php:404
-#: src/Admin/ListTables/InvoicesTable.php:141
+#: src/Admin/ListTables/InvoicesTable.php:141 src/Functions/transactions.php:42
 #: vendor/woocommerce/action-scheduler/classes/abstracts/ActionScheduler_Store.php:407
 msgid "Pending"
 msgstr ""
@@ -1642,19 +1645,15 @@ msgstr ""
 #: includes/admin/views/items/edit-item.php:21
 #: includes/admin/views/js/modal-add-item.php:12
 #: src/Admin/views/items/items/add.php:12
-#: src/Admin/views/items/items/form.php:90
+#: src/Admin/views/items/items/form.php:158
 msgid "Add Item"
 msgstr ""
 
 #: includes/admin/list-tables/class-item-list-table.php:127
-#: src/Admin/ListTables/ItemsTable.php:220
-#: src/Admin/views/items/items/form.php:49
 msgid "Sale Price"
 msgstr ""
 
 #: includes/admin/list-tables/class-item-list-table.php:128
-#: src/Admin/ListTables/ItemsTable.php:221
-#: src/Admin/views/items/items/form.php:57
 msgid "Purchase Price"
 msgstr ""
 
@@ -1682,12 +1681,12 @@ msgstr ""
 #: src/Admin/views/banking/accounts/form.php:39
 #: src/Admin/views/banking/currencies/form.php:39
 #: src/Admin/views/banking/transfers/form.php:39
-#: src/Admin/views/expenses/bills/form.php:39
-#: src/Admin/views/expenses/payments/form.php:39
-#: src/Admin/views/expenses/vendors/form.php:39
-#: src/Admin/views/items/items/form.php:76
+#: src/Admin/views/items/items/form.php:131
 #: src/Admin/views/misc/categories/form.php:56
 #: src/Admin/views/misc/currencies/form.php:56
+#: src/Admin/views/purchases/bills/form.php:39
+#: src/Admin/views/purchases/payments/form.php:39
+#: src/Admin/views/purchases/vendors/form.php:39
 #: src/Admin/views/sales/customers/form.php:39
 #: src/Admin/views/sales/invoices/form.php:39
 #: src/Admin/views/sales/revenues/form.php:39
@@ -1710,8 +1709,8 @@ msgstr ""
 #: includes/admin/views/js/modal-bill-payment.php:13
 #: includes/admin/views/js/modal-invoice-payment.php:13
 #: includes/admin/views/payments/edit-payment.php:23
-#: src/Admin/views/expenses/payments/add.php:12
-#: src/Admin/views/expenses/payments/form.php:53
+#: src/Admin/views/purchases/payments/add.php:12
+#: src/Admin/views/purchases/payments/form.php:53
 msgid "Add Payment"
 msgstr ""
 
@@ -1760,7 +1759,7 @@ msgstr ""
 #: src/Admin/ListTables/BillsTable.php:173
 #: src/Admin/ListTables/CustomersTable.php:170
 #: src/Admin/ListTables/InvoicesTable.php:171
-#: src/Admin/ListTables/ItemsTable.php:202
+#: src/Admin/ListTables/ItemsTable.php:224
 #: src/Admin/ListTables/PaymentsTable.php:170
 #: src/Admin/ListTables/RevenuesTable.php:170
 #: src/Admin/ListTables/TransactionsTable.php:165
@@ -1864,7 +1863,7 @@ msgstr ""
 #: includes/admin/reports/class-sales.php:129
 #: includes/admin/reports/expense-summary.php:33
 #: includes/admin/reports/income-expense.php:32
-#: includes/admin/reports/income-summary.php:34
+#: includes/admin/reports/income-summary.php:34 src/Functions/items.php:48
 msgid "Year"
 msgstr ""
 
@@ -2263,13 +2262,12 @@ msgstr ""
 #: src/Admin/views/banking/accounts/accounts.php:14
 #: src/Admin/views/banking/currencies/currencies.php:14
 #: src/Admin/views/banking/transfers/transfers.php:14
-#: src/Admin/views/expenses/bills/bills.php:14
-#: src/Admin/views/expenses/payments/payments.php:14
-#: src/Admin/views/expenses/vendors/vendors.php:14
-#: src/Admin/views/items/categories/categories.php:14
 #: src/Admin/views/items/items/items.php:14
 #: src/Admin/views/misc/categories/categories.php:14
 #: src/Admin/views/misc/currencies/currencies.php:18
+#: src/Admin/views/purchases/bills/bills.php:14
+#: src/Admin/views/purchases/payments/payments.php:14
+#: src/Admin/views/purchases/vendors/vendors.php:14
 #: src/Admin/views/sales/customers/customers.php:14
 #: src/Admin/views/sales/invoices/invoices.php:14
 #: src/Admin/views/sales/revenues/revenues.php:14
@@ -2371,13 +2369,12 @@ msgstr ""
 #: src/Admin/views/banking/currencies/currencies.php:27
 #: src/Admin/views/banking/transactions/transactions.php:21
 #: src/Admin/views/banking/transfers/transfers.php:27
-#: src/Admin/views/expenses/bills/bills.php:24
-#: src/Admin/views/expenses/payments/payments.php:27
-#: src/Admin/views/expenses/vendors/vendors.php:27
-#: src/Admin/views/items/categories/categories.php:19
 #: src/Admin/views/items/items/items.php:24
 #: src/Admin/views/misc/categories/categories.php:24
 #: src/Admin/views/misc/currencies/currencies.php:29
+#: src/Admin/views/purchases/bills/bills.php:24
+#: src/Admin/views/purchases/payments/payments.php:27
+#: src/Admin/views/purchases/vendors/vendors.php:27
 #: src/Admin/views/sales/customers/customers.php:24
 #: src/Admin/views/sales/invoices/invoices.php:21
 #: src/Admin/views/sales/revenues/revenues.php:27
@@ -2562,13 +2559,13 @@ msgid "Payment"
 msgstr ""
 
 #: includes/admin/views/bills/edit-bill.php:20
-#: src/Admin/views/expenses/bills/form.php:51
+#: src/Admin/views/purchases/bills/form.php:51
 msgid "Update Bill"
 msgstr ""
 
 #: includes/admin/views/bills/edit-bill.php:20
-#: src/Admin/views/expenses/bills/add.php:12
-#: src/Admin/views/expenses/bills/form.php:53
+#: src/Admin/views/purchases/bills/add.php:12
+#: src/Admin/views/purchases/bills/form.php:53
 msgid "Add Bill"
 msgstr ""
 
@@ -2656,6 +2653,7 @@ msgstr ""
 #: includes/admin/views/categories/edit-category.php:51
 #: includes/admin/views/js/modal-add-category.php:19
 #: includes/admin/views/js/modal-income-category.php:19
+#: src/Admin/views/items/items/form.php:78
 #: src/Admin/views/misc/categories/add.php:12
 msgid "Add Category"
 msgstr ""
@@ -2757,6 +2755,7 @@ msgstr ""
 #: includes/admin/views/js/modal-add-customer.php:37
 #: includes/admin/views/js/modal-add-vendor.php:37
 #: includes/admin/views/vendors/edit-vendor.php:95
+#: src/Admin/Settings/General.php:44
 msgid "Company"
 msgstr ""
 
@@ -2771,6 +2770,7 @@ msgstr ""
 #: includes/admin/views/js/modal-add-vendor.php:54
 #: includes/admin/views/vendors/edit-vendor.php:114
 #: includes/admin/views/vendors/view-vendor.php:162
+#: src/Admin/Settings/General.php:84
 msgid "Phone"
 msgstr ""
 
@@ -2906,7 +2906,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/views/items/edit-item.php:21
-#: src/Admin/views/items/items/form.php:88
+#: src/Admin/views/items/items/form.php:156
 msgid "Update Item"
 msgstr ""
 
@@ -2949,7 +2949,7 @@ msgstr ""
 #: includes/admin/views/revenues/view-income.php:160
 #: includes/admin/views/transfers/edit-transfer.php:126
 #: src/Admin/ListTables/CategoriesTable.php:223
-#: src/Admin/views/items/items/form.php:65
+#: src/Admin/views/items/items/form.php:120
 #: src/Admin/views/misc/categories/form.php:45
 #: src/Admin/views/misc/currencies/form.php:45
 msgid "Description"
@@ -3012,8 +3012,8 @@ msgstr ""
 
 #: includes/admin/views/js/modal-add-vendor.php:12
 #: includes/admin/views/vendors/edit-vendor.php:26
-#: src/Admin/views/expenses/vendors/add.php:12
-#: src/Admin/views/expenses/vendors/form.php:53
+#: src/Admin/views/purchases/vendors/add.php:12
+#: src/Admin/views/purchases/vendors/form.php:53
 msgid "Add Vendor"
 msgstr ""
 
@@ -3036,7 +3036,7 @@ msgid "Total amount due:%s"
 msgstr ""
 
 #: includes/admin/views/payments/edit-payment.php:23
-#: src/Admin/views/expenses/payments/form.php:51
+#: src/Admin/views/purchases/payments/form.php:51
 msgid "Update Payment"
 msgstr ""
 
@@ -3184,7 +3184,7 @@ msgid "Unknown vendor ID"
 msgstr ""
 
 #: includes/admin/views/vendors/edit-vendor.php:26
-#: src/Admin/views/expenses/vendors/form.php:51
+#: src/Admin/views/purchases/vendors/form.php:51
 msgid "Update Vendor"
 msgstr ""
 
@@ -3495,11 +3495,11 @@ msgid "Overdue"
 msgstr ""
 
 #: includes/ea-document-functions.php:390
-#: includes/ea-document-functions.php:408
+#: includes/ea-document-functions.php:408 src/Functions/transactions.php:45
 msgid "Cancelled"
 msgstr ""
 
-#: includes/ea-document-functions.php:409
+#: includes/ea-document-functions.php:409 src/Functions/transactions.php:44
 msgid "Refunded"
 msgstr ""
 
@@ -4021,6 +4021,8 @@ msgstr ""
 #: src/Admin/ListTables/CategoriesTable.php:321
 #: src/Admin/ListTables/CurrenciesTable.php:176
 #: src/Admin/ListTables/CurrenciesTable.php:291
+#: src/Admin/ListTables/ItemsTable.php:195
+#: src/Admin/ListTables/ItemsTable.php:327
 msgid "Activate"
 msgstr ""
 
@@ -4028,6 +4030,8 @@ msgstr ""
 #: src/Admin/ListTables/CategoriesTable.php:315
 #: src/Admin/ListTables/CurrenciesTable.php:177
 #: src/Admin/ListTables/CurrenciesTable.php:285
+#: src/Admin/ListTables/ItemsTable.php:196
+#: src/Admin/ListTables/ItemsTable.php:321
 msgid "Deactivate"
 msgstr ""
 
@@ -4067,30 +4071,20 @@ msgstr[1] ""
 msgid "No invoices found."
 msgstr ""
 
-#: src/Admin/ListTables/ItemsTable.php:96
-msgid "Item enabled."
-msgid_plural "%s items enabled."
-msgstr[0] ""
-msgstr[1] ""
-
-#: src/Admin/ListTables/ItemsTable.php:116
-msgid "Item disabled."
-msgid_plural "%s items disabled."
-msgstr[0] ""
-msgstr[1] ""
-
-#: src/Admin/ListTables/ItemsTable.php:136
-msgid "Item deleted."
-msgid_plural "%s items deleted."
-msgstr[0] ""
-msgstr[1] ""
-
-#: src/Admin/ListTables/ItemsTable.php:146
-msgid "No items found."
+#: src/Admin/ListTables/ItemsTable.php:98
+msgid "%s item(s) activated successfully."
 msgstr ""
 
-#: src/Admin/ListTables/ItemsTable.php:340
-msgid "Disabled"
+#: src/Admin/ListTables/ItemsTable.php:118
+msgid "%s item(s) deactivated successfully."
+msgstr ""
+
+#: src/Admin/ListTables/ItemsTable.php:139
+msgid "%s item(s) deleted successfully."
+msgstr ""
+
+#: src/Admin/ListTables/ItemsTable.php:149
+msgid "No items found."
 msgstr ""
 
 #: src/Admin/ListTables/ListTable.php:158
@@ -4148,8 +4142,132 @@ msgstr[1] ""
 msgid "No vendors found."
 msgstr ""
 
-#: src/Admin/Menus.php:170
+#: src/Admin/Menus.php:85 src/Admin/Menus.php:86
+msgid "Dashboard"
+msgstr ""
+
+#: src/Admin/Menus.php:201
 msgid "Per page"
+msgstr ""
+
+#: src/Admin/Settings/General.php:60
+msgid "Company Information"
+msgstr ""
+
+#: src/Admin/Settings/General.php:61
+msgid ""
+"General details about your company. These will be used in the records you "
+"create."
+msgstr ""
+
+#: src/Admin/Settings/General.php:67
+msgid ""
+"The name of your company. This will be used in the invoice, bill, and other "
+"documents."
+msgstr ""
+
+#: src/Admin/Settings/General.php:76
+msgid ""
+"The email address of your company. This will be used in the invoice, bill, "
+"and other documents."
+msgstr ""
+
+#: src/Admin/Settings/General.php:85
+msgid ""
+"The phone number of your company. This will be used in the invoice, bill, "
+"and other documents."
+msgstr ""
+
+#: src/Admin/Settings/General.php:94
+msgid ""
+"The logo of your company. This will be used in the invoice, bill, and other "
+"documents."
+msgstr ""
+
+#: src/Admin/Settings/General.php:103
+msgid ""
+"The vat number of your company. This will be used in the invoice, bill, and "
+"other documents."
+msgstr ""
+
+#: src/Admin/Settings/General.php:111
+msgid "Tax Number"
+msgstr ""
+
+#: src/Admin/Settings/General.php:112
+msgid ""
+"The tax number of your company. This will be used in the invoice, bill, and "
+"other documents."
+msgstr ""
+
+#: src/Admin/Settings/General.php:120
+msgid "Base Currency"
+msgstr ""
+
+#: src/Admin/Settings/General.php:136
+msgid "Base currency can not be changed once you have recorded any transaction."
+msgstr ""
+
+#: src/Admin/Settings/General.php:140
+msgid "The start date of your financial year."
+msgstr ""
+
+#: src/Admin/Settings/General.php:153
+msgid ""
+"Business address details. The address will be used in the invoices, bills, "
+"and other records that you issue."
+msgstr ""
+
+#: src/Admin/Settings/General.php:158
+msgid "Address Line 1"
+msgstr ""
+
+#: src/Admin/Settings/General.php:159
+msgid "The street address of your company."
+msgstr ""
+
+#: src/Admin/Settings/General.php:167
+msgid "Address Line 2"
+msgstr ""
+
+#: src/Admin/Settings/General.php:168
+msgid "An additional, optional address line for your company location."
+msgstr ""
+
+#: src/Admin/Settings/General.php:177
+msgid ""
+"The city in which your company is located. This will be used in the "
+"invoice, bill, and other documents."
+msgstr ""
+
+#: src/Admin/Settings/General.php:186
+msgid "The state in which your company is located."
+msgstr ""
+
+#: src/Admin/Settings/General.php:194
+msgid "Postcode / ZIP"
+msgstr ""
+
+#: src/Admin/Settings/General.php:195
+msgid ""
+"The postcode or ZIP code of your company if any. This will be used in the "
+"invoice, bill, and other documents."
+msgstr ""
+
+#: src/Admin/Settings/General.php:204
+msgid "The country in which your company is located."
+msgstr ""
+
+#: src/Admin/Settings/General.php:210
+msgid "Select a country&hellip;"
+msgstr ""
+
+#: src/Admin/Settings/Page.php:191
+msgid "Save changes"
+msgstr ""
+
+#: src/Admin/Utilities.php:42 src/Admin/Utilities.php:43
+msgid "Purchases"
 msgstr ""
 
 #: src/Admin/Utilities.php:66 src/Admin/Utilities.php:67
@@ -4160,12 +4278,12 @@ msgstr ""
 #: src/Admin/views/banking/currencies/currencies.php:20
 #: src/Admin/views/banking/transactions/transactions.php:14
 #: src/Admin/views/banking/transfers/transfers.php:20
-#: src/Admin/views/expenses/bills/bills.php:17
-#: src/Admin/views/expenses/payments/payments.php:20
-#: src/Admin/views/expenses/vendors/vendors.php:20
 #: src/Admin/views/items/items/items.php:17
 #: src/Admin/views/misc/categories/categories.php:17
 #: src/Admin/views/misc/currencies/currencies.php:21
+#: src/Admin/views/purchases/bills/bills.php:17
+#: src/Admin/views/purchases/payments/payments.php:20
+#: src/Admin/views/purchases/vendors/vendors.php:20
 #: src/Admin/views/sales/revenues/revenues.php:20
 #: vendor/woocommerce/action-scheduler/classes/abstracts/ActionScheduler_Abstract_ListTable.php:668
 #. translators: %s: search query
@@ -4178,18 +4296,18 @@ msgstr ""
 #: src/Admin/views/banking/currencies/edit.php:13
 #: src/Admin/views/banking/transfers/add.php:13
 #: src/Admin/views/banking/transfers/edit.php:13
-#: src/Admin/views/expenses/bills/add.php:13
-#: src/Admin/views/expenses/bills/edit.php:13
-#: src/Admin/views/expenses/payments/add.php:13
-#: src/Admin/views/expenses/payments/edit.php:13
-#: src/Admin/views/expenses/vendors/add.php:13
-#: src/Admin/views/expenses/vendors/edit.php:13
 #: src/Admin/views/items/items/add.php:13
 #: src/Admin/views/items/items/edit.php:13
 #: src/Admin/views/misc/categories/add.php:13
 #: src/Admin/views/misc/categories/edit.php:13
 #: src/Admin/views/misc/currencies/add.php:13
 #: src/Admin/views/misc/currencies/edit.php:13
+#: src/Admin/views/purchases/bills/add.php:13
+#: src/Admin/views/purchases/bills/edit.php:13
+#: src/Admin/views/purchases/payments/add.php:13
+#: src/Admin/views/purchases/payments/edit.php:13
+#: src/Admin/views/purchases/vendors/add.php:13
+#: src/Admin/views/purchases/vendors/edit.php:13
 #: src/Admin/views/sales/customers/add.php:13
 #: src/Admin/views/sales/customers/edit.php:13
 #: src/Admin/views/sales/invoices/add.php:13
@@ -4206,10 +4324,10 @@ msgstr ""
 #: src/Admin/views/banking/accounts/form.php:21
 #: src/Admin/views/banking/currencies/form.php:21
 #: src/Admin/views/banking/transfers/form.php:21
-#: src/Admin/views/expenses/bills/form.php:21
-#: src/Admin/views/expenses/payments/form.php:21
-#: src/Admin/views/expenses/vendors/form.php:21
-#: src/Admin/views/items/items/form.php:20
+#: src/Admin/views/items/items/form.php:19
+#: src/Admin/views/purchases/bills/form.php:21
+#: src/Admin/views/purchases/payments/form.php:21
+#: src/Admin/views/purchases/vendors/form.php:21
 #: src/Admin/views/sales/customers/form.php:21
 #: src/Admin/views/sales/invoices/form.php:21
 #: src/Admin/views/sales/revenues/form.php:21
@@ -4225,20 +4343,34 @@ msgstr ""
 msgid "Edit Transfer"
 msgstr ""
 
-#: src/Admin/views/expenses/bills/edit.php:12
-msgid "Edit Bill"
-msgstr ""
-
-#: src/Admin/views/expenses/payments/edit.php:12
-msgid "Edit Payment"
-msgstr ""
-
-#: src/Admin/views/expenses/vendors/edit.php:12
-msgid "Edit Vendor"
-msgstr ""
-
 #: src/Admin/views/items/items/edit.php:12
 msgid "Edit Item"
+msgstr ""
+
+#: src/Admin/views/items/items/form.php:38
+#: src/Admin/views/misc/categories/form.php:37
+#: src/Admin/views/misc/currencies/form.php:37
+msgid "Select type"
+msgstr ""
+
+#: src/Admin/views/items/items/form.php:58
+msgid "Cost"
+msgstr ""
+
+#: src/Admin/views/items/items/form.php:86 src/Functions/items.php:46
+msgid "Unit"
+msgstr ""
+
+#: src/Admin/views/items/items/form.php:89
+msgid "Select unit"
+msgstr ""
+
+#: src/Admin/views/items/items/form.php:98
+msgid "Taxable"
+msgstr ""
+
+#: src/Admin/views/items/items/form.php:115
+msgid "The selected tax rates will be applied to this item."
 msgstr ""
 
 #: src/Admin/views/misc/categories/edit.php:12
@@ -4250,14 +4382,21 @@ msgstr ""
 msgid "Category Details"
 msgstr ""
 
-#: src/Admin/views/misc/categories/form.php:37
-#: src/Admin/views/misc/currencies/form.php:37
-msgid "Select type"
-msgstr ""
-
 #: src/Admin/views/misc/categories/form.php:81
 #: src/Admin/views/misc/currencies/form.php:81
 msgid "Update"
+msgstr ""
+
+#: src/Admin/views/purchases/bills/edit.php:12
+msgid "Edit Bill"
+msgstr ""
+
+#: src/Admin/views/purchases/payments/edit.php:12
+msgid "Edit Payment"
+msgstr ""
+
+#: src/Admin/views/purchases/vendors/edit.php:12
+msgid "Edit Vendor"
 msgstr ""
 
 #: src/Admin/views/sales/customers/edit.php:12
@@ -4278,6 +4417,106 @@ msgstr ""
 
 #: src/Functions/accounts.php:18
 msgid "Card"
+msgstr ""
+
+#: src/Functions/items.php:25
+msgid "Box"
+msgstr ""
+
+#: src/Functions/items.php:26
+msgid "Centimeter"
+msgstr ""
+
+#: src/Functions/items.php:27
+msgid "Day"
+msgstr ""
+
+#: src/Functions/items.php:28
+msgid "Dozen"
+msgstr ""
+
+#: src/Functions/items.php:29
+msgid "Feet"
+msgstr ""
+
+#: src/Functions/items.php:30
+msgid "Gram"
+msgstr ""
+
+#: src/Functions/items.php:31
+msgid "Hour"
+msgstr ""
+
+#: src/Functions/items.php:32
+msgid "Inch"
+msgstr ""
+
+#: src/Functions/items.php:33
+msgid "Kilogram"
+msgstr ""
+
+#: src/Functions/items.php:34
+msgid "Kilometer"
+msgstr ""
+
+#: src/Functions/items.php:35
+msgid "Liter"
+msgstr ""
+
+#: src/Functions/items.php:36
+msgid "Pound"
+msgstr ""
+
+#: src/Functions/items.php:37
+msgid "Meter"
+msgstr ""
+
+#: src/Functions/items.php:38
+msgid "Milligram"
+msgstr ""
+
+#: src/Functions/items.php:39
+msgid "Mile"
+msgstr ""
+
+#: src/Functions/items.php:40
+msgid "Minute"
+msgstr ""
+
+#: src/Functions/items.php:41
+msgid "Millimeter"
+msgstr ""
+
+#: src/Functions/items.php:42
+msgid "Month"
+msgstr ""
+
+#: src/Functions/items.php:43
+msgid "Ounce"
+msgstr ""
+
+#: src/Functions/items.php:44
+msgid "Piece"
+msgstr ""
+
+#: src/Functions/items.php:45
+msgid "Second"
+msgstr ""
+
+#: src/Functions/items.php:47
+msgid "Week"
+msgstr ""
+
+#: src/Functions/items.php:63
+msgid "Standard Item"
+msgstr ""
+
+#: src/Functions/items.php:64
+msgid "Shipping Fee"
+msgstr ""
+
+#: src/Functions/items.php:65
+msgid "Fee Item"
 msgstr ""
 
 #: src/Models/Category.php:97
@@ -4320,11 +4559,11 @@ msgstr ""
 msgid "Currency thousand separator is required."
 msgstr ""
 
-#: src/Models/Item.php:173
+#: src/Models/Item.php:174
 msgid "Item name is required."
 msgstr ""
 
-#: src/Models/Item.php:176
+#: src/Models/Item.php:177
 msgid "Item price is required."
 msgstr ""
 
@@ -5483,6 +5722,7 @@ msgstr ""
 
 #: src/Admin/ListTables/CategoriesTable.php:164
 #: src/Admin/ListTables/CurrenciesTable.php:147
+#: src/Admin/ListTables/ItemsTable.php:165
 msgctxt "list_table"
 msgid "All <span class=\"count\">(%s)</span>"
 msgid_plural "All <span class=\"count\">(%s)</span>"
@@ -5491,6 +5731,7 @@ msgstr[1] ""
 
 #: src/Admin/ListTables/CategoriesTable.php:165
 #: src/Admin/ListTables/CurrenciesTable.php:148
+#: src/Admin/ListTables/ItemsTable.php:166
 msgctxt "list_table"
 msgid "Active <span class=\"count\">(%s)</span>"
 msgid_plural "Active <span class=\"count\">(%s)</span>"
@@ -5499,6 +5740,7 @@ msgstr[1] ""
 
 #: src/Admin/ListTables/CategoriesTable.php:166
 #: src/Admin/ListTables/CurrenciesTable.php:149
+#: src/Admin/ListTables/ItemsTable.php:167
 msgctxt "list_table"
 msgid "Inactive <span class=\"count\">(%s)</span>"
 msgid_plural "Inactive <span class=\"count\">(%s)</span>"

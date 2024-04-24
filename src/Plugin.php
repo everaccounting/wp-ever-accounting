@@ -55,7 +55,6 @@ class Plugin extends \ByteKit\Core\Plugin {
 	 */
 	public function includes() {
 		require_once __DIR__ . '/functions.php';
-//		$this->services->add( 'installer', new Installer() );
 	}
 
 	/**
@@ -70,23 +69,13 @@ class Plugin extends \ByteKit\Core\Plugin {
 	}
 
 	/**
-	 * Run on activation.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	public function on_activation() {
-//		$this->installer()->install();
-	}
-
-	/**
 	 * Run on init.
 	 *
 	 * @since 1.0.0
 	 * @return void
 	 */
 	public function on_init() {
-		$this->container['installer'] = new Installer();
+		$this->services['installer'] = new Installer();
 
 		if ( is_admin() ) {
 			new Admin\Admin();

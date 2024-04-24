@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:byteever/bytekit-core.git",
-                "reference": "232f2df859c9733b1283074920e684efce08e630"
+                "reference": "65ec9a54fe17e312ad9f47f25b7baab2c15bc609"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/byteever/bytekit-core/zipball/232f2df859c9733b1283074920e684efce08e630",
-                "reference": "232f2df859c9733b1283074920e684efce08e630",
+                "url": "https://api.github.com/repos/byteever/bytekit-core/zipball/65ec9a54fe17e312ad9f47f25b7baab2c15bc609",
+                "reference": "65ec9a54fe17e312ad9f47f25b7baab2c15bc609",
                 "shasum": ""
             },
             "require": {
@@ -100,7 +100,7 @@
                 "source": "https://github.com/byteever/bytekit-core/tree/master",
                 "issues": "https://github.com/byteever/bytekit-core/issues"
             },
-            "time": "2024-04-23T16:38:43+00:00"
+            "time": "2024-04-24T06:32:12+00:00"
         },
         {
             "name": "byteever/bytekit-models",

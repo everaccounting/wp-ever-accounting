@@ -63,11 +63,25 @@ class Admin {
 		if ( ! in_array( $hook, Utilities::get_screen_ids(), true ) ) {
 			return;
 		}
-		// Early core enqueue.
-		EAC()->scripts->enqueue_style( 'bytekit-core' );
 
-		// Admin scripts.
-		EAC()->scripts->register_script( 'eac-core', 'js/eac-core.js', array( 'jquery' ), false, true );
+		// 3rd party scripts.
+		EAC()->scripts->enqueue_style( 'bytekit-core' );
+		EAC()->scripts->register_style( 'eac-select2', 'css/select-woo.css' );
+		EAC()->scripts->register_script( 'eac-select2', 'js/select-woo.js', array( 'jquery' ) );
+		EAC()->scripts->enqueue_style( 'eac-select2' );
+		EAC()->scripts->enqueue_script( 'eac-select2' );
+
+
+		// Core scripts.
+		EAC()->scripts->register_script( 'eac-core', 'js/eac-core.js', array( 'jquery' )  );
+		EAC()->scripts->register_script( 'eac-admin', 'js/eac-admin.js', array( 'jquery', 'eac-select2' ) );
+		EAC()->scripts->register_style( 'eac-admin', 'css/eac-admin.css');
+		EAC()->scripts->enqueue_script( 'eac-core' );
+		EAC()->scripts->enqueue_script( 'eac-admin' );
+		EAC()->scripts->enqueue_style( 'eac-admin' );
+
+
+
 		EAC()->scripts->add_data( 'eac-core', 'eac_core_js_vars', array(
 			'ajax_url' => admin_url( 'admin-ajax.php' ),
 			'nonce'    => wp_create_nonce( 'eac_nonce' ),
@@ -75,9 +89,6 @@ class Admin {
 				'confirm_delete' => __( 'Are you sure you want to delete this item?', 'wp-ever-accounting' ),
 			),
 		) );
-		EAC()->scripts->enqueue_script( 'eac-core' );
-		EAC()->scripts->enqueue_style( 'eac-admin', 'css/eac-admin.css' );
-		// enqueue wp-interac
 	}
 
 	/**
