@@ -1,9 +1,12 @@
 <?php
 /**
- * Add tax view.
+ * Admin Add Tax View.
+ * Page: Misc
+ * Tab: Taxes
  *
  * @package EverAccounting
- * @var $tax \EverAccounting\Models\Tax
+ * @since 1.0.0
+ * @var $tax \EverAccounting\Models\Tax Tax object.
  */
 
 defined( 'ABSPATH' ) || exit;

@@ -1,9 +1,11 @@
 <?php
 /**
- * List of Taxes
+ * Admin List of Taxes.
+ * Page: Misc
+ * Tab: Taxes
  *
  * @package EverAccounting
- * @version 1.0.0
+ * @since 1.0.0
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -17,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
 			<?php esc_html_e( 'Import', 'wp-ever-accounting' ); ?>
 		</a>
 		<?php if ( $this->list_table->get_request_search() ) : ?>
-			<span class="subtitle"><?php echo esc_html( sprintf( __( 'Search results for "%s"', 'wp-ever-accounting' ), esc_html( $this->list_table->get_request_search() ) ) ); ?></span>
+			<span class="subtitle"><?php echo esc_html( sprintf( /* translators: 1: Get requested search string */ __( 'Search results for "%s"', 'wp-ever-accounting' ), esc_html( $this->list_table->get_request_search() ) ) ); ?></span>
 		<?php endif; ?>
 	</h1>
 	<hr class="wp-header-end">

@@ -1,9 +1,11 @@
 <?php
 /**
- * Currency view.
+ * Admin Currency Form.
+ * Page: Misc
+ * Tab: Currencies
  *
- * @package EverAccounting\Admin\Views\Currencies
- * @version 1.0.0
+ * @package EverAccounting
+ * @since 1.0.0
  * @var $currency \EverAccounting\Models\Currency Currency object.
  */
 

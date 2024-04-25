@@ -181,6 +181,7 @@ class Menus {
 				'eac_accounts_per_page',
 				'eac_categories_per_page',
 				'eac_currencies_per_page',
+				'eac_taxes_per_page',
 				'eac_revenues_per_page',
 				'eac_invoices_per_page',
 				'eac_customers_per_page',
