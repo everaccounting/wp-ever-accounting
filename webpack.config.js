@@ -47,12 +47,6 @@ module.exports                 = [
 		},
 		plugins: [
 			...defaultConfig.plugins,
-			// Copy images to the build folder.
-			new CopyWebpackPlugin(
-				{
-					patterns: []
-				}
-			),
 
 			new RemoveEmptyScriptsPlugin(
 				{

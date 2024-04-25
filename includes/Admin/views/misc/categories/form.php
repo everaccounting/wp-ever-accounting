@@ -38,6 +38,7 @@ defined( 'ABSPATH' ) || exit;
 							'label'       => __( 'Type', 'wp-ever-accounting' ),
 							'placeholder' => __( 'Select category type', 'wp-ever-accounting' ),
 							'value'       => $category->type,
+							'default'     => isset( $_GET['type'] ) ? sanitize_text_field( wp_unslash( $_GET['type'] ) ) : '', // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Nonce verification is not required here.
 							'options'     => eac_get_category_types(),
 						)
 					);

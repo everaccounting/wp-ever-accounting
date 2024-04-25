@@ -22,12 +22,10 @@ require_once __DIR__ . '/vendor/autoload.php';
 /**
  * Main instance of EverAccounting.
  *
- * Returns the main instance of EverAccounting to prevent the need to use globals.
- *
  * @since  1.0.0
  * @return EverAccounting\Plugin
  */
-function EAC() { // phpcs:ignore PSR1.Functions.FunctionName
+function EAC() { // phpcs:ignore
 	return EverAccounting\Plugin::create( __FILE__ );
 }
 

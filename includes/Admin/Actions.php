@@ -21,6 +21,7 @@ class Actions {
 	public function __construct() {
 		add_action( 'wp_ajax_eac_json_search', array( $this, 'handle_json_search' ) );
 		add_action( 'admin_post_eac_edit_item', array( $this, 'handle_edit_item' ) );
+		add_action( 'admin_post_eac_edit_revenue', array( $this, 'handle_edit_revenue' ) );
 		add_action( 'admin_post_eac_edit_customer', array( $this, 'handle_edit_customer' ) );
 		add_action( 'admin_post_eac_edit_vendor', array( $this, 'handle_edit_vendor' ) );
 		add_action( 'admin_post_eac_edit_account', array( $this, 'handle_edit_account' ) );
@@ -78,38 +79,19 @@ class Actions {
 					$items
 				);
 				break;
-			case 'item_category':
-				$args['type'] = 'item';
+			case 'category':
+				$args['type'] = isset( $_POST['subtype'] ) ? sanitize_text_field( wp_unslash( $_POST['subtype'] ) ) : '';
 				$categories   = eac_get_categories( $args );
 				$total        = eac_get_categories( $args, true );
-				foreach ( $categories as $category ) {
-					$results[] = array(
-						'id'   => $category->get_id(),
-						'text' => $category->get_formatted_name(),
-					);
-				}
-				break;
-			case 'payment_category':
-				$args['type'] = 'payment';
-				$categories   = eac_get_categories( $args );
-				$total        = eac_get_categories( $args, true );
-				foreach ( $categories as $category ) {
-					$results[] = array(
-						'id'   => $category->get_id(),
-						'text' => $category->get_formatted_name(),
-					);
-				}
-				break;
-			case 'expense_category':
-				$args['type'] = 'expense';
-				$categories   = eac_get_categories( $args );
-				$total        = eac_get_categories( $args, true );
-				foreach ( $categories as $category ) {
-					$results[] = array(
-						'id'   => $category->get_id(),
-						'text' => $category->get_formatted_name(),
-					);
-				}
+				$results      = array_map(
+					function ( $category ) {
+						return array(
+							'id'   => $category->id,
+							'text' => $category->formatted_name,
+						);
+					},
+					$categories
+				);
 				break;
 			case 'currency':
 				$currencies = eac_get_currencies();
@@ -279,6 +261,43 @@ class Actions {
 
 		wp_safe_redirect( $referer );
 		exit();
+	}
+
+	/**
+	 * Edit revenue.
+	 *
+	 * @return void
+	 * @since 1.2.0
+	 */
+	public static function handle_edit_revenue() {
+		check_admin_referer( 'eac_edit_revenue' );
+		$referer = wp_get_referer();
+		$revenue = eac_insert_revenue(
+			array(
+				'id'             => isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0,
+				'date'           => isset( $_POST['date'] ) ? sanitize_text_field( wp_unslash( $_POST['date'] ) ) : '',
+				'account_id'     => isset( $_POST['account_id'] ) ? absint( wp_unslash( $_POST['account_id'] ) ) : 0,
+				'amount'         => isset( $_POST['amount'] ) ? floatval( wp_unslash( $_POST['amount'] ) ) : 0,
+				'category_id'    => isset( $_POST['category_id'] ) ? absint( wp_unslash( $_POST['category_id'] ) ) : 0,
+				'contact_id'     => isset( $_POST['contact_id'] ) ? absint( wp_unslash( $_POST['contact_id'] ) ) : 0,
+				'payment_method' => isset( $_POST['payment_method'] ) ? sanitize_text_field( wp_unslash( $_POST['payment_method'] ) ) : '',
+				'invoice_id'     => isset( $_POST['invoice_id'] ) ? absint( wp_unslash( $_POST['invoice_id'] ) ) : 0,
+				'reference'      => isset( $_POST['reference'] ) ? sanitize_text_field( wp_unslash( $_POST['reference'] ) ) : '',
+				'note'           => isset( $_POST['note'] ) ? sanitize_textarea_field( wp_unslash( $_POST['note'] ) ) : '',
+				'status'         => isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : 'active',
+			)
+		);
+
+		if ( is_wp_error( $revenue ) ) {
+			EAC()->flash->error( $revenue->get_error_message() );
+		} else {
+			EAC()->flash->success( __( 'Revenue saved successfully.', 'wp-ever-accounting' ) );
+			$referer = add_query_arg( 'edit', $revenue->id, $referer );
+			$referer = remove_query_arg( array( 'add' ), $referer );
+		}
+
+		wp_safe_redirect( $referer );
+		exit;
 	}
 
 	/**
