@@ -35,7 +35,7 @@ defined( 'ABSPATH' ) || exit;
 							'id'       => 'name',
 							'label'    => __( 'Name', 'wp-ever-accounting' ),
 							'type'     => 'text',
-							'value'    => $currency->get_name(),
+							'value'    => $currency->name,
 							'class'    => 'eac-col-6',
 							'required' => true,
 						)
