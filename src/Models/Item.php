@@ -16,14 +16,15 @@ use ByteKit\Models\Relation;
  * @property string $type Type of the item.
  * @property string $name Name of the item.
  * @property string $description Description of the item.
+ * @property string $unit Unit of the item.
  * @property double $price Price of the item.
  * @property double $cost Cost of the item.
- * @property string $unit Unit of the item.
  * @property bool   $taxable Whether the item is taxable.
  * @property string $tax_ids Tax IDs of the item.
  * @property int    $category_id Category ID of the item.
  * @property int    $thumbnail_id Thumbnail ID of the item.
  * @property string $status Status of the item.
+ *
  * @property string $formatted_price Formatted price of the item.
  * @property string $formatted_cost Formatted cost of the item.
  * @property Category $category Category of the item.
@@ -51,9 +52,9 @@ class Item extends Model {
 		'type',
 		'name',
 		'description',
+		'unit',
 		'price',
 		'cost',
-		'unit',
 		'taxable',
 		'tax_ids',
 		'category_id',

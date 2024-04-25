@@ -11,8 +11,8 @@ defined( 'ABSPATH' ) || exit;
  * @package EverAccounting
  *
  * @property int    $id ID of the note.
- * @property int    $parent_id ID of the parent.
- * @property string $parent_type Type of the parent.
+ * @property int    $object_id Object ID of the object.
+ * @property string $object_type Object type of the object.
  * @property string $content Content of the note.
  * @property array  $note_metadata Metadata of the note.
  * @property int    $author_id ID of the author.
@@ -36,8 +36,8 @@ class Note extends Model {
 	 */
 	protected $columns = array(
 		'id',
-		'parent_id',
-		'parent_type',
+		'object_id',
+		'object_type',
 		'content',
 		'note_metadata',
 		'author_id',
@@ -61,7 +61,7 @@ class Note extends Model {
 	 */
 	protected $casts = array(
 		'id'            => 'int',
-		'parent_id'     => 'int',
+		'object_id'     => 'int',
 		'author_id'     => 'int',
 		'note_metadata' => 'array',
 	);
@@ -92,11 +92,11 @@ class Note extends Model {
 	 * @return \WP_Error|true True on success, WP_Error on failure.
 	 */
 	public function save() {
-		if ( ! $this->parent_id ) {
-			return new \WP_Error( 'missing_parent_id', __( 'Missing parent ID.', 'wp-ever-accounting' ) );
+		if ( ! $this->object_id ) {
+			return new \WP_Error( 'missing_object_id', __( 'Missing object ID.', 'wp-ever-accounting' ) );
 		}
-		if ( ! $this->parent_type ) {
-			return new \WP_Error( 'missing_parent_type', __( 'Missing parent type.', 'wp-ever-accounting' ) );
+		if ( ! $this->object_type ) {
+			return new \WP_Error( 'missing_object_type', __( 'Missing object type.', 'wp-ever-accounting' ) );
 		}
 
 		if ( empty( $this->author_id ) && is_user_logged_in() ) {
