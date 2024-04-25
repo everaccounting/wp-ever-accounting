@@ -289,6 +289,21 @@ class TaxesTable extends ListTable {
 	}
 
 	/**
+	 * Renders the is_compound column.
+	 *
+	 * @param Tax $item The current object.
+	 *
+	 * @since  1.0.0
+	 * @return string Displays the compound.
+	 */
+	public function column_is_compound( $item ) {
+		$is_compound_false = false === $item->is_compound ? 'no' : null;
+		$is_compound       = true === $item->is_compound ? 'yes' : $is_compound_false;
+
+		return isset( $is_compound ) ? esc_html( ucfirst( $is_compound ) ) : '&mdash;';
+	}
+
+	/**
 	 * Generates and displays row actions links.
 	 *
 	 * @param Tax    $item The comment object.
