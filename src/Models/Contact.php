@@ -18,6 +18,7 @@ defined( 'ABSPATH' ) || exit;
  * @property string $company Company of the contact.
  * @property string $email Email of the contact.
  * @property string $phone Phone of the contact.
+ * @property string $website Website url of the contact.
  * @property string $address_1 Address line 1 of the contact.
  * @property string $address_2 Address line 2 of the contact.
  * @property string $city City of the contact.
@@ -72,6 +73,7 @@ class Contact extends Model {
 		'company',
 		'email',
 		'phone',
+		'website',
 		'address_1',
 		'address_2',
 		'city',
@@ -108,8 +110,8 @@ class Contact extends Model {
 	protected $casts = array(
 		'id'           => 'int',
 		'vat_exempt'   => 'bool',
-		'user_id'      => 'int',
 		'thumbnail_id' => 'int',
+		'user_id'      => 'int',
 		'author_id'    => 'int',
 	);
 
@@ -141,6 +143,17 @@ class Contact extends Model {
 	 */
 	protected $searchable = array(
 		'name',
+	);
+
+	/**
+	 * The accessors to append to the model's array form.
+	 *
+	 * @since 1.0.0
+	 * @var array
+	 */
+	protected $appends = array(
+		'formatted_name',
+		'country_name',
 	);
 
 	/**

@@ -15,16 +15,16 @@ use ByteKit\Models\Relation;
  * @property int    $id ID of the category.
  * @property string $code Code of the currency.
  * @property string $name Name of the category.
+ * @property float  $exchange_rate Exchange rate of the currency.
  * @property int    $precision Precision of the currency.
  * @property string $symbol Symbol of the currency.
  * @property int    $subunit Subunit of the currency.
  * @property string $position Position of the currency.
- * @property string $decimal_separator Decimal separator of the currency.
  * @property string $thousand_separator A Thousand separator of the currency.
- * @property float  $exchange_rate Exchange rate of the currency.
+ * @property string $decimal_separator Decimal separator of the currency.
+ * @property string $status Status of the currency.
  * @property string $date_updated Date updated of the currency.
  * @property string $date_created Date created of the currency.
- * @property string $status Status of the currency.
  *
  * @property string $formatted_name Formatted name.
  */
@@ -48,13 +48,13 @@ class Currency extends Model {
 		'id',
 		'code',
 		'name',
+		'exchange_rate',
 		'precision',
 		'symbol',
 		'subunit',
 		'position',
-		'decimal_separator',
 		'thousand_separator',
-		'exchange_rate',
+		'decimal_separator',
 		'status',
 	);
 
@@ -65,13 +65,13 @@ class Currency extends Model {
 	 * @var array
 	 */
 	protected $data = array(
+		'exchange_rate'      => 1,
 		'precision'          => 2,
 		'symbol'             => '$',
 		'subunit'            => 100,
 		'position'           => 'before',
-		'decimal_separator'  => '.',
 		'thousand_separator' => ',',
-		'exchange_rate'      => 1,
+		'decimal_separator'  => '.',
 		'status'             => 'active',
 	);
 
@@ -84,9 +84,9 @@ class Currency extends Model {
 	 */
 	protected $casts = array(
 		'id'            => 'int',
+		'exchange_rate' => 'float',
 		'precision'     => 'int',
 		'subunit'       => 'int',
-		'exchange_rate' => 'float',
 	);
 
 	/**

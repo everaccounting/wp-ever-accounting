@@ -61,8 +61,8 @@ class Category extends Model {
 	 */
 	protected $casts = array(
 		'id'          => 'int',
-		'name'        => 'sanitize_text',
 		'type'        => 'sanitize_key',
+		'name'        => 'sanitize_text',
 		'description' => 'sanitize_textarea',
 	);
 
