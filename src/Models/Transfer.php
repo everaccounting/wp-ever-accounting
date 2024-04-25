@@ -13,21 +13,20 @@ defined( 'ABSPATH' ) || exit;
  * @subpackage Models
  *
  * @property int    $id ID of the item.
- * @property int $income_id Income ID of the transfer.
- * @property int $expense_id Expense ID of the transfer.
- * @property int $author_id Author ID of the transfer.
+ * @property int    $payment_id Payment ID of the item.
+ * @property int    $expense_id Expense ID of the transfer.
+ * @property double $amount Amount of the transfer.
  * @property string $uuid UUID of the transfer.
+ * @property int    $creator_id Creator ID of the transfer.
  * @property string $date_created Date the transfer was created.
  * @property string $date_updated Date the transfer was last updated.
  *
- * @property int $from_account_id From account ID of the transfer.
- * @property int $to_account_id To account ID of the transfer.
- * @property float $amount Amount of the transfer.
+ * @property int    $from_account_id From account ID of the transfer.
+ * @property int    $to_account_id To account ID of the transfer.
  * @property string $currency_code Currency code of the transfer.
- * @property float $exchange_rate Exchange rate of the transfer.
+ * @property float  $exchange_rate Exchange rate of the transfer.
  * @property string $date Date of the transfer.
  * @property string $payment_method Payment method of the transfer.
- * @property string $note Note of the transfer.
  */
 class Transfer extends Model {
 	/**
@@ -66,7 +65,6 @@ class Transfer extends Model {
 		'exchange_rate'   => 1,
 		'date'            => null,
 		'payment_method'  => '',
-		'note'            => '',
 	);
 
 	/**
