@@ -60,8 +60,8 @@ class Account extends Model {
 		'bank_phone',
 		'bank_address',
 		'currency_code',
-		'thumbnail_id',
 		'author_id',
+		'thumbnail_id',
 		'status',
 		'uuid',
 	);
