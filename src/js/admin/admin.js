@@ -33,6 +33,7 @@
 									term: params.term,
 									action: $(self).data('action'),
 									type: $(self).data('type'),
+									subtype: $(self).data('subtype'),
 									_wpnonce: eac_admin_js_vars.search_nonce,
 									exclude: $(self).data('exclude'),
 									include: $(self).data('include'),

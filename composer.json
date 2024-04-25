@@ -34,11 +34,8 @@
   },
   "autoload": {
     "psr-4": {
-      "EverAccounting\\": "src/"
-    },
-    "classmap": [
-      "includes/"
-    ]
+      "EverAccounting\\": "includes/"
+    }
   },
   "require-dev": {
     "byteever/byteever-sniffs": "^1.0",

@@ -62,25 +62,7 @@ defined( 'ABSPATH' ) || exit;
 								'value'       => $revenue->amount,
 								'required'    => true,
 								'class'       => 'eac_decimal_input',
-								'tooltip'     => __( 'Enter the amount, use (.) for decimal.', 'wp-ever-accounting' ),
-							)
-						);
-						eac_form_group(
-							array(
-								'label'            => __( 'Category', 'wp-ever-accounting' ),
-								'type'             => 'select',
-								'name'             => 'category_id',
-								'value'            => $revenue->category_id,
-								'options'          => wp_list_pluck( $revenue->category, 'formatted_name', 'id' ),
-								'placeholder'      => __( 'Select category', 'wp-ever-accounting' ),
-								'required'         => true,
-								'class'            => 'eac_select2',
-								'data-placeholder' => __( 'Select category', 'wp-ever-accounting' ),
-								'suffix'           => sprintf(
-									'<a class="addon" href="%s" target="_blank" title="%s"><span class="dashicons dashicons-plus"></span></a>',
-									esc_url( admin_url( 'admin.php?page=eac-misc&tab=categories&add=yes&type=income' ) ),
-									__( 'Add Category', 'wp-ever-accounting' )
-								),
+								'tooltip'     => __( 'Enter the amount in the currency of the selected account, use (.) for decimal.', 'wp-ever-accounting' ),
 							)
 						);
 						eac_form_group(
@@ -92,11 +74,33 @@ defined( 'ABSPATH' ) || exit;
 								'options'          => wp_list_pluck( $revenue->contact, 'formatted_name', 'id' ),
 								'default'          => filter_input( INPUT_GET, 'customer_id', FILTER_SANITIZE_NUMBER_INT ),
 								'data-placeholder' => __( 'Select customer', 'wp-ever-accounting' ),
+								'data-action'      => 'eac_json_search',
+								'data-type'        => 'customer',
 								'class'            => 'eac_select2',
 								'suffix'           => sprintf(
 									'<a class="button" href="%s" target="_blank" title="%s"><span class="dashicons dashicons-plus"></span></a>',
 									esc_url( admin_url( 'admin.php?page=eac-sales&tab=customers&add=yes' ) ),
 									__( 'Add customer', 'wp-ever-accounting' )
+								),
+							)
+						);
+						eac_form_group(
+							array(
+								'label'            => __( 'Category', 'wp-ever-accounting' ),
+								'type'             => 'select',
+								'name'             => 'category_id',
+								'value'            => $revenue->category_id,
+								'options'          => wp_list_pluck( $revenue->category, 'formatted_name', 'id' ),
+								'placeholder'      => __( 'Select category', 'wp-ever-accounting' ),
+								'class'            => 'eac_select2',
+								'data-placeholder' => __( 'Select category', 'wp-ever-accounting' ),
+								'data-action'      => 'eac_json_search',
+								'data-type'        => 'category',
+								'data-subtype'     => 'income',
+								'suffix'           => sprintf(
+									'<a class="addon" href="%s" target="_blank" title="%s"><span class="dashicons dashicons-plus"></span></a>',
+									esc_url( admin_url( 'admin.php?page=eac-misc&tab=categories&add=yes&type=income' ) ),
+									__( 'Add Category', 'wp-ever-accounting' )
 								),
 							)
 						);
