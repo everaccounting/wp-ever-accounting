@@ -18,6 +18,8 @@ namespace EverAccounting\Models;
  * @property string $status Status of the tax.
  * @property string $date_created Date the tax was created.
  * @property string $date_updated Date the tax was last updated.
+ *
+ * @property-read string $formatted_name Formatted name of the tax.
  */
 class Tax extends Model {
 
@@ -68,6 +70,16 @@ class Tax extends Model {
 	);
 
 	/**
+	 * The accessors to append to the model's array form.
+	 *
+	 * @since 1.0.0
+	 * @var array
+	 */
+	protected $appends = array(
+		'formatted_name',
+	);
+
+	/**
 	 * Searchable properties.
 	 *
 	 * @since 1.0.0
@@ -84,6 +96,16 @@ class Tax extends Model {
 	 * @var bool
 	 */
 	public $timestamps = true;
+
+	/**
+	 * Get formatted name.
+	 *
+	 * @return string
+	 * @since 1.1.6
+	 */
+	public function get_formatted_name_prop() {
+		return sprintf( '%1$s (%2$d%%)', $this->name, $this->rate );
+	}
 
 	/**
 	 * Save the object to the database.

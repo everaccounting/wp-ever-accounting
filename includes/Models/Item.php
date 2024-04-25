@@ -24,12 +24,13 @@ use ByteKit\Models\Relation;
  * @property int    $category_id Category ID of the item.
  * @property int    $thumbnail_id Thumbnail ID of the item.
  * @property string $status Status of the item.
+ * @property string $date_created Date created of the item.
+ * * @property string $date_updated Date updated of the item.
  *
  * @property string $formatted_price Formatted price of the item.
  * @property string $formatted_cost Formatted cost of the item.
  * @property Category $category Category of the item.
- * @property string $date_created Date created of the item.
- * @property string $date_updated Date updated of the item.
+ * @property Tax[] $taxes Taxes of the item.
  */
 class Item extends Model {
 
@@ -59,7 +60,7 @@ class Item extends Model {
 		'tax_ids',
 		'category_id',
 		'thumbnail_id',
-		'status'
+		'status',
 	);
 
 	/**
@@ -69,8 +70,8 @@ class Item extends Model {
 	 * @var array
 	 */
 	protected $data = array(
-		'type'   => 'standard',
-		'status' => 'active',
+		'type'    => 'standard',
+		'status'  => 'active',
 		'taxable' => false,
 	);
 
@@ -78,7 +79,7 @@ class Item extends Model {
 	 * Model's casts data.
 	 *
 	 * @since 1.0.0
-	 * @return bool
+	 * @var array
 	 */
 	protected $casts = array(
 		'id'           => 'int',
@@ -146,7 +147,22 @@ class Item extends Model {
 	 * @return Relation
 	 */
 	public function category() {
-		return $this->belongs_to( Category::class, 'category_id');
+		return $this->belongs_to( Category::class, 'category_id' );
+	}
+
+	/**
+	 * Get items tax
+	 *
+	 * @since 1.2.1
+	 * @return Tax[]
+	 */
+	public function taxes() {
+		$taxes = explode( ',', $this->tax_ids );
+		return Tax::query(
+			array(
+				'include' => $taxes,
+			)
+		);
 	}
 
 	/**
@@ -158,6 +174,9 @@ class Item extends Model {
 	public function save() {
 		if ( empty( $this->name ) ) {
 			return new \WP_Error( 'missing_required', __( 'Item name is required.', 'wp-ever-accounting' ) );
+		}
+		if ( empty( $this->type ) ) {
+			return new \WP_Error( 'missing_required', __( 'Item type is required.', 'wp-ever-accounting' ) );
 		}
 		if ( empty( $this->price ) ) {
 			return new \WP_Error( 'missing_required', __( 'Item price is required.', 'wp-ever-accounting' ) );

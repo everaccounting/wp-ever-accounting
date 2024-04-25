@@ -42,20 +42,17 @@ defined( 'ABSPATH' ) || exit;
 						)
 					);
 
-					$is_compound_false = false === $tax->is_compound ? 'no' : null;
-					$is_compound       = true === $tax->is_compound ? 'yes' : $is_compound_false;
 					eac_form_group(
 						array(
-							'id'          => 'is_compound',
-							'label'       => __( 'Is compound', 'wp-ever-accounting' ),
-							'placeholder' => __( 'Select if tax is compound', 'wp-ever-accounting' ),
-							'value'       => $is_compound,
-							'required'    => true,
-							'options'     => array(
+							'id'       => 'is_compound',
+							'label'    => __( 'Is compound', 'wp-ever-accounting' ),
+							'value'    => filter_var( $tax->is_compound, FILTER_VALIDATE_BOOLEAN ) ? 'yes' : 'no',
+							'required' => true,
+							'options'  => array(
 								'yes' => __( 'Yes', 'wp-ever-accounting' ),
 								'no'  => __( 'No', 'wp-ever-accounting' ),
 							),
-							'type'        => 'select',
+							'type'     => 'select',
 						)
 					);
 					eac_form_group(

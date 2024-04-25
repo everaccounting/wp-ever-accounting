@@ -32,9 +32,9 @@ $categories = eac_get_categories(
 					<?php
 					eac_form_group(
 						array(
+							'label'       => __( 'Name', 'wp-ever-accounting' ),
 							'type'        => 'text',
 							'name'        => 'name',
-							'label'       => __( 'Name', 'wp-ever-accounting' ),
 							'value'       => $item->name,
 							'placeholder' => __( 'Laptop', 'wp-ever-accounting' ),
 							'required'    => true,
@@ -59,10 +59,11 @@ $categories = eac_get_categories(
 							'label'       => __( 'Price', 'wp-ever-accounting' ),
 							'value'       => $item->price,
 							'placeholder' => __( '1000.00', 'wp-ever-accounting' ),
+							'class'       => 'eac_decimal_input',
 							'required'    => true,
 							'prefix'      => eac_get_base_currency(),
 							/* translators: %s: currency symbol */
-							'desc'        => sprintf( __( 'Enter the price of the item in %s.', 'wp-ever-accounting' ), eac_get_base_currency() ),
+							'tooltip'     => sprintf( __( 'Enter the price of the item in %s.', 'wp-ever-accounting' ), eac_get_base_currency() ),
 						)
 					);
 					eac_form_group(
@@ -72,9 +73,10 @@ $categories = eac_get_categories(
 							'label'       => __( 'Cost', 'wp-ever-accounting' ),
 							'value'       => $item->cost,
 							'placeholder' => __( '1000.00', 'wp-ever-accounting' ),
+							'class'       => 'eac_decimal_input',
 							'prefix'      => eac_get_base_currency(),
 							/* translators: %s: currency symbol */
-							'desc'        => sprintf( __( 'Enter the cost of the item in %s.', 'wp-ever-accounting' ), eac_get_base_currency() ),
+							'tooltip'     => sprintf( __( 'Enter the cost of the item in %s.', 'wp-ever-accounting' ), eac_get_base_currency() ),
 						)
 					);
 					eac_form_group(
@@ -83,11 +85,14 @@ $categories = eac_get_categories(
 							'name'             => 'category_id',
 							'label'            => __( 'Category', 'wp-ever-accounting' ),
 							'value'            => $item->category_id,
-							'options'          => wp_list_pluck( $categories, 'formatted_name', 'id' ),
+							'options'          => wp_list_pluck( $item->category, 'formatted_name', 'id' ),
 							'data-placeholder' => __( 'Select item category', 'wp-ever-accounting' ),
-							'class'            => 'eac-select2',
+							'class'            => 'eac_select2',
+							'data-action'      => 'eac_json_search',
+							'data-type'        => 'category',
+							'data-subtype'     => 'item',
 							'suffix'           => sprintf(
-								'<a class="addon" href="%s" title="%s"><span class="dashicons dashicons-plus"></span></a>',
+								'<a class="addon" href="%s" target="_blank" title="%s"><span class="dashicons dashicons-plus"></span></a>',
 								esc_url( 'admin.php?page=eac-misc&tab=categories&add=yes' ),
 								__( 'Add Category', 'wp-ever-accounting' )
 							),
@@ -110,7 +115,7 @@ $categories = eac_get_categories(
 							'type'    => 'select',
 							'name'    => 'taxable',
 							'label'   => __( 'Taxable', 'wp-ever-accounting' ),
-							'value'   => $item->taxable,
+							'value'   => filter_var( $item->taxable, FILTER_VALIDATE_BOOLEAN ) ? 'yes' : 'no',
 							'options' => array(
 								'yes' => __( 'Yes', 'wp-ever-accounting' ),
 								'no'  => __( 'No', 'wp-ever-accounting' ),
@@ -120,23 +125,16 @@ $categories = eac_get_categories(
 					// tax_ids.
 					eac_form_group(
 						array(
-							'type'      => 'select',
-							'name'      => 'tax_ids[]',
-							'label'     => __( 'Taxes', 'wp-ever-accounting' ),
-							'value'     => $item->tax_ids,
-							// 'options'  => wp_list_pluck(
-							// eac_get_taxes(
-							// array(
-							// 'limit'  => - 1,
-							// 'status' => 'active',
-							// )
-							// ),
-							// 'name',
-							// 'id'
-							// ),
-								'class' => 'eac-select2',
-							'multiple'  => true,
-							'desc'      => __( 'The selected tax rates will be applied to this item.', 'wp-ever-accounting' ),
+							'type'        => 'select',
+							'multiple'    => true,
+							'name'        => 'tax_ids',
+							'label'       => __( 'Taxes', 'wp-ever-accounting' ),
+							'value'       => wp_list_pluck( $item->taxes, 'id' ),
+							'options'     => wp_list_pluck( $item->taxes, 'formatted_name', 'id' ),
+							'class'       => 'eac_select2',
+							'data-action' => 'eac_json_search',
+							'data-type'   => 'tax',
+							'tooltip'     => __( 'The selected tax rates will be applied to this item.', 'wp-ever-accounting' ),
 						)
 					);
 

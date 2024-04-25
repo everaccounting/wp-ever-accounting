@@ -347,8 +347,7 @@ class ItemsTable extends ListTable {
 	 * @return string Displays the category.
 	 */
 	public function column_category( $item ) {
-		$category = $item->category;
-		if ( $category->exists() ) {
+		if ( isset( $item->category ) && $item->category->exists() ) {
 			return sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( 'category_id', $category->id, $this->base_url ) ), wp_kses_post( $category->name ) );
 		}
 

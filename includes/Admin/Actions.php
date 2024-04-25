@@ -179,12 +179,15 @@ class Actions {
 			case 'tax':
 				$tax_rates = eac_get_taxes( $args );
 				$total     = eac_get_taxes( $args, true );
-				foreach ( $tax_rates as $tax_rate ) {
-					$results[] = array(
-						'id'   => $tax_rate->get_id(),
-						'text' => $tax_rate->get_formatted_name(),
-					);
-				}
+				$results   = array_map(
+					function ( $tax_rate ) {
+						return array(
+							'id'   => $tax_rate->id,
+							'text' => $tax_rate->formatted_name,
+						);
+					},
+					$tax_rates
+				);
 				break;
 
 			default:
