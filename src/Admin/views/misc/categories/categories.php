@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
 			<?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?>
 		</a>
 		<?php if ( $this->list_table->get_request_search() ) : ?>
-			<span class="subtitle"><?php echo esc_html( sprintf( /* translators: 1: Get requested search string */ __( 'Search results for "%s"', 'wp-ever-accounting' ), esc_html( $this->list_table->get_request_search() ) ) ); ?></span>
+			<span class="subtitle"><?php echo esc_html( sprintf( /* translators: %s: Get requested search string */ __( 'Search results for "%s"', 'wp-ever-accounting' ), esc_html( $this->list_table->get_request_search() ) ) ); ?></span>
 		<?php endif; ?>
 	</h1>
 	<hr class="wp-header-end">

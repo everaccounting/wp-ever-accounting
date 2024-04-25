@@ -1,9 +1,12 @@
 <?php
 /**
  * Edit customer view.
+ * Page: Sales
+ * Tab: Customers
  *
  * @package EverAccounting
- * @var $item \EverAccounting\Models\Item
+ * @since 1.0.0
+ * @var $customer \EverAccounting\Models\Customer Customer object.
  */
 
 defined( 'ABSPATH' ) || exit;
