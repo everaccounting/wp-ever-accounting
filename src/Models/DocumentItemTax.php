@@ -20,7 +20,6 @@ namespace EverAccounting\Models;
  * @property int    $document_id Document ID of the document_item_tax.
  * @property string $date_updated Date updated of the document_item_tax.
  * @property string $date_created Date created of the document_item_tax.
- *
  */
 class DocumentItemTax extends Model {
 
@@ -30,7 +29,7 @@ class DocumentItemTax extends Model {
 	 * @since 1.0.0
 	 * @var string
 	 */
-	protected $table = 'ea_document_item_tax';
+	protected $table = 'ea_document_item_taxes';
 
 	/**
 	 * Table columns.
