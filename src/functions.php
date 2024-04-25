@@ -15,6 +15,8 @@ require_once __DIR__ . '/Functions/categories.php';
 require_once __DIR__ . '/Functions/currencies.php';
 require_once __DIR__ . '/Functions/items.php';
 require_once __DIR__ . '/Functions/taxes.php';
+require_once __DIR__ . '/Functions/formatters.php';
+require_once __DIR__ . '/Functions/transactions.php';
 require_once __DIR__ . '/Functions/misc.php';
 require_once __DIR__ . '/Functions/updates.php';
 
@@ -229,3 +231,23 @@ function eac_convert_money( $amount, $from, $to, $from_rate = null, $to_rate = n
 	return $amount;
 }
 
+/**
+ * Get payment methods.
+ *
+ * @return array
+ * @since 1.0.2
+ */
+function eac_get_payment_methods() {
+	return apply_filters(
+		'ever_accounting_payment_methods',
+		array(
+			'cash'          => esc_html__( 'Cash', 'wp-ever-accounting' ),
+			'check'         => esc_html__( 'Cheque', 'wp-ever-accounting' ),
+			'credit_card'   => esc_html__( 'Credit Card', 'wp-ever-accounting' ),
+			'debit_card'    => esc_html__( 'Debit Card', 'wp-ever-accounting' ),
+			'bank_transfer' => esc_html__( 'Bank Transfer', 'wp-ever-accounting' ),
+			'paypal'        => esc_html__( 'PayPal', 'wp-ever-accounting' ),
+			'other'         => esc_html__( 'Other', 'wp-ever-accounting' ),
+		)
+	);
+}

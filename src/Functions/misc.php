@@ -23,7 +23,6 @@ function eac_form_group( $field ) {
 		'class'         => '',
 		'style'         => '',
 		'options'       => array(),
-		'attrs'         => array(),
 		'default'       => '',
 		'label'         => '',
 		'suffix'        => '',
@@ -47,7 +46,6 @@ function eac_form_group( $field ) {
 	$field['name']          = empty( $field['name'] ) ? $field['id'] : $field['name'];
 	$field['id']            = empty( $field['id'] ) ? $field['name'] : $field['id'];
 	$field['value']         = empty( $field['value'] ) ? $field['default'] : $field['value'];
-	$field['attrs']         = array_filter( array_unique( wp_parse_args( $field['attrs'] ) ) );
 	$field['class']         = array_filter( array_unique( wp_parse_list( $field['class'] ) ) );
 	$field['class']         = array_map( 'sanitize_html_class', $field['class'] );
 	$field['class']         = implode( ' ', $field['class'] );
@@ -55,19 +53,20 @@ function eac_form_group( $field ) {
 	$field['wrapper_class'] = array_map( 'sanitize_html_class', $field['wrapper_class'] );
 	$field['wrapper_class'] = implode( ' ', $field['wrapper_class'] );
 
-	$field['attrs'] = wp_parse_args( $field['attrs'] );
-	foreach ( array( 'readonly', 'disabled', 'required', 'autofocus' ) as $attr_key ) {
-		if ( isset( $field[ $attr_key ] ) && ! empty( $field[ $attr_key ] ) ) {
-			$field['attrs'][ $attr_key ] = esc_attr( $attr_key );
-		}
-	}
-
+	// Prepare attributes.
+	// Anything that starts with "attr-" will be added to the attributes.
 	$attrs = array();
-	foreach ( $field['attrs'] as $attr_key => $attr_value ) {
+	foreach ( $field as $attr_key => $attr_value ) {
 		if ( empty( $attr_key ) || empty( $attr_value ) ) {
 			continue;
 		}
-		$attrs[] = sprintf( '%s="%s"', esc_attr( $attr_key ), esc_attr( $attr_value ) );
+		if ( strpos( $attr_key, 'attr-' ) === 0 ) {
+			$attrs[] = sprintf( '%s="%s"', esc_attr( str_replace( 'attr-', '', $attr_key ) ), esc_attr( $attr_value ) );
+		} elseif ( strpos( $attr_key, 'data-' ) === 0 ) {
+			$attrs[] = sprintf( '%s="%s"', esc_attr( $attr_key ), esc_attr( $attr_value ) );
+		} elseif ( in_array( $attr_key, array( 'readonly', 'disabled', 'required', 'autofocus' ), true ) ) {
+			$attrs[] = sprintf( '%s="%s"', esc_attr( $attr_key ), esc_attr( $attr_value ) );
+		}
 	}
 
 	// Prefix.
@@ -107,8 +106,8 @@ function eac_form_group( $field ) {
 			$field['value']       = array_map( 'strval', $field['value'] );
 			$field['placeholder'] = ! empty( $field['placeholder'] ) ? $field['placeholder'] : '';
 			if ( ! empty( $field['multiple'] ) ) {
-				$field['name']   .= '[]';
-				$attrs[] = 'multiple="multiple"';
+				$field['name'] .= '[]';
+				$attrs[]        = 'multiple="multiple"';
 			}
 			$input = sprintf(
 				'<select name="%1$s" id="%2$s" class="%3$s" placeholder="%4$s" style="%5$s" %6$s>',
@@ -281,5 +280,5 @@ function eac_form_group( $field ) {
 		);
 	}
 
-	echo $input; //phpcs:ignore
+	echo $input; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the above code.
 }

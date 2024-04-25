@@ -58,7 +58,7 @@ class ItemsTable extends ListTable {
 			'order_by'    => $order_by,
 			'order'       => $order,
 			'status'      => $this->get_request_status(),
-			'category_id' => isset( $_GET['category_id'] ) ? absint( trim( $_GET['category_id'] ) ) : '',
+			'category_id' => isset( $_GET['category_id'] ) ? absint( wp_unslash( $_GET['category_id'] ) ) : '',
 		);
 
 		/**

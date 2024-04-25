@@ -33,33 +33,36 @@ class RevenuesTable extends ListTable {
 				)
 			)
 		);
+
+		$this->base_url = admin_url( 'admin.php?page=eac-sales&tab=revenues' );
 	}
 
 	/**
 	 * Prepares the list for display.
 	 *
-	 * @return void
 	 * @since 1.0.0
+	 * @return void
 	 */
 	public function prepare_items() {
-		$this->process_bulk_action();
-		$this->_column_headers = array(
-			$this->get_columns(),
-			get_hidden_columns( $this->screen ),
-			$this->get_sortable_columns()
-		);
-		$per_page              = $this->get_items_per_page( 'eac_sales_revenues_per_page', 20 );
-		$paged                 = $this->get_pagenum();
-		$search                = $this->get_request_search();
-		$order_by              = $this->get_request_orderby();
-		$order                 = $this->get_request_order();
-		$args                  = array(
+		$this->process_actions();
+		$per_page    = $this->get_items_per_page( 'eac_revenues_per_page', 20 );
+		$paged       = $this->get_pagenum();
+		$search      = $this->get_request_search();
+		$order_by    = $this->get_request_orderby();
+		$order       = $this->get_request_order();
+		$account_id  = isset( $_GET['account_id'] ) ? absint( wp_unslash( $_GET['account_id'] ) ) : 0;
+		$category_id = isset( $_GET['category_id'] ) ? absint( wp_unslash( $_GET['category_id'] ) ) : 0;
+		$contact_id  = isset( $_GET['customer_id'] ) ? absint( wp_unslash( $_GET['customer_id'] ) ) : 0;
+		$args        = array(
 			'limit'    => $per_page,
 			'page'     => $paged,
 			'search'   => $search,
 			'order_by' => $order_by,
 			'order'    => $order,
 			'status'   => $this->get_request_status(),
+			'account'  => $account_id,
+			'category' => $category_id,
+			'customer' => $contact_id,
 		);
 		/**
 		 * Filter the query arguments for the list table.
@@ -70,11 +73,8 @@ class RevenuesTable extends ListTable {
 		 */
 		$args = apply_filters( 'ever_accounting_revenues_table_query_args', $args );
 
-		// TODO: Need to create revenue query methods.
-		//$this->items = eac_get_revenues( $args );
-		$this->items = array();
-		//$total       = eac_get_revenues( $args, true );
-		$total = 0;
+		$this->items = Revenue::query( $args );
+		$total       = Revenue::count( $args );
 
 		$this->set_pagination_args(
 			array(
@@ -82,27 +82,6 @@ class RevenuesTable extends ListTable {
 				'per_page'    => $per_page,
 			)
 		);
-	}
-
-	/**
-	 * handle bulk delete action.
-	 *
-	 * @param array $ids List of item IDs.
-	 *
-	 * @return void
-	 * @since 1.0.0
-	 */
-	protected function bulk_delete( $ids ) {
-		$performed = [];
-		foreach ( $ids as $id ) {
-			// TODO: Need tp create the revenue delete method.
-//			if ( eac_delete_revenue( $id ) ) {
-//				$performed[] = $id;
-//			}
-		}
-		if ( ! empty( $performed ) ) {
-			EAC()->flash()->success( sprintf( _n( 'Revenue deleted.', '%s revenues deleted.', count( $performed ), 'wp-ever-accounting' ), count( $performed ) ) );
-		}
 	}
 
 	/**
@@ -118,27 +97,45 @@ class RevenuesTable extends ListTable {
 	 * Returns an associative array listing all the views that can be used
 	 * with this table.
 	 *
-	 * Provides a list of roles and user count for that role for easy
-	 * filtering of the user table.
-	 *
-	 * @return string[] An array of HTML links keyed by their view.
 	 * @since 1.0.0
 	 *
-	 * @global string $role
+	 * @return string[] An array of HTML links keyed by their view.
 	 */
 	protected function get_views() {
+		$current      = $this->get_request_status( 'all' );
+		$status_links = array();
+
+		// $views        = array(
+		// translators: %s: number of revenues.
+		// 'all'       => _nx_noop( 'All <span class="count">(%s)</span>', 'All <span class="count">(%s)</span>', 'list_table', 'wp-ever-accounting' ),
+		// translators: %s: number of revenues.
+		// 'pending'   => _nx_noop( 'Pending <span class="count">(%s)</span>', 'Pending <span class="count">(%s)</span>', 'list_table', 'wp-ever-accounting' ),
+		// translators: %s: number of revenues.
+		// 'paid'      => _nx_noop( 'Paid <span class="count">(%s)</span>', 'Paid <span class="count">(%s)</span>', 'list_table', 'wp-ever-accounting' ),
+		// translators: %s: number of revenues.
+		// 'refunded'  => _nx_noop( 'Refunded <span class="count">(%s)</span>', 'Refunded <span class="count">(%s)</span>', 'list_table', 'wp-ever-accounting' ),
+		// translators: %s: number of revenues.
+		// 'cancelled' => _nx_noop( 'Cancelled <span class="count">(%s)</span>', 'Cancelled <span class="count">(%s)</span>', 'list_table', 'wp-ever-accounting' ),
+		// );
+		$views = array();
+
+		//return $this->get_views_links( $status_links );
 	}
 
 	/**
 	 * Retrieves an associative array of bulk actions available on this table.
 	 *
-	 * @return array Array of bulk action labels keyed by their action.
 	 * @since 1.0.0
 	 *
+	 * @return array Array of bulk action labels keyed by their action.
 	 */
 	protected function get_bulk_actions() {
 		$actions = array(
-			'delete' => __( 'Delete', 'wp-ever-accounting' ),
+			'mark_paid'      => __( 'Mark as Paid', 'wp-ever-accounting' ),
+			'mark_pending'   => __( 'Mark as Pending', 'wp-ever-accounting' ),
+			'mark_refunded'  => __( 'Mark as Refunded', 'wp-ever-accounting' ),
+			'mark_cancelled' => __( 'Mark as Cancelled', 'wp-ever-accounting' ),
+			'delete'         => __( 'Delete', 'wp-ever-accounting' ),
 		);
 
 		return $actions;
@@ -149,8 +146,8 @@ class RevenuesTable extends ListTable {
 	 *
 	 * @param string $which Whether invoked above ("top") or below the table ("bottom").
 	 *
-	 * @return void
 	 * @since 1.0.0
+	 * @return void
 	 */
 	protected function extra_tablenav( $which ) {
 		// TODO: Need to include revenuesTable filters 'Select Month', 'Select Account', 'Select Category', 'Select Customer'.
@@ -158,28 +155,14 @@ class RevenuesTable extends ListTable {
 		if ( ! isset( $has_items ) ) {
 			$has_items = $this->has_items();
 		}
-
-		echo '<div class="alignleft actions">';
-
-		if ( 'top' === $which ) {
-			ob_start();
-			$this->category_filter( 'item' );
-			$output = ob_get_clean();
-			if ( ! empty( $output ) && $this->has_items() ) {
-				echo $output;
-				submit_button( __( 'Filter', 'wp-ever-accounting' ), '', 'filter_action', false );
-			}
-		}
-
-		echo '</div>';
 	}
 
 	/**
 	 * Gets a list of columns for the list table.
 	 *
-	 * @return string[] Array of column titles keyed by their column name.
 	 * @since 1.0.0
 	 *
+	 * @return string[] Array of column titles keyed by their column name.
 	 */
 	public function get_columns() {
 		return array(
@@ -196,9 +179,9 @@ class RevenuesTable extends ListTable {
 	/**
 	 * Gets a list of sortable columns for the list table.
 	 *
-	 * @return array Array of sortable columns.
 	 * @since 1.0.0
 	 *
+	 * @return array Array of sortable columns.
 	 */
 	protected function get_sortable_columns() {
 		return array(
@@ -214,8 +197,8 @@ class RevenuesTable extends ListTable {
 	/**
 	 * Define primary column.
 	 *
-	 * @return string
 	 * @since 1.0.2
+	 * @return string
 	 */
 	public function get_primary_column_name() {
 		return 'date';
@@ -224,10 +207,10 @@ class RevenuesTable extends ListTable {
 	/**
 	 * Renders the checkbox column.
 	 *
-	 * @param Item $item The current object.
+	 * @param Revenue $item The current object.
 	 *
-	 * @return string Displays a checkbox.
 	 * @since  1.0.0
+	 * @return string Displays a checkbox.
 	 */
 	public function column_cb( $item ) {
 		return sprintf( '<input type="checkbox" name="id[]" value="%d"/>', esc_attr( $item->id ) );
@@ -238,8 +221,8 @@ class RevenuesTable extends ListTable {
 	 *
 	 * @param Revenue $revenue The current object.
 	 *
-	 * @return string Displays the date.
 	 * @since  1.0.0
+	 * @return string Displays the date.
 	 */
 	public function column_date( $revenue ) {
 		$urls    = array(
@@ -266,8 +249,8 @@ class RevenuesTable extends ListTable {
 	 *
 	 * @param Revenue $revenue The current object.
 	 *
-	 * @return string Displays the actions.
 	 * @since  1.0.0
+	 * @return string Displays the actions.
 	 */
 	public function column_actions( $revenue ) {
 		$urls = array(
@@ -278,7 +261,7 @@ class RevenuesTable extends ListTable {
 		);
 
 		$actions = array(
-			//'edit'   => sprintf( '<a href="%s">%s</a>', esc_url( $urls['edit'] ), __( 'Edit', 'wp-ever-accounting' ) ),
+			// 'edit'   => sprintf( '<a href="%s">%s</a>', esc_url( $urls['edit'] ), __( 'Edit', 'wp-ever-accounting' ) ),
 			'delete' => sprintf( '<a class="eac_confirm_delete" href="%s">%s</a>', esc_url( $urls['delete'] ), __( 'Delete', 'wp-ever-accounting' ) ),
 		);
 		if ( $revenue->enabled ) {
@@ -294,10 +277,10 @@ class RevenuesTable extends ListTable {
 	 * This function renders most of the columns in the list table.
 	 *
 	 * @param Object|array $item The current item.
-	 * @param string $column_name The name of the column.
+	 * @param string       $column_name The name of the column.
 	 *
-	 * @return string The column value.
 	 * @since 1.0.0
+	 * @return string The column value.
 	 */
 	public function column_default( $item, $column_name ) {
 		switch ( $column_name ) {

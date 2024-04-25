@@ -79,18 +79,15 @@ $categories = eac_get_categories(
 					);
 					eac_form_group(
 						array(
-							'type'    => 'select',
-							'name'    => 'category_id',
-							'label'   => __( 'Category', 'wp-ever-accounting' ),
-							'value'   => $item->category_id,
-							'options' => wp_list_pluck( $categories, 'formatted_name', 'id' ),
-							'attrs'   => array(
-								'data-placeholder'  => __( 'Select item category', 'wp-ever-accounting' ),
-								'date-allows-clear' => 'true',
-							),
-							'class'   => 'eac-select2',
-							'suffix'  => sprintf(
-								'<a class="button" href="%s" title="%s"><span class="dashicons dashicons-plus"></span></a>',
+							'type'             => 'select',
+							'name'             => 'category_id',
+							'label'            => __( 'Category', 'wp-ever-accounting' ),
+							'value'            => $item->category_id,
+							'options'          => wp_list_pluck( $categories, 'formatted_name', 'id' ),
+							'data-placeholder' => __( 'Select item category', 'wp-ever-accounting' ),
+							'class'            => 'eac-select2',
+							'suffix'           => sprintf(
+								'<a class="addon" href="%s" title="%s"><span class="dashicons dashicons-plus"></span></a>',
 								esc_url( 'admin.php?page=eac-misc&tab=categories&add=yes' ),
 								__( 'Add Category', 'wp-ever-accounting' )
 							),

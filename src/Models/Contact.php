@@ -36,6 +36,7 @@ defined( 'ABSPATH' ) || exit;
  * @property string $date_created Date created of the contact.
  * @property string $date_updated Date updated of the contact.
  *
+ * @property-read  string $formatted_name Get formatted name.
  * @property-read  string $country_name Get country name.
  */
 class Contact extends Model {
@@ -102,7 +103,7 @@ class Contact extends Model {
 	 * Model's casts data.
 	 *
 	 * @since 1.0.0
-	 * @return bool
+	 * @var array
 	 */
 	protected $casts = array(
 		'id'           => 'int',
@@ -173,6 +174,17 @@ class Contact extends Model {
 	public function get_country_name_prop() {
 		$countries = I18n::get_countries();
 		return isset( $countries[ $this->country ] ) ? $countries[ $this->country ] : $this->country;
+	}
+
+	/**
+	 * Get formatted name.
+	 *
+	 * @return string
+	 * @since 1.1.6
+	 */
+	public function get_formatted_name_prop() {
+		$company = $this->company ? ' (' . $this->company . ')' : '';
+		return $this->name . $company;
 	}
 
 	/**

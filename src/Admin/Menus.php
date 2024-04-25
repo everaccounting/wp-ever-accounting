@@ -7,6 +7,7 @@ use EverAccounting\Models\Category;
 use EverAccounting\Models\Currency;
 use EverAccounting\Models\Customer;
 use EverAccounting\Models\Item;
+use EverAccounting\Models\Revenue;
 use EverAccounting\Models\Tax;
 use EverAccounting\Models\Vendor;
 
@@ -321,12 +322,12 @@ class Menus {
 	 * @since 1.0.0
 	 */
 	public function render_revenues_tab() {
-		$edit = Utilities::is_edit_screen();
-		// $revenue = new Revenue( $edit );
-		// if ( ! empty( $edit ) && ! $revenue->exists() ) {
-		// wp_safe_redirect( remove_query_arg( 'edit' ) );
-		// exit();
-		// }
+		$edit    = Utilities::is_edit_screen();
+		$revenue = new Revenue( $edit );
+		if ( ! empty( $edit ) && ! $revenue->exists() ) {
+			wp_safe_redirect( remove_query_arg( 'edit' ) );
+			exit();
+		}
 		if ( Utilities::is_add_screen() ) {
 			include __DIR__ . '/views/sales/revenues/add.php';
 		} elseif ( $edit ) {

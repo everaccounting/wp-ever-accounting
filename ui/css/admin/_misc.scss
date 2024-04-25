@@ -47,8 +47,9 @@
 // clear select2 height
 .eac-admin .select2-container .select2-selection--single {
 	height: unset;
+	min-height: 30px;
 }
 .eac-admin .select2-search__field {
-	min-height: unset !important;
+	min-height: 30px;
 	line-height: 1.7;
 }

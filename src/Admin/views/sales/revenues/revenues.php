@@ -20,12 +20,14 @@ defined( 'ABSPATH' ) || exit;
 			<span class="subtitle"><?php echo esc_html( sprintf( __( 'Search results for "%s"', 'wp-ever-accounting' ), esc_html( $this->list_table->get_request_search() ) ) ); ?></span>
 		<?php endif; ?>
 	</h1>
+
 	<hr class="wp-header-end">
 
 	<form method="get" action="<?php echo esc_url( admin_url( 'admin.php' ) ); ?>">
 		<?php $this->list_table->views(); ?>
 		<?php $this->list_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'search' ); ?>
 		<?php $this->list_table->display(); ?>
-		<input type="hidden" name="page" value="eac-revenues"/>
+		<input type="hidden" name="page" value="eac-sales"/>
+		<input type="hidden" name="tab" value="revenues"/>
 	</form>
 <?php

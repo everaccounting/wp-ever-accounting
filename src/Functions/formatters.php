@@ -38,7 +38,7 @@ function eac_tooltip( $tip, $allow_html = false ) {
 		$tip = esc_attr( $tip );
 	}
 
-	return '<span class="eac-tooltip" title="' . wp_kses_post( $tip ) . '"></span>';
+	return '<span class="eac-tooltip" title="' . wp_kses_post( $tip ) . '">[?]</span>';
 }
 
 

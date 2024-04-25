@@ -26,12 +26,14 @@ defined( 'ABSPATH' ) || exit;
  * @property int    $document_id Document ID of the transaction.
  * @property int    $contact_id Contact ID of the transaction.
  * @property int    $category_id Category ID of the transaction.
+ * @property int    $transfer_id Transfer ID of the transaction.
  * @property int    $attachment_id Attachment ID of the transaction.
  * @property int    $parent_id Parent ID of the transaction.
  * @property bool   $reconciled Whether the transaction is reconciled.
- * @property string $uuid UUID of the transaction.
  * @property string $created_via Created via of the transaction.
  * @property int    $author_id Author ID of the transaction.
+ * @property string $status Status of the transaction.
+ * @property string $uuid UUID of the transaction.
  * @property string $date_created Date the transaction was created.
  * @property string $date_updated Date the transaction was last updated.
  *
@@ -81,9 +83,11 @@ class Transaction extends Model {
 		'document_id',
 		'contact_id',
 		'category_id',
+		'transfer_id',
 		'attachment_id',
 		'parent_id',
 		'reconciled',
+		'status',
 		'uuid',
 		'created_via',
 		'author_id',
@@ -201,8 +205,8 @@ class Transaction extends Model {
 	 * @since 1.0.0
 	 * @return \ByteKit\Models\Relation
 	 */
-	public function account() {
-		return $this->belongs_to( Account::class );
+	protected function account() {
+		return $this->has_one( Account::class, 'account_id' );
 	}
 
 	/**

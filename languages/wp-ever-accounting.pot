@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Ever Accounting 1.2.0\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/wp-ever-accounting\n"
-"POT-Creation-Date: 2024-04-25 04:24:08+00:00\n"
+"POT-Creation-Date: 2024-04-25 04:27:15+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -103,8 +103,8 @@ msgstr ""
 #: includes/admin/class-assets.php:66 includes/admin/class-menu.php:68
 #: includes/admin/class-menu.php:69 includes/admin/ea-admin-functions.php:115
 #: includes/admin/ea-admin-functions.php:155
-#: includes/admin/ea-admin-functions.php:190 src/Admin/Menus.php:79
-#: src/Admin/Menus.php:80
+#: includes/admin/ea-admin-functions.php:190 src/Admin/Menus.php:80
+#: src/Admin/Menus.php:81
 msgid "Accounting"
 msgstr ""
 
@@ -240,9 +240,10 @@ msgstr ""
 #: includes/admin/views/revenues/edit-revenue.php:64
 #: includes/admin/views/transfers/edit-transfer.php:96
 #: src/Admin/ListTables/PaymentsTable.php:187
-#: src/Admin/ListTables/RevenuesTable.php:187
+#: src/Admin/ListTables/RevenuesTable.php:180
 #: src/Admin/ListTables/TransactionsTable.php:162
 #: src/Admin/ListTables/TransfersTable.php:187
+#: src/Admin/views/sales/revenues/form.php:27
 msgid "Date"
 msgstr ""
 
@@ -265,7 +266,7 @@ msgstr ""
 #: includes/models/class-bill.php:74 includes/models/class-invoice.php:74
 #: src/Admin/ListTables/ItemsTable.php:259
 #: src/Admin/ListTables/PaymentsTable.php:190
-#: src/Admin/ListTables/RevenuesTable.php:190
+#: src/Admin/ListTables/RevenuesTable.php:183
 #: src/Admin/ListTables/TransactionsTable.php:166
 #: src/Admin/ListTables/TransfersTable.php:190
 #: src/Admin/views/items/items/form.php:84
@@ -286,7 +287,7 @@ msgstr ""
 #: includes/admin/views/revenues/view-income.php:161
 #: includes/admin/views/transfers/edit-transfer.php:83
 #: src/Admin/ListTables/PaymentsTable.php:188
-#: src/Admin/ListTables/RevenuesTable.php:188
+#: src/Admin/ListTables/RevenuesTable.php:181
 #: src/Admin/ListTables/TransactionsTable.php:163
 #: src/Admin/ListTables/TransfersTable.php:188
 msgid "Amount"
@@ -312,7 +313,7 @@ msgstr ""
 #: includes/admin/views/payments/edit-payment.php:80
 #: includes/admin/views/revenues/edit-revenue.php:75
 #: includes/class-settings.php:166 src/Admin/ListTables/PaymentsTable.php:189
-#: src/Admin/ListTables/RevenuesTable.php:189
+#: src/Admin/ListTables/RevenuesTable.php:182
 #: src/Admin/ListTables/TransactionsTable.php:165
 #: src/Admin/ListTables/TransfersTable.php:189
 msgid "Account"
@@ -697,7 +698,6 @@ msgstr ""
 #: src/Admin/views/purchases/vendors/form.php:28
 #: src/Admin/views/sales/customers/form.php:26
 #: src/Admin/views/sales/invoices/form.php:27
-#: src/Admin/views/sales/revenues/form.php:27
 msgid "Name"
 msgstr ""
 
@@ -1224,8 +1224,8 @@ msgstr ""
 #: src/Admin/ListTables/InvoicesTable.php:288
 #: src/Admin/ListTables/PaymentsTable.php:258
 #: src/Admin/ListTables/PaymentsTable.php:287
-#: src/Admin/ListTables/RevenuesTable.php:258
-#: src/Admin/ListTables/RevenuesTable.php:287
+#: src/Admin/ListTables/RevenuesTable.php:251
+#: src/Admin/ListTables/RevenuesTable.php:280
 #: src/Admin/ListTables/TransactionsTable.php:232
 #: src/Admin/ListTables/TransactionsTable.php:261
 #: src/Admin/ListTables/TransfersTable.php:258
@@ -1244,8 +1244,8 @@ msgstr ""
 #: src/Admin/ListTables/InvoicesTable.php:286
 #: src/Admin/ListTables/PaymentsTable.php:256
 #: src/Admin/ListTables/PaymentsTable.php:285
-#: src/Admin/ListTables/RevenuesTable.php:256
-#: src/Admin/ListTables/RevenuesTable.php:285
+#: src/Admin/ListTables/RevenuesTable.php:249
+#: src/Admin/ListTables/RevenuesTable.php:278
 #: src/Admin/ListTables/TransactionsTable.php:230
 #: src/Admin/ListTables/TransactionsTable.php:259
 #: src/Admin/ListTables/TransfersTable.php:256
@@ -1294,9 +1294,9 @@ msgstr ""
 #: src/Admin/ListTables/PaymentsTable.php:141
 #: src/Admin/ListTables/PaymentsTable.php:253
 #: src/Admin/ListTables/PaymentsTable.php:282
-#: src/Admin/ListTables/RevenuesTable.php:141
-#: src/Admin/ListTables/RevenuesTable.php:253
-#: src/Admin/ListTables/RevenuesTable.php:282
+#: src/Admin/ListTables/RevenuesTable.php:148
+#: src/Admin/ListTables/RevenuesTable.php:246
+#: src/Admin/ListTables/RevenuesTable.php:275
 #: src/Admin/ListTables/TaxesTable.php:207
 #: src/Admin/ListTables/TaxesTable.php:364
 #: src/Admin/ListTables/TransactionsTable.php:227
@@ -1315,7 +1315,7 @@ msgstr ""
 #: src/Admin/views/purchases/vendors/form.php:192
 #: src/Admin/views/sales/customers/form.php:191
 #: src/Admin/views/sales/invoices/form.php:48
-#: src/Admin/views/sales/revenues/form.php:48
+#: src/Admin/views/sales/revenues/form.php:50
 #: vendor/woocommerce/action-scheduler/classes/ActionScheduler_ListTable.php:92
 msgid "Delete"
 msgstr ""
@@ -1647,7 +1647,7 @@ msgstr ""
 #: includes/admin/views/revenues/edit-revenue.php:97
 #: includes/ea-contact-functions.php:23 includes/models/class-invoice.php:75
 #: src/Admin/ListTables/InvoicesTable.php:190
-#: src/Admin/ListTables/RevenuesTable.php:191 src/Functions/contacts.php:26
+#: src/Admin/ListTables/RevenuesTable.php:184 src/Functions/contacts.php:26
 msgid "Customer"
 msgstr ""
 
@@ -1722,7 +1722,7 @@ msgstr ""
 #: src/Admin/views/purchases/vendors/form.php:166
 #: src/Admin/views/sales/customers/form.php:165
 #: src/Admin/views/sales/invoices/form.php:39
-#: src/Admin/views/sales/revenues/form.php:39
+#: src/Admin/views/sales/revenues/form.php:41
 msgid "Actions"
 msgstr ""
 
@@ -1755,7 +1755,7 @@ msgstr ""
 #: includes/admin/views/revenues/edit-revenue.php:138
 #: includes/admin/views/transfers/edit-transfer.php:116
 #: src/Admin/ListTables/PaymentsTable.php:192
-#: src/Admin/ListTables/RevenuesTable.php:192
+#: src/Admin/ListTables/RevenuesTable.php:185
 #: src/Admin/ListTables/TransactionsTable.php:167
 #: src/Admin/ListTables/TransfersTable.php:192
 msgid "Reference"
@@ -1791,7 +1791,6 @@ msgstr ""
 #: src/Admin/ListTables/InvoicesTable.php:171
 #: src/Admin/ListTables/ItemsTable.php:239
 #: src/Admin/ListTables/PaymentsTable.php:170
-#: src/Admin/ListTables/RevenuesTable.php:170
 #: src/Admin/ListTables/TransactionsTable.php:146
 #: src/Admin/ListTables/TransfersTable.php:170
 #: vendor/woocommerce/action-scheduler/classes/abstracts/ActionScheduler_Abstract_ListTable.php:541
@@ -1816,7 +1815,7 @@ msgstr ""
 #: includes/admin/list-tables/class-revenue-list-table.php:94
 #: includes/admin/views/revenues/edit-revenue.php:55
 #: src/Admin/views/sales/revenues/add.php:12
-#: src/Admin/views/sales/revenues/form.php:53
+#: src/Admin/views/sales/revenues/form.php:55
 msgid "Add Revenue"
 msgstr ""
 
@@ -2408,7 +2407,7 @@ msgstr ""
 #: src/Admin/views/purchases/vendors/vendors.php:29
 #: src/Admin/views/sales/customers/customers.php:24
 #: src/Admin/views/sales/invoices/invoices.php:21
-#: src/Admin/views/sales/revenues/revenues.php:27
+#: src/Admin/views/sales/revenues/revenues.php:28
 #: vendor/woocommerce/action-scheduler/classes/abstracts/ActionScheduler_Abstract_ListTable.php:786
 msgid "Search"
 msgstr ""
@@ -2645,6 +2644,7 @@ msgid "Fixed"
 msgstr ""
 
 #: includes/admin/views/bills/view-bill.php:22
+#: src/Admin/ListTables/RevenuesTable.php:147
 msgid "Mark as Cancelled"
 msgstr ""
 
@@ -2654,6 +2654,7 @@ msgstr ""
 
 #: includes/admin/views/bills/view-bill.php:31
 #: includes/admin/views/invoices/view-invoice.php:26
+#: src/Admin/ListTables/RevenuesTable.php:144
 msgid "Mark as Paid"
 msgstr ""
 
@@ -3163,7 +3164,7 @@ msgid "Reference:"
 msgstr ""
 
 #: includes/admin/views/revenues/edit-revenue.php:55
-#: src/Admin/views/sales/revenues/form.php:51
+#: src/Admin/views/sales/revenues/form.php:53
 msgid "Update Revenue"
 msgstr ""
 
@@ -3991,49 +3992,49 @@ msgstr ""
 msgid "HTTP Requests disabled for unit tests"
 msgstr ""
 
-#: src/Admin/Actions.php:68
+#: src/Admin/Actions.php:260
 msgid "Item saved successfully."
 msgstr ""
 
-#: src/Admin/Actions.php:110
+#: src/Admin/Actions.php:302
 msgid "Customer saved successfully."
 msgstr ""
 
-#: src/Admin/Actions.php:153
+#: src/Admin/Actions.php:345
 msgid "Vendor saved successfully."
 msgstr ""
 
-#: src/Admin/Actions.php:190
+#: src/Admin/Actions.php:382
 msgid "Account saved successfully."
 msgstr ""
 
-#: src/Admin/Actions.php:226
+#: src/Admin/Actions.php:418
 msgid "Category saved successfully."
 msgstr ""
 
-#: src/Admin/Actions.php:272
+#: src/Admin/Actions.php:464
 msgid "Currency saved successfully."
 msgstr ""
 
-#: src/Admin/Actions.php:312
+#: src/Admin/Actions.php:504
 msgid "Tax saved successfully."
 msgstr ""
 
-#: src/Admin/Admin.php:89
+#: src/Admin/Admin.php:91
 msgid "Are you sure you want to delete this item?"
 msgstr ""
 
-#: src/Admin/Admin.php:106
+#: src/Admin/Admin.php:109
 #. translators: %s: Plugin name
 msgid "Thank you for using %s!"
 msgstr ""
 
-#: src/Admin/Admin.php:112
+#: src/Admin/Admin.php:115
 #. translators: %s: Plugin name
 msgid " Share your appreciation with a five-star review %s."
 msgstr ""
 
-#: src/Admin/Admin.php:132
+#: src/Admin/Admin.php:135
 #. translators: 1: Plugin version
 msgid "Version %s"
 msgstr ""
@@ -4212,14 +4213,16 @@ msgstr[1] ""
 msgid "No payments found."
 msgstr ""
 
-#: src/Admin/ListTables/RevenuesTable.php:104
-msgid "Revenue deleted."
-msgid_plural "%s revenues deleted."
-msgstr[0] ""
-msgstr[1] ""
-
-#: src/Admin/ListTables/RevenuesTable.php:114
+#: src/Admin/ListTables/RevenuesTable.php:93
 msgid "No revenues found."
+msgstr ""
+
+#: src/Admin/ListTables/RevenuesTable.php:145
+msgid "Mark as Pending"
+msgstr ""
+
+#: src/Admin/ListTables/RevenuesTable.php:146
+msgid "Mark as Refunded"
 msgstr ""
 
 #: src/Admin/ListTables/TaxesTable.php:103
@@ -4278,11 +4281,11 @@ msgstr ""
 msgid "No vendors found."
 msgstr ""
 
-#: src/Admin/Menus.php:91 src/Admin/Menus.php:92
+#: src/Admin/Menus.php:92 src/Admin/Menus.php:93
 msgid "Dashboard"
 msgstr ""
 
-#: src/Admin/Menus.php:210
+#: src/Admin/Menus.php:211
 msgid "Per page"
 msgstr ""
 
@@ -4492,7 +4495,6 @@ msgstr ""
 #: src/Admin/views/purchases/bills/form.php:21
 #: src/Admin/views/purchases/payments/form.php:21
 #: src/Admin/views/sales/invoices/form.php:21
-#: src/Admin/views/sales/revenues/form.php:21
 msgid "Item details"
 msgstr ""
 
@@ -4732,6 +4734,10 @@ msgstr ""
 
 #: src/Admin/views/sales/revenues/edit.php:12
 msgid "Edit Revenue"
+msgstr ""
+
+#: src/Admin/views/sales/revenues/form.php:19
+msgid "Revenue details"
 msgstr ""
 
 #: src/Functions/accounts.php:17
@@ -6076,6 +6082,7 @@ msgstr ""
 #: src/Admin/ListTables/CurrenciesTable.php:161
 #: src/Admin/ListTables/CustomersTable.php:178
 #: src/Admin/ListTables/ItemsTable.php:178
+#: src/Admin/ListTables/RevenuesTable.php:109
 #: src/Admin/ListTables/TaxesTable.php:177
 #: src/Admin/ListTables/VendorsTable.php:178
 #. translators: %s: number of accounts.
@@ -6083,6 +6090,7 @@ msgstr ""
 #. translators: %s: number of currencies.
 #. translators: %s: number of currencies.
 #. translators: %s: number of currencies.
+#. translators: %s: number of revenues.
 #. translators: %s: number of currencies.
 #. translators: %s: number of currencies.
 msgctxt "list_table"
@@ -6128,6 +6136,38 @@ msgstr[1] ""
 msgctxt "list_table"
 msgid "Inactive <span class=\"count\">(%s)</span>"
 msgid_plural "Inactive <span class=\"count\">(%s)</span>"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Admin/ListTables/RevenuesTable.php:111
+#. translators: %s: number of revenues.
+msgctxt "list_table"
+msgid "Pending <span class=\"count\">(%s)</span>"
+msgid_plural "Pending <span class=\"count\">(%s)</span>"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Admin/ListTables/RevenuesTable.php:113
+#. translators: %s: number of revenues.
+msgctxt "list_table"
+msgid "Paid <span class=\"count\">(%s)</span>"
+msgid_plural "Paid <span class=\"count\">(%s)</span>"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Admin/ListTables/RevenuesTable.php:115
+#. translators: %s: number of revenues.
+msgctxt "list_table"
+msgid "Refunded <span class=\"count\">(%s)</span>"
+msgid_plural "Refunded <span class=\"count\">(%s)</span>"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Admin/ListTables/RevenuesTable.php:117
+#. translators: %s: number of revenues.
+msgctxt "list_table"
+msgid "Cancelled <span class=\"count\">(%s)</span>"
+msgid_plural "Cancelled <span class=\"count\">(%s)</span>"
 msgstr[0] ""
 msgstr[1] ""
 

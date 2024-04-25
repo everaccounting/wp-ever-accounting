@@ -19,6 +19,7 @@ class Actions {
 	 * @since 1.0.0
 	 */
 	public function __construct() {
+		add_action( 'wp_ajax_eac_json_search', array( $this, 'handle_json_search' ) );
 		add_action( 'admin_post_eac_edit_item', array( $this, 'handle_edit_item' ) );
 		add_action( 'admin_post_eac_edit_customer', array( $this, 'handle_edit_customer' ) );
 		add_action( 'admin_post_eac_edit_vendor', array( $this, 'handle_edit_vendor' ) );
@@ -26,6 +27,212 @@ class Actions {
 		add_action( 'admin_post_eac_edit_category', array( $this, 'handle_edit_category' ) );
 		add_action( 'admin_post_eac_edit_currency', array( $this, 'handle_edit_currency' ) );
 		add_action( 'admin_post_eac_edit_tax', array( $this, 'handle_edit_tax' ) );
+	}
+
+	/**
+	 * Search items.
+	 *
+	 * @return void
+	 * @since 1.2.0
+	 */
+	public function handle_json_search() {
+		check_ajax_referer( 'eac_search_action' );
+		$type    = isset( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '';
+		$term    = isset( $_POST['term'] ) ? sanitize_text_field( wp_unslash( $_POST['term'] ) ) : '';
+		$limit   = isset( $_POST['limit'] ) ? absint( $_POST['limit'] ) : 20;
+		$page    = isset( $_POST['page'] ) ? absint( $_POST['page'] ) : 1;
+		$results = array();
+		$total   = 0;
+
+		$args = array(
+			'limit'    => $limit,
+			'page'     => $page,
+			'status'   => 'active',
+			'search'   => $term,
+			'no_count' => true,
+		);
+		switch ( $type ) {
+			case 'account':
+				$accounts = eac_get_accounts( $args );
+				$total    = eac_get_accounts( $args, true );
+				$results  = array_map(
+					function ( $account ) {
+						return array(
+							'id'   => $account->id,
+							'text' => $account->formatted_name,
+						);
+					},
+					$accounts
+				);
+				break;
+			case 'item':
+				$items   = eac_get_items( $args );
+				$total   = eac_get_items( $args, true );
+				$results = array_map(
+					function ( $item ) {
+						return array(
+							'id'   => $item->id,
+							'text' => $item->formatted_name,
+						);
+					},
+					$items
+				);
+				break;
+			case 'item_category':
+				$args['type'] = 'item';
+				$categories   = eac_get_categories( $args );
+				$total        = eac_get_categories( $args, true );
+				foreach ( $categories as $category ) {
+					$results[] = array(
+						'id'   => $category->get_id(),
+						'text' => $category->get_formatted_name(),
+					);
+				}
+				break;
+			case 'payment_category':
+				$args['type'] = 'payment';
+				$categories   = eac_get_categories( $args );
+				$total        = eac_get_categories( $args, true );
+				foreach ( $categories as $category ) {
+					$results[] = array(
+						'id'   => $category->get_id(),
+						'text' => $category->get_formatted_name(),
+					);
+				}
+				break;
+			case 'expense_category':
+				$args['type'] = 'expense';
+				$categories   = eac_get_categories( $args );
+				$total        = eac_get_categories( $args, true );
+				foreach ( $categories as $category ) {
+					$results[] = array(
+						'id'   => $category->get_id(),
+						'text' => $category->get_formatted_name(),
+					);
+				}
+				break;
+			case 'currency':
+				$currencies = eac_get_currencies();
+				$total      = eac_get_currencies();
+				$results    = array_map(
+					function ( $currency ) {
+						return array(
+							'id'   => $currency->id,
+							'text' => $currency->formatted_name,
+						);
+					},
+					$currencies
+				);
+				break;
+
+			// case 'payment':
+			// $payments = eac_get_payments( $args );
+			// $total    = eac_get_payments( $args, true );
+			// foreach ( $payments as $payment ) {
+			// $results[] = array(
+			// 'id'   => $payment->get_id(),
+			// 'text' => $payment->get_amount(),
+			// );
+			// }
+			// break;
+
+			case 'expense':
+				$expenses = eac_get_expenses( $args );
+				$total    = eac_get_expenses( $args, true );
+				foreach ( $expenses as $expense ) {
+					$results[] = array(
+						'id'   => $expense->get_id(),
+						'text' => $expense->get_amount(),
+					);
+				}
+				break;
+
+			case 'customer':
+				$customers = eac_get_customers( $args );
+				$total     = eac_get_customers( $args, true );
+				$results   = array_map(
+					function ( $customer ) {
+						return array(
+							'id'   => $customer->id,
+							'text' => $customer->formatted_name,
+						);
+					},
+					$customers
+				);
+				break;
+
+			case 'vendor':
+				$vendors = eac_get_vendors( $args );
+				$total   = eac_get_vendors( $args, true );
+				$results = array_map(
+					function ( $vendor ) {
+						return array(
+							'id'   => $vendor->id,
+							'text' => $vendor->formatted_name,
+						);
+					},
+					$vendors
+				);
+				break;
+			// case 'invoice':
+			// $invoices = eac_get_invoices( $args );
+			// $total    = eac_get_invoices( $args, true );
+			// foreach ( $invoices as $invoice ) {
+			// $results[] = array(
+			// 'id'   => $invoice->get_id(),
+			// 'text' => $invoice->get_formatted_name(),
+			// );
+			// }
+			// break;
+			// case 'bill':
+			// $bills = eac_get_bills( $args );
+			// $total = eac_get_bills( $args, true );
+			// foreach ( $bills as $bill ) {
+			// $results[] = array(
+			// 'id'   => $bill->get_id(),
+			// 'text' => $bill->get_bill_number(),
+			// );
+			// }
+			// break;
+			case 'tax':
+				$tax_rates = eac_get_taxes( $args );
+				$total     = eac_get_taxes( $args, true );
+				foreach ( $tax_rates as $tax_rate ) {
+					$results[] = array(
+						'id'   => $tax_rate->get_id(),
+						'text' => $tax_rate->get_formatted_name(),
+					);
+				}
+				break;
+
+			default:
+				$filtered = apply_filters(
+					'ever_accounting_json_search',
+					array(
+						'results' => $results,
+						'total'   => $total,
+					),
+					$type,
+					$term,
+					$limit,
+					$page
+				);
+
+				$results = $filtered['results'];
+				$total   = $filtered['total'];
+				break;
+		}
+
+		wp_send_json(
+			array(
+				'results'    => $results,
+				'total'      => $total,
+				'page'       => $page,
+				'pagination' => array(
+					'more' => ( $page * $limit ) < $total,
+				),
+			)
+		);
 	}
 
 	/**

@@ -28,7 +28,7 @@ class Installer {
 			'eac_update_1215',
 			'eac_update_1215_another',
 		),
-		'1.2.1.7' => 'eac_update_1217'
+		'1.2.1.7' => 'eac_update_1217',
 	);
 
 	/**
@@ -37,9 +37,9 @@ class Installer {
 	 * @since 1.0.0
 	 */
 	public function __construct() {
-		add_action( 'init', array( $this, 'check_update' ), 5 );
-		add_action( 'eac_run_update_callback', array( $this, 'run_update_callback' ), 10, 2 );
-		add_action( 'eac_update_db_version', array( $this, 'update_db_version' ) );
+//		add_action( 'init', array( $this, 'check_update' ), 5 );
+//		add_action( 'eac_run_update_callback', array( $this, 'run_update_callback' ), 10, 2 );
+//		add_action( 'eac_update_db_version', array( $this, 'update_db_version' ) );
 	}
 
 	/**
@@ -84,19 +84,19 @@ class Installer {
 					EAC()->queue()->schedule_single(
 						time() + $loop,
 						'eac_run_update_callback',
-						array( 'callback' => $callback, 'version' => $version )
+						array(
+							'callback' => $callback,
+							'version'  => $version,
+						)
 					);
-
-					error_log( sprintf( 'Scheduling update callback %s of version %s', $callback, $version ) );
-
-					$loop ++;
+					++$loop;
 				}
 			}
-			$loop ++;
+			++$loop;
 		}
 
 		if ( version_compare( EAC()->get_db_version(), EAC()->get_version(), '<' ) &&
-		     ! EAC()->queue()->get_next( 'eac_update_db_version' ) ) {
+			! EAC()->queue()->get_next( 'eac_update_db_version' ) ) {
 			EAC()->queue()->schedule_single(
 				time() + $loop,
 				'eac_update_db_version',
@@ -104,7 +104,6 @@ class Installer {
 					'version' => EAC()->get_version(),
 				)
 			);
-			error_log( "Finally scheduling db udpate" );
 		}
 	}
 
@@ -142,7 +141,6 @@ class Installer {
 	 * @return void
 	 */
 	public function update_db_version( $version ) {
-		error_log( "Updating db version to $version" );
 		EAC()->update_db_version( $version );
 	}
 
@@ -176,7 +174,7 @@ class Installer {
 		// drop old ea_currencies table if exists.
 		$currency_table = $wpdb->prefix . 'ea_currencies';
 		if ( $wpdb->get_var( "SHOW TABLES LIKE '{$currency_table}'" ) === $currency_table &&
-		     $wpdb->get_var( "SHOW COLUMNS FROM {$currency_table} LIKE 'exchange_rate'" ) != 'exchange_rate' ) {
+			$wpdb->get_var( "SHOW COLUMNS FROM {$currency_table} LIKE 'exchange_rate'" ) != 'exchange_rate' ) {
 			$wpdb->query( "DROP TABLE $currency_table" );
 		}
 
@@ -447,8 +445,8 @@ KEY `ea_transaction_id`(`ea_transaction_id`),
 KEY `meta_key` (meta_key($index_length))
 ) $collate;
 CREATE TABLE {$wpdb->prefix}ea_transactions(
-`type` VARCHAR(20) DEFAULT NULL,
 `id` bigINT(20) NOT NULL AUTO_INCREMENT,
+`type` VARCHAR(20) DEFAULT NULL,
 `number` VARCHAR(30) DEFAULT NULL,
 `date` DATE NOT NULL DEFAULT '0000-00-00',
 `amount` DOUBLE(15,4) NOT NULL,
@@ -461,11 +459,13 @@ CREATE TABLE {$wpdb->prefix}ea_transactions(
 `document_id` BIGINT(20) UNSIGNED DEFAULT NULL,
 `contact_id` BIGINT(20) UNSIGNED DEFAULT NULL,
 `category_id` BIGINT(20) UNSIGNED NOT NULL,
+`transfer_id` BIGINT(20) UNSIGNED DEFAULT NULL,
 `attachment_id` BIGINT(20) UNSIGNED DEFAULT NULL,
 `parent_id` BIGINT(20) UNSIGNED DEFAULT NULL,
 `reconciled` tinyINT(1) NOT NULL DEFAULT '0',
 `created_via` VARCHAR(100) DEFAULT 'manual',
 `author_id` BIGINT(20) UNSIGNED DEFAULT NULL,
+`status` ENUM('draft','pending','completed','refunded','cancelled') NOT NULL DEFAULT 'draft',
 `uuid` VARCHAR(36) DEFAULT NULL,
 `date_updated` DATETIME NULL DEFAULT NULL,
 `date_created` DATETIME NULL DEFAULT NULL,
@@ -479,6 +479,8 @@ KEY `account_id` (`account_id`),
 KEY `document_id` (`document_id`),
 KEY `category_id` (`category_id`),
 KEY `contact_id` (`contact_id`),
+KEY `transfer_id` (`transfer_id`),
+KEY `status` (`status`),
 UNIQUE KEY `uuid` (`uuid`)
 ) $collate;
 CREATE TABLE {$wpdb->prefix}ea_transfers(
@@ -515,7 +517,7 @@ UNIQUE KEY `uuid` (`uuid`)
 			}
 			delete_option( 'eaccounting_currencies' );
 		}
-		$currencies = eac_get_currencies( [ 'limit' => - 1 ] );
+		$currencies = eac_get_currencies( array( 'limit' => - 1 ) );
 		$codes      = wp_list_pluck( $currencies, 'code' );
 		foreach ( I18n::get_currencies() as $code => $currency ) {
 			if ( ! in_array( $code, $codes, true ) ) {
@@ -525,11 +527,16 @@ UNIQUE KEY `uuid` (`uuid`)
 		}
 
 		// now if there is any no active currency, make USD active.
-		$active_currencies = eac_get_currencies( [ 'status' => 'active' ] );
+		$active_currencies = eac_get_currencies( array( 'status' => 'active' ) );
 		if ( empty( $active_currencies ) ) {
 			$usd = eac_get_currency( 'USD' );
 			if ( $usd ) {
-				eac_insert_currency( [ 'id' => $usd->id, 'status' => 'active' ] );
+				eac_insert_currency(
+					array(
+						'id'     => $usd->id,
+						'status' => 'active',
+					)
+				);
 			}
 		}
 	}

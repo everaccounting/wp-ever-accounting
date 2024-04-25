@@ -30,7 +30,6 @@ function eac_get_transaction_types() {
 	return apply_filters( 'ever_accounting_transaction_types', $types );
 }
 
-
 /**
  * Get Transaction Statuses
  *
@@ -39,8 +38,9 @@ function eac_get_transaction_types() {
  */
 function eac_get_transaction_statuses() {
 	$statuses = array(
+		'draft'     => esc_html__( 'Draft', 'wp-ever-accounting' ), // 'draft' status is only for internal use.
 		'pending'   => esc_html__( 'Pending', 'wp-ever-accounting' ),
-		'paid'      => esc_html__( 'Paid', 'wp-ever-accounting' ),
+		'completed' => esc_html__( 'Completed', 'wp-ever-accounting' ),
 		'refunded'  => esc_html__( 'Refunded', 'wp-ever-accounting' ),
 		'cancelled' => esc_html__( 'Cancelled', 'wp-ever-accounting' ),
 	);
