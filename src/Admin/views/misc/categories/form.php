@@ -19,33 +19,37 @@ defined( 'ABSPATH' ) || exit;
 				</div>
 
 				<div class="bkit-card__body grid--fields">
-
-					<div class="bkit-form-group">
-						<label for="name">
-							<?php esc_html_e( 'Name', 'wp-ever-accounting' ); ?>
-							<abbr title="required"></abbr>
-						</label>
-						<input type="text" name="name" id="name" value="<?php echo esc_attr( $category->name ); ?>"/>
-					</div>
-
-					<div class="bkit-form-group">
-						<label for="type">
-							<?php esc_html_e( 'Type', 'wp-ever-accounting' ); ?>
-							<abbr title="required"></abbr>
-						</label>
-						<select name="type" id="type">
-							<option value=""><?php esc_html_e( 'Select type', 'wp-ever-accounting' ); ?></option>
-							<?php foreach ( eac_get_category_types() as $key => $value ) : ?>
-								<option value="<?php echo esc_attr( $key ); ?>" <?php selected( $key, $category->type ); ?>><?php echo esc_html( $value ); ?></option>
-							<?php endforeach; ?>
-						</select>
-					</div>
-
-					<div class="bkit-form-group is--full">
-						<label for="description"><?php esc_html_e( 'Description', 'wp-ever-accounting' ); ?></label>
-						<textarea name="description" id="description"><?php echo esc_html( $category->description ); ?></textarea>
-					</div>
-
+					<?php
+					eac_form_group(
+						array(
+							'id'          => 'name',
+							'label'       => __( 'Name', 'wp-ever-accounting' ),
+							'placeholder' => __( 'Enter category name', 'wp-ever-accounting' ),
+							'value'       => $category->name,
+							'required'    => true,
+						)
+					);
+					eac_form_group(
+						array(
+							'id'          => 'type',
+							'type'        => 'select',
+							'label'       => __( 'Type', 'wp-ever-accounting' ),
+							'placeholder' => __( 'Select category type', 'wp-ever-accounting' ),
+							'value'       => $category->type,
+							'options'     => eac_get_category_types(),
+						)
+					);
+					eac_form_group(
+						array(
+							'id'            => 'description',
+							'label'         => __( 'Description', 'wp-ever-accounting' ),
+							'placeholder'   => __( 'Enter category description', 'wp-ever-accounting' ),
+							'value'         => $category->description,
+							'type'          => 'textarea',
+							'wrapper_class' => 'is--full',
+						)
+					);
+					?>
 				</div>
 			</div>
 		</div><!-- .column-1 -->
@@ -57,15 +61,21 @@ defined( 'ABSPATH' ) || exit;
 				</div>
 
 				<div class="bkit-card__body">
-					<div class="bkit-form-group">
-						<label for="status">
-							<?php esc_html_e( 'Status', 'wp-ever-accounting' ); ?>
-						</label>
-						<select name="status" id="status">
-							<option value="active" <?php selected( 'active', $category->status ); ?>><?php esc_html_e( 'Active', 'wp-ever-accounting' ); ?></option>
-							<option value="inactive" <?php selected( 'inactive', $category->status ); ?>><?php esc_html_e( 'Inactive', 'wp-ever-accounting' ); ?></option>
-						</select>
-					</div>
+					<?php
+					eac_form_group(
+						array(
+							'type'        => 'select',
+							'id'          => 'status',
+							'label'       => __( 'Status', 'wp-ever-accounting' ),
+							'options'     => array(
+								'active'   => __( 'Active', 'wp-ever-accounting' ),
+								'inactive' => __( 'Inactive', 'wp-ever-accounting' ),
+							),
+							'value'       => $category->status,
+							'placeholder' => __( 'Select status', 'wp-ever-accounting' ),
+						)
+					);
+					?>
 				</div>
 
 				<div class="bkit-card__footer">

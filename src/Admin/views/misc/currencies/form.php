@@ -19,74 +19,97 @@ defined( 'ABSPATH' ) || exit;
 				</div>
 				<div class="bkit-card__body grid--fields">
 
-					<div class="bkit-form-group">
-						<label for="code">
-							<?php esc_html_e( 'Code', 'wp-ever-accounting' ); ?>
-							<abbr title="required"></abbr>
-						</label>
-						<input type="text" name="code" id="code" value="<?php echo esc_attr( $currency->code ); ?>" readonly/>
-					</div>
+					<?php
+					eac_form_group(
+						array(
+							'id'       => 'code',
+							'label'    => __( 'Code', 'wp-ever-accounting' ),
+							'value'    => $currency->code,
+							'class'    => 'eac-col-6',
+							'required' => true,
+							'readonly' => true,
+						)
+					);
+					eac_form_group(
+						array(
+							'id'       => 'name',
+							'label'    => __( 'Name', 'wp-ever-accounting' ),
+							'type'     => 'text',
+							'value'    => $currency->get_name(),
+							'class'    => 'eac-col-6',
+							'required' => true,
+						)
+					);
+					eac_form_group(
+						array(
+							'id'        => 'exchange_rate',
+							'label'     => __( 'Exchange Rate', 'wp-ever-accounting' ),
+							'data_type' => 'decimal',
+							'value'     => $currency->is_base_currency() ? 1 : $currency->exchange_rate,
+							'readonly'  => $currency->is_base_currency() ? 'readonly' : false,
+							'required'  => true,
+							// translators: %s is the base currency.
+							'prefix'    => sprintf( __( '1 %s =', 'wp-ever-accounting' ), eac_get_base_currency() ),
+						)
+					);
+					eac_form_group(
+						array(
+							'id'       => 'symbol',
+							'label'    => __( 'Symbol', 'wp-ever-accounting' ),
+							'type'     => 'text',
+							'value'    => $currency->symbol,
+							'class'    => 'eac-col-6',
+							'required' => true,
+						)
+					);
+					eac_form_group(
+						array(
+							'id'       => 'thousand_separator',
+							'label'    => __( 'Thousand Separator', 'wp-ever-accounting' ),
+							'type'     => 'text',
+							'value'    => $currency->thousand_separator,
+							'class'    => 'eac-col-6',
+							'required' => true,
+						)
+					);
 
-					<div class="bkit-form-group">
-						<label for="exchange_rate">
-							<?php esc_html_e( 'Exchange Rate', 'wp-ever-accounting' ); ?>
-							<abbr title="required"></abbr>
-						</label>
-						<input type="text" name="exchange_rate" id="exchange_rate" value="<?php echo esc_attr( $currency->exchange_rate ); ?>"
-							<?php echo eac_get_base_currency() == $currency->code ? 'readonly' : ''; ?>/>
-					</div>
+					eac_form_group(
+						array(
+							'id'       => 'decimal_separator',
+							'label'    => __( 'Decimal Separator', 'wp-ever-accounting' ),
+							'type'     => 'text',
+							'value'    => $currency->decimal_separator,
+							'class'    => 'eac-col-6',
+							'required' => true,
+						)
+					);
 
-					<div class="bkit-form-group">
-						<label for="name">
-							<?php esc_html_e( 'Name', 'wp-ever-accounting' ); ?>
-							<abbr title="required"></abbr>
-						</label>
-						<input type="text" name="name" id="name" value="<?php echo esc_attr( $currency->name ); ?>"/>
-					</div>
+					eac_form_group(
+						array(
+							'id'       => 'precision',
+							'label'    => __( 'Number of Decimals', 'wp-ever-accounting' ),
+							'type'     => 'number',
+							'value'    => $currency->precision,
+							'class'    => 'eac-col-6',
+							'required' => true,
+						)
+					);
 
-					<div class="bkit-form-group">
-						<label for="symbol">
-							<?php esc_html_e( 'Symbol', 'wp-ever-accounting' ); ?>
-							<abbr title="required"></abbr>
-						</label>
-						<input type="text" name="symbol" id="symbol" value="<?php echo esc_attr( $currency->symbol ); ?>"/>
-					</div>
-
-					<div class="bkit-form-group">
-						<label for="thousand_separator">
-							<?php esc_html_e( 'Thousand Separator', 'wp-ever-accounting' ); ?>
-							<abbr title="required"></abbr>
-						</label>
-						<input type="text" name="thousand_separator" id="thousand_separator" value="<?php echo esc_attr( $currency->thousand_separator ); ?>"/>
-					</div>
-
-					<div class="bkit-form-group">
-						<label for="decimal_separator">
-							<?php esc_html_e( 'Decimal Separator', 'wp-ever-accounting' ); ?>
-							<abbr title="required"></abbr>
-						</label>
-						<input type="text" name="decimal_separator" id="decimal_separator" value="<?php echo esc_attr( $currency->decimal_separator ); ?>"/>
-					</div>
-
-					<div class="bkit-form-group">
-						<label for="precision">
-							<?php esc_html_e( 'Number of Decimals', 'wp-ever-accounting' ); ?>
-							<abbr title="required"></abbr>
-						</label>
-						<input type="number" name="precision" id="precision" value="<?php echo esc_attr( $currency->precision ); ?>"/>
-					</div>
-
-					<div class="bkit-form-group">
-						<label for="position">
-							<?php esc_html_e( 'Symbol Position', 'wp-ever-accounting' ); ?>
-							<abbr title="required"></abbr>
-						</label>
-						<select name="position" id="position" required="required">
-							<option value=""><?php esc_html_e( 'Select an option…', 'wp-ever-accounting' ); ?></option>
-							<option value="before" <?php selected( 'before', $currency->position ); ?>><?php esc_html_e( 'Before amount', 'wp-ever-accounting' ); ?></option>
-							<option value="after" <?php selected( 'after', $currency->position ); ?>><?php esc_html_e( 'After amount', 'wp-ever-accounting' ); ?></option>
-						</select>
-					</div>
+					eac_form_group(
+						array(
+							'id'       => 'position',
+							'label'    => __( 'Symbol Position', 'wp-ever-accounting' ),
+							'type'     => 'select',
+							'value'    => $currency->position,
+							'class'    => 'eac-col-6',
+							'required' => true,
+							'options'  => array(
+								'before' => __( 'Before amount', 'wp-ever-accounting' ),
+								'after'  => __( 'After amount', 'wp-ever-accounting' ),
+							),
+						)
+					);
+					?>
 				</div>
 			</div>
 		</div><!-- .column-1 -->
@@ -98,15 +121,21 @@ defined( 'ABSPATH' ) || exit;
 				</div>
 
 				<div class="bkit-card__body">
-					<div class="bkit-form-group">
-						<label for="status">
-							<?php esc_html_e( 'Status', 'wp-ever-accounting' ); ?>
-						</label>
-						<select name="status" id="status">
-							<option value="active" <?php selected( 'active', $currency->status ); ?>><?php esc_html_e( 'Active', 'wp-ever-accounting' ); ?></option>
-							<option value="inactive" <?php selected( 'inactive', $currency->status ); ?>><?php esc_html_e( 'Inactive', 'wp-ever-accounting' ); ?></option>
-						</select>
-					</div>
+					<?php
+					eac_form_group(
+						array(
+							'type'        => 'select',
+							'id'          => 'status',
+							'label'       => __( 'Status', 'wp-ever-accounting' ),
+							'options'     => array(
+								'active'   => __( 'Active', 'wp-ever-accounting' ),
+								'inactive' => __( 'Inactive', 'wp-ever-accounting' ),
+							),
+							'value'       => $currency->status,
+							'placeholder' => __( 'Select status', 'wp-ever-accounting' ),
+						)
+					);
+					?>
 				</div>
 
 				<div class="bkit-card__footer">

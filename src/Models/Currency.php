@@ -24,6 +24,7 @@ use ByteKit\Models\Relation;
  * @property float  $exchange_rate Exchange rate of the currency.
  * @property string $date_updated Date updated of the currency.
  * @property string $date_created Date created of the currency.
+ * @property string $status Status of the currency.
  *
  * @property string $formatted_name Formatted name.
  */
@@ -125,7 +126,7 @@ class Currency extends Model {
 	 */
 	protected function set_position_prop( $value ) {
 		$value = strtolower( $value );
-		$value = in_array( $value, array( 'before', 'after' ) ) ? $value : 'before';
+		$value = in_array( $value, array( 'before', 'after', true ) ) ? $value : 'before';
 		$this->set_prop_value( 'position', $value );
 	}
 
@@ -146,6 +147,16 @@ class Currency extends Model {
 	 */
 	protected function get_formatted_name_prop() {
 		return sprintf( '%s (%s)', $this->name, $this->code );
+	}
+
+	/**
+	 * Determine if the currency is base currency.
+	 *
+	 * @since 1.0.0
+	 * @return bool
+	 */
+	public function is_base_currency() {
+		return eac_get_base_currency() === $this->code;
 	}
 
 	/**
