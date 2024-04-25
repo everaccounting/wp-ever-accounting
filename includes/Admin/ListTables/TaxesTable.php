@@ -297,10 +297,7 @@ class TaxesTable extends ListTable {
 	 * @return string Displays the compound.
 	 */
 	public function column_is_compound( $item ) {
-		$is_compound_false = false === $item->is_compound ? 'no' : null;
-		$is_compound       = true === $item->is_compound ? 'yes' : $is_compound_false;
-
-		return isset( $is_compound ) ? esc_html( ucfirst( $is_compound ) ) : '&mdash;';
+		return $item->is_compound ? __( 'Yes', 'wp-ever-accounting' ) : __( 'No', 'wp-ever-accounting' );
 	}
 
 	/**
