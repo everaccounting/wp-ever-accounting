@@ -15,9 +15,9 @@ use ByteKit\Models\Relation;
  * @property int    $id ID of the category.
  * @property string $code Code of the currency.
  * @property string $name Name of the category.
- * @property int $precision Precision of the currency.
+ * @property int    $precision Precision of the currency.
  * @property string $symbol Symbol of the currency.
- * @property int $subunit Subunit of the currency.
+ * @property int    $subunit Subunit of the currency.
  * @property string $position Position of the currency.
  * @property string $decimal_separator Decimal separator of the currency.
  * @property string $thousand_separator A Thousand separator of the currency.
@@ -80,6 +80,7 @@ class Currency extends Model {
 	 *
 	 * @since 1.0.0
 	 * @return bool
+	 * @var array
 	 */
 	protected $casts = array(
 		'id'            => 'int',
@@ -96,7 +97,7 @@ class Currency extends Model {
 	 */
 	protected $searchable = array(
 		'name',
-		'code'
+		'code',
 	);
 
 	/**
@@ -126,7 +127,7 @@ class Currency extends Model {
 	 */
 	protected function set_position_prop( $value ) {
 		$value = strtolower( $value );
-		$value = in_array( $value, array( 'before', 'after', true ) ) ? $value : 'before';
+		$value = in_array( $value, array( 'before', 'after', true ), true ) ? $value : 'before';
 		$this->set_prop_value( 'position', $value );
 	}
 

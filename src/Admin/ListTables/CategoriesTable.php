@@ -56,6 +56,7 @@ class CategoriesTable extends ListTable {
 			'search'   => $search,
 			'order_by' => $order_by,
 			'order'    => $order,
+			'status'   => $this->get_request_status(),
 		);
 
 		/**

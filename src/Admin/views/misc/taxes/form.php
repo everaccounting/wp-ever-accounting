@@ -1,9 +1,11 @@
 <?php
 /**
- * Tax form
+ * Admin Tax Form.
+ * Page: Misc
+ * Tab: Taxes
  *
  * @package EverAccounting
- * @version 1.0.0
+ * @since 1.0.0
  * @var $tax \EverAccounting\Models\Tax Tax object.
  */
 
@@ -36,14 +38,18 @@ defined( 'ABSPATH' ) || exit;
 							'placeholder' => __( 'Enter tax rate', 'wp-ever-accounting' ),
 							'value'       => $tax->rate,
 							'required'    => true,
+							'type'        => 'number',
 						)
 					);
+
+					$is_compound_false = false === $tax->is_compound ? 'no' : null;
+					$is_compound       = true === $tax->is_compound ? 'yes' : $is_compound_false;
 					eac_form_group(
 						array(
 							'id'          => 'is_compound',
 							'label'       => __( 'Is compound', 'wp-ever-accounting' ),
 							'placeholder' => __( 'Select if tax is compound', 'wp-ever-accounting' ),
-							'value'       => $tax->is_compound,
+							'value'       => $is_compound,
 							'required'    => true,
 							'options'     => array(
 								'yes' => __( 'Yes', 'wp-ever-accounting' ),

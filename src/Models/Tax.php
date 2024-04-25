@@ -58,12 +58,13 @@ class Tax extends Model {
 	 * Model's casts data.
 	 *
 	 * @since 1.0.0
+	 * @var array
 	 * @return bool
 	 */
 	protected $casts = array(
 		'id'          => 'int',
 		'rate'        => 'float',
-		'is_compound' => 'bool'
+		'is_compound' => 'bool',
 	);
 
 	/**
@@ -73,7 +74,7 @@ class Tax extends Model {
 	 * @var array
 	 */
 	protected $searchable = array(
-		'name'
+		'name',
 	);
 
 	/**

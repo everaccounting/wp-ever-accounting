@@ -1,16 +1,21 @@
 <?php
 /**
- * Currencies view.
+ * Admin List of Currencies.
+ * Page: Misc
+ * Tab: Currencies
  *
- * @since 1.2.0
  * @package EverAccounting
- * @subpackage Admin/Views/Banking/Currencies
+ * @since 1.0.0
+ * @var $currency \EverAccounting\Models\Currency Currency object.
  */
 
 defined( 'ABSPATH' ) || exit;
 ?>
 	<h1 class="wp-heading-inline">
 		<?php esc_html_e( 'Currencies', 'wp-ever-accounting' ); ?>
+		<?php if ( $this->list_table->get_request_search() ) : ?>
+			<span class="subtitle"><?php echo esc_html( sprintf( /* translators: 1: Get requested search string */ __( 'Search results for "%s"', 'wp-ever-accounting' ), esc_html( $this->list_table->get_request_search() ) ) ); ?></span>
+		<?php endif; ?>
 	</h1>
 	<hr class="wp-header-end">
 	<form method="get" action="<?php echo esc_url( admin_url( 'admin.php' ) ); ?>">

@@ -1,8 +1,11 @@
 <?php
 /**
- * Edit category view.
+ * Admin Edit Category View.
+ * Page: Misc
+ * Tab: Categories
  *
  * @package EverAccounting
+ * @since 1.0.0
  * @var $category \EverAccounting\Models\Category Category object.
  */
 
