@@ -2,6 +2,8 @@
 
 namespace EverAccounting\Models;
 
+use EverAccounting\Utilities\I18n;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -33,6 +35,8 @@ defined( 'ABSPATH' ) || exit;
  * @property string $uuid UUID of the contact.
  * @property string $date_created Date created of the contact.
  * @property string $date_updated Date updated of the contact.
+ *
+ * @property-read  string $country_name Get country name.
  */
 class Contact extends Model {
 
@@ -135,7 +139,7 @@ class Contact extends Model {
 	 * @var array
 	 */
 	protected $searchable = array(
-		'name'
+		'name',
 	);
 
 	/**
@@ -158,6 +162,17 @@ class Contact extends Model {
 		$this->data['type']       = $this->get_object_type();
 		$this->query_args['type'] = $this->get_object_type();
 		parent::__construct( $data );
+	}
+
+	/**
+	 * Get country name.
+	 *
+	 * @since 1.0.0
+	 * @return string
+	 */
+	public function get_country_name_prop() {
+		$countries = I18n::get_countries();
+		return isset( $countries[ $this->country ] ) ? $countries[ $this->country ] : $this->country;
 	}
 
 	/**

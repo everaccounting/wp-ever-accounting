@@ -9,7 +9,7 @@
 
 defined( 'ABSPATH' ) || exit;
 ?>
-<form id="eac-taxes-form" method="post" action="<?php echo esc_html( admin_url( 'admin-post.php' ) ); ?>">
+<form id="eac-tax-form" method="post" action="<?php echo esc_html( admin_url( 'admin-post.php' ) ); ?>">
 	<span data-wp-text="name"></span>
 	<div class="bkit-poststuff">
 		<div class="column-1">
@@ -18,40 +18,51 @@ defined( 'ABSPATH' ) || exit;
 					<h2 class="bkit-card__title"><?php esc_html_e( 'Tax rate details', 'wp-ever-accounting' ); ?></h2>
 				</div>
 				<div class="bkit-card__body grid--fields">
-
-					<div class="bkit-form-group">
-						<label for="name">
-							<?php esc_html_e( 'Name', 'wp-ever-accounting' ); ?>
-							<abbr title="required"></abbr>
-						</label>
-						<input type="text" name="name" id="name" value="<?php echo esc_attr( $tax->name ); ?>" required/>
-					</div>
-
-					<div class="bkit-form-group">
-						<label for="rate">
-							<?php esc_html_e( 'Rate', 'wp-ever-accounting' ); ?>
-							<abbr title="required"></abbr>
-						</label>
-						<input type="text" name="rate" id="rate" value="<?php echo esc_attr( $tax->rate ); ?>" required/>
-					</div>
-
-					<div class="bkit-form-group">
-						<label for="is_compound">
-							<?php esc_html_e( 'Is compound', 'wp-ever-accounting' ); ?>
-							<abbr title="required"></abbr>
-						</label>
-						<select name="is_compound" id="is_compound" required="required">
-							<option value=""><?php esc_html_e( 'Select if tax is compound', 'wp-ever-accounting' ); ?></option>
-							<option value="yes" <?php selected( true, $tax->is_compound ); ?>><?php esc_html_e( 'Yes', 'wp-ever-accounting' ); ?></option>
-							<option value="no" <?php selected( false, $tax->is_compound ); ?>><?php esc_html_e( 'No', 'wp-ever-accounting' ); ?></option>
-						</select>
-					</div>
-
-					<div class="bkit-form-group is--full">
-						<label for="description"><?php esc_html_e( 'Description', 'wp-ever-accounting' ); ?></label>
-						<textarea type="text" name="description" id="description"><?php echo esc_html( $tax->description ); ?></textarea>
-					</div>
-
+					<?php
+					eac_form_group(
+						array(
+							'id'          => 'name',
+							'label'       => __( 'Name', 'wp-ever-accounting' ),
+							'placeholder' => __( 'Enter tax rate name', 'wp-ever-accounting' ),
+							'value'       => $tax->name,
+							'required'    => true,
+						)
+					);
+					eac_form_group(
+						array(
+							'data_type'   => 'decimal',
+							'id'          => 'rate',
+							'label'       => __( 'Rate (%)', 'wp-ever-accounting' ),
+							'placeholder' => __( 'Enter tax rate', 'wp-ever-accounting' ),
+							'value'       => $tax->rate,
+							'required'    => true,
+						)
+					);
+					eac_form_group(
+						array(
+							'id'          => 'is_compound',
+							'label'       => __( 'Is compound', 'wp-ever-accounting' ),
+							'placeholder' => __( 'Select if tax is compound', 'wp-ever-accounting' ),
+							'value'       => $tax->is_compound,
+							'required'    => true,
+							'options'     => array(
+								'yes' => __( 'Yes', 'wp-ever-accounting' ),
+								'no'  => __( 'No', 'wp-ever-accounting' ),
+							),
+							'type'        => 'select',
+						)
+					);
+					eac_form_group(
+						array(
+							'id'            => 'description',
+							'label'         => __( 'Description', 'wp-ever-accounting' ),
+							'placeholder'   => __( 'Enter tax rate description', 'wp-ever-accounting' ),
+							'value'         => $tax->description,
+							'wrapper_class' => 'is--full',
+							'type'          => 'textarea',
+						)
+					);
+					?>
 				</div>
 			</div>
 		</div><!-- .column-1 -->
@@ -63,15 +74,21 @@ defined( 'ABSPATH' ) || exit;
 				</div>
 
 				<div class="bkit-card__body">
-					<div class="bkit-form-group">
-						<label for="status">
-							<?php esc_html_e( 'Status', 'wp-ever-accounting' ); ?>
-						</label>
-						<select name="status" id="status">
-							<option value="active" <?php selected( 'active', $tax->status ); ?>><?php esc_html_e( 'Active', 'wp-ever-accounting' ); ?></option>
-							<option value="inactive" <?php selected( 'inactive', $tax->status ); ?>><?php esc_html_e( 'Inactive', 'wp-ever-accounting' ); ?></option>
-						</select>
-					</div>
+					<?php
+					eac_form_group(
+						array(
+							'type'        => 'select',
+							'id'          => 'status',
+							'label'       => __( 'Status', 'wp-ever-accounting' ),
+							'options'     => array(
+								'active'   => __( 'Active', 'wp-ever-accounting' ),
+								'inactive' => __( 'Inactive', 'wp-ever-accounting' ),
+							),
+							'value'       => $tax->status,
+							'placeholder' => __( 'Select status', 'wp-ever-accounting' ),
+						)
+					);
+					?>
 				</div>
 
 				<div class="bkit-card__footer">

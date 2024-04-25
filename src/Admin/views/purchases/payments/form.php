@@ -12,7 +12,7 @@
 defined( 'ABSPATH' ) || exit;
 // $state = wp_interactivity_state( 'eac/payment', $payment->to_array() );
 ?>
-<form method="post" action="<?php echo esc_html( admin_url( 'admin-post.php' ) ); ?>" data-wp-interactive="eac/payment">
+<form id="eac-payment-form" method="post" action="<?php echo esc_html( admin_url( 'admin-post.php' ) ); ?>" data-wp-interactive="eac/payment">
 	<span data-wp-text="name"></span>
 	<div class="bkit-poststuff">
 		<div class="column-1">

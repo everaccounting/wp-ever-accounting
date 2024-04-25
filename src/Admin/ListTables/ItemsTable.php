@@ -91,11 +91,17 @@ class ItemsTable extends ListTable {
 	protected function bulk_activate( $ids ) {
 		$performed = 0;
 		foreach ( $ids as $id ) {
-			if ( eac_insert_item( array( 'id' => $id, 'status' => 'active' ) ) ) {
-				$performed ++;
+			if ( eac_insert_item(
+				array(
+					'id'     => $id,
+					'status' => 'active',
+				)
+			) ) {
+				++$performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
+			// translators: %s: number of items activated.
 			EAC()->flash->success( sprintf( __( '%s item(s) activated successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
 		}
 	}
@@ -111,14 +117,19 @@ class ItemsTable extends ListTable {
 	protected function bulk_deactivate( $ids ) {
 		$performed = 0;
 		foreach ( $ids as $id ) {
-			if ( eac_insert_item( array( 'id' => $id, 'status' => 'inactive' ) ) ) {
-				$performed ++;
+			if ( eac_insert_item(
+				array(
+					'id'     => $id,
+					'status' => 'inactive',
+				)
+			) ) {
+				++$performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
+			// translators: %s: number of items deactivated.
 			EAC()->flash->success( sprintf( __( '%s item(s) deactivated successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
 		}
-
 	}
 
 	/**
@@ -133,10 +144,11 @@ class ItemsTable extends ListTable {
 		$performed = 0;
 		foreach ( $ids as $id ) {
 			if ( eac_delete_item( $id ) ) {
-				$performed ++;
+				++$performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
+			// translators: %s: number of items deleted.
 			EAC()->flash->success( sprintf( __( '%s item(s) deleted successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
 		}
 	}
@@ -162,15 +174,18 @@ class ItemsTable extends ListTable {
 		$current      = $this->get_request_status( 'all' );
 		$status_links = array();
 		$views        = array(
+			// translators: %s: number of currencies.
 			'all'      => _nx_noop( 'All <span class="count">(%s)</span>', 'All <span class="count">(%s)</span>', 'list_table', 'wp-ever-accounting' ),
+			// translators: %s: number of currencies.
 			'active'   => _nx_noop( 'Active <span class="count">(%s)</span>', 'Active <span class="count">(%s)</span>', 'list_table', 'wp-ever-accounting' ),
+			// translators: %s: number of currencies.
 			'inactive' => _nx_noop( 'Inactive <span class="count">(%s)</span>', 'Inactive <span class="count">(%s)</span>', 'list_table', 'wp-ever-accounting' ),
 		);
 		foreach ( $views as $view => $label ) {
-			$link  = $view === 'all' ? $this->base_url : add_query_arg( 'status', $view, $this->base_url );
+			$link  = 'all' === $view ? $this->base_url : add_query_arg( 'status', $view, $this->base_url );
 			$args  = 'all' === $view ? array() : array( 'status' => $view );
-			$count = eac_get_items( $args, true );
-			$label = sprintf( _n( $label[0], $label[1], $count, 'wp-ever-accounting' ), number_format_i18n( $count ) );
+			$count = Item::count( $args );
+			$label = sprintf( translate_nooped_plural( $label, $count, 'wp-ever-accounting' ), number_format_i18n( $count ) );
 
 			$status_links[ $view ] = array(
 				'url'     => $link,
@@ -220,7 +235,7 @@ class ItemsTable extends ListTable {
 			$this->category_filter( 'item' );
 			$output = ob_get_clean();
 			if ( ! empty( $output ) && $this->has_items() ) {
-				echo $output;
+				echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				submit_button( __( 'Filter', 'wp-ever-accounting' ), '', 'filter_action', false );
 			}
 		}
@@ -355,26 +370,64 @@ class ItemsTable extends ListTable {
 			return null;
 		}
 		$actions = array(
-			'id' => sprintf( '#%d', esc_attr( $item->id ) ),
+			'id'   => sprintf( '#%d', esc_attr( $item->id ) ),
+			'edit' => sprintf(
+				'<a href="%s">%s</a>',
+				esc_url( add_query_arg( 'edit', $item->id, $this->base_url ) ),
+				__( 'Edit', 'wp-ever-accounting' )
+			),
 		);
 
-		if ( $item->status === 'active' ) {
+		if ( 'active' === $item->status ) {
 			$actions['deactivate'] = sprintf(
 				'<a href="%s">%s</a>',
-				esc_url( wp_nonce_url( add_query_arg( array( 'action' => 'deactivate', 'id' => $item->id ), $this->base_url ), 'bulk-' . $this->_args['plural'] ) ),
+				esc_url(
+					wp_nonce_url(
+						add_query_arg(
+							array(
+								'action' => 'deactivate',
+								'id'     => $item->id,
+							),
+							$this->base_url
+						),
+						'bulk-' . $this->_args['plural']
+					)
+				),
 				__( 'Deactivate', 'wp-ever-accounting' )
 			);
 		} else {
 			$actions['activate'] = sprintf(
 				'<a href="%s">%s</a>',
-				esc_url( wp_nonce_url( add_query_arg( array( 'action' => 'activate', 'id' => $item->id ), $this->base_url ), 'bulk-' . $this->_args['plural'] ) ),
+				esc_url(
+					wp_nonce_url(
+						add_query_arg(
+							array(
+								'action' => 'activate',
+								'id'     => $item->id,
+							),
+							$this->base_url
+						),
+						'bulk-' . $this->_args['plural']
+					)
+				),
 				__( 'Activate', 'wp-ever-accounting' )
 			);
 		}
 
 		$actions['delete'] = sprintf(
 			'<a href="%s" class="del">%s</a>',
-			esc_url( wp_nonce_url( add_query_arg( array( 'action' => 'delete', 'id' => $item->id ), $this->base_url ), 'bulk-' . $this->_args['plural'] ) ),
+			esc_url(
+				wp_nonce_url(
+					add_query_arg(
+						array(
+							'action' => 'delete',
+							'id'     => $item->id,
+						),
+						$this->base_url
+					),
+					'bulk-' . $this->_args['plural']
+				)
+			),
 			__( 'Delete', 'wp-ever-accounting' )
 		);
 

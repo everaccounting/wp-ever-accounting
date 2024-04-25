@@ -57,13 +57,23 @@ class Category extends Model {
 	 * Model's casts data.
 	 *
 	 * @since 1.0.0
-	 * @return bool
+	 * @var array
 	 */
 	protected $casts = array(
 		'id'          => 'int',
 		'name'        => 'sanitize_text',
 		'type'        => 'sanitize_key',
 		'description' => 'sanitize_textarea',
+	);
+
+	/**
+	 * The accessors to append to the model's array form.
+	 *
+	 * @since 1.0.0
+	 * @var array
+	 */
+	protected $appends = array(
+		'formatted_name',
 	);
 
 	/**
@@ -101,10 +111,12 @@ class Category extends Model {
 		}
 
 		// Duplicate check. Same type and name should not exist.
-		$existing = $this->find( array(
-			'type' => $this->type,
-			'name' => $this->name,
-		) );
+		$existing = $this->find(
+			array(
+				'type' => $this->type,
+				'name' => $this->name,
+			)
+		);
 		if ( ! empty( $existing ) && $existing->id !== $this->id ) {
 			return new \WP_Error( 'duplicate', __( 'Category with same name and type already exists.', 'wp-ever-accounting' ) );
 		}
@@ -127,7 +139,17 @@ class Category extends Model {
 	 * @return void
 	 */
 	protected function set_type_prop( $type ) {
-		$type = ! in_array( $type, eac_get_category_types() ) ? 'income' : $type;
+		$type = ! in_array( $type, eac_get_category_types(), true ) ? 'income' : $type;
 		$this->set_prop_value( 'type', $type );
+	}
+
+	/**
+	 * Get the formatted name of the category.
+	 *
+	 * @since 1.0.0
+	 * @return string
+	 */
+	protected function get_formatted_name_prop() {
+		return sprintf( '%s (#%d)', $this->name, $this->id );
 	}
 }

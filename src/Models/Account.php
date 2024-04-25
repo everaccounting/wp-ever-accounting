@@ -80,7 +80,7 @@ class Account extends Model {
 	 * Model's casts data.
 	 *
 	 * @since 1.0.0
-	 * @return bool
+	 * @var array
 	 */
 	protected $casts = array(
 		'id'              => 'int',

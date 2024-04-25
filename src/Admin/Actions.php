@@ -20,6 +20,8 @@ class Actions {
 	 */
 	public function __construct() {
 		add_action( 'admin_post_eac_edit_item', array( $this, 'handle_edit_item' ) );
+		add_action( 'admin_post_eac_edit_customer', array( $this, 'handle_edit_customer' ) );
+		add_action( 'admin_post_eac_edit_vendor', array( $this, 'handle_edit_vendor' ) );
 		add_action( 'admin_post_eac_edit_account', array( $this, 'handle_edit_account' ) );
 		add_action( 'admin_post_eac_edit_category', array( $this, 'handle_edit_category' ) );
 		add_action( 'admin_post_eac_edit_currency', array( $this, 'handle_edit_currency' ) );
@@ -30,7 +32,7 @@ class Actions {
 	 * Edit item.
 	 *
 	 * @return void
-	 * @since 1.1.6
+	 * @since 1.2.0
 	 */
 	public static function handle_edit_item() {
 		check_admin_referer( 'eac_edit_item' );
@@ -73,9 +75,95 @@ class Actions {
 	}
 
 	/**
+	 * Edit customer.
+	 *
+	 * @return void
+	 * @since 1.2.0
+	 */
+	public static function handle_edit_customer() {
+		check_admin_referer( 'eac_edit_customer' );
+		$referer  = wp_get_referer();
+		$customer = eac_insert_customer(
+			array(
+				'id'            => isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0,
+				'name'          => isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '',
+				'currency_code' => isset( $_POST['currency_code'] ) ? sanitize_text_field( wp_unslash( $_POST['currency_code'] ) ) : eac_get_base_currency(),
+				'email'         => isset( $_POST['email'] ) ? sanitize_email( wp_unslash( $_POST['email'] ) ) : '',
+				'phone'         => isset( $_POST['phone'] ) ? sanitize_text_field( wp_unslash( $_POST['phone'] ) ) : '',
+				'company'       => isset( $_POST['company'] ) ? sanitize_text_field( wp_unslash( $_POST['company'] ) ) : '',
+				'website'       => isset( $_POST['website'] ) ? esc_url_raw( wp_unslash( $_POST['website'] ) ) : '',
+				'vat_number'    => isset( $_POST['vat_number'] ) ? sanitize_text_field( wp_unslash( $_POST['vat_number'] ) ) : '',
+				'vat_exempt'    => isset( $_POST['vat_exempt'] ) ? sanitize_text_field( wp_unslash( $_POST['vat_exempt'] ) ) : 'no', // phpcs:ignore
+				'address_1'     => isset( $_POST['address_1'] ) ? sanitize_text_field( wp_unslash( $_POST['address_1'] ) ) : '',
+				'address_2'     => isset( $_POST['address_2'] ) ? sanitize_text_field( wp_unslash( $_POST['address_2'] ) ) : '',
+				'city'          => isset( $_POST['city'] ) ? sanitize_text_field( wp_unslash( $_POST['city'] ) ) : '',
+				'state'         => isset( $_POST['state'] ) ? sanitize_text_field( wp_unslash( $_POST['state'] ) ) : '',
+				'postcode'      => isset( $_POST['postcode'] ) ? sanitize_text_field( wp_unslash( $_POST['postcode'] ) ) : '',
+				'country'       => isset( $_POST['country'] ) ? sanitize_text_field( wp_unslash( $_POST['country'] ) ) : '',
+				'status'        => isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : 'active',
+			)
+		);
+
+		if ( is_wp_error( $customer ) ) {
+			EAC()->flash->error( $customer->get_error_message() );
+		} else {
+			EAC()->flash->success( __( 'Customer saved successfully.', 'wp-ever-accounting' ) );
+			$referer = add_query_arg( 'edit', $customer->id, $referer );
+			$referer = remove_query_arg( array( 'add' ), $referer );
+
+		}
+		wp_safe_redirect( $referer );
+		exit;
+	}
+
+
+	/**
+	 * Edit vendor.
+	 *
+	 * @return void
+	 * @since 1.2.0
+	 */
+	public static function handle_edit_vendor() {
+		check_admin_referer( 'eac_edit_vendor' );
+		$referer = wp_get_referer();
+		$vendor  = eac_insert_vendor(
+			array(
+				'id'            => isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0,
+				'name'          => isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '',
+				'currency_code' => isset( $_POST['currency_code'] ) ? sanitize_text_field( wp_unslash( $_POST['currency_code'] ) ) : eac_get_base_currency(),
+				'email'         => isset( $_POST['email'] ) ? sanitize_email( wp_unslash( $_POST['email'] ) ) : '',
+				'phone'         => isset( $_POST['phone'] ) ? sanitize_text_field( wp_unslash( $_POST['phone'] ) ) : '',
+				'company'       => isset( $_POST['company'] ) ? sanitize_text_field( wp_unslash( $_POST['company'] ) ) : '',
+				'website'       => isset( $_POST['website'] ) ? esc_url_raw( wp_unslash( $_POST['website'] ) ) : '',
+				'vat_number'    => isset( $_POST['vat_number'] ) ? sanitize_text_field( wp_unslash( $_POST['vat_number'] ) ) : '',
+				'vat_exempt'    => isset( $_POST['vat_exempt'] ) ? sanitize_text_field( wp_unslash( $_POST['vat_exempt'] ) ) : 'no', // phpcs:ignore
+				'address_1'     => isset( $_POST['address_1'] ) ? sanitize_text_field( wp_unslash( $_POST['address_1'] ) ) : '',
+				'address_2'     => isset( $_POST['address_2'] ) ? sanitize_text_field( wp_unslash( $_POST['address_2'] ) ) : '',
+				'city'          => isset( $_POST['city'] ) ? sanitize_text_field( wp_unslash( $_POST['city'] ) ) : '',
+				'state'         => isset( $_POST['state'] ) ? sanitize_text_field( wp_unslash( $_POST['state'] ) ) : '',
+				'postcode'      => isset( $_POST['postcode'] ) ? sanitize_text_field( wp_unslash( $_POST['postcode'] ) ) : '',
+				'country'       => isset( $_POST['country'] ) ? sanitize_text_field( wp_unslash( $_POST['country'] ) ) : '',
+				'status'        => isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : 'active',
+			)
+		);
+
+		if ( is_wp_error( $vendor ) ) {
+			EAC()->flash->error( $vendor->get_error_message() );
+		} else {
+			EAC()->flash->success( __( 'Vendor saved successfully.', 'wp-ever-accounting' ) );
+			$referer = add_query_arg( 'edit', $vendor->id, $referer );
+			$referer = remove_query_arg( array( 'add' ), $referer );
+
+		}
+		wp_safe_redirect( $referer );
+		exit;
+	}
+
+
+	/**
 	 * Edit account.
 	 *
-	 * @since 1.1.6
+	 * @since 1.2.0
 	 * @return void
 	 */
 	public static function handle_edit_account() {
@@ -112,7 +200,7 @@ class Actions {
 	 * Edit category.
 	 *
 	 * @return void
-	 * @since 1.1.6
+	 * @since 1.2.0
 	 */
 	public static function handle_edit_category() {
 		check_admin_referer( 'eac_edit_category' );
@@ -148,7 +236,7 @@ class Actions {
 	 * Edit currency.
 	 *
 	 * @return void
-	 * @since 1.1.6
+	 * @since 1.2.0
 	 */
 	public static function handle_edit_currency() {
 		check_admin_referer( 'eac_edit_currency' );
@@ -193,21 +281,21 @@ class Actions {
 	 * Edit tax.
 	 *
 	 * @return void
-	 * @since 1.1.6
+	 * @since 1.2.0
 	 */
 	public static function handle_edit_tax() {
 		check_admin_referer( 'eac_edit_tax' );
-		$referer = wp_get_referer();
+		$referer     = wp_get_referer();
 		$id          = isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0;
 		$name        = isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '';
 		$rate        = isset( $_POST['rate'] ) ? doubleval( wp_unslash( $_POST['rate'] ) ) : '';
 		$is_compound = isset( $_POST['is_compound'] ) ? sanitize_text_field( wp_unslash( $_POST['is_compound'] ) ) : '';
 		$desc        = isset( $_POST['description'] ) ? sanitize_textarea_field( wp_unslash( $_POST['description'] ) ) : '';
 		$status      = isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : 'active';
-		if( $is_compound ) {
+		if ( $is_compound ) {
 			$is_compound = 'yes' === $is_compound ? true : false;
 		}
-		$tax         = eac_insert_tax(
+		$tax = eac_insert_tax(
 			array(
 				'id'          => $id,
 				'name'        => $name,

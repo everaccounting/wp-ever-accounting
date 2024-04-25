@@ -33,27 +33,23 @@ class TransactionsTable extends ListTable {
 				)
 			)
 		);
+		$this->base_url = admin_url( 'admin.php?page=eac-banking&tab=transactions' );
 	}
 
 	/**
 	 * Prepares the list for display.
 	 *
-	 * @return void
 	 * @since 1.0.0
+	 * @return void
 	 */
 	public function prepare_items() {
-		$this->process_bulk_action();
-		$this->_column_headers = array(
-			$this->get_columns(),
-			get_hidden_columns( $this->screen ),
-			$this->get_sortable_columns()
-		);
-		$per_page              = $this->get_items_per_page( 'eac_banking_transactions_per_page', 20 );
-		$paged                 = $this->get_pagenum();
-		$search                = $this->get_request_search();
-		$order_by              = $this->get_request_orderby();
-		$order                 = $this->get_request_order();
-		$args                  = array(
+		$this->process_actions();
+		$per_page = $this->get_items_per_page( 'eac_banking_transactions_per_page', 20 );
+		$paged    = $this->get_pagenum();
+		$search   = $this->get_request_search();
+		$order_by = $this->get_request_orderby();
+		$order    = $this->get_request_order();
+		$args     = array(
 			'limit'    => $per_page,
 			'page'     => $paged,
 			'search'   => $search,
@@ -70,11 +66,8 @@ class TransactionsTable extends ListTable {
 		 */
 		$args = apply_filters( 'ever_accounting_transactions_table_query_args', $args );
 
-		// TODO: Need to create transaction query methods.
-		//$this->items = eac_get_transactions( $args );
-		$this->items = array();
-		//$total       = eac_get_transactions( $args, true );
-		$total = 0;
+		$this->items = Transaction::query( $args );
+		$total       = Transaction::count( $args );
 
 		$this->set_pagination_args(
 			array(
@@ -89,21 +82,10 @@ class TransactionsTable extends ListTable {
 	 *
 	 * @param array $ids List of item IDs.
 	 *
-	 * @return void
 	 * @since 1.0.0
+	 * @return void
 	 */
-	protected function bulk_delete( $ids ) {
-		$performed = [];
-		foreach ( $ids as $id ) {
-			// TODO: Need tp create the transaction delete method.
-//			if ( eac_delete_transaction( $id ) ) {
-//				$performed[] = $id;
-//			}
-		}
-		if ( ! empty( $performed ) ) {
-			EAC()->flash()->success( sprintf( _n( 'Transaction deleted.', '%s transactions deleted.', count( $performed ), 'wp-ever-accounting' ), count( $performed ) ) );
-		}
-	}
+	protected function bulk_delete( $ids ) {}
 
 	/**
 	 * Outputs 'no users' message.
@@ -121,9 +103,9 @@ class TransactionsTable extends ListTable {
 	 * Provides a list of roles and user count for that role for easy
 	 * filtering of the user table.
 	 *
-	 * @return string[] An array of HTML links keyed by their view.
 	 * @since 1.0.0
 	 *
+	 * @return string[] An array of HTML links keyed by their view.
 	 * @global string $role
 	 */
 	protected function get_views() {
@@ -132,9 +114,8 @@ class TransactionsTable extends ListTable {
 	/**
 	 * Retrieves an associative array of bulk actions available on this table.
 	 *
-	 * @return array Array of bulk action labels keyed by their action.
 	 * @since 1.0.0
-	 *
+	 * @return array Array of bulk action labels keyed by their action.
 	 */
 	protected function get_bulk_actions() {
 		return array();
@@ -145,8 +126,8 @@ class TransactionsTable extends ListTable {
 	 *
 	 * @param string $which Whether invoked above ("top") or below the table ("bottom").
 	 *
-	 * @return void
 	 * @since 1.0.0
+	 * @return void
 	 */
 	protected function extra_tablenav( $which ) {
 		static $has_items;
@@ -172,9 +153,8 @@ class TransactionsTable extends ListTable {
 	/**
 	 * Gets a list of columns for the list table.
 	 *
-	 * @return string[] Array of column titles keyed by their column name.
 	 * @since 1.0.0
-	 *
+	 * @return string[] Array of column titles keyed by their column name.
 	 */
 	public function get_columns() {
 		return array(
@@ -191,9 +171,8 @@ class TransactionsTable extends ListTable {
 	/**
 	 * Gets a list of sortable columns for the list table.
 	 *
-	 * @return array Array of sortable columns.
 	 * @since 1.0.0
-	 *
+	 * @return array Array of sortable columns.
 	 */
 	protected function get_sortable_columns() {
 		return array(
@@ -209,8 +188,8 @@ class TransactionsTable extends ListTable {
 	/**
 	 * Define primary column.
 	 *
-	 * @return string
 	 * @since 1.0.2
+	 * @return string
 	 */
 	public function get_primary_column_name() {
 		return 'date';
@@ -221,8 +200,8 @@ class TransactionsTable extends ListTable {
 	 *
 	 * @param Item $item The current object.
 	 *
-	 * @return string Displays a checkbox.
 	 * @since  1.0.0
+	 * @return string Displays a checkbox.
 	 */
 	public function column_cb( $item ) {
 		return sprintf( '<input type="checkbox" name="id[]" value="%d"/>', esc_attr( $item->id ) );
@@ -233,8 +212,8 @@ class TransactionsTable extends ListTable {
 	 *
 	 * @param Transaction $transaction The current object.
 	 *
-	 * @return string Displays the date.
 	 * @since  1.0.0
+	 * @return string Displays the date.
 	 */
 	public function column_date( $transaction ) {
 		$urls    = array(
@@ -261,8 +240,8 @@ class TransactionsTable extends ListTable {
 	 *
 	 * @param Transaction $transaction The current object.
 	 *
-	 * @return string Displays the actions.
 	 * @since  1.0.0
+	 * @return string Displays the actions.
 	 */
 	public function column_actions( $transaction ) {
 		$urls = array(
@@ -273,7 +252,7 @@ class TransactionsTable extends ListTable {
 		);
 
 		$actions = array(
-			//'edit'   => sprintf( '<a href="%s">%s</a>', esc_url( $urls['edit'] ), __( 'Edit', 'wp-ever-accounting' ) ),
+			// 'edit'   => sprintf( '<a href="%s">%s</a>', esc_url( $urls['edit'] ), __( 'Edit', 'wp-ever-accounting' ) ),
 			'delete' => sprintf( '<a class="eac_confirm_delete" href="%s">%s</a>', esc_url( $urls['delete'] ), __( 'Delete', 'wp-ever-accounting' ) ),
 		);
 		if ( $transaction->enabled ) {
@@ -289,10 +268,10 @@ class TransactionsTable extends ListTable {
 	 * This function renders most of the columns in the list table.
 	 *
 	 * @param Object|array $item The current item.
-	 * @param string $column_name The name of the column.
+	 * @param string       $column_name The name of the column.
 	 *
-	 * @return string The column value.
 	 * @since 1.0.0
+	 * @return string The column value.
 	 */
 	public function column_default( $item, $column_name ) {
 		switch ( $column_name ) {

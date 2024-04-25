@@ -45,19 +45,18 @@ class CurrenciesTable extends ListTable {
 	 */
 	public function prepare_items() {
 		$this->process_actions();
-		$this->_column_headers = array( $this->get_columns(), get_hidden_columns( $this->screen ), $this->get_sortable_columns() );
-		$per_page              = $this->get_items_per_page( 'eac_currencies_per_page', 20 );
-		$paged                 = $this->get_pagenum();
-		$search                = $this->get_request_search();
-		$order_by              = $this->get_request_orderby();
-		$order                 = $this->get_request_order();
-		$args                  = array(
+		$per_page = $this->get_items_per_page( 'eac_currencies_per_page', 20 );
+		$paged    = $this->get_pagenum();
+		$search   = $this->get_request_search();
+		$order_by = $this->get_request_orderby();
+		$order    = $this->get_request_order();
+		$args     = array(
 			'limit'    => $per_page,
 			'page'     => $paged,
 			'search'   => $search,
 			'order_by' => $order_by,
 			'order'    => $order,
-			'status'      => $this->get_request_status(),
+			'status'   => $this->get_request_status(),
 		);
 
 		/**
@@ -90,12 +89,20 @@ class CurrenciesTable extends ListTable {
 	protected function bulk_activate( $ids ) {
 		$performed = 0;
 		foreach ( $ids as $id ) {
-			if ( eac_insert_currency( array( 'id' => $id, 'status' => 'active' ) ) ) {
-				$performed ++;
+			if ( eac_insert_currency(
+				array(
+					'id'     => $id,
+					'status' => 'active',
+				)
+			) ) {
+				++$performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
+			// translators: %s: number of currencies.
 			EAC()->flash->success( sprintf( __( '%s currency(s) activated successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
+			$note = __( '<strong>ALERT:</strong> Please update the exchange rate for the activated currencies before using the currency in transactions.', 'wp-ever-accounting' );
+			EAC()->flash->info( $note );
 		}
 	}
 
@@ -110,14 +117,19 @@ class CurrenciesTable extends ListTable {
 	protected function bulk_deactivate( $ids ) {
 		$performed = 0;
 		foreach ( $ids as $id ) {
-			if ( eac_insert_currency( array( 'id' => $id, 'status' => 'inactive' ) ) ) {
-				$performed ++;
+			if ( eac_insert_currency(
+				array(
+					'id'     => $id,
+					'status' => 'inactive',
+				)
+			) ) {
+				++$performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
+			// translators: %s: number of currencies.
 			EAC()->flash->success( sprintf( __( '%s currency(s) deactivated successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
 		}
-
 	}
 
 	/**
@@ -145,15 +157,18 @@ class CurrenciesTable extends ListTable {
 		$current      = $this->get_request_status( 'all' );
 		$status_links = array();
 		$views        = array(
+			// translators: %s: number of currencies.
 			'all'      => _nx_noop( 'All <span class="count">(%s)</span>', 'All <span class="count">(%s)</span>', 'list_table', 'wp-ever-accounting' ),
+			// translators: %s: number of currencies.
 			'active'   => _nx_noop( 'Active <span class="count">(%s)</span>', 'Active <span class="count">(%s)</span>', 'list_table', 'wp-ever-accounting' ),
+			// translators: %s: number of currencies.
 			'inactive' => _nx_noop( 'Inactive <span class="count">(%s)</span>', 'Inactive <span class="count">(%s)</span>', 'list_table', 'wp-ever-accounting' ),
 		);
 		foreach ( $views as $view => $label ) {
-			$link  = $view === 'all' ? $this->base_url : add_query_arg( 'status', $view, $this->base_url );
+			$link  = 'all' === $view ? $this->base_url : add_query_arg( 'status', $view, $this->base_url );
 			$args  = 'all' === $view ? array() : array( 'status' => $view );
 			$count = eac_get_currencies( $args, true );
-			$label = sprintf( _n( $label[0], $label[1], $count, 'wp-ever-accounting' ), number_format_i18n( $count ) );
+			$label = sprintf( translate_nooped_plural( $label, $count, 'wp-ever-accounting' ), number_format_i18n( $count ) );
 
 			$status_links[ $view ] = array(
 				'url'     => $link,
@@ -276,19 +291,46 @@ class CurrenciesTable extends ListTable {
 			return null;
 		}
 		$actions = array(
-			'id' => sprintf( '#%d', esc_attr( $item->id ) ),
+			'id'   => sprintf( '#%d', esc_attr( $item->id ) ),
+			'edit' => sprintf(
+				'<a href="%s">%s</a>',
+				esc_url( add_query_arg( 'edit', $item->id, $this->base_url ) ),
+				__( 'Edit', 'wp-ever-accounting' )
+			),
 		);
 
-		if ( $item->status === 'active' ) {
+		if ( 'active' === $item->status ) {
 			$actions['deactivate'] = sprintf(
 				'<a href="%s">%s</a>',
-				esc_url( wp_nonce_url( add_query_arg( array( 'action' => 'deactivate', 'id' => $item->id ), $this->base_url ), 'bulk-' . $this->_args['plural'] ) ),
+				esc_url(
+					wp_nonce_url(
+						add_query_arg(
+							array(
+								'action' => 'deactivate',
+								'id'     => $item->id,
+							),
+							$this->base_url
+						),
+						'bulk-' . $this->_args['plural']
+					)
+				),
 				__( 'Deactivate', 'wp-ever-accounting' )
 			);
 		} else {
 			$actions['activate'] = sprintf(
 				'<a href="%s">%s</a>',
-				esc_url( wp_nonce_url( add_query_arg( array( 'action' => 'activate', 'id' => $item->id ), $this->base_url ), 'bulk-' . $this->_args['plural'] ) ),
+				esc_url(
+					wp_nonce_url(
+						add_query_arg(
+							array(
+								'action' => 'activate',
+								'id'     => $item->id,
+							),
+							$this->base_url
+						),
+						'bulk-' . $this->_args['plural']
+					)
+				),
 				__( 'Activate', 'wp-ever-accounting' )
 			);
 		}

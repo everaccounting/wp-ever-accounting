@@ -96,7 +96,7 @@ class AccountsTable extends ListTable {
 					'status' => 'active',
 				)
 			) ) {
-				++ $performed;
+				++$performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
@@ -122,7 +122,7 @@ class AccountsTable extends ListTable {
 					'status' => 'inactive',
 				)
 			) ) {
-				++ $performed;
+				++$performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
@@ -143,7 +143,7 @@ class AccountsTable extends ListTable {
 		$performed = 0;
 		foreach ( $ids as $id ) {
 			if ( eac_delete_account( $id ) ) {
-				++ $performed;
+				++$performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
@@ -187,8 +187,7 @@ class AccountsTable extends ListTable {
 			$link  = 'all' === $view ? $this->base_url : add_query_arg( 'status', $view, $this->base_url );
 			$args  = 'all' === $view ? array() : array( 'status' => $view );
 			$count = eac_get_accounts( $args, true );
-			// translators: %1$s: number of accounts, %2$s: account status.
-			$label = sprintf( _n( $label[0], $label[1], $count, 'wp-ever-accounting' ), number_format_i18n( $count ) );
+			$label = sprintf( translate_nooped_plural( $label, $count, 'wp-ever-accounting' ), number_format_i18n( $count ) );
 
 			$status_links[ $view ] = array(
 				'url'     => $link,

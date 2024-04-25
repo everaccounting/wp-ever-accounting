@@ -45,17 +45,12 @@ class TaxesTable extends ListTable {
 	 */
 	public function prepare_items() {
 		$this->process_actions();
-		$this->_column_headers = array(
-			$this->get_columns(),
-			get_hidden_columns( $this->screen ),
-			$this->get_sortable_columns()
-		);
-		$per_page              = $this->get_items_per_page( 'eac_taxes_per_page', 20 );
-		$paged                 = $this->get_pagenum();
-		$search                = $this->get_request_search();
-		$order_by              = $this->get_request_orderby();
-		$order                 = $this->get_request_order();
-		$args                  = array(
+		$per_page = $this->get_items_per_page( 'eac_taxes_per_page', 20 );
+		$paged    = $this->get_pagenum();
+		$search   = $this->get_request_search();
+		$order_by = $this->get_request_orderby();
+		$order    = $this->get_request_order();
+		$args     = array(
 			'limit'    => $per_page,
 			'page'     => $paged,
 			'search'   => $search,
@@ -94,11 +89,17 @@ class TaxesTable extends ListTable {
 	protected function bulk_activate( $ids ) {
 		$performed = 0;
 		foreach ( $ids as $id ) {
-			if ( eac_insert_tax( array( 'id' => $id, 'status' => 'active' ) ) ) {
-				$performed ++;
+			if ( eac_insert_tax(
+				array(
+					'id'     => $id,
+					'status' => 'active',
+				)
+			) ) {
+				++$performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
+			// translators: %s: number of taxes activated.
 			EAC()->flash->success( sprintf( __( '%s tax(es) activated successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
 		}
 	}
@@ -114,14 +115,19 @@ class TaxesTable extends ListTable {
 	protected function bulk_deactivate( $ids ) {
 		$performed = 0;
 		foreach ( $ids as $id ) {
-			if ( eac_insert_tax( array( 'id' => $id, 'status' => 'inactive' ) ) ) {
-				$performed ++;
+			if ( eac_insert_tax(
+				array(
+					'id'     => $id,
+					'status' => 'inactive',
+				)
+			) ) {
+				++$performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
+			// translators: %s: number of taxes deactivated.
 			EAC()->flash->success( sprintf( __( '%s tax(es) deactivated successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
 		}
-
 	}
 
 	/**
@@ -136,10 +142,11 @@ class TaxesTable extends ListTable {
 		$performed = 0;
 		foreach ( $ids as $id ) {
 			if ( eac_delete_tax( $id ) ) {
-				$performed ++;
+				++$performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
+			// translators: %s: number of taxes deleted.
 			EAC()->flash->success( sprintf( __( '%s tax(1s) deleted successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
 		}
 	}
@@ -166,15 +173,18 @@ class TaxesTable extends ListTable {
 		$current      = $this->get_request_status( 'all' );
 		$status_links = array();
 		$views        = array(
+			// translators: %s: number of currencies.
 			'all'      => _nx_noop( 'All <span class="count">(%s)</span>', 'All <span class="count">(%s)</span>', 'list_table', 'wp-ever-accounting' ),
+			// translators: %s: number of currencies.
 			'active'   => _nx_noop( 'Active <span class="count">(%s)</span>', 'Active <span class="count">(%s)</span>', 'list_table', 'wp-ever-accounting' ),
+			// translators: %s: number of currencies.
 			'inactive' => _nx_noop( 'Inactive <span class="count">(%s)</span>', 'Inactive <span class="count">(%s)</span>', 'list_table', 'wp-ever-accounting' ),
 		);
 		foreach ( $views as $view => $label ) {
-			$link  = $view === 'all' ? $this->base_url : add_query_arg( 'status', $view, $this->base_url );
+			$link  = 'all' === $view ? $this->base_url : add_query_arg( 'status', $view, $this->base_url );
 			$args  = 'all' === $view ? array() : array( 'status' => $view );
-			$count = eac_get_taxes( $args, true );
-			$label = sprintf( _n( $label[0], $label[1], $count, 'wp-ever-accounting' ), number_format_i18n( $count ) );
+			$count = Tax::count( $args );
+			$label = sprintf( translate_nooped_plural( $label, $count, 'wp-ever-accounting' ), number_format_i18n( $count ) );
 
 			$status_links[ $view ] = array(
 				'url'     => $link,
@@ -191,7 +201,6 @@ class TaxesTable extends ListTable {
 	 *
 	 * @return array Array of bulk action labels keyed by their action.
 	 * @since 1.0.0
-	 *
 	 */
 	protected function get_bulk_actions() {
 		$actions = array(
@@ -219,7 +228,6 @@ class TaxesTable extends ListTable {
 	 *
 	 * @return string[] Array of column titles keyed by their column name.
 	 * @since 1.0.0
-	 *
 	 */
 	public function get_columns() {
 		return array(
@@ -236,7 +244,6 @@ class TaxesTable extends ListTable {
 	 *
 	 * @return array Array of sortable columns.
 	 * @since 1.0.0
-	 *
 	 */
 	protected function get_sortable_columns() {
 		return array(
@@ -284,7 +291,7 @@ class TaxesTable extends ListTable {
 	/**
 	 * Generates and displays row actions links.
 	 *
-	 * @param Tax $item The comment object.
+	 * @param Tax    $item The comment object.
 	 * @param string $column_name Current column name.
 	 * @param string $primary Primary column name.
 	 *
@@ -296,35 +303,64 @@ class TaxesTable extends ListTable {
 			return null;
 		}
 		$actions = array(
-			'id' => sprintf( '#%d', esc_attr( $item->id ) ),
+			'id'   => sprintf( '#%d', esc_attr( $item->id ) ),
+			'edit' => sprintf(
+				'<a href="%s">%s</a>',
+				esc_url( add_query_arg( 'edit', $item->id, $this->base_url ) ),
+				__( 'Edit', 'wp-ever-accounting' )
+			),
 		);
 
-		if ( $item->status === 'active' ) {
+		if ( 'active' === $item->status ) {
 			$actions['deactivate'] = sprintf(
 				'<a href="%s">%s</a>',
-				esc_url( wp_nonce_url( add_query_arg( array(
-					'action' => 'deactivate',
-					'id'     => $item->id
-				), $this->base_url ), 'bulk-' . $this->_args['plural'] ) ),
+				esc_url(
+					wp_nonce_url(
+						add_query_arg(
+							array(
+								'action' => 'deactivate',
+								'id'     => $item->id,
+							),
+							$this->base_url
+						),
+						'bulk-' . $this->_args['plural']
+					)
+				),
 				__( 'Deactivate', 'wp-ever-accounting' )
 			);
 		} else {
 			$actions['activate'] = sprintf(
 				'<a href="%s">%s</a>',
-				esc_url( wp_nonce_url( add_query_arg( array(
-					'action' => 'activate',
-					'id'     => $item->id
-				), $this->base_url ), 'bulk-' . $this->_args['plural'] ) ),
+				esc_url(
+					wp_nonce_url(
+						add_query_arg(
+							array(
+								'action' => 'activate',
+								'id'     => $item->id,
+							),
+							$this->base_url
+						),
+						'bulk-' . $this->_args['plural']
+					)
+				),
 				__( 'Activate', 'wp-ever-accounting' )
 			);
 		}
 
 		$actions['delete'] = sprintf(
 			'<a href="%s" class="del">%s</a>',
-			esc_url( wp_nonce_url( add_query_arg( array(
-				'action' => 'delete',
-				'id'     => $item->id
-			), $this->base_url ), 'bulk-' . $this->_args['plural'] ) ),
+			esc_url(
+				wp_nonce_url(
+					add_query_arg(
+						array(
+							'action' => 'delete',
+							'id'     => $item->id,
+						),
+						$this->base_url
+					),
+					'bulk-' . $this->_args['plural']
+				)
+			),
 			__( 'Delete', 'wp-ever-accounting' )
 		);
 
