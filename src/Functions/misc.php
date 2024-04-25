@@ -79,7 +79,7 @@ function eac_form_group( $field ) {
 	// Suffix.
 	if ( ! empty( $field['suffix'] ) && ! preg_match( '/<[^>]+>/', $field['suffix'] ) ) {
 		$suffix          = is_callable( $field['suffix'] ) ? call_user_func( $field['suffix'], $field ) : $field['suffix'];
-		$field['suffix'] = '<span class="eac-form-field__addon">' . $suffix . '</span>';
+		$field['suffix'] = '<span class="addon eac-form-field__addon">' . $suffix . '</span>';
 	}
 
 	switch ( $field['type'] ) {

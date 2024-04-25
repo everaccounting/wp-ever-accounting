@@ -36,7 +36,6 @@ defined( 'ABSPATH' ) || exit;
 							'label'    => __( 'Name', 'wp-ever-accounting' ),
 							'type'     => 'text',
 							'value'    => $currency->name,
-							'class'    => 'eac-col-6',
 							'required' => true,
 						)
 					);
@@ -48,8 +47,10 @@ defined( 'ABSPATH' ) || exit;
 							'value'     => $currency->is_base_currency() ? 1 : $currency->exchange_rate,
 							'readonly'  => $currency->is_base_currency() ? 'readonly' : false,
 							'required'  => true,
+							'class'     => 'eac_decimal_input',
 							// translators: %s is the base currency.
 							'prefix'    => sprintf( __( '1 %s =', 'wp-ever-accounting' ), eac_get_base_currency() ),
+							'suffix'    => $currency->code,
 						)
 					);
 					eac_form_group(
@@ -58,7 +59,6 @@ defined( 'ABSPATH' ) || exit;
 							'label'    => __( 'Symbol', 'wp-ever-accounting' ),
 							'type'     => 'text',
 							'value'    => $currency->symbol,
-							'class'    => 'eac-col-6',
 							'required' => true,
 						)
 					);
@@ -68,7 +68,6 @@ defined( 'ABSPATH' ) || exit;
 							'label'    => __( 'Thousand Separator', 'wp-ever-accounting' ),
 							'type'     => 'text',
 							'value'    => $currency->thousand_separator,
-							'class'    => 'eac-col-6',
 							'required' => true,
 						)
 					);
@@ -79,7 +78,6 @@ defined( 'ABSPATH' ) || exit;
 							'label'    => __( 'Decimal Separator', 'wp-ever-accounting' ),
 							'type'     => 'text',
 							'value'    => $currency->decimal_separator,
-							'class'    => 'eac-col-6',
 							'required' => true,
 						)
 					);
@@ -90,7 +88,6 @@ defined( 'ABSPATH' ) || exit;
 							'label'    => __( 'Number of Decimals', 'wp-ever-accounting' ),
 							'type'     => 'number',
 							'value'    => $currency->precision,
-							'class'    => 'eac-col-6',
 							'required' => true,
 						)
 					);
@@ -101,7 +98,6 @@ defined( 'ABSPATH' ) || exit;
 							'label'    => __( 'Symbol Position', 'wp-ever-accounting' ),
 							'type'     => 'select',
 							'value'    => $currency->position,
-							'class'    => 'eac-col-6',
 							'required' => true,
 							'options'  => array(
 								'before' => __( 'Before amount', 'wp-ever-accounting' ),
