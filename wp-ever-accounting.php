@@ -17,23 +17,7 @@
 
 defined( 'ABSPATH' ) || exit();
 
-define( 'EACCOUNTING_BASENAME', plugin_basename( __FILE__ ) );
-define( 'EACCOUNTING_PLUGIN_FILE', __FILE__ );
-
 require_once __DIR__ . '/vendor/autoload.php';
-require_once __DIR__ . '/includes/class-wp-ever-accounting.php';
-
-/**
- * Returns the main instance of Plugin.
- *
- * @since  1.0.0
- * @return EverAccounting
- */
-function eaccounting() {
-	return EverAccounting::instance();
-}
-
-//eaccounting();
 
 /**
  * Main instance of EverAccounting.
@@ -43,7 +27,7 @@ function eaccounting() {
  * @since  1.0.0
  * @return EverAccounting\Plugin
  */
-function EAC() {
+function EAC() { // phpcs:ignore PSR1.Functions.FunctionName
 	return EverAccounting\Plugin::create( __FILE__ );
 }
 
