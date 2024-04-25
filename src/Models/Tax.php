@@ -10,8 +10,8 @@ namespace EverAccounting\Models;
  * @package EverAccounting
  * @subpackage Models
  *
- * @property int    $id ID of the item.
- * @property string $name Name of the item.
+ * @property int    $id ID of the tax.
+ * @property string $name Name of the tax.
  * @property double $rate Rate of the tax.
  * @property bool   $is_compound Whether the tax is compound.
  * @property string $description Description of the tax.
