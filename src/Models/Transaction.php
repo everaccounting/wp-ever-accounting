@@ -12,8 +12,8 @@ defined( 'ABSPATH' ) || exit;
  * @package EverAccounting
  * @subpackage Models
  *
- * @property int    $id ID of the item.
  * @property string $type Type of the transaction.
+ * @property int    $id ID of the item.
  * @property string $number Number of the transaction.
  * @property string $date Date of the transaction.
  * @property double $amount Amount of the transaction.
@@ -26,13 +26,11 @@ defined( 'ABSPATH' ) || exit;
  * @property int    $document_id Document ID of the transaction.
  * @property int    $contact_id Contact ID of the transaction.
  * @property int    $category_id Category ID of the transaction.
- * @property int    $transfer_id Transfer ID of the transaction.
  * @property int    $attachment_id Attachment ID of the transaction.
  * @property int    $parent_id Parent ID of the transaction.
  * @property bool   $reconciled Whether the transaction is reconciled.
  * @property string $created_via Created via of the transaction.
  * @property int    $author_id Author ID of the transaction.
- * @property string $status Status of the transaction.
  * @property string $uuid UUID of the transaction.
  * @property string $date_created Date the transaction was created.
  * @property string $date_updated Date the transaction was last updated.
@@ -69,8 +67,8 @@ class Transaction extends Model {
 	 * @var array
 	 */
 	protected $columns = array(
-		'id',
 		'type',
+		'id',
 		'number',
 		'date',
 		'amount',
@@ -83,14 +81,12 @@ class Transaction extends Model {
 		'document_id',
 		'contact_id',
 		'category_id',
-		'transfer_id',
 		'attachment_id',
 		'parent_id',
 		'reconciled',
-		'status',
-		'uuid',
 		'created_via',
 		'author_id',
+		'uuid',
 	);
 
 	/**
