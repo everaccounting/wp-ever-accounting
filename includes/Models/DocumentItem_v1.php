@@ -2,8 +2,6 @@
 
 namespace EverAccounting\Models;
 
-use ByteKit\Models\Relation;
-
 /**
  * DocumentItem model.
  *
@@ -31,7 +29,7 @@ use ByteKit\Models\Relation;
  * @property string $date_updated Date updated of the document_item.
  * @property string $date_created Date created of the document_item.
  */
-class DocumentItem extends Model {
+class DocumentItem_v1 extends Model {
 
 	/**
 	 * The table associated with the model.
@@ -128,46 +126,44 @@ class DocumentItem extends Model {
 	}
 
 	/**
-	 * Convert the model instance to an array.
+	 * Set tax ids.
 	 *
-	 * @return array
+	 * @param string $tax_ids Tax ids.
+	 *
+	 * @return void
+	 * @since 1.0.0
 	 */
-	public function to_array() {
-		$data          = parent::to_array();
-		$data['taxes'] = array();
-		foreach ( $this->get_taxes() as $tax ) {
-			$data['taxes'][] = $tax->to_array();
+	protected function set_tax_ids_prop( $tax_ids ) {
+		$tax_ids = wp_parse_id_list( $tax_ids );
+		$taxes   = array();
+		foreach ( $tax_ids as $tax_id ) {
+			$taxes[] = array( 'tax_id' => $tax_id );
 		}
-
-		return $data;
+		$this->set_tax_items( $taxes );
 	}
 
-	/*
-	|--------------------------------------------------------------------------
-	| Prop methods
-	|--------------------------------------------------------------------------
-	| The following methods are used to get and set properties of the object.
-	*/
 
-	/*
-	|--------------------------------------------------------------------------
-	| Relation methods
-	|--------------------------------------------------------------------------
-	| Methods for defining and accessing relationships between objects.
-	*/
+	/**
+	 * Get tax ids.
+	 *
+	 * @return string
+	 * @since 1.0.0
+	 */
+	public function get_tax_ids_prop() {
+		$tax_ids = array();
+		foreach ( $this->get_tax_items() as $tax ) {
+			$tax_ids[] = $tax->id;
+		}
 
-	/*
-	|--------------------------------------------------------------------------
-	| CRUD methods
-	|--------------------------------------------------------------------------
-	| Methods for saving, updating, and deleting objects.
-	*/
+		return implode( ',', $tax_ids );
+	}
+
 	/**
 	 * Saves an object in the database.
 	 *
+	 * @return true|\WP_Error True on success, WP_Error on failure.
 	 * @throws \Exception When the document item is invalid.
 	 * @since 1.0.0
-	 * @return true|\WP_Error True on success, WP_Error on failure.
 	 */
 	public function save() {
 		// Required fields check.
@@ -199,12 +195,12 @@ class DocumentItem extends Model {
 				throw new \Exception( $saved->get_error_message() );
 			}
 
-			foreach ( $this->get_taxes() as $doc_tax ) {
+			foreach ( $this->get_tax_items() as $doc_tax ) {
 				$doc_tax->document_id = $this->document_id;
 				$doc_tax->item_id     = $this->id;
 
 				// check if tax is 0, set it to delete.
-				// if ( empty( $doc_tax->subtotal ) && empty( $doc_tax->get_discount() ) && empty( $doc_tax->get_shipping() ) && empty( $doc_tax->get_fee() ) && empty( $doc_tax->get_total() ) ) {
+				// if ( empty( $doc_tax->get_subtotal() ) && empty( $doc_tax->get_discount() ) && empty( $doc_tax->get_shipping() ) && empty( $doc_tax->get_fee() ) && empty( $doc_tax->get_total() ) ) {
 				// $this->deletable[] = $doc_tax;
 				// continue;
 				// }
@@ -237,29 +233,18 @@ class DocumentItem extends Model {
 
 	/*
 	|--------------------------------------------------------------------------
-	| Helper methods.
+	| Document Taxes related methods
 	|--------------------------------------------------------------------------
-	| Utility methods which don't directly relate to this object but may be
-	| used by this object.
+	| These methods are related to line items taxes.
 	*/
-
-	/**
-	 * Get discounted price.
-	 *
-	 * @return float
-	 * @since 1.1.0
-	 */
-	public function get_discounted_price() {
-		return (float) $this->subtotal - (float) $this->discount;
-	}
 
 	/**
 	 * Get taxes.
 	 *
-	 * @since 1.0.0
 	 * @return DocumentItemTax[]
+	 * @since 1.0.0
 	 */
-	public function get_taxes() {
+	public function get_tax_items() {
 		if ( is_null( $this->taxes ) ) {
 			$this->taxes = array();
 			if ( $this->exists() ) {
@@ -284,11 +269,11 @@ class DocumentItem extends Model {
 	 *
 	 * @param array $taxes Taxes.
 	 *
-	 * @since 1.1.6
 	 * @return void
+	 * @since 1.1.6
 	 */
-	public function set_taxes( $taxes ) {
-		$old_taxes       = array_merge( $this->get_taxes(), $this->deletable );
+	public function set_tax_items( $taxes ) {
+		$old_taxes       = array_merge( $this->get_tax_items(), $this->deletable );
 		$this->taxes     = array();
 		$this->deletable = array_filter(
 			$old_taxes,
@@ -302,13 +287,13 @@ class DocumentItem extends Model {
 		}
 
 		foreach ( $taxes as $tax ) {
-			$this->add_tax( $tax );
+			$this->add_tax_item( $tax );
 		}
 
 		// Go through deletable items and if they are in the new items list, remove them from the deletable list.
 		foreach ( $this->deletable as $key => $deletable ) {
 			foreach ( $this->taxes as $new_tax ) {
-				if ( $deletable->id === $new_tax->id ) {
+				if ( $deletable->get_id() === $new_tax->get_id() ) {
 					unset( $this->deletable[ $key ] );
 				}
 			}
@@ -320,10 +305,10 @@ class DocumentItem extends Model {
 	 *
 	 * @param int|array|DocumentItemTax $data Tax data.
 	 *
-	 * @since 1.0.0
 	 * @return void
+	 * @since 1.0.0
 	 */
-	public function add_tax( $data ) {
+	public function add_tax_item( $data ) {
 		// Load items before call this method. Otherwise, it will cause mis calculation.
 		$default = array(
 			'id'          => 0,
@@ -346,7 +331,7 @@ class DocumentItem extends Model {
 		}
 
 		if ( ! empty( $data['tax_id'] ) ) {
-			$tax           = Tax::find( $data['tax_id'] );
+			$tax           = eac_get_tax( $data['tax_id'] );
 			$tax_data      = $tax ? $tax->get_data() : array();
 			$accepted_keys = array( 'name', 'rate', 'is_compound' );
 			$tax_data      = wp_array_slice_assoc( $tax_data, $accepted_keys );
@@ -354,8 +339,7 @@ class DocumentItem extends Model {
 		}
 
 		$data     = wp_parse_args( $data, $default );
-		$item_tax = new DocumentItemTax( $data );
-
+		$item_tax = new DocumentItemTax( $data['id'] );
 		// If tax id is not set, we will ignore the tax.
 		if ( empty( $item_tax->tax_id ) ) {
 			return;
@@ -374,57 +358,33 @@ class DocumentItem extends Model {
 
 		// if the tax_id with same tax_id already exists, we will ignore the tax.
 		foreach ( $this->taxes as $tax ) {
-			if ( $tax->tax_id === $item_tax->tax_id ) {
+			if ( $tax->id === $item_tax->id ) {
 				return;
 			}
 		}
+
 		$this->taxes[] = $item_tax;
 	}
 
-	/**
-	 * Get tax ids.
-	 *
-	 * @since 1.0.0
-	 * @return string
-	 */
-	public function get_tax_ids() {
-		$tax_ids = array();
-		foreach ( $this->get_taxes() as $tax ) {
-			$tax_ids[] = $tax->id;
-		}
-
-		return implode( ',', $tax_ids );
-	}
-
-	/**
-	 * Set tax ids.
-	 *
-	 * @param string|array $tax_ids Tax ids.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	public function set_taxes_by_ids( $tax_ids ) {
-		$tax_ids = wp_parse_id_list( $tax_ids );
-		$taxes   = array();
-		foreach ( $tax_ids as $tax_id ) {
-			$taxes[] = array( 'tax_id' => $tax_id );
-		}
-		$this->set_taxes( $taxes );
-	}
+	/*
+	|--------------------------------------------------------------------------
+	| Calculations
+	|--------------------------------------------------------------------------
+	| This section contains methods for calculating totals.
+	*/
 
 	/**
 	 * Calculate subtotal.
 	 *
 	 * @param bool $tax_inclusive Tax inclusive.
 	 *
-	 * @since 1.0.0
 	 * @return void
+	 * @since 1.0.0
 	 */
 	public function calculate_subtotal( $tax_inclusive = false ) {
 		$subtotal = $this->quantity * $this->price;
 		if ( $tax_inclusive ) {
-			$tax_rates    = eac_calculate_taxes( $subtotal, $this->get_taxes(), $tax_inclusive );
+			$tax_rates    = eac_calculate_taxes( $subtotal, $this->get_tax_items(), $tax_inclusive );
 			$subtotal_tax = array_sum( wp_list_pluck( $tax_rates, 'amount' ) );
 			$subtotal    -= $subtotal_tax;
 		}
@@ -432,13 +392,21 @@ class DocumentItem extends Model {
 		$this->subtotal = $subtotal;
 	}
 
+	/*
+	|--------------------------------------------------------------------------
+	| Helper methods.
+	|--------------------------------------------------------------------------
+	| Utility methods which don't directly relate to this object but may be
+	| used by this object.
+	*/
+
 	/**
 	 * Is similar.
 	 *
 	 * @param DocumentItem $item Item to compare.
 	 *
-	 * @since 1.1.0
 	 * @return bool
+	 * @since 1.1.0
 	 */
 	public function is_similar( $item ) {
 		return $this->item_id === $item->item_id &&
@@ -455,8 +423,8 @@ class DocumentItem extends Model {
 	 *
 	 * @param DocumentItem $item Item to merge.
 	 *
-	 * @since 1.1.0
 	 * @return static|false Merged item or false on failure.
+	 * @since 1.1.0
 	 */
 	public function merge( $item ) {
 		// If the item's properties are same, then merge and increase the quantity.

@@ -6,6 +6,7 @@ use EverAccounting\Models\Account;
 use EverAccounting\Models\Category;
 use EverAccounting\Models\Currency;
 use EverAccounting\Models\Customer;
+use EverAccounting\Models\Invoice;
 use EverAccounting\Models\Item;
 use EverAccounting\Models\Revenue;
 use EverAccounting\Models\Tax;
@@ -205,7 +206,7 @@ class Menus {
 	 */
 	public function setup_list_table() {
 		$screen = get_current_screen();
-		if ( Utilities::is_add_screen() || Utilities::is_edit_screen() || ! in_array( $screen->id, Utilities::get_screen_ids(), true ) ) {
+		if ( Utilities::is_add_screen() || Utilities::is_edit_screen() || Utilities::is_view_screen() || ! in_array( $screen->id, Utilities::get_screen_ids(), true ) ) {
 			return;
 		}
 		$args = array(
@@ -323,8 +324,10 @@ class Menus {
 	 */
 	public function render_revenues_tab() {
 		$edit    = Utilities::is_edit_screen();
-		$revenue = new Revenue( $edit );
-		if ( ! empty( $edit ) && ! $revenue->exists() ) {
+		$view    = Utilities::is_view_screen();
+		$id      = $edit ? $edit : $view;
+		$revenue = new Revenue( $id );
+		if ( ! empty( $id ) && ! $revenue->exists() ) {
 			wp_safe_redirect( remove_query_arg( 'edit' ) );
 			exit();
 		}
@@ -332,6 +335,8 @@ class Menus {
 			include __DIR__ . '/views/sales/revenues/add.php';
 		} elseif ( $edit ) {
 			include __DIR__ . '/views/sales/revenues/edit.php';
+		} elseif ( $view ) {
+			include __DIR__ . '/views/sales/revenues/view.php';
 		} else {
 			include __DIR__ . '/views/sales/revenues/revenues.php';
 		}
@@ -343,12 +348,12 @@ class Menus {
 	 * @since 1.0.0
 	 */
 	public function render_invoices_tab() {
-		$edit = Utilities::is_edit_screen();
-		// $invoice = new Invoice( $edit );
-		// if ( ! empty( $edit ) && ! $invoice->exists() ) {
-		// wp_safe_redirect( remove_query_arg( 'edit' ) );
-		// exit();
-		// }
+		$edit    = Utilities::is_edit_screen();
+		$document = new Invoice( $edit );
+		if ( ! empty( $edit ) && ! $document->exists() ) {
+			wp_safe_redirect( remove_query_arg( 'edit' ) );
+			exit();
+		}
 		if ( Utilities::is_add_screen() ) {
 			include __DIR__ . '/views/sales/invoices/add.php';
 		} elseif ( $edit ) {

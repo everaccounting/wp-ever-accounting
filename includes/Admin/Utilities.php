@@ -72,7 +72,7 @@ class Utilities {
 					'categories' => __( 'Categories', 'wp-ever-accounting' ),
 					'currencies' => __( 'Currencies', 'wp-ever-accounting' ),
 					'taxes'      => __( 'Taxes', 'wp-ever-accounting' ),
-				)
+				),
 			),
 			array(
 				'page_title' => __( 'Tools', 'wp-ever-accounting' ),
@@ -82,8 +82,16 @@ class Utilities {
 				'page_hook'  => 'tools',
 				'tabs'       => array(
 					'import' => __( 'Import', 'wp-ever-accounting' ),
-					'export' => __( 'Export', 'wp-ever-accounting' )
+					'export' => __( 'Export', 'wp-ever-accounting' ),
 				),
+			),
+			array(
+				'page_title' => __( 'Settings', 'wp-ever-accounting' ),
+				'menu_title' => __( 'Settings', 'wp-ever-accounting' ),
+				'capability' => 'manage_options',
+				'menu_slug'  => 'eac-settings',
+				'callback'  => array( Settings::class, 'output' ),
+				'load_hook'  => array( Settings::class, 'get_tabs' ),
 			),
 		);
 
@@ -128,5 +136,15 @@ class Utilities {
 	 */
 	public static function is_edit_screen() {
 		return filter_input( INPUT_GET, 'edit', FILTER_VALIDATE_INT );
+	}
+
+	/**
+	 * Determine if current page is view screen.
+	 *
+	 * @since 1.0.0
+	 * @return false|int False if not view screen, id if view screen.
+	 */
+	public static function is_view_screen() {
+		return filter_input( INPUT_GET, 'view', FILTER_VALIDATE_INT );
 	}
 }

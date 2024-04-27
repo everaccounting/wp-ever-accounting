@@ -48,4 +48,105 @@ class DocumentItemTax extends Model {
 		'document_id',
 	);
 
+	/**
+	 * Model's property casts.
+	 *
+	 * @since 1.0.0
+	 * @var array
+	 */
+	protected $casts = array(
+		'id'          => 'int',
+		'rate'        => 'double',
+		'is_compound' => 'bool',
+		'amount'      => 'double',
+		'item_id'     => 'int',
+		'tax_id'      => 'int',
+		'document_id' => 'int',
+	);
+
+	/*
+	|--------------------------------------------------------------------------
+	| Prop methods
+	|--------------------------------------------------------------------------
+	| The following methods are used to get and set properties of the object.
+	*/
+
+	/*
+	|--------------------------------------------------------------------------
+	| Relation methods
+	|--------------------------------------------------------------------------
+	| Methods for defining and accessing relationships between objects.
+	*/
+
+	/*
+	|--------------------------------------------------------------------------
+	| CRUD methods
+	|--------------------------------------------------------------------------
+	| Methods for saving, updating, and deleting objects.
+	*/
+	/**
+	 * Saves an object in the database.
+	 *
+	 * @return true|\WP_Error True on success, WP_Error on failure.
+	 * @since 1.0.0
+	 */
+	public function save() {
+		// Required fields check.
+		if ( empty( $this->document_id ) ) {
+			return new \WP_Error( 'missing_required', __( 'Document ID is required.', 'wp-ever-accounting' ) );
+		}
+
+		if ( empty( $this->item_id ) ) {
+			return new \WP_Error( 'missing_required', __( 'Item ID is required.', 'wp-ever-accounting' ) );
+		}
+
+		if ( empty( $this->tax_id ) ) {
+			return new \WP_Error( 'missing_required', __( 'Tax ID is required.', 'wp-ever-accounting' ) );
+		}
+
+		if ( empty( $this->name ) ) {
+			return new \WP_Error( 'missing_required', __( 'Tax name is required.', 'wp-ever-accounting' ) );
+		}
+
+		if ( empty( $this->rate ) ) {
+			return new \WP_Error( 'missing_required', __( 'Tax rate is required.', 'wp-ever-accounting' ) );
+		}
+
+		return parent::save();
+	}
+
+
+	/*
+	|--------------------------------------------------------------------------
+	| Helper methods.
+	|--------------------------------------------------------------------------
+	| Utility methods which don't directly relate to this object but may be
+	| used by this object.
+	*/
+	/**
+	 * Is the tax similar to another tax?
+	 *
+	 * @param DocumentItemTax $tax The tax to compare.
+	 *
+	 * @return bool
+	 * @since 1.1.0
+	 */
+	public function is_similar( $tax ) {
+		return $this->rate === $tax->rate && $this->is_compound === $tax->is_compound;
+	}
+
+	/**
+	 * Merge this tax with another tax.
+	 *
+	 * @param static $line_tax The tax to merge with.
+	 *
+	 * @since 1.1.0
+	 */
+	public function merge( $line_tax ) {
+		if ( ! $this->is_similar( $line_tax ) ) {
+			return;
+		}
+
+		$this->amount += $line_tax->amount;
+	}
 }

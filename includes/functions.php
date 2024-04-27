@@ -232,6 +232,50 @@ function eac_convert_money( $amount, $from, $to, $from_rate = null, $to_rate = n
 }
 
 /**
+ * Get only numbers from the string.
+ *
+ * @param string   $number Number to get only numbers from.
+ *
+ * @param bool|int $decimals Allow decimal. If true, then allow decimal. If false, then only allow integers. If a number, then allow that many decimal places.
+ *
+ * @return int|float|null
+ * @since 1.0.2
+ */
+function eac_sanitize_number( $number, $decimals = 2 ) {
+	// Convert multiple dots to just one.
+	$number = preg_replace( '/\.(?![^.]+$)|[^0-9.-]/', '', eac_clean( $number ) );
+
+	if ( $decimals ) {
+		$number = (float) preg_replace( '/[^0-9.-]/', '', $number );
+		// if allow decimal is a number, then use that as the number of decimals.
+		if ( is_numeric( $decimals ) ) {
+			$number = number_format( floatval( $number ), $decimals, '.', '' );
+		}
+
+		return $number;
+	}
+
+	return (int) preg_replace( '/[^0-9]/', '', $number );
+}
+
+/**
+ * Round a number using the built-in `round` function, but unless the value to round is numeric
+ * (a number or a string that can be parsed as a number), apply 'floatval' first to it
+ * (so it will convert it to 0 in most cases).
+ *
+ * @param mixed $val The value to round.
+ * @param int   $precision The optional number of decimal digits to round to.
+ * @param int   $mode A constant to specify the mode in which rounding occurs.
+ *
+ * @return float The value rounded to the given precision as a float, or the supplied default value.
+ */
+function eac_round_number( $val, $precision = 6, $mode = PHP_ROUND_HALF_UP ) {
+	$val = eac_sanitize_number( $val, $precision );
+
+	return round( $val, $precision, $mode );
+}
+
+/**
  * Get payment methods.
  *
  * @return array

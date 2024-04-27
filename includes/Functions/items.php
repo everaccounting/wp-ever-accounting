@@ -115,7 +115,7 @@ function eac_delete_item( $item_id ) {
  * @param array $args Optional. Arguments to retrieve items.
  * @param bool  $count Optional. Whether to return the count of items.
  *
- * @return array|int
+ * @return Item[]|int
  * @since 1.1.0
  */
 function eac_get_items( $args = array(), $count = false ) {
@@ -124,5 +124,4 @@ function eac_get_items( $args = array(), $count = false ) {
 	}
 
 	return Item::query( $args );
-
 }

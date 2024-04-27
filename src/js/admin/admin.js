@@ -1,113 +1,582 @@
 (function ($, window, document, undefined) {
-	'use strict';
-	var $document = $(document),
-		$window = $(window),
-		$body = $(document.body);
+
 	window.eac_admin = {
-		init: function () {
+		bindEvents: function () {
 			var self = this;
-			self.select2('.eac_select2');
-			self.datepicker('.eac_datepicker');
-			self.tooltip('.eac_tooltip');
+			/**
+			 * Initialize select2
+			 */
+			$('.eac_select2').filter(':not(.enhanced)').each(function () {
+				self.initSelect2(this);
+			});
+
+			/**
+			 * Initialize datepicker
+			 */
+			$('.eac_datepicker').filter(':not(.enhanced)').each(function () {
+				self.initDatepicker(this);
+			});
+
+			/**
+			 * Initialize tooltip
+			 */
+			$('.eac_tooltip').filter(':not(.enhanced)').each(function () {
+				self.initTooltip(this);
+			});
+
+			/**
+			 * Initialize number input
+			 */
+			$('.eac_number_input').filter(':not(.enhanced)').each(function () {
+				self.initNumberInput(this);
+			});
+
+			/**
+			 * Initialize price input
+			 */
+			$('.eac_price_input').filter(':not(.enhanced)').each(function () {
+				self.initPriceInput(this, $(this).data('currency-code'));
+			});
+
+			/**
+			 * Initialize inputmask
+			 */
+			$('.eac_inputmask').filter(':not(.enhanced)').each(function () {
+				self.initInputmask(this);
+			});
+
+			/**
+			 * Initialize invoice form
+			 */
+			// $('#eac-invoice-form')
+			// 	.on('change', ':input[class*="trigger-update"]', function (){
+			// 		$(this).closest('form').trigger('update');
+			// 	})
+			// 	.on('update', function () {
+			// 		var $form = $(this);
+			// 		var data = {};
+			// 		$form.find(':input').each(function () {
+			// 			var name = $(this).attr('name');
+			// 			var value = $(this).val();
+			// 			if (name) {
+			// 				data[name] = value;
+			// 			}
+			// 		});
+			// 		data.action = 'eac_calculate_invoice_totals';
+			// 		$form.load(eac_admin_js_vars.ajax_url, data, function () {
+			// 			self.unblockForm($form);
+			// 			$form.removeClass('initiated');
+			// 			// self.init();
+			// 		});
+			// 	});
 		},
-		select2: function (el) {
-			// if ('undefined' === typeof $.selectWoo) {
-			// 	console.warn('Select2 is not loaded.');
-			// 	return;
-			// }
-			$(el).filter(':not(.enhanced)')
-				.each(function () {
-					var self = this;
-					var options = {
-						allowClear: $(self).data('allow-clear') && !$(self).prop('multiple') || true,
-						placeholder: $(self).data('placeholder') || '',
-						width: '100%',
-						minimumInputLength: $(self).data('minimum-input-length') || 0,
-						ajax: {
-							url: eac_admin_js_vars.ajax_url,
-							dataType: 'json',
-							delay: 250,
-							method: 'POST',
-							data: function (params) {
-								return {
-									term: params.term,
-									action: $(self).data('action'),
-									type: $(self).data('type'),
-									subtype: $(self).data('subtype'),
-									_wpnonce: eac_admin_js_vars.search_nonce,
-									exclude: $(self).data('exclude'),
-									include: $(self).data('include'),
-									limit: $(self).data('limit'),
-								};
-							},
-							processResults: function (data) {
-								data.page = data.page || 1;
-								return data;
-							},
-							cache: true
-						}
-					}
-					// if data-action is not defined then return.
-					if (!$(self).data('action')) {
-						delete options.ajax;
-					}
-					$(this).selectWoo(options);
-				});
+
+		/**
+		 * Initialize select2.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param {HTMLElement} el - The element to initialize select2.
+		 * @return {*|jQuery}
+		 */
+		initSelect2: function (el) {
+			var options = {
+				allowClear: $(el).data('allow-clear') && !$(el).prop('multiple') || true,
+				placeholder: $(el).data('placeholder') || '',
+				width: '100%',
+				minimumInputLength: $(el).data('minimum-input-length') || 0,
+				readOnly: $(el).data('readonly') || false,
+				ajax: {
+					url: eac_admin_js_vars.ajax_url,
+					dataType: 'json',
+					delay: 250,
+					method: 'POST',
+					data: function (params) {
+						return {
+							term: params.term,
+							action: $(el).data('action'),
+							type: $(el).data('type'),
+							subtype: $(el).data('subtype'),
+							_wpnonce: eac_admin_js_vars.search_nonce,
+							exclude: $(el).data('exclude'),
+							include: $(el).data('include'),
+							limit: $(el).data('limit'),
+						};
+					},
+					processResults: function (data) {
+						data.page = data.page || 1;
+						return data;
+					},
+					cache: true
+				}
+			}
+
+			// if data-action is not defined then return.
+			if (!$(el).data('action')) {
+				delete options.ajax;
+			}
+
+			return $(el).selectWoo(options);
 		},
-		datepicker: function (el) {
+
+		/**
+		 * Initialize datepicker.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param {HTMLElement} el - The element to initialize datepicker.
+		 * @return {*|jQuery}
+		 */
+		initDatepicker: function (el) {
 			if ('undefined' === typeof $.datepicker) {
 				console.warn('jQuery UI Datepicker is not loaded.');
 				return;
 			}
-			$(el).filter(':not(.enhanced)')
-				.each(function () {
-					console.log($(this).data('format'));
-					$(this).datepicker({
-						dateFormat: $(this).data('format') || 'mm-dd',
-						changeMonth: $(this).data('change-month') || false,
-						changeYear: $(this).data('change-year') || false,
-						yearRange: $(this).data('year-range') || 'c-10:c+10',
-						showButtonPanel: $(this).data('show-button-panel') || true,
-						onClose: function (dateText, inst) {
-							if ($(window.event.srcElement).hasClass('ui-datepicker-close')) {
-								$element.val('');
-							}
-						},
-					});
-					$(this).addClass('enhanced');
-				});
+
+			return $(el).datepicker({
+				dateFormat: $(el).data('format') || 'yy-mm-dd',
+				changeMonth: true,
+				changeYear: true,
+				showButtonPanel: true,
+				showOtherMonths: true,
+				selectOtherMonths: true,
+				yearRange: '-100:+10',
+			});
+
 		},
-		tooltip: function (el) {
+
+		/**
+		 * Initialize tooltip.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param {HTMLElement} el - The element to initialize tooltip.
+		 * @return {*|jQuery}
+		 */
+		initTooltip: function (el) {
 			if ('undefined' === typeof $.tooltip) {
 				console.warn('jQuery UI is not loaded.');
 				return;
 			}
-			const self = this;
-			$(el).filter(':not(.enhanced)')
-				.each(function () {
-					$(this).tooltip({
-						content: function () {
-							return $(self).prop('title');
-						},
-						tooltipClass: 'eac-ui-tooltip',
-						position: {
-							my: 'center top',
-							at: 'center bottom+10',
-							collision: 'flipfit',
-						},
-						hide: {
-							duration: 200,
-						},
-						show: {
-							duration: 200,
-						},
-					});
-				});
-		},
-	}
 
-	$(document).ready(function () {
-		eac_admin.init();
+			return $(el).tooltip({
+				content: function () {
+					return $(this).prop('title');
+				},
+				tooltipClass: 'eac-ui-tooltip',
+				position: {
+					my: 'center top',
+					at: 'center bottom+10',
+					collision: 'flipfit',
+				},
+				hide: {
+					duration: 200,
+				},
+				show: {
+					duration: 200,
+				},
+			});
+		},
+
+		/**
+		 * Initialize inputmask.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param {HTMLElement} el - The element to initialize inputmask.
+		 * @return {void}
+		 */
+		initInputmask: function (el) {
+			// if ('undefined' === typeof $.inputmask) {
+			// 	console.warn('jQuery Inputmask is not loaded.');
+			// 	return;
+			// }
+
+			$(el).inputmask( $(el).data());
+		},
+
+		/**
+		 * Block form.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param {HTMLElement} el - The element to block form.
+		 * @return {void}
+		 */
+		blockForm: function (el) {
+			var $form = $(el);
+
+			$form.find(':input').prop('disabled', true);
+			$form.find(':submit').attr('disabled', 'disabled');
+			$form.find(':submit').attr('disabled', 'disabled');
+			$form.find('[type="button"]').attr('disabled', 'disabled');
+			$('[form="' + $form.attr('id') + '"]').attr('disabled', 'disabled');
+
+			$form.block({
+				message: null,
+				overlayCSS: {
+					background: '#fff',
+					opacity: 0.6,
+				},
+			});
+		},
+
+		/**
+		 * Unblock form.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param {HTMLElement} el - The element to unblock form.
+		 * @return {void}
+		 */
+		unblockForm: function (el) {
+			var $form = $(el);
+			$form.find(':input').prop('disabled', false);
+			$form.find(':submit').removeAttr('disabled');
+			$form.find('[type="button"]').removeAttr('disabled');
+			$('[form="' + $form.attr('id') + '"]').removeAttr('disabled');
+			$form.unblock();
+		},
+
+		/**
+		 * Initialize input number.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param {HTMLElement} el - The element to initialize input number.
+		 * @return {void}
+		 */
+		initNumberInput: function (el) {
+			$(el).on('input', function () {
+				this.value = this.value.replace(/[^0-9]/g, '');
+			});
+		},
+
+		/**
+		 * Initialize input price.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param {HTMLElement} el - The element to initialize input price.
+		 * @param {string} currency_code - The currency code.
+		 *
+		 * @return {void}
+		 */
+		initPriceInput: function (el, currency_code) {
+			$(el).on('input', function () {
+				var val = $(this).val();
+				val = val.replace(/[^0-9.]/g, '');
+				$(this).val(val);
+			});
+		},
+
+		/**
+		 * Show flash message.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param {string} message - The message to show.
+		 * @param {string} type - The type of message. Default is 'success'.
+		 * @return {void}
+		 */
+		flash: function (message, type) {
+			type = type || 'success';
+			$('<div class="notice notice-' + type + ' is-dismissible"><p>' + message + '</p></div>').insertAfter('.wrap h1').delay(5000).fadeOut();
+		},
+
+		/**
+		 * Process a batch action and continue until its done.
+		 *
+		 * @since 1.0.0
+		 *
+		 *
+		 * @param {string} action - The action to process.
+		 * @param {array} items - The items to process.
+		 * @param {int} index - The index of the item to process.
+		 * @param {int} total - The total number of items to process.
+		 * @param {function} callback - The callback function to call when done.
+		 * @return {void}
+		 *
+		 */
+		processBatchAction: function (action, items, index, total, callback) {
+			var self = this;
+			var item = items[index];
+			var $progress = $('.eac-batch-progress');
+			var $bar = $progress.find('.progress-bar');
+			var percent = Math.round((index / total) * 100);
+
+			$bar.css('width', percent + '%');
+
+			$.ajax({
+				url: eac_admin_js_vars.ajax_url,
+				type: 'POST',
+				data: {
+					action: action,
+					item: item,
+					_wpnonce: eac_admin_js_vars.batch_nonce,
+				},
+				success: function (response) {
+					if (index < total - 1) {
+						self.processBatchAction(action, items, index + 1, total, callback);
+					} else {
+						$bar.css('width', '100%');
+						$progress.fadeOut();
+						callback();
+					}
+				},
+			});
+		},
+
+		/**
+		 * Get currency.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param {string} code - The currency code.
+		 *
+		 * @example
+		 * eac_admin.geCurrency('USD').then(function (currency) {
+		 * 	console.log(currency);
+		 * })
+		 *
+		 * 	@return {Promise}
+		 */
+		getCurrency: function (code) {
+			console.log(eac_admin_js_vars);
+			return $.ajax({
+				url: eac_admin_js_vars.ajax_url,
+				type: 'POST',
+				data: {
+					action: 'eac_get_currency',
+					currency_code: code,
+					_wpnonce: eac_admin_js_vars.currency_nonce,
+				},
+			});
+		},
+
+		/**
+		 * Get account.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param {string} account_id - The account ID.
+		 *
+		 * @example
+		 * eac_admin.getAccount(1).then(function (account) {
+		 * 	console.log(account);
+		 *
+		 * 		// Do something with account.
+		 *
+		 * });
+		 *
+		 * @return {Promise}
+		 */
+		getAccount: function (account_id) {
+			return $.ajax({
+				url: eac_admin_js_vars.ajax_url,
+				type: 'POST',
+				data: {
+					action: 'eac_get_account',
+					account_id: account_id,
+					_wpnonce: eac_admin_js_vars.get_account_nonce,
+				},
+			});
+		},
+
+		/**
+		 * Get item.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param {string} item_id - The item ID.
+		 *
+		 *
+		 * @example
+		 * eac_admin.getItem(1).then(function (item) {
+		 * 	console.log(item);
+		 * })
+		 *
+		 * 	@return {Promise}
+		 *
+		 */
+		getItem: function (item_id) {
+			return $.ajax({
+				url: eac_admin_js_vars.ajax_url,
+				type: 'POST',
+				data: {
+					action: 'eac_get_item',
+					item_id: item_id,
+					_wpnonce: eac_admin_js_vars.item_nonce,
+				},
+			});
+		},
+
+		/**
+		 * Get customer.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param {string} customer_id - The customer ID.
+		 *
+		 * @example
+		 * eac_admin.getCustomer(1).then(function (customer) {
+		 * 	console.log
+		 * 	})
+		 *
+		 * 	@return {Promise}
+		 */
+		getCustomer: function (customer_id) {
+			return $.ajax({
+				url: eac_admin_js_vars.ajax_url,
+				type: 'POST',
+				data: {
+					action: 'eac_get_customer',
+					customer_id: customer_id,
+					_wpnonce: eac_admin_js_vars.customer_nonce,
+				},
+			});
+		},
+
+		/**
+		 * Get vendor.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param {string} vendor_id - The vendor ID.
+		 *
+		 * @example
+		 * eac_admin.getVendor(1).then(function (vendor) {
+		 * 	console.log(vendor);
+		 * })
+		 *
+		 * @return {Promise}
+		 */
+		getVendor: function (vendor_id) {
+			return $.ajax({
+				url: eac_admin_js_vars.ajax_url,
+				type: 'POST',
+				data: {
+					action: 'eac_get_vendor',
+					vendor_id: vendor_id,
+					_wpnonce: eac_admin_js_vars.vendor_nonce,
+				},
+			});
+		},
+
+		/**
+		 * Get invoice.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param {string} invoice_id - The invoice ID.
+		 *
+		 * @example
+		 * eac_admin.getInvoice(1).then(function (invoice) {
+		 * 	console.log(invoice);
+		 * })
+		 *
+		 * @return {Promise}
+		 */
+		getInvoice: function (invoice_id) {
+			return $.ajax({
+				url: eac_admin_js_vars.ajax_url,
+				type: 'POST',
+				data: {
+					action: 'eac_get_invoice',
+					invoice_id: invoice_id,
+					_wpnonce: eac_admin_js_vars.invoice_nonce,
+				},
+			});
+		},
+
+		/**
+		 * Get bill.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param {string} bill_id - The bill ID.
+		 *
+		 * @example
+		 * eac_admin.geBill(1).then(function (bill) {
+		 * 	console.log(bill);
+		 * })
+		 *
+		 * @return {Promise}
+		 */
+		getBill: function (bill_id) {
+			return $.ajax({
+				url: eac_admin_js_vars.ajax_url,
+				type: 'POST',
+				data: {
+					action: 'eac_get_bill',
+					bill_id: bill_id,
+					_wpnonce: eac_admin_js_vars.bill_nonce,
+				},
+			});
+		},
+
+		/**
+		 * Get tax.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param {string} tax_id - The tax ID.
+		 *
+		 * @example
+		 * eac_admin.getTax(1).then(function (tax) {
+		 * 	console.log(tax);
+		 * })
+		 *
+		 * @return {Promise}
+		 */
+		getTax: function (tax_id) {
+			return $.ajax({
+				url: eac_admin_js_vars.ajax_url,
+				type: 'POST',
+				data: {
+					action: 'eac_get_tax',
+					tax_id: tax_id,
+					_wpnonce: eac_admin_js_vars.tax_nonce,
+				},
+			});
+		},
+	};
+
+	eac_admin.invoiceForm = {
+		bindEvents: function () {
+			var self = this, $form = $('#eac-invoice-form');
+
+			$form
+				.on('change', ':input.add-item', this.triggerUpdate)
+				.on('select2-blur', '.item-taxes', this.triggerUpdate)
+				.on('update', this.update);
+		},
+		triggerUpdate: function (e) {
+			$(e.target).closest('form').trigger('update')
+		},
+		update: function (e) {
+			var $form = $(e.target), data = {};
+			eac_admin.blockForm($form);
+			$(':input', $form).each(function () {
+				var name = $(this).attr('name');
+				var value = $(this).val();
+				if (name) {
+					data[name] = value;
+				}
+			});
+			data.action = 'eac_calculate_invoice_totals';
+
+			$form.load(eac_admin_js_vars.ajax_url, data, function () {
+				eac_admin.unblockForm($form);
+				$form.removeClass('initiated');
+				eac_admin.bindEvents();
+			});
+		},
+	};
+
+	$(function () {
+		eac_admin.bindEvents();
+		eac_admin.invoiceForm.bindEvents();
 	});
 
 })(jQuery, window, document);

@@ -24,6 +24,7 @@ class Admin {
 		add_filter( 'admin_footer_text', array( $this, 'admin_footer_text' ), PHP_INT_MAX );
 		add_filter( 'update_footer', array( $this, 'update_footer' ), PHP_INT_MAX );
 		add_action( 'in_admin_header', array( __CLASS__, 'in_admin_header' ) );
+		add_action( 'wp_loaded', array( $this, 'save_settings' ) );
 	}
 
 	/**
@@ -71,16 +72,24 @@ class Admin {
 		EAC()->scripts->register_script( 'eac-select2', 'js/select-woo.js', array( 'jquery' ) );
 		EAC()->scripts->register_style( 'eac-jquery-ui', 'css/jquery-ui.css' );
 		EAC()->scripts->register_script( 'eac-tiptip', 'js/tipTip.js', array( 'jquery' ) );
+		EAC()->scripts->register_script( 'eac-blockui', 'js/blockui.js', array( 'jquery' ) );
+		EAC()->scripts->register_script( 'eac-inputmask', 'js/inputmask.js', array( 'jquery' ) );
 		EAC()->scripts->enqueue_style( 'eac-select2' );
 		EAC()->scripts->enqueue_script( 'eac-select2' );
 
 		// Core scripts.
-		EAC()->scripts->register_script( 'eac-core', 'js/eac-core.js', array( 'jquery' ) );
-		EAC()->scripts->register_script( 'eac-admin', 'js/eac-admin.js', array( 'jquery', 'eac-select2', 'jquery-ui-datepicker', 'jquery-ui-tooltip' ) );
+		EAC()->scripts->register_script( 'eac-admin', 'js/eac-admin.js', array( 'jquery', 'eac-select2', 'jquery-ui-datepicker', 'jquery-ui-tooltip', 'eac-blockui', 'eac-inputmask' ) );
+		EAC()->scripts->register_script( 'eac-settings', 'js/eac-settings.js', array( 'jquery', 'eac-select2', 'jquery-ui-datepicker', 'jquery-ui-tooltip' ) );
 		EAC()->scripts->register_style( 'eac-admin', 'css/eac-admin.css', array( 'eac-jquery-ui' ) );
-		EAC()->scripts->enqueue_script( 'eac-core' );
+		EAC()->scripts->register_style( 'eac-settings', 'css/eac-settings.css', array( 'eac-jquery-ui' ) );
 		EAC()->scripts->enqueue_script( 'eac-admin' );
 		EAC()->scripts->enqueue_style( 'eac-admin' );
+
+		// if settings page.
+		if ( 'ever-accounting_page_eac-settings' === $hook ) {
+			EAC()->scripts->register_script( 'eac-settings', 'js/settings.js', array( 'jquery' ) );
+			EAC()->scripts->enqueue_style( 'eac-settings' );
+		}
 
 		wp_localize_script(
 			'eac-core',
@@ -97,9 +106,18 @@ class Admin {
 			'eac-admin',
 			'eac_admin_js_vars',
 			array(
-				'ajax_url'     => admin_url( 'admin-ajax.php' ),
-				'search_nonce' => wp_create_nonce( 'eac_search_action' ),
-				'i18n'         => array(
+				'ajax_url'       => admin_url( 'admin-ajax.php' ),
+				'search_nonce'   => wp_create_nonce( 'eac_search_action' ),
+				'currency_nonce' => wp_create_nonce( 'eac_currency' ),
+				'account_nonce'  => wp_create_nonce( 'eac_account' ),
+				'item_nonce'     => wp_create_nonce( 'eac_item' ),
+				'customer_nonce' => wp_create_nonce( 'eac_customer' ),
+				'vendor_nonce'   => wp_create_nonce( 'eac_vendor' ),
+				'payment_nonce'  => wp_create_nonce( 'eac_payment' ),
+				'expense_nonce'  => wp_create_nonce( 'eac_expense' ),
+				'invoice_nonce'  => wp_create_nonce( 'eac_invoice' ),
+				'purchase_nonce' => wp_create_nonce( 'eac_purchase' ),
+				'i18n'           => array(
 					'confirm_delete' => __( 'Are you sure you want to delete this item?', 'wp-ever-accounting' ),
 				),
 			)
@@ -248,5 +266,35 @@ class Admin {
 			</div>
 		</div>
 		<?php
+	}
+
+	/**
+	 * Save settings.
+	 *
+	 * @since 1.1.6
+	 */
+	public function save_settings() {
+		global $current_tab, $current_section;
+		$page = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+
+		// We should only save on the settings page.
+		if ( ! is_admin() || empty( $page ) || 'eac-settings' !== $page ) {
+			return;
+		}
+
+		// Include settings pages.
+		Settings::get_tabs();
+
+		// Get current tab/section.
+		$current_tab     = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_FULL_SPECIAL_CHARS ) ?? 'general';
+		$current_section = filter_input( INPUT_GET, 'section', FILTER_SANITIZE_FULL_SPECIAL_CHARS ) ?? '';
+		$is_save         = isset( $_POST['save'] ) ? true : false;
+
+		// Save settings if data has been posted.
+		if ( '' !== $current_section && apply_filters( "ever_accounting_save_settings_{$current_tab}_{$current_section}", $is_save ) ) {
+			Settings::save();
+		} elseif ( '' === $current_section && apply_filters( "ever_accounting_save_settings_{$current_tab}", $is_save ) ) {
+			Settings::save();
+		}
 	}
 }

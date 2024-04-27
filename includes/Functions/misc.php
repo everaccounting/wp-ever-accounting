@@ -65,7 +65,7 @@ function eac_form_group( $field ) {
 		} elseif ( strpos( $attr_key, 'data-' ) === 0 ) {
 			$attrs[] = sprintf( '%s="%s"', esc_attr( $attr_key ), esc_attr( $attr_value ) );
 		} elseif ( in_array( $attr_key, array( 'readonly', 'disabled', 'required', 'autofocus' ), true ) ) {
-			$attrs[] = sprintf( '%s="%s"', esc_attr( $attr_key ), esc_attr( $attr_value ) );
+			$attrs[] = sprintf( '%s="%s"', esc_attr( $attr_key ), esc_attr( $attr_key ) );
 		}
 	}
 
@@ -109,6 +109,18 @@ function eac_form_group( $field ) {
 				$field['name'] .= '[]';
 				$attrs[]        = 'multiple="multiple"';
 			}
+
+			// It may send an option_key and option_value to use in the options.
+			// if its an object, it will use the object properties.
+			if ( ! empty( $field['option_key'] ) && ! empty( $field['option_value'] ) ) {
+				// verify options is an array otherwise we will make it an array.
+				if ( ! is_array( $field['options'] ) ) {
+					$field['options'] = array();
+				}
+				$field['options'] = array_filter( $field['options'] );
+				$field['options'] = wp_list_pluck( $field['options'], $field['option_value'], $field['option_key'] );
+			}
+
 			$input = sprintf(
 				'<select name="%1$s" id="%2$s" class="%3$s" placeholder="%4$s" style="%5$s" %6$s>',
 				esc_attr( $field['name'] ),

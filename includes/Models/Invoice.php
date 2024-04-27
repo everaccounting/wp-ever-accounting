@@ -2,6 +2,9 @@
 
 namespace EverAccounting\Models;
 
-class Invoice extends Model{
+/**
+ * Invoice model.
+ */
+class Invoice extends Document {
 
 }

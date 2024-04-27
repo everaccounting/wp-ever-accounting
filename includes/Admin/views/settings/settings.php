@@ -13,7 +13,6 @@
  */
 
 defined( 'ABSPATH' ) || exit;
-
 $current_tab_label = isset( $tabs[ $current_tab ] ) ? $tabs[ $current_tab ] : '';
 ?>
 <div class="wrap bkit-wrap">

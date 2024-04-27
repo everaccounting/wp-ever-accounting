@@ -20,7 +20,7 @@ class General extends Page {
 	 * @since 1.0.0
 	 */
 	public function __construct() {
-		$this->id    = 'general';
+		$this->id    = '';
 		$this->label = __( 'General', 'wp-ever-accounting' );
 
 		parent::__construct();
@@ -40,12 +40,7 @@ class General extends Page {
 	 * @return array An associative array where keys are section identifiers and the values are translated section names.
 	 */
 	protected function get_own_sections() {
-		$sections = array(
-			''           => __( 'Company', 'wp-ever-accounting' ),
-			'currencies' => __( 'Currencies', 'wp-ever-accounting' ),
-		);
-
-		return $sections;
+		return array();
 	}
 
 	/**
@@ -117,23 +112,18 @@ class General extends Page {
 				'desc_tip'    => true,
 			),
 			array(
-				'title'    => __( 'Base Currency', 'wp-ever-accounting' ),
-				'id'       => 'eac_base_currency',
-				'type'     => 'select',
-				'default'  => 'USD',
-				'class'    => 'eac-select2',
-				'options'  => wp_list_pluck(
-					eac_get_currencies(
-						[
-							'status' => 'active',
-							'limit'  => -1,
-						]
-					),
-					'formatted_name',
-					'code'
-				),
-				'disabled' => ! empty( eac_get_transactions() ),
-				'desc_tip' => __( 'Base currency can not be changed once you have recorded any transaction.', 'wp-ever-accounting' ),
+				'title'        => __( 'Base Currency', 'wp-ever-accounting' ),
+				'id'           => 'eac_base_currency',
+				'type'         => 'select',
+				'default'      => 'USD',
+				'class'        => 'eac_select2',
+				'options'      => array( eac_get_currency( get_option( 'eac_base_currency' ) ) ),
+				'option_key'   => 'id',
+				'option_value' => 'formatted_name',
+				'disabled'     => ! empty( eac_get_transactions() ),
+				'desc_tip'     => __( 'Base currency can not be changed once you have recorded any transaction.', 'wp-ever-accounting' ),
+				'data-action'  => 'eac_json_search',
+				'data-type'    => 'currency',
 			),
 			array(
 				'title'       => __( 'Financial Year Start', 'wp-ever-accounting' ),
@@ -143,6 +133,8 @@ class General extends Page {
 				'placeholder' => 'e.g. 01-01',
 				'default'     => '01-01',
 				'desc_tip'    => true,
+				'class'       => 'eac_datepicker',
+				'data-format'  => 'mm-dd',
 			),
 			array(
 				'type' => 'sectionend',
@@ -204,8 +196,8 @@ class General extends Page {
 				'desc'        => __( 'The country in which your company is located.', 'wp-ever-accounting' ),
 				'id'          => 'eac_company_country',
 				'type'        => 'select',
-				'options'     => I18n::get_currencies(),
-				'class'       => 'eac-select2',
+				'options'     => I18n::get_countries(),
+				'class'       => 'eac_select2',
 				'default'     => 'US',
 				'placeholder' => __( 'Select a country&hellip;', 'wp-ever-accounting' ),
 				'desc_tip'    => true,

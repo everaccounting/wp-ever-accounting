@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Ever Accounting 1.2.0\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/wp-ever-accounting\n"
-"POT-Creation-Date: 2024-04-25 11:47:16+00:00\n"
+"POT-Creation-Date: 2024-04-26 15:12:59+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -76,31 +76,31 @@ msgstr ""
 msgid "Tax saved successfully."
 msgstr ""
 
-#: includes/Admin/Admin.php:92 includes/Admin/Admin.php:103
+#: includes/Admin/Admin.php:114 includes/Admin/Admin.php:125
 msgid "Are you sure you want to delete this item?"
 msgstr ""
 
-#: includes/Admin/Admin.php:121
+#: includes/Admin/Admin.php:143
 #. translators: %s: Plugin name
 msgid "Thank you for using %s!"
 msgstr ""
 
-#: includes/Admin/Admin.php:127
+#: includes/Admin/Admin.php:149
 #. translators: %s: Plugin name
 msgid " Share your appreciation with a five-star review %s."
 msgstr ""
 
-#: includes/Admin/Admin.php:147
+#: includes/Admin/Admin.php:169
 #. translators: 1: Plugin version
 msgid "Version %s"
 msgstr ""
 
-#: includes/Admin/Admin.php:165 includes/Admin/Menus.php:92
-#: includes/Admin/Menus.php:93
+#: includes/Admin/Admin.php:187 includes/Admin/Menus.php:93
+#: includes/Admin/Menus.php:94
 msgid "Dashboard"
 msgstr ""
 
-#: includes/Admin/Admin.php:170 includes/Admin/Utilities.php:30
+#: includes/Admin/Admin.php:192 includes/Admin/Utilities.php:30
 #: includes/Admin/Utilities.php:31 legacy/admin/class-menu.php:107
 #: legacy/admin/class-menu.php:108 legacy/admin/class-menu.php:323
 #: legacy/admin/reports/class-expenses.php:195
@@ -109,21 +109,21 @@ msgstr ""
 msgid "Sales"
 msgstr ""
 
-#: includes/Admin/Admin.php:175 includes/Admin/Utilities.php:42
+#: includes/Admin/Admin.php:197 includes/Admin/Utilities.php:42
 #: includes/Admin/Utilities.php:43
 msgid "Purchases"
 msgstr ""
 
-#: includes/Admin/Admin.php:180
+#: includes/Admin/Admin.php:202
 msgid "New"
 msgstr ""
 
-#: includes/Admin/Admin.php:185 legacy/admin/views/bills/bill-payments.php:25
+#: includes/Admin/Admin.php:207 legacy/admin/views/bills/bill-payments.php:25
 #: legacy/admin/views/invoices/invoice-payments.php:25
 msgid "Payment"
 msgstr ""
 
-#: includes/Admin/Admin.php:189 includes/Functions/categories.php:15
+#: includes/Admin/Admin.php:211 includes/Functions/categories.php:15
 #: includes/Functions/transactions.php:27 legacy/admin/class-dashboard.php:176
 #: legacy/admin/list-tables/class-transaction-list-table.php:267
 #: legacy/admin/reports/class-cashflow.php:213
@@ -133,7 +133,7 @@ msgstr ""
 msgid "Expense"
 msgstr ""
 
-#: includes/Admin/Admin.php:193 includes/Functions/categories.php:17
+#: includes/Admin/Admin.php:215 includes/Functions/categories.php:17
 #: legacy/admin/class-settings.php:214 legacy/admin/class-settings.php:275
 #: legacy/admin/views/bills/bill-items.php:13
 #: legacy/admin/views/invoices/invoice-items.php:13
@@ -145,14 +145,14 @@ msgstr ""
 msgid "Item"
 msgstr ""
 
-#: includes/Admin/Admin.php:197
-#: includes/Admin/views/sales/revenues/form.php:120
+#: includes/Admin/Admin.php:219
+#: includes/Admin/views/sales/revenues/form.php:129
 msgid "Invoice"
 msgstr ""
 
-#: includes/Admin/Admin.php:201 includes/Admin/ListTables/InvoicesTable.php:190
+#: includes/Admin/Admin.php:223 includes/Admin/ListTables/InvoicesTable.php:190
 #: includes/Admin/ListTables/RevenuesTable.php:174
-#: includes/Admin/views/sales/revenues/form.php:70
+#: includes/Admin/views/sales/revenues/form.php:75
 #: includes/Functions/contacts.php:26
 #: legacy/admin/list-tables/class-invoice-list-table.php:125
 #: legacy/admin/list-tables/class-revenue-list-table.php:113
@@ -163,7 +163,7 @@ msgstr ""
 msgid "Customer"
 msgstr ""
 
-#: includes/Admin/Admin.php:205 includes/Admin/ListTables/BillsTable.php:192
+#: includes/Admin/Admin.php:227 includes/Admin/ListTables/BillsTable.php:192
 #: includes/Admin/ListTables/PaymentsTable.php:191
 #: includes/Admin/ListTables/TransfersTable.php:191
 #: includes/Functions/contacts.php:27
@@ -176,7 +176,7 @@ msgstr ""
 msgid "Vendor"
 msgstr ""
 
-#: includes/Admin/Admin.php:211 vendor/byteever/bytekit-core/src/Plugin.php:501
+#: includes/Admin/Admin.php:233 vendor/byteever/bytekit-core/src/Plugin.php:501
 msgid "Support"
 msgstr ""
 
@@ -220,8 +220,7 @@ msgstr ""
 #: includes/Admin/ListTables/PaymentsTable.php:253
 #: includes/Admin/ListTables/PaymentsTable.php:282
 #: includes/Admin/ListTables/RevenuesTable.php:138
-#: includes/Admin/ListTables/RevenuesTable.php:236
-#: includes/Admin/ListTables/RevenuesTable.php:265
+#: includes/Admin/ListTables/RevenuesTable.php:338
 #: includes/Admin/ListTables/TaxesTable.php:207
 #: includes/Admin/ListTables/TaxesTable.php:376
 #: includes/Admin/ListTables/TransactionsTable.php:227
@@ -239,8 +238,14 @@ msgstr ""
 #: includes/Admin/views/purchases/payments/form.php:48
 #: includes/Admin/views/purchases/vendors/form.php:192
 #: includes/Admin/views/sales/customers/form.php:191
-#: includes/Admin/views/sales/invoices/form.php:48
-#: includes/Admin/views/sales/revenues/form.php:183
+#: includes/Admin/views/sales/invoices/form.php:63
+#: includes/Admin/views/sales/revenues/form.php:193
+#: includes/Admin/views/sales/revenues/view.php:20
+#: includes/Admin/views/sales/revenues/view.php:100
+#: includes/Admin/views/sales/revenues/view.php:119
+#: includes/Admin/views/sales/revenues/view.php:138
+#: includes/Admin/views/sales/revenues/view.php:157
+#: includes/Admin/views/sales/revenues/view.php:176
 #: legacy/admin/list-tables/class-account-list-table.php:160
 #: legacy/admin/list-tables/class-account-list-table.php:244
 #: legacy/admin/list-tables/class-bill-list-table.php:146
@@ -321,7 +326,6 @@ msgstr ""
 #: includes/Admin/views/purchases/payments/form.php:27
 #: includes/Admin/views/purchases/vendors/form.php:28
 #: includes/Admin/views/sales/customers/form.php:26
-#: includes/Admin/views/sales/invoices/form.php:27
 #: legacy/admin/class-settings.php:58
 #: legacy/admin/list-tables/class-account-list-table.php:126
 #: legacy/admin/list-tables/class-category-list-table.php:131
@@ -384,7 +388,7 @@ msgstr ""
 #: includes/Admin/views/misc/taxes/form.php:85
 #: includes/Admin/views/purchases/vendors/form.php:174
 #: includes/Admin/views/sales/customers/form.php:173
-#: includes/Admin/views/sales/revenues/form.php:166
+#: includes/Admin/views/sales/revenues/form.php:175
 #: legacy/admin/list-tables/class-bill-list-table.php:114
 #: legacy/admin/list-tables/class-invoice-list-table.php:128
 #: vendor/woocommerce/action-scheduler/classes/ActionScheduler_AdminView.php:243
@@ -481,8 +485,6 @@ msgstr ""
 #: includes/Admin/ListTables/InvoicesTable.php:286
 #: includes/Admin/ListTables/PaymentsTable.php:256
 #: includes/Admin/ListTables/PaymentsTable.php:285
-#: includes/Admin/ListTables/RevenuesTable.php:239
-#: includes/Admin/ListTables/RevenuesTable.php:268
 #: includes/Admin/ListTables/TransactionsTable.php:230
 #: includes/Admin/ListTables/TransactionsTable.php:259
 #: includes/Admin/ListTables/TransfersTable.php:256
@@ -501,8 +503,6 @@ msgstr ""
 #: includes/Admin/ListTables/InvoicesTable.php:288
 #: includes/Admin/ListTables/PaymentsTable.php:258
 #: includes/Admin/ListTables/PaymentsTable.php:287
-#: includes/Admin/ListTables/RevenuesTable.php:241
-#: includes/Admin/ListTables/RevenuesTable.php:270
 #: includes/Admin/ListTables/TransactionsTable.php:232
 #: includes/Admin/ListTables/TransactionsTable.php:261
 #: includes/Admin/ListTables/TransfersTable.php:258
@@ -566,8 +566,10 @@ msgstr ""
 #: includes/Admin/ListTables/CurrenciesTable.php:298
 #: includes/Admin/ListTables/CustomersTable.php:357
 #: includes/Admin/ListTables/ItemsTable.php:376
+#: includes/Admin/ListTables/RevenuesTable.php:320
 #: includes/Admin/ListTables/TaxesTable.php:322
 #: includes/Admin/ListTables/VendorsTable.php:336
+#: includes/Admin/views/sales/revenues/view.php:16
 #: legacy/admin/list-tables/class-account-list-table.php:243
 #: legacy/admin/list-tables/class-bill-list-table.php:217
 #: legacy/admin/list-tables/class-category-list-table.php:224
@@ -690,6 +692,7 @@ msgid "Country"
 msgstr ""
 
 #: includes/Admin/ListTables/CustomersTable.php:352
+#: includes/Admin/ListTables/RevenuesTable.php:315
 #: includes/Admin/ListTables/VendorsTable.php:331
 #: legacy/admin/list-tables/class-account-list-table.php:242
 #: legacy/admin/list-tables/class-bill-list-table.php:214
@@ -769,7 +772,7 @@ msgstr ""
 #: includes/Admin/ListTables/TransactionsTable.php:166
 #: includes/Admin/ListTables/TransfersTable.php:190
 #: includes/Admin/views/items/items/form.php:86
-#: includes/Admin/views/sales/revenues/form.php:89
+#: includes/Admin/views/sales/revenues/form.php:96
 #: legacy/admin/class-dashboard.php:475 legacy/admin/class-dashboard.php:528
 #: legacy/admin/list-tables/class-item-list-table.php:129
 #: legacy/admin/list-tables/class-payment-list-table.php:112
@@ -860,7 +863,7 @@ msgstr ""
 #: includes/Admin/ListTables/RevenuesTable.php:171
 #: includes/Admin/ListTables/TransactionsTable.php:163
 #: includes/Admin/ListTables/TransfersTable.php:188
-#: includes/Admin/views/sales/revenues/form.php:59
+#: includes/Admin/views/sales/revenues/form.php:63
 #: legacy/admin/class-dashboard.php:476 legacy/admin/class-dashboard.php:529
 #: legacy/admin/list-tables/class-payment-list-table.php:110
 #: legacy/admin/list-tables/class-revenue-list-table.php:110
@@ -880,7 +883,7 @@ msgstr ""
 #: includes/Admin/ListTables/RevenuesTable.php:172
 #: includes/Admin/ListTables/TransactionsTable.php:165
 #: includes/Admin/ListTables/TransfersTable.php:189
-#: includes/Admin/views/sales/revenues/form.php:38
+#: includes/Admin/views/sales/revenues/form.php:39
 #: legacy/admin/class-dashboard.php:585 legacy/admin/class-settings.php:145
 #: legacy/admin/list-tables/class-payment-list-table.php:111
 #: legacy/admin/list-tables/class-revenue-list-table.php:111
@@ -900,7 +903,7 @@ msgstr ""
 #: includes/Admin/ListTables/RevenuesTable.php:175
 #: includes/Admin/ListTables/TransactionsTable.php:167
 #: includes/Admin/ListTables/TransfersTable.php:192
-#: includes/Admin/views/sales/revenues/form.php:135
+#: includes/Admin/views/sales/revenues/form.php:144
 #: legacy/admin/list-tables/class-payment-list-table.php:114
 #: legacy/admin/list-tables/class-revenue-list-table.php:114
 #: legacy/admin/list-tables/class-transaction-list-table.php:91
@@ -1025,7 +1028,7 @@ msgstr ""
 msgid "No vendors found."
 msgstr ""
 
-#: includes/Admin/Menus.php:80 includes/Admin/Menus.php:81
+#: includes/Admin/Menus.php:81 includes/Admin/Menus.php:82
 #: legacy/admin/class-assets.php:66 legacy/admin/class-menu.php:68
 #: legacy/admin/class-menu.php:69 legacy/admin/ea-admin-functions.php:115
 #: legacy/admin/ea-admin-functions.php:155
@@ -1033,7 +1036,7 @@ msgstr ""
 msgid "Accounting"
 msgstr ""
 
-#: includes/Admin/Menus.php:212
+#: includes/Admin/Menus.php:213
 msgid "Per page"
 msgstr ""
 
@@ -1487,7 +1490,7 @@ msgstr ""
 
 #: includes/Admin/views/banking/accounts/add.php:12
 #: includes/Admin/views/banking/accounts/form.php:124
-#: includes/Admin/views/sales/revenues/form.php:53
+#: includes/Admin/views/sales/revenues/form.php:57
 #: legacy/admin/list-tables/class-account-list-table.php:110
 #: legacy/admin/views/accounts/edit-account.php:22
 #: legacy/admin/views/js/modal-add-account.php:12
@@ -1605,8 +1608,8 @@ msgstr ""
 #: includes/Admin/views/purchases/payments/form.php:39
 #: includes/Admin/views/purchases/vendors/form.php:166
 #: includes/Admin/views/sales/customers/form.php:165
-#: includes/Admin/views/sales/invoices/form.php:39
-#: includes/Admin/views/sales/revenues/form.php:160
+#: includes/Admin/views/sales/invoices/form.php:54
+#: includes/Admin/views/sales/revenues/form.php:169
 #: legacy/admin/list-tables/class-note-list-table.php:91
 msgid "Actions"
 msgstr ""
@@ -1630,7 +1633,6 @@ msgstr ""
 #: includes/Admin/views/items/items/form.php:27
 #: includes/Admin/views/purchases/bills/form.php:21
 #: includes/Admin/views/purchases/payments/form.php:21
-#: includes/Admin/views/sales/invoices/form.php:21
 msgid "Item details"
 msgstr ""
 
@@ -1684,7 +1686,7 @@ msgstr ""
 
 #: includes/Admin/views/items/items/form.php:97
 #: includes/Admin/views/misc/categories/add.php:15
-#: includes/Admin/views/sales/revenues/form.php:103
+#: includes/Admin/views/sales/revenues/form.php:112
 #: legacy/admin/views/categories/edit-category.php:51
 #: legacy/admin/views/js/modal-add-category.php:19
 #: legacy/admin/views/js/modal-income-category.php:19
@@ -1738,7 +1740,7 @@ msgstr ""
 #: includes/Admin/views/misc/taxes/form.php:91
 #: includes/Admin/views/purchases/vendors/form.php:180
 #: includes/Admin/views/sales/customers/form.php:179
-#: includes/Admin/views/sales/revenues/form.php:171
+#: includes/Admin/views/sales/revenues/form.php:180
 msgid "Select status"
 msgstr ""
 
@@ -1989,7 +1991,7 @@ msgid "Update Customer"
 msgstr ""
 
 #: includes/Admin/views/sales/invoices/add.php:12
-#: includes/Admin/views/sales/invoices/form.php:53
+#: includes/Admin/views/sales/invoices/form.php:68
 #: legacy/admin/views/invoices/edit-invoice.php:22
 msgid "Add Invoice"
 msgstr ""
@@ -1998,13 +2000,21 @@ msgstr ""
 msgid "Edit Invoice"
 msgstr ""
 
-#: includes/Admin/views/sales/invoices/form.php:51
+#: includes/Admin/views/sales/invoices/form.php:29
+msgid "Toggle"
+msgstr ""
+
+#: includes/Admin/views/sales/invoices/form.php:36
+msgid "Example Interactive - hello from an interactive block!"
+msgstr ""
+
+#: includes/Admin/views/sales/invoices/form.php:66
 #: legacy/admin/views/invoices/edit-invoice.php:22
 msgid "Update Invoice"
 msgstr ""
 
 #: includes/Admin/views/sales/revenues/add.php:12
-#: includes/Admin/views/sales/revenues/form.php:188
+#: includes/Admin/views/sales/revenues/form.php:198
 #: legacy/admin/list-tables/class-revenue-list-table.php:94
 #: legacy/admin/views/revenues/edit-revenue.php:55
 msgid "Add Revenue"
@@ -2018,35 +2028,35 @@ msgstr ""
 msgid "Revenue details"
 msgstr ""
 
-#: includes/Admin/views/sales/revenues/form.php:45
+#: includes/Admin/views/sales/revenues/form.php:46
 msgid "Select the receiving account."
 msgstr ""
 
-#: includes/Admin/views/sales/revenues/form.php:47
+#: includes/Admin/views/sales/revenues/form.php:51
 msgid "Select an account"
 msgstr ""
 
-#: includes/Admin/views/sales/revenues/form.php:65
+#: includes/Admin/views/sales/revenues/form.php:69
 msgid ""
 "Enter the amount in the currency of the selected account, use (.) for "
 "decimal."
 msgstr ""
 
-#: includes/Admin/views/sales/revenues/form.php:76
+#: includes/Admin/views/sales/revenues/form.php:83
 msgid "Select customer"
 msgstr ""
 
-#: includes/Admin/views/sales/revenues/form.php:83
+#: includes/Admin/views/sales/revenues/form.php:90
 msgid "Add customer"
 msgstr ""
 
-#: includes/Admin/views/sales/revenues/form.php:94
-#: includes/Admin/views/sales/revenues/form.php:96
+#: includes/Admin/views/sales/revenues/form.php:103
+#: includes/Admin/views/sales/revenues/form.php:105
 #: legacy/admin/class-settings.php:660 legacy/class-settings.php:493
 msgid "Select category"
 msgstr ""
 
-#: includes/Admin/views/sales/revenues/form.php:109
+#: includes/Admin/views/sales/revenues/form.php:118
 #: legacy/admin/class-settings.php:161
 #: legacy/admin/views/js/modal-bill-payment.php:49
 #: legacy/admin/views/js/modal-invoice-payment.php:49
@@ -2060,31 +2070,32 @@ msgstr ""
 msgid "Payment Method"
 msgstr ""
 
-#: includes/Admin/views/sales/revenues/form.php:114
+#: includes/Admin/views/sales/revenues/form.php:123
 msgid "Select &hellip;"
 msgstr ""
 
-#: includes/Admin/views/sales/revenues/form.php:126
-#: includes/Admin/views/sales/revenues/form.php:129
+#: includes/Admin/views/sales/revenues/form.php:135
+#: includes/Admin/views/sales/revenues/form.php:138
 msgid "Select invoice"
 msgstr ""
 
-#: includes/Admin/views/sales/revenues/form.php:130
+#: includes/Admin/views/sales/revenues/form.php:139
 msgid "Select the invoice related to this revenue., ignore if not applicable."
 msgstr ""
 
-#: includes/Admin/views/sales/revenues/form.php:139
+#: includes/Admin/views/sales/revenues/form.php:148
 #: legacy/admin/views/payments/edit-payment.php:155
 #: legacy/admin/views/revenues/edit-revenue.php:143
 #: legacy/admin/views/transfers/edit-transfer.php:121
 msgid "Enter reference"
 msgstr ""
 
-#: includes/Admin/views/sales/revenues/form.php:144
+#: includes/Admin/views/sales/revenues/form.php:153
+#: includes/Admin/views/sales/revenues/view.php:67
 msgid "Notes"
 msgstr ""
 
-#: includes/Admin/views/sales/revenues/form.php:148
+#: includes/Admin/views/sales/revenues/form.php:157
 #: legacy/admin/views/items/edit-item.php:146
 #: legacy/admin/views/js/modal-bill-payment.php:61
 #: legacy/admin/views/js/modal-invoice-payment.php:61
@@ -2094,9 +2105,18 @@ msgstr ""
 msgid "Enter description"
 msgstr ""
 
-#: includes/Admin/views/sales/revenues/form.php:186
+#: includes/Admin/views/sales/revenues/form.php:196
 #: legacy/admin/views/revenues/edit-revenue.php:55
 msgid "Update Revenue"
+msgstr ""
+
+#: includes/Admin/views/sales/revenues/view.php:44
+msgid "Send Receipt"
+msgstr ""
+
+#: includes/Admin/views/sales/revenues/view.php:72
+#: includes/Admin/views/sales/revenues/view.php:78
+msgid "Add Note"
 msgstr ""
 
 #: includes/Functions/accounts.php:17
@@ -2261,7 +2281,7 @@ msgstr ""
 msgid "Fee Item"
 msgstr ""
 
-#: includes/Functions/misc.php:260
+#: includes/Functions/misc.php:272
 msgid "required"
 msgstr ""
 
@@ -2321,6 +2341,48 @@ msgstr ""
 msgid "Currency thousand separator is required."
 msgstr ""
 
+#: includes/Models/Document.php:475 includes/Models/Document_v1.php:477
+msgid "Contact ID is required."
+msgstr ""
+
+#: includes/Models/Document.php:479 includes/Models/Document_v1.php:481
+msgid "Type is required."
+msgstr ""
+
+#: includes/Models/Document.php:483 includes/Models/Document_v1.php:485
+msgid "Status is required."
+msgstr ""
+
+#: includes/Models/Document.php:488 includes/Models/Document_v1.php:490
+msgid "Contact can't be changed once the document is paid."
+msgstr ""
+
+#: includes/Models/Document.php:530 includes/Models/Document_v1.php:532
+#. translators: %s: error message.
+msgid "Error while deleting items. error: %s"
+msgstr ""
+
+#: includes/Models/DocumentItem.php:138
+msgid "Document ID is required."
+msgstr ""
+
+#: includes/Models/DocumentItem.php:142
+msgid "Item ID is required."
+msgstr ""
+
+#: includes/Models/DocumentItem.php:146
+msgid "Product name is required."
+msgstr ""
+
+#: includes/Models/DocumentItem.php:150
+msgid "Product quantity is required."
+msgstr ""
+
+#: includes/Models/DocumentItem.php:185
+#. translators: %s: error message.
+msgid "Error while deleting unused tax. error: %s"
+msgstr ""
+
 #: includes/Models/Item.php:176
 msgid "Item name is required."
 msgstr ""
@@ -2341,12 +2403,20 @@ msgstr ""
 msgid "Missing object type."
 msgstr ""
 
+#: includes/Models/Revenue.php:32
+msgid "Transaction date is required."
+msgstr ""
+
 #: includes/Models/Tax.php:118
 msgid "Tax name is required."
 msgstr ""
 
 #: includes/Models/Tax.php:121
 msgid "Tax rate is required."
+msgstr ""
+
+#: includes/Models/Transaction.php:328
+msgid "Account ID is required."
 msgstr ""
 
 #: includes/Models/Transfer.php:108

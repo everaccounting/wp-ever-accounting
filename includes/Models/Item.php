@@ -27,6 +27,7 @@ use ByteKit\Models\Relation;
  * @property string $date_created Date created of the item.
  * * @property string $date_updated Date updated of the item.
  *
+ * @property string $formatted_name Formatted name of the item.
  * @property string $formatted_price Formatted price of the item.
  * @property string $formatted_cost Formatted cost of the item.
  * @property Category $category Category of the item.
@@ -97,6 +98,7 @@ class Item extends Model {
 	 * @var array
 	 */
 	protected $appends = array(
+		'formatted_name',
 		'formatted_price',
 		'formatted_cost',
 	);
@@ -119,6 +121,16 @@ class Item extends Model {
 	 * @var bool
 	 */
 	public $timestamps = true;
+
+	/**
+	 * Get formatted name.
+	 *
+	 * @return string
+	 * @since 1.1.6
+	 */
+	public function get_formatted_name_prop() {
+		return sprintf( '%s (#%s)', $this->name, $this->id );
+	}
 
 	/**
 	 * Get formatted sale price.

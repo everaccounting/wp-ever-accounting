@@ -2,6 +2,8 @@
 
 namespace EverAccounting\Admin;
 
+use EverAccounting\Models\Invoice;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -28,13 +30,27 @@ class Actions {
 		add_action( 'admin_post_eac_edit_category', array( $this, 'handle_edit_category' ) );
 		add_action( 'admin_post_eac_edit_currency', array( $this, 'handle_edit_currency' ) );
 		add_action( 'admin_post_eac_edit_tax', array( $this, 'handle_edit_tax' ) );
+
+		add_action( 'wp_ajax_eac_get_currency', array( $this, 'ajax_get_currency' ) );
+		add_action( 'wp_ajax_eac_get_account', array( $this, 'ajax_get_account' ) );
+		add_action( 'wp_ajax_eac_get_item', array( $this, 'ajax_get_item' ) );
+		add_action( 'wp_ajax_eac_get_category', array( $this, 'ajax_get_category' ) );
+		add_action( 'wp_ajax_eac_get_tax', array( $this, 'ajax_get_tax' ) );
+		add_action( 'wp_ajax_eac_get_customer', array( $this, 'ajax_get_customer' ) );
+		add_action( 'wp_ajax_eac_get_vendor', array( $this, 'ajax_get_vendor' ) );
+		add_action( 'wp_ajax_eac_get_revenue', array( $this, 'ajax_get_revenue' ) );
+		add_action( 'wp_ajax_eac_get_expense', array( $this, 'ajax_get_expense' ) );
+		add_action( 'wp_ajax_eac_get_invoice', array( $this, 'ajax_get_invoice' ) );
+		add_action( 'wp_ajax_eac_get_bill', array( $this, 'ajax_get_bill' ) );
+
+		add_action( 'wp_ajax_eac_calculate_invoice_totals', array( $this, 'ajax_calculate_invoice_totals' ) );
 	}
 
 	/**
 	 * Search items.
 	 *
-	 * @return void
 	 * @since 1.2.0
+	 * @return void
 	 */
 	public function handle_json_search() {
 		check_ajax_referer( 'eac_search_action' );
@@ -223,8 +239,8 @@ class Actions {
 	/**
 	 * Edit item.
 	 *
-	 * @return void
 	 * @since 1.2.0
+	 * @return void
 	 */
 	public static function handle_edit_item() {
 		check_admin_referer( 'eac_edit_item' );
@@ -250,7 +266,7 @@ class Actions {
 				'unit'        => $unit,
 				'tax_ids'     => implode( ',', array_unique( array_filter( $tax_ids ) ) ),
 				'description' => $desc,
-				'status'      => $status,
+				'status'      => filter_var()
 			)
 		);
 
@@ -269,8 +285,8 @@ class Actions {
 	/**
 	 * Edit revenue.
 	 *
-	 * @return void
 	 * @since 1.2.0
+	 * @return void
 	 */
 	public static function handle_edit_revenue() {
 		check_admin_referer( 'eac_edit_revenue' );
@@ -306,8 +322,8 @@ class Actions {
 	/**
 	 * Edit customer.
 	 *
-	 * @return void
 	 * @since 1.2.0
+	 * @return void
 	 */
 	public static function handle_edit_customer() {
 		check_admin_referer( 'eac_edit_customer' );
@@ -349,8 +365,8 @@ class Actions {
 	/**
 	 * Edit vendor.
 	 *
-	 * @return void
 	 * @since 1.2.0
+	 * @return void
 	 */
 	public static function handle_edit_vendor() {
 		check_admin_referer( 'eac_edit_vendor' );
@@ -428,8 +444,8 @@ class Actions {
 	/**
 	 * Edit category.
 	 *
-	 * @return void
 	 * @since 1.2.0
+	 * @return void
 	 */
 	public static function handle_edit_category() {
 		check_admin_referer( 'eac_edit_category' );
@@ -464,8 +480,8 @@ class Actions {
 	/**
 	 * Edit currency.
 	 *
-	 * @return void
 	 * @since 1.2.0
+	 * @return void
 	 */
 	public static function handle_edit_currency() {
 		check_admin_referer( 'eac_edit_currency' );
@@ -509,8 +525,8 @@ class Actions {
 	/**
 	 * Edit tax.
 	 *
-	 * @return void
 	 * @since 1.2.0
+	 * @return void
 	 */
 	public static function handle_edit_tax() {
 		check_admin_referer( 'eac_edit_tax' );
@@ -545,5 +561,208 @@ class Actions {
 
 		wp_safe_redirect( $referer );
 		exit;
+	}
+
+	/**
+	 * Get currency.
+	 *
+	 * @since 1.2.0
+	 * @return void
+	 */
+	public function ajax_get_currency() {
+		check_ajax_referer( 'eac_currency' );
+		$currency_code = isset( $_POST['code'] ) ? sanitize_text_field( wp_unslash( $_POST['code'] ) ) : '';
+		$currency      = eac_get_currency( $currency_code );
+		if ( ! $currency ) {
+			wp_send_json_error( __( 'Currency not found.', 'wp-ever-accounting' ) );
+		}
+		wp_send_json_success( $currency->to_array() );
+		exit;
+	}
+
+	/**
+	 * Get account.
+	 *
+	 * @since 1.2.0
+	 * @return void
+	 */
+	public function ajax_get_account() {
+		check_ajax_referer( 'eac_account' );
+		$account_id = isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0;
+		$account    = eac_get_account( $account_id );
+		if ( ! $account ) {
+			wp_send_json_error( __( 'Account not found.', 'wp-ever-accounting' ) );
+		}
+		wp_send_json_success( $account->to_array() );
+		exit;
+	}
+
+	/**
+	 * Get item.
+	 *
+	 * @since 1.2.0
+	 * @return void
+	 */
+	public function ajax_get_item() {
+		check_ajax_referer( 'eac_item' );
+		$item_id = isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0;
+		$item    = eac_get_item( $item_id );
+		if ( ! $item ) {
+			wp_send_json_error( __( 'Item not found.', 'wp-ever-accounting' ) );
+		}
+		wp_send_json_success( $item->to_array() );
+		exit;
+	}
+
+	/**
+	 * Get category.
+	 *
+	 * @since 1.2.0
+	 * @return void
+	 */
+	public function ajax_get_category() {
+		check_ajax_referer( 'eac_category' );
+		$category_id = isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0;
+		$category    = eac_get_category( $category_id );
+		if ( ! $category ) {
+			wp_send_json_error( __( 'Category not found.', 'wp-ever-accounting' ) );
+		}
+		wp_send_json_success( $category->to_array() );
+		exit;
+	}
+
+	/**
+	 * Get tax.
+	 *
+	 * @since 1.2.0
+	 * @return void
+	 */
+	public function ajax_get_tax() {
+		check_ajax_referer( 'eac_tax' );
+		$tax_id = isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0;
+		$tax    = eac_get_tax( $tax_id );
+		if ( ! $tax ) {
+			wp_send_json_error( __( 'Tax not found.', 'wp-ever-accounting' ) );
+		}
+		wp_send_json_success( $tax->to_array() );
+		exit;
+	}
+
+	/**
+	 * Get customer.
+	 *
+	 * @since 1.2.0
+	 * @return void
+	 */
+	public function ajax_get_customer() {
+		check_ajax_referer( 'eac_customer' );
+		$customer_id = isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0;
+		$customer    = eac_get_customer( $customer_id );
+		if ( ! $customer ) {
+			wp_send_json_error( __( 'Customer not found.', 'wp-ever-accounting' ) );
+		}
+		wp_send_json_success( $customer->to_array() );
+		exit;
+	}
+
+	/**
+	 * Get vendor.
+	 *
+	 * @since 1.2.0
+	 * @return void
+	 */
+	public function ajax_get_vendor() {
+		check_ajax_referer( 'eac_vendor' );
+		$vendor_id = isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0;
+		$vendor    = eac_get_vendor( $vendor_id );
+		if ( ! $vendor ) {
+			wp_send_json_error( __( 'Vendor not found.', 'wp-ever-accounting' ) );
+		}
+		wp_send_json_success( $vendor->to_array() );
+		exit;
+	}
+
+	/**
+	 * Get revenue.
+	 *
+	 * @since 1.2.0
+	 * @return void
+	 */
+	public function ajax_get_revenue() {
+		check_ajax_referer( 'eac_revenue' );
+		$revenue_id = isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0;
+		$revenue    = eac_get_revenue( $revenue_id );
+		if ( ! $revenue ) {
+			wp_send_json_error( __( 'Revenue not found.', 'wp-ever-accounting' ) );
+		}
+		wp_send_json_success( $revenue->to_array() );
+		exit;
+	}
+
+	/**
+	 * Get expense.
+	 *
+	 * @since 1.2.0
+	 * @return void
+	 */
+	public function ajax_get_expense() {
+		check_ajax_referer( 'eac_expense' );
+		$expense_id = isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0;
+		$expense    = eac_get_expense( $expense_id );
+		if ( ! $expense ) {
+			wp_send_json_error( __( 'Expense not found.', 'wp-ever-accounting' ) );
+		}
+		wp_send_json_success( $expense->to_array() );
+		exit;
+	}
+
+	/**
+	 * Get invoice.
+	 *
+	 * @since 1.2.0
+	 * @return void
+	 */
+	public function ajax_get_invoice() {
+		check_ajax_referer( 'eac_invoice' );
+		$invoice_id = isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0;
+		$invoice    = eac_get_invoice( $invoice_id );
+		if ( ! $invoice ) {
+			wp_send_json_error( __( 'Invoice not found.', 'wp-ever-accounting' ) );
+		}
+		wp_send_json_success( $invoice->to_array() );
+		exit;
+	}
+
+	/**
+	 * Get bill.
+	 *
+	 * @since 1.2.0
+	 * @return void
+	 */
+	public function ajax_get_bill() {
+		check_ajax_referer( 'eac_bill' );
+		$bill_id = isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0;
+		$bill    = eac_get_bill( $bill_id );
+		if ( ! $bill ) {
+			wp_send_json_error( __( 'Bill not found.', 'wp-ever-accounting' ) );
+		}
+		wp_send_json_success( $bill->to_array() );
+		exit;
+	}
+
+	/**
+	 * Calculate invoice total.
+	 *
+	 * @since 1.2.0
+	 * @return void
+	 */
+	public function ajax_calculate_invoice_totals() {
+		check_ajax_referer( 'eac_edit_invoice' );
+		$items    = isset( $_POST['items'] ) ? map_deep( wp_unslash( $_POST['items'] ), 'sanitize_text_field' ) : array();
+		$document = new Invoice();
+		$document->set_items( $items );
+		$document->calculate_totals();
+		include __DIR__ . '/views/sales/invoices/form.php';
+		exit();
 	}
 }

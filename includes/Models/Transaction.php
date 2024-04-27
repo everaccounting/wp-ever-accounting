@@ -12,37 +12,38 @@ defined( 'ABSPATH' ) || exit;
  * @package EverAccounting
  * @subpackage Models
  *
- * @property int                             $id ID of the item.
- * @property string                          $type Type of the transaction.
- * @property string                          $number Number of the transaction.
- * @property string                          $date Date of the transaction.
- * @property double                          $amount Amount of the transaction.
- * @property string                          $currency_code Currency code of the transaction.
- * @property double                          $exchange_rate Exchange rate of the transaction.
- * @property string                          $reference Reference of the transaction.
- * @property string                          $note Note of the transaction.
- * @property string                          $payment_method Payment method of the transaction.
- * @property int                             $account_id Account ID of the transaction.
- * @property int                             $document_id Document ID of the transaction.
- * @property int                             $contact_id Contact ID of the transaction.
- * @property int                             $category_id Category ID of the transaction.
- * @property int                             $transfer_id Transfer ID of the transaction.
- * @property int                             $attachment_id Attachment ID of the transaction.
- * @property int                             $parent_id Parent ID of the transaction.
- * @property bool                            $reconciled Whether the transaction is reconciled.
- * @property string                          $created_via Created via of the transaction.
- * @property int                             $author_id Author ID of the transaction.
- * @property string                          $status Status of the transaction.
- * @property string                          $uuid UUID of the transaction.
- * @property string                          $date_created Date the transaction was created.
- * @property string                          $date_updated Date the transaction was last updated.
+ * @property int      $id ID of the item.
+ * @property string   $type Type of the transaction.
+ * @property string   $number Number of the transaction.
+ * @property string   $date Date of the transaction.
+ * @property double   $amount Amount of the transaction.
+ * @property string   $currency_code Currency code of the transaction.
+ * @property double   $exchange_rate Exchange rate of the transaction.
+ * @property string   $reference Reference of the transaction.
+ * @property string   $note Note of the transaction.
+ * @property string   $payment_method Payment method of the transaction.
+ * @property int      $account_id Account ID of the transaction.
+ * @property int      $document_id Document ID of the transaction.
+ * @property int      $contact_id Contact ID of the transaction.
+ * @property int      $category_id Category ID of the transaction.
+ * @property int      $transfer_id Transfer ID of the transaction.
+ * @property int      $attachment_id Attachment ID of the transaction.
+ * @property int      $parent_id Parent ID of the transaction.
+ * @property bool     $reconciled Whether the transaction is reconciled.
+ * @property string   $created_via Created via of the transaction.
+ * @property int      $author_id Author ID of the transaction.
+ * @property string   $status Status of the transaction.
+ * @property string   $uuid UUID of the transaction.
+ * @property string   $date_created Date the transaction was created.
+ * @property string   $date_updated Date the transaction was last updated.
  *
- * @property string                          $formatted_amount Formatted amount of the transaction.
- * @property \EverAccounting\Models\Currency $currency Related currency.
- * @property \EverAccounting\Models\Account  $account Related account.
- * @property \EverAccounting\Models\Category $category Related category.
- * @property \EverAccounting\Models\Contact  $customer Related customer.
- * @property \EverAccounting\Models\Vendor   $vendor Related vendor.
+ * @property string   $formatted_amount Formatted amount of the transaction.
+ * @property Currency $currency Related currency.
+ * @property Account  $account Related account.
+ * @property Category $category Related category.
+ * @property Contact  $contact Related contact.
+ * @property Customer $customer Related customer.
+ * @property Vendor   $vendor Related vendor.
  */
 class Transaction extends Model {
 
@@ -176,9 +177,7 @@ class Transaction extends Model {
 	 */
 	public function __construct( $data = null ) {
 		$this->data['uid']           = wp_generate_uuid4();
-		$this->data['type']          = $this->get_object_type();
 		$this->data['currency_code'] = eac_get_base_currency();
-		$this->query_args['type']    = $this->get_object_type();
 		parent::__construct( $data );
 	}
 
@@ -202,26 +201,26 @@ class Transaction extends Model {
 	/**
 	 * Get formatted address.
 	 *
-	 * @return string
 	 * @since 1.0.0
+	 * @return string
 	 */
 	public function get_formatted_address() {
 		if ( empty( $this->contact ) ) {
 			return '';
 		}
 
-		return eac_get_formatted_address(
-			array(
-				'name'      => $contact->get_name(),
-				'company'   => $contact->get_company(),
-				'address_1' => $contact->get_address_1(),
-				'address_2' => $contact->get_address_2(),
-				'city'      => $contact->get_city(),
-				'state'     => $contact->get_state(),
-				'postcode'  => $contact->get_postcode(),
-				'country'   => $contact->get_country(),
-			)
-		);
+//		return eac_get_formatted_address(
+//			array(
+//				'name'      => $contact->get_name(),
+//				'company'   => $contact->get_company(),
+//				'address_1' => $contact->get_address_1(),
+//				'address_2' => $contact->get_address_2(),
+//				'city'      => $contact->get_city(),
+//				'state'     => $contact->get_state(),
+//				'postcode'  => $contact->get_postcode(),
+//				'country'   => $contact->get_country(),
+//			)
+//		);
 	}
 
 	/*
@@ -238,7 +237,7 @@ class Transaction extends Model {
 	 * @return \ByteKit\Models\Relation
 	 */
 	protected function currency() {
-		return $this->has_one( Currency::class, 'code', 'currency_code' );
+		return $this->belongs_to( Currency::class, 'currency_code', 'id' );
 	}
 
 	/**
@@ -247,8 +246,8 @@ class Transaction extends Model {
 	 * @since 1.0.0
 	 * @return \ByteKit\Models\Relation
 	 */
-	protected function account() {
-		return $this->has_one( Account::class, 'account_id' );
+	public function account() {
+		return $this->belongs_to( Account::class );
 	}
 
 	/**
@@ -258,17 +257,7 @@ class Transaction extends Model {
 	 * @return \ByteKit\Models\Relation
 	 */
 	protected function category() {
-		return $this->has_one( Category::class, 'category_id' );
-	}
-
-	/**
-	 * Transaction related contact.
-	 *
-	 * @since 1.0.0
-	 * @return \ByteKit\Models\Relation
-	 */
-	protected function contact() {
-		return $this->belongs_to( Contact::class, 'contact_id' );
+		return $this->belongs_to( Category::class );
 	}
 
 	/**
@@ -278,7 +267,7 @@ class Transaction extends Model {
 	 * @return \ByteKit\Models\Relation
 	 */
 	protected function customer() {
-		return $this->belongs_to( Contact::class, 'contact_id' );
+		return $this->belongs_to( Customer::class, 'contact_id' );
 	}
 
 	/**
@@ -299,38 +288,30 @@ class Transaction extends Model {
 	*/
 
 	/**
-	 * Load the object from the database.
-	 *
-	 * @param string|int $id ID of the object.
-	 *
-	 * @since 1.0.0
-	 * @return $this
-	 */
-	protected function load( $id ) {
-		parent::load( $id );
-		if ( $this->get_object_type() !== $this->data['type'] ) {
-			$this->apply_defaults();
-		}
-
-		return $this;
-	}
-
-	/**
 	 * Save the object to the database.
 	 *
 	 * @since 1.0.0
 	 * @return \WP_Error|true True on success, WP_Error on failure.
 	 */
 	public function save() {
+		if ( empty( $this->account_id ) ) {
+			return new \WP_Error( 'missing_required', __( 'Account ID is required.', 'wp-ever-accounting' ) );
+		}
+
 		// If the account_id is changed, update the currency code.
 		if ( $this->is_prop_changed( 'account_id' ) || ! $this->exists() ) {
 			$account = Account::find( $this->account_id );
 			$this->set_prop_value( 'currency_code', $account ? $account->currency_code : 'USD' );
 		}
+
 		// If currency code is changed, update the currency rate.
 		if ( $this->is_prop_changed( 'currency_code' ) || ! $this->exists() ) {
 			$currency = Currency::find( array( 'code' => $this->currency_code ) );
 			$this->set_prop_value( 'currency_rate', $currency ? $currency->exchange_rate : 1 );
+		}
+
+		if ( empty( $this->number ) ) {
+			$this->number = $this->get_next_number();
 		}
 
 		if ( empty( $this->uuid ) ) {
@@ -354,8 +335,8 @@ class Transaction extends Model {
 	/**
 	 * Get max voucher number.
 	 *
-	 * @return string
 	 * @since 1.0.0
+	 * @return string
 	 */
 	protected function get_max_number() {
 		return (int) $this->wpdb()->get_var(
@@ -369,8 +350,8 @@ class Transaction extends Model {
 	/**
 	 * Set next transaction number.
 	 *
-	 * @return string
 	 * @since 1.0.0
+	 * @return string
 	 */
 	public function get_next_number() {
 		$max    = $this->get_max_number();

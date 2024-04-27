@@ -22,14 +22,15 @@ defined( 'ABSPATH' ) || exit;
 						<?php
 						eac_form_group(
 							array(
-								'label'       => __( 'Date', 'wp-ever-accounting' ),
-								'type'        => 'date',
-								'name'        => 'date',
-								'placeholder' => 'YYYY-MM-DD',
-								'value'       => $revenue->date,
-								'required'    => true,
-								'class'       => 'eac_datepicker',
-								'data-format' => 'yy-mm-dd',
+								'label'                => __( 'Date', 'wp-ever-accounting' ),
+								'type'                 => 'date',
+								'name'                 => 'date',
+								'placeholder'          => 'YYYY-MM-DD',
+								'value'                => $revenue->date,
+								'required'             => true,
+								'class'                => 'eac_inputmask',
+								'data-inputmask-alias' => 'datetime',
+								'data-inputmask-inputformat' => 'yyyy-mm-dd',
 							)
 						);
 
@@ -38,12 +39,15 @@ defined( 'ABSPATH' ) || exit;
 								'label'            => __( 'Account', 'wp-ever-accounting' ),
 								'type'             => 'select',
 								'name'             => 'account_id',
-								'options'          => wp_list_pluck( $revenue->account, 'formatted_name', 'id' ),
+								'options'          => array( $revenue->account ),
 								'value'            => $revenue->account_id,
 								'required'         => true,
 								'class'            => 'eac_select2',
 								'tooltip'          => __( 'Select the receiving account.', 'wp-ever-accounting' ),
-								'disabled'         => $revenue->exists(),
+								// 'disabled'         => $revenue->exists(),
+								'readonly'         => true,
+								'option_key'       => 'id',
+								'option_value'     => 'formatted_name',
 								'data-placeholder' => __( 'Select an account', 'wp-ever-accounting' ),
 								'data-action'      => 'eac_json_search',
 								'data-type'        => 'account',
@@ -56,22 +60,26 @@ defined( 'ABSPATH' ) || exit;
 						);
 						eac_form_group(
 							array(
-								'label'       => __( 'Amount', 'wp-ever-accounting' ),
-								'name'        => 'amount',
-								'placeholder' => '0.00',
-								'value'       => $revenue->amount,
-								'required'    => true,
-								'class'       => 'eac_decimal_input',
-								'tooltip'     => __( 'Enter the amount in the currency of the selected account, use (.) for decimal.', 'wp-ever-accounting' ),
+								'label'          => __( 'Amount', 'wp-ever-accounting' ),
+								'name'           => 'amount',
+								'placeholder'    => '0.00',
+								'value'          => $revenue->amount,
+								'required'       => true,
+								'class'          => 'eac_inputmask',
+								'tooltip'        => __( 'Enter the amount in the currency of the selected account, use (.) for decimal.', 'wp-ever-accounting' ),
+								'data-inputmask' => 'currency',
 							)
 						);
+
 						eac_form_group(
 							array(
 								'label'            => __( 'Customer', 'wp-ever-accounting' ),
 								'type'             => 'select',
 								'name'             => 'contact_id',
 								'value'            => $revenue->contact_id,
-								'options'          => wp_list_pluck( $revenue->contact, 'formatted_name', 'id' ),
+								'options'          => array( $revenue->contact ),
+								'option_key'       => 'id',
+								'option_value'     => 'formatted_name',
 								'default'          => filter_input( INPUT_GET, 'customer_id', FILTER_SANITIZE_NUMBER_INT ),
 								'data-placeholder' => __( 'Select customer', 'wp-ever-accounting' ),
 								'data-action'      => 'eac_json_search',
@@ -90,7 +98,9 @@ defined( 'ABSPATH' ) || exit;
 								'type'             => 'select',
 								'name'             => 'category_id',
 								'value'            => $revenue->category_id,
-								'options'          => wp_list_pluck( $revenue->category, 'formatted_name', 'id' ),
+								'options'          => array( $revenue->category ),
+								'option_key'       => 'id',
+								'option_value'     => 'formatted_name',
 								'placeholder'      => __( 'Select category', 'wp-ever-accounting' ),
 								'class'            => 'eac_select2',
 								'data-placeholder' => __( 'Select category', 'wp-ever-accounting' ),
@@ -175,6 +185,7 @@ defined( 'ABSPATH' ) || exit;
 					</div>
 					<div class="bkit-card__footer">
 						<?php if ( $revenue->exists() ) : ?>
+							<input type="hidden" name="account_id" value="<?php echo esc_attr( $revenue->account_id ); ?>"/>
 							<input type="hidden" name="id" value="<?php echo esc_attr( $revenue->id ); ?>"/>
 						<?php endif; ?>
 						<input type="hidden" name="action" value="eac_edit_revenue"/>
@@ -189,6 +200,8 @@ defined( 'ABSPATH' ) || exit;
 						<?php endif; ?>
 					</div>
 				</div>
+
+
 			</div><!-- .column-2 -->
 
 		</div><!-- .bkit-poststuff -->

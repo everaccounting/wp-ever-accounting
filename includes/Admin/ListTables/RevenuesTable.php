@@ -119,7 +119,7 @@ class RevenuesTable extends ListTable {
 		// );
 		$views = array();
 
-		//return $this->get_views_links( $status_links );
+		// return $this->get_views_links( $status_links );
 	}
 
 	/**
@@ -217,77 +217,127 @@ class RevenuesTable extends ListTable {
 	}
 
 	/**
-	 * Renders the date column.
+	 * Renders the name column.
 	 *
-	 * @param Revenue $revenue The current object.
+	 * @param Revenue $item The current object.
 	 *
 	 * @since  1.0.0
-	 * @return string Displays the date.
+	 * @return string Displays the name.
 	 */
-	public function column_date( $revenue ) {
-		$urls    = array(
-			'edit'    => admin_url( 'admin.php?page=eac-sales&edit=' . $revenue->id ),
-			'delete'  => wp_nonce_url( admin_url( 'admin.php?page=eac-sales&tab=revenues&action=delete&id=' . $revenue->id ), 'bulk-' . $this->_args['plural'] ),
-			'enable'  => wp_nonce_url( admin_url( 'admin.php?page=eac-sales&tab=revenues&action=enable&id=' . $revenue->id ), 'bulk-' . $this->_args['plural'] ),
-			'disable' => wp_nonce_url( admin_url( 'admin.php?page=eac-sales&tab=revenues&action=disable&id=' . $revenue->id ), 'bulk-' . $this->_args['plural'] ),
-		);
-		$actions = array(
-			'ID'     => sprintf( 'ID: %d', $revenue->id ),
-			'delete' => sprintf( '<a class="eac_confirm_delete" href="%s">%s</a>', esc_url( $urls['delete'] ), __( 'Delete', 'wp-ever-accounting' ) ),
-		);
-		if ( $revenue->enabled ) {
-			$actions['disable'] = sprintf( '<a href="%s">%s</a>', esc_url( $urls['disable'] ), __( 'Disable', 'wp-ever-accounting' ) );
-		} else {
-			$actions['enable'] = sprintf( '<a href="%s">%s</a>', esc_url( $urls['enable'] ), __( 'Enable', 'wp-ever-accounting' ) );
-		}
-
-		return sprintf( '<a href="%1$s">%2$s</a>%3$s', admin_url( 'admin.php?page=eac-sales&tab=revenues&edit=' . $revenue->id ), wp_kses_post( $revenue->name ), $this->row_actions( $actions ) );
+	public function column_date( $item ) {
+		return sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( 'view', $item->id, $this->base_url ) ), wp_kses_post( $item->date ) );
 	}
 
 	/**
-	 * Renders the actions column.
+	 * Renders the amount column.
 	 *
-	 * @param Revenue $revenue The current object.
+	 * @param Revenue $item The current object.
 	 *
 	 * @since  1.0.0
-	 * @return string Displays the actions.
+	 * @return string Displays the amount.
 	 */
-	public function column_actions( $revenue ) {
-		$urls = array(
-			'edit'    => admin_url( 'admin.php?page=eac-items&edit=' . $revenue->id ),
-			'delete'  => wp_nonce_url( admin_url( 'admin.php?page=eac-sales&tab=revenues&action=delete&id=' . $revenue->id ), 'bulk-' . $this->_args['plural'] ),
-			'enable'  => wp_nonce_url( admin_url( 'admin.php?page=eac-sales&tab=revenues&action=enable&id=' . $revenue->id ), 'bulk-' . $this->_args['plural'] ),
-			'disable' => wp_nonce_url( admin_url( 'admin.php?page=eac-sales&tab=revenues&action=disable&id=' . $revenue->id ), 'bulk-' . $this->_args['plural'] ),
-		);
-
-		$actions = array(
-			// 'edit'   => sprintf( '<a href="%s">%s</a>', esc_url( $urls['edit'] ), __( 'Edit', 'wp-ever-accounting' ) ),
-			'delete' => sprintf( '<a class="eac_confirm_delete" href="%s">%s</a>', esc_url( $urls['delete'] ), __( 'Delete', 'wp-ever-accounting' ) ),
-		);
-		if ( $revenue->enabled ) {
-			$actions['disable'] = sprintf( '<a href="%s">%s</a>', esc_url( $urls['disable'] ), __( 'Disable', 'wp-ever-accounting' ) );
-		} else {
-			$actions['enable'] = sprintf( '<a href="%s">%s</a>', esc_url( $urls['enable'] ), __( 'Enable', 'wp-ever-accounting' ) );
-		}
-
-		return $this->row_actions( $actions, true );
+	public function column_amount( $item ) {
+		return esc_html( $item->formatted_amount );
 	}
 
 	/**
-	 * This function renders most of the columns in the list table.
+	 * Renders the account column.
 	 *
-	 * @param Object|array $item The current item.
-	 * @param string       $column_name The name of the column.
+	 * @param Revenue $item The current object.
+	 *
+	 * @since  1.0.0
+	 * @return string Displays the account.
+	 */
+	public function column_account( $item ) {
+		$account = $item->account;
+		if ( $account ) {
+			return sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( 'account_id', $account->id, $this->base_url ) ), wp_kses_post( $account->name ) );
+		}
+
+		return '&mdash;';
+	}
+
+	/**
+	 * Renders the category column.
+	 *
+	 * @param Revenue $item The current object.
+	 *
+	 * @since  1.0.0
+	 * @return string Displays the category.
+	 */
+	public function column_category( $item ) {
+		$category = $item->category;
+		if ( $category ) {
+			return sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( 'category_id', $category->id, $this->base_url ) ), wp_kses_post( $category->name ) );
+		}
+
+		return '&mdash;';
+
+	}
+
+	/**
+	 * Renders the customer column.
+	 *
+	 * @param Revenue $item The current object.
+	 *
+	 * @since  1.0.0
+	 * @return string Displays the customer.
+	 */
+	public function column_customer( $item ) {
+		$customer = $item->customer;
+		if ( $customer ) {
+			return sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( 'customer_id', $customer->id, $this->base_url ) ), wp_kses_post( $customer->name ) );
+		}
+
+		return '&mdash;';
+
+	}
+
+	/**
+	 * Generates and displays row actions links.
+	 *
+	 * @param Revenue $item The comment object.
+	 * @param string  $column_name Current column name.
+	 * @param string  $primary Primary column name.
 	 *
 	 * @since 1.0.0
-	 * @return string The column value.
+	 * @return string Row actions output.
 	 */
-	public function column_default( $item, $column_name ) {
-		switch ( $column_name ) {
-			case 'column_name':
-				return empty( $item->column_name ) ? '&mdash;' : $item->column_name;
+	protected function handle_row_actions( $item, $column_name, $primary ) {
+		if ( $primary !== $column_name ) {
+			return null;
 		}
+		$actions = array(
+			'id'   => sprintf( '#%d', esc_attr( $item->number ) ),
+			'view' => sprintf(
+				'<a href="%s">%s</a>',
+				esc_url( add_query_arg( 'view', $item->id, $this->base_url ) ),
+				__( 'View', 'wp-ever-accounting' )
+			),
+			'edit' => sprintf(
+				'<a href="%s">%s</a>',
+				esc_url( add_query_arg( 'edit', $item->id, $this->base_url ) ),
+				__( 'Edit', 'wp-ever-accounting' )
+			),
+		);
 
-		return parent::column_default( $item, $column_name );
+		$actions['delete'] = sprintf(
+			'<a href="%s" class="del">%s</a>',
+			esc_url(
+				wp_nonce_url(
+					add_query_arg(
+						array(
+							'action' => 'delete',
+							'id'     => $item->id,
+						),
+						$this->base_url
+					),
+					'bulk-' . $this->_args['plural']
+				)
+			),
+			__( 'Delete', 'wp-ever-accounting' )
+		);
+
+		return $this->row_actions( $actions );
 	}
 }
