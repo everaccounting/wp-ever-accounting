@@ -64,6 +64,7 @@ class Menus {
 		add_action( 'ever_accounting_admin_misc_categories', array( $this, 'render_categories_tab' ) );
 		add_action( 'ever_accounting_admin_misc_currencies', array( $this, 'render_currencies_tab' ) );
 		add_action( 'ever_accounting_admin_misc_taxes', array( $this, 'render_taxes_tab' ) );
+		add_action( 'ever_accounting_admin_tools_export', array( $this, 'render_export_tab' ) );
 	}
 
 	/**
@@ -529,5 +530,22 @@ class Menus {
 		} else {
 			include __DIR__ . '/views/misc/taxes/taxes.php';
 		}
+	}
+
+	/**
+	 * Export Tab.
+	 *
+	 * @since 1.0.0
+	 */
+	public function render_export_tab() {
+		include __DIR__ . '/views/export/items.php';
+		include __DIR__ . '/views/export/accounts.php';
+		include __DIR__ . '/views/export/customers.php';
+		include __DIR__ . '/views/export/categories.php';
+		include __DIR__ . '/views/export/vendors.php';
+
+		// TODO: Need to add bellow export options.
+//		include __DIR__ . '/views/export/payments.php';
+//		include __DIR__ . '/views/export/expenses.php';
 	}
 }
