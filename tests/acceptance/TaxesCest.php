@@ -1,7 +1,10 @@
 <?php
 
 class TaxesCest
+
+
 {
+
 	public function CheckTaxesList( AcceptanceTester $I ) {
 		//Login
 		$I->loginAsAdmin();
@@ -24,7 +27,8 @@ class TaxesCest
 		}
 	}
  */
-	public function addNewTaxes( AcceptanceTester $I, $i = 88 ) {
+	public function addNewTaxes( AcceptanceTester $I, $i = 889 ) {
+
 		$this->CheckTaxesList($I); // Call the method to check categories page.
 
 		//Go to Add New Form
@@ -44,23 +48,33 @@ class TaxesCest
 
 	}
 
-	public function  UpdateTaxes( AcceptanceTester $I, $i = 176 ) {
+	public function  UpdateTaxes( AcceptanceTester $I, $i = 203 ) {
 
 		$I->loginAsAdmin();
 		$I->amOnPage('/wp-admin/admin.php?page=eac-misc&tab=taxes&edit='.$i);
 		$I->see( 'Edit Tax', 'h1' );
 		$I->see( 'Actions', '.bkit-card__title' );
 
-		$I->fillField('input[name="name"]', 'new values'.$i);
-		$I->fillField('input[name="rate"]', '5');
-		$I->fillField('textarea[name="description"]', 'new Description');
+		$I->fillField('input[name="name"]', 'new values'.$i+5);
+		$I->fillField('input[name="rate"]', $i-100);
+		$I->fillField('textarea[name="description"]', 'new Description'.$i+5);
 		$I->selectOption('select[name="is_compound"]', 'No');
 		$I->selectOption('select[name="status"]', 'Inactive');
+		// Get the current status
+		$currentStatus = $I->grabValueFrom('#status');
+
+		// Change the status to the opposite value
+		if ($currentStatus === 'active') {
+			$I->selectOption('#status', 'inactive');
+		} else {
+			$I->selectOption('#status', 'active');
+		}
 
 		$I->click('Update Tax', '.column-2','.button button-primary');
 		$I->see( 'Tax saved successfully.', 'p' );
 	}
-	public function  DeleteTaxes( AcceptanceTester $I, $i = 197 ) {
+
+	public function  DeleteTaxes( AcceptanceTester $I, $i = 191 ) {
 
 		$I->loginAsAdmin();
 		$I->amOnPage('/wp-admin/admin.php?page=eac-misc&tab=taxes&edit='.$i);

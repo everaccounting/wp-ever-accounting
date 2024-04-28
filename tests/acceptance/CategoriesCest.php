@@ -45,10 +45,18 @@ class CategoriesCest {
 		$I->see( 'Category saved successfully.', '.notice-success' );
 	}
 
+	public function  DeleteCategory( AcceptanceTester $I, $i = 14 ) {
+
+		$I->loginAsAdmin();
+		$I->amOnPage('/wp-admin/admin.php?page=eac-misc&tab=categories&edit='.$i);
+		$I->see( 'Edit Category', 'h1' );
+		$I->see( 'Actions', '.bkit-card__title' );
+		$I->click('Delete', '.column-2','.eac_confirm_delete del');
+	}
 
 	/*
 	 //DeleteCategories
-	public function deleteCategory(AcceptanceTester $I) {
+	public function DeleteAllCategory(AcceptanceTester $I) {
 		$this->checkCategoriesPage($I); // Call the method to check categories page.
 		$I->click('#cb-select-all-1'); // Click on the "Select All" checkbox.
 		$I->selectOption('#bulk-action-selector-top', 'delete'); // Select 'Delete' from the bulk actions dropdown.
