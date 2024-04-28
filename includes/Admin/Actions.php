@@ -44,6 +44,8 @@ class Actions {
 		add_action( 'wp_ajax_eac_get_bill', array( $this, 'ajax_get_bill' ) );
 
 		add_action( 'wp_ajax_eac_calculate_invoice_totals', array( $this, 'ajax_calculate_invoice_totals' ) );
+		// Export data.
+		add_action( 'admin_post_eac_export_data', array( __CLASS__, 'export_data' ) );
 	}
 
 	/**
@@ -763,6 +765,54 @@ class Actions {
 		$document->set_items( $items );
 		$document->calculate_totals();
 		include __DIR__ . '/views/sales/invoices/form.php';
+		exit();
+	}
+
+	/**
+	 * Export data.
+	 *
+	 * @since 1.1.6
+	 * @return void
+	 */
+	public static function export_data() {
+		check_admin_referer( 'eac_export_data' );
+		$posted      = eac_clean( wp_unslash( $_POST ) );
+		$export_type = isset( $posted['export_type'] ) ? $posted['export_type'] : '';
+
+		// if export type not set, die.
+		if ( empty( $export_type ) ) {
+			wp_die( esc_html__( 'Export type not found!', 'wp-ever-accounting' ) );
+		}
+
+		switch ( $export_type ) {
+			case 'accounts':
+				$exporter = new Exporters\Accounts();
+				$exporter->process_step( 1 );
+				$exporter->export();
+				break;
+			case 'customers':
+				$exporter = new Exporters\Customers();
+				$exporter->process_step( 1 );
+				$exporter->export();
+				break;
+			case 'items':
+				$exporter = new Exporters\Items();
+				$exporter->process_step( 1 );
+				$exporter->export();
+				break;
+			case 'categories':
+				$exporter = new Exporters\Categories();
+				$exporter->process_step( 1 );
+				$exporter->export();
+				break;
+			case 'vendors':
+				$exporter = new Exporters\Vendors();
+				$exporter->process_step( 1 );
+				$exporter->export();
+				break;
+		}
+
+		wp_safe_redirect( wp_get_referer() );
 		exit();
 	}
 }

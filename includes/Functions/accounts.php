@@ -83,5 +83,7 @@ function eac_get_accounts( $args = array(), $count = false ) {
 		return Account::count( $args );
 	}
 
-	return Account::query( $args );
+	$account = Account::query( $args );
+
+	return $account;
 }

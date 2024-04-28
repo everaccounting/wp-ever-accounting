@@ -172,3 +172,28 @@ function eac_make_phone_clickable( $phone ) {
 
 	return $number ? '<a href="tel:' . esc_attr( $number ) . '">' . esc_html( $phone ) . '</a>' : '';
 }
+
+/**
+ * Get input variable.
+ *
+ * @param string $var Input variable.
+ * @param string $default Default value.
+ * @param string $method Request method. Possible values: get, post, request.
+ * @param string $sanitizer Sanitizer function.
+ *
+ * @return mixed
+ * @since 1.1.6
+ */
+function eac_get_input_var( $var, $default = null, $method = 'get', $sanitizer = 'eac_clean' ) {
+	$method = strtolower( $method );
+
+	if ( 'get' === $method ) {
+		$value = isset( $_GET[ $var ] ) ? eac_clean( wp_unslash( $_GET[ $var ] ) ) : $default;
+	} elseif ( 'post' === $method ) {
+		$value = isset( $_POST[ $var ] ) ? eac_clean( wp_unslash( $_POST[ $var ] ) ) : $default;
+	} elseif ( 'request' === $method ) {
+		$value = isset( $_REQUEST[ $var ] ) ? eac_clean( wp_unslash( $_REQUEST[ $var ] ) ) : $default;
+	}
+
+	return $sanitizer ? call_user_func( $sanitizer, $value ) : $value;
+}
