@@ -27,7 +27,7 @@ class TaxesCest
 		}
 	}
  */
-	public function addNewTaxes( AcceptanceTester $I, $i = 889 ) {
+	public function addNewTaxes( AcceptanceTester $I, $i = 555 ) {
 
 		$this->CheckTaxesList($I); // Call the method to check categories page.
 
@@ -74,7 +74,7 @@ class TaxesCest
 		$I->see( 'Tax saved successfully.', 'p' );
 	}
 
-	public function  DeleteTaxes( AcceptanceTester $I, $i = 191 ) {
+	public function  DeleteTaxes( AcceptanceTester $I, $i = 176 ) {
 
 		$I->loginAsAdmin();
 		$I->amOnPage('/wp-admin/admin.php?page=eac-misc&tab=taxes&edit='.$i);
