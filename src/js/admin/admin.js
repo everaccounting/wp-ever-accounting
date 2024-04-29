@@ -691,9 +691,34 @@
 	// 	},
 	// };
 
+	window.eac_admin_tooltip = {
+		bindEvents: function () {
+			/**
+			 * Trigger jquery tooltip for every title elements.
+			 *
+			 * @since 1.0.0
+			 */
+			$('[title][title!=""]').tooltip({
+				position: {
+					my: "center top+15",
+					at: "center bottom",
+					using: function( position, feedback ) {
+						$( this ).css( position );
+						$( "<div>" )
+							.addClass( "eac-tooltip-arrow" )
+							.addClass( feedback.vertical )
+							.addClass( feedback.horizontal )
+							.appendTo( this );
+					}
+				},
+			});
+		},
+	};
+
 	$(function () {
 		eac_admin.bindEvents();
 		// eac_admin.invoiceForm.bindEvents();
+		eac_admin_tooltip.bindEvents();
 	});
 
 })(jQuery, window, document);
