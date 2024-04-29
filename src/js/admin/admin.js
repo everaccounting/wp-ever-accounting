@@ -691,9 +691,21 @@
 	// 	},
 	// };
 
+	window.eac_admin_tooltip = {
+		bindEvents: function () {
+			/**
+			 * Trigger jquery tooltip for every title elements.
+			 *
+			 * @since 1.0.0
+			 */
+			$('[title][title!=""]').tooltip();
+		},
+	};
+
 	$(function () {
 		eac_admin.bindEvents();
 		// eac_admin.invoiceForm.bindEvents();
+		eac_admin_tooltip.bindEvents();
 	});
 
 })(jQuery, window, document);
