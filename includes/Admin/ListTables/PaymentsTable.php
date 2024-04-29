@@ -153,7 +153,6 @@ class PaymentsTable extends ListTable {
 	 * @since 1.0.0
 	 */
 	protected function extra_tablenav( $which ) {
-		// TODO: Need to include paymentsTable filters 'Select Month', 'Select Account', 'Select Category', 'Select Customer'.
 		static $has_items;
 		if ( ! isset( $has_items ) ) {
 			$has_items = $this->has_items();
@@ -163,7 +162,11 @@ class PaymentsTable extends ListTable {
 
 		if ( 'top' === $which ) {
 			ob_start();
+			$this->date_filter();
+			$this->year_filter();
+			$this->account_filter( 'active' );
 			$this->category_filter( 'item' );
+			$this->currency_filter( 'active' );
 			$output = ob_get_clean();
 			if ( ! empty( $output ) && $this->has_items() ) {
 				echo $output;

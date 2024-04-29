@@ -3,8 +3,8 @@
 - [] Summary & Chart
 
 ## List Table Filters
-- [] Filter by month, year, account, category and currency filters in revenue and expense page.
-- [] Add country filter in the customer and vendor page.
+- [X] Filter by month, year, account, category and currency filters in revenue and expense(** similar list table payments available) page.
+- [X] Add country filter in the customer and vendor page.
 - [X] Add the currency filter in the account page.
 
 ## Tools
