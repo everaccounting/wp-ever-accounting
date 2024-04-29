@@ -41,6 +41,7 @@ class CategoriesCest {
 			'name'        => 'Test2',
 			'type'        => 'income',
 		) );
+
 		$I->see( 'Category saved successfully.', '.notice-success' );
 	}
 
