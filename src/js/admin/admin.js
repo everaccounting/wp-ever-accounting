@@ -698,7 +698,20 @@
 			 *
 			 * @since 1.0.0
 			 */
-			$('[title][title!=""]').tooltip();
+			$('[title][title!=""]').tooltip({
+				position: {
+					my: "center top+15",
+					at: "center bottom",
+					using: function( position, feedback ) {
+						$( this ).css( position );
+						$( "<div>" )
+							.addClass( "eac-tooltip-arrow" )
+							.addClass( feedback.vertical )
+							.addClass( feedback.horizontal )
+							.appendTo( this );
+					}
+				},
+			});
 		},
 	};
 
