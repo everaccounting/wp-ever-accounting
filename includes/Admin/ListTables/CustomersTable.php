@@ -219,11 +219,24 @@ class CustomersTable extends ListTable {
 	 * @return void
 	 */
 	protected function extra_tablenav( $which ) {
-		// TODO: Need to include customersTable filters 'Select Month', 'Select Account', 'Select Category', 'Select Customer'.
 		static $has_items;
 		if ( ! isset( $has_items ) ) {
 			$has_items = $this->has_items();
 		}
+
+		echo '<div class="alignleft actions">';
+
+		if ( 'top' === $which ) {
+			ob_start();
+			$this->country_filter( 'active' );
+			$output = ob_get_clean();
+			if ( ! empty( $output ) && $this->has_items() ) {
+				echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				submit_button( __( 'Filter', 'wp-ever-accounting' ), '', 'filter_action', false );
+			}
+		}
+
+		echo '</div>';
 	}
 
 	/**

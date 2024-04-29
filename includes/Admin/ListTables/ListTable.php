@@ -173,4 +173,147 @@ abstract class ListTable extends \WP_List_Table {
 		</div>
 		<?php
 	}
+
+	/**
+	 * Currency filter.
+	 *
+	 * @param string $status Status of currency.
+	 *
+	 * @since 1.2.0
+	 * @return void
+	 */
+	protected function currency_filter( $status ) {
+		$currency_id = filter_input( INPUT_GET, 'currency_id', FILTER_SANITIZE_NUMBER_INT );
+		$currencies  = eac_get_currencies(
+			array(
+				'status'  => $status,
+			)
+		);
+		?>
+		<div>
+			<label for="filter-by-currency" class="screen-reader-text">
+				<?php esc_html_e( 'Filter by currency', 'wp-ever-accounting' ); ?>
+			</label>
+			<select class="eac_select_currency eac_select2" name="currency_id" id="filter-by-currency" data-action="eac_json_search" data-type="currency" data-subtype="<?php echo esc_attr( $status ); ?>" data-placeholder="<?php esc_attr_e( 'Search for a currency&hellip;', 'wp-ever-accounting' ); ?>">
+				<option value=""><?php esc_html_e( 'Filter by currency', 'wp-ever-accounting' ); ?></option>
+				<?php foreach ( $currencies as $currency ) : ?>
+					<option value="<?php echo esc_attr( $currency->id ); ?>" <?php selected( $currency_id, $currency->id ); ?>>
+						<?php echo esc_html( $currency->name ); ?>
+					</option>
+				<?php endforeach; ?>
+			</select>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Country filter.
+	 *
+	 * @param string $status status of country.
+	 *
+	 * @since 1.2.0
+	 * @return void
+	 */
+	protected function country_filter( $status ) {
+		$country_id = filter_input( INPUT_GET, 'country_id', FILTER_SANITIZE_NUMBER_INT );
+		$countries  = eac_get_currencies(
+			array(
+				'status' => $status,
+			)
+		);
+		?>
+		<div>
+			<label for="filter-by-country" class="screen-reader-text">
+				<?php esc_html_e( 'Filter by country', 'wp-ever-accounting' ); ?>
+			</label>
+			<select class="eac_select_country eac_select2" name="country_id" id="filter-by-country" data-action="eac_json_search" data-type="country" data-subtype="<?php echo esc_attr( $status ); ?>" data-placeholder="<?php esc_attr_e( 'Search for a country&hellip;', 'wp-ever-accounting' ); ?>">
+				<option value=""><?php esc_html_e( 'Filter by country', 'wp-ever-accounting' ); ?></option>
+				<?php foreach ( $countries as $country ) : ?>
+					<option value="<?php echo esc_attr( $country->id ); ?>" <?php selected( $country_id, $country->id ); ?>>
+						<?php echo esc_html( $country->name ); ?>
+					</option>
+				<?php endforeach; ?>
+			</select>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Account filter.
+	 *
+	 * @param string $status status of country.
+	 *
+	 * @since 1.2.0
+	 * @return void
+	 */
+	protected function account_filter( $status ) {
+		$account_id = filter_input( INPUT_GET, 'account_id', FILTER_SANITIZE_NUMBER_INT );
+		$accounts  = eac_get_accounts(
+			array(
+				'status' => $status,
+			)
+		);
+		?>
+		<div>
+			<label for="filter-by-account" class="screen-reader-text">
+				<?php esc_html_e( 'Filter by account', 'wp-ever-accounting' ); ?>
+			</label>
+			<select class="eac_select_account eac_select2" name="account_id" id="filter-by-account" data-action="eac_json_search" data-type="account" data-subtype="<?php echo esc_attr( $status ); ?>" data-placeholder="<?php esc_attr_e( 'Search for a account&hellip;', 'wp-ever-accounting' ); ?>">
+				<option value=""><?php esc_html_e( 'Filter by account', 'wp-ever-accounting' ); ?></option>
+				<?php foreach ( $accounts as $account ) : ?>
+					<option value="<?php echo esc_attr( $account->id ); ?>" <?php selected( $account_id, $account->id ); ?>>
+						<?php echo esc_html( $account->name ); ?>
+					</option>
+				<?php endforeach; ?>
+			</select>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Filter by year.
+	 *
+	 * @since 1.2.0
+	 * @return void
+	 */
+	protected function year_filter() {
+		$selected_year = filter_input( INPUT_GET, 'filter_by_year', FILTER_SANITIZE_NUMBER_INT );
+		$years  = array();
+		for ( $counter = 0; $counter <= 20; $counter++) {
+			$years[$counter] = date("Y",strtotime(- $counter . " year") );
+		}
+		?>
+		<div>
+			<label for="filter-by-year" class="screen-reader-text">
+				<?php esc_html_e( 'Filter by year', 'wp-ever-accounting' ); ?>
+			</label>
+			<select name="filter_by_year" id="filter-by-year" title="<?php esc_attr_e( 'Filter by year&hellip;', 'wp-ever-accounting' ); ?>">
+				<option value=""><?php esc_html_e( 'Filter by year', 'wp-ever-accounting' ); ?></option>
+				<?php foreach ( $years as $year ) : ?>
+					<option value="<?php echo esc_attr( $year); ?>" <?php selected( $selected_year, $year ); ?>>
+						<?php echo esc_html( $year ); ?>
+					</option>
+				<?php endforeach; ?>
+			</select>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Date filter.
+	 *
+	 * @since 1.2.0
+	 * @return void
+	 */
+	protected function date_filter() {
+		$selected_date = filter_input( INPUT_GET, 'filter_by_date', FILTER_SANITIZE_NUMBER_INT );
+		?>
+		<div>
+			<label for="filter-by-date" class="screen-reader-text">
+				<?php esc_html_e( 'Filter by date', 'wp-ever-accounting' ); ?>
+			</label>
+			<input type="date" class="eac_select_date" name="filter_by_date" id="filter-by-date" title="<?php esc_attr_e( 'Filter by date&hellip;', 'wp-ever-accounting' ); ?>" value="<?php echo esc_attr( $selected_date ); ?>">
+		</div>
+		<?php
+	}
 }
