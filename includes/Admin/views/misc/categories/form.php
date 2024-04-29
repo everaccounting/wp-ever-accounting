@@ -88,7 +88,7 @@ defined( 'ABSPATH' ) || exit;
 					<input type="hidden" name="action" value="eac_edit_category"/>
 					<?php wp_nonce_field( 'eac_edit_category' ); ?>
 					<?php if ( $category->exists() ) : ?>
-						<a class="eac_confirm_delete del" href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'action', 'delete', admin_url( 'admin.php?page=eac-categories&id=' . $category->id ) ), 'bulk-categories' ) ); ?>"><?php esc_html_e( 'Delete', 'wp-ever-accounting' ); ?></a>
+						<a class="eac_confirm_delete del" href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'action', 'delete', admin_url( 'admin.php?page=eac-misc&tab=categories&id=' . $category->id ) ), 'bulk-categories' ) ); ?>"><?php esc_html_e( 'Delete', 'wp-ever-accounting' ); ?></a>
 					<?php endif; ?>
 					<?php if ( $category->exists() ) : ?>
 						<input type="submit" class="button button-primary" value="<?php esc_attr_e( 'Update', 'wp-ever-accounting' ); ?>"/>

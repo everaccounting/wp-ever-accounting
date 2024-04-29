@@ -173,4 +173,36 @@ abstract class ListTable extends \WP_List_Table {
 		</div>
 		<?php
 	}
+
+	/**
+	 * Currency filter.
+	 *
+	 * @param string $status Status of currency.
+	 *
+	 * @since 1.2.1
+	 * @return void
+	 */
+	protected function currency_filter( $status ) {
+		$currency_id = filter_input( INPUT_GET, 'currency_id', FILTER_SANITIZE_NUMBER_INT );
+		$currencies  = eac_get_currencies(
+			array(
+				'status'  => $status,
+			)
+		);
+		?>
+		<div>
+			<label for="filter-by-currency" class="screen-reader-text">
+				<?php esc_html_e( 'Filter by currency', 'wp-ever-accounting' ); ?>
+			</label>
+			<select class="eac_select_currency eac_select2" name="currency_id" id="filter-by-currency" data-action="eac_json_search" data-type="currency" data-subtype="<?php echo esc_attr( $status ); ?>" data-placeholder="<?php esc_attr_e( 'Search for a currency&hellip;', 'wp-ever-accounting' ); ?>">
+				<option value=""><?php esc_html_e( 'Filter by currency', 'wp-ever-accounting' ); ?></option>
+				<?php foreach ( $currencies as $currency ) : ?>
+					<option value="<?php echo esc_attr( $currency->id ); ?>" <?php selected( $currency_id, $currency->id ); ?>>
+						<?php echo esc_html( $currency->name ); ?>
+					</option>
+				<?php endforeach; ?>
+			</select>
+		</div>
+		<?php
+	}
 }
