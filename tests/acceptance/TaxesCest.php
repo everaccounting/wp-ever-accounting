@@ -81,6 +81,7 @@ class TaxesCest
 		$I->see( 'Edit Tax', 'h1' );
 		$I->see( 'Actions', '.bkit-card__title' );
 		$I->click('Delete', '.column-2','.eac_confirm_delete del');
+
 	}
 
 }

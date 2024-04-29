@@ -34,24 +34,49 @@ class CategoriesCest {
 		$I->see( 'Add Category', 'h1' );
 		$I->seeElement( '#eac-category-form' );
 		$I->submitForm( '#eac-category-form', array(
-			'name'        => 'Test2',
+			'name'        => 'Test4',
 		) );
 		$I->see( 'Category type is required.', '.notice-error' );
 		$I->submitForm( '#eac-category-form', array(
-			'name'        => 'Test2',
+			'name'        => 'Test3',
 			'type'        => 'income',
 		) );
 
 		$I->see( 'Category saved successfully.', '.notice-success' );
 	}
 
-	public function  DeleteCategory( AcceptanceTester $I, $i = 14 ) {
+
+	public function  UpdateCategories( AcceptanceTester $I, $i = 14 ) {
 
 		$I->loginAsAdmin();
 		$I->amOnPage('/wp-admin/admin.php?page=eac-misc&tab=categories&edit='.$i);
 		$I->see( 'Edit Category', 'h1' );
 		$I->see( 'Actions', '.bkit-card__title' );
-		$I->click('Delete', '.column-2','.eac_confirm_delete del');
+
+		$I->fillField('input[name="name"]', 'new valuefffffs');
+		$I->fillField('textarea[name="description"]', 'new Description');
+		$I->selectOption('select[name="type"]', 'expense');
+		$I->selectOption('select[name="status"]', 'Inactive');
+		// Get the current status
+		$currentStatus = $I->grabValueFrom('#status');
+
+		// Change the status to the opposite value
+		if ($currentStatus === 'active') {
+			$I->selectOption('#status', 'inactive');
+		} else {
+			$I->selectOption('#status', 'active');
+		}
+
+		$I->click('Update', '.column-2','.button button-primary');
+		$I->see( 'Category saved successfully.', 'p' );
+	}
+	public function  DeleteCategory( AcceptanceTester $I, $i = 14 ) {
+
+	 	$I->loginAsAdmin();
+		 $I->amOnPage('/wp-admin/admin.php?page=eac-misc&tab=categories&edit= '.$i);
+		 $I->see( 'Edit Category', 'h1' );
+		  //$I->see( 'Actions', '.bkit-card__title' );
+		$I->click('Delete', '.bkit-card','.eac_confirm_delete del');
 	}
 
 	/*
