@@ -31,23 +31,21 @@ defined( 'ABSPATH' ) || exit;
 						);
 						eac_form_group(
 							array(
-								'id'       => 'currency_code',
-								'type'     => 'select',
-								'label'    => __( 'Currency Code', 'wp-ever-accounting' ),
-								'value'    => $customer->currency_code,
-								'default'  => eac_get_base_currency(),
-								'required' => true,
-								'class'    => 'eac-select2',
-								'options'  => wp_list_pluck(
-									eac_get_currencies(
-										array(
-											'status' => 'active',
-											'limit'  => - 1,
-										)
-									),
-									'formatted_name',
-									'code'
+								'id'           => 'currency_code',
+								'type'         => 'select',
+								'label'        => __( 'Currency Code', 'wp-ever-accounting' ),
+								'value'        => $customer->currency_code,
+								'default'      => eac_get_base_currency(),
+								'required'     => true,
+								'class'        => 'eac_select2',
+								'options'      => eac_get_currencies(
+									array(
+										'status' => 'active',
+										'limit'  => - 1,
+									)
 								),
+								'option_value' => 'code',
+								'option_label' => 'formatted_name',
 							)
 						);
 						eac_form_group(
@@ -92,15 +90,14 @@ defined( 'ABSPATH' ) || exit;
 						);
 						eac_form_group(
 							array(
-								'id'          => 'vat_exempt',
-								'label'       => __( 'VAT Exempt', 'wp-ever-accounting' ),
-								'type'        => 'select',
-								'options'     => array(
-									'1' => __( 'Yes', 'wp-ever-accounting' ),
-									'0' => __( 'No', 'wp-ever-accounting' ),
+								'id'      => 'vat_exempt',
+								'label'   => __( 'VAT Exempt', 'wp-ever-accounting' ),
+								'type'    => 'select',
+								'options' => array(
+									'yes' => __( 'Yes', 'wp-ever-accounting' ),
+									''    => __( 'No', 'wp-ever-accounting' ),
 								),
-								'value'       => $customer->vat_exempt,
-								'placeholder' => __( 'Select VAT exempt status', 'wp-ever-accounting' ),
+								'value'   => filter_var( $customer->vat_exempt, FILTER_VALIDATE_BOOLEAN ) ? 'yes' : '',
 							)
 						);
 						eac_form_group(

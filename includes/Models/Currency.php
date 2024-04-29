@@ -152,7 +152,7 @@ class Currency extends Model {
 	 * @return string
 	 * @since 1.0.2
 	 */
-	protected function get_formatted_name_prop() {
+	protected function get_formatted_name_attribute() {
 		return sprintf( '%s (%s)', $this->name, $this->code );
 	}
 

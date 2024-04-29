@@ -22,14 +22,14 @@ defined( 'ABSPATH' ) || exit;
 						<?php
 						eac_form_group(
 							array(
-								'label'                => __( 'Date', 'wp-ever-accounting' ),
-								'type'                 => 'date',
-								'name'                 => 'date',
-								'placeholder'          => 'YYYY-MM-DD',
-								'value'                => $revenue->date,
-								'required'             => true,
-								'class'                => 'eac_inputmask',
-								'data-inputmask-alias' => 'datetime',
+								'label'                      => __( 'Date', 'wp-ever-accounting' ),
+								'type'                       => 'date',
+								'name'                       => 'date',
+								'placeholder'                => 'YYYY-MM-DD',
+								'value'                      => $revenue->date,
+								'required'                   => true,
+								'class'                      => 'eac_inputmask',
+								'data-inputmask-alias'       => 'datetime',
 								'data-inputmask-inputformat' => 'yyyy-mm-dd',
 							)
 						);
@@ -44,10 +44,9 @@ defined( 'ABSPATH' ) || exit;
 								'required'         => true,
 								'class'            => 'eac_select2',
 								'tooltip'          => __( 'Select the receiving account.', 'wp-ever-accounting' ),
-								// 'disabled'         => $revenue->exists(),
-								'readonly'         => true,
-								'option_key'       => 'id',
-								'option_value'     => 'formatted_name',
+								'disabled'         => $revenue->exists(),
+								'option_value'     => 'id',
+								'option_label'     => 'formatted_name',
 								'data-placeholder' => __( 'Select an account', 'wp-ever-accounting' ),
 								'data-action'      => 'eac_json_search',
 								'data-type'        => 'account',
@@ -70,16 +69,15 @@ defined( 'ABSPATH' ) || exit;
 								'data-inputmask' => 'currency',
 							)
 						);
-
 						eac_form_group(
 							array(
 								'label'            => __( 'Customer', 'wp-ever-accounting' ),
 								'type'             => 'select',
 								'name'             => 'contact_id',
 								'value'            => $revenue->contact_id,
-								'options'          => array( $revenue->contact ),
-								'option_key'       => 'id',
-								'option_value'     => 'formatted_name',
+								'options'          => array( $revenue->customer ),
+								'option_value'     => 'id',
+								'option_label'     => 'formatted_name',
 								'default'          => filter_input( INPUT_GET, 'customer_id', FILTER_SANITIZE_NUMBER_INT ),
 								'data-placeholder' => __( 'Select customer', 'wp-ever-accounting' ),
 								'data-action'      => 'eac_json_search',
@@ -99,8 +97,8 @@ defined( 'ABSPATH' ) || exit;
 								'name'             => 'category_id',
 								'value'            => $revenue->category_id,
 								'options'          => array( $revenue->category ),
-								'option_key'       => 'id',
-								'option_value'     => 'formatted_name',
+								'option_value'     => 'id',
+								'option_label'     => 'formatted_name',
 								'placeholder'      => __( 'Select category', 'wp-ever-accounting' ),
 								'class'            => 'eac_select2',
 								'data-placeholder' => __( 'Select category', 'wp-ever-accounting' ),

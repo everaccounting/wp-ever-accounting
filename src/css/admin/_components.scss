@@ -210,7 +210,8 @@
 	&.is--danger,
 	&.is--cancelled{
 		background: #e55353;
-		border: 1px solid #e55353;
+		border: 1px solid darken(#e55353, 10%);
+		color: #fff;
 	}
 
 	&.is--success,
