@@ -6,7 +6,7 @@ module.exports = {
 		preflight: false,
 	},
 	content: [
-		join(__dirname, 'includes/Admin/views/**/*.php')
+		join(__dirname, 'includes/Admin/views/**/**/*.php')
 	],
 	media: false,
 	theme: {},

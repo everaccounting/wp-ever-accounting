@@ -349,7 +349,7 @@ class Menus {
 	 * @since 1.0.0
 	 */
 	public function render_invoices_tab() {
-		$edit    = Utilities::is_edit_screen();
+		$edit     = Utilities::is_edit_screen();
 		$document = new Invoice( $edit );
 		if ( ! empty( $edit ) && ! $document->exists() ) {
 			wp_safe_redirect( remove_query_arg( 'edit' ) );
@@ -371,6 +371,8 @@ class Menus {
 	 */
 	public function render_customers_tab() {
 		$edit     = Utilities::is_edit_screen();
+		$view     = Utilities::is_view_screen();
+		$id       = $edit ? $edit : $view;
 		$customer = new Customer( $edit );
 		if ( ! empty( $edit ) && ! $customer->exists() ) {
 			wp_safe_redirect( remove_query_arg( 'edit' ) );
@@ -380,6 +382,8 @@ class Menus {
 			include __DIR__ . '/views/sales/customers/add.php';
 		} elseif ( $edit ) {
 			include __DIR__ . '/views/sales/customers/edit.php';
+		} elseif ( $view ) {
+			include __DIR__ . '/views/sales/customers/view.php';
 		} else {
 			include __DIR__ . '/views/sales/customers/customers.php';
 		}

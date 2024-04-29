@@ -67,41 +67,33 @@ class Admin {
 		}
 
 		// 3rd party scripts.
-		EAC()->scripts->enqueue_style( 'bytekit-core' );
-		EAC()->scripts->register_style( 'eac-select2', 'css/select-woo.css' );
-		EAC()->scripts->register_script( 'eac-select2', 'js/select-woo.js', array( 'jquery' ) );
-		EAC()->scripts->register_style( 'eac-jquery-ui', 'css/jquery-ui.css' );
-		EAC()->scripts->register_script( 'eac-tiptip', 'js/tipTip.js', array( 'jquery' ) );
-		EAC()->scripts->register_script( 'eac-blockui', 'js/blockui.js', array( 'jquery' ) );
-		EAC()->scripts->register_script( 'eac-inputmask', 'js/inputmask.js', array( 'jquery' ) );
-		EAC()->scripts->enqueue_style( 'eac-select2' );
-		EAC()->scripts->enqueue_script( 'eac-select2' );
+		$scripts = EAC()->scripts;
+		$scripts->enqueue_style( 'bytekit-core' );
+		$scripts->register_style( 'eac-select2', 'css/select2.css' );
+		$scripts->register_script( 'eac-select2', 'js/select2.js', array( 'jquery' ) );
+		$scripts->register_style( 'eac-jquery-ui', 'css/jquery-ui.css' );
+		$scripts->register_script( 'eac-tiptip', 'js/tipTip.js', array( 'jquery' ) );
+		$scripts->register_script( 'eac-blockui', 'js/blockui.js', array( 'jquery' ) );
+		$scripts->register_script( 'eac-mask', 'js/mask.js', array( 'jquery' ) );
+		$scripts->register_script( 'eac-inputmask', 'js/inputmask.js', array( 'jquery' ) );
+		$scripts->register_script( 'eac-alpine', 'js/alpine.js', array(), array( 'strategy' => 'defer' ) );
 
 		// Core scripts.
-		EAC()->scripts->register_script( 'eac-admin', 'js/eac-admin.js', array( 'jquery', 'eac-select2', 'jquery-ui-datepicker', 'jquery-ui-tooltip', 'eac-blockui', 'eac-inputmask' ) );
-		EAC()->scripts->register_script( 'eac-settings', 'js/eac-settings.js', array( 'jquery', 'eac-select2', 'jquery-ui-datepicker', 'jquery-ui-tooltip' ) );
-		EAC()->scripts->register_style( 'eac-admin', 'css/eac-admin.css', array( 'eac-jquery-ui' ) );
-		EAC()->scripts->register_style( 'eac-settings', 'css/eac-settings.css', array( 'eac-jquery-ui' ) );
-		EAC()->scripts->enqueue_script( 'eac-admin' );
-		EAC()->scripts->enqueue_style( 'eac-admin' );
+		$admin_js_deps = array( 'jquery', 'eac-select2', 'jquery-ui-datepicker', 'jquery-ui-tooltip', 'eac-blockui', 'eac-mask' );
+		$scripts->register_script( 'eac-admin', 'js/eac-admin.js', $admin_js_deps );
+		$scripts->register_script( 'eac-settings', 'js/eac-settings.js', array( 'eac-admin' ) );
+		$scripts->register_style( 'eac-admin', 'css/eac-admin.css', array( 'eac-jquery-ui', 'eac-select2' ) );
+		$scripts->register_style( 'eac-settings', 'css/eac-settings.css', array( 'eac-jquery-ui' ) );
+		$scripts->enqueue_script( 'eac-admin' );
+		$scripts->enqueue_style( 'eac-admin' );
+		$scripts->enqueue_script( 'eac-alpine' );
 
 		// if settings page.
 		if ( 'ever-accounting_page_eac-settings' === $hook ) {
-			EAC()->scripts->register_script( 'eac-settings', 'js/settings.js', array( 'jquery' ) );
-			EAC()->scripts->enqueue_style( 'eac-settings' );
+			$scripts->register_script( 'eac-settings', 'js/settings.js', array( 'jquery' ) );
+			$scripts->enqueue_style( 'eac-settings' );
 		}
 
-		wp_localize_script(
-			'eac-core',
-			'eac_core_js_vars',
-			array(
-				'ajax_url' => admin_url( 'admin-ajax.php' ),
-				'nonce'    => wp_create_nonce( 'eac_nonce' ),
-				'i18n'     => array(
-					'confirm_delete' => __( 'Are you sure you want to delete this item?', 'wp-ever-accounting' ),
-				),
-			)
-		);
 		wp_localize_script(
 			'eac-admin',
 			'eac_admin_js_vars',

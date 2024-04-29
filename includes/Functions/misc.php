@@ -60,6 +60,11 @@ function eac_form_group( $field ) {
 		if ( empty( $attr_key ) || empty( $attr_value ) ) {
 			continue;
 		}
+
+//		if ( is_array( $attr_value ) ) {
+//			$attr_value = wp_json_encode( $attr_value, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP );
+//		}
+
 		if ( strpos( $attr_key, 'attr-' ) === 0 ) {
 			$attrs[] = sprintf( '%s="%s"', esc_attr( str_replace( 'attr-', '', $attr_key ) ), esc_attr( $attr_value ) );
 		} elseif ( strpos( $attr_key, 'data-' ) === 0 ) {
@@ -112,13 +117,13 @@ function eac_form_group( $field ) {
 
 			// It may send an option_key and option_value to use in the options.
 			// if its an object, it will use the object properties.
-			if ( ! empty( $field['option_key'] ) && ! empty( $field['option_value'] ) ) {
+			if ( ! empty( $field['option_value'] ) && ! empty( $field['option_label'] ) ) {
 				// verify options is an array otherwise we will make it an array.
 				if ( ! is_array( $field['options'] ) ) {
 					$field['options'] = array();
 				}
 				$field['options'] = array_filter( $field['options'] );
-				$field['options'] = wp_list_pluck( $field['options'], $field['option_value'], $field['option_key'] );
+				$field['options'] = wp_list_pluck( $field['options'], $field['option_label'], $field['option_value'] );
 			}
 
 			$input = sprintf(

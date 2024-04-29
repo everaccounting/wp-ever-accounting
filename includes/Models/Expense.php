@@ -11,7 +11,6 @@ defined( 'ABSPATH' ) || exit;
  * @author  Sultan Nasir Uddin <manikdrmc@gmail.com>
  * @package EverAccounting
  * @subpackage Models
- *
  */
 class Expense extends Transaction {
 	/**
@@ -21,4 +20,29 @@ class Expense extends Transaction {
 	 * @var string
 	 */
 	protected $object_type = 'expense';
+
+
+	/*
+	|--------------------------------------------------------------------------
+	| Attributes & Relations
+	|--------------------------------------------------------------------------
+	| Define the attributes and relations of the model.
+	*/
+
+
+	/*
+	|--------------------------------------------------------------------------
+	| CRUD methods
+	|--------------------------------------------------------------------------
+	| Methods for saving, updating, and deleting objects.
+	*/
+
+
+	/*
+	|--------------------------------------------------------------------------
+	| Helper methods.
+	|--------------------------------------------------------------------------
+	| Utility methods which don't directly relate to this object but may be
+	| used by this object.
+	*/
 }

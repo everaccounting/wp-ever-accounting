@@ -67,6 +67,16 @@ class DocumentItem extends Model {
 	);
 
 	/**
+	 * The model's attributes.
+	 *
+	 * @since 1.0.0
+	 * @var array
+	 */
+	protected $attributes = array(
+		'type' => 'standard',
+	);
+
+	/**
 	 * Model's property casts.
 	 *
 	 * @since 1.0.0
@@ -88,16 +98,6 @@ class DocumentItem extends Model {
 	);
 
 	/**
-	 * Model's data container.
-	 *
-	 * @since 1.0.0
-	 * @var array
-	 */
-	protected $data = array(
-		'type' => 'standard',
-	);
-
-	/**
 	 * document taxes will be stored here, sometimes before they persist in the DB.
 	 *
 	 * @since 1.1.0
@@ -116,15 +116,16 @@ class DocumentItem extends Model {
 	protected $deletable = array();
 
 	/**
-	 * DocumentItem constructor.
+	 * Create a new model instance.
 	 *
-	 * @param int|object|array $data Object ID, post object, or array of data.
+	 * @param string|int|array $attributes Attributes.
 	 *
-	 * @since 1.0.0
+	 * @throws \InvalidArgumentException If table name or object type is not set.
+	 * @return void
 	 */
-	public function __construct( $data = 0 ) {
-		$this->data['taxable'] = filter_var( eac_tax_enabled(), FILTER_VALIDATE_BOOLEAN );
-		parent::__construct( $data );
+	public function __construct( $attributes = 0 ) {
+		$this->attributes['taxable'] = filter_var( eac_tax_enabled(), FILTER_VALIDATE_BOOLEAN );
+		parent::__construct( $attributes );
 	}
 
 	/**
@@ -336,7 +337,7 @@ class DocumentItem extends Model {
 		);
 
 		if ( is_object( $data ) ) {
-			$data = $data instanceof \stdClass ? get_object_vars( $data ) : $data->get_data();
+			$data = $data instanceof \stdClass ? get_object_vars( $data ) : $data->to_array();
 		} elseif ( is_numeric( $data ) ) {
 			$data = array( 'tax_id' => $data );
 		}
@@ -347,7 +348,7 @@ class DocumentItem extends Model {
 
 		if ( ! empty( $data['tax_id'] ) ) {
 			$tax           = Tax::find( $data['tax_id'] );
-			$tax_data      = $tax ? $tax->get_data() : array();
+			$tax_data      = $tax ? $tax->to_array() : array();
 			$accepted_keys = array( 'name', 'rate', 'is_compound' );
 			$tax_data      = wp_array_slice_assoc( $tax_data, $accepted_keys );
 			$data          = wp_parse_args( $data, $tax_data );
@@ -447,7 +448,7 @@ class DocumentItem extends Model {
 				$this->unit === $item->unit &&
 				$this->price === $item->price &&
 				$this->taxable === $item->taxable &&
-				$this->get_tax_ids() === $item->get_tax_ids();
+				wp_list_pluck( $this->get_taxes(), 'id' ) === wp_list_pluck( $item->get_taxes(), 'id' );
 	}
 
 	/**

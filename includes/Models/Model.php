@@ -72,8 +72,8 @@ abstract class Model extends \ByteKit\Models\Model {
 	 * @return \WP_Error|true True on success, WP_Error on failure.
 	 */
 	public function save() {
-		if ( $this->has_author && empty( $this->get_prop( self::AUTHOR_ID ) ) && is_user_logged_in() ) {
-			$this->set_prop_value( self::AUTHOR_ID, get_current_user_id() );
+		if ( $this->has_author && empty( $this->get_attribute( self::AUTHOR_ID ) ) && is_user_logged_in() ) {
+			$this->set_attribute_value( self::AUTHOR_ID, get_current_user_id() );
 		}
 
 		return parent::save();

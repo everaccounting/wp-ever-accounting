@@ -92,17 +92,17 @@ class Contact extends Model {
 	);
 
 	/**
-	 * Model's data container.
+	 * The model's attributes.
 	 *
 	 * @since 1.0.0
 	 * @var array
 	 */
-	protected $data = array(
+	protected $attributes = array(
 		'status' => 'active',
 	);
 
 	/**
-	 * Model's casts data.
+	 * The attributes that should be cast.
 	 *
 	 * @since 1.0.0
 	 * @var array
@@ -113,6 +113,17 @@ class Contact extends Model {
 		'thumbnail_id' => 'int',
 		'user_id'      => 'int',
 		'author_id'    => 'int',
+	);
+
+	/**
+	 * The accessors to append to the model's array form.
+	 *
+	 * @since 1.0.0
+	 * @var array
+	 */
+	protected $appends = array(
+		'formatted_name',
+		'country_name',
 	);
 
 	/**
@@ -136,7 +147,7 @@ class Contact extends Model {
 	);
 
 	/**
-	 * Searchable properties.
+	 * Searchable attributes.
 	 *
 	 * @since 1.0.0
 	 * @var array
@@ -146,37 +157,19 @@ class Contact extends Model {
 	);
 
 	/**
-	 * The accessors to append to the model's array form.
-	 *
-	 * @since 1.0.0
-	 * @var array
-	 */
-	protected $appends = array(
-		'formatted_name',
-		'country_name',
-	);
-
-	/**
 	 * Whether the model should be timestamped.
 	 *
 	 * @since 1.0.0
 	 * @var bool
 	 */
-	public $timestamps = true;
+	protected $timestamps = true;
 
-	/**
-	 * Create a new Eloquent model instance.
-	 *
-	 * @param string|int|array $data Data properties.
-	 *
-	 * @throws \InvalidArgumentException If table name or object type is not set.
-	 * @return void
-	 */
-	public function __construct( $data = null ) {
-		$this->data['type']       = $this->get_object_type();
-		$this->query_args['type'] = $this->get_object_type();
-		parent::__construct( $data );
-	}
+	/*
+	|--------------------------------------------------------------------------
+	| Attributes & Relations
+	|--------------------------------------------------------------------------
+	| Define the attributes and relations of the model.
+	*/
 
 	/**
 	 * Get country name.
@@ -184,7 +177,7 @@ class Contact extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	public function get_country_name_prop() {
+	public function get_country_name_attribute() {
 		$countries = I18n::get_countries();
 		return isset( $countries[ $this->country ] ) ? $countries[ $this->country ] : $this->country;
 	}
@@ -195,27 +188,17 @@ class Contact extends Model {
 	 * @return string
 	 * @since 1.1.6
 	 */
-	public function get_formatted_name_prop() {
+	public function get_formatted_name_attribute() {
 		$company = $this->company ? ' (' . $this->company . ')' : '';
 		return $this->name . $company;
 	}
 
-	/**
-	 * Load the object from the database.
-	 *
-	 * @param string|int $id ID of the object.
-	 *
-	 * @since 1.0.0
-	 * @return $this
-	 */
-	protected function load( $id ) {
-		parent::load( $id );
-		if ( $this->get_object_type() !== $this->data['type'] ) {
-			$this->apply_defaults();
-		}
-
-		return $this;
-	}
+	/*
+	|--------------------------------------------------------------------------
+	| CRUD methods
+	|--------------------------------------------------------------------------
+	| Methods for reading, creating, updating and deleting objects.
+	*/
 
 	/**
 	 * Save the object to the database.
@@ -229,7 +212,7 @@ class Contact extends Model {
 		}
 
 		if ( empty( $this->currency_code ) ) {
-			$this->set_prop_value( 'currency_code', eac_get_base_currency() );
+			$this->set_attribute_value( 'currency_code', eac_get_base_currency() );
 		}
 
 		if ( empty( $this->uuid ) ) {
@@ -242,4 +225,12 @@ class Contact extends Model {
 
 		return parent::save();
 	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| Helper methods.
+	|--------------------------------------------------------------------------
+	| Utility methods which don't directly relate to this object but may be
+	| used by this object.
+	*/
 }

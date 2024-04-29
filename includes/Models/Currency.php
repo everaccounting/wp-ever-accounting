@@ -59,12 +59,12 @@ class Currency extends Model {
 	);
 
 	/**
-	 * Model's data container.
+	 * The model's attributes.
 	 *
 	 * @since 1.0.0
 	 * @var array
 	 */
-	protected $data = array(
+	protected $attributes = array(
 		'exchange_rate'      => 1,
 		'precision'          => 2,
 		'symbol'             => '$',
@@ -76,10 +76,9 @@ class Currency extends Model {
 	);
 
 	/**
-	 * Model's casts data.
+	 * The attributes that should be cast.
 	 *
 	 * @since 1.0.0
-	 * @return bool
 	 * @var array
 	 */
 	protected $casts = array(
@@ -87,17 +86,6 @@ class Currency extends Model {
 		'exchange_rate' => 'float',
 		'precision'     => 'int',
 		'subunit'       => 'int',
-	);
-
-	/**
-	 * Searchable properties.
-	 *
-	 * @since 1.0.0
-	 * @var array
-	 */
-	protected $searchable = array(
-		'name',
-		'code',
 	);
 
 	/**
@@ -111,12 +99,30 @@ class Currency extends Model {
 	);
 
 	/**
+	 * Searchable attributes.
+	 *
+	 * @since 1.0.0
+	 * @var array
+	 */
+	protected $searchable = array(
+		'name',
+		'code',
+	);
+
+	/**
 	 * Whether the model should be timestamped.
 	 *
 	 * @since 1.0.0
 	 * @var bool
 	 */
-	public $timestamps = true;
+	protected $timestamps = true;
+
+	/*
+	|--------------------------------------------------------------------------
+	| Attributes & Relations
+	|--------------------------------------------------------------------------
+	| Define the attributes and relations of the model.
+	*/
 
 	/**
 	 * Set position property.
@@ -125,10 +131,10 @@ class Currency extends Model {
 	 *
 	 * @since 1.0.0
 	 */
-	protected function set_position_prop( $value ) {
+	protected function set_position_attribute( $value ) {
 		$value = strtolower( $value );
 		$value = in_array( $value, array( 'before', 'after', true ), true ) ? $value : 'before';
-		$this->set_prop_value( 'position', $value );
+		$this->set_attribute_value( 'position', $value );
 	}
 
 	/**
@@ -136,8 +142,8 @@ class Currency extends Model {
 	 *
 	 * @since 1.0.0
 	 */
-	protected function get_exchange_rate_prop() {
-		return eac_get_base_currency() === $this->code ? 1 : $this->get_prop_value( 'exchange_rate' );
+	protected function get_exchange_rate_attribute() {
+		return eac_get_base_currency() === $this->code ? 1 : $this->get_attribute_value( 'exchange_rate' );
 	}
 
 	/**
@@ -151,14 +157,21 @@ class Currency extends Model {
 	}
 
 	/**
-	 * Determine if the currency is base currency.
+	 * Get related accounts.
 	 *
 	 * @since 1.0.0
-	 * @return bool
+	 * @return Relation
 	 */
-	public function is_base_currency() {
-		return eac_get_base_currency() === $this->code;
+	protected function accounts() {
+		return $this->has_many( Account::class, 'currency_code', 'code' );
 	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| CRUD methods
+	|--------------------------------------------------------------------------
+	| Methods for reading, creating, updating and deleting objects.
+	*/
 
 	/**
 	 * Read a record.
@@ -228,13 +241,22 @@ class Currency extends Model {
 		return parent::save();
 	}
 
+
+	/*
+	|--------------------------------------------------------------------------
+	| Helper methods.
+	|--------------------------------------------------------------------------
+	| Utility methods which don't directly relate to this object but may be
+	| used by this object.
+	*/
+
 	/**
-	 * Get related accounts.
+	 * Determine if the currency is base currency.
 	 *
 	 * @since 1.0.0
-	 * @return Relation
+	 * @return bool
 	 */
-	public function accounts() {
-		return $this->has_many( Account::class, 'currency_code', 'code' );
+	public function is_base_currency() {
+		return eac_get_base_currency() === $this->code;
 	}
 }

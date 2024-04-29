@@ -27,8 +27,7 @@ require_once __DIR__ . '/Functions/updates.php';
  * @return string
  */
 function eac_get_base_currency() {
-	$settings = get_option( 'eaccounting_settings', array() );
-	$currency = get_option( 'eac_base_currency', isset( $settings['default_currency'] ) ? $settings['default_currency'] : 'usd' );
+	$currency = get_option( 'eac_base_currency', 'USD' );
 
 	return apply_filters( 'ever_accounting_base_currency', strtoupper( $currency ) );
 }

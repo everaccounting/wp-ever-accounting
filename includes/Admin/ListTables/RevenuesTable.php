@@ -104,22 +104,23 @@ class RevenuesTable extends ListTable {
 	protected function get_views() {
 		$current      = $this->get_request_status( 'all' );
 		$status_links = array();
+		$statuses     = eac_get_transaction_statuses();
+		$statuses     = array_merge( array( 'all' => __( 'All', 'wp-ever-accounting' ) ), $statuses );
 
-		// $views        = array(
-		// translators: %s: number of revenues.
-		// 'all'       => _nx_noop( 'All <span class="count">(%s)</span>', 'All <span class="count">(%s)</span>', 'list_table', 'wp-ever-accounting' ),
-		// translators: %s: number of revenues.
-		// 'pending'   => _nx_noop( 'Pending <span class="count">(%s)</span>', 'Pending <span class="count">(%s)</span>', 'list_table', 'wp-ever-accounting' ),
-		// translators: %s: number of revenues.
-		// 'paid'      => _nx_noop( 'Paid <span class="count">(%s)</span>', 'Paid <span class="count">(%s)</span>', 'list_table', 'wp-ever-accounting' ),
-		// translators: %s: number of revenues.
-		// 'refunded'  => _nx_noop( 'Refunded <span class="count">(%s)</span>', 'Refunded <span class="count">(%s)</span>', 'list_table', 'wp-ever-accounting' ),
-		// translators: %s: number of revenues.
-		// 'cancelled' => _nx_noop( 'Cancelled <span class="count">(%s)</span>', 'Cancelled <span class="count">(%s)</span>', 'list_table', 'wp-ever-accounting' ),
-		// );
-		$views = array();
+		foreach ( $statuses as $status => $label ) {
+			$link  = 'all' === $status ? $this->base_url : add_query_arg( 'status', $status, $this->base_url );
+			$args  = 'all' === $status ? array() : array( 'status' => $status );
+			$count = Revenue::count( $args );
+			$label = sprintf( '%s <span class="count">(%s)</span>', esc_html( $label ), number_format_i18n( $count ) );
 
-		// return $this->get_views_links( $status_links );
+			$status_links[ $status ] = array(
+				'url'     => $link,
+				'label'   => $label,
+				'current' => $current === $status,
+			);
+		}
+
+		return $this->get_views_links( $status_links );
 	}
 
 	/**
@@ -168,11 +169,12 @@ class RevenuesTable extends ListTable {
 		return array(
 			'cb'        => '<input type="checkbox" />',
 			'date'      => __( 'Date', 'wp-ever-accounting' ),
-			'amount'    => __( 'Amount', 'wp-ever-accounting' ),
 			'account'   => __( 'Account', 'wp-ever-accounting' ),
 			'category'  => __( 'Category', 'wp-ever-accounting' ),
 			'customer'  => __( 'Customer', 'wp-ever-accounting' ),
 			'reference' => __( 'Reference', 'wp-ever-accounting' ),
+			'amount'    => __( 'Amount', 'wp-ever-accounting' ),
+			'status'    => __( 'Status', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -272,7 +274,6 @@ class RevenuesTable extends ListTable {
 		}
 
 		return '&mdash;';
-
 	}
 
 	/**
@@ -290,7 +291,22 @@ class RevenuesTable extends ListTable {
 		}
 
 		return '&mdash;';
+	}
 
+	/**
+	 * Renders the status column.
+	 *
+	 * @param Revenue $item The current object.
+	 *
+	 * @since 1.0.0
+	 * @return string Displays the status.
+	 */
+	public function column_status( $item ) {
+		$statuses = eac_get_transaction_statuses();
+		$status   = isset( $item->status ) ? $item->status : '';
+		$label    = isset( $statuses[ $status ] ) ? $statuses[ $status ] : '';
+
+		return sprintf( '<span class="eac-status is--%1$s">%2$s</span>', esc_attr( $status ), esc_html( $label ) );
 	}
 
 	/**

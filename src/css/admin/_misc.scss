@@ -1,55 +1,69 @@
 // Fix heading styles so when we put buttons in the heading they look good.
-.eac-admin .wp-heading-inline {
-	display: flex !important;
-	align-items: center;
-	line-height: 1.7;
-	font-size: 1.5em;
-	margin: 0 0 1em;
-	box-sizing: border-box;
-	gap: 10px;
+.eac-admin {
+	.wp-heading-inline {
+		display: flex !important;
+		align-items: center;
+		line-height: 1.7;
+		font-size: 1.5em;
+		margin: 0 0 1em;
+		box-sizing: border-box;
+		gap: 10px;
 
-	.page-title-action,
-	.page-title-action:active,
-	.page-title-action:focus,
-	.page-title-action:hover {
-		top: 0;
-	}
+		.page-title-action,
+		.page-title-action:active,
+		.page-title-action:focus,
+		.page-title-action:hover {
+			top: 0;
+		}
 
-	a {
-		text-decoration: none;
+		a {
+			text-decoration: none;
 
-		&:has(.dashicons) {
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			height: 28px;
-			width: 28px;
-			border-radius: 50%;
-			background-color: #f8f9fa;
-			color: #495057;
-			font-size: 1rem;
-			line-height: 1;
-			transition: background-color .15s, color .15s;
-
-			&:hover {
-				background-color: #e9ecef;
+			&:has(.dashicons) {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				height: 28px;
+				width: 28px;
+				border-radius: 50%;
+				background-color: #f8f9fa;
 				color: #495057;
-			}
+				font-size: 1rem;
+				line-height: 1;
+				transition: background-color .15s, color .15s;
 
-			&:active {
-				background-color: #dee2e6;
-				color: #495057;
+				&:hover {
+					background-color: #e9ecef;
+					color: #495057;
+				}
+
+				&:active {
+					background-color: #dee2e6;
+					color: #495057;
+				}
 			}
 		}
 	}
-}
 
-// clear select2 height
-.eac-admin .select2-container .select2-selection--single {
-	height: unset;
-	min-height: 30px;
-}
-.eac-admin .select2-search__field {
-	min-height: 30px;
-	line-height: 1.7;
+	// clear select2 height
+	.select2-search__field {
+		min-height: 30px;
+		line-height: 1.7;
+	}
+	.select2-container .select2-selection--single {
+		height: unset;
+		min-height: 30px;
+	}
+
+	.tablenav .actions .select2-container{
+		min-width: 180px;
+	}
+
+	.del {
+		color: red;
+	}
+
+	textarea[disabled='disabled'] {
+		background: #dfdfdf !important;
+	}
 }

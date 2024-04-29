@@ -44,17 +44,17 @@ class Category extends Model {
 	);
 
 	/**
-	 * Model's data container.
+	 * The model's attributes.
 	 *
 	 * @since 1.0.0
 	 * @var array
 	 */
-	protected $data = array(
+	protected $attributes = array(
 		'status' => 'active',
 	);
 
 	/**
-	 * Model's casts data.
+	 * The attributes that should be cast.
 	 *
 	 * @since 1.0.0
 	 * @var array
@@ -77,7 +77,7 @@ class Category extends Model {
 	);
 
 	/**
-	 * Searchable properties.
+	 * Searchable attributes.
 	 *
 	 * @since 1.0.0
 	 * @var array
@@ -94,7 +94,44 @@ class Category extends Model {
 	 * @since 1.0.0
 	 * @var bool
 	 */
-	public $timestamps = true;
+	protected $timestamps = true;
+
+	/*
+	|--------------------------------------------------------------------------
+	| Attributes & Relations
+	|--------------------------------------------------------------------------
+	| Define the attributes and relations of the model.
+	*/
+
+	/**
+	 * Set the type of the category.
+	 *
+	 * @param string $type Type of the category.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	protected function set_type_attribute( $type ) {
+		$type = ! in_array( $type, eac_get_category_types(), true ) ? 'income' : $type;
+		$this->set_attribute_value( 'type', $type );
+	}
+
+	/**
+	 * Get the formatted name of the category.
+	 *
+	 * @since 1.0.0
+	 * @return string
+	 */
+	protected function get_formatted_name_attribute() {
+		return sprintf( '%s (#%d)', $this->name, $this->id );
+	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| CRUD methods
+	|--------------------------------------------------------------------------
+	| Methods for saving, updating, and deleting objects.
+	*/
 
 	/**
 	 * Save the object to the database.
@@ -126,30 +163,9 @@ class Category extends Model {
 
 	/*
 	|--------------------------------------------------------------------------
-	| Getters & Setters
+	| Helper methods.
 	|--------------------------------------------------------------------------
-	| Below are the getters and setters for the model.
+	| Utility methods which don't directly relate to this object but may be
+	| used by this object.
 	*/
-	/**
-	 * Set the type of the category.
-	 *
-	 * @param string $type Type of the category.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	protected function set_type_prop( $type ) {
-		$type = ! in_array( $type, eac_get_category_types(), true ) ? 'income' : $type;
-		$this->set_prop_value( 'type', $type );
-	}
-
-	/**
-	 * Get the formatted name of the category.
-	 *
-	 * @since 1.0.0
-	 * @return string
-	 */
-	protected function get_formatted_name_prop() {
-		return sprintf( '%s (#%d)', $this->name, $this->id );
-	}
 }

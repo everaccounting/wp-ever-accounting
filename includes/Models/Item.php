@@ -20,7 +20,7 @@ use ByteKit\Models\Relation;
  * @property double $price Price of the item.
  * @property double $cost Cost of the item.
  * @property bool   $taxable Whether the item is taxable.
- * @property string $tax_ids Tax IDs of the item.
+ * @property array $tax_ids Tax IDs of the item.
  * @property int    $category_id Category ID of the item.
  * @property int    $thumbnail_id Thumbnail ID of the item.
  * @property string $status Status of the item.
@@ -65,19 +65,19 @@ class Item extends Model {
 	);
 
 	/**
-	 * Model's data container.
+	 * The model's attributes.
 	 *
 	 * @since 1.0.0
 	 * @var array
 	 */
-	protected $data = array(
+	protected $attributes = array(
 		'type'    => 'standard',
 		'status'  => 'active',
 		'taxable' => false,
 	);
 
 	/**
-	 * Model's casts data.
+	 * The attributes that should be cast.
 	 *
 	 * @since 1.0.0
 	 * @var array
@@ -104,7 +104,7 @@ class Item extends Model {
 	);
 
 	/**
-	 * Searchable properties.
+	 * Searchable attributes.
 	 *
 	 * @since 1.0.0
 	 * @var array
@@ -120,7 +120,14 @@ class Item extends Model {
 	 * @since 1.0.0
 	 * @var bool
 	 */
-	public $timestamps = true;
+	protected $timestamps = true;
+
+	/*
+	|--------------------------------------------------------------------------
+	| Attributes & Relations
+	|--------------------------------------------------------------------------
+	| Define the attributes and relations of the model.
+	*/
 
 	/**
 	 * Get formatted name.
@@ -128,7 +135,7 @@ class Item extends Model {
 	 * @return string
 	 * @since 1.1.6
 	 */
-	public function get_formatted_name_prop() {
+	protected function get_formatted_name_attribute() {
 		return sprintf( '%s (#%s)', $this->name, $this->id );
 	}
 
@@ -138,7 +145,7 @@ class Item extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	public function get_formatted_price_prop() {
+	protected function get_formatted_price_attribute() {
 		return eac_format_money( $this->price );
 	}
 
@@ -148,7 +155,7 @@ class Item extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	public function get_formatted_cost_prop() {
+	protected function get_formatted_cost_attribute() {
 		return eac_format_money( $this->cost );
 	}
 
@@ -158,24 +165,16 @@ class Item extends Model {
 	 * @since 1.2.1
 	 * @return Relation
 	 */
-	public function category() {
-		return $this->belongs_to( Category::class, 'category_id' );
+	protected function category() {
+		return $this->belongs_to( Category::class );
 	}
 
-	/**
-	 * Get items tax
-	 *
-	 * @since 1.2.1
-	 * @return Tax[]
-	 */
-	public function taxes() {
-		$taxes = explode( ',', $this->tax_ids );
-		return Tax::query(
-			array(
-				'include' => $taxes,
-			)
-		);
-	}
+	/*
+	|--------------------------------------------------------------------------
+	| CRUD methods
+	|--------------------------------------------------------------------------
+	| Methods for saving, updating, and deleting objects.
+	*/
 
 	/**
 	 * Save the object to the database.
@@ -198,5 +197,28 @@ class Item extends Model {
 		}
 
 		return parent::save();
+	}
+
+
+	/*
+	|--------------------------------------------------------------------------
+	| Helper methods.
+	|--------------------------------------------------------------------------
+	| Utility methods which don't directly relate to this object but may be
+	| used by this object.
+	*/
+
+	/**
+	 * Get items tax
+	 *
+	 * @since 1.2.1
+	 * @return Tax[]
+	 */
+	public function get_taxes() {
+		return Tax::query(
+			array(
+				'include' => $this->tax_ids,
+			)
+		);
 	}
 }

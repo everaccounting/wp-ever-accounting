@@ -54,16 +54,18 @@ $categories = eac_get_categories(
 					);
 					eac_form_group(
 						array(
-							'type'        => 'text',
-							'name'        => 'price',
-							'label'       => __( 'Price', 'wp-ever-accounting' ),
-							'value'       => $item->price,
-							'placeholder' => __( '1000.00', 'wp-ever-accounting' ),
-							'class'       => 'eac_decimal_input',
-							'required'    => true,
-							'prefix'      => eac_get_base_currency(),
+							'type'              => 'text',
+							'name'              => 'price',
+							'label'             => __( 'Price', 'wp-ever-accounting' ),
+							'value'             => $item->price,
+							'placeholder'       => __( '1000.00', 'wp-ever-accounting' ),
+							'class'             => 'eac_inputmask',
+							'required'          => true,
+							'prefix'            => eac_get_base_currency(),
 							/* translators: %s: currency symbol */
-							'tooltip'     => sprintf( __( 'Enter the price of the item in %s.', 'wp-ever-accounting' ), eac_get_base_currency() ),
+							'tooltip'           => sprintf( __( 'Enter the price of the item in %s.', 'wp-ever-accounting' ), eac_get_base_currency() ),
+							'data-mask'         => '##.00',
+							'data-mask-reverse' => 'true',
 						)
 					);
 					eac_form_group(
@@ -85,7 +87,9 @@ $categories = eac_get_categories(
 							'name'             => 'category_id',
 							'label'            => __( 'Category', 'wp-ever-accounting' ),
 							'value'            => $item->category_id,
-							'options'          => wp_list_pluck( $item->category, 'formatted_name', 'id' ),
+							'options'          => array( $item->category ),
+							'option_label'     => 'formatted_name',
+							'option_value'     => 'id',
 							'data-placeholder' => __( 'Select item category', 'wp-ever-accounting' ),
 							'class'            => 'eac_select2',
 							'data-action'      => 'eac_json_search',
@@ -125,16 +129,18 @@ $categories = eac_get_categories(
 					// tax_ids.
 					eac_form_group(
 						array(
-							'type'        => 'select',
-							'multiple'    => true,
-							'name'        => 'tax_ids',
-							'label'       => __( 'Taxes', 'wp-ever-accounting' ),
-							'value'       => wp_list_pluck( $item->taxes, 'id' ),
-							'options'     => wp_list_pluck( $item->taxes, 'formatted_name', 'id' ),
-							'class'       => 'eac_select2',
-							'data-action' => 'eac_json_search',
-							'data-type'   => 'tax',
-							'tooltip'     => __( 'The selected tax rates will be applied to this item.', 'wp-ever-accounting' ),
+							'type'         => 'select',
+							'multiple'     => true,
+							'name'         => 'tax_ids',
+							'label'        => __( 'Taxes', 'wp-ever-accounting' ),
+							'value'        => wp_list_pluck( $item->taxes, 'id' ),
+							'options'      => $item->taxes,
+							'option_label' => 'formatted_name',
+							'option_value' => 'id',
+							'class'        => 'eac_select2',
+							'data-action'  => 'eac_json_search',
+							'data-type'    => 'tax',
+							'tooltip'      => __( 'The selected tax rates will be applied to this item.', 'wp-ever-accounting' ),
 						)
 					);
 

@@ -44,20 +44,20 @@ class Note extends Model {
 	);
 
 	/**
-	 * Model's data container.
+	 * The model's attributes.
 	 *
 	 * @since 1.0.0
 	 * @var array
 	 */
-	protected $data = array(
+	protected $attributes = array(
 		'note_metadata' => array(),
 	);
 
 	/**
-	 * Model's casts data.
+	 * The attributes that should be cast.
 	 *
 	 * @since 1.0.0
-	 * @return bool
+	 * @var array
 	 */
 	protected $casts = array(
 		'id'            => 'int',
@@ -67,7 +67,7 @@ class Note extends Model {
 	);
 
 	/**
-	 * Searchable properties.
+	 * Searchable attributes.
 	 *
 	 * @since 1.0.0
 	 * @var array
@@ -83,8 +83,21 @@ class Note extends Model {
 	 * @since 1.0.0
 	 * @var bool
 	 */
-	public $timestamps = true;
+	protected $timestamps = true;
 
+	/*
+	|--------------------------------------------------------------------------
+	| Attributes & Relations
+	|--------------------------------------------------------------------------
+	| Define the attributes and relations of the model.
+	*/
+
+	/*
+	|--------------------------------------------------------------------------
+	| CRUD methods
+	|--------------------------------------------------------------------------
+	| Methods for saving, updating, and deleting objects.
+	*/
 	/**
 	 * Save the object to the database.
 	 *
@@ -105,4 +118,12 @@ class Note extends Model {
 
 		return parent::save();
 	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| Helper methods.
+	|--------------------------------------------------------------------------
+	| Utility methods which don't directly relate to this object but may be
+	| used by this object.
+	*/
 }

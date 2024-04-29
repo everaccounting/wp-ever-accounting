@@ -48,27 +48,20 @@
 			/**
 			 * Initialize invoice form
 			 */
-			// $('#eac-invoice-form')
-			// 	.on('change', ':input[class*="trigger-update"]', function (){
-			// 		$(this).closest('form').trigger('update');
-			// 	})
-			// 	.on('update', function () {
-			// 		var $form = $(this);
-			// 		var data = {};
-			// 		$form.find(':input').each(function () {
-			// 			var name = $(this).attr('name');
-			// 			var value = $(this).val();
-			// 			if (name) {
-			// 				data[name] = value;
-			// 			}
-			// 		});
-			// 		data.action = 'eac_calculate_invoice_totals';
-			// 		$form.load(eac_admin_js_vars.ajax_url, data, function () {
-			// 			self.unblockForm($form);
-			// 			$form.removeClass('initiated');
-			// 			// self.init();
-			// 		});
-			// 	});
+			$('#eac-invoice-form').filter(':not(.enhanced)').each(function () {
+				$(this)
+					.on('change', ':input#contact_id', self.invoiceForm.updateContact)
+					.on('change', ':input.add-line-item', self.invoiceForm.triggerUpdate)
+					.on('blur', ':input.line-item__price-input', self.invoiceForm.triggerUpdate)
+					.on('blur', ':input.line-item__quantity-input', self.invoiceForm.triggerUpdate)
+					.on('blur', ':input#discount_amount', self.invoiceForm.triggerUpdate)
+					.on('blur', ':input#discount_type', self.invoiceForm.triggerUpdate)
+					.on('select2:close', '.line-item__quantity-input', self.invoiceForm.triggerUpdate)
+					.on('click', '.remove-line-item', self.invoiceForm.removeLineItem)
+					.on('click', '.calculate_totals', self.invoiceForm.recalculate)
+					.on('update', self.invoiceForm.recalculate)
+					.addClass('enhanced');
+			});
 		},
 
 		/**
@@ -116,7 +109,7 @@
 				delete options.ajax;
 			}
 
-			return $(el).selectWoo(options);
+			return $(el).select2(options);
 		},
 
 		/**
@@ -192,7 +185,7 @@
 			// 	return;
 			// }
 
-			$(el).inputmask( $(el).data());
+			$(el).mask($(el).data('mask') || '9999-99-99');
 		},
 
 		/**
@@ -328,6 +321,54 @@
 		},
 
 		/**
+		 * Format address.
+		 *
+		 * @param {object} args - The address object.
+		 * @param {string} separator - The separator.
+		 *
+		 * @return {string}
+		 * @since 1.0.0
+		 */
+		formatAddress: function (args, separator) {
+			separator = separator || '<br/>';
+			const defaultArgs = {
+				'name': '',
+				'company': '',
+				'address_1': '',
+				'address_2': '',
+				'city': '',
+				'state': '',
+				'postcode': '',
+				'country': '',
+			};
+			const escapeRegExp = (string) => string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+			const format = "{name}\n{company}\n{address_1}\n{address_2}\n{city} {state} {postcode}\n{country}";
+			args = Object.fromEntries(Object.entries(Object.assign(defaultArgs, args)).map(([key, value]) => [key, value.trim()]));
+			const replace = Object.fromEntries(Object.entries({
+				'{name}': args['name'],
+				'{company}': args['company'],
+				'{address_1}': args['address_1'],
+				'{address_2}': args['address_2'],
+				'{city}': args['city'],
+				'{state}': args['state'],
+				'{postcode}': args['postcode'],
+				'{country}': country,
+			}).map(([key, value]) => [key, value]));
+			let formattedAddress = format;
+			Object.keys(replace).forEach(key => {
+				formattedAddress = formattedAddress.replace(new RegExp(escapeRegExp(key), 'g'), replace[key]);
+			});
+			formattedAddress = formattedAddress.replace(/  +/g, ' ').trim();
+			formattedAddress = formattedAddress.replace(/\n\n+/g, "\n");
+			let addressLines = formattedAddress.split("\n").map(line => line.trim()).filter(line => line);
+			if (args['phone']) {
+				addressLines.push('Phone: ' + args['phone']);
+			}
+
+			return addressLines.join(separator);
+		},
+
+		/**
 		 * Get currency.
 		 *
 		 * @since 1.0.0
@@ -416,7 +457,7 @@
 		 *
 		 * @since 1.0.0
 		 *
-		 * @param {string} customer_id - The customer ID.
+		 * @param {integer} id - The customer ID.
 		 *
 		 * @example
 		 * eac_admin.getCustomer(1).then(function (customer) {
@@ -425,13 +466,13 @@
 		 *
 		 * 	@return {Promise}
 		 */
-		getCustomer: function (customer_id) {
+		getCustomer: function (id) {
 			return $.ajax({
 				url: eac_admin_js_vars.ajax_url,
 				type: 'POST',
 				data: {
+					id,
 					action: 'eac_get_customer',
-					customer_id: customer_id,
 					_wpnonce: eac_admin_js_vars.customer_nonce,
 				},
 			});
@@ -540,43 +581,123 @@
 				},
 			});
 		},
-	};
 
-	eac_admin.invoiceForm = {
-		bindEvents: function () {
-			var self = this, $form = $('#eac-invoice-form');
-
-			$form
-				.on('change', ':input.add-item', this.triggerUpdate)
-				.on('select2-blur', '.item-taxes', this.triggerUpdate)
-				.on('update', this.update);
-		},
-		triggerUpdate: function (e) {
-			$(e.target).closest('form').trigger('update')
-		},
-		update: function (e) {
-			var $form = $(e.target), data = {};
-			eac_admin.blockForm($form);
-			$(':input', $form).each(function () {
-				var name = $(this).attr('name');
-				var value = $(this).val();
-				if (name) {
-					data[name] = value;
+		/**
+		 * Invoice form
+		 *
+		 * handle invoice form events.
+		 *
+		 * @since 1.0.0
+		 * @type {{recalculate: eac_admin.invoiceForm.recalculate}}
+		 */
+		invoiceForm: {
+			updateContact: function (e) {
+				var $form = $(e.target).closest('form');
+				var $left = $(e.target).closest('.billing-fields');
+				var contact_id = parseInt($(e.target).val());
+				var updateBillingFields = function (contact) {
+					//Find all the inputs within left that have a name attribute starting with billing_.
+					$left.find(':input[name^="billing_"]').each(function () {
+						var name = $(this).attr('name').replace('billing_', '');
+						var value = contact[name] || '';
+						// if value is a boolean then convert it to string yes or no.
+						if (typeof value === 'boolean') {
+							value = value ? 'yes' : 'no';
+						}
+						$(this).val(value);
+					});
+					// $form.trigger('update');
+				};
+				updateBillingFields({});
+				if (!contact_id) {
+					return;
 				}
-			});
-			data.action = 'eac_calculate_invoice_totals';
+				eac_admin.blockForm($form);
+				eac_admin.getCustomer(contact_id).then(function (contact) {
+					eac_admin.unblockForm($form);
+					updateBillingFields(contact.data || {});
+				});
+			},
+			// updateBillingFields: function (billing) {
+			// 	billing = billing || {};
+			// 	$left.find(':input[name^="billing_"]').each(function () {
+			// 		var name = $(this).attr('name').replace('billing_', '');
+			// 		var value = contact[name] || '';
+			// 		// if value is a boolean then convert it to string yes or no.
+			// 		if (typeof value === 'boolean') {
+			// 			value = value ? 'yes' : 'no';
+			// 		}
+			// 		$(this).val(value);
+			// 	});
+			// },
+			triggerUpdate: function (e) {
+				$(e.target).closest('form').trigger('update');
+			},
+			removeLineItem: function (e) {
+				e.preventDefault();
+				var $form = $(e.target).closest('form');
+				$(e.target).closest('tr').remove();
+				$form.trigger('update');
+			},
+			recalculate: function (e) {
+				var $form = $(e.target).closest('form'), data = {};
+				eac_admin.blockForm($form);
+				$(':input', $form).each(function () {
+					var name = $(this).attr('name');
+					var value = $(this).val();
+					if (name) {
+						data[name] = value;
+					}
+				});
 
-			$form.load(eac_admin_js_vars.ajax_url, data, function () {
-				eac_admin.unblockForm($form);
-				$form.removeClass('initiated');
-				eac_admin.bindEvents();
-			});
-		},
+				data.action = 'eac_calculate_invoice_totals';
+				$form.load(eac_admin_js_vars.ajax_url, data, function () {
+					eac_admin.unblockForm($form);
+					eac_admin.bindEvents();
+				});
+			},
+		}
 	};
+
+	// eac_admin.invoiceForm = {
+	// 	bindEvents: function () {
+	// 		var self = this, $form = $('#eac-invoice-form');
+	//
+	// 		$form
+	// 			.on('change', ':input.add-item', this.triggerUpdate)
+	// 			.on('select2-blur', '.item-taxes', this.triggerUpdate)
+	// 			.on('update', this.update);
+	// 	},
+	// 	triggerUpdate: function (e) {
+	// 		$(e.target).closest('form').trigger('update')
+	// 	},
+	// 	update: function (e) {
+	// 		var $form = $(e.target), data = {};
+	// 		eac_admin.blockForm($form);
+	// 		$(':input', $form).each(function () {
+	// 			var name = $(this).attr('name');
+	// 			var value = $(this).val();
+	// 			if (name) {
+	// 				data[name] = value;
+	// 			}
+	// 		});
+	// 		data.action = 'eac_calculate_invoice_totals';
+	//
+	// 		$form.load(eac_admin_js_vars.ajax_url, data, function () {
+	// 			eac_admin.unblockForm($form);
+	// 			$form.removeClass('initiated');
+	// 			eac_admin.bindEvents();
+	// 		});
+	// 	},
+	// };
 
 	$(function () {
 		eac_admin.bindEvents();
-		eac_admin.invoiceForm.bindEvents();
+		// eac_admin.invoiceForm.bindEvents();
 	});
 
 })(jQuery, window, document);
+
+document.addEventListener( 'alpine:init', () => {
+	console.log('AlpineJS Initialized');
+} );

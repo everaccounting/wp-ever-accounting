@@ -52,12 +52,12 @@ class Transfer extends Model {
 	);
 
 	/**
-	 * Model's data container.
+	 * The model's attributes.
 	 *
 	 * @since 1.0.0
 	 * @var array
 	 */
-	protected $data = array(
+	protected $attributes = array(
 		'from_account_id' => null,
 		'to_account_id'   => null,
 		'amount'          => 0.00,
@@ -68,10 +68,10 @@ class Transfer extends Model {
 	);
 
 	/**
-	 * Model's casts data.
+	 * The attributes that should be cast.
 	 *
 	 * @since 1.0.0
-	 * @return bool
+	 * @var array
 	 */
 	protected $casts = array(
 		'from_account_id' => 'int',
@@ -82,7 +82,7 @@ class Transfer extends Model {
 	);
 
 	/**
-	 * Searchable properties.
+	 * Searchable attributes.
 	 *
 	 * @since 1.0.0
 	 * @var array
@@ -95,7 +95,21 @@ class Transfer extends Model {
 	 * @since 1.0.0
 	 * @var bool
 	 */
-	public $timestamps = true;
+	protected $timestamps = true;
+
+	/*
+	|--------------------------------------------------------------------------
+	| Attributes & Relations
+	|--------------------------------------------------------------------------
+	| Define the attributes and relations of the model.
+	*/
+
+	/*
+	|--------------------------------------------------------------------------
+	| CRUD methods
+	|--------------------------------------------------------------------------
+	| Methods for saving, updating, and deleting objects.
+	*/
 
 	/**
 	 * Save the object to the database.
@@ -131,4 +145,11 @@ class Transfer extends Model {
 		return parent::save();
 	}
 
+	/*
+	|--------------------------------------------------------------------------
+	| Helper methods.
+	|--------------------------------------------------------------------------
+	| Utility methods which don't directly relate to this object but may be
+	| used by this object.
+	*/
 }

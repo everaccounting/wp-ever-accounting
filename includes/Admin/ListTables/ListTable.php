@@ -56,15 +56,15 @@ abstract class ListTable extends \WP_List_Table {
 	/**
 	 * Return the status filter for this request, if any.
 	 *
-	 * @param string $default Default status.
+	 * @param string $fallback Default status.
 	 *
 	 * @since 1.2.1
 	 * @return string
 	 */
-	protected function get_request_status( $default = null ) {
+	protected function get_request_status( $fallback = null ) {
 		$status = ( ! empty( $_GET['status'] ) ) ? sanitize_text_field( wp_unslash( $_GET['status'] ) ) : ''; //phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
-		return in_array( $status, array( 'active', 'inactive' ), true ) ? $status : $default;
+		return empty( $status ) ? $fallback : $status;
 	}
 
 	/**
@@ -114,8 +114,8 @@ abstract class ListTable extends \WP_List_Table {
 	/**
 	 * This function renders most of the columns in the list table.
 	 *
-	 * @param Object|array $item The current item.
-	 * @param string       $column_name The name of the column.
+	 * @param Object $item The current item.
+	 * @param string $column_name The name of the column.
 	 *
 	 * @since 1.0.0
 	 * @return string The column value.
@@ -151,22 +151,26 @@ abstract class ListTable extends \WP_List_Table {
 	 */
 	protected function category_filter( $type ) {
 		$category_id = filter_input( INPUT_GET, 'category_id', FILTER_SANITIZE_NUMBER_INT );
-		$categories  = eac_get_categories( array(
-			'type'  => $type,
-			'limit' => - 1,
-		) );
+		$categories  = eac_get_categories(
+			array(
+				'type'    => $type,
+				'include' => $category_id,
+			)
+		);
 		?>
-		<label for="filter-by-category" class="screen-reader-text">
-			<?php esc_html_e( 'Filter by category', 'wp-ever-accounting' ); ?>
-		</label>
-		<select class="eac_select_category" name="category_id" id="filter-by-category">
-			<option value=""><?php esc_html_e( 'Filter by category', 'wp-ever-accounting' ); ?></option>
-			<?php foreach ( $categories as $category ) : ?>
-				<option value="<?php echo esc_attr( $category->id ); ?>" <?php selected( $category_id, $category->id ); ?>>
-					<?php echo esc_html( $category->name ); ?>
-				</option>
-			<?php endforeach; ?>
-		</select>
+		<div>
+			<label for="filter-by-category" class="screen-reader-text">
+				<?php esc_html_e( 'Filter by category', 'wp-ever-accounting' ); ?>
+			</label>
+			<select class="eac_select_category eac_select2" name="category_id" id="filter-by-category" data-action="eac_json_search" data-type="category" data-subtype="<?php echo esc_attr( $type ); ?>" data-placeholder="<?php esc_attr_e( 'Search for a category&hellip;', 'wp-ever-accounting' ); ?>">
+				<option value=""><?php esc_html_e( 'Filter by category', 'wp-ever-accounting' ); ?></option>
+				<?php foreach ( $categories as $category ) : ?>
+					<option value="<?php echo esc_attr( $category->id ); ?>" <?php selected( $category_id, $category->id ); ?>>
+						<?php echo esc_html( $category->name ); ?>
+					</option>
+				<?php endforeach; ?>
+			</select>
+		</div>
 		<?php
 	}
 }

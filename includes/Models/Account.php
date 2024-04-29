@@ -67,17 +67,17 @@ class Account extends Model {
 	);
 
 	/**
-	 * Model's data container.
+	 * The model's attributes.
 	 *
 	 * @since 1.0.0
 	 * @var array
 	 */
-	protected $data = array(
-		'balance' => null,
+	protected $attributes = array(
+		'status' => 'active',
 	);
 
 	/**
-	 * Model's casts data.
+	 * The attributes that should be cast.
 	 *
 	 * @since 1.0.0
 	 * @var array
@@ -85,12 +85,12 @@ class Account extends Model {
 	protected $casts = array(
 		'id'              => 'int',
 		'opening_balance' => 'float',
-		'thumbnail_id'    => 'int',
 		'author_id'       => 'int',
+		'thumbnail_id'    => 'int',
 	);
 
 	/**
-	 * The properties that should be hidden from array/json.
+	 * The attributes that should be hidden for serialization.
 	 *
 	 * @since 1.0.0
 	 * @var array
@@ -106,13 +106,13 @@ class Account extends Model {
 	 * @var array
 	 */
 	protected $appends = array(
+		'balance',
 		'formatted_name',
 		'formatted_balance',
-		'balance',
 	);
 
 	/**
-	 * Searchable properties.
+	 * Searchable attributes.
 	 *
 	 * @since 1.0.0
 	 * @var array
@@ -128,20 +128,14 @@ class Account extends Model {
 	 * @since 1.0.0
 	 * @var bool
 	 */
-	public $timestamps = true;
+	protected $timestamps = true;
 
-	/**
-	 * Get formatted name.
-	 *
-	 * @since 1.0.0
-	 * @return string
-	 */
-	public function get_formatted_name_prop() {
-		$name   = sprintf( '%s (%s)', $this->name, $this->currency_code );
-		$number = $this->number;
-
-		return $number ? sprintf( '%s - %s', $number, $name ) : $name;
-	}
+	/*
+	|--------------------------------------------------------------------------
+	| Attributes & Relations
+	|--------------------------------------------------------------------------
+	| Define the attributes and relations of the model.
+	*/
 
 	/**
 	 * Get balance.
@@ -151,16 +145,14 @@ class Account extends Model {
 	 *
 	 * @return float|string
 	 */
-	public function get_balance_prop() {
-		if ( null !== $this->get_prop_value( 'balance' ) ) {
-			return $this->get_prop_value( 'balance' );
+	public function get_balance_attribute() {
+		static $balance;
+		if ( is_null( $balance ) ) {
+			$transaction_total = (float) $this->wpdb()->get_var(
+				$this->wpdb()->prepare( "SELECT SUM(CASE WHEN type='income' then amount WHEN type='expense' then - amount END) as total from {$this->wpdb()->prefix}ea_transactions WHERE account_id=%d", $this->id )
+			);
+			$balance           = $this->opening_balance + $transaction_total;
 		}
-		global $wpdb;
-		$transaction_total = (float) $wpdb->get_var(
-			$wpdb->prepare( "SELECT SUM(CASE WHEN type='income' then amount WHEN type='expense' then - amount END) as total from {$wpdb->prefix}ea_transactions WHERE account_id=%d", $this->id )
-		);
-		$balance           = $this->opening_balance + $transaction_total;
-		$this->set_prop_value( 'balance', $balance );
 
 		return $balance;
 	}
@@ -171,8 +163,21 @@ class Account extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	public function get_formatted_balance_prop() {
+	public function get_formatted_balance_attribute() {
 		return eac_format_money( $this->balance, $this->currency_code );
+	}
+
+	/**
+	 * Get formatted name.
+	 *
+	 * @since 1.0.0
+	 * @return string
+	 */
+	public function get_formatted_name_attribute() {
+		$name   = sprintf( '%s (%s)', $this->name, $this->currency_code );
+		$number = $this->number;
+
+		return $number ? sprintf( '%s - %s', $number, $name ) : $name;
 	}
 
 	/**
@@ -194,6 +199,13 @@ class Account extends Model {
 	public function transactions() {
 		return $this->has_many( Transaction::class, 'account_id' );
 	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| CRUD methods
+	|--------------------------------------------------------------------------
+	| Methods for saving, updating, and deleting objects.
+	*/
 
 	/**
 	 * Save the object to the database.
@@ -222,4 +234,12 @@ class Account extends Model {
 
 		return parent::save();
 	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| Helper methods.
+	|--------------------------------------------------------------------------
+	| Utility methods which don't directly relate to this object but may be
+	| used by this object.
+	*/
 }

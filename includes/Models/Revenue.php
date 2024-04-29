@@ -22,18 +22,34 @@ class Revenue extends Transaction {
 	protected $object_type = 'revenue';
 
 	/**
-	 * Create a new Eloquent model instance.
+	 * Create a new model instance.
 	 *
-	 * @param string|int|array $data Data properties.
+	 * @param string|int|array $attributes Attributes.
 	 *
 	 * @throws \InvalidArgumentException If table name or object type is not set.
 	 * @return void
 	 */
-	public function __construct( $data = null ) {
-		$this->data['type']       = $this->get_object_type();
+	public function __construct( $attributes = null ) {
+		$this->attributes['type']       = $this->get_object_type();
 		$this->query_args['type'] = $this->get_object_type();
-		parent::__construct( $data );
+		parent::__construct( $attributes );
 	}
+
+
+	/*
+	|--------------------------------------------------------------------------
+	| Attributes & Relations
+	|--------------------------------------------------------------------------
+	| Define the attributes and relations of the model.
+	*/
+
+
+	/*
+	|--------------------------------------------------------------------------
+	| CRUD methods
+	|--------------------------------------------------------------------------
+	| Methods for saving, updating, and deleting objects.
+	*/
 
 	/**
 	 * Load the object from the database.
@@ -45,7 +61,7 @@ class Revenue extends Transaction {
 	 */
 	protected function load( $id ) {
 		parent::load( $id );
-		if ( $this->get_object_type() !== $this->data['type'] ) {
+		if ( $this->get_object_type() !== $this->attributes['type'] ) {
 			$this->apply_defaults();
 		}
 
@@ -66,4 +82,13 @@ class Revenue extends Transaction {
 
 		return parent::save();
 	}
+
+
+	/*
+	|--------------------------------------------------------------------------
+	| Helper methods.
+	|--------------------------------------------------------------------------
+	| Utility methods which don't directly relate to this object but may be
+	| used by this object.
+	*/
 }

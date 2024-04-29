@@ -182,11 +182,11 @@ class Document_v1 extends Model {
 	 * @since 1.0.0
 	 */
 	public function __construct( $data = 0 ) {
-		$this->data['tax_inclusive'] = filter_var( eac_price_includes_tax(), FILTER_VALIDATE_BOOLEAN );
-		$this->data['currency_code'] = eac_get_base_currency();
-		$this->data['author_id']     = get_current_user_id();
-		$this->data['date_created']  = wp_date( 'Y-m-d H:i:s' );
-		$this->data['uuid']          = wp_generate_uuid4();
+		$this->attributes['tax_inclusive'] = filter_var( eac_price_includes_tax(), FILTER_VALIDATE_BOOLEAN );
+		$this->attributes['currency_code'] = eac_get_base_currency();
+		$this->attributes['author_id']     = get_current_user_id();
+		$this->attributes['date_created']  = wp_date( 'Y-m-d H:i:s' );
+		$this->attributes['uuid']          = wp_generate_uuid4();
 		parent::__construct( $data );
 	}
 
@@ -201,8 +201,8 @@ class Document_v1 extends Model {
 	protected function get_billing_attribute( $prop ) {
 		$value = null;
 
-		if ( isset( $this->data['billing_data'][ $prop ] ) ) {
-			$value = $this->data['billing_data'][ $prop ];
+		if ( isset( $this->attributes['billing_data'][ $prop ] ) ) {
+			$value = $this->attributes['billing_data'][ $prop ];
 		}
 
 		return $value;
@@ -218,7 +218,7 @@ class Document_v1 extends Model {
 	 * @since 1.1.0
 	 */
 	protected function set_billing_attribute( $prop, $value ) {
-		$this->data['billing_data'][ $prop ] = $value;
+		$this->attributes['billing_data'][ $prop ] = $value;
 	}
 
 

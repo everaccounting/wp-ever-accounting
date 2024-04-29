@@ -173,27 +173,24 @@ class VendorsTable extends ListTable {
 	protected function get_views() {
 		$current      = $this->get_request_status( 'all' );
 		$status_links = array();
-		$views        = array(
-			// translators: %s: number of currencies.
-			'all'      => _nx_noop( 'All <span class="count">(%s)</span>', 'All <span class="count">(%s)</span>', 'list_table', 'wp-ever-accounting' ),
-			// translators: %s: number of currencies.
-			'active'   => _nx_noop( 'Active <span class="count">(%s)</span>', 'Active <span class="count">(%s)</span>', 'list_table', 'wp-ever-accounting' ),
-			// translators: %s: number of currencies.
-			'inactive' => _nx_noop( 'Inactive <span class="count">(%s)</span>', 'Inactive <span class="count">(%s)</span>', 'list_table', 'wp-ever-accounting' ),
+		$statuses     = array(
+			'all'      => __( 'All', 'wp-ever-accounting' ),
+			'active'   => __( 'Active', 'wp-ever-accounting' ),
+			'inactive' => __( 'Inactive', 'wp-ever-accounting' ),
 		);
-		foreach ( $views as $view => $label ) {
-			$link  = 'all' === $view ? $this->base_url : add_query_arg( 'status', $view, $this->base_url );
-			$args  = 'all' === $view ? array() : array( 'status' => $view );
-			$count = Vendor::count( $args );
-			$label = sprintf( translate_nooped_plural( $label, $count, 'wp-ever-accounting' ), number_format_i18n( $count ) );
 
-			$status_links[ $view ] = array(
+		foreach ( $statuses as $status => $label ) {
+			$link  = 'all' === $status ? $this->base_url : add_query_arg( 'status', $status, $this->base_url );
+			$args  = 'all' === $status ? array() : array( 'status' => $status );
+			$count = Vendor::count( $args );
+			$label = sprintf( '%s <span class="count">(%s)</span>', esc_html( $label ), number_format_i18n( $count ) );
+
+			$status_links[ $status ] = array(
 				'url'     => $link,
 				'label'   => $label,
-				'current' => $current === $view,
+				'current' => $current === $status,
 			);
 		}
-
 		return $this->get_views_links( $status_links );
 	}
 

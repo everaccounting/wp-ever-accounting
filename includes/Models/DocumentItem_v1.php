@@ -121,7 +121,7 @@ class DocumentItem_v1 extends Model {
 	 * @since 1.0.0
 	 */
 	public function __construct( $data = 0 ) {
-		$this->data['taxable'] = filter_var( eac_tax_enabled(), FILTER_VALIDATE_BOOLEAN );
+		$this->attributes['taxable'] = filter_var( eac_tax_enabled(), FILTER_VALIDATE_BOOLEAN );
 		parent::__construct( $data );
 	}
 

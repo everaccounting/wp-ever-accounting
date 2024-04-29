@@ -26,7 +26,6 @@ defined( 'ABSPATH' ) || exit;
  * @property int      $document_id Document ID of the transaction.
  * @property int      $contact_id Contact ID of the transaction.
  * @property int      $category_id Category ID of the transaction.
- * @property int      $transfer_id Transfer ID of the transaction.
  * @property int      $attachment_id Attachment ID of the transaction.
  * @property int      $parent_id Parent ID of the transaction.
  * @property bool     $reconciled Whether the transaction is reconciled.
@@ -84,7 +83,6 @@ class Transaction extends Model {
 		'document_id',
 		'contact_id',
 		'category_id',
-		'transfer_id',
 		'attachment_id',
 		'parent_id',
 		'reconciled',
@@ -106,12 +104,12 @@ class Transaction extends Model {
 	);
 
 	/**
-	 * Model's data container.
+	 * The model's attributes.
 	 *
 	 * @since 1.0.0
 	 * @var array
 	 */
-	protected $data = array(
+	protected $attributes = array(
 		'status'        => 'draft',
 		'type'          => 'income',
 		'exchange_rate' => 1,
@@ -134,8 +132,7 @@ class Transaction extends Model {
 		'attachment_id' => 'int',
 		'parent_id'     => 'int',
 		'reconciled'    => 'bool',
-		'creator_id'    => 'int',
-		'date_created'  => 'datetime',
+		'author_id'     => 'int',
 	);
 
 	/**
@@ -149,7 +146,7 @@ class Transaction extends Model {
 	);
 
 	/**
-	 * Searchable properties.
+	 * Searchable attributes.
 	 *
 	 * @since 1.0.0
 	 * @var array
@@ -165,27 +162,27 @@ class Transaction extends Model {
 	 * @since 1.0.0
 	 * @var bool
 	 */
-	public $timestamps = true;
+	protected $timestamps = true;
 
 	/**
-	 * Create a new Eloquent model instance.
+	 * Create a new model instance.
 	 *
-	 * @param string|int|array $data Data properties.
+	 * @param string|int|array $attributes Attributes.
 	 *
 	 * @throws \InvalidArgumentException If table name or object type is not set.
 	 * @return void
 	 */
-	public function __construct( $data = null ) {
-		$this->data['uid']           = wp_generate_uuid4();
-		$this->data['currency_code'] = eac_get_base_currency();
-		parent::__construct( $data );
+	public function __construct( $attributes = null ) {
+		$this->attributes['uid']           = wp_generate_uuid4();
+		$this->attributes['currency_code'] = eac_get_base_currency();
+		parent::__construct( $attributes );
 	}
 
 	/*
 	|--------------------------------------------------------------------------
-	| Prop methods
+	| Attributes & Relations
 	|--------------------------------------------------------------------------
-	| The following methods are used to get and set properties of the object.
+	| Define the attributes and relations of the model.
 	*/
 
 	/**
@@ -194,7 +191,7 @@ class Transaction extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	public function get_formatted_amount_prop() {
+	protected function get_formatted_amount_attribute() {
 		return eac_format_money( $this->amount, $this->currency_code );
 	}
 
@@ -204,31 +201,24 @@ class Transaction extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	public function get_formatted_address() {
+	protected function get_formatted_address_attribute() {
 		if ( empty( $this->contact ) ) {
 			return '';
 		}
 
-//		return eac_get_formatted_address(
-//			array(
-//				'name'      => $contact->get_name(),
-//				'company'   => $contact->get_company(),
-//				'address_1' => $contact->get_address_1(),
-//				'address_2' => $contact->get_address_2(),
-//				'city'      => $contact->get_city(),
-//				'state'     => $contact->get_state(),
-//				'postcode'  => $contact->get_postcode(),
-//				'country'   => $contact->get_country(),
-//			)
-//		);
+		// return eac_get_formatted_address(
+		// array(
+		// 'name'      => $contact->get_name(),
+		// 'company'   => $contact->get_company(),
+		// 'address_1' => $contact->get_address_1(),
+		// 'address_2' => $contact->get_address_2(),
+		// 'city'      => $contact->get_city(),
+		// 'state'     => $contact->get_state(),
+		// 'postcode'  => $contact->get_postcode(),
+		// 'country'   => $contact->get_country(),
+		// )
+		// );
 	}
-
-	/*
-	|--------------------------------------------------------------------------
-	| Relationships
-	|--------------------------------------------------------------------------
-	| The following methods are used to define relationships between models.
-	*/
 
 	/**
 	 * Related currency.
@@ -237,7 +227,7 @@ class Transaction extends Model {
 	 * @return \ByteKit\Models\Relation
 	 */
 	protected function currency() {
-		return $this->belongs_to( Currency::class, 'currency_code', 'id' );
+		return $this->belongs_to( Currency::class, 'currency_code', 'code' );
 	}
 
 	/**
@@ -299,15 +289,15 @@ class Transaction extends Model {
 		}
 
 		// If the account_id is changed, update the currency code.
-		if ( $this->is_prop_changed( 'account_id' ) || ! $this->exists() ) {
+		if ( $this->is_attribute_changed( 'account_id' ) || ! $this->exists() ) {
 			$account = Account::find( $this->account_id );
-			$this->set_prop_value( 'currency_code', $account ? $account->currency_code : 'USD' );
+			$this->set_attribute_value( 'currency_code', $account ? $account->currency_code : 'USD' );
 		}
 
 		// If currency code is changed, update the currency rate.
-		if ( $this->is_prop_changed( 'currency_code' ) || ! $this->exists() ) {
+		if ( $this->is_attribute_changed( 'currency_code' ) || ! $this->exists() ) {
 			$currency = Currency::find( array( 'code' => $this->currency_code ) );
-			$this->set_prop_value( 'currency_rate', $currency ? $currency->exchange_rate : 1 );
+			$this->set_attribute_value( 'currency_rate', $currency ? $currency->exchange_rate : 1 );
 		}
 
 		if ( empty( $this->number ) ) {
@@ -338,7 +328,7 @@ class Transaction extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	protected function get_max_number() {
+	public function get_max_number() {
 		return (int) $this->wpdb()->get_var(
 			$this->wpdb()->prepare(
 				"SELECT MAX(REGEXP_REPLACE(number, '[^0-9]', '')) FROM {$this->wpdb()->prefix}{$this->get_table()} WHERE type = %s",

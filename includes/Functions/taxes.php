@@ -50,7 +50,7 @@ function eac_calculate_taxes( $amount, $rates, $inclusive = false ) {
 	);
 	foreach ( $rates as $key => $rate ) {
 		if ( is_a( $rate, '\EverAccounting\Models\DocumentItemTax' ) ) {
-			$rate = $rate->get_data();
+			$rate = $rate->to_array();
 		} elseif ( is_object( $rate ) ) {
 			$rate = get_object_vars( $rate );
 		}

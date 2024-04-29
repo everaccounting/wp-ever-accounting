@@ -66,46 +66,46 @@ class Purchases extends Page {
 			),
 			// Default payment account.
 			array(
-				'title'       => __( 'Purchases Account', 'wp-ever-accounting' ),
-				'desc'        => __( 'The default account to which the expense will be debited.', 'wp-ever-accounting' ),
-				'id'          => 'eac_default_expenses_account_id',
-				'type'        => 'select',
-				'options'     => wp_list_pluck( $expense_accounts, 'formatted_name', 'id' ),
-				'default'     => '',
-				'placeholder' => __( 'Select an account&hellip;', 'wp-ever-accounting' ),
-				'desc_tip'    => true,
-				'class'       => 'eac-select2',
-				'attrs'       => array(
-					'data-action' => 'eac_json_search',
-					'data-type'   => 'account',
-				),
+				'title'            => __( 'Purchases Account', 'wp-ever-accounting' ),
+				'desc'             => __( 'The default account to which the expense will be debited.', 'wp-ever-accounting' ),
+				'id'               => 'eac_default_expenses_account_id',
+				'type'             => 'select',
+				'options'          => wp_list_pluck( (array) eac_get_account( get_option( 'eac_default_expenses_account_id' ) ), 'formatted_name', 'id' ),
+				'default'          => '',
+				'desc_tip'         => true,
+				'class'            => 'eac_select2',
+				'data-action'      => 'eac_json_search',
+				'data-type'        => 'account',
+				'data-placeholder' => __( 'Select an account&hellip;', 'wp-ever-accounting' ),
 			),
 			// Default category.
 			array(
-				'title'       => __( 'Purchases Category', 'wp-ever-accounting' ),
-				'desc'        => __( 'The default category for purchases.', 'wp-ever-accounting' ),
-				'id'          => 'eac_default_expense_category_id',
-				'type'        => 'select',
-				'options'     => wp_list_pluck( $expense_categories, 'formatted_name', 'id' ),
-				'placeholder' => __( 'Select a category&hellip;', 'wp-ever-accounting' ),
-				'desc_tip'    => true,
-				'class'       => 'eac-select2',
-				'attrs'       => array(
-					'data-action' => 'eac_json_search',
-					'data-type'   => 'expense_category',
-				),
+				'title'            => __( 'Purchases Category', 'wp-ever-accounting' ),
+				'desc'             => __( 'The default category for purchases.', 'wp-ever-accounting' ),
+				'id'               => 'eac_default_expense_category_id',
+				'type'             => 'select',
+				'options'          => wp_list_pluck( (array) get_category( get_option( 'eac_default_expense_category_id' ) ), 'formatted_name', 'id' ),
+				'desc_tip'         => true,
+				'class'            => 'eac_select2',
+				'data-action'      => 'eac_json_search',
+				'data-type'        => 'account',
+				'data-subtype'     => 'expense',
+				'data-placeholder' => __( 'Select a category&hellip;', 'wp-ever-accounting' ),
 			),
 			// tax.
+			$taxes = eac_get_taxes( array( 'include' => get_option( 'eac_default_purchases_taxes' ) ) ),
 			array(
 				'title'       => __( 'Purchases Taxes', 'wp-ever-accounting' ),
 				'desc'        => __( 'The default tax for purchases.', 'wp-ever-accounting' ),
 				'id'          => 'eac_default_purchases_taxes',
 				'type'        => 'select',
 				'multiple'    => true,
-				'class'       => 'eac-select2',
-				'options'     => wp_list_pluck( eac_get_taxes( [ 'limit' => - 1 ] ), 'formatted_name', 'id' ),
-				'placeholder' => __( 'Select a tax&hellip;', 'wp-ever-accounting' ),
+				'class'       => 'eac_select2',
+				'options'     => wp_list_pluck( $taxes, 'formatted_name', 'id' ),
 				'desc_tip'    => true,
+				'data-action' => 'eac_json_search',
+				'data-type'   => 'tax',
+				'placeholder' => __( 'Select a tax&hellip;', 'wp-ever-accounting' ),
 			),
 			// Default payment method.
 			array(
@@ -156,7 +156,6 @@ class Purchases extends Page {
 				'id'   => 'expense_settings',
 			),
 		);
-
 	}
 
 	/**
@@ -299,5 +298,4 @@ class Purchases extends Page {
 			),
 		);
 	}
-
 }
