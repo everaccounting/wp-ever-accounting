@@ -158,7 +158,7 @@ abstract class ListTable extends \WP_List_Table {
 			)
 		);
 		?>
-		<div>
+		<div class="alignleft actions category_filter">
 			<label for="filter-by-category" class="screen-reader-text">
 				<?php esc_html_e( 'Filter by category', 'wp-ever-accounting' ); ?>
 			</label>
@@ -190,7 +190,7 @@ abstract class ListTable extends \WP_List_Table {
 			)
 		);
 		?>
-		<div>
+		<div class="alignleft actions currency_filter">
 			<label for="filter-by-currency" class="screen-reader-text">
 				<?php esc_html_e( 'Filter by currency', 'wp-ever-accounting' ); ?>
 			</label>
@@ -222,7 +222,7 @@ abstract class ListTable extends \WP_List_Table {
 			)
 		);
 		?>
-		<div>
+		<div class="alignleft actions country_filter">
 			<label for="filter-by-country" class="screen-reader-text">
 				<?php esc_html_e( 'Filter by country', 'wp-ever-accounting' ); ?>
 			</label>
@@ -254,7 +254,7 @@ abstract class ListTable extends \WP_List_Table {
 			)
 		);
 		?>
-		<div>
+		<div class="alignleft actions account_filter">
 			<label for="filter-by-account" class="screen-reader-text">
 				<?php esc_html_e( 'Filter by account', 'wp-ever-accounting' ); ?>
 			</label>
@@ -279,11 +279,11 @@ abstract class ListTable extends \WP_List_Table {
 	protected function year_filter() {
 		$selected_year = filter_input( INPUT_GET, 'filter_by_year', FILTER_SANITIZE_NUMBER_INT );
 		$years  = array();
-		for ( $counter = 0; $counter <= 20; $counter++) {
+		for ( $counter = 0; $counter <= 30; $counter++) {
 			$years[$counter] = date("Y",strtotime(- $counter . " year") );
 		}
 		?>
-		<div>
+		<div class="alignleft actions year_filter">
 			<label for="filter-by-year" class="screen-reader-text">
 				<?php esc_html_e( 'Filter by year', 'wp-ever-accounting' ); ?>
 			</label>
@@ -308,7 +308,7 @@ abstract class ListTable extends \WP_List_Table {
 	protected function date_filter() {
 		$selected_date = filter_input( INPUT_GET, 'filter_by_date', FILTER_SANITIZE_NUMBER_INT );
 		?>
-		<div>
+		<div class="alignleft actions date_filter">
 			<label for="filter-by-date" class="screen-reader-text">
 				<?php esc_html_e( 'Filter by date', 'wp-ever-accounting' ); ?>
 			</label>
