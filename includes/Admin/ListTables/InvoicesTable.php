@@ -154,13 +154,10 @@ class InvoicesTable extends ListTable {
 	 * @since 1.0.0
 	 */
 	protected function extra_tablenav( $which ) {
-		// TODO: Need to include invoicesTable filters 'Select Month', 'Select Account', 'Select Category', 'Select Customer'.
 		static $has_items;
 		if ( ! isset( $has_items ) ) {
 			$has_items = $this->has_items();
 		}
-
-		echo '<div class="alignleft actions">';
 
 		if ( 'top' === $which ) {
 			ob_start();
@@ -168,11 +165,9 @@ class InvoicesTable extends ListTable {
 			$output = ob_get_clean();
 			if ( ! empty( $output ) && $this->has_items() ) {
 				echo $output;
-				submit_button( __( 'Filter', 'wp-ever-accounting' ), '', 'filter_action', false );
+				submit_button( __( 'Filter', 'wp-ever-accounting' ), 'alignleft', 'filter_action', false );
 			}
 		}
-
-		echo '</div>';
 	}
 
 	/**

@@ -23,7 +23,7 @@
 - [X] ToolTip
 
 ## Issues
-- [] Fix broken select2 filter in the list page. (Its looking fine in the accounting-php branch.)
+- [X] Fix broken select2 filter in the list page. (Its looking fine in the accounting-php branch.)
 
 
 
