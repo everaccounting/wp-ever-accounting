@@ -225,15 +225,14 @@ class ItemsTable extends ListTable {
 			$has_items = $this->has_items();
 		}
 
+		echo '<div class="alignleft actions">';
+
 		if ( 'top' === $which ) {
-			ob_start();
 			$this->category_filter( 'item' );
-			$output = ob_get_clean();
-			if ( ! empty( $output ) && $this->has_items() ) {
-				echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-				submit_button( __( 'Filter', 'wp-ever-accounting' ), 'alignleft', 'filter_action', false );
-			}
+			submit_button( __( 'Filter', 'wp-ever-accounting' ), '', 'filter_action', false );
 		}
+
+		echo '</div>';
 	}
 
 	/**

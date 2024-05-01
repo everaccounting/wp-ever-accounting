@@ -13,7 +13,7 @@ module.exports = [
 			'css/jquery-ui': './node_modules/jquery-ui/themes/base/all.css',
 			'js/select2': './node_modules/select2/dist/js/select2.full.js',
 			'css/select2': './node_modules/select2/dist/css/select2.css',
-			'js/alpine': './node_modules/alpinejs/dist/cdn.js',
+			'js/micromodal': './node_modules/micromodal/dist/micromodal.js',
 			'js/tipTip': './src/libraries/tipTip/tipTip.js',
 			'js/blockui': './src/libraries/blockui/blockUI.js',
 			'js/mask': './src/libraries/mask/mask.js',

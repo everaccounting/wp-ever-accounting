@@ -65,15 +65,6 @@ function eac_delete_note( $note_id ) {
  * @return array|int|Note[]
  */
 function eac_get_notes( $args = array(), $count = false ) {
-	$defaults = array(
-		'limit'   => 20,
-		'orderby' => 'id',
-		'order'   => 'DESC',
-		'fields'  => 'all',
-	);
-
-	$args = wp_parse_args( $args, $defaults );
-
 	if ( $count ) {
 		return Note::count( $args );
 	}

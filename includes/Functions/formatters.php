@@ -69,38 +69,17 @@ function eac_sanitize_tooltip( $text ) {
 	);
 }
 
-/**
- * Get the ajax action url.
- *
- * @param array|string $args Array of arguments.
- * @param bool         $ajax Whether to use ajax or not.
- * @param bool         $nonce Whether to use nonce or not.
- *
- * @since 1.0.0
- */
-function eac_action_url( $args = array(), $ajax = true, $nonce = true ) {
-	$args = wp_parse_args( $args );
-	if ( isset( $args['action'] ) && 0 !== strpos( $args['action'], 'eac_' ) ) {
-		$args['action'] = 'eac_' . $args['action'];
-	}
-	$url = add_query_arg( $args, admin_url( $ajax ? 'admin-ajax.php' : 'admin-post.php' ) );
-	if ( $nonce && isset( $args['action'] ) ) {
-		$url = wp_nonce_url( $url, $args['action'] );
-	}
-
-	return $url;
-}
 
 /**
  * Get country address format.
  *
- * @param array  $args Arguments.
+ * @param array  $fields Address fields.
  * @param string $separator How to separate address lines.
  *
  * @return string
  */
-function eac_get_formatted_address( $args = array(), $separator = '<br/>' ) {
-	$default_args = array(
+function eac_get_formatted_address( $fields = array(), $separator = '<br/>' ) {
+	$defaults          = array(
 		'name'      => '',
 		'company'   => '',
 		'address_1' => '',
@@ -110,46 +89,35 @@ function eac_get_formatted_address( $args = array(), $separator = '<br/>' ) {
 		'postcode'  => '',
 		'country'   => '',
 	);
-	$format       = apply_filters( 'ever_accounting_address_format', "{name}\n{company}\n{address_1}\n{address_2}\n{city} {state} {postcode}\n{country}" );
-	$args         = array_map( 'trim', wp_parse_args( $args, $default_args ) );
-	$countries    = I18n::get_countries();
-	$country      = isset( $countries[ $args['country'] ] ) ? $countries[ $args['country'] ] : $args['country'];
-	$replace      = array_map(
+	$format            = apply_filters( 'ever_accounting_address_format', "{name}\n{company}\n{address_1}\n{address_2}\n{city} {state} {postcode}\n{country}" );
+	$fields            = array_map( 'trim', wp_parse_args( $fields, $defaults ) );
+	$countries         = I18n::get_countries();
+	$fields['country'] = isset( $countries[ $fields['country'] ] ) ? $countries[ $fields['country'] ] : $fields['country'];
+	$replacers         = array_map(
 		'esc_html',
 		array(
-			'{name}'      => $args['name'],
-			'{company}'   => $args['company'],
-			'{address_1}' => $args['address_1'],
-			'{address_2}' => $args['address_2'],
-			'{city}'      => $args['city'],
-			'{state}'     => $args['state'],
-			'{postcode}'  => $args['postcode'],
-			'{country}'   => $country,
+			'{name}'      => $fields['name'],
+			'{company}'   => $fields['company'],
+			'{address_1}' => $fields['address_1'],
+			'{address_2}' => $fields['address_2'],
+			'{city}'      => $fields['city'],
+			'{state}'     => $fields['state'],
+			'{postcode}'  => $fields['postcode'],
+			'{country}'   => $fields['country'],
 		)
 	);
-
-	$formatted_address = str_replace( array_keys( $replace ), $replace, $format );
+	$formatted_address = str_replace( array_keys( $replacers ), $replacers, $format );
 	// Clean up white space.
 	$formatted_address = preg_replace( '/  +/', ' ', trim( $formatted_address ) );
 	$formatted_address = preg_replace( '/\n\n+/', "\n", $formatted_address );
 	// Break newlines apart and remove empty lines/trim commas and white space.
 	$address_lines = array_map( 'trim', array_filter( explode( "\n", $formatted_address ) ) );
-	$address_lines = array_filter( $address_lines );
-	// If phone is set, add it to the last line.
-	if ( ! empty( $args['phone'] ) ) {
-		// it should click to call on mobile.
-		$address_lines[] = eac_make_phone_clickable( $args['phone'] );
-	}
-	// If email is set, add it to the last line.
-	if ( ! empty( $args['email'] ) ) {
-		$address_lines[] = sprintf( '<a href="mailto:%s">%s</a>', $args['email'], $args['email'] );
-	}
-	// If Vat is set, add it to the last line.
-	if ( ! empty( $args['vat'] ) ) {
-		$address_lines[ count( $address_lines ) - 1 ] = sprintf( '%s %s', __( 'VAT:', 'wp-ever-accounting' ), $args['vat'] );
-	}
-	if ( ! empty( $args['tax'] ) ) {
-		$address_lines[ count( $address_lines ) - 1 ] = sprintf( '%s %s', __( 'Tax ID:', 'wp-ever-accounting' ), $args['tax_id'] );
+	// Now check if there any aditional fields.
+	$extra = array_diff_key( $fields, $defaults );
+	foreach ( $extra as $key => $value ) {
+		if ( ! empty( $value ) ) {
+			$address_lines[] = $value;
+		}
 	}
 
 	return implode( $separator, $address_lines );
@@ -171,29 +139,4 @@ function eac_make_phone_clickable( $phone ) {
 	$number = trim( preg_replace( '/[^\d|\+]/', '', $phone ) );
 
 	return $number ? '<a href="tel:' . esc_attr( $number ) . '">' . esc_html( $phone ) . '</a>' : '';
-}
-
-/**
- * Get input variable.
- *
- * @param string $var Input variable.
- * @param string $default Default value.
- * @param string $method Request method. Possible values: get, post, request.
- * @param string $sanitizer Sanitizer function.
- *
- * @return mixed
- * @since 1.1.6
- */
-function eac_get_input_var( $var, $default = null, $method = 'get', $sanitizer = 'eac_clean' ) {
-	$method = strtolower( $method );
-
-	if ( 'get' === $method ) {
-		$value = isset( $_GET[ $var ] ) ? eac_clean( wp_unslash( $_GET[ $var ] ) ) : $default;
-	} elseif ( 'post' === $method ) {
-		$value = isset( $_POST[ $var ] ) ? eac_clean( wp_unslash( $_POST[ $var ] ) ) : $default;
-	} elseif ( 'request' === $method ) {
-		$value = isset( $_REQUEST[ $var ] ) ? eac_clean( wp_unslash( $_REQUEST[ $var ] ) ) : $default;
-	}
-
-	return $sanitizer ? call_user_func( $sanitizer, $value ) : $value;
 }

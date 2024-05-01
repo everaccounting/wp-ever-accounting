@@ -1,8 +1,11 @@
-(function ($, window, document, undefined) {
-
+(function ($, window, document, wp, undefined) {
+	console.log(wp);
 	window.eac_admin = {
 		bindEvents: function () {
 			var self = this;
+
+			// MicroModal.init();
+
 			/**
 			 * Initialize select2
 			 */
@@ -48,19 +51,42 @@
 			/**
 			 * Initialize invoice form
 			 */
-			$('#eac-invoice-form').filter(':not(.enhanced)').each(function () {
-				$(this)
-					.on('change', ':input#contact_id', self.invoiceForm.updateContact)
-					.on('change', ':input.add-line-item', self.invoiceForm.triggerUpdate)
-					.on('blur', ':input.line-item__price-input', self.invoiceForm.triggerUpdate)
-					.on('blur', ':input.line-item__quantity-input', self.invoiceForm.triggerUpdate)
-					.on('blur', ':input#discount_amount', self.invoiceForm.triggerUpdate)
-					.on('blur', ':input#discount_type', self.invoiceForm.triggerUpdate)
-					.on('select2:close', '.line-item__quantity-input', self.invoiceForm.triggerUpdate)
-					.on('click', '.remove-line-item', self.invoiceForm.removeLineItem)
-					.on('click', '.calculate_totals', self.invoiceForm.recalculate)
-					.on('update', self.invoiceForm.recalculate)
-					.addClass('enhanced');
+			$('.eac-document-form').filter(':not(.enhanced)').each(function () {
+				self.initDocumentForm(this);
+				$(this).addClass('enhanced');
+			});
+
+			$('#eac-invoice-add-payment').on('click', function (e) {
+				e.preventDefault();
+				MicroModal.show('add-payment', {
+					onShow: function (modal) {
+						console.log(modal);
+						console.log('model opened');
+					},
+					onClose: function () {
+						$('#eac-invoice-form').trigger('update');
+					}
+				});
+			});
+
+			$('form[name="eac-invoice-add-payment"]').on('change', ':input[name="account_id"]', function (e) {
+				var account_id = $(e.target).val();
+				var $form = $(e.target).closest('form');
+				var $amount = $form.find(':input[name="amount"]');
+				var $currency = $form.find(':input[name="currency_code"]');
+				var $due = $form.find(':input[name="due"]');
+				// eac_admin.blockForm($form);
+				// eac_admin.getAccount(account_id).done(function (account) {
+				// 	eac_admin.convertCurrency($amount.data('due'), $amount.data('currency'), account.currency_code).done(function (amount) {
+				// 		$amount.attr('max', amount);
+				// 		$amount.val(amount);
+				// 	});
+				// }).always(function () {
+				// 	eac_admin.unblockForm($form);
+				// }).fail(function () {
+				// 	$amount.removeAttr('max');
+				// 	$amount.val('');
+				// });
 			});
 		},
 
@@ -109,7 +135,7 @@
 				delete options.ajax;
 			}
 
-			return $(el).select2(options);
+			return $(el).selectWoo(options);
 		},
 
 		/**
@@ -321,54 +347,6 @@
 		},
 
 		/**
-		 * Format address.
-		 *
-		 * @param {object} args - The address object.
-		 * @param {string} separator - The separator.
-		 *
-		 * @return {string}
-		 * @since 1.0.0
-		 */
-		formatAddress: function (args, separator) {
-			separator = separator || '<br/>';
-			const defaultArgs = {
-				'name': '',
-				'company': '',
-				'address_1': '',
-				'address_2': '',
-				'city': '',
-				'state': '',
-				'postcode': '',
-				'country': '',
-			};
-			const escapeRegExp = (string) => string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-			const format = "{name}\n{company}\n{address_1}\n{address_2}\n{city} {state} {postcode}\n{country}";
-			args = Object.fromEntries(Object.entries(Object.assign(defaultArgs, args)).map(([key, value]) => [key, value.trim()]));
-			const replace = Object.fromEntries(Object.entries({
-				'{name}': args['name'],
-				'{company}': args['company'],
-				'{address_1}': args['address_1'],
-				'{address_2}': args['address_2'],
-				'{city}': args['city'],
-				'{state}': args['state'],
-				'{postcode}': args['postcode'],
-				'{country}': country,
-			}).map(([key, value]) => [key, value]));
-			let formattedAddress = format;
-			Object.keys(replace).forEach(key => {
-				formattedAddress = formattedAddress.replace(new RegExp(escapeRegExp(key), 'g'), replace[key]);
-			});
-			formattedAddress = formattedAddress.replace(/  +/g, ' ').trim();
-			formattedAddress = formattedAddress.replace(/\n\n+/g, "\n");
-			let addressLines = formattedAddress.split("\n").map(line => line.trim()).filter(line => line);
-			if (args['phone']) {
-				addressLines.push('Phone: ' + args['phone']);
-			}
-
-			return addressLines.join(separator);
-		},
-
-		/**
 		 * Get currency.
 		 *
 		 * @since 1.0.0
@@ -376,22 +354,16 @@
 		 * @param {string} code - The currency code.
 		 *
 		 * @example
-		 * eac_admin.geCurrency('USD').then(function (currency) {
+		 * eac_admin.geCurrency('USD').done(function (currency) {
 		 * 	console.log(currency);
 		 * })
 		 *
 		 * 	@return {Promise}
 		 */
 		getCurrency: function (code) {
-			console.log(eac_admin_js_vars);
-			return $.ajax({
-				url: eac_admin_js_vars.ajax_url,
-				type: 'POST',
-				data: {
-					action: 'eac_get_currency',
-					currency_code: code,
-					_wpnonce: eac_admin_js_vars.currency_nonce,
-				},
+			return wp.ajax.post('eac_get_currency', {
+				currency_code: code,
+				_wpnonce: eac_admin_js_vars.currency_nonce,
 			});
 		},
 
@@ -400,7 +372,7 @@
 		 *
 		 * @since 1.0.0
 		 *
-		 * @param {string} account_id - The account ID.
+		 * @param {string} id - The account ID.
 		 *
 		 * @example
 		 * eac_admin.getAccount(1).then(function (account) {
@@ -412,15 +384,10 @@
 		 *
 		 * @return {Promise}
 		 */
-		getAccount: function (account_id) {
-			return $.ajax({
-				url: eac_admin_js_vars.ajax_url,
-				type: 'POST',
-				data: {
-					action: 'eac_get_account',
-					account_id: account_id,
-					_wpnonce: eac_admin_js_vars.get_account_nonce,
-				},
+		getAccount: function (id) {
+			return wp.ajax.post('eac_get_account', {
+				id,
+				_wpnonce: eac_admin_js_vars.account_nonce,
 			});
 		},
 
@@ -429,7 +396,7 @@
 		 *
 		 * @since 1.0.0
 		 *
-		 * @param {string} item_id - The item ID.
+		 * @param {string} id - The item ID.
 		 *
 		 *
 		 * @example
@@ -440,15 +407,10 @@
 		 * 	@return {Promise}
 		 *
 		 */
-		getItem: function (item_id) {
-			return $.ajax({
-				url: eac_admin_js_vars.ajax_url,
-				type: 'POST',
-				data: {
-					action: 'eac_get_item',
-					item_id: item_id,
-					_wpnonce: eac_admin_js_vars.item_nonce,
-				},
+		getItem: function (id) {
+			return wp.ajax.post('eac_get_item', {
+				id,
+				_wpnonce: eac_admin_js_vars.item_nonce,
 			});
 		},
 
@@ -467,14 +429,9 @@
 		 * 	@return {Promise}
 		 */
 		getCustomer: function (id) {
-			return $.ajax({
-				url: eac_admin_js_vars.ajax_url,
-				type: 'POST',
-				data: {
-					id,
-					action: 'eac_get_customer',
-					_wpnonce: eac_admin_js_vars.customer_nonce,
-				},
+			return wp.ajax.post('eac_get_customer', {
+				id: id,
+				_wpnonce: eac_admin_js_vars.customer_nonce,
 			});
 		},
 
@@ -483,7 +440,7 @@
 		 *
 		 * @since 1.0.0
 		 *
-		 * @param {string} vendor_id - The vendor ID.
+		 * @param {string} id - The vendor ID.
 		 *
 		 * @example
 		 * eac_admin.getVendor(1).then(function (vendor) {
@@ -492,16 +449,11 @@
 		 *
 		 * @return {Promise}
 		 */
-		getVendor: function (vendor_id) {
-			return $.ajax({
-				url: eac_admin_js_vars.ajax_url,
-				type: 'POST',
-				data: {
-					action: 'eac_get_vendor',
-					vendor_id: vendor_id,
-					_wpnonce: eac_admin_js_vars.vendor_nonce,
-				},
-			});
+		getVendor: function (id) {
+			return wp.ajax.post('eac_get_vendor', {
+				id,
+				_wpnonce: eac_admin_js_vars.vendor_nonce,
+			})
 		},
 
 		/**
@@ -509,7 +461,7 @@
 		 *
 		 * @since 1.0.0
 		 *
-		 * @param {string} invoice_id - The invoice ID.
+		 * @param {string} id - The invoice ID.
 		 *
 		 * @example
 		 * eac_admin.getInvoice(1).then(function (invoice) {
@@ -518,15 +470,10 @@
 		 *
 		 * @return {Promise}
 		 */
-		getInvoice: function (invoice_id) {
-			return $.ajax({
-				url: eac_admin_js_vars.ajax_url,
-				type: 'POST',
-				data: {
-					action: 'eac_get_invoice',
-					invoice_id: invoice_id,
-					_wpnonce: eac_admin_js_vars.invoice_nonce,
-				},
+		getInvoice: function (id) {
+			return wp.ajax.post('eac_get_invoice', {
+				id,
+				_wpnonce: eac_admin_js_vars.invoice_nonce,
 			});
 		},
 
@@ -535,7 +482,7 @@
 		 *
 		 * @since 1.0.0
 		 *
-		 * @param {string} bill_id - The bill ID.
+		 * @param {string} id - The bill ID.
 		 *
 		 * @example
 		 * eac_admin.geBill(1).then(function (bill) {
@@ -544,15 +491,10 @@
 		 *
 		 * @return {Promise}
 		 */
-		getBill: function (bill_id) {
-			return $.ajax({
-				url: eac_admin_js_vars.ajax_url,
-				type: 'POST',
-				data: {
-					action: 'eac_get_bill',
-					bill_id: bill_id,
-					_wpnonce: eac_admin_js_vars.bill_nonce,
-				},
+		getBill: function (id) {
+			return wp.ajax.post('eac_get_bill', {
+				id,
+				_wpnonce: eac_admin_js_vars.bill_nonce,
 			});
 		},
 
@@ -561,7 +503,7 @@
 		 *
 		 * @since 1.0.0
 		 *
-		 * @param {string} tax_id - The tax ID.
+		 * @param {string} id - The tax ID.
 		 *
 		 * @example
 		 * eac_admin.getTax(1).then(function (tax) {
@@ -570,16 +512,119 @@
 		 *
 		 * @return {Promise}
 		 */
-		getTax: function (tax_id) {
-			return $.ajax({
-				url: eac_admin_js_vars.ajax_url,
-				type: 'POST',
-				data: {
-					action: 'eac_get_tax',
-					tax_id: tax_id,
-					_wpnonce: eac_admin_js_vars.tax_nonce,
-				},
+		getTax: function (id) {
+			return wp.ajax.post('eac_get_tax', {
+				id,
+				_wpnonce: eac_admin_js_vars.tax_nonce,
 			});
+		},
+
+		/**
+		 * Convert currency.
+		 *
+		 * @since 1.0.0
+		 * @param {string} amount - The amount to convert.
+		 * @param {string} from - The currency code to convert from.
+		 * @param {string} to - The currency code to convert to.
+		 *
+		 *
+		 * @example
+		 * eac_admin.convertCurrency(100, 'USD', 'EUR').then(function (amount) {
+		 * 	console.log(amount);
+		 * 	})
+		 *
+		 * 	@return {Promise}
+		 */
+		convertCurrency: function (amount, from, to) {
+			return wp.ajax.post('eac_convert_currency', {
+				amount: amount,
+				from: from,
+				to: to,
+				_wpnonce: eac_admin_js_vars.currency_nonce,
+			});
+		},
+
+		/**
+		 * Initialize document form.
+		 *
+		 * @since 1.0.0
+		 * @param {HTMLElement} el - The element to initialize document form.
+		 *
+		 * @return {void}
+		 */
+		initDocumentForm: function (el) {
+			var $form = $(el);
+
+			/**
+			 * Recalculate totals.
+			 *
+			 * @since 1.0.0
+			 * @return {void}
+			 */
+			function recalculateTotals() {
+				var data = {};
+				// $form.removeClass('initiated');
+				eac_admin.blockForm($form);
+				$(':input', $form).each(function () {
+					var name = $(this).attr('name');
+					var value = $(this).val();
+					if (name) {
+						data[name] = value;
+					}
+				});
+
+				var action = data.action || '';
+				if (!action) {
+					alert('Action not defined');
+					return;
+				}
+				action = action.replace('edit', 'calculate');
+				data.action = action;
+				data.calulate_totals = 'yes';
+
+				$('.eac-document-form__main', $form).load(eac_admin_js_vars.ajax_url, data, function () {
+					eac_admin.unblockForm($form);
+					eac_admin.bindEvents();
+				});
+			}
+
+
+			$form.on('dirty', recalculateTotals)
+				.on('change', ':input.add-line-item', recalculateTotals)
+				.on('change', ':input.line-item__price', recalculateTotals)
+				.on('change', ':input.line-item__quantity', recalculateTotals)
+				.on('change', ':input.line-item__taxes', recalculateTotals)
+				.on('change', ':input#currency_code', recalculateTotals)
+				.on('change', ':input#vat_exempt', recalculateTotals)
+				.on('change', ':input#discount_amount', recalculateTotals)
+				.on('change', ':input#discount_type', recalculateTotals)
+				.on('click', '.calculate_totals', recalculateTotals)
+				.on('click', '.remove-line-item', function (e) {
+					e.preventDefault();
+					$(e.target).closest('tr').remove();
+					recalculateTotals();
+				})
+				.on('change', ':input#contact_id', function (e) {
+					var contact_id = parseInt($(e.target).val());
+					var fields = $form.find(':input[name^="billing_"]');
+					console.log(fields);
+
+					eac_admin.blockForm($form);
+					eac_admin.getCustomer(contact_id).then(function (contact) {
+						console.log(contact);
+						eac_admin.unblockForm($form);
+						if (contact.success) {
+							fields.each(function () {
+								var name = $(this).attr('name').replace('billing_', '');
+								var value = contact.data[name] || '';
+								$(this).attr('value', value);
+							});
+						} else {
+							fields.val('');
+						}
+						recalculateTotals();
+					});
+				})
 		},
 
 		/**
@@ -593,43 +638,51 @@
 		invoiceForm: {
 			updateContact: function (e) {
 				var $form = $(e.target).closest('form');
-				var $left = $(e.target).closest('.billing-fields');
 				var contact_id = parseInt($(e.target).val());
-				var updateBillingFields = function (contact) {
-					//Find all the inputs within left that have a name attribute starting with billing_.
-					$left.find(':input[name^="billing_"]').each(function () {
-						var name = $(this).attr('name').replace('billing_', '');
-						var value = contact[name] || '';
-						// if value is a boolean then convert it to string yes or no.
-						if (typeof value === 'boolean') {
-							value = value ? 'yes' : 'no';
-						}
-						$(this).val(value);
-					});
-					// $form.trigger('update');
-				};
-				updateBillingFields({});
+				var resetFields = function () {
+					$form.find(':input[name^="billing_"]').val('');
+				}
+
 				if (!contact_id) {
+					$form.find(':input[name^="billing_"]').val('');
+					$form.trigger('update');
 					return;
 				}
+
 				eac_admin.blockForm($form);
 				eac_admin.getCustomer(contact_id).then(function (contact) {
 					eac_admin.unblockForm($form);
-					updateBillingFields(contact.data || {});
+					if (!contact.success) {
+						$form.find(':input[name^="billing_"]').val('');
+						$form.trigger('update');
+						return;
+					}
+
+					$form.find(':input[name^="billing_"]').each(function () {
+						var name = $(this).attr('name').replace('billing_', '');
+						var value = contact.data[name] || '';
+						$(this).val(value);
+					});
+					// If currency_code value is set then update the form.
+					if (contact.data.currency_code) {
+						$form.find(':input[name="currency_code"]').val(contact.data.currency_code);
+					}
+
+				}).then(function () {
+					console.log('trigger update');
+					$form.trigger('update');
 				});
 			},
-			// updateBillingFields: function (billing) {
-			// 	billing = billing || {};
-			// 	$left.find(':input[name^="billing_"]').each(function () {
-			// 		var name = $(this).attr('name').replace('billing_', '');
-			// 		var value = contact[name] || '';
-			// 		// if value is a boolean then convert it to string yes or no.
-			// 		if (typeof value === 'boolean') {
-			// 			value = value ? 'yes' : 'no';
-			// 		}
-			// 		$(this).val(value);
-			// 	});
-			// },
+			openBillingDetails: function (e) {
+				e.preventDefault();
+				var $form = $(e.target).closest('form');
+				MicroModal.show('edit-billing-details', {
+					onClose: function () {
+						console.log('model closed');
+						$form.trigger('update');
+					}
+				});
+			},
 			triggerUpdate: function (e) {
 				$(e.target).closest('form').trigger('update');
 			},
@@ -721,8 +774,6 @@
 		eac_admin_tooltip.bindEvents();
 	});
 
-})(jQuery, window, document);
+})(jQuery, window, document, wp);
 
-document.addEventListener( 'alpine:init', () => {
-	console.log('AlpineJS Initialized');
-} );
+// import './components/document.js';

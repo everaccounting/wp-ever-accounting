@@ -266,7 +266,7 @@ $columns = array(
 
 													break;
 												case 'subtotal':
-													echo esc_html( eac_format_money( $item->subtotal, $document->currency_code ) );
+													echo esc_html( eac_format_amount( $item->subtotal, $document->currency_code ) );
 													break;
 												case 'actions':
 													echo '<a href="#" class="remove-line-item"><span class="dashicons dashicons-trash"></span></a>';

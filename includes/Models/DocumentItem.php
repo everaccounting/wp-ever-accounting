@@ -98,6 +98,14 @@ class DocumentItem extends Model {
 	);
 
 	/**
+	 * Whether the model should be timestamped.
+	 *
+	 * @since 1.0.0
+	 * @var bool
+	 */
+	protected $timestamps = true;
+
+	/**
 	 * document taxes will be stored here, sometimes before they persist in the DB.
 	 *
 	 * @since 1.1.0
@@ -142,20 +150,6 @@ class DocumentItem extends Model {
 
 		return $data;
 	}
-
-	/*
-	|--------------------------------------------------------------------------
-	| Prop methods
-	|--------------------------------------------------------------------------
-	| The following methods are used to get and set properties of the object.
-	*/
-
-	/*
-	|--------------------------------------------------------------------------
-	| Relation methods
-	|--------------------------------------------------------------------------
-	| Methods for defining and accessing relationships between objects.
-	*/
 
 	/*
 	|--------------------------------------------------------------------------

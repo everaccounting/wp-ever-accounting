@@ -193,6 +193,23 @@ $categories = eac_get_categories(
 					<?php endif; ?>
 				</div>
 			</div>
+
+			<div class="bkit-card">
+				<div class="bkit-card__header">
+					<h2 class="bkit-card__title"><?php esc_html_e( 'Item Image', 'wp-ever-accounting' ); ?></h2>
+				</div>
+
+				<div class="bkit-card__body">
+					<div class="bkit-form-group is--upload">
+						<label for="image">
+							<img src="#" alt="Preview Uploaded Image" id="file-preview">
+							<?php esc_html_e( 'Upload Image', 'wp-ever-accounting' ); ?>
+							<input type="file" name="image" id="image" accept="image/*"/>
+						</label>
+					</div>
+				</div>
+			</div>
+
 		</div><!-- .column-2 -->
 	</div><!-- .bkit-poststuff -->
 </form>

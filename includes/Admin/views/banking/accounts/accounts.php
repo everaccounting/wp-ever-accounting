@@ -26,6 +26,7 @@ defined( 'ABSPATH' ) || exit;
 		<?php $this->list_table->views(); ?>
 		<?php $this->list_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'search' ); ?>
 		<?php $this->list_table->display(); ?>
-		<input type="hidden" name="page" value="eac-accounts"/>
+		<input type="hidden" name="page" value="eac-banking"/>
+		<input type="hidden" name="tab" value="accounts"/>
 	</form>
 <?php

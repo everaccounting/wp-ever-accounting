@@ -30,6 +30,8 @@ class Actions {
 		add_action( 'admin_post_eac_edit_category', array( $this, 'handle_edit_category' ) );
 		add_action( 'admin_post_eac_edit_currency', array( $this, 'handle_edit_currency' ) );
 		add_action( 'admin_post_eac_edit_tax', array( $this, 'handle_edit_tax' ) );
+		add_action( 'admin_post_eac_edit_invoice', array( $this, 'handle_edit_invoice' ) );
+		add_action( 'admin_post_eac_add_invoice_payment', array( $this, 'handle_invoice_payment' ) );
 
 		add_action( 'wp_ajax_eac_get_currency', array( $this, 'ajax_get_currency' ) );
 		add_action( 'wp_ajax_eac_get_account', array( $this, 'ajax_get_account' ) );
@@ -43,7 +45,11 @@ class Actions {
 		add_action( 'wp_ajax_eac_get_invoice', array( $this, 'ajax_get_invoice' ) );
 		add_action( 'wp_ajax_eac_get_bill', array( $this, 'ajax_get_bill' ) );
 
-		add_action( 'wp_ajax_eac_calculate_invoice_totals', array( $this, 'ajax_calculate_invoice_totals' ) );
+		add_action( 'wp_ajax_eac_convert_currency', array( $this, 'ajax_convert_currency' ) );
+
+		add_action( 'wp_ajax_eac_calculate_invoice', array( $this, 'ajax_calculate_invoice_totals' ) );
+		add_action( 'wp_ajax_eac_add_invoice_payment', array( $this, 'ajax_add_invoice_payment' ) );
+
 		// Export data.
 		add_action( 'admin_post_eac_export_data', array( __CLASS__, 'export_data' ) );
 	}
@@ -112,12 +118,12 @@ class Actions {
 				);
 				break;
 			case 'currency':
-				$currencies = eac_get_currencies();
-				$total      = eac_get_currencies();
+				$currencies = eac_get_currencies( $args );
+				$total      = eac_get_currencies( $args, true );
 				$results    = array_map(
 					function ( $currency ) {
 						return array(
-							'id'   => $currency->id,
+							'id'   => $currency->code,
 							'text' => $currency->formatted_name,
 						);
 					},
@@ -295,7 +301,7 @@ class Actions {
 	public static function handle_edit_revenue() {
 		check_admin_referer( 'eac_edit_revenue' );
 		$referer = wp_get_referer();
-		$data = array(
+		$data    = array(
 			'id'             => isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0,
 			'date'           => isset( $_POST['date'] ) ? sanitize_text_field( wp_unslash( $_POST['date'] ) ) : '',
 			'account_id'     => isset( $_POST['account_id'] ) ? absint( wp_unslash( $_POST['account_id'] ) ) : 0,
@@ -308,7 +314,7 @@ class Actions {
 			'note'           => isset( $_POST['note'] ) ? sanitize_textarea_field( wp_unslash( $_POST['note'] ) ) : '',
 			'status'         => isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : 'active',
 		);
-		$revenue = eac_insert_revenue($data);
+		$revenue = eac_insert_revenue( $data );
 		if ( is_wp_error( $revenue ) ) {
 			EAC()->flash->error( $revenue->get_error_message() );
 		} else {
@@ -753,6 +759,22 @@ class Actions {
 	}
 
 	/**
+	 * Get converted amount.
+	 *
+	 * @since 1.2.0
+	 * @return void
+	 */
+	public function ajax_convert_currency() {
+		check_ajax_referer( 'eac_currency' );
+		$amount    = isset( $_POST['amount'] ) ? floatval( wp_unslash( $_POST['amount'] ) ) : 0;
+		$from      = isset( $_POST['from'] ) ? sanitize_text_field( wp_unslash( $_POST['from'] ) ) : eac_get_base_currency();
+		$to        = isset( $_POST['to'] ) ? sanitize_text_field( wp_unslash( $_POST['to'] ) ) : eac_get_base_currency();
+		$converted = eac_convert_currency( $amount, $from, $to );
+		wp_send_json_success( $converted );
+		exit;
+	}
+
+	/**
 	 * Calculate invoice total.
 	 *
 	 * @since 1.2.0
@@ -760,8 +782,51 @@ class Actions {
 	 */
 	public function ajax_calculate_invoice_totals() {
 		check_ajax_referer( 'eac_edit_invoice' );
+		$_POST['calculate_totals'] = 'yes';
+		$document                  = $this->handle_edit_invoice();
+		if ( ! $document instanceof Invoice ) {
+			$document = new Invoice();
+		}
+
+		include __DIR__ . '/views/sales/invoices/form-main.php';
+		exit();
+	}
+
+	/**
+	 * Add invoice payment.
+	 *
+	 * @since 1.2.0
+	 * @return void
+	 */
+	public function ajax_add_invoice_payment() {
+		check_ajax_referer( 'eac_invoice' );
+		$invoice_id = isset( $_POST['invoice_id'] ) ? absint( wp_unslash( $_POST['invoice_id'] ) ) : 0;
+		$date       = isset( $_POST['date'] ) ? sanitize_text_field( wp_unslash( $_POST['date'] ) ) : '';
+		$account_id = isset( $_POST['account_id'] ) ? absint( wp_unslash( $_POST['account_id'] ) ) : 0;
+		$amount     = isset( $_POST['amount'] ) ? floatval( wp_unslash( $_POST['amount'] ) ) : 0;
+		$method     = isset( $_POST['method'] ) ? sanitize_text_field( wp_unslash( $_POST['method'] ) ) : '';
+		$note       = isset( $_POST['note'] ) ? sanitize_textarea_field( wp_unslash( $_POST['note'] ) ) : '';
+
+		if ( is_wp_error( $payment ) ) {
+			wp_send_json_error( $payment->get_error_message() );
+		}
+		wp_send_json_success( $payment->to_array() );
+		exit;
+	}
+
+	/**
+	 * Edit invoice.
+	 *
+	 * @since 1.2.0
+	 * @return void|Invoice $document Invoice object.
+	 */
+	public function handle_edit_invoice() {
+		check_ajax_referer( 'eac_edit_invoice' );
+		$referer                      = wp_get_referer();
+		$calculate_totals             = isset( $_POST['calculate_totals'] ) ? sanitize_text_field( wp_unslash( $_POST['calculate_totals'] ) ) : '';
 		$items                        = isset( $_POST['items'] ) ? map_deep( wp_unslash( $_POST['items'] ), 'sanitize_text_field' ) : array();
-		$document                     = new Invoice();
+		$id                           = isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0;
+		$document                     = new Invoice( $id );
 		$document->contact_id         = isset( $_POST['contact_id'] ) ? absint( wp_unslash( $_POST['contact_id'] ) ) : 0;
 		$document->discount_amount    = isset( $_POST['discount_amount'] ) ? floatval( wp_unslash( $_POST['discount_amount'] ) ) : 0;
 		$document->discount_type      = isset( $_POST['discount_type'] ) ? sanitize_text_field( wp_unslash( $_POST['discount_type'] ) ) : 'fixed';
@@ -769,7 +834,9 @@ class Actions {
 		$document->due_date           = isset( $_POST['due_date'] ) ? sanitize_text_field( wp_unslash( $_POST['due_date'] ) ) : '';
 		$document->number             = isset( $_POST['number'] ) ? sanitize_text_field( wp_unslash( $_POST['number'] ) ) : '';
 		$document->reference          = isset( $_POST['reference'] ) ? sanitize_text_field( wp_unslash( $_POST['reference'] ) ) : '';
+		$document->currency_code      = isset( $_POST['currency_code'] ) ? sanitize_text_field( wp_unslash( $_POST['currency_code'] ) ) : eac_get_base_currency();
 		$document->billing_name       = isset( $_POST['billing_name'] ) ? sanitize_text_field( wp_unslash( $_POST['billing_name'] ) ) : '';
+		$document->vat_exempt         = isset( $_POST['vat_exempt'] ) ? sanitize_text_field( wp_unslash( $_POST['vat_exempt'] ) ) : 'no';
 		$document->billing_company    = isset( $_POST['billing_company'] ) ? sanitize_text_field( wp_unslash( $_POST['billing_company'] ) ) : '';
 		$document->billing_address_1  = isset( $_POST['billing_address_1'] ) ? sanitize_text_field( wp_unslash( $_POST['billing_address_1'] ) ) : '';
 		$document->billing_address_2  = isset( $_POST['billing_address_2'] ) ? sanitize_text_field( wp_unslash( $_POST['billing_address_2'] ) ) : '';
@@ -780,14 +847,62 @@ class Actions {
 		$document->billing_phone      = isset( $_POST['billing_phone'] ) ? sanitize_text_field( wp_unslash( $_POST['billing_phone'] ) ) : '';
 		$document->billing_email      = isset( $_POST['billing_email'] ) ? sanitize_text_field( wp_unslash( $_POST['billing_email'] ) ) : '';
 		$document->billing_vat_number = isset( $_POST['billing_vat_number'] ) ? sanitize_text_field( wp_unslash( $_POST['billing_vat_number'] ) ) : '';
-		$document->billing_vat_exempt = isset( $_POST['billing_vat_exempt'] ) ? sanitize_text_field( wp_unslash( $_POST['billing_vat_exempt'] ) ) : 'no';
 
 		$document->set_items( $items );
-		$document->calculate_totals();
 
-		include __DIR__ . '/views/sales/invoices/form.php';
-		exit();
+		if ( 'yes' === $calculate_totals ) {
+			$document->calculate_totals();
+			return $document;
+		}
+		$saved = $document->save();
+		if ( is_wp_error( $saved ) ) {
+			EAC()->flash->error( $saved->get_error_message() );
+		} else {
+			EAC()->flash->success( __( 'Invoice saved successfully.', 'wp-ever-accounting' ) );
+			$referer = add_query_arg( 'edit', $document->id, $referer );
+			$referer = remove_query_arg( array( 'add' ), $referer );
+		}
+
+		wp_safe_redirect( $referer );
+		exit;
 	}
+
+	/**
+	 * Handle invoice payment.
+	 *
+	 * @since 1.2.0
+	 *
+	 * @return void
+	 */
+	public function handle_invoice_payment() {
+		check_admin_referer( 'eac_invoice_payment' );
+		$referer = wp_get_referer();
+		$id      = isset( $_POST['invoice_id'] ) ? absint( wp_unslash( $_POST['invoice_id'] ) ) : 0;
+		$invoice = eac_get_invoice( $id );
+		if ( ! $invoice ) {
+			EAC()->flash->error( __( 'Invoice not found.', 'wp-ever-accounting' ) );
+			wp_safe_redirect( $referer );
+			exit;
+		}
+		$data = array(
+			'date'           => isset( $_POST['date'] ) ? sanitize_text_field( wp_unslash( $_POST['date'] ) ) : '',
+			'account_id'     => isset( $_POST['account_id'] ) ? absint( wp_unslash( $_POST['account_id'] ) ) : 0,
+			'amount'         => isset( $_POST['amount'] ) ? floatval( wp_unslash( $_POST['amount'] ) ) : 0,
+			'payment_method' => isset( $_POST['payment_method'] ) ? sanitize_text_field( wp_unslash( $_POST['payment_method'] ) ) : '',
+			'note'           => isset( $_POST['note'] ) ? sanitize_textarea_field( wp_unslash( $_POST['note'] ) ) : '',
+		);
+
+		$is_error = $invoice->add_payment( $data );
+		if ( is_wp_error( $is_error ) ) {
+			EAC()->flash->error( $is_error->get_error_message() );
+		} else {
+			EAC()->flash->success( __( 'Invoice payment added successfully.', 'wp-ever-accounting' ) );
+		}
+
+		wp_safe_redirect( $referer );
+		exit;
+	}
+
 
 	/**
 	 * Export data.

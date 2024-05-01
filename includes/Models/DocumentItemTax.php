@@ -20,6 +20,8 @@ namespace EverAccounting\Models;
  * @property int    $document_id Document ID of the document_item_tax.
  * @property string $date_updated Date updated of the document_item_tax.
  * @property string $date_created Date created of the document_item_tax.
+ *
+ * @property-read string $formatted_name Formatted name of the document_item_tax.
  */
 class DocumentItemTax extends Model {
 
@@ -64,19 +66,30 @@ class DocumentItemTax extends Model {
 		'document_id' => 'int',
 	);
 
-	/*
-	|--------------------------------------------------------------------------
-	| Prop methods
-	|--------------------------------------------------------------------------
-	| The following methods are used to get and set properties of the object.
-	*/
+	/**
+	 * Whether the model should be timestamped.
+	 *
+	 * @since 1.0.0
+	 * @var bool
+	 */
+	protected $timestamps = true;
 
 	/*
 	|--------------------------------------------------------------------------
-	| Relation methods
+	| Attributes & Relations
 	|--------------------------------------------------------------------------
-	| Methods for defining and accessing relationships between objects.
+	| Define the attributes and relations of the model.
 	*/
+
+	/**
+	 * Get the formatted name of the document_item_tax.
+	 *
+	 * @return string
+	 * @since 1.0.0
+	 */
+	protected function get_formatted_name_attribute() {
+		return $this->name . ' (' . $this->rate . '%)';
+	}
 
 	/*
 	|--------------------------------------------------------------------------
@@ -84,6 +97,7 @@ class DocumentItemTax extends Model {
 	|--------------------------------------------------------------------------
 	| Methods for saving, updating, and deleting objects.
 	*/
+
 	/**
 	 * Saves an object in the database.
 	 *

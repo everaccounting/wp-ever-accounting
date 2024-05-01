@@ -76,6 +76,7 @@ class Plugin extends \ByteKit\Core\Plugin {
 	 */
 	public function on_init() {
 		$this->services['installer'] = new Installer();
+		new Controllers\Documents();
 
 		if ( is_admin() ) {
 			new Admin\Admin();

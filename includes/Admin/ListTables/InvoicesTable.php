@@ -33,6 +33,8 @@ class InvoicesTable extends ListTable {
 				)
 			)
 		);
+
+		$this->base_url = admin_url( 'admin.php?page=eac-sales&tab=invoices' );
 	}
 
 	/**
@@ -42,18 +44,13 @@ class InvoicesTable extends ListTable {
 	 * @since 1.0.0
 	 */
 	public function prepare_items() {
-		$this->process_bulk_action();
-		$this->_column_headers = array(
-			$this->get_columns(),
-			get_hidden_columns( $this->screen ),
-			$this->get_sortable_columns()
-		);
-		$per_page              = $this->get_items_per_page( 'eac_sales_invoices_per_page', 20 );
-		$paged                 = $this->get_pagenum();
-		$search                = $this->get_request_search();
-		$order_by              = $this->get_request_orderby();
-		$order                 = $this->get_request_order();
-		$args                  = array(
+		$this->process_actions();
+		$per_page = $this->get_items_per_page( 'eac_sales_invoices_per_page', 20 );
+		$paged    = $this->get_pagenum();
+		$search   = $this->get_request_search();
+		$order_by = $this->get_request_orderby();
+		$order    = $this->get_request_order();
+		$args     = array(
 			'limit'    => $per_page,
 			'page'     => $paged,
 			'search'   => $search,
@@ -71,8 +68,8 @@ class InvoicesTable extends ListTable {
 		$args = apply_filters( 'ever_accounting_invoices_table_query_args', $args );
 
 		// TODO: Need to create invoice query methods.
-		$this->items = array();
-		$total       = 0;
+		$this->items = Invoice::query( $args );
+		$total       = Invoice::count( $args );
 
 		$this->set_pagination_args(
 			array(
@@ -91,15 +88,15 @@ class InvoicesTable extends ListTable {
 	 * @since 1.0.0
 	 */
 	protected function bulk_delete( $ids ) {
-		$performed = [];
+		$performed = 0;
 		foreach ( $ids as $id ) {
-			// TODO: Need tp create the invoice delete method.
-//			if ( eac_delete_invoice( $id ) ) {
-//				$performed[] = $id;
-//			}
+			if ( eac_delete_invoice( $id ) ) {
+				++$performed;
+			}
 		}
 		if ( ! empty( $performed ) ) {
-			EAC()->flash()->success( sprintf( _n( 'Invoice deleted.', '%s invoices deleted.', count( $performed ), 'wp-ever-accounting' ), count( $performed ) ) );
+			// translators: %s: number of items deleted.
+			EAC()->flash->success( sprintf( __( '%s invoice(s) deleted successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
 		}
 	}
 
@@ -121,10 +118,25 @@ class InvoicesTable extends ListTable {
 	 *
 	 * @return string[] An array of HTML links keyed by their view.
 	 * @since 1.0.0
-	 *
-	 * @global string $role
 	 */
 	protected function get_views() {
+		$current      = $this->get_request_status( 'all' );
+		$status_links = array();
+		$statuses     = eac_get_invoice_statuses();
+
+		foreach ( $statuses as $status => $label ) {
+			$link  = 'all' === $status ? $this->base_url : add_query_arg( 'status', $status, $this->base_url );
+			$args  = 'all' === $status ? array() : array( 'status' => $status );
+			$count = Invoice::count( $args );
+			$label = sprintf( '%s <span class="count">(%s)</span>', esc_html( $label ), number_format_i18n( $count ) );
+
+			$status_links[ $status ] = array(
+				'url'     => $link,
+				'label'   => $label,
+				'current' => $current === $status,
+			);
+		}
+		return $this->get_views_links( $status_links );
 	}
 
 	/**
@@ -132,7 +144,6 @@ class InvoicesTable extends ListTable {
 	 *
 	 * @return array Array of bulk action labels keyed by their action.
 	 * @since 1.0.0
-	 *
 	 */
 	protected function get_bulk_actions() {
 		$actions = array(
@@ -154,20 +165,19 @@ class InvoicesTable extends ListTable {
 	 * @since 1.0.0
 	 */
 	protected function extra_tablenav( $which ) {
+		// TODO: Need to include invoicesTable filters 'Select Month', 'Select Account', 'Select Category', 'Select Customer'.
 		static $has_items;
 		if ( ! isset( $has_items ) ) {
 			$has_items = $this->has_items();
 		}
 
+		echo '<div class="alignleft actions">';
+
 		if ( 'top' === $which ) {
-			ob_start();
-			$this->category_filter( 'item' );
-			$output = ob_get_clean();
-			if ( ! empty( $output ) && $this->has_items() ) {
-				echo $output;
-				submit_button( __( 'Filter', 'wp-ever-accounting' ), 'alignleft', 'filter_action', false );
-			}
+			submit_button( __( 'Filter', 'wp-ever-accounting' ), '', 'filter_action', false );
 		}
+
+		echo '</div>';
 	}
 
 	/**
@@ -175,17 +185,16 @@ class InvoicesTable extends ListTable {
 	 *
 	 * @return string[] Array of column titles keyed by their column name.
 	 * @since 1.0.0
-	 *
 	 */
 	public function get_columns() {
 		return array(
-			'cb'           => '<input type="checkbox" />',
-			'number'       => __( 'Number', 'wp-ever-accounting' ),
-			'total'        => __( 'Total', 'wp-ever-accounting' ),
-			'customer'     => __( 'Customer', 'wp-ever-accounting' ),
-			'invoice_date' => __( 'Invoice Date', 'wp-ever-accounting' ),
-			'due_date'     => __( 'Due Date', 'wp-ever-accounting' ),
-			'status'       => __( 'Status', 'wp-ever-accounting' ),
+			'cb'         => '<input type="checkbox" />',
+			'number'     => __( 'Number', 'wp-ever-accounting' ),
+			'total'      => __( 'Total', 'wp-ever-accounting' ),
+			'customer'   => __( 'Customer', 'wp-ever-accounting' ),
+			'issue_date' => __( 'Issue Date', 'wp-ever-accounting' ),
+			'due_date'   => __( 'Due Date', 'wp-ever-accounting' ),
+			'status'     => __( 'Status', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -194,16 +203,15 @@ class InvoicesTable extends ListTable {
 	 *
 	 * @return array Array of sortable columns.
 	 * @since 1.0.0
-	 *
 	 */
 	protected function get_sortable_columns() {
 		return array(
-			'number'       => array( 'number', false ),
-			'total'        => array( 'total', false ),
-			'customer'     => array( 'customer', false ),
-			'invoice_date' => array( 'invoice_date', false ),
-			'due_date'     => array( 'due_date', false ),
-			'status'       => array( 'status', false ),
+			'number'     => array( 'number', false ),
+			'total'      => array( 'total', false ),
+			'customer'   => array( 'customer', false ),
+			'issue_date' => array( 'issue_date', false ),
+			'due_date'   => array( 'due_date', false ),
+			'status'     => array( 'status', false ),
 		);
 	}
 
@@ -220,7 +228,7 @@ class InvoicesTable extends ListTable {
 	/**
 	 * Renders the checkbox column.
 	 *
-	 * @param Item $item The current object.
+	 * @param Invoice $item The current object.
 	 *
 	 * @return string Displays a checkbox.
 	 * @since  1.0.0
@@ -230,77 +238,106 @@ class InvoicesTable extends ListTable {
 	}
 
 	/**
-	 * Renders the date column.
+	 * Renders the number column.
 	 *
-	 * @param Invoice $invoice The current object.
+	 * @param Invoice $item The current object.
 	 *
-	 * @return string Displays the date.
 	 * @since  1.0.0
+	 * @return string Displays the name.
 	 */
-	public function column_number( $invoice ) {
-		$urls    = array(
-			'edit'    => admin_url( 'admin.php?page=eac-sales&edit=' . $invoice->id ),
-			'delete'  => wp_nonce_url( admin_url( 'admin.php?page=eac-sales&tab=invoices&action=delete&id=' . $invoice->id ), 'bulk-' . $this->_args['plural'] ),
-			'enable'  => wp_nonce_url( admin_url( 'admin.php?page=eac-sales&tab=invoices&action=enable&id=' . $invoice->id ), 'bulk-' . $this->_args['plural'] ),
-			'disable' => wp_nonce_url( admin_url( 'admin.php?page=eac-sales&tab=invoices&action=disable&id=' . $invoice->id ), 'bulk-' . $this->_args['plural'] ),
-		);
-		$actions = array(
-			'ID'     => sprintf( 'ID: %d', $invoice->id ),
-			'delete' => sprintf( '<a class="eac_confirm_delete" href="%s">%s</a>', esc_url( $urls['delete'] ), __( 'Delete', 'wp-ever-accounting' ) ),
-		);
-		if ( $invoice->enabled ) {
-			$actions['disable'] = sprintf( '<a href="%s">%s</a>', esc_url( $urls['disable'] ), __( 'Disable', 'wp-ever-accounting' ) );
-		} else {
-			$actions['enable'] = sprintf( '<a href="%s">%s</a>', esc_url( $urls['enable'] ), __( 'Enable', 'wp-ever-accounting' ) );
-		}
-
-		return sprintf( '<a href="%1$s">%2$s</a>%3$s', admin_url( 'admin.php?page=eac-sales&tab=invoices&edit=' . $invoice->id ), wp_kses_post( $invoice->name ), $this->row_actions( $actions ) );
+	public function column_number( $item ) {
+		return sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( 'edit', $item->id, $this->base_url ) ), wp_kses_post( $item->number ) );
 	}
 
 	/**
-	 * Renders the actions column.
+	 * Renders the price column.
 	 *
-	 * @param Invoice $invoice The current object.
+	 * @param Invoice $item The current object.
 	 *
-	 * @return string Displays the actions.
 	 * @since  1.0.0
+	 * @return string Displays the price.
 	 */
-	public function column_actions( $invoice ) {
-		$urls = array(
-			'edit'    => admin_url( 'admin.php?page=eac-items&edit=' . $invoice->id ),
-			'delete'  => wp_nonce_url( admin_url( 'admin.php?page=eac-sales&tab=invoices&action=delete&id=' . $invoice->id ), 'bulk-' . $this->_args['plural'] ),
-			'enable'  => wp_nonce_url( admin_url( 'admin.php?page=eac-sales&tab=invoices&action=enable&id=' . $invoice->id ), 'bulk-' . $this->_args['plural'] ),
-			'disable' => wp_nonce_url( admin_url( 'admin.php?page=eac-sales&tab=invoices&action=disable&id=' . $invoice->id ), 'bulk-' . $this->_args['plural'] ),
-		);
+	public function column_total( $item ) {
+		return esc_html( $item->formatted_total );
+	}
 
-		$actions = array(
-			//'edit'   => sprintf( '<a href="%s">%s</a>', esc_url( $urls['edit'] ), __( 'Edit', 'wp-ever-accounting' ) ),
-			'delete' => sprintf( '<a class="eac_confirm_delete" href="%s">%s</a>', esc_url( $urls['delete'] ), __( 'Delete', 'wp-ever-accounting' ) ),
-		);
-		if ( $invoice->enabled ) {
-			$actions['disable'] = sprintf( '<a href="%s">%s</a>', esc_url( $urls['disable'] ), __( 'Disable', 'wp-ever-accounting' ) );
-		} else {
-			$actions['enable'] = sprintf( '<a href="%s">%s</a>', esc_url( $urls['enable'] ), __( 'Enable', 'wp-ever-accounting' ) );
+
+	/**
+	 * Renders the customer column.
+	 *
+	 * @param Invoice $item The current object.
+	 *
+	 * @since  1.0.0
+	 * @return string Displays the customer.
+	 */
+	public function column_customer( $item ) {
+		if ( $item->customer ) {
+			return sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( 'customer_id', $item->customer->id, $this->base_url ) ), wp_kses_post( $item->customer->name ) );
 		}
 
-		return $this->row_actions( $actions, true );
+		return '&mdash;';
 	}
 
 	/**
-	 * This function renders most of the columns in the list table.
+	 * Renders the status column.
 	 *
-	 * @param Object|array $item The current item.
-	 * @param string $column_name The name of the column.
+	 * @param Invoice $item The current object.
 	 *
-	 * @return string The column value.
 	 * @since 1.0.0
+	 * @return string Displays the status.
 	 */
-	public function column_default( $item, $column_name ) {
-		switch ( $column_name ) {
-			case 'column_name':
-				return empty( $item->column_name ) ? '&mdash;' : $item->column_name;
-		}
+	public function column_status( $item ) {
+		$statuses = eac_get_invoice_statuses();
+		$status   = isset( $item->status ) ? $item->status : '';
+		$label    = isset( $statuses[ $status ] ) ? $statuses[ $status ] : '';
 
-		return parent::column_default( $item, $column_name );
+		return sprintf( '<span class="eac-status is--%1$s">%2$s</span>', esc_attr( $status ), esc_html( $label ) );
+	}
+
+	/**
+	 * Generates and displays row actions links.
+	 *
+	 * @param Invoice $item The object.
+	 * @param string  $column_name Current column name.
+	 * @param string  $primary Primary column name.
+	 *
+	 * @since 1.0.0
+	 * @return string Row actions output.
+	 */
+	protected function handle_row_actions( $item, $column_name, $primary ) {
+		if ( $primary !== $column_name ) {
+			return null;
+		}
+		$actions = array(
+			'view' => sprintf(
+				'<a href="%s">%s</a>',
+				esc_url( add_query_arg( 'view', $item->id, $this->base_url ) ),
+				__( 'View', 'wp-ever-accounting' )
+			),
+			'edit' => sprintf(
+				'<a href="%s">%s</a>',
+				esc_url( add_query_arg( 'edit', $item->id, $this->base_url ) ),
+				__( 'Edit', 'wp-ever-accounting' )
+			),
+		);
+
+		$actions['delete'] = sprintf(
+			'<a href="%s" class="del">%s</a>',
+			esc_url(
+				wp_nonce_url(
+					add_query_arg(
+						array(
+							'action' => 'delete',
+							'id'     => $item->id,
+						),
+						$this->base_url
+					),
+					'bulk-' . $this->_args['plural']
+				)
+			),
+			__( 'Delete', 'wp-ever-accounting' )
+		);
+
+		return $this->row_actions( $actions );
 	}
 }

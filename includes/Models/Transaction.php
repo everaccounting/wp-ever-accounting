@@ -192,7 +192,7 @@ class Transaction extends Model {
 	 * @return string
 	 */
 	protected function get_formatted_amount_attribute() {
-		return eac_format_money( $this->amount, $this->currency_code );
+		return eac_format_amount( $this->amount, $this->currency_code );
 	}
 
 	/**

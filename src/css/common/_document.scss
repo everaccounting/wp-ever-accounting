@@ -260,6 +260,11 @@
 
 
 .eac-document-form {
+	&__main {
+		min-width: 800px;
+		overflow-x: auto;
+	}
+
 	input[type="number"]::-webkit-outer-spin-button,
 	input[type="number"]::-webkit-inner-spin-button {
 		-webkit-appearance: none;
@@ -271,17 +276,6 @@
 	input:not([type="checkbox"]):not([type="radio"]) {
 		width: 100%;
 		text-align: inherit;
-	}
-
-	.eac-document-column-2 {
-		box-sizing: border-box;
-		flex-wrap: wrap;
-		column-gap: 20px;
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		justify-content: space-between;
-		align-items: self-start;
-		align-content: flex-start;
 	}
 
 	&__section {
@@ -296,72 +290,61 @@
 			align-items: self-start;
 			align-content: flex-start;
 
+			.document-info__meta {
+				box-sizing: border-box;
+				flex-wrap: wrap;
+				padding: 1em;
+				column-gap: 20px;
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				justify-content: space-between;
+				align-items: self-start;
+				align-content: flex-start;
+			}
 
 			h3 {
 				color: #333;
-				margin: 1.33em 0 0;
+				margin: 0 0 1.33em 0;
 				font-size: 14px;
 				margin-bottom: 20px;
-
-				span {
-					display: block;
-
-					a {
-						font-size: 13px;
-						display: inline-block;
-						font-weight: 400;
-					}
-				}
 			}
-
-			a.edit_billing_address {
-				width: 14px;
-				height: 0;
-				padding: 14px 0 0;
-				margin: 0 0 0 6px;
-				overflow: hidden;
-				position: relative;
-				color: #999;
-				border: 0;
-				float: right;
-
-				&:after {
-					font-family: Dashicons;
-					content: "\f464";
-					position: absolute;
-					top: 0;
-					left: 0;
-					text-align: center;
-					vertical-align: top;
-					line-height: 14px;
-					font-size: 14px;
-					font-weight: 400;
-				}
-			}
-
-			p {
-				font-size: 13px;
-				line-height: 1.5;
-				margin: 0 0 10px;
-				padding: 0;
-
-				strong {
-					display: block;
-				}
-			}
-
-			.billing-fields,
-			.billing-data {
+			P{
 				color: #777;
 			}
 		}
 
-		&.document-actions {
-			display: flex;
-			justify-content: flex-end;
-			align-items: center;
-			border-bottom: 1px solid #ddd;
-			padding: 1.5em 1em 1em;
+		//.document-info__column {
+		//	box-sizing: border-box;
+		//	flex-wrap: wrap;
+		//	padding: 1em;
+		//	column-gap: 20px;
+		//	display: grid;
+		//	grid-template-columns: 1fr 1fr;
+		//	justify-content: space-between;
+		//	align-items: self-start;
+		//	align-content: flex-start;
+		//
+		//	h3 {
+		//		color: #333;
+		//		margin: 0 0 1.33em 0;
+		//		font-size: 14px;
+		//		margin-bottom: 20px;
+		//		grid-column: 1 / -1;
+		//	}
+		//
+		//	.document-info__address {
+		//		color: #777;
+		//		font-size: 13px;
+		//		line-height: 1.5;
+		//	}
+		//
+		//
+		//}
+
+		&.document-items {
+			margin-bottom: 0;
+			padding-bottom: 0;
+			overflow-x: auto;
 		}
 
 		&.document-totals {
@@ -369,10 +352,12 @@
 			grid-template-columns: 2fr 1fr;
 			gap: 80px;
 			padding: 1em 4em 4em;
+			font-size: 14px;
+			line-height: 1.75;
 		}
 	}
 
-	&__items {
+	.document-items__table {
 		border-collapse: collapse;
 		border-spacing: 0;
 		background-color: #fff;
@@ -430,16 +415,33 @@
 				width: 47%;
 			}
 
-			&__price,
-			&__quantity,
-			&__tax,
-			&__subtotal {
-				width: 12%;
+			&__quantity {
+				width: 10%;
 				text-align: right !important;
 			}
 
+			&__quantity,
+			&__price,
+			&__tax,
+			&__subtotal {
+				text-align: right !important;
+			}
+
+			&__quantity {
+				width: 10%;
+			}
+
+			&__price {
+				width: 14%;
+			}
+
+			&__tax,
+			&__subtotal {
+				width: 12%;
+			}
+
 			&__actions {
-				width: 5%;
+				width: 4%;
 				text-align: right !important;
 
 				> a {
@@ -459,7 +461,7 @@
 				}
 			}
 
-			&__description-input {
+			&__description {
 				margin-top: 10px;
 				padding: 2px 6px;
 				resize: none;
@@ -468,27 +470,13 @@
 		}
 	}
 
-	&__totals {
+	.document-totals__table {
 		text-align: right;
 
-		> div {
-			display: grid;
-			grid-template-columns: 1fr 2fr;
-
-			& > span {
-				padding: 0.25rem 0.75rem;
-				break-inside: avoid;
-				text-wrap: avoid;
-				//disable word wrap
-				white-space: nowrap;
-			}
-
-			&:last-child,
-			&:first-child {
-				span {
-					padding-bottom: 0;
-				}
-			}
+		.document-total__value {
+			font-weight: 400;
+			text-align: right;
+			font-family: inherit;
 		}
 	}
 }

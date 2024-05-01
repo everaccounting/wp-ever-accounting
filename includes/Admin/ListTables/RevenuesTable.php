@@ -85,6 +85,27 @@ class RevenuesTable extends ListTable {
 	}
 
 	/**
+	 * handle bulk delete action.
+	 *
+	 * @param array $ids List of item IDs.
+	 *
+	 * @return void
+	 * @since 1.0.0
+	 */
+	protected function bulk_delete( $ids ) {
+		$performed = 0;
+		foreach ( $ids as $id ) {
+			if ( eac_delete_revenue( $id ) ) {
+				++$performed;
+			}
+		}
+		if ( ! empty( $performed ) ) {
+			// translators: %s: number of items deleted.
+			EAC()->flash->success( sprintf( __( '%s revenue(s) deleted successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
+		}
+	}
+
+	/**
 	 * Outputs 'no users' message.
 	 *
 	 * @since 1.0.0

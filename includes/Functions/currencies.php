@@ -5,6 +5,20 @@ use EverAccounting\Models\Currency;
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * Get currency symbol.
+ *
+ * @param mixed $currency Currency ID or object.
+ *
+ * @return string
+ * @since 1.1.0
+ */
+function eac_get_currency_symbol( $currency = null ) {
+	$currency = eac_get_currency( $currency );
+
+	return $currency && $currency->symbol ? $currency->symbol : '$';
+}
+
+/**
  * Get currency.
  *
  * @param mixed $currency Currency ID or object.

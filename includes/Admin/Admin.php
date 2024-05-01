@@ -69,24 +69,25 @@ class Admin {
 		// 3rd party scripts.
 		$scripts = EAC()->scripts;
 		$scripts->enqueue_style( 'bytekit-core' );
-		$scripts->register_style( 'eac-select2', 'css/select2.css' );
-		$scripts->register_script( 'eac-select2', 'js/select2.js', array( 'jquery' ) );
+		$scripts->register_style( 'eac-select2', 'css/select-woo.css' );
+		$scripts->register_script( 'eac-select2', 'js/select-woo.js', array( 'jquery' ) );
 		$scripts->register_style( 'eac-jquery-ui', 'css/jquery-ui.css' );
 		$scripts->register_script( 'eac-tiptip', 'js/tipTip.js', array( 'jquery' ) );
 		$scripts->register_script( 'eac-blockui', 'js/blockui.js', array( 'jquery' ) );
 		$scripts->register_script( 'eac-mask', 'js/mask.js', array( 'jquery' ) );
 		$scripts->register_script( 'eac-inputmask', 'js/inputmask.js', array( 'jquery' ) );
-		$scripts->register_script( 'eac-alpine', 'js/alpine.js', array(), array( 'strategy' => 'defer' ) );
+		$scripts->register_script( 'eac-modal', 'js/micromodal.js' );
 
 		// Core scripts.
-		$admin_js_deps = array( 'jquery', 'eac-select2', 'jquery-ui-datepicker', 'jquery-ui-tooltip', 'eac-blockui', 'eac-mask' );
+		$admin_js_deps  = array( 'jquery', 'wp-util', 'eac-select2', 'jquery-ui-datepicker', 'jquery-ui-tooltip', 'eac-blockui', 'eac-modal' );
+		$admin_css_deps = array( 'eac-jquery-ui', 'eac-select2' );
 		$scripts->register_script( 'eac-admin', 'js/eac-admin.js', $admin_js_deps );
 		$scripts->register_script( 'eac-settings', 'js/eac-settings.js', array( 'eac-admin' ) );
-		$scripts->register_style( 'eac-admin', 'css/eac-admin.css', array( 'eac-jquery-ui', 'eac-select2' ) );
+		$scripts->register_style( 'eac-admin', 'css/eac-admin.css', $admin_css_deps );
 		$scripts->register_style( 'eac-settings', 'css/eac-settings.css', array( 'eac-jquery-ui' ) );
 		$scripts->enqueue_script( 'eac-admin' );
 		$scripts->enqueue_style( 'eac-admin' );
-		$scripts->enqueue_script( 'eac-alpine' );
+		// $scripts->enqueue_script( 'eac-alpine' );
 
 		// if settings page.
 		if ( 'ever-accounting_page_eac-settings' === $hook ) {
@@ -109,6 +110,7 @@ class Admin {
 				'expense_nonce'  => wp_create_nonce( 'eac_expense' ),
 				'invoice_nonce'  => wp_create_nonce( 'eac_invoice' ),
 				'purchase_nonce' => wp_create_nonce( 'eac_purchase' ),
+
 				'i18n'           => array(
 					'confirm_delete' => __( 'Are you sure you want to delete this item?', 'wp-ever-accounting' ),
 				),
@@ -193,27 +195,27 @@ class Admin {
 				'submenu' => array(
 					array(
 						'title' => __( 'Payment', 'wp-ever-accounting' ),
-						'url'   => eac_action_url( 'action=get_html_response&html_type=edit_payment' ),
+						'url'   => '#',
 					),
 					array(
 						'title' => __( 'Expense', 'wp-ever-accounting' ),
-						'url'   => eac_action_url( 'action=get_html_response&html_type=edit_expense' ),
+						'url'   => '#',
 					),
 					array(
 						'title' => __( 'Item', 'wp-ever-accounting' ),
-						'url'   => eac_action_url( 'action=get_html_response&html_type=edit_item' ),
+						'url'   => '#',
 					),
 					array(
 						'title' => __( 'Invoice', 'wp-ever-accounting' ),
-						'url'   => admin_url( 'admin.php?page=eac-sales&tab=invoices&action=add' ),
+						'url'   => '#',
 					),
 					array(
 						'title' => __( 'Customer', 'wp-ever-accounting' ),
-						'url'   => eac_action_url( 'action=get_html_response&html_type=edit_customer' ),
+						'url'   => '#',
 					),
 					array(
 						'title' => __( 'Vendor', 'wp-ever-accounting' ),
-						'url'   => eac_action_url( 'action=get_html_response&html_type=edit_vendor' ),
+						'url'   => '#',
 					),
 				),
 			),
@@ -278,7 +280,7 @@ class Admin {
 		Settings::get_tabs();
 
 		// Get current tab/section.
-		$current_tab     = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_FULL_SPECIAL_CHARS ) ?? 'general';
+		$current_tab     = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_FULL_SPECIAL_CHARS ) ?? '';
 		$current_section = filter_input( INPUT_GET, 'section', FILTER_SANITIZE_FULL_SPECIAL_CHARS ) ?? '';
 		$is_save         = isset( $_POST['save'] ) ? true : false;
 

@@ -164,7 +164,7 @@ class Account extends Model {
 	 * @return string
 	 */
 	public function get_formatted_balance_attribute() {
-		return eac_format_money( $this->balance, $this->currency_code );
+		return eac_format_amount( $this->balance, $this->currency_code );
 	}
 
 	/**

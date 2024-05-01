@@ -146,7 +146,7 @@ class Item extends Model {
 	 * @return string
 	 */
 	protected function get_formatted_price_attribute() {
-		return eac_format_money( $this->price );
+		return eac_format_amount( $this->price );
 	}
 
 	/**
@@ -156,7 +156,7 @@ class Item extends Model {
 	 * @return string
 	 */
 	protected function get_formatted_cost_attribute() {
-		return eac_format_money( $this->cost );
+		return eac_format_amount( $this->cost );
 	}
 
 	/**

@@ -10,14 +10,17 @@
 defined( 'ABSPATH' ) || exit;
 
 require_once __DIR__ . '/Functions/accounts.php';
-require_once __DIR__ . '/Functions/contacts.php';
 require_once __DIR__ . '/Functions/categories.php';
+require_once __DIR__ . '/Functions/contacts.php';
 require_once __DIR__ . '/Functions/currencies.php';
-require_once __DIR__ . '/Functions/items.php';
-require_once __DIR__ . '/Functions/taxes.php';
+require_once __DIR__ . '/Functions/documents.php';
 require_once __DIR__ . '/Functions/formatters.php';
-require_once __DIR__ . '/Functions/transactions.php';
+require_once __DIR__ . '/Functions/items.php';
+require_once __DIR__ . '/Functions/notes.php';
 require_once __DIR__ . '/Functions/misc.php';
+require_once __DIR__ . '/Functions/taxes.php';
+require_once __DIR__ . '/Functions/templates.php';
+require_once __DIR__ . '/Functions/transactions.php';
 require_once __DIR__ . '/Functions/updates.php';
 
 /**
@@ -42,12 +45,12 @@ function eac_get_base_currency() {
  * @since 1.0.2
  * @return string
  */
-function eac_format_money( $amount, $code = null ) {
+function eac_format_amount( $amount, $code = null ) {
 	if ( is_null( $code ) ) {
 		$code = eac_get_base_currency();
 	}
 	if ( ! is_numeric( $amount ) ) {
-		$amount = eac_sanitize_money( $amount, $code );
+		$amount = eac_sanitize_amount( $amount, $code );
 	}
 	$currency     = eac_get_currency( $code );
 	$precision    = $currency ? $currency->precision : 2;
@@ -77,7 +80,7 @@ function eac_format_money( $amount, $code = null ) {
  * @since 1.0.2
  * @return float|int
  */
-function eac_sanitize_money( $amount, $from_code = null ) {
+function eac_sanitize_amount( $amount, $from_code = null ) {
 	$base_currency = eac_get_base_currency();
 	// Get the base currency if not passed.
 	if ( is_null( $from_code ) ) {
@@ -119,9 +122,9 @@ function eac_sanitize_money( $amount, $from_code = null ) {
  * @since 1.0.2
  * @return float|int|string
  */
-function eac_convert_money_from_base( $amount, $to, $to_rate = null ) {
+function eac_convert_currency_from_base( $amount, $to, $to_rate = null ) {
 	$default = eac_get_base_currency();
-	$amount  = eac_sanitize_money( $amount, $to );
+	$amount  = eac_sanitize_amount( $amount, $to );
 	// No need to convert same currency.
 	if ( $default === $to ) {
 		return $amount;
@@ -152,10 +155,10 @@ function eac_convert_money_from_base( $amount, $to, $to_rate = null ) {
  * @since 1.0.2
  * @return float|int|string
  */
-function eac_convert_money_to_base( $amount, $from, $from_rate = null, $formatted = false ) {
+function eac_convert_currency_to_base( $amount, $from, $from_rate = null, $formatted = false ) {
 	$base          = eac_get_base_currency();
 	$from_currency = eac_get_currency( $from );
-	$amount        = eac_sanitize_money( $amount, $from );
+	$amount        = eac_sanitize_amount( $amount, $from );
 	// No need to convert same currency.
 	if ( $base === $from ) {
 		return $amount;
@@ -175,7 +178,7 @@ function eac_convert_money_to_base( $amount, $from, $from_rate = null, $formatte
 	}
 
 	if ( $formatted ) {
-		$amount = eac_format_money( $amount, $base );
+		$amount = eac_format_amount( $amount, $base );
 	}
 
 	return $amount;
@@ -194,10 +197,10 @@ function eac_convert_money_to_base( $amount, $from, $from_rate = null, $formatte
  * @since 1.0.2
  * @return float|int|string
  */
-function eac_convert_money( $amount, $from, $to, $from_rate = null, $to_rate = null, $formatted = false ) {
+function eac_convert_currency( $amount, $from, $to, $from_rate = null, $to_rate = null, $formatted = false ) {
 
 	if ( ! is_numeric( $amount ) ) {
-		$amount = eac_sanitize_money( $amount, $from );
+		$amount = eac_sanitize_amount( $amount, $from );
 	}
 
 	if ( empty( $from_rate ) ) {
@@ -224,7 +227,7 @@ function eac_convert_money( $amount, $from, $to, $from_rate = null, $to_rate = n
 	}
 
 	if ( $formatted ) {
-		$amount = eac_format_money( $amount, $to );
+		$amount = eac_format_amount( $amount, $to );
 	}
 
 	return $amount;
@@ -291,6 +294,27 @@ function eac_get_payment_methods() {
 			'bank_transfer' => esc_html__( 'Bank Transfer', 'wp-ever-accounting' ),
 			'paypal'        => esc_html__( 'PayPal', 'wp-ever-accounting' ),
 			'other'         => esc_html__( 'Other', 'wp-ever-accounting' ),
+		)
+	);
+}
+/**
+ * Get formatted company address.
+ *
+ * @return string
+ * @since 1.1.6
+ */
+function eac_get_formatted_company_address() {
+	return eac_get_formatted_address(
+		array(
+			'name'      => get_option( 'eac_company_name', get_bloginfo( 'name' ) ),
+			'address_1' => get_option( 'eac_company_address_1' ),
+			'address_2' => get_option( 'eac_company_address_2' ),
+			'city'      => get_option( 'eac_company_city' ),
+			'state'     => get_option( 'eac_company_state' ),
+			'postcode'  => get_option( 'eac_company_postcode' ),
+			'country'   => get_option( 'eac_company_country' ),
+			'phone'     => get_option( 'eac_company_phone' ),
+			'email'     => get_option( 'eac_company_email' ),
 		)
 	);
 }

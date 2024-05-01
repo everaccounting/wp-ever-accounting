@@ -26,6 +26,7 @@
     "alpinejs": "^3.13.10",
     "chart.js": "^2.9.4",
     "inputmask": "^5.0.5",
+    "micromodal": "^0.4.10",
     "moment": "^2.29.4",
     "select-woo": "^1.0.1"
   },

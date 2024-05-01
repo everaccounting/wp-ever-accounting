@@ -22,14 +22,14 @@ defined( 'ABSPATH' ) || exit;
 						<?php
 						eac_form_group(
 							array(
-								'label'                      => __( 'Date', 'wp-ever-accounting' ),
-								'type'                       => 'date',
-								'name'                       => 'date',
-								'placeholder'                => 'YYYY-MM-DD',
-								'value'                      => $revenue->date,
-								'required'                   => true,
-								'class'                      => 'eac_inputmask',
-								'data-inputmask-alias'       => 'datetime',
+								'label'                => __( 'Date', 'wp-ever-accounting' ),
+								'type'                 => 'date',
+								'name'                 => 'date',
+								'placeholder'          => 'YYYY-MM-DD',
+								'value'                => $revenue->date,
+								'required'             => true,
+								'class'                => 'eac_inputmask',
+								'data-inputmask-alias' => 'datetime',
 								'data-inputmask-inputformat' => 'yyyy-mm-dd',
 							)
 						);
