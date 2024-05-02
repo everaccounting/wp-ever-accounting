@@ -9,8 +9,10 @@
 	min-height: 1px;
 	background: #fff;
 	border: 1px solid #e1e2e2;
+	--padding-x: 1em;
+	--padding-y: 0.5em;
 
-	&::after {
+	&:before, &:after {
 		content: ".";
 		display: block;
 		height: 0;
@@ -20,22 +22,18 @@
 		overflow: hidden;
 	}
 
-	& > &__header, & > &__footer {
-		display: flex;
+	.eac-card__header, .eac-card__footer {
 		align-items: center;
+		display: flex;
 		justify-content: space-between;
-		padding: 0.5em 1em;
 		margin: 0;
 		min-height: 25px;
+		padding: var(--padding-y) var(--padding-x);
 
-		p {
+		h2, h3, p {
 			margin: 0;
 			padding: 0;
-		}
-
-		h2, h3 {
-			margin: 0;
-			padding: 0;
+			color: inherit;
 		}
 
 		input, select, .select2, button {
@@ -47,27 +45,26 @@
 		}
 	}
 
-	 &__title, &__subtitle {
+	.eac-card__title, .eac-card__subtitle {
 		padding: 0;
 		margin: 0;
 		font-size: 1.2em;
 	}
 
-	&__title, h2 {
+	.eac-card__title, h2 {
 		font-weight: normal;
 		line-height: 1.4;
 	}
 
-	&__subtitle {
+	.eac-card__subtitle {
 		font-size: 0.8em;
 	}
 
-	& > &__body {
+	.eac-card__body {
 		box-sizing: border-box;
-		position: relative;
-		padding: 1em;
-		line-height: 1.4;
 		flex: 1 1 auto;
+		line-height: 1.4;
+		padding: var(--padding-y) var(--padding-x);
 
 		& > *:first-child {
 			margin-top: 0;
@@ -80,15 +77,6 @@
 		&:has(table) {
 			padding: 0;
 		}
-
-		& > table {
-			border: 0;
-			box-shadow: none;
-
-			thead th {
-				border-bottom-color: #e1e2e2;
-			}
-		}
 	}
 
 	// any class that contains
@@ -97,5 +85,25 @@
 		&:not(:last-child) {
 			border-bottom: 1px solid #e1e2e2;
 		}
+	}
+
+	img {
+		max-width: 100%;
+		height: auto;
+	}
+
+	a:focus, a:active {
+		box-shadow: none;
+		outline: none;
+	}
+
+	&.is--medium {
+		--padding-x: 1.5em;
+		--padding-y: 1em;
+	}
+
+	&.is--large {
+		--padding-x: 2em;
+		--padding-y: 1.5em;
 	}
 }

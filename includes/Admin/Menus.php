@@ -99,7 +99,7 @@ class Menus {
 			function () {
 				$page_hook = 'dashboard';
 				$tabs      = array();
-				include_once __DIR__ . '/views/admin-page.php';
+				include_once __DIR__ . '/views/dashboard.php';
 			},
 		);
 

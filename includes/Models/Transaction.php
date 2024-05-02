@@ -111,7 +111,7 @@ class Transaction extends Model {
 	 */
 	protected $attributes = array(
 		'status'        => 'draft',
-		'type'          => 'income',
+		'type'          => 'expense',
 		'exchange_rate' => 1,
 		'created_via'   => 'manual',
 	);

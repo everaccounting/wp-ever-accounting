@@ -77,6 +77,7 @@ class Admin {
 		$scripts->register_script( 'eac-mask', 'js/mask.js', array( 'jquery' ) );
 		$scripts->register_script( 'eac-inputmask', 'js/inputmask.js', array( 'jquery' ) );
 		$scripts->register_script( 'eac-modal', 'js/micromodal.js' );
+		$scripts->register_script( 'eac-chartjs', 'js/chartjs.js' );
 
 		// Core scripts.
 		$admin_js_deps  = array( 'jquery', 'wp-util', 'eac-select2', 'jquery-ui-datepicker', 'jquery-ui-tooltip', 'eac-blockui', 'eac-modal' );
@@ -93,6 +94,12 @@ class Admin {
 		if ( 'ever-accounting_page_eac-settings' === $hook ) {
 			$scripts->register_script( 'eac-settings', 'js/settings.js', array( 'jquery' ) );
 			$scripts->enqueue_style( 'eac-settings' );
+		}
+
+		// if dashboard or reports page.
+
+		if ( 'toplevel_page_ever-accounting' === $hook || 'ever-accounting_page_eac-reports' === $hook ) {
+			$scripts->enqueue_script( 'eac-chartjs' );
 		}
 
 		wp_localize_script(

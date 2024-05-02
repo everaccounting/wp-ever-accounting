@@ -18,6 +18,7 @@ require_once __DIR__ . '/Functions/formatters.php';
 require_once __DIR__ . '/Functions/items.php';
 require_once __DIR__ . '/Functions/notes.php';
 require_once __DIR__ . '/Functions/misc.php';
+require_once __DIR__ . '/Functions/reports.php';
 require_once __DIR__ . '/Functions/taxes.php';
 require_once __DIR__ . '/Functions/templates.php';
 require_once __DIR__ . '/Functions/transactions.php';

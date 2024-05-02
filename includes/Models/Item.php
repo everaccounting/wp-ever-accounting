@@ -12,26 +12,26 @@ use ByteKit\Models\Relation;
  * @package EverAccounting
  * @subpackage Models
  *
- * @property int    $id ID of the item.
- * @property string $type Type of the item.
- * @property string $name Name of the item.
- * @property string $description Description of the item.
- * @property string $unit Unit of the item.
- * @property double $price Price of the item.
- * @property double $cost Cost of the item.
- * @property bool   $taxable Whether the item is taxable.
- * @property array $tax_ids Tax IDs of the item.
- * @property int    $category_id Category ID of the item.
- * @property int    $thumbnail_id Thumbnail ID of the item.
- * @property string $status Status of the item.
- * @property string $date_created Date created of the item.
+ * @property int      $id ID of the item.
+ * @property string   $type Type of the item.
+ * @property string   $name Name of the item.
+ * @property string   $description Description of the item.
+ * @property string   $unit Unit of the item.
+ * @property double   $price Price of the item.
+ * @property double   $cost Cost of the item.
+ * @property bool     $taxable Whether the item is taxable.
+ * @property array    $tax_ids Tax IDs of the item.
+ * @property int      $category_id Category ID of the item.
+ * @property int      $thumbnail_id Thumbnail ID of the item.
+ * @property string   $status Status of the item.
+ * @property string   $date_created Date created of the item.
  * * @property string $date_updated Date updated of the item.
  *
- * @property string $formatted_name Formatted name of the item.
- * @property string $formatted_price Formatted price of the item.
- * @property string $formatted_cost Formatted cost of the item.
+ * @property string   $formatted_name Formatted name of the item.
+ * @property string   $formatted_price Formatted price of the item.
+ * @property string   $formatted_cost Formatted cost of the item.
  * @property Category $category Category of the item.
- * @property Tax[] $taxes Taxes of the item.
+ * @property Tax[]    $taxes Taxes of the item.
  */
 class Item extends Model {
 
@@ -134,8 +134,8 @@ class Item extends Model {
 	/**
 	 * Get formatted name.
 	 *
-	 * @return string
 	 * @since 1.1.6
+	 * @return string
 	 */
 	protected function get_formatted_name_attribute() {
 		return sprintf( '%s (#%s)', $this->name, $this->id );
@@ -164,8 +164,9 @@ class Item extends Model {
 	/**
 	 * Set item taxes.
 	 *
+	 * @param array $taxes Tax IDs.
+	 *
 	 * @since 1.2.1
-	 * @param array $tax_ids Tax IDs.
 	 */
 	public function set_tax_ids_attribute( $taxes ) {
 		$tax_ids = wp_parse_id_list( $taxes );
@@ -225,9 +226,9 @@ class Item extends Model {
 	/**
 	 * Cast item type.
 	 *
-	 * @since 1.0.0
 	 * @param string $value Item type.
 	 *
+	 * @since 1.0.0
 	 * @return string
 	 */
 	public static function cast_item_type( $value ) {
@@ -241,6 +242,10 @@ class Item extends Model {
 	 * @return Tax[]
 	 */
 	public function get_taxes() {
+		if ( ! $this->exists() || empty( $this->tax_ids ) ) {
+			return array();
+		}
+
 		return Tax::query(
 			array(
 				'include' => $this->tax_ids,

@@ -18,6 +18,7 @@ module.exports = [
 			'js/blockui': './src/libraries/blockui/blockUI.js',
 			'js/mask': './src/libraries/mask/mask.js',
 			'js/inputmask': ['./src/libraries/inputmask/inputmask.js' , './src/libraries/inputmask/inputmask.binding.js'],
+			'js/chartjs': './node_modules/chart.js/dist/chart.js',
 
 
 			'js/eac-core': './src/js/common/eac-core.js',
