@@ -1,11 +1,11 @@
 <?php
 /**
- * EAccounting Item Functions.
+ * EverAccounting Item Functions.
  *
  * All item related function of the plugin.
  *
  * @since   1.1.0
- * @package EAccounting
+ * @package EverAccounting
  */
 
 use EverAccounting\Models\Item;

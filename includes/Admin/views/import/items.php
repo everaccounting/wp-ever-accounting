@@ -4,7 +4,7 @@
  *
  * @since 1.0.0
  * @package EverAccounting
- * @subpackage Admin/View/Import
+ * @subpackage Admin/Views/Import
  */
 
 defined( 'ABSPATH' ) || exit();
