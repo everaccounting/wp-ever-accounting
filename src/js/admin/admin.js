@@ -607,24 +607,20 @@
 				.on('change', ':input#contact_id', function (e) {
 					var contact_id = parseInt($(e.target).val());
 					var fields = $form.find(':input[name^="billing_"]');
-					console.log(fields);
-
 					eac_admin.blockForm($form);
-					eac_admin.getCustomer(contact_id).then(function (contact) {
-						console.log(contact);
+					eac_admin.getCustomer(contact_id).done(function (contact) {
 						eac_admin.unblockForm($form);
-						if (contact.success) {
-							fields.each(function () {
-								var name = $(this).attr('name').replace('billing_', '');
-								var value = contact.data[name] || '';
-								$(this).attr('value', value);
-							});
-						} else {
-							fields.val('');
-						}
+						fields.each(function () {
+							var name = $(this).attr('name').replace('billing_', '');
+							var value = contact[name] || '';
+							$(this).attr('value', value);
+						});
+						recalculateTotals();
+					}).fail(function () {
+						fields.val('');
 						recalculateTotals();
 					});
-				})
+				}).addClass('enhanced');
 		},
 
 		/**

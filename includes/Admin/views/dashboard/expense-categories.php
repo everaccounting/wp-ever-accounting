@@ -46,7 +46,7 @@ if ( count( $amounts ) > 4 ) {
 	</div>
 	<div class="eac-card__body padding-0">
 		<div class="eac-overflow-x">
-			<table class="widefat striped border-0">
+			<table class="eac-table is--striped">
 				<thead>
 				<tr>
 					<th><?php esc_html_e( 'Category', 'wp-ever-accounting' ); ?></th>
