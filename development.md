@@ -8,8 +8,8 @@
 - [X] Add the currency filter in the account page.
 
 ## Tools
-- [] Imports
-- [] Add cards for imports(excluding currency): live plugin for reference.
+- [X] Imports
+- [X] Add cards for imports(excluding currency): live plugin for reference.
 
 - [X] Exporters
 
@@ -24,6 +24,3 @@
 
 ## Issues
 - [X] Fix broken select2 filter in the list page. (Its looking fine in the accounting-php branch.)
-
-
-
