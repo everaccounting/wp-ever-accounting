@@ -228,7 +228,7 @@ class Invoice extends Document {
 
 			$product_data = wp_array_slice_assoc( $product_data, $accepted_keys );
 			// prepare tax ids.
-			if ( ! empty( $product->tax_ids ) ) {
+			if ( ! empty( $product->tax_ids ) && is_array( $product->tax_ids ) ) {
 				$product_data['taxes'] = array_unique( $product->tax_ids );
 			} else {
 				$product_data['taxes'] = array();
