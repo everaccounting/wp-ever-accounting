@@ -57,7 +57,7 @@ class RevenuesTable extends ListTable {
 			'limit'    => $per_page,
 			'page'     => $paged,
 			'search'   => $search,
-			'order_by' => $order_by,
+			'orderby'  => $order_by,
 			'order'    => $order,
 			'status'   => $this->get_request_status(),
 			'account'  => $account_id,
@@ -89,14 +89,14 @@ class RevenuesTable extends ListTable {
 	 *
 	 * @param array $ids List of item IDs.
 	 *
-	 * @return void
 	 * @since 1.0.0
+	 * @return void
 	 */
 	protected function bulk_delete( $ids ) {
 		$performed = 0;
 		foreach ( $ids as $id ) {
 			if ( eac_delete_revenue( $id ) ) {
-				++$performed;
+				++ $performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
@@ -176,20 +176,16 @@ class RevenuesTable extends ListTable {
 		if ( ! isset( $has_items ) ) {
 			$has_items = $this->has_items();
 		}
-
+		echo '<div class="alignleft actions">';
 		if ( 'top' === $which ) {
-			ob_start();
 			$this->date_filter();
 			$this->year_filter();
 			$this->account_filter( 'active' );
 			$this->category_filter( 'item' );
 			$this->currency_filter( 'active' );
-			$output = ob_get_clean();
-			if ( ! empty( $output ) && $this->has_items() ) {
-				echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-				submit_button( __( 'Filter', 'wp-ever-accounting' ), 'alignleft', 'filter_action', false );
-			}
+			submit_button( __( 'Filter', 'wp-ever-accounting' ), '', 'filter_action', false );
 		}
+		echo '</div>';
 	}
 
 	/**

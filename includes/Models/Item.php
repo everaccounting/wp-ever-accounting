@@ -84,11 +84,13 @@ class Item extends Model {
 	 */
 	protected $casts = array(
 		'id'           => 'int',
+		'type'         => array( __CLASS__, 'cast_item_type' ),
 		'price'        => 'double',
 		'cost'         => 'double',
 		'taxable'      => 'bool',
 		'category_id'  => 'int',
 		'thumbnail_id' => 'int',
+		'status'       => array( 'active', 'inactive' ),
 	);
 
 	/**
@@ -160,6 +162,18 @@ class Item extends Model {
 	}
 
 	/**
+	 * Set item taxes.
+	 *
+	 * @since 1.2.1
+	 * @param array $tax_ids Tax IDs.
+	 */
+	public function set_tax_ids_attribute( $taxes ) {
+		$tax_ids = wp_parse_id_list( $taxes );
+		$tax_ids = array_filter( array_map( 'intval', array_unique( $tax_ids ) ) );
+		$this->set_attribute_value( 'tax_ids', $tax_ids );
+	}
+
+	/**
 	 * Get items category
 	 *
 	 * @since 1.2.1
@@ -207,6 +221,18 @@ class Item extends Model {
 	| Utility methods which don't directly relate to this object but may be
 	| used by this object.
 	*/
+
+	/**
+	 * Cast item type.
+	 *
+	 * @since 1.0.0
+	 * @param string $value Item type.
+	 *
+	 * @return string
+	 */
+	public static function cast_item_type( $value ) {
+		return in_array( $value, array_keys( eac_get_item_types() ) ) ? $value : null;
+	}
 
 	/**
 	 * Get items tax

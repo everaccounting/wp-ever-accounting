@@ -166,12 +166,9 @@ class DocumentItem extends Model {
 	 */
 	public function save() {
 		// Required fields check.
-		if ( empty( $this->document_id ) ) {
-			return new \WP_Error( 'required_missing', __( 'Document ID is required.', 'wp-ever-accounting' ) );
-		}
 
-		if ( empty( $this->item_id ) ) {
-			return new \WP_Error( 'required_missing', __( 'Item ID is required.', 'wp-ever-accounting' ) );
+		if ( empty( $this->type ) ) {
+			return new \WP_Error( 'required_missing', __( 'Product type is required.', 'wp-ever-accounting' ) );
 		}
 
 		if ( empty( $this->name ) ) {
@@ -182,6 +179,13 @@ class DocumentItem extends Model {
 			return new \WP_Error( 'required_missing', __( 'Product quantity is required.', 'wp-ever-accounting' ) );
 		}
 
+		if ( empty( $this->item_id ) ) {
+			return new \WP_Error( 'required_missing', __( 'Item ID is required.', 'wp-ever-accounting' ) );
+		}
+
+		if ( empty( $this->document_id ) ) {
+			return new \WP_Error( 'required_missing', __( 'Document ID is required.', 'wp-ever-accounting' ) );
+		}
 		// If the item is not taxable, then shipping and fee should not be taxable.
 		if ( ! $this->taxable ) {
 			$this->taxes = array();
@@ -241,8 +245,8 @@ class DocumentItem extends Model {
 	/**
 	 * Get discounted price.
 	 *
-	 * @return float
 	 * @since 1.1.0
+	 * @return float
 	 */
 	public function get_discounted_price() {
 		return (float) $this->subtotal - (float) $this->discount;
@@ -331,7 +335,7 @@ class DocumentItem extends Model {
 		);
 
 		if ( is_object( $data ) ) {
-			$data = $data instanceof \stdClass ? get_object_vars( $data ) : $data->to_array();
+			$data = is_callable( array( $data, 'to_array' ) ) ? $data->to_array() : (array) $data;
 		} elseif ( is_numeric( $data ) ) {
 			$data = array( 'tax_id' => $data );
 		}
@@ -340,12 +344,12 @@ class DocumentItem extends Model {
 			return;
 		}
 
-		if ( ! empty( $data['tax_id'] ) ) {
+		if ( empty( $data['id'] ) && ! empty( $data['tax_id'] ) ) {
 			$tax           = Tax::find( $data['tax_id'] );
 			$tax_data      = $tax ? $tax->to_array() : array();
 			$accepted_keys = array( 'name', 'rate', 'is_compound' );
 			$tax_data      = wp_array_slice_assoc( $tax_data, $accepted_keys );
-			$data          = wp_parse_args( $data, $tax_data );
+			$default       = wp_parse_args( $tax_data, $default );
 		}
 
 		$data     = wp_parse_args( $data, $default );
@@ -361,14 +365,13 @@ class DocumentItem extends Model {
 			if ( $deletable_item->is_similar( $item_tax ) ) {
 				unset( $this->deletable[ $key ] );
 				$deletable_item->fill( $data );
-				$this->taxes[] = $deletable_item;
-
-				return;
+				$item_tax = $deletable_item;
+				break;
 			}
 		}
 
 		// if the tax_id with same tax_id already exists, we will ignore the tax.
-		foreach ( $this->taxes as $tax ) {
+		foreach ( $this->get_taxes() as $tax ) {
 			if ( $tax->tax_id === $item_tax->tax_id ) {
 				return;
 			}
@@ -392,23 +395,6 @@ class DocumentItem extends Model {
 	}
 
 	/**
-	 * Set tax ids.
-	 *
-	 * @param string|array $tax_ids Tax ids.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	public function set_taxes_by_ids( $tax_ids ) {
-		$tax_ids = wp_parse_id_list( $tax_ids );
-		$taxes   = array();
-		foreach ( $tax_ids as $tax_id ) {
-			$taxes[] = array( 'tax_id' => $tax_id );
-		}
-		$this->set_taxes( $taxes );
-	}
-
-	/**
 	 * Calculate subtotal.
 	 *
 	 * @param bool $tax_inclusive Tax inclusive.
@@ -421,7 +407,7 @@ class DocumentItem extends Model {
 		if ( $tax_inclusive ) {
 			$tax_rates    = eac_calculate_taxes( $subtotal, $this->get_taxes(), $tax_inclusive );
 			$subtotal_tax = array_sum( wp_list_pluck( $tax_rates, 'amount' ) );
-			$subtotal    -= $subtotal_tax;
+			$subtotal     -= $subtotal_tax;
 		}
 
 		$this->subtotal = $subtotal;
@@ -437,12 +423,12 @@ class DocumentItem extends Model {
 	 */
 	public function is_similar( $item ) {
 		return $this->item_id === $item->item_id &&
-				$this->type === $item->type &&
-				$this->name === $item->name &&
-				$this->unit === $item->unit &&
-				$this->price === $item->price &&
-				$this->taxable === $item->taxable &&
-				wp_list_pluck( $this->get_taxes(), 'id' ) === wp_list_pluck( $item->get_taxes(), 'id' );
+		       $this->type === $item->type &&
+		       $this->name === $item->name &&
+		       $this->unit === $item->unit &&
+		       $this->price === $item->price &&
+		       $this->taxable === $item->taxable &&
+		       wp_list_pluck( $this->get_taxes(), 'id' ) === wp_list_pluck( $item->get_taxes(), 'id' );
 	}
 
 	/**

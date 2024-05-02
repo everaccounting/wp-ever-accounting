@@ -106,8 +106,12 @@ class DocumentItemTax extends Model {
 	 */
 	public function save() {
 		// Required fields check.
-		if ( empty( $this->document_id ) ) {
-			return new \WP_Error( 'missing_required', __( 'Document ID is required.', 'wp-ever-accounting' ) );
+		if ( empty( $this->name ) ) {
+			return new \WP_Error( 'missing_required', __( 'Tax name is required.', 'wp-ever-accounting' ) );
+		}
+
+		if ( empty( $this->rate ) ) {
+			return new \WP_Error( 'missing_required', __( 'Tax rate is required.', 'wp-ever-accounting' ) );
 		}
 
 		if ( empty( $this->item_id ) ) {
@@ -118,12 +122,8 @@ class DocumentItemTax extends Model {
 			return new \WP_Error( 'missing_required', __( 'Tax ID is required.', 'wp-ever-accounting' ) );
 		}
 
-		if ( empty( $this->name ) ) {
-			return new \WP_Error( 'missing_required', __( 'Tax name is required.', 'wp-ever-accounting' ) );
-		}
-
-		if ( empty( $this->rate ) ) {
-			return new \WP_Error( 'missing_required', __( 'Tax rate is required.', 'wp-ever-accounting' ) );
+		if ( empty( $this->document_id ) ) {
+			return new \WP_Error( 'missing_required', __( 'Document ID is required.', 'wp-ever-accounting' ) );
 		}
 
 		return parent::save();

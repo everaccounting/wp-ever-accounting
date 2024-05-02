@@ -54,7 +54,7 @@ class InvoicesTable extends ListTable {
 			'limit'    => $per_page,
 			'page'     => $paged,
 			'search'   => $search,
-			'order_by' => $order_by,
+			'orderby' => $order_by,
 			'order'    => $order,
 			'status'   => $this->get_request_status(),
 		);

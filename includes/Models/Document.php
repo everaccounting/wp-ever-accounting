@@ -592,10 +592,9 @@ class Document extends Model {
 			'state'     => $this->billing_state,
 			'postcode'  => $this->billing_postcode,
 			'country'   => $this->billing_country,
+			'vat'       => $this->billing_vat_number,
 			'phone'     => $this->billing_phone,
 			'email'     => $this->billing_email,
-			// translators: %s: VAT number.
-			'vat'       => $this->billing_vat_number ? sprintf( __( 'VAT: %s', 'wp-ever-accounting' ), $this->billing_vat_number ) : '',
 		);
 
 		return eac_get_formatted_address( $data );
@@ -753,11 +752,6 @@ class Document extends Model {
 	 * @return true|\WP_Error True on success, WP_Error on failure.
 	 */
 	public function save() {
-		$this->calculate_totals();
-
-		return var_dump($this->get_changes());
-		exit;
-
 		if ( empty( $this->contact_id ) ) {
 			return new \WP_Error( 'missing_required', __( 'Contact ID is required.', 'wp-ever-accounting' ) );
 		}
@@ -1083,23 +1077,6 @@ class Document extends Model {
 	|--------------------------------------------------------------------------
 	| This section contains methods for calculating totals.
 	*/
-
-	/**
-	 * Convert totals to selected currency.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	protected function calculate_item_prices() {
-		// if the currency is changed, we need to convert the totals.
-		if ( ! $this->is_attribute_changed( 'currency_code' ) ) {
-			return;
-		}
-		foreach ( $this->get_items() as $item ) {
-			$price       = eac_convert_currency( $item->price, $this->original['currency_code'], $this->currency_code );
-			$item->price = $price;
-		}
-	}
 
 	/*
 	|--------------------------------------------------------------------------

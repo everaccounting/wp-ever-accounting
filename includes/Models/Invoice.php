@@ -165,7 +165,7 @@ class Invoice extends Document {
 			}
 		}
 
-			return $deleted;
+		return $deleted;
 	}
 
 	/*
@@ -195,11 +195,10 @@ class Invoice extends Document {
 			'price'       => 0,
 			'quantity'    => 1,
 			'taxable'     => $this->is_calculating_tax(),
-			'tax_ids'     => '',
+			'taxes'       => array(),
 		);
-
 		if ( is_object( $data ) ) {
-			$data = $data instanceof \stdClass ? get_object_vars( $data ) : $data->to_array();
+			$data = is_callable( array( $data, 'to_array' ) ) ? $data->to_array() : (array) $data;
 		} elseif ( is_numeric( $data ) ) {
 			$data = array( 'item_id' => $data );
 		}
@@ -208,8 +207,8 @@ class Invoice extends Document {
 		if ( ! isset( $data['id'] ) && ! isset( $data['item_id'] ) ) {
 			return;
 		}
-
-		if ( ! empty( $data['item_id'] ) ) {
+		// If the item id is set, we need to get the item data.
+		if ( empty( $data['id'] ) && ! empty( $data['item_id'] ) ) {
 			$product       = eac_get_item( $data['item_id'] );
 			$product_data  = $product ? $product->to_array() : array();
 			$accepted_keys = array(
@@ -219,7 +218,6 @@ class Invoice extends Document {
 				'unit',
 				'price',
 				'taxable',
-				// 'tax_ids',
 			);
 			// if the currency is not the as the base currency, we need to convert the price.
 
@@ -230,16 +228,12 @@ class Invoice extends Document {
 
 			$product_data = wp_array_slice_assoc( $product_data, $accepted_keys );
 			// prepare tax ids.
-			if ( $product->taxable && ! empty( $product->tax_ids ) ) {
-				foreach ( $product->tax_ids as $tax_id ) {
-					$product_data['taxes'][] = array(
-						'tax_id' => $tax_id,
-						'amount' => 0,
-					);
-				}
+			if ( ! empty( $product->tax_ids ) ) {
+				$product_data['taxes'] = array_unique( $product->tax_ids );
+			} else {
+				$product_data['taxes'] = array();
 			}
-
-			$data = wp_parse_args( $data, $product_data );
+			$default = wp_parse_args( $product_data, $default );
 		}
 
 		$data                = wp_parse_args( $data, $default );
@@ -259,9 +253,7 @@ class Invoice extends Document {
 
 		$item = new DocumentItem( $data['id'] );
 		$item->fill( $data );
-		if ( ! empty( $data['taxes'] ) ) {
-			$item->set_taxes( $data['taxes'] );
-		}
+		$item->set_taxes( $data['taxes'] );
 
 		// if product id is not set then it is not product item.
 		if ( empty( $item->item_id ) || empty( $item->quantity ) ) {
@@ -273,9 +265,8 @@ class Invoice extends Document {
 			if ( $deletable_item->is_similar( $item ) ) {
 				unset( $this->deletable[ $key ] );
 				$deletable_item->fill( $data );
-				$this->items[] = $deletable_item;
-
-				return;
+				$item = $deletable_item;
+				break;
 			}
 		}
 
@@ -368,8 +359,8 @@ class Invoice extends Document {
 	 *
 	 * @param array $args Query arguments.
 	 *
-	 * @return Note[]
 	 * @since 1.0.0
+	 * @return Note[]
 	 */
 	public function get_payments( $args = array() ) {
 		$args = array_merge(
@@ -379,6 +370,7 @@ class Invoice extends Document {
 			),
 			$args
 		);
+
 		return eac_get_revenues( $args );
 	}
 
@@ -409,7 +401,6 @@ class Invoice extends Document {
 			}
 		}
 
-		$this->calculate_item_prices();
 		$this->calculate_item_subtotals();
 		$this->calculate_item_discounts();
 		$this->calculate_item_taxes();
@@ -513,7 +504,7 @@ class Invoice extends Document {
 			foreach ( $item->get_taxes() as $tax ) {
 				$amount      = isset( $taxes[ $tax->tax_id ] ) ? $taxes[ $tax->tax_id ] : 0;
 				$tax->amount = $amount;
-				$line_tax   += $amount;
+				$line_tax    += $amount;
 			}
 			$item->tax_total = $line_tax;
 		}
@@ -526,9 +517,9 @@ class Invoice extends Document {
 	 */
 	protected function calculate_item_totals() {
 		foreach ( $this->get_items() as $item ) {
-			$total        = $item->subtotal + $item->tax_total - $item->discount;
-			$total        = max( 0, $total );
-			$item->total += $total;
+			$total       = $item->subtotal + $item->tax_total - $item->discount;
+			$total       = max( 0, $total );
+			$item->total = $total;
 		}
 	}
 
@@ -616,9 +607,9 @@ class Invoice extends Document {
 		foreach ( $items as $item ) {
 			$discounted_price = $item->get_discounted_price();
 			// If the item is not created yet, we need to calculate the discounted price without tax.
-			$discount        = $discounted_price * ( $amount / 100 );
-			$discount        = min( $discounted_price, $discount );
-			$item->discount  = $item->discount + $discount;
+			$discount       = $discounted_price * ( $amount / 100 );
+			$discount       = min( $discounted_price, $discount );
+			$item->discount = $item->discount + $discount;
 			$total_discount += $discount;
 			$document_total += $discounted_price;
 		}
@@ -646,11 +637,11 @@ class Invoice extends Document {
 		$total_discount = 0;
 		foreach ( $items as $item ) {
 			$quantity = $item->quantity;
-			for ( $i = 0; $i < $quantity; $i++ ) {
+			for ( $i = 0; $i < $quantity; $i ++ ) {
 				$discounted_price = $item->get_discounted_price();
 				$discount         = min( $discounted_price, 1 );
 				$item->discount   = $item->discount + $discount;
-				$total_discount  += $discount;
+				$total_discount   += $discount;
 				if ( $total_discount >= $amount ) {
 					break 2;
 				}
@@ -677,7 +668,7 @@ class Invoice extends Document {
 		$total = 0;
 		foreach ( $items as $item ) {
 			$amount = $item->$column ?? 0;
-			$total += $round ? round( $amount, 2 ) : $amount;
+			$total  += $round ? round( $amount, 2 ) : $amount;
 		}
 
 		return $round ? round( $total, 2 ) : $total;

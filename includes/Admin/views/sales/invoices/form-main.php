@@ -85,7 +85,7 @@ if ( ! $document->is_calculating_tax() && isset( $columns['tax'] ) ) {
 							printf( '<textarea class="line-item__description" name="items[%s][description]" placeholder="%s" maxlength="160">%s</textarea>', esc_attr( $item_key ), esc_attr__( 'Description', 'wp-ever-accounting' ), esc_textarea( $item->get_description ) );
 							?>
 							<?php if ( $document->is_calculating_tax() && $item->taxable ) : ?>
-								<select name="items[<?php echo esc_attr( $item_key ); ?>][taxes][]" class="line-item__taxes-input eac_select2 " data-action="eac_json_search" data-type="tax" data-placeholder="<?php esc_attr_e( 'Select a tax', 'wp-ever-accounting' ); ?>" multiple>
+								<select name="items[<?php echo esc_attr( $item_key ); ?>][taxes][]" class="line-item__taxes eac_select2 " data-action="eac_json_search" data-type="tax" data-placeholder="<?php esc_attr_e( 'Select a tax', 'wp-ever-accounting' ); ?>" multiple>
 									<?php foreach ( $item->get_taxes() as $tax ) : ?>
 										<option value="<?php echo esc_attr( $tax->tax_id ); ?>" selected="selected"><?php echo esc_html( $tax->name ); ?></option>
 									<?php endforeach; ?>
@@ -132,7 +132,7 @@ if ( ! $document->is_calculating_tax() && isset( $columns['tax'] ) ) {
 				</td>
 				<td class="line-item tw-text-right" colspan="<?php echo count( $columns ) - 1; ?>">
 					<?php if ( $document->get_items() ) : ?>
-						<a class="button add-line-item" href="#"><?php esc_html_e( 'Add Line Item', 'wp-ever-accounting' ); ?></a>
+
 					<?php endif; ?>
 				</td>
 			</tr>

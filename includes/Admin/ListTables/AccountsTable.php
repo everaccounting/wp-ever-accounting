@@ -54,7 +54,7 @@ class AccountsTable extends ListTable {
 			'limit'    => $per_page,
 			'page'     => $paged,
 			'search'   => $search,
-			'order_by' => $order_by,
+			'orderby' => $order_by,
 			'order'    => $order,
 			'status'   => $this->get_request_status(),
 		);
@@ -227,15 +227,12 @@ class AccountsTable extends ListTable {
 			$has_items = $this->has_items();
 		}
 
+		echo '<div class="alignleft actions">';
 		if ( 'top' === $which ) {
-			ob_start();
 			$this->currency_filter( 'active' );
-			$output = ob_get_clean();
-			if ( ! empty( $output ) && $this->has_items() ) {
-				echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-				submit_button( __( 'Filter', 'wp-ever-accounting' ), 'alignleft', 'filter_action', false );
-			}
+			submit_button( __( 'Filter', 'wp-ever-accounting' ), '', 'filter_action', false );
 		}
+		echo '</div>';
 	}
 
 	/**

@@ -10,8 +10,8 @@ defined( 'ABSPATH' ) || exit;
  *
  * @param string|array $value Data to sanitize.
  *
- * @return string|array
  * @since 1.1.6
+ * @return string|array
  */
 function eac_clean( $value ) {
 	if ( is_array( $value ) ) {
@@ -27,9 +27,9 @@ function eac_clean( $value ) {
  * @param string $tip Help tip text.
  * @param bool   $allow_html Allow sanitized HTML if true or escape.
  *
- * @return string
  * @since 1.1.6 Renamed from eaccounting_tooltip() to eac_tooltip().
  * @since 1.0.2
+ * @return string
  */
 function eac_tooltip( $tip, $allow_html = false ) {
 	if ( $allow_html ) {
@@ -47,8 +47,8 @@ function eac_tooltip( $tip, $allow_html = false ) {
  *
  * @param string $text Data to sanitize.
  *
- * @return string
  * @since 1.1.6
+ * @return string
  */
 function eac_sanitize_tooltip( $text ) {
 	return htmlspecialchars(
@@ -89,7 +89,7 @@ function eac_get_formatted_address( $fields = array(), $separator = '<br/>' ) {
 		'postcode'  => '',
 		'country'   => '',
 	);
-	$format            = apply_filters( 'ever_accounting_address_format', "{name}\n{company}\n{address_1}\n{address_2}\n{city} {state} {postcode}\n{country}" );
+	$format            = apply_filters( 'ever_accounting_address_format', "<strong>{name}</strong>\n{company}\n{address_1}\n{address_2}\n{city} {state} {postcode}\n{country}" );
 	$fields            = array_map( 'trim', wp_parse_args( $fields, $defaults ) );
 	$countries         = I18n::get_countries();
 	$fields['country'] = isset( $countries[ $fields['country'] ] ) ? $countries[ $fields['country'] ] : $fields['country'];
@@ -116,7 +116,22 @@ function eac_get_formatted_address( $fields = array(), $separator = '<br/>' ) {
 	$extra = array_diff_key( $fields, $defaults );
 	foreach ( $extra as $key => $value ) {
 		if ( ! empty( $value ) ) {
-			$address_lines[] = $value;
+			switch ( $key ) {
+				case 'phone':
+					$address_lines[] = eac_make_phone_clickable( $value );
+					break;
+				case 'email':
+					$address_lines[] = '<a href="mailto:' . esc_attr( $value ) . '">' . esc_html( $value ) . '</a>';
+					break;
+				case 'website':
+					$address_lines[] = '<a href="' . esc_url( $value ) . '">' . esc_html( $value ) . '</a>';
+					break;
+				case 'vat':
+					$address_lines[] = __( 'VAT:', 'wp-ever-accounting' ) . ' ' . $value;
+					break;
+				default:
+					$address_lines[] = $value;
+			}
 		}
 	}
 

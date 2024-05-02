@@ -848,6 +848,13 @@ class Actions {
 		$document->billing_email      = isset( $_POST['billing_email'] ) ? sanitize_text_field( wp_unslash( $_POST['billing_email'] ) ) : '';
 		$document->billing_vat_number = isset( $_POST['billing_vat_number'] ) ? sanitize_text_field( wp_unslash( $_POST['billing_vat_number'] ) ) : '';
 
+		// Empty taxes not submitted so if not set, set it to empty array.
+		foreach ( $items as $key => $item ) {
+			if ( ! isset( $item['taxes'] ) ) {
+				$items[ $key ]['taxes'] = array();
+			}
+		}
+
 		$document->set_items( $items );
 
 		if ( 'yes' === $calculate_totals ) {
