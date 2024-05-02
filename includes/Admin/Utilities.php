@@ -86,6 +86,19 @@ class Utilities {
 				),
 			),
 			array(
+				'page_title' => __( 'Reports', 'wp-ever-accounting' ),
+				'menu_title' => __( 'Reports', 'wp-ever-accounting' ),
+				'capability' => 'manage_options',
+				'menu_slug'  => 'eac-reports',
+				'page_hook'  => 'reports',
+				'tabs'       => array(
+					'payments'    => __( 'Payments', 'wp-ever-accounting' ),
+					'expenses' => __( 'Expenses', 'wp-ever-accounting' ),
+					'profits'  => __( 'Profits', 'wp-ever-accounting' ),
+					'taxes'  => __( 'Taxes', 'wp-ever-accounting' ),
+				),
+			),
+			array(
 				'page_title' => __( 'Settings', 'wp-ever-accounting' ),
 				'menu_title' => __( 'Settings', 'wp-ever-accounting' ),
 				'capability' => 'manage_options',

@@ -66,6 +66,7 @@ class Menus {
 		add_action( 'ever_accounting_admin_misc_taxes', array( $this, 'render_taxes_tab' ) );
 		add_action( 'ever_accounting_admin_tools_import', array( $this, 'render_import_tab' ) );
 		add_action( 'ever_accounting_admin_tools_export', array( $this, 'render_export_tab' ) );
+		add_action( 'ever_accounting_admin_reports_payments', array( $this, 'render_payments_report_tab' ) );
 	}
 
 	/**
@@ -571,5 +572,14 @@ class Menus {
 		// TODO: Need to add bellow export options.
 //		include __DIR__ . '/views/export/payments.php';
 //		include __DIR__ . '/views/export/expenses.php';
+	}
+
+	/**
+	 * Payments report tab.
+	 *
+	 * @since 1.0.0
+	 */
+	public function render_payments_report_tab() {
+		include __DIR__ . '/views/reports/payments.php';
 	}
 }
