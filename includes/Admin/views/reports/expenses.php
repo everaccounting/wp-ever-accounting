@@ -3,7 +3,8 @@
  * Sales expenses page.
  *
  * @since 1.0.0
- * @package EverAccounting\Admin
+ * @package EverAccounting
+ * @subpackage Admin/Views/Reports
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -11,7 +12,11 @@ defined( 'ABSPATH' ) || exit;
 $datasets = array();
 $currency = eac_get_currency();
 $years    = range( wp_date( 'Y' ), 2015 );
-$year     = eac_get_input_var( 'year', wp_date( 'Y' ) );
+
+// TODO: Need to update these bellow php variable.
+// $year     = eac_get_input_var( 'year', wp_date( 'Y' ) );
+$year     = wp_date( 'Y' );
+
 $data     = eac_get_expense_report( $year );
 $labels   = array_keys( $data['months'] );
 foreach ( $data['categories'] as $category_id => $datum ) {
@@ -36,52 +41,54 @@ $datasets['total'] = array(
 );
 ?>
 
-<div class="eac-panel align-items-center d-flex justify-content-between">
-	<h3 class="eac-panel__title">
-		<?php echo esc_html__( 'Expense Report', 'wp-ever-accounting' ); ?>
-	</h3>
-	<form class="ea-report-filters" method="get" action="">
-		<select name="year" class="eac-select">
-			<?php foreach ( $years as $y ) : ?>
-				<option value="<?php echo esc_attr( $y ); ?>" <?php selected( $y, $year ); ?>>
-					<?php echo esc_html( $y ); ?>
-				</option>
-			<?php endforeach; ?>
-		</select>
-		<button type="submit" class="button">
-			<?php echo esc_html__( 'Submit', 'wp-ever-accounting' ); ?>
-		</button>
-		<input hidden="hidden" name="page" value="eac-reports"/>
-		<input hidden="hidden" name="tab" value="expenses"/>
-	</form>
+<div class="bkit-panel">
+	<div class="bkit-panel-inner tw-flex tw-justify-between tw-items-center">
+		<h3 class="bkit-panel__title">
+			<?php echo esc_html__( 'Expense Report', 'wp-ever-accounting' ); ?>
+		</h3>
+		<form class="eac-report-filters" method="get" action="">
+			<select name="year" class="eac-select">
+				<?php foreach ( $years as $y ) : ?>
+					<option value="<?php echo esc_attr( $y ); ?>" <?php selected( $y, $year ); ?>>
+						<?php echo esc_html( $y ); ?>
+					</option>
+				<?php endforeach; ?>
+			</select>
+			<button type="submit" class="button">
+				<?php echo esc_html__( 'Submit', 'wp-ever-accounting' ); ?>
+			</button>
+			<input hidden="hidden" name="page" value="eac-reports"/>
+			<input hidden="hidden" name="tab" value="expenses"/>
+		</form>
+	</div>
 </div>
 
 <ul class="eac-summaries">
 	<li class="eac-summary">
 		<div class="eac-summary__label"><?php esc_html_e( 'Total Expense', 'wp-ever-accounting' ); ?></div>
 		<div class="eac-summary__data">
-			<div class="eac-summary__value"><?php echo esc_html( eac_format_money( $data['total_amount'] ) ); ?></div>
+			<div class="eac-summary__value"><?php echo esc_html( eac_format_amount( $data['total_amount'] ) ); ?></div>
 		</div>
 	</li>
 	<li class="eac-summary">
 		<div class="eac-summary__label"><?php esc_html_e( 'Per Month', 'wp-ever-accounting' ); ?></div>
 		<div class="eac-summary__data">
-			<div class="eac-summary__value"><?php echo esc_html( eac_format_money( $data['month_avg'] ) ); ?></div>
+			<div class="eac-summary__value"><?php echo esc_html( eac_format_amount( $data['month_avg'] ) ); ?></div>
 		</div>
 	</li>
 	<li class="eac-summary">
 		<div class="eac-summary__label"><?php esc_html_e( 'Per Day', 'wp-ever-accounting' ); ?></div>
 		<div class="eac-summary__data">
-			<div class="eac-summary__value"><?php echo esc_html( eac_format_money( $data['daily_avg'] ) ); ?></div>
+			<div class="eac-summary__value"><?php echo esc_html( eac_format_amount( $data['daily_avg'] ) ); ?></div>
 		</div>
 	</li>
 </ul>
 
-<div class="eac-card">
-	<div class="eac-card__header">
-		<h3 class="eac-card__title"><?php esc_html_e( 'Expense Chart', 'wp-ever-accounting' ); ?></h3>
+<div class="bkit-card">
+	<div class="bkit-card__header">
+		<h3 class="bkit-card__title"><?php esc_html_e( 'Expense Chart', 'wp-ever-accounting' ); ?></h3>
 	</div>
-	<div class="eac-card__body">
+	<div class="bkit-card__body">
 		<div class="eac-chart">
 			<canvas id="eac-sales-chart" style="min-height: 300px;"></canvas>
 		</div>
@@ -89,11 +96,11 @@ $datasets['total'] = array(
 </div>
 
 
-<div class="eac-card">
-	<div class="eac-card__header">
-		<h3 class="eac-card__title"><?php esc_html_e( 'Sales by Months', 'wp-ever-accounting' ); ?></h3>
+<div class="bkit-card">
+	<div class="bkit-card__header">
+		<h3 class="bkit-card__title"><?php esc_html_e( 'Sales by Months', 'wp-ever-accounting' ); ?></h3>
 	</div>
-	<div class="eac-card__body padding-0">
+	<div class="bkit-card__body padding-0">
 		<div class="eac-overflow-x">
 			<table class="widefat striped eac-report-table border-0">
 				<thead>
@@ -116,7 +123,7 @@ $datasets['total'] = array(
 							?>
 						</td>
 						<?php foreach ( $datum as $value ) : ?>
-							<td><?php echo esc_html( eac_format_money( $value ) ); ?></td>
+							<td><?php echo esc_html( eac_format_amount( $value ) ); ?></td>
 						<?php endforeach; ?>
 					</tr>
 				<?php endforeach; ?>
@@ -132,7 +139,7 @@ $datasets['total'] = array(
 				<tr>
 					<th><?php esc_html_e( 'Total', 'wp-ever-accounting' ); ?></th>
 					<?php foreach ( $data['months'] as $value ) : ?>
-						<th><?php echo esc_html( eac_format_money( $value ) ); ?></th>
+						<th><?php echo esc_html( eac_format_amount( $value ) ); ?></th>
 					<?php endforeach; ?>
 				</tr>
 				</tfoot>
