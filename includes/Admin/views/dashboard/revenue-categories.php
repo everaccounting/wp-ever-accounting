@@ -12,9 +12,9 @@ defined( 'ABSPATH' ) || exit;
 
 $data     = eac_get_expense_report( wp_date( 'Y' ) );
 $total    = array_sum( $data['months'] );
-$amounts  = [];
-$labels   = [];
-$percents = [];
+$amounts  = array();
+$labels   = array();
+$percents = array();
 foreach ( $data['categories'] as $category_id => $datum ) {
 	$category_total           = array_sum( $datum );
 	$amounts[ $category_id ]  = $category_total;
@@ -35,7 +35,7 @@ if ( count( $amounts ) > 4 ) {
 
 <div class="eac-card">
 	<div class="eac-card__header">
-		<?php esc_html_e( 'Top Payment Categories', 'wp-ever-accounting' ); ?>
+		<?php esc_html_e( 'Top Revenue Categories', 'wp-ever-accounting' ); ?>
 		<?php if ( ! empty( $amounts ) ) : ?>
 			<div class="eac-card__header__actions">
 				<a href="<?php echo esc_url( admin_url( 'admin.php?page=eac-reports&tab=payments' ) ); ?>">
@@ -63,7 +63,7 @@ if ( count( $amounts ) > 4 ) {
 					<?php foreach ( $amounts as $index => $amount ) : ?>
 						<tr>
 							<td><?php echo esc_html( $labels[ $index ] ); ?></td>
-							<td><?php echo eac_format_amount( $amount ); ?></td>
+							<td><?php echo esc_html( eac_format_amount( $amount ) ); ?></td>
 							<td><?php echo esc_html( $percents[ $index ] ); ?>%</td>
 						</tr>
 					<?php endforeach; ?>

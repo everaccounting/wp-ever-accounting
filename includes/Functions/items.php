@@ -123,5 +123,5 @@ function eac_get_items( $args = array(), $count = false ) {
 		return Item::count( $args );
 	}
 
-	return Item::query( $args );
+	return Item::results( $args );
 }

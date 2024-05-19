@@ -6,6 +6,7 @@ use EverAccounting\Models\Account;
 use EverAccounting\Models\Category;
 use EverAccounting\Models\Currency;
 use EverAccounting\Models\Customer;
+use EverAccounting\Models\Expense;
 use EverAccounting\Models\Invoice;
 use EverAccounting\Models\Item;
 use EverAccounting\Models\Revenue;
@@ -57,7 +58,7 @@ class Menus {
 		add_action( 'ever_accounting_admin_sales_revenues', array( $this, 'render_revenues_tab' ) );
 		add_action( 'ever_accounting_admin_sales_invoices', array( $this, 'render_invoices_tab' ) );
 		add_action( 'ever_accounting_admin_sales_customers', array( $this, 'render_customers_tab' ) );
-		add_action( 'ever_accounting_admin_purchases_payments', array( $this, 'render_payments_tab' ) );
+		add_action( 'ever_accounting_admin_purchases_expenses', array( $this, 'render_expenses_tab' ) );
 		add_action( 'ever_accounting_admin_purchases_bills', array( $this, 'render_bills_tab' ) );
 		add_action( 'ever_accounting_admin_purchases_vendors', array( $this, 'render_vendors_tab' ) );
 		add_action( 'ever_accounting_admin_banking_accounts', array( $this, 'render_accounts_tab' ) );
@@ -232,20 +233,20 @@ class Menus {
 			case 'eac-items-categories':
 				$this->list_table = new ListTables\CategoriesTable();
 				$this->list_table->prepare_items();
-				$args['option'] = 'eac_items_categories_per_page';
+				$args['option'] = 'eac_categories_per_page';
 				add_screen_option( 'per_page', $args );
 				break;
 			case 'eac-sales':
 			case 'eac-sales-revenues':
 				$this->list_table = new ListTables\RevenuesTable();
 				$this->list_table->prepare_items();
-				$args['option'] = 'eac_sales_revenues_per_page';
+				$args['option'] = 'eac_revenues_per_page';
 				add_screen_option( 'per_page', $args );
 				break;
 			case 'eac-sales-invoices':
 				$this->list_table = new ListTables\InvoicesTable();
 				$this->list_table->prepare_items();
-				$args['option'] = 'eac_sales_invoices_per_page';
+				$args['option'] = 'eac_invoices_per_page';
 				add_screen_option( 'per_page', $args );
 				break;
 			case 'eac-sales-customers':
@@ -255,22 +256,22 @@ class Menus {
 				add_screen_option( 'per_page', $args );
 				break;
 			case 'eac-purchases':
-			case 'eac-purchases-payments':
-				$this->list_table = new ListTables\PaymentsTable();
+			case 'eac-purchases-expenses':
+				$this->list_table = new ListTables\ExpensesTable();
 				$this->list_table->prepare_items();
-				$args['option'] = 'eac_purchases_payments_per_page';
+				$args['option'] = 'eac_expenses_per_page';
 				add_screen_option( 'per_page', $args );
 				break;
 			case 'eac-purchases-bills':
 				$this->list_table = new ListTables\BillsTable();
 				$this->list_table->prepare_items();
-				$args['option'] = 'eac_purchases_bills_per_page';
+				$args['option'] = 'eac_bills_per_page';
 				add_screen_option( 'per_page', $args );
 				break;
 			case 'eac-purchases-vendors':
 				$this->list_table = new ListTables\VendorsTable();
 				$this->list_table->prepare_items();
-				$args['option'] = 'eac_purchases_vendors_per_page';
+				$args['option'] = 'eac_vendors_per_page';
 				add_screen_option( 'per_page', $args );
 				break;
 			case 'eac-banking':
@@ -309,7 +310,7 @@ class Menus {
 	 */
 	public function render_items_tab() {
 		$edit = Utilities::is_edit_screen();
-		$item = new Item( $edit );
+		$item = Item::make( $edit );
 		if ( ! empty( $edit ) && ! $item->exists() ) {
 			wp_safe_redirect( remove_query_arg( 'edit' ) );
 			exit();
@@ -332,7 +333,7 @@ class Menus {
 		$edit    = Utilities::is_edit_screen();
 		$view    = Utilities::is_view_screen();
 		$id      = $edit ?? $view;
-		$revenue = new Revenue( $id );
+		$revenue = Revenue::make( $id );
 		if ( ! empty( $id ) && ! $revenue->exists() ) {
 			wp_safe_redirect( remove_query_arg( 'edit' ) );
 			exit();
@@ -357,7 +358,7 @@ class Menus {
 		$edit     = Utilities::is_edit_screen();
 		$view     = Utilities::is_view_screen();
 		$id       = $edit ?? $view;
-		$document = new Invoice( $id );
+		$document = Invoice::make( $id );
 		if ( ! empty( $id ) && ! $document->exists() ) {
 			wp_safe_redirect( remove_query_arg( 'edit' ) );
 			exit();
@@ -382,7 +383,7 @@ class Menus {
 		$edit     = Utilities::is_edit_screen();
 		$view     = Utilities::is_view_screen();
 		$id       = $edit ?? $view;
-		$customer = new Customer( $edit );
+		$customer = Customer::make( $id );
 		if ( ! empty( $id ) && ! $customer->exists() ) {
 			wp_safe_redirect( remove_query_arg( 'edit' ) );
 			exit();
@@ -403,19 +404,19 @@ class Menus {
 	 *
 	 * @since 1.0.0
 	 */
-	public function render_payments_tab() {
-		$edit = Utilities::is_edit_screen();
-		// $payment = new Payment( $edit );
-		// if ( ! empty( $edit ) && ! $payment->exists() ) {
-		// wp_safe_redirect( remove_query_arg( 'edit' ) );
-		// exit();
-		// }
+	public function render_expenses_tab() {
+		$edit    = Utilities::is_edit_screen();
+		$expense = Expense::make( $edit );
+		if ( ! empty( $edit ) && ! $expense->exists() ) {
+			wp_safe_redirect( remove_query_arg( 'edit' ) );
+			exit();
+		}
 		if ( Utilities::is_add_screen() ) {
-			include __DIR__ . '/views/purchases/payments/add.php';
+			include __DIR__ . '/views/purchases/expenses/add.php';
 		} elseif ( $edit ) {
-			include __DIR__ . '/views/purchases/payments/edit.php';
+			include __DIR__ . '/views/purchases/expenses/edit.php';
 		} else {
-			include __DIR__ . '/views/purchases/payments/payments.php';
+			include __DIR__ . '/views/purchases/expenses/expenses.php';
 		}
 	}
 
@@ -447,7 +448,7 @@ class Menus {
 	 */
 	public function render_vendors_tab() {
 		$edit   = Utilities::is_edit_screen();
-		$vendor = new Vendor( $edit );
+		$vendor = Vendor::make( $edit );
 		if ( ! empty( $edit ) && ! $vendor->exists() ) {
 			wp_safe_redirect( remove_query_arg( 'edit' ) );
 			exit();
@@ -468,7 +469,7 @@ class Menus {
 	 */
 	public function render_accounts_tab() {
 		$edit    = Utilities::is_edit_screen();
-		$account = new Account( $edit );
+		$account = Account::make( $edit );
 		if ( ! empty( $edit ) && ! $account->exists() ) {
 			wp_safe_redirect( remove_query_arg( 'edit' ) );
 			exit();
@@ -489,7 +490,7 @@ class Menus {
 	 */
 	public function render_categories_tab() {
 		$edit     = Utilities::is_edit_screen();
-		$category = new Category( $edit );
+		$category = Category::make( $edit );
 		if ( ! empty( $edit ) && ! $category->exists() ) {
 			wp_safe_redirect( remove_query_arg( 'edit' ) );
 			exit();
@@ -510,7 +511,7 @@ class Menus {
 	 */
 	public function render_currencies_tab() {
 		$edit     = Utilities::is_edit_screen();
-		$currency = new Currency( $edit );
+		$currency = Currency::make( $edit );
 		if ( ! empty( $edit ) && ! $currency->exists() ) {
 			wp_safe_redirect( remove_query_arg( 'edit' ) );
 			exit();
@@ -531,7 +532,7 @@ class Menus {
 	 */
 	public function render_taxes_tab() {
 		$edit = Utilities::is_edit_screen();
-		$tax  = new Tax( $edit );
+		$tax  = Tax::make( $edit );
 		if ( ! empty( $edit ) && ! $tax->exists() ) {
 			wp_safe_redirect( remove_query_arg( 'edit' ) );
 			exit();

@@ -8,6 +8,7 @@
  * @package EverAccounting
  */
 
+use EverAccounting\Models\Contact;
 use EverAccounting\Models\Customer;
 use EverAccounting\Models\Vendor;
 
@@ -20,13 +21,7 @@ defined( 'ABSPATH' ) || exit();
  * @since 1.1.0
  */
 function eac_get_contact_types() {
-	return apply_filters(
-		'ever_accounting_contact_types',
-		array(
-			'customer' => esc_html__( 'Customer', 'wp-ever-accounting' ),
-			'vendor'   => esc_html__( 'Vendor', 'wp-ever-accounting' ),
-		)
-	);
+	return Contact::get_contact_types();
 }
 
 
@@ -88,7 +83,7 @@ function eac_get_customers( $args = array(), $count = false ) {
 		return Customer::count( $args );
 	}
 
-	return Customer::query( $args );
+	return Customer::results( $args );
 }
 
 /**
@@ -99,7 +94,7 @@ function eac_get_customers( $args = array(), $count = false ) {
  * @since 1.1.0
  */
 function eac_get_vendor( $vendor ) {
-	return Vendor::get( $vendor );
+	return Vendor::find( $vendor );
 }
 
 /**
@@ -149,5 +144,5 @@ function eac_get_vendors( $args = array(), $count = false ) {
 		return Vendor::count( $args );
 	}
 
-	return Vendor::query( $args );
+	return Vendor::results( $args );
 }

@@ -37,8 +37,8 @@
 			/**
 			 * Initialize price input
 			 */
-			$('.eac_price_input').filter(':not(.enhanced)').each(function () {
-				self.initPriceInput(this, $(this).data('currency-code'));
+			$('.eac_decimal_input').filter(':not(.enhanced)').each(function () {
+				self.initDecimalInput(this, $(this).data('currency-code'));
 			});
 
 			/**
@@ -210,8 +210,7 @@
 			// 	console.warn('jQuery Inputmask is not loaded.');
 			// 	return;
 			// }
-
-			$(el).mask($(el).data('mask') || '9999-99-99');
+			$(el).inputmask();
 		},
 
 		/**
@@ -272,7 +271,7 @@
 		},
 
 		/**
-		 * Initialize input price.
+		 * Initialize decimal input.
 		 *
 		 * @since 1.0.0
 		 *
@@ -281,7 +280,7 @@
 		 *
 		 * @return {void}
 		 */
-		initPriceInput: function (el, currency_code) {
+		initDecimalInput: function (el, currency_code) {
 			$(el).on('input', function () {
 				var val = $(this).val();
 				val = val.replace(/[^0-9.]/g, '');

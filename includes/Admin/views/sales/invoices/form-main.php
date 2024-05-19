@@ -11,14 +11,8 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$columns = array(
-	'item'     => __( 'Item', 'wp-ever-accounting' ),
-	'price'    => __( 'Price', 'wp-ever-accounting' ),
-	'quantity' => __( 'Quantity', 'wp-ever-accounting' ),
-	'tax'      => __( 'Tax', 'wp-ever-accounting' ),
-	'subtotal' => __( 'Subtotal', 'wp-ever-accounting' ),
-	'actions'  => '&nbsp;',
-);
+$columns= eac_get_invoice_columns();
+$columns['actions'] = '&nbsp;';
 if ( ! $document->is_calculating_tax() && isset( $columns['tax'] ) ) {
 	unset( $columns['tax'] );
 }
@@ -28,7 +22,7 @@ if ( ! $document->is_calculating_tax() && isset( $columns['tax'] ) ) {
 	<div class="eac-document-form__section document-info">
 		<div class="document-info__column document-info__billing">
 			<h3>
-				<?php esc_html_e( 'Bill To', 'ever-accounting' ); ?>
+				<?php esc_html_e( 'Billing Details', 'ever-accounting' ); ?>
 			</h3>
 			<?php if ( $document->contact_id ) : ?>
 				<?php echo wp_kses_post( wpautop( $document->formatted_billing_address ) ); ?>
@@ -97,10 +91,10 @@ if ( ! $document->is_calculating_tax() && isset( $columns['tax'] ) ) {
 							<?php
 							switch ( $key ) {
 								case 'price':
-									printf( '<div class="bkit-input-group"><span class="addon">%s</span> <input class="line-item__price" type="number" name="items[%s][price]" value="%s" placeholder="%s" /></div>', esc_html( eac_get_currency_symbol( $document->currency_code ) ), esc_attr( $item_key ), esc_attr( $item->price ), esc_attr__( 'Price', 'wp-ever-accounting' ) );
+									printf( '<div class="bkit-input-group"><span class="addon">%s</span> <input class="line-item__price eac_decimal_input" type="text" name="items[%s][price]" value="%s" placeholder="%s" /></div>', esc_html( eac_get_currency_symbol( $document->currency_code ) ), esc_attr( $item_key ), esc_attr( $item->price ), esc_attr__( 'Price', 'wp-ever-accounting' ) );
 									break;
 								case 'quantity':
-									printf( '<input class="line-item__quantity" type="number" name="items[%s][quantity]" value="%s" placeholder="%s" />', esc_attr( $item_key ), esc_attr( $item->quantity ), esc_attr__( 'Quantity', 'wp-ever-accounting' ) );
+									printf( '<input class="line-item__quantity eac_decimal_input" type="number" name="items[%s][quantity]" value="%s" placeholder="%s" />', esc_attr( $item_key ), esc_attr( $item->quantity ), esc_attr__( 'Quantity', 'wp-ever-accounting' ) );
 									break;
 								case 'tax':
 									echo esc_html( eac_format_amount( $item->tax_total, $document->currency_code ) );

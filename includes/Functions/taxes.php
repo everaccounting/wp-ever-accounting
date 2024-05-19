@@ -165,5 +165,5 @@ function eac_get_taxes( $args = array(), $count = false ) {
 		return Tax::count( $args );
 	}
 
-	return Tax::query( $args );
+	return Tax::results( $args );
 }

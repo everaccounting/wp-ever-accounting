@@ -24,6 +24,7 @@ class Actions {
 		add_action( 'wp_ajax_eac_json_search', array( $this, 'handle_json_search' ) );
 		add_action( 'admin_post_eac_edit_item', array( $this, 'handle_edit_item' ) );
 		add_action( 'admin_post_eac_edit_revenue', array( $this, 'handle_edit_revenue' ) );
+		add_action( 'admin_post_eac_edit_expense', array( $this, 'handle_edit_expense' ) );
 		add_action( 'admin_post_eac_edit_customer', array( $this, 'handle_edit_customer' ) );
 		add_action( 'admin_post_eac_edit_vendor', array( $this, 'handle_edit_vendor' ) );
 		add_action( 'admin_post_eac_edit_account', array( $this, 'handle_edit_account' ) );
@@ -320,6 +321,41 @@ class Actions {
 		} else {
 			EAC()->flash->success( __( 'Revenue saved successfully.', 'wp-ever-accounting' ) );
 			$referer = add_query_arg( 'edit', $revenue->id, $referer );
+			$referer = remove_query_arg( array( 'add' ), $referer );
+		}
+
+		wp_safe_redirect( $referer );
+		exit;
+	}
+
+	/**
+	 * Edit expense.
+	 *
+	 * @since 1.2.0
+	 * @return void
+	 */
+	public static function handle_edit_expense() {
+		check_admin_referer( 'eac_edit_expense' );
+		$referer = wp_get_referer();
+		$data    = array(
+			'id'             => isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0,
+			'date'           => isset( $_POST['date'] ) ? sanitize_text_field( wp_unslash( $_POST['date'] ) ) : '',
+			'account_id'     => isset( $_POST['account_id'] ) ? absint( wp_unslash( $_POST['account_id'] ) ) : 0,
+			'amount'         => isset( $_POST['amount'] ) ? floatval( wp_unslash( $_POST['amount'] ) ) : 0,
+			'category_id'    => isset( $_POST['category_id'] ) ? absint( wp_unslash( $_POST['category_id'] ) ) : 0,
+			'contact_id'     => isset( $_POST['contact_id'] ) ? absint( wp_unslash( $_POST['contact_id'] ) ) : 0,
+			'payment_method' => isset( $_POST['payment_method'] ) ? sanitize_text_field( wp_unslash( $_POST['payment_method'] ) ) : '',
+			'invoice_id'     => isset( $_POST['invoice_id'] ) ? absint( wp_unslash( $_POST['invoice_id'] ) ) : 0,
+			'reference'      => isset( $_POST['reference'] ) ? sanitize_text_field( wp_unslash( $_POST['reference'] ) ) : '',
+			'note'           => isset( $_POST['note'] ) ? sanitize_textarea_field( wp_unslash( $_POST['note'] ) ) : '',
+			'status'         => isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : 'active',
+		);
+		$expense = eac_insert_expense( $data );
+		if ( is_wp_error( $expense ) ) {
+			EAC()->flash->error( $expense->get_error_message() );
+		} else {
+			EAC()->flash->success( __( 'Expense saved successfully.', 'wp-ever-accounting' ) );
+			$referer = add_query_arg( 'edit', $expense->id, $referer );
 			$referer = remove_query_arg( array( 'add' ), $referer );
 		}
 

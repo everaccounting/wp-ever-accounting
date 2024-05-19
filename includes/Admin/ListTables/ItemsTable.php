@@ -55,10 +55,10 @@ class ItemsTable extends ListTable {
 			'limit'       => $per_page,
 			'page'        => $paged,
 			'search'      => $search,
-			'order_by'    => $order_by,
+			'orderby'     => $order_by,
 			'order'       => $order,
 			'status'      => $this->get_request_status(),
-			'category_id' => isset( $_GET['category_id'] ) ? absint( wp_unslash( $_GET['category_id'] ) ) : '',
+			'category_id' => filter_input( INPUT_GET, 'category_id', FILTER_VALIDATE_INT ),
 		);
 
 		/**
@@ -68,10 +68,10 @@ class ItemsTable extends ListTable {
 		 *
 		 * @since 1.0.0
 		 */
-		$args = apply_filters( 'ever_accounting_items_table_query_args', $args );
-
-		$this->items = eac_get_items( $args );
-		$total       = eac_get_items( $args, true );
+		$args                  = apply_filters( 'ever_accounting_items_table_query_args', $args );
+		$args['no_found_rows'] = false;
+		$this->items           = Item::results( $args );
+		$total                 = Item::count( $args );
 		$this->set_pagination_args(
 			array(
 				'total_items' => $total,
@@ -339,7 +339,7 @@ class ItemsTable extends ListTable {
 	 * @return string Displays the category.
 	 */
 	public function column_category( $item ) {
-		if ( isset( $item->category ) && $item->category->exists() ) {
+		if ( $item->category ) {
 			return sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( 'category_id', $item->category->id, $this->base_url ) ), wp_kses_post( $item->category->name ) );
 		}
 

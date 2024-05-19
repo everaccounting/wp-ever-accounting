@@ -60,5 +60,5 @@ function eac_get_currencies( $args = array(), $count = false ) {
 		return Currency::count( $args );
 	}
 
-	return Currency::query( $args );
+	return Currency::results( $args );
 }

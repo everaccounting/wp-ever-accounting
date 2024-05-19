@@ -2,7 +2,8 @@
 
 namespace EverAccounting\Models;
 
-use ByteKit\Models\Relation;
+use ByteKit\Models\Relations\BelongsTo;
+use ByteKit\Models\Relations\BelongsToMany;
 
 /**
  * Item model.
@@ -44,7 +45,7 @@ class Item extends Model {
 	protected $table = 'ea_items';
 
 	/**
-	 * Table columns.
+	 * The table columns of the model.
 	 *
 	 * @since 1.0.0
 	 * @var array
@@ -70,27 +71,25 @@ class Item extends Model {
 	 * @since 1.0.0
 	 * @var array
 	 */
-	protected $attributes = array(
+	protected $props = array(
 		'type'    => 'standard',
 		'status'  => 'active',
 		'taxable' => false,
 	);
 
 	/**
-	 * The attributes that should be cast.
+	 * The properties that should be cast.
 	 *
 	 * @since 1.0.0
 	 * @var array
 	 */
 	protected $casts = array(
-		'id'           => 'int',
-		'type'         => array( __CLASS__, 'cast_item_type' ),
 		'price'        => 'double',
 		'cost'         => 'double',
 		'taxable'      => 'bool',
+		'tax_ids'      => 'id_list',
 		'category_id'  => 'int',
 		'thumbnail_id' => 'int',
-		'status'       => array( 'active', 'inactive' ),
 	);
 
 	/**
@@ -106,7 +105,15 @@ class Item extends Model {
 	);
 
 	/**
-	 * Searchable attributes.
+	 * Indicates if the model should be timestamped.
+	 *
+	 * @since 1.0.0
+	 * @var bool
+	 */
+	protected $timestamps = true;
+
+	/**
+	 * The properties that are searchable.
 	 *
 	 * @since 1.0.0
 	 * @var array
@@ -116,20 +123,92 @@ class Item extends Model {
 		'description',
 	);
 
+	/*
+	|--------------------------------------------------------------------------
+	| Prop Definition Methods
+	|--------------------------------------------------------------------------
+	| This section contains methods that define and provide specific prop values
+	| related to the model, such as statuses or types. These methods can be accessed
+	| without instantiating the model.
+	|--------------------------------------------------------------------------
+	*/
+
 	/**
-	 * Whether the model should be timestamped.
+	 * Get item types.
 	 *
-	 * @since 1.0.0
-	 * @var bool
+	 * @return array
+	 * @since 1.1.6
 	 */
-	protected $timestamps = true;
+	public static function get_types() {
+		return apply_filters(
+			'ever_accounting_item_types',
+			array(
+				'standard' => __( 'Standard Item', 'wp-ever-accounting' ),
+				'shipping' => __( 'Shipping Fee', 'wp-ever-accounting' ),
+				'fee'      => __( 'Fee Item', 'wp-ever-accounting' ),
+			)
+		);
+	}
+
+	/**
+	 * Get item units
+	 *
+	 * @return array
+	 * @since 1.1.6
+	 */
+	public static function get_units() {
+		return apply_filters(
+			'ever_accounting_units',
+			array(
+				'box'   => __( 'Box', 'wp-ever-accounting' ),
+				'cm'    => __( 'Centimeter', 'wp-ever-accounting' ),
+				'day'   => __( 'Day', 'wp-ever-accounting' ),
+				'doz'   => __( 'Dozen', 'wp-ever-accounting' ),
+				'ft'    => __( 'Feet', 'wp-ever-accounting' ),
+				'gm'    => __( 'Gram', 'wp-ever-accounting' ),
+				'hr'    => __( 'Hour', 'wp-ever-accounting' ),
+				'inch'  => __( 'Inch', 'wp-ever-accounting' ),
+				'kg'    => __( 'Kilogram', 'wp-ever-accounting' ),
+				'km'    => __( 'Kilometer', 'wp-ever-accounting' ),
+				'l'     => __( 'Liter', 'wp-ever-accounting' ),
+				'lb'    => __( 'Pound', 'wp-ever-accounting' ),
+				'm'     => __( 'Meter', 'wp-ever-accounting' ),
+				'mg'    => __( 'Milligram', 'wp-ever-accounting' ),
+				'mile'  => __( 'Mile', 'wp-ever-accounting' ),
+				'min'   => __( 'Minute', 'wp-ever-accounting' ),
+				'mm'    => __( 'Millimeter', 'wp-ever-accounting' ),
+				'month' => __( 'Month', 'wp-ever-accounting' ),
+				'oz'    => __( 'Ounce', 'wp-ever-accounting' ),
+				'pc'    => __( 'Piece', 'wp-ever-accounting' ),
+				'sec'   => __( 'Second', 'wp-ever-accounting' ),
+				'unit'  => __( 'Unit', 'wp-ever-accounting' ),
+				'week'  => __( 'Week', 'wp-ever-accounting' ),
+				'year'  => __( 'Year', 'wp-ever-accounting' ),
+			)
+		);
+	}
 
 	/*
 	|--------------------------------------------------------------------------
-	| Attributes & Relations
+	| Accessors, Mutators, Relationship and Validation Methods
 	|--------------------------------------------------------------------------
-	| Define the attributes and relations of the model.
+	| This section contains methods for getting and setting properties (accessors
+	| and mutators) as well as defining relationships between models. It also includes
+	| a data validation method that ensures data integrity before saving.
+	|--------------------------------------------------------------------------
 	*/
+
+	/**
+	 * Cast item type.
+	 *
+	 * @param string $value Item type.
+	 *
+	 * @since 1.0.0
+	 * @return string
+	 */
+	public static function set_item_type_prop( $value ) {
+		return array_key_exists( $value, self::get_types() ) ? $value : 'standard';
+	}
 
 	/**
 	 * Get formatted name.
@@ -137,7 +216,7 @@ class Item extends Model {
 	 * @since 1.1.6
 	 * @return string
 	 */
-	protected function get_formatted_name_attribute() {
+	protected function get_formatted_name_prop() {
 		return sprintf( '%s (#%s)', $this->name, $this->id );
 	}
 
@@ -147,7 +226,7 @@ class Item extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	protected function get_formatted_price_attribute() {
+	protected function get_formatted_price_prop() {
 		return eac_format_amount( $this->price );
 	}
 
@@ -157,47 +236,37 @@ class Item extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	protected function get_formatted_cost_attribute() {
+	protected function get_formatted_cost_prop() {
 		return eac_format_amount( $this->cost );
-	}
-
-	/**
-	 * Set item taxes.
-	 *
-	 * @param array $taxes Tax IDs.
-	 *
-	 * @since 1.2.1
-	 */
-	public function set_tax_ids_attribute( $taxes ) {
-		$tax_ids = wp_parse_id_list( $taxes );
-		$tax_ids = array_filter( array_map( 'intval', array_unique( $tax_ids ) ) );
-		$this->set_attribute_value( 'tax_ids', $tax_ids );
 	}
 
 	/**
 	 * Get items category
 	 *
 	 * @since 1.2.1
-	 * @return Relation
+	 * @return BelongsTo
 	 */
-	protected function category() {
+	public function category() {
 		return $this->belongs_to( Category::class );
 	}
 
-	/*
-	|--------------------------------------------------------------------------
-	| CRUD methods
-	|--------------------------------------------------------------------------
-	| Methods for saving, updating, and deleting objects.
-	*/
+	/**
+	 * Get tax rates.
+	 *
+	 * @since 1.2.1
+	 * @return BelongsToMany
+	 */
+	public function taxes() {
+		return $this->belongs_to_many( Tax::class );
+	}
 
 	/**
-	 * Save the object to the database.
+	 * Sanitize data before saving.
 	 *
 	 * @since 1.0.0
-	 * @return \WP_Error|true True on success, WP_Error on failure.
+	 * @return void|\WP_Error Return WP_Error if data is not valid or void.
 	 */
-	public function save() {
+	public function validate_save_data() {
 		if ( empty( $this->name ) ) {
 			return new \WP_Error( 'missing_required', __( 'Item name is required.', 'wp-ever-accounting' ) );
 		}
@@ -210,30 +279,16 @@ class Item extends Model {
 		if ( empty( $this->cost ) ) {
 			$this->cost = $this->price;
 		}
-
-		return parent::save();
 	}
-
 
 	/*
 	|--------------------------------------------------------------------------
-	| Helper methods.
+	| Helper Methods
 	|--------------------------------------------------------------------------
-	| Utility methods which don't directly relate to this object but may be
-	| used by this object.
+	| This section contains utility methods that are not directly related to this
+	| object but can be used to support its functionality.
+	|--------------------------------------------------------------------------
 	*/
-
-	/**
-	 * Cast item type.
-	 *
-	 * @param string $value Item type.
-	 *
-	 * @since 1.0.0
-	 * @return string
-	 */
-	public static function cast_item_type( $value ) {
-		return in_array( $value, array_keys( eac_get_item_types() ) ) ? $value : null;
-	}
 
 	/**
 	 * Get items tax
@@ -241,15 +296,15 @@ class Item extends Model {
 	 * @since 1.2.1
 	 * @return Tax[]
 	 */
-	public function get_taxes() {
-		if ( ! $this->exists() || empty( $this->tax_ids ) ) {
-			return array();
-		}
-
-		return Tax::query(
-			array(
-				'include' => $this->tax_ids,
-			)
-		);
-	}
+	// public function get_taxes() {
+	// if ( ! $this->exists() || empty( $this->tax_ids ) ) {
+	// return array();
+	// }
+	//
+	// return Tax::query(
+	// array(
+	// 'include' => $this->tax_ids,
+	// )
+	// );
+	// }
 }

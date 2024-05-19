@@ -45,7 +45,7 @@ class Utilities {
 				'menu_slug'  => 'eac-purchases',
 				'page_hook'  => 'purchases',
 				'tabs'       => array(
-					'payments' => __( 'Payments', 'wp-ever-accounting' ),
+					'expenses' => __( 'Expenses', 'wp-ever-accounting' ),
 					'bills'    => __( 'Bills', 'wp-ever-accounting' ),
 					'vendors'  => __( 'Vendors', 'wp-ever-accounting' ),
 				),

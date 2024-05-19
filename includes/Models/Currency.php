@@ -2,7 +2,7 @@
 
 namespace EverAccounting\Models;
 
-use ByteKit\Models\Relation;
+use ByteKit\Models\Relations\HasMany;
 
 /**
  * Currency model.
@@ -16,6 +16,7 @@ use ByteKit\Models\Relation;
  * @property string $code Code of the currency.
  * @property string $name Name of the category.
  * @property float  $exchange_rate Exchange rate of the currency.
+ * @property float  $rate Exchange rate of the currency.
  * @property int    $precision Precision of the currency.
  * @property string $symbol Symbol of the currency.
  * @property int    $subunit Subunit of the currency.
@@ -59,12 +60,12 @@ class Currency extends Model {
 	);
 
 	/**
-	 * The model's attributes.
+	 * Data properties of the model.
 	 *
 	 * @since 1.0.0
 	 * @var array
 	 */
-	protected $attributes = array(
+	protected $data = array(
 		'exchange_rate'      => 1,
 		'precision'          => 2,
 		'symbol'             => '$',
@@ -76,7 +77,7 @@ class Currency extends Model {
 	);
 
 	/**
-	 * The attributes that should be cast.
+	 * The properties that should be cast to native types.
 	 *
 	 * @since 1.0.0
 	 * @var array
@@ -89,24 +90,23 @@ class Currency extends Model {
 	);
 
 	/**
-	 * The accessors to append to the model's array form.
+	 * The properties that have aliases.
+	 *
+	 * @since 1.0.0
+	 * @var array
+	 */
+	protected $aliases = array(
+		'rate' => 'exchange_rate',
+	);
+
+	/**
+	 * The properties that should be appended to the model's array form.
 	 *
 	 * @since 1.0.0
 	 * @var array
 	 */
 	protected $appends = array(
 		'formatted_name',
-	);
-
-	/**
-	 * Searchable attributes.
-	 *
-	 * @since 1.0.0
-	 * @var array
-	 */
-	protected $searchable = array(
-		'name',
-		'code',
 	);
 
 	/**
@@ -117,11 +117,22 @@ class Currency extends Model {
 	 */
 	protected $timestamps = true;
 
+	/**
+	 * The properties that should be searchable when querying.
+	 *
+	 * @since 1.0.0
+	 * @var array
+	 */
+	protected $searchable = array(
+		'name',
+		'code',
+	);
+
 	/*
 	|--------------------------------------------------------------------------
-	| Attributes & Relations
+	| Props & Relations
 	|--------------------------------------------------------------------------
-	| Define the attributes and relations of the model.
+	| Define the props and relations of the model.
 	*/
 
 	/**
@@ -131,10 +142,10 @@ class Currency extends Model {
 	 *
 	 * @since 1.0.0
 	 */
-	protected function set_position_attribute( $value ) {
+	protected function set_position_prop( $value ) {
 		$value = strtolower( $value );
 		$value = in_array( $value, array( 'before', 'after', true ), true ) ? $value : 'before';
-		$this->set_attribute_value( 'position', $value );
+		$this->set_prop_value( 'position', $value );
 	}
 
 	/**
@@ -142,17 +153,31 @@ class Currency extends Model {
 	 *
 	 * @since 1.0.0
 	 */
-	protected function get_exchange_rate_attribute() {
-		return eac_get_base_currency() === $this->code ? 1 : $this->get_attribute_value( 'exchange_rate' );
+	protected function get_exchange_rate_prop() {
+		return eac_get_base_currency() === $this->code ? 1 : $this->get_prop_value( 'exchange_rate' );
+	}
+
+	/**
+	 * Set exchange_rate property.
+	 *
+	 * @param float $value Exchange rate of the currency.
+	 *
+	 * @since 1.0.0
+	 */
+	protected function set_exchange_rate_prop( $value ) {
+		if ( eac_get_base_currency() === $this->code ) {
+			$value = 1;
+		}
+		$this->set_prop_value( 'exchange_rate', $value );
 	}
 
 	/**
 	 * Get formatted name.
 	 *
-	 * @return string
 	 * @since 1.0.2
+	 * @return string
 	 */
-	protected function get_formatted_name_attribute() {
+	protected function get_formatted_name_prop() {
 		return sprintf( '%s (%s)', $this->name, $this->code );
 	}
 
@@ -160,7 +185,7 @@ class Currency extends Model {
 	 * Get related accounts.
 	 *
 	 * @since 1.0.0
-	 * @return Relation
+	 * @return HasMany
 	 */
 	protected function accounts() {
 		return $this->has_many( Account::class, 'currency_code', 'code' );
@@ -172,37 +197,6 @@ class Currency extends Model {
 	|--------------------------------------------------------------------------
 	| Methods for reading, creating, updating and deleting objects.
 	*/
-
-	/**
-	 * Read a record.
-	 *
-	 * @param int|string $key Record ID.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return object
-	 */
-	protected function read( $key ) {
-		if ( ! is_numeric( $key ) && strlen( $key ) === 3 && false === wp_cache_get( $key, $this->get_cache_group() ) ) {
-			$table = $this->wpdb()->prefix . $this->get_table();
-			$row   = $this->wpdb()->get_row(
-				$this->wpdb()->prepare(
-					"SELECT * FROM {$table} WHERE code = %s",
-					$key
-				)
-			);
-			if ( empty( $row ) ) {
-				return null;
-			}
-
-			wp_cache_set( $key, $row, $this->get_cache_group() );
-			wp_cache_set( $row->id, $row, $this->get_cache_group() );
-
-			$key = $row->id;
-		}
-
-		return parent::read( $key );
-	}
 
 	/**
 	 * Save the object to the database.
@@ -230,15 +224,74 @@ class Currency extends Model {
 			return new \WP_Error( 'missing_required', __( 'Currency thousand separator is required.', 'wp-ever-accounting' ) );
 		}
 
-		if ( empty( $this->date_created ) ) {
-			$this->date_created = current_time( 'mysql' );
-		}
-
-		if ( empty( $this->date_updated ) && $this->exists() ) {
-			$this->date_updated = current_time( 'mysql' );
-		}
-
 		return parent::save();
+	}
+
+	/**
+	 * Delete the object from the database.
+	 *
+	 * @since 1.0.0
+	 * @return bool
+	 */
+	public function delete() {
+		// Currency can't be deleted.
+		return false;
+	}
+
+
+	/*
+	|--------------------------------------------------------------------------
+	| Query methods.
+	|--------------------------------------------------------------------------
+	| Methods for querying data.
+	*/
+
+	/**
+	 * Find an object by its primary key or query.
+	 *
+	 * @param mixed $value The value to search for.
+	 *
+	 * @since 1.0.0
+	 * @return static|null The model instance, or null if not found.
+	 */
+	public static function find( $value ) {
+		if ( ! is_numeric( $value ) && strlen( $value ) === 3 ) {
+			$value = array( 'code' => strtoupper( $value ) );
+		}
+
+		$retval = parent::find( $value );
+
+		// If the currency is not found, we have to load as new. As we must have a currency.
+		return $retval ? $retval : ( static::make() )->set_props( $value );
+	}
+
+	/**
+	 * Find an object by its primary key or create a new instance.
+	 *
+	 * @param mixed $props Entity data.
+	 *
+	 * @since 1.0.0
+	 * @return static The model instance.
+	 */
+	public static function make( $props = null ) {
+		$model       = new static();
+		$primary_key = $model->get_key_name();
+		$id          = null;
+		if ( is_scalar( $props ) ) {
+			$id = $props;
+		} elseif ( is_array( $props ) && isset( $props[ $primary_key ] ) ) {
+			$id = $props[ $primary_key ];
+		} elseif ( is_object( $props ) && isset( $props->$primary_key ) ) {
+			$id = $props->$primary_key;
+		} elseif ( $props instanceof static ) {
+			$id = $props->get_key_value();
+		} elseif ( is_array( $props ) && isset( $props['code'] ) ) {
+			$id = $props['code'];
+		}
+
+		$item = $id ? static::find( $id ) : $model;
+
+		return $item ? $item->set_props( $props ) : $model->new_instance( $props );
 	}
 
 

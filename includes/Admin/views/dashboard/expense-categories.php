@@ -12,9 +12,9 @@ defined( 'ABSPATH' ) || exit;
 
 $data     = eac_get_expense_report( wp_date( 'Y' ) );
 $total    = array_sum( $data['months'] );
-$amounts  = [];
-$labels   = [];
-$percents = [];
+$amounts  = array();
+$labels   = array();
+$percents = array();
 foreach ( $data['categories'] as $category_id => $datum ) {
 	$category_total           = array_sum( $datum );
 	$amounts[ $category_id ]  = $category_total;

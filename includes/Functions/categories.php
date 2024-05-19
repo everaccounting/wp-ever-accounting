@@ -11,13 +11,7 @@ defined( 'ABSPATH' ) || exit;
  * @return array
  */
 function eac_get_category_types() {
-	$types = array(
-		'expense' => esc_html__( 'Expense', 'wp-ever-accounting' ),
-		'income'  => esc_html__( 'Income', 'wp-ever-accounting' ),
-		'item'    => esc_html__( 'Item', 'wp-ever-accounting' ),
-	);
-
-	return apply_filters( 'ever_accounting_category_types', $types );
+	return Category::get_types();
 }
 
 /**
@@ -72,5 +66,5 @@ function eac_get_categories( $args = array(), $count = false ) {
 		return Category::count( $args );
 	}
 
-	return Category::query( $args );
+	return Category::results( $args );
 }

@@ -41,6 +41,13 @@ defined( 'ABSPATH' ) || exit;
  * @property-read  string $country_name Get country name.
  */
 class Contact extends Model {
+	/**
+	 * The table associated with the model.
+	 *
+	 * @since 1.0.0
+	 * @var string
+	 */
+	public $table = 'ea_contacts';
 
 	/**
 	 * Meta type declaration for the object.
@@ -49,16 +56,6 @@ class Contact extends Model {
 	 * @var string
 	 */
 	public $meta_type = 'ea_contact';
-
-	/**
-	 * Table name.
-	 *
-	 * This is also used as table alias.
-	 *
-	 * @since 1.0.0
-	 * @var string
-	 */
-	public $table = 'ea_contacts';
 
 	/**
 	 * Table columns.
@@ -92,23 +89,25 @@ class Contact extends Model {
 	);
 
 	/**
-	 * The model's attributes.
+	 * Data properties of the model.
 	 *
 	 * @since 1.0.0
 	 * @var array
 	 */
-	protected $attributes = array(
+	protected $data = array(
 		'status' => 'active',
 	);
 
 	/**
-	 * The attributes that should be cast.
+	 * The properties that should be cast to native types.
 	 *
 	 * @since 1.0.0
 	 * @var array
 	 */
 	protected $casts = array(
 		'id'           => 'int',
+		'email'        => 'sanitize_email',
+		'website'      => 'esc_url',
 		'vat_exempt'   => 'bool',
 		'thumbnail_id' => 'int',
 		'user_id'      => 'int',
@@ -116,7 +115,17 @@ class Contact extends Model {
 	);
 
 	/**
-	 * The accessors to append to the model's array form.
+	 * The properties those are guarded against mass assignment.
+	 *
+	 * @since 1.0.0
+	 * @var array
+	 */
+	protected $guarded = array(
+		'type',
+	);
+
+	/**
+	 * The properties that should be appended to the model's array form.
 	 *
 	 * @since 1.0.0
 	 * @var array
@@ -127,17 +136,7 @@ class Contact extends Model {
 	);
 
 	/**
-	 * Model's data that aren't mass assignable.
-	 *
-	 * @since 1.0.0
-	 * @var array
-	 */
-	protected $guarded = array(
-		'type',
-	);
-
-	/**
-	 * The properties that should be hidden from array/json.
+	 * The properties that should be hidden for arrays.
 	 *
 	 * @since 1.0.0
 	 * @var array
@@ -147,28 +146,61 @@ class Contact extends Model {
 	);
 
 	/**
-	 * Searchable attributes.
-	 *
-	 * @since 1.0.0
-	 * @var array
-	 */
-	protected $searchable = array(
-		'name',
-	);
-
-	/**
-	 * Whether the model should be timestamped.
+	 * Indicates if the model should be timestamped.
 	 *
 	 * @since 1.0.0
 	 * @var bool
 	 */
 	protected $timestamps = true;
 
+	/**
+	 * The properties that should be searchable when querying.
+	 *
+	 * @since 1.0.0
+	 * @var array
+	 */
+	protected $searchable = array(
+		'name',
+		'company',
+		'email',
+		'phone',
+		'address_1',
+		'address_2',
+	);
+
 	/*
 	|--------------------------------------------------------------------------
-	| Attributes & Relations
+	| Prop Definition Methods
 	|--------------------------------------------------------------------------
-	| Define the attributes and relations of the model.
+	| This section contains methods that define and provide specific prop values
+	| related to the model, such as statuses or types. These methods can be accessed
+	| without instantiating the model.
+	|--------------------------------------------------------------------------
+	*/
+	/**
+	 * Get contact types.
+	 *
+	 * @return array
+	 * @since 1.1.0
+	 */
+	public static function get_contact_types() {
+		return apply_filters(
+			'ever_accounting_contact_types',
+			array(
+				'customer' => esc_html__( 'Customer', 'wp-ever-accounting' ),
+				'vendor'   => esc_html__( 'Vendor', 'wp-ever-accounting' ),
+			)
+		);
+	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| Accessors, Mutators, Relationship and Validation Methods
+	|--------------------------------------------------------------------------
+	| This section contains methods for getting and setting properties (accessors
+	| and mutators) as well as defining relationships between models. It also includes
+	| a data validation method that ensures data integrity before saving.
+	|--------------------------------------------------------------------------
 	*/
 
 	/**
@@ -177,7 +209,7 @@ class Contact extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	public function get_country_name_attribute() {
+	public function get_country_name_prop() {
 		$countries = I18n::get_countries();
 		return isset( $countries[ $this->country ] ) ? $countries[ $this->country ] : $this->country;
 	}
@@ -188,31 +220,24 @@ class Contact extends Model {
 	 * @return string
 	 * @since 1.1.6
 	 */
-	public function get_formatted_name_attribute() {
+	public function get_formatted_name_prop() {
 		$company = $this->company ? ' (' . $this->company . ')' : '';
 		return $this->name . $company;
 	}
 
-	/*
-	|--------------------------------------------------------------------------
-	| CRUD methods
-	|--------------------------------------------------------------------------
-	| Methods for reading, creating, updating and deleting objects.
-	*/
-
 	/**
-	 * Save the object to the database.
+	 * Sanitize data before saving.
 	 *
 	 * @since 1.0.0
-	 * @return \WP_Error|true True on success, WP_Error on failure.
+	 * @return void|\WP_Error Return WP_Error if data is not valid or void.
 	 */
-	public function save() {
+	public function validate_save_data() {
 		if ( empty( $this->name ) ) {
 			return new \WP_Error( 'missing_required', __( 'Name is required.', 'wp-ever-accounting' ) );
 		}
 
 		if ( empty( $this->currency_code ) ) {
-			$this->set_attribute_value( 'currency_code', eac_get_base_currency() );
+			$this->set_prop_value( 'currency_code', eac_get_base_currency() );
 		}
 
 		if ( empty( $this->uuid ) ) {
@@ -222,15 +247,14 @@ class Contact extends Model {
 		if ( empty( $this->author_id ) && is_user_logged_in() ) {
 			$this->author_id = get_current_user_id();
 		}
-
-		return parent::save();
 	}
 
 	/*
 	|--------------------------------------------------------------------------
-	| Helper methods.
+	| Helper Methods
 	|--------------------------------------------------------------------------
-	| Utility methods which don't directly relate to this object but may be
-	| used by this object.
+	| This section contains utility methods that are not directly related to this
+	| object but can be used to support its functionality.
+	|--------------------------------------------------------------------------
 	*/
 }

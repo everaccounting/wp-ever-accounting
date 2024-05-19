@@ -3,6 +3,9 @@
 namespace EverAccounting\Models;
 
 use ByteKit\Models\Relation;
+use ByteKit\Models\Relations\BelongsTo;
+use ByteKit\Models\Relations\HasMany;
+use ByteKit\Models\Relations\HasOne;
 
 /**
  * Document model.
@@ -722,7 +725,7 @@ class Document extends Model {
 	 * Get document transactions.
 	 *
 	 * @since 1.0.0
-	 * @return Relation
+	 * @return HasMany
 	 */
 	public function transactions() {
 		return $this->has_many( Transaction::class, 'document_id' );
@@ -732,7 +735,7 @@ class Document extends Model {
 	 * Get document currency.
 	 *
 	 * @since 1.0.0
-	 * @return Relation
+	 * @return BelongsTo
 	 */
 	protected function currency() {
 		return $this->belongs_to( Currency::class, 'currency_code', 'code' );

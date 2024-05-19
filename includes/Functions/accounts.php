@@ -6,19 +6,14 @@ defined( 'ABSPATH' ) || exit;
 
 
 /**
- * Get bank types.
+ * Get account types.
  *
  * @since 1.0.2
  *
  * @return array
  */
 function eac_get_account_types() {
-	$bank_types = array(
-		'bank' => __( 'Bank', 'wp-ever-accounting' ),
-		'card' => __( 'Card', 'wp-ever-accounting' ),
-	);
-
-	return apply_filters( 'ever_accounting_account_types', $bank_types );
+	return Account::get_types();
 }
 
 
@@ -83,7 +78,5 @@ function eac_get_accounts( $args = array(), $count = false ) {
 		return Account::count( $args );
 	}
 
-	$account = Account::query( $args );
-
-	return $account;
+	return Account::results( $args );
 }

@@ -21,74 +21,84 @@ defined( 'ABSPATH' ) || exit;
 					</div>
 
 					<div class="bkit-card__body grid--fields">
-						<div class="bkit-form-group">
-							<label for="name">
-								<?php esc_html_e( 'Name', 'wp-ever-accounting' ); ?>
-								<abbr title="required"></abbr>
-							</label>
-							<input type="text" name="name" id="name" placeholder="<?php esc_attr_e( 'Saving Account', 'wp-ever-accounting' ); ?>" value="<?php echo esc_attr( $account->name ); ?>" required/>
-						</div>
 
-						<div class="bkit-form-group">
-							<label for="number">
-								<?php esc_html_e( 'Number', 'wp-ever-accounting' ); ?>
-								<abbr title="required"></abbr>
-							</label>
-							<input type="text" name="number" id="number" placeholder="<?php esc_attr_e( '1234567890', 'wp-ever-accounting' ); ?>" value="<?php echo esc_attr( $account->number ); ?>" required/>
-						</div>
-						<div class="bkit-form-group">
-							<label for="type">
-								<?php esc_html_e( 'Type', 'wp-ever-accounting' ); ?>
-								<abbr title="required"></abbr>
-							</label>
-							<select name="type" id="type" required>
-								<option value=""><?php esc_html_e( 'Select Type', 'wp-ever-accounting' ); ?></option>
-								<?php foreach ( eac_get_account_types() as $key => $value ) : ?>
-									<option value="<?php echo esc_attr( $key ); ?>" <?php selected( $key, $account->type ); ?>><?php echo esc_html( $value ); ?></option>
-								<?php endforeach; ?>
-							</select>
-						</div>
+						<?php
+						eac_form_group(
+							array(
+								'label'       => __( 'Name', 'wp-ever-accounting' ),
+								'type'        => 'text',
+								'name'        => 'name',
+								'value'       => $account->name,
+								'placeholder' => __( 'XYZ Saving Account', 'wp-ever-accounting' ),
+								'required'    => true,
+							)
+						);
 
-						<div class="bkit-form-group">
-							<label for="currency_code">
-								<?php esc_html_e( 'Currency', 'wp-ever-accounting' ); ?>
-								<abbr title="required"></abbr>
-							</label>
-							<select name="currency_code" id="currency_code" required>
-								<option value=""><?php esc_html_e( 'Select Currency', 'wp-ever-accounting' ); ?></option>
-								<?php foreach ( eac_get_currencies( array( 'limit' => - 1, 'status' => 'active' ) ) as $currency ) : ?>
-									<option value="<?php echo esc_attr( $currency->code ); ?>" <?php selected( $currency->code, $account->currency_code ); ?>><?php echo esc_html( $currency->formatted_name ); ?></option>
-								<?php endforeach; ?>
-							</select>
-						</div>
+						eac_form_group(
+							array(
+								'label'       => __( 'Number', 'wp-ever-accounting' ),
+								'type'        => 'text',
+								'name'        => 'number',
+								'value'       => $account->number,
+								'placeholder' => __( '1234567890', 'wp-ever-accounting' ),
+								'required'    => true,
+							)
+						);
 
-						<div class="bkit-form-group">
-							<label for="opening_balance">
-								<?php esc_html_e( 'Opening Balance', 'wp-ever-accounting' ); ?>
-							</label>
-							<input type="number" name="opening_balance" id="opening_balance" placeholder="<?php esc_attr_e( '0.00', 'wp-ever-accounting' ); ?>" value="<?php echo esc_attr( $account->opening_balance ); ?>"/>
-						</div>
+						eac_form_group(
+							array(
+								'label'       => __( 'Type', 'wp-ever-accounting' ),
+								'type'        => 'select',
+								'name'        => 'type',
+								'value'       => $account->type,
+								'options'     => \EverAccounting\Models\Account::get_types(),
+								'placeholder' => __( 'Select Type', 'wp-ever-accounting' ),
+								'required'    => true,
+							)
+						);
 
-						<div class="bkit-form-group">
-							<label for="bank_name">
-								<?php esc_html_e( 'Bank Name', 'wp-ever-accounting' ); ?>
-							</label>
-							<input type="text" name="bank_name" id="bank_name" placeholder="<?php esc_attr_e( 'XYZ Bank', 'wp-ever-accounting' ); ?>" value="<?php echo esc_attr( $account->bank_name ); ?>"/>
-						</div>
-
-						<div class="bkit-form-group">
-							<label for="bank_phone">
-								<?php esc_html_e( 'Bank Phone', 'wp-ever-accounting' ); ?>
-							</label>
-							<input type="text" name="bank_phone" id="bank_phone" placeholder="<?php esc_attr_e( '+1234567890', 'wp-ever-accounting' ); ?>" value="<?php echo esc_attr( $account->bank_phone ); ?>"/>
-						</div>
-
-						<div class="bkit-form-group is--full">
-							<label for="bank_address">
-								<?php esc_html_e( 'Bank Address', 'wp-ever-accounting' ); ?>
-							</label>
-							<textarea name="bank_address" id="bank_address" placeholder="<?php esc_attr_e( '123, XYZ Street, City, Country', 'wp-ever-accounting' ); ?>"><?php echo esc_textarea( $account->bank_address ); ?></textarea>
-						</div>
+						eac_form_group(
+							array(
+								'label'        => __( 'Currency', 'wp-ever-accounting' ),
+								'type'         => 'select',
+								'name'         => 'currency_code',
+								'value'        => $account->currency_code,
+								'options'      => \EverAccounting\Models\Currency::results( array( 'status' => 'active' ) ),
+								'option_label' => 'formatted_name',
+								'option_value' => 'code',
+								'placeholder'  => __( 'Select Currency', 'wp-ever-accounting' ),
+								'required'     => true,
+							)
+						);
+						eac_form_group(
+							array(
+								'label'       => __( 'Bank Name', 'wp-ever-accounting' ),
+								'type'        => 'text',
+								'name'        => 'bank_name',
+								'value'       => $account->bank_name,
+								'placeholder' => __( 'XYZ Bank', 'wp-ever-accounting' ),
+							)
+						);
+						eac_form_group(
+							array(
+								'label'       => __( 'Bank Phone', 'wp-ever-accounting' ),
+								'type'        => 'text',
+								'name'        => 'bank_phone',
+								'value'       => $account->bank_phone,
+								'placeholder' => __( '+1234567890', 'wp-ever-accounting' ),
+							)
+						);
+						eac_form_group(
+							array(
+								'label'         => __( 'Bank Address', 'wp-ever-accounting' ),
+								'type'          => 'textarea',
+								'name'          => 'bank_address',
+								'value'         => $account->bank_address,
+								'placeholder'   => __( '123, XYZ Street, City, Country', 'wp-ever-accounting' ),
+								'wrapper_class' => 'full--width',
+							)
+						);
+						?>
 					</div><!-- .bkit-card__body -->
 				</div>
 			</div><!-- .column-1 -->
