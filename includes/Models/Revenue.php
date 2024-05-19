@@ -11,6 +11,8 @@ defined( 'ABSPATH' ) || exit;
  * @author  Sultan Nasir Uddin <manikdrmc@gmail.com>
  * @package EverAccounting
  * @subpackage Models
+ *
+ * @property int    $customer_id ID of the customer.
  */
 class Revenue extends Transaction {
 	/**
@@ -22,6 +24,27 @@ class Revenue extends Transaction {
 	protected $object_type = 'revenue';
 
 	/**
+	 * The properties that have aliases.
+	 *
+	 * @since 1.0.0
+	 * @var array
+	 */
+	protected $aliases = array(
+		'customer_id' => 'contact_id',
+	);
+
+	/**
+	 * Properties that have transition effects when changed.
+	 *
+	 * @since 1.0.0
+	 * @var array
+	 */
+	protected $transitionable = array(
+		'status',
+	);
+
+
+	/**
 	 * Create a new model instance.
 	 *
 	 * @param string|int|array $attributes Attributes.
@@ -30,65 +53,50 @@ class Revenue extends Transaction {
 	 * @return void
 	 */
 	public function __construct( $attributes = null ) {
-		$this->attributes['type'] = $this->get_object_type();
+		$this->data['type']       = $this->get_object_type();
 		$this->query_args['type'] = $this->get_object_type();
 		parent::__construct( $attributes );
 	}
 
+	/*
+	|--------------------------------------------------------------------------
+	| Prop Definition Methods
+	|--------------------------------------------------------------------------
+	| This section contains methods that define and provide specific prop values
+	| related to the model, such as statuses or types. These methods can be accessed
+	| without instantiating the model.
+	|--------------------------------------------------------------------------
+	*/
 
 	/*
 	|--------------------------------------------------------------------------
-	| Attributes & Relations
+	| Accessors, Mutators, Relationship and Validation Methods
 	|--------------------------------------------------------------------------
-	| Define the attributes and relations of the model.
-	*/
-
-
-	/*
+	| This section contains methods for getting and setting properties (accessors
+	| and mutators) as well as defining relationships between models. It also includes
+	| a data validation method that ensures data integrity before saving.
 	|--------------------------------------------------------------------------
-	| CRUD methods
-	|--------------------------------------------------------------------------
-	| Methods for saving, updating, and deleting objects.
 	*/
 
 	/**
-	 * Load the object from the database.
-	 *
-	 * @param string|int $id ID of the object.
+	 * Validate data before saving.
 	 *
 	 * @since 1.0.0
-	 * @return $this
+	 * @return void|\WP_Error Return WP_Error if data is not valid or void.
 	 */
-	protected function load( $id ) {
-		parent::load( $id );
-		if ( $this->get_object_type() !== $this->attributes['type'] ) {
-			$this->apply_defaults();
-		}
-
-		return $this;
-	}
-
-
-	/**
-	 * Save the object to the database.
-	 *
-	 * @since 1.0.0
-	 * @return \WP_Error|true True on success, WP_Error on failure.
-	 */
-	public function save() {
+	public function validate_save_data() {
 		if ( empty( $this->date ) ) {
 			return new \WP_Error( 'missing_required', __( 'Transaction date is required.', 'wp-ever-accounting' ) );
 		}
-
-		return parent::save();
 	}
 
 
 	/*
 	|--------------------------------------------------------------------------
-	| Helper methods.
+	| Helper Methods
 	|--------------------------------------------------------------------------
-	| Utility methods which don't directly relate to this object but may be
-	| used by this object.
+	| This section contains utility methods that are not directly related to this
+	| object but can be used to support its functionality.
+	|--------------------------------------------------------------------------
 	*/
 }

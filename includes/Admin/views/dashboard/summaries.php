@@ -12,7 +12,7 @@ $purchases_summary = eac_get_purchases_summary();
 $profits_summary   = eac_get_profits_summary();
 ?>
 
-<div class="eac-summaries-section">
+<div class="eac-summaries-section  tw-mb-20">
 	<ul class="eac-summaries">
 		<li class="eac-summary">
 			<div class="eac-summary__label"><?php esc_html_e( 'Net Sales', 'wp-ever-accounting' ); ?></div>

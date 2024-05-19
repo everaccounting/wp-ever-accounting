@@ -6,8 +6,10 @@
  *
  * @package EverAccounting
  * @since 1.0.0
- * @var $category \EverAccounting\Models\Category Category object.
+ * @var $category Category Category object.
  */
+
+use EverAccounting\Models\Category;
 
 defined( 'ABSPATH' ) || exit;
 ?>
@@ -39,7 +41,7 @@ defined( 'ABSPATH' ) || exit;
 							'placeholder' => __( 'Select category type', 'wp-ever-accounting' ),
 							'value'       => $category->type,
 							'default'     => isset( $_GET['type'] ) ? sanitize_text_field( wp_unslash( $_GET['type'] ) ) : '', // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Nonce verification is not required here.
-							'options'     => eac_get_category_types(),
+							'options'     => Category::get_types(),
 						)
 					);
 					eac_form_group(

@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
  */
 class Customer extends Contact {
 	/**
-	 * Object type in singular form.
+	 * The type of the object. Used for actions and filters.
 	 *
 	 * @since 1.0.0
 	 * @var string
@@ -20,64 +20,45 @@ class Customer extends Contact {
 	protected $object_type = 'customer';
 
 	/**
-	 * Whether the model should be timestamped.
-	 *
-	 * @since 1.0.0
-	 * @var bool
-	 */
-	public $timestamps = true;
-
-	/**
 	 * Create a new model instance.
 	 *
-	 * @param string|int|array $attributes Attributes.
+	 * @param object|array|null $data The data to initialize the model.
 	 *
 	 * @throws \InvalidArgumentException If table name or object type is not set.
-	 * @return void
 	 */
-	public function __construct( $attributes = null ) {
-		$this->attributes['type'] = $this->get_object_type();
+	public function __construct( $data = null ) {
+		$this->data['type']       = $this->get_object_type();
 		$this->query_args['type'] = $this->get_object_type();
-		parent::__construct( $attributes );
-	}
-
-	/*
-	|--------------------------------------------------------------------------
-	| Attributes & Relations
-	|--------------------------------------------------------------------------
-	| Define the attributes and relations of the model.
-	*/
-
-	/*
-	|--------------------------------------------------------------------------
-	| CRUD methods
-	|--------------------------------------------------------------------------
-	| Methods for reading, creating, updating and deleting objects.
-	*/
-
-	/**
-	 * Load the object from the database.
-	 *
-	 * @param string|int $id ID of the object.
-	 *
-	 * @since 1.0.0
-	 * @return $this
-	 */
-	protected function load( $id ) {
-		parent::load( $id );
-		if ( $this->get_object_type() !== $this->attributes['type'] ) {
-			$this->apply_defaults();
-		}
-
-		return $this;
+		parent::__construct( $data );
 	}
 
 
 	/*
 	|--------------------------------------------------------------------------
-	| Helper methods.
+	| Prop Definition Methods
 	|--------------------------------------------------------------------------
-	| Utility methods which don't directly relate to this object but may be
-	| used by this object.
+	| This section contains methods that define and provide specific prop values
+	| related to the model, such as statuses or types. These methods can be accessed
+	| without instantiating the model.
+	|--------------------------------------------------------------------------
+	*/
+
+	/*
+	|--------------------------------------------------------------------------
+	| Accessors, Mutators, Relationship and Validation Methods
+	|--------------------------------------------------------------------------
+	| This section contains methods for getting and setting properties (accessors
+	| and mutators) as well as defining relationships between models. It also includes
+	| a data validation method that ensures data integrity before saving.
+	|--------------------------------------------------------------------------
+	*/
+
+	/*
+	|--------------------------------------------------------------------------
+	| Helper Methods
+	|--------------------------------------------------------------------------
+	| This section contains utility methods that are not directly related to this
+	| object but can be used to support its functionality.
+	|--------------------------------------------------------------------------
 	*/
 }

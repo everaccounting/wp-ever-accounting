@@ -16,6 +16,9 @@ defined( 'ABSPATH' ) || exit;
 		<a href="<?php echo esc_attr( admin_url( 'admin.php?page=eac-misc&tab=categories&add=yes' ) ); ?>" class="page-title-action">
 			<?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?>
 		</a>
+		<a href="<?php echo esc_attr( admin_url( 'admin.php?page=eac-tools' ) ); ?>" class="page-title-action">
+			<?php esc_html_e( 'Import', 'wp-ever-accounting' ); ?>
+		</a>
 		<?php if ( $this->list_table->get_request_search() ) : ?>
 			<span class="subtitle"><?php echo esc_html( sprintf( /* translators: %s: Get requested search string */ __( 'Search results for "%s"', 'wp-ever-accounting' ), esc_html( $this->list_table->get_request_search() ) ) ); ?></span>
 		<?php endif; ?>

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6032d17cb655d3f32c4de79c8fcee4cd",
+    "content-hash": "582efb929d1a88f6f8bca339fe07c1e9",
     "packages": [
         {
             "name": "byteever/bytekit-core",
@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:byteever/bytekit-core.git",
-                "reference": "4830dfbd87d1c31122f40f3714beb26a9f94a1d0"
+                "reference": "9f2a0b01b92722ce182d866a0439c242394f4a12"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/byteever/bytekit-core/zipball/4830dfbd87d1c31122f40f3714beb26a9f94a1d0",
-                "reference": "4830dfbd87d1c31122f40f3714beb26a9f94a1d0",
+                "url": "https://api.github.com/repos/byteever/bytekit-core/zipball/9f2a0b01b92722ce182d866a0439c242394f4a12",
+                "reference": "9f2a0b01b92722ce182d866a0439c242394f4a12",
                 "shasum": ""
             },
             "require": {
@@ -100,103 +100,7 @@
                 "source": "https://github.com/byteever/bytekit-core/tree/master",
                 "issues": "https://github.com/byteever/bytekit-core/issues"
             },
-            "time": "2024-04-25T15:18:27+00:00"
-        },
-        {
-            "name": "byteever/bytekit-models",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "git@github.com:byteever/bytekit-models.git",
-                "reference": "6bb81db5853e1473a4a72a67bbdd50ee121ce86a"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/byteever/bytekit-models/zipball/6bb81db5853e1473a4a72a67bbdd50ee121ce86a",
-                "reference": "6bb81db5853e1473a4a72a67bbdd50ee121ce86a",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=8.0"
-            },
-            "require-dev": {
-                "byteever/byteever-sniffs": "dev-master",
-                "codeception/module-asserts": "^1.0",
-                "codeception/module-cli": "^1.0",
-                "codeception/module-db": "^1.0",
-                "codeception/module-filesystem": "^1.0",
-                "codeception/module-phpbrowser": "^1.0",
-                "codeception/module-rest": "^2.0",
-                "codeception/module-webdriver": "^1.0",
-                "codeception/util-universalframework": "^1.0",
-                "lucatume/wp-browser": "<3.5"
-            },
-            "default-branch": true,
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "ByteKit\\Models\\": "src/"
-                }
-            },
-            "autoload-dev": {
-                "psr-4": {
-                    "ByteKit\\Models\\Tests\\Supports\\": "tests/_support",
-                    "ByteKit\\Models\\Tests\\Unit\\": "tests/unit",
-                    "ByteKit\\Models\\Tests\\Functional\\": "tests/functional",
-                    "ByteKit\\Models\\Tests\\Acceptance\\": "tests/acceptance",
-                    "ByteKit\\Models\\Tests\\WPUnit\\": "tests/wpunit"
-                }
-            },
-            "scripts": {
-                "phpcs": [
-                    "@php ./vendor/bin/phpcs --standard=phpcs.xml -s -v"
-                ],
-                "phpcbf": [
-                    "@php ./vendor/bin/phpcbf --standard=phpcs.xml -v"
-                ],
-                "test:setup": [
-                    "bash bin/install-test-env.sh"
-                ],
-                "test:build": [
-                    "vendor/bin/codecept build"
-                ],
-                "test:wpunit": [
-                    "vendor/bin/codecept run wpunit --"
-                ],
-                "test:functional": [
-                    "vendor/bin/codecept run functional --"
-                ],
-                "test:acceptance": [
-                    "vendor/bin/codecept run acceptance --"
-                ],
-                "test:gen:wpunit": [
-                    "vendor/bin/codecept generate:wpunit wpunit"
-                ],
-                "test:gen:functional": [
-                    "vendor/bin/codecept generate:wpunit functional"
-                ],
-                "test:gen:acceptance": [
-                    "vendor/bin/codecept generate:acceptance acceptance"
-                ],
-                "test": [
-                    "vendor/bin/codecept run wpunit"
-                ]
-            },
-            "license": [
-                "GPL-3.0-or-later"
-            ],
-            "authors": [
-                {
-                    "name": "Sultan Nasir Uddin",
-                    "email": "manikdrmc@gmail.com"
-                }
-            ],
-            "description": "A package to manage models in WordPress.",
-            "support": {
-                "source": "https://github.com/byteever/bytekit-models/tree/master",
-                "issues": "https://github.com/byteever/bytekit-models/issues"
-            },
-            "time": "2024-05-01T15:00:32+00:00"
+            "time": "2024-05-02T09:34:58+00:00"
         },
         {
             "name": "woocommerce/action-scheduler",
@@ -10628,16 +10532,16 @@
         },
         {
             "name": "wp-cli/scaffold-command",
-            "version": "v2.2.0",
+            "version": "v2.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wp-cli/scaffold-command.git",
-                "reference": "8aa906c3ec6ae7d95f38c962fc2561714f9c7145"
+                "reference": "7a7d145c260ead64fa93a59498d60def970d5214"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wp-cli/scaffold-command/zipball/8aa906c3ec6ae7d95f38c962fc2561714f9c7145",
-                "reference": "8aa906c3ec6ae7d95f38c962fc2561714f9c7145",
+                "url": "https://api.github.com/repos/wp-cli/scaffold-command/zipball/7a7d145c260ead64fa93a59498d60def970d5214",
+                "reference": "7a7d145c260ead64fa93a59498d60def970d5214",
                 "shasum": ""
             },
             "require": {
@@ -10688,9 +10592,9 @@
             "homepage": "https://github.com/wp-cli/scaffold-command",
             "support": {
                 "issues": "https://github.com/wp-cli/scaffold-command/issues",
-                "source": "https://github.com/wp-cli/scaffold-command/tree/v2.2.0"
+                "source": "https://github.com/wp-cli/scaffold-command/tree/v2.3.0"
             },
-            "time": "2023-11-16T15:25:33+00:00"
+            "time": "2024-04-26T21:05:48+00:00"
         },
         {
             "name": "wp-cli/search-replace-command",
@@ -11309,7 +11213,6 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "byteever/bytekit-core": 20,
-        "byteever/bytekit-models": 20,
         "roave/security-advisories": 20
     },
     "prefer-stable": true,
@@ -11318,5 +11221,5 @@
         "php": ">=7.0"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.3.0"
 }

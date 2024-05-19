@@ -22,12 +22,7 @@ defined( 'ABSPATH' ) || exit;
  * @return array
  */
 function eac_get_transaction_types() {
-	$types = array(
-		'income'  => esc_html__( 'Income', 'wp-ever-accounting' ),
-		'expense' => esc_html__( 'Expense', 'wp-ever-accounting' ),
-	);
-
-	return apply_filters( 'ever_accounting_transaction_types', $types );
+	return Transaction::get_types();
 }
 
 /**
@@ -37,15 +32,7 @@ function eac_get_transaction_types() {
  * @return array
  */
 function eac_get_transaction_statuses() {
-	$statuses = array(
-		'draft'     => esc_html__( 'Draft', 'wp-ever-accounting' ), // 'draft' status is only for internal use.
-		'pending'   => esc_html__( 'Pending', 'wp-ever-accounting' ),
-		'completed' => esc_html__( 'Completed', 'wp-ever-accounting' ),
-		'refunded'  => esc_html__( 'Refunded', 'wp-ever-accounting' ),
-		'cancelled' => esc_html__( 'Cancelled', 'wp-ever-accounting' ),
-	);
-
-	return apply_filters( 'ever_accounting_transaction_statuses', $statuses );
+	return Transaction::get_statuses();
 }
 
 /**
@@ -109,7 +96,7 @@ function eac_get_revenues( $args = array(), $count = false ) {
 		return Revenue::count( $args );
 	}
 
-	return Revenue::query( $args );
+	return Revenue::results( $args );
 }
 
 /**
@@ -173,7 +160,7 @@ function eac_get_expenses( $args = array(), $count = false ) {
 		return Expense::count( $args );
 	}
 
-	return Expense::query( $args );
+	return Expense::results( $args );
 }
 
 /**
@@ -191,7 +178,7 @@ function eac_get_transactions( $args = array(), $count = false ) {
 		return Transaction::count( $args );
 	}
 
-	return Transaction::query( $args );
+	return Transaction::results( $args );
 }
 
 /**
@@ -255,7 +242,7 @@ function eac_get_transfers( $args = array(), $count = false ) {
 		return Transfer::count( $args );
 	}
 
-	return Transfer::query( $args );
+	return Transfer::results( $args );
 }
 
 /**
@@ -297,7 +284,7 @@ function eac_get_estimated_transaction_total( $period = 'month', $type = 'revenu
 
 	$estimate = false; // get_transient( "eac_estimated_revenue_for_{$period}_{$type}" );
 	if ( false === $estimate ) {
-		$result = $wpdb->get_results(
+		$result = $wpdb->results(
 			$wpdb->prepare(
 				"SELECT DATE_FORMAT(revenue_date, %s) AS period, SUM(amount/currency_rate) AS total_amount
 				FROM {$wpdb->prefix}ea_transactions

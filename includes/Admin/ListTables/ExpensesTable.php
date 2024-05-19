@@ -2,17 +2,17 @@
 
 namespace EverAccounting\Admin\ListTables;
 
-use EverAccounting\Models\Revenue;
+use EverAccounting\Models\Expense;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class RevenuesTable.
+ * Class ExpensesTable.
  *
  * @since 1.0.0
  * @package EverAccounting\Admin\ListTables
  */
-class RevenuesTable extends ListTable {
+class ExpensesTable extends ListTable {
 	/**
 	 * Constructor.
 	 *
@@ -26,26 +26,26 @@ class RevenuesTable extends ListTable {
 			wp_parse_args(
 				$args,
 				array(
-					'singular' => 'revenue',
-					'plural'   => 'revenues',
+					'singular' => 'expense',
+					'plural'   => 'expenses',
 					'screen'   => get_current_screen(),
 					'args'     => array(),
 				)
 			)
 		);
 
-		$this->base_url = admin_url( 'admin.php?page=eac-sales&tab=revenues' );
+		$this->base_url = admin_url( 'admin.php?page=eac-purchases&tab=expenses' );
 	}
 
 	/**
 	 * Prepares the list for display.
 	 *
-	 * @since 1.0.0
 	 * @return void
+	 * @since 1.0.0
 	 */
 	public function prepare_items() {
 		$this->process_actions();
-		$per_page    = $this->get_items_per_page( 'eac_revenues_per_page', 20 );
+		$per_page    = $this->get_items_per_page( 'eac_expenses_per_page', 20 );
 		$paged       = $this->get_pagenum();
 		$search      = $this->get_request_search();
 		$order_by    = $this->get_request_orderby();
@@ -71,11 +71,11 @@ class RevenuesTable extends ListTable {
 		 *
 		 * @since 1.0.0
 		 */
-		$args = apply_filters( 'ever_accounting_revenues_table_query_args', $args );
+		$args = apply_filters( 'ever_accounting_expenses_table_query_args', $args );
 
 		$args['no_found_rows'] = false;
-		$this->items           = Revenue::results( $args );
-		$total                 = Revenue::count( $args );
+		$this->items           = Expense::results( $args );
+		$total                 = Expense::count( $args );
 
 		$this->set_pagination_args(
 			array(
@@ -112,7 +112,7 @@ class RevenuesTable extends ListTable {
 	 * @since 1.0.0
 	 */
 	public function no_items() {
-		esc_html_e( 'No revenues found.', 'wp-ever-accounting' );
+		esc_html_e( 'No expenses found.', 'wp-ever-accounting' );
 	}
 
 	/**
@@ -132,7 +132,7 @@ class RevenuesTable extends ListTable {
 		foreach ( $statuses as $status => $label ) {
 			$link  = 'all' === $status ? $this->base_url : add_query_arg( 'status', $status, $this->base_url );
 			$args  = 'all' === $status ? array() : array( 'status' => $status );
-			$count = Revenue::count( $args );
+			$count = Expense::count( $args );
 			$label = sprintf( '%s <span class="count">(%s)</span>', esc_html( $label ), number_format_i18n( $count ) );
 
 			$status_links[ $status ] = array(
@@ -144,6 +144,7 @@ class RevenuesTable extends ListTable {
 
 		return $this->get_views_links( $status_links );
 	}
+
 
 	/**
 	 * Retrieves an associative array of bulk actions available on this table.
@@ -202,7 +203,7 @@ class RevenuesTable extends ListTable {
 			'date'      => __( 'Date', 'wp-ever-accounting' ),
 			'account'   => __( 'Account', 'wp-ever-accounting' ),
 			'category'  => __( 'Category', 'wp-ever-accounting' ),
-			'customer'  => __( 'Customer', 'wp-ever-accounting' ),
+			'vendor'    => __( 'Vendor', 'wp-ever-accounting' ),
 			'reference' => __( 'Reference', 'wp-ever-accounting' ),
 			'amount'    => __( 'Amount', 'wp-ever-accounting' ),
 			'status'    => __( 'Status', 'wp-ever-accounting' ),
@@ -220,13 +221,12 @@ class RevenuesTable extends ListTable {
 		return array(
 			'date'      => array( 'date', false ),
 			'amount'    => array( 'amount', false ),
-			'account'   => array( 'account', false ),
-			'category'  => array( 'category', false ),
-			'customer'  => array( 'customer', false ),
+			'account'   => array( 'account_id', false ),
+			'category'  => array( 'category_id', false ),
+			'vendor'    => array( 'vendor_id', false ),
 			'reference' => array( 'reference', false ),
 		);
 	}
-
 	/**
 	 * Define primary column.
 	 *
@@ -240,7 +240,7 @@ class RevenuesTable extends ListTable {
 	/**
 	 * Renders the checkbox column.
 	 *
-	 * @param Revenue $item The current object.
+	 * @param Expense $item The current object.
 	 *
 	 * @since  1.0.0
 	 * @return string Displays a checkbox.
@@ -252,7 +252,7 @@ class RevenuesTable extends ListTable {
 	/**
 	 * Renders the name column.
 	 *
-	 * @param Revenue $item The current object.
+	 * @param Expense $item The current object.
 	 *
 	 * @since  1.0.0
 	 * @return string Displays the name.
@@ -264,7 +264,7 @@ class RevenuesTable extends ListTable {
 	/**
 	 * Renders the amount column.
 	 *
-	 * @param Revenue $item The current object.
+	 * @param Expense $item The current object.
 	 *
 	 * @since  1.0.0
 	 * @return string Displays the amount.
@@ -276,7 +276,7 @@ class RevenuesTable extends ListTable {
 	/**
 	 * Renders the account column.
 	 *
-	 * @param Revenue $item The current object.
+	 * @param Expense $item The current object.
 	 *
 	 * @since  1.0.0
 	 * @return string Displays the account.
@@ -293,7 +293,7 @@ class RevenuesTable extends ListTable {
 	/**
 	 * Renders the category column.
 	 *
-	 * @param Revenue $item The current object.
+	 * @param Expense $item The current object.
 	 *
 	 * @since  1.0.0
 	 * @return string Displays the category.
@@ -310,15 +310,14 @@ class RevenuesTable extends ListTable {
 	/**
 	 * Renders the customer column.
 	 *
-	 * @param Revenue $item The current object.
+	 * @param Expense $item The current object.
 	 *
 	 * @since  1.0.0
 	 * @return string Displays the customer.
 	 */
-	public function column_customer( $item ) {
-		$customer = $item->customer;
-		if ( $customer ) {
-			return sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( 'customer_id', $customer->id, $this->base_url ) ), wp_kses_post( $customer->name ) );
+	public function column_vendor( $item ) {
+		if ( $item->vendor ) {
+			return sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( 'customer_id', $item->vendor, $this->base_url ) ), wp_kses_post( $item->vendor->name ) );
 		}
 
 		return '&mdash;';
@@ -327,7 +326,7 @@ class RevenuesTable extends ListTable {
 	/**
 	 * Renders the status column.
 	 *
-	 * @param Revenue $item The current object.
+	 * @param Expense $item The current object.
 	 *
 	 * @since 1.0.0
 	 * @return string Displays the status.
@@ -343,7 +342,7 @@ class RevenuesTable extends ListTable {
 	/**
 	 * Generates and displays row actions links.
 	 *
-	 * @param Revenue $item The comment object.
+	 * @param Expense $item The comment object.
 	 * @param string  $column_name Current column name.
 	 * @param string  $primary Primary column name.
 	 *

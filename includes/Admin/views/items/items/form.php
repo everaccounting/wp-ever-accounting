@@ -4,8 +4,10 @@
  *
  * @package EverAccounting
  * @version 1.0.0
- * @var $item \EverAccounting\Models\Item Item object.
+ * @var $item Item Item object.
  */
+
+use EverAccounting\Models\Item;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -54,31 +56,30 @@ $categories = eac_get_categories(
 					);
 					eac_form_group(
 						array(
-							'type'              => 'text',
-							'name'              => 'price',
-							'label'             => __( 'Price', 'wp-ever-accounting' ),
-							'value'             => $item->price,
-							'placeholder'       => __( '1000.00', 'wp-ever-accounting' ),
-							'class'             => 'eac_inputmask',
-							'required'          => true,
-							'prefix'            => eac_get_currency_symbol(),
+							'type'           => 'text',
+							'name'           => 'price',
+							'label'          => __( 'Price', 'wp-ever-accounting' ),
+							'value'          => $item->price,
+							'placeholder'    => __( '1000.00', 'wp-ever-accounting' ),
+							'class'          => 'eac_inputmask',
+							'required'       => true,
+							'prefix'         => eac_get_currency_symbol(),
 							/* translators: %s: currency symbol */
-							'tooltip'           => sprintf( __( 'Enter the price of the item in %s.', 'wp-ever-accounting' ), eac_get_base_currency() ),
-							'data-mask'         => '##.00',
-							'data-mask-reverse' => 'true',
+							'tooltip'        => sprintf( __( 'Enter the price of the item in %s.', 'wp-ever-accounting' ), eac_get_base_currency() ),
+							'data-inputmask' => '"alias": "decimal","placeholder": "0.00", "rightAlign": false',
 						)
 					);
 					eac_form_group(
 						array(
-							'type'        => 'text',
-							'name'        => 'cost',
-							'label'       => __( 'Cost', 'wp-ever-accounting' ),
-							'value'       => $item->cost,
-							'placeholder' => __( '1000.00', 'wp-ever-accounting' ),
-							'class'       => 'eac_decimal_input',
-							'prefix'      => eac_get_currency_symbol(),
+							'type'           => 'text',
+							'name'           => 'cost',
+							'label'          => __( 'Cost', 'wp-ever-accounting' ),
+							'value'          => $item->cost,
+							'class'          => 'eac_inputmask',
+							'prefix'         => eac_get_currency_symbol(),
 							/* translators: %s: currency symbol */
-							'tooltip'     => sprintf( __( 'Enter the cost of the item in %s.', 'wp-ever-accounting' ), eac_get_base_currency() ),
+							'tooltip'        => sprintf( __( 'Enter the cost of the item in %s.', 'wp-ever-accounting' ), eac_get_base_currency() ),
+							'data-inputmask' => '"alias": "decimal","placeholder": "0.00", "rightAlign": false',
 						)
 					);
 					eac_form_group(
@@ -108,7 +109,7 @@ $categories = eac_get_categories(
 							'name'        => 'unit',
 							'label'       => __( 'Unit', 'wp-ever-accounting' ),
 							'value'       => $item->unit,
-							'options'     => eac_get_unit_types(),
+							'options'     => Item::get_units(),
 							'placeholder' => __( 'Select unit', 'wp-ever-accounting' ),
 							'class'       => 'eac-select2',
 						)
@@ -133,7 +134,7 @@ $categories = eac_get_categories(
 							'multiple'     => true,
 							'name'         => 'tax_ids',
 							'label'        => __( 'Taxes', 'wp-ever-accounting' ),
-							'value'        => wp_list_pluck( $item->taxes, 'id' ),
+							'value'        => $item->tax_ids,
 							'options'      => $item->taxes,
 							'option_label' => 'formatted_name',
 							'option_value' => 'id',

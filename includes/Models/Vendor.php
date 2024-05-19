@@ -22,54 +22,44 @@ class Vendor extends Contact {
 	/**
 	 * Create a new model instance.
 	 *
-	 * @param string|int|array $attributes Attributes.
+	 * @param object|array|null $data The data to initialize the model.
 	 *
 	 * @throws \InvalidArgumentException If table name or object type is not set.
 	 * @return void
 	 */
-	public function __construct( $attributes = null ) {
-		$this->attributes['type'] = $this->get_object_type();
+	public function __construct( $data = null ) {
+		$this->data['type']       = $this->get_object_type();
 		$this->query_args['type'] = $this->get_object_type();
-		parent::__construct( $attributes );
+		parent::__construct( $data );
 	}
 
+
 	/*
 	|--------------------------------------------------------------------------
-	| Attributes & Relations
+	| Prop Definition Methods
 	|--------------------------------------------------------------------------
-	| Define the attributes and relations of the model.
+	| This section contains methods that define and provide specific prop values
+	| related to the model, such as statuses or types. These methods can be accessed
+	| without instantiating the model.
+	|--------------------------------------------------------------------------
 	*/
 
-
 	/*
 	|--------------------------------------------------------------------------
-	| CRUD methods
+	| Accessors, Mutators, Relationship and Validation Methods
 	|--------------------------------------------------------------------------
-	| Methods for saving, updating, and deleting objects.
+	| This section contains methods for getting and setting properties (accessors
+	| and mutators) as well as defining relationships between models. It also includes
+	| a data validation method that ensures data integrity before saving.
+	|--------------------------------------------------------------------------
 	*/
 
-	/**
-	 * Load the object from the database.
-	 *
-	 * @param string|int $id ID of the object.
-	 *
-	 * @since 1.0.0
-	 * @return $this
-	 */
-	protected function load( $id ) {
-		parent::load( $id );
-		if ( $this->get_object_type() !== $this->attributes['type'] ) {
-			$this->apply_defaults();
-		}
-
-		return $this;
-	}
-
 	/*
 	|--------------------------------------------------------------------------
-	| Helper methods.
+	| Helper Methods
 	|--------------------------------------------------------------------------
-	| Utility methods which don't directly relate to this object but may be
-	| used by this object.
+	| This section contains utility methods that are not directly related to this
+	| object but can be used to support its functionality.
+	|--------------------------------------------------------------------------
 	*/
 }

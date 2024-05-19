@@ -69,7 +69,7 @@ function eac_get_invoices( $args = array(), $count = false ) {
 		return Invoice::count( $args );
 	}
 
-	return Invoice::query( $args );
+	return Invoice::results( $args );
 }
 
 
@@ -129,7 +129,7 @@ function eac_get_bills( $args = array(), $count = false ) {
 		return Bill::count( $args );
 	}
 
-	return Bill::query( $args );
+	return Bill::results( $args );
 }
 
 /**
@@ -166,4 +166,41 @@ function eac_get_invoice_statuses() {
 	);
 
 	return apply_filters( 'ever_accounting_invoice_statuses', $statuses );
+}
+
+
+/**
+ * Get invoice columns.
+ *
+ * @return array
+ * @since 1.1.0
+ */
+function eac_get_invoice_columns() {
+	$columns = array(
+		'item'     => get_option( 'eac_invoice_col_item_label', esc_html__( 'Item', 'wp-ever-accounting' ) ),
+		'price'    => get_option( 'eac_invoice_col_price_label', esc_html__( 'Price', 'wp-ever-accounting' ) ),
+		'quantity' => get_option( 'eac_invoice_col_quantity_label', esc_html__( 'Quantity', 'wp-ever-accounting' ) ),
+		'tax'      => get_option( 'eac_invoice_col_tax_label', esc_html__( 'Tax', 'wp-ever-accounting' ) ),
+		'subtotal' => get_option( 'eac_invoice_col_subtotal_label', esc_html__( 'Subtotal', 'wp-ever-accounting' ) ),
+	);
+
+	return apply_filters( 'ever_accounting_invoice_columns', $columns );
+}
+
+/**
+ * Get bill columns.
+ *
+ * @return array
+ * @since 1.1.0
+ */
+function eac_get_bill_columns() {
+	$columns = array(
+		'item'     => esc_html__( 'Item', 'wp-ever-accounting' ),
+		'price'    => esc_html__( 'Price', 'wp-ever-accounting' ),
+		'quantity' => esc_html__( 'Quantity', 'wp-ever-accounting' ),
+		'tax'      => esc_html__( 'Tax', 'wp-ever-accounting' ),
+		'subtotal' => esc_html__( 'Subtotal', 'wp-ever-accounting' ),
+	);
+
+	return apply_filters( 'ever_accounting_bill_columns', $columns );
 }

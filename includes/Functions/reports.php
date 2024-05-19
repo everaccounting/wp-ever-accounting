@@ -203,7 +203,6 @@ function eac_get_comparison_dates( $start_date, $end_date ) {
 		$previous_start_date = wp_date( 'Y-m-d', strtotime( $start_date . ' -1 year' ) );
 		$previous_end_date   = wp_date( 'Y-m-d', strtotime( $end_date . ' -1 year' ) );
 	}
-
 }
 
 /**
@@ -272,7 +271,7 @@ function eac_get_random_color( $key = null ) {
  * @since 1.0.0
  */
 function eac_get_sales_summary() {
-	$summery       = [];
+	$summery       = array();
 	$total_revenue = 0;
 	$date          = wp_date( 'M, y' );
 	$revenues      = eac_get_revenues_report();
@@ -292,7 +291,7 @@ function eac_get_sales_summary() {
  * @since 1.0.0
  */
 function eac_get_purchases_summary() {
-	$summery       = [];
+	$summery       = array();
 	$total_expense = 0;
 	$date          = wp_date( 'M, y' );
 	$expenses      = eac_get_expense_report();
@@ -312,7 +311,7 @@ function eac_get_purchases_summary() {
  * @since 1.0.0
  */
 function eac_get_profits_summary() {
-	$summery = [];
+	$summery = array();
 	$revenue = eac_get_sales_summary();
 	$expense = eac_get_purchases_summary();
 
@@ -332,7 +331,7 @@ function eac_get_profits_summary() {
  */
 function eac_get_revenues_report( $year = null, $force = false ) {
 	global $wpdb;
-	$reports     = false; //get_transient( 'eac_revenues_reports' );
+	$reports     = false; // get_transient( 'eac_revenues_reports' );
 	$reports     = ! is_array( $reports ) ? array() : $reports;
 	$year        = empty( $year ) ? wp_date( 'Y' ) : $year;
 	$start_date  = eac_get_year_start_date( $year );
@@ -349,16 +348,17 @@ function eac_get_revenues_report( $year = null, $force = false ) {
 		WHERE t.type = 'revenue'
 		AND it.revenue_id IS NULL
 		AND et.expense_id IS NULL
+		AND t.status = 'completed'
 		AND t.date BETWEEN %s AND %s
 		ORDER BY t.date ASC",
 				$start_date,
 				$end_date
 			)
 		);
-		$months      = array_fill_keys( eac_get_months_in_range( $start_date, $end_date, $date_format ), 0 );
-		$month_count = count( $months );
-		$date_count  = count( eac_get_date_range( $start_date, $end_date ) );
-		$data        = array(
+		$months       = array_fill_keys( eac_get_months_in_range( $start_date, $end_date, $date_format ), 0 );
+		$month_count  = count( $months );
+		$date_count   = count( eac_get_date_range( $start_date, $end_date ) );
+		$data         = array(
 			'total_amount' => 0,
 			'total_count'  => 0,
 			'daily_avg'    => 0,
@@ -375,7 +375,7 @@ function eac_get_revenues_report( $year = null, $force = false ) {
 			$month_year  = wp_date( $date_format, strtotime( $trans_year . '-' . $month . '-01' ) );
 			// Total.
 			$data['total_amount'] += round( $amount, 2 );
-			$data['total_count'] ++;
+			++$data['total_count'];
 
 			// months.
 			if ( ! isset( $data['months'][ $month_year ] ) ) {
@@ -418,7 +418,7 @@ function eac_get_revenues_report( $year = null, $force = false ) {
  */
 function eac_get_expense_report( $year = null, $force = false ) {
 	global $wpdb;
-	$reports     = false; //get_transient( 'eac_expense_reports' );
+	$reports     = false; // get_transient( 'eac_expense_reports' );
 	$reports     = ! is_array( $reports ) ? array() : $reports;
 	$year        = empty( $year ) ? wp_date( 'Y' ) : $year;
 	$start_date  = eac_get_year_start_date( $year );
@@ -435,16 +435,17 @@ function eac_get_expense_report( $year = null, $force = false ) {
 		WHERE t.type = 'expense'
 		AND it.revenue_id IS NULL
 		AND et.expense_id IS NULL
+		AND t.status = 'completed'
 		AND t.date BETWEEN %s AND %s
 		ORDER BY t.date ASC",
 				$start_date,
 				$end_date
 			)
 		);
-		$months      = array_fill_keys( eac_get_months_in_range( $start_date, $end_date, $date_format ), 0 );
-		$month_count = count( $months );
-		$date_count  = count( eac_get_date_range( $start_date, $end_date ) );
-		$data        = array(
+		$months       = array_fill_keys( eac_get_months_in_range( $start_date, $end_date, $date_format ), 0 );
+		$month_count  = count( $months );
+		$date_count   = count( eac_get_date_range( $start_date, $end_date ) );
+		$data         = array(
 			'total_amount' => 0,
 			'total_count'  => 0,
 			'daily_avg'    => 0,
@@ -462,7 +463,7 @@ function eac_get_expense_report( $year = null, $force = false ) {
 
 			// Total.
 			$data['total_amount'] += round( $amount, 2 );
-			$data['total_count'] ++;
+			++$data['total_count'];
 
 			// months.
 			if ( ! isset( $data['months'][ $month_year ] ) ) {
@@ -520,6 +521,7 @@ function eac_get_profit_report( $year = null, $force = true ) {
 		LEFT JOIN {$wpdb->prefix}ea_transfers AS et ON t.id = et.expense_id
 		WHERE it.revenue_id IS NULL
 		AND et.expense_id IS NULL
+		AND t.status = 'completed'
 		AND t.date BETWEEN %s AND %s
 		ORDER BY t.date ASC",
 				$start_date,
@@ -549,7 +551,7 @@ function eac_get_profit_report( $year = null, $force = true ) {
 			$month_year = wp_date( $date_format, strtotime( $trans_year . '-' . $month . '-01' ) );
 
 			// total count.
-			$data['total_count'] ++;
+			++$data['total_count'];
 
 			// Now based on type add or subtract.
 			if ( 'revenue' === $type ) {

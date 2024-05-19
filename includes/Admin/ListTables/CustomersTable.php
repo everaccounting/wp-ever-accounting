@@ -50,12 +50,12 @@ class CustomersTable extends ListTable {
 		$order_by = $this->get_request_orderby();
 		$order    = $this->get_request_order();
 		$args     = array(
-			'limit'    => $per_page,
-			'page'     => $paged,
-			'search'   => $search,
+			'limit'   => $per_page,
+			'page'    => $paged,
+			'search'  => $search,
 			'orderby' => $order_by,
-			'order'    => $order,
-			'status'   => $this->get_request_status(),
+			'order'   => $order,
+			'status'  => $this->get_request_status(),
 		);
 		/**
 		 * Filter the query arguments for the list table.
@@ -64,10 +64,10 @@ class CustomersTable extends ListTable {
 		 *
 		 * @since 1.0.0
 		 */
-		$args = apply_filters( 'ever_accounting_customers_table_query_args', $args );
-
-		$this->items = Customer::query( $args );
-		$total       = Customer::count( $args );
+		$args                  = apply_filters( 'ever_accounting_customers_table_query_args', $args );
+		$args['no_found_rows'] = false;
+		$this->items           = Customer::results( $args );
+		$total                 = Customer::count( $args );
 
 		$this->set_pagination_args(
 			array(

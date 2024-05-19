@@ -22,15 +22,14 @@ defined( 'ABSPATH' ) || exit;
 						<?php
 						eac_form_group(
 							array(
-								'label'                => __( 'Date', 'wp-ever-accounting' ),
-								'type'                 => 'date',
-								'name'                 => 'date',
-								'placeholder'          => 'YYYY-MM-DD',
-								'value'                => $revenue->date,
-								'required'             => true,
-								'class'                => 'eac_inputmask',
-								'data-inputmask-alias' => 'datetime',
-								'data-inputmask-inputformat' => 'yyyy-mm-dd',
+								'label'          => __( 'Date', 'wp-ever-accounting' ),
+								'type'           => 'date',
+								'name'           => 'date',
+								'placeholder'    => 'yyyy-mm-dd',
+								'value'          => $revenue->date,
+								'required'       => true,
+								'class'          => 'eac_inputmask',
+								'data-inputmask' => '"alias": "datetime", "inputFormat": "yyyy-mm-dd"',
 							)
 						);
 
@@ -66,7 +65,8 @@ defined( 'ABSPATH' ) || exit;
 								'required'       => true,
 								'class'          => 'eac_inputmask',
 								'tooltip'        => __( 'Enter the amount in the currency of the selected account, use (.) for decimal.', 'wp-ever-accounting' ),
-								'data-inputmask' => 'currency',
+								'data-inputmask' => '"alias": "decimal","placeholder": "0.00", "rightAlign": false',
+
 							)
 						);
 						eac_form_group(
@@ -79,6 +79,7 @@ defined( 'ABSPATH' ) || exit;
 								'option_value'     => 'id',
 								'option_label'     => 'formatted_name',
 								'default'          => filter_input( INPUT_GET, 'customer_id', FILTER_SANITIZE_NUMBER_INT ),
+								'disabled'         => $revenue->exists() && $revenue->contact_id,
 								'data-placeholder' => __( 'Select customer', 'wp-ever-accounting' ),
 								'data-action'      => 'eac_json_search',
 								'data-type'        => 'customer',
@@ -132,7 +133,7 @@ defined( 'ABSPATH' ) || exit;
 								'default'          => filter_input( INPUT_GET, 'document_id', FILTER_SANITIZE_NUMBER_INT ),
 								'options'          => wp_list_pluck( $revenue->invoice, 'formatted_name', 'id' ),
 								'placeholder'      => __( 'Select invoice', 'wp-ever-accounting' ),
-								'required'         => false,
+								'disabled'         => $revenue->exists() && $revenue->document_id,
 								'class'            => 'eac_select2',
 								'data-placeholder' => __( 'Select invoice', 'wp-ever-accounting' ),
 								'tooltip'          => __( 'Select the invoice related to this revenue., ignore if not applicable.', 'wp-ever-accounting' ),

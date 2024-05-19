@@ -51,12 +51,12 @@ class CurrenciesTable extends ListTable {
 		$order_by = $this->get_request_orderby();
 		$order    = $this->get_request_order();
 		$args     = array(
-			'limit'    => $per_page,
-			'page'     => $paged,
-			'search'   => $search,
+			'limit'   => $per_page,
+			'page'    => $paged,
+			'search'  => $search,
 			'orderby' => $order_by,
-			'order'    => $order,
-			'status'   => $this->get_request_status(),
+			'order'   => $order,
+			'status'  => $this->get_request_status(),
 		);
 
 		/**
@@ -68,8 +68,9 @@ class CurrenciesTable extends ListTable {
 		 */
 		$args = apply_filters( 'ever_accounting_currencies_table_query_args', $args );
 
-		$this->items = eac_get_currencies( $args );
-		$total       = eac_get_currencies( $args, true );
+		$args['no_found_rows'] = false;
+		$this->items           = Currency::results( $args );
+		$total                 = Currency::count( $args );
 		$this->set_pagination_args(
 			array(
 				'total_items' => $total,

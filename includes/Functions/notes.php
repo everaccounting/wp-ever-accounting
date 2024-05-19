@@ -21,7 +21,7 @@ defined( 'ABSPATH' ) || exit;
  * @since 1.1.0
  */
 function eac_get_note( $item ) {
-	return Note::get( $item );
+	return Note::find( $item );
 }
 
 /**
@@ -69,5 +69,5 @@ function eac_get_notes( $args = array(), $count = false ) {
 		return Note::count( $args );
 	}
 
-	return Note::query( $args );
+	return Note::results( $args );
 }

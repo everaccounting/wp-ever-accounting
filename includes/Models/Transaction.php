@@ -2,6 +2,8 @@
 
 namespace EverAccounting\Models;
 
+use ByteKit\Models\Relations\BelongsTo;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -45,15 +47,6 @@ defined( 'ABSPATH' ) || exit;
  * @property Vendor   $vendor Related vendor.
  */
 class Transaction extends Model {
-
-	/**
-	 * Meta type declaration for the object.
-	 *
-	 * @since 1.0.0
-	 * @var string
-	 */
-	public $meta_type = 'ea_transaction';
-
 	/**
 	 * The table associated with the model.
 	 *
@@ -61,6 +54,14 @@ class Transaction extends Model {
 	 * @var string
 	 */
 	protected $table = 'ea_transactions';
+
+	/**
+	 * Meta type declaration for the object.
+	 *
+	 * @since 1.0.0
+	 * @var string
+	 */
+	protected $meta_type = 'ea_transaction';
 
 	/**
 	 * Table columns.
@@ -93,32 +94,22 @@ class Transaction extends Model {
 	);
 
 	/**
-	 * Model's data that aren't mass assignable.
+	 * The model's data properties.
 	 *
 	 * @since 1.0.0
 	 * @var array
 	 */
-	protected $guarded = array(
-		'currency_code',
-		'type',
-	);
-
-	/**
-	 * The model's attributes.
-	 *
-	 * @since 1.0.0
-	 * @var array
-	 */
-	protected $attributes = array(
+	protected $props = array(
 		'status'        => 'draft',
-		'type'          => 'expense',
 		'exchange_rate' => 1,
 		'created_via'   => 'manual',
+		'reconciled'    => false,
 	);
 
 	/**
-	 * The attributes that should be cast to native types.
+	 * The properties that should be cast.
 	 *
+	 * @since 1.0.0
 	 * @var array
 	 */
 	protected $casts = array(
@@ -146,7 +137,15 @@ class Transaction extends Model {
 	);
 
 	/**
-	 * Searchable attributes.
+	 * Indicates if the model should be timestamped.
+	 *
+	 * @since 1.0.0
+	 * @var bool
+	 */
+	protected $timestamps = true;
+
+	/**
+	 * The properties that are searchable.
 	 *
 	 * @since 1.0.0
 	 * @var array
@@ -157,32 +156,72 @@ class Transaction extends Model {
 	);
 
 	/**
-	 * Whether the model should be timestamped.
-	 *
-	 * @since 1.0.0
-	 * @var bool
-	 */
-	protected $timestamps = true;
-
-	/**
 	 * Create a new model instance.
 	 *
-	 * @param string|int|array $attributes Attributes.
+	 * @param string|int|array $data Attributes.
 	 *
 	 * @throws \InvalidArgumentException If table name or object type is not set.
 	 * @return void
 	 */
-	public function __construct( $attributes = null ) {
-		$this->attributes['uid']           = wp_generate_uuid4();
-		$this->attributes['currency_code'] = eac_get_base_currency();
-		parent::__construct( $attributes );
+	public function __construct( $data = null ) {
+		$this->props['uid']           = wp_generate_uuid4();
+		$this->props['currency_code'] = eac_get_base_currency();
+		parent::__construct( $data );
 	}
 
 	/*
 	|--------------------------------------------------------------------------
-	| Attributes & Relations
+	| Prop Definition Methods
 	|--------------------------------------------------------------------------
-	| Define the attributes and relations of the model.
+	| This section contains methods that define and provide specific prop values
+	| related to the model, such as statuses or types. These methods can be accessed
+	| without instantiating the model.
+	|--------------------------------------------------------------------------
+	*/
+
+	/**
+	 * Get transaction types.
+	 *
+	 * @since 1.0.0
+	 * @return array
+	 */
+	public static function get_types() {
+		return apply_filters(
+			'ever_accounting_transaction_types',
+			array(
+				'revenue' => esc_html__( 'Revenue', 'wp-ever-accounting' ),
+				'expense' => esc_html__( 'Expense', 'wp-ever-accounting' ),
+			)
+		);
+	}
+
+	/**
+	 * Get statuses.
+	 *
+	 * @since 1.1.0
+	 * @return array
+	 */
+	public static function get_statuses() {
+		return apply_filters(
+			'ever_accounting_transaction_statuses',
+			array(
+				'draft'     => esc_html__( 'Draft', 'wp-ever-accounting' ), // 'draft' status is only for internal use.
+				'pending'   => esc_html__( 'Pending', 'wp-ever-accounting' ),
+				'completed' => esc_html__( 'Completed', 'wp-ever-accounting' ),
+				'refunded'  => esc_html__( 'Refunded', 'wp-ever-accounting' ),
+				'cancelled' => esc_html__( 'Cancelled', 'wp-ever-accounting' ),
+			)
+		);
+	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| Accessors, Mutators, Relationship and Validation Methods
+	|--------------------------------------------------------------------------
+	| This section contains methods for getting and setting properties (accessors
+	| and mutators) as well as defining relationships between models. It also includes
+	| a data validation method that ensures data integrity before saving.
+	|--------------------------------------------------------------------------
 	*/
 
 	/**
@@ -191,7 +230,7 @@ class Transaction extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	protected function get_formatted_amount_attribute() {
+	protected function get_formatted_amount_prop() {
 		return eac_format_amount( $this->amount, $this->currency_code );
 	}
 
@@ -201,7 +240,7 @@ class Transaction extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	protected function get_formatted_address_attribute() {
+	protected function get_formatted_address_prop() {
 		if ( empty( $this->contact ) ) {
 			return '';
 		}
@@ -224,7 +263,7 @@ class Transaction extends Model {
 	 * Related currency.
 	 *
 	 * @since 1.2.1
-	 * @return \ByteKit\Models\Relation
+	 * @return BelongsTo
 	 */
 	protected function currency() {
 		return $this->belongs_to( Currency::class, 'currency_code', 'code' );
@@ -234,7 +273,7 @@ class Transaction extends Model {
 	 * Transaction related account.
 	 *
 	 * @since 1.0.0
-	 * @return \ByteKit\Models\Relation
+	 * @return BelongsTo
 	 */
 	public function account() {
 		return $this->belongs_to( Account::class );
@@ -244,9 +283,9 @@ class Transaction extends Model {
 	 * Transaction related category.
 	 *
 	 * @since 1.0.0
-	 * @return \ByteKit\Models\Relation
+	 * @return BelongsTo
 	 */
-	protected function category() {
+	public function category() {
 		return $this->belongs_to( Category::class );
 	}
 
@@ -254,9 +293,9 @@ class Transaction extends Model {
 	 * Transaction related contact.
 	 *
 	 * @since 1.0.0
-	 * @return \ByteKit\Models\Relation
+	 * @return BelongsTo
 	 */
-	protected function customer() {
+	public function customer() {
 		return $this->belongs_to( Customer::class, 'contact_id' );
 	}
 
@@ -264,40 +303,43 @@ class Transaction extends Model {
 	 * Transaction related contact.
 	 *
 	 * @since 1.0.0
-	 * @return \ByteKit\Models\Relation
+	 * @return BelongsTo
 	 */
-	protected function vendor() {
+	public function vendor() {
 		return $this->belongs_to( Vendor::class, 'contact_id' );
 	}
 
-	/*
-	|--------------------------------------------------------------------------
-	| CRUD methods
-	|--------------------------------------------------------------------------
-	| The following methods are used to create, read, update and delete the object.
-	*/
-
 	/**
-	 * Save the object to the database.
+	 * Document relation.
 	 *
 	 * @since 1.0.0
-	 * @return \WP_Error|true True on success, WP_Error on failure.
+	 * @return BelongsTo
 	 */
-	public function save() {
+	public function document() {
+		return $this->belongs_to( Document::class );
+	}
+
+	/**
+	 * Sanitize data before saving.
+	 *
+	 * @since 1.0.0
+	 * @return void|\WP_Error Return WP_Error if data is not valid or void.
+	 */
+	public function validate_save_data() {
 		if ( empty( $this->account_id ) ) {
 			return new \WP_Error( 'missing_required', __( 'Account ID is required.', 'wp-ever-accounting' ) );
 		}
 
 		// If the account_id is changed, update the currency code.
-		if ( $this->is_attribute_changed( 'account_id' ) || ! $this->exists() ) {
+		if ( $this->is_dirty( 'account_id' ) || ! $this->exists() ) {
 			$account = Account::find( $this->account_id );
-			$this->set_attribute_value( 'currency_code', $account ? $account->currency_code : 'USD' );
+			$this->set_prop_value( 'currency_code', $account ? $account->currency_code : 'USD' );
 		}
 
 		// If currency code is changed, update the currency rate.
-		if ( $this->is_attribute_changed( 'currency_code' ) || ! $this->exists() ) {
-			$currency = Currency::find( array( 'code' => $this->currency_code ) );
-			$this->set_attribute_value( 'currency_rate', $currency ? $currency->exchange_rate : 1 );
+		if ( $this->is_dirty( 'currency_code' ) || ! $this->exists() ) {
+			$currency = Currency::find( $this->currency_code );
+			$this->set_prop_value( 'currency_rate', $currency ? $currency->exchange_rate : 1 );
 		}
 
 		if ( empty( $this->number ) ) {
@@ -311,16 +353,15 @@ class Transaction extends Model {
 		if ( empty( $this->author_id ) && is_user_logged_in() ) {
 			$this->author_id = get_current_user_id();
 		}
-
-		return parent::save();
 	}
 
 	/*
 	|--------------------------------------------------------------------------
-	| Helper methods.
+	| Helper Methods
 	|--------------------------------------------------------------------------
-	| Utility methods which don't directly relate to this object but may be
-	| used by this object.
+	| This section contains utility methods that are not directly related to this
+	| object but can be used to support its functionality.
+	|--------------------------------------------------------------------------
 	*/
 	/**
 	 * Get max voucher number.
@@ -329,9 +370,9 @@ class Transaction extends Model {
 	 * @return string
 	 */
 	public function get_max_number() {
-		return (int) $this->wpdb()->get_var(
-			$this->wpdb()->prepare(
-				"SELECT MAX(REGEXP_REPLACE(number, '[^0-9]', '')) FROM {$this->wpdb()->prefix}{$this->get_table()} WHERE type = %s",
+		return (int) $this->get_db()->get_var(
+			$this->get_db()->prepare(
+				"SELECT MAX(REGEXP_REPLACE(number, '[^0-9]', '')) FROM {$this->get_table( true )} WHERE type = %s",
 				$this->type
 			)
 		);

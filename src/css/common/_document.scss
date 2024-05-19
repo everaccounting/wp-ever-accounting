@@ -285,22 +285,10 @@
 			padding: 1em;
 			column-gap: 20px;
 			display: grid;
-			grid-template-columns: 1fr 1fr;
+			grid-template-columns: 3fr 2fr;
 			justify-content: space-between;
 			align-items: self-start;
 			align-content: flex-start;
-
-			.document-info__meta {
-				box-sizing: border-box;
-				flex-wrap: wrap;
-				padding: 1em;
-				column-gap: 20px;
-				display: grid;
-				grid-template-columns: 1fr 1fr;
-				justify-content: space-between;
-				align-items: self-start;
-				align-content: flex-start;
-			}
 
 			h3 {
 				color: #333;

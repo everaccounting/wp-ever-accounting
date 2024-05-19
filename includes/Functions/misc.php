@@ -60,11 +60,9 @@ function eac_form_group( $field ) {
 		if ( empty( $attr_key ) || empty( $attr_value ) ) {
 			continue;
 		}
-
-//		if ( is_array( $attr_value ) ) {
-//			$attr_value = wp_json_encode( $attr_value, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP );
-//		}
-
+		if ( is_array( $attr_value ) ) {
+			$attr_value = wp_json_encode( $attr_value, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP );
+		}
 		if ( strpos( $attr_key, 'attr-' ) === 0 ) {
 			$attrs[] = sprintf( '%s="%s"', esc_attr( str_replace( 'attr-', '', $attr_key ) ), esc_attr( $attr_value ) );
 		} elseif ( strpos( $attr_key, 'data-' ) === 0 ) {
@@ -261,7 +259,7 @@ function eac_form_group( $field ) {
 			break;
 	}
 
-	if ( ! empty( $field['prefix'] ) || ! empty( $field['suffix'] ) && ! empty( $input ) ) {
+	if ( ! empty( $field['prefix'] ) || ( ! empty( $field['suffix'] ) && ! empty( $input ) ) ) {
 		$input = sprintf(
 			'<div class="bkit-input-group eac-form-field__group">%s%s%s</div>',
 			$field['prefix'],

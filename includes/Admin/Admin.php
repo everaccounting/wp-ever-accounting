@@ -80,7 +80,7 @@ class Admin {
 		$scripts->register_script( 'eac-chartjs', 'js/chartjs.js' );
 
 		// Core scripts.
-		$admin_js_deps  = array( 'jquery', 'wp-util', 'eac-select2', 'jquery-ui-datepicker', 'jquery-ui-tooltip', 'eac-blockui', 'eac-modal' );
+		$admin_js_deps  = array( 'jquery', 'wp-util', 'eac-select2', 'eac-inputmask', 'jquery-ui-datepicker', 'jquery-ui-tooltip', 'eac-blockui', 'eac-modal' );
 		$admin_css_deps = array( 'eac-jquery-ui', 'eac-select2' );
 		$scripts->register_script( 'eac-admin', 'js/eac-admin.js', $admin_js_deps );
 		$scripts->register_script( 'eac-settings', 'js/eac-settings.js', array( 'eac-admin' ) );
@@ -196,33 +196,42 @@ class Admin {
 				'url'   => admin_url( 'admin.php?page=eac-purchases' ),
 			),
 			array(
+				'title' => __( 'Banking', 'wp-ever-accounting' ),
+				'icon'  => 'dashicons dashicons-store',
+				'url'   => admin_url( 'admin.php?page=eac-banking' ),
+			),
+			array(
 				'title'   => __( 'New', 'wp-ever-accounting' ),
 				'icon'    => 'dashicons dashicons-plus-alt',
 				'url'     => '#',
 				'submenu' => array(
 					array(
-						'title' => __( 'Payment', 'wp-ever-accounting' ),
-						'url'   => '#',
+						'title' => __( 'Item', 'wp-ever-accounting' ),
+						'url'   => admin_url( 'admin.php?page=eac-items&tab=items&add=yes' ),
+					),
+					array(
+						'title' => __( 'Revenue', 'wp-ever-accounting' ),
+						'url'   => admin_url( 'admin.php?page=eac-sales&tab=revenues&add=yes' ),
 					),
 					array(
 						'title' => __( 'Expense', 'wp-ever-accounting' ),
-						'url'   => '#',
-					),
-					array(
-						'title' => __( 'Item', 'wp-ever-accounting' ),
-						'url'   => '#',
+						'url'   => admin_url( 'admin.php?page=eac-purchases&tab=expenses&add=yes' ),
 					),
 					array(
 						'title' => __( 'Invoice', 'wp-ever-accounting' ),
-						'url'   => '#',
+						'url'   => admin_url( 'admin.php?page=eac-sales&tab=invoices&add=yes' ),
+					),
+					array(
+						'title' => __( 'Bill', 'wp-ever-accounting' ),
+						'url'   => admin_url( 'admin.php?page=eac-purchases&tab=bills&add=yes' ),
 					),
 					array(
 						'title' => __( 'Customer', 'wp-ever-accounting' ),
-						'url'   => '#',
+						'url'   => admin_url( 'admin.php?page=eac-sales&tab=customers&add=yes' ),
 					),
 					array(
 						'title' => __( 'Vendor', 'wp-ever-accounting' ),
-						'url'   => '#',
+						'url'   => admin_url( 'admin.php?page=eac-purchases&tab=vendors&add=yes' ),
 					),
 				),
 			),
