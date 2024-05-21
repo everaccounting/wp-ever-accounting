@@ -92,10 +92,10 @@ class Utilities {
 				'menu_slug'  => 'eac-reports',
 				'page_hook'  => 'reports',
 				'tabs'       => array(
-					'payments'    => __( 'Payments', 'wp-ever-accounting' ),
+					'revenue'  => __( 'Revenues', 'wp-ever-accounting' ),
 					'expenses' => __( 'Expenses', 'wp-ever-accounting' ),
 					'profits'  => __( 'Profits', 'wp-ever-accounting' ),
-					'taxes'  => __( 'Taxes', 'wp-ever-accounting' ),
+					'taxes'    => __( 'Taxes', 'wp-ever-accounting' ),
 				),
 			),
 			array(
@@ -103,7 +103,7 @@ class Utilities {
 				'menu_title' => __( 'Settings', 'wp-ever-accounting' ),
 				'capability' => 'manage_options',
 				'menu_slug'  => 'eac-settings',
-				'callback'  => array( Settings::class, 'output' ),
+				'callback'   => array( Settings::class, 'output' ),
 				'load_hook'  => array( Settings::class, 'get_tabs' ),
 			),
 		);

@@ -314,6 +314,39 @@ KEY `taxable` (`taxable`),
 KEY `item_id` (`item_id`),
 KEY `document_id` (`document_id`)
 ) $collate;
+CREATE TABLE {$wpdb->prefix}ea_document_lines(
+`id` bigINT(20) NOT NULL AUTO_INCREMENT,
+`type` VARCHAR(20) NOT NULL default 'standard',
+`name` VARCHAR(191) NOT NULL,
+`description` TEXT NULL,
+`unit` VARCHAR(20) DEFAULT NULL,
+`price` double(15,4) NOT NULL,
+`quantity` double(7,2) NOT NULL DEFAULT 0.00,
+`subtotal` double(15,4) NOT NULL DEFAULT 0.00,
+`subtotal_tax` double(15,4) NOT NULL DEFAULT 0.00,
+`discount` double(15,4) NOT NULL DEFAULT 0.00,
+`discount_tax` double(15,4) NOT NULL DEFAULT 0.00,
+`tax_total` double(15,4) NOT NULL DEFAULT 0.00,
+`total` double(15,4) NOT NULL DEFAULT 0.00,
+`taxable` TINYINT(1) NOT NULL DEFAULT 0,
+`item_id` BIGINT(20) UNSIGNED DEFAULT NULL,
+`document_id` BIGINT(20) UNSIGNED DEFAULT NULL,
+`date_updated` DATETIME NULL DEFAULT NULL,
+`date_created` DATETIME NULL DEFAULT NULL,
+PRIMARY KEY (`id`),
+KEY `name` (`name`),
+KEY `type` (`type`),
+KEY `unit` (`unit`),
+KEY `price` (`price`),
+KEY `quantity` (`quantity`),
+KEY `subtotal` (`subtotal`),
+KEY `discount` (`discount`),
+KEY `total` (`total`),
+KEY `tax_total` (`tax_total`),
+KEY `taxable` (`taxable`),
+KEY `item_id` (`item_id`),
+KEY `document_id` (`document_id`)
+) $collate;
 CREATE TABLE {$wpdb->prefix}ea_document_item_taxes(
 `id` bigINT(20) NOT NULL AUTO_INCREMENT,
 `name` VARCHAR(191) NOT NULL,
@@ -327,6 +360,22 @@ CREATE TABLE {$wpdb->prefix}ea_document_item_taxes(
 `date_created` DATETIME NULL DEFAULT NULL,
 PRIMARY KEY (`id`),
 KEY `item_id` (`item_id`),
+KEY `tax_id` (`tax_id`),
+KEY `document_id` (`document_id`)
+) $collate;
+CREATE TABLE {$wpdb->prefix}ea_document_line_taxes(
+`id` bigINT(20) NOT NULL AUTO_INCREMENT,
+`name` VARCHAR(191) NOT NULL,
+`rate` double(15,4) NOT NULL,
+`is_compound` TINYINT(1) NOT NULL DEFAULT 0,
+`amount` double(15,4) NOT NULL DEFAULT 0.00,
+`line_id` BIGINT(20) UNSIGNED NOT NULL,
+`tax_id` BIGINT(20) UNSIGNED NOT NULL,
+`document_id` BIGINT(20) UNSIGNED NOT NULL,
+`date_updated` DATETIME NULL DEFAULT NULL,
+`date_created` DATETIME NULL DEFAULT NULL,
+PRIMARY KEY (`id`),
+KEY `line_id` (`line_id`),
 KEY `tax_id` (`tax_id`),
 KEY `document_id` (`document_id`)
 ) $collate;

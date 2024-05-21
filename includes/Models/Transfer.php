@@ -2,6 +2,8 @@
 
 namespace EverAccounting\Models;
 
+use ByteKit\Models\Relations\BelongsTo;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -27,6 +29,7 @@ defined( 'ABSPATH' ) || exit;
  * @property float  $exchange_rate Exchange rate of the transfer.
  * @property string $date Date of the transfer.
  * @property string $payment_method Payment method of the transfer.
+ * @property string $reference Reference of the transfer.
  */
 class Transfer extends Model {
 	/**
@@ -38,26 +41,26 @@ class Transfer extends Model {
 	protected $table = 'ea_transfers';
 
 	/**
-	 * Table columns.
+	 * The table columns of the model.
 	 *
 	 * @since 1.0.0
 	 * @var array
 	 */
 	protected $columns = array(
 		'id',
-		'income_id',
+		'revenue_id',
 		'expense_id',
-		'author_id',
 		'uuid',
+		'author_id',
 	);
 
 	/**
-	 * The model's attributes.
+	 * The model's data properties.
 	 *
 	 * @since 1.0.0
 	 * @var array
 	 */
-	protected $attributes = array(
+	protected $props = array(
 		'from_account_id' => null,
 		'to_account_id'   => null,
 		'amount'          => 0.00,
@@ -65,6 +68,7 @@ class Transfer extends Model {
 		'exchange_rate'   => 1,
 		'date'            => null,
 		'payment_method'  => '',
+		'reference'       => '',
 	);
 
 	/**
@@ -74,6 +78,8 @@ class Transfer extends Model {
 	 * @var array
 	 */
 	protected $casts = array(
+		'expense_id'      => 'int',
+		'revenue_id'      => 'int',
 		'from_account_id' => 'int',
 		'to_account_id'   => 'int',
 		'amount'          => 'float',
@@ -87,7 +93,23 @@ class Transfer extends Model {
 	 * @since 1.0.0
 	 * @var array
 	 */
-	protected $searchable = array();
+	protected $searchable = array(
+		'from_account_id',
+		'to_account_id',
+		'amount',
+		'date',
+		'payment_method',
+	);
+
+	/**
+	 * The properties that aren't mass assignable.
+	 *
+	 * @since 1.0.0
+	 * @var string[]|bool
+	 */
+	protected $guarded = array(
+		'currency_code',
+	);
 
 	/**
 	 * Whether the model should be timestamped.
@@ -99,23 +121,57 @@ class Transfer extends Model {
 
 	/*
 	|--------------------------------------------------------------------------
-	| Attributes & Relations
+	| Prop Definition Methods
 	|--------------------------------------------------------------------------
-	| Define the attributes and relations of the model.
+	| This section contains methods that define and provide specific prop values
+	| related to the model, such as statuses or types. These methods can be accessed
+	| without instantiating the model.
+	|--------------------------------------------------------------------------
 	*/
 
 	/*
 	|--------------------------------------------------------------------------
-	| CRUD methods
+	| Accessors, Mutators, Relationship and Validation Methods
 	|--------------------------------------------------------------------------
-	| Methods for saving, updating, and deleting objects.
+	| This section contains methods for getting and setting properties (accessors
+	| and mutators) as well as defining relationships between models. It also includes
+	| a data validation method that ensures data integrity before saving.
+	|--------------------------------------------------------------------------
+	*/
+	/**
+	 * Revenue relationship.
+	 *
+	 * @since 1.0.0
+	 * @return BelongsTo
+	 */
+	public function revenue() {
+		return $this->belongs_to( Revenue::class, 'revenue_id' );
+	}
+
+	/**
+	 * Expense relationship.
+	 *
+	 * @since 1.0.0
+	 * @return BelongsTo
+	 */
+	public function expense() {
+		return $this->belongs_to( Expense::class, 'expense_id' );
+	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| CRUD Methods
+	|--------------------------------------------------------------------------
+	| This section contains methods for creating, reading, updating, and deleting
+	| objects in the database.
+	|--------------------------------------------------------------------------
 	*/
 
 	/**
 	 * Save the object to the database.
 	 *
 	 * @since 1.0.0
-	 * @return \WP_Error|true True on success, WP_Error on failure.
+	 * @return \WP_Error|static WP_Error on failure, or the object on success.
 	 */
 	public function save() {
 		if ( empty( $this->from_account_id ) ) {
@@ -133,13 +189,58 @@ class Transfer extends Model {
 		if ( empty( $this->payment_method ) ) {
 			return new \WP_Error( 'missing_required', __( 'Payment method is required.', 'wp-ever-accounting' ) );
 		}
+		// Check if from account and to account is same.
+		if ( $this->from_account_id === $this->to_account_id ) {
+			return new \WP_Error( 'invalid_data', __( 'From and to account cannot be the same.', 'wp-ever-accounting' ) );
+		}
+		$from_account = Account::find( $this->from_account_id );
+		$to_account   = Account::find( $this->to_account_id );
+
+		if ( ! $from_account ) {
+			return new \WP_Error( 'invalid_data', __( 'Transfer from account does not exists.', 'wp-ever-accounting' ) );
+		}
+
+		if ( ! $to_account ) {
+			return new \WP_Error( 'invalid_data', __( 'Transfer to account does not exists.', 'wp-ever-accounting' ) );
+		}
 
 		if ( empty( $this->uuid ) ) {
 			$this->uuid = wp_generate_uuid4();
 		}
 
-		if ( empty( $this->author_id ) && is_user_logged_in() ) {
-			$this->author_id = get_current_user_id();
+		$expense = $this->expense()->insert(
+			array(
+				'account_id'     => $this->from_account_id,
+				'date'           => $this->date,
+				'amount'         => $this->amount,
+				'currency_code'  => $this->currency_code,
+				'payment_method' => $this->payment_method,
+				'reference'      => $this->reference,
+			)
+		);
+		if ( is_wp_error( $expense ) ) {
+			return $expense;
+		}
+
+		$amount = $this->amount;
+		// If from and to account currency is different, then we have to convert the amount.
+		if ( $from_account->currency_code !== $to_account->currency_code ) {
+			$amount = eac_convert_currency( $this->amount, $this->currency_code, $to_account->currency_code );
+		}
+
+		$revenue = $this->revenue()->insert(
+			array(
+				'account_id'     => $this->to_account_id,
+				'date'           => $this->date,
+				'amount'         => $amount,
+				'currency_code'  => $to_account->currency_code,
+				'payment_method' => $this->payment_method,
+				'reference'      => $this->reference,
+			)
+		);
+
+		if ( is_wp_error( $revenue ) ) {
+			return $revenue;
 		}
 
 		return parent::save();
@@ -147,9 +248,10 @@ class Transfer extends Model {
 
 	/*
 	|--------------------------------------------------------------------------
-	| Helper methods.
+	| Helper Methods
 	|--------------------------------------------------------------------------
-	| Utility methods which don't directly relate to this object but may be
-	| used by this object.
+	| This section contains utility methods that are not directly related to this
+	| object but can be used to support its functionality.
+	|--------------------------------------------------------------------------
 	*/
 }

@@ -829,28 +829,6 @@ class Actions {
 	}
 
 	/**
-	 * Add invoice payment.
-	 *
-	 * @since 1.2.0
-	 * @return void
-	 */
-	public function ajax_add_invoice_payment() {
-		check_ajax_referer( 'eac_invoice' );
-		$invoice_id = isset( $_POST['invoice_id'] ) ? absint( wp_unslash( $_POST['invoice_id'] ) ) : 0;
-		$date       = isset( $_POST['date'] ) ? sanitize_text_field( wp_unslash( $_POST['date'] ) ) : '';
-		$account_id = isset( $_POST['account_id'] ) ? absint( wp_unslash( $_POST['account_id'] ) ) : 0;
-		$amount     = isset( $_POST['amount'] ) ? floatval( wp_unslash( $_POST['amount'] ) ) : 0;
-		$method     = isset( $_POST['method'] ) ? sanitize_text_field( wp_unslash( $_POST['method'] ) ) : '';
-		$note       = isset( $_POST['note'] ) ? sanitize_textarea_field( wp_unslash( $_POST['note'] ) ) : '';
-
-		if ( is_wp_error( $payment ) ) {
-			wp_send_json_error( $payment->get_error_message() );
-		}
-		wp_send_json_success( $payment->to_array() );
-		exit;
-	}
-
-	/**
 	 * Edit invoice.
 	 *
 	 * @since 1.2.0
@@ -862,7 +840,7 @@ class Actions {
 		$calculate_totals             = isset( $_POST['calculate_totals'] ) ? sanitize_text_field( wp_unslash( $_POST['calculate_totals'] ) ) : '';
 		$items                        = isset( $_POST['items'] ) ? map_deep( wp_unslash( $_POST['items'] ), 'sanitize_text_field' ) : array();
 		$id                           = isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0;
-		$document                     = new Invoice( $id );
+		$document                     = Invoice::make( $id );
 		$document->contact_id         = isset( $_POST['contact_id'] ) ? absint( wp_unslash( $_POST['contact_id'] ) ) : 0;
 		$document->discount_amount    = isset( $_POST['discount_amount'] ) ? floatval( wp_unslash( $_POST['discount_amount'] ) ) : 0;
 		$document->discount_type      = isset( $_POST['discount_type'] ) ? sanitize_text_field( wp_unslash( $_POST['discount_type'] ) ) : 'fixed';
@@ -946,6 +924,28 @@ class Actions {
 		exit;
 	}
 
+
+	/**
+	 * Add invoice payment.
+	 *
+	 * @since 1.2.0
+	 * @return void
+	 */
+	public function ajax_add_invoice_payment() {
+		check_ajax_referer( 'eac_invoice' );
+		$invoice_id = isset( $_POST['invoice_id'] ) ? absint( wp_unslash( $_POST['invoice_id'] ) ) : 0;
+		$date       = isset( $_POST['date'] ) ? sanitize_text_field( wp_unslash( $_POST['date'] ) ) : '';
+		$account_id = isset( $_POST['account_id'] ) ? absint( wp_unslash( $_POST['account_id'] ) ) : 0;
+		$amount     = isset( $_POST['amount'] ) ? floatval( wp_unslash( $_POST['amount'] ) ) : 0;
+		$method     = isset( $_POST['method'] ) ? sanitize_text_field( wp_unslash( $_POST['method'] ) ) : '';
+		$note       = isset( $_POST['note'] ) ? sanitize_textarea_field( wp_unslash( $_POST['note'] ) ) : '';
+
+		if ( is_wp_error( $payment ) ) {
+			wp_send_json_error( $payment->get_error_message() );
+		}
+		wp_send_json_success( $payment->to_array() );
+		exit;
+	}
 
 	/**
 	 * Export data.

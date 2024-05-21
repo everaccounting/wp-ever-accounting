@@ -77,8 +77,10 @@ class Account extends Model {
 	 * @since 1.0.0
 	 * @var array
 	 */
-	protected $data = array(
-		'status' => 'active',
+	protected $props = array(
+		'type'            => 'bank',
+		'opening_balance' => 0,
+		'status'          => 'active',
 	);
 
 	/**
@@ -244,7 +246,17 @@ class Account extends Model {
 	 * @return HasMany
 	 */
 	public function transactions() {
-		return $this->has_many( Transaction::class );
+		return $this->has_many( Transaction::class )->set( 'limit', 1 );
+	}
+
+	/**
+	 * Revenue relation.
+	 *
+	 * @since 1.0.0
+	 * @return HasMany
+	 */
+	public function revenues() {
+		return $this->has_one( Revenue::class );
 	}
 
 	/**
@@ -253,7 +265,7 @@ class Account extends Model {
 	 * @since 1.0.0
 	 * @return void|\WP_Error Return WP_Error if data is not valid or void.
 	 */
-	public function validate_save_data() {
+	protected function validate_save_data() {
 		if ( empty( $this->name ) ) {
 			return new \WP_Error( 'missing_required', __( 'Account name is required.', 'wp-ever-accounting' ) );
 		}

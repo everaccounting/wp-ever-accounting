@@ -2,7 +2,6 @@
 
 namespace EverAccounting\Models;
 
-use ByteKit\Models\Relation;
 use ByteKit\Models\Relations\BelongsTo;
 use ByteKit\Models\Relations\HasMany;
 use ByteKit\Models\Relations\HasOne;
@@ -106,16 +105,10 @@ use ByteKit\Models\Relations\HasOne;
  * @property double   $formatted_balance Formatted balance.
  * @property array    formatted_itemized_taxes Formatted itemized taxes.
  * @property Currency $currency Currency object.
- * @property Revenue[]|Expense[] $transactions Transactions relation.
+ * @property DocumentLineTax[] $taxes Taxes of the document.
+ * @property DocumentLine[] $lines Lines of the document.
  */
 class Document extends Model {
-	/**
-	 * Meta type declaration for the object.
-	 *
-	 * @since 1.0.0
-	 * @var string
-	 */
-	public $meta_type = 'ea_document';
 
 	/**
 	 * The table associated with the model.
@@ -126,7 +119,15 @@ class Document extends Model {
 	protected $table = 'ea_documents';
 
 	/**
-	 * Table columns.
+	 * Meta type declaration for the object.
+	 *
+	 * @since 1.0.0
+	 * @var string
+	 */
+	public $meta_type = 'ea_document';
+
+	/**
+	 * The table columns of the model.
 	 *
 	 * @since 1.0.0
 	 * @var array
@@ -165,12 +166,12 @@ class Document extends Model {
 	);
 
 	/**
-	 * The model's attributes.
+	 * The model's data properties.
 	 *
 	 * @since 1.0.0
 	 * @var array
 	 */
-	protected $attributes = array(
+	protected $props = array(
 		'discount_type' => 'fixed',
 		'billing_data'  => array(
 			'name'       => '',
@@ -190,7 +191,7 @@ class Document extends Model {
 	);
 
 	/**
-	 * The attributes that should be cast.
+	 * The properties that should be cast.
 	 *
 	 * @since 1.0.0
 	 * @var array
@@ -217,15 +218,6 @@ class Document extends Model {
 		'author_id'       => 'int',
 	);
 
-
-	/**
-	 * The attributes that aren't mass assignable.
-	 *
-	 * @since 1.0.0
-	 * @var string[]|bool
-	 */
-	protected $guarded = array();
-
 	/**
 	 * Whether the model should be timestamped.
 	 *
@@ -234,74 +226,25 @@ class Document extends Model {
 	 */
 	protected $timestamps = true;
 
-	/**
-	 * document items will be stored here, sometimes before they persist in the DB.
-	 *
-	 * @since 1.1.0
-	 *
-	 * @var DocumentItem[]
-	 */
-	protected $items = null;
-
-	/**
-	 * document items that need deleting are stored here.
-	 *
-	 * @since 1.1.0
-	 *
-	 * @var DocumentItem[]
-	 */
-	protected $deletable = array();
-
-	/**
-	 * Create a new model instance.
-	 *
-	 * @param string|int|array $attributes Attributes.
-	 *
-	 * @throws \InvalidArgumentException If table name or object type is not set.
-	 * @return void
-	 */
-	public function __construct( $attributes = 0 ) {
-		$this->attributes['tax_inclusive'] = filter_var( eac_price_includes_tax(), FILTER_VALIDATE_BOOLEAN );
-		$this->attributes['currency_code'] = eac_get_base_currency();
-		$this->attributes['author_id']     = get_current_user_id();
-		$this->attributes['uuid']          = wp_generate_uuid4();
-		$this->attributes['date_created']  = wp_date( 'Y-m-d H:i:s' );
-		parent::__construct( $attributes );
-	}
-
-	/**
-	 * Convert the model instance to an array.
-	 *
-	 * @return array
-	 */
-	public function to_array() {
-		$data          = parent::to_array();
-		$data['items'] = array();
-		foreach ( $this->get_items() as $item ) {
-			$data['items'][] = $item->to_array();
-		}
-
-		return $data;
-	}
+	/*
+	|--------------------------------------------------------------------------
+	| Prop Definition Methods
+	|--------------------------------------------------------------------------
+	| This section contains methods that define and provide specific prop values
+	| related to the model, such as statuses or types. These methods can be accessed
+	| without instantiating the model.
+	|--------------------------------------------------------------------------
+	*/
 
 	/*
 	|--------------------------------------------------------------------------
-	| Attributes & Relations
+	| Accessors, Mutators, Relationship and Validation Methods
 	|--------------------------------------------------------------------------
-	| Define the attributes and relations of the model.
+	| This section contains methods for getting and setting properties (accessors
+	| and mutators) as well as defining relationships between models. It also includes
+	| a data validation method that ensures data integrity before saving.
+	|--------------------------------------------------------------------------
 	*/
-	/**
-	 * Set status.
-	 *
-	 * @param string $status Status.
-	 *
-	 * @since 1.1.0
-	 * @return void
-	 */
-	public function set_status_attribute( $status ) {
-		$status = in_array( $status, eac_get_invoice_statuses(), true ) ? $status : 'draft';
-		$this->set_attribute_value( 'status', $status );
-	}
 
 	/**
 	 * Set discount type.
@@ -311,892 +254,69 @@ class Document extends Model {
 	 * @since 1.1.0
 	 * @return void
 	 */
-	public function set_discount_type_attribute( $type ) {
-		$this->attributes['discount_type'] = in_array( $type, array( 'fixed', 'percentage' ), true ) ? $type : 'fixed';
-	}
-
-	/**
-	 * Gets a prop for a getter method.
-	 *
-	 * @param string $prop Name of prop to get.
-	 *
-	 * @since  1.1.0
-	 * @return mixed
-	 */
-	protected function get_billing_attribute( $prop ) {
-		$value = null;
-
-		if ( isset( $this->attributes['billing_data'][ $prop ] ) ) {
-			$value = $this->attributes['billing_data'][ $prop ];
+	public function set_discount_type_props( $type ) {
+		if ( ! in_array( $type, array( 'fixed', 'percentage' ), true ) ) {
+			$type = 'fixed';
 		}
-
-		return $value;
+		$this->set_prop_value( 'discount_type', $type );
 	}
 
 	/**
-	 * Sets a prop for a setter method.
-	 *
-	 * @param string $prop Name of prop to set.
-	 * @param mixed  $value Value of the prop.
-	 *
-	 * @since 1.1.0
-	 */
-	protected function set_billing_attribute( $prop, $value ) {
-		if ( array_key_exists( $prop, $this->attributes['billing_data'] ) ) {
-			$this->attributes['billing_data'][ $prop ] = $value;
-		}
-	}
-
-	/**
-	 * Get billing name.
-	 *
-	 * @since  1.1.0
-	 * @return string
-	 */
-	protected function get_billing_name_attribute() {
-		return $this->get_billing_attribute( 'name' );
-	}
-
-	/**
-	 * Set billing name.
-	 *
-	 * @param string $name Billing name.
-	 *
-	 * @since  1.1.0
-	 */
-	public function set_billing_name_attribute( $name ) {
-		$this->set_billing_attribute( 'name', $name );
-	}
-
-	/**
-	 * Get billing company name.
-	 *
-	 * @since 1.1.0
-	 * @return string
-	 */
-	protected function get_billing_company_attribute() {
-		return $this->get_billing_attribute( 'company' );
-	}
-
-	/**
-	 * Set billing company name.
-	 *
-	 * @param string $company Billing company name.
-	 *
-	 * @since  1.1.0
-	 */
-	public function set_billing_company_attribute( $company ) {
-		$this->set_billing_attribute( 'company', eac_clean( $company ) );
-	}
-
-	/**
-	 * Get billing address_1 address.
-	 *
-	 * @since  1.1.0
-	 * @return string
-	 */
-	protected function get_billing_address_1_attribute() {
-		return $this->get_billing_attribute( 'address_1' );
-	}
-
-	/**
-	 * Set billing address_1 address.
-	 *
-	 * @param string $address_1 Billing address_1 address.
-	 *
-	 * @since  1.1.0
-	 */
-	public function set_billing_address_1_attribute( $address_1 ) {
-		$this->set_billing_attribute( 'address_1', sanitize_text_field( $address_1 ) );
-	}
-
-
-	/**
-	 * Get billing address_2 address.
-	 *
-	 * @since  1.1.0
-	 * @return string
-	 */
-	protected function get_billing_address_2_attribute() {
-		return $this->get_billing_attribute( 'address_2' );
-	}
-
-	/**
-	 * Set billing address_2 address.
-	 *
-	 * @param string $address_2 Billing address_2 address.
-	 *
-	 * @since  1.1.0
-	 */
-	public function set_billing_address_2_attribute( $address_2 ) {
-		$this->set_billing_attribute( 'address_2', eac_clean( $address_2 ) );
-	}
-
-	/**
-	 * Get billing city address.
-	 *
-	 * @since 1.1.0
-	 * @return string
-	 */
-	protected function get_billing_city_attribute() {
-		return $this->get_billing_attribute( 'city' );
-	}
-
-	/**
-	 * Set billing city address.
-	 *
-	 * @param string $city Billing city address.
-	 *
-	 * @since  1.1.0
-	 */
-	public function set_billing_city_attribute( $city ) {
-		$this->set_billing_attribute( 'city', eac_clean( $city ) );
-	}
-
-	/**
-	 * Get billing state address.
-	 *
-	 * @since 1.1.0
-	 * @return string
-	 */
-	protected function get_billing_state_attribute() {
-		return $this->get_billing_attribute( 'state' );
-	}
-
-	/**
-	 * Set billing state address.
-	 *
-	 * @param string $state Billing state address.
-	 *
-	 * @since  1.1.0
-	 */
-	public function set_billing_state_attribute( $state ) {
-		$this->set_billing_attribute( 'state', eac_clean( $state ) );
-	}
-
-	/**
-	 * Get billing postcode code address.
-	 *
-	 * @since 1.1.0
-	 * @return string
-	 */
-	protected function get_billing_postcode_attribute() {
-		return $this->get_billing_attribute( 'postcode' );
-	}
-
-	/**
-	 * Set billing postcode code address.
-	 *
-	 * @param string $postcode Billing postcode code address.
-	 *
-	 * @since  1.1.0
-	 */
-	public function set_billing_postcode_attribute( $postcode ) {
-		$this->set_billing_attribute( 'postcode', eac_clean( $postcode ) );
-	}
-
-	/**
-	 * Get billing country address.
-	 *
-	 * @since 1.1.0
-	 * @return string
-	 */
-	protected function get_billing_country_attribute() {
-		return $this->get_billing_attribute( 'country' );
-	}
-
-	/**
-	 * Set billing country address.
-	 *
-	 * @param string $country Billing country address.
-	 *
-	 * @since  1.1.0
-	 */
-	public function set_billing_country_attribute( $country ) {
-		$this->set_billing_attribute( 'country', eac_clean( $country ) );
-	}
-
-	/**
-	 * Get billing phone number.
-	 *
-	 * @since 1.1.0
-	 * @return string
-	 */
-	protected function get_billing_phone_attribute() {
-		return $this->get_billing_attribute( 'phone' );
-	}
-
-	/**
-	 * Set billing phone number.
-	 *
-	 * @param string $phone Billing phone number.
-	 *
-	 * @since  1.1.0
-	 */
-	public function set_billing_phone_attribute( $phone ) {
-		$this->set_billing_attribute( 'phone', eac_clean( $phone ) );
-	}
-
-	/**
-	 * Get billing email address.
-	 *
-	 * @since 1.1.0
-	 * @return string
-	 */
-	protected function get_billing_email_attribute() {
-		return $this->get_billing_attribute( 'email' );
-	}
-
-	/**
-	 * Set billing email address.
-	 *
-	 * @param string $email Billing email address.
-	 *
-	 * @since  1.1.0
-	 */
-	public function set_billing_email_attribute( $email ) {
-		$this->set_billing_attribute( 'email', eac_clean( $email ) );
-	}
-
-	/**
-	 * Get billing vat number.
-	 *
-	 * @since  1.1.0
-	 * @return string
-	 */
-	protected function get_billing_vat_number_attribute() {
-		return $this->get_billing_attribute( 'vat_number' );
-	}
-
-	/**
-	 * Set billing vat number.
-	 *
-	 * @param string $vat Billing vat number.
-	 *
-	 * @since  1.1.0
-	 */
-	public function set_billing_vat_number_attribute( $vat ) {
-		$this->set_billing_attribute( 'vat_number', eac_clean( $vat ) );
-	}
-
-	/**
-	 * Get formatted billing address.
-	 *
-	 * @since 1.0.0
-	 * @return string
-	 */
-	public function get_formatted_billing_address_attribute() {
-		$data = array(
-			'name'      => $this->billing_name,
-			'company'   => $this->billing_company,
-			'address_1' => $this->billing_address_1,
-			'address_2' => $this->billing_address_2,
-			'city'      => $this->billing_city,
-			'state'     => $this->billing_state,
-			'postcode'  => $this->billing_postcode,
-			'country'   => $this->billing_country,
-			'vat'       => $this->billing_vat_number,
-			'phone'     => $this->billing_phone,
-			'email'     => $this->billing_email,
-		);
-
-		return eac_get_formatted_address( $data );
-	}
-
-	/**
-	 * Get formatted items total.
-	 *
-	 * @since 1.0.0
-	 * @return string
-	 */
-	protected function get_formatted_items_total_attribute() {
-		return eac_format_amount( $this->items_total, $this->currency_code );
-	}
-
-	/**
-	 * Get formatted discount total.
-	 *
-	 * @since 1.0.0
-	 * @return string
-	 */
-	protected function get_formatted_discount_total_attribute() {
-		return eac_format_amount( $this->discount_total, $this->currency_code );
-	}
-
-	/**
-	 * Get formatted shipping total.
-	 *
-	 * @since 1.0.0
-	 * @return string
-	 */
-	protected function get_formatted_shipping_total_attribute() {
-		return eac_format_amount( $this->shipping_total, $this->currency_code );
-	}
-
-	/**
-	 * Get formatted fees total.
-	 *
-	 * @since 1.0.0
-	 * @return string
-	 */
-	protected function get_formatted_fees_total_attribute() {
-		return eac_format_amount( $this->fees_total, $this->currency_code );
-	}
-
-	/**
-	 * Get formatted tax total.
-	 *
-	 * @since 1.0.0
-	 * @return string
-	 */
-	protected function get_formatted_tax_total_attribute() {
-		return eac_format_amount( $this->tax_total, $this->currency_code );
-	}
-
-	/**
-	 * Get formatted total.
-	 *
-	 * @since 1.0.0
-	 * @return string
-	 */
-	protected function get_formatted_total_attribute() {
-		return eac_format_amount( $this->total, $this->currency_code );
-	}
-
-	/**
-	 * Get formatted total paid.
-	 *
-	 * @since 1.0.0
-	 * @return string
-	 */
-	protected function get_formatted_total_paid_attribute() {
-		return eac_format_amount( $this->total_paid, $this->currency_code );
-	}
-
-	/**
-	 * Get formatted balance.
-	 *
-	 * @since 1.0.0
-	 * @return string
-	 */
-	protected function get_formatted_balance_attribute() {
-		return eac_format_amount( $this->balance, $this->currency_code );
-	}
-
-	/**
-	 * Get formatted itemized taxes.
-	 *
-	 * @since 1.0.0
-	 * @return array
-	 */
-	protected function get_formatted_itemized_taxes_attribute() {
-		$taxes = $this->get_merged_taxes();
-		$list  = array();
-		foreach ( $taxes as $tax ) {
-			if ( $tax->amount > 0 ) {
-				$list[ $tax->formatted_name ] = eac_format_amount( $tax->amount, $this->currency_code );
-			}
-		}
-
-		return $list;
-	}
-
-
-	/**
-	 * Get formatted invoice name.
-	 *
-	 * @return string
-	 * @since 1.0.0
-	 */
-	protected function get_formatted_name_attribute() {
-		// example: #INV-0001 (Paid) - John Doe.
-		$invoice_name = $this->number;
-		if ( $this->is_paid() ) {
-			$invoice_name .= ' (' . __( 'Paid', 'wp-ever-accounting' ) . ')';
-		}
-		if ( ! empty( $this->billing_name ) ) {
-			$invoice_name .= ' - ' . $this->billing_name;
-		}
-
-		return $invoice_name;
-	}
-
-	/**
-	 * Get document transactions.
-	 *
-	 * @since 1.0.0
-	 * @return HasMany
-	 */
-	public function transactions() {
-		return $this->has_many( Transaction::class, 'document_id' );
-	}
-
-	/**
-	 * Get document currency.
+	 * Contact relation.
 	 *
 	 * @since 1.0.0
 	 * @return BelongsTo
 	 */
-	protected function currency() {
+	public function contact() {
+		return $this->belongs_to( Contact::class, 'contact_id' );
+	}
+
+	/**
+	 * Parent relation.
+	 *
+	 * @since 1.0.0
+	 * @return BelongsTo
+	 */
+	public function parent() {
+		return $this->belongs_to( self::class, 'parent_id' );
+	}
+
+	/**
+	 * Currency relation.
+	 *
+	 * @since 1.0.0
+	 * @return BelongsTo
+	 */
+	public function currency() {
 		return $this->belongs_to( Currency::class, 'currency_code', 'code' );
 	}
 
-	/*
-	|--------------------------------------------------------------------------
-	| CRUD methods
-	|--------------------------------------------------------------------------
-	| Methods for saving, updating, and deleting objects.
-	*/
 	/**
-	 * Saves an object in the database.
+	 * Items relation.
 	 *
-	 * @throws \Exception When the invoice is already paid.
 	 * @since 1.0.0
-	 * @return true|\WP_Error True on success, WP_Error on failure.
+	 * @return HasMany
 	 */
-	public function save() {
-		if ( empty( $this->contact_id ) ) {
-			return new \WP_Error( 'missing_required', __( 'Contact ID is required.', 'wp-ever-accounting' ) );
-		}
-		if ( empty( $this->type ) ) {
-			return new \WP_Error( 'missing_required', __( 'Type is required.', 'wp-ever-accounting' ) );
-		}
-
-		if ( empty( $this->status ) ) {
-			return new \WP_Error( 'missing_required', __( 'Status is required.', 'wp-ever-accounting' ) );
-		}
-
-		// Once the invoice is paid, contact can't be changed.
-		if ( $this->total_paid > 0 && $this->is_attribute_changed( 'contact_id' ) ) {
-			return new \WP_Error( 'invalid-argument', __( 'Contact can\'t be changed once the document is paid.', 'wp-ever-accounting' ) );
-		}
-
-		// check if the document number is already exists.
-		if ( empty( $this->number ) ) {
-			$next_number  = $this->get_next_number();
-			$this->number = $next_number;
-		}
-
-		// Check if there any other document with the same number. If so, generate a new number.
-		$document = $this->find(
-			array(
-				'number' => $this->number,
-				'type'   => $this->type,
-			)
-		);
-		if ( ! empty( $document ) && $document->id !== $this->id ) {
-			$next_number  = $this->get_next_number();
-			$this->number = $next_number;
-		}
-
-		$billing_data = array_filter( array_values( $this->billing_data ) );
-		if ( empty( $billing_data ) ) {
-			$contact = Contact::find( $this->contact_id );
-			if ( ! empty( $contact ) ) {
-				$this->billing_name       = $contact->name;
-				$this->billing_company    = $contact->company;
-				$this->billing_address_1  = $contact->address_1;
-				$this->billing_address_2  = $contact->address_2;
-				$this->billing_city       = $contact->city;
-				$this->billing_state      = $contact->state;
-				$this->billing_postcode   = $contact->postcode;
-				$this->billing_country    = $contact->country;
-				$this->billing_phone      = $contact->phone;
-				$this->billing_email      = $contact->email;
-				$this->billing_vat_number = $contact->vat_number;
-			}
-		}
-
-		// uuid is required.
-		if ( empty( $this->uuid ) ) {
-			$this->uuid = wp_generate_uuid4();
-		}
-
-		try {
-			$this->wpdb()->query( 'START TRANSACTION' );
-			$saved = parent::save();
-			if ( is_wp_error( $saved ) ) {
-				throw new \Exception( $saved->get_error_message() );
-			}
-
-			foreach ( $this->get_items() as $item ) {
-				$item->document_id = $this->id;
-				$saved             = $item->save();
-				if ( is_wp_error( $saved ) ) {
-					throw new \Exception( $saved->get_error_message() );
-				}
-			}
-
-			foreach ( $this->deletable as $deletable ) {
-				if ( $deletable->exists() && ! $deletable->delete() ) {
-					// translators: %s: error message.
-					throw new \Exception( sprintf( __( 'Error while deleting items. error: %s', 'wp-ever-accounting' ), $wpdb->last_error ) );
-				}
-			}
-
-			$this->wpdb()->query( 'COMMIT' );
-
-			return true;
-		} catch ( \Exception $e ) {
-			$wpdb->query( 'ROLLBACK' );
-
-			return new \WP_Error( 'db-error', $e->getMessage() );
-		}
+	public function lines() {
+		return $this->has_many( DocumentLine::class, 'document_id' );
 	}
 
 	/**
-	 * Deletes an object from the database.
+	 * Tax relation.
 	 *
 	 * @since 1.0.0
-	 * @return bool|\WP_Error True on success, false or WP_Error on failure.
+	 * @return HasMany
 	 */
-	public function delete() {
-		$deleted = parent::delete();
-
-		if ( $deleted ) {
-			foreach ( $this->get_items() as $item ) {
-				$item->delete();
-			}
-
-			foreach ( $this->get_taxes() as $tax ) {
-				$tax->delete();
-			}
-
-			foreach ( $this->get_notes() as $note ) {
-				$note->delete();
-			}
-		}
-
-		return $deleted;
+	public function taxes() {
+		return $this->has_many( DocumentLineTax::class, 'document_id' );
 	}
 
 	/*
 	|--------------------------------------------------------------------------
-	| Line Items related methods
+	| Helper Methods
 	|--------------------------------------------------------------------------
-	| These methods are related to line items.
+	| This section contains utility methods that are not directly related to this
+	| object but can be used to support its functionality.
+	|--------------------------------------------------------------------------
 	*/
-
-	/**
-	 * Get items.
-	 *
-	 * @param string $type Type of the item.
-	 *
-	 * @return DocumentItem[]
-	 */
-	public function get_items( $type = null ) {
-		if ( is_null( $this->items ) ) {
-			$this->items = array();
-
-			if ( $this->exists() ) {
-				$this->items = DocumentItem::query(
-					array(
-						'document_id' => $this->id,
-						'orderby'     => 'id',
-						'order'       => 'ASC',
-						'limit'       => - 1,
-						'no_count'    => true,
-					)
-				);
-			}
-		}
-
-		// Filter by type.
-		if ( ! empty( $type ) && 'all' !== $type ) {
-			return array_filter(
-				$this->items,
-				function ( $item ) use ( $type ) {
-					if ( 'line_item' === $type ) {
-						return 'standard' === $item->type;
-					}
-
-					return $item->type === $type;
-				}
-			);
-		}
-
-		return $this->items;
-	}
-
-	/**
-	 * Set items, this will replace the existing items.
-	 *
-	 * @param array $items Items.
-	 *
-	 * @return void
-	 */
-	public function set_items( $items ) {
-		$old_items       = array_merge( $this->get_items(), $this->deletable );
-		$this->items     = array();
-		$this->deletable = array_filter(
-			$old_items,
-			function ( $item ) {
-				return $item->exists();
-			}
-		);
-
-		if ( ! is_array( $items ) ) {
-			$items = wp_parse_id_list( $items );
-		}
-
-		foreach ( $items as $item ) {
-			$this->add_item( $item );
-		}
-
-		// Go through deletable items and if they are in the new items list, remove them from the deletable list.
-		foreach ( $this->deletable as $key => $item ) {
-			foreach ( $this->items as $new_item ) {
-				if ( $item->id === $new_item->id ) {
-					unset( $this->deletable[ $key ] );
-				}
-			}
-		}
-	}
-
-	/**
-	 * Get item.
-	 *
-	 * @param int $item_id Line ID.
-	 *
-	 * @return DocumentItem|false False if not found, DocumentItem if found.
-	 */
-	public function get_item( $item_id ) {
-		if ( ! empty( $item_id ) ) {
-			foreach ( $this->items as $item ) {
-				if ( $item->id === $item_id ) {
-					return $item;
-				}
-			}
-		}
-
-		return false;
-	}
-
-	/**
-	 * Add item.
-	 *
-	 * Subtotal, discount is restricted to pass in item data.
-	 *
-	 * @param array $data Item.
-	 *
-	 * @return void
-	 */
-	public function add_item( $data ) {
-		// Implement this method as per the requirements.
-	}
-
-
-	/*
-	|--------------------------------------------------------------------------
-	|  Taxes related methods
-	|--------------------------------------------------------------------------
-	| These methods are related to line items taxes.
-	*/
-	/**
-	 * Get merged taxes.
-	 *
-	 * @since 1.0.0
-	 * @return DocumentItemTax[]
-	 */
-	public function get_taxes() {
-		$taxes = array();
-		foreach ( $this->get_items() as $item ) {
-			foreach ( $item->get_taxes() as $tax ) {
-				$index = md5( $tax->tax_id . $tax->rate );
-				if ( ! isset( $taxes[ $index ] ) ) {
-					$taxes[ $index ] = $tax;
-				} else {
-					$taxes[ $index ]->merge( $tax );
-				}
-			}
-		}
-
-		return $taxes;
-	}
-
-	/*
-	|--------------------------------------------------------------------------
-	|  Notes related methods
-	|--------------------------------------------------------------------------
-	| These methods are related to notes.
-	*/
-	/**
-	 * Add note.
-	 *
-	 * @param array $data Note data.
-	 *
-	 * @return Note| \WP_Error Note ID on success, WP_Error otherwise.
-	 * @since 1.0.0
-	 */
-	public function add_note( $data ) {
-		$data = wp_parse_args(
-			$data,
-			array(
-				'parent_id'    => $this->id,
-				'parent_type'  => get_class( $this ),
-				'content'      => '',
-				'creator_id'   => get_current_user_id(),
-				'date_created' => current_time( 'mysql' ),
-			)
-		);
-
-		if ( empty( $data['note'] ) ) {
-			return new \WP_Error( 'missing_required', __( 'Note is required.', 'wp-ever-accounting' ) );
-		}
-
-		$note  = new Note( $data );
-		$saved = $note->save();
-		if ( is_wp_error( $saved ) ) {
-			return $saved;
-		}
-
-		return $note;
-	}
-
-	/**
-	 * Get notes.
-	 *
-	 * @param array $args Query arguments.
-	 *
-	 * @return Note[]
-	 * @since 1.0.0
-	 */
-	public function get_notes( $args = array() ) {
-		$args = array_merge(
-			array(
-				'parent_id'   => $this->id,
-				'parent_type' => get_class( $this ),
-				'limit'       => - 1,
-			),
-			$args
-		);
-
-		return eac_get_notes( $args );
-	}
-
-	/*
-	|--------------------------------------------------------------------------
-	| Calculations
-	|--------------------------------------------------------------------------
-	| This section contains methods for calculating totals.
-	*/
-
-	/*
-	|--------------------------------------------------------------------------
-	| Helper methods.
-	|--------------------------------------------------------------------------
-	| Utility methods which don't directly relate to this object but may be
-	| used by this object.
-	*/
-	/**
-	 * Is calculating tax.
-	 *
-	 * @since 1.0.0
-	 * @return bool
-	 */
-	public function is_calculating_tax() {
-		return 'yes' !== eac_tax_enabled() && ! $this->vat_exempt;
-	}
-
-	/**
-	 * Get max voucher number.
-	 *
-	 * @since 1.0.0
-	 * @return string
-	 */
-	public function get_max_number() {
-		return (int) $this->wpdb()->get_var(
-			$this->wpdb()->prepare(
-				"SELECT MAX(REGEXP_REPLACE(number, '[^0-9]', '')) FROM {$this->wpdb()->prefix}{$this->get_table()} WHERE type = %s",
-				$this->type
-			)
-		);
-	}
-
-	/**
-	 * Set next transaction number.
-	 *
-	 * @since 1.0.0
-	 * @return string
-	 */
-	public function get_next_number() {
-		$max    = $this->get_max_number();
-		$prefix = strtoupper( substr( $this->type, 0, 3 ) ) . '-';
-		$next   = str_pad( $max + 1, 4, '0', STR_PAD_LEFT );
-
-		return $prefix . $next;
-	}
-
-
-	/**
-	 * Get merged taxes.
-	 *
-	 * @since 1.0.0
-	 * @return DocumentItemTax[]
-	 */
-	public function get_merged_taxes() {
-		$taxes = array();
-		foreach ( $this->get_taxes() as $tax ) {
-			$index = md5( $tax->tax_id . $tax->rate );
-			if ( ! isset( $taxes[ $index ] ) ) {
-				$taxes[ $index ] = $tax;
-			} else {
-				$taxes[ $index ]->merge( $tax );
-			}
-		}
-
-		return $taxes;
-	}
-
-	/**
-	 * is editable.
-	 *
-	 * @return bool
-	 * @since 1.0.0
-	 */
-	public function is_editable() {
-		return $this->total_paid <= 0;
-	}
-
-	/**
-	 * Checks if the invoice has a given status.
-	 *
-	 * @param string $status Status to check.
-	 *
-	 * @return bool
-	 * @since 1.1.0
-	 */
-	public function is_status( $status ) {
-		return $this->status === $status;
-	}
-
-
-	/**
-	 * Returns if an order has been paid for based on the order status.
-	 *
-	 * @return bool
-	 * @since 1.10
-	 */
-	public function is_paid() {
-		return $this->is_status( 'paid' );
-	}
-
-	/**
-	 * Checks if the invoice is draft.
-	 *
-	 * @return bool
-	 * @since 1.1.0
-	 */
-	public function is_draft() {
-		return $this->is_status( 'draft' );
-	}
-
-	/**
-	 * Checks if an order needs payment, based on status and order total.
-	 *
-	 * @return bool
-	 */
-	public function needs_payment() {
-		return ! $this->is_status( 'paid' ) && $this->total > 0;
-	}
 }

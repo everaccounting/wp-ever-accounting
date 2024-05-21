@@ -11,7 +11,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$columns= eac_get_invoice_columns();
+$columns            = eac_get_invoice_columns();
 $columns['actions'] = '&nbsp;';
 if ( ! $document->is_calculating_tax() && isset( $columns['tax'] ) ) {
 	unset( $columns['tax'] );
@@ -67,20 +67,20 @@ if ( ! $document->is_calculating_tax() && isset( $columns['tax'] ) ) {
 			</tr>
 			</thead>
 			<tbody>
-			<?php foreach ( $document->get_items() as $item_key => $item ) : ?>
-			<tr class="line-item" data-item-id="<?php echo esc_attr( $item->item_id ); ?>">
+			<?php foreach ( $document->lines as $line_key => $line ) : ?>
+			<tr class="line-item" data-item-id="<?php echo esc_attr( $line->item_id ); ?>">
 				<?php foreach ( $columns as $key => $label ) : ?>
 					<?php if ( 'item' === $key ) : ?>
 						<td class="line-<?php echo esc_attr( $key ); ?>__item" colspan="2">
 							<?php
-							printf( '<input type="hidden" name="items[%s][id]" value="%s"/>', esc_attr( $item_key ), esc_attr( $item->id ) );
-							printf( '<input type="hidden" name="items[%s][item_id]" value="%s"/>', esc_attr( $item_key ), esc_attr( $item->item_id ) );
-							printf( '<input class="line-item__name" type="text" name="items[%s][name]" value="%s" readonly/>', esc_attr( $item_key ), esc_attr( $item->name ) );
-							printf( '<textarea class="line-item__description" name="items[%s][description]" placeholder="%s" maxlength="160">%s</textarea>', esc_attr( $item_key ), esc_attr__( 'Description', 'wp-ever-accounting' ), esc_textarea( $item->get_description ) );
+							printf( '<input type="hidden" name="line[%s][id]" value="%s"/>', esc_attr( $line_key ), esc_attr( $line->id ) );
+							printf( '<input type="hidden" name="line[%s][item_id]" value="%s"/>', esc_attr( $line_key ), esc_attr( $line->item_id ) );
+							printf( '<input class="line-item__name" type="text" name="line[%s][name]" value="%s" readonly/>', esc_attr( $line_key ), esc_attr( $line->name ) );
+							printf( '<textarea class="line-item__description" name="line[%s][description]" placeholder="%s" maxlength="160">%s</textarea>', esc_attr( $line_key ), esc_attr__( 'Description', 'wp-ever-accounting' ), esc_textarea( $line->get_description ) );
 							?>
-							<?php if ( $document->is_calculating_tax() && $item->taxable ) : ?>
-								<select name="items[<?php echo esc_attr( $item_key ); ?>][taxes][]" class="line-item__taxes eac_select2 " data-action="eac_json_search" data-type="tax" data-placeholder="<?php esc_attr_e( 'Select a tax', 'wp-ever-accounting' ); ?>" multiple>
-									<?php foreach ( $item->get_taxes() as $tax ) : ?>
+							<?php if ( $document->is_calculating_tax() && $line->taxable ) : ?>
+								<select name="items[<?php echo esc_attr( $line_key ); ?>][taxes][]" class="line-item__taxes eac_select2 " data-action="eac_json_search" data-type="tax" data-placeholder="<?php esc_attr_e( 'Select a tax', 'wp-ever-accounting' ); ?>" multiple>
+									<?php foreach ( $line->get_taxes() as $tax ) : ?>
 										<option value="<?php echo esc_attr( $tax->tax_id ); ?>" selected="selected"><?php echo esc_html( $tax->name ); ?></option>
 									<?php endforeach; ?>
 								</select>
@@ -91,16 +91,16 @@ if ( ! $document->is_calculating_tax() && isset( $columns['tax'] ) ) {
 							<?php
 							switch ( $key ) {
 								case 'price':
-									printf( '<div class="bkit-input-group"><span class="addon">%s</span> <input class="line-item__price eac_decimal_input" type="text" name="items[%s][price]" value="%s" placeholder="%s" /></div>', esc_html( eac_get_currency_symbol( $document->currency_code ) ), esc_attr( $item_key ), esc_attr( $item->price ), esc_attr__( 'Price', 'wp-ever-accounting' ) );
+									printf( '<div class="bkit-input-group"><span class="addon">%s</span> <input class="line-item__price eac_decimal_input" type="text" name="line[%s][price]" value="%s" placeholder="%s" /></div>', esc_html( eac_get_currency_symbol( $document->currency_code ) ), esc_attr( $line_key ), esc_attr( $line->price ), esc_attr__( 'Price', 'wp-ever-accounting' ) );
 									break;
 								case 'quantity':
-									printf( '<input class="line-item__quantity eac_decimal_input" type="number" name="items[%s][quantity]" value="%s" placeholder="%s" />', esc_attr( $item_key ), esc_attr( $item->quantity ), esc_attr__( 'Quantity', 'wp-ever-accounting' ) );
+									printf( '<input class="line-item__quantity eac_decimal_input" type="number" name="line[%s][quantity]" value="%s" placeholder="%s" />', esc_attr( $line_key ), esc_attr( $line->quantity ), esc_attr__( 'Quantity', 'wp-ever-accounting' ) );
 									break;
 								case 'tax':
-									echo esc_html( eac_format_amount( $item->tax_total, $document->currency_code ) );
+									echo esc_html( eac_format_amount( $line->tax_total, $document->currency_code ) );
 									break;
 								case 'subtotal':
-									echo esc_html( eac_format_amount( $item->subtotal, $document->currency_code ) );
+									echo esc_html( eac_format_amount( $line->subtotal, $document->currency_code ) );
 									break;
 								case 'actions':
 									echo '<a href="#" class="remove-line-item"><span class="dashicons dashicons-trash"></span></a>';
@@ -125,7 +125,7 @@ if ( ! $document->is_calculating_tax() && isset( $columns['tax'] ) ) {
 					</div>
 				</td>
 				<td class="line-item tw-text-right" colspan="<?php echo count( $columns ) - 1; ?>">
-					<?php if ( $document->get_items() ) : ?>
+					<?php if ( $document->lines ) : ?>
 
 					<?php endif; ?>
 				</td>

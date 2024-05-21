@@ -134,7 +134,7 @@ class Tax extends Model {
 	 * @since 1.0.0
 	 * @return void|\WP_Error Return WP_Error if data is not valid or void.
 	 */
-	public function validate_save_data() {
+	protected function validate_save_data() {
 		if ( empty( $this->name ) ) {
 			return new \WP_Error( 'missing_required', __( 'Tax name is required.', 'wp-ever-accounting' ) );
 		}

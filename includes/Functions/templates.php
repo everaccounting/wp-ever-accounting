@@ -42,8 +42,8 @@ function eac_get_template_part( $slug, $name = null ) {
  *
  * This is the load order:
  *
- * yourtheme/$template_path/$template_name
- * yourtheme/$template_name
+ * yourtheme/eac/$template_path/$template_name
+ * yourtheme/eac/$template_name
  * $default_path/$template_name
  *
  * @param string $template_name Template name.
@@ -65,7 +65,7 @@ function eac_locate_template( $template_name, $template_path = '', $default_path
 	$template = locate_template(
 		array(
 			trailingslashit( $template_path ) . $template_name,
-			'accounting/' . $template_name,
+			'eac/' . $template_name,
 		)
 	);
 
@@ -133,154 +133,4 @@ function eac_get_template_html( $template_name, $args = array(), $template_path 
 	eac_get_template( $template_name, $args, $template_path, $default_path );
 
 	return ob_get_clean();
-}
-
-/**
- * Output endpoint header.
- *
- * @return void
- * @since 1.1.6
- */
-function eac_get_header() {
-	eac_get_template_part( 'header' );
-}
-
-/**
- * Output endpoint footer.
- *
- * @return void
- * @since 1.1.6
- */
-function eac_get_footer() {
-	eac_get_template_part( 'footer' );
-}
-
-/**
- * Dropdown menu.
- *
- * @param array $items Array of actions.
- * @param array $args Array of arguments.
- *
- * @return void
- * @since 1.1.6
- */
-function eac_dropdown_menu( $items, $args = array() ) {
-	$defaults = array(
-		'button_class'  => 'button-secondary',
-		'button_text'   => '',
-		'button_icon'   => '',
-		'dropdown_icon' => 'dashicons-ellipsis',
-		'button_css'    => '',
-		'button_id'     => 'eac-dropdown' . wp_rand( 1, 1000 ),
-		'button_attrs'  => array(),
-	);
-
-	$args                  = wp_parse_args( $args, $defaults );
-	$args['button_class'] .= ' eac-dropdown__button';
-
-	if ( ! empty( $args['button_css'] ) ) {
-		$args['button_attrs']['style'] .= $args['button_css'];
-	}
-
-	$attrs = array();
-	foreach ( $args['button_attrs'] as $attr => $value ) {
-		$attrs[] = $attr . '="' . esc_attr( $value ) . '"';
-	}
-	if ( empty( $items ) ) {
-		return;
-	}
-	?>
-	<div class="eac-dropdown">
-		<button class="<?php echo esc_attr( $args['button_class'] ); ?>"
-				id="<?php echo esc_attr( $args['button_id'] ); ?>" <?php echo wp_kses_post( implode( ' ', $attrs ) ); ?>>
-			<?php if ( $args['button_icon'] ) : ?>
-				<span class="dashicons <?php echo esc_attr( $args['button_icon'] ); ?>"></span>
-			<?php endif; ?>
-			<?php if ( $args['button_text'] ) : ?>
-				<?php echo esc_html( $args['button_text'] ); ?>
-			<?php endif; ?>
-			<?php if ( $args['dropdown_icon'] ) : ?>
-				<span class="dashicons <?php echo esc_attr( $args['dropdown_icon'] ); ?>"></span>
-			<?php endif; ?>
-		</button>
-		<ul class="eac-dropdown__menu">
-			<?php foreach ( $items as $item ) : ?>
-				<?php $item_attrs = array(); ?>
-				<?php if ( ! empty( $item['attrs'] ) ) : ?>
-					<?php foreach ( $item['attrs'] as $attr => $value ) : ?>
-						<?php $item_attrs[] = $attr . '="' . esc_attr( $value ) . '"'; ?>
-					<?php endforeach; ?>
-				<?php endif; ?>
-				<li>
-					<a href="<?php echo esc_url( $item['url'] ); ?>" <?php echo wp_kses_post( implode( ' ', $item_attrs ) ); ?>><?php echo esc_html( $item['text'] ); ?></a>
-				</li>
-			<?php endforeach; ?>
-		</ul>
-	</div>
-
-	<?php
-}
-
-/**
- * Display payment.
- *
- * @param int $payment_id Payment ID.
- *
- * @return void
- * @since  1.1.6
- */
-function eac_display_payment( $payment_id ) {
-	$payment = eac_get_payment( $payment_id );
-	if ( ! $payment ) {
-		return;
-	}
-	eac_get_template( 'content-payment.php', array( 'payment' => $payment ) );
-}
-
-/**
- * Display expense.
- *
- * @param int $expense_id Expense ID.
- *
- * @return void
- * @since  1.1.6
- */
-function eac_display_expense( $expense_id ) {
-	$expense = eac_get_expense( $expense_id );
-	if ( ! $expense ) {
-		return;
-	}
-	eac_get_template( 'content-expense.php', array( 'expense' => $expense ) );
-}
-
-/**
- * Display invoice.
- *
- * @param int $invoice_id Invoice ID.
- *
- * @return void
- * @since  1.1.6
- */
-function eac_display_invoice( $invoice_id ) {
-	$invoice = eac_get_invoice( $invoice_id );
-	if ( ! $invoice ) {
-		return;
-	}
-	eac_get_template( 'content-invoice.php', array( 'invoice' => $invoice ) );
-}
-
-/**
- * Display bill.
- *
- * @param int $bill_id Bill ID.
- *
- * @return void
- * @since  1.1.6
- */
-function eac_display_bill( $bill_id ) {
-	$bill = eac_get_bill( $bill_id );
-	if ( ! $bill ) {
-		return;
-	}
-	eac_get_template( 'content-bill.php', array( 'bill' => $bill ) );
 }

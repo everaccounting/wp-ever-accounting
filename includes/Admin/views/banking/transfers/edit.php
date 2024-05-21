@@ -3,7 +3,7 @@
  * Edit transfer view.
  *
  * @package EverAccounting
- * @var $item \EverAccounting\Models\Item
+ * @var $transfer \EverAccounting\Models\Transfer
  */
 
 defined( 'ABSPATH' ) || exit;
