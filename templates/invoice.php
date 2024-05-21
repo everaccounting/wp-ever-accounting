@@ -77,7 +77,7 @@ eac_get_template( 'invoice-styles.php' );
 
 		<tr>
 			<td>
-				<hr class="data-table__StyledSeparator-sc-11th571-6 jcLHeJ">
+				<hr>
 			</td>
 		</tr>
 

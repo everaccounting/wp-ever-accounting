@@ -45,18 +45,18 @@ class InvoicesTable extends ListTable {
 	 */
 	public function prepare_items() {
 		$this->process_actions();
-		$per_page = $this->get_items_per_page( 'eac_sales_invoices_per_page', 20 );
+		$per_page = $this->get_items_per_page( 'eac_invoices_per_page', 20 );
 		$paged    = $this->get_pagenum();
 		$search   = $this->get_request_search();
 		$order_by = $this->get_request_orderby();
 		$order    = $this->get_request_order();
 		$args     = array(
-			'limit'    => $per_page,
-			'page'     => $paged,
-			'search'   => $search,
+			'limit'   => $per_page,
+			'page'    => $paged,
+			'search'  => $search,
 			'orderby' => $order_by,
-			'order'    => $order,
-			'status'   => $this->get_request_status(),
+			'order'   => $order,
+			'status'  => $this->get_request_status(),
 		);
 		/**
 		 * Filter the query arguments for the list table.
@@ -67,9 +67,9 @@ class InvoicesTable extends ListTable {
 		 */
 		$args = apply_filters( 'ever_accounting_invoices_table_query_args', $args );
 
-		// TODO: Need to create invoice query methods.
-		$this->items = Invoice::query( $args );
-		$total       = Invoice::count( $args );
+		$args['no_found_rows'] = false;
+		$this->items           = Invoice::results( $args );
+		$total                 = Invoice::count( $args );
 
 		$this->set_pagination_args(
 			array(

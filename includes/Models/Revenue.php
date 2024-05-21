@@ -84,7 +84,7 @@ class Revenue extends Transaction {
 	 * @since 1.0.0
 	 * @return void|\WP_Error Return WP_Error if data is not valid or void.
 	 */
-	public function validate_save_data() {
+	protected function validate_save_data() {
 		if ( empty( $this->date ) ) {
 			return new \WP_Error( 'missing_required', __( 'Transaction date is required.', 'wp-ever-accounting' ) );
 		}

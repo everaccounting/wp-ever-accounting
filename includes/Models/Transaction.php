@@ -325,7 +325,7 @@ class Transaction extends Model {
 	 * @since 1.0.0
 	 * @return void|\WP_Error Return WP_Error if data is not valid or void.
 	 */
-	public function validate_save_data() {
+	protected function validate_save_data() {
 		if ( empty( $this->account_id ) ) {
 			return new \WP_Error( 'missing_required', __( 'Account ID is required.', 'wp-ever-accounting' ) );
 		}

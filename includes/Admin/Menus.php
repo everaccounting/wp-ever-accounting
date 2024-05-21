@@ -11,6 +11,7 @@ use EverAccounting\Models\Invoice;
 use EverAccounting\Models\Item;
 use EverAccounting\Models\Revenue;
 use EverAccounting\Models\Tax;
+use EverAccounting\Models\Transfer;
 use EverAccounting\Models\Vendor;
 
 /**
@@ -62,6 +63,7 @@ class Menus {
 		add_action( 'ever_accounting_admin_purchases_bills', array( $this, 'render_bills_tab' ) );
 		add_action( 'ever_accounting_admin_purchases_vendors', array( $this, 'render_vendors_tab' ) );
 		add_action( 'ever_accounting_admin_banking_accounts', array( $this, 'render_accounts_tab' ) );
+		add_action( 'ever_accounting_admin_banking_transfers', array( $this, 'render_transfers_tab' ) );
 		add_action( 'ever_accounting_admin_misc_categories', array( $this, 'render_categories_tab' ) );
 		add_action( 'ever_accounting_admin_misc_currencies', array( $this, 'render_currencies_tab' ) );
 		add_action( 'ever_accounting_admin_misc_taxes', array( $this, 'render_taxes_tab' ) );
@@ -281,6 +283,12 @@ class Menus {
 				$args['option'] = 'eac_accounts_per_page';
 				add_screen_option( 'per_page', $args );
 				break;
+			case 'eac-banking-transfers':
+				$this->list_table = new ListTables\TransfersTable();
+				$this->list_table->prepare_items();
+				$args['option'] = 'eac_transfers_per_page';
+				add_screen_option( 'per_page', $args );
+				break;
 			case 'eac-misc':
 			case 'eac-misc-categories':
 				$this->list_table = new ListTables\CategoriesTable();
@@ -484,6 +492,29 @@ class Menus {
 	}
 
 	/**
+	 * Transfers Tab.
+	 *
+	 * @since 1.0.0
+	 */
+	public function render_transfers_tab() {
+		$edit     = Utilities::is_edit_screen();
+		$view     = Utilities::is_view_screen();
+		$id       = $edit ?? $view;
+		$transfer = Transfer::make( $id );
+		if ( ! empty( $id ) && ! $transfer->exists() ) {
+			wp_safe_redirect( remove_query_arg( 'edit' ) );
+			exit();
+		}
+		if ( Utilities::is_add_screen() ) {
+			include __DIR__ . '/views/banking/transfers/add.php';
+		} elseif ( $edit ) {
+			include __DIR__ . '/views/banking/transfers/edit.php';
+		} else {
+			include __DIR__ . '/views/banking/transfers/transfers.php';
+		}
+	}
+
+	/**
 	 * Categories Tab.
 	 *
 	 * @since 1.0.0
@@ -574,8 +605,8 @@ class Menus {
 		include __DIR__ . '/views/export/vendors.php';
 
 		// TODO: Need to add bellow export options.
-//		include __DIR__ . '/views/export/payments.php';
-//		include __DIR__ . '/views/export/expenses.php';
+		// include __DIR__ . '/views/export/payments.php';
+		// include __DIR__ . '/views/export/expenses.php';
 	}
 
 	/**

@@ -17,6 +17,7 @@ defined( 'ABSPATH' ) || exit;
 			<?php esc_html_e( 'Import', 'wp-ever-accounting' ); ?>
 		</a>
 		<?php if ( $this->list_table->get_request_search() ) : ?>
+			<?php // translators: %s: search query. ?>
 			<span class="subtitle"><?php echo esc_html( sprintf( __( 'Search results for "%s"', 'wp-ever-accounting' ), esc_html( $this->list_table->get_request_search() ) ) ); ?></span>
 		<?php endif; ?>
 	</h1>
@@ -26,6 +27,7 @@ defined( 'ABSPATH' ) || exit;
 		<?php $this->list_table->views(); ?>
 		<?php $this->list_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'search' ); ?>
 		<?php $this->list_table->display(); ?>
-		<input type="hidden" name="page" value="eac-transfers"/>
+		<input type="hidden" name="page" value="eac-banking"/>
+		<input type="hidden" name="tab" value="transfers"/>
 	</form>
 <?php

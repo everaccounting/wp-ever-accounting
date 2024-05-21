@@ -187,7 +187,7 @@ class Currency extends Model {
 	 * @since 1.0.0
 	 * @return HasMany
 	 */
-	protected function accounts() {
+	public function accounts() {
 		return $this->has_many( Account::class, 'currency_code', 'code' );
 	}
 
