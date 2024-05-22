@@ -390,7 +390,7 @@ $text   = get_option( 'eac_invoice_text_color', '#6E7178' );
 					<tr>
 						<td><p>2024-11-01</p></td>
 						<td><p>Cash</p></td>
-						<td class="eac-text-right"><p>$100.00 (paid)</p></td>
+						<td class="eac-text-right"><p>$100.03 (paid)</p></td>
 					</tr>
 					</tbody>
 				</table>
