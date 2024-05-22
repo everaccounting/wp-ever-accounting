@@ -82,7 +82,7 @@ use ByteKit\Models\Relations\HasOne;
  *
  * @property string   $billing_name Name of the billing contact.
  * @property string   $billing_company Company of the billing contact.
- * @property string   $billing_address_1 Address line 1 of the billing contact.
+ * @property string   $billing_address Address line 1 of the billing contact.
  * @property string   $billing_address_2 Address line 2 of the billing contact.
  * @property string   $billing_city City of the billing contact.
  * @property string   $billing_state State of the billing contact.
@@ -262,6 +262,271 @@ class Document extends Model {
 	}
 
 	/**
+	 * Gets a prop for a getter method.
+	 *
+	 * @param string $prop Name of prop to get.
+	 *
+	 * @since  1.1.0
+	 * @return mixed
+	 */
+	protected function get_billing_prop( $prop ) {
+		$value = null;
+
+		if ( isset( $this->props['billing_data'][ $prop ] ) ) {
+			$value = $this->props['billing_data'][ $prop ];
+		}
+
+		return $value;
+	}
+
+	/**
+	 * Sets a prop for a setter method.
+	 *
+	 * @param string $prop Name of prop to set.
+	 * @param mixed  $value Value of the prop.
+	 *
+	 * @since 1.1.0
+	 */
+	protected function set_billing_prop( $prop, $value ) {
+		if ( array_key_exists( $prop, $this->props['billing_data'] ) ) {
+			$this->props['billing_data'][ $prop ] = $value;
+		}
+	}
+
+	/**
+	 * Get billing name.
+	 *
+	 * @since  1.1.0
+	 * @return string
+	 */
+	protected function get_billing_name_prop() {
+		return $this->get_billing_prop( 'name' );
+	}
+
+	/**
+	 * Set billing name.
+	 *
+	 * @param string $name Billing name.
+	 *
+	 * @since  1.1.0
+	 */
+	public function set_billing_name_prop( $name ) {
+		$this->set_billing_prop( 'name', $name );
+	}
+
+	/**
+	 * Get billing company name.
+	 *
+	 * @since 1.1.0
+	 * @return string
+	 */
+	protected function get_billing_company_prop() {
+		return $this->get_billing_prop( 'company' );
+	}
+
+	/**
+	 * Set billing company name.
+	 *
+	 * @param string $company Billing company name.
+	 *
+	 * @since  1.1.0
+	 */
+	public function set_billing_company_prop( $company ) {
+		$this->set_billing_prop( 'company', eac_clean( $company ) );
+	}
+
+	/**
+	 * Get billing address address.
+	 *
+	 * @since  1.1.0
+	 * @return string
+	 */
+	protected function get_billing_address_prop() {
+		return $this->get_billing_prop( 'address' );
+	}
+
+	/**
+	 * Set billing address.
+	 *
+	 * @param string $address Billing address.
+	 *
+	 * @since  1.1.0
+	 */
+	public function set_billing_address_prop( $address ) {
+		$this->set_billing_prop( 'address', sanitize_text_field( $address ) );
+	}
+
+	/**
+	 * Get billing city address.
+	 *
+	 * @since 1.1.0
+	 * @return string
+	 */
+	protected function get_billing_city_prop() {
+		return $this->get_billing_prop( 'city' );
+	}
+
+	/**
+	 * Set billing city address.
+	 *
+	 * @param string $city Billing city address.
+	 *
+	 * @since  1.1.0
+	 */
+	public function set_billing_city_prop( $city ) {
+		$this->set_billing_prop( 'city', eac_clean( $city ) );
+	}
+
+	/**
+	 * Get billing state address.
+	 *
+	 * @since 1.1.0
+	 * @return string
+	 */
+	protected function get_billing_state_prop() {
+		return $this->get_billing_prop( 'state' );
+	}
+
+	/**
+	 * Set billing state address.
+	 *
+	 * @param string $state Billing state address.
+	 *
+	 * @since  1.1.0
+	 */
+	public function set_billing_state_prop( $state ) {
+		$this->set_billing_prop( 'state', eac_clean( $state ) );
+	}
+
+	/**
+	 * Get billing postcode code address.
+	 *
+	 * @since 1.1.0
+	 * @return string
+	 */
+	protected function get_billing_postcode_prop() {
+		return $this->get_billing_prop( 'postcode' );
+	}
+
+	/**
+	 * Set billing postcode code address.
+	 *
+	 * @param string $postcode Billing postcode code address.
+	 *
+	 * @since  1.1.0
+	 */
+	public function set_billing_postcode_prop( $postcode ) {
+		$this->set_billing_prop( 'postcode', eac_clean( $postcode ) );
+	}
+
+	/**
+	 * Get billing country address.
+	 *
+	 * @since 1.1.0
+	 * @return string
+	 */
+	protected function get_billing_country_prop() {
+		return $this->get_billing_prop( 'country' );
+	}
+
+	/**
+	 * Set billing country address.
+	 *
+	 * @param string $country Billing country address.
+	 *
+	 * @since  1.1.0
+	 */
+	public function set_billing_country_prop( $country ) {
+		$this->set_billing_prop( 'country', eac_clean( $country ) );
+	}
+
+	/**
+	 * Get billing phone number.
+	 *
+	 * @since 1.1.0
+	 * @return string
+	 */
+	protected function get_billing_phone_prop() {
+		return $this->get_billing_prop( 'phone' );
+	}
+
+	/**
+	 * Set billing phone number.
+	 *
+	 * @param string $phone Billing phone number.
+	 *
+	 * @since  1.1.0
+	 */
+	public function set_billing_phone_prop( $phone ) {
+		$this->set_billing_prop( 'phone', eac_clean( $phone ) );
+	}
+
+	/**
+	 * Get billing email address.
+	 *
+	 * @since 1.1.0
+	 * @return string
+	 */
+	protected function get_billing_email_prop() {
+		return $this->get_billing_prop( 'email' );
+	}
+
+	/**
+	 * Set billing email address.
+	 *
+	 * @param string $email Billing email address.
+	 *
+	 * @since  1.1.0
+	 */
+	public function set_billing_email_prop( $email ) {
+		$this->set_billing_prop( 'email', eac_clean( $email ) );
+	}
+
+	/**
+	 * Get billing vat number.
+	 *
+	 * @since  1.1.0
+	 * @return string
+	 */
+	protected function get_billing_vat_number_prop() {
+		return $this->get_billing_prop( 'vat_number' );
+	}
+
+	/**
+	 * Set billing vat number.
+	 *
+	 * @param string $vat Billing vat number.
+	 *
+	 * @since  1.1.0
+	 */
+	public function set_billing_vat_number_prop( $vat ) {
+		$this->set_billing_prop( 'vat_number', eac_clean( $vat ) );
+	}
+
+	/**
+	 * Get formatted billing address.
+	 *
+	 * @since 1.0.0
+	 * @return string
+	 */
+	public function get_formatted_billing_address_prop() {
+		$data = array(
+			'name'     => $this->billing_name,
+			'company'  => $this->billing_company,
+			'address'  => $this->billing_address,
+			'city'     => $this->billing_city,
+			'state'    => $this->billing_state,
+			'postcode' => $this->billing_postcode,
+			'country'  => $this->billing_country,
+			'vat'      => $this->billing_vat_number,
+			'phone'    => $this->billing_phone,
+			'email'    => $this->billing_email,
+		);
+
+		return eac_get_formatted_address( $data );
+	}
+
+	/**
 	 * Contact relation.
 	 *
 	 * @since 1.0.0
@@ -309,6 +574,27 @@ class Document extends Model {
 	 */
 	public function taxes() {
 		return $this->has_many( DocumentLineTax::class, 'document_id' );
+	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| CRUD Methods
+	|--------------------------------------------------------------------------
+	| This section contains methods for creating, reading, updating, and deleting
+	| objects in the database.
+	|--------------------------------------------------------------------------
+	*/
+
+	/**
+	 * Delete the object from the database.
+	 *
+	 * @since 1.0.0
+	 * @return array|false true on success, false on failure.
+	 */
+	public function delete() {
+		$this->lines()->delete();
+		$this->taxes()->delete();
+		return parent::delete();
 	}
 
 	/*

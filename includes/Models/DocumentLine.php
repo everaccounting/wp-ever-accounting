@@ -13,27 +13,27 @@ use ByteKit\Models\Relations\HasMany;
  * @package EverAccounting
  * @subpackage Models
  *
- * @property int    $id ID of the document_item.
- * @property string $type Type of the document_item.
- * @property string $name Name of the document_item.
- * @property double $price Price of the document_item.
- * @property double $quantity Quantity of the document_item.
- * @property double $subtotal Subtotal of the document_item.
- * @property double $subtotal_tax Subtotal_tax of the document_item.
- * @property double $discount Discount of the document_item.
- * @property double $discount_tax Discount Tax of the document_item.
- * @property double $tax_total Tax total of the document_item.
- * @property double $total Total of the document_item.
- * @property int    $taxable Taxable of the document_item.
- * @property string $description Description of the document_item.
- * @property string $unit Unit of the document_item.
- * @property int    $item_id Item ID of the document_item.
- * @property int    $document_id Document ID of the document_item.
- * @property string $date_updated Date updated of the document_item.
- * @property string $date_created Date created of the document_item.
+ * @property int                    $id ID of the document_item.
+ * @property string                 $type Type of the document_item.
+ * @property string                 $name Name of the document_item.
+ * @property double                 $price Price of the document_item.
+ * @property double                 $quantity Quantity of the document_item.
+ * @property double                 $subtotal Subtotal of the document_item.
+ * @property double                 $subtotal_tax Subtotal_tax of the document_item.
+ * @property double                 $discount Discount of the document_item.
+ * @property double                 $discount_tax Discount Tax of the document_item.
+ * @property double                 $tax_total Tax total of the document_item.
+ * @property double                 $total Total of the document_item.
+ * @property int                    $taxable Taxable of the document_item.
+ * @property string                 $description Description of the document_item.
+ * @property string                 $unit Unit of the document_item.
+ * @property int                    $item_id Item ID of the document_item.
+ * @property int                    $document_id Document ID of the document_item.
+ * @property string                 $date_updated Date updated of the document_item.
+ * @property string                 $date_created Date created of the document_item.
  *
- * @property-read double $discounted_subtotal Discounted subtotal of the document_item.
- * @property-read DocumentItemTax[] $taxes Taxes of the document_item.
+ * @property-read double            $discounted_subtotal Discounted subtotal of the document_item.
+ * @property-read DocumentLineTax[] $taxes Taxes of the document_item.
  */
 class DocumentLine extends Model {
 
@@ -150,6 +150,30 @@ class DocumentLine extends Model {
 	*/
 
 	/**
+	 * Set name prop.
+	 *
+	 * @param string $value Name of the document_item.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	protected function set_name_prop( $value ) {
+		$this->props['name'] = sanitize_text_field( wp_strip_all_tags( $value ) );
+	}
+
+	/**
+	 * Set description prop.
+	 *
+	 * @param string $value Description of the document_item.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	protected function set_description_prop( $value ) {
+		$this->props['description'] = sanitize_text_field( wp_trim_words( wp_strip_all_tags( $value ), 10 ) );
+	}
+
+	/**
 	 * Get discounted subtotal.
 	 *
 	 * @since 1.0.0
@@ -157,6 +181,23 @@ class DocumentLine extends Model {
 	 */
 	protected function get_discounted_subtotal_prop() {
 		return (float) $this->subtotal - (float) $this->discount;
+	}
+
+	/**
+	 * Set tax ids.
+	 *
+	 * @param string $tax_ids Tax ids.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public function set_tax_ids_props( $tax_ids ) {
+		$tax_ids = wp_parse_id_list( $tax_ids );
+		$taxes   = array();
+		foreach ( $tax_ids as $tax_id ) {
+			$taxes[] = array( 'tax_id' => $tax_id );
+		}
+		$this->set_taxes( $taxes );
 	}
 
 	/**
@@ -221,29 +262,24 @@ class DocumentLine extends Model {
 		}
 	}
 
+	/*
+	|--------------------------------------------------------------------------
+	| CRUD Methods
+	|--------------------------------------------------------------------------
+	| This section contains methods for creating, reading, updating, and deleting
+	| objects in the database.
+	|--------------------------------------------------------------------------
+	*/
 	/**
-	 * Save the object to the database.
+	 * Delete the object from the database.
 	 *
 	 * @since 1.0.0
-	 * @return \WP_Error|static WP_Error on failure, or the object on success.
+	 * @return array|false true on success, false on failure.
 	 */
-	public function save() {
-		$ret_val = parent::save();
-		if ( is_wp_error( $ret_val ) ) {
-			return $ret_val;
-		}
+	public function delete() {
+		$this->taxes()->delete();
 
-		// Save taxes.
-		if ( ! empty( $this->taxes ) ) {
-			foreach ( $this->taxes as $tax ) {
-				if ( $tax->is_dirty() || ! $tax->exists() ) {
-					$tax->document_id = $this->document_id;
-					$this->taxes()->save( $tax );
-				}
-			}
-		}
-
-		return $ret_val;
+		return parent::delete();
 	}
 
 	/*
@@ -254,6 +290,80 @@ class DocumentLine extends Model {
 	| object but can be used to support its functionality.
 	|--------------------------------------------------------------------------
 	*/
+	/**
+	 * Set taxes.
+	 *
+	 * @param array $taxes Taxes.
+	 *
+	 * @since 1.1.6
+	 * @return void
+	 */
+	public function set_taxes( $taxes ) {
+		if ( ! is_array( $taxes ) ) {
+			return;
+		}
+		$old_taxes = $this->taxes()->get_items();
+		$this->set_relation( 'taxes', array() );
+		foreach ( $taxes as $tax_data ) {
+			// Load items before call this method. Otherwise, it will cause mis calculation.
+			$default = array(
+				'id'          => 0,
+				'tax_id'      => 0,
+				'item_id'     => $this->id,
+				'document_id' => $this->document_id,
+				'is_compound' => 'no',
+			);
+
+			if ( is_object( $tax_data ) ) {
+				$tax_data = is_callable( array( $tax_data, 'to_array' ) ) ? $tax_data->to_array() : (array) $tax_data;
+			}
+
+			if ( empty( $tax_data['id'] ) && empty( $tax_data['tax_id'] ) ) {
+				return;
+			}
+
+			if ( empty( $tax_data['id'] ) && ! empty( $tax_data['tax_id'] ) ) {
+				$tax      = Tax::make( $tax_data['tax_id'] );
+				$tax_data = wp_array_slice_assoc( $tax->to_array(), array( 'name', 'rate', 'is_compound' ) );
+				$default  = wp_parse_args( $tax_data, $default );
+			}
+
+			$tax_data = wp_parse_args( $tax_data, $default );
+			$line_tax = DocumentLineTax::make( $tax_data );
+
+			if ( ! $line_tax->tax_id ) {
+				continue;
+			}
+
+			foreach ( $old_taxes as $key => $old_tax ) {
+				if ( $old_tax->is_similar( $line_tax ) ) {
+					unset( $old_taxes[ $key ] );
+					break;
+				}
+			}
+
+			// skip if the tax is already added.
+			foreach ( $this->taxes as $old_line_tax ) {
+				if ( $old_line_tax->tax_id === $line_tax->tax_id ) {
+					continue;
+				}
+			}
+
+			$this->set_relation(
+				'taxes',
+				function ( $relation ) use ( $line_tax ) {
+					$relation   = is_array( $relation ) ? $relation : array( $relation );
+					$relation[] = $line_tax;
+
+					return $relation;
+				}
+			);
+		}
+
+		foreach ( $old_taxes as $old_tax ) {
+			$old_tax->delete();
+		}
+	}
 
 	/**
 	 * Calculate subtotal.

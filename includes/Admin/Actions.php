@@ -2,7 +2,10 @@
 
 namespace EverAccounting\Admin;
 
+use EverAccounting\Models\Customer;
 use EverAccounting\Models\Invoice;
+use EverAccounting\Models\Item;
+use EverAccounting\Models\Tax;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -232,6 +235,15 @@ class Actions {
 				$total   = $filtered['total'];
 				break;
 		}
+
+		// limit the text length to 60 characters.
+		$results = array_map(
+			function ( $result ) {
+				$result['text'] = wp_trim_words( $result['text'], 5, '...' );
+				return $result;
+			},
+			$results
+		);
 
 		wp_send_json(
 			array(
@@ -654,6 +666,7 @@ class Actions {
 		if ( ! $item ) {
 			wp_send_json_error( __( 'Item not found.', 'wp-ever-accounting' ) );
 		}
+		$item->taxes; // load taxes.
 		wp_send_json_success( $item->to_array() );
 		exit;
 	}
@@ -824,7 +837,7 @@ class Actions {
 			$document = new Invoice();
 		}
 
-		include __DIR__ . '/views/sales/invoices/form-main.php';
+		include __DIR__ . '/views/sales/invoices/form-body.php';
 		exit();
 	}
 
@@ -836,53 +849,58 @@ class Actions {
 	 */
 	public function handle_edit_invoice() {
 		check_ajax_referer( 'eac_edit_invoice' );
-		$referer                      = wp_get_referer();
-		$calculate_totals             = isset( $_POST['calculate_totals'] ) ? sanitize_text_field( wp_unslash( $_POST['calculate_totals'] ) ) : '';
-		$items                        = isset( $_POST['items'] ) ? map_deep( wp_unslash( $_POST['items'] ), 'sanitize_text_field' ) : array();
-		$id                           = isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0;
-		$document                     = Invoice::make( $id );
-		$document->contact_id         = isset( $_POST['contact_id'] ) ? absint( wp_unslash( $_POST['contact_id'] ) ) : 0;
-		$document->discount_amount    = isset( $_POST['discount_amount'] ) ? floatval( wp_unslash( $_POST['discount_amount'] ) ) : 0;
-		$document->discount_type      = isset( $_POST['discount_type'] ) ? sanitize_text_field( wp_unslash( $_POST['discount_type'] ) ) : 'fixed';
-		$document->issue_date         = isset( $_POST['issue_date'] ) ? sanitize_text_field( wp_unslash( $_POST['issue_date'] ) ) : '';
-		$document->due_date           = isset( $_POST['due_date'] ) ? sanitize_text_field( wp_unslash( $_POST['due_date'] ) ) : '';
-		$document->number             = isset( $_POST['number'] ) ? sanitize_text_field( wp_unslash( $_POST['number'] ) ) : '';
-		$document->reference          = isset( $_POST['reference'] ) ? sanitize_text_field( wp_unslash( $_POST['reference'] ) ) : '';
-		$document->currency_code      = isset( $_POST['currency_code'] ) ? sanitize_text_field( wp_unslash( $_POST['currency_code'] ) ) : eac_get_base_currency();
-		$document->billing_name       = isset( $_POST['billing_name'] ) ? sanitize_text_field( wp_unslash( $_POST['billing_name'] ) ) : '';
-		$document->vat_exempt         = isset( $_POST['vat_exempt'] ) ? sanitize_text_field( wp_unslash( $_POST['vat_exempt'] ) ) : 'no';
-		$document->billing_company    = isset( $_POST['billing_company'] ) ? sanitize_text_field( wp_unslash( $_POST['billing_company'] ) ) : '';
-		$document->billing_address_1  = isset( $_POST['billing_address_1'] ) ? sanitize_text_field( wp_unslash( $_POST['billing_address_1'] ) ) : '';
-		$document->billing_address_2  = isset( $_POST['billing_address_2'] ) ? sanitize_text_field( wp_unslash( $_POST['billing_address_2'] ) ) : '';
-		$document->billing_city       = isset( $_POST['billing_city'] ) ? sanitize_text_field( wp_unslash( $_POST['billing_city'] ) ) : '';
-		$document->billing_state      = isset( $_POST['billing_state'] ) ? sanitize_text_field( wp_unslash( $_POST['billing_state'] ) ) : '';
-		$document->billing_postcode   = isset( $_POST['billing_postcode'] ) ? sanitize_text_field( wp_unslash( $_POST['billing_postcode'] ) ) : '';
-		$document->billing_country    = isset( $_POST['billing_country'] ) ? sanitize_text_field( wp_unslash( $_POST['billing_country'] ) ) : '';
-		$document->billing_phone      = isset( $_POST['billing_phone'] ) ? sanitize_text_field( wp_unslash( $_POST['billing_phone'] ) ) : '';
-		$document->billing_email      = isset( $_POST['billing_email'] ) ? sanitize_text_field( wp_unslash( $_POST['billing_email'] ) ) : '';
-		$document->billing_vat_number = isset( $_POST['billing_vat_number'] ) ? sanitize_text_field( wp_unslash( $_POST['billing_vat_number'] ) ) : '';
+		$referer                   = wp_get_referer();
+		$id                        = isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0;
+		$document                  = Invoice::make( $id );
+		$calculate_totals          = isset( $_POST['calculate_totals'] ) ? sanitize_text_field( wp_unslash( $_POST['calculate_totals'] ) ) : '';
+		$document->contact_id      = isset( $_POST['contact_id'] ) ? absint( wp_unslash( $_POST['contact_id'] ) ) : 0;
+		$document->discount_amount = isset( $_POST['discount_amount'] ) ? floatval( wp_unslash( $_POST['discount_amount'] ) ) : 0;
+		$document->discount_type   = isset( $_POST['discount_type'] ) ? sanitize_text_field( wp_unslash( $_POST['discount_type'] ) ) : 'fixed';
+		$document->issue_date      = isset( $_POST['issue_date'] ) ? sanitize_text_field( wp_unslash( $_POST['issue_date'] ) ) : '';
+		$document->due_date        = isset( $_POST['due_date'] ) ? sanitize_text_field( wp_unslash( $_POST['due_date'] ) ) : '';
+		$document->number          = isset( $_POST['number'] ) ? sanitize_text_field( wp_unslash( $_POST['number'] ) ) : '';
+		$document->reference       = isset( $_POST['reference'] ) ? sanitize_text_field( wp_unslash( $_POST['reference'] ) ) : '';
+		$document->currency_code   = isset( $_POST['currency_code'] ) ? sanitize_text_field( wp_unslash( $_POST['currency_code'] ) ) : eac_get_base_currency();
+		$document->vat_exempt      = isset( $_POST['vat_exempt'] ) ? sanitize_text_field( wp_unslash( $_POST['vat_exempt'] ) ) : 'no';
+		$lines                     = isset( $_POST['lines'] ) ? map_deep( wp_unslash( $_POST['lines'] ), 'sanitize_text_field' ) : array();
 
-		// Empty taxes not submitted so if not set, set it to empty array.
-		foreach ( $items as $key => $item ) {
-			if ( ! isset( $item['taxes'] ) ) {
-				$items[ $key ]['taxes'] = array();
-			}
+		error_log(print_r($lines, true));
+
+		if ( ! $document->exists() || $document->is_dirty( 'contact_id' ) ) {
+			$customer               = Customer::make( $document->contact_id );
+			$document->billing_data = $customer->to_array();
 		}
-
-		$document->set_items( $items );
 
 		if ( 'yes' === $calculate_totals ) {
-			$document->calculate_totals();
+			$document->set_relation( 'lines', array() );
+			$document->set_lines( $lines );
+			$document->recalculate();
 			return $document;
 		}
-		$saved = $document->save();
-		if ( is_wp_error( $saved ) ) {
-			EAC()->flash->error( $saved->get_error_message() );
-		} else {
-			EAC()->flash->success( __( 'Invoice saved successfully.', 'wp-ever-accounting' ) );
-			$referer = add_query_arg( 'edit', $document->id, $referer );
-			$referer = remove_query_arg( array( 'add' ), $referer );
+
+		foreach ( $document->lines()->get_items() as $line ) {
+			$line->delete();
 		}
+
+		$document->set_lines( $lines );
+		$retval = $document->save();
+		if ( is_wp_error( $retval ) ) {
+			EAC()->flash->error( $retval->get_error_message() );
+		}
+
+		$document->lines()->save_many( $document->lines );
+		foreach ( $document->lines as $line ) {
+			$line->taxes()->save_many(
+				$line->taxes,
+				function ( $line_tax ) use ( $document ) {
+					$line_tax->document_id = $document->id;
+					return $line_tax;
+				}
+			);
+		}
+		EAC()->flash->success( __( 'Invoice saved successfully.', 'wp-ever-accounting' ) );
+		$referer = add_query_arg( 'edit', $document->id, $referer );
+		$referer = remove_query_arg( array( 'add' ), $referer );
 
 		wp_safe_redirect( $referer );
 		exit;

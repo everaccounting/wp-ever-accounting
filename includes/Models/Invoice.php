@@ -14,7 +14,7 @@ use ByteKit\Models\Relations\HasMany;
  *
  * @author  Sultan Nasir Uddin <manikdrmc@gmail.com>
  *
- * @property int $id Invoice ID.
+ * @property int            $id Invoice ID.
  * @property DocumentLine[] $lines Invoice lines.
  */
 class Invoice extends Document {
@@ -60,6 +60,46 @@ class Invoice extends Document {
 		$this->props = array_merge( $this->props, $_props );
 		parent::__construct( $props );
 	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| Prop Definition Methods
+	|--------------------------------------------------------------------------
+	| This section contains methods that define and provide specific prop values
+	| related to the model, such as statuses or types. These methods can be accessed
+	| without instantiating the model.
+	|--------------------------------------------------------------------------
+	*/
+
+	/**
+	 * Get invoice line items columns.
+	 *
+	 * @since 1.0.0
+	 * @return array
+	 */
+	public static function get_line_columns() {
+		return apply_filters(
+			'ever_accounting_invoice_line_columns',
+			array(
+				'item'     => __( 'Item', 'wp-ever-accounting' ),
+				'price'    => __( 'Price', 'wp-ever-accounting' ),
+				'quantity' => __( 'Quantity', 'wp-ever-accounting' ),
+				'tax'      => __( 'Tax', 'wp-ever-accounting' ),
+				'subtotal' => __( 'Subtotal', 'wp-ever-accounting' ),
+			)
+		);
+	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| Accessors, Mutators, Relationship and Validation Methods
+	|--------------------------------------------------------------------------
+	| This section contains methods for getting and setting properties (accessors
+	| and mutators) as well as defining relationships between models. It also includes
+	| a data validation method that ensures data integrity before saving.
+	|--------------------------------------------------------------------------
+	*/
+
 
 	/**
 	 * Payments relation.
@@ -127,6 +167,16 @@ class Invoice extends Document {
 		// If the status is changed, update the status.
 		if ( ! empty( $new_status ) && $new_status !== $this->status ) {
 			$this->status = $new_status;
+		}
+
+		// ensure the invoice number is set and unique.
+		if ( empty( $this->number ) ) {
+			$this->number = $this->get_next_number();
+		} else {
+			$existing = self::find( array( 'number' => $this->number ) );
+			if ( ! empty( $existing ) && $existing->id !== $this->id ) {
+				$this->number = $this->get_next_number();
+			}
 		}
 
 		return parent::save();
@@ -436,6 +486,207 @@ class Invoice extends Document {
 	| object but can be used to support its functionality.
 	|--------------------------------------------------------------------------
 	*/
+	/**
+	 * Set line items.
+	 *
+	 * @param array $lines Items.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public function set_lines( $lines ) {
+		if ( ! is_array( $lines ) ) {
+			return;
+		}
+		$old_lines = $this->lines()->get_items();
+		$this->set_relation( 'lines', array() );
+		foreach ( $lines as $line ) {
+			$line_default = array(
+				'id'       => 0, // line id.
+				'item_id'  => 0, // item id **not line id** be careful.
+				'type'     => 'standard', // 'standard', 'fee', 'shipping
+				'quantity' => 1,
+			);
+
+			// The data must be a line item with id or a new array with item_id and additional data.
+			if ( empty( $line['id'] ) && empty( $line['item_id'] ) ) {
+				return;
+			}
+
+			// If id is not set but item_id is set, we need to get the item data.
+			if ( empty( $line['id'] ) && ! empty( $line['item_id'] ) ) {
+				$item                 = Item::make( $line['item_id'] );
+				$item_data            = wp_array_slice_assoc( $item->to_array(), array( 'name', 'type', 'description', 'unit', 'price', 'taxable' ) );
+				$item_data['item_id'] = $item->id;
+				$line_default         = wp_parse_args( $item_data, $line_default );
+			}
+			$line = wp_parse_args( $line, $line_default );
+
+			// skip if item_id is not set.
+			if ( empty( $line['item_id'] ) ) {
+				continue;
+			}
+
+			$line_item = $this->lines()->make( $line );
+			// If same line already exists, we will merge them.
+			foreach ( $this->lines as $old_line_item ) {
+				if ( $old_line_item->is_similar( $line_item ) ) {
+					$old_line_item->quantity += $line_item->quantity;
+					break;
+				}
+			}
+
+			$this->set_relation(
+				'lines',
+				function ( $relation ) use ( $line_item ) {
+					$relation   = is_array( $relation ) ? $relation : array( $relation );
+					$relation[] = $line_item;
+
+					return $relation;
+				}
+			);
+		}
+	}
+
+	/**
+	 * Set line items.
+	 *
+	 * @param array $request Items.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public function set_lines_v1( $request ) {
+		foreach ( $request as $line_data ) {
+			$line_default = array(
+				'id'          => 0, // line id.
+				'item_id'     => 0, // item id **not line id** be careful.
+				'type'        => 'standard', // 'standard', 'fee', 'shipping
+				'name'        => '',
+				'description' => '',
+				'unit'        => '',
+				'price'       => 0,
+				'quantity'    => 1,
+			);
+			// The data must be a line item with id or a new array with item_id and additional data.
+			if ( empty( $line_data['id'] ) && empty( $line_data['item_id'] ) ) {
+				return;
+			}
+
+			// If id is not set but item_id is set, we need to get the item data.
+			if ( empty( $line_data['id'] ) && ! empty( $line_data['item_id'] ) ) {
+				$item                 = Item::make( $line_data['item_id'] );
+				$item_data            = wp_array_slice_assoc( $item->to_array(), array( 'name', 'type', 'description', 'unit', 'price', 'taxable' ) );
+				$item_data['item_id'] = $item->id;
+				$line_default         = wp_parse_args( $item_data, $line_default );
+			}
+
+			$line_data                = wp_parse_args( $line_data, $line_default );
+			$line_data['name']        = wp_strip_all_tags( $line_data['name'] );
+			$line_data['description'] = wp_strip_all_tags( $line_data['description'] );
+			$line_data['description'] = wp_trim_words( $line_data['description'], 20, '' );
+			$line_data['unit']        = wp_strip_all_tags( $line_data['unit'] );
+
+			// skip if item_id is not set.
+			if ( empty( $line_data['item_id'] ) ) {
+				continue;
+			}
+
+			// we have to validate the data before creating the item.
+			if ( ! array_key_exists( $line_data['type'], eac_get_item_types() ) ) {
+				$line_data['type'] = 'standard';
+			}
+			if ( ! array_key_exists( $line_data['unit'], eac_get_unit_types() ) ) {
+				$line_data['unit'] = '';
+			}
+
+			$line = $this->lines()->make( $line_data );
+			foreach ( $line->taxes()->get_items() as $old_line_tax ) {
+				$old_line_tax->delete();
+			}
+
+			// taxes may come in 2 formats, one is just an array of tax ids, and another is an array of tax data.
+			if ( isset( $line_data['tax_ids'] ) ) {
+				$line_data['taxes'] = array_map(
+					function ( $tax_id ) {
+						return array(
+							'tax_id' => $tax_id,
+						);
+					},
+					(array) $line_data['tax_ids']
+				);
+			}
+
+			// Line taxes.
+			if ( ! empty( $line_data['tax_ids'] ) ) {
+				foreach ( $line_data['tax_ids'] as $line_tax_key => $line_tax_data ) {
+					$tax_default = array(
+						'id'          => 0,
+						'tax_id'      => 0,
+						'line_id'     => null,
+						'document_id' => null,
+						'name'        => '',
+						'rate'        => 0,
+						'is_compound' => 'no',
+					);
+
+					if ( empty( $line_tax_data['id'] ) && empty( $line_tax_data['tax_id'] ) ) {
+						continue;
+					}
+
+					if ( empty( $line_tax_data['id'] ) && ! empty( $line_tax_data['tax_id'] ) ) {
+						$tax         = Tax::make( $line_tax_data['tax_id'] );
+						$tax_data    = wp_array_slice_assoc( $tax->to_array(), array( 'name', 'rate', 'is_compound' ) );
+						$tax_default = wp_parse_args( $tax_data, $tax_default );
+					}
+
+					$line_tax_data = wp_parse_args( $line_tax_data, $tax_default );
+					// if tax_id is not set, we will skip this tax.
+					if ( empty( $line_tax_data['tax_id'] ) ) {
+						unset( $line_data['taxes'][ $line_tax_key ] );
+						continue;
+					}
+
+					$line_tax = $line->taxes()->make( $line_tax_data );
+
+					foreach ( $line->taxes as $line_tax_k => $old_line_tax ) {
+						if ( $old_line_tax->tax_id === $line_tax->tax_id ) {
+							unset( $line->taxes[ $line_tax_k ] );
+							continue;
+						}
+					}
+					$line->set_relation(
+						'taxes',
+						function ( $relation ) use ( $line_tax ) {
+							$relation   = is_array( $relation ) ? $relation : array( $relation );
+							$relation[] = $line_tax;
+
+							return $relation;
+						}
+					);
+				}
+			}
+
+			// If same line already exists, we will merge them.
+			foreach ( $this->lines as $old_line ) {
+				if ( $old_line->is_similar( $line ) ) {
+					$old_line->quantity += $line->quantity;
+					break;
+				}
+			}
+
+			$this->set_relation(
+				'lines',
+				function ( $relation ) use ( $line ) {
+					$relation   = is_array( $relation ) ? $relation : array( $relation );
+					$relation[] = $line;
+
+					return $relation;
+				}
+			);
+		}
+	}
+
 	/**
 	 * Get the lines of the given type.
 	 *

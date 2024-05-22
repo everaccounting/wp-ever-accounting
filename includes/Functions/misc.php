@@ -240,6 +240,22 @@ function eac_form_group( $field ) {
 				esc_attr( $accept )
 			);
 
+			$input .= sprintf(
+				'<input type="hidden" name="%1$s" id="%2$s-hidden" value="%3$s">',
+				esc_attr( $field['name'] ),
+				esc_attr( $field['id'] ),
+				esc_attr( $field['value'] )
+			);
+
+			// preview.
+//			if ( ! empty( $field['value'] ) ) {
+//				$input .= sprintf(
+//					'<img src="%1$s" alt="%2$s" class="eac-form-field__preview">',
+//					esc_url( $field['value'] ),
+//					esc_attr( $field['label'] )
+//				);
+//			}
+
 			break;
 		case 'wp_editor':
 			ob_start();

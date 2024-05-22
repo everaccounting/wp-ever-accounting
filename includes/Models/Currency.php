@@ -249,20 +249,17 @@ class Currency extends Model {
 	/**
 	 * Find an object by its primary key or query.
 	 *
-	 * @param mixed $value The value to search for.
+	 * @param mixed $args The value to search for.
 	 *
 	 * @since 1.0.0
 	 * @return static|null The model instance, or null if not found.
 	 */
-	public static function find( $value ) {
-		if ( ! is_numeric( $value ) && strlen( $value ) === 3 ) {
-			$value = array( 'code' => strtoupper( $value ) );
+	public static function find( $args ) {
+		if ( ! is_numeric( $args ) && strlen( $args ) === 3 ) {
+			$value = array( 'code' => strtoupper( $args ) );
 		}
 
-		$retval = parent::find( $value );
-
-		// If the currency is not found, we have to load as new. As we must have a currency.
-		return $retval ? $retval : ( static::make() )->set_props( $value );
+		return parent::find( $value );
 	}
 
 	/**
