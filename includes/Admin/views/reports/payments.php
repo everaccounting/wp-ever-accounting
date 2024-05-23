@@ -14,44 +14,44 @@ $currency = eac_get_currency();
 $years    = range( wp_date( 'Y' ), 2015 );
 
 // TODO: Need to update these bellow two php variables with the dynamic values.
-$year     = wp_date( 'Y' ); // eac_get_input_var( 'year', wp_date( 'Y' ) );
-// $data     = eac_get_payment_report( $year );
-$data = array(
-	"total_amount" => 0,
-	"total_count" => 0,
-	"daily_avg" => 0,
-	"month_avg" => 0,
-	"date_count" => 122,
-	"months" => array(
-		"Jan, 24" => 0,
-		"Feb, 24" => 0,
-		"Mar, 24" => 0,
-		"Apr, 24" => 0,
-		"May, 24" => 0,
-	),
-  	"categories" => array(),
-);
-
-$labels   = array_keys( $data['months'] );
-foreach ( $data['categories'] as $category_id => $datum ) {
-	if ( ! isset( $datasets[ $category_id ] ) ) {
-		$term                     = eac_get_category( $category_id );
-		$term_name                = $term && $term->get_name() ? esc_html( $term->get_name() ) : esc_html__( 'Uncategorized', 'wp-ever-accounting' );
-		$datasets[ $category_id ] = array(
-			'label'           => $term_name,
-			'backgroundColor' => eac_get_random_color( $term_name ),
-		);
-	}
-	$datasets[ $category_id ]['data'] = array_values( $datum );
-}
-$datasets['total'] = array(
-	'type'            => 'line',
-	'fill'            => false,
-	'label'           => esc_html__( 'Total', 'wp-ever-accounting' ),
-	'backgroundColor' => '#3644ff',
-	'borderColor'     => '#3644ff',
-	'data'            => array_values( $data['months'] ),
-);
+//$year     = wp_date( 'Y' ); // eac_get_input_var( 'year', wp_date( 'Y' ) );
+//// $data     = eac_get_payment_report( $year );
+//$data = array(
+//	"total_amount" => 0,
+//	"total_count" => 0,
+//	"daily_avg" => 0,
+//	"month_avg" => 0,
+//	"date_count" => 122,
+//	"months" => array(
+//		"Jan, 24" => 0,
+//		"Feb, 24" => 0,
+//		"Mar, 24" => 0,
+//		"Apr, 24" => 0,
+//		"May, 24" => 0,
+//	),
+//  	"categories" => array(),
+//);
+//
+//$labels   = array_keys( $data['months'] );
+//foreach ( $data['categories'] as $category_id => $datum ) {
+//	if ( ! isset( $datasets[ $category_id ] ) ) {
+//		$term                     = eac_get_category( $category_id );
+//		$term_name                = $term && $term->get_name() ? esc_html( $term->get_name() ) : esc_html__( 'Uncategorized', 'wp-ever-accounting' );
+//		$datasets[ $category_id ] = array(
+//			'label'           => $term_name,
+//			'backgroundColor' => eac_get_random_color( $term_name ),
+//		);
+//	}
+//	$datasets[ $category_id ]['data'] = array_values( $datum );
+//}
+//$datasets['total'] = array(
+//	'type'            => 'line',
+//	'fill'            => false,
+//	'label'           => esc_html__( 'Total', 'wp-ever-accounting' ),
+//	'backgroundColor' => '#3644ff',
+//	'borderColor'     => '#3644ff',
+//	'data'            => array_values( $data['months'] ),
+//);
 ?>
 
 <div class="bkit-panel">

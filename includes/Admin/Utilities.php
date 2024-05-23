@@ -92,7 +92,7 @@ class Utilities {
 				'menu_slug'  => 'eac-reports',
 				'page_hook'  => 'reports',
 				'tabs'       => array(
-					'revenue'  => __( 'Revenues', 'wp-ever-accounting' ),
+					'revenues' => __( 'Revenues', 'wp-ever-accounting' ),
 					'expenses' => __( 'Expenses', 'wp-ever-accounting' ),
 					'profits'  => __( 'Profits', 'wp-ever-accounting' ),
 					'taxes'    => __( 'Taxes', 'wp-ever-accounting' ),
