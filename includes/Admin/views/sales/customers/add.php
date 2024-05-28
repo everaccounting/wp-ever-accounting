@@ -18,5 +18,23 @@ defined( 'ABSPATH' ) || exit;
 		</a>
 	</h1>
 
+	<div class="eac-profile">
+		<div class="eac-profile__avatar">
+			<?php echo get_avatar( 'manikdrmc@gmail.com', 120 ); ?>
+		</div>
+		<div class="eac-profile__content">
+			<div class="eac-profile__column">
+				<h3 class="eac-profile__title"><?php esc_html_e( 'Customer Details', 'wp-ever-accounting' ); ?></h3>
+				<p><a href="mailto:manikdrmc@gmail.com">manikdrmc@gmail.com</a></p>
+				<p><a href="tel:+01712345678">+8801712345678</a></p>
+				<p><a href="https://manikdrmc.com" target="_blank">manikdrmc.com</a></p>
+			</div>
+			<div class="eac-profile__column">
+				<h3 class="eac-profile__title"><?php esc_html_e( 'Customer Details', 'wp-ever-accounting' ); ?></h3>
+				<?php (\EverAccounting\Models\Customer::find()
+			</div>
+		</div>
+	</div>
+
 <?php
 require __DIR__ . '/form.php';

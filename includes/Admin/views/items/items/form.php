@@ -201,13 +201,15 @@ $categories = eac_get_categories(
 				</div>
 
 				<div class="bkit-card__body">
-					<div class="bkit-form-group is--upload">
-						<label for="image">
-							<img src="#" alt="Preview Uploaded Image" id="file-preview">
-							<?php esc_html_e( 'Upload Image', 'wp-ever-accounting' ); ?>
-							<input type="file" name="image" id="image" accept="image/*"/>
-						</label>
-					</div>
+					<?php
+					eac_form_group(
+						array(
+							'type'  => 'thumbnail',
+							'name'  => 'thumbnail_id',
+							'value' => $item->thumbnail_id,
+						)
+					);
+					?>
 				</div>
 			</div>
 

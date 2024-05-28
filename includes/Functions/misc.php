@@ -226,35 +226,39 @@ function eac_form_group( $field ) {
 
 			break;
 
-		case 'file':
-			$accept = ! empty( $field['accept'] ) ? $field['accept'] : 'image/*';
-			$input  = sprintf(
-				'<input type="file" name="%1$s" id="%2$s" class="%3$s" value="%4$s" placeholder="%5$s" style="%6$s" %7$s accept="%8$s">',
-				esc_attr( $field['name'] ),
+		case 'thumbnail':
+			$attachment = new \stdClass();
+			if ( ! empty( $field['value'] ) && 'attachment' === get_post_type( $field['value'] ) ) {
+				$attachment = get_post( $field['value'] );
+			}
+			$icon = isset( $attachment->ID ) && in_array( $attachment->post_mime_type, array( 'image/jpeg', 'image/png' ), true ) ? false : true;
+			$src  = ! isset( $attachment->ID ) ? '' : wp_get_attachment_image_url( $attachment->ID, 'thumbnail', $icon );
+			$link = ! isset( $attachment->ID ) ? '' : wp_get_attachment_url( $attachment->ID );
+			$name = ! isset( $attachment->post_title ) ? '' : $attachment->post_title;
+			$id   = ! isset( $attachment->ID ) ? '' : $attachment->ID;
+
+			$input = sprintf(
+				'<div class="eac-thumbnail" id="%1$s" style="%2$s">
+					<input type="hidden" name="%3$s" value="%4$s">
+					<div class="eac-thumbnail__preview">
+						<a class="eac-thumbnail__link" href="%5$s" target="_blank">
+							<img class="eac-thumbnail__image" src="%5$s" alt="%6$s">
+						</a>
+					</div>
+					<div class="eac-thumbnail__actions">
+						<a href="#" class="eac-thumbnail__upload button">%7$s</a>
+						<a href="#" class="eac-thumbnail__remove button">%8$s</a>
+					</div>
+				</div>',
 				esc_attr( $field['id'] ),
-				esc_attr( $field['class'] ),
-				esc_attr( $field['value'] ),
-				esc_attr( $field['placeholder'] ),
 				esc_attr( $field['style'] ),
-				wp_kses_post( implode( ' ', $attrs ) ),
-				esc_attr( $accept )
-			);
-
-			$input .= sprintf(
-				'<input type="hidden" name="%1$s" id="%2$s-hidden" value="%3$s">',
 				esc_attr( $field['name'] ),
-				esc_attr( $field['id'] ),
-				esc_attr( $field['value'] )
+				esc_attr( $field['value'] ),
+				esc_url( $link ),
+				esc_attr( $name ),
+				esc_html__( 'Upload', 'wp-ever-accounting' ),
+				esc_html__( 'Remove', 'wp-ever-accounting' )
 			);
-
-			// preview.
-//			if ( ! empty( $field['value'] ) ) {
-//				$input .= sprintf(
-//					'<img src="%1$s" alt="%2$s" class="eac-form-field__preview">',
-//					esc_url( $field['value'] ),
-//					esc_attr( $field['label'] )
-//				);
-//			}
 
 			break;
 		case 'wp_editor':
