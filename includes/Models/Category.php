@@ -117,9 +117,9 @@ class Category extends Model {
 	 */
 	public static function get_types() {
 		$types = array(
+			'item'    => esc_html__( 'Item', 'wp-ever-accounting' ),
 			'revenue' => esc_html__( 'Revenue', 'wp-ever-accounting' ),
 			'expense' => esc_html__( 'Expense', 'wp-ever-accounting' ),
-			'item'    => esc_html__( 'Item', 'wp-ever-accounting' ),
 		);
 
 		return apply_filters( 'ever_accounting_category_types', $types );
@@ -143,9 +143,8 @@ class Category extends Model {
 	 * @since 1.0.0
 	 * @return void
 	 */
-	protected function set_type_prop( $type ) {
-		$type = ! in_array( $type, self::get_types(), true ) ? 'income' : $type;
-		$this->set_prop_value( 'type', $type );
+	protected function set_type_attribute( $type ) {
+		$this->attributes['type'] = ! array_key_exists( $type, self::get_types() ) ? 'item' : $type;
 	}
 
 	/**
@@ -154,7 +153,7 @@ class Category extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	protected function get_formatted_name_prop() {
+	protected function get_formatted_name_attribute() {
 		return sprintf( '%s (#%d)', $this->name, $this->id );
 	}
 
@@ -198,13 +197,21 @@ class Category extends Model {
 		return $this->has_many( Item::class );
 	}
 
+	/*
+	|--------------------------------------------------------------------------
+	| CRUD Methods
+	|--------------------------------------------------------------------------
+	| This section contains methods for creating, reading, updating, and deleting
+	| objects in the database.
+	|--------------------------------------------------------------------------
+	*/
 	/**
-	 * Sanitize data before saving.
+	 * Save the object to the database.
 	 *
 	 * @since 1.0.0
-	 * @return void|\WP_Error Return WP_Error if data is not valid or void.
+	 * @return \WP_Error|static WP_Error on failure, or the object on success.
 	 */
-	protected function validate_save_data() {
+	public function save() {
 		if ( empty( $this->name ) ) {
 			return new \WP_Error( 'missing_required', __( 'Category name is required.', 'wp-ever-accounting' ) );
 		}
@@ -222,6 +229,8 @@ class Category extends Model {
 		if ( ! empty( $existing ) && $existing->id !== $this->id ) {
 			return new \WP_Error( 'duplicate', __( 'Category with same name and type already exists.', 'wp-ever-accounting' ) );
 		}
+
+		return parent::save();
 	}
 
 	/*

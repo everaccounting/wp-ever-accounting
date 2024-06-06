@@ -71,7 +71,7 @@ class Item extends Model {
 	 * @since 1.0.0
 	 * @var array
 	 */
-	protected $props = array(
+	protected $attributes = array(
 		'type'    => 'standard',
 		'status'  => 'active',
 		'taxable' => false,
@@ -204,10 +204,10 @@ class Item extends Model {
 	 * @param string $value Item type.
 	 *
 	 * @since 1.0.0
-	 * @return string
+	 * @return void
 	 */
-	public static function set_item_type_prop( $value ) {
-		return array_key_exists( $value, self::get_types() ) ? $value : 'standard';
+	public function set_item_type_attribute( $value ) {
+		$this->attributes['type'] = array_key_exists( $value, self::get_types() ) ? $value : 'standard';
 	}
 
 	/**
@@ -216,7 +216,7 @@ class Item extends Model {
 	 * @since 1.1.6
 	 * @return string
 	 */
-	protected function get_formatted_name_prop() {
+	protected function get_formatted_name_attribute() {
 		return sprintf( '%s (#%s)', $this->name, $this->id );
 	}
 
@@ -226,7 +226,7 @@ class Item extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	protected function get_formatted_price_prop() {
+	protected function get_formatted_price_attribute() {
 		return eac_format_amount( $this->price );
 	}
 
@@ -236,7 +236,7 @@ class Item extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	protected function get_formatted_cost_prop() {
+	protected function get_formatted_cost_attribute() {
 		return eac_format_amount( $this->cost );
 	}
 
@@ -260,13 +260,21 @@ class Item extends Model {
 		return $this->belongs_to_many( Tax::class );
 	}
 
+	/*
+	|--------------------------------------------------------------------------
+	| CRUD Methods
+	|--------------------------------------------------------------------------
+	| This section contains methods for creating, reading, updating, and deleting
+	| objects in the database.
+	|--------------------------------------------------------------------------
+	*/
 	/**
-	 * Sanitize data before saving.
+	 * Save the object to the database.
 	 *
 	 * @since 1.0.0
-	 * @return void|\WP_Error Return WP_Error if data is not valid or void.
+	 * @return \WP_Error|static WP_Error on failure, or the object on success.
 	 */
-	protected function validate_save_data() {
+	public function save() {
 		if ( empty( $this->name ) ) {
 			return new \WP_Error( 'missing_required', __( 'Item name is required.', 'wp-ever-accounting' ) );
 		}
@@ -279,6 +287,8 @@ class Item extends Model {
 		if ( empty( $this->cost ) ) {
 			$this->cost = $this->price;
 		}
+
+		return parent::save();
 	}
 
 	/*

@@ -13,16 +13,16 @@ defined( 'ABSPATH' ) || exit;
 ?>
 <form id="eac-currency-form" method="post" action="<?php echo esc_html( admin_url( 'admin-post.php' ) ); ?>">
 	<span data-wp-text="name"></span>
-	<div class="bkit-poststuff">
+	<div class="eac-poststuff">
 		<div class="column-1">
-			<div class="bkit-card">
-				<div class="bkit-card__header">
-					<h2 class="bkit-card__title"><?php esc_html_e( 'Currency Details', 'wp-ever-accounting' ); ?></h2>
+			<div class="eac-card">
+				<div class="eac-card__header">
+					<h2 class="eac-card__title"><?php esc_html_e( 'Currency Details', 'wp-ever-accounting' ); ?></h2>
 				</div>
-				<div class="bkit-card__body grid--fields">
+				<div class="eac-card__body grid--fields">
 
 					<?php
-					eac_form_group(
+					eac_form_field(
 						array(
 							'id'       => 'code',
 							'label'    => __( 'Code', 'wp-ever-accounting' ),
@@ -32,7 +32,7 @@ defined( 'ABSPATH' ) || exit;
 							'readonly' => true,
 						)
 					);
-					eac_form_group(
+					eac_form_field(
 						array(
 							'id'       => 'name',
 							'label'    => __( 'Name', 'wp-ever-accounting' ),
@@ -41,7 +41,7 @@ defined( 'ABSPATH' ) || exit;
 							'required' => true,
 						)
 					);
-					eac_form_group(
+					eac_form_field(
 						array(
 							'id'        => 'exchange_rate',
 							'label'     => __( 'Exchange Rate', 'wp-ever-accounting' ),
@@ -55,7 +55,7 @@ defined( 'ABSPATH' ) || exit;
 							'suffix'    => $currency->code,
 						)
 					);
-					eac_form_group(
+					eac_form_field(
 						array(
 							'id'       => 'symbol',
 							'label'    => __( 'Symbol', 'wp-ever-accounting' ),
@@ -64,7 +64,7 @@ defined( 'ABSPATH' ) || exit;
 							'required' => true,
 						)
 					);
-					eac_form_group(
+					eac_form_field(
 						array(
 							'id'       => 'thousand_separator',
 							'label'    => __( 'Thousand Separator', 'wp-ever-accounting' ),
@@ -74,7 +74,7 @@ defined( 'ABSPATH' ) || exit;
 						)
 					);
 
-					eac_form_group(
+					eac_form_field(
 						array(
 							'id'       => 'decimal_separator',
 							'label'    => __( 'Decimal Separator', 'wp-ever-accounting' ),
@@ -84,7 +84,7 @@ defined( 'ABSPATH' ) || exit;
 						)
 					);
 
-					eac_form_group(
+					eac_form_field(
 						array(
 							'id'       => 'precision',
 							'label'    => __( 'Number of Decimals', 'wp-ever-accounting' ),
@@ -94,7 +94,7 @@ defined( 'ABSPATH' ) || exit;
 						)
 					);
 
-					eac_form_group(
+					eac_form_field(
 						array(
 							'id'       => 'position',
 							'label'    => __( 'Symbol Position', 'wp-ever-accounting' ),
@@ -113,14 +113,14 @@ defined( 'ABSPATH' ) || exit;
 		</div><!-- .column-1 -->
 
 		<div class="column-2">
-			<div class="bkit-card">
-				<div class="bkit-card__header">
-					<h2 class="bkit-card__title"><?php esc_html_e( 'Actions', 'wp-ever-accounting' ); ?></h2>
+			<div class="eac-card">
+				<div class="eac-card__header">
+					<h2 class="eac-card__title"><?php esc_html_e( 'Actions', 'wp-ever-accounting' ); ?></h2>
 				</div>
 
-				<div class="bkit-card__body">
+				<div class="eac-card__body">
 					<?php
-					eac_form_group(
+					eac_form_field(
 						array(
 							'type'        => 'select',
 							'id'          => 'status',
@@ -136,13 +136,13 @@ defined( 'ABSPATH' ) || exit;
 					?>
 				</div>
 
-				<div class="bkit-card__footer">
+				<div class="eac-card__footer">
 					<input type="hidden" name="id" value="<?php echo esc_attr( $currency->id ); ?>"/>
 					<input type="hidden" name="action" value="eac_edit_currency"/>
 					<?php wp_nonce_field( 'eac_edit_currency' ); ?>
-					<button class="button button-primary bkit-w-100"><?php esc_html_e( 'Update', 'wp-ever-accounting' ); ?></button>
+					<button class="button button-primary eac-w-100"><?php esc_html_e( 'Update', 'wp-ever-accounting' ); ?></button>
 				</div>
 			</div>
 		</div><!-- .column-2 -->
-	</div><!-- .bkit-poststuff -->
+	</div><!-- .eac-poststuff -->
 </form>

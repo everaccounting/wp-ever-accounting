@@ -23,7 +23,6 @@
   },
   "main": "index.js",
   "dependencies": {
-    "alpinejs": "^3.13.10",
     "chart.js": "^2.9.4",
     "inputmask": "^5.0.5",
     "micromodal": "^0.4.10",
@@ -35,6 +34,7 @@
     "@wordpress/interactivity": "^5.5.0",
     "@wordpress/prettier-config": "^2.19.0",
     "@wordpress/scripts": "^27.7.0",
+    "alpinejs": "^3.14.0",
     "clean-webpack-plugin": "^4.0.0",
     "copy-webpack-plugin": "^11.0.0",
     "grunt": "^1.6.1",

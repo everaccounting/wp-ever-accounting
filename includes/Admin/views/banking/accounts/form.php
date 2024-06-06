@@ -13,17 +13,17 @@ defined( 'ABSPATH' ) || exit;
 ?>
 	<form id="eac-account-form" method="post" action="<?php echo esc_html( admin_url( 'admin-post.php' ) ); ?>">
 		<span data-wp-text="name"></span>
-		<div class="bkit-poststuff">
+		<div class="eac-poststuff">
 			<div class="column-1">
-				<div class="bkit-card">
-					<div class="bkit-card__header">
-						<h2 class="bkit-card__title"><?php esc_html_e( 'Account details', 'wp-ever-accounting' ); ?></h2>
+				<div class="eac-card">
+					<div class="eac-card__header">
+						<h2 class="eac-card__title"><?php esc_html_e( 'Account details', 'wp-ever-accounting' ); ?></h2>
 					</div>
 
-					<div class="bkit-card__body grid--fields">
+					<div class="eac-card__body grid--fields">
 
 						<?php
-						eac_form_group(
+						eac_form_field(
 							array(
 								'label'       => __( 'Name', 'wp-ever-accounting' ),
 								'type'        => 'text',
@@ -34,7 +34,7 @@ defined( 'ABSPATH' ) || exit;
 							)
 						);
 
-						eac_form_group(
+						eac_form_field(
 							array(
 								'label'       => __( 'Number', 'wp-ever-accounting' ),
 								'type'        => 'text',
@@ -45,7 +45,7 @@ defined( 'ABSPATH' ) || exit;
 							)
 						);
 
-						eac_form_group(
+						eac_form_field(
 							array(
 								'label'       => __( 'Type', 'wp-ever-accounting' ),
 								'type'        => 'select',
@@ -57,12 +57,13 @@ defined( 'ABSPATH' ) || exit;
 							)
 						);
 
-						eac_form_group(
+						eac_form_field(
 							array(
 								'label'        => __( 'Currency', 'wp-ever-accounting' ),
 								'type'         => 'select',
 								'name'         => 'currency_code',
 								'value'        => $account->currency_code,
+								'class'        => 'eac_select2',
 								'options'      => \EverAccounting\Models\Currency::results( array( 'status' => 'active' ) ),
 								'option_label' => 'formatted_name',
 								'option_value' => 'code',
@@ -70,7 +71,7 @@ defined( 'ABSPATH' ) || exit;
 								'required'     => true,
 							)
 						);
-						eac_form_group(
+						eac_form_field(
 							array(
 								'label'       => __( 'Bank Name', 'wp-ever-accounting' ),
 								'type'        => 'text',
@@ -79,7 +80,7 @@ defined( 'ABSPATH' ) || exit;
 								'placeholder' => __( 'XYZ Bank', 'wp-ever-accounting' ),
 							)
 						);
-						eac_form_group(
+						eac_form_field(
 							array(
 								'label'       => __( 'Bank Phone', 'wp-ever-accounting' ),
 								'type'        => 'text',
@@ -88,38 +89,44 @@ defined( 'ABSPATH' ) || exit;
 								'placeholder' => __( '+1234567890', 'wp-ever-accounting' ),
 							)
 						);
-						eac_form_group(
+						eac_form_field(
 							array(
 								'label'         => __( 'Bank Address', 'wp-ever-accounting' ),
 								'type'          => 'textarea',
 								'name'          => 'bank_address',
 								'value'         => $account->bank_address,
 								'placeholder'   => __( '123, XYZ Street, City, Country', 'wp-ever-accounting' ),
-								'wrapper_class' => 'full--width',
+								'wrapper_class' => 'is--full',
 							)
 						);
 						?>
-					</div><!-- .bkit-card__body -->
+					</div><!-- .eac-card__body -->
 				</div>
 			</div><!-- .column-1 -->
 
 			<div class="column-2">
-				<div class="bkit-card">
-					<div class="bkit-card__header">
-						<h2 class="bkit-card__title"><?php esc_html_e( 'Actions', 'wp-ever-accounting' ); ?></h2>
+				<div class="eac-card">
+					<div class="eac-card__header">
+						<h2 class="eac-card__title"><?php esc_html_e( 'Actions', 'wp-ever-accounting' ); ?></h2>
 					</div>
-					<div class="bkit-card__body">
-						<div class="bkit-form-group">
-							<label for="status">
-								<?php esc_html_e( 'Status', 'wp-ever-accounting' ); ?>
-							</label>
-							<select name="status" id="status">
-								<option value="active" <?php selected( 'active', $account->status ); ?>><?php esc_html_e( 'Active', 'wp-ever-accounting' ); ?></option>
-								<option value="inactive" <?php selected( 'inactive', $account->status ); ?>><?php esc_html_e( 'Inactive', 'wp-ever-accounting' ); ?></option>
-							</select>
-						</div>
+					<div class="eac-card__body">
+						<?php
+						eac_form_field(
+							array(
+								'type'        => 'select',
+								'id'          => 'status',
+								'label'       => __( 'Status', 'wp-ever-accounting' ),
+								'options'     => array(
+									'active'   => __( 'Active', 'wp-ever-accounting' ),
+									'inactive' => __( 'Inactive', 'wp-ever-accounting' ),
+								),
+								'value'       => $account->status,
+								'placeholder' => __( 'Select status', 'wp-ever-accounting' ),
+							)
+						);
+						?>
 					</div>
-					<div class="bkit-card__footer">
+					<div class="eac-card__footer">
 						<?php if ( $account->exists() ) : ?>
 							<input type="hidden" name="id" value="<?php echo esc_attr( $account->id ); ?>"/>
 						<?php endif; ?>
@@ -131,12 +138,12 @@ defined( 'ABSPATH' ) || exit;
 						<?php if ( $account->exists() ) : ?>
 							<button class="button button-primary"><?php esc_html_e( 'Update Account', 'wp-ever-accounting' ); ?></button>
 						<?php else : ?>
-							<button class="button button-primary bkit-w-100"><?php esc_html_e( 'Add Account', 'wp-ever-accounting' ); ?></button>
+							<button class="button button-primary tw-w-full"><?php esc_html_e( 'Add Account', 'wp-ever-accounting' ); ?></button>
 						<?php endif; ?>
 					</div>
 				</div>
 			</div><!-- .column-2 -->
 
-		</div><!-- .bkit-poststuff -->
+		</div><!-- .eac-poststuff -->
 	</form>
 <?php

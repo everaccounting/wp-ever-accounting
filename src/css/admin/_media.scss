@@ -1,0 +1,77 @@
+.eac-uploader {
+	display: block;
+	box-sizing: border-box;
+
+	&__button {
+		cursor: pointer;
+		border: 2px dashed #e1e2e2;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		align-items: center;
+		flex-direction: column;
+		width: 100%;
+		min-height: 90px;
+		color: #595959;
+		font-size: 0.9rem;
+
+		.dashicons {
+			font-size: 2em;
+			margin-bottom: 0.5em;
+		}
+	}
+
+	&__preview {
+		position: relative;
+		display: flex;
+		align-items: center;
+		box-sizing: border-box;
+	}
+
+	&__thumb {
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		text-align: center;
+		flex: none;
+		height: 48px;
+		max-width: 48px;
+		margin-right: 10px;
+
+		img {
+			display: block;
+			width: auto;
+			height: 100%;
+			overflow: hidden;
+			border: 1px solid #e1e2e2;
+			padding: 2px;
+		}
+	}
+
+	&__name{
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		flex: auto;
+		outline: none;
+		cursor: pointer;
+		color: #595959;
+		font-size: 0.9em;
+		text-decoration: none;
+	}
+
+	&__remove {
+		cursor: pointer;
+		color: #c3c4c5;
+		font-size: 1.5em;
+		margin-left: 1em;
+		background: transparent;
+		border: none;
+		appearance: none;
+		transition: color 0.3s;
+
+		&:hover {
+			color: #f00;
+		}
+	}
+}

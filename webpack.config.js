@@ -8,20 +8,23 @@ module.exports = [
 		entry: {
 			...defaultConfig.entry(),
 			//3rd party libraries
-			'js/select-woo': './node_modules/select-woo/dist/js/selectWoo.js',
-			'css/select-woo': './node_modules/select-woo/dist/css/selectWoo.css',
-			'css/jquery-ui': './node_modules/jquery-ui/themes/base/all.css',
-			'js/select2': './node_modules/select2/dist/js/select2.full.js',
-			'css/select2': './node_modules/select2/dist/css/select2.css',
-			'js/micromodal': './node_modules/micromodal/dist/micromodal.js',
-			'js/tipTip': './src/libraries/tipTip/tipTip.js',
-			'js/blockui': './src/libraries/blockui/blockUI.js',
-			'js/mask': './src/libraries/mask/mask.js',
-			'js/inputmask': ['./src/libraries/inputmask/inputmask.js' , './src/libraries/inputmask/inputmask.binding.js'],
 			'js/chartjs': './node_modules/chart.js/dist/chart.js',
+			'js/jquery-plugins': [
+				'./node_modules/select-woo/dist/js/selectWoo.js',
+				'./src/libraries/tipTip/tipTip.js',
+				'./src/libraries/mask/mask.js',
+				'./src/libraries/inputmask/inputmask.js',
+				'./src/libraries/inputmask/inputmask.binding.js',
+				'./node_modules/micromodal/dist/micromodal.js',
+				'./node_modules/select2/dist/js/select2.full.js',
+			],
+			'css/jquery-plugins': [
+				'./node_modules/select-woo/dist/css/selectWoo.css',
+				'./node_modules/jquery-ui/themes/base/datepicker.css',
+				'./node_modules/jquery-ui/themes/base/tooltip.css',
+			],
 
 
-			'js/eac-core': './src/js/common/eac-core.js',
 			'js/eac-admin': './src/js/admin/admin.js',
 			'js/eac-settings': './src/js/admin/settings.js',
 			'css/eac-admin': './src/css/admin/admin.scss',
@@ -31,6 +34,7 @@ module.exports = [
 			...defaultConfig.output,
 			filename: '[name].js',
 			path: __dirname + '/assets/',
+			chunkFilename: 'chunks/[chunkhash].js',
 		},
 		module: {
 			rules: [

@@ -194,7 +194,7 @@ class Account extends Model {
 	 *
 	 * @return float|string
 	 */
-	public function get_balance_prop() {
+	public function get_balance_attribute() {
 		static $balance;
 		if ( is_null( $balance ) ) {
 			$transaction_total = (float) $this->get_db()->get_var(
@@ -212,7 +212,7 @@ class Account extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	public function get_formatted_balance_prop() {
+	public function get_formatted_balance_attribute() {
 		return eac_format_amount( $this->balance, $this->currency_code );
 	}
 
@@ -222,7 +222,7 @@ class Account extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	public function get_formatted_name_prop() {
+	public function get_formatted_name_attribute() {
 		$name   = sprintf( '%s (%s)', $this->name, $this->currency_code );
 		$number = $this->number;
 

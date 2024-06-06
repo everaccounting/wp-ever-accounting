@@ -1,39 +1,16 @@
 .eac-card {
-	display: block;
-	position: relative;
-	margin: 0 0 1.5em;
-	box-sizing: border-box;
-	width: 100%;
-	max-width: none;
-	min-width: auto;
-	min-height: 1px;
-	background: #fff;
-	border: 1px solid #e1e2e2;
-	--padding-x: 1em;
-	--padding-y: 0.5em;
+	@extend .eac-panel;
+	padding: 0 !important;
 
-	&:before, &:after {
-		content: ".";
-		display: block;
-		height: 0;
-		width: 0;
-		clear: both;
-		visibility: hidden;
-		overflow: hidden;
-	}
-
-	.eac-card__header, .eac-card__footer {
-		align-items: center;
+	& > &__header, & > &__footer {
 		display: flex;
+		flex-direction: row;
+		align-items: center;
 		justify-content: space-between;
-		margin: 0;
-		min-height: 25px;
-		padding: var(--padding-y) var(--padding-x);
 
 		h2, h3, p {
 			margin: 0;
 			padding: 0;
-			color: inherit;
 		}
 
 		input, select, .select2, button {
@@ -45,41 +22,31 @@
 		}
 	}
 
-	.eac-card__title, .eac-card__subtitle {
+	&__title {
 		padding: 0;
 		margin: 0;
-		font-size: 1.2em;
+		color: inherit;
+		font-size: 14px;
+		font-weight: 600;
 	}
 
-	.eac-card__title, h2 {
-		font-weight: normal;
-		line-height: 1.4;
+	&__subtitle {
+		font-size: 13px;
+		font-weight: 400;
+		color: #777;
 	}
 
-	.eac-card__subtitle {
-		font-size: 0.8em;
+	& > &__body {
 	}
 
-	.eac-card__body {
-		box-sizing: border-box;
-		flex: 1 1 auto;
-		line-height: 1.4;
-		padding: var(--padding-y) var(--padding-x);
+	& > &__section {
 
-		& > *:first-child {
-			margin-top: 0;
-		}
-
-		& > *:last-child {
-			margin-bottom: 0;
-		}
-
-		&:has(table) {
-			padding: 0;
-		}
 	}
 
-	// any class that contains
+	& > [class*=eac-card]:not([class*=wide]) {
+		padding: 8px 12px;
+	}
+
 	& > [class*=eac-card__] {
 		// child expect last item.
 		&:not(:last-child) {
@@ -87,23 +54,15 @@
 		}
 	}
 
-	img {
-		max-width: 100%;
-		height: auto;
-	}
-
-	a:focus, a:active {
-		box-shadow: none;
-		outline: none;
-	}
-
-	&.is--medium {
-		--padding-x: 1.5em;
-		--padding-y: 1em;
+	&.is--small {
+		& > [class*=eac-card__] {
+			padding: 6px 8px;
+		}
 	}
 
 	&.is--large {
-		--padding-x: 2em;
-		--padding-y: 1.5em;
+		& > [class*=eac-card__] {
+			padding: 12px 12px;
+		}
 	}
 }

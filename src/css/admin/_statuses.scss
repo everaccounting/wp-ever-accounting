@@ -1,0 +1,72 @@
+
+.eac-status {
+	//text-transform: uppercase;
+	//font-weight: 400;
+	//display: inline-block;
+	//text-decoration: none;
+	//font-size: 12px;
+	//line-height: 1;
+	//padding: 4px 12px;
+	//margin: 0;
+	//border-radius: 3px;
+	//white-space: nowrap;
+	//box-sizing: border-box;
+	//background: 0 0;
+	//color: #ffffff;
+	//background: #63686f;
+	//border: 1px solid #63686f;
+	text-transform: uppercase;
+	font-weight: bold;
+	font-size: 0.8em;
+	line-height: 1;
+	padding: 4px 8px;
+	background-color: #d3d3d3;
+	border: 1px solid #a9a9a9;
+	color: #333333;
+	min-width: 80px;
+	display: inline-block;
+	text-align: center;
+
+	&.is--warning,
+	&.is--pending{
+		background: #f9a825;
+		border: 1px solid darken(#f9a825, 10%);
+		color: #333;
+	}
+
+	&.is--danger,
+	&.is--cancelled{
+		background: #e55353;
+		border: 1px solid darken(#e55353, 10%);
+		color: #fff;
+	}
+
+	&.is--success,
+	&.is--active,
+	&is--enabled,
+	&.is--completed {
+		background: #00a86b;
+		border: 1px solid darken(#00a86b, 10%);
+		color: #fff;
+	}
+
+	&.is--info,
+	&.is--refunded {
+		background: #007bff;
+		border: 1px solid darken(#007bff, 10%);
+		color: #fff;
+	}
+
+	&.is--secondary,
+	&.is--draft {
+		background: #6c757d;
+		border: 1px solid #6c757d;
+		color: #fff;
+	}
+
+	&.is--disabled {
+		background: #f8f9fa;
+		border: 1px solid #f8f9fa;
+		color: #495057;
+	}
+}

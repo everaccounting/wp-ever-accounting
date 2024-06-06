@@ -14,17 +14,16 @@ use EverAccounting\Models\Category;
 defined( 'ABSPATH' ) || exit;
 ?>
 <form id="eac-category-form" method="post" action="<?php echo esc_html( admin_url( 'admin-post.php' ) ); ?>">
-	<span data-wp-text="name"></span>
-	<div class="bkit-poststuff">
+	<div class="eac-poststuff">
 		<div class="column-1">
-			<div class="bkit-card">
-				<div class="bkit-card__header">
-					<h2 class="bkit-card__title"><?php esc_html_e( 'Category Details', 'wp-ever-accounting' ); ?></h2>
+			<div class="eac-card">
+				<div class="eac-card__header">
+					<h2 class="eac-card__title"><?php esc_html_e( 'Category Details', 'wp-ever-accounting' ); ?></h2>
 				</div>
 
-				<div class="bkit-card__body grid--fields">
+				<div class="eac-card__body grid--fields">
 					<?php
-					eac_form_group(
+					eac_form_field(
 						array(
 							'id'          => 'name',
 							'label'       => __( 'Name', 'wp-ever-accounting' ),
@@ -33,18 +32,18 @@ defined( 'ABSPATH' ) || exit;
 							'required'    => true,
 						)
 					);
-					eac_form_group(
+					eac_form_field(
 						array(
 							'id'          => 'type',
 							'type'        => 'select',
 							'label'       => __( 'Type', 'wp-ever-accounting' ),
 							'placeholder' => __( 'Select category type', 'wp-ever-accounting' ),
 							'value'       => $category->type,
-							'default'     => isset( $_GET['type'] ) ? sanitize_text_field( wp_unslash( $_GET['type'] ) ) : '', // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Nonce verification is not required here.
+							'default'     => isset( $_GET['type'] ) ? sanitize_text_field( wp_unslash( $_GET['type'] ) ) : 'item', // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Nonce verification is not required here.
 							'options'     => Category::get_types(),
 						)
 					);
-					eac_form_group(
+					eac_form_field(
 						array(
 							'id'            => 'description',
 							'label'         => __( 'Description', 'wp-ever-accounting' ),
@@ -60,14 +59,14 @@ defined( 'ABSPATH' ) || exit;
 		</div><!-- .column-1 -->
 
 		<div class="column-2">
-			<div class="bkit-card">
-				<div class="bkit-card__header">
-					<h2 class="bkit-card__title"><?php esc_html_e( 'Actions', 'wp-ever-accounting' ); ?></h2>
+			<div class="eac-card">
+				<div class="eac-card__header">
+					<h2 class="eac-card__title"><?php esc_html_e( 'Actions', 'wp-ever-accounting' ); ?></h2>
 				</div>
 
-				<div class="bkit-card__body">
+				<div class="eac-card__body">
 					<?php
-					eac_form_group(
+					eac_form_field(
 						array(
 							'type'        => 'select',
 							'id'          => 'status',
@@ -83,7 +82,7 @@ defined( 'ABSPATH' ) || exit;
 					?>
 				</div>
 
-				<div class="bkit-card__footer">
+				<div class="eac-card__footer">
 					<?php if ( $category->exists() ) : ?>
 						<input type="hidden" name="id" value="<?php echo esc_attr( $category->id ); ?>"/>
 					<?php endif; ?>
@@ -95,10 +94,10 @@ defined( 'ABSPATH' ) || exit;
 					<?php if ( $category->exists() ) : ?>
 						<input type="submit" class="button button-primary" value="<?php esc_attr_e( 'Update', 'wp-ever-accounting' ); ?>"/>
 					<?php else : ?>
-						<input type="submit" class="button button-primary bkit-w-100" value="<?php esc_attr_e( 'Add', 'wp-ever-accounting' ); ?>"/>
+						<input type="submit" class="button button-primary tw-w-full" value="<?php esc_attr_e( 'Add', 'wp-ever-accounting' ); ?>"/>
 					<?php endif; ?>
 				</div>
 			</div>
 		</div><!-- .column-2 -->
-	</div><!-- .bkit-poststuff -->
+	</div><!-- .eac-poststuff -->
 </form>

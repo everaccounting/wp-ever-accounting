@@ -21,18 +21,17 @@ $categories = eac_get_categories(
 ?>
 
 <form method="post" action="<?php echo esc_html( admin_url( 'admin-post.php' ) ); ?>">
-	<span data-wp-text="name"></span>
-	<div class="bkit-poststuff">
+	<div class="eac-poststuff">
 		<div class="column-1">
-			<div class="bkit-card">
-				<div class="bkit-card__header">
-					<h2 class="bkit-card__title"><?php esc_html_e( 'Item details', 'wp-ever-accounting' ); ?></h2>
+			<div class="eac-card">
+				<div class="eac-card__header">
+					<h2 class="eac-card__title"><?php esc_html_e( 'Item details', 'wp-ever-accounting' ); ?></h2>
 				</div>
 
-				<div class="bkit-card__body grid--fields">
+				<div class="eac-card__body grid--fields">
 
 					<?php
-					eac_form_group(
+					eac_form_field(
 						array(
 							'label'       => __( 'Name', 'wp-ever-accounting' ),
 							'type'        => 'text',
@@ -42,7 +41,7 @@ $categories = eac_get_categories(
 							'required'    => true,
 						)
 					);
-					eac_form_group(
+					eac_form_field(
 						array(
 							'type'        => 'select',
 							'name'        => 'type',
@@ -54,7 +53,7 @@ $categories = eac_get_categories(
 							'placeholder' => __( 'Select type', 'wp-ever-accounting' ),
 						)
 					);
-					eac_form_group(
+					eac_form_field(
 						array(
 							'type'           => 'text',
 							'name'           => 'price',
@@ -69,7 +68,7 @@ $categories = eac_get_categories(
 							'data-inputmask' => '"alias": "decimal","placeholder": "0.00", "rightAlign": false',
 						)
 					);
-					eac_form_group(
+					eac_form_field(
 						array(
 							'type'           => 'text',
 							'name'           => 'cost',
@@ -82,7 +81,7 @@ $categories = eac_get_categories(
 							'data-inputmask' => '"alias": "decimal","placeholder": "0.00", "rightAlign": false',
 						)
 					);
-					eac_form_group(
+					eac_form_field(
 						array(
 							'type'             => 'select',
 							'name'             => 'category_id',
@@ -103,7 +102,7 @@ $categories = eac_get_categories(
 							),
 						)
 					);
-					eac_form_group(
+					eac_form_field(
 						array(
 							'type'        => 'select',
 							'name'        => 'unit',
@@ -115,7 +114,7 @@ $categories = eac_get_categories(
 						)
 					);
 					// taxable.
-					eac_form_group(
+					eac_form_field(
 						array(
 							'type'    => 'select',
 							'name'    => 'taxable',
@@ -128,7 +127,7 @@ $categories = eac_get_categories(
 						)
 					);
 					// tax_ids.
-					eac_form_group(
+					eac_form_field(
 						array(
 							'type'         => 'select',
 							'multiple'     => true,
@@ -145,7 +144,7 @@ $categories = eac_get_categories(
 						)
 					);
 
-					eac_form_group(
+					eac_form_field(
 						array(
 							'type'          => 'textarea',
 							'name'          => 'description',
@@ -157,28 +156,37 @@ $categories = eac_get_categories(
 
 					?>
 				</div>
+
+				<div class="eac-card__section">
+					Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium, tempora!
+				</div>
 			</div>
 		</div><!-- .column-1 -->
 
 		<div class="column-2">
-			<div class="bkit-card">
-				<div class="bkit-card__header">
-					<h2 class="bkit-card__title"><?php esc_html_e( 'Actions', 'wp-ever-accounting' ); ?></h2>
+			<div class="eac-card">
+				<div class="eac-card__header">
+					<h2 class="eac-card__title"><?php esc_html_e( 'Actions', 'wp-ever-accounting' ); ?></h2>
 				</div>
 
-				<div class="bkit-card__body">
-					<div class="bkit-form-group">
-						<label for="status">
-							<?php esc_html_e( 'Status', 'wp-ever-accounting' ); ?>
-						</label>
-						<select name="status" id="status">
-							<option value="active" <?php selected( 'active', $item->status ); ?>><?php esc_html_e( 'Active', 'wp-ever-accounting' ); ?></option>
-							<option value="inactive" <?php selected( 'inactive', $item->status ); ?>><?php esc_html_e( 'Inactive', 'wp-ever-accounting' ); ?></option>
-						</select>
-					</div>
+				<div class="eac-card__body">
+					<?php
+					eac_form_field(
+						array(
+							'type'    => 'select',
+							'name'    => 'status',
+							'label'   => __( 'Status', 'wp-ever-accounting' ),
+							'value'   => $item->status,
+							'options' => array(
+								'active'   => __( 'Active', 'wp-ever-accounting' ),
+								'inactive' => __( 'Inactive', 'wp-ever-accounting' ),
+							),
+						)
+					);
+					?>
 				</div>
 
-				<div class="bkit-card__footer">
+				<div class="eac-card__footer">
 					<?php if ( $item->exists() ) : ?>
 						<input type="hidden" name="id" value="<?php echo esc_attr( $item->id ); ?>"/>
 					<?php endif; ?>
@@ -190,29 +198,10 @@ $categories = eac_get_categories(
 					<?php if ( $item->exists() ) : ?>
 						<button class="button button-primary"><?php esc_html_e( 'Update Item', 'wp-ever-accounting' ); ?></button>
 					<?php else : ?>
-						<button class="button button-primary bkit-w-100"><?php esc_html_e( 'Add Item', 'wp-ever-accounting' ); ?></button>
+						<button class="button button-primary eac-w-100"><?php esc_html_e( 'Add Item', 'wp-ever-accounting' ); ?></button>
 					<?php endif; ?>
 				</div>
 			</div>
-
-			<div class="bkit-card">
-				<div class="bkit-card__header">
-					<h2 class="bkit-card__title"><?php esc_html_e( 'Item Image', 'wp-ever-accounting' ); ?></h2>
-				</div>
-
-				<div class="bkit-card__body">
-					<?php
-					eac_form_group(
-						array(
-							'type'  => 'thumbnail',
-							'name'  => 'thumbnail_id',
-							'value' => $item->thumbnail_id,
-						)
-					);
-					?>
-				</div>
-			</div>
-
 		</div><!-- .column-2 -->
-	</div><!-- .bkit-poststuff -->
+	</div><!-- .eac-poststuff -->
 </form>

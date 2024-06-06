@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
  * @package EverAccounting
  * @subpackage Models
  *
- * @property int    $customer_id ID of the customer.
+ * @property int $customer_id ID of the customer.
  */
 class Revenue extends Transaction {
 	/**
@@ -67,6 +67,24 @@ class Revenue extends Transaction {
 	| without instantiating the model.
 	|--------------------------------------------------------------------------
 	*/
+
+	/**
+	 * Get statuses.
+	 *
+	 * @since 1.1.0
+	 * @return array
+	 */
+	public static function get_statuses() {
+		return apply_filters(
+			'ever_accounting_revenue_statuses',
+			array(
+				'pending'   => esc_html__( 'Pending', 'wp-ever-accounting' ),
+				'paid'      => esc_html__( 'paid', 'wp-ever-accounting' ),
+				'refunded'  => esc_html__( 'Refunded', 'wp-ever-accounting' ),
+				'cancelled' => esc_html__( 'Cancelled', 'wp-ever-accounting' ),
+			)
+		);
+	}
 
 	/*
 	|--------------------------------------------------------------------------

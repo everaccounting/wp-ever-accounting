@@ -13,16 +13,16 @@ defined( 'ABSPATH' ) || exit;
 ?>
 <form id="eac-payment-form" method="post" action="<?php echo esc_html( admin_url( 'admin-post.php' ) ); ?>" data-wp-interactive="eac/payment">
 	<span data-wp-text="name"></span>
-	<div class="bkit-poststuff">
+	<div class="eac-poststuff">
 		<div class="column-1">
-			<div class="bkit-card">
-				<div class="bkit-card__header">
-					<h2 class="bkit-card__title"><?php esc_html_e( 'Item details', 'wp-ever-accounting' ); ?></h2>
+			<div class="eac-card">
+				<div class="eac-card__header">
+					<h2 class="eac-card__title"><?php esc_html_e( 'Item details', 'wp-ever-accounting' ); ?></h2>
 				</div>
 
-				<div class="bkit-card__body grid--fields">
+				<div class="eac-card__body grid--fields">
 					<?php
-					eac_form_group(
+					eac_form_field(
 						array(
 							'label'          => __( 'Date', 'wp-ever-accounting' ),
 							'type'           => 'date',
@@ -35,7 +35,7 @@ defined( 'ABSPATH' ) || exit;
 						)
 					);
 
-					eac_form_group(
+					eac_form_field(
 						array(
 							'label'            => __( 'Account', 'wp-ever-accounting' ),
 							'type'             => 'select',
@@ -58,7 +58,7 @@ defined( 'ABSPATH' ) || exit;
 							),
 						)
 					);
-					eac_form_group(
+					eac_form_field(
 						array(
 							'label'          => __( 'Amount', 'wp-ever-accounting' ),
 							'name'           => 'amount',
@@ -72,7 +72,7 @@ defined( 'ABSPATH' ) || exit;
 						)
 					);
 
-					eac_form_group(
+					eac_form_field(
 						array(
 							'label'            => __( 'Vendor', 'wp-ever-accounting' ),
 							'type'             => 'select',
@@ -95,7 +95,7 @@ defined( 'ABSPATH' ) || exit;
 							),
 						)
 					);
-					eac_form_group(
+					eac_form_field(
 						array(
 							'label'            => __( 'Category', 'wp-ever-accounting' ),
 							'type'             => 'select',
@@ -118,7 +118,7 @@ defined( 'ABSPATH' ) || exit;
 						)
 					);
 
-					eac_form_group(
+					eac_form_field(
 						array(
 							'label'       => __( 'Payment Method', 'wp-ever-accounting' ),
 							'type'        => 'select',
@@ -130,7 +130,7 @@ defined( 'ABSPATH' ) || exit;
 					);
 
 					// bill.
-					eac_form_group(
+					eac_form_field(
 						array(
 							'label'            => __( 'Bill', 'wp-ever-accounting' ),
 							'type'             => 'select',
@@ -152,7 +152,7 @@ defined( 'ABSPATH' ) || exit;
 						)
 					);
 
-					eac_form_group(
+					eac_form_field(
 						array(
 							'label'       => __( 'Reference', 'wp-ever-accounting' ),
 							'type'        => 'text',
@@ -161,7 +161,7 @@ defined( 'ABSPATH' ) || exit;
 							'placeholder' => __( 'Enter reference', 'wp-ever-accounting' ),
 						)
 					);
-					eac_form_group(
+					eac_form_field(
 						array(
 							'label'         => __( 'Notes', 'wp-ever-accounting' ),
 							'type'          => 'textarea',
@@ -179,13 +179,13 @@ defined( 'ABSPATH' ) || exit;
 		</div><!-- .column-1 -->
 
 		<div class="column-2">
-			<div class="bkit-card">
-				<div class="bkit-card__header">
-					<h2 class="bkit-card__title"><?php esc_html_e( 'Actions', 'wp-ever-accounting' ); ?></h2>
+			<div class="eac-card">
+				<div class="eac-card__header">
+					<h2 class="eac-card__title"><?php esc_html_e( 'Actions', 'wp-ever-accounting' ); ?></h2>
 				</div>
-				<div class="bkit-card__body">
+				<div class="eac-card__body">
 					<?php
-					eac_form_group(
+					eac_form_field(
 						array(
 							'label'       => __( 'Status', 'wp-ever-accounting' ),
 							'type'        => 'select',
@@ -197,7 +197,7 @@ defined( 'ABSPATH' ) || exit;
 					);
 					?>
 				</div>
-				<div class="bkit-card__footer">
+				<div class="eac-card__footer">
 					<?php if ( $expense->exists() ) : ?>
 						<input type="hidden" name="account_id" value="<?php echo esc_attr( $expense->account_id ); ?>"/>
 						<input type="hidden" name="id" value="<?php echo esc_attr( $expense->id ); ?>"/>
@@ -210,12 +210,12 @@ defined( 'ABSPATH' ) || exit;
 					<?php if ( $expense->exists() ) : ?>
 						<button class="button button-primary"><?php esc_html_e( 'Update Expense', 'wp-ever-accounting' ); ?></button>
 					<?php else : ?>
-						<button class="button button-primary bkit-w-100"><?php esc_html_e( 'Add Expense', 'wp-ever-accounting' ); ?></button>
+						<button class="button button-primary eac-w-100"><?php esc_html_e( 'Add Expense', 'wp-ever-accounting' ); ?></button>
 					<?php endif; ?>
 				</div>
 			</div>
 		</div><!-- .column-2 -->
 
-	</div><!-- .bkit-poststuff -->
+	</div><!-- .eac-poststuff -->
 </form>
 <?php

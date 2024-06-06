@@ -1,92 +1,36 @@
 (function ($, window, document, wp, undefined) {
-	console.log(wp);
-	window.eac_admin = {
-		bindEvents: function () {
-			var self = this;
+	var eac_admin = {
+		init: function () {
+			const self = this;
 
-			// MicroModal.init();
-
-			/**
-			 * Initialize select2
-			 */
+			// Initialize select2.
 			$('.eac_select2').filter(':not(.enhanced)').each(function () {
-				self.initSelect2(this);
+				self.select2(this);
 			});
 
-			/**
-			 * Initialize datepicker
-			 */
+			// Initialize datepicker.
 			$('.eac_datepicker').filter(':not(.enhanced)').each(function () {
-				self.initDatepicker(this);
+				self.datepicker(this);
 			});
 
-			/**
-			 * Initialize tooltip
-			 */
-			$('.eac_tooltip').filter(':not(.enhanced)').each(function () {
-				self.initTooltip(this);
+			// Initialize tooltip.
+			$('.eac-tooltip').filter(':not(.enhanced)').each(function () {
+				self.tooltip(this);
 			});
 
-			/**
-			 * Initialize number input
-			 */
-			$('.eac_number_input').filter(':not(.enhanced)').each(function () {
-				self.initNumberInput(this);
-			});
-
-			/**
-			 * Initialize price input
-			 */
-			$('.eac_decimal_input').filter(':not(.enhanced)').each(function () {
-				self.initDecimalInput(this, $(this).data('currency-code'));
-			});
-
-			/**
-			 * Initialize inputmask
-			 */
+			// Initialize inputmask.
 			$('.eac_inputmask').filter(':not(.enhanced)').each(function () {
-				self.initInputmask(this);
+				self.inputMask(this);
 			});
 
-			/**
-			 * Initialize invoice form
-			 */
-			$('.eac-document-form').filter(':not(.enhanced)').each(function () {
-				self.initDocumentForm(this);
-				$(this).addClass('enhanced');
+			// Initialize number input.
+			$('.eac_number_input').filter(':not(.enhanced)').each(function () {
+				self.numberInput(this);
 			});
 
-			$('#eac-invoice-add-payment').on('click', function (e) {
-				e.preventDefault();
-				MicroModal.show('add-payment', {
-					onShow: function (modal) {
-						console.log(modal);
-						console.log('model opened');
-					},
-					onClose: function () {
-						$('#eac-invoice-form').trigger('update');
-					}
-				});
-			});
-
-			$('form[name="eac-invoice-add-payment"]').on('change', ':input[name="account_id"]', function (e) {
-				var account_id = $(e.target).val();
-				var $form = $(e.target).closest('form');
-				var $amount = $form.find(':input[name="amount"]');
-				var $currency = $form.find(':input[name="currency_code"]');
-				var $due = $form.find(':input[name="due"]');
-				// eac_admin.blockForm($form);
-				// eac_admin.getAccount(account_id).done(function (account) {
-				// 	eac_admin.convertCurrency($amount.data('due'), $amount.data('currency'), account.currency_code).done(function (amount) {
-				// 		$amount.attr('max', amount);
-				// 		$amount.val(amount);
-				// 	});
-				// }).always(function () {
-				// 	eac_admin.unblockForm($form);
-				// }).fail(function () {
-				// 	$amount.removeAttr('max');
-				// 	$amount.val('');
-				// });
+			// Initialize decimal input.
+			$('.eac_decimal_input').filter(':not(.enhanced)').each(function () {
+				self.decimalInput(this);
 			});
 		},
 
@@ -98,7 +42,7 @@
 		 * @param {HTMLElement} el - The element to initialize select2.
 		 * @return {*|jQuery}
 		 */
-		initSelect2: function (el) {
+		select2: function (el) {
 			var options = {
 				allowClear: $(el).data('allow-clear') && !$(el).prop('multiple') || true,
 				placeholder: $(el).data('placeholder') || '',
@@ -146,7 +90,7 @@
 		 * @param {HTMLElement} el - The element to initialize datepicker.
 		 * @return {*|jQuery}
 		 */
-		initDatepicker: function (el) {
+		datepicker: function (el) {
 			if ('undefined' === typeof $.datepicker) {
 				console.warn('jQuery UI Datepicker is not loaded.');
 				return;
@@ -172,11 +116,11 @@
 		 * @param {HTMLElement} el - The element to initialize tooltip.
 		 * @return {*|jQuery}
 		 */
-		initTooltip: function (el) {
-			if ('undefined' === typeof $.tooltip) {
-				console.warn('jQuery UI is not loaded.');
-				return;
-			}
+		tooltip: function (el) {
+			// if ('undefined' === typeof fn.tooltip) {
+			// 	console.warn('jQuery UI is not loaded.');
+			// 	return;
+			// }
 
 			return $(el).tooltip({
 				content: function () {
@@ -205,7 +149,7 @@
 		 * @param {HTMLElement} el - The element to initialize inputmask.
 		 * @return {void}
 		 */
-		initInputmask: function (el) {
+		inputMask: function (el) {
 			// if ('undefined' === typeof $.inputmask) {
 			// 	console.warn('jQuery Inputmask is not loaded.');
 			// 	return;
@@ -264,7 +208,7 @@
 		 * @param {HTMLElement} el - The element to initialize input number.
 		 * @return {void}
 		 */
-		initNumberInput: function (el) {
+		numberInput: function (el) {
 			$(el).on('input', function () {
 				this.value = this.value.replace(/[^0-9]/g, '');
 			});
@@ -280,7 +224,7 @@
 		 *
 		 * @return {void}
 		 */
-		initDecimalInput: function (el, currency_code) {
+		decimalInput: function (el, currency_code) {
 			$(el).on('input', function () {
 				var val = $(this).val();
 				val = val.replace(/[^0-9.]/g, '');
@@ -289,60 +233,46 @@
 		},
 
 		/**
-		 * Show flash message.
+		 * Confirm delete action.
 		 *
-		 * @since 1.0.0
+		 * @param {string} message  The message to confirm.
+		 * @param {function} callback The callback function.
 		 *
-		 * @param {string} message - The message to show.
-		 * @param {string} type - The type of message. Default is 'success'.
-		 * @return {void}
+		 * @example
+		 * eac_core.confirm('Are you sure you want to delete?', function () {
+		 * 	console.log('Deleted');
+		 * 		// Do something.
+		 * 		});
+		 *
+		 * 	@return {void}
+		 *  @since 1.0.0
 		 */
-		flash: function (message, type) {
-			type = type || 'success';
-			$('<div class="notice notice-' + type + ' is-dismissible"><p>' + message + '</p></div>').insertAfter('.wrap h1').delay(5000).fadeOut();
+		confirm: function (message, callback) {
+			if (confirm(message)) {
+				callback();
+			}
 		},
-
 		/**
-		 * Process a batch action and continue until its done.
-		 *
-		 * @since 1.0.0
+		 * Prompt.
 		 *
 		 *
-		 * @param {string} action - The action to process.
-		 * @param {array} items - The items to process.
-		 * @param {int} index - The index of the item to process.
-		 * @param {int} total - The total number of items to process.
-		 * @param {function} callback - The callback function to call when done.
-		 * @return {void}
+		 * @param {string} message  The message to prompt.
+		 * @param {function} callback The callback function.
 		 *
+		 * @example
+		 * eac_core.prompt('Enter your name', function (name) {
+		 * 	console.log(name);
+		 * // Do something with name.
+		 * });
+		 *
+		 * 	@return {void}
+		 *  @since 1.0.0
 		 */
-		processBatchAction: function (action, items, index, total, callback) {
-			var self = this;
-			var item = items[index];
-			var $progress = $('.eac-batch-progress');
-			var $bar = $progress.find('.progress-bar');
-			var percent = Math.round((index / total) * 100);
-
-			$bar.css('width', percent + '%');
-
-			$.ajax({
-				url: eac_admin_js_vars.ajax_url,
-				type: 'POST',
-				data: {
-					action: action,
-					item: item,
-					_wpnonce: eac_admin_js_vars.batch_nonce,
-				},
-				success: function (response) {
-					if (index < total - 1) {
-						self.processBatchAction(action, items, index + 1, total, callback);
-					} else {
-						$bar.css('width', '100%');
-						$progress.fadeOut();
-						callback();
-					}
-				},
-			});
+		prompt: function (message, callback) {
+			var response = prompt(message);
+			if (response) {
+				callback(response);
+			}
 		},
 
 		/**
@@ -353,7 +283,7 @@
 		 * @param {string} code - The currency code.
 		 *
 		 * @example
-		 * eac_admin.geCurrency('USD').done(function (currency) {
+		 * eac_core.geCurrency('USD').done(function (currency) {
 		 * 	console.log(currency);
 		 * })
 		 *
@@ -365,7 +295,6 @@
 				_wpnonce: eac_admin_js_vars.currency_nonce,
 			});
 		},
-
 		/**
 		 * Get account.
 		 *
@@ -544,231 +473,36 @@
 		},
 
 		/**
-		 * Initialize document form.
+		 * Get attachment.
 		 *
 		 * @since 1.0.0
-		 * @param {HTMLElement} el - The element to initialize document form.
 		 *
-		 * @return {void}
+		 * @param {string} id - The attachment ID.
+		 *
+		 * @example
+		 * eac_admin.getAttachment(1).then(function (attachment) {
+		 * 	console.log(attachment);
+		 * 		// Do something with attachment.
+		 * 		})
+		 *
+		 * @return {Promise}
 		 */
-		initDocumentForm: function (el) {
-			var $form = $(el);
-
-			/**
-			 * Recalculate totals.
-			 *
-			 * @since 1.0.0
-			 * @return {void}
-			 */
-			function recalculateTotals() {
-				var data = {};
-				// $form.removeClass('initiated');
-				eac_admin.blockForm($form);
-				$(':input', $form).each(function () {
-					var name = $(this).attr('name');
-					var value = $(this).val();
-					if (name) {
-						data[name] = value;
-					}
-				});
-
-				var action = data.action || '';
-				if (!action) {
-					alert('Action not defined');
-					return;
-				}
-				action = action.replace('edit', 'calculate');
-				data.action = action;
-				data.calulate_totals = 'yes';
-
-				$('.eac-document-form__main', $form).load(eac_admin_js_vars.ajax_url, data, function () {
-					eac_admin.unblockForm($form);
-					eac_admin.bindEvents();
-				});
-			}
-
-
-			$form.on('dirty', recalculateTotals)
-				.on('change', ':input.add-line-item', recalculateTotals)
-				.on('change', ':input.line-item__price', recalculateTotals)
-				.on('change', ':input.line-item__quantity', recalculateTotals)
-				.on('change', ':input.line-item__taxes', recalculateTotals)
-				.on('change', ':input#currency_code', recalculateTotals)
-				.on('change', ':input#vat_exempt', recalculateTotals)
-				.on('change', ':input#discount_amount', recalculateTotals)
-				.on('change', ':input#discount_type', recalculateTotals)
-				.on('click', '.calculate_totals', recalculateTotals)
-				.on('click', '.remove-line-item', function (e) {
-					e.preventDefault();
-					$(e.target).closest('tr').remove();
-					recalculateTotals();
+		getAttachment: function (id) {
+			// use wp rest api to get attachment.
+			return fetch('/wp-json/wp/v2/media/' + id)
+				.then(function (response) {
+					return response.json();
 				})
-				.on('change', ':input#contact_id', function (e) {
-					var contact_id = parseInt($(e.target).val());
-					var fields = $form.find(':input[name^="billing_"]');
-					eac_admin.blockForm($form);
-					eac_admin.getCustomer(contact_id).done(function (contact) {
-						eac_admin.unblockForm($form);
-						fields.each(function () {
-							var name = $(this).attr('name').replace('billing_', '');
-							var value = contact[name] || '';
-							$(this).attr('value', value);
-						});
-						recalculateTotals();
-					}).fail(function () {
-						fields.val('');
-						recalculateTotals();
-					});
-				}).addClass('enhanced');
-		},
-
-		/**
-		 * Invoice form
-		 *
-		 * handle invoice form events.
-		 *
-		 * @since 1.0.0
-		 * @type {{recalculate: eac_admin.invoiceForm.recalculate}}
-		 */
-		invoiceForm: {
-			updateContact: function (e) {
-				var $form = $(e.target).closest('form');
-				var contact_id = parseInt($(e.target).val());
-				var resetFields = function () {
-					$form.find(':input[name^="billing_"]').val('');
-				}
-
-				if (!contact_id) {
-					$form.find(':input[name^="billing_"]').val('');
-					$form.trigger('update');
-					return;
-				}
-
-				eac_admin.blockForm($form);
-				eac_admin.getCustomer(contact_id).then(function (contact) {
-					eac_admin.unblockForm($form);
-					if (!contact.success) {
-						$form.find(':input[name^="billing_"]').val('');
-						$form.trigger('update');
-						return;
-					}
-
-					$form.find(':input[name^="billing_"]').each(function () {
-						var name = $(this).attr('name').replace('billing_', '');
-						var value = contact.data[name] || '';
-						$(this).val(value);
-					});
-					// If currency_code value is set then update the form.
-					if (contact.data.currency_code) {
-						$form.find(':input[name="currency_code"]').val(contact.data.currency_code);
-					}
-
-				}).then(function () {
-					console.log('trigger update');
-					$form.trigger('update');
-				});
-			},
-			openBillingDetails: function (e) {
-				e.preventDefault();
-				var $form = $(e.target).closest('form');
-				MicroModal.show('edit-billing-details', {
-					onClose: function () {
-						console.log('model closed');
-						$form.trigger('update');
-					}
-				});
-			},
-			triggerUpdate: function (e) {
-				$(e.target).closest('form').trigger('update');
-			},
-			removeLineItem: function (e) {
-				e.preventDefault();
-				var $form = $(e.target).closest('form');
-				$(e.target).closest('tr').remove();
-				$form.trigger('update');
-			},
-			recalculate: function (e) {
-				var $form = $(e.target).closest('form'), data = {};
-				eac_admin.blockForm($form);
-				$(':input', $form).each(function () {
-					var name = $(this).attr('name');
-					var value = $(this).val();
-					if (name) {
-						data[name] = value;
-					}
+				.catch(function (error) {
+					console.error('Error:', error);
 				});
 
-				data.action = 'eac_calculate_invoice_totals';
-				$form.load(eac_admin_js_vars.ajax_url, data, function () {
-					eac_admin.unblockForm($form);
-					eac_admin.bindEvents();
-				});
-			},
 		}
-	};
+	}
 
-	// eac_admin.invoiceForm = {
-	// 	bindEvents: function () {
-	// 		var self = this, $form = $('#eac-invoice-form');
-	//
-	// 		$form
-	// 			.on('change', ':input.add-item', this.triggerUpdate)
-	// 			.on('select2-blur', '.item-taxes', this.triggerUpdate)
-	// 			.on('update', this.update);
-	// 	},
-	// 	triggerUpdate: function (e) {
-	// 		$(e.target).closest('form').trigger('update')
-	// 	},
-	// 	update: function (e) {
-	// 		var $form = $(e.target), data = {};
-	// 		eac_admin.blockForm($form);
-	// 		$(':input', $form).each(function () {
-	// 			var name = $(this).attr('name');
-	// 			var value = $(this).val();
-	// 			if (name) {
-	// 				data[name] = value;
-	// 			}
-	// 		});
-	// 		data.action = 'eac_calculate_invoice_totals';
-	//
-	// 		$form.load(eac_admin_js_vars.ajax_url, data, function () {
-	// 			eac_admin.unblockForm($form);
-	// 			$form.removeClass('initiated');
-	// 			eac_admin.bindEvents();
-	// 		});
-	// 	},
-	// };
 
-	window.eac_admin_tooltip = {
-		bindEvents: function () {
-			/**
-			 * Trigger jquery tooltip for every title elements.
-			 *
-			 * @since 1.0.0
-			 */
-			$('[title][title!=""]').tooltip({
-				position: {
-					my: "center top+15",
-					at: "center bottom",
-					using: function( position, feedback ) {
-						$( this ).css( position );
-						$( "<div>" )
-							.addClass( "eac-tooltip-arrow" )
-							.addClass( feedback.vertical )
-							.addClass( feedback.horizontal )
-							.appendTo( this );
-					}
-				},
-			});
-		},
-	};
-
-	$(function () {
-		eac_admin.bindEvents();
-		// eac_admin.invoiceForm.bindEvents();
-		eac_admin_tooltip.bindEvents();
+	$(document).ready(function () {
+		eac_admin.init();
 	});
 
 })(jQuery, window, document, wp);
-
-// import './components/document.js';

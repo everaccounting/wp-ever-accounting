@@ -3,14 +3,14 @@
 defined( 'ABSPATH' ) || exit();
 
 /**
- * Form field.
+ * Form input field.
  *
  * @param array $field Field arguments.
  *
  * @since 1.2.0
  * @return void
  */
-function eac_form_group( $field ) {
+function eac_form_field( $field ) {
 	$defaults = array(
 		'type'          => 'text',
 		'name'          => '',
@@ -40,7 +40,7 @@ function eac_form_group( $field ) {
 	 *
 	 * @since 1.2.0
 	 */
-	$field = apply_filters( 'ever_accounting_form_group_args', $field );
+	$field = apply_filters( 'ever_accounting_form_field_args', $field );
 
 	// Set default name and ID attributes if not provided.
 	$field['name']          = empty( $field['name'] ) ? $field['id'] : $field['name'];
@@ -75,14 +75,15 @@ function eac_form_group( $field ) {
 	// Prefix.
 	if ( ! empty( $field['prefix'] ) && ! preg_match( '/<[^>]+>/', $field['prefix'] ) ) {
 		$prefix          = is_callable( $field['prefix'] ) ? call_user_func( $field['suffix'], $field ) : $field['prefix'];
-		$field['prefix'] = '<span class="addon eac-form-field__addon">' . $prefix . '</span>';
+		$field['prefix'] = '<span class="eac-form-field__addon">' . $prefix . '</span>';
 	}
 
 	// Suffix.
 	if ( ! empty( $field['suffix'] ) && ! preg_match( '/<[^>]+>/', $field['suffix'] ) ) {
 		$suffix          = is_callable( $field['suffix'] ) ? call_user_func( $field['suffix'], $field ) : $field['suffix'];
-		$field['suffix'] = '<span class="addon eac-form-field__addon">' . $suffix . '</span>';
+		$field['suffix'] = '<span class="eac-form-field__addon">' . $suffix . '</span>';
 	}
+
 
 	switch ( $field['type'] ) {
 		case 'text':
@@ -92,7 +93,7 @@ function eac_form_group( $field ) {
 		case 'hidden':
 		case 'url':
 			$input = sprintf(
-				'<input type="%1$s" name="%2$s" id="%3$s" class="%4$s" value="%5$s" placeholder="%6$s" style="%7$s" %8$s>',
+				'<input type="%1$s" name="%2$s" id="%3$s" class="eac-form-field__input %4$s" value="%5$s" placeholder="%6$s" style="%7$s" %8$s>',
 				esc_attr( $field['type'] ),
 				esc_attr( $field['name'] ),
 				esc_attr( $field['id'] ),
@@ -102,15 +103,24 @@ function eac_form_group( $field ) {
 				esc_attr( $field['style'] ),
 				wp_kses_post( implode( ' ', $attrs ) )
 			);
+			if ( ! empty( $field['prefix'] ) || ! empty( $field['suffix'] ) ) {
+				$input = sprintf(
+					'<div class="eac-form-field__group">%1$s%2$s%3$s</div>',
+					wp_kses_post( $field['prefix'] ),
+					$input,
+					wp_kses_post( $field['suffix'] )
+				);
+			}
 
 			break;
+
 		case 'select':
 			$field['value']       = wp_parse_list( $field['value'] );
 			$field['value']       = array_map( 'strval', $field['value'] );
 			$field['placeholder'] = ! empty( $field['placeholder'] ) ? $field['placeholder'] : '';
 			if ( ! empty( $field['multiple'] ) ) {
 				$field['name'] .= '[]';
-				$attrs[]        = 'multiple="multiple"';
+				$attrs[]       = 'multiple="multiple"';
 			}
 
 			// It may send an option_key and option_value to use in the options.
@@ -125,7 +135,7 @@ function eac_form_group( $field ) {
 			}
 
 			$input = sprintf(
-				'<select name="%1$s" id="%2$s" class="%3$s" placeholder="%4$s" style="%5$s" %6$s>',
+				'<select name="%1$s" id="%2$s" class="eac-form-field__select %3$s" placeholder="%4$s" style="%5$s" %6$s>',
 				esc_attr( $field['name'] ),
 				esc_attr( $field['id'] ),
 				esc_attr( $field['class'] ),
@@ -152,13 +162,45 @@ function eac_form_group( $field ) {
 
 			$input .= '</select>';
 
+			if ( ! empty( $field['prefix'] ) || ! empty( $field['suffix'] ) ) {
+				$input = sprintf(
+					'<div class="eac-form-field__group">%1$s%2$s%3$s</div>',
+					wp_kses_post( $field['prefix'] ),
+					$input,
+					wp_kses_post( $field['suffix'] )
+				);
+			}
+
+			break;
+
+		case 'date':
+			$input = sprintf(
+				'<input type="text" name="%1$s" id="%2$s" class="eac-form-field__input %3$s" value="%4$s" placeholder="%5$s" style="%6$s" %7$s>',
+				esc_attr( $field['name'] ),
+				esc_attr( $field['id'] ),
+				esc_attr( $field['class'] ),
+				esc_attr( $field['value'] ),
+				esc_attr( $field['placeholder'] ),
+				esc_attr( $field['style'] ),
+				wp_kses_post( implode( ' ', $attrs ) )
+			);
+
+			if ( ! empty( $field['prefix'] ) || ! empty( $field['suffix'] ) ) {
+				$input = sprintf(
+					'<div class="eac-form-field__group">%1$s%2$s%3$s</div>',
+					wp_kses_post( $field['prefix'] ),
+					$input,
+					wp_kses_post( $field['suffix'] )
+				);
+			}
+
 			break;
 
 		case 'textarea':
 			$rows  = ! empty( $field['rows'] ) ? absint( $field['rows'] ) : 4;
 			$cols  = ! empty( $field['cols'] ) ? absint( $field['cols'] ) : 50;
 			$input = sprintf(
-				'<textarea name="%1$s" id="%2$s" class="%3$s" placeholder="%4$s" rows="%5$s" cols="%6$s" style="%7$s" %8$s>%9$s</textarea>',
+				'<textarea name="%1$s" id="%2$s" class="eac-form-field__textarea %3$s" placeholder="%4$s" rows="%5$s" cols="%6$s" style="%7$s" %8$s>%9$s</textarea>',
 				esc_attr( $field['name'] ),
 				esc_attr( $field['id'] ),
 				esc_attr( $field['class'] ),
@@ -172,95 +214,6 @@ function eac_form_group( $field ) {
 
 			break;
 
-		case 'checkbox':
-			$field['value'] = ! empty( $field['value'] ) ? $field['value'] : '1';
-			$input          = sprintf(
-				'<label><input type="checkbox" name="%1$s" id="%2$s" class="%3$s" value="%4$s" %5$s %6$s>%7$s</label>',
-				esc_attr( $field['name'] ),
-				esc_attr( $field['id'] ),
-				esc_attr( $field['class'] ),
-				esc_attr( $field['value'] ),
-				checked( $field['value'], '1', false ),
-				wp_kses_post( implode( ' ', $attrs ) ),
-				wp_kses_post( $field['label'] )
-			);
-
-			break;
-
-		case 'radio':
-		case 'checkboxes':
-			$field['value'] = wp_parse_list( $field['value'] );
-			$input          = '';
-			if ( ! empty( $field['options'] ) ) {
-				$input .= '<fieldset>';
-				foreach ( $field['options'] as $key => $value ) {
-					$input .= sprintf(
-						'<label><input type="%1$s" name="%2$s" id="%3$s_%4$s" class="%5$s" value="%6$s" %7$s %8$s>%9$s</label>',
-						esc_attr( $field['type'] ),
-						esc_attr( $field['name'] ),
-						esc_attr( $field['id'] ),
-						esc_attr( $key ),
-						esc_attr( $field['class'] ),
-						esc_attr( $key ),
-						checked( in_array( (string) $key, $field['value'], true ), true, false ),
-						wp_kses_post( implode( ' ', $attrs ) ),
-						esc_html( $value )
-					);
-				}
-
-				$input .= '</fieldset>';
-			}
-			break;
-
-		case 'date':
-			$input = sprintf(
-				'<input type="text" name="%1$s" id="%2$s" class="%3$s" value="%4$s" placeholder="%5$s" style="%6$s" %7$s>',
-				esc_attr( $field['name'] ),
-				esc_attr( $field['id'] ),
-				esc_attr( $field['class'] ),
-				esc_attr( $field['value'] ),
-				esc_attr( $field['placeholder'] ),
-				esc_attr( $field['style'] ),
-				wp_kses_post( implode( ' ', $attrs ) )
-			);
-
-			break;
-
-		case 'thumbnail':
-			$attachment = new \stdClass();
-			if ( ! empty( $field['value'] ) && 'attachment' === get_post_type( $field['value'] ) ) {
-				$attachment = get_post( $field['value'] );
-			}
-			$icon = isset( $attachment->ID ) && in_array( $attachment->post_mime_type, array( 'image/jpeg', 'image/png' ), true ) ? false : true;
-			$src  = ! isset( $attachment->ID ) ? '' : wp_get_attachment_image_url( $attachment->ID, 'thumbnail', $icon );
-			$link = ! isset( $attachment->ID ) ? '' : wp_get_attachment_url( $attachment->ID );
-			$name = ! isset( $attachment->post_title ) ? '' : $attachment->post_title;
-			$id   = ! isset( $attachment->ID ) ? '' : $attachment->ID;
-
-			$input = sprintf(
-				'<div class="eac-thumbnail" id="%1$s" style="%2$s">
-					<input type="hidden" name="%3$s" value="%4$s">
-					<div class="eac-thumbnail__preview">
-						<a class="eac-thumbnail__link" href="%5$s" target="_blank">
-							<img class="eac-thumbnail__image" src="%5$s" alt="%6$s">
-						</a>
-					</div>
-					<div class="eac-thumbnail__actions">
-						<a href="#" class="eac-thumbnail__upload button">%7$s</a>
-						<a href="#" class="eac-thumbnail__remove button">%8$s</a>
-					</div>
-				</div>',
-				esc_attr( $field['id'] ),
-				esc_attr( $field['style'] ),
-				esc_attr( $field['name'] ),
-				esc_attr( $field['value'] ),
-				esc_url( $link ),
-				esc_attr( $name ),
-				esc_html__( 'Upload', 'wp-ever-accounting' ),
-				esc_html__( 'Remove', 'wp-ever-accounting' )
-			);
-
-			break;
 		case 'wp_editor':
 			ob_start();
 			wp_editor(
@@ -273,47 +226,39 @@ function eac_form_group( $field ) {
 			);
 			$input = ob_get_clean();
 			break;
+
 		case 'callback':
 		default:
 			$input = isset( $field['callback'] ) && is_callable( $field['callback'] ) ? call_user_func( $field['callback'], $field ) : '';
 			break;
 	}
 
-	if ( ! empty( $field['prefix'] ) || ( ! empty( $field['suffix'] ) && ! empty( $input ) ) ) {
-		$input = sprintf(
-			'<div class="bkit-input-group eac-form-field__group">%s%s%s</div>',
-			$field['prefix'],
-			$input,
-			$field['suffix']
-		);
-	}
-
-	if ( ! empty( $input ) ) {
-		if ( ! empty( $field['label'] ) ) {
-			$label = '<label for="' . esc_attr( $field['id'] ) . '">' . esc_html( $field['label'] );
-			if ( true === $field['required'] ) {
-				$label .= '&nbsp;<abbr title="' . esc_attr__( 'required', 'wp-ever-accounting' ) . '">	</abbr>';
-			}
-			if ( ! empty( $field['tooltip'] ) ) {
-				$label .= eac_tooltip( $field['tooltip'] );
-			}
-			$label .= '</label>';
-			$input  = $label . $input;
-		}
-
-		if ( ! empty( $field['desc'] ) && ! in_array( $field['type'], array( 'checkbox', 'switch' ), true ) ) {
-			$input .= '<p class="description">' . esc_html( $field['desc'] ) . '</p>';
-		}
-
-		$input = sprintf(
-			'<div class="bkit-form-group eac-form-group eac-form-group-%1$s %2$s" id="eac-form-group-%3$s" style="%4$s">%5$s</div>',
-			esc_attr( $field['type'] ),
-			esc_attr( $field['wrapper_class'] ),
+	//label.
+	if ( ! empty( $field['label'] ) ) {
+		$required = true === $field['required'] ? '&nbsp;<abbr title="' . esc_attr__( 'required', 'wp-ever-accounting' ) . '"></abbr>' : '';
+		$tooltip  = ! empty( $field['tooltip'] ) ? '&nbsp;' . eac_tooltip( $field['tooltip'] ) : '';
+		$label    = sprintf(
+			'<label class="eac-form-field__label" for="%1$s">%2$s%3$s%4$s</label>',
 			esc_attr( $field['id'] ),
-			esc_attr( $field['wrapper_style'] ),
-			$input
+			esc_html( $field['label'] ),
+			wp_kses_post( $tooltip ),
+			wp_kses_post( $required ),
 		);
+
+		$input = $label . PHP_EOL . $input;
 	}
 
-	echo $input; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the above code.
+	if ( ! empty( $field['desc'] ) ) {
+		$input .= sprintf( '<span class="eac-form-field__help">%s</span>', wp_kses_post( $field['desc'] ) );
+	}
+
+	// Wrapper.
+	echo sprintf(
+		'<div class="eac-form-field eac-form-field-%1$s %2$s" id="eac-form-field-%3$s" style="%4$s">%5$s</div>',
+		esc_attr( $field['type'] ),
+		esc_attr( $field['wrapper_class'] ),
+		esc_attr( $field['id'] ),
+		esc_attr( $field['wrapper_style'] ),
+		$input
+	);
 }

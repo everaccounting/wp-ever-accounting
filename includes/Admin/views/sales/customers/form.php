@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit;
 					</div>
 					<div class="bkit-card__body grid--fields">
 						<?php
-						eac_form_group(
+						eac_form_field(
 							array(
 								'id'          => 'name',
 								'label'       => __( 'Name', 'wp-ever-accounting' ),
@@ -29,7 +29,7 @@ defined( 'ABSPATH' ) || exit;
 								'required'    => true,
 							)
 						);
-						eac_form_group(
+						eac_form_field(
 							array(
 								'id'           => 'currency_code',
 								'type'         => 'select',
@@ -48,7 +48,7 @@ defined( 'ABSPATH' ) || exit;
 								'option_label' => 'formatted_name',
 							)
 						);
-						eac_form_group(
+						eac_form_field(
 							array(
 								'id'          => 'email',
 								'label'       => __( 'Email', 'wp-ever-accounting' ),
@@ -56,7 +56,7 @@ defined( 'ABSPATH' ) || exit;
 								'value'       => $customer->email,
 							)
 						);
-						eac_form_group(
+						eac_form_field(
 							array(
 								'id'          => 'phone',
 								'label'       => __( 'Phone', 'wp-ever-accounting' ),
@@ -64,7 +64,7 @@ defined( 'ABSPATH' ) || exit;
 								'value'       => $customer->phone,
 							)
 						);
-						eac_form_group(
+						eac_form_field(
 							array(
 								'id'          => 'company',
 								'label'       => __( 'Company', 'wp-ever-accounting' ),
@@ -72,7 +72,7 @@ defined( 'ABSPATH' ) || exit;
 								'value'       => $customer->company,
 							)
 						);
-						eac_form_group(
+						eac_form_field(
 							array(
 								'id'          => 'website',
 								'label'       => __( 'Website', 'wp-ever-accounting' ),
@@ -80,7 +80,7 @@ defined( 'ABSPATH' ) || exit;
 								'value'       => $customer->website,
 							)
 						);
-						eac_form_group(
+						eac_form_field(
 							array(
 								'id'          => 'vat_number',
 								'label'       => __( 'VAT Number', 'wp-ever-accounting' ),
@@ -88,7 +88,7 @@ defined( 'ABSPATH' ) || exit;
 								'value'       => $customer->vat_number,
 							)
 						);
-						eac_form_group(
+						eac_form_field(
 							array(
 								'id'      => 'vat_exempt',
 								'label'   => __( 'VAT Exempt', 'wp-ever-accounting' ),
@@ -100,7 +100,7 @@ defined( 'ABSPATH' ) || exit;
 								'value'   => filter_var( $customer->vat_exempt, FILTER_VALIDATE_BOOLEAN ) ? 'yes' : '',
 							)
 						);
-						eac_form_group(
+						eac_form_field(
 							array(
 								'id'          => 'address_1',
 								'label'       => __( 'Address Line 1', 'wp-ever-accounting' ),
@@ -108,7 +108,7 @@ defined( 'ABSPATH' ) || exit;
 								'value'       => $customer->address_1,
 							)
 						);
-						eac_form_group(
+						eac_form_field(
 							array(
 								'id'          => 'address_2',
 								'label'       => __( 'Address Line 2', 'wp-ever-accounting' ),
@@ -116,7 +116,7 @@ defined( 'ABSPATH' ) || exit;
 								'value'       => $customer->address_2,
 							)
 						);
-						eac_form_group(
+						eac_form_field(
 							array(
 								'id'          => 'city',
 								'label'       => __( 'City', 'wp-ever-accounting' ),
@@ -124,7 +124,7 @@ defined( 'ABSPATH' ) || exit;
 								'value'       => $customer->city,
 							)
 						);
-						eac_form_group(
+						eac_form_field(
 							array(
 								'id'          => 'state',
 								'label'       => __( 'State', 'wp-ever-accounting' ),
@@ -132,7 +132,7 @@ defined( 'ABSPATH' ) || exit;
 								'value'       => $customer->state,
 							)
 						);
-						eac_form_group(
+						eac_form_field(
 							array(
 								'id'          => 'postcode',
 								'label'       => __( 'Postal Code', 'wp-ever-accounting' ),
@@ -140,7 +140,7 @@ defined( 'ABSPATH' ) || exit;
 								'value'       => $customer->postcode,
 							)
 						);
-						eac_form_group(
+						eac_form_field(
 							array(
 								'type'    => 'select',
 								'id'      => 'country',
@@ -163,7 +163,7 @@ defined( 'ABSPATH' ) || exit;
 					</div>
 					<div class="bkit-card__body">
 						<?php
-						eac_form_group(
+						eac_form_field(
 							array(
 								'type'        => 'select',
 								'id'          => 'status',
