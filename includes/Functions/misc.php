@@ -3,41 +3,6 @@
 defined( 'ABSPATH' ) || exit();
 
 /**
- * Generated valid HTML from an array of attrs.
- *
- * @since   1.2.0
- *
- * @param   array $attrs The array of attrs.
- * @return  string
- */
-function eac_esc_attrs( $attrs ) {
-	$html = '';
-
-	// Loop over attrs and validate data types.
-	foreach ( $attrs as $k => $v ) {
-
-		// String (but don't trim value).
-		if ( is_string( $v ) && ( $k !== 'value' ) ) {
-			$v = trim( $v );
-
-			// Boolean
-		} elseif ( is_bool( $v ) ) {
-			$v = $v ? 1 : 0;
-
-			// Object
-		} elseif ( is_array( $v ) || is_object( $v ) ) {
-			$v = json_encode( $v );
-		}
-
-		// Generate HTML.
-		$html .= sprintf( ' %s="%s"', esc_attr( $k ), esc_attr( $v ) );
-	}
-
-	// Return trimmed.
-	return trim( $html );
-}
-
-/**
  * Form input field.
  *
  * @param array $field Field arguments.
@@ -91,19 +56,21 @@ function eac_form_field( $field ) {
 	// Prepare attributes.
 	// Anything that starts with "attr-" will be added to the attributes.
 	$attrs = array();
-	foreach ( $field as $attr_key => $attr_value ) {
-		if ( empty( $attr_key ) || empty( $attr_value ) ) {
+	foreach ( $field as $k => $v ) {
+		if ( empty( $k ) || empty( $v ) ) {
 			continue;
 		}
-		if ( is_array( $attr_value ) ) {
-			$attr_value = wp_json_encode( $attr_value, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP );
+
+		if ( is_array( $v ) || is_object( $v ) ) {
+			$v = wp_json_encode( $v, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP );
 		}
-		if ( strpos( $attr_key, 'attr-' ) === 0 ) {
-			$attrs[] = sprintf( '%s="%s"', esc_attr( str_replace( 'attr-', '', $attr_key ) ), esc_attr( $attr_value ) );
-		} elseif ( strpos( $attr_key, 'data-' ) === 0 ) {
-			$attrs[] = sprintf( '%s="%s"', esc_attr( $attr_key ), esc_attr( $attr_value ) );
-		} elseif ( in_array( $attr_key, array( 'maxlength', 'pattern', 'readonly', 'disabled', 'required', 'autofocus' ), true ) ) {
-			$attrs[] = sprintf( '%s="%s"', esc_attr( $attr_key ), esc_attr( $attr_key ) );
+
+		if ( strpos( $k, 'attr-' ) === 0 ) {
+			$attrs[] = sprintf( '%s="%s"', esc_attr( str_replace( 'attr-', '', $k ) ), esc_attr( $v ) );
+		} elseif ( strpos( $k, 'data-' ) === 0 ) {
+			$attrs[] = sprintf( '%s="%s"', esc_attr( $k ), esc_attr( $v ) );
+		} elseif ( in_array( $k, array( 'maxlength', 'pattern', 'readonly', 'disabled', 'required', 'autofocus' ), true ) ) {
+			$attrs[] = sprintf( '%s="%s"', esc_attr( $k ), esc_attr( $k ) );
 		}
 	}
 
@@ -119,12 +86,12 @@ function eac_form_field( $field ) {
 		$field['suffix'] = '<span class="eac-form-field__addon">' . $suffix . '</span>';
 	}
 
+	$input = '';
 	switch ( $field['type'] ) {
 		case 'text':
 		case 'email':
 		case 'number':
 		case 'password':
-		case 'hidden':
 		case 'url':
 			$input = sprintf(
 				'<input type="%1$s" name="%2$s" id="%3$s" class="eac-form-field__input %4$s" value="%5$s" placeholder="%6$s" style="%7$s" %8$s>',
@@ -230,6 +197,77 @@ function eac_form_field( $field ) {
 
 			break;
 
+		case 'hidden':
+			$input = sprintf(
+				'<input type="hidden" name="%1$s" id="%2$s" class="eac-form-field__input %3$s" value="%4$s" placeholder="%5$s" style="%6$s" %7$s>',
+				esc_attr( $field['name'] ),
+				esc_attr( $field['id'] ),
+				esc_attr( $field['class'] ),
+				esc_attr( $field['value'] ),
+				esc_attr( $field['placeholder'] ),
+				esc_attr( $field['style'] ),
+				wp_kses_post( implode( ' ', $attrs ) )
+			);
+
+			break;
+
+		case 'file':
+			$uploader_class = ! empty( $field['uploader_class'] ) ? $field['uploader_class'] : 'has--file';
+			$mime_types     = ! empty( $field['mime_types'] ) ? $field['mime_types'] : '';
+			$file           = array(
+				'icon'     => '',
+				'title'    => '',
+				'url'      => '',
+				'filename' => '',
+				'filesize' => '',
+			);
+			if ( $field['value'] ) {
+				$post = get_post( $field['value'] );
+				if ( $post && 'attachment' === $post->post_type ) {
+					$uploader_class = ' has--file';
+					// update.
+					$file['icon']     = $post['icon'];
+					$file['title']    = $post['title'];
+					$file['url']      = $post['url'];
+					$file['filename'] = $post['filename'];
+					if ( $post['filesize'] ) {
+						$file['filesize'] = size_format( $post['filesize'] );
+					}
+				}
+			}
+
+			$input = sprintf(
+				'<div class="eac-form-field__file %1$s" data-mime-types="%2$s">
+					<input type="hidden" name="%3$s" id="%4$s" class="eac-form-field__file-input %5$s" value="%6$s" %7$s>
+					<div class="eac-form-field__file-preview">
+						<div class="eac-form-field__file-icon"><img src="%8$s" alt="%9$s"/></div>
+					    <div class="eac-form-field__file-info">
+					        <a href="%10$s" target="_blank" class="eac-form-field__file-name">%11$s</a>
+					        <span class="eac-form-field__file-size">%12$s</span>
+					        <a href="#" class=" eac-form-field__file-remove" data-id="%4$s">%13$s</a>
+					    </div>
+					</div>
+					<div class="eac-form-field__file-upload">
+					    <button type="button" class="eac-form-field__file-button">%14$s</button>
+					</div>
+				</div>',
+				esc_attr( $uploader_class ),
+				esc_attr( $mime_types ),
+				esc_attr( $field['name'] ),
+				esc_attr( $field['id'] ),
+				esc_attr( $field['class'] ),
+				esc_attr( $field['value'] ),
+				wp_kses_post( implode( ' ', $attrs ) ),
+				esc_url( $file['icon'] ),
+				esc_attr( $file['title'] ),
+				esc_url( $file['url'] ),
+				esc_html( $file['filename'] ),
+				esc_html( $file['filesize'] ),
+				esc_html__( 'Remove', 'wp-ever-accounting' ),
+				esc_html( $field['placeholder'] )
+			);
+
+			break;
 		case 'textarea':
 			$rows  = ! empty( $field['rows'] ) ? absint( $field['rows'] ) : 4;
 			$cols  = ! empty( $field['cols'] ) ? absint( $field['cols'] ) : 50;
@@ -260,15 +298,10 @@ function eac_form_field( $field ) {
 			);
 			$input = ob_get_clean();
 			break;
-
-		case 'callback':
-		default:
-			$input = isset( $field['callback'] ) && is_callable( $field['callback'] ) ? call_user_func( $field['callback'], $field ) : '';
-			break;
 	}
 
 	// label.
-	if ( ! empty( $field['label'] ) ) {
+	if ( ! empty( $input ) && ! empty( $field['label'] ) && 'hidden' !== $field['type'] ) {
 		$required = true === $field['required'] ? '&nbsp;<abbr title="' . esc_attr__( 'required', 'wp-ever-accounting' ) . '"></abbr>' : '';
 		$tooltip  = ! empty( $field['tooltip'] ) ? '&nbsp;' . eac_tooltip( $field['tooltip'] ) : '';
 		$label    = sprintf(
@@ -282,51 +315,18 @@ function eac_form_field( $field ) {
 		$input = $label . PHP_EOL . $input;
 	}
 
-	if ( ! empty( $field['desc'] ) ) {
+	if ( ! empty( $input ) && ! empty( $field['desc'] ) ) {
 		$input .= sprintf( '<span class="eac-form-field__help">%s</span>', wp_kses_post( $field['desc'] ) );
 	}
 
-	// Wrapper.
-	printf(
-		'<div class="eac-form-field eac-form-field-%1$s %2$s" id="eac-form-field-%3$s" style="%4$s">%5$s</div>',
-		esc_attr( $field['type'] ),
-		esc_attr( $field['wrapper_class'] ),
-		esc_attr( $field['id'] ),
-		esc_attr( $field['wrapper_style'] ),
-		$input // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Already escaped.
-	);
-}
-
-function eac_upload_field( $field ) {
-	$o = array(
-		'icon'     => '',
-		'title'    => '',
-		'url'      => '',
-		'filename' => '',
-		'filesize' => '',
-	);
-
-	$div = array(
-		'class'           => 'eac-file-uploader',
-		'data-library'    => $field['library'],
-		'data-mime_types' => $field['mime_types'],
-	);
-
-	if ( $field['value'] ) {
-		$attachment = get_post( $field['value'] );
-		if ( $attachment && 'attachment' === $attachment->post_type ) {
-
-			// has value.
-			$div['class'] .= ' has-value';
-
-			// update.
-			$o['icon']     = $attachment['icon'];
-			$o['title']    = $attachment['title'];
-			$o['url']      = $attachment['url'];
-			$o['filename'] = $attachment['filename'];
-			if ( $attachment['filesize'] ) {
-				$o['filesize'] = size_format( $attachment['filesize'] );
-			}
-		}
+	if ( ! empty( $input ) ) {
+		printf(
+			'<div class="eac-form-field eac-form-field-%1$s %2$s" id="eac-form-field-%3$s" style="%4$s">%5$s</div>',
+			esc_attr( $field['type'] ),
+			esc_attr( $field['wrapper_class'] ),
+			esc_attr( $field['id'] ),
+			esc_attr( $field['wrapper_style'] ),
+			$input // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Already escaped.
+		);
 	}
 }

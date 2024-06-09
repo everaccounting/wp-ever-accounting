@@ -205,7 +205,16 @@ defined( 'ABSPATH' ) || exit;
 						<h2 class="eac-card__title"><?php esc_html_e( 'Attachment', 'wp-ever-accounting' ); ?></h2>
 					</div>
 					<div class="eac-card__body">
-						Lorem ipsum dolor sit amet, consectetur adipisicing elit. Possimus, voluptatibus.
+						<?php
+						eac_form_field(
+							array(
+								'type'        => 'file',
+								'name'        => 'attachment',
+								'placeholder' => __( 'Select file', 'wp-ever-accounting' ),
+								'tooltip'     => __( 'Upload a file related to this payment.', 'wp-ever-accounting' ),
+							)
+						);
+						?>
 					</div>
 				</div>
 
