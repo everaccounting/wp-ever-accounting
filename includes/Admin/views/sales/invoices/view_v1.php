@@ -11,7 +11,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$payment = new EverAccounting\Models\Revenue();
+$payment = new EverAccounting\Models\Payment();
 
 $actions = array(
 	array(
@@ -36,8 +36,8 @@ $actions = apply_filters( 'eac_invoice_actions', $actions, $document->id );
 	</a>
 </h1>
 
-<div class="bkit-row">
-	<div class="bkit-col-9">
+<div class="eac-row">
+	<div class="eac-col-9">
 		<?php eac_get_template( 'invoice.php', array( 'invoice' => $document ) ); ?>
 
 		<div class="eac-card">
@@ -81,15 +81,15 @@ $actions = apply_filters( 'eac_invoice_actions', $actions, $document->id );
 		</div>
 
 	</div>
-	<div class="bkit-col-3">
+	<div class="eac-col-3">
 
 		<?php if ( $document->needs_payment() ) : ?>
 			<form name="eac-invoice-add-payment" method="post" action="<?php echo esc_html( admin_url( 'admin-post.php' ) ); ?>">
-				<div class="bkit-card">
-					<div class="bkit-card__header">
-						<h2 class="bkit-card__title"><?php esc_html_e( 'Add Payment', 'wp-ever-accounting' ); ?></h2>
+				<div class="eac-card">
+					<div class="eac-card__header">
+						<h2 class="eac-card__title"><?php esc_html_e( 'Add Payment', 'wp-ever-accounting' ); ?></h2>
 					</div>
-					<div class="bkit-card__body">
+					<div class="eac-card__body">
 						<?php
 						eac_form_group(
 							array(
@@ -153,7 +153,7 @@ $actions = apply_filters( 'eac_invoice_actions', $actions, $document->id );
 						);
 						?>
 					</div>
-					<div class="bkit-card__footer">
+					<div class="eac-card__footer">
 						<button type="submit" class="button button-secondary button-large tw-w-full">
 							<?php esc_html_e( 'Add Payment', 'wp-ever-accounting' ); ?>
 						</button>
@@ -204,5 +204,5 @@ $actions = apply_filters( 'eac_invoice_actions', $actions, $document->id );
 				</ul>
 			</div>
 		</div>
-	</div><!-- .bkit-col-3 -->
+	</div><!-- .eac-col-3 -->
 </div>

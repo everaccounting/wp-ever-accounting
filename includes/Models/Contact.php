@@ -89,17 +89,17 @@ class Contact extends Model {
 	);
 
 	/**
-	 * Data properties of the model.
+	 * The model's attributes.
 	 *
 	 * @since 1.0.0
 	 * @var array
 	 */
-	protected $data = array(
+	protected $attributes = array(
 		'status' => 'active',
 	);
 
 	/**
-	 * The properties that should be cast to native types.
+	 * The attributes that should be cast.
 	 *
 	 * @since 1.0.0
 	 * @var array
@@ -115,7 +115,7 @@ class Contact extends Model {
 	);
 
 	/**
-	 * The properties those are guarded against mass assignment.
+	 * The attributes those are guarded against mass assignment.
 	 *
 	 * @since 1.0.0
 	 * @var array
@@ -125,7 +125,7 @@ class Contact extends Model {
 	);
 
 	/**
-	 * The properties that should be appended to the model's array form.
+	 * The accessors to append to the model's array form.
 	 *
 	 * @since 1.0.0
 	 * @var array
@@ -136,7 +136,7 @@ class Contact extends Model {
 	);
 
 	/**
-	 * The properties that should be hidden for arrays.
+	 * The attributes that should be hidden for serialization.
 	 *
 	 * @since 1.0.0
 	 * @var array
@@ -154,7 +154,7 @@ class Contact extends Model {
 	protected $timestamps = true;
 
 	/**
-	 * The properties that should be searchable when querying.
+	 * The attributes that are searchable.
 	 *
 	 * @since 1.0.0
 	 * @var array
@@ -170,13 +170,14 @@ class Contact extends Model {
 
 	/*
 	|--------------------------------------------------------------------------
-	| Prop Definition Methods
+	| Property Definition Methods
 	|--------------------------------------------------------------------------
-	| This section contains methods that define and provide specific prop values
-	| related to the model, such as statuses or types. These methods can be accessed
-	| without instantiating the model.
+	| This section contains static methods that define and return specific
+	| property values related to the model.
+	| These methods are accessible without creating an instance of the model.
 	|--------------------------------------------------------------------------
 	*/
+
 	/**
 	 * Get contact types.
 	 *
@@ -195,11 +196,10 @@ class Contact extends Model {
 
 	/*
 	|--------------------------------------------------------------------------
-	| Accessors, Mutators, Relationship and Validation Methods
+	| Accessors, Mutators and Relationship Methods
 	|--------------------------------------------------------------------------
-	| This section contains methods for getting and setting properties (accessors
-	| and mutators) as well as defining relationships between models. It also includes
-	| a data validation method that ensures data integrity before saving.
+	| This section contains methods for getting and setting attributes (accessors
+	| and mutators) as well as defining relationships between models.
 	|--------------------------------------------------------------------------
 	*/
 
@@ -209,7 +209,7 @@ class Contact extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	public function get_country_name_prop() {
+	public function get_country_name_attribute() {
 		$countries = I18n::get_countries();
 		return isset( $countries[ $this->country ] ) ? $countries[ $this->country ] : $this->country;
 	}
@@ -220,24 +220,32 @@ class Contact extends Model {
 	 * @return string
 	 * @since 1.1.6
 	 */
-	public function get_formatted_name_prop() {
+	public function get_formatted_name_attribute() {
 		$company = $this->company ? ' (' . $this->company . ')' : '';
 		return $this->name . $company;
 	}
 
+	/*
+	|--------------------------------------------------------------------------
+	| CRUD Methods
+	|--------------------------------------------------------------------------
+	| This section contains methods for creating, reading, updating, and deleting
+	| objects in the database.
+	|--------------------------------------------------------------------------
+	*/
 	/**
-	 * Sanitize data before saving.
+	 * Save the object to the database.
 	 *
 	 * @since 1.0.0
-	 * @return void|\WP_Error Return WP_Error if data is not valid or void.
+	 * @return \WP_Error|static WP_Error on failure, or the object on success.
 	 */
-	protected function validate_save_data() {
+	public function save() {
 		if ( empty( $this->name ) ) {
 			return new \WP_Error( 'missing_required', __( 'Name is required.', 'wp-ever-accounting' ) );
 		}
 
 		if ( empty( $this->currency_code ) ) {
-			$this->set_prop_value( 'currency_code', eac_get_base_currency() );
+			$this->set_attribute( 'currency_code', eac_get_base_currency() );
 		}
 
 		if ( empty( $this->uuid ) ) {
@@ -247,6 +255,8 @@ class Contact extends Model {
 		if ( empty( $this->author_id ) && is_user_logged_in() ) {
 			$this->author_id = get_current_user_id();
 		}
+
+		return parent::save();
 	}
 
 	/*

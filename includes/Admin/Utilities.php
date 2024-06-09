@@ -33,7 +33,7 @@ class Utilities {
 				'menu_slug'  => 'eac-sales',
 				'page_hook'  => 'sales',
 				'tabs'       => array(
-					'revenues'  => __( 'Revenues', 'wp-ever-accounting' ),
+					'payments'  => __( 'Payments', 'wp-ever-accounting' ),
 					'invoices'  => __( 'Invoices', 'wp-ever-accounting' ),
 					'customers' => __( 'Customers', 'wp-ever-accounting' ),
 				),
@@ -92,7 +92,7 @@ class Utilities {
 				'menu_slug'  => 'eac-reports',
 				'page_hook'  => 'reports',
 				'tabs'       => array(
-					'revenues' => __( 'Revenues', 'wp-ever-accounting' ),
+					'payments' => __( 'payments', 'wp-ever-accounting' ),
 					'expenses' => __( 'Expenses', 'wp-ever-accounting' ),
 					'profits'  => __( 'Profits', 'wp-ever-accounting' ),
 					'taxes'    => __( 'Taxes', 'wp-ever-accounting' ),

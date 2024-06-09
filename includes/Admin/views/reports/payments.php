@@ -54,13 +54,13 @@ $years    = range( wp_date( 'Y' ), 2015 );
 //);
 ?>
 
-<div class="bkit-panel">
-	<div class="bkit-panel-inner tw-flex tw-justify-between tw-items-center">
-		<h3 class="bkit-panel__title">
+<div class="eac-panel">
+	<div class="eac-panel-inner tw-flex tw-justify-between tw-items-center">
+		<h3 class="eac-panel__title">
 			<?php echo esc_html__( 'Payment Report', 'wp-ever-accounting' ); ?>
 		</h3>
 		<form class="eac-report-filters" method="get" action="">
-			<select name="year" class="bkit-select">
+			<select name="year" class="eac-select">
 				<?php foreach ( $years as $y ) : ?>
 					<option value="<?php echo esc_attr( $y ); ?>" <?php selected( $y, $year ); ?>>
 						<?php echo esc_html( $y ); ?>
@@ -243,23 +243,23 @@ $years    = range( wp_date( 'Y' ), 2015 );
 <!--	</li>-->
 <!--</ul>-->
 
-<div class="bkit-card">
-	<div class="bkit-card__header">
-		<h3 class="bkit-card__title"><?php esc_html_e( 'Chart', 'wp-ever-accounting' ); ?></h3>
+<div class="eac-card">
+	<div class="eac-card__header">
+		<h3 class="eac-card__title"><?php esc_html_e( 'Chart', 'wp-ever-accounting' ); ?></h3>
 	</div>
-	<div class="bkit-card__body">
+	<div class="eac-card__body">
 		<div class="eac-chart">
 			<canvas id="eac-payment-chart" style="min-height: 300px;"></canvas>
 		</div>
 	</div>
 </div>
 
-<div class="bkit-card">
-	<div class="bkit-card__header">
-		<h3 class="bkit-card__title"><?php esc_html_e( 'Payments by Months', 'wp-ever-accounting' ); ?></h3>
+<div class="eac-card">
+	<div class="eac-card__header">
+		<h3 class="eac-card__title"><?php esc_html_e( 'Payments by Months', 'wp-ever-accounting' ); ?></h3>
 	</div>
-	<div class="bkit-card__body padding-0">
-		<div class="bkit-overflow-x">
+	<div class="eac-card__body padding-0">
+		<div class="eac-overflow-x">
 			<table class="widefat striped eac-report-table border-0">
 				<thead>
 				<tr>

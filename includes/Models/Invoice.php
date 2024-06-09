@@ -45,8 +45,8 @@ class Invoice extends Document {
 	 * @throws \InvalidArgumentException If table name or object type is not set.
 	 */
 	public function __construct( $props = array() ) {
-		$due_after   = get_option( 'eac_invoice_due_date', 7 );
-		$_props      = array(
+		$due_after        = get_option( 'eac_invoice_due_date', 7 );
+		$_attributes      = array(
 			'type'          => $this->get_object_type(),
 			'number'        => $this->get_next_number(),
 			'issue_date'    => current_time( 'mysql' ),
@@ -57,7 +57,7 @@ class Invoice extends Document {
 			'author_id'     => get_current_user_id(),
 			'uuid'          => wp_generate_uuid4(),
 		);
-		$this->props = array_merge( $this->props, $_props );
+		$this->attributes = array_merge( $this->attributes, $_attributes );
 		parent::__construct( $props );
 	}
 

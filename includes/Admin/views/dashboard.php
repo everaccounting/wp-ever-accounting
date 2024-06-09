@@ -9,57 +9,33 @@
 
 defined( 'ABSPATH' ) || exit();
 
-$revenues = eac_get_revenues( array( 'limit' => 5 ) );
+$payments = eac_get_payments( array( 'limit' => 5 ) );
 $expenses = eac_get_expenses( array( 'limit' => 5 ) );
 
 ?>
-<div class="wrap eac-wrapper">
-	<div class="eac-panel grid--fields">
-		<?php
-		eac_form_field( array(
-			'id'          => 'name',
-			'label'       => __( 'Name', 'wp-ever-accounting' ),
-			'placeholder' => __( 'John Doe', 'wp-ever-accounting' ),
-			'required'    => true,
-			'suffix'      => 'suffix',
-			'prefix'      => 'prefix',
-			'tooltip'     => 'tooltip',
-			'desc'        => 'desc',
-		) );
-		eac_form_field( array(
-			'id'          => 'name',
-			'label'       => __( 'Name', 'wp-ever-accounting' ),
-			'placeholder' => __( 'John Doe', 'wp-ever-accounting' ),
-			'required'    => true,
-			'suffix'      => 'suffix',
-			'prefix'      => 'prefix',
-			'tooltip'     => 'tooltip',
-			'desc'        => 'desc',
-		) );
-		?>
+<div class="wrap eac-wrap">
+	<h1 class="wp-heading-inline">
+		<?php esc_html_e( 'Dashboard', 'wp-ever-accounting' ); ?>
+	</h1>
+	<hr class="wp-header-end">
+
+	<?php require __DIR__ . '/dashboard/summaries.php'; ?>
+	<?php require __DIR__ . '/dashboard/cashflow-chart.php'; ?>
+
+	<div class="tw-grid tw-grid-cols-2 tw-gap-[30px]">
+		<?php require __DIR__ . '/dashboard/payment-categories.php'; ?>
+		<?php require __DIR__ . '/dashboard/expense-categories.php'; ?>
 	</div>
-	<div class="eac-panel inline--fields">
-		<?php
-		eac_form_field( array(
-			'id'          => 'name',
-			'label'       => __( 'Name', 'wp-ever-accounting' ),
-			'placeholder' => __( 'John Doe', 'wp-ever-accounting' ),
-			'required'    => true,
-			'suffix'      => 'suffix',
-			'prefix'      => 'prefix',
-			'tooltip'     => 'tooltip',
-			'desc'        => 'desc',
-		) );
-		eac_form_field( array(
-			'id'          => 'name',
-			'label'       => __( 'Name', 'wp-ever-accounting' ),
-			'placeholder' => __( 'John Doe', 'wp-ever-accounting' ),
-			'required'    => true,
-			'suffix'      => 'suffix',
-			'prefix'      => 'prefix',
-			'tooltip'     => 'tooltip',
-			'desc'        => 'desc',
-		) );
-		?>
+
+	<div class="tw-grid tw-grid-cols-3 tw-gap-[30px]">
+		<div>
+			<?php require __DIR__ . '/dashboard/recent-payments.php'; ?>
+		</div>
+		<div>
+			<?php require __DIR__ . '/dashboard/recent-expenses.php'; ?>
+		</div>
+		<div>
+			<?php require __DIR__ . '/dashboard/account-balances.php'; ?>
+		</div>
 	</div>
 </div>

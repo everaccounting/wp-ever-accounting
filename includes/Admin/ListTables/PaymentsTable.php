@@ -2,17 +2,17 @@
 
 namespace EverAccounting\Admin\ListTables;
 
-use EverAccounting\Models\Revenue;
+use EverAccounting\Models\Payment;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class RevenuesTable.
+ * Class PaymentsTable.
  *
  * @since 1.0.0
  * @package EverAccounting\Admin\ListTables
  */
-class RevenuesTable extends ListTable {
+class PaymentsTable extends ListTable {
 	/**
 	 * Constructor.
 	 *
@@ -26,15 +26,15 @@ class RevenuesTable extends ListTable {
 			wp_parse_args(
 				$args,
 				array(
-					'singular' => 'revenue',
-					'plural'   => 'revenues',
+					'singular' => 'payment',
+					'plural'   => 'payments',
 					'screen'   => get_current_screen(),
 					'args'     => array(),
 				)
 			)
 		);
 
-		$this->base_url = admin_url( 'admin.php?page=eac-sales&tab=revenues' );
+		$this->base_url = admin_url( 'admin.php?page=eac-sales&tab=payments' );
 	}
 
 	/**
@@ -45,7 +45,7 @@ class RevenuesTable extends ListTable {
 	 */
 	public function prepare_items() {
 		$this->process_actions();
-		$per_page    = $this->get_items_per_page( 'eac_revenues_per_page', 20 );
+		$per_page    = $this->get_items_per_page( 'eac_payments_per_page', 20 );
 		$paged       = $this->get_pagenum();
 		$search      = $this->get_request_search();
 		$order_by    = $this->get_request_orderby();
@@ -71,11 +71,11 @@ class RevenuesTable extends ListTable {
 		 *
 		 * @since 1.0.0
 		 */
-		$args = apply_filters( 'ever_accounting_revenues_table_query_args', $args );
+		$args = apply_filters( 'ever_accounting_payments_table_query_args', $args );
 
 		$args['no_found_rows'] = false;
-		$this->items           = Revenue::results( $args );
-		$total                 = Revenue::count( $args );
+		$this->items           = Payment::results( $args );
+		$total                 = Payment::count( $args );
 
 		$this->set_pagination_args(
 			array(
@@ -96,13 +96,13 @@ class RevenuesTable extends ListTable {
 	protected function bulk_delete( $ids ) {
 		$performed = 0;
 		foreach ( $ids as $id ) {
-			if ( eac_delete_revenue( $id ) ) {
+			if ( eac_delete_payment( $id ) ) {
 				++$performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
 			// translators: %s: number of items deleted.
-			EAC()->flash->success( sprintf( __( '%s revenue(s) deleted successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
+			EAC()->flash->success( sprintf( __( '%s payment(s) deleted successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
 		}
 	}
 
@@ -112,7 +112,7 @@ class RevenuesTable extends ListTable {
 	 * @since 1.0.0
 	 */
 	public function no_items() {
-		esc_html_e( 'No revenues found.', 'wp-ever-accounting' );
+		esc_html_e( 'No payments found.', 'wp-ever-accounting' );
 	}
 
 	/**
@@ -126,13 +126,13 @@ class RevenuesTable extends ListTable {
 	protected function get_views() {
 		$current      = $this->get_request_status( 'all' );
 		$status_links = array();
-		$statuses     = eac_get_transaction_statuses();
+		$statuses     = Payment::get_statuses();
 		$statuses     = array_merge( array( 'all' => __( 'All', 'wp-ever-accounting' ) ), $statuses );
 
 		foreach ( $statuses as $status => $label ) {
 			$link  = 'all' === $status ? $this->base_url : add_query_arg( 'status', $status, $this->base_url );
 			$args  = 'all' === $status ? array() : array( 'status' => $status );
-			$count = Revenue::count( $args );
+			$count = Payment::count( $args );
 			$label = sprintf( '%s <span class="count">(%s)</span>', esc_html( $label ), number_format_i18n( $count ) );
 
 			$status_links[ $status ] = array(
@@ -240,7 +240,7 @@ class RevenuesTable extends ListTable {
 	/**
 	 * Renders the checkbox column.
 	 *
-	 * @param Revenue $item The current object.
+	 * @param Payment $item The current object.
 	 *
 	 * @since  1.0.0
 	 * @return string Displays a checkbox.
@@ -252,7 +252,7 @@ class RevenuesTable extends ListTable {
 	/**
 	 * Renders the name column.
 	 *
-	 * @param Revenue $item The current object.
+	 * @param Payment $item The current object.
 	 *
 	 * @since  1.0.0
 	 * @return string Displays the name.
@@ -264,7 +264,7 @@ class RevenuesTable extends ListTable {
 	/**
 	 * Renders the amount column.
 	 *
-	 * @param Revenue $item The current object.
+	 * @param Payment $item The current object.
 	 *
 	 * @since  1.0.0
 	 * @return string Displays the amount.
@@ -276,7 +276,7 @@ class RevenuesTable extends ListTable {
 	/**
 	 * Renders the account column.
 	 *
-	 * @param Revenue $item The current object.
+	 * @param Payment $item The current object.
 	 *
 	 * @since  1.0.0
 	 * @return string Displays the account.
@@ -293,7 +293,7 @@ class RevenuesTable extends ListTable {
 	/**
 	 * Renders the category column.
 	 *
-	 * @param Revenue $item The current object.
+	 * @param Payment $item The current object.
 	 *
 	 * @since  1.0.0
 	 * @return string Displays the category.
@@ -310,7 +310,7 @@ class RevenuesTable extends ListTable {
 	/**
 	 * Renders the customer column.
 	 *
-	 * @param Revenue $item The current object.
+	 * @param Payment $item The current object.
 	 *
 	 * @since  1.0.0
 	 * @return string Displays the customer.
@@ -327,13 +327,13 @@ class RevenuesTable extends ListTable {
 	/**
 	 * Renders the status column.
 	 *
-	 * @param Revenue $item The current object.
+	 * @param Payment $item The current object.
 	 *
 	 * @since 1.0.0
 	 * @return string Displays the status.
 	 */
 	public function column_status( $item ) {
-		$statuses = eac_get_transaction_statuses();
+		$statuses = Payment::get_statuses();
 		$status   = isset( $item->status ) ? $item->status : '';
 		$label    = isset( $statuses[ $status ] ) ? $statuses[ $status ] : '';
 
@@ -343,7 +343,7 @@ class RevenuesTable extends ListTable {
 	/**
 	 * Generates and displays row actions links.
 	 *
-	 * @param Revenue $item The comment object.
+	 * @param Payment $item The comment object.
 	 * @param string  $column_name Current column name.
 	 * @param string  $primary Primary column name.
 	 *

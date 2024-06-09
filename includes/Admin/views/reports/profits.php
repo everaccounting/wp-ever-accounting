@@ -30,7 +30,7 @@ $datasets = array(
 ?>
 
 <div class="eac-panel">
-	<div class="bkit-panel-inner tw-flex tw-justify-between tw-items-center">
+	<div class="eac-panel-inner tw-flex tw-justify-between tw-items-center">
 		<h3 class="eac-panel__title">
 			<?php echo esc_html__( 'Profit Report', 'wp-ever-accounting' ); ?>
 		</h3>
@@ -72,11 +72,11 @@ $datasets = array(
 	</li>
 </ul>
 
-<div class="bkit-card">
-	<div class="bkit-card__header">
-		<h3 class="bkit-card__title"><?php esc_html_e( 'Chart', 'wp-ever-accounting' ); ?></h3>
+<div class="eac-card">
+	<div class="eac-card__header">
+		<h3 class="eac-card__title"><?php esc_html_e( 'Chart', 'wp-ever-accounting' ); ?></h3>
 	</div>
-	<div class="bkit-card__body">
+	<div class="eac-card__body">
 		<div class="eac-chart">
 			<canvas id="eac-profit-chart" style="min-height: 300px;"></canvas>
 		</div>
@@ -84,11 +84,11 @@ $datasets = array(
 </div>
 
 
-<div class="bkit-card">
-	<div class="bkit-card__header">
-		<h3 class="bkit-card__title"><?php esc_html_e( 'Profits by Months', 'wp-ever-accounting' ); ?></h3>
+<div class="eac-card">
+	<div class="eac-card__header">
+		<h3 class="eac-card__title"><?php esc_html_e( 'Profits by Months', 'wp-ever-accounting' ); ?></h3>
 	</div>
-	<div class="bkit-card__body padding-0">
+	<div class="eac-card__body padding-0">
 		<div class="eac-overflow-x">
 			<table class="widefat striped eac-report-table border-0">
 				<thead>

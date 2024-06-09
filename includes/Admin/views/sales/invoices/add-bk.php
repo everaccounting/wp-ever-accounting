@@ -3,7 +3,7 @@
  * Add invoice view.
  *
  * @package EverAccounting
- * @var &revenue \EverAccounting\Models\Invoice
+ * @var &payment \EverAccounting\Models\Invoice
  */
 
 defined( 'ABSPATH' ) || exit;

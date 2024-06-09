@@ -87,7 +87,7 @@ class Category extends Model {
 	protected $timestamps = true;
 
 	/**
-	 * Searchable attributes.
+	 * The attributes that are searchable.
 	 *
 	 * @since 1.0.0
 	 * @var array
@@ -101,11 +101,11 @@ class Category extends Model {
 
 	/*
 	|--------------------------------------------------------------------------
-	| Prop Definition Methods
+	| Property Definition Methods
 	|--------------------------------------------------------------------------
-	| This section contains methods that define and provide specific prop values
-	| related to the model, such as statuses or types. These methods can be accessed
-	| without instantiating the model.
+	| This section contains static methods that define and return specific
+	| property values related to the model.
+	| These methods are accessible without creating an instance of the model.
 	|--------------------------------------------------------------------------
 	*/
 
@@ -118,7 +118,7 @@ class Category extends Model {
 	public static function get_types() {
 		$types = array(
 			'item'    => esc_html__( 'Item', 'wp-ever-accounting' ),
-			'revenue' => esc_html__( 'Revenue', 'wp-ever-accounting' ),
+			'payment' => esc_html__( 'Payment', 'wp-ever-accounting' ),
 			'expense' => esc_html__( 'Expense', 'wp-ever-accounting' ),
 		);
 
@@ -127,11 +127,10 @@ class Category extends Model {
 
 	/*
 	|--------------------------------------------------------------------------
-	| Accessors, Mutators, Relationship and Validation Methods
+	| Accessors, Mutators and Relationship Methods
 	|--------------------------------------------------------------------------
-	| This section contains methods for getting and setting properties (accessors
-	| and mutators) as well as defining relationships between models. It also includes
-	| a data validation method that ensures data integrity before saving.
+	| This section contains methods for getting and setting attributes (accessors
+	| and mutators) as well as defining relationships between models.
 	|--------------------------------------------------------------------------
 	*/
 
@@ -173,8 +172,8 @@ class Category extends Model {
 	 * @since 1.0.0
 	 * @return HasMany
 	 */
-	public function revenues() {
-		return $this->has_many( Revenue::class );
+	public function payments() {
+		return $this->has_many( Payment::class );
 	}
 
 	/**

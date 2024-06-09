@@ -24,7 +24,7 @@ class Expense extends Transaction {
 	protected $object_type = 'expense';
 
 	/**
-	 * The properties that have aliases.
+	 * The attributes that have aliases.
 	 *
 	 * @since 1.0.0
 	 * @var array
@@ -40,11 +40,11 @@ class Expense extends Transaction {
 	 * @var array
 	 */
 	protected $query_args = array(
-		'update_meta_cache' => false,
+		'update_meta_cache' => true,
 	);
 
 	/**
-	 * Properties that have transition effects when changed.
+	 * Attributes that have transition effects when changed.
 	 *
 	 * @since 1.0.0
 	 * @var array
@@ -56,47 +56,73 @@ class Expense extends Transaction {
 	/**
 	 * Create a new model instance.
 	 *
-	 * @param string|int|array $attributes Attributes.
+	 * @param string|array|object $attributes The model attributes.
 	 *
 	 * @throws \InvalidArgumentException If table name or object type is not set.
-	 * @return void
 	 */
-	public function __construct( $attributes = null ) {
-		$this->props['type']      = $this->get_object_type();
-		$this->query_args['type'] = $this->get_object_type();
+	public function __construct( $attributes = array() ) {
+		$this->attributes['status'] = 'pending';
+		$this->attributes['type']   = $this->get_object_type();
+		$this->query_args['type']   = $this->get_object_type();
 		parent::__construct( $attributes );
 	}
 
 	/*
 	|--------------------------------------------------------------------------
-	| Prop Definition Methods
+	| Property Definition Methods
 	|--------------------------------------------------------------------------
-	| This section contains methods that define and provide specific prop values
-	| related to the model, such as statuses or types. These methods can be accessed
-	| without instantiating the model.
+	| This section contains static methods that define and return specific
+	| property values related to the model.
+	| These methods are accessible without creating an instance of the model.
+	|--------------------------------------------------------------------------
+	*/
+	/**
+	 * Get statuses.
+	 *
+	 * @since 1.1.0
+	 * @return array
+	 */
+	public static function get_statuses() {
+		return apply_filters(
+			'ever_accounting_expense_statuses',
+			array(
+				'pending'   => esc_html__( 'Pending', 'wp-ever-accounting' ),
+				'paid'      => esc_html__( 'paid', 'wp-ever-accounting' ),
+				'refunded'  => esc_html__( 'Refunded', 'wp-ever-accounting' ),
+				'cancelled' => esc_html__( 'Cancelled', 'wp-ever-accounting' ),
+			)
+		);
+	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| Accessors, Mutators and Relationship Methods
+	|--------------------------------------------------------------------------
+	| This section contains methods for getting and setting attributes (accessors
+	| and mutators) as well as defining relationships between models.
 	|--------------------------------------------------------------------------
 	*/
 
 	/*
 	|--------------------------------------------------------------------------
-	| Accessors, Mutators, Relationship and Validation Methods
+	| CRUD Methods
 	|--------------------------------------------------------------------------
-	| This section contains methods for getting and setting properties (accessors
-	| and mutators) as well as defining relationships between models. It also includes
-	| a data validation method that ensures data integrity before saving.
+	| This section contains methods for creating, reading, updating, and deleting
+	| objects in the database.
 	|--------------------------------------------------------------------------
 	*/
-
 	/**
-	 * Validate data before saving.
+	 * Save the object to the database.
 	 *
 	 * @since 1.0.0
-	 * @return void|\WP_Error Return WP_Error if data is not valid or void.
+	 * @return \WP_Error|static WP_Error on failure, or the object on success.
 	 */
-	protected function validate_save_data() {
+	public function save() {
 		if ( empty( $this->date ) ) {
 			return new \WP_Error( 'missing_required', __( 'Transaction date is required.', 'wp-ever-accounting' ) );
 		}
+
+		return parent::save();
 	}
 
 	/*

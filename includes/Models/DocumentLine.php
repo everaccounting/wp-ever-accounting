@@ -33,7 +33,7 @@ use ByteKit\Models\Relations\HasMany;
  * @property string $date_created Date created of the document_item.
  *
  * @property-read double $discounted_subtotal Discounted subtotal of the document_item.
- * @property-read DocumentItemTax[] $taxes Taxes of the document_item.
+ * @property-read DocumentLineTax[] $taxes Taxes of the document_item.
  */
 class DocumentLine extends Model {
 
@@ -71,17 +71,17 @@ class DocumentLine extends Model {
 	);
 
 	/**
-	 * The model's data properties.
+	 * The attributes of the model.
 	 *
 	 * @since 1.0.0
 	 * @var array
 	 */
-	protected $props = array(
+	protected $attributes = array(
 		'type' => 'standard',
 	);
 
 	/**
-	 * The properties that should be cast.
+	 * The attributes that should be cast.
 	 *
 	 * @since 1.0.0
 	 * @var array
@@ -102,14 +102,6 @@ class DocumentLine extends Model {
 	);
 
 	/**
-	 * The accessors to append to the model's array form.
-	 *
-	 * @since 1.0.0
-	 * @var array
-	 */
-	protected $appends = array();
-
-	/**
 	 * Whether the model should be timestamped.
 	 *
 	 * @since 1.0.0
@@ -120,32 +112,31 @@ class DocumentLine extends Model {
 	/**
 	 * Create a new model instance.
 	 *
-	 * @param string|array|object $props The model attributes.
+	 * @param string|array|object $attributes The model attributes.
 	 *
 	 * @throws \InvalidArgumentException If table name or object type is not set.
 	 */
-	public function __construct( $props = array() ) {
-		$this->props['taxable'] = filter_var( eac_tax_enabled(), FILTER_VALIDATE_BOOLEAN );
-		parent::__construct( $props );
+	public function __construct( $attributes = array() ) {
+		$this->attributes['taxable'] = filter_var( eac_tax_enabled(), FILTER_VALIDATE_BOOLEAN );
+		parent::__construct( $attributes );
 	}
 
 	/*
 	|--------------------------------------------------------------------------
-	| Prop Definition Methods
+	| Property Definition Methods
 	|--------------------------------------------------------------------------
-	| This section contains methods that define and provide specific prop values
-	| related to the model, such as statuses or types. These methods can be accessed
-	| without instantiating the model.
+	| This section contains static methods that define and return specific
+	| property values related to the model.
+	| These methods are accessible without creating an instance of the model.
 	|--------------------------------------------------------------------------
 	*/
 
 	/*
 	|--------------------------------------------------------------------------
-	| Accessors, Mutators, Relationship and Validation Methods
+	| Accessors, Mutators and Relationship Methods
 	|--------------------------------------------------------------------------
-	| This section contains methods for getting and setting properties (accessors
-	| and mutators) as well as defining relationships between models. It also includes
-	| a data validation method that ensures data integrity before saving.
+	| This section contains methods for getting and setting attributes (accessors
+	| and mutators) as well as defining relationships between models.
 	|--------------------------------------------------------------------------
 	*/
 
@@ -155,7 +146,7 @@ class DocumentLine extends Model {
 	 * @since 1.0.0
 	 * @return double
 	 */
-	protected function get_discounted_subtotal_prop() {
+	protected function get_discounted_subtotal_attribute() {
 		return (float) $this->subtotal - (float) $this->discount;
 	}
 
@@ -189,13 +180,21 @@ class DocumentLine extends Model {
 		return $this->belongs_to( Document::class );
 	}
 
+	/*
+	|--------------------------------------------------------------------------
+	| CRUD Methods
+	|--------------------------------------------------------------------------
+	| This section contains methods for creating, reading, updating, and deleting
+	| objects in the database.
+	|--------------------------------------------------------------------------
+	*/
 	/**
-	 * Validate data before saving.
+	 * Save the object to the database.
 	 *
 	 * @since 1.0.0
-	 * @return void|\WP_Error Return WP_Error if data is not valid or void.
+	 * @return \WP_Error|static WP_Error on failure, or the object on success.
 	 */
-	protected function validate_save_data() {
+	public function save() {
 		if ( empty( $this->type ) ) {
 			return new \WP_Error( 'required_missing', __( 'Product type is required.', 'wp-ever-accounting' ) );
 		}
@@ -219,15 +218,7 @@ class DocumentLine extends Model {
 		if ( ! $this->taxable ) {
 			$this->taxes()->delete();
 		}
-	}
 
-	/**
-	 * Save the object to the database.
-	 *
-	 * @since 1.0.0
-	 * @return \WP_Error|static WP_Error on failure, or the object on success.
-	 */
-	public function save() {
 		$ret_val = parent::save();
 		if ( is_wp_error( $ret_val ) ) {
 			return $ret_val;

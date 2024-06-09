@@ -35,7 +35,7 @@ if ( count( $amounts ) > 4 ) {
 
 <div class="eac-card">
 	<div class="eac-card__header">
-		<?php esc_html_e( 'Top Revenue Categories', 'wp-ever-accounting' ); ?>
+		<?php esc_html_e( 'Top Payment Categories', 'wp-ever-accounting' ); ?>
 		<?php if ( ! empty( $amounts ) ) : ?>
 			<div class="eac-card__header__actions">
 				<a href="<?php echo esc_url( admin_url( 'admin.php?page=eac-reports&tab=payments' ) ); ?>">

@@ -17,7 +17,7 @@ if ( ! $document->is_calculating_tax() && isset( $columns['tax'] ) ) {
 	unset( $columns['tax'] );
 }
 ?>
-<div class="bkit-panel tw-p-0">
+<div class="eac-panel tw-p-0">
 	<div class="eac-document-form__section document-info">
 		<div class=" document-info__billing">
 			<h3>
@@ -70,7 +70,7 @@ if ( ! $document->is_calculating_tax() && isset( $columns['tax'] ) ) {
 							<?php
 							switch ( $key ) {
 								case 'price':
-									printf( '<div class="bkit-input-group"><span class="addon">%s</span> <input class="line-item__price eac_decimal_input" type="text" name="lines[%s][price]" value="%s" placeholder="%s" /></div>', esc_html( eac_get_currency_symbol( $document->currency_code ) ), esc_attr( $line_key ), esc_attr( $line->price ), esc_attr__( 'Price', 'wp-ever-accounting' ) );
+									printf( '<div class="eac-input-group"><span class="addon">%s</span> <input class="line-item__price eac_decimal_input" type="text" name="lines[%s][price]" value="%s" placeholder="%s" /></div>', esc_html( eac_get_currency_symbol( $document->currency_code ) ), esc_attr( $line_key ), esc_attr( $line->price ), esc_attr__( 'Price', 'wp-ever-accounting' ) );
 									break;
 								case 'quantity':
 									printf( '<input class="line-item__quantity eac_decimal_input" type="number" name="lines[%s][quantity]" value="%s" placeholder="%s" />', esc_attr( $line_key ), esc_attr( $line->quantity ), esc_attr__( 'Quantity', 'wp-ever-accounting' ) );
@@ -96,7 +96,7 @@ if ( ! $document->is_calculating_tax() && isset( $columns['tax'] ) ) {
 			</tr>
 			<tr>
 				<td colspan="2">
-					<div class="bkit-input-group">
+					<div class="eac-input-group">
 						<select class="add-line-item eac_select2" data-action="eac_json_search" data-type="item" data-placeholder="<?php esc_attr_e( 'Select an item', 'wp-ever-accounting' ); ?>"></select>
 						<a class="button" href="<?php echo esc_url( admin_url( 'admin.php?page=eac-items&add=yes' ) ); ?>" title="<?php esc_attr_e( 'Add New Item', 'wp-ever-accounting' ); ?>">
 							<span class="dashicons dashicons-plus"></span>

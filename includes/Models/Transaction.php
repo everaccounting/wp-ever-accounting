@@ -94,20 +94,20 @@ class Transaction extends Model {
 	);
 
 	/**
-	 * The model's data properties.
+	 * The attributes of the model.
 	 *
 	 * @since 1.0.0
 	 * @var array
 	 */
-	protected $props = array(
-		'status'        => 'draft',
+	protected $attributes = array(
+		'status'        => '',
 		'exchange_rate' => 1,
 		'created_via'   => 'manual',
 		'reconciled'    => false,
 	);
 
 	/**
-	 * The properties that should be cast.
+	 * The attributes that should be cast.
 	 *
 	 * @since 1.0.0
 	 * @var array
@@ -115,7 +115,7 @@ class Transaction extends Model {
 	protected $casts = array(
 		'id'            => 'int',
 		'amount'        => 'float',
-		'currency_rate' => 'float',
+		'exchange_rate' => 'double',
 		'account_id'    => 'int',
 		'document_id'   => 'int',
 		'contact_id'    => 'int',
@@ -133,6 +133,7 @@ class Transaction extends Model {
 	 * @var array
 	 */
 	protected $appends = array(
+		'formatted_number',
 		'formatted_amount',
 	);
 
@@ -145,7 +146,7 @@ class Transaction extends Model {
 	protected $timestamps = true;
 
 	/**
-	 * The properties that are searchable.
+	 * The attributes that are searchable.
 	 *
 	 * @since 1.0.0
 	 * @var array
@@ -158,15 +159,14 @@ class Transaction extends Model {
 	/**
 	 * Create a new model instance.
 	 *
-	 * @param string|int|array $data Attributes.
+	 * @param string|array|object $attributes The model attributes.
 	 *
 	 * @throws \InvalidArgumentException If table name or object type is not set.
-	 * @return void
 	 */
-	public function __construct( $data = null ) {
-		$this->props['uid']           = wp_generate_uuid4();
-		$this->props['currency_code'] = eac_get_base_currency();
-		parent::__construct( $data );
+	public function __construct( $attributes = array() ) {
+		$this->attributes['uuid']          = wp_generate_uuid4();
+		$this->attributes['currency_code'] = eac_get_base_currency();
+		parent::__construct( $attributes );
 	}
 
 	/*
@@ -189,27 +189,8 @@ class Transaction extends Model {
 		return apply_filters(
 			'ever_accounting_transaction_types',
 			array(
-				'revenue' => esc_html__( 'Revenue', 'wp-ever-accounting' ),
+				'payment' => esc_html__( 'Payment', 'wp-ever-accounting' ),
 				'expense' => esc_html__( 'Expense', 'wp-ever-accounting' ),
-			)
-		);
-	}
-
-	/**
-	 * Get statuses.
-	 *
-	 * @since 1.1.0
-	 * @return array
-	 */
-	public static function get_statuses() {
-		return apply_filters(
-			'ever_accounting_transaction_statuses',
-			array(
-				'draft'     => esc_html__( 'Draft', 'wp-ever-accounting' ), // 'draft' status is only for internal use.
-				'pending'   => esc_html__( 'Pending', 'wp-ever-accounting' ),
-				'completed' => esc_html__( 'Completed', 'wp-ever-accounting' ),
-				'refunded'  => esc_html__( 'Refunded', 'wp-ever-accounting' ),
-				'cancelled' => esc_html__( 'Cancelled', 'wp-ever-accounting' ),
 			)
 		);
 	}
@@ -225,12 +206,26 @@ class Transaction extends Model {
 	*/
 
 	/**
+	 * Returns the formatted number.
+	 *
+	 * @since 1.0.0
+	 * @return string
+	 */
+	protected function get_formatted_number_attribute() {
+		$number = empty( $this->number ) ? $this->get_next_number() : $this->number;
+		$prefix = strtoupper( substr( $this->type, 0, 3 ) ) . '-';
+		$next   = str_pad( $number, 4, '0', STR_PAD_LEFT );
+
+		return $prefix . $next;
+	}
+
+	/**
 	 * Returns the formatted amount.
 	 *
 	 * @since 1.0.0
 	 * @return string
 	 */
-	protected function get_formatted_amount_prop() {
+	protected function get_formatted_amount_attribute() {
 		return eac_format_amount( $this->amount, $this->currency_code );
 	}
 
@@ -240,7 +235,7 @@ class Transaction extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	protected function get_formatted_address_prop() {
+	protected function get_formatted_address_attribute() {
 		if ( empty( $this->contact ) ) {
 			return '';
 		}
@@ -319,13 +314,21 @@ class Transaction extends Model {
 		return $this->belongs_to( Document::class );
 	}
 
+	/*
+	|--------------------------------------------------------------------------
+	| CRUD Methods
+	|--------------------------------------------------------------------------
+	| This section contains methods for creating, reading, updating, and deleting
+	| objects in the database.
+	|--------------------------------------------------------------------------
+	*/
 	/**
-	 * Sanitize data before saving.
+	 * Save the object to the database.
 	 *
 	 * @since 1.0.0
-	 * @return void|\WP_Error Return WP_Error if data is not valid or void.
+	 * @return \WP_Error|static WP_Error on failure, or the object on success.
 	 */
-	protected function validate_save_data() {
+	public function save() {
 		if ( empty( $this->account_id ) ) {
 			return new \WP_Error( 'missing_required', __( 'Account ID is required.', 'wp-ever-accounting' ) );
 		}
@@ -333,13 +336,15 @@ class Transaction extends Model {
 		// If the account_id is changed, update the currency code.
 		if ( $this->is_dirty( 'account_id' ) || ! $this->exists() ) {
 			$account = Account::find( $this->account_id );
-			$this->set_prop_value( 'currency_code', $account ? $account->currency_code : 'USD' );
+
+			$this->attributes['currency_code'] = $account ? $account->currency_code : eac_get_base_currency();
 		}
 
 		// If currency code is changed, update the currency rate.
 		if ( $this->is_dirty( 'currency_code' ) || ! $this->exists() ) {
 			$currency = Currency::find( $this->currency_code );
-			$this->set_prop_value( 'currency_rate', $currency ? $currency->exchange_rate : 1 );
+
+			$this->attributes['exchange_rate'] = $currency ? $currency->exchange_rate : 1;
 		}
 
 		if ( empty( $this->number ) ) {
@@ -353,6 +358,8 @@ class Transaction extends Model {
 		if ( empty( $this->author_id ) && is_user_logged_in() ) {
 			$this->author_id = get_current_user_id();
 		}
+
+		return parent::save();
 	}
 
 	/*
@@ -372,7 +379,7 @@ class Transaction extends Model {
 	public function get_max_number() {
 		return (int) $this->get_db()->get_var(
 			$this->get_db()->prepare(
-				"SELECT MAX(REGEXP_REPLACE(number, '[^0-9]', '')) FROM {$this->get_table( true )} WHERE type = %s",
+				"SELECT MAX(`number`) FROM {$this->get_prefixed_table()} WHERE type = %s",
 				$this->type
 			)
 		);
@@ -382,13 +389,10 @@ class Transaction extends Model {
 	 * Set next transaction number.
 	 *
 	 * @since 1.0.0
-	 * @return string
+	 * @return int
 	 */
 	public function get_next_number() {
-		$max    = $this->get_max_number();
-		$prefix = strtoupper( substr( $this->type, 0, 3 ) ) . '-';
-		$next   = str_pad( $max + 1, 4, '0', STR_PAD_LEFT );
-
-		return $prefix . $next;
+		$max = (int) $this->get_max_number();
+		return $max + 1;
 	}
 }

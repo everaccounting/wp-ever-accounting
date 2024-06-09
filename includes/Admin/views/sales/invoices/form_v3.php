@@ -22,13 +22,13 @@ $columns = array(
 ?>
 	<form id="eac-invoice-form" method="post" action="<?php echo esc_html( admin_url( 'admin-post.php' ) ); ?>" class="eac-document-form">
 
-		<div class="bkit-panel bkit-p-0">
+		<div class="eac-panel eac-p-0">
 
 			<div class="eac-document-form__section document-info">
 				<div class="document-info__left">
-					<div class="bkit-form-group tw-mt-0">
+					<div class="eac-form-group tw-mt-0">
 						<label for="contact_id"><?php esc_html_e( 'Customer', 'wp-ever-accounting' ); ?></label>
-						<div class="bkit-input-group">
+						<div class="eac-input-group">
 							<select name="contact_id" id="contact_id" class="eac_select2" data-action="eac_json_search" data-type="customer" data-placeholder="<?php esc_attr_e( 'Select a customer', 'wp-ever-accounting' ); ?>">
 								<?php if ( $document->contact_id ) : ?>
 									<option value="<?php echo esc_attr( $document->contact_id ); ?>" selected="selected"><?php echo esc_html( $document->billing_name ); ?></option>
@@ -72,25 +72,25 @@ $columns = array(
 
 				</div>
 				<div class="document-info__right tw-box-sizing:border-box tw-flex-wrap:wrap tw-gap-x-[20px] tw-grid tw-grid-cols-2 tw-justify-between tw-items-self-start tw-content-flex-start">
-					<div class="bkit-form-group tw-mt-0">
+					<div class="eac-form-group tw-mt-0">
 						<label for="issue_date"><?php esc_html_e( 'Issue Date', 'wp-ever-accounting' ); ?>
 							<abbr class="required" title="<?php esc_attr_e( 'required', 'wp-ever-accounting' ); ?>"></abbr>
 						</label>
 						<input type="text" name="issue_date" id="issue_date" class="eac_datepicker" placeholder="<?php esc_attr_e( 'YYYY-MM-DD', 'wp-ever-accounting' ); ?>" value="<?php echo esc_attr( $document->issue_date ); ?>" required/>
 					</div>
-					<div class="bkit-form-group tw-mt-0">
+					<div class="eac-form-group tw-mt-0">
 						<label for="due_date"><?php esc_html_e( 'Due Date', 'wp-ever-accounting' ); ?></label>
 						<input type="text" name="due_date" id="due_date" data-format="yy-mm-dd" class="eac_datepicker" placeholder="<?php esc_attr_e( 'YYYY-MM-DD', 'wp-ever-accounting' ); ?>" value="<?php echo esc_attr( $document->due_date ); ?>"/>
 					</div>
-					<div class="bkit-form-group tw-mt-0">
+					<div class="eac-form-group tw-mt-0">
 						<label for="number"><?php esc_html_e( 'Invoice Number', 'wp-ever-accounting' ); ?></label>
 						<input type="text" name="number" id="number" placeholder="INV-0001" value="<?php echo esc_attr( $document->number ); ?>"/>
 					</div>
-					<div class="bkit-form-group tw-mt-0">
+					<div class="eac-form-group tw-mt-0">
 						<label for="reference"><?php esc_html_e( 'Reference', 'wp-ever-accounting' ); ?></label>
 						<input type="text" name="reference" id="reference" placeholder="REF-0001" value="<?php echo esc_attr( $document->reference ); ?>"/>
 					</div>
-					<div class="bkit-form-group tw-mt-0">
+					<div class="eac-form-group tw-mt-0">
 						<label for="currency_code"><?php esc_html_e( 'Currency', 'wp-ever-accounting' ); ?></label>
 						<select name="currency_code" id="currency_code" class="eac_select eac_select2" data-action="eac_json_search" data-type="currency" data-placeholder="<?php esc_attr_e( 'Select a currency', 'wp-ever-accounting' ); ?>">
 							<?php if ( $document->currency ) : ?>
@@ -98,9 +98,9 @@ $columns = array(
 							<?php endif; ?>
 						</select>
 					</div>
-					<div class="bkit-form-group tw-mt-0">
+					<div class="eac-form-group tw-mt-0">
 						<label for="discount_amount"><?php esc_html_e( 'Discount', 'wp-ever-accounting' ); ?></label>
-						<div class="bkit-input-group">
+						<div class="eac-input-group">
 							<input type="number" name="discount_amount" id="discount_amount" placeholder=".05" value="<?php echo esc_attr( $document->discount_amount ); ?>"/>
 							<select name="discount_type" id="discount_type" class="addon" style="width: 150px;">
 								<option value="fixed" <?php selected( 'fixed', $document->discount_type ); ?>><?php esc_html_e( 'Fixed', 'wp-ever-accounting' ); ?></option>
@@ -148,7 +148,7 @@ $columns = array(
 									<?php
 									switch ( $key ) {
 										case 'price':
-											printf( '<div class="bkit-input-group"><span class="addon">%s</span> <input class="line-item__price-input" type="number" name="items[%s][price]" value="%s" placeholder="%s" /></div>', esc_html( eac_get_currency_symbol( $document->currency_code ) ), esc_attr( $item_key ), esc_attr( $item->price ), esc_attr__( 'Price', 'wp-ever-accounting' ) );
+											printf( '<div class="eac-input-group"><span class="addon">%s</span> <input class="line-item__price-input" type="number" name="items[%s][price]" value="%s" placeholder="%s" /></div>', esc_html( eac_get_currency_symbol( $document->currency_code ) ), esc_attr( $item_key ), esc_attr( $item->price ), esc_attr__( 'Price', 'wp-ever-accounting' ) );
 											break;
 										case 'quantity':
 											printf( '<input class="line-item__quantity-input" type="number" name="items[%s][quantity]" value="%s" placeholder="%s" />', esc_attr( $item_key ), esc_attr( $item->quantity ), esc_attr__( 'Quantity', 'wp-ever-accounting' ) );
@@ -175,7 +175,7 @@ $columns = array(
 					</tr>
 					<tr>
 						<td colspan="2">
-							<div class="bkit-input-group">
+							<div class="eac-input-group">
 								<select class="add-line-item eac_select2" data-action="eac_json_search" data-type="item" name="items[<?php echo esc_attr( PHP_INT_MAX ); ?>][item_id]" data-placeholder="<?php esc_attr_e( 'Select an item', 'wp-ever-accounting' ); ?>"></select>
 								<a class="button" href="<?php echo esc_url( eac_action_url( 'action=get_html_response&html_type=edit_item' ) ); ?>" title="<?php esc_attr_e( 'Add New Item', 'wp-ever-accounting' ); ?>">
 									<span class="dashicons dashicons-plus"></span>

@@ -53,84 +53,13 @@ class Purchases extends Page {
 	 * @since 1.0.0
 	 */
 	protected function get_settings_for_default_section() {
-		$expense_accounts   = eac_get_accounts( array( 'include' => get_option( 'eac_default_expenses_account_id' ) ) );
-		$expense_categories = eac_get_categories( array( 'include' => get_option( 'eac_default_expense_category_id' ) ) );
-
 		return array(
-			// Purchase defaults section.
-			array(
-				'title' => __( 'Default Settings', 'wp-ever-accounting' ),
-				'type'  => 'title',
-				'desc'  => __( 'Default values will be automatically filled in when you create a new purchase related record.', 'wp-ever-accounting' ),
-				'id'    => 'purchase_defaults',
-			),
-			// Default payment account.
-			array(
-				'title'            => __( 'Purchases Account', 'wp-ever-accounting' ),
-				'desc'             => __( 'The default account to which the expense will be debited.', 'wp-ever-accounting' ),
-				'id'               => 'eac_default_expenses_account_id',
-				'type'             => 'select',
-				'options'          => wp_list_pluck( (array) eac_get_account( get_option( 'eac_default_expenses_account_id' ) ), 'formatted_name', 'id' ),
-				'default'          => '',
-				'desc_tip'         => true,
-				'class'            => 'eac_select2',
-				'data-action'      => 'eac_json_search',
-				'data-type'        => 'account',
-				'data-placeholder' => __( 'Select an account&hellip;', 'wp-ever-accounting' ),
-			),
-			// Default category.
-			array(
-				'title'            => __( 'Purchases Category', 'wp-ever-accounting' ),
-				'desc'             => __( 'The default category for purchases.', 'wp-ever-accounting' ),
-				'id'               => 'eac_default_expense_category_id',
-				'type'             => 'select',
-				'options'          => wp_list_pluck( (array) get_category( get_option( 'eac_default_expense_category_id' ) ), 'formatted_name', 'id' ),
-				'desc_tip'         => true,
-				'class'            => 'eac_select2',
-				'data-action'      => 'eac_json_search',
-				'data-type'        => 'account',
-				'data-subtype'     => 'expense',
-				'data-placeholder' => __( 'Select a category&hellip;', 'wp-ever-accounting' ),
-			),
-			// tax.
-			$taxes = eac_get_taxes( array( 'include' => get_option( 'eac_default_purchases_taxes' ) ) ),
-			array(
-				'title'       => __( 'Purchases Taxes', 'wp-ever-accounting' ),
-				'desc'        => __( 'The default tax for purchases.', 'wp-ever-accounting' ),
-				'id'          => 'eac_default_purchases_taxes',
-				'type'        => 'select',
-				'multiple'    => true,
-				'class'       => 'eac_select2',
-				'options'     => wp_list_pluck( $taxes, 'formatted_name', 'id' ),
-				'desc_tip'    => true,
-				'data-action' => 'eac_json_search',
-				'data-type'   => 'tax',
-				'placeholder' => __( 'Select a tax&hellip;', 'wp-ever-accounting' ),
-			),
-			// Default payment method.
-			array(
-				'title'       => __( 'Payment Method', 'wp-ever-accounting' ),
-				'desc'        => __( 'The default payment method for purchases.', 'wp-ever-accounting' ),
-				'id'          => 'eac_default_purchases_payment_method',
-				'type'        => 'select',
-				'class'       => 'eac-select2',
-				'options'     => eac_get_payment_methods(),
-				'default'     => '',
-				'placeholder' => __( 'Select a payment method&hellip;', 'wp-ever-accounting' ),
-				'desc_tip'    => true,
-			),
-			// end of purchase defaults section.
-			array(
-				'type' => 'sectionend',
-				'id'   => 'purchase_defaults',
-			),
 			array(
 				'title' => __( 'Expense Settings', 'wp-ever-accounting' ),
 				'desc'  => __( 'Customize how your expense number gets generated automatically when you create a new expense.', 'wp-ever-accounting' ),
 				'type'  => 'title',
 				'id'    => 'expense_settings',
 			),
-			// prefix.
 			array(
 				'title'       => __( 'Number Prefix', 'wp-ever-accounting' ),
 				'desc'        => __( 'The prefix of the expense number.', 'wp-ever-accounting' ),
@@ -140,7 +69,6 @@ class Purchases extends Page {
 				'default'     => 'EXP-',
 				'desc_tip'    => true,
 			),
-			// minimum digits of expense number.
 			array(
 				'title'       => __( 'Minimum Digits', 'wp-ever-accounting' ),
 				'desc'        => __( 'The minimum digits of the expense number.', 'wp-ever-accounting' ),
@@ -150,7 +78,6 @@ class Purchases extends Page {
 				'default'     => 4,
 				'desc_tip'    => true,
 			),
-			// end expense settings section
 			array(
 				'type' => 'sectionend',
 				'id'   => 'expense_settings',

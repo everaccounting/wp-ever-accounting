@@ -5,7 +5,7 @@ namespace EverAccounting\Models;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Revenue model.
+ * Payment model.
  *
  * @since 1.0.0
  * @author  Sultan Nasir Uddin <manikdrmc@gmail.com>
@@ -14,17 +14,17 @@ defined( 'ABSPATH' ) || exit;
  *
  * @property int $customer_id ID of the customer.
  */
-class Revenue extends Transaction {
+class Payment extends Transaction {
 	/**
 	 * Object type in singular form.
 	 *
 	 * @since 1.0.0
 	 * @var string
 	 */
-	protected $object_type = 'revenue';
+	protected $object_type = 'payment';
 
 	/**
-	 * The properties that have aliases.
+	 * The attributes that have aliases.
 	 *
 	 * @since 1.0.0
 	 * @var array
@@ -53,18 +53,19 @@ class Revenue extends Transaction {
 	 * @return void
 	 */
 	public function __construct( $attributes = null ) {
-		$this->data['type']       = $this->get_object_type();
-		$this->query_args['type'] = $this->get_object_type();
+		$this->attributes['status'] = 'pending';
+		$this->attributes['type']   = $this->get_object_type();
+		$this->query_args['type']   = $this->get_object_type();
 		parent::__construct( $attributes );
 	}
 
 	/*
 	|--------------------------------------------------------------------------
-	| Prop Definition Methods
+	| Property Definition Methods
 	|--------------------------------------------------------------------------
-	| This section contains methods that define and provide specific prop values
-	| related to the model, such as statuses or types. These methods can be accessed
-	| without instantiating the model.
+	| This section contains static methods that define and return specific
+	| property values related to the model.
+	| These methods are accessible without creating an instance of the model.
 	|--------------------------------------------------------------------------
 	*/
 
@@ -76,7 +77,7 @@ class Revenue extends Transaction {
 	 */
 	public static function get_statuses() {
 		return apply_filters(
-			'ever_accounting_revenue_statuses',
+			'ever_accounting_payment_statuses',
 			array(
 				'pending'   => esc_html__( 'Pending', 'wp-ever-accounting' ),
 				'paid'      => esc_html__( 'paid', 'wp-ever-accounting' ),
@@ -88,24 +89,33 @@ class Revenue extends Transaction {
 
 	/*
 	|--------------------------------------------------------------------------
-	| Accessors, Mutators, Relationship and Validation Methods
+	| Accessors, Mutators and Relationship Methods
 	|--------------------------------------------------------------------------
-	| This section contains methods for getting and setting properties (accessors
-	| and mutators) as well as defining relationships between models. It also includes
-	| a data validation method that ensures data integrity before saving.
+	| This section contains methods for getting and setting attributes (accessors
+	| and mutators) as well as defining relationships between models.
 	|--------------------------------------------------------------------------
 	*/
 
+	/*
+	|--------------------------------------------------------------------------
+	| CRUD Methods
+	|--------------------------------------------------------------------------
+	| This section contains methods for creating, reading, updating, and deleting
+	| objects in the database.
+	|--------------------------------------------------------------------------
+	*/
 	/**
-	 * Validate data before saving.
+	 * Save the object to the database.
 	 *
 	 * @since 1.0.0
-	 * @return void|\WP_Error Return WP_Error if data is not valid or void.
+	 * @return \WP_Error|static WP_Error on failure, or the object on success.
 	 */
-	protected function validate_save_data() {
+	public function save() {
 		if ( empty( $this->date ) ) {
 			return new \WP_Error( 'missing_required', __( 'Transaction date is required.', 'wp-ever-accounting' ) );
 		}
+
+		return parent::save();
 	}
 
 

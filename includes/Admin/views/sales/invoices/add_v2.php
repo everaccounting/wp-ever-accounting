@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
 </h1>
 
 <form id="eac-invoice-form" method="post" action="<?php echo esc_html( admin_url( 'admin-post.php' ) ); ?>" class="eac-document-form">
-	<div class="bkit-poststuff">
+	<div class="eac-poststuff">
 		<div class="column-1"></div>
 
 		<div class="column-2">

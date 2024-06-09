@@ -4,8 +4,8 @@
  * Page: Misc
  * Tab: Currencies
  *
- * @package EverAccounting
  * @since 1.0.0
+ * @package EverAccounting
  * @var $currency \EverAccounting\Models\Currency Currency object.
  */
 
@@ -13,6 +13,9 @@ defined( 'ABSPATH' ) || exit;
 ?>
 	<h1 class="wp-heading-inline">
 		<?php esc_html_e( 'Currencies', 'wp-ever-accounting' ); ?>
+		<a href="<?php echo esc_attr( admin_url( 'admin.php?page=eac-misc&tab=currencies&add=yes' ) ); ?>" class="page-title-action">
+			<?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?>
+		</a>
 		<?php if ( $this->list_table->get_request_search() ) : ?>
 			<span class="subtitle"><?php echo esc_html( sprintf( /* translators: %s: Get requested search string */ __( 'Search results for "%s"', 'wp-ever-accounting' ), esc_html( $this->list_table->get_request_search() ) ) ); ?></span>
 		<?php endif; ?>

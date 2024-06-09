@@ -104,9 +104,9 @@ eac_form_group(
 	)
 );
 ?>
-<div class="bkit-form-group tw-mt-0">
+<div class="eac-form-group tw-mt-0">
 	<label for="discount_amount"><?php esc_html_e( 'Discount', 'wp-ever-accounting' ); ?></label>
-	<div class="bkit-input-group">
+	<div class="eac-input-group">
 		<input type="number" name="discount_amount" id="discount_amount" placeholder="10" value="<?php echo esc_attr( $document->discount_amount ); ?>"/>
 		<select name="discount_type" id="discount_type" class="addon" style="width: 80px;">
 			<option value="fixed" <?php selected( 'fixed', $document->discount_type ); ?>><?php echo $document->currency ? esc_html( $document->currency->symbol ) : esc_html( '($)' ); ?></option>

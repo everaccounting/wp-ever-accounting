@@ -9,7 +9,7 @@ use EverAccounting\Models\Customer;
 use EverAccounting\Models\Expense;
 use EverAccounting\Models\Invoice;
 use EverAccounting\Models\Item;
-use EverAccounting\Models\Revenue;
+use EverAccounting\Models\Payment;
 use EverAccounting\Models\Tax;
 use EverAccounting\Models\Transfer;
 use EverAccounting\Models\Vendor;
@@ -56,7 +56,7 @@ class Menus {
 		add_filter( 'set-screen-option', array( $this, 'screen_option' ), 10, 3 );
 		add_action( 'current_screen', array( $this, 'setup_list_table' ) );
 		add_action( 'ever_accounting_admin_items', array( $this, 'render_items_tab' ) );
-		add_action( 'ever_accounting_admin_sales_revenues', array( $this, 'render_revenues_tab' ) );
+		add_action( 'ever_accounting_admin_sales_payments', array( $this, 'render_payments_tab' ) );
 		add_action( 'ever_accounting_admin_sales_invoices', array( $this, 'render_invoices_tab' ) );
 		add_action( 'ever_accounting_admin_sales_customers', array( $this, 'render_customers_tab' ) );
 		add_action( 'ever_accounting_admin_purchases_expenses', array( $this, 'render_expenses_tab' ) );
@@ -69,7 +69,7 @@ class Menus {
 		add_action( 'ever_accounting_admin_misc_taxes', array( $this, 'render_taxes_tab' ) );
 		add_action( 'ever_accounting_admin_tools_import', array( $this, 'render_import_tab' ) );
 		add_action( 'ever_accounting_admin_tools_export', array( $this, 'render_export_tab' ) );
-		add_action( 'ever_accounting_admin_reports_revenues', array( $this, 'render_revenues_report_tab' ) );
+		add_action( 'ever_accounting_admin_reports_payments', array( $this, 'render_payments_report_tab' ) );
 		add_action( 'ever_accounting_admin_reports_expenses', array( $this, 'render_expenses_report_tab' ) );
 		add_action( 'ever_accounting_admin_reports_profits', array( $this, 'render_profits_report_tab' ) );
 		add_action( 'ever_accounting_admin_reports_taxes', array( $this, 'render_taxes_report_tab' ) );
@@ -193,7 +193,7 @@ class Menus {
 				'eac_categories_per_page',
 				'eac_currencies_per_page',
 				'eac_taxes_per_page',
-				'eac_revenues_per_page',
+				'eac_payments_per_page',
 				'eac_invoices_per_page',
 				'eac_customers_per_page',
 				'eac_payments_per_page',
@@ -239,10 +239,10 @@ class Menus {
 				add_screen_option( 'per_page', $args );
 				break;
 			case 'eac-sales':
-			case 'eac-sales-revenues':
-				$this->list_table = new ListTables\RevenuesTable();
+			case 'eac-sales-payments':
+				$this->list_table = new ListTables\paymentsTable();
 				$this->list_table->prepare_items();
-				$args['option'] = 'eac_revenues_per_page';
+				$args['option'] = 'eac_payments_per_page';
 				add_screen_option( 'per_page', $args );
 				break;
 			case 'eac-sales-invoices':
@@ -333,27 +333,27 @@ class Menus {
 	}
 
 	/**
-	 * Revenues Tab.
+	 * payments Tab.
 	 *
 	 * @since 1.0.0
 	 */
-	public function render_revenues_tab() {
+	public function render_payments_tab() {
 		$edit    = Utilities::is_edit_screen();
 		$view    = Utilities::is_view_screen();
 		$id      = $edit ?? $view;
-		$revenue = Revenue::make( $id );
-		if ( ! empty( $id ) && ! $revenue->exists() ) {
+		$payment = Payment::make( $id );
+		if ( ! empty( $id ) && ! $payment->exists() ) {
 			wp_safe_redirect( remove_query_arg( 'edit' ) );
 			exit();
 		}
 		if ( Utilities::is_add_screen() ) {
-			include __DIR__ . '/views/sales/revenues/add.php';
+			include __DIR__ . '/views/sales/payments/add.php';
 		} elseif ( $edit ) {
-			include __DIR__ . '/views/sales/revenues/edit.php';
+			include __DIR__ . '/views/sales/payments/edit.php';
 		} elseif ( $view ) {
-			include __DIR__ . '/views/sales/revenues/view.php';
+			include __DIR__ . '/views/sales/payments/view.php';
 		} else {
-			include __DIR__ . '/views/sales/revenues/revenues.php';
+			include __DIR__ . '/views/sales/payments/payments.php';
 		}
 	}
 
@@ -547,10 +547,10 @@ class Menus {
 			wp_safe_redirect( remove_query_arg( 'edit' ) );
 			exit();
 		}
-
-		if ( $edit ) {
+		if ( Utilities::is_add_screen() ) {
+			include __DIR__ . '/views/misc/currencies/add.php';
+		} elseif ( $edit ) {
 			include __DIR__ . '/views/misc/currencies/edit.php';
-
 		} else {
 			include __DIR__ . '/views/misc/currencies/currencies.php';
 		}
@@ -587,7 +587,7 @@ class Menus {
 		include __DIR__ . '/views/import/vendors.php';
 		include __DIR__ . '/views/import/accounts.php';
 		include __DIR__ . '/views/import/items.php';
-		include __DIR__ . '/views/import/revenues.php';
+		include __DIR__ . '/views/import/payments.php';
 		include __DIR__ . '/views/import/payments.php';
 		include __DIR__ . '/views/import/categories.php';
 	}
@@ -614,7 +614,7 @@ class Menus {
 	 *
 	 * @since 1.0.0
 	 */
-	public function render_revenues_report_tab() {
+	public function render_payments_report_tab() {
 		include __DIR__ . '/views/reports/payments.php';
 	}
 

@@ -24,7 +24,7 @@ use ByteKit\Models\Relations\BelongsTo;
  * @property string      $date_created Date created of the document_item_tax.
  *
  * @property-read string $formatted_name Formatted name of the document_item_tax.
- * @property-read DocumentItem $item Item relationship.
+ * @property-read DocumentLine $item Item relationship.
  * @property-read Tax $tax Tax relationship.
  * @property-read Document $document Document relationship.
  */
@@ -56,7 +56,7 @@ class DocumentLineTax extends Model {
 	);
 
 	/**
-	 * Model's property casts.
+	 * The attributes that should be cast.
 	 *
 	 * @since 1.0.0
 	 * @var array
@@ -91,21 +91,20 @@ class DocumentLineTax extends Model {
 
 	/*
 	|--------------------------------------------------------------------------
-	| Prop Definition Methods
+	| Property Definition Methods
 	|--------------------------------------------------------------------------
-	| This section contains methods that define and provide specific prop values
-	| related to the model, such as statuses or types. These methods can be accessed
-	| without instantiating the model.
+	| This section contains static methods that define and return specific
+	| property values related to the model.
+	| These methods are accessible without creating an instance of the model.
 	|--------------------------------------------------------------------------
 	*/
 
 	/*
 	|--------------------------------------------------------------------------
-	| Accessors, Mutators, Relationship and Validation Methods
+	| Accessors, Mutators and Relationship Methods
 	|--------------------------------------------------------------------------
-	| This section contains methods for getting and setting properties (accessors
-	| and mutators) as well as defining relationships between models. It also includes
-	| a data validation method that ensures data integrity before saving.
+	| This section contains methods for getting and setting attributes (accessors
+	| and mutators) as well as defining relationships between models.
 	|--------------------------------------------------------------------------
 	*/
 
@@ -115,7 +114,7 @@ class DocumentLineTax extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	protected function get_formatted_name_prop() {
+	protected function get_formatted_name_attribute() {
 		return $this->name . ' (' . $this->rate . '%)';
 	}
 
@@ -149,13 +148,21 @@ class DocumentLineTax extends Model {
 		return $this->belongs_to( Document::class );
 	}
 
+	/*
+	|--------------------------------------------------------------------------
+	| CRUD Methods
+	|--------------------------------------------------------------------------
+	| This section contains methods for creating, reading, updating, and deleting
+	| objects in the database.
+	|--------------------------------------------------------------------------
+	*/
 	/**
-	 * Validate data before saving.
+	 * Save the object to the database.
 	 *
 	 * @since 1.0.0
-	 * @return void|\WP_Error Return WP_Error if data is not valid or void.
+	 * @return \WP_Error|static WP_Error on failure, or the object on success.
 	 */
-	protected function validate_save_data() {
+	public function save() {
 		if ( empty( $this->name ) ) {
 			return new \WP_Error( 'missing_required', __( 'Tax name is required.', 'wp-ever-accounting' ) );
 		}
@@ -175,6 +182,8 @@ class DocumentLineTax extends Model {
 		if ( empty( $this->document_id ) ) {
 			return new \WP_Error( 'missing_required', __( 'Document ID is required.', 'wp-ever-accounting' ) );
 		}
+
+		return parent::save();
 	}
 
 	/*

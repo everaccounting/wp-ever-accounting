@@ -190,7 +190,7 @@ defined( 'ABSPATH' ) || exit;
 							'label'       => __( 'Status', 'wp-ever-accounting' ),
 							'type'        => 'select',
 							'id'          => 'status',
-							'options'     => eac_get_transaction_statuses(),
+							'options'     => \EverAccounting\Models\Expense::get_statuses(),
 							'value'       => $expense->status,
 							'placeholder' => __( 'Select status', 'wp-ever-accounting' ),
 						)

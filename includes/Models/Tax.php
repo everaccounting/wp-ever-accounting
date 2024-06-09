@@ -47,17 +47,17 @@ class Tax extends Model {
 	);
 
 	/**
-	 * The model's data properties.
+	 * The attributes of the model.
 	 *
 	 * @since 1.0.0
 	 * @var array
 	 */
-	protected $props = array(
+	protected $attributes = array(
 		'status' => 'active',
 	);
 
 	/**
-	 * The properties that should be cast.
+	 * The attributes that should be cast.
 	 *
 	 * @since 1.0.0
 	 * @var array
@@ -88,7 +88,7 @@ class Tax extends Model {
 	protected $timestamps = true;
 
 	/**
-	 * The properties that are searchable.
+	 * The attributes that are searchable.
 	 *
 	 * @since 1.0.0
 	 * @var array
@@ -100,21 +100,20 @@ class Tax extends Model {
 
 	/*
 	|--------------------------------------------------------------------------
-	| Prop Definition Methods
+	| Property Definition Methods
 	|--------------------------------------------------------------------------
-	| This section contains methods that define and provide specific prop values
-	| related to the model, such as statuses or types. These methods can be accessed
-	| without instantiating the model.
+	| This section contains static methods that define and return specific
+	| property values related to the model.
+	| These methods are accessible without creating an instance of the model.
 	|--------------------------------------------------------------------------
 	*/
 
 	/*
 	|--------------------------------------------------------------------------
-	| Accessors, Mutators, Relationship and Validation Methods
+	| Accessors, Mutators and Relationship Methods
 	|--------------------------------------------------------------------------
-	| This section contains methods for getting and setting properties (accessors
-	| and mutators) as well as defining relationships between models. It also includes
-	| a data validation method that ensures data integrity before saving.
+	| This section contains methods for getting and setting attributes (accessors
+	| and mutators) as well as defining relationships between models.
 	|--------------------------------------------------------------------------
 	*/
 
@@ -124,23 +123,33 @@ class Tax extends Model {
 	 * @return string
 	 * @since 1.1.6
 	 */
-	public function get_formatted_name_prop() {
+	public function get_formatted_name_attribute() {
 		return sprintf( '%1$s (%2$d%%)', $this->name, $this->rate );
 	}
 
+	/*
+	|--------------------------------------------------------------------------
+	| CRUD Methods
+	|--------------------------------------------------------------------------
+	| This section contains methods for creating, reading, updating, and deleting
+	| objects in the database.
+	|--------------------------------------------------------------------------
+	*/
 	/**
-	 * Sanitize data before saving.
+	 * Save the object to the database.
 	 *
 	 * @since 1.0.0
-	 * @return void|\WP_Error Return WP_Error if data is not valid or void.
+	 * @return \WP_Error|static WP_Error on failure, or the object on success.
 	 */
-	protected function validate_save_data() {
+	public function save() {
 		if ( empty( $this->name ) ) {
 			return new \WP_Error( 'missing_required', __( 'Tax name is required.', 'wp-ever-accounting' ) );
 		}
 		if ( empty( $this->rate ) ) {
 			return new \WP_Error( 'missing_required', __( 'Tax rate is required.', 'wp-ever-accounting' ) );
 		}
+
+		return parent::save();
 	}
 
 	/*

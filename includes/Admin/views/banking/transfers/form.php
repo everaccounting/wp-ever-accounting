@@ -12,7 +12,7 @@
 defined( 'ABSPATH' ) || exit;
 ?>
 <form method="post" action="<?php echo esc_html( admin_url( 'admin-post.php' ) ); ?>">
-	<div class="bkit-poststuff">
+	<div class="eac-poststuff">
 		<div class="column-1">
 
 		</div><!-- .column-1 -->
@@ -21,6 +21,6 @@ defined( 'ABSPATH' ) || exit;
 
 		</div><!-- .column-2 -->
 
-	</div><!-- .bkit-poststuff -->
+	</div><!-- .eac-poststuff -->
 </form>
 <?php

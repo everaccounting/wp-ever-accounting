@@ -2,7 +2,9 @@
 
 namespace EverAccounting\Admin;
 
+use EverAccounting\Models\Currency;
 use EverAccounting\Models\Invoice;
+use EverAccounting\Utilities\I18n;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -23,12 +25,13 @@ class Actions {
 	public function __construct() {
 		add_action( 'wp_ajax_eac_json_search', array( $this, 'handle_json_search' ) );
 		add_action( 'admin_post_eac_edit_item', array( $this, 'handle_edit_item' ) );
-		add_action( 'admin_post_eac_edit_revenue', array( $this, 'handle_edit_revenue' ) );
+		add_action( 'admin_post_eac_edit_payment', array( $this, 'handle_edit_payment' ) );
 		add_action( 'admin_post_eac_edit_expense', array( $this, 'handle_edit_expense' ) );
 		add_action( 'admin_post_eac_edit_customer', array( $this, 'handle_edit_customer' ) );
 		add_action( 'admin_post_eac_edit_vendor', array( $this, 'handle_edit_vendor' ) );
 		add_action( 'admin_post_eac_edit_account', array( $this, 'handle_edit_account' ) );
 		add_action( 'admin_post_eac_edit_category', array( $this, 'handle_edit_category' ) );
+		add_action( 'admin_post_eac_add_currency', array( $this, 'handle_add_currency' ) );
 		add_action( 'admin_post_eac_edit_currency', array( $this, 'handle_edit_currency' ) );
 		add_action( 'admin_post_eac_edit_tax', array( $this, 'handle_edit_tax' ) );
 		add_action( 'admin_post_eac_edit_invoice', array( $this, 'handle_edit_invoice' ) );
@@ -41,7 +44,7 @@ class Actions {
 		add_action( 'wp_ajax_eac_get_tax', array( $this, 'ajax_get_tax' ) );
 		add_action( 'wp_ajax_eac_get_customer', array( $this, 'ajax_get_customer' ) );
 		add_action( 'wp_ajax_eac_get_vendor', array( $this, 'ajax_get_vendor' ) );
-		add_action( 'wp_ajax_eac_get_revenue', array( $this, 'ajax_get_revenue' ) );
+		add_action( 'wp_ajax_eac_get_payment', array( $this, 'ajax_get_payment' ) );
 		add_action( 'wp_ajax_eac_get_expense', array( $this, 'ajax_get_expense' ) );
 		add_action( 'wp_ajax_eac_get_invoice', array( $this, 'ajax_get_invoice' ) );
 		add_action( 'wp_ajax_eac_get_bill', array( $this, 'ajax_get_bill' ) );
@@ -294,13 +297,13 @@ class Actions {
 	}
 
 	/**
-	 * Edit revenue.
+	 * Edit payment.
 	 *
 	 * @since 1.2.0
 	 * @return void
 	 */
-	public static function handle_edit_revenue() {
-		check_admin_referer( 'eac_edit_revenue' );
+	public static function handle_edit_payment() {
+		check_admin_referer( 'eac_edit_payment' );
 		$referer = wp_get_referer();
 		$data    = array(
 			'id'             => isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0,
@@ -315,12 +318,12 @@ class Actions {
 			'note'           => isset( $_POST['note'] ) ? sanitize_textarea_field( wp_unslash( $_POST['note'] ) ) : '',
 			'status'         => isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : 'active',
 		);
-		$revenue = eac_insert_revenue( $data );
-		if ( is_wp_error( $revenue ) ) {
-			EAC()->flash->error( $revenue->get_error_message() );
+		$payment = eac_insert_payment( $data );
+		if ( is_wp_error( $payment ) ) {
+			EAC()->flash->error( $payment->get_error_message() );
 		} else {
-			EAC()->flash->success( __( 'Revenue saved successfully.', 'wp-ever-accounting' ) );
-			$referer = add_query_arg( 'edit', $revenue->id, $referer );
+			EAC()->flash->success( __( 'Payment saved successfully.', 'wp-ever-accounting' ) );
+			$referer = add_query_arg( 'edit', $payment->id, $referer );
 			$referer = remove_query_arg( array( 'add' ), $referer );
 		}
 
@@ -517,6 +520,49 @@ class Actions {
 			$referer = remove_query_arg( array( 'add' ), $referer );
 		}
 
+		wp_safe_redirect( $referer );
+		exit;
+	}
+
+	/**
+	 * Add currency.
+	 *
+	 * @since 1.2.0
+	 * @return void
+	 */
+	public static function handle_add_currency() {
+		check_admin_referer( 'eac_add_currency' );
+		$referer       = wp_get_referer();
+		$code          = isset( $_POST['code'] ) ? sanitize_text_field( wp_unslash( $_POST['code'] ) ) : '';
+		$exchange_rate = isset( $_POST['exchange_rate'] ) ? doubleval( wp_unslash( $_POST['exchange_rate'] ) ) : 1;
+
+		// if code is empty, return error.
+		if ( empty( $code ) ) {
+			EAC()->flash->error( __( 'Currency code is required.', 'wp-ever-accounting' ) );
+			wp_safe_redirect( $referer );
+			exit;
+		}
+
+		$currency = Currency::find( $code );
+		if ( $currency ) {
+			EAC()->flash->error( __( 'Currency already exists.', 'wp-ever-accounting' ) );
+			wp_safe_redirect( $referer );
+			exit;
+		}
+		$config                = I18n::get_currencies();
+		$data                  = isset( $config[ $code ] ) ? $config[ $code ] : array();
+		$data['code']          = $code;
+		$data['exchange_rate'] = $exchange_rate;
+		$currency              = Currency::insert( $data );
+		if ( is_wp_error( $currency ) ) {
+			EAC()->flash->error( $currency->get_error_message() );
+			wp_safe_redirect( $referer );
+			exit;
+		}
+
+		EAC()->flash->success( __( 'Currency added successfully.', 'wp-ever-accounting' ) );
+		$referer = remove_query_arg( array( 'add' ), $referer );
+		$referer = add_query_arg( 'edit', $currency->id, $referer );
 		wp_safe_redirect( $referer );
 		exit;
 	}
@@ -727,19 +773,19 @@ class Actions {
 	}
 
 	/**
-	 * Get revenue.
+	 * Get payment.
 	 *
 	 * @since 1.2.0
 	 * @return void
 	 */
-	public function ajax_get_revenue() {
-		check_ajax_referer( 'eac_revenue' );
-		$revenue_id = isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0;
-		$revenue    = eac_get_revenue( $revenue_id );
-		if ( ! $revenue ) {
-			wp_send_json_error( __( 'Revenue not found.', 'wp-ever-accounting' ) );
+	public function ajax_get_payment() {
+		check_ajax_referer( 'eac_payment' );
+		$payment_id = isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0;
+		$payment    = eac_get_payment( $payment_id );
+		if ( ! $payment ) {
+			wp_send_json_error( __( 'Payment not found.', 'wp-ever-accounting' ) );
 		}
-		wp_send_json_success( $revenue->to_array() );
+		wp_send_json_success( $payment->to_array() );
 		exit;
 	}
 

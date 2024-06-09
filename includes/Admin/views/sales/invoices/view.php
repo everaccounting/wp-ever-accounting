@@ -11,7 +11,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$payment = new EverAccounting\Models\Revenue();
+$payment = new EverAccounting\Models\Payment();
 
 $actions = array(
 	array(
@@ -36,11 +36,11 @@ $actions = apply_filters( 'eac_invoice_actions', $actions, $document->id );
 	</a>
 </h1>
 
-<div class="bkit-row">
-	<div class="bkit-col-9">
+<div class="eac-row">
+	<div class="eac-col-9">
 		<?php eac_get_template( 'invoice.php', array( 'invoice' => $document ) ); ?>
 
 	</div>
-	<div class="bkit-col-3">
-	</div><!-- .bkit-col-3 -->
+	<div class="eac-col-3">
+	</div><!-- .eac-col-3 -->
 </div>

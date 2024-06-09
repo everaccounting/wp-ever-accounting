@@ -16,24 +16,24 @@ defined( 'ABSPATH' ) || exit();
 		<span class="dashicons dashicons-undo"></span>
 	</a>
 </h1>
-<div class="bkit-row">
-	<div class="bkit-col-3">
-		<div class="bkit-card">
-			<div class="bkit-card__header">
+<div class="eac-row">
+	<div class="eac-col-3">
+		<div class="eac-card">
+			<div class="eac-card__header">
 				Customer Details
 			</div>
 		</div>
 
-		<div class="bkit-list has--border has--split has--hover is--small">
-			<h2 class="bkit-list__header">Header</h2>
-			<div class="bkit-list__item">
+		<div class="eac-list has--border has--split has--hover is--small">
+			<h2 class="eac-list__header">Header</h2>
+			<div class="eac-list__item">
 				<div>
 					<img src="https://via.placeholder.com/54" alt="Placeholder" />
 					<span>Item</span>
 				</div>
 				<span>Value</span>
 			</div>
-			<div class="bkit-list__item">
+			<div class="eac-list__item">
 				<div>
 					<img src="https://via.placeholder.com/54" alt="Placeholder" />
 					<span>Item</span>
@@ -42,7 +42,7 @@ defined( 'ABSPATH' ) || exit();
 			</div>
 		</div>
 	</div>
-	<div class="bkit-col-9">
+	<div class="eac-col-9">
 		<ul class="eac-summaries">
 			<li class="eac-summary">
 				<div class="eac-summary__label">Net Sales</div>

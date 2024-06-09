@@ -9,100 +9,80 @@
  */
 
 use EverAccounting\Models\Expense;
-use EverAccounting\Models\Revenue;
+use EverAccounting\Models\Payment;
 use EverAccounting\Models\Transfer;
 use EverAccounting\Models\Transaction;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Get Transaction Types
+ * Get payment.
  *
- * @since 1.1.0
- * @return array
- */
-function eac_get_transaction_types() {
-	return Transaction::get_types();
-}
-
-/**
- * Get Transaction Statuses
- *
- * @since 1.1.0
- * @return array
- */
-function eac_get_transaction_statuses() {
-	return Transaction::get_statuses();
-}
-
-/**
- * Get revenue.
- *
- * @param mixed $revenue Revenue object or ID.
+ * @param mixed $payment Payment object or ID.
  *
  * @since 1.1.6
- * @return Revenue|null
+ * @return Payment|null
  */
-function eac_get_revenue( $revenue ) {
-	return Revenue::find( $revenue );
+function eac_get_payment( $payment ) {
+	return Payment::find( $payment );
 }
 
 /**
- *  Create new revenue.
+ *  Create new payment.
  *
- *  Returns a new revenue object on success.
+ *  Returns a new payment object on success.
  *
- * @param array $data revenue data.
+ * @param array $data payment data.
  * @param bool  $wp_error Optional. Whether to return a WP_Error on failure. Default false.
  *
  * @since 1.1.0
- * @return Revenue|false|WP_Error revenue object on success, false or WP_Error on failure.
+ * @return Payment|false|WP_Error payment object on success, false or WP_Error on failure.
  */
-function eac_insert_revenue( $data, $wp_error = true ) {
-	return Revenue::insert( $data, $wp_error );
+function eac_insert_payment( $data, $wp_error = true ) {
+	return Payment::insert( $data, $wp_error );
 }
 
 /**
- * Delete an revenue.
+ * Delete an payment.
  *
- * @param int $revenue_id Revenue ID.
+ * @param int $payment_id Payment ID.
  *
  * @since 1.1.0
  *
  * @return bool
  */
-function eac_delete_revenue( $revenue_id ) {
-	$revenue = eac_get_revenue( $revenue_id );
+function eac_delete_payment( $payment_id ) {
+	$payment = eac_get_payment( $payment_id );
 
-	if ( ! $revenue ) {
+	if ( ! $payment ) {
 		return false;
 	}
 
-	return $revenue->delete();
+	return $payment->delete();
 }
 
 /**
- * Get revenues.
+ * Get payments.
  *
  * @param array $args Query arguments.
  * @param bool  $count Optional. Whether to return only the total found accounts for the query.
  *
  * @since 1.1.0
  *
- * @return array|int|Revenue[] Array of revenue objects, the total found revenue for the query, or the total found revenues for the query as int when `$count` is true.
+ * @return array|int|Payment[] Array of payment objects, the total found payment for the query, or the total found payments for the query as int when `$count` is true.
  */
-function eac_get_revenues( $args = array(), $count = false ) {
+function eac_get_payments( $args = array(), $count = false ) {
 	if ( $count ) {
-		return Revenue::count( $args );
+		return Payment::count( $args );
 	}
 
-	return Revenue::results( $args );
+	return Payment::results( $args );
 }
 
 /**
  * Get expense.
  *
- * @param mixed $expesnse Revenue object or ID.
+ * @param mixed $expesnse Payment object or ID.
  *
  * @since 1.1.6
  * @return Expense|null
@@ -246,16 +226,16 @@ function eac_get_transfers( $args = array(), $count = false ) {
 }
 
 /**
- * Get estimated revenue for a given period.
+ * Get estimated payment for a given period.
  *
- * @param string $period The time period to calculate estimated revenue for. Accepts 'month', 'quarter', or 'year'.
- * @param string $type The type of transaction to calculate estimated revenue for. Accepts 'revenue' or 'refund'.
+ * @param string $period The time period to calculate estimated payment for. Accepts 'month', 'quarter', or 'year'.
+ * @param string $type The type of transaction to calculate estimated payment for. Accepts 'payment' or 'refund'.
  *
  * @since 1.1.0
  *
  * @return float
  */
-function eac_get_estimated_transaction_total( $period = 'month', $type = 'revenue' ) {
+function eac_get_estimated_transaction_total( $period = 'month', $type = 'payment' ) {
 	global $wpdb;
 
 	switch ( $period ) {
@@ -282,14 +262,14 @@ function eac_get_estimated_transaction_total( $period = 'month', $type = 'revenu
 			$interval    = '1 MONTH';
 	}
 
-	$estimate = false; // get_transient( "eac_estimated_revenue_for_{$period}_{$type}" );
+	$estimate = false; // get_transient( "eac_estimated_payment_for_{$period}_{$type}" );
 	if ( false === $estimate ) {
 		$result = $wpdb->results(
 			$wpdb->prepare(
-				"SELECT DATE_FORMAT(revenue_date, %s) AS period, SUM(amount/currency_rate) AS total_amount
+				"SELECT DATE_FORMAT(payment_date, %s) AS period, SUM(amount/currency_rate) AS total_amount
 				FROM {$wpdb->prefix}ea_transactions
-				WHERE revenue_date >= DATE_SUB(NOW(), INTERVAL $interval) AND type = %s
-				GROUP BY DATE_FORMAT(revenue_date, %s)",
+				WHERE payment_date >= DATE_SUB(NOW(), INTERVAL $interval) AND type = %s
+				GROUP BY DATE_FORMAT(payment_date, %s)",
 				$date_format,
 				$type,
 				$date_format
@@ -318,7 +298,7 @@ function eac_get_estimated_transaction_total( $period = 'month', $type = 'revenu
 			$estimate = $actual_total_amount + ( $average * $remaining_days );
 		}
 		//
-		// set_transient( "eac_estimated_revenue_for_{$period}_{$type}", $estimate, 60 * 60 * 24 );
+		// set_transient( "eac_estimated_payment_for_{$period}_{$type}", $estimate, 60 * 60 * 24 );
 	}
 
 	return $estimate;

@@ -3,6 +3,41 @@
 defined( 'ABSPATH' ) || exit();
 
 /**
+ * Generated valid HTML from an array of attrs.
+ *
+ * @since   1.2.0
+ *
+ * @param   array $attrs The array of attrs.
+ * @return  string
+ */
+function eac_esc_attrs( $attrs ) {
+	$html = '';
+
+	// Loop over attrs and validate data types.
+	foreach ( $attrs as $k => $v ) {
+
+		// String (but don't trim value).
+		if ( is_string( $v ) && ( $k !== 'value' ) ) {
+			$v = trim( $v );
+
+			// Boolean
+		} elseif ( is_bool( $v ) ) {
+			$v = $v ? 1 : 0;
+
+			// Object
+		} elseif ( is_array( $v ) || is_object( $v ) ) {
+			$v = json_encode( $v );
+		}
+
+		// Generate HTML.
+		$html .= sprintf( ' %s="%s"', esc_attr( $k ), esc_attr( $v ) );
+	}
+
+	// Return trimmed.
+	return trim( $html );
+}
+
+/**
  * Form input field.
  *
  * @param array $field Field arguments.
@@ -67,7 +102,7 @@ function eac_form_field( $field ) {
 			$attrs[] = sprintf( '%s="%s"', esc_attr( str_replace( 'attr-', '', $attr_key ) ), esc_attr( $attr_value ) );
 		} elseif ( strpos( $attr_key, 'data-' ) === 0 ) {
 			$attrs[] = sprintf( '%s="%s"', esc_attr( $attr_key ), esc_attr( $attr_value ) );
-		} elseif ( in_array( $attr_key, array( 'readonly', 'disabled', 'required', 'autofocus' ), true ) ) {
+		} elseif ( in_array( $attr_key, array( 'maxlength', 'pattern', 'readonly', 'disabled', 'required', 'autofocus' ), true ) ) {
 			$attrs[] = sprintf( '%s="%s"', esc_attr( $attr_key ), esc_attr( $attr_key ) );
 		}
 	}
@@ -83,7 +118,6 @@ function eac_form_field( $field ) {
 		$suffix          = is_callable( $field['suffix'] ) ? call_user_func( $field['suffix'], $field ) : $field['suffix'];
 		$field['suffix'] = '<span class="eac-form-field__addon">' . $suffix . '</span>';
 	}
-
 
 	switch ( $field['type'] ) {
 		case 'text':
@@ -120,7 +154,7 @@ function eac_form_field( $field ) {
 			$field['placeholder'] = ! empty( $field['placeholder'] ) ? $field['placeholder'] : '';
 			if ( ! empty( $field['multiple'] ) ) {
 				$field['name'] .= '[]';
-				$attrs[]       = 'multiple="multiple"';
+				$attrs[]        = 'multiple="multiple"';
 			}
 
 			// It may send an option_key and option_value to use in the options.
@@ -233,7 +267,7 @@ function eac_form_field( $field ) {
 			break;
 	}
 
-	//label.
+	// label.
 	if ( ! empty( $field['label'] ) ) {
 		$required = true === $field['required'] ? '&nbsp;<abbr title="' . esc_attr__( 'required', 'wp-ever-accounting' ) . '"></abbr>' : '';
 		$tooltip  = ! empty( $field['tooltip'] ) ? '&nbsp;' . eac_tooltip( $field['tooltip'] ) : '';
@@ -253,12 +287,46 @@ function eac_form_field( $field ) {
 	}
 
 	// Wrapper.
-	echo sprintf(
+	printf(
 		'<div class="eac-form-field eac-form-field-%1$s %2$s" id="eac-form-field-%3$s" style="%4$s">%5$s</div>',
 		esc_attr( $field['type'] ),
 		esc_attr( $field['wrapper_class'] ),
 		esc_attr( $field['id'] ),
 		esc_attr( $field['wrapper_style'] ),
-		$input
+		$input // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Already escaped.
 	);
+}
+
+function eac_upload_field( $field ) {
+	$o = array(
+		'icon'     => '',
+		'title'    => '',
+		'url'      => '',
+		'filename' => '',
+		'filesize' => '',
+	);
+
+	$div = array(
+		'class'           => 'eac-file-uploader',
+		'data-library'    => $field['library'],
+		'data-mime_types' => $field['mime_types'],
+	);
+
+	if ( $field['value'] ) {
+		$attachment = get_post( $field['value'] );
+		if ( $attachment && 'attachment' === $attachment->post_type ) {
+
+			// has value.
+			$div['class'] .= ' has-value';
+
+			// update.
+			$o['icon']     = $attachment['icon'];
+			$o['title']    = $attachment['title'];
+			$o['url']      = $attachment['url'];
+			$o['filename'] = $attachment['filename'];
+			if ( $attachment['filesize'] ) {
+				$o['filesize'] = size_format( $attachment['filesize'] );
+			}
+		}
+	}
 }

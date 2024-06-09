@@ -1,22 +1,22 @@
 <?php
 /**
- * Admin Revenue Form.
+ * Admin Payment Form.
  * Page: Sales
- * Tab: Revenue
+ * Tab: Payment
  *
  * @package EverAccounting
  * @version 1.0.0
- * @var $revenue \EverAccounting\Models\Revenue Revenue object.
+ * @var $payment \EverAccounting\Models\Payment Payment object.
  */
 
 defined( 'ABSPATH' ) || exit;
 ?>
-	<form id="eac-revenue-form" method="post" action="<?php echo esc_html( admin_url( 'admin-post.php' ) ); ?>">
+	<form id="eac-payment-form" method="post" action="<?php echo esc_html( admin_url( 'admin-post.php' ) ); ?>">
 		<div class="eac-poststuff">
 			<div class="column-1">
 				<div class="eac-card">
 					<div class="eac-card__header">
-						<h2 class="eac-card__title"><?php esc_html_e( 'Revenue details', 'wp-ever-accounting' ); ?></h2>
+						<h2 class="eac-card__title"><?php esc_html_e( 'Payment details', 'wp-ever-accounting' ); ?></h2>
 					</div>
 					<div class="eac-card__body grid--fields">
 						<?php
@@ -26,7 +26,7 @@ defined( 'ABSPATH' ) || exit;
 								'type'           => 'date',
 								'name'           => 'date',
 								'placeholder'    => 'yyyy-mm-dd',
-								'value'          => $revenue->date,
+								'value'          => $payment->date,
 								'required'       => true,
 								'class'          => 'eac_inputmask',
 								'data-inputmask' => '"alias": "datetime", "inputFormat": "yyyy-mm-dd"',
@@ -38,12 +38,12 @@ defined( 'ABSPATH' ) || exit;
 								'label'            => __( 'Account', 'wp-ever-accounting' ),
 								'type'             => 'select',
 								'name'             => 'account_id',
-								'options'          => array( $revenue->account ),
-								'value'            => $revenue->account_id,
+								'options'          => array( $payment->account ),
+								'value'            => $payment->account_id,
 								'required'         => true,
 								'class'            => 'eac_select2',
 								'tooltip'          => __( 'Select the receiving account.', 'wp-ever-accounting' ),
-								'disabled'         => $revenue->exists(),
+								'disabled'         => $payment->exists(),
 								'option_value'     => 'id',
 								'option_label'     => 'formatted_name',
 								'data-placeholder' => __( 'Select an account', 'wp-ever-accounting' ),
@@ -61,7 +61,7 @@ defined( 'ABSPATH' ) || exit;
 								'label'          => __( 'Amount', 'wp-ever-accounting' ),
 								'name'           => 'amount',
 								'placeholder'    => '0.00',
-								'value'          => $revenue->amount,
+								'value'          => $payment->amount,
 								'required'       => true,
 								'class'          => 'eac_inputmask',
 								'tooltip'        => __( 'Enter the amount in the currency of the selected account, use (.) for decimal.', 'wp-ever-accounting' ),
@@ -74,12 +74,12 @@ defined( 'ABSPATH' ) || exit;
 								'label'            => __( 'Customer', 'wp-ever-accounting' ),
 								'type'             => 'select',
 								'name'             => 'contact_id',
-								'value'            => $revenue->contact_id,
-								'options'          => array( $revenue->customer ),
+								'value'            => $payment->contact_id,
+								'options'          => array( $payment->customer ),
 								'option_value'     => 'id',
 								'option_label'     => 'formatted_name',
 								'default'          => filter_input( INPUT_GET, 'customer_id', FILTER_SANITIZE_NUMBER_INT ),
-								'disabled'         => $revenue->exists() && $revenue->contact_id,
+								'disabled'         => $payment->exists() && $payment->contact_id,
 								'data-placeholder' => __( 'Select customer', 'wp-ever-accounting' ),
 								'data-action'      => 'eac_json_search',
 								'data-type'        => 'customer',
@@ -96,8 +96,8 @@ defined( 'ABSPATH' ) || exit;
 								'label'            => __( 'Category', 'wp-ever-accounting' ),
 								'type'             => 'select',
 								'name'             => 'category_id',
-								'value'            => $revenue->category_id,
-								'options'          => array( $revenue->category ),
+								'value'            => $payment->category_id,
+								'options'          => array( $payment->category ),
 								'option_value'     => 'id',
 								'option_label'     => 'formatted_name',
 								'placeholder'      => __( 'Select category', 'wp-ever-accounting' ),
@@ -118,7 +118,7 @@ defined( 'ABSPATH' ) || exit;
 								'label'       => __( 'Payment Method', 'wp-ever-accounting' ),
 								'type'        => 'select',
 								'name'        => 'payment_method',
-								'value'       => $revenue->payment_method,
+								'value'       => $payment->payment_method,
 								'options'     => eac_get_payment_methods(),
 								'placeholder' => __( 'Select &hellip;', 'wp-ever-accounting' ),
 							)
@@ -129,14 +129,14 @@ defined( 'ABSPATH' ) || exit;
 								'label'            => __( 'Invoice', 'wp-ever-accounting' ),
 								'type'             => 'select',
 								'name'             => 'document_id',
-								'value'            => $revenue->document_id,
+								'value'            => $payment->document_id,
 								'default'          => filter_input( INPUT_GET, 'document_id', FILTER_SANITIZE_NUMBER_INT ),
-								'options'          => wp_list_pluck( $revenue->invoice, 'formatted_name', 'id' ),
+								'options'          => wp_list_pluck( $payment->invoice, 'formatted_name', 'id' ),
 								'placeholder'      => __( 'Select invoice', 'wp-ever-accounting' ),
-								'disabled'         => $revenue->exists() && $revenue->document_id,
+								'disabled'         => $payment->exists() && $payment->document_id,
 								'class'            => 'eac_select2',
 								'data-placeholder' => __( 'Select invoice', 'wp-ever-accounting' ),
-								'tooltip'          => __( 'Select the invoice related to this revenue., ignore if not applicable.', 'wp-ever-accounting' ),
+								'tooltip'          => __( 'Select the invoice related to this payment., ignore if not applicable.', 'wp-ever-accounting' ),
 							)
 						);
 						eac_form_field(
@@ -144,7 +144,7 @@ defined( 'ABSPATH' ) || exit;
 								'label'       => __( 'Reference', 'wp-ever-accounting' ),
 								'type'        => 'text',
 								'name'        => 'reference',
-								'value'       => $revenue->reference,
+								'value'       => $payment->reference,
 								'placeholder' => __( 'Enter reference', 'wp-ever-accounting' ),
 							)
 						);
@@ -153,7 +153,7 @@ defined( 'ABSPATH' ) || exit;
 								'label'         => __( 'Notes', 'wp-ever-accounting' ),
 								'type'          => 'textarea',
 								'name'          => 'note',
-								'value'         => $revenue->note,
+								'value'         => $payment->note,
 								'placeholder'   => __( 'Enter description', 'wp-ever-accounting' ),
 								'wrapper_class' => 'is--full',
 							)
@@ -175,27 +175,27 @@ defined( 'ABSPATH' ) || exit;
 								'label'       => __( 'Status', 'wp-ever-accounting' ),
 								'type'        => 'select',
 								'id'          => 'status',
-								'options'     => eac_get_transaction_statuses(),
-								'value'       => $revenue->status,
+								'options'     => \EverAccounting\Models\Payment::get_statuses(),
+								'value'       => $payment->status,
 								'placeholder' => __( 'Select status', 'wp-ever-accounting' ),
 							)
 						);
 						?>
 					</div>
 					<div class="eac-card__footer">
-						<?php if ( $revenue->exists() ) : ?>
-							<input type="hidden" name="account_id" value="<?php echo esc_attr( $revenue->account_id ); ?>"/>
-							<input type="hidden" name="id" value="<?php echo esc_attr( $revenue->id ); ?>"/>
+						<?php if ( $payment->exists() ) : ?>
+							<input type="hidden" name="account_id" value="<?php echo esc_attr( $payment->account_id ); ?>"/>
+							<input type="hidden" name="id" value="<?php echo esc_attr( $payment->id ); ?>"/>
 						<?php endif; ?>
-						<input type="hidden" name="action" value="eac_edit_revenue"/>
-						<?php wp_nonce_field( 'eac_edit_revenue' ); ?>
-						<?php if ( $revenue->exists() ) : ?>
-							<a class="eac_confirm_delete del" href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'action', 'delete', admin_url( 'admin.php?page=eac-sales&tab=revenues&id=' . $revenue->id ) ), 'bulk-revenues' ) ); ?>"><?php esc_html_e( 'Delete', 'wp-ever-accounting' ); ?></a>
+						<input type="hidden" name="action" value="eac_edit_payment"/>
+						<?php wp_nonce_field( 'eac_edit_payment' ); ?>
+						<?php if ( $payment->exists() ) : ?>
+							<a class="eac_confirm_delete del" href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'action', 'delete', admin_url( 'admin.php?page=eac-sales&tab=payments&id=' . $payment->id ) ), 'bulk-payments' ) ); ?>"><?php esc_html_e( 'Delete', 'wp-ever-accounting' ); ?></a>
 						<?php endif; ?>
-						<?php if ( $revenue->exists() ) : ?>
-							<button class="button button-primary"><?php esc_html_e( 'Update Revenue', 'wp-ever-accounting' ); ?></button>
+						<?php if ( $payment->exists() ) : ?>
+							<button class="button button-primary"><?php esc_html_e( 'Update Payment', 'wp-ever-accounting' ); ?></button>
 						<?php else : ?>
-							<button class="button button-primary eac-w-100"><?php esc_html_e( 'Add Revenue', 'wp-ever-accounting' ); ?></button>
+							<button class="button button-primary eac-w-100"><?php esc_html_e( 'Add Payment', 'wp-ever-accounting' ); ?></button>
 						<?php endif; ?>
 					</div>
 				</div>
@@ -205,13 +205,7 @@ defined( 'ABSPATH' ) || exit;
 						<h2 class="eac-card__title"><?php esc_html_e( 'Attachment', 'wp-ever-accounting' ); ?></h2>
 					</div>
 					<div class="eac-card__body">
-						<?php
-						eac_form_field( array(
-							'type' => 'upload',
-							'name' => 'attachment_id',
-						) );
-						?>
-
+						Lorem ipsum dolor sit amet, consectetur adipisicing elit. Possimus, voluptatibus.
 					</div>
 				</div>
 

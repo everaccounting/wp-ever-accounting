@@ -96,13 +96,13 @@ class ExpensesTable extends ListTable {
 	protected function bulk_delete( $ids ) {
 		$performed = 0;
 		foreach ( $ids as $id ) {
-			if ( eac_delete_revenue( $id ) ) {
+			if ( eac_delete_payment( $id ) ) {
 				++$performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
 			// translators: %s: number of items deleted.
-			EAC()->flash->success( sprintf( __( '%s revenue(s) deleted successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
+			EAC()->flash->success( sprintf( __( '%s payment(s) deleted successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
 		}
 	}
 
@@ -126,7 +126,7 @@ class ExpensesTable extends ListTable {
 	protected function get_views() {
 		$current      = $this->get_request_status( 'all' );
 		$status_links = array();
-		$statuses     = eac_get_transaction_statuses();
+		$statuses     = Expense::get_statuses();
 		$statuses     = array_merge( array( 'all' => __( 'All', 'wp-ever-accounting' ) ), $statuses );
 
 		foreach ( $statuses as $status => $label ) {
@@ -332,7 +332,7 @@ class ExpensesTable extends ListTable {
 	 * @return string Displays the status.
 	 */
 	public function column_status( $item ) {
-		$statuses = eac_get_transaction_statuses();
+		$statuses = Expense::get_statuses();
 		$status   = isset( $item->status ) ? $item->status : '';
 		$label    = isset( $statuses[ $status ] ) ? $statuses[ $status ] : '';
 

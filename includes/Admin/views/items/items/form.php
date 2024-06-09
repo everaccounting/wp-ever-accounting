@@ -156,10 +156,6 @@ $categories = eac_get_categories(
 
 					?>
 				</div>
-
-				<div class="eac-card__section">
-					Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium, tempora!
-				</div>
 			</div>
 		</div><!-- .column-1 -->
 

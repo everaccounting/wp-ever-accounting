@@ -12,7 +12,6 @@
 defined( 'ABSPATH' ) || exit;
 ?>
 <form id="eac-currency-form" method="post" action="<?php echo esc_html( admin_url( 'admin-post.php' ) ); ?>">
-	<span data-wp-text="name"></span>
 	<div class="eac-poststuff">
 		<div class="column-1">
 			<div class="eac-card">

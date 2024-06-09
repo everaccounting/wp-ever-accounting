@@ -22,34 +22,32 @@ class Customer extends Contact {
 	/**
 	 * Create a new model instance.
 	 *
-	 * @param object|array|null $data The data to initialize the model.
+	 * @param string|array|object $attributes The model attributes.
 	 *
 	 * @throws \InvalidArgumentException If table name or object type is not set.
 	 */
-	public function __construct( $data = null ) {
-		$this->data['type']       = $this->get_object_type();
+	public function __construct( $attributes = array() ) {
+		$this->attributes['type'] = $this->get_object_type();
 		$this->query_args['type'] = $this->get_object_type();
-		parent::__construct( $data );
+		parent::__construct( $attributes );
 	}
-
 
 	/*
 	|--------------------------------------------------------------------------
-	| Prop Definition Methods
+	| Property Definition Methods
 	|--------------------------------------------------------------------------
-	| This section contains methods that define and provide specific prop values
-	| related to the model, such as statuses or types. These methods can be accessed
-	| without instantiating the model.
+	| This section contains static methods that define and return specific
+	| property values related to the model.
+	| These methods are accessible without creating an instance of the model.
 	|--------------------------------------------------------------------------
 	*/
 
 	/*
 	|--------------------------------------------------------------------------
-	| Accessors, Mutators, Relationship and Validation Methods
+	| Accessors, Mutators and Relationship Methods
 	|--------------------------------------------------------------------------
-	| This section contains methods for getting and setting properties (accessors
-	| and mutators) as well as defining relationships between models. It also includes
-	| a data validation method that ensures data integrity before saving.
+	| This section contains methods for getting and setting attributes (accessors
+	| and mutators) as well as defining relationships between models.
 	|--------------------------------------------------------------------------
 	*/
 

@@ -134,6 +134,28 @@ class CurrenciesTable extends ListTable {
 	}
 
 	/**
+	 * handle bulk delete action.
+	 *
+	 * @param array $ids List of item IDs.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	protected function bulk_delete( $ids ) {
+		$performed = 0;
+		foreach ( $ids as $id ) {
+			$currency = Currency::find( $id );
+			if ( $currency && $currency->delete() ) {
+				++$performed;
+			}
+		}
+		if ( ! empty( $performed ) ) {
+			// translators: %s: number of currencies.
+			EAC()->flash->success( sprintf( __( '%s currency(s) deactivated successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
+		}
+	}
+
+	/**
 	 * Outputs 'no users' message.
 	 *
 	 * @since 1.0.0
@@ -189,6 +211,7 @@ class CurrenciesTable extends ListTable {
 		$actions = array(
 			'activate'   => __( 'Activate', 'wp-ever-accounting' ),
 			'deactivate' => __( 'Deactivate', 'wp-ever-accounting' ),
+			'delete'     => __( 'Delete', 'wp-ever-accounting' ),
 		);
 
 		return $actions;
@@ -330,6 +353,25 @@ class CurrenciesTable extends ListTable {
 					)
 				),
 				__( 'Activate', 'wp-ever-accounting' )
+			);
+		}
+
+		if ( $item->is_deletable() ) {
+			$actions['delete'] = sprintf(
+				'<a href="%s" class="del">%s</a>',
+				esc_url(
+					wp_nonce_url(
+						add_query_arg(
+							array(
+								'action' => 'delete',
+								'id'     => $item->id,
+							),
+							$this->base_url
+						),
+						'bulk-' . $this->_args['plural']
+					)
+				),
+				__( 'Delete', 'wp-ever-accounting' )
 			);
 		}
 

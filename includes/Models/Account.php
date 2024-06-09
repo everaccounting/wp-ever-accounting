@@ -72,19 +72,19 @@ class Account extends Model {
 	);
 
 	/**
-	 * Data properties of the model.
+	 * The attributes of the model.
 	 *
 	 * @since 1.0.0
 	 * @var array
 	 */
-	protected $props = array(
+	protected $attributes = array(
 		'type'            => 'bank',
 		'opening_balance' => 0,
 		'status'          => 'active',
 	);
 
 	/**
-	 * The properties that should be cast to native types.
+	 * The attributes that should be cast.
 	 *
 	 * @since 1.0.0
 	 * @var array
@@ -97,7 +97,7 @@ class Account extends Model {
 	);
 
 	/**
-	 * The properties that have aliases.
+	 * The attributes that have aliases.
 	 *
 	 * @since 1.0.0
 	 * @var array
@@ -107,17 +107,7 @@ class Account extends Model {
 	);
 
 	/**
-	 * The properties that should be hidden for arrays.
-	 *
-	 * @since 1.0.0
-	 * @var array
-	 */
-	protected $hidden = array(
-		'opening_balance',
-	);
-
-	/**
-	 * The properties that should be appended to the model's array form.
+	 * The accessors to append to the model's array form.
 	 *
 	 * @since 1.0.0
 	 * @var array
@@ -129,6 +119,16 @@ class Account extends Model {
 	);
 
 	/**
+	 * The attributes that should be hidden for serialization.
+	 *
+	 * @since 1.0.0
+	 * @var array
+	 */
+	protected $hidden = array(
+		'opening_balance',
+	);
+
+	/**
 	 * Whether the model should be timestamped.
 	 *
 	 * @since 1.0.0
@@ -137,7 +137,7 @@ class Account extends Model {
 	protected $timestamps = true;
 
 	/**
-	 * Searchable attributes.
+	 * The attributes that are searchable.
 	 *
 	 * @since 1.0.0
 	 * @var array
@@ -153,11 +153,11 @@ class Account extends Model {
 
 	/*
 	|--------------------------------------------------------------------------
-	| Prop Definition Methods
+	| Property Definition Methods
 	|--------------------------------------------------------------------------
-	| This section contains methods that define and provide specific prop values
-	| related to the model, such as statuses or types. These methods can be accessed
-	| without instantiating the model.
+	| This section contains static methods that define and return specific
+	| property values related to the model.
+	| These methods are accessible without creating an instance of the model.
 	|--------------------------------------------------------------------------
 	*/
 
@@ -178,11 +178,10 @@ class Account extends Model {
 
 	/*
 	|--------------------------------------------------------------------------
-	| Accessors, Mutators, Relationship and Validation Methods
+	| Accessors, Mutators and Relationship Methods
 	|--------------------------------------------------------------------------
-	| This section contains methods for getting and setting properties (accessors
-	| and mutators) as well as defining relationships between models. It also includes
-	| a data validation method that ensures data integrity before saving.
+	| This section contains methods for getting and setting attributes (accessors
+	| and mutators) as well as defining relationships between models.
 	|--------------------------------------------------------------------------
 	*/
 
@@ -256,16 +255,24 @@ class Account extends Model {
 	 * @return HasMany
 	 */
 	public function revenues() {
-		return $this->has_one( Revenue::class );
+		return $this->has_many( Revenue::class );
 	}
 
+	/*
+	|--------------------------------------------------------------------------
+	| CRUD Methods
+	|--------------------------------------------------------------------------
+	| This section contains methods for creating, reading, updating, and deleting
+	| objects in the database.
+	|--------------------------------------------------------------------------
+	*/
 	/**
-	 * Sanitize data before saving.
+	 * Save the object to the database.
 	 *
 	 * @since 1.0.0
-	 * @return void|\WP_Error Return WP_Error if data is not valid or void.
+	 * @return \WP_Error|static WP_Error on failure, or the object on success.
 	 */
-	protected function validate_save_data() {
+	public function save() {
 		if ( empty( $this->name ) ) {
 			return new \WP_Error( 'missing_required', __( 'Account name is required.', 'wp-ever-accounting' ) );
 		}
@@ -283,6 +290,8 @@ class Account extends Model {
 		if ( empty( $this->author_id ) && is_user_logged_in() ) {
 			$this->author_id = get_current_user_id();
 		}
+
+		return parent::save();
 	}
 
 	/*

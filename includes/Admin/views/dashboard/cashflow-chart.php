@@ -12,8 +12,8 @@ $data     = eac_get_profit_report();
 $currency = eac_get_currency();
 ?>
 
-<div class="bkit-card">
-	<div class="bkit-card__header">
+<div class="eac-card">
+	<div class="eac-card__header">
 		<div>
 			<?php esc_html_e( 'Cashflow', 'wp-ever-accounting' ); ?>
 		</div>
@@ -21,7 +21,7 @@ $currency = eac_get_currency();
 			<?php echo esc_html( wp_date( 'Y' ) ); ?>
 		</div>
 	</div>
-	<div class="bkit-card__body">
+	<div class="eac-card__body">
 		<div class="eac-chart">
 			<canvas id="eac-cashflow-chart" height="300"></canvas>
 		</div>
@@ -35,12 +35,12 @@ $currency = eac_get_currency();
 		new Chart(sales_expense, {
 			type: 'line',
 			data: {
-				labels: <?php echo wp_json_encode( array_keys( $data['revenues'] ) ); ?>,
+				labels: <?php echo wp_json_encode( array_keys( $data['payments'] ) ); ?>,
 				datasets: [
 					{
 						label: "<?php esc_html_e( 'Incoming', 'wp-ever-accounting' ); ?>",
 						backgroundColor: "#3644ff",
-						data: <?php echo wp_json_encode( array_values( $data['revenues'] ) ); ?>
+						data: <?php echo wp_json_encode( array_values( $data['payments'] ) ); ?>
 					},
 					{
 						label: "<?php esc_html_e( 'Outgoing', 'wp-ever-accounting' ); ?>",

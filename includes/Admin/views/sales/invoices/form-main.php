@@ -18,7 +18,7 @@ if ( ! $document->is_calculating_tax() && isset( $columns['tax'] ) ) {
 }
 
 ?>
-<div class="bkit-panel tw-p-0">
+<div class="eac-panel tw-p-0">
 	<div class="eac-document-form__section document-info">
 		<div class="document-info__column document-info__billing">
 			<h3>
@@ -33,21 +33,21 @@ if ( ! $document->is_calculating_tax() && isset( $columns['tax'] ) ) {
 			<?php endif; ?>
 		</div>
 		<div class="document-info__column document-info__meta">
-			<div class="bkit-form-group tw-mt-0">
+			<div class="eac-form-group tw-mt-0">
 				<label for="number"><?php esc_html_e( 'Invoice Number', 'wp-ever-accounting' ); ?></label>
 				<input type="text" name="number" id="number" placeholder="INV-0001" value="<?php echo esc_attr( $document->number ); ?>" readonly/>
 			</div>
-			<div class="bkit-form-group tw-mt-0">
+			<div class="eac-form-group tw-mt-0">
 				<label for="reference"><?php esc_html_e( 'Reference', 'wp-ever-accounting' ); ?></label>
 				<input type="text" name="reference" id="reference" placeholder="REF-0001" value="<?php echo esc_attr( $document->reference ); ?>"/>
 			</div>
-			<div class="bkit-form-group tw-mt-0">
+			<div class="eac-form-group tw-mt-0">
 				<label for="issue_date"><?php esc_html_e( 'Issue Date', 'wp-ever-accounting' ); ?>
 					<abbr class="required" title="<?php esc_attr_e( 'required', 'wp-ever-accounting' ); ?>"></abbr>
 				</label>
 				<input type="text" name="issue_date" id="issue_date" class="eac_datepicker" placeholder="<?php esc_attr_e( 'YYYY-MM-DD', 'wp-ever-accounting' ); ?>" value="<?php echo esc_attr( $document->issue_date ); ?>" required/>
 			</div>
-			<div class="bkit-form-group tw-mt-0">
+			<div class="eac-form-group tw-mt-0">
 				<label for="due_date"><?php esc_html_e( 'Due Date', 'wp-ever-accounting' ); ?></label>
 				<input type="text" name="due_date" id="due_date" data-format="yy-mm-dd" class="eac_datepicker" placeholder="<?php esc_attr_e( 'YYYY-MM-DD', 'wp-ever-accounting' ); ?>" value="<?php echo esc_attr( $document->due_date ); ?>"/>
 			</div>
@@ -91,7 +91,7 @@ if ( ! $document->is_calculating_tax() && isset( $columns['tax'] ) ) {
 							<?php
 							switch ( $key ) {
 								case 'price':
-									printf( '<div class="bkit-input-group"><span class="addon">%s</span> <input class="line-item__price eac_decimal_input" type="text" name="line[%s][price]" value="%s" placeholder="%s" /></div>', esc_html( eac_get_currency_symbol( $document->currency_code ) ), esc_attr( $line_key ), esc_attr( $line->price ), esc_attr__( 'Price', 'wp-ever-accounting' ) );
+									printf( '<div class="eac-input-group"><span class="addon">%s</span> <input class="line-item__price eac_decimal_input" type="text" name="line[%s][price]" value="%s" placeholder="%s" /></div>', esc_html( eac_get_currency_symbol( $document->currency_code ) ), esc_attr( $line_key ), esc_attr( $line->price ), esc_attr__( 'Price', 'wp-ever-accounting' ) );
 									break;
 								case 'quantity':
 									printf( '<input class="line-item__quantity eac_decimal_input" type="number" name="line[%s][quantity]" value="%s" placeholder="%s" />', esc_attr( $line_key ), esc_attr( $line->quantity ), esc_attr__( 'Quantity', 'wp-ever-accounting' ) );
@@ -117,7 +117,7 @@ if ( ! $document->is_calculating_tax() && isset( $columns['tax'] ) ) {
 			</tr>
 			<tr>
 				<td colspan="2">
-					<div class="bkit-input-group">
+					<div class="eac-input-group">
 						<select class="add-line-item eac_select2" data-action="eac_json_search" data-type="item" name="items[<?php echo esc_attr( PHP_INT_MAX ); ?>][item_id]" data-placeholder="<?php esc_attr_e( 'Select an item', 'wp-ever-accounting' ); ?>"></select>
 						<a class="button" href="<?php echo esc_url( admin_url( 'admin.php?page=eac-items&add=yes' ) ); ?>" title="<?php esc_attr_e( 'Add New Item', 'wp-ever-accounting' ); ?>">
 							<span class="dashicons dashicons-plus"></span>

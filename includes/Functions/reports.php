@@ -272,15 +272,15 @@ function eac_get_random_color( $key = null ) {
  */
 function eac_get_sales_summary() {
 	$summery       = array();
-	$total_revenue = 0;
+	$total_payment = 0;
 	$date          = wp_date( 'M, y' );
-	$revenues      = eac_get_revenues_report();
+	$payments      = eac_get_payments_report();
 
-	if ( ! empty( $revenues ) && isset( $revenues['months'] ) && isset( $revenues['months'][ $date ] ) ) {
-		$total_revenue = $revenues['months'][ $date ];
+	if ( ! empty( $payments ) && isset( $payments['months'] ) && isset( $payments['months'][ $date ] ) ) {
+		$total_payment = $payments['months'][ $date ];
 	}
 
-	$summery['total'] = $total_revenue;
+	$summery['total'] = $total_payment;
 
 	return apply_filters( 'ever_accounting_sales_summary', $summery );
 }
@@ -312,10 +312,10 @@ function eac_get_purchases_summary() {
  */
 function eac_get_profits_summary() {
 	$summery = array();
-	$revenue = eac_get_sales_summary();
+	$payment = eac_get_sales_summary();
 	$expense = eac_get_purchases_summary();
 
-	$summery['total'] = $revenue['total'] - $expense['total'];
+	$summery['total'] = $payment['total'] - $expense['total'];
 
 	return apply_filters( 'ever_accounting_profits_summary', $summery );
 }
@@ -329,9 +329,9 @@ function eac_get_profits_summary() {
  * @return array
  * @since 1.0.0
  */
-function eac_get_revenues_report( $year = null, $force = false ) {
+function eac_get_payments_report( $year = null, $force = false ) {
 	global $wpdb;
-	$reports     = false; // get_transient( 'eac_revenues_reports' );
+	$reports     = get_transient( 'eac_payments_reports' );
 	$reports     = ! is_array( $reports ) ? array() : $reports;
 	$year        = empty( $year ) ? wp_date( 'Y' ) : $year;
 	$start_date  = eac_get_year_start_date( $year );
@@ -343,10 +343,10 @@ function eac_get_revenues_report( $year = null, $force = false ) {
 			$wpdb->prepare(
 				"SELECT (t.amount*t.exchange_rate) amount, MONTH(t.date) AS month, YEAR(t.date) AS year, t.category_id
 		FROM {$wpdb->prefix}ea_transactions AS t
-		LEFT JOIN {$wpdb->prefix}ea_transfers AS it ON t.id = it.revenue_id
+		LEFT JOIN {$wpdb->prefix}ea_transfers AS it ON t.id = it.payment_id
 		LEFT JOIN {$wpdb->prefix}ea_transfers AS et ON t.id = et.expense_id
-		WHERE t.type = 'revenue'
-		AND it.revenue_id IS NULL
+		WHERE t.type = 'payment'
+		AND it.payment_id IS NULL
 		AND et.expense_id IS NULL
 		AND t.status = 'completed'
 		AND t.date BETWEEN %s AND %s
@@ -401,7 +401,7 @@ function eac_get_revenues_report( $year = null, $force = false ) {
 
 		$reports[ $year ] = apply_filters( 'ever_accounting_sales_report', $data, $year );
 		// Cache for 1 hour.
-		set_transient( 'eac_revenues_reports', $reports, HOUR_IN_SECONDS );
+		set_transient( 'eac_payments_reports', $reports, HOUR_IN_SECONDS );
 	}
 
 	return $reports[ $year ];
@@ -418,7 +418,7 @@ function eac_get_revenues_report( $year = null, $force = false ) {
  */
 function eac_get_expense_report( $year = null, $force = false ) {
 	global $wpdb;
-	$reports     = false; // get_transient( 'eac_expense_reports' );
+	$reports     = get_transient( 'eac_expense_reports' );
 	$reports     = ! is_array( $reports ) ? array() : $reports;
 	$year        = empty( $year ) ? wp_date( 'Y' ) : $year;
 	$start_date  = eac_get_year_start_date( $year );
@@ -430,10 +430,10 @@ function eac_get_expense_report( $year = null, $force = false ) {
 			$wpdb->prepare(
 				"SELECT (t.amount*t.exchange_rate) amount, MONTH(t.date) AS month, YEAR(t.date) AS year, t.category_id
 		FROM {$wpdb->prefix}ea_transactions AS t
-		LEFT JOIN {$wpdb->prefix}ea_transfers AS it ON t.id = it.revenue_id
+		LEFT JOIN {$wpdb->prefix}ea_transfers AS it ON t.id = it.payment_id
 		LEFT JOIN {$wpdb->prefix}ea_transfers AS et ON t.id = et.expense_id
 		WHERE t.type = 'expense'
-		AND it.revenue_id IS NULL
+		AND it.payment_id IS NULL
 		AND et.expense_id IS NULL
 		AND t.status = 'completed'
 		AND t.date BETWEEN %s AND %s
@@ -517,9 +517,9 @@ function eac_get_profit_report( $year = null, $force = true ) {
 			$wpdb->prepare(
 				"SELECT (t.amount*t.exchange_rate) amount, MONTH(t.date) AS month, YEAR(t.date) AS year, t.category_id, t.type
 		FROM {$wpdb->prefix}ea_transactions AS t
-		LEFT JOIN {$wpdb->prefix}ea_transfers AS it ON t.id = it.revenue_id
+		LEFT JOIN {$wpdb->prefix}ea_transfers AS it ON t.id = it.payment_id
 		LEFT JOIN {$wpdb->prefix}ea_transfers AS et ON t.id = et.expense_id
-		WHERE it.revenue_id IS NULL
+		WHERE it.payment_id IS NULL
 		AND et.expense_id IS NULL
 		AND t.status = 'completed'
 		AND t.date BETWEEN %s AND %s
@@ -538,7 +538,7 @@ function eac_get_profit_report( $year = null, $force = true ) {
 			'daily_avg'    => 0,
 			'month_avg'    => 0,
 			'date_count'   => $date_count,
-			'revenues'     => $months,
+			'payments'     => $months,
 			'expenses'     => $months,
 			'profits'      => $months,
 		);
@@ -554,9 +554,9 @@ function eac_get_profit_report( $year = null, $force = true ) {
 			++$data['total_count'];
 
 			// Now based on type add or subtract.
-			if ( 'revenue' === $type ) {
+			if ( 'payment' === $type ) {
 				$data['total_profit']            += round( $amount, 2 );
-				$data['revenues'][ $month_year ] += round( $amount, 2 );
+				$data['payments'][ $month_year ] += round( $amount, 2 );
 				$data['profits'][ $month_year ]  += round( $amount, 2 );
 			} else {
 				$data['total_profit']            -= round( $amount, 2 );

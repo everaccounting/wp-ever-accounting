@@ -6,31 +6,37 @@
 			// Initialize select2.
 			$('.eac_select2').filter(':not(.enhanced)').each(function () {
 				self.select2(this);
+				$(this).addClass('enhanced');
 			});
 
 			// Initialize datepicker.
 			$('.eac_datepicker').filter(':not(.enhanced)').each(function () {
 				self.datepicker(this);
+				$(this).addClass('enhanced');
 			});
 
 			// Initialize tooltip.
 			$('.eac-tooltip').filter(':not(.enhanced)').each(function () {
 				self.tooltip(this);
+				$(this).addClass('enhanced');
 			});
 
 			// Initialize inputmask.
 			$('.eac_inputmask').filter(':not(.enhanced)').each(function () {
 				self.inputMask(this);
+				$(this).addClass('enhanced');
 			});
 
 			// Initialize number input.
 			$('.eac_number_input').filter(':not(.enhanced)').each(function () {
 				self.numberInput(this);
+				$(this).addClass('enhanced');
 			});
 
 			// Initialize decimal input.
 			$('.eac_decimal_input').filter(':not(.enhanced)').each(function () {
 				self.decimalInput(this);
+				$(this).addClass('enhanced');
 			});
 		},
 

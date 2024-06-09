@@ -1,6 +1,6 @@
 <?php
 /**
- * Recent Revenues
+ * Recent payments
  *
  * @package WP Ever Accounting
  * @since   1.1.6
@@ -16,14 +16,14 @@ $expenses = eac_get_expenses(
 	)
 );
 ?>
-<div class="bkit-card">
-	<div class="bkit-card__header">
+<div class="eac-card">
+	<div class="eac-card__header">
 		<?php esc_html_e( 'Recent Expenses', 'wp-ever-accounting' ); ?>
 		<?php if ( ! empty( $expenses ) ) : ?>
-			<a href="<?php echo esc_url( admin_url( 'admin.php?page=eac-sales&tab=expenses' ) ); ?>" class="bkit-card__header__link"><?php esc_html_e( 'View all', 'wp-ever-accounting' ); ?></a>
+			<a href="<?php echo esc_url( admin_url( 'admin.php?page=eac-sales&tab=expenses' ) ); ?>" class="eac-card__header__link"><?php esc_html_e( 'View all', 'wp-ever-accounting' ); ?></a>
 		<?php endif; ?>
 	</div>
-	<div class="bkit-card__body !tw-p-0">
+	<div class="eac-card__body !tw-p-0">
 		<table class="eac-table is--striped">
 			<thead>
 			<tr>
@@ -47,7 +47,7 @@ $expenses = eac_get_expenses(
 				<?php endforeach; ?>
 			<?php else : ?>
 				<tr>
-					<td colspan="2"><?php esc_html_e( 'No expenses found.', 'wp-ever-accounting' ); ?></td>
+					<td colspan="3"><?php esc_html_e( 'No expenses found.', 'wp-ever-accounting' ); ?></td>
 				</tr>
 			<?php endif; ?>
 			</tbody>

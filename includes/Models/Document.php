@@ -166,12 +166,12 @@ class Document extends Model {
 	);
 
 	/**
-	 * The model's data properties.
+	 * The attributes of the model.
 	 *
 	 * @since 1.0.0
 	 * @var array
 	 */
-	protected $props = array(
+	protected $attributes = array(
 		'discount_type' => 'fixed',
 		'billing_data'  => array(
 			'name'       => '',
@@ -191,7 +191,7 @@ class Document extends Model {
 	);
 
 	/**
-	 * The properties that should be cast.
+	 * The attributes that should be cast.
 	 *
 	 * @since 1.0.0
 	 * @var array
@@ -228,21 +228,20 @@ class Document extends Model {
 
 	/*
 	|--------------------------------------------------------------------------
-	| Prop Definition Methods
+	| Property Definition Methods
 	|--------------------------------------------------------------------------
-	| This section contains methods that define and provide specific prop values
-	| related to the model, such as statuses or types. These methods can be accessed
-	| without instantiating the model.
+	| This section contains static methods that define and return specific
+	| property values related to the model.
+	| These methods are accessible without creating an instance of the model.
 	|--------------------------------------------------------------------------
 	*/
 
 	/*
 	|--------------------------------------------------------------------------
-	| Accessors, Mutators, Relationship and Validation Methods
+	| Accessors, Mutators and Relationship Methods
 	|--------------------------------------------------------------------------
-	| This section contains methods for getting and setting properties (accessors
-	| and mutators) as well as defining relationships between models. It also includes
-	| a data validation method that ensures data integrity before saving.
+	| This section contains methods for getting and setting attributes (accessors
+	| and mutators) as well as defining relationships between models.
 	|--------------------------------------------------------------------------
 	*/
 
@@ -254,11 +253,11 @@ class Document extends Model {
 	 * @since 1.1.0
 	 * @return void
 	 */
-	public function set_discount_type_props( $type ) {
+	public function set_discount_type_attribute( $type ) {
 		if ( ! in_array( $type, array( 'fixed', 'percentage' ), true ) ) {
 			$type = 'fixed';
 		}
-		$this->set_prop_value( 'discount_type', $type );
+		$this->attributes['discount_type'] = $type;
 	}
 
 	/**

@@ -24,17 +24,17 @@ $columns = array(
 
 ?>
 	<form id="eac-invoice-form" method="post" action="<?php echo esc_html( admin_url( 'admin-post.php' ) ); ?>" class="eac-document-form">
-		<div class="bkit-poststuff">
+		<div class="eac-poststuff">
 
 			<div class="column-1">
-				<div class="bkit-panel bkit-p-0">
+				<div class="eac-panel eac-p-0">
 
 					<div class="eac-document-form__section document-info">
 						<div class="eac-document-info__column">
 
-							<div class="bkit-form-group tw-mt-0">
+							<div class="eac-form-group tw-mt-0">
 								<label for="contact_id"><?php esc_html_e( 'Customer', 'wp-ever-accounting' ); ?></label>
-								<div class="bkit-input-group">
+								<div class="eac-input-group">
 									<select name="contact_id" id="contact_id" class="eac_select2" data-action="eac_json_search" data-type="customer" data-placeholder="<?php esc_attr_e( 'Select a customer', 'wp-ever-accounting' ); ?>">
 										<option></option>
 									</select>
@@ -190,29 +190,29 @@ $columns = array(
 							<?php endif; ?>
 						</div>
 						<div class="eac-document-info__column tw-box-sizing:border-box tw-flex-wrap:wrap tw-gap-x-[20px] tw-grid tw-grid-cols-2 tw-justify-between tw-items-self-start tw-content-flex-start">
-							<div class="bkit-form-group tw-mt-0">
+							<div class="eac-form-group tw-mt-0">
 								<label for="issue_date"><?php esc_html_e( 'Issue Date', 'wp-ever-accounting' ); ?>
 									<abbr class="required" title="<?php esc_attr_e( 'required', 'wp-ever-accounting' ); ?>"></abbr>
 								</label>
 								<input type="text" name="issue_date" id="issue_date" class="eac_datepicker" placeholder="<?php esc_attr_e( 'YYYY-MM-DD', 'wp-ever-accounting' ); ?>" value="<?php echo esc_attr( $document->issue_date ); ?>" required/>
 							</div>
-							<div class="bkit-form-group tw-mt-0">
+							<div class="eac-form-group tw-mt-0">
 								<label for="due_date"><?php esc_html_e( 'Due Date', 'wp-ever-accounting' ); ?></label>
 								<input type="text" name="due_date" id="due_date" data-format="yy-mm-dd" class="eac_datepicker" placeholder="<?php esc_attr_e( 'YYYY-MM-DD', 'wp-ever-accounting' ); ?>" value="<?php echo esc_attr( $document->due_date ); ?>"/>
 							</div>
-							<div class="bkit-form-group tw-mt-0">
+							<div class="eac-form-group tw-mt-0">
 								<label for="invoice_number"><?php esc_html_e( 'Invoice Number', 'wp-ever-accounting' ); ?></label>
 								<input type="text" name="invoice_number" id="invoice_number" placeholder="INV-0001" value="<?php echo esc_attr( $document->number ); ?>"/>
 							</div>
-							<div class="bkit-form-group tw-mt-0">
+							<div class="eac-form-group tw-mt-0">
 								<label for="reference"><?php esc_html_e( 'Reference', 'wp-ever-accounting' ); ?></label>
 								<input type="text" name="reference" id="reference" placeholder="REF-0001" value="<?php echo esc_attr( $document->reference ); ?>"/>
 							</div>
-							<div class="bkit-form-group tw-mt-0">
+							<div class="eac-form-group tw-mt-0">
 								<label for="discount"><?php esc_html_e( 'Discount', 'wp-ever-accounting' ); ?></label>
 								<input type="number" name="discount" id="discount" placeholder=".05" value="<?php echo esc_attr( $document->discount_amount ); ?>"/>
 							</div>
-							<div class="bkit-form-group tw-mt-0">
+							<div class="eac-form-group tw-mt-0">
 								<label for="discount_type"><?php esc_html_e( 'Discount Type', 'wp-ever-accounting' ); ?></label>
 								<select name="discount_type" id="discount_type">
 									<option value="fixed" <?php selected( 'fixed', $document->discount_type ); ?>><?php esc_html_e( 'Fixed Amount', 'wp-ever-accounting' ); ?></option>
@@ -284,7 +284,7 @@ $columns = array(
 							</tr>
 							<tr>
 								<td class="line-item" colspan="3">
-									<div class="bkit-input-group">
+									<div class="eac-input-group">
 										<select class="trigger-update eac_select2" data-action="eac_json_search" data-type="item" name="items[<?php echo esc_attr( PHP_INT_MAX ); ?>][item_id]" data-placeholder="<?php esc_attr_e( 'Select an item', 'wp-ever-accounting' ); ?>">
 											<option></option>
 										</select>
@@ -356,11 +356,11 @@ $columns = array(
 			</div><!-- .column-1 -->
 
 			<div class="column-2">
-				<div class="bkit-card">
-					<div class="bkit-card__header">
-						<h2 class="bkit-card__title"><?php esc_html_e( 'Actions', 'wp-ever-accounting' ); ?></h2>
+				<div class="eac-card">
+					<div class="eac-card__header">
+						<h2 class="eac-card__title"><?php esc_html_e( 'Actions', 'wp-ever-accounting' ); ?></h2>
 					</div>
-					<div class="bkit-card__footer">
+					<div class="eac-card__footer">
 						<?php if ( $document->exists() ) : ?>
 							<input type="hidden" name="id" value="<?php echo esc_attr( $document->id ); ?>"/>
 						<?php endif; ?>
@@ -372,12 +372,12 @@ $columns = array(
 						<?php if ( $document->exists() ) : ?>
 							<button class="button button-primary"><?php esc_html_e( 'Update Invoice', 'wp-ever-accounting' ); ?></button>
 						<?php else : ?>
-							<button class="button button-primary bkit-w-100"><?php esc_html_e( 'Add Invoice', 'wp-ever-accounting' ); ?></button>
+							<button class="button button-primary eac-w-100"><?php esc_html_e( 'Add Invoice', 'wp-ever-accounting' ); ?></button>
 						<?php endif; ?>
 					</div>
 				</div>
 			</div><!-- .column-2 -->
 
-		</div><!-- .bkit-poststuff -->
+		</div><!-- .eac-poststuff -->
 	</form>
 <?php

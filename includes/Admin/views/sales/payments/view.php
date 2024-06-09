@@ -1,20 +1,20 @@
 <?php
 /**
- * Admin Veiw Revenue.
+ * Admin Veiw Payment.
  * Page: Sales
- * Tab: Revenue
+ * Tab: Payment
  *
  * @package EverAccounting
  * @version 1.0.0
- * @var $revenue \EverAccounting\Models\Revenue Revenue object.
+ * @var $payment \EverAccounting\Models\Payment Payment object.
  */
 
 defined( 'ABSPATH' ) || exit;
 ?>
 <div class="eac-columns">
 	<div class="eac-col-9">
-		<div class="bkit-panel">
-			<?php echo do_shortcode( '[eac_revenue id=' . $revenue->id . ']' ); ?>
+		<div class="eac-panel">
+			<?php echo do_shortcode( '[eac_payment id=' . $payment->id . ']' ); ?>
 		</div>
 	</div>
 	<div class="eac-col-3"></div>
