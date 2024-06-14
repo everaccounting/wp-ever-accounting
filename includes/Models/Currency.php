@@ -264,17 +264,17 @@ class Currency extends Model {
 	/**
 	 * Find an object by its primary key or query.
 	 *
-	 * @param mixed $args The value to search for.
+	 * @param string|int $id The ID of the object to find.
 	 *
 	 * @since 1.0.0
 	 * @return static|null The model instance, or null if not found.
 	 */
-	public static function find( $args ) {
-		if ( ! is_numeric( $args ) && strlen( $args ) === 3 ) {
-			$args = array( 'code' => strtoupper( $args ) );
+	public static function find( $id ) {
+		if ( ! is_numeric( $id ) && strlen( $id ) === 3 ) {
+			$id = array( 'code' => strtoupper( $id ) );
 		}
 
-		return parent::find( $args );
+		return parent::find( $id );
 	}
 
 	/**

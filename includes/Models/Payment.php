@@ -48,8 +48,6 @@ class Payment extends Transaction {
 	 * Create a new model instance.
 	 *
 	 * @param string|int|array $attributes Attributes.
-	 *
-	 * @throws \InvalidArgumentException If table name or object type is not set.
 	 * @return void
 	 */
 	public function __construct( $attributes = null ) {

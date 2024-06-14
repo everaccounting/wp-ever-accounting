@@ -160,8 +160,6 @@ class Transaction extends Model {
 	 * Create a new model instance.
 	 *
 	 * @param string|array|object $attributes The model attributes.
-	 *
-	 * @throws \InvalidArgumentException If table name or object type is not set.
 	 */
 	public function __construct( $attributes = array() ) {
 		$this->attributes['uuid']          = wp_generate_uuid4();
@@ -379,7 +377,7 @@ class Transaction extends Model {
 	public function get_max_number() {
 		return (int) $this->get_db()->get_var(
 			$this->get_db()->prepare(
-				"SELECT MAX(`number`) FROM {$this->get_prefixed_table()} WHERE type = %s",
+				"SELECT MAX(`number`) FROM {$this->get_db()->prefix}{$this->table} WHERE `type` = %s",
 				$this->type
 			)
 		);

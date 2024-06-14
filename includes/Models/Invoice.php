@@ -41,8 +41,6 @@ class Invoice extends Document {
 	 * Create a new model instance.
 	 *
 	 * @param string|array|object $props The model attributes.
-	 *
-	 * @throws \InvalidArgumentException If table name or object type is not set.
 	 */
 	public function __construct( $props = array() ) {
 		$due_after        = get_option( 'eac_invoice_due_date', 7 );

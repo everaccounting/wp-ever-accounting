@@ -19,7 +19,21 @@ $expenses = eac_get_expenses( array( 'limit' => 5 ) );
 	</h1>
 	<hr class="wp-header-end">
 
-	<?php require __DIR__ . '/dashboard/summaries.php'; ?>
+	<div class="eac-metrics">
+		<?php for ( $i = 1; $i <= 8; $i++ ) : ?>
+		<div class="eac-metric">
+			<span class="eac-metric__legend">Monthly</span>
+			<h4 class="eac-metric__label"><?php esc_html_e( 'Total Payments', 'wp-ever-accounting' ); ?></h4>
+			<div class="eac-metric__value">
+				$<?php echo number_format( wp_rand( 1000, 1000000 ), 2 ); ?>
+				<span class="eac-metric__delta eac-metric__delta--positive">
+					+12%
+				</span>
+			</div>
+		</div>
+		<?php endfor; ?>
+	</div>
+
 	<?php require __DIR__ . '/dashboard/cashflow-chart.php'; ?>
 
 	<div class="tw-grid tw-grid-cols-2 tw-gap-[30px]">

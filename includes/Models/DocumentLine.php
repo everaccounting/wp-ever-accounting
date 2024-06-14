@@ -113,8 +113,6 @@ class DocumentLine extends Model {
 	 * Create a new model instance.
 	 *
 	 * @param string|array|object $attributes The model attributes.
-	 *
-	 * @throws \InvalidArgumentException If table name or object type is not set.
 	 */
 	public function __construct( $attributes = array() ) {
 		$this->attributes['taxable'] = filter_var( eac_tax_enabled(), FILTER_VALIDATE_BOOLEAN );

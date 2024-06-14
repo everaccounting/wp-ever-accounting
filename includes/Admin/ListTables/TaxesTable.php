@@ -51,12 +51,12 @@ class TaxesTable extends ListTable {
 		$order_by = $this->get_request_orderby();
 		$order    = $this->get_request_order();
 		$args     = array(
-			'limit'    => $per_page,
-			'page'     => $paged,
-			'search'   => $search,
+			'limit'   => $per_page,
+			'page'    => $paged,
+			'search'  => $search,
 			'orderby' => $order_by,
-			'order'    => $order,
-			'status'   => $this->get_request_status(),
+			'order'   => $order,
+			'status'  => $this->get_request_status(),
 		);
 
 		/**

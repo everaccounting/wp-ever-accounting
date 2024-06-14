@@ -18,7 +18,7 @@
   ],
   "repositories": [
     {
-      "url": "git@github.com:byteever/bytekit-core.git",
+      "url": "git@github.com:byteever/bytekit-plugin.git",
       "type": "github"
     },
     {
@@ -28,7 +28,7 @@
   ],
   "require": {
     "php": ">=7.0",
-    "byteever/bytekit-core": "dev-master",
+    "byteever/bytekit-plugin": "dev-master",
     "woocommerce/action-scheduler": "^3.7"
   },
   "autoload": {

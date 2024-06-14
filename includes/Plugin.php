@@ -8,7 +8,7 @@ namespace EverAccounting;
  * @since 1.2.1
  * @package EverAccounting
  */
-class Plugin extends \ByteKit\Core\Plugin {
+class Plugin extends \ByteKit\Plugin {
 	/**
 	 * Plugin constructor.
 	 *
@@ -17,7 +17,7 @@ class Plugin extends \ByteKit\Core\Plugin {
 	 * @since 1.0.0
 	 */
 	protected function __construct( $data ) {
-		$data['id'] = 'eac';
+		$data['prefix'] = 'eac';
 		parent::__construct( $data );
 		$this->define_constants();
 		$this->includes();
@@ -75,14 +75,14 @@ class Plugin extends \ByteKit\Core\Plugin {
 	 * @return void
 	 */
 	public function on_init() {
-		$this->services['installer'] = new Installer();
-		new Controllers\Documents();
-		new Controllers\Shortcodes();
+		$this->services->add( 'installer', new Installer() );
+		$this->services->add( 'documents', new Controllers\Documents() );
+		$this->services->add( 'shortcodes', new Controllers\Shortcodes() );
 
 		if ( is_admin() ) {
-			new Admin\Admin();
-			new Admin\Menus();
-			new Admin\Actions();
+			$this->services->add( Admin\Admin::class );
+			$this->services->add( Admin\Menus::class );
+			$this->services->add( Admin\Actions::class );
 		}
 
 		/**

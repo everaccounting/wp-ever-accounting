@@ -42,45 +42,19 @@ class TransfersTable extends ListTable {
 	 * @since 1.0.0
 	 */
 	public function prepare_items() {
-		$this->process_bulk_action();
-		$this->_column_headers = array(
-			$this->get_columns(),
-			get_hidden_columns( $this->screen ),
-			$this->get_sortable_columns()
-		);
-		$per_page              = $this->get_items_per_page( 'eac_banking_transfers_per_page', 20 );
-		$paged                 = $this->get_pagenum();
-		$search                = $this->get_request_search();
-		$order_by              = $this->get_request_orderby();
-		$order                 = $this->get_request_order();
-		$args                  = array(
-			'limit'    => $per_page,
-			'page'     => $paged,
-			'search'   => $search,
+		$this->process_actions();
+		$per_page = $this->get_items_per_page( 'eac_taxes_per_page', 20 );
+		$paged    = $this->get_pagenum();
+		$search   = $this->get_request_search();
+		$order_by = $this->get_request_orderby();
+		$order    = $this->get_request_order();
+
+		$args = array(
+			'limit'   => $per_page,
+			'page'    => $paged,
+			'search'  => $search,
 			'orderby' => $order_by,
-			'order'    => $order,
-			'status'   => $this->get_request_status(),
-		);
-		/**
-		 * Filter the query arguments for the list table.
-		 *
-		 * @param array $args An associative array of arguments.
-		 *
-		 * @since 1.0.0
-		 */
-		$args = apply_filters( 'ever_accounting_transfers_table_query_args', $args );
-
-		// TODO: Need to create transfer query methods.
-		//$this->items = eac_get_transfers( $args );
-		$this->items = array();
-		//$total       = eac_get_transfers( $args, true );
-		$total = 0;
-
-		$this->set_pagination_args(
-			array(
-				'total_items' => $total,
-				'per_page'    => $per_page,
-			)
+			'order'   => $order,
 		);
 	}
 
@@ -93,12 +67,12 @@ class TransfersTable extends ListTable {
 	 * @since 1.0.0
 	 */
 	protected function bulk_delete( $ids ) {
-		$performed = [];
+		$performed = array();
 		foreach ( $ids as $id ) {
 			// TODO: Need tp create the transfer delete method.
-//			if ( eac_delete_transfer( $id ) ) {
-//				$performed[] = $id;
-//			}
+			// if ( eac_delete_transfer( $id ) ) {
+			// $performed[] = $id;
+			// }
 		}
 		if ( ! empty( $performed ) ) {
 			EAC()->flash()->success( sprintf( _n( 'Transfer deleted.', '%s transfers deleted.', count( $performed ), 'wp-ever-accounting' ), count( $performed ) ) );
@@ -134,7 +108,6 @@ class TransfersTable extends ListTable {
 	 *
 	 * @return array Array of bulk action labels keyed by their action.
 	 * @since 1.0.0
-	 *
 	 */
 	protected function get_bulk_actions() {
 		$actions = array(
@@ -174,7 +147,6 @@ class TransfersTable extends ListTable {
 	 *
 	 * @return string[] Array of column titles keyed by their column name.
 	 * @since 1.0.0
-	 *
 	 */
 	public function get_columns() {
 		return array(
@@ -193,7 +165,6 @@ class TransfersTable extends ListTable {
 	 *
 	 * @return array Array of sortable columns.
 	 * @since 1.0.0
-	 *
 	 */
 	protected function get_sortable_columns() {
 		return array(
@@ -273,7 +244,7 @@ class TransfersTable extends ListTable {
 		);
 
 		$actions = array(
-			//'edit'   => sprintf( '<a href="%s">%s</a>', esc_url( $urls['edit'] ), __( 'Edit', 'wp-ever-accounting' ) ),
+			// 'edit'   => sprintf( '<a href="%s">%s</a>', esc_url( $urls['edit'] ), __( 'Edit', 'wp-ever-accounting' ) ),
 			'delete' => sprintf( '<a class="eac_confirm_delete" href="%s">%s</a>', esc_url( $urls['delete'] ), __( 'Delete', 'wp-ever-accounting' ) ),
 		);
 		if ( $transfer->enabled ) {
@@ -289,7 +260,7 @@ class TransfersTable extends ListTable {
 	 * This function renders most of the columns in the list table.
 	 *
 	 * @param Object|array $item The current item.
-	 * @param string $column_name The name of the column.
+	 * @param string       $column_name The name of the column.
 	 *
 	 * @return string The column value.
 	 * @since 1.0.0

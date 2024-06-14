@@ -38,13 +38,13 @@ class Category extends Model {
 	 * @since 1.0.0
 	 * @var array
 	 */
-	protected $columns = array(
-		'id',
-		'type',
-		'name',
-		'description',
-		'status',
-	);
+//	protected $columns = array(
+//		'id',
+//		'type',
+//		'name',
+//		'description',
+//		'status',
+//	);
 
 	/**
 	 * The model's attributes.

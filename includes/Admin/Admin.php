@@ -67,30 +67,29 @@ class Admin {
 		}
 
 		// 3rd party scripts.
-		$scripts = EAC()->scripts;
 		//$scripts->register_script( 'eac-jquery-plugins', 'js/jquery-plugins.js', array( 'jquery', 'jquery-ui-datepicker', 'jquery-ui-tooltip' ) );
 		//$scripts->register_style( 'eac-jquery-plugins', 'css/jquery-plugins.css' );
-		$scripts->register_script( 'eac-chartjs', 'js/chartjs.js' );
+		EAC()->scripts->register_script( 'eac-chartjs', 'js/chartjs.js' );
 
 		// Core scripts.
-		$scripts->enqueue_script( 'eac-admin', 'js/eac-admin.js', array( 'jquery', 'jquery-ui-datepicker', 'jquery-ui-tooltip', 'wp-util' ) );
-		$scripts->enqueue_style( 'eac-admin', 'css/eac-admin.css' );
-		$scripts->register_style( 'eac-settings', 'css/eac-settings.css', array( 'eac-admin' ) );
-		$scripts->register_script( 'eac-settings', 'js/eac-settings.js', array( 'eac-admin' ) );
+		EAC()->scripts->enqueue_script( 'eac-admin', 'js/eac-admin.js', array( 'jquery', 'jquery-ui-datepicker', 'jquery-ui-tooltip', 'wp-util' ) );
+		EAC()->scripts->enqueue_style( 'eac-admin', 'css/eac-admin.css' );
+		EAC()->scripts->register_style( 'eac-settings', 'css/eac-settings.css', array( 'eac-admin' ) );
+		EAC()->scripts->register_script( 'eac-settings', 'js/eac-settings.js', array( 'eac-admin' ) );
 
 		// enqueue media scripts.
 		wp_enqueue_media();
 
 		// if settings page.
 		if ( 'ever-accounting_page_eac-settings' === $hook ) {
-			$scripts->enqueue_script( 'eac-settings' );
-			$scripts->enqueue_style( 'eac-settings' );
+			EAC()->scripts->enqueue_script( 'eac-settings' );
+			EAC()->scripts->enqueue_style( 'eac-settings' );
 		}
 
 		// if dashboard or reports page.
 
 		if ( 'toplevel_page_ever-accounting' === $hook || 'ever-accounting_page_eac-reports' === $hook ) {
-			$scripts->enqueue_script( 'eac-chartjs' );
+			EAC()->scripts->enqueue_script( 'eac-chartjs' );
 		}
 
 		wp_localize_script(

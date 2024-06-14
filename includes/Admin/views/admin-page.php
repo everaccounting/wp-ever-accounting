@@ -16,7 +16,7 @@ $tabs         = apply_filters( 'ever_accounting_admin_' . $page_hook . '_tabs', 
 $current_tab  = ! empty( $current_tab ) && array_key_exists( $current_tab, $tabs ) ? $current_tab : key( $tabs );
 
 ?>
-	<div class="wrap eac-wrapper">
+	<div class="wrap eac-wrap">
 		<?php if ( ! empty( $tabs ) && count( $tabs ) > 1 ) : ?>
 			<nav class="nav-tab-wrapper eac-navbar">
 				<?php

@@ -23,8 +23,6 @@ class Customer extends Contact {
 	 * Create a new model instance.
 	 *
 	 * @param string|array|object $attributes The model attributes.
-	 *
-	 * @throws \InvalidArgumentException If table name or object type is not set.
 	 */
 	public function __construct( $attributes = array() ) {
 		$this->attributes['type'] = $this->get_object_type();

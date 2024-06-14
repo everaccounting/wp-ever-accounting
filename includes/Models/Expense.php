@@ -57,8 +57,6 @@ class Expense extends Transaction {
 	 * Create a new model instance.
 	 *
 	 * @param string|array|object $attributes The model attributes.
-	 *
-	 * @throws \InvalidArgumentException If table name or object type is not set.
 	 */
 	public function __construct( $attributes = array() ) {
 		$this->attributes['status'] = 'pending';

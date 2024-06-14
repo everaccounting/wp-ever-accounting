@@ -48,27 +48,15 @@ class Transfer extends Model {
 	 */
 	protected $columns = array(
 		'id',
-		'revenue_id',
+		'date',
+		'amount',
+		'currency_code',
+		'reference',
+		'payment_id',
 		'expense_id',
-		'uuid',
-		'author_id',
-	);
-
-	/**
-	 * The model's data properties.
-	 *
-	 * @since 1.0.0
-	 * @var array
-	 */
-	protected $props = array(
-		'from_account_id' => null,
-		'to_account_id'   => null,
-		'amount'          => 0.00,
-		'currency_code'   => null,
-		'exchange_rate'   => 1,
-		'date'            => null,
-		'payment_method'  => '',
-		'reference'       => '',
+		'creator_id',
+		'from_account_id',
+		'to_account_id',
 	);
 
 	/**
@@ -78,37 +66,30 @@ class Transfer extends Model {
 	 * @var array
 	 */
 	protected $casts = array(
+		'date'            => 'date',
+		'amount'          => 'double',
+		'exchange_rate'   => 'double',
+		'reference'       => 'string',
 		'expense_id'      => 'int',
 		'revenue_id'      => 'int',
 		'from_account_id' => 'int',
 		'to_account_id'   => 'int',
-		'amount'          => 'float',
-		'exchange_rate'   => 'float',
-		'date'            => 'datetime',
 	);
 
 	/**
-	 * Searchable attributes.
+	 * Default query variables passed to Query class.
 	 *
 	 * @since 1.0.0
 	 * @var array
 	 */
-	protected $searchable = array(
-		'from_account_id',
-		'to_account_id',
-		'amount',
-		'date',
-		'payment_method',
-	);
-
-	/**
-	 * The properties that aren't mass assignable.
-	 *
-	 * @since 1.0.0
-	 * @var string[]|bool
-	 */
-	protected $guarded = array(
-		'currency_code',
+	protected $query_vars = array(
+		'search_columns' => array(
+			'from_account_id',
+			'to_account_id',
+			'amount',
+			'date',
+			'payment_method',
+		),
 	);
 
 	/**
@@ -131,21 +112,20 @@ class Transfer extends Model {
 
 	/*
 	|--------------------------------------------------------------------------
-	| Accessors, Mutators, Relationship and Validation Methods
+	| Accessors, Mutators and Relationship
 	|--------------------------------------------------------------------------
 	| This section contains methods for getting and setting properties (accessors
-	| and mutators) as well as defining relationships between models. It also includes
-	| a data validation method that ensures data integrity before saving.
+	| and mutators) as well as defining relationships between models.
 	|--------------------------------------------------------------------------
 	*/
 	/**
-	 * Revenue relationship.
+	 * Payment relationship.
 	 *
 	 * @since 1.0.0
 	 * @return BelongsTo
 	 */
-	public function revenue() {
-		return $this->belongs_to( Revenue::class, 'revenue_id' );
+	public function payment() {
+		return $this->belongs_to( Payment::class, 'payment_id' );
 	}
 
 	/**
@@ -156,6 +136,26 @@ class Transfer extends Model {
 	 */
 	public function expense() {
 		return $this->belongs_to( Expense::class, 'expense_id' );
+	}
+
+	/**
+	 * From account relationship.
+	 *
+	 * @since 1.0.0
+	 * @return BelongsTo
+	 */
+	public function from_account() {
+		return $this->belongs_to( Account::class, 'from_account_id' );
+	}
+
+	/**
+	 * To account relationship.
+	 *
+	 * @since 1.0.0
+	 * @return BelongsTo
+	 */
+	public function to_account() {
+		return $this->belongs_to( Account::class, 'to_account_id' );
 	}
 
 	/*
@@ -172,8 +172,11 @@ class Transfer extends Model {
 	 *
 	 * @since 1.0.0
 	 * @return \WP_Error|static WP_Error on failure, or the object on success.
+	 *
+	 * @throws \Exception If there is an error saving the transfer.
 	 */
 	public function save() {
+
 		if ( empty( $this->from_account_id ) ) {
 			return new \WP_Error( 'missing_required', __( 'From account is required.', 'wp-ever-accounting' ) );
 		}
@@ -193,6 +196,7 @@ class Transfer extends Model {
 		if ( $this->from_account_id === $this->to_account_id ) {
 			return new \WP_Error( 'invalid_data', __( 'From and to account cannot be the same.', 'wp-ever-accounting' ) );
 		}
+
 		$from_account = Account::find( $this->from_account_id );
 		$to_account   = Account::find( $this->to_account_id );
 
@@ -204,46 +208,63 @@ class Transfer extends Model {
 			return new \WP_Error( 'invalid_data', __( 'Transfer to account does not exists.', 'wp-ever-accounting' ) );
 		}
 
-		if ( empty( $this->uuid ) ) {
-			$this->uuid = wp_generate_uuid4();
+		try {
+			$this->get_db()->query( 'START TRANSACTION' );
+
+			// Create a payment and expense for the transfer.
+			$payment = $this->payment()->insert(
+				array(
+					'account_id'     => $this->to_account_id,
+					'date'           => $this->date,
+					'amount'         => $this->amount,
+					'currency_code'  => $to_account->currency_code,
+					'payment_method' => $this->payment_method,
+					'reference'      => $this->reference,
+				)
+			);
+
+			if ( is_wp_error( $payment ) ) {
+				throw new \Exception( $payment->get_error_message() );
+			}
+
+			$amount = $this->amount;
+			// If from and to account currency is different, then we have to convert the amount.
+			if ( $from_account->currency_code !== $to_account->currency_code ) {
+				$amount = eac_convert_currency( $this->amount, $this->currency_code, $to_account->currency_code );
+			}
+
+			$expense = $this->expense()->insert(
+				array(
+					'account_id'     => $this->from_account_id,
+					'date'           => $this->date,
+					'amount'         => $amount,
+					'currency_code'  => $this->currency_code,
+					'payment_method' => $this->payment_method,
+					'reference'      => $this->reference,
+				)
+			);
+
+			if ( is_wp_error( $expense ) ) {
+				throw new \Exception( $expense->get_error_message() );
+			}
+
+			$this->get_db()->query( 'COMMIT' );
+
+			$this->set_attribute( 'payment_id', $payment->id );
+			$this->set_attribute( 'expense_id', $expense->id );
+			$this->set_attribute( 'currency_code', $to_account->currency_code );
+			$this->set_attribute( 'from_account_id', $from_account->id );
+			$this->set_attribute( 'to_account_id', $to_account->id );
+			$this->set_attribute( 'reference', $this->reference );
+			$this->set_attribute( 'creator_id', get_current_user_id() );
+
+			return parent::save();
+
+		} catch ( \Exception $e ) {
+			$this->get_db()->query( 'ROLLBACK' );
+
+			return new \WP_Error( 'db_error', $e->getMessage() );
 		}
-
-		$expense = $this->expense()->insert(
-			array(
-				'account_id'     => $this->from_account_id,
-				'date'           => $this->date,
-				'amount'         => $this->amount,
-				'currency_code'  => $this->currency_code,
-				'payment_method' => $this->payment_method,
-				'reference'      => $this->reference,
-			)
-		);
-		if ( is_wp_error( $expense ) ) {
-			return $expense;
-		}
-
-		$amount = $this->amount;
-		// If from and to account currency is different, then we have to convert the amount.
-		if ( $from_account->currency_code !== $to_account->currency_code ) {
-			$amount = eac_convert_currency( $this->amount, $this->currency_code, $to_account->currency_code );
-		}
-
-		$revenue = $this->revenue()->insert(
-			array(
-				'account_id'     => $this->to_account_id,
-				'date'           => $this->date,
-				'amount'         => $amount,
-				'currency_code'  => $to_account->currency_code,
-				'payment_method' => $this->payment_method,
-				'reference'      => $this->reference,
-			)
-		);
-
-		if ( is_wp_error( $revenue ) ) {
-			return $revenue;
-		}
-
-		return parent::save();
 	}
 
 	/*
