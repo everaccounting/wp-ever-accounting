@@ -210,6 +210,7 @@ defined( 'ABSPATH' ) || exit;
 							array(
 								'type'        => 'file',
 								'name'        => 'attachment',
+								'value'	=> '113',
 								'placeholder' => __( 'Select file', 'wp-ever-accounting' ),
 								'tooltip'     => __( 'Upload a file related to this payment.', 'wp-ever-accounting' ),
 							)

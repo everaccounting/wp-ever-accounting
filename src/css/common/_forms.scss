@@ -1,4 +1,227 @@
 .eac-form-field {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	position: relative;
+	min-width: 0;
+	vertical-align: top;
+	box-sizing: border-box;
+	min-height: 30px;
+	margin: 0 0 1em 0;
+
+	//label with for
+	> label:first-child {
+		display: flex;
+		align-self: self-start;
+		justify-content: flex-start;
+		align-items: center;
+		font-weight: bold;
+		font-size: 95%;
+		margin-bottom: 0.25em;
+
+		abbr[title="required"] {
+			color: #ff0000;
+			text-decoration: none;
+			font-weight: normal;
+
+			&:after {
+				content: "*";
+			}
+		}
+	}
+
+	//input, select, textarea
+	> input, > select, > textarea {
+		box-sizing: border-box;
+		position: relative;
+		max-width: unset;
+	}
+
+	> .button, > button {
+		position: relative;
+		z-index: 2;
+		display: flex;
+		align-items: center;
+		border-width: 1px;
+		margin: 0;
+
+		&:focus {
+			z-index: 3;
+		}
+	}
+
+	//group
+	.eac-input-group {
+		position: relative;
+		display: flex;
+		flex-wrap: wrap;
+		align-items: stretch;
+		align-self: center;
+		width: 100%;
+
+		> input, > select, > textarea, .select2-container {
+			flex: 1 1 auto;
+			min-width: 0;
+			margin: 0;
+			max-width: unset;
+		}
+
+		.select2-container {
+			width: unset !important;
+		}
+
+		[class*='addon'], .button {
+			display: flex;
+			align-items: center;
+			padding: 0 8px;
+			text-align: center;
+			white-space: nowrap;
+			background-color: #eee;
+			border: 1px solid #8c8f94;
+			border-radius: 4px;
+			user-select: none;
+			text-decoration: none;
+		}
+
+		& > :not(:last-child) {
+			border-right: 0;
+			border-top-right-radius: 0;
+			border-bottom-right-radius: 0;
+
+			.select2-selection {
+				border-top-right-radius: 0;
+				border-bottom-right-radius: 0;
+			}
+		}
+
+		& > :nth-last-child(n+3) {
+			border-top-right-radius: 0;
+			border-bottom-right-radius: 0;
+		}
+
+		& > :not(:first-child) {
+			margin-left: -1px !important;
+			border-top-left-radius: 0;
+			border-bottom-left-radius: 0;
+
+			.select2-selection {
+				border-top-left-radius: 0;
+				border-bottom-left-radius: 0;
+			}
+		}
+
+		// if the 2nd child is select2.
+		& > :nth-child(2) {
+			.select2-selection {
+				border-top-left-radius: 4px;
+				border-bottom-left-radius: 4px;
+			}
+		}
+	}
+
+	//help
+	.description {
+		margin: 2px 0 5px;
+		color: #646970;
+		font-size: 13px;
+	}
+
+	//file upload
+	.eac-file-uploader {
+		.eac-file-uploader__preview {
+			border: #ccd0d4 solid 1px;
+			height: 84px;
+			position: relative;
+			background: #fff;
+			display: none;
+			align-items: center;
+			justify-content: flex-start;
+			width: 100%;
+			flex: 1 1 auto;
+
+			.eac-file-uploader__icon {
+				position: relative;
+				padding: 10px;
+				border-right: #d5d9dd solid 1px;
+
+				img {
+					display: block;
+					padding: 0;
+					margin: 0;
+					max-width: 48px;
+				}
+
+				&:hover {
+					cursor: pointer;
+
+					.eac-file-uploader__remove {
+						opacity: 1;
+					}
+				}
+			}
+
+			.eac-file-uploader__remove {
+				position: absolute;
+				top: 0;
+				right: 0;
+				padding: 10px;
+				cursor: pointer;
+				text-decoration: none;
+				opacity: 0;
+				transition: all 0.3s ease;
+				color: red;
+				width: 100%;
+				height: 100%;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				background: rgba(255, 255, 255, 0.8);
+
+				&:focus {
+					outline: none;
+				}
+			}
+
+			.eac-file-uploader__details {
+				padding: 10px;
+				display: flex;
+				flex-direction: column;
+				justify-content: flex-start;
+			}
+		}
+
+		.eac-file-uploader__button {
+			display: block;
+			appearance: none;
+			width: 100%;
+			padding: 20px;
+			border: 1px dashed #ccc;
+			border-radius: 4px;
+			background-color: #f9f9f9;
+			color: #646970;
+			font-size: 14px;
+			text-align: center;
+			cursor: pointer;
+			transition: all 0.3s ease;
+
+			&:hover {
+				background-color: #f0f0f0;
+			}
+		}
+
+		&.has--file {
+			.eac-file-uploader__preview {
+				display: flex;
+			}
+
+			.eac-file-uploader__button {
+				display: none;
+			}
+		}
+	}
+}
+
+.eac-form-field_v1 {
 	$root: &;
 
 	width: 100%;
@@ -195,7 +418,7 @@
 				}
 			}
 
-			&-info{
+			&-info {
 				padding: 10px;
 				margin-left: 69px;
 				display: flex;

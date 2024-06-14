@@ -74,18 +74,6 @@ function eac_form_field( $field ) {
 		}
 	}
 
-	// Prefix.
-	if ( ! empty( $field['prefix'] ) && ! preg_match( '/<[^>]+>/', $field['prefix'] ) ) {
-		$prefix          = is_callable( $field['prefix'] ) ? call_user_func( $field['suffix'], $field ) : $field['prefix'];
-		$field['prefix'] = '<span class="eac-form-field__addon">' . $prefix . '</span>';
-	}
-
-	// Suffix.
-	if ( ! empty( $field['suffix'] ) && ! preg_match( '/<[^>]+>/', $field['suffix'] ) ) {
-		$suffix          = is_callable( $field['suffix'] ) ? call_user_func( $field['suffix'], $field ) : $field['suffix'];
-		$field['suffix'] = '<span class="eac-form-field__addon">' . $suffix . '</span>';
-	}
-
 	$input = '';
 	switch ( $field['type'] ) {
 		case 'text':
@@ -94,7 +82,7 @@ function eac_form_field( $field ) {
 		case 'password':
 		case 'url':
 			$input = sprintf(
-				'<input type="%1$s" name="%2$s" id="%3$s" class="eac-form-field__input %4$s" value="%5$s" placeholder="%6$s" style="%7$s" %8$s>',
+				'<input type="%1$s" name="%2$s" id="%3$s" class="%4$s" value="%5$s" placeholder="%6$s" style="%7$s" %8$s>',
 				esc_attr( $field['type'] ),
 				esc_attr( $field['name'] ),
 				esc_attr( $field['id'] ),
@@ -104,18 +92,10 @@ function eac_form_field( $field ) {
 				esc_attr( $field['style'] ),
 				wp_kses_post( implode( ' ', $attrs ) )
 			);
-			if ( ! empty( $field['prefix'] ) || ! empty( $field['suffix'] ) ) {
-				$input = sprintf(
-					'<div class="eac-form-field__group">%1$s%2$s%3$s</div>',
-					wp_kses_post( $field['prefix'] ),
-					$input,
-					wp_kses_post( $field['suffix'] )
-				);
-			}
-
 			break;
 
 		case 'select':
+			$field['options']     = is_array( $field['options'] ) ? $field['options'] : array();
 			$field['value']       = wp_parse_list( $field['value'] );
 			$field['value']       = array_map( 'strval', $field['value'] );
 			$field['placeholder'] = ! empty( $field['placeholder'] ) ? $field['placeholder'] : '';
@@ -136,11 +116,10 @@ function eac_form_field( $field ) {
 			}
 
 			$input = sprintf(
-				'<select name="%1$s" id="%2$s" class="eac-form-field__select %3$s" placeholder="%4$s" style="%5$s" %6$s>',
+				'<select name="%1$s" id="%2$s" class="%3$s" style="%4$s" %5$s>',
 				esc_attr( $field['name'] ),
 				esc_attr( $field['id'] ),
 				esc_attr( $field['class'] ),
-				esc_attr( $field['placeholder'] ),
 				esc_attr( $field['style'] ),
 				wp_kses_post( implode( ' ', $attrs ) )
 			);
@@ -162,21 +141,11 @@ function eac_form_field( $field ) {
 			}
 
 			$input .= '</select>';
-
-			if ( ! empty( $field['prefix'] ) || ! empty( $field['suffix'] ) ) {
-				$input = sprintf(
-					'<div class="eac-form-field__group">%1$s%2$s%3$s</div>',
-					wp_kses_post( $field['prefix'] ),
-					$input,
-					wp_kses_post( $field['suffix'] )
-				);
-			}
-
 			break;
 
 		case 'date':
 			$input = sprintf(
-				'<input type="text" name="%1$s" id="%2$s" class="eac-form-field__input %3$s" value="%4$s" placeholder="%5$s" style="%6$s" %7$s>',
+				'<input type="text" name="%1$s" id="%2$s" class="%3$s" value="%4$s" placeholder="%5$s" style="%6$s" %7$s>',
 				esc_attr( $field['name'] ),
 				esc_attr( $field['id'] ),
 				esc_attr( $field['class'] ),
@@ -185,21 +154,12 @@ function eac_form_field( $field ) {
 				esc_attr( $field['style'] ),
 				wp_kses_post( implode( ' ', $attrs ) )
 			);
-
-			if ( ! empty( $field['prefix'] ) || ! empty( $field['suffix'] ) ) {
-				$input = sprintf(
-					'<div class="eac-form-field__group">%1$s%2$s%3$s</div>',
-					wp_kses_post( $field['prefix'] ),
-					$input,
-					wp_kses_post( $field['suffix'] )
-				);
-			}
 
 			break;
 
 		case 'hidden':
 			$input = sprintf(
-				'<input type="hidden" name="%1$s" id="%2$s" class="eac-form-field__input %3$s" value="%4$s" placeholder="%5$s" style="%6$s" %7$s>',
+				'<input type="hidden" name="%1$s" id="%2$s" class="%3$s" value="%4$s" placeholder="%5$s" style="%6$s" %7$s>',
 				esc_attr( $field['name'] ),
 				esc_attr( $field['id'] ),
 				esc_attr( $field['class'] ),
@@ -211,68 +171,11 @@ function eac_form_field( $field ) {
 
 			break;
 
-		case 'file':
-			$uploader_class = ! empty( $field['uploader_class'] ) ? $field['uploader_class'] : 'has--file';
-			$mime_types     = ! empty( $field['mime_types'] ) ? $field['mime_types'] : '';
-			$file           = array(
-				'icon'     => '',
-				'title'    => '',
-				'url'      => '',
-				'filename' => '',
-				'filesize' => '',
-			);
-			if ( $field['value'] ) {
-				$post = get_post( $field['value'] );
-				if ( $post && 'attachment' === $post->post_type ) {
-					$uploader_class = ' has--file';
-					// update.
-					$file['icon']     = $post['icon'];
-					$file['title']    = $post['title'];
-					$file['url']      = $post['url'];
-					$file['filename'] = $post['filename'];
-					if ( $post['filesize'] ) {
-						$file['filesize'] = size_format( $post['filesize'] );
-					}
-				}
-			}
-
-			$input = sprintf(
-				'<div class="eac-form-field__file %1$s" data-mime-types="%2$s">
-					<input type="hidden" name="%3$s" id="%4$s" class="eac-form-field__file-input %5$s" value="%6$s" %7$s>
-					<div class="eac-form-field__file-preview">
-						<div class="eac-form-field__file-icon"><img src="%8$s" alt="%9$s"/></div>
-					    <div class="eac-form-field__file-info">
-					        <a href="%10$s" target="_blank" class="eac-form-field__file-name">%11$s</a>
-					        <span class="eac-form-field__file-size">%12$s</span>
-					        <a href="#" class=" eac-form-field__file-remove" data-id="%4$s">%13$s</a>
-					    </div>
-					</div>
-					<div class="eac-form-field__file-upload">
-					    <button type="button" class="eac-form-field__file-button">%14$s</button>
-					</div>
-				</div>',
-				esc_attr( $uploader_class ),
-				esc_attr( $mime_types ),
-				esc_attr( $field['name'] ),
-				esc_attr( $field['id'] ),
-				esc_attr( $field['class'] ),
-				esc_attr( $field['value'] ),
-				wp_kses_post( implode( ' ', $attrs ) ),
-				esc_url( $file['icon'] ),
-				esc_attr( $file['title'] ),
-				esc_url( $file['url'] ),
-				esc_html( $file['filename'] ),
-				esc_html( $file['filesize'] ),
-				esc_html__( 'Remove', 'wp-ever-accounting' ),
-				esc_html( $field['placeholder'] )
-			);
-
-			break;
 		case 'textarea':
 			$rows  = ! empty( $field['rows'] ) ? absint( $field['rows'] ) : 4;
 			$cols  = ! empty( $field['cols'] ) ? absint( $field['cols'] ) : 50;
 			$input = sprintf(
-				'<textarea name="%1$s" id="%2$s" class="eac-form-field__textarea %3$s" placeholder="%4$s" rows="%5$s" cols="%6$s" style="%7$s" %8$s>%9$s</textarea>',
+				'<textarea name="%1$s" id="%2$s" class="%3$s" placeholder="%4$s" rows="%5$s" cols="%6$s" style="%7$s" %8$s>%9$s</textarea>',
 				esc_attr( $field['name'] ),
 				esc_attr( $field['id'] ),
 				esc_attr( $field['class'] ),
@@ -287,46 +190,123 @@ function eac_form_field( $field ) {
 			break;
 
 		case 'wp_editor':
-			ob_start();
-			wp_editor(
-				$field['value'],
-				$field['id'],
+			$settings = isset( $field['settings'] ) ? $field['settings'] : array();
+			$settings = wp_parse_args(
+				$settings,
 				array(
 					'textarea_name' => $field['name'],
 					'textarea_rows' => 10,
 				)
 			);
+			ob_start();
+			wp_editor(
+				$field['value'],
+				$field['id'],
+				$settings,
+			);
 			$input = ob_get_clean();
 			break;
+
+		case 'file':
+			$field = wp_parse_args(
+				$field,
+				array(
+					'button_class' => '',
+					'button_label' => __( 'Choose File', 'wp-ever-accounting' ),
+					'mime_types'   => '',
+				)
+			);
+			$file  = array(
+				'icon'     => '',
+				'title'    => '',
+				'url'      => '',
+				'filename' => '',
+				'filesize' => '',
+			);
+			if ( ! empty( $field['value'] ) ) {
+				// get attachment.
+
+				$post = get_post( $field['value'] );
+				if ( $post && 'attachment' === $post->post_type ) {
+					$meta            = wp_get_attachment_metadata( $post->ID );
+					$attached_file   = get_attached_file( $post->ID );
+					$field['class'] .= ' has--file';
+					// update.
+					$file['icon']     = wp_mime_type_icon( $post->ID );
+					$file['title']    = get_the_title( $post->ID );
+					$file['url']      = wp_get_attachment_url( $post->ID );
+					$file['filename'] = wp_basename( $attached_file );
+				}
+			}
+
+			$input = sprintf(
+				'<div class="eac-file-uploader %1$s" data-mime-types="%2$s" data-file_id="%3$d">
+					<input type="hidden" name="%4$s" id="%5$s" value="%6$d" class="eac-file-uploader__input">
+					<div class="eac-file-uploader__preview">
+						<div class="eac-file-uploader__icon">
+							<img src="%7$s" alt="%8$s">
+							<a href="#" class="eac-file-uploader__remove"><span class="dashicons dashicons-trash"></span></a>
+						</div>
+						<div class="eac-file-uploader__details">
+							<a href="%9$s" target="_blank" rel="noopener noreferrer" class="eac-file-uploader__filename">%10$s</a>
+						</div>
+					</div>
+					<button type="button" class="eac-file-uploader__button %11$s">%12$s</button>
+				</div>',
+				esc_attr( $field['class'] ),
+				esc_attr( $field['mime_types'] ),
+				absint( $field['value'] ),
+				esc_attr( $field['name'] ),
+				esc_attr( $field['id'] ),
+				absint( $field['value'] ),
+				esc_url( $file['icon'] ),
+				esc_attr( $file['title'] ),
+				esc_url( $file['url'] ),
+				esc_html( $file['filename'] ),
+				esc_attr( $field['button_class'] ),
+				esc_html( $field['button_label'] ),
+			);
+
+			break;
+
 	}
 
-	// label.
-	if ( ! empty( $input ) && ! empty( $field['label'] ) && 'hidden' !== $field['type'] ) {
+	// Add prefix and suffix.
+	if ( ! empty( $input ) && ( ! empty( $field['prefix'] ) || ! empty( $field['suffix'] ) ) && in_array( $field['type'], array( 'text', 'email', 'number', 'password', 'url', 'select', 'date' ), true ) ) {
+		$prefix = ! empty( $field['prefix'] ) && ! preg_match( '/<[^>]+>/', $field['prefix'] ) ? '<span class="eac-form-field__addon">' . $field['prefix'] . '</span>' : $field['prefix'];
+		$suffix = ! empty( $field['suffix'] ) && ! preg_match( '/<[^>]+>/', $field['suffix'] ) ? '<span class="eac-form-field__addon">' . $field['suffix'] . '</span>' : $field['suffix'];
+
+		$input = sprintf(
+			'<div class="eac-input-group">%1$s%2$s%3$s</div>',
+			wp_kses_post( $prefix ),
+			$input,
+			wp_kses_post( $suffix )
+		);
+	}
+
+	if ( ! empty( $input ) && ! empty( $field['label'] ) ) {
 		$required = true === $field['required'] ? '&nbsp;<abbr title="' . esc_attr__( 'required', 'wp-ever-accounting' ) . '"></abbr>' : '';
 		$tooltip  = ! empty( $field['tooltip'] ) ? '&nbsp;' . eac_tooltip( $field['tooltip'] ) : '';
-		$label    = sprintf(
-			'<label class="eac-form-field__label" for="%1$s">%2$s%3$s%4$s</label>',
+		$input    = sprintf(
+			'<label for="%1$s">%2$s%3$s%4$s</label>%5$s',
 			esc_attr( $field['id'] ),
 			esc_html( $field['label'] ),
-			wp_kses_post( $tooltip ),
-			wp_kses_post( $required ),
+			$required,
+			$tooltip,
+			$input
 		);
-
-		$input = $label . PHP_EOL . $input;
 	}
 
 	if ( ! empty( $input ) && ! empty( $field['desc'] ) ) {
-		$input .= sprintf( '<span class="eac-form-field__help">%s</span>', wp_kses_post( $field['desc'] ) );
+		$input .= sprintf( '<p class="description">%s</p>', wp_kses_post( $field['desc'] ) );
 	}
 
 	if ( ! empty( $input ) ) {
 		printf(
-			'<div class="eac-form-field eac-form-field-%1$s %2$s" id="eac-form-field-%3$s" style="%4$s">%5$s</div>',
-			esc_attr( $field['type'] ),
+			'<div class="eac-form-field %1$s" style="%2$s">%3$s</div>',
 			esc_attr( $field['wrapper_class'] ),
-			esc_attr( $field['id'] ),
 			esc_attr( $field['wrapper_style'] ),
-			$input // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Already escaped.
+			$input // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output is escaped in the above code.
 		);
 	}
 }
