@@ -166,7 +166,7 @@ class Currency extends Model {
 	 * @since 1.0.0
 	 */
 	protected function set_exchange_rate_attribute( $value ) {
-		$this->attributes['exchange_rate'] = eac_get_base_currency() === $this->code ? 1 : $this->cast_attribute( 'exchange_rate', $value );
+		$this->attributes['exchange_rate'] = eac_get_base_currency() === $this->code ? 1 : $this->cast( 'exchange_rate', $value );
 	}
 
 	/**
@@ -305,7 +305,6 @@ class Currency extends Model {
 
 		return $item ? $item->fill( $attributes ) : $model->new_instance( $attributes );
 	}
-
 
 	/*
 	|--------------------------------------------------------------------------

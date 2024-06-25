@@ -39,7 +39,7 @@ class Expense extends Transaction {
 	 * @since 1.0.0
 	 * @var array
 	 */
-	protected $query_args = array(
+	protected $query_vars = array(
 		'update_meta_cache' => true,
 	);
 
@@ -59,9 +59,9 @@ class Expense extends Transaction {
 	 * @param string|array|object $attributes The model attributes.
 	 */
 	public function __construct( $attributes = array() ) {
-		$this->attributes['status'] = 'pending';
+		$this->attributes['status'] = 'completed';
 		$this->attributes['type']   = $this->get_object_type();
-		$this->query_args['type']   = $this->get_object_type();
+		$this->query_vars['type']   = $this->get_object_type();
 		parent::__construct( $attributes );
 	}
 
@@ -85,7 +85,7 @@ class Expense extends Transaction {
 			'ever_accounting_expense_statuses',
 			array(
 				'pending'   => esc_html__( 'Pending', 'wp-ever-accounting' ),
-				'paid'      => esc_html__( 'paid', 'wp-ever-accounting' ),
+				'completed' => esc_html__( 'Completed', 'wp-ever-accounting' ),
 				'refunded'  => esc_html__( 'Refunded', 'wp-ever-accounting' ),
 				'cancelled' => esc_html__( 'Cancelled', 'wp-ever-accounting' ),
 			)

@@ -34,6 +34,17 @@ class Payment extends Transaction {
 	);
 
 	/**
+	 * Default query variables passed to Query.
+	 *
+	 * @since 1.0.0
+	 * @var array
+	 */
+	protected $query_vars = array(
+		'type'           => 'payment',
+		'search_columns' => array( 'id', 'contact_id', 'amount', 'status', 'date' ),
+	);
+
+	/**
 	 * Properties that have transition effects when changed.
 	 *
 	 * @since 1.0.0
@@ -51,9 +62,9 @@ class Payment extends Transaction {
 	 * @return void
 	 */
 	public function __construct( $attributes = null ) {
-		$this->attributes['status'] = 'pending';
+		$this->attributes['status'] = 'completed';
 		$this->attributes['type']   = $this->get_object_type();
-		$this->query_args['type']   = $this->get_object_type();
+		$this->query_vars['type']   = $this->get_object_type();
 		parent::__construct( $attributes );
 	}
 
@@ -78,7 +89,7 @@ class Payment extends Transaction {
 			'ever_accounting_payment_statuses',
 			array(
 				'pending'   => esc_html__( 'Pending', 'wp-ever-accounting' ),
-				'paid'      => esc_html__( 'paid', 'wp-ever-accounting' ),
+				'completed' => esc_html__( 'Completed', 'wp-ever-accounting' ),
 				'refunded'  => esc_html__( 'Refunded', 'wp-ever-accounting' ),
 				'cancelled' => esc_html__( 'Cancelled', 'wp-ever-accounting' ),
 			)

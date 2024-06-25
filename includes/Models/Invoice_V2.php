@@ -40,7 +40,7 @@ class Invoice_V2 extends Document {
 		$this->attributes['issue_date'] = wp_date( 'Y-m-d' );
 		$this->attributes['due_date']   = $due_date;
 		$this->attributes['note']       = $notes;
-		$this->query_args['type']       = $this->get_object_type();
+		$this->query_vars['type']       = $this->get_object_type();
 		parent::__construct( $attributes );
 	}
 

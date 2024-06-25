@@ -76,7 +76,7 @@ use ByteKit\Models\Relations\HasOne;
  * @property double   $exchange_rate Exchange rate of the document.
  * @property int      $parent_id Parent ID of the document.
  * @property string   $created_via Created via of the document.
- * @property int      $author_id Author ID of the document.
+ * @property int      $creator_id Author ID of the document.
  * @property string   $uuid UUID of the document.
  * @property string   $date_updated Date updated of the document.
  * @property string   $date_created Date created of the document.
@@ -161,7 +161,7 @@ class Document_BK extends Model {
 		'exchange_rate',
 		'parent_id',
 		'created_via',
-		'author_id',
+		'creator_id',
 		'uuid',
 	);
 
@@ -215,7 +215,7 @@ class Document_BK extends Model {
 		'vat_exempt'      => 'bool',
 		'exchange_rate'   => 'double',
 		'parent_id'       => 'int',
-		'author_id'       => 'int',
+		'creator_id'       => 'int',
 	);
 
 	/**
@@ -235,7 +235,7 @@ class Document_BK extends Model {
 	public function __construct( $attributes = 0 ) {
 		$this->props['tax_inclusive'] = filter_var( eac_price_includes_tax(), FILTER_VALIDATE_BOOLEAN );
 		$this->props['currency_code'] = eac_get_base_currency();
-		$this->props['author_id']     = get_current_user_id();
+		$this->props['creator_id']     = get_current_user_id();
 		$this->props['uuid']          = wp_generate_uuid4();
 		$this->props['date_created']  = wp_date( 'Y-m-d H:i:s' );
 		parent::__construct( $attributes );

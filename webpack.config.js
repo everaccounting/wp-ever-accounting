@@ -8,23 +8,24 @@ module.exports = [
 		entry: {
 			...defaultConfig.entry(),
 			'js/chartjs': './node_modules/chart.js/dist/chart.js',
-			'js/eac-admin': [
+			'js/select2': [
 				'./node_modules/select-woo/dist/js/selectWoo.js',
-				//'./node_modules/micromodal/dist/micromodal.js',
 				'./node_modules/select2/dist/js/select2.full.js',
-				'./src/libraries/tipTip/tipTip.js',
+			],
+			'js/inputmask': [
 				'./src/libraries/inputmask/inputmask.js',
 				'./src/libraries/inputmask/inputmask.binding.js',
-				'./src/js/common/eac.js',
-				'./src/js/admin/admin.js'
 			],
-			'css/eac-admin': [
-				'./node_modules/select-woo/dist/css/selectWoo.css',
+			'js/tiptip': './src/libraries/tipTip/tipTip.js',
+			'js/eac-admin': './src/js/admin/admin.js',
+			'js/eac-settings': './src/js/admin/settings.js',
+			'css/jquery-ui': [
+				'./node_modules/jquery-ui/themes/base/theme.css',
 				'./node_modules/jquery-ui/themes/base/datepicker.css',
 				'./node_modules/jquery-ui/themes/base/tooltip.css',
-				'./src/css/admin/admin.scss'
 			],
-			'js/eac-settings': './src/js/admin/settings.js',
+			'css/select2': './node_modules/select-woo/dist/css/selectWoo.css',
+			'css/eac-admin': './src/css/admin/admin.scss',
 			'css/eac-settings': './src/css/admin/settings.scss',
 		},
 		output: {

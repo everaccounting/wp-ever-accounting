@@ -38,6 +38,12 @@
 				self.decimalInput(this);
 				$(this).addClass('enhanced');
 			});
+
+			// Upload file.
+			$('.eac-file-uploader').filter(':not(.enhanced)').each(function () {
+				self.uploadFile(this);
+				$(this).addClass('enhanced');
+			});
 		},
 
 		/**
@@ -123,10 +129,10 @@
 		 * @return {*|jQuery}
 		 */
 		tooltip: function (el) {
-			// if ('undefined' === typeof fn.tooltip) {
-			// 	console.warn('jQuery UI is not loaded.');
-			// 	return;
-			// }
+			if ('undefined' === typeof $.fn.tooltip) {
+				console.warn('jQuery UI is not loaded.');
+				return;
+			}
 
 			return $(el).tooltip({
 				content: function () {
@@ -156,10 +162,10 @@
 		 * @return {void}
 		 */
 		inputMask: function (el) {
-			// if ('undefined' === typeof $.inputmask) {
-			// 	console.warn('jQuery Inputmask is not loaded.');
-			// 	return;
-			// }
+			if ('undefined' === typeof $.fn.inputmask) {
+				console.warn('jQuery Inputmask is not loaded.');
+				return;
+			}
 			$(el).inputmask();
 		},
 
@@ -235,6 +241,62 @@
 				var val = $(this).val();
 				val = val.replace(/[^0-9.]/g, '');
 				$(this).val(val);
+			});
+		},
+
+		/**
+		 * Upload file.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param {HTMLElement} el - The element to upload file.
+		 * @return {void}
+		 */
+		uploadFile: function (el) {
+			var $el = $(el);
+			var $button = $el.find('.eac-file-uploader__button ');
+			var $input = $el.find('.eac-file-uploader__input');
+			var $filename = $el.find('.eac-file-uploader__filename');
+			var $remove = $el.find('.eac-file-uploader__remove');
+			var $preview = $el.find('.eac-file-uploader__preview');
+			var $img = $preview.find('img');
+
+			// WordPress media uploader.
+			var frame = null;
+
+			$button.on('click', function (e) {
+				e.preventDefault();
+				console.log('clicked');
+				if (frame) {
+					frame.open();
+					return;
+				}
+
+				frame = wp.media({
+					title: 'Upload File',
+					button: {
+						text: 'Select File'
+					},
+					multiple: false
+				});
+
+				frame.on('select', function () {
+					var attachment = frame.state().get('selection').first().toJSON();
+					console.log(attachment);
+					$input.val(attachment.id);
+					$img.attr('src', attachment.icon);
+					$el.addClass('has--file');
+					$filename.text(attachment.filename);
+					$filename.attr('href', attachment.url);
+				});
+
+				frame.open();
+			});
+
+			$remove.on('click', function (e) {
+				e.preventDefault();
+				$input.val('');
+				$preview.hide();
 			});
 		},
 

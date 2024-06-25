@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @property string $object_type Object type of the object.
  * @property string $content Content of the note.
  * @property array  $note_metadata Metadata of the note.
- * @property int    $author_id ID of the author.
+ * @property int    $creator_id ID of the author.
  * @property string $date_created Date created of the note.
  * @property string $date_updated Date updated of the note.
  */
@@ -40,7 +40,7 @@ class Note extends Model {
 		'object_type',
 		'content',
 		'note_metadata',
-		'author_id',
+		'creator_id',
 	);
 
 	/**
@@ -62,7 +62,7 @@ class Note extends Model {
 	protected $casts = array(
 		'id'            => 'int',
 		'object_id'     => 'int',
-		'author_id'     => 'int',
+		'creator_id'     => 'int',
 		'note_metadata' => 'array',
 	);
 
@@ -112,8 +112,8 @@ class Note extends Model {
 			return new \WP_Error( 'missing_object_type', __( 'Missing object type.', 'wp-ever-accounting' ) );
 		}
 
-		if ( empty( $this->author_id ) && is_user_logged_in() ) {
-			$this->author_id = get_current_user_id();
+		if ( empty( $this->creator_id ) && is_user_logged_in() ) {
+			$this->creator_id = get_current_user_id();
 		}
 
 		return parent::save();

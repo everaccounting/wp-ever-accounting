@@ -29,10 +29,11 @@ abstract class ListTable extends \WP_List_Table {
 	 * @return string
 	 */
 	protected function get_request_orderby() {
+		wp_verify_nonce( '_wpnonce' );
 		$sortable_columns = $this->get_sortable_columns();
-		$orderby          = '';
-		if ( ! empty( $_GET['orderby'] ) && array_key_exists( $_GET['orderby'], $sortable_columns ) ) { //phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			$orderby = sanitize_text_field( wp_unslash( $_GET['orderby'] ) ); //phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$orderby          = isset( $_GET['orderby'] ) ? sanitize_text_field( wp_unslash( $_GET['orderby'] ) ) : '';
+		if ( ! array_key_exists( $orderby, $sortable_columns ) ) {
+			$orderby = '';
 		}
 
 		return $orderby;
@@ -62,7 +63,8 @@ abstract class ListTable extends \WP_List_Table {
 	 * @return string
 	 */
 	protected function get_request_status( $fallback = null ) {
-		$status = ( ! empty( $_GET['status'] ) ) ? sanitize_text_field( wp_unslash( $_GET['status'] ) ) : ''; //phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		wp_verify_nonce( '_wpnonce' );
+		$status = ( ! empty( $_GET['status'] ) ) ? sanitize_text_field( wp_unslash( $_GET['status'] ) ) : '';
 
 		return empty( $status ) ? $fallback : $status;
 	}
@@ -74,6 +76,7 @@ abstract class ListTable extends \WP_List_Table {
 	 * @return string
 	 */
 	public function get_request_search() {
+		wp_verify_nonce( '_wpnonce' );
 		return ! empty( $_GET['s'] ) ? sanitize_text_field( wp_unslash( $_GET['s'] ) ) : '';
 	}
 
@@ -93,7 +96,7 @@ abstract class ListTable extends \WP_List_Table {
 
 		check_admin_referer( 'bulk-' . $this->_args['plural'] );
 
-		$ids    = isset( $_GET['id'] ) ? wp_unslash( $_GET['id'] ) : array();
+		$ids    = isset( $_GET['id'] ) ? map_deep( wp_unslash( $_GET['id'] ), 'intval' ) : array();
 		$ids    = wp_parse_id_list( $ids );
 		$method = 'bulk_' . $action;
 		if ( array_key_exists( $action, $this->get_bulk_actions() ) && method_exists( $this, $method ) && ! empty( $ids ) ) {

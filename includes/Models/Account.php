@@ -24,7 +24,7 @@ defined( 'ABSPATH' ) || exit;
  * @property string             $bank_phone Bank phone.
  * @property string             $bank_address Bank address.
  * @property string             $currency_code Currency code.
- * @property int                $author_id Author ID.
+ * @property int                $creator_id Author ID.
  * @property int                $thumbnail_id Thumbnail ID.
  * @property string             $status Status of the account.
  * @property string             $uuid UUID of the account.
@@ -36,8 +36,8 @@ defined( 'ABSPATH' ) || exit;
  * @property-read string        $formatted_balance Formatted balance.
  * @property-read Currency      $currency Currency relation.
  * @property-read Transaction[] $transactions Transaction relation.
- * @property-read Revenue[]     $revenues Revenue relation.
- * @property-read Expense[]     $expenses Expense relation.
+ * @property-read Payment[]     $payments Payments relation.
+ * @property-read Expense[]     $expenses Expenses relation.
  */
 class Account extends Model {
 
@@ -65,7 +65,7 @@ class Account extends Model {
 		'bank_phone',
 		'bank_address',
 		'currency_code',
-		'author_id',
+		'creator_id',
 		'thumbnail_id',
 		'status',
 		'uuid',
@@ -92,7 +92,7 @@ class Account extends Model {
 	protected $casts = array(
 		'id'              => 'int',
 		'opening_balance' => 'float',
-		'author_id'       => 'int',
+		'creator_id'      => 'int',
 		'thumbnail_id'    => 'int',
 	);
 
@@ -135,6 +135,7 @@ class Account extends Model {
 	 * @var bool
 	 */
 	protected $timestamps = true;
+
 
 	/**
 	 * The attributes that are searchable.
@@ -287,8 +288,8 @@ class Account extends Model {
 			$this->uuid = wp_generate_uuid4();
 		}
 
-		if ( empty( $this->author_id ) && is_user_logged_in() ) {
-			$this->author_id = get_current_user_id();
+		if ( empty( $this->creator_id ) && is_user_logged_in() ) {
+			$this->creator_id = get_current_user_id();
 		}
 
 		return parent::save();

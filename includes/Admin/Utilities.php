@@ -138,7 +138,7 @@ class Utilities {
 	 * @return bool
 	 */
 	public static function is_add_screen() {
-		return isset( $_GET['add'] ) ? true : false; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		return filter_input( INPUT_GET, 'add' ) !== null;
 	}
 
 	/**

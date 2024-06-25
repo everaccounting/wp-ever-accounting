@@ -294,7 +294,7 @@ function eac_get_purchases_summary() {
 	$summery       = array();
 	$total_expense = 0;
 	$date          = wp_date( 'M, y' );
-	$expenses      = eac_get_expense_report();
+	$expenses      = eac_get_expenses_report();
 
 	if ( ! empty( $expenses ) && isset( $expenses['months'] ) && isset( $expenses['months'][ $date ] ) ) {
 		$total_expense = $expenses['months'][ $date ];
@@ -416,7 +416,7 @@ function eac_get_payments_report( $year = null, $force = false ) {
  * @return array
  * @since 1.0.0
  */
-function eac_get_expense_report( $year = null, $force = false ) {
+function eac_get_expenses_report( $year = null, $force = false ) {
 	global $wpdb;
 	$reports     = get_transient( 'eac_expense_reports' );
 	$reports     = ! is_array( $reports ) ? array() : $reports;
@@ -487,9 +487,9 @@ function eac_get_expense_report( $year = null, $force = false ) {
 			$data['month_avg'] = round( $data['total_amount'] / $month_count, 2 );
 		}
 
-		$reports[ $year ] = apply_filters( 'ever_accounting_expense_report', $data, $year );
+		$reports[ $year ] = apply_filters( 'ever_accounting_expenses_report', $data, $year );
 		// Cache for 1 hour.
-		set_transient( 'eac_expense_reports', $reports, HOUR_IN_SECONDS );
+		set_transient( 'eac_expenses_reports', $reports, HOUR_IN_SECONDS );
 	}
 
 	return $reports[ $year ];

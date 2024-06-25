@@ -103,15 +103,6 @@ class General extends Page {
 				'desc_tip'    => true,
 			),
 			array(
-				'title'       => __( 'Tax Number', 'wp-ever-accounting' ),
-				'desc'        => __( 'The tax number of your company. This will be used in the invoice, bill, and other documents.', 'wp-ever-accounting' ),
-				'id'          => 'eac_company_tax_number',
-				'type'        => 'text',
-				'placeholder' => 'e.g. 123456789',
-				'default'     => '',
-				'desc_tip'    => true,
-			),
-			array(
 				'title'        => __( 'Base Currency', 'wp-ever-accounting' ),
 				'id'           => 'eac_base_currency',
 				'type'         => 'select',

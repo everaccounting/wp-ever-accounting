@@ -93,7 +93,7 @@ class Queue {
 	 *
 	 * @return bool
 	 */
-	public function is_scheduled( $hook, $args = [], $group = self::GROUP ) {
+	public function is_scheduled( $hook, $args = array(), $group = self::GROUP ) {
 		if ( ! function_exists( 'as_has_scheduled_action' ) ) {
 			return ! is_null( $this->get_next( $hook, $args ) );
 		}

@@ -75,7 +75,7 @@ use ByteKit\Models\Relations\HasOne;
  * @property double   $exchange_rate Exchange rate of the document.
  * @property int      $parent_id Parent ID of the document.
  * @property string   $created_via Created via of the document.
- * @property int      $author_id Author ID of the document.
+ * @property int      $creator_id Author ID of the document.
  * @property string   $uuid UUID of the document.
  * @property string   $date_updated Date updated of the document.
  * @property string   $date_created Date created of the document.
@@ -161,7 +161,7 @@ class Document extends Model {
 		'exchange_rate',
 		'parent_id',
 		'created_via',
-		'author_id',
+		'creator_id',
 		'uuid',
 	);
 
@@ -215,7 +215,7 @@ class Document extends Model {
 		'vat_exempt'      => 'bool',
 		'exchange_rate'   => 'double',
 		'parent_id'       => 'int',
-		'author_id'       => 'int',
+		'creator_id'       => 'int',
 	);
 
 	/**

@@ -19,6 +19,12 @@ defined( 'ABSPATH' ) || exit();
 
 require_once __DIR__ . '/vendor/autoload.php';
 
+// Migrate legacy version.
+if ( get_option( 'eaccounting_version' ) ) {
+	update_option( 'eac_version', get_option( 'eaccounting_version' ) );
+	delete_option( 'eaccounting_version' );
+}
+
 /**
  * Main instance of EverAccounting.
  *

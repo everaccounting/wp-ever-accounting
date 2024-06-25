@@ -148,7 +148,6 @@ class Sales extends Page {
 				'type' => 'sectionend',
 				'id'   => 'general_settings',
 			),
-			// defaults section start
 			array(
 				'title' => __( 'Invoice Defaults', 'wp-ever-accounting' ),
 				'desc'  => __( 'Customize the default values of your invoices.', 'wp-ever-accounting' ),
@@ -170,8 +169,6 @@ class Sales extends Page {
 				'type' => 'sectionend',
 				'id'   => 'defaults_settings',
 			),
-
-			// Columns section start
 			array(
 				'title' => __( 'Invoice Columns', 'wp-ever-accounting' ),
 				'desc'  => __( 'Customize the columns of your invoices.', 'wp-ever-accounting' ),

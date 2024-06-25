@@ -55,6 +55,7 @@ class Plugin extends \ByteKit\Plugin {
 	 */
 	public function includes() {
 		require_once __DIR__ . '/functions.php';
+		require_once dirname( __DIR__ ) . '/vendor/woocommerce/action-scheduler/action-scheduler.php';
 	}
 
 	/**
@@ -76,6 +77,7 @@ class Plugin extends \ByteKit\Plugin {
 	 */
 	public function on_init() {
 		$this->services->add( 'installer', new Installer() );
+		$this->services->add( 'transactions', new Controllers\Transactions() );
 		$this->services->add( 'documents', new Controllers\Documents() );
 		$this->services->add( 'shortcodes', new Controllers\Shortcodes() );
 

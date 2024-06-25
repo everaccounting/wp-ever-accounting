@@ -10,7 +10,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$data     = eac_get_expense_report( wp_date( 'Y' ) );
+$data     = eac_get_expenses_report( wp_date( 'Y' ) );
 $total    = array_sum( $data['months'] );
 $amounts  = array();
 $labels   = array();
@@ -44,7 +44,7 @@ if ( count( $amounts ) > 4 ) {
 			</div>
 		<?php endif; ?>
 	</div>
-	<div class="eac-card__body padding-0">
+	<div class="eac-card__body !tw-p-0">
 		<div class="eac-overflow-x">
 			<table class="eac-table is--striped">
 				<thead>

@@ -17,7 +17,7 @@ $years    = range( wp_date( 'Y' ), 2015 );
 // $year     = eac_get_input_var( 'year', wp_date( 'Y' ) );
 $year     = wp_date( 'Y' );
 
-$data     = eac_get_expense_report( $year );
+$data     = eac_get_expenses_report( $year );
 $labels   = array_keys( $data['months'] );
 foreach ( $data['categories'] as $category_id => $datum ) {
 	if ( ! isset( $datasets[ $category_id ] ) ) {

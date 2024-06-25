@@ -22,14 +22,13 @@ defined( 'ABSPATH' ) || exit;
 						<?php
 						eac_form_field(
 							array(
-								'label'          => __( 'Date', 'wp-ever-accounting' ),
-								'type'           => 'date',
-								'name'           => 'date',
-								'placeholder'    => 'yyyy-mm-dd',
-								'value'          => $payment->date,
-								'required'       => true,
-								'class'          => 'eac_inputmask',
-								'data-inputmask' => '"alias": "datetime", "inputFormat": "yyyy-mm-dd"',
+								'label'       => __( 'Date', 'wp-ever-accounting' ),
+								'type'        => 'date',
+								'name'        => 'date',
+								'placeholder' => 'yyyy-mm-dd',
+								'value'       => $payment->date,
+								'required'    => true,
+								'class'       => 'eac_datepicker',
 							)
 						);
 
@@ -210,7 +209,7 @@ defined( 'ABSPATH' ) || exit;
 							array(
 								'type'        => 'file',
 								'name'        => 'attachment',
-								'value'	=> '113',
+								'value'       => '113',
 								'placeholder' => __( 'Select file', 'wp-ever-accounting' ),
 								'tooltip'     => __( 'Upload a file related to this payment.', 'wp-ever-accounting' ),
 							)

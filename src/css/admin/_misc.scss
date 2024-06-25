@@ -73,28 +73,4 @@
 		min-height: 30px;
 		border: 1px solid #8c8f94;
 	}
-
-	.bkit-form-group.is--upload {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 10px;
-
-		label {
-			width: 100%;
-			cursor: pointer;
-			text-align: center;
-			border: 1px dashed #c3c4c7;
-			box-sizing: border-box;
-			padding: 9px 0;
-			line-height: 1.6;
-			text-overflow: ellipsis;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-
-			input[type='file'] {
-				display: none;
-			}
-		}
-	}
 }

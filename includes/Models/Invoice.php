@@ -33,7 +33,7 @@ class Invoice extends Document {
 	 * @since 1.0.0
 	 * @var array
 	 */
-	protected $query_args = array(
+	protected $query_vars = array(
 		'type' => 'invoice',
 	);
 
@@ -52,7 +52,7 @@ class Invoice extends Document {
 			'notes'         => get_option( 'eac_invoice_notes', '' ),
 			'tax_inclusive' => filter_var( eac_price_includes_tax(), FILTER_VALIDATE_BOOLEAN ),
 			'currency_code' => eac_get_base_currency(),
-			'author_id'     => get_current_user_id(),
+			'creator_id'     => get_current_user_id(),
 			'uuid'          => wp_generate_uuid4(),
 		);
 		$this->attributes = array_merge( $this->attributes, $_attributes );

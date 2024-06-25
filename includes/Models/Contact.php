@@ -32,7 +32,7 @@ defined( 'ABSPATH' ) || exit;
  * @property int    $user_id User ID of the contact.
  * @property string $status Status of the contact.
  * @property string $created_via Created via of the contact.
- * @property int    $author_id Author ID of the contact.
+ * @property int    $creator_id Author ID of the contact.
  * @property string $uuid UUID of the contact.
  * @property string $date_created Date created of the contact.
  * @property string $date_updated Date updated of the contact.
@@ -84,7 +84,7 @@ class Contact extends Model {
 		'user_id',
 		'status',
 		'created_via',
-		'author_id',
+		'creator_id',
 		'uuid',
 	);
 
@@ -111,17 +111,7 @@ class Contact extends Model {
 		'vat_exempt'   => 'bool',
 		'thumbnail_id' => 'int',
 		'user_id'      => 'int',
-		'author_id'    => 'int',
-	);
-
-	/**
-	 * The attributes those are guarded against mass assignment.
-	 *
-	 * @since 1.0.0
-	 * @var array
-	 */
-	protected $guarded = array(
-		'type',
+		'creator_id'    => 'int',
 	);
 
 	/**
@@ -252,8 +242,8 @@ class Contact extends Model {
 			$this->uuid = wp_generate_uuid4();
 		}
 
-		if ( empty( $this->author_id ) && is_user_logged_in() ) {
-			$this->author_id = get_current_user_id();
+		if ( empty( $this->creator_id ) && is_user_logged_in() ) {
+			$this->creator_id = get_current_user_id();
 		}
 
 		return parent::save();

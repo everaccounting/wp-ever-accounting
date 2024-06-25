@@ -12,6 +12,10 @@ defined( 'ABSPATH' ) || exit();
 $payments = eac_get_payments( array( 'limit' => 5 ) );
 $expenses = eac_get_expenses( array( 'limit' => 5 ) );
 
+var_dump( eac_get_payments_report() );
+var_dump( eac_get_expenses_report() );
+var_dump( eac_get_profit_report() );
+
 ?>
 <div class="wrap eac-wrap">
 	<h1 class="wp-heading-inline">
@@ -22,10 +26,9 @@ $expenses = eac_get_expenses( array( 'limit' => 5 ) );
 	<div class="eac-metrics">
 		<?php for ( $i = 1; $i <= 8; $i++ ) : ?>
 		<div class="eac-metric">
-			<span class="eac-metric__legend">Monthly</span>
-			<h4 class="eac-metric__label"><?php esc_html_e( 'Total Payments', 'wp-ever-accounting' ); ?></h4>
+			<h4 class="eac-metric__title"><?php esc_html_e( 'Total Payments', 'wp-ever-accounting' ); ?></h4>
 			<div class="eac-metric__value">
-				$<?php echo number_format( wp_rand( 1000, 1000000 ), 2 ); ?>
+				$<?php echo number_format( wp_rand( 1000, 2000 ), 2 ); ?>
 				<span class="eac-metric__delta eac-metric__delta--positive">
 					+12%
 				</span>

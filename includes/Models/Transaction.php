@@ -32,7 +32,7 @@ defined( 'ABSPATH' ) || exit;
  * @property int      $parent_id Parent ID of the transaction.
  * @property bool     $reconciled Whether the transaction is reconciled.
  * @property string   $created_via Created via of the transaction.
- * @property int      $author_id Author ID of the transaction.
+ * @property int      $creator_id Author ID of the transaction.
  * @property string   $status Status of the transaction.
  * @property string   $uuid UUID of the transaction.
  * @property string   $date_created Date the transaction was created.
@@ -90,7 +90,7 @@ class Transaction extends Model {
 		'status',
 		'uuid',
 		'created_via',
-		'author_id',
+		'creator_id',
 	);
 
 	/**
@@ -123,7 +123,7 @@ class Transaction extends Model {
 		'attachment_id' => 'int',
 		'parent_id'     => 'int',
 		'reconciled'    => 'bool',
-		'author_id'     => 'int',
+		'creator_id'    => 'int',
 	);
 
 	/**
@@ -345,6 +345,7 @@ class Transaction extends Model {
 			$this->attributes['exchange_rate'] = $currency ? $currency->exchange_rate : 1;
 		}
 
+		// check if the number is empty.
 		if ( empty( $this->number ) ) {
 			$this->number = $this->get_next_number();
 		}
@@ -353,8 +354,8 @@ class Transaction extends Model {
 			$this->uuid = wp_generate_uuid4();
 		}
 
-		if ( empty( $this->author_id ) && is_user_logged_in() ) {
-			$this->author_id = get_current_user_id();
+		if ( empty( $this->creator_id ) && is_user_logged_in() ) {
+			$this->creator_id = get_current_user_id();
 		}
 
 		return parent::save();
@@ -375,12 +376,15 @@ class Transaction extends Model {
 	 * @return string
 	 */
 	public function get_max_number() {
-		return (int) $this->get_db()->get_var(
+		$max = $this->get_db()->get_var(
 			$this->get_db()->prepare(
-				"SELECT MAX(`number`) FROM {$this->get_db()->prefix}{$this->table} WHERE `type` = %s",
+				"SELECT `number` FROM {$this->get_db()->prefix}{$this->table} WHERE `type` = %s ORDER BY `number` DESC",
 				$this->type
 			)
 		);
+
+		// Get the number part of the max number using regex.
+		return (int) preg_replace( '/[^0-9]/', '', $max );
 	}
 
 	/**

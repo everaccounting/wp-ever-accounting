@@ -28,7 +28,7 @@ class Installer {
 			'eac_update_1215',
 			'eac_update_1215_another',
 		),
-		'1.2.1.7' => 'eac_update_1217',
+		'1.2.0'   => 'eac_update_120',
 	);
 
 	/**
@@ -37,9 +37,9 @@ class Installer {
 	 * @since 1.0.0
 	 */
 	public function __construct() {
-//		add_action( 'init', array( $this, 'check_update' ), 5 );
-//		add_action( 'eac_run_update_callback', array( $this, 'run_update_callback' ), 10, 2 );
-//		add_action( 'eac_update_db_version', array( $this, 'update_db_version' ) );
+		add_action( 'init', array( $this, 'check_update' ), 5 );
+		add_action( 'eac_run_update_callback', array( $this, 'run_update_callback' ), 10, 2 );
+		add_action( 'eac_update_db_version', array( $this, 'update_db_version' ) );
 	}
 
 	/**
@@ -56,7 +56,6 @@ class Installer {
 		$requires_update = version_compare( $db_version, $current_version, '<' );
 		$can_install     = ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) && ! defined( 'IFRAME_REQUEST' );
 		if ( $can_install && $requires_update && ! EAC()->queue()->get_next( 'eac_run_update_callback' ) ) {
-			error_log( 'Updating Ever Accounting' );
 			static::install();
 			$update_versions = array_keys( $this->updates );
 			usort( $update_versions, 'version_compare' );
@@ -189,17 +188,15 @@ CREATE TABLE {$wpdb->prefix}ea_accounts(
 `bank_phone` VARCHAR(20) DEFAULT NULL,
 `bank_address` VARCHAR(191) DEFAULT NULL,
 `currency_code` varchar(3) NOT NULL DEFAULT 'USD',
+`status` ENUM('active','inactive') NOT NULL DEFAULT 'active',
 `creator_id` BIGINT(20) UNSIGNED DEFAULT NULL,
 `thumbnail_id` BIGINT(20) UNSIGNED DEFAULT NULL,
-`status` ENUM('active','inactive') NOT NULL DEFAULT 'active',
-`uuid` VARCHAR(36) NOT NULL,
-`date_updated` DATETIME NULL DEFAULT NULL,
 `date_created` DATETIME NULL DEFAULT NULL,
+`date_updated` DATETIME NULL DEFAULT NULL,
 PRIMARY KEY (`id`),
 KEY `name` (`name`),
 KEY `type` (`type`),
 UNIQUE KEY (`number`),
-UNIQUE KEY (`uuid`),
 KEY `currency_code` (`currency_code`),
 KEY `status` (`status`)
 ) $collate;
@@ -209,8 +206,8 @@ CREATE TABLE {$wpdb->prefix}ea_categories(
 `name` VARCHAR(191) NOT NULL,
 `description` TEXT NULL,
 `status` ENUM('active','inactive') NOT NULL DEFAULT 'active',
-`date_updated` DATETIME NULL DEFAULT NULL,
 `date_created` DATETIME NULL DEFAULT NULL,
+`date_updated` DATETIME NULL DEFAULT NULL,
 PRIMARY KEY (`id`),
 KEY `name` (`name`),
 KEY `type` (`type`),
@@ -229,8 +226,8 @@ CREATE TABLE {$wpdb->prefix}ea_currencies (
 `thousand_separator` VARCHAR(5) NOT NULL DEFAULT ',',
 `decimal_separator` VARCHAR(5) NOT NULL DEFAULT '.',
 `status` ENUM('active','inactive') NOT NULL DEFAULT 'active',
-`date_updated` DATETIME NULL DEFAULT NULL,
 `date_created` DATETIME NULL DEFAULT NULL,
+`date_updated` DATETIME NULL DEFAULT NULL,
 PRIMARY KEY (`id`),
 KEY `name` (`name`),
 UNIQUE KEY `code` (`code`),
@@ -254,8 +251,7 @@ CREATE TABLE {$wpdb->prefix}ea_contacts(
 `email` VARCHAR(191) DEFAULT NULL,
 `phone` VARCHAR(50) DEFAULT NULL,
 `website` VARCHAR(191) DEFAULT NULL,
-`address_1` VARCHAR(191) DEFAULT NULL,
-`address_2` VARCHAR(191) DEFAULT NULL,
+`address` VARCHAR(191) DEFAULT NULL,
 `city` VARCHAR(50) DEFAULT NULL,
 `state` VARCHAR(50) DEFAULT NULL,
 `postcode` VARCHAR(20) DEFAULT NULL,
@@ -268,9 +264,8 @@ CREATE TABLE {$wpdb->prefix}ea_contacts(
 `status` ENUM('active','inactive') NOT NULL DEFAULT 'active',
 `created_via` VARCHAR(100) DEFAULT 'manual',
 `creator_id` BIGINT(20) UNSIGNED DEFAULT NULL,
-`uuid` VARCHAR(36) DEFAULT NULL,
-`date_updated` DATETIME NULL DEFAULT NULL,
 `date_created` DATETIME NULL DEFAULT NULL,
+`date_updated` DATETIME NULL DEFAULT NULL,
 PRIMARY KEY (`id`),
 KEY `name`(`name`),
 KEY `type`(`type`),
@@ -278,7 +273,6 @@ KEY `email`(`email`),
 KEY `phone`(`phone`),
 KEY `currency_code`(`currency_code`),
 KEY `user_id`(`user_id`),
-UNIQUE KEY (`uuid`),
 KEY `status`(`status`)
 ) $collate;
 CREATE TABLE {$wpdb->prefix}ea_document_items(
@@ -298,8 +292,8 @@ CREATE TABLE {$wpdb->prefix}ea_document_items(
 `taxable` TINYINT(1) NOT NULL DEFAULT 0,
 `item_id` BIGINT(20) UNSIGNED DEFAULT NULL,
 `document_id` BIGINT(20) UNSIGNED DEFAULT NULL,
-`date_updated` DATETIME NULL DEFAULT NULL,
 `date_created` DATETIME NULL DEFAULT NULL,
+`date_updated` DATETIME NULL DEFAULT NULL,
 PRIMARY KEY (`id`),
 KEY `name` (`name`),
 KEY `type` (`type`),
@@ -331,8 +325,8 @@ CREATE TABLE {$wpdb->prefix}ea_document_lines(
 `taxable` TINYINT(1) NOT NULL DEFAULT 0,
 `item_id` BIGINT(20) UNSIGNED DEFAULT NULL,
 `document_id` BIGINT(20) UNSIGNED DEFAULT NULL,
-`date_updated` DATETIME NULL DEFAULT NULL,
 `date_created` DATETIME NULL DEFAULT NULL,
+`date_updated` DATETIME NULL DEFAULT NULL,
 PRIMARY KEY (`id`),
 KEY `name` (`name`),
 KEY `type` (`type`),
@@ -356,8 +350,8 @@ CREATE TABLE {$wpdb->prefix}ea_document_item_taxes(
 `item_id` BIGINT(20) UNSIGNED NOT NULL,
 `tax_id` BIGINT(20) UNSIGNED NOT NULL,
 `document_id` BIGINT(20) UNSIGNED NOT NULL,
-`date_updated` DATETIME NULL DEFAULT NULL,
 `date_created` DATETIME NULL DEFAULT NULL,
+`date_updated` DATETIME NULL DEFAULT NULL,
 PRIMARY KEY (`id`),
 KEY `item_id` (`item_id`),
 KEY `tax_id` (`tax_id`),
@@ -372,8 +366,8 @@ CREATE TABLE {$wpdb->prefix}ea_document_line_taxes(
 `line_id` BIGINT(20) UNSIGNED NOT NULL,
 `tax_id` BIGINT(20) UNSIGNED NOT NULL,
 `document_id` BIGINT(20) UNSIGNED NOT NULL,
-`date_updated` DATETIME NULL DEFAULT NULL,
 `date_created` DATETIME NULL DEFAULT NULL,
+`date_updated` DATETIME NULL DEFAULT NULL,
 PRIMARY KEY (`id`),
 KEY `line_id` (`line_id`),
 KEY `tax_id` (`tax_id`),
@@ -496,6 +490,7 @@ KEY `meta_key` (meta_key($index_length))
 CREATE TABLE {$wpdb->prefix}ea_transactions(
 `id` bigINT(20) NOT NULL AUTO_INCREMENT,
 `type` VARCHAR(20) DEFAULT NULL,
+`status` VARCHAR(20) DEFAULT NULL default 'completed',
 `number` VARCHAR(30) DEFAULT NULL,
 `date` DATE NOT NULL DEFAULT '0000-00-00',
 `amount` DOUBLE(15,4) NOT NULL,
@@ -513,7 +508,6 @@ CREATE TABLE {$wpdb->prefix}ea_transactions(
 `reconciled` tinyINT(1) NOT NULL DEFAULT '0',
 `created_via` VARCHAR(100) DEFAULT 'manual',
 `creator_id` BIGINT(20) UNSIGNED DEFAULT NULL,
-`status` ENUM('draft','pending','completed','refunded','cancelled') NOT NULL DEFAULT 'draft',
 `uuid` VARCHAR(36) DEFAULT NULL,
 `date_updated` DATETIME NULL DEFAULT NULL,
 `date_created` DATETIME NULL DEFAULT NULL,
@@ -532,24 +526,14 @@ UNIQUE KEY `uuid` (`uuid`)
 ) $collate;
 CREATE TABLE {$wpdb->prefix}ea_transfers(
 `id` bigINT(20) NOT NULL AUTO_INCREMENT,
-`date` DATE NOT NULL DEFAULT '0000-00-00',
-`amount` DOUBLE(15,4) NOT NULL,
-`currency_code` varchar(3) NOT NULL DEFAULT 'USD',
-`reference` VARCHAR(191) DEFAULT NULL,
 `payment_id` BIGINT(20) UNSIGNED NOT NULL,
 `expense_id` BIGINT(20) UNSIGNED NOT NULL,
-`from_account_id` BIGINT(20) UNSIGNED NOT NULL,
-`to_account_id` BIGINT(20) UNSIGNED NOT NULL,
 `creator_id` BIGINT(20) UNSIGNED DEFAULT NULL,
-`date_updated` DATETIME NULL DEFAULT NULL,
 `date_created` DATETIME NULL DEFAULT NULL,
+`date_updated` DATETIME NULL DEFAULT NULL,
 PRIMARY KEY (`id`),
-KEY `amount` (`amount`),
-KEY `currency_code` (`currency_code`),
 KEY `payment_id` (`payment_id`),
-KEY `expense_id` (`expense_id`),
-KEY `from_account_id` (`from_account_id`),
-KEY `to_account_id` (`to_account_id`)
+KEY `expense_id` (`expense_id`)
 ) $collate;
 ";
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
@@ -563,20 +547,39 @@ KEY `to_account_id` (`to_account_id`)
 	 * @return void
 	 */
 	public static function create_currencies() {
-		$options = get_option( 'eaccounting_currencies', array() );
+		$all_currencies = I18n::get_currencies();
+		$options        = get_option( 'eaccounting_currencies', array() );
 		if ( $options ) {
 			foreach ( $options as $option ) {
-				eac_insert_currency( $option );
+				$defaults = isset( $all_currencies[ $option['code'] ] ) ? $all_currencies[ $option['code'] ] : array();
+				$data     = wp_parse_args( $option, $defaults );
+				unset( $data['id'] );
+				eac_insert_currency( $data );
 			}
 			delete_option( 'eaccounting_currencies' );
 		}
-		$currencies = eac_get_currencies( array( 'limit' => - 1 ) );
-		$codes      = wp_list_pluck( $currencies, 'code' );
-		foreach ( I18n::get_currencies() as $code => $currency ) {
-			if ( ! in_array( $code, $codes, true ) ) {
-				$currency['status'] = 'inactive';
-				eac_insert_currency( $currency );
-			}
+
+		// If there is no currency, insert default currencies.
+		$currencies = eac_get_currencies();
+		if ( empty( $currencies ) ) {
+			$usd_currency = isset( $all_currencies['USD'] ) ? $all_currencies['USD'] : array();
+			eac_insert_currency(
+				wp_parse_args(
+					$usd_currency,
+					array(
+						'code'               => 'USD',
+						'name'               => 'US Dollar',
+						'exchange_rate'      => 1.0000,
+						'precision'          => 2,
+						'symbol'             => '$',
+						'subunit'            => 100,
+						'position'           => 'before',
+						'thousand_separator' => ',',
+						'decimal_separator'  => '.',
+						'status'             => 'active',
+					)
+				)
+			);
 		}
 
 		// now if there is any no active currency, make USD active.

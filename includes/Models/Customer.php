@@ -26,7 +26,7 @@ class Customer extends Contact {
 	 */
 	public function __construct( $attributes = array() ) {
 		$this->attributes['type'] = $this->get_object_type();
-		$this->query_args['type'] = $this->get_object_type();
+		$this->query_vars['type'] = $this->get_object_type();
 		parent::__construct( $attributes );
 	}
 

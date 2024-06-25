@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:byteever/bytekit-plugin.git",
-                "reference": "15b0f3e1963721039b5356d4b0456ec7c961b423"
+                "reference": "f9b5ea0fea78152902f467fd7ae487bb7425fe49"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/byteever/bytekit-plugin/zipball/15b0f3e1963721039b5356d4b0456ec7c961b423",
-                "reference": "15b0f3e1963721039b5356d4b0456ec7c961b423",
+                "url": "https://api.github.com/repos/byteever/bytekit-plugin/zipball/f9b5ea0fea78152902f467fd7ae487bb7425fe49",
+                "reference": "f9b5ea0fea78152902f467fd7ae487bb7425fe49",
                 "shasum": ""
             },
             "require": {
@@ -91,7 +91,7 @@
                 "source": "https://github.com/byteever/bytekit-plugin/tree/master",
                 "issues": "https://github.com/byteever/bytekit-plugin/issues"
             },
-            "time": "2024-06-14T11:55:34+00:00"
+            "time": "2024-06-14T15:33:21+00:00"
         },
         {
             "name": "woocommerce/action-scheduler",

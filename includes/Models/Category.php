@@ -38,13 +38,13 @@ class Category extends Model {
 	 * @since 1.0.0
 	 * @var array
 	 */
-//	protected $columns = array(
-//		'id',
-//		'type',
-//		'name',
-//		'description',
-//		'status',
-//	);
+	protected $columns = array(
+		'id',
+		'type',
+		'name',
+		'description',
+		'status',
+	);
 
 	/**
 	 * The model's attributes.
@@ -52,7 +52,7 @@ class Category extends Model {
 	 * @since 1.0.0
 	 * @var array
 	 */
-	protected $props = array(
+	protected $attributes = array(
 		'status' => 'active',
 	);
 
@@ -84,7 +84,7 @@ class Category extends Model {
 	 * @since 1.0.0
 	 * @var bool
 	 */
-	protected $timestamps = true;
+	protected $has_timestamps = true;
 
 	/**
 	 * The attributes that are searchable.
@@ -219,13 +219,14 @@ class Category extends Model {
 		}
 
 		// Duplicate check. Same type and name should not exist.
-		$existing = $this->find(
+		$existing = static::results(
 			array(
-				'type' => $this->type,
-				'name' => $this->name,
+				'type'  => $this->type,
+				'name'  => $this->name,
+				'limit' => 1,
 			)
 		);
-		if ( ! empty( $existing ) && $existing->id !== $this->id ) {
+		if ( ! empty( $existing ) && $existing[0]->id !== $this->id ) {
 			return new \WP_Error( 'duplicate', __( 'Category with same name and type already exists.', 'wp-ever-accounting' ) );
 		}
 

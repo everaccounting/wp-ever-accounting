@@ -65,20 +65,24 @@ class Admin {
 		if ( ! in_array( $hook, Utilities::get_screen_ids(), true ) ) {
 			return;
 		}
-
 		// 3rd party scripts.
-		//$scripts->register_script( 'eac-jquery-plugins', 'js/jquery-plugins.js', array( 'jquery', 'jquery-ui-datepicker', 'jquery-ui-tooltip' ) );
-		//$scripts->register_style( 'eac-jquery-plugins', 'css/jquery-plugins.css' );
-		EAC()->scripts->register_script( 'eac-chartjs', 'js/chartjs.js' );
+		EAC()->scripts->register_script( 'eac-chartjs', 'js/chartjs.js', array( 'jquery' ), true );
+		EAC()->scripts->register_script( 'eac-inputmask', 'js/inputmask.js', array( 'jquery' ), true );
+		EAC()->scripts->register_script( 'eac-select2', 'js/select2.js', array( 'jquery' ), true );
+		EAC()->scripts->register_script( 'eac-tiptip', 'js/tiptip.js', array( 'jquery' ), true );
+		EAC()->scripts->register_style( 'eac-jquery-ui', 'css/jquery-ui.css' );
+		EAC()->scripts->register_style( 'eac-select2', 'css/select2.css' );
 
 		// Core scripts.
-		EAC()->scripts->enqueue_script( 'eac-admin', 'js/eac-admin.js', array( 'jquery', 'jquery-ui-datepicker', 'jquery-ui-tooltip', 'wp-util' ) );
-		EAC()->scripts->enqueue_style( 'eac-admin', 'css/eac-admin.css' );
+		EAC()->scripts->register_script( 'eac-admin', 'js/eac-admin.js', array( 'jquery', 'eac-chartjs', 'eac-inputmask', 'eac-select2', 'eac-tiptip', 'jquery-ui-datepicker', 'jquery-ui-tooltip', 'wp-util' ), true );
+		EAC()->scripts->register_script( 'eac-settings', 'js/eac-settings.js', array( 'eac-admin' ), true );
+		EAC()->scripts->register_style( 'eac-admin', 'css/eac-admin.css', array( 'eac-jquery-ui', 'eac-select2' ) );
 		EAC()->scripts->register_style( 'eac-settings', 'css/eac-settings.css', array( 'eac-admin' ) );
-		EAC()->scripts->register_script( 'eac-settings', 'js/eac-settings.js', array( 'eac-admin' ) );
 
 		// enqueue media scripts.
 		wp_enqueue_media();
+		wp_enqueue_script( 'eac-admin' );
+		wp_enqueue_style( 'eac-admin' );
 
 		// if settings page.
 		if ( 'ever-accounting_page_eac-settings' === $hook ) {
@@ -87,7 +91,6 @@ class Admin {
 		}
 
 		// if dashboard or reports page.
-
 		if ( 'toplevel_page_ever-accounting' === $hook || 'ever-accounting_page_eac-reports' === $hook ) {
 			EAC()->scripts->enqueue_script( 'eac-chartjs' );
 		}

@@ -24,14 +24,13 @@ defined( 'ABSPATH' ) || exit;
 					<?php
 					eac_form_field(
 						array(
-							'label'          => __( 'Date', 'wp-ever-accounting' ),
-							'type'           => 'date',
-							'name'           => 'date',
-							'placeholder'    => 'yyyy-mm-dd',
-							'value'          => $expense->date,
-							'required'       => true,
-							'class'          => 'eac_inputmask',
-							'data-inputmask' => '"alias": "datetime", "inputFormat": "yyyy-mm-dd"',
+							'label'       => __( 'Date', 'wp-ever-accounting' ),
+							'type'        => 'date',
+							'name'        => 'date',
+							'placeholder' => 'yyyy-mm-dd',
+							'value'       => $expense->date,
+							'required'    => true,
+							'class'       => 'eac_datepicker',
 						)
 					);
 
