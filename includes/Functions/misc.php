@@ -96,12 +96,12 @@ function eac_form_field( $field ) {
 
 		case 'select':
 			$field['options']     = is_array( $field['options'] ) ? $field['options'] : array();
-			$field['value']       = wp_parse_list( $field['value'] );
+			$field['value']       = ! empty( $field['value'] ) ? wp_parse_list( $field['value'] ) : [];
 			$field['value']       = array_map( 'strval', $field['value'] );
 			$field['placeholder'] = ! empty( $field['placeholder'] ) ? $field['placeholder'] : '';
 			if ( ! empty( $field['multiple'] ) ) {
 				$field['name'] .= '[]';
-				$attrs[]        = 'multiple="multiple"';
+				$attrs[]       = 'multiple="multiple"';
 			}
 
 			// It may send an option_key and option_value to use in the options.
@@ -228,8 +228,8 @@ function eac_form_field( $field ) {
 
 				$post = get_post( $field['value'] );
 				if ( $post && 'attachment' === $post->post_type ) {
-					$meta            = wp_get_attachment_metadata( $post->ID );
-					$attached_file   = get_attached_file( $post->ID );
+					$meta           = wp_get_attachment_metadata( $post->ID );
+					$attached_file  = get_attached_file( $post->ID );
 					$field['class'] .= ' has--file';
 					// update.
 					$file['icon']     = wp_mime_type_icon( $post->ID );

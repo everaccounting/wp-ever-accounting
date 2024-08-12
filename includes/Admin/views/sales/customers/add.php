@@ -31,7 +31,6 @@ defined( 'ABSPATH' ) || exit;
 			</div>
 			<div class="eac-profile__column">
 				<h3 class="eac-profile__title"><?php esc_html_e( 'Customer Details', 'wp-ever-accounting' ); ?></h3>
-				<?php (\EverAccounting\Models\Customer::find()
 			</div>
 		</div>
 	</div>
