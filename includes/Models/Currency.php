@@ -24,8 +24,8 @@ use ByteKit\Models\Relations\HasMany;
  * @property string $thousand_separator A Thousand separator of the currency.
  * @property string $decimal_separator Decimal separator of the currency.
  * @property string $status Status of the currency.
- * @property string $date_updated Date updated of the currency.
- * @property string $date_created Date created of the currency.
+ * @property string $updated_at Date updated of the currency.
+ * @property string $created_at Date created of the currency.
  *
  * @property string $formatted_name Formatted name.
  */

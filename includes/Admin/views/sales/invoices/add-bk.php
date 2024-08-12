@@ -134,7 +134,7 @@ defined( 'ABSPATH' ) || exit;
 					),
 				);
 				foreach ( $fields as $field ) {
-					eac_form_group( $field );
+					eac_form_field( $field );
 				}
 				?>
 			</div>

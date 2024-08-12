@@ -16,8 +16,8 @@ defined( 'ABSPATH' ) || exit;
  * @property string $content Content of the note.
  * @property array  $note_metadata Metadata of the note.
  * @property int    $creator_id ID of the author.
- * @property string $date_created Date created of the note.
- * @property string $date_updated Date updated of the note.
+ * @property string $created_at Date created of the note.
+ * @property string $updated_at Date updated of the note.
  */
 class Note extends Model {
 	/**

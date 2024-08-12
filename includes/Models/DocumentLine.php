@@ -29,8 +29,8 @@ use ByteKit\Models\Relations\HasMany;
  * @property string $unit Unit of the document_item.
  * @property int    $item_id Item ID of the document_item.
  * @property int    $document_id Document ID of the document_item.
- * @property string $date_updated Date updated of the document_item.
- * @property string $date_created Date created of the document_item.
+ * @property string $updated_at Date updated of the document_item.
+ * @property string $created_at Date created of the document_item.
  *
  * @property-read double $discounted_subtotal Discounted subtotal of the document_item.
  * @property-read DocumentLineTax[] $taxes Taxes of the document_item.

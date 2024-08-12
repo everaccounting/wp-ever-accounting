@@ -78,8 +78,8 @@ use ByteKit\Models\Relations\HasOne;
  * @property string   $created_via Created via of the document.
  * @property int      $creator_id Author ID of the document.
  * @property string   $uuid UUID of the document.
- * @property string   $date_updated Date updated of the document.
- * @property string   $date_created Date created of the document.
+ * @property string   $updated_at Date updated of the document.
+ * @property string   $created_at Date created of the document.
  *
  * @property string   $billing_name Name of the billing contact.
  * @property string   $billing_company Company of the billing contact.
@@ -237,7 +237,7 @@ class Document_BK extends Model {
 		$this->props['currency_code'] = eac_get_base_currency();
 		$this->props['creator_id']     = get_current_user_id();
 		$this->props['uuid']          = wp_generate_uuid4();
-		$this->props['date_created']  = wp_date( 'Y-m-d H:i:s' );
+		$this->props['created_at']  = wp_date( 'Y-m-d H:i:s' );
 		parent::__construct( $attributes );
 	}
 
@@ -1008,7 +1008,7 @@ class Document_BK extends Model {
 				'parent_type'  => get_class( $this ),
 				'content'      => '',
 				'creator_id'   => get_current_user_id(),
-				'date_created' => current_time( 'mysql' ),
+				'created_at' => current_time( 'mysql' ),
 			)
 		);
 

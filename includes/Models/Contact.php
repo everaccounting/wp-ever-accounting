@@ -34,8 +34,8 @@ defined( 'ABSPATH' ) || exit;
  * @property string $created_via Created via of the contact.
  * @property int    $creator_id Author ID of the contact.
  * @property string $uuid UUID of the contact.
- * @property string $date_created Date created of the contact.
- * @property string $date_updated Date updated of the contact.
+ * @property string $created_at Date created of the contact.
+ * @property string $updated_at Date updated of the contact.
  *
  * @property-read  string $formatted_name Get formatted name.
  * @property-read  string $country_name Get country name.

@@ -20,8 +20,8 @@ defined( 'ABSPATH' ) || exit;
  * @property string $name Name of the category.
  * @property string $description Description of the category.
  * @property string $status Status of the category.
- * @property string $date_created Date created of the category.
- * @property string $date_updated Date updated of the category.
+ * @property string $created_at Date created of the category.
+ * @property string $updated_at Date updated of the category.
  */
 class Category extends Model {
 	/**

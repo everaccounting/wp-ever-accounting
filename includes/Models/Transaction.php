@@ -35,8 +35,8 @@ defined( 'ABSPATH' ) || exit;
  * @property int      $creator_id Author ID of the transaction.
  * @property string   $status Status of the transaction.
  * @property string   $uuid UUID of the transaction.
- * @property string   $date_created Date the transaction was created.
- * @property string   $date_updated Date the transaction was last updated.
+ * @property string   $created_at Date the transaction was created.
+ * @property string   $updated_at Date the transaction was last updated.
  *
  * @property string   $formatted_amount Formatted amount of the transaction.
  * @property Currency $currency Related currency.

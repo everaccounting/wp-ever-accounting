@@ -91,7 +91,7 @@ $actions = apply_filters( 'eac_invoice_actions', $actions, $document->id );
 					</div>
 					<div class="eac-card__body">
 						<?php
-						eac_form_group(
+						eac_form_field(
 							array(
 								'label'       => __( 'Date', 'wp-ever-accounting' ),
 								'type'        => 'date',
@@ -101,7 +101,7 @@ $actions = apply_filters( 'eac_invoice_actions', $actions, $document->id );
 								'required'    => true,
 							)
 						);
-						eac_form_group(
+						eac_form_field(
 							array(
 								'label'       => __( 'Amount', 'wp-ever-accounting' ),
 								'name'        => 'amount',
@@ -112,7 +112,7 @@ $actions = apply_filters( 'eac_invoice_actions', $actions, $document->id );
 								'prefix'      => eac_get_currency_symbol( $document->currency_code ),
 							)
 						);
-						eac_form_group(
+						eac_form_field(
 							array(
 								'label'            => __( 'Receiving Account', 'wp-ever-accounting' ),
 								'type'             => 'select',
@@ -133,7 +133,7 @@ $actions = apply_filters( 'eac_invoice_actions', $actions, $document->id );
 								),
 							),
 						);
-						eac_form_group(
+						eac_form_field(
 							array(
 								'label'       => __( 'Payment Method', 'wp-ever-accounting' ),
 								'type'        => 'select',
@@ -142,7 +142,7 @@ $actions = apply_filters( 'eac_invoice_actions', $actions, $document->id );
 								'placeholder' => __( 'Select &hellip;', 'wp-ever-accounting' ),
 							)
 						);
-						eac_form_group(
+						eac_form_field(
 							array(
 								'label'       => __( 'Notes', 'wp-ever-accounting' ),
 								'type'        => 'textarea',

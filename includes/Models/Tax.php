@@ -16,8 +16,8 @@ namespace EverAccounting\Models;
  * @property bool   $is_compound Whether the tax is compound.
  * @property string $description Description of the tax.
  * @property string $status Status of the tax.
- * @property string $date_created Date the tax was created.
- * @property string $date_updated Date the tax was last updated.
+ * @property string $created_at Date the tax was created.
+ * @property string $updated_at Date the tax was last updated.
  *
  * @property-read string $formatted_name Formatted name of the tax.
  */

@@ -25,8 +25,8 @@ use ByteKit\Models\Relations\BelongsToMany;
  * @property int      $category_id Category ID of the item.
  * @property int      $thumbnail_id Thumbnail ID of the item.
  * @property string   $status Status of the item.
- * @property string   $date_created Date created of the item.
- * * @property string $date_updated Date updated of the item.
+ * @property string   $created_at Date created of the item.
+ * * @property string $updated_at Date updated of the item.
  *
  * @property string   $formatted_name Formatted name of the item.
  * @property string   $formatted_price Formatted price of the item.

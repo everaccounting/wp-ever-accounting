@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit();
 			<div class="eac-columns">
 				<div class="eac-col-6">
 					<?php
-					eac_form_group(
+					eac_form_field(
 						array(
 							'label'   => __( 'Filter by status', 'wp-ever-accounting' ),
 							'type'    => 'select',
@@ -33,7 +33,7 @@ defined( 'ABSPATH' ) || exit();
 						)
 					);
 					// TODO: Need to fixed the country select field.
-					eac_form_group(
+					eac_form_field(
 						array(
 							'type'        => 'country',
 							'name'        => 'country',

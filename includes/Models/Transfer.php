@@ -20,8 +20,8 @@ defined( 'ABSPATH' ) || exit;
  * @property double $amount Amount of the transfer.
  * @property string $uuid UUID of the transfer.
  * @property int    $creator_id Creator ID of the transfer.
- * @property string $date_created Date the transfer was created.
- * @property string $date_updated Date the transfer was last updated.
+ * @property string $created_at Date the transfer was created.
+ * @property string $updated_at Date the transfer was last updated.
  *
  * @property int    $from_account_id From account ID of the transfer.
  * @property int    $to_account_id To account ID of the transfer.

@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
 <hr>
 
 <?php
-eac_form_group(
+eac_form_field(
 	array(
 		'label'            => __( 'Customer', 'wp-ever-accounting' ),
 		'type'             => 'select',
@@ -41,7 +41,7 @@ eac_form_group(
 	)
 );
 
-eac_form_group(
+eac_form_field(
 	array(
 		'label'       => esc_html__( 'Issue Date', 'wp-ever-accounting' ),
 		'name'        => 'issue_date',
@@ -53,7 +53,7 @@ eac_form_group(
 	)
 );
 
-eac_form_group(
+eac_form_field(
 	array(
 		'label'       => esc_html__( 'Due Date', 'wp-ever-accounting' ),
 		'name'        => 'due_date',
@@ -64,7 +64,7 @@ eac_form_group(
 	)
 );
 
-eac_form_group(
+eac_form_field(
 	array(
 		'label'       => esc_html__( 'Reference', 'wp-ever-accounting' ),
 		'name'        => 'reference',
@@ -74,7 +74,7 @@ eac_form_group(
 	)
 );
 
-eac_form_group(
+eac_form_field(
 	array(
 		'label'        => esc_html__( 'Currency', 'wp-ever-accounting' ),
 		'name'         => 'currency_code',
@@ -90,7 +90,7 @@ eac_form_group(
 	)
 );
 
-eac_form_group(
+eac_form_field(
 	array(
 		'label'   => esc_html__( 'VAT Exempt', 'wp-ever-accounting' ),
 		'name'    => 'vat_exempt',
