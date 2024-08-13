@@ -192,11 +192,12 @@ class Account extends Model {
 	 *
 	 * @return float|string
 	 */
-	public function get_balance_attribute() {
+	public function get_balance() {
+		global $wpdb;
 		static $balance;
 		if ( is_null( $balance ) ) {
-			$transaction_total = (float) $this->get_db()->get_var(
-				$this->get_db()->prepare( "SELECT SUM(CASE WHEN type='income' then amount WHEN type='expense' then - amount END) as total from {$this->get_db()->prefix}ea_transactions WHERE account_id=%d", $this->id )
+			$transaction_total = (float) $wpdb->get_var(
+				$wpdb->prepare( "SELECT SUM(CASE WHEN type='income' then amount WHEN type='expense' then - amount END) as total from {$this->get_db()->prefix}ea_transactions WHERE account_id=%d", $this->id )
 			);
 			$balance           = $this->opening_balance + $transaction_total;
 		}
@@ -210,7 +211,7 @@ class Account extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	public function get_formatted_balance_attribute() {
+	public function get_formatted_balance() {
 		return eac_format_amount( $this->balance, $this->currency_code );
 	}
 
@@ -220,7 +221,7 @@ class Account extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	public function get_formatted_name_attribute() {
+	public function get_formatted_name() {
 		$name   = sprintf( '%s (%s)', $this->name, $this->currency_code );
 		$number = $this->number;
 

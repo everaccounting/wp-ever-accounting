@@ -114,7 +114,7 @@ class DocumentLineTax extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	protected function get_formatted_name_attribute() {
+	protected function get_formatted_name() {
 		return $this->name . ' (' . $this->rate . '%)';
 	}
 

@@ -253,7 +253,7 @@ class Document extends Model {
 	 * @since 1.1.0
 	 * @return void
 	 */
-	public function set_discount_type_attribute( $type ) {
+	public function set_discount_type( $type ) {
 		if ( ! in_array( $type, array( 'fixed', 'percentage' ), true ) ) {
 			$type = 'fixed';
 		}

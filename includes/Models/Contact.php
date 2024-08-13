@@ -199,7 +199,7 @@ class Contact extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	public function get_country_name_attribute() {
+	public function get_country_name() {
 		$countries = I18n::get_countries();
 		return isset( $countries[ $this->country ] ) ? $countries[ $this->country ] : $this->country;
 	}
@@ -210,7 +210,7 @@ class Contact extends Model {
 	 * @return string
 	 * @since 1.1.6
 	 */
-	public function get_formatted_name_attribute() {
+	public function get_formatted_name() {
 		$company = $this->company ? ' (' . $this->company . ')' : '';
 		return $this->name . $company;
 	}
@@ -235,7 +235,7 @@ class Contact extends Model {
 		}
 
 		if ( empty( $this->currency_code ) ) {
-			$this->set_attribute( 'currency_code', eac_get_base_currency() );
+			$this->set( 'currency_code', eac_get_base_currency() );
 		}
 
 		if ( empty( $this->uuid ) ) {

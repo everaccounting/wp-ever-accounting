@@ -270,7 +270,7 @@ class Document_BK extends Model {
 	 * @since 1.1.0
 	 * @return void
 	 */
-	public function set_status_attribute( $status ) {
+	public function set_status( $status ) {
 		$status = in_array( $status, eac_get_invoice_statuses(), true ) ? $status : 'draft';
 		$this->set_attribute_value( 'status', $status );
 	}
@@ -283,7 +283,7 @@ class Document_BK extends Model {
 	 * @since 1.1.0
 	 * @return void
 	 */
-	public function set_discount_type_attribute( $type ) {
+	public function set_discount_type( $type ) {
 		$this->attributes['discount_type'] = in_array( $type, array( 'fixed', 'percentage' ), true ) ? $type : 'fixed';
 	}
 
@@ -295,7 +295,7 @@ class Document_BK extends Model {
 	 * @since  1.1.0
 	 * @return mixed
 	 */
-	protected function get_billing_attribute( $prop ) {
+	protected function get_billing( $prop ) {
 		$value = null;
 
 		if ( isset( $this->attributes['billing_data'][ $prop ] ) ) {
@@ -313,7 +313,7 @@ class Document_BK extends Model {
 	 *
 	 * @since 1.1.0
 	 */
-	protected function set_billing_attribute( $prop, $value ) {
+	protected function set_billing( $prop, $value ) {
 		if ( array_key_exists( $prop, $this->attributes['billing_data'] ) ) {
 			$this->attributes['billing_data'][ $prop ] = $value;
 		}
@@ -325,8 +325,8 @@ class Document_BK extends Model {
 	 * @since  1.1.0
 	 * @return string
 	 */
-	protected function get_billing_name_attribute() {
-		return $this->get_billing_attribute( 'name' );
+	protected function get_billing_name() {
+		return $this->get_billing( 'name' );
 	}
 
 	/**
@@ -336,8 +336,8 @@ class Document_BK extends Model {
 	 *
 	 * @since  1.1.0
 	 */
-	public function set_billing_name_attribute( $name ) {
-		$this->set_billing_attribute( 'name', $name );
+	public function set_billing_name( $name ) {
+		$this->set_billing( 'name', $name );
 	}
 
 	/**
@@ -346,8 +346,8 @@ class Document_BK extends Model {
 	 * @since 1.1.0
 	 * @return string
 	 */
-	protected function get_billing_company_attribute() {
-		return $this->get_billing_attribute( 'company' );
+	protected function get_billing_company() {
+		return $this->get_billing( 'company' );
 	}
 
 	/**
@@ -357,8 +357,8 @@ class Document_BK extends Model {
 	 *
 	 * @since  1.1.0
 	 */
-	public function set_billing_company_attribute( $company ) {
-		$this->set_billing_attribute( 'company', eac_clean( $company ) );
+	public function set_billing_company( $company ) {
+		$this->set_billing( 'company', eac_clean( $company ) );
 	}
 
 	/**
@@ -367,8 +367,8 @@ class Document_BK extends Model {
 	 * @since  1.1.0
 	 * @return string
 	 */
-	protected function get_billing_address_1_attribute() {
-		return $this->get_billing_attribute( 'address_1' );
+	protected function get_billing_address_1() {
+		return $this->get_billing( 'address_1' );
 	}
 
 	/**
@@ -378,8 +378,8 @@ class Document_BK extends Model {
 	 *
 	 * @since  1.1.0
 	 */
-	public function set_billing_address_1_attribute( $address_1 ) {
-		$this->set_billing_attribute( 'address_1', sanitize_text_field( $address_1 ) );
+	public function set_billing_address_1( $address_1 ) {
+		$this->set_billing( 'address_1', sanitize_text_field( $address_1 ) );
 	}
 
 
@@ -389,8 +389,8 @@ class Document_BK extends Model {
 	 * @since  1.1.0
 	 * @return string
 	 */
-	protected function get_billing_address_2_attribute() {
-		return $this->get_billing_attribute( 'address_2' );
+	protected function get_billing_address_2() {
+		return $this->get_billing( 'address_2' );
 	}
 
 	/**
@@ -400,8 +400,8 @@ class Document_BK extends Model {
 	 *
 	 * @since  1.1.0
 	 */
-	public function set_billing_address_2_attribute( $address_2 ) {
-		$this->set_billing_attribute( 'address_2', eac_clean( $address_2 ) );
+	public function set_billing_address_2( $address_2 ) {
+		$this->set_billing( 'address_2', eac_clean( $address_2 ) );
 	}
 
 	/**
@@ -410,8 +410,8 @@ class Document_BK extends Model {
 	 * @since 1.1.0
 	 * @return string
 	 */
-	protected function get_billing_city_attribute() {
-		return $this->get_billing_attribute( 'city' );
+	protected function get_billing_city() {
+		return $this->get_billing( 'city' );
 	}
 
 	/**
@@ -421,8 +421,8 @@ class Document_BK extends Model {
 	 *
 	 * @since  1.1.0
 	 */
-	public function set_billing_city_attribute( $city ) {
-		$this->set_billing_attribute( 'city', eac_clean( $city ) );
+	public function set_billing_city( $city ) {
+		$this->set_billing( 'city', eac_clean( $city ) );
 	}
 
 	/**
@@ -431,8 +431,8 @@ class Document_BK extends Model {
 	 * @since 1.1.0
 	 * @return string
 	 */
-	protected function get_billing_state_attribute() {
-		return $this->get_billing_attribute( 'state' );
+	protected function get_billing_state() {
+		return $this->get_billing( 'state' );
 	}
 
 	/**
@@ -442,8 +442,8 @@ class Document_BK extends Model {
 	 *
 	 * @since  1.1.0
 	 */
-	public function set_billing_state_attribute( $state ) {
-		$this->set_billing_attribute( 'state', eac_clean( $state ) );
+	public function set_billing_state( $state ) {
+		$this->set_billing( 'state', eac_clean( $state ) );
 	}
 
 	/**
@@ -452,8 +452,8 @@ class Document_BK extends Model {
 	 * @since 1.1.0
 	 * @return string
 	 */
-	protected function get_billing_postcode_attribute() {
-		return $this->get_billing_attribute( 'postcode' );
+	protected function get_billing_postcode() {
+		return $this->get_billing( 'postcode' );
 	}
 
 	/**
@@ -463,8 +463,8 @@ class Document_BK extends Model {
 	 *
 	 * @since  1.1.0
 	 */
-	public function set_billing_postcode_attribute( $postcode ) {
-		$this->set_billing_attribute( 'postcode', eac_clean( $postcode ) );
+	public function set_billing_postcode( $postcode ) {
+		$this->set_billing( 'postcode', eac_clean( $postcode ) );
 	}
 
 	/**
@@ -473,8 +473,8 @@ class Document_BK extends Model {
 	 * @since 1.1.0
 	 * @return string
 	 */
-	protected function get_billing_country_attribute() {
-		return $this->get_billing_attribute( 'country' );
+	protected function get_billing_country() {
+		return $this->get_billing( 'country' );
 	}
 
 	/**
@@ -484,8 +484,8 @@ class Document_BK extends Model {
 	 *
 	 * @since  1.1.0
 	 */
-	public function set_billing_country_attribute( $country ) {
-		$this->set_billing_attribute( 'country', eac_clean( $country ) );
+	public function set_billing_country( $country ) {
+		$this->set_billing( 'country', eac_clean( $country ) );
 	}
 
 	/**
@@ -494,8 +494,8 @@ class Document_BK extends Model {
 	 * @since 1.1.0
 	 * @return string
 	 */
-	protected function get_billing_phone_attribute() {
-		return $this->get_billing_attribute( 'phone' );
+	protected function get_billing_phone() {
+		return $this->get_billing( 'phone' );
 	}
 
 	/**
@@ -505,8 +505,8 @@ class Document_BK extends Model {
 	 *
 	 * @since  1.1.0
 	 */
-	public function set_billing_phone_attribute( $phone ) {
-		$this->set_billing_attribute( 'phone', eac_clean( $phone ) );
+	public function set_billing_phone( $phone ) {
+		$this->set_billing( 'phone', eac_clean( $phone ) );
 	}
 
 	/**
@@ -515,8 +515,8 @@ class Document_BK extends Model {
 	 * @since 1.1.0
 	 * @return string
 	 */
-	protected function get_billing_email_attribute() {
-		return $this->get_billing_attribute( 'email' );
+	protected function get_billing_email() {
+		return $this->get_billing( 'email' );
 	}
 
 	/**
@@ -526,8 +526,8 @@ class Document_BK extends Model {
 	 *
 	 * @since  1.1.0
 	 */
-	public function set_billing_email_attribute( $email ) {
-		$this->set_billing_attribute( 'email', eac_clean( $email ) );
+	public function set_billing_email( $email ) {
+		$this->set_billing( 'email', eac_clean( $email ) );
 	}
 
 	/**
@@ -536,8 +536,8 @@ class Document_BK extends Model {
 	 * @since  1.1.0
 	 * @return string
 	 */
-	protected function get_billing_vat_number_attribute() {
-		return $this->get_billing_attribute( 'vat_number' );
+	protected function get_billing_vat_number() {
+		return $this->get_billing( 'vat_number' );
 	}
 
 	/**
@@ -547,8 +547,8 @@ class Document_BK extends Model {
 	 *
 	 * @since  1.1.0
 	 */
-	public function set_billing_vat_number_attribute( $vat ) {
-		$this->set_billing_attribute( 'vat_number', eac_clean( $vat ) );
+	public function set_billing_vat_number( $vat ) {
+		$this->set_billing( 'vat_number', eac_clean( $vat ) );
 	}
 
 	/**
@@ -557,7 +557,7 @@ class Document_BK extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	public function get_formatted_billing_address_attribute() {
+	public function get_formatted_billing_address() {
 		$data = array(
 			'name'      => $this->billing_name,
 			'company'   => $this->billing_company,
@@ -581,7 +581,7 @@ class Document_BK extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	protected function get_formatted_items_total_attribute() {
+	protected function get_formatted_items_total() {
 		return eac_format_amount( $this->items_total, $this->currency_code );
 	}
 
@@ -591,7 +591,7 @@ class Document_BK extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	protected function get_formatted_discount_total_attribute() {
+	protected function get_formatted_discount_total() {
 		return eac_format_amount( $this->discount_total, $this->currency_code );
 	}
 
@@ -601,7 +601,7 @@ class Document_BK extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	protected function get_formatted_shipping_total_attribute() {
+	protected function get_formatted_shipping_total() {
 		return eac_format_amount( $this->shipping_total, $this->currency_code );
 	}
 
@@ -611,7 +611,7 @@ class Document_BK extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	protected function get_formatted_fees_total_attribute() {
+	protected function get_formatted_fees_total() {
 		return eac_format_amount( $this->fees_total, $this->currency_code );
 	}
 
@@ -621,7 +621,7 @@ class Document_BK extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	protected function get_formatted_tax_total_attribute() {
+	protected function get_formatted_tax_total() {
 		return eac_format_amount( $this->tax_total, $this->currency_code );
 	}
 
@@ -631,7 +631,7 @@ class Document_BK extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	protected function get_formatted_total_attribute() {
+	protected function get_formatted_total() {
 		return eac_format_amount( $this->total, $this->currency_code );
 	}
 
@@ -641,7 +641,7 @@ class Document_BK extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	protected function get_formatted_total_paid_attribute() {
+	protected function get_formatted_total_paid() {
 		return eac_format_amount( $this->total_paid, $this->currency_code );
 	}
 
@@ -651,7 +651,7 @@ class Document_BK extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	protected function get_formatted_balance_attribute() {
+	protected function get_formatted_balance() {
 		return eac_format_amount( $this->balance, $this->currency_code );
 	}
 
@@ -661,7 +661,7 @@ class Document_BK extends Model {
 	 * @since 1.0.0
 	 * @return array
 	 */
-	protected function get_formatted_itemized_taxes_attribute() {
+	protected function get_formatted_itemized_taxes() {
 		$taxes = $this->get_merged_taxes();
 		$list  = array();
 		foreach ( $taxes as $tax ) {
@@ -680,7 +680,7 @@ class Document_BK extends Model {
 	 * @return string
 	 * @since 1.0.0
 	 */
-	protected function get_formatted_name_attribute() {
+	protected function get_formatted_name() {
 		// example: #INV-0001 (Paid) - John Doe.
 		$invoice_name = $this->number;
 		if ( $this->is_paid() ) {

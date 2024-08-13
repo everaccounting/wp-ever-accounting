@@ -250,13 +250,13 @@ class Transfer extends Model {
 
 			$this->get_db()->query( 'COMMIT' );
 
-			$this->set_attribute( 'payment_id', $payment->id );
-			$this->set_attribute( 'expense_id', $expense->id );
-			$this->set_attribute( 'currency_code', $to_account->currency_code );
-			$this->set_attribute( 'from_account_id', $from_account->id );
-			$this->set_attribute( 'to_account_id', $to_account->id );
-			$this->set_attribute( 'reference', $this->reference );
-			$this->set_attribute( 'creator_id', get_current_user_id() );
+			$this->set( 'payment_id', $payment->id );
+			$this->set( 'expense_id', $expense->id );
+			$this->set( 'currency_code', $to_account->currency_code );
+			$this->set( 'from_account_id', $from_account->id );
+			$this->set( 'to_account_id', $to_account->id );
+			$this->set( 'reference', $this->reference );
+			$this->set( 'creator_id', get_current_user_id() );
 
 			return parent::save();
 

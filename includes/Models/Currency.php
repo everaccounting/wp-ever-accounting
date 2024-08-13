@@ -144,7 +144,7 @@ class Currency extends Model {
 	 *
 	 * @since 1.0.0
 	 */
-	protected function set_position_attribute( $value ) {
+	protected function set_position( $value ) {
 		$value                        = strtolower( $value );
 		$this->attributes['position'] = in_array( $value, array( 'before', 'after' ), true ) ? $value : 'before';
 	}
@@ -154,7 +154,7 @@ class Currency extends Model {
 	 *
 	 * @since 1.0.0
 	 */
-	protected function get_exchange_rate_attribute() {
+	protected function get_exchange_rate() {
 		return eac_get_base_currency() === $this->code ? 1 : $this->attributes['exchange_rate'];
 	}
 

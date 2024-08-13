@@ -143,7 +143,7 @@ class Category extends Model {
 	 * @since 1.0.0
 	 * @return void
 	 */
-	protected function set_type_attribute( $type ) {
+	protected function set_type( $type ) {
 		$this->attributes['type'] = ! array_key_exists( $type, self::get_types() ) ? 'item' : $type;
 	}
 

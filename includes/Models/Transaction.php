@@ -209,7 +209,7 @@ class Transaction extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	protected function get_formatted_number_attribute() {
+	protected function get_formatted_number() {
 		$number = empty( $this->number ) ? $this->get_next_number() : $this->number;
 		$prefix = strtoupper( substr( $this->type, 0, 3 ) ) . '-';
 		$next   = str_pad( $number, 4, '0', STR_PAD_LEFT );
@@ -223,7 +223,7 @@ class Transaction extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	protected function get_formatted_amount_attribute() {
+	protected function get_formatted_amount() {
 		return eac_format_amount( $this->amount, $this->currency_code );
 	}
 
@@ -233,7 +233,7 @@ class Transaction extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	protected function get_formatted_address_attribute() {
+	protected function get_formatted_address() {
 		if ( empty( $this->contact ) ) {
 			return '';
 		}
@@ -376,9 +376,10 @@ class Transaction extends Model {
 	 * @return string
 	 */
 	public function get_max_number() {
-		$max = $this->get_db()->get_var(
-			$this->get_db()->prepare(
-				"SELECT `number` FROM {$this->get_db()->prefix}{$this->table} WHERE `type` = %s ORDER BY `number` DESC",
+		global $wpdb;
+		$max = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT `number` FROM {$wpdb->prefix}{$this->table} WHERE `type` = %s ORDER BY `number` DESC",
 				$this->type
 			)
 		);

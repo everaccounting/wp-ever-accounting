@@ -144,7 +144,7 @@ class DocumentLine extends Model {
 	 * @since 1.0.0
 	 * @return double
 	 */
-	protected function get_discounted_subtotal_attribute() {
+	protected function get_discounted_subtotal() {
 		return (float) $this->subtotal - (float) $this->discount;
 	}
 
