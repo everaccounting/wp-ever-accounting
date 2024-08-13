@@ -104,7 +104,7 @@ defined( 'ABSPATH' ) || exit;
 								'data-placeholder' => __( 'Select category', 'wp-ever-accounting' ),
 								'data-action'      => 'eac_json_search',
 								'data-type'        => 'category',
-								'data-subtype'     => 'income',
+								'data-subtype'     => 'payment',
 								'suffix'           => sprintf(
 									'<a class="addon" href="%s" target="_blank" title="%s"><span class="dashicons dashicons-plus"></span></a>',
 									esc_url( admin_url( 'admin.php?page=eac-misc&tab=categories&add=yes&type=income' ) ),

@@ -20,6 +20,7 @@ defined( 'ABSPATH' ) || exit;
  * @property string $name Name of the category.
  * @property string $description Description of the category.
  * @property string $status Status of the category.
+ * @property string $formatted_name Formatted name of the category.
  * @property string $created_at Date created of the category.
  * @property string $updated_at Date updated of the category.
  */
@@ -152,7 +153,7 @@ class Category extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	protected function get_formatted_name_attribute() {
+	protected function get_formatted_name() {
 		return sprintf( '%s (#%d)', $this->name, $this->id );
 	}
 
