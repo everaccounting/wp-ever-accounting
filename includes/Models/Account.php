@@ -197,7 +197,7 @@ class Account extends Model {
 		static $balance;
 		if ( is_null( $balance ) ) {
 			$transaction_total = (float) $wpdb->get_var(
-				$wpdb->prepare( "SELECT SUM(CASE WHEN type='income' then amount WHEN type='expense' then - amount END) as total from {$this->get_db()->prefix}ea_transactions WHERE account_id=%d", $this->id )
+				$wpdb->prepare( "SELECT SUM(CASE WHEN type='income' then amount WHEN type='expense' then - amount END) as total from {$wpdb->prefix}ea_transactions WHERE account_id=%d", $this->id )
 			);
 			$balance           = $this->opening_balance + $transaction_total;
 		}
