@@ -4,8 +4,8 @@
  * Page: Misc
  * Tab: Categories
  *
- * @package EverAccounting
  * @since 1.0.0
+ * @package EverAccounting
  * @var $category Category Category object.
  */
 
@@ -75,8 +75,8 @@ defined( 'ABSPATH' ) || exit;
 								'active'   => __( 'Active', 'wp-ever-accounting' ),
 								'inactive' => __( 'Inactive', 'wp-ever-accounting' ),
 							),
-							'value'       => $category->status,
-							'placeholder' => __( 'Select status', 'wp-ever-accounting' ),
+							'required'    => true,
+							'value'       => $category->status
 						)
 					);
 					?>

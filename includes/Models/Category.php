@@ -217,6 +217,9 @@ class Category extends Model {
 		if ( empty( $this->type ) ) {
 			return new \WP_Error( 'missing_required', __( 'Category type is required.', 'wp-ever-accounting' ) );
 		}
+		if ( empty( $this->status ) ) {
+			return new \WP_Error( 'missing_required', __( 'Category status is required.', 'wp-ever-accounting' ) );
+		}
 
 		// Duplicate check. Same type and name should not exist.
 		$existing = static::results(
