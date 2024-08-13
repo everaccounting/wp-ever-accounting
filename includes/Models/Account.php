@@ -27,7 +27,6 @@ defined( 'ABSPATH' ) || exit;
  * @property int                $creator_id Author ID.
  * @property int                $thumbnail_id Thumbnail ID.
  * @property string             $status Status of the account.
- * @property string             $uuid UUID of the account.
  * @property string             $created_at Date created.
  * @property string             $updated_at Date updated.
  *
@@ -67,8 +66,7 @@ class Account extends Model {
 		'currency_code',
 		'creator_id',
 		'thumbnail_id',
-		'status',
-		'uuid',
+		'status'
 	);
 
 	/**
@@ -282,10 +280,6 @@ class Account extends Model {
 		}
 		if ( empty( $this->currency_code ) ) {
 			return new \WP_Error( 'missing_required', __( 'Currency code is required.', 'wp-ever-accounting' ) );
-		}
-
-		if ( empty( $this->uuid ) ) {
-			$this->uuid = wp_generate_uuid4();
 		}
 
 		if ( empty( $this->creator_id ) && is_user_logged_in() ) {
