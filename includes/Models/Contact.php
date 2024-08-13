@@ -19,8 +19,7 @@ defined( 'ABSPATH' ) || exit;
  * @property string $email Email of the contact.
  * @property string $phone Phone of the contact.
  * @property string $website Website url of the contact.
- * @property string $address_1 Address line 1 of the contact.
- * @property string $address_2 Address line 2 of the contact.
+ * @property string $address Address line of the contact.
  * @property string $city City of the contact.
  * @property string $state State of the contact.
  * @property string $postcode Postcode of the contact.
@@ -33,7 +32,6 @@ defined( 'ABSPATH' ) || exit;
  * @property string $status Status of the contact.
  * @property string $created_via Created via of the contact.
  * @property int    $creator_id Author ID of the contact.
- * @property string $uuid UUID of the contact.
  * @property string $created_at Date created of the contact.
  * @property string $updated_at Date updated of the contact.
  *
@@ -71,8 +69,7 @@ class Contact extends Model {
 		'email',
 		'phone',
 		'website',
-		'address_1',
-		'address_2',
+		'address',
 		'city',
 		'state',
 		'postcode',
@@ -85,7 +82,6 @@ class Contact extends Model {
 		'status',
 		'created_via',
 		'creator_id',
-		'uuid',
 	);
 
 	/**
@@ -141,7 +137,7 @@ class Contact extends Model {
 	 * @since 1.0.0
 	 * @var bool
 	 */
-	protected $timestamps = true;
+	protected $has_timestamps = true;
 
 	/**
 	 * The attributes that are searchable.
@@ -154,8 +150,7 @@ class Contact extends Model {
 		'company',
 		'email',
 		'phone',
-		'address_1',
-		'address_2',
+		'address'
 	);
 
 	/*
@@ -236,10 +231,6 @@ class Contact extends Model {
 
 		if ( empty( $this->currency_code ) ) {
 			$this->set( 'currency_code', eac_get_base_currency() );
-		}
-
-		if ( empty( $this->uuid ) ) {
-			$this->uuid = wp_generate_uuid4();
 		}
 
 		if ( empty( $this->creator_id ) && is_user_logged_in() ) {

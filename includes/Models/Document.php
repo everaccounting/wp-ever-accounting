@@ -224,7 +224,7 @@ class Document extends Model {
 	 * @since 1.0.0
 	 * @var bool
 	 */
-	protected $timestamps = true;
+	protected $has_timestamps = true;
 
 	/*
 	|--------------------------------------------------------------------------
