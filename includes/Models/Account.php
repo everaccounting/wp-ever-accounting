@@ -28,8 +28,8 @@ defined( 'ABSPATH' ) || exit;
  * @property int                $thumbnail_id Thumbnail ID.
  * @property string             $status Status of the account.
  * @property string             $uuid UUID of the account.
- * @property string             $date_created Date created.
- * @property string             $date_updated Date updated.
+ * @property string             $created_at Date created.
+ * @property string             $updated_at Date updated.
  *
  * @property-read string        $formatted_name Formatted name.
  * @property-read float         $balance Balance.

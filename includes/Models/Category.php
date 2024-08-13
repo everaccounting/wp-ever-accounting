@@ -20,8 +20,8 @@ defined( 'ABSPATH' ) || exit;
  * @property string $name Name of the category.
  * @property string $description Description of the category.
  * @property string $status Status of the category.
- * @property string $date_created Date created of the category.
- * @property string $date_updated Date updated of the category.
+ * @property string $created_at Date created of the category.
+ * @property string $updated_at Date updated of the category.
  */
 class Category extends Model {
 	/**
@@ -216,6 +216,9 @@ class Category extends Model {
 		}
 		if ( empty( $this->type ) ) {
 			return new \WP_Error( 'missing_required', __( 'Category type is required.', 'wp-ever-accounting' ) );
+		}
+		if ( empty( $this->status ) ) {
+			return new \WP_Error( 'missing_required', __( 'Category status is required.', 'wp-ever-accounting' ) );
 		}
 
 		// Duplicate check. Same type and name should not exist.

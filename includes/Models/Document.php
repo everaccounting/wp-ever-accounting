@@ -77,8 +77,8 @@ use ByteKit\Models\Relations\HasOne;
  * @property string   $created_via Created via of the document.
  * @property int      $creator_id Author ID of the document.
  * @property string   $uuid UUID of the document.
- * @property string   $date_updated Date updated of the document.
- * @property string   $date_created Date created of the document.
+ * @property string   $updated_at Date updated of the document.
+ * @property string   $created_at Date created of the document.
  *
  * @property string   $billing_name Name of the billing contact.
  * @property string   $billing_company Company of the billing contact.

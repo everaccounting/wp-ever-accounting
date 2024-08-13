@@ -21,7 +21,7 @@ defined( 'ABSPATH' ) || exit;
 
 		<div class="column-2">
 			<?php
-			eac_form_group(
+			eac_form_field(
 				array(
 					'label'            => __( 'Currency', 'wp-ever-accounting' ),
 					'type'             => 'select',
@@ -37,7 +37,7 @@ defined( 'ABSPATH' ) || exit;
 					'data-placeholder' => __( 'Select Currency', 'wp-ever-accounting' ),
 				)
 			);
-			eac_form_group(
+			eac_form_field(
 				array(
 					'label' => __( 'Discount', 'wp-ever-accounting' ),
 				)

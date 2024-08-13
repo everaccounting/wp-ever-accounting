@@ -20,8 +20,8 @@ use ByteKit\Models\Relations\BelongsTo;
  * @property int         $line_id Item ID of the document_item_tax.
  * @property int         $tax_id Tax ID of the document_item_tax.
  * @property int         $document_id Document ID of the document_item_tax.
- * @property string      $date_updated Date updated of the document_item_tax.
- * @property string      $date_created Date created of the document_item_tax.
+ * @property string      $updated_at Date updated of the document_item_tax.
+ * @property string      $created_at Date created of the document_item_tax.
  *
  * @property-read string $formatted_name Formatted name of the document_item_tax.
  * @property-read DocumentLine $item Item relationship.
