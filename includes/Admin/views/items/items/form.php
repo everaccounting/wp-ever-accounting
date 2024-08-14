@@ -169,11 +169,12 @@ $categories = eac_get_categories(
 					<?php
 					eac_form_field(
 						array(
-							'type'    => 'select',
-							'name'    => 'status',
-							'label'   => __( 'Status', 'wp-ever-accounting' ),
-							'value'   => $item->status,
-							'options' => array(
+							'type'     => 'select',
+							'name'     => 'status',
+							'label'    => __( 'Status', 'wp-ever-accounting' ),
+							'required' => true,
+							'value'    => $item->status,
+							'options'  => array(
 								'active'   => __( 'Active', 'wp-ever-accounting' ),
 								'inactive' => __( 'Inactive', 'wp-ever-accounting' ),
 							),
