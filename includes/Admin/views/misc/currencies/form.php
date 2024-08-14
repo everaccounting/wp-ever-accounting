@@ -129,7 +129,7 @@ defined( 'ABSPATH' ) || exit;
 								'inactive' => __( 'Inactive', 'wp-ever-accounting' ),
 							),
 							'value'       => $currency->status,
-							'placeholder' => __( 'Select status', 'wp-ever-accounting' ),
+							'required'    => true,
 						)
 					);
 					?>
@@ -139,6 +139,9 @@ defined( 'ABSPATH' ) || exit;
 					<input type="hidden" name="id" value="<?php echo esc_attr( $currency->id ); ?>"/>
 					<input type="hidden" name="action" value="eac_edit_currency"/>
 					<?php wp_nonce_field( 'eac_edit_currency' ); ?>
+					<?php if ( $currency->exists() && $currency->is_deletable() ) : ?>
+						<a class="eac_confirm_delete del" href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'action', 'delete', admin_url( 'admin.php?page=eac-misc&tab=currencies&action=delete&id=' . $currency->id ) ), 'bulk-currencies' ) ); ?>"><?php esc_html_e( 'Delete', 'wp-ever-accounting' ); ?></a>
+					<?php endif; ?>
 					<button class="button button-primary eac-w-100"><?php esc_html_e( 'Update', 'wp-ever-accounting' ); ?></button>
 				</div>
 			</div>
