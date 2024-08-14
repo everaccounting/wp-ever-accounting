@@ -39,6 +39,7 @@ defined( 'ABSPATH' ) || exit;
 							'value'       => $tax->rate,
 							'required'    => true,
 							'type'        => 'number',
+							'attr-step'   => 'any',
 						)
 					);
 
@@ -88,7 +89,7 @@ defined( 'ABSPATH' ) || exit;
 								'inactive' => __( 'Inactive', 'wp-ever-accounting' ),
 							),
 							'value'       => $tax->status,
-							'placeholder' => __( 'Select status', 'wp-ever-accounting' ),
+							'required'    => true,
 						)
 					);
 					?>
