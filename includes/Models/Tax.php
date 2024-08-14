@@ -148,6 +148,9 @@ class Tax extends Model {
 		if ( empty( $this->rate ) ) {
 			return new \WP_Error( 'missing_required', __( 'Tax rate is required.', 'wp-ever-accounting' ) );
 		}
+		if ( empty( $this->status ) ) {
+			return new \WP_Error( 'missing_required', __( 'Tax status is required.', 'wp-ever-accounting' ) );
+		}
 
 		return parent::save();
 	}
