@@ -229,6 +229,10 @@ class Contact extends Model {
 			return new \WP_Error( 'missing_required', __( 'Name is required.', 'wp-ever-accounting' ) );
 		}
 
+		if ( empty( $this->status ) ) {
+			return new \WP_Error( 'missing_required', __( 'Status is required.', 'wp-ever-accounting' ) );
+		}
+
 		if ( empty( $this->currency_code ) ) {
 			$this->set( 'currency_code', eac_get_base_currency() );
 		}
