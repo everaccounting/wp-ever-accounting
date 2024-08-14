@@ -235,6 +235,9 @@ class Currency extends Model {
 		if ( empty( $this->symbol ) ) {
 			return new \WP_Error( 'missing_required', __( 'Currency symbol is required.', 'wp-ever-accounting' ) );
 		}
+		if ( empty( $this->status ) ) {
+			return new \WP_Error( 'missing_required', __( 'Currency status is required.', 'wp-ever-accounting' ) );
+		}
 
 		return parent::save();
 	}

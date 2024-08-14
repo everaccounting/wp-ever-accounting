@@ -129,7 +129,7 @@ defined( 'ABSPATH' ) || exit;
 								'inactive' => __( 'Inactive', 'wp-ever-accounting' ),
 							),
 							'value'       => $currency->status,
-							'placeholder' => __( 'Select status', 'wp-ever-accounting' ),
+							'required'    => true,
 						)
 					);
 					?>
