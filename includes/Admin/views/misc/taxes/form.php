@@ -39,6 +39,7 @@ defined( 'ABSPATH' ) || exit;
 							'value'       => $tax->rate,
 							'required'    => true,
 							'type'        => 'number',
+							'attr-step'   => 'any',
 						)
 					);
 
