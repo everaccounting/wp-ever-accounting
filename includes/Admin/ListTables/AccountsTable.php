@@ -333,6 +333,28 @@ class AccountsTable extends ListTable {
 		}
 		$actions = array(
 			'id' => sprintf( '#%d', esc_attr( $item->id ) ),
+			'edit' => sprintf(
+				'<a href="%s">%s</a>',
+				esc_url( add_query_arg( 'edit', $item->id, $this->base_url ) ),
+				__( 'Edit', 'wp-ever-accounting' )
+			),
+		);
+
+		$actions['delete'] = sprintf(
+			'<a href="%s" class="del">%s</a>',
+			esc_url(
+				wp_nonce_url(
+					add_query_arg(
+						array(
+							'action' => 'delete',
+							'id'     => $item->id,
+						),
+						$this->base_url
+					),
+					'bulk-' . $this->_args['plural']
+				)
+			),
+			__( 'Delete', 'wp-ever-accounting' )
 		);
 
 		if ( 'active' === $item->status ) {
@@ -370,23 +392,6 @@ class AccountsTable extends ListTable {
 				__( 'Activate', 'wp-ever-accounting' )
 			);
 		}
-
-		$actions['delete'] = sprintf(
-			'<a href="%s" class="del">%s</a>',
-			esc_url(
-				wp_nonce_url(
-					add_query_arg(
-						array(
-							'action' => 'delete',
-							'id'     => $item->id,
-						),
-						$this->base_url
-					),
-					'bulk-' . $this->_args['plural']
-				)
-			),
-			__( 'Delete', 'wp-ever-accounting' )
-		);
 
 		return $this->row_actions( $actions );
 	}
