@@ -182,7 +182,7 @@ class PaymentsTable extends ListTable {
 			$this->date_filter();
 			$this->year_filter();
 			$this->account_filter( 'active' );
-			$this->category_filter( 'item' );
+			$this->category_filter( 'payment' );
 			$this->currency_filter( 'active' );
 			submit_button( __( 'Filter', 'wp-ever-accounting' ), '', 'filter_action', false );
 		}

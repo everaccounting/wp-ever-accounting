@@ -123,8 +123,8 @@ class Payment extends Transaction {
 		if ( empty( $this->date ) ) {
 			return new \WP_Error( 'missing_required', __( 'Payment date is required.', 'wp-ever-accounting' ) );
 		}
-		if ( empty( $this->date ) ) {
-			return new \WP_Error( 'missing_required', __( 'Payment date is required.', 'wp-ever-accounting' ) );
+		if ( empty( $this->status ) ) {
+			return new \WP_Error( 'missing_required', __( 'Payment status is required.', 'wp-ever-accounting' ) );
 		}
 
 		return parent::save();
