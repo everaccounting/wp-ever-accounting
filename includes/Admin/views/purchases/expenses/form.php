@@ -192,6 +192,7 @@ defined( 'ABSPATH' ) || exit;
 							'options'     => \EverAccounting\Models\Expense::get_statuses(),
 							'value'       => $expense->status,
 							'placeholder' => __( 'Select status', 'wp-ever-accounting' ),
+							'required'    => true,
 						)
 					);
 					?>

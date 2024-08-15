@@ -117,7 +117,10 @@ class Expense extends Transaction {
 	 */
 	public function save() {
 		if ( empty( $this->date ) ) {
-			return new \WP_Error( 'missing_required', __( 'Transaction date is required.', 'wp-ever-accounting' ) );
+			return new \WP_Error( 'missing_required', __( 'Expense date is required.', 'wp-ever-accounting' ) );
+		}
+		if ( empty( $this->status ) ) {
+			return new \WP_Error( 'missing_required', __( 'Expense status is required.', 'wp-ever-accounting' ) );
 		}
 
 		return parent::save();
