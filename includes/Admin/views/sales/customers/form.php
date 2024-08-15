@@ -142,12 +142,13 @@ defined( 'ABSPATH' ) || exit;
 						);
 						eac_form_field(
 							array(
-								'type'    => 'select',
-								'id'      => 'country',
-								'label'   => __( 'Country', 'wp-ever-accounting' ),
-								'options' => \EverAccounting\Utilities\I18n::get_countries(),
-								'value'   => $customer->country,
-								'class'   => 'eac-select2',
+								'type'        => 'select',
+								'id'          => 'country',
+								'label'       => __( 'Country', 'wp-ever-accounting' ),
+								'options'     => \EverAccounting\Utilities\I18n::get_countries(),
+								'value'       => $customer->country,
+								'class'   	  => 'eac-select2',
+								'placeholder' => __( 'Select Country', 'wp-ever-accounting' ),
 							)
 						);
 						?>

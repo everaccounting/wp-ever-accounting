@@ -364,6 +364,23 @@ class CustomersTable extends ListTable {
 			),
 		);
 
+		$actions['delete'] = sprintf(
+			'<a href="%s" class="del">%s</a>',
+			esc_url(
+				wp_nonce_url(
+					add_query_arg(
+						array(
+							'action' => 'delete',
+							'id'     => $item->id,
+						),
+						$this->base_url
+					),
+					'bulk-' . $this->_args['plural']
+				)
+			),
+			__( 'Delete', 'wp-ever-accounting' )
+		);
+
 		if ( 'active' === $item->status ) {
 			$actions['deactivate'] = sprintf(
 				'<a href="%s">%s</a>',
