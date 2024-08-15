@@ -282,6 +282,9 @@ class Account extends Model {
 		if ( empty( $this->currency_code ) ) {
 			return new \WP_Error( 'missing_required', __( 'Currency code is required.', 'wp-ever-accounting' ) );
 		}
+		if ( empty( $this->status ) ) {
+			return new \WP_Error( 'missing_required', __( 'Currency status is required.', 'wp-ever-accounting' ) );
+		}
 
 		if ( empty( $this->creator_id ) && is_user_logged_in() ) {
 			$this->creator_id = get_current_user_id();
