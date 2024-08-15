@@ -177,6 +177,7 @@ defined( 'ABSPATH' ) || exit;
 								'options'     => \EverAccounting\Models\Payment::get_statuses(),
 								'value'       => $payment->status,
 								'placeholder' => __( 'Select status', 'wp-ever-accounting' ),
+								'required'    => true,
 							)
 						);
 						?>
