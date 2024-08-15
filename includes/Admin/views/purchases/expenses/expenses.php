@@ -10,7 +10,7 @@ defined( 'ABSPATH' ) || exit;
 ?>
 	<h1 class="wp-heading-inline">
 		<?php esc_html_e( 'Expenses', 'wp-ever-accounting' ); ?>
-		<a href="<?php echo esc_attr( admin_url( 'admin.php?page=eac-purchases&tab=expense&add=yes' ) ); ?>" class="page-title-action">
+		<a href="<?php echo esc_attr( admin_url( 'admin.php?page=eac-purchases&tab=expenses&add=yes' ) ); ?>" class="page-title-action">
 			<?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?>
 		</a>
 		<a href="<?php echo esc_attr( admin_url( 'admin.php?page=eac-tools' ) ); ?>" class="page-title-action">
