@@ -192,6 +192,7 @@ defined( 'ABSPATH' ) || exit;
 							'options'     => \EverAccounting\Models\Expense::get_statuses(),
 							'value'       => $expense->status,
 							'placeholder' => __( 'Select status', 'wp-ever-accounting' ),
+							'required'    => true,
 						)
 					);
 					?>
@@ -204,7 +205,7 @@ defined( 'ABSPATH' ) || exit;
 					<input type="hidden" name="action" value="eac_edit_expense"/>
 					<?php wp_nonce_field( 'eac_edit_expense' ); ?>
 					<?php if ( $expense->exists() ) : ?>
-						<a class="eac_confirm_delete del" href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'action', 'delete', admin_url( 'admin.php?page=eac-sales&tab=expenses&id=' . $expense->id ) ), 'bulk-expenses' ) ); ?>"><?php esc_html_e( 'Delete', 'wp-ever-accounting' ); ?></a>
+						<a class="eac_confirm_delete del" href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'action', 'delete', admin_url( 'admin.php?page=eac-purchases&tab=expenses&id=' . $expense->id ) ), 'bulk-expenses' ) ); ?>"><?php esc_html_e( 'Delete', 'wp-ever-accounting' ); ?></a>
 					<?php endif; ?>
 					<?php if ( $expense->exists() ) : ?>
 						<button class="button button-primary"><?php esc_html_e( 'Update Expense', 'wp-ever-accounting' ); ?></button>
