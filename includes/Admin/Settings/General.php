@@ -111,7 +111,7 @@ class General extends Page {
 				'options'      => array( eac_get_currency( get_option( 'eac_base_currency' ) ) ),
 				'option_key'   => 'code',
 				'option_value' => 'formatted_name',
-				'value'        => get_option( 'eac_base_currency' ),
+				'value'        => get_option( 'eac_base_currency', 'USD' ),
 				'disabled'     => ! empty( eac_get_transactions() ),
 				'desc_tip'     => __( 'Base currency can not be changed once you have recorded any transaction.', 'wp-ever-accounting' ),
 				'data-action'  => 'eac_json_search',
