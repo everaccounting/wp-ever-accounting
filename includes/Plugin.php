@@ -77,14 +77,17 @@ class Plugin extends \ByteKit\Plugin {
 	 */
 	public function on_init() {
 		$this->services->add( 'installer', new Installer() );
-		$this->services->add( 'transactions', new Controllers\Transactions() );
-		$this->services->add( 'documents', new Controllers\Documents() );
-		$this->services->add( 'shortcodes', new Controllers\Shortcodes() );
+		$this->services->add( 'transactions', new Handlers\Transactions() );
+		$this->services->add( 'documents', new Handlers\Documents() );
+		$this->services->add( 'shortcodes', new Handlers\Shortcodes() );
 
 		if ( is_admin() ) {
 			$this->services->add( Admin\Admin::class );
 			$this->services->add( Admin\Menus::class );
 			$this->services->add( Admin\Actions::class );
+			$this->services->add( Admin\Sales\Payments::class );
+			$this->services->add( Admin\Sales\Invoices::class );
+			$this->services->add( Admin\Sales\Customers::class );
 		}
 
 		/**

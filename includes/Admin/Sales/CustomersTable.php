@@ -1,7 +1,8 @@
 <?php
 
-namespace EverAccounting\Admin\ListTables;
+namespace EverAccounting\Admin\Sales;
 
+use EverAccounting\Admin\ListTable;
 use EverAccounting\Models\Customer;
 
 defined( 'ABSPATH' ) || exit;

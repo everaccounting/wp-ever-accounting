@@ -1,7 +1,8 @@
 <?php
 
-namespace EverAccounting\Admin\ListTables;
+namespace EverAccounting\Admin\Sales;
 
+use EverAccounting\Admin\ListTable;
 use EverAccounting\Models\Payment;
 
 defined( 'ABSPATH' ) || exit;
@@ -10,7 +11,7 @@ defined( 'ABSPATH' ) || exit;
  * Class PaymentsTable.
  *
  * @since 1.0.0
- * @package EverAccounting\Admin\ListTables
+ * @package EverAccounting
  */
 class PaymentsTable extends ListTable {
 	/**

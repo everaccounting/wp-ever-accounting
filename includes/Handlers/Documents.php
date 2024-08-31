@@ -1,6 +1,6 @@
 <?php
 
-namespace EverAccounting\Controllers;
+namespace EverAccounting\Handlers;
 
 defined( 'ABSPATH' ) || exit;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace EverAccounting\Controllers;
+namespace EverAccounting\Handlers;
 
 use ByteKit\Models\Query;
 

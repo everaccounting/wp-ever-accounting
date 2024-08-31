@@ -1,6 +1,6 @@
 <?php
 
-namespace EverAccounting\Admin\ListTables;
+namespace EverAccounting\Admin;
 
 defined( 'ABSPATH' ) || exit;
 

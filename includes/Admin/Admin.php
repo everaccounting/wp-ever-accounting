@@ -119,22 +119,6 @@ class Admin {
 	}
 
 	/**
-	 * Add `defer` to the AlpineJS script tag.
-	 *
-	 * @param string $tag The script tag.
-	 *
-	 * @since 1.0.0
-	 * @return string
-	 */
-	public function defer_alpinejs( $tag ) {
-		if ( false !== strpos( $tag, 'alpine.js' ) ) {
-			$tag = str_replace( ' src', ' defer src', $tag );
-		}
-
-		return $tag;
-	}
-
-	/**
 	 * Request review.
 	 *
 	 * @param string $text Footer text.

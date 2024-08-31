@@ -2,6 +2,7 @@
 
 namespace EverAccounting\Admin\ListTables;
 
+use EverAccounting\ListTable;
 use EverAccounting\Models\Item;
 
 defined( 'ABSPATH' ) || exit;
