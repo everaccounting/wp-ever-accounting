@@ -23,11 +23,11 @@ class Payments {
 	 * Payments constructor.
 	 */
 	public function __construct() {
-		add_filter( 'ever_accounting_sales_page_tabs', array( $this, 'setup_home_screen' ) );
-		add_action( 'ever_accounting_sales_screen_payments_home', array( $this, 'home_screen' ) );
-		add_action( 'ever_accounting_sales_page_payments_home', array( $this, 'render_list' ) );
-		add_action( 'ever_accounting_sales_page_payments_add', array( $this, 'render_add' ) );
-		add_action( 'ever_accounting_sales_page_payments_edit', array( $this, 'render_edit' ) );
+		add_filter( 'eac_sales_page_tabs', array( $this, 'setup_home_screen' ) );
+		add_action( 'load_eac_sales_page_payments_home', array( $this, 'home_screen' ) );
+		add_action( 'eac_sales_page_payments_home', array( $this, 'render_list' ) );
+		add_action( 'eac_sales_page_payments_add', array( $this, 'render_add' ) );
+		add_action( 'eac_sales_page_payments_edit', array( $this, 'render_edit' ) );
 	}
 
 	/**
@@ -51,7 +51,8 @@ class Payments {
 	 *
 	 * @since 1.0.0
 	 */
-	public function home_screen( $screen ) {
+	public function home_screen() {
+		$screen           = get_current_screen();
 		$this->list_table = new PaymentsTable();
 		$this->list_table->prepare_items();
 		$screen->add_option( 'per_page', array(

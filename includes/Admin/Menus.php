@@ -127,7 +127,7 @@ class Menus {
 			)
 		);
 
-		add_submenu_page(
+		$load = add_submenu_page(
 			$menu['parent'],
 			$menu['page_title'],
 			$menu['menu_title'],
@@ -149,7 +149,7 @@ class Menus {
 
 
 		$this->page   = $page === self::PARENT_SLUG ? 'dashboard' : $page;
-		$this->tabs   = apply_filters( 'ever_accounting_' . $this->page . '_page_tabs', array() );
+		$this->tabs   = apply_filters( 'eac_' . $this->page . '_page_tabs', array() );
 		$this->tab    = ! empty( $tab ) && array_key_exists( $tab, $this->tabs ) ? $tab : current( array_keys( $this->tabs ) );
 		$this->action = ! empty( $action ) ? $action : 'home';
 
@@ -159,56 +159,49 @@ class Menus {
 			exit;
 		}
 
-
-		add_action( 'current_screen', array( $this, 'current_screen' ), -1 );
+		add_action( 'load-' . $load, array( $this, 'handle_page_load' ) );
 		add_filter( 'admin_title', array( $this, 'admin_title' ) );
 	}
 
 	/**
-	 * Set current screen.
-	 *
-	 * @param \WP_Screen $screen Screen object.
+	 * Handle page load.
 	 *
 	 * @since 3.0.0
 	 * @return void
 	 */
-	public function current_screen( $screen ) {
+	public function handle_page_load() {
 		if ( ! empty( $this->page ) && ! empty( $this->tab ) && ! empty( $this->action ) ) {
 			/**
-			 * Fires after the current screen has been set.
-			 *
-			 * @param \WP_Screen $screen Screen object.
+			 * Fires when the page is loaded.
 			 *
 			 * @since 3.0.0
 			 */
-			do_action( 'ever_accounting_' . $this->page . '_screen_' . $this->tab . '_' . $this->action, $screen );
+			do_action( 'load_eac_' . $this->page . '_page_' . $this->tab . '_' . $this->action );
 		}
 
 		if ( ! empty( $this->page ) && ! empty( $this->tab ) ) {
 			/**
-			 * Fires after the current screen has been set.
+			 * Fires when the page is loaded.
 			 *
-			 * @param \WP_Screen $screen Screen object.
-			 * @param string     $action The current action.
+			 * @param string $action The current action.
 			 *
 			 * @since 3.0.0
 			 *
 			 */
-			do_action( 'ever_accounting_' . $this->page . '_screen_' . $this->tab, $screen, $this->action );
+			do_action( 'load_eac_' . $this->page . '_page_' . $this->tab, $this->action );
 		}
 
 		if ( ! empty( $this->page ) ) {
 			/**
-			 * Fires after the current screen has been set.
+			 * Fires when the page is loaded.
 			 *
-			 * @param \WP_Screen $screen Screen object.
 			 * @param string     $tab The current tab.
 			 * @param string     $action The current action.
 			 *
 			 * @since 3.0.0
 			 *
 			 */
-			do_action( 'ever_accounting_' . $this->page . '_screen_', $screen, $this->tab, $this->action );
+			do_action( 'load_eac_' . $this->page . '_page_', $this->tab, $this->action );
 		}
 	}
 
@@ -261,7 +254,7 @@ class Menus {
 					 *
 					 * @since 1.0.0
 					 */
-					do_action( 'ever_accounting_' . $this->page . '_page_nav_items', $this->tab, $this->tabs );
+					do_action( 'eac_' . $this->page . '_page_nav_items', $this->tab, $this->tabs );
 					?>
 				</nav>
 
@@ -279,7 +272,7 @@ class Menus {
 				 *
 				 * @since 1.0.0
 				 */
-				do_action( 'ever_accounting_' . $this->page . '_page_' . $this->tab . '_' . $this->action );
+				do_action( 'eac_' . $this->page . '_page_' . $this->tab . '_' . $this->action );
 			}
 
 			if ( ! empty( $this->page ) && ! empty( $this->tab ) ) {
@@ -291,7 +284,7 @@ class Menus {
 				 *
 				 * @since 1.0.0
 				 */
-				do_action( 'ever_accounting_' . $this->page . '_page_' . $this->tab );
+				do_action( 'eac_' . $this->page . '_page_' . $this->tab );
 			}
 
 			if ( ! empty( $this->page ) ) {
@@ -302,7 +295,7 @@ class Menus {
 				 *
 				 * @since 1.0.0
 				 */
-				do_action( 'ever_accounting_' . $this->page . '_page' );
+				do_action( 'eac_' . $this->page . '_page' );
 			}
 			?>
 		</div>
