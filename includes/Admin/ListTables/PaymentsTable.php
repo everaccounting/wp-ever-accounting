@@ -1,6 +1,6 @@
 <?php
 
-namespace EverAccounting\Admin\Sales;
+namespace EverAccounting\Admin\ListTables;
 
 use EverAccounting\Admin\ListTable;
 use EverAccounting\Models\Payment;

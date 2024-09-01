@@ -218,8 +218,6 @@ defined( 'ABSPATH' ) || exit;
 						?>
 					</div>
 				</div>
-
-
 			</div><!-- .column-2 -->
 
 		</div><!-- .eac-poststuff -->

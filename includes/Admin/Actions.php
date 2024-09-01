@@ -25,12 +25,10 @@ class Actions {
 	public function __construct() {
 		add_action( 'wp_ajax_eac_json_search', array( $this, 'handle_json_search' ) );
 		add_action( 'admin_post_eac_edit_item', array( $this, 'handle_edit_item' ) );
-		add_action( 'admin_post_eac_edit_payment', array( $this, 'handle_edit_payment' ) );
 		add_action( 'admin_post_eac_edit_expense', array( $this, 'handle_edit_expense' ) );
 		add_action( 'admin_post_eac_edit_customer', array( $this, 'handle_edit_customer' ) );
 		add_action( 'admin_post_eac_edit_vendor', array( $this, 'handle_edit_vendor' ) );
 		add_action( 'admin_post_eac_edit_account', array( $this, 'handle_edit_account' ) );
-		add_action( 'admin_post_eac_edit_category', array( $this, 'handle_edit_category' ) );
 		add_action( 'admin_post_eac_add_currency', array( $this, 'handle_add_currency' ) );
 		add_action( 'admin_post_eac_edit_currency', array( $this, 'handle_edit_currency' ) );
 		add_action( 'admin_post_eac_edit_tax', array( $this, 'handle_edit_tax' ) );
@@ -297,41 +295,6 @@ class Actions {
 	}
 
 	/**
-	 * Edit payment.
-	 *
-	 * @since 1.2.0
-	 * @return void
-	 */
-	public static function handle_edit_payment() {
-		check_admin_referer( 'eac_edit_payment' );
-		$referer = wp_get_referer();
-		$data    = array(
-			'id'             => isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0,
-			'date'           => isset( $_POST['date'] ) ? sanitize_text_field( wp_unslash( $_POST['date'] ) ) : '',
-			'account_id'     => isset( $_POST['account_id'] ) ? absint( wp_unslash( $_POST['account_id'] ) ) : 0,
-			'amount'         => isset( $_POST['amount'] ) ? floatval( wp_unslash( $_POST['amount'] ) ) : 0,
-			'category_id'    => isset( $_POST['category_id'] ) ? absint( wp_unslash( $_POST['category_id'] ) ) : 0,
-			'contact_id'     => isset( $_POST['contact_id'] ) ? absint( wp_unslash( $_POST['contact_id'] ) ) : 0,
-			'payment_method' => isset( $_POST['payment_method'] ) ? sanitize_text_field( wp_unslash( $_POST['payment_method'] ) ) : '',
-			'invoice_id'     => isset( $_POST['invoice_id'] ) ? absint( wp_unslash( $_POST['invoice_id'] ) ) : 0,
-			'reference'      => isset( $_POST['reference'] ) ? sanitize_text_field( wp_unslash( $_POST['reference'] ) ) : '',
-			'note'           => isset( $_POST['note'] ) ? sanitize_textarea_field( wp_unslash( $_POST['note'] ) ) : '',
-			'status'         => isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : 'active',
-		);
-		$payment = eac_insert_payment( $data );
-		if ( is_wp_error( $payment ) ) {
-			EAC()->flash->error( $payment->get_error_message() );
-		} else {
-			EAC()->flash->success( __( 'Payment saved successfully.', 'wp-ever-accounting' ) );
-			$referer = add_query_arg( 'edit', $payment->id, $referer );
-			$referer = remove_query_arg( array( 'add' ), $referer );
-		}
-
-		wp_safe_redirect( $referer );
-		exit;
-	}
-
-	/**
 	 * Edit expense.
 	 *
 	 * @since 1.2.0
@@ -481,42 +444,6 @@ class Actions {
 		} else {
 			EAC()->flash->success( __( 'Account saved successfully.', 'wp-ever-accounting' ) );
 			$referer = add_query_arg( 'edit', $account->id, $referer );
-			$referer = remove_query_arg( array( 'add' ), $referer );
-		}
-
-		wp_safe_redirect( $referer );
-		exit;
-	}
-
-	/**
-	 * Edit category.
-	 *
-	 * @since 1.2.0
-	 * @return void
-	 */
-	public static function handle_edit_category() {
-		check_admin_referer( 'eac_edit_category' );
-		$referer  = wp_get_referer();
-		$id       = isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0;
-		$name     = isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '';
-		$type     = isset( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '';
-		$desc     = isset( $_POST['description'] ) ? sanitize_textarea_field( wp_unslash( $_POST['description'] ) ) : '';
-		$status   = isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : 'active';
-		$category = eac_insert_category(
-			array(
-				'id'          => $id,
-				'name'        => $name,
-				'type'        => $type,
-				'description' => $desc,
-				'status'      => $status,
-			)
-		);
-
-		if ( is_wp_error( $category ) ) {
-			EAC()->flash->error( $category->get_error_message() );
-		} else {
-			EAC()->flash->success( __( 'Category saved successfully.', 'wp-ever-accounting' ) );
-			$referer = add_query_arg( 'edit', $category->id, $referer );
 			$referer = remove_query_arg( array( 'add' ), $referer );
 		}
 

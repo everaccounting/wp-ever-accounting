@@ -21,7 +21,29 @@ abstract class ListTable extends \WP_List_Table {
 	 * @since 1.0.0
 	 * @var string
 	 */
-	protected $base_url;
+	public $base_url;
+
+	/**
+	 * Per page option.
+	 *
+	 * @since 1.0.0
+	 * @var string
+	 */
+	public $per_page_option;
+
+	/**
+	 * Constructor.
+	 *
+	 * @param array $args An associative array of arguments.
+	 *
+	 * @see WP_List_Table::__construct() for more information on default arguments.
+	 * @since 1.0.0
+	 */
+	public function __construct( $args = array() ) {
+		parent::__construct( $args );
+		$this->per_page_option = 'eac_' . $this->_args['plural'] . '_per_page';
+		remove_filter( "manage_{$this->screen->id}_columns", array( $this, 'get_columns' ), 0 );
+	}
 
 	/**
 	 * Return the sortable column specified for this request to order the results by, if any.
@@ -77,6 +99,7 @@ abstract class ListTable extends \WP_List_Table {
 	 */
 	public function get_request_search() {
 		wp_verify_nonce( '_wpnonce' );
+
 		return ! empty( $_GET['s'] ) ? sanitize_text_field( wp_unslash( $_GET['s'] ) ) : '';
 	}
 

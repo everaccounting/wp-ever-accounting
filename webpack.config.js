@@ -2,6 +2,33 @@ const defaultConfig = require('@wordpress/scripts/config/webpack.config');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const path = require('path');
 const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
+
+class AddMinPlugin {
+	constructor(options) {
+		this.isProduction = options.isProduction;
+	}
+
+	apply(compiler) {
+		if (!this.isProduction) {
+			return;
+		}
+
+		compiler.hooks.emit.tapAsync('AddMinPlugin', (compilation, callback) => {
+			for (const asset in compilation.assets) {
+				if (asset.endsWith('.js')) {
+					const minAsset = asset.replace(/\.js$/, '.min.js');
+					compilation.assets[minAsset] = compilation.assets[asset];
+					delete compilation.assets[asset];
+				} else if (asset.endsWith('.css')) {
+					const minAsset = asset.replace(/\.css$/, '.min.css');
+					compilation.assets[minAsset] = compilation.assets[asset];
+					delete compilation.assets[asset];
+				}
+			}
+			callback();
+		});
+	}
+}
 module.exports = [
 	{
 		...defaultConfig,
@@ -59,6 +86,7 @@ module.exports = [
 		},
 		plugins: [
 			...defaultConfig.plugins,
+			new AddMinPlugin(),
 			new RemoveEmptyScriptsPlugin(
 				{
 					stage: RemoveEmptyScriptsPlugin.STAGE_AFTER_PROCESS_PLUGINS,

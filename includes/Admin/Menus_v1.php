@@ -233,26 +233,26 @@ class Menus_v1 {
 				add_screen_option( 'per_page', $args );
 				break;
 			case 'eac-items-categories':
-				$this->list_table = new ListTables\CategoriesTable();
+				$this->list_table = new Misc\Tables\CategoriesTable();
 				$this->list_table->prepare_items();
 				$args['option'] = 'eac_categories_per_page';
 				add_screen_option( 'per_page', $args );
 				break;
 			case 'eac-sales':
 			case 'eac-sales-payments':
-				$this->list_table = new Sales\paymentsTable();
+				$this->list_table = new ListTables\paymentsTable();
 				$this->list_table->prepare_items();
 				$args['option'] = 'eac_payments_per_page';
 				add_screen_option( 'per_page', $args );
 				break;
 			case 'eac-sales-invoices':
-				$this->list_table = new Sales\InvoicesTable();
+				$this->list_table = new ListTables\InvoicesTable();
 				$this->list_table->prepare_items();
 				$args['option'] = 'eac_invoices_per_page';
 				add_screen_option( 'per_page', $args );
 				break;
 			case 'eac-sales-customers':
-				$this->list_table = new Sales\CustomersTable();
+				$this->list_table = new ListTables\CustomersTable();
 				$this->list_table->prepare_items();
 				$args['option'] = 'eac_customers_per_page';
 				add_screen_option( 'per_page', $args );
@@ -291,19 +291,19 @@ class Menus_v1 {
 				break;
 			case 'eac-misc':
 			case 'eac-misc-categories':
-				$this->list_table = new ListTables\CategoriesTable();
+				$this->list_table = new Misc\Tables\CategoriesTable();
 				$this->list_table->prepare_items();
 				$args['option'] = 'eac_categories_per_page';
 				add_screen_option( 'per_page', $args );
 				break;
 			case 'eac-misc-currencies':
-				$this->list_table = new ListTables\CurrenciesTable();
+				$this->list_table = new Misc\Tables\CurrenciesTable();
 				$this->list_table->prepare_items();
 				$args['option'] = 'eac_currencies_per_page';
 				add_screen_option( 'per_page', $args );
 				break;
 			case 'eac-misc-taxes':
-				$this->list_table = new ListTables\TaxesTable();
+				$this->list_table = new Misc\Tables\TaxRatesTable();
 				$this->list_table->prepare_items();
 				$args['option'] = 'eac_taxes_per_page';
 				add_screen_option( 'per_page', $args );
