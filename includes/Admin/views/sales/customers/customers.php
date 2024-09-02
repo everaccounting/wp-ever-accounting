@@ -13,10 +13,10 @@ defined( 'ABSPATH' ) || exit;
 ?>
 	<h1 class="wp-heading-inline">
 		<?php esc_html_e( 'Customers', 'wp-ever-accounting' ); ?>
-		<a href="<?php echo esc_attr( admin_url( 'admin.php?page=eac-sales&tab=customers&add=yes' ) ); ?>" class="page-title-action">
+		<a href="<?php echo esc_attr( admin_url( 'admin.php?page=eac-sales&tab=customers&add=yes' ) ); ?>" class="button button-small">
 			<?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?>
 		</a>
-		<a href="<?php echo esc_attr( admin_url( 'admin.php?page=eac-tools' ) ); ?>" class="page-title-action">
+		<a href="<?php echo esc_attr( admin_url( 'admin.php?page=eac-tools' ) ); ?>" class="button button-small">
 			<?php esc_html_e( 'Import', 'wp-ever-accounting' ); ?>
 		</a>
 		<?php if ( $this->list_table->get_request_search() ) : ?>

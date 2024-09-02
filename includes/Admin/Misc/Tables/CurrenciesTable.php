@@ -46,7 +46,7 @@ class CurrenciesTable extends ListTable {
 	 */
 	public function prepare_items() {
 		$this->process_actions();
-		$per_page = $this->get_items_per_page( 'eac_currencies_per_page', 20 );
+		$per_page = $this->get_items_per_page( "eac_{$this->_args['plural']}_per_page" );
 		$paged    = $this->get_pagenum();
 		$search   = $this->get_request_search();
 		$order_by = $this->get_request_orderby();
@@ -97,7 +97,7 @@ class CurrenciesTable extends ListTable {
 					'status' => 'active',
 				)
 			) ) {
-				++$performed;
+				++ $performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
@@ -125,7 +125,7 @@ class CurrenciesTable extends ListTable {
 					'status' => 'inactive',
 				)
 			) ) {
-				++$performed;
+				++ $performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
@@ -147,7 +147,7 @@ class CurrenciesTable extends ListTable {
 		foreach ( $ids as $id ) {
 			$currency = Currency::find( $id );
 			if ( $currency && $currency->delete() ) {
-				++$performed;
+				++ $performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
@@ -198,6 +198,7 @@ class CurrenciesTable extends ListTable {
 				'current' => $current === $status,
 			);
 		}
+
 		return $this->get_views_links( $status_links );
 	}
 
@@ -316,7 +317,10 @@ class CurrenciesTable extends ListTable {
 			'id'   => sprintf( '#%d', esc_attr( $item->id ) ),
 			'edit' => sprintf(
 				'<a href="%s">%s</a>',
-				esc_url( add_query_arg( 'edit', $item->id, $this->base_url ) ),
+				esc_url( add_query_arg( array(
+					'id'   => $item->id,
+					'view' => 'edit',
+				), $this->base_url ) ),
 				__( 'Edit', 'wp-ever-accounting' )
 			),
 		);

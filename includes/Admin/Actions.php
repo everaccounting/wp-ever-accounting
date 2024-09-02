@@ -2,9 +2,7 @@
 
 namespace EverAccounting\Admin;
 
-use EverAccounting\Models\Currency;
 use EverAccounting\Models\Invoice;
-use EverAccounting\Utilities\I18n;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -24,13 +22,10 @@ class Actions {
 	 */
 	public function __construct() {
 		add_action( 'wp_ajax_eac_json_search', array( $this, 'handle_json_search' ) );
-		add_action( 'admin_post_eac_edit_item', array( $this, 'handle_edit_item' ) );
 		add_action( 'admin_post_eac_edit_expense', array( $this, 'handle_edit_expense' ) );
 		add_action( 'admin_post_eac_edit_customer', array( $this, 'handle_edit_customer' ) );
 		add_action( 'admin_post_eac_edit_vendor', array( $this, 'handle_edit_vendor' ) );
 		add_action( 'admin_post_eac_edit_account', array( $this, 'handle_edit_account' ) );
-		add_action( 'admin_post_eac_add_currency', array( $this, 'handle_add_currency' ) );
-		add_action( 'admin_post_eac_edit_currency', array( $this, 'handle_edit_currency' ) );
 		add_action( 'admin_post_eac_edit_tax', array( $this, 'handle_edit_tax' ) );
 		add_action( 'admin_post_eac_edit_invoice', array( $this, 'handle_edit_invoice' ) );
 		add_action( 'admin_post_eac_add_invoice_payment', array( $this, 'handle_invoice_payment' ) );
@@ -43,7 +38,6 @@ class Actions {
 		add_action( 'wp_ajax_eac_get_customer', array( $this, 'ajax_get_customer' ) );
 		add_action( 'wp_ajax_eac_get_vendor', array( $this, 'ajax_get_vendor' ) );
 		add_action( 'wp_ajax_eac_get_payment', array( $this, 'ajax_get_payment' ) );
-		add_action( 'wp_ajax_eac_get_expense', array( $this, 'ajax_get_expense' ) );
 		add_action( 'wp_ajax_eac_get_invoice', array( $this, 'ajax_get_invoice' ) );
 		add_action( 'wp_ajax_eac_get_bill', array( $this, 'ajax_get_bill' ) );
 
@@ -246,88 +240,6 @@ class Actions {
 		);
 	}
 
-	/**
-	 * Edit item.
-	 *
-	 * @since 1.2.0
-	 * @return void
-	 */
-	public static function handle_edit_item() {
-		check_admin_referer( 'eac_edit_item' );
-		$referer     = wp_get_referer();
-		$id          = isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0;
-		$name        = isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '';
-		$type        = isset( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '';
-		$price       = isset( $_POST['price'] ) ? floatval( wp_unslash( $_POST['price'] ) ) : 0;
-		$cost        = isset( $_POST['cost'] ) ? floatval( wp_unslash( $_POST['cost'] ) ) : 0;
-		$category_id = isset( $_POST['category_id'] ) ? absint( wp_unslash( $_POST['category_id'] ) ) : 0;
-		$unit        = isset( $_POST['unit'] ) ? sanitize_text_field( wp_unslash( $_POST['unit'] ) ) : '';
-		$taxable     = isset( $_POST['taxable'] ) ? sanitize_text_field( wp_unslash( $_POST['taxable'] ) ) : 'no'; // phpcs:ignore
-		$tax_ids     = isset( $_POST['tax_ids'] ) ? array_map( 'absint', wp_unslash( $_POST['tax_ids'] ) ) : array();
-		$desc        = isset( $_POST['description'] ) ? sanitize_textarea_field( wp_unslash( $_POST['description'] ) ) : '';
-		$status      = isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : 'active';
-		$item        = eac_insert_item(
-			array(
-				'id'          => $id,
-				'name'        => $name,
-				'type'        => $type,
-				'price'       => $price,
-				'cost'        => $cost,
-				'category_id' => $category_id,
-				'unit'        => $unit,
-				'taxable'     => $taxable,
-				'tax_ids'     => implode( ',', array_unique( array_filter( $tax_ids ) ) ),
-				'description' => $desc,
-				'status'      => $status,
-			)
-		);
-
-		if ( is_wp_error( $item ) ) {
-			EAC()->flash->error( $item->get_error_message() );
-		} else {
-			EAC()->flash->success( __( 'Item saved successfully.', 'wp-ever-accounting' ) );
-			$referer = add_query_arg( 'edit', $item->id, $referer );
-			$referer = remove_query_arg( array( 'add' ), $referer );
-		}
-
-		wp_safe_redirect( $referer );
-		exit();
-	}
-
-	/**
-	 * Edit expense.
-	 *
-	 * @since 1.2.0
-	 * @return void
-	 */
-	public static function handle_edit_expense() {
-		check_admin_referer( 'eac_edit_expense' );
-		$referer = wp_get_referer();
-		$data    = array(
-			'id'             => isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0,
-			'date'           => isset( $_POST['date'] ) ? sanitize_text_field( wp_unslash( $_POST['date'] ) ) : '',
-			'account_id'     => isset( $_POST['account_id'] ) ? absint( wp_unslash( $_POST['account_id'] ) ) : 0,
-			'amount'         => isset( $_POST['amount'] ) ? floatval( wp_unslash( $_POST['amount'] ) ) : 0,
-			'category_id'    => isset( $_POST['category_id'] ) ? absint( wp_unslash( $_POST['category_id'] ) ) : 0,
-			'contact_id'     => isset( $_POST['contact_id'] ) ? absint( wp_unslash( $_POST['contact_id'] ) ) : 0,
-			'payment_method' => isset( $_POST['payment_method'] ) ? sanitize_text_field( wp_unslash( $_POST['payment_method'] ) ) : '',
-			'invoice_id'     => isset( $_POST['invoice_id'] ) ? absint( wp_unslash( $_POST['invoice_id'] ) ) : 0,
-			'reference'      => isset( $_POST['reference'] ) ? sanitize_text_field( wp_unslash( $_POST['reference'] ) ) : '',
-			'note'           => isset( $_POST['note'] ) ? sanitize_textarea_field( wp_unslash( $_POST['note'] ) ) : '',
-			'status'         => isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : 'active',
-		);
-		$expense = eac_insert_expense( $data );
-		if ( is_wp_error( $expense ) ) {
-			EAC()->flash->error( $expense->get_error_message() );
-		} else {
-			EAC()->flash->success( __( 'Expense saved successfully.', 'wp-ever-accounting' ) );
-			$referer = add_query_arg( 'edit', $expense->id, $referer );
-			$referer = remove_query_arg( array( 'add' ), $referer );
-		}
-
-		wp_safe_redirect( $referer );
-		exit;
-	}
 
 	/**
 	 * Edit customer.
@@ -445,94 +357,6 @@ class Actions {
 			EAC()->flash->success( __( 'Account saved successfully.', 'wp-ever-accounting' ) );
 			$referer = add_query_arg( 'edit', $account->id, $referer );
 			$referer = remove_query_arg( array( 'add' ), $referer );
-		}
-
-		wp_safe_redirect( $referer );
-		exit;
-	}
-
-	/**
-	 * Add currency.
-	 *
-	 * @since 1.2.0
-	 * @return void
-	 */
-	public static function handle_add_currency() {
-		check_admin_referer( 'eac_add_currency' );
-		$referer       = wp_get_referer();
-		$code          = isset( $_POST['code'] ) ? sanitize_text_field( wp_unslash( $_POST['code'] ) ) : '';
-		$exchange_rate = isset( $_POST['exchange_rate'] ) ? doubleval( wp_unslash( $_POST['exchange_rate'] ) ) : 1;
-
-		// if code is empty, return error.
-		if ( empty( $code ) ) {
-			EAC()->flash->error( __( 'Currency code is required.', 'wp-ever-accounting' ) );
-			wp_safe_redirect( $referer );
-			exit;
-		}
-
-		$currency = Currency::find( $code );
-		if ( $currency ) {
-			EAC()->flash->error( __( 'Currency already exists.', 'wp-ever-accounting' ) );
-			wp_safe_redirect( $referer );
-			exit;
-		}
-		$config                = I18n::get_currencies();
-		$data                  = isset( $config[ $code ] ) ? $config[ $code ] : array();
-		$data['code']          = $code;
-		$data['exchange_rate'] = $exchange_rate;
-		$currency              = Currency::insert( $data );
-		if ( is_wp_error( $currency ) ) {
-			EAC()->flash->error( $currency->get_error_message() );
-			wp_safe_redirect( $referer );
-			exit;
-		}
-
-		EAC()->flash->success( __( 'Currency added successfully.', 'wp-ever-accounting' ) );
-		$referer = remove_query_arg( array( 'add' ), $referer );
-		$referer = add_query_arg( 'edit', $currency->id, $referer );
-		wp_safe_redirect( $referer );
-		exit;
-	}
-
-	/**
-	 * Edit currency.
-	 *
-	 * @since 1.2.0
-	 * @return void
-	 */
-	public static function handle_edit_currency() {
-		check_admin_referer( 'eac_edit_currency' );
-		$referer            = wp_get_referer();
-		$id                 = isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0;
-		$code               = isset( $_POST['code'] ) ? sanitize_text_field( wp_unslash( $_POST['code'] ) ) : '';
-		$name               = isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '';
-		$symbol             = isset( $_POST['symbol'] ) ? sanitize_text_field( wp_unslash( $_POST['symbol'] ) ) : '';
-		$exchange_rate      = isset( $_POST['exchange_rate'] ) ? doubleval( wp_unslash( $_POST['exchange_rate'] ) ) : 0;
-		$thousand_separator = isset( $_POST['thousand_separator'] ) ? sanitize_text_field( wp_unslash( $_POST['thousand_separator'] ) ) : '';
-		$decimal_separator  = isset( $_POST['decimal_separator'] ) ? sanitize_text_field( wp_unslash( $_POST['decimal_separator'] ) ) : '';
-		$precision          = isset( $_POST['precision'] ) ? absint( wp_unslash( $_POST['precision'] ) ) : '';
-		$position           = isset( $_POST['position'] ) ? sanitize_text_field( wp_unslash( $_POST['position'] ) ) : '';
-		$status             = isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : 'active';
-		$currency           = eac_insert_currency(
-			array(
-				'id'                 => $id,
-				'code'               => $code,
-				'name'               => $name,
-				'symbol'             => $symbol,
-				'exchange_rate'      => $exchange_rate,
-				'thousand_separator' => $thousand_separator,
-				'decimal_separator'  => $decimal_separator,
-				'precision'          => $precision,
-				'position'           => $position,
-				'status'             => $status,
-			)
-		);
-
-		if ( is_wp_error( $currency ) ) {
-			EAC()->flash->error( $currency->get_error_message() );
-		} else {
-			EAC()->flash->success( __( 'Currency saved successfully.', 'wp-ever-accounting' ) );
-			$referer = add_query_arg( 'edit', $currency->id, $referer );
 		}
 
 		wp_safe_redirect( $referer );
@@ -846,6 +670,7 @@ class Actions {
 
 		if ( 'yes' === $calculate_totals ) {
 			$document->calculate_totals();
+
 			return $document;
 		}
 		$saved = $document->save();
@@ -938,27 +763,27 @@ class Actions {
 
 		switch ( $export_type ) {
 			case 'accounts':
-				$exporter = new Exporters\Accounts();
+				$exporter = new Tools\Exporters\Accounts();
 				$exporter->process_step( 1 );
 				$exporter->export();
 				break;
 			case 'customers':
-				$exporter = new Exporters\Customers();
+				$exporter = new Tools\Exporters\Customers();
 				$exporter->process_step( 1 );
 				$exporter->export();
 				break;
 			case 'items':
-				$exporter = new Exporters\Items();
+				$exporter = new Tools\Exporters\Items();
 				$exporter->process_step( 1 );
 				$exporter->export();
 				break;
 			case 'categories':
-				$exporter = new Exporters\Categories();
+				$exporter = new Tools\Exporters\Categories();
 				$exporter->process_step( 1 );
 				$exporter->export();
 				break;
 			case 'vendors':
-				$exporter = new Exporters\Vendors();
+				$exporter = new Tools\Exporters\Vendors();
 				$exporter->process_step( 1 );
 				$exporter->export();
 				break;

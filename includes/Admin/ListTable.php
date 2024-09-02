@@ -24,14 +24,6 @@ abstract class ListTable extends \WP_List_Table {
 	public $base_url;
 
 	/**
-	 * Per page option.
-	 *
-	 * @since 1.0.0
-	 * @var string
-	 */
-	public $per_page_option;
-
-	/**
 	 * Constructor.
 	 *
 	 * @param array $args An associative array of arguments.
@@ -41,7 +33,6 @@ abstract class ListTable extends \WP_List_Table {
 	 */
 	public function __construct( $args = array() ) {
 		parent::__construct( $args );
-		$this->per_page_option = 'eac_' . $this->_args['plural'] . '_per_page';
 		remove_filter( "manage_{$this->screen->id}_columns", array( $this, 'get_columns' ), 0 );
 	}
 
@@ -113,20 +104,19 @@ abstract class ListTable extends \WP_List_Table {
 
 		// Detect when a bulk action is being triggered.
 		$action = $this->current_action();
-		if ( ! $action ) {
-			return;
+		if ( ! empty( $action ) ) {
+
+			check_admin_referer( 'bulk-' . $this->_args['plural'] );
+
+			$ids    = isset( $_GET['id'] ) ? map_deep( wp_unslash( $_GET['id'] ), 'intval' ) : array();
+			$ids    = wp_parse_id_list( $ids );
+			$method = 'bulk_' . $action;
+			if ( array_key_exists( $action, $this->get_bulk_actions() ) && method_exists( $this, $method ) && ! empty( $ids ) ) {
+				$this->$method( $ids );
+			}
 		}
 
-		check_admin_referer( 'bulk-' . $this->_args['plural'] );
-
-		$ids    = isset( $_GET['id'] ) ? map_deep( wp_unslash( $_GET['id'] ), 'intval' ) : array();
-		$ids    = wp_parse_id_list( $ids );
-		$method = 'bulk_' . $action;
-		if ( array_key_exists( $action, $this->get_bulk_actions() ) && method_exists( $this, $method ) && ! empty( $ids ) ) {
-			$this->$method( $ids );
-		}
-
-		if ( isset( $_SERVER['REQUEST_URI'] ) || isset( $_REQUEST['_wp_http_referer'] ) ) {
+		if ( isset( $_GET['_wp_http_referer'] ) ) {
 			wp_safe_redirect(
 				remove_query_arg(
 					array( '_wp_http_referer', '_wpnonce', 'id', 'action', 'action2' ),

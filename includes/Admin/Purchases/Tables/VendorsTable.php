@@ -1,19 +1,19 @@
 <?php
 
-namespace EverAccounting\Admin\Misc\Tables;
+namespace EverAccounting\Admin\Purchases\Tables;
 
 use EverAccounting\Admin\ListTable;
-use EverAccounting\Models\Category;
+use EverAccounting\Models\Vendor;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class CategoriesTable.
+ * Class VendorsTable.
  *
  * @since 1.0.0
  * @package EverAccounting\Admin\ListTables
  */
-class CategoriesTable extends ListTable {
+class VendorsTable extends ListTable {
 	/**
 	 * Constructor.
 	 *
@@ -27,15 +27,14 @@ class CategoriesTable extends ListTable {
 			wp_parse_args(
 				$args,
 				array(
-					'singular' => 'category',
-					'plural'   => 'categories',
+					'singular' => 'vendor',
+					'plural'   => 'vendors',
 					'screen'   => get_current_screen(),
 					'args'     => array(),
 				)
 			)
 		);
-
-		$this->base_url = admin_url( 'admin.php?page=eac-misc&tab=categories' );
+		$this->base_url = admin_url( 'admin.php?page=eac-purchases&tab=vendors' );
 	}
 
 	/**
@@ -46,7 +45,7 @@ class CategoriesTable extends ListTable {
 	 */
 	public function prepare_items() {
 		$this->process_actions();
-		$per_page = $this->get_items_per_page( "eac_{$this->_args['plural']}_per_page" );
+		$per_page = $this->get_items_per_page( 'eac_vendors_per_page', 20 );
 		$paged    = $this->get_pagenum();
 		$search   = $this->get_request_search();
 		$order_by = $this->get_request_orderby();
@@ -59,7 +58,6 @@ class CategoriesTable extends ListTable {
 			'order'   => $order,
 			'status'  => $this->get_request_status(),
 		);
-
 		/**
 		 * Filter the query arguments for the list table.
 		 *
@@ -67,11 +65,11 @@ class CategoriesTable extends ListTable {
 		 *
 		 * @since 1.0.0
 		 */
-		$args = apply_filters( 'ever_accounting_categories_table_query_args', $args );
-
+		$args                  = apply_filters( 'ever_accounting_vendors_table_query_args', $args );
 		$args['no_found_rows'] = false;
-		$this->items           = Category::results( $args );
-		$total                 = Category::count( $args );
+		$this->items           = Vendor::results( $args );
+		$total                 = Vendor::count( $args );
+
 		$this->set_pagination_args(
 			array(
 				'total_items' => $total,
@@ -91,18 +89,18 @@ class CategoriesTable extends ListTable {
 	protected function bulk_activate( $ids ) {
 		$performed = 0;
 		foreach ( $ids as $id ) {
-			if ( eac_insert_category(
+			if ( eac_insert_vendor(
 				array(
 					'id'     => $id,
 					'status' => 'active',
 				)
 			) ) {
-				++ $performed;
+				++$performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
-			// translators: %s: number of categories activated.
-			EAC()->flash->success( sprintf( __( '%s category(s) activated successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
+			// translators: %s: number of vendors.
+			EAC()->flash->success( sprintf( __( '%s vendor(s) activated successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
 		}
 	}
 
@@ -117,18 +115,18 @@ class CategoriesTable extends ListTable {
 	protected function bulk_deactivate( $ids ) {
 		$performed = 0;
 		foreach ( $ids as $id ) {
-			if ( eac_insert_category(
+			if ( eac_insert_vendor(
 				array(
 					'id'     => $id,
 					'status' => 'inactive',
 				)
 			) ) {
-				++ $performed;
+				++$performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
-			// translators: %s: number of categories.
-			EAC()->flash->success( sprintf( __( '%s category(s) deactivated successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
+			// translators: %s: number of vendors.
+			EAC()->flash->success( sprintf( __( '%s vendor(s) deactivated successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
 		}
 	}
 
@@ -143,33 +141,35 @@ class CategoriesTable extends ListTable {
 	protected function bulk_delete( $ids ) {
 		$performed = 0;
 		foreach ( $ids as $id ) {
-			if ( eac_delete_category( $id ) ) {
-				++ $performed;
+			if ( eac_delete_vendor( $id ) ) {
+				++$performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
-			// translators: %s: number of categories.
-			EAC()->flash->success( sprintf( __( '%s category(s) deleted successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
+			// translators: %s: number of vendors.
+			EAC()->flash->success( sprintf( __( '%s vendor(s) deleted successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
 		}
 	}
 
 	/**
-	 * Outputs 'no categories' message.
+	 * Outputs 'no users' message.
 	 *
 	 * @since 1.0.0
 	 */
 	public function no_items() {
-		esc_html_e( 'No categories found.', 'wp-ever-accounting' );
+		esc_html_e( 'No vendors found.', 'wp-ever-accounting' );
 	}
 
 	/**
 	 * Returns an associative array listing all the views that can be used
 	 * with this table.
 	 *
+	 * Provides a list of roles and user count for that role for easy
+	 * filtering of the user table.
+	 *
 	 * @since 1.0.0
 	 *
 	 * @return string[] An array of HTML links keyed by their view.
-	 * @global string $role
 	 */
 	protected function get_views() {
 		$current      = $this->get_request_status( 'all' );
@@ -183,7 +183,7 @@ class CategoriesTable extends ListTable {
 		foreach ( $statuses as $status => $label ) {
 			$link  = 'all' === $status ? $this->base_url : add_query_arg( 'status', $status, $this->base_url );
 			$args  = 'all' === $status ? array() : array( 'status' => $status );
-			$count = Category::count( $args );
+			$count = Vendor::count( $args );
 			$label = sprintf( '%s <span class="count">(%s)</span>', esc_html( $label ), number_format_i18n( $count ) );
 
 			$status_links[ $status ] = array(
@@ -192,7 +192,6 @@ class CategoriesTable extends ListTable {
 				'current' => $current === $status,
 			);
 		}
-
 		return $this->get_views_links( $status_links );
 	}
 
@@ -200,7 +199,6 @@ class CategoriesTable extends ListTable {
 	 * Retrieves an associative array of bulk actions available on this table.
 	 *
 	 * @since 1.0.0
-	 *
 	 * @return array Array of bulk action labels keyed by their action.
 	 */
 	protected function get_bulk_actions() {
@@ -222,22 +220,36 @@ class CategoriesTable extends ListTable {
 	 * @return void
 	 */
 	protected function extra_tablenav( $which ) {
+		static $has_items;
+		if ( ! isset( $has_items ) ) {
+			$has_items = $this->has_items();
+		}
+
+		if ( 'top' === $which ) {
+			ob_start();
+			$this->country_filter( 'active' );
+			$output = ob_get_clean();
+			if ( ! empty( $output ) && $this->has_items() ) {
+				echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				submit_button( __( 'Filter', 'wp-ever-accounting' ), 'alignleft', 'filter_action', false );
+			}
+		}
 	}
 
 	/**
 	 * Gets a list of columns for the list table.
 	 *
 	 * @since 1.0.0
-	 *
 	 * @return string[] Array of column titles keyed by their column name.
 	 */
 	public function get_columns() {
 		return array(
-			'cb'          => '<input type="checkbox" />',
-			'name'        => __( 'Name', 'wp-ever-accounting' ),
-			'description' => __( 'Description', 'wp-ever-accounting' ),
-			'type'        => __( 'Type', 'wp-ever-accounting' ),
-			'status'      => __( 'Status', 'wp-ever-accounting' ),
+			'cb'      => '<input type="checkbox" />',
+			'name'    => __( 'Name', 'wp-ever-accounting' ),
+			'email'   => __( 'Email', 'wp-ever-accounting' ),
+			'phone'   => __( 'Phone', 'wp-ever-accounting' ),
+			'country' => __( 'Country', 'wp-ever-accounting' ),
+			'status'  => __( 'Status', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -245,22 +257,22 @@ class CategoriesTable extends ListTable {
 	 * Gets a list of sortable columns for the list table.
 	 *
 	 * @since 1.0.0
-	 *
 	 * @return array Array of sortable columns.
 	 */
 	protected function get_sortable_columns() {
 		return array(
-			'name'        => array( 'name', false ),
-			'description' => array( 'description', false ),
-			'type'        => array( 'type', false ),
-			'status'      => array( 'status', false ),
+			'name'    => array( 'name', false ),
+			'email'   => array( 'email', false ),
+			'phone'   => array( 'phone', false ),
+			'country' => array( 'country', false ),
+			'status'  => array( 'status', false ),
 		);
 	}
 
 	/**
 	 * Define primary column.
 	 *
-	 * @since 1.0.2
+	 * @since 1.0.0
 	 * @return string
 	 */
 	public function get_primary_column_name() {
@@ -270,7 +282,7 @@ class CategoriesTable extends ListTable {
 	/**
 	 * Renders the checkbox column.
 	 *
-	 * @param Category $item The current object.
+	 * @param Vendor $item The current object.
 	 *
 	 * @since  1.0.0
 	 * @return string Displays a checkbox.
@@ -282,7 +294,7 @@ class CategoriesTable extends ListTable {
 	/**
 	 * Renders the name column.
 	 *
-	 * @param Category $item The current object.
+	 * @param Vendor $item The current object.
 	 *
 	 * @since  1.0.0
 	 * @return string Displays the name.
@@ -291,26 +303,25 @@ class CategoriesTable extends ListTable {
 		return sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( 'edit', $item->id, $this->base_url ) ), wp_kses_post( $item->name ) );
 	}
 
-	/**
-	 * Renders the type column.
-	 *
-	 * @param Category $item The current object.
-	 *
-	 * @since  1.0.0
-	 * @return string Displays the type.
-	 */
-	public function column_type( $item ) {
-		$types = eac_get_category_types();
 
-		return isset( $types[ $item->type ] ) ? $types[ $item->type ] : '';
+	/**
+	 * Renders the country column.
+	 *
+	 * @param Vendor $item The current object.
+	 *
+	 * @since 1.0.0
+	 * @return string Displays the country.
+	 */
+	public function column_country( $item ) {
+		return $item->country_name;
 	}
 
 	/**
 	 * Generates and displays row actions links.
 	 *
-	 * @param Category $item The comment object.
-	 * @param string   $column_name Current column name.
-	 * @param string   $primary Primary column name.
+	 * @param Vendor $item The vendor object.
+	 * @param string $column_name Current column name.
+	 * @param string $primary Primary column name.
 	 *
 	 * @since 1.0.0
 	 * @return string Row actions output.
@@ -321,11 +332,33 @@ class CategoriesTable extends ListTable {
 		}
 		$actions = array(
 			'id'   => sprintf( '#%d', esc_attr( $item->id ) ),
+			'view' => sprintf(
+				'<a href="%s">%s</a>',
+				esc_url( add_query_arg( 'view', $item->id, $this->base_url ) ),
+				__( 'View', 'wp-ever-accounting' )
+			),
 			'edit' => sprintf(
 				'<a href="%s">%s</a>',
 				esc_url( add_query_arg( 'edit', $item->id, $this->base_url ) ),
 				__( 'Edit', 'wp-ever-accounting' )
 			),
+		);
+
+		$actions['delete'] = sprintf(
+			'<a href="%s" class="del">%s</a>',
+			esc_url(
+				wp_nonce_url(
+					add_query_arg(
+						array(
+							'action' => 'delete',
+							'id'     => $item->id,
+						),
+						$this->base_url
+					),
+					'bulk-' . $this->_args['plural']
+				)
+			),
+			__( 'Delete', 'wp-ever-accounting' )
 		);
 
 		if ( 'active' === $item->status ) {
@@ -363,23 +396,6 @@ class CategoriesTable extends ListTable {
 				__( 'Activate', 'wp-ever-accounting' )
 			);
 		}
-
-		$actions['delete'] = sprintf(
-			'<a href="%s" class="del">%s</a>',
-			esc_url(
-				wp_nonce_url(
-					add_query_arg(
-						array(
-							'action' => 'delete',
-							'id'     => $item->id,
-						),
-						$this->base_url
-					),
-					'bulk-' . $this->_args['plural']
-				)
-			),
-			__( 'Delete', 'wp-ever-accounting' )
-		);
 
 		return $this->row_actions( $actions );
 	}

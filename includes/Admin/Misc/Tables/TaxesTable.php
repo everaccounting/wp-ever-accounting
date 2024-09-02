@@ -3,17 +3,17 @@
 namespace EverAccounting\Admin\Misc\Tables;
 
 use EverAccounting\Admin\ListTable;
-use EverAccounting\Models\Category;
+use EverAccounting\Models\Tax;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class CategoriesTable.
+ * Class TaxesTable.
  *
  * @since 1.0.0
  * @package EverAccounting\Admin\ListTables
  */
-class CategoriesTable extends ListTable {
+class TaxesTable extends ListTable {
 	/**
 	 * Constructor.
 	 *
@@ -27,26 +27,26 @@ class CategoriesTable extends ListTable {
 			wp_parse_args(
 				$args,
 				array(
-					'singular' => 'category',
-					'plural'   => 'categories',
+					'singular' => 'tax',
+					'plural'   => 'taxes',
 					'screen'   => get_current_screen(),
 					'args'     => array(),
 				)
 			)
 		);
 
-		$this->base_url = admin_url( 'admin.php?page=eac-misc&tab=categories' );
+		$this->base_url = admin_url( 'admin.php?page=eac-misc&tab=taxes' );
 	}
 
 	/**
 	 * Prepares the list for display.
 	 *
-	 * @since 1.0.0
 	 * @return void
+	 * @since 1.0.0
 	 */
 	public function prepare_items() {
 		$this->process_actions();
-		$per_page = $this->get_items_per_page( "eac_{$this->_args['plural']}_per_page" );
+		$per_page = $this->get_items_per_page( 'eac_taxes_per_page', 20 );
 		$paged    = $this->get_pagenum();
 		$search   = $this->get_request_search();
 		$order_by = $this->get_request_orderby();
@@ -67,11 +67,10 @@ class CategoriesTable extends ListTable {
 		 *
 		 * @since 1.0.0
 		 */
-		$args = apply_filters( 'ever_accounting_categories_table_query_args', $args );
+		$args = apply_filters( 'ever_accounting_taxes_table_query_args', $args );
 
-		$args['no_found_rows'] = false;
-		$this->items           = Category::results( $args );
-		$total                 = Category::count( $args );
+		$this->items = eac_get_taxes( $args );
+		$total       = eac_get_taxes( $args, true );
 		$this->set_pagination_args(
 			array(
 				'total_items' => $total,
@@ -85,24 +84,24 @@ class CategoriesTable extends ListTable {
 	 *
 	 * @param array $ids List of item IDs.
 	 *
-	 * @since 1.0.0
 	 * @return void
+	 * @since 1.0.0
 	 */
 	protected function bulk_activate( $ids ) {
 		$performed = 0;
 		foreach ( $ids as $id ) {
-			if ( eac_insert_category(
+			if ( eac_insert_tax(
 				array(
 					'id'     => $id,
 					'status' => 'active',
 				)
 			) ) {
-				++ $performed;
+				++$performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
-			// translators: %s: number of categories activated.
-			EAC()->flash->success( sprintf( __( '%s category(s) activated successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
+			// translators: %s: number of taxes activated.
+			EAC()->flash->success( sprintf( __( '%s tax(es) activated successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
 		}
 	}
 
@@ -111,64 +110,64 @@ class CategoriesTable extends ListTable {
 	 *
 	 * @param array $ids List of item IDs.
 	 *
-	 * @since 1.0.0
 	 * @return void
+	 * @since 1.0.0
 	 */
 	protected function bulk_deactivate( $ids ) {
 		$performed = 0;
 		foreach ( $ids as $id ) {
-			if ( eac_insert_category(
+			if ( eac_insert_tax(
 				array(
 					'id'     => $id,
 					'status' => 'inactive',
 				)
 			) ) {
-				++ $performed;
+				++$performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
-			// translators: %s: number of categories.
-			EAC()->flash->success( sprintf( __( '%s category(s) deactivated successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
+			// translators: %s: number of taxes deactivated.
+			EAC()->flash->success( sprintf( __( '%s tax(es) deactivated successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
 		}
 	}
 
 	/**
 	 * handle bulk delete action.
 	 *
-	 * @param array $ids List of item IDs.
+	 * @param array $ids List of tax IDs.
 	 *
-	 * @since 1.0.0
 	 * @return void
+	 * @since 1.0.0
 	 */
 	protected function bulk_delete( $ids ) {
 		$performed = 0;
 		foreach ( $ids as $id ) {
-			if ( eac_delete_category( $id ) ) {
-				++ $performed;
+			if ( eac_delete_tax( $id ) ) {
+				++$performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
-			// translators: %s: number of categories.
-			EAC()->flash->success( sprintf( __( '%s category(s) deleted successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
+			// translators: %s: number of taxes deleted.
+			EAC()->flash->success( sprintf( __( '%s tax(1s) deleted successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
 		}
 	}
 
 	/**
-	 * Outputs 'no categories' message.
+	 * Outputs 'no users' message.
 	 *
 	 * @since 1.0.0
 	 */
 	public function no_items() {
-		esc_html_e( 'No categories found.', 'wp-ever-accounting' );
+		esc_html_e( 'No taxes found.', 'wp-ever-accounting' );
 	}
 
 	/**
 	 * Returns an associative array listing all the views that can be used
 	 * with this table.
 	 *
+	 * @return string[] An array of HTML links keyed by their view.
 	 * @since 1.0.0
 	 *
-	 * @return string[] An array of HTML links keyed by their view.
 	 * @global string $role
 	 */
 	protected function get_views() {
@@ -183,7 +182,7 @@ class CategoriesTable extends ListTable {
 		foreach ( $statuses as $status => $label ) {
 			$link  = 'all' === $status ? $this->base_url : add_query_arg( 'status', $status, $this->base_url );
 			$args  = 'all' === $status ? array() : array( 'status' => $status );
-			$count = Category::count( $args );
+			$count = Tax::count( $args );
 			$label = sprintf( '%s <span class="count">(%s)</span>', esc_html( $label ), number_format_i18n( $count ) );
 
 			$status_links[ $status ] = array(
@@ -192,16 +191,14 @@ class CategoriesTable extends ListTable {
 				'current' => $current === $status,
 			);
 		}
-
 		return $this->get_views_links( $status_links );
 	}
 
 	/**
 	 * Retrieves an associative array of bulk actions available on this table.
 	 *
-	 * @since 1.0.0
-	 *
 	 * @return array Array of bulk action labels keyed by their action.
+	 * @since 1.0.0
 	 */
 	protected function get_bulk_actions() {
 		$actions = array(
@@ -218,8 +215,8 @@ class CategoriesTable extends ListTable {
 	 *
 	 * @param string $which Whether invoked above ("top") or below the table ("bottom").
 	 *
-	 * @since 1.0.0
 	 * @return void
+	 * @since 1.0.0
 	 */
 	protected function extra_tablenav( $which ) {
 	}
@@ -227,16 +224,15 @@ class CategoriesTable extends ListTable {
 	/**
 	 * Gets a list of columns for the list table.
 	 *
-	 * @since 1.0.0
-	 *
 	 * @return string[] Array of column titles keyed by their column name.
+	 * @since 1.0.0
 	 */
 	public function get_columns() {
 		return array(
 			'cb'          => '<input type="checkbox" />',
 			'name'        => __( 'Name', 'wp-ever-accounting' ),
-			'description' => __( 'Description', 'wp-ever-accounting' ),
-			'type'        => __( 'Type', 'wp-ever-accounting' ),
+			'rate'        => __( 'Rate', 'wp-ever-accounting' ),
+			'is_compound' => __( 'Compound', 'wp-ever-accounting' ),
 			'status'      => __( 'Status', 'wp-ever-accounting' ),
 		);
 	}
@@ -244,24 +240,23 @@ class CategoriesTable extends ListTable {
 	/**
 	 * Gets a list of sortable columns for the list table.
 	 *
-	 * @since 1.0.0
-	 *
 	 * @return array Array of sortable columns.
+	 * @since 1.0.0
 	 */
 	protected function get_sortable_columns() {
 		return array(
 			'name'        => array( 'name', false ),
-			'description' => array( 'description', false ),
-			'type'        => array( 'type', false ),
-			'status'      => array( 'status', false ),
+			'rate'        => array( 'rate', false ),
+			'is_compound' => array( 'is_compound', false ),
+			'status'      => array( 'status', true ),
 		);
 	}
 
 	/**
 	 * Define primary column.
 	 *
-	 * @since 1.0.2
 	 * @return string
+	 * @since 1.0.2
 	 */
 	public function get_primary_column_name() {
 		return 'name';
@@ -270,10 +265,10 @@ class CategoriesTable extends ListTable {
 	/**
 	 * Renders the checkbox column.
 	 *
-	 * @param Category $item The current object.
+	 * @param Tax $item The current object.
 	 *
-	 * @since  1.0.0
 	 * @return string Displays a checkbox.
+	 * @since  1.0.0
 	 */
 	public function column_cb( $item ) {
 		return sprintf( '<input type="checkbox" name="id[]" value="%d"/>', esc_attr( $item->id ) );
@@ -282,38 +277,36 @@ class CategoriesTable extends ListTable {
 	/**
 	 * Renders the name column.
 	 *
-	 * @param Category $item The current object.
+	 * @param Tax $item The current object.
 	 *
-	 * @since  1.0.0
 	 * @return string Displays the name.
+	 * @since  1.0.0
 	 */
 	public function column_name( $item ) {
 		return sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( 'edit', $item->id, $this->base_url ) ), wp_kses_post( $item->name ) );
 	}
 
 	/**
-	 * Renders the type column.
+	 * Renders the is_compound column.
 	 *
-	 * @param Category $item The current object.
+	 * @param Tax $item The current object.
 	 *
 	 * @since  1.0.0
-	 * @return string Displays the type.
+	 * @return string Displays the compound.
 	 */
-	public function column_type( $item ) {
-		$types = eac_get_category_types();
-
-		return isset( $types[ $item->type ] ) ? $types[ $item->type ] : '';
+	public function column_is_compound( $item ) {
+		return $item->is_compound ? __( 'Yes', 'wp-ever-accounting' ) : __( 'No', 'wp-ever-accounting' );
 	}
 
 	/**
 	 * Generates and displays row actions links.
 	 *
-	 * @param Category $item The comment object.
-	 * @param string   $column_name Current column name.
-	 * @param string   $primary Primary column name.
+	 * @param Tax    $item The comment object.
+	 * @param string $column_name Current column name.
+	 * @param string $primary Primary column name.
 	 *
-	 * @since 1.0.0
 	 * @return string Row actions output.
+	 * @since 1.0.0
 	 */
 	protected function handle_row_actions( $item, $column_name, $primary ) {
 		if ( $primary !== $column_name ) {

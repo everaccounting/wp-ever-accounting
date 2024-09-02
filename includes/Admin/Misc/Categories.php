@@ -52,11 +52,11 @@ class Categories {
 		$screen     = get_current_screen();
 		$list_table = new Tables\CategoriesTable();
 		$list_table->prepare_items();
-//		$screen->add_option( 'per_page', array(
-//			'label'   => __( 'Number of items per page:', 'wp-ever-accounting' ),
-//			'default' => 20,
-//			'option'  => 'eac_categories_per_page',
-//		) );
+		$screen->add_option( 'per_page', array(
+			'label'   => __( 'Number of items per page:', 'wp-ever-accounting' ),
+			'default' => 20,
+			'option'  => "eac_{$list_table->_args['plural']}_per_page",
+		) );
 	}
 
 	/**
@@ -70,7 +70,8 @@ class Categories {
 	 * @return mixed
 	 */
 	public static function set_screen_option( $status, $option, $value ) {
-		if ( 'eac_categories_per_page' === $option ) {
+		global $list_table;
+		if ( "eac_{$list_table->_args['plural']}_per_page" === $option ) {
 			return $value;
 		}
 

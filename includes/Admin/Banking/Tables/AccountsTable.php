@@ -1,19 +1,19 @@
 <?php
 
-namespace EverAccounting\Admin\Misc\Tables;
+namespace EverAccounting\Admin\Banking\Tables;
 
 use EverAccounting\Admin\ListTable;
-use EverAccounting\Models\Category;
+use EverAccounting\Models\Account;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class CategoriesTable.
+ * Class AccountsTable.
  *
  * @since 1.0.0
  * @package EverAccounting\Admin\ListTables
  */
-class CategoriesTable extends ListTable {
+class AccountsTable extends ListTable {
 	/**
 	 * Constructor.
 	 *
@@ -27,15 +27,15 @@ class CategoriesTable extends ListTable {
 			wp_parse_args(
 				$args,
 				array(
-					'singular' => 'category',
-					'plural'   => 'categories',
+					'singular' => 'account',
+					'plural'   => 'accounts',
 					'screen'   => get_current_screen(),
 					'args'     => array(),
 				)
 			)
 		);
 
-		$this->base_url = admin_url( 'admin.php?page=eac-misc&tab=categories' );
+		$this->base_url = admin_url( 'admin.php?page=eac-banking&tab=accounts' );
 	}
 
 	/**
@@ -46,7 +46,7 @@ class CategoriesTable extends ListTable {
 	 */
 	public function prepare_items() {
 		$this->process_actions();
-		$per_page = $this->get_items_per_page( "eac_{$this->_args['plural']}_per_page" );
+		$per_page = $this->get_items_per_page( 'eac_accounts_per_page', 20 );
 		$paged    = $this->get_pagenum();
 		$search   = $this->get_request_search();
 		$order_by = $this->get_request_orderby();
@@ -67,11 +67,12 @@ class CategoriesTable extends ListTable {
 		 *
 		 * @since 1.0.0
 		 */
-		$args = apply_filters( 'ever_accounting_categories_table_query_args', $args );
+		$args = apply_filters( 'ever_accounting_accounts_table_query_args', $args );
 
 		$args['no_found_rows'] = false;
-		$this->items           = Category::results( $args );
-		$total                 = Category::count( $args );
+		$this->items           = Account::results( $args );
+		$total                 = Account::count( $args );
+
 		$this->set_pagination_args(
 			array(
 				'total_items' => $total,
@@ -91,18 +92,18 @@ class CategoriesTable extends ListTable {
 	protected function bulk_activate( $ids ) {
 		$performed = 0;
 		foreach ( $ids as $id ) {
-			if ( eac_insert_category(
+			if ( eac_insert_account(
 				array(
 					'id'     => $id,
 					'status' => 'active',
 				)
 			) ) {
-				++ $performed;
+				++$performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
-			// translators: %s: number of categories activated.
-			EAC()->flash->success( sprintf( __( '%s category(s) activated successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
+			// translators: %s: number of accounts.
+			EAC()->flash->success( sprintf( __( '%s account(s) activated successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
 		}
 	}
 
@@ -117,18 +118,18 @@ class CategoriesTable extends ListTable {
 	protected function bulk_deactivate( $ids ) {
 		$performed = 0;
 		foreach ( $ids as $id ) {
-			if ( eac_insert_category(
+			if ( eac_insert_account(
 				array(
 					'id'     => $id,
 					'status' => 'inactive',
 				)
 			) ) {
-				++ $performed;
+				++$performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
-			// translators: %s: number of categories.
-			EAC()->flash->success( sprintf( __( '%s category(s) deactivated successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
+			// translators: %s: number of accounts.
+			EAC()->flash->success( sprintf( __( '%s account(s) deactivated successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
 		}
 	}
 
@@ -143,33 +144,35 @@ class CategoriesTable extends ListTable {
 	protected function bulk_delete( $ids ) {
 		$performed = 0;
 		foreach ( $ids as $id ) {
-			if ( eac_delete_category( $id ) ) {
-				++ $performed;
+			if ( eac_delete_account( $id ) ) {
+				++$performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
-			// translators: %s: number of categories.
-			EAC()->flash->success( sprintf( __( '%s category(s) deleted successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
+			// translators: %s: number of accounts.
+			EAC()->flash->success( sprintf( __( '%s account(s) deleted successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
 		}
 	}
 
 	/**
-	 * Outputs 'no categories' message.
+	 * Outputs 'no users' message.
 	 *
 	 * @since 1.0.0
 	 */
 	public function no_items() {
-		esc_html_e( 'No categories found.', 'wp-ever-accounting' );
+		esc_html_e( 'No accounts found.', 'wp-ever-accounting' );
 	}
 
 	/**
 	 * Returns an associative array listing all the views that can be used
 	 * with this table.
 	 *
+	 * Provides a list of roles and user count for that role for easy
+	 * filtering of the user table.
+	 *
 	 * @since 1.0.0
 	 *
 	 * @return string[] An array of HTML links keyed by their view.
-	 * @global string $role
 	 */
 	protected function get_views() {
 		$current      = $this->get_request_status( 'all' );
@@ -183,7 +186,7 @@ class CategoriesTable extends ListTable {
 		foreach ( $statuses as $status => $label ) {
 			$link  = 'all' === $status ? $this->base_url : add_query_arg( 'status', $status, $this->base_url );
 			$args  = 'all' === $status ? array() : array( 'status' => $status );
-			$count = Category::count( $args );
+			$count = Account::count( $args );
 			$label = sprintf( '%s <span class="count">(%s)</span>', esc_html( $label ), number_format_i18n( $count ) );
 
 			$status_links[ $status ] = array(
@@ -192,7 +195,6 @@ class CategoriesTable extends ListTable {
 				'current' => $current === $status,
 			);
 		}
-
 		return $this->get_views_links( $status_links );
 	}
 
@@ -222,6 +224,17 @@ class CategoriesTable extends ListTable {
 	 * @return void
 	 */
 	protected function extra_tablenav( $which ) {
+		static $has_items;
+		if ( ! isset( $has_items ) ) {
+			$has_items = $this->has_items();
+		}
+
+		echo '<div class="alignleft actions">';
+		if ( 'top' === $which ) {
+			$this->currency_filter( 'active' );
+			submit_button( __( 'Filter', 'wp-ever-accounting' ), '', 'filter_action', false );
+		}
+		echo '</div>';
 	}
 
 	/**
@@ -233,11 +246,12 @@ class CategoriesTable extends ListTable {
 	 */
 	public function get_columns() {
 		return array(
-			'cb'          => '<input type="checkbox" />',
-			'name'        => __( 'Name', 'wp-ever-accounting' ),
-			'description' => __( 'Description', 'wp-ever-accounting' ),
-			'type'        => __( 'Type', 'wp-ever-accounting' ),
-			'status'      => __( 'Status', 'wp-ever-accounting' ),
+			'cb'        => '<input type="checkbox" />',
+			'name'      => __( 'Name', 'wp-ever-accounting' ),
+			'balance'   => __( 'Balance', 'wp-ever-accounting' ),
+			'number'    => __( 'Number', 'wp-ever-accounting' ),
+			'bank_name' => __( 'Bank Name', 'wp-ever-accounting' ),
+			'status'    => __( 'Status', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -250,10 +264,11 @@ class CategoriesTable extends ListTable {
 	 */
 	protected function get_sortable_columns() {
 		return array(
-			'name'        => array( 'name', false ),
-			'description' => array( 'description', false ),
-			'type'        => array( 'type', false ),
-			'status'      => array( 'status', false ),
+			'name'      => array( 'name', false ),
+			'number'    => array( 'number', false ),
+			'bank_name' => array( 'bank_name', false ),
+			'balance'   => array( 'balance', false ),
+			'status'    => array( 'status', false ),
 		);
 	}
 
@@ -270,7 +285,7 @@ class CategoriesTable extends ListTable {
 	/**
 	 * Renders the checkbox column.
 	 *
-	 * @param Category $item The current object.
+	 * @param Account $item The current object.
 	 *
 	 * @since  1.0.0
 	 * @return string Displays a checkbox.
@@ -282,7 +297,7 @@ class CategoriesTable extends ListTable {
 	/**
 	 * Renders the name column.
 	 *
-	 * @param Category $item The current object.
+	 * @param Account $item The current object.
 	 *
 	 * @since  1.0.0
 	 * @return string Displays the name.
@@ -292,25 +307,23 @@ class CategoriesTable extends ListTable {
 	}
 
 	/**
-	 * Renders the type column.
+	 * Renders the balance column.
 	 *
-	 * @param Category $item The current object.
+	 * @param Account $item The current object.
 	 *
 	 * @since  1.0.0
-	 * @return string Displays the type.
+	 * @return string Displays the balance.
 	 */
-	public function column_type( $item ) {
-		$types = eac_get_category_types();
-
-		return isset( $types[ $item->type ] ) ? $types[ $item->type ] : '';
+	public function column_balance( $item ) {
+		return esc_html( $item->formatted_balance );
 	}
 
 	/**
 	 * Generates and displays row actions links.
 	 *
-	 * @param Category $item The comment object.
-	 * @param string   $column_name Current column name.
-	 * @param string   $primary Primary column name.
+	 * @param Account $item The comment object.
+	 * @param string  $column_name Current column name.
+	 * @param string  $primary Primary column name.
 	 *
 	 * @since 1.0.0
 	 * @return string Row actions output.
@@ -320,12 +333,29 @@ class CategoriesTable extends ListTable {
 			return null;
 		}
 		$actions = array(
-			'id'   => sprintf( '#%d', esc_attr( $item->id ) ),
+			'id' => sprintf( '#%d', esc_attr( $item->id ) ),
 			'edit' => sprintf(
 				'<a href="%s">%s</a>',
 				esc_url( add_query_arg( 'edit', $item->id, $this->base_url ) ),
 				__( 'Edit', 'wp-ever-accounting' )
 			),
+		);
+
+		$actions['delete'] = sprintf(
+			'<a href="%s" class="del">%s</a>',
+			esc_url(
+				wp_nonce_url(
+					add_query_arg(
+						array(
+							'action' => 'delete',
+							'id'     => $item->id,
+						),
+						$this->base_url
+					),
+					'bulk-' . $this->_args['plural']
+				)
+			),
+			__( 'Delete', 'wp-ever-accounting' )
 		);
 
 		if ( 'active' === $item->status ) {
@@ -363,23 +393,6 @@ class CategoriesTable extends ListTable {
 				__( 'Activate', 'wp-ever-accounting' )
 			);
 		}
-
-		$actions['delete'] = sprintf(
-			'<a href="%s" class="del">%s</a>',
-			esc_url(
-				wp_nonce_url(
-					add_query_arg(
-						array(
-							'action' => 'delete',
-							'id'     => $item->id,
-						),
-						$this->base_url
-					),
-					'bulk-' . $this->_args['plural']
-				)
-			),
-			__( 'Delete', 'wp-ever-accounting' )
-		);
 
 		return $this->row_actions( $actions );
 	}

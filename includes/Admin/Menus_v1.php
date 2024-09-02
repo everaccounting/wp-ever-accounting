@@ -227,7 +227,7 @@ class Menus_v1 {
 		switch ( $page ) {
 			case 'eac-items':
 			case 'eac-items-items':
-				$this->list_table = new ListTables\ItemsTable();
+				$this->list_table = new Items\Tables\ItemsTable();
 				$this->list_table->prepare_items();
 				$args['option'] = 'eac_items_per_page';
 				add_screen_option( 'per_page', $args );
@@ -240,51 +240,51 @@ class Menus_v1 {
 				break;
 			case 'eac-sales':
 			case 'eac-sales-payments':
-				$this->list_table = new ListTables\paymentsTable();
+				$this->list_table = new Sales\Tables\paymentsTable();
 				$this->list_table->prepare_items();
 				$args['option'] = 'eac_payments_per_page';
 				add_screen_option( 'per_page', $args );
 				break;
 			case 'eac-sales-invoices':
-				$this->list_table = new ListTables\InvoicesTable();
+				$this->list_table = new Sales\Tables\InvoicesTable();
 				$this->list_table->prepare_items();
 				$args['option'] = 'eac_invoices_per_page';
 				add_screen_option( 'per_page', $args );
 				break;
 			case 'eac-sales-customers':
-				$this->list_table = new ListTables\CustomersTable();
+				$this->list_table = new Sales\Tables\CustomersTable();
 				$this->list_table->prepare_items();
 				$args['option'] = 'eac_customers_per_page';
 				add_screen_option( 'per_page', $args );
 				break;
 			case 'eac-purchases':
 			case 'eac-purchases-expenses':
-				$this->list_table = new ListTables\ExpensesTable();
+				$this->list_table = new Purchases\Tables\ExpensesTable();
 				$this->list_table->prepare_items();
 				$args['option'] = 'eac_expenses_per_page';
 				add_screen_option( 'per_page', $args );
 				break;
 			case 'eac-purchases-bills':
-				$this->list_table = new ListTables\BillsTable();
+				$this->list_table = new Purchases\Tables\BillsTable();
 				$this->list_table->prepare_items();
 				$args['option'] = 'eac_bills_per_page';
 				add_screen_option( 'per_page', $args );
 				break;
 			case 'eac-purchases-vendors':
-				$this->list_table = new ListTables\VendorsTable();
+				$this->list_table = new Purchases\Tables\VendorsTable();
 				$this->list_table->prepare_items();
 				$args['option'] = 'eac_vendors_per_page';
 				add_screen_option( 'per_page', $args );
 				break;
 			case 'eac-banking':
 			case 'eac-banking-accounts':
-				$this->list_table = new ListTables\AccountsTable();
+				$this->list_table = new Banking\Tables\AccountsTable();
 				$this->list_table->prepare_items();
 				$args['option'] = 'eac_accounts_per_page';
 				add_screen_option( 'per_page', $args );
 				break;
 			case 'eac-banking-transfers':
-				$this->list_table = new ListTables\TransfersTable();
+				$this->list_table = new Banking\Tables\TransfersTable();
 				$this->list_table->prepare_items();
 				$args['option'] = 'eac_transfers_per_page';
 				add_screen_option( 'per_page', $args );
@@ -303,7 +303,7 @@ class Menus_v1 {
 				add_screen_option( 'per_page', $args );
 				break;
 			case 'eac-misc-taxes':
-				$this->list_table = new Misc\Tables\TaxRatesTable();
+				$this->list_table = new Misc\Tables\TaxesTable();
 				$this->list_table->prepare_items();
 				$args['option'] = 'eac_taxes_per_page';
 				add_screen_option( 'per_page', $args );
