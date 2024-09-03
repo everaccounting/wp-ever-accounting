@@ -88,6 +88,7 @@ class Plugin extends \ByteKit\Plugin {
 			$this->services->add( Admin\Actions::class );
 			$this->services->add( Admin\Items\Items::class );
 			$this->services->add( Admin\Sales\Invoices::class );
+			$this->services->add( Admin\Sales\Customers::class );
 //			$this->services->add( Admin\Payments::class );
 //			$this->services->add( Admin\Invoices::class );
 //			$this->services->add( Admin\Customers::class );
