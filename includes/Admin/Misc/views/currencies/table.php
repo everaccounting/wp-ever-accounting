@@ -20,7 +20,6 @@ defined( 'ABSPATH' ) || exit;
 			<span class="subtitle"><?php echo esc_html( sprintf( /* translators: %s: Get requested search string */ __( 'Search results for "%s"', 'wp-ever-accounting' ), esc_html( $list_table->get_request_search() ) ) ); ?></span>
 		<?php endif; ?>
 	</h1>
-	<hr class="wp-header-end">
 	<form method="get" action="<?php echo esc_url( admin_url( 'admin.php' ) ); ?>">
 		<?php $list_table->views(); ?>
 		<?php $list_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'search' ); ?>

@@ -17,6 +17,7 @@ class Customers {
 	 */
 	public function __construct() {
 		add_filter( 'eac_sales_page_tabs', array( $this, 'register_tabs' ) );
+		add_filter( 'set-screen-option', array( __CLASS__, 'set_screen_option' ), 10, 3 );
 		add_action( 'load_eac_sales_page_customers_index', array( $this, 'setup_table' ) );
 		add_action( 'eac_sales_page_customers_index', array( $this, 'render_table' ) );
 		add_action( 'eac_sales_page_customers_add', array( $this, 'render_add' ) );
@@ -36,6 +37,25 @@ class Customers {
 		$tabs['customers'] = __( 'Customers', 'wp-ever-accounting' );
 
 		return $tabs;
+	}
+
+	/**
+	 * Set screen option.
+	 *
+	 * @param mixed  $status Status.
+	 * @param string $option Option.
+	 * @param mixed  $value Value.
+	 *
+	 * @since 3.0.0
+	 * @return mixed
+	 */
+	public static function set_screen_option( $status, $option, $value ) {
+		global $list_table;
+		if ( "eac_{$list_table->_args['plural']}_per_page" === $option ) {
+			return $value;
+		}
+
+		return $status;
 	}
 
 	/**

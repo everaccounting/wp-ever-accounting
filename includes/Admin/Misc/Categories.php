@@ -20,6 +20,7 @@ class Categories {
 	 */
 	public function __construct() {
 		add_filter( 'eac_misc_page_tabs', array( __CLASS__, 'register_tabs' ) );
+		add_filter( 'set-screen-option', array( __CLASS__, 'set_screen_option' ), 10, 3 );
 		add_action( 'load_eac_misc_page_categories_index', array( __CLASS__, 'setup_table' ) );
 		add_action( 'eac_misc_page_categories_index', array( __CLASS__, 'render_table' ) );
 		add_action( 'eac_misc_page_categories_add', array( __CLASS__, 'render_add' ) );
@@ -42,6 +43,25 @@ class Categories {
 	}
 
 	/**
+	 * Set screen option.
+	 *
+	 * @param mixed  $status Status.
+	 * @param string $option Option.
+	 * @param mixed  $value Value.
+	 *
+	 * @since 3.0.0
+	 * @return mixed
+	 */
+	public static function set_screen_option( $status, $option, $value ) {
+		global $list_table;
+		if ( "eac_{$list_table->_args['plural']}_per_page" === $option ) {
+			return $value;
+		}
+
+		return $status;
+	}
+
+	/**
 	 * setup categories list.
 	 *
 	 * @since 3.0.0
@@ -52,7 +72,7 @@ class Categories {
 		$list_table = new Tables\CategoriesTable();
 		$list_table->prepare_items();
 		$screen->add_option( 'per_page', array(
-			'label'   => __( 'Number of items per page:', 'wp-ever-accounting' ),
+			'label'   => __( 'Number of categories per page:', 'wp-ever-accounting' ),
 			'default' => 20,
 			'option'  => "eac_{$list_table->_args['plural']}_per_page",
 		) );

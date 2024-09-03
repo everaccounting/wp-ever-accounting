@@ -19,6 +19,7 @@ class Items {
 	 */
 	public function __construct() {
 		add_filter( 'eac_items_page_tabs', array( __CLASS__, 'register_tabs' ) );
+		add_filter( 'set-screen-option', array( __CLASS__, 'set_screen_option' ), 10, 3 );
 		add_action( 'load_eac_items_page_items_index', array( __CLASS__, 'setup_table' ) );
 		add_action( 'eac_items_page_items_index', array( __CLASS__, 'render_table' ) );
 		add_action( 'eac_items_page_items_add', array( __CLASS__, 'render_add' ) );
@@ -38,6 +39,25 @@ class Items {
 		$tabs['items'] = __( 'Items', 'wp-ever-accounting' );
 
 		return $tabs;
+	}
+
+	/**
+	 * Set screen option.
+	 *
+	 * @param mixed  $status Status.
+	 * @param string $option Option.
+	 * @param mixed  $value Value.
+	 *
+	 * @since 3.0.0
+	 * @return mixed
+	 */
+	public static function set_screen_option( $status, $option, $value ) {
+		global $list_table;
+		if ( "eac_{$list_table->_args['plural']}_per_page" === $option ) {
+			return $value;
+		}
+
+		return $status;
 	}
 
 	/**
