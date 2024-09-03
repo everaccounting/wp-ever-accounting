@@ -81,13 +81,20 @@ class Expenses {
 	}
 
 	/**
-	 * Render edit form.
+	 * Render edit expense form.
 	 *
 	 * @since 3.0.0
 	 * @return void
 	 */
 	public static function render_edit() {
-		$expense = new Expense( absint( $_GET['id'] ) );
+		$id       = filter_input( INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT );
+		$expense = Expense::find( $id );
+		if ( ! $expense ) {
+			esc_html_e( 'The specified expense does not exist.', 'wp-ever-accounting' );
+
+			return;
+		}
+//		$expense = new Expense( absint( $_GET['id'] ) );
 		include __DIR__ . '/views/expenses/edit.php';
 	}
 

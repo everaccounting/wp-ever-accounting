@@ -1,19 +1,19 @@
 <?php
 /**
- * Admin List of Taxes.
- * Page: Misc
- * Tab: Taxes
+ * Admin List of Accounts.
+ * Page: Banking
+ * Tab: Accounts
  *
  * @since 1.0.0
  * @package EverAccounting
- * @var $currency \EverAccounting\Models\Tax Currency object.
+ * @var $currency \EverAccounting\Models\Account Account object.
  */
 
 defined( 'ABSPATH' ) || exit;
 ?>
 	<h1 class="wp-heading-inline">
-		<?php esc_html_e( 'Taxes', 'wp-ever-accounting' ); ?>
-		<a href="<?php echo esc_attr( admin_url( 'admin.php?page=eac-misc&tab=taxes&view=add' ) ); ?>" class="button button-small">
+		<?php esc_html_e( 'Accounts', 'wp-ever-accounting' ); ?>
+		<a href="<?php echo esc_attr( admin_url( 'admin.php?page=eac-banking&tab=accounts&view=add' ) ); ?>" class="button button-small">
 			<?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?>
 		</a>
 		<?php if ( $list_table->get_request_search() ) : ?>

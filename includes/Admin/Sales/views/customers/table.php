@@ -1,9 +1,12 @@
 <?php
 /**
- * List of Customers
+ * Admin List of Customers.
+ * Page: Sales
+ * Tab: Customers
  *
+ * @since 1.0.0
  * @package EverAccounting
- * @version 1.0.0
+ * @var $currency \EverAccounting\Models\Customer Customer object.
  */
 
 defined( 'ABSPATH' ) || exit;
