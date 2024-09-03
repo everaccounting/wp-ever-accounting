@@ -50,75 +50,6 @@
 		}
 	}
 
-	//group
-	.eac-input-group {
-		position: relative;
-		display: flex;
-		flex-wrap: wrap;
-		align-items: stretch;
-		align-self: center;
-		width: 100%;
-
-		> input, > select, > textarea, .select2-container {
-			flex: 1 1 auto;
-			min-width: 0;
-			margin: 0;
-			max-width: unset;
-		}
-
-		.select2-container {
-			width: unset !important;
-		}
-
-		[class*='addon'], .button {
-			display: flex;
-			align-items: center;
-			padding: 0 8px;
-			text-align: center;
-			white-space: nowrap;
-			background-color: #eee;
-			border: 1px solid #8c8f94;
-			border-radius: 4px;
-			user-select: none;
-			text-decoration: none;
-		}
-
-		& > :not(:last-child) {
-			border-right: 0;
-			border-top-right-radius: 0;
-			border-bottom-right-radius: 0;
-
-			.select2-selection {
-				border-top-right-radius: 0;
-				border-bottom-right-radius: 0;
-			}
-		}
-
-		& > :nth-last-child(n+3) {
-			border-top-right-radius: 0;
-			border-bottom-right-radius: 0;
-		}
-
-		& > :not(:first-child) {
-			margin-left: -1px !important;
-			border-top-left-radius: 0;
-			border-bottom-left-radius: 0;
-
-			.select2-selection {
-				border-top-left-radius: 0;
-				border-bottom-left-radius: 0;
-			}
-		}
-
-		// if the 2nd child is select2.
-		& > :nth-child(2) {
-			.select2-selection {
-				border-top-left-radius: 4px;
-				border-bottom-left-radius: 4px;
-			}
-		}
-	}
-
 	//help
 	.description {
 		margin: 2px 0 5px;
@@ -217,6 +148,75 @@
 			.eac-file-uploader__button {
 				display: none;
 			}
+		}
+	}
+}
+
+//group
+.eac-input-group {
+	position: relative;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: stretch;
+	align-self: center;
+	width: 100%;
+
+	> input, > select, > textarea, .select2-container {
+		flex: 1 1 auto;
+		min-width: 0;
+		margin: 0;
+		max-width: unset;
+	}
+
+	.select2-container {
+		width: unset !important;
+	}
+
+	[class*='addon'], .button {
+		display: flex;
+		align-items: center;
+		padding: 0 8px;
+		text-align: center;
+		white-space: nowrap;
+		background-color: #eee;
+		border: 1px solid #8c8f94;
+		border-radius: 4px;
+		user-select: none;
+		text-decoration: none;
+	}
+
+	& > :not(:last-child) {
+		border-right: 0;
+		border-top-right-radius: 0;
+		border-bottom-right-radius: 0;
+
+		.select2-selection {
+			border-top-right-radius: 0;
+			border-bottom-right-radius: 0;
+		}
+	}
+
+	& > :nth-last-child(n+3) {
+		border-top-right-radius: 0;
+		border-bottom-right-radius: 0;
+	}
+
+	& > :not(:first-child) {
+		margin-left: -1px !important;
+		border-top-left-radius: 0;
+		border-bottom-left-radius: 0;
+
+		.select2-selection {
+			border-top-left-radius: 0;
+			border-bottom-left-radius: 0;
+		}
+	}
+
+	// if the 2nd child is select2.
+	& > :nth-child(2) {
+		.select2-selection {
+			border-top-left-radius: 4px;
+			border-bottom-left-radius: 4px;
 		}
 	}
 }

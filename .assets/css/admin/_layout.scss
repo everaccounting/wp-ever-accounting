@@ -6,6 +6,7 @@
 	box-sizing: border-box;
 	position: relative;
 	clear: both;
+
 	&:before,
 	&:after {
 		content: "";
@@ -21,17 +22,23 @@
 	}
 }
 
-.eac-poststuff{
+.eac-poststuff {
 	margin-top: 10px;
 	margin-right: 340px;
 
-	.column-1{
+	&:after {
+		content: "";
+		display: table;
+		clear: both;
+	}
+
+	.column-1 {
 		width: 100%;
 		min-width: 463px;
 		float: left;
 	}
 
-	.column-2{
+	.column-2 {
 		float: right;
 		margin-right: -340px;
 		width: 320px;
@@ -39,7 +46,7 @@
 
 	@media only screen and (max-width: 850px) {
 		margin-right: 0;
-		.column-1, .column-2{
+		.column-1, .column-2 {
 			width: 100%;
 			min-width: 0;
 			float: none;
@@ -47,11 +54,12 @@
 		}
 	}
 
-	&.is--reversed{
-		.column-1{
+	&.is--reversed {
+		.column-1 {
 			float: right;
 		}
-		.column-2{
+
+		.column-2 {
 			float: left;
 		}
 	}

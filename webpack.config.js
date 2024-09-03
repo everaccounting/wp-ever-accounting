@@ -46,6 +46,7 @@ module.exports = [
 			'js/tiptip': './.assets/libraries/tipTip/tipTip.js',
 			'js/eac-admin': './.assets/js/admin/admin.js',
 			'js/eac-settings': './.assets/js/admin/settings.js',
+			'js/eac-invoices': './.assets/js/admin/invoices',
 			'css/jquery-ui': [
 				'./node_modules/jquery-ui/themes/base/theme.css',
 				'./node_modules/jquery-ui/themes/base/datepicker.css',
@@ -86,7 +87,6 @@ module.exports = [
 		},
 		plugins: [
 			...defaultConfig.plugins,
-			new AddMinPlugin(),
 			new RemoveEmptyScriptsPlugin(
 				{
 					stage: RemoveEmptyScriptsPlugin.STAGE_AFTER_PROCESS_PLUGINS,

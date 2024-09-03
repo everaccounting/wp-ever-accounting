@@ -41,8 +41,8 @@ class InvoicesTable extends ListTable {
 	/**
 	 * Prepares the list for display.
 	 *
-	 * @return void
 	 * @since 1.0.0
+	 * @return void
 	 */
 	public function prepare_items() {
 		$this->process_actions();
@@ -85,14 +85,14 @@ class InvoicesTable extends ListTable {
 	 *
 	 * @param array $ids List of item IDs.
 	 *
-	 * @return void
 	 * @since 1.0.0
+	 * @return void
 	 */
 	protected function bulk_delete( $ids ) {
 		$performed = 0;
 		foreach ( $ids as $id ) {
 			if ( eac_delete_invoice( $id ) ) {
-				++$performed;
+				++ $performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
@@ -117,8 +117,8 @@ class InvoicesTable extends ListTable {
 	 * Provides a list of roles and user count for that role for easy
 	 * filtering of the user table.
 	 *
-	 * @return string[] An array of HTML links keyed by their view.
 	 * @since 1.0.0
+	 * @return string[] An array of HTML links keyed by their view.
 	 */
 	protected function get_views() {
 		$current      = $this->get_request_status( 'all' );
@@ -137,14 +137,15 @@ class InvoicesTable extends ListTable {
 				'current' => $current === $status,
 			);
 		}
+
 		return $this->get_views_links( $status_links );
 	}
 
 	/**
 	 * Retrieves an associative array of bulk actions available on this table.
 	 *
-	 * @return array Array of bulk action labels keyed by their action.
 	 * @since 1.0.0
+	 * @return array Array of bulk action labels keyed by their action.
 	 */
 	protected function get_bulk_actions() {
 		$actions = array(
@@ -162,8 +163,8 @@ class InvoicesTable extends ListTable {
 	 *
 	 * @param string $which Whether invoked above ("top") or below the table ("bottom").
 	 *
-	 * @return void
 	 * @since 1.0.0
+	 * @return void
 	 */
 	protected function extra_tablenav( $which ) {
 		// TODO: Need to include invoicesTable filters 'Select Month', 'Select Account', 'Select Category', 'Select Customer'.
@@ -184,8 +185,8 @@ class InvoicesTable extends ListTable {
 	/**
 	 * Gets a list of columns for the list table.
 	 *
-	 * @return string[] Array of column titles keyed by their column name.
 	 * @since 1.0.0
+	 * @return string[] Array of column titles keyed by their column name.
 	 */
 	public function get_columns() {
 		return array(
@@ -202,8 +203,8 @@ class InvoicesTable extends ListTable {
 	/**
 	 * Gets a list of sortable columns for the list table.
 	 *
-	 * @return array Array of sortable columns.
 	 * @since 1.0.0
+	 * @return array Array of sortable columns.
 	 */
 	protected function get_sortable_columns() {
 		return array(
@@ -219,8 +220,8 @@ class InvoicesTable extends ListTable {
 	/**
 	 * Define primary column.
 	 *
-	 * @return string
 	 * @since 1.0.2
+	 * @return string
 	 */
 	public function get_primary_column_name() {
 		return 'number';
@@ -231,8 +232,8 @@ class InvoicesTable extends ListTable {
 	 *
 	 * @param Invoice $item The current object.
 	 *
-	 * @return string Displays a checkbox.
 	 * @since  1.0.0
+	 * @return string Displays a checkbox.
 	 */
 	public function column_cb( $item ) {
 		return sprintf( '<input type="checkbox" name="id[]" value="%d"/>', esc_attr( $item->id ) );
@@ -312,7 +313,10 @@ class InvoicesTable extends ListTable {
 		$actions = array(
 			'view' => sprintf(
 				'<a href="%s">%s</a>',
-				esc_url( add_query_arg( 'view', $item->id, $this->base_url ) ),
+				esc_url( add_query_arg( [
+					'view' => 'edit',
+					'id'   => $item->id,
+				], $this->base_url ) ),
 				__( 'View', 'wp-ever-accounting' )
 			),
 			'edit' => sprintf(

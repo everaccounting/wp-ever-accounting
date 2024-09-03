@@ -66,7 +66,7 @@ class Invoice extends Document {
 	 * @return HasMany
 	 */
 	public function payments() {
-		return $this->has_many( Revenue::class, 'document_id' )->set_query_var( 'status', 'completed' );
+		return $this->has_many( Payment::class, 'document_id' )->set_query_var( 'status', 'completed' );
 	}
 
 	/*
@@ -468,9 +468,10 @@ class Invoice extends Document {
 	 * @return string
 	 */
 	public function get_max_number() {
-		return (int) $this->get_db()->get_var(
-			$this->get_db()->prepare(
-				"SELECT MAX(REGEXP_REPLACE(number, '[^0-9]', '')) FROM {$this->get_table(true)} WHERE type = %s",
+		global $wpdb;
+		return (int) $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT MAX(REGEXP_REPLACE(number, '[^0-9]', '')) FROM {$wpdb->prefix}{$this->table} WHERE type = %s",
 				esc_sql( $this->type )
 			)
 		);

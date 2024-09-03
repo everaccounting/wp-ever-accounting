@@ -154,6 +154,7 @@ class Installer {
 			return;
 		}
 		self::create_tables();
+		self::create_roles();
 		self::create_currencies();
 		EAC()->add_db_version();
 	}
@@ -538,6 +539,102 @@ KEY `expense_id` (`expense_id`)
 ";
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		dbDelta( $tables );
+	}
+
+	/**
+	 * Create roles and capabilities.
+	 *
+	 * @return void
+	 * @since 1.1.6
+	 */
+	public static function create_roles() {
+		global $wp_roles;
+
+		if ( ! class_exists( 'WP_Roles' ) ) {
+			return;
+		}
+
+		if ( ! isset( $wp_roles ) ) {
+			$wp_roles = new \WP_Roles();
+		}
+
+		// Dummy gettext calls to get strings in the catalog.
+		_x( 'Accounting Manager', 'User role', 'wp-ever-accounting' );
+		_x( 'Accountant', 'User role', 'wp-ever-accounting' );
+
+		// Accountant role.
+		add_role(
+			'eac_accountant',
+			'Accountant',
+			array(
+				'manage_accounting'   => true,
+				'eac_manage_product'  => true,
+				'eac_manage_customer' => true,
+				'eac_manage_vendor'   => true,
+				'eac_manage_account'  => true,
+				'eac_manage_payment'  => true,
+				'eac_manage_expense'  => true,
+				'eac_manage_transfer' => true,
+				'eac_manage_category' => true,
+				'eac_manage_currency' => true,
+				'eac_manage_item'     => true,
+				'eac_manage_invoice'  => true,
+				'eac_manage_bill'     => true,
+				'eac_manage_tax'      => true,
+				'read'                => true,
+			)
+		);
+
+		// Accounting manager role.
+		add_role(
+			'eac_manager',
+			'Accounting Manager',
+			array(
+				'manage_accounting'   => true,
+				'eac_manage_report'   => true,
+				'eac_manage_options'  => true,
+				'eac_manage_product'  => true,
+				'eac_manage_customer' => true,
+				'eac_manage_vendor'   => true,
+				'eac_manage_account'  => true,
+				'eac_manage_payment'  => true,
+				'eac_manage_expense'  => true,
+				'eac_manage_transfer' => true,
+				'eac_manage_category' => true,
+				'eac_manage_currency' => true,
+				'eac_manage_item'     => true,
+				'eac_manage_invoice'  => true,
+				'eac_manage_bill'     => true,
+				'eac_manage_tax'      => true,
+				'eac_manage_import'   => true,
+				'eac_manage_export'   => true,
+				'read'                => true,
+			)
+		);
+
+		// add caps to admin.
+		global $wp_roles;
+
+		if ( is_object( $wp_roles ) ) {
+			$wp_roles->add_cap( 'administrator', 'manage_accounting' );
+			$wp_roles->add_cap( 'administrator', 'eac_manage_report' );
+			$wp_roles->add_cap( 'administrator', 'eac_manage_options' );
+			$wp_roles->add_cap( 'administrator', 'eac_manage_product' );
+			$wp_roles->add_cap( 'administrator', 'eac_manage_customer' );
+			$wp_roles->add_cap( 'administrator', 'eac_manage_vendor' );
+			$wp_roles->add_cap( 'administrator', 'eac_manage_account' );
+			$wp_roles->add_cap( 'administrator', 'eac_manage_payment' );
+			$wp_roles->add_cap( 'administrator', 'eac_manage_expense' );
+			$wp_roles->add_cap( 'administrator', 'eac_manage_transfer' );
+			$wp_roles->add_cap( 'administrator', 'eac_manage_category' );
+			$wp_roles->add_cap( 'administrator', 'eac_manage_currency' );
+			$wp_roles->add_cap( 'administrator', 'eac_manage_item' );
+			$wp_roles->add_cap( 'administrator', 'eac_manage_invoice' );
+			$wp_roles->add_cap( 'administrator', 'eac_manage_bill' );
+			$wp_roles->add_cap( 'administrator', 'eac_manage_tax' );
+			$wp_roles->add_cap( 'administrator', 'eac_manage_import' );
+			$wp_roles->add_cap( 'administrator', 'eac_manage_export' );
+		}
 	}
 
 	/**
