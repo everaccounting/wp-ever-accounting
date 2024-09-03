@@ -129,7 +129,7 @@ class Customers {
 			EAC()->flash->error( $customer->get_error_message() );
 		} else {
 			EAC()->flash->success( __( 'Customer saved successfully.', 'wp-ever-accounting' ) );
-			$referer = add_query_arg( 'edit', $customer->id, $referer );
+			$referer = add_query_arg( ['view' => 'edit', 'id' => $customer->id ], $referer );
 			$referer = remove_query_arg( array( 'add' ), $referer );
 
 		}

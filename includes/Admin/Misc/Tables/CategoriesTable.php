@@ -288,7 +288,7 @@ class CategoriesTable extends ListTable {
 	 * @return string Displays the name.
 	 */
 	public function column_name( $item ) {
-		return sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( 'edit', $item->id, $this->base_url ) ), wp_kses_post( $item->name ) );
+		return sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( ['view' => 'edit', 'id' => $item->id ], $this->base_url ) ), wp_kses_post( $item->name ) );
 	}
 
 	/**
@@ -323,7 +323,7 @@ class CategoriesTable extends ListTable {
 			'id'   => sprintf( '#%d', esc_attr( $item->id ) ),
 			'edit' => sprintf(
 				'<a href="%s">%s</a>',
-				esc_url( add_query_arg( 'edit', $item->id, $this->base_url ) ),
+				esc_url( add_query_arg( ['view' => 'edit', 'id' => $item->id ], $this->base_url ) ),
 				__( 'Edit', 'wp-ever-accounting' )
 			),
 		);

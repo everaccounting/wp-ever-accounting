@@ -20,12 +20,11 @@ class Categories {
 	 */
 	public function __construct() {
 		add_filter( 'eac_misc_page_tabs', array( __CLASS__, 'register_tabs' ) );
-		add_action( 'load_eac_misc_page_categories_home', array( __CLASS__, 'setup_table' ) );
-		add_filter( 'set-screen-option', array( __CLASS__, 'set_screen_option' ), 10, 3 );
-		add_action( 'eac_misc_page_categories_home', array( __CLASS__, 'render_table' ) );
+		add_action( 'load_eac_misc_page_categories_index', array( __CLASS__, 'setup_table' ) );
+		add_action( 'eac_misc_page_categories_index', array( __CLASS__, 'render_table' ) );
 		add_action( 'eac_misc_page_categories_add', array( __CLASS__, 'render_add' ) );
 		add_action( 'eac_misc_page_categories_edit', array( __CLASS__, 'render_edit' ) );
-		add_action( 'admin_post_eac_edit_category', array( __CLASS__, 'handle_edit' ) );
+		add_action( 'admin_post_eac_edit_category', array( __CLASS__, 'handle_edit_category' ) );
 	}
 
 	/**
@@ -57,25 +56,6 @@ class Categories {
 			'default' => 20,
 			'option'  => "eac_{$list_table->_args['plural']}_per_page",
 		) );
-	}
-
-	/**
-	 * Set screen option.
-	 *
-	 * @param mixed  $status Status.
-	 * @param string $option Option.
-	 * @param mixed  $value Value.
-	 *
-	 * @since 3.0.0
-	 * @return mixed
-	 */
-	public static function set_screen_option( $status, $option, $value ) {
-		global $list_table;
-		if ( "eac_{$list_table->_args['plural']}_per_page" === $option ) {
-			return $value;
-		}
-
-		return $status;
 	}
 
 	/**
@@ -121,7 +101,7 @@ class Categories {
 	 * @since 1.2.0
 	 * @return void
 	 */
-	public static function handle_edit() {
+	public static function handle_edit_category() {
 		check_admin_referer( 'eac_edit_category' );
 		$referer  = wp_get_referer();
 		$id       = isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0;
@@ -143,7 +123,7 @@ class Categories {
 			EAC()->flash->error( $category->get_error_message() );
 		} else {
 			EAC()->flash->success( __( 'Category saved successfully.', 'wp-ever-accounting' ) );
-			$referer = add_query_arg( 'edit', $category->id, $referer );
+			$referer = add_query_arg( ['view' => 'edit', 'id' => $category->id ], $referer );
 			$referer = remove_query_arg( array( 'add' ), $referer );
 		}
 
