@@ -22,7 +22,6 @@ class Currencies {
 	public function __construct() {
 		add_filter( 'eac_misc_page_tabs', array( __CLASS__, 'register_tabs' ) );
 		add_action( 'load_eac_misc_page_currencies_index', array( __CLASS__, 'setup_table' ) );
-		add_filter( 'set-screen-option', array( __CLASS__, 'set_screen_option' ), 10, 3 );
 		add_action( 'eac_misc_page_currencies_index', array( __CLASS__, 'render_table' ) );
 		add_action( 'eac_misc_page_currencies_add', array( __CLASS__, 'render_add' ) );
 		add_action( 'eac_misc_page_currencies_edit', array( __CLASS__, 'render_edit' ) );
@@ -59,25 +58,6 @@ class Currencies {
 			'default' => 20,
 			'option'  => "eac_{$list_table->_args['plural']}_per_page",
 		) );
-	}
-
-	/**
-	 * Set screen option.
-	 *
-	 * @param mixed  $status Status.
-	 * @param string $option Option.
-	 * @param mixed  $value Value.
-	 *
-	 * @since 3.0.0
-	 * @return mixed
-	 */
-	public static function set_screen_option( $status, $option, $value ) {
-		global $list_table;
-		if ( "eac_{$list_table->_args['plural']}_per_page" === $option ) {
-			return $value;
-		}
-
-		return $status;
 	}
 
 	/**
