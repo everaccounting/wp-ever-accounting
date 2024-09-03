@@ -94,7 +94,6 @@ class Expenses {
 
 			return;
 		}
-//		$expense = new Expense( absint( $_GET['id'] ) );
 		include __DIR__ . '/views/expenses/edit.php';
 	}
 
@@ -125,7 +124,7 @@ class Expenses {
 			EAC()->flash->error( $expense->get_error_message() );
 		} else {
 			EAC()->flash->success( __( 'Expense saved successfully.', 'wp-ever-accounting' ) );
-			$referer = add_query_arg( 'edit', $expense->id, $referer );
+			$referer = add_query_arg( [ 'view' => 'edit', 'id' => $expense->id ], $referer );
 			$referer = remove_query_arg( array( 'add' ), $referer );
 		}
 
