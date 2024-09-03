@@ -3,32 +3,6 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const path = require('path');
 const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
 
-class AddMinPlugin {
-	constructor(options) {
-		this.isProduction = options.isProduction;
-	}
-
-	apply(compiler) {
-		if (!this.isProduction) {
-			return;
-		}
-
-		compiler.hooks.emit.tapAsync('AddMinPlugin', (compilation, callback) => {
-			for (const asset in compilation.assets) {
-				if (asset.endsWith('.js')) {
-					const minAsset = asset.replace(/\.js$/, '.min.js');
-					compilation.assets[minAsset] = compilation.assets[asset];
-					delete compilation.assets[asset];
-				} else if (asset.endsWith('.css')) {
-					const minAsset = asset.replace(/\.css$/, '.min.css');
-					compilation.assets[minAsset] = compilation.assets[asset];
-					delete compilation.assets[asset];
-				}
-			}
-			callback();
-		});
-	}
-}
 module.exports = [
 	{
 		...defaultConfig,
@@ -43,10 +17,11 @@ module.exports = [
 				'./.assets/libraries/inputmask/inputmask.js',
 				'./.assets/libraries/inputmask/inputmask.binding.js',
 			],
+			'js/blockui': './.assets/libraries/blockui/blockUI.js',
 			'js/tiptip': './.assets/libraries/tipTip/tipTip.js',
 			'js/eac-admin': './.assets/js/admin/admin.js',
 			'js/eac-settings': './.assets/js/admin/settings.js',
-			'js/eac-invoices': './.assets/js/admin/invoices',
+			'js/eac-invoices': './.assets/js/admin/invoices.js',
 			'css/jquery-ui': [
 				'./node_modules/jquery-ui/themes/base/theme.css',
 				'./node_modules/jquery-ui/themes/base/datepicker.css',

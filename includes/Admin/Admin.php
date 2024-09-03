@@ -70,11 +70,12 @@ class Admin {
 		EAC()->scripts->register_script( 'eac-inputmask', 'js/inputmask.js', array( 'jquery' ), true );
 		EAC()->scripts->register_script( 'eac-select2', 'js/select2.js', array( 'jquery' ), true );
 		EAC()->scripts->register_script( 'eac-tiptip', 'js/tiptip.js', array( 'jquery' ), true );
+		EAC()->scripts->register_script( 'eac-blockui', 'js/blockui.js', array( 'jquery' ), true );
 		EAC()->scripts->register_style( 'eac-jquery-ui', 'css/jquery-ui.css' );
 		EAC()->scripts->register_style( 'eac-select2', 'css/select2.css' );
 
 		// Core scripts.
-		EAC()->scripts->register_script( 'eac-invoices', 'js/eac-invoices.js', array( 'wp-util', 'backbone', 'underscore' ), true );
+		EAC()->scripts->register_script( 'eac-invoices', 'js/eac-invoices.js', array( 'wp-util', 'backbone', 'underscore', 'eac-blockui' ), true );
 		EAC()->scripts->register_script( 'eac-admin', 'js/eac-admin.js', array( 'jquery', 'eac-chartjs', 'eac-inputmask', 'eac-select2', 'eac-tiptip', 'jquery-ui-datepicker', 'jquery-ui-tooltip', 'wp-util' ), true );
 		EAC()->scripts->register_script( 'eac-settings', 'js/eac-settings.js', array( 'eac-admin' ), true );
 		EAC()->scripts->register_style( 'eac-admin', 'css/eac-admin.css', array( 'eac-jquery-ui', 'eac-select2' ) );
@@ -98,7 +99,7 @@ class Admin {
 
 		wp_localize_script(
 			'eac-admin',
-			'eac_admin_js_vars',
+			'eac_admin_vars',
 			array(
 				'ajax_url'       => admin_url( 'admin-ajax.php' ),
 				'search_nonce'   => wp_create_nonce( 'eac_search_action' ),

@@ -76,12 +76,6 @@ class Invoices {
 	 */
 	public static function render_add() {
 		$document = new Invoice();
-		$data = array(
-			'restUrl'            => rest_url(),
-			'restNonce'          => wp_create_nonce( 'wp_rest' ),
-		);
-
-		wp_localize_script('eac-invoices', 'eacInvoices', $data);
 		include __DIR__ . '/views/invoices/add.php';
 	}
 
