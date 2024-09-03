@@ -21,13 +21,13 @@ class Currencies {
 	 */
 	public function __construct() {
 		add_filter( 'eac_misc_page_tabs', array( __CLASS__, 'register_tabs' ) );
-		add_action( 'load_eac_misc_page_currencies_home', array( __CLASS__, 'setup_table' ) );
+		add_action( 'load_eac_misc_page_currencies_index', array( __CLASS__, 'setup_table' ) );
 		add_filter( 'set-screen-option', array( __CLASS__, 'set_screen_option' ), 10, 3 );
-		add_action( 'eac_misc_page_currencies_home', array( __CLASS__, 'render_table' ) );
+		add_action( 'eac_misc_page_currencies_index', array( __CLASS__, 'render_table' ) );
 		add_action( 'eac_misc_page_currencies_add', array( __CLASS__, 'render_add' ) );
 		add_action( 'eac_misc_page_currencies_edit', array( __CLASS__, 'render_edit' ) );
 		add_action( 'admin_post_eac_add_currency', array( __CLASS__, 'handle_add' ) );
-		add_action( 'admin_post_eac_edit_category', array( __CLASS__, 'handle_edit' ) );
+		add_action( 'admin_post_eac_edit_currency', array( __CLASS__, 'handle_edit_currency' ) );
 	}
 
 	/**
@@ -107,8 +107,8 @@ class Currencies {
 	 */
 	public static function render_edit() {
 		$id       = filter_input( INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT );
-		$category = Currency::find( $id );
-		if ( ! $category ) {
+		$currency = Currency::find( $id );
+		if ( ! $currency ) {
 			esc_html_e( 'The specified currency does not exist.', 'wp-ever-accounting' );
 
 			return;
@@ -154,7 +154,7 @@ class Currencies {
 
 		EAC()->flash->success( __( 'Currency added successfully.', 'wp-ever-accounting' ) );
 		$referer = remove_query_arg( array( 'add' ), $referer );
-		$referer = add_query_arg( 'edit', $currency->id, $referer );
+		$referer = add_query_arg( ['view' => 'edit', 'id' => $currency->id ], $referer );
 		wp_safe_redirect( $referer );
 		exit;
 	}
@@ -164,7 +164,7 @@ class Currencies {
 	 *
 	 * @since 3.0.0
 	 */
-	public static function handle_edit() {
+	public static function handle_edit_currency() {
 		check_admin_referer( 'eac_edit_currency' );
 		$referer            = wp_get_referer();
 		$id                 = isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0;
@@ -196,11 +196,11 @@ class Currencies {
 			EAC()->flash->error( $currency->get_error_message() );
 		} else {
 			EAC()->flash->success( __( 'Currency saved successfully.', 'wp-ever-accounting' ) );
-			$referer = add_query_arg( 'edit', $currency->id, $referer );
+			$referer = add_query_arg( ['view' => 'edit', 'id' => $currency->id ], $referer );
+			$referer = remove_query_arg( array( 'add' ), $referer );
 		}
 
 		wp_safe_redirect( $referer );
 		exit;
 	}
-
 }
