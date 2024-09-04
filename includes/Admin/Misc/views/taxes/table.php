@@ -25,6 +25,6 @@ defined( 'ABSPATH' ) || exit;
 		<?php $list_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'search' ); ?>
 		<?php $list_table->display(); ?>
 		<input type="hidden" name="page" value="eac-misc"/>
-		<input type="hidden" name="tab" value="currencies"/>
+		<input type="hidden" name="tab" value="taxes"/>
 	</form>
 <?php
