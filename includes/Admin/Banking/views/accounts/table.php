@@ -6,7 +6,7 @@
  *
  * @since 1.0.0
  * @package EverAccounting
- * @var $currency \EverAccounting\Models\Account Account object.
+ * @var $account \EverAccounting\Models\Account Account object.
  */
 
 defined( 'ABSPATH' ) || exit;

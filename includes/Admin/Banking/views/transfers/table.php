@@ -1,19 +1,19 @@
 <?php
 /**
- * Admin List of Taxes.
- * Page: Misc
- * Tab: Taxes
+ * Admin List of Transfers.
+ * Page: Banking
+ * Tab: Transfers
  *
  * @since 1.0.0
  * @package EverAccounting
- * @var $tax \EverAccounting\Models\Tax Currency object.
+ * @var $transfer \EverAccounting\Models\Transfer Transfer object.
  */
 
 defined( 'ABSPATH' ) || exit;
 ?>
 	<h1 class="wp-heading-inline">
-		<?php esc_html_e( 'Taxes', 'wp-ever-accounting' ); ?>
-		<a href="<?php echo esc_attr( admin_url( 'admin.php?page=eac-misc&tab=taxes&view=add' ) ); ?>" class="button button-small">
+		<?php esc_html_e( 'Transfers', 'wp-ever-accounting' ); ?>
+		<a href="<?php echo esc_attr( admin_url( 'admin.php?page=eac-banking&tab=transfers&view=add' ) ); ?>" class="button button-small">
 			<?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?>
 		</a>
 		<?php if ( $list_table->get_request_search() ) : ?>
@@ -24,7 +24,7 @@ defined( 'ABSPATH' ) || exit;
 		<?php $list_table->views(); ?>
 		<?php $list_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'search' ); ?>
 		<?php $list_table->display(); ?>
-		<input type="hidden" name="page" value="eac-misc"/>
-		<input type="hidden" name="tab" value="taxes"/>
+		<input type="hidden" name="page" value="eac-banking"/>
+		<input type="hidden" name="tab" value="transfers"/>
 	</form>
 <?php

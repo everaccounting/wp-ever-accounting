@@ -95,6 +95,7 @@ class Plugin extends \ByteKit\Plugin {
 			$this->services->add( Admin\Purchases\Vendors::class );
 //			$this->services->add( Admin\Purchases\Bills::class );
 			$this->services->add( Admin\Banking\Accounts::class );
+			$this->services->add( Admin\Banking\Transfers::class );
 			$this->services->add( Admin\Misc\Categories::class );
 			$this->services->add( Admin\Misc\Currencies::class );
 			$this->services->add( Admin\Misc\Taxes::class );

@@ -1,12 +1,12 @@
 <?php
 /**
- * Admin List of Vendors.
- * Page: Sales
- * Tab: Vendors
+ * Admin List of Bills.
+ * Page: Purchase
+ * Tab: Bills
  *
  * @since 1.0.0
  * @package EverAccounting
- * @var $currency \EverAccounting\Models\Vendor Vendor object.
+ * @var $bill \EverAccounting\Models\Bill Bill object.
  */
 
 defined( 'ABSPATH' ) || exit;
