@@ -34,50 +34,60 @@ wp_enqueue_script( 'eac-invoices' );
 
 	<div class="eac-poststuff">
 		<div class="column-1">
-			<div class="eac-document__section document-items">
-				<table>
-					<thead>
-					<tr>
-						<th class="column-item" colspan="2"><?php esc_html_e( 'Item', 'wp-ever-accounting' ); ?></th>
-						<?php foreach ( $columns as $key => $label ) : ?>
-							<?php if ( 'item' !== $key ) : ?>
-								<th class="column-<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $label ); ?></th>
-							<?php endif; ?>
-						<?php endforeach; ?>
-					</thead>
 
 
-					<tbody>
-					<tr>
-						<td colspan="2">
-							<div class="eac-input-group">
-								<select class="add-line-item eac_select2" data-action="eac_json_search" data-type="item" data-placeholder="<?php esc_attr_e( 'Select an item', 'wp-ever-accounting' ); ?>"></select>
-								<a class="button" href="<?php echo esc_url( admin_url( 'admin.php?page=eac-items&add=yes' ) ); ?>" title="<?php esc_attr_e( 'Add New Item', 'wp-ever-accounting' ); ?>">
-									<span class="dashicons dashicons-plus"></span>
-								</a>
-							</div>
-						</td>
-					</tr>
-					</tbody>
-				</table>
-			</div>
+			<table class="eac-invoice-table">
+				<thead>
+				<tr>
+					<th class="eac-invoice-table__col eac-invoice-table__col-item" colspan="2"><?php esc_html_e( 'Item', 'wp-ever-accounting' ); ?></th>
+					<?php foreach ( $columns as $key => $label ) : ?>
+						<?php if ( 'item' !== $key ) : ?>
+							<th class="eac-invoice-table__col eac-invoice-table__col-<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $label ); ?></th>
+						<?php endif; ?>
+					<?php endforeach; ?>
+				</tr>
+				</thead>
 
-		</div>
-	</div>
+				<tbody id="eac-invoice-items"></tbody>
+				<tbody id="eac-invoice-totals"></tbody>
+
+				<tfoot>
+				<tr>
+					<td colspan="2">
+						<div class="eac-input-group">
+							<select class="add-line-item eac_select2" data-action="eac_json_search" data-type="item" data-placeholder="<?php esc_attr_e( 'Select an item', 'wp-ever-accounting' ); ?>"></select>
+							<a class="button" href="<?php echo esc_url( admin_url( 'admin.php?page=eac-items&add=yes' ) ); ?>" title="<?php esc_attr_e( 'Add New Item', 'wp-ever-accounting' ); ?>">
+								<span class="dashicons dashicons-plus"></span>
+							</a>
+						</div>
+					</td>
+				</tr>
+				</tfoot>
+			</table>
+
+		</div><!-- .column-1 -->
+	</div><!-- .eac-poststuff -->
 </form>
 
-<script type="text/html" id="tmpl-eac-invoice-line">
-	<tr class="line-item" data-item-id="{{ data.item_id }}">
+<script type="text/template" id="tmpl-invoice-item-template">
+	<tr class="eac-invoice-table__item" data-id="{{ data.id }}">
+		<td class="eac-invoice-table__col eac-invoice-table__col-item">
+			<input type="hidden" name="items[{{ data.id }}][item_id]" value="{{ data.id }}">
+			{{ data.name }}
+		</td>
+
 		<?php foreach ( $columns as $key => $label ) : ?>
-			<?php if ( 'item' === $key ) : ?>
-				<td class="line-<?php echo esc_attr( $key ); ?>__item" colspan="2">
-					hello
-				</td>
-			<?php else : ?>
-				<td class="line-item__<?php echo esc_attr( $key ); ?>">
-					Jello
+			<?php if ( ! in_array( $key, array( 'item', 'actions' ) ) ) : ?>
+				<td class="eac-invoice-table__col eac-invoice-table__col-<?php echo esc_attr( $key ); ?>">
+					<input type="text" name="items[{{ data.id }}][{{ key }}]" value="{{ data[ key ] }}">
 				</td>
 			<?php endif; ?>
 		<?php endforeach; ?>
+
+		<td class="eac-invoice-table__col eac-invoice-table__col-actions">
+			<button class="button button-link eac-remove-line-item" title="<?php esc_attr_e( 'Remove', 'wp-ever-accounting' ); ?>">
+				<span class="dashicons dashicons-trash"></span>
+			</button>
+		</td>
 	</tr>
 </script>

@@ -1,4 +1,3 @@
-
 window.eac_invoice = window.eac_invoice || {};
 
 (function ($) {
@@ -25,11 +24,12 @@ window.eac_invoice = window.eac_invoice || {};
 	};
 
 	/**
-	 * ========================================================================
-	 * MODELS
-	 * ========================================================================
+	 * invoice.model.Item
+	 *
+	 * The model for an invoice item.
+	 *
+	 * @param {Object} options
 	 */
-
 	invoice.model.Item = Backbone.Model.extend({
 		defaults: {
 			id: null,
@@ -48,35 +48,58 @@ window.eac_invoice = window.eac_invoice || {};
 			unit: '',
 			item_id: null,
 		},
+	});
 
-		fetch: function (id) {
-			return wp.ajax.send({
-				url: eac_invoices_vars.rest_url + '/items/' + id,
-				method: 'GET',
-				beforeSend: function (xhr) {
-					xhr.setRequestHeader('X-WP-Nonce', eac_invoices_vars.rest_nonce);
-				},
-			})
-		}
+
+	/**
+	 * invoice.collection.Items
+	 *
+	 * The collection for the line items.
+	 *
+	 * @param {Object} options Collection options.
+	 */
+	invoice.collection.Items = Backbone.Collection.extend({
+		model: invoice.model.Item,
 	});
 
 	/**
-	 * invoice.model.LineTax
+	 * invoice.view.Item
 	 *
-	 * The model for the line item tax.
+	 * The view for the line item.
 	 *
 	 * @param {Object} options
 	 */
-	invoice.model.LineTax = Backbone.Model.extend({
-		defaults: {
-			'id': null,
-			'name': '',
-			'rate': 0,
-			'is_compound': false,
-			'amount': 0,
-			'line_id': null,
-			'tax_id': null,
-			'document_id': null,
+	invoice.view.Item = wp.Backbone.View.extend({
+		tagName: 'tr',
+		className: 'eac-invoice-item',
+
+		template: wp.template('eac-invoice-item'),
+
+		// initialize: function () {
+		// 	this.listenTo(this.model, 'change', this.render);
+		// },
+		//
+		// render: function () {
+		// 	this.$el.html(this.template(this.model.toJSON()));
+		// 	return this;
+		// }
+	});
+
+	/**
+	 * invoice.view.Items
+	 *
+	 * The view for the line items.
+	 *
+	 * @param {Object} options
+	 */
+	invoice.view.Items = wp.Backbone.View.extend({
+		el: '#eac-invoice-items',
+
+		initialize: function () {
+		},
+
+		render: function () {
+			this.views.add(new invoice.view.Item(this.options));
 		}
 	});
 
@@ -90,56 +113,6 @@ window.eac_invoice = window.eac_invoice || {};
 	invoice.model.FrameState = Backbone.Model.extend({
 		defaults: {
 			loading: false,
-			items: [],
-		},
-
-		initialize: function () {
-			// console.log(this)
-		}
-	});
-
-	/**
-	 * ========================================================================
-	 * COLLECTIONS
-	 * ========================================================================
-	 */
-
-	/**
-	 * invoice.collection.Items
-	 *
-	 * The collection for the line items.
-	 *
-	 * @param {null|Array} models List of Models.
-	 * @param {Object} options Collection options.
-	 */
-	invoice.collection.Items = Backbone.Collection.extend({
-		model: invoice.model.Item,
-
-		preinitialize: function (models, options) {
-			this.options = options;
-		},
-	});
-
-	/**
-	 * ========================================================================
-	 * VIEWS
-	 * ========================================================================
-	 */
-
-	/**
-	 * invoice.view.Items
-	 *
-	 * The view for the line items.
-	 *
-	 * @param {Object} options
-	 */
-	invoice.view.Items = Backbone.View.extend({
-		tagName: 'tbody',
-
-		className: 'eac-invoice-line-items',
-
-		initialize: function () {
-
 		},
 	});
 
@@ -147,40 +120,45 @@ window.eac_invoice = window.eac_invoice || {};
 	 * invoice.view.Frame
 	 *
 	 * Top-level view for the invoice screen.
+	 *
+	 * @param {Object} options
 	 */
-	invoice.view.Frame = Backbone.View.extend({
-		defaults: {
-			invoice: {},
-		},
+	invoice.view.Frame = wp.Backbone.View.extend({
 
 		el: '#eac-invoice-form',
 
 		events: {
-			'change :input.add-line-item': 'addItem',
-		},
-
-		initialize: function () {
-			// invoice.view.Frame.prototype.initialize.apply(this, arguments);
-			// console.log(this)
+			'change .add-line-item': 'addLineItem',
 		},
 
 		render: function () {
-			Backbone.View.prototype.render.apply(this, arguments);
+			console.log(this.options);
+
 			return this;
 		},
-		addItem: function (e) {
-			const view = this;
-			e.preventDefault();
-			var id = parseInt($(e.target).val());
-			// bail if the id is not a number.
-			if (isNaN(id)) {
+
+		addLineItem: function (e) {
+			var self = this,
+				$select = $(e.target),
+				item_id = parseInt($select.val(), 10);
+
+			// Bail if the item_id is not found.
+			if (!item_id) {
 				return;
 			}
-			//this.model = new invoice.model.Item();
 
-			// console.log(this.model.fetch(id));
-			//
-			console.log(view);
+			$select.val('').trigger('change');
+			const {state} = this.options;
+			const items = state.get('items') || [];
+
+			// Fetch the item.
+			wp.apiRequest({
+				path: '/eac/v1/items/' + item_id,
+				method: 'GET',
+			}).done(function (response) {
+				var model = new invoice.model.Item({...response, id: undefined});
+				items.add(model);
+			});
 		},
 	});
 
@@ -189,19 +167,20 @@ window.eac_invoice = window.eac_invoice || {};
 	 */
 	invoice.int = function () {
 		var state;
+
 		// Initialize the state model.
 		state = new invoice.model.FrameState({
-			columns: eac_invoices_vars.columns,
-			invoice: eac_invoices_vars.invoice,
+			...eac_invoices_vars.invoice || {},
 		});
 
+		// Initialize the items collection.
 		state.set({
-			items: new invoice.collection.Items(null, {state}),
+			items: new invoice.collection.Items({state}),
 		});
 
-		new invoice.view.Frame({
-			mode: state
-		}).render();
+		// Initialize the frame view.
+		invoice.frame = new invoice.view.Frame({state});
+		invoice.frame.render();
 	};
 
 	// Initialize the invoice UI.
