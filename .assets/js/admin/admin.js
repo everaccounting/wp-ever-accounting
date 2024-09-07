@@ -1,108 +1,127 @@
 /* global eac_admin_vars */
-
 jQuery(document).ready(($) => {
 	'use strict';
 
-	// Select2.
-	$('.eac_select2').filter(':not(.enhanced)').each(function () {
-		const $this = $(this);
-		const options = {
-			allowClear: $this.data('allow-clear') && !$this.prop('multiple') || true,
-			placeholder: $this.data('placeholder') || '',
-			width: '100%',
-			minimumInputLength: $this.data('minimum-input-length') || 0,
-			readOnly: $this.data('readonly') || false,
-			ajax: {
-				url: eac_admin_vars.ajax_url,
-				dataType: 'json',
-				delay: 250,
-				method: 'POST',
-				data: function (params) {
-					return {
-						term: params.term,
-						action: $this.data('action'),
-						type: $this.data('type'),
-						subtype: $this.data('subtype'),
-						_wpnonce: eac_admin_vars.search_nonce,
-						exclude: $this.data('exclude'),
-						include: $this.data('include'),
-						limit: $this.data('limit'),
-					};
-				},
-				processResults: function (data) {
-					data.page = data.page || 1;
-					return data;
-				},
-				cache: true
+	var initializeUI = function () {
+		// Select2.
+		$('.eac_select2').filter(':not(.enhanced)').each(function () {
+			const $this = $(this);
+			const options = {
+				allowClear: $this.data('allow-clear') && !$this.prop('multiple') || true,
+				placeholder: $this.data('placeholder') || '',
+				width: '100%',
+				minimumInputLength: $this.data('minimum-input-length') || 0,
+				readOnly: $this.data('readonly') || false,
+				ajax: {
+					url: eac_admin_vars.ajax_url,
+					dataType: 'json',
+					delay: 250,
+					method: 'POST',
+					data: function (params) {
+						return {
+							term: params.term,
+							action: $this.data('action'),
+							type: $this.data('type'),
+							subtype: $this.data('subtype'),
+							_wpnonce: eac_admin_vars.search_nonce,
+							exclude: $this.data('exclude'),
+							include: $this.data('include'),
+							limit: $this.data('limit'),
+						};
+					},
+					processResults: function (data) {
+						data.page = data.page || 1;
+						return data;
+					},
+					cache: true
+				}
 			}
-		}
-		// if data-action is not defined then return.
-		if (!$this.data('action')) {
-			delete options.ajax;
-		}
-		$this.addClass('enhanced').selectWoo(options);
-	});
-
-	// Datepicker.
-	$('.eac_datepicker').filter(':not(.enhanced)').each(function () {
-		const $this = $(this);
-		const options = {
-			dateFormat: $this.data('format') || 'yy-mm-dd',
-			changeMonth: true,
-			changeYear: true,
-			showButtonPanel: true,
-			showOtherMonths: true,
-			selectOtherMonths: true,
-			yearRange: '-100:+10',
-			beforeShow: function () {
-				$('#ui-datepicker-div')
-					.removeClass('ui-datepicker')
-					.addClass('eac-datepicker');
-			},
-		};
-		$this.addClass('enhanced').datepicker(options);
-	});
-
-	// Tooltip.
-	$('.eac_tooltip').filter(':not(.enhanced)').each(function () {
-		const $this = $(this);
-		const options = {
-			position: {
-				my: 'center bottom-15',
-				at: 'center top',
-			},
-			tooltipClass: 'eac-tooltip',
-		};
-		$this.addClass('enhanced').tooltip(options);
-	});
-
-	// inputMask.
-	$('.eac_inputmask').filter(':not(.enhanced)').each(function () {
-		const $this = $(this);
-		const options = {
-			alias: $this.data('alias') || '',
-			placeholder: $this.data('placeholder') || '',
-			clearIncomplete: $this.data('clear-incomplete') || false,
-		};
-		$this.addClass('enhanced').inputmask(options);
-	});
-
-	// Number Input.
-	$('.eac_number_input').filter(':not(.enhanced)').each(function () {
-		const $this = $(this);
-		$this.addClass('enhanced').on('input', function () {
-			$this.value = $this.value.replace(/[^0-9]/g, '');
+			// if data-action is not defined then return.
+			if (!$this.data('action')) {
+				delete options.ajax;
+			}
+			$this.addClass('enhanced').selectWoo(options);
 		});
-	});
 
-	// Decimal Input.
-	$('.eac_decimal_input').filter(':not(.enhanced)').each(function () {
-		const $this = $(this);
-		$this.addClass('enhanced').on('input', function () {
-			var val = $(this).val();
-			val = val.replace(/[^0-9.]/g, '');
-			$this.val(val);
+		// Datepicker.
+		$('.eac_datepicker').filter(':not(.enhanced)').each(function () {
+			const $this = $(this);
+			const options = {
+				dateFormat: $this.data('format') || 'yy-mm-dd',
+				changeMonth: true,
+				changeYear: true,
+				showButtonPanel: true,
+				showOtherMonths: true,
+				selectOtherMonths: true,
+				yearRange: '-100:+10',
+				beforeShow: function () {
+					$('#ui-datepicker-div')
+						.removeClass('ui-datepicker')
+						.addClass('eac-datepicker');
+				},
+			};
+			$this.addClass('enhanced').datepicker(options);
 		});
-	});
 
+		// Tooltip.
+		$('.eac_tooltip').filter(':not(.enhanced)').each(function () {
+			const $this = $(this);
+			const options = {
+				position: {
+					my: 'center bottom-15',
+					at: 'center top',
+				},
+				tooltipClass: 'eac-tooltip',
+			};
+			$this.addClass('enhanced').tooltip(options);
+		});
+
+		// inputMask.
+		$('.eac_inputmask').filter(':not(.enhanced)').each(function () {
+			const $this = $(this);
+			const options = {
+				alias: $this.data('alias') || '',
+				placeholder: $this.data('placeholder') || '',
+				clearIncomplete: $this.data('clear-incomplete') || false,
+			};
+			$this.addClass('enhanced').inputmask(options);
+		});
+
+		// Number Input.
+		$('.eac_number_input').filter(':not(.enhanced)').each(function () {
+			const $this = $(this);
+			$this.addClass('enhanced').on('input', function () {
+				$this.value = $this.value.replace(/[^0-9]/g, '');
+			});
+		});
+
+		// Decimal Input.
+		$('.eac_decimal_input').filter(':not(.enhanced)').each(function () {
+			const $this = $(this);
+			$this.addClass('enhanced').on('input', function () {
+				var val = $(this).val();
+				val = val.replace(/[^0-9.]/g, '');
+				$this.val(val);
+			});
+		});
+
+		MicroModal.init({
+			onShow: modal => console.info(`${modal.id} is shown`), // [1]
+			onClose: modal => console.info(`${modal.id} is hidden`), // [2]
+			openTrigger: 'data-open', // [3]
+			closeTrigger: 'data-close', // [4]
+			openClass: 'is-open', // [5]
+			disableScroll: true, // [6]
+			disableFocus: false, // [7]
+			awaitOpenAnimation: false, // [8]
+			awaitCloseAnimation: false, // [9]
+			debugMode: false // [10]
+		});
+	}
+
+	// Initialize UI.
+	initializeUI();
+
+	// Reinitialize UI when document body triggers 'eac-update-ui'.
+	$(document.body).on('eac_update_ui', initializeUI);
 });

@@ -71,11 +71,21 @@ class Admin {
 		EAC()->scripts->register_script( 'eac-select2', 'js/select2.js', array( 'jquery' ), true );
 		EAC()->scripts->register_script( 'eac-tiptip', 'js/tiptip.js', array( 'jquery' ), true );
 		EAC()->scripts->register_script( 'eac-blockui', 'js/blockui.js', array( 'jquery' ), true );
+		EAC()->scripts->enqueue_script( 'eac-modal', 'js/modal.js', array(), true );
 		EAC()->scripts->register_style( 'eac-jquery-ui', 'css/jquery-ui.css' );
 		EAC()->scripts->register_style( 'eac-select2', 'css/select2.css' );
 
+		// Package scripts.
+		EAC()->scripts->enqueue_script( 'eac-vue', 'js/vue.js', array(), true );
+		EAC()->scripts->enqueue_script( 'eac-money', 'packages/money.js', array(), true );
+
 		// Core scripts.
-		EAC()->scripts->register_script( 'eac-invoices', 'js/eac-invoices.js', array( 'wp-util', 'backbone', 'underscore', 'eac-blockui' ), true );
+		EAC()->scripts->register_script(
+			'eac-invoices',
+			'js/eac-invoices.js',
+			array( 'eac-vue', 'eac-blockui', 'eac-modal' ),
+			true
+		);
 		EAC()->scripts->register_script( 'eac-admin', 'js/eac-admin.js', array( 'jquery', 'eac-chartjs', 'eac-inputmask', 'eac-select2', 'eac-tiptip', 'jquery-ui-datepicker', 'jquery-ui-tooltip', 'wp-util' ), true );
 		EAC()->scripts->register_script( 'eac-settings', 'js/eac-settings.js', array( 'eac-admin' ), true );
 		EAC()->scripts->register_style( 'eac-admin', 'css/eac-admin.css', array( 'eac-jquery-ui', 'eac-select2' ) );
@@ -115,6 +125,7 @@ class Admin {
 
 				'i18n' => array(
 					'confirm_delete' => __( 'Are you sure you want to delete this item?', 'wp-ever-accounting' ),
+					'close'          => __( 'Close', 'wp-ever-accounting' ),
 				),
 			)
 		);

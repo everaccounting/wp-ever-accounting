@@ -98,65 +98,15 @@
 	 * ========================================================================
 	 */
 
-	views.Modal = wp.Backbone.View.extend({
-		tagName: 'div',
-
-		className: 'eac-modal micromodal-slide',
-
-		// initialize: function () {
-		// 	console.log('views.Modal');
-		// 	wp.Backbone.View.prototype.initialize.apply(this, arguments);
-		// 	this.isOpen = false;
-		// },
-
-		render: function () {
-			console.log('views.Modal render');
-			this.$el.html(`
-			    <div class="eac-modal__overlay" tabindex="-1" data-close>
-			          <div class="eac-modal__container" role="dialog" aria-modal="true">
-			          ${this.template()}
-			          </div>
-			    </div>
-			`);
-			this.$el.attr('id', 'modal-' + _.uniqueId());
-
-			return this;
-		},
-
-		openModal: function() {
-			console.log(this.$el.html())
-			// check if the modal is already open. Look into dom with the id.
-			$('body').append(this.$el);
-			MicroModal.show(this.$el.attr('id'));
-		},
-
-		closeModal: function() {
-			MicroModal.close(this.$el.attr('id'));
-			this.remove();
-		}
-	});
-
-
-
-	views.AddLineItemModal = views.Modal.extend({
+	views.AddLineItemModal = wp.Backbone.View.extend({
+		el: '#eac-invoice-add-item-modal-placeholder',
 
 		template: wp.template('eac-invoice-add-item'),
-		//
-		// initialize: function() {
-		// 	views.Modal.prototype.initialize.call(this, arguments);
-		// },
-
-		render: function () {
-			console.log('views.AddLineItemModal render');
-			views.Modal.prototype.render.apply(this, arguments);
-			return this;
-		}
 	});
 
 
 	views.LineItem = wp.Backbone.View.extend({
 		tagName: 'tr',
-
 		template: wp.template('invoice-line-item'),
 	});
 
@@ -168,7 +118,6 @@
 
 	views.NoItems = wp.Backbone.View.extend({
 		tagName: 'tbody',
-
 		className: 'eac-invoice-table__no-items',
 
 		template: wp.template('eac-invoice-no-items'),
@@ -196,7 +145,6 @@
 		},
 
 		render: function () {
-			MicroModal.init();
 			wp.Backbone.View.prototype.render.apply(this, arguments);
 			// this.views.add( new views.AddLineItemModal(this.options) );
 			return this;
@@ -205,9 +153,8 @@
 		onAddItem: function (e) {
 			e.preventDefault();
 			console.log('onAddItem');
-			var addLineItemModal = new views.AddLineItemModal(this.options);
-			addLineItemModal.render();
-			addLineItemModal.openModal();
+			// now we need to open the modal.
+			new views.AddLineItemModal(this.options).render();
 		},
 	});
 

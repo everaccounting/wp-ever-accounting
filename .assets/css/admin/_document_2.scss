@@ -1,0 +1,135 @@
+.eac-invoice-table {
+	border-collapse: collapse;
+	border-spacing: 0;
+	background-color: #fff;
+	table-layout: fixed;
+	width: 100%;
+	min-width: 780px;
+	border: 1px solid #ddd;
+
+	@media only screen and (max-width: 768px) {
+		table-layout: auto !important;
+	}
+
+	td, th {
+		padding: 1em 1em 1em !important;
+		vertical-align: top;
+
+
+		&:first-child {
+			padding-left: 1em !important;
+		}
+
+		&:last-child {
+			padding-right: 1em !important;
+		}
+	}
+
+	thead {
+		border-bottom: 1px solid #ddd;
+
+		th {
+			padding: .8em 1em !important;
+			text-align: left !important;
+			font-weight: 400;
+			color: #999;
+			background: #f8f8f8;
+			user-select: none;
+		}
+	}
+
+	tbody, tfoot {
+		tr {
+			border-bottom: 1px solid #ddd;
+
+			&:last-child {
+				border-bottom: 0;
+			}
+		}
+	}
+
+	#{&}__col{
+		&-item {
+			width: 47%;
+		}
+
+		&-quantity {
+			width: 10%;
+			text-align: right !important;
+		}
+
+		&-price {
+			width: 14%;
+		}
+
+		&-tax,
+		&-subtotal {
+			width: 12%;
+		}
+
+		&-quantity,
+		&-price,
+		&-tax,
+		&-subtotal {
+			text-align: right !important;
+		}
+
+		&-actions {
+			width: 2%;
+			text-align: right !important;
+
+			> a {
+				display: inline-block;
+				color: #ccc;
+				transition: color 0.1s ease-in;
+				text-decoration: none;
+				cursor: pointer;
+
+				&:hover {
+					color: #444;
+				}
+			}
+
+			th & {
+				text-indent: -9999px;
+			}
+		}
+
+		.line-name,
+		.line-description{
+			width: 100%;
+			display: block;
+		}
+
+		[class*="line-"] {
+			width: 100%;
+		}
+
+		.line-subtotal, .line-quantity, .line-price, .line-tax {
+			text-align: right;
+		}
+
+		.line-description {
+			margin-top: 10px;
+			color: #666;
+			position: relative;
+			resize: none;
+
+			// add a dash to the beginning of the description and adjust the padding.
+			&:before {
+				content: "-";
+				display: inline-block;
+				width: 1em;
+				margin-right: 0.5em;
+				color: inherit;
+				position: absolute;
+				left: 0;
+			}
+		}
+
+		.line-quantity-unit {
+			color: #666;
+			font-size: 0.85em;
+		}
+	}
+}

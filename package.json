@@ -27,13 +27,16 @@
     "inputmask": "^5.0.5",
     "micromodal": "^0.4.10",
     "moment": "^2.29.4",
-    "select-woo": "^1.0.1"
+    "select-woo": "^1.0.1",
+    "tokenfield": "^1.5.2",
+    "vue": "^2.7.16"
   },
   "devDependencies": {
     "@lodder/time-grunt": "^4.0.0",
     "@wordpress/interactivity": "^5.5.0",
     "@wordpress/prettier-config": "^2.19.0",
     "@wordpress/scripts": "^27.7.0",
+    "accounting": "github:openexchangerates/accounting.js",
     "alpinejs": "^3.14.0",
     "clean-webpack-plugin": "^4.0.0",
     "copy-webpack-plugin": "^11.0.0",

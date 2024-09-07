@@ -1,16 +1,17 @@
-const defaultConfig = require('@wordpress/scripts/config/webpack.config');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
-const webpack = require( 'webpack' );
+const RemoveEmptyScript = require('webpack-remove-empty-scripts');
+const DependencyHandler = require('@wordpress/dependency-extraction-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
+const defaults = require('@wordpress/scripts/config/webpack.config');
+const glob = require('glob');
 const path = require('path');
-const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
 
 const PACKAGE_NAMESPACE = '@eac/';
 
 module.exports = [
 	{
-		...defaultConfig,
+		...defaults,
 		entry: {
-			...defaultConfig.entry(),
+			...defaults.entry(),
 			'js/chartjs': './node_modules/chart.js/dist/chart.js',
 			'js/select2': [
 				'./node_modules/select-woo/dist/js/selectWoo.js',
@@ -20,8 +21,8 @@ module.exports = [
 				'./.assets/libraries/inputmask/inputmask.js',
 				'./.assets/libraries/inputmask/inputmask.binding.js',
 			],
+			'js/modal': './node_modules/micromodal/dist/micromodal.js',
 			'js/blockui': './.assets/libraries/blockui/blockUI.js',
-			'js/tiptip': './.assets/libraries/tipTip/tipTip.js',
 			'js/eac-admin': './.assets/js/admin/admin.js',
 			'js/eac-settings': './.assets/js/admin/settings.js',
 			'js/eac-invoices': './.assets/js/admin/invoices.js',
@@ -35,21 +36,50 @@ module.exports = [
 			'css/eac-settings': './.assets/css/admin/settings.scss',
 		},
 		output: {
-			...defaultConfig.output,
+			...defaults.output,
 			filename: '[name].js',
 			path: __dirname + '/assets/',
 			chunkFilename: 'chunks/[chunkhash].js',
+			uniqueName: '__eac_webpackJsonp',
+			library: {
+				name: '[name]',
+				type: 'window',
+			},
 		},
 		module: {
-			rules: [
-				...defaultConfig.module.rules,
-			],
+			rules: [...defaults.module.rules].filter(Boolean),
 		},
 		plugins: [
-			...defaultConfig.plugins,
-			new RemoveEmptyScriptsPlugin(
+			...defaults.plugins.filter((plugin) => !['DependencyExtractionWebpackPlugin'].includes(plugin.constructor.name)),
+
+			// Extracts dependencies from the source code.
+			new DependencyHandler({
+				injectPolyfill: false,
+				requestToExternal(request) {
+					if (request.startsWith(PACKAGE_NAMESPACE)) {
+						return [
+							'eac',
+							request.substring(PACKAGE_NAMESPACE.length).replace(/-([a-z])/g, (_, letter) => letter.toUpperCase()),
+						];
+					}
+				},
+				requestToHandle(request) {
+					if (request.startsWith(PACKAGE_NAMESPACE)) {
+						return `eac-${request.substring(PACKAGE_NAMESPACE.length).replace(/-([a-z])/g, (_, letter) => letter.toUpperCase())}`;
+					}
+				},
+			}),
+
+			// copy vue js file from node_modules to assets folder.
+			new CopyPlugin({
+				patterns: [
+					{ from: 'node_modules/vue/dist/vue.min.js', to: 'js/vue.js' },
+				],
+			}),
+
+			new RemoveEmptyScript(
 				{
-					stage: RemoveEmptyScriptsPlugin.STAGE_AFTER_PROCESS_PLUGINS,
+					stage: RemoveEmptyScript.STAGE_AFTER_PROCESS_PLUGINS,
 					remove: /\.(js)$/,
 				}
 			),
@@ -57,29 +87,25 @@ module.exports = [
 	},
 	// Packages.
 	{
-		...defaultConfig,
-		entry: Object.keys(dependencies)
-			.filter((dependency) => dependency.startsWith(PACKAGE_NAMESPACE))
-			.map((packageName) => packageName.replace(PACKAGE_NAMESPACE, ''))
-			.reduce((memo, packageName) => {
-				return {
-					...memo,
-					[packageName]: {
-						import: `./packages/${packageName}/src/index.js`,
-						library: {
-							name: [
-								'eac',
-								packageName.replace(/-([a-z])/g, (_, letter) =>
-									letter.toUpperCase()
-								),
-							],
-							type: 'window',
-						},
-					},
-				};
-			}, {}),
+		...defaults,
+		entry: glob.sync('./.assets/packages/*/src/index.js').reduce((memo, file)=>{
+			const module = file.replace('.assets/packages/', '').replace('/src/index.js', '');
+			return {
+				...memo,
+				[`${module}`]: {
+					import: path.resolve(__dirname, file),
+					library:{
+						name: [
+							'eac',
+							module.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase())
+						],
+						type: 'window',
+					}
+				}
+			};
+		}, {}),
 		output: {
-			...baseConfig.output,
+			...defaults.output,
 			path: path.resolve(__dirname, 'assets/packages'),
 		},
 	}

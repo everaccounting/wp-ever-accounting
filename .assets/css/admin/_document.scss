@@ -1,4 +1,79 @@
 .eac-invoice-table {
+	table-layout: fixed;
+	min-width: 780px;
+	box-shadow: none;
+	border-color: #ddd;
+
+	input[type="number"]::-webkit-outer-spin-button,
+	input[type="number"]::-webkit-inner-spin-button {
+		-webkit-appearance: none;
+		margin: 0;
+	}
+
+	textarea,
+	select,
+	input:not([type="checkbox"]):not([type="radio"]) {
+		width: 100%;
+		text-align: inherit;
+	}
+
+	&.widefat {
+		box-shadow: none;
+		border-color: #ddd;
+	}
+
+	#{&}__items {
+		tr {
+			td {
+				border-bottom: 1px solid #ddd;
+			}
+		}
+	}
+	#{&}__totals{
+		.col-summary{
+			//font-size: 1.2em;
+			font-weight: 600;
+		}
+	}
+
+	[class^="col-"]:not(.col-item, .col-actions) {
+		width: 10%;
+		text-align: right;
+
+		& > * {
+			text-align: inherit;
+		}
+	}
+
+	.col-actions {
+		width: 2%;
+		text-align: right;
+		> a {
+			display: inline-block;
+			color: #ccc;
+			transition: color 0.1s ease-in;
+			text-decoration: none;
+			cursor: pointer;
+
+			&:hover {
+				color: #444;
+			}
+		}
+
+		th & {
+			text-indent: -9999px;
+		}
+	}
+
+	.line-description {
+		margin-top: 10px;
+		color: #666;
+		position: relative;
+		resize: none;
+	}
+}
+
+.eac-invoice-table_v1 {
 	border-collapse: collapse;
 	border-spacing: 0;
 	background-color: #fff;
@@ -12,16 +87,16 @@
 	}
 
 	td, th {
-		padding: 1em 1em 1em !important;
+		padding: 8px 10px !important;
 		vertical-align: top;
 
 
 		&:first-child {
-			padding-left: 1em !important;
+			padding-left: 8px !important;
 		}
 
 		&:last-child {
-			padding-right: 1em !important;
+			padding-right: 8px !important;
 		}
 	}
 
@@ -29,8 +104,7 @@
 		border-bottom: 1px solid #ddd;
 
 		th {
-			padding: .8em 1em !important;
-			text-align: left !important;
+			text-align: left;
 			font-weight: 400;
 			color: #999;
 			background: #f8f8f8;
@@ -38,99 +112,78 @@
 		}
 	}
 
-	tbody, tfoot {
+	tbody {
 		tr {
 			border-bottom: 1px solid #ddd;
+		}
 
-			&:last-child {
+		&:last-child {
+			tr:last-child {
 				border-bottom: 0;
 			}
 		}
 	}
 
-	#{&}__col{
-		&-item {
-			width: 47%;
-		}
+	input[type="number"]::-webkit-outer-spin-button,
+	input[type="number"]::-webkit-inner-spin-button {
+		-webkit-appearance: none;
+		margin: 0;
+	}
 
-		&-quantity {
-			width: 10%;
-			text-align: right !important;
-		}
+	textarea,
+	select,
+	input:not([type="checkbox"]):not([type="radio"]) {
+		width: 100%;
+		text-align: inherit;
+	}
 
-		&-quantity,
-		&-price,
-		&-tax,
-		&-subtotal {
-			text-align: right !important;
-		}
+	[class^="col-"]:not(.col-item) {
+		width: 10%;
+		text-align: right;
+	}
 
-		&-quantity {
-			width: 10%;
-		}
+	.col-actions {
+		padding: 8px 0 !important;
+		width: 2% !important;
+		text-align: right !important;
 
-		&-price {
-			width: 14%;
-		}
+		> a {
+			display: inline-block;
+			color: #ccc;
+			transition: color 0.1s ease-in;
+			text-decoration: none;
+			cursor: pointer;
 
-		&-tax,
-		&-subtotal {
-			width: 12%;
-		}
-
-		&-actions {
-			width: 1%;
-			text-align: right !important;
-
-			> a {
-				display: inline-block;
-				color: #ccc;
-				transition: color 0.1s ease-in;
-				text-decoration: none;
-				cursor: pointer;
-
-				&:hover {
-					color: #444;
-				}
-			}
-
-			th & {
-				text-indent: -9999px;
+			&:hover {
+				color: #444;
 			}
 		}
 
-		.line-name,
-		.line-description{
-			width: 100%;
-			display: block;
-		}
-
-		.line-subtotal, .line-quantity, .line-price, .line-tax {
-			text-align: right;
-		}
-
-		.line-description {
-			margin-top: 10px;
-			padding: 0;
-			color: #666;
-			position: relative;
-			padding-left: 1.5em;
-
-			// add a dash to the beginning of the description and adjust the padding.
-			&:before {
-				content: "-";
-				display: inline-block;
-				width: 1em;
-				margin-right: 0.5em;
-				color: inherit;
-				position: absolute;
-				left: 0;
-			}
-		}
-
-		.line-quantity-unit {
-			color: #666;
-			font-size: 0.85em;
+		th & {
+			text-indent: -9999px;
 		}
 	}
+
+	.line-name,
+	.line-description {
+		width: 100%;
+		display: block;
+	}
+
+	.line-subtotal, .line-quantity, .line-price, .line-tax {
+		text-align: right;
+	}
+
+	.line-description {
+		margin-top: 10px;
+		color: #666;
+		position: relative;
+		resize: none;
+	}
+
+	.line-quantity-unit {
+		color: #666;
+		font-size: 0.85em;
+	}
+
 }
