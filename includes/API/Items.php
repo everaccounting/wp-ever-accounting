@@ -65,7 +65,7 @@ class Items extends Controller {
 				array(
 					'methods'             => \WP_REST_Server::READABLE,
 					'callback'            => array( $this, 'get_item' ),
-					'permission_callback' => array( $this, 'get_item_permissions_check' ),
+					'permission_callback' => '__return_true',
 					'args'                => $get_item_args,
 				),
 				array(

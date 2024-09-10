@@ -12,6 +12,91 @@ jQuery(document).ready(($) => {
 
 	/**
 	 * ========================================================================
+	 * MODELS
+	 * ========================================================================
+	 */
+	var LineItemModel = Backbone.Model.extend({
+		defaults: {
+			id: null,
+			type: 'standard',
+			name: '',
+			price: 0,
+			quantity: 1,
+			subtotal: 0,
+			subtotal_tax: 0,
+			discount: 0,
+			discount_tax: 0,
+			tax_total: 0,
+			total: 0,
+			taxable: false,
+			description: '',
+			unit: '',
+			item_id: null,
+			taxes: [],
+		},
+	});
+
+	var LineItemTaxModel = Backbone.Model.extend({
+		defaults: {
+			id: null,
+			name: '',
+			rate: 0,
+			amount: 0,
+			total: 0,
+		},
+	});
+
+	var State = Backbone.Model.extend({
+		defaults: {
+			id: null,
+			number: '',
+			date: '',
+			due_date: '',
+			status: 'draft',
+			customer_id: null,
+			customer_name: '',
+			customer_email: '',
+			customer_address: '',
+			customer_phone: '',
+			customer_vat: '',
+			customer_note: '',
+			currency_code: '',
+			currency_rate: 1,
+			subtotal: 0,
+			subtotal_tax: 0,
+			discount: 0,
+			discount_tax: 0,
+			tax_total: 0,
+			total: 0,
+			items: [],
+			tax_enabled: 'yes'
+		},
+	});
+
+	/**
+	 * ========================================================================
+	 * COLLECTIONS
+	 * ========================================================================
+	 */
+
+	var LineItemsCollection = Backbone.Collection.extend({
+		model: LineItemModel,
+
+		preinitialize: function (models, options) {
+			this.options = options;
+		},
+	});
+
+	var LineItemTaxesCollection = Backbone.Collection.extend({
+		model: LineItemTaxModel,
+
+		preinitialize: function (models, options) {
+			this.options = options;
+		},
+	});
+
+	/**
+	 * ========================================================================
 	 * VIEWS
 	 * ========================================================================
 	 */
@@ -30,6 +115,49 @@ jQuery(document).ready(($) => {
 		className: 'eac-document-summary__items',
 
 		template: wp.template('eac-invoice-line-items'),
+
+		initialize() {
+			const { state } = this.options;
+
+			const items = state.get( 'items' );
+
+			// Listen for events.
+			// this.listenTo( items, 'add', this.render );
+			// this.listenTo( items, 'remove', this.remove );
+		},
+
+		render() {
+			const {state} = this.options;
+			const items = state.get('items');
+			this.views.remove();
+			_.each( items.models, ( model ) => this.add( model ) );
+		},
+
+		add(model) {
+			this.views.add(new LineItemView({
+				...this.options,
+				model,
+			}));
+		},
+
+		remove(model) {
+			let subview = null;
+
+			this.views.each((view) => {
+				if (view.model === model) {
+					subview = view;
+				}
+			});
+			if ( null !== subview ) {
+				subview.remove();
+			}
+		}
+	});
+
+	var LineItemView = wp.Backbone.View.extend({
+		tagName: 'tr',
+
+		template: wp.template('eac-invoice-line-item'),
 	});
 
 	var ActionsView = wp.Backbone.View.extend({
@@ -43,17 +171,38 @@ jQuery(document).ready(($) => {
 			'change .add-line-item': 'onAddLineItem',
 		},
 
+		initialize(){
+			const { state } = this.options;
+			this.listenTo( state.get( 'items' ), 'add', this.stopSpinner );
+		},
+
 		onAddLineItem(e) {
 			e.preventDefault();
-			var self = this;
-			var $target = $(e.target);
-			var item_id = parseInt($target.val(), 10);
-			if (!item_id) {
+			var $select = $(e.target),
+				item_id = parseInt($select.val(), 10);
+
+			// Bail if the item_id is not found.
+			if (isNaN(item_id)) {
 				return;
 			}
-			$target.val('').trigger('change');
-			self.startSpinner();
-			console.log('onAddLineItem');
+
+			$select.val('').trigger('change');
+			const {state} = this.options;
+			const items = state.get('items') || [];
+			this.startSpinner();
+			wp.apiRequest({
+				path: '/eac/v1/items/' + item_id,
+				method: 'GET',
+			}).done(function (response) {
+				const model = new LineItemModel({
+					...response,
+					id: _.uniqueId('item_'),
+					item_id: response?.id,
+					description: response.description.length > 160 ? response.description.substring(0, 160) : response.description,
+					subtotal: response.price
+				});
+				items.add(model);
+			});
 		},
 
 		startSpinner() {
@@ -73,11 +222,20 @@ jQuery(document).ready(($) => {
 		template: wp.template('eac-invoice-totals'),
 	});
 
-	var FormView = wp.Backbone.View.extend({
+	var Form = wp.Backbone.View.extend({
 		el: FORM_ID,
 
+		initialize(){
+			const { state } = this.options;
+			this.listenTo( state.get( 'items' ), 'add, remove', this.render );
+		},
+
 		render() {
+			console.log("Form view render");
+			const { state } = this.options;
+			if (state)
 			this.views.add('.eac-document-summary', new NoLineItemsView(this.options));
+			this.views.add('.eac-document-summary', new LineItemsView(this.options));
 			this.views.add('.eac-document-summary', new ActionsView(this.options));
 			this.views.add('.eac-document-summary', new TotalsView(this.options));
 			$(document.body).trigger('eac_update_ui');
@@ -89,11 +247,26 @@ jQuery(document).ready(($) => {
 	 * Initialize the invoice UI.
 	 */
 	var int = function () {
-		if (!$(FORM_ID).length) {
+		if (!$(FORM_ID).length ){
 			return;
 		}
 
-		var formView = new FormView();
+		const state = new State({
+			...eac_invoice_form_vars.invoice || {},
+		});
+
+		state.set({
+			items: new LineItemsCollection(null, {state}),
+		});
+
+		var formView = new Form({state});
+
+		// Hydrate collections.
+		var items = eac_invoice_form_vars.invoice.items || [];
+		items.forEach(function (item) {
+			state.get('items').add(item);
+		});
+
 		formView.render();
 	};
 
