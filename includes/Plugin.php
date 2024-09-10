@@ -85,6 +85,7 @@ class Plugin extends \ByteKit\Plugin {
 		if ( is_admin() ) {
 			$this->services->add( Admin\Admin::class );
 			$this->services->add( Admin\Menus::class );
+			$this->services->add( Admin\Scripts::class );
 			$this->services->add( Admin\Actions::class );
 			$this->services->add( Admin\Items\Items::class );
 			$this->services->add( Admin\Sales\Invoices::class );
@@ -93,7 +94,7 @@ class Plugin extends \ByteKit\Plugin {
 //			$this->services->add( Admin\Invoices::class );
 			$this->services->add( Admin\Purchases\Expenses::class );
 			$this->services->add( Admin\Purchases\Vendors::class );
-//			$this->services->add( Admin\Purchases\Bills::class );
+			$this->services->add( Admin\Purchases\Bills::class );
 			$this->services->add( Admin\Banking\Accounts::class );
 			$this->services->add( Admin\Banking\Transfers::class );
 			$this->services->add( Admin\Misc\Categories::class );
@@ -119,6 +120,7 @@ class Plugin extends \ByteKit\Plugin {
 			'eac_rest_handlers',
 			array(
 				'EverAccounting\API\Items',
+				'EverAccounting\API\Taxes',
 			)
 		);
 		foreach ( $rest_handlers as $controller ) {

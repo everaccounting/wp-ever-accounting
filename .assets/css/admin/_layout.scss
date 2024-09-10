@@ -32,13 +32,13 @@
 		clear: both;
 	}
 
-	.column-1 {
+	&>.column-1 {
 		width: 100%;
 		min-width: 463px;
 		float: left;
 	}
 
-	.column-2 {
+	&>.column-2 {
 		float: right;
 		margin-right: -340px;
 		width: 320px;

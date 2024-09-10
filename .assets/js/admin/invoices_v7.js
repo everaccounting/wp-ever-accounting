@@ -1,3 +1,5 @@
+import Modal from "./invoices/modal";
+
 (function ($) {
 	var invoice;
 
@@ -98,58 +100,89 @@
 	 * ========================================================================
 	 */
 
-	views.Modal = wp.Backbone.View.extend({
-		tagName: 'div',
 
-		className: 'eac-modal micromodal-slide',
+	views.AddLineItemModal = Modal.extend({
+		/**
+		 * @since 3.0
+		 */
+		// el: '#edd-admin-order-add-item-dialog',
 
-		// initialize: function () {
-		// 	console.log('views.Modal');
-		// 	wp.Backbone.View.prototype.initialize.apply(this, arguments);
-		// 	this.isOpen = false;
-		// },
+		/**
+		 * @since 3.0
+		 */
+		template: wp.template('wc-modal-tracking-setup'),
 
-		render: function () {
-			console.log('views.Modal render');
-			this.$el.html(`
-			    <div class="eac-modal__overlay" tabindex="-1" data-close>
-			          <div class="eac-modal__container" role="dialog" aria-modal="true">
-			          ${this.template()}
-			          </div>
-			    </div>
-			`);
-			this.$el.attr('id', 'modal-' + _.uniqueId());
-
-			return this;
+		events: {
+			'change [name="quantity"]': 'onChangeQuantity',
+			'change [name="price"]': 'onChangePrice',
 		},
-
-		openModal: function() {
-			console.log(this.$el.html())
-			// check if the modal is already open. Look into dom with the id.
-			$('body').append(this.$el);
-			MicroModal.show(this.$el.attr('id'));
-		},
-
-		closeModal: function() {
-			MicroModal.close(this.$el.attr('id'));
-			this.remove();
-		}
-	});
-
-
-
-	views.AddLineItemModal = views.Modal.extend({
-
-		template: wp.template('eac-invoice-add-item'),
 		//
-		// initialize: function() {
-		// 	views.Modal.prototype.initialize.call(this, arguments);
-		// },
+		initialize: function () {
+
+			// const { state } = this.options;
+			// const id = uuid();
+
+			// Create a fresh `OrderItem` to be added.
+			this.model = new models.LineItem({
+				error: false,
+				quantity: 1,
+				price: 0,
+				subtotal: 0,
+				// state,
+			});
+			// Listen for events.
+			this.listenTo(this.model, 'change', this.render);
+			this.listenTo(this.model, 'change', this.updateSubtotal);
+			Modal.prototype.initialize.apply(this, arguments);
+		},
+
+
+
+		prepare: function () {
+			console.log("AddLineItemModal prepare");
+			const { model, options } = this;
+			const { state } = options;
+
+			// const { currency } = state.get('formatters');
+
+			const defaults = Modal.prototype.prepare.apply(this, arguments);
+
+			console.log(defaults)
+
+			return {
+				...defaults,
+			};
+		},
 
 		render: function () {
-			console.log('views.AddLineItemModal render');
-			views.Modal.prototype.render.apply(this, arguments);
+			this.$el.html(this.template(this.model.toJSON()));
+			$(document.body).trigger('eac_update_ui');
+			jQuery( document.body ).css({
+				'overflow': 'hidden'
+			}).append( this.$el );
+
 			return this;
+		},
+
+
+		onChangeQuantity: function (e) {
+			const quantity = parseInt(e.target.value, 10);
+			this.model.set('quantity', quantity);
+			console.log('onChangeQuantity');
+		},
+
+		onChangePrice: function (e) {
+			const price = parseFloat(e.target.value);
+			this.model.set('price', price);
+			console.log('onChangePrice');
+		},
+
+		updateSubtotal: function () {
+			const { model } = this;
+			const quantity = model.get('quantity');
+			const price = model.get('price');
+			const subtotal = quantity * price;
+			model.set('subtotal', subtotal);
 		}
 	});
 
@@ -196,24 +229,16 @@
 		},
 
 		render: function () {
-			MicroModal.init();
-			wp.Backbone.View.prototype.render.apply(this, arguments);
-			// this.views.add( new views.AddLineItemModal(this.options) );
+			wp.Backbone.View.prototype.render.apply( this, arguments );
 			return this;
 		},
 
 		onAddItem: function (e) {
 			e.preventDefault();
-			console.log('onAddItem');
-			var addLineItemModal = new views.AddLineItemModal(this.options);
-			addLineItemModal.render();
-			addLineItemModal.openModal();
+			new views.AddLineItemModal( this.options ).render();
+			//$(document.body).trigger('eac_update_ui');
 		},
 	});
-
-
-	// views.AddTaxesModal = Modal.extend({});
-
 
 	views.Invoice = wp.Backbone.View.extend({
 		el: '#eac-invoice-form',

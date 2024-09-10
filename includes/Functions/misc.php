@@ -303,7 +303,8 @@ function eac_form_field( $field ) {
 
 	if ( ! empty( $input ) ) {
 		printf(
-			'<div class="eac-form-field %1$s" style="%2$s">%3$s</div>',
+			'<div class="eac-form-field eac-form-field-%1$s %2$s" style="%3$s">%4$s</div>',
+			esc_attr( $field['name'] ),
 			esc_attr( $field['wrapper_class'] ),
 			esc_attr( $field['wrapper_style'] ),
 			$input // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output is escaped in the above code.

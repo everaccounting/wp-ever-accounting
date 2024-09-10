@@ -1,6 +1,39 @@
 .eac-card {
-	@extend .eac-panel;
-	padding: 0 !important;
+	display: block;
+	box-sizing: border-box;
+	max-width: none;
+	min-width: auto;
+	min-height: 1px;
+	background: #fff;
+	font-size: 13px;
+	line-height: 1.5;
+	margin: 0 auto 1.5em;
+	position: relative;
+	width: 100%;
+	border: 1px solid #e1e2e2;
+
+	[class*=eac] {
+		box-sizing: inherit;
+	}
+
+	img {
+		max-width: 100%;
+		height: auto;
+	}
+	h2, h3 {
+		padding: 0;
+		margin: 0;
+		color: inherit;
+		font-size: 14px;
+		font-weight: 600;
+	}
+	h2, h3, h4 {
+		color: inherit;
+	}
+
+	&:not(:has(>[class*="eac-card__"])) {
+		padding: 12px;
+	}
 
 	& > &__header, & > &__footer {
 		display: flex;
@@ -22,6 +55,20 @@
 		}
 	}
 
+	& > &__header{
+		padding: 8px 12px;
+		border-bottom: 1px solid #e1e2e2;
+	}
+
+	& > &__body{
+		padding: 12px;
+	}
+
+	& > &__footer{
+		padding: 8px 12px;
+		border-top: 1px solid #e1e2e2;
+	}
+
 	&__title {
 		padding: 0;
 		margin: 0;
@@ -36,33 +83,4 @@
 		color: #777;
 	}
 
-	& > &__body {
-	}
-
-	& > &__section {
-
-	}
-
-	& > [class*=eac-card]:not([class*=wide]) {
-		padding: 8px 12px;
-	}
-
-	& > [class*=eac-card__] {
-		// child expect last item.
-		&:not(:last-child) {
-			border-bottom: 1px solid #e1e2e2;
-		}
-	}
-
-	&.is--small {
-		& > [class*=eac-card__] {
-			padding: 6px 8px;
-		}
-	}
-
-	&.is--large {
-		& > [class*=eac-card__] {
-			padding: 12px 12px;
-		}
-	}
 }

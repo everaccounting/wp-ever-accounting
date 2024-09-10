@@ -23,7 +23,7 @@ class Bills {
 		add_action( 'eac_purchases_page_bills_index', array( __CLASS__, 'render_table' ) );
 		add_action( 'eac_purchases_page_bills_add', array( __CLASS__, 'render_add' ) );
 		add_action( 'eac_purchases_page_bills_edit', array( __CLASS__, 'render_edit' ) );
-		add_action( 'admin_post_eac_edit_vendor', array( __CLASS__, 'handle_edit' ) );
+		add_action( 'admin_post_eac_edit_bill', array( __CLASS__, 'handle_edit' ) );
 	}
 
 	/**
@@ -95,7 +95,6 @@ class Bills {
 	 * @return void
 	 */
 	public static function render_add() {
-		$bill = new Bill();
 		include __DIR__ . '/views/bills/add.php';
 	}
 

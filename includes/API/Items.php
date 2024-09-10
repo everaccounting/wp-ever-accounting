@@ -23,6 +23,68 @@ class Items extends Controller {
 	protected $rest_base = 'items';
 
 	/**
+	 * Registers the routes for the objects of the controller.
+	 *
+	 * @see register_rest_route()
+	 * @since 1.1.0
+	 */
+	public function register_routes() {
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->rest_base,
+			array(
+				array(
+					'methods'             => \WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'get_items' ),
+					'permission_callback' => array( $this, 'get_items_permissions_check' ),
+					'args'                => $this->get_collection_params(),
+				),
+				array(
+					'methods'             => \WP_REST_Server::CREATABLE,
+					'callback'            => array( $this, 'create_item' ),
+					'permission_callback' => array( $this, 'create_item_permissions_check' ),
+					'args'                => $this->get_endpoint_args_for_item_schema( \WP_REST_Server::CREATABLE ),
+				),
+				'schema' => array( $this, 'get_public_item_schema' ),
+			)
+		);
+
+		$get_item_args = array(
+			'context' => $this->get_context_param( array( 'default' => 'view' ) ),
+		);
+
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->rest_base . '/(?P<id>[\d]+)',
+			array(
+				'args'   => array(
+					'id' => array(
+						'description' => __( 'Unique identifier for the account.', 'wp-ever-accounting' ),
+					),
+				),
+				array(
+					'methods'             => \WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'get_item' ),
+					'permission_callback' => array( $this, 'get_item_permissions_check' ),
+					'args'                => $get_item_args,
+				),
+				array(
+					'methods'             => \WP_REST_Server::EDITABLE,
+					'callback'            => array( $this, 'update_item' ),
+					'permission_callback' => array( $this, 'update_item_permissions_check' ),
+					'args'                => $this->get_endpoint_args_for_item_schema( \WP_REST_Server::EDITABLE ),
+				),
+				array(
+					'methods'             => \WP_REST_Server::DELETABLE,
+					'callback'            => array( $this, 'delete_item' ),
+					'permission_callback' => array( $this, 'delete_item_permissions_check' ),
+				),
+				'schema' => array( $this, 'get_public_item_schema' ),
+			)
+		);
+	}
+
+	/**
 	 * Checks if a given request has access to read items.
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
@@ -145,8 +207,6 @@ class Items extends Controller {
 			}
 		}
 
-		$args['type']      = sanitize_key( $request['type'] );
-
 		/**
 		 * Filters the query arguments for a request.
 		 *
@@ -157,8 +217,7 @@ class Items extends Controller {
 		 *
 		 * @since 1.2.1
 		 */
-		$args = apply_filters( 'ever_accounting_rest_item_query', $args, $request );
-
+		$args = apply_filters( 'eac_rest_item_query', $args, $request );
 		$items     = eac_get_items( $args );
 		$total     = eac_get_items( $args, true );
 		$page      = isset( $request['page'] ) ? absint( $request['page'] ) : 1;
@@ -321,8 +380,8 @@ class Items extends Controller {
 
 		foreach ( array_keys( $this->get_schema_properties() ) as $key ) {
 			switch ( $key ) {
-				case 'date_created':
-				case 'date_updated':
+				case 'created_at':
+				case 'updated_at':
 					$value = $this->prepare_date_response( $item->$key );
 					break;
 				default:
@@ -460,12 +519,12 @@ class Items extends Controller {
 					'type'        => 'boolean',
 					'context'     => array( 'view', 'edit' ),
 				),
-				'tax_ids'      => array(
-					'description' => __( 'Tax IDs for the item.', 'wp-ever-accounting' ),
+				'taxes'        => array(
+					'description' => __( 'Taxes for the item.', 'wp-ever-accounting' ),
 					'type'        => 'array',
 					'context'     => array( 'view', 'edit' ),
 					'items'       => array(
-						'type' => 'integer',
+						'$ref' => rest_url( sprintf( '/%s/%s/taxes', $this->namespace, $this->rest_base ) ),
 					),
 				),
 				'category_id'=> array(
@@ -485,13 +544,13 @@ class Items extends Controller {
 					'context'     => array( 'view', 'edit' ),
 					'required'    => true,
 				),
-				'date_updated' => array(
+				'updated_at' => array(
 					'description' => __( "The date the item was last updated, in the site's timezone.", 'wp-ever-accounting' ),
 					'type'        => 'date-time',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
-				'date_created' => array(
+				'created_at' => array(
 					'description' => __( "The date the item was created, in the site's timezone.", 'wp-ever-accounting' ),
 					'type'        => 'date-time',
 					'context'     => array( 'view', 'edit' ),
@@ -510,6 +569,32 @@ class Items extends Controller {
 		$schema = apply_filters( 'ever_accounting_rest_item_schema', $schema );
 
 		return $this->add_additional_fields_schema( $schema );
+	}
+
+	/**
+	 * Retrieves the query params for the items' collection.
+	 *
+	 * @since 1.1.2
+	 * @return array Collection parameters.
+	 */
+	public function get_collection_params() {
+		$params =  parent::get_collection_params();
+		$params['type'] = array(
+			'description'       => __( 'Limit result set to items of a particular type.', 'wp-ever-accounting' ),
+			'type'              => 'string',
+			'enum'              => array_keys( eac_get_item_types() ),
+			'default'           => '',
+			'sanitize_callback' => 'sanitize_key',
+		);
+		$params['status'] = array(
+			'description'       => __( 'Limit result set to items of a particular status.', 'wp-ever-accounting' ),
+			'type'              => 'string',
+			'enum'              => array( 'active', 'inactive' ),
+			'default'           => '',
+			'sanitize_callback' => 'sanitize_key',
+		);
+
+		return $params;
 	}
 
 }

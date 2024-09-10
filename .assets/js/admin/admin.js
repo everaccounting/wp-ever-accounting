@@ -105,17 +105,11 @@ jQuery(document).ready(($) => {
 			});
 		});
 
-		MicroModal.init({
-			onShow: modal => console.info(`${modal.id} is shown`), // [1]
-			onClose: modal => console.info(`${modal.id} is hidden`), // [2]
-			openTrigger: 'data-open', // [3]
-			closeTrigger: 'data-close', // [4]
-			openClass: 'is-open', // [5]
-			disableScroll: true, // [6]
-			disableFocus: false, // [7]
-			awaitOpenAnimation: false, // [8]
-			awaitCloseAnimation: false, // [9]
-			debugMode: false // [10]
+		// Polyfill for card padding for firefox.
+		$('.eac-card').each(function() {
+			if (!$(this).children('[class*="eac-card__"]').length && !parseInt($(this).css('padding'))) {
+				$(this).css('padding', '8px 12px');
+			}
 		});
 	}
 

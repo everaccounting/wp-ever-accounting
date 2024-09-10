@@ -21,17 +21,17 @@ module.exports = [
 				'./.assets/libraries/inputmask/inputmask.js',
 				'./.assets/libraries/inputmask/inputmask.binding.js',
 			],
-			'js/modal': './node_modules/micromodal/dist/micromodal.js',
+			'js/tiptip': './.assets/libraries/tiptip/tiptip.js',
 			'js/blockui': './.assets/libraries/blockui/blockUI.js',
+			'js/eac-modal': './.assets/js/admin/modal.js',
 			'js/eac-admin': './.assets/js/admin/admin.js',
+			'js/eac-invoice': './.assets/js/admin/invoice.js',
 			'js/eac-settings': './.assets/js/admin/settings.js',
-			'js/eac-invoices': './.assets/js/admin/invoices.js',
 			'css/jquery-ui': [
 				'./node_modules/jquery-ui/themes/base/theme.css',
 				'./node_modules/jquery-ui/themes/base/datepicker.css',
 				'./node_modules/jquery-ui/themes/base/tooltip.css',
 			],
-			'css/select2': './node_modules/select-woo/dist/css/selectWoo.css',
 			'css/eac-admin': './.assets/css/admin/admin.scss',
 			'css/eac-settings': './.assets/css/admin/settings.scss',
 		},
@@ -45,6 +45,19 @@ module.exports = [
 				name: '[name]',
 				type: 'window',
 			},
+		},
+		resolve: {
+			...defaults.resolve,
+			modules: [
+				'node_modules',
+				'.assets/packages',
+			],
+			alias: {
+				...defaults.resolve.alias,
+				'@js': path.resolve(__dirname, '.assets/js'),
+				'@css': path.resolve(__dirname, '.assets/css'),
+				'@eac': path.resolve(__dirname, '.assets/packages'),
+			}
 		},
 		module: {
 			rules: [...defaults.module.rules].filter(Boolean),
@@ -73,7 +86,7 @@ module.exports = [
 			// copy vue js file from node_modules to assets folder.
 			new CopyPlugin({
 				patterns: [
-					{ from: 'node_modules/vue/dist/vue.min.js', to: 'js/vue.js' },
+					{from: 'node_modules/vue/dist/vue.min.js', to: 'js/vue.js'},
 				],
 			}),
 
@@ -88,13 +101,13 @@ module.exports = [
 	// Packages.
 	{
 		...defaults,
-		entry: glob.sync('./.assets/packages/*/src/index.js').reduce((memo, file)=>{
+		entry: glob.sync('./.assets/packages/*/src/index.js').reduce((memo, file) => {
 			const module = file.replace('.assets/packages/', '').replace('/src/index.js', '');
 			return {
 				...memo,
 				[`${module}`]: {
 					import: path.resolve(__dirname, file),
-					library:{
+					library: {
 						name: [
 							'eac',
 							module.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase())

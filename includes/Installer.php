@@ -568,7 +568,6 @@ KEY `expense_id` (`expense_id`)
 			'Accountant',
 			array(
 				'manage_accounting'   => true,
-				'eac_manage_product'  => true,
 				'eac_manage_customer' => true,
 				'eac_manage_vendor'   => true,
 				'eac_manage_account'  => true,
@@ -619,7 +618,6 @@ KEY `expense_id` (`expense_id`)
 			$wp_roles->add_cap( 'administrator', 'manage_accounting' );
 			$wp_roles->add_cap( 'administrator', 'eac_manage_report' );
 			$wp_roles->add_cap( 'administrator', 'eac_manage_options' );
-			$wp_roles->add_cap( 'administrator', 'eac_manage_product' );
 			$wp_roles->add_cap( 'administrator', 'eac_manage_customer' );
 			$wp_roles->add_cap( 'administrator', 'eac_manage_vendor' );
 			$wp_roles->add_cap( 'administrator', 'eac_manage_account' );

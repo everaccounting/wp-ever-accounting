@@ -20,7 +20,6 @@ class Admin {
 	public function __construct() {
 		add_action( 'admin_init', array( $this, 'buffer_start' ), 1 );
 		add_filter( 'admin_body_class', array( $this, 'body_class' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		add_filter( 'admin_footer_text', array( $this, 'admin_footer_text' ), PHP_INT_MAX );
 		add_filter( 'update_footer', array( $this, 'update_footer' ), PHP_INT_MAX );
 		//add_action( 'in_admin_header', array( __CLASS__, 'in_admin_header' ) );
@@ -51,84 +50,6 @@ class Admin {
 		}
 
 		return $classes;
-	}
-
-	/**
-	 * Enqueue admin scripts.
-	 *
-	 * @param string $hook The current admin page.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	public function enqueue_scripts( $hook ) {
-		if ( ! in_array( $hook, Utilities::get_screen_ids(), true ) ) {
-			return;
-		}
-		// 3rd party scripts.
-		EAC()->scripts->register_script( 'eac-chartjs', 'js/chartjs.js', array( 'jquery' ), true );
-		EAC()->scripts->register_script( 'eac-inputmask', 'js/inputmask.js', array( 'jquery' ), true );
-		EAC()->scripts->register_script( 'eac-select2', 'js/select2.js', array( 'jquery' ), true );
-		EAC()->scripts->register_script( 'eac-tiptip', 'js/tiptip.js', array( 'jquery' ), true );
-		EAC()->scripts->register_script( 'eac-blockui', 'js/blockui.js', array( 'jquery' ), true );
-		EAC()->scripts->enqueue_script( 'eac-modal', 'js/modal.js', array(), true );
-		EAC()->scripts->register_style( 'eac-jquery-ui', 'css/jquery-ui.css' );
-		EAC()->scripts->register_style( 'eac-select2', 'css/select2.css' );
-
-		// Package scripts.
-		EAC()->scripts->enqueue_script( 'eac-vue', 'js/vue.js', array(), true );
-		EAC()->scripts->enqueue_script( 'eac-money', 'packages/money.js', array(), true );
-
-		// Core scripts.
-		EAC()->scripts->register_script(
-			'eac-invoices',
-			'js/eac-invoices.js',
-			array( 'eac-vue', 'eac-blockui', 'eac-modal' ),
-			true
-		);
-		EAC()->scripts->register_script( 'eac-admin', 'js/eac-admin.js', array( 'jquery', 'eac-chartjs', 'eac-inputmask', 'eac-select2', 'eac-tiptip', 'jquery-ui-datepicker', 'jquery-ui-tooltip', 'wp-util' ), true );
-		EAC()->scripts->register_script( 'eac-settings', 'js/eac-settings.js', array( 'eac-admin' ), true );
-		EAC()->scripts->register_style( 'eac-admin', 'css/eac-admin.css', array( 'eac-jquery-ui', 'eac-select2' ) );
-		EAC()->scripts->register_style( 'eac-settings', 'css/eac-settings.css', array( 'eac-admin' ) );
-
-		// enqueue media scripts.
-		wp_enqueue_media();
-		wp_enqueue_script( 'eac-admin' );
-		wp_enqueue_style( 'eac-admin' );
-
-		// if settings page.
-		if ( 'ever-accounting_page_eac-settings' === $hook ) {
-			EAC()->scripts->enqueue_script( 'eac-settings' );
-			EAC()->scripts->enqueue_style( 'eac-settings' );
-		}
-
-		// if dashboard or reports page.
-		if ( 'toplevel_page_ever-accounting' === $hook || 'ever-accounting_page_eac-reports' === $hook ) {
-			EAC()->scripts->enqueue_script( 'eac-chartjs' );
-		}
-
-		wp_localize_script(
-			'eac-admin',
-			'eac_admin_vars',
-			array(
-				'ajax_url'       => admin_url( 'admin-ajax.php' ),
-				'search_nonce'   => wp_create_nonce( 'eac_search_action' ),
-				'currency_nonce' => wp_create_nonce( 'eac_currency' ),
-				'account_nonce'  => wp_create_nonce( 'eac_account' ),
-				'item_nonce'     => wp_create_nonce( 'eac_item' ),
-				'customer_nonce' => wp_create_nonce( 'eac_customer' ),
-				'vendor_nonce'   => wp_create_nonce( 'eac_vendor' ),
-				'payment_nonce'  => wp_create_nonce( 'eac_payment' ),
-				'expense_nonce'  => wp_create_nonce( 'eac_expense' ),
-				'invoice_nonce'  => wp_create_nonce( 'eac_invoice' ),
-				'purchase_nonce' => wp_create_nonce( 'eac_purchase' ),
-
-				'i18n' => array(
-					'confirm_delete' => __( 'Are you sure you want to delete this item?', 'wp-ever-accounting' ),
-					'close'          => __( 'Close', 'wp-ever-accounting' ),
-				),
-			)
-		);
 	}
 
 	/**
