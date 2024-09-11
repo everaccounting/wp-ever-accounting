@@ -1,7 +1,7 @@
 import Base from './base.js';
 
 export default Base.extend( {
-	endpoint: 'transactions',
+	endpoint: 'payments',
 
 	defaults: {
 		id: '',

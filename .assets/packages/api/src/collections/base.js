@@ -1,27 +1,43 @@
 export default Backbone.Collection.extend({
-	namespace: 'eac/v1',
-
-	nonce: wpApiSettings.nonce,
+	/**
+	 * API root.
+	 */
+	apiRoot: wpApiSettings.root || '/wp-json',
 
 	/**
-	 * Initialize the collection.
-	 *
-	 * @param {Array} models.
-	 * @param {Object} options.
-	 * @return {void}.
+	 * API namespace.
 	 */
-	preinitialize: function (models, options) {
+	namespace: 'eac/v1',
+
+	/**
+	 * API endpoint.
+	 */
+	endpoint: '',
+
+	/**
+	 * Request nonce.
+	 */
+	nonce: wpApiSettings.nonce || '',
+
+	/**
+	 * Setup default state.
+	 */
+	initialize: function( models, options ) {
+		this.state = {
+			data: {},
+			total: null,
+			page: 1,
+		};
 		this.options = options;
 	},
 
 	/**
-	 * Get the URL for the collection.
+	 * Get the URL for the model.
 	 *
 	 * @return {string}.
 	 */
 	url: function () {
-		const apiRoot = wpApiSettings.root || '/wp-json';
-		return apiRoot.replace(/\/+$/, '') + '/' + this.namespace.replace(/\/+$/, '') + '/' + this.endpoint.replace(/\/+$/, '');
+		return this.apiRoot.replace(/\/+$/, '') + '/' + this.namespace.replace(/\/+$/, '') + '/' + this.endpoint.replace(/\/+$/, '');
 	},
 
 	/**
@@ -32,24 +48,66 @@ export default Backbone.Collection.extend({
 	 * @param {{beforeSend}, *} options.
 	 * @return {*}.
 	 */
-	sync: function( method, model, options ) {
+	sync: function (method, model, options) {
+		var beforeSend;
 		options = options || {};
 
-		if ( ! _.isEmpty( model.nonce ) ) {
-			// Set nonce header.
+		// Include the nonce with requests.
+		if ( ! _.isEmpty(model.nonce) ) {
+			beforeSend = options.beforeSend;
 			options.beforeSend = function( xhr ) {
 				xhr.setRequestHeader( 'X-WP-Nonce', model.nonce );
+
+				if ( beforeSend ) {
+					return beforeSend.apply( this, arguments );
+				}
 			};
 
 			// Update the nonce when a new nonce is returned with the response.
 			options.complete = function( xhr ) {
-				var newNonce = xhr.getResponseHeader( 'X-WP-Nonce' );
-				if ( newNonce && newNonce !== model.nonce ) {
-					model.set( 'nonce', newNonce );
+				var returnedNonce = xhr.getResponseHeader( 'X-WP-Nonce' );
+				if ( ! _.isEmpty( returnedNonce ) ) {
+					model.nonce = returnedNonce;
 				}
-			}
+			};
 		}
 
-		return Backbone.sync(  method, model, options );
+		// When reading, add pagination data.
+		if ( 'read' === method ) {
+			if ( options.data ) {
+				self.state.data = _.clone( options.data );
+
+				delete self.state.data.page;
+			} else {
+				self.state.data = options.data = {};
+			}
+
+			if ( 'undefined' === typeof options.data.page ) {
+				self.state.page  = null;
+				self.state.total = null;
+			} else {
+				self.state.page = options.data.page - 1;
+			}
+
+			success = options.success;
+			options.success = function( data, textStatus, request ) {
+				if ( ! _.isUndefined( request ) ) {
+
+					self.state.total = parseInt( request.getResponseHeader( 'x-wp-total' ), 10 );
+				}
+
+				if ( null === self.state.page ) {
+					self.state.page = 1;
+				} else {
+					self.state.page++;
+				}
+
+				if ( success ) {
+					return success.apply( this, arguments );
+				}
+			};
+		}
+
+		return Backbone.sync( method, model, options );
 	}
 });

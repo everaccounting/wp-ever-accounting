@@ -1,6 +1,6 @@
 import {LineItemsCollection, LineItemModel, ItemModel} from "@eac/store";
 
-/* global Backbone, _, jQuery, eac_invoices_vars */
+/* global Backbone, _, jQuery, eac_invoices_vars, eac */
 /**
  * ========================================================================
  * INVOICE FORM HANDLER

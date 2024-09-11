@@ -1,7 +1,23 @@
 export default Backbone.Model.extend({
+	/**
+	 * API root.
+	 */
+	apiRoot: wpApiSettings.root || '/wp-json',
+
+	/**
+	 * API namespace.
+	 */
 	namespace: 'eac/v1',
 
-	nonce: wpApiSettings.nonce,
+	/**
+	 * API endpoint.
+	 */
+	endpoint: '',
+
+	/**
+	 * Request nonce.
+	 */
+	nonce: wpApiSettings.nonce || '',
 
 	/**
 	 * Get the URL for the model.
@@ -9,8 +25,7 @@ export default Backbone.Model.extend({
 	 * @return {string}.
 	 */
 	url: function () {
-		const apiRoot = wpApiSettings.root || '/wp-json';
-		var url = apiRoot.replace(/\/+$/, '') + '/' + this.namespace.replace(/\/+$/, '') + '/' + this.endpoint.replace(/\/+$/, '');
+		var url = this.apiRoot.replace(/\/+$/, '') + '/' + this.namespace.replace(/\/+$/, '') + '/' + this.endpoint.replace(/\/+$/, '');
 		if (!_.isUndefined(this.get('id'))) {
 			url += '/' + this.get('id');
 		}
@@ -27,23 +42,31 @@ export default Backbone.Model.extend({
 	 * @return {*}.
 	 */
 	sync: function (method, model, options) {
+		var beforeSend;
 		options = options || {};
 
-		if (!_.isEmpty(model.nonce)) {
-			// Set nonce header.
-			options.beforeSend = function (xhr) {
-				xhr.setRequestHeader('X-WP-Nonce', model.nonce);
+		// Include the nonce with requests.
+		if ( ! _.isEmpty(model.nonce) ) {
+			beforeSend = options.beforeSend;
+			options.beforeSend = function( xhr ) {
+				xhr.setRequestHeader( 'X-WP-Nonce', model.nonce );
+
+				if ( beforeSend ) {
+					return beforeSend.apply( this, arguments );
+				}
 			};
 
 			// Update the nonce when a new nonce is returned with the response.
-			options.complete = function (xhr) {
-				var newNonce = xhr.getResponseHeader('X-WP-Nonce');
-				if (newNonce && newNonce !== model.nonce) {
-					model.set('nonce', newNonce);
+			options.complete = function( xhr ) {
+				var returnedNonce = xhr.getResponseHeader( 'X-WP-Nonce' );
+
+				if ( returnedNonce && _.isEmpty(model.nonce) && model.nonce !== returnedNonce ) {
+					model.set( 'nonce', returnedNonce );
 				}
-			}
+			};
 		}
 
-		return Backbone.sync(method, model, options);
+		return Backbone.sync( method, model, options );
 	}
+
 });
