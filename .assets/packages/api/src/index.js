@@ -1,9 +1,7 @@
-// export * from './collections';
-// export * from './models';
-// export * from './utils';
-import collections from './collections';
-var module = {
-	collections: collections,
-}
+import * as collections from './collections';
+import * as models from './models';
+export * as utils from './utils';
 
-export default module;
+export {collections};
+export {models};
+// export {utils};

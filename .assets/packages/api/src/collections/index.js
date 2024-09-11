@@ -1,5 +1,2 @@
-import categories from './categories';
-
-export default {
-	categories,
-}
+export { default as base } from './base';
+export { default as categories } from './categories';
