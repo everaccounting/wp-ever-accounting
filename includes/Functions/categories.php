@@ -15,7 +15,7 @@ function eac_get_category_types() {
 }
 
 /**
- * Get all the available type of category the plugin support.
+ * Get all the available status of category the plugin support.
  *
  * @since 1.1.0
  * @return array

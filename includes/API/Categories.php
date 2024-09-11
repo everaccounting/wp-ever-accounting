@@ -325,8 +325,7 @@ class Categories extends Controller {
 			return $data;
 		}
 
-		$data  = array_merge( array( 'id'=> $category->id ), $data );
-		$saved = eac_insert_category( $data );
+		$saved = $category->fill($data)->save();
 		if ( is_wp_error( $saved ) ) {
 			return $saved;
 		}
@@ -421,15 +420,13 @@ class Categories extends Controller {
 	 */
 	protected function prepare_item_for_database( $request ) {
 		$schema    = $this->get_item_schema();
-		$data_keys = array_keys( array_filter( $schema['properties'], array( $this, 'filter_writable_props' ) ) );
-		$props     = [];
-		// Handle all writable props.
-		foreach ( $data_keys as $key ) {
-			$value = $request[ $key ];
-			if ( ! is_null( $value ) ) {
-				switch ( $key ) {
+		$props = array_keys( array_filter( $schema['properties'], array( $this, 'filter_writable_props' ) ) );
+		$data     = [];
+		foreach ( $props as $prop ) {
+			if (isset($request[$prop])) {
+				switch ($prop) {
 					default:
-						$props[ $key ] = $value;
+						$data[$prop] = $request[$prop];
 						break;
 				}
 			}
@@ -438,10 +435,10 @@ class Categories extends Controller {
 		/**
 		 * Filters category before it is inserted via the REST API.
 		 *
-		 * @param array $props Category props.
+		 * @param array $data Category data.
 		 * @param \WP_REST_Request $request Request object.
 		 */
-		return apply_filters( 'eac_rest_pre_insert_category', $props, $request );
+		return apply_filters( 'eac_rest_pre_insert_category', $data, $request );
 	}
 
 	/**
