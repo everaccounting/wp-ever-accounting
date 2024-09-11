@@ -325,7 +325,7 @@ class Taxes extends Controller {
 			return $data;
 		}
 
-		$saved = $tax->set_data( $data )->save();
+		$saved = $tax->fill( $data )->save();
 		if ( is_wp_error( $saved ) ) {
 			return $saved;
 		}
@@ -406,7 +406,7 @@ class Taxes extends Controller {
 		 * @param Tax $item Tax object used to create response.
 		 * @param \WP_REST_Request $request Request object.
 		 */
-		return apply_filters( 'ever_accounting_rest_prepare_tax', $response, $item, $request );
+		return apply_filters( 'eac_rest_prepare_tax', $response, $item, $request );
 	}
 
 	/**
@@ -439,7 +439,7 @@ class Taxes extends Controller {
 		 * @param array $props Tax props.
 		 * @param \WP_REST_Request $request Request object.
 		 */
-		return apply_filters( 'ever_accounting_rest_pre_insert_tax', $props, $request );
+		return apply_filters( 'eac_rest_pre_insert_tax', $props, $request );
 	}
 
 	/**
