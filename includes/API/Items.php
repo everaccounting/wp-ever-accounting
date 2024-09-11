@@ -65,7 +65,7 @@ class Items extends Controller {
 				array(
 					'methods'             => \WP_REST_Server::READABLE,
 					'callback'            => array( $this, 'get_item' ),
-					'permission_callback' => '__return_true',
+					'permission_callback' => array( $this, 'get_item_permissions_check' ),
 					'args'                => $get_item_args,
 				),
 				array(
@@ -217,7 +217,7 @@ class Items extends Controller {
 		 *
 		 * @since 1.2.1
 		 */
-		$args = apply_filters( 'eac_rest_item_query', $args, $request );
+		$args      = apply_filters( 'eac_rest_item_query', $args, $request );
 		$items     = eac_get_items( $args );
 		$total     = eac_get_items( $args, true );
 		$page      = isset( $request['page'] ) ? absint( $request['page'] ) : 1;
@@ -380,6 +380,9 @@ class Items extends Controller {
 
 		foreach ( array_keys( $this->get_schema_properties() ) as $key ) {
 			switch ( $key ) {
+				case 'category':
+					$value    = $item->category_id? $this->get_endpoint_data( sprintf( '/%s/categories/%d', $this->namespace, $item->category_id ) ) : null;
+					break;
 				case 'created_at':
 				case 'updated_at':
 					$value = $this->prepare_date_response( $item->$key );
@@ -402,7 +405,7 @@ class Items extends Controller {
 		 * Filter item data returned from the REST API.
 		 *
 		 * @param \WP_REST_Response $response The response object.
-		 * @param Item          $item Item object used to create response.
+		 * @param Item              $item Item object used to create response.
 		 * @param \WP_REST_Request  $request Request object.
 		 */
 		return apply_filters( 'ever_accounting_rest_prepare_item', $response, $item, $request );
@@ -463,8 +466,8 @@ class Items extends Controller {
 	/**
 	 * Retrieves the item's schema, conforming to JSON Schema.
 	 *
-	 * @return array Item schema data.
 	 * @since 1.1.2
+	 * @return array Item schema data.
 	 */
 	public function get_item_schema() {
 		$schema = array(
@@ -524,13 +527,21 @@ class Items extends Controller {
 					'type'        => 'array',
 					'context'     => array( 'view', 'edit' ),
 					'items'       => array(
-						'$ref' => rest_url( sprintf( '/%s/%s/taxes', $this->namespace, $this->rest_base ) ),
+						'$ref' => rest_url( sprintf( '/%s/taxes', $this->namespace  ) ),
 					),
 				),
-				'category_id'=> array(
+				'category_id'  => array(
 					'description' => __( 'Category ID for the item.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'edit' ),
+				),
+				'category'     => array(
+					'description' => __( 'Category for the item.', 'wp-ever-accounting' ),
+					'type'        => 'object',
+					'context'     => array( 'view', 'edit' ),
+					'properties'  => array(
+						'$ref' => rest_url( sprintf( '/%s/categories', $this->namespace  ) ),
+					),
 				),
 				'thumbnail_id' => array(
 					'description' => __( 'Thumbnail ID for the item.', 'wp-ever-accounting' ),
@@ -540,17 +551,17 @@ class Items extends Controller {
 				'status'       => array(
 					'description' => __( 'Item status.', 'wp-ever-accounting' ),
 					'type'        => 'string',
-					'enum'        => array( 'active', 'inactive'),
+					'enum'        => array( 'active', 'inactive' ),
 					'context'     => array( 'view', 'edit' ),
 					'required'    => true,
 				),
-				'updated_at' => array(
+				'updated_at'   => array(
 					'description' => __( "The date the item was last updated, in the site's timezone.", 'wp-ever-accounting' ),
 					'type'        => 'date-time',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
-				'created_at' => array(
+				'created_at'   => array(
 					'description' => __( "The date the item was created, in the site's timezone.", 'wp-ever-accounting' ),
 					'type'        => 'date-time',
 					'context'     => array( 'view', 'edit' ),
@@ -578,8 +589,8 @@ class Items extends Controller {
 	 * @return array Collection parameters.
 	 */
 	public function get_collection_params() {
-		$params =  parent::get_collection_params();
-		$params['type'] = array(
+		$params           = parent::get_collection_params();
+		$params['type']   = array(
 			'description'       => __( 'Limit result set to items of a particular type.', 'wp-ever-accounting' ),
 			'type'              => 'string',
 			'enum'              => array_keys( eac_get_item_types() ),

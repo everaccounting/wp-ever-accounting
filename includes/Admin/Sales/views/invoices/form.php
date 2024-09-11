@@ -13,9 +13,9 @@ if ( ! $document->is_calculating_tax() && isset( $columns['tax'] ) ) {
 }
 $columns['action'] = '&nbsp;';
 $data              = array(
-	'columns'            => $columns,
-	'invoice'            => $document->to_array(),
-	'is_calculating_tax' => $document->is_calculating_tax(),
+	'columns'      => $columns,
+	'invoice'      => $document->to_array(),
+	'tax_per_item' => true,
 );
 wp_localize_script( 'eac-invoice', 'eac_invoice_form_vars', $data );
 wp_enqueue_script( 'eac-invoice' );
@@ -49,40 +49,52 @@ wp_enqueue_script( 'eac-invoice' );
 </form>
 
 <script type="text/html" id="tmpl-eac-invoice-no-line-items">
-	<tr>
-		<td colspan="<?php echo count( $columns ); ?>">
-			<?php esc_html_e( 'No items added yet.', 'wp-ever-accounting' ); ?>
-		</td>
-	</tr>
+	<td colspan="<?php echo count( $columns ); ?>">
+		<?php esc_html_e( 'No items added yet.', 'wp-ever-accounting' ); ?>
+	</td>
 </script>
 
-<script type="text/html" id="tmpl-eac-invoice-line">
+<script type="text/html" id="tmpl-eac-invoice-line-item">
 	<td class="col-item">
-		<select class="select-line-item eac_select2" data-action="eac_json_search" data-type="item" data-placeholder="<?php esc_attr_e( 'Select an item', 'wp-ever-accounting' ); ?>"></select>
-		<textarea class="line-description" placeholder="Item Description"></textarea>
-	</td>
-	<td class="col-quantity">
-		<input type="number" class="add-line-item-quantity" min="1" value="1">
+		<input class="line-name" type="text" placeholder="<?php esc_attr_e( 'Item Name', 'wp-ever-accounting' ); ?>" value="{{ data.name }}">
+		<textarea class="line-description" placeholder="<?php esc_attr_e( 'Item Description', 'wp-ever-accounting' ); ?>">{{ data.description }}</textarea>
+		<select class="line-taxes eac_select2" data-action="eac_json_search" data-type="tax" data-placeholder="<?php esc_attr_e( 'Select a tax rate', 'wp-ever-accounting' ); ?>" multiple>
+			<# if ( data.taxes && data.taxes.length ) { #>
+			<# _.each( data.taxes, function( taxes ) { #>
+			<option value="{{ taxes.id }}" selected>{{ taxes.name }}</option>
+			<# } ); #>
+			<# } #>
+		</select>
+		<# if ( data.taxes && data.taxes.length ) { #>
+		<# _.each( data.taxes, function( taxes ) { #>
+		<input type="hidden" name="lines[{{ data.id }}][taxes]{{ taxes.id }}['id']" value="{{ taxes.id }}">
+		<input type="hidden" name="lines[{{ data.id }}][taxes]{{ taxes.id }}['name']" value="{{ taxes.name }}">
+		<input type="hidden" name="lines[{{ data.id }}][taxes]{{ taxes.id }}['rate']" value="{{ taxes.rate }}">
+		<# } ); #>
+		<# } #>
 	</td>
 	<td class="col-price">
-		<input type="number" class="add-line-item-price" min="0" value="0">
+		<input type="number" class="line-price" min="0" value="{{ data.price }}">
+	</td>
+	<td class="col-quantity">
+		<input type="number" class="line-quantity" min="0" value="{{ data.quantity }}">
 	</td>
 	<td class="col-tax">
-		&mdash;
+		<span class="line-tax">{{ data.tax }}</span>
 	</td>
 	<td class="col-subtotal">
-		&mdash;
+		<span class="line-subtotal">{{ data.subtotal }}</span>
 	</td>
 	<td class="col-action">
-		<a href="#">
-			<span class="dashicons dashicons-saved"></span>
+		<a href="#" class="remove-line-item">
+			<span class="dashicons dashicons-trash"></span>
 		</a>
 	</td>
 </script>
 
 <script type="text/html" id="tmpl-eac-invoice-actions">
 	<tr>
-		<td colspan="<?php echo count( $columns ) - 1 ; ?>">
+		<td colspan="<?php echo count( $columns ) - 1; ?>">
 			<select class="add-line-item eac_select2" data-action="eac_json_search" data-type="item" data-placeholder="<?php esc_attr_e( 'Select an item', 'wp-ever-accounting' ); ?>"></select>
 		</td>
 		<td class="col-action">
@@ -94,10 +106,28 @@ wp_enqueue_script( 'eac-invoice' );
 <script type="text/html" id="tmpl-eac-invoice-totals">
 	<tr>
 		<td class="col-summary-label" colspan="<?php echo count( $columns ) - 2; ?>">
-		<?php esc_html_e( 'Subtotal', 'wp-ever-accounting' ); ?>
+			<?php esc_html_e( 'Subtotal', 'wp-ever-accounting' ); ?>
 		</td>
 		<td class="col-summary-amount">
-			$0
+			{{ data.subtotal }}
+		</td>
+		<td class="col-action">&nbsp;</td>
+	</tr>
+	<tr>
+		<td class="col-summary-label" colspan="<?php echo count( $columns ) - 2; ?>">
+			<?php esc_html_e( 'Tax', 'wp-ever-accounting' ); ?>
+		</td>
+		<td class="col-summary-amount">
+			{{ data.tax }}
+		</td>
+		<td class="col-action">&nbsp;</td>
+	</tr>
+	<tr>
+		<td class="col-summary-label" colspan="<?php echo count( $columns ) - 2; ?>">
+			<?php esc_html_e( 'Total', 'wp-ever-accounting' ); ?>
+		</td>
+		<td class="col-summary-amount">
+			{{ data.total }}
 		</td>
 		<td class="col-action">&nbsp;</td>
 	</tr>

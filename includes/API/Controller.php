@@ -599,4 +599,29 @@ class Controller extends \WP_REST_Controller {
 
 		return $params;
 	}
+
+
+	/**
+	 * Get data from a WooCommerce API endpoint.
+	 * This method used to be part of the WooCommerce Legacy REST API.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $endpoint Endpoint.
+	 * @param array  $params Params to pass with request.
+	 * @param string $method Request method.
+	 * @return array|\WP_Error
+	 */
+	public function get_endpoint_data( $endpoint, $params = array(), $method = 'GET' ) {
+		$request = new \WP_REST_Request( $method, $endpoint );
+		if ( $params  && 'GET' === $method ) {
+			$request->set_query_params( $params );
+		} elseif ( $params && 'POST' === $method ) {
+			$request->set_body_params( $params );
+		}
+		$response = rest_do_request( $request );
+		$server   = rest_get_server();
+		$json     = wp_json_encode( $server->response_to_data( $response, false ) );
+		return json_decode( $json, true );
+	}
 }

@@ -23,6 +23,68 @@ class Categories extends Controller {
 	protected $rest_base = 'categories';
 
 	/**
+	 * Registers the routes for the objects of the controller.
+	 *
+	 * @see register_rest_route()
+	 * @since 1.1.0
+	 */
+	public function register_routes() {
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->rest_base,
+			array(
+				array(
+					'methods'             => \WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'get_items' ),
+					'permission_callback' => array( $this, 'get_items_permissions_check' ),
+					'args'                => $this->get_collection_params(),
+				),
+				array(
+					'methods'             => \WP_REST_Server::CREATABLE,
+					'callback'            => array( $this, 'create_item' ),
+					'permission_callback' => array( $this, 'create_item_permissions_check' ),
+					'args'                => $this->get_endpoint_args_for_item_schema( \WP_REST_Server::CREATABLE ),
+				),
+				'schema' => array( $this, 'get_public_item_schema' ),
+			)
+		);
+
+		$get_item_args = array(
+			'context' => $this->get_context_param( array( 'default' => 'view' ) ),
+		);
+
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->rest_base . '/(?P<id>[\d]+)',
+			array(
+				'args'   => array(
+					'id' => array(
+						'description' => __( 'Unique identifier for the account.', 'wp-ever-accounting' ),
+					),
+				),
+				array(
+					'methods'             => \WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'get_item' ),
+					'permission_callback' => array( $this, 'get_item_permissions_check' ),
+					'args'                => $get_item_args,
+				),
+				array(
+					'methods'             => \WP_REST_Server::EDITABLE,
+					'callback'            => array( $this, 'update_item' ),
+					'permission_callback' => array( $this, 'update_item_permissions_check' ),
+					'args'                => $this->get_endpoint_args_for_item_schema( \WP_REST_Server::EDITABLE ),
+				),
+				array(
+					'methods'             => \WP_REST_Server::DELETABLE,
+					'callback'            => array( $this, 'delete_item' ),
+					'permission_callback' => array( $this, 'delete_item_permissions_check' ),
+				),
+				'schema' => array( $this, 'get_public_item_schema' ),
+			)
+		);
+	}
+
+	/**
 	 * Checks if a given request has access to read categories.
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
@@ -144,12 +206,6 @@ class Categories extends Controller {
 				$args[ $key ] = $request[ $key ];
 			}
 		}
-		foreach ( ( new Category() )->get_core_data_keys() as $key ) {
-			if ( isset( $request[ $key ] ) ) {
-				$args[ $key ] = $request[ $key ];
-			}
-		}
-
 
 		/**
 		 * Filters the query arguments for a request.
@@ -161,7 +217,7 @@ class Categories extends Controller {
 		 *
 		 * @since 1.2.1
 		 */
-		$args = apply_filters( 'ever_accounting_rest_category_query', $args, $request );
+		$args = apply_filters( 'eac_rest_category_query', $args, $request );
 
 		$categories = eac_get_categories( $args );
 		$total      = eac_get_categories( $args, true );
@@ -248,7 +304,7 @@ class Categories extends Controller {
 		$response = rest_ensure_response( $response );
 
 		$response->set_status( 201 );
-		$response->header( 'Location', rest_url( sprintf( '%s/%s/%d', $this->namespace, $this->rest_base, $category->get_id() ) ) );
+		$response->header( 'Location', rest_url( sprintf( '%s/%s/%d', $this->namespace, $this->rest_base, $category->id ) ) );
 
 		return $response;
 
@@ -292,7 +348,7 @@ class Categories extends Controller {
 		$request->set_param( 'context', 'edit' );
 		$data = $this->prepare_item_for_response( $category, $request );
 
-		if ( ! eac_delete_category( $category->get_id() ) ) {
+		if ( ! eac_delete_category( $category->id ) ) {
 			return new \WP_Error(
 				'rest_cannot_delete',
 				__( 'The category cannot be deleted.', 'wp-ever-accounting' ),
@@ -314,23 +370,23 @@ class Categories extends Controller {
 	/**
 	 * Prepares a single category output for response.
 	 *
-	 * @param Category $category Category object.
+	 * @param Category $item Category object.
 	 * @param \WP_REST_Request $request Request object.
 	 *
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 * @since 1.2.1
 	 */
-	public function prepare_item_for_response( $category, $request ) {
+	public function prepare_item_for_response( $item, $request ) {
 		$data = [];
 
 		foreach ( array_keys( $this->get_schema_properties() ) as $key ) {
 			switch ( $key ) {
 				case 'date_created':
 				case 'date_updated':
-					$value = $this->prepare_date_response( $category->$key );
+					$value = $this->prepare_date_response( $item->$key );
 					break;
 				default:
-					$value = $category->$key;
+					$value = $item->$key;
 					break;
 			}
 
@@ -341,16 +397,16 @@ class Categories extends Controller {
 		$data     = $this->add_additional_fields_to_object( $data, $request );
 		$data     = $this->filter_response_by_context( $data, $context );
 		$response = rest_ensure_response( $data );
-		$response->add_links( $this->prepare_links( $category, $request ) );
+		$response->add_links( $this->prepare_links( $item, $request ) );
 
 		/**
 		 * Filter category data returned from the REST API.
 		 *
 		 * @param \WP_REST_Response $response The response object.
-		 * @param Category $category Category object used to create response.
+		 * @param Category $item Category object used to create response.
 		 * @param \WP_REST_Request $request Request object.
 		 */
-		return apply_filters( 'ever_accounting_rest_prepare_category', $response, $category, $request );
+		return apply_filters( 'ever_accounting_rest_prepare_category', $response, $item, $request );
 	}
 
 	/**
@@ -397,7 +453,7 @@ class Categories extends Controller {
 	protected function prepare_links( $category, $request ) {
 		return array(
 			'self'       => array(
-				'href' => rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $category->get_id() ) ),
+				'href' => rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $category->id ) ),
 			),
 			'collection' => array(
 				'href' => rest_url( sprintf( '/%s/%s', $this->namespace, $this->rest_base ) ),
