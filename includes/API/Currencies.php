@@ -56,7 +56,7 @@ class Currencies extends Controller {
 
 		register_rest_route(
 			$this->namespace,
-			'/' . $this->rest_base . '/(?P<code>[A-Z]{3})',
+			'/' . $this->rest_base . '/(?P<id>[\d]+)',
 			array(
 				'args'   => array(
 					'id' => array(
@@ -209,11 +209,6 @@ class Currencies extends Controller {
 				$args[ $key ] = $request[ $key ];
 			}
 		}
-		foreach ( ( new Currency() )->get_core_data_keys() as $key ) {
-			if ( isset( $request[ $key ] ) ) {
-				$args[ $key ] = $request[ $key ];
-			}
-		}
 
 		/**
 		 * Filters the query arguments for a request.
@@ -225,7 +220,7 @@ class Currencies extends Controller {
 		 *
 		 * @since 1.2.1
 		 */
-		$args = apply_filters( 'ever_accounting_rest_currency_query', $args, $request );
+		$args = apply_filters( 'eac_rest_currency_query', $args, $request );
 
 		$currencies = eac_get_currencies( $args );
 		$total      = eac_get_currencies( $args, true );
@@ -322,7 +317,7 @@ class Currencies extends Controller {
 		$response = rest_ensure_response( $response );
 
 		$response->set_status( 201 );
-		$response->header( 'Location', rest_url( sprintf( '%s/%s/%d', $this->namespace, $this->rest_base, $currency->get_id() ) ) );
+		$response->header( 'Location', rest_url( sprintf( '%s/%s/%d', $this->namespace, $this->rest_base, $currency->id ) ) );
 
 		return $response;
 
@@ -342,7 +337,6 @@ class Currencies extends Controller {
 		if ( is_wp_error( $data ) ) {
 			return $data;
 		}
-		$data['id'] = $currency->get_id();
 		$currency   = eac_insert_currency( $data );
 		if ( is_wp_error( $currency ) ) {
 			return $currency;
@@ -367,7 +361,7 @@ class Currencies extends Controller {
 		$request->set_param( 'context', 'edit' );
 		$data = $this->prepare_item_for_response( $currency, $request );
 
-		if ( ! eac_delete_currency( $currency->get_id() ) ) {
+		if ( ! eac_delete_currency( $currency->id ) ) {
 			return new \WP_Error(
 				'rest_account_cannot_delete',
 				__( 'The currency cannot be deleted.', 'wp-ever-accounting' ),
@@ -389,23 +383,23 @@ class Currencies extends Controller {
 	/**
 	 * Prepares a single currency output for response.
 	 *
-	 * @param Currency $currency currency object.
+	 * @param Currency $item Currency object.
 	 * @param \WP_REST_Request $request Request object.
 	 *
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 * @since 1.2.1
 	 */
-	public function prepare_item_for_response( $currency, $request ) {
+	public function prepare_item_for_response( $item, $request ) {
 		$data = [];
 
 		foreach ( array_keys( $this->get_schema_properties() ) as $key ) {
 			switch ( $key ) {
 				case 'date_created':
 				case 'date_updated':
-					$value = $this->prepare_date_response( $currency->$key );
+					$value = $this->prepare_date_response( $item->$key );
 					break;
 				default:
-					$value = $currency->$key;
+					$value = $item->$key;
 					break;
 			}
 
@@ -416,7 +410,7 @@ class Currencies extends Controller {
 		$data     = $this->add_additional_fields_to_object( $data, $request );
 		$data     = $this->filter_response_by_context( $data, $context );
 		$response = rest_ensure_response( $data );
-		$response->add_links( $this->prepare_links( $currency, $request ) );
+		$response->add_links( $this->prepare_links( $item, $request ) );
 
 		/**
 		 * Filter currency data returned from the REST API.
@@ -425,7 +419,7 @@ class Currencies extends Controller {
 		 * @param currency $currency currency object used to create response.
 		 * @param \WP_REST_Request $request Request object.
 		 */
-		return apply_filters( 'ever_accounting_rest_prepare_currency', $response, $currency, $request );
+		return apply_filters( 'eac_rest_prepare_currency', $response, $item, $request );
 	}
 
 	/**
@@ -458,7 +452,7 @@ class Currencies extends Controller {
 		 * @param array $props currency props.
 		 * @param \WP_REST_Request $request Request object.
 		 */
-		return apply_filters( 'ever_accounting_rest_pre_insert_currency', $props, $request );
+		return apply_filters( 'eac_rest_pre_insert_currency', $props, $request );
 	}
 
 	/**
@@ -472,7 +466,7 @@ class Currencies extends Controller {
 	protected function prepare_links( $currency, $request ) {
 		return array(
 			'self'       => array(
-				'href' => rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $currency->get_id() ) ),
+				'href' => rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $currency->id ) ),
 			),
 			'collection' => array(
 				'href' => rest_url( sprintf( '/%s/%s', $this->namespace, $this->rest_base ) ),
@@ -504,8 +498,7 @@ class Currencies extends Controller {
 				'code'               => array(
 					'description' => __( 'currency code.', 'wp-ever-accounting' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'embed', 'edit' ),
-					'readonly'    => true,
+					'context'     => array( 'view', 'edit' ),
 					'required'    => true,
 				),
 				'name'               => array(
@@ -586,7 +579,7 @@ class Currencies extends Controller {
 		 *
 		 * @since 1.2.1
 		 */
-		$schema = apply_filters( 'ever_accounting_rest_currency_item_schema', $schema );
+		$schema = apply_filters( 'eac_rest_currency_item_schema', $schema );
 
 		return $this->add_additional_fields_schema( $schema );
 	}

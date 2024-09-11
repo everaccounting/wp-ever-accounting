@@ -62,3 +62,17 @@ function eac_get_currencies( $args = array(), $count = false ) {
 
 	return Currency::results( $args );
 }
+
+/**
+ * Delete a currency.
+ *
+ * @param int $id Currency ID.
+ *
+ * @return bool
+ * @since 1.1.0
+ */
+function eac_delete_currency( $id ) {
+	$currency = eac_get_currency( $id );
+
+	return $currency ? $currency->delete() : false;
+}

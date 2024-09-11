@@ -420,8 +420,8 @@ class Categories extends Controller {
 	 */
 	protected function prepare_item_for_database( $request ) {
 		$schema    = $this->get_item_schema();
-		$props = array_keys( array_filter( $schema['properties'], array( $this, 'filter_writable_props' ) ) );
-		$data     = [];
+		$props     = array_keys( array_filter( $schema['properties'], array( $this, 'filter_writable_props' ) ) );
+		$data      = [];
 		foreach ( $props as $prop ) {
 			if (isset($request[$prop])) {
 				switch ($prop) {
