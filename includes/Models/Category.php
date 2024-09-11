@@ -53,9 +53,7 @@ class Category extends Model {
 	 * @since 1.0.0
 	 * @var array
 	 */
-	protected $attributes = array(
-		'status' => 'active',
-	);
+	protected $attributes = array();
 
 	/**
 	 * The attributes that should be cast.
@@ -126,6 +124,21 @@ class Category extends Model {
 		return apply_filters( 'ever_accounting_category_types', $types );
 	}
 
+	/**
+	 * Get all the available status of category the plugin support.
+	 *
+	 * @since 1.1.0
+	 * @return array
+	 */
+	public static function get_statuses() {
+		$statuses = array(
+			'active'   => esc_html__( 'Active', 'wp-ever-accounting' ),
+			'inactive' => esc_html__( 'Inactive', 'wp-ever-accounting' ),
+		);
+
+		return apply_filters( 'ever_accounting_category_statuses', $statuses );
+	}
+
 	/*
 	|--------------------------------------------------------------------------
 	| Accessors, Mutators and Relationship Methods
@@ -145,6 +158,18 @@ class Category extends Model {
 	 */
 	protected function set_type( $type ) {
 		$this->attributes['type'] = ! array_key_exists( $type, self::get_types() ) ? 'item' : $type;
+	}
+
+	/**
+	 * Set the status of the category.
+	 *
+	 * @param string $status Status of the category.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	protected function set_status( $status ) {
+		$this->attributes['status'] = ! array_key_exists( $status, self::get_statuses() ) ? 'active' : $status;
 	}
 
 	/**

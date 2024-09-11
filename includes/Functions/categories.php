@@ -15,6 +15,16 @@ function eac_get_category_types() {
 }
 
 /**
+ * Get all the available type of category the plugin support.
+ *
+ * @since 1.1.0
+ * @return array
+ */
+function eac_get_category_statuses() {
+	return Category::get_statuses();
+}
+
+/**
  * Get category.
  *
  * @param mixed $category Category ID or object.

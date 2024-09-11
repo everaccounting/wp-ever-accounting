@@ -324,12 +324,14 @@ class Categories extends Controller {
 		if ( is_wp_error( $data ) ) {
 			return $data;
 		}
-		$saved = $category->set_data( $data )->save();
+
+		$data  = array_merge( array( 'id'=> $category->id ), $data );
+		$saved = eac_insert_category( $data );
 		if ( is_wp_error( $saved ) ) {
 			return $saved;
 		}
 
-		$response = $this->prepare_item_for_response( $category, $request );
+		$response = $this->prepare_item_for_response( $saved, $request );
 		$response = rest_ensure_response( $response );
 
 		return $response;
@@ -406,7 +408,7 @@ class Categories extends Controller {
 		 * @param Category $item Category object used to create response.
 		 * @param \WP_REST_Request $request Request object.
 		 */
-		return apply_filters( 'ever_accounting_rest_prepare_category', $response, $item, $request );
+		return apply_filters( 'eac_rest_prepare_category', $response, $item, $request );
 	}
 
 	/**
@@ -439,7 +441,7 @@ class Categories extends Controller {
 		 * @param array $props Category props.
 		 * @param \WP_REST_Request $request Request object.
 		 */
-		return apply_filters( 'ever_accounting_rest_pre_insert_category', $props, $request );
+		return apply_filters( 'eac_rest_pre_insert_category', $props, $request );
 	}
 
 	/**
@@ -505,13 +507,20 @@ class Categories extends Controller {
 					'type'        => 'integer',
 					'context'     => array( 'view', 'edit' ),
 				),
-				'date_updated' => array(
+				'status' 	 => array(
+					'description' => __( 'Category status.', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'enum'        => array_keys( eac_get_category_statuses() ),
+					'context'     => array( 'view', 'edit' ),
+					'required'    => true,
+				),
+				'updated_at' => array(
 					'description' => __( "The date the category was last updated, in the site's timezone.", 'wp-ever-accounting' ),
 					'type'        => 'date-time',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
-				'date_created' => array(
+				'created_at' => array(
 					'description' => __( "The date the category was created, in the site's timezone.", 'wp-ever-accounting' ),
 					'type'        => 'date-time',
 					'context'     => array( 'view', 'edit' ),
@@ -527,7 +536,7 @@ class Categories extends Controller {
 		 *
 		 * @since 1.2.1
 		 */
-		$schema = apply_filters( 'ever_accounting_rest_category_item_schema', $schema );
+		$schema = apply_filters( 'eac_rest_category_item_schema', $schema );
 
 		return $this->add_additional_fields_schema( $schema );
 	}
