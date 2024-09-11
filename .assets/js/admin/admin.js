@@ -118,4 +118,5 @@ jQuery(document).ready(($) => {
 
 	// Reinitialize UI when document body triggers 'eac-update-ui'.
 	$(document.body).on('eac_update_ui', initializeUI);
+
 });

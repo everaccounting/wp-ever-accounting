@@ -522,14 +522,19 @@ class Items extends Controller {
 					'type'        => 'boolean',
 					'context'     => array( 'view', 'edit' ),
 				),
-				'taxes'        => array(
-					'description' => __( 'Taxes for the item.', 'wp-ever-accounting' ),
-					'type'        => 'array',
+				'tax_ids'      => array(
+					'description' => __( 'Tax IDs for the item.', 'wp-ever-accounting' ),
+					'type'        => 'string',
 					'context'     => array( 'view', 'edit' ),
-					'items'       => array(
-						'$ref' => rest_url( sprintf( '/%s/taxes', $this->namespace  ) ),
-					),
 				),
+//				'taxes'        => array(
+//					'description' => __( 'Taxes for the item.', 'wp-ever-accounting' ),
+//					'type'        => 'array',
+//					'context'     => array( 'view', 'edit' ),
+//					'items'       => array(
+//						'$ref' => rest_url( sprintf( '/%s/taxes', $this->namespace  ) ),
+//					),
+//				),
 				'category_id'  => array(
 					'description' => __( 'Category ID for the item.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
