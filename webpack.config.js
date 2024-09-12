@@ -26,6 +26,7 @@ module.exports = [
 			'js/eac-modal': './.assets/js/admin/modal.js',
 			'js/eac-admin': './.assets/js/admin/admin.js',
 			'js/eac-invoice': './.assets/js/admin/invoice.js',
+			'js/eac-bill-form': './.assets/js/admin/bill-form.js',
 			'js/eac-settings': './.assets/js/admin/settings.js',
 			'css/jquery-ui': [
 				'./node_modules/jquery-ui/themes/base/theme.css',
@@ -86,7 +87,7 @@ module.exports = [
 			// copy vue js file from node_modules to assets folder.
 			new CopyPlugin({
 				patterns: [
-					{from: 'node_modules/vue/dist/vue.min.js', to: 'js/vue.js'},
+					{from: 'node_modules/accounting/accounting.js', to: 'js/accounting.js'},
 				],
 			}),
 

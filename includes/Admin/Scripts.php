@@ -34,15 +34,16 @@ class Scripts {
 		EAC()->scripts->register_script( 'eac-select2', 'js/select2.js', array( 'jquery' ), true );
 		EAC()->scripts->register_script( 'eac-tiptip', 'js/tiptip.js', array( 'jquery' ), true );
 		EAC()->scripts->register_script( 'eac-blockui', 'js/blockui.js', array( 'jquery' ), true );
+		EAC()->scripts->register_script( 'eac-accounting', 'js/accounting.js', array( 'jquery' ), true );
 
 		// Packages.
-		EAC()->scripts->register_script( 'eac-api', 'packages/api.js', array( 'wp-api' ), true );
-		EAC()->scripts->register_script( 'eac-store', 'packages/store.js', array( 'wp-api' ), true );
+		EAC()->scripts->register_script( 'eac-api', 'packages/api.js', array( 'wp-api', 'wp-backbone', 'underscore', 'jquery', 'eac-accounting' ), true );
 
 
-		EAC()->scripts->register_script( 'eac-modal', 'js/eac-modal.js', array( 'wp-backbone', 'underscore', 'jquery' ), true );
-		EAC()->scripts->register_script( 'eac-invoice', 'js/eac-invoice.js', array( 'eac-modal', 'eac-store', 'eac-api' ), true );
 		EAC()->scripts->register_script( 'eac-admin', 'js/eac-admin.js', array( 'jquery', 'eac-chartjs', 'eac-inputmask', 'eac-select2', 'eac-tiptip', 'jquery-ui-datepicker', 'jquery-ui-tooltip', 'wp-util' ), true );
+		EAC()->scripts->register_script( 'eac-modal', 'js/eac-modal.js', array( 'wp-backbone', 'underscore', 'jquery' ), true );
+		EAC()->scripts->register_script( 'eac-invoice', 'js/eac-invoice.js', array( 'eac-modal', 'eac-api' ), true );
+		EAC()->scripts->register_script( 'eac-bill-form', 'js/eac-bill-form.js', array( 'eac-modal', 'eac-api' ), true );
 		EAC()->scripts->register_script( 'eac-settings', 'js/eac-settings.js', array( 'eac-admin' ), true );
 
 		if ( ! in_array( $hook, Utilities::get_screen_ids(), true ) ) {

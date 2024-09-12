@@ -2,6 +2,7 @@ export { default as base} from './base';
 export { default as Account} from './account';
 export { default as Bill} from './bill';
 export { default as Category} from './category';
+export { default as Currency} from './currency';
 export { default as Customer} from './customer';
 export { default as Invoice} from './invoice';
 export { default as Item} from './item';

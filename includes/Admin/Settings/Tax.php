@@ -69,17 +69,6 @@ class Tax extends Page {
 				'type'    => 'checkbox',
 				'default' => 'no',
 			),
-			array(
-				'title'    => __( 'Prices include tax', 'wp-ever-accounting' ),
-				'id'       => 'eac_prices_include_tax',
-				'type'     => 'select',
-				'default'  => 'no',
-				'desc_tip' => true,
-				'options'  => array(
-					'yes' => __( 'Yes, I will enter prices inclusive of tax', 'wp-ever-accounting' ),
-					'no'  => __( 'No, I will enter prices exclusive of tax', 'wp-ever-accounting' ),
-				),
-			),
 			// tax_display_totals as single or not.
 			array(
 				'title'    => __( 'Display tax totals', 'wp-ever-accounting' ),

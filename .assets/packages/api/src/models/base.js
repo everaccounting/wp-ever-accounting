@@ -26,7 +26,7 @@ export default Backbone.Model.extend({
 	 */
 	url: function () {
 		var url = this.apiRoot.replace(/\/+$/, '') + '/' + this.namespace.replace(/\/+$/, '') + '/' + this.endpoint.replace(/\/+$/, '');
-		if (!_.isUndefined(this.get('id'))) {
+		if (!_.isEmpty(this.get('id'))) {
 			url += '/' + this.get('id');
 		}
 
@@ -44,6 +44,10 @@ export default Backbone.Model.extend({
 	sync: function (method, model, options) {
 		var beforeSend;
 		options = options || {};
+		// if cached is not set then set it to true.
+		if ( _.isUndefined( options.cache ) ) {
+			options.cache = true;
+		}
 
 		// Include the nonce with requests.
 		if ( ! _.isEmpty(model.nonce) ) {

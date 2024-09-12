@@ -24,12 +24,12 @@ export default Base.extend( {
 	getTaxes() {
 		var ids = this.get( 'tax_ids' ),
 			taxes = new TaxesCollection();
-		console.log(this.toJSON());
 		if (_.isEmpty(ids)) {
 			return jQuery.Deferred().resolve( [] );
 		}
 
 		return taxes.fetch({
+			cache: true,
 			data: {
 				include: ids,
 			},

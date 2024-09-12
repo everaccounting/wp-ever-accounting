@@ -1,3 +1,4 @@
+// import './misc/cache';
 import * as collections from './collections';
 import * as models from './models';
 export * as utils from './utils';

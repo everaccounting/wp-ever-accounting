@@ -382,8 +382,8 @@ class Categories extends Controller {
 
 		foreach ( array_keys( $this->get_schema_properties() ) as $key ) {
 			switch ( $key ) {
-				case 'created_at':
 				case 'updated_at':
+				case 'crated_at':
 					$value = $this->prepare_date_response( $item->$key );
 					break;
 				default:

@@ -17,9 +17,10 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Main function for returning invoice.
  *
+ * @param mixed $invoice Invoice ID or post object.
+ *
  * @since 1.1.0
  *
- * @param mixed $invoice Invoice ID or post object.
  * @return EverAccounting\Models\Invoice|null
  */
 function eac_get_invoice( $invoice ) {
@@ -30,10 +31,10 @@ function eac_get_invoice( $invoice ) {
  *  Create new invoice programmatically.
  *  Returns a new invoice object on success.
  *
- * @since 1.1.0
- * @param  array $args   Invoice arguments.
+ * @param array $args Invoice arguments.
  * @param bool  $wp_error Whether to return a WP_Error on failure.
  *
+ * @since 1.1.0
  * @return Invoice|false|int|WP_Error
  */
 function eac_insert_invoice( $args, $wp_error = true ) {
@@ -43,9 +44,9 @@ function eac_insert_invoice( $args, $wp_error = true ) {
 /**
  * Delete an invoice.
  *
- * @since 1.1.0
- *
  * @param int $invoice_id Invoice ID.
+ *
+ * @since 1.1.0
  *
  * @return bool
  */
@@ -58,10 +59,11 @@ function eac_delete_invoice( $invoice_id ) {
 /**
  * Get invoices.
  *
- * @since 1.1.0
- *
  * @param array $args Query arguments.
  * @param bool  $count Whether to return count or items.
+ *
+ * @since 1.1.0
+ *
  * @return array|Invoice[]|int|
  */
 function eac_get_invoices( $args = array(), $count = false ) {
@@ -76,9 +78,10 @@ function eac_get_invoices( $args = array(), $count = false ) {
 /**
  * Main function for returning bill.
  *
+ * @param mixed $bill Bill ID or object.
+ *
  * @since 1.1.0
  *
- * @param mixed $bill Bill ID or object.
  * @return Bill|null
  */
 function eac_get_bill( $bill ) {
@@ -89,10 +92,10 @@ function eac_get_bill( $bill ) {
  *  Create new bill programmatically.
  *  Returns a new bill object on success.
  *
- * @since 1.1.0
- * @param  array $args   Bill data.
+ * @param array $args Bill data.
  * @param bool  $wp_error Optional. Whether to return a WP_Error on failure.
  *
+ * @since 1.1.0
  * @return Bill|false|int|WP_Error
  */
 function eac_insert_bill( $args, $wp_error = true ) {
@@ -102,9 +105,9 @@ function eac_insert_bill( $args, $wp_error = true ) {
 /**
  * Delete an bill.
  *
- * @since 1.1.0
- *
  * @param int $bill_id Bill ID.
+ *
+ * @since 1.1.0
  *
  * @return bool
  */
@@ -117,10 +120,10 @@ function eac_delete_bill( $bill_id ) {
 /**
  * Get bills.
  *
- * @since 1.1.0
- *
  * @param array $args Query arguments.
  * @param bool  $count Whether to return count or items.
+ *
+ * @since 1.1.0
  *
  * @return array|Bill[]|int|
  */
@@ -172,8 +175,8 @@ function eac_get_invoice_statuses() {
 /**
  * Get invoice columns.
  *
- * @return array
  * @since 1.1.0
+ * @return array
  */
 function eac_get_invoice_columns() {
 	$columns = array(
@@ -190,16 +193,16 @@ function eac_get_invoice_columns() {
 /**
  * Get bill columns.
  *
- * @return array
  * @since 1.1.0
+ * @return array
  */
 function eac_get_bill_columns() {
 	$columns = array(
-		'item'     => esc_html__( 'Item', 'wp-ever-accounting' ),
-		'price'    => esc_html__( 'Price', 'wp-ever-accounting' ),
-		'quantity' => esc_html__( 'Quantity', 'wp-ever-accounting' ),
-		'tax'      => esc_html__( 'Tax', 'wp-ever-accounting' ),
-		'subtotal' => esc_html__( 'Subtotal', 'wp-ever-accounting' ),
+		'item'         => esc_html__( 'Item', 'wp-ever-accounting' ),
+		'price'        => esc_html__( 'Price', 'wp-ever-accounting' ),
+		'quantity'     => esc_html__( 'Quantity', 'wp-ever-accounting' ),
+		'subtotal_tax' => esc_html__( 'Tax', 'wp-ever-accounting' ),
+		'subtotal'     => esc_html__( 'Subtotal', 'wp-ever-accounting' ),
 	);
 
 	return apply_filters( 'ever_accounting_bill_columns', $columns );

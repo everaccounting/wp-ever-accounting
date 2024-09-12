@@ -50,7 +50,6 @@ class Invoice extends Document {
 			'issue_date'    => current_time( 'mysql' ),
 			'due_date'      => wp_date( 'Y-m-d', strtotime( '+' . $due_after . ' days' ) ),
 			'notes'         => get_option( 'eac_invoice_notes', '' ),
-			'tax_inclusive' => filter_var( eac_price_includes_tax(), FILTER_VALIDATE_BOOLEAN ),
 			'currency_code' => eac_get_base_currency(),
 			'creator_id'     => get_current_user_id(),
 			'uuid'          => wp_generate_uuid4(),

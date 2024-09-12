@@ -4,7 +4,6 @@ namespace EverAccounting\Models;
 
 use ByteKit\Models\Relations\BelongsTo;
 use ByteKit\Models\Relations\HasMany;
-use ByteKit\Models\Relations\HasOne;
 
 /**
  * Document model.

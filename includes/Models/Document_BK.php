@@ -233,7 +233,6 @@ class Document_BK extends Model {
 	 * @return void
 	 */
 	public function __construct( $attributes = 0 ) {
-		$this->props['tax_inclusive'] = filter_var( eac_price_includes_tax(), FILTER_VALIDATE_BOOLEAN );
 		$this->props['currency_code'] = eac_get_base_currency();
 		$this->props['creator_id']     = get_current_user_id();
 		$this->props['uuid']          = wp_generate_uuid4();

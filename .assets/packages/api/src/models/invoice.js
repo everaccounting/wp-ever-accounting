@@ -9,20 +9,16 @@ export default Base.extend( {
 		status: '',
 		number: '',
 		contact_id: '',
-		items_total: '',
+		subtotal: '',
 		discount_total: '',
-		shipping_total: '',
-		fees_total: '',
 		tax_total: '',
 		total: '',
 		total_paid: '',
-		balance: '',
 		discount_amount: '',
 		discount_type: '',
 		billing_data: '',
 		reference: '',
 		note: '',
-		tax_inclusive: '',
 		vat_exempt: '',
 		issue_date: '',
 		due_date: '',
@@ -37,4 +33,8 @@ export default Base.extend( {
 		updated_at: '',
 		created_at: '',
 	},
+
+	updateTotals() {
+		let items_amount = this.TotalBeforeDiscountAndTax();
+	}
 } );

@@ -22,12 +22,7 @@ export default Backbone.Collection.extend({
 	/**
 	 * Setup default state.
 	 */
-	initialize: function( models, options ) {
-		this.state = {
-			data: {},
-			total: null,
-			page: 1,
-		};
+	preinitialize: function( models, options ) {
 		this.options = options;
 	},
 
@@ -51,6 +46,10 @@ export default Backbone.Collection.extend({
 	sync: function (method, model, options) {
 		var beforeSend;
 		options = options || {};
+		// if cached is not set then set it to true.
+		if ( _.isUndefined( options.cache ) ) {
+			options.cache = true;
+		}
 
 		// Include the nonce with requests.
 		if ( ! _.isEmpty(model.nonce) ) {
@@ -68,42 +67,6 @@ export default Backbone.Collection.extend({
 				var returnedNonce = xhr.getResponseHeader( 'X-WP-Nonce' );
 				if ( ! _.isEmpty( returnedNonce ) ) {
 					model.nonce = returnedNonce;
-				}
-			};
-		}
-
-		// When reading, add pagination data.
-		if ( 'read' === method ) {
-			if ( options.data ) {
-				self.state.data = _.clone( options.data );
-
-				delete self.state.data.page;
-			} else {
-				self.state.data = options.data = {};
-			}
-
-			if ( 'undefined' === typeof options.data.page ) {
-				self.state.page  = null;
-				self.state.total = null;
-			} else {
-				self.state.page = options.data.page - 1;
-			}
-
-			success = options.success;
-			options.success = function( data, textStatus, request ) {
-				if ( ! _.isUndefined( request ) ) {
-
-					self.state.total = parseInt( request.getResponseHeader( 'x-wp-total' ), 10 );
-				}
-
-				if ( null === self.state.page ) {
-					self.state.page = 1;
-				} else {
-					self.state.page++;
-				}
-
-				if ( success ) {
-					return success.apply( this, arguments );
 				}
 			};
 		}

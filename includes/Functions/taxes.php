@@ -23,15 +23,6 @@ function eac_tax_enabled() {
 }
 
 /**
- * Are prices inclusive of tax?
- *
- * @return bool
- */
-function eac_price_includes_tax() {
-	return eac_tax_enabled() && apply_filters( 'ever_accounting_price_includes_tax', get_option( 'eac_prices_include_tax' ) === 'yes' );
-}
-
-/**
  * Get calculated tax.
  *
  * @param double $amount Amount to calculate tax for.

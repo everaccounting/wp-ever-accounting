@@ -1,5 +1,3 @@
-import {LineItemsCollection, LineItemModel, ItemModel} from "@eac/store";
-
 /* global Backbone, _, jQuery, eac_invoices_vars, eac */
 /**
  * ========================================================================
@@ -10,231 +8,6 @@ jQuery(document).ready(($) => {
 	'use strict';
 	const FORM_ID = '#eac-invoice-form';
 
-	var utils = {
-		calculateTaxes: function (amount, rates, inclusive = false) {
-			const defaultData = {
-				tax_id: 0,
-				rate: 0,
-				is_compound: 'no',
-				amount: 0
-			};
-
-			rates = rates.filter(rate => {
-				if (typeof rate === 'object' && rate !== null) {
-					return !(rate.tax_id === undefined || rate.tax_id === null);
-
-				}
-				return false;
-			}).map(rate => {
-				return {...defaultData, ...rate};
-			});
-
-			if (inclusive) {
-				let nonCompounded = amount;
-				for (let rate of rates) {
-					if (rate.is_compound !== 'yes') {
-						continue;
-					}
-					const taxAmount = nonCompounded - (nonCompounded / (1 + (rate.rate / 100)));
-					rate.amount = taxAmount;
-					nonCompounded -= taxAmount;
-				}
-
-				const regularTaxRate = 1 + (rates.filter(rate => rate.is_compound === 'no')
-					.reduce((sum, rate) => sum + rate.rate, 0) / 100);
-
-				for (let rate of rates) {
-					if (rate.is_compound === 'yes') {
-						continue;
-					}
-					const theRate = rate.rate / 100 / regularTaxRate;
-					const netPrice = amount - (theRate * nonCompounded);
-					rate.amount += amount - netPrice;
-				}
-			} else {
-				for (let rate of rates) {
-					if (rate.is_compound === 'yes') {
-						continue;
-					}
-					rate.amount = amount * (rate.rate / 100);
-				}
-
-				let preCompounded = rates.reduce((sum, rate) => sum + (rate.is_compound === 'no' ? rate.amount : 0), 0);
-				for (let rate of rates) {
-					if (rate.is_compound !== 'yes') {
-						continue;
-					}
-					const taxAmount = (amount + preCompounded) * (rate.rate / 100);
-					rate.amount += taxAmount;
-					preCompounded += taxAmount;
-				}
-			}
-
-			return rates.reduce((acc, rate) => {
-				acc[rate.tax_id] = rate.amount;
-				return acc;
-			}, {});
-		}
-	}
-
-	/**
-	 * ========================================================================
-	 * MODELS
-	 * ========================================================================
-	 */
-	// var LineItemModel = wp.api.WPApiBaseModel.extend({
-	// 	urlRoot: '/eac/v1/items',
-	//
-	// 	defaults: {
-	// 		id: null,
-	// 		type: 'standard',
-	// 		name: '',
-	// 		price: 0,
-	// 		quantity: 1,
-	// 		subtotal: 0,
-	// 		subtotal_tax: 0,
-	// 		discount: 0,
-	// 		discount_tax: 0,
-	// 		tax_total: 0,
-	// 		total: 0,
-	// 		taxable: false,
-	// 		description: '',
-	// 		unit: '',
-	// 		item_id: null,
-	// 		taxes: [],
-	// 	},
-	//
-	// 	getDiscountedSubtotal() {
-	// 		return this.getSubtotal() - this.getDiscount();
-	// 	},
-	//
-	// 	getSubtotal() {
-	// 		return this.get('quantity') * this.get('price');
-	// 	},
-	//
-	// 	getTotal() {
-	// 		return this.get('quantity') * this.get('price');
-	// 	},
-	//
-	// 	add_tax: function (tax) {
-	//
-	// 	},
-	// });
-
-	var LineItemTaxModel = Backbone.Model.extend({
-		defaults: {
-			id: null,
-			name: '',
-			rate: 0,
-			amount: 0,
-			total: 0,
-		},
-	});
-
-	var State = eac.store.InvoiceModel.extend({
-		defaults: {
-			id: null,
-			number: '',
-			date: '',
-			due_date: '',
-			status: 'draft',
-			customer_id: null,
-			customer_name: '',
-			customer_email: '',
-			customer_address: '',
-			customer_phone: '',
-			customer_vat: '',
-			customer_note: '',
-			currency_code: '',
-			currency_rate: 1,
-			subtotal: 0,
-			subtotal_tax: 0,
-			discount: 0,
-			discount_tax: 0,
-			tax_total: 0,
-			total: 0,
-			items: [],
-			tax_enabled: 'yes',
-			inclusive_taxes: 'no',
-		},
-
-		getSubtotal() {
-			const {models: items} = this.get('items');
-
-			return items.reduce(
-				(amount, item) => {
-					return amount += +item.getSubtotal();
-				},
-				0
-			);
-		},
-
-		getTotal() {
-			const {models: items} = this.get('items');
-
-			return items.reduce(
-				(amount, item) => {
-					return amount += +item.getTotal();
-				},
-				0
-			);
-		},
-
-		recalculate() {
-			const {models: items} = this.get('items');
-
-			// calculate line subtotals.
-			const subtotal = items.reduce( (amount, item) => {
-				var price = item.get('price');
-				var quantity = item.get('quantity');
-				var subtotal = price * quantity;
-				var taxes = item.get('taxes').map( tax => tax.toJSON() );
-				var subtotal_tax = utils.calculateTaxes(subtotal, taxes, this.get('inclusive_taxes') === 'yes').reduce((sum, tax) => sum + tax, 0);
-				if (this.get('inclusive_taxes') === 'yes') {
-					subtotal -= subtotal_tax;
-				}
-				subtotal = Math.max(0, subtotal);
-				item.set('subtotal', subtotal);
-				item.set('subtotal_tax', subtotal_tax);
-
-			}, 0);
-		}
-	});
-
-	/**
-	 * ========================================================================
-	 * COLLECTIONS
-	 * ========================================================================
-	 */
-
-	// var LineItemsCollection = wp.api.WPApiBaseCollection.extend({
-	// 	urlRoot: '/eac/v1/items',
-	//
-	// 	model: LineItemModel,
-	//
-	// 	// preinitialize: function (models, options) {
-	// 	// 	this.options = options;
-	// 	// },
-	//
-	// 	url: function () {
-	// 		return '/eac/v1/items';
-	// 	}
-	// });
-
-	var LineItemTaxesCollection = Backbone.Collection.extend({
-		model: LineItemTaxModel,
-
-		preinitialize: function (models, options) {
-			this.options = options;
-		},
-	});
-
-	/**
-	 * ========================================================================
-	 * VIEWS
-	 * ========================================================================
-	 */
-
 	var LineItemsView = wp.Backbone.View.extend({
 		tagName: 'tbody',
 
@@ -244,7 +17,6 @@ jQuery(document).ready(($) => {
 
 		initialize() {
 			const {state} = this.options;
-
 			const items = state.get('items');
 
 			// Listen for events.
@@ -254,12 +26,9 @@ jQuery(document).ready(($) => {
 		},
 
 		render() {
-			console.log("rendering line items");
 			const {state} = this.options;
 			const items = state.get('items') || [];
-
-			this.views.remove();
-
+			this.views.detach();
 			if (0 === items.length) {
 				this.views.add(new NoLineItemsView(this.options));
 			} else {
@@ -268,28 +37,6 @@ jQuery(document).ready(($) => {
 			$(document.body).trigger('eac_update_ui');
 			return this;
 		},
-
-		add(model) {
-			this.views.add(new LineItemView({
-				...this.options,
-				model,
-			}));
-		},
-
-		remove(model) {
-			let subview = null;
-			console.log(this.views);
-			this.views.each((view) => {
-				if (view.model === model) {
-					subview = view;
-				}
-			});
-			if (null !== subview) {
-				subview.remove();
-			}
-		},
-
-
 	});
 
 	var NoLineItemsView = wp.Backbone.View.extend({
@@ -307,13 +54,16 @@ jQuery(document).ready(($) => {
 			'change .line-quantity': 'onChangeQuantity',
 			'change .line-price': 'onChangePrice',
 			'change .line-description': 'onChangeDescription',
-			'change .line-taxes': 'onChangeTaxes',
+			'select2:select .line-taxes': 'onAddTax',
+			'select2:unselect .line-taxes': 'onRemoveTax',
 			'click .remove-line-item': 'onRemoveLineItem',
 		},
 
 		initialize() {
 			// Listen for events.
+			this.listenTo(this.model.get('taxes'), 'change', this.onChaneTaxes);
 			this.listenTo(this.model, 'change', this.render);
+			this.listenTo(this.model.get('taxes'), 'change', this.render);
 		},
 
 		prepare() {
@@ -325,7 +75,6 @@ jQuery(document).ready(($) => {
 
 			//taxes.
 			const taxes = model.get('taxes') || [];
-			console.log(taxes);
 
 			return {
 				...model.toJSON(),
@@ -345,7 +94,7 @@ jQuery(document).ready(($) => {
 		},
 
 		onChangePrice(e) {
-			const price = parseFloat(e.target.value);
+			const price = parseFloat(e.target.value) || 0;
 			this.model.set('price', price);
 		},
 
@@ -354,47 +103,41 @@ jQuery(document).ready(($) => {
 			this.model.set('description', description);
 		},
 
-		onChangeTaxes(e) {
-			e.preventDefault();
-			var $select = $(e.target);
-			var tax_ids = $select.val().filter((value, index, self) => {
-				return self.indexOf(value) === index && !isNaN(value);
-			}).map(value => parseInt(value, 10));
-
-			// if empty we will remove all the taxes. otherwise we will add the selected taxes.
-			if (tax_ids.length === 0) {
-				this.model.set('taxes', []);
+		onAddTax(e) {
+			const self = this;
+			var data = e.params.data;
+			var tax_id = parseInt(data.id, 10);
+			// bail if the tax_id is not found.
+			if (isNaN(tax_id)) {
 				return;
 			}
+			var tax = new eac.api.models.Tax({id: tax_id});
+			var lineTaxes = self.model.get('taxes');
+			tax.fetch({
+				success: function (model) {
+					// todo check if the tax is already added.
 
-			// ignore any tax that is already added.
-			const taxes = this.model.get('taxes') || [];
-			const new_tax_ids = tax_ids.filter(tax_id => taxes.findIndex(tax => tax.id === tax_id) === -1);
-
-			// bail if no new taxes are found.
-			if (new_tax_ids.length === 0) {
-				return;
-			}
-
-			// fetch the taxes from the server.
-			wp.apiRequest({
-				path: '/eac/v1/taxes',
-				method: 'GET',
-				data: {
-					include: new_tax_ids.join(',')
-				},
-			}).done((response) => {
-				const new_taxes = response.map(tax => {
-					return new LineItemTaxModel({
-						id: tax.id,
-						name: tax.name,
-						rate: tax.rate,
-						amount: 0,
-						total: 0,
-					});
-				});
-				this.model.set('taxes', [...taxes, ...new_taxes]);
+					lineTaxes.add(new eac.api.models.LineTax({
+						...model.toJSON(),
+						id: _.uniqueId('tax_'),
+					}), {merge: true, silent: true});
+				}
 			});
+
+			lineTaxes.trigger('change');
+		},
+
+		onRemoveTax(e) {
+			e.preventDefault();
+			var data = e.params.data;
+			var tax_id = parseInt(data.id, 10);
+			// bail if the tax_id is not found.
+			if (isNaN(tax_id)) {
+				return;
+			}
+			var lineTaxes = this.model.get('taxes');
+			var tax = lineTaxes.findWhere({tax_id});
+			lineTaxes.remove(tax);
 		},
 
 		onRemoveLineItem(e) {
@@ -404,6 +147,11 @@ jQuery(document).ready(($) => {
 
 			// Remove OrderItem.
 			state.get('items').remove(model);
+		},
+
+		onChaneTaxes() {
+			const {state} = this.options;
+			state.get('items').updateAmounts();
 		}
 	});
 
@@ -420,7 +168,6 @@ jQuery(document).ready(($) => {
 
 		initialize() {
 			const {state} = this.options;
-			console.log(state);
 			this.listenTo(state.get('items'), 'add', this.stopSpinner);
 		},
 
@@ -437,39 +184,43 @@ jQuery(document).ready(($) => {
 			$select.val('').trigger('change');
 			const {state} = this.options;
 			const items = state.get('items') || [];
-			const item = new ItemModel({id:item_id});
-			item.fetch();
+			const item = new eac.api.models.Item({id: item_id});
+			this.startSpinner();
+			item.fetch({
+				success: function (model) {
+					model.getTaxes().done(function (taxes) {
+						const lineTaxes = new eac.api.collections.LineTaxes(null, {state});
+						_.each(taxes, function (tax) {
+							lineTaxes.add(new eac.api.models.LineTax({
+								...tax,
+								id: _.uniqueId('tax_'),
+							}));
+						});
 
+						const lineItem = new eac.api.models.LineItem({
+							id: _.uniqueId('item_'),
+							item_id: item_id,
+							name: model.get('name'),
+							price: model.get('price'),
+							subtotal: model.get('price') * 1,
+							total: model.get('price') * 1,
+							description: model.get('description').length > 160 ? model.get('description').substring(0, 160) : model.get('description'),
+							quantity: 1,
+							taxes: lineTaxes,
+						});
 
-			// this.startSpinner();
-			// wp.apiRequest({
-			// 	path: '/eac/v1/items/' + item_id,
-			// 	method: 'GET',
-			// }).done(function (response) {
-			// 	const model = new LineItemModel({
-			// 		...response,
-			// 		id: _.uniqueId('item_'),
-			// 		item_id: response?.id,
-			// 		description: response.description.length > 160 ? response.description.substring(0, 160) : response.description,
-			// 		subtotal: response.price
-			// 	});
-			//
-			// 	// if response has taxes then we will add them to the model.
-			// 	if (response.taxes) {
-			// 		const taxes = response.taxes.map(tax => {
-			// 			return new LineItemTaxModel({
-			// 				id: tax.id,
-			// 				name: tax.name,
-			// 				rate: tax.rate,
-			// 				amount: 0,
-			// 				total: 0,
-			// 			});
-			// 		});
-			// 		model.set('taxes', taxes);
-			// 	}
-			//
-			// 	items.add(model);
-			// });
+						// todo improve this.
+						const existingItem = items.findWhere(lineItem);
+						if (existingItem) {
+							existingItem.set('quantity', existingItem.get('quantity') + 1);
+						} else {
+							items.add(lineItem);
+						}
+
+						items.updateAmounts();
+					});
+				},
+			});
 		},
 
 		startSpinner() {
@@ -497,15 +248,10 @@ jQuery(document).ready(($) => {
 		},
 
 		prepare() {
-			console.log("TotalsView prepare");
 			const {state} = this.options;
-			// const subtotal = state.getSubtotal();
-			// const total = state.getTotal();
-
+			console.log(state.toJSON());
 			return {
 				...state.toJSON(),
-				// subtotal,
-				// total,
 			};
 		}
 	});
@@ -513,13 +259,46 @@ jQuery(document).ready(($) => {
 	var Form = wp.Backbone.View.extend({
 		el: FORM_ID,
 
+		initialize(options) {
+			this.options = options;
+			this.listenTo(this.options.state.get('items'), 'change', this.updateAmounts);
+			this.listenTo(this.options.state, 'change:discount_amount', this.updateAmounts);
+			this.listenTo(this.options.state, 'change:discount_type', this.updateAmounts);
+			this.listenTo(this.options.state, 'change:vat_exempt', this.updateAmounts);
+			this.listenTo(this.options.state, 'change:currency_code', this.updateAmounts);
+		},
+
+		events: {
+			'change [name="discount_amount"]': 'onChangeDiscountAmount',
+			'change [name="discount_type"]': 'onChangeDiscountType',
+		},
+
 		render() {
-			// this.views.add('.eac-document-summary', new NoLineItemsView(this.options));
+			this.views.detach();
 			this.views.add('.eac-document-summary', new LineItemsView(this.options));
 			this.views.add('.eac-document-summary', new ActionsView(this.options));
 			this.views.add('.eac-document-summary', new TotalsView(this.options));
 			$(document.body).trigger('eac_update_ui');
 			return this;
+		},
+
+		onChangeDiscountAmount(e) {
+			const {state} = this.options;
+			const amount = parseFloat(e.target.value, 10);
+			state.set('discount_amount', amount);
+		},
+
+		onChangeDiscountType(e) {
+			const {state} = this.options;
+			const type = e.target.value;
+			state.set('discount_type', type);
+		},
+
+		updateAmounts() {
+			console.log('updateAmounts');
+			const {state} = this.options;
+			const items = state.get('items');
+			items.updateAmounts();
 		}
 	});
 
@@ -531,13 +310,16 @@ jQuery(document).ready(($) => {
 			return;
 		}
 
-		const state = new State({
+		const state = new eac.api.models.Invoice({
 			...eac_invoice_form_vars.invoice || {},
+			settings: eac_invoice_form_vars.settings || {},
 		});
 
 		state.set({
-			items: new LineItemsCollection(null, {state}),
+			items: new eac.api.collections.LineItems(null, {state}),
 		});
+
+		window.invoiceState = state;
 
 		var formView = new Form({state});
 

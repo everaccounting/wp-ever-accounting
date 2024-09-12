@@ -33,7 +33,6 @@ function eac_update_120() {
 		'eac_tax_display_totals'           => 'tax_display_totals',
 		'eac_default_sales_account_id'     => 'default_account',
 		'eac_default_sales_payment_method' => 'default_payment_method',
-		'eac_prices_include_tax'           => 'prices_include_tax',
 		'eac_invoice_prefix'               => 'invoice_prefix',
 		'eac_invoice_digits'               => 'invoice_digit',
 		'eac_invoice_due'                  => 'invoice_due',
