@@ -103,7 +103,6 @@ defined( 'ABSPATH' ) || exit;
 						eac_form_field(
 							array(
 								'id'            => 'address',
-								'type'          => 'textarea',
 								'label'         => __( 'Address', 'wp-ever-accounting' ),
 								'placeholder'   => __( '123 Main St', 'wp-ever-accounting' ),
 								'value'         => $customer->address,

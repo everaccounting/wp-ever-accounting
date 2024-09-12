@@ -107,7 +107,7 @@ class Contacts extends Controller {
 					'enum'        => array_keys( eac_get_countries() ),
 					'context'     => array( 'view', 'embed', 'edit' ),
 					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_key',
+						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
 				'website'      => array(

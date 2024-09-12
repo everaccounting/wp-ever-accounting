@@ -394,8 +394,8 @@ class Currencies extends Controller {
 
 		foreach ( array_keys( $this->get_schema_properties() ) as $key ) {
 			switch ( $key ) {
-				case 'date_created':
-				case 'date_updated':
+				case 'created_at':
+				case 'updated_at':
 					$value = $this->prepare_date_response( $item->$key );
 					break;
 				default:
