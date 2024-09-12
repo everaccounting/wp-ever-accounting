@@ -2,17 +2,17 @@
 
 namespace EverAccounting\API;
 
-use EverAccounting\Models\Item;
+use EverAccounting\Models\Account;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class Items
+ * Class Accounts
  *
  * @since 0.0.1
  * @package EverAccounting\API
  */
-class Items extends Controller {
+class Accounts extends Controller {
 	/**
 	 * Route base.
 	 *
@@ -20,7 +20,7 @@ class Items extends Controller {
 	 *
 	 * @var string
 	 */
-	protected $rest_base = 'items';
+	protected $rest_base = 'accounts';
 
 	/**
 	 * Registers the routes for the objects of the controller.
@@ -59,7 +59,7 @@ class Items extends Controller {
 			array(
 				'args'   => array(
 					'id' => array(
-						'description' => __( 'Unique identifier for the item.', 'wp-ever-accounting' ),
+						'description' => __( 'Unique identifier for the account.', 'wp-ever-accounting' ),
 					),
 				),
 				array(
@@ -85,7 +85,7 @@ class Items extends Controller {
 	}
 
 	/**
-	 * Checks if a given request has access to read items.
+	 * Checks if a given request has access to read accounts.
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
@@ -93,10 +93,10 @@ class Items extends Controller {
 	 * @return true|\WP_Error True, if the request has read access, WP_Error object otherwise.
 	 */
 	public function get_items_permissions_check( $request ) {
-		if ( ! current_user_can( 'eac_manage_item' ) ) {
+		if ( ! current_user_can( 'eac_manage_account' ) ) {
 			return new \WP_Error(
 				'rest_forbidden_context',
-				__( 'Sorry, you are not allowed to view items.', 'wp-ever-accounting' ),
+				__( 'Sorry, you are not allowed to view accounts.', 'wp-ever-accounting' ),
 				array( 'status' => rest_authorization_required_code() )
 			);
 		}
@@ -105,7 +105,7 @@ class Items extends Controller {
 	}
 
 	/**
-	 * Checks if a given request has access to create an item.
+	 * Checks if a given request has access to create an account.
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
@@ -113,10 +113,10 @@ class Items extends Controller {
 	 * @return true|\WP_Error True, if the request has read access, WP_Error object otherwise.
 	 */
 	public function create_item_permissions_check( $request ) {
-		if ( ! current_user_can( 'eac_manage_item' ) ) {
+		if ( ! current_user_can( 'eac_manage_account' ) ) {
 			return new \WP_Error(
 				'rest_forbidden_context',
-				__( 'Sorry, you are not allowed to create items.', 'wp-ever-accounting' ),
+				__( 'Sorry, you are not allowed to create account.', 'wp-ever-accounting' ),
 				array( 'status' => rest_authorization_required_code() )
 			);
 		}
@@ -125,20 +125,20 @@ class Items extends Controller {
 	}
 
 	/**
-	 * Checks if a given request has access to read a item.
+	 * Checks if a given request has access to read an account.
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @since 1.2.1
-	 * @return true|\WP_Error True if the request has read access, WP_Error object otherwise.
+	 * @return true|\WP_Error True, if the request has read access, WP_Error object otherwise.
 	 */
 	public function get_item_permissions_check( $request ) {
-		$item = eac_get_item( $request['id'] );
+		$account = eac_get_account( $request['id'] );
 
-		if ( empty( $item ) || ! current_user_can( 'eac_manage_item' ) ) {
+		if ( empty( $account ) || ! current_user_can( 'eac_manage_account' ) ) {
 			return new \WP_Error(
 				'rest_forbidden_context',
-				__( 'Sorry, you are not allowed to view this item.', 'wp-ever-accounting' ),
+				__( 'Sorry, you are not allowed to view this account.', 'wp-ever-accounting' ),
 				array( 'status' => rest_authorization_required_code() )
 			);
 		}
@@ -147,20 +147,20 @@ class Items extends Controller {
 	}
 
 	/**
-	 * Checks if a given request has access to update an item.
+	 * Checks if a given request has access to update an account.
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @since 1.2.1
-	 * @return true|\WP_Error True if the request has read access, WP_Error object otherwise.
+	 * @return true|\WP_Error True, if the request has read access, WP_Error object otherwise.
 	 */
 	public function update_item_permissions_check( $request ) {
-		$item = eac_get_item( $request['id'] );
+		$account = eac_get_account( $request['id'] );
 
-		if ( empty( $item ) || ! current_user_can( 'eac_manage_item' ) ) {
+		if ( empty( $account ) || ! current_user_can( 'eac_manage_account' ) ) {
 			return new \WP_Error(
 				'rest_forbidden_context',
-				__( 'Sorry, you are not allowed to update this item.', 'wp-ever-accounting' ),
+				__( 'Sorry, you are not allowed to update this account.', 'wp-ever-accounting' ),
 				array( 'status' => rest_authorization_required_code() )
 			);
 		}
@@ -169,20 +169,20 @@ class Items extends Controller {
 	}
 
 	/**
-	 * Checks if a given request has access to delete a item.
+	 * Checks if a given request has access to delete an account.
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @since 1.2.1
-	 * @return true|\WP_Error True if the request has read access, WP_Error object otherwise.
+	 * @return true|\WP_Error True, if the request has read access, WP_Error object otherwise.
 	 */
 	public function delete_item_permissions_check( $request ) {
-		$item = eac_get_item( $request['id'] );
+		$account = eac_get_account( $request['id'] );
 
-		if ( empty( $item ) || ! current_user_can( 'eac_manage_item' ) ) {
+		if ( empty( $account ) || ! current_user_can( 'eac_manage_account' ) ) {
 			return new \WP_Error(
 				'rest_forbidden_context',
-				__( 'Sorry, you are not allowed to delete this item.', 'wp-ever-accounting' ),
+				__( 'Sorry, you are not allowed to delete this account.', 'wp-ever-accounting' ),
 				array( 'status' => rest_authorization_required_code() )
 			);
 		}
@@ -191,7 +191,7 @@ class Items extends Controller {
 	}
 
 	/**
-	 * Retrieves a list of items.
+	 * Retrieves a list of accounts.
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
@@ -210,22 +210,22 @@ class Items extends Controller {
 		/**
 		 * Filters the query arguments for a request.
 		 *
-		 * Enables adding extra arguments or setting defaults for a item request.
+		 * Enables adding extra arguments or setting defaults for a account request.
 		 *
 		 * @param array            $args Key value array of query var to query value.
 		 * @param \WP_REST_Request $request The request used.
 		 *
 		 * @since 1.2.1
 		 */
-		$args      = apply_filters( 'eac_rest_item_query', $args, $request );
-		$items     = eac_get_items( $args );
-		$total     = eac_get_items( $args, true );
+		$args      = apply_filters( 'eac_rest_account_query', $args, $request );
+		$accounts  = eac_get_accounts( $args );
+		$total     = eac_get_accounts( $args, true );
 		$page      = isset( $request['page'] ) ? absint( $request['page'] ) : 1;
 		$max_pages = ceil( $total / (int) $args['per_page'] );
 
 		$results = array();
-		foreach ( $items as $item ) {
-			$data      = $this->prepare_item_for_response( $item, $request );
+		foreach ( $accounts as $account ) {
+			$data      = $this->prepare_item_for_response( $account, $request );
 			$results[] = $this->prepare_response_for_collection( $data );
 		}
 
@@ -258,7 +258,7 @@ class Items extends Controller {
 	}
 
 	/**
-	 * Retrieves a single item.
+	 * Retrieves a single account.
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
@@ -266,14 +266,14 @@ class Items extends Controller {
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function get_item( $request ) {
-		$item = eac_get_item( $request['id'] );
-		$data = $this->prepare_item_for_response( $item, $request );
+		$account = eac_get_account( $request['id'] );
+		$data    = $this->prepare_item_for_response( $account, $request );
 
 		return rest_ensure_response( $data );
 	}
 
 	/**
-	 * Creates a single item.
+	 * Creates a single account.
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
@@ -284,7 +284,7 @@ class Items extends Controller {
 		if ( ! empty( $request['id'] ) ) {
 			return new \WP_Error(
 				'rest_exists',
-				__( 'Cannot create existing item.', 'wp-ever-accounting' ),
+				__( 'Cannot create existing account.', 'wp-ever-accounting' ),
 				array( 'status' => 400 )
 			);
 		}
@@ -294,23 +294,23 @@ class Items extends Controller {
 			return $data;
 		}
 
-		$item = eac_insert_item( $data );
-		if ( is_wp_error( $item ) ) {
-			return $item;
+		$account = eac_insert_account( $data );
+		if ( is_wp_error( $account ) ) {
+			return $account;
 		}
 
-		$response = $this->prepare_item_for_response( $item, $request );
+		$response = $this->prepare_item_for_response( $account, $request );
 		$response = rest_ensure_response( $response );
 
 		$response->set_status( 201 );
-		$response->header( 'Location', rest_url( sprintf( '%s/%s/%d', $this->namespace, $this->rest_base, $item->id ) ) );
+		$response->header( 'Location', rest_url( sprintf( '%s/%s/%d', $this->namespace, $this->rest_base, $account->id ) ) );
 
 		return $response;
 
 	}
 
 	/**
-	 * Updates a single item.
+	 * Updates a single account.
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
@@ -318,25 +318,25 @@ class Items extends Controller {
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function update_item( $request ) {
-		$item = eac_get_item( $request['id'] );
-		$data = $this->prepare_item_for_database( $request );
+		$account = eac_get_account( $request['id'] );
+		$data    = $this->prepare_item_for_database( $request );
 		if ( is_wp_error( $data ) ) {
 			return $data;
 		}
 
-		$item = $item->fill( $data )->save();
-		if ( is_wp_error( $item ) ) {
-			return $item;
+		$account = $account->fill( $data )->save();
+		if ( is_wp_error( $account ) ) {
+			return $account;
 		}
 
-		$response = $this->prepare_item_for_response( $item, $request );
+		$response = $this->prepare_item_for_response( $account, $request );
 		$response = rest_ensure_response( $response );
 
 		return $response;
 	}
 
 	/**
-	 * Deletes a single item.
+	 * Deletes a single account.
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
@@ -344,14 +344,14 @@ class Items extends Controller {
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function delete_item( $request ) {
-		$item = eac_get_item( $request['id'] );
+		$account = eac_get_account( $request['id'] );
 		$request->set_param( 'context', 'edit' );
-		$data = $this->prepare_item_for_response( $item, $request );
+		$data = $this->prepare_item_for_response( $account, $request );
 
-		if ( ! eac_delete_item( $item->id ) ) {
+		if ( ! eac_delete_account( $account->id ) ) {
 			return new \WP_Error(
 				'rest_cannot_delete',
-				__( 'The item cannot be deleted.', 'wp-ever-accounting' ),
+				__( 'The account cannot be deleted.', 'wp-ever-accounting' ),
 				array( 'status' => 500 )
 			);
 		}
@@ -368,9 +368,9 @@ class Items extends Controller {
 	}
 
 	/**
-	 * Prepares a single item output for response.
+	 * Prepares a single account output for response.
 	 *
-	 * @param Item             $item Item object.
+	 * @param Account          $item Account object.
 	 * @param \WP_REST_Request $request Request object.
 	 *
 	 * @since 1.2.1
@@ -381,9 +381,6 @@ class Items extends Controller {
 
 		foreach ( array_keys( $this->get_schema_properties() ) as $key ) {
 			switch ( $key ) {
-				case 'category':
-					$value    = $item->category_id? $this->get_endpoint_data( sprintf( '/%s/categories/%d', $this->namespace, $item->category_id ) ) : null;
-					break;
 				case 'created_at':
 				case 'updated_at':
 					$value = $this->prepare_date_response( $item->$key );
@@ -403,22 +400,22 @@ class Items extends Controller {
 		$response->add_links( $this->prepare_links( $item, $request ) );
 
 		/**
-		 * Filter item data returned from the REST API.
+		 * Filter account data returned from the REST API.
 		 *
 		 * @param \WP_REST_Response $response The response object.
-		 * @param Item              $item Item object used to create response.
+		 * @param Account           $item Account object used to create response.
 		 * @param \WP_REST_Request  $request Request object.
 		 */
-		return apply_filters( 'eac_rest_prepare_item', $response, $item, $request );
+		return apply_filters( 'eac_rest_prepare_account', $response, $item, $request );
 	}
 
 	/**
-	 * Prepares a single item for create or update.
+	 * Prepares a single account for creation or update.
 	 *
 	 * @param \WP_REST_Request $request Request object.
 	 *
 	 * @since 1.2.1
-	 * @return array|\WP_Error Item object or WP_Error.
+	 * @return array|\WP_Error Account object or WP_Error.
 	 */
 	protected function prepare_item_for_database( $request ) {
 		$schema    = $this->get_item_schema();
@@ -437,21 +434,21 @@ class Items extends Controller {
 		}
 
 		/**
-		 * Filters item before it is inserted via the REST API.
+		 * Filters account before it is inserted via the REST API.
 		 *
-		 * @param array            $props Item props.
+		 * @param array            $props Account props.
 		 * @param \WP_REST_Request $request Request object.
 		 */
-		return apply_filters( 'eac_rest_pre_insert_item', $props, $request );
+		return apply_filters( 'eac_rest_pre_insert_account', $props, $request );
 	}
 
 	/**
 	 * Prepare links for the request.
 	 *
-	 * @param Item             $item Object data.
-	 * @param \WP_REST_Request $request Request item.
+	 * @param Account          $item Object data.
+	 * @param \WP_REST_Request $request Request account.
 	 *
-	 * @return array Links for the given item.
+	 * @return array Links for the given account.
 	 */
 	protected function prepare_links( $item, $request ) {
 		return array(
@@ -465,19 +462,19 @@ class Items extends Controller {
 	}
 
 	/**
-	 * Retrieves the item's schema, conforming to JSON Schema.
+	 * Retrieves the account's schema, conforming to JSON Schema.
 	 *
 	 * @since 1.1.2
-	 * @return array Item schema data.
+	 * @return array Account schema data.
 	 */
 	public function get_item_schema() {
 		$schema = array(
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
-			'title'      => __( 'Item', 'wp-ever-accounting' ),
+			'title'      => __( 'Account', 'wp-ever-accounting' ),
 			'type'       => 'object',
 			'properties' => array(
 				'id'           => array(
-					'description' => __( 'Unique identifier for the item.', 'wp-ever-accounting' ),
+					'description' => __( 'Unique identifier for the account.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'embed', 'edit' ),
 					'readonly'    => true,
@@ -486,90 +483,83 @@ class Items extends Controller {
 					),
 				),
 				'name'         => array(
-					'description' => __( 'Item name.', 'wp-ever-accounting' ),
+					'description' => __( 'Account name.', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'context'     => array( 'view', 'edit' ),
+					'required'    => true,
+				),
+				'number'       => array(
+					'description' => __( 'Account number.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'edit' ),
 					'required'    => true,
 				),
 				'type'         => array(
-					'description' => __( 'Item type.', 'wp-ever-accounting' ),
+					'description' => __( 'Account type.', 'wp-ever-accounting' ),
 					'type'        => 'string',
-					'enum'        => array_keys( eac_get_item_types() ),
+					'enum'        => array( 'bank', 'card' ),
 					'context'     => array( 'view', 'edit' ),
 					'required'    => true,
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_text_field',
+					),
 				),
-				'description'  => array(
-					'description' => __( 'Item description.', 'wp-ever-accounting' ),
+				'currency_code' => array(
+					'description' => __( 'Account currency code.', 'wp-ever-accounting' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
-				),
-				'unit'         => array(
-					'description' => __( 'Measurement unit for the .', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
-				),
-				'price'        => array(
-					'description' => __( 'Item price.', 'wp-ever-accounting' ),
-					'type'        => 'number',
 					'context'     => array( 'view', 'edit' ),
 					'required'    => true,
+					'default'     => eac_get_base_currency(),
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_text_field',
+					),
 				),
-				'cost'         => array(
-					'description' => __( 'Item cost.', 'wp-ever-accounting' ),
-					'type'        => 'number',
-					'context'     => array( 'view', 'edit' ),
-				),
-				'taxable'      => array(
-					'description' => __( 'Whether or not the item is taxable.', 'wp-ever-accounting' ),
-					'type'        => 'boolean',
-					'context'     => array( 'view', 'edit' ),
-				),
-				'tax_ids'      => array(
-					'description' => __( 'Tax IDs for the item.', 'wp-ever-accounting' ),
+				'bank_name'    => array(
+					'description' => __( 'Bank name.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'edit' ),
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_text_field',
+					),
 				),
-//				'taxes'        => array(
-//					'description' => __( 'Taxes for the item.', 'wp-ever-accounting' ),
-//					'type'        => 'array',
-//					'context'     => array( 'view', 'edit' ),
-//					'items'       => array(
-//						'$ref' => rest_url( sprintf( '/%s/taxes', $this->namespace  ) ),
-//					),
-//				),
-				'category_id'  => array(
-					'description' => __( 'Category ID for the item.', 'wp-ever-accounting' ),
-					'type'        => 'integer',
+				'bank_phone'   => array(
+					'description' => __( 'Bank phone number.', 'wp-ever-accounting' ),
+					'type'        => 'string',
 					'context'     => array( 'view', 'edit' ),
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_text_field',
+					),
 				),
-				'category'     => array(
-					'description' => __( 'Category for the item.', 'wp-ever-accounting' ),
-					'type'        => 'object',
+				'bank_address' => array(
+					'description' => __( 'Bank address.', 'wp-ever-accounting' ),
+					'type'        => 'string',
 					'context'     => array( 'view', 'edit' ),
-					'properties'  => array(
-						'$ref' => rest_url( sprintf( '/%s/categories', $this->namespace  ) ),
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
 				'thumbnail_id' => array(
-					'description' => __( 'Thumbnail ID for the item.', 'wp-ever-accounting' ),
+					'description' => __( 'Thumbnail ID for the account.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'edit' ),
+					'readonly'    => true,
 				),
 				'status'       => array(
-					'description' => __( 'Item status.', 'wp-ever-accounting' ),
+					'description' => __( 'Account status.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'enum'        => array( 'active', 'inactive' ),
 					'context'     => array( 'view', 'edit' ),
 					'required'    => true,
+					'default'     => 'active',
 				),
 				'updated_at'   => array(
-					'description' => __( "The date the item was last updated, in the site's timezone.", 'wp-ever-accounting' ),
+					'description' => __( "The date the account was last updated, in the site's timezone.", 'wp-ever-accounting' ),
 					'type'        => 'date-time',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'created_at'   => array(
-					'description' => __( "The date the item was created, in the site's timezone.", 'wp-ever-accounting' ),
+					'description' => __( "The date the account was created, in the site's timezone.", 'wp-ever-accounting' ),
 					'type'        => 'date-time',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
@@ -578,41 +568,14 @@ class Items extends Controller {
 		);
 
 		/**
-		 * Filters the item's schema.
+		 * Filters the account's schema.
 		 *
-		 * @param array $schema Item schema data.
+		 * @param array $schema Account schema data.
 		 *
 		 * @since 1.2.1
 		 */
-		$schema = apply_filters( 'eac_rest_item_schema', $schema );
+		$schema = apply_filters( 'eac_rest_account_schema', $schema );
 
 		return $this->add_additional_fields_schema( $schema );
 	}
-
-	/**
-	 * Retrieves the query params for the items' collection.
-	 *
-	 * @since 1.1.2
-	 * @return array Collection parameters.
-	 */
-	public function get_collection_params() {
-		$params           = parent::get_collection_params();
-		$params['type']   = array(
-			'description'       => __( 'Limit result set to items of a particular type.', 'wp-ever-accounting' ),
-			'type'              => 'string',
-			'enum'              => array_keys( eac_get_item_types() ),
-			'default'           => '',
-			'sanitize_callback' => 'sanitize_key',
-		);
-		$params['status'] = array(
-			'description'       => __( 'Limit result set to items of a particular status.', 'wp-ever-accounting' ),
-			'type'              => 'string',
-			'enum'              => array( 'active', 'inactive' ),
-			'default'           => '',
-			'sanitize_callback' => 'sanitize_key',
-		);
-
-		return $params;
-	}
-
 }
