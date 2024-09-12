@@ -11,6 +11,7 @@
 use EverAccounting\Models\Contact;
 use EverAccounting\Models\Customer;
 use EverAccounting\Models\Vendor;
+use EverAccounting\Utilities\I18n;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -145,4 +146,14 @@ function eac_get_vendors( $args = array(), $count = false ) {
 	}
 
 	return Vendor::results( $args );
+}
+
+/**
+ * Get countries.
+ *
+ * @return array
+ * @since 1.1.0
+ */
+function eac_get_countries() {
+	return I18n::get_countries();
 }

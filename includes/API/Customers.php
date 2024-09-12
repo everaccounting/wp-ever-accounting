@@ -23,12 +23,74 @@ class Customers extends Contacts {
 	protected $rest_base = 'customers';
 
 	/**
+	 * Registers the routes for the objects of the controller.
+	 *
+	 * @see register_rest_route()
+	 * @since 1.1.0
+	 */
+	public function register_routes() {
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->rest_base,
+			array(
+				array(
+					'methods'             => \WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'get_items' ),
+					'permission_callback' => array( $this, 'get_items_permissions_check' ),
+					'args'                => $this->get_collection_params(),
+				),
+				array(
+					'methods'             => \WP_REST_Server::CREATABLE,
+					'callback'            => array( $this, 'create_item' ),
+					'permission_callback' => array( $this, 'create_item_permissions_check' ),
+					'args'                => $this->get_endpoint_args_for_item_schema( \WP_REST_Server::CREATABLE ),
+				),
+				'schema' => array( $this, 'get_public_item_schema' ),
+			)
+		);
+
+		$get_item_args = array(
+			'context' => $this->get_context_param( array( 'default' => 'view' ) ),
+		);
+
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->rest_base . '/(?P<id>[\d]+)',
+			array(
+				'args'   => array(
+					'id' => array(
+						'description' => __( 'Unique identifier for the customer.', 'wp-ever-accounting' ),
+					),
+				),
+				array(
+					'methods'             => \WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'get_item' ),
+					'permission_callback' => array( $this, 'get_item_permissions_check' ),
+					'args'                => $get_item_args,
+				),
+				array(
+					'methods'             => \WP_REST_Server::EDITABLE,
+					'callback'            => array( $this, 'update_item' ),
+					'permission_callback' => array( $this, 'update_item_permissions_check' ),
+					'args'                => $this->get_endpoint_args_for_item_schema( \WP_REST_Server::EDITABLE ),
+				),
+				array(
+					'methods'             => \WP_REST_Server::DELETABLE,
+					'callback'            => array( $this, 'delete_item' ),
+					'permission_callback' => array( $this, 'delete_item_permissions_check' ),
+				),
+				'schema' => array( $this, 'get_public_item_schema' ),
+			)
+		);
+	}
+
+	/**
 	 * Checks if a given request has access to read customers.
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @since 1.2.1
-	 * @return true|\WP_Error True if the request has read access, WP_Error object otherwise.
+	 * @return true|\WP_Error True, if the request has read access, WP_Error object otherwise.
 	 */
 	public function get_items_permissions_check( $request ) {
 		if ( ! current_user_can( 'eac_manage_customer' ) ) {
@@ -48,7 +110,7 @@ class Customers extends Contacts {
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @since 1.2.1
-	 * @return true|\WP_Error True if the request has read access, WP_Error object otherwise.
+	 * @return true|\WP_Error True, if the request has read access, WP_Error object otherwise.
 	 */
 	public function create_item_permissions_check( $request ) {
 		if ( ! current_user_can( 'eac_manage_customer' ) ) {
@@ -68,7 +130,7 @@ class Customers extends Contacts {
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @since 1.2.1
-	 * @return true|\WP_Error True if the request has read access, WP_Error object otherwise.
+	 * @return true|\WP_Error True, if the request has read access, WP_Error object otherwise.
 	 */
 	public function get_item_permissions_check( $request ) {
 		$customer = eac_get_customer( $request['id'] );
@@ -90,7 +152,7 @@ class Customers extends Contacts {
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @since 1.2.1
-	 * @return true|\WP_Error True if the request has read access, WP_Error object otherwise.
+	 * @return true|\WP_Error True, if the request has read access, WP_Error object otherwise.
 	 */
 	public function update_item_permissions_check( $request ) {
 		$customer = eac_get_customer( $request['id'] );
@@ -112,7 +174,7 @@ class Customers extends Contacts {
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @since 1.2.1
-	 * @return true|\WP_Error True if the request has read access, WP_Error object otherwise.
+	 * @return true|\WP_Error True, if the request has read access, WP_Error object otherwise.
 	 */
 	public function delete_item_permissions_check( $request ) {
 		$customer = eac_get_customer( $request['id'] );
@@ -155,7 +217,7 @@ class Customers extends Contacts {
 		 *
 		 * @since 1.2.1
 		 */
-		$args = apply_filters( 'ever_accounting_rest_customer_query', $args, $request );
+		$args = apply_filters( 'eac_rest_customer_query', $args, $request );
 
 		$customers   = eac_get_customers( $args );
 		$total     = eac_get_customers( $args, true );
@@ -243,7 +305,7 @@ class Customers extends Contacts {
 		$response = rest_ensure_response( $response );
 
 		$response->set_status( 201 );
-		$response->header( 'Location', rest_url( sprintf( '%s/%s/%d', $this->namespace, $this->rest_base, $customer->get_id() ) ) );
+		$response->header( 'Location', rest_url( sprintf( '%s/%s/%d', $this->namespace, $this->rest_base, $customer->id ) ) );
 
 		return $response;
 
@@ -264,7 +326,7 @@ class Customers extends Contacts {
 			return $data;
 		}
 
-		$saved = $customer->set_data( $data )->save();
+		$saved = $customer->fill( $data )->save();
 		if ( is_wp_error( $saved ) ) {
 			return $saved;
 		}
@@ -288,7 +350,7 @@ class Customers extends Contacts {
 		$request->set_param( 'context', 'edit' );
 		$data = $this->prepare_item_for_response( $customer, $request );
 
-		if ( ! eac_delete_customer( $customer->get_id() ) ) {
+		if ( ! eac_delete_customer( $customer->id ) ) {
 			return new \WP_Error(
 				'rest_cannot_delete',
 				__( 'The customer cannot be deleted.', 'wp-ever-accounting' ),
@@ -310,23 +372,23 @@ class Customers extends Contacts {
 	/**
 	 * Prepares a single customer output for response.
 	 *
-	 * @param customer           $customer customer object.
+	 * @param customer         $item customer object.
 	 * @param \WP_REST_Request $request Request object.
 	 *
 	 * @since 1.2.1
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
-	public function prepare_item_for_response( $customer, $request ) {
+	public function prepare_item_for_response( $item, $request ) {
 		$data = [];
 
 		foreach ( array_keys( $this->get_schema_properties() ) as $key ) {
 			switch ( $key ) {
-				case 'date_created':
-				case 'date_updated':
-					$value = $this->prepare_date_response( $customer->$key );
+				case 'created_at':
+				case 'updated_at':
+					$value = $this->prepare_date_response( $item->$key );
 					break;
 				default:
-					$value = $customer->$key;
+					$value = $item->$key;
 					break;
 			}
 
@@ -337,20 +399,20 @@ class Customers extends Contacts {
 		$data     = $this->add_additional_fields_to_object( $data, $request );
 		$data     = $this->filter_response_by_context( $data, $context );
 		$response = rest_ensure_response( $data );
-		$response->add_links( $this->prepare_links( $customer, $request ) );
+		$response->add_links( $this->prepare_links( $item, $request ) );
 
 		/**
 		 * Filter customer data returned from the REST API.
 		 *
 		 * @param \WP_REST_Response $response The response object.
-		 * @param customer          $customer customer object used to create response.
+		 * @param customer          $item customer object used to create response.
 		 * @param \WP_REST_Request  $request Request object.
 		 */
-		return apply_filters( 'ever_accounting_rest_prepare_customer', $response, $customer, $request );
+		return apply_filters( 'eac_rest_prepare_customer', $response, $item, $request );
 	}
 
 	/**
-	 * Prepares a single customer for create or update.
+	 * Prepares a single customer for creation or update.
 	 *
 	 * @param \WP_REST_Request $request Request object.
 	 *
@@ -379,7 +441,7 @@ class Customers extends Contacts {
 		 * @param array            $props customer props.
 		 * @param \WP_REST_Request $request Request object.
 		 */
-		return apply_filters( 'ever_accounting_rest_pre_insert_customer', $props, $request );
+		return apply_filters( 'eac_rest_pre_insert_customer', $props, $request );
 	}
 
 	/**
@@ -393,7 +455,7 @@ class Customers extends Contacts {
 	protected function prepare_links( $customer, $request ) {
 		return array(
 			'self'       => array(
-				'href' => rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $customer->get_id() ) ),
+				'href' => rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $customer->id ) ),
 			),
 			'collection' => array(
 				'href' => rest_url( sprintf( '/%s/%s', $this->namespace, $this->rest_base ) ),
@@ -409,6 +471,15 @@ class Customers extends Contacts {
 	 */
 	public function get_item_schema() {
 		$schema = parent::get_item_schema();
+		$schema['properties']['currency_code'] = array(
+			'description' => __( 'Currency code of the customer.', 'wp-ever-accounting' ),
+			'type'        => 'string',
+			'context'     => array( 'view', 'edit' ),
+			'arg_options' => array(
+				'sanitize_callback' => 'sanitize_text_field',
+			),
+			'required'    => true,
+		);
 		$schema['title'] = __( 'customer', 'wp-ever-accounting' );
 		/**
 		 * Filters the customer's schema.
@@ -417,7 +488,7 @@ class Customers extends Contacts {
 		 *
 		 * @since 1.2.1
 		 */
-		$schema = apply_filters( 'ever_accounting_rest_customer_item_schema', $schema );
+		$schema = apply_filters( 'eac_rest_customer_item_schema', $schema );
 
 		return $this->add_additional_fields_schema( $schema );
 	}

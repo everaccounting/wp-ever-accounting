@@ -60,7 +60,7 @@ class Currencies extends Controller {
 			array(
 				'args'   => array(
 					'id' => array(
-						'description' => __( 'Unique identifier for the account.', 'wp-ever-accounting' ),
+						'description' => __( 'Unique identifier for the currency.', 'wp-ever-accounting' ),
 					),
 				),
 				array(

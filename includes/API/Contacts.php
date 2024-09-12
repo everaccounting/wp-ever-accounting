@@ -68,16 +68,8 @@ class Contacts extends Controller {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
-				'address_1'    => array(
+				'address'    => array(
 					'description' => __( 'Address line 1 of the contact.', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'context'     => array( 'view', 'embed', 'edit' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
-					),
-				),
-				'address_2'    => array(
-					'description' => __( 'Address line 2 of the contact.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'embed', 'edit' ),
 					'arg_options' => array(
@@ -130,7 +122,7 @@ class Contacts extends Controller {
 				'vat_number'   => array(
 					'description' => __( 'VAT number of the contact.', 'wp-ever-accounting' ),
 					'type'        => 'string',
-					'context'     => array( 'edit' ),
+					'context'     => array( 'view', 'edit' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
@@ -138,7 +130,7 @@ class Contacts extends Controller {
 				'vat_exempt'   => array(
 					'description' => __( 'VAT exempt status of the contact.', 'wp-ever-accounting' ),
 					'type'        => 'boolean',
-					'context'     => array( 'edit' ),
+					'context'     => array( 'view', 'edit' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'wp_validate_boolean',
 					),
@@ -158,8 +150,7 @@ class Contacts extends Controller {
 					'type'        => 'string',
 					'enum'        => array( 'active', 'inactive' ),
 					'default'     => 'active',
-					'context'     => array( 'view', 'embed', 'edit' ),
-					'readonly'    => true,
+					'context'     => array( 'view', 'edit' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_key',
 					),
@@ -171,13 +162,13 @@ class Contacts extends Controller {
 					'context'     => array( 'view', 'embed', 'edit' ),
 					'readonly'    => true,
 				),
-				'date_updated' => array(
+				'updated_at' => array(
 					'description' => __( "The date the category was last updated, in the site's timezone.", 'wp-ever-accounting' ),
 					'type'        => 'date-time',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
-				'date_created' => array(
+				'created_at' => array(
 					'description' => __( "The date the category was created, in the site's timezone.", 'wp-ever-accounting' ),
 					'type'        => 'date-time',
 					'context'     => array( 'view', 'edit' ),

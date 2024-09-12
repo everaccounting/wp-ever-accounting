@@ -102,18 +102,12 @@ defined( 'ABSPATH' ) || exit;
 						);
 						eac_form_field(
 							array(
-								'id'          => 'address_1',
-								'label'       => __( 'Address Line 1', 'wp-ever-accounting' ),
-								'placeholder' => __( '123 Main St', 'wp-ever-accounting' ),
-								'value'       => $customer->address_1,
-							)
-						);
-						eac_form_field(
-							array(
-								'id'          => 'address_2',
-								'label'       => __( 'Address Line 2', 'wp-ever-accounting' ),
-								'placeholder' => __( 'Apartment, studio, or floor', 'wp-ever-accounting' ),
-								'value'       => $customer->address_2,
+								'id'            => 'address',
+								'type'          => 'textarea',
+								'label'         => __( 'Address', 'wp-ever-accounting' ),
+								'placeholder'   => __( '123 Main St', 'wp-ever-accounting' ),
+								'value'         => $customer->address,
+								'wrapper_style' => 'grid-column: 1 / span 2;',
 							)
 						);
 						eac_form_field(

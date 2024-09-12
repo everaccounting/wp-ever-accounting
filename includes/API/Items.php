@@ -59,7 +59,7 @@ class Items extends Controller {
 			array(
 				'args'   => array(
 					'id' => array(
-						'description' => __( 'Unique identifier for the account.', 'wp-ever-accounting' ),
+						'description' => __( 'Unique identifier for the item.', 'wp-ever-accounting' ),
 					),
 				),
 				array(
@@ -90,7 +90,7 @@ class Items extends Controller {
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @since 1.2.1
-	 * @return true|\WP_Error True if the request has read access, WP_Error object otherwise.
+	 * @return true|\WP_Error True, if the request has read access, WP_Error object otherwise.
 	 */
 	public function get_items_permissions_check( $request ) {
 		if ( ! current_user_can( 'eac_manage_item' ) ) {
@@ -105,12 +105,12 @@ class Items extends Controller {
 	}
 
 	/**
-	 * Checks if a given request has access to create a item.
+	 * Checks if a given request has access to create an item.
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @since 1.2.1
-	 * @return true|\WP_Error True if the request has read access, WP_Error object otherwise.
+	 * @return true|\WP_Error True, if the request has read access, WP_Error object otherwise.
 	 */
 	public function create_item_permissions_check( $request ) {
 		if ( ! current_user_can( 'eac_manage_item' ) ) {
@@ -318,12 +318,13 @@ class Items extends Controller {
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function update_item( $request ) {
+		$item = eac_get_item( $request['id'] );
 		$data = $this->prepare_item_for_database( $request );
 		if ( is_wp_error( $data ) ) {
 			return $data;
 		}
 
-		$item = eac_insert_item( $data );
+		$item = $item->fill( $data )->save();
 		if ( is_wp_error( $item ) ) {
 			return $item;
 		}
@@ -511,6 +512,7 @@ class Items extends Controller {
 					'description' => __( 'Item price.', 'wp-ever-accounting' ),
 					'type'        => 'number',
 					'context'     => array( 'view', 'edit' ),
+					'required'    => true,
 				),
 				'cost'         => array(
 					'description' => __( 'Item cost.', 'wp-ever-accounting' ),

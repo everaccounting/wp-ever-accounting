@@ -123,6 +123,7 @@ class Plugin extends \ByteKit\Plugin {
 				'EverAccounting\API\Taxes',
 				'EverAccounting\API\Categories',
 				'EverAccounting\API\Currencies',
+				'EverAccounting\API\Customers',
 			)
 		);
 		foreach ( $rest_handlers as $controller ) {
