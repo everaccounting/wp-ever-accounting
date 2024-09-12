@@ -135,14 +135,13 @@ class Contacts extends Controller {
 						'sanitize_callback' => 'wp_validate_boolean',
 					),
 				),
-				'currency'     => array(
+				'currency_code'     => array(
 					'description' => __( 'Currency code of the contact.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'default'     => eac_get_base_currency(),
-					'context'     => array( 'view', 'embed', 'edit' ),
-					'readonly'    => true,
+					'context'     => array( 'view', 'edit' ),
 					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_key',
+						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
 				'status'       => array(
@@ -155,11 +154,29 @@ class Contacts extends Controller {
 						'sanitize_callback' => 'sanitize_key',
 					),
 				),
+				'user_id'      => array(
+					'description' => __( 'The ID of the user who created the contact.', 'wp-ever-accounting' ),
+					'type'        => 'integer',
+					'context'     => array( 'view' ),
+					'readonly'    => true,
+				),
 				'uuid'         => array(
 					'description' => __( 'Unique identifier for the resource.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'format'      => 'uuid',
 					'context'     => array( 'view', 'embed', 'edit' ),
+					'readonly'    => true,
+				),
+				'created_via'  => array(
+					'description' => __( 'The ID of the user who created the contact.', 'wp-ever-accounting' ),
+					'type'        => 'integer',
+					'context'     => array( 'view' ),
+					'readonly'    => true,
+				),
+				'creator_id'   => array(
+					'description' => __( 'The ID of the user who created the contact.', 'wp-ever-accounting' ),
+					'type'        => 'integer',
+					'context'     => array( 'view' ),
 					'readonly'    => true,
 				),
 				'updated_at' => array(

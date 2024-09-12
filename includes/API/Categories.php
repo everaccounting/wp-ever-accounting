@@ -129,7 +129,7 @@ class Categories extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @return true|\WP_Error True if the request has read access, WP_Error object otherwise.
+	 * @return true|\WP_Error True, if the request has read access, WP_Error object otherwise.
 	 * @since 1.2.1
 	 */
 	public function get_item_permissions_check( $request ) {

@@ -2,17 +2,17 @@
 
 namespace EverAccounting\API;
 
-use EverAccounting\Models\Customer;
+use EverAccounting\Models\Vendor;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class Customers
+ * Class Vendors
  *
  * @since 0.0.1
  * @package EverAccounting\API
  */
-class Customers extends Contacts {
+class Vendors extends Contacts {
 	/**
 	 * Route base.
 	 *
@@ -20,7 +20,7 @@ class Customers extends Contacts {
 	 *
 	 * @var string
 	 */
-	protected $rest_base = 'customers';
+	protected $rest_base = 'vendors';
 
 	/**
 	 * Registers the routes for the objects of the controller.
@@ -59,7 +59,7 @@ class Customers extends Contacts {
 			array(
 				'args'   => array(
 					'id' => array(
-						'description' => __( 'Unique identifier for the customer.', 'wp-ever-accounting' ),
+						'description' => __( 'Unique identifier for the vendor.', 'wp-ever-accounting' ),
 					),
 				),
 				array(
@@ -85,7 +85,7 @@ class Customers extends Contacts {
 	}
 
 	/**
-	 * Checks if a given request has access to read customers.
+	 * Checks if a given request has access to read vendors.
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
@@ -93,10 +93,10 @@ class Customers extends Contacts {
 	 * @return true|\WP_Error True, if the request has read access, WP_Error object otherwise.
 	 */
 	public function get_items_permissions_check( $request ) {
-		if ( ! current_user_can( 'eac_manage_customer' ) ) {
+		if ( ! current_user_can( 'eac_manage_vendor' ) ) {
 			return new \WP_Error(
 				'rest_forbidden_context',
-				__( 'Sorry, you are not allowed to view customers.', 'wp-ever-accounting' ),
+				__( 'Sorry, you are not allowed to view Vendors.', 'wp-ever-accounting' ),
 				array( 'status' => rest_authorization_required_code() )
 			);
 		}
@@ -105,7 +105,7 @@ class Customers extends Contacts {
 	}
 
 	/**
-	 * Checks if a given request has access to create a customer.
+	 * Checks if a given request has access to create a vendor.
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
@@ -113,10 +113,10 @@ class Customers extends Contacts {
 	 * @return true|\WP_Error True, if the request has read access, WP_Error object otherwise.
 	 */
 	public function create_item_permissions_check( $request ) {
-		if ( ! current_user_can( 'eac_manage_customer' ) ) {
+		if ( ! current_user_can( 'eac_manage_vendor' ) ) {
 			return new \WP_Error(
 				'rest_forbidden_context',
-				__( 'Sorry, you are not allowed to create customers.', 'wp-ever-accounting' ),
+				__( 'Sorry, you are not allowed to create vendor.', 'wp-ever-accounting' ),
 				array( 'status' => rest_authorization_required_code() )
 			);
 		}
@@ -125,29 +125,7 @@ class Customers extends Contacts {
 	}
 
 	/**
-	 * Checks if a given request has access to read a customer.
-	 *
-	 * @param \WP_REST_Request $request Full details about the request.
-	 *
-	 * @since 1.2.1
-	 * @return true|\WP_Error True, if the request has read access, WP_Error object otherwise.
-	 */
-	public function get_item_permissions_check( $request ) {
-		$customer = eac_get_customer( $request['id'] );
-
-		if ( empty( $customer ) || ! current_user_can( 'eac_manage_customer' ) ) {
-			return new \WP_Error(
-				'rest_forbidden_context',
-				__( 'Sorry, you are not allowed to view this customer.', 'wp-ever-accounting' ),
-				array( 'status' => rest_authorization_required_code() )
-			);
-		}
-
-		return true;
-	}
-
-	/**
-	 * Checks if a given request has access to update a customer.
+	 * Checks if a given request has access to update a vendor.
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
@@ -155,12 +133,12 @@ class Customers extends Contacts {
 	 * @return true|\WP_Error True, if the request has read access, WP_Error object otherwise.
 	 */
 	public function update_item_permissions_check( $request ) {
-		$customer = eac_get_customer( $request['id'] );
+		$vendor = eac_get_vendor( $request['id'] );
 
-		if ( empty( $customer ) || ! current_user_can( 'eac_manage_customer' ) ) {
+		if ( empty( $vendor ) || ! current_user_can( 'eac_manage_vendor' ) ) {
 			return new \WP_Error(
 				'rest_forbidden_context',
-				__( 'Sorry, you are not allowed to update this customer.', 'wp-ever-accounting' ),
+				__( 'Sorry, you are not allowed to update this vendor.', 'wp-ever-accounting' ),
 				array( 'status' => rest_authorization_required_code() )
 			);
 		}
@@ -169,7 +147,29 @@ class Customers extends Contacts {
 	}
 
 	/**
-	 * Checks if a given request has access to delete a customer.
+	 * Checks if a given request has access to read a vendor.
+	 *
+	 * @param \WP_REST_Request $request Full details about the request.
+	 *
+	 * @since 1.2.1
+	 * @return true|\WP_Error True, if the request has read access, WP_Error object otherwise.
+	 */
+	public function get_item_permissions_check( $request ) {
+		$vendor = eac_get_vendor( $request['id'] );
+
+		if ( empty( $vendor ) || ! current_user_can( 'eac_manage_vendor' ) ) {
+			return new \WP_Error(
+				'rest_forbidden_context',
+				__( 'Sorry, you are not allowed to view this vendor.', 'wp-ever-accounting' ),
+				array( 'status' => rest_authorization_required_code() )
+			);
+		}
+
+		return true;
+	}
+
+	/**
+	 * Checks if a given request has access to delete a vendor.
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
@@ -177,12 +177,12 @@ class Customers extends Contacts {
 	 * @return true|\WP_Error True, if the request has read access, WP_Error object otherwise.
 	 */
 	public function delete_item_permissions_check( $request ) {
-		$customer = eac_get_customer( $request['id'] );
+		$vendor = eac_get_vendor( $request['id'] );
 
-		if ( empty( $customer ) || ! current_user_can( 'eac_manage_customer' ) ) {
+		if ( empty( $vendor ) || ! current_user_can( 'eac_manage_vendor' ) ) {
 			return new \WP_Error(
 				'rest_forbidden_context',
-				__( 'Sorry, you are not allowed to delete this customer.', 'wp-ever-accounting' ),
+				__( 'Sorry, you are not allowed to delete this vendor.', 'wp-ever-accounting' ),
 				array( 'status' => rest_authorization_required_code() )
 			);
 		}
@@ -191,7 +191,7 @@ class Customers extends Contacts {
 	}
 
 	/**
-	 * Retrieves a list of customers.
+	 * Retrieves a list of vendors.
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
@@ -210,24 +210,24 @@ class Customers extends Contacts {
 		/**
 		 * Filters the query arguments for a request.
 		 *
-		 * Enables adding extra arguments or setting defaults for a customer request.
+		 * Enables adding extra arguments or setting defaults for a vendor request.
 		 *
 		 * @param array            $args Key value array of query var to query value.
 		 * @param \WP_REST_Request $request The request used.
 		 *
 		 * @since 1.2.1
 		 */
-		$args = apply_filters( 'eac_rest_customer_query', $args, $request );
+		$args = apply_filters( 'eac_rest_vendor_query', $args, $request );
 
-		$customers   = eac_get_customers( $args );
-		$total     = eac_get_customers( $args, true );
+		$vendors   = eac_get_vendors( $args );
+		$total     = eac_get_vendors( $args, true );
 		$page      = isset( $request['page'] ) ? absint( $request['page'] ) : 1;
 		$max_pages = ceil( $total / (int) $args['per_page'] );
 
 
 		$results = array();
-		foreach ( $customers as $customer ) {
-			$data      = $this->prepare_item_for_response( $customer, $request );
+		foreach ( $vendors as $vendor ) {
+			$data      = $this->prepare_item_for_response( $vendor, $request );
 			$results[] = $this->prepare_response_for_collection( $data );
 		}
 
@@ -260,7 +260,7 @@ class Customers extends Contacts {
 	}
 
 	/**
-	 * Retrieves a single customer.
+	 * Retrieves a single vendor.
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
@@ -268,14 +268,14 @@ class Customers extends Contacts {
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function get_item( $request ) {
-		$customer = eac_get_customer( $request['id'] );
-		$data     = $this->prepare_item_for_response( $customer, $request );
+		$vendor = eac_get_vendor( $request['id'] );
+		$data   = $this->prepare_item_for_response( $vendor, $request );
 
 		return rest_ensure_response( $data );
 	}
 
 	/**
-	 * Creates a single customer.
+	 * Creates a single vendor.
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
@@ -286,7 +286,7 @@ class Customers extends Contacts {
 		if ( ! empty( $request['id'] ) ) {
 			return new \WP_Error(
 				'rest_exists',
-				__( 'Cannot create existing customer.', 'wp-ever-accounting' ),
+				__( 'Cannot create existing vendor.', 'wp-ever-accounting' ),
 				array( 'status' => 400 )
 			);
 		}
@@ -296,23 +296,23 @@ class Customers extends Contacts {
 			return $data;
 		}
 
-		$customer = eac_insert_customer( $data );
-		if ( is_wp_error( $customer ) ) {
-			return $customer;
+		$vendor = eac_insert_vendor( $data );
+		if ( is_wp_error( $vendor ) ) {
+			return $vendor;
 		}
 
-		$response = $this->prepare_item_for_response( $customer, $request );
+		$response = $this->prepare_item_for_response( $vendor, $request );
 		$response = rest_ensure_response( $response );
 
 		$response->set_status( 201 );
-		$response->header( 'Location', rest_url( sprintf( '%s/%s/%d', $this->namespace, $this->rest_base, $customer->id ) ) );
+		$response->header( 'Location', rest_url( sprintf( '%s/%s/%d', $this->namespace, $this->rest_base, $vendor->id ) ) );
 
 		return $response;
 
 	}
 
 	/**
-	 * Updates a single customer.
+	 * Updates a single vendor.
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
@@ -320,25 +320,25 @@ class Customers extends Contacts {
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function update_item( $request ) {
-		$customer = eac_get_customer( $request['id'] );
+		$vendor = eac_get_vendor( $request['id'] );
 		$data   = $this->prepare_item_for_database( $request );
 		if ( is_wp_error( $data ) ) {
 			return $data;
 		}
 
-		$saved = $customer->fill( $data )->save();
+		$saved = $vendor->fill( $data )->save();
 		if ( is_wp_error( $saved ) ) {
 			return $saved;
 		}
 
-		$response = $this->prepare_item_for_response( $customer, $request );
+		$response = $this->prepare_item_for_response( $vendor, $request );
 		$response = rest_ensure_response( $response );
 
 		return $response;
 	}
 
 	/**
-	 * Deletes a single customer.
+	 * Deletes a single vendor.
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
@@ -346,14 +346,14 @@ class Customers extends Contacts {
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function delete_item( $request ) {
-		$customer = eac_get_customer( $request['id'] );
+		$vendor = eac_get_vendor( $request['id'] );
 		$request->set_param( 'context', 'edit' );
-		$data = $this->prepare_item_for_response( $customer, $request );
+		$data   = $this->prepare_item_for_response( $vendor, $request );
 
-		if ( ! eac_delete_customer( $customer->id ) ) {
+		if ( ! eac_delete_vendor( $vendor->id ) ) {
 			return new \WP_Error(
 				'rest_cannot_delete',
-				__( 'The customer cannot be deleted.', 'wp-ever-accounting' ),
+				__( 'The vendor cannot be deleted.', 'wp-ever-accounting' ),
 				array( 'status' => 500 )
 			);
 		}
@@ -370,9 +370,9 @@ class Customers extends Contacts {
 	}
 
 	/**
-	 * Prepares a single customer output for response.
+	 * Prepares a single vendor output for response.
 	 *
-	 * @param customer         $item customer object.
+	 * @param vendor           $item vendor object.
 	 * @param \WP_REST_Request $request Request object.
 	 *
 	 * @since 1.2.1
@@ -402,21 +402,21 @@ class Customers extends Contacts {
 		$response->add_links( $this->prepare_links( $item, $request ) );
 
 		/**
-		 * Filter customer data returned from the REST API.
+		 * Filter vendor data returned from the REST API.
 		 *
 		 * @param \WP_REST_Response $response The response object.
-		 * @param customer          $item customer object used to create response.
+		 * @param vendor            $item vendor object used to create response.
 		 * @param \WP_REST_Request  $request Request object.
 		 */
-		return apply_filters( 'eac_rest_prepare_customer', $response, $item, $request );
+		return apply_filters( 'eac_rest_prepare_vendor', $response, $item, $request );
 	}
 
 	/**
-	 * Prepares a single customer for creation or update.
+	 * Prepares a single vendor for creation or update.
 	 *
 	 * @param \WP_REST_Request $request Request object.
 	 *
-	 * @return array|\WP_Error Customer object or WP_Error.
+	 * @return array|\WP_Error Vendor object or WP_Error.
 	 * @since 1.2.1
 	 */
 	protected function prepare_item_for_database( $request ) {
@@ -436,26 +436,26 @@ class Customers extends Contacts {
 		}
 
 		/**
-		 * Filters customer before it is inserted via the REST API.
+		 * Filters vendor before it is inserted via the REST API.
 		 *
-		 * @param array            $props customer props.
+		 * @param array            $props Vendor props.
 		 * @param \WP_REST_Request $request Request object.
 		 */
-		return apply_filters( 'eac_rest_pre_insert_customer', $props, $request );
+		return apply_filters( 'eac_rest_pre_insert_vendor', $props, $request );
 	}
 
 	/**
 	 * Prepare links for the request.
 	 *
-	 * @param customer           $customer Object data.
-	 * @param \WP_REST_Request $request Request customer.
+	 * @param vendor           $vendor Object data.
+	 * @param \WP_REST_Request $request Request vendor.
 	 *
-	 * @return array Links for the given customer.
+	 * @return array Links for the given vendor.
 	 */
-	protected function prepare_links( $customer, $request ) {
+	protected function prepare_links( $vendor, $request ) {
 		return array(
 			'self'       => array(
-				'href' => rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $customer->id ) ),
+				'href' => rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $vendor->id ) ),
 			),
 			'collection' => array(
 				'href' => rest_url( sprintf( '/%s/%s', $this->namespace, $this->rest_base ) ),
@@ -471,15 +471,16 @@ class Customers extends Contacts {
 	 */
 	public function get_item_schema() {
 		$schema = parent::get_item_schema();
-		$schema['title'] = __( 'Customer', 'wp-ever-accounting' );
+		$schema['title'] = __( 'Vendor', 'wp-ever-accounting' );
+
 		/**
-		 * Filters the customer's schema.
+		 * Filters the vendor's schema.
 		 *
 		 * @param array $schema Item schema data.
 		 *
 		 * @since 1.2.1
 		 */
-		$schema = apply_filters( 'eac_rest_customer_item_schema', $schema );
+		$schema = apply_filters( 'eac_rest_vendor_item_schema', $schema );
 
 		return $this->add_additional_fields_schema( $schema );
 	}

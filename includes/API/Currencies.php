@@ -557,13 +557,13 @@ class Currencies extends Controller {
 					'context'     => array( 'view', 'edit' ),
 					'required'    => true,
 				),
-				'date_updated'       => array(
+				'updated_at'       => array(
 					'description' => __( "The date the currency was last updated, in the site's timezone.", 'wp-ever-accounting' ),
 					'type'        => 'date-time',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
-				'date_created'       => array(
+				'created_at'       => array(
 					'description' => __( "The date the currency was created, in the site's timezone.", 'wp-ever-accounting' ),
 					'type'        => 'date-time',
 					'context'     => array( 'view', 'edit' ),

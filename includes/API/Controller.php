@@ -61,7 +61,7 @@ class Controller extends \WP_REST_Controller {
 	 * @return bool|\WP_Error
 	 */
 	protected function check_batch_limit( $items ) {
-		$limit = apply_filters( 'ever_accounting_rest_batch_items_limit', 100, $this->get_normalized_rest_base() );
+		$limit = apply_filters( 'eac_rest_batch_items_limit', 100, $this->get_normalized_rest_base() );
 		$total = count( $items['create'] ) + count( $items['update'] ) + count( $items['delete'] );
 
 		if ( $total > $limit ) {
