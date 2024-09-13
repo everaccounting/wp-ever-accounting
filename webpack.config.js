@@ -24,6 +24,7 @@ module.exports = [
 			'js/tiptip': './.assets/libraries/tiptip/tiptip.js',
 			'js/blockui': './.assets/libraries/blockui/blockUI.js',
 			'js/eac-modal': './.assets/js/admin/modal.js',
+			'js/eac-form': './.assets/js/admin/form.js',
 			'js/eac-admin': './.assets/js/admin/admin.js',
 			'js/eac-invoice': './.assets/js/admin/invoice.js',
 			'js/eac-bill-form': './.assets/js/admin/bill-form.js',
@@ -77,11 +78,11 @@ module.exports = [
 						];
 					}
 				},
-				requestToHandle(request) {
-					if (request.startsWith(PACKAGE_NAMESPACE)) {
-						return `eac-${request.substring(PACKAGE_NAMESPACE.length).replace(/-([a-z])/g, (_, letter) => letter.toUpperCase())}`;
-					}
-				},
+				// requestToHandle(request) {
+				// 	if (request.startsWith(PACKAGE_NAMESPACE)) {
+				// 		return `eac-${request.substring(PACKAGE_NAMESPACE.length).replace(/-([a-z])/g, (_, letter) => letter.toUpperCase())}`;
+				// 	}
+				// },
 			}),
 
 			// copy vue js file from node_modules to assets folder.

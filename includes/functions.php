@@ -54,7 +54,7 @@ function eac_format_amount( $amount, $code = null ) {
 		$amount = eac_sanitize_amount( $amount, $code );
 	}
 	$currency     = eac_get_currency( $code );
-	$precision    = $currency ? $currency->precision : 2;
+	$decimals    = $currency ? $currency->decimals : 2;
 	$thousand_sep = $currency ? $currency->thousand_separator : '';
 	$decimal_sep  = $currency ? $currency->decimal_separator : '.';
 	$position     = $currency ? $currency->position : 'before';
@@ -64,7 +64,7 @@ function eac_format_amount( $amount, $code = null ) {
 	$is_negative  = $amount < 0;
 	$amount       = $is_negative ? - $amount : $amount;
 
-	$value = number_format( $amount, $precision, $decimal_sep, $thousand_sep );
+	$value = number_format( $amount, $decimals, $decimal_sep, $thousand_sep );
 
 	return ( $is_negative ? '-' : '' ) . $prefix . $value . $suffix;
 }
@@ -131,7 +131,7 @@ function eac_convert_currency_from_base( $amount, $to, $to_rate = null ) {
 		return $amount;
 	}
 	$currency  = eac_get_currency( $to );
-	$precision = $currency ? $currency->precision : 2;
+	$decimals = $currency ? $currency->decimals : 2;
 	if ( is_null( $to_rate ) ) {
 		$to_rate = $currency ? $currency->exchange_rate : 1;
 	}
@@ -142,7 +142,7 @@ function eac_convert_currency_from_base( $amount, $to, $to_rate = null ) {
 	}
 
 	// Multiply by rate.
-	return round( $amount * $to_rate, $precision, PHP_ROUND_HALF_UP );
+	return round( $amount * $to_rate, $decimals, PHP_ROUND_HALF_UP );
 }
 
 /**
@@ -174,8 +174,8 @@ function eac_convert_currency_to_base( $amount, $from, $from_rate = null, $forma
 		$amount = 0;
 	} else {
 		// Divide by rate.
-		$precision = $from_currency ? $from_currency->precision : 2;
-		$amount    = round( $amount / $from_rate, $precision, PHP_ROUND_HALF_UP );
+		$decimals = $from_currency ? $from_currency->decimals : 2;
+		$amount    = round( $amount / $from_rate, $decimals, PHP_ROUND_HALF_UP );
 	}
 
 	if ( $formatted ) {
@@ -217,14 +217,14 @@ function eac_convert_currency( $amount, $from, $to, $from_rate = null, $to_rate 
 	// No need to convert same currency.
 	if ( $from !== $to && $amount > 0 && $from_rate > 0 ) {
 		$currency  = eac_get_currency( $to );
-		$precision = $currency ? $currency->precision : 2;
-		$amount    = round( $amount / $from_rate, $precision, PHP_ROUND_HALF_UP );
+		$decimals = $currency ? $currency->decimals : 2;
+		$amount    = round( $amount / $from_rate, $decimals, PHP_ROUND_HALF_UP );
 	}
 
 	if ( $amount > 0 && $to_rate > 0 ) {
 		$currency  = eac_get_currency( $to );
-		$precision = $currency ? $currency->precision : 2;
-		$amount    = round( $amount * $to_rate, $precision, PHP_ROUND_HALF_UP );
+		$decimals = $currency ? $currency->decimals : 2;
+		$amount    = round( $amount * $to_rate, $decimals, PHP_ROUND_HALF_UP );
 	}
 
 	if ( $formatted ) {
@@ -267,15 +267,15 @@ function eac_sanitize_number( $number, $decimals = 2 ) {
  * (so it will convert it to 0 in most cases).
  *
  * @param mixed $val The value to round.
- * @param int   $precision The optional number of decimal digits to round to.
+ * @param int   $decimals The optional number of decimal digits to round to.
  * @param int   $mode A constant to specify the mode in which rounding occurs.
  *
- * @return float The value rounded to the given precision as a float, or the supplied default value.
+ * @return float The value rounded to the given decimals as a float, or the supplied default value.
  */
-function eac_round_number( $val, $precision = 6, $mode = PHP_ROUND_HALF_UP ) {
-	$val = eac_sanitize_number( $val, $precision );
+function eac_round_number( $val, $decimals = 6, $mode = PHP_ROUND_HALF_UP ) {
+	$val = eac_sanitize_number( $val, $decimals );
 
-	return round( $val, $precision, $mode );
+	return round( $val, $decimals, $mode );
 }
 
 /**

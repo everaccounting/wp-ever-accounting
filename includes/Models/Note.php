@@ -36,8 +36,8 @@ class Note extends Model {
 	 */
 	protected $columns = array(
 		'id',
-		'object_id',
-		'object_type',
+		'parent_id',
+		'parent_type',
 		'content',
 		'note_metadata',
 		'creator_id',

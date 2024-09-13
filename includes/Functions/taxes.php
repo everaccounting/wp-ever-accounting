@@ -37,7 +37,7 @@ function eac_calculate_taxes( $amount, $rates, $inclusive = false ) {
 	$default_data = array(
 		'tax_id'      => 0,
 		'rate'        => 0,
-		'is_compound' => 'no',
+		'compound' => 'no',
 	);
 	foreach ( $rates as $key => $rate ) {
 		if ( is_a( $rate, '\EverAccounting\Models\DocumentItemTax' ) ) {
@@ -57,7 +57,7 @@ function eac_calculate_taxes( $amount, $rates, $inclusive = false ) {
 	if ( $inclusive ) {
 		$non_compounded = $amount;
 		foreach ( $rates as &$rate ) {
-			if ( 'yes' !== $rate['is_compound'] ) {
+			if ( 'yes' !== $rate['compound'] ) {
 				continue;
 			}
 			$tax_amount      = $non_compounded - ( $non_compounded / ( 1 + ( $rate['rate'] / 100 ) ) );

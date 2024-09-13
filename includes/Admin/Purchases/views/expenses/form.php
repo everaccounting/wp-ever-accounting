@@ -11,8 +11,7 @@
 
 defined( 'ABSPATH' ) || exit;
 ?>
-<form id="eac-expense-form" method="post" action="<?php echo esc_html( admin_url( 'admin-post.php' ) ); ?>" data-wp-interactive="eac/payment">
-	<span data-wp-text="name"></span>
+<form id="eac-expense-form" method="post" action="<?php echo esc_html( admin_url( 'admin-post.php' ) ); ?>">
 	<div class="eac-poststuff">
 		<div class="column-1">
 			<div class="eac-card">
@@ -55,6 +54,7 @@ defined( 'ABSPATH' ) || exit;
 								esc_url( admin_url( 'admin.php?page=eac-banking&tab=accounts&add=yes' ) ),
 								__( 'Add Account', 'wp-ever-accounting' )
 							),
+							'multiple'         => true,
 						)
 					);
 					eac_form_field(

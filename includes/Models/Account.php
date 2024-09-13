@@ -59,7 +59,6 @@ class Account extends Model {
 		'type',
 		'name',
 		'number',
-		'opening_balance',
 		'bank_name',
 		'bank_phone',
 		'bank_address',
@@ -76,9 +75,8 @@ class Account extends Model {
 	 * @var array
 	 */
 	protected $attributes = array(
-		'type'            => 'bank',
-		'opening_balance' => 0,
-		'status'          => 'active',
+		'type'   => 'bank',
+		'status' => 'active',
 	);
 
 	/**
@@ -89,19 +87,8 @@ class Account extends Model {
 	 */
 	protected $casts = array(
 		'id'              => 'int',
-		'opening_balance' => 'float',
 		'creator_id'      => 'int',
 		'thumbnail_id'    => 'int',
-	);
-
-	/**
-	 * The attributes that have aliases.
-	 *
-	 * @since 1.0.0
-	 * @var array
-	 */
-	protected $aliases = array(
-		'opening' => 'opening_balance',
 	);
 
 	/**
@@ -114,16 +101,6 @@ class Account extends Model {
 		'balance',
 		'formatted_name',
 		'formatted_balance',
-	);
-
-	/**
-	 * The attributes that should be hidden for serialization.
-	 *
-	 * @since 1.0.0
-	 * @var array
-	 */
-	protected $hidden = array(
-		'opening_balance',
 	);
 
 	/**
@@ -196,10 +173,9 @@ class Account extends Model {
 		global $wpdb;
 		static $balance;
 		if ( is_null( $balance ) ) {
-			$transaction_total = (float) $wpdb->get_var(
+			$balance = (float) $wpdb->get_var(
 				$wpdb->prepare( "SELECT SUM(CASE WHEN type='income' then amount WHEN type='expense' then - amount END) as total from {$wpdb->prefix}ea_transactions WHERE account_id=%d", $this->id )
 			);
-			$balance           = $this->opening_balance + $transaction_total;
 		}
 
 		return $balance;

@@ -126,18 +126,18 @@ class Taxes {
 		$id          = isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0;
 		$name        = isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '';
 		$rate        = isset( $_POST['rate'] ) ? doubleval( wp_unslash( $_POST['rate'] ) ) : '';
-		$is_compound = isset( $_POST['is_compound'] ) ? sanitize_text_field( wp_unslash( $_POST['is_compound'] ) ) : '';
+		$compound = isset( $_POST['compound'] ) ? sanitize_text_field( wp_unslash( $_POST['compound'] ) ) : '';
 		$desc        = isset( $_POST['description'] ) ? sanitize_textarea_field( wp_unslash( $_POST['description'] ) ) : '';
 		$status      = isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : 'active';
-		if ( $is_compound ) {
-			$is_compound = 'yes' === $is_compound ? true : false;
+		if ( $compound ) {
+			$compound = 'yes' === $compound ? true : false;
 		}
 		$tax = eac_insert_tax(
 			array(
 				'id'          => $id,
 				'name'        => $name,
 				'rate'        => $rate,
-				'is_compound' => $is_compound,
+				'compound' => $compound,
 				'description' => $desc,
 				'status'      => $status,
 			)

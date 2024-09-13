@@ -2,11 +2,15 @@
 
 namespace EverAccounting;
 
+use EverAccounting\Controllers\Accounts;
+
 /**
  * Class Plugin.
  *
  * @since 1.2.1
  * @package EverAccounting
+ *
+ * @property Accounts $accounts Accounts controller.
  */
 class Plugin extends \ByteKit\Plugin {
 	/**
@@ -78,6 +82,7 @@ class Plugin extends \ByteKit\Plugin {
 	 */
 	public function on_init() {
 		$this->services->add( 'installer', new Installer() );
+		$this->services->add( 'accounts', new Controllers\Accounts() );
 		$this->services->add( 'transactions', new Handlers\Transactions() );
 		$this->services->add( 'documents', new Handlers\Documents() );
 		$this->services->add( 'shortcodes', new Handlers\Shortcodes() );
@@ -90,8 +95,6 @@ class Plugin extends \ByteKit\Plugin {
 			$this->services->add( Admin\Items\Items::class );
 			$this->services->add( Admin\Sales\Invoices::class );
 			$this->services->add( Admin\Sales\Customers::class );
-//			$this->services->add( Admin\Payments::class );
-//			$this->services->add( Admin\Invoices::class );
 			$this->services->add( Admin\Purchases\Expenses::class );
 			$this->services->add( Admin\Purchases\Vendors::class );
 			$this->services->add( Admin\Purchases\Bills::class );
@@ -126,6 +129,7 @@ class Plugin extends \ByteKit\Plugin {
 				'EverAccounting\API\Customers',
 				'EverAccounting\API\Vendors',
 				'EverAccounting\API\Accounts',
+				'EverAccounting\API\Utilities',
 			)
 		);
 		foreach ( $rest_handlers as $controller ) {

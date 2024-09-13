@@ -232,7 +232,7 @@ class TaxesTable extends ListTable {
 			'cb'          => '<input type="checkbox" />',
 			'name'        => __( 'Name', 'wp-ever-accounting' ),
 			'rate'        => __( 'Rate', 'wp-ever-accounting' ),
-			'is_compound' => __( 'Compound', 'wp-ever-accounting' ),
+			'compound' => __( 'Compound', 'wp-ever-accounting' ),
 			'status'      => __( 'Status', 'wp-ever-accounting' ),
 		);
 	}
@@ -247,7 +247,7 @@ class TaxesTable extends ListTable {
 		return array(
 			'name'        => array( 'name', false ),
 			'rate'        => array( 'rate', false ),
-			'is_compound' => array( 'is_compound', false ),
+			'compound' => array( 'compound', false ),
 			'status'      => array( 'status', true ),
 		);
 	}
@@ -287,15 +287,15 @@ class TaxesTable extends ListTable {
 	}
 
 	/**
-	 * Renders the is_compound column.
+	 * Renders the compound column.
 	 *
 	 * @param Tax $item The current object.
 	 *
 	 * @since  1.0.0
 	 * @return string Displays the compound.
 	 */
-	public function column_is_compound( $item ) {
-		return $item->is_compound ? __( 'Yes', 'wp-ever-accounting' ) : __( 'No', 'wp-ever-accounting' );
+	public function column_compound( $item ) {
+		return $item->compound ? __( 'Yes', 'wp-ever-accounting' ) : __( 'No', 'wp-ever-accounting' );
 	}
 
 	/**

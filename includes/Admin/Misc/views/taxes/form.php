@@ -45,9 +45,9 @@ defined( 'ABSPATH' ) || exit;
 
 					eac_form_field(
 						array(
-							'id'       => 'is_compound',
-							'label'    => __( 'Is compound', 'wp-ever-accounting' ),
-							'value'    => filter_var( $tax->is_compound, FILTER_VALIDATE_BOOLEAN ) ? 'yes' : 'no',
+							'id'       => 'compound',
+							'label'    => __( 'Compound', 'wp-ever-accounting' ),
+							'value'    => filter_var( $tax->compound, FILTER_VALIDATE_BOOLEAN ) ? 'yes' : 'no',
 							'required' => true,
 							'options'  => array(
 								'yes' => __( 'Yes', 'wp-ever-accounting' ),

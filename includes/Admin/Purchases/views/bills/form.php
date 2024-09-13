@@ -186,7 +186,6 @@ wp_localize_script( 'eac-bill-form', 'eac_bill_form_vars', $data );
 							</li>
 						</ul>
 					</div>
-
 				</div>
 			</div>
 
@@ -350,4 +349,44 @@ wp_localize_script( 'eac-bill-form', 'eac_bill_form_vars', $data );
 			<# } #>
 		</td>
 	</tr>
+</script>
+
+<script type="text/html" id="tmpl-eac-bill-summary-totals">
+	<tr>
+		<td class="col-summary-label" colspan="<?php echo count( $columns ) - 2; ?>">
+			<?php esc_html_e( 'Subtotal', 'wp-ever-accounting' ); ?>
+		</td>
+		<td class="col-summary-amount">
+			{{ data.subtotal || 0 }}
+		</td>
+		<td class="col-action">&nbsp;</td>
+	</tr>
+	<tr>
+		<td class="col-summary-label" colspan="<?php echo count( $columns ) - 2; ?>">
+			<?php esc_html_e( 'Tax', 'wp-ever-accounting' ); ?>
+		</td>
+		<td class="col-summary-amount">
+			{{ data.tax_total || 0 }}
+		</td>
+		<td class="col-action">&nbsp;</td>
+	</tr>
+	<tr>
+		<td class="col-summary-label" colspan="<?php echo count( $columns ) - 2; ?>">
+			<?php esc_html_e( 'Discount', 'wp-ever-accounting' ); ?>
+		</td>
+		<td class="col-summary-amount">
+			{{ data.discount_total || 0 }}
+		</td>
+		<td class="col-action">&nbsp;</td>
+	</tr>
+	<tr>
+		<td class="col-summary-label" colspan="<?php echo count( $columns ) - 2; ?>">
+			<?php esc_html_e( 'Total', 'wp-ever-accounting' ); ?>
+		</td>
+		<td class="col-summary-amount">
+			{{ data.total || 0 }}
+		</td>
+		<td class="col-action">&nbsp;</td>
+	</tr>
+
 </script>

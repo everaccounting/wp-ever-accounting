@@ -174,7 +174,7 @@ class Currencies {
 		$exchange_rate      = isset( $_POST['exchange_rate'] ) ? doubleval( wp_unslash( $_POST['exchange_rate'] ) ) : 0;
 		$thousand_separator = isset( $_POST['thousand_separator'] ) ? sanitize_text_field( wp_unslash( $_POST['thousand_separator'] ) ) : '';
 		$decimal_separator  = isset( $_POST['decimal_separator'] ) ? sanitize_text_field( wp_unslash( $_POST['decimal_separator'] ) ) : '';
-		$precision          = isset( $_POST['precision'] ) ? absint( wp_unslash( $_POST['precision'] ) ) : '';
+		$decimals          = isset( $_POST['decimals'] ) ? absint( wp_unslash( $_POST['decimals'] ) ) : '';
 		$position           = isset( $_POST['position'] ) ? sanitize_text_field( wp_unslash( $_POST['position'] ) ) : '';
 		$status             = isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : 'active';
 		$currency           = eac_insert_currency(
@@ -186,7 +186,7 @@ class Currencies {
 				'exchange_rate'      => $exchange_rate,
 				'thousand_separator' => $thousand_separator,
 				'decimal_separator'  => $decimal_separator,
-				'precision'          => $precision,
+				'decimals'          => $decimals,
 				'position'           => $position,
 				'status'             => $status,
 			)

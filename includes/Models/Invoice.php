@@ -14,8 +14,8 @@ use ByteKit\Models\Relations\HasMany;
  *
  * @author  Sultan Nasir Uddin <manikdrmc@gmail.com>
  *
- * @property int $id Invoice ID.
- * @property DocumentLine[] $lines Invoice lines.
+ * @property int            $id Invoice ID.
+ * @property DocumentItem[] $lines Invoice lines.
  */
 class Invoice extends Document {
 	/**
@@ -299,7 +299,7 @@ class Invoice extends Document {
 	 * Apply fixed discount.
 	 *
 	 * @param float          $amount Discount amount.
-	 * @param DocumentLine[] $items Items.
+	 * @param DocumentItem[] $items Items.
 	 *
 	 * @since 1.0.0
 	 * @return float Total discounted.
@@ -345,7 +345,7 @@ class Invoice extends Document {
 	 * Apply percentage discount.
 	 *
 	 * @param float          $amount Discount amount.
-	 * @param DocumentLine[] $items Items.
+	 * @param DocumentItem[] $items Items.
 	 */
 	public function apply_percentage_discount( $amount, $items ) {
 		$total_discount = 0;
@@ -379,7 +379,7 @@ class Invoice extends Document {
 	 * Apply remainder discount.
 	 *
 	 * @param float          $amount Discount amount.
-	 * @param DocumentLine[] $items Items.
+	 * @param DocumentItem[] $items Items.
 	 *
 	 * @since 1.0.0
 	 * @return float
@@ -439,7 +439,7 @@ class Invoice extends Document {
 	 * @param string $type The type of the line.
 	 *
 	 * @since 1.0.0
-	 * @return DocumentLine[]
+	 * @return DocumentItem[]
 	 */
 	protected function get_lines( $type = 'standard' ) {
 		return array_filter(

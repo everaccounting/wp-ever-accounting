@@ -85,10 +85,10 @@ defined( 'ABSPATH' ) || exit;
 
 					eac_form_field(
 						array(
-							'id'       => 'precision',
+							'id'       => 'decimals',
 							'label'    => __( 'Number of Decimals', 'wp-ever-accounting' ),
 							'type'     => 'number',
-							'value'    => $currency->precision,
+							'value'    => $currency->decimals,
 							'required' => true,
 						)
 					);

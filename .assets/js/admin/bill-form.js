@@ -41,8 +41,8 @@ jQuery( function($){
 		events: {
 			'change .line-quantity': 'onQuantityChange',
 			'change .line-price': 'onPriceChange',
-			// 'change [name="discount_amount"]': 'onDiscountAmountChange',
-			// 'change [name="discount_type"]': 'onDiscountTypeChange',
+			'select2:select .line-taxes': 'onAddTax',
+			'select2:unselect .line-taxes': 'onRemoveTax',
 			'click .remove-line-item': 'onRemoveLineItem',
 		},
 
@@ -57,9 +57,15 @@ jQuery( function($){
 			const { model} = this.options;
 			return {
 				...model.toJSON(),
-				subtotal: model.get('quantity') * model.get('price'),
 				taxes: model.get('taxes').toJSON(),
 			}
+		},
+
+		render() {
+			console.log('=== SummaryItem.render() ===');
+			wp.Backbone.View.prototype.render.apply(this, arguments);
+			$(document.body).trigger('eac_update_ui');
+			return this;
 		},
 
 		onQuantityChange(e) {
@@ -67,18 +73,46 @@ jQuery( function($){
 			const {model} = this.options;
 			const value = e.target.value;
 			model.set('quantity', value);
+			const {state} = this.options;
+			state.updateAmounts();
 		},
 
 		onPriceChange(e) {
 			e.preventDefault();
 			const value = e.target.value;
 			this.model.set('price', value);
+			const {state} = this.options;
+			state.updateAmounts();
 		},
+
+		onAddTax(e) {
+			e.preventDefault();
+			const {model} = this.options;
+			var data = e.params.data;
+			var tax_id = parseInt(data.id, 10);
+			// bail if the tax_id is not found.
+			if (isNaN(tax_id)) {
+				return;
+			}
+			if (!model.get('taxes').findWhere({tax_id: tax_id})) {
+				(new eac.api.models.Tax({id: tax_id})).fetch({
+					success: function (tax) {
+						model.get('taxes').add(new eac.api.models.LineTax({
+							...tax.toJSON(),
+							tax_id: tax.id,
+							id: _.uniqueId('tax_'),
+						}));
+					}
+				})
+			}
+		},
+
 		onRemoveLineItem(e) {
 			e.preventDefault();
 			const {state, model} = this.options;
 			state.get('items').remove(model);
-		}
+			state.updateAmounts();
+		},
 	});
 
 	var SummaryEmptyItem = wp.Backbone.View.extend({
@@ -99,6 +133,7 @@ jQuery( function($){
 			const items = state.get('items');
 			this.listenTo(items, 'add', this.render);
 			this.listenTo(items, 'remove', this.render);
+			this.listenTo(items, 'add', this.scrollToBottom);
 		},
 
 		render(){
@@ -107,7 +142,7 @@ jQuery( function($){
 			const {state} = this.options;
 			const items = state.get('items');
 			items.each( model => {
-				this.views.add(new SummaryItem({model}));
+				this.views.add(new SummaryItem({...this.options, model}));
 			});
 			// if no items, add a blank row.
 			if ( 0 === items.length ) {
@@ -115,6 +150,42 @@ jQuery( function($){
 			}
 			$(document.body).trigger('eac_update_ui');
 			return this;
+		},
+
+		scrollToBottom() {
+			console.log('=== SummaryItems.scrollToBottom() ===');
+			// scroll to the bottom of the table when a new item is added. then focus on the new item.
+			// $('html, body').animate({
+			// 	scrollTop: $(document).height()
+			// }, 500);
+			var $el = this.$el.closest('tbody').find('tr:last-child');
+			$el.find('.line-price').focus();
+			// Now we need to scroll to the bottom of the table.
+			var $table = this.$el.closest('table');
+			$('html, body').animate({
+				scrollTop: $el.offset().top - $table.offset().top + $table.scrollTop()
+			}, 500);
+		}
+	});
+
+	var SummaryTotals = wp.Backbone.View.extend({
+		tagName: 'tfoot',
+
+		className: 'eac-document-summary__totals',
+
+		template: wp.template('eac-bill-summary-totals'),
+
+		initialize() {
+			console.log('=== SummaryTotals.initialize() ===');
+			const {state} = this.options;
+			this.listenTo(state, 'change:subtotal', this.render);
+		},
+
+		prepare() {
+			const {state} = this.options;
+			return {
+				...state.toJSON(),
+			}
 		}
 	});
 
@@ -167,6 +238,7 @@ jQuery( function($){
 			this.views.add(new SummaryHead(this.options));
 			this.views.add(new SummaryItems(this.options));
 			this.views.add(new SummaryActions(this.options));
+			this.views.add(new SummaryTotals(this.options));
 			return this;
 		}
 	});
@@ -184,6 +256,7 @@ jQuery( function($){
 		initialize() {
 			const {state} = this.options;
 			this.listenTo(state, 'change:currency_code', this.onCurrencyUpdate);
+			//this.listenTo(state.get('items'), 'add remove change', this.updateAmounts);
 		},
 
 		render() {
@@ -215,18 +288,31 @@ jQuery( function($){
 
 		onDiscountAmountChange(e) {
 			e.preventDefault();
+			var state = this.options.state;
+			var value = parseFloat(e.target.value, 10);
+			state.set('discount_amount', value);
+			state.updateAmounts();
 		},
 
 		onDiscountTypeChange(e) {
 			e.preventDefault();
+			var state = this.options.state;
+			var value = e.target.value;
+			state.set('discount_type', value);
+			state.updateAmounts();
 		},
 
 		onCurrencyUpdate() {
 			console.log('=== Form.onCurrencyUpdate() ===');
-			// test if update is working.
 			const state = this.options.state;
 			state.set('billing_name', 'Jane Doe');
 			state.set('contact_id', 2);
+
+		},
+		UpdateAmounts() {
+			console.log('=== Form.updateAmount() ===');
+			const state = this.options.state;
+			state.updateAmounts();
 		}
 	});
 

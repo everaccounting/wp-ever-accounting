@@ -17,7 +17,7 @@ use ByteKit\Models\Relations\HasMany;
  * @property string $name Name of the category.
  * @property float  $exchange_rate Exchange rate of the currency.
  * @property float  $rate Exchange rate of the currency.
- * @property int    $precision Precision of the currency.
+ * @property int    $decimals decimals of the currency.
  * @property string $symbol Symbol of the currency.
  * @property int    $subunit Subunit of the currency.
  * @property string $position Position of the currency.
@@ -50,7 +50,7 @@ class Currency extends Model {
 		'code',
 		'name',
 		'exchange_rate',
-		'precision',
+		'decimals',
 		'symbol',
 		'subunit',
 		'position',
@@ -67,7 +67,7 @@ class Currency extends Model {
 	 */
 	protected $attributes = array(
 		'exchange_rate'      => 1,
-		'precision'          => 2,
+		'decimals'          => 2,
 		'symbol'             => '$',
 		'subunit'            => 100,
 		'position'           => 'before',
@@ -85,7 +85,7 @@ class Currency extends Model {
 	protected $casts = array(
 		'id'            => 'int',
 		'exchange_rate' => 'float',
-		'precision'     => 'int',
+		'decimals'     => 'int',
 		'subunit'       => 'int',
 	);
 

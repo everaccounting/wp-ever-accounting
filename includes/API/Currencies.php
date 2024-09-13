@@ -509,8 +509,8 @@ class Currencies extends Controller {
 					'context'     => array( 'view', 'edit' ),
 					'required'    => true,
 				),
-				'precision'          => array(
-					'description' => __( 'currency precision.', 'wp-ever-accounting' ),
+				'decimals'          => array(
+					'description' => __( 'currency decimals.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'edit' ),
 					'required'    => true,

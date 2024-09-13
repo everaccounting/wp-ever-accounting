@@ -101,7 +101,7 @@ use ByteKit\Models\Relations\HasMany;
  * @property DocumentItemTax[] $taxes Taxes of the document.
  * @property DocumentItem[]    $lines Lines of the document.
  */
-class Document extends Model {
+class DocumentAddress extends Model {
 
 	/**
 	 * The table associated with the model.

@@ -311,3 +311,17 @@ function eac_form_field( $field ) {
 		);
 	}
 }
+
+/**
+ * Get next number.
+ *
+ * @param string $type Type of number to get.
+ *
+ * @since 1.1.0
+ * @return string
+ */
+function eac_get_next_number( $type = 'invoice' ) {
+	$number = '';
+
+	return apply_filters( 'eac_' . $type . '_next_number', '' );
+}

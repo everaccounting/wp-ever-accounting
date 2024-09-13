@@ -6,7 +6,7 @@ use ByteKit\Models\Relations\BelongsTo;
 use ByteKit\Models\Relations\HasMany;
 
 /**
- * DocumentLine model.
+ * DocumentItem model.
  *
  * @since 1.0.0
  * @author  Sultan Nasir Uddin <manikdrmc@gmail.com>
@@ -33,9 +33,9 @@ use ByteKit\Models\Relations\HasMany;
  * @property string $created_at Date created of the document_item.
  *
  * @property-read double $discounted_subtotal Discounted subtotal of the document_item.
- * @property-read DocumentLineTax[] $taxes Taxes of the document_item.
+ * @property-read DocumentItemTax[] $taxes Taxes of the document_item.
  */
-class DocumentLine extends Model {
+class DocumentItem extends Model {
 
 	/**
 	 * The table associated with the model.
@@ -43,7 +43,7 @@ class DocumentLine extends Model {
 	 * @since 1.0.0
 	 * @var string
 	 */
-	protected $table = 'ea_document_lines';
+	protected $table = 'ea_document_items';
 
 	/**
 	 * The table columns of the model.
@@ -155,7 +155,7 @@ class DocumentLine extends Model {
 	 * @return HasMany
 	 */
 	public function taxes() {
-		return $this->has_many( DocumentLineTax::class, 'line_id' );
+		return $this->has_many( DocumentItemTax::class, 'item_id' );
 	}
 
 	/**
@@ -266,7 +266,7 @@ class DocumentLine extends Model {
 	/**
 	 * Is similar.
 	 *
-	 * @param DocumentLine $line Item to compare.
+	 * @param DocumentItem $line Item to compare.
 	 *
 	 * @since 1.1.0
 	 * @return bool
@@ -284,7 +284,7 @@ class DocumentLine extends Model {
 	/**
 	 * Merge two items.
 	 *
-	 * @param DocumentLine $line Item to merge.
+	 * @param DocumentItem $line Item to merge.
 	 *
 	 * @since 1.1.0
 	 * @return static|false Merged item or false on failure.

@@ -1,4 +1,5 @@
 /* global eac_admin_vars */
+
 jQuery(document).ready(($) => {
 	'use strict';
 
@@ -106,7 +107,7 @@ jQuery(document).ready(($) => {
 		});
 
 		// Polyfill for card padding for firefox.
-		$('.eac-card').each(function() {
+		$('.eac-card').each(function () {
 			if (!$(this).children('[class*="eac-card__"]').length && !parseInt($(this).css('padding'))) {
 				$(this).css('padding', '8px 12px');
 			}
@@ -118,5 +119,54 @@ jQuery(document).ready(($) => {
 
 	// Reinitialize UI when document body triggers 'eac-update-ui'.
 	$(document.body).on('eac_update_ui', initializeUI);
+
+	// Media Uploader.
+	$('.eac_media_uploader').filter(':not(.enhanced)').each(function () {
+		const $this = $(this);
+		const options = {
+			title: $this.data('title') || '',
+			button: {
+				text: $this.data('button') || '',
+			},
+			multiple: $this.data('multiple') || false,
+		};
+		$this.addClass('enhanced').on('click', function (e) {
+			e.preventDefault();
+			const frame = wp.media(options);
+			frame.on('select', function () {
+				const attachment = frame.state().get('selection').first().toJSON();
+				$this.val(attachment.url);
+			});
+			frame.open();
+		});
+	});
+});
+
+jQuery(document).ready(($) => {
+
+	var form = eac.modal.View.extend({
+		el: 'form#eac-expense-form',
+
+		events: {
+			'change': 'onSubmit',
+		},
+
+		initialize() {
+			console.log(this.$el.eacform().data());
+			console.log('=== Preinitialize ===');
+		},
+
+		render() {
+			console.log('=== Render ===');
+			return this;
+		},
+
+		onSubmit(e) {
+			e.preventDefault();
+			console.log(this.$el.eacform().data());
+		}
+	});
+
+	new form().render();
 
 });
