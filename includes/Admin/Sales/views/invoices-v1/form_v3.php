@@ -104,7 +104,7 @@ $columns = array(
 							<input type="number" name="discount_amount" id="discount_amount" placeholder=".05" value="<?php echo esc_attr( $document->discount_amount ); ?>"/>
 							<select name="discount_type" id="discount_type" class="addon" style="width: 150px;">
 								<option value="fixed" <?php selected( 'fixed', $document->discount_type ); ?>><?php esc_html_e( 'Fixed', 'wp-ever-accounting' ); ?></option>
-								<option value="percentage" <?php selected( 'percentage', $document->discount_type ); ?>><?php esc_html_e( '(%)', 'wp-ever-accounting' ); ?></option>
+								<option value="percent" <?php selected( 'percent', $document->discount_type ); ?>><?php esc_html_e( '(%)', 'wp-ever-accounting' ); ?></option>
 							</select>
 						</div>
 					</div>

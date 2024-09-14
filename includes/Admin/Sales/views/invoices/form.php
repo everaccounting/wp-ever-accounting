@@ -10,12 +10,8 @@ defined( 'ABSPATH' ) || exit;
 $invoice           = new \EverAccounting\Models\Invoice();
 $columns           = eac_get_invoice_columns();
 $columns['action'] = '&nbsp;';
-$data              = array(
-	'invoice'  => $invoice->to_array(),
-	'settings' => array(
-		'currency' => eac_get_currency( $invoice->currency_code ),
-	),
-);
+$invoice->vat_exempt = true;
+$data              = $invoice->to_array();
 wp_add_inline_script( 'eac-sales', 'var eac_invoice_edit_vars = ' . json_encode( $data ) . ';', 'after' );
 ?>
 <form id="eac-invoice-form" class="eac-document-overview" method="post" action="<?php echo esc_html( admin_url( 'admin-post.php' ) ); ?>">
@@ -148,10 +144,10 @@ wp_add_inline_script( 'eac-sales', 'var eac_invoice_edit_vars = ' . json_encode(
 				array(
 					'label'   => esc_html__( 'VAT Exempt', 'wp-ever-accounting' ),
 					'name'    => 'vat_exempt',
-					'value'   => $invoice->vat_exempt,
+					'value'   => $invoice->vat_exempt ? 'yes' : '',
 					'type'    => 'select',
 					'options' => array(
-						'no'  => esc_html__( 'No', 'wp-ever-accounting' ),
+						''    => esc_html__( 'No', 'wp-ever-accounting' ),
 						'yes' => esc_html__( 'Yes', 'wp-ever-accounting' ),
 					),
 				)
@@ -164,7 +160,7 @@ wp_add_inline_script( 'eac-sales', 'var eac_invoice_edit_vars = ' . json_encode(
 					<input type="number" name="discount_amount" id="discount_amount" placeholder="10" value="<?php echo esc_attr( $invoice->discount_amount ); ?>"/>
 					<select name="discount_type" id="discount_type" class="addon" style="max-width: 80px;">
 						<option value="fixed" <?php selected( 'fixed', $invoice->discount_type ); ?>><?php echo $invoice->currency ? esc_html( $invoice->currency->symbol ) : esc_html( '($)' ); ?></option>
-						<option value="percentage" <?php selected( 'percentage', $invoice->discount_type ); ?>><?php echo esc_html( '(%)' ); ?></option>
+						<option value="percent" <?php selected( 'percent', $invoice->discount_type ); ?>><?php echo esc_html( '(%)' ); ?></option>
 					</select>
 				</div>
 			</div><!-- .eac-form-field -->
@@ -285,7 +281,7 @@ wp_add_inline_script( 'eac-sales', 'var eac_invoice_edit_vars = ' . json_encode(
 					<input type="hidden" name="items[{{ data.id }}][total]" value="{{ data.total }}">
 					<input class="item-name" type="text" name="items[{{ data.id }}][name]" value="{{ data.name }}" placeholder="<?php esc_attr_e( 'Item Name', 'wp-ever-accounting' ); ?>">
 					<textarea class="item-description" name="items[{{ data.id }}][description]" placeholder="<?php esc_attr_e( 'Item Description', 'wp-ever-accounting' ); ?>">{{ data.description }}</textarea>
-					<# if ( data.taxable && 'yes' === data.vat_exempt ) { #>
+					<# if ( ! data.vat_exempt ) { #>
 					<select class="item-taxes eac_select2" data-action="eac_json_search" data-type="tax" data-placeholder="<?php esc_attr_e( 'Select a tax rate', 'wp-ever-accounting' ); ?>" multiple>
 						<# if ( data.taxes && data.taxes.length ) { #>
 						<# _.each( data.taxes, function( taxes ) { #>
@@ -299,6 +295,8 @@ wp_add_inline_script( 'eac-sales', 'var eac_invoice_edit_vars = ' . json_encode(
 					<input type="hidden" name="items[{{ data.id }}][taxes]{{ taxes.id }}['tax_id']" value="{{ taxes.tax_id }}">
 					<input type="hidden" name="items[{{ data.id }}][taxes]{{ taxes.id }}['name']" value="{{ taxes.name }}">
 					<input type="hidden" name="items[{{ data.id }}][taxes]{{ taxes.id }}['rate']" value="{{ taxes.rate }}">
+					<input type="hidden" name="items[{{ data.id }}][taxes]{{ taxes.id }}['compound']" value="{{ taxes.compound }}">
+					<input type="hidden" name="items[{{ data.id }}][taxes]{{ taxes.id }}['amount']" value="{{ taxes.amount }}">
 					<# } ); #>
 					<# } #>
 					<# } #>
@@ -313,17 +311,17 @@ wp_add_inline_script( 'eac-sales', 'var eac_invoice_edit_vars = ' . json_encode(
 					echo '<input type="number" class="item-quantity" name="items[{{ data.id }}][quantity]" min="0" value="{{ data.quantity }}">';
 					break;
 
-				case 'subtotal_tax':
-					echo '<span class="item-tax">{{ data.subtotal_tax }}</span>';
+				case 'tax':
+					echo '<span class="item-tax">{{ data.tax.toFixed(2) }}</span>';
 					break;
 
 				case 'subtotal':
-					echo '<span class="item-subtotal">{{ accounting.formatMoney(data.subtotal) }}</span>';
+					echo '<span class="item-subtotal">{{ data.subtotal.toFixed(2) }}</span>';
 					break;
 
 				case 'action':
 					?>
-					<a href="#" class="remove-item-item">
+					<a href="#" class="remove-item">
 						<span class="dashicons dashicons-trash"></span>
 					</a>
 					<?php
@@ -354,25 +352,29 @@ wp_add_inline_script( 'eac-sales', 'var eac_invoice_edit_vars = ' . json_encode(
 			<?php esc_html_e( 'Subtotal', 'wp-ever-accounting' ); ?>
 		</td>
 		<td class="col-total-amount">
-			{{ data.subtotal || 0 }}
+			{{ data.subtotal.toFixed(2) || 0 }}
 		</td>
 		<td class="col-action">&nbsp;</td>
 	</tr>
+	<# if ( ! data.vat_exempt && data.itemized_taxes && data.itemized_taxes.length ) { #>
+	<# _.each( data.itemized_taxes, function( tax ) { #>
 	<tr>
 		<td class="col-total-label" colspan="<?php echo count( $columns ) - 2; ?>">
-			<?php esc_html_e( 'Tax', 'wp-ever-accounting' ); ?>
+			{{ tax.formatted_name }}
 		</td>
 		<td class="col-total-amount">
-			{{ data.tax_total || 0 }}
+			{{ tax.amount.toFixed(2) || 0 }}
 		</td>
 		<td class="col-action">&nbsp;</td>
 	</tr>
+	<# } ); #>
+	<# } #>
 	<tr>
 		<td class="col-total-label" colspan="<?php echo count( $columns ) - 2; ?>">
 			<?php esc_html_e( 'Discount', 'wp-ever-accounting' ); ?>
 		</td>
 		<td class="col-total-amount">
-			{{ data.discount_total || 0 }}
+			{{ data.discount_total.toFixed(2) || 0 }}
 		</td>
 		<td class="col-action">&nbsp;</td>
 	</tr>
@@ -390,7 +392,7 @@ wp_add_inline_script( 'eac-sales', 'var eac_invoice_edit_vars = ' . json_encode(
 			<?php esc_html_e( 'Total', 'wp-ever-accounting' ); ?>
 		</td>
 		<td class="col-total-amount">
-			{{ data.total || 0 }}
+			{{ data.total.toFixed(2) || 0 }}
 		</td>
 		<td class="col-action">&nbsp;</td>
 	</tr>

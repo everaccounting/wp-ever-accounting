@@ -365,7 +365,7 @@ CREATE TABLE {$wpdb->prefix}ea_documents (
     tax_total DOUBLE(15, 4) DEFAULT 0,
     total DOUBLE(15, 4) DEFAULT 0,
     discount_amount DOUBLE(15, 4) DEFAULT 0,
-    discount_type ENUM('fixed', 'percentage') DEFAULT NULL,
+    discount_type ENUM('fixed', 'percent') DEFAULT NULL,
     billing_name VARCHAR(191) DEFAULT NULL,
     billing_address VARCHAR(191) DEFAULT NULL,
     billing_company VARCHAR(191) DEFAULT NULL,

@@ -382,7 +382,16 @@ class Items extends Controller {
 		foreach ( array_keys( $this->get_schema_properties() ) as $key ) {
 			switch ( $key ) {
 				case 'category':
-					$value    = $item->category_id? $this->get_endpoint_data( sprintf( '/%s/categories/%d', $this->namespace, $item->category_id ) ) : null;
+					$value = $item->category_id ? $this->get_endpoint_data( sprintf( '/%s/categories/%d', $this->namespace, $item->category_id ) ) : null;
+					break;
+				case 'taxes':
+					$value = [];
+					if ( ! empty( $item->taxes ) ) {
+						$properties = array_keys( $this->get_schema_properties()[ $key ]['items'] );
+						$value      = array_map( function ( $tax ) use ( $properties ) {
+							return array_intersect_key( $tax->to_array(), array_flip( $properties ) );
+						}, $item->taxes );
+					}
 					break;
 				case 'created_at':
 				case 'updated_at':
@@ -519,36 +528,39 @@ class Items extends Controller {
 					'type'        => 'number',
 					'context'     => array( 'view', 'edit' ),
 				),
-				'taxable'      => array(
-					'description' => __( 'Whether or not the item is taxable.', 'wp-ever-accounting' ),
-					'type'        => 'boolean',
+				'taxes'        => array(
+					'description' => __( 'Taxes for the item.', 'wp-ever-accounting' ),
+					'type'        => 'array',
 					'context'     => array( 'view', 'edit' ),
+					'items'       => array(
+						'id'             => array(
+							'type'    => 'integer',
+							'context' => array( 'view', 'edit' ),
+						),
+						'name'           => array(
+							'type'    => 'string',
+							'context' => array( 'view', 'edit' ),
+						),
+						'formatted_name' => array(
+							'type'     => 'string',
+							'context'  => array( 'view', 'edit' ),
+							'readonly' => true,
+						),
+						'rate'           => array(
+							'type'    => 'number',
+							'context' => array( 'view', 'edit' ),
+						),
+						'compound'       => array(
+							'type'    => 'boolean',
+							'context' => array( 'view', 'edit' ),
+							'default' => false,
+						),
+					),
 				),
-				'tax_ids'      => array(
-					'description' => __( 'Tax IDs for the item.', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
-				),
-//				'taxes'        => array(
-//					'description' => __( 'Taxes for the item.', 'wp-ever-accounting' ),
-//					'type'        => 'array',
-//					'context'     => array( 'view', 'edit' ),
-//					'items'       => array(
-//						'$ref' => rest_url( sprintf( '/%s/taxes', $this->namespace  ) ),
-//					),
-//				),
 				'category_id'  => array(
 					'description' => __( 'Category ID for the item.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'edit' ),
-				),
-				'category'     => array(
-					'description' => __( 'Category for the item.', 'wp-ever-accounting' ),
-					'type'        => 'object',
-					'context'     => array( 'view', 'edit' ),
-					'properties'  => array(
-						'$ref' => rest_url( sprintf( '/%s/categories', $this->namespace  ) ),
-					),
 				),
 				'thumbnail_id' => array(
 					'description' => __( 'Thumbnail ID for the item.', 'wp-ever-accounting' ),
@@ -560,6 +572,7 @@ class Items extends Controller {
 					'type'        => 'string',
 					'enum'        => array( 'active', 'inactive' ),
 					'context'     => array( 'view', 'edit' ),
+					'default'     => 'active',
 					'required'    => true,
 				),
 				'updated_at'   => array(

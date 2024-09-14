@@ -17,7 +17,7 @@ export default Base.extend({
 		discount_type: 'fixed',
 		reference: '',
 		note: '',
-		vat_exempt: 'no',
+		vat_exempt: false,
 		issue_date: '',
 		due_date: '',
 		sent_date: '',

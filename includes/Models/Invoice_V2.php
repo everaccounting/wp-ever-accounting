@@ -535,8 +535,8 @@ class Invoice_V2 extends Document {
 		$total_discounted = 0;
 		if ( 'fixed' === $type ) {
 			$total_discounted = $this->apply_fixed_discount( $amount, $items );
-		} elseif ( 'percentage' === $type ) {
-			$total_discounted = $this->apply_percentage_discount( $amount, $items );
+		} elseif ( 'percent' === $type ) {
+			$total_discounted = $this->apply_percent_discount( $amount, $items );
 		}
 
 		return $total_discounted;
@@ -589,12 +589,12 @@ class Invoice_V2 extends Document {
 	}
 
 	/**
-	 * Apply percentage discount.
+	 * Apply percent discount.
 	 *
 	 * @param float          $amount Discount amount.
 	 * @param DocumentItem[] $items Items.
 	 */
-	public function apply_percentage_discount( $amount, $items ) {
+	public function apply_percent_discount( $amount, $items ) {
 		$total_discount = 0;
 		$document_total = 0;
 

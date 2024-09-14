@@ -283,7 +283,7 @@ class Document_BK extends Model {
 	 * @return void
 	 */
 	public function set_discount_type( $type ) {
-		$this->attributes['discount_type'] = in_array( $type, array( 'fixed', 'percentage' ), true ) ? $type : 'fixed';
+		$this->attributes['discount_type'] = in_array( $type, array( 'fixed', 'percent' ), true ) ? $type : 'fixed';
 	}
 
 	/**

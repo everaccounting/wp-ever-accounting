@@ -235,7 +235,7 @@ class Document extends Model {
 	 * @return void
 	 */
 	public function set_discount_type( $type ) {
-		if ( ! in_array( $type, array( 'fixed', 'percentage' ), true ) ) {
+		if ( ! in_array( $type, array( 'fixed', 'percent' ), true ) ) {
 			$type = 'fixed';
 		}
 		$this->attributes['discount_type'] = $type;

@@ -1,7 +1,7 @@
 import Base from './base.js';
-import DocumentItemTaxes from "../collections/document-item-taxes";
+import DocumentTaxes from "../collections/document-taxes";
 
-export default Base.extend( {
+export default Base.extend({
 	endpoint: 'line-items',
 
 	defaults: {
@@ -11,12 +11,9 @@ export default Base.extend( {
 		price: 0,
 		quantity: 1,
 		subtotal: 0,
-		subtotal_tax: 0,
 		discount: 0,
-		discount_tax: 0,
-		tax_total: 0,
+		tax: 0,
 		total: 0,
-		taxable: false,
 		description: '',
 		unit: '',
 		item_id: null,
@@ -24,17 +21,28 @@ export default Base.extend( {
 		created_at: '',
 
 		// Relationships
-		taxes: new DocumentItemTaxes(),
+		taxes: new DocumentTaxes(),
 	},
 
 	/**
-	 * Update Amount
+	 * Update amounts.
 	 *
 	 * @return {void}
 	 */
-	updateAmount() {
-		var subtotal = this.get( 'price' ) * this.get( 'quantity' );
-		this.set( 'subtotal', subtotal );
+	updateAmounts() {
+		var self = this;
+		var subtotal = parseFloat(this.get('price')) * parseFloat(this.get('quantity'));
+		this.get('taxes').updateAmounts(subtotal);
+		this.set('subtotal', subtotal);
+	},
+
+	/**
+	 * Get total tax.
+	 *
+	 * @return {number}
+	 */
+	getTotalTax() {
+		return this.get('taxes').getTotal();
 	}
 
-} );
+});

@@ -51,7 +51,7 @@ if ( count( $amounts ) > 4 ) {
 				<tr>
 					<th><?php esc_html_e( 'Category', 'wp-ever-accounting' ); ?></th>
 					<th><?php esc_html_e( 'Amount', 'wp-ever-accounting' ); ?></th>
-					<th><?php esc_html_e( 'Percentage', 'wp-ever-accounting' ); ?></th>
+					<th><?php esc_html_e( 'Percent', 'wp-ever-accounting' ); ?></th>
 				</tr>
 				</thead>
 				<tbody>

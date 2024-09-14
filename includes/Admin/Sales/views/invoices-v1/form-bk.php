@@ -216,7 +216,7 @@ $columns = array(
 								<label for="discount_type"><?php esc_html_e( 'Discount Type', 'wp-ever-accounting' ); ?></label>
 								<select name="discount_type" id="discount_type">
 									<option value="fixed" <?php selected( 'fixed', $document->discount_type ); ?>><?php esc_html_e( 'Fixed Amount', 'wp-ever-accounting' ); ?></option>
-									<option value="percentage" <?php selected( 'percentage', $document->discount_type ); ?>><?php esc_html_e( 'Percentage (%)', 'wp-ever-accounting' ); ?></option>
+									<option value="percent" <?php selected( 'percent', $document->discount_type ); ?>><?php esc_html_e( 'Percent (%)', 'wp-ever-accounting' ); ?></option>
 								</select>
 							</div>
 						</div>

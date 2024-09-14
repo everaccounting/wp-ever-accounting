@@ -157,7 +157,7 @@ wp_localize_script( 'eac-bill-form', 'eac_bill_form_vars', $data );
 					<input type="number" name="discount_amount" id="discount_amount" placeholder="10" value="<?php echo esc_attr( $document->discount_amount ); ?>"/>
 					<select name="discount_type" id="discount_type" class="addon" style="max-width: 80px;">
 						<option value="fixed" <?php selected( 'fixed', $document->discount_type ); ?>><?php echo $document->currency ? esc_html( $document->currency->symbol ) : esc_html( '($)' ); ?></option>
-						<option value="percentage" <?php selected( 'percentage', $document->discount_type ); ?>><?php echo esc_html( '(%)' ); ?></option>
+						<option value="percent" <?php selected( 'percent', $document->discount_type ); ?>><?php echo esc_html( '(%)' ); ?></option>
 					</select>
 				</div>
 			</div>

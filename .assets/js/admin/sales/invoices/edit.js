@@ -51,16 +51,16 @@ jQuery(function ($) {
 			this.listenTo(items, 'add', this.scrollToBottom);
 		},
 
-		render(){
+		render() {
 			console.log('=== SummaryItems.render() ===');
 			this.views.detach();
 			const {state} = this.options;
 			const items = state.get('items');
-			items.each( model => {
+			items.each(model => {
 				this.views.add(new Item({...this.options, model}));
 			});
 			// if no items, add a blank row.
-			if ( 0 === items.length ) {
+			if (0 === items.length) {
 				this.views.add(new NoItems(this.options));
 			}
 			$(document.body).trigger('eac_update_ui');
@@ -96,12 +96,14 @@ jQuery(function ($) {
 		initialize() {
 			this.listenTo(this.model, 'change', this.render);
 			this.listenTo(this.model, 'change', this.render);
+			this.listenTo(this.model.get('taxes'), 'add remove change', this.render);
 		},
 
 		prepare() {
-			const { model} = this.options;
+			const {model} = this.options;
 			return {
 				...model.toJSON(),
+				tax: model.get('taxes').reduce((acc, tax) => acc + tax.get('amount'), 0),
 				taxes: model.get('taxes').toJSON(),
 			}
 		},
@@ -116,15 +118,19 @@ jQuery(function ($) {
 		onQuantityChange(e) {
 			e.preventDefault();
 			var value = parseFloat(e.target.value, 10);
+			if( ! value ){
+				this.onRemoveLineItem(e);
+				return;
+			}
 			this.model.set('quantity', value);
-			this.model.updateAmount();
+			this.options.state.updateAmounts();
 		},
 
 		onPriceChange(e) {
 			e.preventDefault();
 			var value = parseFloat(e.target.value, 10);
 			this.model.set('price', value);
-			this.model.updateAmount();
+			this.options.state.updateAmounts();
 		},
 
 		onAddTax(e) {
@@ -142,19 +148,29 @@ jQuery(function ($) {
 						tax_id: model.get('id'),
 						id: _.uniqueId('tax_'),
 					});
+					this.options.state.updateAmounts();
 				}
 			});
 		},
 
 		onRemoveTax(e) {
+			log('=== onRemoveTax() ===');
 			e.preventDefault();
 			var data = e.params.data;
 			var tax_id = parseInt(data.id, 10) || null;
-			if (!tax_id) {
-				return;
+			if (tax_id) {
+				var tax = this.model.get('taxes').findWhere({tax_id: tax_id});
+				if (tax){
+					this.model.get('taxes').remove(tax);
+					this.options.state.updateAmounts();
+				}
 			}
-			var tax = this.model.get('taxes').findWhere({id: tax_id});
-			this.model.get('taxes').remove(tax);
+		},
+
+		onRemoveLineItem(e) {
+			e.preventDefault();
+			this.options.state.get('items').remove(this.model);
+			this.options.state.updateAmounts();
 		}
 	});
 
@@ -191,7 +207,6 @@ jQuery(function ($) {
 
 		onAddItem(e) {
 			e.preventDefault();
-			log('=== onAddItem() ===');
 			const {state} = this.options;
 			const item_id = parseInt(e.params.data.id, 10) || null;
 			if (!item_id) {
@@ -201,12 +216,27 @@ jQuery(function ($) {
 			const item = new eac.api.Item({id: item_id});
 			item.fetch({
 				success: (model) => {
+					const id = _.uniqueId('item_');
 					state.get('items').add({
 						...model.toJSON(),
+						quantity: 1,
 						subtotal: 1 * model.get('price'),
+						tax: 0,
+						discount: 0,
+						total: 1 * model.get('price'),
 						item_id: model.get('id'),
-						id: _.uniqueId('item_'),
+						id: id,
+						// convert taxes to a collection.
+						taxes: new eac.api.DocumentTaxes(
+							model.get('taxes').map((tax) => ({
+								...tax,
+								id: _.uniqueId('tax_'),
+								tax_id: tax.id,
+								item_id: id,
+							})),
+						),
 					});
+					state.updateAmounts();
 				}
 			});
 		},
@@ -228,6 +258,7 @@ jQuery(function ($) {
 			const {state} = this.options;
 			return {
 				...state.toJSON(),
+				itemized_taxes: state.getItemizedTaxes(),
 			}
 		},
 	});
@@ -245,8 +276,6 @@ jQuery(function ($) {
 
 		initialize() {
 			const {state} = this.options;
-			this.listenTo(state, 'change', log);
-			this.listenTo(state, 'change:number', this.updateNumber);
 		},
 
 		render() {
@@ -292,21 +321,42 @@ jQuery(function ($) {
 		onVatExemptChange(e) {
 			e.preventDefault();
 			var state = this.options.state;
-			var value = e.target.value === 'yes' ? 'yes' : 'no';
+			var value = e.target.value === 'yes';
 			state.set('vat_exempt', value);
+			// If vat_exempt is true, remove all taxes.
+			if (value) {
+				state.get('items').each((item) => {
+					item.get('taxes').reset();
+				});
+				state.updateAmounts();
+			}
 		},
 
 		onDiscountAmountChange(e) {
+			log('=== onDiscountAmountChange() ===');
 			e.preventDefault();
 			var state = this.options.state;
 			var value = parseFloat(e.target.value, 10);
+			// if type is percent and amount is greater than 100, set to 100.
+			if (state.get('discount_type') === 'percent' && value > 100) {
+				value = 100;
+				this.$('[name="discount_amount"]').val(100);
+			}
+
 			state.set('discount_amount', value);
 		},
 
 		onDiscountTypeChange(e) {
+			log('=== onDiscountTypeChange() ===');
 			e.preventDefault();
 			var state = this.options.state;
 			var value = e.target.value;
+
+			//if type is percent and amount is greater than 100, set to 100.
+			if (value === 'percent' && state.get('discount_amount') > 100) {
+				state.set('discount_amount', 100);
+				this.$('[name="discount_amount"]').val(100);
+			}
 			state.set('discount_type', value);
 		},
 
@@ -326,7 +376,6 @@ jQuery(function ($) {
 		items.forEach(function (item) {
 			state.get('items').add(item);
 		});
-
 
 
 		(new Invoice({state})).render();

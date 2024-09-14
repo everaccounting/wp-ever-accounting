@@ -292,7 +292,7 @@ function eac_update_121() {
 	$wpdb->query( "ALTER TABLE $table_name ADD `balance` DOUBLE(15,4) DEFAULT 0 AFTER `total_paid`" );
 	$wpdb->query( "ALTER TABLE $table_name CHANGE `discount` `discount_amount` DOUBLE(15,4) DEFAULT 0 AFTER `balance`" );
 	$wpdb->query( "ALTER TABLE $table_name CHANGE `discount_type` `discount_type` VARCHAR(20) NOT NULL DEFAULT 'fixed' AFTER `discount_amount`" );
-	$wpdb->query( "UPDATE $table_name SET discount_type = 'percent' WHERE discount_type = 'percentage'" );
+	$wpdb->query( "UPDATE $table_name SET discount_type = 'percent' WHERE discount_type = 'percent'" );
 	$wpdb->query( "ALTER TABLE $table_name CHANGE `discount_type` `discount_type` ENUM('fixed','percent') NOT NULL DEFAULT 'fixed'" );
 	$wpdb->query( "ALTER TABLE $table_name CHANGE `address` `billing_data` longtext NULL AFTER `discount_type`" );
 	$wpdb->query( "ALTER TABLE $table_name CHANGE `order_number` `reference` VARCHAR(30) DEFAULT NULL AFTER `billing_data` " );
