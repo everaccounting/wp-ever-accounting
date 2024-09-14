@@ -2,6 +2,7 @@
 
 namespace EverAccounting;
 
+use EverAccounting\Controllers\Currencies;
 use EverAccounting\Controllers\Accounts;
 
 /**
@@ -11,6 +12,7 @@ use EverAccounting\Controllers\Accounts;
  * @package EverAccounting
  *
  * @property Accounts $accounts Accounts controller.
+ * @property Currencies $currencies Currencies controller.
  */
 class Plugin extends \ByteKit\Plugin {
 	/**
@@ -82,7 +84,11 @@ class Plugin extends \ByteKit\Plugin {
 	 */
 	public function on_init() {
 		$this->services->add( 'installer', new Installer() );
+
 		$this->services->add( 'accounts', new Controllers\Accounts() );
+		$this->services->add( 'currencies', new Controllers\Currencies() );
+		$this->services->add( 'items', new Controllers\Items() );
+
 		$this->services->add( 'transactions', new Handlers\Transactions() );
 		$this->services->add( 'documents', new Handlers\Documents() );
 		$this->services->add( 'shortcodes', new Handlers\Shortcodes() );

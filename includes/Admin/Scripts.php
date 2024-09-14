@@ -15,8 +15,36 @@ class Scripts {
 	 * Scripts constructor.
 	 */
 	public function __construct() {
+		add_action( 'admin_enqueue_scripts', array( $this, 'register_scripts' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles' ) );
+	}
+
+	/**
+	 * Register admin scripts.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public function register_scripts() {
+		// 3rd party scripts.
+		EAC()->scripts->register_script( 'eac-chartjs', 'js/chartjs.js', array( 'jquery' ), true );
+		EAC()->scripts->register_script( 'eac-inputmask', 'js/inputmask.js', array( 'jquery' ), true );
+		EAC()->scripts->register_script( 'eac-select2', 'js/select2.js', array( 'jquery' ), true );
+		EAC()->scripts->register_script( 'eac-tiptip', 'js/tiptip.js', array( 'jquery' ), true );
+		EAC()->scripts->register_script( 'eac-blockui', 'js/blockui.js', array( 'jquery' ), true );
+		EAC()->scripts->register_script( 'eac-accounting', 'js/accounting.js', array( 'jquery' ), true );
+
+		// Packages.
+		EAC()->scripts->register_script( 'eac-api', 'packages/api.js', array( 'wp-api', 'wp-backbone', 'underscore', 'jquery', 'eac-accounting' ), true );
+
+		// Plugin scripts.
+		EAC()->scripts->register_script( 'eac-admin', 'js/eac-admin.js', array( 'jquery', 'eac-chartjs', 'eac-inputmask', 'eac-select2', 'eac-tiptip', 'jquery-ui-datepicker', 'jquery-ui-tooltip', 'wp-util' ), true );
+		EAC()->scripts->register_script( 'eac-sales', 'js/eac-sales.js', array( 'eac-api' ), true );
+		EAC()->scripts->register_script( 'eac-settings', 'js/eac-settings.js', array( 'eac-admin' ), true );
+
+		EAC()->scripts->register_style( 'eac-jquery-ui', 'css/jquery-ui.css' );
+		EAC()->scripts->register_style( 'eac-admin', 'css/eac-admin.css', array( 'eac-jquery-ui', 'wp-jquery-ui-dialog' ) );
+		EAC()->scripts->register_style( 'eac-settings', 'css/eac-settings.css', array( 'eac-admin' ) );
 	}
 
 	/**
@@ -28,44 +56,13 @@ class Scripts {
 	 * @return void
 	 */
 	public function enqueue_scripts( $hook ) {
-		// 3rd party scripts.
-		EAC()->scripts->register_script( 'eac-chartjs', 'js/chartjs.js', array( 'jquery' ), true );
-		EAC()->scripts->register_script( 'eac-inputmask', 'js/inputmask.js', array( 'jquery' ), true );
-		EAC()->scripts->register_script( 'eac-select2', 'js/select2.js', array( 'jquery' ), true );
-		EAC()->scripts->register_script( 'eac-tiptip', 'js/tiptip.js', array( 'jquery' ), true );
-		EAC()->scripts->register_script( 'eac-blockui', 'js/blockui.js', array( 'jquery' ), true );
-		EAC()->scripts->register_script( 'eac-accounting', 'js/accounting.js', array( 'jquery' ), true );
-
-		// Packages.
-		EAC()->scripts->register_script( 'eac-api', 'packages/api.js', array( 'wp-api', 'wp-backbone', 'underscore', 'jquery', 'eac-accounting' ), true );
-		EAC()->scripts->register_script( 'eac-modal', 'packages/modal.js', array( 'wp-backbone' ), true );
-
-		// Plugin scripts.
-//		EAC()->scripts->register_script( 'eac-modal', 'js/eac-modal.js', array( 'wp-backbone', 'underscore', 'jquery' ), true );
-		EAC()->scripts->register_script( 'eac-form', 'js/eac-form.js', array( 'jquery', 'eac-api' ), true );
-
-
-		EAC()->scripts->register_script( 'eac-admin', 'js/eac-admin.js', array( 'jquery', 'eac-form', 'eac-chartjs', 'eac-inputmask', 'eac-select2', 'eac-tiptip', 'jquery-ui-datepicker', 'jquery-ui-tooltip', 'wp-util' ), true );
-		EAC()->scripts->register_script( 'eac-invoice', 'js/eac-invoice.js', array( 'eac-modal', 'eac-api' ), true );
-		EAC()->scripts->register_script( 'eac-bill-form', 'js/eac-bill-form.js', array( 'eac-modal', 'eac-api' ), true );
-		EAC()->scripts->register_script( 'eac-settings', 'js/eac-settings.js', array( 'eac-admin' ), true );
-
 		if ( ! in_array( $hook, Utilities::get_screen_ids(), true ) ) {
 			return;
 		}
 
 		wp_enqueue_media();
-		wp_enqueue_script( 'eac-modal' );
 		wp_enqueue_script( 'eac-admin' );
-
-
-		// if settings page.
-		if ( 'ever-accounting_page_eac-settings' === $hook ) {
-			EAC()->scripts->enqueue_script( 'eac-settings' );
-		}
-		if ( 'toplevel_page_ever-accounting' === $hook || 'ever-accounting_page_eac-reports' === $hook ) {
-			EAC()->scripts->enqueue_script( 'eac-chartjs' );
-		}
+		wp_enqueue_style( 'eac-admin' );
 
 		wp_localize_script(
 			'eac-admin',
@@ -89,31 +86,20 @@ class Scripts {
 				),
 			)
 		);
-	}
 
-
-	/**
-	 * Enqueue admin styles.
-	 *
-	 * @param string $hook The current admin page.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	public function enqueue_styles( $hook ) {
-		EAC()->scripts->register_style( 'eac-jquery-ui', 'css/jquery-ui.css' );
-		EAC()->scripts->register_style( 'eac-admin', 'css/eac-admin.css', array( 'eac-jquery-ui', 'wp-jquery-ui-dialog' ) );
-		EAC()->scripts->register_style( 'eac-settings', 'css/eac-settings.css', array( 'eac-admin' ) );
-
-		if ( ! in_array( $hook, Utilities::get_screen_ids(), true ) ) {
-			return;
+		// If sales page.
+		if ( 'ever-accounting_page_eac-sales' === $hook ) {
+			EAC()->scripts->enqueue_script( 'eac-sales' );
 		}
 
-		wp_enqueue_style( 'eac-admin' );
-
+		// if settings page.
 		if ( 'ever-accounting_page_eac-settings' === $hook ) {
+			EAC()->scripts->enqueue_script( 'eac-settings' );
 			EAC()->scripts->enqueue_style( 'eac-settings' );
 		}
-	}
 
+		if ( 'toplevel_page_ever-accounting' === $hook || 'ever-accounting_page_eac-reports' === $hook ) {
+			EAC()->scripts->enqueue_script( 'eac-chartjs' );
+		}
+	}
 }

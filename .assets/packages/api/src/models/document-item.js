@@ -1,5 +1,5 @@
 import Base from './base.js';
-import LineTaxes from '../collections/line-taxes';
+import DocumentItemTaxes from "../collections/document-item-taxes";
 
 export default Base.extend( {
 	endpoint: 'line-items',
@@ -20,9 +20,21 @@ export default Base.extend( {
 		description: '',
 		unit: '',
 		item_id: null,
-		taxes: new LineTaxes(),
 		updated_at: '',
 		created_at: '',
+
+		// Relationships
+		taxes: new DocumentItemTaxes(),
 	},
+
+	/**
+	 * Update Amount
+	 *
+	 * @return {void}
+	 */
+	updateAmount() {
+		var subtotal = this.get( 'price' ) * this.get( 'quantity' );
+		this.set( 'subtotal', subtotal );
+	}
 
 } );

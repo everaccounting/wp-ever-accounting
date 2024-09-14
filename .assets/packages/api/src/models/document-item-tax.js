@@ -9,7 +9,7 @@ export default Base.extend( {
 		rate: 0,
 		compound: false,
 		amount: 0,
-		line_id: 0,
+		item_id: 0,
 		tax_id: 0,
 		document_id: 0,
 		updated_at: '',

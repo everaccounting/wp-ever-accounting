@@ -299,4 +299,28 @@ class Document extends Model {
 	| object but can be used to support its functionality.
 	|--------------------------------------------------------------------------
 	*/
+
+	/**
+	 * Get max number.
+	 *
+	 * @since 1.0.0
+	 * @return string
+	 */
+	public function get_max_number() {
+		global $wpdb;
+		$number = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT number FROM {$wpdb->prefix}{$this->table} WHERE type = %s AND number IS NOT NULL AND number != '' ORDER BY number DESC",
+				esc_sql( $this->type )
+			)
+		);
+
+		// if number is not empty, using regular expression to extract the number.
+		if ( ! empty( $number ) ) {
+			preg_match( '/\d+$/', $number, $matches );
+			$number = ! empty( $matches ) ? $matches[0] : 0;
+		}
+
+		return (int) $number;
+	}
 }

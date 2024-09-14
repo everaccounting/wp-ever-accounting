@@ -1,40 +1,51 @@
-import Base from './base.js';
+import Document from './document.js';
+import Customer from './customer.js';
 
-export default Base.extend( {
+export default Document.extend( {
 	endpoint: 'invoices',
 
-	defaults: {
-		id: '',
-		type: '',
-		status: '',
-		number: '',
-		contact_id: '',
-		subtotal: '',
-		discount_total: '',
-		tax_total: '',
-		total: '',
-		total_paid: '',
-		discount_amount: '',
-		discount_type: '',
-		billing_data: '',
-		reference: '',
-		note: '',
-		vat_exempt: '',
-		issue_date: '',
-		due_date: '',
-		sent_date: '',
-		payment_date: '',
-		currency_code: '',
-		exchange_rate: '',
-		parent_id: '',
-		created_via: '',
-		creator_id: '',
-		uuid: '',
-		updated_at: '',
-		created_at: '',
+	defaults: Object.assign({}, Document.prototype.defaults, {
+		type: 'invoice',
+
+		// Relationships
+		customer: new Customer(),
+	}),
+
+	/**
+	 * Get a new invoice number
+	 *
+	 * @return {Promise}
+	 */
+	getNewNumber() {
+		var self = this;
+		this.getNextNumber({
+			success: ( response ) => {
+				self.set( 'number', response.next_number );
+			}
+		})
 	},
 
-	updateTotals() {
-		let items_amount = this.TotalBeforeDiscountAndTax();
+	/**
+	 * Update Amount
+	 *
+	 * @return {void}
+	 */
+	updateAmount() {
+		var subtotal = 0;
+		var discount_total = 0;
+		var tax_total = 0;
+		var total = 0;
+
+		this.get( 'items' ).each( ( item ) => {
+			subtotal += item.get( 'total' );
+			discount_total += item.get( 'discount_total' );
+			tax_total += item.get( 'tax_total' );
+			total += item.get( 'total' );
+		} );
+
+		this.set( 'subtotal', subtotal );
+		this.set( 'discount_total', discount_total );
+		this.set( 'tax_total', tax_total );
+		this.set( 'total', total );
 	}
 } );

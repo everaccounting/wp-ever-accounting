@@ -10,7 +10,7 @@ defined( 'ABSPATH' ) || exit;
  * Class Installer.
  *
  * @since   1.0.0
- * @package WooCommerceKeyManager
+ * @package EverAccounting
  */
 class Installer {
 	/**
@@ -252,7 +252,7 @@ CREATE TABLE {$wpdb->prefix}ea_contacts (
     address VARCHAR(191) DEFAULT NULL,
     city VARCHAR(50) DEFAULT NULL,
     state VARCHAR(50) DEFAULT NULL,
-    postcode VARCHAR(20) DEFAULT NULL,
+    zip VARCHAR(20) DEFAULT NULL,
     country VARCHAR(3) DEFAULT NULL,
     tax_number VARCHAR(50) DEFAULT NULL,
     currency_code VARCHAR(3) NOT NULL DEFAULT 'USD',
@@ -271,6 +271,31 @@ CREATE TABLE {$wpdb->prefix}ea_contacts (
     KEY currency_code (currency_code),
     KEY user_id (user_id),
     KEY status (status)
+) $collate;
+
+CREATE TABLE {$wpdb->prefix}ea_document_addresses (
+	id BIGINT(20) NOT NULL AUTO_INCREMENT,
+	document_id BIGINT(20) UNSIGNED NOT NULL,
+	type VARCHAR(20) NOT NULL DEFAULT 'billing',
+	name VARCHAR(191) NOT NULL,
+	company VARCHAR(191) DEFAULT NULL,
+	address VARCHAR(191) DEFAULT NULL,
+	city VARCHAR(50) DEFAULT NULL,
+	state VARCHAR(50) DEFAULT NULL,
+	zip VARCHAR(20) DEFAULT NULL,
+	country VARCHAR(3) DEFAULT NULL,
+	phone VARCHAR(20) DEFAULT NULL,
+	email VARCHAR(191) DEFAULT NULL,
+	tax_number VARCHAR(50) DEFAULT NULL,
+	created_at DATETIME DEFAULT NULL,
+	updated_at DATETIME DEFAULT NULL,
+	PRIMARY KEY (id),
+	KEY document_id (document_id),
+	KEY type (type),
+	KEY name (name),
+	KEY country (country),
+	KEY state (state),
+	KEY city (city)
 ) $collate;
 
 CREATE TABLE {$wpdb->prefix}ea_document_items (
@@ -372,8 +397,7 @@ CREATE TABLE {$wpdb->prefix}ea_documents (
     KEY contact_id (contact_id),
     KEY type (type),
     KEY status (status),
-    KEY total (total),
-    KEY balance (balance)
+    KEY total (total)
 ) $collate;
 
 CREATE TABLE {$wpdb->prefix}ea_items (

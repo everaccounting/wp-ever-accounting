@@ -12,6 +12,8 @@ module.exports = [
 		...defaults,
 		entry: {
 			...defaults.entry(),
+
+			// 3rd party libraries.
 			'js/chartjs': './node_modules/chart.js/dist/chart.js',
 			'js/select2': [
 				'./node_modules/select-woo/dist/js/selectWoo.js',
@@ -23,19 +25,16 @@ module.exports = [
 			],
 			'js/tiptip': './.assets/libraries/tiptip/tiptip.js',
 			'js/blockui': './.assets/libraries/blockui/blockUI.js',
-			'js/eac-modal': './.assets/js/admin/modal.js',
-			'js/eac-form': './.assets/js/admin/form.js',
-			'js/eac-admin': './.assets/js/admin/admin.js',
-			'js/eac-invoice': './.assets/js/admin/invoice.js',
-			'js/eac-bill-form': './.assets/js/admin/bill-form.js',
-			'js/eac-settings': './.assets/js/admin/settings.js',
 			'css/jquery-ui': [
 				'./node_modules/jquery-ui/themes/base/theme.css',
 				'./node_modules/jquery-ui/themes/base/datepicker.css',
 				'./node_modules/jquery-ui/themes/base/tooltip.css',
 			],
+
+			// Plugin scripts.
+			'js/eac-admin': './.assets/js/admin/admin.js',
+			'js/eac-sales': './.assets/js/admin/sales.js',
 			'css/eac-admin': './.assets/css/admin/admin.scss',
-			'css/eac-settings': './.assets/css/admin/settings.scss',
 		},
 		output: {
 			...defaults.output,

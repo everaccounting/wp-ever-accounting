@@ -6,6 +6,14 @@ use EverAccounting\Models\Account;
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Accounts controller.
+ *
+ * @since 1.0.0
+ * @author  Sultan Nasir Uddin <manikdrmc@gmail.com>
+ * @package EverAccounting
+ * @subpackage Controllers
+ */
 class Accounts {
 
 	/**

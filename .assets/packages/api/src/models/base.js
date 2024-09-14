@@ -26,10 +26,9 @@ export default Backbone.Model.extend({
 	 */
 	url: function () {
 		var url = this.apiRoot.replace(/\/+$/, '') + '/' + this.namespace.replace(/\/+$/, '') + '/' + this.endpoint.replace(/\/+$/, '');
-		if (!_.isEmpty(this.get('id'))) {
+		if (!_.isUndefined(this.get('id'))) {
 			url += '/' + this.get('id');
 		}
-
 		return url;
 	},
 
@@ -71,6 +70,16 @@ export default Backbone.Model.extend({
 		}
 
 		return Backbone.sync( method, model, options );
-	}
+	},
+
+	// toJSON: function () {
+	// 	var json = _.clone(Backbone.Model.prototype.toJSON.apply(this, arguments));
+	// 	for(var attr in json) {
+	// 		if((json[attr] instanceof Backbone.Model) || (json[attr] instanceof Backbone.Collection)) {
+	// 			json[attr] = json[attr].toJSON();
+	// 		}
+	// 	}
+	// 	return json;
+	// },
 
 });

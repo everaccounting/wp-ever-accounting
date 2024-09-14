@@ -488,13 +488,19 @@ class Taxes extends Controller {
 					'context'     => array( 'view', 'edit' ),
 					'required'    => true,
 				),
+				'formatted_name' => array(
+					'description' => __( 'Formatted tax name.', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'context'     => array( 'view' ),
+					'readonly'    => true,
+				),
 				'rate'        => array(
 					'description' => __( 'Tax rate.', 'wp-ever-accounting' ),
 					'type'        => 'number',
 					'context'     => array( 'view', 'edit' ),
 					'required'    => true,
 				),
-				'is_compound' => array(
+				'compound' => array(
 					'description' => __( 'Whether the tax is compound.', 'wp-ever-accounting' ),
 					'type'        => 'boolean',
 					'context'     => array( 'view', 'edit' ),

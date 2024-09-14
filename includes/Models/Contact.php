@@ -72,7 +72,7 @@ class Contact extends Model {
 		'address',
 		'city',
 		'state',
-		'postcode',
+		'zip',
 		'country',
 		'tax_number',
 		'currency_code',
