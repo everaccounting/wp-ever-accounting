@@ -36,10 +36,12 @@ class Scripts {
 
 		// Packages.
 		EAC()->scripts->register_script( 'eac-api', 'packages/api.js', array( 'wp-api', 'wp-backbone', 'underscore', 'jquery', 'eac-accounting' ), true );
+		EAC()->scripts->register_script( 'eac-expenses', 'client/expenses.js' );
 
 		// Plugin scripts.
 		EAC()->scripts->register_script( 'eac-admin', 'js/eac-admin.js', array( 'jquery', 'eac-chartjs', 'eac-inputmask', 'eac-select2', 'eac-tiptip', 'jquery-ui-datepicker', 'jquery-ui-tooltip', 'wp-util' ), true );
 		EAC()->scripts->register_script( 'eac-sales', 'js/eac-sales.js', array( 'eac-api' ), true );
+		EAC()->scripts->register_script( 'eac-purchases', 'js/eac-purchases.js', array( 'eac-api' ), true );
 		EAC()->scripts->register_script( 'eac-settings', 'js/eac-settings.js', array( 'eac-admin' ), true );
 
 		EAC()->scripts->register_style( 'eac-jquery-ui', 'css/jquery-ui.css' );
@@ -90,6 +92,12 @@ class Scripts {
 		// If sales page.
 		if ( 'ever-accounting_page_eac-sales' === $hook ) {
 			EAC()->scripts->enqueue_script( 'eac-sales' );
+		}
+
+		// If purchases page.
+		if ( 'ever-accounting_page_eac-purchases' === $hook ) {
+//			EAC()->scripts->enqueue_script( 'eac-purchases' );
+			EAC()->scripts->enqueue_script( 'eac-expenses' );
 		}
 
 		// if settings page.

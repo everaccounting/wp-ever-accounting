@@ -133,7 +133,6 @@ class Items {
 		$cost        = isset( $_POST['cost'] ) ? floatval( wp_unslash( $_POST['cost'] ) ) : 0;
 		$category_id = isset( $_POST['category_id'] ) ? absint( wp_unslash( $_POST['category_id'] ) ) : 0;
 		$unit        = isset( $_POST['unit'] ) ? sanitize_text_field( wp_unslash( $_POST['unit'] ) ) : '';
-		$taxable     = isset( $_POST['taxable'] ) ? sanitize_text_field( wp_unslash( $_POST['taxable'] ) ) : 'no'; // phpcs:ignore
 		$tax_ids     = isset( $_POST['tax_ids'] ) ? array_map( 'absint', wp_unslash( $_POST['tax_ids'] ) ) : array();
 		$desc        = isset( $_POST['description'] ) ? sanitize_textarea_field( wp_unslash( $_POST['description'] ) ) : '';
 		$status      = isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : 'active';
@@ -146,7 +145,6 @@ class Items {
 				'cost'        => $cost,
 				'category_id' => $category_id,
 				'unit'        => $unit,
-				'taxable'     => $taxable,
 				'tax_ids'     => implode( ',', array_unique( array_filter( $tax_ids ) ) ),
 				'description' => $desc,
 				'status'      => $status,

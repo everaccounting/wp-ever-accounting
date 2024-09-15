@@ -22,10 +22,9 @@ defined( 'ABSPATH' ) || exit;
  * @property string $address Address line of the contact.
  * @property string $city City of the contact.
  * @property string $state State of the contact.
- * @property string $postcode Postcode of the contact.
+ * @property string $zip Postcode of the contact.
  * @property string $country Country of the contact.
- * @property string $vat_number VAT number of the contact.
- * @property bool   $vat_exempt VAT exempt status of the contact.
+ * @property string $tax_number Tax number of the contact.
  * @property string $currency_code Currency code of the contact.
  * @property int    $thumbnail_id Thumbnail ID of the contact.
  * @property int    $user_id User ID of the contact.

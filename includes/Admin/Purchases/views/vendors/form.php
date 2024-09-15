@@ -86,23 +86,10 @@ defined( 'ABSPATH' ) || exit;
 						);
 						eac_form_field(
 							array(
-								'id'          => 'vat_number',
-								'label'       => __( 'VAT Number', 'wp-ever-accounting' ),
+								'id'          => 'tax_number',
+								'label'       => __( 'TAX Number', 'wp-ever-accounting' ),
 								'placeholder' => __( '123456789', 'wp-ever-accounting' ),
-								'value'       => $vendor->vat_number,
-							)
-						);
-						eac_form_field(
-							array(
-								'id'          => 'vat_exempt',
-								'label'       => __( 'VAT Exempt', 'wp-ever-accounting' ),
-								'type'        => 'select',
-								'options'     => array(
-									'1' => __( 'Yes', 'wp-ever-accounting' ),
-									'0' => __( 'No', 'wp-ever-accounting' ),
-								),
-								'value'       => $vendor->vat_exempt,
-								'placeholder' => __( 'Select VAT exempt status', 'wp-ever-accounting' ),
+								'value'       => $vendor->tax_number,
 							)
 						);
 						eac_form_field(

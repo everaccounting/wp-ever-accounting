@@ -34,7 +34,17 @@ module.exports = [
 			// Plugin scripts.
 			'js/eac-admin': './.assets/js/admin/admin.js',
 			'js/eac-sales': './.assets/js/admin/sales.js',
+			'js/eac-purchases': './.assets/js/admin/purchases.js',
 			'css/eac-admin': './.assets/css/admin/admin.scss',
+
+			// Client scripts.
+			...glob.sync('./.assets/client/*/index.js').reduce((memo, file) => {
+				const module = file.replace('.assets/client/', '').replace('/index.js', '');
+				return {
+					...memo,
+					[`client/${module}`]: path.resolve(__dirname, file),
+				};
+			}, {}),
 		},
 		output: {
 			...defaults.output,
@@ -42,10 +52,10 @@ module.exports = [
 			path: __dirname + '/assets/',
 			chunkFilename: 'chunks/[chunkhash].js',
 			uniqueName: '__eac_webpackJsonp',
-			library: {
-				name: '[name]',
-				type: 'window',
-			},
+			// library: {
+			// 	name: '[name]',
+			// 	type: 'window',
+			// },
 		},
 		resolve: {
 			...defaults.resolve,
@@ -77,11 +87,11 @@ module.exports = [
 						];
 					}
 				},
-				// requestToHandle(request) {
-				// 	if (request.startsWith(PACKAGE_NAMESPACE)) {
-				// 		return `eac-${request.substring(PACKAGE_NAMESPACE.length).replace(/-([a-z])/g, (_, letter) => letter.toUpperCase())}`;
-				// 	}
-				// },
+				requestToHandle(request) {
+					if (request.startsWith(PACKAGE_NAMESPACE)) {
+						return `eac-${request.substring(PACKAGE_NAMESPACE.length).replace(/-([a-z])/g, (_, letter) => letter.toUpperCase())}`;
+					}
+				},
 			}),
 
 			// copy vue js file from node_modules to assets folder.

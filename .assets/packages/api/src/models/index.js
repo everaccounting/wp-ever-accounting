@@ -4,6 +4,7 @@ export { default as Bill} from './bill';
 export { default as Category} from './category';
 export { default as Currency} from './currency';
 export { default as Customer} from './customer';
+export { default as Expense} from './expense';
 export { default as Invoice} from './invoice';
 export { default as Item} from './item';
 export { default as DocumentTax} from './document-tax';

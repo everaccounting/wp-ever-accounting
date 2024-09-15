@@ -113,19 +113,6 @@ $categories = eac_get_categories(
 							'class'       => 'eac-select2',
 						)
 					);
-					// taxable.
-					eac_form_field(
-						array(
-							'type'    => 'select',
-							'name'    => 'taxable',
-							'label'   => __( 'Taxable', 'wp-ever-accounting' ),
-							'value'   => filter_var( $item->taxable, FILTER_VALIDATE_BOOLEAN ) ? 'yes' : 'no',
-							'options' => array(
-								'yes' => __( 'Yes', 'wp-ever-accounting' ),
-								'no'  => __( 'No', 'wp-ever-accounting' ),
-							),
-						)
-					);
 					// tax_ids.
 					eac_form_field(
 						array(

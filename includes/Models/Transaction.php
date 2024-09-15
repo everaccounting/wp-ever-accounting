@@ -327,23 +327,6 @@ class Transaction extends Model {
 	 * @return \WP_Error|static WP_Error on failure, or the object on success.
 	 */
 	public function save() {
-		if ( empty( $this->account_id ) ) {
-			return new \WP_Error( 'missing_required', __( 'Account ID is required.', 'wp-ever-accounting' ) );
-		}
-
-		// If the account_id is changed, update the currency code.
-		if ( $this->is_dirty( 'account_id' ) || ! $this->exists() ) {
-			$account = Account::find( $this->account_id );
-
-			$this->attributes['currency_code'] = $account ? $account->currency_code : eac_get_base_currency();
-		}
-
-		// If currency code is changed, update the currency rate.
-		if ( $this->is_dirty( 'currency_code' ) || ! $this->exists() ) {
-			$currency = Currency::find( $this->currency_code );
-
-			$this->attributes['exchange_rate'] = $currency ? $currency->exchange_rate : 1;
-		}
 
 		// check if the number is empty.
 		if ( empty( $this->number ) ) {

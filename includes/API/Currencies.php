@@ -90,8 +90,8 @@ class Currencies extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @return true|\WP_Error True if the request has read access, WP_Error object otherwise.
 	 * @since 1.2.1
+	 * @return true|\WP_Error True if the request has read access, WP_Error object otherwise.
 	 */
 	public function get_items_permissions_check( $request ) {
 		if ( ! current_user_can( 'eac_manage_currency' ) ) {
@@ -110,8 +110,8 @@ class Currencies extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @return true|\WP_Error True if the request has read access, WP_Error object otherwise.
 	 * @since 1.2.1
+	 * @return true|\WP_Error True if the request has read access, WP_Error object otherwise.
 	 */
 	public function create_item_permissions_check( $request ) {
 		if ( ! current_user_can( 'eac_manage_currency' ) ) {
@@ -130,8 +130,8 @@ class Currencies extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @return true|\WP_Error True if the request has read access, WP_Error object otherwise.
 	 * @since 1.2.1
+	 * @return true|\WP_Error True if the request has read access, WP_Error object otherwise.
 	 */
 	public function get_item_permissions_check( $request ) {
 		$id       = ! empty( $request['id'] ) ? $request['id'] : $request['code'];
@@ -153,8 +153,8 @@ class Currencies extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @return true|\WP_Error True if the request has read access, WP_Error object otherwise.
 	 * @since 1.2.1
+	 * @return true|\WP_Error True if the request has read access, WP_Error object otherwise.
 	 */
 	public function update_item_permissions_check( $request ) {
 		$id       = ! empty( $request['id'] ) ? $request['id'] : $request['code'];
@@ -176,8 +176,8 @@ class Currencies extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @return true|\WP_Error True if the request has read access, WP_Error object otherwise.
 	 * @since 1.2.1
+	 * @return true|\WP_Error True if the request has read access, WP_Error object otherwise.
 	 */
 	public function delete_item_permissions_check( $request ) {
 		$id       = ! empty( $request['id'] ) ? $request['id'] : $request['code'];
@@ -199,8 +199,8 @@ class Currencies extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 * @since 1.2.1
+	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function get_items( $request ) {
 		$params = $this->get_collection_params();
@@ -215,7 +215,7 @@ class Currencies extends Controller {
 		 *
 		 * Enables adding extra arguments or setting defaults for a currency request.
 		 *
-		 * @param array $args Key value array of query var to query value.
+		 * @param array            $args Key value array of query var to query value.
 		 * @param \WP_REST_Request $request The request used.
 		 *
 		 * @since 1.2.1
@@ -275,8 +275,8 @@ class Currencies extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 * @since 1.2.1
+	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function get_item( $request ) {
 		$id       = ! empty( $request['id'] ) ? $request['id'] : $request['code'];
@@ -291,8 +291,8 @@ class Currencies extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 * @since 1.2.1
+	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function create_item( $request ) {
 		if ( ! empty( $request['id'] ) ) {
@@ -328,8 +328,8 @@ class Currencies extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 * @since 1.2.1
+	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function update_item( $request ) {
 		$currency = eac_get_currency( $request['id'] );
@@ -354,8 +354,8 @@ class Currencies extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 * @since 1.2.1
+	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function delete_item( $request ) {
 		$currency = eac_get_currency( $request['id'] );
@@ -384,11 +384,11 @@ class Currencies extends Controller {
 	/**
 	 * Prepares a single currency output for response.
 	 *
-	 * @param Currency $item currency object.
+	 * @param Currency         $item currency object.
 	 * @param \WP_REST_Request $request Request object.
 	 *
-	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 * @since 1.2.1
+	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function prepare_item_for_response( $item, $request ) {
 		$data = [];
@@ -417,8 +417,8 @@ class Currencies extends Controller {
 		 * Filter currency data returned from the REST API.
 		 *
 		 * @param \WP_REST_Response $response The response object.
-		 * @param Currency $item Category object used to create response.
-		 * @param \WP_REST_Request $request Request object.
+		 * @param Currency          $item Category object used to create response.
+		 * @param \WP_REST_Request  $request Request object.
 		 */
 		return apply_filters( 'eac_rest_prepare_currency', $response, $item, $request );
 	}
@@ -428,8 +428,8 @@ class Currencies extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Request object.
 	 *
-	 * @return array|\WP_Error currency object or WP_Error.
 	 * @since 1.2.1
+	 * @return array|\WP_Error currency object or WP_Error.
 	 */
 	protected function prepare_item_for_database( $request ) {
 		$schema    = $this->get_item_schema();
@@ -450,7 +450,7 @@ class Currencies extends Controller {
 		/**
 		 * Filters currency before it is inserted via the REST API.
 		 *
-		 * @param array $props currency props.
+		 * @param array            $props currency props.
 		 * @param \WP_REST_Request $request Request object.
 		 */
 		return apply_filters( 'ever_accounting_rest_pre_insert_currency', $props, $request );
@@ -459,7 +459,7 @@ class Currencies extends Controller {
 	/**
 	 * Prepare links for the request.
 	 *
-	 * @param currency $currency Object data.
+	 * @param currency         $currency Object data.
 	 * @param \WP_REST_Request $request Request currency.
 	 *
 	 * @return array Links for the given currency.
@@ -478,8 +478,8 @@ class Currencies extends Controller {
 	/**
 	 * Retrieves the item's schema, conforming to JSON Schema.
 	 *
-	 * @return array Item schema data.
 	 * @since 1.1.2
+	 * @return array Item schema data.
 	 */
 	public function get_item_schema() {
 		$schema = array(
@@ -509,7 +509,13 @@ class Currencies extends Controller {
 					'context'     => array( 'view', 'edit' ),
 					'required'    => true,
 				),
-				'decimals'          => array(
+				'exchange_rate'      => array(
+					'description' => __( 'currency exchange rate.', 'wp-ever-accounting' ),
+					'type'        => 'number',
+					'context'     => array( 'view', 'edit' ),
+					'required'    => true,
+				),
+				'decimals'           => array(
 					'description' => __( 'currency decimals.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'edit' ),
@@ -540,18 +546,6 @@ class Currencies extends Controller {
 					'context'     => array( 'view', 'edit' ),
 					'required'    => true,
 				),
-				'exchange_rate'      => array(
-					'description' => __( 'currency exchange rate.', 'wp-ever-accounting' ),
-					'type'        => 'number',
-					'context'     => array( 'view', 'edit' ),
-					'required'    => true,
-				),
-				'auto_update'        => array(
-					'description' => __( 'currency auto update.', 'wp-ever-accounting' ),
-					'type'        => 'boolean',
-					'context'     => array( 'view', 'edit' ),
-					'required'    => true,
-				),
 				'status'             => array(
 					'description' => __( 'currency status.', 'wp-ever-accounting' ),
 					'type'        => 'string',
@@ -559,13 +553,13 @@ class Currencies extends Controller {
 					'context'     => array( 'view', 'edit' ),
 					'required'    => true,
 				),
-				'updated_at'       => array(
+				'updated_at'         => array(
 					'description' => __( "The date the currency was last updated, in the site's timezone.", 'wp-ever-accounting' ),
 					'type'        => 'date-time',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
-				'created_at'       => array(
+				'created_at'         => array(
 					'description' => __( "The date the currency was created, in the site's timezone.", 'wp-ever-accounting' ),
 					'type'        => 'date-time',
 					'context'     => array( 'view', 'edit' ),

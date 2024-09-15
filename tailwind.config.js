@@ -8,6 +8,8 @@ module.exports = {
 	content: [
 		join(__dirname, 'includes/Admin/**/views/**/**/*.php'),
 		join(__dirname, 'templates/**/*.php'),
+		join(__dirname, '.assets/packages/**/*.js'),
+		join(__dirname, '.assets/client/**/*.js'),
 	],
 	media: false,
 	theme: {},

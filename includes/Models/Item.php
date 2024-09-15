@@ -20,7 +20,6 @@ use ByteKit\Models\Relations\BelongsToMany;
  * @property string   $unit Unit of the item.
  * @property double   $price Price of the item.
  * @property double   $cost Cost of the item.
- * @property bool     $taxable Whether the item is taxable.
  * @property array    $tax_ids Tax IDs of the item.
  * @property int      $category_id Category ID of the item.
  * @property int      $thumbnail_id Thumbnail ID of the item.
@@ -58,7 +57,6 @@ class Item extends Model {
 		'unit',
 		'price',
 		'cost',
-		'taxable',
 		'tax_ids',
 		'category_id',
 		'thumbnail_id',
@@ -74,7 +72,6 @@ class Item extends Model {
 	protected $attributes = array(
 		'type'    => 'standard',
 		'status'  => 'active',
-		'taxable' => false,
 	);
 
 	/**
@@ -86,7 +83,6 @@ class Item extends Model {
 	protected $casts = array(
 		'price'        => 'double',
 		'cost'         => 'double',
-		'taxable'      => 'bool',
 		'tax_ids'      => 'id_list',
 		'category_id'  => 'int',
 		'thumbnail_id' => 'int',
@@ -281,12 +277,10 @@ class Item extends Model {
 		if ( empty( $this->type ) ) {
 			return new \WP_Error( 'missing_required', __( 'Item type is required.', 'wp-ever-accounting' ) );
 		}
-		if ( empty( $this->price ) ) {
-			return new \WP_Error( 'missing_required', __( 'Item price is required.', 'wp-ever-accounting' ) );
-		}
 		if ( empty( $this->status ) ) {
 			return new \WP_Error( 'missing_required', __( 'Item status is required.', 'wp-ever-accounting' ) );
 		}
+
 		if ( empty( $this->cost ) ) {
 			$this->cost = $this->price;
 		}
@@ -302,22 +296,4 @@ class Item extends Model {
 	| object but can be used to support its functionality.
 	|--------------------------------------------------------------------------
 	*/
-
-	/**
-	 * Get items tax
-	 *
-	 * @since 1.2.1
-	 * @return Tax[]
-	 */
-	// public function get_taxes() {
-	// if ( ! $this->exists() || empty( $this->tax_ids ) ) {
-	// return array();
-	// }
-	//
-	// return Tax::query(
-	// array(
-	// 'include' => $this->tax_ids,
-	// )
-	// );
-	// }
 }
