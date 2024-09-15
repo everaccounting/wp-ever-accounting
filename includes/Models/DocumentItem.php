@@ -13,27 +13,24 @@ use ByteKit\Models\Relations\HasMany;
  * @package EverAccounting
  * @subpackage Models
  *
- * @property int    $id ID of the document_item.
- * @property string $type Type of the document_item.
- * @property string $name Name of the document_item.
- * @property double $price Price of the document_item.
- * @property double $quantity Quantity of the document_item.
- * @property double $subtotal Subtotal of the document_item.
- * @property double $subtotal_tax Subtotal_tax of the document_item.
- * @property double $discount Discount of the document_item.
- * @property double $discount_tax Discount Tax of the document_item.
- * @property double $tax_total Tax total of the document_item.
- * @property double $total Total of the document_item.
- * @property int    $taxable Taxable of the document_item.
- * @property string $description Description of the document_item.
- * @property string $unit Unit of the document_item.
- * @property int    $item_id Item ID of the document_item.
- * @property int    $document_id Document ID of the document_item.
- * @property string $updated_at Date updated of the document_item.
- * @property string $created_at Date created of the document_item.
+ * @property int                $id ID of the document_item.
+ * @property string             $type Type of the document_item.
+ * @property string             $name Name of the document_item.
+ * @property double             $price Price of the document_item.
+ * @property double             $quantity Quantity of the document_item.
+ * @property double             $subtotal Subtotal of the document_item.
+ * @property double             $discount Discount of the document_item.
+ * @property double             $tax_total Tax total of the document_item.
+ * @property double             $total Total of the document_item.
+ * @property string             $description Description of the document_item.
+ * @property string             $unit Unit of the document_item.
+ * @property int                $item_id Item ID of the document_item.
+ * @property int                $document_id Document ID of the document_item.
+ * @property string             $updated_at Date updated of the document_item.
+ * @property string             $created_at Date created of the document_item.
  *
- * @property-read double $discounted_subtotal Discounted subtotal of the document_item.
- * @property-read DocumentItemTax[] $taxes Taxes of the document_item.
+ * @property-read double        $discounted_subtotal Discounted subtotal of the document_item.
+ * @property-read DocumentTax[] $taxes Taxes of the document_item.
  */
 class DocumentItem extends Model {
 
@@ -58,12 +55,9 @@ class DocumentItem extends Model {
 		'price',
 		'quantity',
 		'subtotal',
-		'subtotal_tax',
 		'discount',
-		'discount_tax',
 		'tax_total',
 		'total',
-		'taxable',
 		'description',
 		'unit',
 		'item_id',
@@ -91,12 +85,9 @@ class DocumentItem extends Model {
 		'price'        => 'double',
 		'quantity'     => 'double',
 		'subtotal'     => 'double',
-		'subtotal_tax' => 'double',
 		'discount'     => 'double',
-		'discount_tax' => 'double',
 		'tax_total'    => 'double',
 		'total'        => 'double',
-		'taxable'      => 'int',
 		'item_id'      => 'int',
 		'document_id'  => 'int',
 	);
@@ -108,16 +99,6 @@ class DocumentItem extends Model {
 	 * @var bool
 	 */
 	protected $has_timestamps = true;
-
-	/**
-	 * Create a new model instance.
-	 *
-	 * @param string|array|object $attributes The model attributes.
-	 */
-	public function __construct( $attributes = array() ) {
-		$this->attributes['taxable'] = filter_var( eac_tax_enabled(), FILTER_VALIDATE_BOOLEAN );
-		parent::__construct( $attributes );
-	}
 
 	/*
 	|--------------------------------------------------------------------------
@@ -155,7 +136,7 @@ class DocumentItem extends Model {
 	 * @return HasMany
 	 */
 	public function taxes() {
-		return $this->has_many( DocumentItemTax::class, 'item_id' );
+		return $this->has_many( DocumentTax::class, 'item_id' );
 	}
 
 	/**
@@ -197,24 +178,12 @@ class DocumentItem extends Model {
 			return new \WP_Error( 'required_missing', __( 'Product type is required.', 'wp-ever-accounting' ) );
 		}
 
-		if ( empty( $this->name ) ) {
-			return new \WP_Error( 'required_missing', __( 'Product name is required.', 'wp-ever-accounting' ) );
-		}
-
 		if ( empty( $this->quantity ) ) {
 			return new \WP_Error( 'required_missing', __( 'Product quantity is required.', 'wp-ever-accounting' ) );
 		}
 
-		if ( empty( $this->item_id ) ) {
-			return new \WP_Error( 'required_missing', __( 'Item ID is required.', 'wp-ever-accounting' ) );
-		}
-
 		if ( empty( $this->document_id ) ) {
 			return new \WP_Error( 'required_missing', __( 'Document ID is required.', 'wp-ever-accounting' ) );
-		}
-		// If the item is not taxable, then shipping and fee should not be taxable.
-		if ( ! $this->taxable ) {
-			$this->taxes()->delete();
 		}
 
 		$ret_val = parent::save();
@@ -243,62 +212,4 @@ class DocumentItem extends Model {
 	| object but can be used to support its functionality.
 	|--------------------------------------------------------------------------
 	*/
-
-	/**
-	 * Calculate subtotal.
-	 *
-	 * @param bool $tax_inclusive Tax inclusive.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	public function calculate_subtotal( $tax_inclusive = false ) {
-		$subtotal = $this->quantity * $this->price;
-		if ( $tax_inclusive ) {
-			$tax_rates    = eac_calculate_taxes( $subtotal, $this->taxes, $tax_inclusive );
-			$subtotal_tax = array_sum( wp_list_pluck( $tax_rates, 'amount' ) );
-			$subtotal    -= $subtotal_tax;
-		}
-
-		$this->subtotal = $subtotal;
-	}
-
-	/**
-	 * Is similar.
-	 *
-	 * @param DocumentItem $line Item to compare.
-	 *
-	 * @since 1.1.0
-	 * @return bool
-	 */
-	public function is_similar( $line ) {
-		return $this->item_id === $line->item_id &&
-				$this->type === $line->type &&
-				$this->name === $line->name &&
-				$this->unit === $line->unit &&
-				$this->price === $line->price &&
-				$this->taxable === $line->taxable &&
-				wp_list_pluck( $this->taxes, 'id' ) === wp_list_pluck( $this->taxes, 'id' );
-	}
-
-	/**
-	 * Merge two items.
-	 *
-	 * @param DocumentItem $line Item to merge.
-	 *
-	 * @since 1.1.0
-	 * @return static|false Merged item or false on failure.
-	 */
-	public function merge( $line ) {
-		// If the item's properties are same, then merge and increase the quantity.
-
-		if ( $this->is_similar( $line ) ) {
-			$this->quantity += $line->quantity;
-			$this->calculate_subtotal( $this->tax_inclusive );
-
-			return $this;
-		}
-
-		return false;
-	}
 }

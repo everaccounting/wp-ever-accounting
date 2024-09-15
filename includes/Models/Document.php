@@ -46,60 +46,60 @@ use ByteKit\Models\Relations\HasMany;
  * @package EverAccounting
  * @subpackage Models
  *
- * @property int      $id ID of the document.
- * @property string   $type Type of the document.
- * @property string   $status Status of the document.
- * @property string   $number Number of the document.
- * @property int      $contact_id Contact ID of the document.
- * @property double   $subtotal Item total of the document.
- * @property double   $discount_total Discount total of the document.
- * @property double   $tax_total Tax total of the document.
- * @property double   $total Total of the document.
- * @property double   $balance Balance of the document.
- * @property float    $discount_amount Discount amount of the document.
- * @property string   $discount_type Discount type of the document.
- * @property array    $billing_data Billing data of the document.
- * @property string   $reference Reference of the document.
- * @property string   $note Note of the document.
- * @property bool     $tax_inclusive Tax inclusive of the document.
- * @property bool     $vat_exempt Vat exempt of the document.
- * @property string   $issue_date Issue date of the document.
- * @property string   $due_date Due date of the document.
- * @property string   $sent_date Sent date of the document.
- * @property string   $payment_date Payment date of the document.
- * @property string   $currency_code Currency code of the document.
- * @property double   $exchange_rate Exchange rate of the document.
- * @property int      $parent_id Parent ID of the document.
- * @property string   $created_via Created via of the document.
- * @property int      $creator_id Author ID of the document.
- * @property string   $uuid UUID of the document.
- * @property string   $updated_at Date updated of the document.
- * @property string   $created_at Date created of the document.
+ * @property int            $id ID of the document.
+ * @property string         $type Type of the document.
+ * @property string         $status Status of the document.
+ * @property string         $number Number of the document.
+ * @property int            $contact_id Contact ID of the document.
+ * @property double         $subtotal Item total of the document.
+ * @property double         $discount_total Discount total of the document.
+ * @property double         $tax_total Tax total of the document.
+ * @property double         $total Total of the document.
+ * @property double         $balance Balance of the document.
+ * @property float          $discount_amount Discount amount of the document.
+ * @property string         $discount_type Discount type of the document.
+ * @property array          $billing_data Billing data of the document.
+ * @property string         $reference Reference of the document.
+ * @property string         $note Note of the document.
+ * @property bool           $tax_inclusive Tax inclusive of the document.
+ * @property bool           $vat_exempt Vat exempt of the document.
+ * @property string         $issue_date Issue date of the document.
+ * @property string         $due_date Due date of the document.
+ * @property string         $sent_date Sent date of the document.
+ * @property string         $payment_date Payment date of the document.
+ * @property string         $currency_code Currency code of the document.
+ * @property double         $exchange_rate Exchange rate of the document.
+ * @property int            $parent_id Parent ID of the document.
+ * @property string         $created_via Created via of the document.
+ * @property int            $creator_id Author ID of the document.
+ * @property string         $uuid UUID of the document.
+ * @property string         $updated_at Date updated of the document.
+ * @property string         $created_at Date created of the document.
  *
- * @property string   $billing_name Name of the billing contact.
- * @property string   $billing_company Company of the billing contact.
- * @property string   $billing_address_1 Address line 1 of the billing contact.
- * @property string   $billing_address_2 Address line 2 of the billing contact.
- * @property string   $billing_city City of the billing contact.
- * @property string   $billing_state State of the billing contact.
- * @property string   $billing_postcode Postcode of the billing contact.
- * @property string   $billing_country Country of the billing contact.
- * @property string   $billing_phone Phone of the billing contact.
- * @property string   $billing_email Email of the billing contact.
- * @property string   $billing_vat_number VAT number of the billing contact.
- * @property bool     $billing_vat_exempt VAT exempt of the billing contact.
- * @property string   $formatted_billing_address Formatted billing address.
+ * @property string         $billing_name Name of the billing contact.
+ * @property string         $billing_company Company of the billing contact.
+ * @property string         $billing_address_1 Address line 1 of the billing contact.
+ * @property string         $billing_address_2 Address line 2 of the billing contact.
+ * @property string         $billing_city City of the billing contact.
+ * @property string         $billing_state State of the billing contact.
+ * @property string         $billing_postcode Postcode of the billing contact.
+ * @property string         $billing_country Country of the billing contact.
+ * @property string         $billing_phone Phone of the billing contact.
+ * @property string         $billing_email Email of the billing contact.
+ * @property string         $billing_vat_number VAT number of the billing contact.
+ * @property bool           $billing_vat_exempt VAT exempt of the billing contact.
+ * @property string         $formatted_billing_address Formatted billing address.
  *
- * @property double   $formatted_name Formatted name.
- * @property double            $formatted_subtotal Formatted items total.
- * @property double            $formatted_discount_total Formatted discount total.
- * @property double            $formatted_tax_total Formatted tax total.
- * @property double            $formatted_total Formatted total.
- * @property double            $formatted_balance Formatted balance.
- * @property array             formatted_itemized_taxes Formatted itemized taxes.
- * @property Currency          $currency Currency object.
- * @property DocumentItemTax[] $taxes Taxes of the document.
- * @property DocumentItem[]    $lines Lines of the document.
+ * @property double         $formatted_name Formatted name.
+ * @property double         $formatted_subtotal Formatted items total.
+ * @property double         $formatted_discount_total Formatted discount total.
+ * @property double         $formatted_tax_total Formatted tax total.
+ * @property double         $formatted_total Formatted total.
+ * @property double         $formatted_balance Formatted balance.
+ * @property array          formatted_itemized_taxes Formatted itemized taxes.
+ * @property Currency       $currency Currency object.
+ * @property DocumentTax[]  $taxes Taxes of the document.
+ * @property DocumentItem[] $lines Lines of the document.
  */
 class Document extends Model {
 
@@ -130,26 +130,12 @@ class Document extends Model {
 		'type',
 		'status',
 		'number',
-		'contact_id',
 		'subtotal',
-		'discount_total',
+		'discount',
 		'tax_total',
 		'total',
-		'discount_amount',
-		'discount_type',
-		'billing_name',
-		'billing_company',
-		'billing_address',
-		'billing_city',
-		'billing_state',
-		'billing_postcode',
-		'billing_country',
-		'billing_phone',
-		'billing_email',
-		'billing_tax_number',
 		'reference',
-		'note',
-		'vat_exempt',
+		'notes',
 		'issue_date',
 		'due_date',
 		'sent_date',
@@ -181,7 +167,7 @@ class Document extends Model {
 	 * @var array
 	 */
 	protected $casts = array(
-		'subtotal'     => 'double',
+		'subtotal'        => 'double',
 		'discount_total'  => 'double',
 		'tax_total'       => 'double',
 		'total'           => 'double',
@@ -196,7 +182,7 @@ class Document extends Model {
 		'vat_exempt'      => 'bool',
 		'exchange_rate'   => 'double',
 		'parent_id'       => 'int',
-		'creator_id'       => 'int',
+		'creator_id'      => 'int',
 	);
 
 	/**
@@ -288,7 +274,7 @@ class Document extends Model {
 	 * @return HasMany
 	 */
 	public function taxes() {
-		return $this->has_many( DocumentItemTax::class, 'document_id' );
+		return $this->has_many( DocumentTax::class, 'document_id' );
 	}
 
 	/*

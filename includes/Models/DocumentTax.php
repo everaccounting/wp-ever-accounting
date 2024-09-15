@@ -12,12 +12,12 @@ use ByteKit\Models\Relations\BelongsTo;
  * @package EverAccounting
  * @subpackage Models
  *
- * @property int         $id ID of the document_item_tax.
- * @property string      $name Name of the document_item_tax.
+ * @property int               $id ID of the document_item_tax.
+ * @property string            $name Name of the document_item_tax.
  * @property double            $rate Rate of the document_item_tax.
  * @property bool              $compound Compound of the document_item_tax.
  * @property double            $amount Amount of the document_item_tax.
- * @property int               $line_id Item ID of the document_item_tax.
+ * @property int               $item_id Document item ID of the document_item_tax.
  * @property int               $tax_id Tax ID of the document_item_tax.
  * @property int               $document_id Document ID of the document_item_tax.
  * @property string            $updated_at Date updated of the document_item_tax.
@@ -28,7 +28,7 @@ use ByteKit\Models\Relations\BelongsTo;
  * @property-read Tax          $tax Tax relationship.
  * @property-read Document     $document Document relationship.
  */
-class DocumentItemTax extends Model {
+class DocumentTax extends Model {
 
 	/**
 	 * The table associated with the model.
@@ -36,7 +36,7 @@ class DocumentItemTax extends Model {
 	 * @since 1.0.0
 	 * @var string
 	 */
-	protected $table = 'ea_document_item_taxes';
+	protected $table = 'ea_document_taxes';
 
 	/**
 	 * The table columns of the model.
@@ -52,7 +52,7 @@ class DocumentItemTax extends Model {
 		'amount',
 		'item_id',
 		'tax_id',
-		'document_id',
+		'document_id'
 	);
 
 	/**
@@ -64,9 +64,9 @@ class DocumentItemTax extends Model {
 	protected $casts = array(
 		'id'          => 'int',
 		'rate'        => 'double',
-		'compound' => 'bool',
+		'compound'    => 'bool',
 		'amount'      => 'double',
-		'line_id'     => 'int',
+		'item_id'     => 'int',
 		'tax_id'      => 'int',
 		'document_id' => 'int',
 	);
@@ -119,12 +119,12 @@ class DocumentItemTax extends Model {
 	}
 
 	/**
-	 * Line relationship.
+	 * Item relationship.
 	 *
 	 * @since 1.0.0
 	 * @return BelongsTo
 	 */
-	public function line() {
+	public function item() {
 		return $this->belongs_to( DocumentItem::class );
 	}
 
@@ -163,16 +163,8 @@ class DocumentItemTax extends Model {
 	 * @return \WP_Error|static WP_Error on failure, or the object on success.
 	 */
 	public function save() {
-		if ( empty( $this->name ) ) {
-			return new \WP_Error( 'missing_required', __( 'Tax name is required.', 'wp-ever-accounting' ) );
-		}
-
 		if ( empty( $this->rate ) ) {
 			return new \WP_Error( 'missing_required', __( 'Tax rate is required.', 'wp-ever-accounting' ) );
-		}
-
-		if ( empty( $this->line_id ) ) {
-			return new \WP_Error( 'missing_required', __( 'Line ID is required.', 'wp-ever-accounting' ) );
 		}
 
 		if ( empty( $this->tax_id ) ) {
@@ -184,41 +176,5 @@ class DocumentItemTax extends Model {
 		}
 
 		return parent::save();
-	}
-
-	/*
-	|--------------------------------------------------------------------------
-	| Helper Methods
-	|--------------------------------------------------------------------------
-	| This section contains utility methods that are not directly related to this
-	| object but can be used to support its functionality.
-	|--------------------------------------------------------------------------
-	*/
-
-	/**
-	 * Is the tax similar to another tax?
-	 *
-	 * @param DocumentItemTax $tax The tax to compare.
-	 *
-	 * @since 1.1.0
-	 * @return bool
-	 */
-	public function is_similar( $tax ) {
-		return $this->rate === $tax->rate && $this->compound === $tax->compound;
-	}
-
-	/**
-	 * Merge this tax with another tax.
-	 *
-	 * @param static $line_tax The tax to merge with.
-	 *
-	 * @since 1.1.0
-	 */
-	public function merge( $line_tax ) {
-		if ( ! $this->is_similar( $line_tax ) ) {
-			return;
-		}
-
-		$this->amount += $line_tax->amount;
 	}
 }

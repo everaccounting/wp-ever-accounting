@@ -15,7 +15,8 @@ use ByteKit\Models\Relations\HasMany;
  * @author  Sultan Nasir Uddin <manikdrmc@gmail.com>
  *
  * @property int            $id Invoice ID.
- * @property DocumentItem[] $lines Invoice lines.
+ * @property DocumentItem[] $items Invoice items.
+ *
  */
 class Invoice extends Document {
 	/**
@@ -25,7 +26,6 @@ class Invoice extends Document {
 	 * @var string
 	 */
 	protected $object_type = 'invoice';
-
 
 	/**
 	 * Default query variables passed to Query class when parsing.
@@ -40,9 +40,9 @@ class Invoice extends Document {
 	/**
 	 * Create a new model instance.
 	 *
-	 * @param string|array|object $props The model attributes.
+	 * @param mixed $attributes The attributes to fill the model with.
 	 */
-	public function __construct( $props = array() ) {
+	public function __construct( $attributes = null ) {
 		$due_after        = get_option( 'eac_invoice_due_date', 7 );
 		$_attributes      = array(
 			'type'          => $this->get_object_type(),
@@ -54,7 +54,26 @@ class Invoice extends Document {
 			'uuid'          => wp_generate_uuid4(),
 		);
 		$this->attributes = array_merge( $this->attributes, $_attributes );
-		parent::__construct( $props );
+		parent::__construct( $attributes );
+	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| CRUD Methods
+	|--------------------------------------------------------------------------
+	| This section contains methods for creating, reading, updating, and deleting
+	| objects in the database.
+	|--------------------------------------------------------------------------
+	*/
+
+	/**
+	 * Save the object to the database.
+	 *
+	 * @since 1.0.0
+	 * @return \WP_Error|static WP_Error on failure, or the object on success.
+	 */
+	public function save() {
+		var_dump($this);
 	}
 
 	/*

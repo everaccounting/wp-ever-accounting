@@ -1,6 +1,6 @@
 <?php
 
-use EverAccounting\Models\DocumentItemTax;
+use EverAccounting\Models\DocumentTax;
 
 class DocumentItemTaxTest extends \Codeception\TestCase\WPTestCase {
 	/**
@@ -18,17 +18,17 @@ class DocumentItemTaxTest extends \Codeception\TestCase\WPTestCase {
 			'tax_id'      => null,
 			'document_id' => null,
 		);
-		$this->assertWPError(  DocumentItemTax::insert( $data ), 'Tax name is required.' );
+		$this->assertWPError(  DocumentTax::insert( $data ), 'Tax name is required.' );
 		$data['name'] = 'Tax name';
-		$this->assertWPError(  DocumentItemTax::insert( $data ), 'Tax rate is required.' );
+		$this->assertWPError(  DocumentTax::insert( $data ), 'Tax rate is required.' );
 		$data['rate'] = 10;
-		$this->assertWPError(  DocumentItemTax::insert( $data ), 'Item ID is required.' );
+		$this->assertWPError(  DocumentTax::insert( $data ), 'Item ID is required.' );
 		$data['item_id'] = 1;
-		$this->assertWPError(  DocumentItemTax::insert( $data ), 'Tax ID is required.' );
+		$this->assertWPError(  DocumentTax::insert( $data ), 'Tax ID is required.' );
 		$data['tax_id'] = 1;
-		$this->assertWPError(  DocumentItemTax::insert( $data ), 'Document ID is required.' );
+		$this->assertWPError(  DocumentTax::insert( $data ), 'Document ID is required.' );
 		$data['document_id'] = 1;
-		$item = DocumentItemTax::insert( $data );
+		$item = DocumentTax::insert( $data );
 		$this->assertNotNull( $item );
 		$this->assertEquals( $data['name'], $item->name );
 		$this->assertEquals( $data['rate'], $item->rate );
@@ -51,7 +51,7 @@ class DocumentItemTaxTest extends \Codeception\TestCase\WPTestCase {
 			'document_id' => 1,
 		);
 
-		$item = DocumentItemTax::insert( $data );
+		$item = DocumentTax::insert( $data );
 
 		$data['id']          = $item->id;
 		$data['name']        = 'Tax name updated';
@@ -61,7 +61,7 @@ class DocumentItemTaxTest extends \Codeception\TestCase\WPTestCase {
 		$data['item_id']     = 2;
 		$data['tax_id']      = 2;
 		$data['document_id'] = 2;
-		$item                = DocumentItemTax::insert( $data );
+		$item                = DocumentTax::insert( $data );
 		$this->assertNotNull( $item );
 		$this->assertEquals( $data['name'], $item->name );
 		$this->assertEquals( $data['rate'], $item->rate );
@@ -84,10 +84,10 @@ class DocumentItemTaxTest extends \Codeception\TestCase\WPTestCase {
 			'document_id' => 1,
 		);
 
-		$item = DocumentItemTax::insert( $data );
+		$item = DocumentTax::insert( $data );
 		$this->assertNotNull( $item );
 		$this->assertNotFalse( $item->delete() );
-		$this->assertNull( DocumentItemTax::find( $item->id ) );
+		$this->assertNull( DocumentTax::find( $item->id ) );
 	}
 
 	//test similar compare.
@@ -103,8 +103,8 @@ class DocumentItemTaxTest extends \Codeception\TestCase\WPTestCase {
 			'document_id' => 1,
 		);
 
-		$item1 = DocumentItemTax::insert( $data );
-		$item2 = DocumentItemTax::insert( $data );
+		$item1 = DocumentTax::insert( $data );
+		$item2 = DocumentTax::insert( $data );
 		$this->assertTrue( $item1->is_similar( $item2 ) );
 		//test merge.
 		$item1->merge( $item2 );

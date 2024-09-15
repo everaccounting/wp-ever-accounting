@@ -967,7 +967,7 @@ class Document_BK extends Model {
 	 * Get merged taxes.
 	 *
 	 * @since 1.0.0
-	 * @return DocumentItemTax[]
+	 * @return DocumentTax[]
 	 */
 	public function get_taxes() {
 		$taxes = array();
@@ -1103,7 +1103,7 @@ class Document_BK extends Model {
 	 * Get merged taxes.
 	 *
 	 * @since 1.0.0
-	 * @return DocumentItemTax[]
+	 * @return DocumentTax[]
 	 */
 	public function get_merged_taxes() {
 		$taxes = array();

@@ -15,14 +15,6 @@ defined( 'ABSPATH' ) || exit;
 class Documents {
 
 	/**
-	 * Get a document.
-	 *
-	 * @param mixed $document Document ID or object.
-	 *
-	 * @since 1.1.0
-	 * @return object|null Document object on success, null on failure.
+	 * Get the types of documents.
 	 */
-	public function get( $document = null ) {
-
-	}
 }
