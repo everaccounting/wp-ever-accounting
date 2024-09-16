@@ -11,3 +11,4 @@ export { default as DocumentTax} from './document-tax';
 export { default as DocumentItem} from './document-item';
 export { default as Note} from './note';
 export { default as Tax} from './tax';
+export { default as Vendor} from './vendor';

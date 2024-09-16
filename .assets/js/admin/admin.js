@@ -1,5 +1,10 @@
 /* global eac_admin_vars */
 
+/**
+ * ========================================================================
+ * ADMIN UI
+ * ========================================================================
+ */
 jQuery(document).ready(($) => {
 	'use strict';
 
@@ -75,6 +80,28 @@ jQuery(document).ready(($) => {
 				tooltipClass: 'eac-tooltip',
 			};
 			$this.addClass('enhanced').tooltip(options);
+		});
+
+		// currency.
+		$(':input[data-currency]').filter(':not(.enhanced)').each(function () {
+			const $this = $(this);
+			const code = $this.data('currency');
+			const currency = new eac.api.Currency({code});
+			currency.fetch({
+				success: (model) => {
+					console.log($this)
+					$this.inputmask({
+						alias: 'currency',
+						placeholder: '0.00',
+						rightAlign: false,
+						allowMinus: true,
+						digits: model.get('decimals'),
+						prefix: 'before' === model.get('position') ? model.get('symbol') : '',
+						suffix: 'after' === model.get('position') ? model.get('symbol') : '',
+						removeMaskOnSubmit: true
+					}).addClass('enhanced');
+				}
+			});
 		});
 
 		// inputMask.

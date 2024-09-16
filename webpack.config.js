@@ -36,15 +36,6 @@ module.exports = [
 			'js/eac-sales': './.assets/js/admin/sales.js',
 			'js/eac-purchases': './.assets/js/admin/purchases.js',
 			'css/eac-admin': './.assets/css/admin/admin.scss',
-
-			// Client scripts.
-			...glob.sync('./.assets/client/*/index.js').reduce((memo, file) => {
-				const module = file.replace('.assets/client/', '').replace('/index.js', '');
-				return {
-					...memo,
-					[`client/${module}`]: path.resolve(__dirname, file),
-				};
-			}, {}),
 		},
 		output: {
 			...defaults.output,

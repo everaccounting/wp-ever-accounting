@@ -60,12 +60,10 @@ $categories = eac_get_categories(
 							'label'          => __( 'Price', 'wp-ever-accounting' ),
 							'value'          => $item->price,
 							'placeholder'    => __( '1000.00', 'wp-ever-accounting' ),
-							'class'          => 'eac_inputmask',
 							'required'       => true,
-							'prefix'         => eac_get_currency_symbol(),
 							/* translators: %s: currency symbol */
 							'tooltip'        => sprintf( __( 'Enter the price of the item in %s.', 'wp-ever-accounting' ), eac_get_base_currency() ),
-							'data-inputmask' => '"alias": "decimal","placeholder": "0.00", "rightAlign": false',
+							'data-currency' => eac_get_base_currency(),
 						)
 					);
 					eac_form_field(
@@ -74,11 +72,9 @@ $categories = eac_get_categories(
 							'name'           => 'cost',
 							'label'          => __( 'Cost', 'wp-ever-accounting' ),
 							'value'          => $item->cost,
-							'class'          => 'eac_inputmask',
-							'prefix'         => eac_get_currency_symbol(),
 							/* translators: %s: currency symbol */
 							'tooltip'        => sprintf( __( 'Enter the cost of the item in %s.', 'wp-ever-accounting' ), eac_get_base_currency() ),
-							'data-inputmask' => '"alias": "decimal","placeholder": "0.00", "rightAlign": false',
+							'data-currency' => eac_get_base_currency(),
 						)
 					);
 					eac_form_field(

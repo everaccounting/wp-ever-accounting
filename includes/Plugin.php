@@ -2,6 +2,8 @@
 
 namespace EverAccounting;
 
+use EverAccounting\Controllers\Bills;
+use EverAccounting\Controllers\Business;
 use EverAccounting\Controllers\Currencies;
 use EverAccounting\Controllers\Accounts;
 use EverAccounting\Controllers\Invoices;
@@ -12,9 +14,11 @@ use EverAccounting\Controllers\Invoices;
  * @since 1.2.1
  * @package EverAccounting
  *
- * @property Accounts $accounts Accounts controller.
+ * @property Business   $business Business controller.
+ * @property Accounts   $accounts Accounts controller.
  * @property Currencies $currencies Currencies controller.
- * @property Invoices $invoices Invoices controller.
+ * @property Invoices   $invoices Invoices controller.
+ * @property Bills	  $bills Bills controller.
  */
 class Plugin extends \ByteKit\Plugin {
 	/**
@@ -87,10 +91,12 @@ class Plugin extends \ByteKit\Plugin {
 	public function on_init() {
 		$this->services->add( 'installer', new Installer() );
 
+		$this->services->add( 'business', new Controllers\Business() );
 		$this->services->add( 'accounts', new Controllers\Accounts() );
 		$this->services->add( 'currencies', new Controllers\Currencies() );
 		$this->services->add( 'items', new Controllers\Items() );
 		$this->services->add( 'invoices', new Controllers\Invoices() );
+		$this->services->add( 'bills', new Controllers\Bills() );
 
 		$this->services->add( 'transactions', new Handlers\Transactions() );
 		$this->services->add( 'documents', new Handlers\Documents() );

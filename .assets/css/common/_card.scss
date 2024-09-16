@@ -31,6 +31,14 @@
 		color: inherit;
 	}
 
+	input[type="number"] {
+		&::-webkit-outer-spin-button,
+		&::-webkit-inner-spin-button {
+			-webkit-appearance: none;
+			margin: 0;
+		}
+	}
+
 	&:not(:has(>[class*="eac-card__"])) {
 		padding: 12px;
 	}
