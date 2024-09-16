@@ -10,10 +10,9 @@
  */
 
 defined( 'ABSPATH' ) || exit;
-$columns           = EAC()->bills->get_columns();
-//$columns['action'] = '&nbsp;';
-$bill              = new \EverAccounting\Models\Bill();
-$data              = $bill->to_array();
+$columns = EAC()->bills->get_columns();
+$bill    = new \EverAccounting\Models\Bill();
+$data    = $bill->to_array();
 wp_add_inline_script( 'eac-admin', 'var eac_bill_edit_vars = ' . json_encode( $data ) . ';', 'after' );
 ?>
 <form id="eac-bill-form" method="post" action="<?php echo esc_html( admin_url( 'admin-post.php' ) ); ?>">
@@ -100,47 +99,19 @@ wp_add_inline_script( 'eac-admin', 'var eac_bill_edit_vars = ' . json_encode( $d
 				<div class="document-items">
 					<table class="eac-document-items">
 						<thead class="eac-document-items__head">
-						<tr>
-							<?php foreach ( $columns as $key => $label ) : ?>
-								<th class="col-<?php echo esc_attr( $key ); ?>">
-									<?php echo esc_html( $label ); ?>
-								</th>
-							<?php endforeach; ?>
-						</tr>
+							<tr>
+								<?php foreach ( $columns as $key => $label ) : ?>
+									<th class="col-<?php echo esc_attr( $key ); ?>">
+										<?php echo esc_html( $label ); ?>
+									</th>
+								<?php endforeach; ?>
+							</tr>
 						</thead>
-						<tbody class="eac-document-items__items">
-						<tr class="eac-document-items__row">
-						<td class="col-item"></td>
-						<td class="col-price">1000</td>
-						<td class="col-quantity">100</td>
-						<td class="col-tax-total">1000</td>
-						<td class="col-subtotal">
-							10000000
-							<a href="#" class="remove-item">
-								<span class="dashicons dashicons-trash"></span>
-							</a>
-						</td>
-						</tr>
-
-						<tr class="eac-document-items__row">
-							<td class="col-item"></td>
-							<td class="col-price">1000</td>
-							<td class="col-quantity">100</td>
-							<td class="col-tax-total">1000</td>
-							<td class="col-subtotal">
-								1
-								<a href="#" class="remove-item">
-									<span class="dashicons dashicons-trash"></span>
-								</a>
-							</td>
-						</tr>
-						</tbody>
 					</table>
 				</div><!-- .document-items -->
 
 				<div class="document-footer eac-grid cols-2">
 					<?php
-					// notes.
 					eac_form_field(
 						array(
 							'label'       => esc_html__( 'Notes', 'wp-ever-accounting' ),
@@ -150,8 +121,6 @@ wp_add_inline_script( 'eac-admin', 'var eac_bill_edit_vars = ' . json_encode( $d
 							'placeholder' => esc_html__( 'Add notes here', 'wp-ever-accounting' ),
 						)
 					);
-
-					//terms.
 					eac_form_field(
 						array(
 							'label'       => esc_html__( 'Terms', 'wp-ever-accounting' ),
@@ -166,50 +135,48 @@ wp_add_inline_script( 'eac-admin', 'var eac_bill_edit_vars = ' . json_encode( $d
 
 			</div><!-- .eac-card -->
 
-			</div><!-- .column-1 -->
-			<div class="column-2">
-				<div class="eac-card">
-					<div class="eac-card__body">
-						<?php
-						eac_form_field(
-							array(
-								'label'       => __( 'Status', 'wp-ever-accounting' ),
-								'type'        => 'select',
-								'id'          => 'status',
-								'options'     => EAC()->bills->get_statuses(),
-								'value'       => $bill->status,
-								'placeholder' => __( 'Select status', 'wp-ever-accounting' ),
-								'required'    => true,
-							)
-						);
-						?>
-					</div><!-- .eac-card__body -->
-					<div class="eac-card__footer">
-						<?php if ( $bill->exists() ) : ?>
-							<input type="hidden" name="account_id"
-								   value="<?php echo esc_attr( $bill->account_id ); ?>"/>
-							<input type="hidden" name="id" value="<?php echo esc_attr( $bill->id ); ?>"/>
-						<?php endif; ?>
-						<input type="hidden" name="action" value="eac_edit_expense"/>
-						<?php wp_nonce_field( 'eac_edit_expense' ); ?>
-						<?php if ( $bill->exists() ) : ?>
-							<a class="eac_confirm_delete del" href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'action', 'delete', admin_url( 'admin.php?page=eac-sales&tab=expenses&id=' . $bill->id ) ), 'bulk-expenses' ) ); ?>">
-								<?php esc_html_e( 'Delete', 'wp-ever-accounting' ); ?>
-							</a>
-						<?php endif; ?>
-						<?php if ( $bill->exists() ) : ?>
-							<button
-								class="button button-primary eac-width-full"><?php esc_html_e( 'Update Bill', 'wp-ever-accounting' ); ?></button>
-						<?php else : ?>
-							<button
-								class="button button-primary button-large eac-width-full"><?php esc_html_e( 'Add Bill', 'wp-ever-accounting' ); ?></button>
-						<?php endif; ?>
-					</div><!-- .eac-card__footer -->
-				</div><!-- .eac-card -->
-
-
-			</div><!-- .column-2 -->
-		</div><!-- .eac-poststuff -->
+		</div><!-- .column-1 -->
+		<div class="column-2">
+			<div class="eac-card">
+				<div class="eac-card__body">
+					<?php
+					eac_form_field(
+						array(
+							'label'       => __( 'Status', 'wp-ever-accounting' ),
+							'type'        => 'select',
+							'id'          => 'status',
+							'options'     => EAC()->bills->get_statuses(),
+							'value'       => $bill->status,
+							'placeholder' => __( 'Select status', 'wp-ever-accounting' ),
+							'required'    => true,
+						)
+					);
+					?>
+				</div><!-- .eac-card__body -->
+				<div class="eac-card__footer">
+					<?php if ( $bill->exists() ) : ?>
+						<input type="hidden" name="account_id"
+							   value="<?php echo esc_attr( $bill->account_id ); ?>"/>
+						<input type="hidden" name="id" value="<?php echo esc_attr( $bill->id ); ?>"/>
+					<?php endif; ?>
+					<input type="hidden" name="action" value="eac_edit_expense"/>
+					<?php wp_nonce_field( 'eac_edit_expense' ); ?>
+					<?php if ( $bill->exists() ) : ?>
+						<a class="eac_confirm_delete del" href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'action', 'delete', admin_url( 'admin.php?page=eac-sales&tab=expenses&id=' . $bill->id ) ), 'bulk-expenses' ) ); ?>">
+							<?php esc_html_e( 'Delete', 'wp-ever-accounting' ); ?>
+						</a>
+					<?php endif; ?>
+					<?php if ( $bill->exists() ) : ?>
+						<button
+							class="button button-primary eac-width-full"><?php esc_html_e( 'Update Bill', 'wp-ever-accounting' ); ?></button>
+					<?php else : ?>
+						<button
+							class="button button-primary button-large eac-width-full"><?php esc_html_e( 'Add Bill', 'wp-ever-accounting' ); ?></button>
+					<?php endif; ?>
+				</div><!-- .eac-card__footer -->
+			</div><!-- .eac-card -->
+		</div><!-- .column-2 -->
+	</div><!-- .eac-poststuff -->
 </form>
 
 <script type="text/html" id="tmpl-eac-billing-address">
@@ -324,20 +291,13 @@ wp_add_inline_script( 'eac-admin', 'var eac_bill_edit_vars = ' . json_encode( $d
 					echo '<input type="number" class="item-quantity" name="items[{{ data.id }}][quantity]" min="0" value="{{ data.quantity }}">';
 					break;
 
-				case 'tax':
-					echo '<span class="item-tax">{{ data.tax.toFixed(2) }}</span>';
+				case 'tax_total':
+					echo '<span class="item-tax">{{ data.tax_total}}</span>';
 					break;
 
 				case 'subtotal':
-					echo '<span class="item-subtotal">{{ data.subtotal.toFixed(2) }}</span>';
-					break;
-
-				case 'action':
-					?>
-					<a href="#" class="remove-item">
-						<span class="dashicons dashicons-trash"></span>
-					</a>
-					<?php
+					echo '<span class="item-subtotal">{{ data.subtotal }}</span>';
+					echo '<a href="#" class="remove-item"><span class="dashicons dashicons-trash"></span></a>';
 					break;
 
 				default:
@@ -347,16 +307,14 @@ wp_add_inline_script( 'eac-admin', 'var eac_bill_edit_vars = ' . json_encode( $d
 		</td>
 	<?php endforeach; ?>
 </script>
-<script type="text/html" id="tmpl-eac-bill-totals">
+<script type="text/html" id="tmpl-eac-items-actions">
 	<tr>
-		<td class="col-label" colspan="<?php echo count( $columns ) - 1; ?>">
-			<?php esc_html_e( 'Subtotal', 'wp-ever-accounting' ); ?>
-		</td>
-		<td class="col-amount">
-			{{ data.subtotal.toFixed(2) || 0 }}
+		<td colspan="<?php echo count( $columns ); ?>">
+			<select class="add-item eac_select2" data-action="eac_json_search" data-type="item" data-placeholder="<?php esc_attr_e( 'Select an item', 'wp-ever-accounting' ); ?>"></select>
 		</td>
 	</tr>
-
+</script>
+<script type="text/html" id="tmpl-eac-items-totals">
 	<tr>
 		<td class="col-label" colspan="<?php echo count( $columns ) - 1; ?>">
 			<?php esc_html_e( 'Discount', 'wp-ever-accounting' ); ?>
@@ -364,11 +322,45 @@ wp_add_inline_script( 'eac-admin', 'var eac_bill_edit_vars = ' . json_encode( $d
 		<td class="col-amount">
 			<div class="eac-input-group">
 				<select name="discount_type" id="discount_type" class="addon">
-					<option value="fixed" <# if ( 'fixed' === data.discount_type ) { #>selected="selected"<# } #>>($)</option>
-					<option value="percent" <# if ( 'percent' === data.discount_type ) { #>selected="selected"<# } #>>(%)</option>
+					<option value="fixed"
+					<# if ( 'fixed' === data.discount_type ) { #>selected="selected"<# } #>>($)</option>
+					<option value="percent"
+					<# if ( 'percent' === data.discount_type ) { #>selected="selected"<# } #>>(%)</option>
 				</select>
-				<input  type="number" name="discount_value" id="discount_value" placeholder="10" style="text-align: right;width: auto;" value="{{data.discount_value}}" />
+				<input type="number" name="discount_value" id="discount_value" placeholder="10" style="text-align: right;width: auto;" value="{{data.discount_value}}"/>
 			</div>
+		</td>
+	</tr>
+	<tr>
+		<td class="col-label" colspan="<?php echo count( $columns ) - 1; ?>">
+			<?php esc_html_e( 'Subtotal', 'wp-ever-accounting' ); ?>
+		</td>
+		<td class="col-amount">
+			{{ data.subtotal || 0 }}
+		</td>
+	</tr>
+	<tr>
+		<td class="col-label" colspan="<?php echo count( $columns ) - 1; ?>">
+			<?php esc_html_e( 'Discount', 'wp-ever-accounting' ); ?>
+		</td>
+		<td class="col-amount">
+			{{ data.discount || 0 }}
+		</td>
+	</tr>
+	<tr>
+		<td class="col-label" colspan="<?php echo count( $columns ) - 1; ?>">
+			<?php esc_html_e( 'Tax', 'wp-ever-accounting' ); ?>
+		</td>
+		<td class="col-amount">
+			{{ data.tax_total || 0 }}
+		</td>
+	</tr>
+	<tr>
+		<td class="col-label" colspan="<?php echo count( $columns ) - 1; ?>">
+			<?php esc_html_e( 'Total', 'wp-ever-accounting' ); ?>
+		</td>
+		<td class="col-amount">
+			{{ data.total || 0 }}
 		</td>
 	</tr>
 </script>

@@ -12,7 +12,7 @@ export default Base.extend({
 		quantity: 1,
 		subtotal: 0,
 		discount: 0,
-		tax: 0,
+		tax_total: 0,
 		total: 0,
 		description: '',
 		unit: '',
@@ -23,26 +23,5 @@ export default Base.extend({
 		// Relationships
 		taxes: new DocumentTaxes(),
 	},
-
-	/**
-	 * Update amounts.
-	 *
-	 * @return {void}
-	 */
-	updateAmounts() {
-		var self = this;
-		var subtotal = parseFloat(this.get('price')) * parseFloat(this.get('quantity'));
-		this.get('taxes').updateAmounts(subtotal);
-		this.set('subtotal', subtotal);
-	},
-
-	/**
-	 * Get total tax.
-	 *
-	 * @return {number}
-	 */
-	getTotalTax() {
-		return this.get('taxes').getTotal();
-	}
 
 });
