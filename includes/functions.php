@@ -37,6 +37,17 @@ function eac_get_base_currency() {
 }
 
 /**
+ * Get the default currency code.
+ *
+ * @since 1.0.2
+ * @return string
+ */
+function eac_currency_code() {
+	return get_option( 'eac_base_currency', 'USD' );
+}
+
+
+/**
  * Format price with currency code & number format
  *
  * @param string $amount Amount.

@@ -6,7 +6,9 @@ use EverAccounting\Controllers\Bills;
 use EverAccounting\Controllers\Business;
 use EverAccounting\Controllers\Currencies;
 use EverAccounting\Controllers\Accounts;
+use EverAccounting\Controllers\Expenses;
 use EverAccounting\Controllers\Invoices;
+use EverAccounting\Controllers\Payments;
 
 /**
  * Class Plugin.
@@ -17,8 +19,10 @@ use EverAccounting\Controllers\Invoices;
  * @property Business   $business Business controller.
  * @property Accounts   $accounts Accounts controller.
  * @property Currencies $currencies Currencies controller.
+ * @property Payments   $payments Payments controller.
  * @property Invoices   $invoices Invoices controller.
- * @property Bills	  $bills Bills controller.
+ * @property Expenses   $expenses Expenses controller.
+ * @property Bills      $bills Bills controller.
  */
 class Plugin extends \ByteKit\Plugin {
 	/**
@@ -96,6 +100,8 @@ class Plugin extends \ByteKit\Plugin {
 		$this->services->add( 'currencies', new Controllers\Currencies() );
 		$this->services->add( 'items', new Controllers\Items() );
 		$this->services->add( 'invoices', new Controllers\Invoices() );
+		$this->services->add( 'payments', new Controllers\Payments() );
+		$this->services->add( 'expenses', new Controllers\Expenses() );
 		$this->services->add( 'bills', new Controllers\Bills() );
 
 		$this->services->add( 'transactions', new Handlers\Transactions() );
@@ -108,11 +114,12 @@ class Plugin extends \ByteKit\Plugin {
 			$this->services->add( Admin\Scripts::class );
 			$this->services->add( Admin\Actions::class );
 			$this->services->add( Admin\Items\Items::class );
+			$this->services->add( Admin\Sales\Payments::class );
 			$this->services->add( Admin\Sales\Invoices::class );
 			$this->services->add( Admin\Sales\Customers::class );
 			$this->services->add( Admin\Purchases\Expenses::class );
-			$this->services->add( Admin\Purchases\Vendors::class );
 			$this->services->add( Admin\Purchases\Bills::class );
+			$this->services->add( Admin\Purchases\Vendors::class );
 			$this->services->add( Admin\Banking\Accounts::class );
 			$this->services->add( Admin\Banking\Transfers::class );
 			$this->services->add( Admin\Misc\Categories::class );

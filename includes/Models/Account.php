@@ -129,31 +129,6 @@ class Account extends Model {
 
 	/*
 	|--------------------------------------------------------------------------
-	| Property Definition Methods
-	|--------------------------------------------------------------------------
-	| This section contains static methods that define and return specific
-	| property values related to the model.
-	| These methods are accessible without creating an instance of the model.
-	|--------------------------------------------------------------------------
-	*/
-
-	/**
-	 * Get account types.
-	 *
-	 * @since 1.0.2
-	 * @return array
-	 */
-	public static function get_types() {
-		$account_types = array(
-			'bank' => __( 'Bank', 'wp-ever-accounting' ),
-			'card' => __( 'Card', 'wp-ever-accounting' ),
-		);
-
-		return apply_filters( 'ever_accounting_account_types', $account_types );
-	}
-
-	/*
-	|--------------------------------------------------------------------------
 	| Accessors, Mutators and Relationship Methods
 	|--------------------------------------------------------------------------
 	| This section contains methods for getting and setting attributes (accessors

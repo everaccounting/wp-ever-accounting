@@ -17,42 +17,55 @@ defined( 'ABSPATH' ) || exit;
 class Currencies {
 
 	/**
-	 * Get a currency.
+	 * Get a currency from the database.
 	 *
 	 * @param mixed $currency Currency ID or object.
 	 *
-	 * @since 1.1.0
-	 * @return Currency|null Currency object on success, null on failure.
+	 * @since 1.1.6
+	 * @return Currency|null Currency object if found, otherwise null.
 	 */
-	public function get( $currency = null ) {
-		if ( empty( $currency ) ) {
-			$currency = eac_get_base_currency();
-		}
-
+	public function get( $currency ) {
 		return Currency::find( $currency );
 	}
 
 	/**
-	 * Insert a currency.
+	 * Insert a new currency into the database.
 	 *
 	 * @param array $data Currency data.
-	 * @param bool  $wp_error Whether to return false or WP_Error on failure.
+	 * @param bool  $wp_error Optional. Whether to return a WP_Error on failure. Default false.
 	 *
-	 * @return int|\WP_Error|Currency|bool The value 0 or WP_Error on failure. The Currency object on success.
 	 * @since 1.1.0
+	 * @return Currency|false|\WP_Error Currency object on success, false or WP_Error on failure.
 	 */
-	public function insert( $data = array(), $wp_error = true ) {
+	public function insert( $data, $wp_error = true ) {
 		return Currency::insert( $data, $wp_error );
 	}
 
 	/**
-	 * Get currency items.
+	 * Delete a currency from the database.
+	 *
+	 * @param int $id Currency ID.
+	 *
+	 * @since 1.1.0
+	 * @return bool True on success, false on failure.
+	 */
+	public function delete( $id ) {
+		$currency = $this->get( $id );
+		if ( ! $currency ) {
+			return false;
+		}
+
+		return $currency->delete();
+	}
+
+	/**
+	 * Get query results for currencies.
 	 *
 	 * @param array $args Query arguments.
-	 * @param bool  $count Whether to return the count of items.
+	 * @param bool  $count Optional. Whether to return only the total found currencies for the query.
 	 *
-	 * @return int|array|Currency[]
 	 * @since 1.1.0
+	 * @return array|int|Currency[] Array of currency objects, the total found currencies for the query, or the total found currencies for the query as int when `$count` is true.
 	 */
 	public function query( $args = array(), $count = false ) {
 		if ( $count ) {
@@ -60,24 +73,6 @@ class Currencies {
 		}
 
 		return Currency::results( $args );
-	}
-
-	/**
-	 * Delete a currency.
-	 *
-	 * @param mixed $currency Currency ID or object.
-	 *
-	 * @since 1.1.0
-	 * @return bool
-	 */
-	public function delete( $currency ) {
-		$currency = Currency::find( $currency );
-
-		if ( ! $currency ) {
-			return false;
-		}
-
-		return $currency->delete();
 	}
 
 	/**

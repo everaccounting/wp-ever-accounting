@@ -2,6 +2,8 @@
 
 namespace EverAccounting\Controllers;
 
+use EverAccounting\Models\Bill;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -13,6 +15,65 @@ defined( 'ABSPATH' ) || exit;
  * @subpackage Controllers
  */
 class Bills {
+
+	/**
+	 * Get a bill from the database.
+	 *
+	 * @param mixed $bill Bill ID or object.
+	 *
+	 * @since 1.1.6
+	 * @return Bill|null Bill object if found, otherwise null.
+	 */
+	public function get( $bill ) {
+		return Bill::find( $bill );
+	}
+
+	/**
+	 * Insert a new bill into the database.
+	 *
+	 * @param array $data Bill data.
+	 * @param bool  $wp_error Optional. Whether to return a WP_Error on failure. Default false.
+	 *
+	 * @since 1.1.0
+	 * @return Bill|false|\WP_Error Bill object on success, false or WP_Error on failure.
+	 */
+	public function insert( $data, $wp_error = true ) {
+		return Bill::insert( $data, $wp_error );
+	}
+
+	/**
+	 * Delete a bill from the database.
+	 *
+	 * @param int $id Bill ID.
+	 *
+	 * @since 1.1.0
+	 * @return bool True on success, false on failure.
+	 */
+	public function delete( $id ) {
+		$bill = $this->get( $id );
+		if ( ! $bill ) {
+			return false;
+		}
+
+		return $bill->delete();
+	}
+
+	/**
+	 * Get query results for bills.
+	 *
+	 * @param array $args Query arguments.
+	 * @param bool  $count Optional. Whether to return only the total found bills for the query.
+	 *
+	 * @since 1.1.0
+	 * @return array|int|Bill[] Array of bill objects, the total found bills for the query, or the total found bills for the query as int when `$count` is true.
+	 */
+	public function query( $args = array(), $count = false ) {
+		if ( $count ) {
+			return Bill::count( $args );
+		}
+
+		return Bill::results( $args );
+	}
 
 	/**
 	 * Get bill columns.
