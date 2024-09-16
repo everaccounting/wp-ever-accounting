@@ -1,9 +1,9 @@
 const RemoveEmptyScript = require('webpack-remove-empty-scripts');
 const DependencyHandler = require('@wordpress/dependency-extraction-webpack-plugin');
-const CopyPlugin = require('copy-webpack-plugin');
 const defaults = require('@wordpress/scripts/config/webpack.config');
-const glob = require('glob');
+const CopyPlugin = require('copy-webpack-plugin');
 const path = require('path');
+const glob = require('glob');
 
 const PACKAGE_NAMESPACE = '@eac/';
 
@@ -43,10 +43,10 @@ module.exports = [
 			path: __dirname + '/assets/',
 			chunkFilename: 'chunks/[chunkhash].js',
 			uniqueName: '__eac_webpackJsonp',
-			// library: {
-			// 	name: '[name]',
-			// 	type: 'window',
-			// },
+			library: {
+				name: '[name]',
+				type: 'window',
+			},
 		},
 		resolve: {
 			...defaults.resolve,
@@ -57,7 +57,6 @@ module.exports = [
 			alias: {
 				...defaults.resolve.alias,
 				'@js': path.resolve(__dirname, '.assets/js'),
-				'@css': path.resolve(__dirname, '.assets/css'),
 				'@eac': path.resolve(__dirname, '.assets/packages'),
 			}
 		},

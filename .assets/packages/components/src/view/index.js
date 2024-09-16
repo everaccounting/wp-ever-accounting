@@ -1,45 +1,6 @@
 import $ from 'jquery';
 
 export default wp.Backbone.View.extend({
-	/**
-	 * The base view class.
-	 *
-	 * @param {Object} options The options for this view.
-	 */
-	constructor: function (options) {
-		console.log('=== View.constructor() ===');
-		wp.Backbone.View.prototype.constructor.call(this, options);
-		// if (this.$el.is('form')) {
-		// 	console.log('=== View.constructor() - is form ===');
-		// 	this.form = new Backbone.Model();
-		// 	this.method = this.$el.attr('method') || 'post';
-		// 	this.action = this.$el.attr('action') || '';
-		// 	this._initializeForm();
-		// 	this.delegateEvents({
-		// 		...this.events,
-		// 		'change input, textarea, select': '_updateForm',
-		// 	});
-		// }
-	},
-
-	preinitialize() {
-		console.log('=== View.preinitialize() ===');
-		wp.Backbone.View.prototype.preinitialize.apply(this, arguments);
-
-		const element = document.querySelector(this.el);
-		// console.log(this.$(this.el));
-		if (element.tagName.toLowerCase() === 'form') {
-			console.log('=== View.constructor() - is form ===');
-			this.form = new Backbone.Model();
-			this.method = element.getAttribute('method') || 'post';
-			this.action = element.getAttribute('action') || '';
-			this._initializeForm();
-			this.delegateEvents({
-				...this.events,
-				'change input, textarea, select': '_updateForm',
-			});
-		}
-	},
 
 	/**
 	 * Blocks the UI by applying a transparent overlay to the view's element.
@@ -63,58 +24,32 @@ export default wp.Backbone.View.extend({
 	},
 
 	/**
-	 * Initializes the form model.
+	 * Get the current value of the associated form element.
 	 *
-	 * @private
-	 * @return {void}
+	 * @param {string|null} name The name of the form element.
+	 * @return {mixed} The value of the form element.
 	 */
-	_initializeForm: function () {
-		// this.$('input, textarea, select').each((_, element) => {
-		// 	const $element = $(element);
-		// 	const name = $element.attr('name');
-		// 	const type = $element.attr('type');
-		//
-		// 	if (name === 'method') return;
-		//
-		// 	if (type === 'radio') {
-		// 		this.form.set(name, $element.is(':checked') ? $element.val() || 0 : undefined);
-		// 	} else if (type === 'checkbox') {
-		// 		this.form.set(name, $element.is(':checked') ? [$element.val()] : []);
-		// 	} else {
-		// 		this.form.set(name, $element.val() || '');
-		// 	}
-		// });
-	},
+	data: function ( name ) {
+		name = name || null;
+		const data = {};
+		this.$('input, select, textarea').each((_, element) => {
+			const $element = $(element);
+			const name = $element.attr('name');
+			const type = $element.attr('type');
 
-	/**
-	 * Updates the form model.
-	 *
-	 * @private
-	 * @param {Object} event The event that triggered the update.
-	 */
-	_updateForm: function (event) {
-		const $element = $(event.target);
-		const name = $element.attr('name');
-		const type = $element.attr('type');
+			if (name === 'method') return;
 
-		console.log('=== _updateForm() ===');
-		console.log('name: ', name);
-		console.log('type: ', type);
-
-		if (name === 'method') return;
-
-		if (type === 'radio') {
-			this.form.set(name, $element.is(':checked') ? $element.val() || 0 : undefined);
-		} else if (type === 'checkbox') {
-			let currentValues = this.form.get(name) || [];
-			if ($element.is(':checked')) {
-				currentValues.push($element.val());
+			if (type === 'radio') {
+				data[name] = $element.is(':checked') ? $element.val() || 0 : data[name];
+			} else if (type === 'checkbox') {
+				data[name] = data[name] || [];
+				if ($element.is(':checked')) {
+					data[name].push($element.val());
+				}
 			} else {
-				currentValues = currentValues.filter(val => val !== $element.val());
+				data[name] = $element.val() || '';
 			}
-			this.form.set(name, currentValues);
-		} else {
-			this.form.set(name, $element.val() || '');
-		}
+		});
+		return name ? data[name] : data;
 	},
 });

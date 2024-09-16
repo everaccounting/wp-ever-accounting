@@ -136,7 +136,7 @@ wp_add_inline_script( 'eac-sales', 'var eac_invoice_edit_vars = ' . json_encode(
 					'class'            => 'eac_select2',
 					'data-action'      => 'eac_json_search',
 					'data-type'        => 'currency',
-					'data-allow-clear' => 'false',
+					'data-allowClear' => 'false',
 				)
 			);
 
