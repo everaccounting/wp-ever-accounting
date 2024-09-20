@@ -60,11 +60,6 @@ jQuery(document).ready(($) => {
 				showOtherMonths: true,
 				selectOtherMonths: true,
 				yearRange: '-100:+10',
-				beforeShow: function () {
-					$('#ui-datepicker-div')
-						.removeClass('ui-datepicker')
-						.addClass('eac-datepicker');
-				},
 			};
 			$this.addClass('enhanced').datepicker(options);
 		});
@@ -77,31 +72,28 @@ jQuery(document).ready(($) => {
 					my: 'center bottom-15',
 					at: 'center top',
 				},
-				tooltipClass: 'eac-tooltip',
+				tooltipClass: 'eac_tooltip',
 			};
 			$this.addClass('enhanced').tooltip(options);
 		});
 
 		// currency.
-		$(':input[data-currency]').filter(':not(.enhanced)').each(function () {
+		$(':input.eac_amount').filter(':not(.enhanced)').each(function () {
 			const $this = $(this);
-			const code = $this.data('currency');
-			const currency = new eac.api.Currency({code});
-			currency.fetch({
-				success: (model) => {
-					console.log($this)
-					$this.inputmask({
-						alias: 'currency',
-						placeholder: '0.00',
-						rightAlign: false,
-						allowMinus: true,
-						digits: model.get('decimals'),
-						prefix: 'before' === model.get('position') ? model.get('symbol') : '',
-						suffix: 'after' === model.get('position') ? model.get('symbol') : '',
-						removeMaskOnSubmit: true
-					}).addClass('enhanced');
-				}
-			});
+			const currency = $this.data('currency') || eac_admin_vars.base_currency;
+			const precision = eac_admin_vars.currencies[currency].precision || 2;
+			const symbol = eac_admin_vars.currencies[currency].symbol || '';
+			const position = eac_admin_vars.currencies[currency].position || 'before';
+			$this.inputmask({
+				alias: 'currency',
+				placeholder: '0.00',
+				rightAlign: false,
+				allowMinus: true,
+				digits: precision,
+				prefix: 'before' === position ? symbol : '',
+				suffix: 'after' === position ? symbol : '',
+				removeMaskOnSubmit: true
+			}).addClass('enhanced');
 		});
 
 		// inputMask.
@@ -148,23 +140,104 @@ jQuery(document).ready(($) => {
 	$(document.body).on('eac_update_ui', initializeUI);
 
 	// Media Uploader.
-	$('.eac_media_uploader').filter(':not(.enhanced)').each(function () {
+	$('.eac-file-upload').filter(':not(.enhanced)').each(function () {
 		const $this = $(this);
-		const options = {
-			title: $this.data('title') || '',
-			button: {
-				text: $this.data('button') || '',
-			},
-			multiple: $this.data('multiple') || false,
-		};
-		$this.addClass('enhanced').on('click', function (e) {
+		const $button = $this.find('.eac-file-upload__button');
+		const $value = $this.find('.eac-file-upload__value');
+		const $preview = $this.find('.eac-file-upload__icon img');
+		const $name = $this.find('.eac-file-upload__name a');
+		const $size = $this.find('.eac-file-upload__size');
+		const $remove = $this.find('a.eac-file-upload__remove');
+
+		$button.on('click', function (e) {
 			e.preventDefault();
-			const frame = wp.media(options);
+			const frame = wp.media({
+				title: $button.data('uploader-title'),
+				multiple: false
+			});
+			frame.on( 'ready', function () {
+				frame.uploader.options.uploader.params = {
+					type: 'eac_file',
+				};
+			} );
 			frame.on('select', function () {
 				const attachment = frame.state().get('selection').first().toJSON();
-				$this.val(attachment.url);
+				const src = attachment.type === 'image' ? attachment.url : attachment.icon;
+				$value.val(attachment.id);
+				$preview.attr('src', src).show();
+				$preview.attr('alt', attachment.filename);
+				$name.text(attachment.filename).attr('href', attachment.url);
+				$size.text(attachment.filesizeHumanReadable);
+				$remove.show();
+				$this.addClass('has--file');
 			});
 			frame.open();
 		});
+
+		$remove.on('click', function (e) {
+			e.preventDefault();
+			$this.removeClass('has--file');
+			$value.val('');
+			$preview.attr('src', '').hide();
+			$name.text('').attr('href', '');
+			$size.text('');
+		});
 	});
 });
+
+(function (document, window, $) {
+	'use strict';
+
+	var app = {
+		events: {
+			'click .wp-heading-inline': 'addItem',
+		},
+
+		addItem: function (e) {
+			e.preventDefault();
+			console.log('--Item added--');
+			console.log(this);
+			console.log('Item added');
+		},
+
+
+		init: function () {
+			var events = this.events || {};
+			for (var key in events) {
+				var method = events[key];
+				if (typeof method !== 'function') method = this[method];
+				if (!method) continue;
+				var match = key.match(/^(\S+)\s*(.*)$/);
+				var eventName = match[1];
+				var selector = match[2];
+				$(document).on(eventName, selector, method.bind(this));
+			}
+		},
+	};
+
+	// app.init();
+
+}(document, window, jQuery));
+
+(function (document, window, $) {
+	'use strict';
+
+	var app = {
+		el: document,
+		init: function () {
+			console.log('App initialized');
+			$(this.el).on('click', '.wp-heading-inline', this.bind(this.addItem));
+		},
+
+		addItem: function (e) {
+			e.preventDefault();
+			console.log('--Item added--');
+			console.log(this);
+			console.log('Item added');
+		},
+	};
+
+	app.init();
+
+}(document, window, jQuery));
+

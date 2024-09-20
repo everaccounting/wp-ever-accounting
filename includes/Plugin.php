@@ -2,13 +2,16 @@
 
 namespace EverAccounting;
 
+use EverAccounting\Controllers\Categories;
+use EverAccounting\Controllers\Customers;
+use EverAccounting\Controllers\Items;
 use EverAccounting\Controllers\Bills;
-use EverAccounting\Controllers\Business;
 use EverAccounting\Controllers\Currencies;
 use EverAccounting\Controllers\Accounts;
 use EverAccounting\Controllers\Expenses;
 use EverAccounting\Controllers\Invoices;
 use EverAccounting\Controllers\Payments;
+use EverAccounting\Controllers\Vendors;
 
 /**
  * Class Plugin.
@@ -16,13 +19,16 @@ use EverAccounting\Controllers\Payments;
  * @since 1.2.1
  * @package EverAccounting
  *
- * @property Business   $business Business controller.
- * @property Accounts   $accounts Accounts controller.
+ * @property Items      $items Items controller.
  * @property Currencies $currencies Currencies controller.
  * @property Payments   $payments Payments controller.
  * @property Invoices   $invoices Invoices controller.
+ * @property Customers $customers Customers controller.
  * @property Expenses   $expenses Expenses controller.
  * @property Bills      $bills Bills controller.
+ * @property Vendors    $vendors Vendors controller.
+ * @property Accounts   $accounts Accounts controller.
+ * @property Categories $categories Categories controller.
  */
 class Plugin extends \ByteKit\Plugin {
 	/**
@@ -54,6 +60,7 @@ class Plugin extends \ByteKit\Plugin {
 		define( 'EAC_PLUGIN_BASENAME', $this->get_basename() );
 		define( 'EAC_PLUGIN_PATH', $this->get_dir_path() . '/' );
 		define( 'EAC_PLUGIN_URL', $this->get_dir_url() . '/' );
+		define( 'EAC_ADMIN_PATH', $this->get_dir_path() . '/admin/' );
 		define( 'EAC_UPLOADS_BASEDIR', $upload_dir['basedir'] . '/eac/' );
 		define( 'EAC_UPLOADS_DIR', $upload_dir['basedir'] . '/eac/' );
 		define( 'EAC_UPLOADS_URL', $upload_dir['baseurl'] . '/eac/' );
@@ -83,7 +90,7 @@ class Plugin extends \ByteKit\Plugin {
 	public function init_hooks() {
 		register_activation_hook( $this->get_file(), array( Installer::class, 'install' ) );
 		add_action( 'plugins_loaded', array( $this, 'on_init' ), 0 );
-		add_action( 'rest_api_init', array( $this, 'register_routes' ) );
+		// add_action( 'rest_api_init', array( $this, 'register_routes' ) );
 	}
 
 	/**
@@ -95,7 +102,7 @@ class Plugin extends \ByteKit\Plugin {
 	public function on_init() {
 		$this->services->add( 'installer', new Installer() );
 
-		$this->services->add( 'business', new Controllers\Business() );
+		$this->services->add( 'items', new Controllers\Items() );
 		$this->services->add( 'accounts', new Controllers\Accounts() );
 		$this->services->add( 'currencies', new Controllers\Currencies() );
 		$this->services->add( 'items', new Controllers\Items() );
@@ -103,6 +110,10 @@ class Plugin extends \ByteKit\Plugin {
 		$this->services->add( 'payments', new Controllers\Payments() );
 		$this->services->add( 'expenses', new Controllers\Expenses() );
 		$this->services->add( 'bills', new Controllers\Bills() );
+		$this->services->add( 'vendors', new Controllers\Vendors() );
+		$this->services->add( 'customers', new Controllers\Customers() );
+		$this->services->add( 'categories', new Controllers\Categories() );
+
 
 		$this->services->add( 'transactions', new Handlers\Transactions() );
 		$this->services->add( 'documents', new Handlers\Documents() );
@@ -113,17 +124,23 @@ class Plugin extends \ByteKit\Plugin {
 			$this->services->add( Admin\Menus::class );
 			$this->services->add( Admin\Scripts::class );
 			$this->services->add( Admin\Actions::class );
+
+			// Items.
 			$this->services->add( Admin\Items\Items::class );
+			// Sales.
 			$this->services->add( Admin\Sales\Payments::class );
 			$this->services->add( Admin\Sales\Invoices::class );
 			$this->services->add( Admin\Sales\Customers::class );
+			// Purchases.
 			$this->services->add( Admin\Purchases\Expenses::class );
 			$this->services->add( Admin\Purchases\Bills::class );
 			$this->services->add( Admin\Purchases\Vendors::class );
+			// Banking.
 			$this->services->add( Admin\Banking\Accounts::class );
 			$this->services->add( Admin\Banking\Transfers::class );
+
+			// Misc.
 			$this->services->add( Admin\Misc\Categories::class );
-			$this->services->add( Admin\Misc\Currencies::class );
 			$this->services->add( Admin\Misc\Taxes::class );
 		}
 
@@ -162,7 +179,6 @@ class Plugin extends \ByteKit\Plugin {
 		}
 	}
 
-
 	/**
 	 * Get queue instance.
 	 *
@@ -172,5 +188,4 @@ class Plugin extends \ByteKit\Plugin {
 	public function queue() {
 		return Utilities\Queue::instance();
 	}
-
 }

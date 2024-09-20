@@ -2,6 +2,8 @@
 
 namespace EverAccounting\Admin;
 
+use EverAccounting\Admin\Settings\Settings;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -68,7 +70,6 @@ class Utilities {
 				'capability' => 'manage_options',
 				'menu_slug'  => 'eac-settings',
 				'callback'   => array( Settings::class, 'output' ),
-				'load_hook'  => array( Settings::class, 'get_tabs' ),
 			),
 		);
 
@@ -84,7 +85,7 @@ class Utilities {
 	public static function get_screen_ids() {
 		$screen_ids = array(
 			'toplevel_page_' . Menus::PARENT_SLUG,
-			Menus::PARENT_SLUG . '_page_dashboard'
+			Menus::PARENT_SLUG . '_page_dashboard',
 		);
 
 		foreach ( self::get_menus() as $page ) {

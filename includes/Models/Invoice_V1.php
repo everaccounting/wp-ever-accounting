@@ -217,8 +217,8 @@ class Invoice_V1 extends Document {
 			);
 			// if the currency is not the as the base currency, we need to convert the price.
 
-			if ( eac_get_base_currency() !== $this->currency_code ) {
-				$price                 = eac_convert_currency( $product_data['price'], eac_get_base_currency(), $this->currency_code );
+			if ( eac_base_currency() !== $this->currency_code ) {
+				$price                 = eac_convert_currency( $product_data['price'], eac_base_currency(), $this->currency_code );
 				$product_data['price'] = $price;
 			}
 
@@ -240,10 +240,10 @@ class Invoice_V1 extends Document {
 		$data['document_id'] = $this->id;
 
 		// we have to validate the data before creating the item.
-		if ( ! array_key_exists( $data['type'], eac_get_item_types() ) ) {
+		if ( ! array_key_exists( $data['type'], EAC()->items->get_types() ) ) {
 			$data['type'] = 'standard';
 		}
-		if ( ! array_key_exists( $data['unit'], eac_get_unit_types() ) ) {
+		if ( ! array_key_exists( $data['unit'], EAC()->items->get_types() ) ) {
 			$data['unit'] = '';
 		}
 

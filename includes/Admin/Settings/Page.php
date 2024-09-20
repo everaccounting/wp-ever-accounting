@@ -2,8 +2,6 @@
 
 namespace EverAccounting\Admin\Settings;
 
-use EverAccounting\Admin\Settings;
-
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -31,10 +29,10 @@ abstract class Page {
 	 * Constructor.
 	 */
 	public function __construct() {
-		add_filter( 'ever_accounting_settings_tabs_array', array( $this, 'add_settings_tab' ), 0 );
-		add_action( 'ever_accounting_settings_sections_' . $this->id, array( $this, 'output_sections' ) );
-		add_action( 'ever_accounting_settings_tab_' . $this->id, array( $this, 'output' ) );
-		add_action( 'ever_accounting_settings_save_' . $this->id, array( $this, 'save' ) );
+		add_filter( 'eac_settings_tabs_array', array( $this, 'add_settings_tab' ), 0 );
+		add_action( 'eac_settings_sections_' . $this->id, array( $this, 'output_sections' ) );
+		add_action( 'eac_settings_tab_' . $this->id, array( $this, 'output' ) );
+		add_action( 'eac_settings_save_' . $this->id, array( $this, 'save' ) );
 	}
 
 	/**
@@ -70,7 +68,6 @@ abstract class Page {
 		return $pages;
 	}
 
-
 	/**
 	 * Get settings array.
 	 *
@@ -100,7 +97,7 @@ abstract class Page {
 			$settings = $this->get_settings_for_section_core( $section_id );
 		}
 
-		return apply_filters( 'ever_accounting_get_settings_' . $this->id, $settings, $section_id );
+		return apply_filters( 'eac_get_settings_' . $this->id, $settings, $section_id );
 	}
 
 	/**
@@ -187,7 +184,7 @@ abstract class Page {
 			<form method="post" id="mainform" action="" enctype="multipart/form-data">
 				<?php Settings::output_fields( $settings ); ?>
 				<?php wp_nonce_field( 'ever-accounting-settings' ); ?>
-				<?php if ( apply_filters( 'ever_accounting_settings_save_button_' . $current_tab, true, $current_section ) ) : ?>
+				<?php if ( apply_filters( 'eac_settings_save_button_' . $current_tab, true, $current_section ) ) : ?>
 					<p class="submit"><button name="save" class="button-primary eac-save-button" type="submit" value="<?php esc_attr_e( 'Save changes', 'wp-ever-accounting' ); ?>"><?php esc_html_e( 'Save changes', 'wp-ever-accounting' ); ?></button></p>
 				<?php endif; ?>
 			</form>

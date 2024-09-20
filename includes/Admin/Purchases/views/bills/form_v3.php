@@ -150,7 +150,7 @@ wp_add_inline_script( 'eac-admin', 'var eac_bill_edit_vars = ' . json_encode( $d
 					array(
 						'label'            => esc_html__( 'Currency', 'wp-ever-accounting' ),
 						'name'             => 'currency_code',
-						'default'          => eac_get_base_currency(),
+						'default'          => eac_base_currency(),
 						'value'            => $bill->currency_code,
 						'type'             => 'select',
 						'options'          => eac_get_currencies(),

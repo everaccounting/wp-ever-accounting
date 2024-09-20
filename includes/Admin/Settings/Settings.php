@@ -1,6 +1,6 @@
 <?php
 
-namespace EverAccounting\Admin;
+namespace EverAccounting\Admin\Settings;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -60,12 +60,12 @@ class Settings {
 	public static function get_tabs() {
 		if ( is_null( self::$tabs ) ) {
 			$tabs   = array();
-			$tabs[] = new Settings\General();
-			$tabs[] = new Settings\Tax();
-			$tabs[] = new Settings\Sales();
-			$tabs[] = new Settings\Purchases();
+			$tabs[] = new General();
+			$tabs[] = new Taxes();
+			$tabs[] = new Sales();
+			$tabs[] = new Purchases();
 
-			self::$tabs = apply_filters( 'ever_accounting_get_settings_tabs', $tabs );
+			self::$tabs = apply_filters( 'eac_get_settings_tabs', $tabs );
 		}
 
 		return self::$tabs;
@@ -86,7 +86,7 @@ class Settings {
 		 *
 		 * @since 1.1.6
 		 */
-		do_action( 'ever_accounting_settings_save_' . $current_tab );
+		do_action( 'eac_settings_save_' . $current_tab );
 
 		// Save settings.
 		do_action( 'ever_accounting_update_options_' . $current_tab );
@@ -99,7 +99,7 @@ class Settings {
 		 *
 		 * @since 1.1.6
 		 */
-		do_action( 'ever_accounting_settings_saved' );
+		do_action( 'eac_settings_saved' );
 	}
 
 	/**
@@ -116,14 +116,14 @@ class Settings {
 		 *
 		 * @since 1.1.6
 		 */
-		do_action( 'ever_accounting_settings_start' );
+		do_action( 'eac_settings_start' );
 
 		// Get tabs for the settings page.
-		$tabs       = apply_filters( 'ever_accounting_settings_tabs_array', array() );
+		$tabs       = apply_filters( 'eac_settings_tabs_array', array() );
 		$page       = isset( $_GET['page'] ) ? sanitize_title( wp_unslash( $_GET['page'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$tab_exists = isset( $tabs[ $current_tab ] ) || has_action( 'ever_accounting_sections_' . $current_tab ) || has_action( 'ever_accounting_settings_' . $current_tab ) || has_action( 'ever_accounting_settings_tabs_' . $current_tab );
+		$tab_exists = isset( $tabs[ $current_tab ] ) || has_action( 'ever_accounting_sections_' . $current_tab ) || has_action( 'eac_settings_' . $current_tab ) || has_action( 'eac_settings_tabs_' . $current_tab );
 		$notices    = self::$notices;
-		include __DIR__ . '/views/settings/settings.php';
+		include __DIR__ . '/views/settings.php';
 	}
 
 	/**
@@ -249,18 +249,18 @@ class Settings {
 					}
 					echo '<table class="form-table eac-settings-table">';
 					if ( ! empty( $value['id'] ) ) {
-						do_action( 'ever_accounting_settings_' . sanitize_title( $value['id'] ) );
+						do_action( 'eac_settings_' . sanitize_title( $value['id'] ) );
 					}
 					break;
 
 				// Section Ends.
 				case 'sectionend':
 					if ( ! empty( $value['id'] ) ) {
-						do_action( 'ever_accounting_settings_' . sanitize_title( $value['id'] ) . '_end' );
+						do_action( 'eac_settings_' . sanitize_title( $value['id'] ) . '_end' );
 					}
 					echo '</table>';
 					if ( ! empty( $value['id'] ) ) {
-						do_action( 'ever_accounting_settings_' . sanitize_title( $value['id'] ) . '_after' );
+						do_action( 'eac_settings_' . sanitize_title( $value['id'] ) . '_after' );
 					}
 
 					break;
@@ -632,7 +632,6 @@ class Settings {
 
 		return ( null === $option_value ) ? $default : $option_value;
 	}
-
 
 	/**
 	 * Save admin fields.

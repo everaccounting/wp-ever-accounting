@@ -503,7 +503,7 @@ class Items extends Controller {
 				'type'         => array(
 					'description' => __( 'Item type.', 'wp-ever-accounting' ),
 					'type'        => 'string',
-					'enum'        => array_keys( eac_get_item_types() ),
+					'enum'        => array_keys( EAC()->items->get_types() ),
 					'context'     => array( 'view', 'edit' ),
 					'required'    => true,
 				),
@@ -613,7 +613,7 @@ class Items extends Controller {
 		$params['type']   = array(
 			'description'       => __( 'Limit result set to items of a particular type.', 'wp-ever-accounting' ),
 			'type'              => 'string',
-			'enum'              => array_keys( eac_get_item_types() ),
+			'enum'              => array_keys( EAC()->items->get_types() ),
 			'default'           => '',
 			'sanitize_callback' => 'sanitize_key',
 		);

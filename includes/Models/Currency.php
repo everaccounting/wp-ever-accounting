@@ -155,7 +155,7 @@ class Currency extends Model {
 	 * @since 1.0.0
 	 */
 	protected function get_exchange_rate() {
-		return eac_get_base_currency() === $this->code ? 1 : $this->attributes['exchange_rate'];
+		return eac_base_currency() === $this->code ? 1 : $this->attributes['exchange_rate'];
 	}
 
 	/**
@@ -166,7 +166,7 @@ class Currency extends Model {
 	 * @since 1.0.0
 	 */
 	protected function set_exchange_rate( $value ) {
-		$this->attributes['exchange_rate'] = eac_get_base_currency() === $this->code ? 1 : $this->cast( 'exchange_rate', $value );
+		$this->attributes['exchange_rate'] = eac_base_currency() === $this->code ? 1 : $this->cast( 'exchange_rate', $value );
 	}
 
 	/**
@@ -176,7 +176,7 @@ class Currency extends Model {
 	 * @return string
 	 */
 	protected function get_formatted_name() {
-		return sprintf( '%s (%s)', $this->name, $this->code );
+		return sprintf( '%s - %s', $this->code, $this->name );
 	}
 
 	/**
@@ -333,6 +333,6 @@ class Currency extends Model {
 	 * @return bool
 	 */
 	public function is_base_currency() {
-		return eac_get_base_currency() === $this->code;
+		return eac_base_currency() === $this->code;
 	}
 }

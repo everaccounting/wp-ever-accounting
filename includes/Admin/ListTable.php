@@ -83,6 +83,21 @@ abstract class ListTable extends \WP_List_Table {
 	}
 
 	/**
+	 * Return the type filter for this request, if any.
+	 *
+	 * @param string $fallback Default type.
+	 *
+	 * @since 1.2.1
+	 * @return string
+	 */
+	protected function get_request_type( $fallback = null ) {
+		wp_verify_nonce( '_wpnonce' );
+		$type = ( ! empty( $_GET['type'] ) ) ? sanitize_text_field( wp_unslash( $_GET['type'] ) ) : '';
+
+		return empty( $type ) ? $fallback : $type;
+	}
+
+	/**
 	 * Return the search filter for this request, if any.
 	 *
 	 * @since 1.2.1
@@ -167,7 +182,7 @@ abstract class ListTable extends \WP_List_Table {
 	 */
 	protected function category_filter( $type ) {
 		$category_id = filter_input( INPUT_GET, 'category_id', FILTER_SANITIZE_NUMBER_INT );
-		$category    = empty( $category_id ) ? null : eac_get_category( $category_id );
+		$category    = empty( $category_id ) ? null : EAC()->categories->get( $category_id );
 		?>
 		<select class="eac_select2" name="category_id" id="filter-by-category" data-action="eac_json_search" data-type="category" data-subtype="<?php echo esc_attr( $type ); ?>" data-placeholder="<?php esc_attr_e( 'Filter by category', 'wp-ever-accounting' ); ?>">
 			<?php if ( ! empty( $category ) ) : ?>
@@ -187,7 +202,7 @@ abstract class ListTable extends \WP_List_Table {
 	 */
 	protected function account_filter() {
 		$account_id = filter_input( INPUT_GET, 'account_id', FILTER_SANITIZE_NUMBER_INT );
-		$account    = empty( $account_id ) ? null : eac_get_account( $account_id );
+		$account    = empty( $account_id ) ? null : EAC()->accounts->get( $account_id );
 		?>
 		<select class="eac_select2" name="account_id" id="filter-by-account" data-action="eac_json_search" data-type="account" data-placeholder="<?php esc_attr_e( 'Filter by account', 'wp-ever-accounting' ); ?>">
 			<?php if ( ! empty( $account ) ) : ?>

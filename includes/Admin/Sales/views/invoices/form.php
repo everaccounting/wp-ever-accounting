@@ -126,7 +126,7 @@ wp_add_inline_script( 'eac-sales', 'var eac_invoice_edit_vars = ' . json_encode(
 				array(
 					'label'            => esc_html__( 'Currency', 'wp-ever-accounting' ),
 					'name'             => 'currency_code',
-					'default'          => eac_get_base_currency(),
+					'default'          => eac_base_currency(),
 					'value'            => $invoice->currency_code,
 					'type'             => 'select',
 					'options'          => eac_get_currencies(),

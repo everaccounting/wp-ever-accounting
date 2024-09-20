@@ -20,8 +20,8 @@ class Items {
 	public function __construct() {
 		add_filter( 'eac_items_page_tabs', array( __CLASS__, 'register_tabs' ) );
 		add_filter( 'set-screen-option', array( __CLASS__, 'set_screen_option' ), 10, 3 );
-		add_action( 'load_eac_items_page_items_index', array( __CLASS__, 'setup_table' ) );
-		add_action( 'eac_items_page_items_index', array( __CLASS__, 'render_table' ) );
+		add_action( 'load_eac_items_page_items', array( __CLASS__, 'setup_table' ) );
+		add_action( 'eac_items_page_items', array( __CLASS__, 'render_table' ) );
 		add_action( 'eac_items_page_items_add', array( __CLASS__, 'render_add' ) );
 		add_action( 'eac_items_page_items_edit', array( __CLASS__, 'render_edit' ) );
 		add_action( 'admin_post_eac_edit_item', array( __CLASS__, 'handle_edit' ) );
@@ -71,11 +71,14 @@ class Items {
 		$screen     = get_current_screen();
 		$list_table = new Tables\ItemsTable();
 		$list_table->prepare_items();
-		$screen->add_option( 'per_page', array(
-			'label'   => __( 'Number of items per page:', 'wp-ever-accounting' ),
-			'default' => 20,
-			'option'  => "eac_{$list_table->_args['plural']}_per_page",
-		) );
+		$screen->add_option(
+			'per_page',
+			array(
+				'label'   => __( 'Number of items per page:', 'wp-ever-accounting' ),
+				'default' => 20,
+				'option'  => "eac_{$list_table->_args['plural']}_per_page",
+			)
+		);
 	}
 
 	/**
@@ -86,7 +89,7 @@ class Items {
 	 */
 	public static function render_table() {
 		global $list_table;
-		include __DIR__ . '/views/items/table.php';
+		include __DIR__ . '/views/item-list.php';
 	}
 
 	/**
@@ -97,7 +100,7 @@ class Items {
 	 */
 	public static function render_add() {
 		$item = new Item();
-		include __DIR__ . '/views/items/add.php';
+		include __DIR__ . '/views/item-add.php';
 	}
 
 	/**
@@ -107,14 +110,14 @@ class Items {
 	 * @return void
 	 */
 	public static function render_edit() {
-		$id = filter_input( INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT );
+		$id   = filter_input( INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT );
 		$item = Item::find( $id );
 		if ( ! $item ) {
 			esc_html_e( 'The specified item does not exist.', 'wp-ever-accounting' );
 
 			return;
 		}
-		include __DIR__ . '/views/items/edit.php';
+		include __DIR__ . '/views/item-edit.php';
 	}
 
 	/**
@@ -136,7 +139,7 @@ class Items {
 		$tax_ids     = isset( $_POST['tax_ids'] ) ? array_map( 'absint', wp_unslash( $_POST['tax_ids'] ) ) : array();
 		$desc        = isset( $_POST['description'] ) ? sanitize_textarea_field( wp_unslash( $_POST['description'] ) ) : '';
 		$status      = isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : 'active';
-		$item        = eac_insert_item(
+		$item        = EAC()->items->insert(
 			array(
 				'id'          => $id,
 				'name'        => $name,

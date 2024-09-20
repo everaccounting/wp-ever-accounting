@@ -96,7 +96,7 @@ function eac_form_field( $field ) {
 
 		case 'select':
 			$field['options']     = is_array( $field['options'] ) ? $field['options'] : array();
-			$field['value']       = ! empty( $field['value'] ) ? wp_parse_list( $field['value'] ) : [];
+			$field['value']       = ! empty( $field['value'] ) ? wp_parse_list( $field['value'] ) : array();
 			$field['value']       = array_map( 'strval', $field['value'] );
 			$field['placeholder'] = ! empty( $field['placeholder'] ) ? $field['placeholder'] : '';
 			if ( ! empty( $field['multiple'] ) ) {
@@ -310,4 +310,67 @@ function eac_form_field( $field ) {
 			$input // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output is escaped in the above code.
 		);
 	}
+}
+
+
+/**
+ * File upload field.
+ *
+ * @param array $field Field arguments.
+ *
+ * @since 1.2.0
+ * @return void
+ */
+function eac_file_uploader( $field ) {
+	$field = wp_parse_args(
+		$field,
+		array(
+			'value'        => '',
+			'name'         => 'attachment_id',
+			'button_label' => __( 'Upload attachment', 'wp-ever-accounting' ),
+			'mime_types'   => '',
+		)
+	);
+	$data  = array(
+		'icon_url' => '',
+		'title'    => '',
+		'src'      => '',
+		'url'      => '',
+	);
+	$value = isset( $field['value'] ) ? absint( $field['value'] ) : 0;
+	$post  = 'attachment' === get_post_type( $value );
+//	// get type of the attachment.
+//	$type = $post ? get_post_mime_type( $value ) : '';
+//
+//	$attachment = array(
+//		'icon_url' => $post ? wp_mime_type_icon( $value ) : '',
+//		'title'    => $post ? get_the_title( $value ) : '',
+//		'src'      => $post ? wp_mime_type_icon( $attachment->ID, '.svg' ) : '',
+//		'url'      => $post ? wp_get_attachment_url( $value ) : '',
+//		'filezise' => $post ? size_format( filesize( get_attached_file( $value ) ) ) : '',
+//	);
+
+	$has_file_class = ! empty( $post ) ? ' has--file' : '';
+	?>
+	<div class="eac-file-upload <?php echo esc_attr( $has_file_class ); ?>">
+		<div class="eac-file-upload__dropzone">
+			<button class="eac-file-upload__button" type="button"><?php echo esc_html( $field['button_label'] ); ?></button>
+			<input class="eac-file-upload__value" type="hidden" name="<?php echo esc_attr( $field['name'] ); ?>" value="<?php echo esc_attr( $value ); ?>">
+		</div>
+		<div class="eac-file-upload__preview">
+			<div class="eac-file-upload__icon">
+				<img src="<?php echo esc_url( $attachment['icon_url'] ); ?>" alt="<?php echo esc_attr( $attachment['title'] ); ?>">
+			</div>
+			<div class="eac-file-upload__info">
+				<div class="eac-file-upload__name">
+					<a target="_blank" href="<?php echo esc_url( $attachment['url'] ); ?>"><?php echo esc_html( $attachment['title'] ); ?></a>
+				</div>
+				<div class="eac-file-upload__size"><?php echo esc_html( $attachment['filezise'] ); ?></div>
+			</div>
+			<div class="eac-file-upload__action">
+				<a href="#" class="eac-file-upload__remove"><span class="dashicons dashicons-trash"></span></a>
+			</div>
+		</div>
+	</div>
+	<?php
 }

@@ -168,7 +168,7 @@ class Installer {
 	public static function create_tables() {
 		global $wpdb;
 		$wpdb->hide_errors();
-		$collate      = $wpdb->has_cap( 'collation' ) ? $wpdb->get_charset_collate() : '';
+		$collate = $wpdb->has_cap( 'collation' ) ? $wpdb->get_charset_collate() : '';
 
 		// drop old ea_currencies table if exists.
 		$currency_table = $wpdb->prefix . 'ea_currencies';
@@ -186,7 +186,7 @@ CREATE TABLE {$wpdb->prefix}ea_accounts (
     bank_name VARCHAR(191) DEFAULT NULL,
     bank_phone VARCHAR(20) DEFAULT NULL,
     bank_address VARCHAR(191) DEFAULT NULL,
-    currency_code VARCHAR(3) NOT NULL DEFAULT 'USD',
+    currency VARCHAR(3) NOT NULL DEFAULT 'USD',
     status ENUM('active', 'inactive') NOT NULL DEFAULT 'active',
     creator_id BIGINT(20) UNSIGNED DEFAULT NULL,
     thumbnail_id BIGINT(20) UNSIGNED DEFAULT NULL,
@@ -255,7 +255,7 @@ CREATE TABLE {$wpdb->prefix}ea_contacts (
     zip VARCHAR(20) DEFAULT NULL,
     country VARCHAR(3) DEFAULT NULL,
     tax_number VARCHAR(50) DEFAULT NULL,
-    currency_code VARCHAR(3) NOT NULL DEFAULT 'USD',
+    currency VARCHAR(3) NOT NULL DEFAULT 'USD',
     thumbnail_id BIGINT(20) UNSIGNED DEFAULT NULL,
     user_id BIGINT(20) UNSIGNED DEFAULT NULL,
     status ENUM('active', 'inactive') NOT NULL DEFAULT 'active',
@@ -268,7 +268,7 @@ CREATE TABLE {$wpdb->prefix}ea_contacts (
     KEY type (type),
     KEY email (email(191)),
     KEY phone (phone(50)),
-    KEY currency_code (currency_code),
+    KEY currency (currency),
     KEY user_id (user_id),
     KEY status (status)
 ) $collate;
@@ -368,7 +368,7 @@ CREATE TABLE {$wpdb->prefix}ea_documents (
     due_date DATETIME DEFAULT NULL,
     sent_date DATETIME DEFAULT NULL,
     payment_date DATETIME DEFAULT NULL,
-    currency_code VARCHAR(3) NOT NULL DEFAULT 'USD',
+    currency VARCHAR(3) NOT NULL DEFAULT 'USD',
     exchange_rate DOUBLE(15, 4) NOT NULL DEFAULT 1.00,
     created_via VARCHAR(100) DEFAULT 'manual',
     creator_id BIGINT(20) UNSIGNED NOT NULL,
@@ -453,7 +453,7 @@ CREATE TABLE {$wpdb->prefix}ea_transactions (
     number VARCHAR(30) NOT NULL,
     date DATE NOT NULL DEFAULT '0000-00-00',
     amount DOUBLE(15, 4) NOT NULL,
-    currency_code VARCHAR(3) NOT NULL DEFAULT 'USD',
+    currency VARCHAR(3) NOT NULL DEFAULT 'USD',
     exchange_rate DOUBLE(15, 8) NOT NULL DEFAULT 1.0,
     reference VARCHAR(191) DEFAULT NULL,
     note TEXT DEFAULT NULL,
@@ -475,7 +475,7 @@ CREATE TABLE {$wpdb->prefix}ea_transactions (
 	KEY type (type),
     KEY number (number),
     KEY amount (amount),
-    KEY currency_code (currency_code),
+    KEY currency (currency),
     KEY exchange_rate (exchange_rate),
     KEY account_id (account_id),
     KEY document_id (document_id),
@@ -639,7 +639,7 @@ CREATE TABLE {$wpdb->prefix}ea_transfers (
 						'code'               => 'USD',
 						'name'               => 'US Dollar',
 						'exchange_rate'      => 1.0000,
-						'decimals'          => 2,
+						'decimals'           => 2,
 						'symbol'             => '$',
 						'subunit'            => 100,
 						'position'           => 'before',

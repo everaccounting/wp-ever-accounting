@@ -82,11 +82,50 @@ class Items {
 	 * @return array
 	 */
 	public function get_types() {
-		return apply_filters( 'eac_item_types', array(
-			'standard' => __( 'Standard Item', 'wp-ever-accounting' ),
-			'shipping' => __( 'Shipping Fee', 'wp-ever-accounting' ),
-			'fee'      => __( 'Fee Item', 'wp-ever-accounting' ),
-		) );
+		return apply_filters(
+			'eac_item_types',
+			array(
+				'standard' => __( 'Standard', 'wp-ever-accounting' ),
+				'fee'      => __( 'Fee', 'wp-ever-accounting' ),
+			)
+		);
 	}
 
+	/**
+	 * Get item units
+	 *
+	 * @return array
+	 * @since 1.1.6
+	 */
+	public function get_units() {
+		return apply_filters(
+			'eac_item_units',
+			array(
+				'box'   => __( 'Box', 'wp-ever-accounting' ),
+				'cm'    => __( 'Centimeter', 'wp-ever-accounting' ),
+				'day'   => __( 'Day', 'wp-ever-accounting' ),
+				'doz'   => __( 'Dozen', 'wp-ever-accounting' ),
+				'ft'    => __( 'Feet', 'wp-ever-accounting' ),
+				'gm'    => __( 'Gram', 'wp-ever-accounting' ),
+				'hr'    => __( 'Hour', 'wp-ever-accounting' ),
+				'inch'  => __( 'Inch', 'wp-ever-accounting' ),
+				'kg'    => __( 'Kilogram', 'wp-ever-accounting' ),
+				'km'    => __( 'Kilometer', 'wp-ever-accounting' ),
+				'l'     => __( 'Liter', 'wp-ever-accounting' ),
+				'lb'    => __( 'Pound', 'wp-ever-accounting' ),
+				'm'     => __( 'Meter', 'wp-ever-accounting' ),
+				'mg'    => __( 'Milligram', 'wp-ever-accounting' ),
+				'mile'  => __( 'Mile', 'wp-ever-accounting' ),
+				'min'   => __( 'Minute', 'wp-ever-accounting' ),
+				'mm'    => __( 'Millimeter', 'wp-ever-accounting' ),
+				'month' => __( 'Month', 'wp-ever-accounting' ),
+				'oz'    => __( 'Ounce', 'wp-ever-accounting' ),
+				'pc'    => __( 'Piece', 'wp-ever-accounting' ),
+				'sec'   => __( 'Second', 'wp-ever-accounting' ),
+				'unit'  => __( 'Unit', 'wp-ever-accounting' ),
+				'week'  => __( 'Week', 'wp-ever-accounting' ),
+				'year'  => __( 'Year', 'wp-ever-accounting' ),
+			)
+		);
+	}
 }

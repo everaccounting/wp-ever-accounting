@@ -61,7 +61,7 @@ foreach ( $codes as $code => $currency ) {
 							'required'      => true,
 							'class'         => 'eac_decimal_input',
 							// translators: %s is the base currency.
-							'prefix'        => sprintf( __( '1 %s =', 'wp-ever-accounting' ), eac_get_base_currency() ),
+							'prefix'        => sprintf( __( '1 %s =', 'wp-ever-accounting' ), eac_base_currency() ),
 							'wrapper_class' => 'is--full',
 						)
 					);

@@ -231,7 +231,7 @@ class Contact extends Model {
 		}
 
 		if ( empty( $this->currency_code ) ) {
-			$this->set( 'currency_code', eac_get_base_currency() );
+			$this->set( 'currency_code', eac_base_currency() );
 		}
 
 		if ( empty( $this->creator_id ) && is_user_logged_in() ) {

@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
  * @property string   $number Number of the transaction.
  * @property string   $date Date of the transaction.
  * @property double   $amount Amount of the transaction.
- * @property string   $currency_code Currency code of the transaction.
+ * @property string   $currency Currency of the transaction.
  * @property double   $exchange_rate Exchange rate of the transaction.
  * @property string   $reference Reference of the transaction.
  * @property string   $note Note of the transaction.
@@ -39,7 +39,6 @@ defined( 'ABSPATH' ) || exit;
  * @property string   $updated_at Date the transaction was last updated.
  *
  * @property string   $formatted_amount Formatted amount of the transaction.
- * @property Currency $currency Related currency.
  * @property Account  $account Related account.
  * @property Category $category Related category.
  * @property Contact  $contact Related contact.
@@ -75,7 +74,7 @@ class Transaction extends Model {
 		'number',
 		'date',
 		'amount',
-		'currency_code',
+		'currency',
 		'exchange_rate',
 		'reference',
 		'note',
@@ -163,7 +162,7 @@ class Transaction extends Model {
 	 */
 	public function __construct( $attributes = array() ) {
 		$this->attributes['uuid']          = wp_generate_uuid4();
-		$this->attributes['currency_code'] = eac_get_base_currency();
+		$this->attributes['currency'] = eac_base_currency();
 		parent::__construct( $attributes );
 	}
 
@@ -224,7 +223,7 @@ class Transaction extends Model {
 	 * @return string
 	 */
 	protected function get_formatted_amount() {
-		return eac_format_amount( $this->amount, $this->currency_code );
+		return eac_format_amount( $this->amount, $this->currency );
 	}
 
 	/**
@@ -250,16 +249,6 @@ class Transaction extends Model {
 		// 'country'   => $contact->get_country(),
 		// )
 		// );
-	}
-
-	/**
-	 * Related currency.
-	 *
-	 * @since 1.2.1
-	 * @return BelongsTo
-	 */
-	protected function currency() {
-		return $this->belongs_to( Currency::class, 'currency_code', 'code' );
 	}
 
 	/**

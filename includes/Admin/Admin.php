@@ -2,6 +2,8 @@
 
 namespace EverAccounting\Admin;
 
+use EverAccounting\Admin\Settings\Settings;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -22,7 +24,7 @@ class Admin {
 		add_filter( 'admin_body_class', array( $this, 'body_class' ) );
 		add_filter( 'admin_footer_text', array( $this, 'admin_footer_text' ), PHP_INT_MAX );
 		add_filter( 'update_footer', array( $this, 'update_footer' ), PHP_INT_MAX );
-		//add_action( 'in_admin_header', array( __CLASS__, 'in_admin_header' ) );
+		add_action( 'in_admin_header', array( __CLASS__, 'in_admin_header' ) );
 		add_action( 'wp_loaded', array( $this, 'save_settings' ) );
 	}
 

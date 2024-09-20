@@ -1,3 +1,4 @@
+const {Money} = eac.money;
 /**
  * ========================================================================
  * BILL FORM
@@ -56,10 +57,11 @@ jQuery(document).ready(($) => {
 		},
 
 		prepare() {
-			const {model} = this.options;
-			console.log(model.toJSON());
+			const {model, state} = this.options;
 			return {
 				...model.toJSON(),
+				formatted_subtotal: state.get('money').format(model.get('subtotal')),
+				formatted_tax_total: state.get('money').format(model.get('tax_total')),
 				// tax: model.get('taxes').reduce((acc, tax) => acc + tax.get('amount'), 0),
 				taxes: model.get('taxes').toJSON(),
 			}
@@ -74,7 +76,7 @@ jQuery(document).ready(($) => {
 		onQuantityChange(e) {
 			e.preventDefault();
 			var value = parseFloat(e.target.value, 10);
-			if( ! value ){
+			if (!value) {
 				this.onRemoveLineItem(e);
 				return;
 			}
@@ -115,7 +117,7 @@ jQuery(document).ready(($) => {
 			var tax_id = parseInt(data.id, 10) || null;
 			if (tax_id) {
 				var tax = this.model.get('taxes').findWhere({tax_id: tax_id});
-				if (tax){
+				if (tax) {
 					this.model.get('taxes').remove(tax);
 					this.options.state.updateAmounts();
 				}
@@ -235,9 +237,12 @@ jQuery(document).ready(($) => {
 
 		prepare() {
 			const {state} = this.options;
-			console.log(state.toJSON())
 			return {
 				...state.toJSON(),
+				formatted_subtotal: state.get('money').format(state.get('subtotal')),
+				formatted_discount: state.get('money').format(state.get('discount')),
+				formatted_tax_total: state.get('money').format(state.get('tax_total')),
+				formatted_total: state.get('money').format(state.get('total')),
 				// itemized_taxes: state.getItemizedTaxes(),
 			}
 		},
@@ -251,6 +256,10 @@ jQuery(document).ready(($) => {
 			'change [name="currency_code"]': 'onCurrencyCodeChange',
 			'change [name="discount_value"]': 'onDiscountValueChange',
 			'change [name="discount_type"]': 'onDiscountTypeChange',
+		},
+
+		initialize() {
+			const {state} = this.options;
 		},
 
 		render() {
@@ -290,15 +299,6 @@ jQuery(document).ready(($) => {
 			e.preventDefault();
 			var state = this.options.state;
 			var value = parseFloat(e.target.value, 10);
-
-			console.log('discount_value', value);
-			// if type is percent and amount is greater than 100, set to 100.
-			if (state.get('discount_type') === 'percent' && value > 100) {
-				console.log('resetting discount_value to 100');
-				value = 100;
-				this.$('[name="discount_value"]').val(100);
-			}
-
 			state.set('discount_value', value);
 			state.updateAmounts();
 		},
@@ -306,12 +306,6 @@ jQuery(document).ready(($) => {
 		onDiscountTypeChange(e) {
 			var state = this.options.state;
 			var value = e.target.value;
-
-			//if type is percent and amount is greater than 100, set to 100.
-			if (value === 'percent' && state.get('discount_value') > 100) {
-				state.set('discount_value', 100);
-				this.$('[name="discount_value"]').val(100);
-			}
 			state.set('discount_type', value);
 			state.updateAmounts();
 		},
@@ -324,6 +318,7 @@ jQuery(document).ready(($) => {
 		const state = new eac.api.Bill({
 			...window.eac_bill_edit_vars?.bill || {},
 			settings: window.eac_bill_edit_vars?.settings || {},
+			money: new Money({code: window.eac_bill_edit_vars?.bill?.currency_code}),
 		});
 
 		// Hydrate collections.

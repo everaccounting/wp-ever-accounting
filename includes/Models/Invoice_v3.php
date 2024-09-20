@@ -49,7 +49,7 @@ class Invoice_v3 extends Document {
 			'issue_date'    => current_time( 'mysql' ),
 			'due_date'      => wp_date( 'Y-m-d', strtotime( '+' . $due_after . ' days' ) ),
 			'notes'         => get_option( 'eac_invoice_notes', '' ),
-			'currency_code' => eac_get_base_currency(),
+			'currency_code' => eac_base_currency(),
 			'creator_id'     => get_current_user_id(),
 			'uuid'          => wp_generate_uuid4(),
 		);

@@ -101,7 +101,7 @@ class Currencies {
 	 * @since 1.1.0
 	 * @return string
 	 */
-	public function get_exchange_rate( $currency = null ) {
+	public function get_rate( $currency = null ) {
 		$currency = $this->get( $currency );
 
 		if ( ! $currency ) {
@@ -227,7 +227,7 @@ class Currencies {
 	 * @since 1.1.0
 	 * @return bool
 	 */
-	public function is_default( $currency = null ) {
+	public function is_base( $currency = null ) {
 		$currency = $this->get( $currency );
 
 		if ( ! $currency ) {

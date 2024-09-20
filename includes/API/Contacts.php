@@ -138,7 +138,7 @@ class Contacts extends Controller {
 				'currency_code'     => array(
 					'description' => __( 'Currency code of the contact.', 'wp-ever-accounting' ),
 					'type'        => 'string',
-					'default'     => eac_get_base_currency(),
+					'default'     => eac_base_currency(),
 					'context'     => array( 'view', 'edit' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',

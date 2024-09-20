@@ -490,7 +490,7 @@ class Categories extends Controller {
 				'type'         => array(
 					'description' => __( 'Category type.', 'wp-ever-accounting' ),
 					'type'        => 'string',
-					'enum'        => array_keys( eac_get_category_types() ),
+//					'enum'        => array_keys( eac_get_category_types() ),
 					'context'     => array( 'view', 'edit' ),
 					'required'    => true,
 				),
@@ -507,7 +507,7 @@ class Categories extends Controller {
 				'status' 	 => array(
 					'description' => __( 'Category status.', 'wp-ever-accounting' ),
 					'type'        => 'string',
-					'enum'        => array_keys( eac_get_category_statuses() ),
+//					'enum'        => array_keys( eac_get_category_statuses() ),
 					'context'     => array( 'view', 'edit' ),
 					'required'    => true,
 				),

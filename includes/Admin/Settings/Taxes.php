@@ -5,15 +5,15 @@ namespace EverAccounting\Admin\Settings;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class ExpensesTab.
+ * Class Taxes
  *
  * @since   1.0.0
  * @package EverAccounting\Admin\Settings
  */
-class Tax extends Page {
+class Taxes extends Page {
 
 	/**
-	 * ExpensesTab constructor.
+	 * Taxes constructor.
 	 *
 	 * @since 1.0.0
 	 */
@@ -23,7 +23,6 @@ class Tax extends Page {
 
 		parent::__construct();
 	}
-
 
 	/**
 	 * Get own sections for this page.
@@ -39,7 +38,12 @@ class Tax extends Page {
 	 * @return array An associative array where keys are section identifiers and the values are translated section names.
 	 */
 	protected function get_own_sections() {
-		return array();
+		$sections = array(
+			''      => __( 'Options', 'wp-ever-accounting' ),
+			'rates' => __( 'Rates', 'wp-ever-accounting' ),
+		);
+
+		return $sections;
 	}
 
 	/**
@@ -59,13 +63,6 @@ class Tax extends Page {
 				'title'   => __( 'Enable Taxes', 'wp-ever-accounting' ),
 				'desc'    => __( 'Enable tax rates and calculations.', 'wp-ever-accounting' ),
 				'id'      => 'eac_tax_enabled',
-				'type'    => 'checkbox',
-				'default' => 'no',
-			),
-			array(
-				'title'   => __( 'Rounding', 'wp-ever-accounting' ),
-				'desc'    => __( 'Round tax at subtotal level, instead of rounding per tax rate.', 'wp-ever-accounting' ),
-				'id'      => 'eac_tax_subtotal_rounding',
 				'type'    => 'checkbox',
 				'default' => 'no',
 			),

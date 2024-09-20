@@ -184,7 +184,6 @@ class PaymentsTable extends ListTable {
 			$this->year_filter();
 			$this->account_filter( 'active' );
 			$this->category_filter( 'payment' );
-			$this->currency_filter( 'active' );
 			submit_button( __( 'Filter', 'wp-ever-accounting' ), '', 'filter_action', false );
 		}
 		echo '</div>';
@@ -225,6 +224,7 @@ class PaymentsTable extends ListTable {
 			'category'  => array( 'category', false ),
 			'customer'  => array( 'customer', false ),
 			'reference' => array( 'reference', false ),
+			'status'    => array( 'status', false ),
 		);
 	}
 
@@ -356,10 +356,18 @@ class PaymentsTable extends ListTable {
 			return null;
 		}
 		$actions = array(
-			'id'   => sprintf( '#%s', esc_attr( $item->number ) ),
-			'edit' => sprintf(
+			'number' => sprintf( '#%s', esc_attr( $item->number ) ),
+			'edit'   => sprintf(
 				'<a href="%s">%s</a>',
-				esc_url( add_query_arg( 'edit', $item->id, $this->base_url ) ),
+				esc_url(
+					add_query_arg(
+						array(
+							'action' => 'edit',
+							'id'     => $item->id,
+						),
+						$this->base_url
+					)
+				),
 				__( 'Edit', 'wp-ever-accounting' )
 			),
 		);

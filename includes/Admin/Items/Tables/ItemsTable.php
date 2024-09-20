@@ -58,7 +58,7 @@ class ItemsTable extends ListTable {
 			'search'      => $search,
 			'orderby'     => $order_by,
 			'order'       => $order,
-			'status'      => $this->get_request_status(),
+			'type'        => filter_input( INPUT_GET, 'type', FILTER_SANITIZE_FULL_SPECIAL_CHARS ),
 			'category_id' => filter_input( INPUT_GET, 'category_id', FILTER_VALIDATE_INT ),
 		);
 
@@ -69,7 +69,7 @@ class ItemsTable extends ListTable {
 		 *
 		 * @since 1.0.0
 		 */
-		$args                  = apply_filters( 'ever_accounting_items_table_query_args', $args );
+		$args                  = apply_filters( 'eac_items_table_query_args', $args );
 		$args['no_found_rows'] = false;
 		$this->items           = Item::results( $args );
 		$total                 = Item::count( $args );
@@ -79,58 +79,6 @@ class ItemsTable extends ListTable {
 				'per_page'    => $per_page,
 			)
 		);
-	}
-
-	/**
-	 * handle bulk activate action.
-	 *
-	 * @param array $ids List of item IDs.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	protected function bulk_activate( $ids ) {
-		$performed = 0;
-		foreach ( $ids as $id ) {
-			if ( eac_insert_item(
-				array(
-					'id'     => $id,
-					'status' => 'active',
-				)
-			) ) {
-				++ $performed;
-			}
-		}
-		if ( ! empty( $performed ) ) {
-			// translators: %s: number of items activated.
-			EAC()->flash->success( sprintf( __( '%s item(s) activated successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
-		}
-	}
-
-	/**
-	 * handle bulk deactivate action.
-	 *
-	 * @param array $ids List of item IDs.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	protected function bulk_deactivate( $ids ) {
-		$performed = 0;
-		foreach ( $ids as $id ) {
-			if ( eac_insert_item(
-				array(
-					'id'     => $id,
-					'status' => 'inactive',
-				)
-			) ) {
-				++ $performed;
-			}
-		}
-		if ( ! empty( $performed ) ) {
-			// translators: %s: number of items deactivated.
-			EAC()->flash->success( sprintf( __( '%s item(s) deactivated successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
-		}
 	}
 
 	/**
@@ -144,8 +92,8 @@ class ItemsTable extends ListTable {
 	protected function bulk_delete( $ids ) {
 		$performed = 0;
 		foreach ( $ids as $id ) {
-			if ( eac_delete_item( $id ) ) {
-				++ $performed;
+			if ( EAC()->items->delete( $id ) ) {
+				++$performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
@@ -172,28 +120,24 @@ class ItemsTable extends ListTable {
 	 * @return string[] An array of HTML links keyed by their view.
 	 */
 	protected function get_views() {
-		$current      = $this->get_request_status( 'all' );
-		$status_links = array();
-		$statuses     = array(
-			'all'      => __( 'All', 'wp-ever-accounting' ),
-			'active'   => __( 'Active', 'wp-ever-accounting' ),
-			'inactive' => __( 'Inactive', 'wp-ever-accounting' ),
-		);
+		$current     = $this->get_request_type( 'all' );
+		$types_links = array();
+		$types       = array_merge( array( 'all' => __( 'All', 'wp-ever-accounting' ) ), EAC()->items->get_types() );
 
-		foreach ( $statuses as $status => $label ) {
-			$link  = 'all' === $status ? $this->base_url : add_query_arg( 'status', $status, $this->base_url );
-			$args  = 'all' === $status ? array() : array( 'status' => $status );
+		foreach ( $types as $type => $label ) {
+			$link  = 'all' === $type ? $this->base_url : add_query_arg( 'type', $type, $this->base_url );
+			$args  = 'all' === $type ? array() : array( 'type' => $type );
 			$count = Item::count( $args );
 			$label = sprintf( '%s <span class="count">(%s)</span>', esc_html( $label ), number_format_i18n( $count ) );
 
-			$status_links[ $status ] = array(
+			$types_links[ $type ] = array(
 				'url'     => $link,
 				'label'   => $label,
-				'current' => $current === $status,
+				'current' => $current === $type,
 			);
 		}
 
-		return $this->get_views_links( $status_links );
+		return $this->get_views_links( $types_links );
 	}
 
 	/**
@@ -205,9 +149,7 @@ class ItemsTable extends ListTable {
 	 */
 	protected function get_bulk_actions() {
 		$actions = array(
-			'delete'     => __( 'Delete', 'wp-ever-accounting' ),
-			'activate'   => __( 'Activate', 'wp-ever-accounting' ),
-			'deactivate' => __( 'Deactivate', 'wp-ever-accounting' ),
+			'delete' => __( 'Delete', 'wp-ever-accounting' ),
 		);
 
 		return $actions;
@@ -248,10 +190,10 @@ class ItemsTable extends ListTable {
 		return array(
 			'cb'       => '<input type="checkbox" />',
 			'name'     => __( 'Name', 'wp-ever-accounting' ),
-			'price'    => __( 'Price', 'wp-ever-accounting' ),
 			'type'     => __( 'Type', 'wp-ever-accounting' ),
 			'category' => __( 'Category', 'wp-ever-accounting' ),
-			'status'   => __( 'Status', 'wp-ever-accounting' ),
+			'cost'     => __( 'Cost', 'wp-ever-accounting' ),
+			'price'    => __( 'Price', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -265,10 +207,10 @@ class ItemsTable extends ListTable {
 	protected function get_sortable_columns() {
 		return array(
 			'name'     => array( 'name', false ),
-			'price'    => array( 'price', false ),
 			'type'     => array( 'type', false ),
 			'category' => array( 'category_id', false ),
-			'status'   => array( 'status', true ),
+			'cost'     => array( 'cost', false ),
+			'price'    => array( 'price', false ),
 		);
 	}
 
@@ -303,7 +245,19 @@ class ItemsTable extends ListTable {
 	 * @return string Displays the name.
 	 */
 	public function column_name( $item ) {
-		return sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( ['view' => 'edit', 'id' => $item->id ], $this->base_url ) ), wp_kses_post( $item->name ) );
+		return sprintf(
+			'<a href="%s">%s</a>',
+			esc_url(
+				add_query_arg(
+					array(
+						'action' => 'edit',
+						'id'     => $item->id,
+					),
+					$this->base_url
+				)
+			),
+			wp_kses_post( $item->name )
+		);
 	}
 
 	/**
@@ -319,6 +273,18 @@ class ItemsTable extends ListTable {
 	}
 
 	/**
+	 * Renders the cost column.
+	 *
+	 * @param Item $item The current object.
+	 *
+	 * @since  1.0.0
+	 * @return string Displays the cost.
+	 */
+	public function column_cost( $item ) {
+		return esc_html( $item->formatted_cost );
+	}
+
+	/**
 	 * Renders the type column.
 	 *
 	 * @param Item $item The current object.
@@ -327,7 +293,7 @@ class ItemsTable extends ListTable {
 	 * @return string Displays the type.
 	 */
 	public function column_type( $item ) {
-		$types = eac_get_item_types();
+		$types = EAC()->items->get_types();
 
 		return isset( $types[ $item->type ] ) ? esc_html( $types[ $item->type ] ) : $item->type;
 	}
@@ -366,49 +332,18 @@ class ItemsTable extends ListTable {
 			'id'   => sprintf( '#%d', esc_attr( $item->id ) ),
 			'edit' => sprintf(
 				'<a href="%s">%s</a>',
-				esc_url( add_query_arg( [
-					'view' => 'edit',
-					'id'   => $item->id,
-				], $this->base_url ) ),
+				esc_url(
+					add_query_arg(
+						array(
+							'action' => 'edit',
+							'id'     => $item->id,
+						),
+						$this->base_url
+					)
+				),
 				__( 'Edit', 'wp-ever-accounting' )
 			),
 		);
-
-		if ( 'active' === $item->status ) {
-			$actions['deactivate'] = sprintf(
-				'<a href="%s">%s</a>',
-				esc_url(
-					wp_nonce_url(
-						add_query_arg(
-							array(
-								'action' => 'deactivate',
-								'id'     => $item->id,
-							),
-							$this->base_url
-						),
-						'bulk-' . $this->_args['plural']
-					)
-				),
-				__( 'Deactivate', 'wp-ever-accounting' )
-			);
-		} else {
-			$actions['activate'] = sprintf(
-				'<a href="%s">%s</a>',
-				esc_url(
-					wp_nonce_url(
-						add_query_arg(
-							array(
-								'action' => 'activate',
-								'id'     => $item->id,
-							),
-							$this->base_url
-						),
-						'bulk-' . $this->_args['plural']
-					)
-				),
-				__( 'Activate', 'wp-ever-accounting' )
-			);
-		}
 
 		$actions['delete'] = sprintf(
 			'<a href="%s" class="del">%s</a>',

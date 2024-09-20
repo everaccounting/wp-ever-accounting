@@ -1,6 +1,6 @@
 <?php
 /**
- * List of Items
+ * List of Payments
  *
  * @package EverAccounting
  * @version 1.0.0
@@ -9,12 +9,9 @@
 defined( 'ABSPATH' ) || exit;
 ?>
 	<h1 class="wp-heading-inline">
-		<?php esc_html_e( 'Items', 'wp-ever-accounting' ); ?>
-		<a href="<?php echo esc_attr( admin_url( 'admin.php?page=eac-items&view=add' ) ); ?>" class="button button-small">
+		<?php esc_html_e( 'Payments', 'wp-ever-accounting' ); ?>
+		<a href="<?php echo esc_attr( admin_url( 'admin.php?page=eac-sales&tab=payments&view=add' ) ); ?>" class="button button-small">
 			<?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?>
-		</a>
-		<a href="<?php echo esc_attr( admin_url( 'admin.php?page=eac-tools' ) ); ?>" class="button button-small">
-			<?php esc_html_e( 'Import', 'wp-ever-accounting' ); ?>
 		</a>
 		<?php if ( $list_table->get_request_search() ) : ?>
 			<?php // translators: %s: search query. ?>
@@ -25,7 +22,7 @@ defined( 'ABSPATH' ) || exit;
 		<?php $list_table->views(); ?>
 		<?php $list_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'search' ); ?>
 		<?php $list_table->display(); ?>
-		<input type="hidden" name="page" value="eac-items"/>
-		<input type="hidden" name="tab" value="items"/>
+		<input type="hidden" name="page" value="eac-sales"/>
+		<input type="hidden" name="tab" value="payments"/>
 	</form>
 <?php

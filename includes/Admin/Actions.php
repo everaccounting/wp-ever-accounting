@@ -69,8 +69,8 @@ class Actions {
 		);
 		switch ( $type ) {
 			case 'account':
-				$accounts = eac_get_accounts( $args );
-				$total    = eac_get_accounts( $args, true );
+				$accounts = EAC()->accounts->query( $args );
+				$total    = EAC()->accounts->query( $args, true );
 				$results  = array_map(
 					function ( $account ) {
 						return array(
@@ -82,8 +82,8 @@ class Actions {
 				);
 				break;
 			case 'item':
-				$items   = eac_get_items( $args );
-				$total   = eac_get_items( $args, true );
+				$items   = EAC()->items->query( $args );
+				$total   = EAC()->items->query( $args, true );
 				$results = array_map(
 					function ( $item ) {
 						return array(
@@ -96,8 +96,8 @@ class Actions {
 				break;
 			case 'category':
 				$args['type'] = isset( $_POST['subtype'] ) ? sanitize_text_field( wp_unslash( $_POST['subtype'] ) ) : '';
-				$categories   = eac_get_categories( $args );
-				$total        = eac_get_categories( $args, true );
+				$categories   = EAC()->categories->query( $args );
+				$total        = EAC()->categories->query( $args, true );
 				$results      = array_map(
 					function ( $category ) {
 						return array(
@@ -108,34 +108,21 @@ class Actions {
 					$categories
 				);
 				break;
-			case 'currency':
-				$currencies = eac_get_currencies( $args );
-				$total      = eac_get_currencies( $args, true );
-				$results    = array_map(
-					function ( $currency ) {
-						return array(
-							'id'   => $currency->code,
-							'text' => $currency->formatted_name,
-						);
-					},
-					$currencies
-				);
+
+			case 'payment':
+				$payments = EAC()->payments->query( $args );
+				$total    = EAC()->payments->query( $args, true );
+				foreach ( $payments as $payment ) {
+					$results[] = array(
+						'id'   => $payment->get_id(),
+						'text' => $payment->get_amount(),
+					);
+				}
 				break;
 
-			// case 'payment':
-			// $payments = eac_get_payments( $args );
-			// $total    = eac_get_payments( $args, true );
-			// foreach ( $payments as $payment ) {
-			// $results[] = array(
-			// 'id'   => $payment->get_id(),
-			// 'text' => $payment->get_amount(),
-			// );
-			// }
-			// break;
-
 			case 'expense':
-				$expenses = eac_get_expenses( $args );
-				$total    = eac_get_expenses( $args, true );
+				$expenses = EAC()->expenses->query( $args );
+				$total    = EAC()->expenses->query( $args, true );
 				foreach ( $expenses as $expense ) {
 					$results[] = array(
 						'id'   => $expense->get_id(),
@@ -145,8 +132,8 @@ class Actions {
 				break;
 
 			case 'customer':
-				$customers = eac_get_customers( $args );
-				$total     = eac_get_customers( $args, true );
+				$customers = EAC()->customers->query( $args );
+				$total     = EAC()->customers->query( $args, true );
 				$results   = array_map(
 					function ( $customer ) {
 						return array(
@@ -159,8 +146,8 @@ class Actions {
 				break;
 
 			case 'vendor':
-				$vendors = eac_get_vendors( $args );
-				$total   = eac_get_vendors( $args, true );
+				$vendors = EAC()->vendors->query( $args );
+				$total   = EAC()->vendors->query( $args, true );
 				$results = array_map(
 					function ( $vendor ) {
 						return array(
@@ -171,29 +158,29 @@ class Actions {
 					$vendors
 				);
 				break;
-			// case 'invoice':
-			// $invoices = eac_get_invoices( $args );
-			// $total    = eac_get_invoices( $args, true );
-			// foreach ( $invoices as $invoice ) {
-			// $results[] = array(
-			// 'id'   => $invoice->get_id(),
-			// 'text' => $invoice->get_formatted_name(),
-			// );
-			// }
-			// break;
-			// case 'bill':
-			// $bills = eac_get_bills( $args );
-			// $total = eac_get_bills( $args, true );
-			// foreach ( $bills as $bill ) {
-			// $results[] = array(
-			// 'id'   => $bill->get_id(),
-			// 'text' => $bill->get_bill_number(),
-			// );
-			// }
-			// break;
+			case 'invoice':
+				$invoices = EAC()->invoices->query( $args );
+				$total    = EAC()->invoices->query( $args, true );
+				foreach ( $invoices as $invoice ) {
+					$results[] = array(
+						'id'   => $invoice->get_id(),
+						'text' => $invoice->get_formatted_name(),
+					);
+				}
+				break;
+			case 'bill':
+				$bills = EAC()->bills->query( $args );
+				$total = EAC()->bills->query( $args, true );
+				foreach ( $bills as $bill ) {
+					$results[] = array(
+						'id'   => $bill->get_id(),
+						'text' => $bill->get_bill_number(),
+					);
+				}
+				break;
 			case 'tax':
-				$tax_rates = eac_get_taxes( $args );
-				$total     = eac_get_taxes( $args, true );
+				$tax_rates = EAC()->taxes->query( $args );
+				$total     = EAC()->taxes->query( $args, true );
 				$results   = array_map(
 					function ( $tax_rate ) {
 						return array(
@@ -431,8 +418,8 @@ class Actions {
 	public function ajax_convert_currency() {
 		check_ajax_referer( 'eac_currency' );
 		$amount    = isset( $_POST['amount'] ) ? floatval( wp_unslash( $_POST['amount'] ) ) : 0;
-		$from      = isset( $_POST['from'] ) ? sanitize_text_field( wp_unslash( $_POST['from'] ) ) : eac_get_base_currency();
-		$to        = isset( $_POST['to'] ) ? sanitize_text_field( wp_unslash( $_POST['to'] ) ) : eac_get_base_currency();
+		$from      = isset( $_POST['from'] ) ? sanitize_text_field( wp_unslash( $_POST['from'] ) ) : eac_base_currency();
+		$to        = isset( $_POST['to'] ) ? sanitize_text_field( wp_unslash( $_POST['to'] ) ) : eac_base_currency();
 		$converted = eac_convert_currency( $amount, $from, $to );
 		wp_send_json_success( $converted );
 		exit;
@@ -476,7 +463,7 @@ class Actions {
 		$document->due_date           = isset( $_POST['due_date'] ) ? sanitize_text_field( wp_unslash( $_POST['due_date'] ) ) : '';
 		$document->number             = isset( $_POST['number'] ) ? sanitize_text_field( wp_unslash( $_POST['number'] ) ) : '';
 		$document->reference          = isset( $_POST['reference'] ) ? sanitize_text_field( wp_unslash( $_POST['reference'] ) ) : '';
-		$document->currency_code      = isset( $_POST['currency_code'] ) ? sanitize_text_field( wp_unslash( $_POST['currency_code'] ) ) : eac_get_base_currency();
+		$document->currency_code      = isset( $_POST['currency_code'] ) ? sanitize_text_field( wp_unslash( $_POST['currency_code'] ) ) : eac_base_currency();
 		$document->billing_name       = isset( $_POST['billing_name'] ) ? sanitize_text_field( wp_unslash( $_POST['billing_name'] ) ) : '';
 		$document->vat_exempt         = isset( $_POST['vat_exempt'] ) ? sanitize_text_field( wp_unslash( $_POST['vat_exempt'] ) ) : 'no';
 		$document->billing_company    = isset( $_POST['billing_company'] ) ? sanitize_text_field( wp_unslash( $_POST['billing_company'] ) ) : '';

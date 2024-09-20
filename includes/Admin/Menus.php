@@ -2,8 +2,6 @@
 
 namespace EverAccounting\Admin;
 
-use EAccounting\Admin\Menu;
-
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -47,20 +45,12 @@ class Menus {
 	public $tab = '';
 
 	/**
-	 * Current page view.
+	 * Current action.
 	 *
 	 * @since 3.0.0
 	 * @var string
 	 */
-	public $view = '';
-
-	/**
-	 * Current page subview.
-	 *
-	 * @since 3.0.0
-	 * @var string
-	 */
-	public $subview = '';
+	public $action = '';
 
 	/**
 	 * Menus constructor.
@@ -93,20 +83,23 @@ class Menus {
 			'54.5'
 		);
 		$admin_page_hooks['ever-accounting'] = 'ever-accounting';
+
 		// register dashboard.
-		$this->register_menu( array(
-			'menu_title' => __( 'Dashboard', 'wp-ever-accounting' ),
-			'page_title' => __( 'Dashboard', 'wp-ever-accounting' ),
-			'capability' => 'manage_options',
-			'menu_slug'  => self::PARENT_SLUG,
-		) );
+		$this->register_menu(
+			array(
+				'menu_title' => __( 'Dashboard', 'wp-ever-accounting' ),
+				'page_title' => __( 'Dashboard', 'wp-ever-accounting' ),
+				'capability' => 'manage_options',
+				'menu_slug'  => self::PARENT_SLUG,
+			)
+		);
 
 		$submenus = Utilities::get_menus();
 		usort(
 			$submenus,
 			function ( $a, $b ) {
-				$a = isset( $a['position'] ) ? $a['position'] : PHP_INT_MAX;
-				$b = isset( $b['position'] ) ? $b['position'] : PHP_INT_MAX;
+				$a = isset( $a['position'] ) ? $a['position'] : 10;
+				$b = isset( $b['position'] ) ? $b['position'] : 10;
 
 				return $a - $b;
 			}
@@ -135,7 +128,7 @@ class Menus {
 				'page_title' => '',
 				'capability' => 'manage_options',
 				'menu_slug'  => '',
-				'callback'   => array( $this, 'output' )
+				'callback'   => array( $this, 'output' ),
 			)
 		);
 
@@ -154,17 +147,15 @@ class Menus {
 		}
 
 		// setup vars.
+		$actions = array( 'add', 'edit', 'view' );
 		$tab     = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_SPECIAL_CHARS );
-		$view    = filter_input( INPUT_GET, 'view', FILTER_SANITIZE_SPECIAL_CHARS );
-		$subview = filter_input( INPUT_GET, 'subview', FILTER_SANITIZE_SPECIAL_CHARS );
+		$action  = filter_input( INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS );
 		$page    = preg_replace( '/^.*?eac-/', '', $menu['menu_slug'] );
 
-
-		$this->page    = $page === self::PARENT_SLUG ? 'dashboard' : sanitize_key( $page );
-		$this->tabs    = apply_filters( 'eac_' . $this->page . '_page_tabs', array() );
-		$this->tab     = ! empty( $tab ) && array_key_exists( $tab, $this->tabs ) ? sanitize_key( $tab ) : current( array_keys( $this->tabs ) );
-		$this->view    = empty( $view ) ? 'index' : sanitize_key( $view );
-		$this->subview = empty( $subview ) ? 'index' : sanitize_key( $subview );
+		$this->page   = self::PARENT_SLUG === $page ? 'dashboard' : $page;
+		$this->tabs   = apply_filters( 'eac_' . $this->page . '_page_tabs', array() );
+		$this->tab    = ! empty( $tab ) && array_key_exists( $tab, $this->tabs ) ? sanitize_key( $tab ) : current( array_keys( $this->tabs ) );
+		$this->action = ! empty( $action ) && in_array( $action, $actions, true ) ? sanitize_key( $action ) : '';
 
 		// if the tab is not valid, redirect remove the tab query arg.
 		if ( $this->tabs && $tab && ! array_key_exists( $tab, $this->tabs ) ) {
@@ -172,60 +163,14 @@ class Menus {
 			exit;
 		}
 
-		add_action( 'load-' . $load, array( $this, 'handle_page_load' ) );
 		add_filter( 'admin_title', array( $this, 'admin_title' ) );
-	}
-
-	/**
-	 * Handle page load.
-	 *
-	 * @since 3.0.0
-	 * @return void
-	 */
-	public function handle_page_load() {
-		if ( ! empty( $this->page ) && ! empty( $this->tab ) && ! empty( $this->view ) ) {
-			/**
-			 * Fires when the page is loaded.
-			 *
-			 * @param string $subview The current subview.
-			 *
-			 * @since 3.0.0
-			 */
-			do_action( 'load_eac_' . $this->page . '_page_' . $this->tab . '_' . $this->view, $this->subview );
-		}
-
-		if ( ! empty( $this->page ) && ! empty( $this->tab ) ) {
-			/**
-			 * Fires when the page is loaded.
-			 *
-			 * @param string $view The current view.
-			 * @param string $subview The current subview.
-			 *
-			 * @since 3.0.0
-			 *
-			 */
-			do_action( 'load_eac_' . $this->page . '_page_' . $this->tab, $this->view, $this->subview );
-		}
-
-		if ( ! empty( $this->page ) ) {
-			/**
-			 * Fires when the page is loaded.
-			 *
-			 * @param string $tab The current tab.
-			 * @param string $view The current view.
-			 * @param string $subview The current subview.
-			 *
-			 * @since 3.0.0
-			 *
-			 */
-			do_action( 'load_eac_' . $this->page . '_page_', $this->tab, $this->view, $this->subview );
-		}
+		add_action( 'load-' . $load, array( $this, 'handle_page_load' ) );
 	}
 
 	/**
 	 * Set page title.
 	 *
-	 * @param string $title
+	 * @param string $title Page title.
 	 *
 	 * @since 3.0.0
 	 * @return string
@@ -236,6 +181,43 @@ class Menus {
 		}
 
 		return $title;
+	}
+
+	/**
+	 * Handle page load.
+	 *
+	 * @since 3.0.0
+	 * @return void
+	 */
+	public function handle_page_load() {
+		if ( ! empty( $this->page ) && ! empty( $this->tab ) && ! empty( $this->action ) ) {
+			/**
+			 * Fires when the page is loaded.
+			 *
+			 * @since 3.0.0
+			 */
+			do_action( 'load_eac_' . $this->page . '_page_' . $this->tab . '_' . $this->action );
+
+		} elseif ( ! empty( $this->page ) && ! empty( $this->tab ) ) {
+			/**
+			 * Fires when the page is loaded.
+			 *
+			 * @param string $action The current action.
+			 *
+			 * @since 3.0.0
+			 */
+			do_action( 'load_eac_' . $this->page . '_page_' . $this->tab, $this->action );
+		}
+
+		/**
+		 * Fires when the page is loaded.
+		 *
+		 * @param string $tab The current tab.
+		 * @param string $action The current action.
+		 *
+		 * @since 3.0.0
+		 */
+		do_action( 'load_eac_' . $this->page . '_page', $this->tab, $this->action );
 	}
 
 	/**
@@ -277,41 +259,35 @@ class Menus {
 			<?php endif; ?>
 
 			<?php
-			if ( ! empty( $this->page ) && ! empty( $this->tab ) && ! empty( $this->view ) ) {
+
+			if ( ! empty( $this->page ) && ! empty( $this->tab ) && ! empty( $this->action ) ) {
 				/**
 				 * Fires before the content on the page.
 				 *
-				 * @param string $subview The current subview.
+				 * @since 1.0.0
+				 */
+				do_action( 'eac_' . $this->page . '_page_' . $this->tab . '_' . $this->action );
+
+			} elseif ( ! empty( $this->page ) && ! empty( $this->tab ) ) {
+				/**
+				 * Fires before the content on the page.
+				 *
+				 * @param string $action The current action.
 				 *
 				 * @since 1.0.0
 				 */
-				do_action( 'eac_' . $this->page . '_page_' . $this->tab . '_' . $this->view, $this->subview );
+				do_action( 'eac_' . $this->page . '_page_' . $this->tab, $this->action );
 			}
 
-			if ( ! empty( $this->page ) && ! empty( $this->tab ) ) {
-				/**
-				 * Fires before the content on the page.
-				 *
-				 * @param string $view The current view.
-				 * @param string $subview The current subview.
-				 *
-				 * @since 1.0.0
-				 */
-				do_action( 'eac_' . $this->page . '_page_' . $this->tab, $this->view, $this->subview );
-			}
-
-			if ( ! empty( $this->page ) ) {
-				/**
-				 * Fires before the content on the page.
-				 *
-				 * @param string $tab The current tab.
-				 * @param string $view The current view.
-				 * @param string $subview The current subview.
-				 *
-				 * @since 1.0.0
-				 */
-				do_action( 'eac_' . $this->page . '_page', $this->tab, $this->view, $this->subview );
-			}
+			/**
+			 * Fires before the content on the page.
+			 *
+			 * @param string $tab The current tab.
+			 * @param string $action The current action.
+			 *
+			 * @since 1.0.0
+			 */
+			do_action( 'eac_' . $this->page . '_page', $this->tab, $this->action );
 			?>
 		</div>
 		<?php

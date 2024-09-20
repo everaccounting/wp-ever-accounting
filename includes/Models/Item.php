@@ -70,8 +70,8 @@ class Item extends Model {
 	 * @var array
 	 */
 	protected $attributes = array(
-		'type'    => 'standard',
-		'status'  => 'active',
+		'type'   => 'standard',
+		'status' => 'active',
 	);
 
 	/**
@@ -121,71 +121,6 @@ class Item extends Model {
 
 	/*
 	|--------------------------------------------------------------------------
-	| Prop Definition Methods
-	|--------------------------------------------------------------------------
-	| This section contains methods that define and provide specific prop values
-	| related to the model, such as statuses or types. These methods can be accessed
-	| without instantiating the model.
-	|--------------------------------------------------------------------------
-	*/
-
-	/**
-	 * Get item types.
-	 *
-	 * @return array
-	 * @since 1.1.6
-	 */
-	public static function get_types() {
-		return apply_filters(
-			'ever_accounting_item_types',
-			array(
-				'standard' => __( 'Standard Item', 'wp-ever-accounting' ),
-				'shipping' => __( 'Shipping Fee', 'wp-ever-accounting' ),
-				'fee'      => __( 'Fee Item', 'wp-ever-accounting' ),
-			)
-		);
-	}
-
-	/**
-	 * Get item units
-	 *
-	 * @return array
-	 * @since 1.1.6
-	 */
-	public static function get_units() {
-		return apply_filters(
-			'ever_accounting_units',
-			array(
-				'box'   => __( 'Box', 'wp-ever-accounting' ),
-				'cm'    => __( 'Centimeter', 'wp-ever-accounting' ),
-				'day'   => __( 'Day', 'wp-ever-accounting' ),
-				'doz'   => __( 'Dozen', 'wp-ever-accounting' ),
-				'ft'    => __( 'Feet', 'wp-ever-accounting' ),
-				'gm'    => __( 'Gram', 'wp-ever-accounting' ),
-				'hr'    => __( 'Hour', 'wp-ever-accounting' ),
-				'inch'  => __( 'Inch', 'wp-ever-accounting' ),
-				'kg'    => __( 'Kilogram', 'wp-ever-accounting' ),
-				'km'    => __( 'Kilometer', 'wp-ever-accounting' ),
-				'l'     => __( 'Liter', 'wp-ever-accounting' ),
-				'lb'    => __( 'Pound', 'wp-ever-accounting' ),
-				'm'     => __( 'Meter', 'wp-ever-accounting' ),
-				'mg'    => __( 'Milligram', 'wp-ever-accounting' ),
-				'mile'  => __( 'Mile', 'wp-ever-accounting' ),
-				'min'   => __( 'Minute', 'wp-ever-accounting' ),
-				'mm'    => __( 'Millimeter', 'wp-ever-accounting' ),
-				'month' => __( 'Month', 'wp-ever-accounting' ),
-				'oz'    => __( 'Ounce', 'wp-ever-accounting' ),
-				'pc'    => __( 'Piece', 'wp-ever-accounting' ),
-				'sec'   => __( 'Second', 'wp-ever-accounting' ),
-				'unit'  => __( 'Unit', 'wp-ever-accounting' ),
-				'week'  => __( 'Week', 'wp-ever-accounting' ),
-				'year'  => __( 'Year', 'wp-ever-accounting' ),
-			)
-		);
-	}
-
-	/*
-	|--------------------------------------------------------------------------
 	| Accessors, Mutators, Relationship and Validation Methods
 	|--------------------------------------------------------------------------
 	| This section contains methods for getting and setting properties (accessors
@@ -203,7 +138,7 @@ class Item extends Model {
 	 * @return void
 	 */
 	public function set_item_type( $value ) {
-		$this->attributes['type'] = array_key_exists( $value, self::get_types() ) ? $value : 'standard';
+		$this->attributes['type'] = array_key_exists( $value, EAC()->items->get_types() ) ? $value : 'standard';
 	}
 
 	/**

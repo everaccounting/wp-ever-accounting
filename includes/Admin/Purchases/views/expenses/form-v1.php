@@ -54,7 +54,7 @@ defined( 'ABSPATH' ) || exit;
 							array(
 								'label'            => esc_html__( 'Currency', 'wp-ever-accounting' ),
 								'name'             => 'currency_code',
-								'default'          => eac_get_base_currency(),
+								'default'          => eac_base_currency(),
 								'value'            => $expense->currency_code,
 								'type'             => 'select',
 								'options'          => eac_get_currencies(),
@@ -82,8 +82,8 @@ defined( 'ABSPATH' ) || exit;
 								'tooltip'       => __( 'Enter the exchange rate for the selected currency.', 'wp-ever-accounting' ),
 								'required'      => true,
 								'prefix'        => "1 $expense->currency_code = ",
-								'suffix'        => eac_get_base_currency(),
-//								'wrapper_style' => eac_get_base_currency() === $expense->currency_code ? 'display: none;' : '',
+								'suffix'        => eac_base_currency(),
+//								'wrapper_style' => eac_base_currency() === $expense->currency_code ? 'display: none;' : '',
 							)
 						);
 

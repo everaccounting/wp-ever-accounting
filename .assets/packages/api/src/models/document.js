@@ -63,6 +63,9 @@ export default Base.extend({
 			discount_type = this.get('discount_type') || 'fixed',
 			discount_value = parseFloat(this.get('discount_value'), 10) || 0;
 
+		console.log('discount_type:', discount_type);
+		console.log('discount_value:', discount_value);
+
 		// Prepare items for calculation
 		_.each(this.get('items').models, (item) => {
 			const _price = parseFloat(item.get('price'), 10) || 0;
@@ -73,6 +76,7 @@ export default Base.extend({
 			if (_type === 'standard') {
 				items_total += _subtotal;
 			}
+
 			item.set({
 				price: _price,
 				quantity: _quantity,
@@ -92,17 +96,23 @@ export default Base.extend({
 				_discount = _type === 'standard' ? (discount / items_total) * _subtotal : 0,
 				_disc_subtotal = Math.max(_subtotal - _discount, 0);
 
-			  // Simple tax calculation.
-			 _.each(item.get('taxes').models, (tax) => {
+			console.log('type:', _type);
+			console.log('discount:', _discount);
+
+			// Simple tax calculation.
+			_.each(item.get('taxes').models, (tax) => {
 				const _tax_rate = parseFloat(tax.get('rate'), 10) || 0;
-				const _tax_amount = ! tax.get('compound') ? _disc_subtotal * (_tax_rate / 100) : 0;
+				const _tax_amount = !tax.get('compound') ? _disc_subtotal * (_tax_rate / 100) : 0;
 				tax.set({
 					rate: _tax_rate,
 					amount: _tax_amount,
 				});
-			 });
+			});
 
-			 const _prev_tax =  _.reduce(item.get('taxes').models, (sum, tax) => { return sum + tax.get('amount') }, 0);
+			const _prev_tax = _.reduce(item.get('taxes').models, (sum, tax) => {
+				return sum + tax.get('amount')
+			}, 0);
+
 			_.each(item.get('taxes').where({compound: true}), (tax) => {
 				const _tax_rate = parseFloat(tax.get('rate'), 10) || 0;
 				const _tax_amount = (_disc_subtotal + _prev_tax) * (_tax_rate / 100);
@@ -111,7 +121,10 @@ export default Base.extend({
 					amount: _tax_amount,
 				});
 			});
-			const _tax_total = _.reduce(item.get('taxes').models, (sum, tax) => { return sum + tax.get('amount') }, 0);
+
+			const _tax_total = _.reduce(item.get('taxes').models, (sum, tax) => {
+				return sum + tax.get('amount')
+			}, 0);
 
 			item.set({
 				discount: _discount,

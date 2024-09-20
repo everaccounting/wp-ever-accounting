@@ -239,12 +239,12 @@ class CurrenciesTable extends ListTable {
 	 */
 	public function get_columns() {
 		return array(
-			'cb'            => '<input type="checkbox" />',
-			'name'          => __( 'Name', 'wp-ever-accounting' ),
-			'code'          => __( 'Code', 'wp-ever-accounting' ),
-			'symbol'        => __( 'Symbol', 'wp-ever-accounting' ),
-			'exchange_rate' => __( 'Exchange Rate', 'wp-ever-accounting' ),
-			'status'        => __( 'Status', 'wp-ever-accounting' ),
+			'cb'     => '<input type="checkbox" />',
+			'name'   => __( 'Name', 'wp-ever-accounting' ),
+			'code'   => __( 'Code', 'wp-ever-accounting' ),
+			'symbol' => __( 'Symbol', 'wp-ever-accounting' ),
+			'rate'   => __( 'Rate', 'wp-ever-accounting' ),
+			'status' => __( 'Status', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -257,11 +257,11 @@ class CurrenciesTable extends ListTable {
 	 */
 	protected function get_sortable_columns() {
 		return array(
-			'name'          => array( 'name', true ),
-			'code'          => array( 'code', true ),
-			'symbol'        => array( 'symbol', true ),
-			'exchange_rate' => array( 'exchange_rate', true ),
-			'status'        => array( 'status', true ),
+			'name'   => array( 'name', true ),
+			'code'   => array( 'code', true ),
+			'symbol' => array( 'symbol', true ),
+			'rate'   => array( 'rate', true ),
+			'status' => array( 'status', true ),
 		);
 	}
 
@@ -296,7 +296,7 @@ class CurrenciesTable extends ListTable {
 	 * @return string Displays the name.
 	 */
 	public function column_name( $item ) {
-		return sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( ['view' => 'edit', 'id' => $item->id ], $this->base_url ) ), wp_kses_post( $item->name ) );
+		return sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( [ 'view' => 'edit', 'id' => $item->id ], $this->base_url ) ), wp_kses_post( $item->name ) );
 	}
 
 	/**

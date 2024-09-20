@@ -35,16 +35,18 @@ class Scripts {
 		EAC()->scripts->register_script( 'eac-accounting', 'js/accounting.js', array( 'jquery' ), true );
 
 		// Packages.
+		EAC()->scripts->register_script( 'eac-money', 'packages/money.js' );
 		EAC()->scripts->register_script( 'eac-api', 'packages/api.js', array( 'wp-api', 'wp-backbone', 'underscore', 'jquery' ), true );
 		EAC()->scripts->register_script( 'eac-components', 'packages/components.js', array( 'wp-backbone', 'underscore', 'jquery', 'eac-blockui' ), true );
 
 		// Plugin scripts.
 		EAC()->scripts->register_script( 'eac-admin', 'js/eac-admin.js', array( 'jquery', 'eac-api', 'eac-chartjs', 'eac-inputmask', 'eac-select2', 'eac-tiptip', 'jquery-ui-datepicker', 'jquery-ui-tooltip', 'wp-util' ), true );
-		EAC()->scripts->register_script( 'eac-purchases', 'js/eac-purchases.js', array( 'eac-api', 'eac-components' ), true );
+		EAC()->scripts->register_script( 'eac-sales', 'js/eac-sales.js', array( 'eac-api', 'eac-money' ), true );
+		EAC()->scripts->register_script( 'eac-purchases', 'js/eac-purchases.js', array( 'eac-api', 'eac-money' ), true );
 		EAC()->scripts->register_script( 'eac-settings', 'js/eac-settings.js', array( 'eac-admin' ), true );
 
 		EAC()->scripts->register_style( 'eac-jquery-ui', 'css/jquery-ui.css' );
-		EAC()->scripts->register_style( 'eac-admin', 'css/eac-admin.css', array( 'eac-jquery-ui', 'wp-jquery-ui-dialog' ) );
+		EAC()->scripts->register_style( 'eac-admin', 'css/eac-admin.css', array( 'eac-jquery-ui' ) );
 		EAC()->scripts->register_style( 'eac-settings', 'css/eac-settings.css', array( 'eac-admin' ) );
 	}
 
@@ -69,25 +71,11 @@ class Scripts {
 			'eac-admin',
 			'eac_admin_vars',
 			array(
-				'ajax_url'       => admin_url( 'admin-ajax.php' ),
-				'currency_code'  => EAC()->currencies->get_code(),
-				'currency_sym'   => EAC()->currencies->get_symbol(),
-				'currency_pos'   => EAC()->currencies->get_position(),
-				'currency_sep'   => EAC()->currencies->get_thousands_separator(),
-				'currency_dec'   => EAC()->currencies->get_decimal_separator(),
-				'currency_sub'   => EAC()->currencies->get_subunit(),
-				'search_nonce'   => wp_create_nonce( 'eac_search_action' ),
-				'currency_nonce' => wp_create_nonce( 'eac_currency' ),
-				'account_nonce'  => wp_create_nonce( 'eac_account' ),
-				'item_nonce'     => wp_create_nonce( 'eac_item' ),
-				'customer_nonce' => wp_create_nonce( 'eac_customer' ),
-				'vendor_nonce'   => wp_create_nonce( 'eac_vendor' ),
-				'payment_nonce'  => wp_create_nonce( 'eac_payment' ),
-				'expense_nonce'  => wp_create_nonce( 'eac_expense' ),
-				'invoice_nonce'  => wp_create_nonce( 'eac_invoice' ),
-				'purchase_nonce' => wp_create_nonce( 'eac_purchase' ),
-
-				'i18n' => array(
+				'ajax_url'      => admin_url( 'admin-ajax.php' ),
+				'base_currency' => eac_base_currency(),
+				'currencies'    => eac_get_currencies(),
+				'search_nonce'  => wp_create_nonce( 'eac_search_action' ),
+				'i18n'          => array(
 					'confirm_delete' => __( 'Are you sure you want to delete this item?', 'wp-ever-accounting' ),
 					'close'          => __( 'Close', 'wp-ever-accounting' ),
 				),

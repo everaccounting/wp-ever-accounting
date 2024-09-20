@@ -124,7 +124,7 @@ wp_localize_script( 'eac-bill-form', 'eac_bill_form_vars', $data );
 				array(
 					'label'            => esc_html__( 'Currency', 'wp-ever-accounting' ),
 					'name'             => 'currency_code',
-					'default'          => eac_get_base_currency(),
+					'default'          => eac_base_currency(),
 					'value'            => $document->currency_code,
 					'type'             => 'select',
 					'options'          => eac_get_currencies(),

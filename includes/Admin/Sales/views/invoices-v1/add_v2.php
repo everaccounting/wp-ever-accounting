@@ -27,7 +27,7 @@ defined( 'ABSPATH' ) || exit;
 					'type'             => 'select',
 					'id'               => 'currency_code',
 					'value'            => $document->currency_code,
-					'default'          => eac_get_base_currency(),
+					'default'          => eac_base_currency(),
 					'class'            => 'eac_select2',
 					'options'          => array( $document->currency ),
 					'option_value'     => 'code',

@@ -509,7 +509,7 @@ class Accounts extends Controller {
 					'type'        => 'string',
 					'context'     => array( 'view', 'edit' ),
 					'required'    => true,
-					'default'     => eac_get_base_currency(),
+					'default'     => eac_base_currency(),
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
