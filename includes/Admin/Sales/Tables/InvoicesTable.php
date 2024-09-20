@@ -123,7 +123,7 @@ class InvoicesTable extends ListTable {
 	protected function get_views() {
 		$current      = $this->get_request_status( 'all' );
 		$status_links = array();
-		$statuses     = eac_get_invoice_statuses();
+		$statuses     = EAC()->invoices->get_statuses();
 
 		foreach ( $statuses as $status => $label ) {
 			$link  = 'all' === $status ? $this->base_url : add_query_arg( 'status', $status, $this->base_url );

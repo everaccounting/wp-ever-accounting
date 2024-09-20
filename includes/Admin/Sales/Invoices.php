@@ -17,12 +17,13 @@ class Invoices {
 	 * Invoices constructor.
 	 */
 	public function __construct() {
-		add_filter( 'eac_sales_page_tabs', array( $this, 'register_tabs' ) );
-		add_action( 'load_eac_sales_page_invoices_index', array( $this, 'setup_table' ) );
-		add_action( 'eac_sales_page_invoices_index', array( $this, 'render_table' ) );
-		add_action( 'eac_sales_page_invoices_add', array( $this, 'render_add' ) );
-		add_action( 'eac_sales_page_invoices_edit', array( $this, 'render_edit' ) );
-		add_action( 'admin_post_eac_edit_invoice', array( $this, 'handle_edit' ) );
+		add_filter( 'eac_sales_page_tabs', array( __CLASS__, 'register_tabs' ) );
+		add_action( 'load_eac_sales_page_invoices', array( __CLASS__, 'setup_table' ) );
+		add_filter( 'set-screen-option', array( __CLASS__, 'set_screen_option' ), 10, 3 );
+		add_action( 'eac_sales_page_invoices', array( __CLASS__, 'render_table' ) );
+		add_action( 'eac_sales_page_invoices_add', array( __CLASS__, 'render_add' ) );
+		add_action( 'eac_sales_page_invoices_edit', array( __CLASS__, 'render_edit' ) );
+		add_action( 'admin_post_eac_edit_invoice', array( __CLASS__, 'handle_edit' ) );
 	}
 
 	/**
@@ -33,7 +34,7 @@ class Invoices {
 	 * @since 1.0.0
 	 * @return array
 	 */
-	public function register_tabs( $tabs ) {
+	public static function register_tabs( $tabs ) {
 		$tabs['invoices'] = __( 'Invoices', 'wp-ever-accounting' );
 
 		return $tabs;
@@ -58,6 +59,25 @@ class Invoices {
 	}
 
 	/**
+	 * Set screen option.
+	 *
+	 * @param mixed  $status Status.
+	 * @param string $option Option.
+	 * @param mixed  $value Value.
+	 *
+	 * @since 3.0.0
+	 * @return mixed
+	 */
+	public static function set_screen_option( $status, $option, $value ) {
+		global $list_table;
+		if ( "eac_{$list_table->_args['plural']}_per_page" === $option ) {
+			return $value;
+		}
+
+		return $status;
+	}
+
+	/**
 	 * Render table.
 	 *
 	 * @since 3.0.0
@@ -65,7 +85,7 @@ class Invoices {
 	 */
 	public static function render_table() {
 		global $list_table;
-		include __DIR__ . '/views/invoices/table.php';
+		include __DIR__ . '/views/invoices-list.php';
 	}
 
 	/**
@@ -75,8 +95,7 @@ class Invoices {
 	 * @return void
 	 */
 	public static function render_add() {
-		$document = new Invoice();
-		include __DIR__ . '/views/invoices/add.php';
+		include __DIR__ . '/views/invoice-add.php';
 	}
 
 	/**
@@ -86,6 +105,6 @@ class Invoices {
 	 * @return void
 	 */
 	public static function render_edit() {
-
+		include __DIR__ . '/views/invoice-edit.php';
 	}
 }

@@ -74,4 +74,40 @@ class Invoices {
 
 		return Invoice::results( $args );
 	}
+
+	/**
+	 * Get invoice statuses.
+	 *
+	 * @return mixed|void
+	 */
+	public function get_statuses() {
+		$statuses = array(
+			'draft'     => esc_html__( 'Draft', 'wp-ever-accounting' ),
+			'sent'      => esc_html__( 'Sent', 'wp-ever-accounting' ),
+			'partial'   => esc_html__( 'Partial', 'wp-ever-accounting' ),
+			'paid'      => esc_html__( 'Paid', 'wp-ever-accounting' ),
+			'overdue'   => esc_html__( 'Overdue', 'wp-ever-accounting' ),
+			'cancelled' => esc_html__( 'Cancelled', 'wp-ever-accounting' ),
+		);
+
+		return apply_filters( 'eac_invoice_statuses', $statuses );
+	}
+
+	/**
+	 * Get invoice columns.
+	 *
+	 * @since 1.1.0
+	 * @return array
+	 */
+	public function get_columns() {
+		$columns = array(
+			'item'     => get_option( 'eac_invoice_col_item_label', esc_html__( 'Item', 'wp-ever-accounting' ) ),
+			'price'    => get_option( 'eac_invoice_col_price_label', esc_html__( 'Price', 'wp-ever-accounting' ) ),
+			'quantity' => get_option( 'eac_invoice_col_quantity_label', esc_html__( 'Quantity', 'wp-ever-accounting' ) ),
+			'tax'      => get_option( 'eac_invoice_col_tax_label', esc_html__( 'Tax', 'wp-ever-accounting' ) ),
+			'subtotal' => get_option( 'eac_invoice_col_subtotal_label', esc_html__( 'Subtotal', 'wp-ever-accounting' ) ),
+		);
+
+		return apply_filters( 'eac_invoice_columns', $columns );
+	}
 }

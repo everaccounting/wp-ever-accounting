@@ -31,6 +31,10 @@ module.exports = [
 				'./node_modules/jquery-ui/themes/base/tooltip.css',
 			],
 
+			// Admin scripts.
+			'js/eac-admin-taxes': './.assets/js/admin-taxes.js',
+			'js/eac-admin-currencies': './.assets/js/admin-currencies.js',
+
 			// Plugin scripts.
 			'js/eac-admin': './.assets/js/admin/admin.js',
 			'js/eac-sales': './.assets/js/admin/sales.js',

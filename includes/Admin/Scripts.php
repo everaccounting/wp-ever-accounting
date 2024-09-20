@@ -41,6 +41,10 @@ class Scripts {
 
 		// Plugin scripts.
 		EAC()->scripts->register_script( 'eac-admin', 'js/eac-admin.js', array( 'jquery', 'eac-api', 'eac-chartjs', 'eac-inputmask', 'eac-select2', 'eac-tiptip', 'jquery-ui-datepicker', 'jquery-ui-tooltip', 'wp-util' ), true );
+
+		EAC()->scripts->register_script( 'eac-admin-taxes', 'js/eac-admin-taxes.js', array( 'eac-admin' ), true );
+		EAC()->scripts->register_script( 'eac-admin-currencies', 'js/eac-admin-currencies.js', array( 'eac-admin' ), true );
+
 		EAC()->scripts->register_script( 'eac-sales', 'js/eac-sales.js', array( 'eac-api', 'eac-money' ), true );
 		EAC()->scripts->register_script( 'eac-purchases', 'js/eac-purchases.js', array( 'eac-api', 'eac-money' ), true );
 		EAC()->scripts->register_script( 'eac-settings', 'js/eac-settings.js', array( 'eac-admin' ), true );
@@ -95,6 +99,7 @@ class Scripts {
 		// if settings page.
 		if ( 'ever-accounting_page_eac-settings' === $hook ) {
 			EAC()->scripts->enqueue_script( 'eac-settings' );
+			EAC()->scripts->enqueue_script( 'eac-admin-currencies' );
 			EAC()->scripts->enqueue_style( 'eac-settings' );
 		}
 

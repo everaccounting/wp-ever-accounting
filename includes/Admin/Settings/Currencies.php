@@ -24,8 +24,9 @@ class Currencies extends Page {
 	 * Output the HTML for the settings.
 	 */
 	public function output() {
+		wp_add_inline_script( 'eac-admin-currencies', 'var eac_admin_currencies_vars = ' . json_encode( [] ) . ';', 'after' );
 		?>
-		<table class="widefat" style="margin-top: 20px;">
+		<table id="eac-admin-currencies" class="widefat fixed" style="margin-top: 20px;">
 			<thead>
 			<tr>
 				<td width="10%"><?php esc_html_e( 'Currency', 'wp-ever-accounting' ); ?></td>
@@ -45,6 +46,9 @@ class Currencies extends Page {
 							</option>
 						<?php endforeach; ?>
 					</select>
+					<button class="button button-secondary add-currency" type="button">
+						<?php esc_html_e( 'Add Currency', 'wp-ever-accounting' ); ?>
+					</button>
 				</td>
 			</tr>
 			</tfoot>
@@ -81,6 +85,23 @@ class Currencies extends Page {
 		<script type="text/html" id="tmpl-eac-currency-table-empty">
 			<tr>
 				<th colspan="5" style="text-align: center;"><?php esc_html_e( 'No currencies found.', 'wp-ever-accounting' ); ?></th>
+			</tr>
+		</script>
+
+		<script type="text/html" id="tmpl-eac-currency-table-actions">
+			<tr>
+				<td colspan="5">
+					<select name="" id="" class="add-currency">
+						<?php foreach ( eac_get_currencies() as $currency ) : ?>
+							<option value="<?php echo esc_attr( $currency['code'] ); ?>">
+								<?php echo esc_html( $currency['name'] ); ?>
+							</option>
+						<?php endforeach; ?>
+					</select>
+					<button class="button button-secondary add-currency" type="button">
+						<?php esc_html_e( 'Add Currency', 'wp-ever-accounting' ); ?>
+					</button>
+				</td>
 			</tr>
 		</script>
 

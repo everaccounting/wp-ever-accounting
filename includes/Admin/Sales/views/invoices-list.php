@@ -10,7 +10,7 @@ defined( 'ABSPATH' ) || exit;
 ?>
 	<h1 class="wp-heading-inline">
 		<?php esc_html_e( 'Invoices', 'wp-ever-accounting' ); ?>
-		<a href="<?php echo esc_attr( admin_url( 'admin.php?page=eac-sales&tab=invoices&view=add' ) ); ?>" class="button button-small">
+		<a href="<?php echo esc_attr( admin_url( 'admin.php?page=eac-sales&tab=invoices&action=add' ) ); ?>" class="button button-small">
 			<?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?>
 		</a>
 		<?php if ( $list_table->get_request_search() ) : ?>
