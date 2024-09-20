@@ -64,6 +64,7 @@ class Settings {
 			$tabs[] = new Taxes();
 			$tabs[] = new Sales();
 			$tabs[] = new Purchases();
+			$tabs[] = new Currencies();
 
 			self::$tabs = apply_filters( 'eac_get_settings_tabs', $tabs );
 		}
