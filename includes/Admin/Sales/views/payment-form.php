@@ -235,13 +235,7 @@ defined( 'ABSPATH' ) || exit;
 			</div><!-- .eac-card -->
 
 			<div class="eac-card">
-				<?php
-				eac_file_uploader(
-					array(
-						'value' => 65,
-					)
-				)
-				?>
+				<?php eac_file_uploader( array( 'value' => $payment->attachment_id ) ); ?>
 			</div>
 
 

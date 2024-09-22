@@ -1,23 +1,18 @@
 (function (document, wp, $) {
 	'use strict';
+	var list, editor, viewer;
 
-	const invoices = { collection:{}, model:{}, view:{} }
 
-	invoices.model.InvoiceItem = wp.Backbone.Model.extend({
-		defaults: {
-			id: 0,
-			name: '',
-			description: '',
-			quantity: 0,
-			price: 0,
-			total: 0,
+	editor.view.Frame = wp.Backbone.View.extend({
+		className: 'media-frame wp-core-ui',
+		frame: function () {
+			return {
+				toolbar: 'main',
+				menu: 'default',
+				content: this.options.content,
+				footer: 'main'
+			};
 		},
 	});
-
-	invoices.collection.InvoiceItems = wp.Backbone.Collection.extend({
-		model: invoices.model.InvoiceItem,
-	});
-
-
 
 }(document, wp, jQuery));

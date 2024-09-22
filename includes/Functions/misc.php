@@ -101,7 +101,7 @@ function eac_form_field( $field ) {
 			$field['placeholder'] = ! empty( $field['placeholder'] ) ? $field['placeholder'] : '';
 			if ( ! empty( $field['multiple'] ) ) {
 				$field['name'] .= '[]';
-				$attrs[]       = 'multiple="multiple"';
+				$attrs[]        = 'multiple="multiple"';
 			}
 
 			// It may send an option_key and option_value to use in the options.
@@ -228,8 +228,8 @@ function eac_form_field( $field ) {
 
 				$post = get_post( $field['value'] );
 				if ( $post && 'attachment' === $post->post_type ) {
-					$meta           = wp_get_attachment_metadata( $post->ID );
-					$attached_file  = get_attached_file( $post->ID );
+					$meta            = wp_get_attachment_metadata( $post->ID );
+					$attached_file   = get_attached_file( $post->ID );
 					$field['class'] .= ' has--file';
 					// update.
 					$file['icon']     = wp_mime_type_icon( $post->ID );
@@ -329,43 +329,44 @@ function eac_file_uploader( $field ) {
 			'name'         => 'attachment_id',
 			'button_label' => __( 'Upload attachment', 'wp-ever-accounting' ),
 			'mime_types'   => '',
+			'icon_url'     => '',
+			'title'        => '',
+			'src'          => '',
+			'url'          => '',
+			'filezise'     => '',
 		)
 	);
-	$data  = array(
-		'icon_url' => '',
-		'title'    => '',
-		'src'      => '',
-		'url'      => '',
-	);
-	$value = isset( $field['value'] ) ? absint( $field['value'] ) : 0;
-	$post  = 'attachment' === get_post_type( $value );
-//	// get type of the attachment.
-//	$type = $post ? get_post_mime_type( $value ) : '';
-//
-//	$attachment = array(
-//		'icon_url' => $post ? wp_mime_type_icon( $value ) : '',
-//		'title'    => $post ? get_the_title( $value ) : '',
-//		'src'      => $post ? wp_mime_type_icon( $attachment->ID, '.svg' ) : '',
-//		'url'      => $post ? wp_get_attachment_url( $value ) : '',
-//		'filezise' => $post ? size_format( filesize( get_attached_file( $value ) ) ) : '',
-//	);
+	$post  = get_post( $field['value'] );
+	if ( $post && 'attachment' === $post->post_type ) {
+		$meta              = wp_get_attachment_metadata( $post->ID );
+		$attached_file     = get_attached_file( $post->ID );
+		$field['title']    = get_the_title( $post->ID );
+		$field['url']      = wp_get_attachment_url( $post->ID );
+		$field['filezise'] = size_format( $meta['filesize'] );
 
-	$has_file_class = ! empty( $post ) ? ' has--file' : '';
+		// if the file is an image set the icon to the thumbnail otherwise use the mime type icon.
+		if ( wp_attachment_is_image( $post->ID ) ) {
+			$field['icon_url'] = wp_get_attachment_image_url( $post->ID, 'thumbnail' );
+		} else {
+			$field['icon_url'] = wp_mime_type_icon( $post->ID );
+		}
+	}
+	$has_file_class = ! empty( $field['value'] ) ? ' has--file' : '';
 	?>
 	<div class="eac-file-upload <?php echo esc_attr( $has_file_class ); ?>">
 		<div class="eac-file-upload__dropzone">
 			<button class="eac-file-upload__button" type="button"><?php echo esc_html( $field['button_label'] ); ?></button>
-			<input class="eac-file-upload__value" type="hidden" name="<?php echo esc_attr( $field['name'] ); ?>" value="<?php echo esc_attr( $value ); ?>">
+			<input class="eac-file-upload__value" type="hidden" name="<?php echo esc_attr( $field['name'] ); ?>" value="<?php echo esc_attr( $field['value'] ); ?>">
 		</div>
 		<div class="eac-file-upload__preview">
 			<div class="eac-file-upload__icon">
-				<img src="<?php echo esc_url( $attachment['icon_url'] ); ?>" alt="<?php echo esc_attr( $attachment['title'] ); ?>">
+				<img src="<?php echo esc_url( $field['icon_url'] ); ?>" alt="<?php echo esc_attr( $field['title'] ); ?>">
 			</div>
 			<div class="eac-file-upload__info">
 				<div class="eac-file-upload__name">
-					<a target="_blank" href="<?php echo esc_url( $attachment['url'] ); ?>"><?php echo esc_html( $attachment['title'] ); ?></a>
+					<a target="_blank" href="<?php echo esc_url( $field['url'] ); ?>"><?php echo esc_html( $field['title'] ); ?></a>
 				</div>
-				<div class="eac-file-upload__size"><?php echo esc_html( $attachment['filezise'] ); ?></div>
+				<div class="eac-file-upload__size"><?php echo esc_html( $field['filezise'] ); ?></div>
 			</div>
 			<div class="eac-file-upload__action">
 				<a href="#" class="eac-file-upload__remove"><span class="dashicons dashicons-trash"></span></a>

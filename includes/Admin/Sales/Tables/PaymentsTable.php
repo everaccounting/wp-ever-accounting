@@ -97,7 +97,7 @@ class PaymentsTable extends ListTable {
 	protected function bulk_delete( $ids ) {
 		$performed = 0;
 		foreach ( $ids as $id ) {
-			if ( eac_delete_payment( $id ) ) {
+			if ( EAC()->payments->delete( $id ) ) {
 				++$performed;
 			}
 		}
