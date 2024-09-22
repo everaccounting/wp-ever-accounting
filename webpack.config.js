@@ -14,32 +14,36 @@ module.exports = [
 			...defaults.entry(),
 
 			// 3rd party libraries.
-			'js/chartjs': './node_modules/chart.js/dist/chart.js',
-			'js/select2': [
-				'./node_modules/select-woo/dist/js/selectWoo.js',
-				'./node_modules/select2/dist/js/select2.full.js',
-			],
-			'js/inputmask': [
-				'./.assets/libraries/inputmask/inputmask.js',
-				'./.assets/libraries/inputmask/inputmask.binding.js',
-			],
-			'js/tiptip': './.assets/libraries/tiptip/tiptip.js',
-			'js/blockui': './.assets/libraries/blockui/blockUI.js',
-			'css/jquery-ui': [
-				'./node_modules/jquery-ui/themes/base/theme.css',
-				'./node_modules/jquery-ui/themes/base/datepicker.css',
-				'./node_modules/jquery-ui/themes/base/tooltip.css',
-			],
+			'js/chartjs': './.assets/vendors/js/chartjs.js',
+			'js/select2': './.assets/vendors/js/select2.js',
+			'js/inputmask': './.assets/vendors/js/inputmask.js',
+			'js/tiptip': './.assets/vendors/js/tiptip.js',
+			'js/blockui': './.assets/vendors/js/blockui.js',
+			'css/jquery-ui': './.assets/css/jquery-ui.scss',
+
+			// Core plugins.
+			'js/eac-api': './.assets/js/eac-api.js',
+			'js/eac-form': './.assets/js/eac-form.js',
+			'js/eac-modal': './.assets/js/eac-modal.js',
+			'js/eac-money': './.assets/js/eac-money.js',
 
 			// Admin scripts.
-			'js/eac-admin-taxes': './.assets/js/admin-taxes.js',
-			'js/eac-admin-currencies': './.assets/js/admin-currencies.js',
+			'js/admin': './.assets/js/admin.js',
+			'js/admin-accounts': './.assets/js/admin-accounts.js',
+			'js/admin-currencies': './.assets/js/admin-currencies.js',
+			'js/admin-customers': './.assets/js/admin-customers.js',
+			'js/admin-dashboard': './.assets/js/admin-dashboard.js',
+			'js/admin-expenses': './.assets/js/admin-expenses.js',
+			'js/admin-invoices': './.assets/js/admin-invoices.js',
+			'js/admin-payments': './.assets/js/admin-payments.js',
+			'js/admin-settings': './.assets/js/admin-settings.js',
+			'js/admin-transfers': './.assets/js/admin-transfers.js',
+			'js/admin-vendors': './.assets/js/admin-vendors.js',
+			'js/admin-reports': './.assets/js/admin-reports.js',
+			'css/admin': './.assets/css/admin.scss',
 
-			// Plugin scripts.
-			'js/eac-admin': './.assets/js/admin/admin.js',
-			'js/eac-sales': './.assets/js/admin/sales.js',
-			'js/eac-purchases': './.assets/js/admin/purchases.js',
-			'css/eac-admin': './.assets/css/admin/admin.scss',
+			// Frontend scripts.
+			'js/frontend': './.assets/js/frontend.js',
 		},
 		output: {
 			...defaults.output,
@@ -68,33 +72,7 @@ module.exports = [
 			rules: [...defaults.module.rules].filter(Boolean),
 		},
 		plugins: [
-			...defaults.plugins.filter((plugin) => !['DependencyExtractionWebpackPlugin'].includes(plugin.constructor.name)),
-
-			// Extracts dependencies from the source code.
-			new DependencyHandler({
-				injectPolyfill: false,
-				requestToExternal(request) {
-					if (request.startsWith(PACKAGE_NAMESPACE)) {
-						return [
-							'eac',
-							request.substring(PACKAGE_NAMESPACE.length).replace(/-([a-z])/g, (_, letter) => letter.toUpperCase()),
-						];
-					}
-				},
-				requestToHandle(request) {
-					if (request.startsWith(PACKAGE_NAMESPACE)) {
-						return `eac-${request.substring(PACKAGE_NAMESPACE.length).replace(/-([a-z])/g, (_, letter) => letter.toUpperCase())}`;
-					}
-				},
-			}),
-
-			// copy vue js file from node_modules to assets folder.
-			new CopyPlugin({
-				patterns: [
-					{from: 'node_modules/accounting/accounting.js', to: 'js/accounting.js'},
-				],
-			}),
-
+			...defaults.plugins,
 			new RemoveEmptyScript(
 				{
 					stage: RemoveEmptyScript.STAGE_AFTER_PROCESS_PLUGINS,
@@ -126,5 +104,24 @@ module.exports = [
 			...defaults.output,
 			path: path.resolve(__dirname, 'assets/packages'),
 		},
+		plugins: [
+			...defaults.plugins.filter((plugin) => !['DependencyExtractionWebpackPlugin'].includes(plugin.constructor.name)),
+			new DependencyHandler({
+				injectPolyfill: false,
+				requestToExternal(request) {
+					if (request.startsWith(PACKAGE_NAMESPACE)) {
+						return [
+							'eac',
+							request.substring(PACKAGE_NAMESPACE.length).replace(/-([a-z])/g, (_, letter) => letter.toUpperCase()),
+						];
+					}
+				},
+				requestToHandle(request) {
+					if (request.startsWith(PACKAGE_NAMESPACE)) {
+						return `eac-${request.substring(PACKAGE_NAMESPACE.length).replace(/-([a-z])/g, (_, letter) => letter.toUpperCase())}`;
+					}
+				},
+			}),
+		],
 	}
 ];
