@@ -51,11 +51,14 @@ class Invoices {
 		$screen     = get_current_screen();
 		$list_table = new Tables\InvoicesTable();
 		$list_table->prepare_items();
-		$screen->add_option( 'per_page', array(
-			'label'   => __( 'Number of items per page:', 'wp-ever-accounting' ),
-			'default' => 20,
-			'option'  => "eac_{$list_table->_args['plural']}_per_page",
-		) );
+		$screen->add_option(
+			'per_page',
+			array(
+				'label'   => __( 'Number of items per page:', 'wp-ever-accounting' ),
+				'default' => 20,
+				'option'  => 'eac_invoices_per_page',
+			)
+		);
 	}
 
 	/**
@@ -69,8 +72,7 @@ class Invoices {
 	 * @return mixed
 	 */
 	public static function set_screen_option( $status, $option, $value ) {
-		global $list_table;
-		if ( "eac_{$list_table->_args['plural']}_per_page" === $option ) {
+		if ( 'eac_invoices_per_page_per_page' === $option ) {
 			return $value;
 		}
 
@@ -85,7 +87,7 @@ class Invoices {
 	 */
 	public static function render_table() {
 		global $list_table;
-		include __DIR__ . '/views/invoices-list.php';
+		include __DIR__ . '/views/invoice-list.php';
 	}
 
 	/**
@@ -95,6 +97,7 @@ class Invoices {
 	 * @return void
 	 */
 	public static function render_add() {
+		$invoice = new Invoice();
 		include __DIR__ . '/views/invoice-add.php';
 	}
 
@@ -105,6 +108,13 @@ class Invoices {
 	 * @return void
 	 */
 	public static function render_edit() {
+		$id      = filter_input( INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT );
+		$invoice = Invoice::find( $id );
+		if ( ! $invoice ) {
+			esc_html_e( 'The specified invoice does not exist.', 'wp-ever-accounting' );
+
+			return;
+		}
 		include __DIR__ . '/views/invoice-edit.php';
 	}
 }

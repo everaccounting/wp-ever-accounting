@@ -14,7 +14,10 @@ defined( 'ABSPATH' ) || exit;
 		<div class="column-1">
 
 			<div class="eac-card">
-				<div class="grid--fields">
+				<div class="eac-card__header">
+					<h3 class="eac-card__title"><?php esc_html_e( 'Payment Attributes', 'wp-ever-accounting' ); ?></h3>
+				</div>
+				<div class="eac-card__body grid--fields">
 					<?php
 					eac_form_field(
 						array(
@@ -37,49 +40,7 @@ defined( 'ABSPATH' ) || exit;
 							'default'     => $payment->get_next_number(),
 							'placeholder' => $payment->get_next_number(),
 							'required'    => true,
-						)
-					);
-					eac_form_field(
-						array(
-							'label'         => __( 'Amount', 'wp-ever-accounting' ),
-							'name'          => 'amount',
-							'placeholder'   => '0.00',
-							'value'         => $payment->amount,
-							'required'      => true,
-							'tooltip'       => __( 'Enter the amount in the currency of the selected account, use (.) for decimal.', 'wp-ever-accounting' ),
-							'data-currency' => $payment->currency,
-							'class'         => 'eac_amount',
-						)
-					);
-
-					eac_form_field(
-						array(
-							'label'            => esc_html__( 'Currency', 'wp-ever-accounting' ),
-							'name'             => 'currency',
-							'default'          => eac_base_currency(),
-							'value'            => $payment->currency,
-							'type'             => 'select',
-							'options'          => wp_list_pluck( eac_get_currencies(), 'formatted_name', 'code' ),
-							'placeholder'      => esc_html__( 'Select a currency', 'wp-ever-accounting' ),
-							'class'            => 'eac_select2',
-							'data-allow-clear' => 'false',
-							'required'         => true,
-						)
-					);
-
-					eac_form_field(
-						array(
-							'label'       => __( 'Exchange Rate', 'wp-ever-accounting' ),
-							'type'        => 'number',
-							'name'        => 'exchange_rate',
-							'default'     => 1,
-							'value'       => $payment->exchange_rate,
-							'placeholder' => '0.00',
-							'tooltip'     => __( 'Enter the exchange rate for the selected currency.', 'wp-ever-accounting' ),
-							'required'    => true,
-							'prefix'      => '1 ' . eac_base_currency() . ' = ',
-							'suffix'      => $payment->currency,
-							'attr-step'   => 'any',
+							'readonly'    => true,
 						)
 					);
 
@@ -97,11 +58,25 @@ defined( 'ABSPATH' ) || exit;
 							'data-placeholder' => __( 'Select an account', 'wp-ever-accounting' ),
 							'data-action'      => 'eac_json_search',
 							'data-type'        => 'account',
+							'required'         => true,
 							'suffix'           => sprintf(
 								'<a class="addon" href="%s" target="_blank" title="%s"><span class="dashicons dashicons-plus"></span></a>',
 								esc_url( admin_url( 'admin.php?page=eac-banking&tab=accounts&add=yes' ) ),
 								__( 'Add Account', 'wp-ever-accounting' )
 							),
+						)
+					);
+
+					eac_form_field(
+						array(
+							'label'         => __( 'Amount', 'wp-ever-accounting' ),
+							'name'          => 'amount',
+							'placeholder'   => '0.00',
+							'value'         => $payment->amount,
+							'required'      => true,
+							'tooltip'       => __( 'Enter the amount in the currency of the selected account, use (.) for decimal.', 'wp-ever-accounting' ),
+							'data-currency' => $payment->currency,
+							'class'         => 'eac_amount',
 						)
 					);
 
@@ -197,7 +172,6 @@ defined( 'ABSPATH' ) || exit;
 							'wrapper_class' => 'is--full',
 						)
 					);
-
 					?>
 				</div>
 			</div>
@@ -206,6 +180,10 @@ defined( 'ABSPATH' ) || exit;
 		<div class="column-2">
 
 			<div class="eac-card">
+
+				<div class="eac-card__header">
+					<h3 class="eac-card__title"><?php esc_html_e( 'Actions', 'wp-ever-accounting' ); ?></h3>
+				</div><!-- .eac-card__header -->
 
 				<div class="eac-card__body">
 					<?php
@@ -245,4 +223,6 @@ defined( 'ABSPATH' ) || exit;
 	<?php wp_nonce_field( 'eac_edit_payment' ); ?>
 	<input type="hidden" name="action" value="eac_edit_payment"/>
 	<input type="hidden" name="id" value="<?php echo esc_attr( $payment->id ); ?>"/>
+	<input type="hidden" name="currency" value="<?php echo esc_attr( $payment->currency ); ?>"/>
+	<input type="hidden" name="exchange_rate" value="<?php echo esc_attr( $payment->exchange_rate ); ?>"/>
 </form>

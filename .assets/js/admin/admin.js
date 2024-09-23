@@ -131,6 +131,34 @@ jQuery(document).ready(($) => {
 				$(this).css('padding', '8px 12px');
 			}
 		});
+
+		// Any form id starts with eac- have currency and exchange rate input field name.
+		$('form[id^="eac-"]').filter(function () {
+			return $(this).find(':input[name="currency"]').length && $(this).find(':input[name="exchange_rate"]').length;
+		}).filter(':not(.enhanced)').each(function () {
+			const $form = $(this);
+			const $currency = $form.find('[name="currency"]');
+			const $exchange_rate = $form.find('[name="exchange_rate"]');
+			const hide_exchange_rate = () => $exchange_rate.closest('.eac-form-field').hide();
+			const show_exchange_rate = () => $exchange_rate.closest('.eac-form-field').show();
+			if (eac_admin_vars.base_currency === $currency.val()) {
+				hide_exchange_rate();
+			}
+			// remove change event to avoid multiple event binding.
+			$currency.on('change', function () {
+				const currency = $(this).val();
+				const rate = eac_admin_vars.currencies[currency]['rate'] || 1;
+				$exchange_rate.val(rate);
+				$exchange_rate.next('.eac-form-field__addon').text(currency);
+				if (eac_admin_vars.base_currency === currency) {
+					hide_exchange_rate();
+				} else {
+					show_exchange_rate();
+				}
+			});
+
+			$form.addClass('enhanced');
+		});
 	}
 
 	// Initialize UI.
@@ -155,11 +183,11 @@ jQuery(document).ready(($) => {
 				title: $button.data('uploader-title'),
 				multiple: false
 			});
-			frame.on( 'ready', function () {
+			frame.on('ready', function () {
 				frame.uploader.options.uploader.params = {
 					type: 'eac_file',
 				};
-			} );
+			});
 			frame.on('select', function () {
 				const attachment = frame.state().get('selection').first().toJSON();
 				const src = attachment.type === 'image' ? attachment.url : attachment.icon;
@@ -184,60 +212,3 @@ jQuery(document).ready(($) => {
 		});
 	});
 });
-//
-// (function (document, window, $) {
-// 	'use strict';
-//
-// 	var app = {
-// 		events: {
-// 			'click .wp-heading-inline': 'addItem',
-// 		},
-//
-// 		addItem: function (e) {
-// 			e.preventDefault();
-// 			console.log('--Item added--');
-// 			console.log(this);
-// 			console.log('Item added');
-// 		},
-//
-//
-// 		init: function () {
-// 			var events = this.events || {};
-// 			for (var key in events) {
-// 				var method = events[key];
-// 				if (typeof method !== 'function') method = this[method];
-// 				if (!method) continue;
-// 				var match = key.match(/^(\S+)\s*(.*)$/);
-// 				var eventName = match[1];
-// 				var selector = match[2];
-// 				$(document).on(eventName, selector, method.bind(this));
-// 			}
-// 		},
-// 	};
-//
-// 	// app.init();
-//
-// }(document, window, jQuery));
-//
-// (function (document, window, $) {
-// 	'use strict';
-//
-// 	var app = {
-// 		el: document,
-// 		init: function () {
-// 			console.log('App initialized');
-// 			$(this.el).on('click', '.wp-heading-inline', this.bind(this.addItem));
-// 		},
-//
-// 		addItem: function (e) {
-// 			e.preventDefault();
-// 			console.log('--Item added--');
-// 			console.log(this);
-// 			console.log('Item added');
-// 		},
-// 	};
-//
-// 	app.init();
-//
-// }(document, window, jQuery));
-

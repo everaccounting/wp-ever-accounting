@@ -89,7 +89,7 @@ class CustomersTable extends ListTable {
 	protected function bulk_activate( $ids ) {
 		$performed = 0;
 		foreach ( $ids as $id ) {
-			if ( eac_insert_customer(
+			if ( EAC()->customers->insert(
 				array(
 					'id'     => $id,
 					'status' => 'active',
@@ -115,7 +115,7 @@ class CustomersTable extends ListTable {
 	protected function bulk_delete( $ids ) {
 		$performed = 0;
 		foreach ( $ids as $id ) {
-			if ( eac_delete_customer( $id ) ) {
+			if ( EAC()->customers->delete( $id ) ) {
 				++$performed;
 			}
 		}
@@ -136,7 +136,7 @@ class CustomersTable extends ListTable {
 	protected function bulk_deactivate( $ids ) {
 		$performed = 0;
 		foreach ( $ids as $id ) {
-			if ( eac_insert_customer(
+			if ( EAC()->customers->insert(
 				array(
 					'id'     => $id,
 					'status' => 'inactive',
@@ -171,29 +171,29 @@ class CustomersTable extends ListTable {
 	 *
 	 * @return string[] An array of HTML links keyed by their view.
 	 */
-	protected function get_views() {
-		$current      = $this->get_request_status( 'all' );
-		$status_links = array();
-		$statuses     = array(
-			'all'      => __( 'All', 'wp-ever-accounting' ),
-			'active'   => __( 'Active', 'wp-ever-accounting' ),
-			'inactive' => __( 'Inactive', 'wp-ever-accounting' ),
-		);
-
-		foreach ( $statuses as $status => $label ) {
-			$link  = 'all' === $status ? $this->base_url : add_query_arg( 'status', $status, $this->base_url );
-			$args  = 'all' === $status ? array() : array( 'status' => $status );
-			$count = Customer::count( $args );
-			$label = sprintf( '%s <span class="count">(%s)</span>', esc_html( $label ), number_format_i18n( $count ) );
-
-			$status_links[ $status ] = array(
-				'url'     => $link,
-				'label'   => $label,
-				'current' => $current === $status,
-			);
-		}
-		return $this->get_views_links( $status_links );
-	}
+	// protected function get_views() {
+	// $current      = $this->get_request_status( 'all' );
+	// $status_links = array();
+	// $statuses     = array(
+	// 'all'      => __( 'All', 'wp-ever-accounting' ),
+	// 'active'   => __( 'Active', 'wp-ever-accounting' ),
+	// 'inactive' => __( 'Inactive', 'wp-ever-accounting' ),
+	// );
+	//
+	// foreach ( $statuses as $status => $label ) {
+	// $link  = 'all' === $status ? $this->base_url : add_query_arg( 'status', $status, $this->base_url );
+	// $args  = 'all' === $status ? array() : array( 'status' => $status );
+	// $count = Customer::count( $args );
+	// $label = sprintf( '%s <span class="count">(%s)</span>', esc_html( $label ), number_format_i18n( $count ) );
+	//
+	// $status_links[ $status ] = array(
+	// 'url'     => $link,
+	// 'label'   => $label,
+	// 'current' => $current === $status,
+	// );
+	// }
+	// return $this->get_views_links( $status_links );
+	// }
 
 	/**
 	 * Retrieves an associative array of bulk actions available on this table.
@@ -202,13 +202,9 @@ class CustomersTable extends ListTable {
 	 * @return array Array of bulk action labels keyed by their action.
 	 */
 	protected function get_bulk_actions() {
-		$actions = array(
-			'delete'     => __( 'Delete', 'wp-ever-accounting' ),
-			'activate'   => __( 'Activate', 'wp-ever-accounting' ),
-			'deactivate' => __( 'Deactivate', 'wp-ever-accounting' ),
+		return array(
+			'delete' => __( 'Delete', 'wp-ever-accounting' ),
 		);
-
-		return $actions;
 	}
 
 	/**
@@ -249,7 +245,7 @@ class CustomersTable extends ListTable {
 			'email'   => __( 'Email', 'wp-ever-accounting' ),
 			'phone'   => __( 'Phone', 'wp-ever-accounting' ),
 			'country' => __( 'Country', 'wp-ever-accounting' ),
-			'status'  => __( 'Status', 'wp-ever-accounting' ),
+			'due'     => __( 'Due', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -300,7 +296,19 @@ class CustomersTable extends ListTable {
 	 * @return string Displays the name.
 	 */
 	public function column_name( $item ) {
-		return sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( ['view' => 'edit', 'id' => $item->id ], $this->base_url ) ), wp_kses_post( $item->name ) );
+		return sprintf(
+			'<a href="%s">%s</a>',
+			esc_url(
+				add_query_arg(
+					array(
+						'view' => 'edit',
+						'id'   => $item->id,
+					),
+					$this->base_url
+				)
+			),
+			wp_kses_post( $item->name )
+		);
 	}
 
 	/**
@@ -360,7 +368,15 @@ class CustomersTable extends ListTable {
 			),
 			'edit' => sprintf(
 				'<a href="%s">%s</a>',
-				esc_url( add_query_arg( ['view' => 'edit', 'id' => $item->id ], $this->base_url ) ),
+				esc_url(
+					add_query_arg(
+						array(
+							'view' => 'edit',
+							'id'   => $item->id,
+						),
+						$this->base_url
+					)
+				),
 				__( 'Edit', 'wp-ever-accounting' )
 			),
 		);

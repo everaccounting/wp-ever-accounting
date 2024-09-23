@@ -125,31 +125,31 @@ function eac_decimal_separator( $currency = null ) {
  * @return array
  */
 function eac_get_currencies() {
-	$base_currency                = eac_base_currency();
-	$currencies                   = I18n::get_currencies();
-	$currencies[ $base_currency ] = array_merge(
-		$currencies[ $base_currency ],
-		array(
-			'rate'               => 1,
-			'precision'          => get_option( 'eac_currency_precision', 2 ),
-			'position'           => get_option( 'eac_currency_position', 'before' ),
-			'thousand_separator' => get_option( 'eac_thousand_separator', ',' ),
-			'decimal_separator'  => get_option( 'eac_decimal_separator', '.' ),
-		)
-	);
+//	$base_currency                = eac_base_currency();
+//	$currencies                   = I18n::get_currencies();
+//	$currencies[ $base_currency ] = array_merge(
+//		$currencies[ $base_currency ],
+//		array(
+//			'rate'               => 1,
+//			'precision'          => get_option( 'eac_currency_precision', 2 ),
+//			'position'           => get_option( 'eac_currency_position', 'before' ),
+//			'thousand_separator' => get_option( 'eac_thousand_separator', ',' ),
+//			'decimal_separator'  => get_option( 'eac_decimal_separator', '.' ),
+//		)
+//	);
+//
+//	$currencies = array_map(
+//		function ( $currency ) {
+//			$currency['formatted_name'] = "{$currency['code']} - {$currency['name']}";
+//
+//			return $currency;
+//		},
+//		$currencies
+//	);
+//
+//	$currencies['BDT']['rate'] = 1 / 120;
 
-	$currencies = array_map(
-		function ( $currency ) {
-			$currency['formatted_name'] = "{$currency['code']} - {$currency['name']}";
-
-			return $currency;
-		},
-		$currencies
-	);
-
-	$currencies['BDT']['rate'] = 1 / 120;
-
-	return apply_filters( 'eac_currencies', $currencies );
+	return apply_filters( 'eac_currencies', I18n::get_currencies() );
 }
 
 /**

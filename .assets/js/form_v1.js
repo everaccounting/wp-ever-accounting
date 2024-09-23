@@ -10,6 +10,27 @@
         this.method = this.$form.attr('method');
         this.action = this.$form.attr('action');
 
+		/**
+		 * Get the form element.
+		 *
+		 * @param selector
+		 * @returns {*|jQuery}
+		 */
+		this.$ = function (selector) {
+			return this.$form.find(selector);
+		}
+
+		/**
+		 * Submit the form.
+		 * @param event
+		 * @param selector
+		 * @param callback
+		 */
+		this.on = function (event, selector, callback) {
+			console.log('on', event, selector, callback);
+			this.$form.on(event, selector, callback);
+		}
+
         /**
          * Get the current value of the associated form element.
          *

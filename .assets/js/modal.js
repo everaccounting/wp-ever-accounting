@@ -17,6 +17,7 @@
 
 	/**
 	 * Initialize the modal plugin.
+	 *
 	 * @param {Object} options - Configuration options for the modal.
 	 * @returns {jQuery} - The jQuery object for chaining.
 	 */

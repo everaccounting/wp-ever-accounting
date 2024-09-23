@@ -1,6 +1,6 @@
 <?php
 /**
- * Add invoice view.
+ * Edit invoice view.
  *
  * @package EverAccounting
  * @since 1.0.0
@@ -15,4 +15,4 @@ defined( 'ABSPATH' ) || exit;
 	</a>
 </h1>
 <?php
-require __DIR__ . '/invoice-form.php';
+require __DIR__ . '/invoices-form.php';

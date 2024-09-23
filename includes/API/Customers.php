@@ -133,7 +133,7 @@ class Customers extends Contacts {
 	 * @return true|\WP_Error True, if the request has read access, WP_Error object otherwise.
 	 */
 	public function get_item_permissions_check( $request ) {
-		$customer = eac_get_customer( $request['id'] );
+		$customer = EAC()->customers->get( $request['id'] );
 
 		if ( empty( $customer ) || ! current_user_can( 'eac_manage_customer' ) ) {
 			return new \WP_Error(
@@ -155,7 +155,7 @@ class Customers extends Contacts {
 	 * @return true|\WP_Error True, if the request has read access, WP_Error object otherwise.
 	 */
 	public function update_item_permissions_check( $request ) {
-		$customer = eac_get_customer( $request['id'] );
+		$customer = EAC()->customers->get( $request['id'] );
 
 		if ( empty( $customer ) || ! current_user_can( 'eac_manage_customer' ) ) {
 			return new \WP_Error(
@@ -177,7 +177,7 @@ class Customers extends Contacts {
 	 * @return true|\WP_Error True, if the request has read access, WP_Error object otherwise.
 	 */
 	public function delete_item_permissions_check( $request ) {
-		$customer = eac_get_customer( $request['id'] );
+		$customer = EAC()->customers->get( $request['id'] );
 
 		if ( empty( $customer ) || ! current_user_can( 'eac_manage_customer' ) ) {
 			return new \WP_Error(
@@ -219,11 +219,10 @@ class Customers extends Contacts {
 		 */
 		$args = apply_filters( 'eac_rest_customer_query', $args, $request );
 
-		$customers   = eac_get_customers( $args );
-		$total     = eac_get_customers( $args, true );
+		$customers = EAC()->customers->query( $args );
+		$total     = EAC()->customers->query( $args, true );
 		$page      = isset( $request['page'] ) ? absint( $request['page'] ) : 1;
 		$max_pages = ceil( $total / (int) $args['per_page'] );
-
 
 		$results = array();
 		foreach ( $customers as $customer ) {
@@ -268,7 +267,7 @@ class Customers extends Contacts {
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function get_item( $request ) {
-		$customer = eac_get_customer( $request['id'] );
+		$customer = EAC()->customers->get( $request['id'] );
 		$data     = $this->prepare_item_for_response( $customer, $request );
 
 		return rest_ensure_response( $data );
@@ -296,7 +295,7 @@ class Customers extends Contacts {
 			return $data;
 		}
 
-		$customer = eac_insert_customer( $data );
+		$customer = EAC()->customers->insert( $data );
 		if ( is_wp_error( $customer ) ) {
 			return $customer;
 		}
@@ -308,7 +307,6 @@ class Customers extends Contacts {
 		$response->header( 'Location', rest_url( sprintf( '%s/%s/%d', $this->namespace, $this->rest_base, $customer->id ) ) );
 
 		return $response;
-
 	}
 
 	/**
@@ -320,8 +318,8 @@ class Customers extends Contacts {
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function update_item( $request ) {
-		$customer = eac_get_customer( $request['id'] );
-		$data   = $this->prepare_item_for_database( $request );
+		$customer = EAC()->customers->get( $request['id'] );
+		$data     = $this->prepare_item_for_database( $request );
 		if ( is_wp_error( $data ) ) {
 			return $data;
 		}
@@ -346,11 +344,11 @@ class Customers extends Contacts {
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function delete_item( $request ) {
-		$customer = eac_get_customer( $request['id'] );
+		$customer = EAC()->customers->get( $request['id'] );
 		$request->set_param( 'context', 'edit' );
 		$data = $this->prepare_item_for_response( $customer, $request );
 
-		if ( ! eac_delete_customer( $customer->id ) ) {
+		if ( ! EAC()->customers->delete( $customer->id ) ) {
 			return new \WP_Error(
 				'rest_cannot_delete',
 				__( 'The customer cannot be deleted.', 'wp-ever-accounting' ),
@@ -379,7 +377,7 @@ class Customers extends Contacts {
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function prepare_item_for_response( $item, $request ) {
-		$data = [];
+		$data = array();
 
 		foreach ( array_keys( $this->get_schema_properties() ) as $key ) {
 			switch ( $key ) {
@@ -422,7 +420,7 @@ class Customers extends Contacts {
 	protected function prepare_item_for_database( $request ) {
 		$schema    = $this->get_item_schema();
 		$data_keys = array_keys( array_filter( $schema['properties'], array( $this, 'filter_writable_props' ) ) );
-		$props     = [];
+		$props     = array();
 		// Handle all writable props.
 		foreach ( $data_keys as $key ) {
 			$value = $request[ $key ];
@@ -447,7 +445,7 @@ class Customers extends Contacts {
 	/**
 	 * Prepare links for the request.
 	 *
-	 * @param customer           $customer Object data.
+	 * @param customer         $customer Object data.
 	 * @param \WP_REST_Request $request Request customer.
 	 *
 	 * @return array Links for the given customer.
@@ -470,7 +468,7 @@ class Customers extends Contacts {
 	 * @return array Item schema data.
 	 */
 	public function get_item_schema() {
-		$schema = parent::get_item_schema();
+		$schema          = parent::get_item_schema();
 		$schema['title'] = __( 'Customer', 'wp-ever-accounting' );
 		/**
 		 * Filters the customer's schema.

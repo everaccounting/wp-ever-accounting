@@ -11,6 +11,7 @@ use EverAccounting\Controllers\Accounts;
 use EverAccounting\Controllers\Expenses;
 use EverAccounting\Controllers\Invoices;
 use EverAccounting\Controllers\Payments;
+use EverAccounting\Controllers\Taxes;
 use EverAccounting\Controllers\Vendors;
 
 /**
@@ -23,12 +24,13 @@ use EverAccounting\Controllers\Vendors;
  * @property Currencies $currencies Currencies controller.
  * @property Payments   $payments Payments controller.
  * @property Invoices   $invoices Invoices controller.
- * @property Customers $customers Customers controller.
+ * @property Customers  $customers Customers controller.
  * @property Expenses   $expenses Expenses controller.
  * @property Bills      $bills Bills controller.
  * @property Vendors    $vendors Vendors controller.
  * @property Accounts   $accounts Accounts controller.
  * @property Categories $categories Categories controller.
+ * @property Taxes      $taxes Taxes controller.
  */
 class Plugin extends \ByteKit\Plugin {
 	/**
@@ -90,7 +92,7 @@ class Plugin extends \ByteKit\Plugin {
 	public function init_hooks() {
 		register_activation_hook( $this->get_file(), array( Installer::class, 'install' ) );
 		add_action( 'plugins_loaded', array( $this, 'on_init' ), 0 );
-		// add_action( 'rest_api_init', array( $this, 'register_routes' ) );
+		add_action( 'rest_api_init', array( $this, 'register_routes' ) );
 	}
 
 	/**
@@ -113,7 +115,7 @@ class Plugin extends \ByteKit\Plugin {
 		$this->services->add( 'vendors', new Controllers\Vendors() );
 		$this->services->add( 'customers', new Controllers\Customers() );
 		$this->services->add( 'categories', new Controllers\Categories() );
-
+		$this->services->add( 'taxes', new Controllers\Taxes() );
 
 		$this->services->add( 'transactions', new Handlers\Transactions() );
 		$this->services->add( 'documents', new Handlers\Documents() );
@@ -123,7 +125,7 @@ class Plugin extends \ByteKit\Plugin {
 			$this->services->add( Admin\Admin::class );
 			$this->services->add( Admin\Menus::class );
 			$this->services->add( Admin\Scripts::class );
-			$this->services->add( Admin\Actions::class );
+			$this->services->add( Admin\Ajax::class );
 
 			// Items.
 			$this->services->add( Admin\Items\Items::class );
@@ -164,9 +166,10 @@ class Plugin extends \ByteKit\Plugin {
 				'EverAccounting\API\Items',
 				'EverAccounting\API\Taxes',
 				'EverAccounting\API\Categories',
-				'EverAccounting\API\Currencies',
+//				'EverAccounting\API\Currencies',
 				'EverAccounting\API\Customers',
 				'EverAccounting\API\Vendors',
+				'EverAccounting\API\Customers',
 				'EverAccounting\API\Accounts',
 				'EverAccounting\API\Utilities',
 			)

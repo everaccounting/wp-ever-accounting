@@ -56,7 +56,7 @@ class Payments {
 			array(
 				'label'   => __( 'Number of items per page:', 'wp-ever-accounting' ),
 				'default' => 20,
-				'option'  => "eac_{$list_table->_args['plural']}_per_page",
+				'option'  => 'eac_payments_per_page',
 			)
 		);
 	}
@@ -72,8 +72,7 @@ class Payments {
 	 * @return mixed
 	 */
 	public static function set_screen_option( $status, $option, $value ) {
-		global $list_table;
-		if ( "eac_{$list_table->_args['plural']}_per_page" === $option ) {
+		if ( 'eac_payments_per_page' === $option ) {
 			return $value;
 		}
 
@@ -89,7 +88,7 @@ class Payments {
 	 */
 	public function render_table() {
 		global $list_table;
-		include __DIR__ . '/views/payments-list.php';
+		include __DIR__ . '/views/payment-list.php';
 	}
 
 	/**

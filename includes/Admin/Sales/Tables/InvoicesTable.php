@@ -190,13 +190,12 @@ class InvoicesTable extends ListTable {
 	 */
 	public function get_columns() {
 		return array(
-			'cb'         => '<input type="checkbox" />',
-			'number'     => __( 'Number', 'wp-ever-accounting' ),
-			'total'      => __( 'Total', 'wp-ever-accounting' ),
-			'customer'   => __( 'Customer', 'wp-ever-accounting' ),
-			'issue_date' => __( 'Issue Date', 'wp-ever-accounting' ),
-			'due_date'   => __( 'Due Date', 'wp-ever-accounting' ),
-			'status'     => __( 'Status', 'wp-ever-accounting' ),
+			'cb'       => '<input type="checkbox" />',
+			'number'   => __( 'Number', 'wp-ever-accounting' ),
+			'date'     => __( 'Date', 'wp-ever-accounting' ),
+			'customer' => __( 'Customer', 'wp-ever-accounting' ),
+			'status'   => __( 'Status', 'wp-ever-accounting' ),
+			'total'    => __( 'Total', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -208,12 +207,11 @@ class InvoicesTable extends ListTable {
 	 */
 	protected function get_sortable_columns() {
 		return array(
-			'number'     => array( 'number', false ),
-			'total'      => array( 'total', false ),
-			'customer'   => array( 'customer', false ),
-			'issue_date' => array( 'issue_date', false ),
-			'due_date'   => array( 'due_date', false ),
-			'status'     => array( 'status', false ),
+			'number'   => array( 'number', false ),
+			'total'    => array( 'total', false ),
+			'customer' => array( 'customer', false ),
+			'date'     => array( 'date', false ),
+			'status'   => array( 'status', false ),
 		);
 	}
 

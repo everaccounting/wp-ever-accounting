@@ -270,7 +270,7 @@ class I18n {
 	 * @return array
 	 */
 	public static function get_currencies() {
-		return array(
+		$currencies = array(
 			'AED' => array(
 				'name'               => 'UAE Dirham',
 				'code'               => 'AED',
@@ -2402,6 +2402,15 @@ class I18n {
 				'decimal_separator'  => '.',
 				'thousand_separator' => ',',
 			),
+		);
+
+		return array_map(
+			function ( $currency ) {
+				$currency['formatted_name'] = "{$currency['code']} - {$currency['name']}";
+
+				return $currency;
+			},
+			$currencies
 		);
 	}
 }

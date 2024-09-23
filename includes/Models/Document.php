@@ -140,7 +140,7 @@ class Document extends Model {
 		'due_date',
 		'sent_date',
 		'payment_date',
-		'currency_code',
+		'currency',
 		'exchange_rate',
 		'parent_id',
 		'created_via',
@@ -155,6 +155,7 @@ class Document extends Model {
 	 * @var array
 	 */
 	protected $attributes = array(
+		'exchange_rate' => 1.00,
 		'discount_type' => 'fixed',
 		'vat_exempt'    => false,
 		'status'        => 'draft',
