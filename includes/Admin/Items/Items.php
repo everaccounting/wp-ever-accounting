@@ -157,7 +157,7 @@ class Items {
 			EAC()->flash->error( $item->get_error_message() );
 		} else {
 			EAC()->flash->success( __( 'Item saved successfully.', 'wp-ever-accounting' ) );
-			$referer = add_query_arg( 'edit', $item->id, $referer );
+			$referer = add_query_arg( ['action' => 'edit', 'id' => $item->id ], $referer );
 			$referer = remove_query_arg( array( 'add' ), $referer );
 		}
 
