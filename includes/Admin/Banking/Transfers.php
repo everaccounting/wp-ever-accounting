@@ -19,8 +19,8 @@ class Transfers {
 	public function __construct() {
 		add_filter( 'eac_banking_page_tabs', array( __CLASS__, 'register_tabs' ) );
 		add_filter( 'set-screen-option', array( __CLASS__, 'set_screen_option' ), 10, 3 );
-		add_action( 'load_eac_banking_page_transfers_index', array( __CLASS__, 'setup_table' ) );
-		add_action( 'eac_banking_page_transfers_index', array( __CLASS__, 'render_table' ) );
+		add_action( 'load_eac_banking_page_transfers', array( __CLASS__, 'setup_table' ) );
+		add_action( 'eac_banking_page_transfers', array( __CLASS__, 'render_table' ) );
 		add_action( 'eac_banking_page_transfers_add', array( __CLASS__, 'render_add' ) );
 		add_action( 'eac_banking_page_transfers_edit', array( __CLASS__, 'render_edit' ) );
 //		add_action( 'admin_post_eac_edit_account', array( __CLASS__, 'handle_edit' ) );
@@ -52,7 +52,7 @@ class Transfers {
 	 */
 	public static function set_screen_option( $status, $option, $value ) {
 		global $list_table;
-		if ( "eac_{$list_table->_args['plural']}_per_page" === $option ) {
+		if ( "eac_transfers_per_page" === $option ) {
 			return $value;
 		}
 
@@ -73,7 +73,7 @@ class Transfers {
 		$screen->add_option( 'per_page', array(
 			'label'   => __( 'Number of transfers per page:', 'wp-ever-accounting' ),
 			'default' => 20,
-			'option'  => "eac_{$list_table->_args['plural']}_per_page",
+			'option'  => "eac_transfers_per_page",
 		) );
 	}
 
@@ -85,7 +85,7 @@ class Transfers {
 	 */
 	public static function render_table() {
 		global $list_table;
-		include __DIR__ . '/views/transfers/table.php';
+		include __DIR__ . '/views/transfer-list.php';
 	}
 
 	/**
@@ -96,7 +96,7 @@ class Transfers {
 	 */
 	public static function render_add() {
 		$transfer = new Transfer();
-		include __DIR__ . '/views/transfers/add.php';
+		include __DIR__ . '/views/transfer-add.php';
 	}
 
 	/**
@@ -113,7 +113,7 @@ class Transfers {
 
 			return;
 		}
-		include __DIR__ . '/views/transfers/edit.php';
+		include __DIR__ . '/views/transfer-edit.php';
 	}
 
 	/**

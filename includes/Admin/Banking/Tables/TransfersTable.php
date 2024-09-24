@@ -44,7 +44,7 @@ class TransfersTable extends ListTable {
 	 */
 	public function prepare_items() {
 		$this->process_actions();
-		$per_page = $this->get_items_per_page( 'eac_taxes_per_page', 20 );
+		$per_page = $this->get_items_per_page( 'eac_transfers_per_page', 20 );
 		$paged    = $this->get_pagenum();
 		$search   = $this->get_request_search();
 		$order_by = $this->get_request_orderby();
