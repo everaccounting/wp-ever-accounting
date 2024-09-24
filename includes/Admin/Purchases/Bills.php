@@ -19,8 +19,8 @@ class Bills {
 	public function __construct() {
 		add_filter( 'eac_purchases_page_tabs', array( __CLASS__, 'register_tabs' ) );
 		add_filter( 'set-screen-option', array( __CLASS__, 'set_screen_option' ), 10, 3 );
-		add_action( 'load_eac_purchases_page_bills_index', array( __CLASS__, 'setup_table' ) );
-		add_action( 'eac_purchases_page_bills_index', array( __CLASS__, 'render_table' ) );
+		add_action( 'load_eac_purchases_page_bills', array( __CLASS__, 'setup_table' ) );
+		add_action( 'eac_purchases_page_bills', array( __CLASS__, 'render_table' ) );
 		add_action( 'eac_purchases_page_bills_add', array( __CLASS__, 'render_add' ) );
 		add_action( 'eac_purchases_page_bills_edit', array( __CLASS__, 'render_edit' ) );
 		add_action( 'admin_post_eac_edit_bill', array( __CLASS__, 'handle_edit' ) );
@@ -52,7 +52,7 @@ class Bills {
 	 */
 	public static function set_screen_option( $status, $option, $value ) {
 		global $list_table;
-		if ( "eac_{$list_table->_args['plural']}_per_page" === $option ) {
+		if ( "eac_bills_per_page" === $option ) {
 			return $value;
 		}
 
@@ -73,7 +73,7 @@ class Bills {
 		$screen->add_option( 'per_page', array(
 			'label'   => __( 'Number of bills per page:', 'wp-ever-accounting' ),
 			'default' => 20,
-			'option'  => "eac_{$list_table->_args['plural']}_per_page",
+			'option'  => "eac_bills_per_page",
 		) );
 	}
 
@@ -85,7 +85,7 @@ class Bills {
 	 */
 	public static function render_table() {
 		global $list_table;
-		include __DIR__ . '/views/bills/table.php';
+		include __DIR__ . '/views/bill-list.php';
 	}
 
 	/**
@@ -95,7 +95,7 @@ class Bills {
 	 * @return void
 	 */
 	public static function render_add() {
-		include __DIR__ . '/views/bills/add.php';
+		include __DIR__ . '/views/bill-add.php';
 	}
 
 	/**
@@ -113,7 +113,7 @@ class Bills {
 			return;
 		}
 
-		include __DIR__ . '/views/bills/edit.php';
+		include __DIR__ . '/views/bill-edit.php';
 	}
 
 	/**

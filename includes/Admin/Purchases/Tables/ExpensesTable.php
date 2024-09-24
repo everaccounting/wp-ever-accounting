@@ -97,7 +97,7 @@ class ExpensesTable extends ListTable {
 	protected function bulk_delete( $ids ) {
 		$performed = 0;
 		foreach ( $ids as $id ) {
-			if ( eac_delete_payment( $id ) ) {
+			if ( EAC()->expenses->delete( $id ) ) {
 				++$performed;
 			}
 		}
@@ -259,7 +259,7 @@ class ExpensesTable extends ListTable {
 	 * @return string Displays the name.
 	 */
 	public function column_date( $item ) {
-		return sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( [ 'view' => 'edit', 'id' => $item->id ], $this->base_url ) ), wp_kses_post( $item->date ) );
+		return sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( [ 'action' => 'edit', 'id' => $item->id ], $this->base_url ) ), wp_kses_post( $item->date ) );
 	}
 
 	/**
@@ -358,7 +358,7 @@ class ExpensesTable extends ListTable {
 			'id'   => sprintf( '#%s', esc_attr( $item->number ) ),
 			'edit' => sprintf(
 				'<a href="%s">%s</a>',
-				esc_url( add_query_arg( [ 'view' => 'edit', 'id' => $item->id ], $this->base_url ) ),
+				esc_url( add_query_arg( [ 'action' => 'edit', 'id' => $item->id ], $this->base_url ) ),
 				__( 'Edit', 'wp-ever-accounting' )
 			),
 		);

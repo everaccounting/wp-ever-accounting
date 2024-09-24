@@ -19,8 +19,8 @@ class Expenses {
 	 */
 	public function __construct() {
 		add_filter( 'eac_purchases_page_tabs', array( __CLASS__, 'register_tabs' ) );
-		add_action( 'load_eac_purchases_page_expenses_index', array( __CLASS__, 'setup_table' ) );
-		add_action( 'eac_purchases_page_expenses_index', array( __CLASS__, 'render_table' ) );
+		add_action( 'load_eac_purchases_page_expenses', array( __CLASS__, 'setup_table' ) );
+		add_action( 'eac_purchases_page_expenses', array( __CLASS__, 'render_table' ) );
 		add_action( 'eac_purchases_page_expenses_add', array( __CLASS__, 'render_add' ) );
 		add_action( 'eac_purchases_page_expenses_edit', array( __CLASS__, 'render_edit' ) );
 		add_action( 'admin_post_eac_edit_expense', array( __CLASS__, 'handle_edit' ) );
@@ -54,7 +54,7 @@ class Expenses {
 		$screen->add_option( 'per_page', array(
 			'label'   => __( 'Number of items per page:', 'wp-ever-accounting' ),
 			'default' => 20,
-			'option'  => "eac_{$list_table->_args['plural']}_per_page",
+			'option'  => "eac_expenses_per_page",
 		) );
 	}
 
@@ -66,7 +66,7 @@ class Expenses {
 	 */
 	public static function render_table() {
 		global $list_table;
-		include __DIR__ . '/views/expenses/table.php';
+		include __DIR__ . '/views/expense-list.php';
 	}
 
 	/**
@@ -77,7 +77,7 @@ class Expenses {
 	 */
 	public static function render_add() {
 		$expense = new Expense();
-		include __DIR__ . '/views/expenses/add.php';
+		include __DIR__ . '/views/expense-add.php';
 	}
 
 	/**
@@ -94,7 +94,7 @@ class Expenses {
 
 			return;
 		}
-		include __DIR__ . '/views/expenses/edit.php';
+		include __DIR__ . '/views/expense-edit.php';
 	}
 
 	/**
@@ -119,12 +119,12 @@ class Expenses {
 			'note'           => isset( $_POST['note'] ) ? sanitize_textarea_field( wp_unslash( $_POST['note'] ) ) : '',
 			'status'         => isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : 'active',
 		);
-		$expense = eac_insert_expense( $data );
+		$expense = EAC()->expenses->insert( $data );
 		if ( is_wp_error( $expense ) ) {
 			EAC()->flash->error( $expense->get_error_message() );
 		} else {
 			EAC()->flash->success( __( 'Expense saved successfully.', 'wp-ever-accounting' ) );
-			$referer = add_query_arg( [ 'view' => 'edit', 'id' => $expense->id ], $referer );
+			$referer = add_query_arg( [ 'action' => 'edit', 'id' => $expense->id ], $referer );
 			$referer = remove_query_arg( array( 'add' ), $referer );
 		}
 
