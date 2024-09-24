@@ -46,7 +46,7 @@ class CurrenciesTable extends ListTable {
 	 */
 	public function prepare_items() {
 		$this->process_actions();
-		$per_page = $this->get_items_per_page( "eac_{$this->_args['plural']}_per_page" );
+		$per_page = $this->get_items_per_page( "eac_currencies_per_page" );
 		$paged    = $this->get_pagenum();
 		$search   = $this->get_request_search();
 		$order_by = $this->get_request_orderby();
@@ -91,7 +91,7 @@ class CurrenciesTable extends ListTable {
 	protected function bulk_activate( $ids ) {
 		$performed = 0;
 		foreach ( $ids as $id ) {
-			if ( eac_insert_currency(
+			if ( EAC()->currencies->insert(
 				array(
 					'id'     => $id,
 					'status' => 'active',
@@ -119,7 +119,7 @@ class CurrenciesTable extends ListTable {
 	protected function bulk_deactivate( $ids ) {
 		$performed = 0;
 		foreach ( $ids as $id ) {
-			if ( eac_insert_currency(
+			if ( EAC()->currencies->insert(
 				array(
 					'id'     => $id,
 					'status' => 'inactive',
@@ -296,7 +296,7 @@ class CurrenciesTable extends ListTable {
 	 * @return string Displays the name.
 	 */
 	public function column_name( $item ) {
-		return sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( [ 'view' => 'edit', 'id' => $item->id ], $this->base_url ) ), wp_kses_post( $item->name ) );
+		return sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( [ 'action' => 'edit', 'id' => $item->id ], $this->base_url ) ), wp_kses_post( $item->name ) );
 	}
 
 	/**
@@ -319,7 +319,7 @@ class CurrenciesTable extends ListTable {
 				'<a href="%s">%s</a>',
 				esc_url( add_query_arg( array(
 					'id'   => $item->id,
-					'view' => 'edit',
+					'action' => 'edit',
 				), $this->base_url ) ),
 				__( 'Edit', 'wp-ever-accounting' )
 			),

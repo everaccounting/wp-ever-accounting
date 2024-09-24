@@ -144,6 +144,7 @@ class Plugin extends \ByteKit\Plugin {
 			// Misc.
 			$this->services->add( Admin\Misc\Categories::class );
 			$this->services->add( Admin\Misc\Taxes::class );
+			$this->services->add( Admin\Misc\Currencies::class );
 		}
 
 		/**

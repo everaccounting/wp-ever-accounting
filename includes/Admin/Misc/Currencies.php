@@ -22,8 +22,8 @@ class Currencies {
 	public function __construct() {
 		add_filter( 'eac_misc_page_tabs', array( __CLASS__, 'register_tabs' ) );
 		add_filter( 'set-screen-option', array( __CLASS__, 'set_screen_option' ), 10, 3 );
-		add_action( 'load_eac_misc_page_currencies_index', array( __CLASS__, 'setup_table' ) );
-		add_action( 'eac_misc_page_currencies_index', array( __CLASS__, 'render_table' ) );
+		add_action( 'load_eac_misc_page_currencies', array( __CLASS__, 'setup_table' ) );
+		add_action( 'eac_misc_page_currencies', array( __CLASS__, 'render_table' ) );
 		add_action( 'eac_misc_page_currencies_add', array( __CLASS__, 'render_add' ) );
 		add_action( 'eac_misc_page_currencies_edit', array( __CLASS__, 'render_edit' ) );
 		add_action( 'admin_post_eac_add_currency', array( __CLASS__, 'handle_add' ) );
@@ -56,7 +56,7 @@ class Currencies {
 	 */
 	public static function set_screen_option( $status, $option, $value ) {
 		global $list_table;
-		if ( "eac_{$list_table->_args['plural']}_per_page" === $option ) {
+		if ( "eac_currencies_per_page" === $option ) {
 			return $value;
 		}
 
@@ -76,7 +76,7 @@ class Currencies {
 		$screen->add_option( 'per_page', array(
 			'label'   => __( 'Number of currencies per page:', 'wp-ever-accounting' ),
 			'default' => 20,
-			'option'  => "eac_{$list_table->_args['plural']}_per_page",
+			'option'  => "eac_currencies_per_page",
 		) );
 	}
 
@@ -87,7 +87,7 @@ class Currencies {
 	 */
 	public static function render_table() {
 		global $list_table;
-		include __DIR__ . '/views/currencies/table.php';
+		include __DIR__ . '/views/currency-list.php';
 	}
 
 	/**
@@ -97,7 +97,7 @@ class Currencies {
 	 */
 	public static function render_add() {
 		$currency = new Currency();
-		include __DIR__ . '/views/currencies/add.php';
+		include __DIR__ . '/views/currency-add.php';
 	}
 
 	/**
@@ -114,7 +114,7 @@ class Currencies {
 			return;
 		}
 
-		include __DIR__ . '/views/currencies/edit.php';
+		include __DIR__ . '/views/currency-edit.php';
 	}
 
 	/**
@@ -154,7 +154,7 @@ class Currencies {
 
 		EAC()->flash->success( __( 'Currency added successfully.', 'wp-ever-accounting' ) );
 		$referer = remove_query_arg( array( 'add' ), $referer );
-		$referer = add_query_arg( ['view' => 'edit', 'id' => $currency->id ], $referer );
+		$referer = add_query_arg( ['action' => 'edit', 'id' => $currency->id ], $referer );
 		wp_safe_redirect( $referer );
 		exit;
 	}
@@ -177,7 +177,7 @@ class Currencies {
 		$decimals          = isset( $_POST['decimals'] ) ? absint( wp_unslash( $_POST['decimals'] ) ) : '';
 		$position           = isset( $_POST['position'] ) ? sanitize_text_field( wp_unslash( $_POST['position'] ) ) : '';
 		$status             = isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : 'active';
-		$currency           = eac_insert_currency(
+		$currency           = EAC()->currencies->insert(
 			array(
 				'id'                 => $id,
 				'code'               => $code,
@@ -196,7 +196,7 @@ class Currencies {
 			EAC()->flash->error( $currency->get_error_message() );
 		} else {
 			EAC()->flash->success( __( 'Currency saved successfully.', 'wp-ever-accounting' ) );
-			$referer = add_query_arg( ['view' => 'edit', 'id' => $currency->id ], $referer );
+			$referer = add_query_arg( ['action' => 'edit', 'id' => $currency->id ], $referer );
 			$referer = remove_query_arg( array( 'add' ), $referer );
 		}
 
