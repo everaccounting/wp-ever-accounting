@@ -89,7 +89,7 @@ class VendorsTable extends ListTable {
 	protected function bulk_activate( $ids ) {
 		$performed = 0;
 		foreach ( $ids as $id ) {
-			if ( eac_insert_vendor(
+			if ( EAC()->vendors->insert(
 				array(
 					'id'     => $id,
 					'status' => 'active',
@@ -115,7 +115,7 @@ class VendorsTable extends ListTable {
 	protected function bulk_deactivate( $ids ) {
 		$performed = 0;
 		foreach ( $ids as $id ) {
-			if ( eac_insert_vendor(
+			if ( EAC()->vendors->insert(
 				array(
 					'id'     => $id,
 					'status' => 'inactive',
@@ -141,7 +141,7 @@ class VendorsTable extends ListTable {
 	protected function bulk_delete( $ids ) {
 		$performed = 0;
 		foreach ( $ids as $id ) {
-			if ( eac_delete_vendor( $id ) ) {
+			if ( EAC()->vendors->delete( $id ) ) {
 				++$performed;
 			}
 		}
@@ -300,7 +300,7 @@ class VendorsTable extends ListTable {
 	 * @return string Displays the name.
 	 */
 	public function column_name( $item ) {
-		return sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( ['view' => 'edit', 'id' => $item->id ], $this->base_url ) ), wp_kses_post( $item->name ) );
+		return sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( ['action' => 'edit', 'id' => $item->id ], $this->base_url ) ), wp_kses_post( $item->name ) );
 	}
 
 
@@ -334,12 +334,12 @@ class VendorsTable extends ListTable {
 			'id'   => sprintf( '#%d', esc_attr( $item->id ) ),
 			'view' => sprintf(
 				'<a href="%s">%s</a>',
-				esc_url( add_query_arg( ['view' => 'edit', 'id' => $item->id ], $this->base_url ) ),
+				esc_url( add_query_arg( ['action' => 'view', 'id' => $item->id ], $this->base_url ) ),
 				__( 'View', 'wp-ever-accounting' )
 			),
 			'edit' => sprintf(
 				'<a href="%s">%s</a>',
-				esc_url( add_query_arg( 'edit', $item->id, $this->base_url ) ),
+				esc_url( add_query_arg( ['action' => 'edit', 'id' => $item->id ], $this->base_url ) ),
 				__( 'Edit', 'wp-ever-accounting' )
 			),
 		);

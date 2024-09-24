@@ -74,7 +74,7 @@ class Contact extends Model {
 		'zip',
 		'country',
 		'tax_number',
-		'currency_code',
+		'currency',
 		'thumbnail_id',
 		'user_id',
 		'status',

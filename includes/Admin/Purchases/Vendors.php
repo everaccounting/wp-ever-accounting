@@ -19,8 +19,8 @@ class Vendors {
 	public function __construct() {
 		add_filter( 'eac_purchases_page_tabs', array( __CLASS__, 'register_tabs' ) );
 		add_filter( 'set-screen-option', array( __CLASS__, 'set_screen_option' ), 10, 3 );
-		add_action( 'load_eac_purchases_page_vendors_index', array( __CLASS__, 'setup_table' ) );
-		add_action( 'eac_purchases_page_vendors_index', array( __CLASS__, 'render_table' ) );
+		add_action( 'load_eac_purchases_page_vendors', array( __CLASS__, 'setup_table' ) );
+		add_action( 'eac_purchases_page_vendors', array( __CLASS__, 'render_table' ) );
 		add_action( 'eac_purchases_page_vendors_add', array( __CLASS__, 'render_add' ) );
 		add_action( 'eac_purchases_page_vendors_edit', array( __CLASS__, 'render_edit' ) );
 		add_action( 'admin_post_eac_edit_vendor', array( __CLASS__, 'handle_edit' ) );
@@ -52,7 +52,7 @@ class Vendors {
 	 */
 	public static function set_screen_option( $status, $option, $value ) {
 		global $list_table;
-		if ( "eac_{$list_table->_args['plural']}_per_page" === $option ) {
+		if ( "eac_vendors_per_page" === $option ) {
 			return $value;
 		}
 
@@ -73,7 +73,7 @@ class Vendors {
 		$screen->add_option( 'per_page', array(
 			'label'   => __( 'Number of items per page:', 'wp-ever-accounting' ),
 			'default' => 20,
-			'option'  => "eac_{$list_table->_args['plural']}_per_page",
+			'option'  => "eac_vendors_per_page",
 		) );
 	}
 
@@ -85,7 +85,7 @@ class Vendors {
 	 */
 	public static function render_table() {
 		global $list_table;
-		include __DIR__ . '/views/vendors/table.php';
+		include __DIR__ . '/views/vendor-list.php';
 	}
 
 	/**
@@ -96,7 +96,7 @@ class Vendors {
 	 */
 	public static function render_add() {
 		$vendor = new Vendor();
-		include __DIR__ . '/views/vendors/add.php';
+		include __DIR__ . '/views/vendor-add.php';
 	}
 
 	/**
@@ -114,7 +114,7 @@ class Vendors {
 			return;
 		}
 
-		include __DIR__ . '/views/vendors/edit.php';
+		include __DIR__ . '/views/vendor-edit.php';
 	}
 
 	/**
@@ -126,11 +126,11 @@ class Vendors {
 	public static function handle_edit() {
 		check_admin_referer( 'eac_edit_vendor' );
 		$referer = wp_get_referer();
-		$vendor  = eac_insert_vendor(
+		$vendor  = EAC()->vendors->insert(
 			array(
 				'id'            => isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0,
 				'name'          => isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '',
-				'currency_code' => isset( $_POST['currency_code'] ) ? sanitize_text_field( wp_unslash( $_POST['currency_code'] ) ) : eac_base_currency(),
+				'currency'      => isset( $_POST['currency'] ) ? sanitize_text_field( wp_unslash( $_POST['currency'] ) ) : eac_base_currency(),
 				'email'         => isset( $_POST['email'] ) ? sanitize_email( wp_unslash( $_POST['email'] ) ) : '',
 				'phone'         => isset( $_POST['phone'] ) ? sanitize_text_field( wp_unslash( $_POST['phone'] ) ) : '',
 				'company'       => isset( $_POST['company'] ) ? sanitize_text_field( wp_unslash( $_POST['company'] ) ) : '',
@@ -151,7 +151,7 @@ class Vendors {
 			EAC()->flash->error( $vendor->get_error_message() );
 		} else {
 			EAC()->flash->success( __( 'Vendor saved successfully.', 'wp-ever-accounting' ) );
-			$referer = add_query_arg( [ 'view' => 'edit', 'id' => $vendor->id ], $referer );
+			$referer = add_query_arg( [ 'action' => 'edit', 'id' => $vendor->id ], $referer );
 			$referer = remove_query_arg( array( 'add' ), $referer );
 		}
 		wp_safe_redirect( $referer );

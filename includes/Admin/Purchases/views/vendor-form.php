@@ -33,7 +33,7 @@ defined( 'ABSPATH' ) || exit;
 						);
 						eac_form_field(
 							array(
-								'id'       => 'currency_code',
+								'id'       => 'currency',
 								'type'     => 'select',
 								'label'    => __( 'Currency Code', 'wp-ever-accounting' ),
 								'value'    => $vendor->currency_code,
@@ -98,7 +98,6 @@ defined( 'ABSPATH' ) || exit;
 								'label'         => __( 'Address', 'wp-ever-accounting' ),
 								'placeholder'   => __( '123 Main St', 'wp-ever-accounting' ),
 								'value'         => $vendor->address,
-								'wrapper_style' => 'grid-column: 1 / span 2;',
 							)
 						);
 						eac_form_field(
