@@ -46,7 +46,7 @@ class CategoriesTable extends ListTable {
 	 */
 	public function prepare_items() {
 		$this->process_actions();
-		$per_page = $this->get_items_per_page( "eac_{$this->_args['plural']}_per_page" );
+		$per_page = $this->get_items_per_page( "eac_categories_per_page" );
 		$paged    = $this->get_pagenum();
 		$search   = $this->get_request_search();
 		$order_by = $this->get_request_orderby();
@@ -91,7 +91,7 @@ class CategoriesTable extends ListTable {
 	protected function bulk_activate( $ids ) {
 		$performed = 0;
 		foreach ( $ids as $id ) {
-			if ( eac_insert_category(
+			if ( EAC()->categories->insert(
 				array(
 					'id'     => $id,
 					'status' => 'active',
@@ -117,7 +117,7 @@ class CategoriesTable extends ListTable {
 	protected function bulk_deactivate( $ids ) {
 		$performed = 0;
 		foreach ( $ids as $id ) {
-			if ( eac_insert_category(
+			if ( EAC()->categories->insert(
 				array(
 					'id'     => $id,
 					'status' => 'inactive',
@@ -143,7 +143,7 @@ class CategoriesTable extends ListTable {
 	protected function bulk_delete( $ids ) {
 		$performed = 0;
 		foreach ( $ids as $id ) {
-			if ( eac_delete_category( $id ) ) {
+			if ( EAC()->categories->delete( $id ) ) {
 				++ $performed;
 			}
 		}
@@ -288,7 +288,7 @@ class CategoriesTable extends ListTable {
 	 * @return string Displays the name.
 	 */
 	public function column_name( $item ) {
-		return sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( ['view' => 'edit', 'id' => $item->id ], $this->base_url ) ), wp_kses_post( $item->name ) );
+		return sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( ['action' => 'edit', 'id' => $item->id ], $this->base_url ) ), wp_kses_post( $item->name ) );
 	}
 
 	/**
@@ -300,7 +300,7 @@ class CategoriesTable extends ListTable {
 	 * @return string Displays the type.
 	 */
 	public function column_type( $item ) {
-		$types = eac_get_category_types();
+		$types = $item->get_types();
 
 		return isset( $types[ $item->type ] ) ? $types[ $item->type ] : '';
 	}
@@ -323,7 +323,7 @@ class CategoriesTable extends ListTable {
 			'id'   => sprintf( '#%d', esc_attr( $item->id ) ),
 			'edit' => sprintf(
 				'<a href="%s">%s</a>',
-				esc_url( add_query_arg( ['view' => 'edit', 'id' => $item->id ], $this->base_url ) ),
+				esc_url( add_query_arg( ['action' => 'edit', 'id' => $item->id ], $this->base_url ) ),
 				__( 'Edit', 'wp-ever-accounting' )
 			),
 		);

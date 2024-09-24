@@ -21,8 +21,8 @@ class Categories {
 	public function __construct() {
 		add_filter( 'eac_misc_page_tabs', array( __CLASS__, 'register_tabs' ) );
 		add_filter( 'set-screen-option', array( __CLASS__, 'set_screen_option' ), 10, 3 );
-		add_action( 'load_eac_misc_page_categories_index', array( __CLASS__, 'setup_table' ) );
-		add_action( 'eac_misc_page_categories_index', array( __CLASS__, 'render_table' ) );
+		add_action( 'load_eac_misc_page_categories', array( __CLASS__, 'setup_table' ) );
+		add_action( 'eac_misc_page_categories', array( __CLASS__, 'render_table' ) );
 		add_action( 'eac_misc_page_categories_add', array( __CLASS__, 'render_add' ) );
 		add_action( 'eac_misc_page_categories_edit', array( __CLASS__, 'render_edit' ) );
 		add_action( 'admin_post_eac_edit_category', array( __CLASS__, 'handle_edit_category' ) );
@@ -54,7 +54,7 @@ class Categories {
 	 */
 	public static function set_screen_option( $status, $option, $value ) {
 		global $list_table;
-		if ( "eac_{$list_table->_args['plural']}_per_page" === $option ) {
+		if ( "eac_categories_per_page" === $option ) {
 			return $value;
 		}
 
@@ -74,7 +74,7 @@ class Categories {
 		$screen->add_option( 'per_page', array(
 			'label'   => __( 'Number of categories per page:', 'wp-ever-accounting' ),
 			'default' => 20,
-			'option'  => "eac_{$list_table->_args['plural']}_per_page",
+			'option'  => "eac_categories_per_page",
 		) );
 	}
 
@@ -85,7 +85,7 @@ class Categories {
 	 */
 	public static function render_table() {
 		global $list_table;
-		include __DIR__ . '/views/categories/table.php';
+		include __DIR__ . '/views/category-table.php';
 	}
 
 	/**
@@ -95,7 +95,7 @@ class Categories {
 	 */
 	public static function render_add() {
 		$category = new Category();
-		include __DIR__ . '/views/categories/add.php';
+		include __DIR__ . '/views/category-add.php';
 	}
 
 	/**
@@ -112,7 +112,7 @@ class Categories {
 			return;
 		}
 
-		include __DIR__ . '/views/categories/edit.php';
+		include __DIR__ . '/views/category-edit.php';
 	}
 
 	/**
@@ -129,26 +129,25 @@ class Categories {
 		$type     = isset( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '';
 		$desc     = isset( $_POST['description'] ) ? sanitize_textarea_field( wp_unslash( $_POST['description'] ) ) : '';
 		$status   = isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : 'active';
-		$category = eac_insert_category(
-			array(
-				'id'          => $id,
-				'name'        => $name,
-				'type'        => $type,
-				'description' => $desc,
-				'status'      => $status,
-			)
+		$data     = array(
+			'id'          => $id,
+			'name'        => $name,
+			'type'        => $type,
+			'description' => $desc,
+			'status'      => $status,
 		);
+
+		$category = EAC()->categories->insert( $data );
 
 		if ( is_wp_error( $category ) ) {
 			EAC()->flash->error( $category->get_error_message() );
 		} else {
 			EAC()->flash->success( __( 'Category saved successfully.', 'wp-ever-accounting' ) );
-			$referer = add_query_arg( ['view' => 'edit', 'id' => $category->id ], $referer );
+			$referer = add_query_arg( ['action' => 'edit', 'id' => $category->id ], $referer );
 			$referer = remove_query_arg( array( 'add' ), $referer );
 		}
 
 		wp_safe_redirect( $referer );
 		exit;
 	}
-
 }
