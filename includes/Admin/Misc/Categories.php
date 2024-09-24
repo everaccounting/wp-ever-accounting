@@ -85,7 +85,7 @@ class Categories {
 	 */
 	public static function render_table() {
 		global $list_table;
-		include __DIR__ . '/views/category-table.php';
+		include __DIR__ . '/views/category-list.php';
 	}
 
 	/**
@@ -129,15 +129,16 @@ class Categories {
 		$type     = isset( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '';
 		$desc     = isset( $_POST['description'] ) ? sanitize_textarea_field( wp_unslash( $_POST['description'] ) ) : '';
 		$status   = isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : 'active';
-		$data     = array(
-			'id'          => $id,
-			'name'        => $name,
-			'type'        => $type,
-			'description' => $desc,
-			'status'      => $status,
-		);
 
-		$category = EAC()->categories->insert( $data );
+		$category = EAC()->categories->insert(
+			array(
+				'id'          => $id,
+				'name'        => $name,
+				'type'        => $type,
+				'description' => $desc,
+				'status'      => $status,
+			)
+		);
 
 		if ( is_wp_error( $category ) ) {
 			EAC()->flash->error( $category->get_error_message() );
