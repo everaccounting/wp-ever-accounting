@@ -92,7 +92,7 @@ class AccountsTable extends ListTable {
 	protected function bulk_activate( $ids ) {
 		$performed = 0;
 		foreach ( $ids as $id ) {
-			if ( eac_insert_account(
+			if ( EAC()->accounts->insert(
 				array(
 					'id'     => $id,
 					'status' => 'active',
@@ -118,7 +118,7 @@ class AccountsTable extends ListTable {
 	protected function bulk_deactivate( $ids ) {
 		$performed = 0;
 		foreach ( $ids as $id ) {
-			if ( eac_insert_account(
+			if ( EAC()->accounts->insert(
 				array(
 					'id'     => $id,
 					'status' => 'inactive',
@@ -144,7 +144,7 @@ class AccountsTable extends ListTable {
 	protected function bulk_delete( $ids ) {
 		$performed = 0;
 		foreach ( $ids as $id ) {
-			if ( eac_delete_account( $id ) ) {
+			if ( EAC()->accounts->delete( $id ) ) {
 				++$performed;
 			}
 		}

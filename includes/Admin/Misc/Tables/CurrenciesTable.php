@@ -145,8 +145,7 @@ class CurrenciesTable extends ListTable {
 	protected function bulk_delete( $ids ) {
 		$performed = 0;
 		foreach ( $ids as $id ) {
-			$currency = Currency::find( $id );
-			if ( $currency && $currency->delete() ) {
+			if ( EAC()->accounts->delete( $id ) ) {
 				++ $performed;
 			}
 		}

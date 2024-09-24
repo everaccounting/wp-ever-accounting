@@ -19,8 +19,8 @@ class Accounts {
 	public function __construct() {
 		add_filter( 'eac_banking_page_tabs', array( __CLASS__, 'register_tabs' ) );
 		add_filter( 'set-screen-option', array( __CLASS__, 'set_screen_option' ), 10, 3 );
-		add_action( 'load_eac_banking_page_accounts_index', array( __CLASS__, 'setup_table' ) );
-		add_action( 'eac_banking_page_accounts_index', array( __CLASS__, 'render_table' ) );
+		add_action( 'load_eac_banking_page_accounts', array( __CLASS__, 'setup_table' ) );
+		add_action( 'eac_banking_page_accounts', array( __CLASS__, 'render_table' ) );
 		add_action( 'eac_banking_page_accounts_add', array( __CLASS__, 'render_add' ) );
 		add_action( 'eac_banking_page_accounts_edit', array( __CLASS__, 'render_edit' ) );
 		add_action( 'admin_post_eac_edit_account', array( __CLASS__, 'handle_edit' ) );
@@ -52,7 +52,7 @@ class Accounts {
 	 */
 	public static function set_screen_option( $status, $option, $value ) {
 		global $list_table;
-		if ( "eac_{$list_table->_args['plural']}_per_page" === $option ) {
+		if ( "eac_accounts_per_page" === $option ) {
 			return $value;
 		}
 
@@ -73,7 +73,7 @@ class Accounts {
 		$screen->add_option( 'per_page', array(
 			'label'   => __( 'Number of accounts per page:', 'wp-ever-accounting' ),
 			'default' => 20,
-			'option'  => "eac_{$list_table->_args['plural']}_per_page",
+			'option'  => "eac_accounts_per_page",
 		) );
 	}
 
@@ -85,7 +85,7 @@ class Accounts {
 	 */
 	public static function render_table() {
 		global $list_table;
-		include __DIR__ . '/views/accounts/table.php';
+		include __DIR__ . '/views/account-list.php';
 	}
 
 	/**
@@ -96,7 +96,7 @@ class Accounts {
 	 */
 	public static function render_add() {
 		$account = new Account();
-		include __DIR__ . '/views/accounts/add.php';
+		include __DIR__ . '/views/account-add.php';
 	}
 
 	/**
@@ -113,7 +113,7 @@ class Accounts {
 
 			return;
 		}
-		include __DIR__ . '/views/accounts/edit.php';
+		include __DIR__ . '/views/account-edit.php';
 	}
 
 	/**
@@ -125,7 +125,7 @@ class Accounts {
 	public static function handle_edit() {
 		check_admin_referer( 'eac_edit_account' );
 		$referer = wp_get_referer();
-		$account = eac_insert_account(
+		$account = EAC()->accounts->insert(
 			array(
 				'id'              => isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0,
 				'name'            => isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '',
@@ -144,7 +144,7 @@ class Accounts {
 			EAC()->flash->error( $account->get_error_message() );
 		} else {
 			EAC()->flash->success( __( 'Account saved successfully.', 'wp-ever-accounting' ) );
-			$referer = add_query_arg( ['view' => 'edit', 'id' => $account->id ], $referer );
+			$referer = add_query_arg( ['action' => 'edit', 'id' => $account->id ], $referer );
 			$referer = remove_query_arg( array( 'add' ), $referer );
 		}
 

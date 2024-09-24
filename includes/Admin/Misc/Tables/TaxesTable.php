@@ -142,7 +142,7 @@ class TaxesTable extends ListTable {
 	protected function bulk_delete( $ids ) {
 		$performed = 0;
 		foreach ( $ids as $id ) {
-			if ( eac_delete_tax( $id ) ) {
+			if ( EAC()->taxes->delete( $id ) ) {
 				++$performed;
 			}
 		}

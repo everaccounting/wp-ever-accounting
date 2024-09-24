@@ -51,7 +51,7 @@ defined( 'ABSPATH' ) || exit;
 								'type'        => 'select',
 								'name'        => 'type',
 								'value'       => $account->type,
-								'options'     => \EverAccounting\Models\Account::get_types(),
+								'options'     => EAC()->accounts->get_types(),
 								'placeholder' => __( 'Select Type', 'wp-ever-accounting' ),
 								'required'    => true,
 							)
