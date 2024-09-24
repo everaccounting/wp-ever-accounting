@@ -56,7 +56,7 @@ class Customers {
 			array(
 				'label'   => __( 'Number of items per page:', 'wp-ever-accounting' ),
 				'default' => 20,
-				'option'  => "eac_{$list_table->_args['plural']}_per_page",
+				'option'  => "eac_customers_per_page",
 			)
 		);
 	}
@@ -73,7 +73,7 @@ class Customers {
 	 */
 	public static function set_screen_option( $status, $option, $value ) {
 		global $list_table;
-		if ( "eac_{$list_table->_args['plural']}_per_page" === $option ) {
+		if ( "eac_customers_per_page" === $option ) {
 			return $value;
 		}
 
@@ -88,7 +88,7 @@ class Customers {
 	 */
 	public function render_table() {
 		global $list_table;
-		include __DIR__ . '/views/customers-list.php';
+		include __DIR__ . '/views/customer-list.php';
 	}
 
 	/**
@@ -98,7 +98,8 @@ class Customers {
 	 * @return void
 	 */
 	public function render_add() {
-		include __DIR__ . '/views/customers-add.php';
+		$customer = new Customer();
+		include __DIR__ . '/views/customer-add.php';
 	}
 
 	/**
@@ -109,7 +110,7 @@ class Customers {
 	 */
 	public function render_edit() {
 		$customer = new Customer( $_GET['id'] );
-		include __DIR__ . '/views/customers-edit.php';
+		include __DIR__ . '/views/customer-edit.php';
 	}
 
 	/**

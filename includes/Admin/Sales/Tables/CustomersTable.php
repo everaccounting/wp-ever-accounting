@@ -301,8 +301,8 @@ class CustomersTable extends ListTable {
 			esc_url(
 				add_query_arg(
 					array(
-						'view' => 'edit',
-						'id'   => $item->id,
+						'action' => 'edit',
+						'id'     => $item->id,
 					),
 					$this->base_url
 				)
@@ -371,8 +371,8 @@ class CustomersTable extends ListTable {
 				esc_url(
 					add_query_arg(
 						array(
-							'view' => 'edit',
-							'id'   => $item->id,
+							'action' => 'edit',
+							'id'     => $item->id,
 						),
 						$this->base_url
 					)

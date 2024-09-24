@@ -31,7 +31,7 @@ defined( 'ABSPATH' ) || exit;
 						);
 						eac_form_field(
 							array(
-								'id'           => 'currency_code',
+								'id'           => 'currency',
 								'type'         => 'select',
 								'label'        => __( 'Currency Code', 'wp-ever-accounting' ),
 								'value'        => $customer->currency_code,
@@ -94,7 +94,6 @@ defined( 'ABSPATH' ) || exit;
 								'label'         => __( 'Address', 'wp-ever-accounting' ),
 								'placeholder'   => __( '123 Main St', 'wp-ever-accounting' ),
 								'value'         => $customer->address,
-								'wrapper_style' => 'grid-column: 1 / span 2;',
 							)
 						);
 						eac_form_field(
@@ -161,7 +160,7 @@ defined( 'ABSPATH' ) || exit;
 						?>
 					</div>
 					<div class="eac-card__footer">
-						<?php if ( $customer->exists() ) : ?>
+						<?php if ( $customer->exists() && EAC()->customers->get($customer->id) ) : ?>
 							<input type="hidden" name="id" value="<?php echo esc_attr( $customer->id ); ?>"/>
 						<?php endif; ?>
 						<input type="hidden" name="action" value="eac_edit_customer"/>
