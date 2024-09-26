@@ -69,7 +69,6 @@ class Utilities {
 				'menu_title' => __( 'Settings', 'wp-ever-accounting' ),
 				'capability' => 'manage_options',
 				'menu_slug'  => 'eac-settings',
-				'callback'   => array( Settings::class, 'output' ),
 			),
 		);
 

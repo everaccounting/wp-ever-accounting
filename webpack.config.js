@@ -26,18 +26,11 @@ module.exports = [
 			'js/modal': './.assets/js/modal.js',
 
 			// Admin scripts.
-			'js/admin': './.assets/js/admin/admin.js',
-			'js/admin-payments': './.assets/js/admin/payments.js',
-			'js/admin-invoices': './.assets/js/admin/invoices.js',
-			// 'js/admin-payments': './.assets/js/admin-payments.js',
-			// 'js/admin-settings': './.assets/js/admin-settings.js',
-			// 'js/admin-transfers': './.assets/js/admin-transfers.js',
-			// 'js/admin-vendors': './.assets/js/admin-vendors.js',
-			// 'js/admin-reports': './.assets/js/admin-reports.js',
+			'js/admin': './.assets/js/admin.js',
+			'js/admin-sales': './.assets/js/admin-sales.js',
+			'js/admin-settings': './.assets/js/admin-settings.js',
 			'css/admin': './.assets/css/admin.scss',
-
-			// Frontend scripts.
-			'js/frontend': './.assets/js/frontend.js',
+			'css/admin-settings': './.assets/css/admin-settings.scss',
 		},
 		output: {
 			...defaults.output,

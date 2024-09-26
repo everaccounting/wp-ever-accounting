@@ -18,14 +18,13 @@ defined( 'ABSPATH' ) || exit;
  * @property int    $payment_id Payment ID of the item.
  * @property int    $expense_id Expense ID of the transfer.
  * @property double $amount Amount of the transfer.
- * @property string $uuid UUID of the transfer.
  * @property int    $creator_id Creator ID of the transfer.
  * @property string $created_at Date the transfer was created.
  * @property string $updated_at Date the transfer was last updated.
  *
  * @property int    $from_account_id From account ID of the transfer.
  * @property int    $to_account_id To account ID of the transfer.
- * @property string $currency_code Currency code of the transfer.
+ * @property string $currency Currency code of the transfer.
  * @property float  $exchange_rate Exchange rate of the transfer.
  * @property string $date Date of the transfer.
  * @property string $payment_method Payment method of the transfer.
@@ -50,7 +49,7 @@ class Transfer extends Model {
 		'id',
 		'date',
 		'amount',
-		'currency_code',
+		'currency',
 		'reference',
 		'payment_id',
 		'expense_id',
@@ -217,7 +216,7 @@ class Transfer extends Model {
 					'account_id'     => $this->to_account_id,
 					'date'           => $this->date,
 					'amount'         => $this->amount,
-					'currency_code'  => $to_account->currency_code,
+					'currency'       => $to_account->currency,
 					'payment_method' => $this->payment_method,
 					'reference'      => $this->reference,
 				)
@@ -229,8 +228,8 @@ class Transfer extends Model {
 
 			$amount = $this->amount;
 			// If from and to account currency is different, then we have to convert the amount.
-			if ( $from_account->currency_code !== $to_account->currency_code ) {
-				$amount = eac_convert_currency( $this->amount, $this->currency_code, $to_account->currency_code );
+			if ( $from_account->currency !== $to_account->currency ) {
+				$amount = eac_convert_currency( $this->amount, $this->currency, $to_account->currency );
 			}
 
 			$expense = $this->expense()->insert(
@@ -238,7 +237,7 @@ class Transfer extends Model {
 					'account_id'     => $this->from_account_id,
 					'date'           => $this->date,
 					'amount'         => $amount,
-					'currency_code'  => $this->currency_code,
+					'currency'       => $this->currency,
 					'payment_method' => $this->payment_method,
 					'reference'      => $this->reference,
 				)
@@ -252,7 +251,7 @@ class Transfer extends Model {
 
 			$this->set( 'payment_id', $payment->id );
 			$this->set( 'expense_id', $expense->id );
-			$this->set( 'currency_code', $to_account->currency_code );
+			$this->set( 'currency', $to_account->currency );
 			$this->set( 'from_account_id', $from_account->id );
 			$this->set( 'to_account_id', $to_account->id );
 			$this->set( 'reference', $this->reference );

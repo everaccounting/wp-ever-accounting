@@ -127,7 +127,7 @@ class PaymentsTable extends ListTable {
 	protected function get_views() {
 		$current      = $this->get_request_status( 'all' );
 		$status_links = array();
-		$statuses     = Payment::get_statuses();
+		$statuses     = EAC()->payments->get_statuses();
 		$statuses     = array_merge( array( 'all' => __( 'All', 'wp-ever-accounting' ) ), $statuses );
 
 		foreach ( $statuses as $status => $label ) {

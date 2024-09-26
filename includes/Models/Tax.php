@@ -14,8 +14,6 @@ namespace EverAccounting\Models;
  * @property string      $name Name of the tax.
  * @property double      $rate Rate of the tax.
  * @property bool        $compound Whether the tax is compound.
- * @property string      $description Description of the tax.
- * @property string      $status Status of the tax.
  * @property string      $created_at Date the tax was created.
  * @property string      $updated_at Date the tax was last updated.
  *
@@ -42,18 +40,6 @@ class Tax extends Model {
 		'name',
 		'rate',
 		'compound',
-		'description',
-		'status',
-	);
-
-	/**
-	 * The attributes of the model.
-	 *
-	 * @since 1.0.0
-	 * @var array
-	 */
-	protected $attributes = array(
-		'status' => 'active',
 	);
 
 	/**
@@ -66,7 +52,6 @@ class Tax extends Model {
 		'id'       => 'int',
 		'rate'     => 'float',
 		'compound' => 'bool',
-		'status'   => array( 'active', 'inactive' ),
 	);
 
 	/**
@@ -147,9 +132,6 @@ class Tax extends Model {
 		}
 		if ( empty( $this->rate ) ) {
 			return new \WP_Error( 'missing_required', __( 'Tax rate is required.', 'wp-ever-accounting' ) );
-		}
-		if ( empty( $this->status ) ) {
-			return new \WP_Error( 'missing_required', __( 'Tax status is required.', 'wp-ever-accounting' ) );
 		}
 
 		return parent::save();

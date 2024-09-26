@@ -117,4 +117,32 @@ class Invoices {
 		}
 		include __DIR__ . '/views/invoice-edit.php';
 	}
+
+	/**
+	 * Handle edit.
+	 *
+	 * @since 3.0.0
+	 * @return void
+	 */
+	public static function handle_edit() {
+		check_ajax_referer( 'eac_edit_invoice' );
+		$referer = wp_get_referer();
+		$invoice = EAC()->invoices->insert( $_POST );
+
+		if ( is_wp_error( $invoice ) ) {
+			EAC()->flash->error( $invoice->get_error_message() );
+		} else {
+			EAC()->flash->success( __( 'Invoice saved successfully.', 'wp-ever-accounting' ) );
+			$referer = add_query_arg(
+				array(
+					'action' => 'edit',
+					'id'     => $invoice->id,
+				),
+				$referer
+			);
+		}
+
+		wp_safe_redirect( $referer );
+		exit();
+	}
 }

@@ -161,35 +161,9 @@ class Transaction extends Model {
 	 * @param string|array|object $attributes The model attributes.
 	 */
 	public function __construct( $attributes = array() ) {
-		$this->attributes['uuid']          = wp_generate_uuid4();
+		$this->attributes['uuid']     = wp_generate_uuid4();
 		$this->attributes['currency'] = eac_base_currency();
 		parent::__construct( $attributes );
-	}
-
-	/*
-	|--------------------------------------------------------------------------
-	| Prop Definition Methods
-	|--------------------------------------------------------------------------
-	| This section contains methods that define and provide specific prop values
-	| related to the model, such as statuses or types. These methods can be accessed
-	| without instantiating the model.
-	|--------------------------------------------------------------------------
-	*/
-
-	/**
-	 * Get transaction types.
-	 *
-	 * @since 1.0.0
-	 * @return array
-	 */
-	public static function get_types() {
-		return apply_filters(
-			'ever_accounting_transaction_types',
-			array(
-				'payment' => esc_html__( 'Payment', 'wp-ever-accounting' ),
-				'expense' => esc_html__( 'Expense', 'wp-ever-accounting' ),
-			)
-		);
 	}
 
 	/*

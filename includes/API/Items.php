@@ -133,7 +133,7 @@ class Items extends Controller {
 	 * @return true|\WP_Error True if the request has read access, WP_Error object otherwise.
 	 */
 	public function get_item_permissions_check( $request ) {
-		$item = eac_get_item( $request['id'] );
+		$item = EAC()->items->get( $request['id'] );
 
 		if ( empty( $item ) || ! current_user_can( 'eac_manage_item' ) ) {
 			return new \WP_Error(
@@ -155,7 +155,7 @@ class Items extends Controller {
 	 * @return true|\WP_Error True if the request has read access, WP_Error object otherwise.
 	 */
 	public function update_item_permissions_check( $request ) {
-		$item = eac_get_item( $request['id'] );
+		$item = EAC()->items->get( $request['id'] );
 
 		if ( empty( $item ) || ! current_user_can( 'eac_manage_item' ) ) {
 			return new \WP_Error(
@@ -177,7 +177,7 @@ class Items extends Controller {
 	 * @return true|\WP_Error True if the request has read access, WP_Error object otherwise.
 	 */
 	public function delete_item_permissions_check( $request ) {
-		$item = eac_get_item( $request['id'] );
+		$item = EAC()->items->get( $request['id'] );
 
 		if ( empty( $item ) || ! current_user_can( 'eac_manage_item' ) ) {
 			return new \WP_Error(
@@ -218,8 +218,8 @@ class Items extends Controller {
 		 * @since 1.2.1
 		 */
 		$args      = apply_filters( 'eac_rest_item_query', $args, $request );
-		$items     = eac_get_items( $args );
-		$total     = eac_get_items( $args, true );
+		$items     = EAC()->items->gets( $args );
+		$total     = EAC()->items->gets( $args, true );
 		$page      = isset( $request['page'] ) ? absint( $request['page'] ) : 1;
 		$max_pages = ceil( $total / (int) $args['per_page'] );
 
@@ -266,7 +266,7 @@ class Items extends Controller {
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function get_item( $request ) {
-		$item = eac_get_item( $request['id'] );
+		$item = EAC()->items->get( $request['id'] );
 		$data = $this->prepare_item_for_response( $item, $request );
 
 		return rest_ensure_response( $data );
@@ -318,7 +318,7 @@ class Items extends Controller {
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function update_item( $request ) {
-		$item = eac_get_item( $request['id'] );
+		$item = EAC()->items->get( $request['id'] );
 		$data = $this->prepare_item_for_database( $request );
 		if ( is_wp_error( $data ) ) {
 			return $data;
@@ -344,7 +344,7 @@ class Items extends Controller {
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function delete_item( $request ) {
-		$item = eac_get_item( $request['id'] );
+		$item = EAC()->items->get( $request['id'] );
 		$request->set_param( 'context', 'edit' );
 		$data = $this->prepare_item_for_response( $item, $request );
 

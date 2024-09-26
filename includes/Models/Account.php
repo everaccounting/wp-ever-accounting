@@ -2,7 +2,6 @@
 
 namespace EverAccounting\Models;
 
-use ByteKit\Models\Relations\BelongsTo;
 use ByteKit\Models\Relations\HasMany;
 
 defined( 'ABSPATH' ) || exit;
@@ -16,24 +15,21 @@ defined( 'ABSPATH' ) || exit;
  * @subpackage Models
  *
  * @property int                $id ID of the category.
- * @property string             $name Name of the category.
  * @property string             $type Type of the account.
+ * @property string             $name Name of the category.
  * @property string             $number Account number.
- * @property float              $opening_balance Opening balance.
  * @property string             $bank_name Bank name.
  * @property string             $bank_phone Bank phone.
  * @property string             $bank_address Bank address.
- * @property string             $currency_code Currency code.
- * @property int                $creator_id Author ID.
+ * @property string             $currency Currency code.
  * @property int                $thumbnail_id Thumbnail ID.
- * @property string             $status Status of the account.
+ * @property int                $creator_id Author ID.
  * @property string             $created_at Date created.
  * @property string             $updated_at Date updated.
  *
  * @property-read string        $formatted_name Formatted name.
  * @property-read float         $balance Balance.
  * @property-read string        $formatted_balance Formatted balance.
- * @property-read Currency      $currency Currency relation.
  * @property-read Transaction[] $transactions Transaction relation.
  * @property-read Payment[]     $payments Payments relation.
  * @property-read Expense[]     $expenses Expenses relation.
@@ -62,10 +58,9 @@ class Account extends Model {
 		'bank_name',
 		'bank_phone',
 		'bank_address',
-		'currency_code',
-		'creator_id',
+		'currency',
 		'thumbnail_id',
-		'status'
+		'creator_id',
 	);
 
 	/**
@@ -75,8 +70,7 @@ class Account extends Model {
 	 * @var array
 	 */
 	protected $attributes = array(
-		'type'   => 'bank',
-		'status' => 'active',
+		'type' => 'bank',
 	);
 
 	/**
@@ -86,9 +80,9 @@ class Account extends Model {
 	 * @var array
 	 */
 	protected $casts = array(
-		'id'              => 'int',
-		'creator_id'      => 'int',
-		'thumbnail_id'    => 'int',
+		'id'           => 'int',
+		'creator_id'   => 'int',
+		'thumbnail_id' => 'int',
 	);
 
 	/**
@@ -123,7 +117,7 @@ class Account extends Model {
 		'bank_name',
 		'bank_phone',
 		'bank_address',
-		'currency_code',
+		'currency',
 		'number',
 	);
 
@@ -163,7 +157,7 @@ class Account extends Model {
 	 * @return string
 	 */
 	public function get_formatted_balance() {
-		return eac_format_amount( $this->balance, $this->currency_code );
+		return eac_format_amount( $this->balance, $this->currency );
 	}
 
 	/**
@@ -173,20 +167,10 @@ class Account extends Model {
 	 * @return string
 	 */
 	public function get_formatted_name() {
-		$name   = sprintf( '%s (%s)', $this->name, $this->currency_code );
+		$name   = sprintf( '%s (%s)', $this->name, $this->currency );
 		$number = $this->number;
 
 		return $number ? sprintf( '%s - %s', $number, $name ) : $name;
-	}
-
-	/**
-	 * Get the currency.
-	 *
-	 * @since 1.0.0
-	 * @return BelongsTo
-	 */
-	public function currency() {
-		return $this->belongs_to( Currency::class, 'currency_code', 'code' );
 	}
 
 	/**
@@ -197,16 +181,6 @@ class Account extends Model {
 	 */
 	public function transactions() {
 		return $this->has_many( Transaction::class )->set( 'limit', 1 );
-	}
-
-	/**
-	 * Revenue relation.
-	 *
-	 * @since 1.0.0
-	 * @return HasMany
-	 */
-	public function revenues() {
-		return $this->has_many( Revenue::class );
 	}
 
 	/*
@@ -230,11 +204,8 @@ class Account extends Model {
 		if ( empty( $this->number ) ) {
 			return new \WP_Error( 'missing_required', __( 'Account number rate is required.', 'wp-ever-accounting' ) );
 		}
-		if ( empty( $this->currency_code ) ) {
+		if ( empty( $this->currency ) ) {
 			return new \WP_Error( 'missing_required', __( 'Currency code is required.', 'wp-ever-accounting' ) );
-		}
-		if ( empty( $this->status ) ) {
-			return new \WP_Error( 'missing_required', __( 'Currency status is required.', 'wp-ever-accounting' ) );
 		}
 
 		if ( empty( $this->creator_id ) && is_user_logged_in() ) {

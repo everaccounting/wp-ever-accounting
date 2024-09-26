@@ -12,27 +12,26 @@ defined( 'ABSPATH' ) || exit;
  * @since   1.0.0
  * @package EverAccounting\Models
  *
- * @property int    $id ID of the contact.
- * @property string $type Type of the contact.
- * @property string $name Name of the contact.
- * @property string $company Company of the contact.
- * @property string $email Email of the contact.
- * @property string $phone Phone of the contact.
- * @property string $website Website url of the contact.
- * @property string $address Address line of the contact.
- * @property string $city City of the contact.
- * @property string $state State of the contact.
- * @property string $zip Postcode of the contact.
- * @property string $country Country of the contact.
- * @property string $tax_number Tax number of the contact.
- * @property string $currency_code Currency code of the contact.
- * @property int    $thumbnail_id Thumbnail ID of the contact.
- * @property int    $user_id User ID of the contact.
- * @property string $status Status of the contact.
- * @property string $created_via Created via of the contact.
- * @property int    $creator_id Author ID of the contact.
- * @property string $created_at Date created of the contact.
- * @property string $updated_at Date updated of the contact.
+ * @property int          $id ID of the contact.
+ * @property string       $type Type of the contact.
+ * @property string       $name Name of the contact.
+ * @property string       $company Company of the contact.
+ * @property string       $email Email of the contact.
+ * @property string       $phone Phone of the contact.
+ * @property string       $website Website url of the contact.
+ * @property string       $address Address line of the contact.
+ * @property string       $city City of the contact.
+ * @property string       $state State of the contact.
+ * @property string       $zip Postcode of the contact.
+ * @property string       $country Country of the contact.
+ * @property string       $tax_number Tax number of the contact.
+ * @property string       $currency Currency code of the contact.
+ * @property int          $thumbnail_id Thumbnail ID of the contact.
+ * @property int          $user_id User ID of the contact.
+ * @property string       $created_via Created via of the contact.
+ * @property int          $creator_id Author ID of the contact.
+ * @property string       $created_at Date created of the contact.
+ * @property string       $updated_at Date updated of the contact.
  *
  * @property-read  string $formatted_name Get formatted name.
  * @property-read  string $country_name Get country name.
@@ -77,19 +76,8 @@ class Contact extends Model {
 		'currency',
 		'thumbnail_id',
 		'user_id',
-		'status',
 		'created_via',
 		'creator_id',
-	);
-
-	/**
-	 * The model's attributes.
-	 *
-	 * @since 1.0.0
-	 * @var array
-	 */
-	protected $attributes = array(
-		'status' => 'active',
 	);
 
 	/**
@@ -104,7 +92,7 @@ class Contact extends Model {
 		'website'      => 'esc_url',
 		'thumbnail_id' => 'int',
 		'user_id'      => 'int',
-		'creator_id'    => 'int',
+		'creator_id'   => 'int',
 	);
 
 	/**
@@ -147,34 +135,8 @@ class Contact extends Model {
 		'company',
 		'email',
 		'phone',
-		'address'
+		'address',
 	);
-
-	/*
-	|--------------------------------------------------------------------------
-	| Property Definition Methods
-	|--------------------------------------------------------------------------
-	| This section contains static methods that define and return specific
-	| property values related to the model.
-	| These methods are accessible without creating an instance of the model.
-	|--------------------------------------------------------------------------
-	*/
-
-	/**
-	 * Get contact types.
-	 *
-	 * @return array
-	 * @since 1.1.0
-	 */
-	public static function get_contact_types() {
-		return apply_filters(
-			'ever_accounting_contact_types',
-			array(
-				'customer' => esc_html__( 'Customer', 'wp-ever-accounting' ),
-				'vendor'   => esc_html__( 'Vendor', 'wp-ever-accounting' ),
-			)
-		);
-	}
 
 	/*
 	|--------------------------------------------------------------------------
@@ -193,17 +155,19 @@ class Contact extends Model {
 	 */
 	public function get_country_name() {
 		$countries = I18n::get_countries();
+
 		return isset( $countries[ $this->country ] ) ? $countries[ $this->country ] : $this->country;
 	}
 
 	/**
 	 * Get formatted name.
 	 *
-	 * @return string
 	 * @since 1.1.6
+	 * @return string
 	 */
 	public function get_formatted_name() {
 		$company = $this->company ? ' (' . $this->company . ')' : '';
+
 		return $this->name . $company;
 	}
 
@@ -226,12 +190,8 @@ class Contact extends Model {
 			return new \WP_Error( 'missing_required', __( 'Name is required.', 'wp-ever-accounting' ) );
 		}
 
-		if ( empty( $this->status ) ) {
-			return new \WP_Error( 'missing_required', __( 'Status is required.', 'wp-ever-accounting' ) );
-		}
-
-		if ( empty( $this->currency_code ) ) {
-			$this->set( 'currency_code', eac_base_currency() );
+		if ( empty( $this->currency ) ) {
+			$this->set( 'currency', eac_base_currency() );
 		}
 
 		if ( empty( $this->creator_id ) && is_user_logged_in() ) {

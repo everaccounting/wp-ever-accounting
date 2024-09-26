@@ -14,98 +14,97 @@ class Currencies extends Page {
 	 * Constructor.
 	 */
 	public function __construct() {
-		$this->id    = 'currencies';
-		$this->label = __( 'Currencies', 'wp-ever-accounting' );
-
-		parent::__construct();
+		parent::__construct( 'currencies', __( 'Currencies', 'wp-ever-accounting' ) );
 	}
 
 	/**
-	 * Output the HTML for the settings.
+	 * Get settings tab sections.
+	 *
+	 * @since 3.0.0
+	 * @return array
 	 */
-	public function output() {
-		wp_add_inline_script( 'eac-admin-currencies', 'var eac_admin_currencies_vars = ' . json_encode( [] ) . ';', 'after' );
-		?>
-		<table id="eac-admin-currencies" class="widefat fixed" style="margin-top: 20px;">
-			<thead>
-			<tr>
-				<td width="10%"><?php esc_html_e( 'Currency', 'wp-ever-accounting' ); ?></td>
-				<td width="10%"><?php esc_html_e( 'Symbol', 'wp-ever-accounting' ); ?></td>
-				<td width="10%"><?php esc_html_e( 'Exchange Rate', 'wp-ever-accounting' ); ?></td>
-				<td width="10%"><?php esc_html_e( 'Precision', 'wp-ever-accounting' ); ?></td>
-				<td width="5%"><?php esc_html_e( 'Action', 'wp-ever-accounting' ); ?></td>
-			</tr>
-			</thead>
-			<tfoot>
-			<tr>
-				<td colspan="5">
-					<select name="" id="" class="add-currency">
-						<?php foreach ( eac_get_currencies() as $currency ) : ?>
-							<option value="<?php echo esc_attr( $currency['code'] ); ?>">
-								<?php echo esc_html( $currency['name'] ); ?>
-							</option>
-						<?php endforeach; ?>
-					</select>
-					<button class="button button-secondary add-currency" type="button">
-						<?php esc_html_e( 'Add Currency', 'wp-ever-accounting' ); ?>
-					</button>
-				</td>
-			</tr>
-			</tfoot>
-			<tbody id="currencies">
-			<tr>
-				<th colspan="5" style="text-align: center;"><?php esc_html_e( 'Loading&hellip;', 'wp-ever-accounting' ); ?></th>
-			</tr>
-			</tbody>
-		</table>
+	public function get_sections() {
+		return array(
+			''           => __( 'Options', 'wp-ever-accounting' ),
+			'currencies' => __( 'Currencies', 'wp-ever-accounting' ),
+		);
+	}
 
-		<script type="text/html" id="tmpl-eac-currency-table-row">
-			<tr>
-				<td>
-					<span class="currency-name">{{ data.code - data.name }}</span>
-					<input type="hidden" value="{{ data.code }}" name="currencies[{{ data.code }}][code]" data-attribute="code"/>
-				</td>
-				<td>
-					<input type="text" value="{{ data.symbol }}" name="currencies[{{ data.code }}][symbol]" data-attribute="symbol"/>
-				</td>
-				<td>
-					<input type="text" value="{{ data.exchange_rate }}" name="currencies[{{ data.code }}][exchange_rate]" data-attribute="exchange_rate"/>
-				</td>
-				<td>
-					<input type="number" value="{{ data.precision }}" name="currencies[{{ data.code }}][precision]" data-attribute="precision"/>
-				</td>
-				<td>
-					<button class="button button-small remove-currency" data-code="{{ data.code }}">
-						<?php esc_html_e( 'Remove', 'wp-ever-accounting' ); ?>
-					</button>
-				</td>
-			</tr>
-		</script>
+	/**
+	 * Get settings.
+	 *
+	 * @since 1.0.0
+	 * @return array
+	 */
+	public function get_default_section_settings() {
+		return array(
+			// currency options.
+			array(
+				'title' => __( 'Currency Options', 'wp-ever-accounting' ),
+				'type'  => 'title',
+				'id'    => 'currency_options',
+			),
+			// currency.
+			array(
+				'title'    => __( 'Base Currency', 'wp-ever-accounting' ),
+				'desc'     => __( 'The base currency of your business.Currency can not be changed once you have recorded any transaction.', 'wp-ever-accounting' ),
+				'id'       => 'eac_base_currency',
+				'type'     => 'select',
+				'default'  => 'USD',
+				'class'    => 'eac_select2',
+				'options'  => wp_list_pluck( eac_get_currencies(), 'formatted_name', 'code' ),
+				'value'    => get_option( 'eac_base_currency', 'USD' ),
+				'desc_tip' => true,
+			),
 
-		<script type="text/html" id="tmpl-eac-currency-table-empty">
-			<tr>
-				<th colspan="5" style="text-align: center;"><?php esc_html_e( 'No currencies found.', 'wp-ever-accounting' ); ?></th>
-			</tr>
-		</script>
+			array(
+				'title'    => __( 'Currency Position', 'wp-ever-accounting' ),
+				'desc'     => __( 'The position of the currency symbol.', 'wp-ever-accounting' ),
+				'id'       => 'eac_currency_position',
+				'type'     => 'select',
+				'default'  => 'before',
+				'options'  => array(
+					'before' => __( 'Before', 'wp-ever-accounting' ),
+					'after'  => __( 'After', 'wp-ever-accounting' ),
+				),
+				'desc_tip' => true,
+			),
+			array(
+				'title'       => __( 'Thousand Separator', 'wp-ever-accounting' ),
+				'desc'        => __( 'The character used to separate thousands.', 'wp-ever-accounting' ),
+				'id'          => 'eac_thousand_separator',
+				'type'        => 'text',
+				'placeholder' => ',',
+				'default'     => ',',
+				'desc_tip'    => true,
+				'css'         => 'width: 80px;',
+			),
+			array(
+				'title'       => __( 'Decimal Separator', 'wp-ever-accounting' ),
+				'desc'        => __( 'The character used to separate decimals.', 'wp-ever-accounting' ),
+				'id'          => 'eac_decimal_separator',
+				'type'        => 'text',
+				'placeholder' => '.',
+				'default'     => '.',
+				'desc_tip'    => true,
+				'css'         => 'width: 80px;',
+			),
+			array(
+				'title'       => __( 'Currency Precision', 'wp-ever-accounting' ),
+				'desc'        => __( 'The number of decimal places to display.', 'wp-ever-accounting' ),
+				'id'          => 'eac_currency_precision',
+				'type'        => 'number',
+				'placeholder' => '2',
+				'default'     => 2,
+				'desc_tip'    => true,
+				'css'         => 'width: 80px;',
+			),
 
-		<script type="text/html" id="tmpl-eac-currency-table-actions">
-			<tr>
-				<td colspan="5">
-					<select name="" id="" class="add-currency">
-						<?php foreach ( eac_get_currencies() as $currency ) : ?>
-							<option value="<?php echo esc_attr( $currency['code'] ); ?>">
-								<?php echo esc_html( $currency['name'] ); ?>
-							</option>
-						<?php endforeach; ?>
-					</select>
-					<button class="button button-secondary add-currency" type="button">
-						<?php esc_html_e( 'Add Currency', 'wp-ever-accounting' ); ?>
-					</button>
-				</td>
-			</tr>
-		</script>
-
-
-		<?php
+			// end currency options.
+			array(
+				'type' => 'sectionend',
+				'id'   => 'currency_options',
+			),
+		);
 	}
 }

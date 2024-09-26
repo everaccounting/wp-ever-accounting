@@ -219,8 +219,8 @@ class Invoice_V2 extends Document {
 			);
 			// if the currency is not the as the base currency, we need to convert the price.
 
-			if ( eac_base_currency() !== $this->currency_code ) {
-				$price                 = eac_convert_currency( $product_data['price'], eac_base_currency(), $this->currency_code );
+			if ( eac_base_currency() !== $this->currency ) {
+				$price                 = eac_convert_currency( $product_data['price'], eac_base_currency(), $this->currency );
 				$product_data['price'] = $price;
 			}
 
@@ -302,7 +302,7 @@ class Invoice_V2 extends Document {
 				'account_id'     => '',
 				'document_id'    => $this->id,
 				'amount'         => 0,
-				'currency_code'  => $this->currency_code,
+				'currency'  => $this->currency,
 				'exchange_rate'  => $this->exchange_rate,
 				'payment_method' => '',
 				'note'           => '',
@@ -323,9 +323,9 @@ class Invoice_V2 extends Document {
 		if ( ! $account ) {
 			return new \WP_Error( 'invalid_account', __( 'Invalid account.', 'wp-ever-accounting' ) );
 		}
-		if ( $account->currency_code !== $this->currency_code ) {
-			$data['amount']        = eac_convert_currency( $data['amount'], $this->currency_code, $account->currency_code, $this->exchange_rate );
-			$data['currency_code'] = $account->currency_code;
+		if ( $account->currency !== $this->currency ) {
+			$data['amount']        = eac_convert_currency( $data['amount'], $this->currency, $account->currency, $this->exchange_rate );
+			$data['currency'] = $account->currency;
 			$data['exchange_rate'] = $account->currency ? $account->currency->exchange_rate : 1;
 		}
 
@@ -336,7 +336,7 @@ class Invoice_V2 extends Document {
 				'contact_id'     => $this->contact_id,
 				'account_id'     => $data['account_id'],
 				'amount'         => $data['amount'],
-				'currency_code'  => $data['currency_code'],
+				'currency'  => $data['currency'],
 				'exchange_rate'  => $data['exchange_rate'],
 				'payment_method' => $data['payment_method'],
 				'note'           => $data['note'],
@@ -390,7 +390,7 @@ class Invoice_V2 extends Document {
 		$this->total_paid = 0;
 		if ( ! empty( $transactions ) ) {
 			foreach ( $transactions as $transaction ) {
-				$amount = eac_convert_currency( $transaction->amount, $transaction->currency_code, $this->currency_code, $transaction->exchange_rate, $this->exchange_rate );
+				$amount = eac_convert_currency( $transaction->amount, $transaction->currency, $this->currency, $transaction->exchange_rate, $this->exchange_rate );
 				if ( 'revenue' === $transaction->type ) {
 					$this->total_paid += $amount;
 				} elseif ( 'expense' === $transaction->type ) {

@@ -12,125 +12,76 @@ defined( 'ABSPATH' ) || exit;
  */
 class Settings {
 	/**
-	 * Settings tabs.
+	 * Settings constructor.
 	 *
-	 * @since 1.1.6
-	 * @var array
+	 * @since 1.0.0
 	 */
-	protected static $tabs = null;
-
-	/**
-	 * Settings messages.
-	 *
-	 * @since 1.1.6
-	 * @var array
-	 */
-	protected static $notices = array();
-
-	/**
-	 * Add a message.
-	 *
-	 * @param string $text Message.
-	 */
-	public static function add_message( $text ) {
-		self::$notices[] = array(
-			'message' => $text,
-			'type'    => 'success',
-		);
+	public function __construct() {
+		add_filter( 'eac_settings_page_tabs', array( __CLASS__, 'register_tabs' ), - 1 );
+		add_action( 'load_eac_settings_page', array( __CLASS__, 'save_settings' ) );
 	}
 
 	/**
-	 * Add an error.
+	 * Register tabs.
 	 *
-	 * @param string $text Message.
-	 */
-	public static function add_error( $text ) {
-		self::$notices[] = array(
-			'message' => $text,
-			'type'    => 'error',
-		);
-	}
-
-	/**
-	 * Get settings pages.
-	 *
+	 * @since 1.0.0
 	 * @return array
-	 * @since 1.1.6
 	 */
-	public static function get_tabs() {
-		if ( is_null( self::$tabs ) ) {
-			$tabs   = array();
-			$tabs[] = new General();
-			$tabs[] = new Taxes();
-			$tabs[] = new Sales();
-			$tabs[] = new Purchases();
-			$tabs[] = new Currencies();
+	public static function register_tabs() {
+		$tabs  = array(); // Reset tabs, prior to this point adding tabs is not allowed.
+		$pages = apply_filters(
+			'eac_settings_pages',
+			array(
+				General::class,
+				Taxes::class,
+				Sales::class,
+				Purchases::class,
+				Categories::class,
+			)
+		);
 
-			self::$tabs = apply_filters( 'eac_get_settings_tabs', $tabs );
+		foreach ( $pages as $page ) {
+			if ( class_exists( $page ) && is_subclass_of( $page, Page::class ) ) {
+				new $page();
+			}
 		}
 
-		return self::$tabs;
+		return apply_filters( 'eac_settings_tabs', $tabs );
 	}
 
 	/**
 	 * Save settings.
 	 *
-	 * @return void
-	 * @since 1.0.0
-	 */
-	public static function save() {
-		global $current_tab;
-		check_admin_referer( 'ever-accounting-settings' );
-
-		/**
-		 * Fires before saving settings.
-		 *
-		 * @since 1.1.6
-		 */
-		do_action( 'eac_settings_save_' . $current_tab );
-
-		// Save settings.
-		do_action( 'ever_accounting_update_options_' . $current_tab );
-		do_action( 'ever_accounting_update_options' );
-
-		self::add_message( __( 'Your settings have been saved.', 'wp-ever-accounting' ) );
-
-		/**
-		 * Fires after saving settings.
-		 *
-		 * @since 1.1.6
-		 */
-		do_action( 'eac_settings_saved' );
-	}
-
-	/**
-	 * Output settings.
+	 * @param string $tab Tab.
 	 *
+	 * @since 1.0.0
 	 * @return void
-	 * @since 1.1.6
 	 */
-	public static function output() {
-		global $current_section, $current_tab;
+	public static function save_settings( $tab ) {
+		if ( ! isset( $_POST['save_settings'] ) ) {
+			return;
+		}
+
+		check_admin_referer( 'eac_save_settings' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
 
 		/**
-		 * Fires before outputting settings.
+		 * Trigger settings save.
 		 *
-		 * @since 1.1.6
+		 * @param string $tab Tab.
+		 *
+		 * @since 1.0.0
 		 */
-		do_action( 'eac_settings_start' );
-
-		// Get tabs for the settings page.
-		$tabs       = apply_filters( 'eac_settings_tabs_array', array() );
-		$page       = isset( $_GET['page'] ) ? sanitize_title( wp_unslash( $_GET['page'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$tab_exists = isset( $tabs[ $current_tab ] ) || has_action( 'ever_accounting_sections_' . $current_tab ) || has_action( 'eac_settings_' . $current_tab ) || has_action( 'eac_settings_tabs_' . $current_tab );
-		$notices    = self::$notices;
-		include __DIR__ . '/views/settings.php';
+		do_action( 'eac_settings_save_' . $tab );
 	}
 
 	/**
 	 * Output admin fields.
 	 *
-	 * Loops though the ever_accounting options array and outputs each field.
+	 * Loops though the eac options array and outputs each field.
 	 *
 	 * @param array $options Options array.
 	 *
@@ -182,7 +133,7 @@ class Settings {
 			 *
 			 * @since 1.1.6
 			 */
-			$value = apply_filters( 'ever_accounting_setting_field', $value );
+			$value = apply_filters( 'eac_setting_field', $value );
 
 			/**
 			 * Filter the arguments of a specific form field before it is rendered.
@@ -193,7 +144,7 @@ class Settings {
 			 *
 			 * @since 1.1.6
 			 */
-			$value = apply_filters( "ever_accounting_setting_field_{$value['type']}", $value );
+			$value = apply_filters( "eac_setting_field_{$value['type']}", $value );
 
 			// Custom attribute handling.
 			$attrs = array();
@@ -592,7 +543,7 @@ class Settings {
 					 *
 					 * @since 1.0.0
 					 */
-					do_action( 'ever_accounting_admin_field_' . $value['type'], $value );
+					do_action( 'eac_settings_field_' . $value['type'], $value );
 					break;
 			}
 		}
@@ -631,7 +582,7 @@ class Settings {
 			$option_value = stripslashes( $option_value );
 		}
 
-		return ( null === $option_value ) ? $default : $option_value;
+		return ( null === $option_value ) ? $fallback : $option_value;
 	}
 
 	/**
@@ -683,9 +634,6 @@ class Settings {
 				case 'textarea':
 					$value = wp_kses_post( trim( $raw_value ) );
 					break;
-				case 'select':
-					$value = eac_clean( $raw_value );
-					break;
 				default:
 					$value = eac_clean( $raw_value );
 					break;
@@ -701,14 +649,14 @@ class Settings {
 			 *
 			 * @since 1.1.3
 			 */
-			$value = apply_filters( 'ever_accounting_admin_settings_sanitize_option', $value, $option, $raw_value );
+			$value = apply_filters( 'eac_settings_sanitize_option', $value, $option, $raw_value );
 
 			/**
 			 * Sanitize the value of an option by option name.
 			 *
 			 * @since 1.1.3
 			 */
-			$value = apply_filters( "ever_accounting_admin_settings_sanitize_option_$option_name", $value, $option, $raw_value );
+			$value = apply_filters( "eac_settings_sanitize_option_$option_name", $value, $option, $raw_value );
 
 			if ( is_null( $value ) ) {
 				continue;

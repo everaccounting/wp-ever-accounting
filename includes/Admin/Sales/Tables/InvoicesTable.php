@@ -91,8 +91,8 @@ class InvoicesTable extends ListTable {
 	protected function bulk_delete( $ids ) {
 		$performed = 0;
 		foreach ( $ids as $id ) {
-			if ( eac_delete_invoice( $id ) ) {
-				++ $performed;
+			if ( EAC()->invoices->delete( $id ) ) {
+				++$performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
@@ -208,10 +208,10 @@ class InvoicesTable extends ListTable {
 	protected function get_sortable_columns() {
 		return array(
 			'number'   => array( 'number', false ),
-			'total'    => array( 'total', false ),
-			'customer' => array( 'customer', false ),
 			'date'     => array( 'date', false ),
+			'customer' => array( 'customer', false ),
 			'status'   => array( 'status', false ),
+			'total'    => array( 'total', false ),
 		);
 	}
 
@@ -247,6 +247,18 @@ class InvoicesTable extends ListTable {
 	 */
 	public function column_number( $item ) {
 		return sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( 'edit', $item->id, $this->base_url ) ), wp_kses_post( $item->number ) );
+	}
+
+	/**
+	 * Renders the date column.
+	 *
+	 * @param Invoice $item The current object.
+	 *
+	 * @since  1.0.0
+	 * @return string Displays the date.
+	 */
+	public function column_date( $item ) {
+		return $item->issue_date ? esc_html( wp_date( get_option( 'date_format' ), strtotime( $item->issue_date ) ) ) : '&mdash;';
 	}
 
 	/**
@@ -287,7 +299,7 @@ class InvoicesTable extends ListTable {
 	 * @return string Displays the status.
 	 */
 	public function column_status( $item ) {
-		$statuses = eac_get_invoice_statuses();
+		$statuses = EAC()->invoices->get_statuses();
 		$status   = isset( $item->status ) ? $item->status : '';
 		$label    = isset( $statuses[ $status ] ) ? $statuses[ $status ] : '';
 
@@ -311,15 +323,28 @@ class InvoicesTable extends ListTable {
 		$actions = array(
 			'view' => sprintf(
 				'<a href="%s">%s</a>',
-				esc_url( add_query_arg( [
-					'view' => 'edit',
-					'id'   => $item->id,
-				], $this->base_url ) ),
+				esc_url(
+					add_query_arg(
+						array(
+							'action' => 'view',
+							'id'     => $item->id,
+						),
+						$this->base_url
+					)
+				),
 				__( 'View', 'wp-ever-accounting' )
 			),
 			'edit' => sprintf(
 				'<a href="%s">%s</a>',
-				esc_url( add_query_arg( 'edit', $item->id, $this->base_url ) ),
+				esc_url(
+					add_query_arg(
+						array(
+							'action' => 'edit',
+							'id'     => $item->id,
+						),
+						$this->base_url
+					)
+				),
 				__( 'Edit', 'wp-ever-accounting' )
 			),
 		);

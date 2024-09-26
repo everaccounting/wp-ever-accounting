@@ -29,7 +29,7 @@ function eac_clean( $value ) {
  *
  * @since 1.1.6 Renamed from eaccounting_tooltip() to eac_tooltip().
  * @since 1.0.2
- * @return string
+ * @return void
  */
 function eac_tooltip( $tip, $allow_html = false ) {
 	if ( $allow_html ) {

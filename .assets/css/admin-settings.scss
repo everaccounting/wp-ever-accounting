@@ -1,6 +1,9 @@
-@import "../common/variables";
+@import "./common/variables";
 
 .eac-admin {
+	.subsubsub:not(.list-table-filters) {
+		margin: -8px 0 0
+	}
 
 	textarea[disabled='disabled'] {
 		background: #dfdfdf !important;
@@ -206,6 +209,22 @@
 			width: 26px;
 			border: 1px solid #ddd;
 			font-size: 14px;
+		}
+	}
+
+	table.eac-exchange-rates {
+		width: 100%;
+		border-collapse: collapse;
+		border-spacing: 0;
+		margin-top: 0;
+		max-width: 600px;
+
+		th,td {
+			//background: #f9f9f9;
+			//border-bottom: 1px solid #e5e5e5;
+			padding: 10px;
+			text-align: left;
+			vertical-align: middle;
 		}
 	}
 }

@@ -7,7 +7,7 @@ use EverAccounting\Utilities\I18n;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class GeneralSettingsPage.
+ * Class General.
  *
  * @since   1.0.0
  * @package EverAccounting\Admin\Settings
@@ -15,45 +15,38 @@ defined( 'ABSPATH' ) || exit;
 class General extends Page {
 
 	/**
-	 * GeneralSettingsPage constructor.
+	 * Constructor.
 	 *
 	 * @since 1.0.0
 	 */
 	public function __construct() {
-		$this->id    = '';
-		$this->label = __( 'General', 'wp-ever-accounting' );
-
-		parent::__construct();
+		parent::__construct( 'general', __( 'General', 'wp-ever-accounting' ) );
+		add_action( 'eac_settings_field_exchange_rates', array( $this, 'exchange_rates_field' ) );
 	}
 
 	/**
-	 * Get own sections for this page.
-	 * Derived classes should override this method if they define sections.
-	 * There should always be one default section with an empty string as identifier.
+	 * Get settings tab sections.
 	 *
-	 * Example:
-	 * return array(
-	 *   ''        => __( 'General', 'wp-ever-accounting' ),
-	 *   'foobars' => __( 'Foos & Bars', 'wp-ever-accounting' ),
-	 * );
-	 *
-	 * @return array An associative array where keys are section identifiers and the values are translated section names.
+	 * @since 3.0.0
+	 * @return array
 	 */
-	protected function get_own_sections() {
-		return array();
+	public function get_sections() {
+		return array(
+			''         => __( 'Options', 'wp-ever-accounting' ),
+			'currency' => __( 'Currency', 'wp-ever-accounting' ),
+		);
 	}
 
 	/**
-	 * Get settings or the default section.
+	 * Get settings.
 	 *
 	 * @since 1.0.0
 	 * @return array
 	 */
-	protected function get_settings_for_default_section() {
+	public function get_default_section_settings() {
 		return array(
 			array(
 				'title' => __( 'Business Information', 'wp-ever-accounting' ),
-				'desc'  => __( 'General details about your business. These will be used in the records you create.', 'wp-ever-accounting' ),
 				'type'  => 'title',
 				'id'    => 'general_settings',
 			),
@@ -119,7 +112,6 @@ class General extends Page {
 			),
 			array(
 				'title' => __( 'Business Address', 'wp-ever-accounting' ),
-				'desc'  => __( 'Business address details. The address will be used in the invoices, bills, and other records that you issue.', 'wp-ever-accounting' ),
 				'type'  => 'title',
 				'id'    => 'business_address',
 			),
@@ -174,18 +166,27 @@ class General extends Page {
 				'type' => 'sectionend',
 				'id'   => 'business_address',
 			),
+		);
+	}
 
+	/**
+	 * Get currency section settings.
+	 *
+	 * @since 1.0.0
+	 * @return array
+	 */
+	public function get_currency_section_settings() {
+		return array(
 			// currency options.
 			array(
 				'title' => __( 'Currency Options', 'wp-ever-accounting' ),
-				'desc'  => __( 'Options related to currency.', 'wp-ever-accounting' ),
 				'type'  => 'title',
 				'id'    => 'currency_options',
 			),
 			// currency.
 			array(
 				'title'    => __( 'Base Currency', 'wp-ever-accounting' ),
-				'desc'     => __( 'The base currency of your business.Currency can not be changed once you have recorded any transaction.', 'wp-ever-accounting' ),
+				'desc'     => __( 'The base currency of your business. Currency can not be changed once you have recorded any transaction.', 'wp-ever-accounting' ),
 				'id'       => 'eac_base_currency',
 				'type'     => 'select',
 				'default'  => 'USD',
@@ -215,7 +216,6 @@ class General extends Page {
 				'placeholder' => ',',
 				'default'     => ',',
 				'desc_tip'    => true,
-				'css'         => 'width: 80px;',
 			),
 			array(
 				'title'       => __( 'Decimal Separator', 'wp-ever-accounting' ),
@@ -225,7 +225,6 @@ class General extends Page {
 				'placeholder' => '.',
 				'default'     => '.',
 				'desc_tip'    => true,
-				'css'         => 'width: 80px;',
 			),
 			array(
 				'title'       => __( 'Currency Precision', 'wp-ever-accounting' ),
@@ -235,24 +234,64 @@ class General extends Page {
 				'placeholder' => '2',
 				'default'     => 2,
 				'desc_tip'    => true,
-				'css'         => 'width: 80px;',
 			),
-
-			// enable multi currency.
-			array(
-				'title'    => __( 'Multi Currency', 'wp-ever-accounting' ),
-				'desc'     => __( 'Enable multi currency support.', 'wp-ever-accounting' ),
-				'id'       => 'eac_multi_currency',
-				'type'     => 'checkbox',
-				'default'  => 'no',
-			),
-
-			// end currency options.
 			array(
 				'type' => 'sectionend',
 				'id'   => 'currency_options',
 			),
 
+			// Currencies.
+			array(
+				'title' => __( 'Multi Currency', 'wp-ever-accounting' ),
+				'type'  => 'title',
+				'id'    => 'currencies',
+			),
+			array(
+				'title' => __( 'Currencies', 'wp-ever-accounting' ),
+				'type'  => 'exchange_rates',
+				'id'    => 'exchange_rates',
+			),
+			array(
+				'type' => 'sectionend',
+				'id'   => 'currencies',
+			),
 		);
+	}
+
+	/**
+	 * Exchange rates field.
+	 *
+	 * @since 1.0.0
+	 */
+	public function exchange_rates_field() {
+		?>
+		<tr valign="top">
+			<th scope="row" class="titledesc">
+				<label for="eac_exchange_rates"><?php esc_html_e( 'Currencies', 'wp-ever-accounting' ); ?></label>
+			</th>
+			<td class="forminp">
+				<table class="eac-exchange-rates widefat">
+					<thead>
+					<tr>
+						<th><?php esc_html_e( 'Currency', 'wp-ever-accounting' ); ?></th>
+						<th><?php esc_html_e( 'Rate', 'wp-ever-accounting' ); ?></th>
+						<th style="width: 1%;">&nbsp;</th>
+					</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>
+								BDT - Bangladeshi Taka
+							</td>
+
+							<td>
+								1 USD = <input type="text" name="eac_exchange_rates[BDT]" value="1" class="eac-exchange-rate" />BDT
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</td>
+		</tr>
+		<?php
 	}
 }

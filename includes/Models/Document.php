@@ -46,60 +46,52 @@ use ByteKit\Models\Relations\HasMany;
  * @package EverAccounting
  * @subpackage Models
  *
- * @property int            $id ID of the document.
- * @property string         $type Type of the document.
- * @property string         $status Status of the document.
- * @property string         $number Number of the document.
- * @property int            $contact_id Contact ID of the document.
- * @property double         $subtotal Item total of the document.
- * @property double         $discount_total Discount total of the document.
- * @property double         $tax_total Tax total of the document.
- * @property double         $total Total of the document.
- * @property double         $balance Balance of the document.
- * @property float          $discount_amount Discount amount of the document.
- * @property string         $discount_type Discount type of the document.
- * @property array          $billing_data Billing data of the document.
- * @property string         $reference Reference of the document.
- * @property string         $note Note of the document.
- * @property bool           $tax_inclusive Tax inclusive of the document.
- * @property bool           $vat_exempt Vat exempt of the document.
- * @property string         $issue_date Issue date of the document.
- * @property string         $due_date Due date of the document.
- * @property string         $sent_date Sent date of the document.
- * @property string         $payment_date Payment date of the document.
- * @property string         $currency_code Currency code of the document.
- * @property double         $exchange_rate Exchange rate of the document.
- * @property int            $parent_id Parent ID of the document.
- * @property string         $created_via Created via of the document.
- * @property int            $creator_id Author ID of the document.
- * @property string         $uuid UUID of the document.
- * @property string         $updated_at Date updated of the document.
- * @property string         $created_at Date created of the document.
+ * @property int             $id ID of the document.
+ * @property string          $type Type of the document.
+ * @property string          $status Status of the document.
+ * @property string          $number Number of the document.
+ * @property string          $reference Reference of the document.
+ * @property double          $subtotal Item total of the document.
+ * @property double          $discount Discount total of the document.
+ * @property double          $tax Tax total of the document.
+ * @property double          $total Total of the document.
+ * @property double          $balance Balance of the document.
+ * @property float           $discount_value Discount amount of the document.
+ * @property string          $discount_type Discount type of the document.
+ * @property int             $contact_id Contact ID of the document.
+ * @property string          $contact_name Name of the contact.
+ * @property string          $contact_email Email of the contact.
+ * @property string          $contact_phone Phone of the contact.
+ * @property string          $contact_address Address of the contact.
+ * @property string          $contact_city City of the contact.
+ * @property string          $contact_state State of the contact.
+ * @property string          $contact_zip Zip of the contact.
+ * @property string          $contact_country Country of the contact.
+ * @property string          $contact_tax_number Tax number of the contact.
+ * @property string          $note Note of the document.
+ * @property string          $terms Terms of the document.
+ * @property string          $issue_date Issue date of the document.
+ * @property string          $due_date Due date of the document.
+ * @property string          $sent_date Sent date of the document.
+ * @property string          $payment_date Payment date of the document.
+ * @property string          $currency Currency code of the document.
+ * @property double          $exchange_rate Exchange rate of the document.
+ * @property int             $parent_id Parent ID of the document.
+ * @property string          $created_via Created via of the document.
+ * @property int             $creator_id Author ID of the document.
+ * @property string          $uuid UUID of the document.
+ * @property string          $updated_at Date updated of the document.
+ * @property string          $created_at Date created of the document.
  *
- * @property string         $billing_name Name of the billing contact.
- * @property string         $billing_company Company of the billing contact.
- * @property string         $billing_address_1 Address line 1 of the billing contact.
- * @property string         $billing_address_2 Address line 2 of the billing contact.
- * @property string         $billing_city City of the billing contact.
- * @property string         $billing_state State of the billing contact.
- * @property string         $billing_postcode Postcode of the billing contact.
- * @property string         $billing_country Country of the billing contact.
- * @property string         $billing_phone Phone of the billing contact.
- * @property string         $billing_email Email of the billing contact.
- * @property string         $billing_vat_number VAT number of the billing contact.
- * @property bool           $billing_vat_exempt VAT exempt of the billing contact.
- * @property string         $formatted_billing_address Formatted billing address.
- *
- * @property double         $formatted_name Formatted name.
- * @property double         $formatted_subtotal Formatted items total.
- * @property double         $formatted_discount_total Formatted discount total.
- * @property double         $formatted_tax_total Formatted tax total.
- * @property double         $formatted_total Formatted total.
- * @property double         $formatted_balance Formatted balance.
- * @property array          formatted_itemized_taxes Formatted itemized taxes.
- * @property Currency       $currency Currency object.
- * @property DocumentTax[]  $taxes Taxes of the document.
- * @property DocumentItem[] $lines Lines of the document.
+ * @property double          $formatted_name Formatted name.
+ * @property double          $formatted_subtotal Formatted items total.
+ * @property double          $formatted_discount Formatted discount total.
+ * @property double          $formatted_tax Formatted tax total.
+ * @property double          $formatted_total Formatted total.
+ * @property double          $formatted_balance Formatted balance.
+ * @property array           formatted_itemized_taxes Formatted itemized taxes.
+ * @property DocumentTax[]   $taxes Taxes of the document.
+ * @property DocumentItem[]  $items Lines of the document.
  */
 class Document extends Model {
 
@@ -127,21 +119,25 @@ class Document extends Model {
 	 */
 	protected $columns = array(
 		'id',
+		'contact_id',
 		'type',
 		'status',
 		'number',
+		'reference',
 		'subtotal',
 		'discount',
-		'tax_total',
+		'tax',
 		'total',
+		'discount_value',
+		'discount_type',
 		'reference',
-		'notes',
+		'note',
+		'terms',
 		'issue_date',
 		'due_date',
 		'sent_date',
 		'payment_date',
 		'currency',
-		'exchange_rate',
 		'parent_id',
 		'created_via',
 		'creator_id',
@@ -155,9 +151,7 @@ class Document extends Model {
 	 * @var array
 	 */
 	protected $attributes = array(
-		'exchange_rate' => 1.00,
 		'discount_type' => 'fixed',
-		'vat_exempt'    => false,
 		'status'        => 'draft',
 	);
 
@@ -168,22 +162,20 @@ class Document extends Model {
 	 * @var array
 	 */
 	protected $casts = array(
-		'subtotal'        => 'double',
-		'discount_total'  => 'double',
-		'tax_total'       => 'double',
-		'total'           => 'double',
-		'balance'         => 'double',
-		'discount_amount' => 'float',
-		'billing_data'    => 'array',
-		'tax_inclusive'   => 'bool',
-		'issue_date'      => 'date',
-		'due_date'        => 'date',
-		'sent_date'       => 'date',
-		'payment_date'    => 'date',
-		'vat_exempt'      => 'bool',
-		'exchange_rate'   => 'double',
-		'parent_id'       => 'int',
-		'creator_id'      => 'int',
+		'number'         => 'string',
+		'reference'      => 'string',
+		'subtotal'       => 'double',
+		'discount'       => 'double',
+		'tax'            => 'double',
+		'total'          => 'double',
+		'discount_value' => 'float',
+		'contact_id'     => 'int',
+		'issue_date'     => 'date',
+		'due_date'       => 'date',
+		'sent_date'      => 'date',
+		'payment_date'   => 'date',
+		'parent_id'      => 'int',
+		'creator_id'     => 'int',
 	);
 
 	/**
@@ -196,22 +188,32 @@ class Document extends Model {
 
 	/*
 	|--------------------------------------------------------------------------
-	| Property Definition Methods
-	|--------------------------------------------------------------------------
-	| This section contains static methods that define and return specific
-	| property values related to the model.
-	| These methods are accessible without creating an instance of the model.
-	|--------------------------------------------------------------------------
-	*/
-
-	/*
-	|--------------------------------------------------------------------------
 	| Accessors, Mutators and Relationship Methods
 	|--------------------------------------------------------------------------
 	| This section contains methods for getting and setting attributes (accessors
 	| and mutators) as well as defining relationships between models.
 	|--------------------------------------------------------------------------
 	*/
+
+	/**
+	 * Get formatted tax total.
+	 *
+	 * @since 1.0.0
+	 * @return string
+	 */
+	protected function get_formatted_tax() {
+		return eac_format_amount( $this->tax, $this->currency );
+	}
+
+	/**
+	 * Get formatted total.
+	 *
+	 * @since 1.0.0
+	 * @return string
+	 */
+	protected function get_formatted_total() {
+		return eac_format_amount( $this->total, $this->currency );
+	}
 
 	/**
 	 * Set discount type.
@@ -249,22 +251,12 @@ class Document extends Model {
 	}
 
 	/**
-	 * Currency relation.
-	 *
-	 * @since 1.0.0
-	 * @return BelongsTo
-	 */
-	public function currency() {
-		return $this->belongs_to( Currency::class, 'currency_code', 'code' );
-	}
-
-	/**
 	 * Items relation.
 	 *
 	 * @since 1.0.0
 	 * @return HasMany
 	 */
-	public function lines() {
+	public function items() {
 		return $this->has_many( DocumentItem::class, 'document_id' );
 	}
 
@@ -276,6 +268,42 @@ class Document extends Model {
 	 */
 	public function taxes() {
 		return $this->has_many( DocumentTax::class, 'document_id' );
+	}
+
+	/**
+	 * Transactions relation.
+	 *
+	 * @since 1.0.0
+	 * @return HasMany
+	 */
+	public function transactions() {
+		return $this->has_many( Transaction::class, 'document_id' );
+	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| CRUD Methods
+	|--------------------------------------------------------------------------
+	| This section contains methods for creating, reading, updating, and deleting
+	| objects in the database.
+	|--------------------------------------------------------------------------
+	*/
+
+	/**
+	 * Delete the object from the database.
+	 *
+	 * @since 1.0.0
+	 * @return true|\WP_Error True on success, WP_Error on failure.
+	 */
+	public function delete() {
+		$return = parent::delete();
+		if ( $return ) {
+			$this->items()->delete();
+			$this->taxes()->delete();
+			$this->transactions()->delete();
+		}
+
+		return $return;
 	}
 
 	/*

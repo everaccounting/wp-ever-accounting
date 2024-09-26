@@ -133,7 +133,7 @@ class Accounts extends Controller {
 	 * @return true|\WP_Error True, if the request has read access, WP_Error object otherwise.
 	 */
 	public function get_item_permissions_check( $request ) {
-		$account = eac_get_account( $request['id'] );
+		$account = EAC()->accounts->get( $request['id'] );
 
 		if ( empty( $account ) || ! current_user_can( 'eac_manage_account' ) ) {
 			return new \WP_Error(
@@ -155,7 +155,7 @@ class Accounts extends Controller {
 	 * @return true|\WP_Error True, if the request has read access, WP_Error object otherwise.
 	 */
 	public function update_item_permissions_check( $request ) {
-		$account = eac_get_account( $request['id'] );
+		$account = EAC()->accounts->get( $request['id'] );
 
 		if ( empty( $account ) || ! current_user_can( 'eac_manage_account' ) ) {
 			return new \WP_Error(
@@ -177,7 +177,7 @@ class Accounts extends Controller {
 	 * @return true|\WP_Error True, if the request has read access, WP_Error object otherwise.
 	 */
 	public function delete_item_permissions_check( $request ) {
-		$account = eac_get_account( $request['id'] );
+		$account = EAC()->accounts->get( $request['id'] );
 
 		if ( empty( $account ) || ! current_user_can( 'eac_manage_account' ) ) {
 			return new \WP_Error(
@@ -218,8 +218,8 @@ class Accounts extends Controller {
 		 * @since 1.2.1
 		 */
 		$args      = apply_filters( 'eac_rest_account_query', $args, $request );
-		$accounts  = eac_get_accounts( $args );
-		$total     = eac_get_accounts( $args, true );
+		$accounts  = EAC()->accounts->gets( $args );
+		$total     = EAC()->accounts->gets( $args, true );
 		$page      = isset( $request['page'] ) ? absint( $request['page'] ) : 1;
 		$max_pages = ceil( $total / (int) $args['per_page'] );
 
@@ -266,7 +266,7 @@ class Accounts extends Controller {
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function get_item( $request ) {
-		$account = eac_get_account( $request['id'] );
+		$account = EAC()->accounts->get( $request['id'] );
 		$data    = $this->prepare_item_for_response( $account, $request );
 
 		return rest_ensure_response( $data );
@@ -318,7 +318,7 @@ class Accounts extends Controller {
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function update_item( $request ) {
-		$account = eac_get_account( $request['id'] );
+		$account = EAC()->accounts->get( $request['id'] );
 		$data    = $this->prepare_item_for_database( $request );
 		if ( is_wp_error( $data ) ) {
 			return $data;
@@ -344,7 +344,7 @@ class Accounts extends Controller {
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function delete_item( $request ) {
-		$account = eac_get_account( $request['id'] );
+		$account = EAC()->accounts->get( $request['id'] );
 		$request->set_param( 'context', 'edit' );
 		$data = $this->prepare_item_for_response( $account, $request );
 

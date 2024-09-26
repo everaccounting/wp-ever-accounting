@@ -12,37 +12,25 @@ defined( 'ABSPATH' ) || exit;
  */
 class Sales extends Page {
 	/**
-	 * GeneralSettingsPage constructor.
+	 * Sales constructor.
 	 *
 	 * @since 1.0.0
 	 */
 	public function __construct() {
-		$this->id    = 'sales';
-		$this->label = __( 'Sales', 'wp-ever-accounting' );
-
-		parent::__construct();
+		parent::__construct( 'sales', __( 'Sales', 'wp-ever-accounting' ) );
 	}
 
 	/**
-	 * Get own sections for this page.
-	 * Derived classes should override this method if they define sections.
-	 * There should always be one default section with an empty string as identifier.
+	 * Get settings tab sections.
 	 *
-	 * Example:
-	 * return array(
-	 *   ''        => __( 'General', 'wp-ever-accounting' ),
-	 *   'foobars' => __( 'Foos & Bars', 'wp-ever-accounting' ),
-	 * );
-	 *
-	 * @return array An associative array where keys are section identifiers and the values are translated section names.
+	 * @since 3.0.0
+	 * @return array
 	 */
-	protected function get_own_sections() {
-		$sections = array(
+	public function get_sections() {
+		return array(
 			''         => __( 'Options', 'wp-ever-accounting' ),
 			'invoices' => __( 'Invoices', 'wp-ever-accounting' ),
 		);
-
-		return $sections;
 	}
 
 	/**
@@ -51,7 +39,7 @@ class Sales extends Page {
 	 * @return array
 	 * @since 1.0.0
 	 */
-	protected function get_settings_for_default_section() {
+	public function get_default_section_settings() {
 		return array(
 			array(
 				'title' => __( 'Payment Settings', 'wp-ever-accounting' ),
@@ -90,7 +78,7 @@ class Sales extends Page {
 	 * @return array
 	 * @since 1.0.0
 	 */
-	protected function get_settings_for_invoices_section() {
+	public function get_invoices_section_settings() {
 		return array(
 			// invoice settings section
 			array(

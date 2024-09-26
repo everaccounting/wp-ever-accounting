@@ -15,4 +15,4 @@ defined( 'ABSPATH' ) || exit;
 	</a>
 </h1>
 <?php
-require __DIR__ . '/invoices-form.php';
+require __DIR__ . '/invoice-form.php';

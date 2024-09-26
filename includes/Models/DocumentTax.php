@@ -12,18 +12,18 @@ use ByteKit\Models\Relations\BelongsTo;
  * @package EverAccounting
  * @subpackage Models
  *
- * @property int               $id ID of the document_item_tax.
- * @property string            $name Name of the document_item_tax.
- * @property double            $rate Rate of the document_item_tax.
- * @property bool              $compound Compound of the document_item_tax.
- * @property double            $amount Amount of the document_item_tax.
- * @property int               $item_id Document item ID of the document_item_tax.
- * @property int               $tax_id Tax ID of the document_item_tax.
- * @property int               $document_id Document ID of the document_item_tax.
- * @property string            $updated_at Date updated of the document_item_tax.
- * @property string            $created_at Date created of the document_item_tax.
+ * @property int               $id ID of the item tax.
+ * @property int               $document_id Document ID of the item tax.
+ * @property int               $document_item_id Document item ID of the item tax.
+ * @property int               $tax_id Tax ID of the item tax.
+ * @property string            $name Name of the item tax.
+ * @property double            $rate Rate of the item tax.
+ * @property bool              $compound Compound of the item tax.
+ * @property double            $amount Amount of the item tax.
+ * @property string            $updated_at Date updated of the item tax.
+ * @property string            $created_at Date created of the item tax.
  *
- * @property-read string       $formatted_name Formatted name of the document_item_tax.
+ * @property-read string       $formatted_name Formatted name of the item tax.
  * @property-read DocumentItem $item Item relationship.
  * @property-read Tax          $tax Tax relationship.
  * @property-read Document     $document Document relationship.
@@ -46,13 +46,13 @@ class DocumentTax extends Model {
 	 */
 	protected $columns = array(
 		'id',
+		'document_id',
+		'document_item_id',
+		'tax_id',
 		'name',
 		'rate',
 		'compound',
 		'amount',
-		'item_id',
-		'tax_id',
-		'document_id'
 	);
 
 	/**
@@ -62,13 +62,13 @@ class DocumentTax extends Model {
 	 * @var array
 	 */
 	protected $casts = array(
-		'id'          => 'int',
-		'rate'        => 'double',
-		'compound'    => 'bool',
-		'amount'      => 'double',
-		'item_id'     => 'int',
-		'tax_id'      => 'int',
-		'document_id' => 'int',
+		'id'               => 'int',
+		'document_id'      => 'int',
+		'document_item_id' => 'int',
+		'tax_id'           => 'int',
+		'rate'             => 'double',
+		'compound'         => 'bool',
+		'amount'           => 'double',
 	);
 
 	/**
@@ -88,16 +88,6 @@ class DocumentTax extends Model {
 	 * @var bool
 	 */
 	protected $has_timestamps = true;
-
-	/*
-	|--------------------------------------------------------------------------
-	| Property Definition Methods
-	|--------------------------------------------------------------------------
-	| This section contains static methods that define and return specific
-	| property values related to the model.
-	| These methods are accessible without creating an instance of the model.
-	|--------------------------------------------------------------------------
-	*/
 
 	/*
 	|--------------------------------------------------------------------------

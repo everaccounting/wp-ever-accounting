@@ -23,7 +23,6 @@ use ByteKit\Models\Relations\BelongsToMany;
  * @property array    $tax_ids Tax IDs of the item.
  * @property int      $category_id Category ID of the item.
  * @property int      $thumbnail_id Thumbnail ID of the item.
- * @property string   $status Status of the item.
  * @property string   $created_at Date created of the item.
  * * @property string $updated_at Date updated of the item.
  *
@@ -53,14 +52,13 @@ class Item extends Model {
 		'id',
 		'type',
 		'name',
-		'description',
+		'desc',
 		'unit',
 		'price',
 		'cost',
 		'tax_ids',
 		'category_id',
-		'thumbnail_id',
-		'status',
+		'thumbnail_id'
 	);
 
 	/**
@@ -70,8 +68,7 @@ class Item extends Model {
 	 * @var array
 	 */
 	protected $attributes = array(
-		'type'   => 'standard',
-		'status' => 'active',
+		'type'   => 'standard'
 	);
 
 	/**
@@ -211,9 +208,6 @@ class Item extends Model {
 		}
 		if ( empty( $this->type ) ) {
 			return new \WP_Error( 'missing_required', __( 'Item type is required.', 'wp-ever-accounting' ) );
-		}
-		if ( empty( $this->status ) ) {
-			return new \WP_Error( 'missing_required', __( 'Item status is required.', 'wp-ever-accounting' ) );
 		}
 
 		if ( empty( $this->cost ) ) {

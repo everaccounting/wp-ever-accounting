@@ -72,7 +72,7 @@ use ByteKit\Models\Relations\HasOne;
  * @property string   $due_date Due date of the document.
  * @property string   $sent_date Sent date of the document.
  * @property string   $payment_date Payment date of the document.
- * @property string   $currency_code Currency code of the document.
+ * @property string   $currency Currency code of the document.
  * @property double   $exchange_rate Exchange rate of the document.
  * @property int      $parent_id Parent ID of the document.
  * @property string   $created_via Created via of the document.
@@ -157,7 +157,7 @@ class Document_BK extends Model {
 		'due_date',
 		'sent_date',
 		'payment_date',
-		'currency_code',
+		'currency',
 		'exchange_rate',
 		'parent_id',
 		'created_via',
@@ -233,7 +233,7 @@ class Document_BK extends Model {
 	 * @return void
 	 */
 	public function __construct( $attributes = 0 ) {
-		$this->props['currency_code'] = eac_base_currency();
+		$this->props['currency'] = eac_base_currency();
 		$this->props['creator_id']     = get_current_user_id();
 		$this->props['uuid']          = wp_generate_uuid4();
 		$this->props['created_at']  = wp_date( 'Y-m-d H:i:s' );
@@ -581,7 +581,7 @@ class Document_BK extends Model {
 	 * @return string
 	 */
 	protected function get_formatted_items_total() {
-		return eac_format_amount( $this->items_total, $this->currency_code );
+		return eac_format_amount( $this->items_total, $this->currency );
 	}
 
 	/**
@@ -591,7 +591,7 @@ class Document_BK extends Model {
 	 * @return string
 	 */
 	protected function get_formatted_discount_total() {
-		return eac_format_amount( $this->discount_total, $this->currency_code );
+		return eac_format_amount( $this->discount_total, $this->currency );
 	}
 
 	/**
@@ -601,7 +601,7 @@ class Document_BK extends Model {
 	 * @return string
 	 */
 	protected function get_formatted_shipping_total() {
-		return eac_format_amount( $this->shipping_total, $this->currency_code );
+		return eac_format_amount( $this->shipping_total, $this->currency );
 	}
 
 	/**
@@ -611,7 +611,7 @@ class Document_BK extends Model {
 	 * @return string
 	 */
 	protected function get_formatted_fees_total() {
-		return eac_format_amount( $this->fees_total, $this->currency_code );
+		return eac_format_amount( $this->fees_total, $this->currency );
 	}
 
 	/**
@@ -621,7 +621,7 @@ class Document_BK extends Model {
 	 * @return string
 	 */
 	protected function get_formatted_tax_total() {
-		return eac_format_amount( $this->tax_total, $this->currency_code );
+		return eac_format_amount( $this->tax_total, $this->currency );
 	}
 
 	/**
@@ -631,7 +631,7 @@ class Document_BK extends Model {
 	 * @return string
 	 */
 	protected function get_formatted_total() {
-		return eac_format_amount( $this->total, $this->currency_code );
+		return eac_format_amount( $this->total, $this->currency );
 	}
 
 	/**
@@ -641,7 +641,7 @@ class Document_BK extends Model {
 	 * @return string
 	 */
 	protected function get_formatted_total_paid() {
-		return eac_format_amount( $this->total_paid, $this->currency_code );
+		return eac_format_amount( $this->total_paid, $this->currency );
 	}
 
 	/**
@@ -651,7 +651,7 @@ class Document_BK extends Model {
 	 * @return string
 	 */
 	protected function get_formatted_balance() {
-		return eac_format_amount( $this->balance, $this->currency_code );
+		return eac_format_amount( $this->balance, $this->currency );
 	}
 
 	/**
@@ -665,7 +665,7 @@ class Document_BK extends Model {
 		$list  = array();
 		foreach ( $taxes as $tax ) {
 			if ( $tax->amount > 0 ) {
-				$list[ $tax->formatted_name ] = eac_format_amount( $tax->amount, $this->currency_code );
+				$list[ $tax->formatted_name ] = eac_format_amount( $tax->amount, $this->currency );
 			}
 		}
 
@@ -709,7 +709,7 @@ class Document_BK extends Model {
 	 * @return BelongsTo
 	 */
 	protected function currency() {
-		return $this->belongs_to( Currency::class, 'currency_code', 'code' );
+		return $this->belongs_to( Currency::class, 'currency', 'code' );
 	}
 
 	/*

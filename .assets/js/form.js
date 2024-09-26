@@ -1,12 +1,14 @@
 (function ($) {
 	/**
-	 * Initialize the form.
+	 * jQuery plugin to initialize a form with various functionalities.
 	 *
-	 * @param {Object} options - Configuration options for the form.
-	 * @returns {jQuery|*}
+	 * @param {Object} [options] - Configuration options for the form.
+	 * @param {string} [options.events] - An object where keys are event types and values are handlers.
+	 * @returns {jQuery|*} - Returns the jQuery object for chaining, or the result of a method call.
 	 */
 	$.fn.eac_form = function (options) {
 		options = options || {};
+
 		if (typeof options === 'object' || !options) {
 			return this.each(function () {
 				const instance = new $.eac_form($(this), options);
@@ -14,103 +16,193 @@
 			});
 		}
 
-		var ret = this;
-		var args = Array.prototype.slice.call(arguments, 1);
-		this.each(function () {
-			var instance = $(this).data('eac_form');
-			if (instance && typeof instance?.view[options] === 'function') {
-				ret = instance.view[options].apply(instance.view, args);
+		const args = Array.prototype.slice.call(arguments, 1);
+		return this.each(function () {
+			const instance = $(this).data('eac_form');
+			if (instance && typeof instance.view[options] === 'function') {
+				instance.view[options].apply(instance.view, args);
 			}
 		});
-
-		return ret;
-	}
+	};
 
 	/**
-	 * Form constructor.
+	 * Constructor for the eac_form.
 	 *
 	 * @param {jQuery} $el - The jQuery element representing the form.
-	 * @param {Object} options - Configuration options for the form.
-	 * @returns {$.eac_form}
+	 * @param {Object} [options] - Configuration options for the form.
 	 * @constructor
 	 */
 	$.eac_form = function ($el, options) {
+		const defaults = {
+			events: {},
+		};
+
+		// Bail if no element is found.
+		if (!$el.length) return;
+
 		this.$el = $el;
-		this.options = $.extend({}, $.eac_form.defaults, options || {});
-		this.events = this.options.events || {};
+		this.options = $.extend(defaults, options || {});
 		this.$el.data('eac_form', this);
 
+		// Store initial values
+		this._values = this.getValues();
 
-		/**
-		 * Get the form element.
-		 *
-		 * @param selector
-		 * @returns {*|jQuery}
-		 */
-		this.$ = function (selector) {
-			return this.$el.find(selector);
+		// Bind events
+		this.init();
+	};
+
+	/**
+	 * Initialize the form by binding events and any other necessary setup.
+	 */
+	$.eac_form.prototype.init = function () {
+		var events = this.options.events || {};
+		// Bind events
+		for (const key in events) {
+			let method = events[key];
+			if (typeof method !== 'function') method = this[method];
+			if (!method) continue;
+
+			const match = key.match(/^(\S+)\s*(.*)$/);
+			this.on(match[1], match[2], method.bind(this));
 		}
+	};
 
-		/**
-		 * Bind an event to the form.
-		 *
-		 * @param {string} event The event to bind.
-		 * @param {string} selector The selector to bind the event to.
-		 * @param {function} callback The callback to execute.
-		 */
-		this.on = function (event, selector, callback) {
-			this.$el.on(event, selector, callback);
-		}
+	/**
+	 * Retrieve the current values of all form fields.
+	 *
+	 * @returns {Object} - An object containing name-value pairs of form inputs.
+	 */
+	$.eac_form.prototype.getValues = function () {
+		const values = {};
+		this.$('input, select, textarea').each((_, element) => {
+			const $element = $(element);
+			const name = $element.attr('name');
+			const type = $element.attr('type');
 
-		/**
-		 * Get the current value of the associated form element.
-		 *
-		 * @param {string|null} name The name of the form element.
-		 * @return {mixed} The value of the form element.
-		 */
-		this.data = function (name) {
-			name = name || null;
-			const data = {};
-			this.$('input, select, textarea').each((_, element) => {
-				const $element = $(element);
-				const name = $element.attr('name');
-				const type = $element.attr('type');
+			if (name === 'method') return; // Skip method field
 
-				if (name === 'method') return;
-
-				if (type === 'radio') {
-					data[name] = $element.is(':checked') ? $element.val() || 0 : data[name];
-				} else if (type === 'checkbox') {
-					data[name] = data[name] || [];
-					if ($element.is(':checked')) {
-						data[name].push($element.val());
-					}
-				} else {
-					data[name] = $element.val() || '';
+			if (type === 'radio') {
+				values[name] = $element.is(':checked') ? $element.val() || 0 : values[name];
+			} else if (type === 'checkbox') {
+				values[name] = values[name] || [];
+				if ($element.is(':checked')) {
+					values[name].push($element.val());
 				}
-			});
-			return name ? data[name] : data;
-		}
+			} else {
+				values[name] = $element.val() || '';
+			}
+		});
+		return values;
+	};
 
+	/**
+	 * Retrieve the value of a single form element by its name.
+	 *
+	 * @param {string} name - The name attribute of the form element whose value is to be retrieved.
+	 * @returns {string|Array|null} - The value of the form element, or null if not found.
+	 */
+	$.eac_form.prototype.getValue = function (name) {
+		return this.getValues()[name] || null;
+	}
 
-		/**
-		 * Initialize the form.
-		 *
-		 * @returns {$.eac_form}
-		 * @constructor
-		 */
-		this.init = function () {
-			for (var key in this.events) {
-				var method = this.events[key];
-				if (typeof method !== 'function') method = this[method];
-				if (!method) continue;
-				var match = key.match(/^(\S+)\s*(.*)$/);
-				this.on(match[1], match[2], method.bind(this));
+	/**
+	 * Find and return a jQuery object representing a subset of form elements.
+	 *
+	 * @param {string} selector - A selector string to filter the form elements.
+	 * @returns {jQuery} - A jQuery object containing the matched elements.
+	 */
+	$.eac_form.prototype.$ = function (selector) {
+		return this.$el.find(selector);
+	};
+
+	/**
+	 * Bind an event to the form element.
+	 *
+	 * @param {string} event - The name of the event to bind (e.g., 'click').
+	 * @param {string} selector - A selector string to specify which elements should trigger the event.
+	 * @param {function} callback - The function to execute when the event is triggered.
+	 */
+	$.eac_form.prototype.on = function (event, selector, callback) {
+		this.$el.on(event, selector, callback);
+	};
+
+	/**
+	 * Reset all form fields to their initial values stored at initialization.
+	 *
+	 * @returns {$.eac_form} - Returns the current instance for chaining.
+	 */
+	$.eac_form.prototype.reset = function () {
+		for (const name in this._values) {
+			const $element = this.$(`[name="${name}"]`);
+			const type = $element.attr('type');
+
+			if (type === 'radio' || type === 'checkbox') {
+				$element.prop('checked', false);
+				if ($element.val() === this._values[name]) {
+					$element.prop('checked', true);
+				}
+			} else {
+				$element.val(this._values[name]);
 			}
 		}
 
+		return this;
+	};
 
-		this.init();
+	/**
+	 * Check if the form has been modified since it was last reset.
+	 *
+	 * @returns {boolean} - Returns true if the form is dirty; otherwise, false.
+	 */
+	$.eac_form.prototype.isDirty = function () {
+		const currentValues = this.getValues();
+
+		// Compare current values with initial values
+		for (const name in this._values) {
+			if (this._values[name] !== currentValues[name]) {
+				return true; // Form is dirty
+			}
+		}
+		return false; // Form is not dirty
+	};
+
+	/**
+	 * Disable all form fields to block user interaction.
+	 *
+	 * @returns {$.eac_form} - Returns the current instance for chaining.
+	 */
+	$.eac_form.prototype.block = function () {
+		// Check if already blocked
+		if (this.$el.find('.blockUI').length > 0) return this;
+
+		// Ensure position is relative
+		if (this.$el.css('position') === 'static') {
+			this.$el.css('position', 'relative');
+		}
+
+		// Create overlay
+		$('<div class="blockUI"></div>').css({
+			position: 'absolute',
+			top: 0,
+			left: 0,
+			width: '100%',
+			height: '100%',
+			backgroundColor: 'rgb(255, 255, 255)',
+			opacity: 0.1,
+			cursor: 'wait',
+			zIndex: 9999
+		}).appendTo(this.$el);
+
+		return this;
+	};
+
+	/**
+	 * Enable all form fields to allow user interaction.
+	 *
+	 * @returns {$.eac_form} - Returns the current instance for chaining.
+	 */
+	$.eac_form.prototype.unblock = function () {
+		this.$el.find('.blockUI').remove(); // Remove overlay
 		return this;
 	};
 

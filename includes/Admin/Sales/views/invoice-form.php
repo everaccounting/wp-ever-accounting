@@ -10,9 +10,17 @@
 defined( 'ABSPATH' ) || exit;
 
 $columns = EAC()->invoices->get_columns();
+$data    = $invoice->to_array();
+foreach ( $invoice->items as $item ) {
+	$_item = $item->to_array();
+	foreach ( $item->taxes as $tax ) {
+		$_item['taxes'][] = $tax->to_array();
+	}
+	$data['items'][] = $_item;
+}
 wp_add_inline_script(
-	'eac-admin-invoices',
-	'var eac_invoice_vars = ' . wp_json_encode( $invoice->to_array() ) . ';',
+	'eac-admin-sales',
+	'var eac_invoice_vars = ' . wp_json_encode( $data ) . ';',
 	'before'
 );
 ?>
@@ -61,7 +69,7 @@ wp_add_inline_script(
 						);
 						eac_form_field(
 							array(
-								'label'             => esc_html__( 'Bill Number', 'wp-ever-accounting' ),
+								'label'             => esc_html__( 'Invoice Number', 'wp-ever-accounting' ),
 								'name'              => 'number',
 								'value'             => $invoice->number,
 								'default'           => $invoice->get_next_number(),
@@ -95,9 +103,9 @@ wp_add_inline_script(
 						eac_form_field(
 							array(
 								'label'           => esc_html__( 'Currency', 'wp-ever-accounting' ),
-								'name'            => 'currency_code',
+								'name'            => 'currency',
 								'default'         => eac_base_currency(),
-								'value'           => $invoice->currency_code,
+								'value'           => $invoice->currency,
 								'type'            => 'select',
 								'options'         => eac_get_currencies(),
 								'option_value'    => 'code',
@@ -142,13 +150,13 @@ wp_add_inline_script(
 					</table>
 				</div><!-- .document-items -->
 
-				<div class="document-footer eac-grid cols-2">
+				<div class="document-footer">
 					<?php
 					eac_form_field(
 						array(
 							'label'       => esc_html__( 'Notes', 'wp-ever-accounting' ),
 							'name'        => 'note',
-							'value'       => $invoice->notes,
+							'value'       => $invoice->note,
 							'type'        => 'textarea',
 							'placeholder' => esc_html__( 'Add notes here', 'wp-ever-accounting' ),
 						)
@@ -194,7 +202,7 @@ wp_add_inline_script(
 						<a class="eac_confirm_delete del" href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'action', 'delete', admin_url( 'admin.php?page=eac-sales&tab=invoices&id=' . $invoice->id ) ), 'bulk-invoices' ) ); ?>">
 							<?php esc_html_e( 'Delete', 'wp-ever-accounting' ); ?>
 						</a>
-						<button class="button button-primary eac-width-full"><?php esc_html_e( 'Update Invoice', 'wp-ever-accounting' ); ?></button>
+						<button class="button button-primary"><?php esc_html_e( 'Update Invoice', 'wp-ever-accounting' ); ?></button>
 					<?php else : ?>
 						<button class="button button-primary button-large eac-width-full"><?php esc_html_e( 'Add Invoice', 'wp-ever-accounting' ); ?></button>
 					<?php endif; ?>
@@ -222,59 +230,59 @@ wp_add_inline_script(
 <script type="text/html" id="tmpl-eac-invoice-billing-address">
 	<table class="document-address">
 		<tbody>
-		<# if ( data.name ) { #>
+		<# if ( data.contact_name ) { #>
 		<tr>
 			<td class="name">
-				<span>{{ data.name }}</span>
-				<input type="hidden" name="billing[name]" value="{{ data.name }}">
+				<span>{{ data.contact_name }}</span>
+				<input type="hidden" name="contact_name" value="{{ data.contact_name }}">
 			</td>
 		</tr>
 		<# } #>
 
-		<# if ( data.company ) { #>
+		<# if ( data.contact_company ) { #>
 		<tr>
 			<td class="company">
-				<span>{{ data.company }}</span>
-				<input type="hidden" name="billing[company]" value="{{ data.company }}">
+				<span>{{ data.contact_company }}</span>
+				<input type="hidden" name="contact_company" value="{{ data.contact_company }}">
 			</td>
 		</tr>
 		<# } #>
 
 		<tr>
 			<td class="address">
-				{{ data.address }}<br>
-				{{ data.city }} {{ data.state }} {{ data.zip }}
-				<input type="hidden" name="billing[address]" value="{{ data.address }}">
-				<input type="hidden" name="billing[city]" value="{{ data.city }}">
-				<input type="hidden" name="billing[state]" value="{{ data.state }}">
-				<input type="hidden" name="billing[zip]" value="{{ data.zip }}">
+				{{ data.contact_address }}<br>
+				{{ data.contact_city }} {{ data.contact_state }} {{ data.contact_zip }}
+				<input type="hidden" name="contact_address" value="{{ data.contact_address }}">
+				<input type="hidden" name="contact_city" value="{{ data.contact_city }}">
+				<input type="hidden" name="contact_state" value="{{ data.contact_state }}">
+				<input type="hidden" name="contact_zip" value="{{ data.contact_zip }}">
 			</td>
 		</tr>
 
-		<# if ( data.country ) { #>
+		<# if ( data.contact_country ) { #>
 		<tr>
 			<td class="country">
-				<span>{{ data.country }}</span>
-				<input type="hidden" name="billing[country]" value="{{ data.country }}">
+				<span>{{ data.contact_country }}</span>
+				<input type="hidden" name="contact_country" value="{{ data.contact_country }}">
 			</td>
 		</tr>
 		<# } #>
 
-		<# if ( data.phone || data.email ) { #>
+		<# if ( data.contact_phone || data.contact_email ) { #>
 		<tr>
 			<td class="phone-email">
-				<# if ( data.phone ) { #>
-				<span class="phone">{{ data.phone }}</span>
-				<input type="hidden" name="billing[phone]" value="{{ data.phone }}">
+				<# if ( data.contact_phone ) { #>
+				<span class="phone">{{ data.contact_phone }}</span>
+				<input type="hidden" name="contact_phone" value="{{ data.contact_phone }}">
 				<# } #>
 
-				<# if ( data.phone && data.email ) { #>
+				<# if ( data.contact_phone && data.contact_email ) { #>
 				<span class="separator"> | </span>
 				<# } #>
 
-				<# if ( data.email ) { #>
-				<span class="email">{{ data.email }}</span>
-				<input type="hidden" name="billing[email]" value="{{ data.email }}">
+				<# if ( data.contact_email ) { #>
+				<span class="email">{{ data.contact_email }}</span>
+				<input type="hidden" name="contact_email" value="{{ data.contact_email }}">
 				<# } #>
 			</td>
 		</tr>
@@ -282,6 +290,68 @@ wp_add_inline_script(
 
 		</tbody>
 	</table>
+</script>
+<script type="text/html" id="tmpl-eac-invoice-no-items">
+	<td colspan="<?php echo count( $columns ); ?>">
+		<?php esc_html_e( 'No items added yet.', 'wp-ever-accounting' ); ?>
+	</td>
+</script>
+<script type="text/html" id="tmpl-eac-invoice-item">
+	<?php foreach ( $columns as $key => $label ) : ?>
+		<td class="col-<?php echo esc_attr( $key ); ?>">
+			<?php
+			switch ( $key ) {
+				case 'item':
+					?>
+					<input type="hidden" name="items[{{ data.id }}][id]" value="{{ data.id }}">
+					<input type="hidden" name="items[{{ data.id }}][item_id]" value="{{ data.item_id }}">
+					<input type="hidden" name="items[{{ data.id }}][type]" value="{{ data.type }}">
+					<input type="hidden" name="items[{{ data.id }}][unit]" value="{{ data.unit }}">
+					<input class="item-name" type="text" name="items[{{ data.id }}][name]" value="{{ data.name }}" readonly>
+					<textarea class="item-description" name="items[{{ data.id }}][description]" placeholder="<?php esc_attr_e( 'Item Description', 'wp-ever-accounting' ); ?>">{{ data.description }}</textarea>
+					<select class="item-taxes eac_select2" data-action="eac_json_search" data-type="tax" data-placeholder="<?php esc_attr_e( 'Select a tax rate', 'wp-ever-accounting' ); ?>" multiple>
+						<# if ( data.taxes && data.taxes.length ) { #>
+						<# _.each( data.taxes, function( taxes ) { #>
+						<option value="{{ taxes.tax_id }}" selected>{{ taxes.formatted_name }}</option>
+						<# } ); #>
+						<# } #>
+					</select>
+					<# if ( data.taxes && data.taxes.length ) { #>
+					<# _.each( data.taxes, function( taxes ) { #>
+					<input type="hidden" name="items[{{ data.id }}][taxes][{{ taxes.id }}][id]" value="{{ taxes.id }}">
+					<input type="hidden" name="items[{{ data.id }}][taxes][{{ taxes.id }}][tax_id]" value="{{ taxes.tax_id }}">
+					<input type="hidden" name="items[{{ data.id }}][taxes][{{ taxes.id }}][name]" value="{{ taxes.name }}">
+					<input type="hidden" name="items[{{ data.id }}][taxes][{{ taxes.id }}][rate]" value="{{ taxes.rate }}">
+					<input type="hidden" name="items[{{ data.id }}][taxes][{{ taxes.id }}][compound]" value="{{ taxes.compound }}">
+					<input type="hidden" name="items[{{ data.id }}][taxes][{{ taxes.id }}][amount]" value="{{ taxes.amount }}">
+					<# } ); #>
+					<# } #>
+					<?php
+					break;
+
+				case 'price':
+					echo '<input type="number" class="item-price" name="items[{{ data.id }}][price]" min="0" step="any" value="{{ data.price }}">';
+					break;
+
+				case 'quantity':
+					echo '<input type="number" class="item-quantity" name="items[{{ data.id }}][quantity]" min="0" step="any" value="{{ data.quantity }}">';
+					break;
+
+				case 'tax':
+					echo '<span class="item-tax">{{ data.formatted_tax}}</span>';
+					break;
+
+				case 'subtotal':
+					echo '<span class="item-subtotal">{{ data.formatted_subtotal }}</span>';
+					echo '<a href="#" class="remove-item"><span class="dashicons dashicons-trash"></span></a>';
+					break;
+
+				default:
+					break;
+			}
+			?>
+		</td>
+	<?php endforeach; ?>
 </script>
 <script type="text/html" id="tmpl-eac-invoice-toolbar">
 	<tr>
@@ -328,7 +398,7 @@ wp_add_inline_script(
 			<?php esc_html_e( 'Tax', 'wp-ever-accounting' ); ?>
 		</td>
 		<td class="col-amount">
-			{{ data.formatted_tax_total || 0 }}
+			{{ data.formatted_tax || 0 }}
 		</td>
 	</tr>
 	<tr>

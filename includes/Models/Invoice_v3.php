@@ -49,7 +49,7 @@ class Invoice_v3 extends Document {
 			'issue_date'    => current_time( 'mysql' ),
 			'due_date'      => wp_date( 'Y-m-d', strtotime( '+' . $due_after . ' days' ) ),
 			'notes'         => get_option( 'eac_invoice_notes', '' ),
-			'currency_code' => eac_base_currency(),
+			'currency' => eac_base_currency(),
 			'creator_id'     => get_current_user_id(),
 			'uuid'          => wp_generate_uuid4(),
 		);
@@ -145,7 +145,7 @@ class Invoice_v3 extends Document {
 		$this->total_paid = 0;
 		$payments         = $this->payments()->get_items();
 		foreach ( $payments as $payment ) {
-			$amount = eac_convert_currency( $payment->amount, $payment->currency_code, $this->currency_code, $payment->exchange_rate, $this->exchange_rate );
+			$amount = eac_convert_currency( $payment->amount, $payment->currency, $this->currency, $payment->exchange_rate, $this->exchange_rate );
 			if ( 'revenue' === $payment->type ) {
 				$this->total_paid += $amount;
 			} elseif ( 'expense' === $payment->type ) {

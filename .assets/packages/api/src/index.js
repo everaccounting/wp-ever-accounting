@@ -182,7 +182,7 @@ export const Category = Model.extend({
  * @type {Object}
  * @since 1.0.0
  */
-export const Document =Model.extend({
+export const Document = Model.extend({
 	defaults: {
 		id: '',
 		type: '',
@@ -191,7 +191,7 @@ export const Document =Model.extend({
 		contact_id: '',
 		subtotal: 0,
 		discount: 0,
-		tax_total: 0,
+		tax: 0,
 		total: 0,
 		discount_value: 0,
 		discount_type: 'fixed',
@@ -239,13 +239,11 @@ export const Document =Model.extend({
 		var items_total = 0,
 			subtotal = 0,
 			discount = 0,
-			tax_total = 0,
+			tax = 0,
 			total = 0,
 			discount_type = this.get('discount_type') || 'fixed',
 			discount_value = parseFloat(this.get('discount_value'), 10) || 0;
 
-		console.log('discount_type:', discount_type);
-		console.log('discount_value:', discount_value);
 
 		// Prepare items for calculation
 		_.each(this.get('items').models, (item) => {
@@ -277,9 +275,6 @@ export const Document =Model.extend({
 				_discount = _type === 'standard' ? (discount / items_total) * _subtotal : 0,
 				_disc_subtotal = Math.max(_subtotal - _discount, 0);
 
-			console.log('type:', _type);
-			console.log('discount:', _discount);
-
 			// Simple tax calculation.
 			_.each(item.get('taxes').models, (tax) => {
 				const _tax_rate = parseFloat(tax.get('rate'), 10) || 0;
@@ -303,27 +298,27 @@ export const Document =Model.extend({
 				});
 			});
 
-			const _tax_total = _.reduce(item.get('taxes').models, (sum, tax) => {
+			const _tax = _.reduce(item.get('taxes').models, (sum, tax) => {
 				return sum + tax.get('amount')
 			}, 0);
 
 			item.set({
 				discount: _discount,
 				subtotal: _disc_subtotal,
-				tax_total: _tax_total,
-				total: _disc_subtotal + _tax_total,
+				tax: _tax,
+				total: _disc_subtotal + _tax,
 			});
 
 			subtotal += _disc_subtotal;
-			tax_total += _tax_total;
+			tax += _tax;
 		});
 
 
-		total = subtotal + tax_total;
+		total = subtotal + tax;
 		this.set({
 			subtotal: subtotal,
 			discount: discount,
-			tax_total: tax_total,
+			tax: tax,
 			total: total,
 		});
 	},
@@ -346,9 +341,9 @@ export const DocumentItem = Model.extend({
 		quantity: 1,
 		subtotal: 0,
 		discount: 0,
-		tax_total: 0,
+		tax: 0,
 		total: 0,
-		description: '',
+		desc: '',
 		unit: '',
 		item_id: null,
 		updated_at: '',
@@ -418,7 +413,7 @@ export const DocumentAddress = Model.extend({
  * @since 1.0.0
  */
 export const Invoice = Document.extend({
-	defaults: Object.assign({},  Document.prototype.defaults, {
+	defaults: Object.assign({}, Document.prototype.defaults, {
 		type: 'invoice',
 	}),
 });
@@ -591,7 +586,7 @@ export const Collection = Backbone.Collection.extend({
 	/**
 	 * Setup default state.
 	 */
-	preinitialize: function( models, options ) {
+	preinitialize: function (models, options) {
 		this.options = options;
 	},
 
@@ -616,31 +611,31 @@ export const Collection = Backbone.Collection.extend({
 		var beforeSend;
 		options = options || {};
 		// if cached is not set then set it to true.
-		if ( _.isUndefined( options.cache ) ) {
+		if (_.isUndefined(options.cache)) {
 			options.cache = true;
 		}
 
 		// Include the nonce with requests.
-		if ( ! _.isEmpty(model.nonce) ) {
+		if (!_.isEmpty(model.nonce)) {
 			beforeSend = options.beforeSend;
-			options.beforeSend = function( xhr ) {
-				xhr.setRequestHeader( 'X-WP-Nonce', model.nonce );
+			options.beforeSend = function (xhr) {
+				xhr.setRequestHeader('X-WP-Nonce', model.nonce);
 
-				if ( beforeSend ) {
-					return beforeSend.apply( this, arguments );
+				if (beforeSend) {
+					return beforeSend.apply(this, arguments);
 				}
 			};
 
 			// Update the nonce when a new nonce is returned with the response.
-			options.complete = function( xhr ) {
-				var returnedNonce = xhr.getResponseHeader( 'X-WP-Nonce' );
-				if ( ! _.isEmpty( returnedNonce ) ) {
+			options.complete = function (xhr) {
+				var returnedNonce = xhr.getResponseHeader('X-WP-Nonce');
+				if (!_.isEmpty(returnedNonce)) {
 					model.nonce = returnedNonce;
 				}
 			};
 		}
 
-		return Backbone.sync( method, model, options );
+		return Backbone.sync(method, model, options);
 	}
 });
 

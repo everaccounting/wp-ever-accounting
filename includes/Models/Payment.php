@@ -70,34 +70,6 @@ class Payment extends Transaction {
 
 	/*
 	|--------------------------------------------------------------------------
-	| Property Definition Methods
-	|--------------------------------------------------------------------------
-	| This section contains static methods that define and return specific
-	| property values related to the model.
-	| These methods are accessible without creating an instance of the model.
-	|--------------------------------------------------------------------------
-	*/
-
-	/**
-	 * Get statuses.
-	 *
-	 * @since 1.1.0
-	 * @return array
-	 */
-	public static function get_statuses() {
-		return apply_filters(
-			'ever_accounting_payment_statuses',
-			array(
-				'pending'   => esc_html__( 'Pending', 'wp-ever-accounting' ),
-				'completed' => esc_html__( 'Completed', 'wp-ever-accounting' ),
-				'refunded'  => esc_html__( 'Refunded', 'wp-ever-accounting' ),
-				'cancelled' => esc_html__( 'Cancelled', 'wp-ever-accounting' ),
-			)
-		);
-	}
-
-	/*
-	|--------------------------------------------------------------------------
 	| Accessors, Mutators and Relationship Methods
 	|--------------------------------------------------------------------------
 	| This section contains methods for getting and setting attributes (accessors

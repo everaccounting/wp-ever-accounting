@@ -10,7 +10,7 @@ defined( 'ABSPATH' ) || exit;
  * @since 3.0.0
  * @package EverAccounting\Admin
  */
-class Menus {
+class Menus_V1 {
 
 	/**
 	 * Main menu slug.

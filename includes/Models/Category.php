@@ -19,7 +19,6 @@ defined( 'ABSPATH' ) || exit;
  * @property string $type Type of the category.
  * @property string $name Name of the category.
  * @property string $description Description of the category.
- * @property string $status Status of the category.
  * @property string $formatted_name Formatted name of the category.
  * @property string $created_at Date created of the category.
  * @property string $updated_at Date updated of the category.
@@ -43,8 +42,7 @@ class Category extends Model {
 		'id',
 		'type',
 		'name',
-		'description',
-		'status',
+		'description'
 	);
 
 	/**
@@ -97,48 +95,6 @@ class Category extends Model {
 		'description',
 	);
 
-
-	/*
-	|--------------------------------------------------------------------------
-	| Property Definition Methods
-	|--------------------------------------------------------------------------
-	| This section contains static methods that define and return specific
-	| property values related to the model.
-	| These methods are accessible without creating an instance of the model.
-	|--------------------------------------------------------------------------
-	*/
-
-	/**
-	 * Get all the available type of category the plugin support.
-	 *
-	 * @since 1.1.0
-	 * @return array
-	 */
-	public static function get_types() {
-		$types = array(
-			'item'    => esc_html__( 'Item', 'wp-ever-accounting' ),
-			'payment' => esc_html__( 'Payment', 'wp-ever-accounting' ),
-			'expense' => esc_html__( 'Expense', 'wp-ever-accounting' ),
-		);
-
-		return apply_filters( 'ever_accounting_category_types', $types );
-	}
-
-	/**
-	 * Get all the available status of category the plugin support.
-	 *
-	 * @since 1.1.0
-	 * @return array
-	 */
-	public static function get_statuses() {
-		$statuses = array(
-			'active'   => esc_html__( 'Active', 'wp-ever-accounting' ),
-			'inactive' => esc_html__( 'Inactive', 'wp-ever-accounting' ),
-		);
-
-		return apply_filters( 'ever_accounting_category_statuses', $statuses );
-	}
-
 	/*
 	|--------------------------------------------------------------------------
 	| Accessors, Mutators and Relationship Methods
@@ -157,7 +113,7 @@ class Category extends Model {
 	 * @return void
 	 */
 	protected function set_type( $type ) {
-		$this->attributes['type'] = ! array_key_exists( $type, self::get_types() ) ? 'item' : $type;
+		$this->attributes['type'] = ! array_key_exists( $type, EAC()->categories->get_types() ) ? 'item' : $type;
 	}
 
 	/**
@@ -169,7 +125,7 @@ class Category extends Model {
 	 * @return void
 	 */
 	protected function set_status( $status ) {
-		$this->attributes['status'] = ! array_key_exists( $status, self::get_statuses() ) ? 'active' : $status;
+		$this->attributes['status'] = ! array_key_exists( $status, EAC()->categories->get_types() ) ? 'active' : $status;
 	}
 
 	/**
@@ -242,9 +198,6 @@ class Category extends Model {
 		}
 		if ( empty( $this->type ) ) {
 			return new \WP_Error( 'missing_required', __( 'Category type is required.', 'wp-ever-accounting' ) );
-		}
-		if ( empty( $this->status ) ) {
-			return new \WP_Error( 'missing_required', __( 'Category status is required.', 'wp-ever-accounting' ) );
 		}
 
 		// Duplicate check. Same type and name should not exist.

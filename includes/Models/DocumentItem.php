@@ -13,24 +13,24 @@ use ByteKit\Models\Relations\HasMany;
  * @package EverAccounting
  * @subpackage Models
  *
- * @property int                $id ID of the document_item.
- * @property string             $type Type of the document_item.
- * @property string             $name Name of the document_item.
- * @property double             $price Price of the document_item.
- * @property double             $quantity Quantity of the document_item.
- * @property double             $subtotal Subtotal of the document_item.
- * @property double             $discount Discount of the document_item.
- * @property double             $tax_total Tax total of the document_item.
- * @property double             $total Total of the document_item.
- * @property string             $description Description of the document_item.
- * @property string             $unit Unit of the document_item.
- * @property int                $item_id Item ID of the document_item.
- * @property int                $document_id Document ID of the document_item.
- * @property string             $updated_at Date updated of the document_item.
- * @property string             $created_at Date created of the document_item.
+ * @property int           $id ID of the item.
+ * @property int           $document_id Document ID of the item.
+ * @property int           $item_id Item ID of the item.
+ * @property string        $type Type of the item.
+ * @property string        $name Name of the item.
+ * @property string        $description Description of the item.
+ * @property string        $unit Unit of the item.
+ * @property double        $price Price of the item.
+ * @property double        $quantity Quantity of the item.
+ * @property double        $subtotal Subtotal of the item.
+ * @property double        $discount Discount of the item.
+ * @property double        $tax Tax total of the item.
+ * @property double        $total Total of the item.
+ * @property string        $updated_at Date updated of the item.
+ * @property string        $created_at Date created of the item.
  *
- * @property-read double        $discounted_subtotal Discounted subtotal of the document_item.
- * @property-read DocumentTax[] $taxes Taxes of the document_item.
+ * @property double        $discounted_subtotal Discounted subtotal of the document_item.
+ * @property DocumentTax[] $taxes Taxes of the document_item.
  */
 class DocumentItem extends Model {
 
@@ -50,18 +50,18 @@ class DocumentItem extends Model {
 	 */
 	protected $columns = array(
 		'id',
+		'document_id',
+		'item_id',
 		'type',
 		'name',
+		'description',
+		'unit',
 		'price',
 		'quantity',
 		'subtotal',
 		'discount',
-		'tax_total',
+		'tax',
 		'total',
-		'description',
-		'unit',
-		'item_id',
-		'document_id',
 	);
 
 	/**
@@ -71,7 +71,8 @@ class DocumentItem extends Model {
 	 * @var array
 	 */
 	protected $attributes = array(
-		'type' => 'standard',
+		'type'     => 'standard',
+		'quantity' => 1,
 	);
 
 	/**
@@ -81,15 +82,15 @@ class DocumentItem extends Model {
 	 * @var array
 	 */
 	protected $casts = array(
-		'id'           => 'int',
-		'price'        => 'double',
-		'quantity'     => 'double',
-		'subtotal'     => 'double',
-		'discount'     => 'double',
-		'tax_total'    => 'double',
-		'total'        => 'double',
-		'item_id'      => 'int',
-		'document_id'  => 'int',
+		'id'          => 'int',
+		'item_id'     => 'int',
+		'document_id' => 'int',
+		'price'       => 'double',
+		'quantity'    => 'double',
+		'subtotal'    => 'double',
+		'discount'    => 'double',
+		'tax'         => 'double',
+		'total'       => 'double',
 	);
 
 	/**
@@ -118,16 +119,6 @@ class DocumentItem extends Model {
 	| and mutators) as well as defining relationships between models.
 	|--------------------------------------------------------------------------
 	*/
-
-	/**
-	 * Get discounted subtotal.
-	 *
-	 * @since 1.0.0
-	 * @return double
-	 */
-	protected function get_discounted_subtotal() {
-		return (float) $this->subtotal - (float) $this->discount;
-	}
 
 	/**
 	 * Tax relationship.
@@ -167,6 +158,7 @@ class DocumentItem extends Model {
 	| objects in the database.
 	|--------------------------------------------------------------------------
 	*/
+
 	/**
 	 * Save the object to the database.
 	 *
@@ -186,22 +178,22 @@ class DocumentItem extends Model {
 			return new \WP_Error( 'required_missing', __( 'Document ID is required.', 'wp-ever-accounting' ) );
 		}
 
-		$ret_val = parent::save();
-		if ( is_wp_error( $ret_val ) ) {
-			return $ret_val;
+		return parent::save();
+	}
+
+	/**
+	 * Delete the object from the database.
+	 *
+	 * @since 1.0.0
+	 * @return true|\WP_Error True on success, WP_Error on failure.
+	 */
+	public function delete() {
+		$return = parent::delete();
+		if ( $return ) {
+			$this->taxes()->delete();
 		}
 
-		// Save taxes.
-		if ( ! empty( $this->taxes ) ) {
-			foreach ( $this->taxes as $tax ) {
-				if ( $tax->is_dirty() || ! $tax->exists() ) {
-					$tax->document_id = $this->document_id;
-					$this->taxes()->save( $tax );
-				}
-			}
-		}
-
-		return $ret_val;
+		return $return;
 	}
 
 	/*

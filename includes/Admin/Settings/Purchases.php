@@ -5,46 +5,33 @@ namespace EverAccounting\Admin\Settings;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class Sales.
+ * Class Purchases.
  *
  * @since   1.0.0
  * @package EverAccounting\Admin\Settings
  */
 class Purchases extends Page {
 	/**
-	 * GeneralSettingsPage constructor.
+	 * Purchases constructor.
 	 *
 	 * @since 1.0.0
 	 */
 	public function __construct() {
-		$this->id    = 'purchases';
-		$this->label = __( 'Purchases', 'wp-ever-accounting' );
-
-		parent::__construct();
+		parent::__construct( 'purchases', __( 'Purchases', 'wp-ever-accounting' ) );
 	}
 
 	/**
-	 * Get own sections for this page.
-	 * Derived classes should override this method if they define sections.
-	 * There should always be one default section with an empty string as identifier.
+	 * Get settings tab sections.
 	 *
-	 * Example:
-	 * return array(
-	 *   ''        => __( 'General', 'wp-ever-accounting' ),
-	 *   'foobars' => __( 'Foos & Bars', 'wp-ever-accounting' ),
-	 * );
-	 *
-	 * @return array An associative array where keys are section identifiers and the values are translated section names.
+	 * @since 3.0.0
+	 * @return array
 	 */
-	protected function get_own_sections() {
-		$sections = array(
+	public function get_sections() {
+		return array(
 			''      => __( 'Options', 'wp-ever-accounting' ),
 			'bills' => __( 'Bills', 'wp-ever-accounting' ),
 		);
-
-		return $sections;
 	}
-
 
 	/**
 	 * Get settings or the default section.
@@ -52,7 +39,7 @@ class Purchases extends Page {
 	 * @return array
 	 * @since 1.0.0
 	 */
-	protected function get_settings_for_default_section() {
+	public function get_default_section_settings() {
 		return array(
 			array(
 				'title' => __( 'Expense Settings', 'wp-ever-accounting' ),
@@ -91,7 +78,7 @@ class Purchases extends Page {
 	 * @return array
 	 * @since 1.0.0
 	 */
-	public function get_settings_for_bills_section() {
+	public function get_bills_section_settings() {
 		return array(
 			array(
 				'title' => __( 'Bill Settings', 'wp-ever-accounting' ),
