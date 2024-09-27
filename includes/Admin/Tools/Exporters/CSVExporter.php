@@ -105,7 +105,7 @@ abstract class CSVExporter {
 	 * @return bool Whether we can export or not
 	 */
 	public function can_export() {
-		return (bool) current_user_can( apply_filters( 'ever_accounting_export_capability', $this->capability ) );
+		return (bool) current_user_can( apply_filters( 'eac_export_capability', $this->capability ) );
 	}
 
 	/**

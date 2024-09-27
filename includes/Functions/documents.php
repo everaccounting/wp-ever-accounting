@@ -150,7 +150,7 @@ function eac_get_bill_statuses() {
 		'cancelled' => esc_html__( 'Cancelled', 'wp-ever-accounting' ),
 	);
 
-	return apply_filters( 'ever_accounting_bill_statuses', $statuses );
+	return apply_filters( 'eac_bill_statuses', $statuses );
 }
 
 /**
@@ -168,7 +168,7 @@ function eac_get_invoice_statuses() {
 		'cancelled' => esc_html__( 'Cancelled', 'wp-ever-accounting' ),
 	);
 
-	return apply_filters( 'ever_accounting_invoice_statuses', $statuses );
+	return apply_filters( 'eac_invoice_statuses', $statuses );
 }
 
 
@@ -187,7 +187,7 @@ function eac_get_invoice_columns() {
 		'subtotal' => get_option( 'eac_invoice_col_subtotal_label', esc_html__( 'Subtotal', 'wp-ever-accounting' ) ),
 	);
 
-	return apply_filters( 'ever_accounting_invoice_columns', $columns );
+	return apply_filters( 'eac_invoice_columns', $columns );
 }
 
 /**
@@ -205,5 +205,5 @@ function eac_get_bill_columns() {
 		'subtotal'     => esc_html__( 'Subtotal', 'wp-ever-accounting' ),
 	);
 
-	return apply_filters( 'ever_accounting_bill_columns', $columns );
+	return apply_filters( 'eac_bill_columns', $columns );
 }

@@ -73,7 +73,7 @@ class Vendors extends CSVExporter {
 			'limit'    => - 1,
 		);
 
-		$args  = apply_filters( 'ever_accounting_vendors_export_query_args', $args );
+		$args  = apply_filters( 'eac_vendors_export_query_args', $args );
 
 		$items = Vendor::query( $args );
 
@@ -103,7 +103,7 @@ class Vendors extends CSVExporter {
 					if ( $item->$column ) {
 						$value = $item->$column;
 					}
-					$value = apply_filters( 'ever_accounting_vendors_export_column_' . $column, $value, $item );
+					$value = apply_filters( 'eac_vendors_export_column_' . $column, $value, $item );
 			}
 
 			$props[ $column ] = $value;

@@ -68,7 +68,7 @@ class Items {
 	public static function setup_table() {
 		global $list_table;
 		$screen     = get_current_screen();
-		$list_table = new Tables\ItemsTable();
+		$list_table = new \EverAccounting\Admin\ListTables\Items();
 		$list_table->prepare_items();
 		$screen->add_option(
 			'per_page',

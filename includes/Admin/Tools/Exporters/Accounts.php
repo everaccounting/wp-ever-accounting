@@ -70,7 +70,7 @@ class Accounts extends CSVExporter {
 			'limit'    => - 1,
 		);
 
-		$args  = apply_filters( 'ever_accounting_accounts_export_query_args', $args );
+		$args  = apply_filters( 'eac_accounts_export_query_args', $args );
 
 		$items = eac_get_accounts( $args );
 
@@ -100,7 +100,7 @@ class Accounts extends CSVExporter {
 					if ( $item->$column ) {
 						$value = $item->$column;
 					}
-					$value = apply_filters( 'ever_accounting_accounts_export_column_' . $column, $value, $item );
+					$value = apply_filters( 'eac_accounts_export_column_' . $column, $value, $item );
 			}
 
 			$props[ $column ] = $value;

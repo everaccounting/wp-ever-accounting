@@ -133,7 +133,7 @@ class Categories extends Controller {
 	 * @since 1.2.1
 	 */
 	public function get_item_permissions_check( $request ) {
-		$category = eac_get_category( $request['id'] );
+		$category = EAC()->categories->get( $request['id'] );
 
 		if ( empty( $category ) || ! current_user_can( 'eac_manage_category' ) ) {
 			return new \WP_Error(
@@ -155,7 +155,7 @@ class Categories extends Controller {
 	 * @since 1.2.1
 	 */
 	public function update_item_permissions_check( $request ) {
-		$category = eac_get_category( $request['id'] );
+		$category = EAC()->categories->get( $request['id'] );
 
 		if ( empty( $category ) || ! current_user_can( 'eac_manage_category' ) ) {
 			return new \WP_Error(
@@ -177,7 +177,7 @@ class Categories extends Controller {
 	 * @since 1.2.1
 	 */
 	public function delete_item_permissions_check( $request ) {
-		$category = eac_get_category( $request['id'] );
+		$category = EAC()->categories->get( $request['id'] );
 
 		if ( empty( $category ) || ! current_user_can( 'eac_manage_category' ) ) {
 			return new \WP_Error(
@@ -219,8 +219,8 @@ class Categories extends Controller {
 		 */
 		$args = apply_filters( 'eac_rest_category_query', $args, $request );
 
-		$categories = eac_get_categories( $args );
-		$total      = eac_get_categories( $args, true );
+		$categories = EAC()->categories->query( $args );
+		$total      = EAC()->categories->query( $args, true );
 		$page       = isset( $request['page'] ) ? absint( $request['page'] ) : 1;
 		$max_pages  = ceil( $total / (int) $args['per_page'] );
 
@@ -267,7 +267,7 @@ class Categories extends Controller {
 	 * @since 1.2.1
 	 */
 	public function get_item( $request ) {
-		$category = eac_get_category( $request['id'] );
+		$category = EAC()->categories->get( $request['id'] );
 		$data     = $this->prepare_item_for_response( $category, $request );
 
 		return rest_ensure_response( $data );
@@ -295,7 +295,7 @@ class Categories extends Controller {
 			return $data;
 		}
 
-		$category = eac_insert_category( $data );
+		$category = EAC()->categories->insert( $data );
 		if ( is_wp_error( $category ) ) {
 			return $category;
 		}
@@ -319,7 +319,7 @@ class Categories extends Controller {
 	 * @since 1.2.1
 	 */
 	public function update_item( $request ) {
-		$category = eac_get_category( $request['id'] );
+		$category = EAC()->categories->get( $request['id'] );
 		$data     = $this->prepare_item_for_database( $request );
 		if ( is_wp_error( $data ) ) {
 			return $data;
@@ -345,11 +345,11 @@ class Categories extends Controller {
 	 * @since 1.2.1
 	 */
 	public function delete_item( $request ) {
-		$category = eac_get_category( $request['id'] );
+		$category = EAC()->categories->get( $request['id'] );
 		$request->set_param( 'context', 'edit' );
 		$data = $this->prepare_item_for_response( $category, $request );
 
-		if ( ! eac_delete_category( $category->id ) ) {
+		if ( ! EAC()->categories->delete( $category->id ) ) {
 			return new \WP_Error(
 				'rest_cannot_delete',
 				__( 'The category cannot be deleted.', 'wp-ever-accounting' ),

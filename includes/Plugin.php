@@ -124,27 +124,35 @@ class Plugin extends \ByteKit\Plugin {
 			$this->services->add( Admin\Scripts::class );
 			$this->services->add( Admin\Ajax::class );
 
-			// Items.
-			$this->services->add( Admin\Items\Items::class );
-			// Sales.
-			$this->services->add( Admin\Sales\Payments::class );
-			$this->services->add( Admin\Sales\Invoices::class );
-			$this->services->add( Admin\Sales\Customers::class );
-			// Purchases.
-			$this->services->add( Admin\Purchases\Expenses::class );
-			$this->services->add( Admin\Purchases\Bills::class );
-			$this->services->add( Admin\Purchases\Vendors::class );
-			// Banking.
-			$this->services->add( Admin\Banking\Accounts::class );
-			$this->services->add( Admin\Banking\Transfers::class );
+			// Dashboard.
+			$this->services->add( Admin\Dashboard::class );
 
-			// Misc.
-			$this->services->add( Admin\Misc\Categories::class );
-			$this->services->add( Admin\Misc\Taxes::class );
-			$this->services->add( Admin\Misc\Currencies::class );
+			// Items.
+			$this->services->add( Admin\Items::class );
+
+			// Sales.
+			$this->services->add( Admin\Payments::class );
+			$this->services->add( Admin\Invoices::class );
+			$this->services->add( Admin\Customers::class );
+
+			// Purchases.
+			$this->services->add( Admin\Expenses::class );
+			$this->services->add( Admin\Bills::class );
+			$this->services->add( Admin\Vendors::class );
+
+			// Banking.
+			$this->services->add( Admin\Accounts::class );
+			$this->services->add( Admin\Transactions::class );
+			$this->services->add( Admin\Transfers::class );
+
+			// Tools.
+			$this->services->add( Admin\Tools::class );
+
+			// Reports.
+			$this->services->add( Admin\Reports::class );
 
 			// Settings.
-			$this->services->add( Admin\Settings\Settings::class );
+			$this->services->add( Admin\Settings::class );
 		}
 
 		/**

@@ -2,6 +2,8 @@
 
 namespace EverAccounting\Admin\Settings;
 
+use EverAccounting\Admin\Settings\Tables\CategoriesTable;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -27,5 +29,9 @@ class Categories extends Page {
 	 * @since 1.0.0
 	 * @return void
 	 */
-	public function render_content() {}
+	public function render_content() {
+		$list_table = new CategoriesTable();
+		$list_table->prepare_items();
+		include __DIR__ . '/views/category-list.php';
+	}
 }

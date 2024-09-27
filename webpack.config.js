@@ -1,13 +1,9 @@
-const RemoveEmptyScript = require('webpack-remove-empty-scripts');
-const DependencyHandler = require('@wordpress/dependency-extraction-webpack-plugin');
-const defaults = require('@wordpress/scripts/config/webpack.config');
-const CopyPlugin = require('copy-webpack-plugin');
-const path = require('path');
-const glob = require('glob');
-
-const PACKAGE_NAMESPACE = '@eac/';
+const defaults = require('./.bin/webpack');
+const glob = require("glob");
+const path = require("path");
 
 module.exports = [
+	// Core scripts.
 	{
 		...defaults,
 		entry: {
@@ -22,72 +18,20 @@ module.exports = [
 			'css/jquery-ui': './.assets/css/jquery-ui.scss',
 
 			// Core plugins.
-			'js/form': './.assets/js/form.js',
-			'js/modal': './.assets/js/modal.js',
+			'js/form': './.assets/js/vendor/form.js',
+			'js/modal': './.assets/js/vendor/modal.js',
+			'js/visibility': './.assets/js/vendor/visibility.js',
+
 
 			// Admin scripts.
-			'js/admin': './.assets/js/admin.js',
-			'js/admin-sales': './.assets/js/admin-sales.js',
-			'js/admin-settings': './.assets/js/admin-settings.js',
-			'css/admin': './.assets/css/admin.scss',
-			'css/admin-settings': './.assets/css/admin-settings.scss',
-
-			//Client scripts.
-			'js/admin-client': './.assets/client/admin/index.js',
-		},
-		output: {
-			...defaults.output,
-			filename: '[name].js',
-			path: __dirname + '/assets/',
-			chunkFilename: 'chunks/[chunkhash].js',
-			uniqueName: '__eac_webpackJsonp',
-			library: {
-				name: '[name]',
-				type: 'window',
-			},
-		},
-		resolve: {
-			...defaults.resolve,
-			modules: [
-				'node_modules',
-				'.assets/packages',
-			],
-			alias: {
-				...defaults.resolve.alias,
-				'@js': path.resolve(__dirname, '.assets/js'),
-				'@eac': path.resolve(__dirname, '.assets/packages'),
-			}
-		},
-		module: {
-			rules: [...defaults.module.rules].filter(Boolean),
-		},
-		plugins: [
-			...defaults.plugins.filter((plugin) => !['DependencyExtractionWebpackPlugin'].includes(plugin.constructor.name)),
-			new DependencyHandler({
-				injectPolyfill: false,
-				requestToExternal(request) {
-					if (request.startsWith(PACKAGE_NAMESPACE)) {
-						return [
-							'eac',
-							request.substring(PACKAGE_NAMESPACE.length).replace(/-([a-z])/g, (_, letter) => letter.toUpperCase()),
-						];
-					}
-				},
-				requestToHandle(request) {
-					if (request.startsWith(PACKAGE_NAMESPACE)) {
-						return `eac-${request.substring(PACKAGE_NAMESPACE.length).replace(/-([a-z])/g, (_, letter) => letter.toUpperCase())}`;
-					}
-				},
-			}),
-			new RemoveEmptyScript(
-				{
-					stage: RemoveEmptyScript.STAGE_AFTER_PROCESS_PLUGINS,
-					remove: /\.(js)$/,
-				}
-			),
-		],
+			'js/admin': './.assets/js/admin/admin.js',
+			'js/admin-sales': './.assets/js/admin/sales.js',
+			'js/admin-settings': './.assets/js/admin/settings.js',
+			'css/admin': './.assets/css/admin/admin.scss',
+			'css/admin-settings': './.assets/css/admin/settings.scss',
+		}
 	},
-	// Packages.
+	//Package scripts.
 	{
 		...defaults,
 		entry: glob.sync('./.assets/packages/*/src/index.js').reduce((memo, file) => {
@@ -106,28 +50,5 @@ module.exports = [
 				}
 			};
 		}, {}),
-		output: {
-			...defaults.output,
-			path: path.resolve(__dirname, 'assets/packages'),
-		},
-		plugins: [
-			...defaults.plugins.filter((plugin) => !['DependencyExtractionWebpackPlugin'].includes(plugin.constructor.name)),
-			new DependencyHandler({
-				injectPolyfill: false,
-				requestToExternal(request) {
-					if (request.startsWith(PACKAGE_NAMESPACE)) {
-						return [
-							'eac',
-							request.substring(PACKAGE_NAMESPACE.length).replace(/-([a-z])/g, (_, letter) => letter.toUpperCase()),
-						];
-					}
-				},
-				requestToHandle(request) {
-					if (request.startsWith(PACKAGE_NAMESPACE)) {
-						return `eac-${request.substring(PACKAGE_NAMESPACE.length).replace(/-([a-z])/g, (_, letter) => letter.toUpperCase())}`;
-					}
-				},
-			}),
-		],
 	}
-];
+]

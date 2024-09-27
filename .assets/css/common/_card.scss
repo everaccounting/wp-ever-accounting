@@ -77,6 +77,11 @@
 		border-top: 1px solid #e1e2e2;
 	}
 
+	// If card footer comes immediately after card header remove the border.
+	& > &__header + &__footer {
+		border-top: 0;
+	}
+
 	&__title {
 		padding: 0;
 		margin: 0;

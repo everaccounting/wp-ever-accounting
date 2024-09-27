@@ -71,7 +71,7 @@ class Currencies {
 	public static function setup_table() {
 		global $list_table;
 		$screen     = get_current_screen();
-		$list_table = new Tables\CurrenciesTable();
+		$list_table = new \EverAccounting\Admin\ListTables\Currencies();
 		$list_table->prepare_items();
 		$screen->add_option( 'per_page', array(
 			'label'   => __( 'Number of currencies per page:', 'wp-ever-accounting' ),

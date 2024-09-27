@@ -220,7 +220,7 @@ class Currencies extends Controller {
 		 *
 		 * @since 1.2.1
 		 */
-		$args = apply_filters( 'ever_accounting_rest_currency_query', $args, $request );
+		$args = apply_filters( 'eac_rest_currency_query', $args, $request );
 
 		$currencies = eac_get_currencies( $args );
 		$total      = eac_get_currencies( $args, true );
@@ -453,7 +453,7 @@ class Currencies extends Controller {
 		 * @param array            $props currency props.
 		 * @param \WP_REST_Request $request Request object.
 		 */
-		return apply_filters( 'ever_accounting_rest_pre_insert_currency', $props, $request );
+		return apply_filters( 'eac_rest_pre_insert_currency', $props, $request );
 	}
 
 	/**
@@ -575,7 +575,7 @@ class Currencies extends Controller {
 		 *
 		 * @since 1.2.1
 		 */
-		$schema = apply_filters( 'ever_accounting_rest_currency_item_schema', $schema );
+		$schema = apply_filters( 'eac_rest_currency_item_schema', $schema );
 
 		return $this->add_additional_fields_schema( $schema );
 	}

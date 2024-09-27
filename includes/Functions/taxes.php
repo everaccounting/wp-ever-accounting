@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
  * @return bool
  */
 function eac_tax_enabled() {
-	return apply_filters( 'ever_accounting_tax_enabled', get_option( 'eac_tax_enabled', 'no' ) === 'yes' );
+	return apply_filters( 'eac_tax_enabled', get_option( 'eac_tax_enabled', 'no' ) === 'yes' );
 }
 
 /**

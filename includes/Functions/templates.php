@@ -25,7 +25,7 @@ function eac_get_template_part( $slug, $name = null ) {
 	 * @param string $slug The slug of the template part.
 	 * @param string $name The name of the template part.
 	 */
-	$templates = apply_filters( 'ever_accounting_get_template_part', $templates, $slug, $name );
+	$templates = apply_filters( 'eac_get_template_part', $templates, $slug, $name );
 
 	foreach ( $templates as $template ) {
 		$located = eac_locate_template( $template );
@@ -75,7 +75,7 @@ function eac_locate_template( $template_name, $template_path = '', $default_path
 	}
 
 	// Return what we found.
-	return apply_filters( 'ever_accounting_locate_template', $template, $template_name, $template_path );
+	return apply_filters( 'eac_locate_template', $template, $template_name, $template_path );
 }
 
 /**
@@ -90,7 +90,7 @@ function eac_get_template( $template_name, $args = array(), $template_path = '',
 	$template = eac_locate_template( $template_name, $template_path, $default_path );
 
 	// Allow 3rd party plugin filter template file from their plugin.
-	$filter_template = apply_filters( 'ever_accounting_get_template', $template, $template_name, $args, $template_path, $default_path );
+	$filter_template = apply_filters( 'eac_get_template', $template, $template_name, $args, $template_path, $default_path );
 
 	if ( $filter_template !== $template ) {
 		if ( ! file_exists( $filter_template ) ) {

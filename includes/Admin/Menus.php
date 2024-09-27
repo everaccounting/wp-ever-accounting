@@ -154,25 +154,35 @@ class Menus {
 			return;
 		}
 
-		add_filter( 'admin_title', array( $this, 'admin_title' ) );
-		add_action( 'load-' . $load, array( $this, 'handle_page_load' ) );
-
 		// setup vars.
 		$tab    = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_SPECIAL_CHARS );
 		$action = filter_input( INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS );
 		$page   = preg_replace( '/^.*?eac-/', '', $menu['menu_slug'] );
-
 		$this->page    = self::PARENT_SLUG === $page ? 'dashboard' : $page;
+
+		/**
+		 * Fires when the page is initialized.
+		 *
+		 * @param string $page The current page.
+		 * @param string $tab The current tab.
+		 * @param string $action The current action.
+		 */
+		do_action( 'eac_' . $this->page . '_page_init', $this->tab, $this->action );
+
 		$this->actions = apply_filters( 'eac_' . $this->page . '_page_actions', array( 'add', 'edit', 'view' ) );
 		$this->tabs    = apply_filters( 'eac_' . $this->page . '_page_tabs', array() );
 		$this->tab     = ! empty( $tab ) && array_key_exists( $tab, $this->tabs ) ? sanitize_key( $tab ) : current( array_keys( $this->tabs ) );
 		$this->action  = ! empty( $action ) && in_array( $action, $this->actions, true ) ? sanitize_key( $action ) : '';
+
 
 		// if the tab is not valid, redirect remove the tab query arg.
 		if ( $this->tabs && $tab && ! array_key_exists( $tab, $this->tabs ) ) {
 			wp_safe_redirect( remove_query_arg( 'tab' ) );
 			exit;
 		}
+
+		add_filter( 'admin_title', array( $this, 'admin_title' ) );
+		add_action( 'load-' . $load, array( $this, 'handle_page_load' ) );
 	}
 
 	/**
@@ -267,8 +277,7 @@ class Menus {
 			<?php endif; ?>
 
 			<?php
-
-			if ( ! empty( $this->page ) && ! empty( $this->tab ) && ! empty( $this->action ) ) {
+			if ( ! empty( $this->page ) && ! empty( $this->tab ) && ! empty( $this->action ) && has_action( 'eac_' . $this->page . '_page_' . $this->tab . '_' . $this->action ) ) {
 				/**
 				 * Fires before the content on the page.
 				 *
@@ -276,7 +285,7 @@ class Menus {
 				 */
 				do_action( 'eac_' . $this->page . '_page_' . $this->tab . '_' . $this->action );
 
-			} elseif ( ! empty( $this->page ) && ! empty( $this->tab ) ) {
+			} elseif ( ! empty( $this->page ) && ! empty( $this->tab ) && has_action( 'eac_' . $this->page . '_page_' . $this->tab ) ) {
 				/**
 				 * Fires before the content on the page.
 				 *

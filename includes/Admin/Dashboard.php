@@ -8,6 +8,7 @@ defined( 'ABSPATH' ) || exit;
  * Class Dashboard
  *
  * @package EverAccounting\Admin
+ * @since 1.0.0
  */
 class Dashboard {
 

@@ -63,7 +63,7 @@ class Categories extends CSVExporter {
 			'order'    => 'ASC',
 			'number'   => - 1,
 		);
-		$args = apply_filters( 'ever_accounting_export_categories_args', $args, $this );
+		$args = apply_filters( 'eac_export_categories_args', $args, $this );
 
 		$items = eac_get_categories( $args );
 
@@ -94,7 +94,7 @@ class Categories extends CSVExporter {
 					if ( $item->$column ) {
 						$value = $item->$column;
 					}
-					$value = apply_filters( 'ever_accounting_export_categories_column_' . $column, $value, $item );
+					$value = apply_filters( 'eac_export_categories_column_' . $column, $value, $item );
 			}
 
 			$props[ $column ] = $value;

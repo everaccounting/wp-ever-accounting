@@ -63,7 +63,7 @@ function eac_get_currency_symbol( $currency = '' ) {
 function eac_base_currency() {
 	$currency = get_option( 'eac_base_currency', 'USD' );
 
-	return apply_filters( 'ever_accounting_base_currency', strtoupper( $currency ) );
+	return apply_filters( 'eac_base_currency', strtoupper( $currency ) );
 }
 
 

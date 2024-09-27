@@ -40,7 +40,7 @@ function eac_form_field( $field ) {
 	 *
 	 * @since 1.2.0
 	 */
-	$field = apply_filters( 'ever_accounting_form_field_args', $field );
+	$field = apply_filters( 'eac_form_field_args', $field );
 
 	// Set default name and ID attributes if not provided.
 	$field['name']          = empty( $field['name'] ) ? $field['id'] : $field['name'];

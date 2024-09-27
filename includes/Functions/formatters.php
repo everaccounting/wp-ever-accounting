@@ -89,7 +89,7 @@ function eac_get_formatted_address( $fields = array(), $separator = '<br/>' ) {
 		'postcode'  => '',
 		'country'   => '',
 	);
-	$format            = apply_filters( 'ever_accounting_address_format', "<strong>{name}</strong>\n{company}\n{address_1}\n{address_2}\n{city} {state} {postcode}\n{country}" );
+	$format            = apply_filters( 'eac_address_format', "<strong>{name}</strong>\n{company}\n{address_1}\n{address_2}\n{city} {state} {postcode}\n{country}" );
 	$fields            = array_map( 'trim', wp_parse_args( $fields, $defaults ) );
 	$countries         = I18n::get_countries();
 	$fields['country'] = isset( $countries[ $fields['country'] ] ) ? $countries[ $fields['country'] ] : $fields['country'];

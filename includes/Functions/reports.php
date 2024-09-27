@@ -282,7 +282,7 @@ function eac_get_sales_summary() {
 
 	$summery['total'] = $total_payment;
 
-	return apply_filters( 'ever_accounting_sales_summary', $summery );
+	return apply_filters( 'eac_sales_summary', $summery );
 }
 
 /**
@@ -302,7 +302,7 @@ function eac_get_purchases_summary() {
 
 	$summery['total'] = $total_expense;
 
-	return apply_filters( 'ever_accounting_purchases_summary', $summery );
+	return apply_filters( 'eac_purchases_summary', $summery );
 }
 
 /**
@@ -317,7 +317,7 @@ function eac_get_profits_summary() {
 
 	$summery['total'] = $payment['total'] - $expense['total'];
 
-	return apply_filters( 'ever_accounting_profits_summary', $summery );
+	return apply_filters( 'eac_profits_summary', $summery );
 }
 
 /**
@@ -399,7 +399,7 @@ function eac_get_payments_report( $year = null, $force = false ) {
 			$data['month_avg'] = round( $data['total_amount'] / $month_count, 2 );
 		}
 
-		$reports[ $year ] = apply_filters( 'ever_accounting_sales_report', $data, $year );
+		$reports[ $year ] = apply_filters( 'eac_sales_report', $data, $year );
 		// Cache for 1 hour.
 		set_transient( 'eac_payments_reports', $reports, HOUR_IN_SECONDS );
 	}
@@ -487,7 +487,7 @@ function eac_get_expenses_report( $year = null, $force = false ) {
 			$data['month_avg'] = round( $data['total_amount'] / $month_count, 2 );
 		}
 
-		$reports[ $year ] = apply_filters( 'ever_accounting_expenses_report', $data, $year );
+		$reports[ $year ] = apply_filters( 'eac_expenses_report', $data, $year );
 		// Cache for 1 hour.
 		set_transient( 'eac_expenses_reports', $reports, HOUR_IN_SECONDS );
 	}
@@ -575,7 +575,7 @@ function eac_get_profit_report( $year = null, $force = true ) {
 			$data['month_avg'] = round( $data['total_profit'] / $month_count, 2 );
 		}
 
-		$reports[ $year ] = apply_filters( 'ever_accounting_profit_report', $data, $year );
+		$reports[ $year ] = apply_filters( 'eac_profit_report', $data, $year );
 		// Cache for 1 hour.
 		set_transient( 'eac_profit_reports', $reports, HOUR_IN_SECONDS );
 	}

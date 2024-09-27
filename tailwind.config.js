@@ -1,7 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 const {join} = require('path');
 module.exports = {
-	prefix: 'tw-',
+	prefix: 'eac-',
 	corePlugins: {
 		preflight: false,
 	},
@@ -12,6 +12,27 @@ module.exports = {
 		join(__dirname, '.assets/client/**/*.js'),
 	],
 	media: false,
-	theme: {},
+	theme: {
+		extend: {
+			fontFamily: {
+				wp: [
+					'-apple-system',
+					'BlinkMacSystemFont',
+					'Segoe UI',
+					'Roboto',
+					'Oxygen-Sans',
+					'Ubuntu',
+					'Cantarell',
+					'Helvetica Neue',
+					'sans-serif',
+				],
+			},
+		},
+		variants: {
+			extend: {
+				opacity: [ 'disabled' ],
+			},
+		},
+	},
 	plugins: [],
 };

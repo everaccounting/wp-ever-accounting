@@ -49,7 +49,7 @@ class Payments {
 	public static function setup_table() {
 		global $list_table;
 		$screen     = get_current_screen();
-		$list_table = new Tables\PaymentsTable();
+		$list_table = new \EverAccounting\Admin\ListTables\Payments();
 		$list_table->prepare_items();
 		$screen->add_option(
 			'per_page',

@@ -34,10 +34,8 @@ class Scripts {
 		EAC()->scripts->register_script( 'eac-blockui', 'js/blockui.js', array( 'jquery' ), true );
 
 		// Packages.
-		EAC()->scripts->enqueue_script( 'eac-components', 'packages/components.js' );
 		EAC()->scripts->register_script( 'eac-money', 'packages/money.js' );
 		EAC()->scripts->register_script( 'eac-api', 'packages/api.js', array( 'wp-api', 'wp-backbone' ), true );
-		EAC()->scripts->enqueue_script( 'eac-admin-client', 'js/admin-client.js', array( 'eac-components' ) );
 
 		// Plugins.
 		EAC()->scripts->register_script( 'eac-modal', 'js/modal.js', array( 'jquery' ), true );
@@ -68,6 +66,9 @@ class Scripts {
 		}
 
 		wp_enqueue_media();
+		wp_enqueue_script( 'eac-api' );
+		wp_enqueue_script( 'eac-form' );
+		wp_enqueue_script( 'eac-modal' );
 		wp_enqueue_script( 'eac-admin' );
 		wp_enqueue_style( 'eac-admin' );
 

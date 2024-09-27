@@ -68,7 +68,7 @@ class Bills {
 	public static function setup_table() {
 		global $list_table;
 		$screen     = get_current_screen();
-		$list_table = new Tables\BillsTable();
+		$list_table = new \EverAccounting\Admin\ListTables\Bills();
 		$list_table->prepare_items();
 		$screen->add_option( 'per_page', array(
 			'label'   => __( 'Number of bills per page:', 'wp-ever-accounting' ),

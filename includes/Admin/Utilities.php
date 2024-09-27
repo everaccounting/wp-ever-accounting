@@ -47,12 +47,6 @@ class Utilities {
 				'menu_slug'  => 'eac-banking',
 			),
 			array(
-				'page_title' => __( 'Misc', 'wp-ever-accounting' ),
-				'menu_title' => __( 'Misc', 'wp-ever-accounting' ),
-				'capability' => 'manage_options',
-				'menu_slug'  => 'eac-misc',
-			),
-			array(
 				'page_title' => __( 'Tools', 'wp-ever-accounting' ),
 				'menu_title' => __( 'Tools', 'wp-ever-accounting' ),
 				'capability' => 'manage_options',
@@ -72,7 +66,7 @@ class Utilities {
 			),
 		);
 
-		return apply_filters( 'ever_accounting_admin_menus', $menus );
+		return apply_filters( 'eac_admin_menus', $menus );
 	}
 
 	/**

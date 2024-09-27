@@ -79,7 +79,7 @@ class Customers extends CSVExporter {
 			'number'   => - 1,
 		);
 
-		$args = apply_filters( 'ever_accounting_export_customers_args', $args );
+		$args = apply_filters( 'eac_export_customers_args', $args );
 
 		$items = eac_get_customers( $args );
 
@@ -109,7 +109,7 @@ class Customers extends CSVExporter {
 					if ( $item->$column ) {
 						$value = $item->$column;
 					}
-					$value = apply_filters( 'ever_accounting_export_customers_column_' . $column, $value, $item );
+					$value = apply_filters( 'eac_export_customers_column_' . $column, $value, $item );
 			}
 
 			$props[ $column ] = $value;
