@@ -6,7 +6,6 @@ use EverAccounting\Controllers\Categories;
 use EverAccounting\Controllers\Customers;
 use EverAccounting\Controllers\Items;
 use EverAccounting\Controllers\Bills;
-use EverAccounting\Controllers\Currencies;
 use EverAccounting\Controllers\Accounts;
 use EverAccounting\Controllers\Expenses;
 use EverAccounting\Controllers\Invoices;
@@ -21,7 +20,6 @@ use EverAccounting\Controllers\Vendors;
  * @package EverAccounting
  *
  * @property Items      $items Items controller.
- * @property Currencies $currencies Currencies controller.
  * @property Payments   $payments Payments controller.
  * @property Invoices   $invoices Invoices controller.
  * @property Customers  $customers Customers controller.
@@ -106,7 +104,6 @@ class Plugin extends \ByteKit\Plugin {
 
 		$this->services->add( 'items', new Controllers\Items() );
 		$this->services->add( 'accounts', new Controllers\Accounts() );
-		$this->services->add( 'currencies', new Controllers\Currencies() );
 		$this->services->add( 'items', new Controllers\Items() );
 		$this->services->add( 'invoices', new Controllers\Invoices() );
 		$this->services->add( 'payments', new Controllers\Payments() );

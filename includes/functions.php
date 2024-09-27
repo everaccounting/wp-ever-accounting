@@ -11,19 +11,11 @@ use EverAccounting\Utilities\I18n;
 
 defined( 'ABSPATH' ) || exit;
 
-// require_once __DIR__ . '/Functions/accounts.php';
-// require_once __DIR__ . '/Functions/categories.php';
-// require_once __DIR__ . '/Functions/contacts.php';
-// require_once __DIR__ . '/Functions/currencies.php';
-// require_once __DIR__ . '/Functions/documents.php';
 require_once __DIR__ . '/Functions/formatters.php';
-// require_once __DIR__ . '/Functions/items.php';
-// require_once __DIR__ . '/Functions/notes.php';
 require_once __DIR__ . '/Functions/misc.php';
 require_once __DIR__ . '/Functions/reports.php';
 require_once __DIR__ . '/Functions/taxes.php';
 require_once __DIR__ . '/Functions/templates.php';
-// require_once __DIR__ . '/Functions/transactions.php';
 require_once __DIR__ . '/Functions/updates.php';
 
 /**
@@ -125,31 +117,22 @@ function eac_decimal_separator( $currency = null ) {
  * @return array
  */
 function eac_get_currencies() {
-//	$base_currency                = eac_base_currency();
-//	$currencies                   = I18n::get_currencies();
-//	$currencies[ $base_currency ] = array_merge(
-//		$currencies[ $base_currency ],
-//		array(
-//			'rate'               => 1,
-//			'precision'          => get_option( 'eac_currency_precision', 2 ),
-//			'position'           => get_option( 'eac_currency_position', 'before' ),
-//			'thousand_separator' => get_option( 'eac_thousand_separator', ',' ),
-//			'decimal_separator'  => get_option( 'eac_decimal_separator', '.' ),
-//		)
-//	);
-//
-//	$currencies = array_map(
-//		function ( $currency ) {
-//			$currency['formatted_name'] = "{$currency['code']} - {$currency['name']}";
-//
-//			return $currency;
-//		},
-//		$currencies
-//	);
-//
-//	$currencies['BDT']['rate'] = 1 / 120;
+	$base_currency = eac_base_currency();
+	$currencies    = I18n::get_currencies();
 
-	return apply_filters( 'eac_currencies', I18n::get_currencies() );
+	$currencies[ $base_currency ] = array_merge(
+		$currencies[ $base_currency ],
+		array(
+			'code'               => $base_currency,
+			'rate'               => 1,
+			'precision'          => get_option( 'eac_currency_precision', 2 ),
+			'position'           => get_option( 'eac_currency_position', 'before' ),
+			'thousand_separator' => get_option( 'eac_thousand_separator', ',' ),
+			'decimal_separator'  => get_option( 'eac_decimal_separator', '.' ),
+		)
+	);
+
+	return apply_filters( 'eac_currencies', $currencies );
 }
 
 /**

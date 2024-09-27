@@ -1,4 +1,5 @@
 const {Money} = eac.money;
+import apiFetch from '@wordpress/api-fetch';
 
 (function (document, wp, $) {
 	'use strict';
@@ -10,31 +11,38 @@ const {Money} = eac.money;
 
 	$('#eac-payment-form').eac_form({
 		events: {
-			'change :input[name="account_id"]': function (e){
-				var self = this;
-				self.block();
-				var account_id = $(e.target).val();
-				var Account = new eac.api.Account({id: account_id});
-				Account.fetch().then(function (account) {
-					self.unblock();
-					self.$(':input[name="amount"]')
-						.data('currency', account.currency)
-						.removeClass('enhanced');
-					$(document.body).trigger('eac_update_ui');
-				});
+			'ready': 'handleExchangeRate',
+			'change :input[name="account_id"]': 'handleExchangeRate',
+		},
+		handleExchangeRate: function () {
+			var self = this;
+			var $amount = this.$(':input[name="amount"]');
+			var $exchange_rate = this.$(':input[name="exchange_rate"]');
+			var account_id = this.$(':input[name="account_id"]').val();
+
+			if (!account_id) {
+				$exchange_rate.attr('readonly', true).val(1.00);
+				$exchange_rate.next('.eac-form-field__addon').text(eac_admin_vars.base_currency);
+				return;
 			}
+
+			self.block();
+			var Account = new eac.api.Account({id: account_id});
+			Account.fetch({
+				success: function (account) {
+					var new_currency = account.get('currency') || eac_admin_vars.base_currency;
+					$amount.data('currency', new_currency).removeClass('enhanced');
+					$exchange_rate.val(eac_admin_vars.currencies[new_currency].rate || 1.00);
+					$exchange_rate.next('.eac-form-field__addon').text(new_currency);
+					$exchange_rate.attr('readonly', new_currency === eac_admin_vars.base_currency);
+					$(document.body).trigger('eac_update_ui');
+				}
+			}).then(function () {
+				self.unblock();
+			});
 		},
 	});
 
-	// $('#eac-invoice-form').eac_form({
-	// 	events:{
-	// 		'submit' : function (e) {
-	// 			e.preventDefault();
-	// 			var self = this;
-	// 			console.log(self.getValues())
-	// 		}
-	// 	}
-	// })
 
 	/**
 	 * ========================================================================
@@ -48,7 +56,7 @@ const {Money} = eac.money;
 	 * @type {Backbone.Model}
 	 * @since 1.0.0
 	 */
-	var InvoiceState  = eac.api.Invoice.extend({
+	var InvoiceState = eac.api.Invoice.extend({
 		defaults: Object.assign({}, eac.api.Invoice.prototype.defaults, {
 			isFetching: false,
 		})

@@ -67,6 +67,21 @@ defined( 'ABSPATH' ) || exit;
 						)
 					);
 
+					// exchange rate.
+					eac_form_field(
+						array(
+							'label'       => __( 'Exchange Rate', 'wp-ever-accounting' ),
+							'type'        => 'number',
+							'name'        => 'exchange_rate',
+							'value'       => $payment->exchange_rate,
+							'placeholder' => '1.00',
+							'required'    => true,
+							'class'       => 'eac_exchange_rate',
+							'prefix'      => '1 ' . eac_base_currency() . ' = ',
+							'suffix'      => $payment->currency,
+						)
+					);
+
 					eac_form_field(
 						array(
 							'label'         => __( 'Amount', 'wp-ever-accounting' ),
@@ -77,28 +92,6 @@ defined( 'ABSPATH' ) || exit;
 							'tooltip'       => __( 'Enter the amount in the currency of the selected account, use (.) for decimal.', 'wp-ever-accounting' ),
 							'data-currency' => $payment->currency,
 							'class'         => 'eac_amount',
-						)
-					);
-
-					eac_form_field(
-						array(
-							'label'            => __( 'Customer', 'wp-ever-accounting' ),
-							'type'             => 'select',
-							'name'             => 'contact_id',
-							'options'          => array( $payment->customer ),
-							'value'            => $payment->customer_id,
-							'class'            => 'eac_select2',
-							'tooltip'          => __( 'Select the customer.', 'wp-ever-accounting' ),
-							'option_value'     => 'id',
-							'option_label'     => 'formatted_name',
-							'data-placeholder' => __( 'Select a customer', 'wp-ever-accounting' ),
-							'data-action'      => 'eac_json_search',
-							'data-type'        => 'customer',
-							'suffix'           => sprintf(
-								'<a class="addon" href="%s" target="_blank" title="%s"><span class="dashicons dashicons-plus"></span></a>',
-								esc_url( admin_url( 'admin.php?page=eac-purchases&tab=customers&action=add' ) ),
-								__( 'Add Vendor', 'wp-ever-accounting' )
-							),
 						)
 					);
 
@@ -127,6 +120,28 @@ defined( 'ABSPATH' ) || exit;
 
 					eac_form_field(
 						array(
+							'label'            => __( 'Customer', 'wp-ever-accounting' ),
+							'type'             => 'select',
+							'name'             => 'contact_id',
+							'options'          => array( $payment->customer ),
+							'value'            => $payment->customer_id,
+							'class'            => 'eac_select2',
+							'tooltip'          => __( 'Select the customer.', 'wp-ever-accounting' ),
+							'option_value'     => 'id',
+							'option_label'     => 'formatted_name',
+							'data-placeholder' => __( 'Select a customer', 'wp-ever-accounting' ),
+							'data-action'      => 'eac_json_search',
+							'data-type'        => 'customer',
+							'suffix'           => sprintf(
+								'<a class="addon" href="%s" target="_blank" title="%s"><span class="dashicons dashicons-plus"></span></a>',
+								esc_url( admin_url( 'admin.php?page=eac-purchases&tab=customers&action=add' ) ),
+								__( 'Add Vendor', 'wp-ever-accounting' )
+							),
+						)
+					);
+
+					eac_form_field(
+						array(
 							'label'       => __( 'Payment Method', 'wp-ever-accounting' ),
 							'type'        => 'select',
 							'name'        => 'payment_method',
@@ -138,18 +153,18 @@ defined( 'ABSPATH' ) || exit;
 
 					eac_form_field(
 						array(
-							'label'            => __( 'Bill', 'wp-ever-accounting' ),
+							'label'            => __( 'Invoice', 'wp-ever-accounting' ),
 							'type'             => 'select',
-							'name'             => 'bill_id',
+							'name'             => 'invoice_id',
 							'value'            => $payment->document_id,
 							'options'          => array( $payment->document ),
 							'option_value'     => 'id',
 							'option_label'     => 'formatted_name',
-							'placeholder'      => __( 'Select bill', 'wp-ever-accounting' ),
+							'placeholder'      => __( 'Select invoice', 'wp-ever-accounting' ),
 							'class'            => 'eac_select2',
-							'data-placeholder' => __( 'Select bill', 'wp-ever-accounting' ),
+							'data-placeholder' => __( 'Select invoice', 'wp-ever-accounting' ),
 							'data-action'      => 'eac_json_search',
-							'data-type'        => 'bill',
+							'data-type'        => 'invoice',
 						)
 					);
 
@@ -213,7 +228,12 @@ defined( 'ABSPATH' ) || exit;
 			</div><!-- .eac-card -->
 
 			<div class="eac-card">
-				<?php eac_file_uploader( array( 'value' => $payment->attachment_id ) ); ?>
+				<div class="eac-card__header">
+					<h3 class="eac-card__title"><?php esc_html_e( 'Attachment', 'wp-ever-accounting' ); ?></h3>
+				</div>
+				<div class="eac-card__body">
+					<?php eac_file_uploader( array( 'value' => $payment->attachment_id ) ); ?>
+				</div>
 			</div>
 
 
@@ -223,6 +243,4 @@ defined( 'ABSPATH' ) || exit;
 	<?php wp_nonce_field( 'eac_edit_payment' ); ?>
 	<input type="hidden" name="action" value="eac_edit_payment"/>
 	<input type="hidden" name="id" value="<?php echo esc_attr( $payment->id ); ?>"/>
-	<input type="hidden" name="currency" value="<?php echo esc_attr( $payment->currency ); ?>"/>
-	<input type="hidden" name="exchange_rate" value="<?php echo esc_attr( $payment->exchange_rate ); ?>"/>
 </form>

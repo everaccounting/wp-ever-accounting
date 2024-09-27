@@ -41,7 +41,7 @@
 		if (!$el.length) return;
 
 		this.$el = $el;
-		this.options = $.extend(defaults, options || {});
+		$.extend(this, defaults, options || {});
 		this.$el.data('eac_form', this);
 
 		// Store initial values
@@ -49,13 +49,16 @@
 
 		// Bind events
 		this.init();
+
+		// trigger ready event.
+		this.$el.trigger('ready');
 	};
 
 	/**
 	 * Initialize the form by binding events and any other necessary setup.
 	 */
 	$.eac_form.prototype.init = function () {
-		var events = this.options.events || {};
+		var events = this.events || {};
 		// Bind events
 		for (const key in events) {
 			let method = events[key];

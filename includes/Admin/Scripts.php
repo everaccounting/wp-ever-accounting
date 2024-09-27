@@ -34,8 +34,10 @@ class Scripts {
 		EAC()->scripts->register_script( 'eac-blockui', 'js/blockui.js', array( 'jquery' ), true );
 
 		// Packages.
+		EAC()->scripts->enqueue_script( 'eac-components', 'packages/components.js' );
 		EAC()->scripts->register_script( 'eac-money', 'packages/money.js' );
 		EAC()->scripts->register_script( 'eac-api', 'packages/api.js', array( 'wp-api', 'wp-backbone' ), true );
+		EAC()->scripts->enqueue_script( 'eac-admin-client', 'js/admin-client.js', array( 'eac-components' ) );
 
 		// Plugins.
 		EAC()->scripts->register_script( 'eac-modal', 'js/modal.js', array( 'jquery' ), true );
@@ -45,7 +47,7 @@ class Scripts {
 		EAC()->scripts->register_script( 'eac-admin', 'js/admin.js', array( 'jquery', 'eac-inputmask', 'eac-select2', 'eac-tiptip', 'jquery-ui-datepicker', 'jquery-ui-tooltip' ), true );
 		EAC()->scripts->register_script( 'eac-admin-sales', 'js/admin-sales.js', array( 'eac-api', 'eac-form', 'eac-money' ), true );
 		EAC()->scripts->register_script( 'eac-admin-invoices', 'js/admin-invoices.js', array( 'eac-api', 'eac-money' ), true );
-		EAC()->scripts->register_script( 'eac-admin-settings', 'js/admin-settings.js', array( 'eac-admin' ), true );
+		EAC()->scripts->register_script( 'eac-admin-settings', 'js/admin-settings.js', array( 'eac-admin', 'eac-form' ), true );
 
 		EAC()->scripts->register_style( 'eac-jquery-ui', 'css/jquery-ui.css' );
 		EAC()->scripts->register_style( 'eac-admin', 'css/admin.css', array( 'eac-jquery-ui' ) );

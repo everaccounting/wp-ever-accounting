@@ -99,6 +99,15 @@ class Payment extends Transaction {
 			return new \WP_Error( 'missing_required', __( 'Payment status is required.', 'wp-ever-accounting' ) );
 		}
 
+		// if does exist or account id is dirty, then set the new currency code.
+		if ( ! $this->exists() || $this->is_dirty( 'account_id' ) ) {
+			$account = Account::find( $this->account_id );
+			if ( ! $account ) {
+				return new \WP_Error( 'invalid_account', __( 'Invalid account.', 'wp-ever-accounting' ) );
+			}
+			$this->currency = $account->currency;
+		}
+
 		return parent::save();
 	}
 

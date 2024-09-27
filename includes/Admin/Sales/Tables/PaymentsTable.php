@@ -334,7 +334,7 @@ class PaymentsTable extends ListTable {
 	 * @return string Displays the status.
 	 */
 	public function column_status( $item ) {
-		$statuses = Payment::get_statuses();
+		$statuses = EAC()->payments->get_statuses();
 		$status   = isset( $item->status ) ? $item->status : '';
 		$label    = isset( $statuses[ $status ] ) ? $statuses[ $status ] : '';
 

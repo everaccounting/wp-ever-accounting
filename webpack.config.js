@@ -31,6 +31,9 @@ module.exports = [
 			'js/admin-settings': './.assets/js/admin-settings.js',
 			'css/admin': './.assets/css/admin.scss',
 			'css/admin-settings': './.assets/css/admin-settings.scss',
+
+			//Client scripts.
+			'js/admin-client': './.assets/client/admin/index.js',
 		},
 		output: {
 			...defaults.output,
@@ -59,7 +62,23 @@ module.exports = [
 			rules: [...defaults.module.rules].filter(Boolean),
 		},
 		plugins: [
-			...defaults.plugins,
+			...defaults.plugins.filter((plugin) => !['DependencyExtractionWebpackPlugin'].includes(plugin.constructor.name)),
+			new DependencyHandler({
+				injectPolyfill: false,
+				requestToExternal(request) {
+					if (request.startsWith(PACKAGE_NAMESPACE)) {
+						return [
+							'eac',
+							request.substring(PACKAGE_NAMESPACE.length).replace(/-([a-z])/g, (_, letter) => letter.toUpperCase()),
+						];
+					}
+				},
+				requestToHandle(request) {
+					if (request.startsWith(PACKAGE_NAMESPACE)) {
+						return `eac-${request.substring(PACKAGE_NAMESPACE.length).replace(/-([a-z])/g, (_, letter) => letter.toUpperCase())}`;
+					}
+				},
+			}),
 			new RemoveEmptyScript(
 				{
 					stage: RemoveEmptyScript.STAGE_AFTER_PROCESS_PLUGINS,

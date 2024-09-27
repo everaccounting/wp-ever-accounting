@@ -306,7 +306,6 @@ class Accounts extends Controller {
 		$response->header( 'Location', rest_url( sprintf( '%s/%s/%d', $this->namespace, $this->rest_base, $account->id ) ) );
 
 		return $response;
-
 	}
 
 	/**
@@ -377,7 +376,7 @@ class Accounts extends Controller {
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function prepare_item_for_response( $item, $request ) {
-		$data = [];
+		$data = array();
 
 		foreach ( array_keys( $this->get_schema_properties() ) as $key ) {
 			switch ( $key ) {
@@ -420,7 +419,7 @@ class Accounts extends Controller {
 	protected function prepare_item_for_database( $request ) {
 		$schema    = $this->get_item_schema();
 		$data_keys = array_keys( array_filter( $schema['properties'], array( $this, 'filter_writable_props' ) ) );
-		$props     = [];
+		$props     = array();
 		// Handle all writable props.
 		foreach ( $data_keys as $key ) {
 			$value = $request[ $key ];
@@ -504,7 +503,7 @@ class Accounts extends Controller {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
-				'currency_code' => array(
+				'currency'     => array(
 					'description' => __( 'Account currency code.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'edit' ),
@@ -563,7 +562,7 @@ class Accounts extends Controller {
 					'type'        => 'date-time',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
-				)
+				),
 			),
 		);
 

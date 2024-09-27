@@ -21,7 +21,7 @@ class General extends Page {
 	 */
 	public function __construct() {
 		parent::__construct( 'general', __( 'General', 'wp-ever-accounting' ) );
-		add_action( 'eac_settings_field_exchange_rates', array( $this, 'exchange_rates_field' ) );
+		add_action( 'eac_settings_general_tab_currencies', array( $this, 'render_currencies' ) );
 	}
 
 	/**
@@ -32,8 +32,9 @@ class General extends Page {
 	 */
 	public function get_sections() {
 		return array(
-			''         => __( 'Options', 'wp-ever-accounting' ),
-			'currency' => __( 'Currency', 'wp-ever-accounting' ),
+			''           => __( 'General', 'wp-ever-accounting' ),
+			'currency'   => __( 'Currency', 'wp-ever-accounting' ),
+			'currencies' => __( 'Currencies', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -179,7 +180,7 @@ class General extends Page {
 		return array(
 			// currency options.
 			array(
-				'title' => __( 'Currency Options', 'wp-ever-accounting' ),
+				'title' => __( 'Currency Settings', 'wp-ever-accounting' ),
 				'type'  => 'title',
 				'id'    => 'currency_options',
 			),
@@ -191,7 +192,7 @@ class General extends Page {
 				'type'     => 'select',
 				'default'  => 'USD',
 				'class'    => 'eac_select2',
-				'options'  => wp_list_pluck( eac_get_currencies(), 'formatted_name', 'code' ),
+				'options'  => wp_list_pluck( I18n::get_currencies(), 'name', 'code' ),
 				'value'    => get_option( 'eac_base_currency', 'USD' ),
 				'desc_tip' => true,
 			),
@@ -239,22 +240,6 @@ class General extends Page {
 				'type' => 'sectionend',
 				'id'   => 'currency_options',
 			),
-
-			// Currencies.
-			array(
-				'title' => __( 'Multi Currency', 'wp-ever-accounting' ),
-				'type'  => 'title',
-				'id'    => 'currencies',
-			),
-			array(
-				'title' => __( 'Currencies', 'wp-ever-accounting' ),
-				'type'  => 'exchange_rates',
-				'id'    => 'exchange_rates',
-			),
-			array(
-				'type' => 'sectionend',
-				'id'   => 'currencies',
-			),
 		);
 	}
 
@@ -279,19 +264,28 @@ class General extends Page {
 					</tr>
 					</thead>
 					<tbody>
-						<tr>
-							<td>
-								BDT - Bangladeshi Taka
-							</td>
+					<tr>
+						<td>
+							BDT - Bangladeshi Taka
+						</td>
 
-							<td>
-								1 USD = <input type="text" name="eac_exchange_rates[BDT]" value="1" class="eac-exchange-rate" />BDT
-							</td>
-						</tr>
+						<td>
+							1 USD = <input type="text" name="eac_exchange_rates[BDT]" value="1" class="eac-exchange-rate"/>BDT
+						</td>
+					</tr>
 					</tbody>
 				</table>
 			</td>
 		</tr>
 		<?php
+	}
+
+	/**
+	 * Render currencies.
+	 *
+	 * @since 1.0.0
+	 */
+	public function render_currencies() {
+		include __DIR__ . '/views/currency-list.php';
 	}
 }
