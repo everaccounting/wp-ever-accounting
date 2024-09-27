@@ -1,6 +1,6 @@
 <?php
 
-namespace EverAccounting\Admin\Misc;
+namespace EverAccounting\Admin;
 
 use EverAccounting\Models\Category;
 
@@ -19,13 +19,13 @@ class Categories {
 	 * Categories constructor.
 	 */
 	public function __construct() {
-//		add_filter( 'eac_misc_page_tabs', array( __CLASS__, 'register_tabs' ) );
-//		add_filter( 'set-screen-option', array( __CLASS__, 'set_screen_option' ), 10, 3 );
-//		add_action( 'load_eac_misc_page_categories', array( __CLASS__, 'setup_table' ) );
-//		add_action( 'eac_misc_page_categories', array( __CLASS__, 'render_table' ) );
-//		add_action( 'eac_misc_page_categories_add', array( __CLASS__, 'render_add' ) );
-//		add_action( 'eac_misc_page_categories_edit', array( __CLASS__, 'render_edit' ) );
-//		add_action( 'admin_post_eac_edit_category', array( __CLASS__, 'handle_edit_category' ) );
+		add_filter( 'eac_settings_page_tabs', array( __CLASS__, 'register_tabs' ) );
+		add_filter( 'set-screen-option', array( __CLASS__, 'set_screen_option' ), 10, 3 );
+		add_action( 'load_eac_settings_page_categories', array( __CLASS__, 'setup_table' ) );
+		add_action( 'eac_settings_page_categories', array( __CLASS__, 'render_table' ) );
+		add_action( 'eac_settings_page_categories_add', array( __CLASS__, 'render_add' ) );
+		add_action( 'eac_settings_page_categories_edit', array( __CLASS__, 'render_edit' ) );
+		add_action( 'admin_post_eac_edit_category', array( __CLASS__, 'handle_edit_category' ) );
 	}
 
 	/**
@@ -69,7 +69,7 @@ class Categories {
 	public static function setup_table() {
 		global $list_table;
 		$screen     = get_current_screen();
-		$list_table = new \EverAccounting\Admin\ListTables\Categories();
+		$list_table = new ListTables\Categories();
 		$list_table->prepare_items();
 		$screen->add_option( 'per_page', array(
 			'label'   => __( 'Number of categories per page:', 'wp-ever-accounting' ),

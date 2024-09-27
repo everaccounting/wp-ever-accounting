@@ -7,7 +7,7 @@ use EverAccounting\Models\Category;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class Categories.
+ * Class CategoriesTable.
  *
  * @since 1.0.0
  * @package EverAccounting\Admin\ListTables
@@ -34,7 +34,7 @@ class Categories extends ListTable {
 			)
 		);
 
-		$this->base_url = admin_url( 'admin.php?page=eac-misc&tab=categories' );
+		$this->base_url = admin_url( 'admin.php?page=eac-settings&tab=categories' );
 	}
 
 	/**
@@ -56,7 +56,7 @@ class Categories extends ListTable {
 			'search'  => $search,
 			'orderby' => $order_by,
 			'order'   => $order,
-			'status'  => $this->get_request_status(),
+			'type'    => $this->get_request_type(),
 		);
 
 		/**
@@ -77,58 +77,6 @@ class Categories extends ListTable {
 				'per_page'    => $per_page,
 			)
 		);
-	}
-
-	/**
-	 * handle bulk activate action.
-	 *
-	 * @param array $ids List of item IDs.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	protected function bulk_activate( $ids ) {
-		$performed = 0;
-		foreach ( $ids as $id ) {
-			if ( EAC()->categories->insert(
-				array(
-					'id'     => $id,
-					'status' => 'active',
-				)
-			) ) {
-				++ $performed;
-			}
-		}
-		if ( ! empty( $performed ) ) {
-			// translators: %s: number of categories activated.
-			EAC()->flash->success( sprintf( __( '%s category(s) activated successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
-		}
-	}
-
-	/**
-	 * handle bulk deactivate action.
-	 *
-	 * @param array $ids List of item IDs.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	protected function bulk_deactivate( $ids ) {
-		$performed = 0;
-		foreach ( $ids as $id ) {
-			if ( EAC()->categories->insert(
-				array(
-					'id'     => $id,
-					'status' => 'inactive',
-				)
-			) ) {
-				++ $performed;
-			}
-		}
-		if ( ! empty( $performed ) ) {
-			// translators: %s: number of categories.
-			EAC()->flash->success( sprintf( __( '%s category(s) deactivated successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
-		}
 	}
 
 	/**
@@ -171,28 +119,24 @@ class Categories extends ListTable {
 	 * @global string $role
 	 */
 	protected function get_views() {
-		$current      = $this->get_request_status( 'all' );
-		$status_links = array();
-		$statuses     = array(
-			'all'      => __( 'All', 'wp-ever-accounting' ),
-			'active'   => __( 'Active', 'wp-ever-accounting' ),
-			'inactive' => __( 'Inactive', 'wp-ever-accounting' ),
-		);
+		$current     = $this->get_request_type( 'all' );
+		$types_links = array();
+		$types       = array_merge( array( 'all' => __( 'All', 'wp-ever-accounting' ) ), EAC()->categories->get_types() );
 
-		foreach ( $statuses as $status => $label ) {
-			$link  = 'all' === $status ? $this->base_url : add_query_arg( 'status', $status, $this->base_url );
-			$args  = 'all' === $status ? array() : array( 'status' => $status );
+		foreach ( $types as $type => $label ) {
+			$link  = 'all' === $type ? $this->base_url : add_query_arg( 'type', $type, $this->base_url );
+			$args  = 'all' === $type ? array() : array( 'type' => $type );
 			$count = Category::count( $args );
 			$label = sprintf( '%s <span class="count">(%s)</span>', esc_html( $label ), number_format_i18n( $count ) );
 
-			$status_links[ $status ] = array(
+			$types_links[ $type ] = array(
 				'url'     => $link,
 				'label'   => $label,
-				'current' => $current === $status,
+				'current' => $current === $type,
 			);
 		}
 
-		return $this->get_views_links( $status_links );
+		return $this->get_views_links( $types_links );
 	}
 
 	/**
@@ -205,8 +149,6 @@ class Categories extends ListTable {
 	protected function get_bulk_actions() {
 		$actions = array(
 			'delete'     => __( 'Delete', 'wp-ever-accounting' ),
-			'activate'   => __( 'Activate', 'wp-ever-accounting' ),
-			'deactivate' => __( 'Deactivate', 'wp-ever-accounting' ),
 		);
 
 		return $actions;
@@ -220,8 +162,7 @@ class Categories extends ListTable {
 	 * @since 1.0.0
 	 * @return void
 	 */
-	protected function extra_tablenav( $which ) {
-	}
+	protected function extra_tablenav( $which ) {}
 
 	/**
 	 * Gets a list of columns for the list table.
@@ -236,7 +177,6 @@ class Categories extends ListTable {
 			'name'        => __( 'Name', 'wp-ever-accounting' ),
 			'description' => __( 'Description', 'wp-ever-accounting' ),
 			'type'        => __( 'Type', 'wp-ever-accounting' ),
-			'status'      => __( 'Status', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -252,7 +192,6 @@ class Categories extends ListTable {
 			'name'        => array( 'name', false ),
 			'description' => array( 'description', false ),
 			'type'        => array( 'type', false ),
-			'status'      => array( 'status', false ),
 		);
 	}
 
@@ -287,7 +226,7 @@ class Categories extends ListTable {
 	 * @return string Displays the name.
 	 */
 	public function column_name( $item ) {
-		return sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( ['action' => 'edit', 'id' => $item->id ], $this->base_url ) ), wp_kses_post( $item->name ) );
+		return sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( [ 'action' => 'edit', 'id' => $item->id ], $this->base_url ) ), wp_kses_post( $item->name ) );
 	}
 
 	/**
@@ -299,7 +238,7 @@ class Categories extends ListTable {
 	 * @return string Displays the type.
 	 */
 	public function column_type( $item ) {
-		$types = $item->get_types();
+		$types = EAC()->categories->get_types();
 
 		return isset( $types[ $item->type ] ) ? $types[ $item->type ] : '';
 	}
@@ -319,22 +258,19 @@ class Categories extends ListTable {
 			return null;
 		}
 		$actions = array(
-			'id'   => sprintf( '#%d', esc_attr( $item->id ) ),
-			'edit' => sprintf(
-				'<a href="%s">%s</a>',
-				esc_url( add_query_arg( ['action' => 'edit', 'id' => $item->id ], $this->base_url ) ),
+			'id'     => sprintf( '#%d', esc_attr( $item->id ) ),
+			'edit'   => sprintf(
+				'<a href="#" data-id="%d">%s</a>',
+				esc_attr( $item->id ),
 				__( 'Edit', 'wp-ever-accounting' )
 			),
-		);
-
-		if ( 'active' === $item->status ) {
-			$actions['deactivate'] = sprintf(
-				'<a href="%s">%s</a>',
+			'delete' => sprintf(
+				'<a href="%s" class="del">%s</a>',
 				esc_url(
 					wp_nonce_url(
 						add_query_arg(
 							array(
-								'action' => 'deactivate',
+								'action' => 'delete',
 								'id'     => $item->id,
 							),
 							$this->base_url
@@ -342,42 +278,8 @@ class Categories extends ListTable {
 						'bulk-' . $this->_args['plural']
 					)
 				),
-				__( 'Deactivate', 'wp-ever-accounting' )
-			);
-		} else {
-			$actions['activate'] = sprintf(
-				'<a href="%s">%s</a>',
-				esc_url(
-					wp_nonce_url(
-						add_query_arg(
-							array(
-								'action' => 'activate',
-								'id'     => $item->id,
-							),
-							$this->base_url
-						),
-						'bulk-' . $this->_args['plural']
-					)
-				),
-				__( 'Activate', 'wp-ever-accounting' )
-			);
-		}
-
-		$actions['delete'] = sprintf(
-			'<a href="%s" class="del">%s</a>',
-			esc_url(
-				wp_nonce_url(
-					add_query_arg(
-						array(
-							'action' => 'delete',
-							'id'     => $item->id,
-						),
-						$this->base_url
-					),
-					'bulk-' . $this->_args['plural']
-				)
-			),
-			__( 'Delete', 'wp-ever-accounting' )
+				__( 'Delete', 'wp-ever-accounting' )
+			)
 		);
 
 		return $this->row_actions( $actions );

@@ -23,7 +23,7 @@ class Settings {
 	 * @since 1.0.0
 	 */
 	public function __construct() {
-		add_action( 'eac_settings_page_init', array( __CLASS__, 'register_settings' ), 5 );
+		add_action( 'eac_settings_page_tabs', array( __CLASS__, 'register_tabs' )  );
 		add_action( 'load_eac_settings_page', array( __CLASS__, 'save_settings' ) );
 	}
 
@@ -33,12 +33,14 @@ class Settings {
 	 * @since 1.0.0
 	 * @return void
 	 */
-	public static function register_settings() {
+	public static function register_tabs( $tabs ) {
+//		$tabs = array();
 		new General();
 		new Taxes();
 		new Sales();
 		new Purchases();
-		new Categories();
+
+		return $tabs;
 	}
 
 	/**

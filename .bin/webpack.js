@@ -9,6 +9,7 @@ const defaults = require( '@wordpress/scripts/config/webpack.config' );
 const WebpackRemoveEmptyScript = require('webpack-remove-empty-scripts');
 const MomentTimezoneDataPlugin = require( 'moment-timezone-data-webpack-plugin' );
 const { resolve } = require( 'path' );
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const path = require("path");
 
 /**
@@ -25,8 +26,7 @@ module.exports = {
 		path: resolve( process.cwd(), './assets/' ),
 		chunkFilename: 'chunks/[chunkhash].js',
 		uniqueName: '__eac_webpackJsonp',
-		libraryTarget: 'window',
-		clean: true,
+		libraryTarget: 'window'
 	},
 	optimization: {
 		...defaults.optimization,
@@ -50,7 +50,7 @@ module.exports = {
 
 		// Extracts dependencies from the source code.
 		new DependencyExtractionWebpackPlugin( {
-			injectPolyfill: true,
+			injectPolyfill: false,
 			requestToExternal( request ) {
 				if ( request.startsWith( PACKAGE_NAMESPACE ) ) {
 					return [

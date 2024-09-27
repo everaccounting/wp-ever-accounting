@@ -2,6 +2,8 @@
 
 namespace EverAccounting\Admin\Settings;
 
+use EverAccounting\Admin\Settings;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -28,15 +30,15 @@ abstract class Page {
 	/**
 	 * Current section.
 	 *
-	 * @var string
 	 * @since 3.0.0
+	 * @var string
 	 */
 	protected $section = '';
 
 	/**
 	 * Page constructor.
 	 *
-	 * @param string $id    Page ID.
+	 * @param string $id Page ID.
 	 * @param string $label Page label.
 	 *
 	 * @since 1.0.0
@@ -45,6 +47,7 @@ abstract class Page {
 		$this->id      = $id;
 		$this->label   = $label;
 		$this->section = (string) filter_input( INPUT_GET, 'section', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+
 		add_filter( 'eac_settings_page_tabs', array( $this, 'register_tab' ) );
 		add_action( 'eac_settings_page_' . $this->id, array( $this, 'render_sections' ) );
 		add_action( 'eac_settings_page_' . $this->id, array( $this, 'render_content' ) );
@@ -182,8 +185,8 @@ abstract class Page {
 	/**
 	 * Get default section settings.
 	 *
-	 * @return array
 	 * @since 1.0.0
+	 * @return array
 	 */
 	public function get_default_section_settings() {
 		return array();
