@@ -8,8 +8,8 @@ const defaults = require( '@wordpress/scripts/config/webpack.config' );
  */
 const WebpackRemoveEmptyScript = require('webpack-remove-empty-scripts');
 const MomentTimezoneDataPlugin = require( 'moment-timezone-data-webpack-plugin' );
-const WebpackRTLPlugin = require( '@automattic/webpack-rtl-plugin' );
 const { resolve } = require( 'path' );
+const path = require("path");
 
 /**
  * Internal dependencies
@@ -22,10 +22,11 @@ module.exports = {
 	output: {
 		...defaults.output,
 		filename: '[name].js',
-		path: resolve( process.cwd(), '/assets/' ),
+		path: resolve( process.cwd(), './assets/' ),
 		chunkFilename: 'chunks/[chunkhash].js',
 		uniqueName: '__eac_webpackJsonp',
 		libraryTarget: 'window',
+		clean: true,
 	},
 	optimization: {
 		...defaults.optimization,
@@ -39,13 +40,7 @@ module.exports = {
 		rules: [ ...defaults.module.rules ].filter( Boolean ),
 	},
 	plugins: [
-		...defaults.plugins.filter( ( plugin ) => ! [ 'DependencyExtractionWebpackPlugin', 'MiniCssExtractPlugin' ].includes( plugin.constructor.name ) ),
-
-		// Generates RTL CSS files.
-		new WebpackRTLPlugin( {
-			filename: '[name]-rtl.css',
-			minify: process.env.NODE_ENV === 'development' ? false : { safe: true },
-		} ),
+		...defaults.plugins.filter( ( plugin ) => ! [ 'DependencyExtractionWebpackPlugin' ].includes( plugin.constructor.name ) ),
 
 		// Reduces data for moment-timezone.
 		new MomentTimezoneDataPlugin( {
@@ -77,7 +72,7 @@ module.exports = {
 
 		new WebpackRemoveEmptyScript(
 			{
-				stage: RemoveEmptyScript.STAGE_AFTER_PROCESS_PLUGINS,
+				stage: WebpackRemoveEmptyScript.STAGE_AFTER_PROCESS_PLUGINS,
 				remove: /\.(js)$/,
 			}
 		),
