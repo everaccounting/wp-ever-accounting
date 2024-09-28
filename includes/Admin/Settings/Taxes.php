@@ -19,7 +19,6 @@ class Taxes extends Page {
 	 */
 	public function __construct() {
 		parent::__construct( 'taxes', __( 'Taxes', 'wp-ever-accounting' ) );
-		add_action( 'eac_settings_taxes_tab_rates', array( $this, 'render_rates' ) );
 	}
 
 	/**
@@ -72,14 +71,5 @@ class Taxes extends Page {
 				'id'   => 'tax_options',
 			),
 		);
-	}
-
-	/**
-	 * Render tax rates.
-	 *
-	 * @since 1.0.0
-	 */
-	public function render_rates() {
-		echo '<div id="eac-tax-rates"></div>';
 	}
 }

@@ -42,7 +42,7 @@ class Category extends Model {
 		'id',
 		'type',
 		'name',
-		'description'
+		'description',
 	);
 
 	/**

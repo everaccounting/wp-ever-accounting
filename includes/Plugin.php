@@ -153,6 +153,7 @@ class Plugin extends \ByteKit\Plugin {
 
 			// Settings.
 			$this->services->add( Admin\Settings::class );
+			$this->services->add( Admin\Taxes::class );
 			$this->services->add( Admin\Categories::class );
 		}
 

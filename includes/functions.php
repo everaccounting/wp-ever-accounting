@@ -132,6 +132,11 @@ function eac_get_currencies() {
 		)
 	);
 
+	// go though each currency and add a key formatted_name with the currency symbol.
+	foreach ( $currencies as $code => $currency ) {
+		$currencies[ $code ]['formatted_name'] = sprintf( '%s - %s', $code, $currency['name'] );
+	}
+
 	return apply_filters( 'eac_currencies', $currencies );
 }
 

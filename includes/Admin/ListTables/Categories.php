@@ -45,7 +45,7 @@ class Categories extends ListTable {
 	 */
 	public function prepare_items() {
 		$this->process_actions();
-		$per_page = $this->get_items_per_page( "eac_categories_per_page" );
+		$per_page = $this->get_items_per_page( 'eac_categories_per_page' );
 		$paged    = $this->get_pagenum();
 		$search   = $this->get_request_search();
 		$order_by = $this->get_request_orderby();
@@ -91,7 +91,7 @@ class Categories extends ListTable {
 		$performed = 0;
 		foreach ( $ids as $id ) {
 			if ( EAC()->categories->delete( $id ) ) {
-				++ $performed;
+				++$performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
@@ -116,7 +116,6 @@ class Categories extends ListTable {
 	 * @since 1.0.0
 	 *
 	 * @return string[] An array of HTML links keyed by their view.
-	 * @global string $role
 	 */
 	protected function get_views() {
 		$current     = $this->get_request_type( 'all' );
@@ -148,7 +147,7 @@ class Categories extends ListTable {
 	 */
 	protected function get_bulk_actions() {
 		$actions = array(
-			'delete'     => __( 'Delete', 'wp-ever-accounting' ),
+			'delete' => __( 'Delete', 'wp-ever-accounting' ),
 		);
 
 		return $actions;
@@ -226,7 +225,19 @@ class Categories extends ListTable {
 	 * @return string Displays the name.
 	 */
 	public function column_name( $item ) {
-		return sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( [ 'action' => 'edit', 'id' => $item->id ], $this->base_url ) ), wp_kses_post( $item->name ) );
+		return sprintf(
+			'<a href="%s">%s</a>',
+			esc_url(
+				add_query_arg(
+					array(
+						'action' => 'edit',
+						'id'     => $item->id,
+					),
+					$this->base_url
+				)
+			),
+			wp_kses_post( $item->name )
+		);
 	}
 
 	/**
@@ -260,8 +271,16 @@ class Categories extends ListTable {
 		$actions = array(
 			'id'     => sprintf( '#%d', esc_attr( $item->id ) ),
 			'edit'   => sprintf(
-				'<a href="#" data-id="%d">%s</a>',
-				esc_attr( $item->id ),
+				'<a href="%s">%s</a>',
+				esc_url(
+					add_query_arg(
+						array(
+							'action' => 'edit',
+							'id'     => $item->id,
+						),
+						$this->base_url
+					)
+				),
 				__( 'Edit', 'wp-ever-accounting' )
 			),
 			'delete' => sprintf(
@@ -279,7 +298,7 @@ class Categories extends ListTable {
 					)
 				),
 				__( 'Delete', 'wp-ever-accounting' )
-			)
+			),
 		);
 
 		return $this->row_actions( $actions );

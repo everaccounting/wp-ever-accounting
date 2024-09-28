@@ -20,8 +20,6 @@ class Categories {
 	 */
 	public function __construct() {
 		add_filter( 'eac_settings_page_tabs', array( __CLASS__, 'register_tabs' ) );
-		add_filter( 'set-screen-option', array( __CLASS__, 'set_screen_option' ), 10, 3 );
-		add_action( 'load_eac_settings_page_categories', array( __CLASS__, 'setup_table' ) );
 		add_action( 'eac_settings_page_categories', array( __CLASS__, 'render_table' ) );
 		add_action( 'eac_settings_page_categories_add', array( __CLASS__, 'render_add' ) );
 		add_action( 'eac_settings_page_categories_edit', array( __CLASS__, 'render_edit' ) );
@@ -43,48 +41,13 @@ class Categories {
 	}
 
 	/**
-	 * Set screen option.
-	 *
-	 * @param mixed  $status Status.
-	 * @param string $option Option.
-	 * @param mixed  $value Value.
-	 *
-	 * @since 3.0.0
-	 * @return mixed
-	 */
-	public static function set_screen_option( $status, $option, $value ) {
-		global $list_table;
-		if ( "eac_categories_per_page" === $option ) {
-			return $value;
-		}
-
-		return $status;
-	}
-
-	/**
-	 * setup categories list.
-	 *
-	 * @since 3.0.0
-	 */
-	public static function setup_table() {
-		global $list_table;
-		$screen     = get_current_screen();
-		$list_table = new ListTables\Categories();
-		$list_table->prepare_items();
-		$screen->add_option( 'per_page', array(
-			'label'   => __( 'Number of categories per page:', 'wp-ever-accounting' ),
-			'default' => 20,
-			'option'  => "eac_categories_per_page",
-		) );
-	}
-
-	/**
 	 * Render categories table.
 	 *
 	 * @since 3.0.0
 	 */
 	public static function render_table() {
-		global $list_table;
+		$list_table = new ListTables\Categories();
+		$list_table->prepare_items();
 		include __DIR__ . '/views/category-list.php';
 	}
 
@@ -123,12 +86,12 @@ class Categories {
 	 */
 	public static function handle_edit_category() {
 		check_admin_referer( 'eac_edit_category' );
-		$referer  = wp_get_referer();
-		$id       = isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0;
-		$name     = isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '';
-		$type     = isset( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '';
-		$desc     = isset( $_POST['description'] ) ? sanitize_textarea_field( wp_unslash( $_POST['description'] ) ) : '';
-		$status   = isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : 'active';
+		$referer = wp_get_referer();
+		$id      = isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0;
+		$name    = isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '';
+		$type    = isset( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '';
+		$desc    = isset( $_POST['description'] ) ? sanitize_textarea_field( wp_unslash( $_POST['description'] ) ) : '';
+
 
 		$category = EAC()->categories->insert(
 			array(
@@ -136,7 +99,6 @@ class Categories {
 				'name'        => $name,
 				'type'        => $type,
 				'description' => $desc,
-				'status'      => $status,
 			)
 		);
 
@@ -144,7 +106,13 @@ class Categories {
 			EAC()->flash->error( $category->get_error_message() );
 		} else {
 			EAC()->flash->success( __( 'Category saved successfully.', 'wp-ever-accounting' ) );
-			$referer = add_query_arg( ['action' => 'edit', 'id' => $category->id ], $referer );
+			$referer = add_query_arg(
+				array(
+					'action' => 'edit',
+					'id'     => $category->id,
+				),
+				$referer
+			);
 			$referer = remove_query_arg( array( 'add' ), $referer );
 		}
 

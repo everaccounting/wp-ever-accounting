@@ -39,6 +39,7 @@ defined( 'ABSPATH' ) || exit;
  * @property string   $updated_at Date the transaction was last updated.
  *
  * @property string   $formatted_amount Formatted amount of the transaction.
+ * @property Document $document Related document.
  * @property Account  $account Related account.
  * @property Category $category Related category.
  * @property Contact  $contact Related contact.

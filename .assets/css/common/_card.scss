@@ -70,6 +70,17 @@
 
 	& > &__body{
 		padding: 12px;
+
+		// anything first child of card body no margin top and
+		// anything last child of card body no margin bottom
+
+		& > *:first-child {
+			margin-top: 0;
+		}
+
+		& > *:last-child {
+			margin-bottom: 0;
+		}
 	}
 
 	& > &__footer{

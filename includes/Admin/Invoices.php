@@ -23,6 +23,7 @@ class Invoices {
 		add_action( 'eac_sales_page_invoices', array( __CLASS__, 'render_table' ) );
 		add_action( 'eac_sales_page_invoices_add', array( __CLASS__, 'render_add' ) );
 		add_action( 'eac_sales_page_invoices_edit', array( __CLASS__, 'render_edit' ) );
+		add_action( 'eac_sales_page_invoices_view', array( __CLASS__, 'render_view' ) );
 		add_action( 'admin_post_eac_edit_invoice', array( __CLASS__, 'handle_edit' ) );
 	}
 
@@ -116,6 +117,16 @@ class Invoices {
 			return;
 		}
 		include __DIR__ . '/views/invoice-edit.php';
+	}
+
+	/**
+	 * Render view.
+	 *
+	 * @since 3.0.0
+	 * @return void
+	 */
+	public static function render_view() {
+
 	}
 
 	/**

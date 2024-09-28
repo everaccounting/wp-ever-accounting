@@ -1,6 +1,6 @@
 <?php
 
-namespace EverAccounting\Admin\Misc;
+namespace EverAccounting\Admin;
 
 use EverAccounting\Models\Tax;
 
@@ -18,72 +18,38 @@ class Taxes {
 	 * TaxRates constructor.
 	 */
 	public function __construct() {
-		add_filter( 'eac_misc_page_tabs', array( __CLASS__, 'register_tabs' ) );
-		add_filter( 'set-screen-option', array( __CLASS__, 'set_screen_option' ), 10, 3 );
-		add_action( 'load_eac_misc_page_taxes', array( __CLASS__, 'setup_table' ) );
-		add_action( 'eac_misc_page_taxes', array( __CLASS__, 'render_table' ) );
-		add_action( 'eac_misc_page_taxes_add', array( __CLASS__, 'render_add' ) );
-		add_action( 'eac_misc_page_taxes_edit', array( __CLASS__, 'render_edit' ) );
-		add_action( 'admin_post_eac_edit_tax', array( $this, 'handle_edit_tax' ) );
+		add_action( 'eac_settings_taxes_tab_rates', array( __CLASS__, 'render_content' ) );
+		add_action( 'admin_post_eac_edit_tax', array( __CLASS__, 'handle_edit_tax' ) );
 	}
 
 	/**
-	 * Register tab.
-	 *
-	 * @param array $tabs Tabs.
+	 * Render content.
 	 *
 	 * @since 3.0.0
-	 * @return array
+	 * @return void
 	 */
-	public static function register_tabs( $tabs ) {
-		$tabs['taxes'] = __( 'Taxes', 'wp-ever-accounting' );
+	public static function render_content() {
+		$action = filter_input( INPUT_GET, 'action', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+		$id     = filter_input( INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT );
 
-		return $tabs;
-	}
-
-	/**
-	 * Set screen option.
-	 *
-	 * @param mixed  $status Status.
-	 * @param string $option Option.
-	 * @param mixed  $value Value.
-	 *
-	 * @since 3.0.0
-	 * @return mixed
-	 */
-	public static function set_screen_option( $status, $option, $value ) {
-		global $list_table;
-		if ( "eac_taxes_per_page" === $option ) {
-			return $value;
+		if ( 'add' === $action ) {
+			self::render_add();
+		} elseif ( 'edit' === $action && $id ) {
+			self::render_edit();
+		} else {
+			self::render_table();
 		}
-
-		return $status;
 	}
 
 	/**
-	 * setup taxes list.
+	 * Render table.
 	 *
 	 * @since 3.0.0
-	 */
-	public static function setup_table() {
-		global $list_table;
-		$screen     = get_current_screen();
-		$list_table = new \EverAccounting\Admin\ListTables\Taxes();
-		$list_table->prepare_items();
-		$screen->add_option( 'per_page', array(
-			'label'   => __( 'Number of taxes per page:', 'wp-ever-accounting' ),
-			'default' => 20,
-			'option'  => "eac_taxes_per_page",
-		) );
-	}
-
-	/**
-	 * Render taxes table.
-	 *
-	 * @since 3.0.0
+	 * @return void
 	 */
 	public static function render_table() {
-		global $list_table;
+		$list_table = new ListTables\Taxes();
+		$list_table->prepare_items();
 		include __DIR__ . '/views/tax-list.php';
 	}
 
@@ -122,13 +88,13 @@ class Taxes {
 	 */
 	public static function handle_edit_tax() {
 		check_admin_referer( 'eac_edit_tax' );
-		$referer     = wp_get_referer();
-		$id          = isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0;
-		$name        = isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '';
-		$rate        = isset( $_POST['rate'] ) ? doubleval( wp_unslash( $_POST['rate'] ) ) : '';
-		$compound    = isset( $_POST['compound'] ) ? sanitize_text_field( wp_unslash( $_POST['compound'] ) ) : '';
-		$desc        = isset( $_POST['description'] ) ? sanitize_textarea_field( wp_unslash( $_POST['description'] ) ) : '';
-		$status      = isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : 'active';
+		$referer  = wp_get_referer();
+		$id       = isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0;
+		$name     = isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '';
+		$rate     = isset( $_POST['rate'] ) ? doubleval( wp_unslash( $_POST['rate'] ) ) : '';
+		$compound = isset( $_POST['compound'] ) ? sanitize_text_field( wp_unslash( $_POST['compound'] ) ) : '';
+		$desc     = isset( $_POST['description'] ) ? sanitize_textarea_field( wp_unslash( $_POST['description'] ) ) : '';
+		$status   = isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : 'active';
 		if ( $compound ) {
 			$compound = 'yes' === $compound ? true : false;
 		}
@@ -147,7 +113,13 @@ class Taxes {
 			EAC()->flash->error( $tax->get_error_message() );
 		} else {
 			EAC()->flash->success( __( 'Tax saved successfully.', 'wp-ever-accounting' ) );
-			$referer = add_query_arg( ['action' => 'edit', 'id' => $tax->id ], $referer );
+			$referer = add_query_arg(
+				array(
+					'action' => 'edit',
+					'id'     => $tax->id,
+				),
+				$referer
+			);
 			$referer = remove_query_arg( array( 'add' ), $referer );
 		}
 

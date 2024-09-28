@@ -143,6 +143,26 @@ abstract class ListTable extends \WP_List_Table {
 	}
 
 	/**
+	 * Render column metadata.
+	 *
+	 * @param array|string $items Items to render.
+	 *
+	 * @since 1.0.0
+	 * @return string
+	 */
+	public function column_metadata( $items ) {
+		if ( ! empty( $items ) ) {
+			$items    = is_array( $items ) ? $items : array( $items );
+			$items    = array_filter( $items );
+			$metadata = sprintf( '<div class="column-metadata"><span>%s</span></div>', implode( '</span><span>', $items ) );
+
+			return wp_kses_post( $metadata );
+		}
+
+		return '';
+	}
+
+	/**
 	 * This function renders most of the columns in the list table.
 	 *
 	 * @param Object $item The current item.

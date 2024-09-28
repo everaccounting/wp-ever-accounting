@@ -2,8 +2,8 @@
 
 namespace EverAccounting\Admin;
 
-use EverAccounting\Admin\Settings\Categories;
 use EverAccounting\Admin\Settings\General;
+use EverAccounting\Admin\Settings\Page;
 use EverAccounting\Admin\Settings\Purchases;
 use EverAccounting\Admin\Settings\Sales;
 use EverAccounting\Admin\Settings\Taxes;
@@ -23,22 +23,34 @@ class Settings {
 	 * @since 1.0.0
 	 */
 	public function __construct() {
-		add_action( 'eac_settings_page_tabs', array( __CLASS__, 'register_tabs' )  );
+		add_filter( 'eac_settings_page_tabs', array( __CLASS__, 'register_tabs' ), -1 );
 		add_action( 'load_eac_settings_page', array( __CLASS__, 'save_settings' ) );
 	}
 
 	/**
 	 * Register tabs.
 	 *
+	 * @param array $tabs Tabs.
+	 *
 	 * @since 1.0.0
-	 * @return void
+	 * @return array
 	 */
 	public static function register_tabs( $tabs ) {
-//		$tabs = array();
-		new General();
-		new Taxes();
-		new Sales();
-		new Purchases();
+		$pages = apply_filters(
+			'eac_settings_pages',
+			array(
+				new General(),
+				new Sales(),
+				new Purchases(),
+				new Taxes(),
+			)
+		);
+
+		foreach ( $pages as $page ) {
+			if ( is_subclass_of( $page, Page::class ) && $page->id && $page->label ) {
+				$tabs[ $page->id ] = $page->label;
+			}
+		}
 
 		return $tabs;
 	}
@@ -79,8 +91,8 @@ class Settings {
 	 *
 	 * @param array $options Options array.
 	 *
-	 * @return void
 	 * @since 1.1.6
+	 * @return void
 	 */
 	public static function output_fields( $options ) {
 		foreach ( $options as $value ) {
@@ -549,8 +561,8 @@ class Settings {
 	 * @param string $option_name Option name.
 	 * @param mixed  $fallback Default value.
 	 *
-	 * @return mixed
 	 * @since 1.0.0
+	 * @return mixed
 	 */
 	public static function get_option( $option_name, $fallback = '' ) {
 		// Array value.
@@ -685,8 +697,8 @@ class Settings {
 	 *
 	 * @param array $value The form field value array.
 	 *
-	 * @return array The description and tip as a 2 element array.
 	 * @since  1.0.0
+	 * @return array The description and tip as a 2 element array.
 	 */
 	public static function get_field_description( $value ) {
 		$description = '';

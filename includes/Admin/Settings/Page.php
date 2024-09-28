@@ -18,14 +18,14 @@ abstract class Page {
 	 *
 	 * @var string
 	 */
-	protected $id = '';
+	public $id = '';
 
 	/**
 	 * Setting tab label.
 	 *
 	 * @var string
 	 */
-	protected $label = '';
+	public $label = '';
 
 	/**
 	 * Current section.
@@ -33,7 +33,7 @@ abstract class Page {
 	 * @since 3.0.0
 	 * @var string
 	 */
-	protected $section = '';
+	public $section = '';
 
 	/**
 	 * Page constructor.
@@ -48,24 +48,10 @@ abstract class Page {
 		$this->label   = $label;
 		$this->section = (string) filter_input( INPUT_GET, 'section', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 
-		add_filter( 'eac_settings_page_tabs', array( $this, 'register_tab' ) );
+
 		add_action( 'eac_settings_page_' . $this->id, array( $this, 'render_sections' ) );
 		add_action( 'eac_settings_page_' . $this->id, array( $this, 'render_content' ) );
 		add_action( 'eac_settings_save_' . $this->id, array( $this, 'save_settings' ) );
-	}
-
-	/**
-	 * Register tab.
-	 *
-	 * @param array $tabs Tabs.
-	 *
-	 * @since 1.0.0
-	 * @return array
-	 */
-	public function register_tab( $tabs ) {
-		$tabs[ $this->id ] = $this->label;
-
-		return $tabs;
 	}
 
 	/**

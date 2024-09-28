@@ -13,6 +13,7 @@ defined( 'ABSPATH' ) || exit;
  * @subpackage Models
  *
  * @property int $customer_id ID of the customer.
+ * @property Invoice $invoice Related invoice.
  */
 class Payment extends Transaction {
 	/**

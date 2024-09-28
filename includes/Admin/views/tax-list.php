@@ -12,8 +12,8 @@
 defined( 'ABSPATH' ) || exit;
 ?>
 	<h1 class="wp-heading-inline">
-		<?php esc_html_e( 'Taxes', 'wp-ever-accounting' ); ?>
-		<a href="<?php echo esc_attr( admin_url( 'admin.php?page=eac-misc&tab=taxes&action=add' ) ); ?>" class="button button-small">
+		<?php esc_html_e( 'Tax Taxes', 'wp-ever-accounting' ); ?>
+		<a href="<?php echo esc_attr( admin_url( 'admin.php?page=eac-settings&tab=taxes&section=rates&action=add' ) ); ?>" class="button button-small">
 			<?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?>
 		</a>
 		<a href="<?php echo esc_attr( admin_url( 'admin.php?page=eac-tools' ) ); ?>" class="button button-small">
@@ -27,7 +27,8 @@ defined( 'ABSPATH' ) || exit;
 		<?php $list_table->views(); ?>
 		<?php $list_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'search' ); ?>
 		<?php $list_table->display(); ?>
-		<input type="hidden" name="page" value="eac-misc"/>
+		<input type="hidden" name="page" value="eac-settings"/>
 		<input type="hidden" name="tab" value="taxes"/>
+		<input type="hidden" name="section" value="rates">
 	</form>
 <?php

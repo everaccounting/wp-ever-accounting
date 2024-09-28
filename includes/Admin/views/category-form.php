@@ -13,7 +13,7 @@ use EverAccounting\Models\Category;
 
 defined( 'ABSPATH' ) || exit;
 ?>
-<form id="eac-category-form" method="post">
+<form id="eac-category-form" method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
 	<div class="eac-poststuff">
 		<div class="column-1">
 			<div class="eac-card">

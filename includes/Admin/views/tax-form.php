@@ -77,34 +77,11 @@ defined( 'ABSPATH' ) || exit;
 					<h2 class="eac-card__title"><?php esc_html_e( 'Actions', 'wp-ever-accounting' ); ?></h2>
 				</div>
 
-				<div class="eac-card__body">
-					<?php
-					eac_form_field(
-						array(
-							'type'        => 'select',
-							'id'          => 'status',
-							'label'       => __( 'Status', 'wp-ever-accounting' ),
-							'options'     => array(
-								'active'   => __( 'Active', 'wp-ever-accounting' ),
-								'inactive' => __( 'Inactive', 'wp-ever-accounting' ),
-							),
-							'value'       => $tax->status,
-							'required'    => true,
-						)
-					);
-					?>
-				</div>
-
 				<div class="eac-card__footer">
 					<?php if ( $tax->exists() ) : ?>
-						<input type="hidden" name="id" value="<?php echo esc_attr( $tax->id ); ?>"/>
-					<?php endif; ?>
-					<input type="hidden" name="action" value="eac_edit_tax"/>
-					<?php wp_nonce_field( 'eac_edit_tax' ); ?>
-					<?php if ( $tax->exists() ) : ?>
-						<a class="eac_confirm_delete del" href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'action', 'delete', admin_url( 'admin.php?page=eac-misc&tab=taxes&id=' . $tax->id ) ), 'bulk-taxes' ) ); ?>"><?php esc_html_e( 'Delete', 'wp-ever-accounting' ); ?></a>
-					<?php endif; ?>
-					<?php if ( $tax->exists() ) : ?>
+						<a class="eac_confirm_delete del" href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'action', 'delete', admin_url( 'admin.php?page=eac-settings&tab=taxes&section=rates&id=' . $tax->id ) ), 'bulk-taxes' ) ); ?>">
+							<?php esc_html_e( 'Delete', 'wp-ever-accounting' ); ?>
+						</a>
 						<button class="button button-primary"><?php esc_html_e( 'Update Tax', 'wp-ever-accounting' ); ?></button>
 					<?php else : ?>
 						<button class="button button-primary tw-w-full"><?php esc_html_e( 'Add Tax', 'wp-ever-accounting' ); ?></button>
@@ -113,4 +90,8 @@ defined( 'ABSPATH' ) || exit;
 			</div>
 		</div><!-- .column-2 -->
 	</div><!-- .eac-poststuff -->
+
+	<?php wp_nonce_field( 'eac_edit_tax' ); ?>
+	<input type="hidden" name="action" value="eac_edit_tax"/>
+	<input type="hidden" name="id" value="<?php echo esc_attr( $tax->id ); ?>"/>
 </form>

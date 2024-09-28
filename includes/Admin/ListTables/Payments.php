@@ -97,7 +97,7 @@ class Payments extends ListTable {
 		$performed = 0;
 		foreach ( $ids as $id ) {
 			if ( EAC()->payments->delete( $id ) ) {
-				++$performed;
+				++ $performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
@@ -197,14 +197,14 @@ class Payments extends ListTable {
 	 */
 	public function get_columns() {
 		return array(
-			'cb'        => '<input type="checkbox" />',
-			'date'      => __( 'Date', 'wp-ever-accounting' ),
-			'account'   => __( 'Account', 'wp-ever-accounting' ),
-			'category'  => __( 'Category', 'wp-ever-accounting' ),
-			'customer'  => __( 'Customer', 'wp-ever-accounting' ),
-			'reference' => __( 'Reference', 'wp-ever-accounting' ),
-			'amount'    => __( 'Amount', 'wp-ever-accounting' ),
-			'status'    => __( 'Status', 'wp-ever-accounting' ),
+			'cb'       => '<input type="checkbox" />',
+			'date'     => __( 'Date', 'wp-ever-accounting' ),
+			'number'   => __( 'Payment #', 'wp-ever-accounting' ),
+			'account'  => __( 'Account', 'wp-ever-accounting' ),
+			'customer' => __( 'Customer', 'wp-ever-accounting' ),
+			'category' => __( 'Category', 'wp-ever-accounting' ),
+			'status'   => __( 'Status', 'wp-ever-accounting' ),
+			'amount'   => __( 'Amount', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -217,13 +217,13 @@ class Payments extends ListTable {
 	 */
 	protected function get_sortable_columns() {
 		return array(
-			'date'      => array( 'date', false ),
-			'amount'    => array( 'amount', false ),
-			'account'   => array( 'account', false ),
-			'category'  => array( 'category', false ),
-			'customer'  => array( 'customer', false ),
-			'reference' => array( 'reference', false ),
-			'status'    => array( 'status', false ),
+			'date'     => array( 'date', false ),
+			'number'   => array( 'number', false ),
+			'account'  => array( 'account', false ),
+			'category' => array( 'category', false ),
+			'customer' => array( 'customer', false ),
+			'status'   => array( 'status', false ),
+			'amount'   => array( 'amount', false ),
 		);
 	}
 
@@ -262,6 +262,21 @@ class Payments extends ListTable {
 	}
 
 	/**
+	 * Renders the number column.
+	 *
+	 * @param Payment $item The current object.
+	 *
+	 * @since  1.0.0
+	 * @return string Displays the number.
+	 */
+	public function column_number( $item ) {
+		$number   = $item->number ? $item->number : '&mdash;';
+		$metadata = $item->reference ? $item->reference : '&mdash;';
+
+		return sprintf( '%s%s', $number, $this->column_metadata( $metadata ) );
+	}
+
+	/**
 	 * Renders the amount column.
 	 *
 	 * @param Payment $item The current object.
@@ -282,12 +297,10 @@ class Payments extends ListTable {
 	 * @return string Displays the account.
 	 */
 	public function column_account( $item ) {
-		$account = $item->account;
-		if ( $account ) {
-			return sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( 'account_id', $account->id, $this->base_url ) ), wp_kses_post( $account->name ) );
-		}
+		$account  = $item->account ? sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( 'account_id', $item->account->id, $this->base_url ) ), wp_kses_post( $item->account->name ) ) : '&mdash;';
+		$metadata = $item->account && $item->account->type ? ucfirst( $item->account->type ) : '&mdash;';
 
-		return '&mdash;';
+		return sprintf( '%s%s', $account, $this->column_metadata( $metadata ) );
 	}
 
 	/**
@@ -299,12 +312,10 @@ class Payments extends ListTable {
 	 * @return string Displays the category.
 	 */
 	public function column_category( $item ) {
-		$category = $item->category;
-		if ( $category ) {
-			return sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( 'category_id', $category->id, $this->base_url ) ), wp_kses_post( $category->name ) );
-		}
+		$category = $item->category ? sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( 'category_id', $item->category->id, $this->base_url ) ), wp_kses_post( $item->category->name ) ) : '&mdash;';
+		$metadata = '&mdash;';
 
-		return '&mdash;';
+		return sprintf( '%s%s', $category, $this->column_metadata( $metadata ) );
 	}
 
 	/**
@@ -316,12 +327,11 @@ class Payments extends ListTable {
 	 * @return string Displays the customer.
 	 */
 	public function column_customer( $item ) {
-		$customer = $item->customer;
-		if ( $customer ) {
-			return sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( 'customer_id', $customer->id, $this->base_url ) ), wp_kses_post( $customer->name ) );
-		}
+		$metadata   = array();
+		$customer   = $item->customer ? sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( 'customer_id', $item->customer->id, $this->base_url ) ), wp_kses_post( $item->customer->name ) ) : '&mdash;';
+		$metadata[] = $item->customer && $item->customer->company ? $item->customer->company : '&mdash;';
 
-		return '&mdash;';
+		return sprintf( '%s%s', $customer, $this->column_metadata( $metadata ) );
 	}
 
 	/**
@@ -355,7 +365,6 @@ class Payments extends ListTable {
 			return null;
 		}
 		$actions = array(
-			'number' => sprintf( '#%s', esc_attr( $item->number ) ),
 			'edit'   => sprintf(
 				'<a href="%s">%s</a>',
 				esc_url(
@@ -369,23 +378,22 @@ class Payments extends ListTable {
 				),
 				__( 'Edit', 'wp-ever-accounting' )
 			),
-		);
-
-		$actions['delete'] = sprintf(
-			'<a href="%s" class="del">%s</a>',
-			esc_url(
-				wp_nonce_url(
-					add_query_arg(
-						array(
-							'action' => 'delete',
-							'id'     => $item->id,
+			'delete' => sprintf(
+				'<a href="%s" class="del">%s</a>',
+				esc_url(
+					wp_nonce_url(
+						add_query_arg(
+							array(
+								'action' => 'delete',
+								'id'     => $item->id,
+							),
+							$this->base_url
 						),
-						$this->base_url
-					),
-					'bulk-' . $this->_args['plural']
-				)
+						'bulk-' . $this->_args['plural']
+					)
+				),
+				__( 'Delete', 'wp-ever-accounting' )
 			),
-			__( 'Delete', 'wp-ever-accounting' )
 		);
 
 		return $this->row_actions( $actions );

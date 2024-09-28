@@ -2,7 +2,6 @@
 
 namespace EverAccounting\Admin\ListTables;
 
-
 use EverAccounting\Models\Customer;
 
 defined( 'ABSPATH' ) || exit;
@@ -210,7 +209,7 @@ class Customers extends ListTable {
 			'email'   => array( 'email', false ),
 			'phone'   => array( 'phone', false ),
 			'country' => array( 'country', false ),
-			'status'  => array( 'status', false ),
+			'due'     => array( 'due', false ),
 		);
 	}
 
@@ -309,13 +308,13 @@ class Customers extends ListTable {
 			return null;
 		}
 		$actions = array(
-			'id'   => sprintf( '#%d', esc_attr( $item->id ) ),
-			'view' => sprintf(
+			'id'     => sprintf( '#%d', esc_attr( $item->id ) ),
+			'view'   => sprintf(
 				'<a href="%s">%s</a>',
 				esc_url( add_query_arg( 'view', $item->id, $this->base_url ) ),
 				__( 'View', 'wp-ever-accounting' )
 			),
-			'edit' => sprintf(
+			'edit'   => sprintf(
 				'<a href="%s">%s</a>',
 				esc_url(
 					add_query_arg(
@@ -328,60 +327,23 @@ class Customers extends ListTable {
 				),
 				__( 'Edit', 'wp-ever-accounting' )
 			),
-		);
-
-		$actions['delete'] = sprintf(
-			'<a href="%s" class="del">%s</a>',
-			esc_url(
-				wp_nonce_url(
-					add_query_arg(
-						array(
-							'action' => 'delete',
-							'id'     => $item->id,
+			'delete' => sprintf(
+				'<a href="%s" class="del">%s</a>',
+				esc_url(
+					wp_nonce_url(
+						add_query_arg(
+							array(
+								'action' => 'delete',
+								'id'     => $item->id,
+							),
+							$this->base_url
 						),
-						$this->base_url
-					),
-					'bulk-' . $this->_args['plural']
-				)
+						'bulk-' . $this->_args['plural']
+					)
+				),
+				__( 'Delete', 'wp-ever-accounting' )
 			),
-			__( 'Delete', 'wp-ever-accounting' )
 		);
-
-		if ( 'active' === $item->status ) {
-			$actions['deactivate'] = sprintf(
-				'<a href="%s">%s</a>',
-				esc_url(
-					wp_nonce_url(
-						add_query_arg(
-							array(
-								'action' => 'deactivate',
-								'id'     => $item->id,
-							),
-							$this->base_url
-						),
-						'bulk-' . $this->_args['plural']
-					)
-				),
-				__( 'Deactivate', 'wp-ever-accounting' )
-			);
-		} else {
-			$actions['activate'] = sprintf(
-				'<a href="%s">%s</a>',
-				esc_url(
-					wp_nonce_url(
-						add_query_arg(
-							array(
-								'action' => 'activate',
-								'id'     => $item->id,
-							),
-							$this->base_url
-						),
-						'bulk-' . $this->_args['plural']
-					)
-				),
-				__( 'Activate', 'wp-ever-accounting' )
-			);
-		}
 
 		return $this->row_actions( $actions );
 	}

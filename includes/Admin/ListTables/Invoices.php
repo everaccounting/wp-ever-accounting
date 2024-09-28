@@ -91,7 +91,7 @@ class Invoices extends ListTable {
 		$performed = 0;
 		foreach ( $ids as $id ) {
 			if ( EAC()->invoices->delete( $id ) ) {
-				++ $performed;
+				++$performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
@@ -189,12 +189,14 @@ class Invoices extends ListTable {
 	 */
 	public function get_columns() {
 		return array(
-			'cb'       => '<input type="checkbox" />',
-			'number'   => __( 'Number', 'wp-ever-accounting' ),
-			'date'     => __( 'Date', 'wp-ever-accounting' ),
-			'customer' => __( 'Customer', 'wp-ever-accounting' ),
-			'status'   => __( 'Status', 'wp-ever-accounting' ),
-			'total'    => __( 'Total', 'wp-ever-accounting' ),
+			'cb'         => '<input type="checkbox" />',
+			'number'     => __( 'Invoice #', 'wp-ever-accounting' ),
+			'reference'  => __( 'Order #', 'wp-ever-accounting' ),
+			'issue_date' => __( 'Issue Date', 'wp-ever-accounting' ),
+			'due_date'   => __( 'Due Date', 'wp-ever-accounting' ),
+			'customer'   => __( 'Customer', 'wp-ever-accounting' ),
+			'status'     => __( 'Status', 'wp-ever-accounting' ),
+			'total'      => __( 'Total', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -206,11 +208,13 @@ class Invoices extends ListTable {
 	 */
 	protected function get_sortable_columns() {
 		return array(
-			'number'   => array( 'number', false ),
-			'date'     => array( 'date', false ),
-			'customer' => array( 'customer', false ),
-			'status'   => array( 'status', false ),
-			'total'    => array( 'total', false ),
+			'number'     => array( 'number', false ),
+			'reference'  => array( 'reference', false ),
+			'issue_date' => array( 'issue_date', false ),
+			'due_date'   => array( 'due_date', false ),
+			'customer'   => array( 'customer', false ),
+			'status'     => array( 'status', false ),
+			'total'      => array( 'total', false ),
 		);
 	}
 
@@ -249,6 +253,18 @@ class Invoices extends ListTable {
 	}
 
 	/**
+	 * Renders the reference column.
+	 *
+	 * @param Invoice $item The current object.
+	 *
+	 * @since  1.0.0
+	 * @return string Displays the reference.
+	 */
+	public function column_reference( $item ) {
+		return $item->reference ? esc_html( $item->reference ) : '&mdash;';
+	}
+
+	/**
 	 * Renders the date column.
 	 *
 	 * @param Invoice $item The current object.
@@ -256,8 +272,20 @@ class Invoices extends ListTable {
 	 * @since  1.0.0
 	 * @return string Displays the date.
 	 */
-	public function column_date( $item ) {
-		return $item->issue_date ? esc_html( wp_date( get_option( 'date_format' ), strtotime( $item->issue_date ) ) ) : '&mdash;';
+	public function column_issue_date( $item ) {
+		return $item->issue_date ? esc_html( wp_date( 'd M Y', strtotime( $item->issue_date ) ) ) : '&mdash;';
+	}
+
+	/**
+	 * Renders the due date column.
+	 *
+	 * @param Invoice $item The current object.
+	 *
+	 * @since  1.0.0
+	 * @return string Displays the due date.
+	 */
+	public function column_due_date( $item ) {
+		return $item->due_date ? esc_html( wp_date( 'd M Y', strtotime( $item->due_date ) ) ) : '&mdash;';
 	}
 
 	/**
