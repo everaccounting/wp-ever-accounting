@@ -78,58 +78,6 @@ class Vendors extends ListTable {
 	}
 
 	/**
-	 * handle bulk activate action.
-	 *
-	 * @param array $ids List of item IDs.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	protected function bulk_activate( $ids ) {
-		$performed = 0;
-		foreach ( $ids as $id ) {
-			if ( EAC()->vendors->insert(
-				array(
-					'id'     => $id,
-					'status' => 'active',
-				)
-			) ) {
-				++$performed;
-			}
-		}
-		if ( ! empty( $performed ) ) {
-			// translators: %s: number of vendors.
-			EAC()->flash->success( sprintf( __( '%s vendor(s) activated successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
-		}
-	}
-
-	/**
-	 * handle bulk deactivate action.
-	 *
-	 * @param array $ids List of item IDs.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	protected function bulk_deactivate( $ids ) {
-		$performed = 0;
-		foreach ( $ids as $id ) {
-			if ( EAC()->vendors->insert(
-				array(
-					'id'     => $id,
-					'status' => 'inactive',
-				)
-			) ) {
-				++$performed;
-			}
-		}
-		if ( ! empty( $performed ) ) {
-			// translators: %s: number of vendors.
-			EAC()->flash->success( sprintf( __( '%s vendor(s) deactivated successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
-		}
-	}
-
-	/**
 	 * handle bulk delete action.
 	 *
 	 * @param array $ids List of item IDs.
@@ -151,47 +99,12 @@ class Vendors extends ListTable {
 	}
 
 	/**
-	 * Outputs 'no users' message.
+	 * Outputs 'no items' message.
 	 *
 	 * @since 1.0.0
 	 */
 	public function no_items() {
 		esc_html_e( 'No vendors found.', 'wp-ever-accounting' );
-	}
-
-	/**
-	 * Returns an associative array listing all the views that can be used
-	 * with this table.
-	 *
-	 * Provides a list of roles and user count for that role for easy
-	 * filtering of the user table.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return string[] An array of HTML links keyed by their view.
-	 */
-	protected function get_views() {
-		$current      = $this->get_request_status( 'all' );
-		$status_links = array();
-		$statuses     = array(
-			'all'      => __( 'All', 'wp-ever-accounting' ),
-			'active'   => __( 'Active', 'wp-ever-accounting' ),
-			'inactive' => __( 'Inactive', 'wp-ever-accounting' ),
-		);
-
-		foreach ( $statuses as $status => $label ) {
-			$link  = 'all' === $status ? $this->base_url : add_query_arg( 'status', $status, $this->base_url );
-			$args  = 'all' === $status ? array() : array( 'status' => $status );
-			$count = Vendor::count( $args );
-			$label = sprintf( '%s <span class="count">(%s)</span>', esc_html( $label ), number_format_i18n( $count ) );
-
-			$status_links[ $status ] = array(
-				'url'     => $link,
-				'label'   => $label,
-				'current' => $current === $status,
-			);
-		}
-		return $this->get_views_links( $status_links );
 	}
 
 	/**
@@ -201,13 +114,9 @@ class Vendors extends ListTable {
 	 * @return array Array of bulk action labels keyed by their action.
 	 */
 	protected function get_bulk_actions() {
-		$actions = array(
-			'delete'     => __( 'Delete', 'wp-ever-accounting' ),
-			'activate'   => __( 'Activate', 'wp-ever-accounting' ),
-			'deactivate' => __( 'Deactivate', 'wp-ever-accounting' ),
+		return array(
+			'delete' => __( 'Delete', 'wp-ever-accounting' ),
 		);
-
-		return $actions;
 	}
 
 	/**
@@ -248,7 +157,7 @@ class Vendors extends ListTable {
 			'email'   => __( 'Email', 'wp-ever-accounting' ),
 			'phone'   => __( 'Phone', 'wp-ever-accounting' ),
 			'country' => __( 'Country', 'wp-ever-accounting' ),
-			'status'  => __( 'Status', 'wp-ever-accounting' ),
+			'due'     => __( 'Due', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -264,7 +173,7 @@ class Vendors extends ListTable {
 			'email'   => array( 'email', false ),
 			'phone'   => array( 'phone', false ),
 			'country' => array( 'country', false ),
-			'status'  => array( 'status', false ),
+			'due'     => array( 'due', false ),
 		);
 	}
 
@@ -299,7 +208,19 @@ class Vendors extends ListTable {
 	 * @return string Displays the name.
 	 */
 	public function column_name( $item ) {
-		return sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( ['action' => 'edit', 'id' => $item->id ], $this->base_url ) ), wp_kses_post( $item->name ) );
+		return sprintf(
+			'<a href="%s">%s</a>',
+			esc_url(
+				add_query_arg(
+					array(
+						'action' => 'edit',
+						'id'     => $item->id,
+					),
+					$this->base_url
+				)
+			),
+			wp_kses_post( $item->name )
+		);
 	}
 
 
@@ -330,71 +251,41 @@ class Vendors extends ListTable {
 			return null;
 		}
 		$actions = array(
-			'id'   => sprintf( '#%d', esc_attr( $item->id ) ),
-			'view' => sprintf(
+			'view'   => sprintf(
 				'<a href="%s">%s</a>',
-				esc_url( add_query_arg( ['action' => 'view', 'id' => $item->id ], $this->base_url ) ),
+				esc_url( add_query_arg( 'view', $item->id, $this->base_url ) ),
 				__( 'View', 'wp-ever-accounting' )
 			),
-			'edit' => sprintf(
+			'edit'   => sprintf(
 				'<a href="%s">%s</a>',
-				esc_url( add_query_arg( ['action' => 'edit', 'id' => $item->id ], $this->base_url ) ),
-				__( 'Edit', 'wp-ever-accounting' )
-			),
-		);
-
-		$actions['delete'] = sprintf(
-			'<a href="%s" class="del">%s</a>',
-			esc_url(
-				wp_nonce_url(
+				esc_url(
 					add_query_arg(
 						array(
-							'action' => 'delete',
+							'action' => 'edit',
 							'id'     => $item->id,
 						),
 						$this->base_url
-					),
-					'bulk-' . $this->_args['plural']
-				)
+					)
+				),
+				__( 'Edit', 'wp-ever-accounting' )
 			),
-			__( 'Delete', 'wp-ever-accounting' )
+			'delete' => sprintf(
+				'<a href="%s" class="del">%s</a>',
+				esc_url(
+					wp_nonce_url(
+						add_query_arg(
+							array(
+								'action' => 'delete',
+								'id'     => $item->id,
+							),
+							$this->base_url
+						),
+						'bulk-' . $this->_args['plural']
+					)
+				),
+				__( 'Delete', 'wp-ever-accounting' )
+			),
 		);
-
-		if ( 'active' === $item->status ) {
-			$actions['deactivate'] = sprintf(
-				'<a href="%s">%s</a>',
-				esc_url(
-					wp_nonce_url(
-						add_query_arg(
-							array(
-								'action' => 'deactivate',
-								'id'     => $item->id,
-							),
-							$this->base_url
-						),
-						'bulk-' . $this->_args['plural']
-					)
-				),
-				__( 'Deactivate', 'wp-ever-accounting' )
-			);
-		} else {
-			$actions['activate'] = sprintf(
-				'<a href="%s">%s</a>',
-				esc_url(
-					wp_nonce_url(
-						add_query_arg(
-							array(
-								'action' => 'activate',
-								'id'     => $item->id,
-							),
-							$this->base_url
-						),
-						'bulk-' . $this->_args['plural']
-					)
-				),
-				__( 'Activate', 'wp-ever-accounting' )
-			);
-		}
 
 		return $this->row_actions( $actions );
 	}

@@ -2,8 +2,6 @@
 
 namespace EverAccounting\API;
 
-use EverAccounting\Models\Currency;
-
 defined( 'ABSPATH' ) || exit();
 
 /**
@@ -74,11 +72,6 @@ class Currencies extends Controller {
 					'callback'            => array( $this, 'update_item' ),
 					'permission_callback' => array( $this, 'update_item_permissions_check' ),
 					'args'                => $this->get_endpoint_args_for_item_schema( \WP_REST_Server::EDITABLE ),
-				),
-				array(
-					'methods'             => \WP_REST_Server::DELETABLE,
-					'callback'            => array( $this, 'delete_item' ),
-					'permission_callback' => array( $this, 'delete_item_permissions_check' ),
 				),
 				'schema' => array( $this, 'get_public_item_schema' ),
 			)
@@ -487,15 +480,6 @@ class Currencies extends Controller {
 			'title'      => __( 'currency', 'wp-ever-accounting' ),
 			'type'       => 'object',
 			'properties' => array(
-				'id'                 => array(
-					'description' => __( 'Unique identifier for the currency.', 'wp-ever-accounting' ),
-					'type'        => 'integer',
-					'context'     => array( 'view', 'embed', 'edit' ),
-					'readonly'    => true,
-					'arg_options' => array(
-						'sanitize_callback' => 'intval',
-					),
-				),
 				'code'               => array(
 					'description' => __( 'currency code.', 'wp-ever-accounting' ),
 					'type'        => 'string',
@@ -507,15 +491,15 @@ class Currencies extends Controller {
 					'description' => __( 'currency name.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'edit' ),
-					'required'    => true,
+					'readonly'    => true,
 				),
-				'exchange_rate'      => array(
+				'rate'      => array(
 					'description' => __( 'currency exchange rate.', 'wp-ever-accounting' ),
 					'type'        => 'number',
 					'context'     => array( 'view', 'edit' ),
 					'required'    => true,
 				),
-				'decimals'           => array(
+				'precision'           => array(
 					'description' => __( 'currency decimals.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'edit' ),
@@ -525,7 +509,7 @@ class Currencies extends Controller {
 					'description' => __( 'currency symbol.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'edit' ),
-					'required'    => true,
+					'readonly'    => true,
 				),
 				'decimal_separator'  => array(
 					'description' => __( 'currency decimal separator.', 'wp-ever-accounting' ),
@@ -545,25 +529,6 @@ class Currencies extends Controller {
 					'enum'        => array( 'before', 'after' ),
 					'context'     => array( 'view', 'edit' ),
 					'required'    => true,
-				),
-				'status'             => array(
-					'description' => __( 'currency status.', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'enum'        => array( 'active', 'inactive' ),
-					'context'     => array( 'view', 'edit' ),
-					'required'    => true,
-				),
-				'updated_at'         => array(
-					'description' => __( "The date the currency was last updated, in the site's timezone.", 'wp-ever-accounting' ),
-					'type'        => 'date-time',
-					'context'     => array( 'view', 'edit' ),
-					'readonly'    => true,
-				),
-				'created_at'         => array(
-					'description' => __( "The date the currency was created, in the site's timezone.", 'wp-ever-accounting' ),
-					'type'        => 'date-time',
-					'context'     => array( 'view', 'edit' ),
-					'readonly'    => true,
 				),
 			),
 		);

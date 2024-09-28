@@ -23,6 +23,7 @@ class Customers {
 		add_action( 'eac_sales_page_customers', array( $this, 'render_table' ) );
 		add_action( 'eac_sales_page_customers_add', array( $this, 'render_add' ) );
 		add_action( 'eac_sales_page_customers_edit', array( $this, 'render_edit' ) );
+		add_action( 'eac_sales_page_customers_view', array( $this, 'render_view' ) );
 		add_action( 'admin_post_eac_edit_customer', array( $this, 'handle_edit' ) );
 	}
 
@@ -109,8 +110,27 @@ class Customers {
 	 * @return void
 	 */
 	public function render_edit() {
-		$customer = new Customer( $_GET['id'] );
+		$id       = filter_input( INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT );
+		$customer = Customer::find( $id );
+		if ( ! $customer ) {
+			wp_die( 'Invalid customer ID' );
+		}
 		include __DIR__ . '/views/customer-edit.php';
+	}
+
+	/**
+	 * Render view.
+	 *
+	 * @since 3.0.0
+	 * @return void
+	 */
+	public function render_view() {
+		$id       = filter_input( INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT );
+		$customer = Customer::find( $id );
+		if ( ! $customer ) {
+			wp_die( 'Invalid customer ID' );
+		}
+		include __DIR__ . '/views/customer-view.php';
 	}
 
 	/**
@@ -120,6 +140,44 @@ class Customers {
 	 * @return void
 	 */
 	public function handle_edit() {
+		$referer = wp_get_referer();
+		if ( ! check_admin_referer( 'eac_edit_customer' ) || ! current_user_can( 'manage_options' ) ) {
+			wp_die( 'Unauthorized' );
+		}
+		$data = array(
+			'id'       => isset( $_POST['id'] ) ? sanitize_text_field( wp_unslash( $_POST['id'] ) ) : '',
+			'name'     => isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '',
+			'currency' => isset( $_POST['currency'] ) ? sanitize_text_field( wp_unslash( $_POST['currency'] ) ) : '',
+			'email'    => isset( $_POST['email'] ) ? sanitize_email( wp_unslash( $_POST['email'] ) ) : '',
+			'phone'    => isset( $_POST['phone'] ) ? sanitize_text_field( wp_unslash( $_POST['phone'] ) ) : '',
+			'company'  => isset( $_POST['company'] ) ? sanitize_text_field( wp_unslash( $_POST['company'] ) ) : '',
+			'tax_number' => isset( $_POST['tax_number'] ) ? sanitize_text_field( wp_unslash( $_POST['tax_number'] ) ) : '',
+			'website'  => isset( $_POST['website'] ) ? esc_url_raw( wp_unslash( $_POST['website'] ) ) : '',
+			'address'  => isset( $_POST['address'] ) ? sanitize_text_field( wp_unslash( $_POST['address'] ) ) : '',
+			'city'     => isset( $_POST['city'] ) ? sanitize_text_field( wp_unslash( $_POST['city'] ) ) : '',
+			'state'    => isset( $_POST['state'] ) ? sanitize_text_field( wp_unslash( $_POST['state'] ) ) : '',
+			'zip'      => isset( $_POST['zip'] ) ? sanitize_text_field( wp_unslash( $_POST['zip'] ) ) : '',
+			'country'  => isset( $_POST['country'] ) ? sanitize_text_field( wp_unslash( $_POST['country'] ) ) : '',
+		);
+
+		$customer = EAC()->customers->insert( $data );
+
+		if ( is_wp_error( $customer ) ) {
+			EAC()->flash->error( $customer->get_error_message() );
+		} else {
+			EAC()->flash->success( __( 'Customer saved successfully.', 'wp-ever-accounting' ) );
+			$referer = add_query_arg(
+				array(
+					'action' => 'edit',
+					'id'     => $customer->id,
+				),
+				$referer
+			);
+			$referer = remove_query_arg( array( 'add' ), $referer );
+		}
+
+		wp_safe_redirect( $referer );
+		exit;
 
 	}
 }

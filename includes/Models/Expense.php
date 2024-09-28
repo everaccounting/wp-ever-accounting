@@ -13,6 +13,7 @@ defined( 'ABSPATH' ) || exit;
  * @subpackage Models
  *
  * @property int    $vendor_id ID of the vendor.
+ * @property Bill $bill Related Bill.
  */
 class Expense extends Transaction {
 	/**
@@ -34,13 +35,14 @@ class Expense extends Transaction {
 	);
 
 	/**
-	 * Default query variables passed to Query class when parsing.
+	 * Default query variables passed to Query.
 	 *
 	 * @since 1.0.0
 	 * @var array
 	 */
 	protected $query_vars = array(
-		'update_meta_cache' => true,
+		'type'           => 'payment',
+		'search_columns' => array( 'id', 'contact_id', 'amount', 'status', 'date' ),
 	);
 
 	/**
@@ -56,9 +58,10 @@ class Expense extends Transaction {
 	/**
 	 * Create a new model instance.
 	 *
-	 * @param string|array|object $attributes The model attributes.
+	 * @param string|int|array $attributes Attributes.
+	 * @return void
 	 */
-	public function __construct( $attributes = array() ) {
+	public function __construct( $attributes = null ) {
 		$this->attributes['status'] = 'completed';
 		$this->attributes['type']   = $this->get_object_type();
 		$this->query_vars['type']   = $this->get_object_type();
@@ -95,9 +98,23 @@ class Expense extends Transaction {
 		if ( empty( $this->status ) ) {
 			return new \WP_Error( 'missing_required', __( 'Expense status is required.', 'wp-ever-accounting' ) );
 		}
+		if ( empty( $this->account_id ) ) {
+			return new \WP_Error( 'missing_required', __( 'Account is required.', 'wp-ever-accounting' ) );
+		}
+
+		// if does exist or account id is dirty, then set the new currency code.
+		if ( ! $this->exists() || $this->is_dirty( 'account_id' ) ) {
+			$account = Account::find( $this->account_id );
+			if ( ! $account ) {
+				return new \WP_Error( 'invalid_account', __( 'Invalid account.', 'wp-ever-accounting' ) );
+			}
+			$this->currency = $account->currency;
+		}
 
 		return parent::save();
 	}
+
+
 
 	/*
 	|--------------------------------------------------------------------------

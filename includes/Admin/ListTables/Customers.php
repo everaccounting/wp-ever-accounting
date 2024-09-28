@@ -109,41 +109,6 @@ class Customers extends ListTable {
 	}
 
 	/**
-	 * Returns an associative array listing all the views that can be used
-	 * with this table.
-	 *
-	 * Provides a list of roles and user count for that role for easy
-	 * filtering of the user table.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return string[] An array of HTML links keyed by their view.
-	 */
-	// protected function get_views() {
-	// $current      = $this->get_request_status( 'all' );
-	// $status_links = array();
-	// $statuses     = array(
-	// 'all'      => __( 'All', 'wp-ever-accounting' ),
-	// 'active'   => __( 'Active', 'wp-ever-accounting' ),
-	// 'inactive' => __( 'Inactive', 'wp-ever-accounting' ),
-	// );
-	//
-	// foreach ( $statuses as $status => $label ) {
-	// $link  = 'all' === $status ? $this->base_url : add_query_arg( 'status', $status, $this->base_url );
-	// $args  = 'all' === $status ? array() : array( 'status' => $status );
-	// $count = Customer::count( $args );
-	// $label = sprintf( '%s <span class="count">(%s)</span>', esc_html( $label ), number_format_i18n( $count ) );
-	//
-	// $status_links[ $status ] = array(
-	// 'url'     => $link,
-	// 'label'   => $label,
-	// 'current' => $current === $status,
-	// );
-	// }
-	// return $this->get_views_links( $status_links );
-	// }
-
-	/**
 	 * Retrieves an associative array of bulk actions available on this table.
 	 *
 	 * @since 1.0.0
@@ -260,28 +225,6 @@ class Customers extends ListTable {
 	}
 
 	/**
-	 * Renders the address column.
-	 *
-	 * @param Customer $item The current object.
-	 *
-	 * @since 1.0.0
-	 * @return string Displays the address.
-	 */
-	public function column_address( $item ) {
-		$data = array(
-			'company'   => $item->company,
-			'address_1' => $item->address_1,
-			'address_2' => $item->address_2,
-			'city'      => $item->city,
-			'state'     => $item->state,
-			'postcode'  => $item->postcode,
-			'country'   => $item->country,
-		);
-
-		return eac_get_formatted_address( $data );
-	}
-
-	/**
 	 * Renders the country column.
 	 *
 	 * @param Customer $item The current object.
@@ -308,10 +251,17 @@ class Customers extends ListTable {
 			return null;
 		}
 		$actions = array(
-			'id'     => sprintf( '#%d', esc_attr( $item->id ) ),
 			'view'   => sprintf(
 				'<a href="%s">%s</a>',
-				esc_url( add_query_arg( 'view', $item->id, $this->base_url ) ),
+				esc_url(
+					add_query_arg(
+						array(
+							'action' => 'view',
+							'id'     => $item->id,
+						),
+						$this->base_url
+					)
+				),
 				__( 'View', 'wp-ever-accounting' )
 			),
 			'edit'   => sprintf(

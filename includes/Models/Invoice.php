@@ -62,21 +62,7 @@ class Invoice extends Document {
 	}
 
 	/**
-	 * Set billing address.
-	 *
-	 * @param array $address Address.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	// public function set_billing( $address ) {
-	// if ( is_array( $address ) ) {
-	// $this->set_relation( 'billing', $this->billing()->make( $address ) );
-	// }
-	// }
-
-	/**
-	 * Contact relation.
+	 * Vendor relation.
 	 *
 	 * @since 1.0.0
 	 * @return BelongsTo

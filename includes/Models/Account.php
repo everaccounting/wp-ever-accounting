@@ -121,6 +121,16 @@ class Account extends Model {
 		'number',
 	);
 
+	/**
+	 * Create a new model instance.
+	 *
+	 * @param mixed $attributes The attributes to fill the model with.
+	 */
+	public function __construct( $attributes = null ) {
+		$this->attributes['currency'] = eac_base_currency();
+		parent::__construct( $attributes );
+	}
+
 	/*
 	|--------------------------------------------------------------------------
 	| Accessors, Mutators and Relationship Methods

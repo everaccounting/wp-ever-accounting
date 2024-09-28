@@ -21,7 +21,6 @@ class General extends Page {
 	 */
 	public function __construct() {
 		parent::__construct( 'general', __( 'General', 'wp-ever-accounting' ) );
-		add_action( 'eac_settings_general_tab_currencies', array( $this, 'render_currencies' ) );
 	}
 
 	/**
@@ -32,9 +31,9 @@ class General extends Page {
 	 */
 	public function get_sections() {
 		return array(
-			''           => __( 'General', 'wp-ever-accounting' ),
-			'currency'   => __( 'Currency', 'wp-ever-accounting' ),
-			'currencies' => __( 'Currencies', 'wp-ever-accounting' ),
+			''               => __( 'General', 'wp-ever-accounting' ),
+			'currency'       => __( 'Currency', 'wp-ever-accounting' ),
+			'currencies'     => __( 'Currencies', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -241,51 +240,5 @@ class General extends Page {
 				'id'   => 'currency_options',
 			),
 		);
-	}
-
-	/**
-	 * Exchange rates field.
-	 *
-	 * @since 1.0.0
-	 */
-	public function exchange_rates_field() {
-		?>
-		<tr valign="top">
-			<th scope="row" class="titledesc">
-				<label for="eac_exchange_rates"><?php esc_html_e( 'Currencies', 'wp-ever-accounting' ); ?></label>
-			</th>
-			<td class="forminp">
-				<table class="eac-exchange-rates widefat">
-					<thead>
-					<tr>
-						<th><?php esc_html_e( 'Currency', 'wp-ever-accounting' ); ?></th>
-						<th><?php esc_html_e( 'Rate', 'wp-ever-accounting' ); ?></th>
-						<th style="width: 1%;">&nbsp;</th>
-					</tr>
-					</thead>
-					<tbody>
-					<tr>
-						<td>
-							BDT - Bangladeshi Taka
-						</td>
-
-						<td>
-							1 USD = <input type="text" name="eac_exchange_rates[BDT]" value="1" class="eac-exchange-rate"/>BDT
-						</td>
-					</tr>
-					</tbody>
-				</table>
-			</td>
-		</tr>
-		<?php
-	}
-
-	/**
-	 * Render currencies.
-	 *
-	 * @since 1.0.0
-	 */
-	public function render_currencies() {
-		include __DIR__ . '/views/currency-list.php';
 	}
 }

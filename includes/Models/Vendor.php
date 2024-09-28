@@ -30,17 +30,6 @@ class Vendor extends Contact {
 		parent::__construct( $attributes );
 	}
 
-
-	/*
-	|--------------------------------------------------------------------------
-	| Property Definition Methods
-	|--------------------------------------------------------------------------
-	| This section contains static methods that define and return specific
-	| property values related to the model.
-	| These methods are accessible without creating an instance of the model.
-	|--------------------------------------------------------------------------
-	*/
-
 	/*
 	|--------------------------------------------------------------------------
 	| Accessors, Mutators and Relationship Methods

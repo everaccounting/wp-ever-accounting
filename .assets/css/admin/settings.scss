@@ -219,7 +219,7 @@
 		margin-top: 0;
 		max-width: 600px;
 
-		th,td {
+		th, td {
 			//background: #f9f9f9;
 			//border-bottom: 1px solid #e5e5e5;
 			padding: 10px;
@@ -227,5 +227,18 @@
 			vertical-align: middle;
 		}
 	}
+}
+
+form#eac-add-currency {
+	//box-sizing: border-box;
+	//width: 100%;
+	//overflow: hidden;
+	//position: relative;
+	//top: 10px;
+	//background: #f6f7f7;
+	//border: 1px solid #c3c4c7;
+	//padding: 30px;
+	//margin: 30px auto;
+	//max-width: 600px;
 }
 

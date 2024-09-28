@@ -47,16 +47,16 @@ defined( 'ABSPATH' ) || exit;
 							'value'         => $expense->amount,
 							'required'      => true,
 							'tooltip'       => __( 'Enter the amount in the currency of the selected account, use (.) for decimal.', 'wp-ever-accounting' ),
-							'data-currency' => $expense->currency_code,
+							'data-currency' => $expense->currency,
 						)
 					);
 
 					eac_form_field(
 						array(
 							'label'            => esc_html__( 'Currency', 'wp-ever-accounting' ),
-							'name'             => 'currency_code',
+							'name'             => 'currency',
 							'default'          => eac_base_currency(),
-							'value'            => $expense->currency_code,
+							'value'            => $expense->currency,
 							'type'             => 'select',
 							'options'          => eac_get_currencies(),
 							'option_value'     => 'code',
@@ -80,9 +80,9 @@ defined( 'ABSPATH' ) || exit;
 							'placeholder'   => '0.00',
 							'tooltip'       => __( 'Enter the exchange rate for the selected currency.', 'wp-ever-accounting' ),
 							'required'      => true,
-							'prefix'        => "1 $expense->currency_code = ",
+							'prefix'        => "1 $expense->currency = ",
 							'suffix'        => eac_base_currency(),
-							'wrapper_style' => eac_base_currency() === $expense->currency_code ? 'display: none;' : '',
+							'wrapper_style' => eac_base_currency() === $expense->currency ? 'display: none;' : '',
 						)
 					);
 

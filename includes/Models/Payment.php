@@ -46,7 +46,7 @@ class Payment extends Transaction {
 	);
 
 	/**
-	 * Properties that have transition effects when changed.
+	 * Attributes that have transition effects when changed.
 	 *
 	 * @since 1.0.0
 	 * @var array
@@ -98,6 +98,9 @@ class Payment extends Transaction {
 		}
 		if ( empty( $this->status ) ) {
 			return new \WP_Error( 'missing_required', __( 'Payment status is required.', 'wp-ever-accounting' ) );
+		}
+		if ( empty( $this->account_id ) ) {
+			return new \WP_Error( 'missing_required', __( 'Account is required.', 'wp-ever-accounting' ) );
 		}
 
 		// if does exist or account id is dirty, then set the new currency code.

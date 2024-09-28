@@ -327,9 +327,8 @@ class Payments extends ListTable {
 	 * @return string Displays the customer.
 	 */
 	public function column_customer( $item ) {
-		$metadata   = array();
 		$customer   = $item->customer ? sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( 'customer_id', $item->customer->id, $this->base_url ) ), wp_kses_post( $item->customer->name ) ) : '&mdash;';
-		$metadata[] = $item->customer && $item->customer->company ? $item->customer->company : '&mdash;';
+		$metadata = $item->customer && $item->customer->company ? $item->customer->company : '&mdash;';
 
 		return sprintf( '%s%s', $customer, $this->column_metadata( $metadata ) );
 	}

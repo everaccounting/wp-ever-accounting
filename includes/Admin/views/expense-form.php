@@ -30,59 +30,14 @@ defined( 'ABSPATH' ) || exit;
 
 					eac_form_field(
 						array(
-							'label'       => __( 'Expense Number', 'wp-ever-accounting' ),
+							'label'       => __( 'Expense #', 'wp-ever-accounting' ),
 							'type'        => 'text',
 							'name'        => 'expense_number',
 							'value'       => $expense->number,
 							'default'     => $expense->get_next_number(),
 							'placeholder' => $expense->get_next_number(),
 							'required'    => true,
-						)
-					);
-					eac_form_field(
-						array(
-							'label'         => __( 'Amount', 'wp-ever-accounting' ),
-							'name'          => 'amount',
-							'placeholder'   => '0.00',
-							'value'         => $expense->amount,
-							'required'      => true,
-							'tooltip'       => __( 'Enter the amount in the currency of the selected account, use (.) for decimal.', 'wp-ever-accounting' ),
-							'data-currency' => $expense->currency_code,
-						)
-					);
-
-					eac_form_field(
-						array(
-							'label'            => esc_html__( 'Currency', 'wp-ever-accounting' ),
-							'name'             => 'currency_code',
-							'default'          => eac_base_currency(),
-							'value'            => $expense->currency_code,
-							'type'             => 'select',
-							'options'          => eac_get_currencies(),
-							'option_value'     => 'code',
-							'option_label'     => 'formatted_name',
-							'placeholder'      => esc_html__( 'Select a currency', 'wp-ever-accounting' ),
-							'class'            => 'eac_select2',
-							'data-action'      => 'eac_json_search',
-							'data-type'        => 'currency',
-							'data-allow-clear' => 'false',
-							'required'         => true,
-						)
-					);
-
-					eac_form_field(
-						array(
-							'label'         => __( 'Exchange Rate', 'wp-ever-accounting' ),
-							'type'          => 'number',
-							'name'          => 'exchange_rate',
-							'default'       => 1,
-							'value'         => $expense->exchange_rate,
-							'placeholder'   => '0.00',
-							'tooltip'       => __( 'Enter the exchange rate for the selected currency.', 'wp-ever-accounting' ),
-							'required'      => true,
-							'prefix'        => "1 $expense->currency_code = ",
-							'suffix'        => eac_base_currency(),
-							'wrapper_style' => eac_base_currency() === $expense->currency_code ? 'display: none;' : '',
+							'readonly'    => true,
 						)
 					);
 
@@ -100,6 +55,7 @@ defined( 'ABSPATH' ) || exit;
 							'data-placeholder' => __( 'Select an account', 'wp-ever-accounting' ),
 							'data-action'      => 'eac_json_search',
 							'data-type'        => 'account',
+							'required'         => true,
 							'suffix'           => sprintf(
 								'<a class="addon" href="%s" target="_blank" title="%s"><span class="dashicons dashicons-plus"></span></a>',
 								esc_url( admin_url( 'admin.php?page=eac-banking&tab=accounts&add=yes' ) ),
@@ -108,25 +64,31 @@ defined( 'ABSPATH' ) || exit;
 						)
 					);
 
+					// exchange rate.
 					eac_form_field(
 						array(
-							'label'            => __( 'Vendor', 'wp-ever-accounting' ),
-							'type'             => 'select',
-							'name'             => 'vendor_id',
-							'options'          => array( $expense->vendor ),
-							'value'            => $expense->vendor_id,
-							'class'            => 'eac_select2',
-							'tooltip'          => __( 'Select the vendor.', 'wp-ever-accounting' ),
-							'option_value'     => 'id',
-							'option_label'     => 'formatted_name',
-							'data-placeholder' => __( 'Select a vendor', 'wp-ever-accounting' ),
-							'data-action'      => 'eac_json_search',
-							'data-type'        => 'vendor',
-							'suffix'           => sprintf(
-								'<a class="addon" href="%s" target="_blank" title="%s"><span class="dashicons dashicons-plus"></span></a>',
-								esc_url( admin_url( 'admin.php?page=eac-purchases&tab=vendors&add=yes' ) ),
-								__( 'Add Vendor', 'wp-ever-accounting' )
-							),
+							'label'       => __( 'Exchange Rate', 'wp-ever-accounting' ),
+							'type'        => 'number',
+							'name'        => 'exchange_rate',
+							'value'       => $expense->exchange_rate,
+							'placeholder' => '1.00',
+							'required'    => true,
+							'class'       => 'eac_exchange_rate',
+							'prefix'      => '1 ' . eac_base_currency() . ' = ',
+							'suffix'      => $expense->currency,
+						)
+					);
+
+					eac_form_field(
+						array(
+							'label'         => __( 'Amount', 'wp-ever-accounting' ),
+							'name'          => 'amount',
+							'placeholder'   => '0.00',
+							'value'         => $expense->amount,
+							'required'      => true,
+							'tooltip'       => __( 'Enter the amount in the currency of the selected account, use (.) for decimal.', 'wp-ever-accounting' ),
+							'data-currency' => $expense->currency,
+							'class'         => 'eac_amount',
 						)
 					);
 
@@ -155,10 +117,32 @@ defined( 'ABSPATH' ) || exit;
 
 					eac_form_field(
 						array(
-							'label'       => __( 'Expense Method', 'wp-ever-accounting' ),
+							'label'            => __( 'Vendor', 'wp-ever-accounting' ),
+							'type'             => 'select',
+							'name'             => 'contact_id',
+							'options'          => array( $expense->vendor ),
+							'value'            => $expense->vendor_id,
+							'class'            => 'eac_select2',
+							'tooltip'          => __( 'Select the vendor.', 'wp-ever-accounting' ),
+							'option_value'     => 'id',
+							'option_label'     => 'formatted_name',
+							'data-placeholder' => __( 'Select a vendor', 'wp-ever-accounting' ),
+							'data-action'      => 'eac_json_search',
+							'data-type'        => 'vendor',
+							'suffix'           => sprintf(
+								'<a class="addon" href="%s" target="_blank" title="%s"><span class="dashicons dashicons-plus"></span></a>',
+								esc_url( admin_url( 'admin.php?page=eac-purchases&tab=vendors&action=add' ) ),
+								__( 'Add Vendor', 'wp-ever-accounting' )
+							),
+						)
+					);
+
+					eac_form_field(
+						array(
+							'label'       => __( 'Payment Method', 'wp-ever-accounting' ),
 							'type'        => 'select',
-							'name'        => 'expense_method',
-							'value'       => $expense->expense_method,
+							'name'        => 'payment_method',
+							'value'       => $expense->payment_method,
 							'options'     => eac_get_payment_methods(),
 							'placeholder' => __( 'Select &hellip;', 'wp-ever-accounting' ),
 						)
@@ -192,7 +176,7 @@ defined( 'ABSPATH' ) || exit;
 					);
 					eac_form_field(
 						array(
-							'label'         => __( 'Notes', 'wp-ever-accounting' ),
+							'label'         => __( 'Note', 'wp-ever-accounting' ),
 							'type'          => 'textarea',
 							'name'          => 'note',
 							'value'         => $expense->note,
@@ -200,7 +184,6 @@ defined( 'ABSPATH' ) || exit;
 							'wrapper_class' => 'is--full',
 						)
 					);
-
 					?>
 				</div>
 			</div>
@@ -209,6 +192,9 @@ defined( 'ABSPATH' ) || exit;
 		<div class="column-2">
 
 			<div class="eac-card">
+				<div class="eac-card__header">
+					<h3 class="eac-card__title"><?php esc_html_e( 'Actions', 'wp-ever-accounting' ); ?></h3>
+				</div><!-- .eac-card__header -->
 
 				<div class="eac-card__body">
 					<?php
@@ -225,31 +211,32 @@ defined( 'ABSPATH' ) || exit;
 					);
 					?>
 				</div><!-- .eac-card__body -->
-
 				<div class="eac-card__footer">
 					<?php if ( $expense->exists() ) : ?>
-						<input type="hidden" name="account_id"
-							   value="<?php echo esc_attr( $expense->account_id ); ?>"/>
-						<input type="hidden" name="id" value="<?php echo esc_attr( $expense->id ); ?>"/>
-					<?php endif; ?>
-					<input type="hidden" name="action" value="eac_edit_expense"/>
-					<?php wp_nonce_field( 'eac_edit_expense' ); ?>
-					<?php if ( $expense->exists() ) : ?>
-						<a class="eac_confirm_delete del" href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'action', 'delete', admin_url( 'admin.php?page=eac-sales&tab=expenses&id=' . $expense->id ) ), 'bulk-expenses' ) ); ?>">
+						<a class="eac_confirm_delete del" href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'action', 'delete', admin_url( 'admin.php?page=eac-purchases&tab=expenses&id=' . $expense->id ) ), 'bulk-expenses' ) ); ?>">
 							<?php esc_html_e( 'Delete', 'wp-ever-accounting' ); ?>
 						</a>
-					<?php endif; ?>
-					<?php if ( $expense->exists() ) : ?>
-						<button
-							class="button button-primary tw-h-full"><?php esc_html_e( 'Update Expense', 'wp-ever-accounting' ); ?></button>
+						<button class="button button-primary tw-h-full"><?php esc_html_e( 'Update Expense', 'wp-ever-accounting' ); ?></button>
 					<?php else : ?>
-						<button
-							class="button button-primary button-large tw-w-full"><?php esc_html_e( 'Add Expense', 'wp-ever-accounting' ); ?></button>
+						<button class="button button-primary button-large tw-w-full"><?php esc_html_e( 'Add Expense', 'wp-ever-accounting' ); ?></button>
 					<?php endif; ?>
 				</div><!-- .eac-card__footer -->
+			</div><!-- .eac-card -->
 
+			<div class="eac-card">
+				<div class="eac-card__header">
+					<h3 class="eac-card__title"><?php esc_html_e( 'Attachment', 'wp-ever-accounting' ); ?></h3>
+				</div>
+				<div class="eac-card__body">
+					<?php eac_file_uploader( array( 'value' => $expense->attachment_id ) ); ?>
+				</div>
 			</div>
+
 
 		</div><!-- .column-2 -->
 	</div><!-- .eac-poststuff -->
+
+	<?php wp_nonce_field( 'eac_edit_expense' ); ?>
+	<input type="hidden" name="action" value="eac_edit_expense"/>
+	<input type="hidden" name="id" value="<?php echo esc_attr( $expense->id ); ?>"/>
 </form>

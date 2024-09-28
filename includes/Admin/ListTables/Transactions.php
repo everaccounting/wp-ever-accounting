@@ -90,7 +90,7 @@ class Transactions extends ListTable {
 	protected function bulk_delete( $ids ) {}
 
 	/**
-	 * Outputs 'no users' message.
+	 * Outputs 'no items' message.
 	 *
 	 * @since 1.0.0
 	 */

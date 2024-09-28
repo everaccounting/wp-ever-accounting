@@ -337,7 +337,7 @@ class Invoices extends Documents {
 					'type'        => 'string',
 					'context'     => array( 'view', 'edit' ),
 				),
-				'currency_code'   => array(
+				'currency'   => array(
 					'description' => __( 'Currency code.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'edit' ),

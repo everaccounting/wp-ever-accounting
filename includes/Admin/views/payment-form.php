@@ -33,7 +33,7 @@ defined( 'ABSPATH' ) || exit;
 
 					eac_form_field(
 						array(
-							'label'       => __( 'Payment Number', 'wp-ever-accounting' ),
+							'label'       => __( 'Payment #', 'wp-ever-accounting' ),
 							'type'        => 'text',
 							'name'        => 'payment_number',
 							'value'       => $payment->number,
@@ -179,7 +179,7 @@ defined( 'ABSPATH' ) || exit;
 					);
 					eac_form_field(
 						array(
-							'label'         => __( 'Notes', 'wp-ever-accounting' ),
+							'label'         => __( 'Note', 'wp-ever-accounting' ),
 							'type'          => 'textarea',
 							'name'          => 'note',
 							'value'         => $payment->note,

@@ -103,7 +103,7 @@ class Items extends ListTable {
 	}
 
 	/**
-	 * Outputs 'no users' message.
+	 * Outputs 'no items' message.
 	 *
 	 * @since 1.0.0
 	 */

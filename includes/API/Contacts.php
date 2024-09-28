@@ -135,7 +135,7 @@ class Contacts extends Controller {
 						'sanitize_callback' => 'wp_validate_boolean',
 					),
 				),
-				'currency_code'     => array(
+				'currency'     => array(
 					'description' => __( 'Currency code of the contact.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'default'     => eac_base_currency(),

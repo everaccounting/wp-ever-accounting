@@ -32,16 +32,6 @@ class Customer extends Contact {
 
 	/*
 	|--------------------------------------------------------------------------
-	| Property Definition Methods
-	|--------------------------------------------------------------------------
-	| This section contains static methods that define and return specific
-	| property values related to the model.
-	| These methods are accessible without creating an instance of the model.
-	|--------------------------------------------------------------------------
-	*/
-
-	/*
-	|--------------------------------------------------------------------------
 	| Accessors, Mutators and Relationship Methods
 	|--------------------------------------------------------------------------
 	| This section contains methods for getting and setting attributes (accessors

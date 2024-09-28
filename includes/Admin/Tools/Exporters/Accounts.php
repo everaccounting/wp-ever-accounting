@@ -46,7 +46,7 @@ class Accounts extends CSVExporter {
 			'bank_name',
 			'bank_phone',
 			'bank_address',
-			'currency_code',
+			'currency',
 			'author_id',
 			'thumbnail_id',
 			'balance',

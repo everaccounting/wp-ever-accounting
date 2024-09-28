@@ -2,13 +2,10 @@
 
 namespace EverAccounting\Admin\ListTables;
 
-use EverAccounting\Admin\ListTable;
-use EverAccounting\Models\Currency;
-
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class CurrenciesTable.
+ * Class Currencies.
  *
  * @since 1.0.0
  * @package EverAccounting\Admin\ListTables
@@ -35,7 +32,7 @@ class Currencies extends ListTable {
 			)
 		);
 
-		$this->base_url = admin_url( 'admin.php?page=eac-misc&tab=currencies' );
+		$this->base_url = admin_url( 'admin.php?page=eac-settings&section=currencies' );
 	}
 
 	/**
@@ -46,187 +43,37 @@ class Currencies extends ListTable {
 	 */
 	public function prepare_items() {
 		$this->process_actions();
-		$per_page = $this->get_items_per_page( "eac_currencies_per_page" );
-		$paged    = $this->get_pagenum();
-		$search   = $this->get_request_search();
-		$order_by = $this->get_request_orderby();
-		$order    = $this->get_request_order();
-		$args     = array(
-			'limit'   => $per_page,
-			'page'    => $paged,
-			'search'  => $search,
-			'orderby' => $order_by,
-			'order'   => $order,
-			'status'  => $this->get_request_status(),
-		);
+		$per_page    = $this->get_items_per_page( 'eac_currencies_per_page', 20 );
+		$paged       = $this->get_pagenum();
+		$search      = $this->get_request_search();
+		$order_by    = $this->get_request_orderby();
+		$order       = $this->get_request_order();
 
-		/**
-		 * Filter the query arguments for the list table.
-		 *
-		 * @param array $args An associative array of arguments.
-		 *
-		 * @since 1.0.0
-		 */
-		$args = apply_filters( 'eac_currencies_table_query_args', $args );
+		$all_currencies = eac_get_currencies();
+		$currencies = array();
+		foreach ( get_option( 'eac_currencies', array() ) as $code => $currency ) {
+			if ( isset( $all_currencies[ $code ] ) ) {
+				$currencies[ $code ] = $all_currencies[ $code ];
+			}
+		}
 
-		$args['no_found_rows'] = false;
-		$this->items           = Currency::results( $args );
-		$total                 = Currency::count( $args );
+		$this->items = $currencies;
+		$total_items = count( $currencies );
 		$this->set_pagination_args(
 			array(
-				'total_items' => $total,
+				'total_items' => $total_items,
 				'per_page'    => $per_page,
 			)
 		);
 	}
 
 	/**
-	 * handle bulk activate action.
-	 *
-	 * @param array $ids List of item IDs.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	protected function bulk_activate( $ids ) {
-		$performed = 0;
-		foreach ( $ids as $id ) {
-			if ( EAC()->currencies->insert(
-				array(
-					'id'     => $id,
-					'status' => 'active',
-				)
-			) ) {
-				++ $performed;
-			}
-		}
-		if ( ! empty( $performed ) ) {
-			// translators: %s: number of currencies.
-			EAC()->flash->success( sprintf( __( '%s currency(s) activated successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
-			$note = __( '<strong>ALERT:</strong> Please update the exchange rate for the activated currencies before using the currency in transactions.', 'wp-ever-accounting' );
-			EAC()->flash->info( $note );
-		}
-	}
-
-	/**
-	 * handle bulk deactivate action.
-	 *
-	 * @param array $ids List of item IDs.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	protected function bulk_deactivate( $ids ) {
-		$performed = 0;
-		foreach ( $ids as $id ) {
-			if ( EAC()->currencies->insert(
-				array(
-					'id'     => $id,
-					'status' => 'inactive',
-				)
-			) ) {
-				++ $performed;
-			}
-		}
-		if ( ! empty( $performed ) ) {
-			// translators: %s: number of currencies.
-			EAC()->flash->success( sprintf( __( '%s currency(s) deactivated successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
-		}
-	}
-
-	/**
-	 * handle bulk delete action.
-	 *
-	 * @param array $ids List of item IDs.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	protected function bulk_delete( $ids ) {
-		$performed = 0;
-		foreach ( $ids as $id ) {
-			if ( EAC()->accounts->delete( $id ) ) {
-				++ $performed;
-			}
-		}
-		if ( ! empty( $performed ) ) {
-			// translators: %s: number of currencies.
-			EAC()->flash->success( sprintf( __( '%s currency(s) deactivated successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
-		}
-	}
-
-	/**
-	 * Outputs 'no users' message.
+	 * Outputs 'no items' message.
 	 *
 	 * @since 1.0.0
 	 */
 	public function no_items() {
-		esc_html_e( 'No currencies found.', 'wp-ever-accounting' );
-	}
-
-	/**
-	 * Returns an associative array listing all the views that can be used
-	 * with this table.
-	 *
-	 * Provides a list of roles and user count for that role for easy
-	 * filtering of the user table.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return string[] An array of HTML links keyed by their view.
-
-	 */
-	protected function get_views() {
-		$current      = $this->get_request_status( 'all' );
-		$status_links = array();
-		$statuses     = array(
-			'all'      => __( 'All', 'wp-ever-accounting' ),
-			'active'   => __( 'Active', 'wp-ever-accounting' ),
-			'inactive' => __( 'Inactive', 'wp-ever-accounting' ),
-		);
-
-		foreach ( $statuses as $status => $label ) {
-			$link  = 'all' === $status ? $this->base_url : add_query_arg( 'status', $status, $this->base_url );
-			$args  = 'all' === $status ? array() : array( 'status' => $status );
-			$count = Currency::count( $args );
-			$label = sprintf( '%s <span class="count">(%s)</span>', esc_html( $label ), number_format_i18n( $count ) );
-
-			$status_links[ $status ] = array(
-				'url'     => $link,
-				'label'   => $label,
-				'current' => $current === $status,
-			);
-		}
-
-		return $this->get_views_links( $status_links );
-	}
-
-	/**
-	 * Retrieves an associative array of bulk actions available on this table.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return array Array of bulk action labels keyed by their action.
-	 */
-	protected function get_bulk_actions() {
-		$actions = array(
-			'activate'   => __( 'Activate', 'wp-ever-accounting' ),
-			'deactivate' => __( 'Deactivate', 'wp-ever-accounting' ),
-			'delete'     => __( 'Delete', 'wp-ever-accounting' ),
-		);
-
-		return $actions;
-	}
-
-	/**
-	 * Outputs the controls to allow user roles to be changed in bulk.
-	 *
-	 * @param string $which Whether invoked above ("top") or below the table ("bottom").
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	protected function extra_tablenav( $which ) {
+		esc_html_e( 'No configured currencies found.', 'wp-ever-accounting' );
 	}
 
 	/**
@@ -238,12 +85,12 @@ class Currencies extends ListTable {
 	 */
 	public function get_columns() {
 		return array(
-			'cb'     => '<input type="checkbox" />',
-			'name'   => __( 'Name', 'wp-ever-accounting' ),
-			'code'   => __( 'Code', 'wp-ever-accounting' ),
-			'symbol' => __( 'Symbol', 'wp-ever-accounting' ),
-			'rate'   => __( 'Rate', 'wp-ever-accounting' ),
-			'status' => __( 'Status', 'wp-ever-accounting' ),
+			'name'               => __( 'Name', 'wp-ever-accounting' ),
+			'rate'               => __( 'Rate', 'wp-ever-accounting' ),
+			'precision'          => __( 'Precision', 'wp-ever-accounting' ),
+			'decimal_separator'  => __( 'Decimal Separator', 'wp-ever-accounting' ),
+			'thousand_separator' => __( 'Thousand Separator', 'wp-ever-accounting' ),
+			'position'           => __( 'Position', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -256,11 +103,12 @@ class Currencies extends ListTable {
 	 */
 	protected function get_sortable_columns() {
 		return array(
-			'name'   => array( 'name', true ),
-			'code'   => array( 'code', true ),
-			'symbol' => array( 'symbol', true ),
-			'rate'   => array( 'rate', true ),
-			'status' => array( 'status', true ),
+			'name'               => array( 'name', true ),
+			'rate'               => array( 'rate', true ),
+			'precision'          => array( 'precision', true ),
+			'decimal_separator'  => array( 'decimal_separator', true ),
+			'thousand_separator' => array( 'thousand_separator', true ),
+			'position'           => array( 'position', true ),
 		);
 	}
 
@@ -277,31 +125,138 @@ class Currencies extends ListTable {
 	/**
 	 * Renders the checkbox column.
 	 *
-	 * @param Currency $item The current object.
+	 * @param array $item The current object.
 	 *
-	 * @since  1.0.0
+	 * @since 1.0.0
+	 *
 	 * @return string Displays a checkbox.
 	 */
 	public function column_cb( $item ) {
-		return sprintf( '<input type="checkbox" name="id[]" value="%d"/>', esc_attr( $item->id ) );
+		$base = eac_base_currency();
+		if ( $base === $item['code'] ) {
+			return '&mdash;';
+		}
+
+		return sprintf( '<input type="checkbox" name="code[]" value="%s"/>', esc_attr( $item['code'] ) );
 	}
 
 	/**
 	 * Renders the name column.
 	 *
-	 * @param Currency $item The current object.
+	 * @param array $item The current object.
 	 *
-	 * @since  1.0.0
+	 * @since 1.0.0
+	 *
 	 * @return string Displays the name.
 	 */
 	public function column_name( $item ) {
-		return sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( [ 'action' => 'edit', 'id' => $item->id ], $this->base_url ) ), wp_kses_post( $item->name ) );
+		return empty( $item['formatted_name'] ) ? '&mdash;' : esc_html( $item['formatted_name'] );
+	}
+
+	/**
+	 * Renders the rate column.
+	 *
+	 * @param array $item The current object.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return string Displays the rate.
+	 */
+	public function column_rate( $item ) {
+		$base = eac_base_currency();
+
+		return sprintf( '
+    <div class="eac-input-group">
+        <span class="addon">1 %1$s =</span>
+        <input type="text" name="[%2$s][rate]" value="%3$s" class="eac-input" %4$s />
+        <span class="addon">%5$s</span>
+    </div>',
+			esc_html( $base ),
+			esc_attr( $item['code'] ),
+			esc_attr( $item['rate'] ),
+			$base === $item['code'] ? 'readonly' : '',
+			esc_html( $item['code'] )
+		);
+	}
+
+	/**
+	 * Renders the precision column.
+	 *
+	 * @param array $item The current object.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return string Displays the precision.
+	 */
+	public function column_precision( $item ) {
+		return sprintf( '<input type="number" name="[%1$s][precision]" value="%2$s" class="eac-input" step="any" min="0" max="10" %3$s/>',
+			esc_attr( $item['code'] ),
+			esc_attr( $item['precision'] ),
+			$item['code'] === eac_base_currency() ? 'readonly' : ''
+		);
+	}
+
+	/**
+	 * Renders the decimal separator column.
+	 *
+	 * @param array $item The current object.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return string Displays the decimal separator.
+	 */
+	public function column_decimal_separator( $item ) {
+		return sprintf( '<input type="text" name="[%1$s][decimal_separator]" value="%2$s" class="eac-input" %3$s/>',
+			esc_attr( $item['code'] ),
+			esc_attr( $item['decimal_separator'] ),
+			$item['code'] === eac_base_currency() ? 'readonly' : ''
+		);
+	}
+
+	/**
+	 * Renders the thousand separator column.
+	 *
+	 * @param array $item The current object.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return string Displays the thousand separator.
+	 */
+	public function column_thousand_separator( $item ) {
+		return sprintf( '<input type="text" name="[%1$s][thousand_separator]" value="%2$s" class="eac-input" %3$s/>',
+			esc_attr( $item['code'] ),
+			esc_attr( $item['thousand_separator'] ),
+			$item['code'] === eac_base_currency() ? 'readonly' : ''
+		);
+	}
+
+	/**
+	 * Renders the position column.
+	 *
+	 * @param array $item The current object.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return string Displays the position.
+	 */
+	public function column_position( $item ) {
+		return sprintf( '<select class="tw-w-[100%%]" name="[%1$s][position]" %2$s>
+			<option value="before" %3$s>%4$s</option>
+			<option value="after" %5$s>%6$s</option>
+		</select>',
+			esc_attr( $item['code'] ),
+			$item['code'] === eac_base_currency() ? 'readonly' : '',
+			selected( 'before', $item['position'], false ),
+			esc_html__( 'Before', 'wp-ever-accounting' ),
+			selected( 'after', $item['position'], false ),
+			esc_html__( 'After', 'wp-ever-accounting' )
+		);
 	}
 
 	/**
 	 * Generates and displays row actions links.
 	 *
-	 * @param Currency $item The comment object.
+	 * @param array $item The object.
 	 * @param string   $column_name Current column name.
 	 * @param string   $primary Primary column name.
 	 *
@@ -313,71 +268,23 @@ class Currencies extends ListTable {
 			return null;
 		}
 		$actions = array(
-			'id'   => sprintf( '#%d', esc_attr( $item->id ) ),
-			'edit' => sprintf(
+			'delete' => sprintf(
 				'<a href="%s">%s</a>',
-				esc_url( add_query_arg( array(
-					'id'   => $item->id,
-					'action' => 'edit',
-				), $this->base_url ) ),
-				__( 'Edit', 'wp-ever-accounting' )
-			),
-		);
-
-		if ( 'active' === $item->status ) {
-			$actions['deactivate'] = sprintf(
-				'<a href="%s">%s</a>',
-				esc_url(
-					wp_nonce_url(
-						add_query_arg(
-							array(
-								'action' => 'deactivate',
-								'id'     => $item->id,
-							),
-							$this->base_url
-						),
-						'bulk-' . $this->_args['plural']
-					)
-				),
-				__( 'Deactivate', 'wp-ever-accounting' )
-			);
-		} else {
-			$actions['activate'] = sprintf(
-				'<a href="%s">%s</a>',
-				esc_url(
-					wp_nonce_url(
-						add_query_arg(
-							array(
-								'action' => 'activate',
-								'id'     => $item->id,
-							),
-							$this->base_url
-						),
-						'bulk-' . $this->_args['plural']
-					)
-				),
-				__( 'Activate', 'wp-ever-accounting' )
-			);
-		}
-
-		if ( $item->is_deletable() ) {
-			$actions['delete'] = sprintf(
-				'<a href="%s" class="del">%s</a>',
 				esc_url(
 					wp_nonce_url(
 						add_query_arg(
 							array(
 								'action' => 'delete',
-								'id'     => $item->id,
+								'code'   => $item['code'],
 							),
 							$this->base_url
 						),
-						'bulk-' . $this->_args['plural']
+						'eac_delete_currency'
 					)
 				),
 				__( 'Delete', 'wp-ever-accounting' )
-			);
-		}
+			),
+		);
 
 		return $this->row_actions( $actions );
 	}

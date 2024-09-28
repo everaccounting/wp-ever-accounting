@@ -114,6 +114,7 @@ class Plugin extends \ByteKit\Plugin {
 		$this->services->add( 'categories', new Controllers\Categories() );
 		$this->services->add( 'taxes', new Controllers\Taxes() );
 
+		$this->services->add( 'currencies', new Handlers\Currencies() );
 		$this->services->add( 'transactions', new Handlers\Transactions() );
 		$this->services->add( 'documents', new Handlers\Documents() );
 		$this->services->add( 'shortcodes', new Handlers\Shortcodes() );
@@ -153,6 +154,7 @@ class Plugin extends \ByteKit\Plugin {
 
 			// Settings.
 			$this->services->add( Admin\Settings::class );
+			$this->services->add( Admin\Currencies::class );
 			$this->services->add( Admin\Taxes::class );
 			$this->services->add( Admin\Categories::class );
 		}
