@@ -43,7 +43,7 @@ class Scripts {
 
 		// Plugin scripts.
 		EAC()->scripts->register_script( 'eac-admin', 'js/admin.js', array( 'jquery', 'eac-inputmask', 'eac-select2', 'eac-tiptip', 'jquery-ui-datepicker', 'jquery-ui-tooltip' ), true );
-		EAC()->scripts->register_script( 'eac-admin-sales', 'js/admin-sales.js', array( 'eac-api', 'eac-form', 'eac-money' ), true );
+		EAC()->scripts->register_script( 'eac-admin-forms', 'js/admin-forms.js', array( 'eac-api', 'eac-form', 'eac-money' ), true );
 		EAC()->scripts->register_script( 'eac-admin-invoices', 'js/admin-invoices.js', array( 'eac-api', 'eac-money' ), true );
 		EAC()->scripts->register_script( 'eac-admin-settings', 'js/admin-settings.js', array( 'eac-admin', 'eac-form' ), true );
 
@@ -70,6 +70,7 @@ class Scripts {
 		wp_enqueue_script( 'eac-form' );
 		wp_enqueue_script( 'eac-modal' );
 		wp_enqueue_script( 'eac-admin' );
+		wp_enqueue_script( 'eac-admin-forms' );
 		wp_enqueue_style( 'eac-admin' );
 
 		wp_localize_script(
@@ -88,9 +89,9 @@ class Scripts {
 		);
 
 		// Payments page.
-		if ( EAC()->get( Menus::class )->page === 'sales' ) {
-			EAC()->scripts->enqueue_script( 'eac-admin-sales' );
-		}
+//		if ( EAC()->get( Menus::class )->page === 'sales' ) {
+//			EAC()->scripts->enqueue_script( 'eac-admin-sales' );
+//		}
 
 		// if settings page.
 		if ( 'ever-accounting_page_eac-settings' === $hook ) {

@@ -60,7 +60,7 @@ defined( 'ABSPATH' ) || exit;
 								'<a class="addon" href="%s" target="_blank" title="%s"><span class="dashicons dashicons-plus"></span></a>',
 								esc_url( admin_url( 'admin.php?page=eac-banking&tab=accounts&add=yes' ) ),
 								__( 'Add Account', 'wp-ever-accounting' )
-							)
+							),
 						)
 					);
 
@@ -76,6 +76,7 @@ defined( 'ABSPATH' ) || exit;
 							'class'       => 'eac_exchange_rate',
 							'prefix'      => '1 ' . eac_base_currency() . ' = ',
 							'suffix'      => $expense->currency,
+							'attr-step'   => 'any',
 						)
 					);
 

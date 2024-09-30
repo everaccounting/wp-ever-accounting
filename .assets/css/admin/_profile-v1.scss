@@ -1,4 +1,27 @@
+.eac-profile-breadcrums {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	margin-bottom: 1rem;
+
+	span {
+		color: #1D2327;
+		font-size: 1rem;
+	}
+}
+
 .eac-profile-header {
+	border: 1px solid #e1e2e2;
+	background: #fff;
+	box-sizing: border-box;
+	font-size: 13px;
+	line-height: 1.5;
+	margin: 0 auto 1.5em;
+	max-width: none;
+	min-height: 1px;
+	min-width: auto;
+	position: relative;
+	width: 100%;
 	padding: 8px 12px;
 	display: flex;
 	flex-wrap: wrap;
@@ -33,7 +56,6 @@
 		display: flex;
 		flex-wrap: wrap;
 		align-items: center;
-		justify-content: space-between;
 		flex: 1 1 0;
 	}
 
@@ -52,47 +74,37 @@
 		font-weight: 700;
 		margin-bottom: 4px;
 	}
+
+	&__actions {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: flex-start;
+		align-items: center;
+		gap: 5px;
+	}
 }
 
-.eac-profile-nav{
+.eac-profile-nav {
 	margin: 0;
 	padding: 0;
 	list-style: none;
-	align-items: center;
 	display: flex;
-	border-top:1px solid #e1e2e2;
+	flex-wrap: wrap;
+	border: 1px solid #e1e2e2;
+	background: #fff;
+	box-sizing: border-box;
+	width: 100%;
 
 	li {
-		padding: 0;
-		margin: 0;
-		display: inline-flex;
-	}
+		//margin-bottom: -1px;
+		margin-inline-end: 8px;
+		box-sizing: border-box;
 
-	a {
-		font-weight: bold;
-		padding: 8px 12px;
-		align-items: center;
-		position: relative;
-		text-align: center;
-		cursor: pointer;
-		display: flex;
-		text-decoration: none;
-		color: inherit;
-		border-bottom: 2px solid transparent;
-		transition: border-color 0.3s ease;
-
-		&:hover{
-			border-bottom-color: #e1e2e2;
-		}
-
-		&.active{
-			border-bottom-color: #0073aa;
-		}
-
-		&:active, &:focus{
-			outline: none;
-			box-shadow: none;
+		a {
+			padding: 8px 12px;
+			box-sizing: border-box;
 		}
 	}
 }
+
 

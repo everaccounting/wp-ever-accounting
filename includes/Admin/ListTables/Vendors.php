@@ -213,7 +213,7 @@ class Vendors extends ListTable {
 			esc_url(
 				add_query_arg(
 					array(
-						'action' => 'edit',
+						'action' => 'view',
 						'id'     => $item->id,
 					),
 					$this->base_url
@@ -253,7 +253,15 @@ class Vendors extends ListTable {
 		$actions = array(
 			'view'   => sprintf(
 				'<a href="%s">%s</a>',
-				esc_url( add_query_arg( 'view', $item->id, $this->base_url ) ),
+				esc_url(
+					add_query_arg(
+						array(
+							'action' => 'view',
+							'id'     => $item->id,
+						),
+						$this->base_url
+					)
+				),
 				__( 'View', 'wp-ever-accounting' )
 			),
 			'edit'   => sprintf(

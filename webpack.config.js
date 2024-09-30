@@ -25,7 +25,7 @@ module.exports = [
 
 			// Admin scripts.
 			'js/admin': './.assets/js/admin/admin.js',
-			'js/admin-sales': './.assets/js/admin/sales.js',
+			'js/admin-forms': './.assets/js/admin/forms.js',
 			'js/admin-settings': './.assets/js/admin/settings.js',
 			'css/admin': './.assets/css/admin/admin.scss',
 			'css/admin-settings': './.assets/css/admin/settings.scss',

@@ -35,14 +35,14 @@ class Reports {
 	public static function register_tabs( $tabs ) {
 		$tabs['payments'] = __( 'Payments', 'ever-accounting' );
 		$tabs['expenses'] = __( 'Expenses', 'ever-accounting' );
-		$tabs['profits']  = __( 'Profits', 'ever-accounting' );
+		$tabs['profits']  = __( 'Profit & Loss', 'ever-accounting' );
 		$tabs['taxes']    = __( 'Taxes', 'ever-accounting' );
 
 		return $tabs;
 	}
 
 	/**
-	 * Render payments.
+	 * Render sales.
 	 *
 	 * @since 1.0.0
 	 */

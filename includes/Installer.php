@@ -2,7 +2,7 @@
 
 namespace EverAccounting;
 
-use EverAccounting\Utilities\I18n;
+use EverAccounting\Admin\Settings;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -155,8 +155,9 @@ class Installer {
 		}
 		self::create_tables();
 		self::create_roles();
-//		self::create_currencies();
+		self::save_settings();
 		EAC()->add_db_version();
+		add_option( 'eac_install_date', wp_date( 'U' ) );
 	}
 
 	/**
@@ -181,7 +182,7 @@ class Installer {
 CREATE TABLE {$wpdb->prefix}ea_accounts (
     id BIGINT(20) NOT NULL AUTO_INCREMENT,
     type VARCHAR(50) NOT NULL,
-    name VARCHAR(191) NOT NULL,
+    name VARCHAR(191) NOT NULL DEFAULT 'account',
     number VARCHAR(100) NOT NULL,
     bank_name VARCHAR(191) DEFAULT NULL,
     bank_phone VARCHAR(20) DEFAULT NULL,
@@ -193,7 +194,7 @@ CREATE TABLE {$wpdb->prefix}ea_accounts (
     updated_at DATETIME DEFAULT NULL,
     PRIMARY KEY (id),
     UNIQUE KEY number (number),
-    KEY name (name),
+    KEY account_name (name),
     KEY type (type)
 ) $collate;
 
@@ -310,10 +311,12 @@ CREATE TABLE {$wpdb->prefix}ea_documents (
     discount DOUBLE(15, 4) DEFAULT 0,
     tax DOUBLE(15, 4) DEFAULT 0,
     total DOUBLE(15, 4) DEFAULT 0,
+    balance DOUBLE(15, 4) DEFAULT 0,
     discount_value DOUBLE(15, 4) DEFAULT 0,
     discount_type ENUM('fixed', 'percent') DEFAULT NULL,
     contact_id BIGINT(20) UNSIGNED NOT NULL,
     contact_name VARCHAR(191) NOT NULL,
+    contact_company VARCHAR(191) NOT NULL,
     contact_email VARCHAR(191) DEFAULT NULL,
     contact_phone VARCHAR(50) DEFAULT NULL,
     contact_address VARCHAR(191) DEFAULT NULL,
@@ -321,7 +324,7 @@ CREATE TABLE {$wpdb->prefix}ea_documents (
     contact_state VARCHAR(50) DEFAULT NULL,
     contact_zip VARCHAR(20) DEFAULT NULL,
     contact_country VARCHAR(3) DEFAULT NULL,
-    contact_tax_number VARCHAR(50) DEFAULT NULL,
+    contact_tax VARCHAR(50) DEFAULT NULL,
     note TEXT DEFAULT NULL,
     terms TEXT DEFAULT NULL,
     issue_date DATETIME DEFAULT NULL,
@@ -332,7 +335,7 @@ CREATE TABLE {$wpdb->prefix}ea_documents (
     exchange_rate DOUBLE(15, 8) NOT NULL DEFAULT 1.0,
     created_via VARCHAR(100) DEFAULT 'manual',
     creator_id BIGINT(20) UNSIGNED NOT NULL,
-    thumbnail_id BIGINT(20) UNSIGNED DEFAULT NULL,
+    attachment_id BIGINT(20) UNSIGNED DEFAULT NULL,
     uuid VARCHAR(36) DEFAULT NULL,
     created_at DATETIME DEFAULT NULL,
     updated_at DATETIME DEFAULT NULL,
@@ -554,59 +557,29 @@ CREATE TABLE {$wpdb->prefix}ea_transfers (
 		}
 	}
 
+
 	/**
-	 * Create currencies.
+	 * Save settings.
 	 *
 	 * @since 1.0.0
 	 * @return void
 	 */
-	public static function create_currencies() {
-		$all_currencies = I18n::get_currencies();
-		$options        = get_option( 'eaccounting_currencies', array() );
-		if ( $options ) {
-			foreach ( $options as $option ) {
-				$defaults = isset( $all_currencies[ $option['code'] ] ) ? $all_currencies[ $option['code'] ] : array();
-				$data     = wp_parse_args( $option, $defaults );
-				unset( $data['id'] );
-				eac_insert_currency( $data );
+	public static function save_settings() {
+		$pages = Settings::get_pages();
+		foreach ( $pages as $page ) {
+			if ( ! is_subclass_of( $page, Admin\Settings\Page::class ) || ! method_exists( $page, 'get_sections' ) ) {
+				continue;
 			}
-			delete_option( 'eaccounting_currencies' );
-		}
 
-		// If there is no currency, insert default currencies.
-		$currencies = eac_get_currencies();
-		if ( empty( $currencies ) ) {
-			$usd_currency = isset( $all_currencies['USD'] ) ? $all_currencies['USD'] : array();
-			eac_insert_currency(
-				wp_parse_args(
-					$usd_currency,
-					array(
-						'code'               => 'USD',
-						'name'               => 'US Dollar',
-						'exchange_rate'      => 1.0000,
-						'decimals'           => 2,
-						'symbol'             => '$',
-						'subunit'            => 100,
-						'position'           => 'before',
-						'thousand_separator' => ',',
-						'decimal_separator'  => '.',
-						'status'             => 'active',
-					)
-				)
-			);
-		}
-
-		// now if there is any no active currency, make USD active.
-		$active_currencies = eac_get_currencies( array( 'status' => 'active' ) );
-		if ( empty( $active_currencies ) ) {
-			$usd = eac_get_currency( 'USD' );
-			if ( $usd ) {
-				eac_insert_currency(
-					array(
-						'id'     => $usd->id,
-						'status' => 'active',
-					)
-				);
+			$sections = array_unique( array_merge( array( '' ), array_keys( $page->get_sections() ) ) );
+			foreach ( $sections as $section ) {
+				$settings = $page->get_section_settings( $section );
+				foreach ( $settings as $setting ) {
+					if ( isset( $setting['default'] ) && isset( $setting['id'] ) ) {
+						$autoload = isset( $setting['autoload'] ) ? (bool) $setting['autoload'] : true;
+						add_option( $setting['id'], $setting['default'], '', ( $autoload ? 'yes' : 'no' ) );
+					}
+				}
 			}
 		}
 	}

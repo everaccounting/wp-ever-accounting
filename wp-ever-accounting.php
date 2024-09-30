@@ -22,6 +22,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 // Migrate legacy version.
 if ( get_option( 'eaccounting_version' ) ) {
 	update_option( 'eac_version', get_option( 'eaccounting_version' ) );
+	update_option( 'eac_install_date', get_option( 'eaccounting_install_date', wp_date( 'U' ) ) );
 	delete_option( 'eaccounting_version' );
 }
 

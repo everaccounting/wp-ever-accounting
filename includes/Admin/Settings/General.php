@@ -31,9 +31,9 @@ class General extends Page {
 	 */
 	public function get_sections() {
 		return array(
-			''               => __( 'General', 'wp-ever-accounting' ),
-			'currency'       => __( 'Currency', 'wp-ever-accounting' ),
-			'currencies'     => __( 'Currencies', 'wp-ever-accounting' ),
+			''           => __( 'General', 'wp-ever-accounting' ),
+			'currency'   => __( 'Currency', 'wp-ever-accounting' ),
+			'currencies' => __( 'Currencies', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -89,7 +89,7 @@ class General extends Page {
 			array(
 				'title'       => __( 'Tax Number', 'wp-ever-accounting' ),
 				'desc'        => __( 'The tax number of your business. This will be used in the invoice, bill, and other documents.', 'wp-ever-accounting' ),
-				'id'          => 'eac_business_vat_number',
+				'id'          => 'eac_business_tax_number',
 				'type'        => 'text',
 				'placeholder' => 'e.g. 123456789',
 				'default'     => '',

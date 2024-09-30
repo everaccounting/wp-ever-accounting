@@ -43,14 +43,14 @@ class Currencies extends ListTable {
 	 */
 	public function prepare_items() {
 		$this->process_actions();
-		$per_page    = $this->get_items_per_page( 'eac_currencies_per_page', 20 );
-		$paged       = $this->get_pagenum();
-		$search      = $this->get_request_search();
-		$order_by    = $this->get_request_orderby();
-		$order       = $this->get_request_order();
+		$per_page = $this->get_items_per_page( 'eac_currencies_per_page', 20 );
+		$paged    = $this->get_pagenum();
+		$search   = $this->get_request_search();
+		$order_by = $this->get_request_orderby();
+		$order    = $this->get_request_order();
 
 		$all_currencies = eac_get_currencies();
-		$currencies = array();
+		$currencies     = array();
 		foreach ( get_option( 'eac_currencies', array() ) as $code => $currency ) {
 			if ( isset( $all_currencies[ $code ] ) ) {
 				$currencies[ $code ] = $all_currencies[ $code ];
@@ -65,6 +65,64 @@ class Currencies extends ListTable {
 				'per_page'    => $per_page,
 			)
 		);
+	}
+
+	/**
+	 * Checks if the current request has a bulk action. If that is the case it will validate and will
+	 * execute the bulk method handler. Regardless if the action is valid or not it will redirect to
+	 * the previous page removing the current arguments that makes this request a bulk action.
+	 */
+	protected function process_actions() {
+		$this->_column_headers = array( $this->get_columns(), get_hidden_columns( $this->screen ), $this->get_sortable_columns() );
+
+		// Detect when a bulk action is being triggered.
+		$action = $this->current_action();
+		if ( ! empty( $action ) ) {
+
+			check_admin_referer( 'bulk-' . $this->_args['plural'] );
+
+			$ids    = isset( $_GET['code'] ) ? map_deep( wp_unslash( $_GET['code'] ), 'sanitize_key' ) : array();
+			$ids    = wp_parse_list( $ids );
+			$method = 'bulk_' . $action;
+			if ( method_exists( $this, $method ) && ! empty( $ids ) ) {
+				$this->$method( $ids );
+			}
+		}
+
+		if ( isset( $_GET['_wpnonce'] ) && isset( $_SERVER['REQUEST_URI'] ) ) {
+			wp_safe_redirect(
+				remove_query_arg(
+					array( '_wp_http_referer', '_wpnonce', 'id', 'action', 'action2' ),
+					esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) )
+				)
+			);
+			exit;
+		}
+	}
+
+	/**
+	 * handle bulk delete action.
+	 *
+	 * @param array $codes List of item codes.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	protected function bulk_delete( $codes ) {
+		$performed  = 0;
+		$currencies = get_option( 'eac_currencies', array() );
+		foreach ( $codes as $code ) {
+			$code = strtoupper( $code );
+			if ( isset( $currencies[ $code ] ) ) {
+				unset( $currencies[ $code ] );
+				++$performed;
+			}
+		}
+		update_option( 'eac_currencies', $currencies );
+		if ( ! empty( $performed ) ) {
+			// translators: %s: number of items deleted.
+			EAC()->flash->success( sprintf( __( '%s currencies(s) deleted successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
+		}
 	}
 
 	/**
@@ -165,7 +223,8 @@ class Currencies extends ListTable {
 	public function column_rate( $item ) {
 		$base = eac_base_currency();
 
-		return sprintf( '
+		return sprintf(
+			'
     <div class="eac-input-group">
         <span class="addon">1 %1$s =</span>
         <input type="text" name="[%2$s][rate]" value="%3$s" class="eac-input" %4$s />
@@ -189,7 +248,8 @@ class Currencies extends ListTable {
 	 * @return string Displays the precision.
 	 */
 	public function column_precision( $item ) {
-		return sprintf( '<input type="number" name="[%1$s][precision]" value="%2$s" class="eac-input" step="any" min="0" max="10" %3$s/>',
+		return sprintf(
+			'<input type="number" name="[%1$s][precision]" value="%2$s" class="eac-input" step="any" min="0" max="10" %3$s/>',
 			esc_attr( $item['code'] ),
 			esc_attr( $item['precision'] ),
 			$item['code'] === eac_base_currency() ? 'readonly' : ''
@@ -206,7 +266,8 @@ class Currencies extends ListTable {
 	 * @return string Displays the decimal separator.
 	 */
 	public function column_decimal_separator( $item ) {
-		return sprintf( '<input type="text" name="[%1$s][decimal_separator]" value="%2$s" class="eac-input" %3$s/>',
+		return sprintf(
+			'<input type="text" name="[%1$s][decimal_separator]" value="%2$s" class="eac-input" %3$s/>',
 			esc_attr( $item['code'] ),
 			esc_attr( $item['decimal_separator'] ),
 			$item['code'] === eac_base_currency() ? 'readonly' : ''
@@ -223,7 +284,8 @@ class Currencies extends ListTable {
 	 * @return string Displays the thousand separator.
 	 */
 	public function column_thousand_separator( $item ) {
-		return sprintf( '<input type="text" name="[%1$s][thousand_separator]" value="%2$s" class="eac-input" %3$s/>',
+		return sprintf(
+			'<input type="text" name="[%1$s][thousand_separator]" value="%2$s" class="eac-input" %3$s/>',
 			esc_attr( $item['code'] ),
 			esc_attr( $item['thousand_separator'] ),
 			$item['code'] === eac_base_currency() ? 'readonly' : ''
@@ -240,7 +302,8 @@ class Currencies extends ListTable {
 	 * @return string Displays the position.
 	 */
 	public function column_position( $item ) {
-		return sprintf( '<select class="tw-w-[100%%]" name="[%1$s][position]" %2$s>
+		return sprintf(
+			'<select class="tw-w-[100%%]" name="[%1$s][position]" %2$s>
 			<option value="before" %3$s>%4$s</option>
 			<option value="after" %5$s>%6$s</option>
 		</select>',
@@ -256,15 +319,15 @@ class Currencies extends ListTable {
 	/**
 	 * Generates and displays row actions links.
 	 *
-	 * @param array $item The object.
-	 * @param string   $column_name Current column name.
-	 * @param string   $primary Primary column name.
+	 * @param array  $item The object.
+	 * @param string $column_name Current column name.
+	 * @param string $primary Primary column name.
 	 *
 	 * @since 1.0.0
 	 * @return string Row actions output.
 	 */
 	protected function handle_row_actions( $item, $column_name, $primary ) {
-		if ( $primary !== $column_name ) {
+		if ( $primary !== $column_name || eac_base_currency() === $item['code'] ) {
 			return null;
 		}
 		$actions = array(
@@ -279,7 +342,7 @@ class Currencies extends ListTable {
 							),
 							$this->base_url
 						),
-						'eac_delete_currency'
+						'bulk-currencies'
 					)
 				),
 				__( 'Delete', 'wp-ever-accounting' )

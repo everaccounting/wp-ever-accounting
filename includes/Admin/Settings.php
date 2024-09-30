@@ -36,15 +36,7 @@ class Settings {
 	 * @return array
 	 */
 	public static function register_tabs( $tabs ) {
-		$pages = apply_filters(
-			'eac_settings_pages',
-			array(
-				new General(),
-				new Sales(),
-				new Purchases(),
-				new Taxes(),
-			)
-		);
+		$pages = self::get_pages();
 
 		foreach ( $pages as $page ) {
 			if ( is_subclass_of( $page, Page::class ) && $page->id && $page->label ) {
@@ -82,6 +74,26 @@ class Settings {
 		 * @since 1.0.0
 		 */
 		do_action( 'eac_settings_save_' . $tab );
+	}
+
+	/**
+	 * Get settings pages.
+	 *
+	 * @since 1.0.0
+	 * @return Page[] Settings pages.
+	 */
+	public static function get_pages() {
+		$pages = apply_filters(
+			'eac_settings_pages',
+			array(
+				new General(),
+				new Sales(),
+				new Purchases(),
+				new Taxes(),
+			)
+		);
+
+		return $pages;
 	}
 
 	/**

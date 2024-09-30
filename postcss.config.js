@@ -4,8 +4,8 @@ module.exports = {
 		annotation: true,
 	},
 	plugins: [
-		require('postcss-import'),
-		require('postcss-url'),
+		// require('postcss-url'),
+		// require('postcss-import'),
 		require('autoprefixer'),
 		require('tailwindcss'),
 		...(process.env.NODE_ENV === 'production' ? [require('cssnano')] : []),

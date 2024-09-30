@@ -191,10 +191,10 @@ class Invoices extends ListTable {
 		return array(
 			'cb'         => '<input type="checkbox" />',
 			'number'     => __( 'Invoice #', 'wp-ever-accounting' ),
-			'reference'  => __( 'Order #', 'wp-ever-accounting' ),
 			'issue_date' => __( 'Issue Date', 'wp-ever-accounting' ),
 			'due_date'   => __( 'Due Date', 'wp-ever-accounting' ),
 			'customer'   => __( 'Customer', 'wp-ever-accounting' ),
+			'reference'  => __( 'Order #', 'wp-ever-accounting' ),
 			'status'     => __( 'Status', 'wp-ever-accounting' ),
 			'total'      => __( 'Total', 'wp-ever-accounting' ),
 		);

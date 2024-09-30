@@ -23,6 +23,7 @@ class Vendors {
 		add_action( 'eac_purchases_page_vendors', array( __CLASS__, 'render_table' ) );
 		add_action( 'eac_purchases_page_vendors_add', array( __CLASS__, 'render_add' ) );
 		add_action( 'eac_purchases_page_vendors_edit', array( __CLASS__, 'render_edit' ) );
+		add_action( 'eac_purchases_page_vendors_view', array( __CLASS__, 'render_view' ) );
 		add_action( 'admin_post_eac_edit_vendor', array( __CLASS__, 'handle_edit' ) );
 	}
 
@@ -52,7 +53,7 @@ class Vendors {
 	 */
 	public static function set_screen_option( $status, $option, $value ) {
 		global $list_table;
-		if ( "eac_vendors_per_page" === $option ) {
+		if ( 'eac_vendors_per_page' === $option ) {
 			return $value;
 		}
 
@@ -60,7 +61,7 @@ class Vendors {
 	}
 
 	/**
-	 * setup expenses list.
+	 * setup vendors list.
 	 *
 	 * @since 3.0.0
 	 * @return void
@@ -70,11 +71,14 @@ class Vendors {
 		$screen     = get_current_screen();
 		$list_table = new ListTables\Vendors();
 		$list_table->prepare_items();
-		$screen->add_option( 'per_page', array(
-			'label'   => __( 'Number of items per page:', 'wp-ever-accounting' ),
-			'default' => 20,
-			'option'  => "eac_vendors_per_page",
-		) );
+		$screen->add_option(
+			'per_page',
+			array(
+				'label'   => __( 'Number of items per page:', 'wp-ever-accounting' ),
+				'default' => 20,
+				'option'  => 'eac_vendors_per_page',
+			)
+		);
 	}
 
 	/**
@@ -100,7 +104,7 @@ class Vendors {
 	}
 
 	/**
-	 * Render edit expense form.
+	 * Render edit vendor form.
 	 *
 	 * @since 3.0.0
 	 * @return void
@@ -109,12 +113,30 @@ class Vendors {
 		$id     = filter_input( INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT );
 		$vendor = Vendor::find( $id );
 		if ( ! $vendor ) {
-			esc_html_e( 'The specified expense does not exist.', 'wp-ever-accounting' );
+			esc_html_e( 'The specified vendor does not exist.', 'wp-ever-accounting' );
 
 			return;
 		}
 
 		include __DIR__ . '/views/vendor-edit.php';
+	}
+
+	/**
+	 * Render view vendor form.
+	 *
+	 * @since 3.0.0
+	 * @return void
+	 */
+	public static function render_view() {
+		$id     = filter_input( INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT );
+		$vendor = Vendor::find( $id );
+		if ( ! $vendor ) {
+			esc_html_e( 'The specified vendor does not exist.', 'wp-ever-accounting' );
+
+			return;
+		}
+
+		include __DIR__ . '/views/vendor-view.php';
 	}
 
 	/**
@@ -128,22 +150,22 @@ class Vendors {
 		$referer = wp_get_referer();
 		$vendor  = EAC()->vendors->insert(
 			array(
-				'id'            => isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0,
-				'name'          => isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '',
-				'currency'      => isset( $_POST['currency'] ) ? sanitize_text_field( wp_unslash( $_POST['currency'] ) ) : eac_base_currency(),
-				'email'         => isset( $_POST['email'] ) ? sanitize_email( wp_unslash( $_POST['email'] ) ) : '',
-				'phone'         => isset( $_POST['phone'] ) ? sanitize_text_field( wp_unslash( $_POST['phone'] ) ) : '',
-				'company'       => isset( $_POST['company'] ) ? sanitize_text_field( wp_unslash( $_POST['company'] ) ) : '',
-				'website'       => isset( $_POST['website'] ) ? esc_url_raw( wp_unslash( $_POST['website'] ) ) : '',
-				'vat_number'    => isset( $_POST['vat_number'] ) ? sanitize_text_field( wp_unslash( $_POST['vat_number'] ) ) : '',
+				'id'         => isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0,
+				'name'       => isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '',
+				'currency'   => isset( $_POST['currency'] ) ? sanitize_text_field( wp_unslash( $_POST['currency'] ) ) : eac_base_currency(),
+				'email'      => isset( $_POST['email'] ) ? sanitize_email( wp_unslash( $_POST['email'] ) ) : '',
+				'phone'      => isset( $_POST['phone'] ) ? sanitize_text_field( wp_unslash( $_POST['phone'] ) ) : '',
+				'company'    => isset( $_POST['company'] ) ? sanitize_text_field( wp_unslash( $_POST['company'] ) ) : '',
+				'website'    => isset( $_POST['website'] ) ? esc_url_raw( wp_unslash( $_POST['website'] ) ) : '',
+				'vat_number' => isset( $_POST['vat_number'] ) ? sanitize_text_field( wp_unslash( $_POST['vat_number'] ) ) : '',
 				'vat_exempt'    => isset( $_POST['vat_exempt'] ) ? sanitize_text_field( wp_unslash( $_POST['vat_exempt'] ) ) : 'no', // phpcs:ignore
-				'address_1'     => isset( $_POST['address_1'] ) ? sanitize_text_field( wp_unslash( $_POST['address_1'] ) ) : '',
-				'address_2'     => isset( $_POST['address_2'] ) ? sanitize_text_field( wp_unslash( $_POST['address_2'] ) ) : '',
-				'city'          => isset( $_POST['city'] ) ? sanitize_text_field( wp_unslash( $_POST['city'] ) ) : '',
-				'state'         => isset( $_POST['state'] ) ? sanitize_text_field( wp_unslash( $_POST['state'] ) ) : '',
-				'postcode'      => isset( $_POST['postcode'] ) ? sanitize_text_field( wp_unslash( $_POST['postcode'] ) ) : '',
-				'country'       => isset( $_POST['country'] ) ? sanitize_text_field( wp_unslash( $_POST['country'] ) ) : '',
-				'status'        => isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : 'active',
+				'address_1'  => isset( $_POST['address_1'] ) ? sanitize_text_field( wp_unslash( $_POST['address_1'] ) ) : '',
+				'address_2'  => isset( $_POST['address_2'] ) ? sanitize_text_field( wp_unslash( $_POST['address_2'] ) ) : '',
+				'city'       => isset( $_POST['city'] ) ? sanitize_text_field( wp_unslash( $_POST['city'] ) ) : '',
+				'state'      => isset( $_POST['state'] ) ? sanitize_text_field( wp_unslash( $_POST['state'] ) ) : '',
+				'postcode'   => isset( $_POST['postcode'] ) ? sanitize_text_field( wp_unslash( $_POST['postcode'] ) ) : '',
+				'country'    => isset( $_POST['country'] ) ? sanitize_text_field( wp_unslash( $_POST['country'] ) ) : '',
+				'status'     => isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : 'active',
 			)
 		);
 
@@ -151,7 +173,13 @@ class Vendors {
 			EAC()->flash->error( $vendor->get_error_message() );
 		} else {
 			EAC()->flash->success( __( 'Vendor saved successfully.', 'wp-ever-accounting' ) );
-			$referer = add_query_arg( [ 'action' => 'edit', 'id' => $vendor->id ], $referer );
+			$referer = add_query_arg(
+				array(
+					'action' => 'edit',
+					'id'     => $vendor->id,
+				),
+				$referer
+			);
 			$referer = remove_query_arg( array( 'add' ), $referer );
 		}
 		wp_safe_redirect( $referer );

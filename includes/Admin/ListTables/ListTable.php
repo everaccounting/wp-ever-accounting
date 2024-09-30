@@ -131,7 +131,7 @@ abstract class ListTable extends \WP_List_Table {
 			}
 		}
 
-		if ( isset( $_GET['_wpnonce'] ) ) {
+		if ( isset( $_GET['_wpnonce'] ) && isset( $_SERVER['REQUEST_URI'] ) ) {
 			wp_safe_redirect(
 				remove_query_arg(
 					array( '_wp_http_referer', '_wpnonce', 'id', 'action', 'action2' ),

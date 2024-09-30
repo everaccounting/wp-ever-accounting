@@ -287,7 +287,7 @@ class ReportsUtil {
 	 * @since 1.0.0
 	 */
 	public static function get_sales_summary() {
-		$summery       = [];
+		$summery       = array();
 		$total_payment = 0;
 		$date          = wp_date( 'M, y' );
 		$payments      = eac_get_payment_report();
@@ -307,7 +307,7 @@ class ReportsUtil {
 	 * @since 1.0.0
 	 */
 	public static function get_purchases_summary() {
-		$summery       = [];
+		$summery       = array();
 		$total_expense = 0;
 		$date          = wp_date( 'M, y' );
 		$expenses      = eac_get_expense_report();
@@ -327,7 +327,7 @@ class ReportsUtil {
 	 * @since 1.0.0
 	 */
 	public static function get_profits_summary() {
-		$summery = [];
+		$summery = array();
 		$payment = eac_get_sales_summary();
 		$expense = eac_get_purchases_summary();
 
@@ -357,7 +357,7 @@ class ReportsUtil {
 		if ( $force || empty( $reports[ $year ] ) ) {
 			$transactions = $wpdb->get_results(
 				$wpdb->prepare(
-					"SELECT (t.amount*t.exchange_rate) amount, MONTH(t.date) AS month, YEAR(t.date) AS year, t.category_id
+					"SELECT (t.amount/t.exchange_rate) amount, MONTH(t.date) AS month, YEAR(t.date) AS year, t.category_id
 		FROM {$wpdb->prefix}ea_transactions AS t
 		LEFT JOIN {$wpdb->prefix}ea_transfers AS it ON t.id = it.payment_id
 		LEFT JOIN {$wpdb->prefix}ea_transfers AS et ON t.id = et.expense_id
@@ -391,7 +391,7 @@ class ReportsUtil {
 				$month_year  = wp_date( $date_format, strtotime( $trans_year . '-' . $month . '-01' ) );
 				// Total.
 				$data['total_amount'] += round( $amount, 2 );
-				$data['total_count'] ++;
+				++$data['total_count'];
 
 				// months.
 				if ( ! isset( $data['months'][ $month_year ] ) ) {
@@ -444,7 +444,7 @@ class ReportsUtil {
 		if ( $force || ! isset( $reports[ $year ] ) ) {
 			$transactions = $wpdb->get_results(
 				$wpdb->prepare(
-					"SELECT (t.amount*t.exchange_rate) amount, MONTH(t.date) AS month, YEAR(t.date) AS year, t.category_id
+					"SELECT (t.amount/t.exchange_rate) amount, MONTH(t.date) AS month, YEAR(t.date) AS year, t.category_id
 		FROM {$wpdb->prefix}ea_transactions AS t
 		LEFT JOIN {$wpdb->prefix}ea_transfers AS it ON t.id = it.payment_id
 		LEFT JOIN {$wpdb->prefix}ea_transfers AS et ON t.id = et.expense_id
@@ -479,7 +479,7 @@ class ReportsUtil {
 
 				// Total.
 				$data['total_amount'] += round( $amount, 2 );
-				$data['total_count'] ++;
+				++$data['total_count'];
 
 				// months.
 				if ( ! isset( $data['months'][ $month_year ] ) ) {
@@ -531,7 +531,7 @@ class ReportsUtil {
 		if ( $force || ! isset( $reports[ $year ] ) ) {
 			$transactions = $wpdb->get_results(
 				$wpdb->prepare(
-					"SELECT (t.amount*t.exchange_rate) amount, MONTH(t.date) AS month, YEAR(t.date) AS year, t.category_id, t.type
+					"SELECT (t.amount/t.exchange_rate) amount, MONTH(t.date) AS month, YEAR(t.date) AS year, t.category_id, t.type
 		FROM {$wpdb->prefix}ea_transactions AS t
 		LEFT JOIN {$wpdb->prefix}ea_transfers AS it ON t.id = it.payment_id
 		LEFT JOIN {$wpdb->prefix}ea_transfers AS et ON t.id = et.expense_id
@@ -566,7 +566,7 @@ class ReportsUtil {
 				$month_year = wp_date( $date_format, strtotime( $trans_year . '-' . $month . '-01' ) );
 
 				// total count.
-				$data['total_count'] ++;
+				++$data['total_count'];
 
 				// Now based on type add or subtract.
 				if ( 'payment' === $type ) {
@@ -597,5 +597,4 @@ class ReportsUtil {
 
 		return $reports[ $year ];
 	}
-
 }

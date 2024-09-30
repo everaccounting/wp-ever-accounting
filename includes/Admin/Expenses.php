@@ -51,11 +51,14 @@ class Expenses {
 		$screen     = get_current_screen();
 		$list_table = new ListTables\Expenses();
 		$list_table->prepare_items();
-		$screen->add_option( 'per_page', array(
-			'label'   => __( 'Number of items per page:', 'wp-ever-accounting' ),
-			'default' => 20,
-			'option'  => "eac_expenses_per_page",
-		) );
+		$screen->add_option(
+			'per_page',
+			array(
+				'label'   => __( 'Number of items per page:', 'wp-ever-accounting' ),
+				'default' => 20,
+				'option'  => 'eac_expenses_per_page',
+			)
+		);
 	}
 
 	/**
@@ -111,8 +114,10 @@ class Expenses {
 			'date'           => isset( $_POST['date'] ) ? sanitize_text_field( wp_unslash( $_POST['date'] ) ) : '',
 			'account_id'     => isset( $_POST['account_id'] ) ? absint( wp_unslash( $_POST['account_id'] ) ) : 0,
 			'amount'         => isset( $_POST['amount'] ) ? floatval( wp_unslash( $_POST['amount'] ) ) : 0,
+			'exchange_rate'  => isset( $_POST['exchange_rate'] ) ? floatval( wp_unslash( $_POST['exchange_rate'] ) ) : 1,
 			'category_id'    => isset( $_POST['category_id'] ) ? absint( wp_unslash( $_POST['category_id'] ) ) : 0,
 			'contact_id'     => isset( $_POST['contact_id'] ) ? absint( wp_unslash( $_POST['contact_id'] ) ) : 0,
+			'attachment_id'  => isset( $_POST['attachment_id'] ) ? absint( wp_unslash( $_POST['attachment_id'] ) ) : 0,
 			'payment_method' => isset( $_POST['payment_method'] ) ? sanitize_text_field( wp_unslash( $_POST['payment_method'] ) ) : '',
 			'invoice_id'     => isset( $_POST['invoice_id'] ) ? absint( wp_unslash( $_POST['invoice_id'] ) ) : 0,
 			'reference'      => isset( $_POST['reference'] ) ? sanitize_text_field( wp_unslash( $_POST['reference'] ) ) : '',
@@ -124,7 +129,13 @@ class Expenses {
 			EAC()->flash->error( $expense->get_error_message() );
 		} else {
 			EAC()->flash->success( __( 'Expense saved successfully.', 'wp-ever-accounting' ) );
-			$referer = add_query_arg( [ 'action' => 'edit', 'id' => $expense->id ], $referer );
+			$referer = add_query_arg(
+				array(
+					'action' => 'edit',
+					'id'     => $expense->id,
+				),
+				$referer
+			);
 			$referer = remove_query_arg( array( 'add' ), $referer );
 		}
 

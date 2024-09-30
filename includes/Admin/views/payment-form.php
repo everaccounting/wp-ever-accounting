@@ -79,6 +79,7 @@ defined( 'ABSPATH' ) || exit;
 							'class'       => 'eac_exchange_rate',
 							'prefix'      => '1 ' . eac_base_currency() . ' = ',
 							'suffix'      => $payment->currency,
+							'attr-step'   => 'any',
 						)
 					);
 

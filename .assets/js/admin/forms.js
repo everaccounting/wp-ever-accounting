@@ -8,9 +8,9 @@ const {Money} = eac.money;
 	 * ========================================================================
 	 */
 
-	$('#eac-payment-form').eac_form({
+	$('#eac-payment-form,#eac-expense-form').eac_form({
 		events: {
-			'ready': 'handleExchangeRate',
+			// 'ready': 'handleExchangeRate',
 			'change :input[name="account_id"]': 'handleExchangeRate',
 		},
 		handleExchangeRate: function () {

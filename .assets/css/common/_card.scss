@@ -12,14 +12,11 @@
 	width: 100%;
 	border: 1px solid #e1e2e2;
 
-	[class*=eac] {
-		box-sizing: inherit;
-	}
-
 	img {
 		max-width: 100%;
 		height: auto;
 	}
+
 	h2, h3 {
 		padding: 0;
 		margin: 0;
@@ -27,6 +24,7 @@
 		font-size: 14px;
 		font-weight: 600;
 	}
+
 	h2, h3, h4 {
 		color: inherit;
 	}
@@ -44,35 +42,24 @@
 	}
 
 	& > &__header, & > &__footer {
+		padding: 8px 12px;
 		display: flex;
 		flex-direction: row;
 		align-items: center;
 		justify-content: space-between;
-
-		h2, h3, p {
-			margin: 0;
-			padding: 0;
-		}
-
-		input, select, .select2, button {
-			margin-right: 5px;
-
-			&:last-child {
-				margin-right: 0;
-			}
-		}
+		gap: 5px;
 	}
 
-	& > &__header{
-		padding: 8px 12px;
+	& > &__header {
 		border-bottom: 1px solid #e1e2e2;
 	}
 
-	& > &__body{
-		padding: 12px;
+	& > &__footer {
+		border-top: 1px solid #e1e2e2;
+	}
 
-		// anything first child of card body no margin top and
-		// anything last child of card body no margin bottom
+	& > &__body {
+		padding: 12px;
 
 		& > *:first-child {
 			margin-top: 0;
@@ -81,11 +68,6 @@
 		& > *:last-child {
 			margin-bottom: 0;
 		}
-	}
-
-	& > &__footer{
-		padding: 8px 12px;
-		border-top: 1px solid #e1e2e2;
 	}
 
 	// If card footer comes immediately after card header remove the border.
@@ -106,5 +88,4 @@
 		font-weight: 400;
 		color: #777;
 	}
-
 }
