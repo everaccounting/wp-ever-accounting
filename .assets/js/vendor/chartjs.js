@@ -1,1 +1,1 @@
-import 'chart.js/dist/chart.js';
+import 'chartjs/chart.js';

@@ -36,7 +36,6 @@ class Ajax {
 		$args = array(
 			'limit'    => $limit,
 			'page'     => $page,
-			'status'   => 'active',
 			'search'   => $term,
 			'no_count' => true,
 		);
@@ -87,8 +86,8 @@ class Ajax {
 				$total    = EAC()->payments->query( $args, true );
 				foreach ( $payments as $payment ) {
 					$results[] = array(
-						'id'   => $payment->get_id(),
-						'text' => $payment->get_amount(),
+						'id'   => $payment->id,
+						'text' => $payment->amount,
 					);
 				}
 				break;
@@ -98,8 +97,8 @@ class Ajax {
 				$total    = EAC()->expenses->query( $args, true );
 				foreach ( $expenses as $expense ) {
 					$results[] = array(
-						'id'   => $expense->get_id(),
-						'text' => $expense->get_amount(),
+						'id'   => $expense->id,
+						'text' => $expense->amount,
 					);
 				}
 				break;
@@ -132,22 +131,24 @@ class Ajax {
 				);
 				break;
 			case 'invoice':
-				$invoices = EAC()->invoices->query( $args );
-				$total    = EAC()->invoices->query( $args, true );
+				$args['status__not'] = 'paid';
+				$invoices            = EAC()->invoices->query( $args );
+				$total               = EAC()->invoices->query( $args, true );
 				foreach ( $invoices as $invoice ) {
 					$results[] = array(
-						'id'   => $invoice->get_id(),
-						'text' => $invoice->get_formatted_name(),
+						'id'   => $invoice->id,
+						'text' => $invoice->number,
 					);
 				}
 				break;
 			case 'bill':
-				$bills = EAC()->bills->query( $args );
-				$total = EAC()->bills->query( $args, true );
+				$args['status__not'] = 'paid';
+				$bills               = EAC()->bills->query( $args );
+				$total               = EAC()->bills->query( $args, true );
 				foreach ( $bills as $bill ) {
 					$results[] = array(
-						'id'   => $bill->get_id(),
-						'text' => $bill->get_bill_number(),
+						'id'   => $bill->id,
+						'text' => $bill->number,
 					);
 				}
 				break;

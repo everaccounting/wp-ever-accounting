@@ -10,13 +10,13 @@ defined( 'ABSPATH' ) || exit;
  * Handles requests to the /settings endpoints.
  *
  * @package EverAccounting\API
- * @since   3.0.0
+ * @since 2.0.0
  */
 class Settings extends Controller {
 	/**
 	 * Route base.
 	 *
-	 * @since 1.1.2
+	 * @since 2.0.0
 	 *
 	 * @var string
 	 */
@@ -25,7 +25,7 @@ class Settings extends Controller {
 	/**
 	 * Register routes.
 	 *
-	 * @since 3.0.0
+	 * @since 2.0.0
 	 */
 	public function register_routes() {
 		register_rest_route(
@@ -61,7 +61,7 @@ class Settings extends Controller {
 	 * @param \WP_REST_Request $request Request data.
 	 *
 	 * @return \WP_Error|\WP_REST_Response
-	 * @since  3.0.0
+	 * @since 2.0.0
 	 */
 	public function get_items( $request ) {
 		$groups = apply_filters( 'eac_settings_groups', array() );
@@ -121,7 +121,7 @@ class Settings extends Controller {
 	 * @param \WP_REST_Request $request Request object.
 	 *
 	 * @return \WP_REST_Response $response Response data.
-	 * @since  3.0.0
+	 * @since 2.0.0
 	 */
 	public function prepare_item_for_response( $item, $request ) {
 		$context = empty( $request['context'] ) ? 'view' : $request['context'];
@@ -142,7 +142,7 @@ class Settings extends Controller {
 	 * @param array $group Group.
 	 *
 	 * @return array
-	 * @since 3.0.0
+	 * @since 2.0.0
 	 */
 	public function filter_group( $group ) {
 		return array_intersect_key(
@@ -157,7 +157,7 @@ class Settings extends Controller {
 	 * @param string $key Key to check.
 	 *
 	 * @return boolean
-	 * @since  3.0.0
+	 * @since 2.0.0
 	 */
 	public function allowed_group_keys( $key ) {
 		return in_array( $key, array( 'id', 'label', 'description', 'parent_id', 'sub_groups' ) );
@@ -167,7 +167,7 @@ class Settings extends Controller {
 	 * Returns default settings for groups. null means the field is required.
 	 *
 	 * @return array
-	 * @since  3.0.0
+	 * @since 2.0.0
 	 */
 	protected function group_defaults() {
 		return array(
@@ -185,7 +185,7 @@ class Settings extends Controller {
 	 * @param \WP_REST_Request $request Full data about the request.
 	 *
 	 * @return \WP_Error|boolean
-	 * @since  3.0.0
+	 * @since 2.0.0
 	 */
 	public function get_items_permissions_check( $request ) {
 		if ( ! current_user_can( 'settings', 'read' ) ) {
@@ -199,7 +199,7 @@ class Settings extends Controller {
 	 * Get the groups schema, conforming to JSON Schema.
 	 *
 	 * @return array
-	 * @since  3.0.0
+	 * @since 2.0.0
 	 */
 	public function get_item_schema() {
 		$schema = array(

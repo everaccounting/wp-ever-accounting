@@ -7,7 +7,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Class Controller
  *
- * @since   1.6.1
+ * @since 2.0.0
  * @package EverAccounting\API
  */
 class Controller extends \WP_REST_Controller {
@@ -29,7 +29,7 @@ class Controller extends \WP_REST_Controller {
 	/**
 	 * Get normalized rest base.
 	 *
-	 * @since 1.1.0
+	 * @since 2.0.0
 	 * @return string
 	 */
 	protected function get_normalized_rest_base() {
@@ -262,7 +262,7 @@ class Controller extends \WP_REST_Controller {
 	/**
 	 * Get the batch schema, conforming to JSON Schema.
 	 *
-	 * @since 1.1.0
+	 * @since 2.0.0
 	 * @return array
 	 */
 	public function get_public_batch_schema() {
@@ -304,7 +304,7 @@ class Controller extends \WP_REST_Controller {
 	 *
 	 * i.e Schema fields.
 	 *
-	 * @since 1.1.0
+	 * @since 2.0.0
 	 * @return array
 	 */
 	protected function get_schema_properties() {
@@ -329,7 +329,7 @@ class Controller extends \WP_REST_Controller {
 	 * @param array       $fields Array of fields.
 	 * @param string|null $context view, edit or embed.
 	 *
-	 * @since 1.1.0
+	 * @since 2.0.0
 	 * @return array
 	 */
 	protected function filter_response_fields_by_context( $fields, $context ) {
@@ -354,7 +354,7 @@ class Controller extends \WP_REST_Controller {
 	 * @param array $fields Array of available fields.
 	 * @param array $requested array of requested fields.
 	 *
-	 * @since 1.1.0
+	 * @since 2.0.0
 	 * @return array
 	 */
 	protected function filter_response_fields_by_array( $fields, $requested ) {
@@ -405,7 +405,7 @@ class Controller extends \WP_REST_Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.1.0
+	 * @since 2.0.0
 	 * @return array Fields to be included in the response.
 	 */
 	public function get_fields_for_response( $request ) {
@@ -437,7 +437,7 @@ class Controller extends \WP_REST_Controller {
 	 * @param array  $fields Requested fields.
 	 * @param string $prefix Prefix for the current field.
 	 *
-	 * @since 1.1.0
+	 * @since 2.0.0
 	 * @return array Fields to be included in the response.
 	 */
 	public function limit_object_to_requested_fields( $data, $fields, $prefix = '' ) {
@@ -485,7 +485,7 @@ class Controller extends \WP_REST_Controller {
 	 *
 	 * @see   rest_is_field_included()
 	 *
-	 * @since 1.1.0
+	 * @since 2.0.0
 	 * @return bool Whether to include the field or not.
 	 */
 	public function is_field_included( $field, $fields ) {
@@ -525,7 +525,7 @@ class Controller extends \WP_REST_Controller {
 	 *
 	 * @param string|null $date Date. Default null.
 	 *
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 * @return string|null ISO8601/RFC3339 formatted datetime.
 	 */
 	protected function prepare_date_response( $date = null ) {
@@ -540,7 +540,7 @@ class Controller extends \WP_REST_Controller {
 	/**
 	 * Retrieves the query params for the items' collection.
 	 *
-	 * @since 1.1.2
+	 * @since 2.0.0
 	 * @return array Collection parameters.
 	 */
 	public function get_collection_params() {
@@ -605,7 +605,7 @@ class Controller extends \WP_REST_Controller {
 	 * Get data from a WooCommerce API endpoint.
 	 * This method used to be part of the WooCommerce Legacy REST API.
 	 *
-	 * @since 3.0.0
+	 * @since 2.0.0
 	 *
 	 * @param string $endpoint Endpoint.
 	 * @param array  $params Params to pass with request.

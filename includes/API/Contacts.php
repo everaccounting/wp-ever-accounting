@@ -7,7 +7,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Class PaymentsController
  *
- * @since 0.0.1
+ * @since 2.0.0
  * @package EverAccounting\API
  */
 class Contacts extends Controller {
@@ -16,7 +16,7 @@ class Contacts extends Controller {
 	 * Retrieves the item's schema, conforming to JSON Schema.
 	 *
 	 * @return array Item schema data.
-	 * @since 1.1.2
+	 * @since 2.0.0
 	 */
 	public function get_item_schema() {
 		$schema = array(

@@ -9,14 +9,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Class Accounts
  *
- * @since 0.0.1
+ * @since 2.0.0
  * @package EverAccounting\API
  */
 class Accounts extends Controller {
 	/**
 	 * Route base.
 	 *
-	 * @since 1.1.2
+	 * @since 2.0.0
 	 *
 	 * @var string
 	 */
@@ -26,7 +26,7 @@ class Accounts extends Controller {
 	 * Registers the routes for the objects of the controller.
 	 *
 	 * @see register_rest_route()
-	 * @since 1.1.0
+	 * @since 2.0.0
 	 */
 	public function register_routes() {
 		register_rest_route(
@@ -89,7 +89,7 @@ class Accounts extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 * @return true|\WP_Error True, if the request has read access, WP_Error object otherwise.
 	 */
 	public function get_items_permissions_check( $request ) {
@@ -109,7 +109,7 @@ class Accounts extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 * @return true|\WP_Error True, if the request has read access, WP_Error object otherwise.
 	 */
 	public function create_item_permissions_check( $request ) {
@@ -129,7 +129,7 @@ class Accounts extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 * @return true|\WP_Error True, if the request has read access, WP_Error object otherwise.
 	 */
 	public function get_item_permissions_check( $request ) {
@@ -151,7 +151,7 @@ class Accounts extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 * @return true|\WP_Error True, if the request has read access, WP_Error object otherwise.
 	 */
 	public function update_item_permissions_check( $request ) {
@@ -173,7 +173,7 @@ class Accounts extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 * @return true|\WP_Error True, if the request has read access, WP_Error object otherwise.
 	 */
 	public function delete_item_permissions_check( $request ) {
@@ -195,7 +195,7 @@ class Accounts extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function get_items( $request ) {
@@ -215,12 +215,11 @@ class Accounts extends Controller {
 		 * @param array            $args Key value array of query var to query value.
 		 * @param \WP_REST_Request $request The request used.
 		 *
-		 * @since 1.2.1
+		 * @since 2.0.0
 		 */
 		$args      = apply_filters( 'eac_rest_account_query', $args, $request );
-		$accounts  = EAC()->accounts->gets( $args );
-		$total     = EAC()->accounts->gets( $args, true );
-		$page      = isset( $request['page'] ) ? absint( $request['page'] ) : 1;
+		$accounts  = EAC()->accounts->query( $args );
+		$total     = EAC()->accounts->query( $args, true );
 		$max_pages = ceil( $total / (int) $args['per_page'] );
 
 		$results = array();
@@ -234,26 +233,6 @@ class Accounts extends Controller {
 		$response->header( 'X-WP-Total', (int) $total );
 		$response->header( 'X-WP-TotalPages', (int) $max_pages );
 
-		$request_params = $request->get_query_params();
-		$base           = add_query_arg( urlencode_deep( $request_params ), rest_url( sprintf( '%s/%s', $this->namespace, $this->rest_base ) ) );
-
-		if ( $page > 1 ) {
-			$prev_page = $page - 1;
-
-			if ( $prev_page > $max_pages ) {
-				$prev_page = $max_pages;
-			}
-
-			$prev_link = add_query_arg( 'page', $prev_page, $base );
-			$response->link_header( 'prev', $prev_link );
-		}
-		if ( $max_pages > $page ) {
-			$next_page = $page + 1;
-			$next_link = add_query_arg( 'page', $next_page, $base );
-
-			$response->link_header( 'next', $next_link );
-		}
-
 		return $response;
 	}
 
@@ -262,7 +241,7 @@ class Accounts extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function get_item( $request ) {
@@ -277,7 +256,7 @@ class Accounts extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function create_item( $request ) {
@@ -294,7 +273,7 @@ class Accounts extends Controller {
 			return $data;
 		}
 
-		$account = eac_insert_account( $data );
+		$account = EAC()->accounts->insert( $data );
 		if ( is_wp_error( $account ) ) {
 			return $account;
 		}
@@ -303,7 +282,6 @@ class Accounts extends Controller {
 		$response = rest_ensure_response( $response );
 
 		$response->set_status( 201 );
-		$response->header( 'Location', rest_url( sprintf( '%s/%s/%d', $this->namespace, $this->rest_base, $account->id ) ) );
 
 		return $response;
 	}
@@ -313,7 +291,7 @@ class Accounts extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function update_item( $request ) {
@@ -339,7 +317,7 @@ class Accounts extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function delete_item( $request ) {
@@ -347,7 +325,7 @@ class Accounts extends Controller {
 		$request->set_param( 'context', 'edit' );
 		$data = $this->prepare_item_for_response( $account, $request );
 
-		if ( ! eac_delete_account( $account->id ) ) {
+		if ( ! $account->delete() ) {
 			return new \WP_Error(
 				'rest_cannot_delete',
 				__( 'The account cannot be deleted.', 'wp-ever-accounting' ),
@@ -372,7 +350,7 @@ class Accounts extends Controller {
 	 * @param Account          $item Account object.
 	 * @param \WP_REST_Request $request Request object.
 	 *
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function prepare_item_for_response( $item, $request ) {
@@ -396,7 +374,6 @@ class Accounts extends Controller {
 		$data     = $this->add_additional_fields_to_object( $data, $request );
 		$data     = $this->filter_response_by_context( $data, $context );
 		$response = rest_ensure_response( $data );
-		$response->add_links( $this->prepare_links( $item, $request ) );
 
 		/**
 		 * Filter account data returned from the REST API.
@@ -413,7 +390,7 @@ class Accounts extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Request object.
 	 *
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 * @return array|\WP_Error Account object or WP_Error.
 	 */
 	protected function prepare_item_for_database( $request ) {
@@ -442,28 +419,9 @@ class Accounts extends Controller {
 	}
 
 	/**
-	 * Prepare links for the request.
-	 *
-	 * @param Account          $item Object data.
-	 * @param \WP_REST_Request $request Request account.
-	 *
-	 * @return array Links for the given account.
-	 */
-	protected function prepare_links( $item, $request ) {
-		return array(
-			'self'       => array(
-				'href' => rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $item->id ) ),
-			),
-			'collection' => array(
-				'href' => rest_url( sprintf( '/%s/%s', $this->namespace, $this->rest_base ) ),
-			),
-		);
-	}
-
-	/**
 	 * Retrieves the account's schema, conforming to JSON Schema.
 	 *
-	 * @since 1.1.2
+	 * @since 2.0.0
 	 * @return array Account schema data.
 	 */
 	public function get_item_schema() {
@@ -479,6 +437,15 @@ class Accounts extends Controller {
 					'readonly'    => true,
 					'arg_options' => array(
 						'sanitize_callback' => 'intval',
+					),
+				),
+				'balance'      => array(
+					'description' => __( 'Account balance.', 'wp-ever-accounting' ),
+					'type'        => 'number',
+					'context'     => array( 'view', 'edit' ),
+					'readonly'    => true,
+					'arg_options' => array(
+						'sanitize_callback' => 'floatval',
 					),
 				),
 				'name'         => array(
@@ -537,20 +504,6 @@ class Accounts extends Controller {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
-				'thumbnail_id' => array(
-					'description' => __( 'Thumbnail ID for the account.', 'wp-ever-accounting' ),
-					'type'        => 'integer',
-					'context'     => array( 'view', 'edit' ),
-					'readonly'    => true,
-				),
-				'status'       => array(
-					'description' => __( 'Account status.', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'enum'        => array( 'active', 'inactive' ),
-					'context'     => array( 'view', 'edit' ),
-					'required'    => true,
-					'default'     => 'active',
-				),
 				'updated_at'   => array(
 					'description' => __( "The date the account was last updated, in the site's timezone.", 'wp-ever-accounting' ),
 					'type'        => 'date-time',
@@ -571,7 +524,7 @@ class Accounts extends Controller {
 		 *
 		 * @param array $schema Account schema data.
 		 *
-		 * @since 1.2.1
+		 * @since 2.0.0
 		 */
 		$schema = apply_filters( 'eac_rest_account_schema', $schema );
 

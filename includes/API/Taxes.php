@@ -9,14 +9,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Class Taxes
  *
- * @since 0.0.1
+ * @since 2.0.0
  * @package EverAccounting\API
  */
 class Taxes extends Controller {
 	/**
 	 * Route base.
 	 *
-	 * @since 1.1.2
+	 * @since 2.0.0
 	 *
 	 * @var string
 	 */
@@ -26,7 +26,7 @@ class Taxes extends Controller {
 	 * Registers the routes for the objects of the controller.
 	 *
 	 * @see register_rest_route()
-	 * @since 1.1.0
+	 * @since 2.0.0
 	 */
 	public function register_routes() {
 		register_rest_route(
@@ -89,8 +89,8 @@ class Taxes extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
+	 * @since 2.0.0
 	 * @return true|\WP_Error True if the request has read access, WP_Error object otherwise.
-	 * @since 1.2.1
 	 */
 	public function get_items_permissions_check( $request ) {
 		if ( ! current_user_can( 'eac_manage_tax' ) ) {
@@ -109,8 +109,8 @@ class Taxes extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
+	 * @since 2.0.0
 	 * @return true|\WP_Error True if the request has read access, WP_Error object otherwise.
-	 * @since 1.2.1
 	 */
 	public function create_item_permissions_check( $request ) {
 		if ( ! current_user_can( 'eac_manage_tax' ) ) {
@@ -129,11 +129,11 @@ class Taxes extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
+	 * @since 2.0.0
 	 * @return true|\WP_Error True if the request has read access, WP_Error object otherwise.
-	 * @since 1.2.1
 	 */
 	public function get_item_permissions_check( $request ) {
-		$tax = eac_get_tax( $request['id'] );
+		$tax = EAC()->taxes->get( $request['id'] );
 
 		if ( empty( $tax ) || ! current_user_can( 'eac_manage_tax' ) ) {
 			return new \WP_Error(
@@ -151,11 +151,11 @@ class Taxes extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
+	 * @since 2.0.0
 	 * @return true|\WP_Error True if the request has read access, WP_Error object otherwise.
-	 * @since 1.2.1
 	 */
 	public function update_item_permissions_check( $request ) {
-		$tax = eac_get_tax( $request['id'] );
+		$tax = EAC()->taxes->get( $request['id'] );
 
 		if ( empty( $tax ) || ! current_user_can( 'eac_manage_tax' ) ) {
 			return new \WP_Error(
@@ -173,11 +173,11 @@ class Taxes extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
+	 * @since 2.0.0
 	 * @return true|\WP_Error True if the request has read access, WP_Error object otherwise.
-	 * @since 1.2.1
 	 */
 	public function delete_item_permissions_check( $request ) {
-		$tax = eac_get_tax( $request['id'] );
+		$tax = EAC()->taxes->get( $request['id'] );
 
 		if ( empty( $tax ) || ! current_user_can( 'eac_manage_tax' ) ) {
 			return new \WP_Error(
@@ -195,8 +195,8 @@ class Taxes extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
+	 * @since 2.0.0
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
-	 * @since 1.2.1
 	 */
 	public function get_items( $request ) {
 		$params = $this->get_collection_params();
@@ -212,16 +212,15 @@ class Taxes extends Controller {
 		 *
 		 * Enables adding extra arguments or setting defaults for a tax request.
 		 *
-		 * @param array $args Key value array of query var to query value.
+		 * @param array            $args Key value array of query var to query value.
 		 * @param \WP_REST_Request $request The request used.
 		 *
-		 * @since 1.2.1
+		 * @since 2.0.0
 		 */
 		$args = apply_filters( 'eac_rest_tax_query', $args, $request );
 
-		$taxes     = eac_get_taxes( $args );
-		$total     = eac_get_taxes( $args, true );
-		$page      = isset( $request['page'] ) ? absint( $request['page'] ) : 1;
+		$taxes     = EAC()->taxes->query( $args );
+		$total     = EAC()->taxes->query( $args, true );
 		$max_pages = ceil( $total / (int) $args['per_page'] );
 
 		$results = array();
@@ -235,26 +234,6 @@ class Taxes extends Controller {
 		$response->header( 'X-WP-Total', (int) $total );
 		$response->header( 'X-WP-TotalPages', (int) $max_pages );
 
-		$request_params = $request->get_query_params();
-		$base           = add_query_arg( urlencode_deep( $request_params ), rest_url( sprintf( '%s/%s', $this->namespace, $this->rest_base ) ) );
-
-		if ( $page > 1 ) {
-			$prev_page = $page - 1;
-
-			if ( $prev_page > $max_pages ) {
-				$prev_page = $max_pages;
-			}
-
-			$prev_link = add_query_arg( 'page', $prev_page, $base );
-			$response->link_header( 'prev', $prev_link );
-		}
-		if ( $max_pages > $page ) {
-			$next_page = $page + 1;
-			$next_link = add_query_arg( 'page', $next_page, $base );
-
-			$response->link_header( 'next', $next_link );
-		}
-
 		return $response;
 	}
 
@@ -263,12 +242,12 @@ class Taxes extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
+	 * @since 2.0.0
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
-	 * @since 1.2.1
 	 */
 	public function get_item( $request ) {
-		$tax = eac_get_tax( $request['id'] );
-		$data     = $this->prepare_item_for_response( $tax, $request );
+		$tax  = EAC()->taxes->get( $request['id'] );
+		$data = $this->prepare_item_for_response( $tax, $request );
 
 		return rest_ensure_response( $data );
 	}
@@ -278,8 +257,8 @@ class Taxes extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
+	 * @since 2.0.0
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
-	 * @since 1.2.1
 	 */
 	public function create_item( $request ) {
 		if ( ! empty( $request['id'] ) ) {
@@ -295,7 +274,7 @@ class Taxes extends Controller {
 			return $data;
 		}
 
-		$tax = eac_insert_tax( $data );
+		$tax = EAC()->taxes->insert( $data );
 		if ( is_wp_error( $tax ) ) {
 			return $tax;
 		}
@@ -307,7 +286,6 @@ class Taxes extends Controller {
 		$response->header( 'Location', rest_url( sprintf( '%s/%s/%d', $this->namespace, $this->rest_base, $tax->id ) ) );
 
 		return $response;
-
 	}
 
 	/**
@@ -315,12 +293,12 @@ class Taxes extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
+	 * @since 2.0.0
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
-	 * @since 1.2.1
 	 */
 	public function update_item( $request ) {
-		$tax = eac_get_tax( $request['id'] );
-		$data     = $this->prepare_item_for_database( $request );
+		$tax  = EAC()->taxes->get( $request['id'] );
+		$data = $this->prepare_item_for_database( $request );
 		if ( is_wp_error( $data ) ) {
 			return $data;
 		}
@@ -340,15 +318,15 @@ class Taxes extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
+	 * @since 2.0.0
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
-	 * @since 1.2.1
 	 */
 	public function delete_item( $request ) {
-		$tax = eac_get_tax( $request['id'] );
+		$tax = EAC()->taxes->get( $request['id'] );
 		$request->set_param( 'context', 'edit' );
 		$data = $this->prepare_item_for_response( $tax, $request );
 
-		if ( ! eac_delete_tax( $tax->id ) ) {
+		if ( ! $tax->delete() ) {
 			return new \WP_Error(
 				'rest_cannot_delete',
 				__( 'The tax cannot be deleted.', 'wp-ever-accounting' ),
@@ -370,14 +348,14 @@ class Taxes extends Controller {
 	/**
 	 * Prepares a single tax output for response.
 	 *
-	 * @param Tax         $item Tax object.
+	 * @param Tax              $item Tax object.
 	 * @param \WP_REST_Request $request Request object.
 	 *
+	 * @since 2.0.0
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
-	 * @since 1.2.1
 	 */
 	public function prepare_item_for_response( $item, $request ) {
-		$data = [];
+		$data = array();
 
 		foreach ( array_keys( $this->get_schema_properties() ) as $key ) {
 			switch ( $key ) {
@@ -397,14 +375,13 @@ class Taxes extends Controller {
 		$data     = $this->add_additional_fields_to_object( $data, $request );
 		$data     = $this->filter_response_by_context( $data, $context );
 		$response = rest_ensure_response( $data );
-		$response->add_links( $this->prepare_links( $item, $request ) );
 
 		/**
 		 * Filter tax data returned from the REST API.
 		 *
 		 * @param \WP_REST_Response $response The response object.
-		 * @param Tax $item Tax object used to create response.
-		 * @param \WP_REST_Request $request Request object.
+		 * @param Tax               $item Tax object used to create response.
+		 * @param \WP_REST_Request  $request Request object.
 		 */
 		return apply_filters( 'eac_rest_prepare_tax', $response, $item, $request );
 	}
@@ -414,13 +391,13 @@ class Taxes extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Request object.
 	 *
+	 * @since 2.0.0
 	 * @return array|\WP_Error Tax object or WP_Error.
-	 * @since 1.2.1
 	 */
 	protected function prepare_item_for_database( $request ) {
 		$schema    = $this->get_item_schema();
 		$data_keys = array_keys( array_filter( $schema['properties'], array( $this, 'filter_writable_props' ) ) );
-		$props     = [];
+		$props     = array();
 		// Handle all writable props.
 		foreach ( $data_keys as $key ) {
 			$value = $request[ $key ];
@@ -436,36 +413,17 @@ class Taxes extends Controller {
 		/**
 		 * Filters tax before it is inserted via the REST API.
 		 *
-		 * @param array $props Tax props.
+		 * @param array            $props Tax props.
 		 * @param \WP_REST_Request $request Request object.
 		 */
 		return apply_filters( 'eac_rest_pre_insert_tax', $props, $request );
 	}
 
 	/**
-	 * Prepare links for the request.
-	 *
-	 * @param Tax         $tax Object data.
-	 * @param \WP_REST_Request $request Request tax.
-	 *
-	 * @return array Links for the given tax.
-	 */
-	protected function prepare_links( $tax, $request ) {
-		return array(
-			'self'       => array(
-				'href' => rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $tax->id ) ),
-			),
-			'collection' => array(
-				'href' => rest_url( sprintf( '/%s/%s', $this->namespace, $this->rest_base ) ),
-			),
-		);
-	}
-
-	/**
 	 * Retrieves the item's schema, conforming to JSON Schema.
 	 *
+	 * @since 2.0.0
 	 * @return array Item schema data.
-	 * @since 1.1.2
 	 */
 	public function get_item_schema() {
 		$schema = array(
@@ -473,7 +431,7 @@ class Taxes extends Controller {
 			'title'      => __( 'Tax', 'wp-ever-accounting' ),
 			'type'       => 'object',
 			'properties' => array(
-				'id'          => array(
+				'id'             => array(
 					'description' => __( 'Unique identifier for the tax.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'embed', 'edit' ),
@@ -482,7 +440,7 @@ class Taxes extends Controller {
 						'sanitize_callback' => 'intval',
 					),
 				),
-				'name'        => array(
+				'name'           => array(
 					'description' => __( 'Tax name.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'edit' ),
@@ -494,39 +452,31 @@ class Taxes extends Controller {
 					'context'     => array( 'view' ),
 					'readonly'    => true,
 				),
-				'rate'        => array(
+				'rate'           => array(
 					'description' => __( 'Tax rate.', 'wp-ever-accounting' ),
 					'type'        => 'number',
 					'context'     => array( 'view', 'edit' ),
 					'required'    => true,
 				),
-				'compound' => array(
+				'compound'       => array(
 					'description' => __( 'Whether the tax is compound.', 'wp-ever-accounting' ),
 					'type'        => 'boolean',
 					'context'     => array( 'view', 'edit' ),
 					'required'    => true,
 					'default'     => false,
 				),
-				'description' => array(
+				'description'    => array(
 					'description' => __( 'Tax description.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'edit' ),
 				),
-				'status'      => array(
-					'description' => __( 'Tax status.', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'enum'        => array( 'active', 'inactive'),
-					'context'     => array( 'view', 'edit' ),
-					'required'    => true,
-					'default'     => 'active',
-				),
-				'updated_at'  => array(
+				'updated_at'     => array(
 					'description' => __( "The date the tax was last updated, in the site's timezone.", 'wp-ever-accounting' ),
 					'type'        => 'date-time',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
-				'created_at'  => array(
+				'created_at'     => array(
 					'description' => __( "The date the tax was created, in the site's timezone.", 'wp-ever-accounting' ),
 					'type'        => 'date-time',
 					'context'     => array( 'view', 'edit' ),
@@ -540,11 +490,10 @@ class Taxes extends Controller {
 		 *
 		 * @param array $schema Item schema data.
 		 *
-		 * @since 1.2.1
+		 * @since 2.0.0
 		 */
 		$schema = apply_filters( 'eac_rest_tax_item_schema', $schema );
 
 		return $this->add_additional_fields_schema( $schema );
 	}
-
 }

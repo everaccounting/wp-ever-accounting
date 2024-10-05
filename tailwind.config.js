@@ -1,15 +1,18 @@
-/** @type {import('tailwindcss').Config} */
-const {join} = require('path');
+/**
+ * External dependencies
+ */
+const { join } = require( 'path' );
+
 module.exports = {
-	prefix: 'tw-',
+	prefix: 'eac-',
+	content: [
+		join( __dirname, 'includes/Admin/views/*.php' ),
+		join( __dirname, 'templates/**/*.php' ),
+		join( __dirname, 'packages/**/*.js' ),
+	],
 	corePlugins: {
 		preflight: false,
 	},
-	content: [
-		join(__dirname, 'includes/Admin/views/*.php'),
-		join(__dirname, 'templates/**/*.php'),
-	],
-	media: false,
 	theme: {
 		extend: {
 			fontFamily: {
@@ -32,5 +35,4 @@ module.exports = {
 			},
 		},
 	},
-	plugins: [],
 };

@@ -36,4 +36,13 @@
 		</properties>
 	</rule>
 
+	<!-- Enable custom_capabilities -->
+	<rule ref="WordPress.WP.CapitalPDangit">
+		<properties>
+			<property name="strings" type="array">
+				<element value="EverAccounting"/>
+			</property>
+		</properties>
+	</rule>
+
 </ruleset>

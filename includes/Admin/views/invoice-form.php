@@ -19,7 +19,7 @@ foreach ( $invoice->items as $item ) {
 	$data['items'][] = $_item;
 }
 wp_add_inline_script(
-	'eac-admin-sales',
+	'eac-admin-forms',
 	'var eac_invoice_vars = ' . wp_json_encode( $data ) . ';',
 	'before'
 );

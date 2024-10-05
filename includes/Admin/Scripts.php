@@ -17,6 +17,7 @@ class Scripts {
 	public function __construct() {
 		add_action( 'admin_enqueue_scripts', array( $this, 'register_scripts' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'client_scripts' ) );
 	}
 
 	/**
@@ -34,8 +35,8 @@ class Scripts {
 		EAC()->scripts->register_script( 'eac-blockui', 'js/blockui.js', array( 'jquery' ), true );
 
 		// Packages.
-		EAC()->scripts->register_script( 'eac-money', 'packages/money.js' );
-		EAC()->scripts->register_script( 'eac-api', 'packages/api.js', array( 'wp-api', 'wp-backbone' ), true );
+		EAC()->scripts->register_script( 'eac-money', 'client/money.js' );
+		EAC()->scripts->register_script( 'eac-api', 'client/api.js', array( 'wp-api', 'wp-backbone' ), true );
 
 		// Plugins.
 		EAC()->scripts->register_script( 'eac-modal', 'js/modal.js', array( 'jquery' ), true );
@@ -89,9 +90,9 @@ class Scripts {
 		);
 
 		// Payments page.
-//		if ( EAC()->get( Menus::class )->page === 'sales' ) {
-//			EAC()->scripts->enqueue_script( 'eac-admin-sales' );
-//		}
+		if ( EAC()->get( Menus::class )->page === 'sales' ) {
+			EAC()->scripts->enqueue_script( 'eac-admin-sales' );
+		}
 
 		// if settings page.
 		if ( 'ever-accounting_page_eac-settings' === $hook ) {
@@ -102,5 +103,24 @@ class Scripts {
 		if ( 'toplevel_page_ever-accounting' === $hook || 'ever-accounting_page_eac-reports' === $hook ) {
 			EAC()->scripts->enqueue_script( 'eac-chartjs' );
 		}
+	}
+
+	/**
+	 * Enqueue client scripts.
+	 *
+	 * @param string $hook The current admin page.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public function client_scripts( $hook ) {
+		EAC()->scripts->enqueue_script( 'eac-components', 'client/components.js' );
+		EAC()->scripts->enqueue_style( 'eac-components', 'client/components.css' );
+
+		EAC()->scripts->register_script( 'eac-tools', 'client/admin-tools.js' );
+		EAC()->scripts->register_style( 'eac-tools', 'client/admin-tools.css', array( 'wp-components' ) );
+
+		wp_enqueue_script( 'eac-tools' );
+		wp_enqueue_style( 'eac-tools' );
 	}
 }

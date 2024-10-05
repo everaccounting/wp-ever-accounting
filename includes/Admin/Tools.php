@@ -17,6 +17,7 @@ class Tools {
 	 */
 	public function __construct() {
 		add_filter( 'eac_tools_page_tabs', array( __CLASS__, 'register_tabs' ) );
+		add_action( 'eac_tools_page_import', array( __CLASS__, 'import_tab' ) );
 	}
 
 	/**
@@ -33,5 +34,16 @@ class Tools {
 		$tabs['export'] = __( 'Export', 'ever-accounting' );
 
 		return $tabs;
+	}
+
+	/**
+	 * Import tab.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
+	 */
+	public static function import_tab() {
+		echo '<div id="eac-app"></div>';
 	}
 }

@@ -9,14 +9,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Class Customers
  *
- * @since 0.0.1
+ * @since 2.0.0
  * @package EverAccounting\API
  */
 class Customers extends Contacts {
 	/**
 	 * Route base.
 	 *
-	 * @since 1.1.2
+	 * @since 2.0.0
 	 *
 	 * @var string
 	 */
@@ -26,7 +26,7 @@ class Customers extends Contacts {
 	 * Registers the routes for the objects of the controller.
 	 *
 	 * @see register_rest_route()
-	 * @since 1.1.0
+	 * @since 2.0.0
 	 */
 	public function register_routes() {
 		register_rest_route(
@@ -89,7 +89,7 @@ class Customers extends Contacts {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 * @return true|\WP_Error True, if the request has read access, WP_Error object otherwise.
 	 */
 	public function get_items_permissions_check( $request ) {
@@ -109,7 +109,7 @@ class Customers extends Contacts {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 * @return true|\WP_Error True, if the request has read access, WP_Error object otherwise.
 	 */
 	public function create_item_permissions_check( $request ) {
@@ -129,7 +129,7 @@ class Customers extends Contacts {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 * @return true|\WP_Error True, if the request has read access, WP_Error object otherwise.
 	 */
 	public function get_item_permissions_check( $request ) {
@@ -151,7 +151,7 @@ class Customers extends Contacts {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 * @return true|\WP_Error True, if the request has read access, WP_Error object otherwise.
 	 */
 	public function update_item_permissions_check( $request ) {
@@ -173,7 +173,7 @@ class Customers extends Contacts {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 * @return true|\WP_Error True, if the request has read access, WP_Error object otherwise.
 	 */
 	public function delete_item_permissions_check( $request ) {
@@ -195,7 +195,7 @@ class Customers extends Contacts {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function get_items( $request ) {
@@ -215,13 +215,12 @@ class Customers extends Contacts {
 		 * @param array            $args Key value array of query var to query value.
 		 * @param \WP_REST_Request $request The request used.
 		 *
-		 * @since 1.2.1
+		 * @since 2.0.0
 		 */
 		$args = apply_filters( 'eac_rest_customer_query', $args, $request );
 
 		$customers = EAC()->customers->query( $args );
 		$total     = EAC()->customers->query( $args, true );
-		$page      = isset( $request['page'] ) ? absint( $request['page'] ) : 1;
 		$max_pages = ceil( $total / (int) $args['per_page'] );
 
 		$results = array();
@@ -235,26 +234,6 @@ class Customers extends Contacts {
 		$response->header( 'X-WP-Total', (int) $total );
 		$response->header( 'X-WP-TotalPages', (int) $max_pages );
 
-		$request_params = $request->get_query_params();
-		$base           = add_query_arg( urlencode_deep( $request_params ), rest_url( sprintf( '%s/%s', $this->namespace, $this->rest_base ) ) );
-
-		if ( $page > 1 ) {
-			$prev_page = $page - 1;
-
-			if ( $prev_page > $max_pages ) {
-				$prev_page = $max_pages;
-			}
-
-			$prev_link = add_query_arg( 'page', $prev_page, $base );
-			$response->link_header( 'prev', $prev_link );
-		}
-		if ( $max_pages > $page ) {
-			$next_page = $page + 1;
-			$next_link = add_query_arg( 'page', $next_page, $base );
-
-			$response->link_header( 'next', $next_link );
-		}
-
 		return $response;
 	}
 
@@ -263,7 +242,7 @@ class Customers extends Contacts {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function get_item( $request ) {
@@ -278,7 +257,7 @@ class Customers extends Contacts {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function create_item( $request ) {
@@ -304,7 +283,6 @@ class Customers extends Contacts {
 		$response = rest_ensure_response( $response );
 
 		$response->set_status( 201 );
-		$response->header( 'Location', rest_url( sprintf( '%s/%s/%d', $this->namespace, $this->rest_base, $customer->id ) ) );
 
 		return $response;
 	}
@@ -314,7 +292,7 @@ class Customers extends Contacts {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function update_item( $request ) {
@@ -340,7 +318,7 @@ class Customers extends Contacts {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function delete_item( $request ) {
@@ -373,7 +351,7 @@ class Customers extends Contacts {
 	 * @param customer         $item customer object.
 	 * @param \WP_REST_Request $request Request object.
 	 *
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function prepare_item_for_response( $item, $request ) {
@@ -397,7 +375,6 @@ class Customers extends Contacts {
 		$data     = $this->add_additional_fields_to_object( $data, $request );
 		$data     = $this->filter_response_by_context( $data, $context );
 		$response = rest_ensure_response( $data );
-		$response->add_links( $this->prepare_links( $item, $request ) );
 
 		/**
 		 * Filter customer data returned from the REST API.
@@ -415,7 +392,7 @@ class Customers extends Contacts {
 	 * @param \WP_REST_Request $request Request object.
 	 *
 	 * @return array|\WP_Error Customer object or WP_Error.
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 */
 	protected function prepare_item_for_database( $request ) {
 		$schema    = $this->get_item_schema();
@@ -443,28 +420,9 @@ class Customers extends Contacts {
 	}
 
 	/**
-	 * Prepare links for the request.
-	 *
-	 * @param customer         $customer Object data.
-	 * @param \WP_REST_Request $request Request customer.
-	 *
-	 * @return array Links for the given customer.
-	 */
-	protected function prepare_links( $customer, $request ) {
-		return array(
-			'self'       => array(
-				'href' => rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $customer->id ) ),
-			),
-			'collection' => array(
-				'href' => rest_url( sprintf( '/%s/%s', $this->namespace, $this->rest_base ) ),
-			),
-		);
-	}
-
-	/**
 	 * Retrieves the item's schema, conforming to JSON Schema.
 	 *
-	 * @since 1.1.2
+	 * @since 2.0.0
 	 * @return array Item schema data.
 	 */
 	public function get_item_schema() {
@@ -475,7 +433,7 @@ class Customers extends Contacts {
 		 *
 		 * @param array $schema Item schema data.
 		 *
-		 * @since 1.2.1
+		 * @since 2.0.0
 		 */
 		$schema = apply_filters( 'eac_rest_customer_item_schema', $schema );
 

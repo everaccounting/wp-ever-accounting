@@ -1,13 +1,22 @@
-const defaults = require('./.bin/webpack');
-const glob = require("glob");
-const path = require("path");
+/**
+ * External dependencies
+ */
+const glob = require( 'glob' );
+/**
+ * Internal dependencies
+ */
+/**
+ * WordPress dependencies
+ */
+const { config, NAMESPACE } = require( './.bin/webpack.config' );
+const { dependencies } = require( './package.json' );
+const path = require( 'path' );
 
 module.exports = [
-	// Core scripts.
 	{
-		...defaults,
+		...config,
 		entry: {
-			...defaults.entry(),
+			...config.entry(),
 
 			// 3rd party libraries.
 			'js/chartjs': './.assets/js/vendor/chartjs.js',
@@ -20,8 +29,7 @@ module.exports = [
 			// Core plugins.
 			'js/form': './.assets/js/vendor/form.js',
 			'js/modal': './.assets/js/vendor/modal.js',
-			'js/visibility': './.assets/js/vendor/visibility.js',
-
+			// 'js/visibility': './.assets/js/vendor/visibility.js',
 
 			// Admin scripts.
 			'js/admin': './.assets/js/admin/admin.js',
@@ -29,31 +37,43 @@ module.exports = [
 			'js/admin-settings': './.assets/js/admin/settings.js',
 			'css/admin': './.assets/css/admin/admin.scss',
 			'css/admin-settings': './.assets/css/admin/settings.scss',
+
+			// Client scripts.
+			...glob.sync( './client/*/*/index.js' ).reduce( ( memo, file ) => {
+				const [ type, name ] = new RegExp( 'client/(.*)/(.*)/index.js' )
+					.exec( file )
+					.slice( 1 );
+				return {
+					...memo,
+					[ `client/${ type }-${ name }` ]: path.resolve( __dirname, file ),
+				};
+			}, {} ),
 		},
 	},
 	//Package scripts.
 	{
-		...defaults,
-		entry: glob.sync('./.assets/packages/*/src/index.js').reduce((memo, file) => {
-			const module = file.replace('.assets/packages/', '').replace('/src/index.js', '');
-			return {
-				...memo,
-				[`${module}`]: {
-					import: path.resolve(__dirname, file),
-					library: {
-						name: [
-							'eac',
-							module.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase())
-						],
-						type: 'window',
-					}
-				}
-			};
-		}, {}),
-
+		...config,
+		entry: Object.keys( dependencies )
+			.filter( ( dependency ) => dependency.startsWith( NAMESPACE ) )
+			.map( ( packageName ) => packageName.replace( NAMESPACE, '' ) )
+			.reduce( ( memo, packageName ) => {
+				const name = packageName.replace( /-([a-z])/g, ( _, letter ) =>
+					letter.toUpperCase()
+				);
+				return {
+					...memo,
+					[ packageName ]: {
+						import: `./packages/${ packageName }/src/index.js`,
+						library: {
+							name: [ 'eac', name ],
+							type: 'window',
+						},
+					},
+				};
+			}, {} ),
 		output: {
-			...defaults.output,
-			path: path.resolve(__dirname, 'assets/packages'),
-		}
-	}
-]
+			...config.output,
+			path: path.resolve( __dirname, 'assets/client' ),
+		},
+	},
+];

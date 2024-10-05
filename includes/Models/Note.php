@@ -102,7 +102,7 @@ class Note extends Model {
 	 * Save the object to the database.
 	 *
 	 * @since 1.0.0
-	 * @return \WP_Error|true True on success, WP_Error on failure.
+	 * @return \WP_Error|static WP_Error on failure, or the object on success.
 	 */
 	public function save() {
 		if ( ! $this->parent_id ) {

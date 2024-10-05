@@ -9,6 +9,7 @@ use EverAccounting\Controllers\Bills;
 use EverAccounting\Controllers\Accounts;
 use EverAccounting\Controllers\Expenses;
 use EverAccounting\Controllers\Invoices;
+use EverAccounting\Controllers\Notes;
 use EverAccounting\Controllers\Payments;
 use EverAccounting\Controllers\Taxes;
 use EverAccounting\Controllers\Vendors;
@@ -29,6 +30,7 @@ use EverAccounting\Controllers\Vendors;
  * @property Accounts   $accounts Accounts controller.
  * @property Categories $categories Categories controller.
  * @property Taxes      $taxes Taxes controller.
+ * @property Notes    $notes Notes controller.
  */
 class Plugin extends \ByteKit\Plugin {
 	/**
@@ -113,11 +115,13 @@ class Plugin extends \ByteKit\Plugin {
 		$this->services->add( 'customers', new Controllers\Customers() );
 		$this->services->add( 'categories', new Controllers\Categories() );
 		$this->services->add( 'taxes', new Controllers\Taxes() );
+		$this->services->add( 'notes', new Controllers\Notes() );
 
-		$this->services->add( 'currencies', new Handlers\Currencies() );
-		$this->services->add( 'transactions', new Handlers\Transactions() );
-		$this->services->add( 'documents', new Handlers\Documents() );
-		$this->services->add( 'shortcodes', new Handlers\Shortcodes() );
+		$this->services->add( new Handlers\Rewrites() );
+		$this->services->add( new Handlers\Currencies() );
+		$this->services->add( new Handlers\Transactions() );
+		$this->services->add( new Handlers\Documents() );
+		$this->services->add( new Handlers\Shortcodes() );
 
 		if ( is_admin() ) {
 			$this->services->add( Admin\Admin::class );
@@ -179,11 +183,14 @@ class Plugin extends \ByteKit\Plugin {
 				'EverAccounting\API\Items',
 				'EverAccounting\API\Taxes',
 				'EverAccounting\API\Categories',
-//				'EverAccounting\API\Currencies',
+				'EverAccounting\API\Currencies',
 				'EverAccounting\API\Customers',
 				'EverAccounting\API\Vendors',
 				'EverAccounting\API\Customers',
 				'EverAccounting\API\Accounts',
+				'EverAccounting\API\Notes',
+				'EverAccounting\API\Expenses',
+				'EverAccounting\API\Payments',
 				'EverAccounting\API\Utilities',
 			)
 		);

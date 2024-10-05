@@ -19,7 +19,7 @@ const eslintConfig = {
 		'import/no-unresolved': [
 			2,
 			{
-				ignore: [ '^@wordpress/', '^lodash-es', '^react', '^react-dom', '^~/' ],
+				ignore: [ '^@wordpress/', '^lodash-es', '^lodash', '^react', '^react-dom', '^~/' ],
 			},
 		],
 		'no-console': 0,
@@ -33,7 +33,7 @@ const eslintConfig = {
 		module: true,
 		process: true,
 		window: true,
-		eac_admin_vars: true,
+		eacAssetData: true,
 	},
 };
 

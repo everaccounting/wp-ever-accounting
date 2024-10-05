@@ -14,7 +14,6 @@ defined( 'ABSPATH' ) || exit;
 require_once __DIR__ . '/Functions/formatters.php';
 require_once __DIR__ . '/Functions/misc.php';
 require_once __DIR__ . '/Functions/reports.php';
-require_once __DIR__ . '/Functions/taxes.php';
 require_once __DIR__ . '/Functions/templates.php';
 require_once __DIR__ . '/Functions/updates.php';
 
@@ -117,24 +116,39 @@ function eac_decimal_separator( $currency = null ) {
  * @return array
  */
 function eac_get_currencies() {
-	$base_currency = eac_base_currency();
-	$currencies    = I18n::get_currencies();
+	$currencies     = array();
+	$iso_currencies = I18n::get_currencies();
+	$base_currency  = eac_base_currency();
+	$options        = get_option( 'eac_currencies', array() );
 
-	$currencies[ $base_currency ] = array_merge(
-		$currencies[ $base_currency ],
-		array(
-			'code'               => $base_currency,
-			'rate'               => 1,
-			'precision'          => get_option( 'eac_currency_precision', 2 ),
-			'position'           => get_option( 'eac_currency_position', 'before' ),
-			'thousand_separator' => get_option( 'eac_thousand_separator', ',' ),
-			'decimal_separator'  => get_option( 'eac_decimal_separator', '.' ),
-		)
+	// add base currency.
+	$currencies[ $base_currency ] = array(
+		'code'               => $base_currency,
+		'rate'               => 1,
+		'precision'          => get_option( 'eac_currency_precision', 2 ),
+		'position'           => get_option( 'eac_currency_position', 'before' ),
+		'thousand_separator' => get_option( 'eac_thousand_separator', ',' ),
+		'decimal_separator'  => get_option( 'eac_decimal_separator', '.' ),
+		'symbol'             => $iso_currencies[ $base_currency ]['symbol'],
+		'name'               => $iso_currencies[ $base_currency ]['name'],
+		'formatted_name'     => sprintf( '%s - %s', $base_currency, $iso_currencies[ $base_currency ]['name'] ),
 	);
 
-	// go though each currency and add a key formatted_name with the currency symbol.
-	foreach ( $currencies as $code => $currency ) {
-		$currencies[ $code ]['formatted_name'] = sprintf( '%s - %s', $code, $currency['name'] );
+	// add local currencies.
+	if ( ! empty( $options ) && is_array( $options ) ) {
+		foreach ( $options as $code => $currency ) {
+			$currencies[ $code ] = wp_parse_args(
+				array(
+					'rate'               => isset( $currency['rate'] ) ? (float) $currency['rate'] : 1,
+					'precision'          => isset( $currency['precision'] ) ? (int) $currency['precision'] : 2,
+					'position'           => isset( $currency['position'] ) ? $currency['position'] : 'before',
+					'thousand_separator' => isset( $currency['thousand_separator'] ) ? $currency['thousand_separator'] : ',',
+					'decimal_separator'  => isset( $currency['decimal_separator'] ) ? $currency['decimal_separator'] : '.',
+					'formatted_name'     => sprintf( '%s - %s', $code, $iso_currencies[ $code ]['name'] ),
+				),
+				$iso_currencies[ $code ],
+			);
+		}
 	}
 
 	return apply_filters( 'eac_currencies', $currencies );
@@ -150,13 +164,9 @@ function eac_get_currencies() {
  */
 function eac_get_exchange_rate( $currency = null ) {
 	$currency = strtoupper( $currency );
-	if ( empty( $currency ) || $currency === eac_base_currency() ) {
-		return 1;
-	}
-
 	$currencies = eac_get_currencies();
 
-	return isset( $currencies[ $currency ] ) ? $currencies[ $currency ]['exchange_rate'] : 1;
+	return isset( $currencies[ $currency ] ) && $currencies[ $currency ]['rate'] > 0 ? $currencies[ $currency ]['rate'] : 1;
 }
 
 /**

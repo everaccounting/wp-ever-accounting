@@ -40,6 +40,7 @@ class Installer {
 		add_action( 'init', array( $this, 'check_update' ), 5 );
 		add_action( 'eac_run_update_callback', array( $this, 'run_update_callback' ), 10, 2 );
 		add_action( 'eac_update_db_version', array( $this, 'update_db_version' ) );
+		add_action( 'eac_flush_rewrite_rules', 'flush_rewrite_rules' );
 	}
 
 	/**
@@ -157,7 +158,28 @@ class Installer {
 		self::create_roles();
 		self::save_settings();
 		EAC()->add_db_version();
+
+		// Set installation date.
 		add_option( 'eac_install_date', wp_date( 'U' ) );
+
+		// Force a flush of rewrite rules even if the corresponding hook isn't initialized yet.
+		if ( ! has_action( 'eac_flush_rewrite_rules' ) ) {
+			flush_rewrite_rules();
+		}
+
+		/**
+		 * Flush the rewrite rules after install or update.
+		 *
+		 * @since 2.0.0
+		 */
+		do_action( 'eac_flush_rewrite_rules' );
+
+		/**
+		 * Perform actions after the plugin is installed.
+		 *
+		 * @since 1.0.0
+		 */
+		do_action( 'eac_installed' );
 	}
 
 	/**
@@ -466,8 +488,8 @@ CREATE TABLE {$wpdb->prefix}ea_transfers (
 	/**
 	 * Create roles and capabilities.
 	 *
-	 * @return void
 	 * @since 1.1.6
+	 * @return void
 	 */
 	public static function create_roles() {
 		global $wp_roles;

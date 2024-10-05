@@ -14,37 +14,38 @@ defined( 'ABSPATH' ) || exit;
  * @package EverAccounting
  * @subpackage Models
  *
- * @property int      $id ID of the item.
- * @property string   $type Type of the transaction.
- * @property string   $number Number of the transaction.
- * @property string   $date Date of the transaction.
- * @property double   $amount Amount of the transaction.
- * @property string   $currency Currency of the transaction.
- * @property double   $exchange_rate Exchange rate of the transaction.
- * @property string   $reference Reference of the transaction.
- * @property string   $note Note of the transaction.
- * @property string   $payment_method Payment method of the transaction.
- * @property int      $account_id Account ID of the transaction.
- * @property int      $document_id Document ID of the transaction.
- * @property int      $contact_id Contact ID of the transaction.
- * @property int      $category_id Category ID of the transaction.
- * @property int      $attachment_id Attachment ID of the transaction.
- * @property int      $parent_id Parent ID of the transaction.
- * @property bool     $reconciled Whether the transaction is reconciled.
- * @property string   $created_via Created via of the transaction.
- * @property int      $creator_id Author ID of the transaction.
- * @property string   $status Status of the transaction.
- * @property string   $uuid UUID of the transaction.
- * @property string   $created_at Date the transaction was created.
- * @property string   $updated_at Date the transaction was last updated.
+ * @property int        $id ID of the item.
+ * @property string     $type Type of the transaction.
+ * @property string     $number Number of the transaction.
+ * @property string     $date Date of the transaction.
+ * @property double     $amount Amount of the transaction.
+ * @property string     $currency Currency of the transaction.
+ * @property double     $exchange_rate Exchange rate of the transaction.
+ * @property string     $reference Reference of the transaction.
+ * @property string     $note Note of the transaction.
+ * @property string     $payment_method Payment method of the transaction.
+ * @property int        $account_id Account ID of the transaction.
+ * @property int        $document_id Document ID of the transaction.
+ * @property int        $contact_id Contact ID of the transaction.
+ * @property int        $category_id Category ID of the transaction.
+ * @property int        $attachment_id Attachment ID of the transaction.
+ * @property int        $parent_id Parent ID of the transaction.
+ * @property bool       $reconciled Whether the transaction is reconciled.
+ * @property string     $created_via Created via of the transaction.
+ * @property int        $creator_id Author ID of the transaction.
+ * @property string     $status Status of the transaction.
+ * @property string     $uuid UUID of the transaction.
+ * @property string     $created_at Date the transaction was created.
+ * @property string     $updated_at Date the transaction was last updated.
  *
- * @property string   $formatted_amount Formatted amount of the transaction.
- * @property Document $document Related document.
- * @property Account  $account Related account.
- * @property Category $category Related category.
- * @property Contact  $contact Related contact.
- * @property Customer $customer Related customer.
- * @property Vendor   $vendor Related vendor.
+ * @property string     $formatted_amount Formatted amount of the transaction.
+ * @property Document   $document Related document.
+ * @property Account    $account Related account.
+ * @property Category   $category Related category.
+ * @property Contact    $contact Related contact.
+ * @property Customer   $customer Related customer.
+ * @property Vendor     $vendor Related vendor.
+ * @property Attachment $attachment Related attachment.
  */
 class Transaction extends Model {
 	/**
@@ -276,6 +277,16 @@ class Transaction extends Model {
 		return $this->belongs_to( Document::class );
 	}
 
+	/**
+	 * Attachment relation.
+	 *
+	 * @since 1.0.0
+	 * @return BelongsTo
+	 */
+	public function attachment() {
+		return $this->belongs_to( Attachment::class, 'attachment_id' );
+	}
+
 	/*
 	|--------------------------------------------------------------------------
 	| CRUD Methods
@@ -343,6 +354,7 @@ class Transaction extends Model {
 	 */
 	public function get_next_number() {
 		$max = (int) $this->get_max_number();
+
 		return $max + 1;
 	}
 }

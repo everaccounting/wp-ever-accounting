@@ -7,7 +7,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Class Invoices
  *
- * @since 0.0.1
+ * @since 2.0.0
  * @package EverAccounting\API
  */
 class Invoices extends Documents {
@@ -16,7 +16,7 @@ class Invoices extends Documents {
 	/**
 	 * Retrieves the item's schema, conforming to JSON Schema.
 	 *
-	 * @since 1.1.2
+	 * @since 2.0.0
 	 * @return array Item schema data.
 	 */
 	public function get_item_schema() {

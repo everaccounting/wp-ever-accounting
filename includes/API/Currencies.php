@@ -7,7 +7,7 @@ defined( 'ABSPATH' ) || exit();
 /**
  * CurrenciesController.php
  *
- * @since     1.1.6
+ * @since 2.0.0
  * @subpackage EverAccounting\API
  * @package   EverAccounting
  */
@@ -15,7 +15,7 @@ class Currencies extends Controller {
 	/**
 	 * Route base.
 	 *
-	 * @since 1.1.2
+	 * @since 2.0.0
 	 *
 	 * @var string
 	 */
@@ -25,7 +25,7 @@ class Currencies extends Controller {
 	 * Registers the routes for the objects of the controller.
 	 *
 	 * @see register_rest_route()
-	 * @since 1.1.0
+	 * @since 2.0.0
 	 */
 	public function register_routes() {
 		register_rest_route(
@@ -35,7 +35,7 @@ class Currencies extends Controller {
 				array(
 					'methods'             => \WP_REST_Server::READABLE,
 					'callback'            => array( $this, 'get_items' ),
-					'permission_callback' => array( $this, 'get_items_permissions_check' ),
+					'permission_callback' => '__return_true',
 					'args'                => $this->get_collection_params(),
 				),
 				array(
@@ -58,7 +58,7 @@ class Currencies extends Controller {
 			array(
 				'args'   => array(
 					'id' => array(
-						'description' => __( 'Unique identifier for the account.', 'wp-ever-accounting' ),
+						'description' => __( 'Currency code.', 'wp-ever-accounting' ),
 					),
 				),
 				array(
@@ -83,7 +83,7 @@ class Currencies extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 * @return true|\WP_Error True if the request has read access, WP_Error object otherwise.
 	 */
 	public function get_items_permissions_check( $request ) {
@@ -103,7 +103,7 @@ class Currencies extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 * @return true|\WP_Error True if the request has read access, WP_Error object otherwise.
 	 */
 	public function create_item_permissions_check( $request ) {
@@ -123,14 +123,11 @@ class Currencies extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 * @return true|\WP_Error True if the request has read access, WP_Error object otherwise.
 	 */
 	public function get_item_permissions_check( $request ) {
-		$id       = ! empty( $request['id'] ) ? $request['id'] : $request['code'];
-		$currency = eac_get_currency( $id );
-
-		if ( empty( $currency ) || ! current_user_can( 'eac_manage_currency' ) ) {
+		if ( ! current_user_can( 'eac_manage_currency' ) ) {
 			return new \WP_Error(
 				'rest_forbidden_context',
 				__( 'Sorry, you are not allowed to view this currency.', 'wp-ever-accounting' ),
@@ -146,14 +143,11 @@ class Currencies extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 * @return true|\WP_Error True if the request has read access, WP_Error object otherwise.
 	 */
 	public function update_item_permissions_check( $request ) {
-		$id       = ! empty( $request['id'] ) ? $request['id'] : $request['code'];
-		$currency = eac_get_currency( $id );
-
-		if ( empty( $currency ) || ! current_user_can( 'eac_manage_currency' ) ) {
+		if ( ! current_user_can( 'eac_manage_currency' ) ) {
 			return new \WP_Error(
 				'rest_forbidden_context',
 				__( 'Sorry, you are not allowed to update this currency.', 'wp-ever-accounting' ),
@@ -169,14 +163,11 @@ class Currencies extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 * @return true|\WP_Error True if the request has read access, WP_Error object otherwise.
 	 */
 	public function delete_item_permissions_check( $request ) {
-		$id       = ! empty( $request['id'] ) ? $request['id'] : $request['code'];
-		$currency = eac_get_currency( $id );
-
-		if ( empty( $currency ) || ! current_user_can( 'eac_manage_currency' ) ) {
+		if ( ! current_user_can( 'eac_manage_currency' ) ) {
 			return new \WP_Error(
 				'rest_forbidden_context',
 				__( 'Sorry, you are not allowed to delete this currency.', 'wp-ever-accounting' ),
@@ -192,7 +183,7 @@ class Currencies extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function get_items( $request ) {
@@ -211,54 +202,26 @@ class Currencies extends Controller {
 		 * @param array            $args Key value array of query var to query value.
 		 * @param \WP_REST_Request $request The request used.
 		 *
-		 * @since 1.2.1
+		 * @since 2.0.0
 		 */
-		$args = apply_filters( 'eac_rest_currency_query', $args, $request );
+		$args       = apply_filters( 'eac_rest_currency_query', $args, $request );
+		$currencies = eac_get_currencies();
+		$per_page   = empty( $args['per_page'] ) ? 20 : $args['per_page'];
+		$page       = empty( $args['page'] ) ? 1 : $args['page'];
+		$offset     = ( $page - 1 ) * $per_page;
 
-		$currencies = eac_get_currencies( $args );
-		$total      = eac_get_currencies( $args, true );
-		$page       = isset( $request['page'] ) ? absint( $request['page'] ) : 1;
-		$max_pages  = ceil( $total / (int) $args['per_page'] );
+		$total   = count( $currencies );
+		$results = $total > $offset ? array_slice( $currencies, $offset, $per_page ) : array();
 
-		// If requesting page is greater than max pages, return empty array.
-		if ( $page > $max_pages ) {
-			return new \WP_Error(
-				'rest_invalid_page_number',
-				__( 'The page number requested is larger than the number of pages available.', 'wp-ever-accounting' ),
-				array( 'status' => 400 )
-			);
+
+		$data = array();
+		foreach ( $results as $currency ) {
+			$data[] = $this->prepare_item_for_response( $currency, $request );
 		}
 
-		$results = array();
-		foreach ( $currencies as $currency ) {
-			$data      = $this->prepare_item_for_response( $currency, $request );
-			$results[] = $this->prepare_response_for_collection( $data );
-		}
-
-		$response = rest_ensure_response( $results );
-
-		$response->header( 'X-WP-Total', (int) $total );
-		$response->header( 'X-WP-TotalPages', (int) $max_pages );
-
-		$request_params = $request->get_query_params();
-		$base           = add_query_arg( urlencode_deep( $request_params ), rest_url( sprintf( '%s/%s', $this->namespace, $this->rest_base ) ) );
-
-		if ( $page > 1 ) {
-			$prev_page = $page - 1;
-
-			if ( $prev_page > $max_pages ) {
-				$prev_page = $max_pages;
-			}
-
-			$prev_link = add_query_arg( 'page', $prev_page, $base );
-			$response->link_header( 'prev', $prev_link );
-		}
-		if ( $max_pages > $page ) {
-			$next_page = $page + 1;
-			$next_link = add_query_arg( 'page', $next_page, $base );
-
-			$response->link_header( 'next', $next_link );
-		}
+		$response = rest_ensure_response( $data );
+		$response->header( 'X-Total-Count', $total );
+		$response->header( 'X-Total-Pages', ceil( $total / (int) $per_page ) );
 
 		return $response;
 	}
@@ -268,15 +231,24 @@ class Currencies extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function get_item( $request ) {
-		$id       = ! empty( $request['id'] ) ? $request['id'] : $request['code'];
-		$currency = eac_get_currency( $id );
-		$data     = $this->prepare_item_for_response( $currency, $request );
+		$code       = strtoupper( $request['code'] );
+		$currencies = eac_get_currencies();
+		$currency   = isset( $currencies[ $code ] ) ? $currencies[ $code ] : null;
+		if ( empty( $currency ) ) {
+			return new \WP_Error(
+				'rest_currency_invalid',
+				__( 'Invalid currency code.', 'wp-ever-accounting' ),
+				array( 'status' => 404 )
+			);
+		}
 
-		return rest_ensure_response( $data );
+		$response = $this->prepare_item_for_response( $currency, $request );
+
+		return rest_ensure_response( $response );
 	}
 
 	/**
@@ -284,13 +256,15 @@ class Currencies extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function create_item( $request ) {
-		if ( ! empty( $request['id'] ) ) {
+		$option = get_option( 'eac_currencies', array() );
+		$code   = strtoupper( $request['code'] );
+		if ( isset( $option[ $code ] ) ) {
 			return new \WP_Error(
-				'rest_account_exists',
+				'rest_currency_exists',
 				__( 'Cannot create existing currency.', 'wp-ever-accounting' ),
 				array( 'status' => 400 )
 			);
@@ -301,19 +275,12 @@ class Currencies extends Controller {
 			return $data;
 		}
 
-		$currency = eac_insert_currency( $data );
-		if ( is_wp_error( $currency ) ) {
-			return $currency;
-		}
+		$option[ $code ] = $data;
+		update_option( 'eac_currencies', $option );
 
-		$response = $this->prepare_item_for_response( $currency, $request );
-		$response = rest_ensure_response( $response );
+		$response = $this->prepare_item_for_response( $option[ $code ], $request );
 
-		$response->set_status( 201 );
-		$response->header( 'Location', rest_url( sprintf( '%s/%s/%d', $this->namespace, $this->rest_base, $currency->id ) ) );
-
-		return $response;
-
+		return rest_ensure_response( $response );
 	}
 
 	/**
@@ -321,25 +288,36 @@ class Currencies extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function update_item( $request ) {
-		$currency = eac_get_currency( $request['id'] );
-		$data     = $this->prepare_item_for_database( $request );
-		if ( is_wp_error( $data ) ) {
-			return $data;
-		}
-		$data['id'] = $currency->id;
-		$currency   = eac_insert_currency( $data );
-		if ( is_wp_error( $currency ) ) {
-			return $currency;
+		$currencies = eac_get_currencies();
+		$code       = strtoupper( $request['code'] );
+		if ( empty( $code ) || ! isset( $currencies[ $code ] ) ) {
+			return new \WP_Error(
+				'rest_currency_invalid',
+				__( 'Invalid currency code.', 'wp-ever-accounting' ),
+				array( 'status' => 404 )
+			);
 		}
 
-		$response = $this->prepare_item_for_response( $currency, $request );
-		$response = rest_ensure_response( $response );
+		$currency         = $currencies[ $code ];
+		$data             = $this->prepare_item_for_database( $request );
+		$options          = get_option( 'eac_currencies', array() );
+		$options[ $code ] = array(
+			'rate'               => isset( $data['rate'] ) ? floatval( $data['rate'] ) : $currency['rate'],
+			'precision'          => isset( $data['precision'] ) ? intval( $data['precision'] ) : $currency['precision'],
+			'decimal_separator'  => isset( $data['decimal_separator'] ) ? $data['decimal_separator'] : $currency['decimal_separator'],
+			'thousand_separator' => isset( $data['thousand_separator'] ) ? $data['thousand_separator'] : $currency['thousand_separator'],
+			'position'           => isset( $data['position'] ) ? $data['position'] : $currency['position'],
+		);
 
-		return $response;
+		update_option( 'eac_currencies', $options );
+
+		$response = $this->prepare_item_for_response( $options[ $code ], $request );
+
+		return rest_ensure_response( $response );
 	}
 
 	/**
@@ -347,73 +325,39 @@ class Currencies extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function delete_item( $request ) {
-		$currency = eac_get_currency( $request['id'] );
-		$request->set_param( 'context', 'edit' );
-		$data = $this->prepare_item_for_response( $currency, $request );
-
-		if ( ! eac_delete_currency( $currency->id ) ) {
+		$currencies = eac_get_currencies();
+		$code       = strtoupper( $request['code'] );
+		if ( empty( $code ) || ! isset( $currencies[ $code ] ) ) {
 			return new \WP_Error(
-				'rest_account_cannot_delete',
-				__( 'The currency cannot be deleted.', 'wp-ever-accounting' ),
-				array( 'status' => 500 )
+				'rest_currency_invalid',
+				__( 'Invalid currency code.', 'wp-ever-accounting' ),
+				array( 'status' => 404 )
 			);
 		}
 
-		$response = new \WP_REST_Response();
-		$response->set_data(
-			array(
-				'deleted'  => true,
-				'previous' => $this->prepare_response_for_collection( $data ),
-			)
-		);
+		$options = get_option( 'eac_currencies', array() );
+		unset( $options[ $code ] );
+		update_option( 'eac_currencies', $options );
 
-		return $response;
+		return new \WP_REST_Response( null, 204 );
 	}
 
 	/**
-	 * Prepares a single currency output for response.
+	 * Prepares the item for the REST response.
 	 *
-	 * @param Currency         $item currency object.
+	 * @param mixed            $item WordPress representation of the item.
 	 * @param \WP_REST_Request $request Request object.
 	 *
-	 * @since 1.2.1
+	 * @since 2.0.0
+	 *
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function prepare_item_for_response( $item, $request ) {
-		$data = [];
-
-		foreach ( array_keys( $this->get_schema_properties() ) as $key ) {
-			switch ( $key ) {
-				case 'created_at':
-				case 'updated_at':
-					$value = $this->prepare_date_response( $item->$key );
-					break;
-				default:
-					$value = $item->$key;
-					break;
-			}
-
-			$data[ $key ] = $value;
-		}
-
-		$context  = ! empty( $request['context'] ) ? $request['context'] : 'view';
-		$data     = $this->add_additional_fields_to_object( $data, $request );
-		$data     = $this->filter_response_by_context( $data, $context );
-		$response = rest_ensure_response( $data );
-		$response->add_links( $this->prepare_links( $item, $request ) );
-
-		/**
-		 * Filter currency data returned from the REST API.
-		 *
-		 * @param \WP_REST_Response $response The response object.
-		 * @param Currency          $item Category object used to create response.
-		 * @param \WP_REST_Request  $request Request object.
-		 */
-		return apply_filters( 'eac_rest_prepare_currency', $response, $item, $request );
+		return $item;
 	}
 
 	/**
@@ -421,7 +365,7 @@ class Currencies extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Request object.
 	 *
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 * @return array|\WP_Error currency object or WP_Error.
 	 */
 	protected function prepare_item_for_database( $request ) {
@@ -450,28 +394,40 @@ class Currencies extends Controller {
 	}
 
 	/**
-	 * Prepare links for the request.
+	 * Retrieves the query params for the items' collection.
 	 *
-	 * @param currency         $currency Object data.
-	 * @param \WP_REST_Request $request Request currency.
-	 *
-	 * @return array Links for the given currency.
+	 * @since 2.0.0
+	 * @return array Collection parameters.
 	 */
-	protected function prepare_links( $currency, $request ) {
-		return array(
-			'self'       => array(
-				'href' => rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $currency->id ) ),
+	public function get_collection_params() {
+		$params = array(
+			'context'  => $this->get_context_param(),
+			'page'     => array(
+				'description'       => __( 'Current page of the collection.', 'wp-ever-accounting' ),
+				'type'              => 'integer',
+				'default'           => 1,
+				'sanitize_callback' => 'absint',
+				'validate_callback' => 'rest_validate_request_arg',
+				'minimum'           => 1,
 			),
-			'collection' => array(
-				'href' => rest_url( sprintf( '/%s/%s', $this->namespace, $this->rest_base ) ),
+			'per_page' => array(
+				'description'       => __( 'Maximum number of items to be returned in result set.', 'wp-ever-accounting' ),
+				'type'              => 'integer',
+				'default'           => 10,
+				'minimum'           => 1,
+				'maximum'           => 100,
+				'sanitize_callback' => 'absint',
+				'validate_callback' => 'rest_validate_request_arg',
 			),
 		);
+
+		return $params;
 	}
 
 	/**
 	 * Retrieves the item's schema, conforming to JSON Schema.
 	 *
-	 * @since 1.1.2
+	 * @since 2.0.0
 	 * @return array Item schema data.
 	 */
 	public function get_item_schema() {
@@ -493,13 +449,13 @@ class Currencies extends Controller {
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
-				'rate'      => array(
+				'rate'               => array(
 					'description' => __( 'currency exchange rate.', 'wp-ever-accounting' ),
 					'type'        => 'number',
 					'context'     => array( 'view', 'edit' ),
 					'required'    => true,
 				),
-				'precision'           => array(
+				'precision'          => array(
 					'description' => __( 'currency decimals.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'edit' ),
@@ -538,7 +494,7 @@ class Currencies extends Controller {
 		 *
 		 * @param array $schema Item schema data.
 		 *
-		 * @since 1.2.1
+		 * @since 2.0.0
 		 */
 		$schema = apply_filters( 'eac_rest_currency_item_schema', $schema );
 

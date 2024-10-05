@@ -7,16 +7,16 @@ use EverAccounting\Models\Category;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class CategoriesController
+ * Class Categories
  *
- * @since 0.0.1
+ * @since 2.0.0
  * @package EverAccounting\API
  */
 class Categories extends Controller {
 	/**
 	 * Route base.
 	 *
-	 * @since 1.1.2
+	 * @since 2.0.0
 	 *
 	 * @var string
 	 */
@@ -26,7 +26,7 @@ class Categories extends Controller {
 	 * Registers the routes for the objects of the controller.
 	 *
 	 * @see register_rest_route()
-	 * @since 1.1.0
+	 * @since 2.0.0
 	 */
 	public function register_routes() {
 		register_rest_route(
@@ -90,7 +90,7 @@ class Categories extends Controller {
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return true|\WP_Error True if the request has read access, WP_Error object otherwise.
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 */
 	public function get_items_permissions_check( $request ) {
 		if ( ! current_user_can( 'eac_manage_category' ) ) {
@@ -110,7 +110,7 @@ class Categories extends Controller {
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return true|\WP_Error True if the request has read access, WP_Error object otherwise.
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 */
 	public function create_item_permissions_check( $request ) {
 		if ( ! current_user_can( 'eac_manage_category' ) ) {
@@ -130,7 +130,7 @@ class Categories extends Controller {
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return true|\WP_Error True, if the request has read access, WP_Error object otherwise.
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 */
 	public function get_item_permissions_check( $request ) {
 		$category = EAC()->categories->get( $request['id'] );
@@ -152,7 +152,7 @@ class Categories extends Controller {
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return true|\WP_Error True if the request has read access, WP_Error object otherwise.
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 */
 	public function update_item_permissions_check( $request ) {
 		$category = EAC()->categories->get( $request['id'] );
@@ -174,7 +174,7 @@ class Categories extends Controller {
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return true|\WP_Error True if the request has read access, WP_Error object otherwise.
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 */
 	public function delete_item_permissions_check( $request ) {
 		$category = EAC()->categories->get( $request['id'] );
@@ -196,7 +196,7 @@ class Categories extends Controller {
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 */
 	public function get_items( $request ) {
 		$params = $this->get_collection_params();
@@ -215,13 +215,12 @@ class Categories extends Controller {
 		 * @param array $args Key value array of query var to query value.
 		 * @param \WP_REST_Request $request The request used.
 		 *
-		 * @since 1.2.1
+		 * @since 2.0.0
 		 */
 		$args = apply_filters( 'eac_rest_category_query', $args, $request );
 
 		$categories = EAC()->categories->query( $args );
 		$total      = EAC()->categories->query( $args, true );
-		$page       = isset( $request['page'] ) ? absint( $request['page'] ) : 1;
 		$max_pages  = ceil( $total / (int) $args['per_page'] );
 
 		$results = array();
@@ -235,26 +234,6 @@ class Categories extends Controller {
 		$response->header( 'X-WP-Total', (int) $total );
 		$response->header( 'X-WP-TotalPages', (int) $max_pages );
 
-		$request_params = $request->get_query_params();
-		$base           = add_query_arg( urlencode_deep( $request_params ), rest_url( sprintf( '%s/%s', $this->namespace, $this->rest_base ) ) );
-
-		if ( $page > 1 ) {
-			$prev_page = $page - 1;
-
-			if ( $prev_page > $max_pages ) {
-				$prev_page = $max_pages;
-			}
-
-			$prev_link = add_query_arg( 'page', $prev_page, $base );
-			$response->link_header( 'prev', $prev_link );
-		}
-		if ( $max_pages > $page ) {
-			$next_page = $page + 1;
-			$next_link = add_query_arg( 'page', $next_page, $base );
-
-			$response->link_header( 'next', $next_link );
-		}
-
 		return $response;
 	}
 
@@ -264,7 +243,7 @@ class Categories extends Controller {
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 */
 	public function get_item( $request ) {
 		$category = EAC()->categories->get( $request['id'] );
@@ -279,7 +258,7 @@ class Categories extends Controller {
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 */
 	public function create_item( $request ) {
 		if ( ! empty( $request['id'] ) ) {
@@ -304,10 +283,8 @@ class Categories extends Controller {
 		$response = rest_ensure_response( $response );
 
 		$response->set_status( 201 );
-		$response->header( 'Location', rest_url( sprintf( '%s/%s/%d', $this->namespace, $this->rest_base, $category->id ) ) );
 
 		return $response;
-
 	}
 
 	/**
@@ -316,7 +293,7 @@ class Categories extends Controller {
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 */
 	public function update_item( $request ) {
 		$category = EAC()->categories->get( $request['id'] );
@@ -325,15 +302,14 @@ class Categories extends Controller {
 			return $data;
 		}
 
-		$saved = $category->fill($data)->save();
+		$saved = $category->fill( $data )->save();
 		if ( is_wp_error( $saved ) ) {
 			return $saved;
 		}
 
 		$response = $this->prepare_item_for_response( $saved, $request );
-		$response = rest_ensure_response( $response );
 
-		return $response;
+		return rest_ensure_response( $response );
 	}
 
 	/**
@@ -342,7 +318,7 @@ class Categories extends Controller {
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 */
 	public function delete_item( $request ) {
 		$category = EAC()->categories->get( $request['id'] );
@@ -371,14 +347,14 @@ class Categories extends Controller {
 	/**
 	 * Prepares a single category output for response.
 	 *
-	 * @param Category $item Category object.
+	 * @param Category         $item Category object.
 	 * @param \WP_REST_Request $request Request object.
 	 *
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 */
 	public function prepare_item_for_response( $item, $request ) {
-		$data = [];
+		$data = array();
 
 		foreach ( array_keys( $this->get_schema_properties() ) as $key ) {
 			switch ( $key ) {
@@ -398,7 +374,6 @@ class Categories extends Controller {
 		$data     = $this->add_additional_fields_to_object( $data, $request );
 		$data     = $this->filter_response_by_context( $data, $context );
 		$response = rest_ensure_response( $data );
-		$response->add_links( $this->prepare_links( $item, $request ) );
 
 		/**
 		 * Filter category data returned from the REST API.
@@ -416,17 +391,17 @@ class Categories extends Controller {
 	 * @param \WP_REST_Request $request Request object.
 	 *
 	 * @return array|\WP_Error Category object or WP_Error.
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 */
 	protected function prepare_item_for_database( $request ) {
-		$schema    = $this->get_item_schema();
-		$props     = array_keys( array_filter( $schema['properties'], array( $this, 'filter_writable_props' ) ) );
-		$data      = [];
+		$schema = $this->get_item_schema();
+		$props  = array_keys( array_filter( $schema['properties'], array( $this, 'filter_writable_props' ) ) );
+		$data   = array();
 		foreach ( $props as $prop ) {
-			if (isset($request[$prop])) {
-				switch ($prop) {
+			if ( isset( $request[ $prop ] ) ) {
+				switch ( $prop ) {
 					default:
-						$data[$prop] = $request[$prop];
+						$data[ $prop ] = $request[ $prop ];
 						break;
 				}
 			}
@@ -441,30 +416,12 @@ class Categories extends Controller {
 		return apply_filters( 'eac_rest_pre_insert_category', $data, $request );
 	}
 
-	/**
-	 * Prepare links for the request.
-	 *
-	 * @param Category $category Object data.
-	 * @param \WP_REST_Request $request Request category.
-	 *
-	 * @return array Links for the given category.
-	 */
-	protected function prepare_links( $category, $request ) {
-		return array(
-			'self'       => array(
-				'href' => rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $category->id ) ),
-			),
-			'collection' => array(
-				'href' => rest_url( sprintf( '/%s/%s', $this->namespace, $this->rest_base ) ),
-			),
-		);
-	}
 
 	/**
 	 * Retrieves the item's schema, conforming to JSON Schema.
 	 *
 	 * @return array Item schema data.
-	 * @since 1.1.2
+	 * @since 2.0.0
 	 */
 	public function get_item_schema() {
 		$schema = array(
@@ -472,7 +429,7 @@ class Categories extends Controller {
 			'title'      => __( 'Category', 'wp-ever-accounting' ),
 			'type'       => 'object',
 			'properties' => array(
-				'id'           => array(
+				'id'          => array(
 					'description' => __( 'Unique identifier for the category.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'embed', 'edit' ),
@@ -481,43 +438,36 @@ class Categories extends Controller {
 						'sanitize_callback' => 'intval',
 					),
 				),
-				'name'         => array(
+				'name'        => array(
 					'description' => __( 'Category name.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'edit' ),
 					'required'    => true,
 				),
-				'type'         => array(
+				'type'        => array(
 					'description' => __( 'Category type.', 'wp-ever-accounting' ),
 					'type'        => 'string',
-//					'enum'        => array_keys( eac_get_category_types() ),
+					'enum'        => array_keys( EAC()->categories->get_types() ),
 					'context'     => array( 'view', 'edit' ),
 					'required'    => true,
 				),
-				'description'  => array(
+				'description' => array(
 					'description' => __( 'Category description.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'edit' ),
 				),
-				'parent_id'    => array(
+				'parent_id'   => array(
 					'description' => __( 'Parent category ID.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'edit' ),
 				),
-				'status' 	 => array(
-					'description' => __( 'Category status.', 'wp-ever-accounting' ),
-					'type'        => 'string',
-//					'enum'        => array_keys( eac_get_category_statuses() ),
-					'context'     => array( 'view', 'edit' ),
-					'required'    => true,
-				),
-				'updated_at' => array(
+				'updated_at'  => array(
 					'description' => __( "The date the category was last updated, in the site's timezone.", 'wp-ever-accounting' ),
 					'type'        => 'date-time',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
-				'created_at' => array(
+				'created_at'  => array(
 					'description' => __( "The date the category was created, in the site's timezone.", 'wp-ever-accounting' ),
 					'type'        => 'date-time',
 					'context'     => array( 'view', 'edit' ),
@@ -531,11 +481,10 @@ class Categories extends Controller {
 		 *
 		 * @param array $schema Item schema data.
 		 *
-		 * @since 1.2.1
+		 * @since 2.0.0
 		 */
 		$schema = apply_filters( 'eac_rest_category_item_schema', $schema );
 
 		return $this->add_additional_fields_schema( $schema );
 	}
-
 }

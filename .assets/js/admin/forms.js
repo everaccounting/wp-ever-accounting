@@ -443,7 +443,7 @@ const {Money} = eac.money;
 
 		const state = new InvoiceState({
 			...window?.eac_invoice_vars || {},
-			items: new eac.api.DocumentItems(null, {state}),
+			items: new eac.api.DocumentItems(),
 			money: new Money({code: window?.eac_invoice_vars?.currency}),
 		});
 

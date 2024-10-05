@@ -16,7 +16,7 @@ class Currencies {
 	 * Constructor.
 	 */
 	public function __construct() {
-		add_filter( 'eac_currencies', array( $this, 'customized_currencies' ) );
+		//add_filter( 'eac_currencies', array( $this, 'customized_currencies' ) );
 	}
 
 	/**

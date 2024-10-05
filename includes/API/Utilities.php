@@ -2,6 +2,8 @@
 
 namespace EverAccounting\API;
 
+use EverAccounting\Utilities\I18n;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -22,64 +24,53 @@ class Utilities extends Controller {
 	 * Registers the routes for the objects of the controller.
 	 *
 	 * @see register_rest_route()
-	 * @since 1.1.0
+	 * @since 2.0.0
 	 */
 	public function register_routes() {
-		register_rest_route( $this->namespace, '/' . $this->rest_base . '/next-number',
+		register_rest_route( $this->namespace, '/' . $this->rest_base . '/currencies',
 			array(
 				'methods'             => 'GET',
-				'callback'            => array( $this, 'get_next_number' ),
+				'callback'            => array( $this, 'get_currencies' ),
 				'permission_callback' => function () {
 					return current_user_can( 'manage_options' );
-				},
-				'args'                => array(
-					'type' => array(
-						'default'           => 'invoice',
-						'sanitize_callback' => 'sanitize_text_field',
-						'required'          => true,
-					),
-				),
+				}
+			)
+		);
+		// Countries.
+		register_rest_route( $this->namespace, '/' . $this->rest_base . '/countries',
+			array(
+				'methods'             => 'GET',
+				'callback'            => array( $this, 'get_countries' ),
+				'permission_callback' => function () {
+					return current_user_can( 'manage_options' );
+				}
 			)
 		);
 	}
 
 	/**
-	 * Get next number.
+	 * Get currencies.
 	 *
 	 * @param \WP_REST_Request $request Request object.
 	 *
 	 * @return \WP_REST_Response
 	 */
-	public function get_next_number( $request ) {
-		$type = $request->get_param( 'type' );
+	public function get_currencies( $request ) {
+		$currencies = I18n::get_currencies();
 
-		$number = 1;
+		return rest_ensure_response( $currencies );
+	}
 
-		switch ( $type ) {
-			case 'invoice':
-				$invoice = new \EverAccounting\Models\Invoice();
-				$number  = $invoice->get_next_number();
-				break;
+	/**
+	 * Get countries.
+	 *
+	 * @param \WP_REST_Request $request Request object.
+	 *
+	 * @return \WP_REST_Response
+	 */
+	public function get_countries( $request ) {
+		$countries = I18n::get_countries();
 
-//			case 'bill':
-//				$bill   = new \EverAccounting\Models\Bill();
-//				$number = $bill->get_next_number();
-//				break;
-//
-//			case 'expense':
-//				$expense = new \EverAccounting\Models\Expense();
-//				$number  = $expense->get_next_number();
-//				break;
-//
-//			case 'payment':
-//				$payment = new \EverAccounting\Models\Payment();
-//				$number  = $payment->get_next_number();
-//				break;
-
-			default:
-				$number = apply_filters( 'eac_get_next_' . $type . '_number', $number );
-		}
-
-		return rest_ensure_response( array( 'next_number' => apply_filters( 'eac_get_next_number', $number, $type ) ) );
+		return rest_ensure_response( $countries );
 	}
 }

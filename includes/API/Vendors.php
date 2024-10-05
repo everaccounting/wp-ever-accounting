@@ -9,14 +9,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Class Vendors
  *
- * @since 0.0.1
+ * @since 2.0.0
  * @package EverAccounting\API
  */
 class Vendors extends Contacts {
 	/**
 	 * Route base.
 	 *
-	 * @since 1.1.2
+	 * @since 2.0.0
 	 *
 	 * @var string
 	 */
@@ -26,7 +26,7 @@ class Vendors extends Contacts {
 	 * Registers the routes for the objects of the controller.
 	 *
 	 * @see register_rest_route()
-	 * @since 1.1.0
+	 * @since 2.0.0
 	 */
 	public function register_routes() {
 		register_rest_route(
@@ -89,7 +89,7 @@ class Vendors extends Contacts {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 * @return true|\WP_Error True, if the request has read access, WP_Error object otherwise.
 	 */
 	public function get_items_permissions_check( $request ) {
@@ -109,7 +109,7 @@ class Vendors extends Contacts {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 * @return true|\WP_Error True, if the request has read access, WP_Error object otherwise.
 	 */
 	public function create_item_permissions_check( $request ) {
@@ -129,7 +129,7 @@ class Vendors extends Contacts {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 * @return true|\WP_Error True, if the request has read access, WP_Error object otherwise.
 	 */
 	public function update_item_permissions_check( $request ) {
@@ -151,7 +151,7 @@ class Vendors extends Contacts {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 * @return true|\WP_Error True, if the request has read access, WP_Error object otherwise.
 	 */
 	public function get_item_permissions_check( $request ) {
@@ -173,7 +173,7 @@ class Vendors extends Contacts {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 * @return true|\WP_Error True, if the request has read access, WP_Error object otherwise.
 	 */
 	public function delete_item_permissions_check( $request ) {
@@ -195,7 +195,7 @@ class Vendors extends Contacts {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function get_items( $request ) {
@@ -215,7 +215,7 @@ class Vendors extends Contacts {
 		 * @param array            $args Key value array of query var to query value.
 		 * @param \WP_REST_Request $request The request used.
 		 *
-		 * @since 1.2.1
+		 * @since 2.0.0
 		 */
 		$args = apply_filters( 'eac_rest_vendor_query', $args, $request );
 
@@ -264,7 +264,7 @@ class Vendors extends Contacts {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function get_item( $request ) {
@@ -279,7 +279,7 @@ class Vendors extends Contacts {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function create_item( $request ) {
@@ -316,7 +316,7 @@ class Vendors extends Contacts {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function update_item( $request ) {
@@ -342,7 +342,7 @@ class Vendors extends Contacts {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function delete_item( $request ) {
@@ -375,7 +375,7 @@ class Vendors extends Contacts {
 	 * @param vendor           $item vendor object.
 	 * @param \WP_REST_Request $request Request object.
 	 *
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function prepare_item_for_response( $item, $request ) {
@@ -417,7 +417,7 @@ class Vendors extends Contacts {
 	 * @param \WP_REST_Request $request Request object.
 	 *
 	 * @return array|\WP_Error Vendor object or WP_Error.
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 */
 	protected function prepare_item_for_database( $request ) {
 		$schema    = $this->get_item_schema();
@@ -466,7 +466,7 @@ class Vendors extends Contacts {
 	/**
 	 * Retrieves the item's schema, conforming to JSON Schema.
 	 *
-	 * @since 1.1.2
+	 * @since 2.0.0
 	 * @return array Item schema data.
 	 */
 	public function get_item_schema() {
@@ -478,7 +478,7 @@ class Vendors extends Contacts {
 		 *
 		 * @param array $schema Item schema data.
 		 *
-		 * @since 1.2.1
+		 * @since 2.0.0
 		 */
 		$schema = apply_filters( 'eac_rest_vendor_item_schema', $schema );
 

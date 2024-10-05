@@ -9,14 +9,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Class Items
  *
- * @since 0.0.1
+ * @since 2.0.0
  * @package EverAccounting\API
  */
 class Items extends Controller {
 	/**
 	 * Route base.
 	 *
-	 * @since 1.1.2
+	 * @since 2.0.0
 	 *
 	 * @var string
 	 */
@@ -26,7 +26,7 @@ class Items extends Controller {
 	 * Registers the routes for the objects of the controller.
 	 *
 	 * @see register_rest_route()
-	 * @since 1.1.0
+	 * @since 2.0.0
 	 */
 	public function register_routes() {
 		register_rest_route(
@@ -89,7 +89,7 @@ class Items extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 * @return true|\WP_Error True, if the request has read access, WP_Error object otherwise.
 	 */
 	public function get_items_permissions_check( $request ) {
@@ -109,7 +109,7 @@ class Items extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 * @return true|\WP_Error True, if the request has read access, WP_Error object otherwise.
 	 */
 	public function create_item_permissions_check( $request ) {
@@ -129,7 +129,7 @@ class Items extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 * @return true|\WP_Error True if the request has read access, WP_Error object otherwise.
 	 */
 	public function get_item_permissions_check( $request ) {
@@ -151,7 +151,7 @@ class Items extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 * @return true|\WP_Error True if the request has read access, WP_Error object otherwise.
 	 */
 	public function update_item_permissions_check( $request ) {
@@ -173,7 +173,7 @@ class Items extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 * @return true|\WP_Error True if the request has read access, WP_Error object otherwise.
 	 */
 	public function delete_item_permissions_check( $request ) {
@@ -195,7 +195,7 @@ class Items extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function get_items( $request ) {
@@ -215,11 +215,11 @@ class Items extends Controller {
 		 * @param array            $args Key value array of query var to query value.
 		 * @param \WP_REST_Request $request The request used.
 		 *
-		 * @since 1.2.1
+		 * @since 2.0.0
 		 */
 		$args      = apply_filters( 'eac_rest_item_query', $args, $request );
-		$items     = EAC()->items->gets( $args );
-		$total     = EAC()->items->gets( $args, true );
+		$items     = EAC()->items->query( $args );
+		$total     = EAC()->items->query( $args, true );
 		$page      = isset( $request['page'] ) ? absint( $request['page'] ) : 1;
 		$max_pages = ceil( $total / (int) $args['per_page'] );
 
@@ -262,7 +262,7 @@ class Items extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function get_item( $request ) {
@@ -277,7 +277,7 @@ class Items extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function create_item( $request ) {
@@ -294,7 +294,7 @@ class Items extends Controller {
 			return $data;
 		}
 
-		$item = eac_insert_item( $data );
+		$item = EAC()->items->insert( $data );
 		if ( is_wp_error( $item ) ) {
 			return $item;
 		}
@@ -303,10 +303,7 @@ class Items extends Controller {
 		$response = rest_ensure_response( $response );
 
 		$response->set_status( 201 );
-		$response->header( 'Location', rest_url( sprintf( '%s/%s/%d', $this->namespace, $this->rest_base, $item->id ) ) );
-
 		return $response;
-
 	}
 
 	/**
@@ -314,7 +311,7 @@ class Items extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function update_item( $request ) {
@@ -340,7 +337,7 @@ class Items extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function delete_item( $request ) {
@@ -348,7 +345,7 @@ class Items extends Controller {
 		$request->set_param( 'context', 'edit' );
 		$data = $this->prepare_item_for_response( $item, $request );
 
-		if ( ! eac_delete_item( $item->id ) ) {
+		if ( ! $item->delete() ) {
 			return new \WP_Error(
 				'rest_cannot_delete',
 				__( 'The item cannot be deleted.', 'wp-ever-accounting' ),
@@ -373,11 +370,11 @@ class Items extends Controller {
 	 * @param Item             $item Item object.
 	 * @param \WP_REST_Request $request Request object.
 	 *
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function prepare_item_for_response( $item, $request ) {
-		$data = [];
+		$data = array();
 
 		foreach ( array_keys( $this->get_schema_properties() ) as $key ) {
 			switch ( $key ) {
@@ -385,12 +382,15 @@ class Items extends Controller {
 					$value = $item->category_id ? $this->get_endpoint_data( sprintf( '/%s/categories/%d', $this->namespace, $item->category_id ) ) : null;
 					break;
 				case 'taxes':
-					$value = [];
+					$value = array();
 					if ( ! empty( $item->taxes ) ) {
 						$properties = array_keys( $this->get_schema_properties()[ $key ]['items'] );
-						$value      = array_map( function ( $tax ) use ( $properties ) {
-							return array_intersect_key( $tax->to_array(), array_flip( $properties ) );
-						}, $item->taxes );
+						$value      = array_map(
+							function ( $tax ) use ( $properties ) {
+								return array_intersect_key( $tax->to_array(), array_flip( $properties ) );
+							},
+							$item->taxes
+						);
 					}
 					break;
 				case 'created_at':
@@ -409,7 +409,6 @@ class Items extends Controller {
 		$data     = $this->add_additional_fields_to_object( $data, $request );
 		$data     = $this->filter_response_by_context( $data, $context );
 		$response = rest_ensure_response( $data );
-		$response->add_links( $this->prepare_links( $item, $request ) );
 
 		/**
 		 * Filter item data returned from the REST API.
@@ -426,13 +425,13 @@ class Items extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Request object.
 	 *
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 * @return array|\WP_Error Item object or WP_Error.
 	 */
 	protected function prepare_item_for_database( $request ) {
 		$schema    = $this->get_item_schema();
 		$data_keys = array_keys( array_filter( $schema['properties'], array( $this, 'filter_writable_props' ) ) );
-		$props     = [];
+		$props     = array();
 		// Handle all writable props.
 		foreach ( $data_keys as $key ) {
 			$value = $request[ $key ];
@@ -455,28 +454,9 @@ class Items extends Controller {
 	}
 
 	/**
-	 * Prepare links for the request.
-	 *
-	 * @param Item             $item Object data.
-	 * @param \WP_REST_Request $request Request item.
-	 *
-	 * @return array Links for the given item.
-	 */
-	protected function prepare_links( $item, $request ) {
-		return array(
-			'self'       => array(
-				'href' => rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $item->id ) ),
-			),
-			'collection' => array(
-				'href' => rest_url( sprintf( '/%s/%s', $this->namespace, $this->rest_base ) ),
-			),
-		);
-	}
-
-	/**
 	 * Retrieves the item's schema, conforming to JSON Schema.
 	 *
-	 * @since 1.1.2
+	 * @since 2.0.0
 	 * @return array Item schema data.
 	 */
 	public function get_item_schema() {
@@ -586,7 +566,7 @@ class Items extends Controller {
 					'type'        => 'date-time',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
-				)
+				),
 			),
 		);
 
@@ -595,7 +575,7 @@ class Items extends Controller {
 		 *
 		 * @param array $schema Item schema data.
 		 *
-		 * @since 1.2.1
+		 * @since 2.0.0
 		 */
 		$schema = apply_filters( 'eac_rest_item_schema', $schema );
 
@@ -605,7 +585,7 @@ class Items extends Controller {
 	/**
 	 * Retrieves the query params for the items' collection.
 	 *
-	 * @since 1.1.2
+	 * @since 2.0.0
 	 * @return array Collection parameters.
 	 */
 	public function get_collection_params() {
@@ -627,5 +607,4 @@ class Items extends Controller {
 
 		return $params;
 	}
-
 }
