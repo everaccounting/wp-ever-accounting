@@ -12,7 +12,7 @@ class EverAccounting_Helper_Transaction {
 	 *
 	 * @return array|\EAccounting\Transaction|WP_Error
 	 */
-	public static function create_transaction( $amount = 50, $payment_method = 'cash', $type = 'expense' ) {
+	public static function create_transaction( $amount = 50, $method = 'cash', $type = 'expense' ) {
 		$category = EverAccounting_Helper_Category::create_category( 'Expense', 'expense' );
 		$account  = EverAccounting_Helper_Account::create_account();
 		$vendor   = EverAccounting_Helper_Contact::create_contact( 'John Doe', 'john@doe.com', 'vendor', 'USD' );
@@ -23,7 +23,7 @@ class EverAccounting_Helper_Transaction {
 			'amount'         => $amount,
 			'vendor_id'      => $vendor->get_id(),
 			'category_id'    => $category->get_id(),
-			'payment_method' => $payment_method,
+			'method' => $method,
 			'type'           => $type
 		) );
 

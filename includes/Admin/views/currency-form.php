@@ -42,10 +42,10 @@ defined( 'ABSPATH' ) || exit;
 					);
 					eac_form_field(
 						array(
-							'id'        => 'exchange_rate',
+							'id'        => 'conversion',
 							'label'     => __( 'Exchange Rate', 'wp-ever-accounting' ),
 							'data_type' => 'decimal',
-							'value'     => $currency->is_base_currency() ? 1 : $currency->exchange_rate,
+							'value'     => $currency->is_base_currency() ? 1 : $currency->conversion,
 							'readonly'  => $currency->is_base_currency() ? 'readonly' : false,
 							'required'  => true,
 							'class'     => 'eac_decimal_input',

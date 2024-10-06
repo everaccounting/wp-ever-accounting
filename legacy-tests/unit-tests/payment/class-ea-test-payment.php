@@ -19,7 +19,7 @@ class EverAccounting_Tests_Payment extends EverAccounting_Unit_Test_Case {
 				'amount' => 50,
 				'vendor_id' => $vendor->get_id(),
 				'category_id' => $category->get_id(),
-				'payment_method' => 'cash',
+				'method' => 'cash',
 				'type' => 'expense'
 			)
 		);
@@ -27,7 +27,7 @@ class EverAccounting_Tests_Payment extends EverAccounting_Unit_Test_Case {
 		$this->assertNotNull( $payment->get_id() );
 		$this->assertEquals( '2020-08-31', date('Y-m-d',strtotime($payment->get_payment_date())));
 		$this->assertEquals( 50, $payment->get_amount());
-		$this->assertEquals( 'cash', $payment->get_payment_method());
+		$this->assertEquals( 'cash', $payment->get_method());
 		$this->assertEquals('expense', $payment->get_type());
 	}
 
@@ -43,7 +43,7 @@ class EverAccounting_Tests_Payment extends EverAccounting_Unit_Test_Case {
 				'amount' => 50,
 				'vendor_id' => $vendor->get_id(),
 				'category_id' => $category->get_id(),
-				'payment_method' => 'cash',
+				'method' => 'cash',
 				'type' => 'expense'
 			)
 		);
@@ -51,7 +51,7 @@ class EverAccounting_Tests_Payment extends EverAccounting_Unit_Test_Case {
 		$this->assertNotFalse( $payment->exists() );
 		$this->assertEquals( '2020-08-31', date('Y-m-d',strtotime($payment->get_payment_date())));
 		$this->assertEquals( 50, $payment->get_amount());
-		$this->assertEquals( 'cash', $payment->get_payment_method());
+		$this->assertEquals( 'cash', $payment->get_method());
 		$this->assertEquals('expense', $payment->get_type());
 
 		$error = eaccounting_insert_transaction(array(
@@ -61,14 +61,14 @@ class EverAccounting_Tests_Payment extends EverAccounting_Unit_Test_Case {
 			'amount' => 100,
 			'vendor_id' => $vendor->get_id(),
 			'category_id' => $category->get_id(),
-			'payment_method' => 'bank_transfer',
+			'method' => 'bank_transfer',
 			'type' => 'expense'
 		));
 
 		$this->assertNotWPError( $error );
 		$payment = eaccounting_get_transaction($payment_id); // so we can read fresh copies from the DB
 		$this->assertEquals( 100, $payment->get_amount());
-		$this->assertEquals( 'bank_transfer', $payment->get_payment_method());
+		$this->assertEquals( 'bank_transfer', $payment->get_method());
 		$this->assertEquals('expense', $payment->get_type());
 	}
 
@@ -101,7 +101,7 @@ class EverAccounting_Tests_Payment extends EverAccounting_Unit_Test_Case {
 			'paid_at' => '2020-09-01',
 			'type' => 'expense',
 			'category_id' => 53,
-			'payment_method' => ''
+			'method' => ''
 		));
 		$this->assertEquals( 'Payment method is required', $payment->get_error_message() );
 
@@ -109,7 +109,7 @@ class EverAccounting_Tests_Payment extends EverAccounting_Unit_Test_Case {
 			'paid_at' => '2020-09-01',
 			'type' => 'expense',
 			'category_id' => 53,
-			'payment_method' => 'cash',
+			'method' => 'cash',
 			'account_id' => ''
 		));
 		$this->assertEquals( 'Account is required.', $payment->get_error_message() );
@@ -121,7 +121,7 @@ class EverAccounting_Tests_Payment extends EverAccounting_Unit_Test_Case {
 			'account_id' => $account->get_id(),
 			'paid_at' => '2020-09-01',
 			'type' => 'income',
-			'payment_method' => 'cash',
+			'method' => 'cash',
 			'category_id' => $category->get_id()
 		));
 		$this->assertEquals( 'Transaction type and category type does not match.', $payment->get_error_message() );
@@ -131,7 +131,7 @@ class EverAccounting_Tests_Payment extends EverAccounting_Unit_Test_Case {
 			'account_id' => $account->get_id(),
 			'paid_at' => '2020-09-01',
 			'type' => 'expense',
-			'payment_method' => 'cash',
+			'method' => 'cash',
 			'category_id' => $category->get_id(),
 			'contact_id' => $contact->get_id()
 		));

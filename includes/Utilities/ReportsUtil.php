@@ -357,7 +357,7 @@ class ReportsUtil {
 		if ( $force || empty( $reports[ $year ] ) ) {
 			$transactions = $wpdb->get_results(
 				$wpdb->prepare(
-					"SELECT (t.amount/t.exchange_rate) amount, MONTH(t.date) AS month, YEAR(t.date) AS year, t.category_id
+					"SELECT (t.amount/t.conversion) amount, MONTH(t.date) AS month, YEAR(t.date) AS year, t.category_id
 		FROM {$wpdb->prefix}ea_transactions AS t
 		LEFT JOIN {$wpdb->prefix}ea_transfers AS it ON t.id = it.payment_id
 		LEFT JOIN {$wpdb->prefix}ea_transfers AS et ON t.id = et.expense_id
@@ -444,7 +444,7 @@ class ReportsUtil {
 		if ( $force || ! isset( $reports[ $year ] ) ) {
 			$transactions = $wpdb->get_results(
 				$wpdb->prepare(
-					"SELECT (t.amount/t.exchange_rate) amount, MONTH(t.date) AS month, YEAR(t.date) AS year, t.category_id
+					"SELECT (t.amount/t.conversion) amount, MONTH(t.date) AS month, YEAR(t.date) AS year, t.category_id
 		FROM {$wpdb->prefix}ea_transactions AS t
 		LEFT JOIN {$wpdb->prefix}ea_transfers AS it ON t.id = it.payment_id
 		LEFT JOIN {$wpdb->prefix}ea_transfers AS et ON t.id = et.expense_id
@@ -531,7 +531,7 @@ class ReportsUtil {
 		if ( $force || ! isset( $reports[ $year ] ) ) {
 			$transactions = $wpdb->get_results(
 				$wpdb->prepare(
-					"SELECT (t.amount/t.exchange_rate) amount, MONTH(t.date) AS month, YEAR(t.date) AS year, t.category_id, t.type
+					"SELECT (t.amount/t.conversion) amount, MONTH(t.date) AS month, YEAR(t.date) AS year, t.category_id, t.type
 		FROM {$wpdb->prefix}ea_transactions AS t
 		LEFT JOIN {$wpdb->prefix}ea_transfers AS it ON t.id = it.payment_id
 		LEFT JOIN {$wpdb->prefix}ea_transfers AS et ON t.id = et.expense_id

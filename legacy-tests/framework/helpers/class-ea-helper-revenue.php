@@ -11,7 +11,7 @@ class EverAccounting_Helper_Revenue {
 	 * Creates an revenue in test db
 	 *
 	 */
-	public static function create_revenue( $type = 'income', $amount = 1000, $payment_date = '2020-08-26', $category = 'income', $payment_method = 'cash' ) {
+	public static function create_revenue( $type = 'income', $amount = 1000, $payment_date = '2020-08-26', $category = 'income', $method = 'cash' ) {
 		$account    = EverAccounting_Helper_Account::create_account();
 		$account_id = $account->get_id();
 
@@ -24,7 +24,7 @@ class EverAccounting_Helper_Revenue {
 			'payment_date'        => $payment_date,
 			'category'       => $category,
 			'category_id'    => $category_id,
-			'payment_method' => $payment_method,
+			'method' => $method,
 			'account_id'     => $account_id
 		) );
 

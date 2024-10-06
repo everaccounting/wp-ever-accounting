@@ -600,7 +600,7 @@ CREATE TABLE `test_ea_transactions` (
   `exchange_rate` double(15,8) NOT NULL DEFAULT '1.00000000',
   `reference` varchar(191) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `note` text COLLATE utf8mb4_unicode_520_ci,
-  `payment_method` varchar(100) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `method` varchar(100) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `account_id` bigint unsigned NOT NULL,
   `document_id` bigint unsigned DEFAULT NULL,
   `contact_id` bigint unsigned DEFAULT NULL,

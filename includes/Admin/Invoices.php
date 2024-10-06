@@ -126,7 +126,14 @@ class Invoices {
 	 * @return void
 	 */
 	public static function render_view() {
+		$id      = filter_input( INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT );
+		$invoice = Invoice::find( $id );
+		if ( ! $invoice ) {
+			esc_html_e( 'The specified invoice does not exist.', 'wp-ever-accounting' );
 
+			return;
+		}
+		include __DIR__ . '/views/invoice-view.php';
 	}
 
 	/**

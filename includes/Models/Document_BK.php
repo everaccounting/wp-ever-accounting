@@ -73,7 +73,7 @@ use ByteKit\Models\Relations\HasOne;
  * @property string   $sent_date Sent date of the document.
  * @property string   $payment_date Payment date of the document.
  * @property string   $currency Currency code of the document.
- * @property double   $exchange_rate Exchange rate of the document.
+ * @property double   $conversion Exchange rate of the document.
  * @property int      $parent_id Parent ID of the document.
  * @property string   $created_via Created via of the document.
  * @property int      $creator_id Author ID of the document.
@@ -158,7 +158,7 @@ class Document_BK extends Model {
 		'sent_date',
 		'payment_date',
 		'currency',
-		'exchange_rate',
+		'conversion',
 		'parent_id',
 		'created_via',
 		'creator_id',
@@ -213,7 +213,7 @@ class Document_BK extends Model {
 		'sent_date'       => 'date',
 		'payment_date'    => 'date',
 		'vat_exempt'      => 'bool',
-		'exchange_rate'   => 'double',
+		'conversion'   => 'double',
 		'parent_id'       => 'int',
 		'creator_id'       => 'int',
 	);

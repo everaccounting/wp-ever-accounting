@@ -20,10 +20,10 @@ defined( 'ABSPATH' ) || exit;
  * @property string     $date Date of the transaction.
  * @property double     $amount Amount of the transaction.
  * @property string     $currency Currency of the transaction.
- * @property double     $exchange_rate Exchange rate of the transaction.
+ * @property double     $conversion Exchange rate of the transaction.
  * @property string     $reference Reference of the transaction.
  * @property string     $note Note of the transaction.
- * @property string     $payment_method Payment method of the transaction.
+ * @property string     $method Payment method of the transaction.
  * @property int        $account_id Account ID of the transaction.
  * @property int        $document_id Document ID of the transaction.
  * @property int        $contact_id Contact ID of the transaction.
@@ -77,10 +77,10 @@ class Transaction extends Model {
 		'date',
 		'amount',
 		'currency',
-		'exchange_rate',
+		'conversion',
 		'reference',
 		'note',
-		'payment_method',
+		'method',
 		'account_id',
 		'document_id',
 		'contact_id',
@@ -101,10 +101,10 @@ class Transaction extends Model {
 	 * @var array
 	 */
 	protected $attributes = array(
-		'status'        => '',
-		'exchange_rate' => 1,
-		'created_via'   => 'manual',
-		'reconciled'    => false,
+		'status'      => '',
+		'conversion'  => 1,
+		'created_via' => 'manual',
+		'reconciled'  => false,
 	);
 
 	/**
@@ -116,7 +116,7 @@ class Transaction extends Model {
 	protected $casts = array(
 		'id'            => 'int',
 		'amount'        => 'float',
-		'exchange_rate' => 'double',
+		'conversion'    => 'double',
 		'account_id'    => 'int',
 		'document_id'   => 'int',
 		'contact_id'    => 'int',

@@ -162,8 +162,8 @@ function eac_get_currencies() {
  * @since 1.0.0
  * @return float
  */
-function eac_get_exchange_rate( $currency = null ) {
-	$currency = strtoupper( $currency );
+function eac_get_conversion( $currency = null ) {
+	$currency   = strtoupper( $currency );
 	$currencies = eac_get_currencies();
 
 	return isset( $currencies[ $currency ] ) && $currencies[ $currency ]['rate'] > 0 ? $currencies[ $currency ]['rate'] : 1;
@@ -251,8 +251,8 @@ function eac_convert_currency( $amount, $from_currency, $to_currency = null, $fr
 		$amount = eac_sanitize_amount( $amount, $from_currency );
 	}
 
-	$from_rate = empty( $from_rate ) ? eac_get_exchange_rate( $from_currency ) : $from_rate;
-	$to_rate   = empty( $to_rate ) ? eac_get_exchange_rate( $to_currency ) : $to_rate;
+	$from_rate = empty( $from_rate ) ? eac_get_conversion( $from_currency ) : $from_rate;
+	$to_rate   = empty( $to_rate ) ? eac_get_conversion( $to_currency ) : $to_rate;
 
 	// No need to convert same currency.
 	if ( $from_currency !== $to_currency && $amount > 0 && $from_rate > 0 ) {
@@ -318,7 +318,7 @@ function eac_round_number( $val, $decimals = 6, $mode = PHP_ROUND_HALF_UP ) {
  */
 function eac_get_payment_methods() {
 	return apply_filters(
-		'ever_accounting_payment_methods',
+		'eac_payment_methods',
 		array(
 			'cash'          => esc_html__( 'Cash', 'wp-ever-accounting' ),
 			'check'         => esc_html__( 'Cheque', 'wp-ever-accounting' ),

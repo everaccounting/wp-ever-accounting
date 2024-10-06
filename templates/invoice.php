@@ -42,7 +42,7 @@ $text   = get_option( 'eac_invoice_text_color', '#6E7178' );
 		color: <?php echo esc_attr( $title ); ?>;
 		margin: 0;
 		font-weight: 600;
-		font-size: 14px;
+		font-size: 0.625rem;
 	}
 	.eac-document h4 {
 		color: <?php echo esc_attr( $text ); ?>;
@@ -51,15 +51,13 @@ $text   = get_option( 'eac_invoice_text_color', '#6E7178' );
 		font-size: 0.75rem;
 	}
 	.eac-document a{
-		font-size: 14px;
-		line-height: 1.3;
+		font-size: 0.625rem;
 		color: <?php echo esc_attr( $title ); ?>;
 		font-weight: 400;
 	}
 	.eac-document p{
 		color: <?php echo esc_attr( $text ); ?>;
-		font-size: 14px;
-		line-height: 1.33;
+		font-size: 0.625rem;
 		font-weight: 400;
 		margin: 0;
 	}
@@ -87,13 +85,7 @@ $text   = get_option( 'eac_invoice_text_color', '#6E7178' );
 		position:absolute;
 		bottom:0;
 		z-index: 1;
-		<?php echo is_rtl() ? 'left:10%;' : 'right:10%;'; ?>;
-	}
-	.eac-document .text-right{
-		text-align: <?php echo is_rtl() ? 'left' : 'right'; ?>;
-	}
-	.eac-document .text-left{
-		text-align: <?php echo is_rtl() ? 'right' : 'left'; ?>;
+	<?php echo is_rtl() ? 'left:10%;' : 'right:10%;'; ?>;
 	}
 </style>
 
@@ -154,29 +146,30 @@ $text   = get_option( 'eac_invoice_text_color', '#6E7178' );
 				<table cellspacing="0" cellpadding="0" width="100%">
 					<tbody>
 					<tr>
-						<td width="50%">
-							<table cellspacing="0" cellpadding="0" width="280px">
+						<td width="33.33%">
+							<table cellspacing="0" cellpadding="0" width="100%">
 								<tbody>
 								<tr>
-									<td width="130px">
+									<td>
 										<h3>Issue Date:</h3>
 									</td>
-									<td width="130px">
+									<td>
 										<p>4 April, 2024</p>
 									</td>
 								</tr>
 								<tr>
-									<td width="130px">
+									<td>
 										<h3>Due Date:</h3>
 									</td>
-									<td width="130px">
+									<td>
 										<p>11 April, 2024</p>
 									</td>
 								</tr>
 								</tbody>
 							</table>
 						</td>
-						<td width="50%">
+						<td width="33.33%"></td>
+						<td width="33.33%">
 							<table cellspacing="0" cellpadding="0" width="100%">
 								<tbody>
 								<tr>
@@ -245,7 +238,7 @@ $text   = get_option( 'eac_invoice_text_color', '#6E7178' );
 							<table cellspacing="0" cellpadding="0" width="100%">
 								<tbody>
 								<tr>
-									<th>
+									<th class="eac-text-left">
 										<h3>Invoice To</h3>
 									</th>
 								</tr>

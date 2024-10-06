@@ -25,7 +25,7 @@ class EverAccounting_Tests_Revenue extends EverAccounting_Unit_Test_Case {
 				'amount'         => 500,
 				'category'       => 'expense',
 				'category_id'    => $category_id,
-				'payment_method' => 'cash',
+				'method' => 'cash',
 				'account_id'     => $account_id
 			)
 		);
@@ -35,7 +35,7 @@ class EverAccounting_Tests_Revenue extends EverAccounting_Unit_Test_Case {
 		$this->assertNotNull( $revenue->get_id() );
 		$this->assertEquals( '2020-08-15', date( 'Y-m-d', strtotime( $revenue->get_payment_date() ) ) );
 		$this->assertEquals( 500, $revenue->get_amount() );
-		$this->assertEquals( 'cash', $revenue->get_payment_method() );
+		$this->assertEquals( 'cash', $revenue->get_method() );
 		$this->assertNotNull( $revenue->get_account_id() );
 		$this->assertNotNull( $revenue->get_category_id() );
 		$this->assertNotNull( $revenue->get_date_created() );
@@ -58,7 +58,7 @@ class EverAccounting_Tests_Revenue extends EverAccounting_Unit_Test_Case {
 				'amount'         => 500,
 				'category'       => 'expense',
 				'category_id'    => $category_id,
-				'payment_method' => 'cash',
+				'method' => 'cash',
 				'account_id'     => $account_id
 			)
 		);
@@ -69,7 +69,7 @@ class EverAccounting_Tests_Revenue extends EverAccounting_Unit_Test_Case {
 		$this->assertNotNull( $revenue->get_id() );
 		$this->assertEquals( '2020-08-15', date( 'Y-m-d', strtotime( $revenue->get_payment_date() ) ) );
 		$this->assertEquals( 500, $revenue->get_amount() );
-		$this->assertEquals( 'cash', $revenue->get_payment_method() );
+		$this->assertEquals( 'cash', $revenue->get_method() );
 		$this->assertNotNull( $revenue->get_account_id() );
 		$this->assertNotNull( $revenue->get_category_id() );
 		$this->assertNotNull( $revenue->get_date_created() );
@@ -81,7 +81,7 @@ class EverAccounting_Tests_Revenue extends EverAccounting_Unit_Test_Case {
 			'paid_at'        => '2020-08-15',
 			'category'       => 'income',
 			'category_id'    => $category_id,
-			'payment_method' => 'check',
+			'method' => 'check',
 			'account_id'     => $account_id
 		) );
 		$this->assertNotWPError( $error );
@@ -92,7 +92,7 @@ class EverAccounting_Tests_Revenue extends EverAccounting_Unit_Test_Case {
 		$this->assertNotNull( $revenue->get_id() );
 		$this->assertEquals( '2020-08-15', date( 'Y-m-d', strtotime( $revenue->get_payment_date() ) ) );
 		$this->assertEquals( 1500, $revenue->get_amount() );
-		$this->assertEquals( 'check', $revenue->get_payment_method() );
+		$this->assertEquals( 'check', $revenue->get_method() );
 		$this->assertNotNull( $revenue->get_account_id() );
 		$this->assertNotNull( $revenue->get_category_id() );
 		$this->assertNotNull( $revenue->get_date_created() );
@@ -127,7 +127,7 @@ class EverAccounting_Tests_Revenue extends EverAccounting_Unit_Test_Case {
 			'paid_at'        => '2020-09-01',
 			'type'           => 'income',
 			'category_id'    => 53,
-			'payment_method' => ''
+			'method' => ''
 		) );
 		$this->assertEquals( 'Payment method is required', $revenue->get_error_message() );
 
@@ -135,7 +135,7 @@ class EverAccounting_Tests_Revenue extends EverAccounting_Unit_Test_Case {
 			'paid_at'        => '2020-09-01',
 			'type'           => 'income',
 			'category_id'    => 53,
-			'payment_method' => 'cash',
+			'method' => 'cash',
 			'account_id'     => ''
 		) );
 		$this->assertEquals( 'Account is required.', $revenue->get_error_message() );
@@ -147,7 +147,7 @@ class EverAccounting_Tests_Revenue extends EverAccounting_Unit_Test_Case {
 			'account_id'     => $account->get_id(),
 			'paid_at'        => '2020-09-01',
 			'type'           => 'income',
-			'payment_method' => 'cash',
+			'method' => 'cash',
 			'category_id'    => $category->get_id()
 		) );
 		$this->assertEquals( 'Transaction type and category type does not match.', $revenue->get_error_message() );
@@ -159,7 +159,7 @@ class EverAccounting_Tests_Revenue extends EverAccounting_Unit_Test_Case {
 			'account_id'     => $account->get_id(),
 			'paid_at'        => '2020-09-01',
 			'type'           => 'income',
-			'payment_method' => 'cash',
+			'method' => 'cash',
 			'category_id'    => $category->get_id(),
 			'contact_id'     => $contact->get_id()
 		) );

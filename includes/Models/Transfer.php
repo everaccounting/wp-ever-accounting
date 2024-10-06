@@ -25,9 +25,9 @@ defined( 'ABSPATH' ) || exit;
  * @property int    $from_account_id From account ID of the transfer.
  * @property int    $to_account_id To account ID of the transfer.
  * @property string $currency Currency code of the transfer.
- * @property float  $exchange_rate Exchange rate of the transfer.
+ * @property float  $conversion Exchange rate of the transfer.
  * @property string $date Date of the transfer.
- * @property string $payment_method Payment method of the transfer.
+ * @property string $method Payment method of the transfer.
  * @property string $reference Reference of the transfer.
  */
 class Transfer extends Model {
@@ -67,7 +67,7 @@ class Transfer extends Model {
 	protected $casts = array(
 		'date'            => 'date',
 		'amount'          => 'double',
-		'exchange_rate'   => 'double',
+		'conversion'      => 'double',
 		'reference'       => 'string',
 		'expense_id'      => 'int',
 		'revenue_id'      => 'int',
@@ -87,7 +87,7 @@ class Transfer extends Model {
 			'to_account_id',
 			'amount',
 			'date',
-			'payment_method',
+			'method',
 		),
 	);
 
@@ -188,7 +188,7 @@ class Transfer extends Model {
 		if ( empty( $this->date ) ) {
 			return new \WP_Error( 'missing_required', __( 'Transfer date is required.', 'wp-ever-accounting' ) );
 		}
-		if ( empty( $this->payment_method ) ) {
+		if ( empty( $this->method ) ) {
 			return new \WP_Error( 'missing_required', __( 'Payment method is required.', 'wp-ever-accounting' ) );
 		}
 		// Check if from account and to account is same.
@@ -213,12 +213,12 @@ class Transfer extends Model {
 			// Create a payment and expense for the transfer.
 			$payment = $this->payment()->insert(
 				array(
-					'account_id'     => $this->to_account_id,
-					'date'           => $this->date,
-					'amount'         => $this->amount,
-					'currency'       => $to_account->currency,
-					'payment_method' => $this->payment_method,
-					'reference'      => $this->reference,
+					'account_id' => $this->to_account_id,
+					'date'       => $this->date,
+					'amount'     => $this->amount,
+					'currency'   => $to_account->currency,
+					'method'     => $this->method,
+					'reference'  => $this->reference,
 				)
 			);
 
@@ -234,12 +234,12 @@ class Transfer extends Model {
 
 			$expense = $this->expense()->insert(
 				array(
-					'account_id'     => $this->from_account_id,
-					'date'           => $this->date,
-					'amount'         => $amount,
-					'currency'       => $this->currency,
-					'payment_method' => $this->payment_method,
-					'reference'      => $this->reference,
+					'account_id' => $this->from_account_id,
+					'date'       => $this->date,
+					'amount'     => $amount,
+					'currency'   => $this->currency,
+					'method'     => $this->method,
+					'reference'  => $this->reference,
 				)
 			);
 

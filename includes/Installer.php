@@ -195,16 +195,14 @@ class Installer {
 
 		// drop old ea_currencies table if exists.
 		$currency_table = $wpdb->prefix . 'ea_currencies';
-		if ( $wpdb->get_var( "SHOW TABLES LIKE '{$currency_table}'" ) === $currency_table &&
-			$wpdb->get_var( "SHOW COLUMNS FROM {$currency_table} LIKE 'exchange_rate'" ) != 'exchange_rate' ) {
+		if ( $wpdb->get_var( "SHOW TABLES LIKE '{$currency_table}'" ) === $currency_table ) {
 			$wpdb->query( "DROP TABLE $currency_table" );
 		}
 
 		$tables = "
 CREATE TABLE {$wpdb->prefix}ea_accounts (
     id BIGINT(20) NOT NULL AUTO_INCREMENT,
-    type VARCHAR(50) NOT NULL,
-    name VARCHAR(191) NOT NULL DEFAULT 'account',
+    type VARCHAR(50) NOT NULL DEFAULT 'account',
     number VARCHAR(100) NOT NULL,
     bank_name VARCHAR(191) DEFAULT NULL,
     bank_phone VARCHAR(20) DEFAULT NULL,
@@ -354,7 +352,7 @@ CREATE TABLE {$wpdb->prefix}ea_documents (
     sent_date DATETIME DEFAULT NULL,
     payment_date DATETIME DEFAULT NULL,
     currency VARCHAR(3) NOT NULL DEFAULT 'USD',
-    exchange_rate DOUBLE(15, 8) NOT NULL DEFAULT 1.0,
+    conversion DOUBLE(15, 8) NOT NULL DEFAULT 1.0,
     created_via VARCHAR(100) DEFAULT 'manual',
     creator_id BIGINT(20) UNSIGNED NOT NULL,
     attachment_id BIGINT(20) UNSIGNED DEFAULT NULL,
@@ -439,10 +437,10 @@ CREATE TABLE {$wpdb->prefix}ea_transactions (
     date DATE NOT NULL DEFAULT '0000-00-00',
     amount DOUBLE(15, 4) NOT NULL,
     currency VARCHAR(3) NOT NULL DEFAULT 'USD',
-    exchange_rate DOUBLE(15, 8) NOT NULL DEFAULT 1.0,
+    conversion DOUBLE(15, 8) NOT NULL DEFAULT 1.0,
     reference VARCHAR(191) DEFAULT NULL,
     note TEXT DEFAULT NULL,
-    payment_method VARCHAR(100) DEFAULT NULL,
+    method VARCHAR(100) DEFAULT NULL,
     account_id BIGINT(20) UNSIGNED NOT NULL,
     document_id BIGINT(20) UNSIGNED DEFAULT NULL,
     contact_id BIGINT(20) UNSIGNED DEFAULT NULL,
@@ -461,7 +459,7 @@ CREATE TABLE {$wpdb->prefix}ea_transactions (
     KEY number (number),
     KEY amount (amount),
     KEY currency (currency),
-    KEY exchange_rate (exchange_rate),
+    KEY conversion (conversion),
     KEY account_id (account_id),
     KEY document_id (document_id),
     KEY category_id (category_id),

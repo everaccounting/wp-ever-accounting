@@ -18,7 +18,7 @@ class EverAccounting_Helper_Transfer {
 			'to_account_id' => EverAccounting_Helper_Account::create_account('To Account')->get_id(),
 			'date' => '2020-08-25',
 			'amount' => $amount,
-			'payment_method' => 'cash'
+			'method' => 'cash'
 		));
 		return $transfer;
 	}

@@ -91,8 +91,6 @@ function Table( props ) {
 		...pagination,
 	} );
 
-	console.log( mergedPagination );
-
 	// ============================= Render =============================
 	const classes = classNames( 'eac-table', className, {
 		'eac-table--empty': ! hasData && ! loading,

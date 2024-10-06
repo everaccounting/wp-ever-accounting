@@ -72,11 +72,11 @@ defined( 'ABSPATH' ) || exit;
 						array(
 							'label'       => __( 'Exchange Rate', 'wp-ever-accounting' ),
 							'type'        => 'number',
-							'name'        => 'exchange_rate',
-							'value'       => $payment->exchange_rate,
+							'name'        => 'conversion',
+							'value'       => $payment->conversion,
 							'placeholder' => '1.00',
 							'required'    => true,
-							'class'       => 'eac_exchange_rate',
+							'class'       => 'eac_conversion',
 							'prefix'      => '1 ' . eac_base_currency() . ' = ',
 							'suffix'      => $payment->currency,
 							'attr-step'   => 'any',
@@ -145,8 +145,8 @@ defined( 'ABSPATH' ) || exit;
 						array(
 							'label'       => __( 'Payment Method', 'wp-ever-accounting' ),
 							'type'        => 'select',
-							'name'        => 'payment_method',
-							'value'       => $payment->payment_method,
+							'name'        => 'method',
+							'value'       => $payment->method,
 							'options'     => eac_get_payment_methods(),
 							'placeholder' => __( 'Select &hellip;', 'wp-ever-accounting' ),
 						)

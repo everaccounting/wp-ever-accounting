@@ -557,7 +557,7 @@ class Expenses extends Transactions {
 					'context'     => array( 'view', 'embed', 'edit' ),
 					'default'     => eac_base_currency(),
 				),
-				'exchange_rate'    => array(
+				'conversion'    => array(
 					'description' => __( 'Exchange rate of the expense.', 'wp-ever-accounting' ),
 					'type'        => 'number',
 					'context'     => array( 'view', 'embed', 'edit' ),
@@ -573,7 +573,7 @@ class Expenses extends Transactions {
 					'type'        => 'string',
 					'context'     => array( 'view', 'embed', 'edit' ),
 				),
-				'payment_method'   => array(
+				'method'   => array(
 					'description' => __( 'Payment method of the expense.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'embed', 'edit' ),

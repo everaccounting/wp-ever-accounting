@@ -55,7 +55,7 @@ foreach ( $codes as $code => $currency ) {
 					);
 					eac_form_field(
 						array(
-							'id'            => 'exchange_rate',
+							'id'            => 'conversion',
 							'label'         => __( 'Exchange Rate', 'wp-ever-accounting' ),
 							'data_type'     => 'decimal',
 							'required'      => true,

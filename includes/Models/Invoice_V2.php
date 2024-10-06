@@ -303,7 +303,7 @@ class Invoice_V2 extends Document {
 				'document_id'    => $this->id,
 				'amount'         => 0,
 				'currency'  => $this->currency,
-				'exchange_rate'  => $this->exchange_rate,
+				'conversion'  => $this->conversion,
 				'payment_method' => '',
 				'note'           => '',
 			)

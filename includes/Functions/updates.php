@@ -137,10 +137,11 @@ function eac_update_120() {
 	// Transactions.
 	$table = $wpdb->prefix . 'ea_transactions';
 	$wpdb->query( "UPDATE $table SET type = 'payment' WHERE type = 'income'" );
+	$wpdb->query( "UPDATE $table SET method = payment_method" );
 	$wpdb->query( "UPDATE $table SET date = payment_date" );
 	$wpdb->query( "UPDATE $table SET currency = currency_code" );
 	$wpdb->query( "UPDATE $table SET note = description" );
-	$wpdb->query( "UPDATE $table SET exchange_rate = currency_rate" );
+	$wpdb->query( "UPDATE $table SET conversion = currency_rate" );
 	$wpdb->query( "UPDATE $table SET created_at = date_created" );
 	$wpdb->query( "UPDATE $table SET uuid = UUID()" );
 	$wpdb->query( "UPDATE $table JOIN (SELECT @rank := 0) r SET number=CONCAT('PAY-',LPAD(@rank:=@rank+1, 5, '0')) WHERE type='payment' AND number IS NULL OR number = ''" );
@@ -148,6 +149,7 @@ function eac_update_120() {
 	$wpdb->query( "ALTER TABLE $table DROP payment_date" );
 	$wpdb->query( "ALTER TABLE $table DROP currency_code" );
 	$wpdb->query( "ALTER TABLE $table DROP currency_rate" );
+	$wpdb->query( "ALTER TABLE $table DROP payment_method" );
 	$wpdb->query( "ALTER TABLE $table DROP date_created" );
 	$wpdb->query( "ALTER TABLE $table DROP description" );
 
@@ -164,7 +166,7 @@ function eac_update_120() {
 	$wpdb->query( "UPDATE $table SET number = document_number" );
 	$wpdb->query( "UPDATE $table SET reference = order_number" );
 	$wpdb->query( "UPDATE $table SET currency = currency_code" );
-	$wpdb->query( "UPDATE $table SET exchange_rate = currency_rate" );
+	$wpdb->query( "UPDATE $table SET conversion = currency_rate" );
 	$wpdb->query( "UPDATE $table SET tax = total_tax" );
 	$wpdb->query( "UPDATE $table SET discount = total_discount" );
 	$wpdb->query( "UPDATE $table SET created_at = date_created" );

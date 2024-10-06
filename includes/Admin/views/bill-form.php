@@ -114,8 +114,8 @@ wp_add_inline_script( 'eac-admin', 'var eac_bill_edit_vars = ' . json_encode( $d
 						eac_form_field(
 							array(
 								'label'       => esc_html__( 'Exchange Rate', 'wp-ever-accounting' ),
-								'name'        => 'exchange_rate',
-								'value'       => $bill->exchange_rate,
+								'name'        => 'conversion',
+								'value'       => $bill->conversion,
 								'type'        => 'number',
 								'placeholder' => '1.00',
 								'step'        => '0.01',

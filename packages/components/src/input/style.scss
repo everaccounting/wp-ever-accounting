@@ -1,0 +1,11 @@
+.eac-field {
+	.components-base-control__help {
+		margin-top: 4px;
+		display: inline-flex;
+		gap: 4px;
+	}
+
+	.eac-field__error {
+		color: #dc3232;
+	}
+}

@@ -56,7 +56,7 @@ class Transactions {
 	public static function setup_payment() {
 		$account_id     = get_option( 'eac_default_sales_account_id', 0 );
 		$sales_category = get_option( 'eac_default_sales_category_id', 0 );
-		$payment_method = get_option( 'eac_default_sales_payment_method', 'cash' );
+		$method = get_option( 'eac_default_sales_method', 'cash' );
 		$account        = eac_get_account( $account_id );
 		$category       = eac_get_category( $sales_category );
 

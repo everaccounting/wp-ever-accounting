@@ -146,7 +146,7 @@ class Transactions extends Controller {
 						),
 					),
 				),
-				'payment_method' => array(
+				'method' => array(
 					'description' => __( 'Payment method of the transaction.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'enum'        => array_keys( eac_get_payment_methods() ),
@@ -180,7 +180,7 @@ class Transactions extends Controller {
 					'enum'        => array_keys( eac_get_currencies() ),
 					'context'     => array( 'view', 'embed', 'edit' ),
 				),
-				'exchange_rate'  => array(
+				'conversion'  => array(
 					'description' => __( 'Conversion rate of the transaction.', 'wp-ever-accounting' ),
 					'type'        => 'number',
 					'context'     => array( 'view', 'embed', 'edit' ),

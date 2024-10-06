@@ -32,10 +32,10 @@ class Dashboard {
 		$stats = $wpdb->get_row(
 			$wpdb->prepare(
 				"SELECT
-    			SUM(CASE WHEN type = 'payment' THEN amount/exchange_rate ELSE 0 END) AS payment,
-    			SUM(CASE WHEN type = 'expense' THEN amount/exchange_rate ELSE 0 END) AS expense,
-    			SUM(CASE WHEN type = 'payment' THEN amount/exchange_rate ELSE 0 END) -
-    			SUM(CASE WHEN type = 'expense' THEN amount/exchange_rate ELSE 0 END) AS profit
+    			SUM(CASE WHEN type = 'payment' THEN amount/conversion ELSE 0 END) AS payment,
+    			SUM(CASE WHEN type = 'expense' THEN amount/conversion ELSE 0 END) AS expense,
+    			SUM(CASE WHEN type = 'payment' THEN amount/conversion ELSE 0 END) -
+    			SUM(CASE WHEN type = 'expense' THEN amount/conversion ELSE 0 END) AS profit
 				FROM {$wpdb->prefix}ea_transactions WHERE status = 'completed' AND MONTH(date) = %d AND YEAR(date) = %d",
 				wp_date( 'm' ),
 				wp_date( 'Y' )

@@ -15,7 +15,7 @@ class EverAccounting_Tests_transfer extends EverAccounting_Unit_Test_Case {
 			'to_account_id'   => $to_account_id,
 			'date'            => '2020-08-26',
 			'amount'          => 50,
-			'payment_method'  => 'cash',
+			'method'  => 'cash',
 			'reference'       => 'Test Reference',
 			'description'     => "Testing transfer for unit testing"
 		) );
@@ -23,7 +23,7 @@ class EverAccounting_Tests_transfer extends EverAccounting_Unit_Test_Case {
 
 		$this->assertEquals( '2020-08-26', date( 'Y-m-d', strtotime( $transfer->get_date() ) ) );
 		$this->assertEquals( 50, $transfer->get_amount() );
-		$this->assertEquals( 'cash', $transfer->get_payment_method() );
+		$this->assertEquals( 'cash', $transfer->get_method() );
 		$this->assertEquals( 'Test Reference', $transfer->get_reference() );
 		$this->assertEquals( 'Testing transfer for unit testing', $transfer->get_description() );
 
@@ -37,14 +37,14 @@ class EverAccounting_Tests_transfer extends EverAccounting_Unit_Test_Case {
 			'to_account_id'   => $to_account_id,
 			'date'            => '2020-08-26',
 			'amount'          => 50,
-			'payment_method'  => 'cash',
+			'method'  => 'cash',
 		) );
 		$transfer_id     = $transfer->get_id();
 		$this->assertNotFalse( $transfer->exists() );
 
 		$this->assertEquals( '2020-08-26', date( 'Y-m-d', strtotime( $transfer->get_date() ) ) );
 		$this->assertEquals( 50, $transfer->get_amount() );
-		$this->assertEquals( 'cash', $transfer->get_payment_method() );
+		$this->assertEquals( 'cash', $transfer->get_method() );
 
 		$error = eaccounting_insert_transfer( array(
 			'id'              => $transfer_id,
@@ -52,7 +52,7 @@ class EverAccounting_Tests_transfer extends EverAccounting_Unit_Test_Case {
 			'to_account_id'   => $from_account_id,
 			'date'            => '2020-08-24',
 			'amount'          => 60,
-			'payment_method'  => 'cash',
+			'method'  => 'cash',
 		) );
 		$this->assertNotWPError( $error );
 
@@ -60,7 +60,7 @@ class EverAccounting_Tests_transfer extends EverAccounting_Unit_Test_Case {
 
 		$this->assertEquals( '2020-08-24', date( 'Y-m-d', strtotime( $transfer->get_date() ) ) );
 		$this->assertEquals( 60, $transfer->get_amount() );
-		$this->assertEquals( 'cash', $transfer->get_payment_method() );
+		$this->assertEquals( 'cash', $transfer->get_method() );
 	}
 
 	public function test_delete_transfer() {
@@ -111,7 +111,7 @@ class EverAccounting_Tests_transfer extends EverAccounting_Unit_Test_Case {
 			'to_account_id'   => $to_account_id,
 			'amount'          => 50,
 			'date'            => '2020-08-31',
-			'payment_method'  => '',
+			'method'  => '',
 
 		) );
 		$this->assertEquals( 'Payment method is required', $transfer->get_error_message() );
@@ -121,7 +121,7 @@ class EverAccounting_Tests_transfer extends EverAccounting_Unit_Test_Case {
 			'to_account_id'   => $to_account_id,
 			'amount'          => 50,
 			'date'            => '2020-08-31',
-			'payment_method'  => 'cash',
+			'method'  => 'cash',
 
 		) );
 		$this->assertNotFalse( $transfer->exists() );

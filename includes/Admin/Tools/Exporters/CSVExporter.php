@@ -9,7 +9,7 @@
 
 namespace EverAccounting\Admin\Tools\Exporters;
 
-use EverAccounting\DateTime;
+use EverAccounting\Utilities\DateTime;
 
 /**
  * Class CSVExporter.

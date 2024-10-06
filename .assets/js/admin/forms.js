@@ -26,7 +26,7 @@ const {Money} = eac.money;
 			}
 
 			self.block();
-			var Account = new eac.api.Account({id: account_id});
+			var Account = new eac_api.Account({id: account_id});
 			Account.fetch({
 				success: function (account) {
 					var new_currency = account.get('currency') || eac_admin_vars.base_currency;
@@ -55,8 +55,8 @@ const {Money} = eac.money;
 	 * @type {Backbone.Model}
 	 * @since 1.0.0
 	 */
-	var InvoiceState = eac.api.Invoice.extend({
-		defaults: Object.assign({}, eac.api.Invoice.prototype.defaults, {
+	var InvoiceState = eac_api.Invoice.extend({
+		defaults: Object.assign({}, eac_api.Invoice.prototype.defaults, {
 			isFetching: false,
 		})
 	});
@@ -72,7 +72,7 @@ const {Money} = eac.money;
 
 		events: {
 			'change [name="contact_id"]': 'onContactChange',
-			'change [name="currency_code"]': 'onCurrencyCodeChange',
+			'change [name="currency"]': 'onCurrencyChange',
 			'change [name="discount_value"]': 'onDiscountValueChange',
 			'change [name="discount_type"]': 'onDiscountTypeChange',
 		},
@@ -107,7 +107,7 @@ const {Money} = eac.money;
 				});
 			}
 
-			new eac.api.Customer({id: contact_id}).fetch({
+			new eac_api.Customer({id: contact_id}).fetch({
 				success: (model) => {
 					state.set('contact_id', model.get('id'));
 					state.set({
@@ -125,12 +125,12 @@ const {Money} = eac.money;
 			});
 		},
 
-		onCurrencyCodeChange(e) {
+		onCurrencyChange(e) {
 			e.preventDefault();
+			var state = this.options.state;
 			var code = e.target.value;
-			var currency = eac_admin_vars.currencies[code] || eac_admin_vars.base_currency;
-			this.options.state.set('money', new Money(currency));
-			this.options.state.set('currency_code', code);
+			this.options.state.set('currency', code);
+			state.updateAmounts();
 		},
 
 		onDiscountValueChange(e) {
@@ -265,8 +265,8 @@ const {Money} = eac.money;
 			console.log(state);
 			return {
 				...model.toJSON(),
-				formatted_subtotal: state.get('money').format(model.get('subtotal')),
-				formatted_tax: state.get('money').format(model.get('tax')),
+				formatted_subtotal: state.get('money').format(model.get('subtotal'), state.get('currency')),
+				formatted_tax: state.get('money').format(model.get('tax'), state.get('currency')),
 				tax: model.get('taxes').reduce((acc, tax) => acc + tax.get('amount'), 0),
 				taxes: model.get('taxes').toJSON(),
 			}
@@ -309,7 +309,7 @@ const {Money} = eac.money;
 				return;
 			}
 
-			var tax = new eac.api.Tax({id: tax_id});
+			var tax = new eac_api.Tax({id: tax_id});
 			tax.fetch({
 				success: (model) => {
 					this.model.get('taxes').add({
@@ -374,7 +374,7 @@ const {Money} = eac.money;
 				return;
 			}
 			$(e.target).val(null).trigger('change');
-			const item = new eac.api.Item({id: item_id});
+			const item = new eac_api.Item({id: item_id});
 			item.fetch({
 				success: (model) => {
 					const id = _.uniqueId('item_');
@@ -384,7 +384,7 @@ const {Money} = eac.money;
 						item_id: model.get('id'),
 						id: id,
 						// convert taxes to a collection.
-						taxes: new eac.api.DocumentTaxes(
+						taxes: new eac_api.DocumentTaxes(
 							model.get('taxes').map((tax) => ({
 								...tax,
 								price: model.get('cost') || model.get('price'),
@@ -422,10 +422,10 @@ const {Money} = eac.money;
 			const {state} = this.options;
 			return {
 				...state.toJSON(),
-				formatted_subtotal: state.get('money').format(state.get('subtotal')),
-				formatted_discount: state.get('money').format(state.get('discount')),
-				formatted_tax: state.get('money').format(state.get('tax')),
-				formatted_total: state.get('money').format(state.get('total')),
+				formatted_subtotal: state.get('money').format(state.get('subtotal'), state.get('currency')),
+				formatted_discount: state.get('money').format(state.get('discount'), state.get('currency')),
+				formatted_tax: state.get('money').format(state.get('tax'), state.get('currency')),
+				formatted_total: state.get('money').format(state.get('total'), state.get('currency')),
 			}
 		}
 	});
@@ -443,17 +443,17 @@ const {Money} = eac.money;
 
 		const state = new InvoiceState({
 			...window?.eac_invoice_vars || {},
-			items: new eac.api.DocumentItems(),
-			money: new Money({code: window?.eac_invoice_vars?.currency}),
+			items: new eac_api.DocumentItems(),
+			money: new Money(window?.eac_invoice_vars?.currencies),
 		});
 
 		// Hydrate collections.
 		var items = eac_invoice_vars?.items || [];
 		items.forEach(function (_item) {
 			var tax_ids = (_item.taxes || []).map(tax => tax.tax_id);
-			var taxes = new eac.api.Taxes();
+			var taxes = new eac_api.Taxes();
 			taxes.fetch({data: {include: tax_ids}});
-			var item = new eac.api.Item({
+			var item = new eac_api.Item({
 				..._item,
 				taxes,
 			});

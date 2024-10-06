@@ -75,7 +75,7 @@ use ByteKit\Models\Relations\HasMany;
  * @property string          $sent_date Sent date of the document.
  * @property string          $payment_date Payment date of the document.
  * @property string          $currency Currency code of the document.
- * @property double          $exchange_rate Exchange rate of the document.
+ * @property double          $conversion Exchange rate of the document.
  * @property int             $parent_id Parent ID of the document.
  * @property string          $created_via Created via of the document.
  * @property int             $creator_id Author ID of the document.
@@ -138,6 +138,7 @@ class Document extends Model {
 		'sent_date',
 		'payment_date',
 		'currency',
+		'conversion',
 		'parent_id',
 		'created_via',
 		'creator_id',
@@ -174,6 +175,7 @@ class Document extends Model {
 		'due_date'       => 'date',
 		'sent_date'      => 'date',
 		'payment_date'   => 'date',
+		'conversion'     => 'float',
 		'parent_id'      => 'int',
 		'creator_id'     => 'int',
 	);

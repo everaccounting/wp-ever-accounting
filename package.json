@@ -38,9 +38,11 @@
   },
   "dependencies": {
     "@eac/api": "file:packages/api",
+    "@eac/autocomplete": "file:packages/autocomplete",
     "@eac/components": "file:packages/components",
     "@eac/money": "file:packages/money",
     "chartjs": "^0.3.24",
+    "lerna": "^8.1.8",
     "react-select": "^5.8.1",
     "select-woo": "^1.0.1"
   },

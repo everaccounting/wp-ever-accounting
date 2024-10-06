@@ -43,26 +43,31 @@ class Currencies extends ListTable {
 	 */
 	public function prepare_items() {
 		$this->process_actions();
-		$per_page = $this->get_items_per_page( 'eac_currencies_per_page', 20 );
-		$paged    = $this->get_pagenum();
-		$search   = $this->get_request_search();
 		$order_by = $this->get_request_orderby();
 		$order    = $this->get_request_order();
 
-		$all_currencies = eac_get_currencies();
-		$currencies     = array();
-		foreach ( get_option( 'eac_currencies', array() ) as $code => $currency ) {
-			if ( isset( $all_currencies[ $code ] ) ) {
-				$currencies[ $code ] = $all_currencies[ $code ];
+		$currencies = eac_get_currencies();
+		// sort currencies.
+		uasort(
+			$currencies,
+			function ( $a, $b ) use ( $order_by, $order ) {
+				if ( in_array( $order_by, array( 'rate', 'precision' ), true ) ) {
+					$comparison = $a[ $order_by ] - $b[ $order_by ];
+				} elseif ( isset( $a[ $order_by ] ) && isset( $b[ $order_by ] ) ) {
+					$comparison = strcmp( $a[ $order_by ], $b[ $order_by ] );
+				} else {
+					$comparison = 0;
+				}
+				return 'asc' === $order ? $comparison : - $comparison;
 			}
-		}
+		);
 
 		$this->items = $currencies;
 		$total_items = count( $currencies );
 		$this->set_pagination_args(
 			array(
 				'total_items' => $total_items,
-				'per_page'    => $per_page,
+				'per_page'    => $total_items,
 			)
 		);
 	}

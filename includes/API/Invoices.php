@@ -342,7 +342,7 @@ class Invoices extends Documents {
 					'type'        => 'string',
 					'context'     => array( 'view', 'edit' ),
 				),
-				'exchange_rate'   => array(
+				'conversion'   => array(
 					'description' => __( 'Exchange rate.', 'wp-ever-accounting' ),
 					'type'        => 'number',
 					'context'     => array( 'view', 'edit' ),

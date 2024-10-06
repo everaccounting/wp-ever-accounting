@@ -58,7 +58,7 @@ class Item extends Model {
 		'cost',
 		'tax_ids',
 		'category_id',
-		'thumbnail_id'
+		'thumbnail_id',
 	);
 
 	/**
@@ -68,7 +68,7 @@ class Item extends Model {
 	 * @var array
 	 */
 	protected $attributes = array(
-		'type'   => 'standard'
+		'type' => 'standard',
 	);
 
 	/**

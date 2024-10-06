@@ -301,8 +301,8 @@ class Invoice_V1 extends Document {
 				'document_id'    => $this->id,
 				'amount'         => 0,
 				'currency'  => $this->currency,
-				'exchange_rate'  => $this->exchange_rate,
-				'payment_method' => '',
+				'conversion'  => $this->conversion,
+				'method' => '',
 				'note'           => '',
 			)
 		);
@@ -322,9 +322,9 @@ class Invoice_V1 extends Document {
 			return new \WP_Error( 'invalid_account', __( 'Invalid account.', 'wp-ever-accounting' ) );
 		}
 		if ( $account->currency !== $this->currency ) {
-			$data['amount']        = eac_convert_currency( $data['amount'], $this->currency, $account->currency, $this->exchange_rate );
+			$data['amount']        = eac_convert_currency( $data['amount'], $this->currency, $account->currency, $this->conversion );
 			$data['currency'] = $account->currency;
-			$data['exchange_rate'] = $account->currency ? $account->currency->exchange_rate : 1;
+			$data['conversion'] = $account->currency ? $account->currency->conversion : 1;
 		}
 
 		$revenue = eac_insert_revenue(
@@ -335,7 +335,7 @@ class Invoice_V1 extends Document {
 				'account_id'     => $data['account_id'],
 				'amount'         => $data['amount'],
 				'currency'  => $data['currency'],
-				'exchange_rate'  => $data['exchange_rate'],
+				'conversion'  => $data['conversion'],
 				'payment_method' => $data['payment_method'],
 				'note'           => $data['note'],
 				'created_via'    => 'invoice',
@@ -388,7 +388,7 @@ class Invoice_V1 extends Document {
 		$this->total_paid = 0;
 		if ( ! empty( $transactions ) ) {
 			foreach ( $transactions as $transaction ) {
-				$amount = eac_convert_currency( $transaction->amount, $transaction->currency, $this->currency, $transaction->exchange_rate, $this->exchange_rate );
+				$amount = eac_convert_currency( $transaction->amount, $transaction->currency, $this->currency, $transaction->conversion, $this->conversion );
 				if ( 'revenue' === $transaction->type ) {
 					$this->total_paid += $amount;
 				} elseif ( 'expense' === $transaction->type ) {

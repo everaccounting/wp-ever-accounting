@@ -94,11 +94,11 @@ class Shortcodes {
 			'eac_invoice'
 		);
 
-//		$invoice = eac_get_invoice( $atts['id'] );
-//
-//		if ( ! $invoice ) {
-//			return '';
-//		}
+		$invoice = EAC()->invoices->get( $atts['id'] );
+
+		if ( ! $invoice ) {
+			return '';
+		}
 
 		ob_start();
 		eac_get_template( 'invoice.php', array( 'invoice' => $invoice ) );
