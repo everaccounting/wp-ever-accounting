@@ -5,28 +5,37 @@ import { Input, useQueryResult } from '@eac/components';
 /**
  * WordPress dependencies
  */
+import { useState, useEffect } from '@wordpress/element';
 
 const App = () => {
-	const { isLoading, result } = useQueryResult( {
-		endpoint: '/eac/v1/items',
-	} );
+	const [ date, setDate ] = useState();
 
-	console.log( isLoading );
-	console.log( result );
+	// after 2 seconds, set a new date.
+	useEffect( () => {
+		setTimeout( () => {
+			console.log( 'Setting date to 2021-01-01' );
+			setDate( new Date() );
+		}, 2000 );
+	}, [] );
+
+	console.log( date );
 
 	return (
 		<div>
 			<h1>App</h1>
-			<Input.Amount
-				label="Amount"
-				placeholder="Please enter a number"
-				defaultValue={ 1000 }
-				onValueChange={ ( value, name, values ) => console.log( value, name, values ) }
-				prefix="$"
-				decimalSeparator="."
-				thousandSeparator=","
+			<Input
+				label="Text"
+				help="Enter some text"
+				// disabled={ true }
+				value="Some text"
 			/>
-			<Input.Date label="Date" placeholder="Please enter a number" />
+			<Input.Date
+				label="Date"
+				help="Select a date"
+				suffix="Suffix"
+				selected={ date }
+				onChange={ ( _date ) => setDate( _date ) }
+			/>
 		</div>
 	);
 };

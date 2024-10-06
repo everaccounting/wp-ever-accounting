@@ -1,11 +1,12 @@
-.eac-field {
-	.components-base-control__help {
-		margin-top: 4px;
-		display: inline-flex;
-		gap: 4px;
-	}
+.react-datepicker-wrapper{
+	width: 100%;
+	display: block;
+}
 
-	.eac-field__error {
-		color: #dc3232;
-	}
+.react-datepicker-popper .react-datepicker__triangle {
+	display: none;
+}
+
+.components-base-control{
+	margin-bottom: 1em;
 }

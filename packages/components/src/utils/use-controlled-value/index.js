@@ -33,5 +33,3 @@ export function useControlledValue( { defaultValue, onChange, value: valueProp }
 
 	return [ value, setValue ];
 }
-
-export default useControlledValue;
