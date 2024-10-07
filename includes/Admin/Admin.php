@@ -2,8 +2,6 @@
 
 namespace EverAccounting\Admin;
 
-use EverAccounting\Admin\Settings\Settings;
-
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -25,7 +23,7 @@ class Admin {
 		add_filter( 'admin_footer_text', array( $this, 'admin_footer_text' ), PHP_INT_MAX );
 		add_filter( 'update_footer', array( $this, 'update_footer' ), PHP_INT_MAX );
 		add_action( 'in_admin_header', array( __CLASS__, 'in_admin_header' ) );
-//		add_action( 'wp_loaded', array( $this, 'save_settings' ) );
+		add_action( 'admin_head', array( $this, 'print_scripts' ) );
 	}
 
 	/**
@@ -212,32 +210,19 @@ class Admin {
 	}
 
 	/**
-	 * Save settings.
+	 * Print scripts.
 	 *
-	 * @since 1.1.6
+	 * @since 1.0.0
+	 * @return void
 	 */
-	public function save_settings() {
-		global $current_tab, $current_section;
-		$page = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
-
-		// We should only save on the settings page.
-		if ( ! is_admin() || empty( $page ) || 'eac-settings' !== $page ) {
-			return;
-		}
-
-		// Include settings pages.
-		Settings::get_tabs();
-
-		// Get current tab/section.
-		$current_tab     = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_FULL_SPECIAL_CHARS ) ?? '';
-		$current_section = filter_input( INPUT_GET, 'section', FILTER_SANITIZE_FULL_SPECIAL_CHARS ) ?? '';
-		$is_save         = isset( $_POST['save'] ) ? true : false;
-
-		// Save settings if data has been posted.
-		if ( '' !== $current_section && apply_filters( "ever_accounting_save_settings_{$current_tab}_{$current_section}", $is_save ) ) {
-			Settings::save();
-		} elseif ( '' === $current_section && apply_filters( "ever_accounting_save_settings_{$current_tab}", $is_save ) ) {
-			Settings::save();
-		}
+	public function print_scripts() {
+		$currencies    = eac_get_currencies();
+		$base_currency = eac_base_currency();
+		?>
+		<script type="text/javascript">
+			var eac_currencies = JSON.parse( decodeURIComponent( '<?php echo rawurlencode( wp_json_encode( $currencies ) ); ?>' ) );
+			var eac_base_currency = '<?php echo esc_js( $base_currency ); ?>';
+		</script>
+		<?php
 	}
 }

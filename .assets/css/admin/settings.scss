@@ -242,3 +242,39 @@ form#eac-add-currency {
 	//max-width: 600px;
 }
 
+table.eac-exchange-rates {
+	max-width: 600px;
+
+	thead th {
+		padding-top: 0 !important;
+		border-bottom: 1px solid #e5e5e5;
+
+		&.col-remove {
+			width: 30px;
+		}
+	}
+
+	td.rate > div {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+	}
+
+	td.rate input {
+		width: 80px;
+	}
+
+	td.actions a {
+		color: #a00;
+		text-decoration: none;
+	}
+
+	select {
+		max-width: 250px;
+		width: 100%;
+	}
+
+	input[type="number"] {
+		width: 100px;
+	}
+}

@@ -30,147 +30,36 @@ function eac_base_currency() {
 }
 
 /**
- * Get the currency symbol.
- *
- * @param string $currency The currency.
- *
- * @since 1.0.0
- * @return string
- */
-function eac_currency_symbol( $currency = null ) {
-	$currency = empty( $currency ) ? eac_base_currency() : strtoupper( $currency );
-
-	$currencies = eac_get_currencies();
-
-	return isset( $currencies[ $currency ] ) ? $currencies[ $currency ]['symbol'] : $currency;
-}
-
-/**
- * Get the currency precision.
- *
- * @param string $currency The currency.
- *
- * @since 1.0.0
- * @return int The currency precision.
- */
-function eac_currency_precision( $currency = null ) {
-	$currency = empty( $currency ) ? eac_base_currency() : strtoupper( $currency );
-
-	$currencies = eac_get_currencies();
-
-	return isset( $currencies[ $currency ] ) ? $currencies[ $currency ]['precision'] : 2;
-}
-
-/**
- * Get the currency position.
- *
- * @param string $currency The currency.
- *
- * @since 1.0.0
- * @return string The currency position.
- */
-function eac_currency_position( $currency = null ) {
-	$currency = empty( $currency ) ? eac_base_currency() : strtoupper( $currency );
-
-	$currencies = eac_get_currencies();
-
-	return isset( $currencies[ $currency ] ) ? $currencies[ $currency ]['position'] : 'before';
-}
-
-/**
- * Get the currency thousands separator.
- *
- * @param string $currency The currency.
- *
- * @since 1.0.0
- * @return string The currency thousand separator.
- */
-function eac_thousand_separator( $currency = null ) {
-	$currency = empty( $currency ) ? eac_base_currency() : strtoupper( $currency );
-
-	$currencies = eac_get_currencies();
-
-	return isset( $currencies[ $currency ] ) ? $currencies[ $currency ]['thousand_separator'] : ',';
-}
-
-/**
- * Get the currency decimal separator.
- *
- * @param string $currency The currency.
- *
- * @since 1.0.0
- * @return string The currency decimal separator.
- */
-function eac_decimal_separator( $currency = null ) {
-	$currency = empty( $currency ) ? eac_base_currency() : strtoupper( $currency );
-
-	$currencies = eac_get_currencies();
-
-	return isset( $currencies[ $currency ] ) ? $currencies[ $currency ]['decimal_separator'] : '.';
-}
-
-/**
  * Get currencies.
  *
  * @since 1.0.0
- * @return array
+ * @return array Array of currencies.
  */
 function eac_get_currencies() {
-	$currencies     = array();
-	$iso_currencies = I18n::get_currencies();
-	$base_currency  = eac_base_currency();
-	$options        = get_option( 'eac_currencies', array() );
-
-	// add base currency.
-	$currencies[ $base_currency ] = array(
-		'code'               => $base_currency,
-		'rate'               => 1,
-		'precision'          => get_option( 'eac_currency_precision', 2 ),
-		'position'           => get_option( 'eac_currency_position', 'before' ),
-		'thousand_separator' => get_option( 'eac_thousand_separator', ',' ),
-		'decimal_separator'  => get_option( 'eac_decimal_separator', '.' ),
-		'symbol'             => $iso_currencies[ $base_currency ]['symbol'],
-		'name'               => $iso_currencies[ $base_currency ]['name'],
-		'formatted_name'     => sprintf( '%s - %s', $base_currency, $iso_currencies[ $base_currency ]['name'] ),
+	$currencies = apply_filters(
+		'eac_currencies',
+		array_map(
+			function ( $currency ) {
+				$currency['formatted_name'] = esc_html( sprintf( '%s (%s) - (%s)', $currency['name'], $currency['symbol'], $currency['code'] ) );
+				return $currency;
+			},
+			I18n::get_currencies()
+		)
 	);
 
-	// add local currencies.
-	if ( ! empty( $options ) && is_array( $options ) ) {
-		foreach ( $options as $code => $currency ) {
-			$currencies[ $code ] = wp_parse_args(
-				array(
-					'rate'               => isset( $currency['rate'] ) ? (float) $currency['rate'] : 1,
-					'precision'          => isset( $currency['precision'] ) ? (int) $currency['precision'] : 2,
-					'position'           => isset( $currency['position'] ) ? $currency['position'] : 'before',
-					'thousand_separator' => isset( $currency['thousand_separator'] ) ? $currency['thousand_separator'] : ',',
-					'decimal_separator'  => isset( $currency['decimal_separator'] ) ? $currency['decimal_separator'] : '.',
-					'formatted_name'     => sprintf( '%s - %s', $code, $iso_currencies[ $code ]['name'] ),
-				),
-				$iso_currencies[ $code ],
-			);
-		}
-	}
+	// Fix rate for base currency.
+	$base                             = eac_base_currency();
+	$currencies[ $base ]['rate']      = 1;
+	$currencies[ $base ]['position']  = get_option( 'eac_currency_position', 'before' );
+	$currencies[ $base ]['thousand']  = stripslashes( get_option( 'eac_thousand_separator', ',' ) );
+	$currencies[ $base ]['decimal']   = stripslashes( get_option( 'eac_decimal_separator', '.' ) );
+	$currencies[ $base ]['precision'] = absint( get_option( 'eac_currency_precision', 2 ) );
 
-	return apply_filters( 'eac_currencies', $currencies );
+	return $currencies;
 }
 
 /**
- * Get exchange rate for a currency.
- *
- * @param string $currency The currency.
- *
- * @since 1.0.0
- * @return float
- */
-function eac_get_conversion( $currency = null ) {
-	$currency   = strtoupper( $currency );
-	$currencies = eac_get_currencies();
-
-	return isset( $currencies[ $currency ] ) && $currencies[ $currency ]['rate'] > 0 ? $currencies[ $currency ]['rate'] : 1;
-}
-
-/**
- * Format price with currency code & number format
+ * Format amount with currency code & number format
  *
  * @param string $amount Amount.
  * @param string $currency Currency code.
@@ -179,21 +68,17 @@ function eac_get_conversion( $currency = null ) {
  * @return string
  */
 function eac_format_amount( $amount, $currency = null ) {
-	$currency_symbol    = eac_currency_symbol( $currency );
-	$currency_precision = eac_currency_precision( $currency );
-	$currency_position  = eac_currency_position( $currency );
-	$thousand_separator = eac_thousand_separator( $currency );
-	$decimal_separator  = eac_decimal_separator( $currency );
-
+	$currencies = eac_get_currencies();
 	if ( ! is_numeric( $amount ) ) {
 		$amount = eac_sanitize_amount( $amount, $currency );
 	}
+	$data     = array_key_exists( $currency, $currencies ) ? $currencies[ $currency ] : $currencies[ eac_base_currency() ];
 	$negative = $amount < 0;
-	$prefix   = 'before' === $currency_position ? $currency_symbol : '';
-	$suffix   = 'after' === $currency_position ? $currency_symbol : '';
+	$prefix   = 'before' === $data['position'] ? $data['symbol'] : '';
+	$suffix   = 'after' === $data['position'] ? $data['symbol'] : '';
 
 	$amount = $negative ? - $amount : $amount;
-	$amount = number_format( $amount, $currency_precision, $decimal_separator, $thousand_separator );
+	$amount = number_format( $amount, $data['precision'], $data['decimal'], $data['thousand'] );
 
 	return $negative ? sprintf( '-%s%s%s', $prefix, $amount, $suffix ) : sprintf( '%s%s%s', $prefix, $amount, $suffix );
 }
@@ -209,16 +94,15 @@ function eac_format_amount( $amount, $currency = null ) {
  */
 function eac_sanitize_amount( $amount, $currency = null ) {
 	if ( ! is_numeric( $amount ) ) {
-		$currency_symbol    = eac_currency_symbol( $currency );
-		$thousand_separator = eac_thousand_separator( $currency );
-		$decimal_separator  = eac_decimal_separator( $currency );
+		$currencies = eac_get_currencies();
+		$data       = array_key_exists( $currency, $currencies ) ? $currencies[ $currency ] : $currencies[ eac_base_currency() ];
 
 		// Remove currency symbol.
-		$amount = str_replace( $currency_symbol, '', $amount );
+		$amount = str_replace( $data['symbol'], '', $amount );
 		// Remove any non-numeric characters except a thousand and decimal separators.
-		$amount = preg_replace( '/[^0-9\\' . $thousand_separator . '\\' . $decimal_separator . '\-\+]/', '', $amount );
+		$amount = preg_replace( '/[^0-9\\' . $data['thousand'] . '\\' . $data['decimal'] . '\-\+]/', '', $amount );
 		// Replace a thousand and decimal separators with empty string and dot respectively.
-		$amount = str_replace( array( $thousand_separator, $decimal_separator ), array( '', '.' ), $amount );
+		$amount = str_replace( array( $data['thousand'], $data['decimal'] ), array( '', '.' ), $amount );
 
 		// Convert to int if amount is a whole number, otherwise convert to float.
 		if ( preg_match( '/^([\-\+])?\d+$/', $amount ) ) {
@@ -247,20 +131,22 @@ function eac_sanitize_amount( $amount, $currency = null ) {
  * @return float|int|string
  */
 function eac_convert_currency( $amount, $from_currency, $to_currency = null, $from_rate = null, $to_rate = null, $formatted = false ) {
+	$currencies = eac_get_currencies();
 	if ( ! is_numeric( $amount ) ) {
 		$amount = eac_sanitize_amount( $amount, $from_currency );
 	}
-
-	$from_rate = empty( $from_rate ) ? eac_get_conversion( $from_currency ) : $from_rate;
-	$to_rate   = empty( $to_rate ) ? eac_get_conversion( $to_currency ) : $to_rate;
+	$from_data = array_key_exists( $from_currency, $currencies ) ? $currencies[ $from_currency ] : $currencies[ eac_base_currency() ];
+	$to_data   = array_key_exists( $to_currency, $currencies ) ? $currencies[ $to_currency ] : $currencies[ eac_base_currency() ];
+	$from_rate = empty( $from_rate ) ? $from_data['rate'] : $from_rate;
+	$to_rate   = empty( $to_rate ) ? $to_data['rate'] : $to_rate;
 
 	// No need to convert same currency.
 	if ( $from_currency !== $to_currency && $amount > 0 && $from_rate > 0 ) {
-		$amount = round( $amount / $from_rate, eac_currency_precision( $to_currency ) ) * $to_rate;
+		$amount = round( $amount / $from_rate, $to_data['precision'] ) * $to_rate;
 	}
 
 	if ( $amount > 0 && $to_rate > 0 ) {
-		$amount = round( $amount * $to_rate, eac_currency_precision( $to_currency ) );
+		$amount = round( $amount * $to_rate, $to_data['precision'] );
 	}
 
 	return $formatted ? eac_format_amount( $amount, $to_currency ) : $amount;

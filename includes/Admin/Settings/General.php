@@ -31,9 +31,8 @@ class General extends Page {
 	 */
 	public function get_sections() {
 		return array(
-			''           => __( 'General', 'wp-ever-accounting' ),
-			'currency'   => __( 'Currency', 'wp-ever-accounting' ),
-			'currencies' => __( 'Currencies', 'wp-ever-accounting' ),
+			''         => __( 'General', 'wp-ever-accounting' ),
+			'currency' => __( 'Currency', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -191,7 +190,7 @@ class General extends Page {
 				'type'     => 'select',
 				'default'  => 'USD',
 				'class'    => 'eac_select2',
-				'options'  => wp_list_pluck( I18n::get_currencies(), 'name', 'code' ),
+				'options'  => wp_list_pluck( eac_get_currencies(), 'formatted_name', 'code' ),
 				'value'    => get_option( 'eac_base_currency', 'USD' ),
 				'desc_tip' => true,
 			),
@@ -235,38 +234,16 @@ class General extends Page {
 				'default'     => 2,
 				'desc_tip'    => true,
 			),
+			// exchange rates.
+			array(
+				'title' => __( 'Exchange Rates', 'wp-ever-accounting' ),
+				'id'    => 'eac_exchange_rates',
+				'type'  => 'exchange_rates',
+			),
+
 			array(
 				'type' => 'sectionend',
 				'id'   => 'currency_options',
-			),
-			array(
-				'title' => __( 'Exchange Rates', 'wp-ever-accounting' ),
-				'type'  => 'title',
-				'id'    => 'exchange_rates',
-			),
-			array(
-				'title'    => __( 'Auto Update Exchange Rates', 'wp-ever-accounting' ),
-				'desc'     => __( 'Automatically update exchange rates.', 'wp-ever-accounting' ),
-				'id'       => 'eac_auto_update_exchange_rates',
-				'type'     => 'checkbox',
-				'default'  => 'no',
-				'desc_tip' => true,
-			),
-			array(
-				'title'    => __( 'Exchange Rates API', 'wp-ever-accounting' ),
-				'desc'     => __( 'The API to use for exchange rates.', 'wp-ever-accounting' ),
-				'id'       => 'eac_exchange_rates_api',
-				'type'     => 'select',
-				'default'  => 'fixer',
-				'options'  => array(
-					'fixer'             => 'Fixer.io',
-					'openexchangerates' => 'Open Exchange Rates',
-				),
-				'desc_tip' => true,
-			),
-			array(
-				'type' => 'sectionend',
-				'id'   => 'exchange_rates',
 			),
 		);
 	}

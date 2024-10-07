@@ -16,52 +16,83 @@ class Currencies {
 	 * Currencies constructor.
 	 */
 	public function __construct() {
-		add_action( 'eac_settings_general_tab_currencies', array( __CLASS__, 'render' ) );
-		add_action( 'admin_post_eac_add_currency', array( __CLASS__, 'handle_add' ) );
+		add_action( 'eac_settings_field_exchange_rates', array( __CLASS__, 'exchange_rates_field' ) );
 	}
 
 	/**
-	 * Render the currencies settings.
+	 * Exchange rates field.
+	 *
+	 * @param array $value Field arguments.
 	 *
 	 * @since 1.0.0
 	 */
-	public static function render() {
+	public static function exchange_rates_field( $value ) {
 		$currencies = eac_get_currencies();
-		$currency   = isset( $_GET['currency'] ) ? strtoupper( sanitize_key( wp_unslash( $_GET['currency'] ) ) ) : '';
-		if ( eac_base_currency() !== $currency && array_key_exists( $currency, $currencies ) ) {
-			$currency = $currencies[ $currency ];
-			include __DIR__ . '/views/currency-edit.php';
-		} else {
-			$list_table = new ListTables\Currencies();
-			$list_table->prepare_items();
-			include __DIR__ . '/views/currency-list.php';
-		}
+		unset( $currencies[ eac_base_currency() ] );
+		$rates = get_option( 'eac_exchange_rates', array() );
+		?>
+		<tr valign="top">
+			<th scope="row" class="titledesc">
+				<label
+					for="<?php echo esc_attr( $value['name'] ); ?>"><?php echo esc_html( $value['title'] ); ?></label>
+			</th>
+			<td class="forminp forminp-<?php echo esc_attr( $value['type'] ); ?>">
+				<?php include __DIR__ . '/views/exchange-rates.php'; ?>
+			</td>
+		</tr>
+		<?php
 	}
 
 	/**
-	 * Handle add currency.
+	 * Exchange rates field.
+	 *
+	 * @param array $value Field arguments.
 	 *
 	 * @since 1.0.0
 	 */
-	public static function handle_add() {
-		$referer = wp_get_referer();
-		if ( ! check_admin_referer( 'eac_add_currency' ) || ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'You are not allowed to perform this action.', 'wp-ever-accounting' ) );
-		}
-		$currency = isset( $_POST['currency'] ) ? sanitize_text_field( wp_unslash( $_POST['currency'] ) ) : '';
-		$rate     = isset( $_POST['rate'] ) ? floatval( wp_unslash( $_POST['rate'] ) ) : '';
-		if ( empty( $currency ) || empty( $rate ) ) {
-			wp_safe_redirect( $referer );
-			exit;
-		}
-		$currencies              = get_option( 'eac_currencies', array() );
-		$currency                = strtoupper( $currency );
-		$currencies[ $currency ] = array(
-			'rate' => $rate,
-		);
-		update_option( 'eac_currencies', $currencies );
-		EAC()->flash->success( esc_html__( 'Currency added successfully.', 'wp-ever-accounting' ) );
-		wp_safe_redirect( $referer );
-		exit;
+	public static function exchange_rates_field_v1( $value ) {
+		$currencies = eac_get_currencies();
+		unset( $currencies[ eac_base_currency() ] );
+		$rates = get_option( 'eac_exchange_rates', array() );
+		?>
+		<tr valign="top">
+			<th scope="row" class="titledesc">
+				<label
+					for="<?php echo esc_attr( $value['name'] ); ?>"><?php echo esc_html( $value['title'] ); ?></label>
+			</th>
+			<td class="forminp forminp-<?php echo esc_attr( $value['type'] ); ?>">
+				<table class="eac-exchange-rates">
+					<thead>
+					<tr>
+						<th class="currency"><?php esc_html_e( 'Currency', 'wp-ever-accounting' ); ?></th>
+						<th class="rate"><?php esc_html_e( 'Rate', 'wp-ever-accounting' ); ?></th>
+						<td class="actions" width="1%"></td>
+					</tr>
+					</thead>
+					<tbody>
+					<?php foreach ( $rates as $code => $rate ) : ?>
+						<?php include __DIR__ . '/views/exchange-rate-row.php'; ?>
+					<?php endforeach; ?>
+					</tbody>
+					<tfoot>
+					<tr>
+						<td colspan="3">
+							<a href="#" class="button add" data-row="
+								<?php
+								ob_start();
+								$rate = 1;
+								$code = '';
+								include __DIR__ . '/views/exchange-rate-row.php';
+								echo esc_attr( ob_get_clean() );
+								?>
+								">
+								<?php esc_html_e( 'Add Exchange Rate', 'wp-ever-accounting' ); ?>
+							</a>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<?php
 	}
 }

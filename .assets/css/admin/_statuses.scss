@@ -27,7 +27,7 @@
 	&.is--danger,
 	&.is--cancelled {
 		background: #e55353;
-		border: 1px solid darken(#e55353, 10%);
+		border: 1px solid #de2727;
 		color: #fff;
 	}
 
@@ -36,14 +36,14 @@
 	&is--enabled,
 	&.is--completed {
 		background: #00a86b;
-		border: 1px solid darken(#00a86b, 10%);
+		border: 1px solid #00754b;
 		color: #fff;
 	}
 
 	&.is--info,
 	&.is--refunded {
 		background: #007bff;
-		border: 1px solid darken(#007bff, 10%);
+		border: 1px solid #0062cc;
 		color: #fff;
 	}
 

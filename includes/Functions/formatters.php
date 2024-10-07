@@ -117,9 +117,6 @@ function eac_get_formatted_address( $fields = array(), $separator = '<br/>' ) {
 	foreach ( $extra as $key => $value ) {
 		if ( ! empty( $value ) ) {
 			switch ( $key ) {
-				case 'phone':
-					$address_lines[] = eac_make_phone_clickable( $value );
-					break;
 				case 'email':
 					$address_lines[] = '<a href="mailto:' . esc_attr( $value ) . '">' . esc_html( $value ) . '</a>';
 					break;
@@ -136,22 +133,4 @@ function eac_get_formatted_address( $fields = array(), $separator = '<br/>' ) {
 	}
 
 	return implode( $separator, $address_lines );
-}
-
-/**
- * Convert plaintext phone number to clickable phone number.
- *
- * Remove formatting and allow "+".
- * Example and specs: https://developer.mozilla.org/en/docs/Web/HTML/Element/a#Creating_a_phone_link
- *
- * @param string $phone Content to convert phone number.
- *
- * @since 1.1.6
- *
- * @return string Content with converted phone number.
- */
-function eac_make_phone_clickable( $phone ) {
-	$number = trim( preg_replace( '/[^\d|\+]/', '', $phone ) );
-
-	return $number ? '<a href="tel:' . esc_attr( $number ) . '">' . esc_html( $phone ) . '</a>' : '';
 }
