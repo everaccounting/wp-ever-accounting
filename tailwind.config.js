@@ -4,11 +4,12 @@
 const { join } = require( 'path' );
 
 module.exports = {
-	prefix: 'eac-',
+	prefix: 'tw-',
 	content: [
-		join( __dirname, 'includes/Admin/*/*.php' ),
-		join( __dirname, 'templates/**/*.php' ),
-		join( __dirname, 'packages/**/*.js' ),
+		join( __dirname, 'includes/Admin/*.php' ),
+		join( __dirname, 'includes/Admin/views/*.php' ),
+		join( __dirname, 'templates/*/*.php' ),
+		join( __dirname, 'packages/*/*.js' ),
 	],
 	corePlugins: {
 		preflight: false,
@@ -36,3 +37,4 @@ module.exports = {
 		},
 	},
 };
+console.log(module.exports);

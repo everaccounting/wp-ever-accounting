@@ -226,21 +226,7 @@ class Currencies extends ListTable {
 	 * @return string Displays the rate.
 	 */
 	public function column_rate( $item ) {
-		$base = eac_base_currency();
-
-		return sprintf(
-			'
-    <div class="eac-input-group">
-        <span class="addon">1 %1$s =</span>
-        <input type="text" name="[%2$s][rate]" value="%3$s" class="eac-input" %4$s />
-        <span class="addon">%5$s</span>
-    </div>',
-			esc_html( $base ),
-			esc_attr( $item['code'] ),
-			esc_attr( $item['rate'] ),
-			$base === $item['code'] ? 'readonly' : '',
-			esc_html( $item['code'] )
-		);
+		return number_format( $item['rate'], 4 );
 	}
 
 	/**
@@ -253,12 +239,7 @@ class Currencies extends ListTable {
 	 * @return string Displays the precision.
 	 */
 	public function column_precision( $item ) {
-		return sprintf(
-			'<input type="number" name="[%1$s][precision]" value="%2$s" class="eac-input" step="any" min="0" max="10" %3$s/>',
-			esc_attr( $item['code'] ),
-			esc_attr( $item['precision'] ),
-			$item['code'] === eac_base_currency() ? 'readonly' : ''
-		);
+		return $item['precision'];
 	}
 
 	/**
@@ -271,12 +252,7 @@ class Currencies extends ListTable {
 	 * @return string Displays the decimal separator.
 	 */
 	public function column_decimal_separator( $item ) {
-		return sprintf(
-			'<input type="text" name="[%1$s][decimal_separator]" value="%2$s" class="eac-input" %3$s/>',
-			esc_attr( $item['code'] ),
-			esc_attr( $item['decimal_separator'] ),
-			$item['code'] === eac_base_currency() ? 'readonly' : ''
-		);
+		return $item['decimal_separator'];
 	}
 
 	/**
@@ -289,12 +265,7 @@ class Currencies extends ListTable {
 	 * @return string Displays the thousand separator.
 	 */
 	public function column_thousand_separator( $item ) {
-		return sprintf(
-			'<input type="text" name="[%1$s][thousand_separator]" value="%2$s" class="eac-input" %3$s/>',
-			esc_attr( $item['code'] ),
-			esc_attr( $item['thousand_separator'] ),
-			$item['code'] === eac_base_currency() ? 'readonly' : ''
-		);
+		return $item['thousand_separator'];
 	}
 
 	/**
@@ -307,18 +278,7 @@ class Currencies extends ListTable {
 	 * @return string Displays the position.
 	 */
 	public function column_position( $item ) {
-		return sprintf(
-			'<select class="tw-w-[100%%]" name="[%1$s][position]" %2$s>
-			<option value="before" %3$s>%4$s</option>
-			<option value="after" %5$s>%6$s</option>
-		</select>',
-			esc_attr( $item['code'] ),
-			$item['code'] === eac_base_currency() ? 'readonly' : '',
-			selected( 'before', $item['position'], false ),
-			esc_html__( 'Before', 'wp-ever-accounting' ),
-			selected( 'after', $item['position'], false ),
-			esc_html__( 'After', 'wp-ever-accounting' )
-		);
+		return $item['position'];
 	}
 
 	/**
@@ -336,6 +296,19 @@ class Currencies extends ListTable {
 			return null;
 		}
 		$actions = array(
+			'edit'   => sprintf(
+				'<a href="%s">%s</a>',
+				esc_url(
+					add_query_arg(
+						array(
+							'action'   => 'edit',
+							'currency' => $item['code'],
+						),
+						$this->base_url
+					)
+				),
+				__( 'Edit', 'wp-ever-accounting' )
+			),
 			'delete' => sprintf(
 				'<a href="%s">%s</a>',
 				esc_url(

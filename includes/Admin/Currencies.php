@@ -26,9 +26,16 @@ class Currencies {
 	 * @since 1.0.0
 	 */
 	public static function render() {
-		$list_table = new ListTables\Currencies();
-		$list_table->prepare_items();
-		include __DIR__ . '/views/currency-list.php';
+		$currencies = eac_get_currencies();
+		$currency   = isset( $_GET['currency'] ) ? strtoupper( sanitize_key( wp_unslash( $_GET['currency'] ) ) ) : '';
+		if ( eac_base_currency() !== $currency && array_key_exists( $currency, $currencies ) ) {
+			$currency = $currencies[ $currency ];
+			include __DIR__ . '/views/currency-edit.php';
+		} else {
+			$list_table = new ListTables\Currencies();
+			$list_table->prepare_items();
+			include __DIR__ . '/views/currency-list.php';
+		}
 	}
 
 	/**

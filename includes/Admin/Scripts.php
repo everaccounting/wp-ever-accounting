@@ -70,39 +70,39 @@ class Scripts {
 //		wp_enqueue_script( 'eac-api' );
 //		wp_enqueue_script( 'eac-form' );
 //		wp_enqueue_script( 'eac-modal' );
-//		wp_enqueue_script( 'eac-admin' );
+		wp_enqueue_script( 'eac-admin' );
 //		wp_enqueue_script( 'eac-admin-forms' );
 		wp_enqueue_style( 'eac-admin' );
 
-//		wp_localize_script(
-//			'eac-admin',
-//			'eac_admin_vars',
-//			array(
-//				'ajax_url'      => admin_url( 'admin-ajax.php' ),
-//				'base_currency' => eac_base_currency(),
-//				'currencies'    => eac_get_currencies(),
-//				'search_nonce'  => wp_create_nonce( 'eac_search_action' ),
-//				'i18n'          => array(
-//					'confirm_delete' => __( 'Are you sure you want to delete this item?', 'wp-ever-accounting' ),
-//					'close'          => __( 'Close', 'wp-ever-accounting' ),
-//				),
-//			)
-//		);
-//
-//		// Payments page.
-//		if ( EAC()->get( Menus::class )->page === 'sales' ) {
-//			EAC()->scripts->enqueue_script( 'eac-admin-sales' );
-//		}
-//
-//		// if settings page.
-//		if ( 'ever-accounting_page_eac-settings' === $hook ) {
-//			EAC()->scripts->enqueue_script( 'eac-admin-settings' );
-//			EAC()->scripts->enqueue_style( 'eac-admin-settings' );
-//		}
-//
-//		if ( 'toplevel_page_ever-accounting' === $hook || 'ever-accounting_page_eac-reports' === $hook ) {
-//			EAC()->scripts->enqueue_script( 'eac-chartjs' );
-//		}
+		wp_localize_script(
+			'eac-admin',
+			'eac_admin_vars',
+			array(
+				'ajax_url'      => admin_url( 'admin-ajax.php' ),
+				'base_currency' => eac_base_currency(),
+				'currencies'    => eac_get_currencies(),
+				'search_nonce'  => wp_create_nonce( 'eac_search_action' ),
+				'i18n'          => array(
+					'confirm_delete' => __( 'Are you sure you want to delete this item?', 'wp-ever-accounting' ),
+					'close'          => __( 'Close', 'wp-ever-accounting' ),
+				),
+			)
+		);
+
+		// Payments page.
+		if ( EAC()->get( Menus::class )->page === 'sales' ) {
+			EAC()->scripts->enqueue_script( 'eac-admin-sales' );
+		}
+
+		// if settings page.
+		if ( 'ever-accounting_page_eac-settings' === $hook ) {
+			EAC()->scripts->enqueue_script( 'eac-admin-settings' );
+			EAC()->scripts->enqueue_style( 'eac-admin-settings' );
+		}
+
+		if ( 'toplevel_page_ever-accounting' === $hook || 'ever-accounting_page_eac-reports' === $hook ) {
+			EAC()->scripts->enqueue_script( 'eac-chartjs' );
+		}
 //		wp_enqueue_media();
 	}
 
@@ -115,7 +115,6 @@ class Scripts {
 	 * @return void
 	 */
 	public function client_scripts( $hook ) {
-		EAC()->scripts->enqueue_script( 'eac-autocomplete', 'client/autocomplete.js' );
 		EAC()->scripts->enqueue_script( 'eac-components', 'client/components.js' );
 		EAC()->scripts->enqueue_style( 'eac-components', 'client/components.css' );
 

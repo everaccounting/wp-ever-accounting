@@ -1,4 +1,4 @@
-.react-datepicker-wrapper{
+.react-datepicker-wrapper {
 	width: 100%;
 	display: block;
 }
@@ -7,6 +7,95 @@
 	display: none;
 }
 
-.components-base-control{
+.components-base-control {
 	margin-bottom: 1em;
+}
+
+.eac-autocomplete {
+	&__control {
+		cursor: text;
+		border: 1px solid #949494;
+		border-radius: 2px;
+		background: #fff;
+		position: relative;
+		display: flex;
+		align-items: center;
+		margin-bottom: 4px;
+		min-height: 32px !important;
+		box-sizing: border-box;
+
+		&--is-focused,&--menu-is-open {
+			box-shadow: 0 0 0 .5px var(--wp-admin-theme-color);
+			border-color: var(--wp-admin-theme-color)
+		}
+	}
+
+	&__value-container {
+		padding: 2px 8px
+	}
+
+	&__indicators {
+		padding-right: 8px;
+	}
+
+	&__multi-value {
+		margin-right: 4px;
+		margin-top: 2px;
+		margin-bottom: 2px;
+
+		&__label {
+			padding: 0 2px 0 8px;
+			border-radius: 2px 0 0 2px;
+			font-size: 12px;
+			line-height: 24px;
+			background: #f0f0f0;
+			transition: all .2s cubic-bezier(.4, 1, .4, 1);
+		}
+
+		&__remove {
+			padding: 0 5px 0 0;
+			border-radius: 0 2px 2px 0;
+			color: #757575;
+			font-size: 12px;
+			line-height: 24px;
+			background: #f0f0f0;
+			transition: all .2s cubic-bezier(.4, 1, .4, 1);
+			cursor: pointer;
+
+			&:hover {
+				color: #1e1e1e;
+			}
+		}
+	}
+
+	&__input {
+		width: 100% !important;
+		margin-top: 2px !important;
+		margin-bottom: 2px !important;
+		font-size: 13px !important;
+		border: 0 !important;
+		box-shadow: none !important;
+		outline: none !important;
+		min-height: auto !important;
+	}
+
+	&__menu {
+		box-sizing: border-box;
+		background: #fff;
+		border-radius: 3px;
+		border: 1px solid #ccc;
+	}
+
+	&__option {
+		cursor: pointer;
+		font-size: 13px;
+		padding: 8px 12px;
+		min-height: 32px;
+		transition: all .2s cubic-bezier(.4, 1, .4, 1);
+
+		&:hover {
+			background: var(--wp-admin-theme-color);
+			color: #fff;
+		}
+	}
 }

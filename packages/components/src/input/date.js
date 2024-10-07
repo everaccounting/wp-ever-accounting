@@ -1,7 +1,7 @@
 /**
  * WordPress dependencies
  */
-import { forwardRef, Suspense, lazy, memo, useRef } from '@wordpress/element';
+import { forwardRef, Suspense, lazy, memo } from '@wordpress/element';
 import { useInstanceId } from '@wordpress/compose';
 import { Spinner, __experimentalInputControl as InputControl } from '@wordpress/components';
 import { Icon, calendar } from '@wordpress/icons';
@@ -24,7 +24,6 @@ const Date = forwardRef( ( { label, help, placeholder, prefix, disabled, ...prop
 		onChange: props.onChange,
 	} );
 	const id = useInstanceId( Date, 'eac-input-date', props.id );
-	const inputref = useRef();
 
 	return (
 		<Suspense fallback={ <Spinner /> }>
@@ -62,7 +61,6 @@ const Date = forwardRef( ( { label, help, placeholder, prefix, disabled, ...prop
 				icon={ calendar }
 				customInput={
 					<InputControl
-						ref={ inputref }
 						id={ id }
 						label={ label }
 						help={ help }
@@ -70,7 +68,7 @@ const Date = forwardRef( ( { label, help, placeholder, prefix, disabled, ...prop
 						disabled={ disabled }
 						prefix={ prefix }
 						suffix={
-							<Icon icon={ calendar } size={ 16 } style={ { marginRight: '4px' } } />
+							<Icon icon={ calendar } size={ 16 } style={ { marginRight: '8px' } } />
 						}
 					/>
 				}

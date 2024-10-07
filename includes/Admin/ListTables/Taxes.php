@@ -68,8 +68,8 @@ class Taxes extends ListTable {
 		 */
 		$args = apply_filters( 'eac_taxes_table_query_args', $args );
 
-		$this->items = eac_get_taxes( $args );
-		$total       = eac_get_taxes( $args, true );
+		$this->items = EAC()->taxes->query( $args );
+		$total       = EAC()->taxes->query( $args, true );
 		$this->set_pagination_args(
 			array(
 				'total_items' => $total,

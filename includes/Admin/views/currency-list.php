@@ -6,10 +6,15 @@
  *
  * @since 1.0.0
  * @package EverAccounting
- * @var $currency \EverAccounting\Models\Currency Currency object.
+ * @var $currency array Currency object.
  */
 
 defined( 'ABSPATH' ) || exit;
+
+$currencies = array_diff_key( \EverAccounting\Utilities\I18n::get_currencies(), eac_get_currencies() );
+if ( array_key_exists( eac_base_currency(), $currencies ) ) {
+	unset( $currencies[ eac_base_currency() ] );
+}
 ?>
 	<h1 class="wp-heading-inline">
 		<?php esc_html_e( 'Currencies', 'wp-ever-accounting' ); ?>
@@ -22,8 +27,8 @@ defined( 'ABSPATH' ) || exit;
 		<div class="eac-form-field">
 			<label for="currency"><?php esc_html_e( 'Currency', 'wp-ever-accounting' ); ?>&nbsp;<abbr title="required"></abbr></label>
 			<select name="currency" id="currency" class="eac_select2" required>
-				<?php foreach ( eac_get_currencies() as $currency ) : ?>
-					<option value="<?php echo esc_attr( $currency['code'] ); ?>"><?php echo esc_html( $currency['formatted_name'] ); ?></option>
+				<?php foreach ( $currencies as $currency ) : ?>
+					<option value="<?php echo esc_attr( $currency['code'] ); ?>"><?php echo esc_html( sprintf( '%s (%s)', $currency['name'], $currency['code'] ) ); ?></option>
 				<?php endforeach; ?>
 			</select>
 		</div>

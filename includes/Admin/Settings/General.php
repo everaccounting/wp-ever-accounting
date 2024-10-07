@@ -239,6 +239,35 @@ class General extends Page {
 				'type' => 'sectionend',
 				'id'   => 'currency_options',
 			),
+			array(
+				'title' => __( 'Exchange Rates', 'wp-ever-accounting' ),
+				'type'  => 'title',
+				'id'    => 'exchange_rates',
+			),
+			array(
+				'title'    => __( 'Auto Update Exchange Rates', 'wp-ever-accounting' ),
+				'desc'     => __( 'Automatically update exchange rates.', 'wp-ever-accounting' ),
+				'id'       => 'eac_auto_update_exchange_rates',
+				'type'     => 'checkbox',
+				'default'  => 'no',
+				'desc_tip' => true,
+			),
+			array(
+				'title'    => __( 'Exchange Rates API', 'wp-ever-accounting' ),
+				'desc'     => __( 'The API to use for exchange rates.', 'wp-ever-accounting' ),
+				'id'       => 'eac_exchange_rates_api',
+				'type'     => 'select',
+				'default'  => 'fixer',
+				'options'  => array(
+					'fixer'             => 'Fixer.io',
+					'openexchangerates' => 'Open Exchange Rates',
+				),
+				'desc_tip' => true,
+			),
+			array(
+				'type' => 'sectionend',
+				'id'   => 'exchange_rates',
+			),
 		);
 	}
 }
