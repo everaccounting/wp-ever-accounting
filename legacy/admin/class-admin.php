@@ -57,10 +57,10 @@ class Admin {
 		if ( ! empty( $page ) ) {
 			switch ( $page ) {
 				case 'ea-setup':
-					include_once dirname( __FILE__ ) . '/class-setup.php';
+					include_once __DIR__ . '/class-setup.php';
 					break;
 				case 'ea-release':
-					include_once dirname( __FILE__ ) . '/class-release.php';
+					include_once __DIR__ . '/class-release.php';
 					break;
 			}
 		}
@@ -78,7 +78,6 @@ class Admin {
 		if ( ! $screen ) {
 			return;
 		}
-
 	}
 
 	/**

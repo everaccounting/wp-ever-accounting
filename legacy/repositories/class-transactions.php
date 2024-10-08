@@ -109,6 +109,4 @@ class Transactions extends Resource_Repository {
 		$item->set_object_read( true );
 		do_action( 'eaccounting_read_' . $item->get_object_type(), $item );
 	}
-
-
 }

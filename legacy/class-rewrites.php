@@ -67,7 +67,6 @@ class Rewrites {
 			exit();
 		}
 	}
-
 }
 
 new Rewrites();

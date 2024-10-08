@@ -75,10 +75,11 @@ use ByteKit\Models\Relations\HasMany;
  * @property string          $sent_date Sent date of the document.
  * @property string          $payment_date Payment date of the document.
  * @property string          $currency Currency code of the document.
- * @property double          $conversion Exchange rate of the document.
+ * @property double          $exchange_rate Exchange rate of the document.
  * @property int             $parent_id Parent ID of the document.
  * @property string          $created_via Created via of the document.
  * @property int             $creator_id Author ID of the document.
+ * @property int             $attachment_id Attachment ID of the document.
  * @property string          $uuid UUID of the document.
  * @property string          $updated_at Date updated of the document.
  * @property string          $created_at Date created of the document.
@@ -138,10 +139,11 @@ class Document extends Model {
 		'sent_date',
 		'payment_date',
 		'currency',
-		'conversion',
+		'exchange_rate',
 		'parent_id',
 		'created_via',
 		'creator_id',
+		'attachment_id',
 		'uuid',
 	);
 
@@ -152,6 +154,7 @@ class Document extends Model {
 	 * @var array
 	 */
 	protected $attributes = array(
+		'exchange_rate' => 1.00,
 		'discount_type' => 'fixed',
 		'status'        => 'draft',
 	);
@@ -175,7 +178,7 @@ class Document extends Model {
 		'due_date'       => 'date',
 		'sent_date'      => 'date',
 		'payment_date'   => 'date',
-		'conversion'     => 'float',
+		'exchange_rate'  => 'float',
 		'parent_id'      => 'int',
 		'creator_id'     => 'int',
 	);

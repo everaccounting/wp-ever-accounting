@@ -83,12 +83,11 @@ class Documents {
 	 */
 	public function get_types() {
 		$document_types = array(
-			'invoice' => __( 'Invoice', 'wp-ever-accounting' ),
-			'receipt' => __( 'Receipt', 'wp-ever-accounting' ),
+			'invoice'  => __( 'Invoice', 'wp-ever-accounting' ),
+			'receipt'  => __( 'Receipt', 'wp-ever-accounting' ),
 			'contract' => __( 'Contract', 'wp-ever-accounting' ),
 		);
 
 		return apply_filters( 'eac_document_types', $document_types );
 	}
-
 }

@@ -74,5 +74,4 @@ class Vendors {
 
 		return Vendor::results( $args );
 	}
-
 }

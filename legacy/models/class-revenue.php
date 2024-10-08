@@ -23,6 +23,7 @@ defined( 'ABSPATH' ) || exit;
  */
 class Revenue extends Transaction {
 	use Attachment;
+
 	/**
 	 * This is the name of this object type.
 	 *

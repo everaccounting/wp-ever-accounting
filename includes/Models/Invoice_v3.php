@@ -45,13 +45,13 @@ class Invoice_v3 extends Document {
 	public function __construct( $props = array() ) {
 		$due_after        = get_option( 'eac_invoice_due_date', 7 );
 		$_attributes      = array(
-			'type'          => $this->get_object_type(),
-			'issue_date'    => current_time( 'mysql' ),
-			'due_date'      => wp_date( 'Y-m-d', strtotime( '+' . $due_after . ' days' ) ),
-			'notes'         => get_option( 'eac_invoice_notes', '' ),
-			'currency' => eac_base_currency(),
-			'creator_id'     => get_current_user_id(),
-			'uuid'          => wp_generate_uuid4(),
+			'type'       => $this->get_object_type(),
+			'issue_date' => current_time( 'mysql' ),
+			'due_date'   => wp_date( 'Y-m-d', strtotime( '+' . $due_after . ' days' ) ),
+			'notes'      => get_option( 'eac_invoice_notes', '' ),
+			'currency'   => eac_base_currency(),
+			'creator_id' => get_current_user_id(),
+			'uuid'       => wp_generate_uuid4(),
 		);
 		$this->attributes = array_merge( $this->attributes, $_attributes );
 		parent::__construct( $props );
@@ -468,12 +468,12 @@ class Invoice_v3 extends Document {
 	public function get_max_number() {
 		global $wpdb;
 		// select the max id
-//		return (int) $wpdb->get_var(
-//			$wpdb->prepare(
-//				"SELECT MAX(REGEXP_REPLACE(number, '[^0-9]', '')) FROM {$wpdb->prefix}{$this->table} WHERE type = %s",
-//				esc_sql( $this->type )
-//			)
-//		);
+		// return (int) $wpdb->get_var(
+		// $wpdb->prepare(
+		// "SELECT MAX(REGEXP_REPLACE(number, '[^0-9]', '')) FROM {$wpdb->prefix}{$this->table} WHERE type = %s",
+		// esc_sql( $this->type )
+		// )
+		// );
 	}
 
 	/**

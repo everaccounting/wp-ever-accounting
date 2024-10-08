@@ -140,5 +140,4 @@ class Revenues extends CSV_Importer {
 
 		return eaccounting_insert_revenue( $data );
 	}
-
 }

@@ -115,7 +115,6 @@ function eaccounting_delete_payment( $payment_id ) {
 	} catch ( \Exception $e ) {
 		return false;
 	}
-
 }
 
 /**

@@ -115,7 +115,7 @@ function eaccounting_reports_income_summary_tab() {
 		$categories = wp_list_pluck( $transactions, 'name', 'category_id' );
 		$date       = new \EAccounting\DateTime( $start );
 		// Dates.
-		for ( $j = 1; $j <= 12; $j ++ ) {
+		for ( $j = 1; $j <= 12; $j++ ) {
 			$dates[ $j ]                     = $date->format( 'F' );
 			$graph[ $date->format( 'F-Y' ) ] = 0;
 			// Totals.

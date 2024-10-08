@@ -45,7 +45,7 @@ $add_new = add_query_arg(
 
 <div class="notice notice-warning notice-large">
 	<?php
-	echo sprintf(
+	printf(
 		'<p><strong>%s:</strong> %s',
 		esc_html__( 'Note', 'wp-ever-accounting' ),
 		esc_html__(

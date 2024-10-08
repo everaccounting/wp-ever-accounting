@@ -167,8 +167,8 @@ class Ajax {
 	 */
 	public static function get_expense_categories() {
 		check_admin_referer( 'ea_categories' );
-		$search = filter_input( INPUT_POST, 'search', FILTER_SANITIZE_STRING );
-		$page   = filter_input( INPUT_POST, 'page', FILTER_SANITIZE_NUMBER_INT );
+		$search  = filter_input( INPUT_POST, 'search', FILTER_SANITIZE_STRING );
+		$page    = filter_input( INPUT_POST, 'page', FILTER_SANITIZE_NUMBER_INT );
 		$results = eaccounting_get_categories(
 			array(
 				'search' => $search,
@@ -181,10 +181,10 @@ class Ajax {
 
 		$total = eaccounting_get_categories(
 			array(
-				'search' => $search,
-				'type'   => 'expense',
-				'page'   => $page,
-				'status' => 'active',
+				'search'      => $search,
+				'type'        => 'expense',
+				'page'        => $page,
+				'status'      => 'active',
 				'count_total' => true,
 			)
 		);
@@ -221,10 +221,10 @@ class Ajax {
 
 		$total = eaccounting_get_categories(
 			array(
-				'search' => $search,
-				'type'   => 'income',
-				'page'   => $page,
-				'status' => 'active',
+				'search'      => $search,
+				'type'        => 'income',
+				'page'        => $page,
+				'status'      => 'active',
 				'count_total' => true,
 			)
 		);
@@ -261,10 +261,10 @@ class Ajax {
 
 		$total = eaccounting_get_categories(
 			array(
-				'search' => $search,
-				'type'   => 'item',
-				'page'   => $page,
-				'status' => 'active',
+				'search'      => $search,
+				'type'        => 'item',
+				'page'        => $page,
+				'status'      => 'active',
 				'count_total' => true,
 			)
 		);
@@ -532,7 +532,7 @@ class Ajax {
 				'status'      => 'active',
 			)
 		);
-		$result = array(
+		$result  = array(
 			'results'    => $results,
 			'page'       => $page,
 			'pagination' => array(
@@ -754,7 +754,7 @@ class Ajax {
 		$total  = eaccounting_get_currencies(
 			array(
 				'search'      => $search,
-				'count_total' => true
+				'count_total' => true,
 			)
 		);
 
@@ -905,14 +905,14 @@ class Ajax {
 				'status' => 'active',
 			)
 		);
-		$total  = eaccounting_get_vendors(
+		$total   = eaccounting_get_vendors(
 			array(
-				'search' => $search,
-				'status' => 'active',
+				'search'      => $search,
+				'status'      => 'active',
 				'count_total' => true,
 			)
 		);
-		$result = array(
+		$result  = array(
 			'results'    => $results,
 			'page'       => $page,
 			'pagination' => array(
@@ -995,7 +995,7 @@ class Ajax {
 		$results = eaccounting_get_accounts(
 			array(
 				'search' => $search,
-				'paged'   => $page,
+				'paged'  => $page,
 				'return' => 'raw',
 				'status' => 'active',
 			)
@@ -1003,8 +1003,8 @@ class Ajax {
 
 		$total = eaccounting_get_accounts(
 			array(
-				'search' => $search,
-				'status' => 'active',
+				'search'      => $search,
+				'status'      => 'active',
 				'count_total' => true,
 			)
 		);
@@ -1173,7 +1173,7 @@ class Ajax {
 		check_admin_referer( 'ea_get_items' );
 		self::check_permission( 'manage_eaccounting' );
 		$search = filter_input( INPUT_POST, 'search', FILTER_SANITIZE_STRING );
-		$page  = filter_input( INPUT_POST, 'page', FILTER_SANITIZE_NUMBER_INT );
+		$page   = filter_input( INPUT_POST, 'page', FILTER_SANITIZE_NUMBER_INT );
 
 		$results = eaccounting_get_items(
 			array(
@@ -1182,10 +1182,10 @@ class Ajax {
 				'status' => 'active',
 			)
 		);
-		$total = eaccounting_get_items(
+		$total   = eaccounting_get_items(
 			array(
-				'search' => $search,
-				'status' => 'active',
+				'search'      => $search,
+				'status'      => 'active',
 				'count_total' => true,
 			)
 		);

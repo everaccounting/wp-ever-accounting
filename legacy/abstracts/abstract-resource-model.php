@@ -460,7 +460,6 @@ abstract class Resource_Model {
 		} else {
 			$this->set_prop( $key, $value );
 		}
-
 	}
 
 	/**
@@ -774,11 +773,9 @@ abstract class Resource_Model {
 			} elseif ( empty( $meta->id ) ) {
 				$meta->id = $this->repository->add_meta( $this, $meta );
 				$meta->apply_changes();
-			} else {
-				if ( $meta->get_changes() ) {
+			} elseif ( $meta->get_changes() ) {
 					$this->repository->update_meta( $this, $meta );
 					$meta->apply_changes();
-				}
 			}
 		}
 		if ( ! empty( $this->cache_group ) ) {
@@ -1172,5 +1169,4 @@ abstract class Resource_Model {
 	public function error( $code, $message, $http_status_code = 400, $data = array() ) {
 		throw new \Exception( $message );
 	}
-
 }

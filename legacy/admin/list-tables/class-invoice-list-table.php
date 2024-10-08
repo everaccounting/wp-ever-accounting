@@ -12,7 +12,7 @@ use EAccounting\Models\Invoice;
 defined( 'ABSPATH' ) || exit();
 
 if ( ! class_exists( '\EverAccounting_List_Table' ) ) {
-	require_once dirname( __FILE__ ) . '/class-list-table.php';
+	require_once __DIR__ . '/class-list-table.php';
 }
 
 /**

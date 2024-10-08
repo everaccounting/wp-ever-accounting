@@ -133,7 +133,7 @@ class Vendors extends Contacts {
 	 * @return true|\WP_Error True, if the request has read access, WP_Error object otherwise.
 	 */
 	public function update_item_permissions_check( $request ) {
-		$vendor = eac_get_vendor( $request['id'] );
+		$vendor = EAC()->vendors->get( $request['id'] );
 
 		if ( empty( $vendor ) || ! current_user_can( 'eac_manage_vendor' ) ) {
 			return new \WP_Error(
@@ -155,7 +155,7 @@ class Vendors extends Contacts {
 	 * @return true|\WP_Error True, if the request has read access, WP_Error object otherwise.
 	 */
 	public function get_item_permissions_check( $request ) {
-		$vendor = eac_get_vendor( $request['id'] );
+		$vendor = EAC()->vendors->get( $request['id'] );
 
 		if ( empty( $vendor ) || ! current_user_can( 'eac_manage_vendor' ) ) {
 			return new \WP_Error(
@@ -177,7 +177,7 @@ class Vendors extends Contacts {
 	 * @return true|\WP_Error True, if the request has read access, WP_Error object otherwise.
 	 */
 	public function delete_item_permissions_check( $request ) {
-		$vendor = eac_get_vendor( $request['id'] );
+		$vendor = EAC()->vendors->get( $request['id'] );
 
 		if ( empty( $vendor ) || ! current_user_can( 'eac_manage_vendor' ) ) {
 			return new \WP_Error(
@@ -219,11 +219,9 @@ class Vendors extends Contacts {
 		 */
 		$args = apply_filters( 'eac_rest_vendor_query', $args, $request );
 
-		$vendors   = eac_get_vendors( $args );
-		$total     = eac_get_vendors( $args, true );
-		$page      = isset( $request['page'] ) ? absint( $request['page'] ) : 1;
+		$vendors   = EAC()->vendors->query( $args );
+		$total     = EAC()->vendors->query( $args, true );
 		$max_pages = ceil( $total / (int) $args['per_page'] );
-
 
 		$results = array();
 		foreach ( $vendors as $vendor ) {
@@ -235,26 +233,6 @@ class Vendors extends Contacts {
 
 		$response->header( 'X-WP-Total', (int) $total );
 		$response->header( 'X-WP-TotalPages', (int) $max_pages );
-
-		$request_params = $request->get_query_params();
-		$base           = add_query_arg( urlencode_deep( $request_params ), rest_url( sprintf( '%s/%s', $this->namespace, $this->rest_base ) ) );
-
-		if ( $page > 1 ) {
-			$prev_page = $page - 1;
-
-			if ( $prev_page > $max_pages ) {
-				$prev_page = $max_pages;
-			}
-
-			$prev_link = add_query_arg( 'page', $prev_page, $base );
-			$response->link_header( 'prev', $prev_link );
-		}
-		if ( $max_pages > $page ) {
-			$next_page = $page + 1;
-			$next_link = add_query_arg( 'page', $next_page, $base );
-
-			$response->link_header( 'next', $next_link );
-		}
 
 		return $response;
 	}
@@ -268,7 +246,7 @@ class Vendors extends Contacts {
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function get_item( $request ) {
-		$vendor = eac_get_vendor( $request['id'] );
+		$vendor = EAC()->vendors->get( $request['id'] );
 		$data   = $this->prepare_item_for_response( $vendor, $request );
 
 		return rest_ensure_response( $data );
@@ -296,7 +274,7 @@ class Vendors extends Contacts {
 			return $data;
 		}
 
-		$vendor = eac_insert_vendor( $data );
+		$vendor = EAC()->vendors->insert( $data );
 		if ( is_wp_error( $vendor ) ) {
 			return $vendor;
 		}
@@ -305,10 +283,8 @@ class Vendors extends Contacts {
 		$response = rest_ensure_response( $response );
 
 		$response->set_status( 201 );
-		$response->header( 'Location', rest_url( sprintf( '%s/%s/%d', $this->namespace, $this->rest_base, $vendor->id ) ) );
 
 		return $response;
-
 	}
 
 	/**
@@ -320,7 +296,7 @@ class Vendors extends Contacts {
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function update_item( $request ) {
-		$vendor = eac_get_vendor( $request['id'] );
+		$vendor = EAC()->vendors->get( $request['id'] );
 		$data   = $this->prepare_item_for_database( $request );
 		if ( is_wp_error( $data ) ) {
 			return $data;
@@ -346,11 +322,11 @@ class Vendors extends Contacts {
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function delete_item( $request ) {
-		$vendor = eac_get_vendor( $request['id'] );
+		$vendor = EAC()->vendors->get( $request['id'] );
 		$request->set_param( 'context', 'edit' );
-		$data   = $this->prepare_item_for_response( $vendor, $request );
+		$data = $this->prepare_item_for_response( $vendor, $request );
 
-		if ( ! eac_delete_vendor( $vendor->id ) ) {
+		if ( ! $vendor->delete() ) {
 			return new \WP_Error(
 				'rest_cannot_delete',
 				__( 'The vendor cannot be deleted.', 'wp-ever-accounting' ),
@@ -379,7 +355,7 @@ class Vendors extends Contacts {
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function prepare_item_for_response( $item, $request ) {
-		$data = [];
+		$data = array();
 
 		foreach ( array_keys( $this->get_schema_properties() ) as $key ) {
 			switch ( $key ) {
@@ -416,13 +392,13 @@ class Vendors extends Contacts {
 	 *
 	 * @param \WP_REST_Request $request Request object.
 	 *
-	 * @return array|\WP_Error Vendor object or WP_Error.
 	 * @since 2.0.0
+	 * @return array|\WP_Error Vendor object or WP_Error.
 	 */
 	protected function prepare_item_for_database( $request ) {
 		$schema    = $this->get_item_schema();
 		$data_keys = array_keys( array_filter( $schema['properties'], array( $this, 'filter_writable_props' ) ) );
-		$props     = [];
+		$props     = array();
 		// Handle all writable props.
 		foreach ( $data_keys as $key ) {
 			$value = $request[ $key ];
@@ -470,7 +446,7 @@ class Vendors extends Contacts {
 	 * @return array Item schema data.
 	 */
 	public function get_item_schema() {
-		$schema = parent::get_item_schema();
+		$schema          = parent::get_item_schema();
 		$schema['title'] = __( 'Vendor', 'wp-ever-accounting' );
 
 		/**

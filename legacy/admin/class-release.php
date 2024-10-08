@@ -43,7 +43,7 @@ class Release {
 		wp_enqueue_style( 'ea-admin-styles', eaccounting()->assets_url() . 'css/admin.css', array(), $version );
 		wp_enqueue_style( 'ea-release-styles', eaccounting()->assets_url() . 'css/release.css', array(), $version );
 
-		include dirname( __FILE__ ) . '/views/admin-page-release.php';
+		include __DIR__ . '/views/admin-page-release.php';
 	}
 
 	/**

@@ -213,7 +213,6 @@ class Currencies extends Controller {
 		$total   = count( $currencies );
 		$results = $total > $offset ? array_slice( $currencies, $offset, $per_page ) : array();
 
-
 		$data = array();
 		foreach ( $results as $currency ) {
 			$data[] = $this->prepare_item_for_response( $currency, $request );
@@ -371,7 +370,7 @@ class Currencies extends Controller {
 	protected function prepare_item_for_database( $request ) {
 		$schema    = $this->get_item_schema();
 		$data_keys = array_keys( array_filter( $schema['properties'], array( $this, 'filter_writable_props' ) ) );
-		$props     = [];
+		$props     = array();
 		// Handle all writable props.
 		foreach ( $data_keys as $key ) {
 			$value = $request[ $key ];
@@ -500,5 +499,4 @@ class Currencies extends Controller {
 
 		return $this->add_additional_fields_schema( $schema );
 	}
-
 }

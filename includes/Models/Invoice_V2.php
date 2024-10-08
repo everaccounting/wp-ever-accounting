@@ -302,8 +302,8 @@ class Invoice_V2 extends Document {
 				'account_id'     => '',
 				'document_id'    => $this->id,
 				'amount'         => 0,
-				'currency'  => $this->currency,
-				'conversion'  => $this->conversion,
+				'currency'       => $this->currency,
+				'exchange_rate'  => $this->exchange_rate,
 				'payment_method' => '',
 				'note'           => '',
 			)
@@ -325,7 +325,7 @@ class Invoice_V2 extends Document {
 		}
 		if ( $account->currency !== $this->currency ) {
 			$data['amount']        = eac_convert_currency( $data['amount'], $this->currency, $account->currency, $this->exchange_rate );
-			$data['currency'] = $account->currency;
+			$data['currency']      = $account->currency;
 			$data['exchange_rate'] = $account->currency ? $account->currency->exchange_rate : 1;
 		}
 
@@ -336,7 +336,7 @@ class Invoice_V2 extends Document {
 				'contact_id'     => $this->contact_id,
 				'account_id'     => $data['account_id'],
 				'amount'         => $data['amount'],
-				'currency'  => $data['currency'],
+				'currency'       => $data['currency'],
 				'exchange_rate'  => $data['exchange_rate'],
 				'payment_method' => $data['payment_method'],
 				'note'           => $data['note'],
@@ -502,7 +502,7 @@ class Invoice_V2 extends Document {
 			foreach ( $item->get_taxes() as $tax ) {
 				$amount      = isset( $taxes[ $tax->tax_id ] ) ? $taxes[ $tax->tax_id ] : 0;
 				$tax->amount = $amount;
-				$line_tax    += $amount;
+				$line_tax   += $amount;
 			}
 			$item->tax_total = $line_tax;
 		}
@@ -605,9 +605,9 @@ class Invoice_V2 extends Document {
 		foreach ( $items as $item ) {
 			$discounted_price = $item->get_discounted_price();
 			// If the item is not created yet, we need to calculate the discounted price without tax.
-			$discount       = $discounted_price * ( $amount / 100 );
-			$discount       = min( $discounted_price, $discount );
-			$item->discount = $item->discount + $discount;
+			$discount        = $discounted_price * ( $amount / 100 );
+			$discount        = min( $discounted_price, $discount );
+			$item->discount  = $item->discount + $discount;
 			$total_discount += $discount;
 			$document_total += $discounted_price;
 		}
@@ -635,11 +635,11 @@ class Invoice_V2 extends Document {
 		$total_discount = 0;
 		foreach ( $items as $item ) {
 			$quantity = $item->quantity;
-			for ( $i = 0; $i < $quantity; $i ++ ) {
+			for ( $i = 0; $i < $quantity; $i++ ) {
 				$discounted_price = $item->get_discounted_price();
 				$discount         = min( $discounted_price, 1 );
 				$item->discount   = $item->discount + $discount;
-				$total_discount   += $discount;
+				$total_discount  += $discount;
 				if ( $total_discount >= $amount ) {
 					break 2;
 				}
@@ -666,7 +666,7 @@ class Invoice_V2 extends Document {
 		$total = 0;
 		foreach ( $items as $item ) {
 			$amount = $item->$column ?? 0;
-			$total  += $round ? round( $amount, 2 ) : $amount;
+			$total += $round ? round( $amount, 2 ) : $amount;
 		}
 
 		return $round ? round( $total, 2 ) : $total;

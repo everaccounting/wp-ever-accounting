@@ -16,7 +16,7 @@ class Tools {
 	 * Tools constructor.
 	 */
 	public function __construct() {
-		add_filter( 'eac_tools_page_tabs', array( __CLASS__, 'register_tabs' ) );
+		add_filter( 'eac_tools_page_tabs', array( __CLASS__, 'register_tabs' ), -1 );
 		add_action( 'eac_tools_page_import', array( __CLASS__, 'import_tab' ) );
 	}
 

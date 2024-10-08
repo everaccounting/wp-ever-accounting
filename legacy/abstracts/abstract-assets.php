@@ -60,7 +60,6 @@ abstract class Assets {
 	 * @version 1.0.3
 	 */
 	public function public_styles() {
-
 	}
 
 	/**
@@ -69,7 +68,6 @@ abstract class Assets {
 	 * @version 1.0.3
 	 */
 	public function public_scripts() {
-
 	}
 
 	/**
@@ -78,7 +76,6 @@ abstract class Assets {
 	 * @version 1.0.3
 	 */
 	public function admin_styles() {
-
 	}
 
 	/**
@@ -87,7 +84,6 @@ abstract class Assets {
 	 * @version 1.0.3
 	 */
 	public function admin_scripts() {
-
 	}
 
 	/**
@@ -100,7 +96,7 @@ abstract class Assets {
 	 */
 	protected function register_style( $handle, $file_path, $dependencies = array(), $has_rtl = true ) {
 		$filename = is_null( $file_path ) ? $handle : $file_path;
-		$filename = str_replace( [ '.min', '.css' ], '', $filename );
+		$filename = str_replace( array( '.min', '.css' ), '', $filename );
 		$file_url = $this->get_asset_dist_url( $filename, '.css' );
 		$version  = $this->plugin_version;
 		if ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) {
@@ -126,7 +122,7 @@ abstract class Assets {
 	 */
 	protected function register_script( $handle, $file_path = null, $dependencies = array(), $has_i18n = true ) {
 		$filename             = is_null( $file_path ) ? $handle : $file_path;
-		$filename             = str_replace( [ '.min', '.js' ], '', $filename );
+		$filename             = str_replace( array( '.min', '.js' ), '', $filename );
 		$file_url             = $this->get_asset_dist_url( $filename );
 		$dependency_file_path = $this->get_asset_dist_path( $filename . '.asset', 'php' );
 		$version              = false;

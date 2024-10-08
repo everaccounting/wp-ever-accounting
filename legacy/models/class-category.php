@@ -206,5 +206,4 @@ class Category extends Resource_Model {
 	| Checks if a condition is true or false.
 	|
 	*/
-
 }

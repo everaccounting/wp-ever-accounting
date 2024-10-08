@@ -52,7 +52,7 @@ class Bills {
 	 */
 	public static function set_screen_option( $status, $option, $value ) {
 		global $list_table;
-		if ( "eac_bills_per_page" === $option ) {
+		if ( 'eac_bills_per_page' === $option ) {
 			return $value;
 		}
 
@@ -70,11 +70,14 @@ class Bills {
 		$screen     = get_current_screen();
 		$list_table = new ListTables\Bills();
 		$list_table->prepare_items();
-		$screen->add_option( 'per_page', array(
-			'label'   => __( 'Number of bills per page:', 'wp-ever-accounting' ),
-			'default' => 20,
-			'option'  => "eac_bills_per_page",
-		) );
+		$screen->add_option(
+			'per_page',
+			array(
+				'label'   => __( 'Number of bills per page:', 'wp-ever-accounting' ),
+				'default' => 20,
+				'option'  => 'eac_bills_per_page',
+			)
+		);
 	}
 
 	/**

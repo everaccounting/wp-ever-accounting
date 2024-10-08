@@ -2,11 +2,9 @@
  * External dependencies
  */
 const glob = require('glob');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 /**
  * Internal dependencies
- */
-/**
- * WordPress dependencies
  */
 const {config, NAMESPACE} = require('./.bin/webpack.config');
 const {dependencies} = require('./package.json');
@@ -19,7 +17,7 @@ module.exports = [
 			...config.entry(),
 
 			// 3rd party libraries.
-			'js/chartjs': './.assets/js/vendor/chartjs.js',
+			'js/chartjs': './node_modules/chart.js/dist/chart.js',
 			'js/select2': './.assets/js/vendor/select2.js',
 			'js/inputmask': './.assets/js/vendor/inputmask.js',
 			'js/tiptip': './.assets/js/vendor/tiptip.js',
@@ -33,22 +31,30 @@ module.exports = [
 
 			// Admin scripts.
 			'js/admin': './.assets/js/admin/admin.js',
-			'js/admin-forms': './.assets/js/admin/forms.js',
-			'js/admin-settings': './.assets/js/admin/settings.js',
 			'css/admin': './.assets/css/admin/admin.scss',
-			'css/admin-settings': './.assets/css/admin/settings.scss',
 
 			// Client scripts.
-			...glob.sync('./client/*/*/index.js').reduce((memo, file) => {
-				const [type, name] = new RegExp('client/(.*)/(.*)/index.js')
-					.exec(file)
-					.slice(1);
-				return {
-					...memo,
-					[`client/${type}-${name}`]: path.resolve(__dirname, file),
-				};
-			}, {}),
+			// ...glob.sync('./client/*/*/index.js').reduce((memo, file) => {
+			// 	const [type, name] = new RegExp('client/(.*)/(.*)/index.js')
+			// 		.exec(file)
+			// 		.slice(1);
+			// 	return {
+			// 		...memo,
+			// 		[`client/${type}-${name}`]: path.resolve(__dirname, file),
+			// 	};
+			// }, {}),
 		},
+		plugins: [
+			...config.plugins,
+			// new CopyWebpackPlugin({
+			// 	patterns: [
+			// 		{
+			// 			from: './node_modules/chart.js/dist/Chart.min.js',
+			// 			to: 'js/chart.bundle.js',
+			// 		}
+			// 	]
+			// }),
+		],
 	},
 	//Package scripts.
 	{

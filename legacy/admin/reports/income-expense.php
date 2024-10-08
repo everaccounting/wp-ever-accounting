@@ -83,7 +83,7 @@ function eaccounting_reports_income_expense_tab() {
 		$date         = new \EAccounting\DateTime( $date_start );
 
 		// Dates.
-		for ( $j = 1; $j <= 12; $j ++ ) {
+		for ( $j = 1; $j <= 12; $j++ ) {
 			$dates[ $j ]                     = $date->format( 'F' );
 			$graph[ $date->format( 'F-Y' ) ] = 0;
 			// Totals.

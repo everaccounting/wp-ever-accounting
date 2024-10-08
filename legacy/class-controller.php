@@ -97,7 +97,6 @@ class Controller {
 		if ( $id != (int) $wpdb->get_var( $wpdb->prepare( "SELECT id from {$wpdb->prefix}ea_accounts WHERE number='%s'", eaccounting_clean( $data['number'] ) ) ) ) { // @codingStandardsIgnoreLine
 			throw new \Exception( __( 'Duplicate account.', 'wp-ever-accounting' ) );
 		}
-
 	}
 
 	/**
@@ -131,7 +130,7 @@ class Controller {
 	/**
 	 * Update customer total paid
 	 *
-	 * @param int                                   $transaction_id transaction id.
+	 * @param int                                $transaction_id transaction id.
 	 * @param \EAccounting\Abstracts\Transaction $transaction transaction.
 	 *
 	 * @since 1.1.0
@@ -174,7 +173,7 @@ class Controller {
 	/**
 	 * Update vendor total paid
 	 *
-	 * @param int                                   $transaction_id transaction id.
+	 * @param int                                $transaction_id transaction id.
 	 * @param \EAccounting\Abstracts\Transaction $transaction transaction.
 	 *
 	 * @since 1.1.0

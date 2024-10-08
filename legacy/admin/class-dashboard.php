@@ -145,8 +145,8 @@ class Dashboard {
 	 * @since 1.1.0
 	 */
 	public static function render_cashflow() {
-		require_once dirname( __FILE__ ) . '/reports/class-report.php';
-		require_once dirname( __FILE__ ) . '/reports/class-cashflow.php';
+		require_once __DIR__ . '/reports/class-report.php';
+		require_once __DIR__ . '/reports/class-cashflow.php';
 		$year   = date_i18n( 'Y' );
 		$init   = new \EAccounting\Admin\Report\CashFlow();
 		$report = $init->get_report( array( 'year' => $year ) );
@@ -260,7 +260,7 @@ class Dashboard {
 	 * @since 1.1.0
 	 */
 	public static function render_incomes_categories() {
-		require_once dirname( __FILE__ ) . '/reports/class-report.php';
+		require_once __DIR__ . '/reports/class-report.php';
 		global $wpdb;
 		$report     = new \EAccounting\Admin\Report\Report();
 		$start_date = $report->get_start_date();
@@ -351,7 +351,7 @@ class Dashboard {
 	 * @since 1.1.0
 	 */
 	public static function render_expenses_categories() {
-		require_once dirname( __FILE__ ) . '/reports/class-report.php';
+		require_once __DIR__ . '/reports/class-report.php';
 		global $wpdb;
 		$report     = new \EAccounting\Admin\Report\Report();
 		$start_date = $report->get_start_date();
@@ -460,7 +460,7 @@ class Dashboard {
 		);
 
 		if ( empty( $incomes ) ) {
-			echo sprintf(
+			printf(
 				'<p class="ea-card__inside">%s</p>',
 				esc_html__( 'There is no income records.', 'wp-ever-accounting' )
 			);
@@ -512,7 +512,7 @@ class Dashboard {
 			)
 		);
 		if ( empty( $expenses ) ) {
-			echo sprintf(
+			printf(
 				'<p class="ea-card__inside">%s</p>',
 				esc_html__( 'There is no expense records.', 'wp-ever-accounting' )
 			);
@@ -570,7 +570,7 @@ class Dashboard {
 		}
 
 		if ( empty( $accounts ) ) {
-			echo sprintf(
+			printf(
 				'<p class="ea-card__inside">%s</p>',
 				esc_html__( 'There is not accounts.', 'wp-ever-accounting' )
 			);

@@ -83,7 +83,7 @@ do_action( 'add_meta_boxes_ea_invoice', $invoice );
 											<?php
 											do_action( 'eaccounting_before_invoice_actions', $invoice );
 											foreach ( $invoice_actions as $action => $title ) {
-												echo sprintf(
+												printf(
 													'<li><a href="%s">%s</a></li>',
 													esc_url(
 														wp_nonce_url(

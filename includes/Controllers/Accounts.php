@@ -89,5 +89,4 @@ class Accounts {
 
 		return apply_filters( 'eac_account_types', $account_types );
 	}
-
 }

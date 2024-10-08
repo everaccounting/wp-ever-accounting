@@ -186,5 +186,4 @@ class Inflector {
 
 		return $string;
 	}
-
 }

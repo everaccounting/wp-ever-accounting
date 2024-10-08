@@ -58,7 +58,6 @@ class Importer {
 			'parse'           => true,
 		);
 
-
 		$batch = eaccounting()->utils->batch->get( $type );
 		if ( empty( $type ) || false === $batch ) {
 			wp_send_json_error(

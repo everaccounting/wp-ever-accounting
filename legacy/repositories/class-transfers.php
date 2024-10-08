@@ -157,7 +157,6 @@ class Transfers extends Resource_Repository {
 			$wpdb->query( 'ROLLBACK' );
 			throw new \Exception( $e->getMessage() );
 		}
-
 	}
 
 
@@ -222,7 +221,6 @@ class Transfers extends Resource_Repository {
 		} catch ( \Exception $e ) {
 			throw new \Exception( $e->getMessage() );
 		}
-
 	}
 
 

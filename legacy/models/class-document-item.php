@@ -587,7 +587,6 @@ class Document_Item extends Resource_Model {
 		$this->set_subtotal( $subtotal );
 		$this->set_tax( $total_tax );
 		$this->set_total( $total );
-
 	}
 
 	/**
@@ -603,5 +602,4 @@ class Document_Item extends Resource_Model {
 
 		return parent::save();
 	}
-
 }

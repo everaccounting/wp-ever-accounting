@@ -493,7 +493,6 @@ abstract class WP_Background_Process extends WP_Async_Request {
 
 			wp_clear_scheduled_hook( $this->cron_hook_identifier );
 		}
-
 	}
 
 	/**
@@ -509,5 +508,4 @@ abstract class WP_Background_Process extends WP_Async_Request {
 	 * @return mixed
 	 */
 	abstract protected function task( $item );
-
 }

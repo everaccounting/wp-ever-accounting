@@ -127,5 +127,4 @@ class Data {
 
 		return $result;
 	}
-
 }

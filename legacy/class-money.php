@@ -424,9 +424,9 @@ class Money {
 			$remainder -= $share;
 		}
 
-		for ( $i = 0; $remainder > 0; $i ++ ) {
-			$results[ $i ]->amount ++;
-			$remainder --;
+		for ( $i = 0; $remainder > 0; $i++ ) {
+			++$results[ $i ]->amount;
+			--$remainder;
 		}
 
 		return $results;
@@ -540,4 +540,3 @@ class Money {
 		return $this->format();
 	}
 }
-

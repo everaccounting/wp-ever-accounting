@@ -91,7 +91,6 @@ class Setup_Wizard {
 
 		$version = eaccounting()->get_version();
 
-
 		wp_enqueue_style( 'ea-admin-styles', eaccounting()->plugin_url() . '/assets/css/admin.css', array(), $version );
 		wp_enqueue_style( 'ea-setup', eaccounting()->plugin_url() . '/assets/css/setup.css', array( 'install', 'common' ), $version );
 
@@ -359,7 +358,7 @@ class Setup_Wizard {
 							eaccounting_select2(
 								array(
 									'name'     => "code[$id]",
-									'options'  => [ '' => __( 'Select', 'wp-ever-accounting' ) ] + $options,
+									'options'  => array( '' => __( 'Select', 'wp-ever-accounting' ) ) + $options,
 									'value'    => $currency->code,
 									'required' => true,
 									'id'       => "$id-code",
@@ -400,7 +399,7 @@ class Setup_Wizard {
 						eaccounting_select2(
 							array(
 								'name'    => 'code[custom]',
-								'options' => [ '' => __( 'Select', 'wp-ever-accounting' ) ] + $options,
+								'options' => array( '' => __( 'Select', 'wp-ever-accounting' ) ) + $options,
 								'id'      => '6-code',
 							)
 						);

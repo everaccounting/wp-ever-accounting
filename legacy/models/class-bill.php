@@ -161,7 +161,6 @@ class Bill extends Document {
 		} else {
 			$this->set_payment_date( '' );
 		}
-
 	}
 
 	/**

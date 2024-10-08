@@ -23,7 +23,7 @@ class Transactions extends Controller {
 			'title'      => __( 'Transaction', 'wp-ever-accounting' ),
 			'type'       => 'object',
 			'properties' => array(
-				'id'             => array(
+				'id'            => array(
 					'description' => __( 'Unique identifier for the transaction.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'embed', 'edit' ),
@@ -32,33 +32,33 @@ class Transactions extends Controller {
 						'sanitize_callback' => 'intval',
 					),
 				),
-				'number'         => array(
+				'number'        => array(
 					'description' => __( 'Transaction number.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'embed', 'edit' ),
 				),
-				'date'           => array(
+				'date'          => array(
 					'description' => __( 'The date the transaction took place, in the site\'s timezone.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'format'      => 'date-time',
 					'context'     => array( 'view', 'embed', 'edit' ),
 				),
-				'amount'         => array(
+				'amount'        => array(
 					'description' => __( 'Total amount of the transaction.', 'wp-ever-accounting' ),
 					'type'        => 'number',
 					'context'     => array( 'view', 'embed', 'edit' ),
 				),
-				'reference'      => array(
+				'reference'     => array(
 					'description' => __( 'Reference of the transaction.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'embed', 'edit' ),
 				),
-				'note'           => array(
+				'note'          => array(
 					'description' => __( 'Note of the transaction.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'embed', 'edit' ),
 				),
-				'account'        => array(
+				'account'       => array(
 					'description' => __( 'Account of the transaction.', 'wp-ever-accounting' ),
 					'type'        => 'object',
 					'context'     => array( 'view', 'embed', 'edit' ),
@@ -80,7 +80,7 @@ class Transactions extends Controller {
 						),
 					),
 				),
-				'document'       => array(
+				'document'      => array(
 					'description' => __( 'Document of the transaction.', 'wp-ever-accounting' ),
 					'type'        => 'object',
 					'context'     => array( 'view', 'embed', 'edit' ),
@@ -102,7 +102,7 @@ class Transactions extends Controller {
 						),
 					),
 				),
-				'category'       => array(
+				'category'      => array(
 					'description' => __( 'Category of the transaction.', 'wp-ever-accounting' ),
 					'type'        => 'object',
 					'context'     => array( 'view', 'embed', 'edit' ),
@@ -124,7 +124,7 @@ class Transactions extends Controller {
 						),
 					),
 				),
-				'contact'        => array(
+				'contact'       => array(
 					'description' => __( 'Contact of the transaction.', 'wp-ever-accounting' ),
 					'type'        => 'object',
 					'context'     => array( 'view', 'embed', 'edit' ),
@@ -146,13 +146,13 @@ class Transactions extends Controller {
 						),
 					),
 				),
-				'method' => array(
+				'mode'          => array(
 					'description' => __( 'Payment method of the transaction.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'enum'        => array_keys( eac_get_payment_methods() ),
 					'context'     => array( 'view', 'embed', 'edit' ),
 				),
-				'attachment'     => array(
+				'attachment'    => array(
 					'description' => __( 'Attachment of the transaction.', 'wp-ever-accounting' ),
 					'type'        => 'object',
 					'context'     => array( 'view', 'embed', 'edit' ),
@@ -174,23 +174,23 @@ class Transactions extends Controller {
 						),
 					),
 				),
-				'currency'       => array(
+				'currency'      => array(
 					'description' => __( 'Currency of the transaction.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'enum'        => array_keys( eac_get_currencies() ),
 					'context'     => array( 'view', 'embed', 'edit' ),
 				),
-				'conversion'  => array(
-					'description' => __( 'Conversion rate of the transaction.', 'wp-ever-accounting' ),
+				'exchange_rate' => array(
+					'description' => __( 'exchange_rate rate of the transaction.', 'wp-ever-accounting' ),
 					'type'        => 'number',
 					'context'     => array( 'view', 'embed', 'edit' ),
 				),
-				'reconciled'     => array(
+				'reconciled'    => array(
 					'description' => __( 'Whether the transaction is reconciled.', 'wp-ever-accounting' ),
 					'type'        => 'boolean',
 					'context'     => array( 'view', 'embed', 'edit' ),
 				),
-				'parent_id'      => array(
+				'parent_id'     => array(
 					'description' => __( 'Parent transaction ID.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'embed', 'edit' ),
@@ -199,18 +199,18 @@ class Transactions extends Controller {
 						'sanitize_callback' => 'intval',
 					),
 				),
-				'uuid'           => array(
+				'uuid'          => array(
 					'description' => __( 'Unique identifier for the transaction.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'embed', 'edit' ),
 				),
-				'date_updated'   => array(
+				'date_updated'  => array(
 					'description' => __( "The date the transaction was last modified, in the site's timezone.", 'wp-ever-accounting' ),
 					'type'        => 'date-time',
 					'context'     => array( 'view', 'embed', 'edit' ),
 					'readonly'    => true,
 				),
-				'date_created'   => array(
+				'date_created'  => array(
 					'description' => __( "The date the transaction was created, in the site's timezone.", 'wp-ever-accounting' ),
 					'type'        => 'date-time',
 					'context'     => array( 'view', 'embed', 'edit' ),
@@ -226,7 +226,7 @@ class Transactions extends Controller {
 		 *
 		 * @since 2.0.0
 		 */
-		$schema = apply_filters( 'eac_rest_'. $this->rest_base .'_item_schema', $schema );
+		$schema = apply_filters( 'eac_rest_' . $this->rest_base . '_item_schema', $schema );
 
 		return $this->add_additional_fields_schema( $schema );
 	}

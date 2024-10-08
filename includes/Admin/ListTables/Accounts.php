@@ -148,7 +148,7 @@ class Accounts extends ListTable {
 	 */
 	protected function get_bulk_actions() {
 		$actions = array(
-			'delete'     => __( 'Delete', 'wp-ever-accounting' ),
+			'delete' => __( 'Delete', 'wp-ever-accounting' ),
 		);
 
 		return $actions;
@@ -218,7 +218,19 @@ class Accounts extends ListTable {
 	 * @return string Displays the name.
 	 */
 	public function column_name( $item ) {
-		return sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( ['action' => 'view', 'id' => $item->id ], $this->base_url ) ), wp_kses_post( $item->name ) );
+		return sprintf(
+			'<a href="%s">%s</a>',
+			esc_url(
+				add_query_arg(
+					array(
+						'action' => 'view',
+						'id'     => $item->id,
+					),
+					$this->base_url
+				)
+			),
+			wp_kses_post( $item->name )
+		);
 	}
 
 	/**
@@ -248,9 +260,17 @@ class Accounts extends ListTable {
 			return null;
 		}
 		$actions = array(
-			'edit' => sprintf(
+			'edit'   => sprintf(
 				'<a href="%s">%s</a>',
-				esc_url( add_query_arg( ['view' => 'edit', 'id' => $item->id ], $this->base_url ) ),
+				esc_url(
+					add_query_arg(
+						array(
+							'action' => 'edit',
+							'id'     => $item->id,
+						),
+						$this->base_url
+					)
+				),
 				__( 'Edit', 'wp-ever-accounting' )
 			),
 			'delete' => sprintf(
@@ -268,7 +288,7 @@ class Accounts extends ListTable {
 					)
 				),
 				__( 'Delete', 'wp-ever-accounting' )
-			)
+			),
 		);
 
 		return $this->row_actions( $actions );

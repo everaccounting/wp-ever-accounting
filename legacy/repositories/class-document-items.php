@@ -61,6 +61,4 @@ class Document_Items extends Resource_Repository {
 		'extra'         => '%s',
 		'date_created'  => '%s',
 	);
-
-
 }

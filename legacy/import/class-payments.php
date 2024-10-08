@@ -142,5 +142,4 @@ class Payments extends CSV_Importer {
 
 		return eaccounting_insert_payment( $data );
 	}
-
 }

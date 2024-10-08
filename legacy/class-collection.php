@@ -32,7 +32,6 @@ class Collection implements \EAccounting\Interfaces\Arrayable {
 	 * @param mixed $items Items.
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function __construct( $items = array() ) {
 		if ( $items instanceof Collection ) {

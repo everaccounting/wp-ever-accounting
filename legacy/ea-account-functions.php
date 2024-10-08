@@ -292,4 +292,3 @@ function eaccounting_get_accounts( $args = array() ) {
 
 	return $results;
 }
-

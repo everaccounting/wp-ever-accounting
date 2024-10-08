@@ -137,6 +137,7 @@ class Menus {
 				'capability' => 'manage_options',
 				'menu_slug'  => '',
 				'callback'   => array( $this, 'output' ),
+				'tabs'       => array(),
 			)
 		);
 
@@ -170,7 +171,7 @@ class Menus {
 		do_action( 'eac_' . $this->page . '_page_init', $this->tab, $this->action );
 
 		$this->actions = apply_filters( 'eac_' . $this->page . '_page_actions', array( 'add', 'edit', 'view' ) );
-		$this->tabs    = apply_filters( 'eac_' . $this->page . '_page_tabs', array() );
+		$this->tabs    = apply_filters( 'eac_' . $this->page . '_page_tabs', $menu['tabs'] );
 		$this->tab     = ! empty( $tab ) && array_key_exists( $tab, $this->tabs ) ? sanitize_key( $tab ) : current( array_keys( $this->tabs ) );
 		$this->action  = ! empty( $action ) && in_array( $action, $this->actions, true ) ? sanitize_key( $action ) : '';
 

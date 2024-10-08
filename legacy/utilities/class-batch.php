@@ -168,7 +168,6 @@ class Batch extends Registry {
 				'file'  => EACCOUNTING_ABSPATH . '/includes/import/class-categories.php',
 			)
 		);
-
 	}
 
 	/**
@@ -204,5 +203,4 @@ class Batch extends Registry {
 
 		return parent::add_item( $batch_id, $args );
 	}
-
 }

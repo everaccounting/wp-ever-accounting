@@ -66,7 +66,7 @@ interface Resource_Repository {
 	 *
 	 * @return mixed
 	 */
-	public function update( $id, array $data);
+	public function update( $id, array $data );
 
 	/**
 	 * Duplicate item.

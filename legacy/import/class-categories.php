@@ -85,5 +85,4 @@ class Categories extends CSV_Importer {
 
 		return eaccounting_insert_category( $data );
 	}
-
 }

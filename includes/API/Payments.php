@@ -557,7 +557,7 @@ class Payments extends Transactions {
 					'context'     => array( 'view', 'embed', 'edit' ),
 					'default'     => eac_base_currency(),
 				),
-				'conversion'    => array(
+				'exchange_rate'    => array(
 					'description' => __( 'Exchange rate of the payment.', 'wp-ever-accounting' ),
 					'type'        => 'number',
 					'context'     => array( 'view', 'embed', 'edit' ),
@@ -573,7 +573,7 @@ class Payments extends Transactions {
 					'type'        => 'string',
 					'context'     => array( 'view', 'embed', 'edit' ),
 				),
-				'method'   => array(
+				'mode'             => array(
 					'description' => __( 'Payment method of the payment.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'embed', 'edit' ),

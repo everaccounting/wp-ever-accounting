@@ -28,8 +28,8 @@
   ],
   "require": {
     "php": ">=7.0",
-    "byteever/bytekit-plugin": "dev-master",
     "byteever/bytekit-models": "dev-master",
+    "byteever/bytekit-plugin": "dev-master",
     "woocommerce/action-scheduler": "^3.7"
   },
   "autoload": {

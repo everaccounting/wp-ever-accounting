@@ -273,7 +273,7 @@ abstract class CSVExporter {
 
 		$this->fputcsv( $buffer, $export_row );
 
-		++ $this->exported_count;
+		++$this->exported_count;
 	}
 
 	/**

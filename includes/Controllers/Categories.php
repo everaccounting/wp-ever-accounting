@@ -90,5 +90,4 @@ class Categories {
 
 		return apply_filters( 'eac_category_types', $types );
 	}
-
 }

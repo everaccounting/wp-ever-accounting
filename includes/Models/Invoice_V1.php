@@ -296,14 +296,14 @@ class Invoice_V1 extends Document {
 		$data = wp_parse_args(
 			$data,
 			array(
-				'date'           => current_time( 'mysql' ),
-				'account_id'     => '',
-				'document_id'    => $this->id,
-				'amount'         => 0,
-				'currency'  => $this->currency,
-				'conversion'  => $this->conversion,
-				'method' => '',
-				'note'           => '',
+				'date'          => current_time( 'mysql' ),
+				'account_id'    => '',
+				'document_id'   => $this->id,
+				'amount'        => 0,
+				'currency'      => $this->currency,
+				'exchange_rate' => $this->exchange_rate,
+				'mode'          => '',
+				'note'          => '',
 			)
 		);
 
@@ -322,9 +322,9 @@ class Invoice_V1 extends Document {
 			return new \WP_Error( 'invalid_account', __( 'Invalid account.', 'wp-ever-accounting' ) );
 		}
 		if ( $account->currency !== $this->currency ) {
-			$data['amount']        = eac_convert_currency( $data['amount'], $this->currency, $account->currency, $this->conversion );
-			$data['currency'] = $account->currency;
-			$data['conversion'] = $account->currency ? $account->currency->conversion : 1;
+			$data['amount']        = eac_convert_currency( $data['amount'], $this->currency, $account->currency, $this->exchange_rate );
+			$data['currency']      = $account->currency;
+			$data['exchange_rate'] = $account->currency ? $account->currency->exchange_rate : 1;
 		}
 
 		$revenue = eac_insert_revenue(
@@ -334,8 +334,8 @@ class Invoice_V1 extends Document {
 				'contact_id'     => $this->contact_id,
 				'account_id'     => $data['account_id'],
 				'amount'         => $data['amount'],
-				'currency'  => $data['currency'],
-				'conversion'  => $data['conversion'],
+				'currency'       => $data['currency'],
+				'exchange_rate'  => $data['exchange_rate'],
 				'payment_method' => $data['payment_method'],
 				'note'           => $data['note'],
 				'created_via'    => 'invoice',
@@ -388,7 +388,7 @@ class Invoice_V1 extends Document {
 		$this->total_paid = 0;
 		if ( ! empty( $transactions ) ) {
 			foreach ( $transactions as $transaction ) {
-				$amount = eac_convert_currency( $transaction->amount, $transaction->currency, $this->currency, $transaction->conversion, $this->conversion );
+				$amount = eac_convert_currency( $transaction->amount, $transaction->currency, $this->currency, $transaction->exchange_rate, $this->exchange_rate );
 				if ( 'revenue' === $transaction->type ) {
 					$this->total_paid += $amount;
 				} elseif ( 'expense' === $transaction->type ) {
@@ -500,7 +500,7 @@ class Invoice_V1 extends Document {
 			foreach ( $item->get_taxes() as $tax ) {
 				$amount      = isset( $taxes[ $tax->tax_id ] ) ? $taxes[ $tax->tax_id ] : 0;
 				$tax->amount = $amount;
-				$line_tax    += $amount;
+				$line_tax   += $amount;
 			}
 			$item->tax_total = $line_tax;
 		}
@@ -603,9 +603,9 @@ class Invoice_V1 extends Document {
 		foreach ( $items as $item ) {
 			$discounted_price = $item->get_discounted_price();
 			// If the item is not created yet, we need to calculate the discounted price without tax.
-			$discount       = $discounted_price * ( $amount / 100 );
-			$discount       = min( $discounted_price, $discount );
-			$item->discount = $item->discount + $discount;
+			$discount        = $discounted_price * ( $amount / 100 );
+			$discount        = min( $discounted_price, $discount );
+			$item->discount  = $item->discount + $discount;
 			$total_discount += $discount;
 			$document_total += $discounted_price;
 		}
@@ -633,11 +633,11 @@ class Invoice_V1 extends Document {
 		$total_discount = 0;
 		foreach ( $items as $item ) {
 			$quantity = $item->quantity;
-			for ( $i = 0; $i < $quantity; $i ++ ) {
+			for ( $i = 0; $i < $quantity; $i++ ) {
 				$discounted_price = $item->get_discounted_price();
 				$discount         = min( $discounted_price, 1 );
 				$item->discount   = $item->discount + $discount;
-				$total_discount   += $discount;
+				$total_discount  += $discount;
 				if ( $total_discount >= $amount ) {
 					break 2;
 				}
@@ -664,7 +664,7 @@ class Invoice_V1 extends Document {
 		$total = 0;
 		foreach ( $items as $item ) {
 			$amount = $item->$column ?? 0;
-			$total  += $round ? round( $amount, 2 ) : $amount;
+			$total += $round ? round( $amount, 2 ) : $amount;
 		}
 
 		return $round ? round( $total, 2 ) : $total;

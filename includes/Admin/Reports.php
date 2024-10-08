@@ -16,29 +16,10 @@ class Reports {
 	 * Reports constructor.
 	 */
 	public function __construct() {
-		add_filter( 'eac_reports_page_tabs', array( __CLASS__, 'register_tabs' ) );
-		add_action( 'eac_reports_page_payments', array( __CLASS__, 'render_payments' ) );
+		add_action( 'eac_reports_page_sales', array( __CLASS__, 'render_sales' ) );
 		add_action( 'eac_reports_page_expenses', array( __CLASS__, 'render_expenses' ) );
 		add_action( 'eac_reports_page_profits', array( __CLASS__, 'render_profits' ) );
 		add_action( 'eac_reports_page_taxes', array( __CLASS__, 'render_taxes' ) );
-	}
-
-	/**
-	 * Register tabs.
-	 *
-	 * @param array $tabs Tabs.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return array
-	 */
-	public static function register_tabs( $tabs ) {
-		$tabs['payments'] = __( 'Payments', 'ever-accounting' );
-		$tabs['expenses'] = __( 'Expenses', 'ever-accounting' );
-		$tabs['profits']  = __( 'Profit & Loss', 'ever-accounting' );
-		$tabs['taxes']    = __( 'Taxes', 'ever-accounting' );
-
-		return $tabs;
 	}
 
 	/**
@@ -46,7 +27,7 @@ class Reports {
 	 *
 	 * @since 1.0.0
 	 */
-	public static function render_payments() {
+	public static function render_sales() {
 		include __DIR__ . '/views/report-payments.php';
 	}
 

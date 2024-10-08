@@ -16,22 +16,23 @@ class Currencies {
 	 * Constructor.
 	 */
 	public function __construct() {
-		//add_filter( 'eac_currencies', array( $this, 'customized_currencies' ) );
+		add_filter( 'eac_currencies', array( __CLASS__, 'add_exchange_rates' ) );
 	}
 
 	/**
-	 * Customized currencies.
+	 * Add conversion rates.
 	 *
 	 * @param array $currencies Currencies.
 	 *
 	 * @since 1.0.0
 	 * @return array
 	 */
-	public function customized_currencies( $currencies ) {
-		$customized = get_option('eac_currencies', array());
-		// we will loop through the currencies and add the customized currencies properties to the currencies array.
-		foreach ( $customized as $code => $currency ) {
-			$currencies[ $code ] = wp_parse_args( $currency, $currencies[ $code ] );
+	public static function add_exchange_rates( $currencies ) {
+		$exchange_rates = get_option( 'eac_exchange_rates', array() );
+		if ( is_array( $exchange_rates ) && ! empty( $exchange_rates ) ) {
+			foreach ( $exchange_rates as $code => $exchange_rate ) {
+				$currencies[ $code ]['rate'] = $exchange_rate;
+			}
 		}
 
 		return $currencies;

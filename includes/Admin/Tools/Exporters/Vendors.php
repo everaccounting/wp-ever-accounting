@@ -64,7 +64,7 @@ class Vendors extends CSVExporter {
 	 * @since 1.0.2
 	 */
 	public function get_rows() {
-		$args  = array(
+		$args = array(
 			'per_page' => $this->limit,
 			'page'     => $this->page,
 			'status'   => eac_get_input_var( 'status', '', 'POST' ),
@@ -73,11 +73,11 @@ class Vendors extends CSVExporter {
 			'limit'    => - 1,
 		);
 
-		$args  = apply_filters( 'eac_vendors_export_query_args', $args );
+		$args = apply_filters( 'eac_vendors_export_query_args', $args );
 
 		$items = Vendor::query( $args );
 
-		$rows  = array();
+		$rows = array();
 
 		foreach ( $items as $item ) {
 			$rows[] = $this->generate_row_data( $item );
@@ -94,12 +94,12 @@ class Vendors extends CSVExporter {
 	 * @return array
 	 */
 	protected function generate_row_data( $item ) {
-		$props = [];
+		$props = array();
 		foreach ( $this->get_columns() as $column ) {
 			$value = null;
 			switch ( $column ) {
 				default:
-					$value  = '';
+					$value = '';
 					if ( $item->$column ) {
 						$value = $item->$column;
 					}

@@ -27,23 +27,27 @@ class Utilities extends Controller {
 	 * @since 2.0.0
 	 */
 	public function register_routes() {
-		register_rest_route( $this->namespace, '/' . $this->rest_base . '/currencies',
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->rest_base . '/currencies',
 			array(
 				'methods'             => 'GET',
 				'callback'            => array( $this, 'get_currencies' ),
 				'permission_callback' => function () {
 					return current_user_can( 'manage_options' );
-				}
+				},
 			)
 		);
 		// Countries.
-		register_rest_route( $this->namespace, '/' . $this->rest_base . '/countries',
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->rest_base . '/countries',
 			array(
 				'methods'             => 'GET',
 				'callback'            => array( $this, 'get_countries' ),
 				'permission_callback' => function () {
 					return current_user_can( 'manage_options' );
-				}
+				},
 			)
 		);
 	}

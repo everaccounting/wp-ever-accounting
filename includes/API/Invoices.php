@@ -337,12 +337,12 @@ class Invoices extends Documents {
 					'type'        => 'string',
 					'context'     => array( 'view', 'edit' ),
 				),
-				'currency'   => array(
+				'currency'        => array(
 					'description' => __( 'Currency code.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'edit' ),
 				),
-				'conversion'   => array(
+				'exchange_rate'   => array(
 					'description' => __( 'Exchange rate.', 'wp-ever-accounting' ),
 					'type'        => 'number',
 					'context'     => array( 'view', 'edit' ),
@@ -376,7 +376,7 @@ class Invoices extends Documents {
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
-			)
+			),
 		);
 
 		return $schema;

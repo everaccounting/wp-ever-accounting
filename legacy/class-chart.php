@@ -311,7 +311,7 @@ class Chart {
 		);
 
 		eaccounting_enqueue_js( "new Chart(document.getElementById('ea-chart-$this->id'),$chart);" );
-		echo sprintf(
+		printf(
 			'<canvas id="ea-chart-%s" height="%s" width="%s">',
 			esc_attr( $this->id ),
 			esc_attr( $this->height ),

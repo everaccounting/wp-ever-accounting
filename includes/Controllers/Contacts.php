@@ -89,5 +89,4 @@ class Contacts {
 
 		return apply_filters( 'eac_contact_types', $contact_types );
 	}
-
 }

@@ -16,6 +16,10 @@ use ByteKit\Models\Relations\BelongsTo;
  *
  * @property int $id Invoice ID.
  * @property int $vendor_id Vendor ID.
+ * @property string $order_number Order number.
+ *
+ *
+ * @property Vendor $vendor Vendor relation.
  */
 class Bill extends Document {
 	/**

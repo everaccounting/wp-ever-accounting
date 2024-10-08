@@ -557,7 +557,6 @@ function eaccounting_numbers_to_words( $number ) {
 	}
 
 	return $string;
-
 }
 
 /**
@@ -591,4 +590,3 @@ function eaccounting_format_address( $address, $break = '<br>' ) {
 
 	return implode( $break, $full_address );
 }
-

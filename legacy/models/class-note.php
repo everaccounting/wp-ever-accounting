@@ -219,5 +219,4 @@ class Note extends Resource_Model {
 	public function set_creator_id( $creator_id = null ) {
 		$this->set_prop( 'creator_id', absint( $creator_id ) );
 	}
-
 }

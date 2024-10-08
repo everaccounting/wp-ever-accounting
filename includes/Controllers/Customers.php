@@ -74,5 +74,4 @@ class Customers {
 
 		return Customer::results( $args );
 	}
-
 }

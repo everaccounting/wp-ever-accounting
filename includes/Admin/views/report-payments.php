@@ -53,7 +53,6 @@ $datasets['total'] = array(
 	</div>
 </div>
 
-
 <div class="eac-card">
 	<div class="eac-card__header">
 		<h3 class="eac-card__title"><?php esc_html_e( 'Chart', 'wp-ever-accounting' ); ?></h3>
@@ -136,7 +135,7 @@ $datasets['total'] = array(
 <script type="text/javascript">
 	window.onload = function () {
 		var ctx = document.getElementById("eac-payment-chart").getContext('2d');
-		var symbol = "<?php echo esc_html( $currency ? eac_currency_symbol( $currency ) : '' ); ?>";
+		var symbol = "<?php echo esc_html( $currency ? eac_get_currencies()[ $currency ]['symbol'] : '' ); ?>";
 		var myChart = new Chart(ctx, {
 			type: 'bar',
 			minHeight: 500,

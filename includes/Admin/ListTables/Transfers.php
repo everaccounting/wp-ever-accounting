@@ -2,7 +2,6 @@
 
 namespace EverAccounting\Admin\ListTables;
 
-
 use EverAccounting\Models\Transfer;
 
 defined( 'ABSPATH' ) || exit;
@@ -98,7 +97,7 @@ class Transfers extends ListTable {
 		$performed = 0;
 		foreach ( $ids as $id ) {
 			if ( EAC()->transfers->delete( $id ) ) {
-				++ $performed;
+				++$performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {

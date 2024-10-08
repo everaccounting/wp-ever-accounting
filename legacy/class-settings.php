@@ -552,7 +552,7 @@ class Settings {
 		$default = isset( $args['std'] ) ? $args['std'] : '';
 		$value   = $this->get( $args['id'], $default );
 
-		echo sprintf(
+		printf(
 			'<input type="text" class="%1$s-text %2$s" style="%3$s" name="eaccounting_settings[%4$s]" id="eaccounting_settings[%4$s]" value="%5$s"/>',
 			esc_attr( $args['size'] ),
 			esc_attr( $args['input_class'] ),
@@ -562,7 +562,6 @@ class Settings {
 		);
 
 		echo ! empty( $args['desc'] ) ? sprintf( '<p class="description">%s</p>', wp_kses_post( $args['desc'] ) ) : '';
-
 	}
 
 	/**
@@ -578,7 +577,7 @@ class Settings {
 	public function email_callback( $args ) {
 		$default = isset( $args['std'] ) ? $args['std'] : '';
 		$value   = $this->get( $args['id'], $default );
-		echo sprintf(
+		printf(
 			'<input type="email" class="%1$s-text %2$s" style="%3$s" name="eaccounting_settings[%4$s]" id="eaccounting_settings[%4$s]" value="%5$s"/>',
 			esc_attr( $args['size'] ),
 			esc_attr( $args['input_class'] ),
@@ -588,7 +587,6 @@ class Settings {
 		);
 
 		echo ! empty( $args['desc'] ) ? sprintf( '<p class="description">%s</p>', wp_kses_post( $args['desc'] ) ) : '';
-
 	}
 
 	/**
@@ -697,7 +695,7 @@ class Settings {
 		$attributes = eaccounting_implode_html_attributes( $args['attr'] );
 		$desc       = ! empty( $args['desc'] ) ? sprintf( '<p class="description">%s</p>', wp_kses_post( $args['desc'] ) ) : '';
 
-		echo sprintf(
+		printf(
 			'<input type="url" class="%s-text %s" style="%s" name="eaccounting_settings[%s]" id="eaccounting_settings[%s]" value="%s" %s/>',
 			esc_attr( $size ),
 			esc_attr( $args['input_class'] ),
@@ -736,7 +734,7 @@ class Settings {
 		$attributes = eaccounting_implode_html_attributes( $args['attr'] );
 		$desc       = ! empty( $args['desc'] ) ? sprintf( '<p class="description">%s</p>', wp_kses_post( $args['desc'] ) ) : '';
 
-		echo sprintf(
+		printf(
 			'<input type="number" class="%s-text %s" style="%s" name="eaccounting_settings[%s]" id="eaccounting_settings[%s]" value="%s" %s/>',
 			esc_attr( $size ),
 			esc_attr( $args['input_class'] ),
@@ -772,7 +770,7 @@ class Settings {
 		$attributes = eaccounting_implode_html_attributes( $args['attr'] );
 		$desc       = ! empty( $args['desc'] ) ? sprintf( '<p class="description">%s</p>', wp_kses_post( $args['desc'] ) ) : '';
 
-		echo sprintf(
+		printf(
 			'<textarea type="text" class="%s-text %s" style="%s" name="eaccounting_settings[%s]" id="eaccounting_settings[%s]" %s>%s</textarea>',
 			esc_attr( $size ),
 			esc_attr( $args['input_class'] ),
@@ -783,7 +781,6 @@ class Settings {
 			esc_textarea( stripslashes( $value ) )
 		);
 		echo wp_kses_post( $desc );
-
 	}
 
 	/**
@@ -809,7 +806,7 @@ class Settings {
 		$attributes = eaccounting_implode_html_attributes( $args['attr'] );
 		$desc       = ! empty( $args['desc'] ) ? sprintf( '<p class="description">%s</p>', wp_kses_post( $args['desc'] ) ) : '';
 
-		echo sprintf(
+		printf(
 			'<input type="password" class="%s-text %s" style="%s" name="eaccounting_settings[%s]" id="eaccounting_settings[%s]" value="%s" %s/>',
 			esc_attr( $size ),
 			esc_attr( $args['input_class'] ),
@@ -841,7 +838,7 @@ class Settings {
 			$value = isset( $args['std'] ) ? $args['std'] : '';
 		}
 
-		echo sprintf(
+		printf(
 			'<select class="%s-text %s" style="%s" name="eaccounting_settings[%s]" id="eaccounting_settings[%s]" %s>',
 			esc_attr( $args['size'] ),
 			esc_attr( $args['input_class'] ),
@@ -852,7 +849,7 @@ class Settings {
 		);
 
 		foreach ( $args['options'] as $key => $option_value ) {
-			echo sprintf( '<option value="%s" %s>%s</option>', esc_attr( $key ), wp_kses_post( eaccounting_selected( esc_attr( $key ), esc_attr( $value ) ) ), esc_html( $option_value ) );
+			printf( '<option value="%s" %s>%s</option>', esc_attr( $key ), wp_kses_post( eaccounting_selected( esc_attr( $key ), esc_attr( $value ) ) ), esc_html( $option_value ) );
 		}
 
 		echo '</select>';
@@ -904,7 +901,7 @@ class Settings {
 		$attributes = eaccounting_implode_html_attributes( $args['attr'] );
 		$desc       = ! empty( $args['desc'] ) ? sprintf( '<p class="description">%s</p>', wp_kses_post( $args['desc'] ) ) : '';
 
-		echo sprintf(
+		printf(
 			'<input type="text" class="%s-text %s" style="%s" name="eaccounting_settings[%s]" id="eaccounting_settings[%s]" value="%s" %s/>',
 			esc_attr( $size ),
 			esc_attr( $args['input_class'] ),
@@ -914,7 +911,7 @@ class Settings {
 			esc_attr( stripslashes( $value ) ),
 			wp_kses_post( $attributes )
 		);
-		echo sprintf( '<span>&nbsp;<input type="button" class="ea_settings_upload_button button-secondary" value="%s"/></span>', esc_html__( 'Upload File', 'wp-ever-accounting' ) );
+		printf( '<span>&nbsp;<input type="button" class="ea_settings_upload_button button-secondary" value="%s"/></span>', esc_html__( 'Upload File', 'wp-ever-accounting' ) );
 		echo wp_kses_post( $desc );
 	}
 
@@ -925,7 +922,7 @@ class Settings {
 	 */
 	public function html_callback( $args ) {
 		$args = wp_parse_args( $args, array( 'html' => '' ) );
-		echo sprintf( '<div class="ea-settings-html %s">%s</div>', sanitize_html_class( $args['input_class'] ), wp_kses_post( $args['html'] ) );
+		printf( '<div class="ea-settings-html %s">%s</div>', sanitize_html_class( $args['input_class'] ), wp_kses_post( $args['html'] ) );
 	}
 
 	/**

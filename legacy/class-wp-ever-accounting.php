@@ -170,7 +170,7 @@ final class EverAccounting {
 		require_once EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-background-process.php';
 
 		// Core classes.
-//		require_once EACCOUNTING_ABSPATH . '/includes/class-install.php';
+		// require_once EACCOUNTING_ABSPATH . '/includes/class-install.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/class-utilities.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/class-options.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/class-ajax.php';
@@ -214,7 +214,7 @@ final class EverAccounting {
 	 * @return void
 	 */
 	private function init_hooks() {
-		//register_activation_hook( EACCOUNTING_PLUGIN_FILE, array( 'EAccounting\Install', 'install' ) );
+		// register_activation_hook( EACCOUNTING_PLUGIN_FILE, array( 'EAccounting\Install', 'install' ) );
 		register_shutdown_function( array( $this, 'log_errors' ) );
 
 		add_action( 'plugins_loaded', array( $this, 'on_plugins_loaded' ), - 1 );
@@ -232,16 +232,16 @@ final class EverAccounting {
 	public function log_errors() {
 		$error = error_get_last();
 		if ( $error && in_array(
-				$error['type'],
-				array(
-					E_ERROR,
-					E_PARSE,
-					E_COMPILE_ERROR,
-					E_USER_ERROR,
-					E_RECOVERABLE_ERROR,
-				),
-				true
-			) ) {
+			$error['type'],
+			array(
+				E_ERROR,
+				E_PARSE,
+				E_COMPILE_ERROR,
+				E_USER_ERROR,
+				E_RECOVERABLE_ERROR,
+			),
+			true
+		) ) {
 			$this->logger->log_critical(
 			/* translators: 1: error message 2: file name and path 3: line number */
 				sprintf( __( '%1$s in %2$s on line %3$s', 'wp-ever-accounting' ), $error['message'], $error['file'], $error['line'] ) . PHP_EOL,

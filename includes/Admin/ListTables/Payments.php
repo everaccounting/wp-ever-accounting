@@ -97,7 +97,7 @@ class Payments extends ListTable {
 		$performed = 0;
 		foreach ( $ids as $id ) {
 			if ( EAC()->payments->delete( $id ) ) {
-				++ $performed;
+				++$performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
@@ -327,7 +327,7 @@ class Payments extends ListTable {
 	 * @return string Displays the customer.
 	 */
 	public function column_customer( $item ) {
-		$customer   = $item->customer ? sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( 'customer_id', $item->customer->id, $this->base_url ) ), wp_kses_post( $item->customer->name ) ) : '&mdash;';
+		$customer = $item->customer ? sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( 'customer_id', $item->customer->id, $this->base_url ) ), wp_kses_post( $item->customer->name ) ) : '&mdash;';
 		$metadata = $item->customer && $item->customer->company ? $item->customer->company : '&mdash;';
 
 		return sprintf( '%s%s', $customer, $this->column_metadata( $metadata ) );

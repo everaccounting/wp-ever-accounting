@@ -435,5 +435,4 @@ class Currency extends Resource_Model {
 	public function is_symbol_first() {
 		return 'before' === $this->get_position( 'edit' );
 	}
-
 }

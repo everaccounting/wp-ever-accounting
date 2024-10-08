@@ -371,5 +371,4 @@ class Item extends Resource_Model {
 	| Does extra thing as helper functions.
 	|
 	*/
-
 }

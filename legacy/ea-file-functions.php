@@ -184,4 +184,3 @@ function eaccounting_handle_assets_name( $full_filename, $ext, $dir ) {
 }
 
 add_filter( 'wp_unique_filename', 'eaccounting_handle_assets_name', 10, 3 );
-

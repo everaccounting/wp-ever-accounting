@@ -118,7 +118,7 @@ defined( 'ABSPATH' ) || exit;
 						</div>
 						<div class="note__actions">
 							<a href="#"
-							   class="note__action"><?php esc_html_e( 'Delete', 'wc-serial-numbers' ); ?></a>
+								class="note__action"><?php esc_html_e( 'Delete', 'wc-serial-numbers' ); ?></a>
 						</div>
 					</li>
 				</ul>

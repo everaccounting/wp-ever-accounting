@@ -130,12 +130,11 @@ class Exporter {
 		} else {
 			wp_send_json_success(
 				array(
-					'step'       => ++ $step,
+					'step'       => ++$step,
 					'percentage' => $exporter->get_percent_complete(),
 				)
 			);
 		}
-
 	}
 
 	/**

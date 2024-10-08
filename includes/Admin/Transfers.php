@@ -24,7 +24,7 @@ class Transfers {
 		add_action( 'eac_banking_page_transfers', array( __CLASS__, 'render_table' ) );
 		add_action( 'eac_banking_page_transfers_add', array( __CLASS__, 'render_add' ) );
 		add_action( 'eac_banking_page_transfers_edit', array( __CLASS__, 'render_edit' ) );
-//		add_action( 'admin_post_eac_edit_account', array( __CLASS__, 'handle_edit' ) );
+		// add_action( 'admin_post_eac_edit_account', array( __CLASS__, 'handle_edit' ) );
 	}
 
 	/**
@@ -53,7 +53,7 @@ class Transfers {
 	 */
 	public static function set_screen_option( $status, $option, $value ) {
 		global $list_table;
-		if ( "eac_transfers_per_page" === $option ) {
+		if ( 'eac_transfers_per_page' === $option ) {
 			return $value;
 		}
 
@@ -71,11 +71,14 @@ class Transfers {
 		$screen     = get_current_screen();
 		$list_table = new ListTables\Transfers();
 		$list_table->prepare_items();
-		$screen->add_option( 'per_page', array(
-			'label'   => __( 'Number of transfers per page:', 'wp-ever-accounting' ),
-			'default' => 20,
-			'option'  => "eac_transfers_per_page",
-		) );
+		$screen->add_option(
+			'per_page',
+			array(
+				'label'   => __( 'Number of transfers per page:', 'wp-ever-accounting' ),
+				'default' => 20,
+				'option'  => 'eac_transfers_per_page',
+			)
+		);
 	}
 
 	/**

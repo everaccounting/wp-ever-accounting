@@ -74,5 +74,4 @@ class Taxes {
 
 		return Tax::results( $args );
 	}
-
 }

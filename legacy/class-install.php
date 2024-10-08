@@ -153,8 +153,8 @@ class Install {
 		// If we made it till here nothing is running yet, lets set the transient now.
 		set_transient( 'eaccounting_installing', 'yes', MINUTE_IN_SECONDS * 1 );
 		eaccounting_maybe_define_constant( 'EACCOUNTING_INSTALLING', true );
-		require_once dirname( __FILE__ ) . '/admin/class-notices.php';
-		require_once dirname( __FILE__ ) . '/class-settings.php';
+		require_once __DIR__ . '/admin/class-notices.php';
+		require_once __DIR__ . '/class-settings.php';
 
 		if ( ! eaccounting()->settings ) {
 			eaccounting()->settings = new \EAccounting\Settings();

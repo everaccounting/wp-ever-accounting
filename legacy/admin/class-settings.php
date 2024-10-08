@@ -428,14 +428,14 @@ class Settings {
 					);
 
 					if ( ! in_array(
-							$args['type'],
-							array(
-								'checkbox',
-								'multicheck',
-								'radio',
-							),
-							true
-						) && ! empty( $tooltip ) ) {
+						$args['type'],
+						array(
+							'checkbox',
+							'multicheck',
+							'radio',
+						),
+						true
+					) && ! empty( $tooltip ) ) {
 						$args['title']     = sprintf( '%s<span class="ea-help-tip" title="%s"></span>', esc_html( $args['title'] ), wp_kses_post( $tooltip ) );
 						$args['label_for'] = $args['id'];
 					}
@@ -474,7 +474,7 @@ class Settings {
 		} elseif ( ! empty( $field['desc'] ) ) {
 			$description = '<p class="description">' . wp_kses_post( $field['desc'] ) . '</p>';
 		}
-		$value        = eaccounting_get_option( $field['id'], $field['default'] );
+		$value = eaccounting_get_option( $field['id'], $field['default'] );
 		// Switch based on type.
 		switch ( $field['type'] ) {
 			// Standard text inputs and subtypes like 'number'.
@@ -557,7 +557,7 @@ class Settings {
 			case 'radio':
 			case 'multicheck':
 				$value = ! is_array( $value ) ? array() : $value;
-				$type = 'multicheck' === $field['type'] ? 'checkbox' : $field['type'];
+				$type  = 'multicheck' === $field['type'] ? 'checkbox' : $field['type'];
 				?>
 				<fieldset>
 					<?php echo wp_kses_post( $description ); ?>
@@ -652,7 +652,7 @@ class Settings {
 		if ( 'ea-settings' === $page ) {
 			$results      = eaccounting_get_categories(
 				array(
-					'limit' => - 1,
+					'limit'  => - 1,
 					'type'   => $type,
 					'return' => OBJECT,
 				)
@@ -677,7 +677,7 @@ class Settings {
 		if ( 'ea-settings' === $page ) {
 			$results      = eaccounting_get_currencies(
 				array(
-					'limit' => - 1,
+					'limit'  => - 1,
 					'return' => OBJECT,
 				)
 			);

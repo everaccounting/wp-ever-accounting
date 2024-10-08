@@ -127,7 +127,7 @@ class Report {
 
 		$period = 0;
 		while ( ( $start = strtotime( '+1 MONTH', $start ) ) <= $end ) {
-			$period ++;
+			++$period;
 		}
 
 		$sql = array();

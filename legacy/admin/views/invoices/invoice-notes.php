@@ -36,7 +36,7 @@ $notes = eaccounting_get_notes(
 						<div class="ea-document-notes__item-meta">
 							<abbr class="exact-date" title="<?php echo esc_attr( $note->get_date_created() ); ?>">
 								<?php
-								echo sprintf(
+								printf(
 								/* translators: %s note creator user */
 									esc_html__( 'added on %1$s at %2$s', 'wp-ever-accounting' ),
 									esc_html( eaccounting_date( $note->get_date_created(), 'F m, Y' ) ),
@@ -63,7 +63,7 @@ $notes = eaccounting_get_notes(
 			<button type="submit" class="add_document_note button"><?php esc_html_e( 'Add', 'wp-ever-accounting' ); ?></button>
 			<input type="hidden" name="action" value="eaccounting_add_invoice_note">
 			<input type="hidden" name="invoice_id" value="<?php echo esc_attr( $invoice->get_id() ); ?>">
-			<?php wp_nonce_field( 'ea_add_invoice_note'); ?>
+			<?php wp_nonce_field( 'ea_add_invoice_note' ); ?>
 		</form>
 	</div>
 </div>

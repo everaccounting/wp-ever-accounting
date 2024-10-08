@@ -81,7 +81,7 @@ do_action( 'add_meta_boxes_ea_bill', $bill );
 										<ul class="ea-dropdown-menu">
 											<?php
 											foreach ( $bill_actions as $action => $title ) {
-												echo sprintf(
+												printf(
 													'<li><a href="%s">%s</a></li>',
 													esc_attr(
 														wp_nonce_url(

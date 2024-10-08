@@ -1,5 +1,3 @@
-import {Model} from "../../../packages/api/src";
-
 (function (window, undefined) {
 	'use strict';
 	window.eac_api = window.eac_api || {};
@@ -10,7 +8,7 @@ import {Model} from "../../../packages/api/src";
 	 * @type {Object}
 	 * @since 1.0.0
 	 */
-	eac_api.Model = Backbone.Model.extend( {
+	const Model =Backbone.Model.extend( {
 		/**
 		 * API root.
 		 */
@@ -89,6 +87,7 @@ import {Model} from "../../../packages/api/src";
 			return Backbone.sync( method, model, options );
 		},
 	} );
+	eac_api.Model = Model;
 
 	/**
 	 * Account model
@@ -158,10 +157,10 @@ import {Model} from "../../../packages/api/src";
 	 * @type {Object}
 	 * @since 1.0.0
 	 */
-	eac_api.Customer = Contact.extend( {
+	eac_api.Customer = eac_api.Contact.extend( {
 		endpoint: 'customers',
 
-		defaults: Object.assign( {}, Contact.prototype.defaults, {
+		defaults: Object.assign( {}, eac_api.Contact.prototype.defaults, {
 			type: 'customer',
 		} ),
 	} );
@@ -397,41 +396,13 @@ import {Model} from "../../../packages/api/src";
 	} );
 
 	/**
-	 * DocumentAddress model
-	 *
-	 * @type {Object}
-	 * @since 1.0.0
-	 */
-	eac_api.DocumentAddress = Model.extend( {
-		endpoint: 'addresses',
-
-		defaults: {
-			id: '',
-			document_id: '',
-			type: 'invoice',
-			name: '',
-			company: '',
-			street: '',
-			city: '',
-			state: '',
-			zip: '',
-			country: '',
-			phone: '',
-			email: '',
-			tax_number: '',
-			updated_at: '',
-			created_at: '',
-		},
-	} );
-
-	/**
 	 * Invoice model
 	 *
 	 * @type {Object}
 	 * @since 1.0.0
 	 */
-	eac_api.Invoice = Document.extend( {
-		defaults: Object.assign( {}, Document.prototype.defaults, {
+	eac_api.Invoice = eac_api.Document.extend( {
+		defaults: Object.assign( {}, eac_api.Document.prototype.defaults, {
 			type: 'invoice',
 		} ),
 	} );
@@ -442,8 +413,8 @@ import {Model} from "../../../packages/api/src";
 	 * @type {Object}
 	 * @since 1.0.0
 	 */
-	eac_api.Bill = Document.extend( {
-		defaults: Object.assign( {}, Document.prototype.defaults, {
+	eac_api.Bill = eac_api.Document.extend( {
+		defaults: Object.assign( {}, eac_api.Document.prototype.defaults, {
 			type: 'bill',
 		} ),
 	} );
@@ -484,8 +455,8 @@ import {Model} from "../../../packages/api/src";
 	 * @type {Object}
 	 * @since 1.0.0
 	 */
-	eac_api.Payment = Transaction.extend( {
-		defaults: Object.assign( {}, Transaction.prototype.defaults, {
+	eac_api.Payment = eac_api.Transaction.extend( {
+		defaults: Object.assign( {}, eac_api.Transaction.prototype.defaults, {
 			type: 'payment',
 		} ),
 	} );
@@ -496,8 +467,8 @@ import {Model} from "../../../packages/api/src";
 	 * @type {Object}
 	 * @since 1.0.0
 	 */
-	eac_api.Expense = Transaction.extend( {
-		defaults: Object.assign( {}, Transaction.prototype.defaults, {
+	eac_api.Expense = eac_api.Transaction.extend( {
+		defaults: Object.assign( {}, eac_api.Transaction.prototype.defaults, {
 			type: 'expense',
 		} ),
 	} );
@@ -566,10 +537,10 @@ import {Model} from "../../../packages/api/src";
 	 * @type {Object}
 	 * @since 1.0.0
 	 */
-	eac_api.Vendor = Contact.extend( {
+	eac_api.Vendor = eac_api.Contact.extend( {
 		endpoint: 'vendors',
 
-		defaults: Object.assign( {}, Contact.prototype.defaults, {
+		defaults: Object.assign( {}, eac_api.Contact.prototype.defaults, {
 			type: 'vendor',
 		} ),
 	} );
@@ -580,7 +551,7 @@ import {Model} from "../../../packages/api/src";
 	 * @type {Object}
 	 * @since 1.0.0
 	 */
-	eac_api.Collection = Backbone.Collection.extend( {
+	const Collection = Backbone.Collection.extend( {
 		/**
 		 * API root.
 		 */
@@ -667,6 +638,7 @@ import {Model} from "../../../packages/api/src";
 			return Backbone.sync( method, model, options );
 		},
 	} );
+	eac_api.Collection = Collection;
 
 	/**
 	 * Account collection
@@ -676,7 +648,7 @@ import {Model} from "../../../packages/api/src";
 	 */
 	eac_api.Accounts = Collection.extend( {
 		endpoint: 'accounts',
-		model: Account,
+		model: eac_api.Account,
 	} );
 
 	/**
@@ -687,7 +659,7 @@ import {Model} from "../../../packages/api/src";
 	 */
 	eac_api.Contacts = Collection.extend( {
 		endpoint: 'contacts',
-		model: Contact,
+		model: eac_api.Contact,
 	} );
 
 	/**
@@ -698,7 +670,7 @@ import {Model} from "../../../packages/api/src";
 	 */
 	eac_api.Customers = Collection.extend( {
 		endpoint: 'customers',
-		model: Customer,
+		model: eac_api.Customer,
 	} );
 
 	/**
@@ -709,7 +681,7 @@ import {Model} from "../../../packages/api/src";
 	 */
 	eac_api.Categories = Collection.extend( {
 		endpoint: 'categories',
-		model: Category,
+		model: eac_api.Category,
 	} );
 
 	/**
@@ -720,7 +692,7 @@ import {Model} from "../../../packages/api/src";
 	 */
 	eac_api.Documents = Collection.extend( {
 		endpoint: 'documents',
-		model: Document,
+		model: eac_api.Document,
 	} );
 
 	/**
@@ -731,7 +703,7 @@ import {Model} from "../../../packages/api/src";
 	 */
 	eac_api.DocumentItems = Collection.extend( {
 		endpoint: 'document/items',
-		model: DocumentItem,
+		model: eac_api.DocumentItem,
 	} );
 
 	/**
@@ -742,7 +714,7 @@ import {Model} from "../../../packages/api/src";
 	 */
 	eac_api.DocumentTaxes = Collection.extend( {
 		endpoint: 'line-taxes',
-		model: DocumentTax,
+		model: eac_api.DocumentTax,
 	} );
 
 	/**
@@ -753,7 +725,7 @@ import {Model} from "../../../packages/api/src";
 	 */
 	eac_api.DocumentAddresses = Collection.extend( {
 		endpoint: 'addresses',
-		model: DocumentAddress,
+		model: eac_api.DocumentAddress,
 	} );
 
 	/**
@@ -764,7 +736,7 @@ import {Model} from "../../../packages/api/src";
 	 */
 	eac_api.Invoices = Collection.extend( {
 		endpoint: 'invoices',
-		model: Invoice,
+		model: eac_api.Invoice,
 	} );
 
 	/**
@@ -775,7 +747,7 @@ import {Model} from "../../../packages/api/src";
 	 */
 	eac_api.Bills = Collection.extend( {
 		endpoint: 'bills',
-		model: Bill,
+		model: eac_api.Bill,
 	} );
 
 	/**
@@ -786,7 +758,7 @@ import {Model} from "../../../packages/api/src";
 	 */
 	eac_api.Transactions = Collection.extend( {
 		endpoint: 'transactions',
-		model: Transaction,
+		model: eac_api.Transaction,
 	} );
 
 	/**
@@ -797,7 +769,7 @@ import {Model} from "../../../packages/api/src";
 	 */
 	eac_api.Payments = Collection.extend( {
 		endpoint: 'payments',
-		model: Payment,
+		model: eac_api.Payment,
 	} );
 
 	/**
@@ -808,7 +780,7 @@ import {Model} from "../../../packages/api/src";
 	 */
 	eac_api.Expenses = Collection.extend( {
 		endpoint: 'expenses',
-		model: Expense,
+		model: eac_api.Expense,
 	} );
 
 	/**
@@ -819,7 +791,7 @@ import {Model} from "../../../packages/api/src";
 	 */
 	eac_api.Items = Collection.extend( {
 		endpoint: 'items',
-		model: Item,
+		model: eac_api.Item,
 	} );
 
 	/**
@@ -830,7 +802,7 @@ import {Model} from "../../../packages/api/src";
 	 */
 	eac_api.Taxes = Collection.extend( {
 		endpoint: 'taxes',
-		model: Tax,
+		model: eac_api.Tax,
 	} );
 
 	/**
@@ -841,7 +813,7 @@ import {Model} from "../../../packages/api/src";
 	 */
 	eac_api.Notes = Collection.extend( {
 		endpoint: 'notes',
-		model: Note,
+		model: eac_api.Note,
 	} );
 
 	/**
@@ -852,6 +824,6 @@ import {Model} from "../../../packages/api/src";
 	 */
 	eac_api.Vendors = Collection.extend( {
 		endpoint: 'vendors',
-		model: Vendor,
+		model: eac_api.Vendor,
 	} );
 })(window);

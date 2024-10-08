@@ -188,7 +188,6 @@ class Assets {
 	 * @param bool   $has_i18n Optional. Whether to add a script translation call to this file. Default 'true'.
 	 *
 	 * @since 1.0.0
-	 *
 	 */
 	protected static function register_react_script( $handle, $src, $dependencies = array(), $has_i18n = true ) {
 		$relative_src = str_replace( plugins_url( '/', EACCOUNTING_PLUGIN_FILE ), '', $src );

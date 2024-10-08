@@ -115,7 +115,7 @@ $add_new         = add_query_arg(
 				switch ( $current_section ) {
 					case 'transactions':
 					case 'transfers':
-						include dirname( __FILE__ ) . '/accounts-' . sanitize_file_name( $current_section ) . '.php';
+						include __DIR__ . '/accounts-' . sanitize_file_name( $current_section ) . '.php';
 						break;
 					default:
 						do_action( 'eaccounting_account_section_' . $current_section, $account );

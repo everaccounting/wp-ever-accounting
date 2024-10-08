@@ -92,7 +92,6 @@ class Categories {
 		$type    = isset( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '';
 		$desc    = isset( $_POST['description'] ) ? sanitize_textarea_field( wp_unslash( $_POST['description'] ) ) : '';
 
-
 		$category = EAC()->categories->insert(
 			array(
 				'id'          => $id,

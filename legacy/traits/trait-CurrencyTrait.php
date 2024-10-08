@@ -175,5 +175,4 @@ trait CurrencyTrait {
 	public function get_converted_amount( $amount, $code, $rate = null ) {
 		// Get currency.
 	}
-
 }

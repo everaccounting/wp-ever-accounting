@@ -53,7 +53,7 @@ class Accounts {
 	 */
 	public static function set_screen_option( $status, $option, $value ) {
 		global $list_table;
-		if ( "eac_accounts_per_page" === $option ) {
+		if ( 'eac_accounts_per_page' === $option ) {
 			return $value;
 		}
 
@@ -71,11 +71,14 @@ class Accounts {
 		$screen     = get_current_screen();
 		$list_table = new ListTables\Accounts();
 		$list_table->prepare_items();
-		$screen->add_option( 'per_page', array(
-			'label'   => __( 'Number of accounts per page:', 'wp-ever-accounting' ),
-			'default' => 20,
-			'option'  => "eac_accounts_per_page",
-		) );
+		$screen->add_option(
+			'per_page',
+			array(
+				'label'   => __( 'Number of accounts per page:', 'wp-ever-accounting' ),
+				'default' => 20,
+				'option'  => 'eac_accounts_per_page',
+			)
+		);
 	}
 
 	/**
@@ -132,7 +135,7 @@ class Accounts {
 				'name'            => isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '',
 				'number'          => isset( $_POST['number'] ) ? sanitize_text_field( wp_unslash( $_POST['number'] ) ) : '',
 				'type'            => isset( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '',
-				'currency'   => isset( $_POST['currency'] ) ? sanitize_text_field( wp_unslash( $_POST['currency'] ) ) : '',
+				'currency'        => isset( $_POST['currency'] ) ? sanitize_text_field( wp_unslash( $_POST['currency'] ) ) : '',
 				'opening_balance' => isset( $_POST['opening_balance'] ) ? floatval( wp_unslash( $_POST['opening_balance'] ) ) : 0,
 				'bank_name'       => isset( $_POST['bank_name'] ) ? sanitize_text_field( wp_unslash( $_POST['bank_name'] ) ) : '',
 				'bank_phone'      => isset( $_POST['bank_phone'] ) ? sanitize_text_field( wp_unslash( $_POST['bank_phone'] ) ) : '',
@@ -145,7 +148,13 @@ class Accounts {
 			EAC()->flash->error( $account->get_error_message() );
 		} else {
 			EAC()->flash->success( __( 'Account saved successfully.', 'wp-ever-accounting' ) );
-			$referer = add_query_arg( ['action' => 'edit', 'id' => $account->id ], $referer );
+			$referer = add_query_arg(
+				array(
+					'action' => 'edit',
+					'id'     => $account->id,
+				),
+				$referer
+			);
 			$referer = remove_query_arg( array( 'add' ), $referer );
 		}
 

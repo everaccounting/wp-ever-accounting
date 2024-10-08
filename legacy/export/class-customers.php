@@ -80,7 +80,7 @@ class Customers extends CSV_Exporter {
 	 * @return array
 	 */
 	protected function generate_row_data( $item ) {
-		$props = [];
+		$props = array();
 		foreach ( $this->get_columns() as $column => $label ) {
 			switch ( $column ) {
 				case 'name':

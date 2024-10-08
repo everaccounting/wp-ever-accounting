@@ -9,7 +9,7 @@
 
 namespace EAccounting\Models;
 
-use \EAccounting\Abstracts\Document;
+use EAccounting\Abstracts\Document;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -162,7 +162,6 @@ class Invoice extends Document {
 		} else {
 			$this->set_payment_date( '' );
 		}
-
 	}
 	/**
 	 * Save should create or update based on object existence.

@@ -120,8 +120,8 @@ wp_add_inline_script(
 						eac_form_field(
 							array(
 								'label'       => esc_html__( 'Exchange Rate', 'wp-ever-accounting' ),
-								'name'        => 'conversion',
-								'value'       => $invoice->conversion,
+								'name'        => 'exchange_rate',
+								'value'       => $invoice->exchange_rate,
 								'type'        => 'number',
 								'placeholder' => '1.00',
 								'step'        => '0.01',
@@ -147,6 +147,7 @@ wp_add_inline_script(
 							<?php endforeach; ?>
 						</tr>
 						</thead>
+						<tbody class="eac-document-items__items"></tbody>
 					</table>
 				</div><!-- .document-items -->
 

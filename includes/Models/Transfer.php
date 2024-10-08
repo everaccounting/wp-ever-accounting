@@ -25,9 +25,9 @@ defined( 'ABSPATH' ) || exit;
  * @property int    $from_account_id From account ID of the transfer.
  * @property int    $to_account_id To account ID of the transfer.
  * @property string $currency Currency code of the transfer.
- * @property float  $conversion Exchange rate of the transfer.
+ * @property float  $exchange_rate Exchange rate of the transfer.
  * @property string $date Date of the transfer.
- * @property string $method Payment method of the transfer.
+ * @property string $mode Payment method of the transfer.
  * @property string $reference Reference of the transfer.
  */
 class Transfer extends Model {
@@ -67,7 +67,7 @@ class Transfer extends Model {
 	protected $casts = array(
 		'date'            => 'date',
 		'amount'          => 'double',
-		'conversion'      => 'double',
+		'exchange_rate'   => 'double',
 		'reference'       => 'string',
 		'expense_id'      => 'int',
 		'revenue_id'      => 'int',
@@ -87,7 +87,7 @@ class Transfer extends Model {
 			'to_account_id',
 			'amount',
 			'date',
-			'method',
+			'mode',
 		),
 	);
 
@@ -217,7 +217,7 @@ class Transfer extends Model {
 					'date'       => $this->date,
 					'amount'     => $this->amount,
 					'currency'   => $to_account->currency,
-					'method'     => $this->method,
+					'mode'       => $this->method,
 					'reference'  => $this->reference,
 				)
 			);
@@ -238,7 +238,7 @@ class Transfer extends Model {
 					'date'       => $this->date,
 					'amount'     => $amount,
 					'currency'   => $this->currency,
-					'method'     => $this->method,
+					'mode'       => $this->method,
 					'reference'  => $this->reference,
 				)
 			);

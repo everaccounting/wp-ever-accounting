@@ -78,5 +78,4 @@ class Utilities {
 		$this->defaults = new Defaults();
 		$this->batch    = new Batch();
 	}
-
 }

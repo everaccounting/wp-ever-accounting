@@ -57,7 +57,7 @@ class Menu {
 	 * @since 1.1.0
 	 */
 	public function register_parent_page() {
-		global $menu,$admin_page_hooks;
+		global $menu, $admin_page_hooks;
 
 		if ( current_user_can( 'manage_eaccounting' ) ) {
 			$menu[] = array( '', 'read', 'ea-separator', '', 'wp-menu-separator accounting' );
@@ -174,7 +174,7 @@ class Menu {
 	 * @since 1.1.0
 	 */
 	public function render_overview_page() {
-		include dirname( __FILE__ ) . '/views/admin-page-overview.php';
+		include __DIR__ . '/views/admin-page-overview.php';
 	}
 
 	/**
@@ -191,7 +191,7 @@ class Menu {
 		$first_tab   = current( array_keys( $tabs ) );
 		$tab         = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_STRING );
 		$current_tab = ! empty( $tab ) && array_key_exists( $tab, $tabs ) ? sanitize_title( $tab ) : $first_tab;
-		include dirname( __FILE__ ) . '/views/admin-page-items.php';
+		include __DIR__ . '/views/admin-page-items.php';
 	}
 
 	/**
@@ -215,7 +215,7 @@ class Menu {
 		$first_tab   = current( array_keys( $tabs ) );
 		$tab         = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_STRING );
 		$current_tab = ! empty( $tab ) && array_key_exists( $tab, $tabs ) ? sanitize_title( $tab ) : $first_tab;
-		include dirname( __FILE__ ) . '/views/admin-page-sales.php';
+		include __DIR__ . '/views/admin-page-sales.php';
 	}
 
 	/**
@@ -251,7 +251,7 @@ class Menu {
 			);
 			exit();
 		}
-		include dirname( __FILE__ ) . '/views/admin-page-expenses.php';
+		include __DIR__ . '/views/admin-page-expenses.php';
 	}
 
 	/**
@@ -276,7 +276,7 @@ class Menu {
 		$first_tab   = current( array_keys( $tabs ) );
 		$tab         = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_STRING );
 		$current_tab = ! empty( $tab ) && array_key_exists( $tab, $tabs ) ? sanitize_title( $tab ) : $first_tab;
-		include dirname( __FILE__ ) . '/views/admin-page-banking.php';
+		include __DIR__ . '/views/admin-page-banking.php';
 	}
 
 	/**
@@ -309,7 +309,7 @@ class Menu {
 			);
 			exit();
 		}
-		include dirname( __FILE__ ) . '/views/admin-page-tools.php';
+		include __DIR__ . '/views/admin-page-tools.php';
 	}
 
 	/**
@@ -331,7 +331,7 @@ class Menu {
 		$first_tab   = current( array_keys( $tabs ) );
 		$tab         = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_STRING );
 		$current_tab = ! empty( $tab ) && array_key_exists( $tab, $tabs ) ? sanitize_title( $tab ) : $first_tab;
-		include dirname( __FILE__ ) . '/views/admin-page-reports.php';
+		include __DIR__ . '/views/admin-page-reports.php';
 	}
 
 	/**
@@ -343,9 +343,9 @@ class Menu {
 		$requested_view = filter_input( INPUT_GET, 'action', FILTER_SANITIZE_STRING );
 		if ( in_array( $requested_view, array( 'add', 'edit' ), true ) ) {
 			$item_id = filter_input( INPUT_GET, 'item_id', FILTER_SANITIZE_NUMBER_INT );
-			include dirname( __FILE__ ) . '/views/items/edit-item.php';
+			include __DIR__ . '/views/items/edit-item.php';
 		} else {
-			include dirname( __FILE__ ) . '/views/items/list-item.php';
+			include __DIR__ . '/views/items/list-item.php';
 		}
 	}
 
@@ -358,9 +358,9 @@ class Menu {
 		$requested_view = filter_input( INPUT_GET, 'action', FILTER_SANITIZE_STRING );
 		if ( in_array( $requested_view, array( 'add', 'edit' ), true ) ) {
 			$invoice_id = filter_input( INPUT_GET, 'revenue_id', FILTER_SANITIZE_NUMBER_INT );
-			include dirname( __FILE__ ) . '/views/revenues/edit-revenue.php';
+			include __DIR__ . '/views/revenues/edit-revenue.php';
 		} else {
-			include dirname( __FILE__ ) . '/views/revenues/list-revenue.php';
+			include __DIR__ . '/views/revenues/list-revenue.php';
 		}
 	}
 
@@ -377,7 +377,7 @@ class Menu {
 		} elseif ( in_array( $requested_view, array( 'add', 'edit' ), true ) ) {
 			Invoice_Actions::edit_invoice( $invoice_id );
 		} else {
-			include dirname( __FILE__ ) . '/views/invoices/list-invoice.php';
+			include __DIR__ . '/views/invoices/list-invoice.php';
 		}
 	}
 
@@ -390,11 +390,11 @@ class Menu {
 		$requested_view = filter_input( INPUT_GET, 'action', FILTER_SANITIZE_STRING );
 		$customer_id    = filter_input( INPUT_GET, 'customer_id', FILTER_SANITIZE_NUMBER_INT );
 		if ( 'view' === $requested_view && ! empty( $customer_id ) ) {
-			include dirname( __FILE__ ) . '/views/customers/view-customer.php';
+			include __DIR__ . '/views/customers/view-customer.php';
 		} elseif ( in_array( $requested_view, array( 'add', 'edit' ), true ) ) {
-			include dirname( __FILE__ ) . '/views/customers/edit-customer.php';
+			include __DIR__ . '/views/customers/edit-customer.php';
 		} else {
-			include dirname( __FILE__ ) . '/views/customers/list-customer.php';
+			include __DIR__ . '/views/customers/list-customer.php';
 		}
 	}
 
@@ -407,9 +407,9 @@ class Menu {
 		$requested_view = filter_input( INPUT_GET, 'action', FILTER_SANITIZE_STRING );
 		$payment_id     = filter_input( INPUT_GET, 'payment_id', FILTER_SANITIZE_NUMBER_INT );
 		if ( in_array( $requested_view, array( 'add', 'edit' ), true ) ) {
-			include dirname( __FILE__ ) . '/views/payments/edit-payment.php';
+			include __DIR__ . '/views/payments/edit-payment.php';
 		} else {
-			include dirname( __FILE__ ) . '/views/payments/list-payment.php';
+			include __DIR__ . '/views/payments/list-payment.php';
 		}
 	}
 
@@ -426,7 +426,7 @@ class Menu {
 		} elseif ( in_array( $requested_view, array( 'add', 'edit' ), true ) ) {
 			Bill_Actions::edit_bill( $bill_id );
 		} else {
-			include dirname( __FILE__ ) . '/views/bills/list-bill.php';
+			include __DIR__ . '/views/bills/list-bill.php';
 		}
 	}
 
@@ -439,11 +439,11 @@ class Menu {
 		$requested_view = filter_input( INPUT_GET, 'action', FILTER_SANITIZE_STRING );
 		$vendor_id      = filter_input( INPUT_GET, 'vendor_id', FILTER_SANITIZE_NUMBER_INT );
 		if ( 'view' === $requested_view && ! empty( $vendor_id ) ) {
-			include dirname( __FILE__ ) . '/views/vendors/view-vendor.php';
+			include __DIR__ . '/views/vendors/view-vendor.php';
 		} elseif ( in_array( $requested_view, array( 'add', 'edit' ), true ) ) {
-			include dirname( __FILE__ ) . '/views/vendors/edit-vendor.php';
+			include __DIR__ . '/views/vendors/edit-vendor.php';
 		} else {
-			include dirname( __FILE__ ) . '/views/vendors/list-vendor.php';
+			include __DIR__ . '/views/vendors/list-vendor.php';
 		}
 	}
 
@@ -456,11 +456,11 @@ class Menu {
 		$requested_view = filter_input( INPUT_GET, 'action', FILTER_SANITIZE_STRING );
 		$account_id     = filter_input( INPUT_GET, 'account_id', FILTER_SANITIZE_NUMBER_INT );
 		if ( 'view' === $requested_view && ! empty( $account_id ) ) {
-			include dirname( __FILE__ ) . '/views/accounts/view-account.php';
+			include __DIR__ . '/views/accounts/view-account.php';
 		} elseif ( in_array( $requested_view, array( 'add', 'edit' ), true ) ) {
-			include dirname( __FILE__ ) . '/views/accounts/edit-account.php';
+			include __DIR__ . '/views/accounts/edit-account.php';
 		} else {
-			include dirname( __FILE__ ) . '/views/accounts/list-account.php';
+			include __DIR__ . '/views/accounts/list-account.php';
 		}
 	}
 
@@ -470,7 +470,7 @@ class Menu {
 	 * @since 1.1.0
 	 */
 	public function render_transactions_tab() {
-		include dirname( __FILE__ ) . '/views/transactions/list-transactions.php';
+		include __DIR__ . '/views/transactions/list-transactions.php';
 	}
 
 	/**
@@ -482,9 +482,9 @@ class Menu {
 		$requested_view = filter_input( INPUT_GET, 'action', FILTER_SANITIZE_STRING );
 		$transfer_id    = filter_input( INPUT_GET, 'transfer_id', FILTER_SANITIZE_NUMBER_INT );
 		if ( in_array( $requested_view, array( 'add', 'edit' ), true ) ) {
-			include dirname( __FILE__ ) . '/views/transfers/edit-transfer.php';
+			include __DIR__ . '/views/transfers/edit-transfer.php';
 		} else {
-			include dirname( __FILE__ ) . '/views/transfers/list-transfer.php';
+			include __DIR__ . '/views/transfers/list-transfer.php';
 		}
 	}
 
@@ -494,7 +494,7 @@ class Menu {
 	 * @since 1.0.2
 	 */
 	public function render_export_page() {
-		include dirname( __FILE__ ) . '/views/tools/export.php';
+		include __DIR__ . '/views/tools/export.php';
 	}
 
 	/**
@@ -503,7 +503,7 @@ class Menu {
 	 * @since 1.0.2
 	 */
 	public function render_import_page() {
-		include dirname( __FILE__ ) . '/views/tools/import.php';
+		include __DIR__ . '/views/tools/import.php';
 	}
 
 	/**
@@ -512,7 +512,7 @@ class Menu {
 	 * @since 1.0.2
 	 */
 	public function render_sales_report_tab() {
-		require_once dirname( __FILE__ ) . '/reports/class-sales.php';
+		require_once __DIR__ . '/reports/class-sales.php';
 		$report = new \EAccounting\Admin\Report\Sales();
 		$report->output();
 	}
@@ -523,7 +523,7 @@ class Menu {
 	 * @since 1.0.2
 	 */
 	public function render_expenses_report_tab() {
-		require_once dirname( __FILE__ ) . '/reports/class-expenses.php';
+		require_once __DIR__ . '/reports/class-expenses.php';
 		$report = new \EAccounting\Admin\Report\Expenses();
 		$report->output();
 	}
@@ -534,7 +534,7 @@ class Menu {
 	 * @since 1.0.2
 	 */
 	public function render_profits_report_tab() {
-		require_once dirname( __FILE__ ) . '/reports/class-profits.php';
+		require_once __DIR__ . '/reports/class-profits.php';
 		$report = new \EAccounting\Admin\Report\Profits();
 		$report->output();
 	}
@@ -545,7 +545,7 @@ class Menu {
 	 * @since 1.0.2
 	 */
 	public function render_cashflow_report_tab() {
-		require_once dirname( __FILE__ ) . '/reports/class-cashflow.php';
+		require_once __DIR__ . '/reports/class-cashflow.php';
 		$report = new \EAccounting\Admin\Report\CashFlow();
 		$report->output();
 	}
@@ -571,9 +571,9 @@ class Menu {
 		$requested_view = filter_input( INPUT_GET, 'action', FILTER_SANITIZE_STRING );
 		$currency_id    = filter_input( INPUT_GET, 'currency_id', FILTER_SANITIZE_NUMBER_INT );
 		if ( in_array( $requested_view, array( 'add', 'edit' ), true ) ) {
-			include dirname( __FILE__ ) . '/views/currencies/edit-currency.php';
+			include __DIR__ . '/views/currencies/edit-currency.php';
 		} else {
-			include dirname( __FILE__ ) . '/views/currencies/list-currency.php';
+			include __DIR__ . '/views/currencies/list-currency.php';
 		}
 	}
 
@@ -586,9 +586,9 @@ class Menu {
 		$requested_view = filter_input( INPUT_GET, 'action', FILTER_SANITIZE_STRING );
 		$category_id    = filter_input( INPUT_GET, 'category_id', FILTER_SANITIZE_NUMBER_INT );
 		if ( in_array( $requested_view, array( 'add', 'edit' ), true ) ) {
-			include dirname( __FILE__ ) . '/views/categories/edit-category.php';
+			include __DIR__ . '/views/categories/edit-category.php';
 		} else {
-			include dirname( __FILE__ ) . '/views/categories/list-category.php';
+			include __DIR__ . '/views/categories/list-category.php';
 		}
 	}
 }

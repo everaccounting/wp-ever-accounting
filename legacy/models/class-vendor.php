@@ -23,6 +23,7 @@ defined( 'ABSPATH' ) || exit;
  */
 class Vendor extends Contact {
 	use Attachment;
+
 	/**
 	 * This is the name of this object type.
 	 *

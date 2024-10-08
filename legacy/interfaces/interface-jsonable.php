@@ -22,5 +22,5 @@ interface JSONable {
 	 * @param int $depth   JSON depth.
 	 * @since 1.0.2
 	 */
-	public function to_json( $options = 0, $depth = 512);
+	public function to_json( $options = 0, $depth = 512 );
 }

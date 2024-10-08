@@ -1,1 +1,0 @@
-import 'chartjs/chart.js';

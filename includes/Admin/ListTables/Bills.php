@@ -55,8 +55,8 @@ class Bills extends ListTable {
 			'page'    => $paged,
 			'search'  => $search,
 			'orderby' => $order_by,
-			'order'    => $order,
-			'status'   => $this->get_request_status(),
+			'order'   => $order,
+			'status'  => $this->get_request_status(),
 		);
 		/**
 		 * Filter the query arguments for the list table.
@@ -194,7 +194,7 @@ class Bills extends ListTable {
 			'reference'  => __( 'Order #', 'wp-ever-accounting' ),
 			'issue_date' => __( 'Issue Date', 'wp-ever-accounting' ),
 			'due_date'   => __( 'Due Date', 'wp-ever-accounting' ),
-			'vendor'   => __( 'Vendor', 'wp-ever-accounting' ),
+			'vendor'     => __( 'Vendor', 'wp-ever-accounting' ),
 			'status'     => __( 'Status', 'wp-ever-accounting' ),
 			'total'      => __( 'Total', 'wp-ever-accounting' ),
 		);
@@ -212,7 +212,7 @@ class Bills extends ListTable {
 			'reference'  => array( 'reference', false ),
 			'issue_date' => array( 'issue_date', false ),
 			'due_date'   => array( 'due_date', false ),
-			'vendor'   => array( 'vendor', false ),
+			'vendor'     => array( 'vendor', false ),
 			'status'     => array( 'status', false ),
 			'total'      => array( 'total', false ),
 		);
@@ -336,9 +336,9 @@ class Bills extends ListTable {
 	/**
 	 * Generates and displays row actions links.
 	 *
-	 * @param Bill $item The object.
-	 * @param string  $column_name Current column name.
-	 * @param string  $primary Primary column name.
+	 * @param Bill   $item The object.
+	 * @param string $column_name Current column name.
+	 * @param string $primary Primary column name.
 	 *
 	 * @since 1.0.0
 	 * @return string Row actions output.

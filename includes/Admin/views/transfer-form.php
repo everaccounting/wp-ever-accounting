@@ -22,9 +22,9 @@ defined( 'ABSPATH' ) || exit;
 					<?php
 					eac_form_field(
 						array(
-							'type'        => 'select',
-							'name'        => 'from_account_id',
-							'label'       => __( 'From Account', 'wp-ever-accounting' ),
+							'type'             => 'select',
+							'name'             => 'from_account_id',
+							'label'            => __( 'From Account', 'wp-ever-accounting' ),
 							'options'          => array( $transfer->from_account ),
 							'value'            => $transfer->from_account_id,
 							'class'            => 'eac_select2',
@@ -39,14 +39,14 @@ defined( 'ABSPATH' ) || exit;
 								'<a class="addon" href="%s" target="_blank" title="%s"><span class="dashicons dashicons-plus"></span></a>',
 								esc_url( admin_url( 'admin.php?page=eac-banking&tab=accounts&add=yes' ) ),
 								__( 'Add Account', 'wp-ever-accounting' )
-							)
+							),
 						)
 					);
 					eac_form_field(
 						array(
-							'type'        => 'select',
-							'name'        => 'to_account_id',
-							'label'       => __( 'To Account', 'wp-ever-accounting' ),
+							'type'             => 'select',
+							'name'             => 'to_account_id',
+							'label'            => __( 'To Account', 'wp-ever-accounting' ),
 							'options'          => array( $transfer->to_account ),
 							'value'            => $transfer->to_account_id,
 							'class'            => 'eac_select2',
@@ -66,12 +66,12 @@ defined( 'ABSPATH' ) || exit;
 					);
 					eac_form_field(
 						array(
-							'type'        => 'text',
-							'name'        => 'amount',
-							'label'       => __( 'Amount', 'wp-ever-accounting' ),
-							'placeholder' => '0.00',
-							'value'       => $transfer->amount,
-							'required'    => true,
+							'type'          => 'text',
+							'name'          => 'amount',
+							'label'         => __( 'Amount', 'wp-ever-accounting' ),
+							'placeholder'   => '0.00',
+							'value'         => $transfer->amount,
+							'required'      => true,
 							'data-currency' => $transfer->currency,
 							'class'         => 'eac_amount',
 						)
@@ -91,7 +91,7 @@ defined( 'ABSPATH' ) || exit;
 					eac_form_field(
 						array(
 							'type'        => 'select',
-							'name'        => 'method',
+							'name'        => 'mode',
 							'label'       => __( 'Payment Method', 'wp-ever-accounting' ),
 							'value'       => $transfer->method,
 							'options'     => eac_get_payment_methods(),
@@ -109,11 +109,11 @@ defined( 'ABSPATH' ) || exit;
 					);
 					eac_form_field(
 						array(
-							'type'        => 'textarea',
-							'name'        => 'note',
-							'label'       => __( 'Notes', 'wp-ever-accounting' ),
-							'value'       => $transfer->note,
-							'placeholder' => __( 'Enter description', 'wp-ever-accounting' ),
+							'type'          => 'textarea',
+							'name'          => 'note',
+							'label'         => __( 'Notes', 'wp-ever-accounting' ),
+							'value'         => $transfer->note,
+							'placeholder'   => __( 'Enter description', 'wp-ever-accounting' ),
 							'wrapper_class' => 'is--full',
 						)
 					);

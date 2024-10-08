@@ -120,7 +120,7 @@ $edit_url        = eaccounting_admin_url(
 					switch ( $current_section ) {
 						case 'transactions':
 						case 'bills':
-							include dirname( __FILE__ ) . '/vendors-' . sanitize_file_name( $current_section ) . '.php';
+							include __DIR__ . '/vendors-' . sanitize_file_name( $current_section ) . '.php';
 							break;
 						default:
 							do_action( 'eaccounting_vendor_section_' . $current_section, $vendor );

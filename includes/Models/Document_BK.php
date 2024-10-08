@@ -73,7 +73,7 @@ use ByteKit\Models\Relations\HasOne;
  * @property string   $sent_date Sent date of the document.
  * @property string   $payment_date Payment date of the document.
  * @property string   $currency Currency code of the document.
- * @property double   $conversion Exchange rate of the document.
+ * @property double   $exchange_rate Exchange rate of the document.
  * @property int      $parent_id Parent ID of the document.
  * @property string   $created_via Created via of the document.
  * @property int      $creator_id Author ID of the document.
@@ -158,7 +158,7 @@ class Document_BK extends Model {
 		'sent_date',
 		'payment_date',
 		'currency',
-		'conversion',
+		'exchange_rate',
 		'parent_id',
 		'created_via',
 		'creator_id',
@@ -213,9 +213,9 @@ class Document_BK extends Model {
 		'sent_date'       => 'date',
 		'payment_date'    => 'date',
 		'vat_exempt'      => 'bool',
-		'conversion'   => 'double',
+		'exchange_rate'   => 'double',
 		'parent_id'       => 'int',
-		'creator_id'       => 'int',
+		'creator_id'      => 'int',
 	);
 
 	/**
@@ -233,10 +233,10 @@ class Document_BK extends Model {
 	 * @return void
 	 */
 	public function __construct( $attributes = 0 ) {
-		$this->props['currency'] = eac_base_currency();
-		$this->props['creator_id']     = get_current_user_id();
-		$this->props['uuid']          = wp_generate_uuid4();
-		$this->props['created_at']  = wp_date( 'Y-m-d H:i:s' );
+		$this->props['currency']   = eac_base_currency();
+		$this->props['creator_id'] = get_current_user_id();
+		$this->props['uuid']       = wp_generate_uuid4();
+		$this->props['created_at'] = wp_date( 'Y-m-d H:i:s' );
 		parent::__construct( $attributes );
 	}
 
@@ -245,15 +245,15 @@ class Document_BK extends Model {
 	 *
 	 * @return array
 	 */
-//	public function to_array() {
-//		$data          = parent::to_array();
-//		$data['items'] = array();
-//		foreach ( $this->get_items() as $item ) {
-//			$data['items'][] = $item->to_array();
-//		}
-//
-//		return $data;
-//	}
+	// public function to_array() {
+	// $data          = parent::to_array();
+	// $data['items'] = array();
+	// foreach ( $this->get_items() as $item ) {
+	// $data['items'][] = $item->to_array();
+	// }
+	//
+	// return $data;
+	// }
 
 	/*
 	|--------------------------------------------------------------------------
@@ -1003,11 +1003,11 @@ class Document_BK extends Model {
 		$data = wp_parse_args(
 			$data,
 			array(
-				'parent_id'    => $this->id,
-				'parent_type'  => get_class( $this ),
-				'content'      => '',
-				'creator_id'   => get_current_user_id(),
-				'created_at' => current_time( 'mysql' ),
+				'parent_id'   => $this->id,
+				'parent_type' => get_class( $this ),
+				'content'     => '',
+				'creator_id'  => get_current_user_id(),
+				'created_at'  => current_time( 'mysql' ),
 			)
 		);
 

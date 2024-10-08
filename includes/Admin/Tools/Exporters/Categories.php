@@ -85,7 +85,7 @@ class Categories extends CSVExporter {
 	 * @return array
 	 */
 	protected function generate_row_data( $item ) {
-		$props = [];
+		$props = array();
 		foreach ( $this->get_columns() as $column ) {
 			$value = null;
 			switch ( $column ) {

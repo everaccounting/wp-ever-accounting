@@ -240,7 +240,7 @@ abstract class CSV_Importer {
 					$this->raw_data[]                            = $row;
 					$this->positions[ count( $this->raw_data ) ] = ftell( $handle );
 
-					if ( ( $this->params['end_position'] > 0 && ftell( $handle ) >= $this->params['end_position'] ) || 0 === -- $this->params['limit'] ) {
+					if ( ( $this->params['end_position'] > 0 && ftell( $handle ) >= $this->params['end_position'] ) || 0 === --$this->params['limit'] ) {
 						break;
 					}
 				} else {
@@ -317,7 +317,6 @@ abstract class CSV_Importer {
 			$default             = array_fill_keys( array_keys( $this->headers ), '' );
 			$this->parsed_data[] = wp_parse_args( $data, $default );
 		}
-
 	}
 
 
@@ -374,7 +373,7 @@ abstract class CSV_Importer {
 				$data['skipped'] = (int) $data['skipped'] + 1;
 			}
 
-			$index ++;
+			++$index;
 
 			if ( $this->params['prevent_timeouts'] && ( $this->time_exceeded() || $this->memory_exceeded() ) ) {
 				$this->position = $this->positions[ $index ];
@@ -692,5 +691,4 @@ abstract class CSV_Importer {
 
 		return $exist->get_id() ? $currency : '';
 	}
-
 }

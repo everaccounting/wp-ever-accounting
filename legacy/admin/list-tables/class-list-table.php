@@ -167,7 +167,6 @@ abstract class EverAccounting_List_Table extends \WP_List_Table {
 	 * Render blank state. Extend to add content.
 	 */
 	protected function render_blank_state() {
-
 	}
 
 	/**

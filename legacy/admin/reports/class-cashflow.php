@@ -354,6 +354,5 @@ class CashFlow extends Report {
 			<?php endif; ?>
 		</div>
 		<?php
-
 	}
 }

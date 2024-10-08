@@ -307,7 +307,6 @@ function eaccounting_accounts_set_screen_option( $status, $option, $value ) {
 	}
 
 	return $status;
-
 }
 
 add_filter( 'set-screen-option', 'eaccounting_accounts_set_screen_option', 10, 3 );

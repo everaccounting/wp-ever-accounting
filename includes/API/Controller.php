@@ -50,7 +50,6 @@ class Controller extends \WP_REST_Controller {
 		$items['delete'] = empty( $items['delete'] ) ? array() : wp_parse_id_list( $items['delete'] );
 
 		return $items;
-
 	}
 
 	/**
@@ -128,7 +127,6 @@ class Controller extends \WP_REST_Controller {
 		}
 
 		return $create;
-
 	}
 
 	/**
@@ -180,7 +178,6 @@ class Controller extends \WP_REST_Controller {
 		}
 
 		return $update;
-
 	}
 
 	/**
@@ -228,7 +225,6 @@ class Controller extends \WP_REST_Controller {
 		}
 
 		return $delete;
-
 	}
 
 	/**
@@ -256,7 +252,6 @@ class Controller extends \WP_REST_Controller {
 			'update' => $this->batch_update_items( $items['update'], $request, $wp_rest_server ),
 			'delete' => $this->batch_delete_items( $items['delete'], $wp_rest_server ),
 		);
-
 	}
 
 	/**
@@ -345,7 +340,6 @@ class Controller extends \WP_REST_Controller {
 		}
 
 		return $fields;
-
 	}
 
 	/**
@@ -394,7 +388,6 @@ class Controller extends \WP_REST_Controller {
 			},
 			array()
 		);
-
 	}
 
 	/**
@@ -425,7 +418,6 @@ class Controller extends \WP_REST_Controller {
 		}
 
 		return $this->filter_response_fields_by_array( $fields, wp_parse_list( $request['_fields'] ) );
-
 	}
 
 	/**
@@ -546,7 +538,7 @@ class Controller extends \WP_REST_Controller {
 	public function get_collection_params() {
 		$params = array(
 			'context'  => $this->get_context_param(),
-			'page'    => array(
+			'page'     => array(
 				'description'       => __( 'Current page of the collection.', 'wp-ever-accounting' ),
 				'type'              => 'integer',
 				'default'           => 1,
@@ -614,7 +606,7 @@ class Controller extends \WP_REST_Controller {
 	 */
 	public function get_endpoint_data( $endpoint, $params = array(), $method = 'GET' ) {
 		$request = new \WP_REST_Request( $method, $endpoint );
-		if ( $params  && 'GET' === $method ) {
+		if ( $params && 'GET' === $method ) {
 			$request->set_query_params( $params );
 		} elseif ( $params && 'POST' === $method ) {
 			$request->set_body_params( $params );

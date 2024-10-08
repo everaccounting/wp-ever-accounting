@@ -13,7 +13,7 @@
 defined( 'ABSPATH' ) || exit();
 
 if ( ! class_exists( '\EverAccounting_List_Table' ) ) {
-	require_once dirname( __FILE__ ) . '/class-list-table.php';
+	require_once __DIR__ . '/class-list-table.php';
 }
 
 /**
@@ -123,7 +123,7 @@ class EverAccounting_Transaction_List_Table extends EverAccounting_List_Table {
 	 * This function renders most of the columns in the list table.
 	 *
 	 * @param  \EAccounting\Abstracts\Transaction $transaction Transaction object.
-	 * @param string                                $column_name The name of the column.
+	 * @param string                             $column_name The name of the column.
 	 *
 	 * @return string The column value.
 	 * @since 1.0.2
@@ -255,7 +255,7 @@ class EverAccounting_Transaction_List_Table extends EverAccounting_List_Table {
 	 */
 	public function get_views() {
 		$tab           = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_STRING );
-		$base          = eaccounting_admin_url( [ 'tab' => $tab ] );
+		$base          = eaccounting_admin_url( array( 'tab' => $tab ) );
 		$current       = filter_input( INPUT_GET, 'type', FILTER_SANITIZE_STRING );
 		$total_count   = '&nbsp;<span class="count">(' . $this->total_count . ')</span>';
 		$income_count  = '&nbsp;<span class="count">(' . $this->income_count . ')</span>';

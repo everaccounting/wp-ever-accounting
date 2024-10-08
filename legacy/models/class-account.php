@@ -389,6 +389,4 @@ class Account extends Resource_Model {
 	| Methods which create, read, update and delete discounts from the database.
 	|
 	*/
-
-
 }

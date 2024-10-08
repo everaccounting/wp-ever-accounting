@@ -17,7 +17,6 @@ class Scripts {
 	public function __construct() {
 		add_action( 'admin_enqueue_scripts', array( $this, 'register_scripts' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'client_scripts' ) );
 	}
 
 	/**
@@ -37,7 +36,6 @@ class Scripts {
 		// Packages.
 		EAC()->scripts->register_script( 'eac-money', 'client/money.js' );
 
-
 		// Plugins.
 		EAC()->scripts->register_script( 'eac-modal', 'js/modal.js', array( 'jquery' ), true );
 		EAC()->scripts->register_script( 'eac-form', 'js/form.js', array( 'jquery' ), true );
@@ -45,13 +43,9 @@ class Scripts {
 
 		// Plugin scripts.
 		EAC()->scripts->register_script( 'eac-admin', 'js/admin.js', array( 'jquery', 'eac-inputmask', 'eac-select2', 'eac-tiptip', 'jquery-ui-datepicker', 'jquery-ui-tooltip' ), true );
-		EAC()->scripts->register_script( 'eac-admin-forms', 'js/admin-forms.js', array( 'eac-api', 'eac-form', 'eac-money' ), true );
-		EAC()->scripts->register_script( 'eac-admin-invoices', 'js/admin-invoices.js', array( 'eac-api', 'eac-money' ), true );
-		EAC()->scripts->register_script( 'eac-admin-settings', 'js/admin-settings.js', array( 'eac-admin', 'eac-form' ), true );
 
 		EAC()->scripts->register_style( 'eac-jquery-ui', 'css/jquery-ui.css' );
 		EAC()->scripts->register_style( 'eac-admin', 'css/admin.css', array( 'eac-jquery-ui' ) );
-		EAC()->scripts->register_style( 'eac-admin-settings', 'css/admin-settings.css', array( 'eac-admin' ) );
 	}
 
 	/**
@@ -66,12 +60,11 @@ class Scripts {
 		if ( ! in_array( $hook, Utilities::get_screen_ids(), true ) ) {
 			return;
 		}
-
-//		wp_enqueue_script( 'eac-api' );
-//		wp_enqueue_script( 'eac-form' );
-//		wp_enqueue_script( 'eac-modal' );
+		wp_enqueue_media();
+		wp_enqueue_script( 'eac-api' );
+		wp_enqueue_script( 'eac-form' );
+		wp_enqueue_script( 'eac-modal' );
 		wp_enqueue_script( 'eac-admin' );
-//		wp_enqueue_script( 'eac-admin-forms' );
 		wp_enqueue_style( 'eac-admin' );
 
 		wp_localize_script(
@@ -89,39 +82,8 @@ class Scripts {
 			)
 		);
 
-		// Payments page.
-		if ( EAC()->get( Menus::class )->page === 'sales' ) {
-			EAC()->scripts->enqueue_script( 'eac-admin-sales' );
-		}
-
-		// if settings page.
-		if ( 'ever-accounting_page_eac-settings' === $hook ) {
-			EAC()->scripts->enqueue_script( 'eac-admin-settings' );
-			EAC()->scripts->enqueue_style( 'eac-admin-settings' );
-		}
-
 		if ( 'toplevel_page_ever-accounting' === $hook || 'ever-accounting_page_eac-reports' === $hook ) {
-			EAC()->scripts->enqueue_script( 'eac-chartjs' );
+			wp_enqueue_script( 'eac-chartjs' );
 		}
-//		wp_enqueue_media();
-	}
-
-	/**
-	 * Enqueue client scripts.
-	 *
-	 * @param string $hook The current admin page.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	public function client_scripts( $hook ) {
-		EAC()->scripts->enqueue_script( 'eac-components', 'client/components.js' );
-		EAC()->scripts->enqueue_style( 'eac-components', 'client/components.css' );
-
-		EAC()->scripts->register_script( 'eac-tools', 'client/admin-tools.js' );
-		EAC()->scripts->register_style( 'eac-tools', 'client/admin-tools.css', array( 'wp-components' ) );
-
-		wp_enqueue_script( 'eac-tools' );
-		wp_enqueue_style( 'eac-tools' );
 	}
 }

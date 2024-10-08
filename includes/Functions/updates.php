@@ -16,37 +16,37 @@ function eac_update_120() {
 	require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 	$settings     = get_option( 'eaccounting_settings', array() );
 	$settings_map = array(
-		'eac_business_name'                => 'company_name',
-		'eac_business_email'               => 'company_email',
-		'eac_business_phone'               => 'company_phone',
-		'eac_business_logo'                => 'company_logo',
-		'eac_business_tax_number'          => 'company_vat_number',
-		'eac_base_currency'                => 'default_currency',
-		'eac_year_start_date'              => 'financial_year_start',
-		'eac_business_address'             => 'company_address',
-		'eac_business_city'                => 'company_city',
-		'eac_business_state'               => 'company_state',
-		'eac_business_postcode'            => 'company_postcode',
-		'eac_business_country'             => 'company_country',
-		'eac_tax_enabled'                  => 'tax_enabled',
-		'eac_tax_subtotal_rounding'        => 'tax_subtotal_rounding',
-		'eac_tax_display_totals'           => 'tax_display_totals',
-		'eac_default_sales_account_id'     => 'default_account',
-		'eac_default_sales_payment_method' => 'default_payment_method',
-		'eac_invoice_prefix'               => 'invoice_prefix',
-		'eac_invoice_digits'               => 'invoice_digit',
-		'eac_invoice_due'                  => 'invoice_due',
-		'eac_invoice_note'                 => 'invoice_notes',
-		'eac_invoice_item_label'           => 'invoice_item_label',
-		'eac_invoice_price_label'          => 'invoice_price_label',
-		'eac_invoice_quantity_label'       => 'invoice_quantity_label',
-		'eac_bill_prefix'                  => 'bill_prefix',
-		'eac_bill_digits'                  => 'bill_digit',
-		'eac_bill_note'                    => 'bill_notes',
-		'eac_bill_due'                     => 'bill_due',
-		'eac_bill_item_label'              => 'bill_item_label',
-		'eac_bill_price_label'             => 'bill_price_label',
-		'eac_bill_quantity_label'          => 'bill_quantity_label',
+		'eac_business_name'              => 'company_name',
+		'eac_business_email'             => 'company_email',
+		'eac_business_phone'             => 'company_phone',
+		'eac_business_logo'              => 'company_logo',
+		'eac_business_tax_number'        => 'company_vat_number',
+		'eac_base_currency'              => 'default_currency',
+		'eac_year_start_date'            => 'financial_year_start',
+		'eac_business_address'           => 'company_address',
+		'eac_business_city'              => 'company_city',
+		'eac_business_state'             => 'company_state',
+		'eac_business_postcode'          => 'company_postcode',
+		'eac_business_country'           => 'company_country',
+		'eac_tax_enabled'                => 'tax_enabled',
+		'eac_tax_subtotal_rounding'      => 'tax_subtotal_rounding',
+		'eac_tax_display_totals'         => 'tax_display_totals',
+		'eac_default_sales_account_id'   => 'default_account',
+		'eac_default_sales_payment_mode' => 'default_payment_method',
+		'eac_invoice_prefix'             => 'invoice_prefix',
+		'eac_invoice_digits'             => 'invoice_digit',
+		'eac_invoice_due'                => 'invoice_due',
+		'eac_invoice_note'               => 'invoice_notes',
+		'eac_invoice_item_label'         => 'invoice_item_label',
+		'eac_invoice_price_label'        => 'invoice_price_label',
+		'eac_invoice_quantity_label'     => 'invoice_quantity_label',
+		'eac_bill_prefix'                => 'bill_prefix',
+		'eac_bill_digits'                => 'bill_digit',
+		'eac_bill_note'                  => 'bill_notes',
+		'eac_bill_due'                   => 'bill_due',
+		'eac_bill_item_label'            => 'bill_item_label',
+		'eac_bill_price_label'           => 'bill_price_label',
+		'eac_bill_quantity_label'        => 'bill_quantity_label',
 	);
 
 	foreach ( $settings_map as $new_key => $old_key ) {
@@ -137,11 +137,11 @@ function eac_update_120() {
 	// Transactions.
 	$table = $wpdb->prefix . 'ea_transactions';
 	$wpdb->query( "UPDATE $table SET type = 'payment' WHERE type = 'income'" );
-	$wpdb->query( "UPDATE $table SET method = payment_method" );
+	$wpdb->query( "UPDATE $table SET mode = payment_method" );
 	$wpdb->query( "UPDATE $table SET date = payment_date" );
 	$wpdb->query( "UPDATE $table SET currency = currency_code" );
 	$wpdb->query( "UPDATE $table SET note = description" );
-	$wpdb->query( "UPDATE $table SET conversion = currency_rate" );
+	$wpdb->query( "UPDATE $table SET exchange_rate = currency_rate" );
 	$wpdb->query( "UPDATE $table SET created_at = date_created" );
 	$wpdb->query( "UPDATE $table SET uuid = UUID()" );
 	$wpdb->query( "UPDATE $table JOIN (SELECT @rank := 0) r SET number=CONCAT('PAY-',LPAD(@rank:=@rank+1, 5, '0')) WHERE type='payment' AND number IS NULL OR number = ''" );
@@ -159,14 +159,14 @@ function eac_update_120() {
 	$wpdb->query( "UPDATE $table SET created_at = date_created" );
 	$wpdb->query( "ALTER TABLE $table DROP `item_name`" );
 	$wpdb->query( "ALTER TABLE $table DROP `date_created`" );
-	//todo need to adjust tax rate and decide about storing currency.
+	// todo need to adjust tax rate and decide about storing currency.
 
 	// Documents.
 	$table = $wpdb->prefix . 'ea_documents';
 	$wpdb->query( "UPDATE $table SET number = document_number" );
 	$wpdb->query( "UPDATE $table SET reference = order_number" );
 	$wpdb->query( "UPDATE $table SET currency = currency_code" );
-	$wpdb->query( "UPDATE $table SET conversion = currency_rate" );
+	$wpdb->query( "UPDATE $table SET exchange_rate = currency_rate" );
 	$wpdb->query( "UPDATE $table SET tax = total_tax" );
 	$wpdb->query( "UPDATE $table SET discount = total_discount" );
 	$wpdb->query( "UPDATE $table SET created_at = date_created" );

@@ -8,9 +8,9 @@
  */
 
 defined( 'ABSPATH' ) || exit();
-require_once dirname( __FILE__ ) . '/expense-summary.php';
-require_once dirname( __FILE__ ) . '/income-summary.php';
-require_once dirname( __FILE__ ) . '/income-expense.php';
+require_once __DIR__ . '/expense-summary.php';
+require_once __DIR__ . '/income-summary.php';
+require_once __DIR__ . '/income-expense.php';
 
 /**
  * render reports page.

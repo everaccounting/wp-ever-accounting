@@ -61,7 +61,7 @@ class Accounts extends CSVExporter {
 	 * @since 1.0.2
 	 */
 	public function get_rows() {
-		$args  = array(
+		$args = array(
 			'per_page' => $this->limit,
 			'page'     => $this->page,
 			'status'   => eac_get_input_var( 'status', '', 'POST' ),
@@ -70,11 +70,11 @@ class Accounts extends CSVExporter {
 			'limit'    => - 1,
 		);
 
-		$args  = apply_filters( 'eac_accounts_export_query_args', $args );
+		$args = apply_filters( 'eac_accounts_export_query_args', $args );
 
 		$items = eac_get_accounts( $args );
 
-		$rows  = array();
+		$rows = array();
 
 		foreach ( $items as $item ) {
 			$rows[] = $this->generate_row_data( $item );
@@ -91,12 +91,12 @@ class Accounts extends CSVExporter {
 	 * @return array
 	 */
 	protected function generate_row_data( $item ) {
-		$props = [];
+		$props = array();
 		foreach ( $this->get_columns() as $column ) {
 			$value = null;
 			switch ( $column ) {
 				default:
-					$value  = '';
+					$value = '';
 					if ( $item->$column ) {
 						$value = $item->$column;
 					}

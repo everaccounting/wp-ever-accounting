@@ -52,12 +52,12 @@ class Transactions extends ListTable {
 		$order_by = $this->get_request_orderby();
 		$order    = $this->get_request_order();
 		$args     = array(
-			'limit'    => $per_page,
-			'page'     => $paged,
-			'search'   => $search,
+			'limit'   => $per_page,
+			'page'    => $paged,
+			'search'  => $search,
 			'orderby' => $order_by,
-			'order'    => $order,
-			'status'   => $this->get_request_status(),
+			'order'   => $order,
+			'status'  => $this->get_request_status(),
 		);
 		/**
 		 * Filter the query arguments for the list table.
@@ -108,7 +108,6 @@ class Transactions extends ListTable {
 	 * @since 1.0.0
 	 *
 	 * @return string[] An array of HTML links keyed by their view.
-
 	 */
 	protected function get_views() {
 	}
