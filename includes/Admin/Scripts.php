@@ -39,7 +39,7 @@ class Scripts {
 		// Plugins.
 		EAC()->scripts->register_script( 'eac-modal', 'js/modal.js', array( 'jquery' ), true );
 		EAC()->scripts->register_script( 'eac-form', 'js/form.js', array( 'jquery' ), true );
-		EAC()->scripts->register_script( 'eac-api', 'js/api.js', array( 'wp-api', 'wp-backbone' ), true );
+		EAC()->scripts->register_script( 'eac-api', 'js/api.js', array( 'wp-backbone' ), true );
 
 		// Plugin scripts.
 		EAC()->scripts->register_script( 'eac-admin', 'js/admin.js', array( 'jquery', 'eac-inputmask', 'eac-select2', 'eac-tiptip', 'jquery-ui-datepicker', 'jquery-ui-tooltip' ), true );
@@ -67,6 +67,17 @@ class Scripts {
 		wp_enqueue_script( 'eac-admin' );
 		wp_enqueue_style( 'eac-admin' );
 
+		// Localize script.
+		wp_localize_script(
+			'eac-api',
+			'eac_api_vars',
+			array(
+				'root'      => sanitize_url( get_rest_url() ),
+				'nonce'     => wp_create_nonce( 'wp_rest' ),
+				'namespace' => 'eac/v1/',
+			)
+		);
+
 		wp_localize_script(
 			'eac-admin',
 			'eac_admin_vars',
@@ -82,8 +93,33 @@ class Scripts {
 			)
 		);
 
+
 		if ( 'toplevel_page_ever-accounting' === $hook || 'ever-accounting_page_eac-reports' === $hook ) {
 			wp_enqueue_script( 'eac-chartjs' );
 		}
+	}
+
+	/**
+	 * Enqueue client scripts.
+	 *
+	 * @param string $hook The current admin page.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public function client_scripts( $hook ) {
+		EAC()->scripts->register_script( 'eac-components', 'client/components.js' );
+		EAC()->scripts->register_style( 'eac-components', 'client/components.css' );
+
+		EAC()->scripts->register_script( 'eac-admin-invoice', 'client/admin-invoice.js' );
+		EAC()->scripts->register_style( 'eac-admin-invoice', 'client/admin-invoice.css' );
+
+		// if sales page and new invoice.
+		wp_enqueue_script( 'eac-admin-invoice' );
+		wp_enqueue_style( 'eac-admin-invoice' );
+//		if ( 'admin.php' === $hook && isset( $_GET['page'] ) && 'eac-sales' === $_GET['page'] && isset( $_GET['action'] ) && 'add' === $_GET['action'] ) {
+//			wp_enqueue_script('eac-invoice');
+//			wp_enqueue_style('eac-invoice');
+//		}
 	}
 }

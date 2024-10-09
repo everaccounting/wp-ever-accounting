@@ -167,6 +167,7 @@ const {Money} = eac.money;
 	Invoice.init = function () {
 		const state = new State({
 			...window.eac_invoice_vars || {},
+			items: new eac_api.DocumentItems(),
 			money: new Money({code: window.eac_invoice_vars?.currency}),
 		});
 

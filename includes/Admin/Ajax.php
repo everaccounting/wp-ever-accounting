@@ -44,11 +44,10 @@ class Ajax {
 				$accounts = EAC()->accounts->query( $args );
 				$total    = EAC()->accounts->query( $args, true );
 				$results  = array_map(
-					function ( $account ) {
-						return array(
-							'id'   => $account->id,
-							'text' => $account->formatted_name,
-						);
+					function ( $item ) {
+						$item->text = $item->formatted_name;
+
+						return $item->to_array();
 					},
 					$accounts
 				);
@@ -58,10 +57,9 @@ class Ajax {
 				$total   = EAC()->items->query( $args, true );
 				$results = array_map(
 					function ( $item ) {
-						return array(
-							'id'   => $item->id,
-							'text' => $item->formatted_name,
-						);
+						$item->text = $item->formatted_name;
+
+						return $item->to_array();
 					},
 					$items
 				);
@@ -71,11 +69,10 @@ class Ajax {
 				$categories   = EAC()->categories->query( $args );
 				$total        = EAC()->categories->query( $args, true );
 				$results      = array_map(
-					function ( $category ) {
-						return array(
-							'id'   => $category->id,
-							'text' => $category->formatted_name,
-						);
+					function ( $item ) {
+						$item->text = $item->formatted_name;
+
+						return $item->to_array();
 					},
 					$categories
 				);
@@ -84,12 +81,14 @@ class Ajax {
 			case 'payment':
 				$payments = EAC()->payments->query( $args );
 				$total    = EAC()->payments->query( $args, true );
-				foreach ( $payments as $payment ) {
-					$results[] = array(
-						'id'   => $payment->id,
-						'text' => $payment->amount,
-					);
-				}
+				$results      = array_map(
+					function ( $item ) {
+						$item->text = $item->amount;
+
+						return $item->to_array();
+					},
+					$payments
+				);
 				break;
 
 			case 'expense':
@@ -107,11 +106,10 @@ class Ajax {
 				$customers = EAC()->customers->query( $args );
 				$total     = EAC()->customers->query( $args, true );
 				$results   = array_map(
-					function ( $customer ) {
-						return array(
-							'id'   => $customer->id,
-							'text' => $customer->formatted_name,
-						);
+					function ( $item ) {
+						$item->text = $item->formatted_name;
+
+						return $item->to_array();
 					},
 					$customers
 				);
@@ -121,11 +119,10 @@ class Ajax {
 				$vendors = EAC()->vendors->query( $args );
 				$total   = EAC()->vendors->query( $args, true );
 				$results = array_map(
-					function ( $vendor ) {
-						return array(
-							'id'   => $vendor->id,
-							'text' => $vendor->formatted_name,
-						);
+					function ( $item ) {
+						$item->text = $item->formatted_name;
+
+						return $item->to_array();
 					},
 					$vendors
 				);
@@ -156,11 +153,10 @@ class Ajax {
 				$tax_rates = EAC()->taxes->query( $args );
 				$total     = EAC()->taxes->query( $args, true );
 				$results   = array_map(
-					function ( $tax_rate ) {
-						return array(
-							'id'   => $tax_rate->id,
-							'text' => $tax_rate->formatted_name,
-						);
+					function ( $item ) {
+						$item->text = $item->formatted_name;
+
+						return $item->to_array();
 					},
 					$tax_rates
 				);

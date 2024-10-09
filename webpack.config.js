@@ -34,27 +34,16 @@ module.exports = [
 			'css/admin': './.assets/css/admin/admin.scss',
 
 			// Client scripts.
-			// ...glob.sync('./client/*/*/index.js').reduce((memo, file) => {
-			// 	const [type, name] = new RegExp('client/(.*)/(.*)/index.js')
-			// 		.exec(file)
-			// 		.slice(1);
-			// 	return {
-			// 		...memo,
-			// 		[`client/${type}-${name}`]: path.resolve(__dirname, file),
-			// 	};
-			// }, {}),
+			...glob.sync('./client/*/*/index.js').reduce((memo, file) => {
+				const [type, name] = new RegExp('client/(.*)/(.*)/index.js')
+					.exec(file)
+					.slice(1);
+				return {
+					...memo,
+					[`client/${type}-${name}`]: path.resolve(__dirname, file),
+				};
+			}, {}),
 		},
-		plugins: [
-			...config.plugins,
-			// new CopyWebpackPlugin({
-			// 	patterns: [
-			// 		{
-			// 			from: './node_modules/chart.js/dist/Chart.min.js',
-			// 			to: 'js/chart.bundle.js',
-			// 		}
-			// 	]
-			// }),
-		],
 	},
 	//Package scripts.
 	{

@@ -19,7 +19,7 @@ foreach ( $invoice->items as $item ) {
 	$data['items'][] = $_item;
 }
 wp_add_inline_script(
-	'eac-admin',
+	'eac-admin-forms',
 	'var eac_invoice_vars = ' . wp_json_encode( $data ) . ';',
 	'before'
 );
@@ -40,7 +40,6 @@ wp_add_inline_script(
 								'options'          => array( $invoice->customer ),
 								'value'            => $invoice->customer_id,
 								'required'         => true,
-								'readonly'         => true,
 								'class'            => 'eac_select2',
 								'option_value'     => 'id',
 								'option_label'     => 'formatted_name',
@@ -77,7 +76,6 @@ wp_add_inline_script(
 								'type'              => 'text',
 								'placeholder'       => 'INV-0001',
 								'required'          => true,
-								'readonly'          => true,
 								'attr-autocomplete' => 'off',
 							)
 						);
@@ -129,6 +127,7 @@ wp_add_inline_script(
 								'step'        => '0.01',
 								'min'         => '0',
 								'prefix'      => '1 USD =',
+								'suffix'      => 'BDT',
 								'required'    => true,
 							)
 						);
@@ -136,7 +135,6 @@ wp_add_inline_script(
 						?>
 					</div>
 				</div><!-- .document-details -->
-
 
 				<div class="document-items">
 					<table class="eac-document-items">
@@ -149,11 +147,35 @@ wp_add_inline_script(
 							<?php endforeach; ?>
 						</tr>
 						</thead>
+						<tbody class="eac-document-items__items"></tbody>
 					</table>
 				</div><!-- .document-items -->
 
+				<div class="document-footer">
+					<?php
+					eac_form_field(
+						array(
+							'label'       => esc_html__( 'Notes', 'wp-ever-accounting' ),
+							'name'        => 'note',
+							'value'       => $invoice->note,
+							'type'        => 'textarea',
+							'placeholder' => esc_html__( 'Add notes here', 'wp-ever-accounting' ),
+						)
+					);
+					eac_form_field(
+						array(
+							'label'       => esc_html__( 'Terms', 'wp-ever-accounting' ),
+							'name'        => 'terms',
+							'value'       => $invoice->terms,
+							'type'        => 'textarea',
+							'placeholder' => esc_html__( 'Add terms here', 'wp-ever-accounting' ),
+						)
+					);
+					?>
+				</div><!-- .document-footer -->
 
 			</div><!-- .eac-card -->
+
 		</div><!-- .column-1 -->
 
 		<div class="column-2">
@@ -206,7 +228,7 @@ wp_add_inline_script(
 	<?php wp_nonce_field( 'eac_edit_invoice' ); ?>
 </form>
 
-<script type="text/html" id="tmpl-eac-invoice-billing-addr">
+<script type="text/html" id="tmpl-eac-invoice-billing-address">
 	<table class="document-address">
 		<tbody>
 		<# if ( data.contact_name ) { #>
@@ -270,7 +292,7 @@ wp_add_inline_script(
 		</tbody>
 	</table>
 </script>
-<script type="text/html" id="tmpl-eac-invoice-empty">
+<script type="text/html" id="tmpl-eac-invoice-no-items">
 	<td colspan="<?php echo count( $columns ); ?>">
 		<?php esc_html_e( 'No items added yet.', 'wp-ever-accounting' ); ?>
 	</td>

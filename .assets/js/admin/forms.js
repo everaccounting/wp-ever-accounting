@@ -187,7 +187,6 @@ const {Money} = eac.money;
 
 		initialize() {
 			const {state} = this.options;
-			console.log(state);
 			this.listenTo(state.get('items'), 'add', this.render);
 			this.listenTo(state.get('items'), 'remove', this.render);
 			this.listenTo(state.get('items'), 'add', this.scrollToBottom);

@@ -12,7 +12,7 @@
 		/**
 		 * API root.
 		 */
-		apiRoot: wpApiSettings.root || '/wp-json',
+		apiRoot: eac_api_vars.root || '/wp-json',
 
 		/**
 		 * API namespace.
@@ -27,7 +27,7 @@
 		/**
 		 * Request nonce.
 		 */
-		nonce: wpApiSettings.nonce || '',
+		nonce: eac_api_vars.nonce || '',
 
 		/**
 		 * Get the URL for the model.
@@ -197,7 +197,7 @@
 			type: '',
 			status: 'draft',
 			number: '',
-			contact_id: '',
+			reference: '',
 			subtotal: 0,
 			discount: 0,
 			tax: 0,
@@ -205,25 +205,31 @@
 			discount_value: 0,
 			discount_type: 'fixed',
 
-			reference: '',
+			contact_id: '',
+			contact_name: '',
+			contact_company: '',
+			contact_email: '',
+			contact_phone: '',
+			contact_address: '',
+			contact_city: '',
+			contact_state: '',
+			contact_zip: '',
+			contact_country: '',
+			contact_tax_number: '',
 			note: '',
+			terms: '',
 			issue_date: '',
 			due_date: '',
 			sent_date: '',
 			payment_date: '',
 			currency_code: '',
 			exchange_rate: '',
-			parent_id: '',
 			created_via: '',
 			creator_id: '',
 			uuid: '',
 			updated_at: '',
 			created_at: '',
-
-			// Relationships
-			address: {},
-			currency: {},
-			items: [],
+			items: eac_api.DocumentItems,
 
 			// Flags
 			is_fetching: false,
@@ -555,12 +561,12 @@
 		/**
 		 * API root.
 		 */
-		apiRoot: wpApiSettings.root || '/wp-json',
+		apiRoot: eac_api_vars.root || '/wp-json',
 
 		/**
 		 * API namespace.
 		 */
-		namespace: 'eac/v1',
+		namespace: eac_api_vars.namespace || 'eac/v1',
 
 		/**
 		 * API endpoint.
@@ -570,7 +576,7 @@
 		/**
 		 * Request nonce.
 		 */
-		nonce: wpApiSettings.nonce || '',
+		nonce: eac_api_vars.nonce || '',
 
 		/**
 		 * Setup default state.
