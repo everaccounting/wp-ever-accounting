@@ -122,6 +122,7 @@ class Plugin extends \ByteKit\Plugin {
 		$this->services->add( new Handlers\Transactions() );
 		$this->services->add( new Handlers\Documents() );
 		$this->services->add( new Handlers\Shortcodes() );
+		$this->services->add( new Frontend() );
 
 		if ( is_admin() ) {
 			$this->services->add( Admin\Admin::class );

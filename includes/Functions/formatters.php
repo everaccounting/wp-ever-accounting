@@ -80,30 +80,28 @@ function eac_sanitize_tooltip( $text ) {
  */
 function eac_get_formatted_address( $fields = array(), $separator = '<br/>' ) {
 	$defaults          = array(
-		'name'      => '',
-		'company'   => '',
-		'address_1' => '',
-		'address_2' => '',
-		'city'      => '',
-		'state'     => '',
-		'postcode'  => '',
-		'country'   => '',
+		'name'    => '',
+		'company' => '',
+		'address' => '',
+		'city'    => '',
+		'state'   => '',
+		'zip'     => '',
+		'country' => '',
 	);
-	$format            = apply_filters( 'eac_address_format', "<strong>{name}</strong>\n{company}\n{address_1}\n{address_2}\n{city} {state} {postcode}\n{country}" );
+	$format            = apply_filters( 'eac_address_format', "<strong>{name}</strong>\n{company}\n{address}\n{city} {state} {zip}\n{country}" );
 	$fields            = array_map( 'trim', wp_parse_args( $fields, $defaults ) );
 	$countries         = I18n::get_countries();
 	$fields['country'] = isset( $countries[ $fields['country'] ] ) ? $countries[ $fields['country'] ] : $fields['country'];
 	$replacers         = array_map(
 		'esc_html',
 		array(
-			'{name}'      => $fields['name'],
-			'{company}'   => $fields['company'],
-			'{address_1}' => $fields['address_1'],
-			'{address_2}' => $fields['address_2'],
-			'{city}'      => $fields['city'],
-			'{state}'     => $fields['state'],
-			'{postcode}'  => $fields['postcode'],
-			'{country}'   => $fields['country'],
+			'{name}'    => $fields['name'],
+			'{company}' => $fields['company'],
+			'{address}' => $fields['address'],
+			'{city}'    => $fields['city'],
+			'{state}'   => $fields['state'],
+			'{zip}'     => $fields['zip'],
+			'{country}' => $fields['country'],
 		)
 	);
 	$formatted_address = str_replace( array_keys( $replacers ), $replacers, $format );
@@ -123,8 +121,8 @@ function eac_get_formatted_address( $fields = array(), $separator = '<br/>' ) {
 				case 'website':
 					$address_lines[] = '<a href="' . esc_url( $value ) . '">' . esc_html( $value ) . '</a>';
 					break;
-				case 'vat':
-					$address_lines[] = __( 'VAT:', 'wp-ever-accounting' ) . ' ' . $value;
+				case 'tax_number':
+					$address_lines[] = __( 'Tax #', 'wp-ever-accounting' ) . $value;
 					break;
 				default:
 					$address_lines[] = $value;

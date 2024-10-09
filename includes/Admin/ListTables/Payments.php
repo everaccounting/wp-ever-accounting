@@ -33,8 +33,26 @@ class Payments extends ListTable {
 				)
 			)
 		);
-
+		add_filter( 'set-screen-option', array( __CLASS__, 'set_screen_option' ), 10, 3 );
 		$this->base_url = admin_url( 'admin.php?page=eac-sales&tab=payments' );
+	}
+
+	/**
+	 * Set screen option.
+	 *
+	 * @param mixed  $status Status.
+	 * @param string $option Option.
+	 * @param mixed  $value Value.
+	 *
+	 * @since 3.0.0
+	 * @return mixed
+	 */
+	public static function set_screen_option( $status, $option, $value ) {
+		if ( 'eac_payments_per_page' === $option ) {
+			return $value;
+		}
+
+		return $status;
 	}
 
 	/**
@@ -198,8 +216,8 @@ class Payments extends ListTable {
 	public function get_columns() {
 		return array(
 			'cb'       => '<input type="checkbox" />',
-			'date'     => __( 'Date', 'wp-ever-accounting' ),
 			'number'   => __( 'Payment #', 'wp-ever-accounting' ),
+			'date'     => __( 'Date', 'wp-ever-accounting' ),
 			'account'  => __( 'Account', 'wp-ever-accounting' ),
 			'customer' => __( 'Customer', 'wp-ever-accounting' ),
 			'category' => __( 'Category', 'wp-ever-accounting' ),
@@ -234,7 +252,7 @@ class Payments extends ListTable {
 	 * @return string
 	 */
 	public function get_primary_column_name() {
-		return 'date';
+		return 'number';
 	}
 
 	/**
@@ -258,7 +276,17 @@ class Payments extends ListTable {
 	 * @return string Displays the name.
 	 */
 	public function column_date( $item ) {
-		return sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( 'view', $item->id, $this->base_url ) ), wp_kses_post( $item->date ) );
+		return sprintf(
+			'<a href="%s">%s</a>',
+			esc_url(
+				add_query_arg(
+					array(
+						'date' => $item->date,
+					)
+				)
+			),
+			wp_kses_post( $item->date )
+		);
 	}
 
 	/**
@@ -270,10 +298,19 @@ class Payments extends ListTable {
 	 * @return string Displays the number.
 	 */
 	public function column_number( $item ) {
-		$number   = $item->number ? $item->number : '&mdash;';
-		$metadata = $item->reference ? $item->reference : '&mdash;';
-
-		return sprintf( '%s%s', $number, $this->column_metadata( $metadata ) );
+		return sprintf(
+			'<a href="%s">%s</a>',
+			esc_url(
+				add_query_arg(
+					array(
+						'action' => 'view',
+						'id'     => $item->id,
+					),
+					$this->base_url
+				)
+			),
+			wp_kses_post( $item->number )
+		);
 	}
 
 	/**
@@ -298,7 +335,7 @@ class Payments extends ListTable {
 	 */
 	public function column_account( $item ) {
 		$account  = $item->account ? sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( 'account_id', $item->account->id, $this->base_url ) ), wp_kses_post( $item->account->name ) ) : '&mdash;';
-		$metadata = $item->account && $item->account->type ? ucfirst( $item->account->type ) : '&mdash;';
+		$metadata = $item->account && $item->account->type ? ucfirst( $item->account->type ) : '';
 
 		return sprintf( '%s%s', $account, $this->column_metadata( $metadata ) );
 	}
@@ -313,7 +350,7 @@ class Payments extends ListTable {
 	 */
 	public function column_category( $item ) {
 		$category = $item->category ? sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( 'category_id', $item->category->id, $this->base_url ) ), wp_kses_post( $item->category->name ) ) : '&mdash;';
-		$metadata = '&mdash;';
+		$metadata = '';
 
 		return sprintf( '%s%s', $category, $this->column_metadata( $metadata ) );
 	}
@@ -328,7 +365,7 @@ class Payments extends ListTable {
 	 */
 	public function column_customer( $item ) {
 		$customer = $item->customer ? sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( 'customer_id', $item->customer->id, $this->base_url ) ), wp_kses_post( $item->customer->name ) ) : '&mdash;';
-		$metadata = $item->customer && $item->customer->company ? $item->customer->company : '&mdash;';
+		$metadata = $item->customer && $item->customer->company ? $item->customer->company : '';
 
 		return sprintf( '%s%s', $customer, $this->column_metadata( $metadata ) );
 	}

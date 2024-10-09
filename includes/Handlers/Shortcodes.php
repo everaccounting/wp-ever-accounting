@@ -18,7 +18,7 @@ class Shortcodes {
 	 * @since 1.0.0
 	 */
 	public function __construct() {
-		add_shortcode( 'eac_revenue', array( $this, 'render_revenue' ) );
+		add_shortcode( 'eac_payment', array( $this, 'render_payment' ) );
 		add_shortcode( 'eac_expense', array( $this, 'render_expense' ) );
 		add_shortcode( 'eac_invoice', array( $this, 'render_invoice' ) );
 		add_shortcode( 'eac_bill', array( $this, 'render_bill' ) );
@@ -31,23 +31,23 @@ class Shortcodes {
 	 *
 	 * @since 1.0.0
 	 */
-	public function render_revenue( $atts ) {
+	public function render_payment( $atts ) {
 		$atts = shortcode_atts(
 			array(
 				'id' => 0,
 			),
 			$atts,
-			'eac_revenue'
+			'eac_payment'
 		);
 
-		$revenue = eac_get_revenue( $atts['id'] );
+		$payment = EAC()->payments->get( $atts['id'] );
 
-		if ( ! $revenue ) {
+		if ( ! $payment ) {
 			return '';
 		}
 
 		ob_start();
-		eac_get_template( 'revenue.php', array( 'revenue' => $revenue ) );
+		eac_get_template( 'payment.php', array( 'payment' => $payment ) );
 		return ob_get_clean();
 	}
 

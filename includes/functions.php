@@ -59,6 +59,19 @@ function eac_get_currencies() {
 }
 
 /**
+ * Get currency config.
+ *
+ * @param string $currency The currency to get config for.
+ *
+ * @since 1.0.0
+ * @return array
+ */
+function eac_get_currency_config( $currency = null ) {
+	$currencies = eac_get_currencies();
+	return array_key_exists( $currency, $currencies ) ? $currencies[ $currency ] : $currencies[ eac_base_currency() ];
+}
+
+/**
  * Format amount with currency code & number format
  *
  * @param string $amount Amount.

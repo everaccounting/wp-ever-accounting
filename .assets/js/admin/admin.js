@@ -1,4 +1,5 @@
 /* global eac_admin_vars, eac_currencies, eac_base_currency */
+import Money from '@eac/money';
 
 /**
  * ========================================================================
@@ -334,25 +335,27 @@ jQuery(document).ready(function ($) {
 			},
 
 			initialize() {
+				const {state} = this.options;
 				this.listenTo(this.model, 'change', this.render);
 				this.listenTo(this.model, 'change', this.render);
 				this.listenTo(this.model.get('taxes'), 'add remove change', this.render);
+				this.listenTo(state, 'change:currency', this.render);
 			},
 
 			prepare() {
 				const {model, state} = this.options;
 				const data = model.toJSON();
-				console.log(data.taxes );
 				return {
 					...data,
-					formatted_subtotal: data.subtotal,
-					formatted_tax: data.tax,
-					// tax: model.get('taxes').reduce((acc, tax) => acc + tax.get('amount'), 0),
+					formatted_subtotal: state.get('money').format(data.subtotal),
+					formatted_tax: state.get('money').format(data.tax),
+					tax: model.get('taxes').reduce((acc, tax) => acc + tax.get('amount'), 0),
 					taxes: data.taxes?.toJSON(),
 				}
 			},
 
 			render() {
+				console.log('=== Invoice.Item.render() ===');
 				wp.Backbone.View.prototype.render.apply(this, arguments);
 				$(document.body).trigger('eac_update_ui');
 				return this;
@@ -507,7 +510,7 @@ jQuery(document).ready(function ($) {
 				const {state} = this.options;
 				const item_id = parseInt(e.params.data.id, 10) || null;
 				if (item_id) {
-					state.set('is_busy', true);
+					$(e.target).val(null).trigger('change');
 					new eac_api.Item({id: item_id}).fetch().then(json => {
 						const taxes = json.taxes || [];
 						json.taxes = new eac_api.DocumentTaxes();
@@ -521,10 +524,10 @@ jQuery(document).ready(function ($) {
 						state.get('items').add({
 							...json,
 							id: _.uniqueId('item_'),
+							price: (json.price || 0) * state.get('exchange_rate'),
 							quantity: 1,
 							item_id: json.id,
 						});
-						console.log(state.get('items').toJSON());
 						state.updateAmounts();
 					})
 				}
@@ -544,8 +547,14 @@ jQuery(document).ready(function ($) {
 
 			template: wp.template('eac-invoice-totals'),
 
+			events: {
+				'change [name="discount_value"]': 'onDiscountValueChange',
+				'change [name="discount_type"]': 'onDiscountTypeChange',
+			},
+
 			initialize() {
 				const {state} = this.options;
+				this.listenTo(state, 'change:currency', this.render);
 				this.listenTo(state, 'change', this.render);
 			},
 
@@ -553,11 +562,25 @@ jQuery(document).ready(function ($) {
 				const {state} = this.options;
 				return {
 					...state.toJSON(),
-					formatted_subtotal: state.get('money').format(state.get('subtotal'), state.get('currency')),
-					formatted_discount: state.get('money').format(state.get('discount'), state.get('currency')),
-					formatted_tax: state.get('money').format(state.get('tax'), state.get('currency')),
-					formatted_total: state.get('money').format(state.get('total'), state.get('currency')),
+					formatted_subtotal: state.get('money').format(state.get('subtotal')),
+					formatted_discount: state.get('money').format(state.get('discount')),
+					formatted_tax: state.get('money').format(state.get('tax')),
+					formatted_total: state.get('money').format(state.get('total')),
 				}
+			},
+			onDiscountValueChange(e) {
+				e.preventDefault();
+				var state = this.options.state;
+				var value = parseFloat(e.target.value, 10);
+				state.set('discount_value', value);
+				state.updateAmounts();
+			},
+
+			onDiscountTypeChange(e) {
+				var state = this.options.state;
+				var value = e.target.value;
+				state.set('discount_type', value);
+				state.updateAmounts();
 			}
 		});
 
@@ -578,19 +601,15 @@ jQuery(document).ready(function ($) {
 			},
 
 			render: function () {
-				console.log('=== Invoice.Main.render() ===');
 				this.views.detach();
-				this.onChangeCurrency();
-				// this.listenTo(this.options.state, 'change:is_busy', this.BlockUnblockUI);
 				this.views.add('.billing-address', new form.BillingAddr(this.options));
 				this.views.add('table.eac-document-items', new form.Items(this.options));
 				this.views.add('table.eac-document-items', new form.Toolbar(this.options));
+				this.views.add('table.eac-document-items', new form.Totals(this.options));
 				$(document.body).trigger('eac_update_ui');
 				return this;
 			},
 			BlockUnblockUI: function () {
-				console.log('=== Invoice.Main.BlockUnblockUI() ===');
-				const is_busy = this.state.get('is_busy');
 				if (is_busy && !this.$el.find('.blockUI').length) {
 					// Ensure position is relative
 					if (this.$el.css('position') === 'static') {
@@ -631,6 +650,7 @@ jQuery(document).ready(function ($) {
 				var self = this;
 				var $exchange = this.$(':input[name="exchange_rate"]');
 				var currency = this.$(':input[name="currency"]').val();
+				self.options.state.set('money', new Money(currency));
 				if (currency) {
 					self.options.state.set('currency', currency);
 					$exchange.val(eac_currencies[currency].rate || 1.00).trigger('change');
@@ -663,16 +683,20 @@ jQuery(document).ready(function ($) {
 		 * @return {void}
 		 */
 		this.Init = function () {
+			const currency = eac_invoice_vars?.currency || eac_base_currency;
 			// create new invoice state.
 			var state = new this.State({
 				...window.eac_invoice_vars || {},
-				items: new eac_api.DocumentItems(),
+				money: new Money(currency),
 			});
+			state.set('items', new eac_api.DocumentItems());
 
 			// Hydrate collections.
 			var items = eac_invoice_vars?.items || [];
-			items.forEach(function (item) {
-				var taxes = item.taxes || [];
+			items.forEach(function (_item) {
+				var taxes = _item.taxes || [];
+				var item = new eac_api.DocumentItem(_item);
+				item.set('taxes', new eac_api.DocumentTaxes());
 				taxes.forEach(function (tax) {
 					item.get('taxes').add(tax);
 				});
@@ -764,7 +788,6 @@ jQuery(document).ready(function ($) {
 		},
 
 		initialize: function () {
-			console.log(this.state)
 			const {state} = this.options;
 			this.listenTo(state, 'change:contact_id', this.renderAddress);
 			this.listenTo(state, 'change:items', this.renderItems);
@@ -773,7 +796,6 @@ jQuery(document).ready(function ($) {
 		},
 
 		render: function () {
-			console.log('=== Bill.Form.render() ===');
 			this.views.detach();
 			this.renderAddress();
 			this.renderItems();
@@ -783,7 +805,6 @@ jQuery(document).ready(function ($) {
 			return this;
 		},
 		renderAddress: function () {
-			console.log('=== Bill.Form.renderAddress() ===');
 			const {state} = this.options;
 			const template = wp.template('eac-address');
 			this.$('.billing-address').html(template(state.toJSON()));
@@ -791,7 +812,6 @@ jQuery(document).ready(function ($) {
 			return this;
 		},
 		renderItems: function () {
-			console.log('=== Bill.Form.renderItems() ===');
 			const {state} = this.options;
 			const items = state.get('items');
 			const empty_template = wp.template('eac-empty');
@@ -809,7 +829,6 @@ jQuery(document).ready(function ($) {
 			return this;
 		},
 		renderToolbar: function () {
-			console.log('=== Bill.Form.renderToolbar() ===');
 			const template = wp.template('eac-toolbar');
 			this.$('tbody.eac-document-items__toolbar').html(template());
 
@@ -866,7 +885,6 @@ jQuery(document).ready(function ($) {
 			var self = this;
 			const {state} = this.options;
 			const item_id = parseInt(e.params.data.id, 10) || null;
-			console.log(item_id)
 			if (!item_id) {
 				return;
 			}
@@ -883,7 +901,6 @@ jQuery(document).ready(function ($) {
 				}
 
 				state.get('items').push(items);
-				console.log(state.get('items'));
 			});
 		},
 		block: function () {
@@ -921,7 +938,6 @@ jQuery(document).ready(function ($) {
 			name: 'John Doe',
 		});
 		const form = new Bill.Form({state: state});
-		console.log(form.length)
 		//form.render();
 	};
 

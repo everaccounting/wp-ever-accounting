@@ -23,6 +23,8 @@ wp_add_inline_script(
 	'var eac_invoice_vars = ' . wp_json_encode( $data ) . ';',
 	'before'
 );
+
+var_dump($data);
 ?>
 <form id="eac-invoice-form" method="post" action="<?php echo esc_html( admin_url( 'admin-post.php' ) ); ?>">
 	<div class="eac-poststuff">
@@ -126,9 +128,8 @@ wp_add_inline_script(
 								'value'       => $invoice->exchange_rate,
 								'type'        => 'number',
 								'placeholder' => '1.00',
-								'step'        => '0.01',
-								'min'         => '0',
-								'prefix'      => '1 USD =',
+								'attr-step'   => 'any',
+								'prefix'      => '1 ' . eac_base_currency() . ' = ',
 								'required'    => true,
 							)
 						);

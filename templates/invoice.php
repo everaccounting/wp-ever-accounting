@@ -64,7 +64,7 @@ $text   = get_option( 'eac_invoice_text_color', '#6E7178' );
 	.eac-document hr {
 		border: none;
 		border-bottom: 1px solid <?php echo esc_attr( $border ); ?>;
-		margin: 0.75rem 0;
+		margin: 1rem 0;
 		padding: 0;
 	}
 	.eac-document .has--border-top th,

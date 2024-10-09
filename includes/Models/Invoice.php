@@ -3,6 +3,7 @@
 namespace EverAccounting\Models;
 
 use ByteKit\Models\Relations\BelongsTo;
+use ByteKit\Models\Relations\BelongsToMany;
 
 /**
  * Invoice model.
@@ -49,7 +50,7 @@ class Invoice extends Document {
 				'type'       => $this->get_object_type(),
 				'issue_date' => current_time( 'mysql' ),
 				'due_date'   => wp_date( 'Y-m-d', strtotime( '+' . $due_after . ' days' ) ),
-				'notes'      => get_option( 'eac_invoice_notes', '' ),
+				'note'       => get_option( 'eac_invoice_notes', '' ),
 				'currency'   => eac_base_currency(),
 				'creator_id' => get_current_user_id(),
 				'uuid'       => wp_generate_uuid4(),
@@ -62,13 +63,23 @@ class Invoice extends Document {
 	}
 
 	/**
-	 * Vendor relation.
+	 * Customer relation.
 	 *
 	 * @since 1.0.0
 	 * @return BelongsTo
 	 */
 	public function customer() {
 		return $this->belongs_to( Customer::class, 'contact_id' );
+	}
+
+	/**
+	 * Payments relation.
+	 *
+	 * @since 1.0.0
+	 * @return BelongsToMany
+	 */
+	public function payments() {
+		return $this->belongs_to_many( Payment::class, 'document_id' );
 	}
 
 	/*

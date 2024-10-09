@@ -127,7 +127,7 @@ class DocumentItem extends Model {
 	 * @return HasMany
 	 */
 	public function taxes() {
-		return $this->has_many( DocumentTax::class, 'item_id' );
+		return $this->has_many( DocumentTax::class, 'document_item_id' );
 	}
 
 	/**

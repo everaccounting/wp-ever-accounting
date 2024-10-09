@@ -312,7 +312,6 @@ function eac_form_field( $field ) {
 	}
 }
 
-
 /**
  * File upload field.
  *

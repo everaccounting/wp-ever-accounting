@@ -10,7 +10,7 @@ defined( 'ABSPATH' ) || exit;
  * @since 3.0.0
  * @package EverAccounting\Admin
  */
-class Menus {
+class Menus_V1 {
 
 	/**
 	 * Main menu slug.
@@ -161,6 +161,15 @@ class Menus {
 		$page       = preg_replace( '/^.*?eac-/', '', $menu['menu_slug'] );
 		$this->page = self::PARENT_SLUG === $page ? 'dashboard' : $page;
 
+		/**
+		 * Fires when the page is initialized.
+		 *
+		 * @param string $page The current page.
+		 * @param string $tab The current tab.
+		 * @param string $action The current action.
+		 */
+		do_action( 'eac_' . $this->page . '_page_init', $this->tab, $this->action );
+
 		$this->actions = apply_filters( 'eac_' . $this->page . '_page_actions', array( 'add', 'edit', 'view' ) );
 		$this->tabs    = apply_filters( 'eac_' . $this->page . '_page_tabs', $menu['tabs'] );
 		$this->tab     = ! empty( $tab ) && array_key_exists( $tab, $this->tabs ) ? sanitize_key( $tab ) : current( array_keys( $this->tabs ) );
@@ -199,7 +208,15 @@ class Menus {
 	 * @return void
 	 */
 	public function handle_page_load() {
-		if ( ! empty( $this->page ) && ! empty( $this->tab ) && has_action( 'eac_' . $this->page . '_page_' . $this->tab ) ) {
+		if ( ! empty( $this->page ) && ! empty( $this->tab ) && ! empty( $this->action ) && has_action( 'eac_' . $this->page . '_page_' . $this->tab . '_' . $this->action ) ) {
+			/**
+			 * Fires when the page is loaded.
+			 *
+			 * @since 3.0.0
+			 */
+			do_action( 'load_eac_' . $this->page . '_page_' . $this->tab . '_' . $this->action );
+
+		} elseif ( ! empty( $this->page ) && ! empty( $this->tab ) && has_action( 'eac_' . $this->page . '_page_' . $this->tab ) ) {
 			/**
 			 * Fires when the page is loaded.
 			 *
@@ -208,18 +225,17 @@ class Menus {
 			 * @since 3.0.0
 			 */
 			do_action( 'load_eac_' . $this->page . '_page_' . $this->tab, $this->action );
-		} else {
-
-			/**
-			 * Fires when the page is loaded.
-			 *
-			 * @param string $tab The current tab.
-			 * @param string $action The current action.
-			 *
-			 * @since 3.0.0
-			 */
-			do_action( 'load_eac_' . $this->page . '_page', $this->tab, $this->action );
 		}
+
+		/**
+		 * Fires when the page is loaded.
+		 *
+		 * @param string $tab The current tab.
+		 * @param string $action The current action.
+		 *
+		 * @since 3.0.0
+		 */
+		do_action( 'load_eac_' . $this->page . '_page', $this->tab, $this->action );
 	}
 
 	/**
@@ -261,7 +277,15 @@ class Menus {
 			<?php endif; ?>
 
 			<?php
-			if ( ! empty( $this->page ) && ! empty( $this->tab ) && has_action( 'eac_' . $this->page . '_page_' . $this->tab ) ) {
+			if ( ! empty( $this->page ) && ! empty( $this->tab ) && ! empty( $this->action ) && has_action( 'eac_' . $this->page . '_page_' . $this->tab . '_' . $this->action ) ) {
+				/**
+				 * Fires before the content on the page.
+				 *
+				 * @since 1.0.0
+				 */
+				do_action( 'eac_' . $this->page . '_page_' . $this->tab . '_' . $this->action );
+
+			} elseif ( ! empty( $this->page ) && ! empty( $this->tab ) && has_action( 'eac_' . $this->page . '_page_' . $this->tab ) ) {
 				/**
 				 * Fires before the content on the page.
 				 *
@@ -270,17 +294,17 @@ class Menus {
 				 * @since 1.0.0
 				 */
 				do_action( 'eac_' . $this->page . '_page_' . $this->tab, $this->action );
-			} else {
-				/**
-				 * Fires before the content on the page.
-				 *
-				 * @param string $tab The current tab.
-				 * @param string $action The current action.
-				 *
-				 * @since 1.0.0
-				 */
-				do_action( 'eac_' . $this->page . '_page', $this->tab, $this->action );
 			}
+
+			/**
+			 * Fires before the content on the page.
+			 *
+			 * @param string $tab The current tab.
+			 * @param string $action The current action.
+			 *
+			 * @since 1.0.0
+			 */
+			do_action( 'eac_' . $this->page . '_page', $this->tab, $this->action );
 			?>
 		</div>
 		<?php

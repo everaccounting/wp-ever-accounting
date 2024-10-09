@@ -19,10 +19,9 @@ class Rewrites {
 	 * @since 1.1.6
 	 */
 	public function __construct() {
-		add_action( 'init', array( $this, 'register_endpoints' ), 0 );
-		add_filter( 'query_vars', array( $this, 'add_query_vars' ), 99 );
-		add_filter( 'template_include', array( $this, 'handle_request' ), 99 );
-		add_action( 'eac_render_invoice_template', array( $this, 'render_invoice_template' ) );
+		add_action( 'init', array( __CLASS__, 'register_endpoints' ), 0 );
+		add_filter( 'query_vars', array( __CLASS__, 'add_query_vars' ), 99 );
+		add_filter( 'template_include', array( __CLASS__, 'handle_request' ), 99 );
 	}
 
 	/**
@@ -30,10 +29,10 @@ class Rewrites {
 	 *
 	 * @since 1.1.6
 	 */
-	public function register_endpoints() {
+	public static function register_endpoints() {
 		$base = apply_filters( 'eac_endpoints_base', 'eac' );
 		// Invoice endpoints.
-		add_rewrite_rule( "^{$base}/invoice/pdf/([^/]+)/?$", 'index.php?uuid=$matches[1]&eac_page=invoice', 'top' );
+		add_rewrite_rule( "^{$base}/invoice/([^/]+)/?$", 'index.php?uuid=$matches[1]&eac_page=invoice', 'top' );
 		add_rewrite_rule( "^{$base}/bill/([^/]+)/?$", 'index.php?uuid=$matches[1]&eac_page=bill', 'top' );
 		// Payment endpoints.
 		add_rewrite_rule( "^{$base}/payment/([^/]+)/?$", 'index.php?uuid=$matches[1]&eac_page=payment', 'top' );
@@ -48,7 +47,7 @@ class Rewrites {
 	 * @since 1.1.6
 	 * @return array
 	 */
-	public function add_query_vars( $vars ) {
+	public static function add_query_vars( $vars ) {
 		$vars[] = 'output';
 		$vars[] = 'uuid';
 		$vars[] = 'eac_page';
@@ -64,7 +63,7 @@ class Rewrites {
 	 * @since 1.1.6
 	 * @return string
 	 */
-	public function handle_request( $template ) {
+	public static function handle_request( $template ) {
 		$page = get_query_var( 'eac_page' );
 		$uuid = get_query_var( 'uuid' );
 
@@ -73,27 +72,25 @@ class Rewrites {
 			return $template;
 		}
 
-		/**
-		 * Fire an action before the template is loaded.
-		 *
-		 * @since 2.0.0
-		 *
-		 */
-		do_action( "eac_render_{$page}_template", $uuid );
+		if ( has_action( "eac_output_{$page}" ) ) {
+
+			// No cache headers.
+			nocache_headers();
+
+			// Block Search Engine Indexing.
+			header( 'X-Robots-Tag: noindex, nofollow', true );
+
+			/**
+			 * Fire an action before the template is loaded.
+			 *
+			 * @since 2.0.0
+			 */
+			do_action( "eac_output_{$page}", $uuid );
+
+			// Done, clear buffer and exit.
+			die();
+		}
 
 		return $template;
-	}
-
-	/**
-	 * Render invoice template.
-	 *
-	 * @param string $uuid UUID.
-	 *
-	 * @since 1.1.6
-	 */
-	public function render_invoice_template( $uuid ) {
-		$invoice = EAC()->invoices->get(['uuid' => $uuid]);
-		var_dump($invoice);
-		exit();
 	}
 }

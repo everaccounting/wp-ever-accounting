@@ -116,7 +116,6 @@ class Payment extends Transaction {
 	}
 
 
-
 	/*
 	|--------------------------------------------------------------------------
 	| Helper Methods
@@ -138,5 +137,25 @@ class Payment extends Transaction {
 		$number = str_pad( $max + 1, get_option( 'eac_payment_digits', 4 ), '0', STR_PAD_LEFT );
 
 		return $prefix . $number;
+	}
+
+	/**
+	 * Get edit URL.
+	 *
+	 * @since 1.0.0
+	 * @return string
+	 */
+	public function get_edit_url() {
+		return admin_url( 'admin.php?page=eac-sales&tab=payments&action=edit&payment_id=' . $this->id );
+	}
+
+	/**
+	 * Get view URL.
+	 *
+	 * @since 1.0.0
+	 * @return string
+	 */
+	public function get_view_url() {
+		return admin_url( 'admin.php?page=eac-sales&tab=payments&action=view&payment_id=' . $this->id );
 	}
 }

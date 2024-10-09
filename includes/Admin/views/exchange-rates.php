@@ -29,7 +29,7 @@ defined( 'ABSPATH' ) || exit;
 			<a href="#" class="button add" data-row="
 								<?php
 								ob_start();
-								$rate = 1;
+								$rate = '';
 								$code = '';
 								require __DIR__ . '/exchange-rate.php';
 								echo esc_attr( ob_get_clean() );

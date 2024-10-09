@@ -1,14 +1,14 @@
 /**
  * External dependencies
  */
-const glob = require('glob');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
+const glob = require( 'glob' );
+const CopyWebpackPlugin = require( 'copy-webpack-plugin' );
 /**
  * Internal dependencies
  */
-const {config, NAMESPACE} = require('./.bin/webpack.config');
-const {dependencies} = require('./package.json');
-const path = require('path');
+const { config, NAMESPACE } = require( './.bin/webpack.config' );
+const { dependencies } = require( './package.json' );
+const path = require( 'path' );
 
 module.exports = [
 	{
@@ -33,42 +33,45 @@ module.exports = [
 			'js/admin': './.assets/js/admin/admin.js',
 			'css/admin': './.assets/css/admin/admin.scss',
 
+			// Frontend scripts.
+			'css/frontend': './.assets/css/frontend/frontend.scss',
+
 			// Client scripts.
-			...glob.sync('./client/*/*/index.js').reduce((memo, file) => {
-				const [type, name] = new RegExp('client/(.*)/(.*)/index.js')
-					.exec(file)
-					.slice(1);
+			...glob.sync( './client/*/*/index.js' ).reduce( ( memo, file ) => {
+				const [ type, name ] = new RegExp( 'client/(.*)/(.*)/index.js' )
+					.exec( file )
+					.slice( 1 );
 				return {
 					...memo,
-					[`client/${type}-${name}`]: path.resolve(__dirname, file),
+					[ `client/${ type }-${ name }` ]: path.resolve( __dirname, file ),
 				};
-			}, {}),
+			}, {} ),
 		},
 	},
 	//Package scripts.
 	{
 		...config,
-		entry: Object.keys(dependencies)
-			.filter((dependency) => dependency.startsWith(NAMESPACE))
-			.map((packageName) => packageName.replace(NAMESPACE, ''))
-			.reduce((memo, packageName) => {
-				const name = packageName.replace(/-([a-z])/g, (_, letter) =>
+		entry: Object.keys( dependencies )
+			.filter( ( dependency ) => dependency.startsWith( NAMESPACE ) )
+			.map( ( packageName ) => packageName.replace( NAMESPACE, '' ) )
+			.reduce( ( memo, packageName ) => {
+				const name = packageName.replace( /-([a-z])/g, ( _, letter ) =>
 					letter.toUpperCase()
 				);
 				return {
 					...memo,
-					[packageName]: {
-						import: `./packages/${packageName}/src/index.js`,
+					[ packageName ]: {
+						import: `./packages/${ packageName }/src/index.js`,
 						library: {
-							name: ['eac', name],
+							name: [ 'eac', name ],
 							type: 'window',
 						},
 					},
 				};
-			}, {}),
+			}, {} ),
 		output: {
 			...config.output,
-			path: path.resolve(__dirname, 'assets/client'),
+			path: path.resolve( __dirname, 'assets/client' ),
 		},
 	},
 ];

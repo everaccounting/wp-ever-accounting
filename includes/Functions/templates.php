@@ -134,3 +134,27 @@ function eac_get_template_html( $template_name, $args = array(), $template_path 
 
 	return ob_get_clean();
 }
+
+/**
+ * Get the header template.
+ *
+ * @since 1.0.0
+ * @see   eac_get_template
+ *
+ * @return void
+ */
+function eac_header() {
+	eac_get_template_part( 'header' );
+}
+
+/**
+ * Get the footer template.
+ *
+ * @since 1.0.0
+ * @see   eac_get_template
+ *
+ * @return void
+ */
+function eac_footer() {
+	eac_get_template_part( 'footer' );
+}

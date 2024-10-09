@@ -167,12 +167,8 @@ class Installer {
 			flush_rewrite_rules();
 		}
 
-		/**
-		 * Flush the rewrite rules after install or update.
-		 *
-		 * @since 2.0.0
-		 */
-		do_action( 'eac_flush_rewrite_rules' );
+		// Schedule a single event to flush rewrite rules.
+		EAC()->queue()->schedule_single( time(), 'eac_flush_rewrite_rules' );
 
 		/**
 		 * Perform actions after the plugin is installed.

@@ -119,7 +119,7 @@ abstract class ListTable extends \WP_List_Table {
 
 		// Detect when a bulk action is being triggered.
 		$action = $this->current_action();
-		if ( ! empty( $action ) ) {
+		if ( ! empty( $action ) && in_array( $action, $this->get_bulk_actions(), true ) ) {
 
 			check_admin_referer( 'bulk-' . $this->_args['plural'] );
 
