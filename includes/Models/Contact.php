@@ -34,7 +34,7 @@ defined( 'ABSPATH' ) || exit;
  * @property string       $updated_at Date updated of the contact.
  *
  * @property-read  string $formatted_name Get formatted name.
- * @property-read  string $country_name Get country name.
+ * @property-read  string $formatted_country Get formatted country name.
  */
 class Contact extends Model {
 	/**
@@ -153,7 +153,7 @@ class Contact extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	public function get_country_name() {
+	public function get_formatted_country() {
 		$countries = I18n::get_countries();
 
 		return isset( $countries[ $this->country ] ) ? $countries[ $this->country ] : $this->country;

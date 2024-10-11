@@ -6,149 +6,173 @@
  *
  * @subpackage EverAccounting/Admin/Views
  * @package EverAccounting
- * @var $customer \EverAccounting\Models\Customer Customer object.
+ * @var $customer Customer Customer object.
  */
 
+use EverAccounting\Models\Customer;
+
 defined( 'ABSPATH' ) || exit;
+
+wp_verify_nonce( '_wpnonce' );
+$id       = isset( $_GET['id'] ) ? absint( wp_unslash( $_GET['id'] ) ) : 0;
+$section  = isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : '';
+$customer = EAC()->customers->get( $id );
+$sections = apply_filters(
+	'eac_customer_view_sections',
+	array(
+		'overview'  => __( 'Overview', 'wp-ever-accounting' ),
+		'payments'  => __( 'Payments', 'wp-ever-accounting' ),
+		'invoices'  => __( 'Invoices', 'wp-ever-accounting' ),
+		'notes'     => __( 'Notes', 'wp-ever-accounting' ),
+		'statement' => __( 'Statement', 'wp-ever-accounting' ),
+	)
+);
+
+// Validate section.
+$section = ! array_key_exists( $section, $sections ) ? current( array_keys( $sections ) ) : $section;
 ?>
 
 <h1 class="wp-heading-inline">
-	<?php printf( esc_html__( 'Customer: #%d', 'wp-ever-accounting' ), esc_html( $customer->id ) ); ?>
+	<?php esc_html_e( 'View Customer', 'wp-ever-accounting' ); ?>
 	<a href="<?php echo esc_attr( remove_query_arg( array( 'action', 'id' ) ) ); ?>" title="<?php esc_attr_e( 'Go back', 'wp-ever-accounting' ); ?>">
 		<span class="dashicons dashicons-undo"></span>
 	</a>
 </h1>
 
-<div class="eac-card">
-	<div class="eac-card__faked"></div>
-	<div class="eac-profile-header">
-		<div class="eac-profile-header__avatar">
-			<?php echo get_avatar( $customer->email, 120 ); ?>
-		</div>
-		<div class="eac-profile-header__columns">
-			<div class="eac-profile-header__column">
-				<div class="eac-profile-header__title">
-					Tremblay and Rath
-				</div>
-				<p>XYZ Company</p>
-				<p>22, Ave Street, Newyork, USA</p>
+<div class="eac-card eac-profile-header">
+	<div class="eac-profile-header__avatar">
+		<?php echo get_avatar( $customer->email, 120 ); ?>
+	</div>
+	<div class="eac-profile-header__columns">
+		<div class="eac-profile-header__column">
+			<div class="eac-profile-header__title">
+				<?php echo esc_html( $customer->name ); ?>
 			</div>
-			<div class="eac-profile-header__column">
-
-			</div>
+			<?php if ( $customer->phone ) : ?>
+				<p class="small"><a href="tel:<?php echo esc_attr( $customer->phone ); ?>"><?php echo esc_html( $customer->phone ); ?></a></p>
+			<?php endif; ?>
+			<?php if ( $customer->email ) : ?>
+				<p class="small"><a href="mailto:<?php echo esc_attr( $customer->email ); ?>"><?php echo esc_html( $customer->email ); ?></a></p>
+			<?php endif; ?>
+			<p class="small">
+				<?php // translators: %s: date. ?>
+				<?php printf( esc_html__( 'Since %s', 'wp-ever-accounting' ), esc_html( wp_date( get_option( 'date_format' ), strtotime( $customer->created_at ) ) ) ); ?>
+			</p>
 		</div>
 	</div>
-	<ul class="eac-profile-nav" role="tablist">
-		<li>
-			<a href="#"  class="active" aria-selected="true" role="tab">
-				<?php esc_html_e( 'Overview', 'wp-ever-accounting' ); ?>
-			</a>
-		</li>
-		<li>
-			<a href="#" aria-selected="false" role="tab">
-				<?php esc_html_e( 'Notes', 'wp-ever-accounting' ); ?>
-			</a>
-		</li>
-	</ul>
+	<div class="eac-profile-header__id">
+		#<?php echo esc_html( $customer->id ); ?>
+	</div>
 </div>
+
 
 <div class="eac-poststuff is--alt">
 	<div class="column-1">
-
 		<div class="eac-card">
-			<table class="eac-table">
-				<thead>
-				<tr>
-					<th><?php esc_html_e( 'Date', 'wp-ever-accounting' ); ?></th>
-					<th><?php esc_html_e( 'Type', 'wp-ever-accounting' ); ?></th>
-					<th><?php esc_html_e( 'Amount', 'wp-ever-accounting' ); ?></th>
-					<th><?php esc_html_e( 'Status', 'wp-ever-accounting' ); ?></th>
-				</tr>
-				</thead>
-				<tbody>
-				<tr>
-					<td>2021-09-01</td>
-					<td>Invoice</td>
-					<td>$100.00</td>
-					<td>Paid</td>
-				</tr>
-				<tr>
-					<td>2021-09-01</td>
-					<td>Invoice</td>
-					<td>$100.00</td>
-					<td>Paid</td>
-				</tr>
-				<tr>
-					<td>2021-09-01</td>
-					<td>Invoice</td>
-					<td>$100.00</td>
-					<td>Paid</td>
-				</tr>
-				</tbody>
-			</table>
-			<div class="eac-card__header">
-				<h3 class="eac-card__title"><?php esc_html_e( 'Notes', 'wc-serial-numbers' ); ?></h3>
-			</div>
-			<div class="eac-card__body">
-				<form action="">
-					<div class="eac-form-field">
-						<label for="note"><?php esc_html_e( 'Add Note', 'wc-serial-numbers' ); ?></label>
-						<textarea name="note" id="note" cols="30" rows="2" required="required" placeholder="Enter Note"></textarea>
-					</div>
-					<input type="hidden" name="object_id" value="">
-					<input type="hidden" name="object_type" value="payment">
-					<?php wp_nonce_field( 'wcsn_add_note' ); ?>
-					<button class="button"><?php esc_html_e( 'Add Note', 'wc-serial-numbers' ); ?></button>
-				</form>
-				<br>
-				<ul class="eac-notes">
-					<li class="note">
-						<div class="note__header">
-							<div class="note__author">
-								<?php echo get_avatar( get_current_user_id(), 32 ); ?>
-								<span
-									class="note__author-name"><?php echo get_the_author_meta( 'display_name', get_current_user_id() ); ?></span>
-							</div>
-							<div class="note__date">
-								<?php echo date_i18n( 'M d, Y', strtotime( current_time( 'mysql' ) ) ); ?>
-							</div>
-						</div>
-						<div class="note__content">
-							<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium, quibusdam.</p>
-						</div>
-						<div class="note__actions">
-							<a href="#"
-								class="note__action"><?php esc_html_e( 'Delete', 'wc-serial-numbers' ); ?></a>
-						</div>
+			<ul class="eac-profile-nav" role="tablist">
+				<?php foreach ( $sections as $section_id => $label ) : ?>
+					<li>
+						<a href="<?php echo esc_url( add_query_arg( 'section', $section_id ) ); ?>" class="<?php echo $section === $section_id ? 'active' : ''; ?>">
+							<?php echo esc_html( $label ); ?>
+						</a>
 					</li>
-				</ul>
+				<?php endforeach; ?>
+			</ul>
+			<div class="eac-card__body">
+
+				<?php
+				/**
+				 * Fires action to display customer view section.
+				 *
+				 * @param Customer $customer Customer object.
+				 *
+				 * @since 2.0.0
+				 */
+				do_action( 'eac_customer_view_section_' . $section, $customer );
+				?>
+
 			</div>
 		</div>
-	</div>
+
+		<?php
+		/**
+		 * Fires action to inject custom meta boxes in the main column.
+		 *
+		 * @param Customer $customer Customer object.
+		 *
+		 * @since 1.0.0
+		 */
+		do_action( 'eac_customer_view_core_meta_boxes', $customer );
+		?>
+
+	</div><!-- .column-1 -->
 
 	<div class="column-2">
 		<div class="eac-card">
 			<div class="eac-card__header">
-				<h3 class="eac-card__title"><?php esc_html_e( 'Customer Information', 'wp-ever-accounting' ); ?></h3>
+				<h3 class="eac-card__title"><?php esc_html_e( 'Customer Details', 'wp-ever-accounting' ); ?></h3>
 			</div>
 			<div class="eac-list has--split has--hover">
 				<div class="eac-list__item">
 					<div class="eac-list__label"><?php esc_html_e( 'Name', 'wp-ever-accounting' ); ?></div>
-					<div class="eac-list__value"><?php echo esc_html( $customer->name ); ?></div>
+					<div class="eac-list__value"><?php echo $customer->name ? esc_html( $customer->name ) : esc_html__( 'N/A', 'wp-ever-accounting' ); ?></div>
+				</div>
+				<div class="eac-list__item">
+					<div class="eac-list__label"><?php esc_html_e( 'Company', 'wp-ever-accounting' ); ?></div>
+					<div class="eac-list__value"><?php echo $customer->company ? esc_html( $customer->company ) : esc_html__( 'N/A', 'wp-ever-accounting' ); ?></div>
 				</div>
 				<div class="eac-list__item">
 					<div class="eac-list__label"><?php esc_html_e( 'Email', 'wp-ever-accounting' ); ?></div>
-					<div class="eac-list__value"><?php echo esc_html( $customer->email ); ?></div>
+					<div class="eac-list__value"><?php echo $customer->email ? esc_html( $customer->email ) : esc_html__( 'N/A', 'wp-ever-accounting' ); ?></div>
 				</div>
 				<div class="eac-list__item">
 					<div class="eac-list__label"><?php esc_html_e( 'Phone', 'wp-ever-accounting' ); ?></div>
-					<div class="eac-list__value"><?php echo esc_html( $customer->phone ); ?></div>
+					<div class="eac-list__value"><?php echo $customer->phone ? esc_html( $customer->phone ) : esc_html__( 'N/A', 'wp-ever-accounting' ); ?></div>
 				</div>
 				<div class="eac-list__item">
 					<div class="eac-list__label"><?php esc_html_e( 'Website', 'wp-ever-accounting' ); ?></div>
-					<div class="eac-list__value"><?php echo esc_html( $customer->website ); ?></div>
+					<div class="eac-list__value"><?php echo $customer->website ? esc_html( $customer->website ) : esc_html__( 'N/A', 'wp-ever-accounting' ); ?></div>
+				</div>
+				<div class="eac-list__item">
+					<div class="eac-list__label"><?php esc_html_e( 'Tax Number', 'wp-ever-accounting' ); ?></div>
+					<div class="eac-list__value"><?php echo $customer->tax_number ? esc_html( $customer->tax_number ) : esc_html__( 'N/A', 'wp-ever-accounting' ); ?></div>
+				</div>
+				<div class="eac-list__item">
+					<div class="eac-list__label"><?php esc_html_e( 'Address', 'wp-ever-accounting' ); ?></div>
+					<div class="eac-list__value"><?php echo $customer->address ? esc_html( $customer->address ) : esc_html__( 'N/A', 'wp-ever-accounting' ); ?></div>
+				</div>
+				<div class="eac-list__item">
+					<div class="eac-list__label"><?php esc_html_e( 'City', 'wp-ever-accounting' ); ?></div>
+					<div class="eac-list__value"><?php echo $customer->city ? esc_html( $customer->city ) : esc_html__( 'N/A', 'wp-ever-accounting' ); ?></div>
+				</div>
+				<div class="eac-list__item">
+					<div class="eac-list__label"><?php esc_html_e( 'State', 'wp-ever-accounting' ); ?></div>
+					<div class="eac-list__value"><?php echo $customer->state ? esc_html( $customer->state ) : esc_html__( 'N/A', 'wp-ever-accounting' ); ?></div>
+				</div>
+				<div class="eac-list__item">
+					<div class="eac-list__label"><?php esc_html_e( 'Zip', 'wp-ever-accounting' ); ?></div>
+					<div class="eac-list__value"><?php echo $customer->zip ? esc_html( $customer->zip ) : esc_html__( 'N/A', 'wp-ever-accounting' ); ?></div>
+				</div>
+				<div class="eac-list__item">
+					<div class="eac-list__label"><?php esc_html_e( 'Country', 'wp-ever-accounting' ); ?></div>
+					<div class="eac-list__value"><?php echo $customer->country ? esc_html( $customer->formatted_country ) : esc_html__( 'N/A', 'wp-ever-accounting' ); ?></div>
+				</div>
+				<div class="eac-list__item">
+					<div class="eac-list__label"><?php esc_html_e( 'Currency', 'wp-ever-accounting' ); ?></div>
+					<div class="eac-list__value"><?php echo $customer->currency ? esc_html( $customer->currency ) : esc_html__( 'N/A', 'wp-ever-accounting' ); ?></div>
 				</div>
 			</div>
 		</div>
-	</div>
+		<?php
+		/**
+		 * Fires action to inject custom meta boxes in the side column.
+		 *
+		 * @param Customer $customer Customer object.
+		 *
+		 * @since 1.0.0
+		 */
+		do_action( 'eac_customer_view_side_meta_boxes', $customer );
+		?>
+
+	</div><!-- .column-2 -->
 </div>

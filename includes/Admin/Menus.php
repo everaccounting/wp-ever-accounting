@@ -21,15 +21,7 @@ class Menus {
 	const PARENT_SLUG = 'ever-accounting';
 
 	/**
-	 * Current page without 'eac-' prefix.
-	 *
-	 * @since 2.0.0
-	 * @var string
-	 */
-	public $page = '';
-
-	/**
-	 * Current page tabs.
+	 * All tabs.
 	 *
 	 * @since 2.0.0
 	 * @var array
@@ -37,12 +29,20 @@ class Menus {
 	public $tabs = array();
 
 	/**
+	 * Current page without 'eac-' prefix.
+	 *
+	 * @since 2.0.0
+	 * @var string
+	 */
+	public $current_page = '';
+
+	/**
 	 * Current page tab.
 	 *
 	 * @since 2.0.0
 	 * @var string
 	 */
-	public $tab = '';
+	public $current_tab = '';
 
 	/**
 	 * Current action.
@@ -50,7 +50,7 @@ class Menus {
 	 * @since 2.0.0
 	 * @var string
 	 */
-	public $action = '';
+	public $current_action = '';
 
 	/**
 	 * Menus constructor.
@@ -128,10 +128,25 @@ class Menus {
 				'page_title' => '',
 				'capability' => 'manage_options',
 				'menu_slug'  => '',
-				'callback'   => array( $this, 'output' ),
-				'tabs'       => array(),
+				'callback'   => array( $this, 'output_content' ),
 			)
 		);
+
+		$menu_page = $this->normalize_page( $menu['menu_slug'] );
+
+		/**
+		 * Filter the tabs for the current page.
+		 *
+		 * @param array $tabs Tabs.
+		 *
+		 * @since 3.0.0
+		 */
+		$this->tabs[ $menu_page ] = apply_filters( 'eac_' . $menu_page . '_page_tabs', array() );
+
+		// Bail if no tabs.
+		if ( empty( $this->tabs[ $menu_page ] ) && array( $this, 'output_content' ) === $menu['callback'] ) {
+			return;
+		}
 
 		$load = add_submenu_page(
 			$menu['parent'],
@@ -148,22 +163,23 @@ class Menus {
 		}
 
 		// setup vars.
-		$page          = preg_replace( '/^.*?eac-/', '', $menu['menu_slug'] );
-		$tab           = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_SPECIAL_CHARS );
-		$action          = filter_input( INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS );
-		$this->page    = self::PARENT_SLUG === $page ? 'dashboard' : $page;
-		$this->tabs    = apply_filters( 'eac_' . $this->page . '_page_tabs', array() );
-		$this->tab     = ! empty( $tab ) && array_key_exists( $tab, $this->tabs ) ? sanitize_key( $tab ) : current( array_keys( $this->tabs ) );
-		$this->action    = ! empty( $action ) ? sanitize_key( $action ) : '';
+		$tab    = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_SPECIAL_CHARS );
+		$action = filter_input( INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS );
+
+		// Setup properties.
+		$this->current_page   = $this->normalize_page( $plugin_page );
+		$this->current_tab    = ! empty( $tab ) && array_key_exists( $tab, $this->tabs[ $this->current_page ] ) ? sanitize_key( $tab ) : current( array_keys( $this->tabs[ $this->current_page ] ) );
+		$this->current_action = ! empty( $action ) ? sanitize_key( $action ) : '';
 
 		// if the tab is not valid, redirect remove the tab query arg.
-		if ( $this->tabs && $tab && ! array_key_exists( $tab, $this->tabs ) ) {
+		if ( $this->tabs[ $this->current_page ] && $tab && ! array_key_exists( $tab, $this->tabs[ $this->current_page ] ) ) {
 			wp_safe_redirect( remove_query_arg( 'tab' ) );
 			exit;
 		}
 
+		// Register hooks.
 		add_filter( 'admin_title', array( $this, 'admin_title' ) );
-		add_action( 'load-' . $load, array( $this, 'handle_page_load' ) );
+		add_action( 'load-' . $load, array( $this, 'handle_load' ) );
 	}
 
 	/**
@@ -188,28 +204,28 @@ class Menus {
 	 * @since 3.0.0
 	 * @return void
 	 */
-	public function handle_page_load() {
+	public function handle_load() {
 
-		if ( ! empty( $this->page ) && ! empty( $this->tab ) && has_action( 'eac_' . $this->page . '_page_' . $this->tab ) ) {
+		if ( ! empty( $this->current_page ) && ! empty( $this->current_tab ) && has_action( 'eac_' . $this->current_page . '_page_' . $this->current_tab . '_loaded' ) ) {
 			/**
 			 * Fires when the page is loaded.
 			 *
-			 * @param string $action The current action.
+			 * @param string $current_action The current action.
 			 *
 			 * @since 3.0.0
 			 */
-			do_action( 'load_eac_' . $this->page . '_page_' . $this->tab, $this->action );
+			do_action( 'eac_' . $this->current_page . '_page_' . $this->current_tab . '_loaded', $this->current_action );
 		} else {
 
 			/**
 			 * Fires when the page is loaded.
 			 *
-			 * @param string $tab The current tab.
-			 * @param string $action The current action.
+			 * @param string $current_tab The current tab.
+			 * @param string $current_action The current action.
 			 *
 			 * @since 3.0.0
 			 */
-			do_action( 'load_eac_' . $this->page . '_page', $this->tab, $this->action );
+			do_action( 'eac_' . $this->current_page . '_page_loaded', $this->current_tab, $this->current_action );
 		}
 	}
 
@@ -218,19 +234,19 @@ class Menus {
 	 *
 	 * @since 3.0.0
 	 */
-	public function output() {
+	public function output_content() {
 		global $plugin_page;
 		ob_start();
 		?>
 		<div class="wrap eac-wrap">
-			<?php if ( ! empty( $this->tabs ) ) : ?>
+			<?php if ( ! empty( $this->tabs[ $this->current_page ] ) && count( $this->tabs[ $this->current_page ] ) > 1 ) : ?>
 				<nav class="nav-tab-wrapper eac-navbar">
 					<?php
-					foreach ( $this->tabs as $name => $label ) {
+					foreach ( $this->tabs[ $this->current_page ] as $name => $label ) {
 						printf(
 							'<a href="%s" class="nav-tab %s">%s</a>',
 							esc_url( admin_url( 'admin.php?page=' . $plugin_page . '&tab=' . $name ) ),
-							esc_attr( $this->tab === $name ? 'nav-tab-active' : '' ),
+							esc_attr( $this->current_tab === $name ? 'nav-tab-active' : '' ),
 							esc_html( $label )
 						);
 					}
@@ -239,12 +255,12 @@ class Menus {
 					/**
 					 * Fires after the tabs on the settings page.
 					 *
-					 * @param string $tab Current tab..
+					 * @param string $current_tab Current tab..
 					 * @param array  $tabs Tabs.
 					 *
 					 * @since 2.0.0
 					 */
-					do_action( 'eac_' . $this->page . '_page_nav_items', $this->tab, $this->tabs );
+					do_action( 'eac_' . $this->current_page . '_page_after_tab_items', $this->current_tab, $this->tabs[ $this->current_page ] );
 					?>
 				</nav>
 
@@ -252,28 +268,42 @@ class Menus {
 			<?php endif; ?>
 
 			<?php
-			if ( ! empty( $this->page ) && ! empty( $this->tab ) && has_action( 'eac_' . $this->page . '_page_' . $this->tab ) ) {
+			if ( ! empty( $this->current_page ) && ! empty( $this->current_tab ) && has_action( 'eac_' . $this->current_page . '_page_' . $this->current_tab . '_content' ) ) {
 				/**
 				 * Fires before the content on the page.
 				 *
-				 * @param string $action The current action.
+				 * @param string $current_action The current action.
 				 *
 				 * @since 2.0.0
 				 */
-				do_action( 'eac_' . $this->page . '_page_' . $this->tab, $this->action );
+				do_action( 'eac_' . $this->current_page . '_page_' . $this->current_tab . '_content', $this->current_action );
 			} else {
 				/**
 				 * Fires before the content on the page.
 				 *
-				 * @param string $tab The current tab.
-				 * @param string $action The current action.
+				 * @param string $current_tab The current tab.
+				 * @param string $current_action The current action.
 				 *
 				 * @since 2.0.0
 				 */
-				do_action( 'eac_' . $this->page . '_page', $this->tab, $this->action );
+				do_action( 'eac_' . $this->current_page . '_page_content', $this->current_tab, $this->current_action );
 			}
 			?>
 		</div>
 		<?php
+	}
+
+	/**
+	 * Normalize the page.
+	 *
+	 * @param string $page Page.
+	 *
+	 * @since 3.0.0
+	 * @return string
+	 */
+	public function normalize_page( $page ) {
+		$page = preg_replace( '/^.*?eac-/', '', $page );
+
+		return self::PARENT_SLUG === $page ? 'dashboard' : sanitize_key( $page );
 	}
 }

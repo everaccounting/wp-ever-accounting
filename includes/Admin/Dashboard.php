@@ -18,7 +18,21 @@ class Dashboard {
 	 * @since 1.0.0
 	 */
 	public function __construct() {
-		add_action( 'eac_dashboard_page', array( __CLASS__, 'render' ) );
+		add_filter( 'eac_dashboard_page_tabs', array( __CLASS__, 'register_tabs' ) );
+	}
+
+	/**
+	 * Register tab.
+	 *
+	 * @param array $tabs Tabs.
+	 *
+	 * @since 1.0.0
+	 * @return array
+	 */
+	public static function register_tabs( $tabs ) {
+		$tabs['overview'] = __( 'Overview', 'wp-ever-accounting' );
+
+		return $tabs;
 	}
 
 	/**

@@ -17,14 +17,6 @@
 		height: auto;
 	}
 
-	h2, h3 {
-		padding: 0;
-		margin: 0;
-		color: inherit;
-		font-size: 14px;
-		font-weight: 600;
-	}
-
 	h2, h3, h4 {
 		color: inherit;
 	}
@@ -48,6 +40,14 @@
 		align-items: center;
 		justify-content: space-between;
 		gap: 5px;
+
+		h2, h3 {
+			padding: 0;
+			margin: 0;
+			color: inherit;
+			font-size: 14px;
+			font-weight: 600;
+		}
 	}
 
 	& > &__header {

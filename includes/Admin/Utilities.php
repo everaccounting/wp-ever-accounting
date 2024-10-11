@@ -24,9 +24,7 @@ class Utilities {
 				'menu_slug'  => 'eac-items',
 				'menu_title' => __( 'Items', 'wp-ever-accounting' ),
 				'page_title' => __( 'Items', 'wp-ever-accounting' ),
-				'tabs'       => array(
-					'items' => __( 'Items', 'wp-ever-accounting' ),
-				),
+				'tabbed'     => true,
 			),
 			array(
 				'page_title' => __( 'Sales', 'wp-ever-accounting' ),
@@ -111,37 +109,5 @@ class Utilities {
 		}
 
 		return $screen_ids;
-	}
-
-	/**
-	 * Do meta boxes.
-	 *
-	 * @since 1.0.0
-	 * @param string $screen Screen type.
-	 * @param string $position Position.
-	 * @param mixed  $item Item object.
-	 *
-	 * @return void
-	 */
-	public static function do_meta_boxes( $screen, $position, $item ) {
-		if ( ! empty( $position ) ) {
-			/**
-			 * Fires action to add meta boxes to the given screen.
-			 *
-			 * @param mixed $object object.
-			 *
-			 * @since 1.0.0
-			 */
-			do_action( 'eac_do_meta_boxes_' . $screen . '_' . $position, $item );
-		}
-
-		/**
-		 * Fires after all built-in meta boxes have been added, contextually for the given object.
-		 *
-		 * @param mixed $object object.
-		 *
-		 * @since 1.0.0
-		 */
-		do_action( 'eac_do_meta_boxes_' . $screen, $item );
 	}
 }

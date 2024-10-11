@@ -12,8 +12,10 @@ defined( 'ABSPATH' ) || exit;
  * @package EverAccounting
  * @subpackage Models
  *
- * @property int $customer_id ID of the customer.
- * @property Invoice $invoice Related invoice.
+ * @property int          $customer_id ID of the customer.
+ *
+ * @property-read string  $formatted_status Formatted status.
+ * @property-read Invoice $invoice Related invoice.
  */
 class Payment extends Transaction {
 	/**
@@ -60,6 +62,7 @@ class Payment extends Transaction {
 	 * Create a new model instance.
 	 *
 	 * @param string|int|array $attributes Attributes.
+	 *
 	 * @return void
 	 */
 	public function __construct( $attributes = null ) {
@@ -77,6 +80,18 @@ class Payment extends Transaction {
 	| and mutators) as well as defining relationships between models.
 	|--------------------------------------------------------------------------
 	*/
+
+	/**
+	 * Get formatted status.
+	 *
+	 * @since 1.0.0
+	 * @return string
+	 */
+	public function get_formatted_status() {
+		$statuses = EAC()->payments->get_statuses();
+
+		return array_key_exists( $this->status, $statuses ) ? $statuses[ $this->status ] : $this->status;
+	}
 
 	/*
 	|--------------------------------------------------------------------------
@@ -103,7 +118,7 @@ class Payment extends Transaction {
 			return new \WP_Error( 'missing_required', __( 'Account is required.', 'wp-ever-accounting' ) );
 		}
 
-		// if does exist or account id is dirty, then set the new currency code.
+		// if it does exist or account id is dirty, then set the new currency code.
 		if ( ! $this->exists() || $this->is_dirty( 'account_id' ) ) {
 			$account = Account::find( $this->account_id );
 			if ( ! $account ) {
@@ -157,5 +172,15 @@ class Payment extends Transaction {
 	 */
 	public function get_view_url() {
 		return admin_url( 'admin.php?page=eac-sales&tab=payments&action=view&payment_id=' . $this->id );
+	}
+
+	/**
+	 * Get the public URL.
+	 *
+	 * @since 1.0.0
+	 * @return string
+	 */
+	public function get_public_url() {
+		//todo add public url
 	}
 }

@@ -9,7 +9,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Class Items
  *
- * @since 3.0.0
+ * @since 2.0.0
  * @package EverAccounting\Admin\Items
  */
 class Items {
@@ -19,13 +19,11 @@ class Items {
 	 */
 	public function __construct() {
 		add_filter( 'eac_items_page_tabs', array( __CLASS__, 'register_tabs' ) );
-		add_action( 'load_eac_items_page_items', array( __CLASS__, 'setup_page' ) );
-		add_action( 'admin_post_eac_edit_item', array( __CLASS__, 'save_item' ) );
-		add_action( 'eac_items_page_items', array( __CLASS__, 'render_page' ) );
-		add_action( 'eac_item_add_primary', array( __CLASS__, 'item_attributes' ) );
-		add_action( 'eac_item_edit_primary', array( __CLASS__, 'item_attributes' ) );
-		add_action( 'eac_item_add_secondary', array( __CLASS__, 'item_actions' ) );
-		add_action( 'eac_item_edit_secondary', array( __CLASS__, 'item_actions' ) );
+		add_action( 'eac_items_page_items_loaded', array( __CLASS__, 'page_loaded' ) );
+		add_action( 'admin_post_eac_edit_item', array( __CLASS__, 'handle_edit' ) );
+		add_action( 'eac_items_page_items_content', array( __CLASS__, 'page_content' ) );
+		add_action( 'eac_item_edit_core_meta_boxes', array( __CLASS__, 'data_meta_box' ) );
+		add_action( 'eac_item_edit_side_meta_boxes', array( __CLASS__, 'actions_meta_box' ) );
 	}
 
 	/**
@@ -33,7 +31,7 @@ class Items {
 	 *
 	 * @param array $tabs Tabs.
 	 *
-	 * @since 3.0.0
+	 * @since 2.0.0
 	 * @return array
 	 */
 	public static function register_tabs( $tabs ) {
@@ -45,40 +43,85 @@ class Items {
 	}
 
 	/**
-	 * setup page.
+	 * Handle page loaded.
 	 *
 	 * @param string $action Current action.
 	 *
-	 * @since 3.0.0
+	 * @since 2.0.0
 	 * @return void
 	 */
-	public static function setup_page( $action ) {
+	public static function page_loaded( $action ) {
 		global $list_table;
-		if ( ! in_array( $action, array( 'new', 'edit' ), true ) ) {
-			$screen     = get_current_screen();
-			$list_table = new ListTables\Items();
-			$list_table->prepare_items();
-			$screen->add_option(
-				'per_page',
-				array(
-					'label'   => __( 'Number of items per page:', 'wp-ever-accounting' ),
-					'default' => 20,
-					'option'  => 'eac_items_per_page',
-				)
-			);
+		switch ( $action ) {
+			case 'add':
+				// Nothing to do here.
+				break;
+
+			case 'edit':
+				$id = filter_input( INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT );
+				if ( ! EAC()->items->get( $id ) ) {
+					wp_die( esc_html__( 'You attempted to edit an item that does not exist. Perhaps it was deleted?', 'wp-ever-accounting' ) );
+				}
+				break;
+
+			default:
+				$screen     = get_current_screen();
+				$list_table = new ListTables\Items();
+				$list_table->prepare_items();
+				$screen->add_option(
+					'per_page',
+					array(
+						'label'   => __( 'Number of items per page:', 'wp-ever-accounting' ),
+						'default' => 20,
+						'option'  => 'eac_items_per_page',
+					)
+				);
+				break;
 		}
 	}
 
 	/**
-	 * Handle edit.
+	 * Save item.
 	 *
-	 * @since 1.2.0
+	 * @since 2.0.0
 	 * @return void
 	 */
-	public static function save_item() {
+	public static function handle_edit() {
 		check_admin_referer( 'eac_edit_item' );
+		if ( ! current_user_can( 'eac_manage_item' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability.
+			wp_die( esc_html__( 'You are not allowed to perform this action.', 'wp-ever-accounting' ) );
+		}
 		$referer = wp_get_referer();
-		$item    = EAC()->items->insert( $_POST );
+		$data    = array();
+		if ( array_key_exists( 'id', $_POST ) ) {
+			$data['id'] = absint( wp_unslash( $_POST['id'] ) );
+		}
+		if ( array_key_exists( 'name', $_POST ) ) {
+			$data['name'] = sanitize_text_field( wp_unslash( $_POST['name'] ) );
+		}
+		if ( array_key_exists( 'type', $_POST ) ) {
+			$data['type'] = sanitize_text_field( wp_unslash( $_POST['type'] ) );
+		}
+		if ( array_key_exists( 'price', $_POST ) ) {
+			$data['price'] = floatval( wp_unslash( $_POST['price'] ) );
+		}
+		if ( array_key_exists( 'cost', $_POST ) ) {
+			$data['cost'] = floatval( wp_unslash( $_POST['cost'] ) );
+		}
+		if ( array_key_exists( 'category_id', $_POST ) ) {
+			$data['category_id'] = absint( wp_unslash( $_POST['category_id'] ) );
+		}
+		if ( array_key_exists( 'unit', $_POST ) ) {
+			$data['unit'] = sanitize_text_field( wp_unslash( $_POST['unit'] ) );
+		}
+		if ( array_key_exists( 'tax_ids', $_POST ) ) {
+			$data['tax_ids'] = array_map( 'absint', wp_unslash( $_POST['tax_ids'] ) );
+		}
+		if ( array_key_exists( 'description', $_POST ) ) {
+			$data['description'] = sanitize_textarea_field( wp_unslash( $_POST['description'] ) );
+		}
+
+		$item = EAC()->items->insert( $data );
 
 		if ( is_wp_error( $item ) ) {
 			EAC()->flash->error( $item->get_error_message() );
@@ -91,7 +134,6 @@ class Items {
 				),
 				$referer
 			);
-			$referer = remove_query_arg( array( 'add' ), $referer );
 		}
 
 		wp_safe_redirect( $referer );
@@ -99,18 +141,16 @@ class Items {
 	}
 
 	/**
-	 * Render page.
+	 * Render page content.
 	 *
-	 * @param string $action View.
+	 * @param string $action Current action.
 	 *
-	 * @since 3.0.0
+	 * @since 2.0.0
 	 * @return void
 	 */
-	public static function render_page( $action ) {
+	public static function page_content( $action ) {
 		switch ( $action ) {
 			case 'add':
-				include __DIR__ . '/views/item-add.php';
-				break;
 			case 'edit':
 				include __DIR__ . '/views/item-edit.php';
 				break;
@@ -121,21 +161,20 @@ class Items {
 	}
 
 	/**
-	 * Render attributes fields.
+	 * Data meta box.
 	 *
-	 * @param Item $item Item.
+	 * @param Item $item Item object.
 	 *
-	 * @since 3.0.0
+	 * @since 2.0.0
 	 * @return void
 	 */
-	public static function item_attributes( $item ) {
+	public static function data_meta_box( $item ) {
 		?>
-		<div class="eac-card">
+		<div id="eac-item-data" class="eac-card">
 			<div class="eac-card__header">
-				<h3 class="eac-card__title"><?php esc_html_e( 'Item Attributes', 'wp-ever-accounting' ); ?></h3>
+				<h3 class="eac-card__title"><?php esc_html_e( 'Item Data', 'wp-ever-accounting' ); ?></h3>
 			</div>
 			<div class="eac-card__body grid--fields">
-
 				<?php
 				eac_form_field(
 					array(
@@ -252,28 +291,42 @@ class Items {
 	}
 
 	/**
-	 * Render item actions.
+	 * Actions meta box.
 	 *
-	 * @param Item $item Item.
+	 * @param Item $item Item object.
 	 *
-	 * @since 3.0.0
+	 * @since 2.0.0
 	 * @return void
 	 */
-	public static function item_actions( $item ) {
+	public static function actions_meta_box( $item ) {
 		?>
-		<div class="eac-card">
+		<div id="eac-item-actions" class="eac-card">
 			<div class="eac-card__header">
 				<h3 class="eac-card__title"><?php esc_html_e( 'Actions', 'wp-ever-accounting' ); ?></h3>
 			</div>
+			<?php if ( has_action( 'eac_item_misc_actions' ) ) : ?>
+				<div class="eac-card__body">
+					<?php
+					/**
+					 * Fires when item-specific meta boxes are added.
+					 *
+					 * @param Item $item Item object.
+					 *
+					 * @since 2.0.0
+					 */
+					do_action( 'eac_item_misc_actions', $item );
+					?>
+				</div>
+			<?php endif; ?>
 			<div class="eac-card__footer">
 				<?php if ( $item->exists() ) : ?>
 					<a class="eac_confirm_delete del" href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'action', 'delete', admin_url( 'admin.php?page=eac-items&id=' . $item->id ) ), 'bulk-items' ) ); ?>"><?php esc_html_e( 'Delete', 'wp-ever-accounting' ); ?></a>
 					<button class="button button-primary"><?php esc_html_e( 'Update Item', 'wp-ever-accounting' ); ?></button>
 				<?php else : ?>
-					<button class="button button-primary eac-width-full"><?php esc_html_e( 'Add Item', 'wp-ever-accounting' ); ?></button>
+					<button class="button button-primary tw-w-[100%]"><?php esc_html_e( 'Add Item', 'wp-ever-accounting' ); ?></button>
 				<?php endif; ?>
 			</div>
-		</div>
+		</div><!-- .eac-card -->
 		<?php
 	}
 }

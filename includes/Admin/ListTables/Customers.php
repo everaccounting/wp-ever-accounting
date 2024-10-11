@@ -66,8 +66,8 @@ class Customers extends ListTable {
 		 */
 		$args                  = apply_filters( 'eac_customers_table_query_args', $args );
 		$args['no_found_rows'] = false;
-		$this->items           = Customer::results( $args );
-		$total                 = Customer::count( $args );
+		$this->items           = EAC()->customers->query( $args );
+		$total                 = EAC()->customers->query( $args, true );
 
 		$this->set_pagination_args(
 			array(
@@ -211,15 +211,7 @@ class Customers extends ListTable {
 	public function column_name( $item ) {
 		return sprintf(
 			'<a href="%s">%s</a>',
-			esc_url(
-				add_query_arg(
-					array(
-						'action' => 'edit',
-						'id'     => $item->id,
-					),
-					$this->base_url
-				)
-			),
+			esc_url( $item->get_view_url() ),
 			wp_kses_post( $item->name )
 		);
 	}
@@ -253,28 +245,12 @@ class Customers extends ListTable {
 		$actions = array(
 			'view'   => sprintf(
 				'<a href="%s">%s</a>',
-				esc_url(
-					add_query_arg(
-						array(
-							'action' => 'view',
-							'id'     => $item->id,
-						),
-						$this->base_url
-					)
-				),
+				esc_url( $item->get_view_url() ),
 				__( 'View', 'wp-ever-accounting' )
 			),
 			'edit'   => sprintf(
 				'<a href="%s">%s</a>',
-				esc_url(
-					add_query_arg(
-						array(
-							'action' => 'edit',
-							'id'     => $item->id,
-						),
-						$this->base_url
-					)
-				),
+				esc_url( $item->get_edit_url() ),
 				__( 'Edit', 'wp-ever-accounting' )
 			),
 			'delete' => sprintf(

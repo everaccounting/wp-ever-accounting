@@ -47,4 +47,32 @@ class Customer extends Contact {
 	| object but can be used to support its functionality.
 	|--------------------------------------------------------------------------
 	*/
+
+	/**
+	 * Get edit URL.
+	 *
+	 * @since 1.0.0
+	 * @return string
+	 */
+	public function get_edit_url() {
+		return admin_url( 'admin.php?page=eac-sales&tab=customers&action=edit&id=' . $this->id );
+	}
+
+	/**
+	 * Get view URL.
+	 *
+	 * @since 1.0.0
+	 * @return string
+	 */
+	public function get_view_url() {
+		return admin_url( 'admin.php?page=eac-sales&tab=customers&action=view&id=' . $this->id );
+	}
+
+	/**
+	 * Get the public URL.
+	 *
+	 * @since 1.0.0
+	 * @return string
+	 */
+	public function get_public_url() {}
 }
