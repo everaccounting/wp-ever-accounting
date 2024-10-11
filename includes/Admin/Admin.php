@@ -23,6 +23,7 @@ class Admin {
 		add_filter( 'admin_footer_text', array( $this, 'admin_footer_text' ), PHP_INT_MAX );
 		add_filter( 'update_footer', array( $this, 'update_footer' ), PHP_INT_MAX );
 		add_action( 'in_admin_header', array( __CLASS__, 'in_admin_header' ) );
+		add_filter( 'set-screen-option', array( __CLASS__, 'set_screen_option' ), 10, 3 );
 		add_action( 'admin_head', array( $this, 'print_scripts' ) );
 	}
 
@@ -207,6 +208,39 @@ class Admin {
 			</div>
 		</div>
 		<?php
+	}
+
+	/**
+	 * Set screen option.
+	 *
+	 * @param mixed  $status Status.
+	 * @param string $option Option.
+	 * @param mixed  $value  Value.
+	 *
+	 * @since 1.0.0
+	 * @return mixed
+	 */
+	public static function set_screen_option( $status, $option, $value ) {
+		$options = array(
+			'eac_items_per_page',
+			'eac_payments_per_page',
+			'eac_invoices_per_page',
+			'eac_customers_per_page',
+			'eac_expenses_per_page',
+			'eac_vendors_per_page',
+			'eac_bills_per_page',
+			'eac_accounts_per_page',
+			'eac_transactions_per_page',
+			'eac_transfer_per_page',
+			'eac_taxes_per_page',
+			'eac_categories_per_page',
+		);
+
+		if ( in_array( $option, $options, true ) ) {
+			return $value;
+		}
+
+		return $status;
 	}
 
 	/**

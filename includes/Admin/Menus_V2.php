@@ -7,15 +7,15 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Menus class.
  *
- * @since 2.0.0
+ * @since 3.0.0
  * @package EverAccounting\Admin
  */
-class Menus {
+class Menus_V2 {
 
 	/**
 	 * Main menu slug.
 	 *
-	 * @since 2.0.0
+	 * @since 3.0.0
 	 * @var string
 	 */
 	const PARENT_SLUG = 'ever-accounting';
@@ -23,7 +23,7 @@ class Menus {
 	/**
 	 * Current page without 'eac-' prefix.
 	 *
-	 * @since 2.0.0
+	 * @since 3.0.0
 	 * @var string
 	 */
 	public $page = '';
@@ -31,7 +31,7 @@ class Menus {
 	/**
 	 * Current page tabs.
 	 *
-	 * @since 2.0.0
+	 * @since 3.0.0
 	 * @var array
 	 */
 	public $tabs = array();
@@ -39,23 +39,31 @@ class Menus {
 	/**
 	 * Current page tab.
 	 *
-	 * @since 2.0.0
+	 * @since 3.0.0
 	 * @var string
 	 */
 	public $tab = '';
 
 	/**
-	 * Current action.
+	 * Current actions.
 	 *
-	 * @since 2.0.0
+	 * @since 3.0.0
+	 * @var array
+	 */
+	public $actions = array();
+
+	/**
+	 * Current view.
+	 *
+	 * @since 3.0.0
 	 * @var string
 	 */
-	public $action = '';
+	public $view = '';
 
 	/**
 	 * Menus constructor.
 	 *
-	 * @since 2.0.0
+	 * @since 3.0.0
 	 */
 	public function __construct() {
 		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
@@ -148,13 +156,13 @@ class Menus {
 		}
 
 		// setup vars.
-		$page          = preg_replace( '/^.*?eac-/', '', $menu['menu_slug'] );
-		$tab           = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_SPECIAL_CHARS );
-		$action          = filter_input( INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS );
-		$this->page    = self::PARENT_SLUG === $page ? 'dashboard' : $page;
-		$this->tabs    = apply_filters( 'eac_' . $this->page . '_page_tabs', array() );
-		$this->tab     = ! empty( $tab ) && array_key_exists( $tab, $this->tabs ) ? sanitize_key( $tab ) : current( array_keys( $this->tabs ) );
-		$this->action    = ! empty( $action ) ? sanitize_key( $action ) : '';
+		$tab          = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_SPECIAL_CHARS );
+		$action       = filter_input( INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS );
+		$page         = preg_replace( '/^.*?eac-/', '', $menu['menu_slug'] );
+		$this->page   = self::PARENT_SLUG === $page ? 'dashboard' : $page;
+		$this->tabs   = apply_filters( 'eac_' . $this->page . '_page_tabs', $menu['tabs'] );
+		$this->tab    = ! empty( $tab ) && array_key_exists( $tab, $this->tabs ) ? sanitize_key( $tab ) : current( array_keys( $this->tabs ) );
+		$this->view = ! empty( $action ) ? sanitize_key( $action ) : '';
 
 		// if the tab is not valid, redirect remove the tab query arg.
 		if ( $this->tabs && $tab && ! array_key_exists( $tab, $this->tabs ) ) {
@@ -189,7 +197,6 @@ class Menus {
 	 * @return void
 	 */
 	public function handle_page_load() {
-
 		if ( ! empty( $this->page ) && ! empty( $this->tab ) && has_action( 'eac_' . $this->page . '_page_' . $this->tab ) ) {
 			/**
 			 * Fires when the page is loaded.
@@ -242,7 +249,7 @@ class Menus {
 					 * @param string $tab Current tab..
 					 * @param array  $tabs Tabs.
 					 *
-					 * @since 2.0.0
+					 * @since 1.0.0
 					 */
 					do_action( 'eac_' . $this->page . '_page_nav_items', $this->tab, $this->tabs );
 					?>
@@ -258,7 +265,7 @@ class Menus {
 				 *
 				 * @param string $action The current action.
 				 *
-				 * @since 2.0.0
+				 * @since 1.0.0
 				 */
 				do_action( 'eac_' . $this->page . '_page_' . $this->tab, $this->action );
 			} else {
@@ -268,7 +275,7 @@ class Menus {
 				 * @param string $tab The current tab.
 				 * @param string $action The current action.
 				 *
-				 * @since 2.0.0
+				 * @since 1.0.0
 				 */
 				do_action( 'eac_' . $this->page . '_page', $this->tab, $this->action );
 			}

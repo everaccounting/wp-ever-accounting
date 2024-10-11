@@ -3,10 +3,19 @@
  * Edit item view.
  *
  * @package EverAccounting
- * @var $item \EverAccounting\Models\Item
  */
 
+use EverAccounting\Models\Item;
+
 defined( 'ABSPATH' ) || exit;
+
+$id   = filter_input( INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT );
+$item = EAC()->items->get( $id );
+
+if ( ! $item ) {
+	wp_die( esc_html__( 'Item not found.', 'wp-ever-accounting' ) );
+}
+
 ?>
 <h1 class="wp-heading-inline">
 	<?php esc_html_e( 'Edit Item', 'wp-ever-accounting' ); ?>
@@ -14,5 +23,45 @@ defined( 'ABSPATH' ) || exit;
 		<span class="dashicons dashicons-undo"></span>
 	</a>
 </h1>
-<?php
-require __DIR__ . '/item-form.php';
+
+<form id="eac-item-edit" method="post" action="<?php echo esc_html( admin_url( 'admin-post.php' ) ); ?>">
+	<div class="eac-poststuff">
+
+		<div class="column-1">
+
+			<?php
+			/**
+			 * Fires hook in the main area of the item edit form to add custom fields.
+			 *
+			 * @param $item Item Item object.
+			 *
+			 * @since 1.0.0
+			 */
+			do_action( 'eac_item_edit_primary', $item );
+			?>
+
+		</div><!-- .column-1 -->
+
+		<div class="column-2">
+
+			<?php
+			/**
+			 * Fires hook in the sidebar area of the item edit form to add custom fields.
+			 *
+			 * @param $item Item Item object.
+			 *
+			 * @since 1.0.0
+			 */
+			do_action( 'eac_item_edit_secondary', $item );
+			?>
+
+		</div><!-- .column-2 -->
+	</div><!-- .eac-poststuff -->
+
+	<?php wp_nonce_field( 'eac_edit_item' ); ?>
+	<input type="hidden" name="action" value="eac_edit_item"/>
+	<input type="hidden" name="referredby" value="<?php echo esc_attr( wp_get_referer() ); ?>"/>
+	<input type="hidden" name="id" value="<?php echo esc_attr( $item->id ); ?>"/>
+</form>
+
+

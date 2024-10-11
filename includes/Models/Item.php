@@ -52,7 +52,7 @@ class Item extends Model {
 		'id',
 		'type',
 		'name',
-		'desc',
+		'description',
 		'unit',
 		'price',
 		'cost',
