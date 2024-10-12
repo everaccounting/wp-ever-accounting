@@ -299,7 +299,7 @@ class Payments extends ListTable {
 	 */
 	public function column_number( $item ) {
 		return sprintf(
-			'<a href="%s">%s</a>',
+			'<a class="row-title" href="%s">%s</a>',
 			esc_url(
 				add_query_arg(
 					array(

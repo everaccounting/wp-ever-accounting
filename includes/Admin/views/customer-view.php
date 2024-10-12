@@ -32,12 +32,15 @@ $sections = apply_filters(
 $section = ! array_key_exists( $section, $sections ) ? current( array_keys( $sections ) ) : $section;
 ?>
 
-<h1 class="wp-heading-inline">
-	<?php esc_html_e( 'View Customer', 'wp-ever-accounting' ); ?>
-	<a href="<?php echo esc_attr( remove_query_arg( array( 'action', 'id' ) ) ); ?>" title="<?php esc_attr_e( 'Go back', 'wp-ever-accounting' ); ?>">
-		<span class="dashicons dashicons-undo"></span>
-	</a>
-</h1>
+<div class="eac-section-header">
+	<h1 class="wp-heading-inline">
+		<?php esc_html_e( 'View Customer', 'wp-ever-accounting' ); ?>
+		<a href="<?php echo esc_attr( remove_query_arg( array( 'action', 'id' ) ) ); ?>" title="<?php esc_attr_e( 'Go back', 'wp-ever-accounting' ); ?>">
+			<span class="dashicons dashicons-undo"></span>
+		</a>
+	</h1>
+	<a href="<?php echo esc_url( $customer->get_edit_url() ); ?>" class="page-title-action"><?php esc_html_e( 'Edit Customer', 'wp-ever-accounting' ); ?></a>
+</div>
 
 <div class="eac-card eac-profile-header">
 	<div class="eac-profile-header__avatar">

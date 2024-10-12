@@ -210,7 +210,7 @@ class Customers extends ListTable {
 	 */
 	public function column_name( $item ) {
 		return sprintf(
-			'<a href="%s">%s</a>',
+			'<a class="row-title" href="%s">%s</a>',
 			esc_url( $item->get_view_url() ),
 			wp_kses_post( $item->name )
 		);
@@ -225,7 +225,7 @@ class Customers extends ListTable {
 	 * @return string Displays the country.
 	 */
 	public function column_country( $item ) {
-		return $item->country_name;
+		return $item->formatted_country;
 	}
 
 	/**
@@ -243,11 +243,6 @@ class Customers extends ListTable {
 			return null;
 		}
 		$actions = array(
-			'view'   => sprintf(
-				'<a href="%s">%s</a>',
-				esc_url( $item->get_view_url() ),
-				__( 'View', 'wp-ever-accounting' )
-			),
 			'edit'   => sprintf(
 				'<a href="%s">%s</a>',
 				esc_url( $item->get_edit_url() ),

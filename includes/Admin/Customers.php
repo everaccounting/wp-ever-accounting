@@ -21,10 +21,9 @@ class Customers {
 		add_action( 'eac_sales_page_customers_loaded', array( __CLASS__, 'handle_actions' ) );
 		add_action( 'eac_sales_page_customers_loaded', array( __CLASS__, 'page_loaded' ) );
 		add_action( 'eac_sales_page_customers_content', array( __CLASS__, 'page_content' ) );
-		add_action( 'eac_customer_edit_core_meta_boxes', array( __CLASS__, 'customer_fields' ) );
-		add_action( 'eac_customer_edit_side_meta_boxes', array( __CLASS__, 'customer_actions' ) );
 		add_action( 'eac_customer_view_section_overview', array( __CLASS__, 'overview_section' ) );
 		add_action( 'eac_customer_view_section_payments', array( __CLASS__, 'payments_section' ) );
+		add_action( 'eac_customer_view_section_invoices', array( __CLASS__, 'invoices_section' ) );
 		add_action( 'eac_customer_view_section_notes', array( __CLASS__, 'notes_section' ) );
 	}
 
@@ -165,197 +164,6 @@ class Customers {
 	}
 
 	/**
-	 * Customer fields.
-	 *
-	 * @param Customer $customer Customer object.
-	 *
-	 * @since 2.0.0
-	 * @return void
-	 */
-	public static function customer_fields( $customer ) {
-		?>
-		<!--Customer basic details-->
-		<div class="eac-card">
-			<div class="eac-card__header">
-				<h2 class="eac-card__title"><?php esc_html_e( 'Basic Details', 'wp-ever-accounting' ); ?></h2>
-			</div>
-			<div class="eac-card__body grid--fields">
-				<?php
-				eac_form_field(
-					array(
-						'id'          => 'name',
-						'label'       => __( 'Name', 'wp-ever-accounting' ),
-						'placeholder' => __( 'John Doe', 'wp-ever-accounting' ),
-						'value'       => $customer->name,
-						'required'    => true,
-					)
-				);
-				eac_form_field(
-					array(
-						'id'           => 'currency',
-						'type'         => 'select',
-						'label'        => __( 'Currency Code', 'wp-ever-accounting' ),
-						'value'        => $customer->currency_code,
-						'default'      => eac_base_currency(),
-						'required'     => true,
-						'class'        => 'eac_select2',
-						'options'      => eac_get_currencies(),
-						'option_value' => 'code',
-						'option_label' => 'formatted_name',
-					)
-				);
-				eac_form_field(
-					array(
-						'id'          => 'email',
-						'label'       => __( 'Email', 'wp-ever-accounting' ),
-						'placeholder' => __( 'john@company.com', 'wp-ever-accounting' ),
-						'value'       => $customer->email,
-					)
-				);
-				eac_form_field(
-					array(
-						'id'          => 'phone',
-						'label'       => __( 'Phone', 'wp-ever-accounting' ),
-						'placeholder' => __( '+1 123 456 7890', 'wp-ever-accounting' ),
-						'value'       => $customer->phone,
-					)
-				);
-				?>
-			</div>
-		</div>
-
-		<!--Customer Business details-->
-		<div class="eac-card">
-			<div class="eac-card__header">
-				<h2 class="eac-card__title"><?php esc_html_e( 'Business Details', 'wp-ever-accounting' ); ?></h2>
-			</div>
-			<div class="eac-card__body grid--fields">
-				<?php
-				eac_form_field(
-					array(
-						'id'          => 'company',
-						'label'       => __( 'Company', 'wp-ever-accounting' ),
-						'placeholder' => __( 'XYZ Inc.', 'wp-ever-accounting' ),
-						'value'       => $customer->company,
-					)
-				);
-				eac_form_field(
-					array(
-						'id'          => 'website',
-						'label'       => __( 'Website', 'wp-ever-accounting' ),
-						'placeholder' => __( 'https://example.com', 'wp-ever-accounting' ),
-						'value'       => $customer->website,
-					)
-				);
-				eac_form_field(
-					array(
-						'id'          => 'tax_number',
-						'label'       => __( 'Tax Number', 'wp-ever-accounting' ),
-						'placeholder' => __( '123456789', 'wp-ever-accounting' ),
-						'value'       => $customer->tax_number,
-					)
-				);
-				?>
-			</div>
-		</div>
-
-		<!--Customer Address details-->
-		<div class="eac-card">
-			<div class="eac-card__header">
-				<h2 class="eac-card__title"><?php esc_html_e( 'Address Details', 'wp-ever-accounting' ); ?></h2>
-			</div>
-			<div class="eac-card__body grid--fields">
-				<?php
-				eac_form_field(
-					array(
-						'id'          => 'address',
-						'label'       => __( 'Address', 'wp-ever-accounting' ),
-						'placeholder' => __( '123 Main St', 'wp-ever-accounting' ),
-						'value'       => $customer->address,
-					)
-				);
-				eac_form_field(
-					array(
-						'id'          => 'city',
-						'label'       => __( 'City', 'wp-ever-accounting' ),
-						'placeholder' => __( 'New York', 'wp-ever-accounting' ),
-						'value'       => $customer->city,
-					)
-				);
-				eac_form_field(
-					array(
-						'id'          => 'state',
-						'label'       => __( 'State', 'wp-ever-accounting' ),
-						'placeholder' => __( 'NY', 'wp-ever-accounting' ),
-						'value'       => $customer->state,
-					)
-				);
-				eac_form_field(
-					array(
-						'id'          => 'zip',
-						'label'       => __( 'Zip Code', 'wp-ever-accounting' ),
-						'placeholder' => __( '10001', 'wp-ever-accounting' ),
-						'value'       => $customer->zip,
-					)
-				);
-				eac_form_field(
-					array(
-						'type'        => 'select',
-						'id'          => 'country',
-						'label'       => __( 'Country', 'wp-ever-accounting' ),
-						'options'     => \EverAccounting\Utilities\I18n::get_countries(),
-						'value'       => $customer->country,
-						'class'       => 'eac-select2',
-						'placeholder' => __( 'Select Country', 'wp-ever-accounting' ),
-					)
-				);
-				?>
-			</div>
-		</div>
-		<?php
-	}
-
-	/**
-	 * Customer actions.
-	 *
-	 * @param Customer $customer Customer object.
-	 *
-	 * @since 2.0.0
-	 * @return void
-	 */
-	public static function customer_actions( $customer ) {
-		?>
-		<div class="eac-card">
-			<div class="eac-card__header">
-				<h2 class="eac-card__title"><?php esc_html_e( 'Actions', 'wp-ever-accounting' ); ?></h2>
-			</div>
-			<?php if ( has_action( 'eac_customer_misc_actions' ) ) : ?>
-				<div class="eac-card__body">
-					<?php
-					/**
-					 * Fires to add custom actions.
-					 *
-					 * @param Customer $customer Customer object.
-					 *
-					 * @since 2.0.0
-					 */
-					do_action( 'eac_customer_misc_actions', $customer );
-					?>
-				</div>
-			<?php endif; ?>
-			<div class="eac-card__footer">
-				<?php if ( $customer->exists() ) : ?>
-					<a class="eac_confirm_delete del" href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'action', 'delete', admin_url( 'admin.php?page=eac-sales&tab=customers&id=' . $customer->id ) ), 'bulk-customers' ) ); ?>"><?php esc_html_e( 'Delete', 'wp-ever-accounting' ); ?></a>
-					<button class="button button-primary"><?php esc_html_e( 'Update Customer', 'wp-ever-accounting' ); ?></button>
-				<?php else : ?>
-					<button class="button button-primary tw-w-[100%]"><?php esc_html_e( 'Add Customer', 'wp-ever-accounting' ); ?></button>
-				<?php endif; ?>
-			</div>
-		</div>
-		<?php
-	}
-
-	/**
 	 * Customer overview.
 	 *
 	 * @param Customer $customer Customer object.
@@ -429,6 +237,57 @@ class Customers {
 			<?php else : ?>
 				<tr>
 					<td colspan="4"><?php esc_html_e( 'No payments found.', 'wp-ever-accounting' ); ?></td>
+				</tr>
+			<?php endif; ?>
+			</tbody>
+		</table>
+		<?php
+	}
+
+	/**
+	 * Customer invoices.
+	 *
+	 * @param Customer $customer Customer object.
+	 *
+	 * @since 2.0.0
+	 * @return void
+	 */
+	public static function invoices_section( $customer ) {
+		$invoices = EAC()->invoices->query(
+			array(
+				'customer_id' => $customer->id,
+				'limit'       => 10,
+				'orderby'     => 'date',
+				'order'       => 'DESC',
+			)
+		);
+		?>
+		<h3><?php esc_html_e( 'Recent Invoices', 'wp-ever-accounting' ); ?></h3>
+		<table class="widefat fixed striped">
+			<thead>
+			<tr>
+				<th><?php esc_html_e( 'Number', 'wp-ever-accounting' ); ?></th>
+				<th><?php esc_html_e( 'Date', 'wp-ever-accounting' ); ?></th>
+				<th><?php esc_html_e( 'Amount', 'wp-ever-accounting' ); ?></th>
+				<th><?php esc_html_e( 'Status', 'wp-ever-accounting' ); ?></th>
+			</tr>
+			</thead>
+			<tbody>
+			<?php if ( $invoices ) : ?>
+				<?php foreach ( $invoices as $invoice ) : ?>
+					<tr>
+						<td>
+							<a href="<?php echo esc_url( $invoice->get_view_url() ); ?>">
+								<?php echo esc_html( $invoice->number ); ?>
+							</a>
+						<td><?php echo esc_html( $invoice->date ); ?></td>
+						<td><?php echo esc_html( $invoice->formatted_amount ); ?></td>
+						<td><?php echo esc_html( $invoice->formatted_status ); ?></td>
+					</tr>
+				<?php endforeach; ?>
+			<?php else : ?>
+				<tr>
+					<td colspan="4"><?php esc_html_e( 'No invoices found.', 'wp-ever-accounting' ); ?></td>
 				</tr>
 			<?php endif; ?>
 			</tbody>

@@ -43,9 +43,9 @@ $email = get_option( 'eac_business_email' );
 				<table border="0" cellspacing="0" cellpadding="0" width="100%">
 					<tr>
 						<td align="left" valign="top">
-							<?php if ( $logo ) : ?>
+							<?php if ( $logo && filter_var( $logo, FILTER_VALIDATE_URL ) ) : ?>
 								<p style="margin: 0; height: 100px;">
-									<img src="<?php echo esc_url( $logo ); ?>" alt="<?php esc_attr_e( 'Business Logo', 'wp-ever-accounting' ); ?>" style="max-height: 100px; max-width: 100%;" />
+									<img src="<?php echo esc_url( $logo ); ?>" alt="<?php esc_attr_e( 'Business Logo', 'wp-ever-accounting' ); ?>" style="max-height: 100px; max-width: 100%;"/>
 								</p>
 							<?php endif; ?>
 							<?php if ( $phone ) : ?>
@@ -66,7 +66,11 @@ $email = get_option( 'eac_business_email' );
 		</tr>
 		<!-- End Header -->
 
-		<tr><td><hr style="border-top: 1px solid #e5e7eb; margin: 30px 0;"></td></tr>
+		<tr>
+			<td>
+				<hr style="border-top: 1px solid #e5e7eb; margin: 30px 0;">
+			</td>
+		</tr>
 
 		<!-- Payment Details Section -->
 		<tr>
@@ -122,7 +126,11 @@ $email = get_option( 'eac_business_email' );
 			</td>
 		</tr>
 
-		<tr><td><hr style="border-top: 1px solid #e5e7eb; margin: 20px 0;"></td></tr>
+		<tr>
+			<td>
+				<hr style="border-top: 1px solid #e5e7eb; margin: 20px 0;">
+			</td>
+		</tr>
 
 		<!-- Payment Summary -->
 		<tr>
@@ -152,7 +160,11 @@ $email = get_option( 'eac_business_email' );
 			</td>
 		</tr>
 
-		<tr><td><hr style="border-top: 1px solid #e5e7eb; margin: 30px 0;"></td></tr>
+		<tr>
+			<td>
+				<hr style="border-top: 1px solid #e5e7eb; margin: 30px 0;">
+			</td>
+		</tr>
 
 		<!-- Notes Section -->
 		<tr>

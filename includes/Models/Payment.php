@@ -161,7 +161,7 @@ class Payment extends Transaction {
 	 * @return string
 	 */
 	public function get_edit_url() {
-		return admin_url( 'admin.php?page=eac-sales&tab=payments&action=edit&payment_id=' . $this->id );
+		return admin_url( 'admin.php?page=eac-sales&tab=payments&action=edit&id=' . $this->id );
 	}
 
 	/**
@@ -171,7 +171,7 @@ class Payment extends Transaction {
 	 * @return string
 	 */
 	public function get_view_url() {
-		return admin_url( 'admin.php?page=eac-sales&tab=payments&action=view&payment_id=' . $this->id );
+		return admin_url( 'admin.php?page=eac-sales&tab=payments&action=view&id=' . $this->id );
 	}
 
 	/**
@@ -181,6 +181,6 @@ class Payment extends Transaction {
 	 * @return string
 	 */
 	public function get_public_url() {
-		//todo add public url
+		return add_query_arg( 'id', $this->id, admin_url( 'admin.php?page=eac-sales&tab=payments' ) );
 	}
 }

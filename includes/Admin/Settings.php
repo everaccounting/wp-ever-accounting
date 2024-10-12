@@ -24,7 +24,7 @@ class Settings {
 	 */
 	public function __construct() {
 		add_filter( 'eac_settings_page_tabs', array( __CLASS__, 'register_tabs' ), -1 );
-		add_action( 'load_eac_settings_page', array( __CLASS__, 'save_settings' ) );
+		add_action( 'eac_settings_page_loaded', array( __CLASS__, 'save_settings' ) );
 	}
 
 	/**

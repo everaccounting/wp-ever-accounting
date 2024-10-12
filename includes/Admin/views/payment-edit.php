@@ -8,10 +8,16 @@
  *
  * @subpackage EverAccounting/Admin/Views
  * @package EverAccounting
- * @var \EverAccounting\Models\Payment $payment Payment object.
+ * @var Payment $payment Payment object.
  */
 
+use EverAccounting\Models\Payment;
+
 defined( 'ABSPATH' ) || exit;
+
+$id       = filter_input( INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT );
+$payment  = Payment::make( $id );
+
 ?>
 <div class="eac-section-header">
 	<h1 class="wp-heading-inline">
@@ -32,7 +38,7 @@ defined( 'ABSPATH' ) || exit;
 	<?php endif; ?>
 </div>
 
-<form id="eac-payment-form" method="post" action="<?php echo esc_html( admin_url( 'admin-post.php' ) ); ?>">
+<form id="eac-payment-form" name="payment" method="post">
 	<div class="eac-poststuff">
 		<div class="column-1">
 			<div class="eac-card">
@@ -212,6 +218,17 @@ defined( 'ABSPATH' ) || exit;
 					?>
 				</div>
 			</div>
+
+			<?php
+			/**
+			 * Fires action to inject custom meta boxes in the main column.
+			 *
+			 * @param Payment $payment Payment object.
+			 *
+			 * @since 1.0.0
+			 */
+			do_action( 'eac_payment_edit_core_meta_boxes', $payment );
+			?>
 		</div>
 		<div class="column-2">
 
@@ -255,6 +272,17 @@ defined( 'ABSPATH' ) || exit;
 					<?php eac_file_uploader( array( 'value' => $payment->attachment_id ) ); ?>
 				</div>
 			</div>
+
+			<?php
+			/**
+			 * Fires action to inject custom meta boxes in the side column.
+			 *
+			 * @param Payment $payment Payment object.
+			 *
+			 * @since 1.0.0
+			 */
+			do_action( 'eac_payment_edit_side_meta_boxes', $payment );
+			?>
 
 		</div><!-- .column-2 -->
 	</div><!-- .eac-poststuff -->
