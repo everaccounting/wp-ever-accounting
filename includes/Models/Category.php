@@ -223,4 +223,14 @@ class Category extends Model {
 	| object but can be used to support its functionality.
 	|--------------------------------------------------------------------------
 	*/
+
+	/**
+	 * Get edit URL.
+	 *
+	 * @since 1.0.0
+	 * @return string
+	 */
+	public function get_edit_url() {
+		return admin_url( 'admin.php?page=eac-settings&tab=categories&action=edit&id=' . $this->id );
+	}
 }

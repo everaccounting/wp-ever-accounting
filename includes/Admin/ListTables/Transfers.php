@@ -45,24 +45,18 @@ class Transfers extends ListTable {
 	 */
 	public function prepare_items() {
 		$this->process_actions();
-		$per_page    = $this->get_items_per_page( 'eac_transfers_per_page', 20 );
-		$paged       = $this->get_pagenum();
-		$search      = $this->get_request_search();
-		$order_by    = $this->get_request_orderby();
-		$order       = $this->get_request_order();
-		$account_id  = filter_input( INPUT_GET, 'account_id', FILTER_VALIDATE_INT );
-		$category_id = filter_input( INPUT_GET, 'category_id', FILTER_VALIDATE_INT );
-		$contact_id  = filter_input( INPUT_GET, 'customer_id', FILTER_VALIDATE_INT );
-		$args        = array(
-			'limit'       => $per_page,
-			'page'        => $paged,
-			'search'      => $search,
-			'orderby'     => $order_by,
-			'order'       => $order,
-			'status'      => $this->get_request_status(),
-			'account_id'  => $account_id,
-			'category_id' => $category_id,
-			'contact_id'  => $contact_id,
+		$this->_column_headers = array( $this->get_columns(), get_hidden_columns( $this->screen ), $this->get_sortable_columns() );
+		$per_page              = $this->get_items_per_page( 'eac_transfers_per_page', 20 );
+		$paged                 = $this->get_pagenum();
+		$search                = $this->get_request_search();
+		$order_by              = $this->get_request_orderby();
+		$order                 = $this->get_request_order();
+		$args                  = array(
+			'limit'   => $per_page,
+			'page'    => $paged,
+			'search'  => $search,
+			'orderby' => $order_by,
+			'order'   => $order,
 		);
 		/**
 		 * Filter the query arguments for the list table.
@@ -76,7 +70,9 @@ class Transfers extends ListTable {
 		$args['no_found_rows'] = false;
 		$this->items           = Transfer::results( $args );
 		$total                 = Transfer::count( $args );
-
+//		var_dump($this->items[0]->payment->account);
+//		var_dump($this->items[0]->expense->account);
+//		exit();
 		$this->set_pagination_args(
 			array(
 				'total_items' => $total,
@@ -182,5 +178,128 @@ class Transfers extends ListTable {
 	 */
 	public function column_cb( $item ) {
 		return sprintf( '<input type="checkbox" name="id[]" value="%d"/>', esc_attr( $item->id ) );
+	}
+
+	/**
+	 * Renders the date column.
+	 *
+	 * @param Transfer $item The current object.
+	 *
+	 * @since  1.0.0
+	 * @return string Displays the date.
+	 */
+	public function column_date( $item ) {
+		var_dump($item->from_account);
+		return sprintf(
+			'<a class="row-title" href="%s">%s</a>',
+			esc_url( $item->get_edit_url() ),
+			esc_html( $item->payment ? wp_date( 'Y-m-d', strtotime( $item->payment->date ) ) : '&mdash;' )
+		);
+	}
+
+	/**
+	 * Renders from account column.
+	 *
+	 * @param Transfer $item The current object.
+	 *
+	 * @since  1.0.0
+	 * @return string Displays from account.
+	 */
+	public function column_from_account_id( $item ) {
+		if ( $item->payment && $item->payment->account ) {
+			return sprintf(
+				'<a href="%s">%s</a>',
+				esc_url( $item->payment->account->get_edit_url() ),
+				esc_html( $item->payment->account->name )
+			);
+		}
+
+		return '&mdash;';
+	}
+
+	/**
+	 * Renders to account column.
+	 *
+	 * @param Transfer $item The current object.
+	 *
+	 * @since  1.0.0
+	 * @return string Displays to account.
+	 */
+	public function column_to_account_id( $item ) {
+		if ( $item->expense && $item->expense->account ) {
+			return sprintf(
+				'<a href="%s">%s</a>',
+				esc_url( $item->expense->account->get_edit_url() ),
+				esc_html( $item->expense->account->name )
+			);
+		}
+
+		return '&mdash;';
+	}
+
+	/**
+	 * Renders the reference column.
+	 *
+	 * @param Transfer $item The current object.
+	 *
+	 * @since  1.0.0
+	 * @return string Displays the reference.
+	 */
+	public function column_reference( $item ) {
+		return $item->reference ? esc_html( $item->reference ) : '&mdash;';
+	}
+
+	/**
+	 * Renders the amount column.
+	 *
+	 * @param Transfer $item The current object.
+	 *
+	 * @since  1.0.0
+	 * @return string Displays the amount.
+	 */
+	public function column_amount( $item ) {
+		return esc_html( $item->formatted_amount );
+	}
+
+	/**
+	 * Generates and displays row actions links.
+	 *
+	 * @param Transfer $item The comment object.
+	 * @param string   $column_name Current column name.
+	 * @param string   $primary Primary column name.
+	 *
+	 * @since 1.0.0
+	 * @return string Row actions output.
+	 */
+	protected function handle_row_actions( $item, $column_name, $primary ) {
+		if ( $primary !== $column_name ) {
+			return null;
+		}
+		$actions = array(
+			'id'     => sprintf( '#%d', esc_attr( $item->id ) ),
+			'edit'   => sprintf(
+				'<a href="%s">%s</a>',
+				esc_url( $item->get_edit_url() ),
+				__( 'Edit', 'wp-ever-accounting' )
+			),
+			'delete' => sprintf(
+				'<a href="%s" class="del del_confirm">%s</a>',
+				esc_url(
+					wp_nonce_url(
+						add_query_arg(
+							array(
+								'action' => 'delete',
+								'id'     => $item->id,
+							),
+							$this->base_url
+						),
+						'bulk-' . $this->_args['plural']
+					)
+				),
+				__( 'Delete', 'wp-ever-accounting' )
+			),
+		);
+
+		return $this->row_actions( $actions );
 	}
 }

@@ -14,7 +14,6 @@ defined( 'ABSPATH' ) || exit;
  * @property int    $parent_id Object ID of the object.
  * @property string $parent_type Object type of the object.
  * @property string $content Content of the note.
- * @property array  $note_metadata Metadata of the note.
  * @property int    $creator_id ID of the author.
  * @property string $created_at Date created of the note.
  * @property string $updated_at Date updated of the note.
@@ -39,18 +38,7 @@ class Note extends Model {
 		'parent_id',
 		'parent_type',
 		'content',
-		'note_metadata',
 		'creator_id',
-	);
-
-	/**
-	 * The model's attributes.
-	 *
-	 * @since 1.0.0
-	 * @var array
-	 */
-	protected $attributes = array(
-		'note_metadata' => array(),
 	);
 
 	/**
@@ -60,10 +48,9 @@ class Note extends Model {
 	 * @var array
 	 */
 	protected $casts = array(
-		'id'            => 'int',
-		'object_id'     => 'int',
-		'creator_id'    => 'int',
-		'note_metadata' => 'array',
+		'id'         => 'int',
+		'parent_id'  => 'int',
+		'creator_id' => 'int',
 	);
 
 	/**
@@ -74,7 +61,6 @@ class Note extends Model {
 	 */
 	protected $searchable = array(
 		'content',
-		'note_metadata',
 	);
 
 	/**

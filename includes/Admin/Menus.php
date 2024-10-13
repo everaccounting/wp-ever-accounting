@@ -91,6 +91,7 @@ class Menus {
 				'page_title' => __( 'Dashboard', 'wp-ever-accounting' ),
 				'capability' => 'manage_options',
 				'menu_slug'  => self::PARENT_SLUG,
+				'callback'   => array( Dashboard::class, 'render_page' ),
 			)
 		);
 
@@ -128,7 +129,7 @@ class Menus {
 				'page_title' => '',
 				'capability' => 'manage_options',
 				'menu_slug'  => '',
-				'callback'   => array( $this, 'output_content' ),
+				'callback'   => array( $this, 'render_page' ),
 			)
 		);
 
@@ -144,7 +145,7 @@ class Menus {
 		$this->tabs[ $menu_page ] = apply_filters( 'eac_' . $menu_page . '_page_tabs', array() );
 
 		// Bail if no tabs.
-		if ( empty( $this->tabs[ $menu_page ] ) && array( $this, 'output_content' ) === $menu['callback'] ) {
+		if ( empty( $this->tabs[ $menu_page ] ) && array( $this, 'render_page' ) === $menu['callback'] ) {
 			return;
 		}
 
@@ -230,11 +231,11 @@ class Menus {
 	}
 
 	/**
-	 * Output.
+	 * Render the page.
 	 *
 	 * @since 3.0.0
 	 */
-	public function output_content() {
+	public function render_page() {
 		global $plugin_page;
 		ob_start();
 		?>

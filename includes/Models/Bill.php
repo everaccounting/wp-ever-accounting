@@ -18,7 +18,6 @@ use ByteKit\Models\Relations\BelongsTo;
  * @property int $vendor_id Vendor ID.
  * @property string $order_number Order number.
  *
- *
  * @property Vendor $vendor Vendor relation.
  */
 class Bill extends Document {
@@ -159,5 +158,41 @@ class Bill extends Document {
 		}
 
 		return $round ? round( $total, 2 ) : $total;
+	}
+
+	/**
+	 * Get edit URL.
+	 *
+	 * @since 1.0.0
+	 * @return string
+	 */
+	public function get_edit_url() {
+		return admin_url( 'admin.php?page=eac-purchases&tab=bills&action=edit&id=' . $this->id );
+	}
+
+	/**
+	 * Get view URL.
+	 *
+	 * @since 1.0.0
+	 * @return string
+	 */
+	public function get_view_url() {
+		return admin_url( 'admin.php?page=eac-purchases&tab=bills&action=view&id=' . $this->id );
+	}
+
+	/**
+	 * Get the public URL.
+	 *
+	 * @since 1.0.0
+	 * @return string
+	 */
+	public function get_public_url() {
+		$page_id = get_option( 'eac_bill_page_id' );
+		if ( empty( $page_id ) ) {
+			return '';
+		}
+
+		$permalink = get_permalink( $page_id );
+		return add_query_arg( 'bill', $this->uuid, $permalink );
 	}
 }

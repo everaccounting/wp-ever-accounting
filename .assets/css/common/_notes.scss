@@ -22,60 +22,35 @@
 
 		&__header {
 			display: flex;
-			justify-content: space-between;
 			align-items: center;
 			margin-bottom: 10px;
-		}
 
-
-		&__author {
-			font-weight: normal;
-			font-size: 12px;
-			color: #999;
-			display: flex;
-			align-items: center;
-
-
-			img {
-				width: 20px;
-				height: 20px;
-				border-radius: 50%;
-				margin-right: 5px;
-			}
-
-			&-name {
-				display: inline-block;
-				margin-right: 5px;
-			}
-		}
-
-		&__date {
-			font-weight: normal;
-			font-size: 12px;
-			color: #999;
-		}
-
-		&__content {
-			font-size: 14px;
-			line-height: 1.4;
-		}
-
-		&__actions {
-			display: flex;
-			align-items: center;
-			justify-content: flex-end;
-			margin-top: 10px;
-
-			a {
-				margin-right: 5px;
+			strong {
 				font-size: 12px;
-				color: #999;
-				text-decoration: none;
-				transition: all 0.3s ease-in-out;
+				color: #333;
+				margin-right: 5px;
+			}
 
-				&:hover {
-					color: #333;
-				}
+			time {
+				font-size: 11px;
+				color: #aaa;
+			}
+		}
+
+
+		&__delete {
+			color: #777;
+			font-weight: 700;
+			text-decoration: none;
+			margin-left: auto;
+			opacity: .5;
+			transition: all 0.3s ease-in-out;
+		}
+
+		&:hover {
+			&__delete {
+				color: #333;
+				opacity: 1;
 			}
 		}
 	}
@@ -122,5 +97,11 @@
 				}
 			}
 		}
+	}
+
+
+	// if this appears after button.
+	button + & {
+		margin-top: 20px;
 	}
 }

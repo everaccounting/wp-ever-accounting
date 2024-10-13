@@ -2,13 +2,15 @@
 
 namespace EverAccounting;
 
-use EverAccounting\Controllers\Categories;
-use EverAccounting\Controllers\Customers;
-use EverAccounting\Controllers\Items;
-use EverAccounting\Controllers\Bills;
+use EverAccounting\Controllers\Transfers;
 use EverAccounting\Controllers\Accounts;
+use EverAccounting\Controllers\Bills;
+use EverAccounting\Controllers\Categories;
+use EverAccounting\Controllers\Currencies;
+use EverAccounting\Controllers\Customers;
 use EverAccounting\Controllers\Expenses;
 use EverAccounting\Controllers\Invoices;
+use EverAccounting\Controllers\Items;
 use EverAccounting\Controllers\Notes;
 use EverAccounting\Controllers\Payments;
 use EverAccounting\Controllers\Taxes;
@@ -20,17 +22,19 @@ use EverAccounting\Controllers\Vendors;
  * @since 1.2.1
  * @package EverAccounting
  *
- * @property Items      $items Items controller.
- * @property Payments   $payments Payments controller.
- * @property Invoices   $invoices Invoices controller.
+ * @property Accounts   $accounts Accounts controller.
+ * @property Bills      $bills Bills controller.
+ * @property Categories $categories Categories controller.
+ * @property Currencies $currencies Currencies controller.
  * @property Customers  $customers Customers controller.
  * @property Expenses   $expenses Expenses controller.
- * @property Bills      $bills Bills controller.
- * @property Vendors    $vendors Vendors controller.
- * @property Accounts   $accounts Accounts controller.
- * @property Categories $categories Categories controller.
+ * @property Invoices   $invoices Invoices controller.
+ * @property Items      $items Items controller.
+ * @property Notes      $notes Notes controller.
+ * @property Payments   $payments Payments controller.
  * @property Taxes      $taxes Taxes controller.
- * @property Notes    $notes Notes controller.
+ * @property Transfers  $transfers Transfers controller.
+ * @property Vendors    $vendors Vendors controller.
  */
 class Plugin extends \ByteKit\Plugin {
 	/**
@@ -104,64 +108,110 @@ class Plugin extends \ByteKit\Plugin {
 	public function on_init() {
 		$this->services->add( 'installer', new Installer() );
 
-		$this->services->add( 'items', new Controllers\Items() );
-		$this->services->add( 'accounts', new Controllers\Accounts() );
-		$this->services->add( 'items', new Controllers\Items() );
-		$this->services->add( 'invoices', new Controllers\Invoices() );
-		$this->services->add( 'payments', new Controllers\Payments() );
-		$this->services->add( 'expenses', new Controllers\Expenses() );
-		$this->services->add( 'bills', new Controllers\Bills() );
-		$this->services->add( 'vendors', new Controllers\Vendors() );
-		$this->services->add( 'customers', new Controllers\Customers() );
-		$this->services->add( 'categories', new Controllers\Categories() );
-		$this->services->add( 'taxes', new Controllers\Taxes() );
-		$this->services->add( 'notes', new Controllers\Notes() );
+		$controllers = array(
+			'EverAccounting\Controllers\Accounts',
+			'EverAccounting\Controllers\Bills',
+			'EverAccounting\Controllers\Categories',
+			'EverAccounting\Controllers\Currencies',
+			'EverAccounting\Controllers\Customers',
+			'EverAccounting\Controllers\Expenses',
+			'EverAccounting\Controllers\Invoices',
+			'EverAccounting\Controllers\Items',
+			'EverAccounting\Controllers\Notes',
+			'EverAccounting\Controllers\Payments',
+			'EverAccounting\Controllers\Taxes',
+			'EverAccounting\Controllers\Transfers',
+			'EverAccounting\Controllers\Vendors',
+		);
 
-		$this->services->add( new Handlers\Rewrites() );
-		$this->services->add( new Handlers\Currencies() );
-		$this->services->add( new Handlers\Transactions() );
-		$this->services->add( new Handlers\Documents() );
-		$this->services->add( new Handlers\Shortcodes() );
-		$this->services->add( new Frontend() );
+		foreach ( $controllers as $controller ) {
+			$controller_name = substr( $controller, strrpos( $controller, '\\' ) + 1 );
+			$this->services->add( strtolower( $controller_name ), $controller );
+		}
+
+		$handlers = array(
+			'EverAccounting\Currencies',
+			'EverAccounting\Documents',
+			'EverAccounting\Shortcodes',
+			'EverAccounting\Transactions',
+			'EverAccounting\Transfers',
+		);
+		foreach ( $handlers as $handler ) {
+			$this->services->add( $handler );
+		}
+
+		// $this->services->add( new Currencies() );
+		// $this->services->add( new Documents() );
+		// $this->services->add( new Shortcodes() );
+		// $this->services->add( new Transactions() );
+		// $this->services->add( new Transfers() );
 
 		if ( is_admin() ) {
-			$this->services->add( Admin\Admin::class );
-			$this->services->add( Admin\Menus::class );
-			$this->services->add( Admin\Scripts::class );
-			$this->services->add( Admin\Ajax::class );
 
+			$handles = array(
+				'EverAccounting\Admin\Admin',
+				'EverAccounting\Admin\Menus',
+				'EverAccounting\Admin\Scripts',
+				'EverAccounting\Admin\Ajax',
+				'EverAccounting\Admin\Dashboard',
+				'EverAccounting\Admin\Items',
+				'EverAccounting\Admin\Payments',
+				'EverAccounting\Admin\Invoices',
+				'EverAccounting\Admin\Customers',
+				'EverAccounting\Admin\Expenses',
+				'EverAccounting\Admin\Bills',
+				'EverAccounting\Admin\Vendors',
+				'EverAccounting\Admin\Accounts',
+				'EverAccounting\Admin\Transactions',
+				'EverAccounting\Admin\Transfers',
+				'EverAccounting\Admin\Tools',
+				'EverAccounting\Admin\Reports',
+				'EverAccounting\Admin\Settings',
+				'EverAccounting\Admin\Currencies',
+				'EverAccounting\Admin\Taxes',
+				'EverAccounting\Admin\Categories',
+			);
+			foreach ( $handles as $handle ) {
+				$this->services->add( $handle );
+			}
+			//
+			// $this->services->add( Admin\Admin::class );
+			// $this->services->add( Admin\Menus::class );
+			// $this->services->add( Admin\Scripts::class );
+			// $this->services->add( Admin\Ajax::class );
+			//
 			// Dashboard.
-			$this->services->add( Admin\Dashboard::class );
-
+			// $this->services->add( Admin\Dashboard::class );
+			//
 			// Items.
-			$this->services->add( Admin\Items::class );
-
+			// $this->services->add( Admin\Items::class );
+			//
 			// Sales.
-			$this->services->add( Admin\Payments::class );
-			$this->services->add( Admin\Invoices::class );
-			$this->services->add( Admin\Customers::class );
-
+			// $this->services->add( Admin\Payments::class );
+			// $this->services->add( Admin\Invoices::class );
+			// $this->services->add( Admin\Customers::class );
+			//
 			// Purchases.
-			$this->services->add( Admin\Expenses::class );
-			$this->services->add( Admin\Bills::class );
-			$this->services->add( Admin\Vendors::class );
-
+			// $this->services->add( Admin\Expenses::class );
+			// $this->services->add( Admin\Bills::class );
+			// $this->services->add( Admin\Vendors::class );
+			//
 			// Banking.
-			$this->services->add( Admin\Accounts::class );
-			$this->services->add( Admin\Transactions::class );
-			$this->services->add( Admin\Transfers::class );
-
+			// $this->services->add( Admin\Accounts::class );
+			// $this->services->add( Admin\Transactions::class );
+			// $this->services->add( Admin\Transfers::class );
+			//
 			// Tools.
-			$this->services->add( Admin\Tools::class );
-
+			// $this->services->add( Admin\Tools::class );
+			//
 			// Reports.
-			$this->services->add( Admin\Reports::class );
-
+			// $this->services->add( Admin\Reports::class );
+			//
 			// Settings.
-			$this->services->add( Admin\Settings::class );
-			$this->services->add( Admin\Currencies::class );
-			$this->services->add( Admin\Taxes::class );
-			$this->services->add( Admin\Categories::class );
+			// $this->services->add( Admin\Settings::class );
+			// $this->services->add( Admin\Currencies::class );
+			// $this->services->add( Admin\Taxes::class );
+			// $this->services->add( Admin\Categories::class );
 		}
 
 		/**
@@ -178,7 +228,7 @@ class Plugin extends \ByteKit\Plugin {
 	 * @since 1.6.1
 	 */
 	public function register_routes() {
-		$rest_handlers = apply_filters(
+		$handlers = apply_filters(
 			'eac_rest_handlers',
 			array(
 				'EverAccounting\API\Items',
@@ -195,7 +245,7 @@ class Plugin extends \ByteKit\Plugin {
 				'EverAccounting\API\Utilities',
 			)
 		);
-		foreach ( $rest_handlers as $controller ) {
+		foreach ( $handlers as $controller ) {
 			if ( class_exists( $controller ) ) {
 				$this->$controller = new $controller();
 				$this->$controller->register_routes();

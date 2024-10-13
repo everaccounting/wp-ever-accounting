@@ -153,12 +153,13 @@ class Customers extends ListTable {
 	 */
 	public function get_columns() {
 		return array(
-			'cb'      => '<input type="checkbox" />',
-			'name'    => __( 'Name', 'wp-ever-accounting' ),
-			'email'   => __( 'Email', 'wp-ever-accounting' ),
-			'phone'   => __( 'Phone', 'wp-ever-accounting' ),
-			'country' => __( 'Country', 'wp-ever-accounting' ),
-			'due'     => __( 'Due', 'wp-ever-accounting' ),
+			'cb'                         => '<input type="checkbox" />',
+			'name'                       => __( 'Name', 'wp-ever-accounting' ),
+			'email'                      => __( 'Email', 'wp-ever-accounting' ),
+			'phone'                      => __( 'Phone', 'wp-ever-accounting' ),
+			'country'                    => __( 'Country', 'wp-ever-accounting' ),
+			// 'due'        => __( 'Due', 'wp-ever-accounting' ),
+							'created_at' => __( 'Date', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -170,11 +171,12 @@ class Customers extends ListTable {
 	 */
 	protected function get_sortable_columns() {
 		return array(
-			'name'    => array( 'name', false ),
-			'email'   => array( 'email', false ),
-			'phone'   => array( 'phone', false ),
-			'country' => array( 'country', false ),
-			'due'     => array( 'due', false ),
+			'name'       => array( 'name', false ),
+			'email'      => array( 'email', false ),
+			'phone'      => array( 'phone', false ),
+			'country'    => array( 'country', false ),
+			'due'        => array( 'due', false ),
+			'created_at' => array( 'created_at', false ),
 		);
 	}
 
@@ -226,6 +228,18 @@ class Customers extends ListTable {
 	 */
 	public function column_country( $item ) {
 		return $item->formatted_country;
+	}
+
+	/**
+	 * Renders the date column.
+	 *
+	 * @param Customer $item The current object.
+	 *
+	 * @since  1.0.0
+	 * @return string Displays the date.
+	 */
+	public function column_created_at( $item ) {
+		return esc_html( wp_date( 'Y-m-d', strtotime( $item->created_at ) ) );
 	}
 
 	/**

@@ -15,8 +15,8 @@ use EverAccounting\Models\Payment;
 
 defined( 'ABSPATH' ) || exit;
 
-$id       = filter_input( INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT );
-$payment  = Payment::make( $id );
+$id      = filter_input( INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT );
+$payment = Payment::make( $id );
 
 ?>
 <div class="eac-section-header">
@@ -38,7 +38,8 @@ $payment  = Payment::make( $id );
 	<?php endif; ?>
 </div>
 
-<form id="eac-payment-form" name="payment" method="post">
+<form id="eac-edit-payment" name="payment" method="post">
+
 	<div class="eac-poststuff">
 		<div class="column-1">
 			<div class="eac-card">
@@ -172,9 +173,9 @@ $payment  = Payment::make( $id );
 						array(
 							'label'       => __( 'Payment Method', 'wp-ever-accounting' ),
 							'type'        => 'select',
-							'name'        => 'mode',
-							'value'       => $payment->mode,
-							'options'     => eac_get_payment_methods(),
+							'name'        => 'payment_mode',
+							'value'       => $payment->payment_mode,
+							'options'     => eac_get_payment_modes(),
 							'placeholder' => __( 'Select &hellip;', 'wp-ever-accounting' ),
 						)
 					);
@@ -234,7 +235,7 @@ $payment  = Payment::make( $id );
 
 			<div class="eac-card">
 				<div class="eac-card__header">
-					<h3 class="eac-card__title"><?php esc_html_e( 'Actions', 'wp-ever-accounting' ); ?></h3>
+					<h3 class="eac-card__title"><?php esc_html_e( 'Save', 'wp-ever-accounting' ); ?></h3>
 				</div>
 				<div class="eac-card__body">
 					<?php
@@ -249,12 +250,21 @@ $payment  = Payment::make( $id );
 							'required'    => true,
 						)
 					);
+
+					/**
+					 * Fires to add custom actions.
+					 *
+					 * @param Payment $payment Payment object.
+					 *
+					 * @since 2.0.0
+					 */
+					do_action( 'eac_payment_edit_misc_actions', $payment );
 					?>
 				</div>
 
 				<div class="eac-card__footer">
 					<?php if ( $payment->exists() ) : ?>
-						<a class="eac_confirm_delete del" href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'action', 'delete', admin_url( 'admin.php?page=eac-sales&tab=payments&id=' . $payment->id ) ), 'bulk-payments' ) ); ?>">
+						<a class="del del_confirm" href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'action', 'delete', $payment->get_edit_url() ), 'bulk-payments' ) ); ?>">
 							<?php esc_html_e( 'Delete', 'wp-ever-accounting' ); ?>
 						</a>
 						<button class="button button-primary"><?php esc_html_e( 'Update Payment', 'wp-ever-accounting' ); ?></button>
@@ -263,15 +273,6 @@ $payment  = Payment::make( $id );
 					<?php endif; ?>
 				</div>
 			</div><!-- .eac-card -->
-
-			<div class="eac-card">
-				<div class="eac-card__header">
-					<h3 class="eac-card__title"><?php esc_html_e( 'Attachment', 'wp-ever-accounting' ); ?></h3>
-				</div>
-				<div class="eac-card__body">
-					<?php eac_file_uploader( array( 'value' => $payment->attachment_id ) ); ?>
-				</div>
-			</div>
 
 			<?php
 			/**

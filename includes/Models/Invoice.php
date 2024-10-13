@@ -15,8 +15,10 @@ use ByteKit\Models\Relations\BelongsToMany;
  *
  * @author  Sultan Nasir Uddin <manikdrmc@gmail.com>
  *
- * @property int $id Invoice ID.
- * @property int $customer_id Customer ID.
+ * @property-read  int      $id Invoice ID.
+ * @property-read  int      $customer_id Customer ID.
+ * @property-read  Customer $customer Customer relation.
+ * @property-read Payment[] $payments Invoice payments.
  */
 class Invoice extends Document {
 	/**
@@ -166,5 +168,125 @@ class Invoice extends Document {
 		}
 
 		return $round ? round( $total, 2 ) : $total;
+	}
+
+	/**
+	 * Get amount paid.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @return float|int|string
+	 */
+	public function get_amount_paid() {
+		$total_paid = 0;
+		foreach ( $this->payments as $payment ) {
+			$total_paid += (float) eac_convert_currency( $payment->amount, $payment->currency, $this->currency, $payment->exchange_rate, $this->exchange_rate );
+		}
+
+		return $total_paid;
+	}
+
+	/**
+	 * Get amount due.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @return float|int
+	 */
+	public function get_amount_due() {
+		$due = $this->total - $this->get_amount_paid();
+		if ( eac_convert_currency( $due, $this->currency, $this->exchange_rate ) <= 0 ) {
+			$due = 0;
+		}
+
+		return $due;
+	}
+
+	/**
+	 * Checks if the invoice has a given status.
+	 *
+	 * @param string $status Status to check.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @return bool
+	 */
+	public function is_status( $status ) {
+		return $this->status === $status;
+	}
+
+	/**
+	 * Checks if an order can be edited, specifically for use on the Edit Order screen.
+	 *
+	 * @return bool
+	 */
+	public function is_editable() {
+		return ! in_array( $this->status, array( 'partial', 'paid' ), true );
+	}
+
+	/**
+	 * Returns if an order has been paid for based on the order status.
+	 *
+	 * @since 1.10
+	 * @return bool
+	 */
+	public function is_paid() {
+		return $this->is_status( 'paid' );
+	}
+
+	/**
+	 * Checks if the invoice is due.
+	 *
+	 * @since 1.1.0
+	 * @return bool
+	 */
+	public function is_due() {
+		return ! ( empty( $this->due_date ) || $this->is_paid() ) && strtotime( wp_date( 'Y-m-d 23:59:00' ) ) > strtotime( wp_date( 'Y-m-d 23:59:00', strtotime( $this->due_date ) ) );
+	}
+
+	/**
+	 * Checks if an order needs payment, based on status and order total.
+	 *
+	 * @return bool
+	 */
+	public function needs_payment() {
+		return ! $this->is_status( 'paid' ) && $this->total > 0;
+	}
+
+	/**
+	 * Get edit URL.
+	 *
+	 * @since 1.0.0
+	 * @return string
+	 */
+	public function get_edit_url() {
+		return admin_url( 'admin.php?page=eac-sales&tab=invoices&action=edit&id=' . $this->id );
+	}
+
+	/**
+	 * Get view URL.
+	 *
+	 * @since 1.0.0
+	 * @return string
+	 */
+	public function get_view_url() {
+		return admin_url( 'admin.php?page=eac-sales&tab=invoices&action=view&id=' . $this->id );
+	}
+
+	/**
+	 * Get the public URL.
+	 *
+	 * @since 1.0.0
+	 * @return string
+	 */
+	public function get_public_url() {
+		$page_id = get_option( 'eac_invoice_page_id' );
+		if ( empty( $page_id ) ) {
+			return '';
+		}
+
+		$permalink = get_permalink( $page_id );
+
+		return add_query_arg( 'bill', $this->uuid, $permalink );
 	}
 }

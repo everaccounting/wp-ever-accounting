@@ -137,24 +137,24 @@ $email = get_option( 'eac_business_email' );
 			<td>
 				<table border="0" cellspacing="0" cellpadding="0" width="100%">
 					<tr>
-						<td style="width: 30%; padding: 10px 0;"><strong><?php esc_attr_e( 'Amount:', 'wp-ever-accounting' ); ?></strong></td>
-						<td style="width: 70%; padding: 10px 0; border-bottom: 1px dashed #e5e7eb;"><?php echo esc_html( $payment->formatted_amount ); ?></td>
+						<td style="width:20%; padding: 10px 0;"><strong><?php esc_attr_e( 'Amount:', 'wp-ever-accounting' ); ?></strong></td>
+						<td style="width: 80%; padding: 10px 0; border-bottom: 1px dashed #e5e7eb;"><?php echo esc_html( $payment->formatted_amount ); ?></td>
 					</tr>
 					<tr>
-						<td style="padding: 10px 0;"><strong><?php esc_attr_e( 'Date:', 'wp-ever-accounting' ); ?></strong></td>
-						<td style="padding: 10px 0; border-bottom: 1px dashed #e5e7eb;"><?php echo esc_html( wp_date( get_option( 'date_format' ), strtotime( $payment->date ) ) ); ?></td>
+						<td style="width:20%; padding: 10px 0;"><strong><?php esc_attr_e( 'Date:', 'wp-ever-accounting' ); ?></strong></td>
+						<td style="width: 80%;padding: 10px 0; border-bottom: 1px dashed #e5e7eb;"><?php echo esc_html( $payment->date ? wp_date( get_option( 'date_format' ), strtotime( $payment->date ) ) : 'N/A' ); ?></td>
 					</tr>
 					<tr>
-						<td style="padding: 10px 0;"><strong><?php esc_attr_e( 'Method:', 'wp-ever-accounting' ); ?></strong></td>
-						<td style="padding: 10px 0; border-bottom: 1px dashed #e5e7eb;"><?php echo esc_html( $payment->mode ); ?></td>
+						<td style="width:20%; padding: 10px 0;"><strong><?php esc_attr_e( 'Method:', 'wp-ever-accounting' ); ?></strong></td>
+						<td style="width: 80%;padding: 10px 0; border-bottom: 1px dashed #e5e7eb;"><?php echo esc_html( $payment->payment_mode_name ? $payment->payment_mode_name : 'N/A' ); ?></td>
 					</tr>
 					<tr>
-						<td style="padding: 10px 0;"><strong><?php esc_attr_e( 'Status:', 'wp-ever-accounting' ); ?></strong></td>
-						<td style="padding: 10px 0; border-bottom: 1px dashed #e5e7eb;"><?php echo esc_html( $payment->status ); ?></td>
+						<td style="width:20%; padding: 10px 0;"><strong><?php esc_attr_e( 'Status:', 'wp-ever-accounting' ); ?></strong></td>
+						<td style="width: 80%;padding: 10px 0; border-bottom: 1px dashed #e5e7eb;"><?php echo esc_html( $payment->status_name ? $payment->status_name : 'N/A' ); ?></td>
 					</tr>
 					<tr>
-						<td style="padding: 10px 0;"><strong><?php esc_attr_e( 'Reference:', 'wp-ever-accounting' ); ?></strong></td>
-						<td style="padding: 10px 0; border-bottom: 1px dashed #e5e7eb;"><?php echo esc_html( $payment->reference ? $payment->reference : 'N/A' ); ?></td>
+						<td style="width:20%; padding: 10px 0;"><strong><?php esc_attr_e( 'Reference:', 'wp-ever-accounting' ); ?></strong></td>
+						<td style="width: 80%;padding: 10px 0; border-bottom: 1px dashed #e5e7eb;"><?php echo esc_html( $payment->reference ? $payment->reference : 'N/A' ); ?></td>
 					</tr>
 				</table>
 			</td>

@@ -17,6 +17,6 @@ abstract class Model extends \ByteKit\Models\Model {
 	 * @return string
 	 */
 	public function get_hook_prefix() {
-		return 'ever_accounting_' . $this->get_object_type();
+		return 'eac_' . $this->get_object_type();
 	}
 }

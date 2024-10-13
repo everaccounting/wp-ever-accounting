@@ -20,6 +20,9 @@ class Payments {
 		add_action( 'eac_sales_page_payments_loaded', array( __CLASS__, 'handle_actions' ) );
 		add_action( 'eac_sales_page_payments_loaded', array( __CLASS__, 'page_loaded' ) );
 		add_action( 'eac_sales_page_payments_content', array( __CLASS__, 'page_content' ) );
+		add_action( 'eac_payment_edit_side_meta_boxes', array( __CLASS__, 'payment_attachment' ) );
+		add_action( 'eac_payment_view_side_meta_boxes', array( __CLASS__, 'payment_attachment' ) );
+		add_action( 'eac_payment_view_side_meta_boxes', array( __CLASS__, 'payment_notes' ) );
 	}
 
 	/**
@@ -31,7 +34,7 @@ class Payments {
 	 * @return array
 	 */
 	public static function register_tabs( $tabs ) {
-		if ( current_user_can( 'eac_manage_payment' ) ) {
+		if ( current_user_can( 'eac_manage_payment' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability.
 			$tabs['payments'] = __( 'Payments', 'wp-ever-accounting' );
 		}
 
@@ -45,6 +48,81 @@ class Payments {
 	 * @return void
 	 */
 	public static function handle_actions() {
+		if ( isset( $_POST['action'] ) && 'eac_edit_payment' === $_POST['action'] && check_admin_referer( 'eac_edit_payment' ) && current_user_can( 'eac_manage_payment' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability.
+			$data = array(
+				'id'            => isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0,
+				'date'          => isset( $_POST['date'] ) ? sanitize_text_field( wp_unslash( $_POST['date'] ) ) : '',
+				'account_id'    => isset( $_POST['account_id'] ) ? absint( wp_unslash( $_POST['account_id'] ) ) : 0,
+				'amount'        => isset( $_POST['amount'] ) ? floatval( wp_unslash( $_POST['amount'] ) ) : 0,
+				'exchange_rate' => isset( $_POST['exchange_rate'] ) ? floatval( wp_unslash( $_POST['exchange_rate'] ) ) : 1,
+				'category_id'   => isset( $_POST['category_id'] ) ? absint( wp_unslash( $_POST['category_id'] ) ) : 0,
+				'contact_id'    => isset( $_POST['contact_id'] ) ? absint( wp_unslash( $_POST['contact_id'] ) ) : 0,
+				'attachment_id' => isset( $_POST['attachment_id'] ) ? absint( wp_unslash( $_POST['attachment_id'] ) ) : 0,
+				'payment_mode'  => isset( $_POST['payment_mode'] ) ? sanitize_text_field( wp_unslash( $_POST['payment_mode'] ) ) : '',
+				'invoice_id'    => isset( $_POST['invoice_id'] ) ? absint( wp_unslash( $_POST['invoice_id'] ) ) : 0,
+				'reference'     => isset( $_POST['reference'] ) ? sanitize_text_field( wp_unslash( $_POST['reference'] ) ) : '',
+				'note'          => isset( $_POST['note'] ) ? sanitize_textarea_field( wp_unslash( $_POST['note'] ) ) : '',
+				'status'        => isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : 'active',
+			);
+
+			$payment = EAC()->payments->insert( $data );
+			if ( is_wp_error( $payment ) ) {
+				EAC()->flash->error( $payment->get_error_message() );
+			} else {
+				EAC()->flash->success( __( 'Payment saved successfully.', 'wp-ever-accounting' ) );
+			}
+		} elseif ( isset( $_POST['action'] ) && 'eac_update_payment' === $_POST['action'] && check_admin_referer( 'eac_update_payment' ) && current_user_can( 'eac_manage_payment' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability.}
+			$id             = isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0;
+			$status         = isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : '';
+			$attachment_id  = isset( $_POST['attachment_id'] ) ? absint( wp_unslash( $_POST['attachment_id'] ) ) : 0;
+			$payment_action = isset( $_POST['payment_action'] ) ? sanitize_text_field( wp_unslash( $_POST['payment_action'] ) ) : '';
+			$payment        = EAC()->payments->get( $id );
+
+			// bail if payment is not found.
+			if ( ! $payment ) {
+				EAC()->flash->error( __( 'Payment not found.', 'wp-ever-accounting' ) );
+
+				return;
+			}
+
+			// Update payment status.
+			if ( ! empty( $status ) && $status !== $payment->status ) {
+				$payment->status = $status;
+			}
+
+			// Update payment attachment.
+			if ( $attachment_id !== $payment->attachment_id ) {
+				$payment->attachment_id = $attachment_id;
+			}
+
+			if ( $payment->is_dirty() && $payment->save() ) {
+				$ret = $payment->save();
+				if ( is_wp_error( $ret ) ) {
+					EAC()->flash->error( $ret->get_error_message() );
+				} else {
+					EAC()->flash->success( __( 'Payment updated successfully.', 'wp-ever-accounting' ) );
+				}
+			}
+
+			// todo handle payment action.
+			if ( ! empty( $payment_action ) ) {
+				switch ( $payment_action ) {
+					case 'send_receipt':
+						// Send payment.
+						break;
+					default:
+						/**
+						 * Fires action to handle custom payment actions.
+						 *
+						 * @param Payment $payment Payment object.
+						 *
+						 * @since 1.0.0
+						 */
+						do_action( 'eac_payment_action_' . $payment_action, $payment );
+						break;
+				}
+			}
+		}
 	}
 
 	/**
@@ -107,5 +185,65 @@ class Payments {
 				include __DIR__ . '/views/payment-list.php';
 				break;
 		}
+	}
+
+	/**
+	 * Payment attachment.
+	 *
+	 * @param Payment $payment Payment object.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public static function payment_attachment( $payment ) {
+		?>
+
+		<div class="eac-card">
+			<div class="eac-card__header">
+				<h3 class="eac-card__title"><?php esc_html_e( 'Attachment', 'wp-ever-accounting' ); ?></h3>
+			</div>
+			<div class="eac-card__body">
+				<?php eac_file_uploader( array( 'value' => $payment->attachment_id ) ); ?>
+			</div>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Payment notes.
+	 *
+	 * @param Payment $payment Payment object.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public static function payment_notes( $payment ) {
+		$notes = EAC()->notes->query(
+			array(
+				'parent_id'   => $payment->id,
+				'parent_type' => 'payment',
+				'orderby'     => 'created_at',
+				'order'       => 'DESC',
+				'limit'       => 20,
+			)
+		);
+		?>
+		<div class="eac-card">
+			<div class="eac-card__header">
+				<h3 class="eac-card__title"><?php esc_html_e( 'Notes', 'wp-ever-accounting' ); ?></h3>
+			</div>
+			<div class="eac-card__body">
+				<div class="eac-form-field">
+					<label for="eac-note"><?php esc_html_e( 'Add Note', 'wp-ever-accounting' ); ?></label>
+					<textarea id="eac-note" cols="30" rows="2" placeholder="<?php esc_attr_e( 'Enter Note', 'wp-ever-accounting' ); ?>"></textarea>
+				</div>
+				<button id="eac-add-note" type="button" class="button tw-mb-[20px]" data-parent_id="<?php echo esc_attr( $payment->id ); ?>" data-parent_type="payment" data-nonce="<?php echo esc_attr( wp_create_nonce( 'eac_add_note' ) ); ?>">
+					<?php esc_html_e( 'Add Note', 'wp-ever-accounting' ); ?>
+				</button>
+
+				<?php include __DIR__ . '/views/note-list.php'; ?>
+			</div>
+		</div>
+		<?php
 	}
 }

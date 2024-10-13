@@ -1,6 +1,6 @@
 <?php
 
-namespace EverAccounting\Handlers;
+namespace EverAccounting;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -32,15 +32,15 @@ class Documents {
 	 * @since 1.0.0
 	 */
 	public function recalculate_invoice( $transaction ) {
-		if ( empty( $transaction->document_id ) ) {
-			return;
-		}
-		$invoice = eac_get_invoice( $transaction->document_id );
-		if ( ! $invoice ) {
-			return;
-		}
-
-		$invoice->calculate_totals();
-		$invoice->save();
+//		if ( empty( $transaction->document_id ) ) {
+//			return;
+//		}
+//		$invoice = eac_get_invoice( $transaction->document_id );
+//		if ( ! $invoice ) {
+//			return;
+//		}
+//
+//		$invoice->calculate_totals();
+//		$invoice->save();
 	}
 }

@@ -141,9 +141,9 @@ defined( 'ABSPATH' ) || exit;
 						array(
 							'label'       => __( 'Payment Method', 'wp-ever-accounting' ),
 							'type'        => 'select',
-							'name'        => 'mode',
-							'value'       => $expense->mode,
-							'options'     => eac_get_payment_methods(),
+							'name'        => 'payment_mode',
+							'value'       => $expense->payment_mode,
+							'options'     => eac_get_payment_modes(),
 							'placeholder' => __( 'Select &hellip;', 'wp-ever-accounting' ),
 						)
 					);

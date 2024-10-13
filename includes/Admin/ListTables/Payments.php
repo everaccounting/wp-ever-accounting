@@ -268,6 +268,22 @@ class Payments extends ListTable {
 	}
 
 	/**
+	 * Renders the number column.
+	 *
+	 * @param Payment $item The current object.
+	 *
+	 * @since  1.0.0
+	 * @return string Displays the number.
+	 */
+	public function column_number( $item ) {
+		return sprintf(
+			'<a class="row-title" href="%s">%s</a>',
+			esc_url( $item->get_view_url() ),
+			wp_kses_post( $item->number )
+		);
+	}
+
+	/**
 	 * Renders the name column.
 	 *
 	 * @param Payment $item The current object.
@@ -290,42 +306,6 @@ class Payments extends ListTable {
 	}
 
 	/**
-	 * Renders the number column.
-	 *
-	 * @param Payment $item The current object.
-	 *
-	 * @since  1.0.0
-	 * @return string Displays the number.
-	 */
-	public function column_number( $item ) {
-		return sprintf(
-			'<a class="row-title" href="%s">%s</a>',
-			esc_url(
-				add_query_arg(
-					array(
-						'action' => 'view',
-						'id'     => $item->id,
-					),
-					$this->base_url
-				)
-			),
-			wp_kses_post( $item->number )
-		);
-	}
-
-	/**
-	 * Renders the amount column.
-	 *
-	 * @param Payment $item The current object.
-	 *
-	 * @since  1.0.0
-	 * @return string Displays the amount.
-	 */
-	public function column_amount( $item ) {
-		return esc_html( $item->formatted_amount );
-	}
-
-	/**
 	 * Renders the account column.
 	 *
 	 * @param Payment $item The current object.
@@ -335,7 +315,7 @@ class Payments extends ListTable {
 	 */
 	public function column_account( $item ) {
 		$account  = $item->account ? sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( 'account_id', $item->account->id, $this->base_url ) ), wp_kses_post( $item->account->name ) ) : '&mdash;';
-		$metadata = $item->account && $item->account->type ? ucfirst( $item->account->type ) : '';
+		$metadata = $item->account && $item->account->number ? ucfirst( $item->account->number ) : '';
 
 		return sprintf( '%s%s', $account, $this->column_metadata( $metadata ) );
 	}
@@ -387,6 +367,18 @@ class Payments extends ListTable {
 	}
 
 	/**
+	 * Renders the amount column.
+	 *
+	 * @param Payment $item The current object.
+	 *
+	 * @since  1.0.0
+	 * @return string Displays the amount.
+	 */
+	public function column_amount( $item ) {
+		return esc_html( $item->formatted_amount );
+	}
+
+	/**
 	 * Generates and displays row actions links.
 	 *
 	 * @param Payment $item The comment object.
@@ -403,19 +395,11 @@ class Payments extends ListTable {
 		$actions = array(
 			'edit'   => sprintf(
 				'<a href="%s">%s</a>',
-				esc_url(
-					add_query_arg(
-						array(
-							'action' => 'edit',
-							'id'     => $item->id,
-						),
-						$this->base_url
-					)
-				),
+				esc_url( $item->get_edit_url() ),
 				__( 'Edit', 'wp-ever-accounting' )
 			),
 			'delete' => sprintf(
-				'<a href="%s" class="del">%s</a>',
+				'<a href="%s" class="del del_confirm">%s</a>',
 				esc_url(
 					wp_nonce_url(
 						add_query_arg(

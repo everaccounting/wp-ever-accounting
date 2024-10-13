@@ -129,7 +129,7 @@ class Accounts extends ListTable {
 			$count = Account::count( $args );
 			$label = sprintf( '%s <span class="count">(%s)</span>', esc_html( $label ), number_format_i18n( $count ) );
 
-			$types_links[ $type ] = array(
+			$types_links[ 'bank-' . $type ] = array(
 				'url'     => $link,
 				'label'   => $label,
 				'current' => $current === $type,
@@ -163,11 +163,12 @@ class Accounts extends ListTable {
 	 */
 	public function get_columns() {
 		return array(
-			'cb'        => '<input type="checkbox" />',
-			'name'      => __( 'Name', 'wp-ever-accounting' ),
-			'number'    => __( 'Number', 'wp-ever-accounting' ),
-			'bank_name' => __( 'Bank Name', 'wp-ever-accounting' ),
-			'balance'   => __( 'Balance', 'wp-ever-accounting' ),
+			'cb'         => '<input type="checkbox" />',
+			'name'       => __( 'Name', 'wp-ever-accounting' ),
+			'number'     => __( 'Number', 'wp-ever-accounting' ),
+			'bank_name'  => __( 'Bank Name', 'wp-ever-accounting' ),
+			'created_at' => __( 'Date', 'wp-ever-accounting' ),
+			'balance'    => __( 'Balance', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -180,10 +181,11 @@ class Accounts extends ListTable {
 	 */
 	protected function get_sortable_columns() {
 		return array(
-			'name'      => array( 'name', false ),
-			'number'    => array( 'number', false ),
-			'bank_name' => array( 'bank_name', false ),
-			'balance'   => array( 'balance', false ),
+			'name'       => array( 'name', false ),
+			'number'     => array( 'number', false ),
+			'bank_name'  => array( 'bank_name', false ),
+			'balance'    => array( 'balance', false ),
+			'created_at' => array( 'created_at', false ),
 		);
 	}
 
@@ -219,18 +221,22 @@ class Accounts extends ListTable {
 	 */
 	public function column_name( $item ) {
 		return sprintf(
-			'<a href="%s">%s</a>',
-			esc_url(
-				add_query_arg(
-					array(
-						'action' => 'view',
-						'id'     => $item->id,
-					),
-					$this->base_url
-				)
-			),
+			'<a class="row-title" href="%s">%s</a>',
+			esc_url( $item->get_edit_url() ),
 			wp_kses_post( $item->name )
 		);
+	}
+
+	/**
+	 * Renders the date column.
+	 *
+	 * @param Account $item The current object.
+	 *
+	 * @since  1.0.0
+	 * @return string Displays the date.
+	 */
+	public function column_created_at( $item ) {
+		return esc_html( wp_date( 'Y-m-d', strtotime( $item->created_at ) ) );
 	}
 
 	/**
@@ -262,19 +268,11 @@ class Accounts extends ListTable {
 		$actions = array(
 			'edit'   => sprintf(
 				'<a href="%s">%s</a>',
-				esc_url(
-					add_query_arg(
-						array(
-							'action' => 'edit',
-							'id'     => $item->id,
-						),
-						$this->base_url
-					)
-				),
+				esc_url( $item->get_edit_url() ),
 				__( 'Edit', 'wp-ever-accounting' )
 			),
 			'delete' => sprintf(
-				'<a href="%s" class="del">%s</a>',
+				'<a href="%s" class="del del_confirm">%s</a>',
 				esc_url(
 					wp_nonce_url(
 						add_query_arg(

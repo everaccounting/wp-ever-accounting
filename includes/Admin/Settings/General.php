@@ -31,8 +31,9 @@ class General extends Page {
 	 */
 	public function get_sections() {
 		return array(
-			''         => __( 'General', 'wp-ever-accounting' ),
-			'currency' => __( 'Currency', 'wp-ever-accounting' ),
+			''           => __( 'General', 'wp-ever-accounting' ),
+			'currency'   => __( 'Currency', 'wp-ever-accounting' ),
+			'page_setup' => __( 'Page Setup', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -244,6 +245,39 @@ class General extends Page {
 			array(
 				'type' => 'sectionend',
 				'id'   => 'currency_options',
+			),
+		);
+	}
+
+	/**
+	 * Get page setup section settings.
+	 *
+	 * @since 1.0.0
+	 * @return array
+	 */
+	public function get_page_setup_section_settings() {
+		return array(
+			array(
+				'title' => __( 'Page Setup', 'wp-ever-accounting' ),
+				'type'  => 'title',
+				'id'    => 'page_setup_options',
+			),
+
+			// invoice page.
+			array(
+				'title'    => __( 'Invoice Page', 'wp-ever-accounting' ),
+				'desc'     => __( 'The page where the invoices are displayed.', 'wp-ever-accounting' ),
+				'id'       => 'eac_invoice_page',
+				'type'     => 'single_select_page_with_search',
+				'default'  => '',
+				'class'    => 'eac_select2',
+				'desc_tip' => true,
+			),
+
+			// end.
+			array(
+				'type' => 'sectionend',
+				'id'   => 'page_setup_options',
 			),
 		);
 	}

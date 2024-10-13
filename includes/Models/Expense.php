@@ -13,7 +13,10 @@ defined( 'ABSPATH' ) || exit;
  * @subpackage Models
  *
  * @property int    $vendor_id ID of the vendor.
- * @property Bill $bill Related Bill.
+ *
+ * @property-read string $formatted_status Formatted status.
+ * @property-read string $payment_mode_name Formatted mode.
+ * @property-read Bill $bill Related Bill.
  */
 class Expense extends Transaction {
 	/**
@@ -77,6 +80,30 @@ class Expense extends Transaction {
 	|--------------------------------------------------------------------------
 	*/
 
+	/**
+	 * Get formatted status.
+	 *
+	 * @since 1.0.0
+	 * @return string
+	 */
+	public function get_formatted_status() {
+		$statuses = EAC()->payments->get_statuses();
+
+		return array_key_exists( $this->status, $statuses ) ? $statuses[ $this->status ] : $this->status;
+	}
+
+	/**
+	 * Get formatted mode.
+	 *
+	 * @since 1.0.0
+	 * @return string
+	 */
+	public function get_payment_mode_name() {
+		$modes = eac_get_payment_modes();
+
+		return array_key_exists( $this->mode, $modes ) ? $modes[ $this->mode ] : $this->mode;
+	}
+
 	/*
 	|--------------------------------------------------------------------------
 	| CRUD Methods
@@ -137,5 +164,41 @@ class Expense extends Transaction {
 		$number = str_pad( $max + 1, get_option( 'eac_expense_digits', 4 ), '0', STR_PAD_LEFT );
 
 		return $prefix . $number;
+	}
+
+	/**
+	 * Get edit URL.
+	 *
+	 * @since 1.0.0
+	 * @return string
+	 */
+	public function get_edit_url() {
+		return admin_url( 'admin.php?page=eac-purchases&tab=expenses&action=edit&id=' . $this->id );
+	}
+
+	/**
+	 * Get view URL.
+	 *
+	 * @since 1.0.0
+	 * @return string
+	 */
+	public function get_view_url() {
+		return admin_url( 'admin.php?page=eac-purchases&tab=expenses&action=view&id=' . $this->id );
+	}
+
+	/**
+	 * Get the public URL.
+	 *
+	 * @since 1.0.0
+	 * @return string
+	 */
+	public function get_public_url() {
+		$page_id = get_option( 'eac_expense_page_id' );
+		if ( empty( $page_id ) ) {
+			return '';
+		}
+
+		$permalink = get_permalink( $page_id );
+		return add_query_arg( 'bill', $this->uuid, $permalink );
 	}
 }

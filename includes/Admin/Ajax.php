@@ -16,6 +16,8 @@ class Ajax {
 	 */
 	public function __construct() {
 		add_action( 'wp_ajax_eac_json_search', array( $this, 'handle_json_search' ) );
+		add_action( 'wp_ajax_eac_add_note', array( $this, 'handle_add_note' ) );
+		add_action( 'wp_ajax_eac_delete_note', array( $this, 'handle_delete_note' ) );
 	}
 
 	/**
@@ -81,7 +83,7 @@ class Ajax {
 			case 'payment':
 				$payments = EAC()->payments->query( $args );
 				$total    = EAC()->payments->query( $args, true );
-				$results      = array_map(
+				$results  = array_map(
 					function ( $item ) {
 						$item->text = $item->amount;
 
@@ -162,6 +164,19 @@ class Ajax {
 				);
 				break;
 
+			case 'page':
+				$pages   = EAC()->pages->query( $args );
+				$total   = EAC()->pages->query( $args, true );
+				$results = array_map(
+					function ( $item ) {
+						$item->text = $item->formatted_name;
+
+						return $item->to_array();
+					},
+					$pages
+				);
+				break;
+
 			default:
 				$filtered = apply_filters(
 					'ever_accounting_json_search',
@@ -190,5 +205,82 @@ class Ajax {
 				),
 			)
 		);
+	}
+
+	/**
+	 * Add note.
+	 *
+	 * @since 1.2.0
+	 * @return void
+	 */
+	public function handle_add_note() {
+		check_ajax_referer( 'eac_add_note', 'nonce' );
+
+		if ( ! current_user_can( 'manage_accounting' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability.
+			wp_die( - 1 );
+		}
+
+		$parent_id   = isset( $_POST['parent_id'] ) ? absint( wp_unslash( $_POST['parent_id'] ) ) : 0;
+		$parent_type = isset( $_POST['parent_type'] ) ? sanitize_key( wp_unslash( $_POST['parent_type'] ) ) : '';
+		$content     = isset( $_POST['content'] ) ? sanitize_textarea_field( wp_unslash( $_POST['content'] ) ) : '';
+
+		// If any of the required fields are empty, return an error.
+		if ( empty( $parent_id ) || empty( $parent_type ) || empty( $content ) ) {
+			wp_die( - 1 );
+		}
+
+		$note = EAC()->notes->insert(
+			array(
+				'parent_id'   => $parent_id,
+				'parent_type' => $parent_type,
+				'content'     => $content,
+				'creator_id'  => get_current_user_id(),
+			)
+		);
+
+		// If error, return error.
+		if ( is_wp_error( $note ) ) {
+			error_log( $note->get_error_message() );
+			wp_die( - 1 );
+		}
+
+		ob_start();
+		include __DIR__ . '/views/note-item.php';
+		$note_html = ob_get_clean();
+
+		$x = new \WP_Ajax_Response();
+		$x->add(
+			array(
+				'what' => 'note_html',
+				'data' => $note_html,
+			)
+		);
+
+		$x->send();
+	}
+
+	/**
+	 * Delete note.
+	 *
+	 * @since 1.2.0
+	 * @return void
+	 */
+	public function handle_delete_note() {
+		check_ajax_referer( 'eac_delete_note', 'nonce' );
+
+		if ( ! current_user_can( 'manage_accounting' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability.
+			wp_die( - 1 );
+		}
+
+		$note_id = isset( $_POST['note_id'] ) ? absint( wp_unslash( $_POST['note_id'] ) ) : 0;
+		$note    = EAC()->notes->get( $note_id );
+
+		if ( ! $note ) {
+			wp_die( - 1 );
+		}
+
+		$note->delete();
+
+		wp_die( 1 );
 	}
 }

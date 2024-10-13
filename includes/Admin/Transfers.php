@@ -2,7 +2,6 @@
 
 namespace EverAccounting\Admin;
 
-use EverAccounting\Admin\Banking\Tables;
 use EverAccounting\Models\Transfer;
 
 defined( 'ABSPATH' ) || exit;
@@ -10,21 +9,21 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Class Transfers
  *
- * @since 3.0.0
- * @package EverAccounting\Admin\Banking
+ * @since 2.0.0
+ * @package EverAccounting
  */
 class Transfers {
+
 	/**
 	 * Transfers constructor.
+	 *
+	 * @since 2.0.0
 	 */
 	public function __construct() {
 		add_filter( 'eac_banking_page_tabs', array( __CLASS__, 'register_tabs' ) );
-		add_filter( 'set-screen-option', array( __CLASS__, 'set_screen_option' ), 10, 3 );
-		add_action( 'load_eac_banking_page_transfers', array( __CLASS__, 'setup_table' ) );
-		add_action( 'eac_banking_page_transfers', array( __CLASS__, 'render_table' ) );
-		add_action( 'eac_banking_page_transfers_add', array( __CLASS__, 'render_add' ) );
-		add_action( 'eac_banking_page_transfers_edit', array( __CLASS__, 'render_edit' ) );
-		// add_action( 'admin_post_eac_edit_account', array( __CLASS__, 'handle_edit' ) );
+		add_action( 'eac_banking_page_transfers_loaded', array( __CLASS__, 'handle_actions' ) );
+		add_action( 'eac_banking_page_transfers_loaded', array( __CLASS__, 'page_loaded' ) );
+		add_action( 'eac_banking_page_transfers_content', array( __CLASS__, 'page_content' ) );
 	}
 
 	/**
@@ -32,105 +31,84 @@ class Transfers {
 	 *
 	 * @param array $tabs Tabs.
 	 *
-	 * @since 3.0.0
+	 * @since 1.0.0
 	 * @return array
 	 */
 	public static function register_tabs( $tabs ) {
-		$tabs['transfers'] = __( 'Transfers', 'wp-ever-accounting' );
+		if ( current_user_can( 'eac_manage_transfer' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability.
+			$tabs['transfers'] = __( 'Transfers', 'wp-ever-accounting' );
+		}
 
 		return $tabs;
 	}
 
 	/**
-	 * Set screen option.
+	 * Handle actions.
 	 *
-	 * @param mixed  $status Status.
-	 * @param string $option Option.
-	 * @param mixed  $value Value.
-	 *
-	 * @since 3.0.0
-	 * @return mixed
+	 * @since 1.0.0
+	 * @return void
 	 */
-	public static function set_screen_option( $status, $option, $value ) {
-		global $list_table;
-		if ( 'eac_transfers_per_page' === $option ) {
-			return $value;
+	public static function handle_actions() {
+		if ( isset( $_POST['action'] ) && 'eac_edit_transfer' === $_POST['action'] && check_admin_referer( 'eac_edit_transfer' ) && current_user_can( 'eac_manage_transfer' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability.
+
 		}
-
-		return $status;
 	}
 
 	/**
-	 * setup transfers list.
+	 * Handle page loaded.
 	 *
-	 * @since 3.0.0
+	 * @param string $action Current action.
+	 *
+	 * @since 2.0.0
 	 * @return void
 	 */
-	public static function setup_table() {
+	public static function page_loaded( $action ) {
 		global $list_table;
-		$screen     = get_current_screen();
-		$list_table = new ListTables\Transfers();
-		$list_table->prepare_items();
-		$screen->add_option(
-			'per_page',
-			array(
-				'label'   => __( 'Number of transfers per page:', 'wp-ever-accounting' ),
-				'default' => 20,
-				'option'  => 'eac_transfers_per_page',
-			)
-		);
-	}
+		switch ( $action ) {
+			case 'add':
+				// Nothing to do here.
+				break;
 
-	/**
-	 * Render table.
-	 *
-	 * @since 3.0.0
-	 * @return void
-	 */
-	public static function render_table() {
-		global $list_table;
-		include __DIR__ . '/views/transfer-list.php';
-	}
+			case 'edit':
+				$id = filter_input( INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT );
+				if ( ! EAC()->transfers->get( $id ) ) {
+					wp_die( esc_html__( 'You attempted to retrieve a transfer that does not exist. Perhaps it was deleted?', 'wp-ever-accounting' ) );
+				}
+				break;
 
-	/**
-	 * Render add form.
-	 *
-	 * @since 3.0.0
-	 * @return void
-	 */
-	public static function render_add() {
-		$transfer = new Transfer();
-		include __DIR__ . '/views/transfer-add.php';
-	}
-
-	/**
-	 * Render edit transfers form.
-	 *
-	 * @since 3.0.0
-	 * @return void
-	 */
-	public static function render_edit() {
-		$id       = filter_input( INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT );
-		$transfer = Transfer::find( $id );
-		if ( ! $transfer ) {
-			esc_html_e( 'The specified transfers does not exist.', 'wp-ever-accounting' );
-
-			return;
+			default:
+				$screen     = get_current_screen();
+				$list_table = new ListTables\Transfers();
+				$list_table->prepare_items();
+				$screen->add_option(
+					'per_page',
+					array(
+						'label'   => __( 'Number of items per page:', 'wp-ever-accounting' ),
+						'default' => 20,
+						'option'  => 'eac_transfers_per_page',
+					)
+				);
+				break;
 		}
-		include __DIR__ . '/views/transfer-edit.php';
 	}
 
 	/**
-	 * Handle edit.
+	 * Handle page content.
 	 *
-	 * @since 1.2.0
+	 * @param string $action Current action.
+	 *
+	 * @since 2.0.0
 	 * @return void
 	 */
-	public static function handle_edit() {
-		check_admin_referer( 'eac_edit_account' );
-		$referer = wp_get_referer();
-		// TODO: edit transfer will handle here.
-		wp_safe_redirect( $referer );
-		exit;
+	public static function page_content( $action ) {
+		switch ( $action ) {
+			case 'add':
+			case 'edit':
+				include __DIR__ . '/views/transfer-edit.php';
+				break;
+			default:
+				include __DIR__ . '/views/transfer-list.php';
+				break;
+		}
 	}
 }

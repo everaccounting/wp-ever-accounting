@@ -14,21 +14,22 @@ defined( 'ABSPATH' ) || exit;
  * @package EverAccounting
  * @subpackage Models
  *
- * @property int    $id ID of the item.
- * @property int    $payment_id Payment ID of the item.
- * @property int    $expense_id Expense ID of the transfer.
- * @property double $amount Amount of the transfer.
- * @property int    $creator_id Creator ID of the transfer.
- * @property string $created_at Date the transfer was created.
- * @property string $updated_at Date the transfer was last updated.
+ * @property int          $id ID of the item.
+ * @property int          $payment_id Payment ID of the item.
+ * @property int          $expense_id Expense ID of the transfer.
+ * @property int          $creator_id Creator ID of the transfer.
+ * @property string       $created_at Date the transfer was created.
+ * @property string       $updated_at Date the transfer was last updated.
  *
- * @property int    $from_account_id From account ID of the transfer.
- * @property int    $to_account_id To account ID of the transfer.
- * @property string $currency Currency code of the transfer.
- * @property float  $exchange_rate Exchange rate of the transfer.
- * @property string $date Date of the transfer.
- * @property string $mode Payment method of the transfer.
- * @property string $reference Reference of the transfer.
+ * @property-read  double $amount Amount of the transfer.
+ * @property-read  string $formatted_amount Formatted amount of the transfer.
+ * @property-read string  $date Date of the transfer.
+ * @property-read Payment $payment Payment object of the transfer.
+ * @property-read Expense $expense Expense object of the transfer.
+ * @property-read Account $from_account From account object of the transfer.
+ * @property-read Account $to_account To account object of the transfer.
+ * @property-read string  $payment_mode Payment method of the transfer.
+ * @property-read string  $reference Reference of the transfer.
  */
 class Transfer extends Model {
 	/**
@@ -48,14 +49,9 @@ class Transfer extends Model {
 	protected $columns = array(
 		'id',
 		'date',
-		'amount',
-		'currency',
-		'reference',
 		'payment_id',
 		'expense_id',
 		'creator_id',
-		'from_account_id',
-		'to_account_id',
 	);
 
 	/**
@@ -65,14 +61,10 @@ class Transfer extends Model {
 	 * @var array
 	 */
 	protected $casts = array(
-		'date'            => 'date',
-		'amount'          => 'double',
-		'exchange_rate'   => 'double',
-		'reference'       => 'string',
-		'expense_id'      => 'int',
-		'revenue_id'      => 'int',
-		'from_account_id' => 'int',
-		'to_account_id'   => 'int',
+		'date'       => 'date',
+		'payment_id' => 'int',
+		'expense_id' => 'int',
+		'creator_id' => 'int',
 	);
 
 	/**
@@ -138,23 +130,76 @@ class Transfer extends Model {
 	}
 
 	/**
-	 * From account relationship.
+	 * Date attribute.
 	 *
 	 * @since 1.0.0
-	 * @return BelongsTo
+	 * @return string
 	 */
-	public function from_account() {
-		return $this->belongs_to( Account::class, 'from_account_id' );
+	public function get_date() {
+		return $this->payment ? $this->payment->date : $this->expense->date;
 	}
 
 	/**
-	 * To account relationship.
+	 * From account.
 	 *
 	 * @since 1.0.0
-	 * @return BelongsTo
+	 * @return Account|null Account object or null.
+	 */
+	public function from_account() {
+		if ( $this->payment && $this->payment->account ) {
+			return $this->payment->account;
+		}
+		return null;
+	}
+
+	/**
+	 * To account.
+	 *
+	 * @since 1.0.0
+	 * @return Account|null Account object or null.
 	 */
 	public function to_account() {
-		return $this->belongs_to( Account::class, 'to_account_id' );
+		return $this->expense && $this->expense->account ? $this->expense->account : null;
+	}
+
+	/**
+	 * Payment mode attribute.
+	 *
+	 * @since 1.0.0
+	 * @return string
+	 */
+	public function get_payment_mode() {
+		return $this->payment ? $this->payment->payment_mode : '';
+	}
+
+	/**
+	 * Reference attribute.
+	 *
+	 * @since 1.0.0
+	 * @return string
+	 */
+	public function get_reference() {
+		return $this->payment ? $this->payment->reference : '';
+	}
+
+	/**
+	 * Amount attribute.
+	 *
+	 * @since 1.0.0
+	 * @return double
+	 */
+	public function get_amount() {
+		return $this->payment ? $this->payment->amount : $this->expense->amount;
+	}
+
+	/**
+	 * Formatted amount attribute.
+	 *
+	 * @since 1.0.0
+	 * @return string
+	 */
+	public function get_formatted_amount() {
+		return $this->payment ? $this->payment->formatted_amount : 0;
 	}
 
 	/*
@@ -166,105 +211,6 @@ class Transfer extends Model {
 	|--------------------------------------------------------------------------
 	*/
 
-	/**
-	 * Save the object to the database.
-	 *
-	 * @since 1.0.0
-	 * @return \WP_Error|static WP_Error on failure, or the object on success.
-	 *
-	 * @throws \Exception If there is an error saving the transfer.
-	 */
-	public function save() {
-
-		if ( empty( $this->from_account_id ) ) {
-			return new \WP_Error( 'missing_required', __( 'From account is required.', 'wp-ever-accounting' ) );
-		}
-		if ( empty( $this->to_account_id ) ) {
-			return new \WP_Error( 'missing_required', __( 'To account is required.', 'wp-ever-accounting' ) );
-		}
-		if ( empty( $this->amount ) ) {
-			return new \WP_Error( 'missing_required', __( 'Transfer amount is required.', 'wp-ever-accounting' ) );
-		}
-		if ( empty( $this->date ) ) {
-			return new \WP_Error( 'missing_required', __( 'Transfer date is required.', 'wp-ever-accounting' ) );
-		}
-		if ( empty( $this->method ) ) {
-			return new \WP_Error( 'missing_required', __( 'Payment method is required.', 'wp-ever-accounting' ) );
-		}
-		// Check if from account and to account is same.
-		if ( $this->from_account_id === $this->to_account_id ) {
-			return new \WP_Error( 'invalid_data', __( 'From and to account cannot be the same.', 'wp-ever-accounting' ) );
-		}
-
-		$from_account = Account::find( $this->from_account_id );
-		$to_account   = Account::find( $this->to_account_id );
-
-		if ( ! $from_account ) {
-			return new \WP_Error( 'invalid_data', __( 'Transfer from account does not exists.', 'wp-ever-accounting' ) );
-		}
-
-		if ( ! $to_account ) {
-			return new \WP_Error( 'invalid_data', __( 'Transfer to account does not exists.', 'wp-ever-accounting' ) );
-		}
-
-		try {
-			$this->get_db()->query( 'START TRANSACTION' );
-
-			// Create a payment and expense for the transfer.
-			$payment = $this->payment()->insert(
-				array(
-					'account_id' => $this->to_account_id,
-					'date'       => $this->date,
-					'amount'     => $this->amount,
-					'currency'   => $to_account->currency,
-					'mode'       => $this->method,
-					'reference'  => $this->reference,
-				)
-			);
-
-			if ( is_wp_error( $payment ) ) {
-				throw new \Exception( $payment->get_error_message() );
-			}
-
-			$amount = $this->amount;
-			// If from and to account currency is different, then we have to convert the amount.
-			if ( $from_account->currency !== $to_account->currency ) {
-				$amount = eac_convert_currency( $this->amount, $this->currency, $to_account->currency );
-			}
-
-			$expense = $this->expense()->insert(
-				array(
-					'account_id' => $this->from_account_id,
-					'date'       => $this->date,
-					'amount'     => $amount,
-					'currency'   => $this->currency,
-					'mode'       => $this->method,
-					'reference'  => $this->reference,
-				)
-			);
-
-			if ( is_wp_error( $expense ) ) {
-				throw new \Exception( $expense->get_error_message() );
-			}
-
-			$this->get_db()->query( 'COMMIT' );
-
-			$this->set( 'payment_id', $payment->id );
-			$this->set( 'expense_id', $expense->id );
-			$this->set( 'currency', $to_account->currency );
-			$this->set( 'from_account_id', $from_account->id );
-			$this->set( 'to_account_id', $to_account->id );
-			$this->set( 'reference', $this->reference );
-			$this->set( 'creator_id', get_current_user_id() );
-
-			return parent::save();
-
-		} catch ( \Exception $e ) {
-			$this->get_db()->query( 'ROLLBACK' );
-
-			return new \WP_Error( 'db_error', $e->getMessage() );
-		}
-	}
 
 	/*
 	|--------------------------------------------------------------------------
@@ -274,4 +220,24 @@ class Transfer extends Model {
 	| object but can be used to support its functionality.
 	|--------------------------------------------------------------------------
 	*/
+
+	/**
+	 * Get edit URL.
+	 *
+	 * @since 1.0.0
+	 * @return string
+	 */
+	public function get_edit_url() {
+		return admin_url( 'admin.php?page=eac-banking&tab=transfers&action=edit&id=' . $this->id );
+	}
+
+	/**
+	 * Get view URL.
+	 *
+	 * @since 1.0.0
+	 * @return string
+	 */
+	public function get_view_url() {
+		return admin_url( 'admin.php?page=eac-banking&tab=transfers&action=view&id=' . $this->id );
+	}
 }

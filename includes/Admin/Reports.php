@@ -16,45 +16,39 @@ class Reports {
 	 * Reports constructor.
 	 */
 	public function __construct() {
-		add_action( 'eac_reports_page_sales', array( __CLASS__, 'render_sales' ) );
-		add_action( 'eac_reports_page_expenses', array( __CLASS__, 'render_expenses' ) );
-		add_action( 'eac_reports_page_profits', array( __CLASS__, 'render_profits' ) );
-		add_action( 'eac_reports_page_taxes', array( __CLASS__, 'render_taxes' ) );
+		add_filter( 'eac_reports_page_tabs', array( __CLASS__, 'register_tabs' ) );
+		add_action( 'eac_reports_page_sales_content', array( __CLASS__, 'sales_report' ) );
+		// add_action( 'eac_reports_page_expenses_content', array( Reports\Expenses::class, 'output' ) );
+		// add_action( 'eac_reports_page_profits_content', array( Reports\Profits::class, 'output' ) );
+		// add_action( 'eac_reports_page_taxes_content', array( Reports\Taxes::class, 'output' ) );
 	}
 
 	/**
-	 * Render sales.
+	 * Register tab.
+	 *
+	 * @param array $tabs Tabs.
 	 *
 	 * @since 1.0.0
+	 * @return array
 	 */
-	public static function render_sales() {
-		include __DIR__ . '/views/report-payments.php';
+	public static function register_tabs( $tabs ) {
+		if ( current_user_can( 'eac_manage_report' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability.
+			$tabs['sales']    = __( 'Sales', 'wp-ever-accounting' );
+			$tabs['expenses'] = __( 'Expenses', 'wp-ever-accounting' );
+			$tabs['profits']  = __( 'Profits', 'wp-ever-accounting' );
+			$tabs['taxes']    = __( 'Taxes', 'wp-ever-accounting' );
+		}
+
+		return $tabs;
 	}
 
 	/**
-	 * Render expenses.
+	 * Render the sales report.
 	 *
 	 * @since 1.0.0
+	 * @return void
 	 */
-	public static function render_expenses() {
-		include __DIR__ . '/views/report-expenses.php';
-	}
-
-	/**
-	 * Render profits.
-	 *
-	 * @since 1.0.0
-	 */
-	public static function render_profits() {
-		include __DIR__ . '/views/report-profits.php';
-	}
-
-	/**
-	 * Render taxes.
-	 *
-	 * @since 1.0.0
-	 */
-	public static function render_taxes() {
-		include __DIR__ . '/views/report-taxes.php';
+	public static function sales_report() {
+		Reports\Sales::render();
 	}
 }

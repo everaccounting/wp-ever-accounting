@@ -2,6 +2,8 @@
 
 namespace EverAccounting\Models;
 
+use ByteKit\Models\Relations\BelongsToMany;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -14,7 +16,8 @@ defined( 'ABSPATH' ) || exit;
  *
  * @property int          $customer_id ID of the customer.
  *
- * @property-read string  $formatted_status Formatted status.
+ * @property-read string  $status_label Formatted status.
+ * @property-read string  $payment_mode_name Formatted mode.
  * @property-read Invoice $invoice Related invoice.
  */
 class Payment extends Transaction {
@@ -87,10 +90,32 @@ class Payment extends Transaction {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	public function get_formatted_status() {
+	public function get_status_label() {
 		$statuses = EAC()->payments->get_statuses();
 
 		return array_key_exists( $this->status, $statuses ) ? $statuses[ $this->status ] : $this->status;
+	}
+
+	/**
+	 * Get formatted mode.
+	 *
+	 * @since 1.0.0
+	 * @return string
+	 */
+	public function get_payment_mode_name() {
+		$modes = eac_get_payment_modes();
+
+		return array_key_exists( $this->mode, $modes ) ? $modes[ $this->mode ] : $this->mode;
+	}
+
+	/**
+	 * Notes relationship.
+	 *
+	 * @since 1.0.0
+	 * @return BelongsToMany
+	 */
+	public function notes() {
+		return $this->belongs_to_many( Note::class, 'parent_id' )->set( 'parent_type', 'payment' );
 	}
 
 	/*
@@ -129,7 +154,6 @@ class Payment extends Transaction {
 
 		return parent::save();
 	}
-
 
 	/*
 	|--------------------------------------------------------------------------
@@ -181,6 +205,13 @@ class Payment extends Transaction {
 	 * @return string
 	 */
 	public function get_public_url() {
-		return add_query_arg( 'id', $this->id, admin_url( 'admin.php?page=eac-sales&tab=payments' ) );
+		$page_id = get_option( 'eac_payment_page_id' );
+		if ( empty( $page_id ) ) {
+			return '';
+		}
+
+		$permalink = get_permalink( $page_id );
+
+		return add_query_arg( 'payment', $this->uuid, $permalink );
 	}
 }

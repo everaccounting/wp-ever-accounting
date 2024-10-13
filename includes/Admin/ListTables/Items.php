@@ -187,12 +187,13 @@ class Items extends ListTable {
 	 */
 	public function get_columns() {
 		return array(
-			'cb'       => '<input type="checkbox" />',
-			'name'     => __( 'Name', 'wp-ever-accounting' ),
-			'type'     => __( 'Type', 'wp-ever-accounting' ),
-			'category' => __( 'Category', 'wp-ever-accounting' ),
-			'cost'     => __( 'Cost', 'wp-ever-accounting' ),
-			'price'    => __( 'Price', 'wp-ever-accounting' ),
+			'cb'         => '<input type="checkbox" />',
+			'name'       => __( 'Name', 'wp-ever-accounting' ),
+			'type'       => __( 'Type', 'wp-ever-accounting' ),
+			'category'   => __( 'Category', 'wp-ever-accounting' ),
+			'cost'       => __( 'Cost', 'wp-ever-accounting' ),
+			'price'      => __( 'Price', 'wp-ever-accounting' ),
+			'created_at' => __( 'Date', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -205,11 +206,12 @@ class Items extends ListTable {
 	 */
 	protected function get_sortable_columns() {
 		return array(
-			'name'     => array( 'name', false ),
-			'type'     => array( 'type', false ),
-			'category' => array( 'category_id', false ),
-			'cost'     => array( 'cost', false ),
-			'price'    => array( 'price', false ),
+			'name'       => array( 'name', false ),
+			'type'       => array( 'type', false ),
+			'category'   => array( 'category_id', false ),
+			'cost'       => array( 'cost', false ),
+			'price'      => array( 'price', false ),
+			'created_at' => array( 'created_at', false ),
 		);
 	}
 
@@ -245,42 +247,10 @@ class Items extends ListTable {
 	 */
 	public function column_name( $item ) {
 		return sprintf(
-			'<a href="%s">%s</a>',
-			esc_url(
-				add_query_arg(
-					array(
-						'action' => 'edit',
-						'id'     => $item->id,
-					),
-					$this->base_url
-				)
-			),
+			'<a class="row-title" href="%s">%s</a>',
+			esc_url( $item->get_edit_url() ),
 			wp_kses_post( $item->name )
 		);
-	}
-
-	/**
-	 * Renders the price column.
-	 *
-	 * @param Item $item The current object.
-	 *
-	 * @since  1.0.0
-	 * @return string Displays the price.
-	 */
-	public function column_price( $item ) {
-		return esc_html( $item->formatted_price );
-	}
-
-	/**
-	 * Renders the cost column.
-	 *
-	 * @param Item $item The current object.
-	 *
-	 * @since  1.0.0
-	 * @return string Displays the cost.
-	 */
-	public function column_cost( $item ) {
-		return esc_html( $item->formatted_cost );
 	}
 
 	/**
@@ -314,6 +284,42 @@ class Items extends ListTable {
 	}
 
 	/**
+	 * Renders the price column.
+	 *
+	 * @param Item $item The current object.
+	 *
+	 * @since  1.0.0
+	 * @return string Displays the price.
+	 */
+	public function column_price( $item ) {
+		return esc_html( $item->formatted_price );
+	}
+
+	/**
+	 * Renders the cost column.
+	 *
+	 * @param Item $item The current object.
+	 *
+	 * @since  1.0.0
+	 * @return string Displays the cost.
+	 */
+	public function column_cost( $item ) {
+		return esc_html( $item->formatted_cost );
+	}
+
+	/**
+	 * Renders the date column.
+	 *
+	 * @param Item $item The current object.
+	 *
+	 * @since  1.0.0
+	 * @return string Displays the date.
+	 */
+	public function column_created_at( $item ) {
+		return esc_html( wp_date( 'Y-m-d', strtotime( $item->created_at ) ) );
+	}
+
+	/**
 	 * Generates and displays row actions links.
 	 *
 	 * @param Item   $item The comment object.
@@ -328,37 +334,28 @@ class Items extends ListTable {
 			return null;
 		}
 		$actions = array(
-			'id'   => sprintf( '#%d', esc_attr( $item->id ) ),
-			'edit' => sprintf(
+			'id'     => sprintf( '#%d', esc_attr( $item->id ) ),
+			'edit'   => sprintf(
 				'<a href="%s">%s</a>',
-				esc_url(
-					add_query_arg(
-						array(
-							'action' => 'edit',
-							'id'     => $item->id,
-						),
-						$this->base_url
-					)
-				),
+				esc_url( $item->get_edit_url() ),
 				__( 'Edit', 'wp-ever-accounting' )
 			),
-		);
-
-		$actions['delete'] = sprintf(
-			'<a href="%s" class="del">%s</a>',
-			esc_url(
-				wp_nonce_url(
-					add_query_arg(
-						array(
-							'action' => 'delete',
-							'id'     => $item->id,
+			'delete' => sprintf(
+				'<a href="%s" class="del del_confirm">%s</a>',
+				esc_url(
+					wp_nonce_url(
+						add_query_arg(
+							array(
+								'action' => 'delete',
+								'id'     => $item->id,
+							),
+							$this->base_url
 						),
-						$this->base_url
-					),
-					'bulk-' . $this->_args['plural']
-				)
+						'bulk-' . $this->_args['plural']
+					)
+				),
+				__( 'Delete', 'wp-ever-accounting' )
 			),
-			__( 'Delete', 'wp-ever-accounting' )
 		);
 
 		return $this->row_actions( $actions );

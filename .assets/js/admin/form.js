@@ -1,4 +1,6 @@
 (function ($) {
+	'use strict';
+
 	/**
 	 * jQuery plugin to initialize a form with various functionalities.
 	 *

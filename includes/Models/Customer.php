@@ -67,12 +67,4 @@ class Customer extends Contact {
 	public function get_view_url() {
 		return admin_url( 'admin.php?page=eac-sales&tab=customers&action=view&id=' . $this->id );
 	}
-
-	/**
-	 * Get the public URL.
-	 *
-	 * @since 1.0.0
-	 * @return string
-	 */
-	public function get_public_url() {}
 }

@@ -50,29 +50,7 @@ class Customers {
 	 * @return void
 	 */
 	public static function handle_actions() {
-		if ( isset( $_POST['action'] ) && 'eac_add_customer_note' === $_POST['action'] && check_admin_referer( 'eac_add_customer_note' ) && current_user_can( 'eac_manage_customer' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability.
-			$data = array(
-				'content'     => isset( $_POST['content'] ) ? sanitize_textarea_field( wp_unslash( $_POST['content'] ) ) : '',
-				'parent_id'   => isset( $_POST['parent_id'] ) ? absint( $_POST['parent_id'] ) : 0,
-				'parent_type' => 'customer',
-				'creator_id'  => get_current_user_id(),
-				'created_at'  => current_time( 'mysql' ),
-			);
-
-			if ( empty( $data['content'] ) ) {
-				EAC()->flash->error( __( 'Note content is required.', 'wp-ever-accounting' ) );
-
-				return;
-			}
-
-			$note = EAC()->notes->insert( $data );
-
-			if ( is_wp_error( $note ) ) {
-				EAC()->flash->error( $note->get_error_message() );
-			} else {
-				EAC()->flash->success( __( 'Note added successfully.', 'wp-ever-accounting' ) );
-			}
-		} elseif ( isset( $_POST['action'] ) && 'eac_edit_customer' === $_POST['action'] && check_admin_referer( 'eac_edit_customer' ) && current_user_can( 'eac_manage_customer' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability.
+		if ( isset( $_POST['action'] ) && 'eac_edit_customer' === $_POST['action'] && check_admin_referer( 'eac_edit_customer' ) && current_user_can( 'eac_manage_customer' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability.
 			$data = array(
 				'id'         => isset( $_POST['id'] ) ? sanitize_text_field( wp_unslash( $_POST['id'] ) ) : '',
 				'name'       => isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '',
@@ -172,24 +150,113 @@ class Customers {
 	 * @return void
 	 */
 	public static function overview_section( $customer ) {
+		global $wpdb;
+		// Customer chart get the payments by month over the year.
+		$results = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT SUM(amount/exchange_rate) as total, MONTH(date) as month FROM {$wpdb->prefix}ea_transactions WHERE contact_id = %d AND YEAR(date) = %d GROUP BY MONTH(date)",
+				$customer->id,
+				wp_date( 'Y' )
+			)
+		);
+
+		$invoices = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT SUM(total/exchange_rate) as total FROM {$wpdb->prefix}ea_documents WHERE contact_id = %d AND contact_id !='' AND type='invoice' AND status != 'draft'",
+				$customer->id
+			)
+		);
+
+		$paid = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT SUM(amount/exchange_rate) as total FROM {$wpdb->prefix}ea_transactions WHERE contact_id = %d AND contact_id != '' AND status='completed'",
+				$customer->id
+			)
+		);
+
+		$due      = $invoices - $paid;
+		$datasets = array();
+		$labels   = array();
+		for ( $i = 1; $i <= 12; $i ++ ) {
+			$datasets[] = isset( $results[ $i - 1 ] ) ? $results[ $i - 1 ]->total : 0;
+			$labels[]   = wp_date( 'M, Y', mktime( 0, 0, 0, $i, 1 ) );
+		}
+		wp_enqueue_script( 'eac-chartjs' );
 		?>
+
+		<h3><?php esc_html_e( 'Overview', 'wp-ever-accounting' ); ?></h3>
+
 		<div class="eac-chart">
-			<canvas id="eac-customer-chart" style="min-height: 300px;"></canvas>
+			<canvas id="eac-customer-chart" style="height: 300px;margin-bottom: 20px;"></canvas>
 		</div>
-		<div class="eac-stats stats--3">
+		<div class="eac-stats stats--2">
 			<div class="eac-stat">
-				<div class="eac-stat__label"><?php esc_html_e( 'Overdue', 'wp-ever-accounting' ); ?></div>
-				<div class="eac-stat__value">100$</div>
-			</div>
-			<div class="eac-stat">
-				<div class="eac-stat__label"><?php esc_html_e( 'Open', 'wp-ever-accounting' ); ?></div>
-				<div class="eac-stat__value">200$</div>
+				<div class="eac-stat__label"><?php esc_html_e( 'Due', 'wp-ever-accounting' ); ?></div>
+				<div class="eac-stat__value"><?php echo esc_html( eac_format_amount( $due ) ); ?></div>
 			</div>
 			<div class="eac-stat">
 				<div class="eac-stat__label"><?php esc_html_e( 'Paid', 'wp-ever-accounting' ); ?></div>
-				<div class="eac-stat__value">400$</div>
+				<div class="eac-stat__value"><?php echo esc_html( eac_format_amount( $paid ) ); ?></div>
 			</div>
 		</div>
+
+		<script type="text/javascript">
+			window.onload = function () {
+				var ctx = document.getElementById("eac-customer-chart").getContext('2d');
+				var symbol = "<?php echo esc_html( EAC()->currencies->get_symbol() ); ?>";
+
+				new Chart(ctx, {
+					type: 'bar',
+					height: 300,
+					data: {
+						labels: <?php echo wp_json_encode( array_values( $labels ) ); ?>,
+						datasets: [
+							{
+								label: symbol,
+								data: <?php echo wp_json_encode( array_values( $datasets ) ); ?>,
+								backgroundColor: '#3644ff',
+								borderColor: '#3644ff',
+								borderWidth: 1
+							}
+						]
+					},
+					options: {
+						tooltips: {
+							displayColors: true,
+							YrPadding: 12,
+							callbacks: {
+								label: function (tooltipItem, data) {
+									return symbol + tooltipItem.yLabel;
+								}
+							}
+						},
+						scales: {
+							xAxes: [{
+								stacked: false,
+								gridLines: {
+									display: true,
+								}
+							}],
+							yAxes: [{
+								stacked: false,
+								ticks: {
+									beginAtZero: true,
+									callback: function (value, index, ticks) {
+										return Number(value).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') + symbol;
+									}
+								},
+								type: 'linear',
+								barPercentage: 0.4
+							}]
+						}
+					},
+					responsive: true,
+					maintainAspectRatio: false,
+					legend: {display: false},
+				});
+			};
+
+		</script>
 		<?php
 	}
 
@@ -204,10 +271,11 @@ class Customers {
 	public static function payments_section( $customer ) {
 		$payments = EAC()->payments->query(
 			array(
-				'customer_id' => $customer->id,
-				'limit'       => 10,
-				'orderby'     => 'date',
-				'order'       => 'DESC',
+				'contact_id'      => $customer->id,
+				'contact_id__not' => '',
+				'limit'           => 20,
+				'orderby'         => 'date',
+				'order'           => 'DESC',
 			)
 		);
 		?>
@@ -231,7 +299,7 @@ class Customers {
 							</a>
 						<td><?php echo esc_html( $payment->date ); ?></td>
 						<td><?php echo esc_html( $payment->formatted_amount ); ?></td>
-						<td><?php echo esc_html( $payment->formatted_status ); ?></td>
+						<td><?php echo esc_html( $payment->status_label ); ?></td>
 					</tr>
 				<?php endforeach; ?>
 			<?php else : ?>
@@ -255,10 +323,11 @@ class Customers {
 	public static function invoices_section( $customer ) {
 		$invoices = EAC()->invoices->query(
 			array(
-				'customer_id' => $customer->id,
-				'limit'       => 10,
-				'orderby'     => 'date',
-				'order'       => 'DESC',
+				'contact_id'      => $customer->id,
+				'contact_id__not' => '',
+				'limit'           => 20,
+				'orderby'         => 'date',
+				'order'           => 'DESC',
 			)
 		);
 		?>
@@ -308,46 +377,23 @@ class Customers {
 			array(
 				'parent_id'   => $customer->id,
 				'parent_type' => 'customer',
-				'limit'       => 100,
-				'orderby'     => 'date',
+				'orderby'     => 'created_at',
 				'order'       => 'DESC',
+				'limit'       => 20,
 			)
 		);
 		?>
+
 		<h3><?php esc_html_e( 'Notes', 'wp-ever-accounting' ); ?></h3>
-		<form name="customer-note" action="" method="post">
-			<div class="eac-form-field">
-				<label for="content"><?php esc_html_e( 'Add Note', 'wp-ever-accounting' ); ?></label>
-				<textarea name="content" id="content" cols="30" rows="2" required="required" placeholder="<?php esc_attr_e( 'Enter Note', 'wp-ever-accounting' ); ?>"></textarea>
-			</div>
-			<?php wp_nonce_field( 'eac_add_customer_note' ); ?>
-			<input type="hidden" name="action" value="eac_add_customer_note">
-			<input type="hidden" name="parent_id" value="<?php echo esc_attr( $customer->id ); ?>">
-			<button class="button"><?php esc_html_e( 'Add Note', 'wp-ever-accounting' ); ?></button>
-		</form>
-		<br>
-		<?php if ( $notes ) : ?>
-			<ul class="eac-notes">
-				<?php foreach ( $notes as $note ) : ?>
-					<li class="note">
-						<div class="note__header">
-							<div class="note__author">
-								<?php echo get_avatar( $note->creator_id, 32 ); ?>
-								<span class="note__author-name"><?php echo esc_html( get_the_author_meta( 'display_name', $note->creator_id ) ); ?></span>
-							</div>
-							<div class="note__date">
-								<?php echo esc_html( date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $note->created_at ) ) ); ?>
-							</div>
-						</div>
-						<div class="note__content">
-							<p><?php echo esc_html( $note->content ); ?></p>
-						</div>
-					</li>
-				<?php endforeach; ?>
-			</ul>
-		<?php else : ?>
-			<p><?php esc_html_e( 'No notes available.', 'wp-ever-accounting' ); ?></p>
-		<?php endif; ?>
+		<div class="eac-form-field">
+			<label for="eac-note"><?php esc_html_e( 'Add Note', 'wp-ever-accounting' ); ?></label>
+			<textarea id="eac-note" cols="30" rows="2" placeholder="<?php esc_attr_e( 'Enter Note', 'wp-ever-accounting' ); ?>"></textarea>
+		</div>
+		<button id="eac-add-note" type="button" class="button tw-mb-[20px]" data-parent_id="<?php echo esc_attr( $customer->id ); ?>" data-parent_type="customer" data-nonce="<?php echo esc_attr( wp_create_nonce( 'eac_add_note' ) ); ?>">
+			<?php esc_html_e( 'Add Note', 'wp-ever-accounting' ); ?>
+		</button>
+
+		<?php include __DIR__ . '/views/note-list.php'; ?>
 		<?php
 	}
 }

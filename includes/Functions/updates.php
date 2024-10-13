@@ -124,7 +124,7 @@ function eac_update_120() {
 	$wpdb->query( "UPDATE $table SET created_at = date_created" );
 	$wpdb->query( "ALTER TABLE $table DROP `type`" );
 	$wpdb->query( "ALTER TABLE $table DROP note" );
-	$wpdb->query( "ALTER TABLE $table DROP date_created" );
+	$wpdb->query( "ALTER TABLE $table DROP note_metadata" );
 	$wpdb->query( "ALTER TABLE $table DROP extra" );
 
 	// Transfers.

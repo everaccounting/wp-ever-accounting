@@ -23,7 +23,7 @@ defined( 'ABSPATH' ) || exit;
  * @property double     $exchange_rate Exchange rate of the transaction.
  * @property string     $reference Reference of the transaction.
  * @property string     $note Note of the transaction.
- * @property string     $mode Payment method of the transaction.
+ * @property string     $payment_mode Payment mode of the transaction.
  * @property int        $account_id Account ID of the transaction.
  * @property int        $document_id Document ID of the transaction.
  * @property int        $contact_id Contact ID of the transaction.
@@ -80,7 +80,7 @@ class Transaction extends Model {
 		'exchange_rate',
 		'reference',
 		'note',
-		'mode',
+		'payment_mode',
 		'account_id',
 		'document_id',
 		'contact_id',

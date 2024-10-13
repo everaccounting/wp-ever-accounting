@@ -249,7 +249,7 @@ class Invoices extends ListTable {
 	 * @return string Displays the name.
 	 */
 	public function column_number( $item ) {
-		return sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( 'edit', $item->id, $this->base_url ) ), wp_kses_post( $item->number ) );
+		return sprintf( '<a class="row-title" href="%s">%s</a>', esc_url( $item->get_view_url() ), wp_kses_post( $item->number ) );
 	}
 
 	/**
@@ -300,7 +300,6 @@ class Invoices extends ListTable {
 		return esc_html( $item->formatted_total );
 	}
 
-
 	/**
 	 * Renders the customer column.
 	 *
@@ -348,51 +347,28 @@ class Invoices extends ListTable {
 			return null;
 		}
 		$actions = array(
-			'view' => sprintf(
+			'edit'   => sprintf(
 				'<a href="%s">%s</a>',
-				esc_url(
-					add_query_arg(
-						array(
-							'action' => 'view',
-							'id'     => $item->id,
-						),
-						$this->base_url
-					)
-				),
-				__( 'View', 'wp-ever-accounting' )
-			),
-			'edit' => sprintf(
-				'<a href="%s">%s</a>',
-				esc_url(
-					add_query_arg(
-						array(
-							'action' => 'edit',
-							'id'     => $item->id,
-						),
-						$this->base_url
-					)
-				),
+				esc_url( $item->get_edit_url() ),
 				__( 'Edit', 'wp-ever-accounting' )
 			),
-		);
-
-		$actions['delete'] = sprintf(
-			'<a href="%s" class="del">%s</a>',
-			esc_url(
-				wp_nonce_url(
-					add_query_arg(
-						array(
-							'action' => 'delete',
-							'id'     => $item->id,
+			'delete' => sprintf(
+				'<a href="%s" class="del">%s</a>',
+				esc_url(
+					wp_nonce_url(
+						add_query_arg(
+							array(
+								'action' => 'delete',
+								'id'     => $item->id,
+							),
+							$this->base_url
 						),
-						$this->base_url
-					),
-					'bulk-' . $this->_args['plural']
-				)
+						'bulk-' . $this->_args['plural']
+					)
+				),
+				__( 'Delete', 'wp-ever-accounting' )
 			),
-			__( 'Delete', 'wp-ever-accounting' )
 		);
-
 		return $this->row_actions( $actions );
 	}
 }

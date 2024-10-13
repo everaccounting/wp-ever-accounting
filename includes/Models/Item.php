@@ -225,4 +225,26 @@ class Item extends Model {
 	| object but can be used to support its functionality.
 	|--------------------------------------------------------------------------
 	*/
+
+
+	/**
+	 * Get edit URL.
+	 *
+	 * @since 1.0.0
+	 * @return string
+	 */
+	public function get_edit_url() {
+		return admin_url( 'admin.php?page=eac-items&tab=items&action=edit&id=' . $this->id );
+	}
+
+	/**
+	 * Get view URL.
+	 *
+	 * @since 1.0.0
+	 * @return string
+	 */
+	public function get_view_url() {
+		return admin_url( 'admin.php?page=eac-items&tab=items&action=view&id=' . $this->id );
+	}
+
 }

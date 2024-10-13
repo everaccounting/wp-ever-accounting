@@ -42,7 +42,7 @@ class Scripts {
 		EAC()->scripts->register_script( 'eac-api', 'js/api.js', array( 'wp-backbone' ), true );
 
 		// Plugin scripts.
-		EAC()->scripts->register_script( 'eac-admin', 'js/admin.js', array( 'jquery', 'eac-inputmask', 'eac-select2', 'eac-tiptip', 'jquery-ui-datepicker', 'jquery-ui-tooltip', 'eac-money' ), true );
+		EAC()->scripts->register_script( 'eac-admin', 'js/admin.js', array( 'jquery', 'eac-inputmask', 'eac-select2', 'eac-tiptip', 'jquery-ui-datepicker', 'jquery-ui-tooltip', 'eac-money', 'wp-ajax-response' ), true );
 
 		EAC()->scripts->register_style( 'eac-jquery-ui', 'css/jquery-ui.css' );
 		EAC()->scripts->register_style( 'eac-admin', 'css/admin.css', array( 'eac-jquery-ui' ) );
@@ -87,12 +87,11 @@ class Scripts {
 				'currencies'    => eac_get_currencies(),
 				'search_nonce'  => wp_create_nonce( 'eac_search_action' ),
 				'i18n'          => array(
-					'confirm_delete' => __( 'Are you sure you want to delete this item?', 'wp-ever-accounting' ),
+					'confirm_delete' => __( 'Are you sure you want to delete this?', 'wp-ever-accounting' ),
 					'close'          => __( 'Close', 'wp-ever-accounting' ),
 				),
 			)
 		);
-
 
 		if ( 'toplevel_page_ever-accounting' === $hook || 'ever-accounting_page_eac-reports' === $hook ) {
 			wp_enqueue_script( 'eac-chartjs' );
@@ -117,9 +116,9 @@ class Scripts {
 		// if sales page and new invoice.
 		wp_enqueue_script( 'eac-admin-invoice' );
 		wp_enqueue_style( 'eac-admin-invoice' );
-//		if ( 'admin.php' === $hook && isset( $_GET['page'] ) && 'eac-sales' === $_GET['page'] && isset( $_GET['action'] ) && 'add' === $_GET['action'] ) {
-//			wp_enqueue_script('eac-invoice');
-//			wp_enqueue_style('eac-invoice');
-//		}
+		// if ( 'admin.php' === $hook && isset( $_GET['page'] ) && 'eac-sales' === $_GET['page'] && isset( $_GET['action'] ) && 'add' === $_GET['action'] ) {
+		// wp_enqueue_script('eac-invoice');
+		// wp_enqueue_style('eac-invoice');
+		// }
 	}
 }

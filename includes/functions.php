@@ -41,6 +41,7 @@ function eac_get_currencies() {
 		array_map(
 			function ( $currency ) {
 				$currency['formatted_name'] = esc_html( sprintf( '%s (%s) - (%s)', $currency['name'], $currency['symbol'], $currency['code'] ) );
+
 				return $currency;
 			},
 			I18n::get_currencies()
@@ -68,6 +69,7 @@ function eac_get_currencies() {
  */
 function eac_get_currency_config( $currency = null ) {
 	$currencies = eac_get_currencies();
+
 	return array_key_exists( $currency, $currencies ) ? $currencies[ $currency ] : $currencies[ eac_base_currency() ];
 }
 
@@ -215,17 +217,17 @@ function eac_round_number( $val, $decimals = 6, $mode = PHP_ROUND_HALF_UP ) {
  * @since 1.0.2
  * @return array
  */
-function eac_get_payment_methods() {
+function eac_get_payment_modes() {
 	return apply_filters(
-		'eac_payment_methods',
+		'eac_payment_modes',
 		array(
-			'cash'          => esc_html__( 'Cash', 'wp-ever-accounting' ),
-			'check'         => esc_html__( 'Cheque', 'wp-ever-accounting' ),
-			'credit_card'   => esc_html__( 'Credit Card', 'wp-ever-accounting' ),
-			'debit_card'    => esc_html__( 'Debit Card', 'wp-ever-accounting' ),
-			'bank_transfer' => esc_html__( 'Bank Transfer', 'wp-ever-accounting' ),
-			'paypal'        => esc_html__( 'PayPal', 'wp-ever-accounting' ),
-			'other'         => esc_html__( 'Other', 'wp-ever-accounting' ),
+			'cash'   => esc_html__( 'Cash', 'wp-ever-accounting' ),
+			'check'  => esc_html__( 'Cheque', 'wp-ever-accounting' ),
+			'credit' => esc_html__( 'Credit Card', 'wp-ever-accounting' ),
+			'debit'  => esc_html__( 'Debit Card', 'wp-ever-accounting' ),
+			'bank'   => esc_html__( 'Bank Transfer', 'wp-ever-accounting' ),
+			'paypal' => esc_html__( 'PayPal', 'wp-ever-accounting' ),
+			'other'  => esc_html__( 'Other', 'wp-ever-accounting' ),
 		)
 	);
 }

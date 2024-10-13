@@ -15,7 +15,6 @@ defined( 'ABSPATH' ) || exit;
 
 $id       = filter_input( INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT );
 $customer = Customer::make( $id );
-
 ?>
 
 <div class="eac-section-header">
