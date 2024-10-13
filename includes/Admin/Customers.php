@@ -51,7 +51,8 @@ class Customers {
 	 */
 	public static function handle_actions() {
 		if ( isset( $_POST['action'] ) && 'eac_edit_customer' === $_POST['action'] && check_admin_referer( 'eac_edit_customer' ) && current_user_can( 'eac_manage_customer' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability.
-			$data = array(
+			$referer = wp_get_referer();
+			$data    = array(
 				'id'         => isset( $_POST['id'] ) ? sanitize_text_field( wp_unslash( $_POST['id'] ) ) : '',
 				'name'       => isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '',
 				'currency'   => isset( $_POST['currency'] ) ? sanitize_text_field( wp_unslash( $_POST['currency'] ) ) : '',
@@ -73,7 +74,13 @@ class Customers {
 				EAC()->flash->error( $customer->get_error_message() );
 			} else {
 				EAC()->flash->success( __( 'Customer saved successfully.', 'wp-ever-accounting' ) );
+				$referer = add_query_arg( 'id', $customer->id, $referer );
+				$referer = add_query_arg( 'action', 'view', $referer );
+				$referer = remove_query_arg( array( 'add' ), $referer );
 			}
+
+			wp_safe_redirect( $referer );
+			exit;
 		}
 	}
 
@@ -177,7 +184,7 @@ class Customers {
 		$due      = $invoices - $paid;
 		$datasets = array();
 		$labels   = array();
-		for ( $i = 1; $i <= 12; $i ++ ) {
+		for ( $i = 1; $i <= 12; $i++ ) {
 			$datasets[] = isset( $results[ $i - 1 ] ) ? $results[ $i - 1 ]->total : 0;
 			$labels[]   = wp_date( 'M, Y', mktime( 0, 0, 0, $i, 1 ) );
 		}

@@ -10,6 +10,7 @@
  */
 
 defined( 'ABSPATH' ) || exit;
+global $list_table;
 ?>
 	<h1 class="wp-heading-inline">
 		<?php esc_html_e( 'Bills', 'wp-ever-accounting' ); ?>

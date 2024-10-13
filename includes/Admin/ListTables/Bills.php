@@ -191,10 +191,10 @@ class Bills extends ListTable {
 		return array(
 			'cb'         => '<input type="checkbox" />',
 			'number'     => __( 'Bill #', 'wp-ever-accounting' ),
-			'reference'  => __( 'Order #', 'wp-ever-accounting' ),
 			'issue_date' => __( 'Issue Date', 'wp-ever-accounting' ),
 			'due_date'   => __( 'Due Date', 'wp-ever-accounting' ),
 			'vendor'     => __( 'Vendor', 'wp-ever-accounting' ),
+			'reference'  => __( 'Order #', 'wp-ever-accounting' ),
 			'status'     => __( 'Status', 'wp-ever-accounting' ),
 			'total'      => __( 'Total', 'wp-ever-accounting' ),
 		);
@@ -348,51 +348,28 @@ class Bills extends ListTable {
 			return null;
 		}
 		$actions = array(
-			'view' => sprintf(
+			'edit'   => sprintf(
 				'<a href="%s">%s</a>',
-				esc_url(
-					add_query_arg(
-						array(
-							'action' => 'view',
-							'id'     => $item->id,
-						),
-						$this->base_url
-					)
-				),
-				__( 'View', 'wp-ever-accounting' )
-			),
-			'edit' => sprintf(
-				'<a href="%s">%s</a>',
-				esc_url(
-					add_query_arg(
-						array(
-							'action' => 'edit',
-							'id'     => $item->id,
-						),
-						$this->base_url
-					)
-				),
+				esc_url( $item->get_edit_url() ),
 				__( 'Edit', 'wp-ever-accounting' )
 			),
-		);
-
-		$actions['delete'] = sprintf(
-			'<a href="%s" class="del">%s</a>',
-			esc_url(
-				wp_nonce_url(
-					add_query_arg(
-						array(
-							'action' => 'delete',
-							'id'     => $item->id,
+			'delete' => sprintf(
+				'<a href="%s" class="del del_confirm">%s</a>',
+				esc_url(
+					wp_nonce_url(
+						add_query_arg(
+							array(
+								'action' => 'delete',
+								'id'     => $item->id,
+							),
+							$this->base_url
 						),
-						$this->base_url
-					),
-					'bulk-' . $this->_args['plural']
-				)
+						'bulk-' . $this->_args['plural']
+					)
+				),
+				__( 'Delete', 'wp-ever-accounting' )
 			),
-			__( 'Delete', 'wp-ever-accounting' )
 		);
-
 		return $this->row_actions( $actions );
 	}
 }

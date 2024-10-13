@@ -13,10 +13,10 @@ defined( 'ABSPATH' ) || exit;
 class Taxes {
 
 	/**
-	 * Output the taxes report.
+	 * Render the taxes report.
 	 *
 	 * @since 2.0.0
 	 * @return void
 	 */
-	public static function output() {}
+	public static function render() {}
 }

@@ -76,7 +76,6 @@
 		 * @param {Object} options - Configuration options for the modal view.
 		 */
 		preinitialize: function (options) {
-			_.bindAll( this, 'render' );
 			this.options = options;
 			const {template} = this.options;
 			if (template && typeof template === 'string') {
@@ -106,7 +105,7 @@
 		 * @returns {$.eacmodal.View} - The modal view instance.
 		 */
 		render: function () {
-			_.bindAll( this, 'render' );
+			// _.bindAll( this, 'render' );
 			wp.Backbone.View.prototype.render.apply(this, arguments);
 			this.$el.attr('id', _.uniqueId('eac-modal-'));
 			this.$el.wrapInner('<div class="eac-modal__main" role="main"></div>');
@@ -126,6 +125,7 @@
 		 * Opens the modal.
 		 */
 		open: function () {
+			var events = this.options.events || {};
 			this.activeElement = document.activeElement;
 			$('body').css('overflow', 'hidden');
 			this.$el.attr('aria-hidden', 'false');
@@ -134,11 +134,21 @@
 			$(document.body).trigger('eac_update_ui');
 
 			this.delegateEvents({
-				// ...this.events,
+				...this.events || {},
 				'keydown': 'onKeydown',
 				'touchstart': 'onClick',
 				'click': 'onClick',
 			});
+
+			// Bind events.
+			// for (const key in events) {
+			// 	let method = events[key];
+			// 	if (typeof method !== 'function') method = this.options[method];
+			// 	console.log(method);
+			//
+			// 	const match = key.match(/^(\S+)\s*(.*)$/);
+			// 	this.$el.on(match[1], match[2], method.bind(this));
+			// }
 
 			this.setFocus();
 			if (typeof this.options.onOpen === 'function') {
@@ -170,6 +180,7 @@
 		 * @param {Event} event - The click event object.
 		 */
 		onClick: function (event) {
+			console.log(event.target);
 			if (
 				event.target.hasAttribute(CLOSE_TRIGGER) ||
 				event.target.parentNode.hasAttribute(CLOSE_TRIGGER)
@@ -249,10 +260,8 @@
 		template: '',
 		model: {},
 		autoOpen: true,
-		onOpen: function () {
-		},
-		onClose: function () {
-		}
+		onOpen: function () {},
+		onClose: function () {}
 	};
 
 })(jQuery, Backbone, _);

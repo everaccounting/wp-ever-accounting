@@ -49,7 +49,8 @@ class Payments {
 	 */
 	public static function handle_actions() {
 		if ( isset( $_POST['action'] ) && 'eac_edit_payment' === $_POST['action'] && check_admin_referer( 'eac_edit_payment' ) && current_user_can( 'eac_manage_payment' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability.
-			$data = array(
+			$referer = wp_get_referer();
+			$data    = array(
 				'id'            => isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0,
 				'date'          => isset( $_POST['date'] ) ? sanitize_text_field( wp_unslash( $_POST['date'] ) ) : '',
 				'account_id'    => isset( $_POST['account_id'] ) ? absint( wp_unslash( $_POST['account_id'] ) ) : 0,
@@ -70,8 +71,15 @@ class Payments {
 				EAC()->flash->error( $payment->get_error_message() );
 			} else {
 				EAC()->flash->success( __( 'Payment saved successfully.', 'wp-ever-accounting' ) );
+				$referer = add_query_arg( 'id', $invoice->id, $referer );
+				$referer = add_query_arg( 'action', 'view', $referer );
+				$referer = remove_query_arg( array( 'add' ), $referer );
 			}
-		} elseif ( isset( $_POST['action'] ) && 'eac_update_payment' === $_POST['action'] && check_admin_referer( 'eac_update_payment' ) && current_user_can( 'eac_manage_payment' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability.}
+
+			wp_safe_redirect( $referer );
+			exit;
+		}
+		if ( isset( $_POST['action'] ) && 'eac_update_payment' === $_POST['action'] && check_admin_referer( 'eac_update_payment' ) && current_user_can( 'eac_manage_payment' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability.}
 			$id             = isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0;
 			$status         = isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : '';
 			$attachment_id  = isset( $_POST['attachment_id'] ) ? absint( wp_unslash( $_POST['attachment_id'] ) ) : 0;
@@ -218,6 +226,10 @@ class Payments {
 	 * @return void
 	 */
 	public static function payment_notes( $payment ) {
+		// bail if payment is not found.
+		if ( ! $payment ) {
+			return;
+		}
 		$notes = EAC()->notes->query(
 			array(
 				'parent_id'   => $payment->id,

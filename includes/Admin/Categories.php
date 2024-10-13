@@ -20,7 +20,7 @@ class Categories {
 	 */
 	public function __construct() {
 		add_filter( 'eac_settings_page_tabs', array( __CLASS__, 'register_tabs' ) );
-		add_action( 'eac_settings_page_categories', array( __CLASS__, 'render_table' ) );
+		add_action( 'eac_settings_page_categories_content', array( __CLASS__, 'render_table' ) );
 		add_action( 'eac_settings_page_categories_add', array( __CLASS__, 'render_add' ) );
 		add_action( 'eac_settings_page_categories_edit', array( __CLASS__, 'render_edit' ) );
 		add_action( 'admin_post_eac_edit_category', array( __CLASS__, 'handle_edit_category' ) );

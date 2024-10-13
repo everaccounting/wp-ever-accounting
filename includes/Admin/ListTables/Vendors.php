@@ -66,8 +66,8 @@ class Vendors extends ListTable {
 		 */
 		$args                  = apply_filters( 'eac_vendors_table_query_args', $args );
 		$args['no_found_rows'] = false;
-		$this->items           = Vendor::results( $args );
-		$total                 = Vendor::count( $args );
+		$this->items           = EAC()->vendors->query( $args );
+		$total                 = EAC()->vendors->query( $args, true );
 
 		$this->set_pagination_args(
 			array(
@@ -152,12 +152,12 @@ class Vendors extends ListTable {
 	 */
 	public function get_columns() {
 		return array(
-			'cb'      => '<input type="checkbox" />',
-			'name'    => __( 'Name', 'wp-ever-accounting' ),
-			'email'   => __( 'Email', 'wp-ever-accounting' ),
-			'phone'   => __( 'Phone', 'wp-ever-accounting' ),
-			'country' => __( 'Country', 'wp-ever-accounting' ),
-			'due'     => __( 'Due', 'wp-ever-accounting' ),
+			'cb'         => '<input type="checkbox" />',
+			'name'       => __( 'Name', 'wp-ever-accounting' ),
+			'email'      => __( 'Email', 'wp-ever-accounting' ),
+			'phone'      => __( 'Phone', 'wp-ever-accounting' ),
+			'country'    => __( 'Country', 'wp-ever-accounting' ),
+			'created_at' => __( 'Date', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -169,11 +169,12 @@ class Vendors extends ListTable {
 	 */
 	protected function get_sortable_columns() {
 		return array(
-			'name'    => array( 'name', false ),
-			'email'   => array( 'email', false ),
-			'phone'   => array( 'phone', false ),
-			'country' => array( 'country', false ),
-			'due'     => array( 'due', false ),
+			'name'       => array( 'name', false ),
+			'email'      => array( 'email', false ),
+			'phone'      => array( 'phone', false ),
+			'country'    => array( 'country', false ),
+			'due'        => array( 'due', false ),
+			'created_at' => array( 'created_at', false ),
 		);
 	}
 
@@ -209,20 +210,11 @@ class Vendors extends ListTable {
 	 */
 	public function column_name( $item ) {
 		return sprintf(
-			'<a href="%s">%s</a>',
-			esc_url(
-				add_query_arg(
-					array(
-						'action' => 'view',
-						'id'     => $item->id,
-					),
-					$this->base_url
-				)
-			),
+			'<a class="row-title" href="%s">%s</a>',
+			esc_url( $item->get_view_url() ),
 			wp_kses_post( $item->name )
 		);
 	}
-
 
 	/**
 	 * Renders the country column.
@@ -251,30 +243,9 @@ class Vendors extends ListTable {
 			return null;
 		}
 		$actions = array(
-			'view'   => sprintf(
-				'<a href="%s">%s</a>',
-				esc_url(
-					add_query_arg(
-						array(
-							'action' => 'view',
-							'id'     => $item->id,
-						),
-						$this->base_url
-					)
-				),
-				__( 'View', 'wp-ever-accounting' )
-			),
 			'edit'   => sprintf(
 				'<a href="%s">%s</a>',
-				esc_url(
-					add_query_arg(
-						array(
-							'action' => 'edit',
-							'id'     => $item->id,
-						),
-						$this->base_url
-					)
-				),
+				esc_url( $item->get_edit_url() ),
 				__( 'Edit', 'wp-ever-accounting' )
 			),
 			'delete' => sprintf(

@@ -1,6 +1,6 @@
 <?php
 /**
- * The Template for displaying revenue.
+ * The Template for displaying expense.
  *
  * This template can be overridden by copying it to yourtheme/eac/revenue.php
  *
@@ -14,7 +14,7 @@
  * @package EverAccounting\Templates
  * @version 1.0.0
  *
- * @var \EverAccounting\Models\Payment $payment Payment object.
+ * @var \EverAccounting\Models\Expense $expense Expense object.
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -26,7 +26,7 @@ $logo  = get_option( 'eac_business_logo' );
 $phone = get_option( 'eac_business_phone' );
 $email = get_option( 'eac_business_email' );
 ?>
-<div class="eac-payment" dir="<?php echo is_rtl() ? 'rtl' : 'ltr'; ?>" style="font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif; margin-bottom: 40px; background-color: #ffffff; border: 1px solid #e5e7eb; padding: 2rem; color: #3c3c3c; font-size: 14px;">
+<div class="eac-expense" dir="<?php echo is_rtl() ? 'rtl' : 'ltr'; ?>" style="font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif; margin-bottom: 40px; background-color: #ffffff; border: 1px solid #e5e7eb; padding: 2rem; color: #3c3c3c; font-size: 14px;">
 	<table border="0" cellpadding="0" cellspacing="0" width="100%">
 		<!-- Header -->
 		<tr>
@@ -48,8 +48,8 @@ $email = get_option( 'eac_business_email' );
 							<p style="margin: 0;"><a style="color: <?php echo esc_attr( $text_color ); ?>" href="<?php echo esc_url( home_url() ); ?>"><?php echo esc_html( home_url() ); ?></a></p>
 						</td>
 						<td align="right" valign="top">
-							<h2 style="color: #3c3c3c; font-size: 24px; margin: 0 0 10px 0;"><?php esc_html_e( 'Payment Receipt', 'wp-ever-accounting' ); ?></h2>
-							<p style="margin: 0;">#&nbsp;<?php echo esc_html( $payment->number ); ?></p>
+							<h2 style="color: #3c3c3c; font-size: 24px; margin: 0 0 10px 0;"><?php esc_html_e( 'Expense Receipt', 'wp-ever-accounting' ); ?></h2>
+							<p style="margin: 0;">#&nbsp;<?php echo esc_html( $expense->number ); ?></p>
 						</td>
 					</tr>
 				</table>
@@ -63,53 +63,53 @@ $email = get_option( 'eac_business_email' );
 			</td>
 		</tr>
 
-		<!-- Payment Details Section -->
+		<!-- Expense Details Section -->
 		<tr>
 			<td>
 				<table border="0" cellspacing="0" cellpadding="0" width="100%">
 					<tr>
 						<td width="50%" valign="top">
 							<h3 style="color: #3c3c3c; font-size: 16px; margin: 0 0 6px;"><?php esc_html_e( 'From', 'wp-ever-accounting' ); ?></h3>
-							<address style="color: #636363; font-size: 13px;line-height:1.5;font-style:normal;">
-								<?php
-								$customer = $payment->customer;
-								if ( $customer ) {
-									$address = eac_get_formatted_address(
-										array(
-											'name'       => $customer->name,
-											'company'    => $customer->company,
-											'address'    => $customer->address,
-											'city'       => $customer->city,
-											'state'      => $customer->state,
-											'zip'        => $customer->zip,
-											'country'    => $customer->country,
-											'tax_number' => $customer->tax_number,
-										)
-									);
-									echo wp_kses_post( $address );
-								} else {
-									echo esc_html( 'N/A' );
-								}
-								?>
-							</address>
+							<?php
+							$address = eac_get_formatted_address(
+								array(
+									'name'       => get_option( 'eac_business_name', get_bloginfo( 'name' ) ),
+									'address'    => get_option( 'eac_business_address' ),
+									'city'       => get_option( 'eac_business_city' ),
+									'state'      => get_option( 'eac_business_state' ),
+									'zip'        => get_option( 'eac_business_postcode' ),
+									'country'    => get_option( 'eac_business_country' ),
+									'tax_number' => get_option( 'eac_business_tax_number' ),
+								)
+							);
+							echo wp_kses_post( $address );
+							?>
 						</td>
 						<td width="50%" valign="top">
 							<h3 style="color: #3c3c3c; font-size: 16px; margin: 0 0 6px;"><?php esc_html_e( 'To', 'wp-ever-accounting' ); ?></h3>
 							<address style="color: #636363; font-size: 13px;line-height:1.5;font-style:normal;">
-								<?php
-								$address = eac_get_formatted_address(
-									array(
-										'name'       => get_option( 'eac_business_name', get_bloginfo( 'name' ) ),
-										'address'    => get_option( 'eac_business_address' ),
-										'city'       => get_option( 'eac_business_city' ),
-										'state'      => get_option( 'eac_business_state' ),
-										'zip'        => get_option( 'eac_business_postcode' ),
-										'country'    => get_option( 'eac_business_country' ),
-										'tax_number' => get_option( 'eac_business_tax_number' ),
-									)
-								);
-								echo wp_kses_post( $address );
-								?>
+								<address style="color: #636363; font-size: 13px;line-height:1.5;font-style:normal;">
+									<?php
+									$customer = $expense->customer;
+									if ( $customer ) {
+										$address = eac_get_formatted_address(
+											array(
+												'name'    => $customer->name,
+												'company' => $customer->company,
+												'address' => $customer->address,
+												'city'    => $customer->city,
+												'state'   => $customer->state,
+												'zip'     => $customer->zip,
+												'country' => $customer->country,
+												'tax_number' => $customer->tax_number,
+											)
+										);
+										echo wp_kses_post( $address );
+									} else {
+										echo esc_html( 'N/A' );
+									}
+									?>
+								</address>
 							</address>
 						</td>
 					</tr>
@@ -123,29 +123,29 @@ $email = get_option( 'eac_business_email' );
 			</td>
 		</tr>
 
-		<!-- Payment Summary -->
+		<!-- Expense Summary -->
 		<tr>
 			<td>
 				<table border="0" cellspacing="0" cellpadding="0" width="100%">
 					<tr>
 						<td style="width:20%; padding: 10px 0;"><strong><?php esc_attr_e( 'Amount:', 'wp-ever-accounting' ); ?></strong></td>
-						<td style="width: 80%; padding: 10px 0; border-bottom: 1px dashed #e5e7eb;"><?php echo esc_html( $payment->formatted_amount ); ?></td>
+						<td style="width: 80%; padding: 10px 0; border-bottom: 1px dashed #e5e7eb;"><?php echo esc_html( $expense->formatted_amount ); ?></td>
 					</tr>
 					<tr>
 						<td style="width:20%; padding: 10px 0;"><strong><?php esc_attr_e( 'Date:', 'wp-ever-accounting' ); ?></strong></td>
-						<td style="width: 80%;padding: 10px 0; border-bottom: 1px dashed #e5e7eb;"><?php echo esc_html( $payment->date ? wp_date( get_option( 'date_format' ), strtotime( $payment->date ) ) : 'N/A' ); ?></td>
+						<td style="width: 80%;padding: 10px 0; border-bottom: 1px dashed #e5e7eb;"><?php echo esc_html( $expense->date ? wp_date( get_option( 'date_format' ), strtotime( $expense->date ) ) : 'N/A' ); ?></td>
 					</tr>
 					<tr>
 						<td style="width:20%; padding: 10px 0;"><strong><?php esc_attr_e( 'Method:', 'wp-ever-accounting' ); ?></strong></td>
-						<td style="width: 80%;padding: 10px 0; border-bottom: 1px dashed #e5e7eb;"><?php echo esc_html( $payment->payment_mode_name ? $payment->payment_mode_name : 'N/A' ); ?></td>
+						<td style="width: 80%;padding: 10px 0; border-bottom: 1px dashed #e5e7eb;"><?php echo esc_html( $expense->expense_mode_name ? $expense->expense_mode_name : 'N/A' ); ?></td>
 					</tr>
 					<tr>
 						<td style="width:20%; padding: 10px 0;"><strong><?php esc_attr_e( 'Status:', 'wp-ever-accounting' ); ?></strong></td>
-						<td style="width: 80%;padding: 10px 0; border-bottom: 1px dashed #e5e7eb;"><?php echo esc_html( $payment->status_name ? $payment->status_name : 'N/A' ); ?></td>
+						<td style="width: 80%;padding: 10px 0; border-bottom: 1px dashed #e5e7eb;"><?php echo esc_html( $expense->status_name ? $expense->status_name : 'N/A' ); ?></td>
 					</tr>
 					<tr>
 						<td style="width:20%; padding: 10px 0;"><strong><?php esc_attr_e( 'Reference:', 'wp-ever-accounting' ); ?></strong></td>
-						<td style="width: 80%;padding: 10px 0; border-bottom: 1px dashed #e5e7eb;"><?php echo esc_html( $payment->reference ? $payment->reference : 'N/A' ); ?></td>
+						<td style="width: 80%;padding: 10px 0; border-bottom: 1px dashed #e5e7eb;"><?php echo esc_html( $expense->reference ? $expense->reference : 'N/A' ); ?></td>
 					</tr>
 				</table>
 			</td>
@@ -159,7 +159,7 @@ $email = get_option( 'eac_business_email' );
 
 		<!-- Notes Section -->
 		<tr>
-			<td><strong><?php esc_attr_e( 'Notes:', 'wp-ever-accounting' ); ?></strong><br/><br/><?php echo wp_kses_post( $payment->note ? $payment->note : 'N/A' ); ?></td>
+			<td><strong><?php esc_attr_e( 'Notes:', 'wp-ever-accounting' ); ?></strong><br/><br/><?php echo wp_kses_post( $expense->note ? $expense->note : 'N/A' ); ?></td>
 		</tr>
 
 	</table>

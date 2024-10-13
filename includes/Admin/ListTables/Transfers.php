@@ -70,9 +70,9 @@ class Transfers extends ListTable {
 		$args['no_found_rows'] = false;
 		$this->items           = Transfer::results( $args );
 		$total                 = Transfer::count( $args );
-//		var_dump($this->items[0]->payment->account);
-//		var_dump($this->items[0]->expense->account);
-//		exit();
+		// var_dump($this->items[0]->payment->account);
+		// var_dump($this->items[0]->expense->account);
+		// exit();
 		$this->set_pagination_args(
 			array(
 				'total_items' => $total,
@@ -189,7 +189,7 @@ class Transfers extends ListTable {
 	 * @return string Displays the date.
 	 */
 	public function column_date( $item ) {
-		var_dump($item->from_account);
+		var_dump( $item->from_account );
 		return sprintf(
 			'<a class="row-title" href="%s">%s</a>',
 			esc_url( $item->get_edit_url() ),

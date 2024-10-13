@@ -102,7 +102,7 @@ class Expenses extends ListTable {
 		}
 		if ( ! empty( $performed ) ) {
 			// translators: %s: number of items deleted.
-			EAC()->flash->success( sprintf( __( '%s payment(s) deleted successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
+			EAC()->flash->success( sprintf( __( '%s expense(s) deleted successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
 		}
 	}
 
@@ -198,8 +198,8 @@ class Expenses extends ListTable {
 	public function get_columns() {
 		return array(
 			'cb'       => '<input type="checkbox" />',
+			'number'   => __( 'Expense #', 'wp-ever-accounting' ),
 			'date'     => __( 'Date', 'wp-ever-accounting' ),
-			'number'   => __( 'Payment #', 'wp-ever-accounting' ),
 			'account'  => __( 'Account', 'wp-ever-accounting' ),
 			'customer' => __( 'Customer', 'wp-ever-accounting' ),
 			'category' => __( 'Category', 'wp-ever-accounting' ),
@@ -234,7 +234,7 @@ class Expenses extends ListTable {
 	 * @return string
 	 */
 	public function get_primary_column_name() {
-		return 'date';
+		return 'number';
 	}
 
 	/**
@@ -250,18 +250,6 @@ class Expenses extends ListTable {
 	}
 
 	/**
-	 * Renders the name column.
-	 *
-	 * @param Expense $item The current object.
-	 *
-	 * @since  1.0.0
-	 * @return string Displays the name.
-	 */
-	public function column_date( $item ) {
-		return sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( 'view', $item->id, $this->base_url ) ), wp_kses_post( $item->date ) );
-	}
-
-	/**
 	 * Renders the number column.
 	 *
 	 * @param Expense $item The current object.
@@ -270,22 +258,33 @@ class Expenses extends ListTable {
 	 * @return string Displays the number.
 	 */
 	public function column_number( $item ) {
-		$number   = $item->number ? $item->number : '&mdash;';
-		$metadata = $item->reference ? $item->reference : '&mdash;';
-
-		return sprintf( '%s%s', $number, $this->column_metadata( $metadata ) );
+		return sprintf(
+			'<a class="row-title" href="%s">%s</a>',
+			esc_url( $item->get_view_url() ),
+			wp_kses_post( $item->number )
+		);
 	}
 
 	/**
-	 * Renders the amount column.
+	 * Renders the name column.
 	 *
 	 * @param Expense $item The current object.
 	 *
 	 * @since  1.0.0
-	 * @return string Displays the amount.
+	 * @return string Displays the name.
 	 */
-	public function column_amount( $item ) {
-		return esc_html( $item->formatted_amount );
+	public function column_date( $item ) {
+		return sprintf(
+			'<a href="%s">%s</a>',
+			esc_url(
+				add_query_arg(
+					array(
+						'date' => $item->date,
+					)
+				)
+			),
+			wp_kses_post( $item->date )
+		);
 	}
 
 	/**
@@ -313,7 +312,7 @@ class Expenses extends ListTable {
 	 */
 	public function column_category( $item ) {
 		$category = $item->category ? sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( 'category_id', $item->category->id, $this->base_url ) ), wp_kses_post( $item->category->name ) ) : '&mdash;';
-		$metadata = '&mdash;';
+		$metadata = '';
 
 		return sprintf( '%s%s', $category, $this->column_metadata( $metadata ) );
 	}
@@ -326,11 +325,11 @@ class Expenses extends ListTable {
 	 * @since  1.0.0
 	 * @return string Displays the customer.
 	 */
-	public function column_vendor( $item ) {
-		$vendor   = $item->vendor ? sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( 'vendor_id', $item->vendor->id, $this->base_url ) ), wp_kses_post( $item->vendor->name ) ) : '&mdash;';
-		$metadata = $item->vendor && $item->vendor->company ? $item->vendor->company : '&mdash;';
+	public function column_customer( $item ) {
+		$customer = $item->customer ? sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( 'customer_id', $item->customer->id, $this->base_url ) ), wp_kses_post( $item->customer->name ) ) : '&mdash;';
+		$metadata = $item->customer && $item->customer->company ? $item->customer->company : '';
 
-		return sprintf( '%s%s', $vendor, $this->column_metadata( $metadata ) );
+		return sprintf( '%s%s', $customer, $this->column_metadata( $metadata ) );
 	}
 
 	/**
@@ -350,6 +349,18 @@ class Expenses extends ListTable {
 	}
 
 	/**
+	 * Renders the amount column.
+	 *
+	 * @param Expense $item The current object.
+	 *
+	 * @since  1.0.0
+	 * @return string Displays the amount.
+	 */
+	public function column_amount( $item ) {
+		return esc_html( $item->formatted_amount );
+	}
+
+	/**
 	 * Generates and displays row actions links.
 	 *
 	 * @param Expense $item The comment object.
@@ -366,19 +377,11 @@ class Expenses extends ListTable {
 		$actions = array(
 			'edit'   => sprintf(
 				'<a href="%s">%s</a>',
-				esc_url(
-					add_query_arg(
-						array(
-							'action' => 'edit',
-							'id'     => $item->id,
-						),
-						$this->base_url
-					)
-				),
+				esc_url( $item->get_edit_url() ),
 				__( 'Edit', 'wp-ever-accounting' )
 			),
 			'delete' => sprintf(
-				'<a href="%s" class="del">%s</a>',
+				'<a href="%s" class="del del_confirm">%s</a>',
 				esc_url(
 					wp_nonce_url(
 						add_query_arg(

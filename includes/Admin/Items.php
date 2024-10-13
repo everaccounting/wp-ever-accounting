@@ -49,6 +49,7 @@ class Items {
 	 */
 	public static function handle_actions() {
 		if ( isset( $_POST['action'] ) && 'eac_edit_item' === $_POST['action'] && check_admin_referer( 'eac_edit_item' ) && current_user_can( 'eac_manage_item' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability.
+			$referer = wp_get_referer();
 			$data = array(
 				'id'          => isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0,
 				'name'        => isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '',
@@ -66,7 +67,12 @@ class Items {
 				EAC()->flash->error( $item->get_error_message() );
 			} else {
 				EAC()->flash->success( __( 'Item saved successfully.', 'wp-ever-accounting' ) );
+				$referer = add_query_arg( 'id', $item->id, $referer );
+				$referer = remove_query_arg( array( 'add' ), $referer );
 			}
+
+			wp_safe_redirect( $referer );
+			exit;
 		}
 	}
 

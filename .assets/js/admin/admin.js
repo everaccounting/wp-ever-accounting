@@ -871,33 +871,29 @@ jQuery( document ).ready( ( $ ) => {
 		e.preventDefault();
 		$(this).eacmodal({
 			template: 'eac-invoice-payment',
-			events: {
-				'change #account_id': 'handleExchangeRate',
-				'change #amount': 'handleAmountChange',
-			},
-			handleExchangeRate: function (e) {
-				var self = this;
-				var $amount = this.$(':input[name="amount"]');
-				var $exchange = this.$(':input[name="exchange_rate"]');
-				var $account = this.$(':input[name="account_id"]');
-				console.log($amount);
-				console.log($exchange);
-				console.log($account);
-				// var self = this;
-				// var $amount = this.$(':input[name="amount"]');
-				// var $conversion = this.$(':input[name="exchange_rate"]');
-				// var account_id = this.$(':input[name="account_id"]').val();
-				//
-				// if (!account_id) {
-				// 	$conversion.val(1.0);
-				// 	$conversion.attr('readonly', true).val(1.0);
-				// 	return;
-				// }
-			},
-			handleAmountChange: function (e) {
-				console.log(e);
-			},
-		})
+			// events: {
+			// 	'change :input[name="account_id"]': 'handleExchangeRate',
+			// },
+			// handleExchangeRate: function (e) {
+			// 	const self = this;
+			// 	const json = $( e.target ).select2( 'data' )?.[ 0 ];
+			// 	const $amount = this.$(':input[name="amount"]');
+			// 	const $exchange = this.$(':input[name="exchange_rate"]');
+			// 	const $account = this.$(':input[name="account_id"]');
+			// 	const account_id = $account.val();
+			//
+			// 	if (!account_id) {
+			// 		$exchange.val(1.0);
+			// 		$exchange.attr('readonly', true).val(1.0);
+			// 		return;
+			// 	}
+			// 	console.log(eac_currencies[json.currency]);
+			// 	$amount.data('currency', json.currency).removeClass('enhanced');
+			// 	$exchange.val(eac_currencies[json.currency].rate || 1.0);
+			// 	$exchange.attr('readonly', json.currency === eac_base_currency);
+			// 	$(document.body).trigger('eac_update_ui');
+			// },
+		});
 	});
 
 	/**

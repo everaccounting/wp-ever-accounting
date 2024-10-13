@@ -158,14 +158,14 @@ $invoice = EAC()->invoices->get( $id );
 
 			eac_form_field(
 				array(
-					'label'         => __( 'Amount', 'wp-ever-accounting' ),
-					'name'          => 'amount',
-					'placeholder'   => '0.00',
-//					'value'         => $payment->amount,
-					'required'      => true,
-					'tooltip'       => __( 'Enter the amount in the currency of the selected account, use (.) for decimal.', 'wp-ever-accounting' ),
-//					'data-currency' => $payment->currency,
-					'class'         => 'eac_amount',
+					'label'       => __( 'Amount', 'wp-ever-accounting' ),
+					'name'        => 'amount',
+					'placeholder' => '0.00',
+					// 'value'         => $payment->amount,
+														'required' => true,
+					'tooltip'     => __( 'Enter the amount in the currency of the selected account, use (.) for decimal.', 'wp-ever-accounting' ),
+					// 'data-currency' => $payment->currency,
+														'class' => 'eac_amount',
 				)
 			);
 

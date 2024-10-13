@@ -52,13 +52,20 @@ class Invoices {
 	public static function handle_actions() {
 		if ( isset( $_POST['action'] ) && 'eac_edit_invoice' === $_POST['action'] && check_admin_referer( 'eac_edit_invoice' ) && current_user_can( 'eac_manage_invoice' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability.
 			$invoice = EAC()->invoices->insert( $_POST );
-
+			$referer = wp_get_referer();
 			if ( is_wp_error( $invoice ) ) {
 				EAC()->flash->error( $invoice->get_error_message() );
 			} else {
 				EAC()->flash->success( __( 'Invoice saved successfully.', 'wp-ever-accounting' ) );
+				$referer = add_query_arg( 'id', $invoice->id, $referer );
+				$referer = add_query_arg( 'action', 'view', $referer );
+				$referer = remove_query_arg( array( 'add' ), $referer );
 			}
-		} elseif ( isset( $_POST['action'] ) && 'eac_update_invoice' === $_POST['action'] && check_admin_referer( 'eac_update_invoice' ) && current_user_can( 'eac_manage_invoice' ) ) {// phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability.
+
+			wp_safe_redirect( $referer );
+			exit;
+		}
+		if ( isset( $_POST['action'] ) && 'eac_update_invoice' === $_POST['action'] && check_admin_referer( 'eac_update_invoice' ) && current_user_can( 'eac_manage_invoice' ) ) {// phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability.
 			$id             = isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0;
 			$status         = isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : '';
 			$attachment_id  = isset( $_POST['attachment_id'] ) ? absint( wp_unslash( $_POST['attachment_id'] ) ) : 0;

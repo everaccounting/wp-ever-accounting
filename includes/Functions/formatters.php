@@ -132,3 +132,45 @@ function eac_get_formatted_address( $fields = array(), $separator = '<br/>' ) {
 
 	return implode( $separator, $address_lines );
 }
+
+
+/**
+ * Date Format - Allows to change date format.
+ *
+ * @since 1.0.0
+ * @return string
+ */
+function eac_date_format() {
+	$date_format = get_option( 'date_format' );
+	if ( empty( $date_format ) ) {
+		// Return default date format if the option is empty.
+		$date_format = 'F j, Y';
+	}
+
+	return apply_filters( 'eac_date_format', $date_format );
+}
+
+/**
+ * Time Format - Allows to change time format.
+ *
+ * @return string
+ */
+function eac_time_format() {
+	$time_format = get_option( 'time_format' );
+	if ( empty( $time_format ) ) {
+		// Return default time format if the option is empty.
+		$time_format = 'g:i a';
+	}
+
+	return apply_filters( 'eac_time_format', $time_format );
+}
+
+/**
+ * Date Time Format - Allows to change date time format for everything WooCommerce.
+ * Combines date and time formats.
+ *
+ * @return string
+ */
+function eac_date_time_format() {
+	return eac_date_format() . '@' . eac_time_format();
+}

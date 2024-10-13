@@ -17,6 +17,8 @@ use ByteKit\Models\Relations\BelongsToMany;
  *
  * @property-read  int      $id Invoice ID.
  * @property-read  int      $customer_id Customer ID.
+ * @property-read  string   $order_number Order number.
+ * @property-read  string   $status_label Status label.
  * @property-read  Customer $customer Customer relation.
  * @property-read Payment[] $payments Invoice payments.
  */
@@ -62,6 +64,18 @@ class Invoice extends Document {
 		$this->aliases['customer_id']  = 'contact_id';
 		$this->aliases['order_number'] = 'reference';
 		parent::__construct( $attributes );
+	}
+
+	/**
+	 * Get formatted status.
+	 *
+	 * @since 1.0.0
+	 * @return string
+	 */
+	public function get_status_label() {
+		$statuses = EAC()->invoices->get_statuses();
+
+		return array_key_exists( $this->status, $statuses ) ? $statuses[ $this->status ] : $this->status;
 	}
 
 	/**

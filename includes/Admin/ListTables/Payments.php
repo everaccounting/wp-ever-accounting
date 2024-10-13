@@ -33,26 +33,7 @@ class Payments extends ListTable {
 				)
 			)
 		);
-		add_filter( 'set-screen-option', array( __CLASS__, 'set_screen_option' ), 10, 3 );
 		$this->base_url = admin_url( 'admin.php?page=eac-sales&tab=payments' );
-	}
-
-	/**
-	 * Set screen option.
-	 *
-	 * @param mixed  $status Status.
-	 * @param string $option Option.
-	 * @param mixed  $value Value.
-	 *
-	 * @since 3.0.0
-	 * @return mixed
-	 */
-	public static function set_screen_option( $status, $option, $value ) {
-		if ( 'eac_payments_per_page' === $option ) {
-			return $value;
-		}
-
-		return $status;
 	}
 
 	/**
@@ -71,6 +52,7 @@ class Payments extends ListTable {
 		$account_id  = filter_input( INPUT_GET, 'account_id', FILTER_VALIDATE_INT );
 		$category_id = filter_input( INPUT_GET, 'category_id', FILTER_VALIDATE_INT );
 		$contact_id  = filter_input( INPUT_GET, 'customer_id', FILTER_VALIDATE_INT );
+		$date        = filter_input( INPUT_GET, 'date', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 		$args        = array(
 			'limit'       => $per_page,
 			'page'        => $paged,
@@ -81,6 +63,7 @@ class Payments extends ListTable {
 			'account_id'  => $account_id,
 			'category_id' => $category_id,
 			'contact_id'  => $contact_id,
+			'date'        => $date,
 		);
 		/**
 		 * Filter the query arguments for the list table.
@@ -115,7 +98,7 @@ class Payments extends ListTable {
 		$performed = 0;
 		foreach ( $ids as $id ) {
 			if ( EAC()->payments->delete( $id ) ) {
-				++$performed;
+				++ $performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {

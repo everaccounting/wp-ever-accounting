@@ -1,6 +1,6 @@
 .eac-notes {
 	list-style: none;
-	padding: 0;
+	padding: 2px 0 0;
 	margin: 0;
 	max-height: 400px;
 	overflow-y: auto;
@@ -8,50 +8,50 @@
 
 	li {
 		margin-bottom: 10px;
-	}
 
-	li:last-child {
-		margin-bottom: 0;
-	}
+		.note__content {
+			padding: 10px;
+			background: #efefef;
+			position: relative;
 
-	.note {
-		padding: 10px;
-		border: 1px solid #e1e2e2;
-		border-radius: 4px;
-		background: #f6f7f7;
-
-		&__header {
-			display: flex;
-			align-items: center;
-			margin-bottom: 10px;
-
-			strong {
-				font-size: 12px;
-				color: #333;
-				margin-right: 5px;
+			&::after{
+				content: "";
+				display: block;
+				position: absolute;
+				bottom: -10px;
+				left: 20px;
+				width: 0;
+				height: 0;
+				border-width: 10px 10px 0 0;
+				border-style: solid;
+				border-color: #efefef transparent;
 			}
 
-			time {
-				font-size: 11px;
-				color: #aaa;
+			p {
+				margin: 0;
+				padding: 0;
+				word-wrap: break-word;
 			}
 		}
 
+		.note__meta {
+			padding: 10px;
+			color: #999;
+			margin: 0;
+			font-size: 11px;
 
-		&__delete {
-			color: #777;
-			font-weight: 700;
-			text-decoration: none;
-			margin-left: auto;
-			opacity: .5;
-			transition: all 0.3s ease-in-out;
+			.exact-date {
+				border-bottom: 1px dotted #999;
+			}
 		}
 
-		&:hover {
-			&__delete {
-				color: #333;
-				opacity: 1;
-			}
+		a.note__delete {
+			margin-left: 5px;
+			color: #a00;
+		}
+
+		&:last-child {
+			margin-bottom: 0;
 		}
 	}
 

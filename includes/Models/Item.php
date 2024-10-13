@@ -246,5 +246,4 @@ class Item extends Model {
 	public function get_view_url() {
 		return admin_url( 'admin.php?page=eac-items&tab=items&action=view&id=' . $this->id );
 	}
-
 }

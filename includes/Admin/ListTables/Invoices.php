@@ -190,7 +190,7 @@ class Invoices extends ListTable {
 	public function get_columns() {
 		return array(
 			'cb'         => '<input type="checkbox" />',
-			'number'     => __( 'Invoice #', 'wp-ever-accounting' ),
+			'number'     => __( 'INV #', 'wp-ever-accounting' ),
 			'issue_date' => __( 'Issue Date', 'wp-ever-accounting' ),
 			'due_date'   => __( 'Due Date', 'wp-ever-accounting' ),
 			'customer'   => __( 'Customer', 'wp-ever-accounting' ),
@@ -353,7 +353,7 @@ class Invoices extends ListTable {
 				__( 'Edit', 'wp-ever-accounting' )
 			),
 			'delete' => sprintf(
-				'<a href="%s" class="del">%s</a>',
+				'<a href="%s" class="del del_confirm">%s</a>',
 				esc_url(
 					wp_nonce_url(
 						add_query_arg(

@@ -18,9 +18,9 @@ class Reports {
 	public function __construct() {
 		add_filter( 'eac_reports_page_tabs', array( __CLASS__, 'register_tabs' ) );
 		add_action( 'eac_reports_page_sales_content', array( __CLASS__, 'sales_report' ) );
-		// add_action( 'eac_reports_page_expenses_content', array( Reports\Expenses::class, 'output' ) );
-		// add_action( 'eac_reports_page_profits_content', array( Reports\Profits::class, 'output' ) );
-		// add_action( 'eac_reports_page_taxes_content', array( Reports\Taxes::class, 'output' ) );
+		add_action( 'eac_reports_page_expenses_content', array( __CLASS__, 'expenses_report' ) );
+		add_action( 'eac_reports_page_profits_content', array( __CLASS__, 'profits_report' ) );
+		add_action( 'eac_reports_page_taxes_content', array( __CLASS__, 'taxes_report' ) );
 	}
 
 	/**
@@ -50,5 +50,35 @@ class Reports {
 	 */
 	public static function sales_report() {
 		Reports\Sales::render();
+	}
+
+	/**
+	 * Render the expenses report.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public static function expenses_report() {
+		Reports\Expenses::render();
+	}
+
+	/**
+	 * Render the profits report.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public static function profits_report() {
+		Reports\Profits::render();
+	}
+
+	/**
+	 * Render the taxes report.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public static function taxes_report() {
+		Reports\Taxes::render();
 	}
 }

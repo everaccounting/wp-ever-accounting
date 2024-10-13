@@ -2,6 +2,8 @@
 
 namespace EverAccounting\Admin\Reports;
 
+use EverAccounting\Utilities\ReportsUtil;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -20,12 +22,9 @@ class Sales {
 	 */
 	public static function render() {
 		wp_verify_nonce( '_wpnonce' );
-		$years    = range( wp_date( 'Y' ), 2015 );
 		$year     = ! empty( $_GET['year'] ) ? absint( $_GET['year'] ) : wp_date( 'Y' );
 		$datasets = array();
-		$currency = eac_base_currency();
-		$years    = range( wp_date( 'Y' ), 2015 );
-		$data     = \EverAccounting\Utilities\ReportsUtil::get_payments_report( $year );
+		$data     = ReportsUtil::get_payments_report( $year );
 		$labels   = array_keys( $data['months'] );
 		foreach ( $data['categories'] as $category_id => $datum ) {
 			if ( ! isset( $datasets[ $category_id ] ) ) {
@@ -33,7 +32,7 @@ class Sales {
 				$term_name                = $term && $term->name ? esc_html( $term->name ) : '&mdash;';
 				$datasets[ $category_id ] = array(
 					'label'           => $term_name,
-					'backgroundColor' => eac_get_random_color( $term_name ),
+					'backgroundColor' => ReportsUtil::get_random_color( $term_name ),
 				);
 			}
 			$datasets[ $category_id ]['data'] = array_values( $datum );
@@ -46,7 +45,6 @@ class Sales {
 			'borderColor'     => '#3644ff',
 			'data'            => array_values( $data['months'] ),
 		);
-
 		?>
 		<div class="eac-section-header">
 			<h3>
@@ -68,7 +66,7 @@ class Sales {
 			</div>
 			<div class="eac-card__body">
 				<div class="eac-chart">
-					<canvas id="eac-sales-report" style="min-height: 300px;"></canvas>
+					<canvas id="eac-sales-chart" style="min-height: 300px;"></canvas>
 				</div>
 			</div>
 		</div>
@@ -146,7 +144,7 @@ class Sales {
 
 		<script type="text/javascript">
 			window.onload = function () {
-				var ctx = document.getElementById("eac-sales-report").getContext('2d');
+				var ctx = document.getElementById("eac-sales-chart").getContext('2d');
 				var symbol = "<?php echo esc_html( EAC()->currencies->get_symbol() ); ?>";
 				var myChart = new Chart(ctx, {
 					type: 'bar',
