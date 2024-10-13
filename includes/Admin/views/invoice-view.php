@@ -91,7 +91,7 @@ $invoice = EAC()->invoices->get( $id );
 						<?php if ( 'draft' === $invoice->status ) : ?>
 							<button class="button button-primary"><?php esc_html_e( 'Send Invoice', 'wp-ever-accounting' ); ?></button>
 						<?php elseif ( 'sent' === $invoice->status && ! $invoice->is_paid() ) : ?>
-							<button class="button button-primary"><?php esc_html_e( 'Add Payment', 'wp-ever-accounting' ); ?></button>
+							<button class="button button-primary add-invoice-payment"><?php esc_html_e( 'Add Payment', 'wp-ever-accounting' ); ?></button>
 						<?php endif; ?>
 						<button class="button button-primary"><?php esc_html_e( 'Submit', 'wp-ever-accounting' ); ?></button>
 					</div>
@@ -117,3 +117,94 @@ $invoice = EAC()->invoices->get( $id );
 	<input type="hidden" name="action" value="eac_update_invoice"/>
 	<input type="hidden" name="id" value="<?php echo esc_attr( $invoice->id ); ?>"/>
 </form>
+
+<script type="text/html" id="tmpl-eac-invoice-payment">
+	<div class="eac-modal-header">
+		<h3><?php esc_html_e( 'Add Payment', 'wp-ever-accounting' ); ?></h3>
+	</div>
+	<div class="eac-modal-body">
+		<form id="eac-add-invoice-payment" name="add-invoice-payment" method="post">
+			<?php
+			eac_form_field(
+				array(
+					'label'            => __( 'Account', 'wp-ever-accounting' ),
+					'type'             => 'select',
+					'name'             => 'account_id',
+					'options'          => array(),
+					'value'            => null,
+					'class'            => 'eac_select2',
+					'tooltip'          => __( 'Select the account.', 'wp-ever-accounting' ),
+					'option_value'     => 'id',
+					'option_label'     => 'formatted_name',
+					'data-placeholder' => __( 'Select an account', 'wp-ever-accounting' ),
+					'data-action'      => 'eac_json_search',
+					'data-type'        => 'account',
+					'required'         => true,
+				)
+			);
+			eac_form_field(
+				array(
+					'label'       => __( 'Exchange Rate', 'wp-ever-accounting' ),
+					'type'        => 'number',
+					'name'        => 'exchange_rate',
+					'value'       => 1,
+					'placeholder' => '1.00',
+					'required'    => true,
+					'class'       => 'eac_exchange_rate',
+					'prefix'      => '1 ' . eac_base_currency() . ' = ',
+					'attr-step'   => 'any',
+				)
+			);
+
+			eac_form_field(
+				array(
+					'label'         => __( 'Amount', 'wp-ever-accounting' ),
+					'name'          => 'amount',
+					'placeholder'   => '0.00',
+//					'value'         => $payment->amount,
+					'required'      => true,
+					'tooltip'       => __( 'Enter the amount in the currency of the selected account, use (.) for decimal.', 'wp-ever-accounting' ),
+//					'data-currency' => $payment->currency,
+					'class'         => 'eac_amount',
+				)
+			);
+
+			eac_form_field(
+				array(
+					'label'       => __( 'Date', 'wp-ever-accounting' ),
+					'type'        => 'date',
+					'name'        => 'date',
+					'placeholder' => 'yyyy-mm-dd',
+					'value'       => wp_date( 'Y-m-d' ),
+					'required'    => true,
+					'class'       => 'eac_datepicker',
+				)
+			);
+
+			eac_form_field(
+				array(
+					'label'       => __( 'Payment Method', 'wp-ever-accounting' ),
+					'type'        => 'select',
+					'name'        => 'payment_mode',
+					'value'       => '',
+					'options'     => eac_get_payment_modes(),
+					'placeholder' => __( 'Select &hellip;', 'wp-ever-accounting' ),
+				)
+			);
+			eac_form_field(
+				array(
+					'label'       => __( 'Reference', 'wp-ever-accounting' ),
+					'type'        => 'text',
+					'name'        => 'reference',
+					'value'       => '',
+					'placeholder' => __( 'Enter reference', 'wp-ever-accounting' ),
+				)
+			);
+			?>
+		</form>
+	</div>
+	<div class="eac-modal-footer">
+		<button class="button button-primary" form="add-invoice-payment"><?php esc_html_e( 'Submit', 'wp-ever-accounting' ); ?></button>
+		<button class="button" data-eacmodal-close="true"><?php esc_html_e( 'Cancel', 'wp-ever-accounting' ); ?></button>
+	</div>
+</script>

@@ -76,6 +76,7 @@
 		 * @param {Object} options - Configuration options for the modal view.
 		 */
 		preinitialize: function (options) {
+			_.bindAll( this, 'render' );
 			this.options = options;
 			const {template} = this.options;
 			if (template && typeof template === 'string') {
@@ -105,6 +106,7 @@
 		 * @returns {$.eacmodal.View} - The modal view instance.
 		 */
 		render: function () {
+			_.bindAll( this, 'render' );
 			wp.Backbone.View.prototype.render.apply(this, arguments);
 			this.$el.attr('id', _.uniqueId('eac-modal-'));
 			this.$el.wrapInner('<div class="eac-modal__main" role="main"></div>');
@@ -113,6 +115,10 @@
 			if (this.options.autoOpen) {
 				this.open();
 			}
+
+			this.delegateEvents({
+				...this.events,
+			});
 			return this;
 		},
 
@@ -128,7 +134,7 @@
 			$(document.body).trigger('eac_update_ui');
 
 			this.delegateEvents({
-				...this.events,
+				// ...this.events,
 				'keydown': 'onKeydown',
 				'touchstart': 'onClick',
 				'click': 'onClick',

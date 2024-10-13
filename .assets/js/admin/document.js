@@ -18,6 +18,7 @@
 		tmpl_shipping_address: '',
 		tmpl_item: '',
 		tmpl_empty: '',
+		tmpl_toolbar: '',
 		tmpl_totals: '',
 	};
 })(jQuery);

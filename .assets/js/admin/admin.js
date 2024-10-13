@@ -867,6 +867,39 @@ jQuery( document ).ready( ( $ ) => {
 	// Initialize Invoice.
 	new Invoice_Form( '#eac-edit-invoice' );
 
+	$('.add-invoice-payment').on('click', function (e) {
+		e.preventDefault();
+		$(this).eacmodal({
+			template: 'eac-invoice-payment',
+			events: {
+				'change #account_id': 'handleExchangeRate',
+				'change #amount': 'handleAmountChange',
+			},
+			handleExchangeRate: function (e) {
+				var self = this;
+				var $amount = this.$(':input[name="amount"]');
+				var $exchange = this.$(':input[name="exchange_rate"]');
+				var $account = this.$(':input[name="account_id"]');
+				console.log($amount);
+				console.log($exchange);
+				console.log($account);
+				// var self = this;
+				// var $amount = this.$(':input[name="amount"]');
+				// var $conversion = this.$(':input[name="exchange_rate"]');
+				// var account_id = this.$(':input[name="account_id"]').val();
+				//
+				// if (!account_id) {
+				// 	$conversion.val(1.0);
+				// 	$conversion.attr('readonly', true).val(1.0);
+				// 	return;
+				// }
+			},
+			handleAmountChange: function (e) {
+				console.log(e);
+			},
+		})
+	});
+
 	/**
 	 * ========================================================================
 	 * PURCHASES UI
