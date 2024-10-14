@@ -80,7 +80,7 @@ class Menus {
 			self::PARENT_SLUG,
 			null,
 			$icon,
-			'54.5'
+			2
 		);
 		$admin_page_hooks['ever-accounting'] = 'ever-accounting';
 
@@ -264,9 +264,9 @@ class Menus {
 					do_action( 'eac_' . $this->current_page . '_page_after_tab_items', $this->current_tab, $this->tabs[ $this->current_page ] );
 					?>
 				</nav>
-
-				<hr class="wp-header-end">
 			<?php endif; ?>
+
+			<hr class="wp-header-end">
 
 			<?php
 			if ( ! empty( $this->current_page ) && ! empty( $this->current_tab ) && has_action( 'eac_' . $this->current_page . '_page_' . $this->current_tab . '_content' ) ) {

@@ -131,6 +131,7 @@ class Plugin extends \ByteKit\Plugin {
 
 		$handlers = array(
 			'EverAccounting\Currencies',
+			'EverAccounting\Contacts',
 			'EverAccounting\Documents',
 			'EverAccounting\Shortcodes',
 			'EverAccounting\Transactions',
@@ -140,14 +141,7 @@ class Plugin extends \ByteKit\Plugin {
 			$this->services->add( $handler );
 		}
 
-		// $this->services->add( new Currencies() );
-		// $this->services->add( new Documents() );
-		// $this->services->add( new Shortcodes() );
-		// $this->services->add( new Transactions() );
-		// $this->services->add( new Transfers() );
-
 		if ( is_admin() ) {
-
 			$handles = array(
 				'EverAccounting\Admin\Admin',
 				'EverAccounting\Admin\Menus',
@@ -174,44 +168,6 @@ class Plugin extends \ByteKit\Plugin {
 			foreach ( $handles as $handle ) {
 				$this->services->add( $handle );
 			}
-			//
-			// $this->services->add( Admin\Admin::class );
-			// $this->services->add( Admin\Menus::class );
-			// $this->services->add( Admin\Scripts::class );
-			// $this->services->add( Admin\Ajax::class );
-			//
-			// Dashboard.
-			// $this->services->add( Admin\Dashboard::class );
-			//
-			// Items.
-			// $this->services->add( Admin\Items::class );
-			//
-			// Sales.
-			// $this->services->add( Admin\Payments::class );
-			// $this->services->add( Admin\Invoices::class );
-			// $this->services->add( Admin\Customers::class );
-			//
-			// Purchases.
-			// $this->services->add( Admin\Expenses::class );
-			// $this->services->add( Admin\Bills::class );
-			// $this->services->add( Admin\Vendors::class );
-			//
-			// Banking.
-			// $this->services->add( Admin\Accounts::class );
-			// $this->services->add( Admin\Transactions::class );
-			// $this->services->add( Admin\Transfers::class );
-			//
-			// Tools.
-			// $this->services->add( Admin\Tools::class );
-			//
-			// Reports.
-			// $this->services->add( Admin\Reports::class );
-			//
-			// Settings.
-			// $this->services->add( Admin\Settings::class );
-			// $this->services->add( Admin\Currencies::class );
-			// $this->services->add( Admin\Taxes::class );
-			// $this->services->add( Admin\Categories::class );
 		}
 
 		/**

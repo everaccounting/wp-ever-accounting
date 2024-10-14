@@ -70,7 +70,8 @@ class Items {
 				$referer = add_query_arg( 'id', $item->id, $referer );
 				$referer = remove_query_arg( array( 'add' ), $referer );
 			}
-
+			var_dump($referer);
+			exit();
 			wp_safe_redirect( $referer );
 			exit;
 		}
@@ -143,6 +144,11 @@ class Items {
 	 * @return void
 	 */
 	public static function item_notes( $item ) {
+		// if does not exist, return.
+		if ( ! $item->exists() ) {
+			return;
+		}
+
 		$notes = EAC()->notes->query(
 			array(
 				'parent_id'   => $item->id,

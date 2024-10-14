@@ -58,6 +58,7 @@
 		cursor: pointer;
 		transition: background-color 0.3s ease;
 		box-sizing: border-box;
+		position: relative;
 
 		&:hover {
 			background-color: #f9f9f9;
@@ -70,6 +71,7 @@
 			display: flex;
 			color: #1e1e1e;
 			margin-bottom: 8px;
+			position: relative;
 		}
 
 		.eac-stat__value {
@@ -77,6 +79,7 @@
 			color: #1e1e1e;
 			font-size: 20px;
 			line-height: 1.4;
+			position: relative;
 		}
 
 		.eac-stat__delta {
@@ -92,6 +95,11 @@
 			padding-bottom: 0.125em;
 			font-size: 10px;
 			line-height: 1;
+			position: absolute;
+			top: 0;
+			right: 0;
+			transform: translate(50%, -50%);
+			white-space: nowrap;
 
 			&.is--negative {
 				color: #dc2626;

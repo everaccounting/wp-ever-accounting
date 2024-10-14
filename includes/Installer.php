@@ -430,7 +430,7 @@ CREATE TABLE {$wpdb->prefix}ea_transactions (
     type VARCHAR(20) DEFAULT NULL,
     status VARCHAR(20) NOT NULL DEFAULT 'completed',
     number VARCHAR(30) NOT NULL,
-    date DATE NOT NULL DEFAULT '0000-00-00',
+    date DATE NOT NULL,
     amount DOUBLE(15, 4) NOT NULL,
     currency VARCHAR(3) NOT NULL DEFAULT 'USD',
     exchange_rate DOUBLE(15, 8) NOT NULL DEFAULT 1.0,

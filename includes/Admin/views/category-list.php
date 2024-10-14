@@ -10,6 +10,7 @@
  */
 
 defined( 'ABSPATH' ) || exit;
+global $list_table;
 ?>
 	<h1 class="wp-heading-inline">
 		<?php esc_html_e( 'Categories', 'wp-ever-accounting' ); ?>
@@ -27,7 +28,7 @@ defined( 'ABSPATH' ) || exit;
 		<?php $list_table->views(); ?>
 		<?php $list_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'search' ); ?>
 		<?php $list_table->display(); ?>
-		<input type="hidden" name="page" value="eac-misc"/>
+		<input type="hidden" name="page" value="eac-settings"/>
 		<input type="hidden" name="tab" value="categories"/>
 	</form>
 <?php

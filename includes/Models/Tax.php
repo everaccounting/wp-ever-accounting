@@ -152,6 +152,6 @@ class Tax extends Model {
 	 * @return string
 	 */
 	public function get_edit_url() {
-		return admin_url( 'admin.php?page=eac-settings&tab=taxes&action=edit&id=' . $this->id );
+		return admin_url( 'admin.php?page=eac-settings&tab=taxes&section=rates&action=edit&id=' . $this->id );
 	}
 }

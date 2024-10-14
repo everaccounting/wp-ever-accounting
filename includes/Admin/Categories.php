@@ -20,10 +20,8 @@ class Categories {
 	 */
 	public function __construct() {
 		add_filter( 'eac_settings_page_tabs', array( __CLASS__, 'register_tabs' ) );
-		add_action( 'eac_settings_page_categories_content', array( __CLASS__, 'render_table' ) );
-		add_action( 'eac_settings_page_categories_add', array( __CLASS__, 'render_add' ) );
-		add_action( 'eac_settings_page_categories_edit', array( __CLASS__, 'render_edit' ) );
-		add_action( 'admin_post_eac_edit_category', array( __CLASS__, 'handle_edit_category' ) );
+		add_action( 'eac_settings_page_categories_loaded', array( __CLASS__, 'handle_actions' ) );
+		add_action( 'eac_settings_page_categories_content', array( __CLASS__, 'render_content' ) );
 	}
 
 	/**
@@ -41,81 +39,56 @@ class Categories {
 	}
 
 	/**
-	 * Render categories table.
+	 * Handle actions.
 	 *
 	 * @since 3.0.0
-	 */
-	public static function render_table() {
-		$list_table = new ListTables\Categories();
-		$list_table->prepare_items();
-		include __DIR__ . '/views/category-list.php';
-	}
-
-	/**
-	 * Render add category form.
-	 *
-	 * @since 3.0.0
-	 */
-	public static function render_add() {
-		$category = new Category();
-		include __DIR__ . '/views/category-add.php';
-	}
-
-	/**
-	 * Render edit category form.
-	 *
-	 * @since 3.0.0
-	 */
-	public static function render_edit() {
-		$id       = filter_input( INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT );
-		$category = Category::find( $id );
-		if ( ! $category ) {
-			esc_html_e( 'The specified category does not exist.', 'wp-ever-accounting' );
-
-			return;
-		}
-
-		include __DIR__ . '/views/category-edit.php';
-	}
-
-	/**
-	 * Edit category.
-	 *
-	 * @since 1.2.0
 	 * @return void
 	 */
-	public static function handle_edit_category() {
-		check_admin_referer( 'eac_edit_category' );
-		$referer = wp_get_referer();
-		$id      = isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0;
-		$name    = isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '';
-		$type    = isset( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '';
-		$desc    = isset( $_POST['description'] ) ? sanitize_textarea_field( wp_unslash( $_POST['description'] ) ) : '';
-
-		$category = EAC()->categories->insert(
-			array(
-				'id'          => $id,
-				'name'        => $name,
-				'type'        => $type,
-				'description' => $desc,
-			)
-		);
-
-		if ( is_wp_error( $category ) ) {
-			EAC()->flash->error( $category->get_error_message() );
-		} else {
-			EAC()->flash->success( __( 'Category saved successfully.', 'wp-ever-accounting' ) );
-			$referer = add_query_arg(
-				array(
-					'action' => 'edit',
-					'id'     => $category->id,
-				),
-				$referer
+	public static function handle_actions() {
+		if ( isset( $_POST['action'] ) && 'eac_edit_category' === $_POST['action'] && check_admin_referer( 'eac_edit_category' ) && current_user_can( 'eac_manage_category' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability.
+			$referer = wp_get_referer();
+			$data = array(
+				'id'          => isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0,
+				'name'        => isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '',
+				'type'        => isset( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '',
+				'description' => isset( $_POST['description'] ) ? sanitize_textarea_field( wp_unslash( $_POST['description'] ) ) : '',
 			);
-			$referer = remove_query_arg( array( 'add' ), $referer );
-		}
 
-		wp_safe_redirect( $referer );
-		exit;
+			$item = EAC()->categories->insert( $data );
+			if ( is_wp_error( $item ) ) {
+				EAC()->flash->error( $item->get_error_message() );
+			} else {
+				EAC()->flash->success( __( 'Category saved successfully.', 'wp-ever-accounting' ) );
+				$referer = add_query_arg( 'id', $item->id, $referer );
+				$referer = remove_query_arg( array( 'add' ), $referer );
+			}
+
+			wp_safe_redirect( $referer );
+			exit;
+		}
+	}
+
+	/**
+	 * Render content.
+	 *
+	 * @since 3.0.0
+	 * @return void
+	 */
+	public static function render_content() {
+		$action = filter_input( INPUT_GET, 'action', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
+		$id     = filter_input( INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT );
+
+		switch ( $action ) {
+			case 'add':
+			case 'edit':
+				include __DIR__ . '/views/category-edit.php';
+				break;
+			default:
+				global $list_table;
+				$list_table = new ListTables\Categories();
+				$list_table->prepare_items();
+				include __DIR__ . '/views/category-list.php';
+				break;
+		}
 	}
 }

@@ -262,19 +262,34 @@ class General extends Page {
 				'type'  => 'title',
 				'id'    => 'page_setup_options',
 			),
-
-			// invoice page.
+			array(
+				'title'    => __( 'Payment Page', 'wp-ever-accounting' ),
+				'desc'     => __( 'This page should have the [eac_payment] shortcode.', 'wp-ever-accounting' ),
+				'id'       => 'eac_payment_page_id',
+				'type'     => 'page',
+				'default'  => '',
+			),
+			array(
+				'title'    => __( 'Expense Page', 'wp-ever-accounting' ),
+				'desc'     => __( 'This page should have the [eac_expense] shortcode.', 'wp-ever-accounting' ),
+				'id'       => 'eac_expense_page_id',
+				'type'     => 'page',
+				'default'  => '',
+			),
 			array(
 				'title'    => __( 'Invoice Page', 'wp-ever-accounting' ),
-				'desc'     => __( 'The page where the invoices are displayed.', 'wp-ever-accounting' ),
-				'id'       => 'eac_invoice_page',
-				'type'     => 'single_select_page_with_search',
+				'desc'     => __( 'This page should have the [eac_invoice] shortcode.', 'wp-ever-accounting' ),
+				'id'       => 'eac_invoice_page_id',
+				'type'     => 'page',
 				'default'  => '',
-				'class'    => 'eac_select2',
-				'desc_tip' => true,
 			),
-
-			// end.
+			array(
+				'title'    => __( 'Bill Page', 'wp-ever-accounting' ),
+				'desc'     => __( 'This page should have the [eac_bill] shortcode.', 'wp-ever-accounting' ),
+				'id'       => 'eac_bill_page_id',
+				'type'     => 'page',
+				'default'  => '',
+			),
 			array(
 				'type' => 'sectionend',
 				'id'   => 'page_setup_options',

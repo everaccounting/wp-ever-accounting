@@ -49,6 +49,26 @@ class Customer extends Contact {
 	*/
 
 	/**
+	 * Update total paid amount.
+	 *
+	 * @since 1.0.0
+	 * @return bool
+	 */
+	public function update_amount_paid() {
+		global $wpdb;
+		$amount = (float) $wpdb->get_var( $wpdb->prepare(
+			"SELECT SUM( amount / exchange_rate)
+			 FROM {$wpdb->prefix}ea_transactions
+			 WHERE contact_id = %d
+			 AND type = 'payment'
+			 AND status = 'completed'",
+			$this->id
+		) );
+		$this->set_meta( 'total_paid', $amount );
+		return ! is_wp_error( $this->save() ) ? $amount : false;
+	}
+
+	/**
 	 * Get edit URL.
 	 *
 	 * @since 1.0.0

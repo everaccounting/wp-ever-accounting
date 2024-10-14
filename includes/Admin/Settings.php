@@ -23,7 +23,7 @@ class Settings {
 	 * @since 1.0.0
 	 */
 	public function __construct() {
-		add_filter( 'eac_settings_page_tabs', array( __CLASS__, 'register_tabs' ), -1 );
+		add_filter( 'eac_settings_page_tabs', array( __CLASS__, 'register_tabs' ), - 1 );
 		add_action( 'eac_settings_page_loaded', array( __CLASS__, 'save_settings' ) );
 	}
 
@@ -205,7 +205,7 @@ class Settings {
 			$tooltip           = $field_description['tooltip'];
 
 			// Suffix handling.
-			$suffix = is_callable( $value['suffix'] ) ? call_user_func( $value['suffix'], $value ) : $value['suffix'];
+			$suffix                       = is_callable( $value['suffix'] ) ? call_user_func( $value['suffix'], $value ) : $value['suffix'];
 
 			// Switch based on type.
 			switch ( $value['type'] ) {
@@ -296,12 +296,12 @@ class Settings {
 					break;
 
 				case 'select':
-					$value['value']       = wp_parse_list( $value['value'] );
+					$value['value'] = wp_parse_list( $value['value'] );
 					$value['value']       = array_map( 'strval', $value['value'] );
 					$value['placeholder'] = ! empty( $value['placeholder'] ) ? $value['placeholder'] : __( 'Select an option&hellip;', 'wp-ever-accounting' );
 					if ( ! empty( $value['multiple'] ) ) {
 						$value['name'] .= '[]';
-						$attrs[]        = 'multiple="multiple"';
+						$attrs[]       = 'multiple="multiple"';
 					}
 					if ( ! empty( $value['option_key'] ) && ! empty( $value['option_value'] ) ) {
 						// verify options is an array otherwise we will make it an array.
@@ -468,14 +468,14 @@ class Settings {
 					break;
 				// Days/months/years selector.
 				case 'relative_date_selector':
-					$periods         = array(
+					$periods = array(
 						'days'   => __( 'Day(s)', 'wp-ever-accounting' ),
 						'weeks'  => __( 'Week(s)', 'wp-ever-accounting' ),
 						'months' => __( 'Month(s)', 'wp-ever-accounting' ),
 						'years'  => __( 'Year(s)', 'wp-ever-accounting' ),
 					);
-					$value['number'] = ! empty( $value['number'] ) ? absint( $value['number'] ) : '';
-					$value['period'] = ! empty( $value['period'] ) ? $value['period'] : 'days';
+					$value['number']      = ! empty( $value['number'] ) ? absint( $value['number'] ) : '';
+					$value['period']      = ! empty( $value['period'] ) ? $value['period'] : 'days';
 
 					?>
 					<tr valign="top">
@@ -516,11 +516,50 @@ class Settings {
 					?>
 					<tr valign="top">
 						<th scope="row" class="titledesc">
-							<label
-								for="<?php echo esc_attr( $value['name'] ); ?>"><?php echo esc_html( $value['title'] ); ?><?php echo wp_kses_post( $tooltip ); ?></label>
+							<label for="<?php echo esc_attr( $value['name'] ); ?>"><?php echo esc_html( $value['title'] ); ?><?php echo wp_kses_post( $tooltip ); ?></label>
 						</th>
 						<td class="forminp forminp-<?php echo esc_attr( $value['type'] ); ?>">
 							<?php wp_editor( $value['value'], $value['name'], array( 'textarea_name' => $value['name'] ) ); ?>
+							<?php echo wp_kses_post( $description ); ?>
+						</td>
+					</tr>
+					<?php
+					break;
+
+				case 'page':
+					$option_value = $value['value'];
+					$page                 = get_post( $option_value );
+
+					if ( ! is_null( $page ) ) {
+						$page                = get_post( $option_value );
+						$option_display_name = sprintf(
+						/* translators: 1: page name 2: page ID */
+							__( '%1$s (ID: %2$s)', 'wp-ever-accounting' ),
+							$page->post_title,
+							$option_value
+						);
+					}
+					?>
+					<tr valign="top">
+						<th scope="row" class="titledesc">
+							<label for="<?php echo esc_attr( $value['name'] ); ?>"><?php echo esc_html( $value['title'] ); ?><?php echo wp_kses_post( $tooltip ); ?></label>
+						</th>
+						<td class="forminp forminp-<?php echo esc_attr( $value['type'] ); ?>">
+							<select
+								name="<?php echo esc_attr( $value['name'] ); ?>"
+								id="<?php echo esc_attr( $value['name'] ); ?>"
+								style="<?php echo esc_attr( $value['css'] ); ?>"
+								class="eac_select2 <?php echo esc_attr( $value['class'] ); ?>"
+								<?php echo wp_kses_post( implode( ' ', $attrs ) ); ?>
+								data-placeholder="<?php esc_attr_e( 'Search for a page&hellip;', 'woocommerce' ); ?>"
+								data-allow_clear="true"
+								data-action="eac_json_search"
+								data-type="page"
+							>
+								<?php if ( ! is_null( $page ) ) { ?>
+									<option value="<?php echo esc_attr( $option_value ); ?>" selected="selected"><?php echo wp_strip_all_tags( $option_display_name ); ?></option>
+								<?php } ?>
+							</select>
 							<?php echo wp_kses_post( $description ); ?>
 						</td>
 					</tr>

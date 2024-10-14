@@ -48,9 +48,22 @@ abstract class Page {
 		$this->label   = $label;
 		$this->section = (string) filter_input( INPUT_GET, 'section', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 
+		add_action( 'eac_settings_page_' . $this->id . '_loaded', array( $this, 'save_settings' ) );
 		add_action( 'eac_settings_page_' . $this->id . '_content', array( $this, 'render_sections' ) );
 		add_action( 'eac_settings_page_' . $this->id . '_content', array( $this, 'render_content' ) );
-		add_action( 'eac_settings_save_' . $this->id, array( $this, 'save_settings' ) );
+	}
+
+	/**
+	 * Save settings.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public function save_settings() {
+		$settings = $this->get_section_settings( $this->section );
+		if ( Settings::save_fields( $settings ) ) {
+			EAC()->flash->success( __( 'Settings saved.', 'wp-ever-accounting' ) );
+		}
 	}
 
 	/**
@@ -86,7 +99,7 @@ abstract class Page {
 	 */
 	public function render_content() {
 		$settings = $this->get_section_settings( $this->section );
-		$action   = 'eac_settings_' . $this->id . '_tab' . ( $this->section ? '_' . $this->section : '' );
+		$action   = 'eac_settings_' . $this->id . '_tab' . ( $this->section ? '_' . $this->section : '' ) . '_content';
 		if ( has_action( $action ) ) : ?>
 			<?php
 			/**
@@ -112,19 +125,6 @@ abstract class Page {
 			</form>
 		<?php endif; ?>
 		<?php
-	}
-
-	/**
-	 * Save settings.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	public function save_settings() {
-		$settings = $this->get_section_settings( $this->section );
-		if ( Settings::save_fields( $settings ) ) {
-			EAC()->flash->success( __( 'Settings saved.', 'wp-ever-accounting' ) );
-		}
 	}
 
 	/**

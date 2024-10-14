@@ -151,6 +151,16 @@ class Purchases extends Page {
 				'default'     => 'Thank you for your business!',
 				'desc_tip'    => true,
 			),
+			//terms.
+			array(
+				'title'       => __( 'Terms', 'wp-ever-accounting' ),
+				'desc'        => __( 'The terms that will be added to the bill automatically when you create a new bill.', 'wp-ever-accounting' ),
+				'id'          => 'eac_bill_terms',
+				'type'        => 'textarea',
+				'placeholder' => 'e.g. Payment is due within 30 days.',
+				'default'     => 'Payment is due within 30 days.',
+				'desc_tip'    => true,
+			),
 			// end section.
 			array(
 				'type' => 'sectionend',

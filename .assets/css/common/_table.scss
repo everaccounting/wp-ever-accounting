@@ -29,4 +29,8 @@
 		border: 1px solid #c3c4c7;
 		border-collapse: collapse;
 	}
+
+	&.is--fixed {
+		table-layout: fixed;
+	}
 }

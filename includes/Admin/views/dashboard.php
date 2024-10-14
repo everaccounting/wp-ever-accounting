@@ -8,19 +8,44 @@
  */
 
 defined( 'ABSPATH' ) || exit;
+
+
 ?>
 
 <div class="wrap eac-wrap">
 	<h1 class="wp-heading-inline"><?php esc_html_e( 'Dashboard', 'wp-ever-accounting' ); ?></h1>
 
-	<div class="eac-card">
-		<div class="eac-card__header">
-			<?php esc_html_e( 'Overview', 'wp-ever-accounting' ); ?>
-		</div>
+	<?php
+	/**
+	 * Fire action to add dashboard widgets.
+	 *
+	 * @since 2.0.0
+	 * @hook eac_dashboard_core_widgets
+	 */
+	do_action( 'eac_dashboard_overview_widgets' );
+	?>
 
-		<div class="eac-card__body">
-
-		</div>
+	<div class="eac-grid cols-2">
+		<?php
+		/**
+		 * Fire action to add dashboard widgets.
+		 *
+		 * @since 2.0.0
+		 * @hook eac_dashboard_advanced_widgets
+		 */
+		do_action( 'eac_dashboard_advanced_widgets' );
+		?>
 	</div>
 
+	<div class="eac-grid cols-3">
+		<?php
+		/**
+		 * Fire action to add dashboard widgets.
+		 *
+		 * @since 2.0.0
+		 * @hook eac_dashboard_widgets
+		 */
+		do_action( 'eac_dashboard_widgets' );
+		?>
+	</div>
 </div>

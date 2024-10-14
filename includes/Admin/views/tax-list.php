@@ -10,9 +10,11 @@
  */
 
 defined( 'ABSPATH' ) || exit;
+
+global $list_table;
 ?>
 	<h1 class="wp-heading-inline">
-		<?php esc_html_e( 'Tax Taxes', 'wp-ever-accounting' ); ?>
+		<?php esc_html_e( 'Taxes', 'wp-ever-accounting' ); ?>
 		<a href="<?php echo esc_attr( admin_url( 'admin.php?page=eac-settings&tab=taxes&section=rates&action=add' ) ); ?>" class="button button-small">
 			<?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?>
 		</a>

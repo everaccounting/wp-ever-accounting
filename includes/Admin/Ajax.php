@@ -165,16 +165,27 @@ class Ajax {
 				break;
 
 			case 'page':
-				$pages   = EAC()->pages->query( $args );
-				$total   = EAC()->pages->query( $args, true );
-				$results = array_map(
-					function ( $item ) {
-						$item->text = $item->formatted_name;
-
-						return $item->to_array();
-					},
-					$pages
+				// query pages.
+				$wp_query = new \WP_Query(
+					array(
+						'post_type'      => 'page',
+						'posts_per_page' => $limit,
+						'paged'          => $page,
+						's'              => $term,
+					)
 				);
+
+				$pages = $wp_query->get_posts();
+				$total = $wp_query->found_posts;
+				foreach ( $pages as $_page ) {
+					$results[] = array(
+						'id'   => $_page->ID,
+						'text' => empty( $_page->post_title ) ? __( '(No title)', 'wp-ever-accounting' ) : wp_strip_all_tags( $_page->post_title ),
+					);
+				}
+
+				// reset post data.
+				$wp_query->reset_postdata();
 				break;
 
 			default:

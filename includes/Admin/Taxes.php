@@ -7,7 +7,7 @@ use EverAccounting\Models\Tax;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * TaxRates class.
+ * Taxes class.
  *
  * @since 3.0.0
  * @package EverAccounting\Admin
@@ -18,8 +18,39 @@ class Taxes {
 	 * TaxRates constructor.
 	 */
 	public function __construct() {
-		add_action( 'eac_settings_taxes_tab_rates', array( __CLASS__, 'render_content' ) );
-		add_action( 'admin_post_eac_edit_tax', array( __CLASS__, 'handle_edit_tax' ) );
+		add_action( 'eac_settings_page_taxes_loaded', array( __CLASS__, 'handle_actions' ) );
+		add_action( 'eac_settings_taxes_tab_rates_content', array( __CLASS__, 'render_content' ) );
+	}
+
+	/**
+	 * Handle actions.
+	 *
+	 * @since 3.0.0
+	 * @return void
+	 */
+	public static function handle_actions() {
+		if ( isset( $_POST['action'] ) && 'eac_edit_tax' === $_POST['action'] && check_admin_referer( 'eac_edit_tax' ) && current_user_can( 'eac_manage_tax' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability.
+			$referer = wp_get_referer();
+			$data = array(
+				'id'          => isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0,
+				'name'        => isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '',
+				'rate'        => isset( $_POST['rate'] ) ? floatval( wp_unslash( $_POST['rate'] ) ) : 0,
+				'compound'    => isset( $_POST['compound'] ) ? sanitize_text_field( wp_unslash( $_POST['compound'] ) ) : '',
+				'description' => isset( $_POST['description'] ) ? sanitize_textarea_field( wp_unslash( $_POST['description'] ) ) : '',
+			);
+
+			$item = EAC()->taxes->insert( $data );
+			if ( is_wp_error( $item ) ) {
+				EAC()->flash->error( $item->get_error_message() );
+			} else {
+				EAC()->flash->success( __( 'Tax saved successfully.', 'wp-ever-accounting' ) );
+				$referer = add_query_arg( 'id', $item->id, $referer );
+				$referer = remove_query_arg( array( 'add' ), $referer );
+			}
+
+			wp_safe_redirect( $referer );
+			exit;
+		}
 	}
 
 	/**
@@ -32,12 +63,17 @@ class Taxes {
 		$action = filter_input( INPUT_GET, 'action', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 		$id     = filter_input( INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT );
 
-		if ( 'add' === $action ) {
-			self::render_add();
-		} elseif ( 'edit' === $action && $id ) {
-			self::render_edit();
-		} else {
-			self::render_table();
+		switch ( $action ) {
+			case 'add':
+			case 'edit':
+				include __DIR__ . '/views/tax-edit.php';
+				break;
+			default:
+				global $list_table;
+				$list_table = new ListTables\Taxes();
+				$list_table->prepare_items();
+				include __DIR__ . '/views/tax-list.php';
+				break;
 		}
 	}
 

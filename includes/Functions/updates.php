@@ -137,7 +137,7 @@ function eac_update_120() {
 	// Transactions.
 	$table = $wpdb->prefix . 'ea_transactions';
 	$wpdb->query( "UPDATE $table SET type = 'payment' WHERE type = 'income'" );
-	$wpdb->query( "UPDATE $table SET mode = payment_method" );
+	$wpdb->query( "UPDATE $table SET payment_mode = payment_method" );
 	$wpdb->query( "UPDATE $table SET date = payment_date" );
 	$wpdb->query( "UPDATE $table SET currency = currency_code" );
 	$wpdb->query( "UPDATE $table SET note = description" );

@@ -65,17 +65,15 @@ class Payments {
 				'note'          => isset( $_POST['note'] ) ? sanitize_textarea_field( wp_unslash( $_POST['note'] ) ) : '',
 				'status'        => isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : 'active',
 			);
-
 			$payment = EAC()->payments->insert( $data );
 			if ( is_wp_error( $payment ) ) {
 				EAC()->flash->error( $payment->get_error_message() );
 			} else {
 				EAC()->flash->success( __( 'Payment saved successfully.', 'wp-ever-accounting' ) );
-				$referer = add_query_arg( 'id', $invoice->id, $referer );
+				$referer = add_query_arg( 'id', $payment->id, $referer );
 				$referer = add_query_arg( 'action', 'view', $referer );
 				$referer = remove_query_arg( array( 'add' ), $referer );
 			}
-
 			wp_safe_redirect( $referer );
 			exit;
 		}

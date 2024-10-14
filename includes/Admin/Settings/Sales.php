@@ -142,7 +142,6 @@ class Sales extends Page {
 				'type'  => 'title',
 				'id'    => 'defaults_settings',
 			),
-			// note.
 			array(
 				'title'       => __( 'Notes', 'wp-ever-accounting' ),
 				'desc'        => __( 'The note that will be added to the invoice automatically when you create a new invoice.', 'wp-ever-accounting' ),
@@ -150,6 +149,15 @@ class Sales extends Page {
 				'type'        => 'textarea',
 				'placeholder' => 'e.g. Thank you for your business!',
 				'default'     => 'Thank you for your business!',
+				'desc_tip'    => true,
+			),
+			array(
+				'title'       => __( 'Terms', 'wp-ever-accounting' ),
+				'desc'        => __( 'The terms that will be added to the invoice automatically when you create a new invoice.', 'wp-ever-accounting' ),
+				'id'          => 'eac_invoice_terms',
+				'type'        => 'textarea',
+				'placeholder' => 'e.g. Payment is due within 30 days.',
+				'default'     => 'Payment is due within 30 days.',
 				'desc_tip'    => true,
 			),
 			// end section.
