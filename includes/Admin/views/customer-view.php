@@ -20,10 +20,10 @@ $customer = EAC()->customers->get( $id );
 $sections = apply_filters(
 	'eac_customer_view_sections',
 	array(
-		// 'overview'  => __( 'Overview', 'wp-ever-accounting' ),
-								'payments' => __( 'Payments', 'wp-ever-accounting' ),
-		'invoices'                         => __( 'Invoices', 'wp-ever-accounting' ),
-		'notes'                            => __( 'Notes', 'wp-ever-accounting' ),
+		'overview' => __( 'Overview', 'wp-ever-accounting' ),
+		'payments' => __( 'Payments', 'wp-ever-accounting' ),
+		'invoices' => __( 'Invoices', 'wp-ever-accounting' ),
+		'notes'    => __( 'Notes', 'wp-ever-accounting' ),
 	)
 );
 
