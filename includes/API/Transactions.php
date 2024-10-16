@@ -149,7 +149,7 @@ class Transactions extends Controller {
 				'mode'          => array(
 					'description' => __( 'Payment method of the transaction.', 'wp-ever-accounting' ),
 					'type'        => 'string',
-					'enum'        => array_keys( eac_get_payment_modes() ),
+					'enum'        => array_keys( eac_get_payment_methods() ),
 					'context'     => array( 'view', 'embed', 'edit' ),
 				),
 				'attachment'    => array(

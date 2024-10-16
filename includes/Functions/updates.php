@@ -32,7 +32,7 @@ function eac_update_120() {
 		'eac_tax_subtotal_rounding'      => 'tax_subtotal_rounding',
 		'eac_tax_display_totals'         => 'tax_display_totals',
 		'eac_default_sales_account_id'   => 'default_account',
-		'eac_default_sales_payment_mode' => 'default_payment_method',
+		'eac_default_sales_payment_method' => 'default_payment_method',
 		'eac_invoice_prefix'             => 'invoice_prefix',
 		'eac_invoice_digits'             => 'invoice_digit',
 		'eac_invoice_due'                => 'invoice_due',
@@ -137,7 +137,6 @@ function eac_update_120() {
 	// Transactions.
 	$table = $wpdb->prefix . 'ea_transactions';
 	$wpdb->query( "UPDATE $table SET type = 'payment' WHERE type = 'income'" );
-	$wpdb->query( "UPDATE $table SET payment_mode = payment_method" );
 	$wpdb->query( "UPDATE $table SET date = payment_date" );
 	$wpdb->query( "UPDATE $table SET currency = currency_code" );
 	$wpdb->query( "UPDATE $table SET note = description" );
@@ -149,7 +148,6 @@ function eac_update_120() {
 	$wpdb->query( "ALTER TABLE $table DROP payment_date" );
 	$wpdb->query( "ALTER TABLE $table DROP currency_code" );
 	$wpdb->query( "ALTER TABLE $table DROP currency_rate" );
-	$wpdb->query( "ALTER TABLE $table DROP payment_method" );
 	$wpdb->query( "ALTER TABLE $table DROP date_created" );
 	$wpdb->query( "ALTER TABLE $table DROP description" );
 

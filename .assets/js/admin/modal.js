@@ -77,9 +77,12 @@
 		 */
 		preinitialize: function (options) {
 			this.options = options;
-			const {template} = this.options;
+			const {template, data} = this.options;
 			if (template && typeof template === 'string') {
 				this.template = wp.template(template);
+			}
+			if ( data && typeof data === 'object' ) {
+				this.model = new Backbone.Model(data);
 			}
 			this.activeElement = null;
 			wp.Backbone.View.prototype.preinitialize.apply(this, arguments);
@@ -105,7 +108,7 @@
 		 * @returns {$.eacmodal.View} - The modal view instance.
 		 */
 		render: function () {
-			// _.bindAll( this, 'render' );
+			_.bindAll( this, 'render' );
 			wp.Backbone.View.prototype.render.apply(this, arguments);
 			this.$el.attr('id', _.uniqueId('eac-modal-'));
 			this.$el.wrapInner('<div class="eac-modal__main" role="main"></div>');
@@ -114,10 +117,6 @@
 			if (this.options.autoOpen) {
 				this.open();
 			}
-
-			this.delegateEvents({
-				...this.events,
-			});
 			return this;
 		},
 
@@ -134,21 +133,19 @@
 			$(document.body).trigger('eac_update_ui');
 
 			this.delegateEvents({
-				...this.events || {},
 				'keydown': 'onKeydown',
 				'touchstart': 'onClick',
 				'click': 'onClick',
 			});
+			// this.delegate('click', null, this.onClick.bind(this));
 
 			// Bind events.
-			// for (const key in events) {
-			// 	let method = events[key];
-			// 	if (typeof method !== 'function') method = this.options[method];
-			// 	console.log(method);
-			//
-			// 	const match = key.match(/^(\S+)\s*(.*)$/);
-			// 	this.$el.on(match[1], match[2], method.bind(this));
-			// }
+			for (const key in events) {
+				let method = events[key];
+				if (typeof method !== 'function') method = this.options[method];
+				const match = key.match(/^(\S+)\s*(.*)$/);
+				this.$el.on(match[1], match[2], method.bind(this));
+			}
 
 			this.setFocus();
 			if (typeof this.options.onOpen === 'function') {
@@ -180,7 +177,6 @@
 		 * @param {Event} event - The click event object.
 		 */
 		onClick: function (event) {
-			console.log(event.target);
 			if (
 				event.target.hasAttribute(CLOSE_TRIGGER) ||
 				event.target.parentNode.hasAttribute(CLOSE_TRIGGER)
@@ -254,11 +250,40 @@
 				}
 			}
 		},
+
+		/**
+		 * Retrieve the current values of all form fields.
+		 *
+		 * @returns {Object} - An object containing name-value pairs of form inputs.
+		 */
+		values : function () {
+			const values = {};
+			this.$('input, select, textarea').each((_, element) => {
+				const $element = $(element);
+				const name = $element.attr('name');
+				const type = $element.attr('type');
+
+				if (name === 'method') return; // Skip method field
+
+				if (type === 'radio') {
+					values[name] = $element.is(':checked') ? $element.val() || 0 : values[name];
+				} else if (type === 'checkbox') {
+					values[name] = values[name] || [];
+					if ($element.is(':checked')) {
+						values[name].push($element.val());
+					}
+				} else {
+					values[name] = $element.val() || '';
+				}
+			});
+			return values;
+		}
 	});
 
 	$.eacmodal.defaults = {
 		template: '',
-		model: {},
+		data: {},
+		events: {},
 		autoOpen: true,
 		onOpen: function () {},
 		onClose: function () {}

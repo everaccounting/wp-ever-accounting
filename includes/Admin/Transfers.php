@@ -50,7 +50,32 @@ class Transfers {
 	 */
 	public static function handle_actions() {
 		if ( isset( $_POST['action'] ) && 'eac_edit_transfer' === $_POST['action'] && check_admin_referer( 'eac_edit_transfer' ) && current_user_can( 'eac_manage_transfer' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability.
+			$referer = wp_get_referer();
+			$data    = array(
+				'id'              => isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0,
+				'date'            => isset( $_POST['date'] ) ? sanitize_text_field( wp_unslash( $_POST['date'] ) ) : '',
+				'from_account_id' => isset( $_POST['from_account_id'] ) ? absint( wp_unslash( $_POST['from_account_id'] ) ) : 0,
+				'amount'          => isset( $_POST['amount'] ) ? floatval( wp_unslash( $_POST['amount'] ) ) : 0,
+				'to_account_id'   => isset( $_POST['to_account_id'] ) ? absint( wp_unslash( $_POST['to_account_id'] ) ) : 0,
+				'income_id'       => isset( $_POST['income_id'] ) ? absint( wp_unslash( $_POST['income_id'] ) ) : 0,
+				'expense_id'      => isset( $_POST['expense_id'] ) ? absint( wp_unslash( $_POST['expense_id'] ) ) : 0,
+				'payment_method'  => isset( $_POST['payment_method'] ) ? sanitize_text_field( wp_unslash( $_POST['payment_method'] ) ) : '',
+				'reference'       => isset( $_POST['reference'] ) ? sanitize_text_field( wp_unslash( $_POST['reference'] ) ) : '',
+				'description'     => isset( $_POST['description'] ) ? sanitize_textarea_field( wp_unslash( $_POST['description'] ) ) : '',
+			);
 
+			$transfer = EAC()->transfers->insert( $data );
+
+			if ( is_wp_error( $transfer ) ) {
+				EAC()->flash->error( $transfer->get_error_message() );
+			} else {
+				EAC()->flash->success( __( 'Transfer saved successfully.', 'wp-ever-accounting' ) );
+				$referer = add_query_arg( 'id', $transfer->id, $referer );
+				$referer = remove_query_arg( array( 'add' ), $referer );
+			}
+
+			wp_safe_redirect( $referer );
+			exit;
 		}
 	}
 

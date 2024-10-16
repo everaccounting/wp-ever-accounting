@@ -80,7 +80,7 @@ abstract class Page {
 		}
 
 		$array_keys = array_keys( $sections );
-		echo '<ul class="subsubsub">';
+		echo '<ul class="subsubsub settings-sections-nav">';
 		foreach ( $sections as $id => $label ) {
 			$url       = admin_url( 'admin.php?page=eac-settings&tab=' . $this->id . '&section=' . sanitize_title( $id ) );
 			$class     = ( $this->section === $id ? 'current' : '' );

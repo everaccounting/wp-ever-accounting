@@ -23,12 +23,13 @@ defined( 'ABSPATH' ) || exit;
  *
  * @property-read  double $amount Amount of the transfer.
  * @property-read  string $formatted_amount Formatted amount of the transfer.
+ * @property-read string  $currency Currency of the transfer.
  * @property-read string  $date Date of the transfer.
  * @property-read Payment $payment Payment object of the transfer.
  * @property-read Expense $expense Expense object of the transfer.
  * @property-read Account $from_account From account object of the transfer.
  * @property-read Account $to_account To account object of the transfer.
- * @property-read string  $payment_mode Payment method of the transfer.
+ * @property-read string  $payment_method Payment method of the transfer.
  * @property-read string  $reference Reference of the transfer.
  */
 class Transfer extends Model {
@@ -48,10 +49,24 @@ class Transfer extends Model {
 	 */
 	protected $columns = array(
 		'id',
-		'date',
 		'payment_id',
-		'expense_id',
-		'creator_id',
+		'expense_id'
+	);
+
+	/**
+	 * The attributes of the model.
+	 *
+	 * @since 1.0.0
+	 * @var array
+	 */
+	protected $attributes = array(
+		'date'            => null,
+		'from_account_id' => null,
+		'amount'          => null,
+		'to_account_id'   => null,
+		'payment_method'    => null,
+		'reference'       => null,
+		'note'            => null,
 	);
 
 	/**
@@ -61,10 +76,15 @@ class Transfer extends Model {
 	 * @var array
 	 */
 	protected $casts = array(
-		'date'       => 'date',
-		'payment_id' => 'int',
-		'expense_id' => 'int',
-		'creator_id' => 'int',
+		'date'            => 'date',
+		'payment_id'      => 'int',
+		'expense_id'      => 'int',
+		'amount'          => 'double',
+		'from_account_id' => 'int',
+		'to_account_id'   => 'int',
+		'reference'       => 'string',
+		'payment_method'    => 'string',
+		'note'            => 'string',
 	);
 
 	/**
@@ -75,11 +95,8 @@ class Transfer extends Model {
 	 */
 	protected $query_vars = array(
 		'search_columns' => array(
-			'from_account_id',
-			'to_account_id',
 			'amount',
 			'date',
-			'mode',
 		),
 	);
 
@@ -129,78 +146,78 @@ class Transfer extends Model {
 		return $this->belongs_to( Expense::class, 'expense_id' );
 	}
 
-	/**
-	 * Date attribute.
-	 *
-	 * @since 1.0.0
-	 * @return string
-	 */
-	public function get_date() {
-		return $this->payment ? $this->payment->date : $this->expense->date;
-	}
-
-	/**
-	 * From account.
-	 *
-	 * @since 1.0.0
-	 * @return Account|null Account object or null.
-	 */
-	public function from_account() {
-		if ( $this->payment && $this->payment->account ) {
-			return $this->payment->account;
-		}
-		return null;
-	}
-
-	/**
-	 * To account.
-	 *
-	 * @since 1.0.0
-	 * @return Account|null Account object or null.
-	 */
-	public function to_account() {
-		return $this->expense && $this->expense->account ? $this->expense->account : null;
-	}
-
-	/**
-	 * Payment mode attribute.
-	 *
-	 * @since 1.0.0
-	 * @return string
-	 */
-	public function get_payment_mode() {
-		return $this->payment ? $this->payment->payment_mode : '';
-	}
-
-	/**
-	 * Reference attribute.
-	 *
-	 * @since 1.0.0
-	 * @return string
-	 */
-	public function get_reference() {
-		return $this->payment ? $this->payment->reference : '';
-	}
-
-	/**
-	 * Amount attribute.
-	 *
-	 * @since 1.0.0
-	 * @return double
-	 */
-	public function get_amount() {
-		return $this->payment ? $this->payment->amount : $this->expense->amount;
-	}
-
-	/**
-	 * Formatted amount attribute.
-	 *
-	 * @since 1.0.0
-	 * @return string
-	 */
-	public function get_formatted_amount() {
-		return $this->payment ? $this->payment->formatted_amount : 0;
-	}
+//	/**
+//	 * Date attribute.
+//	 *
+//	 * @since 1.0.0
+//	 * @return string
+//	 */
+//	public function get_date() {
+//		return $this->payment ? $this->payment->date : $this->expense->date;
+//	}
+//
+//	/**
+//	 * From account.
+//	 *
+//	 * @since 1.0.0
+//	 * @return Account|null Account object or null.
+//	 */
+//	public function from_account() {
+//		if ( $this->payment && $this->payment->account ) {
+//			return $this->payment->account;
+//		}
+//		return null;
+//	}
+//
+//	/**
+//	 * To account.
+//	 *
+//	 * @since 1.0.0
+//	 * @return Account|null Account object or null.
+//	 */
+//	public function to_account() {
+//		return $this->expense && $this->expense->account ? $this->expense->account : null;
+//	}
+//
+//	/**
+//	 * Payment mode attribute.
+//	 *
+//	 * @since 1.0.0
+//	 * @return string
+//	 */
+//	public function get_payment_method() {
+//		return $this->payment ? $this->payment->payment_method : '';
+//	}
+//
+//	/**
+//	 * Reference attribute.
+//	 *
+//	 * @since 1.0.0
+//	 * @return string
+//	 */
+//	public function get_reference() {
+//		return $this->payment ? $this->payment->reference : '';
+//	}
+//
+//	/**
+//	 * Amount attribute.
+//	 *
+//	 * @since 1.0.0
+//	 * @return double
+//	 */
+//	public function get_amount() {
+//		return $this->payment ? $this->payment->amount : $this->expense->amount;
+//	}
+//
+//	/**
+//	 * Formatted amount attribute.
+//	 *
+//	 * @since 1.0.0
+//	 * @return string
+//	 */
+//	public function get_formatted_amount() {
+//		return $this->payment ? $this->payment->formatted_amount : 0;
+//	}
 
 	/*
 	|--------------------------------------------------------------------------
@@ -210,6 +227,107 @@ class Transfer extends Model {
 	| objects in the database.
 	|--------------------------------------------------------------------------
 	*/
+
+	/**
+	 * Read an item from the database.
+	 *
+	 * @param int|string $id ID of the item to read.
+	 *
+	 * @since 1.0.0
+	 * @return array|null The item data, or null if not found.
+	 * @global \wpdb     $wpdb WordPress database abstraction object.
+	 */
+	protected function read( $id ) {
+
+		$data = parent::read( $id );
+		if ( ! empty( $data['payment_id'] ) ) {
+			$payment               = Payment::make( $data['payment_id'] );
+			$data['to_account_id'] = $payment->account_id;
+		}
+		if ( ! empty( $data['expense_id'] ) ) {
+			$expense                 = Expense::make( $data['expense_id'] );
+			$data['from_account_id'] = $expense->account_id;
+			$data['amount']          = $expense->amount;
+			$data['date']            = $expense->date;
+			$data['payment_method']    = $expense->payment_method;
+			$data['reference']       = $expense->reference;
+			$data['note']            = $expense->note;
+		}
+
+		return $data;
+	}
+
+	/**
+	 * Save the object to the database.
+	 *
+	 * @since 1.0.0
+	 * @return \WP_Error|static WP_Error on failure, or the object on success.
+	 */
+	public function save() {
+		global $wpdb;
+		$wpdb->query( 'START TRANSACTION' );
+		$from_account = Account::find( $this->from_account_id );
+		$to_account   = Account::find( $this->to_account_id );
+		$expense      = Expense::make( $this->expense_id );
+		$payment      = Payment::make( $this->payment_id );
+		$expense->fill(
+			array(
+				'account_id'     => $this->from_account_id,
+				'payment_date'   => $this->date,
+				'amount'         => $this->amount,
+				'description'    => $this->description,
+				'category_id'    => $this->category_id,
+				'payment_method' => $this->payment_method,
+				'reference'      => $this->reference,
+			)
+		);
+		$ret_val1 = $expense->save();
+		if ( is_wp_error( $ret_val1 ) ) {
+			$wpdb->query( 'ROLLBACK' );
+
+			return $ret_val1;
+		}
+
+		$this->expense_id = $expense->id;
+
+		$amount = $this->amount;
+		if ( $from_account->currency !== $to_account->currency ) {
+			$amount = eac_convert_currency( $amount, $from_account->currency, $to_account->currency );
+		}
+
+		$payment->fill(
+			array(
+				'account_id'     => $this->to_account_id,
+				'payment_date'   => $this->date,
+				'amount'         => $amount,
+				'description'    => $this->description,
+				'category_id'    => $this->category_id,
+				'payment_method' => $this->payment_method,
+				'reference'      => $this->reference,
+			)
+		);
+
+		$ret_val2 = $payment->save();
+		if ( is_wp_error( $ret_val2 ) ) {
+			$wpdb->query( 'ROLLBACK' );
+
+			return $ret_val2;
+		}
+
+		$this->payment_id = $payment->id;
+
+		$ret_val = parent::save();
+
+		if ( is_wp_error( $ret_val ) ) {
+			$wpdb->query( 'ROLLBACK' );
+
+			return $ret_val;
+		}
+
+		$wpdb->query( 'COMMIT' );
+
+		return $ret_val;
+	}
 
 
 	/*

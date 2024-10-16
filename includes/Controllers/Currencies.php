@@ -85,6 +85,17 @@ class Currencies {
 		return $this->get_config( $currency )['decimal'];
 	}
 
+	/**
+	 * Get exchange rate.
+	 *
+	 * @param string $currency Currency to get rate.
+	 *
+	 * @return float Currency rate.
+	 * @since 2.0.0
+	 */
+	public function get_rate( $currency = null ) {
+		return $this->get_config( $currency )['rate'];
+	}
 
 	/**
 	 * Get config.

@@ -56,6 +56,17 @@ function eac_get_currencies() {
 	$currencies[ $base ]['decimal']   = stripslashes( get_option( 'eac_decimal_separator', '.' ) );
 	$currencies[ $base ]['precision'] = absint( get_option( 'eac_currency_precision', 2 ) );
 
+	// now sort the currencies by formatted name but put the base currency at the top.
+	uasort( $currencies, function( $a, $b ) {
+		if ( $a['code'] === eac_base_currency() ) {
+			return -1;
+		}
+		if ( $b['code'] === eac_base_currency() ) {
+			return 1;
+		}
+		return strcasecmp( $a['formatted_name'], $b['formatted_name'] );
+	} );
+
 	return $currencies;
 }
 
@@ -135,17 +146,45 @@ function eac_sanitize_amount( $amount, $currency = null ) {
 /**
  * Convert price from one currency to another.
  *
- * @param string      $amount Amount.
- * @param string      $from_currency Convert from currency.
- * @param string|null $to_currency Convert to currency.
- * @param string|null $from_rate Convert from currency rate.
- * @param string|null $to_rate Convert to currency rate.
- * @param bool        $formatted Whether to format the price or not.
+ * @param string $amount Amount.
+ * @param float  $from Rate of the currency to convert from.
+ * @param float  $to Rate of the currency to convert to.
  *
  * @since 1.0.2
- * @return float|int|string
+ * @return float Converted amount.
  */
-function eac_convert_currency( $amount, $from_currency, $to_currency = null, $from_rate = null, $to_rate = null, $formatted = false ) {
+function eac_convert_currency( $amount, $from = 1, $to = 1 ) {
+	$currencies = eac_get_currencies();
+	// Check if amount is numeric; if not, sanitize it
+	if ( ! is_numeric( $amount ) ) {
+		$amount = eac_sanitize_amount( $amount );
+	}
+
+	// If from or to any of these is not exchange rate instead a valid currency code, then get the exchange rate.
+	if ( ! is_numeric( $from ) && strlen( $from ) === 3 && array_key_exists( $from, $currencies ) ) {
+		$from =  EAC()->currencies->get_rate( $from );
+	}
+	if ( ! is_numeric( $to ) && strlen( $to ) === 3 && array_key_exists( $to, $currencies ) ) {
+		$to = EAC()->currencies->get_rate( $to );
+	}
+
+	// Validate rates
+	if ( ! is_numeric( $from ) || $from <= 0 || ! is_numeric( $to ) || $to <= 0 ) {
+		return 0;
+	}
+
+	// No need to convert same currency.
+	if ( $from === $to ) {
+		return $amount;
+	}
+
+	// Safe conversion
+	$base_amount = $amount / $from;
+	return $base_amount * $to;
+}
+
+
+function eac_convert_currency_v1( $amount, $from_currency, $to_currency = null, $from_rate = null, $to_rate = null, $formatted = false ) {
 	$currencies = eac_get_currencies();
 	if ( ! is_numeric( $amount ) ) {
 		$amount = eac_sanitize_amount( $amount, $from_currency );
@@ -217,9 +256,9 @@ function eac_round_number( $val, $decimals = 6, $mode = PHP_ROUND_HALF_UP ) {
  * @since 1.0.2
  * @return array
  */
-function eac_get_payment_modes() {
+function eac_get_payment_methods() {
 	return apply_filters(
-		'eac_payment_modes',
+		'eac_payment_methods',
 		array(
 			'cash'   => esc_html__( 'Cash', 'wp-ever-accounting' ),
 			'check'  => esc_html__( 'Cheque', 'wp-ever-accounting' ),

@@ -91,10 +91,10 @@ defined( 'ABSPATH' ) || exit;
 					eac_form_field(
 						array(
 							'type'        => 'select',
-							'name'        => 'payment_mode',
+							'name'        => 'payment_method',
 							'label'       => __( 'Payment Method', 'wp-ever-accounting' ),
 							'value'       => $transfer->method,
-							'options'     => eac_get_payment_modes(),
+							'options'     => eac_get_payment_methods(),
 							'placeholder' => __( 'Select payment method', 'wp-ever-accounting' ),
 						)
 					);

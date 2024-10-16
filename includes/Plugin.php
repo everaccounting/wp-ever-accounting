@@ -156,7 +156,6 @@ class Plugin extends \ByteKit\Plugin {
 				'EverAccounting\Admin\Bills',
 				'EverAccounting\Admin\Vendors',
 				'EverAccounting\Admin\Accounts',
-				'EverAccounting\Admin\Transactions',
 				'EverAccounting\Admin\Transfers',
 				'EverAccounting\Admin\Tools',
 				'EverAccounting\Admin\Reports',

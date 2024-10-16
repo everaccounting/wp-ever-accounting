@@ -338,7 +338,6 @@ function eac_file_uploader( $field ) {
 	$post  = get_post( $field['value'] );
 	if ( $post && 'attachment' === $post->post_type ) {
 		$meta              = wp_get_attachment_metadata( $post->ID );
-		$attached_file     = get_attached_file( $post->ID );
 		$field['title']    = get_the_title( $post->ID );
 		$field['url']      = wp_get_attachment_url( $post->ID );
 		$field['filezise'] = size_format( $meta['filesize'] );

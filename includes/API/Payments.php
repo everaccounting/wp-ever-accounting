@@ -462,16 +462,16 @@ class Payments extends Transactions {
 						$data['account_id'] = $account->id;
 						break;
 
-					case 'bill':
-						$bill = EAC()->bills->get( $request[ $prop ]['id'] );
+					case 'invoice':
+						$bill = EAC()->invoices->get( $request[ $prop ]['id'] );
 						if ( ! $bill ) {
 							return new \WP_Error(
-								'rest_invalid_bill',
-								__( 'Invalid bill.', 'wp-ever-accounting' ),
+								'rest_invalid_invoice',
+								__( 'Invalid invoice.', 'wp-ever-accounting' ),
 								array( 'status' => 400 )
 							);
 						}
-						$data['bill_id'] = $bill->id;
+						$data['invoice_id'] = $invoice->id;
 						break;
 
 					case 'vendor':
@@ -538,7 +538,7 @@ class Payments extends Transactions {
 				'date'             => array(
 					'description' => __( 'The date the payment took place, in the site\'s timezone.', 'wp-ever-accounting' ),
 					'type'        => 'string',
-					'format'      => 'date-time',
+					'format'      => 'string',
 					'context'     => array( 'view', 'embed', 'edit' ),
 				),
 				'amount'           => array(
@@ -573,7 +573,7 @@ class Payments extends Transactions {
 					'type'        => 'string',
 					'context'     => array( 'view', 'embed', 'edit' ),
 				),
-				'payment_mode'     => array(
+				'payment_method'     => array(
 					'description' => __( 'Payment method of the payment.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'embed', 'edit' ),
@@ -601,8 +601,8 @@ class Payments extends Transactions {
 						),
 					),
 				),
-				'bill'             => array(
-					'description' => __( 'Bill of the payment.', 'wp-ever-accounting' ),
+				'invoice'             => array(
+					'description' => __( 'Invoice of the payment.', 'wp-ever-accounting' ),
 					'type'        => 'object',
 					'context'     => array( 'view', 'embed', 'edit' ),
 					'properties'  => array(
@@ -616,7 +616,7 @@ class Payments extends Transactions {
 							),
 						),
 						'name' => array(
-							'description' => __( 'Bill name.', 'wp-ever-accounting' ),
+							'description' => __( 'Invoice name.', 'wp-ever-accounting' ),
 							'type'        => 'string',
 							'context'     => array( 'view', 'embed', 'edit' ),
 						),

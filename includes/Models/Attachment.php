@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  * @property string  $title Attachment title.
  * @property string  $url Attachment URL.
  * @property string  $path Attachment file path.
- * @property numeric $size Attachment file size.
+ * @property string $filesize Attachment file size.
  */
 class Attachment extends Model {
 	/**
@@ -105,7 +105,7 @@ class Attachment extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	public function get_size() {
+	public function get_filesize() {
 		$meta = wp_get_attachment_metadata( $this->ID );
 
 		return isset( $meta['filesize'] ) ? $meta['filesize'] : filesize( get_attached_file( $this->ID ) );

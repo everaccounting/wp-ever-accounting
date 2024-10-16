@@ -173,29 +173,29 @@ $payment = Payment::make( $id );
 						array(
 							'label'       => __( 'Payment Method', 'wp-ever-accounting' ),
 							'type'        => 'select',
-							'name'        => 'payment_mode',
-							'value'       => $payment->payment_mode,
-							'options'     => eac_get_payment_modes(),
+							'name'        => 'payment_method',
+							'value'       => $payment->payment_method,
+							'options'     => eac_get_payment_methods(),
 							'placeholder' => __( 'Select &hellip;', 'wp-ever-accounting' ),
 						)
 					);
 
-					eac_form_field(
-						array(
-							'label'            => __( 'Invoice', 'wp-ever-accounting' ),
-							'type'             => 'select',
-							'name'             => 'invoice_id',
-							'value'            => $payment->document_id,
-							'options'          => array( $payment->document ),
-							'option_value'     => 'id',
-							'option_label'     => 'formatted_name',
-							'placeholder'      => __( 'Select invoice', 'wp-ever-accounting' ),
-							'class'            => 'eac_select2',
-							'data-placeholder' => __( 'Select invoice', 'wp-ever-accounting' ),
-							'data-action'      => 'eac_json_search',
-							'data-type'        => 'invoice',
-						)
-					);
+					if ( $payment->document_id ) {
+						// readonly select field.
+						eac_form_field(
+							array(
+								'label'        => __( 'Invoice', 'wp-ever-accounting' ),
+								'type'         => 'select',
+								'name'         => 'invoice_id',
+								'value'        => $payment->document_id,
+								'options'      => array( $payment->document ),
+								'option_value' => 'id',
+								'option_label' => 'number',
+								'disabled'     => true,
+							)
+						);
+						printf('<input type="hidden" name="invoice_id" value="%d">', $payment->document_id);
+					}
 
 					eac_form_field(
 						array(

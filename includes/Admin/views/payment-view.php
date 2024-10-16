@@ -65,19 +65,6 @@ $payment = EAC()->payments->get( $id );
 							'required'    => true,
 						)
 					);
-
-					eac_form_field(
-						array(
-							'label'       => __( 'Action', 'wp-ever-accounting' ),
-							'type'        => 'select',
-							'name'        => 'payment_action',
-							'options'     => array(
-								'send_receipt' => __( 'Send Receipt', 'wp-ever-accounting' ),
-							),
-							'placeholder' => __( 'Select action', 'wp-ever-accounting' ),
-						)
-					);
-
 					/**
 					 * Fires to add custom actions.
 					 *

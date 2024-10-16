@@ -21,7 +21,6 @@ module.exports = [
 			'js/select2': './.assets/js/vendor/select2.js',
 			'js/inputmask': './.assets/js/vendor/inputmask.js',
 			'js/tiptip': './.assets/js/vendor/tiptip.js',
-			'js/blockui': './.assets/js/vendor/blockui.js',
 			'css/jquery-ui': './.assets/css/vendor/jquery-ui.scss',
 
 			// Core plugins.

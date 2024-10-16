@@ -1,3 +1,4 @@
+/** global: eac_base_currency  */
 export default class Money {
 	/**
 	 * Currencies configs.
@@ -40,6 +41,7 @@ export default class Money {
 	 * @param {string} currency The currency code.
 	 */
 	constructor( currency ) {
+		currency = currency || window?.eac_base_currency || 'USD';
 		// Set up the currencies if eac_currencies is available.
 		if ( typeof window?.eac_currencies !== 'undefined' ) {
 			// eslint-disable-next-line no-undef
@@ -124,5 +126,42 @@ export default class Money {
 	 */
 	absint( amount ) {
 		return Math.abs( Math.round( this.unformat( amount ) ) );
+	}
+
+	/**
+	 * Convert an amount from one currency to another.
+	 *
+	 * @param {number}        amount The amount to convert.
+	 * @param {string|number} to     The currency to convert to.
+	 * @param {string|number} from   The currency to convert from.
+	 *
+	 * @return {number} The converted amount.
+	 */
+	convert( amount, to, from ) {
+		const currencies = this.currencies;
+
+		if ( isNaN( amount ) ) {
+			amount = this.unformat( amount );
+		}
+
+		if ( typeof from === 'string' && from.length === 3 && currencies.hasOwnProperty( from ) ) {
+			from = currencies[ from ].rate;
+		}
+
+		if ( typeof to === 'string' && to.length === 3 && currencies.hasOwnProperty( to ) ) {
+			to = currencies[ to ].rate;
+		}
+
+		// validate the rates
+		if ( isNaN( from ) || from <= 0 || isNaN( to ) || to <= 0 ) {
+			return amount;
+		}
+
+		if ( from === to ) {
+			return amount;
+		}
+
+		const baseAmount = amount / from;
+		return baseAmount * to;
 	}
 }

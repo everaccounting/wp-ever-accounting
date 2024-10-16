@@ -23,6 +23,7 @@ class Payments {
 		add_action( 'eac_payment_edit_side_meta_boxes', array( __CLASS__, 'payment_attachment' ) );
 		add_action( 'eac_payment_view_side_meta_boxes', array( __CLASS__, 'payment_attachment' ) );
 		add_action( 'eac_payment_view_side_meta_boxes', array( __CLASS__, 'payment_notes' ) );
+		add_action( 'eac_payment_edit_side_meta_boxes', array( __CLASS__, 'payment_notes' ) );
 	}
 
 	/**
@@ -59,7 +60,7 @@ class Payments {
 				'category_id'   => isset( $_POST['category_id'] ) ? absint( wp_unslash( $_POST['category_id'] ) ) : 0,
 				'contact_id'    => isset( $_POST['contact_id'] ) ? absint( wp_unslash( $_POST['contact_id'] ) ) : 0,
 				'attachment_id' => isset( $_POST['attachment_id'] ) ? absint( wp_unslash( $_POST['attachment_id'] ) ) : 0,
-				'payment_mode'  => isset( $_POST['payment_mode'] ) ? sanitize_text_field( wp_unslash( $_POST['payment_mode'] ) ) : '',
+				'payment_method'  => isset( $_POST['payment_method'] ) ? sanitize_text_field( wp_unslash( $_POST['payment_method'] ) ) : '',
 				'invoice_id'    => isset( $_POST['invoice_id'] ) ? absint( wp_unslash( $_POST['invoice_id'] ) ) : 0,
 				'reference'     => isset( $_POST['reference'] ) ? sanitize_text_field( wp_unslash( $_POST['reference'] ) ) : '',
 				'note'          => isset( $_POST['note'] ) ? sanitize_textarea_field( wp_unslash( $_POST['note'] ) ) : '',
@@ -203,13 +204,12 @@ class Payments {
 	 */
 	public static function payment_attachment( $payment ) {
 		?>
-
 		<div class="eac-card">
 			<div class="eac-card__header">
 				<h3 class="eac-card__title"><?php esc_html_e( 'Attachment', 'wp-ever-accounting' ); ?></h3>
 			</div>
 			<div class="eac-card__body">
-				<?php eac_file_uploader( array( 'value' => $payment->attachment_id ) ); ?>
+				<?php eac_file_uploader( array( 'value' => $payment->attachment_id  ) ); ?>
 			</div>
 		</div>
 		<?php
@@ -225,7 +225,7 @@ class Payments {
 	 */
 	public static function payment_notes( $payment ) {
 		// bail if payment is not found.
-		if ( ! $payment ) {
+		if ( ! $payment ->exists() ) {
 			return;
 		}
 		$notes = EAC()->notes->query(

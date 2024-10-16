@@ -44,7 +44,9 @@
 			if ( ! _.isUndefined( this.get( 'id' ) ) ) {
 				url += '/' + this.get( 'id' );
 			}
-			return url;
+
+			// remove the trailing slash.
+			return url.replace( /\/+$/, '' );
 		},
 
 		/**
@@ -462,6 +464,8 @@
 	 * @since 1.0.0
 	 */
 	eac_api.Payment = eac_api.Transaction.extend( {
+		endpoint: 'payments',
+
 		defaults: Object.assign( {}, eac_api.Transaction.prototype.defaults, {
 			type: 'payment',
 		} ),

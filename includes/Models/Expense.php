@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @property int    $vendor_id ID of the vendor.
  *
  * @property-read string $formatted_status Formatted status.
- * @property-read string $payment_mode_name Formatted mode.
+ * @property-read string $payment_method_name Formatted mode.
  * @property-read Bill $bill Related Bill.
  */
 class Expense extends Transaction {
@@ -35,6 +35,7 @@ class Expense extends Transaction {
 	 */
 	protected $aliases = array(
 		'vendor_id' => 'contact_id',
+		'bill_id'   => 'document_id',
 	);
 
 	/**
@@ -98,8 +99,8 @@ class Expense extends Transaction {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	public function get_payment_mode_name() {
-		$modes = eac_get_payment_modes();
+	public function get_payment_method_name() {
+		$modes = eac_get_payment_methods();
 
 		return array_key_exists( $this->mode, $modes ) ? $modes[ $this->mode ] : $this->mode;
 	}

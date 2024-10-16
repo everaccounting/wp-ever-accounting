@@ -30,7 +30,7 @@ $item = Item::make( $id );
 
 			<div id="eac-item-data" class="eac-card">
 				<div class="eac-card__header">
-					<h3 class="eac-card__title"><?php esc_html_e( 'Item Data', 'wp-ever-accounting' ); ?></h3>
+					<h3 class="eac-card__title"><?php esc_html_e( 'Item Attributes', 'wp-ever-accounting' ); ?></h3>
 				</div>
 				<div class="eac-card__body grid--fields">
 					<?php

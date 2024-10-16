@@ -436,7 +436,7 @@ CREATE TABLE {$wpdb->prefix}ea_transactions (
     exchange_rate DOUBLE(15, 8) NOT NULL DEFAULT 1.0,
     reference VARCHAR(191) DEFAULT NULL,
     note TEXT DEFAULT NULL,
-    payment_mode VARCHAR(100) DEFAULT NULL,
+    payment_method VARCHAR(100) DEFAULT NULL,
     account_id BIGINT(20) UNSIGNED NOT NULL,
     document_id BIGINT(20) UNSIGNED DEFAULT NULL,
     contact_id BIGINT(20) UNSIGNED DEFAULT NULL,

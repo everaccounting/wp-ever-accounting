@@ -70,8 +70,6 @@ class Items {
 				$referer = add_query_arg( 'id', $item->id, $referer );
 				$referer = remove_query_arg( array( 'add' ), $referer );
 			}
-			var_dump($referer);
-			exit();
 			wp_safe_redirect( $referer );
 			exit;
 		}

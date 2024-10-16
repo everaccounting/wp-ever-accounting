@@ -2,6 +2,8 @@
 
 namespace EverAccounting;
 
+use EverAccounting\Models\Payment;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -18,29 +20,25 @@ class Documents {
 	 * @since 1.0.0
 	 */
 	public function __construct() {
-		add_action( 'ever_accounting_revenue_saved', array( $this, 'recalculate_invoice' ) );
-		add_action( 'ever_accounting_expense_saved', array( $this, 'recalculate_invoice' ) );
-		add_action( 'ever_accounting_revenue_deleted', array( $this, 'recalculate_invoice' ) );
-		add_action( 'ever_accounting_expense_deleted', array( $this, 'recalculate_invoice' ) );
+		add_action( 'eac_payment_inserted', array( __CLASS__, 'invoice_payment_updated' ) );
+		add_action( 'eac_payment_deleted', array( __CLASS__, 'invoice_payment_updated' ) );
+		add_action( 'eac_payment_updated', array( __CLASS__, 'invoice_payment_updated' ) );
 	}
 
 	/**
-	 * Recalculate invoice.
+	 * Payment updated so we need to update the invoice status.
 	 *
-	 * @param object $transaction Transaction object.
+	 * @param Payment $payment The payment being edited or deleted.
 	 *
-	 * @since 1.0.0
+	 * @return void
 	 */
-	public function recalculate_invoice( $transaction ) {
-		// if ( empty( $transaction->document_id ) ) {
-		// return;
-		// }
-		// $invoice = eac_get_invoice( $transaction->document_id );
-		// if ( ! $invoice ) {
-		// return;
-		// }
-		//
-		// $invoice->calculate_totals();
-		// $invoice->save();
+	public static function invoice_payment_updated( $payment ) {
+		$original = $payment->get_original();
+//		if ( array_key_exists( 'contact_id', $original ) && $original['contact_id'] !== $payment->contact_id && $original['contact_id'] > 0 ) {
+//			$old_customer = EAC()->customers->get( $original['contact_id'] );
+//			if ( $old_customer ) {
+//				$old_customer->update_amount_paid();
+//			}
+//		}
 	}
 }

@@ -162,10 +162,9 @@ $invoice = EAC()->invoices->get( $id );
 					'name'        => 'amount',
 					'placeholder' => '0.00',
 					// 'value'         => $payment->amount,
-														'required' => true,
-					'tooltip'     => __( 'Enter the amount in the currency of the selected account, use (.) for decimal.', 'wp-ever-accounting' ),
+					'required'    => true,
 					// 'data-currency' => $payment->currency,
-														'class' => 'eac_amount',
+					'class'       => 'eac_amount',
 				)
 			);
 
@@ -185,9 +184,9 @@ $invoice = EAC()->invoices->get( $id );
 				array(
 					'label'       => __( 'Payment Method', 'wp-ever-accounting' ),
 					'type'        => 'select',
-					'name'        => 'payment_mode',
+					'name'        => 'payment_method',
 					'value'       => '',
-					'options'     => eac_get_payment_modes(),
+					'options'     => eac_get_payment_methods(),
 					'placeholder' => __( 'Select &hellip;', 'wp-ever-accounting' ),
 				)
 			);
@@ -201,10 +200,11 @@ $invoice = EAC()->invoices->get( $id );
 				)
 			);
 			?>
+			<input type="hidden" name="invoice_id" value="<?php echo esc_attr( $invoice->id ); ?>"/>
 		</form>
 	</div>
 	<div class="eac-modal-footer">
-		<button class="button button-primary" form="add-invoice-payment"><?php esc_html_e( 'Submit', 'wp-ever-accounting' ); ?></button>
+		<button class="button button-primary" form="eac-add-invoice-payment"><?php esc_html_e( 'Submit', 'wp-ever-accounting' ); ?></button>
 		<button class="button" data-eacmodal-close="true"><?php esc_html_e( 'Cancel', 'wp-ever-accounting' ); ?></button>
 	</div>
 </script>

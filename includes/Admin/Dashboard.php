@@ -49,22 +49,7 @@ class Dashboard {
 		global $wpdb;
 		$stats = apply_filters(
 			'eac_dashboard_overview_stats',
-			array(
-				array(
-					'label' => __( 'Receivable', 'wp-ever-accounting' ),
-					'value' => eac_format_amount( 100 ),
-				),
-
-				array(
-					'label' => __( 'Payable', 'wp-ever-accounting' ),
-					'value' => eac_format_amount( 100 ),
-				),
-
-				array(
-					'label' => __( 'Upcoming', 'wp-ever-accounting' ),
-					'value' => eac_format_amount( 100 ),
-				),
-			)
+			array()
 		);
 
 		// prepare the chart data. get all the transactions for the current year where the id is not exist in the transfers table in payment_id and expense_id columns.
@@ -83,15 +68,15 @@ class Dashboard {
 			)
 		);
 		// now prepare the data for the chart we have add the profit and loss data too by subtracting the expenses from the sales.
-		$labels = array();
-		$sales  = array();
+		$labels   = array();
+		$sales    = array();
 		$expenses = array();
-		$profits = array();
+		$profits  = array();
 		foreach ( $transactions as $transaction ) {
-			$labels[] = wp_date( 'F', mktime( 0, 0, 0, $transaction->month, 1 ) );
-			$sales[] = $transaction->sales;
+			$labels[]   = wp_date( 'F', mktime( 0, 0, 0, $transaction->month, 1 ) );
+			$sales[]    = $transaction->sales;
 			$expenses[] = $transaction->expenses;
-			$profits[] = $transaction->sales - $transaction->expenses;
+			$profits[]  = $transaction->sales - $transaction->expenses;
 		}
 
 		$chart_data = array(
@@ -99,21 +84,21 @@ class Dashboard {
 			'datasets' => array(
 				array(
 					'label'           => __( 'Sales', 'wp-ever-accounting' ),
-					'backgroundColor' => 'rgba(54, 162, 235, 0.2)',
+					'backgroundColor' => 'transparent',
 					'borderColor'     => 'rgba(54, 162, 235, 1)',
 					'borderWidth'     => 1,
 					'data'            => $sales,
 				),
 				array(
 					'label'           => __( 'Expenses', 'wp-ever-accounting' ),
-					'backgroundColor' => 'rgba(255, 99, 132, 0.2)',
+					'backgroundColor' => 'transparent',
 					'borderColor'     => 'rgba(255, 99, 132, 1)',
 					'borderWidth'     => 1,
 					'data'            => $expenses,
 				),
 				array(
 					'label'           => __( 'Profit/Loss', 'wp-ever-accounting' ),
-					'backgroundColor' => 'rgba(75, 192, 192, 0.2)',
+					'backgroundColor' => 'transparent',
 					'borderColor'     => 'rgba(75, 192, 192, 1)',
 					'borderWidth'     => 1,
 					'data'            => $profits,
@@ -127,7 +112,25 @@ class Dashboard {
 				<?php esc_html_e( 'Overview', 'wp-ever-accounting' ); ?>
 			</div>
 			<div class="eac-card__body">
-				<canvas id="eac-overview-chart" style="min-height: 300px;"></canvas>
+				<div class="tw-flex tw-flex-col-reverse lg:tw-flex-row tw-mt-3">
+					<div class="tw-w-full lg:tw-w-11/12">
+						<canvas id="eac-overview-chart" style="min-height: 300px;"></canvas>
+					</div>
+					<div class="tw-w-full lg:tw-w-1/12 tw-flex tw-flex-row lg:tw-flex-col tw-items-center tw-justify-center tw-space-y-0 sm:tw-space-y-4 tw-gap-2">
+						<div class="tw-relative tw-w-32 lg:tw-w-auto tw-flex tw-flex-col tw-items-center sm:tw-justify-between tw-text-center tw-text-[#36a2eb]">
+							<div class="tw-flex tw-justify-end lg:tw-block tw-text-lg">$2.15K</div>
+							<span class="tw-text-green tw-text-xs lg:tw-block">Incoming</span>
+						</div>
+						<div class="tw-relative tw-w-32 lg:tw-w-auto tw-flex tw-flex-col tw-items-center sm:tw-justify-between tw-text-center tw-text-[#FF6384]">
+							<div class="tw-flex tw-justify-end lg:tw-block tw-text-lg">$2.15K</div>
+							<span class="tw-text-green tw-text-xs lg:tw-block">Incoming</span>
+						</div>
+						<div class="tw-relative tw-w-32 lg:tw-w-auto tw-flex tw-flex-col tw-items-center sm:tw-justify-between tw-text-center tw-text-[#4BC0C0]">
+							<div class="tw-flex tw-justify-end lg:tw-block tw-text-lg">$2.15K</div>
+							<span class="tw-text-green tw-text-xs lg:tw-block">Incoming</span>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 		<div class="eac-stats stats--3">
@@ -152,9 +155,9 @@ class Dashboard {
 			<?php endforeach; ?>
 		</div>
 		<script type="text/javascript">
-			jQuery( document ).ready( function( $ ) {
-				var ctx = document.getElementById( 'eac-overview-chart' ).getContext( '2d' );
-				var myChart = new Chart( ctx, {
+			jQuery(document).ready(function ($) {
+				var ctx = document.getElementById('eac-overview-chart').getContext('2d');
+				var myChart = new Chart(ctx, {
 					type: 'line',
 					data: <?php echo wp_json_encode( $chart_data ); ?>,
 					options: {
@@ -164,15 +167,15 @@ class Dashboard {
 							display: true,
 						},
 						scales: {
-							yAxes: [ {
+							yAxes: [{
 								ticks: {
 									beginAtZero: true,
 								},
-							} ],
+							}],
 						},
 					},
-				} );
-			} );
+				});
+			});
 		</script>
 		<?php
 	}
@@ -187,42 +190,39 @@ class Dashboard {
 	 */
 	public static function overview_stats( $stats ) {
 		global $wpdb;
-		// get total sales and expenses for the current month.
-		$result = $wpdb->get_row(
-			$wpdb->prepare(
-				"SELECT
-            	SUM(CASE WHEN type = 'payment' AND status = 'completed' THEN amount / exchange_rate ELSE 0 END) AS sales,
-            	SUM(CASE WHEN type = 'expense' AND status = 'completed' THEN amount / exchange_rate ELSE 0 END) AS expenses
-         		FROM {$wpdb->prefix}ea_transactions
-         		WHERE MONTH(`date`) = %d AND YEAR(`date`) = %d",
-				date( 'm' ),
-				date( 'Y' )
-			)
+
+		$document = $wpdb->get_row(
+			"SELECT
+				SUM(CASE WHEN type = 'invoice' AND status NOT IN ( 'draft', 'cancelled', 'paid' ) THEN total / exchange_rate ELSE 0 END) AS invoice,
+				SUM(CASE WHEN type = 'bill' AND status NOT IN ( 'draft', 'cancelled', 'paid' ) THEN total / exchange_rate ELSE 0 END) AS bill
+		 		FROM {$wpdb->prefix}ea_documents"
 		);
 
-
-		$stats[] = array(
-			'label' => __( 'Total Sales', 'wp-ever-accounting' ),
-			'value' => eac_format_amount( $result->sales ),
-			'meta'  => array(
-				wp_date( 'F Y' ),
-			)
+		$trans = $wpdb->get_row(
+			"SELECT
+				SUM(CASE WHEN document_id IN ( SELECT document_id FROM {$wpdb->prefix}ea_documents WHERE status NOT IN ( 'draft', 'cancelled', 'paid' ) AND type='invoice' ) AND type='payment' AND status='completed' THEN amount / exchange_rate ELSE 0 END) AS invoice,
+				SUM(CASE WHEN document_id IN ( SELECT document_id FROM {$wpdb->prefix}ea_documents WHERE status NOT IN ( 'draft', 'cancelled', 'paid' ) AND type='bill' ) AND type='expense' AND status='completed' THEN amount / exchange_rate ELSE 0 END) AS bill
+		 		FROM {$wpdb->prefix}ea_transactions"
 		);
 
+		// now find the payable and receivable amount by subtracting the total amount from the total paid.
+		$receivable = (float) $document->invoice - (float) $trans->invoice;
+		$payable    = (float) $document->bill - (float) $trans->bill;
+		$upcoming   = $receivable - $payable;
+
 		$stats[] = array(
-			'label' => __( 'Total Expenses', 'wp-ever-accounting' ),
-			'value' => eac_format_amount( $result->expenses ),
-			'meta'  => array(
-				wp_date( 'F Y' ),
-			)
+			'label' => __( 'Receivable', 'wp-ever-accounting' ),
+			'value' => eac_format_amount( $receivable ),
 		);
 
 		$stats[] = array(
-			'label' => __( 'Net Income', 'wp-ever-accounting' ),
-			'value' => eac_format_amount( $result->sales - $result->expenses ),
-			'meta'  => array(
-				wp_date( 'F Y' ),
-			)
+			'label' => __( 'Payable', 'wp-ever-accounting' ),
+			'value' => eac_format_amount( $payable ),
+		);
+
+		$stats[] = array(
+			'label' => __( 'Upcoming', 'wp-ever-accounting' ),
+			'value' => eac_format_amount( $upcoming ),
 		);
 
 		return $stats;

@@ -44,7 +44,10 @@ $expense = Expense::make( $id );
 		<div class="column-1">
 
 			<div class="eac-card">
-				<div class="grid--fields">
+				<div class="eac-card__header">
+					<h3 class="eac-card__title"><?php esc_html_e( 'Exxpense Attributes', 'wp-ever-accounting' ); ?></h3>
+				</div>
+				<div class="eac-card__body grid--fields">
 					<?php
 					eac_form_field(
 						array(
@@ -171,29 +174,29 @@ $expense = Expense::make( $id );
 						array(
 							'label'       => __( 'Payment Method', 'wp-ever-accounting' ),
 							'type'        => 'select',
-							'name'        => 'payment_mode',
-							'value'       => $expense->payment_mode,
-							'options'     => eac_get_payment_modes(),
+							'name'        => 'payment_method',
+							'value'       => $expense->payment_method,
+							'options'     => eac_get_payment_methods(),
 							'placeholder' => __( 'Select &hellip;', 'wp-ever-accounting' ),
 						)
 					);
 
-					eac_form_field(
-						array(
-							'label'            => __( 'Bill', 'wp-ever-accounting' ),
-							'type'             => 'select',
-							'name'             => 'bill_id',
-							'value'            => $expense->document_id,
-							'options'          => array( $expense->document ),
-							'option_value'     => 'id',
-							'option_label'     => 'formatted_name',
-							'placeholder'      => __( 'Select bill', 'wp-ever-accounting' ),
-							'class'            => 'eac_select2',
-							'data-placeholder' => __( 'Select bill', 'wp-ever-accounting' ),
-							'data-action'      => 'eac_json_search',
-							'data-type'        => 'bill',
-						)
-					);
+					if ( $expense->document_id ) {
+						// readonly select field.
+						eac_form_field(
+							array(
+								'label'        => __( 'Bill', 'wp-ever-accounting' ),
+								'type'         => 'select',
+								'name'         => 'bill_id',
+								'value'        => $expense->document_id,
+								'options'      => array( $expense->document ),
+								'option_value' => 'id',
+								'option_label' => 'number',
+								'disabled'     => true,
+							)
+						);
+						printf('<input type="hidden" name="invoice_id" value="%d">', $expense->document_id);
+					}
 
 					eac_form_field(
 						array(
