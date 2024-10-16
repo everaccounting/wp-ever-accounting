@@ -20,7 +20,9 @@ class Installer {
 	 * @var array
 	 */
 	protected $updates = array(
-		'2.0.0'   => 'eac_update_120',
+		'2.0.0' => array(
+			'eac_update_120_settings',
+		),
 	);
 
 	/**
@@ -110,9 +112,6 @@ class Installer {
 	public function run_update_callback( $callback, $version ) {
 		require_once __DIR__ . '/Functions/updates.php';
 		if ( is_callable( $callback ) ) {
-			error_log('run_update_callback');
-			error_log($callback);
-			error_log($version);
 			$result = (bool) call_user_func( $callback );
 			if ( $result ) {
 				EAC()->queue()->add(
@@ -180,26 +179,26 @@ class Installer {
 		$wpdb->hide_errors();
 		$collate = $wpdb->has_cap( 'collation' ) ? $wpdb->get_charset_collate() : '';
 
-		// drop old ea_currencies table if exists.
-		$currency_table = $wpdb->prefix . 'ea_currencies';
-		if ( $wpdb->get_var( "SHOW TABLES LIKE '{$currency_table}'" ) === $currency_table ) {
-			$wpdb->query( "DROP TABLE $currency_table" );
+		// Prior to 2.0.0, the address field was text and later changed to varchar.
+		if ( version_compare( EAC()->get_db_version(), '2.0.0', '<' ) && $wpdb->get_var( "SHOW COLUMNS FROM {$wpdb->prefix}ea_documents LIKE 'address'" ) &&
+			! $wpdb->get_var( "SHOW COLUMNS FROM {$wpdb->prefix}ea_documents LIKE 'tax_number'" ) ) {
+			$wpdb->query( "ALTER TABLE {$wpdb->prefix}ea_documents CHANGE COLUMN address billing_address TEXT DEFAULT NULL" );
 		}
 
 		$tables = "
 CREATE TABLE {$wpdb->prefix}ea_accounts (
-    id BIGINT(20) NOT NULL AUTO_INCREMENT,
-    type VARCHAR(50) NOT NULL DEFAULT 'account',
-    name VARCHAR(191) NOT NULL,
-    number VARCHAR(100) NOT NULL,
-    balance DOUBLE(15, 4) NOT NULL DEFAULT 0.00,
-    currency VARCHAR(3) NOT NULL DEFAULT 'USD',
-    created_at DATETIME DEFAULT NULL,
-    updated_at DATETIME DEFAULT NULL,
-    PRIMARY KEY (id),
-    UNIQUE KEY number (number),
-    KEY bank_name (name),
-    KEY bank_type (type)
+	id BIGINT(20) NOT NULL AUTO_INCREMENT,
+	type VARCHAR(50) NOT NULL DEFAULT 'account',
+	name VARCHAR(191) NOT NULL,
+	number VARCHAR(100) NOT NULL,
+	balance DOUBLE(15, 4) NOT NULL DEFAULT 0.00,
+	currency VARCHAR(3) NOT NULL DEFAULT 'USD',
+	created_at DATETIME DEFAULT NULL,
+	updated_at DATETIME DEFAULT NULL,
+	PRIMARY KEY (id),
+	UNIQUE KEY number (number),
+	KEY bank_name (name),
+	KEY bank_type (type)
 ) $collate;
 
 CREATE TABLE {$wpdb->prefix}ea_categories (
@@ -207,7 +206,7 @@ CREATE TABLE {$wpdb->prefix}ea_categories (
     type VARCHAR(50) NOT NULL,
     name VARCHAR(191) NOT NULL,
     description TEXT DEFAULT NULL,
-    created_at DATETIME DEFAULT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT NULL,
     PRIMARY KEY (id),
     UNIQUE KEY name_type (name, type)
@@ -240,7 +239,7 @@ CREATE TABLE {$wpdb->prefix}ea_contacts (
     currency VARCHAR(3) NOT NULL DEFAULT 'USD',
     user_id BIGINT(20) UNSIGNED DEFAULT NULL,
     created_via VARCHAR(100) DEFAULT 'manual',
-    created_at DATETIME DEFAULT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT NULL,
     PRIMARY KEY (id),
     KEY name (name(191)),
@@ -266,7 +265,7 @@ CREATE TABLE {$wpdb->prefix}ea_document_items (
     tax DOUBLE(15, 4) NOT NULL DEFAULT 0.00,
     total DOUBLE(15, 4) NOT NULL DEFAULT 0.00,
     currency VARCHAR(3) NOT NULL DEFAULT 'USD',
-    created_at DATETIME DEFAULT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT NULL,
     PRIMARY KEY (id),
     KEY type (type),
@@ -287,7 +286,7 @@ CREATE TABLE {$wpdb->prefix}ea_document_taxes (
     compound TINYINT(1) NOT NULL DEFAULT 0,
     amount DOUBLE(15, 4) NOT NULL DEFAULT 0.00,
     currency VARCHAR(3) NOT NULL DEFAULT 'USD',
-    created_at DATETIME DEFAULT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT NULL,
     PRIMARY KEY (id),
     KEY document_id (document_id),
@@ -307,7 +306,6 @@ CREATE TABLE {$wpdb->prefix}ea_documentmeta (
 
 CREATE TABLE {$wpdb->prefix}ea_documents (
     id BIGINT(20) NOT NULL AUTO_INCREMENT,
-    contact_id BIGINT(20) UNSIGNED NOT NULL,
     type VARCHAR(20) NOT NULL DEFAULT 'invoice',
     status VARCHAR(20) NOT NULL DEFAULT 'draft',
     number VARCHAR(30) NOT NULL,
@@ -318,12 +316,13 @@ CREATE TABLE {$wpdb->prefix}ea_documents (
     total DOUBLE(15, 4) DEFAULT 0,
     balance DOUBLE(15, 4) DEFAULT 0,
     discount_value DOUBLE(15, 4) DEFAULT 0,
-    discount_type ENUM('fixed', 'percent') DEFAULT NULL,
+    discount_type ENUM('fixed', 'percentage') DEFAULT 'fixed',
+    contact_id BIGINT(20) UNSIGNED NOT NULL,
     name VARCHAR(191) NOT NULL,
     company VARCHAR(191) NOT NULL,
     email VARCHAR(191) DEFAULT NULL,
     phone VARCHAR(50) DEFAULT NULL,
-    address VARCHAR(191) DEFAULT NULL,
+    address TEXT DEFAULT NULL,
     city VARCHAR(50) DEFAULT NULL,
     state VARCHAR(50) DEFAULT NULL,
     postcode VARCHAR(20) DEFAULT NULL,
@@ -331,7 +330,7 @@ CREATE TABLE {$wpdb->prefix}ea_documents (
     tax_number VARCHAR(50) DEFAULT NULL,
     note TEXT DEFAULT NULL,
     terms TEXT DEFAULT NULL,
-    issued_at DATETIME DEFAULT NULL,
+    issued_at DATETIME  NOT NULL DEFAULT CURRENT_TIMESTAMP,
     due_at DATETIME DEFAULT NULL,
     paid_at DATETIME DEFAULT NULL,
     currency VARCHAR(3) NOT NULL DEFAULT 'USD',
@@ -339,7 +338,7 @@ CREATE TABLE {$wpdb->prefix}ea_documents (
     created_via VARCHAR(100) DEFAULT 'manual',
     attachment_id BIGINT(20) UNSIGNED DEFAULT NULL,
     uuid VARCHAR(36) DEFAULT NULL,
-    created_at DATETIME DEFAULT NULL,
+    created_at DATETIME  NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT NULL,
     PRIMARY KEY (id),
     UNIQUE KEY uuid (uuid),
@@ -363,7 +362,7 @@ CREATE TABLE {$wpdb->prefix}ea_items (
     cost DOUBLE(15, 4) NOT NULL,
     tax_ids VARCHAR(191) DEFAULT NULL,
     category_id INT(11) DEFAULT NULL,
-    created_at DATETIME DEFAULT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT NULL,
     PRIMARY KEY (id),
     KEY name (name),
@@ -371,7 +370,6 @@ CREATE TABLE {$wpdb->prefix}ea_items (
     KEY price (price),
     KEY cost (cost)
 ) $collate;
-
 
 CREATE TABLE {$wpdb->prefix}ea_transactionmeta (
     meta_id BIGINT(20) NOT NULL AUTO_INCREMENT,
@@ -388,7 +386,7 @@ CREATE TABLE {$wpdb->prefix}ea_taxes (
     name VARCHAR(191) NOT NULL,
     rate DOUBLE(15, 4) NOT NULL,
     compound TINYINT(1) NOT NULL DEFAULT 0,
-    created_at DATETIME DEFAULT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT NULL,
     PRIMARY KEY (id),
     KEY name (name),
@@ -414,7 +412,7 @@ CREATE TABLE {$wpdb->prefix}ea_transactions (
     type VARCHAR(20) DEFAULT NULL,
     status VARCHAR(20) NOT NULL DEFAULT 'completed',
     number VARCHAR(30) NOT NULL,
-    paid_at DATE NOT NULL,
+    paid_at DATETIME  NOT NULL DEFAULT CURRENT_TIMESTAMP,
     amount DOUBLE(15, 4) NOT NULL,
     currency VARCHAR(3) NOT NULL DEFAULT 'USD',
     exchange_rate DOUBLE(15, 8) NOT NULL DEFAULT 1.0,
@@ -426,12 +424,12 @@ CREATE TABLE {$wpdb->prefix}ea_transactions (
     contact_id BIGINT(20) UNSIGNED DEFAULT NULL,
     category_id BIGINT(20) UNSIGNED NOT NULL,
     attachment_id BIGINT(20) UNSIGNED DEFAULT NULL,
+    author_id BIGINT(20) UNSIGNED DEFAULT NULL,
     parent_id BIGINT(20) UNSIGNED DEFAULT NULL,
     reconciled TINYINT(1) NOT NULL DEFAULT 0,
     created_via VARCHAR(100) DEFAULT 'manual',
     uuid VARCHAR(36) DEFAULT NULL,
-    author_id BIGINT(20) UNSIGNED DEFAULT NULL,
-    updated_at DATETIME DEFAULT NULL,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     created_at DATETIME DEFAULT NULL,
     PRIMARY KEY (id),
     UNIQUE KEY uuid (uuid),
@@ -453,12 +451,15 @@ CREATE TABLE {$wpdb->prefix}ea_transfers (
     expense_id BIGINT(20) UNSIGNED NOT NULL,
     from_account_id BIGINT(20) UNSIGNED NOT NULL,
     to_account_id BIGINT(20) UNSIGNED NOT NULL,
+    from_exchange_rate DOUBLE(15, 8) NOT NULL DEFAULT 1.0,
+    to_exchange_rate DOUBLE(15, 8) NOT NULL DEFAULT 1.0,
     amount DOUBLE(15, 4) NOT NULL DEFAULT 0.00,
+    currency VARCHAR(3) NOT NULL DEFAULT 'USD',
     payment_method VARCHAR(100) DEFAULT NULL,
     reference VARCHAR(191) DEFAULT NULL,
     note TEXT DEFAULT NULL,
     creator_id BIGINT(20) UNSIGNED DEFAULT NULL,
-    created_at DATETIME DEFAULT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT NULL,
     PRIMARY KEY (id),
     KEY payment_id (payment_id),
