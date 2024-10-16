@@ -25,6 +25,10 @@ $account = Account::make( $id );
 			<span class="dashicons dashicons-undo"></span>
 		</a>
 	</h1>
+
+	<?php if ( $account->exists() ) : ?>
+		<a href="<?php echo esc_url( $account->get_view_url() ); ?>" class="page-title-action"><?php esc_html_e( 'View Account', 'wp-ever-accounting' ); ?></a>
+	<?php endif; ?>
 </div>
 
 <form id="eac-edit-account" name="account" method="post">
