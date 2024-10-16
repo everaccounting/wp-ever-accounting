@@ -21,10 +21,10 @@ class Customers {
 		add_action( 'eac_sales_page_customers_loaded', array( __CLASS__, 'handle_actions' ) );
 		add_action( 'eac_sales_page_customers_loaded', array( __CLASS__, 'page_loaded' ) );
 		add_action( 'eac_sales_page_customers_content', array( __CLASS__, 'page_content' ) );
-		add_action( 'eac_customer_view_section_overview', array( __CLASS__, 'overview_section' ) );
-		add_action( 'eac_customer_view_section_payments', array( __CLASS__, 'payments_section' ) );
-		add_action( 'eac_customer_view_section_invoices', array( __CLASS__, 'invoices_section' ) );
-		add_action( 'eac_customer_view_section_notes', array( __CLASS__, 'notes_section' ) );
+		add_action( 'eac_customer_profile_section_overview', array( __CLASS__, 'overview_section' ) );
+		add_action( 'eac_customer_profile_section_payments', array( __CLASS__, 'payments_section' ) );
+		add_action( 'eac_customer_profile_section_invoices', array( __CLASS__, 'invoices_section' ) );
+		add_action( 'eac_customer_profile_section_notes', array( __CLASS__, 'notes_section' ) );
 	}
 
 	/**
