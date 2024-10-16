@@ -20,15 +20,7 @@ class Installer {
 	 * @var array
 	 */
 	protected $updates = array(
-		'1.2.1.4' => array(
-			'eac_update_1214',
-			'eac_update_1214_another',
-		),
-		'1.2.1.5' => array(
-			'eac_update_1215',
-			'eac_update_1215_another',
-		),
-		'1.2.0'   => 'eac_update_120',
+		'2.0.0'   => 'eac_update_120',
 	);
 
 	/**
@@ -40,7 +32,6 @@ class Installer {
 		add_action( 'init', array( $this, 'check_update' ), 5 );
 		add_action( 'eac_run_update_callback', array( $this, 'run_update_callback' ), 10, 2 );
 		add_action( 'eac_update_db_version', array( $this, 'update_db_version' ) );
-		add_action( 'eac_flush_rewrite_rules', 'flush_rewrite_rules' );
 	}
 
 	/**
@@ -119,6 +110,9 @@ class Installer {
 	public function run_update_callback( $callback, $version ) {
 		require_once __DIR__ . '/Functions/updates.php';
 		if ( is_callable( $callback ) ) {
+			error_log('run_update_callback');
+			error_log($callback);
+			error_log($version);
 			$result = (bool) call_user_func( $callback );
 			if ( $result ) {
 				EAC()->queue()->add(
@@ -167,9 +161,6 @@ class Installer {
 			flush_rewrite_rules();
 		}
 
-		// Schedule a single event to flush rewrite rules.
-		EAC()->queue()->schedule_single( time(), 'eac_flush_rewrite_rules' );
-
 		/**
 		 * Perform actions after the plugin is installed.
 		 *
@@ -201,18 +192,14 @@ CREATE TABLE {$wpdb->prefix}ea_accounts (
     type VARCHAR(50) NOT NULL DEFAULT 'account',
     name VARCHAR(191) NOT NULL,
     number VARCHAR(100) NOT NULL,
-    bank_name VARCHAR(191) DEFAULT NULL,
-    bank_phone VARCHAR(20) DEFAULT NULL,
-    bank_address VARCHAR(191) DEFAULT NULL,
+    balance DOUBLE(15, 4) NOT NULL DEFAULT 0.00,
     currency VARCHAR(3) NOT NULL DEFAULT 'USD',
-    thumbnail_id BIGINT(20) UNSIGNED DEFAULT NULL,
-    creator_id BIGINT(20) UNSIGNED DEFAULT NULL,
     created_at DATETIME DEFAULT NULL,
     updated_at DATETIME DEFAULT NULL,
     PRIMARY KEY (id),
     UNIQUE KEY number (number),
-    KEY account_name (name),
-    KEY type (type)
+    KEY bank_name (name),
+    KEY bank_type (type)
 ) $collate;
 
 CREATE TABLE {$wpdb->prefix}ea_categories (
@@ -247,14 +234,12 @@ CREATE TABLE {$wpdb->prefix}ea_contacts (
     address VARCHAR(191) DEFAULT NULL,
     city VARCHAR(50) DEFAULT NULL,
     state VARCHAR(50) DEFAULT NULL,
-    zip VARCHAR(20) DEFAULT NULL,
+    postcode VARCHAR(20) DEFAULT NULL,
     country VARCHAR(3) DEFAULT NULL,
     tax_number VARCHAR(50) DEFAULT NULL,
     currency VARCHAR(3) NOT NULL DEFAULT 'USD',
-    thumbnail_id BIGINT(20) UNSIGNED DEFAULT NULL,
     user_id BIGINT(20) UNSIGNED DEFAULT NULL,
     created_via VARCHAR(100) DEFAULT 'manual',
-    creator_id BIGINT(20) UNSIGNED DEFAULT NULL,
     created_at DATETIME DEFAULT NULL,
     updated_at DATETIME DEFAULT NULL,
     PRIMARY KEY (id),
@@ -280,6 +265,7 @@ CREATE TABLE {$wpdb->prefix}ea_document_items (
     discount DOUBLE(15, 4) NOT NULL DEFAULT 0.00,
     tax DOUBLE(15, 4) NOT NULL DEFAULT 0.00,
     total DOUBLE(15, 4) NOT NULL DEFAULT 0.00,
+    currency VARCHAR(3) NOT NULL DEFAULT 'USD',
     created_at DATETIME DEFAULT NULL,
     updated_at DATETIME DEFAULT NULL,
     PRIMARY KEY (id),
@@ -300,6 +286,7 @@ CREATE TABLE {$wpdb->prefix}ea_document_taxes (
     rate DOUBLE(15, 4) NOT NULL,
     compound TINYINT(1) NOT NULL DEFAULT 0,
     amount DOUBLE(15, 4) NOT NULL DEFAULT 0.00,
+    currency VARCHAR(3) NOT NULL DEFAULT 'USD',
     created_at DATETIME DEFAULT NULL,
     updated_at DATETIME DEFAULT NULL,
     PRIMARY KEY (id),
@@ -320,6 +307,7 @@ CREATE TABLE {$wpdb->prefix}ea_documentmeta (
 
 CREATE TABLE {$wpdb->prefix}ea_documents (
     id BIGINT(20) NOT NULL AUTO_INCREMENT,
+    contact_id BIGINT(20) UNSIGNED NOT NULL,
     type VARCHAR(20) NOT NULL DEFAULT 'invoice',
     status VARCHAR(20) NOT NULL DEFAULT 'draft',
     number VARCHAR(30) NOT NULL,
@@ -331,27 +319,24 @@ CREATE TABLE {$wpdb->prefix}ea_documents (
     balance DOUBLE(15, 4) DEFAULT 0,
     discount_value DOUBLE(15, 4) DEFAULT 0,
     discount_type ENUM('fixed', 'percent') DEFAULT NULL,
-    contact_id BIGINT(20) UNSIGNED NOT NULL,
-    contact_name VARCHAR(191) NOT NULL,
-    contact_company VARCHAR(191) NOT NULL,
-    contact_email VARCHAR(191) DEFAULT NULL,
-    contact_phone VARCHAR(50) DEFAULT NULL,
-    contact_address VARCHAR(191) DEFAULT NULL,
-    contact_city VARCHAR(50) DEFAULT NULL,
-    contact_state VARCHAR(50) DEFAULT NULL,
-    contact_zip VARCHAR(20) DEFAULT NULL,
-    contact_country VARCHAR(3) DEFAULT NULL,
-    contact_tax VARCHAR(50) DEFAULT NULL,
+    name VARCHAR(191) NOT NULL,
+    company VARCHAR(191) NOT NULL,
+    email VARCHAR(191) DEFAULT NULL,
+    phone VARCHAR(50) DEFAULT NULL,
+    address VARCHAR(191) DEFAULT NULL,
+    city VARCHAR(50) DEFAULT NULL,
+    state VARCHAR(50) DEFAULT NULL,
+    postcode VARCHAR(20) DEFAULT NULL,
+    country VARCHAR(3) DEFAULT NULL,
+    tax_number VARCHAR(50) DEFAULT NULL,
     note TEXT DEFAULT NULL,
     terms TEXT DEFAULT NULL,
-    issue_date DATETIME DEFAULT NULL,
-    due_date DATETIME DEFAULT NULL,
-    sent_date DATETIME DEFAULT NULL,
-    payment_date DATETIME DEFAULT NULL,
+    issued_at DATETIME DEFAULT NULL,
+    due_at DATETIME DEFAULT NULL,
+    paid_at DATETIME DEFAULT NULL,
     currency VARCHAR(3) NOT NULL DEFAULT 'USD',
     exchange_rate DOUBLE(15, 8) NOT NULL DEFAULT 1.0,
     created_via VARCHAR(100) DEFAULT 'manual',
-    creator_id BIGINT(20) UNSIGNED NOT NULL,
     attachment_id BIGINT(20) UNSIGNED DEFAULT NULL,
     uuid VARCHAR(36) DEFAULT NULL,
     created_at DATETIME DEFAULT NULL,
@@ -362,10 +347,10 @@ CREATE TABLE {$wpdb->prefix}ea_documents (
     KEY status (status),
     KEY total (total),
     KEY contact_id (contact_id),
-    KEY contact_name (contact_name),
-    KEY contact_email (contact_email),
-    KEY contact_phone (contact_phone),
-    KEY contact_city (contact_city)
+    KEY contact_name (name),
+    KEY contact_email (email),
+    KEY contact_phone (phone),
+    KEY contact_city (city)
 ) $collate;
 
 CREATE TABLE {$wpdb->prefix}ea_items (
@@ -378,7 +363,6 @@ CREATE TABLE {$wpdb->prefix}ea_items (
     cost DOUBLE(15, 4) NOT NULL,
     tax_ids VARCHAR(191) DEFAULT NULL,
     category_id INT(11) DEFAULT NULL,
-    thumbnail_id BIGINT(20) UNSIGNED DEFAULT NULL,
     created_at DATETIME DEFAULT NULL,
     updated_at DATETIME DEFAULT NULL,
     PRIMARY KEY (id),
@@ -417,7 +401,7 @@ CREATE TABLE {$wpdb->prefix}ea_notes (
     parent_id BIGINT(20) UNSIGNED NOT NULL,
     parent_type VARCHAR(20) NOT NULL,
     content TEXT DEFAULT NULL,
-    creator_id BIGINT(20) UNSIGNED DEFAULT NULL,
+    author_id BIGINT(20) UNSIGNED DEFAULT NULL,
     created_at DATETIME DEFAULT NULL,
     updated_at DATETIME DEFAULT NULL,
     PRIMARY KEY (id),
@@ -430,7 +414,7 @@ CREATE TABLE {$wpdb->prefix}ea_transactions (
     type VARCHAR(20) DEFAULT NULL,
     status VARCHAR(20) NOT NULL DEFAULT 'completed',
     number VARCHAR(30) NOT NULL,
-    date DATE NOT NULL,
+    paid_at DATE NOT NULL,
     amount DOUBLE(15, 4) NOT NULL,
     currency VARCHAR(3) NOT NULL DEFAULT 'USD',
     exchange_rate DOUBLE(15, 8) NOT NULL DEFAULT 1.0,
@@ -445,8 +429,8 @@ CREATE TABLE {$wpdb->prefix}ea_transactions (
     parent_id BIGINT(20) UNSIGNED DEFAULT NULL,
     reconciled TINYINT(1) NOT NULL DEFAULT 0,
     created_via VARCHAR(100) DEFAULT 'manual',
-    creator_id BIGINT(20) UNSIGNED DEFAULT NULL,
     uuid VARCHAR(36) DEFAULT NULL,
+    author_id BIGINT(20) UNSIGNED DEFAULT NULL,
     updated_at DATETIME DEFAULT NULL,
     created_at DATETIME DEFAULT NULL,
     PRIMARY KEY (id),
@@ -467,12 +451,20 @@ CREATE TABLE {$wpdb->prefix}ea_transfers (
     id BIGINT(20) NOT NULL AUTO_INCREMENT,
     payment_id BIGINT(20) UNSIGNED NOT NULL,
     expense_id BIGINT(20) UNSIGNED NOT NULL,
+    from_account_id BIGINT(20) UNSIGNED NOT NULL,
+    to_account_id BIGINT(20) UNSIGNED NOT NULL,
+    amount DOUBLE(15, 4) NOT NULL DEFAULT 0.00,
+    payment_method VARCHAR(100) DEFAULT NULL,
+    reference VARCHAR(191) DEFAULT NULL,
+    note TEXT DEFAULT NULL,
     creator_id BIGINT(20) UNSIGNED DEFAULT NULL,
     created_at DATETIME DEFAULT NULL,
     updated_at DATETIME DEFAULT NULL,
     PRIMARY KEY (id),
     KEY payment_id (payment_id),
-    KEY expense_id (expense_id)
+    KEY expense_id (expense_id),
+    KEY from_account_id (from_account_id),
+    KEY to_account_id (to_account_id)
 ) $collate;
 ";
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';

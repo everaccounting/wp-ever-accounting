@@ -10,7 +10,7 @@ use EverAccounting\Models\Transfer;
 
 defined( 'ABSPATH' ) || exit;
 
-$id      = filter_input( INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT );
+$id       = filter_input( INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT );
 $transfer = Transfer::make( $id );
 
 ?>
@@ -28,7 +28,7 @@ $transfer = Transfer::make( $id );
 </div>
 
 
-<form id="eac-edit-transfer" name="transfer" method="post">
+<form id="eac-edit-transfer" name="transfer" method="post" action="<?php echo esc_html( admin_url( 'admin-post.php' ) ); ?>">
 	<div class="eac-poststuff">
 		<div class="column-1">
 
@@ -43,8 +43,8 @@ $transfer = Transfer::make( $id );
 							'type'             => 'select',
 							'name'             => 'from_account_id',
 							'label'            => __( 'From Account', 'wp-ever-accounting' ),
-							'options'          => array( $transfer->from_account ),
-							'value'            => $transfer->from_account_id,
+							'options'          => array( $transfer->expense ? $transfer->expense->account : null ),
+							'value'            => $transfer->expense ? $transfer->expense->account_id : null,
 							'class'            => 'eac_select2',
 							'tooltip'          => __( 'Select the account.', 'wp-ever-accounting' ),
 							'option_value'     => 'id',
@@ -65,8 +65,8 @@ $transfer = Transfer::make( $id );
 							'type'             => 'select',
 							'name'             => 'to_account_id',
 							'label'            => __( 'To Account', 'wp-ever-accounting' ),
-							'options'          => array( $transfer->to_account ),
-							'value'            => $transfer->to_account_id,
+							'options'          => array( $transfer->payment ? $transfer->payment->account : null ),
+							'value'            => $transfer->payment ? $transfer->payment->account_id : null,
 							'class'            => 'eac_select2',
 							'tooltip'          => __( 'Select the account.', 'wp-ever-accounting' ),
 							'option_value'     => 'id',
@@ -82,15 +82,48 @@ $transfer = Transfer::make( $id );
 							),
 						)
 					);
+					// from exchange rate.
+					eac_form_field(
+						array(
+							'name'          => 'from_exchange_rate',
+							'label'         => __( 'From Exchange Rate', 'wp-ever-accounting' ),
+							'value'         => $transfer->expense ? $transfer->expense->exchange_rate : '',
+							'placeholder'   => '0.00',
+							'required'      => true,
+							'prefix'        => '1 ' . eac_base_currency() . ' = ',
+							'class'         => 'eac_amount',
+							'attr-step'     => 'any',
+							'readonly'      => $transfer->expense && $transfer->expense->currency === eac_base_currency(),
+							'data-currency' => $transfer->expense ? $transfer->expense->currency : eac_base_currency(),
+						)
+					);
+
+					// to exchange rate.
+					eac_form_field(
+						array(
+							'type'          => 'text',
+							'name'          => 'to_exchange_rate',
+							'label'         => __( 'To Exchange Rate', 'wp-ever-accounting' ),
+							'value'         => $transfer->payment ? $transfer->payment->exchange_rate : '',
+							'placeholder'   => '0.00',
+							'required'      => true,
+							'prefix'        => '1 ' . eac_base_currency() . ' = ',
+							'class'         => 'eac_amount',
+							'attr-step'     => 'any',
+							'readonly'      => $transfer->payment && $transfer->payment->currency === eac_base_currency(),
+							'data-currency' => $transfer->payment ? $transfer->payment->currency : eac_base_currency(),
+						)
+					);
+
 					eac_form_field(
 						array(
 							'type'          => 'text',
 							'name'          => 'amount',
 							'label'         => __( 'Amount', 'wp-ever-accounting' ),
 							'placeholder'   => '0.00',
-							'value'         => $transfer->amount,
+							'value'         => $transfer->expense ? $transfer->expense->amount : '',
 							'required'      => true,
-							'data-currency' => $transfer->currency,
+							'data-currency' => $transfer->expense ? $transfer->expense->currency : eac_base_currency(),
 							'class'         => 'eac_amount',
 						)
 					);
@@ -100,7 +133,8 @@ $transfer = Transfer::make( $id );
 							'name'        => 'date',
 							'label'       => __( 'Date', 'wp-ever-accounting' ),
 							'placeholder' => 'YYYY-MM-DD',
-							'value'       => $transfer->date,
+							'value'       => $transfer->expense ? $transfer->expense->date : date( 'Y-m-d' ),
+							'default'     => date( 'Y-m-d' ),
 							'required'    => true,
 							'class'       => 'eac_datepicker',
 						)
@@ -111,7 +145,7 @@ $transfer = Transfer::make( $id );
 							'type'        => 'select',
 							'name'        => 'payment_method',
 							'label'       => __( 'Payment Method', 'wp-ever-accounting' ),
-							'value'       => $transfer->method,
+							'value'       => $transfer->expense ? $transfer->expense->payment_method : '',
 							'options'     => eac_get_payment_methods(),
 							'placeholder' => __( 'Select payment method', 'wp-ever-accounting' ),
 						)
@@ -121,7 +155,7 @@ $transfer = Transfer::make( $id );
 							'type'        => 'text',
 							'name'        => 'reference',
 							'label'       => __( 'Reference', 'wp-ever-accounting' ),
-							'value'       => $transfer->reference,
+							'value'       => $transfer->expense ? $transfer->expense->reference : '',
 							'placeholder' => __( 'Enter reference', 'wp-ever-accounting' ),
 						)
 					);
@@ -130,7 +164,7 @@ $transfer = Transfer::make( $id );
 							'type'          => 'textarea',
 							'name'          => 'note',
 							'label'         => __( 'Notes', 'wp-ever-accounting' ),
-							'value'         => $transfer->note,
+							'value'         => $transfer->expense ? $transfer->expense->note : '',
 							'placeholder'   => __( 'Enter description', 'wp-ever-accounting' ),
 							'wrapper_class' => 'is--full',
 						)

@@ -21,16 +21,8 @@ defined( 'ABSPATH' ) || exit;
  * @property string       $created_at Date the transfer was created.
  * @property string       $updated_at Date the transfer was last updated.
  *
- * @property-read  double $amount Amount of the transfer.
- * @property-read  string $formatted_amount Formatted amount of the transfer.
- * @property-read string  $currency Currency of the transfer.
- * @property-read string  $date Date of the transfer.
- * @property-read Payment $payment Payment object of the transfer.
- * @property-read Expense $expense Expense object of the transfer.
- * @property-read Account $from_account From account object of the transfer.
- * @property-read Account $to_account To account object of the transfer.
- * @property-read string  $payment_method Payment method of the transfer.
- * @property-read string  $reference Reference of the transfer.
+ * @property-read Payment $payment Payment object.
+ * @property-read Expense $expense Expense object.
  */
 class Transfer extends Model {
 	/**
@@ -54,37 +46,23 @@ class Transfer extends Model {
 	);
 
 	/**
-	 * The attributes of the model.
-	 *
-	 * @since 1.0.0
-	 * @var array
-	 */
-	protected $attributes = array(
-		'date'            => null,
-		'from_account_id' => null,
-		'amount'          => null,
-		'to_account_id'   => null,
-		'payment_method'    => null,
-		'reference'       => null,
-		'note'            => null,
-	);
-
-	/**
 	 * The attributes that should be cast.
 	 *
 	 * @since 1.0.0
 	 * @var array
 	 */
 	protected $casts = array(
-		'date'            => 'date',
-		'payment_id'      => 'int',
-		'expense_id'      => 'int',
-		'amount'          => 'double',
-		'from_account_id' => 'int',
-		'to_account_id'   => 'int',
-		'reference'       => 'string',
-		'payment_method'    => 'string',
-		'note'            => 'string',
+		'date'               => 'date',
+		'payment_id'         => 'int',
+		'expense_id'         => 'int',
+		'amount'             => 'double',
+		'from_account_id'    => 'int',
+		'to_account_id'      => 'int',
+		'from_exchange_rate' => 'double',
+		'to_exchange_rate'   => 'double',
+		'reference'          => 'string',
+		'payment_method'     => 'string',
+		'note'               => 'string',
 	);
 
 	/**
@@ -229,35 +207,6 @@ class Transfer extends Model {
 	*/
 
 	/**
-	 * Read an item from the database.
-	 *
-	 * @param int|string $id ID of the item to read.
-	 *
-	 * @since 1.0.0
-	 * @return array|null The item data, or null if not found.
-	 * @global \wpdb     $wpdb WordPress database abstraction object.
-	 */
-	protected function read( $id ) {
-
-		$data = parent::read( $id );
-		if ( ! empty( $data['payment_id'] ) ) {
-			$payment               = Payment::make( $data['payment_id'] );
-			$data['to_account_id'] = $payment->account_id;
-		}
-		if ( ! empty( $data['expense_id'] ) ) {
-			$expense                 = Expense::make( $data['expense_id'] );
-			$data['from_account_id'] = $expense->account_id;
-			$data['amount']          = $expense->amount;
-			$data['date']            = $expense->date;
-			$data['payment_method']    = $expense->payment_method;
-			$data['reference']       = $expense->reference;
-			$data['note']            = $expense->note;
-		}
-
-		return $data;
-	}
-
-	/**
 	 * Save the object to the database.
 	 *
 	 * @since 1.0.0
@@ -265,18 +214,36 @@ class Transfer extends Model {
 	 */
 	public function save() {
 		global $wpdb;
+
+		// from and to accounts cannot be the same.
+		if ( $this->from_account_id === $this->to_account_id ) {
+			return new \WP_Error( 'same_account', __( 'From and to accounts cannot be the same.', 'wp-ever-accounting' ) );
+		}
+
+		// Prepare vars.
+//		$from_account       = Account::find( $this->from_account_id );
+//		$to_account         = Account::find( $this->to_account_id );
+//		$expense            = Expense::make( $this->expense_id );
+//		$payment            = Payment::make( $this->payment_id );
+		$from_account_id    = $this->from_account_id ? $this->from_account_id : ( $this->expense && $this->expense->account_id ? $this->expense->account_id : 0 );
+		$to_account_id      = $this->to_account_id ? $this->to_account_id : ( $this->payment && $this->payment->account_id ? $this->payment->account_id : 0 );
+		$date               = $this->date ? $this->date : ( $this->expense && $this->expense->date ? $this->expense->date : date( 'Y-m-d' ) );
+		$amount             = $this->amount ? $this->amount : ( $this->expense && $this->expense->amount ? $this->expense->amount : 0 );
+		$payment_method     = $this->payment_method ? $this->payment_method : ( $this->expense && $this->expense->payment_method ? $this->expense->payment_method : '' );
+		$from_exchange_rate = $this->from_exchange_rate ? $this->from_exchange_rate : ( $this->expense && $this->expense->exchange_rate ? $this->expense->exchange_rate : 1 );
+		$to_exchange_rate   = $this->to_exchange_rate ? $this->to_exchange_rate : ( $this->payment && $this->payment->exchange_rate ? $this->payment->exchange_rate : 1 );
+		$reference          = $this->reference ? $this->reference : ( $this->expense && $this->expense->reference ? $this->expense->reference : '' );
+		$note               = $this->note ? $this->note : ( $this->expense && $this->expense->note ? $this->expense->note : '' );
+
 		$wpdb->query( 'START TRANSACTION' );
-		$from_account = Account::find( $this->from_account_id );
-		$to_account   = Account::find( $this->to_account_id );
-		$expense      = Expense::make( $this->expense_id );
-		$payment      = Payment::make( $this->payment_id );
 		$expense->fill(
 			array(
+				'date'           => $date,
 				'account_id'     => $this->from_account_id,
 				'payment_date'   => $this->date,
 				'amount'         => $this->amount,
-				'description'    => $this->description,
-				'category_id'    => $this->category_id,
+				'exchange_rate'  => $this->from_exchange_rate,
+				'note'           => $this->note,
 				'payment_method' => $this->payment_method,
 				'reference'      => $this->reference,
 			)
@@ -292,16 +259,17 @@ class Transfer extends Model {
 
 		$amount = $this->amount;
 		if ( $from_account->currency !== $to_account->currency ) {
-			$amount = eac_convert_currency( $amount, $from_account->currency, $to_account->currency );
+			$amount = eac_convert_currency( $amount, $this->from_exchange_rate, $this->to_exchange_rate );
 		}
 
 		$payment->fill(
 			array(
+				'date'           => $this->date,
 				'account_id'     => $this->to_account_id,
 				'payment_date'   => $this->date,
 				'amount'         => $amount,
-				'description'    => $this->description,
-				'category_id'    => $this->category_id,
+				'exchange_rate'  => $this->to_exchange_rate,
+				'note'           => $this->note,
 				'payment_method' => $this->payment_method,
 				'reference'      => $this->reference,
 			)

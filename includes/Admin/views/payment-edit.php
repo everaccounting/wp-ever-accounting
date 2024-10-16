@@ -99,15 +99,16 @@ $payment = Payment::make( $id );
 					// exchange rate.
 					eac_form_field(
 						array(
-							'label'       => __( 'Exchange Rate', 'wp-ever-accounting' ),
-							'type'        => 'number',
-							'name'        => 'exchange_rate',
-							'value'       => $payment->exchange_rate,
-							'placeholder' => '1.00',
-							'required'    => true,
-							'class'       => 'eac_exchange_rate',
-							'prefix'      => '1 ' . eac_base_currency() . ' = ',
-							'attr-step'   => 'any',
+							'label'         => __( 'Exchange Rate', 'wp-ever-accounting' ),
+							'name'          => 'exchange_rate',
+							'value'         => $payment->exchange_rate,
+							'placeholder'   => '1.00',
+							'required'      => true,
+							'prefix'        => '1 ' . eac_base_currency() . ' = ',
+							'class'         => 'eac_amount',
+							'attr-step'     => 'any',
+							'readonly'      => $payment->currency === eac_base_currency(),
+							'data-currency' => $payment->currency,
 						)
 					);
 
@@ -194,7 +195,7 @@ $payment = Payment::make( $id );
 								'disabled'     => true,
 							)
 						);
-						printf('<input type="hidden" name="invoice_id" value="%d">', $payment->document_id);
+						printf( '<input type="hidden" name="invoice_id" value="%d">', $payment->document_id );
 					}
 
 					eac_form_field(

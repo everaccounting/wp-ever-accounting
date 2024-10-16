@@ -12,6 +12,7 @@ defined( 'ABSPATH' ) || exit;
  * Update to 1.2.0
  */
 function eac_update_120() {
+	error_log('eac_update_120');
 	global $wpdb;
 	require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 	$settings     = get_option( 'eaccounting_settings', array() );
@@ -73,17 +74,21 @@ function eac_update_120() {
 	$table = $wpdb->prefix . 'ea_accounts';
 	$wpdb->query( "UPDATE $table SET created_at = date_created" );
 	$wpdb->query( "UPDATE $table SET currency = currency_code" );
-	$wpdb->query( "ALTER TABLE $table DROP `enabled`" );
-	$wpdb->query( "ALTER TABLE $table DROP `currency_code`" );
-	$wpdb->query( "ALTER TABLE $table DROP `date_created`" );
+	$wpdb->query( "ALTER TABLE $table MODIFY COLUMN type VARCHAR(50) NOT NULL DEFAULT 'account' AFTER id" );
+	$drops = array( 'enabled', 'currency_code', 'date_created', 'thumbnail_id', 'creator_id', 'bank_name', 'bank_phone', 'bank_address' );
+	foreach ( $drops as $drop ) {
+		$wpdb->query( "ALTER TABLE $table DROP COLUMN $drop" );
+	}
 
 	// Categories.
 	$table = $wpdb->prefix . 'ea_categories';
 	$wpdb->query( "UPDATE $table SET type = 'payment' WHERE type = 'income'" );
 	$wpdb->query( "UPDATE $table SET created_at = date_created" );
-	$wpdb->query( "ALTER TABLE $table DROP `color`" );
-	$wpdb->query( "ALTER TABLE $table DROP `enabled`" );
-	$wpdb->query( "ALTER TABLE $table DROP `date_created`" );
+	$wpdb->query( "DELETE FROM $table WHERE type = 'other'" );
+	$drops = array( 'color', 'enabled', 'date_created' );
+	foreach ( $drops as $drop ) {
+		$wpdb->query( "ALTER TABLE $table DROP COLUMN $drop" );
+	}
 
 	// Contacts.
 	$table = $wpdb->prefix . 'ea_contactmeta';
@@ -92,141 +97,27 @@ function eac_update_120() {
 
 	$table = $wpdb->prefix . 'ea_contacts';
 	$wpdb->query( "UPDATE $table SET tax_number = vat_number" );
-	$wpdb->query( "UPDATE $table SET zip = postcode" );
 	$wpdb->query( "UPDATE $table SET currency = currency_code" );
 	$wpdb->query( "UPDATE $table SET created_at = date_created" );
-	$wpdb->query( "ALTER TABLE $table DROP `birth_date`" );
-	$wpdb->query( "ALTER TABLE $table DROP `vat_number`" );
-	$wpdb->query( "ALTER TABLE $table DROP `postcode`" );
-	$wpdb->query( "ALTER TABLE $table DROP `currency_code`" );
-	$wpdb->query( "ALTER TABLE $table DROP `date_created`" );
-	$wpdb->query( "ALTER TABLE $table DROP `attachment`" );
-	$wpdb->query( "ALTER TABLE $table DROP `enabled`" );
-
-	// Items.
-	$table = $wpdb->prefix . 'ea_items';
-	$wpdb->query( "UPDATE $table SET price = sale_price" );
-	$wpdb->query( "UPDATE $table SET cost = purchase_price" );
-	$wpdb->query( "UPDATE $table SET created_at = date_created" );
-	$wpdb->query( "ALTER TABLE $table DROP sale_price" );
-	$wpdb->query( "ALTER TABLE $table DROP purchase_price" );
-	$wpdb->query( "ALTER TABLE $table DROP sku" );
-	$wpdb->query( "ALTER TABLE $table DROP quantity" );
-	$wpdb->query( "ALTER TABLE $table DROP sales_tax" );
-	$wpdb->query( "ALTER TABLE $table DROP purchase_tax" );
-	$wpdb->query( "ALTER TABLE $table DROP enabled" );
-	$wpdb->query( "ALTER TABLE $table DROP date_created" );
-
-	// Notes.
-	$table = $wpdb->prefix . 'ea_notes';
-	$wpdb->query( "UPDATE $table SET parent_type = type" );
-	$wpdb->query( "UPDATE $table SET content = note" );
-	$wpdb->query( "UPDATE $table SET created_at = date_created" );
-	$wpdb->query( "ALTER TABLE $table DROP `type`" );
-	$wpdb->query( "ALTER TABLE $table DROP note" );
-	$wpdb->query( "ALTER TABLE $table DROP note_metadata" );
-	$wpdb->query( "ALTER TABLE $table DROP extra" );
-
-	// Transfers.
-	$table = $wpdb->prefix . 'ea_transfers';
-	$wpdb->query( "UPDATE $table SET payment_id = income_id" );
-	$wpdb->query( "UPDATE $table SET created_at = date_created" );
-	$wpdb->query( "ALTER TABLE $table DROP income_id" );
-	$wpdb->query( "ALTER TABLE $table DROP date_created" );
-
-	// Transactions.
-	$table = $wpdb->prefix . 'ea_transactions';
-	$wpdb->query( "UPDATE $table SET type = 'payment' WHERE type = 'income'" );
-	$wpdb->query( "UPDATE $table SET date = payment_date" );
-	$wpdb->query( "UPDATE $table SET currency = currency_code" );
-	$wpdb->query( "UPDATE $table SET note = description" );
-	$wpdb->query( "UPDATE $table SET exchange_rate = currency_rate" );
-	$wpdb->query( "UPDATE $table SET created_at = date_created" );
-	$wpdb->query( "UPDATE $table SET uuid = UUID()" );
-	$wpdb->query( "UPDATE $table JOIN (SELECT @rank := 0) r SET number=CONCAT('PAY-',LPAD(@rank:=@rank+1, 5, '0')) WHERE type='payment' AND number IS NULL OR number = ''" );
-	$wpdb->query( "UPDATE $table JOIN (SELECT @rank := 0) r SET number=CONCAT('EXP-',LPAD(@rank:=@rank+1, 5, '0')) WHERE type='expense' AND number IS NULL OR number = ''" );
-	$wpdb->query( "ALTER TABLE $table DROP payment_date" );
-	$wpdb->query( "ALTER TABLE $table DROP currency_code" );
-	$wpdb->query( "ALTER TABLE $table DROP currency_rate" );
-	$wpdb->query( "ALTER TABLE $table DROP date_created" );
-	$wpdb->query( "ALTER TABLE $table DROP description" );
+	$wpdb->query( "ALTER TABLE $table MODIFY COLUMN type VARCHAR(30) DEFAULT 'customer' AFTER id" );
+	$wpdb->query( "ALTER TABLE $table MODIFY COLUMN website VARCHAR(191) DEFAULT NULL AFTER phone" );
+	$wpdb->query( "ALTER TABLE $table MODIFY COLUMN country VARCHAR(3) DEFAULT NULL AFTER zip" );
+	$drops = array( 'birth_date', 'vat_number', 'currency_code', 'date_created', 'attachment', 'enabled', 'creator_id', 'thumbnail_id', 'user_id', 'street' );
+	foreach ( $drops as $drop ) {
+		$wpdb->query( "ALTER TABLE $table DROP COLUMN $drop" );
+	}
 
 	// Documents Items.
 	$table = $wpdb->prefix . 'ea_document_items';
 	$wpdb->query( "UPDATE $table SET name = item_name" );
-	$wpdb->query( "UPDATE $table SET created_at = date_created" );
-	$wpdb->query( "ALTER TABLE $table DROP `item_name`" );
-	$wpdb->query( "ALTER TABLE $table DROP `date_created`" );
-	// todo need to adjust tax rate and decide about storing currency.
-
-	// Documents.
-	$table = $wpdb->prefix . 'ea_documents';
-	$wpdb->query( "UPDATE $table SET number = document_number" );
-	$wpdb->query( "UPDATE $table SET reference = order_number" );
 	$wpdb->query( "UPDATE $table SET currency = currency_code" );
-	$wpdb->query( "UPDATE $table SET exchange_rate = currency_rate" );
-	$wpdb->query( "UPDATE $table SET tax = total_tax" );
-	$wpdb->query( "UPDATE $table SET discount = total_discount" );
 	$wpdb->query( "UPDATE $table SET created_at = date_created" );
-	$wpdb->query( "UPDATE $table SET uuid = UUID()" );
-
-	$wpdb->query( "ALTER TABLE $table DROP `document_number`" );
-	$wpdb->query( "ALTER TABLE $table DROP `order_number`" );
-	$wpdb->query( "ALTER TABLE $table DROP `currency_code`" );
-	$wpdb->query( "ALTER TABLE $table DROP `currency_rate`" );
-	$wpdb->query( "ALTER TABLE $table DROP `total_tax`" );
-	$wpdb->query( "ALTER TABLE $table DROP `total_discount`" );
-	$wpdb->query( "ALTER TABLE $table DROP `total_shipping`" );
-	$wpdb->query( "ALTER TABLE $table DROP `total_fees`" );
-	$wpdb->query( "ALTER TABLE $table DROP `tax_inclusive`" );
-	$wpdb->query( "ALTER TABLE $table DROP `date_created`" );
-	$wpdb->query( "ALTER TABLE $table DROP `category_id`" );
-	$wpdb->query( "ALTER TABLE $table DROP `key`" );
-	$documents = $wpdb->get_results( "SELECT id, address FROM $table WHERE address IS NOT NULL AND address != ''" );
-	foreach ( $documents as $document ) {
-		$address = maybe_unserialize( $document->address );
-		$address = wp_parse_args(
-			$address,
-			array(
-				'name'       => '',
-				'company'    => '',
-				'street'     => '',
-				'city'       => '',
-				'state'      => '',
-				'postcode'   => '',
-				'country'    => '',
-				'email'      => '',
-				'phone'      => '',
-				'vat_number' => '',
-			)
-		);
-		$mapping = array(
-			'contact_name'     => 'name',
-			'contact_company'  => 'company',
-			'contact_address'  => 'street',
-			'contact_city'     => 'city',
-			'contact_state'    => 'state',
-			'contact_postcode' => 'postcode',
-			'contact_country'  => 'country',
-			'contact_email'    => 'email',
-			'contact_phone'    => 'phone',
-			'contact_tax'      => 'vat_number',
-		);
-
-		// map to new fields.
-		$data = array();
-		foreach ( $mapping as $new => $old ) {
-			$data[ $new ] = $address[ $old ];
-		}
-		// take only keys which have values.
-		$data = array_filter( $data );
-		if ( empty( $data ) ) {
-			continue;
-		}
-		// update the document.
-		$wpdb->update( $table, $data, array( 'id' => $document->id ) );
+	$wpdb->query( "ALTER TABLE $table MODIFY COLUMN unit VARCHAR(20) DEFAULT NULL AFTER item_id" );
+	$wpdb->query( "ALTER TABLE $table MODIFY COLUMN description VARCHAR(160) DEFAULT NULL AFTER item_id" );
+	$wpdb->query( "ALTER TABLE $table MODIFY COLUMN name VARCHAR(191) NOT NULL AFTER item_id" );
+	$wpdb->query( "ALTER TABLE $table MODIFY COLUMN type VARCHAR(20) NOT NULL DEFAULT 'standard' AFTER item_id" );
+	$drops = array( 'item_name', 'extra', 'tax_rate', 'currency_code', 'date_created' );
+	foreach ( $drops as $drop ) {
+		$wpdb->query( "ALTER TABLE $table DROP `$drop`" );
 	}
-	$wpdb->query( "ALTER TABLE $table DROP `address`" );
-
-	wp_cache_flush();
 }
