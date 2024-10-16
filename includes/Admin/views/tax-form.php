@@ -56,16 +56,6 @@ defined( 'ABSPATH' ) || exit;
 							'type'     => 'select',
 						)
 					);
-					eac_form_field(
-						array(
-							'id'            => 'description',
-							'label'         => __( 'Description', 'wp-ever-accounting' ),
-							'placeholder'   => __( 'Enter tax rate description', 'wp-ever-accounting' ),
-							'value'         => $tax->description,
-							'wrapper_class' => 'is--full',
-							'type'          => 'textarea',
-						)
-					);
 					?>
 				</div>
 			</div>

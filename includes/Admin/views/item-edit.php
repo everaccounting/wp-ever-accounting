@@ -99,7 +99,7 @@ $item = Item::make( $id );
 							'data-subtype'     => 'item',
 							'suffix'           => sprintf(
 								'<a class="addon" href="%s" target="_blank" title="%s"><span class="dashicons dashicons-plus"></span></a>',
-								esc_url( 'admin.php?page=eac-misc&tab=categories&add=yes' ),
+								esc_url( 'admin.php?page=eac-settings&tab=categories&action=add' ),
 								__( 'Add Category', 'wp-ever-accounting' )
 							),
 						)
@@ -130,6 +130,11 @@ $item = Item::make( $id );
 							'data-action'  => 'eac_json_search',
 							'data-type'    => 'tax',
 							'tooltip'      => __( 'The selected tax rates will be applied to this item.', 'wp-ever-accounting' ),
+							'suffix'       => sprintf(
+								'<a class="addon" href="%s" target="_blank" title="%s"><span class="dashicons dashicons-plus"></span></a>',
+								esc_url( 'admin.php?page=eac-settings&tab=taxes&section=rates&action=add' ),
+								__( 'Add Tax', 'wp-ever-accounting' )
+							),
 						)
 					);
 
