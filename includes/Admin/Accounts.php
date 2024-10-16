@@ -25,6 +25,10 @@ class Accounts {
 		add_action( 'eac_banking_page_accounts_loaded', array( __CLASS__, 'page_loaded' ) );
 		add_action( 'eac_banking_page_accounts_content', array( __CLASS__, 'page_content' ) );
 		add_action( 'eac_account_edit_side_meta_boxes', array( __CLASS__, 'account_notes' ) );
+		add_action( 'eac_account_profile_section_overview', array( __CLASS__, 'overview_section' ) );
+		add_action( 'eac_account_profile_section_payments', array( __CLASS__, 'payments_section' ) );
+		add_action( 'eac_account_profile_section_expenses', array( __CLASS__, 'expenses_section' ) );
+		add_action( 'eac_account_profile_section_notes', array( __CLASS__, 'account_notes' ) );
 	}
 
 
@@ -130,10 +134,199 @@ class Accounts {
 			case 'edit':
 				include __DIR__ . '/views/account-edit.php';
 				break;
+			case 'view':
+				include __DIR__ . '/views/account-view.php';
+				break;
 			default:
 				include __DIR__ . '/views/account-list.php';
 				break;
 		}
+	}
+
+	/**
+	 * Account overview.
+	 *
+	 * @param Account $account Account object.
+	 *
+	 * @since 2.0.0
+	 * @return void
+	 */
+	public static function overview_section( $account ) {
+		global $wpdb;
+		$stats = apply_filters(
+			'eac_account_overview_stats',
+			array(
+				array(
+					'label' => __( 'Receivable', 'wp-ever-accounting' ),
+					'value' => eac_format_amount( 100 ),
+				),
+
+				array(
+					'label' => __( 'Payable', 'wp-ever-accounting' ),
+					'value' => eac_format_amount( 100 ),
+				),
+
+				array(
+					'label' => __( 'Upcoming', 'wp-ever-accounting' ),
+					'value' => eac_format_amount( 100 ),
+				),
+			)
+		);
+		?>
+		<h2 class="has--border"><?php echo esc_html__( 'Overview', 'wp-ever-accounting' ); ?></h2>
+		<canvas class="eac-profile-cart" style="min-height: 300px;"></canvas>
+		<div class="eac-stats stats--3">
+			<?php foreach ( $stats as $stat ) : ?>
+				<div class="eac-stat">
+					<div class="eac-stat__label"><?php echo esc_html( $stat['label'] ); ?></div>
+					<div class="eac-stat__value">
+						<?php echo esc_html( $stat['value'] ); ?>
+						<?php if ( isset( $stat['delta'] ) ) : ?>
+							<?php $delta_class = $stat['delta'] > 0 ? 'is--positive' : 'is--negative'; ?>
+							<div class="eac-stat__delta <?php echo esc_attr( $delta_class ); ?>">
+								<?php echo esc_html( $stat['delta'] ); ?>%
+							</div>
+						<?php endif; ?>
+					</div>
+					<?php if ( isset( $stat['meta'] ) ) : ?>
+						<div class="eac-stat__meta">
+							<span><?php echo wp_kses_post( implode( ' </span><span> ', $stat['meta'] ) ); ?></span>
+						</div>
+					<?php endif; ?>
+				</div>
+			<?php endforeach; ?>
+		</div>
+
+		<h4 class="tw-text-gray-500 tw-uppercase tw-text-base">Basic Info</h4>
+		<div class="tw-grid tw-gap-4 tw-mt-5 md:tw-grid-cols-2 lg:tw-grid-cols-3">
+			<div>
+				<label class="tw-mb-1">Display Name</label>
+				<p class="tw-font-bold">admin </p>
+			</div>
+			<div>
+				<label class="tw-mb-1">Primary Contact Name</label>
+				<p class="tw-font-bold">Primary Contact </p>
+			</div>
+			<div>
+				<label class="tw-mb-1">Email</label>
+				<p class="tw-font-bold">email@gmail.com </p>
+			</div>
+			<div>
+				<label class="tw-mb-1">Display Name</label>
+				<p class="tw-font-bold">admin </p>
+			</div>
+			<div>
+				<label class="tw-mb-1">Primary Contact Name</label>
+				<p class="tw-font-bold">Primary Contact </p>
+			</div>
+			<div>
+				<label class="tw-mb-1">Email</label>
+				<p class="tw-font-bold">email@gmail.com </p>
+			</div>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Account payments.
+	 *
+	 * @param Account $account Account object.
+	 *
+	 * @since 2.0.0
+	 * @return void
+	 */
+	public static function payments_section( $account ) {
+		$payments = EAC()->payments->query(
+			array(
+				'account_id' => $account->id,
+				'orderby'    => 'created_at',
+				'order'      => 'DESC',
+				'limit'      => 20,
+			)
+		);
+		?>
+		<h2 class="has--border"><?php esc_html_e( 'Recent Payments', 'wp-ever-accounting' ); ?></h2>
+		<table class="widefat fixed striped">
+			<thead>
+			<tr>
+				<th><?php esc_html_e( 'Number', 'wp-ever-accounting' ); ?></th>
+				<th><?php esc_html_e( 'Date', 'wp-ever-accounting' ); ?></th>
+				<th><?php esc_html_e( 'Amount', 'wp-ever-accounting' ); ?></th>
+				<th><?php esc_html_e( 'Status', 'wp-ever-accounting' ); ?></th>
+			</tr>
+			</thead>
+			<tbody>
+			<?php if ( $payments ) : ?>
+				<?php foreach ( $payments as $payment ) : ?>
+					<tr>
+						<td>
+							<a href="<?php echo esc_url( $payment->get_view_url() ); ?>">
+								<?php echo esc_html( $payment->number ); ?>
+							</a>
+						</td>
+						<td><?php echo esc_html( wp_date( eac_date_format(), strtotime( $payment->issue_date ) ) ); ?></td>
+						<td><?php echo esc_html( eac_format_amount( $payment->amount ) ); ?></td>
+						<td><?php echo esc_html( $payment->status ); ?></td>
+					</tr>
+				<?php endforeach; ?>
+			<?php else : ?>
+				<tr>
+					<td colspan="4"><?php esc_html_e( 'No payments found.', 'wp-ever-accounting' ); ?></td>
+				</tr>
+			<?php endif; ?>
+		</table>
+		<?php
+	}
+
+	/**
+	 * Account expenses.
+	 *
+	 * @param Account $account Account object.
+	 *
+	 * @since 2.0.0
+	 * @return void
+	 */
+	public static function expenses_section( $account ) {
+		$expenses = EAC()->expenses->query(
+			array(
+				'account_id' => $account->id,
+				'orderby'    => 'created_at',
+				'order'      => 'DESC',
+				'limit'      => 20,
+			)
+		);
+		?>
+		<h2 class="has--border"><?php esc_html_e( 'Recent Expenses', 'wp-ever-accounting' ); ?></h2>
+		<table class="widefat fixed striped">
+			<thead>
+			<tr>
+				<th><?php esc_html_e( 'Number', 'wp-ever-accounting' ); ?></th>
+				<th><?php esc_html_e( 'Date', 'wp-ever-accounting' ); ?></th>
+				<th><?php esc_html_e( 'Amount', 'wp-ever-accounting' ); ?></th>
+				<th><?php esc_html_e( 'Status', 'wp-ever-accounting' ); ?></th>
+			</tr>
+			</thead>
+			<tbody>
+			<?php if ( $expenses ) : ?>
+				<?php foreach ( $expenses as $expense ) : ?>
+					<tr>
+						<td>
+							<a href="<?php echo esc_url( $expense->get_view_url() ); ?>">
+								<?php echo esc_html( $expense->number ); ?>
+							</a>
+						</td>
+						<td><?php echo esc_html( wp_date( eac_date_format(), strtotime( $expense->issue_date ) ) ); ?></td>
+						<td><?php echo esc_html( eac_format_amount( $expense->amount ) ); ?></td>
+						<td><?php echo esc_html( $expense->status ); ?></td>
+					</tr>
+				<?php endforeach; ?>
+			<?php else : ?>
+				<tr>
+					<td colspan="4"><?php esc_html_e( 'No expenses found.', 'wp-ever-accounting' ); ?></td>
+				</tr>
+			<?php endif; ?>
+		</table>
+		<?php
 	}
 
 	/**

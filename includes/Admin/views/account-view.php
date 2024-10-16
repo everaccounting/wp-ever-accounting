@@ -1,0 +1,111 @@
+<?php
+/**
+ * Admin View: Account details.
+ *
+ * @since 1.0.0
+ *
+ * @subpackage EverAccounting/Admin/Views
+ * @package EverAccounting
+ * @var $account \EverAccounting\Models\Account Account object.
+ */
+
+use EverAccounting\Models\Account;
+
+defined( 'ABSPATH' ) || exit;
+
+wp_verify_nonce( '_wpnonce' );
+$id       = isset( $_GET['id'] ) ? absint( wp_unslash( $_GET['id'] ) ) : 0;
+$section  = isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : '';
+$account  = EAC()->accounts->get( $id );
+$sections = apply_filters(
+	'eac_account_view_sections',
+	array(
+		'overview' => array(
+			'label' => __( 'Overview', 'wp-ever-accounting' ),
+			'icon'  => 'admin-settings',
+		),
+		'payments' => array(
+			'label' => __( 'Payments', 'wp-ever-accounting' ),
+			'icon'  => 'money',
+		),
+		'expenses' => array(
+			'label' => __( 'Expenses', 'wp-ever-accounting' ),
+			'icon'  => 'money-alt',
+		),
+		'notes'    => array(
+			'label' => __( 'Notes', 'wp-ever-accounting' ),
+			'icon'  => 'admin-comments',
+		),
+	)
+);
+
+// Validate section.
+$current_section = ! array_key_exists( $section, $sections ) ? current( array_keys( $sections ) ) : $section;
+?>
+<div class="eac-section-header">
+	<h1 class="wp-heading-inline">
+		<?php esc_html_e( 'View Account', 'wp-ever-accounting' ); ?>
+		<a href="<?php echo esc_attr( remove_query_arg( array( 'action', 'id' ) ) ); ?>" title="<?php esc_attr_e( 'Go back', 'wp-ever-accounting' ); ?>">
+			<span class="dashicons dashicons-undo"></span>
+		</a>
+	</h1>
+	<a href="<?php echo esc_url( $account->get_edit_url() ); ?>" class="page-title-action"><?php esc_html_e( 'Edit Account', 'wp-ever-accounting' ); ?></a>
+</div>
+
+
+<div class="eac-card eac-profile-header">
+	<div class="eac-profile-header__avatar">
+		<?php echo get_avatar( $account->email, 120 ); ?>
+	</div>
+	<div class="eac-profile-header__columns">
+		<div class="eac-profile-header__column">
+			<div class="eac-profile-header__title">
+				<?php echo esc_html( $account->name ); ?>
+			</div>
+			<?php if ( $account->number ) : ?>
+				<p class="small"><?php printf( '%1$s %2$s', __( 'Account Number:', 'wp-ever-accounting' ), esc_html( $account->number ) ); ?></p>
+			<?php endif; ?>
+			<?php //if ( $account->balance ) : ?>
+				<p class="small"><?php printf( '%1$s %2$s', __( 'Balance:', 'wp-ever-accounting' ), esc_html( $account->balance ) ); ?></p>
+			<?php //endif; ?>
+			<p class="small">
+				<?php // translators: %s: date. ?>
+				<?php printf( esc_html__( 'Since %s', 'wp-ever-accounting' ), esc_html( wp_date( get_option( 'date_format' ), strtotime( $account->created_at ) ) ) ); ?>
+			</p>
+		</div>
+	</div>
+	<div class="eac-profile-header__id">
+		#<?php echo esc_html( $account->id ); ?>
+	</div>
+</div>
+
+<div class="eac-profile-sections">
+	<ul class="eac-profile-sections__nav" role="tablist">
+		<?php foreach ( $sections as $key => $section ) : ?>
+			<li id="<?php echo esc_attr( $key ); ?>-nav-item" class="eac-profile-sections__nav-item <?php echo $current_section === $key ? 'is-active' : ''; ?>" role="tab" aria-controls="<?php echo esc_attr( $key ); ?>">
+				<a href="<?php echo esc_url( add_query_arg( 'section', $key ) ); ?>">
+					<span class="dashicons dashicons-<?php echo esc_attr( $section['icon'] ); ?>"></span>
+					<span class="label">
+						<?php echo esc_html( $section['label'] ); ?>
+					</span>
+				</a>
+			</li>
+		<?php endforeach; ?>
+	</ul>
+	<div class="eac-profile-sections__content">
+		<?php if ( isset( $sections[ $current_section ] ) && ! empty( $sections[ $current_section ]['label'] ) ) : ?>
+			<h2 class="screen-reader-text"><?php echo esc_html( $sections[ $current_section ]['label'] ); ?></h2>
+		<?php endif; ?>
+		<?php
+		/**
+		 * Fires action to display account view section.
+		 *
+		 * @param Account $account Account object.
+		 *
+		 * @since 2.0.0
+		 */
+		do_action( 'eac_account_profile_section_' . $current_section, $account );
+		?>
+	</div>
+	<br class="clear">
+</div>

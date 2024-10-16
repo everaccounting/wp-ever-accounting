@@ -222,7 +222,7 @@ class Accounts extends ListTable {
 	public function column_name( $item ) {
 		return sprintf(
 			'<a class="row-title" href="%s">%s</a>',
-			esc_url( $item->get_edit_url() ),
+			esc_url( $item->get_view_url() ),
 			wp_kses_post( $item->name )
 		);
 	}
