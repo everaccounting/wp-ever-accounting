@@ -450,6 +450,17 @@ class Payments extends Transactions {
 						}
 						$data['category_id'] = $category->id;
 						break;
+					case 'category_id':
+						$category = EAC()->categories->get( $request[ $prop ] );
+						if ( ! $category ) {
+							return new \WP_Error(
+								'rest_invalid_category',
+								__( 'Invalid category.', 'wp-ever-accounting' ),
+								array( 'status' => 400 )
+							);
+						}
+						$data['category_id'] = $category->id;
+						break;
 					case 'account':
 						$account = EAC()->accounts->get( $request[ $prop ]['id'] );
 						if ( ! $account ) {
@@ -462,9 +473,21 @@ class Payments extends Transactions {
 						$data['account_id'] = $account->id;
 						break;
 
+					case 'account_id':
+						$account = EAC()->accounts->get( $request[ $prop ] );
+						if ( ! $account ) {
+							return new \WP_Error(
+								'rest_invalid_account',
+								__( 'Invalid account.', 'wp-ever-accounting' ),
+								array( 'status' => 400 )
+							);
+						}
+						$data['account_id'] = $account->id;
+						break;
+
 					case 'invoice':
-						$bill = EAC()->invoices->get( $request[ $prop ]['id'] );
-						if ( ! $bill ) {
+						$invoice = EAC()->invoices->get( $request[ $prop ]['id'] );
+						if ( ! $invoice ) {
 							return new \WP_Error(
 								'rest_invalid_invoice',
 								__( 'Invalid invoice.', 'wp-ever-accounting' ),
@@ -535,7 +558,7 @@ class Payments extends Transactions {
 					'type'        => 'string',
 					'context'     => array( 'view', 'embed', 'edit' ),
 				),
-				'date'             => array(
+				'paid_at'          => array(
 					'description' => __( 'The date the payment took place, in the site\'s timezone.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'format'      => 'string',
@@ -573,7 +596,7 @@ class Payments extends Transactions {
 					'type'        => 'string',
 					'context'     => array( 'view', 'embed', 'edit' ),
 				),
-				'payment_method'     => array(
+				'payment_method'   => array(
 					'description' => __( 'Payment method of the payment.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'embed', 'edit' ),
@@ -601,7 +624,7 @@ class Payments extends Transactions {
 						),
 					),
 				),
-				'invoice'             => array(
+				'invoice'          => array(
 					'description' => __( 'Invoice of the payment.', 'wp-ever-accounting' ),
 					'type'        => 'object',
 					'context'     => array( 'view', 'embed', 'edit' ),
