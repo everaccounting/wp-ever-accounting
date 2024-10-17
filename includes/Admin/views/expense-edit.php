@@ -38,7 +38,7 @@ $expense = Expense::make( $id );
 	<?php endif; ?>
 </div>
 
-<form id="eac-edit-expense" name="expense" method="post">
+<form id="eac-edit-expense" name="expense" method="post" action="<?php echo esc_html( admin_url( 'admin-post.php' ) ); ?>">
 
 	<div class="eac-poststuff">
 		<div class="column-1">
@@ -55,7 +55,7 @@ $expense = Expense::make( $id );
 							'type'        => 'date',
 							'name'        => 'date',
 							'placeholder' => 'yyyy-mm-dd',
-							'value'       => $expense->date,
+							'value'       => $expense->paid_at,
 							'required'    => true,
 							'class'       => 'eac_datepicker',
 						)

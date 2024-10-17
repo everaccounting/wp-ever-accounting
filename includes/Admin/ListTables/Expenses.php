@@ -40,8 +40,8 @@ class Expenses extends ListTable {
 	/**
 	 * Prepares the list for display.
 	 *
-	 * @return void
 	 * @since 1.0.0
+	 * @return void
 	 */
 	public function prepare_items() {
 		$this->process_actions();
@@ -97,12 +97,34 @@ class Expenses extends ListTable {
 		$performed = 0;
 		foreach ( $ids as $id ) {
 			if ( EAC()->expenses->delete( $id ) ) {
-				++$performed;
+				++ $performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
 			// translators: %s: number of items deleted.
 			EAC()->flash->success( sprintf( __( '%s expense(s) deleted successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
+		}
+	}
+
+	/**
+	 * handle bulk paid action.
+	 *
+	 * @param array $ids List of item IDs.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	protected function bulk_set_completed( $ids ) {
+		$performed = 0;
+		foreach ( $ids as $id ) {
+			$expense = EAC()->expenses->get( $id );
+			if ( ! is_wp_error( $expense->set( 'status', 'completed' )->save() ) ) {
+				++ $performed;
+			}
+		}
+		if ( ! empty( $performed ) ) {
+			// translators: %s: number of items deleted.
+			EAC()->flash->success( sprintf( __( '%s expense(s) status updated to completed successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
 		}
 	}
 
@@ -154,11 +176,11 @@ class Expenses extends ListTable {
 	 */
 	protected function get_bulk_actions() {
 		$actions = array(
-			'mark_paid'      => __( 'Mark as Paid', 'wp-ever-accounting' ),
-			'mark_pending'   => __( 'Mark as Pending', 'wp-ever-accounting' ),
-			'mark_refunded'  => __( 'Mark as Refunded', 'wp-ever-accounting' ),
-			'mark_cancelled' => __( 'Mark as Cancelled', 'wp-ever-accounting' ),
-			'delete'         => __( 'Delete', 'wp-ever-accounting' ),
+			'set_completed' => __( 'Set Completed', 'wp-ever-accounting' ),
+			'set_pending'   => __( 'Set Pending', 'wp-ever-accounting' ),
+			'set_refunded'  => __( 'Set Refunded', 'wp-ever-accounting' ),
+			'set_cancelled' => __( 'Set Cancelled', 'wp-ever-accounting' ),
+			'delete'        => __( 'Delete', 'wp-ever-accounting' ),
 		);
 
 		return $actions;

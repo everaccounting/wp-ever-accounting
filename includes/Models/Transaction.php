@@ -14,38 +14,38 @@ defined( 'ABSPATH' ) || exit;
  * @package EverAccounting
  * @subpackage Models
  *
- * @property int        $id ID of the item.
- * @property string     $type Type of the transaction.
- * @property string     $number Number of the transaction.
- * @property string     $paid_at Date of the transaction.
- * @property double     $amount Amount of the transaction.
- * @property string     $currency Currency of the transaction.
- * @property double     $exchange_rate Exchange rate of the transaction.
- * @property string     $reference Reference of the transaction.
- * @property string     $note Note of the transaction.
- * @property string     $payment_method Payment mode of the transaction.
- * @property int        $account_id Account ID of the transaction.
- * @property int        $document_id Document ID of the transaction.
- * @property int        $contact_id Contact ID of the transaction.
- * @property int        $category_id Category ID of the transaction.
- * @property int        $attachment_id Attachment ID of the transaction.
- * @property int        $parent_id Parent ID of the transaction.
- * @property bool       $reconciled Whether the transaction is reconciled.
- * @property string     $created_via Created via of the transaction.
- * @property int        $creator_id Author ID of the transaction.
- * @property string     $status Status of the transaction.
- * @property string     $uuid UUID of the transaction.
- * @property string     $created_at Date the transaction was created.
- * @property string     $updated_at Date the transaction was last updated.
+ * @property int             $id ID of the item.
+ * @property string          $type Type of the transaction.
+ * @property string          $number Number of the transaction.
+ * @property string          $paid_at Date of the transaction.
+ * @property double          $amount Amount of the transaction.
+ * @property string          $currency Currency of the transaction.
+ * @property double          $exchange_rate Exchange rate of the transaction.
+ * @property string          $reference Reference of the transaction.
+ * @property string          $note Note of the transaction.
+ * @property string          $payment_method Payment mode of the transaction.
+ * @property int             $account_id Account ID of the transaction.
+ * @property int             $document_id Document ID of the transaction.
+ * @property int             $contact_id Contact ID of the transaction.
+ * @property int             $category_id Category ID of the transaction.
+ * @property int             $attachment_id Attachment ID of the transaction.
+ * @property int             $parent_id Parent ID of the transaction.
+ * @property bool            $reconciled Whether the transaction is reconciled.
+ * @property string          $created_via Created via of the transaction.
+ * @property int             $creator_id Author ID of the transaction.
+ * @property string          $status Status of the transaction.
+ * @property string          $uuid UUID of the transaction.
+ * @property string          $created_at Date the transaction was created.
+ * @property string          $updated_at Date the transaction was last updated.
  *
- * @property string     $formatted_amount Formatted amount of the transaction.
- * @property Document   $document Related document.
- * @property Account    $account Related account.
- * @property Category   $category Related category.
- * @property Contact    $contact Related contact.
- * @property Customer   $customer Related customer.
- * @property Vendor     $vendor Related vendor.
- * @property Attachment $attachment Related attachment.
+ * @property-read  string    $formatted_amount Formatted amount of the transaction.
+ * @property-read Document   $document Related document.
+ * @property-read Account    $account Related account.
+ * @property-read Category   $category Related category.
+ * @property-read Contact    $contact Related contact.
+ * @property-read Customer   $customer Related customer.
+ * @property-read Vendor     $vendor Related vendor.
+ * @property-read Attachment $attachment Related attachment.
  */
 class Transaction extends Model {
 	/**

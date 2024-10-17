@@ -535,7 +535,7 @@ class Expenses extends Transactions {
 					'type'        => 'string',
 					'context'     => array( 'view', 'embed', 'edit' ),
 				),
-				'date'             => array(
+				'paid_at'             => array(
 					'description' => __( 'The date the expense took place, in the site\'s timezone.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'format'      => 'date-time',

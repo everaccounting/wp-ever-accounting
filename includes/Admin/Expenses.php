@@ -17,7 +17,7 @@ class Expenses {
 	 */
 	public function __construct() {
 		add_filter( 'eac_purchases_page_tabs', array( __CLASS__, 'register_tabs' ) );
-		add_action( 'eac_purchases_page_expenses_loaded', array( __CLASS__, 'handle_actions' ) );
+		add_action( 'admin_post_eac_edit_expense', array( __CLASS__, 'handle_edit' ) );
 		add_action( 'eac_purchases_page_expenses_loaded', array( __CLASS__, 'page_loaded' ) );
 		add_action( 'eac_purchases_page_expenses_content', array( __CLASS__, 'page_content' ) );
 		add_action( 'eac_expense_edit_side_meta_boxes', array( __CLASS__, 'expense_attachment' ) );
@@ -43,6 +43,49 @@ class Expenses {
 	}
 
 	/**
+	 * Handle edit.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public static function handle_edit() {
+		check_admin_referer( 'eac_edit_expense' );
+		if ( ! current_user_can( 'eac_manage_expense' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability.
+			wp_die( esc_html__( 'You do not have permission to edit expenses.', 'wp-ever-accounting' ) );
+		}
+
+		$referer = wp_get_referer();
+		$data    = array(
+			'id'             => isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0,
+			'paid_at'        => isset( $_POST['paid_at'] ) ? sanitize_text_field( wp_unslash( $_POST['paid_at'] ) ) : '',
+			'account_id'     => isset( $_POST['account_id'] ) ? absint( wp_unslash( $_POST['account_id'] ) ) : 0,
+			'amount'         => isset( $_POST['amount'] ) ? floatval( wp_unslash( $_POST['amount'] ) ) : 0,
+			'exchange_rate'  => isset( $_POST['exchange_rate'] ) ? floatval( wp_unslash( $_POST['exchange_rate'] ) ) : 1,
+			'category_id'    => isset( $_POST['category_id'] ) ? absint( wp_unslash( $_POST['category_id'] ) ) : 0,
+			'contact_id'     => isset( $_POST['contact_id'] ) ? absint( wp_unslash( $_POST['contact_id'] ) ) : 0,
+			'attachment_id'  => isset( $_POST['attachment_id'] ) ? absint( wp_unslash( $_POST['attachment_id'] ) ) : 0,
+			'payment_method' => isset( $_POST['payment_method'] ) ? sanitize_text_field( wp_unslash( $_POST['payment_method'] ) ) : '',
+			'bill_id'        => isset( $_POST['bill_id'] ) ? absint( wp_unslash( $_POST['bill_id'] ) ) : 0,
+			'reference'      => isset( $_POST['reference'] ) ? sanitize_text_field( wp_unslash( $_POST['reference'] ) ) : '',
+			'note'           => isset( $_POST['note'] ) ? sanitize_textarea_field( wp_unslash( $_POST['note'] ) ) : '',
+			'status'         => isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : 'active',
+		);
+
+		$expense = EAC()->expenses->insert( $data );
+		if ( is_wp_error( $expense ) ) {
+			EAC()->flash->error( $expense->get_error_message() );
+		} else {
+			EAC()->flash->success( __( 'Expense saved successfully.', 'wp-ever-accounting' ) );
+			$referer = add_query_arg( 'id', $expense->id, $referer );
+			$referer = add_query_arg( 'action', 'view', $referer );
+			$referer = remove_query_arg( array( 'add' ), $referer );
+		}
+
+		wp_safe_redirect( $referer );
+		exit;
+	}
+
+	/**
 	 * Handle actions.
 	 *
 	 * @since 1.0.0
@@ -52,19 +95,19 @@ class Expenses {
 		if ( isset( $_POST['action'] ) && 'eac_edit_expense' === $_POST['action'] && check_admin_referer( 'eac_edit_expense' ) && current_user_can( 'eac_manage_expense' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability.
 			$referer = wp_get_referer();
 			$data    = array(
-				'id'            => isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0,
-				'date'          => isset( $_POST['date'] ) ? sanitize_text_field( wp_unslash( $_POST['date'] ) ) : '',
-				'account_id'    => isset( $_POST['account_id'] ) ? absint( wp_unslash( $_POST['account_id'] ) ) : 0,
-				'amount'        => isset( $_POST['amount'] ) ? floatval( wp_unslash( $_POST['amount'] ) ) : 0,
-				'exchange_rate' => isset( $_POST['exchange_rate'] ) ? floatval( wp_unslash( $_POST['exchange_rate'] ) ) : 1,
-				'category_id'   => isset( $_POST['category_id'] ) ? absint( wp_unslash( $_POST['category_id'] ) ) : 0,
-				'contact_id'    => isset( $_POST['contact_id'] ) ? absint( wp_unslash( $_POST['contact_id'] ) ) : 0,
-				'attachment_id' => isset( $_POST['attachment_id'] ) ? absint( wp_unslash( $_POST['attachment_id'] ) ) : 0,
-				'payment_method'  => isset( $_POST['payment_method'] ) ? sanitize_text_field( wp_unslash( $_POST['payment_method'] ) ) : '',
-				'bill_id'       => isset( $_POST['bill_id'] ) ? absint( wp_unslash( $_POST['bill_id'] ) ) : 0,
-				'reference'     => isset( $_POST['reference'] ) ? sanitize_text_field( wp_unslash( $_POST['reference'] ) ) : '',
-				'note'          => isset( $_POST['note'] ) ? sanitize_textarea_field( wp_unslash( $_POST['note'] ) ) : '',
-				'status'        => isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : 'active',
+				'id'             => isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0,
+				'date'           => isset( $_POST['date'] ) ? sanitize_text_field( wp_unslash( $_POST['date'] ) ) : '',
+				'account_id'     => isset( $_POST['account_id'] ) ? absint( wp_unslash( $_POST['account_id'] ) ) : 0,
+				'amount'         => isset( $_POST['amount'] ) ? floatval( wp_unslash( $_POST['amount'] ) ) : 0,
+				'exchange_rate'  => isset( $_POST['exchange_rate'] ) ? floatval( wp_unslash( $_POST['exchange_rate'] ) ) : 1,
+				'category_id'    => isset( $_POST['category_id'] ) ? absint( wp_unslash( $_POST['category_id'] ) ) : 0,
+				'contact_id'     => isset( $_POST['contact_id'] ) ? absint( wp_unslash( $_POST['contact_id'] ) ) : 0,
+				'attachment_id'  => isset( $_POST['attachment_id'] ) ? absint( wp_unslash( $_POST['attachment_id'] ) ) : 0,
+				'payment_method' => isset( $_POST['payment_method'] ) ? sanitize_text_field( wp_unslash( $_POST['payment_method'] ) ) : '',
+				'bill_id'        => isset( $_POST['bill_id'] ) ? absint( wp_unslash( $_POST['bill_id'] ) ) : 0,
+				'reference'      => isset( $_POST['reference'] ) ? sanitize_text_field( wp_unslash( $_POST['reference'] ) ) : '',
+				'note'           => isset( $_POST['note'] ) ? sanitize_textarea_field( wp_unslash( $_POST['note'] ) ) : '',
+				'status'         => isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : 'active',
 			);
 
 			$expense = EAC()->expenses->insert( $data );
