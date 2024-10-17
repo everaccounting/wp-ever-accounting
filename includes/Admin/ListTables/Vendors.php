@@ -54,8 +54,7 @@ class Vendors extends ListTable {
 			'page'    => $paged,
 			'search'  => $search,
 			'orderby' => $order_by,
-			'order'   => $order,
-			'status'  => $this->get_request_status(),
+			'order'   => $order
 		);
 		/**
 		 * Filter the query arguments for the list table.

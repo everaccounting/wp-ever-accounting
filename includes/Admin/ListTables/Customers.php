@@ -55,7 +55,6 @@ class Customers extends ListTable {
 			'search'  => $search,
 			'orderby' => $order_by,
 			'order'   => $order,
-			'status'  => $this->get_request_status(),
 		);
 		/**
 		 * Filter the query arguments for the list table.

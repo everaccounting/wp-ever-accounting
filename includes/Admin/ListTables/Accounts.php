@@ -56,7 +56,7 @@ class Accounts extends ListTable {
 			'search'  => $search,
 			'orderby' => $order_by,
 			'order'   => $order,
-			'status'  => $this->get_request_status(),
+			'type'    => filter_input( INPUT_GET, 'type', FILTER_SANITIZE_FULL_SPECIAL_CHARS ),
 		);
 
 		/**
