@@ -203,7 +203,7 @@ class Account extends Model {
 		$balance = (float) $wpdb->get_var(
 			$wpdb->prepare(
 				"SELECT SUM(CASE WHEN type='payment' then amount WHEN type='expense' then - amount END) as total
-				 FROM {$wpdb->prefix}ea_transactions WHERE account_id=%d", $this->id )
+				 FROM {$wpdb->prefix}ea_transactions WHERE account_id=%d AND status='completed'", $this->id )
 		);
 
 		if ( $balance !== $this->balance ) {

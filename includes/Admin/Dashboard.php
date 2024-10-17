@@ -2,7 +2,8 @@
 
 namespace EverAccounting\Admin;
 
-use EverAccounting\Utilities\NumberUtil;use EverAccounting\Utilities\ReportsUtil;
+use EverAccounting\Utilities\NumberUtil;
+use EverAccounting\Utilities\ReportsUtil;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -49,23 +50,28 @@ class Dashboard {
 	 */
 	public static function overview_widget() {
 		global $wpdb;
-		$report  = ReportsUtil::get_profits_report( date( 'Y' ) );
-		$delta  =  (array_sum( $report['profits'] ) / array_sum( $report['payments'] )) * 100;
-		$stats   = apply_filters( 'eac_dashboard_overview_stats', array(
+		$report   = ReportsUtil::get_profits_report( wp_date( 'Y' ) );
+		$profits  = array_sum( $report['profits'] );
+		$payments = array_sum( $report['payments'] );
+		$delta    = $profits > 0 && $payments > 0 ? ( $profits / $payments ) * 100 : 0;
+		$stats    = apply_filters(
+			'eac_dashboard_overview_stats',
 			array(
-				'label' => __( 'Income', 'wp-ever-accounting' ),
-				'value' => eac_format_amount( array_sum( $report['payments'] ) ),
-			),
-			array(
-				'label' => __( 'Expenses', 'wp-ever-accounting' ),
-				'value' => eac_format_amount( array_sum( $report['expenses'] ) ),
-			),
-			array(
-				'label' => __( 'Profit/Loss', 'wp-ever-accounting' ),
-				'value' => eac_format_amount( array_sum( $report['profits'] ) ),
-				'delta' => number_format( $delta, 2 ),
-			),
-		) );
+				array(
+					'label' => __( 'Income', 'wp-ever-accounting' ),
+					'value' => eac_format_amount( array_sum( $report['payments'] ) ),
+				),
+				array(
+					'label' => __( 'Expenses', 'wp-ever-accounting' ),
+					'value' => eac_format_amount( array_sum( $report['expenses'] ) ),
+				),
+				array(
+					'label' => __( 'Profit/Loss', 'wp-ever-accounting' ),
+					'value' => eac_format_amount( array_sum( $report['profits'] ) ),
+					'delta' => number_format( $delta, 2 ),
+				),
+			)
+		);
 
 		$datasets = array(
 			'labels'   => array_keys( $report['payments'] ),
@@ -91,7 +97,7 @@ class Dashboard {
 					'borderWidth'     => 2,
 					'data'            => array_values( $report['profits'] ),
 				),
-			)
+			),
 		);
 
 		?>
@@ -109,16 +115,16 @@ class Dashboard {
 					<div class="eac-stat__label"><?php echo esc_html( $stat['label'] ); ?></div>
 					<div class="eac-stat__value">
 						<?php echo esc_html( $stat['value'] ); ?>
-						<?php if ( isset( $stat['delta'] ) ) : ?>
-							<?php $delta_class = $stat['delta'] > 0 ? 'is--positive' : 'is--negative'; ?>
-							<div class="eac-stat__delta <?php echo esc_attr( $delta_class ); ?>">
-								<?php echo esc_html( $stat['delta'] ); ?>%
-							</div>
-						<?php endif; ?>
 					</div>
 					<?php if ( isset( $stat['meta'] ) ) : ?>
 						<div class="eac-stat__meta">
 							<span><?php echo wp_kses_post( implode( ' </span><span> ', $stat['meta'] ) ); ?></span>
+						</div>
+					<?php endif; ?>
+					<?php if ( isset( $stat['delta'] ) ) : ?>
+						<?php $delta_class = $stat['delta'] > 0 ? 'is--positive' : 'is--negative'; ?>
+						<div class="eac-stat__delta <?php echo esc_attr( $delta_class ); ?>" title="<?php esc_html_e( 'Percentage of profit', 'wpe-ver-accounting' ); ?>">
+							<?php echo esc_html( $stat['delta'] ); ?>%
 						</div>
 					<?php endif; ?>
 				</div>
@@ -295,7 +301,6 @@ class Dashboard {
 				'order'   => 'DESC',
 			)
 		);
-
 		?>
 		<div class="eac-card is--widget">
 			<div class="eac-card__header">
@@ -304,17 +309,16 @@ class Dashboard {
 					<a href="<?php echo esc_url( admin_url( 'admin.php?page=eac-expenses&tab=expenses' ) ); ?>"><?php esc_html_e( 'View all', 'wp-ever-accounting' ); ?></a>
 				<?php endif; ?>
 			</div>
-
-			<table class="eac-table is--fixed">
-				<thead>
-				<tr>
-					<th><?php esc_html_e( 'Expense #', 'wp-ever-accounting' ); ?></th>
-					<th><?php esc_html_e( 'Date', 'wp-ever-accounting' ); ?></th>
-					<th><?php esc_html_e( 'Amount', 'wp-ever-accounting' ); ?></th>
-				</tr>
-				</thead>
-				<tbody>
-				<?php if ( ! empty( $expenses ) ) : ?>
+			<?php if ( ! empty( $expenses ) ) : ?>
+				<table class="eac-table is--fixed">
+					<thead>
+					<tr>
+						<th><?php esc_html_e( 'Expense #', 'wp-ever-accounting' ); ?></th>
+						<th><?php esc_html_e( 'Date', 'wp-ever-accounting' ); ?></th>
+						<th><?php esc_html_e( 'Amount', 'wp-ever-accounting' ); ?></th>
+					</tr>
+					</thead>
+					<tbody>
 					<?php foreach ( $expenses as $expense ) : ?>
 						<tr>
 							<td><a href="<?php echo esc_url( $expense->get_view_url() ); ?>"><?php echo esc_html( $expense->number ); ?></a></td>
@@ -322,15 +326,13 @@ class Dashboard {
 							<td><?php echo esc_html( $expense->formatted_amount ); ?></td>
 						</tr>
 					<?php endforeach; ?>
-				<?php else : ?>
-					<tr>
-						<td colspan="3">
-							<p><?php esc_html_e( 'No expenses found.', 'wp-ever-accounting' ); ?></p>
-						</td>
-					</tr>
-				<?php endif; ?>
-				</tbody>
-			</table>
+					</tbody>
+				</table>
+			<?php else : ?>
+				<div class="eac-card__body">
+					<p class="empty"><?php esc_html_e( 'No expenses found.', 'wp-ever-accounting' ); ?></p>
+				</div>
+			<?php endif; ?>
 		</div>
 		<?php
 	}

@@ -36,7 +36,7 @@ $account = Account::make( $id );
 		<div class="column-1">
 			<div class="eac-card">
 				<div class="eac-card__header">
-					<h2 class="eac-card__title"><?php esc_html_e( 'Account details', 'wp-ever-accounting' ); ?></h2>
+					<h2 class="eac-card__title"><?php esc_html_e( 'Account Attributes', 'wp-ever-accounting' ); ?></h2>
 				</div>
 
 				<div class="eac-card__body grid--fields">
@@ -88,45 +88,6 @@ $account = Account::make( $id );
 							'option_value' => 'code',
 							'placeholder'  => __( 'Select Currency', 'wp-ever-accounting' ),
 							'required'     => true,
-						)
-					);
-					?>
-				</div><!-- .eac-card__body -->
-			</div>
-
-			<div class="eac-card">
-				<div class="eac-card__header">
-					<h2 class="eac-card__title"><?php esc_html_e( 'Bank details', 'wp-ever-accounting' ); ?></h2>
-				</div>
-
-				<div class="eac-card__body grid--fields">
-					<?php
-					eac_form_field(
-						array(
-							'label'       => __( 'Bank Name', 'wp-ever-accounting' ),
-							'type'        => 'text',
-							'name'        => 'bank_name',
-							'value'       => $account->bank_name,
-							'placeholder' => __( 'XYZ Bank', 'wp-ever-accounting' ),
-						)
-					);
-					eac_form_field(
-						array(
-							'label'       => __( 'Bank Phone', 'wp-ever-accounting' ),
-							'type'        => 'text',
-							'name'        => 'bank_phone',
-							'value'       => $account->bank_phone,
-							'placeholder' => __( '+1234567890', 'wp-ever-accounting' ),
-						)
-					);
-					eac_form_field(
-						array(
-							'label'         => __( 'Bank Address', 'wp-ever-accounting' ),
-							'type'          => 'textarea',
-							'name'          => 'bank_address',
-							'value'         => $account->bank_address,
-							'placeholder'   => __( '123, XYZ Street, City, Country', 'wp-ever-accounting' ),
-							'wrapper_class' => 'is--full',
 						)
 					);
 					?>

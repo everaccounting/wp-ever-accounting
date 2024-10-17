@@ -96,9 +96,8 @@
 			font-size: 10px;
 			line-height: 1;
 			position: absolute;
-			top: 0;
-			right: 0;
-			transform: translate(50%, -50%);
+			bottom: 5px;
+			right: 5px;
 			white-space: nowrap;
 
 			&.is--negative {
