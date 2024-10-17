@@ -81,6 +81,29 @@ class Accounts extends ListTable {
 	}
 
 	/**
+	 * Handle bulk balance update action.
+	 *
+	 * @param array $ids List of item IDs.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	protected function bulk_update_balance( $ids ) {
+		$performed = 0;
+		foreach ( $ids as $id ) {
+			$account = EAC()->accounts->get( $id );
+			if ( $account ) {
+				$account->update_balance();
+				++ $performed;
+			}
+		}
+		if ( ! empty( $performed ) ) {
+			// translators: %s: number of accounts.
+			EAC()->flash->success( sprintf( __( '%s account(s) balance updated successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
+		}
+	}
+
+	/**
 	 * handle bulk delete action.
 	 *
 	 * @param array $ids List of item IDs.
@@ -92,7 +115,7 @@ class Accounts extends ListTable {
 		$performed = 0;
 		foreach ( $ids as $id ) {
 			if ( EAC()->accounts->delete( $id ) ) {
-				++$performed;
+				++ $performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
@@ -148,7 +171,8 @@ class Accounts extends ListTable {
 	 */
 	protected function get_bulk_actions() {
 		$actions = array(
-			'delete' => __( 'Delete', 'wp-ever-accounting' ),
+			'update_balance' => __( 'Update Balance', 'wp-ever-accounting' ),
+			'delete'         => __( 'Delete', 'wp-ever-accounting' ),
 		);
 
 		return $actions;

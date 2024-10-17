@@ -25,14 +25,6 @@ class Profits {
 		$year     = ! empty( $_GET['year'] ) ? absint( $_GET['year'] ) : wp_date( 'Y' );
 		$data     = ReportsUtil::get_profits_report( $year );
 		$labels   = array_keys( $data['profits'] );
-		$datasets = array(
-			'profits' => array(
-				'type'            => 'bar',
-				'label'           => esc_html__( 'Profits', 'wp-ever-accounting' ),
-				'backgroundColor' => ReportsUtil::get_random_color( 'profits' ),
-				'data'            => array_values( $data['profits'] ),
-			),
-		);
 		?>
 		<div class="eac-section-header">
 			<h3>
@@ -78,41 +70,39 @@ class Profits {
 			<div class="eac-card__header">
 				<h3 class="eac-card__title"><?php esc_html_e( 'Profits by Months', 'wp-ever-accounting' ); ?></h3>
 			</div>
-			<div class="eac-card__body !tw-p-0">
-				<div class="tw-overflow-x-auto">
-					<table class="eac-table has--border">
-						<thead>
-						<tr>
-							<th><?php esc_html_e( 'Month', 'wp-ever-accounting' ); ?></th>
-							<?php foreach ( array_keys( $data['profits'] ) as $label ) : ?>
-								<th><?php echo esc_html( $label ); ?></th>
-							<?php endforeach; ?>
-						</tr>
-						</thead>
-						<tbody>
-						<tr>
-							<th><?php esc_html_e( 'Payments', 'wp-ever-accounting' ); ?></th>
-							<?php foreach ( $data['payments'] as $value ) : ?>
-								<td><?php echo esc_html( eac_format_amount( $value ) ); ?></td>
-							<?php endforeach; ?>
-						</tr>
-						<tr>
-							<th><?php esc_html_e( 'Expenses', 'wp-ever-accounting' ); ?></th>
-							<?php foreach ( $data['expenses'] as $value ) : ?>
-								<td><?php echo esc_html( eac_format_amount( $value ) ); ?></td>
-							<?php endforeach; ?>
-						</tr>
-						</tbody>
-						<tfoot>
-						<tr>
-							<th><?php esc_html_e( 'Profit', 'wp-ever-accounting' ); ?></th>
-							<?php foreach ( $data['profits'] as $value ) : ?>
-								<th><?php echo esc_html( eac_format_amount( $value ) ); ?></th>
-							<?php endforeach; ?>
-						</tr>
-						</tfoot>
-					</table>
-				</div>
+			<div class="tw-overflow-x-auto">
+				<table class="eac-table has--border">
+					<thead>
+					<tr>
+						<th><?php esc_html_e( 'Month', 'wp-ever-accounting' ); ?></th>
+						<?php foreach ( array_keys( $data['profits'] ) as $label ) : ?>
+							<th><?php echo esc_html( $label ); ?></th>
+						<?php endforeach; ?>
+					</tr>
+					</thead>
+					<tbody>
+					<tr>
+						<th><?php esc_html_e( 'Payments', 'wp-ever-accounting' ); ?></th>
+						<?php foreach ( $data['payments'] as $value ) : ?>
+							<td><?php echo esc_html( eac_format_amount( $value ) ); ?></td>
+						<?php endforeach; ?>
+					</tr>
+					<tr>
+						<th><?php esc_html_e( 'Expenses', 'wp-ever-accounting' ); ?></th>
+						<?php foreach ( $data['expenses'] as $value ) : ?>
+							<td><?php echo esc_html( eac_format_amount( $value ) ); ?></td>
+						<?php endforeach; ?>
+					</tr>
+					</tbody>
+					<tfoot>
+					<tr>
+						<th><?php esc_html_e( 'Profit', 'wp-ever-accounting' ); ?></th>
+						<?php foreach ( $data['profits'] as $value ) : ?>
+							<th><?php echo esc_html( eac_format_amount( $value ) ); ?></th>
+						<?php endforeach; ?>
+					</tr>
+					</tfoot>
+				</table>
 			</div>
 		</div>
 
@@ -122,7 +112,7 @@ class Profits {
 				var ctx = document.getElementById("eac-profits-chart").getContext('2d');
 				var symbol = "<?php echo esc_html( EAC()->currencies->get_symbol() ); ?>";
 				var myChart = new Chart(ctx, {
-					type: 'bar',
+					type: 'line',
 					minHeight: 500,
 					data: {
 						labels: <?php echo wp_json_encode( array_values( $labels ) ); ?>,

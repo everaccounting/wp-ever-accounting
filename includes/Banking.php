@@ -2,6 +2,8 @@
 
 namespace EverAccounting;
 
+use EverAccounting\Models\Payment;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -15,32 +17,33 @@ class Banking {
 	 * Banking constructor.
 	 */
 	public function __construct() {
-		add_action( 'eac_update_account_balance', array( __CLASS__, 'update_account_balance' ) );
+		add_action( 'eac_payment_inserted', array( __CLASS__, 'update_account_balance' ) );
+		add_action( 'eac_payment_deleted', array( __CLASS__, 'update_account_balance' ) );
+		add_action( 'eac_payment_updated', array( __CLASS__, 'update_account_balance' ) );
 	}
 
 	/**
 	 * Update account balance.
 	 *
-	 * @param int $account_id Account ID.
+	 * @param Payment $payment The payment being edited or deleted.
 	 *
 	 * @since 1.0.0
 	 * @return void
 	 */
-	public static function update_account_balance( $account_id ) {
-//		global $wpdb;
-//		$account = EAC()->accounts->get( $account_id );
-//		if ( ! $this ) {
-//			return;
-//		}
-//
-//		// when currency is equal to bank currency we will get the transactions in default currencies
-//		$balance = (float) $wpdb->get_var(
-//			$wpdb->prepare(
-//				"SELECT SUM(CASE WHEN type='payment' then amount WHEN type='expense' then - amount END) as total
-//				 FROM {$wpdb->prefix}ea_transactions WHERE account_id=%d", $account_id )
-//		);
-//
-//		$account->balance = $balance;
-//		$account->save();
+	public static function update_account_balance( $payment ) {
+		// if the account id is changed then we have to update for the old account too.
+		if ( array_key_exists( 'account_id', $payment->get_original() ) && $payment->account_id !== $payment->get_original()['account_id'] ) {
+			$old_account = EAC()->accounts->get( $payment->get_original()['account_id'] );
+			if ( $old_account ) {
+				$old_account->update_balance();
+			}
+		}
+
+		if ( $payment->account_id > 0 ) {
+			$account = EAC()->accounts->get( $payment->account_id );
+			if ( $account ) {
+				$account->update_balance();
+			}
+		}
 	}
 }

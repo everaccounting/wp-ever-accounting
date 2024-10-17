@@ -26,17 +26,6 @@ class Sales {
 		$datasets = array();
 		$data     = ReportsUtil::get_payments_report( $year );
 		$labels   = array_keys( $data['months'] );
-		foreach ( $data['categories'] as $category_id => $datum ) {
-			if ( ! isset( $datasets[ $category_id ] ) ) {
-				$term                     = EAC()->categories->get( $category_id );
-				$term_name                = $term && $term->name ? esc_html( $term->name ) : '&mdash;';
-				$datasets[ $category_id ] = array(
-					'label'           => $term_name,
-					'backgroundColor' => ReportsUtil::get_random_color( $term_name ),
-				);
-			}
-			$datasets[ $category_id ]['data'] = array_values( $datum );
-		}
 		$datasets['total'] = array(
 			'type'            => 'line',
 			'fill'            => false,
@@ -91,53 +80,51 @@ class Sales {
 			<div class="eac-card__header">
 				<h3 class="eac-card__title"><?php esc_html_e( 'Sales by Months', 'wp-ever-accounting' ); ?></h3>
 			</div>
-			<div class="eac-card__body !tw-p-0">
-				<div class="tw-overflow-x-auto">
-					<table class="eac-table has--border">
-						<thead>
-						<tr>
-							<th><?php esc_html_e( 'Month', 'wp-ever-accounting' ); ?></th>
-							<?php foreach ( array_keys( $data['months'] ) as $label ) : ?>
-								<th><?php echo esc_html( $label ); ?></th>
-							<?php endforeach; ?>
-						</tr>
-						</thead>
-						<tbody>
-						<?php if ( ! empty( $data['categories'] ) ) : ?>
-							<?php foreach ( $data['categories'] as $category_id => $datum ) : ?>
-								<tr>
-									<td>
-										<?php
-										$term      = EAC()->categories->get( $category_id );
-										$term_name = $term && $term->name ? $term->name : '&mdash;';
-										echo esc_html( $term_name );
-										?>
-									</td>
-									<?php foreach ( $datum as $value ) : ?>
-										<td><?php echo esc_html( eac_format_amount( $value ) ); ?></td>
-									<?php endforeach; ?>
-								</tr>
-							<?php endforeach; ?>
-						<?php else : ?>
+			<div class="tw-overflow-x-auto">
+				<table class="eac-table has--border">
+					<thead>
+					<tr>
+						<th><?php esc_html_e( 'Month', 'wp-ever-accounting' ); ?></th>
+						<?php foreach ( array_keys( $data['months'] ) as $label ) : ?>
+							<th><?php echo esc_html( $label ); ?></th>
+						<?php endforeach; ?>
+					</tr>
+					</thead>
+					<tbody>
+					<?php if ( ! empty( $data['categories'] ) ) : ?>
+						<?php foreach ( $data['categories'] as $category_id => $datum ) : ?>
 							<tr>
-								<td colspan="<?php echo count( $data['months'] ) + 1; ?>">
-									<p>
-										<?php esc_html_e( 'No data found', 'wp-ever-accounting' ); ?>
-									</p>
+								<td>
+									<?php
+									$term      = EAC()->categories->get( $category_id );
+									$term_name = $term && $term->name ? $term->name : '&mdash;';
+									echo esc_html( $term_name );
+									?>
 								</td>
+								<?php foreach ( $datum as $value ) : ?>
+									<td><?php echo esc_html( eac_format_amount( $value ) ); ?></td>
+								<?php endforeach; ?>
 							</tr>
-						<?php endif; ?>
-						</tbody>
-						<tfoot>
+						<?php endforeach; ?>
+					<?php else : ?>
 						<tr>
-							<th><?php esc_html_e( 'Total', 'wp-ever-accounting' ); ?></th>
-							<?php foreach ( $data['months'] as $value ) : ?>
-								<th><?php echo esc_html( eac_format_amount( $value ) ); ?></th>
-							<?php endforeach; ?>
+							<td colspan="<?php echo count( $data['months'] ) + 1; ?>">
+								<p>
+									<?php esc_html_e( 'No data found', 'wp-ever-accounting' ); ?>
+								</p>
+							</td>
 						</tr>
-						</tfoot>
-					</table>
-				</div>
+					<?php endif; ?>
+					</tbody>
+					<tfoot>
+					<tr>
+						<th><?php esc_html_e( 'Total', 'wp-ever-accounting' ); ?></th>
+						<?php foreach ( $data['months'] as $value ) : ?>
+							<th><?php echo esc_html( eac_format_amount( $value ) ); ?></th>
+						<?php endforeach; ?>
+					</tr>
+					</tfoot>
+				</table>
 			</div>
 		</div>
 

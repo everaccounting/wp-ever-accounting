@@ -206,8 +206,10 @@ class Account extends Model {
 				 FROM {$wpdb->prefix}ea_transactions WHERE account_id=%d", $this->id )
 		);
 
-		$this->balance = $balance;
-		$this->save();
+		if ( $balance !== $this->balance ) {
+			$this->balance = $balance;
+			$this->save();
+		}
 	}
 
 	/*
