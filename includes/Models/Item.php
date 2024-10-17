@@ -13,24 +13,23 @@ use ByteKit\Models\Relations\BelongsToMany;
  * @package EverAccounting
  * @subpackage Models
  *
- * @property int      $id ID of the item.
- * @property string   $type Type of the item.
- * @property string   $name Name of the item.
- * @property string   $description Description of the item.
- * @property string   $unit Unit of the item.
- * @property double   $price Price of the item.
- * @property double   $cost Cost of the item.
- * @property array    $tax_ids Tax IDs of the item.
- * @property int      $category_id Category ID of the item.
- * @property int      $thumbnail_id Thumbnail ID of the item.
- * @property string   $created_at Date created of the item.
- * * @property string $updated_at Date updated of the item.
+ * @property int    $id ID of the item.
+ * @property string $type Type of the item.
+ * @property string $name Name of the item.
+ * @property string $description Description of the item.
+ * @property string $unit Unit of the item.
+ * @property double $price Price of the item.
+ * @property double $cost Cost of the item.
+ * @property array  $tax_ids Tax IDs of the item.
+ * @property int    $category_id Category ID of the item.
+ * @property string $created_at Date created of the item.
+ * @property string $updated_at Date updated of the item.
  *
- * @property string   $formatted_name Formatted name of the item.
- * @property string   $formatted_price Formatted price of the item.
- * @property string   $formatted_cost Formatted cost of the item.
- * @property Category $category Category of the item.
- * @property Tax[]    $taxes Taxes of the item.
+ * @property-read string   $formatted_name Formatted name of the item.
+ * @property-read string   $formatted_price Formatted price of the item.
+ * @property-read string   $formatted_cost Formatted cost of the item.
+ * @property-read Category $category Category of the item.
+ * @property-read Tax[]    $taxes Taxes of the item.
  */
 class Item extends Model {
 
@@ -58,7 +57,6 @@ class Item extends Model {
 		'cost',
 		'tax_ids',
 		'category_id',
-		'thumbnail_id',
 	);
 
 	/**
@@ -78,11 +76,14 @@ class Item extends Model {
 	 * @var array
 	 */
 	protected $casts = array(
+		'type'         => 'sanitize_text',
+		'name' 		   => 'sanitize_text',
+		'description'  => 'sanitize_textarea',
+		'unit'         => 'sanitize_text',
 		'price'        => 'double',
 		'cost'         => 'double',
 		'tax_ids'      => 'id_list',
 		'category_id'  => 'int',
-		'thumbnail_id' => 'int',
 	);
 
 	/**

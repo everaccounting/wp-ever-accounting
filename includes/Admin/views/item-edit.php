@@ -24,7 +24,7 @@ $item = Item::make( $id );
 	</a>
 </h1>
 
-<form id="eac-edit-item" name="item" method="post">
+<form id="eac-edit-item" name="item" method="post" action="<?php echo esc_html( admin_url( 'admin-post.php' ) ); ?>">
 	<div class="eac-poststuff">
 		<div class="column-1">
 

@@ -19,7 +19,7 @@ class Items {
 	 */
 	public function __construct() {
 		add_filter( 'eac_items_page_tabs', array( __CLASS__, 'register_tabs' ) );
-		add_action( 'eac_items_page_items_loaded', array( __CLASS__, 'handle_actions' ) );
+		add_action( 'admin_post_eac_edit_item', array( __CLASS__, 'handle_edit' ) );
 		add_action( 'eac_items_page_items_loaded', array( __CLASS__, 'page_loaded' ) );
 		add_action( 'eac_items_page_items_content', array( __CLASS__, 'page_content' ) );
 		add_action( 'eac_item_edit_side_meta_boxes', array( __CLASS__, 'item_notes' ) );
@@ -47,32 +47,35 @@ class Items {
 	 * @since 2.0.0
 	 * @return void
 	 */
-	public static function handle_actions() {
-		if ( isset( $_POST['action'] ) && 'eac_edit_item' === $_POST['action'] && check_admin_referer( 'eac_edit_item' ) && current_user_can( 'eac_manage_item' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability.
-			$referer = wp_get_referer();
-			$data = array(
-				'id'          => isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0,
-				'name'        => isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '',
-				'type'        => isset( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '',
-				'description' => isset( $_POST['description'] ) ? sanitize_text_field( wp_unslash( $_POST['description'] ) ) : '',
-				'price'       => isset( $_POST['price'] ) ? floatval( wp_unslash( $_POST['price'] ) ) : 0,
-				'cost'        => isset( $_POST['cost'] ) ? floatval( wp_unslash( $_POST['cost'] ) ) : 0,
-				'category_id' => isset( $_POST['category_id'] ) ? absint( wp_unslash( $_POST['category_id'] ) ) : 0,
-				'unit'        => isset( $_POST['unit'] ) ? sanitize_text_field( wp_unslash( $_POST['unit'] ) ) : '',
-				'tax_ids'     => isset( $_POST['tax_ids'] ) ? array_map( 'absint', wp_unslash( $_POST['tax_ids'] ) ) : array(),
-			);
-
-			$item = EAC()->items->insert( $data );
-			if ( is_wp_error( $item ) ) {
-				EAC()->flash->error( $item->get_error_message() );
-			} else {
-				EAC()->flash->success( __( 'Item saved successfully.', 'wp-ever-accounting' ) );
-				$referer = add_query_arg( 'id', $item->id, $referer );
-				$referer = remove_query_arg( array( 'add' ), $referer );
-			}
-			wp_safe_redirect( $referer );
-			exit;
+	public static function handle_edit() {
+		check_admin_referer( 'eac_edit_item' );
+		if ( ! current_user_can( 'eac_manage_item' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability.
+			wp_die( esc_html__( 'You do not have permission to edit items.', 'wp-ever-accounting' ) );
 		}
+
+		$referer = wp_get_referer();
+		$data    = array(
+			'id'          => isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0,
+			'type'        => isset( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '',
+			'name'        => isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '',
+			'description' => isset( $_POST['description'] ) ? sanitize_text_field( wp_unslash( $_POST['description'] ) ) : '',
+			'unit'        => isset( $_POST['unit'] ) ? sanitize_text_field( wp_unslash( $_POST['unit'] ) ) : '',
+			'price'       => isset( $_POST['price'] ) ? floatval( wp_unslash( $_POST['price'] ) ) : 0,
+			'cost'        => isset( $_POST['cost'] ) ? floatval( wp_unslash( $_POST['cost'] ) ) : 0,
+			'tax_ids'     => isset( $_POST['tax_ids'] ) ? array_map( 'absint', wp_unslash( $_POST['tax_ids'] ) ) : array(),
+			'category_id' => isset( $_POST['category_id'] ) ? absint( wp_unslash( $_POST['category_id'] ) ) : 0,
+		);
+
+		$item = EAC()->items->insert( $data );
+		if ( is_wp_error( $item ) ) {
+			EAC()->flash->error( $item->get_error_message() );
+		} else {
+			EAC()->flash->success( __( 'Item saved successfully.', 'wp-ever-accounting' ) );
+			$referer = add_query_arg( 'id', $item->id, $referer );
+			$referer = remove_query_arg( array( 'add' ), $referer );
+		}
+		wp_safe_redirect( $referer );
+		exit;
 	}
 
 	/**

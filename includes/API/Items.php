@@ -474,16 +474,16 @@ class Items extends Controller {
 						'sanitize_callback' => 'intval',
 					),
 				),
-				'name'         => array(
-					'description' => __( 'Item name.', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
-					'required'    => true,
-				),
 				'type'         => array(
 					'description' => __( 'Item type.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'enum'        => array_keys( EAC()->items->get_types() ),
+					'context'     => array( 'view', 'edit' ),
+					'required'    => true,
+				),
+				'name'         => array(
+					'description' => __( 'Item name.', 'wp-ever-accounting' ),
+					'type'        => 'string',
 					'context'     => array( 'view', 'edit' ),
 					'required'    => true,
 				),
@@ -541,19 +541,6 @@ class Items extends Controller {
 					'description' => __( 'Category ID for the item.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'edit' ),
-				),
-				'thumbnail_id' => array(
-					'description' => __( 'Thumbnail ID for the item.', 'wp-ever-accounting' ),
-					'type'        => 'integer',
-					'context'     => array( 'view', 'edit' ),
-				),
-				'status'       => array(
-					'description' => __( 'Item status.', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'enum'        => array( 'active', 'inactive' ),
-					'context'     => array( 'view', 'edit' ),
-					'default'     => 'active',
-					'required'    => true,
 				),
 				'updated_at'   => array(
 					'description' => __( "The date the item was last updated, in the site's timezone.", 'wp-ever-accounting' ),
