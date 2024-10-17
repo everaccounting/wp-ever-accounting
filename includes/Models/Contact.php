@@ -22,14 +22,12 @@ defined( 'ABSPATH' ) || exit;
  * @property string       $address Address line of the contact.
  * @property string       $city City of the contact.
  * @property string       $state State of the contact.
- * @property string       $zip Postcode of the contact.
+ * @property string       $postcode Postcode of the contact.
  * @property string       $country Country of the contact.
  * @property string       $tax_number Tax number of the contact.
  * @property string       $currency Currency code of the contact.
- * @property int          $thumbnail_id Thumbnail ID of the contact.
  * @property int          $user_id User ID of the contact.
  * @property string       $created_via Created via of the contact.
- * @property int          $creator_id Author ID of the contact.
  * @property string       $created_at Date created of the contact.
  * @property string       $updated_at Date updated of the contact.
  *
@@ -70,14 +68,12 @@ class Contact extends Model {
 		'address',
 		'city',
 		'state',
-		'zip',
+		'postcode',
 		'country',
 		'tax_number',
 		'currency',
-		'thumbnail_id',
 		'user_id',
 		'created_via',
-		'creator_id',
 	);
 
 	/**
@@ -87,12 +83,22 @@ class Contact extends Model {
 	 * @var array
 	 */
 	protected $casts = array(
-		'id'           => 'int',
-		'email'        => 'sanitize_email',
-		'website'      => 'esc_url',
-		'thumbnail_id' => 'int',
-		'user_id'      => 'int',
-		'creator_id'   => 'int',
+		'id'          => 'int',
+		'type'        => 'sanitize_text',
+		'name'        => 'sanitize_text',
+		'company'     => 'sanitize_text',
+		'email'       => 'sanitize_email',
+		'phone'       => 'sanitize_text',
+		'website'     => 'sanitize_url',
+		'address'     => 'sanitize_text',
+		'city'        => 'sanitize_text',
+		'state'       => 'sanitize_text',
+		'postcode'    => 'sanitize_text',
+		'country'     => 'sanitize_text',
+		'tax_number'  => 'sanitize_text',
+		'currency'    => 'sanitize_text',
+		'user_id'     => 'int',
+		'created_via' => 'sanitize_text',
 	);
 
 	/**

@@ -34,7 +34,7 @@ $customer = Customer::make( $id );
 	<?php endif; ?>
 </div>
 
-<form id="eac-customer-form" name="customer" method="post">
+<form id="eac-customer-form" name="customer" method="post" action="<?php echo esc_html( admin_url( 'admin-post.php' ) ); ?>">
 	<div class="eac-poststuff">
 		<div class="column-1">
 
@@ -156,10 +156,10 @@ $customer = Customer::make( $id );
 					);
 					eac_form_field(
 						array(
-							'id'          => 'zip',
+							'id'          => 'postcode',
 							'label'       => __( 'Zip Code', 'wp-ever-accounting' ),
 							'placeholder' => __( '10001', 'wp-ever-accounting' ),
-							'value'       => $customer->zip,
+							'value'       => $customer->postcode,
 						)
 					);
 					eac_form_field(

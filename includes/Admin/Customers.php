@@ -18,7 +18,7 @@ class Customers {
 	 */
 	public function __construct() {
 		add_filter( 'eac_sales_page_tabs', array( __CLASS__, 'register_tabs' ) );
-		add_action( 'eac_sales_page_customers_loaded', array( __CLASS__, 'handle_actions' ) );
+		add_action( 'admin_post_eac_edit_customer', array( __CLASS__, 'handle_actions' ) );
 		add_action( 'eac_sales_page_customers_loaded', array( __CLASS__, 'page_loaded' ) );
 		add_action( 'eac_sales_page_customers_content', array( __CLASS__, 'page_content' ) );
 		add_action( 'eac_customer_profile_section_overview', array( __CLASS__, 'overview_section' ) );
@@ -50,38 +50,41 @@ class Customers {
 	 * @return void
 	 */
 	public static function handle_actions() {
-		if ( isset( $_POST['action'] ) && 'eac_edit_customer' === $_POST['action'] && check_admin_referer( 'eac_edit_customer' ) && current_user_can( 'eac_manage_customer' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability.
-			$referer = wp_get_referer();
-			$data    = array(
-				'id'         => isset( $_POST['id'] ) ? sanitize_text_field( wp_unslash( $_POST['id'] ) ) : '',
-				'name'       => isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '',
-				'currency'   => isset( $_POST['currency'] ) ? sanitize_text_field( wp_unslash( $_POST['currency'] ) ) : '',
-				'email'      => isset( $_POST['email'] ) ? sanitize_email( wp_unslash( $_POST['email'] ) ) : '',
-				'phone'      => isset( $_POST['phone'] ) ? sanitize_text_field( wp_unslash( $_POST['phone'] ) ) : '',
-				'company'    => isset( $_POST['company'] ) ? sanitize_text_field( wp_unslash( $_POST['company'] ) ) : '',
-				'tax_number' => isset( $_POST['tax_number'] ) ? sanitize_text_field( wp_unslash( $_POST['tax_number'] ) ) : '',
-				'website'    => isset( $_POST['website'] ) ? esc_url_raw( wp_unslash( $_POST['website'] ) ) : '',
-				'address'    => isset( $_POST['address'] ) ? sanitize_text_field( wp_unslash( $_POST['address'] ) ) : '',
-				'city'       => isset( $_POST['city'] ) ? sanitize_text_field( wp_unslash( $_POST['city'] ) ) : '',
-				'state'      => isset( $_POST['state'] ) ? sanitize_text_field( wp_unslash( $_POST['state'] ) ) : '',
-				'zip'        => isset( $_POST['zip'] ) ? sanitize_text_field( wp_unslash( $_POST['zip'] ) ) : '',
-				'country'    => isset( $_POST['country'] ) ? sanitize_text_field( wp_unslash( $_POST['country'] ) ) : '',
-			);
-
-			$customer = EAC()->customers->insert( $data );
-
-			if ( is_wp_error( $customer ) ) {
-				EAC()->flash->error( $customer->get_error_message() );
-			} else {
-				EAC()->flash->success( __( 'Customer saved successfully.', 'wp-ever-accounting' ) );
-				$referer = add_query_arg( 'id', $customer->id, $referer );
-				$referer = add_query_arg( 'action', 'view', $referer );
-				$referer = remove_query_arg( array( 'add' ), $referer );
-			}
-
-			wp_safe_redirect( $referer );
-			exit;
+		check_admin_referer( 'eac_edit_customer' );
+		if ( ! current_user_can( 'eac_manage_customer' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability.
+			wp_die( esc_html__( 'You do not have permission to edit expenses.', 'wp-ever-accounting' ) );
 		}
+
+		$referer = wp_get_referer();
+		$data    = array(
+			'id'         => isset( $_POST['id'] ) ? sanitize_text_field( wp_unslash( $_POST['id'] ) ) : '',
+			'name'       => isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '',
+			'company'    => isset( $_POST['company'] ) ? sanitize_text_field( wp_unslash( $_POST['company'] ) ) : '',
+			'email'      => isset( $_POST['email'] ) ? sanitize_email( wp_unslash( $_POST['email'] ) ) : '',
+			'phone'      => isset( $_POST['phone'] ) ? sanitize_text_field( wp_unslash( $_POST['phone'] ) ) : '',
+			'website'    => isset( $_POST['website'] ) ? esc_url_raw( wp_unslash( $_POST['website'] ) ) : '',
+			'address'    => isset( $_POST['address'] ) ? sanitize_text_field( wp_unslash( $_POST['address'] ) ) : '',
+			'city'       => isset( $_POST['city'] ) ? sanitize_text_field( wp_unslash( $_POST['city'] ) ) : '',
+			'state'      => isset( $_POST['state'] ) ? sanitize_text_field( wp_unslash( $_POST['state'] ) ) : '',
+			'postcode'   => isset( $_POST['postcode'] ) ? sanitize_text_field( wp_unslash( $_POST['postcode'] ) ) : '',
+			'country'    => isset( $_POST['country'] ) ? sanitize_text_field( wp_unslash( $_POST['country'] ) ) : '',
+			'tax_number' => isset( $_POST['tax_number'] ) ? sanitize_text_field( wp_unslash( $_POST['tax_number'] ) ) : '',
+			'currency'   => isset( $_POST['currency'] ) ? sanitize_text_field( wp_unslash( $_POST['currency'] ) ) : '',
+		);
+
+		$customer = EAC()->customers->insert( $data );
+
+		if ( is_wp_error( $customer ) ) {
+			EAC()->flash->error( $customer->get_error_message() );
+		} else {
+			EAC()->flash->success( __( 'Customer saved successfully.', 'wp-ever-accounting' ) );
+			$referer = add_query_arg( 'id', $customer->id, $referer );
+			$referer = add_query_arg( 'action', 'view', $referer );
+			$referer = remove_query_arg( array( 'add' ), $referer );
+		}
+
+		wp_safe_redirect( $referer );
+		exit;
 	}
 
 	/**
