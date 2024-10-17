@@ -245,13 +245,12 @@ class Ajax {
 				'parent_id'   => $parent_id,
 				'parent_type' => $parent_type,
 				'content'     => $content,
-				'creator_id'  => get_current_user_id(),
+				'author_id'   => get_current_user_id(),
 			)
 		);
 
 		// If error, return error.
 		if ( is_wp_error( $note ) ) {
-			error_log( $note->get_error_message() );
 			wp_die( - 1 );
 		}
 

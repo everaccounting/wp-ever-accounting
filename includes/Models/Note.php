@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  * @property int    $parent_id Object ID of the object.
  * @property string $parent_type Object type of the object.
  * @property string $content Content of the note.
- * @property int    $creator_id ID of the author.
+ * @property int    $author_id ID of the author.
  * @property string $created_at Date created of the note.
  * @property string $updated_at Date updated of the note.
  */
@@ -38,7 +38,7 @@ class Note extends Model {
 		'parent_id',
 		'parent_type',
 		'content',
-		'creator_id',
+		'author_id',
 	);
 
 	/**
@@ -48,9 +48,9 @@ class Note extends Model {
 	 * @var array
 	 */
 	protected $casts = array(
-		'id'         => 'int',
-		'parent_id'  => 'int',
-		'creator_id' => 'int',
+		'id'        => 'int',
+		'parent_id' => 'int',
+		'author_id' => 'int',
 	);
 
 	/**
@@ -98,8 +98,8 @@ class Note extends Model {
 			return new \WP_Error( 'missing_required', __( 'Missing parent type.', 'wp-ever-accounting' ) );
 		}
 
-		if ( empty( $this->creator_id ) && is_user_logged_in() ) {
-			$this->creator_id = get_current_user_id();
+		if ( empty( $this->author_id ) && is_user_logged_in() ) {
+			$this->author_id = get_current_user_id();
 		}
 
 		return parent::save();

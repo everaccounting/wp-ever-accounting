@@ -14,8 +14,8 @@ use EverAccounting\Models\Note;
 defined( 'ABSPATH' ) || exit();
 
 $author = esc_html__( 'System', 'wp-ever-accounting' );
-if ( $note->creator_id ) {
-	$user_object = get_userdata( $note->creator_id );
+if ( $note->author_id ) {
+	$user_object = get_userdata( $note->author_id );
 	if ( $user_object ) {
 		$author = ! empty( $user_object->display_name ) ? $user_object->display_name : $user_object->user_login;
 	}
