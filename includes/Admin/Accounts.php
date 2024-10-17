@@ -21,7 +21,7 @@ class Accounts {
 	 */
 	public function __construct() {
 		add_filter( 'eac_banking_page_tabs', array( __CLASS__, 'register_tabs' ) );
-		add_action( 'eac_banking_page_accounts_loaded', array( __CLASS__, 'handle_actions' ) );
+		add_action( 'admin_post_eac_edit_account', array( __CLASS__, 'handle_edit' ) );
 		add_action( 'eac_banking_page_accounts_loaded', array( __CLASS__, 'page_loaded' ) );
 		add_action( 'eac_banking_page_accounts_content', array( __CLASS__, 'page_content' ) );
 		add_action( 'eac_account_edit_side_meta_boxes', array( __CLASS__, 'account_notes' ) );
@@ -54,32 +54,32 @@ class Accounts {
 	 * @since 1.0.0
 	 * @return void
 	 */
-	public static function handle_actions() {
-		if ( isset( $_POST['action'] ) && 'eac_edit_account' === $_POST['action'] && check_admin_referer( 'eac_edit_account' ) && current_user_can( 'eac_manage_account' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability.
-			$referer = wp_get_referer();
-			$data    = array(
-				'id'           => isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0,
-				'name'         => isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '',
-				'number'       => isset( $_POST['number'] ) ? sanitize_text_field( wp_unslash( $_POST['number'] ) ) : '',
-				'type'         => isset( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '',
-				'currency'     => isset( $_POST['currency'] ) ? sanitize_text_field( wp_unslash( $_POST['currency'] ) ) : '',
-				'bank_name'    => isset( $_POST['bank_name'] ) ? sanitize_text_field( wp_unslash( $_POST['bank_name'] ) ) : '',
-				'bank_phone'   => isset( $_POST['bank_phone'] ) ? sanitize_text_field( wp_unslash( $_POST['bank_phone'] ) ) : '',
-				'bank_address' => isset( $_POST['bank_address'] ) ? sanitize_text_field( wp_unslash( $_POST['bank_address'] ) ) : '',
-			);
-
-			$account = EAC()->accounts->insert( $data );
-			if ( is_wp_error( $account ) ) {
-				EAC()->flash->error( $account->get_error_message() );
-			} else {
-				EAC()->flash->success( __( 'Account saved successfully.', 'wp-ever-accounting' ) );
-				$referer = add_query_arg( 'id', $account->id, $referer );
-				$referer = remove_query_arg( array( 'add' ), $referer );
-			}
-
-			wp_safe_redirect( $referer );
-			exit;
+	public static function handle_edit() {
+		check_admin_referer( 'eac_edit_account' );
+		if ( ! current_user_can( 'eac_manage_account' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability.
+			wp_die( esc_html__( 'You do not have permission to edit accounts.', 'wp-ever-accounting' ) );
 		}
+
+		$referer = wp_get_referer();
+		$data    = array(
+			'id'           => isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0,
+			'type'         => isset( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '',
+			'name'         => isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '',
+			'number'       => isset( $_POST['number'] ) ? sanitize_text_field( wp_unslash( $_POST['number'] ) ) : '',
+			'currency'     => isset( $_POST['currency'] ) ? sanitize_text_field( wp_unslash( $_POST['currency'] ) ) : '',
+		);
+
+		$account = EAC()->accounts->insert( $data );
+		if ( is_wp_error( $account ) ) {
+			EAC()->flash->error( $account->get_error_message() );
+		} else {
+			EAC()->flash->success( __( 'Account saved successfully.', 'wp-ever-accounting' ) );
+			$referer = add_query_arg( 'id', $account->id, $referer );
+			$referer = remove_query_arg( array( 'add' ), $referer );
+		}
+
+		wp_safe_redirect( $referer );
+		exit;
 	}
 
 

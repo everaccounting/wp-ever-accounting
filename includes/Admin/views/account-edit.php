@@ -31,7 +31,7 @@ $account = Account::make( $id );
 	<?php endif; ?>
 </div>
 
-<form id="eac-edit-account" name="account" method="post">
+<form id="eac-edit-account" name="account" method="post" action="<?php echo esc_html( admin_url( 'admin-post.php' ) ); ?>">
 	<div class="eac-poststuff">
 		<div class="column-1">
 			<div class="eac-card">

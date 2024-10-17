@@ -190,7 +190,6 @@ class Accounts extends ListTable {
 			'cb'         => '<input type="checkbox" />',
 			'name'       => __( 'Name', 'wp-ever-accounting' ),
 			'number'     => __( 'Number', 'wp-ever-accounting' ),
-			'bank_name'  => __( 'Bank Name', 'wp-ever-accounting' ),
 			'created_at' => __( 'Date', 'wp-ever-accounting' ),
 			'balance'    => __( 'Balance', 'wp-ever-accounting' ),
 		);
@@ -207,7 +206,6 @@ class Accounts extends ListTable {
 		return array(
 			'name'       => array( 'name', false ),
 			'number'     => array( 'number', false ),
-			'bank_name'  => array( 'bank_name', false ),
 			'balance'    => array( 'balance', false ),
 			'created_at' => array( 'created_at', false ),
 		);

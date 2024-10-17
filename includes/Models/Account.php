@@ -20,7 +20,6 @@ defined( 'ABSPATH' ) || exit;
  * @property string             $number Account number.
  * @property float              $balance Account balance.
  * @property string             $currency Currency code.
- * @property int                $thumbnail_id Thumbnail ID.
  * @property string             $created_at Date created.
  * @property string             $updated_at Date updated.
  *
@@ -52,8 +51,7 @@ class Account extends Model {
 		'name',
 		'number',
 		'balance',
-		'currency',
-		'thumbnail_id'
+		'currency'
 	);
 
 	/**
@@ -74,10 +72,11 @@ class Account extends Model {
 	 */
 	protected $casts = array(
 		'id'           => 'int',
-		'number'       => 'string',
-		'balance'      => 'float',
-		'currency'     => 'string',
-		'thumbnail_id' => 'int',
+		'type'         => 'sanitize_text',
+		'name'         => 'sanitize_text',
+		'number'       => 'sanitize_text',
+		'balance'      => 'double',
+		'currency'     => 'sanitize_text',
 	);
 
 	/**

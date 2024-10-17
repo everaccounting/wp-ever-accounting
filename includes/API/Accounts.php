@@ -439,13 +439,14 @@ class Accounts extends Controller {
 						'sanitize_callback' => 'intval',
 					),
 				),
-				'balance'      => array(
-					'description' => __( 'Account balance.', 'wp-ever-accounting' ),
-					'type'        => 'number',
+				'type'         => array(
+					'description' => __( 'Account type.', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'enum'        => array( 'bank', 'card' ),
 					'context'     => array( 'view', 'edit' ),
-					'readonly'    => true,
+					'required'    => true,
 					'arg_options' => array(
-						'sanitize_callback' => 'floatval',
+						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
 				'name'         => array(
@@ -460,14 +461,13 @@ class Accounts extends Controller {
 					'context'     => array( 'view', 'edit' ),
 					'required'    => true,
 				),
-				'type'         => array(
-					'description' => __( 'Account type.', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'enum'        => array( 'bank', 'card' ),
+				'balance'      => array(
+					'description' => __( 'Account balance.', 'wp-ever-accounting' ),
+					'type'        => 'number',
 					'context'     => array( 'view', 'edit' ),
-					'required'    => true,
+					'readonly'    => true,
 					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
+						'sanitize_callback' => 'floatval',
 					),
 				),
 				'currency'     => array(
@@ -476,30 +476,6 @@ class Accounts extends Controller {
 					'context'     => array( 'view', 'edit' ),
 					'required'    => true,
 					'default'     => eac_base_currency(),
-					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
-					),
-				),
-				'bank_name'    => array(
-					'description' => __( 'Bank name.', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
-					),
-				),
-				'bank_phone'   => array(
-					'description' => __( 'Bank phone number.', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
-					),
-				),
-				'bank_address' => array(
-					'description' => __( 'Bank address.', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
