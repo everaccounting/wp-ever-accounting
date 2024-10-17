@@ -108,6 +108,94 @@ class Payments extends ListTable {
 	}
 
 	/**
+	 * handle bulk paid action.
+	 *
+	 * @param array $ids List of item IDs.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	protected function bulk_set_completed( $ids ) {
+		$performed = 0;
+		foreach ( $ids as $id ) {
+			$expense = EAC()->payments->get( $id );
+			if ( ! is_wp_error( $expense->set( 'status', 'completed' )->save() ) ) {
+				++ $performed;
+			}
+		}
+		if ( ! empty( $performed ) ) {
+			// translators: %s: number of items deleted.
+			EAC()->flash->success( sprintf( __( '%s expense(s) status updated to completed successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
+		}
+	}
+
+	/**
+	 * handle bulk pending action.
+	 *
+	 * @param array $ids List of item IDs.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	protected function bulk_set_pending( $ids ) {
+		$performed = 0;
+		foreach ( $ids as $id ) {
+			$payment = EAC()->payments->get( $id );
+			if ( ! is_wp_error( $payment->set( 'status', 'pending' )->save() ) ) {
+				++ $performed;
+			}
+		}
+		if ( ! empty( $performed ) ) {
+			// translators: %s: number of items deleted.
+			EAC()->flash->success( sprintf( __( '%s payment(s) status updated to pending successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
+		}
+	}
+
+	/**
+	 * handle bulk refunded action.
+	 *
+	 * @param array $ids List of item IDs.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	protected function bulk_set_refunded( $ids ) {
+		$performed = 0;
+		foreach ( $ids as $id ) {
+			$payment = EAC()->payments->get( $id );
+			if ( ! is_wp_error( $payment->set( 'status', 'refunded' )->save() ) ) {
+				++ $performed;
+			}
+		}
+		if ( ! empty( $performed ) ) {
+			// translators: %s: number of items deleted.
+			EAC()->flash->success( sprintf( __( '%s payment(s) status updated to refunded successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
+		}
+	}
+
+	/**
+	 * handle bulk cancelled action.
+	 *
+	 * @param array $ids List of item IDs.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	protected function bulk_set_cancelled( $ids ) {
+		$performed = 0;
+		foreach ( $ids as $id ) {
+			$payment = EAC()->payments->get( $id );
+			if ( ! is_wp_error( $payment->set( 'status', 'cancelled' )->save() ) ) {
+				++ $performed;
+			}
+		}
+		if ( ! empty( $performed ) ) {
+			// translators: %s: number of items deleted.
+			EAC()->flash->success( sprintf( __( '%s payment(s) status updated to cancelled successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
+		}
+	}
+
+	/**
 	 * Outputs 'no results' message.
 	 *
 	 * @since 1.0.0
@@ -155,11 +243,11 @@ class Payments extends ListTable {
 	 */
 	protected function get_bulk_actions() {
 		$actions = array(
-			'mark_paid'      => __( 'Mark as Paid', 'wp-ever-accounting' ),
-			'mark_pending'   => __( 'Mark as Pending', 'wp-ever-accounting' ),
-			'mark_refunded'  => __( 'Mark as Refunded', 'wp-ever-accounting' ),
-			'mark_cancelled' => __( 'Mark as Cancelled', 'wp-ever-accounting' ),
-			'delete'         => __( 'Delete', 'wp-ever-accounting' ),
+			'set_completed' => __( 'Set Completed', 'wp-ever-accounting' ),
+			'set_pending'   => __( 'Set Pending', 'wp-ever-accounting' ),
+			'set_refunded'  => __( 'Set Refunded', 'wp-ever-accounting' ),
+			'set_cancelled' => __( 'Set Cancelled', 'wp-ever-accounting' ),
+			'delete'        => __( 'Delete', 'wp-ever-accounting' ),
 		);
 
 		return $actions;
