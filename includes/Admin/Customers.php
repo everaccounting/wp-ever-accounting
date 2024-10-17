@@ -52,7 +52,7 @@ class Customers {
 	public static function handle_actions() {
 		check_admin_referer( 'eac_edit_customer' );
 		if ( ! current_user_can( 'eac_manage_customer' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability.
-			wp_die( esc_html__( 'You do not have permission to edit expenses.', 'wp-ever-accounting' ) );
+			wp_die( esc_html__( 'You do not have permission to edit customers.', 'wp-ever-accounting' ) );
 		}
 
 		$referer = wp_get_referer();
@@ -164,7 +164,7 @@ class Customers {
 		// Customer chart get the payments by month over the year.
 		$results = $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT SUM(amount/exchange_rate) as total, MONTH(date) as month FROM {$wpdb->prefix}ea_transactions WHERE contact_id = %d AND YEAR(date) = %d GROUP BY MONTH(date)",
+				"SELECT SUM(amount/exchange_rate) as total, MONTH(paid_at) as month FROM {$wpdb->prefix}ea_transactions WHERE contact_id = %d AND YEAR(paid_at) = %d GROUP BY MONTH(paid_at)",
 				$customer->id,
 				wp_date( 'Y' )
 			)

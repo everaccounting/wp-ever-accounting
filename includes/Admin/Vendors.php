@@ -18,7 +18,7 @@ class Vendors {
 	 */
 	public function __construct() {
 		add_filter( 'eac_purchases_page_tabs', array( __CLASS__, 'register_tabs' ) );
-		add_action( 'eac_purchases_page_vendors_loaded', array( __CLASS__, 'handle_actions' ) );
+		add_action( 'admin_post_eac_edit_vendor', array( __CLASS__, 'handle_edit' ) );
 		add_action( 'eac_purchases_page_vendors_loaded', array( __CLASS__, 'page_loaded' ) );
 		add_action( 'eac_purchases_page_vendors_content', array( __CLASS__, 'page_content' ) );
 		add_action( 'eac_vendor_profile_section_overview', array( __CLASS__, 'overview_section' ) );
@@ -49,39 +49,41 @@ class Vendors {
 	 * @since 2.0.0
 	 * @return void
 	 */
-	public static function handle_actions() {
-		if ( isset( $_POST['action'] ) && 'eac_edit_vendor' === $_POST['action'] && check_admin_referer( 'eac_edit_vendor' ) && current_user_can( 'eac_manage_vendor' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability.
-			$referer = wp_get_referer();
-			$data    = array(
-				'id'         => isset( $_POST['id'] ) ? sanitize_text_field( wp_unslash( $_POST['id'] ) ) : '',
-				'name'       => isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '',
-				'currency'   => isset( $_POST['currency'] ) ? sanitize_text_field( wp_unslash( $_POST['currency'] ) ) : '',
-				'email'      => isset( $_POST['email'] ) ? sanitize_email( wp_unslash( $_POST['email'] ) ) : '',
-				'phone'      => isset( $_POST['phone'] ) ? sanitize_text_field( wp_unslash( $_POST['phone'] ) ) : '',
-				'company'    => isset( $_POST['company'] ) ? sanitize_text_field( wp_unslash( $_POST['company'] ) ) : '',
-				'tax_number' => isset( $_POST['tax_number'] ) ? sanitize_text_field( wp_unslash( $_POST['tax_number'] ) ) : '',
-				'website'    => isset( $_POST['website'] ) ? esc_url_raw( wp_unslash( $_POST['website'] ) ) : '',
-				'address'    => isset( $_POST['address'] ) ? sanitize_text_field( wp_unslash( $_POST['address'] ) ) : '',
-				'city'       => isset( $_POST['city'] ) ? sanitize_text_field( wp_unslash( $_POST['city'] ) ) : '',
-				'state'      => isset( $_POST['state'] ) ? sanitize_text_field( wp_unslash( $_POST['state'] ) ) : '',
-				'zip'        => isset( $_POST['zip'] ) ? sanitize_text_field( wp_unslash( $_POST['zip'] ) ) : '',
-				'country'    => isset( $_POST['country'] ) ? sanitize_text_field( wp_unslash( $_POST['country'] ) ) : '',
-			);
-
-			$vendor = EAC()->vendors->insert( $data );
-
-			if ( is_wp_error( $vendor ) ) {
-				EAC()->flash->error( $vendor->get_error_message() );
-			} else {
-				EAC()->flash->success( __( 'Vendor saved successfully.', 'wp-ever-accounting' ) );
-				$referer = add_query_arg( 'id', $vendor->id, $referer );
-				$referer = add_query_arg( 'action', 'view', $referer );
-				$referer = remove_query_arg( array( 'add' ), $referer );
-			}
-
-			wp_safe_redirect( $referer );
-			exit;
+	public static function handle_edit() {
+		check_admin_referer( 'eac_edit_vendor' );
+		if ( ! current_user_can( 'eac_manage_vendor' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability.
+			wp_die( esc_html__( 'You do not have permission to edit vendors.', 'wp-ever-accounting' ) );
 		}
+		$referer = wp_get_referer();
+		$data    = array(
+			'id'         => isset( $_POST['id'] ) ? sanitize_text_field( wp_unslash( $_POST['id'] ) ) : '',
+			'name'       => isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '',
+			'company'    => isset( $_POST['company'] ) ? sanitize_text_field( wp_unslash( $_POST['company'] ) ) : '',
+			'email'      => isset( $_POST['email'] ) ? sanitize_email( wp_unslash( $_POST['email'] ) ) : '',
+			'phone'      => isset( $_POST['phone'] ) ? sanitize_text_field( wp_unslash( $_POST['phone'] ) ) : '',
+			'website'    => isset( $_POST['website'] ) ? esc_url_raw( wp_unslash( $_POST['website'] ) ) : '',
+			'address'    => isset( $_POST['address'] ) ? sanitize_text_field( wp_unslash( $_POST['address'] ) ) : '',
+			'city'       => isset( $_POST['city'] ) ? sanitize_text_field( wp_unslash( $_POST['city'] ) ) : '',
+			'state'      => isset( $_POST['state'] ) ? sanitize_text_field( wp_unslash( $_POST['state'] ) ) : '',
+			'postcode'   => isset( $_POST['postcode'] ) ? sanitize_text_field( wp_unslash( $_POST['postcode'] ) ) : '',
+			'country'    => isset( $_POST['country'] ) ? sanitize_text_field( wp_unslash( $_POST['country'] ) ) : '',
+			'tax_number' => isset( $_POST['tax_number'] ) ? sanitize_text_field( wp_unslash( $_POST['tax_number'] ) ) : '',
+			'currency'   => isset( $_POST['currency'] ) ? sanitize_text_field( wp_unslash( $_POST['currency'] ) ) : '',
+		);
+
+		$vendor = EAC()->vendors->insert( $data );
+
+		if ( is_wp_error( $vendor ) ) {
+			EAC()->flash->error( $vendor->get_error_message() );
+		} else {
+			EAC()->flash->success( __( 'Vendor saved successfully.', 'wp-ever-accounting' ) );
+			$referer = add_query_arg( 'id', $vendor->id, $referer );
+			$referer = add_query_arg( 'action', 'view', $referer );
+			$referer = remove_query_arg( array( 'add' ), $referer );
+		}
+
+		wp_safe_redirect( $referer );
+		exit;
 	}
 
 	/**

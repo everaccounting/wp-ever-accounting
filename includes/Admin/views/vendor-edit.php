@@ -32,7 +32,7 @@ $vendor = Vendor::make( $id );
 	<?php endif; ?>
 </div>
 
-<form id="eac-vendor-form" name="vendor" method="post">
+<form id="eac-vendor-form" name="vendor" method="post" action="<?php echo esc_html( admin_url( 'admin-post.php' ) ); ?>">
 	<div class="eac-poststuff">
 		<div class="column-1">
 
@@ -57,7 +57,7 @@ $vendor = Vendor::make( $id );
 							'id'           => 'currency',
 							'type'         => 'select',
 							'label'        => __( 'Currency Code', 'wp-ever-accounting' ),
-							'value'        => $vendor->currency_code,
+							'value'        => $vendor->currency,
 							'default'      => eac_base_currency(),
 							'required'     => true,
 							'class'        => 'eac_select2',
@@ -154,10 +154,10 @@ $vendor = Vendor::make( $id );
 					);
 					eac_form_field(
 						array(
-							'id'          => 'zip',
-							'label'       => __( 'Zip Code', 'wp-ever-accounting' ),
+							'id'          => 'postcode',
+							'label'       => __( 'Postal Code', 'wp-ever-accounting' ),
 							'placeholder' => __( '10001', 'wp-ever-accounting' ),
-							'value'       => $vendor->zip,
+							'value'       => $vendor->postcode,
 						)
 					);
 					eac_form_field(

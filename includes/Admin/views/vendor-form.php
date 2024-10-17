@@ -36,7 +36,7 @@ defined( 'ABSPATH' ) || exit;
 								'id'           => 'currency',
 								'type'         => 'select',
 								'label'        => __( 'Currency Code', 'wp-ever-accounting' ),
-								'value'        => $vendor->currency_code,
+								'value'        => $vendor->currency,
 								'default'      => eac_base_currency(),
 								'required'     => true,
 								'class'        => 'eac_select2',

@@ -59,7 +59,7 @@ $customer = Customer::make( $id );
 							'id'           => 'currency',
 							'type'         => 'select',
 							'label'        => __( 'Currency Code', 'wp-ever-accounting' ),
-							'value'        => $customer->currency_code,
+							'value'        => $customer->currency,
 							'default'      => eac_base_currency(),
 							'required'     => true,
 							'class'        => 'eac_select2',
@@ -157,7 +157,7 @@ $customer = Customer::make( $id );
 					eac_form_field(
 						array(
 							'id'          => 'postcode',
-							'label'       => __( 'Zip Code', 'wp-ever-accounting' ),
+							'label'       => __( 'Postal Code', 'wp-ever-accounting' ),
 							'placeholder' => __( '10001', 'wp-ever-accounting' ),
 							'value'       => $customer->postcode,
 						)

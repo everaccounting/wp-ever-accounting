@@ -68,6 +68,15 @@ class Contacts extends Controller {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
+				'website'     => array(
+					'description' => __( 'Website URL of the contact.', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'format'      => 'uri',
+					'context'     => array( 'view', 'embed', 'edit' ),
+					'arg_options' => array(
+						'sanitize_callback' => 'esc_url_raw',
+					),
+				),
 				'address'     => array(
 					'description' => __( 'Address line 1 of the contact.', 'wp-ever-accounting' ),
 					'type'        => 'string',
@@ -110,29 +119,12 @@ class Contacts extends Controller {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
-				'website'     => array(
-					'description' => __( 'Website URL of the contact.', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'format'      => 'uri',
-					'context'     => array( 'view', 'embed', 'edit' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'esc_url_raw',
-					),
-				),
-				'vat_number'  => array(
-					'description' => __( 'VAT number of the contact.', 'wp-ever-accounting' ),
+				'tax_number'  => array(
+					'description' => __( 'Tax number of the contact.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'edit' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
-					),
-				),
-				'vat_exempt'  => array(
-					'description' => __( 'VAT exempt status of the contact.', 'wp-ever-accounting' ),
-					'type'        => 'boolean',
-					'context'     => array( 'view', 'edit' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'wp_validate_boolean',
 					),
 				),
 				'currency'    => array(
@@ -142,16 +134,6 @@ class Contacts extends Controller {
 					'context'     => array( 'view', 'edit' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
-					),
-				),
-				'status'      => array(
-					'description' => __( 'Status of the contact.', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'enum'        => array( 'active', 'inactive' ),
-					'default'     => 'active',
-					'context'     => array( 'view', 'edit' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_key',
 					),
 				),
 				'user_id'     => array(
@@ -168,12 +150,6 @@ class Contacts extends Controller {
 					'readonly'    => true,
 				),
 				'created_via' => array(
-					'description' => __( 'The ID of the user who created the contact.', 'wp-ever-accounting' ),
-					'type'        => 'integer',
-					'context'     => array( 'view' ),
-					'readonly'    => true,
-				),
-				'creator_id'  => array(
 					'description' => __( 'The ID of the user who created the contact.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'view' ),
