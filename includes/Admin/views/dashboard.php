@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 ?>
 
 <div class="wrap eac-wrap">
-	<h1 class="wp-heading-inline"><?php esc_html_e( 'Dashboard', 'wp-ever-accounting' ); ?></h1>
+	<h1 class="wp-heading-inline !tw-mb-2"><?php esc_html_e( 'Dashboard', 'wp-ever-accounting' ); ?></h1>
 
 	<?php
 	/**

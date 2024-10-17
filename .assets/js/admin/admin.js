@@ -7,3 +7,4 @@ import './components/invoices';
 import './components/payments';
 import './components/transfers';
 import './components/vendors';
+import './components/charts';

@@ -3,6 +3,7 @@
 namespace EverAccounting\Admin;
 
 use EverAccounting\Models\Account;
+use EverAccounting\Utilities\ReportsUtil;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -153,27 +154,59 @@ class Accounts {
 	 */
 	public static function overview_section( $account ) {
 		global $wpdb;
-		$stats = apply_filters(
-			'eac_account_overview_stats',
-			array(
-				array(
-					'label' => __( 'Receivable', 'wp-ever-accounting' ),
-					'value' => eac_format_amount( 100 ),
-				),
-
-				array(
-					'label' => __( 'Payable', 'wp-ever-accounting' ),
-					'value' => eac_format_amount( 100 ),
-				),
-
-				array(
-					'label' => __( 'Upcoming', 'wp-ever-accounting' ),
-					'value' => eac_format_amount( 100 ),
-				),
+//		wp_enqueue_script('eac-chartjs');
+		$start_date   = ReportsUtil::get_year_start_date();
+		$end_date     = ReportsUtil::get_year_end_date();
+		$transactions = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT t.amount amount, MONTH(t.paid_at) AS month, YEAR(t.paid_at) AS year, t.type
+					FROM {$wpdb->prefix}ea_transactions AS t
+					LEFT JOIN {$wpdb->prefix}ea_transfers AS it ON t.id = it.payment_id OR t.id = it.expense_id
+					WHERE it.payment_id IS NULL
+					AND it.expense_id IS NULL
+					AND t.account_id = %d
+					AND t.paid_at BETWEEN %s AND %s
+					ORDER BY t.paid_at ASC",
+				$account->id,
+				$start_date,
+				$end_date
 			)
 		);
+		$months       = array_fill_keys( ReportsUtil::get_months_in_range( $start_date, $end_date, 'M, y' ), 0 );
+		$data         = array(
+			'payment' => $months,
+			'expense' => $months,
+		);
+		foreach ( $transactions as $transaction ) {
+			$data[ $transaction->type ][ wp_date( 'M, y', strtotime( $transaction->year . '-' . $transaction->month . '-01' ) ) ] += $transaction->amount;
+		}
+		$stats[]  = array(
+			'label' => __( 'Incoming', 'wp-ever-accounting' ),
+			'value' => eac_format_amount( array_sum( $data['payment'] ), $account->currency ),
+		);
+		$stats[]  = array(
+			'label' => __( 'Outgoing', 'wp-ever-accounting' ),
+			'value' => eac_format_amount( array_sum( $data['expense'] ), $account->currency ),
+		);
+		$stats[]  = array(
+			'label' => __( 'Balance', 'wp-ever-accounting' ),
+			'value' => $account->get_formatted_balance(),
+		);
+		$stats    = apply_filters( 'eac_account_overview_stats', $stats );
+		$datasets = array(
+			array(
+				'label'           => __( 'Incoming', 'wp-ever-accounting' ),
+				'backgroundColor' => '#4CAF50',
+				'data'            => array_values( $data['payment'] ),
+			),
+			array(
+				'label'           => __( 'Outgoing', 'wp-ever-accounting' ),
+				'backgroundColor' => '#F44336',
+				'data'            => array_values( $data['expense'] ),
+			),
+		);
 		?>
-		<h2 class="has--border"><?php echo esc_html__( 'Overview', 'wp-ever-accounting' ); ?></h2>
+		<h2 class="has--border"><?php echo esc_html__( 'Overview', 'wp-ever-accounting' ); ?> <?php echo esc_html( wp_date( 'Y' ) ); ?></h2>
 		<canvas class="eac-profile-cart" style="min-height: 300px;"></canvas>
 		<div class="eac-stats stats--3">
 			<?php foreach ( $stats as $stat ) : ?>
@@ -196,7 +229,6 @@ class Accounts {
 				</div>
 			<?php endforeach; ?>
 		</div>
-
 		<h4 class="tw-text-gray-500 tw-uppercase tw-text-base">Basic Info</h4>
 		<div class="tw-grid tw-gap-4 tw-mt-5 md:tw-grid-cols-2 lg:tw-grid-cols-3">
 			<div>
@@ -224,6 +256,64 @@ class Accounts {
 				<p class="tw-font-bold">email@gmail.com </p>
 			</div>
 		</div>
+
+		<script>
+			(function ($) {
+				$(document).ready(function () {
+					var ctx = document.getElementsByClassName('eac-profile-cart');
+					var symbol = "<?php echo esc_html( EAC()->currencies->get_symbol( $account->currency ) ); ?>";
+					var myChart = new Chart(ctx, {
+						type: 'line',
+						data: {
+							labels: <?php echo wp_json_encode( array_keys( $data['payment'] ) ); ?>,
+							datasets: <?php echo wp_json_encode( $datasets ); ?>
+						},
+						options: {
+							tooltips: {
+								displayColors: true,
+								YrPadding: 12,
+								backgroundColor: "#000000",
+								bodyFontColor: "#e5e5e5",
+								bodySpacing: 4,
+								intersect: 0,
+								mode: "nearest",
+								position: "nearest",
+								titleFontColor: "#ffffff",
+								callbacks: {
+									label: function (tooltipItem, data) {
+										let value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+										let datasetLabel = data.datasets[tooltipItem.datasetIndex].label || '';
+										return datasetLabel + ': ' + value.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') + symbol;
+									}
+								}
+							},
+							scales: {
+								xAxes: [{
+									stacked: false,
+									gridLines: {
+										display: true,
+									}
+								}],
+								yAxes: [{
+									stacked: false,
+									ticks: {
+										beginAtZero: true,
+										callback: function (value, index, ticks) {
+											return Number(value).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') + symbol;
+										}
+									},
+									type: 'linear',
+									barPercentage: 0.4
+								}]
+							},
+							responsive: true,
+							maintainAspectRatio: false,
+							legend: {display: false},
+						}
+					});
+				});
+			})(jQuery);
+		</script>
 		<?php
 	}
 

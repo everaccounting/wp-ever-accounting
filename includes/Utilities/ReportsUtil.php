@@ -103,7 +103,7 @@ class ReportsUtil {
 	 * @since 1.1.6
 	 * @return string
 	 */
-	public function get_year_start_date( $year = '' ) {
+	public static function get_year_start_date( $year = '' ) {
 		if ( empty( $year ) ) {
 			$year = wp_date( 'Y' );
 		}
@@ -130,7 +130,7 @@ class ReportsUtil {
 			$year = wp_date( 'Y' );
 		}
 
-		$start_date = eac_get_year_start_date( $year );
+		$start_date = self::get_year_start_date( $year );
 		// if the year is current year, then end date is today.
 
 		if ( wp_date( 'Y' ) === $year ) {
@@ -282,63 +282,6 @@ class ReportsUtil {
 	}
 
 	/**
-	 * Get sales summary.
-	 *
-	 * @since 1.0.0
-	 */
-	public static function get_sales_summary() {
-		$summery       = array();
-		$total_payment = 0;
-		$date          = wp_date( 'M, y' );
-		$payments      = self::get_payments_report();
-
-		var_dump($payments);
-
-		if ( ! empty( $payments ) && isset( $payments['months'] ) && isset( $payments['months'][ $date ] ) ) {
-			$total_payment = $payments['months'][ $date ];
-		}
-//
-//		$summery['total'] = $total_payment;
-
-		return apply_filters( 'ever_accounting_sales_summary', $summery );
-	}
-
-	/**
-	 * Get expense summary.
-	 *
-	 * @since 1.0.0
-	 */
-	public static function get_purchases_summary() {
-		$summery       = array();
-		$total_expense = 0;
-		$date          = wp_date( 'M, y' );
-		$expenses      = eac_get_expense_report();
-
-		if ( ! empty( $expenses ) && isset( $expenses['months'] ) && isset( $expenses['months'][ $date ] ) ) {
-			$total_expense = $expenses['months'][ $date ];
-		}
-
-		$summery['total'] = $total_expense;
-
-		return apply_filters( 'ever_accounting_purchases_summary', $summery );
-	}
-
-	/**
-	 * Get profit summary.
-	 *
-	 * @since 1.0.0
-	 */
-	public static function get_profits_summary() {
-		$summery = array();
-		$payment = eac_get_sales_summary();
-		$expense = eac_get_purchases_summary();
-
-		$summery['total'] = $payment['total'] - $expense['total'];
-
-		return apply_filters( 'ever_accounting_profits_summary', $summery );
-	}
-
-	/**
 	 * Get Sales report based on year.
 	 *
 	 * @param int  $year Year.
@@ -352,8 +295,8 @@ class ReportsUtil {
 		$reports     = get_transient( 'eac_payments_report' );
 		$reports     = ! is_array( $reports ) ? array() : $reports;
 		$year        = empty( $year ) ? wp_date( 'Y' ) : $year;
-		$start_date  = eac_get_year_start_date( $year );
-		$end_date    = eac_get_year_end_date( $year );
+		$start_date  = self::get_year_start_date( $year );
+		$end_date    = self::get_year_end_date( $year );
 		$date_format = 'M, y';
 
 		if ( $force || empty( $reports[ $year ] ) ) {
@@ -371,10 +314,10 @@ class ReportsUtil {
 					$end_date
 				)
 			);
-			$months      = array_fill_keys( self::get_months_in_range( $start_date, $end_date, $date_format ), 0 );
-			$month_count = count( $months );
-			$date_count  = count( self::get_dates_range( $start_date, $end_date ) );
-			$data        = array(
+			$months       = array_fill_keys( self::get_months_in_range( $start_date, $end_date, $date_format ), 0 );
+			$month_count  = count( $months );
+			$date_count   = count( self::get_dates_range( $start_date, $end_date ) );
+			$data         = array(
 				'total_amount' => 0,
 				'total_count'  => 0,
 				'daily_avg'    => 0,
@@ -437,8 +380,8 @@ class ReportsUtil {
 		$reports     = get_transient( 'get_expenses_report' );
 		$reports     = ! is_array( $reports ) ? array() : $reports;
 		$year        = empty( $year ) ? wp_date( 'Y' ) : $year;
-		$start_date  = eac_get_year_start_date( $year );
-		$end_date    = eac_get_year_end_date( $year );
+		$start_date  = self::get_year_start_date( $year );
+		$end_date    = self::get_year_end_date( $year );
 		$date_format = 'M, y';
 
 		if ( $force || ! isset( $reports[ $year ] ) ) {
@@ -457,9 +400,9 @@ class ReportsUtil {
 				)
 			);
 
-			$months      = array_fill_keys( eac_get_months_in_range( $start_date, $end_date, $date_format ), 0 );
+			$months      = array_fill_keys( self::get_months_in_range( $start_date, $end_date, $date_format ), 0 );
 			$month_count = count( $months );
-			$date_count  = count( eac_get_date_range( $start_date, $end_date ) );
+			$date_count  = count( self::get_dates_range( $start_date, $end_date ) );
 			$data        = array(
 				'total_amount' => 0,
 				'total_count'  => 0,
@@ -524,8 +467,8 @@ class ReportsUtil {
 		$reports     = get_transient( 'get_profits_report' );
 		$reports     = ! is_array( $reports ) ? array() : $reports;
 		$year        = empty( $year ) ? wp_date( 'Y' ) : $year;
-		$start_date  = eac_get_year_start_date( $year );
-		$end_date    = eac_get_year_end_date( $year );
+		$start_date  = self::get_year_start_date( $year );
+		$end_date    = self::get_year_end_date( $year );
 		$date_format = 'M, y';
 		if ( $force || ! isset( $reports[ $year ] ) ) {
 			$transactions = $wpdb->get_results(
@@ -542,9 +485,9 @@ class ReportsUtil {
 				)
 			);
 
-			$months      = array_fill_keys( eac_get_months_in_range( $start_date, $end_date, $date_format ), 0 );
+			$months      = array_fill_keys( self::get_months_in_range( $start_date, $end_date, $date_format ), 0 );
 			$month_count = count( $months );
-			$date_count  = count( eac_get_date_range( $start_date, $end_date ) );
+			$date_count  = count( self::get_dates_range( $start_date, $end_date ) );
 			$data        = array(
 				'total_profit' => 0,
 				'total_count'  => 0,

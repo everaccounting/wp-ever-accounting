@@ -49,7 +49,6 @@ class Dashboard {
 	 * @return void
 	 */
 	public static function overview_widget() {
-		global $wpdb;
 		$report   = ReportsUtil::get_profits_report( wp_date( 'Y' ) );
 		$profits  = array_sum( $report['profits'] );
 		$payments = array_sum( $report['payments'] );
@@ -58,55 +57,57 @@ class Dashboard {
 			'eac_dashboard_overview_stats',
 			array(
 				array(
-					'label' => __( 'Income', 'wp-ever-accounting' ),
+					'label' => __( 'Incoming', 'wp-ever-accounting' ),
 					'value' => eac_format_amount( array_sum( $report['payments'] ) ),
 				),
 				array(
-					'label' => __( 'Expenses', 'wp-ever-accounting' ),
+					'label' => __( 'Outgoing', 'wp-ever-accounting' ),
 					'value' => eac_format_amount( array_sum( $report['expenses'] ) ),
 				),
 				array(
-					'label' => __( 'Profit/Loss', 'wp-ever-accounting' ),
+					'label' => __( 'Profit', 'wp-ever-accounting' ),
 					'value' => eac_format_amount( array_sum( $report['profits'] ) ),
 					'delta' => number_format( $delta, 2 ),
 				),
 			)
 		);
-
 		$datasets = array(
 			'labels'   => array_keys( $report['payments'] ),
+			'type'     => 'line',
 			'datasets' => array(
 				array(
-					'label'           => __( 'Sales', 'wp-ever-accounting' ),
-					'backgroundColor' => 'transparent',
-					'borderColor'     => 'rgba(54, 162, 235, 1)',
-					'borderWidth'     => 2,
+					'backgroundColor' => '#3644ff',
+					'borderColor'     => '#3644ff',
 					'data'            => array_values( $report['payments'] ),
+					'fill'            => false,
+					'label'           => __( 'Sales', 'wp-ever-accounting' ),
+					'type'            => 'line',
 				),
 				array(
 					'label'           => __( 'Expenses', 'wp-ever-accounting' ),
-					'backgroundColor' => 'transparent',
-					'borderColor'     => 'rgba(255, 99, 132, 1)',
-					'borderWidth'     => 2,
+					'backgroundColor' => '#f2385a',
+					'borderColor'     => '#f2385a',
+					'type'            => 'line',
+					'fill'            => false,
 					'data'            => array_values( $report['expenses'] ),
 				),
 				array(
 					'label'           => __( 'Profit/Loss', 'wp-ever-accounting' ),
-					'backgroundColor' => 'transparent',
-					'borderColor'     => 'rgba(75, 192, 192, 1)',
-					'borderWidth'     => 2,
+					'backgroundColor' => '#00d48f',
+					'borderColor'     => '#00d48f',
+					'type'            => 'line',
+					'fill'            => false,
 					'data'            => array_values( $report['profits'] ),
 				),
 			),
 		);
-
 		?>
 		<div class="eac-card is--widget">
 			<div class="eac-card__header">
 				<?php esc_html_e( 'Overview', 'wp-ever-accounting' ); ?>
 			</div>
 			<div class="eac-card__body">
-				<canvas id="eac-overview-chart" style="min-height: 300px;"></canvas>
+				<canvas class="eac-chart" style="min-height: 300px;" data-datasets="<?php echo esc_attr( wp_json_encode( $datasets ) ); ?>" data-currency="<?php echo esc_attr( EAC()->currencies->get_symbol( eac_base_currency() ) ); ?>"></canvas>
 			</div>
 		</div>
 		<div class="eac-stats stats--3">
@@ -130,58 +131,6 @@ class Dashboard {
 				</div>
 			<?php endforeach; ?>
 		</div>
-		<script type="text/javascript">
-			jQuery(document).ready(function ($) {
-				var symbol = "<?php echo esc_html( EAC()->currencies->get_symbol() ); ?>";
-				var ctx = document.getElementById('eac-overview-chart').getContext('2d');
-				var myChart = new Chart(ctx, {
-					type: 'line',
-					data: <?php echo wp_json_encode( $datasets ); ?>,
-					options: {
-						tooltips: {
-							displayColors: true,
-							YrPadding: 12,
-							backgroundColor: "#000000",
-							bodyFontColor: "#e5e5e5",
-							bodySpacing: 4,
-							intersect: 0,
-							mode: "nearest",
-							position: "nearest",
-							titleFontColor: "#ffffff",
-							callbacks: {
-								label: function (tooltipItem, data) {
-									let value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
-									let datasetLabel = data.datasets[tooltipItem.datasetIndex].label || '';
-									return datasetLabel + ': ' + value.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') + symbol;
-								}
-							}
-						},
-						scales: {
-							xAxes: [{
-								stacked: false,
-								gridLines: {
-									display: true,
-								}
-							}],
-							yAxes: [{
-								stacked: false,
-								ticks: {
-									beginAtZero: true,
-									callback: function (value, index, ticks) {
-										return Number(value).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') + symbol;
-									}
-								},
-								type: 'linear',
-								barPercentage: 0.4
-							}]
-						},
-						responsive: true,
-						maintainAspectRatio: false,
-						legend: {display: false},
-					}
-				});
-			});
-		</script>
 		<?php
 	}
 

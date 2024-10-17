@@ -56,7 +56,7 @@ $current_section = ! array_key_exists( $section, $sections ) ? current( array_ke
 <div class="eac-card eac-profile-header">
 	<div class="eac-profile-header__avatar">
 		<div class="avatar tw-flex tw-items-center tw-justify-center tw-w-16 tw-h-16 tw-rounded-full tw-bg-blue-500 tw-text-white tw-text-2xl tw-font-bold">
-		<?php echo strtoupper( $account->name[0] ); ?>
+		<?php echo esc_html( EAC()->currencies->get_symbol( $account->currency ) ); ?>
 		</div>
 	</div>
 	<div class="eac-profile-header__columns">
@@ -64,13 +64,13 @@ $current_section = ! array_key_exists( $section, $sections ) ? current( array_ke
 			<div class="eac-profile-header__title">
 				<?php echo esc_html( $account->name ); ?>
 			</div>
+			<p class="small"><?php printf( '%1$s %2$s', __( 'Balance:', 'wp-ever-accounting' ), esc_html( $account->formatted_balance ) ); ?></p>
 			<?php if ( $account->number ) : ?>
-				<p class="small"><?php printf( '%1$s %2$s', __( 'Account Number:', 'wp-ever-accounting' ), esc_html( $account->number ) ); ?></p>
+				<p class="small"><?php printf( '%1$s %2$s', __( 'Account #:', 'wp-ever-accounting' ), esc_html( $account->number ) ); ?></p>
 			<?php endif; ?>
-			<p class="small"><?php printf( '%1$s %2$s', __( 'Balance:', 'wp-ever-accounting' ), esc_html( $account->balance ) ); ?></p>
 			<p class="small">
 				<?php // translators: %s: date. ?>
-				<?php printf( esc_html__( 'Since %s', 'wp-ever-accounting' ), esc_html( wp_date( get_option( 'date_format' ), strtotime( $account->created_at ) ) ) ); ?>
+				<?php printf( esc_html__( 'Since %s', 'wp-ever-accounting' ), esc_html( wp_date( eac_date_format(), strtotime( $account->created_at ) ) ) ); ?>
 			</p>
 		</div>
 	</div>
