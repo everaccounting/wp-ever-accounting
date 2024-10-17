@@ -13,6 +13,7 @@ defined( 'ABSPATH' ) || exit;
  * @subpackage Models
  *
  * @property int    $vendor_id ID of the vendor.
+ * @property int    $bill_id ID of the bill.
  *
  * @property-read string $formatted_status Formatted status.
  * @property-read string $payment_method_name Formatted mode.

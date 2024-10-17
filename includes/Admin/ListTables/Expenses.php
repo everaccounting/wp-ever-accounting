@@ -129,6 +129,72 @@ class Expenses extends ListTable {
 	}
 
 	/**
+	 * handle bulk pending action.
+	 *
+	 * @param array $ids List of item IDs.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	protected function bulk_set_pending( $ids ) {
+		$performed = 0;
+		foreach ( $ids as $id ) {
+			$expense = EAC()->expenses->get( $id );
+			if ( ! is_wp_error( $expense->set( 'status', 'pending' )->save() ) ) {
+				++ $performed;
+			}
+		}
+		if ( ! empty( $performed ) ) {
+			// translators: %s: number of items deleted.
+			EAC()->flash->success( sprintf( __( '%s expense(s) status updated to pending successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
+		}
+	}
+
+	/**
+	 * handle bulk refunded action.
+	 *
+	 * @param array $ids List of item IDs.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	protected function bulk_set_refunded( $ids ) {
+		$performed = 0;
+		foreach ( $ids as $id ) {
+			$expense = EAC()->expenses->get( $id );
+			if ( ! is_wp_error( $expense->set( 'status', 'refunded' )->save() ) ) {
+				++ $performed;
+			}
+		}
+		if ( ! empty( $performed ) ) {
+			// translators: %s: number of items deleted.
+			EAC()->flash->success( sprintf( __( '%s expense(s) status updated to refunded successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
+		}
+	}
+
+	/**
+	 * handle bulk cancelled action.
+	 *
+	 * @param array $ids List of item IDs.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	protected function bulk_set_cancelled( $ids ) {
+		$performed = 0;
+		foreach ( $ids as $id ) {
+			$expense = EAC()->expenses->get( $id );
+			if ( ! is_wp_error( $expense->set( 'status', 'cancelled' )->save() ) ) {
+				++ $performed;
+			}
+		}
+		if ( ! empty( $performed ) ) {
+			// translators: %s: number of items deleted.
+			EAC()->flash->success( sprintf( __( '%s expense(s) status updated to cancelled successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
+		}
+	}
+
+	/**
 	 * Outputs 'no results' message.
 	 *
 	 * @since 1.0.0
@@ -301,11 +367,11 @@ class Expenses extends ListTable {
 			esc_url(
 				add_query_arg(
 					array(
-						'date' => $item->date,
+						'date' => $item->paid_at,
 					)
 				)
 			),
-			wp_kses_post( $item->date )
+			wp_kses_post( $item->paid_at )
 		);
 	}
 

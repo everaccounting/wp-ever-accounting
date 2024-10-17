@@ -53,7 +53,7 @@ $expense = Expense::make( $id );
 						array(
 							'label'       => __( 'Date', 'wp-ever-accounting' ),
 							'type'        => 'date',
-							'name'        => 'date',
+							'name'        => 'paid_at',
 							'placeholder' => 'yyyy-mm-dd',
 							'value'       => $expense->paid_at,
 							'required'    => true,
@@ -91,7 +91,7 @@ $expense = Expense::make( $id );
 							'required'         => true,
 							'suffix'           => sprintf(
 								'<a class="addon" href="%s" target="_blank" title="%s"><span class="dashicons dashicons-plus"></span></a>',
-								esc_url( admin_url( 'admin.php?page=eac-banking&tab=accounts&add=yes' ) ),
+								esc_url( admin_url( 'admin.php?page=eac-banking&tab=accounts&action=add' ) ),
 								__( 'Add Account', 'wp-ever-accounting' )
 							),
 						)
@@ -143,7 +143,7 @@ $expense = Expense::make( $id );
 							'data-subtype'     => 'expense',
 							'suffix'           => sprintf(
 								'<a class="addon" href="%s" target="_blank" title="%s"><span class="dashicons dashicons-plus"></span></a>',
-								esc_url( admin_url( 'admin.php?page=eac-misc&tab=categories&add=yes&type=income' ) ),
+								esc_url( admin_url( 'admin.php?page=eac-settings&tab=categories&action=add&type=expense' ) ),
 								__( 'Add Category', 'wp-ever-accounting' )
 							),
 						)

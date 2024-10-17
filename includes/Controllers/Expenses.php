@@ -85,8 +85,8 @@ class Expenses {
 		return apply_filters(
 			'eac_expense_statuses',
 			array(
-				'pending'   => esc_html__( 'Pending', 'wp-ever-accounting' ),
 				'completed' => esc_html__( 'Completed', 'wp-ever-accounting' ),
+				'pending'   => esc_html__( 'Pending', 'wp-ever-accounting' ),
 				'refunded'  => esc_html__( 'Refunded', 'wp-ever-accounting' ),
 				'cancelled' => esc_html__( 'Cancelled', 'wp-ever-accounting' ),
 			)

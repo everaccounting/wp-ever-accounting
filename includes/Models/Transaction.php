@@ -16,6 +16,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @property int             $id ID of the item.
  * @property string          $type Type of the transaction.
+ * @property string          $status Status of the transaction.
  * @property string          $number Number of the transaction.
  * @property string          $paid_at Date of the transaction.
  * @property double          $amount Amount of the transaction.
@@ -29,16 +30,15 @@ defined( 'ABSPATH' ) || exit;
  * @property int             $contact_id Contact ID of the transaction.
  * @property int             $category_id Category ID of the transaction.
  * @property int             $attachment_id Attachment ID of the transaction.
+ * @property int			 $author_id Author ID of the transaction.
  * @property int             $parent_id Parent ID of the transaction.
  * @property bool            $reconciled Whether the transaction is reconciled.
  * @property string          $created_via Created via of the transaction.
- * @property int             $creator_id Author ID of the transaction.
- * @property string          $status Status of the transaction.
  * @property string          $uuid UUID of the transaction.
- * @property string          $created_at Date the transaction was created.
  * @property string          $updated_at Date the transaction was last updated.
+ * @property string          $created_at Date the transaction was created.
  *
- * @property-read  string    $formatted_amount Formatted amount of the transaction.
+ * @property-read string     $formatted_amount Formatted amount of the transaction.
  * @property-read Document   $document Related document.
  * @property-read Account    $account Related account.
  * @property-read Category   $category Related category.
@@ -73,6 +73,7 @@ class Transaction extends Model {
 	protected $columns = array(
 		'id',
 		'type',
+		'status',
 		'number',
 		'paid_at',
 		'amount',
@@ -86,11 +87,13 @@ class Transaction extends Model {
 		'contact_id',
 		'category_id',
 		'attachment_id',
+		'author_id',
 		'parent_id',
 		'reconciled',
-		'status',
+		'created_via',
 		'uuid',
-		'created_via'
+		'updated_at',
+		'created_at',
 	);
 
 	/**
@@ -114,16 +117,26 @@ class Transaction extends Model {
 	 */
 	protected $casts = array(
 		'id'            => 'int',
+		'type'          => 'sanitize_text',
+		'status'        => 'sanitize_text',
+		'number'        => 'sanitize_text',
 		'paid_at'       => 'date',
 		'amount'        => 'float',
+		'currency'      => 'sanitize_text',
 		'exchange_rate' => 'double',
+		'reference'     => 'sanitize_text',
+		'note'          => 'sanitize_textarea',
+		'payment_method' => 'sanitize_text',
 		'account_id'    => 'int',
 		'document_id'   => 'int',
 		'contact_id'    => 'int',
 		'category_id'   => 'int',
 		'attachment_id' => 'int',
+		'author_id'     => 'int',
 		'parent_id'     => 'int',
 		'reconciled'    => 'bool',
+		'created_via'   => 'sanitize_text',
+		'uuid'          => 'sanitize_text',
 	);
 
 	/**
@@ -199,31 +212,6 @@ class Transaction extends Model {
 	 */
 	protected function get_formatted_amount() {
 		return eac_format_amount( $this->amount, $this->currency );
-	}
-
-	/**
-	 * Get formatted address.
-	 *
-	 * @since 1.0.0
-	 * @return string
-	 */
-	protected function get_formatted_address() {
-		if ( empty( $this->contact ) ) {
-			return '';
-		}
-
-		// return eac_get_formatted_address(
-		// array(
-		// 'name'      => $contact->get_name(),
-		// 'company'   => $contact->get_company(),
-		// 'address_1' => $contact->get_address_1(),
-		// 'address_2' => $contact->get_address_2(),
-		// 'city'      => $contact->get_city(),
-		// 'state'     => $contact->get_state(),
-		// 'postcode'  => $contact->get_postcode(),
-		// 'country'   => $contact->get_country(),
-		// )
-		// );
 	}
 
 	/**
@@ -311,8 +299,8 @@ class Transaction extends Model {
 			$this->uuid = wp_generate_uuid4();
 		}
 
-		if ( empty( $this->creator_id ) && is_user_logged_in() ) {
-			$this->creator_id = get_current_user_id();
+		if ( empty( $this->author_id ) && is_user_logged_in() ) {
+			$this->author_id = get_current_user_id();
 		}
 
 		return parent::save();
