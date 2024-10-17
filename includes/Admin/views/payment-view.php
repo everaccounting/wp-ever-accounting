@@ -29,7 +29,7 @@ $payment = EAC()->payments->get( $id );
 	<a href="<?php echo esc_url( $payment->get_edit_url() ); ?>" class="page-title-action"><?php esc_html_e( 'Edit Payment', 'wp-ever-accounting' ); ?></a>
 </div>
 
-<form id="eac-update-payment" name="payment" method="post">
+<form id="eac-update-payment" name="payment" method="post" action="<?php echo esc_html( admin_url( 'admin-post.php' ) ); ?>">
 
 	<div class="eac-poststuff">
 

@@ -17,7 +17,8 @@ class Payments {
 	 */
 	public function __construct() {
 		add_filter( 'eac_sales_page_tabs', array( __CLASS__, 'register_tabs' ) );
-		add_action( 'eac_sales_page_payments_loaded', array( __CLASS__, 'handle_actions' ) );
+		add_action( 'admin_post_eac_edit_payment', array( __CLASS__, 'handle_edit' ) );
+		add_action( 'admin_post_eac_update_payment', array( __CLASS__, 'handle_update' ) );
 		add_action( 'eac_sales_page_payments_loaded', array( __CLASS__, 'page_loaded' ) );
 		add_action( 'eac_sales_page_payments_content', array( __CLASS__, 'page_content' ) );
 		add_action( 'eac_payment_edit_side_meta_boxes', array( __CLASS__, 'payment_attachment' ) );
@@ -43,93 +44,114 @@ class Payments {
 	}
 
 	/**
-	 * Handle actions.
+	 * Handle edit.
 	 *
 	 * @since 1.0.0
 	 * @return void
 	 */
-	public static function handle_actions() {
-		if ( isset( $_POST['action'] ) && 'eac_edit_payment' === $_POST['action'] && check_admin_referer( 'eac_edit_payment' ) && current_user_can( 'eac_manage_payment' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability.
-			$referer = wp_get_referer();
-			$data    = array(
-				'id'            => isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0,
-				'date'          => isset( $_POST['date'] ) ? sanitize_text_field( wp_unslash( $_POST['date'] ) ) : '',
-				'account_id'    => isset( $_POST['account_id'] ) ? absint( wp_unslash( $_POST['account_id'] ) ) : 0,
-				'amount'        => isset( $_POST['amount'] ) ? floatval( wp_unslash( $_POST['amount'] ) ) : 0,
-				'exchange_rate' => isset( $_POST['exchange_rate'] ) ? floatval( wp_unslash( $_POST['exchange_rate'] ) ) : 1,
-				'category_id'   => isset( $_POST['category_id'] ) ? absint( wp_unslash( $_POST['category_id'] ) ) : 0,
-				'contact_id'    => isset( $_POST['contact_id'] ) ? absint( wp_unslash( $_POST['contact_id'] ) ) : 0,
-				'attachment_id' => isset( $_POST['attachment_id'] ) ? absint( wp_unslash( $_POST['attachment_id'] ) ) : 0,
-				'payment_method'  => isset( $_POST['payment_method'] ) ? sanitize_text_field( wp_unslash( $_POST['payment_method'] ) ) : '',
-				'invoice_id'    => isset( $_POST['invoice_id'] ) ? absint( wp_unslash( $_POST['invoice_id'] ) ) : 0,
-				'reference'     => isset( $_POST['reference'] ) ? sanitize_text_field( wp_unslash( $_POST['reference'] ) ) : '',
-				'note'          => isset( $_POST['note'] ) ? sanitize_textarea_field( wp_unslash( $_POST['note'] ) ) : '',
-				'status'        => isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : 'active',
-			);
-			$payment = EAC()->payments->insert( $data );
-			if ( is_wp_error( $payment ) ) {
-				EAC()->flash->error( $payment->get_error_message() );
+	public static function handle_edit() {
+		check_admin_referer( 'eac_edit_payment' );
+		if ( ! current_user_can( 'eac_manage_payment' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability.
+			wp_die( esc_html__( 'You do not have permission to edit payments.', 'wp-ever-accounting' ) );
+		}
+
+		$referer = wp_get_referer();
+		$data    = array(
+			'id'             => isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0,
+			'paid_at'        => isset( $_POST['paid_at'] ) ? sanitize_text_field( wp_unslash( $_POST['paid_at'] ) ) : '',
+			'account_id'     => isset( $_POST['account_id'] ) ? absint( wp_unslash( $_POST['account_id'] ) ) : 0,
+			'amount'         => isset( $_POST['amount'] ) ? floatval( wp_unslash( $_POST['amount'] ) ) : 0,
+			'exchange_rate'  => isset( $_POST['exchange_rate'] ) ? floatval( wp_unslash( $_POST['exchange_rate'] ) ) : 1,
+			'category_id'    => isset( $_POST['category_id'] ) ? absint( wp_unslash( $_POST['category_id'] ) ) : 0,
+			'contact_id'     => isset( $_POST['contact_id'] ) ? absint( wp_unslash( $_POST['contact_id'] ) ) : 0,
+			'attachment_id'  => isset( $_POST['attachment_id'] ) ? absint( wp_unslash( $_POST['attachment_id'] ) ) : 0,
+			'payment_method' => isset( $_POST['payment_method'] ) ? sanitize_text_field( wp_unslash( $_POST['payment_method'] ) ) : '',
+			'invoice_id'     => isset( $_POST['invoice_id'] ) ? absint( wp_unslash( $_POST['invoice_id'] ) ) : 0,
+			'reference'      => isset( $_POST['reference'] ) ? sanitize_text_field( wp_unslash( $_POST['reference'] ) ) : '',
+			'note'           => isset( $_POST['note'] ) ? sanitize_textarea_field( wp_unslash( $_POST['note'] ) ) : '',
+			'status'         => isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : 'active',
+		);
+
+		$payment = EAC()->payments->insert( $data );
+		if ( is_wp_error( $payment ) ) {
+			EAC()->flash->error( $payment->get_error_message() );
+		} else {
+			EAC()->flash->success( __( 'Payment saved successfully.', 'wp-ever-accounting' ) );
+			$referer = add_query_arg( 'id', $payment->id, $referer );
+			$referer = add_query_arg( 'action', 'view', $referer );
+			$referer = remove_query_arg( array( 'add' ), $referer );
+		}
+
+		wp_safe_redirect( $referer );
+		exit;
+	}
+
+	/**
+	 * Handle update.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public static function handle_update() {
+		check_admin_referer( 'eac_update_payment' );
+		if ( ! current_user_can( 'eac_manage_payment' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability.
+			wp_die( esc_html__( 'You do not have permission to update payments.', 'wp-ever-accounting' ) );
+		}
+
+		$referer        = wp_get_referer();
+		$id             = isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0;
+		$status         = isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : '';
+		$attachment_id  = isset( $_POST['attachment_id'] ) ? absint( wp_unslash( $_POST['attachment_id'] ) ) : 0;
+		$payment_action = isset( $_POST['payment_action'] ) ? sanitize_text_field( wp_unslash( $_POST['payment_action'] ) ) : '';
+		$payment        = EAC()->payments->get( $id );
+
+		// bail if payment is not found.
+		if ( ! $payment ) {
+			EAC()->flash->error( __( 'Payment not found.', 'wp-ever-accounting' ) );
+
+			return;
+		}
+
+		// Update payment status.
+		if ( ! empty( $status ) && $status !== $payment->status ) {
+			$payment->status = $status;
+		}
+
+		// Update payment attachment.
+		if ( $attachment_id !== $payment->attachment_id ) {
+			$payment->attachment_id = $attachment_id;
+		}
+
+		if ( $payment->is_dirty() && $payment->save() ) {
+			$ret = $payment->save();
+			if ( is_wp_error( $ret ) ) {
+				EAC()->flash->error( $ret->get_error_message() );
 			} else {
-				EAC()->flash->success( __( 'Payment saved successfully.', 'wp-ever-accounting' ) );
-				$referer = add_query_arg( 'id', $payment->id, $referer );
-				$referer = add_query_arg( 'action', 'view', $referer );
-				$referer = remove_query_arg( array( 'add' ), $referer );
-			}
-			wp_safe_redirect( $referer );
-			exit;
-		}
-		if ( isset( $_POST['action'] ) && 'eac_update_payment' === $_POST['action'] && check_admin_referer( 'eac_update_payment' ) && current_user_can( 'eac_manage_payment' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability.}
-			$id             = isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0;
-			$status         = isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : '';
-			$attachment_id  = isset( $_POST['attachment_id'] ) ? absint( wp_unslash( $_POST['attachment_id'] ) ) : 0;
-			$payment_action = isset( $_POST['payment_action'] ) ? sanitize_text_field( wp_unslash( $_POST['payment_action'] ) ) : '';
-			$payment        = EAC()->payments->get( $id );
-
-			// bail if payment is not found.
-			if ( ! $payment ) {
-				EAC()->flash->error( __( 'Payment not found.', 'wp-ever-accounting' ) );
-
-				return;
-			}
-
-			// Update payment status.
-			if ( ! empty( $status ) && $status !== $payment->status ) {
-				$payment->status = $status;
-			}
-
-			// Update payment attachment.
-			if ( $attachment_id !== $payment->attachment_id ) {
-				$payment->attachment_id = $attachment_id;
-			}
-
-			if ( $payment->is_dirty() && $payment->save() ) {
-				$ret = $payment->save();
-				if ( is_wp_error( $ret ) ) {
-					EAC()->flash->error( $ret->get_error_message() );
-				} else {
-					EAC()->flash->success( __( 'Payment updated successfully.', 'wp-ever-accounting' ) );
-				}
-			}
-
-			// todo handle payment action.
-			if ( ! empty( $payment_action ) ) {
-				switch ( $payment_action ) {
-					case 'send_receipt':
-						// Send payment.
-						break;
-					default:
-						/**
-						 * Fires action to handle custom payment actions.
-						 *
-						 * @param Payment $payment Payment object.
-						 *
-						 * @since 1.0.0
-						 */
-						do_action( 'eac_payment_action_' . $payment_action, $payment );
-						break;
-				}
+				EAC()->flash->success( __( 'Payment updated successfully.', 'wp-ever-accounting' ) );
 			}
 		}
+
+		// todo handle payment action.
+		if ( ! empty( $payment_action ) ) {
+			switch ( $payment_action ) {
+				case 'send_receipt':
+					// Send payment.
+					break;
+				default:
+					/**
+					 * Fires action to handle custom payment actions.
+					 *
+					 * @param Payment $payment Payment object.
+					 *
+					 * @since 1.0.0
+					 */
+					do_action( 'eac_payment_action_' . $payment_action, $payment );
+					break;
+			}
+		}
+
+		wp_safe_redirect( $referer );
+		exit;
 	}
 
 	/**
@@ -209,7 +231,7 @@ class Payments {
 				<h3 class="eac-card__title"><?php esc_html_e( 'Attachment', 'wp-ever-accounting' ); ?></h3>
 			</div>
 			<div class="eac-card__body">
-				<?php eac_file_uploader( array( 'value' => $payment->attachment_id  ) ); ?>
+				<?php eac_file_uploader( array( 'value' => $payment->attachment_id ) ); ?>
 			</div>
 		</div>
 		<?php
@@ -225,7 +247,7 @@ class Payments {
 	 */
 	public static function payment_notes( $payment ) {
 		// bail if payment is not found.
-		if ( ! $payment ->exists() ) {
+		if ( ! $payment->exists() ) {
 			return;
 		}
 		$notes = EAC()->notes->query(

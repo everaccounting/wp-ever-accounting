@@ -18,6 +18,7 @@ class Expenses {
 	public function __construct() {
 		add_filter( 'eac_purchases_page_tabs', array( __CLASS__, 'register_tabs' ) );
 		add_action( 'admin_post_eac_edit_expense', array( __CLASS__, 'handle_edit' ) );
+		add_action( 'admin_post_eac_update_expense', array( __CLASS__, 'handle_update' ) );
 		add_action( 'eac_purchases_page_expenses_loaded', array( __CLASS__, 'page_loaded' ) );
 		add_action( 'eac_purchases_page_expenses_content', array( __CLASS__, 'page_content' ) );
 		add_action( 'eac_expense_edit_side_meta_boxes', array( __CLASS__, 'expense_attachment' ) );
@@ -86,96 +87,71 @@ class Expenses {
 	}
 
 	/**
-	 * Handle actions.
+	 * Handle update.
 	 *
 	 * @since 1.0.0
 	 * @return void
 	 */
-	public static function handle_actions() {
-		if ( isset( $_POST['action'] ) && 'eac_edit_expense' === $_POST['action'] && check_admin_referer( 'eac_edit_expense' ) && current_user_can( 'eac_manage_expense' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability.
-			$referer = wp_get_referer();
-			$data    = array(
-				'id'             => isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0,
-				'date'           => isset( $_POST['date'] ) ? sanitize_text_field( wp_unslash( $_POST['date'] ) ) : '',
-				'account_id'     => isset( $_POST['account_id'] ) ? absint( wp_unslash( $_POST['account_id'] ) ) : 0,
-				'amount'         => isset( $_POST['amount'] ) ? floatval( wp_unslash( $_POST['amount'] ) ) : 0,
-				'exchange_rate'  => isset( $_POST['exchange_rate'] ) ? floatval( wp_unslash( $_POST['exchange_rate'] ) ) : 1,
-				'category_id'    => isset( $_POST['category_id'] ) ? absint( wp_unslash( $_POST['category_id'] ) ) : 0,
-				'contact_id'     => isset( $_POST['contact_id'] ) ? absint( wp_unslash( $_POST['contact_id'] ) ) : 0,
-				'attachment_id'  => isset( $_POST['attachment_id'] ) ? absint( wp_unslash( $_POST['attachment_id'] ) ) : 0,
-				'payment_method' => isset( $_POST['payment_method'] ) ? sanitize_text_field( wp_unslash( $_POST['payment_method'] ) ) : '',
-				'bill_id'        => isset( $_POST['bill_id'] ) ? absint( wp_unslash( $_POST['bill_id'] ) ) : 0,
-				'reference'      => isset( $_POST['reference'] ) ? sanitize_text_field( wp_unslash( $_POST['reference'] ) ) : '',
-				'note'           => isset( $_POST['note'] ) ? sanitize_textarea_field( wp_unslash( $_POST['note'] ) ) : '',
-				'status'         => isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : 'active',
-			);
+	public static function handle_update() {
+		check_admin_referer( 'eac_update_expense' );
+		if ( ! current_user_can( 'eac_manage_expense' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability.
+			wp_die( esc_html__( 'You do not have permission to update expense.', 'wp-ever-accounting' ) );
+		}
 
-			$expense = EAC()->expenses->insert( $data );
-			if ( is_wp_error( $expense ) ) {
-				EAC()->flash->error( $expense->get_error_message() );
+		$referer        = wp_get_referer();
+		$id             = isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0;
+		$status         = isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : '';
+		$attachment_id  = isset( $_POST['attachment_id'] ) ? absint( wp_unslash( $_POST['attachment_id'] ) ) : 0;
+		$expense_action = isset( $_POST['payment_action'] ) ? sanitize_text_field( wp_unslash( $_POST['payment_action'] ) ) : '';
+		$expense        = EAC()->payments->get( $id );
+
+		// bail if payment is not found.
+		if ( ! $expense ) {
+			EAC()->flash->error( __( 'Expense not found.', 'wp-ever-accounting' ) );
+
+			return;
+		}
+
+		// Update payment status.
+		if ( ! empty( $status ) && $status !== $expense->status ) {
+			$expense->status = $status;
+		}
+
+		// Update payment attachment.
+		if ( $attachment_id !== $expense->attachment_id ) {
+			$expense->attachment_id = $attachment_id;
+		}
+
+		if ( $expense->is_dirty() && $expense->save() ) {
+			$ret = $expense->save();
+			if ( is_wp_error( $ret ) ) {
+				EAC()->flash->error( $ret->get_error_message() );
 			} else {
-				EAC()->flash->success( __( 'Expense saved successfully.', 'wp-ever-accounting' ) );
-				$referer = add_query_arg( 'id', $expense->id, $referer );
-				$referer = add_query_arg( 'action', 'view', $referer );
-				$referer = remove_query_arg( array( 'add' ), $referer );
-			}
-
-			wp_safe_redirect( $referer );
-			exit;
-		}
-
-		if ( isset( $_POST['action'] ) && 'eac_update_expense' === $_POST['action'] && check_admin_referer( 'eac_update_expense' ) && current_user_can( 'eac_manage_expense' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability.}
-			$id             = isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0;
-			$status         = isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : '';
-			$attachment_id  = isset( $_POST['attachment_id'] ) ? absint( wp_unslash( $_POST['attachment_id'] ) ) : 0;
-			$expense_action = isset( $_POST['expense_action'] ) ? sanitize_text_field( wp_unslash( $_POST['expense_action'] ) ) : '';
-			$expense        = EAC()->expenses->get( $id );
-
-			// bail if expense is not found.
-			if ( ! $expense ) {
-				EAC()->flash->error( __( 'Expense not found.', 'wp-ever-accounting' ) );
-
-				return;
-			}
-
-			// Update expense status.
-			if ( ! empty( $status ) && $status !== $expense->status ) {
-				$expense->status = $status;
-			}
-
-			// Update expense attachment.
-			if ( $attachment_id !== $expense->attachment_id ) {
-				$expense->attachment_id = $attachment_id;
-			}
-
-			if ( $expense->is_dirty() && $expense->save() ) {
-				$ret = $expense->save();
-				if ( is_wp_error( $ret ) ) {
-					EAC()->flash->error( $ret->get_error_message() );
-				} else {
-					EAC()->flash->success( __( 'Expense updated successfully.', 'wp-ever-accounting' ) );
-				}
-			}
-
-			// todo handle expense action.
-			if ( ! empty( $expense_action ) ) {
-				switch ( $expense_action ) {
-					case 'send_receipt':
-						// Send expense.
-						break;
-					default:
-						/**
-						 * Fires action to handle custom expense actions.
-						 *
-						 * @param Expense $expense Expense object.
-						 *
-						 * @since 1.0.0
-						 */
-						do_action( 'eac_expense_action_' . $expense_action, $expense );
-						break;
-				}
+				EAC()->flash->success( __( 'Expense updated successfully.', 'wp-ever-accounting' ) );
 			}
 		}
+
+		// todo handle expense action.
+		if ( ! empty( $expense_action ) ) {
+			switch ( $expense_action ) {
+				case 'send_receipt':
+					// Send payment.
+					break;
+				default:
+					/**
+					 * Fires action to handle custom expense actions.
+					 *
+					 * @param Expense $expense Expense object.
+					 *
+					 * @since 1.0.0
+					 */
+					do_action( 'eac_expense_action_' . $expense_action, $expense );
+					break;
+			}
+		}
+
+		wp_safe_redirect( $referer );
+		exit;
 	}
 
 	/**

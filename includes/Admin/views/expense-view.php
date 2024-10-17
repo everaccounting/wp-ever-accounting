@@ -29,7 +29,7 @@ $expense = EAC()->expenses->get( $id );
 	<a href="<?php echo esc_url( $expense->get_edit_url() ); ?>" class="page-title-action"><?php esc_html_e( 'Edit Expense', 'wp-ever-accounting' ); ?></a>
 </div>
 
-<form id="eac-update-expense" name="expense" method="post">
+<form id="eac-update-expense" name="expense" method="post"  action="<?php echo esc_html( admin_url( 'admin-post.php' ) ); ?>">
 
 	<div class="eac-poststuff">
 

@@ -38,7 +38,7 @@ $payment = Payment::make( $id );
 	<?php endif; ?>
 </div>
 
-<form id="eac-edit-payment" name="payment" method="post">
+<form id="eac-edit-payment" name="payment" method="post" action="<?php echo esc_html( admin_url( 'admin-post.php' ) ); ?>">
 
 	<div class="eac-poststuff">
 		<div class="column-1">
@@ -52,9 +52,9 @@ $payment = Payment::make( $id );
 						array(
 							'label'       => __( 'Date', 'wp-ever-accounting' ),
 							'type'        => 'date',
-							'name'        => 'date',
+							'name'        => 'paid_at',
 							'placeholder' => 'yyyy-mm-dd',
-							'value'       => $payment->date,
+							'value'       => $payment->paid_at,
 							'required'    => true,
 							'class'       => 'eac_datepicker',
 						)
@@ -195,7 +195,7 @@ $payment = Payment::make( $id );
 								'disabled'     => true,
 							)
 						);
-						printf( '<input type="hidden" name="invoice_id" value="%d">', $payment->document_id );
+						printf( '<input type="hidden" name="invoice_id" value="%d">', esc_attr( $payment->document_id ) );
 					}
 
 					eac_form_field(
