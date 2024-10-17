@@ -2,6 +2,8 @@
 
 namespace EverAccounting\Admin;
 
+use EverAccounting\Utilities\NumberUtil;use EverAccounting\Utilities\ReportsUtil;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -47,61 +49,47 @@ class Dashboard {
 	 */
 	public static function overview_widget() {
 		global $wpdb;
-		$stats = apply_filters(
-			'eac_dashboard_overview_stats',
-			array()
-		);
+		$report  = ReportsUtil::get_profits_report( date( 'Y' ) );
+		$delta  =  (array_sum( $report['profits'] ) / array_sum( $report['payments'] )) * 100;
+		$stats   = apply_filters( 'eac_dashboard_overview_stats', array(
+			array(
+				'label' => __( 'Income', 'wp-ever-accounting' ),
+				'value' => eac_format_amount( array_sum( $report['payments'] ) ),
+			),
+			array(
+				'label' => __( 'Expenses', 'wp-ever-accounting' ),
+				'value' => eac_format_amount( array_sum( $report['expenses'] ) ),
+			),
+			array(
+				'label' => __( 'Profit/Loss', 'wp-ever-accounting' ),
+				'value' => eac_format_amount( array_sum( $report['profits'] ) ),
+				'delta' => number_format( $delta, 2 ),
+			),
+		) );
 
-		// prepare the chart data. get all the transactions for the current year where the id is not exist in the transfers table in payment_id and expense_id columns.
-		$transactions = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT
-				MONTH(t.paid_at) AS month,
-				SUM(CASE WHEN t.type = 'payment' AND t.status = 'completed' THEN t.amount / t.exchange_rate ELSE 0 END) AS sales,
-				SUM(CASE WHEN t.type = 'expense' AND t.status = 'completed' THEN t.amount / t.exchange_rate ELSE 0 END) AS expenses
-		 		FROM {$wpdb->prefix}ea_transactions AS t
-		 		LEFT JOIN {$wpdb->prefix}ea_transfers AS it ON t.id = it.payment_id OR t.id = it.expense_id
-		 		WHERE YEAR(`paid_at`) = %d
-		 		AND it.id IS NULL
-		 		GROUP BY MONTH(`paid_at`)",
-				date( 'Y' )
-			)
-		);
-		// now prepare the data for the chart we have add the profit and loss data too by subtracting the expenses from the sales.
-		$labels   = array();
-		$sales    = array();
-		$expenses = array();
-		$profits  = array();
-		foreach ( $transactions as $transaction ) {
-			$labels[]   = wp_date( 'F', mktime( 0, 0, 0, $transaction->month, 1 ) );
-			$sales[]    = $transaction->sales;
-			$expenses[] = $transaction->expenses;
-			$profits[]  = $transaction->sales - $transaction->expenses;
-		}
-
-		$chart_data = array(
-			'labels'   => $labels,
+		$datasets = array(
+			'labels'   => array_keys( $report['payments'] ),
 			'datasets' => array(
 				array(
 					'label'           => __( 'Sales', 'wp-ever-accounting' ),
 					'backgroundColor' => 'transparent',
 					'borderColor'     => 'rgba(54, 162, 235, 1)',
 					'borderWidth'     => 2,
-					'data'            => $sales,
+					'data'            => array_values( $report['payments'] ),
 				),
 				array(
 					'label'           => __( 'Expenses', 'wp-ever-accounting' ),
 					'backgroundColor' => 'transparent',
 					'borderColor'     => 'rgba(255, 99, 132, 1)',
 					'borderWidth'     => 2,
-					'data'            => $expenses,
+					'data'            => array_values( $report['expenses'] ),
 				),
 				array(
 					'label'           => __( 'Profit/Loss', 'wp-ever-accounting' ),
 					'backgroundColor' => 'transparent',
 					'borderColor'     => 'rgba(75, 192, 192, 1)',
 					'borderWidth'     => 2,
-					'data'            => $profits,
+					'data'            => array_values( $report['profits'] ),
 				),
 			)
 		);
@@ -112,25 +100,7 @@ class Dashboard {
 				<?php esc_html_e( 'Overview', 'wp-ever-accounting' ); ?>
 			</div>
 			<div class="eac-card__body">
-				<div class="tw-flex tw-flex-col-reverse lg:tw-flex-row tw-mt-3">
-					<div class="tw-w-full lg:tw-w-11/12">
-						<canvas id="eac-overview-chart" style="min-height: 300px;"></canvas>
-					</div>
-					<div class="tw-w-full lg:tw-w-1/12 tw-flex tw-flex-row lg:tw-flex-col tw-items-center tw-justify-center tw-space-y-0 sm:tw-space-y-4 tw-gap-2">
-						<div class="tw-relative tw-w-32 lg:tw-w-auto tw-flex tw-flex-col tw-items-center sm:tw-justify-between tw-text-center tw-text-[#36a2eb]">
-							<div class="tw-flex tw-justify-end lg:tw-block tw-text-lg">$2.15K</div>
-							<span class="tw-text-green tw-text-xs lg:tw-block">Incoming</span>
-						</div>
-						<div class="tw-relative tw-w-32 lg:tw-w-auto tw-flex tw-flex-col tw-items-center sm:tw-justify-between tw-text-center tw-text-[#FF6384]">
-							<div class="tw-flex tw-justify-end lg:tw-block tw-text-lg">$2.15K</div>
-							<span class="tw-text-green tw-text-xs lg:tw-block">Incoming</span>
-						</div>
-						<div class="tw-relative tw-w-32 lg:tw-w-auto tw-flex tw-flex-col tw-items-center sm:tw-justify-between tw-text-center tw-text-[#4BC0C0]">
-							<div class="tw-flex tw-justify-end lg:tw-block tw-text-lg">$2.15K</div>
-							<span class="tw-text-green tw-text-xs lg:tw-block">Incoming</span>
-						</div>
-					</div>
-				</div>
+				<canvas id="eac-overview-chart" style="min-height: 300px;"></canvas>
 			</div>
 		</div>
 		<div class="eac-stats stats--3">
@@ -156,24 +126,53 @@ class Dashboard {
 		</div>
 		<script type="text/javascript">
 			jQuery(document).ready(function ($) {
+				var symbol = "<?php echo esc_html( EAC()->currencies->get_symbol() ); ?>";
 				var ctx = document.getElementById('eac-overview-chart').getContext('2d');
 				var myChart = new Chart(ctx, {
 					type: 'line',
-					data: <?php echo wp_json_encode( $chart_data ); ?>,
+					data: <?php echo wp_json_encode( $datasets ); ?>,
 					options: {
-						responsive: true,
-						maintainAspectRatio: false,
-						legend: {
-							display: true,
+						tooltips: {
+							displayColors: true,
+							YrPadding: 12,
+							backgroundColor: "#000000",
+							bodyFontColor: "#e5e5e5",
+							bodySpacing: 4,
+							intersect: 0,
+							mode: "nearest",
+							position: "nearest",
+							titleFontColor: "#ffffff",
+							callbacks: {
+								label: function (tooltipItem, data) {
+									let value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+									let datasetLabel = data.datasets[tooltipItem.datasetIndex].label || '';
+									return datasetLabel + ': ' + value.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') + symbol;
+								}
+							}
 						},
 						scales: {
+							xAxes: [{
+								stacked: false,
+								gridLines: {
+									display: true,
+								}
+							}],
 							yAxes: [{
+								stacked: false,
 								ticks: {
 									beginAtZero: true,
+									callback: function (value, index, ticks) {
+										return Number(value).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') + symbol;
+									}
 								},
-							}],
+								type: 'linear',
+								barPercentage: 0.4
+							}]
 						},
-					},
+						responsive: true,
+						maintainAspectRatio: false,
+						legend: {display: false},
+					}
 				});
 			});
 		</script>
@@ -433,28 +432,58 @@ class Dashboard {
 	public static function top_customers() {
 		global $wpdb;
 		// we will query documents table where type is invoice and status is paid. then we will get the items from document items table.
-//		$customers = $wpdb->get_results(
-//			$wpdb->prepare(
-//				"SELECT customer_id, SUM(amount / exchange_rate) AS amount
-//				 FROM {$wpdb->prefix}ea_transactions
-//				 WHERE type = %s AND status = %s
-//				 WHERE d.type = %s AND d.status = %s
-//				 GROUP BY d.contact_id
-//				 ORDER BY amount DESC
-//		 		LIMIT 5",
-//				'invoice',
-//				'paid'
-//			)
-//		);
+		$payments = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT contact_id, SUM(amount / exchange_rate) AS amount
+				 FROM {$wpdb->prefix}ea_transactions
+				 WHERE type = 'payment' AND status = 'completed'
+				 GROUP BY contact_id
+				 ORDER BY amount DESC LIMIT %d",
+				5
+			)
+		);
 
+		$customers = array();
+		foreach ( $payments as $payment ) {
+			$customer = EAC()->customers->get( $payment->contact_id );
+			if ( $customer ) {
+				$customer->amount = $payment->amount;
+				$customers[]      = $customer;
+			}
+		}
 		?>
 		<div class="eac-card is--widget">
 			<div class="eac-card__header">
 				<?php esc_html_e( 'Top Customers', 'wp-ever-accounting' ); ?>
 			</div>
-			<div class="eac-card__body">
-				<p><?php esc_html_e( 'Coming soon!', 'wp-ever-accounting' ); ?></p>
-			</div>
+			<table class="eac-table is--fixed">
+				<thead>
+				<tr>
+					<th><?php esc_html_e( 'Customer', 'wp-ever-accounting' ); ?></th>
+					<th><?php esc_html_e( 'Amount', 'wp-ever-accounting' ); ?></th>
+				</tr>
+				</thead>
+				<tbody>
+				<?php if ( ! empty( $customers ) ) : ?>
+					<?php foreach ( $customers as $customer ) : ?>
+						<tr>
+							<td>
+								<a href="<?php echo esc_url( $customer->get_view_url() ); ?>">
+									<?php echo esc_html( $customer->formatted_name ); ?>
+								</a>
+							</td>
+							<td><?php echo esc_html( eac_format_amount( $customer->amount ) ); ?></td>
+						</tr>
+					<?php endforeach; ?>
+				<?php else : ?>
+					<tr>
+						<td colspan="2">
+							<p><?php esc_html_e( 'No customers found.', 'wp-ever-accounting' ); ?></p>
+						</td>
+					</tr>
+				<?php endif; ?>
+				</tbody>
+			</table>
 		</div>
 		<?php
 	}
@@ -467,28 +496,62 @@ class Dashboard {
 	 */
 	public static function top_vendors() {
 		global $wpdb;
-		// we will query documents table where type is invoice and status is paid. then we will get the items from document items table.
-		$vendors = $wpdb->get_results(
+		// we will query documents table where type is bill and status is paid. then we will get the items from document items table.
+		$expenses = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT contact_id, SUM(amount / exchange_rate) AS amount
 				 FROM {$wpdb->prefix}ea_transactions
 				 WHERE type = 'expense' AND status = 'completed'
 				 GROUP BY contact_id
-				 ORDER BY amount DESC
-		 		LIMIT %d",
+				 ORDER BY amount DESC LIMIT %d",
 				5
 			)
 		);
 
+		$vendors = array();
+		foreach ( $expenses as $expense ) {
+			$vendor = EAC()->vendors->get( $expense->contact_id );
+			if ( $vendor ) {
+				$vendor->amount = $expense->amount;
+				$vendors[]      = $vendor;
+			}
+		}
 		?>
 		<div class="eac-card is--widget">
 			<div class="eac-card__header">
 				<?php esc_html_e( 'Top Vendors', 'wp-ever-accounting' ); ?>
 			</div>
-			<div class="eac-card__body">
-				<p><?php esc_html_e( 'Coming soon!', 'wp-ever-accounting' ); ?></p>
-			</div>
+			<table class="eac-table is--fixed">
+				<thead>
+				<tr>
+					<th><?php esc_html_e( 'Vendor', 'wp-ever-accounting' ); ?></th>
+					<th><?php esc_html_e( 'Amount', 'wp-ever-accounting' ); ?></th>
+				</tr>
+				</thead>
+				<tbody>
+				<?php if ( ! empty( $vendors ) ) : ?>
+					<?php foreach ( $vendors as $vendor ) : ?>
+						<tr>
+							<td>
+								<a href="<?php echo esc_url( $vendor->get_view_url() ); ?>">
+									<?php echo esc_html( $vendor->formatted_name ); ?>
+								</a>
+							</td>
+							<td><?php echo esc_html( eac_format_amount( $vendor->amount ) ); ?></td>
+						</tr>
+					<?php endforeach; ?>
+				<?php else : ?>
+					<tr>
+						<td colspan="2">
+							<p><?php esc_html_e( 'No vendors found.', 'wp-ever-accounting' ); ?></p>
+						</td>
+					</tr>
+				<?php endif; ?>
+				</tbody>
+			</table>
+
 		</div>
+
 		<?php
 	}
 }

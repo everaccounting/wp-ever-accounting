@@ -23,7 +23,7 @@ class Profits {
 	public static function render() {
 		wp_verify_nonce( '_wpnonce' );
 		$year     = ! empty( $_GET['year'] ) ? absint( $_GET['year'] ) : wp_date( 'Y' );
-		$data     = ReportsUtil::get_profit_report( $year );
+		$data     = ReportsUtil::get_profits_report( $year );
 		$labels   = array_keys( $data['profits'] );
 		$datasets = array(
 			'profits' => array(

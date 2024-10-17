@@ -290,13 +290,15 @@ class ReportsUtil {
 		$summery       = array();
 		$total_payment = 0;
 		$date          = wp_date( 'M, y' );
-		$payments      = eac_get_payment_report();
+		$payments      = self::get_payments_report();
+
+		var_dump($payments);
 
 		if ( ! empty( $payments ) && isset( $payments['months'] ) && isset( $payments['months'][ $date ] ) ) {
 			$total_payment = $payments['months'][ $date ];
 		}
-
-		$summery['total'] = $total_payment;
+//
+//		$summery['total'] = $total_payment;
 
 		return apply_filters( 'ever_accounting_sales_summary', $summery );
 	}
@@ -347,7 +349,7 @@ class ReportsUtil {
 	 */
 	public static function get_payments_report( $year = null, $force = false ) {
 		global $wpdb;
-		$reports     = get_transient( 'eac_payment_reports' );
+		$reports     = get_transient( 'eac_payments_report' );
 		$reports     = ! is_array( $reports ) ? array() : $reports;
 		$year        = empty( $year ) ? wp_date( 'Y' ) : $year;
 		$start_date  = eac_get_year_start_date( $year );
@@ -357,20 +359,18 @@ class ReportsUtil {
 		if ( $force || empty( $reports[ $year ] ) ) {
 			$transactions = $wpdb->get_results(
 				$wpdb->prepare(
-					"SELECT (t.amount/t.exchange_rate) amount, MONTH(t.date) AS month, YEAR(t.date) AS year, t.category_id
-		FROM {$wpdb->prefix}ea_transactions AS t
-		LEFT JOIN {$wpdb->prefix}ea_transfers AS it ON t.id = it.payment_id
-		LEFT JOIN {$wpdb->prefix}ea_transfers AS et ON t.id = et.expense_id
-		WHERE t.type = 'payment'
-		AND it.payment_id IS NULL
-		AND et.expense_id IS NULL
-		AND t.date BETWEEN %s AND %s
-		ORDER BY t.date ASC",
+					"SELECT (t.amount/t.exchange_rate) amount, MONTH(t.paid_at) AS month, YEAR(t.paid_at) AS year, t.category_id
+					FROM {$wpdb->prefix}ea_transactions AS t
+					LEFT JOIN {$wpdb->prefix}ea_transfers AS it ON t.id = it.payment_id OR t.id = it.expense_id
+					WHERE t.type = 'payment'
+					AND it.payment_id IS NULL
+					AND it.expense_id IS NULL
+					AND t.paid_at BETWEEN %s AND %s
+					ORDER BY t.paid_at ASC",
 					$start_date,
 					$end_date
 				)
 			);
-
 			$months      = array_fill_keys( self::get_months_in_range( $start_date, $end_date, $date_format ), 0 );
 			$month_count = count( $months );
 			$date_count  = count( self::get_dates_range( $start_date, $end_date ) );
@@ -417,7 +417,7 @@ class ReportsUtil {
 
 			$reports[ $year ] = apply_filters( 'eac_payments_report', $data, $year );
 			// Cache for 1 hour.
-			set_transient( 'eac_payment_reports', $reports, HOUR_IN_SECONDS );
+			set_transient( 'eac_payments_report', $reports, HOUR_IN_SECONDS );
 		}
 
 		return $reports[ $year ];
@@ -432,9 +432,9 @@ class ReportsUtil {
 	 * @return array
 	 * @since 1.0.0
 	 */
-	public static function get_expense_report( $year = null, $force = false ) {
+	public static function get_expenses_report( $year = null, $force = false ) {
 		global $wpdb;
-		$reports     = get_transient( 'eac_expense_reports' );
+		$reports     = get_transient( 'get_expenses_report' );
 		$reports     = ! is_array( $reports ) ? array() : $reports;
 		$year        = empty( $year ) ? wp_date( 'Y' ) : $year;
 		$start_date  = eac_get_year_start_date( $year );
@@ -444,15 +444,14 @@ class ReportsUtil {
 		if ( $force || ! isset( $reports[ $year ] ) ) {
 			$transactions = $wpdb->get_results(
 				$wpdb->prepare(
-					"SELECT (t.amount/t.exchange_rate) amount, MONTH(t.date) AS month, YEAR(t.date) AS year, t.category_id
-		FROM {$wpdb->prefix}ea_transactions AS t
-		LEFT JOIN {$wpdb->prefix}ea_transfers AS it ON t.id = it.payment_id
-		LEFT JOIN {$wpdb->prefix}ea_transfers AS et ON t.id = et.expense_id
-		WHERE t.type = 'expense'
-		AND it.payment_id IS NULL
-		AND et.expense_id IS NULL
-		AND t.date BETWEEN %s AND %s
-		ORDER BY t.date ASC",
+					"SELECT (t.amount/t.exchange_rate) amount, MONTH(t.paid_at) AS month, YEAR(t.paid_at) AS year, t.category_id
+					FROM {$wpdb->prefix}ea_transactions AS t
+					LEFT JOIN {$wpdb->prefix}ea_transfers AS it ON t.id = it.payment_id OR t.id = it.expense_id
+					WHERE t.type = 'expense'
+					AND it.payment_id IS NULL
+					AND it.expense_id IS NULL
+					AND t.paid_at BETWEEN %s AND %s
+					ORDER BY t.paid_at ASC",
 					$start_date,
 					$end_date
 				)
@@ -503,9 +502,9 @@ class ReportsUtil {
 				$data['month_avg'] = round( $data['total_amount'] / $month_count, 2 );
 			}
 
-			$reports[ $year ] = apply_filters( 'ever_accounting_expense_report', $data, $year );
+			$reports[ $year ] = apply_filters( 'eac_expenses_report', $data, $year );
 			// Cache for 1 hour.
-			set_transient( 'eac_expense_reports', $reports, HOUR_IN_SECONDS );
+			set_transient( 'eac_expenses_report', $reports, HOUR_IN_SECONDS );
 		}
 
 		return $reports[ $year ];
@@ -520,9 +519,9 @@ class ReportsUtil {
 	 * @return array
 	 * @since 1.0.0
 	 */
-	public static function get_profit_report( $year = null, $force = true ) {
+	public static function get_profits_report( $year = null, $force = true ) {
 		global $wpdb;
-		$reports     = get_transient( 'eac_profit_reports' );
+		$reports     = get_transient( 'get_profits_report' );
 		$reports     = ! is_array( $reports ) ? array() : $reports;
 		$year        = empty( $year ) ? wp_date( 'Y' ) : $year;
 		$start_date  = eac_get_year_start_date( $year );
@@ -531,14 +530,13 @@ class ReportsUtil {
 		if ( $force || ! isset( $reports[ $year ] ) ) {
 			$transactions = $wpdb->get_results(
 				$wpdb->prepare(
-					"SELECT (t.amount/t.exchange_rate) amount, MONTH(t.date) AS month, YEAR(t.date) AS year, t.category_id, t.type
-		FROM {$wpdb->prefix}ea_transactions AS t
-		LEFT JOIN {$wpdb->prefix}ea_transfers AS it ON t.id = it.payment_id
-		LEFT JOIN {$wpdb->prefix}ea_transfers AS et ON t.id = et.expense_id
-		WHERE it.payment_id IS NULL
-		AND et.expense_id IS NULL
-		AND t.date BETWEEN %s AND %s
-		ORDER BY t.date ASC",
+					"SELECT (t.amount/t.exchange_rate) amount, MONTH(t.paid_at) AS month, YEAR(t.paid_at) AS year, t.category_id, t.type
+					FROM {$wpdb->prefix}ea_transactions AS t
+					LEFT JOIN {$wpdb->prefix}ea_transfers AS it ON t.id = it.payment_id OR t.id = it.expense_id
+					WHERE it.payment_id IS NULL
+					AND it.expense_id IS NULL
+					AND t.paid_at BETWEEN %s AND %s
+					ORDER BY t.paid_at ASC",
 					$start_date,
 					$end_date
 				)
@@ -590,9 +588,9 @@ class ReportsUtil {
 				$data['month_avg'] = round( $data['total_profit'] / $month_count, 2 );
 			}
 
-			$reports[ $year ] = apply_filters( 'ever_accounting_profit_report', $data, $year );
+			$reports[ $year ] = apply_filters( 'eac_profits_report', $data, $year );
 			// Cache for 1 hour.
-			set_transient( 'eac_profit_reports', $reports, HOUR_IN_SECONDS );
+			set_transient( 'eac_profits_report', $reports, HOUR_IN_SECONDS );
 		}
 
 		return $reports[ $year ];

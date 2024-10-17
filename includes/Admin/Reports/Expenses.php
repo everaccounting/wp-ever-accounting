@@ -24,7 +24,7 @@ class Expenses {
 		wp_verify_nonce( '_wpnonce' );
 		$year     = ! empty( $_GET['year'] ) ? absint( $_GET['year'] ) : wp_date( 'Y' );
 		$datasets = array();
-		$data     = ReportsUtil::get_expense_report( $year );
+		$data     = ReportsUtil::get_expenses_report( $year );
 		$labels   = array_keys( $data['months'] );
 		foreach ( $data['categories'] as $category_id => $datum ) {
 			if ( ! isset( $datasets[ $category_id ] ) ) {
