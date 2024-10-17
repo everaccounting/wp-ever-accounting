@@ -27,23 +27,20 @@ class Banking {
 	 * @return void
 	 */
 	public static function update_account_balance( $account_id ) {
-		global $wpdb;
-		$account = EAC()->accounts->get( $account_id );
-		if ( ! $account ) {
-			return;
-		}
-
-		// when currency is equal to bank currency we will get the transactions in default currencies
-		$balance = (float) $wpdb->get_var(
-			$wpdb->prepare(
-				"SELECT SUM(CASE WHEN type='payment' then amount WHEN type='expense' then - amount END) as total
-				 FROM {$wpdb->prefix}ea_transactions WHERE account_id=%d", $account_id )
-		);
-
-		$wpdb->update(
-			$wpdb->prefix . 'ea_accounts',
-			array( 'balance' => $balance ),
-			array( 'id' => $account_id ),
-		);
+//		global $wpdb;
+//		$account = EAC()->accounts->get( $account_id );
+//		if ( ! $this ) {
+//			return;
+//		}
+//
+//		// when currency is equal to bank currency we will get the transactions in default currencies
+//		$balance = (float) $wpdb->get_var(
+//			$wpdb->prepare(
+//				"SELECT SUM(CASE WHEN type='payment' then amount WHEN type='expense' then - amount END) as total
+//				 FROM {$wpdb->prefix}ea_transactions WHERE account_id=%d", $account_id )
+//		);
+//
+//		$account->balance = $balance;
+//		$account->save();
 	}
 }

@@ -70,21 +70,57 @@ function eac_update_120_settings() {
 }
 
 /**
- * Update Accounts to 1.2.0
+ * eac_update_120_migration.
+ *
+ * @param string $table Table name.
+ * @param array  $updates Array of updates.
+ * @param array  $deletes Array of deletes.
+ *
+ * @return void
  */
-function eac_update_120_accounts() {
+function eac_update_120_migration( $table, $updates, $deletes ) {
 	global $wpdb;
-	require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-	$table = $wpdb->prefix . 'ea_accounts';
-	$wpdb->query( "UPDATE $table SET created_at = date_created, currency = currency_code" );
-	$wpdb->query( "ALTER TABLE $table MODIFY COLUMN type VARCHAR(50) NOT NULL DEFAULT 'account' AFTER id" );
-	$droppable = array( 'date_created', 'currency_code', 'enabled', 'thumbnail_id', 'creator_id', 'bank_name', 'bank_phone', 'bank_address' );
-	$columns = wp_list_pluck( $wpdb->get_results("DESCRIBE `$table`"), 'Field' );
-	foreach ( $droppable as $column ) {
+	$wpdb->hide_errors();
+	$columns = wp_list_pluck( $wpdb->get_results( "DESCRIBE `$table`" ), 'Field' );
+
+	foreach ( $updates as $new => $old ) {
+		if ( in_array( $old, $columns, true ) ) {
+			$wpdb->query( "UPDATE $table SET `$new` = `$old`" );
+		}
+	}
+
+	foreach ( $deletes as $column ) {
 		if ( in_array( $column, $columns, true ) ) {
 			$wpdb->query( "ALTER TABLE $table DROP COLUMN `$column`" );
 		}
 	}
+}
+
+/**
+ * Update Accounts to 1.2.0
+ */
+function eac_update_120_accounts() {
+	global $wpdb;
+	$table = $wpdb->prefix . 'ea_accounts';
+	eac_update_120_migration(
+		$table,
+		array(
+			'created_at' => 'date_created',
+			'currency'   => 'currency_code',
+			'balance'    => 'current_balance',
+		),
+		array(
+			'currency_code',
+			'date_created',
+			'current_balance',
+			'enabled',
+			'creator_id',
+			'bank_name',
+			'bank_phone',
+			'bank_address',
+		)
+	);
+	$wpdb->query( "ALTER TABLE $table MODIFY COLUMN type VARCHAR(50) NOT NULL DEFAULT 'account' AFTER id" );
 }
 
 /**
@@ -92,19 +128,22 @@ function eac_update_120_accounts() {
  */
 function eac_update_120_categories() {
 	global $wpdb;
-	require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 	$table = $wpdb->prefix . 'ea_categories';
+	eac_update_120_migration(
+		$table,
+		array(
+			'created_at' => 'date_created',
+		),
+		array(
+			'color',
+			'enabled',
+			'date_created',
+			'creator_id',
+		)
+	);
 	$wpdb->query( "UPDATE $table SET type = 'payment' WHERE type = 'income'" );
-	$wpdb->query( "UPDATE $table SET created_at = date_created" );
 	$wpdb->query( "DELETE FROM $table WHERE type = 'other'" );
 	$wpdb->query( "ALTER TABLE $table MODIFY COLUMN type VARCHAR(50) NOT NULL AFTER id" );
-	$droppable = array( 'color', 'enabled', 'date_created' );
-	$columns = wp_list_pluck( $wpdb->get_results("DESCRIBE `$table`"), 'Field' );
-	foreach ( $droppable as $column ) {
-		if ( in_array( $column, $columns, true ) ) {
-			$wpdb->query( "ALTER TABLE $table DROP COLUMN `$column`" );
-		}
-	}
 }
 
 /**
@@ -112,26 +151,43 @@ function eac_update_120_categories() {
  */
 function eac_update_120_contacts() {
 	global $wpdb;
-	require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 	$table = $wpdb->prefix . 'ea_contacts';
-	$wpdb->query( "UPDATE $table SET tax_number = vat_number" );
-	$wpdb->query( "UPDATE $table SET currency = currency_code" );
-	$wpdb->query( "UPDATE $table SET created_at = date_created" );
+
+	eac_update_120_migration(
+		$table,
+		array(
+			'created_at' => 'date_created',
+			'currency'   => 'currency_code',
+			'vat_number' => 'tax_number',
+		),
+		array(
+			'vat_number',
+			'currency_code',
+			'date_created',
+			'attachment',
+			'enabled',
+			'creator_id',
+			'thumbnail_id',
+			'user_id',
+			'street',
+			'birth_date',
+		)
+	);
 	$wpdb->query( "ALTER TABLE $table MODIFY COLUMN type VARCHAR(30) DEFAULT 'customer' AFTER id" );
 	$wpdb->query( "ALTER TABLE $table MODIFY COLUMN website VARCHAR(191) DEFAULT NULL AFTER phone" );
 	$wpdb->query( "ALTER TABLE $table MODIFY COLUMN country VARCHAR(3) DEFAULT NULL AFTER postcode" );
-	$droppable = array( 'vat_number', 'currency_code', 'date_created', 'attachment', 'enabled', 'creator_id', 'thumbnail_id', 'user_id', 'street', 'birth_date' );
-	$columns = wp_list_pluck( $wpdb->get_results("DESCRIBE `$table`"), 'Field' );
-	foreach ( $droppable as $column ) {
-		if ( in_array( $column, $columns, true ) ) {
-			$wpdb->query( "ALTER TABLE $table DROP COLUMN `$column`" );
-		}
-	}
 
 	// Contacts.
 	$table = $wpdb->prefix . 'ea_contactmeta';
-	$wpdb->query( "UPDATE $table SET ea_contact_id = contact_id" );
-	$wpdb->query( "ALTER TABLE $table DROP COLUMN contact_id" );
+	eac_update_120_migration(
+		$table,
+		array(
+			'ea_contact_id' => 'contact_id',
+		),
+		array(
+			'contact_id',
+		)
+	);
 	$wpdb->query( "ALTER TABLE $table MODIFY COLUMN ea_contact_id INT(11) NOT NULL AFTER meta_id" );
 	error_log( __METHOD__ );
 }
@@ -141,39 +197,42 @@ function eac_update_120_contacts() {
  */
 function eac_update_120_documents() {
 	global $wpdb;
-	require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 	$table = $wpdb->prefix . 'ea_documents';
-	$wpdb->query( "UPDATE $table SET number = document_number" );
-	$wpdb->query( "UPDATE $table SET reference = order_number" );
-	$wpdb->query( "UPDATE $table SET currency = currency_code" );
-	$wpdb->query( "UPDATE $table SET exchange_rate = currency_rate" );
-	$wpdb->query( "UPDATE $table SET tax = total_tax" );
-	$wpdb->query( "UPDATE $table SET discount_value = discount" );
-	$wpdb->query( "UPDATE $table SET discount = total_discount" );
-	$wpdb->query( "UPDATE $table SET issued_at = issue_date" );
-	$wpdb->query( "UPDATE $table SET due_at = due_date" );
-	$wpdb->query( "UPDATE $table SET paid_at = payment_date" );
-	$wpdb->query( "UPDATE $table SET created_at = date_created" );
-	$wpdb->query( "UPDATE $table SET uuid = UUID()" );
-
-	$wpdb->query( "ALTER TABLE $table DROP COLUMN document_number" );
-	$wpdb->query( "ALTER TABLE $table DROP COLUMN order_number" );
-	$wpdb->query( "ALTER TABLE $table DROP COLUMN currency_code" );
-	$wpdb->query( "ALTER TABLE $table DROP COLUMN currency_rate" );
-	$wpdb->query( "ALTER TABLE $table DROP COLUMN total_tax" );
-	$wpdb->query( "ALTER TABLE $table DROP COLUMN total_discount" );
-	$wpdb->query( "ALTER TABLE $table DROP COLUMN total_shipping" );
-	$wpdb->query( "ALTER TABLE $table DROP COLUMN total_fees" );
-	$wpdb->query( "ALTER TABLE $table DROP COLUMN tax_inclusive" );
-	$wpdb->query( "ALTER TABLE $table DROP COLUMN date_created" );
-	$wpdb->query( "ALTER TABLE $table DROP COLUMN category_id" );
-	$wpdb->query( "ALTER TABLE $table DROP COLUMN issue_date" );
-	$wpdb->query( "ALTER TABLE $table DROP COLUMN due_date" );
-	$wpdb->query( "ALTER TABLE $table DROP COLUMN payment_date" );
-	$wpdb->query( "ALTER TABLE $table DROP COLUMN `key`" );
-	$wpdb->query( "ALTER TABLE $table DROP COLUMN creator_id" );
-	$wpdb->query( "ALTER TABLE $table DROP COLUMN parent_id" );
-
+	eac_update_120_migration(
+		$table,
+		array(
+			'number'         => 'document_number',
+			'reference'      => 'order_number',
+			'currency'       => 'currency_code',
+			'exchange_rate'  => 'currency_rate',
+			'tax'            => 'total_tax',
+			'discount_value' => 'discount',
+			'discount'       => 'total_discount',
+			'issued_at'      => 'issue_date',
+			'due_at'         => 'due_date',
+			'paid_at'        => 'payment_date',
+			'created_at'     => 'date_created',
+		),
+		array(
+			'document_number',
+			'order_number',
+			'currency_code',
+			'currency_rate',
+			'total_tax',
+			'total_discount',
+			'total_shipping',
+			'total_fees',
+			'tax_inclusive',
+			'date_created',
+			'category_id',
+			'issue_date',
+			'due_date',
+			'payment_date',
+			'key',
+			'creator_id',
+			'parent_id'
+		)
+	);
 	$wpdb->query( "ALTER TABLE $table MODIFY COLUMN number VARCHAR(30) NOT NULL AFTER status" );
 	$wpdb->query( "ALTER TABLE $table MODIFY COLUMN reference VARCHAR(191) DEFAULT NULL AFTER number" );
 	$wpdb->query( "ALTER TABLE $table MODIFY COLUMN discount DOUBLE(15, 4) DEFAULT 0 AFTER subtotal" );
@@ -231,16 +290,17 @@ function eac_update_120_documents() {
 
 	// Documents Items.
 	$table = $wpdb->prefix . 'ea_document_items';
-	$wpdb->query( "UPDATE $table SET name = item_name" );
-	$wpdb->query( "UPDATE $table SET currency = currency_code" );
-	$wpdb->query( "UPDATE $table SET created_at = date_created" );
-
-	$wpdb->query( "ALTER TABLE $table DROP COLUMN item_name" );
-	$wpdb->query( "ALTER TABLE $table DROP COLUMN extra" );
-	$wpdb->query( "ALTER TABLE $table DROP COLUMN tax_rate" );
-	$wpdb->query( "ALTER TABLE $table DROP COLUMN currency_code" );
-	$wpdb->query( "ALTER TABLE $table DROP COLUMN date_created" );
-
+	eac_update_120_migration(
+		$table,
+		array( 'name' => 'item_name', 'currency' => 'currency_code', 'created_at' => 'date_created' ),
+		array(
+			'item_name',
+			'extra',
+			'tax_rate',
+			'currency_code',
+			'date_created'
+		)
+	);
 	$wpdb->query( "ALTER TABLE $table MODIFY COLUMN unit VARCHAR(20) DEFAULT NULL AFTER item_id" );
 	$wpdb->query( "ALTER TABLE $table MODIFY COLUMN description VARCHAR(160) DEFAULT NULL AFTER item_id" );
 	$wpdb->query( "ALTER TABLE $table MODIFY COLUMN name VARCHAR(191) NOT NULL AFTER item_id" );
@@ -253,21 +313,18 @@ function eac_update_120_documents() {
  */
 function eac_update_120_transactions() {
 	global $wpdb;
+	$wpdb->hide_errors();
 	require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 	$table = $wpdb->prefix . 'ea_transactions';
+	eac_update_120_migration(
+		$table,
+		array( 'paid_at' => 'payment_date', 'currency' => 'currency_code', 'note' => 'description', 'exchange_rate' => 'currency_rate', 'created_at' => 'date_created', 'author_id' => 'creator_id' ),
+		array( 'payment_date', 'currency_code', 'currency_rate', 'date_created', 'description', 'creator_id' )
+	);
+	$wpdb->query( "UPDATE $table SET uuid = UUID()" );
 	$wpdb->query( "UPDATE $table SET type = 'payment' WHERE type = 'income'" );
-	$wpdb->query( "UPDATE $table SET paid_at = payment_date, currency = currency_code, note = description, exchange_rate = currency_rate, created_at = date_created, uuid = UUID()" );
-	$wpdb->query( "UPDATE $table SET author_id = creator_id" );
 	$wpdb->query( "UPDATE $table JOIN (SELECT @rank := 0) r SET number=CONCAT('PAY-',LPAD(@rank:=@rank+1, 5, '0')) WHERE type='payment' AND number = ''" );
 	$wpdb->query( "UPDATE $table JOIN (SELECT @rank := 0) r SET number=CONCAT('EXP-',LPAD(@rank:=@rank+1, 5, '0')) WHERE type='expense' AND number = ''" );
-
-	$wpdb->query( "ALTER TABLE $table DROP payment_date" );
-	$wpdb->query( "ALTER TABLE $table DROP currency_code" );
-	$wpdb->query( "ALTER TABLE $table DROP currency_rate" );
-	$wpdb->query( "ALTER TABLE $table DROP date_created" );
-	$wpdb->query( "ALTER TABLE $table DROP description" );
-	$wpdb->query( "ALTER TABLE $table DROP creator_id" );
-
 	$wpdb->query( "ALTER TABLE $table MODIFY status VARCHAR(20) NOT NULL DEFAULT 'completed' AFTER type" );
 	$wpdb->query( "ALTER TABLE $table MODIFY number VARCHAR(30) NOT NULL AFTER status" );
 	$wpdb->query( "ALTER TABLE $table MODIFY paid_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER number" );
@@ -280,10 +337,11 @@ function eac_update_120_transactions() {
 
 
 	$table = $wpdb->prefix . 'ea_transfers';
-	$wpdb->query( "UPDATE $table SET payment_id = income_id, created_at = date_created" );
-	$wpdb->query( "ALTER TABLE $table DROP date_created" );
-	$wpdb->query( "ALTER TABLE $table DROP income_id" );
-	$wpdb->query( "ALTER TABLE $table DROP creator_id" );
+	eac_update_120_migration(
+		$table,
+		array( 'created_at' => 'date_created', 'payment_id' => 'income_id' ),
+		array( 'date_created', 'creator_id', 'income_id' )
+	);
 	$wpdb->query(
 		"UPDATE $table
 	JOIN {$wpdb->prefix }ea_transactions AS payment ON payment.id = $table.payment_id
@@ -301,44 +359,61 @@ function eac_update_120_transactions() {
 }
 
 /**
- * Update items to 1.2.0
+ * Update Items to 1.2.0
  */
-function eac_update_120_misc() {
+function eac_update_120_items() {
 	global $wpdb;
+	$wpdb->hide_errors();
 	require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 	$table = $wpdb->prefix . 'ea_items';
-	$wpdb->query( "UPDATE $table SET created_at = date_created" );
-	$wpdb->query( "UPDATE $table SET price = sale_price, cost = purchase_price, created_at = date_created" );
-	$wpdb->query( "ALTER TABLE $table DROP COLUMN sale_price" );
-	$wpdb->query( "ALTER TABLE $table DROP COLUMN purchase_price" );
-	$wpdb->query( "ALTER TABLE $table DROP COLUMN sku" );
-	$wpdb->query( "ALTER TABLE $table DROP COLUMN quantity" );
-	$wpdb->query( "ALTER TABLE $table DROP COLUMN sales_tax" );
-	$wpdb->query( "ALTER TABLE $table DROP COLUMN purchase_tax" );
-	$wpdb->query( "ALTER TABLE $table DROP COLUMN enabled" );
-	$wpdb->query( "ALTER TABLE $table DROP COLUMN date_created" );
-	$wpdb->query( "ALTER TABLE $table DROP COLUMN creator_id" );
-
+	eac_update_120_migration(
+		$table,
+		array( 'created_at' => 'date_created', 'price' => 'sale_price', 'cost' => 'purchase_price' ),
+		array(
+			'sale_price',
+			'purchase_price',
+			'sku',
+			'quantity',
+			'sales_tax',
+			'purchase_tax',
+			'enabled',
+			'date_created',
+			'creator_id'
+		)
+	);
 	$wpdb->query( "ALTER TABLE $table MODIFY type VARCHAR(50) NOT NULL AFTER id" );
 	$wpdb->query( "ALTER TABLE $table MODIFY unit VARCHAR(50) DEFAULT NULL AFTER description" );
 	$wpdb->query( "ALTER TABLE $table MODIFY price DECIMAL(10,2) DEFAULT NULL AFTER unit" );
 	$wpdb->query( "ALTER TABLE $table MODIFY cost DOUBLE(15, 4) NOT NULL AFTER price" );
 	$wpdb->query( "ALTER TABLE $table MODIFY tax_ids VARCHAR(191) DEFAULT NULL AFTER cost" );
+}
 
-	// Notes.
+/**
+ * Update Notes to 1.2.0
+ */
+function eac_update_120_notes() {
+	global $wpdb;
 	$table = $wpdb->prefix . 'ea_notes';
-	$wpdb->query( "UPDATE $table SET author_id = creator_id" );
-	$wpdb->query( "UPDATE $table SET parent_type = type" );
-	$wpdb->query( "UPDATE $table SET content = note" );
-	$wpdb->query( "UPDATE $table SET created_at = date_created" );
+	eac_update_120_migration(
+		$table,
+		array( 'author_id' => 'creator_id', 'parent_type' => 'type', 'content' => 'note', 'created_at' => 'date_created' ),
+		array(
+			'type',
+			'note',
+			'extra',
+			'creator_id',
+			'date_created'
+		)
+	);
+}
 
-	$wpdb->query( "ALTER TABLE $table DROP COLUMN `type`" );
-	$wpdb->query( "ALTER TABLE $table DROP COLUMN note" );
-	$wpdb->query( "ALTER TABLE $table DROP COLUMN extra" );
-	$wpdb->query( "ALTER TABLE $table DROP COLUMN creator_id" );
-	$wpdb->query( "ALTER TABLE $table DROP COLUMN date_created" );
-
-
+/**
+ * Update items to 1.2.0
+ */
+function eac_update_120_misc() {
+	global $wpdb;
+	$wpdb->hide_errors();
+	error_log( __METHOD__ );
 	// accounts having opening balance insert as payments.
 	$accounts = $wpdb->get_results( "SELECT id, opening_balance, currency, created_at FROM {$wpdb->prefix}ea_accounts WHERE opening_balance > 0" );
 	foreach ( $accounts as $account ) {
@@ -352,7 +427,10 @@ function eac_update_120_misc() {
 			'note'          => __( 'Opening Balance', 'wp-ever-accounting' ),
 		) );
 		$payment->save();
-		$account->update_balance();
+		$account = EAC()->accounts->get( $account->id );
+		if ( $account ) {
+			$account->update_balance();
+		}
 	}
 
 	// now drop the opening balance column.

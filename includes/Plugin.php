@@ -84,7 +84,6 @@ class Plugin extends \ByteKit\Plugin {
 	 */
 	public function includes() {
 		require_once __DIR__ . '/functions.php';
-		require_once __DIR__ . '/Functions/updates.php';
 		require_once dirname( __DIR__ ) . '/vendor/woocommerce/action-scheduler/action-scheduler.php';
 	}
 
@@ -134,6 +133,7 @@ class Plugin extends \ByteKit\Plugin {
 			'EverAccounting\Currencies',
 			'EverAccounting\Contacts',
 			'EverAccounting\Documents',
+			'EverAccounting\Banking',
 			'EverAccounting\Shortcodes',
 			'EverAccounting\Transactions',
 			'EverAccounting\Transfers',

@@ -120,7 +120,7 @@ class Expense extends Transaction {
 	 * @return \WP_Error|static WP_Error on failure, or the object on success.
 	 */
 	public function save() {
-		if ( empty( $this->date ) ) {
+		if ( empty( $this->paid_at ) ) {
 			return new \WP_Error( 'missing_required', __( 'Expense date is required.', 'wp-ever-accounting' ) );
 		}
 		if ( empty( $this->status ) ) {

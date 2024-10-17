@@ -56,14 +56,14 @@ class Dashboard {
 		$transactions = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT
-				MONTH(t.date) AS month,
+				MONTH(t.paid_at) AS month,
 				SUM(CASE WHEN t.type = 'payment' AND t.status = 'completed' THEN t.amount / t.exchange_rate ELSE 0 END) AS sales,
 				SUM(CASE WHEN t.type = 'expense' AND t.status = 'completed' THEN t.amount / t.exchange_rate ELSE 0 END) AS expenses
 		 		FROM {$wpdb->prefix}ea_transactions AS t
 		 		LEFT JOIN {$wpdb->prefix}ea_transfers AS it ON t.id = it.payment_id OR t.id = it.expense_id
-		 		WHERE YEAR(`date`) = %d
+		 		WHERE YEAR(`paid_at`) = %d
 		 		AND it.id IS NULL
-		 		GROUP BY MONTH(`date`)",
+		 		GROUP BY MONTH(`paid_at`)",
 				date( 'Y' )
 			)
 		);
@@ -86,21 +86,21 @@ class Dashboard {
 					'label'           => __( 'Sales', 'wp-ever-accounting' ),
 					'backgroundColor' => 'transparent',
 					'borderColor'     => 'rgba(54, 162, 235, 1)',
-					'borderWidth'     => 1,
+					'borderWidth'     => 2,
 					'data'            => $sales,
 				),
 				array(
 					'label'           => __( 'Expenses', 'wp-ever-accounting' ),
 					'backgroundColor' => 'transparent',
 					'borderColor'     => 'rgba(255, 99, 132, 1)',
-					'borderWidth'     => 1,
+					'borderWidth'     => 2,
 					'data'            => $expenses,
 				),
 				array(
 					'label'           => __( 'Profit/Loss', 'wp-ever-accounting' ),
 					'backgroundColor' => 'transparent',
 					'borderColor'     => 'rgba(75, 192, 192, 1)',
-					'borderWidth'     => 1,
+					'borderWidth'     => 2,
 					'data'            => $profits,
 				),
 			)
@@ -238,7 +238,7 @@ class Dashboard {
 		$payments = EAC()->payments->query(
 			array(
 				'limit'   => 5,
-				'orderby' => 'date',
+				'orderby' => 'paid_at',
 				'order'   => 'DESC',
 			)
 		);
@@ -292,7 +292,7 @@ class Dashboard {
 		$expenses = EAC()->expenses->query(
 			array(
 				'limit'   => 5,
-				'orderby' => 'date',
+				'orderby' => 'paid_at',
 				'order'   => 'DESC',
 			)
 		);

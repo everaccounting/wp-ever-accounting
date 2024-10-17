@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  * @property int        $id ID of the item.
  * @property string     $type Type of the transaction.
  * @property string     $number Number of the transaction.
- * @property string     $date Date of the transaction.
+ * @property string     $paid_at Date of the transaction.
  * @property double     $amount Amount of the transaction.
  * @property string     $currency Currency of the transaction.
  * @property double     $exchange_rate Exchange rate of the transaction.
@@ -74,7 +74,7 @@ class Transaction extends Model {
 		'id',
 		'type',
 		'number',
-		'date',
+		'paid_at',
 		'amount',
 		'currency',
 		'exchange_rate',
@@ -90,8 +90,7 @@ class Transaction extends Model {
 		'reconciled',
 		'status',
 		'uuid',
-		'created_via',
-		'creator_id',
+		'created_via'
 	);
 
 	/**
@@ -115,6 +114,7 @@ class Transaction extends Model {
 	 */
 	protected $casts = array(
 		'id'            => 'int',
+		'paid_at'       => 'date',
 		'amount'        => 'float',
 		'exchange_rate' => 'double',
 		'account_id'    => 'int',
@@ -124,7 +124,6 @@ class Transaction extends Model {
 		'attachment_id' => 'int',
 		'parent_id'     => 'int',
 		'reconciled'    => 'bool',
-		'creator_id'    => 'int',
 	);
 
 	/**

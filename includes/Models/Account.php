@@ -18,17 +18,13 @@ defined( 'ABSPATH' ) || exit;
  * @property string             $type Type of the account.
  * @property string             $name Name of the category.
  * @property string             $number Account number.
- * @property string             $bank_name Bank name.
- * @property string             $bank_phone Bank phone.
- * @property string             $bank_address Bank address.
+ * @property float              $balance Account balance.
  * @property string             $currency Currency code.
  * @property int                $thumbnail_id Thumbnail ID.
- * @property int                $creator_id Author ID.
  * @property string             $created_at Date created.
  * @property string             $updated_at Date updated.
  *
  * @property-read string        $formatted_name Formatted name.
- * @property-read float         $balance Balance.
  * @property-read string        $formatted_balance Formatted balance.
  * @property-read Transaction[] $transactions Transaction relation.
  * @property-read Payment[]     $payments Payments relation.
@@ -55,12 +51,9 @@ class Account extends Model {
 		'type',
 		'name',
 		'number',
-		'bank_name',
-		'bank_phone',
-		'bank_address',
+		'balance',
 		'currency',
-		'thumbnail_id',
-		'creator_id',
+		'thumbnail_id'
 	);
 
 	/**
@@ -81,7 +74,9 @@ class Account extends Model {
 	 */
 	protected $casts = array(
 		'id'           => 'int',
-		'creator_id'   => 'int',
+		'number'       => 'string',
+		'balance'      => 'float',
+		'currency'     => 'string',
 		'thumbnail_id' => 'int',
 	);
 
@@ -92,7 +87,6 @@ class Account extends Model {
 	 * @var array
 	 */
 	protected $appends = array(
-		'balance',
 		'formatted_name',
 		'formatted_balance',
 	);
@@ -114,11 +108,8 @@ class Account extends Model {
 	 */
 	protected $searchable = array(
 		'name',
-		'bank_name',
-		'bank_phone',
-		'bank_address',
-		'currency',
 		'number',
+		'currency',
 	);
 
 	/**
@@ -139,26 +130,6 @@ class Account extends Model {
 	| and mutators) as well as defining relationships between models.
 	|--------------------------------------------------------------------------
 	*/
-
-	/**
-	 * Get balance.
-	 *
-	 * @since 1.1.0
-	 * @since 1.0.2
-	 *
-	 * @return float|string
-	 */
-	public function get_balance() {
-		global $wpdb;
-		static $balance;
-		if ( is_null( $balance ) ) {
-			$balance = (float) $wpdb->get_var(
-				$wpdb->prepare( "SELECT SUM(CASE WHEN type='income' then amount WHEN type='expense' then - amount END) as total from {$wpdb->prefix}ea_transactions WHERE account_id=%d", $this->id )
-			);
-		}
-
-		return $balance;
-	}
 
 	/**
 	 * Get formatted balance.
@@ -190,7 +161,7 @@ class Account extends Model {
 	 * @return HasMany
 	 */
 	public function transactions() {
-		return $this->has_many( Transaction::class )->set( 'limit', 1 );
+		return $this->has_many( Transaction::class );
 	}
 
 	/*
@@ -218,11 +189,25 @@ class Account extends Model {
 			return new \WP_Error( 'missing_required', __( 'Currency code is required.', 'wp-ever-accounting' ) );
 		}
 
-		if ( empty( $this->creator_id ) && is_user_logged_in() ) {
-			$this->creator_id = get_current_user_id();
-		}
-
 		return parent::save();
+	}
+
+	/**
+	 * Update account balance.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public function update_balance() {
+		global $wpdb;
+		$balance = (float) $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT SUM(CASE WHEN type='payment' then amount WHEN type='expense' then - amount END) as total
+				 FROM {$wpdb->prefix}ea_transactions WHERE account_id=%d", $this->id )
+		);
+
+		$this->balance = $balance;
+		$this->save();
 	}
 
 	/*

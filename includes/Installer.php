@@ -22,6 +22,14 @@ class Installer {
 	protected $updates = array(
 		'2.0.0' => array(
 			'eac_update_120_settings',
+			'eac_update_120_accounts',
+			'eac_update_120_categories',
+			'eac_update_120_contacts',
+			'eac_update_120_documents',
+			'eac_update_120_transactions',
+			'eac_update_120_items',
+			'eac_update_120_notes',
+			'eac_update_120_misc'
 		),
 	);
 
@@ -32,6 +40,7 @@ class Installer {
 	 */
 	public function __construct() {
 		add_action( 'init', array( $this, 'check_update' ), 5 );
+		add_action( 'admin_notices', array( $this, 'update_notice' ) );
 		add_action( 'eac_run_update_callback', array( $this, 'run_update_callback' ), 10, 2 );
 		add_action( 'eac_update_db_version', array( $this, 'update_db_version' ) );
 	}
@@ -82,14 +91,14 @@ class Installer {
 							'version'  => $version,
 						)
 					);
-					++$loop;
+					++ $loop;
 				}
 			}
-			++$loop;
+			++ $loop;
 		}
 
 		if ( version_compare( EAC()->get_db_version(), EAC()->get_version(), '<' ) &&
-			! EAC()->queue()->get_next( 'eac_update_db_version' ) ) {
+			 ! EAC()->queue()->get_next( 'eac_update_db_version' ) ) {
 			EAC()->queue()->schedule_single(
 				time() + $loop,
 				'eac_update_db_version',
@@ -97,6 +106,22 @@ class Installer {
 					'version' => EAC()->get_version(),
 				)
 			);
+		}
+	}
+
+	/**
+	 * Display an update notice.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public function update_notice() {
+		if ( EAC()->queue()->get_next( 'eac_run_update_callback' ) ) {
+			?>
+			<div class="notice notice-info is-dismissible">
+				<p><?php esc_html_e( 'Ever Accounting is updating the database in the background. Please wait.', 'wp-ever-accounting' ); ?></p>
+			</div>
+			<?php
 		}
 	}
 
@@ -112,8 +137,10 @@ class Installer {
 	public function run_update_callback( $callback, $version ) {
 		require_once __DIR__ . '/Functions/updates.php';
 		if ( is_callable( $callback ) ) {
+			error_log( 'run_update_callback: ' . $callback );
 			$result = (bool) call_user_func( $callback );
 			if ( $result ) {
+				error_log( 'run_update_callback: ' . $callback . ' - success' );
 				EAC()->queue()->add(
 					'eac_run_update_callback',
 					array(
@@ -179,9 +206,13 @@ class Installer {
 		$wpdb->hide_errors();
 		$collate = $wpdb->has_cap( 'collation' ) ? $wpdb->get_charset_collate() : '';
 
+		error_log( '===============================' );
+		error_log( 'create_tables: ' );
+		error_log( '===============================' );
+
 		// Prior to 2.0.0, the address field was text and later changed to varchar.
 		if ( version_compare( EAC()->get_db_version(), '2.0.0', '<' ) && $wpdb->get_var( "SHOW COLUMNS FROM {$wpdb->prefix}ea_documents LIKE 'address'" ) &&
-			! $wpdb->get_var( "SHOW COLUMNS FROM {$wpdb->prefix}ea_documents LIKE 'tax_number'" ) ) {
+			 ! $wpdb->get_var( "SHOW COLUMNS FROM {$wpdb->prefix}ea_documents LIKE 'tax_number'" ) ) {
 			$wpdb->query( "ALTER TABLE {$wpdb->prefix}ea_documents CHANGE COLUMN address billing_address TEXT DEFAULT NULL" );
 		}
 
@@ -451,14 +482,11 @@ CREATE TABLE {$wpdb->prefix}ea_transfers (
     expense_id BIGINT(20) UNSIGNED NOT NULL,
     from_account_id BIGINT(20) UNSIGNED NOT NULL,
     to_account_id BIGINT(20) UNSIGNED NOT NULL,
-    from_exchange_rate DOUBLE(15, 8) NOT NULL DEFAULT 1.0,
-    to_exchange_rate DOUBLE(15, 8) NOT NULL DEFAULT 1.0,
     amount DOUBLE(15, 4) NOT NULL DEFAULT 0.00,
     currency VARCHAR(3) NOT NULL DEFAULT 'USD',
     payment_method VARCHAR(100) DEFAULT NULL,
     reference VARCHAR(191) DEFAULT NULL,
     note TEXT DEFAULT NULL,
-    creator_id BIGINT(20) UNSIGNED DEFAULT NULL,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT NULL,
     PRIMARY KEY (id),
