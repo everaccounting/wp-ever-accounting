@@ -3,7 +3,7 @@
  * Plugin Name: Ever Accounting
  * Plugin URI: https://wpeveraccounting.com/
  * Description: Manage your business finances right from your WordPress dashboard.
- * Version: 1.2.0
+ * Version: 2.0.0
  * Author: EAccounting
  * Author URI: https://wpeveraccounting.com/
  * Requires at least: 4.7.0
@@ -17,19 +17,24 @@
 
 defined( 'ABSPATH' ) || exit();
 
-define( 'EACCOUNTING_BASENAME', plugin_basename( __FILE__ ) );
-define( 'EACCOUNTING_PLUGIN_FILE', __FILE__ );
+require_once __DIR__ . '/vendor/autoload.php';
 
-require_once __DIR__ . '/includes/class-wp-ever-accounting.php';
-
-/**
- * Returns the main instance of Plugin.
- *
- * @since  1.0.0
- * @return EverAccounting
- */
-function eaccounting() {
-	return EverAccounting::instance();
+// Migrate legacy version.
+if ( get_option( 'eaccounting_version' ) ) {
+	update_option( 'eac_version', get_option( 'eaccounting_version' ) );
+	update_option( 'eac_install_date', get_option( 'eaccounting_install_date', wp_date( 'U' ) ) );
+	delete_option( 'eaccounting_version' );
 }
 
-eaccounting();
+/**
+ * Main instance of EverAccounting.
+ *
+ * @since  1.0.0
+ * @return EverAccounting\Plugin
+ */
+function EAC() { // phpcs:ignore
+	return EverAccounting\Plugin::create( __FILE__ );
+}
+
+// Instantiate the plugin.
+EAC();
