@@ -205,7 +205,7 @@ class Dashboard {
 					<a href="<?php echo esc_url( admin_url( 'admin.php?page=eac-sales&tab=payments' ) ); ?>"><?php esc_html_e( 'View all', 'wp-ever-accounting' ); ?></a>
 				<?php endif; ?>
 			</div>
-
+			<?php if ( ! empty( $payments ) ) : ?>
 			<table class="eac-table is--fixed">
 				<thead>
 				<tr>
@@ -215,7 +215,6 @@ class Dashboard {
 				</tr>
 				</thead>
 				<tbody>
-				<?php if ( ! empty( $payments ) ) : ?>
 					<?php foreach ( $payments as $payment ) : ?>
 						<tr>
 							<td><a href="<?php echo esc_url( $payment->get_view_url() ); ?>"><?php echo esc_html( $payment->number ); ?></a></td>
@@ -223,16 +222,14 @@ class Dashboard {
 							<td><?php echo esc_html( $payment->formatted_amount ); ?></td>
 						</tr>
 					<?php endforeach; ?>
-				<?php else : ?>
-					<tr>
-						<td colspan="3">
-							<p><?php esc_html_e( 'No payments found.', 'wp-ever-accounting' ); ?></p>
-						</td>
-					</tr>
-				<?php endif; ?>
 				</tbody>
 			</table>
 		</div>
+		<?php else : ?>
+			<div class="eac-card__body">
+				<p class="empty"><?php esc_html_e( 'No payments found.', 'wp-ever-accounting' ); ?></p>
+			</div>
+		<?php endif; ?>
 		<?php
 	}
 
