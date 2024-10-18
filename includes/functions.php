@@ -178,9 +178,17 @@ function eac_convert_currency( $amount, $from = 1, $to = 1 ) {
 		return $amount;
 	}
 
-	// Safe conversion
-	$base_amount = $amount / $from;
-	return $base_amount * $to;
+	// from amount is in base currency.
+	if ( $from !== 1 ) {
+		$amount = $amount / $from;
+	}
+
+	// to amount is in base currency.
+	if ( $to !== 1 ) {
+		$amount = $amount * $to;
+	}
+
+	return $amount;
 }
 
 

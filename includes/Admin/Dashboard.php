@@ -268,7 +268,7 @@ class Dashboard {
 					<?php foreach ( $expenses as $expense ) : ?>
 						<tr>
 							<td><a href="<?php echo esc_url( $expense->get_view_url() ); ?>"><?php echo esc_html( $expense->number ); ?></a></td>
-							<td><?php echo esc_html( date_i18n( eac_date_format(), strtotime( $expense->date ) ) ); ?></td>
+							<td><?php echo esc_html( date_i18n( eac_date_format(), strtotime( $expense->paid_at ) ) ); ?></td>
 							<td><?php echo esc_html( $expense->formatted_amount ); ?></td>
 						</tr>
 					<?php endforeach; ?>
@@ -306,7 +306,7 @@ class Dashboard {
 					<a href="<?php echo esc_url( admin_url( 'admin.php?page=eac-sales&tab=invoices' ) ); ?>"><?php esc_html_e( 'View all', 'wp-ever-accounting' ); ?></a>
 				<?php endif; ?>
 			</div>
-
+			<?php if ( ! empty( $invoices ) ) : ?>
 			<table class="eac-table is--fixed">
 				<thead>
 				<tr>
@@ -316,7 +316,6 @@ class Dashboard {
 				</tr>
 				</thead>
 				<tbody>
-				<?php if ( ! empty( $invoices ) ) : ?>
 					<?php foreach ( $invoices as $invoice ) : ?>
 						<tr>
 							<td><a href="<?php echo esc_url( $invoice->get_view_url() ); ?>"><?php echo esc_html( $invoice->number ); ?></a></td>
@@ -324,15 +323,13 @@ class Dashboard {
 							<td><?php echo esc_html( $invoice->formatted_total ); ?></td>
 						</tr>
 					<?php endforeach; ?>
-				<?php else : ?>
-					<tr>
-						<td colspan="3">
-							<p><?php esc_html_e( 'No invoices found.', 'wp-ever-accounting' ); ?></p>
-						</td>
-					</tr>
-				<?php endif; ?>
 				</tbody>
 			</table>
+			<?php else : ?>
+				<div class="eac-card__body">
+					<p class="empty"><?php esc_html_e( 'No invoices found.', 'wp-ever-accounting' ); ?></p>
+				</div>
+			<?php endif; ?>
 		</div>
 		<?php
 	}
@@ -404,6 +401,7 @@ class Dashboard {
 			<div class="eac-card__header">
 				<?php esc_html_e( 'Top Customers', 'wp-ever-accounting' ); ?>
 			</div>
+			<?php if ( ! empty( $customers ) ) : ?>
 			<table class="eac-table is--fixed">
 				<thead>
 				<tr>
@@ -412,7 +410,6 @@ class Dashboard {
 				</tr>
 				</thead>
 				<tbody>
-				<?php if ( ! empty( $customers ) ) : ?>
 					<?php foreach ( $customers as $customer ) : ?>
 						<tr>
 							<td>
@@ -423,15 +420,13 @@ class Dashboard {
 							<td><?php echo esc_html( eac_format_amount( $customer->amount ) ); ?></td>
 						</tr>
 					<?php endforeach; ?>
-				<?php else : ?>
-					<tr>
-						<td colspan="2">
-							<p><?php esc_html_e( 'No customers found.', 'wp-ever-accounting' ); ?></p>
-						</td>
-					</tr>
-				<?php endif; ?>
 				</tbody>
 			</table>
+			<?php else : ?>
+				<div class="eac-card__body">
+					<p class="empty"><?php esc_html_e( 'No data found.', 'wp-ever-accounting' ); ?></p>
+				</div>
+			<?php endif; ?>
 		</div>
 		<?php
 	}
@@ -469,6 +464,7 @@ class Dashboard {
 			<div class="eac-card__header">
 				<?php esc_html_e( 'Top Vendors', 'wp-ever-accounting' ); ?>
 			</div>
+			<?php if ( ! empty( $vendors ) ) : ?>
 			<table class="eac-table is--fixed">
 				<thead>
 				<tr>
@@ -477,7 +473,6 @@ class Dashboard {
 				</tr>
 				</thead>
 				<tbody>
-				<?php if ( ! empty( $vendors ) ) : ?>
 					<?php foreach ( $vendors as $vendor ) : ?>
 						<tr>
 							<td>
@@ -488,18 +483,14 @@ class Dashboard {
 							<td><?php echo esc_html( eac_format_amount( $vendor->amount ) ); ?></td>
 						</tr>
 					<?php endforeach; ?>
-				<?php else : ?>
-					<tr>
-						<td colspan="2">
-							<p><?php esc_html_e( 'No vendors found.', 'wp-ever-accounting' ); ?></p>
-						</td>
-					</tr>
-				<?php endif; ?>
 				</tbody>
 			</table>
-
+			<?php else : ?>
+				<div class="eac-card__body">
+					<p class="empty"><?php esc_html_e( 'No data found.', 'wp-ever-accounting' ); ?></p>
+				</div>
+			<?php endif; ?>
 		</div>
-
 		<?php
 	}
 }

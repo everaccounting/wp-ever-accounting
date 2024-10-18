@@ -412,6 +412,62 @@ CREATE TABLE {$wpdb->prefix}ea_transactionmeta (
     KEY meta_key (meta_key(191))
 ) $collate;
 
+
+CREATE TABLE {$wpdb->prefix}ea_transactions (
+    id BIGINT(20) NOT NULL AUTO_INCREMENT,
+    type VARCHAR(20) DEFAULT NULL,
+    status VARCHAR(20) NOT NULL DEFAULT 'completed',
+    number VARCHAR(30) NOT NULL,
+    paid_at DATETIME  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    amount DOUBLE(15, 4) NOT NULL,
+    currency VARCHAR(3) NOT NULL DEFAULT 'USD',
+    exchange_rate DOUBLE(15, 8) NOT NULL DEFAULT 1.0,
+    reference VARCHAR(191) DEFAULT NULL,
+    note TEXT DEFAULT NULL,
+    payment_method VARCHAR(100) DEFAULT NULL,
+    account_id BIGINT(20) UNSIGNED NOT NULL,
+    document_id BIGINT(20) UNSIGNED DEFAULT NULL,
+    contact_id BIGINT(20) UNSIGNED DEFAULT NULL,
+    category_id BIGINT(20) UNSIGNED NOT NULL,
+    attachment_id BIGINT(20) UNSIGNED DEFAULT NULL,
+    author_id BIGINT(20) UNSIGNED DEFAULT NULL,
+    parent_id BIGINT(20) UNSIGNED DEFAULT NULL,
+    editable TINYINT(1) NOT NULL DEFAULT 1,
+    created_via VARCHAR(100) DEFAULT 'manual',
+    uuid VARCHAR(36) DEFAULT NULL,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at DATETIME DEFAULT NULL,
+    PRIMARY KEY (id),
+    UNIQUE KEY uuid (uuid),
+	KEY type (type),
+    KEY number (number),
+    KEY amount (amount),
+    KEY currency (currency),
+    KEY exchange_rate (exchange_rate),
+    KEY account_id (account_id),
+    KEY document_id (document_id),
+    KEY category_id (category_id),
+    KEY contact_id (contact_id),
+    KEY status (status)
+) $collate;
+
+CREATE TABLE {$wpdb->prefix}ea_transfers (
+    id BIGINT(20) NOT NULL AUTO_INCREMENT,
+    payment_id BIGINT(20) UNSIGNED NOT NULL,
+    expense_id BIGINT(20) UNSIGNED NOT NULL,
+    paid_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    amount DOUBLE(15, 4) NOT NULL DEFAULT 0.00,
+    currency VARCHAR(3) NOT NULL DEFAULT 'USD',
+    payment_method VARCHAR(100) DEFAULT NULL,
+    reference VARCHAR(191) DEFAULT NULL,
+    note TEXT DEFAULT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT NULL,
+    PRIMARY KEY (id),
+    KEY payment_id (payment_id),
+    KEY expense_id (expense_id)
+) $collate;
+
 CREATE TABLE {$wpdb->prefix}ea_taxes (
     id BIGINT(20) NOT NULL AUTO_INCREMENT,
     name VARCHAR(191) NOT NULL,
@@ -436,64 +492,6 @@ CREATE TABLE {$wpdb->prefix}ea_notes (
     PRIMARY KEY (id),
     KEY parent_id (parent_id),
     KEY parent_type (parent_type)
-) $collate;
-
-CREATE TABLE {$wpdb->prefix}ea_transactions (
-    id BIGINT(20) NOT NULL AUTO_INCREMENT,
-    type VARCHAR(20) DEFAULT NULL,
-    status VARCHAR(20) NOT NULL DEFAULT 'completed',
-    number VARCHAR(30) NOT NULL,
-    paid_at DATETIME  NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    amount DOUBLE(15, 4) NOT NULL,
-    currency VARCHAR(3) NOT NULL DEFAULT 'USD',
-    exchange_rate DOUBLE(15, 8) NOT NULL DEFAULT 1.0,
-    reference VARCHAR(191) DEFAULT NULL,
-    note TEXT DEFAULT NULL,
-    payment_method VARCHAR(100) DEFAULT NULL,
-    account_id BIGINT(20) UNSIGNED NOT NULL,
-    document_id BIGINT(20) UNSIGNED DEFAULT NULL,
-    contact_id BIGINT(20) UNSIGNED DEFAULT NULL,
-    category_id BIGINT(20) UNSIGNED NOT NULL,
-    attachment_id BIGINT(20) UNSIGNED DEFAULT NULL,
-    author_id BIGINT(20) UNSIGNED DEFAULT NULL,
-    parent_id BIGINT(20) UNSIGNED DEFAULT NULL,
-    reconciled TINYINT(1) NOT NULL DEFAULT 0,
-    created_via VARCHAR(100) DEFAULT 'manual',
-    uuid VARCHAR(36) DEFAULT NULL,
-    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    created_at DATETIME DEFAULT NULL,
-    PRIMARY KEY (id),
-    UNIQUE KEY uuid (uuid),
-	KEY type (type),
-    KEY number (number),
-    KEY amount (amount),
-    KEY currency (currency),
-    KEY exchange_rate (exchange_rate),
-    KEY account_id (account_id),
-    KEY document_id (document_id),
-    KEY category_id (category_id),
-    KEY contact_id (contact_id),
-    KEY status (status)
-) $collate;
-
-CREATE TABLE {$wpdb->prefix}ea_transfers (
-    id BIGINT(20) NOT NULL AUTO_INCREMENT,
-    payment_id BIGINT(20) UNSIGNED NOT NULL,
-    expense_id BIGINT(20) UNSIGNED NOT NULL,
-    from_account_id BIGINT(20) UNSIGNED NOT NULL,
-    to_account_id BIGINT(20) UNSIGNED NOT NULL,
-    amount DOUBLE(15, 4) NOT NULL DEFAULT 0.00,
-    currency VARCHAR(3) NOT NULL DEFAULT 'USD',
-    payment_method VARCHAR(100) DEFAULT NULL,
-    reference VARCHAR(191) DEFAULT NULL,
-    note TEXT DEFAULT NULL,
-    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT NULL,
-    PRIMARY KEY (id),
-    KEY payment_id (payment_id),
-    KEY expense_id (expense_id),
-    KEY from_account_id (from_account_id),
-    KEY to_account_id (to_account_id)
 ) $collate;
 ";
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';

@@ -53,10 +53,10 @@ $payment = Payment::make( $id );
 							'label'       => __( 'Date', 'wp-ever-accounting' ),
 							'type'        => 'date',
 							'name'        => 'paid_at',
-							'placeholder' => 'yyyy-mm-dd',
 							'value'       => $payment->paid_at,
-							'required'    => true,
+							'placeholder' => 'yyyy-mm-dd',
 							'class'       => 'eac_datepicker',
+							'required'    => true,
 						)
 					);
 
@@ -66,10 +66,10 @@ $payment = Payment::make( $id );
 							'type'        => 'text',
 							'name'        => 'payment_number',
 							'value'       => $payment->number,
-							'default'     => $payment->get_next_number(),
 							'placeholder' => $payment->get_next_number(),
-							'required'    => true,
+							'default'     => $payment->get_next_number(),
 							'readonly'    => true,
+							'required'    => true,
 						)
 					);
 
@@ -78,12 +78,11 @@ $payment = Payment::make( $id );
 							'label'            => __( 'Account', 'wp-ever-accounting' ),
 							'type'             => 'select',
 							'name'             => 'account_id',
-							'options'          => array( $payment->account ),
 							'value'            => $payment->account_id,
-							'class'            => 'eac_select2',
-							'tooltip'          => __( 'Select the account.', 'wp-ever-accounting' ),
+							'options'          => array( $payment->account ),
 							'option_value'     => 'id',
 							'option_label'     => 'formatted_name',
+							'class'            => 'eac_select2',
 							'data-placeholder' => __( 'Select an account', 'wp-ever-accounting' ),
 							'data-action'      => 'eac_json_search',
 							'data-type'        => 'account',
@@ -93,19 +92,20 @@ $payment = Payment::make( $id );
 								esc_url( admin_url( 'admin.php?page=eac-banking&tab=accounts&action=add' ) ),
 								__( 'Add Account', 'wp-ever-accounting' )
 							),
+							'tooltip'          => __( 'Select the account.', 'wp-ever-accounting' ),
 						)
 					);
 
-					// exchange rate.
 					eac_form_field(
 						array(
 							'label'         => __( 'Exchange Rate', 'wp-ever-accounting' ),
 							'name'          => 'exchange_rate',
 							'value'         => $payment->exchange_rate,
+							'default'       => 1,
 							'placeholder'   => '1.00',
+							'class'         => 'eac_exchange_rate',
 							'required'      => true,
 							'prefix'        => '1 ' . eac_base_currency() . ' = ',
-							'class'         => 'eac_amount',
 							'attr-step'     => 'any',
 							'readonly'      => $payment->currency === eac_base_currency(),
 							'data-currency' => $payment->currency,
@@ -116,12 +116,12 @@ $payment = Payment::make( $id );
 						array(
 							'label'         => __( 'Amount', 'wp-ever-accounting' ),
 							'name'          => 'amount',
-							'placeholder'   => '0.00',
 							'value'         => $payment->amount,
+							'placeholder'   => '0.00',
+							'class'         => 'eac_amount',
 							'required'      => true,
 							'tooltip'       => __( 'Enter the amount in the currency of the selected account, use (.) for decimal.', 'wp-ever-accounting' ),
 							'data-currency' => $payment->currency,
-							'class'         => 'eac_amount',
 						)
 					);
 
@@ -134,8 +134,8 @@ $payment = Payment::make( $id );
 							'options'          => array( $payment->category ),
 							'option_value'     => 'id',
 							'option_label'     => 'formatted_name',
-							'placeholder'      => __( 'Select category', 'wp-ever-accounting' ),
 							'class'            => 'eac_select2',
+							'placeholder'      => __( 'Select category', 'wp-ever-accounting' ),
 							'data-placeholder' => __( 'Select category', 'wp-ever-accounting' ),
 							'data-action'      => 'eac_json_search',
 							'data-type'        => 'category',
@@ -153,12 +153,11 @@ $payment = Payment::make( $id );
 							'label'            => __( 'Customer', 'wp-ever-accounting' ),
 							'type'             => 'select',
 							'name'             => 'contact_id',
-							'options'          => array( $payment->customer ),
 							'value'            => $payment->customer_id,
-							'class'            => 'eac_select2',
-							'tooltip'          => __( 'Select the customer.', 'wp-ever-accounting' ),
+							'options'          => array( $payment->customer ),
 							'option_value'     => 'id',
 							'option_label'     => 'formatted_name',
+							'class'            => 'eac_select2',
 							'data-placeholder' => __( 'Select a customer', 'wp-ever-accounting' ),
 							'data-action'      => 'eac_json_search',
 							'data-type'        => 'customer',
@@ -167,6 +166,7 @@ $payment = Payment::make( $id );
 								esc_url( admin_url( 'admin.php?page=eac-purchases&tab=customers&action=add' ) ),
 								__( 'Add Vendor', 'wp-ever-accounting' )
 							),
+							'tooltip'          => __( 'Select the customer.', 'wp-ever-accounting' ),
 						)
 					);
 
@@ -182,7 +182,6 @@ $payment = Payment::make( $id );
 					);
 
 					if ( $payment->document_id ) {
-						// readonly select field.
 						eac_form_field(
 							array(
 								'label'        => __( 'Invoice', 'wp-ever-accounting' ),
@@ -207,6 +206,7 @@ $payment = Payment::make( $id );
 							'placeholder' => __( 'Enter reference', 'wp-ever-accounting' ),
 						)
 					);
+
 					eac_form_field(
 						array(
 							'label'         => __( 'Note', 'wp-ever-accounting' ),

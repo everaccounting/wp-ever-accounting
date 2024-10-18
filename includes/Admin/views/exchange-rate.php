@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 ?>
 <tr>
 	<td class="currency">
-		<select name="eac_exchange_rates[<?php echo esc_attr( $code ); ?>]" required>
+		<select name="eac_exchange_rates[<?php echo esc_attr( $code ); ?>]"  required>
 			<option value=""><?php esc_html_e( 'Select Currency', 'wp-ever-accounting' ); ?></option>
 			<?php foreach ( $currencies as $currency ) : ?>
 				<option value="<?php echo esc_attr( $currency['code'] ); ?>" <?php selected( $code, $currency['code'] ); ?>><?php echo esc_html( $currency['formatted_name'] ); ?></option>

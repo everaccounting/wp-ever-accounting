@@ -37,7 +37,9 @@
     "test:unit": "wp-scripts test-unit-js"
   },
   "dependencies": {
+    "@alpinejs/mask": "^3.14.3",
     "@eac/money": "file:packages/money",
+    "alpinejs": "^3.14.3",
     "chart.js": "^2.9.4",
     "lerna": "^8.1.8",
     "select-woo": "^1.0.1"

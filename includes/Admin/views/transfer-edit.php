@@ -46,13 +46,13 @@ $transfer = Transfer::make( $id );
 							'options'          => array( $transfer->expense ? $transfer->expense->account : null ),
 							'value'            => $transfer->expense ? $transfer->expense->account_id : null,
 							'class'            => 'eac_select2',
+							'required'         => true,
 							'tooltip'          => __( 'Select the account.', 'wp-ever-accounting' ),
-							'option_value'     => 'id',
-							'option_label'     => 'formatted_name',
 							'data-placeholder' => __( 'Select an account', 'wp-ever-accounting' ),
 							'data-action'      => 'eac_json_search',
 							'data-type'        => 'account',
-							'required'         => true,
+							'option_value'     => 'id',
+							'option_label'     => 'formatted_name',
 							'suffix'           => sprintf(
 								'<a class="addon" href="%s" target="_blank" title="%s"><span class="dashicons dashicons-plus"></span></a>',
 								esc_url( admin_url( 'admin.php?page=eac-banking&tab=accounts&add=yes' ) ),
@@ -60,6 +60,7 @@ $transfer = Transfer::make( $id );
 							),
 						)
 					);
+
 					eac_form_field(
 						array(
 							'type'             => 'select',
@@ -68,13 +69,13 @@ $transfer = Transfer::make( $id );
 							'options'          => array( $transfer->payment ? $transfer->payment->account : null ),
 							'value'            => $transfer->payment ? $transfer->payment->account_id : null,
 							'class'            => 'eac_select2',
+							'required'         => true,
 							'tooltip'          => __( 'Select the account.', 'wp-ever-accounting' ),
-							'option_value'     => 'id',
-							'option_label'     => 'formatted_name',
 							'data-placeholder' => __( 'Select an account', 'wp-ever-accounting' ),
 							'data-action'      => 'eac_json_search',
 							'data-type'        => 'account',
-							'required'         => true,
+							'option_value'     => 'id',
+							'option_label'     => 'formatted_name',
 							'suffix'           => sprintf(
 								'<a class="addon" href="%s" target="_blank" title="%s"><span class="dashicons dashicons-plus"></span></a>',
 								esc_url( admin_url( 'admin.php?page=eac-banking&tab=accounts&add=yes' ) ),
@@ -82,33 +83,34 @@ $transfer = Transfer::make( $id );
 							),
 						)
 					);
-					// from exchange rate.
+
 					eac_form_field(
 						array(
 							'name'          => 'from_exchange_rate',
 							'label'         => __( 'From Exchange Rate', 'wp-ever-accounting' ),
 							'value'         => $transfer->expense ? $transfer->expense->exchange_rate : '',
+							'default'       => 1,
 							'placeholder'   => '0.00',
 							'required'      => true,
 							'prefix'        => '1 ' . eac_base_currency() . ' = ',
-							'class'         => 'eac_amount',
+							'class'         => 'eac_exchange_rate',
 							'attr-step'     => 'any',
 							'readonly'      => $transfer->expense && $transfer->expense->currency === eac_base_currency(),
 							'data-currency' => $transfer->expense ? $transfer->expense->currency : eac_base_currency(),
 						)
 					);
 
-					// to exchange rate.
 					eac_form_field(
 						array(
 							'type'          => 'text',
 							'name'          => 'to_exchange_rate',
 							'label'         => __( 'To Exchange Rate', 'wp-ever-accounting' ),
 							'value'         => $transfer->payment ? $transfer->payment->exchange_rate : '',
+							'default'       => 1,
 							'placeholder'   => '0.00',
 							'required'      => true,
 							'prefix'        => '1 ' . eac_base_currency() . ' = ',
-							'class'         => 'eac_amount',
+							'class'         => 'eac_exchange_rate',
 							'attr-step'     => 'any',
 							'readonly'      => $transfer->payment && $transfer->payment->currency === eac_base_currency(),
 							'data-currency' => $transfer->payment ? $transfer->payment->currency : eac_base_currency(),
@@ -127,10 +129,11 @@ $transfer = Transfer::make( $id );
 							'class'         => 'eac_amount',
 						)
 					);
+
 					eac_form_field(
 						array(
 							'data_type'   => 'date',
-							'name'        => 'date',
+							'name'        => 'paid_at',
 							'label'       => __( 'Date', 'wp-ever-accounting' ),
 							'placeholder' => 'YYYY-MM-DD',
 							'value'       => $transfer->expense ? $transfer->expense->date : date( 'Y-m-d' ),
@@ -150,6 +153,7 @@ $transfer = Transfer::make( $id );
 							'placeholder' => __( 'Select payment method', 'wp-ever-accounting' ),
 						)
 					);
+
 					eac_form_field(
 						array(
 							'type'        => 'text',
@@ -159,6 +163,7 @@ $transfer = Transfer::make( $id );
 							'placeholder' => __( 'Enter reference', 'wp-ever-accounting' ),
 						)
 					);
+
 					eac_form_field(
 						array(
 							'type'          => 'textarea',
@@ -207,7 +212,7 @@ $transfer = Transfer::make( $id );
 
 				<div class="eac-card__footer">
 					<?php if ( $transfer->exists() ) : ?>
-						<a class="del del_confirm" href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'action', 'delete', $transfer->get_edit_url() ), 'bulk-accounts' ) ); ?>">
+						<a class="del del_confirm" href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'action', 'delete', $transfer->get_edit_url() ), 'bulk-transfers' ) ); ?>">
 							<?php esc_html_e( 'Delete', 'wp-ever-accounting' ); ?>
 						</a>
 						<button class="button button-primary"><?php esc_html_e( 'Update Transfer', 'wp-ever-accounting' ); ?></button>

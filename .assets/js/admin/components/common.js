@@ -86,6 +86,8 @@ jQuery( document ).ready( ( $ ) => {
 				const precision = eac_admin_vars.currencies[ currency ].precision || 2;
 				const symbol = eac_admin_vars.currencies[ currency ].symbol || '';
 				const position = eac_admin_vars.currencies[ currency ].position || 'before';
+				const thousand = eac_admin_vars.currencies[ currency ].thousand || ',';
+				const decimal = eac_admin_vars.currencies[ currency ].decimal || '.';
 				$this
 					.inputmask( {
 						alias: 'currency',
@@ -93,6 +95,8 @@ jQuery( document ).ready( ( $ ) => {
 						rightAlign: false,
 						allowMinus: true,
 						digits: precision,
+						radixPoint: decimal,
+						groupSeparator: thousand,
 						prefix: 'before' === position ? symbol : '',
 						suffix: 'after' === position ? symbol : '',
 						removeMaskOnSubmit: true,
@@ -100,39 +104,40 @@ jQuery( document ).ready( ( $ ) => {
 					.addClass( 'enhanced' );
 			} );
 
+		// exchange rate.
+		$( ':input.eac_exchange_rate' )
+			.filter( ':not(.enhanced)' )
+			.each( function () {
+				const $this = $( this );
+				const currency = $this.data( 'currency' ) || eac_admin_vars.base_currency;
+				const symbol = eac_admin_vars.currencies[ currency ].symbol || '';
+				$this
+					.inputmask( {
+						alias: 'currency',
+						placeholder: '0.00',
+						rightAlign: false,
+						allowMinus: true,
+						digits: 4,
+						suffix: symbol,
+						removeMaskOnSubmit: true,
+					} )
+					.addClass( 'enhanced' );
+			});
+
 		// inputMask.
 		$( '.eac_inputmask' )
 			.filter( ':not(.enhanced)' )
 			.each( function () {
 				const $this = $( this );
 				const options = {
-					alias: $this.data( 'alias' ) || '',
+					alias: $this.data( 'alias' ) || 'decimal',
+					rightAlign: false,
+					allowMinus: false,
 					placeholder: $this.data( 'placeholder' ) || '',
 					clearIncomplete: $this.data( 'clear-incomplete' ) || false,
+					removeMaskOnSubmit: true,
 				};
 				$this.addClass( 'enhanced' ).inputmask( options );
-			} );
-
-		// Number Input.
-		$( '.eac_number_input' )
-			.filter( ':not(.enhanced)' )
-			.each( function () {
-				const $this = $( this );
-				$this.addClass( 'enhanced' ).on( 'input', function () {
-					$this.value = $this.value.replace( /[^0-9]/g, '' );
-				} );
-			} );
-
-		// Decimal Input.
-		$( '.eac_decimal_input' )
-			.filter( ':not(.enhanced)' )
-			.each( function () {
-				const $this = $( this );
-				$this.addClass( 'enhanced' ).on( 'input', function () {
-					var val = $( this ).val();
-					val = val.replace( /[^0-9.]/g, '' );
-					$this.val( val );
-				} );
 			} );
 
 		// Polyfill for card padding for firefox.

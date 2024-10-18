@@ -70,3 +70,8 @@ jQuery( document ).ready( ( $ ) => {
 		} );
 	} );
 } );
+
+
+document.addEventListener("alpine:init", () => {
+	console.log("Alpine.js initialized 2");
+});

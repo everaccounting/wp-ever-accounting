@@ -2,6 +2,8 @@
 
 namespace EverAccounting\Controllers;
 
+use EverAccounting\Models\Expense;
+use EverAccounting\Models\Payment;
 use EverAccounting\Models\Transfer;
 
 defined( 'ABSPATH' ) || exit;

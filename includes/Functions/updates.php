@@ -283,15 +283,20 @@ function eac_update_120_transactions() {
 		"UPDATE $table
 	JOIN {$wpdb->prefix }ea_transactions AS payment ON payment.id = $table.payment_id
 	JOIN {$wpdb->prefix }ea_transactions AS expense ON expense.id = $table.expense_id
-	SET $table.from_account_id = expense.account_id,
-	$table.to_account_id = payment.account_id,
+	SET $table.paid_at = expense.paid_at,
+	$table.amount = expense.amount,
 	$table.amount = expense.amount,
 	$table.currency = expense.currency,
-	$table.payment_method = payment.payment_method,
-	$table.reference = payment.reference,
-	$table.note = payment.note"
+	$table.payment_method = expense.payment_method,
+	$table.reference = expense.reference,
+	$table.note = expense.note"
 	);
-	error_log( __METHOD__ );
+
+	// Now any transaction that id is either in expense_id or payment_id set editable to 0.
+	$table = $wpdb->prefix . 'ea_transactions';
+	$wpdb->query(
+		"UPDATE $table JOIN {$wpdb->prefix }ea_transfers AS transfer ON transfer.expense_id = $table.id OR transfer.payment_id = $table.id SET $table.editable = 0"
+	);
 }
 
 /**
@@ -353,7 +358,7 @@ function eac_update_120_misc() {
 			'amount'        => $account->opening_balance,
 			'currency'      => $account->currency,
 			'exchange_rate' => EAC()->currencies->get_rate( $account->currency ),
-			'paid_at'       => !empty($account->created_at) ? $account->created_at : current_time( 'mysql' ),
+			'paid_at'       => ! empty( $account->created_at ) ? $account->created_at : current_time( 'mysql' ),
 			'note'          => __( 'Opening Balance', 'wp-ever-accounting' ),
 		) );
 		$payment->save();

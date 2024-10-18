@@ -15,12 +15,18 @@ defined( 'ABSPATH' ) || exit;
  * @subpackage Models
  *
  * @property int          $id ID of the item.
- * @property int          $payment_id Payment ID of the item.
  * @property int          $expense_id Expense ID of the transfer.
- * @property int          $creator_id Creator ID of the transfer.
+ * @property int          $payment_id Payment ID of the item.
+ * @property string       $paid_at Date the transfer was transferred.
+ * @property float        $amount Amount of the transfer.
+ * @property string       $currency Currency of the transfer.
+ * @property string       $payment_method Payment method of the transfer.
+ * @property string       $reference Reference of the transfer.
+ * @property string       $note Note of the transfer.
  * @property string       $created_at Date the transfer was created.
  * @property string       $updated_at Date the transfer was last updated.
  *
+ * @property-read string $formatted_amount Formatted amount.
  * @property-read Payment $payment Payment object.
  * @property-read Expense $expense Expense object.
  */
@@ -41,8 +47,14 @@ class Transfer extends Model {
 	 */
 	protected $columns = array(
 		'id',
+		'expense_id',
 		'payment_id',
-		'expense_id'
+		'paid_at',
+		'amount',
+		'currency',
+		'payment_method',
+		'reference',
+		'note',
 	);
 
 	/**
@@ -52,17 +64,14 @@ class Transfer extends Model {
 	 * @var array
 	 */
 	protected $casts = array(
-		'date'               => 'date',
-		'payment_id'         => 'int',
-		'expense_id'         => 'int',
-		'amount'             => 'double',
-		'from_account_id'    => 'int',
-		'to_account_id'      => 'int',
-		'from_exchange_rate' => 'double',
-		'to_exchange_rate'   => 'double',
-		'reference'          => 'string',
-		'payment_method'     => 'string',
-		'note'               => 'string',
+		'payment_id'     => 'int',
+		'expense_id'     => 'int',
+		'paid_at' => 'datetime',
+		'amount'         => 'double',
+		'currency'       => 'string',
+		'payment_method' => 'string',
+		'reference'      => 'string',
+		'note'           => 'string',
 	);
 
 	/**
@@ -88,22 +97,23 @@ class Transfer extends Model {
 
 	/*
 	|--------------------------------------------------------------------------
-	| Prop Definition Methods
-	|--------------------------------------------------------------------------
-	| This section contains methods that define and provide specific prop values
-	| related to the model, such as statuses or types. These methods can be accessed
-	| without instantiating the model.
-	|--------------------------------------------------------------------------
-	*/
-
-	/*
-	|--------------------------------------------------------------------------
 	| Accessors, Mutators and Relationship
 	|--------------------------------------------------------------------------
 	| This section contains methods for getting and setting properties (accessors
 	| and mutators) as well as defining relationships between models.
 	|--------------------------------------------------------------------------
 	*/
+
+	/**
+	 * Formatted amount.
+	 *
+	 * @since 1.0.0
+	 * @return string
+	 */
+	public function get_formatted_amount() {
+		return eac_format_amount( $this->amount, $this->currency );
+	}
+
 	/**
 	 * Payment relationship.
 	 *
@@ -124,79 +134,6 @@ class Transfer extends Model {
 		return $this->belongs_to( Expense::class, 'expense_id' );
 	}
 
-//	/**
-//	 * Date attribute.
-//	 *
-//	 * @since 1.0.0
-//	 * @return string
-//	 */
-//	public function get_date() {
-//		return $this->payment ? $this->payment->date : $this->expense->date;
-//	}
-//
-//	/**
-//	 * From account.
-//	 *
-//	 * @since 1.0.0
-//	 * @return Account|null Account object or null.
-//	 */
-//	public function from_account() {
-//		if ( $this->payment && $this->payment->account ) {
-//			return $this->payment->account;
-//		}
-//		return null;
-//	}
-//
-//	/**
-//	 * To account.
-//	 *
-//	 * @since 1.0.0
-//	 * @return Account|null Account object or null.
-//	 */
-//	public function to_account() {
-//		return $this->expense && $this->expense->account ? $this->expense->account : null;
-//	}
-//
-//	/**
-//	 * Payment mode attribute.
-//	 *
-//	 * @since 1.0.0
-//	 * @return string
-//	 */
-//	public function get_payment_method() {
-//		return $this->payment ? $this->payment->payment_method : '';
-//	}
-//
-//	/**
-//	 * Reference attribute.
-//	 *
-//	 * @since 1.0.0
-//	 * @return string
-//	 */
-//	public function get_reference() {
-//		return $this->payment ? $this->payment->reference : '';
-//	}
-//
-//	/**
-//	 * Amount attribute.
-//	 *
-//	 * @since 1.0.0
-//	 * @return double
-//	 */
-//	public function get_amount() {
-//		return $this->payment ? $this->payment->amount : $this->expense->amount;
-//	}
-//
-//	/**
-//	 * Formatted amount attribute.
-//	 *
-//	 * @since 1.0.0
-//	 * @return string
-//	 */
-//	public function get_formatted_amount() {
-//		return $this->payment ? $this->payment->formatted_amount : 0;
-//	}
-
 	/*
 	|--------------------------------------------------------------------------
 	| CRUD Methods
@@ -213,90 +150,114 @@ class Transfer extends Model {
 	 * @return \WP_Error|static WP_Error on failure, or the object on success.
 	 */
 	public function save() {
-		global $wpdb;
+		$from_account_id = $this->from_account_id ? $this->from_account_id : ( $this->expense && $this->expense->account_id ? $this->expense->account_id : 0 );
+		$to_account_id   = $this->to_account_id ? $this->to_account_id : ( $this->payment && $this->payment->account_id ? $this->payment->account_id : 0 );
+		// Prepare vars.
+		$from_account = Account::find( $this->from_account_id );
+		$to_account   = Account::find( $this->to_account_id );
+		$expense      = Expense::make( $this->expense_id );
+		$payment      = Payment::make( $this->payment_id );
 
-		// from and to accounts cannot be the same.
-		if ( $this->from_account_id === $this->to_account_id ) {
+		// Check if accounts are valid.
+		if ( ! $from_account || ! $to_account ) {
+			return new \WP_Error( 'invalid_account', __( 'Invalid account.', 'wp-ever-accounting' ) );
+		}
+
+		// Check if accounts are same.
+		if ( $from_account_id === $to_account_id ) {
 			return new \WP_Error( 'same_account', __( 'From and to accounts cannot be the same.', 'wp-ever-accounting' ) );
 		}
 
-		// Prepare vars.
-//		$from_account       = Account::find( $this->from_account_id );
-//		$to_account         = Account::find( $this->to_account_id );
-//		$expense            = Expense::make( $this->expense_id );
-//		$payment            = Payment::make( $this->payment_id );
-		$from_account_id    = $this->from_account_id ? $this->from_account_id : ( $this->expense && $this->expense->account_id ? $this->expense->account_id : 0 );
-		$to_account_id      = $this->to_account_id ? $this->to_account_id : ( $this->payment && $this->payment->account_id ? $this->payment->account_id : 0 );
-		$date               = $this->date ? $this->date : ( $this->expense && $this->expense->date ? $this->expense->date : date( 'Y-m-d' ) );
-		$amount             = $this->amount ? $this->amount : ( $this->expense && $this->expense->amount ? $this->expense->amount : 0 );
-		$payment_method     = $this->payment_method ? $this->payment_method : ( $this->expense && $this->expense->payment_method ? $this->expense->payment_method : '' );
-		$from_exchange_rate = $this->from_exchange_rate ? $this->from_exchange_rate : ( $this->expense && $this->expense->exchange_rate ? $this->expense->exchange_rate : 1 );
-		$to_exchange_rate   = $this->to_exchange_rate ? $this->to_exchange_rate : ( $this->payment && $this->payment->exchange_rate ? $this->payment->exchange_rate : 1 );
-		$reference          = $this->reference ? $this->reference : ( $this->expense && $this->expense->reference ? $this->expense->reference : '' );
-		$note               = $this->note ? $this->note : ( $this->expense && $this->expense->note ? $this->expense->note : '' );
+		// Check if amount is valid.
+		if ( empty( $this->amount ) || ! is_numeric( $this->amount ) ) {
+			return new \WP_Error( 'invalid_amount', __( 'Invalid amount.', 'wp-ever-accounting' ) );
+		}
 
-		$wpdb->query( 'START TRANSACTION' );
-		$expense->fill(
-			array(
-				'date'           => $date,
-				'account_id'     => $this->from_account_id,
-				'payment_date'   => $this->date,
-				'amount'         => $this->amount,
-				'exchange_rate'  => $this->from_exchange_rate,
-				'note'           => $this->note,
-				'payment_method' => $this->payment_method,
-				'reference'      => $this->reference,
-			)
-		);
+		if ( ! empty( $this->from_exchange_rate ) ) {
+			$from_rate = floatval( $this->from_exchange_rate );
+		} else {
+			if ( ! empty( $this->expense ) && ! empty( $this->expense->exchange_rate ) ) {
+				$from_rate = floatval( $this->expense->exchange_rate );
+			} else {
+				$from_rate = floatval( EAC()->currencies->get_rate( $from_account->currency ) );
+			}
+		}
+
+		if ( ! empty( $this->to_exchange_rate ) ) {
+			$to_rate = floatval( $this->to_exchange_rate );
+		} else {
+			if ( ! empty( $this->payment ) && ! empty( $this->payment->exchange_rate ) ) {
+				$to_rate = floatval( $this->payment->exchange_rate );
+			} else {
+				$to_rate = floatval( EAC()->currencies->get_rate( $to_account->currency ) );
+			}
+		}
+
+		if ( empty( $this->paid_at ) ) {
+			$this->paid_at = current_time( 'mysql' );
+		}
+
+		$expense->fill( array(
+			'status'         => 'completed',
+			'paid_at'        => $this->paid_at,
+			'amount'         => $this->amount,
+			'currency'       => $from_account->currency,
+			'exchange_rate'  => $from_rate,
+			'reference'      => $this->reference,
+			'note'           => $this->note,
+			'payment_method' => $this->payment_method,
+			'account_id'     => $from_account_id,
+			'editable'       => false,
+		) );
+
 		$ret_val1 = $expense->save();
 		if ( is_wp_error( $ret_val1 ) ) {
-			$wpdb->query( 'ROLLBACK' );
-
 			return $ret_val1;
 		}
 
-		$this->expense_id = $expense->id;
-
 		$amount = $this->amount;
 		if ( $from_account->currency !== $to_account->currency ) {
-			$amount = eac_convert_currency( $amount, $this->from_exchange_rate, $this->to_exchange_rate );
+			$amount = eac_convert_currency( $amount, $from_rate, $to_rate );
 		}
 
-		$payment->fill(
-			array(
-				'date'           => $this->date,
-				'account_id'     => $this->to_account_id,
-				'payment_date'   => $this->date,
-				'amount'         => $amount,
-				'exchange_rate'  => $this->to_exchange_rate,
-				'note'           => $this->note,
-				'payment_method' => $this->payment_method,
-				'reference'      => $this->reference,
-			)
-		);
+		$payment->fill( array(
+			'status'         => 'completed',
+			'paid_at'        => $this->paid_at,
+			'amount'         => $amount,
+			'currency'       => $to_account->currency,
+			'exchange_rate'  => $to_rate,
+			'reference'      => $this->reference,
+			'note'           => $this->note,
+			'payment_method' => $this->payment_method,
+			'account_id'     => $to_account_id,
+			'editable'       => false,
+		) );
 
 		$ret_val2 = $payment->save();
 		if ( is_wp_error( $ret_val2 ) ) {
-			$wpdb->query( 'ROLLBACK' );
-
 			return $ret_val2;
 		}
 
-		$this->payment_id = $payment->id;
+		$this->fill( array(
+			'expense_id' => $expense->id,
+			'payment_id' => $payment->id,
+			'currency'   => $from_account->currency,
+		) );
 
-		$ret_val = parent::save();
-
-		if ( is_wp_error( $ret_val ) ) {
-			$wpdb->query( 'ROLLBACK' );
-
-			return $ret_val;
-		}
-
-		$wpdb->query( 'COMMIT' );
-
-		return $ret_val;
+		return parent::save();
 	}
 
+	/**
+	 * Delete the object from the database.
+	 *
+	 * @since 1.0.0
+	 * @return true|\WP_Error True on success, WP_Error on failure.
+	 */
+	public function delete() {
+		$this->expense()->delete();
+		$this->payment()->delete();
+		return parent::delete();
+	}
 
 	/*
 	|--------------------------------------------------------------------------

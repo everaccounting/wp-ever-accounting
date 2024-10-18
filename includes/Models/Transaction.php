@@ -30,9 +30,9 @@ defined( 'ABSPATH' ) || exit;
  * @property int             $contact_id Contact ID of the transaction.
  * @property int             $category_id Category ID of the transaction.
  * @property int             $attachment_id Attachment ID of the transaction.
- * @property int			 $author_id Author ID of the transaction.
+ * @property int             $author_id Author ID of the transaction.
  * @property int             $parent_id Parent ID of the transaction.
- * @property bool            $reconciled Whether the transaction is reconciled.
+ * @property bool            $editable Whether the transaction is editable.
  * @property string          $created_via Created via of the transaction.
  * @property string          $uuid UUID of the transaction.
  * @property string          $updated_at Date the transaction was last updated.
@@ -89,7 +89,7 @@ class Transaction extends Model {
 		'attachment_id',
 		'author_id',
 		'parent_id',
-		'reconciled',
+		'editable',
 		'created_via',
 		'uuid',
 		'updated_at',
@@ -103,10 +103,9 @@ class Transaction extends Model {
 	 * @var array
 	 */
 	protected $attributes = array(
-		'status'        => '',
-		'exchange_rate' => 1,
-		'created_via'   => 'manual',
-		'reconciled'    => false,
+		'status'      => '',
+		'created_via' => 'manual',
+		'editable'    => false,
 	);
 
 	/**
@@ -116,27 +115,27 @@ class Transaction extends Model {
 	 * @var array
 	 */
 	protected $casts = array(
-		'id'            => 'int',
-		'type'          => 'sanitize_text',
-		'status'        => 'sanitize_text',
-		'number'        => 'sanitize_text',
-		'paid_at'       => 'date',
-		'amount'        => 'float',
-		'currency'      => 'sanitize_text',
-		'exchange_rate' => 'double',
-		'reference'     => 'sanitize_text',
-		'note'          => 'sanitize_textarea',
+		'id'             => 'int',
+		'type'           => 'sanitize_text',
+		'status'         => 'sanitize_text',
+		'number'         => 'sanitize_text',
+		'paid_at'        => 'date',
+		'amount'         => 'float',
+		'currency'       => 'sanitize_text',
+		'exchange_rate'  => 'double',
+		'reference'      => 'sanitize_text',
+		'note'           => 'sanitize_textarea',
 		'payment_method' => 'sanitize_text',
-		'account_id'    => 'int',
-		'document_id'   => 'int',
-		'contact_id'    => 'int',
-		'category_id'   => 'int',
-		'attachment_id' => 'int',
-		'author_id'     => 'int',
-		'parent_id'     => 'int',
-		'reconciled'    => 'bool',
-		'created_via'   => 'sanitize_text',
-		'uuid'          => 'sanitize_text',
+		'account_id'     => 'int',
+		'document_id'    => 'int',
+		'contact_id'     => 'int',
+		'category_id'    => 'int',
+		'attachment_id'  => 'int',
+		'author_id'      => 'int',
+		'parent_id'      => 'int',
+		'editable'       => 'bool',
+		'created_via'    => 'sanitize_text',
+		'uuid'           => 'sanitize_text',
 	);
 
 	/**

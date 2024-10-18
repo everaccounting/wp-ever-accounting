@@ -20,8 +20,8 @@ jQuery(document).ready(($) => {
 				account = $(e.target).select2('data')?.[0],
 				currency = account?.currency || eac_base_currency,
 				config = eac_currencies[account?.currency] || eac_currencies[eac_base_currency];
-
 			$exchange.val(config?.rate || 1).removeClass('enhanced').data('currency', currency).attr('readonly', currency === eac_base_currency);
+			$(document.body).trigger('eac_update_ui');
 		});
 
 });
