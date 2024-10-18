@@ -12,7 +12,7 @@ use EverAccounting\Models\Category;
 
 defined( 'ABSPATH' ) || exit;
 
-$id   = filter_input( INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT );
+$id       = filter_input( INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT );
 $category = Category::make( $id );
 
 ?>

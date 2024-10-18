@@ -2,7 +2,6 @@
  * External dependencies
  */
 const glob = require( 'glob' );
-const CopyWebpackPlugin = require( 'copy-webpack-plugin' );
 /**
  * Internal dependencies
  */
@@ -18,7 +17,6 @@ module.exports = [
 
 			// 3rd party libraries.
 			'js/chartjs': './node_modules/chart.js/dist/chart.js',
-			'js/alpinejs': './node_modules/alpinejs/dist/cdn.js',
 			'js/select2': './.assets/js/vendor/select2.js',
 			'js/inputmask': './.assets/js/vendor/inputmask.js',
 			'js/tiptip': './.assets/js/vendor/tiptip.js',

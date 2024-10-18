@@ -91,7 +91,7 @@ $invoice = EAC()->invoices->get( $id );
 						<?php if ( 'draft' === $invoice->status ) : ?>
 							<button class="button button-primary"><?php esc_html_e( 'Send Invoice', 'wp-ever-accounting' ); ?></button>
 						<?php elseif ( 'sent' === $invoice->status && ! $invoice->is_paid() ) : ?>
-							<button class="button button-primary add-invoice-payment"><?php esc_html_e( 'Add Payment', 'wp-ever-accounting' ); ?></button>
+							<button class="button button-primary add-invoice-payment" data-due="<?php echo esc_attr( $invoice->total ); ?>"><?php esc_html_e( 'Add Payment', 'wp-ever-accounting' ); ?></button>
 						<?php endif; ?>
 						<button class="button button-primary"><?php esc_html_e( 'Submit', 'wp-ever-accounting' ); ?></button>
 					</div>
@@ -144,27 +144,16 @@ $invoice = EAC()->invoices->get( $id );
 			);
 			eac_form_field(
 				array(
-					'label'       => __( 'Exchange Rate', 'wp-ever-accounting' ),
-					'type'        => 'number',
-					'name'        => 'exchange_rate',
-					'value'       => 1,
-					'placeholder' => '1.00',
-					'required'    => true,
-					'class'       => 'eac_exchange_rate',
-					'prefix'      => '1 ' . eac_base_currency() . ' = ',
-					'attr-step'   => 'any',
-				)
-			);
-
-			eac_form_field(
-				array(
-					'label'       => __( 'Amount', 'wp-ever-accounting' ),
-					'name'        => 'amount',
-					'placeholder' => '0.00',
-					// 'value'         => $payment->amount,
-					'required'    => true,
-					// 'data-currency' => $payment->currency,
-					'class'       => 'eac_amount',
+					'label'         => __( 'Exchange Rate', 'wp-ever-accounting' ),
+					'type'          => 'text',
+					'name'          => 'exchange_rate',
+					'value'         => $invoice->exchange_rate,
+					'placeholder'   => '1.00',
+					'required'      => true,
+					'class'         => 'eac_exchange_rate',
+					'prefix'        => '1 ' . eac_base_currency() . ' = ',
+					'attr-step'     => 'any',
+					'data-currency' => $invoice->currency,
 				)
 			);
 
@@ -172,7 +161,7 @@ $invoice = EAC()->invoices->get( $id );
 				array(
 					'label'       => __( 'Date', 'wp-ever-accounting' ),
 					'type'        => 'date',
-					'name'        => 'date',
+					'name'        => 'payment_date',
 					'placeholder' => 'yyyy-mm-dd',
 					'value'       => wp_date( 'Y-m-d' ),
 					'required'    => true,
@@ -201,6 +190,8 @@ $invoice = EAC()->invoices->get( $id );
 			);
 			?>
 			<input type="hidden" name="invoice_id" value="<?php echo esc_attr( $invoice->id ); ?>"/>
+			<input type="hidden" name="action" value="eac_add_invoice_payment"/>
+			<?php wp_nonce_field( 'eac_add_invoice_payment' ); ?>
 		</form>
 	</div>
 	<div class="eac-modal-footer">

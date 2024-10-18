@@ -358,8 +358,8 @@ class Accounts extends Controller {
 
 		foreach ( array_keys( $this->get_schema_properties() ) as $key ) {
 			switch ( $key ) {
-				case 'created_at':
-				case 'updated_at':
+				case 'date_Created':
+				case 'date_updated':
 					$value = $this->prepare_date_response( $item->$key );
 					break;
 				default:
@@ -480,13 +480,13 @@ class Accounts extends Controller {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
-				'updated_at'   => array(
+				'date_updated' => array(
 					'description' => __( "The date the account was last updated, in the site's timezone.", 'wp-ever-accounting' ),
 					'type'        => 'date-time',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
-				'created_at'   => array(
+				'date_Created' => array(
 					'description' => __( "The date the account was created, in the site's timezone.", 'wp-ever-accounting' ),
 					'type'        => 'date-time',
 					'context'     => array( 'view', 'edit' ),

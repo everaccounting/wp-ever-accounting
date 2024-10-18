@@ -154,7 +154,7 @@ class Items {
 			array(
 				'parent_id'   => $item->id,
 				'parent_type' => 'item',
-				'orderby'     => 'created_at',
+				'orderby'     => 'date_created',
 				'order'       => 'DESC',
 				'limit'       => 20,
 			)

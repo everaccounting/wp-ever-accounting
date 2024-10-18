@@ -94,7 +94,7 @@ class Accounts extends ListTable {
 			$account = EAC()->accounts->get( $id );
 			if ( $account ) {
 				$account->update_balance();
-				++ $performed;
+				++$performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
@@ -115,7 +115,7 @@ class Accounts extends ListTable {
 		$performed = 0;
 		foreach ( $ids as $id ) {
 			if ( EAC()->accounts->delete( $id ) ) {
-				++ $performed;
+				++$performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
@@ -187,11 +187,11 @@ class Accounts extends ListTable {
 	 */
 	public function get_columns() {
 		return array(
-			'cb'         => '<input type="checkbox" />',
-			'name'       => __( 'Name', 'wp-ever-accounting' ),
-			'number'     => __( 'Number', 'wp-ever-accounting' ),
-			'created_at' => __( 'Date', 'wp-ever-accounting' ),
-			'balance'    => __( 'Balance', 'wp-ever-accounting' ),
+			'cb'           => '<input type="checkbox" />',
+			'name'         => __( 'Name', 'wp-ever-accounting' ),
+			'number'       => __( 'Number', 'wp-ever-accounting' ),
+			'date_created' => __( 'Date', 'wp-ever-accounting' ),
+			'balance'      => __( 'Balance', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -204,10 +204,10 @@ class Accounts extends ListTable {
 	 */
 	protected function get_sortable_columns() {
 		return array(
-			'name'       => array( 'name', false ),
-			'number'     => array( 'number', false ),
-			'balance'    => array( 'balance', false ),
-			'created_at' => array( 'created_at', false ),
+			'name'         => array( 'name', false ),
+			'number'       => array( 'number', false ),
+			'balance'      => array( 'balance', false ),
+			'date_created' => array( 'date_created', false ),
 		);
 	}
 
@@ -257,8 +257,8 @@ class Accounts extends ListTable {
 	 * @since  1.0.0
 	 * @return string Displays the date.
 	 */
-	public function column_created_at( $item ) {
-		return esc_html( wp_date( 'Y-m-d', strtotime( $item->created_at ) ) );
+	public function column_date_created( $item ) {
+		return esc_html( wp_date( 'Y-m-d', strtotime( $item->date_created ) ) );
 	}
 
 	/**

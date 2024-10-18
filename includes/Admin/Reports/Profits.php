@@ -22,9 +22,9 @@ class Profits {
 	 */
 	public static function render() {
 		wp_verify_nonce( '_wpnonce' );
-		$year     = ! empty( $_GET['year'] ) ? absint( $_GET['year'] ) : wp_date( 'Y' );
-		$data     = ReportsUtil::get_profits_report( $year );
-		$labels   = array_keys( $data['profits'] );
+		$year   = ! empty( $_GET['year'] ) ? absint( $_GET['year'] ) : wp_date( 'Y' );
+		$data   = ReportsUtil::get_profits_report( $year );
+		$labels = array_keys( $data['profits'] );
 		?>
 		<div class="eac-section-header">
 			<h3>

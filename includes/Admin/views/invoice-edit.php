@@ -13,12 +13,21 @@ defined( 'ABSPATH' ) || exit;
 $id      = filter_input( INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT );
 $invoice = Invoice::make( $id );
 
-$columns = EAC()->invoices->get_columns();
-$data    = $invoice->to_array();
+$columns  = EAC()->invoices->get_columns();
+$is_taxed = 'yes' === get_option( 'eac_tax_enabled', 'no' ) || $invoice->tax > 0;
+// if tax is not enabled and invoice has no tax, remove the tax column.
+if ( ! $is_taxed ) {
+	unset( $columns['tax'] );
+}
+
+
+$data = $invoice->to_array();
 foreach ( $invoice->items as $item ) {
 	$_item = $item->to_array();
-	foreach ( $item->taxes as $tax ) {
-		$_item['taxes'][] = $tax->to_array();
+	if ( $is_taxed ) {
+		foreach ( $item->taxes as $tax ) {
+			$_item['taxes'][] = $tax->to_array();
+		}
 	}
 	$data['items'][] = $_item;
 }
@@ -326,6 +335,7 @@ wp_add_inline_script(
 					<input type="hidden" name="items[{{ data.id }}][discount]" value="{{ data.discount }}">
 					<input class="item-name" type="text" name="items[{{ data.id }}][name]" value="{{ data.name }}" readonly>
 					<textarea class="item-description" name="items[{{ data.id }}][description]" placeholder="<?php esc_attr_e( 'Item Description', 'wp-ever-accounting' ); ?>">{{ data.description }}</textarea>
+					<?php if ( $is_taxed ) : ?>
 					<select class="item-taxes eac_select2" data-action="eac_json_search" data-type="tax" data-placeholder="<?php esc_attr_e( 'Select a tax rate', 'wp-ever-accounting' ); ?>" multiple>
 						<# if ( data.taxes && data.taxes.length ) { #>
 						<# _.each( data.taxes, function( taxes ) { #>
@@ -343,6 +353,7 @@ wp_add_inline_script(
 					<input type="hidden" name="items[{{ data.id }}][taxes][{{ taxes.id }}][amount]" value="{{ taxes.amount }}">
 					<# } ); #>
 					<# } #>
+				<?php endif; ?>
 					<?php
 					break;
 
@@ -385,8 +396,10 @@ wp_add_inline_script(
 		<td class="col-amount">
 			<div class="eac-input-group">
 				<select name="discount_type" id="discount_type" class="addon">
-					<option value="fixed" <# if ( 'fixed' === data.discount_type ) { #>selected="selected"<# } #>>($)</option>
-					<option value="percent" <# if ( 'percent' === data.discount_type ) { #>selected="selected"<# } #>>(%)</option>
+					<option value="fixed"
+					<# if ( 'fixed' === data.discount_type ) { #>selected="selected"<# } #>>($)</option>
+					<option value="percent"
+					<# if ( 'percent' === data.discount_type ) { #>selected="selected"<# } #>>(%)</option>
 				</select>
 				<input type="number" name="discount_value" id="discount_value" placeholder="10" style="text-align: right;width: auto;" value="{{data.discount_value}}"/>
 			</div>
@@ -408,14 +421,17 @@ wp_add_inline_script(
 			{{ data.formatted_discount || 0 }}
 		</td>
 	</tr>
-	<tr>
-		<td class="col-label" colspan="<?php echo count( $columns ) - 1; ?>">
-			<?php esc_html_e( 'Tax', 'wp-ever-accounting' ); ?>
-		</td>
-		<td class="col-amount">
-			{{ data.formatted_tax || 0 }}
-		</td>
-	</tr>
+
+	<?php if ( $is_taxed ) : ?>
+		<tr>
+			<td class="col-label" colspan="<?php echo count( $columns ) - 1; ?>">
+				<?php esc_html_e( 'Tax', 'wp-ever-accounting' ); ?>
+			</td>
+			<td class="col-amount">
+				{{ data.formatted_tax || 0 }}
+			</td>
+		</tr>
+	<?php endif; ?>
 	<tr>
 		<td class="col-label" colspan="<?php echo count( $columns ) - 1; ?>">
 			<?php esc_html_e( 'Total', 'wp-ever-accounting' ); ?>

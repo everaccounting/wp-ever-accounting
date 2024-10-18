@@ -359,10 +359,6 @@ class Taxes extends Controller {
 
 		foreach ( array_keys( $this->get_schema_properties() ) as $key ) {
 			switch ( $key ) {
-				case 'created_at':
-				case 'updated_at':
-					$value = $this->prepare_date_response( $item->$key );
-					break;
 				default:
 					$value = $item->$key;
 					break;
@@ -470,13 +466,13 @@ class Taxes extends Controller {
 					'type'        => 'string',
 					'context'     => array( 'view', 'edit' ),
 				),
-				'updated_at'     => array(
+				'date_updated'   => array(
 					'description' => __( "The date the tax was last updated, in the site's timezone.", 'wp-ever-accounting' ),
 					'type'        => 'date-time',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
-				'created_at'     => array(
+				'date_created'   => array(
 					'description' => __( "The date the tax was created, in the site's timezone.", 'wp-ever-accounting' ),
 					'type'        => 'date-time',
 					'context'     => array( 'view', 'edit' ),

@@ -33,9 +33,10 @@
 	&.is--success,
 	&.is--active,
 	&is--enabled,
+	&.is--paid,
 	&.is--completed {
 		background: #00a86b;
-		border: 1px solid #00754b;
+		border: 1px solid #00a86b;
 		color: #fff;
 	}
 

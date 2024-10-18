@@ -18,6 +18,7 @@ class Ajax {
 		add_action( 'wp_ajax_eac_json_search', array( $this, 'handle_json_search' ) );
 		add_action( 'wp_ajax_eac_add_note', array( $this, 'handle_add_note' ) );
 		add_action( 'wp_ajax_eac_delete_note', array( $this, 'handle_delete_note' ) );
+		add_action( 'wp_ajax_eac_add_invoice_payment', array( $this, 'handle_add_invoice_payment' ) );
 	}
 
 	/**
@@ -292,5 +293,64 @@ class Ajax {
 		$note->delete();
 
 		wp_die( 1 );
+	}
+
+	/**
+	 * Add invoice payment.
+	 *
+	 * @since 1.2.0
+	 * @return void
+	 */
+	public function handle_add_invoice_payment() {
+		check_ajax_referer( 'eac_add_invoice_payment' );
+
+		if ( ! current_user_can( 'eac_manage_payment' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability.
+			wp_send_json_error( array( 'message' => __( 'You do not have permission to add payment.', 'wp-ever-accounting' ) ) );
+		}
+
+		$invoice_id = isset( $_POST['invoice_id'] ) ? absint( wp_unslash( $_POST['invoice_id'] ) ) : 0;
+		$account_id = isset( $_POST['account_id'] ) ? absint( wp_unslash( $_POST['account_id'] ) ) : 0;
+		$exchange   = isset( $_POST['exchange_rate'] ) ? floatval( wp_unslash( $_POST['exchange_rate'] ) ) : '';
+		$date       = isset( $_POST['payment_date'] ) ? sanitize_text_field( wp_unslash( $_POST['payment_date'] ) ) : '';
+		$reference  = isset( $_POST['reference'] ) ? sanitize_text_field( wp_unslash( $_POST['reference'] ) ) : '';
+		$note       = isset( $_POST['note'] ) ? sanitize_text_field( wp_unslash( $_POST['note'] ) ) : '';
+
+		$invoice = EAC()->invoices->get( $invoice_id );
+		if ( ! $invoice ) {
+			wp_send_json_error( array( 'message' => __( 'Invoice not found.', 'wp-ever-accounting' ) ) );
+		}
+
+		$account = EAC()->accounts->get( $account_id );
+		if ( ! $account ) {
+			wp_send_json_error( array( 'message' => __( 'Account not found.', 'wp-ever-accounting' ) ) );
+		}
+
+		// convert the invoice amount to the account currency.
+		$amount = eac_convert_currency( $invoice->total, $invoice->exchange_rate, $exchange );
+
+		$payment = EAC()->payments->insert(
+			array(
+				'account_id'   => $account_id,
+				'exchange'     => $exchange,
+				'amount'       => $amount,
+				'payment_date' => $date,
+				'reference'    => $reference,
+				'note'         => $note,
+			)
+		);
+
+		if ( is_wp_error( $payment ) ) {
+			wp_send_json_error( array( 'message' => $payment->get_error_message() ) );
+		}
+
+		$invoice->transaction_id = $payment->id;
+		$invoice->status         = 'paid';
+		$invoice->payment_date   = $date;
+		$ret                     = $invoice->save();
+		if ( is_wp_error( $ret ) ) {
+			wp_send_json_error( array( 'message' => $ret->get_error_message() ) );
+		}
+
+		wp_send_json_success( array( 'message' => __( 'Payment added successfully.', 'wp-ever-accounting' ) ) );
 	}
 }

@@ -22,8 +22,8 @@ use ByteKit\Models\Relations\BelongsToMany;
  * @property double $cost Cost of the item.
  * @property array  $tax_ids Tax IDs of the item.
  * @property int    $category_id Category ID of the item.
- * @property string $created_at Date created of the item.
- * @property string $updated_at Date updated of the item.
+ * @property string $date_created Date created of the item.
+ * @property string $date_updated Date updated of the item.
  *
  * @property-read string   $formatted_name Formatted name of the item.
  * @property-read string   $formatted_price Formatted price of the item.
@@ -76,14 +76,14 @@ class Item extends Model {
 	 * @var array
 	 */
 	protected $casts = array(
-		'type'         => 'sanitize_text',
-		'name' 		   => 'sanitize_text',
-		'description'  => 'sanitize_textarea',
-		'unit'         => 'sanitize_text',
-		'price'        => 'double',
-		'cost'         => 'double',
-		'tax_ids'      => 'id_list',
-		'category_id'  => 'int',
+		'type'        => 'sanitize_text',
+		'name'        => 'sanitize_text',
+		'description' => 'sanitize_textarea',
+		'unit'        => 'sanitize_text',
+		'price'       => 'double',
+		'cost'        => 'double',
+		'tax_ids'     => 'id_list',
+		'category_id' => 'int',
 	);
 
 	/**

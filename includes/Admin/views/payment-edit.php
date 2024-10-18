@@ -52,8 +52,8 @@ $payment = Payment::make( $id );
 						array(
 							'label'       => __( 'Date', 'wp-ever-accounting' ),
 							'type'        => 'date',
-							'name'        => 'paid_at',
-							'value'       => $payment->paid_at,
+							'name'        => 'payment_date',
+							'value'       => $payment->payment_date,
 							'placeholder' => 'yyyy-mm-dd',
 							'class'       => 'eac_datepicker',
 							'required'    => true,
@@ -180,22 +180,6 @@ $payment = Payment::make( $id );
 							'placeholder' => __( 'Select &hellip;', 'wp-ever-accounting' ),
 						)
 					);
-
-					if ( $payment->document_id ) {
-						eac_form_field(
-							array(
-								'label'        => __( 'Invoice', 'wp-ever-accounting' ),
-								'type'         => 'select',
-								'name'         => 'invoice_id',
-								'value'        => $payment->document_id,
-								'options'      => array( $payment->document ),
-								'option_value' => 'id',
-								'option_label' => 'number',
-								'disabled'     => true,
-							)
-						);
-						printf( '<input type="hidden" name="invoice_id" value="%d">', esc_attr( $payment->document_id ) );
-					}
 
 					eac_form_field(
 						array(

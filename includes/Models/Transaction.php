@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  * @property string          $type Type of the transaction.
  * @property string          $status Status of the transaction.
  * @property string          $number Number of the transaction.
- * @property string          $paid_at Date of the transaction.
+ * @property string          $payment_date Date of the transaction.
  * @property double          $amount Amount of the transaction.
  * @property string          $currency Currency of the transaction.
  * @property double          $exchange_rate Exchange rate of the transaction.
@@ -26,7 +26,6 @@ defined( 'ABSPATH' ) || exit;
  * @property string          $note Note of the transaction.
  * @property string          $payment_method Payment mode of the transaction.
  * @property int             $account_id Account ID of the transaction.
- * @property int             $document_id Document ID of the transaction.
  * @property int             $contact_id Contact ID of the transaction.
  * @property int             $category_id Category ID of the transaction.
  * @property int             $attachment_id Attachment ID of the transaction.
@@ -35,11 +34,10 @@ defined( 'ABSPATH' ) || exit;
  * @property bool            $editable Whether the transaction is editable.
  * @property string          $created_via Created via of the transaction.
  * @property string          $uuid UUID of the transaction.
- * @property string          $updated_at Date the transaction was last updated.
- * @property string          $created_at Date the transaction was created.
+ * @property string          $date_updated Date the transaction was last updated.
+ * @property string          $date_created Date the transaction was created.
  *
  * @property-read string     $formatted_amount Formatted amount of the transaction.
- * @property-read Document   $document Related document.
  * @property-read Account    $account Related account.
  * @property-read Category   $category Related category.
  * @property-read Contact    $contact Related contact.
@@ -75,7 +73,7 @@ class Transaction extends Model {
 		'type',
 		'status',
 		'number',
-		'paid_at',
+		'payment_date',
 		'amount',
 		'currency',
 		'exchange_rate',
@@ -83,7 +81,6 @@ class Transaction extends Model {
 		'note',
 		'payment_method',
 		'account_id',
-		'document_id',
 		'contact_id',
 		'category_id',
 		'attachment_id',
@@ -92,8 +89,8 @@ class Transaction extends Model {
 		'editable',
 		'created_via',
 		'uuid',
-		'updated_at',
-		'created_at',
+		'date_updated',
+		'date_created',
 	);
 
 	/**
@@ -119,7 +116,7 @@ class Transaction extends Model {
 		'type'           => 'sanitize_text',
 		'status'         => 'sanitize_text',
 		'number'         => 'sanitize_text',
-		'paid_at'        => 'date',
+		'payment_date'   => 'date',
 		'amount'         => 'float',
 		'currency'       => 'sanitize_text',
 		'exchange_rate'  => 'double',
@@ -127,7 +124,6 @@ class Transaction extends Model {
 		'note'           => 'sanitize_textarea',
 		'payment_method' => 'sanitize_text',
 		'account_id'     => 'int',
-		'document_id'    => 'int',
 		'contact_id'     => 'int',
 		'category_id'    => 'int',
 		'attachment_id'  => 'int',
@@ -251,16 +247,6 @@ class Transaction extends Model {
 	 */
 	public function vendor() {
 		return $this->belongs_to( Vendor::class, 'contact_id' );
-	}
-
-	/**
-	 * Document relation.
-	 *
-	 * @since 1.0.0
-	 * @return BelongsTo
-	 */
-	public function document() {
-		return $this->belongs_to( Document::class );
 	}
 
 	/**

@@ -26,8 +26,6 @@ use ByteKit\Models\Relations\HasMany;
  * @property double        $discount Discount of the item.
  * @property double        $tax Tax total of the item.
  * @property double        $total Total of the item.
- * @property string        $updated_at Date updated of the item.
- * @property string        $created_at Date created of the item.
  *
  * @property double        $discounted_subtotal Discounted subtotal of the document_item.
  * @property DocumentTax[] $taxes Taxes of the document_item.
@@ -92,14 +90,6 @@ class DocumentItem extends Model {
 		'tax'         => 'double',
 		'total'       => 'double',
 	);
-
-	/**
-	 * Whether the model should be timestamped.
-	 *
-	 * @since 1.0.0
-	 * @var bool
-	 */
-	protected $has_timestamps = true;
 
 	/*
 	|--------------------------------------------------------------------------

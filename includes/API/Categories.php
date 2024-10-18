@@ -358,7 +358,7 @@ class Categories extends Controller {
 
 		foreach ( array_keys( $this->get_schema_properties() ) as $key ) {
 			switch ( $key ) {
-				case 'updated_at':
+				case 'date_updated':
 				case 'crated_at':
 					$value = $this->prepare_date_response( $item->$key );
 					break;
@@ -455,23 +455,6 @@ class Categories extends Controller {
 					'description' => __( 'Category description.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'edit' ),
-				),
-				'parent_id'   => array(
-					'description' => __( 'Parent category ID.', 'wp-ever-accounting' ),
-					'type'        => 'integer',
-					'context'     => array( 'view', 'edit' ),
-				),
-				'updated_at'  => array(
-					'description' => __( "The date the category was last updated, in the site's timezone.", 'wp-ever-accounting' ),
-					'type'        => 'date-time',
-					'context'     => array( 'view', 'edit' ),
-					'readonly'    => true,
-				),
-				'created_at'  => array(
-					'description' => __( "The date the category was created, in the site's timezone.", 'wp-ever-accounting' ),
-					'type'        => 'date-time',
-					'context'     => array( 'view', 'edit' ),
-					'readonly'    => true,
 				),
 			),
 		);

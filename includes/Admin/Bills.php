@@ -220,7 +220,7 @@ class Bills {
 			array(
 				'parent_id'   => $bill->id,
 				'parent_type' => 'bill',
-				'orderby'     => 'created_at',
+				'orderby'     => 'date_created',
 				'order'       => 'DESC',
 				'limit'       => 20,
 			)

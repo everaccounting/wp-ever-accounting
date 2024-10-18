@@ -205,7 +205,7 @@ class Settings {
 			$tooltip           = $field_description['tooltip'];
 
 			// Suffix handling.
-			$suffix                       = is_callable( $value['suffix'] ) ? call_user_func( $value['suffix'], $value ) : $value['suffix'];
+			$suffix = is_callable( $value['suffix'] ) ? call_user_func( $value['suffix'], $value ) : $value['suffix'];
 
 			// Switch based on type.
 			switch ( $value['type'] ) {
@@ -296,12 +296,12 @@ class Settings {
 					break;
 
 				case 'select':
-					$value['value'] = wp_parse_list( $value['value'] );
+					$value['value']       = wp_parse_list( $value['value'] );
 					$value['value']       = array_map( 'strval', $value['value'] );
 					$value['placeholder'] = ! empty( $value['placeholder'] ) ? $value['placeholder'] : __( 'Select an option&hellip;', 'wp-ever-accounting' );
 					if ( ! empty( $value['multiple'] ) ) {
 						$value['name'] .= '[]';
-						$attrs[]       = 'multiple="multiple"';
+						$attrs[]        = 'multiple="multiple"';
 					}
 					if ( ! empty( $value['option_key'] ) && ! empty( $value['option_value'] ) ) {
 						// verify options is an array otherwise we will make it an array.
@@ -468,14 +468,14 @@ class Settings {
 					break;
 				// Days/months/years selector.
 				case 'relative_date_selector':
-					$periods = array(
+					$periods         = array(
 						'days'   => __( 'Day(s)', 'wp-ever-accounting' ),
 						'weeks'  => __( 'Week(s)', 'wp-ever-accounting' ),
 						'months' => __( 'Month(s)', 'wp-ever-accounting' ),
 						'years'  => __( 'Year(s)', 'wp-ever-accounting' ),
 					);
-					$value['number']      = ! empty( $value['number'] ) ? absint( $value['number'] ) : '';
-					$value['period']      = ! empty( $value['period'] ) ? $value['period'] : 'days';
+					$value['number'] = ! empty( $value['number'] ) ? absint( $value['number'] ) : '';
+					$value['period'] = ! empty( $value['period'] ) ? $value['period'] : 'days';
 
 					?>
 					<tr valign="top">
@@ -528,7 +528,7 @@ class Settings {
 
 				case 'page':
 					$option_value = $value['value'];
-					$page                 = get_post( $option_value );
+					$page         = get_post( $option_value );
 
 					if ( ! is_null( $page ) ) {
 						$page                = get_post( $option_value );

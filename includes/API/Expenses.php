@@ -396,7 +396,7 @@ class Expenses extends Transactions {
 					}
 					break;
 
-				case 'updated_at':
+				case 'date_updated':
 				case 'crated_at':
 				case 'date':
 					$value = $this->prepare_date_response( $item->$key );
@@ -535,7 +535,7 @@ class Expenses extends Transactions {
 					'type'        => 'string',
 					'context'     => array( 'view', 'embed', 'edit' ),
 				),
-				'paid_at'             => array(
+				'payment_date'     => array(
 					'description' => __( 'The date the expense took place, in the site\'s timezone.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'format'      => 'date-time',
@@ -573,7 +573,7 @@ class Expenses extends Transactions {
 					'type'        => 'string',
 					'context'     => array( 'view', 'embed', 'edit' ),
 				),
-				'payment_method'     => array(
+				'payment_method'   => array(
 					'description' => __( 'Payment method of the expense.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'embed', 'edit' ),
@@ -703,13 +703,13 @@ class Expenses extends Transactions {
 					'context'     => array( 'view', 'embed', 'edit' ),
 					'readonly'    => true,
 				),
-				'updated_at'       => array(
+				'date_updated'     => array(
 					'description' => __( "The date the expense was last updated, in the site's timezone.", 'wp-ever-accounting' ),
 					'type'        => 'date-time',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
-				'created_at'       => array(
+				'date_created'     => array(
 					'description' => __( "The date the expense was created, in the site's timezone.", 'wp-ever-accounting' ),
 					'type'        => 'date-time',
 					'context'     => array( 'view', 'edit' ),

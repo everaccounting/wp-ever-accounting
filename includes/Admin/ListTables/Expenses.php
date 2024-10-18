@@ -97,7 +97,7 @@ class Expenses extends ListTable {
 		$performed = 0;
 		foreach ( $ids as $id ) {
 			if ( EAC()->expenses->delete( $id ) ) {
-				++ $performed;
+				++$performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
@@ -119,7 +119,7 @@ class Expenses extends ListTable {
 		foreach ( $ids as $id ) {
 			$expense = EAC()->expenses->get( $id );
 			if ( ! is_wp_error( $expense->set( 'status', 'completed' )->save() ) ) {
-				++ $performed;
+				++$performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
@@ -141,7 +141,7 @@ class Expenses extends ListTable {
 		foreach ( $ids as $id ) {
 			$expense = EAC()->expenses->get( $id );
 			if ( ! is_wp_error( $expense->set( 'status', 'pending' )->save() ) ) {
-				++ $performed;
+				++$performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
@@ -163,7 +163,7 @@ class Expenses extends ListTable {
 		foreach ( $ids as $id ) {
 			$expense = EAC()->expenses->get( $id );
 			if ( ! is_wp_error( $expense->set( 'status', 'refunded' )->save() ) ) {
-				++ $performed;
+				++$performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
@@ -185,7 +185,7 @@ class Expenses extends ListTable {
 		foreach ( $ids as $id ) {
 			$expense = EAC()->expenses->get( $id );
 			if ( ! is_wp_error( $expense->set( 'status', 'cancelled' )->save() ) ) {
-				++ $performed;
+				++$performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
@@ -367,11 +367,11 @@ class Expenses extends ListTable {
 			esc_url(
 				add_query_arg(
 					array(
-						'date' => $item->paid_at,
+						'date' => $item->payment_date,
 					)
 				)
 			),
-			wp_kses_post( $item->paid_at )
+			wp_kses_post( $item->payment_date )
 		);
 	}
 

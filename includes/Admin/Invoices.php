@@ -220,7 +220,7 @@ class Invoices {
 			array(
 				'parent_id'   => $invoice->id,
 				'parent_type' => 'invoice',
-				'orderby'     => 'created_at',
+				'orderby'     => 'date_created',
 				'order'       => 'DESC',
 				'limit'       => 20,
 			)

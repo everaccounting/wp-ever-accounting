@@ -364,13 +364,13 @@ class Invoices extends Documents {
 					'context'     => array( 'view', 'embed', 'edit' ),
 					'readonly'    => true,
 				),
-				'updated_at'      => array(
+				'date_updated'    => array(
 					'description' => __( 'The date the invoice was last updated, in the site\'s timezone.', 'wp-ever-accounting' ),
 					'type'        => 'date-time',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
-				'created_at'      => array(
+				'date_Created'    => array(
 					'description' => __( 'The date the invoice was created, in the site\'s timezone.', 'wp-ever-accounting' ),
 					'type'        => 'date-time',
 					'context'     => array( 'view', 'edit' ),

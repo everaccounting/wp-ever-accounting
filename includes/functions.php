@@ -57,15 +57,18 @@ function eac_get_currencies() {
 	$currencies[ $base ]['precision'] = absint( get_option( 'eac_currency_precision', 2 ) );
 
 	// now sort the currencies by formatted name but put the base currency at the top.
-	uasort( $currencies, function( $a, $b ) {
-		if ( $a['code'] === eac_base_currency() ) {
-			return -1;
+	uasort(
+		$currencies,
+		function ( $a, $b ) {
+			if ( $a['code'] === eac_base_currency() ) {
+				return -1;
+			}
+			if ( $b['code'] === eac_base_currency() ) {
+				return 1;
+			}
+			return strcasecmp( $a['formatted_name'], $b['formatted_name'] );
 		}
-		if ( $b['code'] === eac_base_currency() ) {
-			return 1;
-		}
-		return strcasecmp( $a['formatted_name'], $b['formatted_name'] );
-	} );
+	);
 
 	return $currencies;
 }
@@ -162,7 +165,7 @@ function eac_convert_currency( $amount, $from = 1, $to = 1 ) {
 
 	// If from or to any of these is not exchange rate instead a valid currency code, then get the exchange rate.
 	if ( ! is_numeric( $from ) && strlen( $from ) === 3 && array_key_exists( $from, $currencies ) ) {
-		$from =  EAC()->currencies->get_rate( $from );
+		$from = EAC()->currencies->get_rate( $from );
 	}
 	if ( ! is_numeric( $to ) && strlen( $to ) === 3 && array_key_exists( $to, $currencies ) ) {
 		$to = EAC()->currencies->get_rate( $to );

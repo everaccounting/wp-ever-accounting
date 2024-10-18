@@ -17,16 +17,16 @@ defined( 'ABSPATH' ) || exit;
  * @property int          $id ID of the item.
  * @property int          $expense_id Expense ID of the transfer.
  * @property int          $payment_id Payment ID of the item.
- * @property string       $paid_at Date the transfer was transferred.
+ * @property string       $transfer_date Date the transfer was transferred.
  * @property float        $amount Amount of the transfer.
  * @property string       $currency Currency of the transfer.
  * @property string       $payment_method Payment method of the transfer.
  * @property string       $reference Reference of the transfer.
  * @property string       $note Note of the transfer.
- * @property string       $created_at Date the transfer was created.
- * @property string       $updated_at Date the transfer was last updated.
+ * @property string       $date_created Date the transfer was created.
+ * @property string       $date_updated Date the transfer was last updated.
  *
- * @property-read string $formatted_amount Formatted amount.
+ * @property-read string  $formatted_amount Formatted amount.
  * @property-read Payment $payment Payment object.
  * @property-read Expense $expense Expense object.
  */
@@ -49,7 +49,7 @@ class Transfer extends Model {
 		'id',
 		'expense_id',
 		'payment_id',
-		'paid_at',
+		'transfer_date',
 		'amount',
 		'currency',
 		'payment_method',
@@ -66,7 +66,7 @@ class Transfer extends Model {
 	protected $casts = array(
 		'payment_id'     => 'int',
 		'expense_id'     => 'int',
-		'paid_at' => 'datetime',
+		'transfer_date'  => 'datetime',
 		'amount'         => 'double',
 		'currency'       => 'string',
 		'payment_method' => 'string',
@@ -175,40 +175,38 @@ class Transfer extends Model {
 
 		if ( ! empty( $this->from_exchange_rate ) ) {
 			$from_rate = floatval( $this->from_exchange_rate );
+		} elseif ( ! empty( $this->expense ) && ! empty( $this->expense->exchange_rate ) ) {
+			$from_rate = floatval( $this->expense->exchange_rate );
 		} else {
-			if ( ! empty( $this->expense ) && ! empty( $this->expense->exchange_rate ) ) {
-				$from_rate = floatval( $this->expense->exchange_rate );
-			} else {
-				$from_rate = floatval( EAC()->currencies->get_rate( $from_account->currency ) );
-			}
+			$from_rate = floatval( EAC()->currencies->get_rate( $from_account->currency ) );
 		}
 
 		if ( ! empty( $this->to_exchange_rate ) ) {
 			$to_rate = floatval( $this->to_exchange_rate );
+		} elseif ( ! empty( $this->payment ) && ! empty( $this->payment->exchange_rate ) ) {
+			$to_rate = floatval( $this->payment->exchange_rate );
 		} else {
-			if ( ! empty( $this->payment ) && ! empty( $this->payment->exchange_rate ) ) {
-				$to_rate = floatval( $this->payment->exchange_rate );
-			} else {
-				$to_rate = floatval( EAC()->currencies->get_rate( $to_account->currency ) );
-			}
+			$to_rate = floatval( EAC()->currencies->get_rate( $to_account->currency ) );
 		}
 
-		if ( empty( $this->paid_at ) ) {
-			$this->paid_at = current_time( 'mysql' );
+		if ( empty( $this->transfer_date ) ) {
+			$this->transfer_date = current_time( 'mysql' );
 		}
 
-		$expense->fill( array(
-			'status'         => 'completed',
-			'paid_at'        => $this->paid_at,
-			'amount'         => $this->amount,
-			'currency'       => $from_account->currency,
-			'exchange_rate'  => $from_rate,
-			'reference'      => $this->reference,
-			'note'           => $this->note,
-			'payment_method' => $this->payment_method,
-			'account_id'     => $from_account_id,
-			'editable'       => false,
-		) );
+		$expense->fill(
+			array(
+				'status'         => 'completed',
+				'payment_date'   => $this->transfer_date,
+				'amount'         => $this->amount,
+				'currency'       => $from_account->currency,
+				'exchange_rate'  => $from_rate,
+				'reference'      => $this->reference,
+				'note'           => $this->note,
+				'payment_method' => $this->payment_method,
+				'account_id'     => $from_account_id,
+				'editable'       => false,
+			)
+		);
 
 		$ret_val1 = $expense->save();
 		if ( is_wp_error( $ret_val1 ) ) {
@@ -220,29 +218,33 @@ class Transfer extends Model {
 			$amount = eac_convert_currency( $amount, $from_rate, $to_rate );
 		}
 
-		$payment->fill( array(
-			'status'         => 'completed',
-			'paid_at'        => $this->paid_at,
-			'amount'         => $amount,
-			'currency'       => $to_account->currency,
-			'exchange_rate'  => $to_rate,
-			'reference'      => $this->reference,
-			'note'           => $this->note,
-			'payment_method' => $this->payment_method,
-			'account_id'     => $to_account_id,
-			'editable'       => false,
-		) );
+		$payment->fill(
+			array(
+				'status'         => 'completed',
+				'payment_date'   => $this->transfer_date,
+				'amount'         => $amount,
+				'currency'       => $to_account->currency,
+				'exchange_rate'  => $to_rate,
+				'reference'      => $this->reference,
+				'note'           => $this->note,
+				'payment_method' => $this->payment_method,
+				'account_id'     => $to_account_id,
+				'editable'       => false,
+			)
+		);
 
 		$ret_val2 = $payment->save();
 		if ( is_wp_error( $ret_val2 ) ) {
 			return $ret_val2;
 		}
 
-		$this->fill( array(
-			'expense_id' => $expense->id,
-			'payment_id' => $payment->id,
-			'currency'   => $from_account->currency,
-		) );
+		$this->fill(
+			array(
+				'expense_id' => $expense->id,
+				'payment_id' => $payment->id,
+				'currency'   => $from_account->currency,
+			)
+		);
 
 		return parent::save();
 	}
@@ -256,6 +258,7 @@ class Transfer extends Model {
 	public function delete() {
 		$this->expense()->delete();
 		$this->payment()->delete();
+
 		return parent::delete();
 	}
 

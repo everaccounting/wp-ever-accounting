@@ -187,13 +187,13 @@ class Items extends ListTable {
 	 */
 	public function get_columns() {
 		return array(
-			'cb'         => '<input type="checkbox" />',
-			'name'       => __( 'Name', 'wp-ever-accounting' ),
-			'type'       => __( 'Type', 'wp-ever-accounting' ),
-			'category'   => __( 'Category', 'wp-ever-accounting' ),
-			'cost'       => __( 'Cost', 'wp-ever-accounting' ),
-			'price'      => __( 'Price', 'wp-ever-accounting' ),
-			'created_at' => __( 'Date', 'wp-ever-accounting' ),
+			'cb'           => '<input type="checkbox" />',
+			'name'         => __( 'Name', 'wp-ever-accounting' ),
+			'type'         => __( 'Type', 'wp-ever-accounting' ),
+			'category'     => __( 'Category', 'wp-ever-accounting' ),
+			'cost'         => __( 'Cost', 'wp-ever-accounting' ),
+			'price'        => __( 'Price', 'wp-ever-accounting' ),
+			'date_created' => __( 'Date', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -206,12 +206,12 @@ class Items extends ListTable {
 	 */
 	protected function get_sortable_columns() {
 		return array(
-			'name'       => array( 'name', false ),
-			'type'       => array( 'type', false ),
-			'category'   => array( 'category_id', false ),
-			'cost'       => array( 'cost', false ),
-			'price'      => array( 'price', false ),
-			'created_at' => array( 'created_at', false ),
+			'name'         => array( 'name', false ),
+			'type'         => array( 'type', false ),
+			'category'     => array( 'category_id', false ),
+			'cost'         => array( 'cost', false ),
+			'price'        => array( 'price', false ),
+			'date_created' => array( 'date_created', false ),
 		);
 	}
 
@@ -315,8 +315,8 @@ class Items extends ListTable {
 	 * @since  1.0.0
 	 * @return string Displays the date.
 	 */
-	public function column_created_at( $item ) {
-		return esc_html( wp_date( 'Y-m-d', strtotime( $item->created_at ) ) );
+	public function column_date_created( $item ) {
+		return esc_html( wp_date( 'Y-m-d', strtotime( $item->date_created ) ) );
 	}
 
 	/**

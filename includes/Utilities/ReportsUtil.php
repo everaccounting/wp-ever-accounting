@@ -302,14 +302,14 @@ class ReportsUtil {
 		if ( $force || empty( $reports[ $year ] ) ) {
 			$transactions = $wpdb->get_results(
 				$wpdb->prepare(
-					"SELECT (t.amount/t.exchange_rate) amount, MONTH(t.paid_at) AS month, YEAR(t.paid_at) AS year, t.category_id
+					"SELECT (t.amount/t.exchange_rate) amount, MONTH(t.payment_date) AS month, YEAR(t.payment_date) AS year, t.category_id
 					FROM {$wpdb->prefix}ea_transactions AS t
 					LEFT JOIN {$wpdb->prefix}ea_transfers AS it ON t.id = it.payment_id OR t.id = it.expense_id
 					WHERE t.type = 'payment'
 					AND it.payment_id IS NULL
 					AND it.expense_id IS NULL
-					AND t.paid_at BETWEEN %s AND %s
-					ORDER BY t.paid_at ASC",
+					AND t.payment_date BETWEEN %s AND %s
+					ORDER BY t.payment_date ASC",
 					$start_date,
 					$end_date
 				)
@@ -387,14 +387,14 @@ class ReportsUtil {
 		if ( $force || ! isset( $reports[ $year ] ) ) {
 			$transactions = $wpdb->get_results(
 				$wpdb->prepare(
-					"SELECT (t.amount/t.exchange_rate) amount, MONTH(t.paid_at) AS month, YEAR(t.paid_at) AS year, t.category_id
+					"SELECT (t.amount/t.exchange_rate) amount, MONTH(t.payment_date) AS month, YEAR(t.payment_date) AS year, t.category_id
 					FROM {$wpdb->prefix}ea_transactions AS t
 					LEFT JOIN {$wpdb->prefix}ea_transfers AS it ON t.id = it.payment_id OR t.id = it.expense_id
 					WHERE t.type = 'expense'
 					AND it.payment_id IS NULL
 					AND it.expense_id IS NULL
-					AND t.paid_at BETWEEN %s AND %s
-					ORDER BY t.paid_at ASC",
+					AND t.payment_date BETWEEN %s AND %s
+					ORDER BY t.payment_date ASC",
 					$start_date,
 					$end_date
 				)
@@ -473,13 +473,13 @@ class ReportsUtil {
 		if ( $force || ! isset( $reports[ $year ] ) ) {
 			$transactions = $wpdb->get_results(
 				$wpdb->prepare(
-					"SELECT (t.amount/t.exchange_rate) amount, MONTH(t.paid_at) AS month, YEAR(t.paid_at) AS year, t.category_id, t.type
+					"SELECT (t.amount/t.exchange_rate) amount, MONTH(t.payment_date) AS month, YEAR(t.payment_date) AS year, t.category_id, t.type
 					FROM {$wpdb->prefix}ea_transactions AS t
 					LEFT JOIN {$wpdb->prefix}ea_transfers AS it ON t.id = it.payment_id OR t.id = it.expense_id
 					WHERE it.payment_id IS NULL
 					AND it.expense_id IS NULL
-					AND t.paid_at BETWEEN %s AND %s
-					ORDER BY t.paid_at ASC",
+					AND t.payment_date BETWEEN %s AND %s
+					ORDER BY t.payment_date ASC",
 					$start_date,
 					$end_date
 				)

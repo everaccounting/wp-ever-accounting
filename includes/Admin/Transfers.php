@@ -55,17 +55,19 @@ class Transfers {
 			wp_die( esc_html__( 'You do not have permission to edit transfers.', 'wp-ever-accounting' ) );
 		}
 		$referer  = wp_get_referer();
-		$transfer = EAC()->transfers->insert( array(
-			'id'                 => isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0,
-			'from_account_id'    => isset( $_POST['from_account_id'] ) ? absint( wp_unslash( $_POST['from_account_id'] ) ) : 0,
-			'from_exchange_rate' => isset( $_POST['from_exchange_rate'] ) ? floatval( wp_unslash( $_POST['from_exchange_rate'] ) ) : 1,
-			'to_account_id'      => isset( $_POST['to_account_id'] ) ? absint( wp_unslash( $_POST['to_account_id'] ) ) : 0,
-			'to_exchange_rate'   => isset( $_POST['to_exchange_rate'] ) ? floatval( wp_unslash( $_POST['to_exchange_rate'] ) ) : 1,
-			'amount'             => isset( $_POST['amount'] ) ? floatval( wp_unslash( $_POST['amount'] ) ) : 0,
-			'payment_method'     => isset( $_POST['payment_method'] ) ? sanitize_text_field( wp_unslash( $_POST['payment_method'] ) ) : '',
-			'reference'          => isset( $_POST['reference'] ) ? sanitize_text_field( wp_unslash( $_POST['reference'] ) ) : '',
-			'note'               => isset( $_POST['note'] ) ? sanitize_textarea_field( wp_unslash( $_POST['note'] ) ) : '',
-		) );
+		$transfer = EAC()->transfers->insert(
+			array(
+				'id'                 => isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0,
+				'from_account_id'    => isset( $_POST['from_account_id'] ) ? absint( wp_unslash( $_POST['from_account_id'] ) ) : 0,
+				'from_exchange_rate' => isset( $_POST['from_exchange_rate'] ) ? floatval( wp_unslash( $_POST['from_exchange_rate'] ) ) : 1,
+				'to_account_id'      => isset( $_POST['to_account_id'] ) ? absint( wp_unslash( $_POST['to_account_id'] ) ) : 0,
+				'to_exchange_rate'   => isset( $_POST['to_exchange_rate'] ) ? floatval( wp_unslash( $_POST['to_exchange_rate'] ) ) : 1,
+				'amount'             => isset( $_POST['amount'] ) ? floatval( wp_unslash( $_POST['amount'] ) ) : 0,
+				'payment_method'     => isset( $_POST['payment_method'] ) ? sanitize_text_field( wp_unslash( $_POST['payment_method'] ) ) : '',
+				'reference'          => isset( $_POST['reference'] ) ? sanitize_text_field( wp_unslash( $_POST['reference'] ) ) : '',
+				'note'               => isset( $_POST['note'] ) ? sanitize_textarea_field( wp_unslash( $_POST['note'] ) ) : '',
+			)
+		);
 
 		if ( is_wp_error( $transfer ) ) {
 			EAC()->flash->error( $transfer->get_error_message() );

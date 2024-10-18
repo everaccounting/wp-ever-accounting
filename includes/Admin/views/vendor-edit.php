@@ -11,7 +11,7 @@ use EverAccounting\Models\Vendor;
 
 defined( 'ABSPATH' ) || exit;
 
-$id       = filter_input( INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT );
+$id     = filter_input( INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT );
 $vendor = Vendor::make( $id );
 ?>
 

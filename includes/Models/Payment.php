@@ -37,7 +37,6 @@ class Payment extends Transaction {
 	 */
 	protected $aliases = array(
 		'customer_id' => 'contact_id',
-		'invoice_id'  => 'document_id',
 	);
 
 	/**
@@ -134,7 +133,7 @@ class Payment extends Transaction {
 	 * @return \WP_Error|static WP_Error on failure, or the object on success.
 	 */
 	public function save() {
-		if ( empty( $this->paid_at ) ) {
+		if ( empty( $this->payment_date ) ) {
 			return new \WP_Error( 'missing_required', __( 'Payment date is required.', 'wp-ever-accounting' ) );
 		}
 		if ( empty( $this->status ) ) {

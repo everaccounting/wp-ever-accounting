@@ -85,7 +85,6 @@ class Bills {
 		$statuses = array(
 			'draft'     => esc_html__( 'Draft', 'wp-ever-accounting' ),
 			'received'  => esc_html__( 'Received', 'wp-ever-accounting' ),
-			'partial'   => esc_html__( 'Partial', 'wp-ever-accounting' ),
 			'paid'      => esc_html__( 'Paid', 'wp-ever-accounting' ),
 			'overdue'   => esc_html__( 'Overdue', 'wp-ever-accounting' ),
 			'cancelled' => esc_html__( 'Cancelled', 'wp-ever-accounting' ),

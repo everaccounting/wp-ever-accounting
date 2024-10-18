@@ -13,11 +13,9 @@ defined( 'ABSPATH' ) || exit;
  * @subpackage Models
  *
  * @property int    $vendor_id ID of the vendor.
- * @property int    $bill_id ID of the bill.
  *
  * @property-read string $formatted_status Formatted status.
  * @property-read string $payment_method_name Formatted mode.
- * @property-read Bill $bill Related Bill.
  */
 class Expense extends Transaction {
 	/**
@@ -36,7 +34,6 @@ class Expense extends Transaction {
 	 */
 	protected $aliases = array(
 		'vendor_id' => 'contact_id',
-		'bill_id'   => 'document_id',
 	);
 
 	/**
@@ -121,7 +118,7 @@ class Expense extends Transaction {
 	 * @return \WP_Error|static WP_Error on failure, or the object on success.
 	 */
 	public function save() {
-		if ( empty( $this->paid_at ) ) {
+		if ( empty( $this->payment_date ) ) {
 			return new \WP_Error( 'missing_required', __( 'Expense date is required.', 'wp-ever-accounting' ) );
 		}
 		if ( empty( $this->status ) ) {
@@ -201,6 +198,6 @@ class Expense extends Transaction {
 		}
 
 		$permalink = get_permalink( $page_id );
-		return add_query_arg( 'bill', $this->uuid, $permalink );
+		return add_query_arg( 'uuid', $this->uuid, $permalink );
 	}
 }

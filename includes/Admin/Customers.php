@@ -164,7 +164,7 @@ class Customers {
 		// Customer chart get the payments by month over the year.
 		$results = $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT SUM(amount/exchange_rate) as total, MONTH(paid_at) as month FROM {$wpdb->prefix}ea_transactions WHERE contact_id = %d AND YEAR(paid_at) = %d GROUP BY MONTH(paid_at)",
+				"SELECT SUM(amount/exchange_rate) as total, MONTH(payment_date) as month FROM {$wpdb->prefix}ea_transactions WHERE contact_id = %d AND YEAR(payment_date) = %d GROUP BY MONTH(payment_date)",
 				$customer->id,
 				wp_date( 'Y' )
 			)
@@ -387,7 +387,7 @@ class Customers {
 			array(
 				'parent_id'   => $customer->id,
 				'parent_type' => 'customer',
-				'orderby'     => 'created_at',
+				'orderby'     => 'date_created',
 				'order'       => 'DESC',
 				'limit'       => 20,
 			)

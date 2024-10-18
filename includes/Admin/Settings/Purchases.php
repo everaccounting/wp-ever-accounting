@@ -151,7 +151,7 @@ class Purchases extends Page {
 				'default'     => 'Thank you for your business!',
 				'desc_tip'    => true,
 			),
-			//terms.
+			// terms.
 			array(
 				'title'       => __( 'Terms', 'wp-ever-accounting' ),
 				'desc'        => __( 'The terms that will be added to the bill automatically when you create a new bill.', 'wp-ever-accounting' ),

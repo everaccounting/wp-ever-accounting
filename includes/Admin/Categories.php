@@ -47,7 +47,7 @@ class Categories {
 	public static function handle_actions() {
 		if ( isset( $_POST['action'] ) && 'eac_edit_category' === $_POST['action'] && check_admin_referer( 'eac_edit_category' ) && current_user_can( 'eac_manage_category' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability.
 			$referer = wp_get_referer();
-			$data = array(
+			$data    = array(
 				'id'          => isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0,
 				'name'        => isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '',
 				'type'        => isset( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '',

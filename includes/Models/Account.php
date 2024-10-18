@@ -20,8 +20,8 @@ defined( 'ABSPATH' ) || exit;
  * @property string             $number Account number.
  * @property float              $balance Account balance.
  * @property string             $currency Currency code.
- * @property string             $created_at Date created.
- * @property string             $updated_at Date updated.
+ * @property string             $date_created Date created.
+ * @property string             $date_updated Date updated.
  *
  * @property-read string        $formatted_name Formatted name.
  * @property-read string        $formatted_balance Formatted balance.
@@ -51,7 +51,7 @@ class Account extends Model {
 		'name',
 		'number',
 		'balance',
-		'currency'
+		'currency',
 	);
 
 	/**
@@ -71,12 +71,12 @@ class Account extends Model {
 	 * @var array
 	 */
 	protected $casts = array(
-		'id'           => 'int',
-		'type'         => 'sanitize_text',
-		'name'         => 'sanitize_text',
-		'number'       => 'sanitize_text',
-		'balance'      => 'double',
-		'currency'     => 'sanitize_text',
+		'id'       => 'int',
+		'type'     => 'sanitize_text',
+		'name'     => 'sanitize_text',
+		'number'   => 'sanitize_text',
+		'balance'  => 'double',
+		'currency' => 'sanitize_text',
 	);
 
 	/**
@@ -202,7 +202,9 @@ class Account extends Model {
 		$balance = (float) $wpdb->get_var(
 			$wpdb->prepare(
 				"SELECT SUM(CASE WHEN type='payment' then amount WHEN type='expense' then - amount END) as total
-				 FROM {$wpdb->prefix}ea_transactions WHERE account_id=%d AND status='completed'", $this->id )
+				 FROM {$wpdb->prefix}ea_transactions WHERE account_id=%d AND status='completed'",
+				$this->id
+			)
 		);
 
 		if ( $balance !== $this->balance ) {

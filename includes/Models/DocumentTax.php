@@ -20,8 +20,6 @@ use ByteKit\Models\Relations\BelongsTo;
  * @property double            $rate Rate of the item tax.
  * @property bool              $compound Compound of the item tax.
  * @property double            $amount Amount of the item tax.
- * @property string            $updated_at Date updated of the item tax.
- * @property string            $created_at Date created of the item tax.
  *
  * @property-read string       $formatted_name Formatted name of the item tax.
  * @property-read DocumentItem $item Item relationship.
@@ -80,14 +78,6 @@ class DocumentTax extends Model {
 	protected $appends = array(
 		'formatted_name',
 	);
-
-	/**
-	 * Indicates if the model should be timestamped.
-	 *
-	 * @since 1.0.0
-	 * @var bool
-	 */
-	protected $has_timestamps = true;
 
 	/*
 	|--------------------------------------------------------------------------

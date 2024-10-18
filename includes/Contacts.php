@@ -19,10 +19,10 @@ class Contacts {
 		add_action( 'eac_payment_inserted', array( __CLASS__, 'update_customer_paid' ) );
 		add_action( 'eac_payment_deleted', array( __CLASS__, 'update_customer_paid' ) );
 		add_action( 'eac_payment_updated', array( __CLASS__, 'update_customer_paid' ) );
-//		add_action( 'eac_invoice_insertedd', array( __CLASS__, 'update_customer_paid' ), 10, 2 );
-//		add_action( 'eac_invoice_updated', array( __CLASS__, 'update_customer_paid' ), 10, 2 );
-//		add_action( 'eac_invoice_deleted', array( __CLASS__, 'update_customer_paid' ), 10, 2 );
-//		add_action( 'eac_delete_customer', array( __CLASS__, 'delete_customer_reference' ) );
+		// add_action( 'eac_invoice_insertedd', array( __CLASS__, 'update_customer_paid' ), 10, 2 );
+		// add_action( 'eac_invoice_updated', array( __CLASS__, 'update_customer_paid' ), 10, 2 );
+		// add_action( 'eac_invoice_deleted', array( __CLASS__, 'update_customer_paid' ), 10, 2 );
+		// add_action( 'eac_delete_customer', array( __CLASS__, 'delete_customer_reference' ) );
 	}
 
 	/**
@@ -46,5 +46,4 @@ class Contacts {
 			$payment->customer->update_amount_paid();
 		}
 	}
-
 }

@@ -32,8 +32,6 @@ class Scripts {
 		EAC()->scripts->register_script( 'eac-inputmask', 'js/inputmask.js', array( 'jquery' ), true );
 		EAC()->scripts->register_script( 'eac-select2', 'js/select2.js', array( 'jquery' ), true );
 		EAC()->scripts->register_script( 'eac-tiptip', 'js/tiptip.js', array( 'jquery' ), true );
-		EAC()->scripts->register_script( 'eac-blockui', 'js/blockui.js', array( 'jquery' ), true );
-		EAC()->scripts->register_script( 'eac-alpinejs', 'js/alpinejs.js', array(), true );
 
 		// Packages.
 		EAC()->scripts->register_script( 'eac-money', 'client/money.js' );
@@ -44,8 +42,7 @@ class Scripts {
 		EAC()->scripts->register_script( 'eac-api', 'js/api.js', array( 'wp-backbone' ), true );
 
 		// Plugin scripts.
-		EAC()->scripts->register_script( 'eac-admin', 'js/admin.js', array('eac-alpinejs', 'jquery', 'eac-inputmask', 'eac-select2', 'eac-tiptip', 'jquery-ui-datepicker', 'jquery-ui-tooltip', 'eac-money', 'wp-ajax-response' ), true );
-		wp_enqueue_script('alpine-mask', 'https://cdn.jsdelivr.net/npm/@alpinejs/mask@3.x.x/dist/cdn.min.js', ['eac-alpinejs'], null, true);
+		EAC()->scripts->register_script( 'eac-admin', 'js/admin.js', array( 'jquery', 'eac-inputmask', 'eac-select2', 'eac-tiptip', 'jquery-ui-datepicker', 'jquery-ui-tooltip', 'eac-money', 'wp-ajax-response' ), true );
 
 		EAC()->scripts->register_style( 'eac-jquery-ui', 'css/jquery-ui.css' );
 		EAC()->scripts->register_style( 'eac-admin', 'css/admin.css', array( 'eac-jquery-ui' ) );
@@ -64,7 +61,6 @@ class Scripts {
 			return;
 		}
 		wp_enqueue_media();
-//		wp_enqueue_script( 'eac-alpinejs' );
 		wp_enqueue_script( 'eac-api' );
 		wp_enqueue_script( 'eac-form' );
 		wp_enqueue_script( 'eac-modal' );
@@ -96,9 +92,6 @@ class Scripts {
 				),
 			)
 		);
-
-//		wp_add_inline_script( 'eac-alpinejs', 'document.addEventListener(\'DOMContentLoaded\', function() { Alpine.start(); });' );
-//		wp_add_inline_script( 'eac-alpinejs', 'window.Alpine = Alpine;' );
 
 		if ( 'toplevel_page_ever-accounting' === $hook || 'ever-accounting_page_eac-reports' === $hook ) {
 			wp_enqueue_script( 'eac-chartjs' );
@@ -146,7 +139,7 @@ class Scripts {
 			if ( false !== strpos( $tag, $script ) ) {
 				return str_replace( ' src', ' defer src', $tag );
 			}
-//			var_dump($tag);
+			// var_dump($tag);
 		}
 
 		return $tag;

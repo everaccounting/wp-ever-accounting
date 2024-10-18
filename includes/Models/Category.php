@@ -19,9 +19,8 @@ defined( 'ABSPATH' ) || exit;
  * @property string $type Type of the category.
  * @property string $name Name of the category.
  * @property string $description Description of the category.
- * @property string $formatted_name Formatted name of the category.
- * @property string $created_at Date created of the category.
- * @property string $updated_at Date updated of the category.
+ *
+ * @property-read  string $formatted_name Formatted name of the category.
  */
 class Category extends Model {
 	/**
@@ -74,14 +73,6 @@ class Category extends Model {
 	protected $appends = array(
 		'formatted_name',
 	);
-
-	/**
-	 * Whether the model should be timestamped.
-	 *
-	 * @since 1.0.0
-	 * @var bool
-	 */
-	protected $has_timestamps = true;
 
 	/**
 	 * The attributes that are searchable.

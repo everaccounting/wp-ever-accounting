@@ -27,8 +27,8 @@ if ( $note->author_id ) {
 		<?php echo wp_kses_post( wpautop( wptexturize( make_clickable( $note->content ) ) ) ); ?>
 	</div>
 	<div class="note__meta">
-		<abbr class="exact-date" title="<?php echo esc_attr( $note->created_at ); ?>">
-			<?php echo esc_html( date_i18n( eac_date_time_format(), strtotime( $note->created_at ) ) ); ?>
+		<abbr class="exact-date" title="<?php echo esc_attr( $note->date_created ); ?>">
+			<?php echo esc_html( date_i18n( eac_date_time_format(), strtotime( $note->date_created ) ) ); ?>
 			<?php // translators: %s: note author. ?>
 			<?php echo esc_html( sprintf( ' ' . __( 'by %s', 'wp-ever-accounting' ), $author ) ); ?>
 		</abbr>

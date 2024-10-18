@@ -246,7 +246,7 @@ class Vendors {
 		$expenses = EAC()->expenses->query(
 			array(
 				'vendor_id' => $vendor->id,
-				'orderby'   => 'created_at',
+				'orderby'   => 'date_created',
 				'order'     => 'DESC',
 				'limit'     => 20,
 			)
@@ -297,7 +297,7 @@ class Vendors {
 		$bills = EAC()->bills->query(
 			array(
 				'vendor_id' => $vendor->id,
-				'orderby'   => 'created_at',
+				'orderby'   => 'date_created',
 				'order'     => 'DESC',
 				'limit'     => 20,
 			)
@@ -349,7 +349,7 @@ class Vendors {
 			array(
 				'parent_id'   => $vendor->id,
 				'parent_type' => 'vendor',
-				'orderby'     => 'created_at',
+				'orderby'     => 'date_created',
 				'order'       => 'DESC',
 				'limit'       => 20,
 			)

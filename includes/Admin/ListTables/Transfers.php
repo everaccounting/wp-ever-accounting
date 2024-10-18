@@ -131,7 +131,7 @@ class Transfers extends ListTable {
 	public function get_columns() {
 		return array(
 			'cb'              => '<input type="checkbox" />',
-			'paid_at'         => __( 'Date', 'wp-ever-accounting' ),
+			'transfer_date'   => __( 'Date', 'wp-ever-accounting' ),
 			'from_account_id' => __( 'From Account', 'wp-ever-accounting' ),
 			'to_account_id'   => __( 'To Account', 'wp-ever-accounting' ),
 			'reference'       => __( 'Reference', 'wp-ever-accounting' ),
@@ -147,7 +147,7 @@ class Transfers extends ListTable {
 	 */
 	protected function get_sortable_columns() {
 		return array(
-			'paid_at'            => array( 'paid_at', false ),
+			'transfer_date'   => array( 'transfer_date', false ),
 			'amount'          => array( 'amount', false ),
 			'from_account_id' => array( 'from_account_id', false ),
 			'to_account_id'   => array( 'to_account_id', false ),
@@ -162,7 +162,7 @@ class Transfers extends ListTable {
 	 * @return string
 	 */
 	public function get_primary_column_name() {
-		return 'paid_at';
+		return 'transfer_date';
 	}
 
 	/**
@@ -185,11 +185,11 @@ class Transfers extends ListTable {
 	 * @since  1.0.0
 	 * @return string Displays the date.
 	 */
-	public function column_paid_at( $item ) {
+	public function column_transfer_date( $item ) {
 		return sprintf(
 			'<a class="row-title" href="%s">%s</a>',
 			esc_url( $item->get_edit_url() ),
-			esc_html( $item->paid_at ? wp_date( 'Y-m-d', strtotime( $item->paid_at ) ) : '&mdash;' )
+			esc_html( $item->transfer_date ? wp_date( 'Y-m-d', strtotime( $item->transfer_date ) ) : '&mdash;' )
 		);
 	}
 

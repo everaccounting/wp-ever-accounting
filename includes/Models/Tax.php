@@ -14,8 +14,6 @@ namespace EverAccounting\Models;
  * @property string      $name Name of the tax.
  * @property double      $rate Rate of the tax.
  * @property bool        $compound Whether the tax is compound.
- * @property string      $created_at Date the tax was created.
- * @property string      $updated_at Date the tax was last updated.
  *
  * @property-read string $formatted_name Formatted name of the tax.
  */
@@ -63,14 +61,6 @@ class Tax extends Model {
 	protected $appends = array(
 		'formatted_name',
 	);
-
-	/**
-	 * Indicates if the model should be timestamped.
-	 *
-	 * @since 1.0.0
-	 * @var bool
-	 */
-	protected $has_timestamps = true;
 
 	/**
 	 * The attributes that are searchable.

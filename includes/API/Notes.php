@@ -358,7 +358,7 @@ class Notes extends Controller {
 
 		foreach ( array_keys( $this->get_schema_properties() ) as $key ) {
 			switch ( $key ) {
-				case 'updated_at':
+				case 'date_updated':
 				case 'crated_at':
 					$value = $this->prepare_date_response( $item->$key );
 					break;
@@ -429,7 +429,7 @@ class Notes extends Controller {
 			'title'      => __( 'Note', 'wp-ever-accounting' ),
 			'type'       => 'object',
 			'properties' => array(
-				'id'          => array(
+				'id'           => array(
 					'description' => __( 'Unique identifier for the note.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'embed', 'edit' ),
@@ -438,35 +438,35 @@ class Notes extends Controller {
 						'sanitize_callback' => 'intval',
 					),
 				),
-				'parent_id'   => array(
+				'parent_id'    => array(
 					'description' => __( 'Parent ID.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'embed', 'edit' ),
 					'required'    => true,
 				),
-				'parent_type' => array(
+				'parent_type'  => array(
 					'description' => __( 'Parent type.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'embed', 'edit' ),
 					'required'    => true,
 				),
-				'content'     => array(
+				'content'      => array(
 					'description' => __( 'Content of the note.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'embed', 'edit' ),
 				),
-				'creator_id'  => array(
+				'creator_id'   => array(
 					'description' => __( 'Creator ID.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'embed', 'edit' ),
 				),
-				'updated_at'  => array(
+				'date_updated' => array(
 					'description' => __( "The date the note was last updated, in the site's timezone.", 'wp-ever-accounting' ),
 					'type'        => 'date-time',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
-				'created_at'  => array(
+				'date_created' => array(
 					'description' => __( "The date the note was created, in the site's timezone.", 'wp-ever-accounting' ),
 					'type'        => 'date-time',
 					'context'     => array( 'view', 'edit' ),

@@ -63,11 +63,11 @@ class Accounts {
 
 		$referer = wp_get_referer();
 		$data    = array(
-			'id'           => isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0,
-			'type'         => isset( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '',
-			'name'         => isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '',
-			'number'       => isset( $_POST['number'] ) ? sanitize_text_field( wp_unslash( $_POST['number'] ) ) : '',
-			'currency'     => isset( $_POST['currency'] ) ? sanitize_text_field( wp_unslash( $_POST['currency'] ) ) : '',
+			'id'       => isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0,
+			'type'     => isset( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '',
+			'name'     => isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '',
+			'number'   => isset( $_POST['number'] ) ? sanitize_text_field( wp_unslash( $_POST['number'] ) ) : '',
+			'currency' => isset( $_POST['currency'] ) ? sanitize_text_field( wp_unslash( $_POST['currency'] ) ) : '',
 		);
 
 		$account = EAC()->accounts->insert( $data );
@@ -154,19 +154,19 @@ class Accounts {
 	 */
 	public static function overview_section( $account ) {
 		global $wpdb;
-//		wp_enqueue_script('eac-chartjs');
+		// wp_enqueue_script('eac-chartjs');
 		$start_date   = ReportsUtil::get_year_start_date();
 		$end_date     = ReportsUtil::get_year_end_date();
 		$transactions = $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT t.amount amount, MONTH(t.paid_at) AS month, YEAR(t.paid_at) AS year, t.type
+				"SELECT t.amount amount, MONTH(t.payment_date) AS month, YEAR(t.payment_date) AS year, t.type
 					FROM {$wpdb->prefix}ea_transactions AS t
 					LEFT JOIN {$wpdb->prefix}ea_transfers AS it ON t.id = it.payment_id OR t.id = it.expense_id
 					WHERE it.payment_id IS NULL
 					AND it.expense_id IS NULL
 					AND t.account_id = %d
-					AND t.paid_at BETWEEN %s AND %s
-					ORDER BY t.paid_at ASC",
+					AND t.payment_date BETWEEN %s AND %s
+					ORDER BY t.payment_date ASC",
 				$account->id,
 				$start_date,
 				$end_date
@@ -329,7 +329,7 @@ class Accounts {
 		$payments = EAC()->payments->query(
 			array(
 				'account_id' => $account->id,
-				'orderby'    => 'created_at',
+				'orderby'    => 'date_created',
 				'order'      => 'DESC',
 				'limit'      => 20,
 			)
@@ -354,8 +354,8 @@ class Accounts {
 								<?php echo esc_html( $payment->number ); ?>
 							</a>
 						</td>
-						<td><?php echo esc_html( wp_date( eac_date_format(), strtotime( $payment->issue_date ) ) ); ?></td>
-						<td><?php echo esc_html( eac_format_amount( $payment->amount ) ); ?></td>
+						<td><?php echo esc_html( wp_date( eac_date_format(), strtotime( $payment->payment_date ) ) ); ?></td>
+						<td><?php echo esc_html( $payment->formatted_amount ); ?></td>
 						<td><?php echo esc_html( $payment->status ); ?></td>
 					</tr>
 				<?php endforeach; ?>
@@ -380,7 +380,7 @@ class Accounts {
 		$expenses = EAC()->expenses->query(
 			array(
 				'account_id' => $account->id,
-				'orderby'    => 'created_at',
+				'orderby'    => 'date_created',
 				'order'      => 'DESC',
 				'limit'      => 20,
 			)
@@ -405,8 +405,8 @@ class Accounts {
 								<?php echo esc_html( $expense->number ); ?>
 							</a>
 						</td>
-						<td><?php echo esc_html( wp_date( eac_date_format(), strtotime( $expense->issue_date ) ) ); ?></td>
-						<td><?php echo esc_html( eac_format_amount( $expense->amount ) ); ?></td>
+						<td><?php echo esc_html( wp_date( eac_date_format(), strtotime( $expense->payment_date ) ) ); ?></td>
+						<td><?php echo esc_html( $expense->formatted_amount ); ?></td>
 						<td><?php echo esc_html( $expense->status ); ?></td>
 					</tr>
 				<?php endforeach; ?>
@@ -437,7 +437,7 @@ class Accounts {
 			array(
 				'parent_id'   => $account->id,
 				'parent_type' => 'account',
-				'orderby'     => 'created_at',
+				'orderby'     => 'date_created',
 				'order'       => 'DESC',
 				'limit'       => 20,
 			)

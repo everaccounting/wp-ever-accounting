@@ -70,7 +70,7 @@ $current_section = ! array_key_exists( $section, $sections ) ? current( array_ke
 			<?php endif; ?>
 			<p class="small">
 				<?php // translators: %s: date. ?>
-				<?php printf( esc_html__( 'Since %s', 'wp-ever-accounting' ), esc_html( wp_date( get_option( 'date_format' ), strtotime( $customer->created_at ) ) ) ); ?>
+				<?php printf( esc_html__( 'Since %s', 'wp-ever-accounting' ), esc_html( wp_date( get_option( 'date_format' ), strtotime( $customer->date_created ) ) ) ); ?>
 			</p>
 		</div>
 	</div>

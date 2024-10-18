@@ -53,9 +53,9 @@ $expense = Expense::make( $id );
 						array(
 							'label'       => __( 'Date', 'wp-ever-accounting' ),
 							'type'        => 'date',
-							'name'        => 'paid_at',
+							'name'        => 'payment_date',
 							'placeholder' => 'yyyy-mm-dd',
-							'value'       => $expense->paid_at,
+							'value'       => $expense->payment_date,
 							'required'    => true,
 							'class'       => 'eac_datepicker',
 						)
@@ -182,23 +182,6 @@ $expense = Expense::make( $id );
 							'placeholder' => __( 'Select &hellip;', 'wp-ever-accounting' ),
 						)
 					);
-
-					if ( $expense->document_id ) {
-						// readonly select field.
-						eac_form_field(
-							array(
-								'label'        => __( 'Bill', 'wp-ever-accounting' ),
-								'type'         => 'select',
-								'name'         => 'bill_id',
-								'value'        => $expense->document_id,
-								'options'      => array( $expense->document ),
-								'option_value' => 'id',
-								'option_label' => 'number',
-								'disabled'     => true,
-							)
-						);
-						printf('<input type="hidden" name="invoice_id" value="%d">', $expense->document_id);
-					}
 
 					eac_form_field(
 						array(

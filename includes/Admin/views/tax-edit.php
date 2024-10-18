@@ -13,7 +13,7 @@ use EverAccounting\Models\Tax;
 
 defined( 'ABSPATH' ) || exit;
 
-$id   = filter_input( INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT );
+$id  = filter_input( INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT );
 $tax = Tax::make( $id );
 
 ?>

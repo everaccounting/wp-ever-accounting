@@ -34,11 +34,11 @@ class Documents {
 	 */
 	public static function invoice_payment_updated( $payment ) {
 		$original = $payment->get_original();
-//		if ( array_key_exists( 'contact_id', $original ) && $original['contact_id'] !== $payment->contact_id && $original['contact_id'] > 0 ) {
-//			$old_customer = EAC()->customers->get( $original['contact_id'] );
-//			if ( $old_customer ) {
-//				$old_customer->update_amount_paid();
-//			}
-//		}
+		// if ( array_key_exists( 'contact_id', $original ) && $original['contact_id'] !== $payment->contact_id && $original['contact_id'] > 0 ) {
+		// $old_customer = EAC()->customers->get( $original['contact_id'] );
+		// if ( $old_customer ) {
+		// $old_customer->update_amount_paid();
+		// }
+		// }
 	}
 }

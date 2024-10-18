@@ -393,8 +393,8 @@ class Items extends Controller {
 						);
 					}
 					break;
-				case 'created_at':
-				case 'updated_at':
+				case 'date_created':
+				case 'date_updated':
 					$value = $this->prepare_date_response( $item->$key );
 					break;
 				default:
@@ -542,13 +542,13 @@ class Items extends Controller {
 					'type'        => 'integer',
 					'context'     => array( 'view', 'edit' ),
 				),
-				'updated_at'   => array(
+				'date_updated' => array(
 					'description' => __( "The date the item was last updated, in the site's timezone.", 'wp-ever-accounting' ),
 					'type'        => 'date-time',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
-				'created_at'   => array(
+				'date_created' => array(
 					'description' => __( "The date the item was created, in the site's timezone.", 'wp-ever-accounting' ),
 					'type'        => 'date-time',
 					'context'     => array( 'view', 'edit' ),

@@ -145,38 +145,26 @@ class Dashboard {
 	public static function overview_stats( $stats ) {
 		global $wpdb;
 
-		$document = $wpdb->get_row(
+		$documents = $wpdb->get_row(
 			"SELECT
-				SUM(CASE WHEN type = 'invoice' AND status NOT IN ( 'draft', 'cancelled', 'paid' ) THEN total / exchange_rate ELSE 0 END) AS invoice,
-				SUM(CASE WHEN type = 'bill' AND status NOT IN ( 'draft', 'cancelled', 'paid' ) THEN total / exchange_rate ELSE 0 END) AS bill
+				SUM(CASE WHEN type = 'invoice' AND status IN ( 'sent', 'overdue' ) THEN total / exchange_rate ELSE 0 END) AS receivable,
+				SUM(CASE WHEN type = 'bill' AND status IN ( 'received', 'overdue' ) THEN total / exchange_rate ELSE 0 END) AS payable
 		 		FROM {$wpdb->prefix}ea_documents"
 		);
 
-		$trans = $wpdb->get_row(
-			"SELECT
-				SUM(CASE WHEN document_id IN ( SELECT document_id FROM {$wpdb->prefix}ea_documents WHERE status NOT IN ( 'draft', 'cancelled', 'paid' ) AND type='invoice' ) AND type='payment' AND status='completed' THEN amount / exchange_rate ELSE 0 END) AS invoice,
-				SUM(CASE WHEN document_id IN ( SELECT document_id FROM {$wpdb->prefix}ea_documents WHERE status NOT IN ( 'draft', 'cancelled', 'paid' ) AND type='bill' ) AND type='expense' AND status='completed' THEN amount / exchange_rate ELSE 0 END) AS bill
-		 		FROM {$wpdb->prefix}ea_transactions"
-		);
-
-		// now find the payable and receivable amount by subtracting the total amount from the total paid.
-		$receivable = (float) $document->invoice - (float) $trans->invoice;
-		$payable    = (float) $document->bill - (float) $trans->bill;
-		$upcoming   = $receivable - $payable;
-
 		$stats[] = array(
 			'label' => __( 'Receivable', 'wp-ever-accounting' ),
-			'value' => eac_format_amount( $receivable ),
+			'value' => eac_format_amount( $documents->receivable ),
 		);
 
 		$stats[] = array(
 			'label' => __( 'Payable', 'wp-ever-accounting' ),
-			'value' => eac_format_amount( $payable ),
+			'value' => eac_format_amount( $documents->payable ),
 		);
 
 		$stats[] = array(
 			'label' => __( 'Upcoming', 'wp-ever-accounting' ),
-			'value' => eac_format_amount( $upcoming ),
+			'value' => eac_format_amount( $documents->receivable - $documents->payable ),
 		);
 
 		return $stats;
@@ -192,7 +180,7 @@ class Dashboard {
 		$payments = EAC()->payments->query(
 			array(
 				'limit'   => 5,
-				'orderby' => 'paid_at',
+				'orderby' => 'payment_date',
 				'order'   => 'DESC',
 			)
 		);
@@ -243,7 +231,7 @@ class Dashboard {
 		$expenses = EAC()->expenses->query(
 			array(
 				'limit'   => 5,
-				'orderby' => 'paid_at',
+				'orderby' => 'payment_date',
 				'order'   => 'DESC',
 			)
 		);
@@ -268,7 +256,7 @@ class Dashboard {
 					<?php foreach ( $expenses as $expense ) : ?>
 						<tr>
 							<td><a href="<?php echo esc_url( $expense->get_view_url() ); ?>"><?php echo esc_html( $expense->number ); ?></a></td>
-							<td><?php echo esc_html( date_i18n( eac_date_format(), strtotime( $expense->paid_at ) ) ); ?></td>
+							<td><?php echo esc_html( date_i18n( eac_date_format(), strtotime( $expense->payment_date ) ) ); ?></td>
 							<td><?php echo esc_html( $expense->formatted_amount ); ?></td>
 						</tr>
 					<?php endforeach; ?>
