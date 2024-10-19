@@ -18,11 +18,11 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { useControlledValue } from '../utils';
 
 const Date = forwardRef( ( { label, help, placeholder, prefix, disabled, ...props }, ref ) => {
-	const [ value, setValue ] = useControlledValue( {
-		defaultValue: undefined,
-		value: props.value,
-		onChange: props.onChange,
-	} );
+	// const [ value, setValue ] = useControlledValue( {
+	// 	defaultValue: undefined,
+	// 	value: props.value,
+	// 	// onChange: props.onChange,
+	// } );
 	const id = useInstanceId( Date, 'eac-input-date', props.id );
 
 	return (
@@ -56,8 +56,8 @@ const Date = forwardRef( ( { label, help, placeholder, prefix, disabled, ...prop
 				} }
 				ref={ ref }
 				disabled={ disabled }
-				value={ value }
-				onChange={ ( newValue ) => setValue( newValue ) }
+				// value={ value }
+				// onChange={ ( newValue ) => setValue( newValue ) }
 				icon={ calendar }
 				customInput={
 					<InputControl

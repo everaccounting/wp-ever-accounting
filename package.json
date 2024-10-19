@@ -38,6 +38,7 @@
   },
   "dependencies": {
     "@eac/money": "file:packages/money",
+    "@eac/components": "file:packages/components",
     "chart.js": "^2.9.4",
     "lerna": "^8.1.8",
     "select-woo": "^1.0.1"

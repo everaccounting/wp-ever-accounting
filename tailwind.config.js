@@ -9,6 +9,7 @@ module.exports = {
 		join( __dirname, 'includes/Admin/**/*.php' ),
 		join( __dirname, 'includes/Admin/views/*.php' ),
 		join( __dirname, 'templates/*/*.php' ),
+		join( __dirname, 'client/**/*.js' ),
 		join( __dirname, 'packages/*/*.js' ),
 	],
 	corePlugins: {

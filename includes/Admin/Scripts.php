@@ -17,6 +17,7 @@ class Scripts {
 	public function __construct() {
 		add_action( 'admin_enqueue_scripts', array( $this, 'register_scripts' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+//		add_action( 'admin_enqueue_scripts', array( $this, 'client_scripts' ) );
 		add_filter( 'script_loader_tag', array( $this, 'defer_scripts' ) );
 	}
 
@@ -110,12 +111,14 @@ class Scripts {
 		EAC()->scripts->register_script( 'eac-components', 'client/components.js' );
 		EAC()->scripts->register_style( 'eac-components', 'client/components.css' );
 
-		EAC()->scripts->register_script( 'eac-admin-invoice', 'client/admin-invoice.js' );
-		EAC()->scripts->register_style( 'eac-admin-invoice', 'client/admin-invoice.css' );
+		EAC()->scripts->register_script( 'eac-bill-editor', 'client/admin-bill.js' );
+//		EAC()->scripts->register_style( 'eac-bill-editor', 'client/admin-bill.css' );
 
 		// if sales page and new invoice.
-		wp_enqueue_script( 'eac-admin-invoice' );
-		wp_enqueue_style( 'eac-admin-invoice' );
+		wp_enqueue_script( 'eac-bill-editor' );
+		wp_enqueue_script( 'eac-components' );
+		wp_enqueue_style( 'eac-components' );
+//		wp_enqueue_style( 'eac-bill-editor' );
 		// if ( 'admin.php' === $hook && isset( $_GET['page'] ) && 'eac-sales' === $_GET['page'] && isset( $_GET['action'] ) && 'add' === $_GET['action'] ) {
 		// wp_enqueue_script('eac-invoice');
 		// wp_enqueue_style('eac-invoice');

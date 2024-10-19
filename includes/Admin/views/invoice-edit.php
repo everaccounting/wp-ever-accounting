@@ -251,7 +251,6 @@ wp_add_inline_script(
 	<?php wp_nonce_field( 'eac_edit_invoice' ); ?>
 </form>
 
-
 <script type="text/html" id="tmpl-eac-invoice-billing-addr">
 	<table class="document-address">
 		<tbody>
