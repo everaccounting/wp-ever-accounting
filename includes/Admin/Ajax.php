@@ -2,6 +2,8 @@
 
 namespace EverAccounting\Admin;
 
+use EverAccounting\Models\Bill;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -18,7 +20,8 @@ class Ajax {
 		add_action( 'wp_ajax_eac_json_search', array( $this, 'handle_json_search' ) );
 		add_action( 'wp_ajax_eac_add_note', array( $this, 'handle_add_note' ) );
 		add_action( 'wp_ajax_eac_delete_note', array( $this, 'handle_delete_note' ) );
-		add_action( 'wp_ajax_eac_add_invoice_payment', array( $this, 'handle_add_invoice_payment' ) );
+		add_action( 'wp_ajax_eac_add_invoice_payment', array( $this, 'add_invoice_payment' ) );
+		add_action( 'wp_ajax_eac_get_bill_address_html', array( $this, 'get_bill_address_html' ) );
 	}
 
 	/**
@@ -301,7 +304,7 @@ class Ajax {
 	 * @since 1.2.0
 	 * @return void
 	 */
-	public function handle_add_invoice_payment() {
+	public function add_invoice_payment() {
 		check_ajax_referer( 'eac_add_invoice_payment' );
 
 		if ( ! current_user_can( 'eac_manage_payment' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability.
@@ -352,5 +355,52 @@ class Ajax {
 		}
 
 		wp_send_json_success( array( 'message' => __( 'Payment added successfully.', 'wp-ever-accounting' ) ) );
+	}
+
+	/**
+	 * Get bill billings.
+	 *
+	 * @since 1.2.0
+	 * @return void
+	 */
+	public function get_bill_address_html() {
+		check_ajax_referer( 'eac_edit_bill' );
+
+		if ( ! current_user_can( 'eac_manage_bill' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability.
+			wp_die( -1 );
+		}
+
+		$vendor_id = isset( $_POST['contact_id'] ) ? absint( wp_unslash( $_POST['contact_id'] ) ) : 0;
+		$vendor    = EAC()->vendors->get( $vendor_id );
+		if ( ! $vendor ) {
+			wp_die( -1 );
+		}
+		$bill                     = new Bill();
+		$bill->contact_id         = $vendor_id;
+		$bill->contact_name       = $vendor->name;
+		$bill->contact_email      = $vendor->email;
+		$bill->contact_phone      = $vendor->phone;
+		$bill->contact_address    = $vendor->address;
+		$bill->contact_city       = $vendor->city;
+		$bill->contact_state      = $vendor->state;
+		$bill->contact_postcode   = $vendor->postcode;
+		$bill->contact_country    = $vendor->country;
+		$bill->contact_tax_number = $vendor->tax_number;
+
+		ob_start();
+		include __DIR__ . '/views/bill-editor-address.php';
+		$html = ob_get_clean();
+
+		$x = new \WP_Ajax_Response();
+		$x->add(
+			array(
+				'what' => 'billings_html',
+				'data' => $html,
+			)
+		);
+
+		$x->send();
+
+		wp_die(1);
 	}
 }

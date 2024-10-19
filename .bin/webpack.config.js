@@ -24,7 +24,6 @@ const config = {
 		path: resolve( process.cwd(), './assets/' ),
 		chunkFilename: 'chunks/[chunkhash].js',
 		uniqueName: '__eac_webpackJsonp',
-		libraryTarget: 'window'
 	},
 	resolve: {
 		...defaults.resolve,

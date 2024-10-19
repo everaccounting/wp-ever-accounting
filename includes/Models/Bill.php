@@ -161,6 +161,16 @@ class Bill extends Document {
 	}
 
 	/**
+	 * Is taxed.
+	 *
+	 * @since 1.0.0
+	 * @return bool
+	 */
+	public function is_taxed() {
+		return 'yes' === get_option( 'eac_tax_enabled', 'no' ) || ( $this->exists() && $this->tax > 0 );
+	}
+
+	/**
 	 * Get edit URL.
 	 *
 	 * @since 1.0.0

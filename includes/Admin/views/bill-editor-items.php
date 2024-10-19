@@ -1,0 +1,146 @@
+<?php if ( $bill->items ) : ?>
+	<?php foreach ( $bill->items as $item ) : ?>
+		<tr class="eac-document-items__item" data-id="<?php echo esc_attr( $item->id ); ?>">
+			<?php foreach ( $columns as $column => $label ) : ?>
+				<td class="col-<?php echo esc_attr( $column ); ?>">
+					<?php
+					switch ( $column ) {
+						case 'item':
+							printf(
+								'<input type="hidden" name="items[%1$s][id]" value="%1$s" />',
+								esc_attr( $item->id )
+							);
+							printf(
+								'<input type="hidden" name="items[%1$s][item_id]" value="%2$s" />',
+								esc_attr( $item->id ),
+								esc_attr( $item->item_id )
+							);
+							printf(
+								'<input type="hidden" name="items[%1$s][type]" value="%2$s" />',
+								esc_attr( $item->id ),
+								esc_attr( $item->type )
+							);
+							printf(
+								'<input type="hidden" name="items[%1$s][unit]" value="%2$s" />',
+								esc_attr( $item->id ),
+								esc_attr( $item->unit )
+							);
+							printf(
+								'<input class="item-name" type="text" name="items[%1$s][name]" value="%2$s" placeholder="%3$s" readonly/>',
+								esc_attr( $item->id ),
+								esc_attr( $item->name ),
+								esc_attr__( 'Name', 'wp-ever-accounting' )
+							);
+							printf(
+								'<textarea class="item-description" name="items[%1$s][description]" placeholder="%2$s">%3$s</textarea>',
+								esc_attr( $item->id ),
+								esc_attr__( 'Description', 'wp-ever-accounting' ),
+								esc_textarea( $item->description )
+							);
+
+							if ( $bill->is_taxed() ) {
+								?>
+								<select class="item-taxes eac_select2" data-action="eac_json_search" data-type="tax" data-placeholder="<?php esc_attr_e( 'Select a tax', 'wp-ever-accounting' ); ?>" multiple>
+									<?php
+									if ( $item->taxes ) {
+										foreach ( $item->taxes as $tax ) {
+											printf(
+												'<option value="%1$s" selected>%2$s</option>',
+												esc_attr( $tax->id ),
+												esc_html( $tax->formatted_name )
+											);
+										}
+									}
+									?>
+								</select>
+								<?php
+								if ( $item->taxes ) {
+									foreach ( $item->taxes as $tax ) {
+										printf(
+											'<input type="hidden" name="items[%1$s][taxes][id]" value="%2$s" />',
+											esc_attr( $item->id ),
+											esc_attr( $tax->id ),
+										);
+
+										printf(
+											'<input type="hidden" name="items[%1$s][taxes][tax_id]" value="%2$s" />',
+											esc_attr( $item->id ),
+											esc_attr( $tax->tax_id ),
+										);
+
+										printf(
+											'<input type="hidden" name="items[%1$s][taxes][name]" value="%2$s" />',
+											esc_attr( $item->id ),
+											esc_attr( $tax->name ),
+										);
+
+										printf(
+											'<input type="hidden" name="items[%1$s][taxes][rate]" value="%2$s" />',
+											esc_attr( $item->id ),
+											esc_attr( $tax->rate ),
+										);
+
+										printf(
+											'<input type="hidden" name="items[%1$s][taxes][compound]" value="%2$s" />',
+											esc_attr( $item->id ),
+											esc_attr( $tax->compound ),
+										);
+
+										printf(
+											'<input type="hidden" name="items[%1$s][taxes][amount]" value="%2$s" />',
+											esc_attr( $item->id ),
+											esc_attr( $tax->amount ),
+										);
+
+									}
+								}
+							}
+
+							break;
+
+						case 'quantity':
+							printf(
+								'<input type="number" class="item-quantity" name="items[%1$s][quantity]" value="%2$s" placeholder="%3$s" step="any" required/>',
+								esc_attr( $item->id ),
+								esc_attr( $item->quantity ),
+								esc_attr__( 'Quantity', 'wp-ever-accounting' )
+							);
+							break;
+
+						case 'price':
+							printf(
+								'<input type="number" class="item-price" name="items[%1$s][price]" value="%2$s" placeholder="%3$s" step="any" required/>',
+								esc_attr( $item->id ),
+								esc_attr( $item->price ),
+								esc_attr__( 'Price', 'wp-ever-accounting' )
+							);
+							break;
+						case 'tax':
+							printf( '<span class="item-tax">%s</span>', esc_html( eac_format_amount( $item->tax, $bill->currency ) ) );
+							break;
+
+						case 'subtotal':
+							printf( '<span class="item-subtotal">%s</span>', esc_html( eac_format_amount( $item->subtotal, $bill->currency ) ) );
+							break;
+
+						case 'default':
+							/**
+							 * Fires when a column is not defined.
+							 *
+							 * @since 1.0.0
+							 */
+							do_action( 'eac_bill_edit_item_column', $column, $item );
+							break;
+					}
+					?>
+				</td>
+			<?php endforeach; ?>
+		</tr>
+	<?php endforeach; ?>
+<?php else : ?>
+	<tr class="eac-document-items__empty">
+		<td colspan="<?php echo esc_attr( count( $columns ) ); ?>">
+			<?php esc_html_e( 'No items added yet.', 'wp-ever-accounting' ); ?>
+		</td>
+	</tr>
+<?php endif; ?>

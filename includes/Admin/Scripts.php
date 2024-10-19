@@ -2,6 +2,8 @@
 
 namespace EverAccounting\Admin;
 
+use EverAccounting\Models\Bill;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -17,8 +19,7 @@ class Scripts {
 	public function __construct() {
 		add_action( 'admin_enqueue_scripts', array( $this, 'register_scripts' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
-//		add_action( 'admin_enqueue_scripts', array( $this, 'client_scripts' ) );
-		add_filter( 'script_loader_tag', array( $this, 'defer_scripts' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'client_scripts' ) );
 	}
 
 	/**
@@ -112,39 +113,19 @@ class Scripts {
 		EAC()->scripts->register_style( 'eac-components', 'client/components.css' );
 
 		EAC()->scripts->register_script( 'eac-bill-editor', 'client/admin-bill.js' );
-//		EAC()->scripts->register_style( 'eac-bill-editor', 'client/admin-bill.css' );
+		EAC()->scripts->register_style( 'eac-bill-editor', 'client/admin-bill.css', array( 'eac-components' ) );
 
 		// if sales page and new invoice.
 		wp_enqueue_script( 'eac-bill-editor' );
-		wp_enqueue_script( 'eac-components' );
-		wp_enqueue_style( 'eac-components' );
-//		wp_enqueue_style( 'eac-bill-editor' );
-		// if ( 'admin.php' === $hook && isset( $_GET['page'] ) && 'eac-sales' === $_GET['page'] && isset( $_GET['action'] ) && 'add' === $_GET['action'] ) {
-		// wp_enqueue_script('eac-invoice');
-		// wp_enqueue_style('eac-invoice');
-		// }
-	}
+		wp_enqueue_style( 'eac-bill-editor' );
 
-	/**
-	 * Defer scripts.
-	 *
-	 * @param string $tag The script tag.
-	 *
-	 * @since 1.0.0
-	 * @return string
-	 */
-	public function defer_scripts( $tag ) {
-		$scripts = array(
-			'js/alpinejs.js',
+		wp_localize_script(
+			'eac-bill-editor',
+			'eac_bill_editor_vars',
+			array(
+				'columns' => EAC()->bills->get_columns(),
+				'bill'    => ( new Bill() )->to_array(),
+			)
 		);
-
-		foreach ( $scripts as $script ) {
-			if ( false !== strpos( $tag, $script ) ) {
-				return str_replace( ' src', ' defer src', $tag );
-			}
-			// var_dump($tag);
-		}
-
-		return $tag;
 	}
 }

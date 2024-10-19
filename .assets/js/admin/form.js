@@ -84,7 +84,7 @@
 			const name = $element.attr('name');
 			const type = $element.attr('type');
 
-			if (name === 'method') return; // Skip method field
+			if (name === 'method' || undefined === name) return; // Skip field
 
 			if (type === 'radio') {
 				values[name] = $element.is(':checked') ? $element.val() || 0 : values[name];

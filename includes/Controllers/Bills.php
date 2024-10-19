@@ -29,6 +29,12 @@ class Bills {
 	}
 
 	/**
+	 * Get instance of a bill or make a new instance.
+	 *
+	 * @param mixed $bill Bill ID or object.
+	 */
+
+	/**
 	 * Insert a new bill into the database.
 	 *
 	 * @param array $data Bill data.
@@ -101,11 +107,11 @@ class Bills {
 	 */
 	public function get_columns() {
 		$columns = array(
-			'item'      => esc_html__( 'Item', 'wp-ever-accounting' ),
-			'price'     => esc_html__( 'Price', 'wp-ever-accounting' ),
-			'quantity'  => esc_html__( 'Quantity', 'wp-ever-accounting' ),
-			'tax_total' => esc_html__( 'Tax', 'wp-ever-accounting' ),
-			'subtotal'  => esc_html__( 'Subtotal', 'wp-ever-accounting' ),
+			'item'     => esc_html__( 'Item', 'wp-ever-accounting' ),
+			'price'    => esc_html__( 'Price', 'wp-ever-accounting' ),
+			'quantity' => esc_html__( 'Quantity', 'wp-ever-accounting' ),
+			'tax'      => esc_html__( 'Tax', 'wp-ever-accounting' ),
+			'subtotal' => esc_html__( 'Subtotal', 'wp-ever-accounting' ),
 		);
 
 		return apply_filters( 'eac_bill_columns', $columns );

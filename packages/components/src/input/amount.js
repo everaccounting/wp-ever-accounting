@@ -11,13 +11,13 @@ import { useNumberFormat } from '@react-input/number-format';
 
 const Amount = forwardRef(
 	(
-		{ label, help, placeholder, prefix, suffix, disabled, value, currency = 'USD', ...props },
+		{ name, label, help, placeholder, prefix, suffix, disabled, value, currency = 'USD', ...props },
 		ref
 	) => {
 		const inputRef = useNumberFormat( { format: 'currency', currency, ...props } );
 		return (
 			<InputControl
-				{ ...{ label, help, placeholder, prefix, suffix, disabled, value } }
+				{ ...{ label, help, placeholder, prefix, suffix, disabled, value, name } }
 				label={ label }
 				help={ help }
 				prefix={ prefix }

@@ -17,7 +17,7 @@ class Tools {
 	 */
 	public function __construct() {
 		add_filter( 'eac_tools_page_tabs', array( __CLASS__, 'register_tabs' ), -1 );
-		add_action( 'eac_tools_page_import', array( __CLASS__, 'import_tab' ) );
+		add_action( 'eac_tools_page_import_content', array( __CLASS__, 'import_tab' ) );
 	}
 
 	/**
@@ -44,6 +44,6 @@ class Tools {
 	 * @return void
 	 */
 	public static function import_tab() {
-		echo '<div id="eac-app"></div>';
+		echo '<div id="eac-bill"></div>';
 	}
 }
