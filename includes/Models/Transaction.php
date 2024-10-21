@@ -26,6 +26,7 @@ defined( 'ABSPATH' ) || exit;
  * @property string          $note Note of the transaction.
  * @property string          $payment_method Payment mode of the transaction.
  * @property int             $account_id Account ID of the transaction.
+ * @property int             $document_id Document ID of the transaction.
  * @property int             $contact_id Contact ID of the transaction.
  * @property int             $category_id Category ID of the transaction.
  * @property int             $attachment_id Attachment ID of the transaction.
@@ -81,6 +82,7 @@ class Transaction extends Model {
 		'note',
 		'payment_method',
 		'account_id',
+		'document_id',
 		'contact_id',
 		'category_id',
 		'attachment_id',
@@ -124,6 +126,7 @@ class Transaction extends Model {
 		'note'           => 'sanitize_textarea',
 		'payment_method' => 'sanitize_text',
 		'account_id'     => 'int',
+		'document_id'    => 'int',
 		'contact_id'     => 'int',
 		'category_id'    => 'int',
 		'attachment_id'  => 'int',
@@ -191,7 +194,7 @@ class Transaction extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	protected function get_formatted_number() {
+	protected function get_formatted_number_attr() {
 		$number = empty( $this->number ) ? $this->get_next_number() : $this->number;
 		$prefix = strtoupper( substr( $this->type, 0, 3 ) ) . '-';
 		$next   = str_pad( $number, 4, '0', STR_PAD_LEFT );
@@ -205,7 +208,7 @@ class Transaction extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	protected function get_formatted_amount() {
+	protected function get_formatted_amount_attr() {
 		return eac_format_amount( $this->amount, $this->currency );
 	}
 

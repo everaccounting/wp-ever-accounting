@@ -2,6 +2,8 @@
 
 namespace EverAccounting\Models;
 
+use ByteKit\Models\Relations\BelongsTo;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -14,8 +16,9 @@ defined( 'ABSPATH' ) || exit;
  *
  * @property int    $vendor_id ID of the vendor.
  *
- * @property-read string $formatted_status Formatted status.
+ * @property-read string $status_label Formatted status.
  * @property-read string $payment_method_name Formatted mode.
+ * @property-read Bill   $bill Related bill.
  */
 class Expense extends Transaction {
 	/**
@@ -33,6 +36,7 @@ class Expense extends Transaction {
 	 * @var array
 	 */
 	protected $aliases = array(
+		'bill_id'   => 'document_id',
 		'vendor_id' => 'contact_id',
 	);
 
@@ -85,7 +89,7 @@ class Expense extends Transaction {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	public function get_formatted_status() {
+	public function get_status_label_attr() {
 		$statuses = EAC()->payments->get_statuses();
 
 		return array_key_exists( $this->status, $statuses ) ? $statuses[ $this->status ] : $this->status;
@@ -97,10 +101,20 @@ class Expense extends Transaction {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	public function get_payment_method_name() {
+	public function get_payment_method_name_attr() {
 		$modes = eac_get_payment_methods();
 
-		return array_key_exists( $this->mode, $modes ) ? $modes[ $this->mode ] : $this->mode;
+		return array_key_exists( $this->payment_method, $modes ) ? $modes[ $this->payment_method ] : $this->payment_method;
+	}
+
+	/**
+	 * Bill relation.
+	 *
+	 * @since 1.0.0
+	 * @return BelongsTo
+	 */
+	public function bill() {
+		return $this->belongs_to( Bill::class, 'document_id' );
 	}
 
 	/*

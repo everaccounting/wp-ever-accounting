@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "18c91ef7eac8ec3d060f3e23bc8f4fa5",
+    "content-hash": "e8b8d6033ac4bf6ff69c04bc87c5c50c",
     "packages": [
         {
             "name": "byteever/bytekit-models",
-            "version": "dev-master",
+            "version": "dev-develop",
             "source": {
                 "type": "git",
                 "url": "git@github.com:byteever/bytekit-models.git",
-                "reference": "d7ba2e6cca4ae87f08b112e6b6e1931a7dab4b9a"
+                "reference": "e0c572828b5514401b5bd2b7314d193e5e46761c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/byteever/bytekit-models/zipball/d7ba2e6cca4ae87f08b112e6b6e1931a7dab4b9a",
-                "reference": "d7ba2e6cca4ae87f08b112e6b6e1931a7dab4b9a",
+                "url": "https://api.github.com/repos/byteever/bytekit-models/zipball/e0c572828b5514401b5bd2b7314d193e5e46761c",
+                "reference": "e0c572828b5514401b5bd2b7314d193e5e46761c",
                 "shasum": ""
             },
             "require": {
@@ -35,7 +35,6 @@
                 "codeception/util-universalframework": "^1.0",
                 "lucatume/wp-browser": "<3.5"
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -97,10 +96,10 @@
             ],
             "description": "A package to manage models in WordPress.",
             "support": {
-                "source": "https://github.com/byteever/bytekit-models/tree/master",
+                "source": "https://github.com/byteever/bytekit-models/tree/develop",
                 "issues": "https://github.com/byteever/bytekit-models/issues"
             },
-            "time": "2024-10-17T11:00:24+00:00"
+            "time": "2024-10-20T14:54:09+00:00"
         },
         {
             "name": "byteever/bytekit-plugin",
@@ -284,25 +283,25 @@
         },
         {
             "name": "behat/gherkin",
-            "version": "v4.9.0",
+            "version": "v4.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Behat/Gherkin.git",
-                "reference": "0bc8d1e30e96183e4f36db9dc79caead300beff4"
+                "reference": "cbb83c4c435dd8d05a161f2a5ae322e61b2f4db6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Behat/Gherkin/zipball/0bc8d1e30e96183e4f36db9dc79caead300beff4",
-                "reference": "0bc8d1e30e96183e4f36db9dc79caead300beff4",
+                "url": "https://api.github.com/repos/Behat/Gherkin/zipball/cbb83c4c435dd8d05a161f2a5ae322e61b2f4db6",
+                "reference": "cbb83c4c435dd8d05a161f2a5ae322e61b2f4db6",
                 "shasum": ""
             },
             "require": {
                 "php": "~7.2|~8.0"
             },
             "require-dev": {
-                "cucumber/cucumber": "dev-gherkin-22.0.0",
+                "cucumber/cucumber": "dev-gherkin-24.1.0",
                 "phpunit/phpunit": "~8|~9",
-                "symfony/yaml": "~3|~4|~5"
+                "symfony/yaml": "~3|~4|~5|~6|~7"
             },
             "suggest": {
                 "symfony/yaml": "If you want to parse features, represented in YAML files"
@@ -341,9 +340,9 @@
             ],
             "support": {
                 "issues": "https://github.com/Behat/Gherkin/issues",
-                "source": "https://github.com/Behat/Gherkin/tree/v4.9.0"
+                "source": "https://github.com/Behat/Gherkin/tree/v4.10.0"
             },
-            "time": "2021-10-12T13:05:09+00:00"
+            "time": "2024-10-19T14:46:06+00:00"
         },
         {
             "name": "bordoni/phpass",
@@ -5126,12 +5125,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "062376b6f97b90ec6f8731b04c9e5879d1f70ad7"
+                "reference": "2db4b93f047a03be06ec0a890d252e1c8c635f74"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/062376b6f97b90ec6f8731b04c9e5879d1f70ad7",
-                "reference": "062376b6f97b90ec6f8731b04c9e5879d1f70ad7",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/2db4b93f047a03be06ec0a890d252e1c8c635f74",
+                "reference": "2db4b93f047a03be06ec0a890d252e1c8c635f74",
                 "shasum": ""
             },
             "conflict": {
@@ -5719,7 +5718,7 @@
                 "subhh/libconnect": "<7.0.8|>=8,<8.1",
                 "sukohi/surpass": "<1",
                 "sulu/form-bundle": ">=2,<2.5.3",
-                "sulu/sulu": "<1.6.44|>=2,<2.6.5",
+                "sulu/sulu": "<1.6.44|>=2,<2.5.21|>=2.6,<2.6.5",
                 "sumocoders/framework-user-bundle": "<1.4",
                 "superbig/craft-audit": "<3.0.2",
                 "swag/paypal": "<5.4.4",
@@ -5950,7 +5949,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-10-17T23:05:35+00:00"
+            "time": "2024-10-18T15:05:15+00:00"
         },
         {
             "name": "sebastian/cli-parser",
@@ -11387,6 +11386,6 @@
     "platform": {
         "php": ">=7.0"
     },
-    "platform-dev": {},
+    "platform-dev": [],
     "plugin-api-version": "2.6.0"
 }

@@ -285,14 +285,14 @@ class Expenses extends ListTable {
 	 */
 	public function get_columns() {
 		return array(
-			'cb'       => '<input type="checkbox" />',
-			'number'   => __( 'Expense #', 'wp-ever-accounting' ),
-			'date'     => __( 'Date', 'wp-ever-accounting' ),
-			'account'  => __( 'Account', 'wp-ever-accounting' ),
-			'customer' => __( 'Customer', 'wp-ever-accounting' ),
-			'category' => __( 'Category', 'wp-ever-accounting' ),
-			'status'   => __( 'Status', 'wp-ever-accounting' ),
-			'amount'   => __( 'Amount', 'wp-ever-accounting' ),
+			'cb'           => '<input type="checkbox" />',
+			'number'       => __( 'Expense #', 'wp-ever-accounting' ),
+			'payment_date' => __( 'Date', 'wp-ever-accounting' ),
+			'account_id'   => __( 'Account', 'wp-ever-accounting' ),
+			'customer_id'  => __( 'Customer', 'wp-ever-accounting' ),
+			'bill_id'      => __( 'Bill', 'wp-ever-accounting' ),
+			'status'       => __( 'Status', 'wp-ever-accounting' ),
+			'amount'       => __( 'Amount', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -305,13 +305,13 @@ class Expenses extends ListTable {
 	 */
 	protected function get_sortable_columns() {
 		return array(
-			'date'     => array( 'date', false ),
-			'number'   => array( 'number', false ),
-			'account'  => array( 'account', false ),
-			'category' => array( 'category', false ),
-			'customer' => array( 'customer', false ),
-			'status'   => array( 'status', false ),
-			'amount'   => array( 'amount', false ),
+			'payment_date' => array( 'payment_date', true ),
+			'number'       => array( 'number', false ),
+			'account_id'   => array( 'account_id', false ),
+			'bill_id'      => array( 'bill_id', false ),
+			'customer_id'  => array( 'customer_id', false ),
+			'status'       => array( 'status', false ),
+			'amount'       => array( 'amount', false ),
 		);
 	}
 
@@ -383,7 +383,7 @@ class Expenses extends ListTable {
 	 * @since  1.0.0
 	 * @return string Displays the account.
 	 */
-	public function column_account( $item ) {
+	public function column_account_id( $item ) {
 		$account  = $item->account ? sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( 'account_id', $item->account->id, $this->base_url ) ), wp_kses_post( $item->account->name ) ) : '&mdash;';
 		$metadata = $item->account && $item->account->type ? ucfirst( $item->account->type ) : '&mdash;';
 
@@ -391,18 +391,18 @@ class Expenses extends ListTable {
 	}
 
 	/**
-	 * Renders the category column.
+	 * Renders the bill column.
 	 *
 	 * @param Expense $item The current object.
 	 *
 	 * @since  1.0.0
 	 * @return string Displays the category.
 	 */
-	public function column_category( $item ) {
-		$category = $item->category ? sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( 'category_id', $item->category->id, $this->base_url ) ), wp_kses_post( $item->category->name ) ) : '&mdash;';
+	public function column_bill_id( $item ) {
+		$bill     = $item->bill ? sprintf( '<a href="%s">%s</a>', esc_url( $item->bill->get_view_url() ), wp_kses_post( $item->bill->number ) ) : '&mdash;';
 		$metadata = '';
 
-		return sprintf( '%s%s', $category, $this->column_metadata( $metadata ) );
+		return sprintf( '%s%s', $bill, $this->column_metadata( $metadata ) );
 	}
 
 	/**
@@ -413,7 +413,7 @@ class Expenses extends ListTable {
 	 * @since  1.0.0
 	 * @return string Displays the customer.
 	 */
-	public function column_customer( $item ) {
+	public function column_customer_id( $item ) {
 		$customer = $item->customer ? sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( 'customer_id', $item->customer->id, $this->base_url ) ), wp_kses_post( $item->customer->name ) ) : '&mdash;';
 		$metadata = $item->customer && $item->customer->company ? $item->customer->company : '';
 

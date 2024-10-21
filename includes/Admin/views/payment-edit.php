@@ -181,6 +181,20 @@ $payment = Payment::make( $id );
 						)
 					);
 
+					if ( $payment->invoice_id ) {
+						// readonly select field.
+						eac_form_field(
+							array(
+								'label'        => __( 'Invoice', 'wp-ever-accounting' ),
+								'type'         => 'text',
+								'name'         => 'invoice',
+								'value'        => $payment->invoice->number,
+								'readonly'     => true,
+							)
+						);
+						printf( '<input type="hidden" name="invoice_id" value="%d">', esc_attr( $payment->document_id ) );
+					}
+
 					eac_form_field(
 						array(
 							'label'       => __( 'Reference', 'wp-ever-accounting' ),

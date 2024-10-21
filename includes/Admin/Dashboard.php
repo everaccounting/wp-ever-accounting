@@ -101,6 +101,8 @@ class Dashboard {
 				),
 			),
 		);
+
+		var_dump($datasets);
 		?>
 		<div class="eac-card is--widget">
 			<div class="eac-card__header">

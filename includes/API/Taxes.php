@@ -218,7 +218,7 @@ class Taxes extends Controller {
 		 * @since 2.0.0
 		 */
 		$args = apply_filters( 'eac_rest_tax_query', $args, $request );
-
+		error_log( print_r( $args, true ) );
 		$taxes     = EAC()->taxes->query( $args );
 		$total     = EAC()->taxes->query( $args, true );
 		$max_pages = ceil( $total / (int) $args['per_page'] );
@@ -461,23 +461,6 @@ class Taxes extends Controller {
 					'required'    => true,
 					'default'     => false,
 				),
-				'description'    => array(
-					'description' => __( 'Tax description.', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
-				),
-				'date_updated'   => array(
-					'description' => __( "The date the tax was last updated, in the site's timezone.", 'wp-ever-accounting' ),
-					'type'        => 'date-time',
-					'context'     => array( 'view', 'edit' ),
-					'readonly'    => true,
-				),
-				'date_created'   => array(
-					'description' => __( "The date the tax was created, in the site's timezone.", 'wp-ever-accounting' ),
-					'type'        => 'date-time',
-					'context'     => array( 'view', 'edit' ),
-					'readonly'    => true,
-				),
 			),
 		);
 
@@ -491,5 +474,28 @@ class Taxes extends Controller {
 		$schema = apply_filters( 'eac_rest_tax_item_schema', $schema );
 
 		return $this->add_additional_fields_schema( $schema );
+	}
+
+	/**
+	 * Retrieves the query params for the items' collection.
+	 *
+	 * @since 2.0.0
+	 * @return array Collection parameters.
+	 */
+	public function get_collection_params() {
+		$params = parent::get_collection_params();
+
+		$params['orderby']['default'] = 'name';
+
+		/**
+		 * Filters the query parameters for a tax collection request.
+		 *
+		 * Enables adding extra arguments or setting defaults for a tax collection request.
+		 *
+		 * @param array $params Key value array of query var to query value.
+		 *
+		 * @since 2.0.0
+		 */
+		return apply_filters( 'eac_rest_tax_collection_params', $params );
 	}
 }

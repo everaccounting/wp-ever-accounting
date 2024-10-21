@@ -76,7 +76,7 @@ use ByteKit\Models\Relations\HasMany;
  * @property string         $payment_date Payment date of the document.
  * @property string         $currency Currency code of the document.
  * @property double         $exchange_rate Exchange rate of the document.
- * @property int         $transaction_id Transaction ID of the document.
+ * @property int            $transaction_id Transaction ID of the document.
  * @property int            $parent_id Parent ID of the document.
  * @property string         $created_via Created via of the document.
  * @property int            $creator_id Author ID of the document.
@@ -135,6 +135,7 @@ class Document extends Model {
 		'discount',
 		'tax',
 		'total',
+		'balance',
 		'currency',
 		'exchange_rate',
 		'contact_name',
@@ -214,13 +215,33 @@ class Document extends Model {
 	*/
 
 	/**
+	 * Get formatted subtotal.
+	 *
+	 * @since 1.0.0
+	 * @return string
+	 */
+	protected function get_formatted_subtotal_attr() {
+		return eac_format_amount( $this->subtotal, $this->currency );
+	}
+
+	/**
 	 * Get formatted tax total.
 	 *
 	 * @since 1.0.0
 	 * @return string
 	 */
-	protected function get_formatted_tax() {
+	protected function get_formatted_tax_attr() {
 		return eac_format_amount( $this->tax, $this->currency );
+	}
+
+	/**
+	 * Get formatted discount.
+	 *
+	 * @since 1.0.0
+	 * @return string
+	 */
+	protected function get_formatted_discount_attr() {
+		return eac_format_amount( $this->discount, $this->currency );
 	}
 
 	/**
@@ -229,7 +250,7 @@ class Document extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	protected function get_formatted_total() {
+	protected function get_formatted_total_attr() {
 		return eac_format_amount( $this->total, $this->currency );
 	}
 
@@ -241,7 +262,7 @@ class Document extends Model {
 	 * @since 1.1.0
 	 * @return void
 	 */
-	public function set_discount_type( $type ) {
+	public function set_discount_type_attr( $type ) {
 		if ( ! in_array( $type, array( 'fixed', 'percent' ), true ) ) {
 			$type = 'fixed';
 		}

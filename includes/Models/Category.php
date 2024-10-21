@@ -103,7 +103,7 @@ class Category extends Model {
 	 * @since 1.0.0
 	 * @return void
 	 */
-	protected function set_type( $type ) {
+	protected function set_type_attr( $type ) {
 		$this->attributes['type'] = ! array_key_exists( $type, EAC()->categories->get_types() ) ? 'item' : $type;
 	}
 
@@ -115,7 +115,7 @@ class Category extends Model {
 	 * @since 1.0.0
 	 * @return void
 	 */
-	protected function set_status( $status ) {
+	protected function set_status_attr( $status ) {
 		$this->attributes['status'] = ! array_key_exists( $status, EAC()->categories->get_types() ) ? 'active' : $status;
 	}
 
@@ -125,7 +125,7 @@ class Category extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	protected function get_formatted_name() {
+	protected function get_formatted_name_attr() {
 		return sprintf( '%s (#%d)', $this->name, $this->id );
 	}
 

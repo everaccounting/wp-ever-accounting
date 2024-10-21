@@ -190,7 +190,7 @@ class Accounts {
 		);
 		$stats[]  = array(
 			'label' => __( 'Balance', 'wp-ever-accounting' ),
-			'value' => $account->get_formatted_balance(),
+			'value' => $account->formatted_balance,
 		);
 		$stats    = apply_filters( 'eac_account_overview_stats', $stats );
 		$datasets = array(

@@ -56,7 +56,7 @@ class Taxes extends Page {
 			),
 			array(
 				'title'    => __( 'Display tax totals', 'wp-ever-accounting' ),
-				'id'       => 'eac_tax_display_totals',
+				'id'       => 'eac_tax_total_display',
 				'type'     => 'select',
 				'default'  => 'single',
 				'desc_tip' => true,

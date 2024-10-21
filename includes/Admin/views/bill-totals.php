@@ -6,8 +6,8 @@
 				<?php
 				foreach (
 					array(
-						'fixed'   => '($)',
-						'percent' => '(%)',
+						'fixed'      => '($)',
+						'percentage' => '(%)',
 					) as $key => $label
 				) :
 					?>
@@ -35,15 +35,28 @@
 	</td>
 </tr>
 
-<?php if ( $is_taxed ) : ?>
-	<tr>
-		<td class="col-label" colspan="<?php echo count( $columns ) - 1; ?>">
-			<?php esc_html_e( 'Tax', 'wp-ever-accounting' ); ?>
-		</td>
-		<td class="col-amount">
-			<?php echo esc_html( $bill->formatted_tax ); ?>
-		</td>
-	</tr>
+<?php if ( $bill->is_taxed() ) : ?>
+	<?php if ( 'single' === get_option( 'eac_tax_total_display' ) ) : ?>
+		<tr>
+			<td class="col-label" colspan="<?php echo count( $columns ) - 1; ?>">
+				<?php esc_html_e( 'Tax', 'wp-ever-accounting' ); ?>
+			</td>
+			<td class="col-amount">
+				<?php echo esc_html( $bill->formatted_tax ); ?>
+			</td>
+		</tr>
+	<?php else : ?>
+		<?php foreach ( $bill->get_itemized_taxes() as $tax ) : ?>
+			<tr>
+				<td class="col-label" colspan="<?php echo count( $columns ) - 1; ?>">
+					<?php echo esc_html( $tax->formatted_name ); ?>
+				</td>
+				<td class="col-amount">
+					<?php echo esc_html( eac_format_amount( $tax->amount, $bill->currency ) ); ?>
+				</td>
+			</tr>
+		<?php endforeach; ?>
+	<?php endif; ?>
 <?php endif; ?>
 
 <tr>

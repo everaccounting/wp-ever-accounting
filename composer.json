@@ -28,7 +28,7 @@
   ],
   "require": {
     "php": ">=7.0",
-    "byteever/bytekit-models": "dev-master",
+    "byteever/bytekit-models": "dev-develop",
     "byteever/bytekit-plugin": "dev-master",
     "woocommerce/action-scheduler": "^3.7"
   },
@@ -60,7 +60,7 @@
   "scripts": {
     "phpcs": "@php ./vendor/bin/phpcs --standard=phpcs.xml -s -v",
     "phpcbf": "@php ./vendor/bin/phpcbf --standard=phpcs.xml -v",
-    "test:setup": "bash bin/install-test-env.sh",
+    "test:setup": "bash ./.bin/setup-tests.sh",
     "test:init": "vendor/bin/codecept init wpbrowser",
     "test:build": "vendor/bin/codecept build",
     "test:wpunit": "vendor/bin/codecept run wpunit --",

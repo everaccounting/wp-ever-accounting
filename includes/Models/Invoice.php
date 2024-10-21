@@ -72,7 +72,7 @@ class Invoice extends Document {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	public function get_status_label() {
+	public function get_status_label_attr() {
 		$statuses = EAC()->invoices->get_statuses();
 
 		return array_key_exists( $this->status, $statuses ) ? $statuses[ $this->status ] : $this->status;
@@ -121,6 +121,25 @@ class Invoice extends Document {
 		}
 
 		return parent::save();
+	}
+	/*
+	|--------------------------------------------------------------------------
+	| Invoice Item Handling
+	|--------------------------------------------------------------------------
+	| Invoice items are used for products, taxes, shipping, and fees within
+	| each order.
+	*/
+
+	/**
+	 * Set items.
+	 *
+	 * @param array $items Items.
+	 *
+	 * @since 1.0.0
+	 * @return $this
+	 */
+	public function set_items( $items ) {
+		$this->items = array();
 	}
 
 	/*
@@ -182,6 +201,29 @@ class Invoice extends Document {
 		}
 
 		return $round ? round( $total, 2 ) : $total;
+	}
+
+	/**
+	 * Get itemized taxes.
+	 *
+	 * @since 1.0.0
+	 * @return array
+	 */
+	public function get_itemized_taxes() {
+		$taxes = array();
+		foreach ( $this->items as $item ) {
+			if ( ! empty( $item->taxes ) ) {
+				foreach ( $item->taxes as $tax ) {
+					if ( !isset( $taxes[ $tax->tax_id] ) ) {
+						$taxes[ $tax->tax_id ] = $tax;
+					} else {
+						$taxes[ $tax->tax_id ]->amount += $tax->amount;
+					}
+				}
+			}
+		}
+
+		return $taxes;
 	}
 
 	/**

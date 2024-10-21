@@ -44,6 +44,13 @@ class Tools {
 	 * @return void
 	 */
 	public static function import_tab() {
-		echo '<div id="eac-bill"></div>';
+		?>
+		<div class="eac-poststuff">
+			<div class="column-1">
+				<div id="eac-bill"></div>'
+			</div>
+			<div class="column-2"></div>
+		</div>
+		<?php
 	}
 }

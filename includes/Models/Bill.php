@@ -14,8 +14,8 @@ use ByteKit\Models\Relations\BelongsTo;
  *
  * @author  Sultan Nasir Uddin <manikdrmc@gmail.com>
  *
- * @property int $id Invoice ID.
- * @property int $vendor_id Vendor ID.
+ * @property int    $id Invoice ID.
+ * @property int    $vendor_id Vendor ID.
  * @property string $order_number Order number.
  *
  * @property Vendor $vendor Vendor relation.
@@ -101,6 +101,95 @@ class Bill extends Document {
 
 	/*
 	|--------------------------------------------------------------------------
+	| Line Item Handling
+	|--------------------------------------------------------------------------
+	| Line items are used for products, and fees within the document.
+	*/
+
+	/**
+	 * Set items.
+	 *
+	 * @param array $items Items.
+	 *
+	 * @since 1.0.0
+	 * @return $this
+	 */
+	public function set_items( $items ) {
+		// $this->items()->delete();
+		$this->items = array();
+
+		$items_total = 0;
+		foreach ( $items as $i => &$itemdata ) {
+			$quantity = isset( $itemdata['quantity'] ) ? floatval( $itemdata['quantity'] ) : 1;
+			$item_id  = isset( $itemdata['item_id'] ) ? absint( $itemdata['item_id'] ) : 0;
+			$item     = EAC()->items->get( $item_id );
+
+			// If item not found, skip.
+			if ( ! $item || $quantity <= 0 ) {
+				unset( $items[ $i ] );
+				continue;
+			}
+
+			$itemdata['name']        = isset( $itemdata['name'] ) ? sanitize_text_field( $itemdata['name'] ) : $item->name;
+			$itemdata['description'] = isset( $itemdata['description'] ) ? sanitize_text_field( $itemdata['description'] ) : $item->description;
+			$itemdata['unit']        = isset( $itemdata['unit'] ) ? sanitize_text_field( $itemdata['unit'] ) : $item->unit;
+			$itemdata['type']        = isset( $itemdata['type'] ) ? sanitize_text_field( $itemdata['type'] ) : $item->type;
+			$itemdata['price']       = isset( $itemdata['price'] ) ? floatval( $itemdata['price'] ) : $item->price;
+			$itemdata['subtotal']    = $itemdata['price'] * $quantity;
+			$itemdata['discount']    = 0;
+			$itemdata['tax']         = 0;
+			$itemdata['total']       = 0;
+
+			if ( array_key_exists( 'taxes', $itemdata ) && is_array( $itemdata['taxes'] ) ) {
+				foreach ( $itemdata['taxes'] as $j => &$taxdata ) {
+					if ( ! is_array( $taxdata ) || empty( $taxdata ) ) {
+						continue;
+					}
+					$taxdata['tax_id'] = isset( $taxdata['tax_id'] ) ? absint( $taxdata['tax_id'] ) : 0;
+					$tax               = EAC()->taxes->get( $taxdata['tax_id'] );
+					// If tax rate not found, skip.
+					if ( ! $tax ) {
+						unset( $itemdata['taxes'][ $j ] );
+						continue;
+					}
+
+					$taxdata['name']     = isset( $taxdata['name'] ) ? sanitize_text_field( $taxdata['name'] ) : $tax->name;
+					$taxdata['rate']     = isset( $taxdata['rate'] ) ? floatval( $taxdata['rate'] ) : $tax->rate;
+					$taxdata['compound'] = isset( $taxdata['compound'] ) ? (bool) $taxdata['compound'] : $tax->compound;
+					$taxdata['amount']   = 0;
+				}
+			}
+
+			$items_total += 'standard' === $itemdata['type'] ? $itemdata['subtotal'] : 0;
+		}
+
+		// Discount calculation.
+		$discount = 'percentage' === $this->discount_type ? ( $items_total * $this->discount ) / 100 : $this->discount_value;
+		$discount = min( $discount, $items_total );
+		foreach ( $items as $item ) {
+			$item['discount']  = 'standard' === $item['type'] ? ( $discount / $items_total ) * $item['subtotal'] : 0;
+			$line              = DocumentItem::make();
+			$line->item_id     = $item['item_id'];
+			$line->name        = $item['name'];
+			$line->description = $item['description'];
+			$line->unit        = $item['unit'];
+			$line->type        = $item['type'];
+			$line->quantity    = $item['quantity'];
+			$line->price       = $item['price'];
+			$line->subtotal    = $item['subtotal'];
+			$line->discount    = min( $item['discount'], $item['subtotal'] );
+			$line->tax         = $item['tax'];
+			if ( array_key_exists( 'taxes', $item ) ) {
+				$line->set_taxes( $item['taxes'] );
+			}
+			$line->total = $line->subtotal - $line->discount + $line->tax;
+			$this->items = array_merge( $this->items, array( $line ) );
+		}
+
+		return $this;
+	}
+	/*
+	|--------------------------------------------------------------------------
 	| Helper Methods
 	|--------------------------------------------------------------------------
 	| This section contains utility methods that are not directly related to this
@@ -160,6 +249,30 @@ class Bill extends Document {
 		return $round ? round( $total, 2 ) : $total;
 	}
 
+
+	/**
+	 * Get itemized taxes.
+	 *
+	 * @since 1.0.0
+	 * @return DocumentTax[]
+	 */
+	public function get_itemized_taxes() {
+		$taxes = array();
+		foreach ( $this->items as $item ) {
+			if ( ! empty( $item->taxes ) ) {
+				foreach ( $item->taxes as $tax ) {
+					if ( !isset( $taxes[ $tax->tax_id] ) ) {
+						$taxes[ $tax->tax_id ] = $tax;
+					} else {
+						$taxes[ $tax->tax_id ]->amount += $tax->amount;
+					}
+				}
+			}
+		}
+
+		return $taxes;
+	}
+
 	/**
 	 * Is taxed.
 	 *
@@ -203,6 +316,7 @@ class Bill extends Document {
 		}
 
 		$permalink = get_permalink( $page_id );
+
 		return add_query_arg( 'bill', $this->uuid, $permalink );
 	}
 }

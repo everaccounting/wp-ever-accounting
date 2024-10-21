@@ -2,6 +2,7 @@
 
 namespace EverAccounting\Models;
 
+use ByteKit\Models\Relations\BelongsTo;
 use ByteKit\Models\Relations\BelongsToMany;
 
 defined( 'ABSPATH' ) || exit;
@@ -36,6 +37,7 @@ class Payment extends Transaction {
 	 * @var array
 	 */
 	protected $aliases = array(
+		'invoice_id'  => 'document_id',
 		'customer_id' => 'contact_id',
 	);
 
@@ -90,7 +92,7 @@ class Payment extends Transaction {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	public function get_status_label() {
+	public function get_status_label_attr() {
 		$statuses = EAC()->payments->get_statuses();
 
 		return array_key_exists( $this->status, $statuses ) ? $statuses[ $this->status ] : $this->status;
@@ -102,10 +104,20 @@ class Payment extends Transaction {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	public function get_payment_method_name() {
+	public function get_payment_method_name_attr() {
 		$modes = eac_get_payment_methods();
 
-		return array_key_exists( $this->mode, $modes ) ? $modes[ $this->mode ] : $this->mode;
+		return array_key_exists( $this->payment_method, $modes ) ? $modes[ $this->payment_method ] : $this->payment_method;
+	}
+
+	/**
+	 * Invoice relationship.
+	 *
+	 * @since 1.0.0
+	 * @return BelongsTo
+	 */
+	public function invoice() {
+		return $this->belongs_to( Invoice::class, 'document_id' );
 	}
 
 	/**

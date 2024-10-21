@@ -40,7 +40,11 @@ jQuery( document ).ready( ( $ ) => {
 						label: function (tooltipItem, data) {
 							let value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
 							let datasetLabel = data.datasets[tooltipItem.datasetIndex].label || '';
-							return datasetLabel + ': ' + value.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') + currency;
+							if ( 'undefined' === typeof value || 'undefined' === typeof datasetLabel ) {
+								value = 0;
+							}
+
+							return datasetLabel + ': ' + Number(value).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') + currency;
 						}
 					}
 				},

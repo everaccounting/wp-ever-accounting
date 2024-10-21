@@ -188,10 +188,95 @@ class DocumentItem extends Model {
 
 	/*
 	|--------------------------------------------------------------------------
+	| Tax Item Handling
+	|--------------------------------------------------------------------------
+	| Document item taxes are used for calculating taxes on each item.
+	*/
+
+	/**
+	 * Set taxes.
+	 *
+	 * @param array $taxes Items.
+	 *
+	 * @since 1.0.0
+	 * @return $this
+	 */
+	public function set_taxes( $taxes ) {
+		$this->taxes()->delete();
+		$this->taxes = array();
+		foreach ( $taxes as $tax_data ) {
+			if ( ! is_array( $tax_data ) || empty( $tax_data ) ) {
+				continue;
+			}
+			$tax_data['tax_id'] = isset( $tax_data['tax_id'] ) ? absint( $tax_data['tax_id'] ) : 0;
+			$tax                = EAC()->taxes->get( $tax_data['tax_id'] );
+
+			// If tax rate not found, skip.
+			if ( ! $tax ) {
+				continue;
+			}
+			$doc_tax                   = DocumentTax::make();
+			$doc_tax->tax_id           = $tax->id;
+			$doc_tax->document_id      = $this->document_id;
+			$doc_tax->document_item_id = $this->id;
+			$doc_tax->name             = isset( $tax_data['name'] ) ? sanitize_text_field( $tax_data['name'] ) : $tax->name;
+			$doc_tax->rate             = isset( $tax_data['rate'] ) ? floatval( $tax_data['rate'] ) : $tax->rate;
+			$doc_tax->compound         = isset( $tax_data['compound'] ) ? (bool) $tax_data['compound'] : $tax->compound;
+			$doc_tax->amount           = 0;
+
+			if ( $this->has_tax( $doc_tax->tax_id ) ) {
+				continue;
+			}
+
+			$this->taxes = array_merge( $this->taxes, array( $doc_tax ) );
+		}
+
+		// Update item taxes.
+		$disc_subtotal = max( 0, $this->subtotal - $this->discount );
+		$simple_tax    = 0;
+		$compound_tax  = 0;
+
+		foreach ( $this->taxes as $item_tax ) {
+			$item_tax->amount = $item_tax->compound ? 0 : ( $disc_subtotal * $item_tax->rate / 100 );
+			$simple_tax       += $item_tax->compound ? 0 : $item_tax->amount;
+		}
+
+		foreach ( $this->taxes as $item_tax ) {
+			if ( $item_tax->compound ) {
+				$item_tax->amount = ( $disc_subtotal + $simple_tax ) * $item_tax->rate / 100;
+				$compound_tax     += $item_tax->amount;
+			}
+		}
+
+		$this->tax = $simple_tax + $compound_tax;
+
+		return $this;
+	}
+
+	/*
+	|--------------------------------------------------------------------------
 	| Helper Methods
 	|--------------------------------------------------------------------------
 	| This section contains utility methods that are not directly related to this
 	| object but can be used to support its functionality.
 	|--------------------------------------------------------------------------
 	*/
+
+	/**
+	 * Determine if a given tax is applied to the item or not.
+	 *
+	 * @param int $tax_id Tax ID.
+	 *
+	 * @since 1.0.0
+	 * @return bool
+	 */
+	public function has_tax( $tax_id ) {
+		foreach ( $this->taxes as $tax ) {
+			if ( $tax->tax_id === $tax_id ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
 }

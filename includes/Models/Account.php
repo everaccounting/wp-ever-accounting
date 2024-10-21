@@ -136,7 +136,7 @@ class Account extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	public function get_formatted_balance() {
+	public function get_formatted_balance_attr() {
 		return eac_format_amount( $this->balance, $this->currency );
 	}
 
@@ -146,7 +146,7 @@ class Account extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	public function get_formatted_name() {
+	public function get_formatted_name_attr() {
 		$name   = sprintf( '%s (%s)', $this->name, $this->currency );
 		$number = $this->number;
 

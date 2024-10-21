@@ -91,6 +91,7 @@ class Bills {
 		$statuses = array(
 			'draft'     => esc_html__( 'Draft', 'wp-ever-accounting' ),
 			'received'  => esc_html__( 'Received', 'wp-ever-accounting' ),
+			'partial'   => esc_html__( 'Partial', 'wp-ever-accounting' ),
 			'paid'      => esc_html__( 'Paid', 'wp-ever-accounting' ),
 			'overdue'   => esc_html__( 'Overdue', 'wp-ever-accounting' ),
 			'cancelled' => esc_html__( 'Cancelled', 'wp-ever-accounting' ),
@@ -108,8 +109,8 @@ class Bills {
 	public function get_columns() {
 		$columns = array(
 			'item'     => esc_html__( 'Item', 'wp-ever-accounting' ),
-			'price'    => esc_html__( 'Price', 'wp-ever-accounting' ),
 			'quantity' => esc_html__( 'Quantity', 'wp-ever-accounting' ),
+			'price'    => esc_html__( 'Price', 'wp-ever-accounting' ),
 			'tax'      => esc_html__( 'Tax', 'wp-ever-accounting' ),
 			'subtotal' => esc_html__( 'Subtotal', 'wp-ever-accounting' ),
 		);

@@ -28,7 +28,7 @@ function eac_update_120_settings() {
 		'eac_business_country'             => 'company_country',
 		'eac_tax_enabled'                  => 'tax_enabled',
 		'eac_tax_subtotal_rounding'        => 'tax_subtotal_rounding',
-		'eac_tax_display_totals'           => 'tax_display_totals',
+		'eac_tax_total_display'           => 'tax_display_totals',
 		'eac_default_sales_account_id'     => 'default_account',
 		'eac_default_sales_payment_method' => 'default_payment_method',
 		'eac_invoice_prefix'               => 'invoice_prefix',
@@ -96,13 +96,6 @@ function eac_update_120_transactions() {
 	$wpdb->query( "ALTER TABLE $table MODIFY payment_method VARCHAR(100) DEFAULT NULL AFTER note" );
 	$wpdb->query( "ALTER TABLE $table MODIFY date_created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER uuid" );
 
-	// select transaction where document id is not null and update transaction_id on document table.
-	// set all the transactions that have document id as pending.
-	$wpdb->query( "UPDATE $table JOIN {$wpdb->prefix}ea_documents AS document ON document.id = $table.document_id SET $table.status = 'pending'" );
-	$wpdb->query( "UPDATE {$wpdb->prefix}ea_documents AS document JOIN $table AS t ON t.document_id = document.id SET document.transaction_id = t.id" );
-	$wpdb->query( "UPDATE $table SET editable = 0, status = 'completed' WHERE document_id IS NOT NULL" );
-	$wpdb->query( "ALTER TABLE $table DROP document_id" );
-
 	$table = $wpdb->prefix . 'ea_transfers';
 	$wpdb->query( "UPDATE $table SET payment_id = income_id" );
 	$wpdb->query( "ALTER TABLE $table DROP income_id" );
@@ -163,7 +156,6 @@ function eac_update_120_documents() {
 	$wpdb->query( "ALTER TABLE $table MODIFY COLUMN tax DOUBLE(15, 4) DEFAULT 0 AFTER discount" );
 	$wpdb->query( "ALTER TABLE $table MODIFY COLUMN discount_value DOUBLE(15, 4) DEFAULT 0 AFTER payment_date" );
 	$wpdb->query( "ALTER TABLE $table MODIFY COLUMN date_created DATETIME  NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER uuid" );
-	$wpdb->query( "ALTER TABLE $table MODIFY COLUMN attachment_id BIGINT(20) UNSIGNED DEFAULT NULL AFTER transaction_id" );
 	$wpdb->query( "ALTER TABLE $table MODIFY COLUMN note TEXT DEFAULT NULL AFTER contact_tax_number" );
 	$wpdb->query( "ALTER TABLE $table MODIFY COLUMN terms TEXT DEFAULT NULL AFTER note" );
 	$wpdb->query( "ALTER TABLE $table MODIFY COLUMN contact_id BIGINT(20) UNSIGNED NOT NULL AFTER attachment_id" );
@@ -369,8 +361,4 @@ function eac_update_120_notes() {
 function eac_update_120_misc() {
 	global $wpdb;
 	$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}ea_currencies" );
-	// if any document has partial status but no payment then set status to draft.
-	$wpdb->query( "UPDATE {$wpdb->prefix}ea_documents SET status = 'draft' WHERE transaction_id IS NULL" );
-	// if any document has partial status and has transaction then set status to paid.
-	$wpdb->query( "UPDATE {$wpdb->prefix}ea_documents SET status = 'paid' WHERE transaction_id IS NOT NULL" );
 }

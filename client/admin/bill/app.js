@@ -14,24 +14,32 @@ const App = () => {
 			<div className="tw-grid tw-grid-cols-2 tw-gap-4">
 				<div>Col 1</div>
 				<div className="tw-grid tw-grid-cols-2 tw-gap-x-[15px]">
-					<Input label={ __( 'Issue Date' ) } name="issue_date" />
-					<Input label={ __( 'Bill Number' ) } name="bill_number" />
-					<Input label={ __( 'Due Date' ) } name="due_date" />
-					<Input label={ __( 'Order Number' ) } name="reference" />
+					<Input hideLabelFromVision label={ __( 'Issue Date' ) } name="issue_date" />
+					<Input hideLabelFromVision label={ __( 'Bill Number' ) } name="bill_number" />
+					<Input hideLabelFromVision label={ __( 'Due Date' ) } name="due_date" />
+					<Input hideLabelFromVision label={ __( 'Order Number' ) } name="reference" />
 					<Input.Autocomplete
+						isMulti
 						label={ __( 'Currency' ) }
 						name="currency"
 						defaultOptions
+						hideLabelFromVision
 						loadOptions={ ( inputValue ) => {
 							return apiFetch( {
 								path: `/eac/v1/currencies?search=${ inputValue }`,
 							} );
 						} }
 						getOptionLabel={ ( option ) => option.name }
+						getOptionValue={ ( option ) => option.code }
 					/>
-					<Input label={ __( 'Exchange Rate' ) } name="exchange_rate" />
+					<Input.Amount
+						value="1000"
+						label={ __( 'Exchange Rate' ) }
+						name="exchange_rate"
+					/>
 					<Input.Amount label={ __( 'Total' ) } name="total" />
 					<Input.Autocomplete
+						isMulti
 						label={ __( 'Taxes' ) }
 						name="taxes"
 						defaultOptions
@@ -39,6 +47,7 @@ const App = () => {
 							apiFetch( { path: `/eac/v1/taxes?search=${ inputValue }` } )
 						}
 						getOptionLabel={ ( option ) => option.name }
+						getOptionValue={ ( option ) => option.id }
 					/>
 				</div>
 			</div>

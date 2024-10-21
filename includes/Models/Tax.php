@@ -70,7 +70,7 @@ class Tax extends Model {
 	 */
 	protected $searchable = array(
 		'name',
-		'description',
+		'rate',
 	);
 
 	/*
@@ -98,7 +98,7 @@ class Tax extends Model {
 	 * @since 1.1.6
 	 * @return string
 	 */
-	public function get_formatted_name() {
+	public function get_formatted_name_attr() {
 		return sprintf( '%1$s (%2$s%%)', $this->name, $this->rate );
 	}
 

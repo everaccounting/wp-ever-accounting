@@ -85,7 +85,7 @@ class Attachment extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	public function get_url() {
+	public function get_url_attr() {
 		return wp_get_attachment_url( $this->ID );
 	}
 
@@ -95,7 +95,7 @@ class Attachment extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	public function get_path() {
+	public function get_path_attr() {
 		return get_attached_file( $this->ID );
 	}
 
@@ -105,7 +105,7 @@ class Attachment extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	public function get_filesize() {
+	public function get_filesize_attr() {
 		$meta = wp_get_attachment_metadata( $this->ID );
 
 		return isset( $meta['filesize'] ) ? $meta['filesize'] : filesize( get_attached_file( $this->ID ) );

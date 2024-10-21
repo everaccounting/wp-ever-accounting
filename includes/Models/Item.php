@@ -135,7 +135,7 @@ class Item extends Model {
 	 * @since 1.0.0
 	 * @return void
 	 */
-	public function set_item_type( $value ) {
+	public function set_item_type_attr( $value ) {
 		$this->attributes['type'] = array_key_exists( $value, EAC()->items->get_types() ) ? $value : 'standard';
 	}
 
@@ -145,7 +145,7 @@ class Item extends Model {
 	 * @since 1.1.6
 	 * @return string
 	 */
-	protected function get_formatted_name() {
+	protected function get_formatted_name_attr() {
 		return sprintf( '%s (#%s)', $this->name, $this->id );
 	}
 
@@ -155,7 +155,7 @@ class Item extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	protected function get_formatted_price() {
+	protected function get_formatted_price_attr() {
 		return eac_format_amount( $this->price );
 	}
 
@@ -165,7 +165,7 @@ class Item extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	protected function get_formatted_cost() {
+	protected function get_formatted_cost_attr() {
 		return eac_format_amount( $this->cost );
 	}
 

@@ -21,7 +21,8 @@ class Ajax {
 		add_action( 'wp_ajax_eac_add_note', array( $this, 'handle_add_note' ) );
 		add_action( 'wp_ajax_eac_delete_note', array( $this, 'handle_delete_note' ) );
 		add_action( 'wp_ajax_eac_add_invoice_payment', array( $this, 'add_invoice_payment' ) );
-		add_action( 'wp_ajax_eac_get_bill_address_html', array( $this, 'get_bill_address_html' ) );
+		add_action( 'wp_ajax_eac_get_bill_address', array( $this, 'get_bill_address' ) );
+		add_action( 'wp_ajax_eac_get_recalculated_bill', array( $this, 'get_recalculated_bill' ) );
 	}
 
 	/**
@@ -357,23 +358,24 @@ class Ajax {
 		wp_send_json_success( array( 'message' => __( 'Payment added successfully.', 'wp-ever-accounting' ) ) );
 	}
 
+
 	/**
 	 * Get bill billings.
 	 *
 	 * @since 1.2.0
 	 * @return void
 	 */
-	public function get_bill_address_html() {
+	public function get_bill_address() {
 		check_ajax_referer( 'eac_edit_bill' );
 
 		if ( ! current_user_can( 'eac_manage_bill' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability.
-			wp_die( -1 );
+			wp_die( - 1 );
 		}
 
 		$vendor_id = isset( $_POST['contact_id'] ) ? absint( wp_unslash( $_POST['contact_id'] ) ) : 0;
 		$vendor    = EAC()->vendors->get( $vendor_id );
 		if ( ! $vendor ) {
-			wp_die( -1 );
+			wp_die( - 1 );
 		}
 		$bill                     = new Bill();
 		$bill->contact_id         = $vendor_id;
@@ -388,7 +390,7 @@ class Ajax {
 		$bill->contact_tax_number = $vendor->tax_number;
 
 		ob_start();
-		include __DIR__ . '/views/bill-editor-address.php';
+		include __DIR__ . '/views/bill-address.php';
 		$html = ob_get_clean();
 
 		$x = new \WP_Ajax_Response();
@@ -401,6 +403,67 @@ class Ajax {
 
 		$x->send();
 
-		wp_die(1);
+		wp_die( 1 );
+	}
+
+	/**
+	 * Get recalculated html.
+	 *
+	 * @since 1.2.0
+	 * @return void
+	 */
+	public function get_recalculated_bill() {
+		check_ajax_referer( 'eac_edit_bill' );
+
+		if ( ! current_user_can( 'eac_manage_bill' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability.
+			wp_die( - 1 );
+		}
+
+		$id                   = isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0;
+		$items                = isset( $_POST['items'] ) ? map_deep( wp_unslash( $_POST['items'] ), 'sanitize_text_field' ) : array();
+		$bill                 = Bill::make( $id );
+		$bill->currency       = isset( $_POST['currency'] ) ? sanitize_text_field( wp_unslash( $_POST['currency'] ) ) : eac_base_currency();
+		$bill->exchange_rate  = isset( $_POST['exchange_rate'] ) ? floatval( wp_unslash( $_POST['exchange_rate'] ) ) : 1;
+		$bill->discount_type  = isset( $_POST['discount_type'] ) ? sanitize_text_field( wp_unslash( $_POST['discount_type'] ) ) : 'fixed';
+		$bill->discount_value = isset( $_POST['discount_value'] ) ? floatval( wp_unslash( $_POST['discount_value'] ) ) : 0;
+		$bill->items          = array();
+		// error_log( print_r( $items, true ) );
+		$bill->set_items( $items );
+		$bill->calculate_totals();
+
+		$columns = EAC()->bills->get_columns();
+		// if tax is not enabled and invoice has no tax, remove the tax column.
+		if ( ! $bill->is_taxed() ) {
+			unset( $columns['tax'] );
+		}
+
+		ob_start();
+		include __DIR__ . '/views/bill-items.php';
+		$items_html = ob_get_clean();
+
+		ob_start();
+		include __DIR__ . '/views/bill-totals.php';
+		$totals_html = ob_get_clean();
+
+		$x = new \WP_Ajax_Response();
+
+		$x->add(
+			array(
+				'what' => 'items_html',
+				'id'   => 'items_html',
+				'data' => $items_html,
+			)
+		);
+		$x->add(
+			array(
+				'what' => 'totals_html',
+				'id'   => 'totals_html',
+				'data' => $totals_html,
+			)
+		);
+
+		$x->send();
+
+		wp_die( 1 );
 	}
 }

@@ -13,10 +13,10 @@ defined( 'ABSPATH' ) || exit;
 $id   = filter_input( INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT );
 $bill = Bill::make( $id );
 
-$columns  = EAC()->bills->get_columns();
-$is_taxed = 'yes' === get_option( 'eac_tax_enabled', 'no' ) || $bill->tax > 0;
+$columns = EAC()->bills->get_columns();
+
 // if tax is not enabled and invoice has no tax, remove the tax column.
-if ( ! $is_taxed ) {
+if ( ! $bill->is_taxed() ) {
 	unset( $columns['tax'] );
 }
 
@@ -28,7 +28,7 @@ defined( 'ABSPATH' ) || exit;
 		<span class="dashicons dashicons-undo"></span>
 	</a>
 </h1>
-<form id="eac-edit-bill" name="invoice" method="post">
+<form id="eac-edit-bill" name="invoice" method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
 	<div class="eac-poststuff">
 		<div class="column-1">
 
@@ -56,7 +56,7 @@ defined( 'ABSPATH' ) || exit;
 						?>
 
 						<div class="document-address">
-							<?php require __DIR__ . '/bill-editor-address.php'; ?>
+							<?php require __DIR__ . '/bill-address.php'; ?>
 						</div>
 
 					</div>
@@ -77,7 +77,7 @@ defined( 'ABSPATH' ) || exit;
 						);
 						eac_form_field(
 							array(
-								'label'             => esc_html__( 'Invoice Number', 'wp-ever-accounting' ),
+								'label'             => esc_html__( 'Bill Number', 'wp-ever-accounting' ),
 								'name'              => 'number',
 								'value'             => $bill->number,
 								'default'           => $bill->get_next_number(),
@@ -156,7 +156,7 @@ defined( 'ABSPATH' ) || exit;
 						</tr>
 						</thead>
 						<tbody class="eac-document-items__items">
-							<?php require __DIR__ . '/bill-editor-items.php'; ?>
+							<?php require __DIR__ . '/bill-items.php'; ?>
 						</tbody>
 						<tbody class="eac-document-items__toolbar">
 						<tr>
@@ -166,7 +166,7 @@ defined( 'ABSPATH' ) || exit;
 						</tr>
 						</tbody>
 						<tfoot class="eac-document-items__totals">
-							<?php require __DIR__ . '/bill-editor-totals.php'; ?>
+							<?php require __DIR__ . '/bill-totals.php'; ?>
 						</tfoot>
 					</table>
 				</div><!-- .document-items -->
@@ -175,8 +175,60 @@ defined( 'ABSPATH' ) || exit;
 		</div>
 
 		<div class="column-2">
-			Bill
-		</div>
+
+			<div class="eac-card">
+				<div class="eac-card__header">
+					<h3 class="eac-card__title"><?php esc_html_e( 'Save', 'wp-ever-accounting' ); ?></h3>
+				</div>
+				<div class="eac-card__body">
+					<?php
+					eac_form_field(
+						array(
+							'label'       => __( 'Status', 'wp-ever-accounting' ),
+							'type'        => 'select',
+							'id'          => 'status',
+							'options'     => EAC()->bills->get_statuses(),
+							'value'       => $bill->status,
+							'placeholder' => __( 'Select status', 'wp-ever-accounting' ),
+							'required'    => true,
+						)
+					);
+
+					/**
+					 * Fires to add custom actions.
+					 *
+					 * @param Bill $bill Bill object.
+					 *
+					 * @since 2.0.0
+					 */
+					do_action( 'eac_invoice_edit_misc_actions', $bill );
+					?>
+				</div>
+
+				<div class="eac-card__footer">
+					<?php if ( $bill->exists() ) : ?>
+						<a class="del del_confirm" href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'action', 'delete', $bill->get_edit_url() ), 'bulk-bills' ) ); ?>">
+							<?php esc_html_e( 'Delete', 'wp-ever-accounting' ); ?>
+						</a>
+						<button class="button button-primary"><?php esc_html_e( 'Update Bill', 'wp-ever-accounting' ); ?></button>
+					<?php else : ?>
+						<button class="button button-primary button-large tw-w-full"><?php esc_html_e( 'Add Bill', 'wp-ever-accounting' ); ?></button>
+					<?php endif; ?>
+				</div>
+			</div><!-- .eac-card -->
+
+			<?php
+			/**
+			 * Fires action to inject custom meta boxes in the side column.
+			 *
+			 * @param Bill $bill Bill object.
+			 *
+			 * @since 1.0.0
+			 */
+			do_action( 'eac_invoice_edit_side_meta_boxes', $bill );
+			?>
+
+		</div><!-- .column-2 -->
 	</div>
 
 	<input type="hidden" name="action" value="eac_edit_bill"/>

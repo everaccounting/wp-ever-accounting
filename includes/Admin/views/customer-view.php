@@ -93,9 +93,6 @@ $current_section = ! array_key_exists( $section, $sections ) ? current( array_ke
 		<?php endforeach; ?>
 	</ul>
 	<div class="eac-profile-sections__content">
-		<?php if ( isset( $sections[ $current_section ] ) && ! empty( $sections[ $current_section ]['label'] ) ) : ?>
-			<h2 class="screen-reader-text"><?php echo esc_html( $sections[ $current_section ]['label'] ); ?></h2>
-		<?php endif; ?>
 		<?php
 		/**
 		 * Fires action to display customer view section.
