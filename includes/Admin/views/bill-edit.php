@@ -15,25 +15,38 @@ $bill = Bill::make( $id );
 
 $columns = EAC()->bills->get_columns();
 
-// if tax is not enabled and invoice has no tax, remove the tax column.
+// if tax is not enabled and bill has no tax, remove the tax column.
 if ( ! $bill->is_taxed() ) {
 	unset( $columns['tax'] );
 }
 
 defined( 'ABSPATH' ) || exit;
 ?>
-<h1 class="wp-heading-inline">
-	<?php esc_html_e( 'Edit Bill', 'wp-ever-accounting' ); ?>
-	<a href="<?php echo esc_attr( remove_query_arg( array( 'action', 'id' ) ) ); ?>" class="button button-small" title="<?php esc_attr_e( 'Go back', 'wp-ever-accounting' ); ?>">
-		<span class="dashicons dashicons-undo"></span>
-	</a>
-</h1>
-<form id="eac-edit-bill" name="invoice" method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
+<div class="eac-section-header">
+	<h1 class="wp-heading-inline">
+		<?php if ( $bill->exists() ) : ?>
+			<?php esc_html_e( 'Edit Bill', 'wp-ever-accounting' ); ?>
+		<?php else : ?>
+			<?php esc_html_e( 'Add Bill', 'wp-ever-accounting' ); ?>
+		<?php endif; ?>
+		<a href="<?php echo esc_attr( remove_query_arg( array( 'action', 'id' ) ) ); ?>" title="<?php esc_attr_e( 'Go back', 'wp-ever-accounting' ); ?>">
+			<span class="dashicons dashicons-undo"></span>
+		</a>
+	</h1>
+
+	<?php if ( $bill->exists() ) : ?>
+		<a class="button" href="<?php echo esc_url( add_query_arg( array( 'action' => 'view' ) ) ); ?>">
+			<?php esc_html_e( 'View Bill', 'wp-ever-accounting' ); ?>
+		</a>
+	<?php endif; ?>
+</div>
+
+<form id="eac-edit-bill" name="bill" method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
 	<div class="eac-poststuff">
 		<div class="column-1">
 
-			<div class="eac-card">
-				<div class="tw-grid tw-grid-cols-2 tw-gap-x-[15px]">
+			<div class="eac-card eac-document-overview">
+				<div class="eac-card__faked document-details tw-grid tw-grid-cols-2 tw-gap-x-[15px]">
 					<div class="">
 						<?php
 						eac_form_field(
@@ -156,7 +169,7 @@ defined( 'ABSPATH' ) || exit;
 						</tr>
 						</thead>
 						<tbody class="eac-document-items__items">
-							<?php require __DIR__ . '/bill-items.php'; ?>
+						<?php require __DIR__ . '/bill-items.php'; ?>
 						</tbody>
 						<tbody class="eac-document-items__toolbar">
 						<tr>
@@ -166,12 +179,52 @@ defined( 'ABSPATH' ) || exit;
 						</tr>
 						</tbody>
 						<tfoot class="eac-document-items__totals">
-							<?php require __DIR__ . '/bill-totals.php'; ?>
+						<?php require __DIR__ . '/bill-totals.php'; ?>
 						</tfoot>
 					</table>
 				</div><!-- .document-items -->
 
+				<div class="document-footer">
+					<?php
+					eac_form_field(
+						array(
+							'label'       => __( 'Notes', 'wp-ever-accounting' ),
+							'name'        => 'notes',
+							'value'       => $bill->note,
+							'default'     => get_option( 'eac_bill_note', '' ),
+							'type'        => 'textarea',
+							'placeholder' => __( 'Add notes', 'wp-ever-accounting' ),
+						)
+					);
+
+					// terms.
+					eac_form_field(
+						array(
+							'label'       => __( 'Terms', 'wp-ever-accounting' ),
+							'name'        => 'terms',
+							'value'       => $bill->terms,
+							'default'     => get_option( 'eac_bill_terms', '' ),
+							'type'        => 'textarea',
+							'placeholder' => __( 'Add terms', 'wp-ever-accounting' ),
+						)
+					);
+
+					?>
+				</div>
+
 			</div>
+
+
+			<?php
+			/**
+			 * Fires action to inject custom meta boxes in the main column.
+			 *
+			 * @param Bill $bill Bill object.
+			 *
+			 * @since 1.0.0
+			 */
+			do_action( 'eac_bill_edit_core_meta_boxes', $bill );
+			?>
 		</div>
 
 		<div class="column-2">
@@ -201,7 +254,7 @@ defined( 'ABSPATH' ) || exit;
 					 *
 					 * @since 2.0.0
 					 */
-					do_action( 'eac_invoice_edit_misc_actions', $bill );
+					do_action( 'eac_bill_edit_misc_actions', $bill );
 					?>
 				</div>
 
@@ -225,7 +278,7 @@ defined( 'ABSPATH' ) || exit;
 			 *
 			 * @since 1.0.0
 			 */
-			do_action( 'eac_invoice_edit_side_meta_boxes', $bill );
+			do_action( 'eac_bill_edit_side_meta_boxes', $bill );
 			?>
 
 		</div><!-- .column-2 -->

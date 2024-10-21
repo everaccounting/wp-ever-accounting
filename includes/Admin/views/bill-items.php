@@ -126,6 +126,7 @@
 
 						case 'subtotal':
 							printf( '<span class="item-subtotal">%s</span>', esc_html( eac_format_amount( $item->subtotal, $bill->currency ) ) );
+							echo '<a href="#" class="remove-item"><span class="dashicons dashicons-trash"></span></a>';
 							break;
 
 						case 'default':

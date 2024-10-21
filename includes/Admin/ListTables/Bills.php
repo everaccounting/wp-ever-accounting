@@ -80,6 +80,94 @@ class Bills extends ListTable {
 	}
 
 	/**
+	 * handle bulk set draft action.
+	 *
+	 * @param array $ids List of item IDs.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	protected function bulk_set_draft( $ids ) {
+		$performed = 0;
+		foreach ( $ids as $id ) {
+			$bill = EAC()->bills->get( $id );
+			if ( $bill && $bill->fill( array( 'status' => 'draft' ) )->save() ) {
+				++$performed;
+			}
+		}
+		if ( ! empty( $performed ) ) {
+			// translators: %s: number of items updated.
+			EAC()->flash->success( sprintf( __( '%s bill(s) marked as draft successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
+		}
+	}
+
+	/**
+	 * handle bulk set received action.
+	 *
+	 * @param array $ids List of item IDs.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	protected function bulk_set_received( $ids ) {
+		$performed = 0;
+		foreach ( $ids as $id ) {
+			$bill = EAC()->bills->get( $id );
+			if ( $bill && $bill->fill( array( 'status' => 'received' ) )->save() ) {
+				++$performed;
+			}
+		}
+		if ( ! empty( $performed ) ) {
+			// translators: %s: number of items updated.
+			EAC()->flash->success( sprintf( __( '%s bill(s) marked as received successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
+		}
+	}
+
+	/**
+	 * handle bulk set overdue action.
+	 *
+	 * @param array $ids List of item IDs.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	protected function bulk_set_overdue( $ids ) {
+		$performed = 0;
+		foreach ( $ids as $id ) {
+			$bill = EAC()->bills->get( $id );
+			if ( $bill && $bill->fill( array( 'status' => 'overdue' ) )->save() ) {
+				++$performed;
+			}
+		}
+		if ( ! empty( $performed ) ) {
+			// translators: %s: number of items updated.
+			EAC()->flash->success( sprintf( __( '%s bill(s) marked as overdue successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
+		}
+	}
+
+	/**
+	 * handle bulk set cancelled action.
+	 *
+	 * @param array $ids List of item IDs.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	protected function bulk_set_cancelled( $ids ) {
+		$performed = 0;
+		foreach ( $ids as $id ) {
+			$bill = EAC()->bills->get( $id );
+			if ( $bill && $bill->fill( array( 'status' => 'cancelled' ) )->save() ) {
+				++$performed;
+			}
+		}
+		if ( ! empty( $performed ) ) {
+			// translators: %s: number of items updated.
+			EAC()->flash->success( sprintf( __( '%s bill(s) marked as cancelled successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
+		}
+	}
+
+	/**
 	 * handle bulk delete action.
 	 *
 	 * @param array $ids List of item IDs.
@@ -148,10 +236,11 @@ class Bills extends ListTable {
 	 */
 	protected function get_bulk_actions() {
 		$actions = array(
-			'cancel'  => __( 'Cancel', 'wp-ever-accounting' ),
-			'paid'    => __( 'Paid', 'wp-ever-accounting' ),
-			'pending' => __( 'Pending', 'wp-ever-accounting' ),
-			'delete'  => __( 'Delete', 'wp-ever-accounting' ),
+			'set_draft'     => __( 'Set Draft', 'wp-ever-accounting' ),
+			'set_received'  => __( 'Set Received', 'wp-ever-accounting' ),
+			'set_overdue'   => __( 'Set Overdue', 'wp-ever-accounting' ),
+			'set_cancelled' => __( 'Set Cancelled', 'wp-ever-accounting' ),
+			'delete'        => __( 'Delete', 'wp-ever-accounting' ),
 		);
 
 		return $actions;
@@ -189,14 +278,14 @@ class Bills extends ListTable {
 	 */
 	public function get_columns() {
 		return array(
-			'cb'         => '<input type="checkbox" />',
-			'number'     => __( 'Bill #', 'wp-ever-accounting' ),
-			'issue_date' => __( 'Issue Date', 'wp-ever-accounting' ),
-			'due_date'   => __( 'Due Date', 'wp-ever-accounting' ),
-			'vendor'     => __( 'Vendor', 'wp-ever-accounting' ),
-			'reference'  => __( 'Order #', 'wp-ever-accounting' ),
-			'status'     => __( 'Status', 'wp-ever-accounting' ),
-			'total'      => __( 'Total', 'wp-ever-accounting' ),
+			'cb'           => '<input type="checkbox" />',
+			'number'       => __( 'Bill #', 'wp-ever-accounting' ),
+			'issue_date'   => __( 'Issue Date', 'wp-ever-accounting' ),
+			'payment_date' => __( 'Payment Date', 'wp-ever-accounting' ),
+			'vendor_id'    => __( 'Vendor', 'wp-ever-accounting' ),
+			'reference'    => __( 'Order #', 'wp-ever-accounting' ),
+			'status'       => __( 'Status', 'wp-ever-accounting' ),
+			'total'        => __( 'Total', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -208,13 +297,13 @@ class Bills extends ListTable {
 	 */
 	protected function get_sortable_columns() {
 		return array(
-			'number'     => array( 'number', false ),
-			'reference'  => array( 'reference', false ),
-			'issue_date' => array( 'issue_date', false ),
-			'due_date'   => array( 'due_date', false ),
-			'vendor'     => array( 'vendor', false ),
-			'status'     => array( 'status', false ),
-			'total'      => array( 'total', false ),
+			'number'       => array( 'number', false ),
+			'issue_date'   => array( 'issue_date', false ),
+			'payment_date' => array( 'payment_date', false ),
+			'vendor_id'    => array( 'vendor_id', false ),
+			'reference'    => array( 'reference', false ),
+			'status'       => array( 'status', false ),
+			'total'        => array( 'total', false ),
 		);
 	}
 
@@ -249,7 +338,39 @@ class Bills extends ListTable {
 	 * @return string Displays the name.
 	 */
 	public function column_number( $item ) {
-		return sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( 'edit', $item->id, $this->base_url ) ), wp_kses_post( $item->number ) );
+		return sprintf( '<a class="row-title" href="%s">%s</a>', esc_url( $item->get_view_url() ), wp_kses_post( $item->number ) );
+	}
+
+	/**
+	 * Renders the date column.
+	 *
+	 * @param Bill $item The current object.
+	 *
+	 * @since  1.0.0
+	 * @return string Displays the date.
+	 */
+	public function column_issue_date( $item ) {
+		$date     = $item->issue_date ? esc_html( wp_date( 'd M Y', strtotime( $item->issue_date ) ) ) : '&mdash;';
+		$metadata = $item->due_date ? sprintf( __( 'Due: %s', 'wp-ever-accounting' ), esc_html( wp_date( eac_date_format(), strtotime( $item->due_date ) ) ) ) : ''; // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment
+
+		return sprintf( '%s%s', $date, $this->column_metadata( $metadata ) );
+	}
+
+
+	/**
+	 * Renders the vendor column.
+	 *
+	 * @param Bill $item The current object.
+	 *
+	 * @since  1.0.0
+	 * @return string Displays the vendor.
+	 */
+	public function column_vendor_id( $item ) {
+		if ( $item->vendor ) {
+			return sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( 'vendor_id', $item->vendor->id, $this->base_url ) ), wp_kses_post( $item->vendor->name ) );
+		}
+
+		return '&mdash;';
 	}
 
 	/**
@@ -265,30 +386,6 @@ class Bills extends ListTable {
 	}
 
 	/**
-	 * Renders the date column.
-	 *
-	 * @param Bill $bill The current object.
-	 *
-	 * @since  1.0.0
-	 * @return string Displays the date.
-	 */
-	public function column_issue_date( $item ) {
-		return $item->issue_date ? esc_html( wp_date( 'd M Y', strtotime( $item->issue_date ) ) ) : '&mdash;';
-	}
-
-	/**
-	 * Renders the due date column.
-	 *
-	 * @param Bill $item The current object.
-	 *
-	 * @since  1.0.0
-	 * @return string Displays the due date.
-	 */
-	public function column_due_date( $item ) {
-		return $item->due_date ? esc_html( wp_date( 'd M Y', strtotime( $item->due_date ) ) ) : '&mdash;';
-	}
-
-	/**
 	 * Renders the price column.
 	 *
 	 * @param Bill $item The current object.
@@ -300,23 +397,6 @@ class Bills extends ListTable {
 		return esc_html( $item->formatted_total );
 	}
 
-
-	/**
-	 * Renders the vendor column.
-	 *
-	 * @param Bill $item The current object.
-	 *
-	 * @since  1.0.0
-	 * @return string Displays the vendor.
-	 */
-	public function column_vendor( $item ) {
-		if ( $item->vendor ) {
-			return sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( 'vendor_id', $item->vendor->id, $this->base_url ) ), wp_kses_post( $item->vendor->name ) );
-		}
-
-		return '&mdash;';
-	}
-
 	/**
 	 * Renders the status column.
 	 *
@@ -326,11 +406,7 @@ class Bills extends ListTable {
 	 * @return string Displays the status.
 	 */
 	public function column_status( $item ) {
-		$statuses = EAC()->invoices->get_statuses();
-		$status   = isset( $item->status ) ? $item->status : '';
-		$label    = isset( $statuses[ $status ] ) ? $statuses[ $status ] : '';
-
-		return sprintf( '<span class="eac-status is--%1$s">%2$s</span>', esc_attr( $status ), esc_html( $label ) );
+		return sprintf( '<span class="eac-status is--%1$s">%2$s</span>', esc_attr( $item->status ), esc_html( $item->status_label ) );
 	}
 
 	/**

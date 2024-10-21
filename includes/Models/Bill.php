@@ -3,6 +3,7 @@
 namespace EverAccounting\Models;
 
 use ByteKit\Models\Relations\BelongsTo;
+use ByteKit\Models\Relations\HasMany;
 
 /**
  * Invoice model.
@@ -17,6 +18,7 @@ use ByteKit\Models\Relations\BelongsTo;
  * @property int    $id Invoice ID.
  * @property int    $vendor_id Vendor ID.
  * @property string $order_number Order number.
+ * @property string $status_label Formatted status.
  *
  * @property Vendor $vendor Vendor relation.
  */
@@ -40,6 +42,19 @@ class Bill extends Document {
 	);
 
 	/**
+	 * Attributes that have transition effects when changed.
+	 *
+	 * This array lists attributes that should trigger transition effects when their values change.
+	 * It is often used for managing state changes or triggering animations in user interfaces.
+	 *
+	 * @since 1.0.0
+	 * @var array
+	 */
+	protected $transitionable = array(
+		'status',
+	);
+
+	/**
 	 * Create a new model instance.
 	 *
 	 * @param mixed $attributes The attributes to fill the model with.
@@ -52,9 +67,8 @@ class Bill extends Document {
 				'type'       => $this->get_object_type(),
 				'issue_date' => current_time( 'mysql' ),
 				'due_date'   => wp_date( 'Y-m-d', strtotime( '+' . $due_after . ' days' ) ),
-				'notes'      => get_option( 'eac_bill_notes', '' ),
+				'note'       => get_option( 'eac_bill_note', '' ),
 				'currency'   => eac_base_currency(),
-				'creator_id' => get_current_user_id(),
 				'uuid'       => wp_generate_uuid4(),
 			)
 		);
@@ -64,6 +78,27 @@ class Bill extends Document {
 		parent::__construct( $attributes );
 	}
 
+	/*
+	|--------------------------------------------------------------------------
+	| Accessors, Mutators and Relationship Methods
+	|--------------------------------------------------------------------------
+	| This section contains methods for getting and setting attributes (accessors
+	| and mutators) as well as defining relationships between models.
+	|--------------------------------------------------------------------------
+	*/
+
+	/**
+	 * Get formatted status.
+	 *
+	 * @since 1.0.0
+	 * @return string
+	 */
+	public function get_status_label_attr() {
+		$statuses = EAC()->payments->get_statuses();
+
+		return array_key_exists( $this->status, $statuses ) ? $statuses[ $this->status ] : $this->status;
+	}
+
 	/**
 	 * Vendor relation.
 	 *
@@ -71,7 +106,17 @@ class Bill extends Document {
 	 * @return BelongsTo
 	 */
 	public function vendor() {
-		return $this->belongs_to( Customer::class, 'contact_id' );
+		return $this->belongs_to( Vendor::class, 'contact_id' );
+	}
+
+	/**
+	 * Notes relation.
+	 *
+	 * @since 1.0.0
+	 * @return HasMany
+	 */
+	public function notes() {
+		return $this->has_many( Note::class, 'document_id' )->set( 'type', 'bill' );
 	}
 
 	/*
@@ -115,9 +160,6 @@ class Bill extends Document {
 	 * @return $this
 	 */
 	public function set_items( $items ) {
-		// $this->items()->delete();
-		$this->items = array();
-
 		$items_total = 0;
 		foreach ( $items as $i => &$itemdata ) {
 			$quantity = isset( $itemdata['quantity'] ) ? floatval( $itemdata['quantity'] ) : 1;
@@ -183,11 +225,12 @@ class Bill extends Document {
 				$line->set_taxes( $item['taxes'] );
 			}
 			$line->total = $line->subtotal - $line->discount + $line->tax;
-			$this->items = array_merge( $this->items, array( $line ) );
+			$this->items = is_array( $this->items ) ? array_merge( $this->items, array( $line ) ) : array( $line );
 		}
 
 		return $this;
 	}
+
 	/*
 	|--------------------------------------------------------------------------
 	| Helper Methods
@@ -261,7 +304,7 @@ class Bill extends Document {
 		foreach ( $this->items as $item ) {
 			if ( ! empty( $item->taxes ) ) {
 				foreach ( $item->taxes as $tax ) {
-					if ( !isset( $taxes[ $tax->tax_id] ) ) {
+					if ( ! isset( $taxes[ $tax->tax_id ] ) ) {
 						$taxes[ $tax->tax_id ] = $tax;
 					} else {
 						$taxes[ $tax->tax_id ]->amount += $tax->amount;

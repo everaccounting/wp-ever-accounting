@@ -7,6 +7,7 @@ jQuery(document).ready(($) => {
 			'change :input[name="contact_id"]': 'onChangeContact',
 			'change :input[name="currency"]': 'onChangeCurrency',
 			'select2:select .add-item': 'onAddItem',
+			'click .remove-item': 'onRemoveItem',
 			'change .item-price, .item-quantity': 'onChangeItem',
 			'select2:select .item-taxes': 'onAddTax',
 			'select2:unselect .item-taxes': 'onRemoveTax',
@@ -69,8 +70,14 @@ jQuery(document).ready(($) => {
 			});
 		},
 
+		onRemoveItem(e) {
+			const self = this;
+			const $row = $(e.target).closest('tr');
+			$row.remove();
+			self.updateTotals();
+		},
+
 		onChangeItem(e) {
-			console.log('onChangeItem');
 			this.updateTotals();
 		},
 
@@ -96,7 +103,6 @@ jQuery(document).ready(($) => {
 			const params = e.params.data;
 			const $row = $(e.target).closest('tr');
 			const rowId = $row.data('index');
-			console.log(values)
 			for (const key in values) {
 				// we will find the items[rowId][taxes][0][tax_id] = params.id then remove all the keys of that taxes.
 				const match = key.match(/^items\[(\d+)\]\[taxes\]\[(\d+)\]\[tax_id\]$/);
@@ -127,7 +133,6 @@ jQuery(document).ready(($) => {
 			self.block();
 			const activeElement = document.activeElement;
 			$.post(ajaxurl, data, function (r) {
-				console.log(r);
 				const res = wpAjax.parseAjaxResponse(r);
 				if (!res || res.errors) {
 					return;

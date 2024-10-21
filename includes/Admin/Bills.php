@@ -72,34 +72,40 @@ class Bills {
 		$bill->contact_postcode   = isset( $_POST['contact_postcode'] ) ? sanitize_text_field( wp_unslash( $_POST['contact_postcode'] ) ) : '';
 		$bill->contact_country    = isset( $_POST['contact_country'] ) ? sanitize_text_field( wp_unslash( $_POST['contact_country'] ) ) : '';
 		$bill->contact_tax_number = isset( $_POST['contact_tax_number'] ) ? sanitize_text_field( wp_unslash( $_POST['contact_tax_number'] ) ) : '';
+		$bill->order_number       = isset( $_POST['order_number'] ) ? sanitize_text_field( wp_unslash( $_POST['order_number'] ) ) : '';
+		$bill->attachment_id      = isset( $_POST['attachment_id'] ) ? absint( wp_unslash( $_POST['attachment_id'] ) ) : 0;
 		$bill->currency           = isset( $_POST['currency'] ) ? sanitize_text_field( wp_unslash( $_POST['currency'] ) ) : eac_base_currency();
 		$bill->exchange_rate      = isset( $_POST['exchange_rate'] ) ? floatval( wp_unslash( $_POST['exchange_rate'] ) ) : 1;
 		$bill->discount_type      = isset( $_POST['discount_type'] ) ? sanitize_text_field( wp_unslash( $_POST['discount_type'] ) ) : 'fixed';
 		$bill->discount_value     = isset( $_POST['discount_value'] ) ? floatval( wp_unslash( $_POST['discount_value'] ) ) : 0;
+		$bill->status             = isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : 'draft';
+		$bill->note               = isset( $_POST['note'] ) ? sanitize_textarea_field( wp_unslash( $_POST['note'] ) ) : '';
+		$bill->terms              = isset( $_POST['terms'] ) ? sanitize_textarea_field( wp_unslash( $_POST['terms'] ) ) : '';
 		$bill->items()->delete();
 		$bill->items = array();
 		$bill->set_items( $items );
 		$bill->calculate_totals();
+		$retval = $bill->save();
+		if ( is_wp_error( $retval ) ) {
+			EAC()->flash->error( $retval->get_error_message() );
+		}
 
 		// save bill items and taxes.
-		foreach ( $bill->items as $index => $item ) {
+		foreach ( $bill->items as $item ) {
+			$item->document_id = $bill->id;
 			$item->save();
 			$taxes = $item->taxes;
-			foreach ( $taxes as $ti => $tax ) {
+			foreach ( $taxes as $tax ) {
+				$tax->document_id      = $bill->id;
+				$tax->document_item_id = $item->id;
 				$tax->save();
 			}
 		}
 
-		$retval = $bill->save();
-		if ( is_wp_error( $retval ) ) {
-			EAC()->flash->error( $retval->get_error_message() );
-		} else {
-			EAC()->flash->success( __( 'Bill saved successfully.', 'wp-ever-accounting' ) );
-			$referer = add_query_arg( 'id', $bill->id, $referer );
-			$referer = add_query_arg( 'action', 'view', $referer );
-			$referer = remove_query_arg( array( 'add' ), $referer );
-		}
-
+		EAC()->flash->success( __( 'Bill saved successfully.', 'wp-ever-accounting' ) );
+		$referer = add_query_arg( 'id', $bill->id, $referer );
+		$referer = add_query_arg( 'action', 'view', $referer );
+		$referer = remove_query_arg( array( 'add' ), $referer );
 		wp_safe_redirect( $referer );
 		exit;
 	}

@@ -79,6 +79,20 @@ class DocumentTax extends Model {
 		'formatted_name',
 	);
 
+	/**
+	 * Default query variables passed to Query class.
+	 *
+	 * This array contains default variables that are passed to the Query class when performing queries.
+	 * These default values can be customized or overridden as needed.
+	 *
+	 * @since 1.0.0
+	 * @var array
+	 */
+	protected $query_vars = array(
+		'orderby' => 'id',
+		'order'   => 'ASC',
+	);
+
 	/*
 	|--------------------------------------------------------------------------
 	| Accessors, Mutators and Relationship Methods

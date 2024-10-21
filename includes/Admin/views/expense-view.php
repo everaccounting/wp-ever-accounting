@@ -26,7 +26,9 @@ $expense = EAC()->expenses->get( $id );
 			<span class="dashicons dashicons-undo"></span>
 		</a>
 	</h1>
-	<a href="<?php echo esc_url( $expense->get_edit_url() ); ?>" class="page-title-action"><?php esc_html_e( 'Edit Expense', 'wp-ever-accounting' ); ?></a>
+	<div>
+		<a href="<?php echo esc_url( $expense->get_edit_url() ); ?>" class="page-title-action"><?php esc_html_e( 'Edit Expense', 'wp-ever-accounting' ); ?></a>
+	</div>
 </div>
 
 <form id="eac-update-expense" name="expense" method="post"  action="<?php echo esc_html( admin_url( 'admin-post.php' ) ); ?>">
