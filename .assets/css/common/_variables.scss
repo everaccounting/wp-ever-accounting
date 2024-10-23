@@ -1,0 +1,36 @@
+/**
+ * EverAccounting CSS Variables
+ */
+@use "sass:color";
+
+$eaccounting: #77B82E !default;
+$eaccounting_dark: #6ba629 !default;
+$blue: #3644ff !default;
+$red: #f2385a !default;
+$aqua: #06d6a0 !default;
+
+$primary: #77B82E !default; // Primary color for buttons (alt)
+//$primarytext: desaturate(color.adjust($primary, 50%), 18%) !default; // Text on primary color bg
+//
+//$secondary: desaturate(color.adjust($primary, 40%), 21%) !default; // Secondary buttons
+//$secondarytext: desaturate(darken($secondary, 60%), 21%) !default; // Text on secondary color bg
+//
+//$highlight: adjust-hue($primary, 150deg) !default; // Prices
+//$highlightext: desaturate(color.adjust($highlight, 50%), 18%) !default; // Text on highlight color bg
+
+$contentbg: #fff !default; // Content BG - Tabs (active state)
+$subtext: #767676 !default; // small, breadcrumbs etc
+
+$income: $blue;
+$expense: $red;
+$profit: $aqua;
+$success: #1ee0ac;
+$info: #17a2b8;
+$warning: #ffc107;
+$danger: #f64e60;
+
+
+//form
+$border_color: #d2d6de !default;
+
+@import "mixins";
