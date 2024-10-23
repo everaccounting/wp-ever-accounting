@@ -66,6 +66,7 @@ class Shortcodes {
 
 		ob_start();
 		eac_get_template( 'payment.php', array( 'payment' => $payment ) );
+
 		return ob_get_clean();
 	}
 }

@@ -47,6 +47,7 @@ class Scripts {
 		EAC()->scripts->register_script( 'eac-admin', 'js/admin.js', array( 'jquery', 'eac-inputmask', 'eac-select2', 'eac-tiptip', 'jquery-ui-datepicker', 'jquery-ui-tooltip', 'eac-money', 'wp-ajax-response' ), true );
 
 		EAC()->scripts->register_style( 'eac-jquery-ui', 'css/jquery-ui.css' );
+		EAC()->scripts->register_style( 'eac-frontend', 'css/frontend.css' );
 		EAC()->scripts->register_style( 'eac-admin', 'css/admin.css', array( 'eac-jquery-ui' ) );
 	}
 
@@ -68,6 +69,11 @@ class Scripts {
 		wp_enqueue_script( 'eac-modal' );
 		wp_enqueue_script( 'eac-admin' );
 		wp_enqueue_style( 'eac-admin' );
+
+		// query argument action have value as view.
+		if ( isset( $_GET['action'] ) && 'view' === $_GET['action'] ) {
+			wp_enqueue_style( 'eac-frontend' );
+		}
 
 		// Localize script.
 		wp_localize_script(
