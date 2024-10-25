@@ -183,13 +183,13 @@ $transfer = Transfer::make( $id );
 
 			<?php
 			/**
-			 * Fires action to inject custom meta boxes in the main column.
+			 * Fires action to inject custom content in the main column.
 			 *
 			 * @param Transfer $transfer Transfer object.
 			 *
 			 * @since 1.0.0
 			 */
-			do_action( 'eac_transfer_edit_core_meta_boxes', $transfer );
+			do_action( 'eac_transfer_edit_core_content', $transfer );
 			?>
 		</div><!-- .column-1 -->
 		<div class="column-2">
@@ -227,13 +227,13 @@ $transfer = Transfer::make( $id );
 
 			<?php
 			/**
-			 * Fires action to inject custom meta boxes in the side column.
+			 * Fires action to inject custom content in the side column.
 			 *
 			 * @param Transfer $transfer Transfer object.
 			 *
 			 * @since 1.0.0
 			 */
-			do_action( 'eac_transfer_edit_side_meta_boxes', $transfer );
+			do_action( 'eac_transfer_edit_sidebar_content', $transfer );
 			?>
 
 		</div><!-- .column-2 -->

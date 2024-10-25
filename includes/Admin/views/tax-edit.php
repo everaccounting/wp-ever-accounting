@@ -82,13 +82,13 @@ $tax = Tax::make( $id );
 
 			<?php
 			/**
-			 * Fires an action to inject custom meta boxes in the main column.
+			 * Fires an action to inject custom content in the main column.
 			 *
 			 * @param Tax $tax The tax object being edited or created.
 			 *
 			 * @since 2.0.0
 			 */
-			do_action( 'eac_tax_edit_core_meta_boxes', $tax );
+			do_action( 'eac_tax_edit_core_content', $tax );
 			?>
 		</div><!-- .column-1 -->
 
@@ -109,13 +109,13 @@ $tax = Tax::make( $id );
 
 			<?php
 			/**
-			 * Fires an action to inject custom meta boxes in the side column.
+			 * Fires an action to inject custom content in the side column.
 			 *
 			 * @param Tax $tax The tax object being edited or created.
 			 *
 			 * @since 2.0.0
 			 */
-			do_action( 'eac_tax_edit_side_meta_boxes', $tax );
+			do_action( 'eac_tax_edit_sidebar_content', $tax );
 			?>
 
 		</div><!-- .column-2 -->

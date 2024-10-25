@@ -222,13 +222,13 @@ wp_add_inline_script(
 
 			<?php
 			/**
-			 * Fires action to inject custom meta boxes in the side column.
+			 * Fires action to inject custom content in the side column.
 			 *
 			 * @param Invoice $invoice Invoice object.
 			 *
 			 * @since 1.0.0
 			 */
-			do_action( 'eac_invoice_edit_side_meta_boxes', $invoice );
+			do_action( 'eac_invoice_edit_sidebar_content', $invoice );
 			?>
 
 		</div><!-- .column-2 -->

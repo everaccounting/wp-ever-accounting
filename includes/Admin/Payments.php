@@ -21,8 +21,8 @@ class Payments {
 		add_action( 'admin_post_eac_update_payment', array( __CLASS__, 'handle_update' ) );
 		add_action( 'eac_sales_page_payments_loaded', array( __CLASS__, 'page_loaded' ) );
 		add_action( 'eac_sales_page_payments_content', array( __CLASS__, 'page_content' ) );
-		add_action( 'eac_payment_view_side_meta_boxes', array( __CLASS__, 'payment_attachment' ) );
-		add_action( 'eac_payment_view_side_meta_boxes', array( __CLASS__, 'payment_notes' ) );
+		add_action( 'eac_payment_view_sidebar_content', array( __CLASS__, 'payment_attachment' ) );
+		add_action( 'eac_payment_view_sidebar_content', array( __CLASS__, 'payment_notes' ) );
 	}
 
 	/**

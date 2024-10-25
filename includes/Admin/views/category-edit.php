@@ -78,13 +78,13 @@ $category = Category::make( $id );
 
 			<?php
 			/**
-			 * Fires an action to inject custom meta boxes in the main column.
+			 * Fires an action to inject custom content in the main column.
 			 *
 			 * @param Category $category The category object being edited or created.
 			 *
 			 * @since 2.0.0
 			 */
-			do_action( 'eac_category_edit_core_meta_boxes', $category );
+			do_action( 'eac_category_edit_core_content', $category );
 			?>
 		</div><!-- .column-1 -->
 
@@ -105,13 +105,13 @@ $category = Category::make( $id );
 
 			<?php
 			/**
-			 * Fires an action to inject custom meta boxes in the side column.
+			 * Fires an action to inject custom content in the side column.
 			 *
 			 * @param Category $category The category object being edited or created.
 			 *
 			 * @since 2.0.0
 			 */
-			do_action( 'eac_category_edit_side_meta_boxes', $category );
+			do_action( 'eac_category_edit_sidebar_content', $category );
 			?>
 
 		</div><!-- .column-2 -->

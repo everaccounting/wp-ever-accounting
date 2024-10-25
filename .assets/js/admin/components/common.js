@@ -122,7 +122,7 @@ jQuery( document ).ready( ( $ ) => {
 						removeMaskOnSubmit: true,
 					} )
 					.addClass( 'enhanced' );
-			});
+			} );
 
 		// inputMask.
 		$( '.eac_inputmask' )
@@ -152,7 +152,8 @@ jQuery( document ).ready( ( $ ) => {
 
 		// remove .eac-card__body if it is empty.
 		$( '.eac-card__body' ).each( function () {
-			if ( ! $( this ).text().trim().length ) {
+			// check for text or any html tags and not it can
+			if ( ! $( this ).text().trim().length && $( this ).children().length === 0 ) {
 				$( this ).remove();
 			}
 		} );
@@ -211,7 +212,6 @@ jQuery( document ).ready( ( $ ) => {
 			} );
 		} );
 
-
 	// Delete confirmation.
 	$( '.del_confirm' ).on( 'click', function ( e ) {
 		if ( ! confirm( eac_admin_vars.i18n.confirm_delete ) ) {
@@ -239,8 +239,8 @@ jQuery( document ).ready( ( $ ) => {
 				nonce: $button.data( 'nonce' ),
 				parent_id: $button.data( 'parent_id' ),
 				parent_type: $button.data( 'parent_type' ),
-				content: $note.val()
-			}
+				content: $note.val(),
+			};
 
 			if ( data.content ) {
 				$button.prop( 'disabled', true );
@@ -257,7 +257,7 @@ jQuery( document ).ready( ( $ ) => {
 						$button.prop( 'disabled', false );
 						$notes.find( '.no-items' ).hide();
 					},
-				}).fail( function () {
+				} ).fail( function () {
 					$button.prop( 'disabled', false );
 				} );
 			}
@@ -271,7 +271,7 @@ jQuery( document ).ready( ( $ ) => {
 				action: 'eac_delete_note',
 				nonce: $button.data( 'nonce' ),
 				note_id: $button.data( 'note_id' ),
-			}
+			};
 
 			if ( confirm( eac_admin_vars.i18n.confirm_delete ) ) {
 				$.ajax( {
@@ -280,7 +280,7 @@ jQuery( document ).ready( ( $ ) => {
 					data: data,
 					success: function ( response ) {
 						if ( '1' === response ) {
-							console.log(response);
+							console.log( response );
 							$note.remove();
 						}
 
@@ -292,26 +292,25 @@ jQuery( document ).ready( ( $ ) => {
 			}
 		} );
 
-
 	// Block UI
-	$.fn.block = function(destroy) {
-		return this.each(function() {
-			var $el = $(this);
-			if (destroy && $el.find('.blockUI').length ){
-				$el.find('.blockUI').remove();
+	$.fn.block = function ( destroy ) {
+		return this.each( function () {
+			var $el = $( this );
+			if ( destroy && $el.find( '.blockUI' ).length ) {
+				$el.find( '.blockUI' ).remove();
 				return;
 			}
 
 			// If destroy is false, just create the overlay if it doesn't exist
-			if (!$el.find('.blockUI').length) {
+			if ( ! $el.find( '.blockUI' ).length ) {
 				// Ensure position is relative
-				if ($el.css('position') === 'static') {
-					$el.css('position', 'relative');
+				if ( $el.css( 'position' ) === 'static' ) {
+					$el.css( 'position', 'relative' );
 				}
 
 				// Create overlay
-				$('<div class="blockUI"></div>')
-					.css({
+				$( '<div class="blockUI"></div>' )
+					.css( {
 						position: 'absolute',
 						top: 0,
 						left: 0,
@@ -321,9 +320,9 @@ jQuery( document ).ready( ( $ ) => {
 						opacity: 0.1,
 						cursor: 'wait',
 						zIndex: 9999,
-					})
-					.appendTo($el);
+					} )
+					.appendTo( $el );
 			}
-		});
+		} );
 	};
-});
+} );

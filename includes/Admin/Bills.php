@@ -23,10 +23,10 @@ class Bills {
 		add_action( 'admin_post_eac_edit_bill', array( __CLASS__, 'handle_edit' ) );
 		add_action( 'eac_purchases_page_bills_loaded', array( __CLASS__, 'page_loaded' ) );
 		add_action( 'eac_purchases_page_bills_content', array( __CLASS__, 'page_content' ) );
-		add_action( 'eac_bill_edit_side_meta_boxes', array( __CLASS__, 'bill_attachment' ) );
-		add_action( 'eac_bill_view_side_meta_boxes', array( __CLASS__, 'bill_attachment' ) );
-		add_action( 'eac_bill_edit_side_meta_boxes', array( __CLASS__, 'bill_notes' ) );
-		add_action( 'eac_bill_view_side_meta_boxes', array( __CLASS__, 'bill_notes' ) );
+		add_action( 'eac_bill_edit_sidebar_content', array( __CLASS__, 'bill_attachment' ) );
+		add_action( 'eac_bill_view_sidebar_content', array( __CLASS__, 'bill_attachment' ) );
+		add_action( 'eac_bill_edit_sidebar_content', array( __CLASS__, 'bill_notes' ) );
+		add_action( 'eac_bill_view_sidebar_content', array( __CLASS__, 'bill_notes' ) );
 	}
 
 	/**

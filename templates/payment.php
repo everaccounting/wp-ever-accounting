@@ -68,7 +68,7 @@ $email = get_option( 'eac_business_email' );
 			<td>
 				<table border="0" cellspacing="0" cellpadding="0" width="100%">
 					<tr>
-						<td width="50%" valign="top">
+						<td width="66%" valign="top">
 							<h3 style="color: #3c3c3c; font-size: 16px; margin: 0 0 6px;"><?php esc_html_e( 'From', 'wp-ever-accounting' ); ?></h3>
 							<address style="color: #636363; font-size: 13px;line-height:1.5;font-style:normal;">
 								<?php
@@ -93,7 +93,7 @@ $email = get_option( 'eac_business_email' );
 								?>
 							</address>
 						</td>
-						<td width="50%" valign="top">
+						<td width="33%" valign="top">
 							<h3 style="color: #3c3c3c; font-size: 16px; margin: 0 0 6px;"><?php esc_html_e( 'To', 'wp-ever-accounting' ); ?></h3>
 							<address style="color: #636363; font-size: 13px;line-height:1.5;font-style:normal;">
 								<?php

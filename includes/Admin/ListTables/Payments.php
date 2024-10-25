@@ -108,94 +108,6 @@ class Payments extends ListTable {
 	}
 
 	/**
-	 * handle bulk paid action.
-	 *
-	 * @param array $ids List of item IDs.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	protected function bulk_set_completed( $ids ) {
-		$performed = 0;
-		foreach ( $ids as $id ) {
-			$expense = EAC()->payments->get( $id );
-			if ( ! is_wp_error( $expense->set( 'status', 'completed' )->save() ) ) {
-				++$performed;
-			}
-		}
-		if ( ! empty( $performed ) ) {
-			// translators: %s: number of items deleted.
-			EAC()->flash->success( sprintf( __( '%s expense(s) status updated to completed successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
-		}
-	}
-
-	/**
-	 * handle bulk pending action.
-	 *
-	 * @param array $ids List of item IDs.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	protected function bulk_set_pending( $ids ) {
-		$performed = 0;
-		foreach ( $ids as $id ) {
-			$payment = EAC()->payments->get( $id );
-			if ( ! is_wp_error( $payment->set( 'status', 'pending' )->save() ) ) {
-				++$performed;
-			}
-		}
-		if ( ! empty( $performed ) ) {
-			// translators: %s: number of items deleted.
-			EAC()->flash->success( sprintf( __( '%s payment(s) status updated to pending successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
-		}
-	}
-
-	/**
-	 * handle bulk refunded action.
-	 *
-	 * @param array $ids List of item IDs.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	protected function bulk_set_refunded( $ids ) {
-		$performed = 0;
-		foreach ( $ids as $id ) {
-			$payment = EAC()->payments->get( $id );
-			if ( ! is_wp_error( $payment->set( 'status', 'refunded' )->save() ) ) {
-				++$performed;
-			}
-		}
-		if ( ! empty( $performed ) ) {
-			// translators: %s: number of items deleted.
-			EAC()->flash->success( sprintf( __( '%s payment(s) status updated to refunded successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
-		}
-	}
-
-	/**
-	 * handle bulk cancelled action.
-	 *
-	 * @param array $ids List of item IDs.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	protected function bulk_set_cancelled( $ids ) {
-		$performed = 0;
-		foreach ( $ids as $id ) {
-			$payment = EAC()->payments->get( $id );
-			if ( ! is_wp_error( $payment->set( 'status', 'cancelled' )->save() ) ) {
-				++$performed;
-			}
-		}
-		if ( ! empty( $performed ) ) {
-			// translators: %s: number of items deleted.
-			EAC()->flash->success( sprintf( __( '%s payment(s) status updated to cancelled successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
-		}
-	}
-
-	/**
 	 * Outputs 'no results' message.
 	 *
 	 * @since 1.0.0
@@ -243,10 +155,6 @@ class Payments extends ListTable {
 	 */
 	protected function get_bulk_actions() {
 		$actions = array(
-			'set_completed' => __( 'Set Completed', 'wp-ever-accounting' ),
-			'set_pending'   => __( 'Set Pending', 'wp-ever-accounting' ),
-			'set_refunded'  => __( 'Set Refunded', 'wp-ever-accounting' ),
-			'set_cancelled' => __( 'Set Cancelled', 'wp-ever-accounting' ),
 			'delete'        => __( 'Delete', 'wp-ever-accounting' ),
 		);
 
@@ -292,7 +200,7 @@ class Payments extends ListTable {
 			'account_id'   => __( 'Account', 'wp-ever-accounting' ),
 			'customer_id'  => __( 'Customer', 'wp-ever-accounting' ),
 			'invoice_id'   => __( 'Invoice', 'wp-ever-accounting' ),
-			'status'       => __( 'Status', 'wp-ever-accounting' ),
+			'reference'    => __( 'Reference', 'wp-ever-accounting' ),
 			'amount'       => __( 'Amount', 'wp-ever-accounting' ),
 		);
 	}
@@ -311,7 +219,7 @@ class Payments extends ListTable {
 			'account_id'   => array( 'account_id', false ),
 			'invoice_id'   => array( 'invoice_id', false ),
 			'customer_id'  => array( 'customer_id', false ),
-			'status'       => array( 'status', false ),
+			'reference'    => array( 'reference', false ),
 			'amount'       => array( 'amount', false ),
 		);
 	}
@@ -363,11 +271,7 @@ class Payments extends ListTable {
 	 * @return string Displays the name.
 	 */
 	public function column_payment_date( $item ) {
-		return sprintf(
-			'<a href="%s">%s</a>',
-			esc_url( add_query_arg( 'payment_date', $item->payment_date ) ),
-			esc_html( wp_date( eac_date_format(), strtotime( $item->payment_date ) ) )
-		);
+		return $item->payment_date ? wp_date( eac_date_format(), strtotime( $item->payment_date ) ) : '&mdash;';
 	}
 
 	/**
@@ -394,7 +298,7 @@ class Payments extends ListTable {
 	 * @return string Displays the category.
 	 */
 	public function column_invoice_id( $item ) {
-		$invoice  = '';
+		$invoice  = '&mdash;';
 		$metadata = '';
 		if ( $item->invoice ) {
 			$invoice = sprintf( '<a href="%s">%s</a>', esc_url( $item->invoice->get_view_url() ), wp_kses_post( $item->invoice->number ) );
@@ -416,22 +320,6 @@ class Payments extends ListTable {
 		$metadata = $item->customer && $item->customer->company ? $item->customer->company : '';
 
 		return sprintf( '%s%s', $customer, $this->column_metadata( $metadata ) );
-	}
-
-	/**
-	 * Renders the status column.
-	 *
-	 * @param Payment $item The current object.
-	 *
-	 * @since 1.0.0
-	 * @return string Displays the status.
-	 */
-	public function column_status( $item ) {
-		$statuses = EAC()->payments->get_statuses();
-		$status   = isset( $item->status ) ? $item->status : '';
-		$label    = isset( $statuses[ $status ] ) ? $statuses[ $status ] : '';
-
-		return sprintf( '<span class="eac-status is--%1$s">%2$s</span>', esc_attr( $status ), esc_html( $label ) );
 	}
 
 	/**

@@ -216,13 +216,13 @@ $payment = Payment::make( $id );
 
 			<?php
 			/**
-			 * Fires action to inject custom meta boxes in the main column.
+			 * Fires action to inject custom content in the main column.
 			 *
 			 * @param Payment $payment Payment object.
 			 *
 			 * @since 1.0.0
 			 */
-			do_action( 'eac_payment_edit_core_meta_boxes', $payment );
+			do_action( 'eac_payment_edit_core_content', $payment );
 			?>
 		</div>
 		<div class="column-2">
@@ -271,13 +271,13 @@ $payment = Payment::make( $id );
 
 			<?php
 			/**
-			 * Fires action to inject custom meta boxes in the side column.
+			 * Fires action to inject custom content in the side column.
 			 *
 			 * @param Payment $payment Payment object.
 			 *
 			 * @since 1.0.0
 			 */
-			do_action( 'eac_payment_edit_side_meta_boxes', $payment );
+			do_action( 'eac_payment_edit_sidebar_content', $payment );
 			?>
 		</div><!-- .column-2 -->
 	</div><!-- .eac-poststuff -->

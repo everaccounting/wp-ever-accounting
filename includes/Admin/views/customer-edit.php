@@ -179,13 +179,13 @@ $customer = Customer::make( $id );
 
 			<?php
 			/**
-			 * Fires action to inject custom meta boxes in the main column.
+			 * Fires action to inject custom content in the main column.
 			 *
 			 * @param Customer $customer Customer object.
 			 *
 			 * @since 1.0.0
 			 */
-			do_action( 'eac_customer_edit_core_meta_boxes', $customer );
+			do_action( 'eac_customer_edit_core_content', $customer );
 			?>
 		</div><!-- .column-1 -->
 
@@ -220,13 +220,13 @@ $customer = Customer::make( $id );
 
 			<?php
 			/**
-			 * Fires action to inject custom meta boxes in the side column.
+			 * Fires action to inject custom content in the side column.
 			 *
 			 * @param Customer $customer Customer object.
 			 *
 			 * @since 1.0.0
 			 */
-			do_action( 'eac_customer_edit_side_meta_boxes', $customer );
+			do_action( 'eac_customer_edit_sidebar_content', $customer );
 			?>
 
 		</div><!-- .column-2 -->

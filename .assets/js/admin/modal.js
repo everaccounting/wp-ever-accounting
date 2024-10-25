@@ -1,6 +1,6 @@
 (function ($) {
 	'use strict';
-	const CLOSE_TRIGGER = 'data-eacmodal-close';
+	const CLOSE_TRIGGER = 'data-modal-close';
 	const FOCUSABLE_ELEMENTS = [
 		'a[href]',
 		'area[href]',
@@ -113,7 +113,7 @@
 			this.$el.attr('id', _.uniqueId('eac-modal-'));
 			this.$el.wrapInner('<div class="eac-modal__main" role="main"></div>');
 			this.$el.wrapInner('<div class="eac-modal__content" tabindex="0"></div>');
-			this.$el.append('<div class="eac-modal__overlay" tabindex="-1" data-eacmodal-close></div>');
+			this.$el.append('<div class="eac-modal__overlay" tabindex="-1" data-modal-close></div>');
 			if (this.options.autoOpen) {
 				this.open();
 			}

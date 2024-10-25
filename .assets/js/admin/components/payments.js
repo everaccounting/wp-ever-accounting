@@ -13,4 +13,14 @@ jQuery( document ).ready( ( $ ) => {
 		$exchange.val( config?.rate || 1 ).removeClass( 'enhanced' ).data( 'currency', currency ).attr( 'readonly', currency === eac_base_currency );
 		$( document.body ).trigger( 'eac_update_ui' );
 	} );
+
+	$( '.eac-payment-email' ).on( 'click', function ( e ) {
+		e.preventDefault();
+		$(this).eacmodal({
+			template: 'eac-payment-email',
+			onOpen: function () {
+				this.$el.find('#message-tmce').trigger('click');
+			},
+		})
+	} );
 });

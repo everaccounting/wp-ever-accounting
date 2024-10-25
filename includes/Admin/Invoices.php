@@ -21,10 +21,10 @@ class Invoices {
 		add_action( 'eac_sales_page_invoices_loaded', array( __CLASS__, 'handle_actions' ) );
 		add_action( 'eac_sales_page_invoices_loaded', array( __CLASS__, 'page_loaded' ) );
 		add_action( 'eac_sales_page_invoices_content', array( __CLASS__, 'page_content' ) );
-		add_action( 'eac_invoice_edit_side_meta_boxes', array( __CLASS__, 'invoice_attachment' ) );
-		add_action( 'eac_invoice_view_side_meta_boxes', array( __CLASS__, 'invoice_attachment' ) );
-//		add_action( 'eac_invoice_edit_side_meta_boxes', array( __CLASS__, 'invoice_notes' ) );
-		add_action( 'eac_invoice_view_side_meta_boxes', array( __CLASS__, 'invoice_notes' ) );
+		add_action( 'eac_invoice_edit_sidebar_content', array( __CLASS__, 'invoice_attachment' ) );
+		add_action( 'eac_invoice_view_sidebar_content', array( __CLASS__, 'invoice_attachment' ) );
+//		add_action( 'eac_invoice_edit_sidebar_content', array( __CLASS__, 'invoice_notes' ) );
+		add_action( 'eac_invoice_view_sidebar_content', array( __CLASS__, 'invoice_notes' ) );
 	}
 
 	/**

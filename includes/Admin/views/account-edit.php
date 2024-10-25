@@ -94,13 +94,13 @@ $account = Account::make( $id );
 			</div>
 			<?php
 			/**
-			 * Fires action to inject custom meta boxes in the main column.
+			 * Fires action to inject custom content in the main column.
 			 *
 			 * @param Account $account Account object.
 			 *
 			 * @since 1.0.0
 			 */
-			do_action( 'eac_account_edit_core_meta_boxes', $account );
+			do_action( 'eac_account_edit_core_content', $account );
 			?>
 		</div><!-- .column-1 -->
 		<div class="column-2">
@@ -122,13 +122,13 @@ $account = Account::make( $id );
 
 			<?php
 			/**
-			 * Fires action to inject custom meta boxes in the side column.
+			 * Fires action to inject custom content in the side column.
 			 *
 			 * @param Account $account Account object.
 			 *
 			 * @since 1.0.0
 			 */
-			do_action( 'eac_account_edit_side_meta_boxes', $account );
+			do_action( 'eac_account_edit_sidebar_content', $account );
 			?>
 
 		</div><!-- .column-2 -->

@@ -35,13 +35,13 @@ $bill = EAC()->bills->get( $id );
 		<?php eac_get_template( 'bill.php', array( 'bill' => $bill ) ); ?>
 		<?php
 		/**
-		 * Fires action to inject custom meta boxes in the main column.
+		 * Fires action to inject custom content in the main column.
 		 *
 		 * @param Bill $bill Bill object.
 		 *
 		 * @since 1.0.0
 		 */
-		do_action( 'eac_bill_edit_core_meta_boxes', $bill );
+		do_action( 'eac_bill_edit_core_content', $bill );
 		?>
 	</div>
 
@@ -76,13 +76,13 @@ $bill = EAC()->bills->get( $id );
 
 		<?php
 		/**
-		 * Fires action to inject custom meta boxes in the side column.
+		 * Fires action to inject custom content in the side column.
 		 *
 		 * @param Bill $bill Bill object.
 		 *
 		 * @since 1.0.0
 		 */
-		do_action( 'eac_bill_view_side_meta_boxes', $bill );
+		do_action( 'eac_bill_view_sidebar_content', $bill );
 		?>
 
 	</div><!-- .column-2 -->

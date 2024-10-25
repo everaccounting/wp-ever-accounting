@@ -22,7 +22,7 @@ class Items {
 		add_action( 'admin_post_eac_edit_item', array( __CLASS__, 'handle_edit' ) );
 		add_action( 'eac_items_page_items_loaded', array( __CLASS__, 'page_loaded' ) );
 		add_action( 'eac_items_page_items_content', array( __CLASS__, 'page_content' ) );
-		add_action( 'eac_item_edit_side_meta_boxes', array( __CLASS__, 'item_notes' ) );
+		add_action( 'eac_item_edit_sidebar_content', array( __CLASS__, 'item_notes' ) );
 	}
 
 	/**

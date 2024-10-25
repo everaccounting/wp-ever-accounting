@@ -59,16 +59,17 @@ class Emails extends Page {
 			),
 			// email body.
 			array(
-				'title'   => __( 'Content', 'wp-ever-accounting' ),
-				'type'    => 'wp_editor',
-				'id'      => 'new_payment_email_content',
-				'default' => __( 'Hello {customer_name},<br><br>A new payment has been received for the invoice {invoice_number}.<br><br>Amount: {amount}<br>Date: {date}<br><br>Thank you for your payment.<br><br>Regards,<br>{site_name}', 'wp-ever-accounting' ),
-				'desc'    => __( 'Available template tags:', 'wp-ever-accounting' )
-				             . '<br>{customer_name} - ' . __( 'Customer name.', 'wp-ever-accounting' )
-				             . '<br>{invoice_number} - ' . __( 'Invoice number.', 'wp-ever-accounting' )
-				             . '<br>{amount} - ' . __( 'Payment amount.', 'wp-ever-accounting' )
-				             . '<br>{date} - ' . __( 'Payment date.', 'wp-ever-accounting' )
-				             . '<br>{site_name} - ' . __( 'Site name.', 'wp-ever-accounting' ),
+				'title'       => __( 'Content', 'wp-ever-accounting' ),
+				'type'        => 'wp_editor',
+				'id'          => 'new_payment_email_content',
+				'sanitize_cb' => 'sanitize_textarea_field',
+				'default'     => __( 'Hello {customer_name},<br><br>A new payment has been received for the invoice {invoice_number}.<br><br>Amount: {amount}<br>Date: {date}<br><br>Thank you for your payment.<br><br>Regards,<br>{site_name}', 'wp-ever-accounting' ),
+				'desc'        => __( 'Available template tags:', 'wp-ever-accounting' )
+				                 . '<br>{customer_name} - ' . __( 'Customer name.', 'wp-ever-accounting' )
+				                 . '<br>{payment_number} - ' . __( 'Payment number.', 'wp-ever-accounting' )
+				                 . '<br>{formatted_amount} - ' . __( 'Payment amount.', 'wp-ever-accounting' )
+				                 . '<br>{payment_date} - ' . __( 'Payment date.', 'wp-ever-accounting' )
+				                 . '<br>{invoice_number} - ' . __( 'Invoice number.', 'wp-ever-accounting' )
 			),
 			// end.
 			array(

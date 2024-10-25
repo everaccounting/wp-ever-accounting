@@ -208,13 +208,13 @@ $expense = Expense::make( $id );
 
 			<?php
 			/**
-			 * Fires action to inject custom meta boxes in the main column.
+			 * Fires action to inject custom content in the main column.
 			 *
 			 * @param Expense $expense Expense object.
 			 *
 			 * @since 1.0.0
 			 */
-			do_action( 'eac_expense_edit_core_meta_boxes', $expense );
+			do_action( 'eac_expense_edit_core_content', $expense );
 			?>
 		</div>
 		<div class="column-2">
@@ -237,13 +237,13 @@ $expense = Expense::make( $id );
 
 			<?php
 			/**
-			 * Fires action to inject custom meta boxes in the side column.
+			 * Fires action to inject custom content in the side column.
 			 *
 			 * @param Expense $expense Expense object.
 			 *
 			 * @since 1.0.0
 			 */
-			do_action( 'eac_expense_edit_side_meta_boxes', $expense );
+			do_action( 'eac_expense_edit_sidebar_content', $expense );
 			?>
 
 		</div><!-- .column-2 -->

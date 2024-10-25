@@ -25,7 +25,7 @@ class Accounts {
 		add_action( 'admin_post_eac_edit_account', array( __CLASS__, 'handle_edit' ) );
 		add_action( 'eac_banking_page_accounts_loaded', array( __CLASS__, 'page_loaded' ) );
 		add_action( 'eac_banking_page_accounts_content', array( __CLASS__, 'page_content' ) );
-		add_action( 'eac_account_edit_side_meta_boxes', array( __CLASS__, 'account_notes' ) );
+		add_action( 'eac_account_edit_sidebar_content', array( __CLASS__, 'account_notes' ) );
 		add_action( 'eac_account_profile_section_overview', array( __CLASS__, 'overview_section' ) );
 		add_action( 'eac_account_profile_section_payments', array( __CLASS__, 'payments_section' ) );
 		add_action( 'eac_account_profile_section_expenses', array( __CLASS__, 'expenses_section' ) );

@@ -515,13 +515,18 @@ class Settings {
 					break;
 
 				case 'wp_editor':
+					$settings = array(
+						'textarea_name' => $value['name'],
+						'textarea_rows' => 10,
+						'teeny'         => true,
+					);
 					?>
 					<tr valign="top">
 						<th scope="row" class="titledesc">
 							<label for="<?php echo esc_attr( $value['name'] ); ?>"><?php echo esc_html( $value['title'] ); ?><?php echo wp_kses_post( $tooltip ); ?></label>
 						</th>
 						<td class="forminp forminp-<?php echo esc_attr( $value['type'] ); ?>">
-							<?php wp_editor( $value['value'], $value['name'], array( 'textarea_name' => $value['name'] ) ); ?>
+							<?php wp_editor( $value['value'], $value['name'], $settings ); ?>
 							<?php echo wp_kses_post( $description ); ?>
 						</td>
 					</tr>
@@ -698,9 +703,9 @@ class Settings {
 					break;
 			}
 
-			$sanitize_callback = isset( $option['sanitize_callback'] ) ? $option['sanitize_callback'] : false;
-			if ( $sanitize_callback && is_callable( $sanitize_callback ) ) {
-				$value = call_user_func( $sanitize_callback, $value );
+			$sanitize_cb = isset( $option['sanitize_cb'] ) ? $option['sanitize_cb'] : false;
+			if ( $sanitize_cb && is_callable( $sanitize_cb ) ) {
+				$value = call_user_func( $sanitize_cb, $value );
 			}
 
 			/**
@@ -720,6 +725,7 @@ class Settings {
 			if ( is_null( $value ) ) {
 				continue;
 			}
+
 			if ( $option_name && $setting_name ) {
 				if ( ! isset( $update_options[ $option_name ] ) ) {
 					$update_options[ $option_name ] = get_option( $option_name, array() );
