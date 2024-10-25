@@ -149,6 +149,13 @@ jQuery( document ).ready( ( $ ) => {
 				$( this ).css( 'padding', '8px 12px' );
 			}
 		} );
+
+		// remove .eac-card__body if it is empty.
+		$( '.eac-card__body' ).each( function () {
+			if ( ! $( this ).text().trim().length ) {
+				$( this ).remove();
+			}
+		} );
 	};
 
 	// Initialize UI.

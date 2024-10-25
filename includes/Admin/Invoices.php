@@ -23,7 +23,7 @@ class Invoices {
 		add_action( 'eac_sales_page_invoices_content', array( __CLASS__, 'page_content' ) );
 		add_action( 'eac_invoice_edit_side_meta_boxes', array( __CLASS__, 'invoice_attachment' ) );
 		add_action( 'eac_invoice_view_side_meta_boxes', array( __CLASS__, 'invoice_attachment' ) );
-		add_action( 'eac_invoice_edit_side_meta_boxes', array( __CLASS__, 'invoice_notes' ) );
+//		add_action( 'eac_invoice_edit_side_meta_boxes', array( __CLASS__, 'invoice_notes' ) );
 		add_action( 'eac_invoice_view_side_meta_boxes', array( __CLASS__, 'invoice_notes' ) );
 	}
 
@@ -138,6 +138,9 @@ class Invoices {
 				$id = filter_input( INPUT_GET, 'id', FILTER_VALIDATE_INT );
 				if ( ! EAC()->invoices->get( $id ) ) {
 					wp_die( esc_html__( 'You attempted to retrieve an invoice that does not exist. Perhaps it was deleted?', 'wp-ever-accounting' ) );
+				}
+				if ( 'edit' === $action && ! EAC()->invoices->get( $id )->editable ) {
+					wp_die( esc_html__( 'You attempted to edit an invoice that is not editable.', 'wp-ever-accounting' ) );
 				}
 				break;
 

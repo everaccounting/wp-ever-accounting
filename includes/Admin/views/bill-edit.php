@@ -233,31 +233,6 @@ defined( 'ABSPATH' ) || exit;
 				<div class="eac-card__header">
 					<h3 class="eac-card__title"><?php esc_html_e( 'Save', 'wp-ever-accounting' ); ?></h3>
 				</div>
-				<div class="eac-card__body">
-					<?php
-					eac_form_field(
-						array(
-							'label'       => __( 'Status', 'wp-ever-accounting' ),
-							'type'        => 'select',
-							'id'          => 'status',
-							'options'     => EAC()->bills->get_statuses(),
-							'value'       => $bill->status,
-							'placeholder' => __( 'Select status', 'wp-ever-accounting' ),
-							'required'    => true,
-						)
-					);
-
-					/**
-					 * Fires to add custom actions.
-					 *
-					 * @param Bill $bill Bill object.
-					 *
-					 * @since 2.0.0
-					 */
-					do_action( 'eac_bill_edit_misc_actions', $bill );
-					?>
-				</div>
-
 				<div class="eac-card__footer">
 					<?php if ( $bill->exists() ) : ?>
 						<a class="del del_confirm" href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'action', 'delete', $bill->get_edit_url() ), 'bulk-bills' ) ); ?>">

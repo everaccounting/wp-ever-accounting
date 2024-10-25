@@ -35,15 +35,15 @@ module.exports = [
 			'css/frontend': './.assets/css/frontend/frontend.scss',
 
 			// Client scripts.
-			...glob.sync( './client/*/*/index.js' ).reduce( ( memo, file ) => {
-				const [ type, name ] = new RegExp( 'client/(.*)/(.*)/index.js' )
-					.exec( file )
-					.slice( 1 );
-				return {
-					...memo,
-					[ `client/${ type }-${ name }` ]: path.resolve( __dirname, file ),
-				};
-			}, {} ),
+			// ...glob.sync( './client/*/*/index.js' ).reduce( ( memo, file ) => {
+			// 	const [ type, name ] = new RegExp( 'client/(.*)/(.*)/index.js' )
+			// 		.exec( file )
+			// 		.slice( 1 );
+			// 	return {
+			// 		...memo,
+			// 		[ `client/${ type }-${ name }` ]: path.resolve( __dirname, file ),
+			// 	};
+			// }, {} ),
 		},
 	},
 	//Package scripts.

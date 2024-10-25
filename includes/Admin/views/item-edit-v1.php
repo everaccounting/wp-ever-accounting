@@ -18,9 +18,6 @@ $item = Item::make( $id );
 	<h1 class="wp-heading-inline">
 		<?php if ( $item->exists() ) : ?>
 			<?php esc_html_e( 'Edit Item', 'wp-ever-accounting' ); ?>
-			<a href="<?php echo esc_attr( admin_url( 'admin.php?page=eac-items&action=add' ) ); ?>" class="button button-small">
-				<?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?>
-			</a>
 		<?php else : ?>
 			<?php esc_html_e( 'Add Item', 'wp-ever-accounting' ); ?>
 		<?php endif; ?>
@@ -32,8 +29,8 @@ $item = Item::make( $id );
 
 <form id="eac-edit-item" name="item" method="post" action="<?php echo esc_html( admin_url( 'admin-post.php' ) ); ?>">
 	<div class="eac-poststuff">
-
 		<div class="column-1">
+
 			<div id="eac-item-data" class="eac-card">
 				<div class="eac-card__header">
 					<h3 class="eac-card__title"><?php esc_html_e( 'Item Attributes', 'wp-ever-accounting' ); ?></h3>
@@ -191,9 +188,9 @@ $item = Item::make( $id );
 				<div class="eac-card__footer">
 					<?php if ( $item->exists() ) : ?>
 						<a class="del del_confirm" href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'action', 'delete', $item->get_edit_url() ), 'bulk-items' ) ); ?>"><?php esc_html_e( 'Delete', 'wp-ever-accounting' ); ?></a>
-						<button class="button button-primary"><?php esc_html_e( 'Update', 'wp-ever-accounting' ); ?></button>
+						<button class="button button-primary"><?php esc_html_e( 'Update Item', 'wp-ever-accounting' ); ?></button>
 					<?php else : ?>
-						<button class="button button-primary button-block"><?php esc_html_e( 'Save', 'wp-ever-accounting' ); ?></button>
+						<button class="button button-primary tw-w-[100%]"><?php esc_html_e( 'Add Item', 'wp-ever-accounting' ); ?></button>
 					<?php endif; ?>
 				</div>
 			</div><!-- .eac-card -->

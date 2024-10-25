@@ -91,7 +91,7 @@ class Invoices extends ListTable {
 		$performed = 0;
 		foreach ( $ids as $id ) {
 			if ( EAC()->invoices->delete( $id ) ) {
-				++$performed;
+				++ $performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
@@ -369,6 +369,11 @@ class Invoices extends ListTable {
 				__( 'Delete', 'wp-ever-accounting' )
 			),
 		);
+
+		if ( ! $item->editable ) {
+			unset( $actions['edit'] );
+		}
+
 		return $this->row_actions( $actions );
 	}
 }

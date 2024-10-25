@@ -18,6 +18,9 @@ $transfer = Transfer::make( $id );
 	<h1 class="wp-heading-inline">
 		<?php if ( $transfer->exists() ) : ?>
 			<?php esc_html_e( 'Edit Transfer', 'wp-ever-accounting' ); ?>
+			<a href="<?php echo esc_attr( admin_url( 'admin.php?page=eac-settings&tab=taxes&section=rates&action=add' ) ); ?>" class="button button-small">
+				<?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?>
+			</a>
 		<?php else : ?>
 			<?php esc_html_e( 'Add Transfer', 'wp-ever-accounting' ); ?>
 		<?php endif; ?>
@@ -217,7 +220,7 @@ $transfer = Transfer::make( $id );
 						</a>
 						<button class="button button-primary"><?php esc_html_e( 'Update Transfer', 'wp-ever-accounting' ); ?></button>
 					<?php else : ?>
-						<button class="button button-primary button-large tw-w-full"><?php esc_html_e( 'Add Transfer', 'wp-ever-accounting' ); ?></button>
+						<button class="button button-primary button-large tw-w-full"><?php esc_html_e( 'Save Transfer', 'wp-ever-accounting' ); ?></button>
 					<?php endif; ?>
 				</div>
 			</div><!-- .eac-card -->

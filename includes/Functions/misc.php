@@ -333,6 +333,7 @@ function eac_file_uploader( $field ) {
 			'src'          => '',
 			'url'          => '',
 			'filezise'     => '',
+			'readonly'     => false,
 		)
 	);
 	$post  = get_post( $field['value'] );
@@ -350,6 +351,13 @@ function eac_file_uploader( $field ) {
 		}
 	}
 	$has_file_class = ! empty( $field['value'] ) ? ' has--file' : '';
+
+	// if readonly and has no value, then return.
+	if ( $field['readonly'] && empty( $field['value'] ) ) {
+		echo esc_html__( 'No file uploaded', 'wp-ever-accounting' );
+		return;
+	}
+
 	?>
 	<div class="eac-file-upload <?php echo esc_attr( $has_file_class ); ?>">
 		<div class="eac-file-upload__dropzone">
@@ -366,9 +374,15 @@ function eac_file_uploader( $field ) {
 				</div>
 				<div class="eac-file-upload__size"><?php echo esc_html( $field['filezise'] ); ?></div>
 			</div>
+			<?php if ( $field['readonly'] ) : ?>
+				<div class="eac-file-upload__action">
+					<a href="<?php echo esc_url( $field['url'] ); ?>" class="eac-file-upload__download" download><span class="dashicons dashicons-download"></span></a>
+				</div>
+			<?php else: ?>
 			<div class="eac-file-upload__action">
 				<a href="#" class="eac-file-upload__remove"><span class="dashicons dashicons-trash"></span></a>
 			</div>
+			<?php endif; ?>
 		</div>
 	</div>
 	<?php

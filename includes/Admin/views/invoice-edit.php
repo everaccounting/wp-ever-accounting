@@ -193,22 +193,10 @@ wp_add_inline_script(
 
 			<div class="eac-card">
 				<div class="eac-card__header">
-					<h3 class="eac-card__title"><?php esc_html_e( 'Save', 'wp-ever-accounting' ); ?></h3>
+					<h3 class="eac-card__title"><?php esc_html_e( 'Actions', 'wp-ever-accounting' ); ?></h3>
 				</div>
 				<div class="eac-card__body">
 					<?php
-					eac_form_field(
-						array(
-							'label'       => __( 'Status', 'wp-ever-accounting' ),
-							'type'        => 'select',
-							'id'          => 'status',
-							'options'     => EAC()->invoices->get_statuses(),
-							'value'       => $invoice->status,
-							'placeholder' => __( 'Select status', 'wp-ever-accounting' ),
-							'required'    => true,
-						)
-					);
-
 					/**
 					 * Fires to add custom actions.
 					 *

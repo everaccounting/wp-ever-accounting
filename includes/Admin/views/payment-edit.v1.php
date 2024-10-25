@@ -23,9 +23,6 @@ $payment = Payment::make( $id );
 	<h1 class="wp-heading-inline">
 		<?php if ( $payment->exists() ) : ?>
 			<?php esc_html_e( 'Edit Payment', 'wp-ever-accounting' ); ?>
-			<a href="<?php echo esc_attr( admin_url( 'admin.php?page=eac-sales&tab=payments&action=add' ) ); ?>" class="button button-small">
-				<?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?>
-			</a>
 		<?php else : ?>
 			<?php esc_html_e( 'Add Payment', 'wp-ever-accounting' ); ?>
 		<?php endif; ?>
@@ -33,6 +30,12 @@ $payment = Payment::make( $id );
 			<span class="dashicons dashicons-undo"></span>
 		</a>
 	</h1>
+
+	<?php if ( $payment->exists() ) : ?>
+		<a class="button" href="<?php echo esc_url( add_query_arg( array( 'action' => 'view' ) ) ); ?>">
+			<?php esc_html_e( 'View Payment', 'wp-ever-accounting' ); ?>
+		</a>
+	<?php endif; ?>
 </div>
 
 <form id="eac-edit-payment" name="payment" method="post" action="<?php echo esc_html( admin_url( 'admin-post.php' ) ); ?>">
@@ -233,26 +236,42 @@ $payment = Payment::make( $id );
 				<div class="eac-card__header">
 					<h3 class="eac-card__title"><?php esc_html_e( 'Save', 'wp-ever-accounting' ); ?></h3>
 				</div>
+				<div class="eac-card__body">
+					<?php
+					eac_form_field(
+						array(
+							'label'       => __( 'Status', 'wp-ever-accounting' ),
+							'type'        => 'select',
+							'id'          => 'status',
+							'options'     => EAC()->payments->get_statuses(),
+							'value'       => $payment->status,
+							'placeholder' => __( 'Select status', 'wp-ever-accounting' ),
+							'required'    => true,
+						)
+					);
+
+					/**
+					 * Fires to add custom actions.
+					 *
+					 * @param Payment $payment Payment object.
+					 *
+					 * @since 2.0.0
+					 */
+					do_action( 'eac_payment_edit_misc_actions', $payment );
+					?>
+				</div>
+
 				<div class="eac-card__footer">
 					<?php if ( $payment->exists() ) : ?>
 						<a class="del del_confirm" href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'action', 'delete', $payment->get_edit_url() ), 'bulk-payments' ) ); ?>">
 							<?php esc_html_e( 'Delete', 'wp-ever-accounting' ); ?>
 						</a>
-						<button class="button button-primary"><?php esc_html_e( 'Update', 'wp-ever-accounting' ); ?></button>
+						<button class="button button-primary"><?php esc_html_e( 'Update Payment', 'wp-ever-accounting' ); ?></button>
 					<?php else : ?>
-						<button class="button button-primary button-block"><?php esc_html_e( 'Save', 'wp-ever-accounting' ); ?></button>
+						<button class="button button-primary button-large tw-w-full"><?php esc_html_e( 'Add Payment', 'wp-ever-accounting' ); ?></button>
 					<?php endif; ?>
 				</div>
 			</div><!-- .eac-card -->
-
-			<div class="eac-card">
-				<div class="eac-card__header">
-					<h3 class="eac-card__title"><?php esc_html_e( 'Attachment', 'wp-ever-accounting' ); ?></h3>
-				</div>
-				<div class="eac-card__body">
-					<?php eac_file_uploader( array( 'value' => $payment->attachment_id ) ); ?>
-				</div>
-			</div>
 
 			<?php
 			/**
@@ -264,6 +283,7 @@ $payment = Payment::make( $id );
 			 */
 			do_action( 'eac_payment_edit_side_meta_boxes', $payment );
 			?>
+
 		</div><!-- .column-2 -->
 	</div><!-- .eac-poststuff -->
 

@@ -2,6 +2,7 @@
 
 namespace EverAccounting\Admin;
 
+use EverAccounting\Admin\Settings\Emails;
 use EverAccounting\Admin\Settings\General;
 use EverAccounting\Admin\Settings\Page;
 use EverAccounting\Admin\Settings\Purchases;
@@ -90,6 +91,7 @@ class Settings {
 				new Sales(),
 				new Purchases(),
 				new Taxes(),
+				new Emails(),
 			)
 		);
 
@@ -580,7 +582,7 @@ class Settings {
 					<?php
 					break;
 
-				case 'custom':
+				case 'html':
 					?>
 					<tr valign="top">
 						<th scope="row" class="titledesc">
@@ -588,7 +590,7 @@ class Settings {
 								for="<?php echo esc_attr( $value['name'] ); ?>"><?php echo esc_html( $value['title'] ); ?><?php echo wp_kses_post( $tooltip ); ?></label>
 						</th>
 						<td class="forminp forminp-<?php echo esc_attr( $value['type'] ); ?>">
-							<?php echo wp_kses_post( $value['html'] ); ?>
+							<?php echo wp_kses_post( $value['content'] ); ?>
 						</td>
 					</tr>
 					<?php

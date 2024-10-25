@@ -68,6 +68,10 @@
 		& > *:last-child {
 			margin-bottom: 0;
 		}
+
+		&:empty{
+			display: none;
+		}
 	}
 
 	// If card footer comes immediately after card header remove the border.

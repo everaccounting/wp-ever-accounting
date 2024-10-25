@@ -131,9 +131,21 @@ BUTTON GROUP
 }
 
 // any button contains dashicon.
-.button:has(>.dashicons) {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	gap: 5px;
+.button {
+	&:has(>.dashicons) {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 5px;
+	}
+
+	&.button-block {
+		text-align: center;
+		width: 100%;
+
+		& + .button-block {
+			margin-top: 10px;
+		}
+	}
 }
+

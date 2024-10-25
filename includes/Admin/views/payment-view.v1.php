@@ -51,10 +51,20 @@ $payment = EAC()->payments->get( $id );
 			<div class="eac-card">
 				<div class="eac-card__header">
 					<h2 class="eac-card__title"><?php esc_html_e( 'Actions', 'wp-ever-accounting' ); ?></h2>
-					<a href="<?php echo esc_url( $payment->get_edit_url() ); ?>" class="page-title-action"><?php esc_html_e( 'Edit Payment', 'wp-ever-accounting' ); ?></a>
 				</div>
 				<div class="eac-card__body">
 					<?php
+					eac_form_field(
+						array(
+							'label'       => __( 'Status', 'wp-ever-accounting' ),
+							'type'        => 'select',
+							'id'          => 'status',
+							'options'     => EAC()->payments->get_statuses(),
+							'value'       => $payment->status,
+							'placeholder' => __( 'Select status', 'wp-ever-accounting' ),
+							'required'    => true,
+						)
+					);
 					/**
 					 * Fires to add custom actions.
 					 *
@@ -64,12 +74,10 @@ $payment = EAC()->payments->get( $id );
 					 */
 					do_action( 'eac_payment_view_misc_actions', $payment );
 					?>
-					<a href="#" class="button button-block">Send Receipt</a>
 				</div>
 				<div class="eac-card__footer">
-					<a class="del del_confirm" href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'action', 'delete', $payment->get_edit_url() ), 'bulk-payments' ) ); ?>">
-						<?php esc_html_e( 'Delete', 'wp-ever-accounting' ); ?>
-					</a>
+					<a class="del del_confirm" href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'action', 'delete', $payment->get_edit_url() ), 'bulk-payments' ) ); ?>"><?php esc_html_e( 'Delete', 'wp-ever-accounting' ); ?></a>
+					<button class="button button-primary"><?php esc_html_e( 'Submit', 'wp-ever-accounting' ); ?></button>
 				</div>
 			</div>
 

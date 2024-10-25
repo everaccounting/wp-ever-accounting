@@ -47,23 +47,14 @@ $bill = EAC()->bills->get( $id );
 
 	<div class="column-2">
 
-		<form class="eac-card" method="post" action="<?php echo esc_url( add_query_arg( 'action', 'update', $bill->get_edit_url() ) ); ?>">
+		<div class="eac-card">
 			<div class="eac-card__header">
 				<h2 class="eac-card__title"><?php esc_html_e( 'Actions', 'wp-ever-accounting' ); ?></h2>
 			</div>
 			<div class="eac-card__body">
+				<a class="button button-block" href="<?php echo esc_url( $bill->get_edit_url() ); ?>"><?php esc_html_e( 'Mark Received', 'wp-ever-accounting' ); ?></a>
+				<a class="button button-primary button-block" href="<?php echo esc_url( $bill->get_edit_url() ); ?>"><?php esc_html_e( 'Add Payment', 'wp-ever-accounting' ); ?></a>
 				<?php
-				eac_form_field(
-					array(
-//						'label'       => __( 'Action', 'wp-ever-accounting' ),
-						'type'        => 'select',
-						'id'          => 'bill_action',
-						'options'     => array(),
-						'value'       => $bill->status,
-						'placeholder' => __( 'Select action', 'wp-ever-accounting' ),
-						'required'    => true,
-					)
-				);
 				/**
 				 * Fires to add custom actions.
 				 *
@@ -76,13 +67,12 @@ $bill = EAC()->bills->get( $id );
 			</div>
 			<div class="eac-card__footer">
 				<a class="del del_confirm" href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'action', 'delete', $bill->get_edit_url() ), 'bulk-bills' ) ); ?>"><?php esc_html_e( 'Delete', 'wp-ever-accounting' ); ?></a>
-				<button type="submit" class="button button-primary"><?php esc_html_e( 'Submit', 'wp-ever-accounting' ); ?></button>
 			</div>
 
 			<?php wp_nonce_field( 'eac_update_bill' ); ?>
 			<input type="hidden" name="bill_id" value="<?php echo esc_attr( $bill->id ); ?>">
 			<input type="hidden" name="action" value="eac_bill_action">
-		</form>
+		</div>
 
 		<?php
 		/**

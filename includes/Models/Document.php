@@ -81,6 +81,7 @@ use ByteKit\Models\Relations\HasMany;
  * @property string         $created_via Created via of the document.
  * @property int            $creator_id Author ID of the document.
  * @property int            $attachment_id Attachment ID of the document.
+ * @property bool		   $editable Whether the document is editable.
  * @property string         $uuid UUID of the document.
  * @property string         $date_updated Date updated of the document.
  * @property string         $date_created Date created of the document.
@@ -150,11 +151,11 @@ class Document extends Model {
 		'contact_tax_number',
 		'note',
 		'terms',
-		'transaction_id',
 		'attachment_id',
 		'contact_id',
 		'parent_id',
 		'author_id',
+		'editable',
 		'created_via',
 		'uuid',
 	);
@@ -195,6 +196,7 @@ class Document extends Model {
 		'attachment_id'  => 'int',
 		'parent_id'      => 'int',
 		'author_id'      => 'int',
+		'editable'       => 'bool',
 	);
 
 	/**

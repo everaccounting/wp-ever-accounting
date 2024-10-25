@@ -1,7 +1,4 @@
 module.exports = ( { file } ) => {
-	console.log( '====================================' );
-	console.log( file );
-	console.log( '====================================' );
 	const isPublic = file.includes( 'frontend' );
 	return {
 		map:

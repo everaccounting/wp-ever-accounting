@@ -97,6 +97,8 @@ class Plugin extends \ByteKit\Plugin {
 		register_activation_hook( $this->get_file(), array( Installer::class, 'install' ) );
 		add_action( 'plugins_loaded', array( $this, 'on_init' ), 0 );
 		add_action( 'rest_api_init', array( $this, 'register_routes' ) );
+		add_action( 'init', array( $this, 'get_actions' ) );
+		add_action( 'init', array( $this, 'post_actions' ) );
 	}
 
 	/**
@@ -207,6 +209,34 @@ class Plugin extends \ByteKit\Plugin {
 				$this->$controller = new $controller();
 				$this->$controller->register_routes();
 			}
+		}
+	}
+
+	/**
+	 * Get actions.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public function get_actions() {
+		$key = ! empty( $_GET['eac_action'] ) ? sanitize_key( $_GET['eac_action'] ) : false;
+
+		if ( ! empty( $key ) ) {
+			do_action( "eac_{$key}", $_GET );
+		}
+	}
+
+	/**
+	 * Post actions.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public function post_actions() {
+		$key = ! empty( $_POST['eac_action'] ) ? sanitize_key( $_POST['eac_action'] ) : false;
+
+		if ( ! empty( $key ) ) {
+			do_action( "eac_{$key}", $_POST );
 		}
 	}
 

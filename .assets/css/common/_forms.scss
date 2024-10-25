@@ -15,9 +15,15 @@
 		align-self: self-start;
 		justify-content: flex-start;
 		align-items: center;
-		font-weight: bold;
-		font-size: 95%;
-		margin-bottom: 0.25em;
+		//font-weight: bold;
+		//font-size: 95%;
+		//margin-bottom: 0.25em;
+
+		font-weight: 500;
+		line-height: 1.4;
+		font-size: 12px;
+		margin-bottom: 4px;
+		text-transform: uppercase;
 
 		abbr[title="required"] {
 			color: #ff0000;

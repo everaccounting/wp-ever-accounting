@@ -223,31 +223,6 @@ $expense = Expense::make( $id );
 				<div class="eac-card__header">
 					<h3 class="eac-card__title"><?php esc_html_e( 'Save', 'wp-ever-accounting' ); ?></h3>
 				</div>
-				<div class="eac-card__body">
-					<?php
-					eac_form_field(
-						array(
-							'label'       => __( 'Status', 'wp-ever-accounting' ),
-							'type'        => 'select',
-							'id'          => 'status',
-							'options'     => EAC()->expenses->get_statuses(),
-							'value'       => $expense->status,
-							'placeholder' => __( 'Select status', 'wp-ever-accounting' ),
-							'required'    => true,
-						)
-					);
-
-					/**
-					 * Fires to add custom actions.
-					 *
-					 * @param Expense $expense Expense object.
-					 *
-					 * @since 2.0.0
-					 */
-					do_action( 'eac_expense_edit_misc_actions', $expense );
-					?>
-				</div>
-
 				<div class="eac-card__footer">
 					<?php if ( $expense->exists() ) : ?>
 						<a class="del del_confirm" href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'action', 'delete', $expense->get_edit_url() ), 'bulk-expenses' ) ); ?>">

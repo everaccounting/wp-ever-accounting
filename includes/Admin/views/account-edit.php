@@ -18,6 +18,9 @@ $account = Account::make( $id );
 	<h1 class="wp-heading-inline">
 		<?php if ( $account->exists() ) : ?>
 			<?php esc_html_e( 'Edit Account', 'wp-ever-accounting' ); ?>
+			<a href="<?php echo esc_attr( admin_url( 'admin.php?page=eac-banking&tab=accounts&action=add' ) ); ?>" class="button button-small">
+				<?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?>
+			</a>
 		<?php else : ?>
 			<?php esc_html_e( 'Add Account', 'wp-ever-accounting' ); ?>
 		<?php endif; ?>
@@ -25,10 +28,6 @@ $account = Account::make( $id );
 			<span class="dashicons dashicons-undo"></span>
 		</a>
 	</h1>
-
-	<?php if ( $account->exists() ) : ?>
-		<a href="<?php echo esc_url( $account->get_view_url() ); ?>" class="page-title-action"><?php esc_html_e( 'View Account', 'wp-ever-accounting' ); ?></a>
-	<?php endif; ?>
 </div>
 
 <form id="eac-edit-account" name="account" method="post" action="<?php echo esc_html( admin_url( 'admin-post.php' ) ); ?>">
@@ -109,22 +108,6 @@ $account = Account::make( $id );
 				<div class="eac-card__header">
 					<h3 class="eac-card__title"><?php esc_html_e( 'Save', 'wp-ever-accounting' ); ?></h3>
 				</div>
-
-				<?php if ( has_action( 'eac_account_edit_misc_actions' ) ) : ?>
-					<div class="eac-card__body">
-						<?php
-						/**
-						 * Fires to add custom actions.
-						 *
-						 * @param Account $account Account object.
-						 *
-						 * @since 2.0.0
-						 */
-						do_action( 'eac_account_edit_misc_actions', $account );
-						?>
-					</div>
-				<?php endif; ?>
-
 				<div class="eac-card__footer">
 					<?php if ( $account->exists() ) : ?>
 						<a class="del del_confirm" href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'action', 'delete', $account->get_edit_url() ), 'bulk-accounts' ) ); ?>">
@@ -132,7 +115,7 @@ $account = Account::make( $id );
 						</a>
 						<button class="button button-primary"><?php esc_html_e( 'Update Account', 'wp-ever-accounting' ); ?></button>
 					<?php else : ?>
-						<button class="button button-primary button-large tw-w-full"><?php esc_html_e( 'Add Account', 'wp-ever-accounting' ); ?></button>
+						<button class="button button-primary button-large button-block"><?php esc_html_e( 'Add Account', 'wp-ever-accounting' ); ?></button>
 					<?php endif; ?>
 				</div>
 			</div><!-- .eac-card -->
