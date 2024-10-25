@@ -34,6 +34,7 @@ class Scripts {
 		EAC()->scripts->register_script( 'eac-inputmask', 'js/inputmask.js', array( 'jquery' ), true );
 		EAC()->scripts->register_script( 'eac-select2', 'js/select2.js', array( 'jquery' ), true );
 		EAC()->scripts->register_script( 'eac-tiptip', 'js/tiptip.js', array( 'jquery' ), true );
+		EAC()->scripts->register_script( 'eac-printthis', 'js/printthis.js', array( 'jquery' ), true );
 
 		// Packages.
 		EAC()->scripts->register_script( 'eac-money', 'client/money.js' );
@@ -44,7 +45,7 @@ class Scripts {
 		EAC()->scripts->register_script( 'eac-api', 'js/api.js', array( 'wp-backbone' ), true );
 
 		// Plugin scripts.
-		EAC()->scripts->register_script( 'eac-admin', 'js/admin.js', array( 'jquery', 'eac-inputmask', 'eac-select2', 'eac-tiptip', 'jquery-ui-datepicker', 'jquery-ui-tooltip', 'eac-money', 'wp-ajax-response' ), true );
+		EAC()->scripts->register_script( 'eac-admin', 'js/admin.js', array( 'jquery', 'eac-inputmask', 'eac-select2', 'eac-printthis', 'eac-tiptip', 'jquery-ui-datepicker', 'jquery-ui-tooltip', 'eac-money', 'wp-ajax-response' ), true );
 
 		EAC()->scripts->register_style( 'eac-jquery-ui', 'css/jquery-ui.css' );
 		EAC()->scripts->register_style( 'eac-frontend', 'css/frontend.css' );

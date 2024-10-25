@@ -29,7 +29,7 @@ function eac_clean( $value ) {
  *
  * @since 1.1.6 Renamed from eaccounting_tooltip() to eac_tooltip().
  * @since 1.0.2
- * @return void
+ * @return string
  */
 function eac_tooltip( $tip, $allow_html = false ) {
 	if ( $allow_html ) {
@@ -80,28 +80,28 @@ function eac_sanitize_tooltip( $text ) {
  */
 function eac_get_formatted_address( $fields = array(), $separator = '<br/>' ) {
 	$defaults          = array(
-		'name'    => '',
-		'company' => '',
-		'address' => '',
-		'city'    => '',
-		'state'   => '',
-		'zip'     => '',
-		'country' => '',
+		'name'     => '',
+		'company'  => '',
+		'address'  => '',
+		'city'     => '',
+		'state'    => '',
+		'postcode' => '',
+		'country'  => '',
 	);
-	$format            = apply_filters( 'eac_address_format', "<strong>{name}</strong>\n{company}\n{address}\n{city} {state} {zip}\n{country}" );
+	$format            = apply_filters( 'eac_address_format', "{name}\n{company}\n{address}\n{city} {state} {postcode}\n{country}" );
 	$fields            = array_map( 'trim', wp_parse_args( $fields, $defaults ) );
 	$countries         = I18n::get_countries();
 	$fields['country'] = isset( $countries[ $fields['country'] ] ) ? $countries[ $fields['country'] ] : $fields['country'];
 	$replacers         = array_map(
 		'esc_html',
 		array(
-			'{name}'    => $fields['name'],
-			'{company}' => $fields['company'],
-			'{address}' => $fields['address'],
-			'{city}'    => $fields['city'],
-			'{state}'   => $fields['state'],
-			'{zip}'     => $fields['zip'],
-			'{country}' => $fields['country'],
+			'{name}'     => $fields['name'],
+			'{company}'  => $fields['company'],
+			'{address}'  => $fields['address'],
+			'{city}'     => $fields['city'],
+			'{state}'    => $fields['state'],
+			'{postcode}' => $fields['postcode'],
+			'{country}'  => $fields['country'],
 		)
 	);
 	$formatted_address = str_replace( array_keys( $replacers ), $replacers, $format );

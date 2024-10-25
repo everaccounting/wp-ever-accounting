@@ -87,8 +87,7 @@ function eac_update_120_transactions() {
 	$wpdb->query( "ALTER TABLE $table DROP reconciled" );
 	$wpdb->query( "ALTER TABLE $table DROP creator_id" );
 
-	$wpdb->query( "ALTER TABLE $table MODIFY status VARCHAR(20) NOT NULL DEFAULT 'completed' AFTER type" );
-	$wpdb->query( "ALTER TABLE $table MODIFY number VARCHAR(30) NOT NULL AFTER status" );
+	$wpdb->query( "ALTER TABLE $table MODIFY number VARCHAR(30) NOT NULL AFTER type" );
 	$wpdb->query( "ALTER TABLE $table MODIFY currency VARCHAR(3) NOT NULL DEFAULT 'USD' AFTER amount" );
 	$wpdb->query( "ALTER TABLE $table MODIFY exchange_rate DOUBLE(15, 8) NOT NULL DEFAULT 1.0 AFTER currency" );
 	$wpdb->query( "ALTER TABLE $table MODIFY reference VARCHAR(191) DEFAULT NULL AFTER exchange_rate" );

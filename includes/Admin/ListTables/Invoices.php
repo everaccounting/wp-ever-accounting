@@ -123,6 +123,7 @@ class Invoices extends ListTable {
 		$current      = $this->get_request_status( 'all' );
 		$status_links = array();
 		$statuses     = EAC()->invoices->get_statuses();
+		$statuses     = array_merge( array( 'all' => __( 'All', 'wp-ever-accounting' ) ), $statuses );
 
 		foreach ( $statuses as $status => $label ) {
 			$link  = 'all' === $status ? $this->base_url : add_query_arg( 'status', $status, $this->base_url );

@@ -16,8 +16,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @property int    $vendor_id ID of the vendor.
  *
- * @property-read string $status_label Formatted status.
- * @property-read string $payment_method_name Formatted mode.
+ * @property-read string $payment_method_label Formatted mode.
  * @property-read Bill   $bill Related bill.
  */
 class Expense extends Transaction {
@@ -48,17 +47,7 @@ class Expense extends Transaction {
 	 */
 	protected $query_vars = array(
 		'type'           => 'payment',
-		'search_columns' => array( 'id', 'contact_id', 'amount', 'status', 'date' ),
-	);
-
-	/**
-	 * Attributes that have transition effects when changed.
-	 *
-	 * @since 1.0.0
-	 * @var array
-	 */
-	protected $transitionable = array(
-		'status',
+		'search_columns' => array( 'id', 'contact_id', 'amount', 'payment_date' ),
 	);
 
 	/**
@@ -68,9 +57,8 @@ class Expense extends Transaction {
 	 * @return void
 	 */
 	public function __construct( $attributes = null ) {
-		$this->attributes['status'] = 'completed';
-		$this->attributes['type']   = $this->get_object_type();
-		$this->query_vars['type']   = $this->get_object_type();
+		$this->attributes['type'] = $this->get_object_type();
+		$this->query_vars['type'] = $this->get_object_type();
 		parent::__construct( $attributes );
 	}
 
@@ -84,24 +72,12 @@ class Expense extends Transaction {
 	*/
 
 	/**
-	 * Get formatted status.
-	 *
-	 * @since 1.0.0
-	 * @return string
-	 */
-	public function get_status_label_attr() {
-		$statuses = EAC()->payments->get_statuses();
-
-		return array_key_exists( $this->status, $statuses ) ? $statuses[ $this->status ] : $this->status;
-	}
-
-	/**
 	 * Get formatted mode.
 	 *
 	 * @since 1.0.0
 	 * @return string
 	 */
-	public function get_payment_method_name_attr() {
+	public function get_payment_method_label_attr() {
 		$modes = eac_get_payment_methods();
 
 		return array_key_exists( $this->payment_method, $modes ) ? $modes[ $this->payment_method ] : $this->payment_method;

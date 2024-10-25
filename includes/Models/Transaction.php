@@ -16,7 +16,6 @@ defined( 'ABSPATH' ) || exit;
  *
  * @property int             $id ID of the item.
  * @property string          $type Type of the transaction.
- * @property string          $status Status of the transaction.
  * @property string          $number Number of the transaction.
  * @property string          $payment_date Date of the transaction.
  * @property double          $amount Amount of the transaction.
@@ -72,7 +71,6 @@ class Transaction extends Model {
 	protected $columns = array(
 		'id',
 		'type',
-		'status',
 		'number',
 		'payment_date',
 		'amount',
@@ -102,7 +100,6 @@ class Transaction extends Model {
 	 * @var array
 	 */
 	protected $attributes = array(
-		'status'      => '',
 		'created_via' => 'manual',
 		'editable'    => false,
 	);
@@ -116,7 +113,6 @@ class Transaction extends Model {
 	protected $casts = array(
 		'id'             => 'int',
 		'type'           => 'sanitize_text',
-		'status'         => 'sanitize_text',
 		'number'         => 'sanitize_text',
 		'payment_date'   => 'date',
 		'amount'         => 'float',

@@ -15,17 +15,12 @@ $id      = isset( $_GET['id'] ) ? absint( wp_unslash( $_GET['id'] ) ) : 0;
 $invoice = EAC()->invoices->get( $id );
 
 ?>
-<div class="eac-section-header">
-	<h1 class="wp-heading-inline">
-		<?php esc_html_e( 'View Invoice', 'wp-ever-accounting' ); ?>
-		<a href="<?php echo esc_attr( remove_query_arg( array( 'action', 'id' ) ) ); ?>" title="<?php esc_attr_e( 'Go back', 'wp-ever-accounting' ); ?>">
-			<span class="dashicons dashicons-undo"></span>
-		</a>
-	</h1>
-	<?php if ( $invoice->editable ): ?>
-		<a href="<?php echo esc_url( $invoice->get_edit_url() ); ?>" class="page-title-action"><?php esc_html_e( 'Edit Invoice', 'wp-ever-accounting' ); ?></a>
-	<?php endif; ?>
-</div>
+<h1 class="wp-heading-inline">
+	<?php esc_html_e( 'View Invoice', 'wp-ever-accounting' ); ?>
+	<a href="<?php echo esc_attr( remove_query_arg( array( 'action', 'id' ) ) ); ?>" title="<?php esc_attr_e( 'Go back', 'wp-ever-accounting' ); ?>">
+		<span class="dashicons dashicons-undo"></span>
+	</a>
+</h1>
 
 
 <div class="eac-poststuff">

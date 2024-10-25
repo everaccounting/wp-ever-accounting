@@ -117,36 +117,6 @@ class Payments extends ListTable {
 	}
 
 	/**
-	 * Returns an associative array listing all the views that can be used
-	 * with this table.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return string[] An array of HTML links keyed by their view.
-	 */
-	protected function get_views() {
-		$current      = $this->get_request_status( 'all' );
-		$status_links = array();
-		$statuses     = EAC()->payments->get_statuses();
-		$statuses     = array_merge( array( 'all' => __( 'All', 'wp-ever-accounting' ) ), $statuses );
-
-		foreach ( $statuses as $status => $label ) {
-			$link  = 'all' === $status ? $this->base_url : add_query_arg( 'status', $status, $this->base_url );
-			$args  = 'all' === $status ? array() : array( 'status' => $status );
-			$count = Payment::count( $args );
-			$label = sprintf( '%s <span class="count">(%s)</span>', esc_html( $label ), number_format_i18n( $count ) );
-
-			$status_links[ $status ] = array(
-				'url'     => $link,
-				'label'   => $label,
-				'current' => $current === $status,
-			);
-		}
-
-		return $this->get_views_links( $status_links );
-	}
-
-	/**
 	 * Retrieves an associative array of bulk actions available on this table.
 	 *
 	 * @since 1.0.0
@@ -155,7 +125,7 @@ class Payments extends ListTable {
 	 */
 	protected function get_bulk_actions() {
 		$actions = array(
-			'delete'        => __( 'Delete', 'wp-ever-accounting' ),
+			'delete' => __( 'Delete', 'wp-ever-accounting' ),
 		);
 
 		return $actions;

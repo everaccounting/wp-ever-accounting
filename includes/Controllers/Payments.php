@@ -74,22 +74,4 @@ class Payments {
 
 		return Payment::results( $args );
 	}
-
-	/**
-	 * Get statuses.
-	 *
-	 * @since 1.1.0
-	 * @return array
-	 */
-	public function get_statuses() {
-		return apply_filters(
-			'eac_payment_statuses',
-			array(
-				'pending'   => esc_html__( 'Pending', 'wp-ever-accounting' ),
-				'completed' => esc_html__( 'Completed', 'wp-ever-accounting' ),
-				'refunded'  => esc_html__( 'Refunded', 'wp-ever-accounting' ),
-				'cancelled' => esc_html__( 'Cancelled', 'wp-ever-accounting' ),
-			)
-		);
-	}
 }

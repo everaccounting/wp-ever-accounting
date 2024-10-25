@@ -64,10 +64,7 @@ $payment = EAC()->payments->get( $id );
 				<a href="#" class="button button-small button-block eac-payment-email">
 					<span class="dashicons dashicons-email"></span> <?php esc_html_e( 'Email', 'wp-ever-accounting' ); ?>
 				</a>
-				<a href="#" class="button button-small button-block">
-					<span class="dashicons dashicons-download"></span> <?php esc_html_e( 'Download', 'wp-ever-accounting' ); ?>
-				</a>
-				<a href="#" class="button button-small button-block">
+				<a href="#" class="button button-small button-block eac-print-this" data-target="#eac-payment>table">
 					<span class="dashicons dashicons-printer"></span> <?php esc_html_e( 'Print', 'wp-ever-accounting' ); ?>
 				</a>
 				<a href="#" class="button button-small button-block">
@@ -112,7 +109,16 @@ $payment = EAC()->payments->get( $id );
 			</div>
 			<div class="eac-form-field">
 				<label for="message"><?php esc_html_e( 'Message', 'wp-ever-accounting' ); ?></label>
-				<?php wp_editor( get_option('new_payment_email_content'), 'message', array( 'textarea_name' => 'message', 'editor_height' => 200 ) ); ?>
+				<?php
+				wp_editor(
+					get_option( 'new_payment_email_content' ),
+					'message',
+					array(
+						'textarea_name' => 'message',
+						'editor_height' => 200,
+					)
+				);
+				?>
 			</div>
 		</div>
 
@@ -122,3 +128,9 @@ $payment = EAC()->payments->get( $id );
 		</div>
 	</form>
 </script>
+
+<script type="text/html" id="tmpl-eac-share-document">
+	<div class="eac-modal-header">
+		<h2><?php esc_html_e( 'Share Payment', 'wp-ever-accounting' ); ?></h2>
+	</div>
+

@@ -17,8 +17,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @property int          $customer_id ID of the customer.
  *
- * @property-read string  $status_label Formatted status.
- * @property-read string  $payment_method_name Formatted mode.
+ * @property-read string  $payment_method_label Formatted mode.
  * @property-read Invoice $invoice Related invoice.
  */
 class Payment extends Transaction {
@@ -71,7 +70,6 @@ class Payment extends Transaction {
 	 * @return void
 	 */
 	public function __construct( $attributes = null ) {
-		$this->attributes['status'] = 'completed';
 		$this->attributes['type']   = $this->get_object_type();
 		$this->query_vars['type']   = $this->get_object_type();
 		parent::__construct( $attributes );
@@ -87,24 +85,12 @@ class Payment extends Transaction {
 	*/
 
 	/**
-	 * Get formatted status.
-	 *
-	 * @since 1.0.0
-	 * @return string
-	 */
-	public function get_status_label_attr() {
-		$statuses = EAC()->payments->get_statuses();
-
-		return array_key_exists( $this->status, $statuses ) ? $statuses[ $this->status ] : $this->status;
-	}
-
-	/**
 	 * Get formatted mode.
 	 *
 	 * @since 1.0.0
 	 * @return string
 	 */
-	public function get_payment_method_name_attr() {
+	public function get_payment_method_label_attr() {
 		$modes = eac_get_payment_methods();
 
 		return array_key_exists( $this->payment_method, $modes ) ? $modes[ $this->payment_method ] : $this->payment_method;
@@ -147,9 +133,6 @@ class Payment extends Transaction {
 	public function save() {
 		if ( empty( $this->payment_date ) ) {
 			return new \WP_Error( 'missing_required', __( 'Payment date is required.', 'wp-ever-accounting' ) );
-		}
-		if ( empty( $this->status ) ) {
-			return new \WP_Error( 'missing_required', __( 'Payment status is required.', 'wp-ever-accounting' ) );
 		}
 		if ( empty( $this->account_id ) ) {
 			return new \WP_Error( 'missing_required', __( 'Account is required.', 'wp-ever-accounting' ) );

@@ -158,7 +158,6 @@ function eac_sanitize_amount( $amount, $currency = null ) {
  */
 function eac_convert_currency( $amount, $from = 1, $to = 1 ) {
 	$currencies = eac_get_currencies();
-	// Check if amount is numeric; if not, sanitize it
 	if ( ! is_numeric( $amount ) ) {
 		$amount = eac_sanitize_amount( $amount );
 	}
@@ -171,7 +170,6 @@ function eac_convert_currency( $amount, $from = 1, $to = 1 ) {
 		$to = EAC()->currencies->get_rate( $to );
 	}
 
-	// Validate rates
 	if ( ! is_numeric( $from ) || $from <= 0 || ! is_numeric( $to ) || $to <= 0 ) {
 		return 0;
 	}
@@ -192,29 +190,6 @@ function eac_convert_currency( $amount, $from = 1, $to = 1 ) {
 	}
 
 	return $amount;
-}
-
-
-function eac_convert_currency_v1( $amount, $from_currency, $to_currency = null, $from_rate = null, $to_rate = null, $formatted = false ) {
-	$currencies = eac_get_currencies();
-	if ( ! is_numeric( $amount ) ) {
-		$amount = eac_sanitize_amount( $amount, $from_currency );
-	}
-	$from_data = array_key_exists( $from_currency, $currencies ) ? $currencies[ $from_currency ] : $currencies[ eac_base_currency() ];
-	$to_data   = array_key_exists( $to_currency, $currencies ) ? $currencies[ $to_currency ] : $currencies[ eac_base_currency() ];
-	$from_rate = empty( $from_rate ) ? $from_data['rate'] : $from_rate;
-	$to_rate   = empty( $to_rate ) ? $to_data['rate'] : $to_rate;
-
-	// No need to convert same currency.
-	if ( $from_currency !== $to_currency && $amount > 0 && $from_rate > 0 ) {
-		$amount = round( $amount / $from_rate, $to_data['precision'] ) * $to_rate;
-	}
-
-	if ( $amount > 0 && $to_rate > 0 ) {
-		$amount = round( $amount * $to_rate, $to_data['precision'] );
-	}
-
-	return $formatted ? eac_format_amount( $amount, $to_currency ) : $amount;
 }
 
 /**

@@ -26,7 +26,7 @@ $logo  = get_option( 'eac_business_logo' );
 $phone = get_option( 'eac_business_phone' );
 $email = get_option( 'eac_business_email' );
 ?>
-<div class="eac-payment" dir="<?php echo is_rtl() ? 'rtl' : 'ltr'; ?>" style="font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif; margin-bottom: 40px; background-color: #ffffff; border: 1px solid #e5e7eb; padding: 2rem; color: #3c3c3c; font-size: 14px;">
+<div id="eac-payment" class="eac-payment" dir="<?php echo is_rtl() ? 'rtl' : 'ltr'; ?>" style="font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif; margin-bottom: 40px; background-color: #ffffff; border: 1px solid #e5e7eb; padding: 2rem; color: #3c3c3c; font-size: 14px;">
 	<table border="0" cellpadding="0" cellspacing="0" width="100%">
 		<!-- Header -->
 		<tr>

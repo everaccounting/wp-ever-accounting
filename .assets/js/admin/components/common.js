@@ -292,6 +292,23 @@ jQuery( document ).ready( ( $ ) => {
 			}
 		} );
 
+	// print.
+	$( '.eac-print-this' ).on( 'click', function ( e ) {
+		e.preventDefault();
+		var $target = $( $( this ).data( 'target' ) );
+		console.log( $target );
+		if ( ! $target.length ) {
+			return;
+		}
+
+		$target.printThis( {
+			printContainer: true,
+			printDelay: 0,
+			header: null,
+			footer: null,
+		} );
+	} );
+
 	// Block UI
 	$.fn.block = function ( destroy ) {
 		return this.each( function () {
