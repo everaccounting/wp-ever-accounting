@@ -19,21 +19,19 @@ $id      = filter_input( INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT );
 $payment = Payment::make( $id );
 
 ?>
-<div class="eac-section-header">
-	<h1 class="wp-heading-inline">
-		<?php if ( $payment->exists() ) : ?>
-			<?php esc_html_e( 'Edit Payment', 'wp-ever-accounting' ); ?>
-			<a href="<?php echo esc_attr( admin_url( 'admin.php?page=eac-sales&tab=payments&action=add' ) ); ?>" class="button button-small">
-				<?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?>
-			</a>
-		<?php else : ?>
-			<?php esc_html_e( 'Add Payment', 'wp-ever-accounting' ); ?>
-		<?php endif; ?>
-		<a href="<?php echo esc_attr( remove_query_arg( array( 'action', 'id' ) ) ); ?>" title="<?php esc_attr_e( 'Go back', 'wp-ever-accounting' ); ?>">
-			<span class="dashicons dashicons-undo"></span>
+<h1 class="wp-heading-inline">
+	<?php if ( $payment->exists() ) : ?>
+		<?php esc_html_e( 'Edit Payment', 'wp-ever-accounting' ); ?>
+		<a href="<?php echo esc_attr( admin_url( 'admin.php?page=eac-sales&tab=payments&action=add' ) ); ?>" class="button button-small">
+			<?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?>
 		</a>
-	</h1>
-</div>
+	<?php else : ?>
+		<?php esc_html_e( 'Add Payment', 'wp-ever-accounting' ); ?>
+	<?php endif; ?>
+	<a href="<?php echo esc_attr( remove_query_arg( array( 'action', 'id' ) ) ); ?>" title="<?php esc_attr_e( 'Go back', 'wp-ever-accounting' ); ?>">
+		<span class="dashicons dashicons-undo"></span>
+	</a>
+</h1>
 
 <form id="eac-edit-payment" name="payment" method="post" action="<?php echo esc_html( admin_url( 'admin-post.php' ) ); ?>">
 
@@ -231,7 +229,24 @@ $payment = Payment::make( $id );
 
 			<div class="eac-card">
 				<div class="eac-card__header">
-					<h3 class="eac-card__title"><?php esc_html_e( 'Save', 'wp-ever-accounting' ); ?></h3>
+					<h3 class="eac-card__title"><?php esc_html_e( 'Actions', 'wp-ever-accounting' ); ?></h3>
+					<?php if ( $payment->exists() ) : ?>
+						<a href="<?php echo esc_url( $payment->get_view_url() ); ?>">
+							<?php esc_html_e( 'View', 'wp-ever-accounting' ); ?>
+						</a>
+					<?php endif; ?>
+				</div>
+				<div class="eac-card__body">
+					<?php
+					/**
+					 * Fires to add custom actions.
+					 *
+					 * @param Payment $payment Payment object.
+					 *
+					 * @since 2.0.0
+					 */
+					do_action( 'eac_payment_edit_misc_actions', $payment );
+					?>
 				</div>
 				<div class="eac-card__footer">
 					<?php if ( $payment->exists() ) : ?>

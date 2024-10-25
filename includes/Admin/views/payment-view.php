@@ -19,15 +19,12 @@ $payment = EAC()->payments->get( $id );
 
 ?>
 
-<div class="eac-section-header">
-	<h1 class="wp-heading-inline">
-		<?php esc_html_e( 'View Payment', 'wp-ever-accounting' ); ?>
-		<a href="<?php echo esc_attr( remove_query_arg( array( 'action', 'id' ) ) ); ?>" title="<?php esc_attr_e( 'Go back', 'wp-ever-accounting' ); ?>">
-			<span class="dashicons dashicons-undo"></span>
-		</a>
-	</h1>
-	<a href="<?php echo esc_url( $payment->get_edit_url() ); ?>" class="page-title-action"><?php esc_html_e( 'Edit Payment', 'wp-ever-accounting' ); ?></a>
-</div>
+<h1 class="wp-heading-inline">
+	<?php esc_html_e( 'View Payment', 'wp-ever-accounting' ); ?>
+	<a href="<?php echo esc_attr( remove_query_arg( array( 'action', 'id' ) ) ); ?>" title="<?php esc_attr_e( 'Go back', 'wp-ever-accounting' ); ?>">
+		<span class="dashicons dashicons-undo"></span>
+	</a>
+</h1>
 
 <form id="eac-update-payment" name="payment" method="post" action="<?php echo esc_html( admin_url( 'admin-post.php' ) ); ?>">
 
@@ -51,7 +48,9 @@ $payment = EAC()->payments->get( $id );
 			<div class="eac-card">
 				<div class="eac-card__header">
 					<h2 class="eac-card__title"><?php esc_html_e( 'Actions', 'wp-ever-accounting' ); ?></h2>
-					<a href="<?php echo esc_url( $payment->get_edit_url() ); ?>" class="page-title-action"><?php esc_html_e( 'Edit Payment', 'wp-ever-accounting' ); ?></a>
+					<a href="<?php echo esc_url( $payment->get_edit_url() ); ?>">
+						<?php esc_html_e( 'Edit', 'wp-ever-accounting' ); ?>
+					</a>
 				</div>
 				<div class="eac-card__body">
 					<?php
@@ -64,7 +63,18 @@ $payment = EAC()->payments->get( $id );
 					 */
 					do_action( 'eac_payment_view_misc_actions', $payment );
 					?>
-					<a href="#" class="button button-block">Send Receipt</a>
+					<a href="#" class="button button-small button-block">
+						<span class="dashicons dashicons-email"></span> <?php esc_html_e( 'Email', 'wp-ever-accounting' ); ?>
+					</a>
+					<a href="#" class="button button-small button-block">
+						<span class="dashicons dashicons-download"></span> <?php esc_html_e( 'Download', 'wp-ever-accounting' ); ?>
+					</a>
+					<a href="#" class="button button-small button-block">
+						<span class="dashicons dashicons-printer"></span> <?php esc_html_e( 'Print', 'wp-ever-accounting' ); ?>
+					</a>
+					<a href="#" class="button button-small button-block">
+						<span class="dashicons dashicons-share"></span> <?php esc_html_e( 'Share', 'wp-ever-accounting' ); ?>
+					</a>
 				</div>
 				<div class="eac-card__footer">
 					<a class="del del_confirm" href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'action', 'delete', $payment->get_edit_url() ), 'bulk-payments' ) ); ?>">

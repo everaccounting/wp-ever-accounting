@@ -110,7 +110,7 @@ function eac_get_formatted_address( $fields = array(), $separator = '<br/>' ) {
 	$formatted_address = preg_replace( '/\n\n+/', "\n", $formatted_address );
 	// Break newlines apart and remove empty lines/trim commas and white space.
 	$address_lines = array_map( 'trim', array_filter( explode( "\n", $formatted_address ) ) );
-	// Now check if there any aditional fields.
+	// Now check if their any additional fields.
 	$extra = array_diff_key( $fields, $defaults );
 	foreach ( $extra as $key => $value ) {
 		if ( ! empty( $value ) ) {
@@ -129,6 +129,11 @@ function eac_get_formatted_address( $fields = array(), $separator = '<br/>' ) {
 			}
 		}
 	}
+
+	// clean up white space.
+	$address_lines = array_map( 'trim', $address_lines );
+	// Remove empty lines.
+	$address_lines = array_filter( $address_lines );
 
 	return implode( $separator, $address_lines );
 }
