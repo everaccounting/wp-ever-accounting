@@ -436,8 +436,7 @@ KEY currency (currency),
 KEY exchange_rate (exchange_rate),
 KEY account_id (account_id),
 KEY category_id (category_id),
-KEY contact_id (contact_id),
-KEY status (status)
+KEY contact_id (contact_id)
 ) $collate;
 
 CREATE TABLE {$wpdb->prefix}ea_transfers (

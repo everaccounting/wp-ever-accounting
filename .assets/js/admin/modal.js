@@ -256,7 +256,7 @@
 		 *
 		 * @returns {Object} - An object containing name-value pairs of form inputs.
 		 */
-		values : function () {
+		getValues : function () {
 			const values = {};
 			this.$('input, select, textarea').each((_, element) => {
 				const $element = $(element);

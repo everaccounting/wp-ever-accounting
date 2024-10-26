@@ -60,6 +60,7 @@ use ByteKit\Models\Relations\HasMany;
  * @property string         $discount_type Discount type of the document.
  * @property int            $contact_id Contact ID of the document.
  * @property string         $contact_name Name of the contact.
+ * @property string         $contact_company Company of the contact.
  * @property string         $contact_email Email of the contact.
  * @property string         $contact_phone Phone of the contact.
  * @property string         $contact_address Address of the contact.
@@ -265,7 +266,7 @@ class Document extends Model {
 	 * @return void
 	 */
 	public function set_discount_type_attr( $type ) {
-		if ( ! in_array( $type, array( 'fixed', 'percent' ), true ) ) {
+		if ( ! in_array( $type, array( 'fixed', 'percentage' ), true ) ) {
 			$type = 'fixed';
 		}
 		$this->attributes['discount_type'] = $type;

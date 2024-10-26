@@ -21,10 +21,10 @@ class Documents {
 	 * @since 1.0.0
 	 */
 	public function __construct() {
-		// add_action( 'eac_payment_inserted', array( __CLASS__, 'invoice_payment_updated' ) );
-		// add_action( 'eac_payment_deleted', array( __CLASS__, 'invoice_payment_updated' ) );
-		// add_action( 'eac_payment_updated', array( __CLASS__, 'invoice_payment_updated' ) );
-		add_action( 'eac_bill_status_transition', array( __CLASS__, 'bill_status_transition' ), 10, 2 );
+		add_action( 'eac_payment_inserted', array( __CLASS__, 'invoice_payment_updated' ) );
+		add_action( 'eac_payment_deleted', array( __CLASS__, 'invoice_payment_updated' ) );
+		add_action( 'eac_payment_updated', array( __CLASS__, 'invoice_payment_updated' ) );
+		add_action( 'eac_invoice_status_transition', array( __CLASS__, 'bill_status_transition' ), 10, 2 );
 	}
 
 	/**
@@ -36,12 +36,16 @@ class Documents {
 	 */
 	public static function invoice_payment_updated( $payment ) {
 		$original = $payment->get_original();
-		// if ( array_key_exists( 'contact_id', $original ) && $original['contact_id'] !== $payment->contact_id && $original['contact_id'] > 0 ) {
-		// $old_customer = EAC()->customers->get( $original['contact_id'] );
-		// if ( $old_customer ) {
-		// $old_customer->update_amount_paid();
-		// }
-		// }
+		if ( array_key_exists( 'document_id', $original ) && $original['document_id'] !== $payment->document_id && $original['document_id'] > 0 ) {
+			$old_document = EAC()->invoices->get( $original['document_id'] );
+			if ( $old_document ) {
+				$old_document->update_balance();
+			}
+		}
+
+		if ( $payment->invoice_id && $payment->invoice ) {
+			$payment->invoice->update_balance();
+		}
 	}
 
 	/**

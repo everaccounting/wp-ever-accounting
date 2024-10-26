@@ -43,9 +43,37 @@ $invoice = EAC()->invoices->get( $id );
 		<div class="eac-card">
 			<div class="eac-card__header">
 				<h2 class="eac-card__title"><?php esc_html_e( 'Actions', 'wp-ever-accounting' ); ?></h2>
+				<?php if ( $invoice->editable ) : ?>
+					<a href="<?php echo esc_url( $invoice->get_edit_url() ); ?>">
+						<?php esc_html_e( 'Edit', 'wp-ever-accounting' ); ?>
+					</a>
+				<?php endif; ?>
 			</div>
 
 			<div class="eac-card__body">
+				<?php if ( $invoice->is_status( 'draft' ) ) : ?>
+					<a href="<?php echo esc_url( wp_nonce_url( add_query_arg( array( 'eac_action' => 'invoice_action', 'id' => $invoice->id, 'invoice_action' => 'send' )  ), 'eac_invoice_action' ) ); ?>" class="button button-primary button-small button-block">
+						<span class="dashicons dashicons-email"></span> <?php esc_html_e( 'Send Invoice', 'wp-ever-accounting' ); ?>
+					</a>
+					<a href="<?php echo esc_url( wp_nonce_url( add_query_arg( array( 'eac_action' => 'invoice_action', 'id' => $invoice->id, 'invoice_action' => 'mark_sent' )  ), 'eac_invoice_action' ) ); ?>" class="button button-small button-block">
+						<!--Mark sent-->
+						<span class="dashicons dashicons-yes"></span> <?php esc_html_e( 'Mark Sent', 'wp-ever-accounting' ); ?>
+					</a>
+				<?php elseif ( $invoice->is_status( 'sent' ) && ! $invoice->is_paid() ) : ?>
+					<a href="#" class="button button-primary button-small button-block eac-add-invoice-payment" data-id="<?php echo esc_attr( $invoice->id ); ?>" data-due="<?php echo esc_attr( $invoice->total ); ?>" data-currency="<?php echo esc_attr( $invoice->currency ); ?>">
+						<span class="dashicons dashicons-money-alt"></span> <?php esc_html_e( 'Add Payment', 'wp-ever-accounting' ); ?>
+					</a>
+				<?php endif; ?>
+				<a href="#" class="button button-small button-block eac-payment-email">
+					<span class="dashicons dashicons-email"></span> <?php esc_html_e( 'Email', 'wp-ever-accounting' ); ?>
+				</a>
+				<a href="#" class="button button-small button-block eac-print-this" data-target=".eac-invoice>table">
+					<span class="dashicons dashicons-printer"></span> <?php esc_html_e( 'Print', 'wp-ever-accounting' ); ?>
+				</a>
+				<a href="#" class="button button-small button-block">
+					<span class="dashicons dashicons-share"></span> <?php esc_html_e( 'Share', 'wp-ever-accounting' ); ?>
+				</a>
+
 				<?php
 				/**
 				 * Fires to add custom actions.
@@ -68,6 +96,15 @@ $invoice = EAC()->invoices->get( $id );
 			</div>
 		</div>
 
+		<div class="eac-card">
+			<div class="eac-card__header">
+				<h3 class="eac-card__title"><?php esc_html_e( 'Attachment', 'wp-ever-accounting' ); ?></h3>
+			</div>
+			<div class="eac-card__body">
+				<?php eac_file_uploader( array( 'value' => $invoice->attachment_id, 'readonly' => true ) ); ?>
+			</div>
+		</div>
+
 		<?php
 		/**
 		 * Fires action to inject custom content in the side column.
@@ -84,83 +121,58 @@ $invoice = EAC()->invoices->get( $id );
 </div><!-- .eac-poststuff -->
 
 <script type="text/html" id="tmpl-eac-invoice-payment">
-	<div class="eac-modal-header">
-		<h3><?php esc_html_e( 'Add Payment', 'wp-ever-accounting' ); ?></h3>
-	</div>
-	<div class="eac-modal-body">
-		<form id="eac-add-invoice-payment" name="add-invoice-payment" method="post">
-			<?php
-			eac_form_field(
-				array(
-					'label'            => __( 'Account', 'wp-ever-accounting' ),
-					'type'             => 'select',
-					'name'             => 'account_id',
-					'options'          => array(),
-					'value'            => null,
-					'class'            => 'eac_select2',
-					'tooltip'          => __( 'Select the account.', 'wp-ever-accounting' ),
-					'option_value'     => 'id',
-					'option_label'     => 'formatted_name',
-					'data-placeholder' => __( 'Select an account', 'wp-ever-accounting' ),
-					'data-action'      => 'eac_json_search',
-					'data-type'        => 'account',
-					'required'         => true,
-				)
-			);
-			eac_form_field(
-				array(
-					'label'         => __( 'Exchange Rate', 'wp-ever-accounting' ),
-					'type'          => 'text',
-					'name'          => 'exchange_rate',
-					'value'         => $invoice->exchange_rate,
-					'placeholder'   => '1.00',
-					'required'      => true,
-					'class'         => 'eac_exchange_rate',
-					'prefix'        => '1 ' . eac_base_currency() . ' = ',
-					'attr-step'     => 'any',
-					'data-currency' => $invoice->currency,
-				)
-			);
+	<form>
+		<div class="eac-modal-header">
+			<h3><?php esc_html_e( 'Add Invoice Payment', 'wp-ever-accounting' ); ?></h3>
+		</div>
 
-			eac_form_field(
-				array(
-					'label'       => __( 'Date', 'wp-ever-accounting' ),
-					'type'        => 'date',
-					'name'        => 'payment_date',
-					'placeholder' => 'yyyy-mm-dd',
-					'value'       => wp_date( 'Y-m-d' ),
-					'required'    => true,
-					'class'       => 'eac_datepicker',
-				)
-			);
+		<div class="eac-modal-body">
+			<div class="eac-form-field">
+				<label for="payment_date"><?php esc_html_e( 'Payment Date', 'wp-ever-accounting' ); ?><abbr title="required"></abbr></label>
+				<input type="text" name="payment_date" id="payment_date" value="<?php echo esc_attr( date_i18n( get_option( 'date_format' ) ) ); ?>" class="eac_datepicker" required>
+			</div>
+			<div class="eac-form-field">
+				<label for="account_id"><?php esc_html_e( 'Account', 'wp-ever-accounting' ); ?><abbr title="required"></abbr></label>
+				<select name="account_id" id="account_id" class="eac_select2 account_id" data-action="eac_json_search" data-type="account" data-placeholder="<?php esc_html_e( 'Select an account', 'wp-ever-accounting' ); ?>" required>
+					<option value=""><?php esc_html_e( 'Select an account', 'wp-ever-accounting' ); ?></option>
+				</select>
+			</div>
+			<div class="eac-form-field">
+				<label for="exchange_rate"><?php esc_html_e( 'Exchange Rate', 'wp-ever-accounting' ); ?><abbr title="required"></abbr></label>
+				<input type="text" name="exchange_rate" id="exchange_rate" value="1.00" class="eac_exchange_rate" data-currency="<?php echo esc_attr( eac_base_currency() ); ?>" required>
+			</div>
 
-			eac_form_field(
-				array(
-					'label'       => __( 'Payment Method', 'wp-ever-accounting' ),
-					'type'        => 'select',
-					'name'        => 'payment_method',
-					'value'       => '',
-					'options'     => eac_get_payment_methods(),
-					'placeholder' => __( 'Select &hellip;', 'wp-ever-accounting' ),
-				)
-			);
-			eac_form_field(
-				array(
-					'label'       => __( 'Reference', 'wp-ever-accounting' ),
-					'type'        => 'text',
-					'name'        => 'reference',
-					'value'       => '',
-					'placeholder' => __( 'Enter reference', 'wp-ever-accounting' ),
-				)
-			);
-			?>
-			<input type="hidden" name="invoice_id" value="<?php echo esc_attr( $invoice->id ); ?>"/>
-			<input type="hidden" name="action" value="eac_add_invoice_payment"/>
-			<?php wp_nonce_field( 'eac_add_invoice_payment' ); ?>
-		</form>
-	</div>
-	<div class="eac-modal-footer">
-		<button class="button button-primary" form="eac-add-invoice-payment"><?php esc_html_e( 'Submit', 'wp-ever-accounting' ); ?></button>
-		<button class="button" data-eacmodal-close="true"><?php esc_html_e( 'Cancel', 'wp-ever-accounting' ); ?></button>
-	</div>
+			<div class="eac-form-field">
+				<label for="amount"><?php esc_html_e( 'Amount', 'wp-ever-accounting' ); ?><abbr title="required"></abbr></label>
+				<input type="text" name="amount" id="amount" class="eac_amount" value="<?php echo esc_attr( $invoice->total ); ?>" data-max="<?php echo esc_attr( $invoice->balance ); ?>" required readonly>
+			</div>
+
+			<div class="eac-form-field">
+				<label for="payment_method"><?php esc_html_e( 'Payment Method', 'wp-ever-accounting' ); ?><abbr title="required"></abbr></label>
+				<select name="payment_method" id="payment_method">
+					<option value=""><?php esc_html_e( 'Select Payment Method', 'wp-ever-accounting' ); ?></option>
+					<?php foreach ( eac_get_payment_methods() as $key => $value ) : ?>
+						<option value="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $value ); ?></option>
+					<?php endforeach; ?>
+				</select>
+			</div>
+			<div class="eac-form-field">
+				<label for="reference"><?php esc_html_e( 'Reference', 'wp-ever-accounting' ); ?></label>
+				<input type="text" name="reference" id="reference">
+			</div>
+
+			<div class="eac-form-field">
+				<label for="note"><?php esc_html_e( 'Description', 'wp-ever-accounting' ); ?></label>
+				<textarea name="note" id="note" rows="3"></textarea>
+			</div>
+		</div>
+
+		<div class="eac-modal-footer">
+			<button type="submit" class="button button-primary"><?php esc_html_e( 'Add Payment', 'wp-ever-accounting' ); ?></button>
+			<button type="button" class="button eac-modal-close"><?php esc_html_e( 'Cancel', 'wp-ever-accounting' ); ?></button>
+		</div>
+
+		<input type="hidden" name="invoice_id" value="<?php echo esc_attr( $invoice->id ); ?>">
+		<input type="hidden" name="customer_id" value="<?php echo esc_attr( $invoice->contact_id ); ?>">
+	</form>
 </script>

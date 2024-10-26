@@ -25,6 +25,7 @@ class Admin {
 		add_action( 'in_admin_header', array( __CLASS__, 'in_admin_header' ) );
 		add_filter( 'set-screen-option', array( __CLASS__, 'set_screen_option' ), 10, 3 );
 		add_action( 'admin_head', array( $this, 'print_scripts' ) );
+		add_action( 'admin_footer', array( $this, 'print_js_templates' ) );
 	}
 
 	/**
@@ -263,5 +264,28 @@ class Admin {
 			var eac_base_currency = '<?php echo esc_js( $base_currency ); ?>';
 		</script>
 		<?php
+	}
+
+	/**
+	 * Print JS templates.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public function print_js_templates() {
+		$screen = get_current_screen();
+		if ( ! in_array( $screen->id, Utilities::get_screen_ids(), true ) ) {
+			return;
+		}
+		$templates = array(
+			'add-payment'
+		);
+
+		foreach ( $templates as $template ) {
+			$file = __DIR__ . '/views/tmpl-' . $template . '.php';
+			if ( file_exists( $file ) ) {
+				include $file;
+			}
+		}
 	}
 }

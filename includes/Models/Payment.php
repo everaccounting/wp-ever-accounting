@@ -16,6 +16,7 @@ defined( 'ABSPATH' ) || exit;
  * @subpackage Models
  *
  * @property int          $customer_id ID of the customer.
+ * @property int          $invoice_id ID of the invoice.
  *
  * @property-read string  $payment_method_label Formatted mode.
  * @property-read Invoice $invoice Related invoice.

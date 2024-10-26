@@ -88,7 +88,7 @@ function eac_get_formatted_address( $fields = array(), $separator = '<br/>' ) {
 		'postcode' => '',
 		'country'  => '',
 	);
-	$format            = apply_filters( 'eac_address_format', "{name}\n{company}\n{address}\n{city} {state} {postcode}\n{country}" );
+	$format            = apply_filters( 'eac_address_format', "<strong>{name}</strong>\n{company}\n{address}\n{city} {state} {postcode}\n{country}" );
 	$fields            = array_map( 'trim', wp_parse_args( $fields, $defaults ) );
 	$countries         = I18n::get_countries();
 	$fields['country'] = isset( $countries[ $fields['country'] ] ) ? $countries[ $fields['country'] ] : $fields['country'];
@@ -115,12 +115,6 @@ function eac_get_formatted_address( $fields = array(), $separator = '<br/>' ) {
 	foreach ( $extra as $key => $value ) {
 		if ( ! empty( $value ) ) {
 			switch ( $key ) {
-				case 'email':
-					$address_lines[] = '<a href="mailto:' . esc_attr( $value ) . '">' . esc_html( $value ) . '</a>';
-					break;
-				case 'website':
-					$address_lines[] = '<a href="' . esc_url( $value ) . '">' . esc_html( $value ) . '</a>';
-					break;
 				case 'tax_number':
 					$address_lines[] = __( 'Tax #', 'wp-ever-accounting' ) . $value;
 					break;

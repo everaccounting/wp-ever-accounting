@@ -95,19 +95,19 @@ class Plugin extends \ByteKit\Plugin {
 	 */
 	public function init_hooks() {
 		register_activation_hook( $this->get_file(), array( Installer::class, 'install' ) );
-		add_action( 'plugins_loaded', array( $this, 'on_init' ), 0 );
+		add_action( 'plugins_loaded', array( $this, 'plugins_loaded' ), 0 );
 		add_action( 'rest_api_init', array( $this, 'register_routes' ) );
-		add_action( 'init', array( $this, 'get_actions' ) );
-		add_action( 'init', array( $this, 'post_actions' ) );
+		add_action( 'init', array( $this, 'get_actions' ), 0 );
+		add_action( 'init', array( $this, 'post_actions' ), 0 );
 	}
 
 	/**
-	 * Run on init.
+	 * Run on plugins loaded.
 	 *
 	 * @since 1.0.0
 	 * @return void
 	 */
-	public function on_init() {
+	public function plugins_loaded() {
 		$this->services->add( 'installer', new Installer() );
 
 		$controllers = array(
@@ -222,7 +222,7 @@ class Plugin extends \ByteKit\Plugin {
 		$key = ! empty( $_GET['eac_action'] ) ? sanitize_key( $_GET['eac_action'] ) : false;
 
 		if ( ! empty( $key ) ) {
-			do_action( "eac_{$key}", $_GET );
+			do_action( "eac_action_{$key}", $_GET );
 		}
 	}
 
@@ -236,7 +236,7 @@ class Plugin extends \ByteKit\Plugin {
 		$key = ! empty( $_POST['eac_action'] ) ? sanitize_key( $_POST['eac_action'] ) : false;
 
 		if ( ! empty( $key ) ) {
-			do_action( "eac_{$key}", $_POST );
+			do_action( "eac_action_{$key}", $_POST );
 		}
 	}
 

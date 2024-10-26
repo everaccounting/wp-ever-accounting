@@ -3,6 +3,7 @@
 namespace EverAccounting\Admin;
 
 use EverAccounting\Models\Bill;
+use EverAccounting\Models\Invoice;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -23,6 +24,8 @@ class Ajax {
 		add_action( 'wp_ajax_eac_add_invoice_payment', array( $this, 'add_invoice_payment' ) );
 		add_action( 'wp_ajax_eac_get_bill_address', array( $this, 'get_bill_address' ) );
 		add_action( 'wp_ajax_eac_get_recalculated_bill', array( $this, 'get_recalculated_bill' ) );
+		add_action( 'wp_ajax_eac_get_invoice_address', array( $this, 'get_invoice_address' ) );
+		add_action( 'wp_ajax_eac_get_recalculated_invoice', array( $this, 'get_recalculated_invoice' ) );
 	}
 
 	/**
@@ -422,10 +425,6 @@ class Ajax {
 		$id                   = isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0;
 		$items                = isset( $_POST['items'] ) ? map_deep( wp_unslash( $_POST['items'] ), 'sanitize_text_field' ) : array();
 		$bill                 = Bill::make( $_POST );
-//		$bill->currency       = isset( $_POST['currency'] ) ? sanitize_text_field( wp_unslash( $_POST['currency'] ) ) : eac_base_currency();
-//		$bill->exchange_rate  = isset( $_POST['exchange_rate'] ) ? floatval( wp_unslash( $_POST['exchange_rate'] ) ) : 1;
-//		$bill->discount_type  = isset( $_POST['discount_type'] ) ? sanitize_text_field( wp_unslash( $_POST['discount_type'] ) ) : 'fixed';
-//		$bill->discount_value = isset( $_POST['discount_value'] ) ? floatval( wp_unslash( $_POST['discount_value'] ) ) : 0;
 		$bill->items          = array();
 		$bill->set_items( $items );
 		$bill->calculate_totals();
@@ -442,6 +441,109 @@ class Ajax {
 
 		ob_start();
 		include __DIR__ . '/views/bill-totals.php';
+		$totals_html = ob_get_clean();
+
+		$x = new \WP_Ajax_Response();
+
+		$x->add(
+			array(
+				'what' => 'items_html',
+				'id'   => 'items_html',
+				'data' => $items_html,
+			)
+		);
+		$x->add(
+			array(
+				'what' => 'totals_html',
+				'id'   => 'totals_html',
+				'data' => $totals_html,
+			)
+		);
+
+		$x->send();
+
+		wp_die( 1 );
+	}
+
+	/**
+	 * Get invoice address.
+	 *
+	 * @since 1.2.0
+	 * @return void
+	 */
+	public function get_invoice_address() {
+		check_ajax_referer( 'eac_edit_invoice' );
+
+		if ( ! current_user_can( 'eac_manage_invoice' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability.
+			wp_die( - 1 );
+		}
+
+		$customer_id = isset( $_POST['contact_id'] ) ? absint( wp_unslash( $_POST['contact_id'] ) ) : 0;
+		$customer    = EAC()->customers->get( $customer_id );
+		if ( ! $customer ) {
+			wp_die( - 1 );
+		}
+		$invoice                     = new Invoice();
+		$invoice->contact_id         = $customer_id;
+		$invoice->contact_name       = $customer->name;
+		$invoice->contact_email      = $customer->email;
+		$invoice->contact_phone      = $customer->phone;
+		$invoice->contact_address    = $customer->address;
+		$invoice->contact_city       = $customer->city;
+		$invoice->contact_state      = $customer->state;
+		$invoice->contact_postcode   = $customer->postcode;
+		$invoice->contact_country    = $customer->country;
+		$invoice->contact_tax_number = $customer->tax_number;
+
+		ob_start();
+		include __DIR__ . '/views/invoice-address.php';
+		$html = ob_get_clean();
+
+		$x = new \WP_Ajax_Response();
+		$x->add(
+			array(
+				'what' => 'billings_html',
+				'data' => $html,
+			)
+		);
+
+		$x->send();
+
+		wp_die( 1 );
+	}
+
+	/**
+	 * Get recalculated invoice.
+	 *
+	 * @since 1.2.0
+	 * @return void
+	 */
+	public function get_recalculated_invoice() {
+		check_ajax_referer( 'eac_edit_invoice' );
+
+		if ( ! current_user_can( 'eac_manage_invoice' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability.
+			wp_die( - 1 );
+		}
+
+		$id                   = isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0;
+		$items                = isset( $_POST['items'] ) ? map_deep( wp_unslash( $_POST['items'] ), 'sanitize_text_field' ) : array();
+		$invoice                 = Invoice::make( $_POST );
+		$invoice->items          = array();
+		$invoice->set_items( $items );
+		$invoice->calculate_totals();
+
+		$columns = EAC()->invoices->get_columns();
+		// if tax is not enabled and invoice has no tax, remove the tax column.
+		if ( ! $invoice->is_taxed() ) {
+			unset( $columns['tax'] );
+		}
+
+		ob_start();
+		include __DIR__ . '/views/invoice-items.php';
+		$items_html = ob_get_clean();
+
+		ob_start();
+		include __DIR__ . '/views/invoice-totals.php';
 		$totals_html = ob_get_clean();
 
 		$x = new \WP_Ajax_Response();

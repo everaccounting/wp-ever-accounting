@@ -73,7 +73,7 @@ class Bill extends Document {
 			)
 		);
 
-		$this->aliases['customer_id']  = 'contact_id';
+		$this->aliases['vendor_id']  = 'contact_id';
 		$this->aliases['order_number'] = 'reference';
 		parent::__construct( $attributes );
 	}
@@ -94,7 +94,7 @@ class Bill extends Document {
 	 * @return string
 	 */
 	public function get_status_label_attr() {
-		$statuses = EAC()->payments->get_statuses();
+		$statuses = EAC()->bills->get_statuses();
 
 		return array_key_exists( $this->status, $statuses ) ? $statuses[ $this->status ] : $this->status;
 	}
@@ -206,7 +206,7 @@ class Bill extends Document {
 		}
 
 		// Discount calculation.
-		$discount = 'percentage' === $this->discount_type ? ( $items_total * $this->discount ) / 100 : $this->discount_value;
+		$discount = 'percentage' === $this->discount_type ? ( $items_total * $this->discount_value ) / 100 : $this->discount_value;
 		$discount = min( $discount, $items_total );
 		foreach ( $items as $item ) {
 			$item['discount']  = 'standard' === $item['type'] ? ( $discount / $items_total ) * $item['subtotal'] : 0;

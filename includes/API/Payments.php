@@ -572,13 +572,7 @@ class Payments extends Transactions {
 				'formatted_amount' => array(
 					'description' => __( 'Formatted total amount of the payment.', 'wp-ever-accounting' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'embed', 'edit' ),
-				),
-				'currency'         => array(
-					'description' => __( 'Currency code of the payment.', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'context'     => array( 'view', 'embed', 'edit' ),
-					'default'     => eac_base_currency(),
+					'context'     => array( 'view', 'embed' ),
 				),
 				'exchange_rate'    => array(
 					'description' => __( 'Exchange rate of the payment.', 'wp-ever-accounting' ),
@@ -600,6 +594,11 @@ class Payments extends Transactions {
 					'description' => __( 'Payment method of the payment.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'embed', 'edit' ),
+				),
+				'account_id'       => array(
+					'description' => __( 'Account ID of the payment.', 'wp-ever-accounting' ),
+					'type'        => 'integer',
+					'context'     => array( 'edit' ),
 				),
 				'account'          => array(
 					'description' => __( 'Account of the payment.', 'wp-ever-accounting' ),
@@ -624,6 +623,11 @@ class Payments extends Transactions {
 						),
 					),
 				),
+				'invoice_id'       => array(
+					'description' => __( 'Invoice ID of the payment.', 'wp-ever-accounting' ),
+					'type'        => 'integer',
+					'context'     => array( 'edit' ),
+				),
 				'invoice'          => array(
 					'description' => __( 'Invoice of the payment.', 'wp-ever-accounting' ),
 					'type'        => 'object',
@@ -645,8 +649,13 @@ class Payments extends Transactions {
 						),
 					),
 				),
-				'vendor'           => array(
-					'description' => __( 'Vendor of the payment.', 'wp-ever-accounting' ),
+				'customer_id'      => array(
+					'description' => __( 'Customer ID of the payment.', 'wp-ever-accounting' ),
+					'type'        => 'integer',
+					'context'     => array( 'edit' ),
+				),
+				'customer'         => array(
+					'description' => __( 'Customer of the payment.', 'wp-ever-accounting' ),
 					'type'        => 'object',
 					'context'     => array( 'view', 'embed', 'edit' ),
 					'properties'  => array(
@@ -698,16 +707,10 @@ class Payments extends Transactions {
 					'type'        => 'integer',
 					'context'     => array( 'view', 'embed', 'edit' ),
 				),
-				'reconciled'       => array(
-					'description' => __( 'Whether the payment is reconciled.', 'wp-ever-accounting' ),
+				'editable'         => array(
+					'description' => __( 'Whether the payment is editable.', 'wp-ever-accounting' ),
 					'type'        => 'boolean',
 					'context'     => array( 'view', 'embed', 'edit' ),
-				),
-				'status'           => array(
-					'description' => __( 'Status of the payment.', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'context'     => array( 'view', 'embed', 'edit' ),
-					'default'     => 'pending',
 				),
 				'uuid'             => array(
 					'description' => __( 'UUID of the payment.', 'wp-ever-accounting' ),

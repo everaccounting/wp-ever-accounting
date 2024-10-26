@@ -12,59 +12,33 @@ defined( 'ABSPATH' ) || exit;
 
 $id      = filter_input( INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT );
 $invoice = Invoice::make( $id );
-
-$columns  = EAC()->invoices->get_columns();
-$is_taxed = 'yes' === get_option( 'eac_tax_enabled', 'no' ) || $invoice->tax > 0;
+$columns = EAC()->invoices->get_columns();
 // if tax is not enabled and invoice has no tax, remove the tax column.
-if ( ! $is_taxed ) {
+if ( ! $invoice->is_taxed() ) {
 	unset( $columns['tax'] );
 }
 
-
-$data = $invoice->to_array();
-foreach ( $invoice->items as $item ) {
-	$_item = $item->to_array();
-	if ( $is_taxed ) {
-		foreach ( $item->taxes as $tax ) {
-			$_item['taxes'][] = $tax->to_array();
-		}
-	}
-	$data['items'][] = $_item;
-}
-wp_add_inline_script(
-	'eac-admin',
-	'var eac_invoice_vars = ' . wp_json_encode( $data ) . ';',
-	'before'
-);
+defined( 'ABSPATH' ) || exit;
 
 ?>
-<div class="eac-section-header">
-	<h1 class="wp-heading-inline">
-		<?php if ( $invoice->exists() ) : ?>
-			<?php esc_html_e( 'Edit Invoice', 'wp-ever-accounting' ); ?>
-		<?php else : ?>
-			<?php esc_html_e( 'Add Invoice', 'wp-ever-accounting' ); ?>
-		<?php endif; ?>
-		<a href="<?php echo esc_attr( remove_query_arg( array( 'action', 'id' ) ) ); ?>" title="<?php esc_attr_e( 'Go back', 'wp-ever-accounting' ); ?>">
-			<span class="dashicons dashicons-undo"></span>
-		</a>
-	</h1>
-
+<h1 class="wp-heading-inline">
 	<?php if ( $invoice->exists() ) : ?>
-		<a class="button" href="<?php echo esc_url( add_query_arg( array( 'action' => 'view' ) ) ); ?>">
-			<?php esc_html_e( 'View Invoice', 'wp-ever-accounting' ); ?>
-		</a>
+		<?php esc_html_e( 'Edit Invoice', 'wp-ever-accounting' ); ?>
+	<?php else : ?>
+		<?php esc_html_e( 'Add Invoice', 'wp-ever-accounting' ); ?>
 	<?php endif; ?>
-</div>
+	<a href="<?php echo esc_attr( remove_query_arg( array( 'action', 'id' ) ) ); ?>" title="<?php esc_attr_e( 'Go back', 'wp-ever-accounting' ); ?>">
+		<span class="dashicons dashicons-undo"></span>
+	</a>
+</h1>
 
 <form id="eac-edit-invoice" name="invoice" method="post">
 	<div class="eac-poststuff">
+
 		<div class="column-1">
-
 			<div class="eac-card eac-document-overview">
-
-				<div class="eac-card__child document-details eac-grid cols-2">
-					<div>
+				<div class="eac-card__faked document-details tw-grid tw-grid-cols-2 tw-gap-x-[15px]">
+					<div class="">
 						<?php
 						eac_form_field(
 							array(
@@ -85,10 +59,13 @@ wp_add_inline_script(
 						);
 						?>
 
-						<div class="billing-address"></div>
+						<div class="document-address">
+							<?php require __DIR__ . '/invoice-address.php'; ?>
+						</div>
 
 					</div>
-					<div class="eac-grid cols-2">
+
+					<div class="tw-grid xs:tw-grid-cols-1 tw-grid-cols-2 tw-gap-x-[15px]">
 						<?php
 						eac_form_field(
 							array(
@@ -152,24 +129,24 @@ wp_add_inline_script(
 								'required'        => true,
 							)
 						);
-						// exchange rate.
 						eac_form_field(
 							array(
-								'label'       => esc_html__( 'Exchange Rate', 'wp-ever-accounting' ),
-								'name'        => 'exchange_rate',
-								'value'       => $invoice->exchange_rate,
-								'type'        => 'number',
-								'placeholder' => '1.00',
-								'attr-step'   => 'any',
-								'prefix'      => '1 ' . eac_base_currency() . ' = ',
-								'required'    => true,
+								'label'         => __( 'Exchange Rate', 'wp-ever-accounting' ),
+								'name'          => 'exchange_rate',
+								'value'         => $invoice->exchange_rate,
+								'default'       => 1,
+								'placeholder'   => '1.00',
+								'required'      => true,
+								'prefix'        => '1 ' . eac_base_currency() . ' = ',
+								'class'         => 'eac_exchange_rate',
+								'attr-step'     => 'any',
+								'readonly'      => eac_base_currency() === $invoice->currency,
+								'data-currency' => $invoice->currency,
 							)
 						);
-
 						?>
 					</div>
-				</div><!-- .document-details -->
-
+				</div>
 
 				<div class="document-items">
 					<table class="eac-document-items">
@@ -182,43 +159,96 @@ wp_add_inline_script(
 							<?php endforeach; ?>
 						</tr>
 						</thead>
+						<tbody class="eac-document-items__items">
+						<?php require __DIR__ . '/invoice-items.php'; ?>
+						</tbody>
+						<tbody class="eac-document-items__toolbar">
+						<tr>
+							<td colspan="<?php echo esc_attr( count( $columns ) ); ?>">
+								<select class="add-item eac_select2" data-action="eac_json_search" data-type="item" data-placeholder="<?php esc_attr_e( 'Select an item', 'wp-ever-accounting' ); ?>"></select>
+							</td>
+						</tr>
+						</tbody>
+						<tfoot class="eac-document-items__totals">
+						<?php require __DIR__ . '/invoice-totals.php'; ?>
+						</tfoot>
 					</table>
 				</div><!-- .document-items -->
 
-
-			</div><!-- .eac-card -->
-
-		</div><!-- .column-1 -->
-		<div class="column-2">
-
-			<div class="eac-card">
-				<div class="eac-card__header">
-					<h3 class="eac-card__title"><?php esc_html_e( 'Actions', 'wp-ever-accounting' ); ?></h3>
-				</div>
-				<div class="eac-card__body">
+				<div class="document-footer">
 					<?php
-					/**
-					 * Fires to add custom actions.
-					 *
-					 * @param Invoice $invoice Invoice object.
-					 *
-					 * @since 2.0.0
-					 */
-					do_action( 'eac_invoice_edit_misc_actions', $invoice );
+					eac_form_field(
+						array(
+							'label'       => __( 'Notes', 'wp-ever-accounting' ),
+							'name'        => 'notes',
+							'value'       => $invoice->note,
+							'default'     => get_option( 'eac_invoice_note', '' ),
+							'type'        => 'textarea',
+							'placeholder' => __( 'Add notes', 'wp-ever-accounting' ),
+						)
+					);
+
+					// terms.
+					eac_form_field(
+						array(
+							'label'       => __( 'Terms', 'wp-ever-accounting' ),
+							'name'        => 'terms',
+							'value'       => $invoice->terms,
+							'default'     => get_option( 'eac_invoice_terms', '' ),
+							'type'        => 'textarea',
+							'placeholder' => __( 'Add terms', 'wp-ever-accounting' ),
+						)
+					);
+
 					?>
 				</div>
 
+			</div>
+
+
+			<?php
+			/**
+			 * Fires action to inject custom content in the main column.
+			 *
+			 * @param Invoice $invoice Invoice object.
+			 *
+			 * @since 1.0.0
+			 */
+			do_action( 'eac_invoice_edit_core_content', $invoice );
+			?>
+
+		</div><!-- .column-1 -->
+
+		<div class="column-2">
+			<div class="eac-card">
+				<div class="eac-card__header">
+					<h3 class="eac-card__title"><?php esc_html_e( 'Actions', 'wp-ever-accounting' ); ?></h3>
+					<?php if ( $invoice->exists() ) : ?>
+						<a href="<?php echo esc_url( $invoice->get_view_url() ); ?>">
+							<?php esc_html_e( 'View', 'wp-ever-accounting' ); ?>
+						</a>
+					<?php endif; ?>
+				</div>
 				<div class="eac-card__footer">
 					<?php if ( $invoice->exists() ) : ?>
 						<a class="del del_confirm" href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'action', 'delete', $invoice->get_edit_url() ), 'bulk-invoices' ) ); ?>">
 							<?php esc_html_e( 'Delete', 'wp-ever-accounting' ); ?>
 						</a>
-						<button class="button button-primary"><?php esc_html_e( 'Update Invoice', 'wp-ever-accounting' ); ?></button>
+						<button class="button button-primary"><?php esc_html_e( 'Update', 'wp-ever-accounting' ); ?></button>
 					<?php else : ?>
-						<button class="button button-primary button-large tw-w-full"><?php esc_html_e( 'Add Invoice', 'wp-ever-accounting' ); ?></button>
+						<button class="button button-primary button-block"><?php esc_html_e( 'Save', 'wp-ever-accounting' ); ?></button>
 					<?php endif; ?>
 				</div>
 			</div><!-- .eac-card -->
+
+			<div class="eac-card">
+				<div class="eac-card__header">
+					<h3 class="eac-card__title"><?php esc_html_e( 'Attachment', 'wp-ever-accounting' ); ?></h3>
+				</div>
+				<div class="eac-card__body">
+					<?php eac_file_uploader( array( 'value' => $invoice->attachment_id ) ); ?>
+				</div>
+			</div>
 
 			<?php
 			/**
@@ -234,197 +264,8 @@ wp_add_inline_script(
 		</div><!-- .column-2 -->
 	</div><!-- .eac-poststuff -->
 
-	<input type="hidden" name="action" value="eac_edit_invoice"/>
+	<input type="hidden" name="eac_action" value="edit_invoice"/>
+	<input type="hidden" name="status" value="<?php echo esc_attr( $invoice->status ); ?>"/>
 	<input type="hidden" name="id" value="<?php echo esc_attr( $invoice->id ); ?>"/>
 	<?php wp_nonce_field( 'eac_edit_invoice' ); ?>
 </form>
-
-<script type="text/html" id="tmpl-eac-invoice-billing-addr">
-	<table class="document-address">
-		<tbody>
-		<# if ( data.contact_name ) { #>
-		<tr>
-			<td class="name">
-				<span>{{ data.contact_name }}</span>
-				<input type="hidden" name="contact_name" value="{{ data.contact_name }}">
-			</td>
-		</tr>
-		<# } #>
-
-		<# if ( data.contact_company ) { #>
-		<tr>
-			<td class="company">
-				<span>{{ data.contact_company }}</span>
-				<input type="hidden" name="contact_company" value="{{ data.contact_company }}">
-			</td>
-		</tr>
-		<# } #>
-
-		<tr>
-			<td class="address">
-				{{ data.contact_address }}<br>
-				{{ data.contact_city }} {{ data.contact_state }} {{ data.contact_zip }}
-				<input type="hidden" name="contact_address" value="{{ data.contact_address }}">
-				<input type="hidden" name="contact_city" value="{{ data.contact_city }}">
-				<input type="hidden" name="contact_state" value="{{ data.contact_state }}">
-				<input type="hidden" name="contact_zip" value="{{ data.contact_zip }}">
-			</td>
-		</tr>
-
-		<# if ( data.contact_country ) { #>
-		<tr>
-			<td class="country">
-				<span>{{ data.contact_country }}</span>
-				<input type="hidden" name="contact_country" value="{{ data.contact_country }}">
-			</td>
-		</tr>
-		<# } #>
-
-		<# if ( data.contact_phone || data.contact_email ) { #>
-		<tr>
-			<td class="phone-email">
-				<# if ( data.contact_phone ) { #>
-				<span class="phone">{{ data.contact_phone }}</span>
-				<input type="hidden" name="contact_phone" value="{{ data.contact_phone }}">
-				<# } #>
-
-				<# if ( data.contact_phone && data.contact_email ) { #>
-				<span class="separator"> | </span>
-				<# } #>
-
-				<# if ( data.contact_email ) { #>
-				<span class="email">{{ data.contact_email }}</span>
-				<input type="hidden" name="contact_email" value="{{ data.contact_email }}">
-				<# } #>
-			</td>
-		</tr>
-		<# } #>
-
-		</tbody>
-	</table>
-</script>
-<script type="text/html" id="tmpl-eac-invoice-empty">
-	<td colspan="<?php echo count( $columns ); ?>">
-		<?php esc_html_e( 'No items added yet.', 'wp-ever-accounting' ); ?>
-	</td>
-</script>
-<script type="text/html" id="tmpl-eac-invoice-item">
-	<?php foreach ( $columns as $key => $label ) : ?>
-		<td class="col-<?php echo esc_attr( $key ); ?>">
-			<?php
-			switch ( $key ) {
-				case 'item':
-					?>
-					<input type="hidden" name="items[{{ data.id }}][id]" value="{{ data.id }}">
-					<input type="hidden" name="items[{{ data.id }}][item_id]" value="{{ data.item_id }}">
-					<input type="hidden" name="items[{{ data.id }}][type]" value="{{ data.type }}">
-					<input type="hidden" name="items[{{ data.id }}][unit]" value="{{ data.unit }}">
-					<input type="hidden" name="items[{{ data.id }}][discount]" value="{{ data.discount }}">
-					<input class="item-name" type="text" name="items[{{ data.id }}][name]" value="{{ data.name }}" readonly>
-					<textarea class="item-description" name="items[{{ data.id }}][description]" placeholder="<?php esc_attr_e( 'Item Description', 'wp-ever-accounting' ); ?>">{{ data.description }}</textarea>
-					<?php if ( $is_taxed ) : ?>
-					<select class="item-taxes eac_select2" data-action="eac_json_search" data-type="tax" data-placeholder="<?php esc_attr_e( 'Select a tax rate', 'wp-ever-accounting' ); ?>" multiple>
-						<# if ( data.taxes && data.taxes.length ) { #>
-						<# _.each( data.taxes, function( taxes ) { #>
-						<option value="{{ taxes.tax_id }}" selected>{{ taxes.formatted_name }}</option>
-						<# } ); #>
-						<# } #>
-					</select>
-					<# if ( data.taxes && data.taxes.length ) { #>
-					<# _.each( data.taxes, function( taxes ) { #>
-					<input type="hidden" name="items[{{ data.id }}][taxes][{{ taxes.id }}][id]" value="{{ taxes.id }}">
-					<input type="hidden" name="items[{{ data.id }}][taxes][{{ taxes.id }}][tax_id]" value="{{ taxes.tax_id }}">
-					<input type="hidden" name="items[{{ data.id }}][taxes][{{ taxes.id }}][name]" value="{{ taxes.name }}">
-					<input type="hidden" name="items[{{ data.id }}][taxes][{{ taxes.id }}][rate]" value="{{ taxes.rate }}">
-					<input type="hidden" name="items[{{ data.id }}][taxes][{{ taxes.id }}][compound]" value="{{ taxes.compound }}">
-					<input type="hidden" name="items[{{ data.id }}][taxes][{{ taxes.id }}][amount]" value="{{ taxes.amount }}">
-					<# } ); #>
-					<# } #>
-				<?php endif; ?>
-					<?php
-					break;
-
-				case 'price':
-					echo '<input type="number" class="item-price" name="items[{{ data.id }}][price]" min="0" step="any" value="{{ data.price }}">';
-					break;
-
-				case 'quantity':
-					echo '<input type="number" class="item-quantity" name="items[{{ data.id }}][quantity]" min="0" step="any" value="{{ data.quantity }}">';
-					break;
-
-				case 'tax':
-					echo '<span class="item-tax">{{ data.formatted_tax}}</span>';
-					break;
-
-				case 'subtotal':
-					echo '<span class="item-subtotal">{{ data.formatted_subtotal }}</span>';
-					echo '<a href="#" class="remove-item"><span class="dashicons dashicons-trash"></span></a>';
-					break;
-
-				default:
-					break;
-			}
-			?>
-		</td>
-	<?php endforeach; ?>
-</script>
-<script type="text/html" id="tmpl-eac-invoice-toolbar">
-	<tr>
-		<td colspan="<?php echo count( $columns ); ?>">
-			<select class="add-item eac_select2" data-action="eac_json_search" data-type="item" data-placeholder="<?php esc_attr_e( 'Select an item', 'wp-ever-accounting' ); ?>"></select>
-		</td>
-	</tr>
-</script>
-<script type="text/html" id="tmpl-eac-invoice-totals">
-	<tr>
-		<td class="col-label" colspan="<?php echo count( $columns ) - 1; ?>">
-			<?php esc_html_e( 'Discount', 'wp-ever-accounting' ); ?>
-		</td>
-		<td class="col-amount">
-			<div class="eac-input-group">
-				<select name="discount_type" id="discount_type" class="addon">
-					<option value="fixed"
-					<# if ( 'fixed' === data.discount_type ) { #>selected="selected"<# } #>>($)</option>
-					<option value="percent"
-					<# if ( 'percent' === data.discount_type ) { #>selected="selected"<# } #>>(%)</option>
-				</select>
-				<input type="number" name="discount_value" id="discount_value" placeholder="10" style="text-align: right;width: auto;" value="{{data.discount_value}}"/>
-			</div>
-		</td>
-	</tr>
-	<tr>
-		<td class="col-label" colspan="<?php echo count( $columns ) - 1; ?>">
-			<?php esc_html_e( 'Subtotal', 'wp-ever-accounting' ); ?>
-		</td>
-		<td class="col-amount">
-			{{ data.formatted_subtotal || 0 }}
-		</td>
-	</tr>
-	<tr>
-		<td class="col-label" colspan="<?php echo count( $columns ) - 1; ?>">
-			<?php esc_html_e( 'Discount', 'wp-ever-accounting' ); ?>
-		</td>
-		<td class="col-amount">
-			{{ data.formatted_discount || 0 }}
-		</td>
-	</tr>
-
-	<?php if ( $is_taxed ) : ?>
-		<tr>
-			<td class="col-label" colspan="<?php echo count( $columns ) - 1; ?>">
-				<?php esc_html_e( 'Tax', 'wp-ever-accounting' ); ?>
-			</td>
-			<td class="col-amount">
-				{{ data.formatted_tax || 0 }}
-			</td>
-		</tr>
-	<?php endif; ?>
-	<tr>
-		<td class="col-label" colspan="<?php echo count( $columns ) - 1; ?>">
-			<?php esc_html_e( 'Total', 'wp-ever-accounting' ); ?>
-		</td>
-		<td class="col-amount">
-			{{ data.formatted_total || 0 }}
-		</td>
-	</tr>
-</script>

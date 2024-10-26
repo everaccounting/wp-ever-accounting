@@ -18,12 +18,10 @@ class Invoices {
 	 */
 	public function __construct() {
 		add_filter( 'eac_sales_page_tabs', array( __CLASS__, 'register_tabs' ) );
-		add_action( 'eac_sales_page_invoices_loaded', array( __CLASS__, 'handle_actions' ) );
+		add_action( 'eac_action_edit_invoice', array( __CLASS__, 'handle_edit' ) );
+		add_action( 'eac_action_invoice_action', array( __CLASS__, 'handle_action' ) );
 		add_action( 'eac_sales_page_invoices_loaded', array( __CLASS__, 'page_loaded' ) );
 		add_action( 'eac_sales_page_invoices_content', array( __CLASS__, 'page_content' ) );
-		add_action( 'eac_invoice_edit_sidebar_content', array( __CLASS__, 'invoice_attachment' ) );
-		add_action( 'eac_invoice_view_sidebar_content', array( __CLASS__, 'invoice_attachment' ) );
-//		add_action( 'eac_invoice_edit_sidebar_content', array( __CLASS__, 'invoice_notes' ) );
 		add_action( 'eac_invoice_view_sidebar_content', array( __CLASS__, 'invoice_notes' ) );
 	}
 
@@ -44,79 +42,121 @@ class Invoices {
 	}
 
 	/**
-	 * Handle actions.
+	 * Handle edit.
+	 *
+	 * @param array $posted Posted data.
 	 *
 	 * @since 1.0.0
 	 * @return void
 	 */
-	public static function handle_actions() {
-		if ( isset( $_POST['action'] ) && 'eac_edit_invoice' === $_POST['action'] && check_admin_referer( 'eac_edit_invoice' ) && current_user_can( 'eac_manage_invoice' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability.
-			$invoice = EAC()->invoices->insert( $_POST );
-			$referer = wp_get_referer();
-			if ( is_wp_error( $invoice ) ) {
-				EAC()->flash->error( $invoice->get_error_message() );
-			} else {
-				EAC()->flash->success( __( 'Invoice saved successfully.', 'wp-ever-accounting' ) );
-				$referer = add_query_arg( 'id', $invoice->id, $referer );
-				$referer = add_query_arg( 'action', 'view', $referer );
-				$referer = remove_query_arg( array( 'add' ), $referer );
-			}
+	public static function handle_edit( $posted ) {
+		check_admin_referer( 'eac_edit_invoice' );
 
-			wp_safe_redirect( $referer );
-			exit;
+		if ( ! current_user_can( 'eac_manage_invoice' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability.
+			wp_die( esc_html__( 'You do not have permission to edit invoices.', 'wp-ever-accounting' ) );
 		}
-		if ( isset( $_POST['action'] ) && 'eac_update_invoice' === $_POST['action'] && check_admin_referer( 'eac_update_invoice' ) && current_user_can( 'eac_manage_invoice' ) ) {// phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability.
-			$id             = isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0;
-			$status         = isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : '';
-			$attachment_id  = isset( $_POST['attachment_id'] ) ? absint( wp_unslash( $_POST['attachment_id'] ) ) : 0;
-			$invoice_action = isset( $_POST['invoice_action'] ) ? sanitize_text_field( wp_unslash( $_POST['invoice_action'] ) ) : '';
 
-			$invoice = EAC()->invoices->get( $id );
+		$referer                     = wp_get_referer();
+		$id                          = isset( $posted['id'] ) ? absint( wp_unslash( $posted['id'] ) ) : 0;
+		$items                       = isset( $posted['items'] ) ? map_deep( wp_unslash( $posted['items'] ), 'sanitize_text_field' ) : array();
+		$invoice                     = Invoice::make( $id );
+		$invoice->contact_id         = isset( $posted['contact_id'] ) ? absint( wp_unslash( $posted['contact_id'] ) ) : 0;
+		$invoice->contact_name       = isset( $posted['contact_name'] ) ? sanitize_text_field( wp_unslash( $posted['contact_name'] ) ) : '';
+		$invoice->contact_email      = isset( $posted['contact_email'] ) ? sanitize_text_field( wp_unslash( $posted['contact_email'] ) ) : '';
+		$invoice->contact_phone      = isset( $posted['contact_phone'] ) ? sanitize_text_field( wp_unslash( $posted['contact_phone'] ) ) : '';
+		$invoice->contact_address    = isset( $posted['contact_address'] ) ? sanitize_text_field( wp_unslash( $posted['contact_address'] ) ) : '';
+		$invoice->contact_city       = isset( $posted['contact_city'] ) ? sanitize_text_field( wp_unslash( $posted['contact_city'] ) ) : '';
+		$invoice->contact_state      = isset( $posted['contact_state'] ) ? sanitize_text_field( wp_unslash( $posted['contact_state'] ) ) : '';
+		$invoice->contact_postcode   = isset( $posted['contact_postcode'] ) ? sanitize_text_field( wp_unslash( $posted['contact_postcode'] ) ) : '';
+		$invoice->contact_country    = isset( $posted['contact_country'] ) ? sanitize_text_field( wp_unslash( $posted['contact_country'] ) ) : '';
+		$invoice->contact_tax_number = isset( $posted['contact_tax_number'] ) ? sanitize_text_field( wp_unslash( $posted['contact_tax_number'] ) ) : '';
+		$invoice->order_number       = isset( $posted['order_number'] ) ? sanitize_text_field( wp_unslash( $posted['order_number'] ) ) : '';
+		$invoice->attachment_id      = isset( $posted['attachment_id'] ) ? absint( wp_unslash( $posted['attachment_id'] ) ) : 0;
+		$invoice->currency           = isset( $posted['currency'] ) ? sanitize_text_field( wp_unslash( $posted['currency'] ) ) : eac_base_currency();
+		$invoice->exchange_rate      = isset( $posted['exchange_rate'] ) ? floatval( wp_unslash( $posted['exchange_rate'] ) ) : 1;
+		$invoice->discount_type      = isset( $posted['discount_type'] ) ? sanitize_text_field( wp_unslash( $posted['discount_type'] ) ) : 'fixed';
+		$invoice->discount_value     = isset( $posted['discount_value'] ) ? floatval( wp_unslash( $posted['discount_value'] ) ) : 0;
+		$invoice->status             = isset( $posted['status'] ) ? sanitize_text_field( wp_unslash( $posted['status'] ) ) : 'draft';
+		$invoice->note               = isset( $posted['note'] ) ? sanitize_textarea_field( wp_unslash( $posted['note'] ) ) : '';
+		$invoice->terms              = isset( $posted['terms'] ) ? sanitize_textarea_field( wp_unslash( $posted['terms'] ) ) : '';
+		$invoice->items()->delete();
+		$invoice->items = array();
+		$invoice->set_items( $items );
+		$invoice->calculate_totals();
+		$retval = $invoice->save();
+		if ( is_wp_error( $retval ) ) {
+			EAC()->flash->error( $retval->get_error_message() );
+		}
 
-			// If invoice not found, bail.
-			if ( ! $invoice ) {
-				wp_die( esc_html__( 'You attempted to update an invoice that does not exist. Perhaps it was deleted?', 'wp-ever-accounting' ) );
-			}
-
-			// Update invoice status.
-			if ( ! empty( $status ) && $status !== $invoice->status ) {
-				$invoice->status = $status;
-			}
-
-			// Update invoice attachment.
-			if ( $attachment_id !== $invoice->attachment_id ) {
-				$invoice->attachment_id = $attachment_id;
-			}
-
-			if ( $invoice->is_dirty() && $invoice->save() ) {
-				$ret = $invoice->save();
-				if ( is_wp_error( $ret ) ) {
-					EAC()->flash->error( $ret->get_error_message() );
-				} else {
-					EAC()->flash->success( __( 'Invoice updated successfully.', 'wp-ever-accounting' ) );
-				}
-			}
-
-			// todo handle payment action.
-			if ( ! empty( $invoice_action ) ) {
-				switch ( $invoice_action ) {
-					case 'send_receipt':
-						// Send invoice.
-						break;
-					default:
-						/**
-						 * Fires action to handle custom invoice actions.
-						 *
-						 * @param Invoice $invoice Payment object.
-						 *
-						 * @since 1.0.0
-						 */
-						do_action( 'eac_invoice_action_' . $invoice_action, $invoice );
-						break;
-				}
+		// save invoice items and taxes.
+		foreach ( $invoice->items as $item ) {
+			$item->document_id = $invoice->id;
+			$item->save();
+			$taxes = $item->taxes;
+			foreach ( $taxes as $tax ) {
+				$tax->document_id      = $invoice->id;
+				$tax->document_item_id = $item->id;
+				$tax->save();
 			}
 		}
+
+		EAC()->flash->success( __( 'Invoice saved successfully.', 'wp-ever-accounting' ) );
+		$referer = add_query_arg( 'id', $invoice->id, $referer );
+		$referer = add_query_arg( 'action', 'view', $referer );
+		$referer = remove_query_arg( array( 'add' ), $referer );
+		wp_safe_redirect( $referer );
+		exit;
 	}
+
+	/**
+	 * Handle action.
+	 *
+	 * @param array $posted Posted data.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public static function handle_action( $posted ) {
+		check_admin_referer( 'eac_invoice_action' );
+		if ( ! current_user_can( 'eac_manage_invoice' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability.
+			wp_die( esc_html__( 'You do not have permission to perform this action.', 'wp-ever-accounting' ) );
+		}
+
+		$id     = isset( $posted['id'] ) ? absint( wp_unslash( $posted['id'] ) ) : 0;
+		$action = isset( $posted['invoice_action'] ) ? sanitize_text_field( wp_unslash( $posted['invoice_action'] ) ) : '';
+		$referer = wp_get_referer();
+		// if any of the required fields are missing, bail.
+		if ( ! $id || ! $action ) {
+			wp_die( esc_html__( 'Invalid request.', 'wp-ever-accounting' ) );
+		}
+
+		$invoice = EAC()->invoices->get( $id );
+		if ( ! $invoice ) {
+			wp_die( esc_html__( 'You attempted to perform an action on an invoice that does not exist.', 'wp-ever-accounting' ) );
+		}
+
+		switch ( $action ) {
+			case 'send':
+//				$invoice->send();
+				EAC()->flash->success( __( 'Invoice sent successfully.', 'wp-ever-accounting' ) );
+				break;
+			case 'mark_sent':
+				$invoice->status = 'sent';
+				if ( $invoice->save() ) {
+					EAC()->flash->success( __( 'Invoice marked as sent.', 'wp-ever-accounting' ) );
+				} else {
+					EAC()->flash->error( __( 'Failed to mark invoice as sent.', 'wp-ever-accounting' ) );
+				}
+				break;
+			default:
+				do_action( 'eac_invoice_action_' . $action, $invoice );
+		}
+
+		$referer = remove_query_arg( array( 'eac_action' ), $referer );
+		wp_safe_redirect( $referer );
+		exit;
+	}
+
 
 	/**
 	 * Handle page loaded.
@@ -181,28 +221,6 @@ class Invoices {
 				include __DIR__ . '/views/invoice-list.php';
 				break;
 		}
-	}
-
-	/**
-	 * Invoice attachment.
-	 *
-	 * @param Invoice $invoice Invoice object.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	public static function invoice_attachment( $invoice ) {
-		?>
-
-		<div class="eac-card">
-			<div class="eac-card__header">
-				<h3 class="eac-card__title"><?php esc_html_e( 'Attachment', 'wp-ever-accounting' ); ?></h3>
-			</div>
-			<div class="eac-card__body">
-				<?php eac_file_uploader( array( 'value' => $invoice->attachment_id ) ); ?>
-			</div>
-		</div>
-		<?php
 	}
 
 	/**

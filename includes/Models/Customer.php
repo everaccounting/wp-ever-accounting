@@ -61,8 +61,7 @@ class Customer extends Contact {
 				"SELECT SUM( amount / exchange_rate)
 			 FROM {$wpdb->prefix}ea_transactions
 			 WHERE contact_id = %d
-			 AND type = 'payment'
-			 AND status = 'completed'",
+			 AND type = 'payment'",
 				$this->id
 			)
 		);

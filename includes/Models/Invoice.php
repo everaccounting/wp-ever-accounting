@@ -4,6 +4,7 @@ namespace EverAccounting\Models;
 
 use ByteKit\Models\Relations\BelongsTo;
 use ByteKit\Models\Relations\BelongsToMany;
+use ByteKit\Models\Relations\HasMany;
 
 /**
  * Invoice model.
@@ -15,10 +16,11 @@ use ByteKit\Models\Relations\BelongsToMany;
  *
  * @author  Sultan Nasir Uddin <manikdrmc@gmail.com>
  *
- * @property-read  int      $id Invoice ID.
- * @property-read  int      $customer_id Customer ID.
- * @property-read  string   $order_number Order number.
- * @property-read  string   $status_label Status label.
+ * @property  int           $id Invoice ID.
+ * @property  int           $customer_id Customer ID.
+ * @property  string        $order_number Order number.
+ *
+ * @property-read   string  $status_label Status label.
  * @property-read  Customer $customer Customer relation.
  * @property-read Payment[] $payments Invoice payments.
  */
@@ -41,6 +43,20 @@ class Invoice extends Document {
 		'type' => 'invoice',
 	);
 
+
+	/**
+	 * Attributes that have transition effects when changed.
+	 *
+	 * This array lists attributes that should trigger transition effects when their values change.
+	 * It is often used for managing state changes or triggering animations in user interfaces.
+	 *
+	 * @since 1.0.0
+	 * @var array
+	 */
+	protected $transitionable = array(
+		'status',
+	);
+
 	/**
 	 * Create a new model instance.
 	 *
@@ -54,9 +70,8 @@ class Invoice extends Document {
 				'type'       => $this->get_object_type(),
 				'issue_date' => current_time( 'mysql' ),
 				'due_date'   => wp_date( 'Y-m-d', strtotime( '+' . $due_after . ' days' ) ),
-				'note'       => get_option( 'eac_invoice_notes', '' ),
+				'note'       => get_option( 'eac_invoice_note', '' ),
 				'currency'   => eac_base_currency(),
-				'creator_id' => get_current_user_id(),
 				'uuid'       => wp_generate_uuid4(),
 			)
 		);
@@ -65,6 +80,15 @@ class Invoice extends Document {
 		$this->aliases['order_number'] = 'reference';
 		parent::__construct( $attributes );
 	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| Accessors, Mutators and Relationship Methods
+	|--------------------------------------------------------------------------
+	| This section contains methods for getting and setting attributes (accessors
+	| and mutators) as well as defining relationships between models.
+	|--------------------------------------------------------------------------
+	*/
 
 	/**
 	 * Get formatted status.
@@ -98,6 +122,16 @@ class Invoice extends Document {
 		return $this->belongs_to_many( Payment::class, 'document_id' );
 	}
 
+	/**
+	 * Notes relation.
+	 *
+	 * @since 1.0.0
+	 * @return HasMany
+	 */
+	public function notes() {
+		return $this->has_many( Note::class, 'document_id' )->set( 'type', 'invoice' );
+	}
+
 	/*
 	|--------------------------------------------------------------------------
 	| CRUD Methods
@@ -122,12 +156,44 @@ class Invoice extends Document {
 
 		return parent::save();
 	}
+
+	/**
+	 * Update balance.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public function update_balance() {
+		global $wpdb;
+		$paid = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT SUM( amount / exchange_rate ) FROM {$wpdb->prefix}ea_transactions WHERE document_id=%d AND type='payment'",
+				$this->id
+			)
+		);
+
+		$paid    = eac_convert_currency( $paid, eac_base_currency(), $this->exchange_rate );
+		$balance = max( 0, $this->total - $paid );
+		if ( $balance == $this->balance ) {
+			return;
+		}
+
+		// update status if needed.
+		if ( $paid >= $this->total ) {
+			$this->status = 'paid';
+		} elseif ( $paid > 0 ) {
+			$this->status = 'partial';
+		}
+
+		$this->balance = $balance;
+		$this->save();
+	}
+
 	/*
 	|--------------------------------------------------------------------------
-	| Invoice Item Handling
+	| Line Item Handling
 	|--------------------------------------------------------------------------
-	| Invoice items are used for products, taxes, shipping, and fees within
-	| each order.
+	| Line items are used for products, and fees within the document.
 	*/
 
 	/**
@@ -139,7 +205,75 @@ class Invoice extends Document {
 	 * @return $this
 	 */
 	public function set_items( $items ) {
-		$this->items = array();
+		$items_total = 0;
+		foreach ( $items as $i => &$itemdata ) {
+			$quantity = isset( $itemdata['quantity'] ) ? floatval( $itemdata['quantity'] ) : 1;
+			$item_id  = isset( $itemdata['item_id'] ) ? absint( $itemdata['item_id'] ) : 0;
+			$item     = EAC()->items->get( $item_id );
+
+			// If item not found, skip.
+			if ( ! $item || $quantity <= 0 ) {
+				unset( $items[ $i ] );
+				continue;
+			}
+
+			$itemdata['name']        = isset( $itemdata['name'] ) ? sanitize_text_field( $itemdata['name'] ) : $item->name;
+			$itemdata['description'] = isset( $itemdata['description'] ) ? sanitize_text_field( $itemdata['description'] ) : $item->description;
+			$itemdata['unit']        = isset( $itemdata['unit'] ) ? sanitize_text_field( $itemdata['unit'] ) : $item->unit;
+			$itemdata['type']        = isset( $itemdata['type'] ) ? sanitize_text_field( $itemdata['type'] ) : $item->type;
+			$itemdata['price']       = isset( $itemdata['price'] ) ? floatval( $itemdata['price'] ) : $item->price;
+			$itemdata['subtotal']    = $itemdata['price'] * $quantity;
+			$itemdata['discount']    = 0;
+			$itemdata['tax']         = 0;
+			$itemdata['total']       = 0;
+
+			if ( array_key_exists( 'taxes', $itemdata ) && is_array( $itemdata['taxes'] ) ) {
+				foreach ( $itemdata['taxes'] as $j => &$taxdata ) {
+					if ( ! is_array( $taxdata ) || empty( $taxdata ) ) {
+						continue;
+					}
+					$taxdata['tax_id'] = isset( $taxdata['tax_id'] ) ? absint( $taxdata['tax_id'] ) : 0;
+					$tax               = EAC()->taxes->get( $taxdata['tax_id'] );
+					// If tax rate not found, skip.
+					if ( ! $tax ) {
+						unset( $itemdata['taxes'][ $j ] );
+						continue;
+					}
+
+					$taxdata['name']     = isset( $taxdata['name'] ) ? sanitize_text_field( $taxdata['name'] ) : $tax->name;
+					$taxdata['rate']     = isset( $taxdata['rate'] ) ? floatval( $taxdata['rate'] ) : $tax->rate;
+					$taxdata['compound'] = isset( $taxdata['compound'] ) ? (bool) $taxdata['compound'] : $tax->compound;
+					$taxdata['amount']   = 0;
+				}
+			}
+
+			$items_total += 'standard' === $itemdata['type'] ? $itemdata['subtotal'] : 0;
+		}
+
+		// Discount calculation.
+		$discount = 'percentage' === $this->discount_type ? ( $items_total * $this->discount_value ) / 100 : $this->discount_value;
+		$discount = min( $discount, $items_total );
+		foreach ( $items as $item ) {
+			$item['discount']  = 'standard' === $item['type'] ? ( $discount / $items_total ) * $item['subtotal'] : 0;
+			$line              = DocumentItem::make();
+			$line->item_id     = $item['item_id'];
+			$line->name        = $item['name'];
+			$line->description = $item['description'];
+			$line->unit        = $item['unit'];
+			$line->type        = $item['type'];
+			$line->quantity    = $item['quantity'];
+			$line->price       = $item['price'];
+			$line->subtotal    = $item['subtotal'];
+			$line->discount    = min( $item['discount'], $item['subtotal'] );
+			$line->tax         = $item['tax'];
+			if ( array_key_exists( 'taxes', $item ) ) {
+				$line->set_taxes( $item['taxes'] );
+			}
+			$line->total = $line->subtotal - $line->discount + $line->tax;
+			$this->items = is_array( $this->items ) ? array_merge( $this->items, array( $line ) ) : array( $line );
+		}
+
+		return $this;
 	}
 
 	/*
@@ -197,24 +331,25 @@ class Invoice extends Document {
 		$total = 0;
 		foreach ( $this->items as $item ) {
 			$amount = $item->$column ?? 0;
-			$total += $round ? round( $amount, 2 ) : $amount;
+			$total  += $round ? round( $amount, 2 ) : $amount;
 		}
 
 		return $round ? round( $total, 2 ) : $total;
 	}
 
+
 	/**
 	 * Get itemized taxes.
 	 *
 	 * @since 1.0.0
-	 * @return array
+	 * @return DocumentTax[]
 	 */
 	public function get_itemized_taxes() {
 		$taxes = array();
 		foreach ( $this->items as $item ) {
 			if ( ! empty( $item->taxes ) ) {
 				foreach ( $item->taxes as $tax ) {
-					if ( !isset( $taxes[ $tax->tax_id] ) ) {
+					if ( ! isset( $taxes[ $tax->tax_id ] ) ) {
 						$taxes[ $tax->tax_id ] = $tax;
 					} else {
 						$taxes[ $tax->tax_id ]->amount += $tax->amount;
@@ -227,35 +362,13 @@ class Invoice extends Document {
 	}
 
 	/**
-	 * Get amount paid.
+	 * Is taxed.
 	 *
-	 * @since 1.1.0
-	 *
-	 * @return float|int|string
+	 * @since 1.0.0
+	 * @return bool
 	 */
-	public function get_amount_paid() {
-		$total_paid = 0;
-		foreach ( $this->payments as $payment ) {
-			$total_paid += (float) eac_convert_currency( $payment->amount, $payment->currency, $this->currency, $payment->exchange_rate, $this->exchange_rate );
-		}
-
-		return $total_paid;
-	}
-
-	/**
-	 * Get amount due.
-	 *
-	 * @since 1.1.0
-	 *
-	 * @return float|int
-	 */
-	public function get_amount_due() {
-		$due = $this->total - $this->get_amount_paid();
-		if ( eac_convert_currency( $due, $this->currency, $this->exchange_rate ) <= 0 ) {
-			$due = 0;
-		}
-
-		return $due;
+	public function is_taxed() {
+		return 'yes' === get_option( 'eac_tax_enabled', 'no' ) || ( $this->exists() && $this->tax > 0 );
 	}
 
 	/**
@@ -264,21 +377,12 @@ class Invoice extends Document {
 	 * @param string $status Status to check.
 	 *
 	 * @since 1.1.0
-	 *
 	 * @return bool
 	 */
 	public function is_status( $status ) {
 		return $this->status === $status;
 	}
 
-	/**
-	 * Checks if an order can be edited, specifically for use on the Edit Order screen.
-	 *
-	 * @return bool
-	 */
-	public function is_editable() {
-		return ! in_array( $this->status, array( 'partial', 'paid' ), true );
-	}
 
 	/**
 	 * Returns if an order has been paid for based on the order status.
@@ -291,13 +395,23 @@ class Invoice extends Document {
 	}
 
 	/**
+	 * Checks if the invoice is draft.
+	 *
+	 * @since 1.1.0
+	 * @return bool
+	 */
+	public function is_draft() {
+		return $this->is_status( 'draft' );
+	}
+
+	/**
 	 * Checks if the invoice is due.
 	 *
 	 * @since 1.1.0
 	 * @return bool
 	 */
 	public function is_due() {
-		return ! ( empty( $this->due_date ) || $this->is_paid() ) && strtotime( wp_date( 'Y-m-d 23:59:00' ) ) > strtotime( wp_date( 'Y-m-d 23:59:00', strtotime( $this->due_date ) ) );
+		return ! ( empty( $this->due_date ) || $this->is_paid() ) && strtotime( date_i18n( 'Y-m-d 23:59:00' ) ) > strtotime( date_i18n( 'Y-m-d 23:59:00', strtotime( $this->due_date ) ) );
 	}
 
 	/**
