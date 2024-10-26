@@ -293,7 +293,7 @@ jQuery( document ).ready( ( $ ) => {
 		} );
 
 	// print.
-	$( '.eac-print-this' ).on( 'click', function ( e ) {
+	$( '.eac_print_document' ).on( 'click', function ( e ) {
 		e.preventDefault();
 		var $target = $( $( this ).data( 'target' ) );
 		console.log( $target );
@@ -307,6 +307,24 @@ jQuery( document ).ready( ( $ ) => {
 			header: null,
 			footer: null,
 		} );
+	} );
+
+	// Share.
+	$( '.eac_share_document' ).on( 'click', function ( e ) {
+		e.preventDefault();
+		var url = $( this ).data( 'url' );
+		if ( ! url ) {
+			return;
+		}
+		var $temp = $( '<input>' );
+		$( 'body' ).append( $temp );
+		$temp.val( url ).select();
+		document.execCommand( 'copy' );
+		$temp.remove();
+		if ( window.prompt( eac_admin_vars.i18n.share_prompt, url ) ) {
+			// open in new tab.
+			window.open( url, '_blank' );
+		}
 	} );
 
 	// Block UI

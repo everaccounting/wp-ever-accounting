@@ -17,22 +17,19 @@ $id       = filter_input( INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT );
 $customer = Customer::make( $id );
 ?>
 
-<div class="eac-section-header">
-	<h1 class="wp-heading-inline">
-		<?php if ( $customer->exists() ) : ?>
-			<?php esc_html_e( 'Edit Customer', 'wp-ever-accounting' ); ?>
-		<?php else : ?>
-			<?php esc_html_e( 'Add Customer', 'wp-ever-accounting' ); ?>
-		<?php endif; ?>
-		<a href="<?php echo esc_attr( remove_query_arg( array( 'action', 'id' ) ) ); ?>" title="<?php esc_attr_e( 'Go back', 'wp-ever-accounting' ); ?>">
-			<span class="dashicons dashicons-undo"></span>
-		</a>
-	</h1>
-
+<h1 class="wp-heading-inline">
 	<?php if ( $customer->exists() ) : ?>
-		<a href="<?php echo esc_url( $customer->get_view_url() ); ?>" class="page-title-action"><?php esc_html_e( 'View Customer', 'wp-ever-accounting' ); ?></a>
+		<?php esc_html_e( 'Edit Customer', 'wp-ever-accounting' ); ?>
+		<a href="<?php echo esc_attr( admin_url( 'admin.php?page=eac-sales&tab=customers&action=add' ) ); ?>" class="button button-small">
+			<?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?>
+		</a>
+	<?php else : ?>
+		<?php esc_html_e( 'Add Customer', 'wp-ever-accounting' ); ?>
 	<?php endif; ?>
-</div>
+	<a href="<?php echo esc_attr( remove_query_arg( array( 'action', 'id' ) ) ); ?>" title="<?php esc_attr_e( 'Go back', 'wp-ever-accounting' ); ?>">
+		<span class="dashicons dashicons-undo"></span>
+	</a>
+</h1>
 
 <form id="eac-customer-form" name="customer" method="post" action="<?php echo esc_html( admin_url( 'admin-post.php' ) ); ?>">
 	<div class="eac-poststuff">
@@ -193,6 +190,11 @@ $customer = Customer::make( $id );
 			<div class="eac-card">
 				<div class="eac-card__header">
 					<h2 class="eac-card__title"><?php esc_html_e( 'Actions', 'wp-ever-accounting' ); ?></h2>
+					<?php if ( $customer->exists() ) : ?>
+						<a href="<?php echo esc_url( $customer->get_view_url() ); ?>">
+							<?php esc_html_e( 'View', 'wp-ever-accounting' ); ?>
+						</a>
+					<?php endif; ?>
 				</div>
 				<?php if ( has_action( 'eac_customer_misc_actions' ) ) : ?>
 					<div class="eac-card__body">
@@ -204,7 +206,7 @@ $customer = Customer::make( $id );
 						 *
 						 * @since 2.0.0
 						 */
-						do_action( 'eac_customer_misc_actions', $customer );
+						do_action( 'eac_customer_edit_misc_actions', $customer );
 						?>
 					</div>
 				<?php endif; ?>
@@ -213,7 +215,7 @@ $customer = Customer::make( $id );
 						<a class="eac_confirm_delete del" href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'action', 'delete', admin_url( 'admin.php?page=eac-sales&tab=customers&id=' . $customer->id ) ), 'bulk-customers' ) ); ?>"><?php esc_html_e( 'Delete', 'wp-ever-accounting' ); ?></a>
 						<button class="button button-primary"><?php esc_html_e( 'Update Customer', 'wp-ever-accounting' ); ?></button>
 					<?php else : ?>
-						<button class="button button-primary tw-w-[100%]"><?php esc_html_e( 'Add Customer', 'wp-ever-accounting' ); ?></button>
+						<button class="button button-primary button-block"><?php esc_html_e( 'Add Customer', 'wp-ever-accounting' ); ?></button>
 					<?php endif; ?>
 				</div>
 			</div>

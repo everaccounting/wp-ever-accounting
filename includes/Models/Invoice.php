@@ -116,10 +116,10 @@ class Invoice extends Document {
 	 * Payments relation.
 	 *
 	 * @since 1.0.0
-	 * @return BelongsToMany
+	 * @return HasMany
 	 */
 	public function payments() {
-		return $this->belongs_to_many( Payment::class, 'document_id' );
+		return $this->has_many( Payment::class, 'document_id' );
 	}
 
 	/**
@@ -129,7 +129,7 @@ class Invoice extends Document {
 	 * @return HasMany
 	 */
 	public function notes() {
-		return $this->has_many( Note::class, 'document_id' )->set( 'type', 'invoice' );
+		return $this->has_many( Note::class, 'parent_id' )->set( 'parent_type', 'invoice' );
 	}
 
 	/*
@@ -155,38 +155,6 @@ class Invoice extends Document {
 		}
 
 		return parent::save();
-	}
-
-	/**
-	 * Update balance.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	public function update_balance() {
-		global $wpdb;
-		$paid = $wpdb->get_var(
-			$wpdb->prepare(
-				"SELECT SUM( amount / exchange_rate ) FROM {$wpdb->prefix}ea_transactions WHERE document_id=%d AND type='payment'",
-				$this->id
-			)
-		);
-
-		$paid    = eac_convert_currency( $paid, eac_base_currency(), $this->exchange_rate );
-		$balance = max( 0, $this->total - $paid );
-		if ( $balance == $this->balance ) {
-			return;
-		}
-
-		// update status if needed.
-		if ( $paid >= $this->total ) {
-			$this->status = 'paid';
-		} elseif ( $paid > 0 ) {
-			$this->status = 'partial';
-		}
-
-		$this->balance = $balance;
-		$this->save();
 	}
 
 	/*
@@ -300,6 +268,33 @@ class Invoice extends Document {
 	}
 
 	/**
+	 * Get total paid.
+	 *
+	 * @since 1.0.0
+	 * @return float
+	 */
+	public function get_paid_amount() {
+		$paid = 0;
+		foreach ( $this->payments as $payment ) {
+			$paid += eac_convert_currency( $payment->amount, $payment->exchange_rate, $this->exchange_rate );
+		}
+
+		return round( $paid, EAC()->currencies->get_precision( $this->currency ) );
+	}
+
+	/**
+	 * Get the due amount.
+	 *
+	 * @since 1.0.0
+	 * @return float
+	 */
+	public function get_due_amount() {
+		$due = max( 0, $this->total - $this->get_paid_amount() );
+		// we will ignore any decimal places so that dealing with multiple currencies is easier.
+		return round( $due, 0 );
+	}
+
+	/**
 	 * Calculate the totals amount of the invoice.
 	 *
 	 * @since 1.0.0
@@ -311,11 +306,23 @@ class Invoice extends Document {
 		$this->tax      = $this->get_items_totals( 'tax', true );
 		$this->total    = $this->get_items_totals( 'total', true );
 
+		// set the status based on the total.
+		$paid_amount = $this->get_paid_amount();
+		$due_amount  = $this->get_due_amount();
+		if ( $paid_amount > 0 && $due_amount > 0 ) {
+			$this->status = 'partial';
+		} elseif ( $due_amount <= 0 ) {
+			$this->status = 'paid';
+		} elseif ( in_array( $this->status, array( 'paid', 'partial' ), true ) && $this->$paid_amount <= 0 && 'overdue' !== $this->status ) {
+			$this->status = 'sent';
+		}
+
 		return array(
 			'subtotal' => $this->subtotal,
 			'discount' => $this->discount,
 			'tax'      => $this->tax,
 			'total'    => $this->total,
+			'balance'  => $due_amount,
 		);
 	}
 
@@ -331,7 +338,7 @@ class Invoice extends Document {
 		$total = 0;
 		foreach ( $this->items as $item ) {
 			$amount = $item->$column ?? 0;
-			$total  += $round ? round( $amount, 2 ) : $amount;
+			$total += $round ? round( $amount, 2 ) : $amount;
 		}
 
 		return $round ? round( $total, 2 ) : $total;
@@ -410,7 +417,7 @@ class Invoice extends Document {
 	 * @since 1.1.0
 	 * @return bool
 	 */
-	public function is_due() {
+	public function is_overdue() {
 		return ! ( empty( $this->due_date ) || $this->is_paid() ) && strtotime( date_i18n( 'Y-m-d 23:59:00' ) ) > strtotime( date_i18n( 'Y-m-d 23:59:00', strtotime( $this->due_date ) ) );
 	}
 
@@ -451,9 +458,9 @@ class Invoice extends Document {
 	 */
 	public function get_public_url() {
 		$page_id = get_option( 'eac_invoice_page_id' );
-		if ( empty( $page_id ) ) {
-			return '';
-		}
+//		if ( empty( $page_id ) ) {
+//			return '';
+//		}
 
 		$permalink = get_permalink( $page_id );
 

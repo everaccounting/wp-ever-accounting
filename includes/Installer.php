@@ -604,4 +604,17 @@ KEY parent_type (parent_type)
 			}
 		}
 	}
+
+	/**
+	 * Create cron jobs.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public static function create_cron_jobs() {
+		// every hour.
+		if ( ! wp_next_scheduled( 'eac_hourly_event' ) ) {
+			wp_schedule_event( time(), 'hourly', 'eac_hourly_event' );
+		}
+	}
 }

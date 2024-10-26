@@ -19,7 +19,7 @@ class Scripts {
 	public function __construct() {
 		add_action( 'admin_enqueue_scripts', array( $this, 'register_scripts' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
-//		add_action( 'admin_enqueue_scripts', array( $this, 'client_scripts' ) );
+		// add_action( 'admin_enqueue_scripts', array( $this, 'client_scripts' ) );
 	}
 
 	/**
@@ -48,7 +48,6 @@ class Scripts {
 		EAC()->scripts->register_script( 'eac-admin', 'js/admin.js', array( 'jquery', 'eac-inputmask', 'eac-select2', 'eac-printthis', 'eac-tiptip', 'jquery-ui-datepicker', 'jquery-ui-tooltip', 'eac-money', 'wp-ajax-response' ), true );
 
 		EAC()->scripts->register_style( 'eac-jquery-ui', 'css/jquery-ui.css' );
-		EAC()->scripts->register_style( 'eac-frontend', 'css/frontend.css' );
 		EAC()->scripts->register_style( 'eac-admin', 'css/admin.css', array( 'eac-jquery-ui' ) );
 	}
 
@@ -70,11 +69,6 @@ class Scripts {
 		wp_enqueue_script( 'eac-modal' );
 		wp_enqueue_script( 'eac-admin' );
 		wp_enqueue_style( 'eac-admin' );
-
-		// query argument action have value as view.
-		if ( isset( $_GET['action'] ) && 'view' === $_GET['action'] ) {
-			wp_enqueue_style( 'eac-frontend' );
-		}
 
 		// Localize script.
 		wp_localize_script(
@@ -98,6 +92,7 @@ class Scripts {
 				'i18n'          => array(
 					'confirm_delete' => __( 'Are you sure you want to delete this?', 'wp-ever-accounting' ),
 					'close'          => __( 'Close', 'wp-ever-accounting' ),
+					'share_prompt'   => __( 'Link is copied to clipboard. Want to open it in a new tab?', 'wp-ever-accounting' ),
 				),
 			)
 		);

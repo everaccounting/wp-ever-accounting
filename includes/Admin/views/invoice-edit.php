@@ -180,7 +180,7 @@ defined( 'ABSPATH' ) || exit;
 					eac_form_field(
 						array(
 							'label'       => __( 'Notes', 'wp-ever-accounting' ),
-							'name'        => 'notes',
+							'name'        => 'note',
 							'value'       => $invoice->note,
 							'default'     => get_option( 'eac_invoice_note', '' ),
 							'type'        => 'textarea',

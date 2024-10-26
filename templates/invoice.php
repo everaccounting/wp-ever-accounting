@@ -19,213 +19,261 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$text_color = get_option( 'eac_email_text_color', '#3c3c3c' );
-$logo       = get_option( 'eac_business_logo' );
-$phone      = get_option( 'eac_business_phone' );
-$email      = get_option( 'eac_business_email' );
-$columns    = EAC()->invoices->get_columns();
+$business_logo  = get_option( 'eac_business_logo', get_site_icon_url( 55 ) );
+$business_phone = get_option( 'eac_business_phone' );
+$business_email = get_option( 'eac_business_email', get_option( 'admin_email' ) );
+$business_name  = get_option( 'eac_business_name', get_bloginfo( 'name' ) );
+$columns        = EAC()->invoices->get_columns();
 ?>
-<style type="text/css">
-	.text-left {
-		text-align: <?php echo is_rtl() ? 'right' : 'left'; ?>;
-	}
+<div class="eac-card">
+	<div class="eac-document">
+		<div class="eac-document__header">
+			<?php if ( $business_logo && filter_var( $business_logo, FILTER_VALIDATE_URL ) ) : ?>
+				<div class="eac-document__logo">
+					<img src="<?php echo esc_url( $business_logo ); ?>" alt="<?php esc_attr_e( 'Logo', 'wp-ever-accounting' ); ?>"/>
+				</div>
+			<?php endif; ?>
+			<div class="eac-document__info">
+				<?php if ( ! empty( $business_name ) ) : ?>
+					<h2><?php echo esc_html( $business_name ); ?></h2>
+				<?php endif; ?>
+				<?php if ( ! empty( $business_phone ) ) : ?>
+					<p><?php echo esc_html( $business_phone ); ?></p>
+				<?php endif; ?>
+				<?php if ( ! empty( $business_email ) ) : ?>
+					<p><?php echo esc_html( $business_email ); ?></p>
+				<?php endif; ?>
+				<p>
+					<?php echo esc_html( site_url() ); ?>
+				</p>
+			</div>
+			<div class="eac-document__title">
+				<h1><?php esc_html_e( 'Invoice', 'wp-ever-accounting' ); ?></h1>
+				<p>
+					<strong><?php esc_html_e( 'Invoice:', 'wp-ever-accounting' ); ?></strong>
+					<?php echo esc_html( $invoice->number ); ?>
+				</p>
+				<?php if ( $invoice->order_number ) : ?>
+					<p>
+						<strong><?php esc_html_e( 'Order:', 'wp-ever-accounting' ); ?></strong>
+						<?php echo esc_html( $invoice->order_number ); ?>
+					</p>
+				<?php endif; ?>
+				<?php if ( $invoice->issue_date ) : ?>
+					<p>
+						<strong><?php esc_html_e( 'Issue:', 'wp-ever-accounting' ); ?></strong>
+						<?php echo esc_html( wp_date( eac_date_format(), strtotime( $invoice->issue_date ) ) ); ?>
+					</p>
+				<?php endif; ?>
+				<?php if ( $invoice->due_date ) : ?>
+					<p>
+						<strong><?php esc_html_e( 'Due:', 'wp-ever-accounting' ); ?></strong>
+						<?php echo esc_html( wp_date( eac_date_format(), strtotime( $invoice->due_date ) ) ); ?>
+					</p>
+				<?php endif; ?>
+			</div>
+		</div>
+		<div class="eac-document__divider"></div>
+		<div class="eac-document__billings">
+			<div class="eac-document__billing">
+				<h3><?php esc_html_e( 'From', 'wp-ever-accounting' ); ?></h3>
+				<p>
+					<?php
+					$address = eac_get_formatted_address(
+						array(
+							'name'       => get_option( 'eac_business_name', get_bloginfo( 'name' ) ),
+							'address'    => get_option( 'eac_business_address' ),
+							'city'       => get_option( 'eac_business_city' ),
+							'state'      => get_option( 'eac_business_state' ),
+							'postcode'   => get_option( 'eac_business_postcode' ),
+							'country'    => get_option( 'eac_business_country' ),
+							'email'      => get_option( 'eac_business_email' ),
+							'phone'      => get_option( 'eac_business_phone' ),
+							'tax_number' => get_option( 'eac_business_tax_number' ),
+						)
+					);
 
-	.text-right {
-		text-align: <?php echo is_rtl() ? 'left' : 'right'; ?>;
-	}
-
-	hr {
-		border-top: 1px solid #e5e7eb;
-		border-bottom: 0;
-		margin: 30px 0;
-	}
-
-	.item-col-item,
-	.item-col-quantity,
-	.item-col-price,
-	.item-col-tax{
-		text-align: <?php echo is_rtl() ? 'right' : 'left'; ?>;
-	}
-	.item-col-subtotal{
-		text-align: <?php echo is_rtl() ? 'left' : 'right'; ?>;
-	}
-</style>
-<div class="eac-invoice" dir="<?php echo is_rtl() ? 'rtl' : 'ltr'; ?>" style="font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif; margin-bottom: 40px; background-color: #ffffff; border: 1px solid #e5e7eb; padding: 2rem; color: #3c3c3c; font-size: 14px;">
-	<table border="0" cellpadding="0" cellspacing="0" width="100%">
-		<!-- Header -->
-		<tr>
-			<td valign="top">
-				<table border="0" cellspacing="0" cellpadding="0" width="100%">
-					<tr>
-						<td align="left" valign="top">
-							<?php if ( $logo && filter_var( $logo, FILTER_VALIDATE_URL ) ) : ?>
-								<p style="margin: 0; height: 100px;">
-									<img src="<?php echo esc_url( $logo ); ?>" alt="<?php esc_attr_e( 'Business Logo', 'wp-ever-accounting' ); ?>" style="max-height: 100px; max-width: 100%;"/>
-								</p>
-							<?php endif; ?>
-							<?php if ( $phone ) : ?>
-								<p style="margin: 0;"><a style="color: <?php echo esc_attr( $text_color ); ?>" href="tel:<?php echo esc_attr( $phone ); ?>"><?php echo esc_html( $phone ); ?></a></p>
-							<?php endif; ?>
-							<?php if ( $email ) : ?>
-								<p style="margin: 0;"><a style="color: <?php echo esc_attr( $text_color ); ?>" href="mailto:<?php echo esc_attr( $email ); ?>"><?php echo esc_html( $email ); ?></a></p>
-							<?php endif; ?>
-							<p style="margin: 0;"><a style="color: <?php echo esc_attr( $text_color ); ?>" href="<?php echo esc_url( home_url() ); ?>"><?php echo esc_html( home_url() ); ?></a></p>
-						</td>
-						<td align="right" valign="top">
-							<h2 style="color: #3c3c3c; font-size: 24px; margin: 0 0 10px 0;"><?php esc_html_e( 'Invoice', 'wp-ever-accounting' ); ?></h2>
-							<p style="margin: 0;">#&nbsp;<?php echo esc_html( $invoice->number ); ?></p>
-						</td>
-					</tr>
-				</table>
-			</td>
-		</tr>
-		<!-- End Header -->
-
-		<tr>
-			<td>
-				<hr>
-			</td>
-		</tr>
-
-		<!--Invoice Meta-->
-		<tr>
-			<td>
-				<table cellspacing="0" cellpadding="0" width="100%">
-					<tbody>
-					<tr>
-						<td width="33.33%">
-							<table cellspacing="0" cellpadding="0" width="100%">
-								<tr>
-									<td>
-										<p style="margin: 0 0 5px 0;"><strong><?php esc_html_e( 'Issue Date:', 'wp-ever-accounting' ); ?></strong></p>
-									</td>
-									<td>
-										<p style="margin: 0 0 5px 0;"><?php echo esc_html( $invoice->issue_date ? wp_date( 'Y-m-d', strtotime( $invoice->issue_date ) ) : '' ); ?></p>
-									</td>
-								</tr>
-								<tr>
-									<td>
-										<p style="margin: 0 0 5px 0;"><strong><?php esc_html_e( 'Due Date:', 'wp-ever-accounting' ); ?></strong></p>
-									</td>
-									<td>
-										<p style="margin: 0 0 5px 0;"><?php echo esc_html( $invoice->due_date ? wp_date( 'Y-m-d', strtotime( $invoice->due_date ) ) : '' ); ?></p>
-									</td>
-								</tr>
-							</table>
-						</td>
-						<td width="33.33%"></td>
-						<td width="33.33%">
-							<table cellspacing="0" cellpadding="0" width="100%" align="right" style="text-align: right;">
-								<tr>
-									<td>
-										<p style="margin: 0 0 5px 0;"><strong><?php esc_html_e( 'Order #:', 'wp-ever-accounting' ); ?></strong></p>
-									</td>
-									<td class="eac-text-right">
-										<p style="margin: 0 0 5px 0;"><?php echo esc_html( $invoice->order_number ? $invoice->order_number : 'N/A' ); ?></p>
-									</td>
-								</tr>
-								<tr>
-									<td>
-										<p style="margin: 0 0 5px 0;"><strong><?php esc_html_e( 'Status:', 'wp-ever-accounting' ); ?></strong></p>
-									</td>
-									<td class="eac-text-right">
-										<p style="margin: 0 0 5px 0;"><?php echo esc_html( $invoice->status_label ); ?></p>
-									</td>
-								</tr>
-							</table>
-						</td>
-					</tr>
-					</tbody>
-				</table>
-			</td>
-		</tr>
-		<!--End Invoice Meta-->
-
-		<tr>
-			<td>
-				<hr>
-			</td>
-		</tr>
-
-		<!-- Payment Details Section -->
-		<tr>
-			<td>
-				<table border="0" cellspacing="0" cellpadding="0" width="100%">
-					<tr>
-						<td width="50%" valign="top">
-							<h3 style="color: #3c3c3c; font-size: 16px; margin: 0 0 6px;"><?php esc_html_e( 'From', 'wp-ever-accounting' ); ?></h3>
-							<address style="color: #636363; font-size: 13px;line-height:1.5;font-style:normal;">
-								<?php
-								$address = eac_get_formatted_address(
-									array(
-										'name'       => $invoice->contact_name,
-										'company'    => $invoice->contact_company,
-										'address'    => $invoice->contact_address,
-										'city'       => $invoice->contact_city,
-										'state'      => $invoice->contact_state,
-										'zip'        => $invoice->contact_zip,
-										'country'    => $invoice->contact_country,
-										'tax_number' => $invoice->contact_tax_number,
-									)
-								);
-								echo wp_kses_post( $address );
-								?>
-							</address>
-						</td>
-						<td width="50%" valign="top">
-							<h3 style="color: #3c3c3c; font-size: 16px; margin: 0 0 6px;"><?php esc_html_e( 'To', 'wp-ever-accounting' ); ?></h3>
-							<address style="color: #636363; font-size: 13px;line-height:1.5;font-style:normal;">
-								<?php
-								$address = eac_get_formatted_address(
-									array(
-										'name'       => get_option( 'eac_business_name', get_bloginfo( 'name' ) ),
-										'address'    => get_option( 'eac_business_address' ),
-										'city'       => get_option( 'eac_business_city' ),
-										'state'      => get_option( 'eac_business_state' ),
-										'zip'        => get_option( 'eac_business_postcode' ),
-										'country'    => get_option( 'eac_business_country' ),
-										'tax_number' => get_option( 'eac_business_tax_number' ),
-									)
-								);
-								echo wp_kses_post( $address );
-								?>
-							</address>
-						</td>
-					</tr>
-				</table>
-			</td>
-		</tr>
-
-		<tr>
-			<td>
-				<div style="margin: 30px 0;"></div>
-			</td>
-		</tr>
-
-		<!--Invoice Items-->
-		<tr>
-			<td>
-				<table cellspacing="0" cellpadding="0" width="100%" style="table-layout: fixed;">
-					<tr>
-						<?php foreach ( $columns as $key => $label ) : ?>
-							<td class="item-col-<?php echo esc_attr( $key ); ?>" style="color: #3c3c3c; font-size: 14px; font-weight: bold;padding: 10px 0; border-bottom: 1px solid #263353;border-top: 1px solid #263353;">
-								<?php echo esc_html( $label ); ?>
-							</td>
-						<?php endforeach; ?>
-					</tr>
+					echo wp_kses_post( $address );
+					?>
+				</p>
+			</div>
+			<div class="eac-document__billing">
+				<h3><?php esc_html_e( 'To', 'wp-ever-accounting' ); ?></h3>
+				<p>
+					<?php
+					$address = eac_get_formatted_address(
+						array(
+							'name'       => $invoice->contact_name,
+							'company'    => $invoice->contact_company,
+							'address'    => $invoice->contact_address,
+							'city'       => $invoice->contact_city,
+							'state'      => $invoice->contact_state,
+							'postcode'   => $invoice->contact_postcode,
+							'country'    => $invoice->contact_country,
+							'email'      => $invoice->contact_email,
+							'phone'      => $invoice->contact_phone,
+							'tax_number' => $invoice->contact_tax_number,
+						)
+					);
+					echo wp_kses_post( $address );
+					?>
+				</p>
+			</div>
+		</div>
+		<div class="eac-document__divider"></div>
+		<div class="eac-document__items">
+			<table>
+				<thead>
+				<tr>
+					<?php foreach ( $columns as $column_key => $column ) : ?>
+						<th class="col-<?php echo esc_attr( $column_key ); ?>">
+							<?php echo esc_html( $column ); ?>
+						</th>
+					<?php endforeach; ?>
+				</tr>
+				</thead>
+				<tbody>
+				<?php if ( $invoice->items ) : ?>
 					<?php foreach ( $invoice->items as $item ) : ?>
 						<tr>
-							<?php foreach ( array_keys( $columns ) as $column ) : ?>
-								<td class="item-col-<?php echo esc_attr( $column ); ?>" style="color: #636363; font-size: 13px; padding: 10px 0; border-bottom: 1px solid #e5e7eb;">
-									100
+							<?php foreach ( $columns as $column_key => $column ) : ?>
+								<td class="col-<?php echo esc_attr( $column_key ); ?>">
+									<?php
+									switch ( $column_key ) {
+										case 'item':
+											echo esc_html( $item->name );
+											if ( $item->description ) {
+												echo '<span class="small">' . esc_html( $item->description ) . '</span>';
+											}
+											break;
+										case 'quantity':
+											printf( '%s x%s', esc_html( $item->quantity ), esc_html( $item->unit ) );
+											break;
+										case 'price':
+											echo esc_html( eac_format_amount( $item->price, $invoice->currency ) );
+											break;
+										case 'tax':
+											echo esc_html( eac_format_amount( $item->tax, $invoice->currency ) );
+											break;
+										case 'subtotal':
+											echo esc_html( eac_format_amount( $item->subtotal, $invoice->currency ) );
+											break;
+									}
+									?>
 								</td>
 							<?php endforeach; ?>
 						</tr>
 					<?php endforeach; ?>
-				</table>
-			</td>
-		</tr>
-		<!--End Invoice Items-->
+				<?php else : ?>
+					<tr>
+						<td colspan="<?php echo esc_attr( count( $columns ) ); ?>">
+							<?php esc_html_e( 'No items found.', 'wp-ever-accounting' ); ?>
+						</td>
+					</tr>
+				<?php endif; ?>
+				</tbody>
 
-	</table>
+				<tfoot>
+				<tr>
+					<td colspan="<?php echo esc_attr( count( $columns ) - 1 ); ?>" class="col-label">
+						<?php esc_html_e( 'Subtotal', 'wp-ever-accounting' ); ?>
+					</td>
+					<td class="col-amount">
+						<?php echo esc_html( eac_format_amount( $invoice->subtotal, $invoice->currency ) ); ?>
+					</td>
+				</tr>
+				<?php if ( $invoice->discount > 0 ) : ?>
+					<tr>
+						<td colspan="<?php echo esc_attr( count( $columns ) - 1 ); ?>" class="col-label">
+							<?php esc_html_e( 'Discount', 'wp-ever-accounting' ); ?>
+						</td>
+						<td class="col-amount">
+							<?php echo esc_html( eac_format_amount( $invoice->discount, $invoice->currency ) ); ?>
+						</td>
+					</tr>
+				<?php endif; ?>
+				<?php if ( $invoice->is_taxed() ) : ?>
+					<?php if ( 'single' === get_option( 'eac_tax_total_display' ) ) : ?>
+						<tr>
+							<td colspan="<?php echo esc_attr( count( $columns ) - 1 ); ?>" class="col-label">
+								<?php esc_html_e( 'Tax', 'wp-ever-accounting' ); ?>
+							</td>
+							<td class="col-amount">
+								<?php echo esc_html( eac_format_amount( $invoice->tax, $invoice->currency ) ); ?>
+							</td>
+						</tr>
+					<?php else : ?>
+						<?php foreach ( $invoice->get_itemized_taxes() as $tax ) : ?>
+							<tr>
+								<td colspan="<?php echo esc_attr( count( $columns ) - 1 ); ?>" class="col-label">
+									<?php echo esc_html( $tax->formatted_name ); ?>
+								</td>
+								<td class="col-amount">
+									<?php echo esc_html( eac_format_amount( $tax->amount, $invoice->currency ) ); ?>
+								</td>
+							</tr>
+						<?php endforeach; ?>
+					<?php endif; ?>
+				<?php endif; ?>
+
+				<tr>
+					<td class="col-label" colspan="<?php echo count( $columns ) - 1; ?>">
+						<?php esc_html_e( 'Total', 'wp-ever-accounting' ); ?>
+					</td>
+					<td class="col-amount">
+						<?php echo esc_html( $invoice->formatted_total ); ?>
+					</td>
+				</tr>
+				<?php if ( $invoice->get_due_amount() > 0 ) : ?>
+					<tr>
+						<td class="col-label" colspan="<?php echo count( $columns ) - 1; ?>">
+							<?php esc_html_e( 'Due', 'wp-ever-accounting' ); ?>
+						</td>
+						<td class="col-amount col-amount--due">
+							<?php echo esc_html( eac_format_amount( $invoice->get_due_amount(), $invoice->currency ) ); ?>
+						</td>
+					</tr>
+				<?php endif; ?>
+				</tfoot>
+			</table>
+		</div>
+
+		<?php if ( $invoice->note ) : ?>
+			<div class="eac-document__note">
+				<h3><?php esc_html_e( 'Notes', 'wp-ever-accounting' ); ?></h3>
+				<?php echo wp_kses_post( wpautop( $invoice->note ) ); ?>
+			</div>
+		<?php endif; ?>
+		<?php if ( $invoice->payments ) : ?>
+			<div class="eac-document__divider"></div>
+			<div class="eac-document__payments">
+				<h3><?php esc_html_e( 'Payments', 'wp-ever-accounting' ); ?></h3>
+				<table>
+					<thead>
+					<tr>
+						<th><?php esc_html_e( 'Payment #', 'wp-ever-accounting' ); ?></th>
+						<th><?php esc_html_e( 'Date', 'wp-ever-accounting' ); ?></th>
+						<th><?php esc_html_e( 'Method', 'wp-ever-accounting' ); ?></th>
+						<th><?php esc_html_e( 'Amount', 'wp-ever-accounting' ); ?></th>
+					</tr>
+					</thead>
+					<tbody>
+					<?php foreach ( $invoice->payments as $payment ) : ?>
+						<tr>
+							<td><?php echo esc_html( $payment->number ); ?></td>
+							<td><?php echo esc_html( $payment->payment_date ? wp_date( get_option( 'date_format' ), strtotime( $payment->payment_date ) ) : 'N/A' ); ?></td>
+							<td><?php echo esc_html( $payment->payment_method_label ? $payment->payment_method_label : 'N/A' ); ?></td>
+							<td><?php echo esc_html( eac_format_amount( eac_convert_currency( $payment->amount, $payment->currency, $invoice->currency ), $invoice->currency ) ); ?></td>
+						</tr>
+					<?php endforeach; ?>
+					</tbody>
+				</table>
+			</div>
+		<?php endif; ?>
+		<?php if ( ! empty( $invoice->terms ) ) : ?>
+			<div class="eac-document__footer">
+				<?php echo wp_kses_post( wpautop( $invoice->terms ) ); ?>
+			</div>
+		<?php endif; ?>
+	</div>
 </div>

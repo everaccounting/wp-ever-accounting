@@ -52,25 +52,19 @@ $invoice = EAC()->invoices->get( $id );
 
 			<div class="eac-card__body">
 				<?php if ( $invoice->is_status( 'draft' ) ) : ?>
-					<a href="<?php echo esc_url( wp_nonce_url( add_query_arg( array( 'eac_action' => 'invoice_action', 'id' => $invoice->id, 'invoice_action' => 'send' )  ), 'eac_invoice_action' ) ); ?>" class="button button-primary button-small button-block">
-						<span class="dashicons dashicons-email"></span> <?php esc_html_e( 'Send Invoice', 'wp-ever-accounting' ); ?>
-					</a>
-					<a href="<?php echo esc_url( wp_nonce_url( add_query_arg( array( 'eac_action' => 'invoice_action', 'id' => $invoice->id, 'invoice_action' => 'mark_sent' )  ), 'eac_invoice_action' ) ); ?>" class="button button-small button-block">
+					<a href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin.php?page=eac-invoices&action=invoice_action&id=' . $invoice->id . '&invoice_action=mark_sent' ), 'eac_invoice_action' ) ); ?>" class="button button-small button-block">
 						<!--Mark sent-->
 						<span class="dashicons dashicons-yes"></span> <?php esc_html_e( 'Mark Sent', 'wp-ever-accounting' ); ?>
 					</a>
-				<?php elseif ( $invoice->is_status( 'sent' ) && ! $invoice->is_paid() ) : ?>
-					<a href="#" class="button button-primary button-small button-block eac-add-invoice-payment" data-id="<?php echo esc_attr( $invoice->id ); ?>" data-due="<?php echo esc_attr( $invoice->total ); ?>" data-currency="<?php echo esc_attr( $invoice->currency ); ?>">
+				<?php elseif ( ! $invoice->is_status( 'draft' ) && ! $invoice->is_paid() ) : ?>
+					<a href="#" class="button button-primary button-small button-block eac-add-invoice-payment" data-id="<?php echo esc_attr( $invoice->id ); ?>" data-due="<?php echo esc_attr( $invoice->get_due_amount() ); ?>" data-currency="<?php echo esc_attr( $invoice->currency ); ?>">
 						<span class="dashicons dashicons-money-alt"></span> <?php esc_html_e( 'Add Payment', 'wp-ever-accounting' ); ?>
 					</a>
 				<?php endif; ?>
-				<a href="#" class="button button-small button-block eac-payment-email">
-					<span class="dashicons dashicons-email"></span> <?php esc_html_e( 'Email', 'wp-ever-accounting' ); ?>
-				</a>
-				<a href="#" class="button button-small button-block eac-print-this" data-target=".eac-invoice>table">
+				<a href="#" class="button button-small button-block eac_print_document" data-target=".eac-document">
 					<span class="dashicons dashicons-printer"></span> <?php esc_html_e( 'Print', 'wp-ever-accounting' ); ?>
 				</a>
-				<a href="#" class="button button-small button-block">
+				<a href="#" class="button button-small button-block eac_share_document" data-url="<?php echo esc_url( $invoice->get_public_url() ); ?>">
 					<span class="dashicons dashicons-share"></span> <?php esc_html_e( 'Share', 'wp-ever-accounting' ); ?>
 				</a>
 
@@ -101,7 +95,14 @@ $invoice = EAC()->invoices->get( $id );
 				<h3 class="eac-card__title"><?php esc_html_e( 'Attachment', 'wp-ever-accounting' ); ?></h3>
 			</div>
 			<div class="eac-card__body">
-				<?php eac_file_uploader( array( 'value' => $invoice->attachment_id, 'readonly' => true ) ); ?>
+				<?php
+				eac_file_uploader(
+					array(
+						'value'    => $invoice->attachment_id,
+						'readonly' => true,
+					)
+				);
+				?>
 			</div>
 		</div>
 
@@ -139,12 +140,12 @@ $invoice = EAC()->invoices->get( $id );
 			</div>
 			<div class="eac-form-field">
 				<label for="exchange_rate"><?php esc_html_e( 'Exchange Rate', 'wp-ever-accounting' ); ?><abbr title="required"></abbr></label>
-				<input type="text" name="exchange_rate" id="exchange_rate" value="1.00" class="eac_exchange_rate" data-currency="<?php echo esc_attr( eac_base_currency() ); ?>" required>
+				<input type="text" name="exchange_rate" id="exchange_rate" value="1.00" class="eac_exchange_rate" data-currency="<?php echo esc_attr( $invoice->currency ); ?>" required>
 			</div>
 
 			<div class="eac-form-field">
 				<label for="amount"><?php esc_html_e( 'Amount', 'wp-ever-accounting' ); ?><abbr title="required"></abbr></label>
-				<input type="text" name="amount" id="amount" class="eac_amount" value="<?php echo esc_attr( $invoice->total ); ?>" data-max="<?php echo esc_attr( $invoice->balance ); ?>" required readonly>
+				<input type="text" name="amount" id="amount" class="eac_amount" value="<?php echo esc_attr( $invoice->get_due_amount() ); ?>" data-currncy="<?php echo esc_attr( $invoice->currency ); ?>" required>
 			</div>
 
 			<div class="eac-form-field">
