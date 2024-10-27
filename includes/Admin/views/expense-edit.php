@@ -43,7 +43,7 @@ $expense = Expense::make( $id );
 						array(
 							'label'       => __( 'Date', 'wp-ever-accounting' ),
 							'type'        => 'date',
-							'name'        => 'expense_date',
+							'name'        => 'payment_date',
 							'value'       => $expense->payment_date,
 							'placeholder' => 'yyyy-mm-dd',
 							'class'       => 'eac_datepicker',
@@ -279,6 +279,6 @@ $expense = Expense::make( $id );
 	</div><!-- .eac-poststuff -->
 
 	<?php wp_nonce_field( 'eac_edit_expense' ); ?>
-	<input type="hidden" name="action" value="eac_edit_exense"/>
+	<input type="hidden" name="action" value="eac_edit_expense"/>
 	<input type="hidden" name="id" value="<?php echo esc_attr( $expense->id ); ?>"/>
 </form>

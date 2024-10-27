@@ -113,11 +113,11 @@ $business_name  = get_option( 'eac_business_name', get_bloginfo( 'name' ) );
 				</tr>
 				<tr>
 					<th scope="row"><?php esc_html_e( 'Date', 'wp-ever-accounting' ); ?></th>
-					<td><?php echo esc_html( $expense->expense_date ? wp_date( eac_date_format(), strtotime( $expense->expense_date ) ) : 'N/A' ); ?></td>
+					<td><?php echo esc_html( $expense->payment_date ? wp_date( eac_date_format(), strtotime( $expense->payment_date ) ) : 'N/A' ); ?></td>
 				</tr>
 				<tr>
 					<th scope="row"><?php esc_html_e( 'Method', 'wp-ever-accounting' ); ?></th>
-					<td><?php echo esc_html( $expense->expense_method ? $expense->expense_method_label : 'N/A' ); ?></td>
+					<td><?php echo esc_html( $expense->payment_method ? $expense->payment_method_label : 'N/A' ); ?></td>
 				</tr>
 				<tr>
 					<th scope="row"><?php esc_html_e( 'Reference', 'wp-ever-accounting' ); ?></th>

@@ -172,6 +172,9 @@ class Payments {
 				if ( ! EAC()->payments->get( $id ) ) {
 					wp_die( esc_html__( 'You attempted to retrieve a payment that does not exist. Perhaps it was deleted?', 'wp-ever-accounting' ) );
 				}
+				if ( 'edit' === $action && ! EAC()->payments->get( $id )->editable ) {
+					wp_die( esc_html__( 'You attempted to edit a payment that is not editable.', 'wp-ever-accounting' ) );
+				}
 				break;
 
 			default:
@@ -228,7 +231,7 @@ class Payments {
 				<h3 class="eac-card__title"><?php esc_html_e( 'Attachment', 'wp-ever-accounting' ); ?></h3>
 			</div>
 			<div class="eac-card__body">
-				<?php eac_file_uploader( array( 'value' => $payment->attachment_id, 'readonly' => true  ) ); ?>
+				<?php eac_file_uploader( array( 'value' => $payment->attachment_id, 'readonly' => true ) ); ?>
 			</div>
 		</div>
 		<?php

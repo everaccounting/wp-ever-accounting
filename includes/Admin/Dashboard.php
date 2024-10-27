@@ -212,12 +212,12 @@ class Dashboard {
 					<?php endforeach; ?>
 				</tbody>
 			</table>
+			<?php else : ?>
+				<div class="eac-card__body">
+					<p class="empty"><?php esc_html_e( 'No payments found.', 'wp-ever-accounting' ); ?></p>
+				</div>
+			<?php endif; ?>
 		</div>
-		<?php else : ?>
-			<div class="eac-card__body">
-				<p class="empty"><?php esc_html_e( 'No payments found.', 'wp-ever-accounting' ); ?></p>
-			</div>
-		<?php endif; ?>
 		<?php
 	}
 
