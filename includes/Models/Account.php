@@ -98,7 +98,6 @@ class Account extends Model {
 	 */
 	protected $has_timestamps = true;
 
-
 	/**
 	 * The attributes that are searchable.
 	 *
@@ -136,7 +135,7 @@ class Account extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	public function get_formatted_balance_attr() {
+	protected function get_formatted_balance_attr() {
 		return eac_format_amount( $this->balance, $this->currency );
 	}
 
@@ -146,7 +145,7 @@ class Account extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	public function get_formatted_name_attr() {
+	protected function get_formatted_name_attr() {
 		$name   = sprintf( '%s (%s)', $this->name, $this->currency );
 		$number = $this->number;
 
