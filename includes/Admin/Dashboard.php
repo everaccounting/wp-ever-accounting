@@ -369,7 +369,7 @@ class Dashboard {
 			$wpdb->prepare(
 				"SELECT contact_id, SUM(amount / exchange_rate) AS amount
 				 FROM {$wpdb->prefix}ea_transactions
-				 WHERE type = 'payment' AND status = 'completed'
+				 WHERE type = 'payment'
 				 GROUP BY contact_id
 				 ORDER BY amount DESC LIMIT %d",
 				5
@@ -432,7 +432,7 @@ class Dashboard {
 			$wpdb->prepare(
 				"SELECT contact_id, SUM(amount / exchange_rate) AS amount
 				 FROM {$wpdb->prefix}ea_transactions
-				 WHERE type = 'expense' AND status = 'completed'
+				 WHERE type = 'expense'
 				 GROUP BY contact_id
 				 ORDER BY amount DESC LIMIT %d",
 				5

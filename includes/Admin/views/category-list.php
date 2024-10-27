@@ -1,8 +1,6 @@
 <?php
 /**
- * Admin List of Categories.
- * Page: Misc
- * Tab: Categories
+ * Admin view: Category list
  *
  * @package EverAccounting
  * @since 1.0.0

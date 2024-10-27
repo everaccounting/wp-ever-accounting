@@ -1,7 +1,8 @@
 <?php
 /**
- * Edit bill view.
+ * Admin View: Bill edit
  *
+ * @since 1.0.0
  * @package EverAccounting
  * @var $item \EverAccounting\Models\Item
  */
@@ -12,7 +13,6 @@ defined( 'ABSPATH' ) || exit;
 
 $id   = filter_input( INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT );
 $bill = Bill::make( $id );
-
 $columns = EAC()->bills->get_columns();
 
 // if tax is not enabled and bill has no tax, remove the tax column.
@@ -43,6 +43,7 @@ defined( 'ABSPATH' ) || exit;
 
 <form id="eac-edit-bill" name="bill" method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
 	<div class="eac-poststuff">
+
 		<div class="column-1">
 
 			<div class="eac-card eac-document-overview">
@@ -189,7 +190,7 @@ defined( 'ABSPATH' ) || exit;
 					eac_form_field(
 						array(
 							'label'       => __( 'Notes', 'wp-ever-accounting' ),
-							'name'        => 'notes',
+							'name'        => 'note',
 							'value'       => $bill->note,
 							'default'     => get_option( 'eac_bill_note', '' ),
 							'type'        => 'textarea',
@@ -211,7 +212,6 @@ defined( 'ABSPATH' ) || exit;
 
 					?>
 				</div>
-
 			</div>
 
 
@@ -231,19 +231,45 @@ defined( 'ABSPATH' ) || exit;
 
 			<div class="eac-card">
 				<div class="eac-card__header">
-					<h3 class="eac-card__title"><?php esc_html_e( 'Save', 'wp-ever-accounting' ); ?></h3>
+					<h3 class="eac-card__title"><?php esc_html_e( 'Actions', 'wp-ever-accounting' ); ?></h3>
+					<?php if ( $bill->exists() ) : ?>
+						<a href="<?php echo esc_url( $bill->get_view_url() ); ?>">
+							<?php esc_html_e( 'View', 'wp-ever-accounting' ); ?>
+						</a>
+					<?php endif; ?>
+				</div>
+				<div class="eac-card__body">
+					<?php
+					/**
+					 * Fires to add custom actions.
+					 *
+					 * @param Bill $bill Bill object.
+					 *
+					 * @since 2.0.0
+					 */
+					do_action( 'eac_bill_edit_misc_actions', $bill );
+					?>
 				</div>
 				<div class="eac-card__footer">
 					<?php if ( $bill->exists() ) : ?>
 						<a class="del del_confirm" href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'action', 'delete', $bill->get_edit_url() ), 'bulk-bills' ) ); ?>">
 							<?php esc_html_e( 'Delete', 'wp-ever-accounting' ); ?>
 						</a>
-						<button class="button button-primary"><?php esc_html_e( 'Update Bill', 'wp-ever-accounting' ); ?></button>
+						<button class="button button-primary"><?php esc_html_e( 'Update', 'wp-ever-accounting' ); ?></button>
 					<?php else : ?>
-						<button class="button button-primary button-large tw-w-full"><?php esc_html_e( 'Add Bill', 'wp-ever-accounting' ); ?></button>
+						<button class="button button-primary button-block"><?php esc_html_e( 'Save', 'wp-ever-accounting' ); ?></button>
 					<?php endif; ?>
 				</div>
 			</div><!-- .eac-card -->
+
+			<div class="eac-card">
+				<div class="eac-card__header">
+					<h3 class="eac-card__title"><?php esc_html_e( 'Attachment', 'wp-ever-accounting' ); ?></h3>
+				</div>
+				<div class="eac-card__body">
+					<?php eac_file_uploader( array( 'value' => $bill->attachment_id ) ); ?>
+				</div>
+			</div>
 
 			<?php
 			/**
@@ -257,9 +283,10 @@ defined( 'ABSPATH' ) || exit;
 			?>
 
 		</div><!-- .column-2 -->
-	</div>
+	</div><!-- .eac-poststuff -->
 
-	<input type="hidden" name="action" value="eac_edit_bill"/>
+	<input type="hidden" name="eac_action" value="edit_bill"/>
+	<input type="hidden" name="status" value="<?php echo esc_attr( $bill->status ); ?>"/>
 	<input type="hidden" name="id" value="<?php echo esc_attr( $bill->id ); ?>"/>
 	<?php wp_nonce_field( 'eac_edit_bill' ); ?>
 </form>

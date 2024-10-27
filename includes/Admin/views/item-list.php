@@ -1,14 +1,15 @@
 <?php
 /**
- * List of Items
+ * Admin View: Item List
  *
  * @package EverAccounting
- * @version 1.0.0
+ * @since 1.0.0
  */
 
 defined( 'ABSPATH' ) || exit;
 
 global $list_table;
+
 ?>
 	<h1 class="wp-heading-inline">
 		<?php esc_html_e( 'Items', 'wp-ever-accounting' ); ?>

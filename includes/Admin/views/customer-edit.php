@@ -1,8 +1,6 @@
 <?php
 /**
- * Edit customer view.
- * Page: Sales
- * Tab: Customers
+ * Admin view: Customer edit
  *
  * @since 1.0.0
  * @package EverAccounting

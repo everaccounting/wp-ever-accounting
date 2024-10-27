@@ -1,3 +1,19 @@
+<?php
+/**
+ * Admin View: Invoice Items
+ *
+ * @since 2.0.0
+ * @package EverAccounting
+ *
+ * @var Invoice $invoice Invoice object.
+ * @var array   $columns Columns.
+ */
+
+use EverAccounting\Models\Invoice;
+
+defined( 'ABSPATH' ) || exit;
+?>
+
 <?php if ( $invoice->items ) : ?>
 	<?php foreach ( $invoice->items as $index => $item ) : ?>
 		<tr class="eac-document-items__item" data-id="<?php echo esc_attr( $item->id ); ?>" data-index="<?php echo esc_attr( $index ); ?>">

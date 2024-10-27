@@ -1,8 +1,6 @@
 <?php
 /**
- * Admin List of Taxes.
- * Page: Misc
- * Tab: Taxes
+ * Admin View: Taxes List
  *
  * @since 1.0.0
  * @package EverAccounting

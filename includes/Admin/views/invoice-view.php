@@ -1,6 +1,6 @@
 <?php
 /**
- * Edit invoice view.
+ * Admin View: Invoice View
  *
  * @since 1.0.0
  * @package EverAccounting
@@ -53,7 +53,6 @@ $invoice = EAC()->invoices->get( $id );
 			<div class="eac-card__body">
 				<?php if ( $invoice->is_status( 'draft' ) ) : ?>
 					<a href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin.php?page=eac-invoices&action=invoice_action&id=' . $invoice->id . '&invoice_action=mark_sent' ), 'eac_invoice_action' ) ); ?>" class="button button-small button-block">
-						<!--Mark sent-->
 						<span class="dashicons dashicons-yes"></span> <?php esc_html_e( 'Mark Sent', 'wp-ever-accounting' ); ?>
 					</a>
 				<?php elseif ( ! $invoice->is_status( 'draft' ) && ! $invoice->is_paid() ) : ?>

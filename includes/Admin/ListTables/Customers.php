@@ -217,6 +217,30 @@ class Customers extends ListTable {
 	}
 
 	/**
+	 * Renders the email column.
+	 *
+	 * @param Customer $item The current object.
+	 *
+	 * @since 1.0.0
+	 * @return string Displays the email.
+	 */
+	public function column_email( $item ) {
+		return $item->email ? esc_html( $item->email ) : '&mdash;';
+	}
+
+	/**
+	 * Renders the phone column.
+	 *
+	 * @param Customer $item The current object.
+	 *
+	 * @since 1.0.0
+	 * @return string Displays the phone.
+	 */
+	public function column_phone( $item ) {
+		return $item->phone ? esc_html( $item->phone ) : '&mdash;';
+	}
+
+	/**
 	 * Renders the country column.
 	 *
 	 * @param Customer $item The current object.
@@ -225,7 +249,19 @@ class Customers extends ListTable {
 	 * @return string Displays the country.
 	 */
 	public function column_country( $item ) {
-		return $item->country_name;
+		return $item->country ? esc_html( $item->country_name ) : '&mdash;';
+	}
+
+	/**
+	 * Renders the date column.
+	 *
+	 * @param Customer $item The current object.
+	 *
+	 * @since 1.0.0
+	 * @return string Displays the date.
+	 */
+	public function column_date_created( $item ) {
+		return wp_date( eac_date_format(), strtotime( $item->date_created ) );
 	}
 
 	/**

@@ -1,12 +1,10 @@
 <?php
 /**
- * Admin View: Customer details.
+ * Admin View: Customer view
  *
  * @since 1.0.0
- *
- * @subpackage EverAccounting/Admin/Views
  * @package EverAccounting
- * @var $customer \EverAccounting\Models\Customer Customer object.
+ * @var $customer Customer Customer object.
  */
 
 use EverAccounting\Models\Customer;

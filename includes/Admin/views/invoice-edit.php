@@ -1,6 +1,6 @@
 <?php
 /**
- * Edit invoice view.
+ * Admin View: Invoice Edit
  *
  * @since 1.0.0
  * @package EverAccounting
@@ -228,6 +228,18 @@ defined( 'ABSPATH' ) || exit;
 							<?php esc_html_e( 'View', 'wp-ever-accounting' ); ?>
 						</a>
 					<?php endif; ?>
+				</div>
+				<div class="eac-card__body">
+					<?php
+					/**
+					 * Fires to add custom actions.
+					 *
+					 * @param Invoice $invoice Invoice object.
+					 *
+					 * @since 2.0.0
+					 */
+					do_action( 'eac_invoice_edit_misc_actions', $invoice );
+					?>
 				</div>
 				<div class="eac-card__footer">
 					<?php if ( $invoice->exists() ) : ?>

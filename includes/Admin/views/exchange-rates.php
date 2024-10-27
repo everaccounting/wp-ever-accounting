@@ -1,9 +1,8 @@
 <?php
 /**
- * Admin view for exchange rates.
+ * Admin view: Exchange rates.
  *
  * @since 1.0.0
- *
  * @package EverAccounting\Admin
  * @var array $rates Exchange rates.
  */
@@ -26,14 +25,13 @@ defined( 'ABSPATH' ) || exit;
 	<tfoot>
 	<tr>
 		<td colspan="3">
-			<a href="#" class="button add" data-row="
-								<?php
-								ob_start();
-								$rate = '';
-								$code = '';
-								require __DIR__ . '/exchange-rate.php';
-								echo esc_attr( ob_get_clean() );
-								?>
+			<a href="#" class="button add" data-row="<?php
+			ob_start();
+			$rate = '';
+			$code = '';
+			require __DIR__ . '/exchange-rate.php';
+			echo esc_attr( ob_get_clean() );
+			?>
 			">
 				<?php esc_html_e( 'Add Exchange Rate', 'wp-ever-accounting' ); ?>
 			</a>

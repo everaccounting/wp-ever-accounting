@@ -116,7 +116,7 @@ class Bill extends Document {
 	 * @return HasMany
 	 */
 	public function notes() {
-		return $this->has_many( Note::class, 'document_id' )->set( 'type', 'bill' );
+		return $this->has_many( Note::class, 'parent_id' )->set( 'parent_type', 'bill' );
 	}
 
 	/*
@@ -255,7 +255,34 @@ class Bill extends Document {
 	}
 
 	/**
-	 * Calculate the totals amount of the bill.
+	 * Get total paid.
+	 *
+	 * @since 1.0.0
+	 * @return float
+	 */
+	public function get_paid_amount() {
+		$paid = 0;
+		foreach ( $this->payments as $payment ) {
+			$paid += eac_convert_currency( $payment->amount, $payment->exchange_rate, $this->exchange_rate );
+		}
+
+		return round( $paid, EAC()->currencies->get_precision( $this->currency ) );
+	}
+
+	/**
+	 * Get the due amount.
+	 *
+	 * @since 1.0.0
+	 * @return float
+	 */
+	public function get_due_amount() {
+		$due = max( 0, $this->total - $this->get_paid_amount() );
+		// we will ignore any decimal places so that dealing with multiple currencies is easier.
+		return round( $due, 0 );
+	}
+
+	/**
+	 * Calculate the totals amount of the invoice.
 	 *
 	 * @since 1.0.0
 	 * @return array
@@ -266,11 +293,23 @@ class Bill extends Document {
 		$this->tax      = $this->get_items_totals( 'tax', true );
 		$this->total    = $this->get_items_totals( 'total', true );
 
+		// set the status based on the total.
+		$paid_amount = $this->get_paid_amount();
+		$due_amount  = $this->get_due_amount();
+		if ( $paid_amount > 0 && $due_amount > 0 ) {
+			$this->status = 'partial';
+		} elseif ( $due_amount <= 0 ) {
+			$this->status = 'paid';
+		} elseif ( in_array( $this->status, array( 'paid', 'partial' ), true ) && $this->$paid_amount <= 0 && 'overdue' !== $this->status ) {
+			$this->status = 'sent';
+		}
+
 		return array(
 			'subtotal' => $this->subtotal,
 			'discount' => $this->discount,
 			'tax'      => $this->tax,
 			'total'    => $this->total,
+			'balance'  => $due_amount,
 		);
 	}
 
@@ -324,6 +363,58 @@ class Bill extends Document {
 	 */
 	public function is_taxed() {
 		return 'yes' === get_option( 'eac_tax_enabled', 'no' ) || ( $this->exists() && $this->tax > 0 );
+	}
+
+	/**
+	 * Checks if the invoice has a given status.
+	 *
+	 * @param string $status Status to check.
+	 *
+	 * @since 1.1.0
+	 * @return bool
+	 */
+	public function is_status( $status ) {
+		return $this->status === $status;
+	}
+
+
+	/**
+	 * Returns if an order has been paid for based on the order status.
+	 *
+	 * @since 1.10
+	 * @return bool
+	 */
+	public function is_paid() {
+		return $this->is_status( 'paid' );
+	}
+
+	/**
+	 * Checks if the invoice is draft.
+	 *
+	 * @since 1.1.0
+	 * @return bool
+	 */
+	public function is_draft() {
+		return $this->is_status( 'draft' );
+	}
+
+	/**
+	 * Checks if the invoice is due.
+	 *
+	 * @since 1.1.0
+	 * @return bool
+	 */
+	public function is_overdue() {
+		return ! ( empty( $this->due_date ) || $this->is_paid() ) && strtotime( date_i18n( 'Y-m-d 23:59:00' ) ) > strtotime( date_i18n( 'Y-m-d 23:59:00', strtotime( $this->due_date ) ) );
+	}
+
+	/**
+	 * Checks if an order needs payment, based on status and order total.
+	 *
+	 * @return bool
+	 */
+	public function needs_payment() {
+		return ! $this->is_status( 'paid' ) && $this->total > 0;
 	}
 
 	/**

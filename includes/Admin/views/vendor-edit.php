@@ -15,22 +15,19 @@ $id     = filter_input( INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT );
 $vendor = Vendor::make( $id );
 ?>
 
-<div class="eac-section-header">
-	<h1 class="wp-heading-inline">
-		<?php if ( $vendor->exists() ) : ?>
-			<?php esc_html_e( 'Edit Vendor', 'wp-ever-accounting' ); ?>
-		<?php else : ?>
-			<?php esc_html_e( 'Add Vendor', 'wp-ever-accounting' ); ?>
-		<?php endif; ?>
-		<a href="<?php echo esc_attr( remove_query_arg( array( 'action', 'id' ) ) ); ?>" title="<?php esc_attr_e( 'Go back', 'wp-ever-accounting' ); ?>">
-			<span class="dashicons dashicons-undo"></span>
-		</a>
-	</h1>
-
+<h1 class="wp-heading-inline">
 	<?php if ( $vendor->exists() ) : ?>
-		<a href="<?php echo esc_url( $vendor->get_view_url() ); ?>" class="page-title-action"><?php esc_html_e( 'View Vendor', 'wp-ever-accounting' ); ?></a>
+		<?php esc_html_e( 'Edit Vendor', 'wp-ever-accounting' ); ?>
+		<a href="<?php echo esc_attr( admin_url( 'admin.php?page=eac-purchases&tab=vendors&action=add' ) ); ?>" class="button button-small">
+			<?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?>
+		</a>
+	<?php else : ?>
+		<?php esc_html_e( 'Add Vendor', 'wp-ever-accounting' ); ?>
 	<?php endif; ?>
-</div>
+	<a href="<?php echo esc_attr( remove_query_arg( array( 'action', 'id' ) ) ); ?>" title="<?php esc_attr_e( 'Go back', 'wp-ever-accounting' ); ?>">
+		<span class="dashicons dashicons-undo"></span>
+	</a>
+</h1>
 
 <form id="eac-vendor-form" name="vendor" method="post" action="<?php echo esc_html( admin_url( 'admin-post.php' ) ); ?>">
 	<div class="eac-poststuff">
@@ -191,6 +188,11 @@ $vendor = Vendor::make( $id );
 			<div class="eac-card">
 				<div class="eac-card__header">
 					<h2 class="eac-card__title"><?php esc_html_e( 'Actions', 'wp-ever-accounting' ); ?></h2>
+					<?php if ( $vendor->exists() ) : ?>
+						<a href="<?php echo esc_url( $vendor->get_view_url() ); ?>">
+							<?php esc_html_e( 'View', 'wp-ever-accounting' ); ?>
+						</a>
+					<?php endif; ?>
 				</div>
 				<?php if ( has_action( 'eac_vendor_misc_actions' ) ) : ?>
 					<div class="eac-card__body">

@@ -107,130 +107,12 @@ class Expenses extends ListTable {
 	}
 
 	/**
-	 * handle bulk paid action.
-	 *
-	 * @param array $ids List of item IDs.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	protected function bulk_set_completed( $ids ) {
-		$performed = 0;
-		foreach ( $ids as $id ) {
-			$expense = EAC()->expenses->get( $id );
-			if ( ! is_wp_error( $expense->set( 'status', 'completed' )->save() ) ) {
-				++$performed;
-			}
-		}
-		if ( ! empty( $performed ) ) {
-			// translators: %s: number of items deleted.
-			EAC()->flash->success( sprintf( __( '%s expense(s) status updated to completed successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
-		}
-	}
-
-	/**
-	 * handle bulk pending action.
-	 *
-	 * @param array $ids List of item IDs.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	protected function bulk_set_pending( $ids ) {
-		$performed = 0;
-		foreach ( $ids as $id ) {
-			$expense = EAC()->expenses->get( $id );
-			if ( ! is_wp_error( $expense->set( 'status', 'pending' )->save() ) ) {
-				++$performed;
-			}
-		}
-		if ( ! empty( $performed ) ) {
-			// translators: %s: number of items deleted.
-			EAC()->flash->success( sprintf( __( '%s expense(s) status updated to pending successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
-		}
-	}
-
-	/**
-	 * handle bulk refunded action.
-	 *
-	 * @param array $ids List of item IDs.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	protected function bulk_set_refunded( $ids ) {
-		$performed = 0;
-		foreach ( $ids as $id ) {
-			$expense = EAC()->expenses->get( $id );
-			if ( ! is_wp_error( $expense->set( 'status', 'refunded' )->save() ) ) {
-				++$performed;
-			}
-		}
-		if ( ! empty( $performed ) ) {
-			// translators: %s: number of items deleted.
-			EAC()->flash->success( sprintf( __( '%s expense(s) status updated to refunded successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
-		}
-	}
-
-	/**
-	 * handle bulk cancelled action.
-	 *
-	 * @param array $ids List of item IDs.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	protected function bulk_set_cancelled( $ids ) {
-		$performed = 0;
-		foreach ( $ids as $id ) {
-			$expense = EAC()->expenses->get( $id );
-			if ( ! is_wp_error( $expense->set( 'status', 'cancelled' )->save() ) ) {
-				++$performed;
-			}
-		}
-		if ( ! empty( $performed ) ) {
-			// translators: %s: number of items deleted.
-			EAC()->flash->success( sprintf( __( '%s expense(s) status updated to cancelled successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
-		}
-	}
-
-	/**
 	 * Outputs 'no results' message.
 	 *
 	 * @since 1.0.0
 	 */
 	public function no_items() {
 		esc_html_e( 'No expenses found.', 'wp-ever-accounting' );
-	}
-
-	/**
-	 * Returns an associative array listing all the views that can be used
-	 * with this table.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return string[] An array of HTML links keyed by their view.
-	 */
-	protected function get_views() {
-		$current      = $this->get_request_status( 'all' );
-		$status_links = array();
-		$statuses     = EAC()->expenses->get_statuses();
-		$statuses     = array_merge( array( 'all' => __( 'All', 'wp-ever-accounting' ) ), $statuses );
-
-		foreach ( $statuses as $status => $label ) {
-			$link  = 'all' === $status ? $this->base_url : add_query_arg( 'status', $status, $this->base_url );
-			$args  = 'all' === $status ? array() : array( 'status' => $status );
-			$count = Expense::count( $args );
-			$label = sprintf( '%s <span class="count">(%s)</span>', esc_html( $label ), number_format_i18n( $count ) );
-
-			$status_links[ $status ] = array(
-				'url'     => $link,
-				'label'   => $label,
-				'current' => $current === $status,
-			);
-		}
-
-		return $this->get_views_links( $status_links );
 	}
 
 	/**
@@ -242,11 +124,7 @@ class Expenses extends ListTable {
 	 */
 	protected function get_bulk_actions() {
 		$actions = array(
-			'set_completed' => __( 'Set Completed', 'wp-ever-accounting' ),
-			'set_pending'   => __( 'Set Pending', 'wp-ever-accounting' ),
-			'set_refunded'  => __( 'Set Refunded', 'wp-ever-accounting' ),
-			'set_cancelled' => __( 'Set Cancelled', 'wp-ever-accounting' ),
-			'delete'        => __( 'Delete', 'wp-ever-accounting' ),
+			'delete' => __( 'Delete', 'wp-ever-accounting' ),
 		);
 
 		return $actions;
@@ -291,7 +169,7 @@ class Expenses extends ListTable {
 			'account_id'   => __( 'Account', 'wp-ever-accounting' ),
 			'customer_id'  => __( 'Customer', 'wp-ever-accounting' ),
 			'bill_id'      => __( 'Bill', 'wp-ever-accounting' ),
-			'status'       => __( 'Status', 'wp-ever-accounting' ),
+			'reference'    => __( 'Reference', 'wp-ever-accounting' ),
 			'amount'       => __( 'Amount', 'wp-ever-accounting' ),
 		);
 	}
@@ -310,7 +188,7 @@ class Expenses extends ListTable {
 			'account_id'   => array( 'account_id', false ),
 			'bill_id'      => array( 'bill_id', false ),
 			'customer_id'  => array( 'customer_id', false ),
-			'status'       => array( 'status', false ),
+			'reference'    => array( 'reference', false ),
 			'amount'       => array( 'amount', false ),
 		);
 	}
@@ -361,18 +239,8 @@ class Expenses extends ListTable {
 	 * @since  1.0.0
 	 * @return string Displays the name.
 	 */
-	public function column_date( $item ) {
-		return sprintf(
-			'<a href="%s">%s</a>',
-			esc_url(
-				add_query_arg(
-					array(
-						'date' => $item->payment_date,
-					)
-				)
-			),
-			wp_kses_post( $item->payment_date )
-		);
+	public function column_payment_date( $item ) {
+		return $item->payment_date ? wp_date( eac_date_format(), strtotime( $item->payment_date ) ) : '&mdash;';
 	}
 
 	/**
@@ -385,7 +253,7 @@ class Expenses extends ListTable {
 	 */
 	public function column_account_id( $item ) {
 		$account  = $item->account ? sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( 'account_id', $item->account->id, $this->base_url ) ), wp_kses_post( $item->account->name ) ) : '&mdash;';
-		$metadata = $item->account && $item->account->type ? ucfirst( $item->account->type ) : '&mdash;';
+		$metadata = $item->account && $item->account->number ? ucfirst( $item->account->number ) : '';
 
 		return sprintf( '%s%s', $account, $this->column_metadata( $metadata ) );
 	}
@@ -399,8 +267,11 @@ class Expenses extends ListTable {
 	 * @return string Displays the category.
 	 */
 	public function column_bill_id( $item ) {
-		$bill     = $item->bill ? sprintf( '<a href="%s">%s</a>', esc_url( $item->bill->get_view_url() ), wp_kses_post( $item->bill->number ) ) : '&mdash;';
+		$bill     = '&mdash;';
 		$metadata = '';
+		if ( $item->bill ) {
+			$metadata = sprintf( '<a href="%s">%s</a>', esc_url( $item->bill->get_view_url() ), wp_kses_post( $item->bill->number ) );
+		}
 
 		return sprintf( '%s%s', $bill, $this->column_metadata( $metadata ) );
 	}
@@ -418,22 +289,6 @@ class Expenses extends ListTable {
 		$metadata = $item->customer && $item->customer->company ? $item->customer->company : '';
 
 		return sprintf( '%s%s', $customer, $this->column_metadata( $metadata ) );
-	}
-
-	/**
-	 * Renders the status column.
-	 *
-	 * @param Expense $item The current object.
-	 *
-	 * @since 1.0.0
-	 * @return string Displays the status.
-	 */
-	public function column_status( $item ) {
-		$statuses = EAC()->expenses->get_statuses();
-		$status   = isset( $item->status ) ? $item->status : '';
-		$label    = isset( $statuses[ $status ] ) ? $statuses[ $status ] : '';
-
-		return sprintf( '<span class="eac-status is--%1$s">%2$s</span>', esc_attr( $status ), esc_html( $label ) );
 	}
 
 	/**

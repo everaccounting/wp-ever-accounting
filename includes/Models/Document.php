@@ -55,7 +55,6 @@ use ByteKit\Models\Relations\HasMany;
  * @property double         $discount Discount total of the document.
  * @property double         $tax Tax total of the document.
  * @property double         $total Total of the document.
- * @property double         $balance Balance of the document.
  * @property float          $discount_value Discount amount of the document.
  * @property string         $discount_type Discount type of the document.
  * @property int            $contact_id Contact ID of the document.
@@ -92,7 +91,6 @@ use ByteKit\Models\Relations\HasMany;
  * @property double         $formatted_discount Formatted discount total.
  * @property double         $formatted_tax Formatted tax total.
  * @property double         $formatted_total Formatted total.
- * @property double         $formatted_balance Formatted balance.
  * @property array          formatted_itemized_taxes Formatted itemized taxes.
  * @property DocumentTax[]  $taxes Taxes of the document.
  * @property DocumentItem[] $items Lines of the document.
@@ -137,7 +135,6 @@ class Document extends Model {
 		'discount',
 		'tax',
 		'total',
-		'balance',
 		'currency',
 		'exchange_rate',
 		'contact_name',

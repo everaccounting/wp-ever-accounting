@@ -1,6 +1,6 @@
 <?php
 /**
- * Edit item view.
+ * Admin View: Item Edit
  *
  * @package EverAccounting
  * @var string $action Current action.
@@ -14,21 +14,19 @@ $id   = filter_input( INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT );
 $item = Item::make( $id );
 ?>
 
-<div class="eac-section-header">
-	<h1 class="wp-heading-inline">
-		<?php if ( $item->exists() ) : ?>
-			<?php esc_html_e( 'Edit Item', 'wp-ever-accounting' ); ?>
-			<a href="<?php echo esc_attr( admin_url( 'admin.php?page=eac-items&action=add' ) ); ?>" class="button button-small">
-				<?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?>
-			</a>
-		<?php else : ?>
-			<?php esc_html_e( 'Add Item', 'wp-ever-accounting' ); ?>
-		<?php endif; ?>
-		<a href="<?php echo esc_attr( remove_query_arg( array( 'action', 'id' ) ) ); ?>" title="<?php esc_attr_e( 'Go back', 'wp-ever-accounting' ); ?>">
-			<span class="dashicons dashicons-undo"></span>
+<h1 class="wp-heading-inline">
+	<?php if ( $item->exists() ) : ?>
+		<?php esc_html_e( 'Edit Item', 'wp-ever-accounting' ); ?>
+		<a href="<?php echo esc_attr( admin_url( 'admin.php?page=eac-items&action=add' ) ); ?>" class="button button-small">
+			<?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?>
 		</a>
-	</h1>
-</div>
+	<?php else : ?>
+		<?php esc_html_e( 'Add Item', 'wp-ever-accounting' ); ?>
+	<?php endif; ?>
+	<a href="<?php echo esc_attr( remove_query_arg( array( 'action', 'id' ) ) ); ?>" title="<?php esc_attr_e( 'Go back', 'wp-ever-accounting' ); ?>">
+		<span class="dashicons dashicons-undo"></span>
+	</a>
+</h1>
 
 <form id="eac-edit-item" name="item" method="post" action="<?php echo esc_html( admin_url( 'admin-post.php' ) ); ?>">
 	<div class="eac-poststuff">

@@ -1,8 +1,6 @@
 <?php
 /**
- * Admin List of Vendors.
- * Page: Sales
- * Tab: Vendors
+ * Admin View: Vendor List
  *
  * @since 1.0.0
  * @package EverAccounting

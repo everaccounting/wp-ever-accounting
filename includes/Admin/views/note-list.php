@@ -4,8 +4,6 @@
  *
  * @since 2.0.0
  * @package EverAccounting
- * @subpackage Admin/Views
- *
  * @var Note[] $notes Notes.
  */
 

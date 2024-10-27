@@ -1,8 +1,6 @@
 <?php
 /**
- * Admin List of Customers.
- * Page: Sales
- * Tab: Customers
+ * Admin view: Customer list
  *
  * @since 1.0.0
  * @package EverAccounting

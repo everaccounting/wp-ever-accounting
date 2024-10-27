@@ -1,3 +1,19 @@
+<?php
+/**
+ * Admin View: Invoice Totals
+ *
+ * @since 2.0.0
+ * @package EverAccounting
+ *
+ * @var Invoice $invoice Invoice object.
+ * @var array   $columns Columns.
+ */
+
+use EverAccounting\Models\Invoice;
+
+defined( 'ABSPATH' ) || exit;
+?>
+
 <tr>
 	<td class="col-label" colspan="<?php echo count( $columns ) - 1; ?>"><?php esc_html_e( 'Discount', 'wp-ever-accounting' ); ?></td>
 	<td class="col-amount">

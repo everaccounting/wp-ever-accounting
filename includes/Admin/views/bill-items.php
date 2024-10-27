@@ -1,3 +1,19 @@
+<?php
+/**
+ * Admin View: Bill Items
+ *
+ * @since 2.0.0
+ * @package EverAccounting
+ *
+ * @var Bill  $bill Bill object.
+ * @var array $columns Columns.
+ */
+
+use EverAccounting\Models\Bill;
+
+defined( 'ABSPATH' ) || exit;
+?>
+
 <?php if ( $bill->items ) : ?>
 	<?php foreach ( $bill->items as $index => $item ) : ?>
 		<tr class="eac-document-items__item" data-id="<?php echo esc_attr( $item->id ); ?>" data-index="<?php echo esc_attr( $index ); ?>">

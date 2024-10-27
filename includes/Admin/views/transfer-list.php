@@ -1,8 +1,6 @@
 <?php
 /**
- * Admin List of Transfers.
- * Page: Banking
- * Tab: Transfers
+ * Admin View: Transfer List
  *
  * @since 1.0.0
  * @package EverAccounting

@@ -1,10 +1,9 @@
 <?php
 /**
- * Admin Add Category View.
- * Tab: Categories
+ * Admin View: Category Edit
  *
- * @package EverAccounting
  * @since 1.0.0
+ * @package EverAccounting
  * @var $category Category Category object.
  */
 

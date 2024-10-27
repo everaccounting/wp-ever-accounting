@@ -1,12 +1,8 @@
 <?php
 /**
- * Payment Edit view.
- *
- * This page handles the views of the payment edit page.
+ * Admin View: Payment Edit
  *
  * @since 1.0.0
- *
- * @subpackage EverAccounting/Admin/Views
  * @package EverAccounting
  * @var Payment $payment Payment object.
  */

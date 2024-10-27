@@ -1,11 +1,9 @@
 <?php
 /**
- * Admin Edit Tax View.
- * Page: Misc
- * Tab: Taxes
+ * Admin View: Tax Edit
  *
- * @package EverAccounting
  * @since 1.0.0
+ * @package EverAccounting
  * @var $tax Tax Tax object.
  */
 

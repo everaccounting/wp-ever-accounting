@@ -1,18 +1,15 @@
 <?php
 /**
- * Invoice address template
+ * Admin View: Invoice Address
  *
+ * @since  1.0.0
  * @package EverAccounting
- * @version 1.0.0
- *
  * @var Invoice $invoice Invoice object
  */
 
 use EverAccounting\Models\Invoice;
 
 defined( 'ABSPATH' ) || exit;
-?>
-<?php
 echo eac_get_formatted_address( array(
 	'name'       => $invoice->contact_name,
 	'company'    => $invoice->contact_company,
@@ -26,13 +23,13 @@ echo eac_get_formatted_address( array(
 	'tax_number' => $invoice->contact_tax_number,
 ) );
 
-printf('<input type="hidden" name="contact_name" value="%s">', esc_attr( $invoice->contact_name ) );
-printf('<input type="hidden" name="contact_company" value="%s">', esc_attr( $invoice->contact_company ) );
-printf('<input type="hidden" name="contact_address" value="%s">', esc_attr( $invoice->contact_address ) );
-printf('<input type="hidden" name="contact_city" value="%s">', esc_attr( $invoice->contact_city ) );
-printf('<input type="hidden" name="contact_state" value="%s">', esc_attr( $invoice->contact_state ) );
-printf('<input type="hidden" name="contact_postcode" value="%s">', esc_attr( $invoice->contact_postcode ) );
-printf('<input type="hidden" name="contact_country" value="%s">', esc_attr( $invoice->contact_country ) );
-printf('<input type="hidden" name="contact_phone" value="%s">', esc_attr( $invoice->contact_phone ) );
-printf('<input type="hidden" name="contact_email" value="%s">', esc_attr( $invoice->contact_email ) );
-printf('<input type="hidden" name="contact_tax_number" value="%s">', esc_attr( $invoice->contact_tax_number ) );
+printf( '<input type="hidden" name="contact_name" value="%s">', esc_attr( $invoice->contact_name ) );
+printf( '<input type="hidden" name="contact_company" value="%s">', esc_attr( $invoice->contact_company ) );
+printf( '<input type="hidden" name="contact_address" value="%s">', esc_attr( $invoice->contact_address ) );
+printf( '<input type="hidden" name="contact_city" value="%s">', esc_attr( $invoice->contact_city ) );
+printf( '<input type="hidden" name="contact_state" value="%s">', esc_attr( $invoice->contact_state ) );
+printf( '<input type="hidden" name="contact_postcode" value="%s">', esc_attr( $invoice->contact_postcode ) );
+printf( '<input type="hidden" name="contact_country" value="%s">', esc_attr( $invoice->contact_country ) );
+printf( '<input type="hidden" name="contact_phone" value="%s">', esc_attr( $invoice->contact_phone ) );
+printf( '<input type="hidden" name="contact_email" value="%s">', esc_attr( $invoice->contact_email ) );
+printf( '<input type="hidden" name="contact_tax_number" value="%s">', esc_attr( $invoice->contact_tax_number ) );

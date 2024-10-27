@@ -180,7 +180,7 @@ class Customers {
 
 		$paid = $wpdb->get_var(
 			$wpdb->prepare(
-				"SELECT SUM(amount/exchange_rate) as total FROM {$wpdb->prefix}ea_transactions WHERE contact_id = %d AND contact_id != '' AND status='completed'",
+				"SELECT SUM(amount/exchange_rate) as total FROM {$wpdb->prefix}ea_transactions WHERE contact_id = %d AND contact_id != ''",
 				$customer->id
 			)
 		);

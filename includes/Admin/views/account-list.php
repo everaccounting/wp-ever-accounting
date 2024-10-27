@@ -1,13 +1,13 @@
 <?php
 /**
- * Admin List of Accounts.
- * Page: Banking
- * Tab: Accounts
+ * Admin View: Account List
  *
  * @since 1.0.0
  * @package EverAccounting
- * @var $account \EverAccounting\Models\Account Account object.
+ * @var $account Account Account object.
  */
+
+use EverAccounting\Models\Account;
 
 defined( 'ABSPATH' ) || exit;
 

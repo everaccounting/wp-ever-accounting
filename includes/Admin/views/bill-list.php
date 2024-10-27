@@ -1,8 +1,6 @@
 <?php
 /**
- * Admin List of Bills.
- * Page: Purchase
- * Tab: Bills
+ * Admin view: Bill list
  *
  * @since 1.0.0
  * @package EverAccounting

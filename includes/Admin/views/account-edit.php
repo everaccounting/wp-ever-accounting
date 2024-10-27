@@ -1,9 +1,10 @@
 <?php
 /**
- * Edit account view.
+ * Admin View: Account Edit
  *
+ * @since 1.0.0
  * @package EverAccounting
- * @var $item \EverAccounting\Models\Account
+ * @var $item Account
  */
 
 use EverAccounting\Models\Account;
@@ -106,7 +107,19 @@ $account = Account::make( $id );
 		<div class="column-2">
 			<div class="eac-card">
 				<div class="eac-card__header">
-					<h3 class="eac-card__title"><?php esc_html_e( 'Save', 'wp-ever-accounting' ); ?></h3>
+					<h3 class="eac-card__title"><?php esc_html_e( 'Actions', 'wp-ever-accounting' ); ?></h3>
+				</div>
+				<div class="eac-card__body">
+					<?php
+					/**
+					 * Fires to add custom actions.
+					 *
+					 * @param Account $account Account object.
+					 *
+					 * @since 2.0.0
+					 */
+					do_action( 'eac_account_edit_misc_actions', $account );
+					?>
 				</div>
 				<div class="eac-card__footer">
 					<?php if ( $account->exists() ) : ?>

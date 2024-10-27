@@ -1,12 +1,10 @@
 <?php
 /**
- * Admin View: Account details.
+ * Admin View: Account View
  *
  * @since 1.0.0
- *
- * @subpackage EverAccounting/Admin/Views
  * @package EverAccounting
- * @var $account \EverAccounting\Models\Account Account object.
+ * @var $account Account Account object.
  */
 
 use EverAccounting\Models\Account;
@@ -74,9 +72,7 @@ $current_section = ! array_key_exists( $section, $sections ) ? current( array_ke
 			</p>
 		</div>
 	</div>
-	<div class="eac-profile-header__id">
-		#<?php echo esc_html( $account->id ); ?>
-	</div>
+	<a class="eac-profile-header__edit" href="<?php echo esc_url( $account->get_edit_url() ); ?>"><span class="dashicons dashicons-edit"></span></a>
 </div>
 
 <div class="eac-profile-sections">
@@ -93,9 +89,6 @@ $current_section = ! array_key_exists( $section, $sections ) ? current( array_ke
 		<?php endforeach; ?>
 	</ul>
 	<div class="eac-profile-sections__content">
-		<?php if ( isset( $sections[ $current_section ] ) && ! empty( $sections[ $current_section ]['label'] ) ) : ?>
-			<h2 class="screen-reader-text"><?php echo esc_html( $sections[ $current_section ]['label'] ); ?></h2>
-		<?php endif; ?>
 		<?php
 		/**
 		 * Fires action to display account view section.

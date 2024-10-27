@@ -1,6 +1,6 @@
 <?php
 /**
- * List of Invoices
+ * Admin View: Invoice List
  *
  * @package EverAccounting
  * @version 1.0.0

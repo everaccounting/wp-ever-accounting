@@ -3,6 +3,7 @@
 namespace EverAccounting\Models;
 
 use ByteKit\Models\Relations\BelongsTo;
+use ByteKit\Models\Relations\BelongsToMany;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -15,6 +16,7 @@ defined( 'ABSPATH' ) || exit;
  * @subpackage Models
  *
  * @property int    $vendor_id ID of the vendor.
+ * @property int    $bill_id ID of the bill.
  *
  * @property-read string $payment_method_label Formatted mode.
  * @property-read Bill   $bill Related bill.
@@ -93,6 +95,16 @@ class Expense extends Transaction {
 		return $this->belongs_to( Bill::class, 'document_id' );
 	}
 
+	/**
+	 * Notes relationship.
+	 *
+	 * @since 1.0.0
+	 * @return BelongsToMany
+	 */
+	public function notes() {
+		return $this->belongs_to_many( Note::class, 'parent_id' )->set( 'parent_type', 'expense' );
+	}
+
 	/*
 	|--------------------------------------------------------------------------
 	| CRUD Methods
@@ -111,9 +123,6 @@ class Expense extends Transaction {
 		if ( empty( $this->payment_date ) ) {
 			return new \WP_Error( 'missing_required', __( 'Expense date is required.', 'wp-ever-accounting' ) );
 		}
-		if ( empty( $this->status ) ) {
-			return new \WP_Error( 'missing_required', __( 'Expense status is required.', 'wp-ever-accounting' ) );
-		}
 		if ( empty( $this->account_id ) ) {
 			return new \WP_Error( 'missing_required', __( 'Account is required.', 'wp-ever-accounting' ) );
 		}
@@ -129,8 +138,6 @@ class Expense extends Transaction {
 
 		return parent::save();
 	}
-
-
 
 	/*
 	|--------------------------------------------------------------------------

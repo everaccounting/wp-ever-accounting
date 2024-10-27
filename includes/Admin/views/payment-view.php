@@ -63,10 +63,7 @@ $payment = EAC()->payments->get( $id );
 				 */
 				do_action( 'eac_payment_view_misc_actions', $payment );
 				?>
-				<a href="#" class="button button-small button-block eac-payment-email">
-					<span class="dashicons dashicons-email"></span> <?php esc_html_e( 'Email', 'wp-ever-accounting' ); ?>
-				</a>
-				<a href="#" class="button button-small button-block eac-print-this" data-target="#eac-payment>table">
+				<a href="#" class="button button-small button-block eac_print_document" data-target=".eac-document">
 					<span class="dashicons dashicons-printer"></span> <?php esc_html_e( 'Print', 'wp-ever-accounting' ); ?>
 				</a>
 				<a href="#" class="button button-small button-block">
@@ -94,45 +91,4 @@ $payment = EAC()->payments->get( $id );
 	</div><!-- .column-2 -->
 
 </div><!-- .eac-poststuff -->
-
-<script type="text/html" id="tmpl-eac-payment-email">
-	<form>
-		<div class="eac-modal-header">
-			<h2><?php esc_html_e( 'Email Payment', 'wp-ever-accounting' ); ?></h2>
-		</div>
-		<div class="eac-modal-body">
-			<div class="eac-form-field">
-				<label for="email"><?php esc_html_e( 'Email', 'wp-ever-accounting' ); ?></label>
-				<input type="email" name="email" id="email" required value="<?php echo esc_attr( $payment->customer ? $payment->customer->email : '' ); ?>">
-			</div>
-			<div class="eac-form-field">
-				<label for="subject"><?php esc_html_e( 'Subject', 'wp-ever-accounting' ); ?></label>
-				<input type="text" name="subject" id="subject" required>
-			</div>
-			<div class="eac-form-field">
-				<label for="message"><?php esc_html_e( 'Message', 'wp-ever-accounting' ); ?></label>
-				<?php
-				wp_editor(
-					get_option( 'new_payment_email_content' ),
-					'message',
-					array(
-						'textarea_name' => 'message',
-						'editor_height' => 200,
-					)
-				);
-				?>
-			</div>
-		</div>
-
-		<div class="eac-modal-footer">
-			<button class="button button-primary"><?php esc_html_e( 'Send', 'wp-ever-accounting' ); ?></button>
-			<button class="button" data-modal-close><?php esc_html_e( 'Cancel', 'wp-ever-accounting' ); ?></button>
-		</div>
-	</form>
-</script>
-
-<script type="text/html" id="tmpl-eac-share-document">
-	<div class="eac-modal-header">
-		<h2><?php esc_html_e( 'Share Payment', 'wp-ever-accounting' ); ?></h2>
-	</div>
 

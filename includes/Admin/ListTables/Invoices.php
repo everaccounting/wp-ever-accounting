@@ -101,6 +101,33 @@ class Invoices extends ListTable {
 	}
 
 	/**
+	 * handle bulk cancel action.
+	 *
+	 * @param array $ids List of item IDs.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	protected function bulk_cancel( $ids ) {
+		$performed = 0;
+		foreach ( $ids as $id ) {
+			$payments = EAC()->payments->query( array( 'document_id' => $id ) );
+			foreach ( $payments as $payment ) {
+				$payment->delete();
+			}
+			$invoice = EAC()->invoices->get( $id );
+			$invoice->status = 'canceled';
+			if ( $invoice->save() ) {
+				++ $performed;
+			}
+		}
+		if ( ! empty( $performed ) ) {
+			// translators: %s: number of items canceled.
+			EAC()->flash->success( sprintf( __( '%s invoice(s) canceled successfully.', 'wp-ever-accounting' ), number_format_i18n( $performed ) ) );
+		}
+	}
+
+	/**
 	 * Outputs 'no items' message.
 	 *
 	 * @since 1.0.0
@@ -150,8 +177,6 @@ class Invoices extends ListTable {
 	protected function get_bulk_actions() {
 		$actions = array(
 			'cancel'  => __( 'Cancel', 'wp-ever-accounting' ),
-			'paid'    => __( 'Paid', 'wp-ever-accounting' ),
-			'pending' => __( 'Pending', 'wp-ever-accounting' ),
 			'delete'  => __( 'Delete', 'wp-ever-accounting' ),
 		);
 

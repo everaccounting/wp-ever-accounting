@@ -4,7 +4,6 @@
  *
  * @since 2.0.0
  * @package EverAccounting
- * @subpackage EverAccounting/Admin/Views
  */
 
 defined( 'ABSPATH' ) || exit;

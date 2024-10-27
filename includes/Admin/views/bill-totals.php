@@ -1,3 +1,19 @@
+<?php
+/**
+ * Admin View: Bill Totals
+ *
+ * @since 2.0.0
+ * @package EverAccounting
+ *
+ * @var Bill  $bill Bill object.
+ * @var array $columns Columns.
+ */
+
+use EverAccounting\Models\Bill;
+
+defined( 'ABSPATH' ) || exit;
+?>
+
 <tr>
 	<td class="col-label" colspan="<?php echo count( $columns ) - 1; ?>"><?php esc_html_e( 'Discount', 'wp-ever-accounting' ); ?></td>
 	<td class="col-amount">
