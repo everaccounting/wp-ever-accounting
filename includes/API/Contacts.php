@@ -161,7 +161,7 @@ class Contacts extends Controller {
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
-				'date_Created' => array(
+				'date_created' => array(
 					'description' => __( "The date the category was created, in the site's timezone.", 'wp-ever-accounting' ),
 					'type'        => 'date-time',
 					'context'     => array( 'view', 'edit' ),

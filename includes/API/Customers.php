@@ -359,7 +359,7 @@ class Customers extends Contacts {
 
 		foreach ( array_keys( $this->get_schema_properties() ) as $key ) {
 			switch ( $key ) {
-				case 'date_Created':
+				case 'date_created':
 				case 'date_updated':
 					$value = $this->prepare_date_response( $item->$key );
 					break;
