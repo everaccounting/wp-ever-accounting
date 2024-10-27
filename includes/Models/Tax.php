@@ -98,7 +98,7 @@ class Tax extends Model {
 	 * @since 1.1.6
 	 * @return string
 	 */
-	public function get_formatted_name_attr() {
+	protected function get_formatted_name_attr() {
 		return sprintf( '%1$s (%2$s%%)', $this->name, $this->rate );
 	}
 
