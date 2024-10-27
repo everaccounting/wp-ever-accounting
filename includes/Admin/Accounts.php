@@ -172,42 +172,41 @@ class Accounts {
 				$end_date
 			)
 		);
-		$months       = array_fill_keys( ReportsUtil::get_months_in_range( $start_date, $end_date, 'M, y' ), 0 );
-		$data         = array(
-			'payment' => $months,
-			'expense' => $months,
-		);
-		foreach ( $transactions as $transaction ) {
-			$data[ $transaction->type ][ wp_date( 'M, y', strtotime( $transaction->year . '-' . $transaction->month . '-01' ) ) ] += $transaction->amount;
-		}
-		$stats[]  = array(
+		$stats[]      = array(
 			'label' => __( 'Incoming', 'wp-ever-accounting' ),
-			'value' => eac_format_amount( array_sum( $data['payment'] ), $account->currency ),
+			'value' => eac_format_amount( array_sum( wp_list_pluck( wp_list_filter( $transactions, array( 'type' => 'payment' ) ), 'amount' ) ), $account->currency ),
 		);
-		$stats[]  = array(
+		$stats[]      = array(
 			'label' => __( 'Outgoing', 'wp-ever-accounting' ),
-			'value' => eac_format_amount( array_sum( $data['expense'] ), $account->currency ),
+			'value' => eac_format_amount( array_sum( wp_list_pluck( wp_list_filter( $transactions, array( 'type' => 'expense' ) ), 'amount' ) ), $account->currency ),
 		);
-		$stats[]  = array(
+		$stats[]      = array(
 			'label' => __( 'Balance', 'wp-ever-accounting' ),
 			'value' => $account->formatted_balance,
 		);
-		$stats    = apply_filters( 'eac_account_overview_stats', $stats );
-		$datasets = array(
-			array(
-				'label'           => __( 'Incoming', 'wp-ever-accounting' ),
-				'backgroundColor' => '#4CAF50',
-				'data'            => array_values( $data['payment'] ),
-			),
-			array(
-				'label'           => __( 'Outgoing', 'wp-ever-accounting' ),
-				'backgroundColor' => '#F44336',
-				'data'            => array_values( $data['expense'] ),
+		$stats        = apply_filters( 'eac_account_overview_stats', $stats );
+
+		$payments = ReportsUtil::annualize_data( wp_list_filter( $transactions, array( 'type' => 'payment' ) ) );
+		$expenses = ReportsUtil::annualize_data( wp_list_filter( $transactions, array( 'type' => 'expense' ) ) );
+		$chart    = array(
+			'type'     => 'line',
+			'labels'   => array_keys( $payments ),
+			'datasets' => array(
+				array(
+					'label'           => __( 'Incoming', 'wp-ever-accounting' ),
+					'backgroundColor' => '#4CAF50',
+					'data'            => array_values( $payments ),
+				),
+				array(
+					'label'           => __( 'Outgoing', 'wp-ever-accounting' ),
+					'backgroundColor' => '#F44336',
+					'data'            => array_values( $expenses ),
+				),
 			),
 		);
 		?>
-		<h2 class="has--border"><?php echo esc_html__( 'Overview', 'wp-ever-accounting' ); ?> <?php echo esc_html( wp_date( 'Y' ) ); ?></h2>
-		<canvas class="eac-profile-cart" style="min-height: 300px;"></canvas>
+		<h2 class="has--border"><?php echo esc_html__( 'Overview', 'wp-ever-accounting' ); ?><?php echo esc_html( wp_date( 'Y' ) ); ?></h2>
+		<canvas class="eac-chart" id="eac-account-chart" style="height: 300px;margin-bottom: 20px;" data-datasets="<?php echo esc_attr( wp_json_encode( $chart ) ); ?>" data-currency="<?php echo esc_attr( EAC()->currencies->get_symbol( $account->currency ) ); ?>"></canvas>
 		<div class="eac-stats stats--3">
 			<?php foreach ( $stats as $stat ) : ?>
 				<div class="eac-stat">
@@ -256,64 +255,6 @@ class Accounts {
 				<p class="tw-font-bold">email@gmail.com </p>
 			</div>
 		</div>
-
-		<script>
-			(function ($) {
-				$(document).ready(function () {
-					var ctx = document.getElementsByClassName('eac-profile-cart');
-					var symbol = "<?php echo esc_html( EAC()->currencies->get_symbol( $account->currency ) ); ?>";
-					var myChart = new Chart(ctx, {
-						type: 'line',
-						data: {
-							labels: <?php echo wp_json_encode( array_keys( $data['payment'] ) ); ?>,
-							datasets: <?php echo wp_json_encode( $datasets ); ?>
-						},
-						options: {
-							tooltips: {
-								displayColors: true,
-								YrPadding: 12,
-								backgroundColor: "#000000",
-								bodyFontColor: "#e5e5e5",
-								bodySpacing: 4,
-								intersect: 0,
-								mode: "nearest",
-								position: "nearest",
-								titleFontColor: "#ffffff",
-								callbacks: {
-									label: function (tooltipItem, data) {
-										let value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
-										let datasetLabel = data.datasets[tooltipItem.datasetIndex].label || '';
-										return datasetLabel + ': ' + value.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') + symbol;
-									}
-								}
-							},
-							scales: {
-								xAxes: [{
-									stacked: false,
-									gridLines: {
-										display: true,
-									}
-								}],
-								yAxes: [{
-									stacked: false,
-									ticks: {
-										beginAtZero: true,
-										callback: function (value, index, ticks) {
-											return Number(value).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') + symbol;
-										}
-									},
-									type: 'linear',
-									barPercentage: 0.4
-								}]
-							},
-							responsive: true,
-							maintainAspectRatio: false,
-							legend: {display: false},
-						}
-					});
-				});
-			})(jQuery);
-		</script>
 		<?php
 	}
 
@@ -341,8 +282,8 @@ class Accounts {
 			<tr>
 				<th><?php esc_html_e( 'Number', 'wp-ever-accounting' ); ?></th>
 				<th><?php esc_html_e( 'Date', 'wp-ever-accounting' ); ?></th>
+				<th><?php esc_html_e( 'Reference', 'wp-ever-accounting' ); ?></th>
 				<th><?php esc_html_e( 'Amount', 'wp-ever-accounting' ); ?></th>
-				<th><?php esc_html_e( 'Status', 'wp-ever-accounting' ); ?></th>
 			</tr>
 			</thead>
 			<tbody>
@@ -353,10 +294,9 @@ class Accounts {
 							<a href="<?php echo esc_url( $payment->get_view_url() ); ?>">
 								<?php echo esc_html( $payment->number ); ?>
 							</a>
-						</td>
-						<td><?php echo esc_html( wp_date( eac_date_format(), strtotime( $payment->payment_date ) ) ); ?></td>
+						<td><?php echo esc_html( $payment->payment_date ? wp_date( eac_date_format(), strtotime( $payment->payment_date ) ) : '&mdash;' ); ?></td>
+						<td><?php echo esc_html( $payment->reference ? $payment->reference : '&mdash;' ); ?></td>
 						<td><?php echo esc_html( $payment->formatted_amount ); ?></td>
-						<td><?php echo esc_html( $payment->status ); ?></td>
 					</tr>
 				<?php endforeach; ?>
 			<?php else : ?>
@@ -405,8 +345,8 @@ class Accounts {
 								<?php echo esc_html( $expense->number ); ?>
 							</a>
 						</td>
-						<td><?php echo esc_html( wp_date( eac_date_format(), strtotime( $expense->payment_date ) ) ); ?></td>
-						<td><?php echo esc_html( $expense->formatted_amount ); ?></td>
+						<td><?php echo esc_html( wp_date( eac_date_format(), strtotime( $expense->date ) ) ); ?></td>
+						<td><?php echo esc_html( eac_format_amount( $expense->amount ) ); ?></td>
 						<td><?php echo esc_html( $expense->status ); ?></td>
 					</tr>
 				<?php endforeach; ?>

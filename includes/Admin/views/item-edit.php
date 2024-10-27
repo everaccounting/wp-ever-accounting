@@ -67,7 +67,6 @@ $item = Item::make( $id );
 							'label'         => __( 'Price', 'wp-ever-accounting' ),
 							'value'         => $item->price,
 							'placeholder'   => __( '10.00', 'wp-ever-accounting' ),
-							'required'      => true,
 							/* translators: %s: currency symbol */
 							'tooltip'       => sprintf( __( 'Enter the price of the item in %s.', 'wp-ever-accounting' ), eac_base_currency() ),
 							'class'         => 'eac_amount',

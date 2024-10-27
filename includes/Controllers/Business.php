@@ -78,10 +78,10 @@ class Business {
 	 * Get the zip code of the company.
 	 *
 	 * @since 1.0.0
-	 * @return string Company zip code.
+	 * @return string Company postcode code.
 	 */
-	public function get_zip() {
-		return get_option( 'eac_company_zip', '' );
+	public function get_postcode() {
+		return get_option( 'eac_company_postcode', '' );
 	}
 
 	/**
@@ -127,12 +127,47 @@ class Business {
 	}
 
 	/**
-	 * Get the company's fiscal year start month.
+	 * Get financial start date.
 	 *
-	 * @since 1.0.0
-	 * @return int Fiscal year start month.
+	 * @param string $year Year.
+	 *
+	 * @since 1.1.6
+	 * @return string
 	 */
-	public function get_fiscal_start_month() {
-		return get_option( 'eac_fiscal_year_start_month', 1 );
+	public function get_year_start_date( $year = '' ) {
+		if ( empty( $year ) ) {
+			$year = wp_date( 'Y' );
+		}
+
+		$year_start = get_option( 'eac_year_start_date', '01-01' );
+		$dates      = explode( '-', $year_start );
+		$month      = ! empty( $dates[0] ) ? $dates[0] : '01';
+		$day        = ! empty( $dates[1] ) ? $dates[1] : '01';
+		$year       = empty( $year ) ? (int) wp_date( 'Y' ) : absint( $year );
+
+		return wp_date( 'Y-m-d', mktime( 0, 0, 0, $month, $day, $year ) );
+	}
+
+	/**
+	 * Get financial end date.
+	 *
+	 * @param string $year Year.
+	 *
+	 * @since 1.1.6
+	 * @return string
+	 */
+	public function get_year_end_date( $year = '' ) {
+		if ( empty( $year ) ) {
+			$year = wp_date( 'Y' );
+		}
+
+		$start_date = $this->get_year_start_date( $year );
+		// if the year is current year, then end date is today.
+
+		if ( wp_date( 'Y' ) === $year ) {
+			return wp_date( 'Y-m-d' );
+		}
+
+		return wp_date( 'Y-m-d', strtotime( $start_date . ' +1 year -1 day' ) );
 	}
 }

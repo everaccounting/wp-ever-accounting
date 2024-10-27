@@ -152,13 +152,12 @@ class ReportsUtil {
 	 * @return array
 	 */
 	public static function get_months_in_range( $start_date, $end_date, $format = 'F,y' ) {
-		$months   = array();
-		$start    = new \DateTime( $start_date );
-		$end      = new \DateTime( $end_date );
-		$interval = \DateInterval::createFromDateString( '1 month' );
-		$period   = new \DatePeriod( $start, $interval, $end );
-		foreach ( $period as $date ) {
-			$months[] = $date->format( $format );
+		$months = array();
+		$start  = new \DateTime( $start_date );
+		$end    = new \DateTime( $end_date );
+		while ( $start <= $end ) {
+			$months[] = $start->format( $format );
+			$start->modify( 'first day of next month' );
 		}
 
 		return $months;
@@ -170,8 +169,8 @@ class ReportsUtil {
 	 * @param string $start_date Start date.
 	 * @param string $end_date End date.
 	 *
-	 * @return array
 	 * @since 1.0.0
+	 * @return array
 	 */
 	public static function get_dates_range( $start_date, $end_date ) {
 		$dates    = array();
@@ -227,8 +226,8 @@ class ReportsUtil {
 	 *
 	 * @param string $key Key.
 	 *
-	 * @return array
 	 * @since 1.1.6
+	 * @return array
 	 */
 	public static function get_random_color( $key = null ) {
 		static $picked = array();
@@ -287,8 +286,8 @@ class ReportsUtil {
 	 * @param int  $year Year.
 	 * @param bool $force Force to get report from database.
 	 *
-	 * @return array
 	 * @since 1.0.0
+	 * @return array
 	 */
 	public static function get_payments_report( $year = null, $force = false ) {
 		global $wpdb;
@@ -372,8 +371,8 @@ class ReportsUtil {
 	 * @param int  $year Year.
 	 * @param bool $force Force to get report from database.
 	 *
-	 * @return array
 	 * @since 1.0.0
+	 * @return array
 	 */
 	public static function get_expenses_report( $year = null, $force = false ) {
 		global $wpdb;
@@ -459,8 +458,8 @@ class ReportsUtil {
 	 * @param int  $year Year.
 	 * @param bool $force Force to get report from database.
 	 *
-	 * @return array
 	 * @since 1.0.0
+	 * @return array
 	 */
 	public static function get_profits_report( $year = null, $force = true ) {
 		global $wpdb;
@@ -537,5 +536,41 @@ class ReportsUtil {
 		}
 
 		return $reports[ $year ];
+	}
+
+	/**
+	 * Generate chart data.
+	 *
+	 * @param array  $data Data.
+	 * @param int    $year Year.
+	 * @param string $date_format Date format.
+	 *
+	 * @since 1.0.0
+	 * @return array Chart data.
+	 */
+	public static function annualize_data( $data, $year = null, $date_format = 'M, y' ) {
+		$year       = empty( $year ) ? wp_date( 'Y' ) : absint( $year );
+		$start_date = EAC()->business->get_year_start_date( $year );
+		$end_date   = EAC()->business->get_year_end_date( $year );
+		$months     = array_fill_keys( self::get_months_in_range( $start_date, $end_date, $date_format ), 0 );
+		foreach ( $data as $datum ) {
+			$datum = get_object_vars( $datum );
+			$datum = wp_parse_args(
+				$datum,
+				array(
+					'month'  => 0,
+					'year'   => 0,
+					'amount' => 0,
+				)
+			);
+
+			// month and year must be set.
+			if ( ! $datum['month'] || ! $datum['year'] || absint( $datum['year'] ) !==  absint( $year ) ) {
+				continue;
+			}
+			$months[ wp_date( 'M, y', mktime( 0, 0, 0, $datum['month'], 1, $datum['year'] ) ) ] = $datum['amount'];
+		}
+
+		return $months;
 	}
 }

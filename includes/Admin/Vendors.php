@@ -3,6 +3,7 @@
 namespace EverAccounting\Admin;
 
 use EverAccounting\Models\Vendor;
+use EverAccounting\Utilities\ReportsUtil;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -160,76 +161,129 @@ class Vendors {
 	 */
 	public static function overview_section( $vendor ) {
 		global $wpdb;
-		$stats = apply_filters(
-			'eac_vendor_overview_stats',
-			array(
-				array(
-					'label' => __( 'Receivable', 'wp-ever-accounting' ),
-					'value' => eac_format_amount( 100 ),
-				),
-
-				array(
-					'label' => __( 'Payable', 'wp-ever-accounting' ),
-					'value' => eac_format_amount( 100 ),
-				),
-
-				array(
-					'label' => __( 'Upcoming', 'wp-ever-accounting' ),
-					'value' => eac_format_amount( 100 ),
-				),
+		wp_enqueue_script( 'eac-chartjs' );
+		$year_start_date = EAC()->business->get_year_start_date();
+		$year_end_date   = EAC()->business->get_year_end_date();
+		$results         = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT SUM(amount/exchange_rate) as amount, MONTH(payment_date) AS month, YEAR(payment_date) AS year
+				FROM {$wpdb->prefix}ea_transactions WHERE contact_id = %d
+			    AND payment_date BETWEEN %s AND %s AND type='expense'",
+				$vendor->id,
+				$year_start_date,
+				$year_end_date
 			)
 		);
+		$bill        = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT SUM(total/exchange_rate) as total FROM {$wpdb->prefix}ea_documents WHERE contact_id = %d AND contact_id !='' AND type='bill' AND status != 'draft'",
+				$vendor->id
+			)
+		);
+
+		$paid = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT SUM(amount/exchange_rate) as total FROM {$wpdb->prefix}ea_transactions WHERE contact_id = %d AND contact_id != '' AND type='expense'",
+				$vendor->id
+			)
+		);
+
+		$due = empty( $bill ) ? 0 : max( $bill - $paid, 0 );
+
+		$chart_data = ReportsUtil::annualize_data( $results );
+		$chart      = array(
+			'type'     => 'line',
+			'labels'   => array_keys( $chart_data ),
+			'datasets' => array(
+				array(
+					'label'           => __( 'Payments', 'wp-ever-accounting' ),
+					'backgroundColor' => '#3644ff',
+					'borderColor'     => '#3644ff',
+					'fill'            => false,
+					'data'            => array_values( $chart_data ),
+				),
+			),
+		);
 		?>
-		<h2 class="has--border"><?php echo esc_html__( 'Overview', 'wp-ever-accounting' ); ?></h2>
-		<canvas class="eac-profile-cart" style="min-height: 300px;"></canvas>
-		<div class="eac-stats stats--3">
-			<?php foreach ( $stats as $stat ) : ?>
-				<div class="eac-stat">
-					<div class="eac-stat__label"><?php echo esc_html( $stat['label'] ); ?></div>
-					<div class="eac-stat__value">
-						<?php echo esc_html( $stat['value'] ); ?>
-						<?php if ( isset( $stat['delta'] ) ) : ?>
-							<?php $delta_class = $stat['delta'] > 0 ? 'is--positive' : 'is--negative'; ?>
-							<div class="eac-stat__delta <?php echo esc_attr( $delta_class ); ?>">
-								<?php echo esc_html( $stat['delta'] ); ?>%
-							</div>
-						<?php endif; ?>
-					</div>
-					<?php if ( isset( $stat['meta'] ) ) : ?>
-						<div class="eac-stat__meta">
-							<span><?php echo wp_kses_post( implode( ' </span><span> ', $stat['meta'] ) ); ?></span>
-						</div>
-					<?php endif; ?>
-				</div>
-			<?php endforeach; ?>
+
+		<h2 class="has--border"><?php esc_html_e( 'Overview', 'wp-ever-accounting' ); ?></h2>
+
+		<div class="eac-chart">
+			<canvas class="eac-chart" id="eac-customer-chart" style="height: 300px;margin-bottom: 20px;" data-datasets="<?php echo esc_attr( wp_json_encode( $chart ) ); ?>" data-currency="<?php echo esc_attr( EAC()->currencies->get_symbol( eac_base_currency() ) ); ?>"></canvas>
+		</div>
+		<div class="eac-stats stats--2">
+			<div class="eac-stat">
+				<div class="eac-stat__label"><?php esc_html_e( 'Due', 'wp-ever-accounting' ); ?></div>
+				<div class="eac-stat__value"><?php echo esc_html( eac_format_amount( $due ) ); ?></div>
+			</div>
+			<div class="eac-stat">
+				<div class="eac-stat__label"><?php esc_html_e( 'Paid', 'wp-ever-accounting' ); ?></div>
+				<div class="eac-stat__value"><?php echo esc_html( eac_format_amount( $paid ) ); ?></div>
+			</div>
 		</div>
 
-		<h4 class="tw-text-gray-500 tw-uppercase tw-text-base">Basic Info</h4>
+		<h3 class="tw-text-gray-500 tw-uppercase tw-text-base"><?php esc_html_e( 'Details', 'wp-ever-accounting' ); ?></h3>
 		<div class="tw-grid tw-gap-4 tw-mt-5 md:tw-grid-cols-2 lg:tw-grid-cols-3">
-			<div>
-				<label class="tw-mb-1">Display Name</label>
-				<p class="tw-font-bold">admin </p>
-			</div>
-			<div>
-				<label class="tw-mb-1">Primary Contact Name</label>
-				<p class="tw-font-bold">Primary Contact </p>
-			</div>
-			<div>
-				<label class="tw-mb-1">Email</label>
-				<p class="tw-font-bold">email@gmail.com </p>
-			</div>
-			<div>
-				<label class="tw-mb-1">Display Name</label>
-				<p class="tw-font-bold">admin </p>
-			</div>
-			<div>
-				<label class="tw-mb-1">Primary Contact Name</label>
-				<p class="tw-font-bold">Primary Contact </p>
-			</div>
-			<div>
-				<label class="tw-mb-1">Email</label>
-				<p class="tw-font-bold">email@gmail.com </p>
-			</div>
+			<?php
+			$attributes = array(
+				array(
+					'label' => __( 'Name', 'wp-ever-accounting' ),
+					'value' => $vendor->name,
+				),
+				array(
+					'label' => __( 'Company', 'wp-ever-accounting' ),
+					'value' => $vendor->company,
+				),
+				array(
+					'label' => __( 'Email', 'wp-ever-accounting' ),
+					'value' => $vendor->email,
+				),
+				array(
+					'label' => __( 'Phone', 'wp-ever-accounting' ),
+					'value' => $vendor->phone,
+				),
+				array(
+					'label' => __( 'Website', 'wp-ever-accounting' ),
+					'value' => $vendor->website,
+				),
+				array(
+					'label' => __( 'Address', 'wp-ever-accounting' ),
+					'value' => $vendor->address,
+				),
+				array(
+					'label' => __( 'City', 'wp-ever-accounting' ),
+					'value' => $vendor->city,
+				),
+				array(
+					'label' => __( 'State', 'wp-ever-accounting' ),
+					'value' => $vendor->state,
+				),
+				array(
+					'label' => __( 'Postcode', 'wp-ever-accounting' ),
+					'value' => $vendor->postcode,
+				),
+				array(
+					'label' => __( 'Country', 'wp-ever-accounting' ),
+					'value' => $vendor->country_name,
+				),
+				array(
+					'label' => __( 'Tax Number', 'wp-ever-accounting' ),
+					'value' => $vendor->tax_number,
+				),
+				array(
+					'label' => __( 'Currency', 'wp-ever-accounting' ),
+					'value' => $vendor->currency,
+				),
+			);
+			foreach ( $attributes as $attribute ) {
+				?>
+				<div>
+					<label class="tw-mb-1"><?php echo esc_html( $attribute['label'] ); ?></label>
+					<p class="tw-font-bold tw-mt-1"><?php echo esc_html( $attribute['value'] ); ?></p>
+				</div>
+				<?php
+			}
+			?>
 		</div>
 		<?php
 	}

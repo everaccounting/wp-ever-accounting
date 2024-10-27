@@ -2,6 +2,7 @@
 
 namespace EverAccounting;
 
+use EverAccounting\Controllers\Business;
 use EverAccounting\Controllers\Transfers;
 use EverAccounting\Controllers\Accounts;
 use EverAccounting\Controllers\Bills;
@@ -24,6 +25,7 @@ use EverAccounting\Controllers\Vendors;
  *
  * @property Accounts   $accounts Accounts controller.
  * @property Bills      $bills Bills controller.
+ * @property Business   $business Business controller.
  * @property Categories $categories Categories controller.
  * @property Currencies $currencies Currencies controller.
  * @property Customers  $customers Customers controller.
@@ -113,6 +115,7 @@ class Plugin extends \ByteKit\Plugin {
 		$controllers = array(
 			'EverAccounting\Controllers\Accounts',
 			'EverAccounting\Controllers\Bills',
+			'EverAccounting\Controllers\Business',
 			'EverAccounting\Controllers\Categories',
 			'EverAccounting\Controllers\Currencies',
 			'EverAccounting\Controllers\Customers',

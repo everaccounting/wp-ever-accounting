@@ -3,6 +3,7 @@
 namespace EverAccounting\Admin;
 
 use EverAccounting\Models\Customer;
+use EverAccounting\Utilities\ReportsUtil;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -162,16 +163,19 @@ class Customers {
 	public static function overview_section( $customer ) {
 		global $wpdb;
 		wp_enqueue_script( 'eac-chartjs' );
-		// Customer chart get the payments by month over the year.
-		$results = $wpdb->get_results(
+		$year_start_date = EAC()->business->get_year_start_date();
+		$year_end_date   = EAC()->business->get_year_end_date();
+		$results         = $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT SUM(amount/exchange_rate) as total, MONTH(payment_date) as month FROM {$wpdb->prefix}ea_transactions WHERE contact_id = %d AND YEAR(payment_date) = %d GROUP BY MONTH(payment_date)",
+				"SELECT SUM(amount/exchange_rate) as amount, MONTH(payment_date) AS month, YEAR(payment_date) AS year
+				FROM {$wpdb->prefix}ea_transactions WHERE contact_id = %d
+			    AND payment_date BETWEEN %s AND %s AND type='payment'",
 				$customer->id,
-				wp_date('Y')
+				$year_start_date,
+				$year_end_date
 			)
 		);
-
-		$invoices = $wpdb->get_var(
+		$invoices        = $wpdb->get_var(
 			$wpdb->prepare(
 				"SELECT SUM(total/exchange_rate) as total FROM {$wpdb->prefix}ea_documents WHERE contact_id = %d AND contact_id !='' AND type='invoice' AND status != 'draft'",
 				$customer->id
@@ -180,28 +184,24 @@ class Customers {
 
 		$paid = $wpdb->get_var(
 			$wpdb->prepare(
-				"SELECT SUM(amount/exchange_rate) as total FROM {$wpdb->prefix}ea_transactions WHERE contact_id = %d AND contact_id != ''",
+				"SELECT SUM(amount/exchange_rate) as total FROM {$wpdb->prefix}ea_transactions WHERE contact_id = %d AND contact_id != '' AND type='payment'",
 				$customer->id
 			)
 		);
-		$due  = $invoices - $paid;
-		$chart_labels = array();
-		$chart_values = array();
-		for ( $i = 1; $i <= 12; $i ++ ) {
-			$chart_values[] = isset( $results[ $i - 1 ] ) ? $results[ $i - 1 ]->total : 0;
-			$chart_labels[] = wp_date( 'M, Y', mktime( 0, 0, 0, $i, 1 ) );
-		}
 
-		$chart = array(
+		$due = empty( $invoices ) ? 0 : max( $invoices - $paid, 0 );
+
+		$chart_data = ReportsUtil::annualize_data( $results );
+		$chart      = array(
 			'type'     => 'line',
-			'labels'   => array_values( $chart_labels ),
+			'labels'   => array_keys( $chart_data ),
 			'datasets' => array(
 				array(
 					'label'           => __( 'Payments', 'wp-ever-accounting' ),
 					'backgroundColor' => '#3644ff',
 					'borderColor'     => '#3644ff',
 					'fill'            => false,
-					'data'            => array_values( $chart_values ),
+					'data'            => array_values( $chart_data ),
 				),
 			),
 		);
@@ -221,6 +221,70 @@ class Customers {
 				<div class="eac-stat__label"><?php esc_html_e( 'Paid', 'wp-ever-accounting' ); ?></div>
 				<div class="eac-stat__value"><?php echo esc_html( eac_format_amount( $paid ) ); ?></div>
 			</div>
+		</div>
+
+		<h3 class="tw-text-gray-500 tw-uppercase tw-text-base"><?php esc_html_e( 'Details', 'wp-ever-accounting' ); ?></h3>
+		<div class="tw-grid tw-gap-4 tw-mt-5 md:tw-grid-cols-2 lg:tw-grid-cols-3">
+			<?php
+			$attributes = array(
+				array(
+					'label' => __( 'Name', 'wp-ever-accounting' ),
+					'value' => $customer->name,
+				),
+				array(
+					'label' => __( 'Company', 'wp-ever-accounting' ),
+					'value' => $customer->company,
+				),
+				array(
+					'label' => __( 'Email', 'wp-ever-accounting' ),
+					'value' => $customer->email,
+				),
+				array(
+					'label' => __( 'Phone', 'wp-ever-accounting' ),
+					'value' => $customer->phone,
+				),
+				array(
+					'label' => __( 'Website', 'wp-ever-accounting' ),
+					'value' => $customer->website,
+				),
+				array(
+					'label' => __( 'Address', 'wp-ever-accounting' ),
+					'value' => $customer->address,
+				),
+				array(
+					'label' => __( 'City', 'wp-ever-accounting' ),
+					'value' => $customer->city,
+				),
+				array(
+					'label' => __( 'State', 'wp-ever-accounting' ),
+					'value' => $customer->state,
+				),
+				array(
+					'label' => __( 'Postcode', 'wp-ever-accounting' ),
+					'value' => $customer->postcode,
+				),
+				array(
+					'label' => __( 'Country', 'wp-ever-accounting' ),
+					'value' => $customer->country_name,
+				),
+				array(
+					'label' => __( 'Tax Number', 'wp-ever-accounting' ),
+					'value' => $customer->tax_number,
+				),
+				array(
+					'label' => __( 'Currency', 'wp-ever-accounting' ),
+					'value' => $customer->currency,
+				),
+			);
+			foreach ( $attributes as $attribute ) {
+				?>
+				<div>
+					<label class="tw-mb-1"><?php echo esc_html( $attribute['label'] ); ?></label>
+					<p class="tw-font-bold tw-mt-1"><?php echo esc_html( $attribute['value'] ); ?></p>
+				</div>
+				<?php
+			}
+			?>
 		</div>
 		<?php
 	}
@@ -250,8 +314,8 @@ class Customers {
 			<tr>
 				<th><?php esc_html_e( 'Number', 'wp-ever-accounting' ); ?></th>
 				<th><?php esc_html_e( 'Date', 'wp-ever-accounting' ); ?></th>
+				<th><?php esc_html_e( 'Reference', 'wp-ever-accounting' ); ?></th>
 				<th><?php esc_html_e( 'Amount', 'wp-ever-accounting' ); ?></th>
-				<th><?php esc_html_e( 'Status', 'wp-ever-accounting' ); ?></th>
 			</tr>
 			</thead>
 			<tbody>
@@ -262,9 +326,9 @@ class Customers {
 							<a href="<?php echo esc_url( $payment->get_view_url() ); ?>">
 								<?php echo esc_html( $payment->number ); ?>
 							</a>
-						<td><?php echo esc_html( $payment->payment_date ); ?></td>
+						<td><?php echo esc_html( $payment->payment_date ? wp_date( eac_date_format(), strtotime( $payment->payment_date ) ) : '&mdash;' ); ?></td>
+						<td><?php echo esc_html( $payment->reference ? $payment->reference : '&mdash;' ); ?></td>
 						<td><?php echo esc_html( $payment->formatted_amount ); ?></td>
-						<td><?php echo esc_html( $payment->status_label ); ?></td>
 					</tr>
 				<?php endforeach; ?>
 			<?php else : ?>
@@ -302,7 +366,7 @@ class Customers {
 			<tr>
 				<th><?php esc_html_e( 'Number', 'wp-ever-accounting' ); ?></th>
 				<th><?php esc_html_e( 'Date', 'wp-ever-accounting' ); ?></th>
-				<th><?php esc_html_e( 'Amount', 'wp-ever-accounting' ); ?></th>
+				<th><?php esc_html_e( 'Total', 'wp-ever-accounting' ); ?></th>
 				<th><?php esc_html_e( 'Status', 'wp-ever-accounting' ); ?></th>
 			</tr>
 			</thead>

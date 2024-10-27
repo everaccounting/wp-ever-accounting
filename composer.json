@@ -37,6 +37,11 @@
       "EverAccounting\\": "includes/"
     }
   },
+  "autoload-dev": {
+    "classmap": [
+      "tests/_support/"
+    ]
+  },
   "require-dev": {
     "byteever/byteever-sniffs": "^1.0",
     "roave/security-advisories": "dev-latest",
