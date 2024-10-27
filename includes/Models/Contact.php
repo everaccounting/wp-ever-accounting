@@ -159,7 +159,7 @@ class Contact extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	public function get_country_name_attr() {
+	protected function get_country_name_attr() {
 		$countries = I18n::get_countries();
 
 		return isset( $countries[ $this->country ] ) ? $countries[ $this->country ] : $this->country;
@@ -171,7 +171,7 @@ class Contact extends Model {
 	 * @since 1.1.6
 	 * @return string
 	 */
-	public function get_formatted_name_attr() {
+	protected function get_formatted_name_attr() {
 		$company = $this->company ? ' (' . $this->company . ')' : '';
 
 		return $this->name . $company;
