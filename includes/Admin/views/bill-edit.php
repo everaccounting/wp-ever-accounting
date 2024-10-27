@@ -22,24 +22,16 @@ if ( ! $bill->is_taxed() ) {
 
 defined( 'ABSPATH' ) || exit;
 ?>
-<div class="eac-section-header">
-	<h1 class="wp-heading-inline">
-		<?php if ( $bill->exists() ) : ?>
-			<?php esc_html_e( 'Edit Bill', 'wp-ever-accounting' ); ?>
-		<?php else : ?>
-			<?php esc_html_e( 'Add Bill', 'wp-ever-accounting' ); ?>
-		<?php endif; ?>
-		<a href="<?php echo esc_attr( remove_query_arg( array( 'action', 'id' ) ) ); ?>" title="<?php esc_attr_e( 'Go back', 'wp-ever-accounting' ); ?>">
-			<span class="dashicons dashicons-undo"></span>
-		</a>
-	</h1>
-
+<h1 class="wp-heading-inline">
 	<?php if ( $bill->exists() ) : ?>
-		<a class="button" href="<?php echo esc_url( add_query_arg( array( 'action' => 'view' ) ) ); ?>">
-			<?php esc_html_e( 'View Bill', 'wp-ever-accounting' ); ?>
-		</a>
+		<?php esc_html_e( 'Edit Bill', 'wp-ever-accounting' ); ?>
+	<?php else : ?>
+		<?php esc_html_e( 'Add Bill', 'wp-ever-accounting' ); ?>
 	<?php endif; ?>
-</div>
+	<a href="<?php echo esc_attr( remove_query_arg( array( 'action', 'id' ) ) ); ?>" title="<?php esc_attr_e( 'Go back', 'wp-ever-accounting' ); ?>">
+		<span class="dashicons dashicons-undo"></span>
+	</a>
+</h1>
 
 <form id="eac-edit-bill" name="bill" method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
 	<div class="eac-poststuff">
@@ -212,6 +204,7 @@ defined( 'ABSPATH' ) || exit;
 
 					?>
 				</div>
+
 			</div>
 
 
@@ -285,7 +278,7 @@ defined( 'ABSPATH' ) || exit;
 		</div><!-- .column-2 -->
 	</div><!-- .eac-poststuff -->
 
-	<input type="hidden" name="eac_action" value="edit_bill"/>
+	<input type="hidden" name="action" value="eac_edit_bill"/>
 	<input type="hidden" name="status" value="<?php echo esc_attr( $bill->status ); ?>"/>
 	<input type="hidden" name="id" value="<?php echo esc_attr( $bill->id ); ?>"/>
 	<?php wp_nonce_field( 'eac_edit_bill' ); ?>

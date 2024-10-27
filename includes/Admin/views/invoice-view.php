@@ -11,8 +11,9 @@ use EverAccounting\Models\Invoice;
 defined( 'ABSPATH' ) || exit;
 
 wp_verify_nonce( '_wpnonce' );
-$id      = isset( $_GET['id'] ) ? absint( wp_unslash( $_GET['id'] ) ) : 0;
-$invoice = EAC()->invoices->get( $id );
+$id            = isset( $_GET['id'] ) ? absint( wp_unslash( $_GET['id'] ) ) : 0;
+$invoice       = EAC()->invoices->get( $id );
+$mark_sent_url = wp_nonce_url( add_query_arg( array( 'eac_action' => 'invoice_action', 'id' => $invoice->id, 'invoice_action' => 'mark_sent' ) ), 'eac_invoice_action' );
 
 ?>
 <h1 class="wp-heading-inline">
@@ -21,7 +22,6 @@ $invoice = EAC()->invoices->get( $id );
 		<span class="dashicons dashicons-undo"></span>
 	</a>
 </h1>
-
 
 <div class="eac-poststuff">
 
@@ -52,11 +52,11 @@ $invoice = EAC()->invoices->get( $id );
 
 			<div class="eac-card__body">
 				<?php if ( $invoice->is_status( 'draft' ) ) : ?>
-					<a href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin.php?page=eac-invoices&action=invoice_action&id=' . $invoice->id . '&invoice_action=mark_sent' ), 'eac_invoice_action' ) ); ?>" class="button button-small button-block">
+					<a href="<?php echo esc_url( $mark_sent_url ); ?>" class="button button-small button-block">
 						<span class="dashicons dashicons-yes"></span> <?php esc_html_e( 'Mark Sent', 'wp-ever-accounting' ); ?>
 					</a>
 				<?php elseif ( ! $invoice->is_status( 'draft' ) && ! $invoice->is_paid() ) : ?>
-					<a href="#" class="button button-primary button-small button-block eac-add-invoice-payment" data-id="<?php echo esc_attr( $invoice->id ); ?>" data-due="<?php echo esc_attr( $invoice->get_due_amount() ); ?>" data-currency="<?php echo esc_attr( $invoice->currency ); ?>">
+					<a href="#" class="button button-primary button-small button-block eac-add-invoice-payment" data-id="<?php echo esc_attr( $invoice->id ); ?>">
 						<span class="dashicons dashicons-money-alt"></span> <?php esc_html_e( 'Add Payment', 'wp-ever-accounting' ); ?>
 					</a>
 				<?php endif; ?>
@@ -169,7 +169,7 @@ $invoice = EAC()->invoices->get( $id );
 
 		<div class="eac-modal-footer">
 			<button type="submit" class="button button-primary"><?php esc_html_e( 'Add Payment', 'wp-ever-accounting' ); ?></button>
-			<button type="button" class="button eac-modal-close"><?php esc_html_e( 'Cancel', 'wp-ever-accounting' ); ?></button>
+			<button type="button" class="button" data-modal-close><?php esc_html_e( 'Cancel', 'wp-ever-accounting' ); ?></button>
 		</div>
 
 		<input type="hidden" name="invoice_id" value="<?php echo esc_attr( $invoice->id ); ?>">

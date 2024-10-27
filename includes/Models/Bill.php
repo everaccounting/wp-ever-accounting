@@ -110,6 +110,16 @@ class Bill extends Document {
 	}
 
 	/**
+	 * Payments relation.
+	 *
+	 * @since 1.0.0
+	 * @return HasMany
+	 */
+	public function payments() {
+		return $this->has_many( Expense::class, 'document_id' );
+	}
+
+	/**
 	 * Notes relation.
 	 *
 	 * @since 1.0.0
@@ -139,6 +149,13 @@ class Bill extends Document {
 		// if number is empty, set next available number.
 		if ( empty( $this->number ) ) {
 			$this->number = $this->get_next_number();
+		}
+
+		// if status is paid but no payment date is set, set it to current time. also if not paid, set it to null.
+		if ( 'paid' === $this->status && empty( $this->payment_date ) ) {
+			$this->payment_date = current_time( 'mysql' );
+		} elseif ( 'paid' !== $this->status ) {
+			$this->payment_date = null;
 		}
 
 		return parent::save();

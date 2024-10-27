@@ -116,20 +116,6 @@ class Purchases extends Page {
 				'default'     => 30,
 				'desc_tip'    => true,
 			),
-			// Retrospective Edits.
-			array(
-				'title'    => __( 'Retrospective Edits', 'wp-ever-accounting' ),
-				'desc'     => __( 'Based on your country\'s laws or your preference, you can restrict users from editing finalised bills.', 'wp-ever-accounting' ),
-				'id'       => 'eac_bill_retrospective_edits',
-				'type'     => 'select',
-				'options'  => array(
-					'disable_on_partial_paid' => __( 'Disable after partial payment', 'wp-ever-accounting' ),
-					'disable_on_paid'         => __( 'Disable after paid', 'wp-ever-accounting' ),
-					'disable_on_sent'         => __( 'Disable after sent', 'wp-ever-accounting' ),
-				),
-				'default'  => 'disable_on_partial_paid',
-				'desc_tip' => true,
-			),
 			// end section.
 			array(
 				'type' => 'sectionend',

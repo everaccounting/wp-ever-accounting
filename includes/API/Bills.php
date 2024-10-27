@@ -2,26 +2,26 @@
 
 namespace EverAccounting\API;
 
-use EverAccounting\Models\Invoice;
+use EverAccounting\Models\Bill;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class Invoices
+ * Class Bills
  *
  * @since 2.0.0
  * @package EverAccounting\API
  */
-class Invoices extends Documents {
+class Bills extends Documents {
 	/**
 	 * Route base.
 	 *
 	 * @var string
 	 */
-	protected $rest_base = 'invoices';
+	protected $rest_base = 'bills';
 
 	/**
-	 * Checks if a given request has access to read invoices.
+	 * Checks if a given request has access to read bills.
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
@@ -29,10 +29,10 @@ class Invoices extends Documents {
 	 * @return true|\WP_Error True, if the request has read access, WP_Error object otherwise.
 	 */
 	public function get_items_permissions_check( $request ) {
-		if ( ! current_user_can( 'eac_manage_invoice' ) ) {
+		if ( ! current_user_can( 'eac_manage_bill' ) ) {
 			return new \WP_Error(
 				'rest_forbidden_context',
-				__( 'Sorry, you are not allowed to view invoices.', 'wp-ever-accounting' ),
+				__( 'Sorry, you are not allowed to view bills.', 'wp-ever-accounting' ),
 				array( 'status' => rest_authorization_required_code() )
 			);
 		}
@@ -41,7 +41,7 @@ class Invoices extends Documents {
 	}
 
 	/**
-	 * Checks if a given request has access to create a invoice.
+	 * Checks if a given request has access to create a bill.
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
@@ -49,10 +49,10 @@ class Invoices extends Documents {
 	 * @return true|\WP_Error True, if the request has read access, WP_Error object otherwise.
 	 */
 	public function create_item_permissions_check( $request ) {
-		if ( ! current_user_can( 'eac_manage_invoice' ) ) {
+		if ( ! current_user_can( 'eac_manage_bill' ) ) {
 			return new \WP_Error(
 				'rest_forbidden_context',
-				__( 'Sorry, you are not allowed to create invoices.', 'wp-ever-accounting' ),
+				__( 'Sorry, you are not allowed to create bills.', 'wp-ever-accounting' ),
 				array( 'status' => rest_authorization_required_code() )
 			);
 		}
@@ -61,7 +61,7 @@ class Invoices extends Documents {
 	}
 
 	/**
-	 * Checks if a given request has access to read a invoice.
+	 * Checks if a given request has access to read a bill.
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
@@ -69,12 +69,12 @@ class Invoices extends Documents {
 	 * @return true|\WP_Error True, if the request has read access, WP_Error object otherwise.
 	 */
 	public function get_item_permissions_check( $request ) {
-		$invoice = EAC()->invoices->get( $request['id'] );
+		$bill = EAC()->bills->get( $request['id'] );
 
-		if ( empty( $invoice ) || ! current_user_can( 'eac_manage_invoice' ) ) {
+		if ( empty( $bill ) || ! current_user_can( 'eac_manage_bill' ) ) {
 			return new \WP_Error(
 				'rest_forbidden_context',
-				__( 'Sorry, you are not allowed to view this invoice.', 'wp-ever-accounting' ),
+				__( 'Sorry, you are not allowed to view this bill.', 'wp-ever-accounting' ),
 				array( 'status' => rest_authorization_required_code() )
 			);
 		}
@@ -83,7 +83,7 @@ class Invoices extends Documents {
 	}
 
 	/**
-	 * Checks if a given request has access to update a invoice.
+	 * Checks if a given request has access to update a bill.
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
@@ -91,12 +91,12 @@ class Invoices extends Documents {
 	 * @return true|\WP_Error True, if the request has read access, WP_Error object otherwise.
 	 */
 	public function update_item_permissions_check( $request ) {
-		$invoice = EAC()->invoices->get( $request['id'] );
+		$bill = EAC()->bills->get( $request['id'] );
 
-		if ( empty( $invoice ) || ! current_user_can( 'eac_manage_invoice' ) ) {
+		if ( empty( $bill ) || ! current_user_can( 'eac_manage_bill' ) ) {
 			return new \WP_Error(
 				'rest_forbidden_context',
-				__( 'Sorry, you are not allowed to update this invoice.', 'wp-ever-accounting' ),
+				__( 'Sorry, you are not allowed to update this bill.', 'wp-ever-accounting' ),
 				array( 'status' => rest_authorization_required_code() )
 			);
 		}
@@ -105,7 +105,7 @@ class Invoices extends Documents {
 	}
 
 	/**
-	 * Checks if a given request has access to delete a invoice.
+	 * Checks if a given request has access to delete a bill.
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
@@ -113,12 +113,12 @@ class Invoices extends Documents {
 	 * @return true|\WP_Error True, if the request has read access, WP_Error object otherwise.
 	 */
 	public function delete_item_permissions_check( $request ) {
-		$invoice = EAC()->invoices->get( $request['id'] );
+		$bill = EAC()->bills->get( $request['id'] );
 
-		if ( empty( $invoice ) || ! current_user_can( 'eac_manage_invoice' ) ) {
+		if ( empty( $bill ) || ! current_user_can( 'eac_manage_bill' ) ) {
 			return new \WP_Error(
 				'rest_forbidden_context',
-				__( 'Sorry, you are not allowed to delete this invoice.', 'wp-ever-accounting' ),
+				__( 'Sorry, you are not allowed to delete this bill.', 'wp-ever-accounting' ),
 				array( 'status' => rest_authorization_required_code() )
 			);
 		}
@@ -153,9 +153,9 @@ class Invoices extends Documents {
 		 *
 		 * @since 2.0.0
 		 */
-		$args      = apply_filters( 'eac_rest_invoice_query', $args, $request );
-		$items     = EAC()->invoices->query( $args );
-		$total     = EAC()->invoices->query( $args, true );
+		$args      = apply_filters( 'eac_rest_bill_query', $args, $request );
+		$items     = EAC()->bills->query( $args );
+		$total     = EAC()->bills->query( $args, true );
 		$page      = isset( $request['page'] ) ? absint( $request['page'] ) : 1;
 		$max_pages = ceil( $total / (int) $args['per_page'] );
 
@@ -194,7 +194,7 @@ class Invoices extends Documents {
 	}
 
 	/**
-	 * Retrieves a single invoice.
+	 * Retrieves a single bill.
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
@@ -202,8 +202,8 @@ class Invoices extends Documents {
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function get_item( $request ) {
-		$invoice = EAC()->invoices->get( $request['id'] );
-		$data    = $this->prepare_item_for_response( $invoice, $request );
+		$bill = EAC()->bills->get( $request['id'] );
+		$data    = $this->prepare_item_for_response( $bill, $request );
 
 		return rest_ensure_response( $data );
 	}
@@ -211,7 +211,7 @@ class Invoices extends Documents {
 	/**
 	 * Prepares a single item output for response.
 	 *
-	 * @param Invoice          $item Invoice object.
+	 * @param Bill          $item Bill object.
 	 * @param \WP_REST_Request $request Request object.
 	 *
 	 * @since 2.0.0
@@ -293,14 +293,14 @@ class Invoices extends Documents {
 		 * Filter item data returned from the REST API.
 		 *
 		 * @param \WP_REST_Response $response The response object.
-		 * @param Invoice           $item Item object used to create response.
+		 * @param Bill           $item Item object used to create response.
 		 * @param \WP_REST_Request  $request Request object.
 		 */
-		return apply_filters( 'eac_rest_prepare_invoice', $response, $item, $request );
+		return apply_filters( 'eac_rest_prepare_bill', $response, $item, $request );
 	}
 
 	/**
-	 * Prepares a single invoice for create or update.
+	 * Prepares a single bill for create or update.
 	 *
 	 * @param \WP_REST_Request $request Request object.
 	 *
@@ -329,7 +329,7 @@ class Invoices extends Documents {
 		 * @param array            $props Item props.
 		 * @param \WP_REST_Request $request Request object.
 		 */
-		return apply_filters( 'eac_rest_pre_insert_invoice', $props, $request );
+		return apply_filters( 'eac_rest_pre_insert_bill', $props, $request );
 	}
 
 	/**
@@ -341,29 +341,29 @@ class Invoices extends Documents {
 	public function get_item_schema() {
 		$schema = array(
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
-			'title'      => __( 'Invoice', 'wp-ever-accounting' ),
+			'title'      => __( 'Bill', 'wp-ever-accounting' ),
 			'type'       => 'object',
 			'properties' => array(
 				'id'                 => array(
-					'description' => __( 'Unique identifier for the invoice.', 'wp-ever-accounting' ),
+					'description' => __( 'Unique identifier for the bill.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'status'             => array(
-					'description' => __( 'Status of the invoice.', 'wp-ever-accounting' ),
+					'description' => __( 'Status of the bill.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'edit' ),
 					'default'     => 'draft',
 				),
 				'number'             => array(
-					'description' => __( 'Invoice number.', 'wp-ever-accounting' ),
+					'description' => __( 'Bill number.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'edit' ),
 					'required'    => true,
 				),
 				'reference'          => array(
-					'description' => __( 'Invoice reference.', 'wp-ever-accounting' ),
+					'description' => __( 'Bill reference.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'edit' ),
 				),
@@ -552,7 +552,7 @@ class Invoices extends Documents {
 					'context'     => array( 'edit' ),
 				),
 				'items'              => array(
-					'description' => __( 'Invoice items.', 'wp-ever-accounting' ),
+					'description' => __( 'Bill items.', 'wp-ever-accounting' ),
 					'type'        => 'array',
 					'context'     => array( 'view', 'edit' ),
 					'items'       => array(
@@ -676,13 +676,13 @@ class Invoices extends Documents {
 					'readonly'    => true,
 				),
 				'date_updated'       => array(
-					'description' => __( 'The date the invoice was last updated, in the site\'s timezone.', 'wp-ever-accounting' ),
+					'description' => __( 'The date the bill was last updated, in the site\'s timezone.', 'wp-ever-accounting' ),
 					'type'        => 'date-time',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'date_created'       => array(
-					'description' => __( 'The date the invoice was created, in the site\'s timezone.', 'wp-ever-accounting' ),
+					'description' => __( 'The date the bill was created, in the site\'s timezone.', 'wp-ever-accounting' ),
 					'type'        => 'date-time',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,

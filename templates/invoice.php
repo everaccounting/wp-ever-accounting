@@ -24,6 +24,9 @@ $business_phone = get_option( 'eac_business_phone' );
 $business_email = get_option( 'eac_business_email', get_option( 'admin_email' ) );
 $business_name  = get_option( 'eac_business_name', get_bloginfo( 'name' ) );
 $columns        = EAC()->invoices->get_columns();
+if ( ! $invoice->is_taxed() ) {
+	unset( $columns['tax'] );
+}
 ?>
 <div class="eac-card">
 	<div class="eac-document">

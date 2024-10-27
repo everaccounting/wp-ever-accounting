@@ -18,7 +18,7 @@ class Invoices {
 	 */
 	public function __construct() {
 		add_filter( 'eac_sales_page_tabs', array( __CLASS__, 'register_tabs' ) );
-		add_action( 'eac_action_edit_invoice', array( __CLASS__, 'handle_edit' ) );
+		add_action( 'admin_post_eac_edit_invoice', array( __CLASS__, 'handle_edit' ) );
 		add_action( 'eac_action_invoice_action', array( __CLASS__, 'handle_action' ) );
 		add_action( 'eac_sales_page_invoices_loaded', array( __CLASS__, 'page_loaded' ) );
 		add_action( 'eac_sales_page_invoices_content', array( __CLASS__, 'page_content' ) );
@@ -44,8 +44,6 @@ class Invoices {
 	/**
 	 * Handle edit.
 	 *
-	 * @param array $posted Posted data.
-	 *
 	 * @since 1.0.0
 	 * @return void
 	 */
@@ -57,28 +55,28 @@ class Invoices {
 		}
 
 		$referer                     = wp_get_referer();
-		$id                          = isset( $posted['id'] ) ? absint( wp_unslash( $posted['id'] ) ) : 0;
-		$items                       = isset( $posted['items'] ) ? map_deep( wp_unslash( $posted['items'] ), 'sanitize_text_field' ) : array();
+		$id                          = isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0;
+		$items                       = isset( $_POST['items'] ) ? map_deep( wp_unslash( $_POST['items'] ), 'sanitize_text_field' ) : array();
 		$invoice                     = Invoice::make( $id );
-		$invoice->contact_id         = isset( $posted['contact_id'] ) ? absint( wp_unslash( $posted['contact_id'] ) ) : 0;
-		$invoice->contact_name       = isset( $posted['contact_name'] ) ? sanitize_text_field( wp_unslash( $posted['contact_name'] ) ) : '';
-		$invoice->contact_email      = isset( $posted['contact_email'] ) ? sanitize_text_field( wp_unslash( $posted['contact_email'] ) ) : '';
-		$invoice->contact_phone      = isset( $posted['contact_phone'] ) ? sanitize_text_field( wp_unslash( $posted['contact_phone'] ) ) : '';
-		$invoice->contact_address    = isset( $posted['contact_address'] ) ? sanitize_text_field( wp_unslash( $posted['contact_address'] ) ) : '';
-		$invoice->contact_city       = isset( $posted['contact_city'] ) ? sanitize_text_field( wp_unslash( $posted['contact_city'] ) ) : '';
-		$invoice->contact_state      = isset( $posted['contact_state'] ) ? sanitize_text_field( wp_unslash( $posted['contact_state'] ) ) : '';
-		$invoice->contact_postcode   = isset( $posted['contact_postcode'] ) ? sanitize_text_field( wp_unslash( $posted['contact_postcode'] ) ) : '';
-		$invoice->contact_country    = isset( $posted['contact_country'] ) ? sanitize_text_field( wp_unslash( $posted['contact_country'] ) ) : '';
-		$invoice->contact_tax_number = isset( $posted['contact_tax_number'] ) ? sanitize_text_field( wp_unslash( $posted['contact_tax_number'] ) ) : '';
-		$invoice->order_number       = isset( $posted['order_number'] ) ? sanitize_text_field( wp_unslash( $posted['order_number'] ) ) : '';
-		$invoice->attachment_id      = isset( $posted['attachment_id'] ) ? absint( wp_unslash( $posted['attachment_id'] ) ) : 0;
-		$invoice->currency           = isset( $posted['currency'] ) ? sanitize_text_field( wp_unslash( $posted['currency'] ) ) : eac_base_currency();
-		$invoice->exchange_rate      = isset( $posted['exchange_rate'] ) ? floatval( wp_unslash( $posted['exchange_rate'] ) ) : 1;
-		$invoice->discount_type      = isset( $posted['discount_type'] ) ? sanitize_text_field( wp_unslash( $posted['discount_type'] ) ) : 'fixed';
-		$invoice->discount_value     = isset( $posted['discount_value'] ) ? floatval( wp_unslash( $posted['discount_value'] ) ) : 0;
-		$invoice->status             = isset( $posted['status'] ) ? sanitize_text_field( wp_unslash( $posted['status'] ) ) : 'draft';
-		$invoice->note               = isset( $posted['note'] ) ? sanitize_textarea_field( wp_unslash( $posted['note'] ) ) : '';
-		$invoice->terms              = isset( $posted['terms'] ) ? sanitize_textarea_field( wp_unslash( $posted['terms'] ) ) : '';
+		$invoice->contact_id         = isset( $_POST['contact_id'] ) ? absint( wp_unslash( $_POST['contact_id'] ) ) : 0;
+		$invoice->contact_name       = isset( $_POST['contact_name'] ) ? sanitize_text_field( wp_unslash( $_POST['contact_name'] ) ) : '';
+		$invoice->contact_email      = isset( $_POST['contact_email'] ) ? sanitize_text_field( wp_unslash( $_POST['contact_email'] ) ) : '';
+		$invoice->contact_phone      = isset( $_POST['contact_phone'] ) ? sanitize_text_field( wp_unslash( $_POST['contact_phone'] ) ) : '';
+		$invoice->contact_address    = isset( $_POST['contact_address'] ) ? sanitize_text_field( wp_unslash( $_POST['contact_address'] ) ) : '';
+		$invoice->contact_city       = isset( $_POST['contact_city'] ) ? sanitize_text_field( wp_unslash( $_POST['contact_city'] ) ) : '';
+		$invoice->contact_state      = isset( $_POST['contact_state'] ) ? sanitize_text_field( wp_unslash( $_POST['contact_state'] ) ) : '';
+		$invoice->contact_postcode   = isset( $_POST['contact_postcode'] ) ? sanitize_text_field( wp_unslash( $_POST['contact_postcode'] ) ) : '';
+		$invoice->contact_country    = isset( $_POST['contact_country'] ) ? sanitize_text_field( wp_unslash( $_POST['contact_country'] ) ) : '';
+		$invoice->contact_tax_number = isset( $_POST['contact_tax_number'] ) ? sanitize_text_field( wp_unslash( $_POST['contact_tax_number'] ) ) : '';
+		$invoice->order_number       = isset( $_POST['order_number'] ) ? sanitize_text_field( wp_unslash( $_POST['order_number'] ) ) : '';
+		$invoice->attachment_id      = isset( $_POST['attachment_id'] ) ? absint( wp_unslash( $_POST['attachment_id'] ) ) : 0;
+		$invoice->currency           = isset( $_POST['currency'] ) ? sanitize_text_field( wp_unslash( $_POST['currency'] ) ) : eac_base_currency();
+		$invoice->exchange_rate      = isset( $_POST['exchange_rate'] ) ? floatval( wp_unslash( $_POST['exchange_rate'] ) ) : 1;
+		$invoice->discount_type      = isset( $_POST['discount_type'] ) ? sanitize_text_field( wp_unslash( $_POST['discount_type'] ) ) : 'fixed';
+		$invoice->discount_value     = isset( $_POST['discount_value'] ) ? floatval( wp_unslash( $_POST['discount_value'] ) ) : 0;
+		$invoice->status             = isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : 'draft';
+		$invoice->note               = isset( $_POST['note'] ) ? sanitize_textarea_field( wp_unslash( $_POST['note'] ) ) : '';
+		$invoice->terms              = isset( $_POST['terms'] ) ? sanitize_textarea_field( wp_unslash( $_POST['terms'] ) ) : '';
 		$invoice->items()->delete();
 		$invoice->items = array();
 		$invoice->set_items( $items );
@@ -136,10 +134,6 @@ class Invoices {
 		}
 
 		switch ( $action ) {
-			case 'send':
-//				$invoice->send();
-				EAC()->flash->success( __( 'Invoice sent successfully.', 'wp-ever-accounting' ) );
-				break;
 			case 'mark_sent':
 				$invoice->status = 'sent';
 				if ( $invoice->save() ) {

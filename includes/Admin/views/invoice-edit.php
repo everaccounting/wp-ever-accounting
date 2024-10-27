@@ -32,7 +32,7 @@ defined( 'ABSPATH' ) || exit;
 	</a>
 </h1>
 
-<form id="eac-edit-invoice" name="invoice" method="post">
+<form id="eac-edit-invoice" name="invoice" method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
 	<div class="eac-poststuff">
 
 		<div class="column-1">
@@ -276,7 +276,7 @@ defined( 'ABSPATH' ) || exit;
 		</div><!-- .column-2 -->
 	</div><!-- .eac-poststuff -->
 
-	<input type="hidden" name="eac_action" value="edit_invoice"/>
+	<input type="hidden" name="action" value="eac_edit_invoice"/>
 	<input type="hidden" name="status" value="<?php echo esc_attr( $invoice->status ); ?>"/>
 	<input type="hidden" name="id" value="<?php echo esc_attr( $invoice->id ); ?>"/>
 	<?php wp_nonce_field( 'eac_edit_invoice' ); ?>

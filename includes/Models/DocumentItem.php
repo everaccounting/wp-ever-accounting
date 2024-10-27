@@ -192,12 +192,9 @@ class DocumentItem extends Model {
 	 * @return true|\WP_Error True on success, WP_Error on failure.
 	 */
 	public function delete() {
-		$return = parent::delete();
-		if ( $return ) {
-			$this->taxes()->delete();
-		}
+		$this->taxes()->delete();
 
-		return $return;
+		return parent::delete();
 	}
 
 	/*
@@ -229,15 +226,18 @@ class DocumentItem extends Model {
 			if ( ! $tax ) {
 				continue;
 			}
-			$doc_tax                   = DocumentTax::make();
+			$tax_data = wp_parse_args(
+				$tax_data,
+				array(
+					'name'     => $tax->name,
+					'rate'     => $tax->rate,
+				)
+			);
+			$doc_tax                   = DocumentTax::make( $tax_data );
 			$doc_tax->tax_id           = $tax->id;
 			$doc_tax->document_id      = $this->document_id;
 			$doc_tax->document_item_id = $this->id;
-			$doc_tax->name             = isset( $tax_data['name'] ) ? sanitize_text_field( $tax_data['name'] ) : $tax->name;
-			$doc_tax->rate             = isset( $tax_data['rate'] ) ? floatval( $tax_data['rate'] ) : $tax->rate;
-			$doc_tax->compound         = isset( $tax_data['compound'] ) ? (bool) $tax_data['compound'] : $tax->compound;
 			$doc_tax->amount           = 0;
-
 			if ( $this->has_tax( $doc_tax->tax_id ) ) {
 				continue;
 			}

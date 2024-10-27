@@ -46,54 +46,56 @@ use ByteKit\Models\Relations\HasMany;
  * @package EverAccounting
  * @subpackage Models
  *
- * @property int            $id ID of the document.
- * @property string         $type Type of the document.
- * @property string         $status Status of the document.
- * @property string         $number Number of the document.
- * @property string         $reference Reference of the document.
- * @property double         $subtotal Item total of the document.
- * @property double         $discount Discount total of the document.
- * @property double         $tax Tax total of the document.
- * @property double         $total Total of the document.
- * @property float          $discount_value Discount amount of the document.
- * @property string         $discount_type Discount type of the document.
- * @property int            $contact_id Contact ID of the document.
- * @property string         $contact_name Name of the contact.
- * @property string         $contact_company Company of the contact.
- * @property string         $contact_email Email of the contact.
- * @property string         $contact_phone Phone of the contact.
- * @property string         $contact_address Address of the contact.
- * @property string         $contact_city City of the contact.
- * @property string         $contact_state State of the contact.
- * @property string         $contact_postcode Zip of the contact.
- * @property string         $contact_country Country of the contact.
- * @property string         $contact_tax_number Tax number of the contact.
- * @property string         $note Note of the document.
- * @property string         $terms Terms of the document.
- * @property string         $issue_date Issue date of the document.
- * @property string         $due_date Due date of the document.
- * @property string         $sent_date Sent date of the document.
- * @property string         $payment_date Payment date of the document.
- * @property string         $currency Currency code of the document.
- * @property double         $exchange_rate Exchange rate of the document.
- * @property int            $transaction_id Transaction ID of the document.
- * @property int            $parent_id Parent ID of the document.
- * @property string         $created_via Created via of the document.
- * @property int            $creator_id Author ID of the document.
- * @property int            $attachment_id Attachment ID of the document.
- * @property bool		   $editable Whether the document is editable.
- * @property string         $uuid UUID of the document.
- * @property string         $date_updated Date updated of the document.
- * @property string         $date_created Date created of the document.
+ * @property int             $id ID of the document.
+ * @property string          $type Type of the document.
+ * @property string          $status Status of the document.
+ * @property string          $number Number of the document.
+ * @property string          $reference Reference of the document.
+ * @property double          $subtotal Item total of the document.
+ * @property double          $discount Discount total of the document.
+ * @property double          $tax Tax total of the document.
+ * @property double          $total Total of the document.
+ * @property float           $discount_value Discount amount of the document.
+ * @property string          $discount_type Discount type of the document.
+ * @property int             $contact_id Contact ID of the document.
+ * @property string          $contact_name Name of the contact.
+ * @property string          $contact_company Company of the contact.
+ * @property string          $contact_email Email of the contact.
+ * @property string          $contact_phone Phone of the contact.
+ * @property string          $contact_address Address of the contact.
+ * @property string          $contact_city City of the contact.
+ * @property string          $contact_state State of the contact.
+ * @property string          $contact_postcode Zip of the contact.
+ * @property string          $contact_country Country of the contact.
+ * @property string          $contact_tax_number Tax number of the contact.
+ * @property string          $note Note of the document.
+ * @property string          $terms Terms of the document.
+ * @property string          $issue_date Issue date of the document.
+ * @property string          $due_date Due date of the document.
+ * @property string          $sent_date Sent date of the document.
+ * @property string          $payment_date Payment date of the document.
+ * @property string          $currency Currency code of the document.
+ * @property double          $exchange_rate Exchange rate of the document.
+ * @property int             $transaction_id Transaction ID of the document.
+ * @property int             $parent_id Parent ID of the document.
+ * @property string          $created_via Created via of the document.
+ * @property int             $creator_id Author ID of the document.
+ * @property int             $attachment_id Attachment ID of the document.
+ * @property bool            $editable Whether the document is editable.
+ * @property string          $uuid UUID of the document.
+ * @property string          $date_updated Date updated of the document.
+ * @property string          $date_created Date created of the document.
  *
- * @property double         $formatted_name Formatted name.
- * @property double         $formatted_subtotal Formatted items total.
- * @property double         $formatted_discount Formatted discount total.
- * @property double         $formatted_tax Formatted tax total.
- * @property double         $formatted_total Formatted total.
- * @property array          formatted_itemized_taxes Formatted itemized taxes.
- * @property DocumentTax[]  $taxes Taxes of the document.
- * @property DocumentItem[] $items Lines of the document.
+ * @property double          $formatted_name Formatted name.
+ * @property double          $formatted_subtotal Formatted items total.
+ * @property double          $formatted_discount Formatted discount total.
+ * @property double          $formatted_tax Formatted tax total.
+ * @property double          $formatted_total Formatted total.
+ * @property array           formatted_itemized_taxes Formatted itemized taxes.
+ *
+ * @property Customer|Vendor $contact Contact of the document.
+ * @property DocumentTax[]   $taxes Taxes of the document.
+ * @property DocumentItem[]  $items Lines of the document.
  */
 class Document extends Model {
 

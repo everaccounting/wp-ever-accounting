@@ -202,6 +202,8 @@ class Plugin extends \ByteKit\Plugin {
 				'EverAccounting\API\Expenses',
 				'EverAccounting\API\Payments',
 				'EverAccounting\API\Utilities',
+				'EverAccounting\API\Invoices',
+				'EverAccounting\API\Bills',
 			)
 		);
 		foreach ( $handlers as $controller ) {

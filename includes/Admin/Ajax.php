@@ -422,10 +422,10 @@ class Ajax {
 			wp_die( - 1 );
 		}
 
-		$id                   = isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0;
-		$items                = isset( $_POST['items'] ) ? map_deep( wp_unslash( $_POST['items'] ), 'sanitize_text_field' ) : array();
-		$bill                 = Bill::make( $_POST );
-		$bill->items          = array();
+		$id          = isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0;
+		$items       = isset( $_POST['items'] ) ? map_deep( wp_unslash( $_POST['items'] ), 'sanitize_text_field' ) : array();
+		$bill        = Bill::make( $_POST );
+		$bill->items = array();
 		$bill->set_items( $items );
 		$bill->calculate_totals();
 
@@ -525,13 +525,12 @@ class Ajax {
 			wp_die( - 1 );
 		}
 
-		$id                   = isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0;
-		$items                = isset( $_POST['items'] ) ? map_deep( wp_unslash( $_POST['items'] ), 'sanitize_text_field' ) : array();
-		$invoice                 = Invoice::make( $_POST );
-		$invoice->items          = array();
+		$id             = isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0;
+		$items          = isset( $_POST['items'] ) ? map_deep( wp_unslash( $_POST['items'] ), 'sanitize_text_field' ) : array();
+		$invoice        = Invoice::make( $_POST );
+		$invoice->items = array();
 		$invoice->set_items( $items );
 		$invoice->calculate_totals();
-
 		$columns = EAC()->invoices->get_columns();
 		// if tax is not enabled and invoice has no tax, remove the tax column.
 		if ( ! $invoice->is_taxed() ) {

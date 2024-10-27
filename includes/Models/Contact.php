@@ -200,8 +200,8 @@ class Contact extends Model {
 			$this->set( 'currency', eac_base_currency() );
 		}
 
-		if ( empty( $this->creator_id ) && is_user_logged_in() ) {
-			$this->creator_id = get_current_user_id();
+		if ( empty( $this->author_id ) && is_user_logged_in() ) {
+			$this->author_id = get_current_user_id();
 		}
 
 		return parent::save();

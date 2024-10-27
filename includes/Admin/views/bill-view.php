@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 wp_verify_nonce( '_wpnonce' );
 $id      = isset( $_GET['id'] ) ? absint( wp_unslash( $_GET['id'] ) ) : 0;
 $bill = EAC()->bills->get( $id );
-
+$mark_sent_url = wp_nonce_url( add_query_arg( array( 'eac_action' => 'bill_action', 'id' => $bill->id, 'bill_action' => 'mark_sent' ) ), 'eac_bill_action' );
 ?>
 <h1 class="wp-heading-inline">
 	<?php esc_html_e( 'View Bill', 'wp-ever-accounting' ); ?>
@@ -52,7 +52,7 @@ $bill = EAC()->bills->get( $id );
 
 			<div class="eac-card__body">
 				<?php if ( $bill->is_status( 'draft' ) ) : ?>
-					<a href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin.php?page=eac-bills&action=bill_action&id=' . $bill->id . '&bill_action=mark_sent' ), 'eac_bill_action' ) ); ?>" class="button button-small button-block">
+					<a href="<?php echo esc_url( $mark_sent_url ); ?>" class="button button-small button-block">
 						<span class="dashicons dashicons-yes"></span> <?php esc_html_e( 'Mark Sent', 'wp-ever-accounting' ); ?>
 					</a>
 				<?php elseif ( ! $bill->is_status( 'draft' ) && ! $bill->is_paid() ) : ?>
@@ -169,10 +169,10 @@ $bill = EAC()->bills->get( $id );
 
 		<div class="eac-modal-footer">
 			<button type="submit" class="button button-primary"><?php esc_html_e( 'Add Payment', 'wp-ever-accounting' ); ?></button>
-			<button type="button" class="button eac-modal-close"><?php esc_html_e( 'Cancel', 'wp-ever-accounting' ); ?></button>
+			<button type="button" class="button" data-modal-close><?php esc_html_e( 'Cancel', 'wp-ever-accounting' ); ?></button>
 		</div>
 
 		<input type="hidden" name="bill_id" value="<?php echo esc_attr( $bill->id ); ?>">
-		<input type="hidden" name="customer_id" value="<?php echo esc_attr( $bill->contact_id ); ?>">
+		<input type="hidden" name="vendor_id" value="<?php echo esc_attr( $bill->contact_id ); ?>">
 	</form>
 </script>

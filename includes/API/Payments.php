@@ -386,12 +386,12 @@ class Payments extends Transactions {
 					}
 					break;
 
-				case 'vendor':
-					if ( ! empty( $item->vendor ) ) {
+				case 'customer':
+					if ( ! empty( $item->customer ) ) {
 						$value      = new \stdClass();
 						$properties = array_keys( $this->get_schema_properties()[ $key ]['properties'] );
 						foreach ( $properties as $property ) {
-							$value->$property = $item->vendor->$property;
+							$value->$property = $item->customer->$property;
 						}
 					}
 					break;
@@ -497,16 +497,16 @@ class Payments extends Transactions {
 						$data['invoice_id'] = $invoice->id;
 						break;
 
-					case 'vendor':
-						$vendor = EAC()->vendors->get( $request[ $prop ]['id'] );
-						if ( ! $vendor ) {
+					case 'customer':
+						$customer = EAC()->customers->get( $request[ $prop ]['id'] );
+						if ( ! $customer ) {
 							return new \WP_Error(
-								'rest_invalid_vendor',
-								__( 'Invalid vendor.', 'wp-ever-accounting' ),
+								'rest_invalid_customer',
+								__( 'Invalid customer.', 'wp-ever-accounting' ),
 								array( 'status' => 400 )
 							);
 						}
-						$data['vendor_id'] = $vendor->id;
+						$data['customer_id'] = $customer->id;
 						break;
 
 					case 'attachment':
@@ -660,7 +660,7 @@ class Payments extends Transactions {
 					'context'     => array( 'view', 'embed', 'edit' ),
 					'properties'  => array(
 						'id'   => array(
-							'description' => __( 'Unique identifier for the vendor.', 'wp-ever-accounting' ),
+							'description' => __( 'Unique identifier for the customer.', 'wp-ever-accounting' ),
 							'type'        => 'integer',
 							'context'     => array( 'view', 'embed', 'edit' ),
 							'readonly'    => true,
@@ -723,7 +723,7 @@ class Payments extends Transactions {
 					'type'        => 'string',
 					'context'     => array( 'view', 'embed', 'edit' ),
 				),
-				'creator_id'       => array(
+				'author_id'       => array(
 					'description' => __( 'Author ID of the payment.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'embed', 'edit' ),

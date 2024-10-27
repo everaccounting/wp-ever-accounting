@@ -21,11 +21,9 @@ class Bills {
 	public function __construct() {
 		add_filter( 'eac_purchases_page_tabs', array( __CLASS__, 'register_tabs' ) );
 		add_action( 'admin_post_eac_edit_bill', array( __CLASS__, 'handle_edit' ) );
+		add_action( 'eac_action_bill_action', array( __CLASS__, 'handle_action' ) );
 		add_action( 'eac_purchases_page_bills_loaded', array( __CLASS__, 'page_loaded' ) );
 		add_action( 'eac_purchases_page_bills_content', array( __CLASS__, 'page_content' ) );
-		add_action( 'eac_bill_edit_sidebar_content', array( __CLASS__, 'bill_attachment' ) );
-		add_action( 'eac_bill_view_sidebar_content', array( __CLASS__, 'bill_attachment' ) );
-		add_action( 'eac_bill_edit_sidebar_content', array( __CLASS__, 'bill_notes' ) );
 		add_action( 'eac_bill_view_sidebar_content', array( __CLASS__, 'bill_notes' ) );
 	}
 
@@ -111,79 +109,50 @@ class Bills {
 	}
 
 	/**
-	 * Handle actions.
+	 * Handle action.
+	 *
+	 * @param array $posted Posted data.
 	 *
 	 * @since 1.0.0
 	 * @return void
 	 */
-	public static function handle_actions() {
-		if ( isset( $_POST['action'] ) && 'eac_edit_bill' === $_POST['action'] && check_admin_referer( 'eac_edit_bill' ) && current_user_can( 'eac_manage_bill' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability.
-			$bill    = EAC()->bills->insert( $_POST );
-			$referer = wp_get_referer();
-			if ( is_wp_error( $bill ) ) {
-				EAC()->flash->error( $bill->get_error_message() );
-			} else {
-				EAC()->flash->success( __( 'Bill saved successfully.', 'wp-ever-accounting' ) );
-				$referer = add_query_arg( 'id', $bill->id, $referer );
-				$referer = add_query_arg( 'action', 'view', $referer );
-				$referer = remove_query_arg( array( 'add' ), $referer );
-			}
-
-			wp_safe_redirect( $referer );
-			exit;
+	public static function handle_action( $posted ) {
+		check_admin_referer( 'eac_bill_action' );
+		if ( ! current_user_can( 'eac_manage_bill' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability.
+			wp_die( esc_html__( 'You do not have permission to perform this action.', 'wp-ever-accounting' ) );
 		}
-		if ( isset( $_POST['action'] ) && 'eac_update_bill' === $_POST['action'] && check_admin_referer( 'eac_update_bill' ) && current_user_can( 'eac_manage_bill' ) ) {// phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability.
-			$id            = isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0;
-			$status        = isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : '';
-			$attachment_id = isset( $_POST['attachment_id'] ) ? absint( wp_unslash( $_POST['attachment_id'] ) ) : 0;
-			$bill_action   = isset( $_POST['bill_action'] ) ? sanitize_text_field( wp_unslash( $_POST['bill_action'] ) ) : '';
 
-			$bill = EAC()->bills->get( $id );
+		$id     = isset( $posted['id'] ) ? absint( wp_unslash( $posted['id'] ) ) : 0;
+		$action = isset( $posted['bill_action'] ) ? sanitize_text_field( wp_unslash( $posted['bill_action'] ) ) : '';
+		$referer = wp_get_referer();
+		// if any of the required fields are missing, bail.
+		if ( ! $id || ! $action ) {
+			wp_die( esc_html__( 'Invalid request.', 'wp-ever-accounting' ) );
+		}
 
-			// If bill not found, bail.
-			if ( ! $bill ) {
-				wp_die( esc_html__( 'You attempted to update an bill that does not exist. Perhaps it was deleted?', 'wp-ever-accounting' ) );
-			}
+		$bill = EAC()->bills->get( $id );
+		if ( ! $bill ) {
+			wp_die( esc_html__( 'You attempted to perform an action on an bill that does not exist.', 'wp-ever-accounting' ) );
+		}
 
-			// Update bill status.
-			if ( ! empty( $status ) && $status !== $bill->status ) {
-				$bill->status = $status;
-			}
-
-			// Update bill attachment.
-			if ( $attachment_id !== $bill->attachment_id ) {
-				$bill->attachment_id = $attachment_id;
-			}
-
-			if ( $bill->is_dirty() && $bill->save() ) {
-				$ret = $bill->save();
-				if ( is_wp_error( $ret ) ) {
-					EAC()->flash->error( $ret->get_error_message() );
+		switch ( $action ) {
+			case 'mark_sent':
+				$bill->status = 'sent';
+				if ( $bill->save() ) {
+					EAC()->flash->success( __( 'Invoice marked as sent.', 'wp-ever-accounting' ) );
 				} else {
-					EAC()->flash->success( __( 'Bill updated successfully.', 'wp-ever-accounting' ) );
+					EAC()->flash->error( __( 'Failed to mark bill as sent.', 'wp-ever-accounting' ) );
 				}
-			}
-
-			// todo handle payment action.
-			if ( ! empty( $bill_action ) ) {
-				switch ( $bill_action ) {
-					case 'send_receipt':
-						// Send bill.
-						break;
-					default:
-						/**
-						 * Fires action to handle custom bill actions.
-						 *
-						 * @param Bill $bill Payment object.
-						 *
-						 * @since 1.0.0
-						 */
-						do_action( 'eac_bill_action_' . $bill_action, $bill );
-						break;
-				}
-			}
+				break;
+			default:
+				do_action( 'eac_bill_action_' . $action, $bill );
 		}
+
+		$referer = remove_query_arg( array( 'eac_action' ), $referer );
+		wp_safe_redirect( $referer );
+		exit;
 	}
+
 
 	/**
 	 * Handle page loaded.
@@ -204,7 +173,10 @@ class Bills {
 			case 'edit':
 				$id = filter_input( INPUT_GET, 'id', FILTER_VALIDATE_INT );
 				if ( ! EAC()->bills->get( $id ) ) {
-					wp_die( esc_html__( 'You attempted to retrieve an bill that does not exist. Perhaps it was deleted?', 'wp-ever-accounting' ) );
+					wp_die( esc_html__( 'You attempted to retrieve a bill that does not exist. Perhaps it was deleted?', 'wp-ever-accounting' ) );
+				}
+				if ( 'edit' === $action && ! EAC()->bills->get( $id )->editable ) {
+					wp_die( esc_html__( 'You attempted to edit a bill that is not editable.', 'wp-ever-accounting' ) );
 				}
 				break;
 
@@ -245,28 +217,6 @@ class Bills {
 				include __DIR__ . '/views/bill-list.php';
 				break;
 		}
-	}
-
-	/**
-	 * Bill attachment.
-	 *
-	 * @param Bill $bill Bill object.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	public static function bill_attachment( $bill ) {
-		?>
-
-		<div class="eac-card">
-			<div class="eac-card__header">
-				<h3 class="eac-card__title"><?php esc_html_e( 'Attachment', 'wp-ever-accounting' ); ?></h3>
-			</div>
-			<div class="eac-card__body">
-				<?php eac_file_uploader( array( 'value' => $bill->attachment_id ) ); ?>
-			</div>
-		</div>
-		<?php
 	}
 
 	/**

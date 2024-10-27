@@ -439,6 +439,17 @@ class Expenses extends Transactions {
 		foreach ( $props as $prop ) {
 			if ( isset( $request[ $prop ] ) ) {
 				switch ( $prop ) {
+					case 'category_id':
+						$category = EAC()->categories->get( $request[ $prop ] );
+						if ( ! $category ) {
+							return new \WP_Error(
+								'rest_invalid_category',
+								__( 'Invalid category.', 'wp-ever-accounting' ),
+								array( 'status' => 400 )
+							);
+						}
+						$data['category_id'] = $category->id;
+						break;
 					case 'category':
 						$category = EAC()->categories->get( $request[ $prop ]['id'] );
 						if ( ! $category ) {
@@ -452,6 +463,18 @@ class Expenses extends Transactions {
 						break;
 					case 'account':
 						$account = EAC()->accounts->get( $request[ $prop ]['id'] );
+						if ( ! $account ) {
+							return new \WP_Error(
+								'rest_invalid_account',
+								__( 'Invalid account.', 'wp-ever-accounting' ),
+								array( 'status' => 400 )
+							);
+						}
+						$data['account_id'] = $account->id;
+						break;
+
+					case 'account_id':
+						$account = EAC()->accounts->get( $request[ $prop ] );
 						if ( ! $account ) {
 							return new \WP_Error(
 								'rest_invalid_account',
@@ -508,7 +531,6 @@ class Expenses extends Transactions {
 		return apply_filters( 'eac_rest_pre_insert_expense', $data, $request );
 	}
 
-
 	/**
 	 * Retrieves the item's schema, conforming to JSON Schema.
 	 *
@@ -538,7 +560,7 @@ class Expenses extends Transactions {
 				'payment_date'     => array(
 					'description' => __( 'The date the expense took place, in the site\'s timezone.', 'wp-ever-accounting' ),
 					'type'        => 'string',
-					'format'      => 'date-time',
+					'format'      => 'string',
 					'context'     => array( 'view', 'embed', 'edit' ),
 				),
 				'amount'           => array(
@@ -578,6 +600,11 @@ class Expenses extends Transactions {
 					'type'        => 'string',
 					'context'     => array( 'view', 'embed', 'edit' ),
 				),
+				'account_id'       => array(
+					'description' => __( 'Account ID of the payment.', 'wp-ever-accounting' ),
+					'type'        => 'integer',
+					'context'     => array( 'edit' ),
+				),
 				'account'          => array(
 					'description' => __( 'Account of the expense.', 'wp-ever-accounting' ),
 					'type'        => 'object',
@@ -601,8 +628,13 @@ class Expenses extends Transactions {
 						),
 					),
 				),
-				'bill'             => array(
-					'description' => __( 'Bill of the expense.', 'wp-ever-accounting' ),
+				'bill_id'       => array(
+					'description' => __( 'Bill ID of the payment.', 'wp-ever-accounting' ),
+					'type'        => 'integer',
+					'context'     => array( 'edit' ),
+				),
+				'bill'          => array(
+					'description' => __( 'Bill of the payment.', 'wp-ever-accounting' ),
 					'type'        => 'object',
 					'context'     => array( 'view', 'embed', 'edit' ),
 					'properties'  => array(
@@ -622,8 +654,13 @@ class Expenses extends Transactions {
 						),
 					),
 				),
-				'vendor'           => array(
-					'description' => __( 'Vendor of the expense.', 'wp-ever-accounting' ),
+				'vendor_id'      => array(
+					'description' => __( 'Customer ID of the payment.', 'wp-ever-accounting' ),
+					'type'        => 'integer',
+					'context'     => array( 'edit' ),
+				),
+				'vendor'         => array(
+					'description' => __( 'Customer of the payment.', 'wp-ever-accounting' ),
 					'type'        => 'object',
 					'context'     => array( 'view', 'embed', 'edit' ),
 					'properties'  => array(
@@ -675,16 +712,10 @@ class Expenses extends Transactions {
 					'type'        => 'integer',
 					'context'     => array( 'view', 'embed', 'edit' ),
 				),
-				'reconciled'       => array(
-					'description' => __( 'Whether the expense is reconciled.', 'wp-ever-accounting' ),
+				'editable'         => array(
+					'description' => __( 'Whether the payment is editable.', 'wp-ever-accounting' ),
 					'type'        => 'boolean',
 					'context'     => array( 'view', 'embed', 'edit' ),
-				),
-				'status'           => array(
-					'description' => __( 'Status of the expense.', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'context'     => array( 'view', 'embed', 'edit' ),
-					'default'     => 'pending',
 				),
 				'uuid'             => array(
 					'description' => __( 'UUID of the expense.', 'wp-ever-accounting' ),
@@ -697,7 +728,7 @@ class Expenses extends Transactions {
 					'type'        => 'string',
 					'context'     => array( 'view', 'embed', 'edit' ),
 				),
-				'creator_id'       => array(
+				'author_id'       => array(
 					'description' => __( 'Author ID of the expense.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'embed', 'edit' ),

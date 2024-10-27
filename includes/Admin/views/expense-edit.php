@@ -226,8 +226,8 @@ $expense = Expense::make( $id );
 			<div class="eac-card">
 				<div class="eac-card__header">
 					<h3 class="eac-card__title"><?php esc_html_e( 'Actions', 'wp-ever-accounting' ); ?></h3>
-					<?php if ( $exense->exists() ) : ?>
-						<a href="<?php echo esc_url( $exense->get_view_url() ); ?>">
+					<?php if ( $expense->exists() ) : ?>
+						<a href="<?php echo esc_url( $expense->get_view_url() ); ?>">
 							<?php esc_html_e( 'View', 'wp-ever-accounting' ); ?>
 						</a>
 					<?php endif; ?>

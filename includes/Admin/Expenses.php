@@ -21,9 +21,6 @@ class Expenses {
 		add_action( 'admin_post_eac_update_expense', array( __CLASS__, 'handle_update' ) );
 		add_action( 'eac_purchases_page_expenses_loaded', array( __CLASS__, 'page_loaded' ) );
 		add_action( 'eac_purchases_page_expenses_content', array( __CLASS__, 'page_content' ) );
-		add_action( 'eac_expense_edit_sidebar_content', array( __CLASS__, 'expense_attachment' ) );
-		add_action( 'eac_expense_view_sidebar_content', array( __CLASS__, 'expense_attachment' ) );
-		add_action( 'eac_expense_edit_sidebar_content', array( __CLASS__, 'expense_notes' ) );
 		add_action( 'eac_expense_view_sidebar_content', array( __CLASS__, 'expense_notes' ) );
 	}
 
