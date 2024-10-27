@@ -135,7 +135,7 @@ class Item extends Model {
 	 * @since 1.0.0
 	 * @return void
 	 */
-	public function set_item_type_attr( $value ) {
+	protected function set_item_type_attr( $value ) {
 		$this->attributes['type'] = array_key_exists( $value, EAC()->items->get_types() ) ? $value : 'standard';
 	}
 
