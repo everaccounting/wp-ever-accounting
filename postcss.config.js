@@ -1,5 +1,4 @@
-module.exports = ( { file } ) => {
-	const isPublic = file.includes( 'frontend' );
+module.exports = () => {
 	return {
 		map:
 			process.env.NODE_ENV === 'production'
@@ -10,9 +9,7 @@ module.exports = ( { file } ) => {
 				  },
 		plugins: [
 			require( 'autoprefixer' ),
-			require( 'tailwindcss' )(
-				isPublic ? './tailwind.public.config.js' : './tailwind.admin.config.js'
-			),
+			require( 'tailwindcss' ),
 			...( process.env.NODE_ENV === 'production' ? [ require( 'cssnano' ) ] : [] ),
 		],
 	};
