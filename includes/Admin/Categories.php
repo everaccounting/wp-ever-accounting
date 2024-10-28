@@ -20,7 +20,7 @@ class Categories {
 	 */
 	public function __construct() {
 		add_filter( 'eac_settings_page_tabs', array( __CLASS__, 'register_tabs' ) );
-		add_action( 'eac_settings_page_categories_loaded', array( __CLASS__, 'handle_actions' ) );
+		add_action( 'admin_post_eac_edit_category', array( __CLASS__, 'handle_edit' ) );
 		add_action( 'eac_settings_page_categories_content', array( __CLASS__, 'render_content' ) );
 	}
 
@@ -36,6 +36,35 @@ class Categories {
 		$tabs['categories'] = __( 'Categories', 'wp-ever-accounting' );
 
 		return $tabs;
+	}
+
+	/**
+	 * Edit category.
+	 *
+	 * @since 3.0.0
+	 * @return void
+	 */
+	public static function handle_edit() {
+		check_admin_referer( 'eac_edit_category' );
+		$referer = wp_get_referer();
+		$data    = array(
+			'id'          => isset( $_POST['id'] ) ? absint( wp_unslash( $_POST['id'] ) ) : 0,
+			'name'        => isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '',
+			'type'        => isset( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '',
+			'description' => isset( $_POST['description'] ) ? sanitize_textarea_field( wp_unslash( $_POST['description'] ) ) : '',
+		);
+
+		$item = EAC()->categories->insert( $data );
+		if ( is_wp_error( $item ) ) {
+			EAC()->flash->error( $item->get_error_message() );
+		} else {
+			EAC()->flash->success( __( 'Category saved successfully.', 'wp-ever-accounting' ) );
+			$referer = add_query_arg( 'id', $item->id, $referer );
+			$referer = remove_query_arg( array( 'add' ), $referer );
+		}
+
+		wp_safe_redirect( $referer );
+		exit;
 	}
 
 	/**

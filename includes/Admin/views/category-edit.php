@@ -29,7 +29,7 @@ $category = Category::make( $id );
 	</a>
 </h1>
 
-<form id="eac-edit-category" name="category" method="post">
+<form id="eac-edit-category" name="category" method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
 	<div class="eac-poststuff">
 		<div class="column-1">
 

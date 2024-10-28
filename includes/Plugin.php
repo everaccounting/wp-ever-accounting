@@ -15,12 +15,14 @@ use EverAccounting\Controllers\Items;
 use EverAccounting\Controllers\Notes;
 use EverAccounting\Controllers\Payments;
 use EverAccounting\Controllers\Taxes;
+use EverAccounting\Controllers\Terms;
 use EverAccounting\Controllers\Vendors;
 
 /**
  * Class Plugin.
  *
- * @since 1.2.1
+ * @since 1.0.0
+ * @author  Sultan Nasir Uddin <manikdrmc@gmail.com>
  * @package EverAccounting
  *
  * @property Accounts   $accounts Accounts controller.
@@ -35,6 +37,7 @@ use EverAccounting\Controllers\Vendors;
  * @property Notes      $notes Notes controller.
  * @property Payments   $payments Payments controller.
  * @property Taxes      $taxes Taxes controller.
+ * @property Terms      $terms Terms controller.
  * @property Transfers  $transfers Transfers controller.
  * @property Vendors    $vendors Vendors controller.
  */
@@ -99,8 +102,6 @@ class Plugin extends \ByteKit\Plugin {
 		register_activation_hook( $this->get_file(), array( Installer::class, 'install' ) );
 		add_action( 'plugins_loaded', array( $this, 'plugins_loaded' ), 0 );
 		add_action( 'rest_api_init', array( $this, 'register_routes' ) );
-		add_action( 'init', array( $this, 'get_actions' ), 0 );
-		add_action( 'init', array( $this, 'post_actions' ), 0 );
 	}
 
 	/**
@@ -126,6 +127,7 @@ class Plugin extends \ByteKit\Plugin {
 			'EverAccounting\Controllers\Payments',
 			'EverAccounting\Controllers\Taxes',
 			'EverAccounting\Controllers\Transfers',
+			'EverAccounting\Controllers\Terms',
 			'EverAccounting\Controllers\Vendors',
 		);
 
@@ -216,34 +218,6 @@ class Plugin extends \ByteKit\Plugin {
 				$this->$controller = new $controller();
 				$this->$controller->register_routes();
 			}
-		}
-	}
-
-	/**
-	 * Get actions.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	public function get_actions() {
-		$key = ! empty( $_GET['eac_action'] ) ? sanitize_key( $_GET['eac_action'] ) : false;
-
-		if ( ! empty( $key ) ) {
-			do_action( "eac_action_{$key}", $_GET );
-		}
-	}
-
-	/**
-	 * Post actions.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	public function post_actions() {
-		$key = ! empty( $_POST['eac_action'] ) ? sanitize_key( $_POST['eac_action'] ) : false;
-
-		if ( ! empty( $key ) ) {
-			do_action( "eac_action_{$key}", $_POST );
 		}
 	}
 

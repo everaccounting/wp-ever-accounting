@@ -155,7 +155,7 @@ class Documents {
 	/**
 	 * Bill status transition.
 	 *
-	 * @param Invoice $invoice Invoice object.
+	 * @param Invoice $bill Bill object.
 	 * @param string  $status New status.
 	 */
 	public static function bill_status_transition( $bill, $status ) {

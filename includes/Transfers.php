@@ -7,8 +7,9 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Class Transfers.
  *
- * @since   1.0.0
- * @package EverAccounting\Controllers
+ * @since 1.0.0
+ * @author  Sultan Nasir Uddin <manikdrmc@gmail.com>
+ * @package EverAccounting
  */
 class Transfers {
 	/**
@@ -16,6 +17,5 @@ class Transfers {
 	 *
 	 * @since 1.0.0
 	 */
-	public function __construct() {
-	}
+	public function __construct() {}
 }

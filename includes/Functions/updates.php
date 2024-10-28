@@ -275,10 +275,23 @@ function eac_update_120_categories() {
 	$table = $wpdb->prefix . 'ea_categories';
 	$wpdb->query( "UPDATE $table SET type = 'payment' WHERE type = 'income'" );
 	$wpdb->query( "DELETE FROM $table WHERE type = 'other'" );
-	$wpdb->query( "ALTER TABLE $table MODIFY COLUMN type VARCHAR(50) NOT NULL AFTER id" );
 	$wpdb->query( "ALTER TABLE $table DROP COLUMN color" );
 	$wpdb->query( "ALTER TABLE $table DROP COLUMN enabled" );
-	$wpdb->query( "ALTER TABLE $table DROP COLUMN date_created" );
+	$wpdb->query( "ALTER TABLE $table MODIFY date_created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP" );
+	// Add column.
+	$wpdb->query( "ALTER TABLE $table ADD COLUMN description TEXT DEFAULT NULL AFTER name" );
+	$wpdb->query( "ALTER TABLE $table ADD COLUMN taxonomy VARCHAR(20) NOT NULL DEFAULT 'category' AFTER id" );
+	$wpdb->query( "ALTER TABLE $table ADD COLUMN parent_id BIGINT(20) UNSIGNED DEFAULT NULL AFTER taxonomy" );
+	$wpdb->query( "ALTER TABLE $table ADD COLUMN date_updated DATETIME DEFAULT NULL AFTER date_created" );
+	// Add index.
+	$wpdb->query( "ALTER TABLE $table ADD INDEX parent_id (parent_id)" );
+	$wpdb->query( "ALTER TABLE $table ADD INDEX taxonomy (taxonomy)" );
+
+	// No drop the newly table ea_terms.
+	$terms_table = $wpdb->prefix . 'ea_terms';
+	$wpdb->query( "DROP TABLE $terms_table" );
+	// Now rename the table ea_categories to ea_terms.
+	$wpdb->query( "RENAME TABLE $table TO $terms_table" );
 }
 
 /**

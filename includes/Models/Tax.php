@@ -12,45 +12,20 @@ namespace EverAccounting\Models;
  *
  * @property int         $id ID of the tax.
  * @property string      $name Name of the tax.
+ * @property string      $description Description of the tax.
  * @property double      $rate Rate of the tax.
  * @property bool        $compound Whether the tax is compound.
  *
  * @property-read string $formatted_name Formatted name of the tax.
  */
-class Tax extends Model {
-
+class Tax extends Term {
 	/**
-	 * The table associated with the model.
+	 * Object type in singular form.
 	 *
 	 * @since 1.0.0
 	 * @var string
 	 */
-	protected $table = 'ea_taxes';
-
-	/**
-	 * The table columns of the model.
-	 *
-	 * @since 1.0.0
-	 * @var array
-	 */
-	protected $columns = array(
-		'id',
-		'name',
-		'rate',
-		'compound',
-	);
-
-	/**
-	 * The attributes that should be cast.
-	 *
-	 * @since 1.0.0
-	 * @var array
-	 */
-	protected $casts = array(
-		'id'       => 'int',
-		'rate'     => 'float',
-		'compound' => 'bool',
-	);
+	protected $object_type = 'tax';
 
 	/**
 	 * The accessors to append to the model's array form.
@@ -59,29 +34,29 @@ class Tax extends Model {
 	 * @var array
 	 */
 	protected $appends = array(
-		'formatted_name',
+		'rate',
+		'compound',
 	);
 
 	/**
-	 * The attributes that are searchable.
+	 * Create a new model instance.
 	 *
-	 * @since 1.0.0
-	 * @var array
+	 * @param string|int|array $attributes Attributes.
+	 *
+	 * @return void
 	 */
-	protected $searchable = array(
-		'name',
-		'rate',
-	);
-
-	/*
-	|--------------------------------------------------------------------------
-	| Property Definition Methods
-	|--------------------------------------------------------------------------
-	| This section contains static methods that define and return specific
-	| property values related to the model.
-	| These methods are accessible without creating an instance of the model.
-	|--------------------------------------------------------------------------
-	*/
+	public function __construct( $attributes = null ) {
+		$this->hidden[] = 'type';
+		$this->hidden[] = 'parent_id';
+		$this->casts    = array_merge(
+			$this->casts,
+			array(
+				'rate'     => 'float',
+				'compound' => 'bool',
+			)
+		);
+		parent::__construct( $attributes );
+	}
 
 	/*
 	|--------------------------------------------------------------------------
@@ -91,6 +66,50 @@ class Tax extends Model {
 	| and mutators) as well as defining relationships between models.
 	|--------------------------------------------------------------------------
 	*/
+
+	/**
+	 * Get rate attribute.
+	 *
+	 * @since 1.0.0
+	 * @return double
+	 */
+	protected function get_rate_attr() {
+		return $this->get_meta( 'rate' );
+	}
+
+	/**
+	 * Get compound attribute.
+	 *
+	 * @since 1.0.0
+	 * @return bool
+	 */
+	protected function get_compound_attr() {
+		return $this->cast( 'compound', $this->get_meta( 'compound' ) );
+	}
+
+	/**
+	 * Set rate attribute.
+	 *
+	 * @param double $value Rate of the tax.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	protected function set_rate_attr( $value ) {
+		$this->set_meta( 'rate', $value );
+	}
+
+	/**
+	 * Set compound attribute.
+	 *
+	 * @param bool $value Whether the tax is compound.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	protected function set_compound_attr( $value ) {
+		$this->set_meta( 'compound', $this->cast( 'compound', $value ) );
+	}
 
 	/**
 	 * Get formatted name.

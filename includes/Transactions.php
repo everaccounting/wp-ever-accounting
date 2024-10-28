@@ -2,15 +2,14 @@
 
 namespace EverAccounting;
 
-use ByteKit\Models\Query;
-
 defined( 'ABSPATH' ) || exit;
 
 /**
  * Class Transactions.
  *
- * @since   1.0.0
- * @package EverAccounting\Controllers
+ * @since 1.0.0
+ * * @author  Sultan Nasir Uddin <manikdrmc@gmail.com>
+ * * @package EverAccounting
  */
 class Transactions {
 	/**
@@ -33,35 +32,5 @@ class Transactions {
 		delete_transient( 'eac_payments_reports' );
 		delete_transient( 'eac_expenses_reports' );
 		delete_transient( 'eac_profit_reports' );
-	}
-
-	/**
-	 * Exclude transfers from the query.
-	 *
-	 * @param array $clauses The query clauses.
-	 * @param Query $query The query object.
-	 *
-	 * @return array
-	 */
-	public function exclude_transfers( $clauses, $query ) {
-		$clauses['join']  .= " LEFT JOIN {$query->get_db()->prefix}ea_transfers AS ea_transfers ON ea_transactions.id=ea_transfers.payment_id";
-		$clauses['where'] .= ' AND ea_transfers.id IS NULL';
-
-		return $clauses;
-	}
-
-	/**
-	 * Initialize payment.
-	 */
-	public static function setup_payment() {
-		$account_id     = get_option( 'eac_default_sales_account_id', 0 );
-		$sales_category = get_option( 'eac_default_sales_category_id', 0 );
-		$method         = get_option( 'eac_default_sales_method', 'cash' );
-		$account        = eac_get_account( $account_id );
-		$category       = eac_get_category( $sales_category );
-
-		if ( ! empty( $account ) ) {
-
-		}
 	}
 }

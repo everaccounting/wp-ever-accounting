@@ -92,14 +92,14 @@ class Installer {
 							'version'  => $version,
 						)
 					);
-					++ $loop;
+					++$loop;
 				}
 			}
-			++ $loop;
+			++$loop;
 		}
 
 		if ( version_compare( EAC()->get_db_version(), EAC()->get_version(), '<' ) &&
-			 ! EAC()->queue()->get_next( 'eac_update_db_version' ) ) {
+			! EAC()->queue()->get_next( 'eac_update_db_version' ) ) {
 			EAC()->queue()->schedule_single(
 				time() + $loop,
 				'eac_update_db_version',
@@ -133,7 +133,7 @@ class Installer {
 	 * @return void
 	 */
 	public function activation_redirect() {
-		if ( ! get_transient( 'eac_installed' )|| !current_user_can( 'manage_options' ) ) {
+		if ( ! get_transient( 'eac_installed' ) || ! current_user_can( 'manage_options' ) ) {
 			return;
 		}
 		delete_transient( 'eac_installed' );
@@ -191,7 +191,7 @@ class Installer {
 		}
 		self::create_tables();
 		self::create_roles();
-		self::create_pages();
+		self::create_cron_jobs();
 		self::save_settings();
 		EAC()->add_db_version();
 
@@ -237,15 +237,6 @@ PRIMARY KEY (id),
 UNIQUE KEY number (number),
 KEY bank_name (name),
 KEY bank_type (type)
-) $collate;
-
-CREATE TABLE {$wpdb->prefix}ea_categories (
-id BIGINT(20) NOT NULL AUTO_INCREMENT,
-type VARCHAR(50) NOT NULL,
-name VARCHAR(191) NOT NULL,
-description TEXT DEFAULT NULL,
-PRIMARY KEY (id),
-UNIQUE KEY name_type (name, type)
 ) $collate;
 
 CREATE TABLE {$wpdb->prefix}ea_contactmeta (
@@ -469,17 +460,6 @@ KEY payment_id (payment_id),
 KEY expense_id (expense_id)
 ) $collate;
 
-CREATE TABLE {$wpdb->prefix}ea_taxes (
-id BIGINT(20) NOT NULL AUTO_INCREMENT,
-name VARCHAR(191) NOT NULL,
-rate DOUBLE(15, 4) NOT NULL,
-compound TINYINT(1) NOT NULL DEFAULT 0,
-PRIMARY KEY (id),
-KEY name (name),
-KEY rate (rate),
-KEY compound (compound)
-) $collate;
-
 CREATE TABLE {$wpdb->prefix}ea_notes (
 id BIGINT(20) NOT NULL AUTO_INCREMENT,
 parent_id BIGINT(20) UNSIGNED NOT NULL,
@@ -491,6 +471,32 @@ date_updated DATETIME DEFAULT NULL,
 PRIMARY KEY (id),
 KEY parent_id (parent_id),
 KEY parent_type (parent_type)
+) $collate;
+
+CREATE TABLE {$wpdb->prefix}ea_terms (
+id BIGINT(20) NOT NULL AUTO_INCREMENT,
+taxonomy VARCHAR(20) NOT NULL DEFAULT 'category',
+name VARCHAR(191) NOT NULL,
+description TEXT DEFAULT NULL,
+type VARCHAR(20) DEFAULT NULL,
+parent_id BIGINT(20) UNSIGNED DEFAULT NULL,
+date_created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+date_updated DATETIME DEFAULT NULL,
+PRIMARY KEY (id),
+KEY name (name),
+KEY type (type),
+KEY taxonomy (taxonomy),
+KEY parent_id (parent_id)
+) $collate;
+
+CREATE TABLE {$wpdb->prefix}ea_termmeta (
+meta_id BIGINT(20) NOT NULL AUTO_INCREMENT,
+ea_term_id BIGINT(20) UNSIGNED NOT NULL DEFAULT '0',
+meta_key VARCHAR(191) DEFAULT NULL,
+meta_value LONGTEXT,
+PRIMARY KEY (meta_id),
+KEY ea_term_id (ea_term_id),
+KEY meta_key (meta_key(191))
 ) $collate;
 ";
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
@@ -590,17 +596,6 @@ KEY parent_type (parent_type)
 			$wp_roles->add_cap( 'administrator', 'eac_manage_export' );
 		}
 	}
-
-	/**
-	 * Create pages.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	public static function create_pages() {
-
-	}
-
 
 	/**
 	 * Save settings.

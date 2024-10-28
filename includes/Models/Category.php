@@ -15,76 +15,21 @@ defined( 'ABSPATH' ) || exit;
  * @subpackage Models
  * @extends Model Category model.
  *
- * @property int    $id ID of the category.
- * @property string $type Type of the category.
- * @property string $name Name of the category.
- * @property string $description Description of the category.
+ * @property int          $id ID of the category.
+ * @property string       $type Type of the category.
+ * @property string       $name Name of the category.
+ * @property string       $description Description of the category.
  *
  * @property-read  string $formatted_name Formatted name of the category.
  */
-class Category extends Model {
+class Category extends Term {
 	/**
-	 * The table associated with the model.
+	 * Object type in singular form.
 	 *
 	 * @since 1.0.0
 	 * @var string
 	 */
-	protected $table = 'ea_categories';
-
-	/**
-	 * Table columns.
-	 *
-	 * @since 1.0.0
-	 * @var array
-	 */
-	protected $columns = array(
-		'id',
-		'type',
-		'name',
-		'description',
-	);
-
-	/**
-	 * The model's attributes.
-	 *
-	 * @since 1.0.0
-	 * @var array
-	 */
-	protected $attributes = array();
-
-	/**
-	 * The attributes that should be cast.
-	 *
-	 * @since 1.0.0
-	 * @var array
-	 */
-	protected $casts = array(
-		'type'        => 'sanitize_key',
-		'name'        => 'sanitize_text',
-		'description' => 'sanitize_textarea',
-	);
-
-	/**
-	 * The accessors to append to the model's array form.
-	 *
-	 * @since 1.0.0
-	 * @var array
-	 */
-	protected $appends = array(
-		'formatted_name',
-	);
-
-	/**
-	 * The attributes that are searchable.
-	 *
-	 * @since 1.0.0
-	 * @var array
-	 */
-	protected $searchable = array(
-		'name',
-		'type',
-		'description',
-	);
+	protected $object_type = 'category';
 
 	/*
 	|--------------------------------------------------------------------------
@@ -98,25 +43,17 @@ class Category extends Model {
 	/**
 	 * Set the type of the category.
 	 *
-	 * @param string $type Type of the category.
+	 * @param string $type Status of the category.
 	 *
 	 * @since 1.0.0
 	 * @return void
 	 */
 	protected function set_type_attr( $type ) {
-		$this->attributes['type'] = ! array_key_exists( $type, EAC()->categories->get_types() ) ? 'item' : $type;
-	}
+		if ( ! array_key_exists( $type, EAC()->categories->get_types() ) ) {
+			$type = '';
+		}
 
-	/**
-	 * Set the status of the category.
-	 *
-	 * @param string $status Status of the category.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	protected function set_status_attr( $status ) {
-		$this->attributes['status'] = ! array_key_exists( $status, EAC()->categories->get_types() ) ? 'active' : $status;
+		$this->attributes['type'] = sanitize_text_field( $type );
 	}
 
 	/**
@@ -187,6 +124,7 @@ class Category extends Model {
 		if ( empty( $this->name ) ) {
 			return new \WP_Error( 'missing_required', __( 'Category name is required.', 'wp-ever-accounting' ) );
 		}
+
 		if ( empty( $this->type ) ) {
 			return new \WP_Error( 'missing_required', __( 'Category type is required.', 'wp-ever-accounting' ) );
 		}
@@ -194,9 +132,10 @@ class Category extends Model {
 		// Duplicate check. Same type and name should not exist.
 		$existing = static::results(
 			array(
-				'type'  => $this->type,
-				'name'  => $this->name,
-				'limit' => 1,
+				'type'     => $this->type,
+				'taxonomy' => $this->taxonomy,
+				'name'     => $this->name,
+				'limit'    => 1,
 			)
 		);
 		if ( ! empty( $existing ) && $existing[0]->id !== $this->id ) {
