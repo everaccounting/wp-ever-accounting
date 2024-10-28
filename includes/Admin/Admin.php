@@ -136,31 +136,31 @@ class Admin {
 				'submenu' => array(
 					array(
 						'title' => __( 'Item', 'wp-ever-accounting' ),
-						'url'   => admin_url( 'admin.php?page=eac-items&tab=items&add=yes' ),
+						'url'   => admin_url( 'admin.php?page=eac-items&tab=items&action=add' ),
 					),
 					array(
 						'title' => __( 'Payment', 'wp-ever-accounting' ),
-						'url'   => admin_url( 'admin.php?page=eac-sales&tab=payments&add=yes' ),
+						'url'   => admin_url( 'admin.php?page=eac-sales&tab=payments&action=add' ),
 					),
 					array(
 						'title' => __( 'Expense', 'wp-ever-accounting' ),
-						'url'   => admin_url( 'admin.php?page=eac-purchases&tab=expenses&add=yes' ),
+						'url'   => admin_url( 'admin.php?page=eac-purchases&tab=expenses&action=add' ),
 					),
 					array(
 						'title' => __( 'Invoice', 'wp-ever-accounting' ),
-						'url'   => admin_url( 'admin.php?page=eac-sales&tab=invoices&add=yes' ),
+						'url'   => admin_url( 'admin.php?page=eac-sales&tab=invoices&action=add' ),
 					),
 					array(
 						'title' => __( 'Bill', 'wp-ever-accounting' ),
-						'url'   => admin_url( 'admin.php?page=eac-purchases&tab=bills&add=yes' ),
+						'url'   => admin_url( 'admin.php?page=eac-purchases&tab=bills&action=add' ),
 					),
 					array(
 						'title' => __( 'Customer', 'wp-ever-accounting' ),
-						'url'   => admin_url( 'admin.php?page=eac-sales&tab=customers&add=yes' ),
+						'url'   => admin_url( 'admin.php?page=eac-sales&tab=customers&action=add' ),
 					),
 					array(
 						'title' => __( 'Vendor', 'wp-ever-accounting' ),
-						'url'   => admin_url( 'admin.php?page=eac-purchases&tab=vendors&add=yes' ),
+						'url'   => admin_url( 'admin.php?page=eac-purchases&tab=vendors&action=add' ),
 					),
 				),
 			),

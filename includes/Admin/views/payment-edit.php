@@ -133,7 +133,7 @@ $payment = Payment::make( $id );
 							'data-subtype'     => 'payment',
 							'suffix'           => sprintf(
 								'<a class="addon" href="%s" target="_blank" title="%s"><span class="dashicons dashicons-plus"></span></a>',
-								esc_url( admin_url( 'admin.php?page=eac-misc&tab=categories&action=add&type=income' ) ),
+								esc_url( admin_url( 'admin.php?page=eac-settings&tab=categories&action=add&type=income' ) ),
 								__( 'Add Category', 'wp-ever-accounting' )
 							),
 						)
@@ -154,8 +154,8 @@ $payment = Payment::make( $id );
 							'data-type'        => 'customer',
 							'suffix'           => sprintf(
 								'<a class="addon" href="%s" target="_blank" title="%s"><span class="dashicons dashicons-plus"></span></a>',
-								esc_url( admin_url( 'admin.php?page=eac-purchases&tab=customers&action=add' ) ),
-								__( 'Add Vendor', 'wp-ever-accounting' )
+								esc_url( admin_url( 'admin.php?page=eac-sales&tab=customers&action=add' ) ),
+								__( 'Add Customer', 'wp-ever-accounting' )
 							),
 							'tooltip'          => __( 'Select the customer.', 'wp-ever-accounting' ),
 						)

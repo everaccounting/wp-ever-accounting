@@ -57,7 +57,7 @@ $transfer = Transfer::make( $id );
 							'option_label'     => 'formatted_name',
 							'suffix'           => sprintf(
 								'<a class="addon" href="%s" target="_blank" title="%s"><span class="dashicons dashicons-plus"></span></a>',
-								esc_url( admin_url( 'admin.php?page=eac-banking&tab=accounts&add=yes' ) ),
+								esc_url( admin_url( 'admin.php?page=eac-banking&tab=accounts&action=add' ) ),
 								__( 'Add Account', 'wp-ever-accounting' )
 							),
 						)
@@ -80,7 +80,7 @@ $transfer = Transfer::make( $id );
 							'option_label'     => 'formatted_name',
 							'suffix'           => sprintf(
 								'<a class="addon" href="%s" target="_blank" title="%s"><span class="dashicons dashicons-plus"></span></a>',
-								esc_url( admin_url( 'admin.php?page=eac-banking&tab=accounts&add=yes' ) ),
+								esc_url( admin_url( 'admin.php?page=eac-banking&tab=accounts&action=add' ) ),
 								__( 'Add Account', 'wp-ever-accounting' )
 							),
 						)
