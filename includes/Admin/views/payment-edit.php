@@ -198,11 +198,11 @@ $payment = Payment::make( $id );
 
 					eac_form_field(
 						array(
-							'label'         => __( 'Description', 'wp-ever-accounting' ),
+							'label'         => __( 'Note', 'wp-ever-accounting' ),
 							'type'          => 'textarea',
 							'name'          => 'note',
 							'value'         => $payment->note,
-							'placeholder'   => __( 'Enter description', 'wp-ever-accounting' ),
+							'placeholder'   => __( 'Enter note', 'wp-ever-accounting' ),
 							'wrapper_class' => 'is--full',
 						)
 					);
