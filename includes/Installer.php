@@ -41,6 +41,7 @@ class Installer {
 	public function __construct() {
 		add_action( 'init', array( $this, 'check_update' ), 5 );
 		add_action( 'admin_notices', array( $this, 'update_notice' ) );
+		add_action( 'admin_init', array( $this, 'activation_redirect' ) );
 		add_action( 'eac_run_update_callback', array( $this, 'run_update_callback' ), 10, 2 );
 		add_action( 'eac_update_db_version', array( $this, 'update_db_version' ) );
 	}
@@ -126,6 +127,22 @@ class Installer {
 	}
 
 	/**
+	 * Redirect to the welcome page on activation.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public function activation_redirect() {
+		if ( ! get_transient( 'eac_installed' )|| !current_user_can( 'manage_options' ) ) {
+			return;
+		}
+		delete_transient( 'eac_installed' );
+		flush_rewrite_rules();
+		wp_safe_redirect( add_query_arg( 'page', 'ever-accounting', admin_url( 'admin.php' ) ) );
+		exit;
+	}
+
+	/**
 	 * Run the update callback.
 	 *
 	 * @param string $callback The callback to run.
@@ -137,11 +154,8 @@ class Installer {
 	public function run_update_callback( $callback, $version ) {
 		require_once __DIR__ . '/Functions/updates.php';
 		if ( is_callable( $callback ) ) {
-			error_log( 'run_update_callback: ' . $callback );
 			$result = (bool) call_user_func( $callback );
 			if ( $result ) {
-				error_log( '===================AGAIN====================' );
-				error_log( 'run_update_callback: ' . $callback . ' - again' );
 				EAC()->queue()->add(
 					'eac_run_update_callback',
 					array(
@@ -149,8 +163,6 @@ class Installer {
 						'version'  => $version,
 					)
 				);
-			} else {
-				error_log( 'run_update_callback: ' . $callback . ' - success' );
 			}
 		}
 	}
@@ -179,11 +191,13 @@ class Installer {
 		}
 		self::create_tables();
 		self::create_roles();
+		self::create_pages();
 		self::save_settings();
 		EAC()->add_db_version();
 
 		// Set installation date.
 		add_option( 'eac_install_date', wp_date( 'U' ) );
+		set_transient( 'eac_installed', 1, 60 );
 
 		// Force a flush of rewrite rules even if the corresponding hook isn't initialized yet.
 		if ( ! has_action( 'eac_flush_rewrite_rules' ) ) {
@@ -575,6 +589,16 @@ KEY parent_type (parent_type)
 			$wp_roles->add_cap( 'administrator', 'eac_manage_import' );
 			$wp_roles->add_cap( 'administrator', 'eac_manage_export' );
 		}
+	}
+
+	/**
+	 * Create pages.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public static function create_pages() {
+
 	}
 
 

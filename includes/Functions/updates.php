@@ -66,7 +66,6 @@ function eac_update_120_settings() {
 		}
 	}
 	update_option( 'eac_currencies', $currencies );
-	error_log( __METHOD__ );
 }
 
 /**
@@ -309,7 +308,6 @@ function eac_update_120_contacts() {
 	$wpdb->query( "UPDATE $table SET ea_contact_id = contact_id" );
 	$wpdb->query( "ALTER TABLE $table DROP COLUMN contact_id" );
 	$wpdb->query( "ALTER TABLE $table MODIFY COLUMN ea_contact_id INT(11) NOT NULL AFTER meta_id" );
-	error_log( __METHOD__ );
 }
 
 

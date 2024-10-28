@@ -461,14 +461,13 @@ class Invoice extends Document {
 	 * @since 1.0.0
 	 * @return string
 	 */
+	/**
+	 * Get the public URL.
+	 *
+	 * @since 1.0.0
+	 * @return string
+	 */
 	public function get_public_url() {
-		$page_id = get_option( 'eac_invoice_page_id' );
-//		if ( empty( $page_id ) ) {
-//			return '';
-//		}
-
-		$permalink = get_permalink( $page_id );
-
-		return add_query_arg( 'bill', $this->uuid, $permalink );
+		return site_url( 'eac/invoice/?uuid=' . $this->uuid );
 	}
 }

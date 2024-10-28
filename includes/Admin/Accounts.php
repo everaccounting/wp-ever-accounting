@@ -25,7 +25,6 @@ class Accounts {
 		add_action( 'admin_post_eac_edit_account', array( __CLASS__, 'handle_edit' ) );
 		add_action( 'eac_banking_page_accounts_loaded', array( __CLASS__, 'page_loaded' ) );
 		add_action( 'eac_banking_page_accounts_content', array( __CLASS__, 'page_content' ) );
-		add_action( 'eac_account_edit_sidebar_content', array( __CLASS__, 'account_notes' ) );
 		add_action( 'eac_account_profile_section_overview', array( __CLASS__, 'overview_section' ) );
 		add_action( 'eac_account_profile_section_payments', array( __CLASS__, 'payments_section' ) );
 		add_action( 'eac_account_profile_section_expenses', array( __CLASS__, 'expenses_section' ) );
@@ -208,7 +207,7 @@ class Accounts {
 			),
 		);
 		?>
-		<h2 class="has--border"><?php echo esc_html__( 'Overview', 'wp-ever-accounting' ); ?><?php echo esc_html( wp_date( 'Y' ) ); ?></h2>
+		<h2 class="has--border"><?php echo esc_html__( 'Overview', 'wp-ever-accounting' ); ?></h2>
 		<canvas class="eac-chart" id="eac-account-chart" style="height: 300px;margin-bottom: 20px;" data-datasets="<?php echo esc_attr( wp_json_encode( $chart ) ); ?>" data-currency="<?php echo esc_attr( EAC()->currencies->get_symbol( $account->currency ) ); ?>"></canvas>
 		<div class="eac-stats stats--3">
 			<?php foreach ( $stats as $stat ) : ?>
@@ -384,22 +383,17 @@ class Accounts {
 			)
 		);
 		?>
-		<div class="eac-card">
-			<div class="eac-card__header">
-				<h3 class="eac-card__title"><?php esc_html_e( 'Notes', 'wp-ever-accounting' ); ?></h3>
-			</div>
-			<div class="eac-card__body">
-				<div class="eac-form-field">
-					<label for="eac-note"><?php esc_html_e( 'Add Note', 'wp-ever-accounting' ); ?></label>
-					<textarea id="eac-note" cols="30" rows="2" placeholder="<?php esc_attr_e( 'Enter Note', 'wp-ever-accounting' ); ?>"></textarea>
-				</div>
-				<button id="eac-add-note" type="button" class="button tw-mb-[20px]" data-parent_id="<?php echo esc_attr( $account->id ); ?>" data-parent_type="account" data-nonce="<?php echo esc_attr( wp_create_nonce( 'eac_add_note' ) ); ?>">
-					<?php esc_html_e( 'Add Note', 'wp-ever-accounting' ); ?>
-				</button>
+		<h2 class="has--border"><?php esc_html_e( 'Notes', 'wp-ever-accounting' ); ?></h2>
 
-				<?php include __DIR__ . '/views/note-list.php'; ?>
-			</div>
+		<div class="eac-form-field">
+			<label for="eac-note"><?php esc_html_e( 'Add Note', 'wp-ever-accounting' ); ?></label>
+			<textarea id="eac-note" cols="30" rows="2" placeholder="<?php esc_attr_e( 'Enter Note', 'wp-ever-accounting' ); ?>"></textarea>
 		</div>
+		<button id="eac-add-note" type="button" class="button tw-mb-[20px]" data-parent_id="<?php echo esc_attr( $account->id ); ?>" data-parent_type="account" data-nonce="<?php echo esc_attr( wp_create_nonce( 'eac_add_note' ) ); ?>">
+			<?php esc_html_e( 'Add Note', 'wp-ever-accounting' ); ?>
+		</button>
+
+		<?php include __DIR__ . '/views/note-list.php'; ?>
 		<?php
 	}
 }

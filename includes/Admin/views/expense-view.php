@@ -29,7 +29,7 @@ $expense = EAC()->expenses->get( $id );
 <div class="eac-poststuff">
 
 	<div class="column-1">
-		<?php eac_get_template( 'expense.php', array( 'expense' => $expense ) ); ?>
+		<div class="eac-card"><?php eac_get_template( 'content-expense.php', array( 'expense' => $expense ) ); ?></div>
 		<?php
 		/**
 		 * Fires action to inject custom content in the main column.
@@ -66,7 +66,7 @@ $expense = EAC()->expenses->get( $id );
 				<a href="#" class="button button-small button-block eac_print_document" data-target=".eac-document">
 					<span class="dashicons dashicons-printer"></span> <?php esc_html_e( 'Print', 'wp-ever-accounting' ); ?>
 				</a>
-				<a href="#" class="button button-small button-block">
+				<a href="#" class="button button-small button-block eac_share_document" data-url="<?php echo esc_url( $expense->get_public_url() ); ?>">
 					<span class="dashicons dashicons-share"></span> <?php esc_html_e( 'Share', 'wp-ever-accounting' ); ?>
 				</a>
 			</div>

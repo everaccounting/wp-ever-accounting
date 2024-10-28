@@ -91,7 +91,7 @@ class Settings {
 				new Sales(),
 				new Purchases(),
 				new Taxes(),
-				new Emails(),
+//				new Emails(),
 			)
 		);
 

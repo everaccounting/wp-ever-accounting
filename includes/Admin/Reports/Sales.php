@@ -23,16 +23,19 @@ class Sales {
 	public static function render() {
 		wp_verify_nonce( '_wpnonce' );
 		$year              = ! empty( $_GET['year'] ) ? absint( $_GET['year'] ) : wp_date( 'Y' );
-		$datasets          = array();
 		$data              = ReportsUtil::get_payments_report( $year );
-		$labels            = array_keys( $data['months'] );
-		$datasets['total'] = array(
-			'type'            => 'line',
-			'fill'            => false,
-			'label'           => esc_html__( 'Total', 'wp-ever-accounting' ),
-			'backgroundColor' => '#3644ff',
-			'borderColor'     => '#3644ff',
-			'data'            => array_values( $data['months'] ),
+		$chart      = array(
+			'type'     => 'line',
+			'labels'   => array_keys( $data['months'] ),
+			'datasets' => array(
+				array(
+					'label'           => __( 'Payments', 'wp-ever-accounting' ),
+					'backgroundColor' => '#3644ff',
+					'borderColor'     => '#3644ff',
+					'fill'            => false,
+					'data'            => array_values( $data['months'] ),
+				),
+			),
 		);
 		?>
 		<div class="eac-section-header">
@@ -55,7 +58,7 @@ class Sales {
 			</div>
 			<div class="eac-card__body">
 				<div class="eac-chart">
-					<canvas id="eac-sales-chart" style="min-height: 300px;"></canvas>
+					<canvas class="eac-chart" id="eac-sales-chart" style="height: 300px;margin-bottom: 20px;" data-datasets="<?php echo esc_attr( wp_json_encode( $chart ) ); ?>" data-currency="<?php echo esc_attr( EAC()->currencies->get_symbol( eac_base_currency() ) ); ?>"></canvas>
 				</div>
 			</div>
 		</div>
@@ -127,65 +130,6 @@ class Sales {
 				</table>
 			</div>
 		</div>
-
-
-		<script type="text/javascript">
-			window.onload = function () {
-				var ctx = document.getElementById("eac-sales-chart").getContext('2d');
-				var symbol = "<?php echo esc_html( EAC()->currencies->get_symbol() ); ?>";
-				var myChart = new Chart(ctx, {
-					type: 'bar',
-					minHeight: 500,
-					data: {
-						labels: <?php echo wp_json_encode( array_values( $labels ) ); ?>,
-						datasets: <?php echo wp_json_encode( array_values( $datasets ) ); ?>
-					},
-					options: {
-						tooltips: {
-							displayColors: true,
-							YrPadding: 12,
-							backgroundColor: "#000000",
-							bodyFontColor: "#e5e5e5",
-							bodySpacing: 4,
-							intersect: 0,
-							mode: "nearest",
-							position: "nearest",
-							titleFontColor: "#ffffff",
-							callbacks: {
-								label: function (tooltipItem, data) {
-									let value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
-									let datasetLabel = data.datasets[tooltipItem.datasetIndex].label || '';
-									return datasetLabel + ': ' + value.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') + symbol;
-								}
-							}
-						},
-						scales: {
-							xAxes: [{
-								stacked: false,
-								gridLines: {
-									display: true,
-								}
-							}],
-							yAxes: [{
-								stacked: false,
-								ticks: {
-									beginAtZero: true,
-									callback: function (value, index, ticks) {
-										return Number(value).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') + symbol;
-									}
-								},
-								type: 'linear',
-								barPercentage: 0.4
-							}]
-						},
-						responsive: true,
-						maintainAspectRatio: false,
-						legend: {display: false},
-					}
-				});
-			}
-		</script>
-
 		<?php
 	}
 }

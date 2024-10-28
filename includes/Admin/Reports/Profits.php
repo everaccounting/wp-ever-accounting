@@ -24,7 +24,36 @@ class Profits {
 		wp_verify_nonce( '_wpnonce' );
 		$year   = ! empty( $_GET['year'] ) ? absint( $_GET['year'] ) : wp_date( 'Y' );
 		$data   = ReportsUtil::get_profits_report( $year );
-		$labels = array_keys( $data['profits'] );
+		$chart = array(
+			'labels'   => array_keys( $data['payments'] ),
+			'type'     => 'line',
+			'datasets' => array(
+				array(
+					'backgroundColor' => '#3644ff',
+					'borderColor'     => '#3644ff',
+					'data'            => array_values( $data['payments'] ),
+					'fill'            => false,
+					'label'           => __( 'Sales', 'wp-ever-accounting' ),
+					'type'            => 'line',
+				),
+				array(
+					'label'           => __( 'Expenses', 'wp-ever-accounting' ),
+					'backgroundColor' => '#f2385a',
+					'borderColor'     => '#f2385a',
+					'type'            => 'line',
+					'fill'            => false,
+					'data'            => array_values( $data['expenses'] ),
+				),
+				array(
+					'label'           => __( 'Profit/Loss', 'wp-ever-accounting' ),
+					'backgroundColor' => '#00d48f',
+					'borderColor'     => '#00d48f',
+					'type'            => 'line',
+					'fill'            => false,
+					'data'            => array_values( $data['profits'] ),
+				),
+			),
+		);
 		?>
 		<div class="eac-section-header">
 			<h3>
@@ -46,7 +75,7 @@ class Profits {
 			</div>
 			<div class="eac-card__body">
 				<div class="eac-chart">
-					<canvas id="eac-profits-chart" style="min-height: 300px;"></canvas>
+					<canvas class="eac-chart" id="eac-profits-chart" style="height: 300px;margin-bottom: 20px;" data-datasets="<?php echo esc_attr( wp_json_encode( $chart ) ); ?>" data-currency="<?php echo esc_attr( EAC()->currencies->get_symbol( eac_base_currency() ) ); ?>"></canvas>
 				</div>
 			</div>
 		</div>
@@ -105,89 +134,6 @@ class Profits {
 				</table>
 			</div>
 		</div>
-
-
-		<script type="text/javascript">
-			window.onload = function () {
-				var ctx = document.getElementById("eac-profits-chart").getContext('2d');
-				var symbol = "<?php echo esc_html( EAC()->currencies->get_symbol() ); ?>";
-				var myChart = new Chart(ctx, {
-					type: 'line',
-					minHeight: 500,
-					data: {
-						labels: <?php echo wp_json_encode( array_values( $labels ) ); ?>,
-						datasets: [
-							{
-								label: "<?php esc_html_e( 'Sales', 'wp-ever-accounting' ); ?>",
-								backgroundColor: "#3644ff",
-								data: <?php echo wp_json_encode( array_values( $data['payments'] ) ); ?>
-							},
-							{
-								label: "<?php esc_html_e( 'Expenses', 'wp-ever-accounting' ); ?>",
-								backgroundColor: "#f2385a",
-								data: <?php echo wp_json_encode( array_values( $data['expenses'] ) ); ?>
-							},
-							{
-								label: "<?php esc_html_e( 'Profit', 'wp-ever-accounting' ); ?>",
-								backgroundColor: "#00d48f",
-								data: <?php echo wp_json_encode( array_values( $data['profits'] ) ); ?>
-							},
-							{
-								type: 'line',
-								fill: false,
-								label: "<?php esc_html_e( 'Profit', 'wp-ever-accounting' ); ?>",
-								backgroundColor: "#00d48f",
-								borderColor: "#00d48f",
-								data: <?php echo wp_json_encode( array_values( $data['profits'] ) ); ?>
-							}
-						]
-					},
-					options: {
-						tooltips: {
-							displayColors: true,
-							YrPadding: 12,
-							backgroundColor: "#000000",
-							bodyFontColor: "#e5e5e5",
-							bodySpacing: 4,
-							intersect: 0,
-							mode: "nearest",
-							position: "nearest",
-							titleFontColor: "#ffffff",
-							callbacks: {
-								label: function (tooltipItem, data) {
-									let value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
-									let datasetLabel = data.datasets[tooltipItem.datasetIndex].label || '';
-									return datasetLabel + ': ' + value.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') + symbol;
-								}
-							}
-						},
-						scales: {
-							xAxes: [{
-								stacked: false,
-								gridLines: {
-									display: true,
-								}
-							}],
-							yAxes: [{
-								stacked: false,
-								ticks: {
-									beginAtZero: true,
-									callback: function (value, index, ticks) {
-										return Number(value).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') + symbol;
-									}
-								},
-								type: 'linear',
-								barPercentage: 0.4
-							}]
-						},
-						responsive: true,
-						maintainAspectRatio: false,
-						legend: {display: false},
-					}
-				});
-			}
-		</script>
-
 		<?php
 	}
 }
