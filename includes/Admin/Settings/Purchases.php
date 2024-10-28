@@ -134,7 +134,7 @@ class Purchases extends Page {
 				'id'          => 'eac_bill_note',
 				'type'        => 'textarea',
 				'placeholder' => 'e.g. Thank you for your business!',
-				'default'     => 'Thank you for your business!',
+				'default'     => __( 'Thank you for your business!', 'wp-ever-accounting' ),
 				'desc_tip'    => true,
 			),
 			// terms.
@@ -144,7 +144,7 @@ class Purchases extends Page {
 				'id'          => 'eac_bill_terms',
 				'type'        => 'textarea',
 				'placeholder' => 'e.g. Payment is due within 30 days.',
-				'default'     => 'Payment is due within 30 days.',
+				'default'     => __( 'Payment is due within 30 days.', 'wp-ever-accounting' ),
 				'desc_tip'    => true,
 			),
 			// end section.
@@ -168,7 +168,7 @@ class Purchases extends Page {
 				'id'          => 'eac_bill_item_label',
 				'type'        => 'text',
 				'placeholder' => 'e.g. Item',
-				'default'     => 'Items',
+				'default'     => __( 'Items', 'wp-ever-accounting' ),
 				'desc_tip'    => true,
 			),
 			// price label.
@@ -178,7 +178,7 @@ class Purchases extends Page {
 				'id'          => 'eac_bill_price_label',
 				'type'        => 'text',
 				'placeholder' => 'e.g. Price',
-				'default'     => 'Price',
+				'default'     => __( 'Price', 'wp-ever-accounting' ),
 				'desc_tip'    => true,
 			),
 			// quantity label.
@@ -188,7 +188,7 @@ class Purchases extends Page {
 				'id'          => 'eac_bill_quantity_label',
 				'type'        => 'text',
 				'placeholder' => 'e.g. Quantity',
-				'default'     => 'Qty',
+				'default'     => __( 'Quantity', 'wp-ever-accounting' ),
 				'desc_tip'    => true,
 			),
 			// discount label.
@@ -198,7 +198,7 @@ class Purchases extends Page {
 				'id'          => 'eac_bill_discount_label',
 				'type'        => 'text',
 				'placeholder' => 'e.g. Discount',
-				'default'     => 'Discount',
+				'default'     => __( 'Discount', 'wp-ever-accounting' ),
 				'desc_tip'    => true,
 			),
 			// end section.
