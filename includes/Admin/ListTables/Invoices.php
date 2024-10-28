@@ -58,6 +58,7 @@ class Invoices extends ListTable {
 			'order'   => $order,
 			'status'  => $this->get_request_status(),
 		);
+		
 		/**
 		 * Filter the query arguments for the list table.
 		 *
