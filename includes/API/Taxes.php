@@ -218,7 +218,6 @@ class Taxes extends Controller {
 		 * @since 2.0.0
 		 */
 		$args = apply_filters( 'eac_rest_tax_query', $args, $request );
-		error_log( print_r( $args, true ) );
 		$taxes     = EAC()->taxes->query( $args );
 		$total     = EAC()->taxes->query( $args, true );
 		$max_pages = ceil( $total / (int) $args['per_page'] );
