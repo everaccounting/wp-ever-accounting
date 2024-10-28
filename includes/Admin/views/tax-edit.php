@@ -35,7 +35,7 @@ $tax = Tax::make( $id );
 
 			<div class="eac-card">
 				<div class="eac-card__header">
-					<h2 class="eac-card__title"><?php esc_html_e( 'Tax Data', 'wp-ever-accounting' ); ?></h2>
+					<h2 class="eac-card__title"><?php esc_html_e( 'Tax Attributes', 'wp-ever-accounting' ); ?></h2>
 				</div>
 				<div class="eac-card__body grid--fields">
 					<?php

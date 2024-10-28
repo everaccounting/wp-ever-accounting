@@ -134,7 +134,7 @@ class Sales extends Page {
 				'id'          => 'eac_invoice_note',
 				'type'        => 'textarea',
 				'placeholder' => 'e.g. Thank you for your business!',
-				'default'     => 'Thank you for your business!',
+				'default'     => __( 'Thank you for your business!', 'wp-ever-accounting' ),
 				'desc_tip'    => true,
 			),
 			array(
@@ -143,7 +143,7 @@ class Sales extends Page {
 				'id'          => 'eac_invoice_terms',
 				'type'        => 'textarea',
 				'placeholder' => 'e.g. Payment is due within 30 days.',
-				'default'     => 'Payment is due within 30 days.',
+				'default'     => __( 'Payment is due within 30 days.', 'wp-ever-accounting' ),
 				'desc_tip'    => true,
 			),
 			// end section.
@@ -165,7 +165,7 @@ class Sales extends Page {
 				'id'          => 'eac_invoice_col_item_label',
 				'type'        => 'text',
 				'placeholder' => 'e.g. Item',
-				'default'     => __( 'Item', 'wp-ever-accounting' ),
+				'default'     => __( 'Items', 'wp-ever-accounting' ),
 				'desc_tip'    => true,
 			),
 			// price label.
