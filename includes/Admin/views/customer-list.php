@@ -27,6 +27,6 @@ global $list_table;
 		<?php $list_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'search' ); ?>
 		<?php $list_table->display(); ?>
 		<input type="hidden" name="page" value="eac-sales"/>
-		<input type="hidden" name="tab" value="invoices"/>
+		<input type="hidden" name="tab" value="customers"/>
 	</form>
 <?php
