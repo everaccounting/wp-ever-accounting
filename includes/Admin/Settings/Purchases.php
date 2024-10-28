@@ -109,7 +109,7 @@ class Purchases extends Page {
 			// due date.
 			array(
 				'title'       => __( 'Due Date', 'wp-ever-accounting' ),
-				'desc'        => __( 'Specify how due date is automatically set when you create an bill.', 'wp-ever-accounting' ),
+				'desc'        => __( 'Specify how due date is automatically set when you create a bill.', 'wp-ever-accounting' ),
 				'id'          => 'eac_bill_due_date',
 				'type'        => 'number',
 				'placeholder' => 'e.g. 30',

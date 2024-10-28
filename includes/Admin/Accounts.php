@@ -75,8 +75,11 @@ class Accounts {
 			EAC()->flash->error( $account->get_error_message() );
 		} else {
 			EAC()->flash->success( __( 'Account saved successfully.', 'wp-ever-accounting' ) );
-			$referer = add_query_arg( 'id', $account->id, $referer );
-			$referer = remove_query_arg( array( 'add' ), $referer );
+			$referer = remove_query_arg( array( 'action' ), $referer );
+			$referer = add_query_arg( array(
+				'action' => 'view',
+				'id'     => $account->id,
+			), $referer );
 		}
 
 		wp_safe_redirect( $referer );
@@ -333,7 +336,6 @@ class Accounts {
 				<th><?php esc_html_e( 'Number', 'wp-ever-accounting' ); ?></th>
 				<th><?php esc_html_e( 'Date', 'wp-ever-accounting' ); ?></th>
 				<th><?php esc_html_e( 'Amount', 'wp-ever-accounting' ); ?></th>
-				<th><?php esc_html_e( 'Status', 'wp-ever-accounting' ); ?></th>
 			</tr>
 			</thead>
 			<tbody>
@@ -345,14 +347,13 @@ class Accounts {
 								<?php echo esc_html( $expense->number ); ?>
 							</a>
 						</td>
-						<td><?php echo esc_html( wp_date( eac_date_format(), strtotime( $expense->date ) ) ); ?></td>
+						<td><?php echo esc_html( wp_date( eac_date_format(), strtotime( $expense->payment_date ) ) ); ?></td>
 						<td><?php echo esc_html( eac_format_amount( $expense->amount ) ); ?></td>
-						<td><?php echo esc_html( $expense->status ); ?></td>
 					</tr>
 				<?php endforeach; ?>
 			<?php else : ?>
 				<tr>
-					<td colspan="4"><?php esc_html_e( 'No expenses found.', 'wp-ever-accounting' ); ?></td>
+					<td colspan="3"><?php esc_html_e( 'No expenses found.', 'wp-ever-accounting' ); ?></td>
 				</tr>
 			<?php endif; ?>
 		</table>
