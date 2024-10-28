@@ -179,6 +179,7 @@ class Installer {
 		}
 		self::create_tables();
 		self::create_roles();
+		self::create_pages();
 		self::save_settings();
 		EAC()->add_db_version();
 
@@ -575,6 +576,16 @@ KEY parent_type (parent_type)
 			$wp_roles->add_cap( 'administrator', 'eac_manage_import' );
 			$wp_roles->add_cap( 'administrator', 'eac_manage_export' );
 		}
+	}
+
+	/**
+	 * Create pages.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public static function create_pages() {
+
 	}
 
 

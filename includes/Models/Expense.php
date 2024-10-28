@@ -189,12 +189,6 @@ class Expense extends Transaction {
 	 * @return string
 	 */
 	public function get_public_url() {
-		$page_id = get_option( 'eac_expense_page_id' );
-		if ( empty( $page_id ) ) {
-			return '';
-		}
-
-		$permalink = get_permalink( $page_id );
-		return add_query_arg( 'uuid', $this->uuid, $permalink );
+		return site_url( 'eac/expense/?uuid=' . $this->uuid );
 	}
 }

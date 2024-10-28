@@ -201,13 +201,6 @@ class Payment extends Transaction {
 	 * @return string
 	 */
 	public function get_public_url() {
-		$page_id = get_option( 'eac_payment_page_id' );
-		if ( empty( $page_id ) ) {
-			return '';
-		}
-
-		$permalink = get_permalink( $page_id );
-
-		return add_query_arg( 'payment', $this->uuid, $permalink );
+		return site_url( 'eac/payment/?uuid=' . $this->uuid );
 	}
 }

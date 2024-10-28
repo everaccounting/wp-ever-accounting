@@ -26,7 +26,7 @@ $mark_sent_url = wp_nonce_url( add_query_arg( array( 'eac_action' => 'bill_actio
 <div class="eac-poststuff">
 
 	<div class="column-1">
-		<?php eac_get_template( 'bill.php', array( 'bill' => $bill ) ); ?>
+		<div class="eac-card"><?php eac_get_template( 'content-bill.php', array( 'bill' => $bill ) ); ?></div>
 		<?php
 		/**
 		 * Fires action to inject custom content in the main column.

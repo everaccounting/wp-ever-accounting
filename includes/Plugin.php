@@ -143,6 +143,8 @@ class Plugin extends \ByteKit\Plugin {
 			'EverAccounting\Transactions',
 			'EverAccounting\Transfers',
 			'EverAccounting\Caches',
+			'EverAccounting\Frontend\Frontend',
+			'EverAccounting\Frontend\Rewrites',
 		);
 		foreach ( $handlers as $handler ) {
 			$this->services->add( $handler );
