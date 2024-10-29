@@ -1,6 +1,6 @@
 <?php
 /**
- * Handle customers export.
+ * Handle accounts export.
  *
  * @since 1.0.2
  *
@@ -9,19 +9,19 @@
 
 namespace EverAccounting\Admin\Exporters;
 
-use EverAccounting\Models\Customer;
+use EverAccounting\Models\Account;
 
 defined( 'ABSPATH' ) || exit();
 
 
 /**
- * Class Customers.
+ * Class Accounts.
  *
  * @since   1.0.2
  *
  * @package EverAccounting\Admin\Exporters
  */
-class Customers extends Exporter {
+class Accounts extends Exporter {
 
 	/**
 	 * Our export type. Used for export-type specific filters/actions.
@@ -29,7 +29,7 @@ class Customers extends Exporter {
 	 * @since 1.0.2
 	 * @var string
 	 */
-	public $export_type = 'customers';
+	public $export_type = 'accounts';
 
 	/**
 	 * Return an array of columns to export.
@@ -38,9 +38,9 @@ class Customers extends Exporter {
 	 * @return array
 	 */
 	public function get_columns() {
-		$hidden = array( 'id', 'type', 'user_id', 'created_via' );
+		$hidden = array( 'id', 'user_id', 'parent_id', 'created_via' );
 
-		return array_diff( ( new Customer() )->get_columns(), $hidden );
+		return array_diff( ( new Account() )->get_columns(), $hidden );
 	}
 
 	/**
@@ -57,9 +57,9 @@ class Customers extends Exporter {
 			'limit'   => $this->limit,
 		);
 
-		$args = apply_filters( 'eac_export_customers_args', $args );
+		$args = apply_filters( 'eac_export_accounts_args', $args );
 
-		$items = EAC()->customers->query( $args );
+		$items = EAC()->accounts->query( $args );
 		$rows  = array();
 
 		foreach ( $items as $item ) {
