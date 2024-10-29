@@ -38,9 +38,14 @@ class Taxes extends Exporter {
 	 * @return array
 	 */
 	public function get_columns() {
-		$hidden = array( 'id', 'description', 'type', 'user_id', 'parent_id', 'created_via' );
+		$hidden    = array( 'id', 'description', 'type', 'taxonomy', 'parent_id', 'date_created', 'date_updated' );
+		$columns   = array_diff( ( new Tax() )->get_columns(), $hidden );
+		$columns[] = 'rate';
+		$columns[] = 'compound';
+		$columns[] = 'date_created';
+		$columns[] = 'date_updated';
 
-		return array_diff( ( new Tax() )->get_columns(), $hidden );
+		return $columns;
 	}
 
 	/**
