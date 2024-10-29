@@ -29,12 +29,12 @@ abstract class Exporter {
 	public $capability = 'manage_options';
 
 	/**
-	 * Number exported.
+	 * Filename to export to.
 	 *
 	 * @since 1.0.2
-	 * @var integer
+	 * @var string
 	 */
-	protected $exported_count = 0;
+	protected $filename = '';
 
 	/**
 	 * The delimiter parameter sets the field delimiter (one character only).
@@ -43,6 +43,30 @@ abstract class Exporter {
 	 * @var string
 	 */
 	protected $delimiter = ',';
+
+	/**
+	 * The character used to wrap text in the CSV.
+	 *
+	 * @since 1.0.2
+	 * @var array
+	 */
+	protected $enclosure = '"';
+
+	/**
+	 * The character used to escape the enclosure character.
+	 *
+	 * @since 1.0.2
+	 * @var array
+	 */
+	protected $escape = "\0"; // This should be double-quoted.
+
+	/**
+	 * Number exported.
+	 *
+	 * @since 1.0.2
+	 * @var integer
+	 */
+	protected $position = 0;
 
 	/**
 	 * Page being exported
@@ -68,14 +92,6 @@ abstract class Exporter {
 	protected $total_count = 0;
 
 	/**
-	 * Filename to export to.
-	 *
-	 * @since 1.0.2
-	 * @var string
-	 */
-	protected $filename = '';
-
-	/**
 	 * Return an array of supported column names and ids.
 	 *
 	 * @since 1.0.2
@@ -99,6 +115,27 @@ abstract class Exporter {
 	 */
 	public function can_export() {
 		return (bool) current_user_can( apply_filters( 'eac_export_capability', $this->capability ) );
+	}
+
+
+	/**
+	 * Set filename to export to.
+	 *
+	 * @param string $filename Filename to export to.
+	 */
+	public function set_filename( $filename ) {
+		$this->filename = sanitize_file_name( str_replace( '.csv', '', $filename ) . '.csv' );
+	}
+
+	/**
+	 * Generate and return a filename.
+	 *
+	 * @return string
+	 */
+	public function get_filename() {
+		$date = wp_date( 'Ymdhis' );
+
+		return sanitize_file_name( "{$this->export_type}-$date.csv" );
 	}
 
 	/**
@@ -142,26 +179,6 @@ abstract class Exporter {
 	}
 
 	/**
-	 * Set filename to export to.
-	 *
-	 * @param string $filename Filename to export to.
-	 */
-	public function set_filename( $filename ) {
-		$this->filename = sanitize_file_name( str_replace( '.csv', '', $filename ) . '.csv' );
-	}
-
-	/**
-	 * Generate and return a filename.
-	 *
-	 * @return string
-	 */
-	public function get_filename() {
-		$date = wp_date( 'Ymd' );
-
-		return sanitize_file_name( "{$this->export_type}-$date.csv" );
-	}
-
-	/**
 	 * Get total % complete.
 	 *
 	 * @since 1.0.2
@@ -178,7 +195,7 @@ abstract class Exporter {
 	 * @return int
 	 */
 	public function get_total_exported() {
-		return ( ( $this->page - 1 ) * $this->limit ) + $this->exported_count;
+		return ( ( $this->page - 1 ) * $this->limit ) + $this->position;
 	}
 
 	/**
@@ -248,9 +265,9 @@ abstract class Exporter {
 			}
 		}
 
-		$this->fputcsv( $buffer, $prepared );
+		fputcsv( $buffer, $prepared, $this->delimiter, $this->enclosure, $this->escape );
 
-		++$this->exported_count;
+		++$this->position;
 	}
 
 	/**
@@ -314,40 +331,13 @@ abstract class Exporter {
 		$buffer     = fopen( 'php://output', 'w' );
 		ob_start();
 
-		foreach ( $columns as $column_id => $column_name ) {
+		foreach ( $columns as $column_name ) {
 			$export_row[] = $this->format_data( $column_name );
 		}
 
-		$this->fputcsv( $buffer, $export_row );
+		fputcsv( $buffer, $export_row, $this->delimiter, $this->enclosure, $this->escape );
 
 		return ob_get_clean();
-	}
-
-	/**
-	 * Write to the CSV file, ensuring escaping works across versions of
-	 * PHP.
-	 *
-	 * PHP 5.5.4 uses '\' as the default escape character. This is not RFC-4180 compliant.
-	 * \0 disables the escape character.
-	 *
-	 * @param resource $buffer Resource we are writing to.
-	 * @param array    $export_row Row to export.
-	 *
-	 * @since 1.0.2
-	 */
-	protected function fputcsv( $buffer, $export_row ) {
-
-		if ( version_compare( PHP_VERSION, '5.5.4', '<' ) ) {
-			ob_start();
-			$temp = fopen( 'php://output', 'w' ); // @codingStandardsIgnoreLine
-			fputcsv( $temp, $export_row, $this->delimiter, '"' ); // @codingStandardsIgnoreLine
-			fclose( $temp ); // @codingStandardsIgnoreLine
-			$row = ob_get_clean();
-			$row = str_replace( '\\"', '\\""', $row );
-			fwrite( $buffer, $row ); // @codingStandardsIgnoreLine
-		} else {
-			fputcsv( $buffer, $export_row, $this->delimiter, '"', "\0" ); // @codingStandardsIgnoreLine
-		}
 	}
 
 	/**
