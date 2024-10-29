@@ -63,7 +63,6 @@ class Invoice extends Document {
 		'contact_tax_number',
 	);
 
-
 	/**
 	 * Attributes that have transition effects when changed.
 	 *

@@ -42,6 +42,26 @@ class Bill extends Document {
 	);
 
 	/**
+	 * The attributes that are searchable.
+	 *
+	 * @since 2.0.0
+	 * @var array
+	 */
+	protected $searchable = array(
+		'number',
+		'contact_name',
+		'contact_company',
+		'contact_email',
+		'contact_phone',
+		'contact_address',
+		'contact_city',
+		'contact_state',
+		'contact_postcode',
+		'contact_country',
+		'contact_tax_number',
+	);
+
+	/**
 	 * Attributes that have transition effects when changed.
 	 *
 	 * This array lists attributes that should trigger transition effects when their values change.

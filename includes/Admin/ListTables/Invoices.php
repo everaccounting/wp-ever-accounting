@@ -204,7 +204,7 @@ class Invoices extends ListTable {
 		echo '<div class="alignleft actions">';
 
 		if ( 'top' === $which ) {
-			$this->customer_filter();
+			$this->contact_filter( 'customer' );
 			submit_button( __( 'Filter', 'wp-ever-accounting' ), '', 'filter_action', false );
 		}
 
