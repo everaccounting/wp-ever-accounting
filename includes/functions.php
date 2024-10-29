@@ -122,7 +122,7 @@ function eac_format_amount( $amount, $currency = null ) {
  * @return float|int
  */
 function eac_sanitize_amount( $amount, $currency = null ) {
-	if ( ! is_numeric( $amount )  ) {
+	if ( ! is_numeric( $amount ) ) {
 		$amount     = sanitize_text_field($amount);
 		$currencies = eac_get_currencies();
 		$data       = array_key_exists( $currency, $currencies ) ? $currencies[ $currency ] : $currencies[ eac_base_currency() ];
