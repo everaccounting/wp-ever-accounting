@@ -145,7 +145,7 @@ function eac_sanitize_amount( $amount, $currency = null ) {
 		}
 	}
 
-	return empty( $amount ) ? 0 : $amount;
+	return $amount;
 }
 
 /**
