@@ -101,7 +101,6 @@ class Transaction extends Model {
 	 */
 	protected $attributes = array(
 		'created_via' => 'manual',
-		'editable'    => false,
 	);
 
 	/**
