@@ -21,6 +21,9 @@ class Exporters {
 		add_filter( 'eac_tools_page_tabs', array( __CLASS__, 'register_tabs' ), - 1 );
 		add_action( 'eac_action_download_export_file', array( __CLASS__, 'handle_csv_download' ) );
 		add_action( 'eac_tools_page_export_content', array( __CLASS__, 'customers_export' ) );
+		add_action( 'eac_tools_page_export_content', array( __CLASS__, 'vendors_export' ) );
+		add_action( 'eac_tools_page_export_content', array( __CLASS__, 'categories_export' ) );
+		add_action( 'eac_tools_page_export_content', array( __CLASS__, 'taxes_export' ) );
 	}
 
 	/**
@@ -70,7 +73,6 @@ class Exporters {
 		exit;
 	}
 
-
 	/**
 	 * Export customers.
 	 *
@@ -95,6 +97,72 @@ class Exporters {
 	}
 
 	/**
+	 * Export vendors.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public static function vendors_export() {
+		?>
+		<div class="eac-card">
+			<div class="eac-card__header">
+				<h2 class="eac-card__title"><?php esc_html_e( 'Export Vendors', 'wp-ever-accounting' ); ?></h2>
+			</div>
+			<div class="eac-card__body">
+				<form method="post" class="eac_exporter" data-type="vendors" data-nonce="<?php echo esc_attr( wp_create_nonce( 'eac_ajax_export' ) ); ?>">
+					<p><?php esc_html_e( 'Export vendors from this site as CSV file. Exported file can be imported into other site.', 'wp-ever-accounting' ); ?></p>
+					<?php submit_button( esc_html__( 'Export', 'wp-ever-accounting' ), 'secondary', null, false ); ?>
+				</form>
+			</div>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Export categories.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public static function categories_export() {
+		?>
+		<div class="eac-card">
+			<div class="eac-card__header">
+				<h2 class="eac-card__title"><?php esc_html_e( 'Export Categories', 'wp-ever-accounting' ); ?></h2>
+			</div>
+			<div class="eac-card__body">
+				<form method="post" class="eac_exporter" data-type="categories" data-nonce="<?php echo esc_attr( wp_create_nonce( 'eac_ajax_export' ) ); ?>">
+					<p><?php esc_html_e( 'Export categories from this site as CSV file. Exported file can be imported into other site.', 'wp-ever-accounting' ); ?></p>
+					<?php submit_button( esc_html__( 'Export', 'wp-ever-accounting' ), 'secondary', null, false ); ?>
+				</form>
+			</div>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Export taxes.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public static function taxes_export() {
+		?>
+		<div class="eac-card">
+			<div class="eac-card__header">
+				<h2 class="eac-card__title"><?php esc_html_e( 'Export Taxes', 'wp-ever-accounting' ); ?></h2>
+			</div>
+			<div class="eac-card__body">
+				<form method="post" class="eac_exporter" data-type="taxes" data-nonce="<?php echo esc_attr( wp_create_nonce( 'eac_ajax_export' ) ); ?>">
+					<p><?php esc_html_e( 'Export taxes from this site as CSV file. Exported file can be imported into other site.', 'wp-ever-accounting' ); ?></p>
+					<?php submit_button( esc_html__( 'Export', 'wp-ever-accounting' ), 'secondary', null, false ); ?>
+				</form>
+			</div>
+		</div>
+		<?php
+	}
+
+	/**
 	 * Get exporter class.
 	 *
 	 * @param string $type Exporter type.
@@ -107,7 +175,15 @@ class Exporters {
 			case 'customers':
 				$exporter = Exporters\Customers::class;
 				break;
-
+			case 'vendors':
+				$exporter = Exporters\Vendors::class;
+				break;
+			case 'categories':
+				$exporter = Exporters\Categories::class;
+				break;
+			case 'taxes':
+				$exporter = Exporters\Taxes::class;
+				break;
 			default:
 				/**
 				 * Filter the export type.

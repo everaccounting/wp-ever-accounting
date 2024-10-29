@@ -205,7 +205,7 @@ class Transfers extends ListTable {
 		if ( $item->payment && $item->payment->account ) {
 			return sprintf(
 				'<a href="%s">%s</a>',
-				esc_url( $item->payment->account->get_edit_url() ),
+				esc_url( $item->payment->account->get_view_url() ),
 				esc_html( $item->payment->account->name )
 			);
 		}
@@ -225,7 +225,7 @@ class Transfers extends ListTable {
 		if ( $item->expense && $item->expense->account ) {
 			return sprintf(
 				'<a href="%s">%s</a>',
-				esc_url( $item->expense->account->get_edit_url() ),
+				esc_url( $item->expense->account->get_view_url() ),
 				esc_html( $item->expense->account->name )
 			);
 		}
