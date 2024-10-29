@@ -271,10 +271,10 @@ class Payments extends ListTable {
 		$invoice  = '&mdash;';
 		$metadata = '';
 		if ( $item->invoice ) {
-			$invoice = sprintf( '<a href="%s">%s</a>', esc_url( $item->invoice->get_view_url() ), wp_kses_post( $item->invoice->number ) );
+			$metadata = sprintf( '<a href="%s">%s</a>', esc_url( $item->invoice->get_view_url() ), wp_kses_post( $item->invoice->number ) );
 		}
 
-		return sprintf( '%s%s', $invoice, $this->column_metadata( $metadata ) );
+		return sprintf( '%s', empty( $this->column_metadata( $metadata ) ) ? $invoice : $this->column_metadata( $metadata ) );
 	}
 
 	/**
