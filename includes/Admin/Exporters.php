@@ -262,6 +262,12 @@ class Exporters {
 			case 'transfers':
 				$exporter = Exporters\Transfers::class;
 				break;
+			case 'expenses':
+				$exporter = Exporters\Expenses::class;
+				break;
+			case 'payments':
+				$exporter = Exporters\Payments::class;
+				break;
 			default:
 				/**
 				 * Filter the export type.
