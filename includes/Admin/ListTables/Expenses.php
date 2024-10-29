@@ -167,7 +167,7 @@ class Expenses extends ListTable {
 			'number'       => __( 'Expense #', 'wp-ever-accounting' ),
 			'payment_date' => __( 'Date', 'wp-ever-accounting' ),
 			'account_id'   => __( 'Account', 'wp-ever-accounting' ),
-			'customer_id'  => __( 'Customer', 'wp-ever-accounting' ),
+			'customer_id'  => __( 'Vendor', 'wp-ever-accounting' ),
 			'bill_id'      => __( 'Bill', 'wp-ever-accounting' ),
 			'reference'    => __( 'Reference', 'wp-ever-accounting' ),
 			'amount'       => __( 'Amount', 'wp-ever-accounting' ),
@@ -252,7 +252,7 @@ class Expenses extends ListTable {
 	 * @return string Displays the account.
 	 */
 	public function column_account_id( $item ) {
-		$account  = $item->account ? sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( 'account_id', $item->account->id, $this->base_url ) ), wp_kses_post( $item->account->name ) ) : '&mdash;';
+		$account  = $item->account ? sprintf( '<a href="%s">%s</a>', esc_url( $item->account->get_view_url() ), wp_kses_post( $item->account->name ) ) : '&mdash;';
 		$metadata = $item->account && $item->account->number ? ucfirst( $item->account->number ) : '';
 
 		return sprintf( '%s%s', $account, $this->column_metadata( $metadata ) );
@@ -273,7 +273,7 @@ class Expenses extends ListTable {
 			$metadata = sprintf( '<a href="%s">%s</a>', esc_url( $item->bill->get_view_url() ), wp_kses_post( $item->bill->number ) );
 		}
 
-		return sprintf( '%s%s', $bill, $this->column_metadata( $metadata ) );
+		return sprintf( '%s', empty( $this->column_metadata( $metadata ) ) ? $bill : $this->column_metadata( $metadata ) );
 	}
 
 	/**
@@ -285,8 +285,8 @@ class Expenses extends ListTable {
 	 * @return string Displays the customer.
 	 */
 	public function column_customer_id( $item ) {
-		$customer = $item->customer ? sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( 'customer_id', $item->customer->id, $this->base_url ) ), wp_kses_post( $item->customer->name ) ) : '&mdash;';
-		$metadata = $item->customer && $item->customer->company ? $item->customer->company : '';
+		$customer = $item->vendor ? sprintf( '<a href="%s">%s</a>', esc_url( $item->vendor->get_view_url() ), wp_kses_post( $item->vendor->name ) ) : '&mdash;';
+		$metadata = $item->vendor && $item->vendor->company ? $item->vendor->company : '';
 
 		return sprintf( '%s%s', $customer, $this->column_metadata( $metadata ) );
 	}
