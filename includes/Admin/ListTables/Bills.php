@@ -45,18 +45,20 @@ class Bills extends ListTable {
 	 */
 	public function prepare_items() {
 		$this->process_actions();
-		$per_page = $this->get_items_per_page( 'eac_bills_per_page', 20 );
-		$paged    = $this->get_pagenum();
-		$search   = $this->get_request_search();
-		$order_by = $this->get_request_orderby();
-		$order    = $this->get_request_order();
-		$args     = array(
-			'limit'   => $per_page,
-			'page'    => $paged,
-			'search'  => $search,
-			'orderby' => $order_by,
-			'order'   => $order,
-			'status'  => $this->get_request_status(),
+		$per_page   = $this->get_items_per_page( 'eac_bills_per_page', 20 );
+		$paged      = $this->get_pagenum();
+		$search     = $this->get_request_search();
+		$order_by   = $this->get_request_orderby();
+		$order      = $this->get_request_order();
+		$contact_id = filter_input( INPUT_GET, 'vendor_id', FILTER_VALIDATE_INT );
+		$args       = array(
+			'limit'      => $per_page,
+			'page'       => $paged,
+			'search'     => $search,
+			'orderby'    => $order_by,
+			'order'      => $order,
+			'status'     => $this->get_request_status(),
+			'contact_id' => $contact_id,
 		);
 		/**
 		 * Filter the query arguments for the list table.
@@ -264,6 +266,7 @@ class Bills extends ListTable {
 		echo '<div class="alignleft actions">';
 
 		if ( 'top' === $which ) {
+			$this->contact_filter( 'vendor' );
 			submit_button( __( 'Filter', 'wp-ever-accounting' ), '', 'filter_action', false );
 		}
 
@@ -367,7 +370,7 @@ class Bills extends ListTable {
 	 */
 	public function column_vendor_id( $item ) {
 		if ( $item->vendor ) {
-			return sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( 'vendor_id', $item->vendor->id, $this->base_url ) ), wp_kses_post( $item->vendor->name ) );
+			return sprintf( '<a href="%s">%s</a>', esc_url( $item->vendor->get_view_url() ), wp_kses_post( $item->vendor->name ) );
 		}
 
 		return '&mdash;';

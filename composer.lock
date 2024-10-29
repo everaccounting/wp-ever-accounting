@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:byteever/bytekit-models.git",
-                "reference": "d71811d5972f594fa4f79a451e726a66e3db43fd"
+                "reference": "78cdf50b93e5c1b3c641040ca9eb755c837cf7fe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/byteever/bytekit-models/zipball/d71811d5972f594fa4f79a451e726a66e3db43fd",
-                "reference": "d71811d5972f594fa4f79a451e726a66e3db43fd",
+                "url": "https://api.github.com/repos/byteever/bytekit-models/zipball/78cdf50b93e5c1b3c641040ca9eb755c837cf7fe",
+                "reference": "78cdf50b93e5c1b3c641040ca9eb755c837cf7fe",
                 "shasum": ""
             },
             "require": {
@@ -99,7 +99,7 @@
                 "source": "https://github.com/byteever/bytekit-models/tree/develop",
                 "issues": "https://github.com/byteever/bytekit-models/issues"
             },
-            "time": "2024-10-26T06:00:10+00:00"
+            "time": "2024-10-28T04:45:06+00:00"
         },
         {
             "name": "byteever/bytekit-plugin",
@@ -7238,16 +7238,16 @@
         },
         {
             "name": "symfony/browser-kit",
-            "version": "v5.4.40",
+            "version": "v5.4.45",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/browser-kit.git",
-                "reference": "92c8ba1e5ee12d07120744c90898516132b4e58b"
+                "reference": "03cce39764429e07fbab9b989a1182a24578341d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/browser-kit/zipball/92c8ba1e5ee12d07120744c90898516132b4e58b",
-                "reference": "92c8ba1e5ee12d07120744c90898516132b4e58b",
+                "url": "https://api.github.com/repos/symfony/browser-kit/zipball/03cce39764429e07fbab9b989a1182a24578341d",
+                "reference": "03cce39764429e07fbab9b989a1182a24578341d",
                 "shasum": ""
             },
             "require": {
@@ -7290,7 +7290,7 @@
             "description": "Simulates the behavior of a web browser, allowing you to make requests, click on links and submit forms programmatically",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/browser-kit/tree/v5.4.40"
+                "source": "https://github.com/symfony/browser-kit/tree/v5.4.45"
             },
             "funding": [
                 {
@@ -7306,20 +7306,20 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-05-31T14:33:22+00:00"
+            "time": "2024-10-22T13:05:35+00:00"
         },
         {
             "name": "symfony/console",
-            "version": "v5.4.44",
+            "version": "v5.4.45",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "5b5a0aa66e3296e303e22490f90f521551835a83"
+                "reference": "108d436c2af470858bdaba3257baab3a74172017"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/5b5a0aa66e3296e303e22490f90f521551835a83",
-                "reference": "5b5a0aa66e3296e303e22490f90f521551835a83",
+                "url": "https://api.github.com/repos/symfony/console/zipball/108d436c2af470858bdaba3257baab3a74172017",
+                "reference": "108d436c2af470858bdaba3257baab3a74172017",
                 "shasum": ""
             },
             "require": {
@@ -7389,7 +7389,7 @@
                 "terminal"
             ],
             "support": {
-                "source": "https://github.com/symfony/console/tree/v5.4.44"
+                "source": "https://github.com/symfony/console/tree/v5.4.45"
             },
             "funding": [
                 {
@@ -7405,20 +7405,20 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-09-20T07:56:40+00:00"
+            "time": "2024-10-08T07:27:17+00:00"
         },
         {
             "name": "symfony/css-selector",
-            "version": "v5.4.40",
+            "version": "v5.4.45",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/css-selector.git",
-                "reference": "ea43887e9afd2029509662d4f95e8b5ef6fc9bbb"
+                "reference": "4f7f3c35fba88146b56d0025d20ace3f3901f097"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/css-selector/zipball/ea43887e9afd2029509662d4f95e8b5ef6fc9bbb",
-                "reference": "ea43887e9afd2029509662d4f95e8b5ef6fc9bbb",
+                "url": "https://api.github.com/repos/symfony/css-selector/zipball/4f7f3c35fba88146b56d0025d20ace3f3901f097",
+                "reference": "4f7f3c35fba88146b56d0025d20ace3f3901f097",
                 "shasum": ""
             },
             "require": {
@@ -7455,7 +7455,7 @@
             "description": "Converts CSS selectors to XPath expressions",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/css-selector/tree/v5.4.40"
+                "source": "https://github.com/symfony/css-selector/tree/v5.4.45"
             },
             "funding": [
                 {
@@ -7471,7 +7471,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-05-31T14:33:22+00:00"
+            "time": "2024-09-25T14:11:13+00:00"
         },
         {
             "name": "symfony/deprecation-contracts",
@@ -7542,16 +7542,16 @@
         },
         {
             "name": "symfony/dom-crawler",
-            "version": "v5.4.44",
+            "version": "v5.4.45",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/dom-crawler.git",
-                "reference": "4c76e4176a5472c5afe504194d7bbef5cfdd1703"
+                "reference": "89647a57db280f9f93c27271fea58babb77bb473"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/dom-crawler/zipball/4c76e4176a5472c5afe504194d7bbef5cfdd1703",
-                "reference": "4c76e4176a5472c5afe504194d7bbef5cfdd1703",
+                "url": "https://api.github.com/repos/symfony/dom-crawler/zipball/89647a57db280f9f93c27271fea58babb77bb473",
+                "reference": "89647a57db280f9f93c27271fea58babb77bb473",
                 "shasum": ""
             },
             "require": {
@@ -7597,7 +7597,7 @@
             "description": "Eases DOM navigation for HTML and XML documents",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/dom-crawler/tree/v5.4.44"
+                "source": "https://github.com/symfony/dom-crawler/tree/v5.4.45"
             },
             "funding": [
                 {
@@ -7613,20 +7613,20 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-09-11T06:50:28+00:00"
+            "time": "2024-10-22T13:05:35+00:00"
         },
         {
             "name": "symfony/event-dispatcher",
-            "version": "v5.4.40",
+            "version": "v5.4.45",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/event-dispatcher.git",
-                "reference": "a54e2a8a114065f31020d6a89ede83e34c3b27a4"
+                "reference": "72982eb416f61003e9bb6e91f8b3213600dcf9e9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/a54e2a8a114065f31020d6a89ede83e34c3b27a4",
-                "reference": "a54e2a8a114065f31020d6a89ede83e34c3b27a4",
+                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/72982eb416f61003e9bb6e91f8b3213600dcf9e9",
+                "reference": "72982eb416f61003e9bb6e91f8b3213600dcf9e9",
                 "shasum": ""
             },
             "require": {
@@ -7682,7 +7682,7 @@
             "description": "Provides tools that allow your application components to communicate with each other by dispatching events and listening to them",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/event-dispatcher/tree/v5.4.40"
+                "source": "https://github.com/symfony/event-dispatcher/tree/v5.4.45"
             },
             "funding": [
                 {
@@ -7698,7 +7698,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-05-31T14:33:22+00:00"
+            "time": "2024-09-25T14:11:13+00:00"
         },
         {
             "name": "symfony/event-dispatcher-contracts",
@@ -7844,16 +7844,16 @@
         },
         {
             "name": "symfony/finder",
-            "version": "v5.4.43",
+            "version": "v5.4.45",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/finder.git",
-                "reference": "ae25a9145a900764158d439653d5630191155ca0"
+                "reference": "63741784cd7b9967975eec610b256eed3ede022b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/finder/zipball/ae25a9145a900764158d439653d5630191155ca0",
-                "reference": "ae25a9145a900764158d439653d5630191155ca0",
+                "url": "https://api.github.com/repos/symfony/finder/zipball/63741784cd7b9967975eec610b256eed3ede022b",
+                "reference": "63741784cd7b9967975eec610b256eed3ede022b",
                 "shasum": ""
             },
             "require": {
@@ -7887,7 +7887,7 @@
             "description": "Finds files and directories via an intuitive fluent interface",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/finder/tree/v5.4.43"
+                "source": "https://github.com/symfony/finder/tree/v5.4.45"
             },
             "funding": [
                 {
@@ -7903,7 +7903,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-08-13T14:03:51+00:00"
+            "time": "2024-09-28T13:32:08+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -8858,16 +8858,16 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v5.4.44",
+            "version": "v5.4.45",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "7025b964f123bbf1896d7563db6ec7f1f63e918a"
+                "reference": "a454d47278cc16a5db371fe73ae66a78a633371e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/7025b964f123bbf1896d7563db6ec7f1f63e918a",
-                "reference": "7025b964f123bbf1896d7563db6ec7f1f63e918a",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/a454d47278cc16a5db371fe73ae66a78a633371e",
+                "reference": "a454d47278cc16a5db371fe73ae66a78a633371e",
                 "shasum": ""
             },
             "require": {
@@ -8913,7 +8913,7 @@
             "description": "Loads and dumps YAML files",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/yaml/tree/v5.4.44"
+                "source": "https://github.com/symfony/yaml/tree/v5.4.45"
             },
             "funding": [
                 {
@@ -8929,7 +8929,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-09-16T14:36:56+00:00"
+            "time": "2024-09-25T14:11:13+00:00"
         },
         {
             "name": "theseer/tokenizer",

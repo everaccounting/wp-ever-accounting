@@ -235,6 +235,42 @@ abstract class ListTable extends \WP_List_Table {
 	}
 
 	/**
+	 * Contact filter
+	 *
+	 * @param string $type type of contact.
+	 *
+	 * @since 2.0.0
+	 * @return void
+	 */
+	protected function contact_filter( $type ) {
+		if( 'customer' === $type ) {
+			$customer_id = filter_input( INPUT_GET, 'customer_id', FILTER_SANITIZE_NUMBER_INT );
+			$customer    = empty( $customer_id ) ? null : EAC()->customers->get( $customer_id );
+			?>
+			<select class="eac_select2" name="customer_id" id="filter-by-customer" data-action="eac_json_search" data-type="customer" data-placeholder="<?php esc_attr_e( 'Filter by customer', 'wp-ever-accounting' ); ?>">
+				<?php if ( ! empty( $customer ) ) : ?>
+					<option value="<?php echo esc_attr( $customer->id ); ?>" <?php selected( $customer_id, $customer->id ); ?>>
+						<?php echo esc_html( $customer->name ); ?>
+					</option>
+				<?php endif; ?>
+			</select>
+			<?php
+		} else {
+			$vendor_id = filter_input( INPUT_GET, 'vendor_id', FILTER_SANITIZE_NUMBER_INT );
+			$vendor    = empty( $vendor_id ) ? null : EAC()->vendors->get( $vendor_id );
+			?>
+			<select class="eac_select2" name="vendor_id" id="filter-by-vendor" data-action="eac_json_search" data-type="vendor" data-placeholder="<?php esc_attr_e( 'Filter by vendor', 'wp-ever-accounting' ); ?>">
+				<?php if ( ! empty( $vendor ) ) : ?>
+					<option value="<?php echo esc_attr( $vendor->id ); ?>" <?php selected( $vendor_id, $vendor->id ); ?>>
+						<?php echo esc_html( $vendor->name ); ?>
+					</option>
+				<?php endif; ?>
+			</select>
+			<?php
+		}
+	}
+
+	/**
 	 * Currency filter
 	 *
 	 * @since 1.2.1

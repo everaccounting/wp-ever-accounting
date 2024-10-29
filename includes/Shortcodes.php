@@ -7,8 +7,9 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Class Shortcodes.
  *
- * @since   1.0.0
- * @package EverAccounting\Controllers
+ * @since 1.0.0
+ * * @author  Sultan Nasir Uddin <manikdrmc@gmail.com>
+ * * @package EverAccounting
  */
 class Shortcodes {
 

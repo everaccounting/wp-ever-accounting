@@ -71,8 +71,8 @@ class Payment extends Transaction {
 	 * @return void
 	 */
 	public function __construct( $attributes = null ) {
-		$this->attributes['type']   = $this->get_object_type();
-		$this->query_vars['type']   = $this->get_object_type();
+		$this->attributes['type'] = $this->get_object_type();
+		$this->query_vars['type'] = $this->get_object_type();
 		parent::__construct( $attributes );
 	}
 

@@ -111,7 +111,11 @@ $payment = Payment::make( $id );
 							'placeholder'   => '0.00',
 							'class'         => 'eac_amount',
 							'required'      => true,
-							'tooltip'       => __( 'Enter the amount in the currency of the selected account, use (.) for decimal.', 'wp-ever-accounting' ),
+							'tooltip'       => sprintf(
+								/* translators: %s: decimal separator */
+								__( 'Enter the amount in the currency of the selected account, use (%s) for decimal.', 'wp-ever-accounting' ),
+								get_option( 'eac_decimal_separator' , '.' )
+							),
 							'data-currency' => $payment->currency,
 						)
 					);
@@ -133,7 +137,7 @@ $payment = Payment::make( $id );
 							'data-subtype'     => 'payment',
 							'suffix'           => sprintf(
 								'<a class="addon" href="%s" target="_blank" title="%s"><span class="dashicons dashicons-plus"></span></a>',
-								esc_url( admin_url( 'admin.php?page=eac-settings&tab=categories&action=add&type=income' ) ),
+								esc_url( admin_url( 'admin.php?page=eac-settings&tab=categories&action=add' ) ),
 								__( 'Add Category', 'wp-ever-accounting' )
 							),
 						)
@@ -202,7 +206,7 @@ $payment = Payment::make( $id );
 							'type'          => 'textarea',
 							'name'          => 'note',
 							'value'         => $payment->note,
-							'placeholder'   => __( 'Enter description', 'wp-ever-accounting' ),
+							'placeholder'   => __( 'Enter note', 'wp-ever-accounting' ),
 							'wrapper_class' => 'is--full',
 						)
 					);
