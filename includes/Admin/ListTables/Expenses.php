@@ -52,7 +52,7 @@ class Expenses extends ListTable {
 		$order       = $this->get_request_order();
 		$account_id  = filter_input( INPUT_GET, 'account_id', FILTER_VALIDATE_INT );
 		$category_id = filter_input( INPUT_GET, 'category_id', FILTER_VALIDATE_INT );
-		$contact_id  = filter_input( INPUT_GET, 'customer_id', FILTER_VALIDATE_INT );
+		$contact_id  = filter_input( INPUT_GET, 'vendor_id', FILTER_VALIDATE_INT );
 		$args        = array(
 			'limit'       => $per_page,
 			'page'        => $paged,
@@ -147,8 +147,9 @@ class Expenses extends ListTable {
 		if ( 'top' === $which ) {
 			$this->date_filter();
 			$this->year_filter();
-			$this->account_filter( 'active' );
+			$this->account_filter();
 			$this->category_filter( 'expense' );
+			$this->contact_filter( 'vendor' );
 			submit_button( __( 'Filter', 'wp-ever-accounting' ), '', 'filter_action', false );
 		}
 		echo '</div>';
@@ -167,7 +168,7 @@ class Expenses extends ListTable {
 			'number'       => __( 'Expense #', 'wp-ever-accounting' ),
 			'payment_date' => __( 'Date', 'wp-ever-accounting' ),
 			'account_id'   => __( 'Account', 'wp-ever-accounting' ),
-			'customer_id'  => __( 'Vendor', 'wp-ever-accounting' ),
+			'vendor_id'    => __( 'Vendor', 'wp-ever-accounting' ),
 			'bill_id'      => __( 'Bill', 'wp-ever-accounting' ),
 			'reference'    => __( 'Reference', 'wp-ever-accounting' ),
 			'amount'       => __( 'Amount', 'wp-ever-accounting' ),
@@ -187,7 +188,7 @@ class Expenses extends ListTable {
 			'number'       => array( 'number', false ),
 			'account_id'   => array( 'account_id', false ),
 			'bill_id'      => array( 'bill_id', false ),
-			'customer_id'  => array( 'customer_id', false ),
+			'vendor_id'    => array( 'vendor_id', false ),
 			'reference'    => array( 'reference', false ),
 			'amount'       => array( 'amount', false ),
 		);
@@ -284,7 +285,7 @@ class Expenses extends ListTable {
 	 * @since  1.0.0
 	 * @return string Displays the customer.
 	 */
-	public function column_customer_id( $item ) {
+	public function column_vendor_id( $item ) {
 		$customer = $item->vendor ? sprintf( '<a href="%s">%s</a>', esc_url( $item->vendor->get_view_url() ), wp_kses_post( $item->vendor->name ) ) : '&mdash;';
 		$metadata = $item->vendor && $item->vendor->company ? $item->vendor->company : '';
 
