@@ -176,6 +176,7 @@ class Plugin extends \ByteKit\Plugin {
 				'EverAccounting\Admin\Currencies',
 				'EverAccounting\Admin\Taxes',
 				'EverAccounting\Admin\Categories',
+				'EverAccounting\Admin\Extensions',
 			);
 			foreach ( $handles as $handle ) {
 				$this->services->add( $handle );
