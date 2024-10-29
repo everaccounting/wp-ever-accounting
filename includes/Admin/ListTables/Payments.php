@@ -148,7 +148,7 @@ class Payments extends ListTable {
 		if ( 'top' === $which ) {
 			$this->date_filter();
 			$this->year_filter();
-			$this->account_filter( 'active' );
+			$this->account_filter();
 			$this->category_filter( 'payment' );
 			submit_button( __( 'Filter', 'wp-ever-accounting' ), '', 'filter_action', false );
 		}
