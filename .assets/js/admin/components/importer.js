@@ -73,7 +73,7 @@ jQuery( document ).ready( ( $ ) => {
 					);
 				},
 			} );
-		}
+		};
 
 		/**
 		 * Process a specific step of the import operation.
@@ -83,10 +83,9 @@ jQuery( document ).ready( ( $ ) => {
 		 * @param {number} position - The current position in the import process.
 		 */
 		this.process_step = function ( position ) {
-
 			window.wp.ajax.send( plugin.action, {
 				data: {
-					nonce: plugin.nonce,
+					_wpnonce: plugin.nonce,
 					type: plugin.type,
 					position: position,
 					file: plugin.file,
@@ -103,12 +102,9 @@ jQuery( document ).ready( ( $ ) => {
 					}
 
 					// Update progress bar width
-					plugin.$form.find( '.eac-progress div' ).animate(
-						{
-							width: res.percentage + '%',
-						},
-						50,
-					);
+					plugin.$form
+						.find( '.eac-progress div' )
+						.animate( { width: res.percentage + '%' }, 50 );
 
 					// Continue processing the next step
 					plugin.process_step( parseInt( res.position, 10 ) );
@@ -117,7 +113,8 @@ jQuery( document ).ready( ( $ ) => {
 					plugin.reset();
 
 					if ( error.message ) {
-						plugin.$form.append('<div class="notice error"><p>' + error.message + '</p></div>'
+						plugin.$form.append(
+							'<div class="notice error"><p>' + error.message + '</p></div>'
 						);
 					}
 				},
@@ -132,16 +129,14 @@ jQuery( document ).ready( ( $ ) => {
 		 */
 		this.reset = function () {
 			// Remove old notice
-			$('.notice', plugin.$form).remove();
-			$('.eac-progress', plugin.$form).remove();
-			$('.spinner', plugin.$form).remove();
-			plugin.$submit.removeClass('disabled');
+			$( '.notice', plugin.$form ).remove();
+			$( '.eac-progress', plugin.$form ).remove();
+			$( '.spinner', plugin.$form ).remove();
+			plugin.$submit.removeClass( 'disabled' );
 		};
 
-
-		this.$form.on('submit', this.submit);
+		this.$form.on( 'submit', this.submit );
 		return this;
-
 	};
 
 	/**

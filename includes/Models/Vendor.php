@@ -41,6 +41,40 @@ class Vendor extends Contact {
 
 	/*
 	|--------------------------------------------------------------------------
+	| CRUD Methods
+	|--------------------------------------------------------------------------
+	| This section contains methods for creating, reading, updating, and deleting
+	| objects in the database.
+	|--------------------------------------------------------------------------
+	*/
+	/**
+	 * Save the object to the database.
+	 *
+	 * @since 1.0.0
+	 * @return \WP_Error|static WP_Error on failure, or the object on success.
+	 */
+	public function save() {
+		// if email is provided, check if it is unique.
+		if ( ! empty( $this->email ) ) {
+			$existing = $this->find( array( 'email' => $this->email ) );
+			if ( ! empty( $existing ) && $existing->id !== $this->id ) {
+				return new \WP_Error( 'duplicate', __( 'Vendor with same email already exists.', 'wp-ever-accounting' ) );
+			}
+		}
+
+		// if phone is provided, check if it is unique.
+		if ( ! empty( $this->phone ) ) {
+			$existing = $this->find( array( 'phone' => $this->phone ) );
+			if ( ! empty( $existing ) && $existing->id !== $this->id ) {
+				return new \WP_Error( 'duplicate', __( 'Vendor with same phone already exists.', 'wp-ever-accounting' ) );
+			}
+		}
+
+		return parent::save();
+	}
+
+	/*
+	|--------------------------------------------------------------------------
 	| Helper Methods
 	|--------------------------------------------------------------------------
 	| This section contains utility methods that are not directly related to this

@@ -8,20 +8,22 @@ namespace EverAccounting\Admin\Importers;
  * @since 1.0.0
  */
 class Customers extends Importer {
+	/**
+	 * Abstract method to import item.
+	 *
+	 * @param array $data Item data.
+	 *
+	 * @since 1.0.2
+	 * @return mixed Inserted item ID.
+	 */
+	public function import_item( $data ) {
+		$protected = array(
+			'id',
+			'type',
+			'date_updated',
+		);
 
-//	protected function get_headers() {
-//		// TODO: Implement get_headers() method.
-//	}
-//
-//	public function get_required() {
-//		// TODO: Implement get_required() method.
-//	}
-//
-//	protected function get_formatting_callback() {
-//		// TODO: Implement get_formatting_callback() method.
-//	}
-//
-//	protected function import_item( $data ) {
-//		// TODO: Implement import_item() method.
-//	}
+		$data = array_diff_key( $data, array_flip( $protected ) );
+		return EAC()->customers->insert( $data );
+	}
 }
