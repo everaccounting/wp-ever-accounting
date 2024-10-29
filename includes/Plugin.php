@@ -99,8 +99,6 @@ class Plugin extends \ByteKit\Plugin {
 		register_activation_hook( $this->get_file(), array( Installer::class, 'install' ) );
 		add_action( 'plugins_loaded', array( $this, 'plugins_loaded' ), 0 );
 		add_action( 'rest_api_init', array( $this, 'register_routes' ) );
-		add_action( 'init', array( $this, 'get_actions' ), 0 );
-		add_action( 'init', array( $this, 'post_actions' ), 0 );
 	}
 
 	/**
@@ -135,6 +133,7 @@ class Plugin extends \ByteKit\Plugin {
 		}
 
 		$handlers = array(
+			'EverAccounting\Actions',
 			'EverAccounting\Currencies',
 			'EverAccounting\Contacts',
 			'EverAccounting\Documents',
@@ -162,11 +161,12 @@ class Plugin extends \ByteKit\Plugin {
 				'EverAccounting\Admin\Invoices',
 				'EverAccounting\Admin\Customers',
 				'EverAccounting\Admin\Expenses',
+				'EverAccounting\Admin\Importers',
+				'EverAccounting\Admin\Exporters',
 				'EverAccounting\Admin\Bills',
 				'EverAccounting\Admin\Vendors',
 				'EverAccounting\Admin\Accounts',
 				'EverAccounting\Admin\Transfers',
-				'EverAccounting\Admin\Tools',
 				'EverAccounting\Admin\Reports',
 				'EverAccounting\Admin\Settings',
 				'EverAccounting\Admin\Currencies',
@@ -216,34 +216,6 @@ class Plugin extends \ByteKit\Plugin {
 				$this->$controller = new $controller();
 				$this->$controller->register_routes();
 			}
-		}
-	}
-
-	/**
-	 * Get actions.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	public function get_actions() {
-		$key = ! empty( $_GET['eac_action'] ) ? sanitize_key( $_GET['eac_action'] ) : false;
-
-		if ( ! empty( $key ) ) {
-			do_action( "eac_action_{$key}", $_GET );
-		}
-	}
-
-	/**
-	 * Post actions.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	public function post_actions() {
-		$key = ! empty( $_POST['eac_action'] ) ? sanitize_key( $_POST['eac_action'] ) : false;
-
-		if ( ! empty( $key ) ) {
-			do_action( "eac_action_{$key}", $_POST );
 		}
 	}
 

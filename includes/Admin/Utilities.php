@@ -2,6 +2,8 @@
 
 namespace EverAccounting\Admin;
 
+use EverAccounting\Admin\Exporters\Exporter;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -24,7 +26,7 @@ class Utilities {
 				'menu_slug'  => 'eac-items',
 				'menu_title' => __( 'Items', 'wp-ever-accounting' ),
 				'page_title' => __( 'Items', 'wp-ever-accounting' ),
-				'position'  => 20,
+				'position'   => 20,
 			),
 			array(
 				'page_title' => __( 'Sales', 'wp-ever-accounting' ),
@@ -91,4 +93,5 @@ class Utilities {
 
 		return $screen_ids;
 	}
+
 }

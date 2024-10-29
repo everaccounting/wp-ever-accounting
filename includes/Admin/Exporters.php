@@ -2,6 +2,121 @@
 
 namespace EverAccounting\Admin;
 
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Exporters class.
+ *
+ * @since 1.0.0
+ * @package EverAccounting\Admin
+ */
 class Exporters {
 
+	/**
+	 * Exporter constructor.
+	 *
+	 * @since 1.0.0
+	 */
+	public function __construct() {
+		add_filter( 'eac_tools_page_tabs', array( __CLASS__, 'register_tabs' ), - 1 );
+		add_action( 'eac_action_download_export_file', array( __CLASS__, 'handle_csv_download' ) );
+		add_action( 'eac_tools_page_export_content', array( __CLASS__, 'customers_export' ) );
+	}
+
+	/**
+	 * Register tabs.
+	 *
+	 * @param array $tabs Tabs.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return array
+	 */
+	public static function register_tabs( $tabs ) {
+		if ( current_user_can( 'manage_options' ) ) {
+			$tabs['export'] = __( 'Export', 'wp-ever-accounting' );
+		}
+
+		return $tabs;
+	}
+
+
+	/**
+	 * Handle CSV download.
+	 *
+	 * @param array $posted Posted data.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public static function handle_csv_download( $posted ) {
+		check_admin_referer( 'eac_download_file' );
+		$type     = isset( $posted['type'] ) ? sanitize_key( wp_unslash( $posted['type'] ) ) : '';
+		$filename = isset( $posted['filename'] ) ? sanitize_text_field( wp_unslash( $posted['filename'] ) ) : '';
+		$exporter = self::get_exporter( $type );
+		if ( ! $exporter || ! is_subclass_of( $exporter, Exporters\Exporter::class ) ) {
+			wp_die( esc_html__( 'Invalid export type.', 'wp-ever-accounting' ) );
+		}
+		$exporter = new $exporter();
+		if ( ! $exporter->can_export() ) {
+			wp_die( esc_html__( 'You do not have permission to export.', 'wp-ever-accounting' ) );
+		}
+
+		if ( ! empty( $filename ) ) {
+			$exporter->set_filename( $filename );
+		}
+
+		$exporter->export();
+		exit;
+	}
+
+
+	/**
+	 * Export customers.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
+	 */
+	public static function customers_export() {
+		?>
+		<div class="eac-card">
+			<div class="eac-card__header">
+				<h2 class="eac-card__title"><?php esc_html_e( 'Export Customers', 'wp-ever-accounting' ); ?></h2>
+			</div>
+			<div class="eac-card__body">
+				<form method="post" class="eac_exporter" data-type="customers" data-nonce="<?php echo esc_attr( wp_create_nonce( 'eac_ajax_export' ) ); ?>">
+					<p><?php esc_html_e( 'Export customers from this site as CSV file. Exported file can be imported into other site.', 'wp-ever-accounting' ); ?></p>
+					<?php submit_button( esc_html__( 'Export', 'wp-ever-accounting' ), 'secondary', null, false ); ?>
+				</form>
+			</div>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Get exporter class.
+	 *
+	 * @param string $type Exporter type.
+	 *
+	 * @since 1.0.0
+	 * @return Exporters\Exporter|null Exporter class.
+	 */
+	public static function get_exporter( $type ) {
+		switch ( $type ) {
+			case 'customers':
+				$exporter = Exporters\Customers::class;
+				break;
+
+			default:
+				/**
+				 * Filter the export type.
+				 *
+				 * @since 1.0.2
+				 */
+				$exporter = apply_filters( "eac_ajax_{$type}_exporter", null );
+		}
+
+		return $exporter;
+	}
 }
