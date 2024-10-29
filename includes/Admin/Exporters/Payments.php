@@ -1,6 +1,6 @@
 <?php
 /**
- * Handle taxes export.
+ * Handle payments export.
  *
  * @since 1.0.2
  *
@@ -9,19 +9,19 @@
 
 namespace EverAccounting\Admin\Exporters;
 
-use EverAccounting\Models\Tax;
+use EverAccounting\Models\Payment;
 
 defined( 'ABSPATH' ) || exit();
 
 
 /**
- * Class Taxes.
+ * Class Accounts.
  *
  * @since   1.0.2
  *
  * @package EverAccounting\Admin\Exporters
  */
-class Taxes extends Exporter {
+class Payments extends Exporter {
 
 	/**
 	 * Our export type. Used for export-type specific filters/actions.
@@ -29,7 +29,7 @@ class Taxes extends Exporter {
 	 * @since 1.0.2
 	 * @var string
 	 */
-	public $export_type = 'taxes';
+	public $export_type = 'payments';
 
 	/**
 	 * Return an array of columns to export.
@@ -38,9 +38,9 @@ class Taxes extends Exporter {
 	 * @return array
 	 */
 	public function get_columns() {
-		$hidden = array( 'id', 'description', 'type', 'user_id', 'parent_id', 'created_via' );
+		$hidden = array( 'id', 'user_id', 'type', 'uuid', 'document_id', 'author_id', 'parent_id', 'created_via' );
 
-		return array_diff( ( new Tax() )->get_columns(), $hidden );
+		return array_diff( ( new Payment() )->get_columns(), $hidden );
 	}
 
 	/**
@@ -57,9 +57,9 @@ class Taxes extends Exporter {
 			'limit'   => $this->limit,
 		);
 
-		$args = apply_filters( 'eac_export_taxes_args', $args );
+		$args = apply_filters( 'eac_export_payments_args', $args );
 
-		$items = EAC()->taxes->query( $args );
+		$items = EAC()->payments->query( $args );
 		$rows  = array();
 
 		foreach ( $items as $item ) {
