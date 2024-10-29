@@ -253,7 +253,7 @@ class Payments extends ListTable {
 	 * @return string Displays the account.
 	 */
 	public function column_account_id( $item ) {
-		$account  = $item->account ? sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( 'account_id', $item->account->id, $this->base_url ) ), wp_kses_post( $item->account->name ) ) : '&mdash;';
+		$account  = $item->account ? sprintf( '<a href="%s">%s</a>', esc_url( $item->account->get_view_url() ), wp_kses_post( $item->account->name ) ) : '&mdash;';
 		$metadata = $item->account && $item->account->number ? ucfirst( $item->account->number ) : '';
 
 		return sprintf( '%s%s', $account, $this->column_metadata( $metadata ) );
@@ -286,7 +286,7 @@ class Payments extends ListTable {
 	 * @return string Displays the customer.
 	 */
 	public function column_customer_id( $item ) {
-		$customer = $item->customer ? sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( 'customer_id', $item->customer->id, $this->base_url ) ), wp_kses_post( $item->customer->name ) ) : '&mdash;';
+		$customer = $item->customer ? sprintf( '<a href="%s">%s</a>', esc_url( $item->customer->get_view_url() ), wp_kses_post( $item->customer->name ) ) : '&mdash;';
 		$metadata = $item->customer && $item->customer->company ? $item->customer->company : '';
 
 		return sprintf( '%s%s', $customer, $this->column_metadata( $metadata ) );
