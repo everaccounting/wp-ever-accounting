@@ -741,7 +741,7 @@ class Ajax {
 		$response['position']   = $importer->get_position();
 		$response['percentage'] = $percent_complete;
 		$response['file']       = $file;
-		$response['results'] = $results;
+		$response['results']    = $results;
 		wp_send_json_success( $response );
 
 		exit();
