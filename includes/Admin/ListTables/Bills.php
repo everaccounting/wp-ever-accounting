@@ -370,7 +370,7 @@ class Bills extends ListTable {
 	 */
 	public function column_vendor_id( $item ) {
 		if ( $item->vendor ) {
-			return sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( 'vendor_id', $item->vendor->id, $this->base_url ) ), wp_kses_post( $item->vendor->name ) );
+			return sprintf( '<a href="%s">%s</a>', esc_url( $item->vendor->get_view_url() ), wp_kses_post( $item->vendor->name ) );
 		}
 
 		return '&mdash;';
