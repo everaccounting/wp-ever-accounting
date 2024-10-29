@@ -108,7 +108,7 @@ class DocumentTax extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	protected function get_formatted_name_attr() {
+	protected function get_formatted_name_attribute() {
 		return $this->name . ' (' . $this->rate . '%)';
 	}
 

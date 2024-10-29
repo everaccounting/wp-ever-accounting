@@ -222,7 +222,7 @@ class Document extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	protected function get_formatted_subtotal_attr() {
+	protected function get_formatted_subtotal_attribute() {
 		return eac_format_amount( $this->subtotal, $this->currency );
 	}
 
@@ -232,7 +232,7 @@ class Document extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	protected function get_formatted_tax_attr() {
+	protected function get_formatted_tax_attribute() {
 		return eac_format_amount( $this->tax, $this->currency );
 	}
 
@@ -242,7 +242,7 @@ class Document extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	protected function get_formatted_discount_attr() {
+	protected function get_formatted_discount_attribute() {
 		return eac_format_amount( $this->discount, $this->currency );
 	}
 
@@ -252,7 +252,7 @@ class Document extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	protected function get_formatted_total_attr() {
+	protected function get_formatted_total_attribute() {
 		return eac_format_amount( $this->total, $this->currency );
 	}
 
@@ -264,7 +264,7 @@ class Document extends Model {
 	 * @since 1.1.0
 	 * @return void
 	 */
-	public function set_discount_type_attr( $type ) {
+	protected function set_discount_type_attribute( $type ) {
 		if ( ! in_array( $type, array( 'fixed', 'percentage' ), true ) ) {
 			$type = 'fixed';
 		}

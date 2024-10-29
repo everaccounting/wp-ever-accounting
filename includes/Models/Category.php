@@ -48,7 +48,7 @@ class Category extends Term {
 	 * @since 1.0.0
 	 * @return void
 	 */
-	protected function set_type_attr( $type ) {
+	protected function set_type_attribute( $type ) {
 		if ( ! array_key_exists( $type, EAC()->categories->get_types() ) ) {
 			$type = '';
 		}
@@ -62,7 +62,7 @@ class Category extends Term {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	protected function get_formatted_name_attr() {
+	protected function get_formatted_name_attribute() {
 		return sprintf( '%s (#%d)', $this->name, $this->id );
 	}
 

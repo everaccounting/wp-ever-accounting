@@ -110,7 +110,7 @@ class Transfer extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	public function get_formatted_amount_attr() {
+	public function get_formatted_amount_attribute() {
 		return eac_format_amount( $this->amount, $this->currency );
 	}
 

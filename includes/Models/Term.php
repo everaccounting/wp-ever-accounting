@@ -128,7 +128,7 @@ class Term extends Model {
 	 * @since 2.0.0
 	 * @return void
 	 */
-	public function set_taxonomy_attr( $value ) {
+	protected function set_taxonomy_attribute( $value ) {
 		if ( ! array_key_exists( $value, EAC()->terms->get_taxonomies() ) ) {
 			$value = '';
 		}
