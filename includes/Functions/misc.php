@@ -378,7 +378,7 @@ function eac_file_uploader( $field ) {
 				<div class="eac-file-upload__action">
 					<a href="<?php echo esc_url( $field['url'] ); ?>" class="eac-file-upload__download" download><span class="dashicons dashicons-download"></span></a>
 				</div>
-			<?php else: ?>
+			<?php else : ?>
 			<div class="eac-file-upload__action">
 				<a href="#" class="eac-file-upload__remove"><span class="dashicons dashicons-trash"></span></a>
 			</div>

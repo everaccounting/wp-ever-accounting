@@ -94,7 +94,7 @@ class Invoices extends ListTable {
 		$performed = 0;
 		foreach ( $ids as $id ) {
 			if ( EAC()->invoices->delete( $id ) ) {
-				++ $performed;
+				++$performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
@@ -118,10 +118,10 @@ class Invoices extends ListTable {
 			foreach ( $payments as $payment ) {
 				$payment->delete();
 			}
-			$invoice = EAC()->invoices->get( $id );
+			$invoice         = EAC()->invoices->get( $id );
 			$invoice->status = 'canceled';
 			if ( $invoice->save() ) {
-				++ $performed;
+				++$performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
@@ -179,8 +179,8 @@ class Invoices extends ListTable {
 	 */
 	protected function get_bulk_actions() {
 		$actions = array(
-			'cancel'  => __( 'Cancel', 'wp-ever-accounting' ),
-			'delete'  => __( 'Delete', 'wp-ever-accounting' ),
+			'cancel' => __( 'Cancel', 'wp-ever-accounting' ),
+			'delete' => __( 'Delete', 'wp-ever-accounting' ),
 		);
 
 		return $actions;

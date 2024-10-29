@@ -231,7 +231,14 @@ class Payments {
 				<h3 class="eac-card__title"><?php esc_html_e( 'Attachment', 'wp-ever-accounting' ); ?></h3>
 			</div>
 			<div class="eac-card__body">
-				<?php eac_file_uploader( array( 'value' => $payment->attachment_id, 'readonly' => true ) ); ?>
+				<?php
+				eac_file_uploader(
+					array(
+						'value'    => $payment->attachment_id,
+						'readonly' => true,
+					)
+				);
+				?>
 			</div>
 		</div>
 		<?php

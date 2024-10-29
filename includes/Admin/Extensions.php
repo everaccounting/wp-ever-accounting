@@ -54,7 +54,7 @@ class Extensions {
 					<div class="eac-card__header">
 						<a href="<?php echo esc_url( $extension->info->link ); ?>" title="<?php echo esc_html( $extension->info->title ); ?>" target="_blank">
 							<img src="<?php echo esc_url( EAC()->get_assets_url() . 'images/img1.png' ); ?>" alt="<?php echo esc_html( $extension->info->title ); ?>" class="eac-card__thumbnail">
-							<!-- <img src="--><?php //echo esc_url( $extension->info->thumbnail ); ?><!--" alt="--><?php //echo esc_html( $extension->info->title ); ?><!--" class="eac-card__thumbnail"> -->
+							<!-- <img src="--><?php // echo esc_url( $extension->info->thumbnail ); ?><!--" alt="--><?php // echo esc_html( $extension->info->title ); ?><!--" class="eac-card__thumbnail"> -->
 						</a>
 					</div>
 					<div class="eac-card__body">

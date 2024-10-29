@@ -28,7 +28,7 @@ function eac_update_120_settings() {
 		'eac_business_country'             => 'company_country',
 		'eac_tax_enabled'                  => 'tax_enabled',
 		'eac_tax_subtotal_rounding'        => 'tax_subtotal_rounding',
-		'eac_tax_total_display'           => 'tax_display_totals',
+		'eac_tax_total_display'            => 'tax_display_totals',
 		'eac_default_sales_account_id'     => 'default_account',
 		'eac_default_sales_payment_method' => 'default_payment_method',
 		'eac_invoice_prefix'               => 'invoice_prefix',

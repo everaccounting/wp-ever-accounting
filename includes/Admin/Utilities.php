@@ -100,5 +100,4 @@ class Utilities {
 
 		return $screen_ids;
 	}
-
 }

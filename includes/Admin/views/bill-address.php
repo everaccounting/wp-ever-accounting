@@ -10,18 +10,20 @@
 use EverAccounting\Models\Bill;
 
 defined( 'ABSPATH' ) || exit;
-echo eac_get_formatted_address( array(
-	'name'       => $bill->contact_name,
-	'company'    => $bill->contact_company,
-	'address'    => $bill->contact_address,
-	'city'       => $bill->contact_city,
-	'state'      => $bill->contact_state,
-	'postcode'   => $bill->contact_postcode,
-	'country'    => $bill->contact_country,
-	'phone'      => $bill->contact_phone,
-	'email'      => $bill->contact_email,
-	'tax_number' => $bill->contact_tax_number,
-) );
+echo eac_get_formatted_address(
+	array(
+		'name'       => $bill->contact_name,
+		'company'    => $bill->contact_company,
+		'address'    => $bill->contact_address,
+		'city'       => $bill->contact_city,
+		'state'      => $bill->contact_state,
+		'postcode'   => $bill->contact_postcode,
+		'country'    => $bill->contact_country,
+		'phone'      => $bill->contact_phone,
+		'email'      => $bill->contact_email,
+		'tax_number' => $bill->contact_tax_number,
+	)
+);
 
 printf( '<input type="hidden" name="contact_name" value="%s">', esc_attr( $bill->contact_name ) );
 printf( '<input type="hidden" name="contact_company" value="%s">', esc_attr( $bill->contact_company ) );

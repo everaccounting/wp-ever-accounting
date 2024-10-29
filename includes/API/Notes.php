@@ -455,7 +455,7 @@ class Notes extends Controller {
 					'type'        => 'string',
 					'context'     => array( 'view', 'embed', 'edit' ),
 				),
-				'author_id'   => array(
+				'author_id'    => array(
 					'description' => __( 'Creator ID.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'embed', 'edit' ),

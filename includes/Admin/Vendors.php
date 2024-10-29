@@ -174,7 +174,7 @@ class Vendors {
 				$year_end_date
 			)
 		);
-		$bill        = $wpdb->get_var(
+		$bill            = $wpdb->get_var(
 			$wpdb->prepare(
 				"SELECT SUM(total/exchange_rate) as total FROM {$wpdb->prefix}ea_documents WHERE contact_id = %d AND contact_id !='' AND type='bill' AND status != 'draft'",
 				$vendor->id

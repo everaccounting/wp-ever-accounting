@@ -243,7 +243,7 @@ abstract class ListTable extends \WP_List_Table {
 	 * @return void
 	 */
 	protected function contact_filter( $type ) {
-		if( 'customer' === $type ) {
+		if ( 'customer' === $type ) {
 			$customer_id = filter_input( INPUT_GET, 'customer_id', FILTER_SANITIZE_NUMBER_INT );
 			$customer    = empty( $customer_id ) ? null : EAC()->customers->get( $customer_id );
 			?>

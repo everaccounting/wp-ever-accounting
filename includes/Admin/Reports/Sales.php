@@ -22,9 +22,9 @@ class Sales {
 	 */
 	public static function render() {
 		wp_verify_nonce( '_wpnonce' );
-		$year              = ! empty( $_GET['year'] ) ? absint( $_GET['year'] ) : wp_date( 'Y' );
-		$data              = ReportsUtil::get_payments_report( $year );
-		$chart      = array(
+		$year  = ! empty( $_GET['year'] ) ? absint( $_GET['year'] ) : wp_date( 'Y' );
+		$data  = ReportsUtil::get_payments_report( $year );
+		$chart = array(
 			'type'     => 'line',
 			'labels'   => array_keys( $data['months'] ),
 			'datasets' => array(

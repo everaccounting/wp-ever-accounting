@@ -46,7 +46,7 @@ $expense = EAC()->expenses->get( $id );
 		<div class="eac-card">
 			<div class="eac-card__header">
 				<h2 class="eac-card__title"><?php esc_html_e( 'Actions', 'wp-ever-accounting' ); ?></h2>
-				<?php if ( $expense->editable) : ?>
+				<?php if ( $expense->editable ) : ?>
 					<a href="<?php echo esc_url( $expense->get_edit_url() ); ?>">
 						<?php esc_html_e( 'Edit', 'wp-ever-accounting' ); ?>
 					</a>

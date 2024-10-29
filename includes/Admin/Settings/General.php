@@ -31,8 +31,8 @@ class General extends Page {
 	 */
 	public function get_sections() {
 		return array(
-			''           => __( 'General', 'wp-ever-accounting' ),
-			'currency'   => __( 'Currency', 'wp-ever-accounting' ),
+			''         => __( 'General', 'wp-ever-accounting' ),
+			'currency' => __( 'Currency', 'wp-ever-accounting' ),
 		);
 	}
 

@@ -25,7 +25,8 @@ defined( 'ABSPATH' ) || exit;
 	<tfoot>
 	<tr>
 		<td colspan="3">
-			<a href="#" class="button add" data-row="<?php
+			<a href="#" class="button add" data-row="
+			<?php
 			ob_start();
 			$rate = '';
 			$code = '';

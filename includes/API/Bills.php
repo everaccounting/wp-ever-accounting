@@ -203,7 +203,7 @@ class Bills extends Documents {
 	 */
 	public function get_item( $request ) {
 		$bill = EAC()->bills->get( $request['id'] );
-		$data    = $this->prepare_item_for_response( $bill, $request );
+		$data = $this->prepare_item_for_response( $bill, $request );
 
 		return rest_ensure_response( $data );
 	}
@@ -211,7 +211,7 @@ class Bills extends Documents {
 	/**
 	 * Prepares a single item output for response.
 	 *
-	 * @param Bill          $item Bill object.
+	 * @param Bill             $item Bill object.
 	 * @param \WP_REST_Request $request Request object.
 	 *
 	 * @since 2.0.0

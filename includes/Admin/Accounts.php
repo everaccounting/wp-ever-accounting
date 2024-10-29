@@ -75,10 +75,13 @@ class Accounts {
 		} else {
 			EAC()->flash->success( __( 'Account saved successfully.', 'wp-ever-accounting' ) );
 			$referer = remove_query_arg( array( 'action' ), $referer );
-			$referer = add_query_arg( array(
-				'action' => 'view',
-				'id'     => $account->id,
-			), $referer );
+			$referer = add_query_arg(
+				array(
+					'action' => 'view',
+					'id'     => $account->id,
+				),
+				$referer
+			);
 		}
 
 		wp_safe_redirect( $referer );

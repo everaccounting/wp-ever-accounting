@@ -13,7 +13,16 @@ defined( 'ABSPATH' ) || exit;
 wp_verify_nonce( '_wpnonce' );
 $id            = isset( $_GET['id'] ) ? absint( wp_unslash( $_GET['id'] ) ) : 0;
 $invoice       = EAC()->invoices->get( $id );
-$mark_sent_url = wp_nonce_url( add_query_arg( array( 'eac_action' => 'invoice_action', 'id' => $invoice->id, 'invoice_action' => 'mark_sent' ) ), 'eac_invoice_action' );
+$mark_sent_url = wp_nonce_url(
+	add_query_arg(
+		array(
+			'eac_action'     => 'invoice_action',
+			'id'             => $invoice->id,
+			'invoice_action' => 'mark_sent',
+		)
+	),
+	'eac_invoice_action'
+);
 
 ?>
 <h1 class="wp-heading-inline">

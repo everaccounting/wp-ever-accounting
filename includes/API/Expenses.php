@@ -628,12 +628,12 @@ class Expenses extends Transactions {
 						),
 					),
 				),
-				'bill_id'       => array(
+				'bill_id'          => array(
 					'description' => __( 'Bill ID of the payment.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'edit' ),
 				),
-				'bill'          => array(
+				'bill'             => array(
 					'description' => __( 'Bill of the payment.', 'wp-ever-accounting' ),
 					'type'        => 'object',
 					'context'     => array( 'view', 'embed', 'edit' ),
@@ -654,12 +654,12 @@ class Expenses extends Transactions {
 						),
 					),
 				),
-				'vendor_id'      => array(
+				'vendor_id'        => array(
 					'description' => __( 'Customer ID of the payment.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'edit' ),
 				),
-				'vendor'         => array(
+				'vendor'           => array(
 					'description' => __( 'Customer of the payment.', 'wp-ever-accounting' ),
 					'type'        => 'object',
 					'context'     => array( 'view', 'embed', 'edit' ),
@@ -728,7 +728,7 @@ class Expenses extends Transactions {
 					'type'        => 'string',
 					'context'     => array( 'view', 'embed', 'edit' ),
 				),
-				'author_id'       => array(
+				'author_id'        => array(
 					'description' => __( 'Author ID of the expense.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'embed', 'edit' ),

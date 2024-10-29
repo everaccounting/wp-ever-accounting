@@ -114,7 +114,7 @@ $payment = Payment::make( $id );
 							'tooltip'       => sprintf(
 								/* translators: %s: decimal separator */
 								__( 'Enter the amount in the currency of the selected account, use (%s) for decimal.', 'wp-ever-accounting' ),
-								get_option( 'eac_decimal_separator' , '.' )
+								get_option( 'eac_decimal_separator', '.' )
 							),
 							'data-currency' => $payment->currency,
 						)
