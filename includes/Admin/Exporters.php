@@ -24,6 +24,7 @@ class Exporters {
 		add_action( 'eac_tools_page_export_content', array( __CLASS__, 'vendors_export' ) );
 		add_action( 'eac_tools_page_export_content', array( __CLASS__, 'categories_export' ) );
 		add_action( 'eac_tools_page_export_content', array( __CLASS__, 'taxes_export' ) );
+		add_action( 'eac_tools_page_export_content', array( __CLASS__, 'items_export' ) );
 	}
 
 	/**
@@ -163,6 +164,28 @@ class Exporters {
 	}
 
 	/**
+	 * Export items.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public static function items_export() {
+		?>
+		<div class="eac-card">
+			<div class="eac-card__header">
+				<h2 class="eac-card__title"><?php esc_html_e( 'Export Items', 'wp-ever-accounting' ); ?></h2>
+			</div>
+			<div class="eac-card__body">
+				<form method="post" class="eac_exporter" data-type="items" data-nonce="<?php echo esc_attr( wp_create_nonce( 'eac_ajax_export' ) ); ?>">
+					<p><?php esc_html_e( 'Export items from this site as CSV file. Exported file can be imported into other site.', 'wp-ever-accounting' ); ?></p>
+					<?php submit_button( esc_html__( 'Export', 'wp-ever-accounting' ), 'secondary', null, false ); ?>
+				</form>
+			</div>
+		</div>
+		<?php
+	}
+
+	/**
 	 * Get exporter class.
 	 *
 	 * @param string $type Exporter type.
@@ -183,6 +206,9 @@ class Exporters {
 				break;
 			case 'taxes':
 				$exporter = Exporters\Taxes::class;
+				break;
+			case 'items':
+				$exporter = Exporters\Items::class;
 				break;
 			default:
 				/**
