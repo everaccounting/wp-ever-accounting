@@ -89,7 +89,7 @@ abstract class Exporter {
 	 * @since 1.0.2
 	 * @var integer
 	 */
-	protected $total_count = 0;
+	protected $total = 0;
 
 	/**
 	 * Return an array of supported column names and ids.
@@ -185,7 +185,7 @@ abstract class Exporter {
 	 * @return int
 	 */
 	public function get_percent_complete() {
-		return $this->total_count ? floor( ( $this->get_total_exported() / $this->total_count ) * 100 ) : 100;
+		return $this->total ? floor( ( $this->get_total_exported() / $this->total ) * 100 ) : 100;
 	}
 
 	/**
