@@ -38,7 +38,7 @@ class Expenses extends Exporter {
 	 * @return array
 	 */
 	public function get_columns() {
-		$hidden = array( 'id', 'user_id', 'parent_id', 'created_via' );
+		$hidden = array( 'id', 'type', 'uuid', 'document_id', 'author_id', 'user_id', 'parent_id', 'created_via' );
 
 		return array_diff( ( new Expense() )->get_columns(), $hidden );
 	}
@@ -46,7 +46,7 @@ class Expenses extends Exporter {
 	/**
 	 * Get export data.
 	 *
-	 * @since 1.0.
+	 * @since 1.0.2
 	 * @return array
 	 */
 	public function get_rows() {

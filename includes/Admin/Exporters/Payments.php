@@ -38,7 +38,7 @@ class Payments extends Exporter {
 	 * @return array
 	 */
 	public function get_columns() {
-		$hidden = array( 'id', 'user_id', 'parent_id', 'created_via' );
+		$hidden = array( 'id', 'user_id', 'type', 'uuid', 'document_id', 'author_id', 'parent_id', 'created_via' );
 
 		return array_diff( ( new Payment() )->get_columns(), $hidden );
 	}
@@ -46,7 +46,7 @@ class Payments extends Exporter {
 	/**
 	 * Get export data.
 	 *
-	 * @since 1.0.
+	 * @since 1.0.2
 	 * @return array
 	 */
 	public function get_rows() {

@@ -46,7 +46,7 @@ class Accounts extends Exporter {
 	/**
 	 * Get export data.
 	 *
-	 * @since 1.0.
+	 * @since 1.0.2
 	 * @return array
 	 */
 	public function get_rows() {
