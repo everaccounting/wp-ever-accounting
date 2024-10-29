@@ -93,7 +93,7 @@ class Bill extends Document {
 			)
 		);
 
-		$this->aliases['vendor_id']  = 'contact_id';
+		$this->aliases['vendor_id']    = 'contact_id';
 		$this->aliases['order_number'] = 'reference';
 		parent::__construct( $attributes );
 	}
@@ -315,7 +315,7 @@ class Bill extends Document {
 	public function get_due_amount() {
 		$due = max( 0, $this->total - $this->get_paid_amount() );
 		// we will ignore any decimal places so that dealing with multiple currencies is easier.
-		return round( $due, 0 );
+		return round( $due, 2 );
 	}
 
 	/**
@@ -335,7 +335,7 @@ class Bill extends Document {
 		$due_amount  = $this->get_due_amount();
 		if ( $paid_amount > 0 && $due_amount > 0 ) {
 			$this->status = 'partial';
-		} elseif ( $due_amount <= 0 ) {
+		} elseif ( round( $due_amount, 1 ) <= 0 ) {
 			$this->status = 'paid';
 		} elseif ( in_array( $this->status, array( 'paid', 'partial' ), true ) && $this->$paid_amount <= 0 && 'overdue' !== $this->status ) {
 			$this->status = 'sent';
