@@ -235,6 +235,26 @@ abstract class ListTable extends \WP_List_Table {
 	}
 
 	/**
+	 * Customer filter
+	 *
+	 * @since 2.0.0
+	 * @return void
+	 */
+	protected function customer_filter() {
+		$customer_id = filter_input( INPUT_GET, 'customer_id', FILTER_SANITIZE_NUMBER_INT );
+		$customer    = empty( $customer_id ) ? null : EAC()->accounts->get( $customer_id );
+		?>
+		<select class="eac_select2" name="customer_id" id="filter-by-customer" data-action="eac_json_search" data-type="customer" data-placeholder="<?php esc_attr_e( 'Filter by customer', 'wp-ever-accounting' ); ?>">
+			<?php if ( ! empty( $customer ) ) : ?>
+				<option value="<?php echo esc_attr( $customer->id ); ?>" <?php selected( $customer_id, $customer->id ); ?>>
+					<?php echo esc_html( $customer->name ); ?>
+				</option>
+			<?php endif; ?>
+		</select>
+		<?php
+	}
+
+	/**
 	 * Currency filter
 	 *
 	 * @since 1.2.1

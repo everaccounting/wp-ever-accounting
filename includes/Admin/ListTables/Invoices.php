@@ -45,20 +45,22 @@ class Invoices extends ListTable {
 	 */
 	public function prepare_items() {
 		$this->process_actions();
-		$per_page = $this->get_items_per_page( 'eac_invoices_per_page', 20 );
-		$paged    = $this->get_pagenum();
-		$search   = $this->get_request_search();
-		$order_by = $this->get_request_orderby();
-		$order    = $this->get_request_order();
-		$args     = array(
-			'limit'   => $per_page,
-			'page'    => $paged,
-			'search'  => $search,
-			'orderby' => $order_by,
-			'order'   => $order,
-			'status'  => $this->get_request_status(),
+		$per_page   = $this->get_items_per_page( 'eac_invoices_per_page', 20 );
+		$paged      = $this->get_pagenum();
+		$search     = $this->get_request_search();
+		$order_by   = $this->get_request_orderby();
+		$order      = $this->get_request_order();
+		$contact_id = filter_input( INPUT_GET, 'customer_id', FILTER_VALIDATE_INT );
+		$args       = array(
+			'limit'      => $per_page,
+			'page'       => $paged,
+			'search'     => $search,
+			'orderby'    => $order_by,
+			'order'      => $order,
+			'status'     => $this->get_request_status(),
+			'contact_id' => $contact_id,
 		);
-		
+
 		/**
 		 * Filter the query arguments for the list table.
 		 *
@@ -202,6 +204,7 @@ class Invoices extends ListTable {
 		echo '<div class="alignleft actions">';
 
 		if ( 'top' === $which ) {
+			$this->customer_filter();
 			submit_button( __( 'Filter', 'wp-ever-accounting' ), '', 'filter_action', false );
 		}
 
