@@ -155,7 +155,7 @@ class Item extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	protected function get_formatted_price_attribute() {
+	public function get_formatted_price_attribute() {
 		return eac_format_amount( $this->price );
 	}
 

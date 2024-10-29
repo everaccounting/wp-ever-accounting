@@ -259,7 +259,7 @@ function eac_update_120_accounts() {
 	$wpdb->query( "ALTER TABLE {$wpdb->prefix}ea_accounts DROP COLUMN opening_balance" );
 
 	// now query all the accounts and update the balance.
-	$accounts = EAC()->accounts->query( array( 'limit' => -1 ) );
+	$accounts = EAC()->accounts->query( array( 'limit' => - 1 ) );
 	foreach ( $accounts as $account ) {
 		$account->update_balance();
 	}
@@ -273,25 +273,11 @@ function eac_update_120_accounts() {
 function eac_update_120_categories() {
 	global $wpdb;
 	$table = $wpdb->prefix . 'ea_categories';
+	$terms = $wpdb->prefix . 'ea_terms';
 	$wpdb->query( "UPDATE $table SET type = 'payment' WHERE type = 'income'" );
 	$wpdb->query( "DELETE FROM $table WHERE type = 'other'" );
-	$wpdb->query( "ALTER TABLE $table DROP COLUMN color" );
-	$wpdb->query( "ALTER TABLE $table DROP COLUMN enabled" );
-	$wpdb->query( "ALTER TABLE $table MODIFY date_created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP" );
-	// Add column.
-	$wpdb->query( "ALTER TABLE $table ADD COLUMN description TEXT DEFAULT NULL AFTER name" );
-	$wpdb->query( "ALTER TABLE $table ADD COLUMN taxonomy VARCHAR(20) NOT NULL DEFAULT 'category' AFTER id" );
-	$wpdb->query( "ALTER TABLE $table ADD COLUMN parent_id BIGINT(20) UNSIGNED DEFAULT NULL AFTER taxonomy" );
-	$wpdb->query( "ALTER TABLE $table ADD COLUMN date_updated DATETIME DEFAULT NULL AFTER date_created" );
-	// Add index.
-	$wpdb->query( "ALTER TABLE $table ADD INDEX parent_id (parent_id)" );
-	$wpdb->query( "ALTER TABLE $table ADD INDEX taxonomy (taxonomy)" );
-
-	// No drop the newly table ea_terms.
-	$terms_table = $wpdb->prefix . 'ea_terms';
-	$wpdb->query( "DROP TABLE $terms_table" );
-	// Now rename the table ea_categories to ea_terms.
-	$wpdb->query( "RENAME TABLE $table TO $terms_table" );
+	$wpdb->query("INSERT INTO $terms (id, name, type, date_created) SELECT id, name, type, date_created FROM $table");
+	$wpdb->query( "DROP TABLE $table" );
 }
 
 /**
