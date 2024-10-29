@@ -64,7 +64,7 @@ class Utilities {
 				'position'   => 90,
 			),
 			array(
-				'page_title' => __( 'Settingss', 'wp-ever-accounting' ),
+				'page_title' => __( 'Settings', 'wp-ever-accounting' ),
 				'menu_title' => __( 'Settings', 'wp-ever-accounting' ),
 				'capability' => 'manage_options',
 				'menu_slug'  => 'eac-settings',

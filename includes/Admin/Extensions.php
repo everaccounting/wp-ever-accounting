@@ -2,10 +2,10 @@
 
 namespace EverAccounting\Admin;
 
-defined( 'ABSPATH' ) || exit;
+defined( 'ABSPATH' ) || exit; // Exit if accessed directly.
 
 /**
- * Class Tools
+ * Class Extensions
  *
  * @package EverAccounting\Admin
  * @since 1.0.0
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 class Extensions {
 
 	/**
-	 * Tools constructor.
+	 * Extensions constructor.
 	 */
 	public function __construct() {
 		add_filter( 'eac_extensions_page_tabs', array( __CLASS__, 'register_tabs' ), -1 );
