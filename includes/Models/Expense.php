@@ -79,7 +79,7 @@ class Expense extends Transaction {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	public function get_payment_method_label_attr() {
+	protected function get_payment_method_label_attribute() {
 		$modes = eac_get_payment_methods();
 
 		return array_key_exists( $this->payment_method, $modes ) ? $modes[ $this->payment_method ] : $this->payment_method;

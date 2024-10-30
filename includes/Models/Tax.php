@@ -73,7 +73,7 @@ class Tax extends Term {
 	 * @since 1.0.0
 	 * @return double
 	 */
-	protected function get_rate_attr() {
+	protected function get_rate_attribute() {
 		return $this->get_meta( 'rate' );
 	}
 
@@ -83,7 +83,7 @@ class Tax extends Term {
 	 * @since 1.0.0
 	 * @return bool
 	 */
-	protected function get_compound_attr() {
+	protected function get_compound_attribute() {
 		return $this->cast( 'compound', $this->get_meta( 'compound' ) );
 	}
 
@@ -95,7 +95,7 @@ class Tax extends Term {
 	 * @since 1.0.0
 	 * @return void
 	 */
-	protected function set_rate_attr( $value ) {
+	protected function set_rate_attribute( $value ) {
 		$this->set_meta( 'rate', $value );
 	}
 
@@ -107,7 +107,7 @@ class Tax extends Term {
 	 * @since 1.0.0
 	 * @return void
 	 */
-	protected function set_compound_attr( $value ) {
+	protected function set_compound_attribute( $value ) {
 		$this->set_meta( 'compound', $this->cast( 'compound', $value ) );
 	}
 
@@ -117,7 +117,7 @@ class Tax extends Term {
 	 * @since 1.1.6
 	 * @return string
 	 */
-	protected function get_formatted_name_attr() {
+	protected function get_formatted_name_attribute() {
 		return sprintf( '%1$s (%2$s%%)', $this->name, $this->rate );
 	}
 

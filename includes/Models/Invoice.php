@@ -115,7 +115,7 @@ class Invoice extends Document {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	public function get_status_label_attr() {
+	protected function get_status_label_attribute() {
 		$statuses = EAC()->invoices->get_statuses();
 
 		return array_key_exists( $this->status, $statuses ) ? $statuses[ $this->status ] : $this->status;
