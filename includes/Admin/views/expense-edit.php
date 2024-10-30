@@ -169,7 +169,7 @@ $expense = Expense::make( $id );
 						array(
 							'label'       => __( 'Expense Method', 'wp-ever-accounting' ),
 							'type'        => 'select',
-							'name'        => 'expense_method',
+							'name'        => 'payment_method',
 							'value'       => $expense->payment_method,
 							'options'     => eac_get_payment_methods(),
 							'placeholder' => __( 'Select &hellip;', 'wp-ever-accounting' ),
