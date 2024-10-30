@@ -40,8 +40,8 @@ class Bills extends ListTable {
 	/**
 	 * Prepares the list for display.
 	 *
-	 * @return void
 	 * @since 1.0.0
+	 * @return void
 	 */
 	public function prepare_items() {
 		$this->process_actions();
@@ -69,9 +69,8 @@ class Bills extends ListTable {
 		 */
 		$args = apply_filters( 'eac_bills_table_query_args', $args );
 
-		$args['no_found_rows'] = false;
-		$this->items           = Bill::results( $args );
-		$total                 = Bill::count( $args );
+		$this->items = Bill::results( $args );
+		$total       = Bill::count( $args );
 
 		$this->set_pagination_args(
 			array(
@@ -94,7 +93,7 @@ class Bills extends ListTable {
 		foreach ( $ids as $id ) {
 			$bill = EAC()->bills->get( $id );
 			if ( $bill && $bill->fill( array( 'status' => 'draft' ) )->save() ) {
-				++$performed;
+				++ $performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
@@ -116,7 +115,7 @@ class Bills extends ListTable {
 		foreach ( $ids as $id ) {
 			$bill = EAC()->bills->get( $id );
 			if ( $bill && $bill->fill( array( 'status' => 'received' ) )->save() ) {
-				++$performed;
+				++ $performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
@@ -138,7 +137,7 @@ class Bills extends ListTable {
 		foreach ( $ids as $id ) {
 			$bill = EAC()->bills->get( $id );
 			if ( $bill && $bill->fill( array( 'status' => 'overdue' ) )->save() ) {
-				++$performed;
+				++ $performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
@@ -160,7 +159,7 @@ class Bills extends ListTable {
 		foreach ( $ids as $id ) {
 			$bill = EAC()->bills->get( $id );
 			if ( $bill && $bill->fill( array( 'status' => 'cancelled' ) )->save() ) {
-				++$performed;
+				++ $performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
@@ -181,7 +180,7 @@ class Bills extends ListTable {
 		$performed = 0;
 		foreach ( $ids as $id ) {
 			if ( EAC()->bills->delete( $id ) ) {
-				++$performed;
+				++ $performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
@@ -449,6 +448,7 @@ class Bills extends ListTable {
 				__( 'Delete', 'wp-ever-accounting' )
 			),
 		);
+
 		return $this->row_actions( $actions );
 	}
 }

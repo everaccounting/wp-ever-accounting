@@ -63,10 +63,9 @@ class Customers extends ListTable {
 		 *
 		 * @since 1.0.0
 		 */
-		$args                  = apply_filters( 'eac_customers_table_query_args', $args );
-		$args['no_found_rows'] = false;
-		$this->items           = EAC()->customers->query( $args );
-		$total                 = EAC()->customers->query( $args, true );
+		$args        = apply_filters( 'eac_customers_table_query_args', $args );
+		$this->items = EAC()->customers->query( $args );
+		$total       = EAC()->customers->query( $args, true );
 
 		$this->set_pagination_args(
 			array(

@@ -70,9 +70,8 @@ class Invoices extends ListTable {
 		 */
 		$args = apply_filters( 'eac_invoices_table_query_args', $args );
 
-		$args['no_found_rows'] = false;
-		$this->items           = Invoice::results( $args );
-		$total                 = Invoice::count( $args );
+		$this->items = Invoice::results( $args );
+		$total       = Invoice::count( $args );
 
 		$this->set_pagination_args(
 			array(
@@ -94,7 +93,7 @@ class Invoices extends ListTable {
 		$performed = 0;
 		foreach ( $ids as $id ) {
 			if ( EAC()->invoices->delete( $id ) ) {
-				++$performed;
+				++ $performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
@@ -121,7 +120,7 @@ class Invoices extends ListTable {
 			$invoice         = EAC()->invoices->get( $id );
 			$invoice->status = 'canceled';
 			if ( $invoice->save() ) {
-				++$performed;
+				++ $performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {

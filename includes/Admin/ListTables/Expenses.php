@@ -73,9 +73,8 @@ class Expenses extends ListTable {
 		 */
 		$args = apply_filters( 'eac_expenses_table_query_args', $args );
 
-		$args['no_found_rows'] = false;
-		$this->items           = Expense::results( $args );
-		$total                 = Expense::count( $args );
+		$this->items = Expense::results( $args );
+		$total       = Expense::count( $args );
 
 		$this->set_pagination_args(
 			array(
@@ -97,7 +96,7 @@ class Expenses extends ListTable {
 		$performed = 0;
 		foreach ( $ids as $id ) {
 			if ( EAC()->expenses->delete( $id ) ) {
-				++$performed;
+				++ $performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
@@ -164,14 +163,14 @@ class Expenses extends ListTable {
 	 */
 	public function get_columns() {
 		return array(
-			'cb'           => '<input type="checkbox" />',
-			'number'       => __( 'Expense #', 'wp-ever-accounting' ),
-			'date' => __( 'Date', 'wp-ever-accounting' ),
-			'account_id'   => __( 'Account', 'wp-ever-accounting' ),
-			'vendor_id'    => __( 'Vendor', 'wp-ever-accounting' ),
-			'bill_id'      => __( 'Bill', 'wp-ever-accounting' ),
-			'reference'    => __( 'Reference', 'wp-ever-accounting' ),
-			'amount'       => __( 'Amount', 'wp-ever-accounting' ),
+			'cb'         => '<input type="checkbox" />',
+			'number'     => __( 'Expense #', 'wp-ever-accounting' ),
+			'date'       => __( 'Date', 'wp-ever-accounting' ),
+			'account_id' => __( 'Account', 'wp-ever-accounting' ),
+			'vendor_id'  => __( 'Vendor', 'wp-ever-accounting' ),
+			'bill_id'    => __( 'Bill', 'wp-ever-accounting' ),
+			'reference'  => __( 'Reference', 'wp-ever-accounting' ),
+			'amount'     => __( 'Amount', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -184,13 +183,13 @@ class Expenses extends ListTable {
 	 */
 	protected function get_sortable_columns() {
 		return array(
-			'date' => array( 'payment_date', true ),
-			'number'       => array( 'number', false ),
-			'account_id'   => array( 'account_id', false ),
-			'bill_id'      => array( 'bill_id', false ),
-			'vendor_id'    => array( 'vendor_id', false ),
-			'reference'    => array( 'reference', false ),
-			'amount'       => array( 'amount', false ),
+			'date'       => array( 'payment_date', true ),
+			'number'     => array( 'number', false ),
+			'account_id' => array( 'account_id', false ),
+			'bill_id'    => array( 'bill_id', false ),
+			'vendor_id'  => array( 'vendor_id', false ),
+			'reference'  => array( 'reference', false ),
+			'amount'     => array( 'amount', false ),
 		);
 	}
 

@@ -74,9 +74,8 @@ class Payments extends ListTable {
 		 */
 		$args = apply_filters( 'eac_payments_table_query_args', $args );
 
-		$args['no_found_rows'] = false;
-		$this->items           = Payment::results( $args );
-		$total                 = Payment::count( $args );
+		$this->items = Payment::results( $args );
+		$total       = Payment::count( $args );
 
 		$this->set_pagination_args(
 			array(

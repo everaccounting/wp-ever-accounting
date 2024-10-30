@@ -68,9 +68,8 @@ class Accounts extends ListTable {
 		 */
 		$args = apply_filters( 'eac_accounts_table_query_args', $args );
 
-		$args['no_found_rows'] = false;
-		$this->items           = Account::results( $args );
-		$total                 = Account::count( $args );
+		$this->items = Account::results( $args );
+		$total       = Account::count( $args );
 
 		$this->set_pagination_args(
 			array(

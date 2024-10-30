@@ -67,9 +67,8 @@ class Transfers extends ListTable {
 		 */
 		$args = apply_filters( 'eac_transfers_table_query_args', $args );
 
-		$args['no_found_rows'] = false;
-		$this->items           = Transfer::results( $args );
-		$total                 = Transfer::count( $args );
+		$this->items = Transfer::results( $args );
+		$total       = Transfer::count( $args );
 		$this->set_pagination_args(
 			array(
 				'total_items' => $total,
@@ -90,7 +89,7 @@ class Transfers extends ListTable {
 		$performed = 0;
 		foreach ( $ids as $id ) {
 			if ( EAC()->transfers->delete( $id ) ) {
-				++$performed;
+				++ $performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
