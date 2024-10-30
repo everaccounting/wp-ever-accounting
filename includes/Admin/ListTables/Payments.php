@@ -98,7 +98,7 @@ class Payments extends ListTable {
 		$performed = 0;
 		foreach ( $ids as $id ) {
 			if ( EAC()->payments->delete( $id ) ) {
-				++$performed;
+				++ $performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
@@ -164,14 +164,14 @@ class Payments extends ListTable {
 	 */
 	public function get_columns() {
 		return array(
-			'cb'           => '<input type="checkbox" />',
-			'number'       => __( 'Payment #', 'wp-ever-accounting' ),
-			'payment_date' => __( 'Date', 'wp-ever-accounting' ),
-			'account_id'   => __( 'Account', 'wp-ever-accounting' ),
-			'customer_id'  => __( 'Customer', 'wp-ever-accounting' ),
-			'invoice_id'   => __( 'Invoice', 'wp-ever-accounting' ),
-			'reference'    => __( 'Reference', 'wp-ever-accounting' ),
-			'amount'       => __( 'Amount', 'wp-ever-accounting' ),
+			'cb'          => '<input type="checkbox" />',
+			'number'      => __( 'Payment #', 'wp-ever-accounting' ),
+			'date'        => __( 'Date', 'wp-ever-accounting' ),
+			'account_id'  => __( 'Account', 'wp-ever-accounting' ),
+			'customer_id' => __( 'Customer', 'wp-ever-accounting' ),
+			'invoice_id'  => __( 'Invoice', 'wp-ever-accounting' ),
+			'reference'   => __( 'Reference', 'wp-ever-accounting' ),
+			'amount'      => __( 'Amount', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -184,13 +184,13 @@ class Payments extends ListTable {
 	 */
 	protected function get_sortable_columns() {
 		return array(
-			'payment_date' => array( 'payment_date', true ),
-			'number'       => array( 'number', false ),
-			'account_id'   => array( 'account_id', false ),
-			'invoice_id'   => array( 'invoice_id', false ),
-			'customer_id'  => array( 'customer_id', false ),
-			'reference'    => array( 'reference', false ),
-			'amount'       => array( 'amount', false ),
+			'date'        => array( 'payment_date', true ),
+			'number'      => array( 'number', false ),
+			'account_id'  => array( 'account_id', false ),
+			'invoice_id'  => array( 'invoice_id', false ),
+			'customer_id' => array( 'customer_id', false ),
+			'reference'   => array( 'reference', false ),
+			'amount'      => array( 'amount', false ),
 		);
 	}
 
@@ -240,7 +240,7 @@ class Payments extends ListTable {
 	 * @since  1.0.0
 	 * @return string Displays the name.
 	 */
-	public function column_payment_date( $item ) {
+	public function column_date( $item ) {
 		return $item->payment_date ? wp_date( eac_date_format(), strtotime( $item->payment_date ) ) : '&mdash;';
 	}
 

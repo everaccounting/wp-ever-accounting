@@ -166,7 +166,7 @@ class Expenses extends ListTable {
 		return array(
 			'cb'           => '<input type="checkbox" />',
 			'number'       => __( 'Expense #', 'wp-ever-accounting' ),
-			'payment_date' => __( 'Date', 'wp-ever-accounting' ),
+			'date' => __( 'Date', 'wp-ever-accounting' ),
 			'account_id'   => __( 'Account', 'wp-ever-accounting' ),
 			'vendor_id'    => __( 'Vendor', 'wp-ever-accounting' ),
 			'bill_id'      => __( 'Bill', 'wp-ever-accounting' ),
@@ -184,7 +184,7 @@ class Expenses extends ListTable {
 	 */
 	protected function get_sortable_columns() {
 		return array(
-			'payment_date' => array( 'payment_date', true ),
+			'date' => array( 'payment_date', true ),
 			'number'       => array( 'number', false ),
 			'account_id'   => array( 'account_id', false ),
 			'bill_id'      => array( 'bill_id', false ),
@@ -240,7 +240,7 @@ class Expenses extends ListTable {
 	 * @since  1.0.0
 	 * @return string Displays the name.
 	 */
-	public function column_payment_date( $item ) {
+	public function column_date( $item ) {
 		return $item->payment_date ? wp_date( eac_date_format(), strtotime( $item->payment_date ) ) : '&mdash;';
 	}
 
