@@ -32,7 +32,7 @@ defined( 'ABSPATH' ) || exit;
 					</option>
 				<?php endforeach; ?>
 			</select>
-			<input type="number" name="discount_value" id="discount_value" placeholder="10" style="text-align: right;width: auto;" value="<?php echo esc_attr( $invoice->discount_value ); ?>"/>
+			<input type="number" name="discount_value" id="discount_value" placeholder="0" style="text-align: right;width: auto;" value="<?php echo esc_attr( $invoice->discount_value ); ?>"/>
 		</div>
 	</td>
 </tr>
