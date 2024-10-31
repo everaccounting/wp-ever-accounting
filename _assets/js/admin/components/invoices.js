@@ -62,7 +62,7 @@ jQuery( document ).ready( ( $ ) => {
 				data[ 'items[' + nextIndex + '][name]' ] = item.name;
 				data[ 'items[' + nextIndex + '][description]' ] = item.description;
 				data[ 'items[' + nextIndex + '][price]' ] =
-					( item.cost || item.price ) * exchange_rate;
+					( item.price || item.cost ) * exchange_rate;
 				data[ 'items[' + nextIndex + '][quantity]' ] = 1;
 				data[ 'items[' + nextIndex + '][type]' ] = item.type;
 				data[ 'items[' + nextIndex + '][unit]' ] = item.unit;

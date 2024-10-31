@@ -1,4 +1,9 @@
 <?php
+
+namespace EverAccounting\Admin\Exporters;
+
+use EverAccounting\Utilities\FileUtil;
+
 /**
  * Handle exporters.
  *
@@ -6,19 +11,7 @@
  *
  * @package EverAccounting\Admin\Exporters
  */
-
-namespace EverAccounting\Admin\Tools\Exporters;
-
-use EverAccounting\Utilities\DateTime;
-
-/**
- * Class CSVExporter.
- *
- * @since   1.0.2
- *
- * @package EverAccounting\Admin\Exporters
- */
-abstract class CSVExporter {
+abstract class Exporter {
 	/**
 	 * Our export type. Used for export-type specific filters/actions.
 	 *
@@ -33,15 +26,15 @@ abstract class CSVExporter {
 	 * @since  1.0.2
 	 * @var    string
 	 */
-	public $capability = 'eac_export';
+	public $capability = 'manage_options';
 
 	/**
-	 * Number exported.
+	 * Filename to export to.
 	 *
 	 * @since 1.0.2
-	 * @var integer
+	 * @var string
 	 */
-	protected $exported_count = 0;
+	protected $filename = '';
 
 	/**
 	 * The delimiter parameter sets the field delimiter (one character only).
@@ -50,6 +43,30 @@ abstract class CSVExporter {
 	 * @var string
 	 */
 	protected $delimiter = ',';
+
+	/**
+	 * The character used to wrap text in the CSV.
+	 *
+	 * @since 1.0.2
+	 * @var array
+	 */
+	protected $enclosure = '"';
+
+	/**
+	 * The character used to escape the enclosure character.
+	 *
+	 * @since 1.0.2
+	 * @var array
+	 */
+	protected $escape = "\0"; // This should be double-quoted.
+
+	/**
+	 * Number exported.
+	 *
+	 * @since 1.0.2
+	 * @var integer
+	 */
+	protected $position = 0;
 
 	/**
 	 * Page being exported
@@ -64,7 +81,7 @@ abstract class CSVExporter {
 	 * @since 1.0.2
 	 * @var integer
 	 */
-	protected $limit = 1000;
+	protected $limit = 100;
 
 	/**
 	 * Total rows to export.
@@ -72,15 +89,7 @@ abstract class CSVExporter {
 	 * @since 1.0.2
 	 * @var integer
 	 */
-	protected $total_count = 0;
-
-	/**
-	 * export file name.
-	 *
-	 * @since 1.0.2
-	 * @var string
-	 */
-	protected $filename = '';
+	protected $total = 0;
 
 	/**
 	 * Return an array of supported column names and ids.
@@ -108,20 +117,37 @@ abstract class CSVExporter {
 		return (bool) current_user_can( apply_filters( 'eac_export_capability', $this->capability ) );
 	}
 
+
+	/**
+	 * Set filename to export to.
+	 *
+	 * @param string $filename Filename to export to.
+	 */
+	public function set_filename( $filename ) {
+		$this->filename = sanitize_file_name( str_replace( '.csv', '', $filename ) . '.csv' );
+	}
+
+	/**
+	 * Generate and return a filename.
+	 *
+	 * @return string
+	 */
+	public function get_filename() {
+		$date = wp_date( 'Ymdhis' );
+
+		return sanitize_file_name( "{$this->export_type}-$date.csv" );
+	}
+
 	/**
 	 * Generate the CSV file.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param int $step Step number.
+	 *
+	 * @since 1.0.2
 	 */
 	public function process_step( $step ) {
-		$this->page = absint( $step );
-		global $wp_filesystem;
-		if ( empty( $wp_filesystem ) ) {
-			require_once ABSPATH . 'wp-admin/includes/file.php';
-			WP_Filesystem();
-		}
+		$this->page    = absint( $step );
+		$wp_filesystem = FileUtil::get_filesystem();
 
 		if ( 1 === $this->page ) {
 			$wp_filesystem->delete( $this->get_file_path() );
@@ -147,33 +173,9 @@ abstract class CSVExporter {
 	public function export() {
 		$this->send_headers();
 		$this->send_content( $this->get_file() );
-		global $wp_filesystem;
-		if ( empty( $wp_filesystem ) ) {
-			require_once ABSPATH . 'wp-admin/includes/file.php';
-			WP_Filesystem();
-		}
+		$wp_filesystem = FileUtil::get_filesystem();
 		$wp_filesystem->delete( $this->get_file_path() );
 		die();
-	}
-
-	/**
-	 * Set filename to export to.
-	 *
-	 * @param string $filename Filename to export to.
-	 */
-	public function set_filename( $filename ) {
-		$this->filename = sanitize_file_name( str_replace( '.csv', '', $filename ) . '.csv' );
-	}
-
-	/**
-	 * Generate and return a filename.
-	 *
-	 * @return string
-	 */
-	public function get_filename() {
-		$date = wp_date( 'Ymd' );
-
-		return sanitize_file_name( "{$this->export_type}-$date.csv" );
 	}
 
 	/**
@@ -183,7 +185,7 @@ abstract class CSVExporter {
 	 * @return int
 	 */
 	public function get_percent_complete() {
-		return $this->total_count ? floor( ( $this->get_total_exported() / $this->total_count ) * 100 ) : 100;
+		return $this->total ? floor( ( $this->get_total_exported() / $this->total ) * 100 ) : 100;
 	}
 
 	/**
@@ -193,7 +195,7 @@ abstract class CSVExporter {
 	 * @return int
 	 */
 	public function get_total_exported() {
-		return ( ( $this->page - 1 ) * $this->limit ) + $this->exported_count;
+		return ( ( $this->page - 1 ) * $this->limit ) + $this->position;
 	}
 
 	/**
@@ -215,13 +217,8 @@ abstract class CSVExporter {
 	 * @return string
 	 */
 	protected function get_file() {
-		$file = '';
-		global $wp_filesystem;
-		if ( empty( $wp_filesystem ) ) {
-			require_once ABSPATH . 'wp-admin/includes/file.php';
-			WP_Filesystem();
-		}
-
+		$file          = '';
+		$wp_filesystem = FileUtil::get_filesystem();
 		// check if file exists.
 		if ( $wp_filesystem->exists( $this->get_file_path() ) ) {
 			$file = $wp_filesystem->get_contents( $this->get_file_path() );
@@ -244,50 +241,47 @@ abstract class CSVExporter {
 	protected function prepare_rows( $rows ) {
 		$buffer = fopen( 'php://output', 'w' );
 		ob_start();
-
-		array_walk( $rows, array( $this, 'prepare_row' ), $buffer );
-
-		return apply_filters( "eaccounting_{$this->export_type}_export_rows", ob_get_clean(), $this );
+		foreach ( $rows as $row ) {
+			$this->prepare_row( $row, $buffer );
+		}
+		return ob_get_clean();
 	}
 
 	/**
 	 * Export rows to an array ready for the CSV.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param array    $row Data to export.
-	 * @param string   $key      Column being exported.
-	 * @param resource $buffer   Output buffer.
+	 * @param resource $buffer Output buffer.
+	 *
+	 * @since 1.0.2
 	 */
-	protected function prepare_row( $row, $key, $buffer ) {
-		$columns    = $this->get_columns();
-		$export_row = array();
-
-		foreach ( $columns as $column ) {
+	protected function prepare_row( $row, $buffer ) {
+		$prepared = array();
+		foreach ( $this->get_columns() as $column ) {
 			if ( isset( $row[ $column ] ) ) {
-				$export_row[] = $this->format_data( $row[ $column ] );
+				$prepared[] = $this->format_data( $row[ $column ] );
 			} else {
-				$export_row[] = '';
+				$prepared[] = '';
 			}
 		}
 
-		$this->fputcsv( $buffer, $export_row );
+		fputcsv( $buffer, $prepared, $this->delimiter, $this->enclosure, $this->escape );
 
-		++$this->exported_count;
+		++$this->position;
 	}
 
 	/**
 	 * Format and escape data ready for the CSV file.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param mixed $data Data to format.
+	 *
+	 * @since 1.0.2
 	 *
 	 * @return string
 	 */
 	protected function format_data( $data ) {
 		if ( ! is_scalar( $data ) ) {
-			if ( is_a( $data, DateTime::class ) ) {
+			if ( is_a( $data, '\EverAccounting\DateTime' ) ) {
 				$data = $data->date( 'Y-m-d G:i:s' );
 			} else {
 				$data = ''; // Not supported.
@@ -309,9 +303,9 @@ abstract class CSVExporter {
 	/**
 	 * Escape a string to be used in a CSV context
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param string $data CSV field to escape.
+	 *
+	 * @since 1.0.2
 	 *
 	 * @return string
 	 */
@@ -337,40 +331,13 @@ abstract class CSVExporter {
 		$buffer     = fopen( 'php://output', 'w' );
 		ob_start();
 
-		foreach ( $columns as $column ) {
-			$export_row[] = $this->format_data( $column );
+		foreach ( $columns as $column_name ) {
+			$export_row[] = $this->format_data( $column_name );
 		}
 
-		$this->fputcsv( $buffer, $export_row );
+		fputcsv( $buffer, $export_row, $this->delimiter, $this->enclosure, $this->escape );
 
 		return ob_get_clean();
-	}
-
-	/**
-	 * Write to the CSV file, ensuring escaping works across versions of
-	 * PHP.
-	 *
-	 * PHP 5.5.4 uses '\' as the default escape character. This is not RFC-4180 compliant.
-	 * \0 disables the escape character.
-	 *
-	 * @since 1.0.2
-	 *
-	 * @param resource $buffer     Resource we are writing to.
-	 * @param array    $export_row Row to export.
-	 */
-	protected function fputcsv( $buffer, $export_row ) {
-
-		if ( version_compare( PHP_VERSION, '5.5.4', '<' ) ) {
-			ob_start();
-			$temp = fopen( 'php://output', 'w' ); // @codingStandardsIgnoreLine
-			fputcsv( $temp, $export_row, $this->delimiter, '"' ); // @codingStandardsIgnoreLine
-			fclose( $temp ); // @codingStandardsIgnoreLine
-			$row = ob_get_clean();
-			$row = str_replace( '\\"', '\\""', $row );
-			fwrite( $buffer, $row ); // @codingStandardsIgnoreLine
-		} else {
-			fputcsv( $buffer, $export_row, $this->delimiter, '"', "\0" ); // @codingStandardsIgnoreLine
-		}
 	}
 
 	/**
@@ -391,9 +358,9 @@ abstract class CSVExporter {
 	/**
 	 * Set the export content.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param string $content All CSV content.
+	 *
+	 * @since 1.0.2
 	 */
 	protected function send_content( $content ) {
 		echo wp_kses_post( $content );

@@ -68,10 +68,9 @@ class Items extends ListTable {
 		 *
 		 * @since 1.0.0
 		 */
-		$args                  = apply_filters( 'eac_items_table_query_args', $args );
-		$args['no_found_rows'] = false;
-		$this->items           = Item::results( $args );
-		$total                 = Item::count( $args );
+		$args        = apply_filters( 'eac_items_table_query_args', $args );
+		$this->items = Item::results( $args );
+		$total       = Item::count( $args );
 		$this->set_pagination_args(
 			array(
 				'total_items' => $total,
@@ -92,7 +91,7 @@ class Items extends ListTable {
 		$performed = 0;
 		foreach ( $ids as $id ) {
 			if ( EAC()->items->delete( $id ) ) {
-				++$performed;
+				++ $performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {

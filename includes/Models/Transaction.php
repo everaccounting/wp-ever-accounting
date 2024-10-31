@@ -101,7 +101,6 @@ class Transaction extends Model {
 	 */
 	protected $attributes = array(
 		'created_via' => 'manual',
-		'editable'    => false,
 	);
 
 	/**
@@ -190,7 +189,7 @@ class Transaction extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	protected function get_formatted_number_attr() {
+	protected function get_formatted_number_attribute() {
 		$number = empty( $this->number ) ? $this->get_next_number() : $this->number;
 		$prefix = strtoupper( substr( $this->type, 0, 3 ) ) . '-';
 		$next   = str_pad( $number, 4, '0', STR_PAD_LEFT );
@@ -204,7 +203,7 @@ class Transaction extends Model {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	protected function get_formatted_amount_attr() {
+	protected function get_formatted_amount_attribute() {
 		return eac_format_amount( $this->amount, $this->currency );
 	}
 

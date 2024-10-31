@@ -63,10 +63,9 @@ class Vendors extends ListTable {
 		 *
 		 * @since 1.0.0
 		 */
-		$args                  = apply_filters( 'eac_vendors_table_query_args', $args );
-		$args['no_found_rows'] = false;
-		$this->items           = EAC()->vendors->query( $args );
-		$total                 = EAC()->vendors->query( $args, true );
+		$args        = apply_filters( 'eac_vendors_table_query_args', $args );
+		$this->items = EAC()->vendors->query( $args );
+		$total       = EAC()->vendors->query( $args, true );
 
 		$this->set_pagination_args(
 			array(

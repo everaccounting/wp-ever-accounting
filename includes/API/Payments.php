@@ -723,7 +723,7 @@ class Payments extends Transactions {
 					'type'        => 'string',
 					'context'     => array( 'view', 'embed', 'edit' ),
 				),
-				'author_id'       => array(
+				'author_id'        => array(
 					'description' => __( 'Author ID of the payment.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'embed', 'edit' ),

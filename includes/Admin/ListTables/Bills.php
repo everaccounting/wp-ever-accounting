@@ -40,23 +40,25 @@ class Bills extends ListTable {
 	/**
 	 * Prepares the list for display.
 	 *
-	 * @return void
 	 * @since 1.0.0
+	 * @return void
 	 */
 	public function prepare_items() {
 		$this->process_actions();
-		$per_page = $this->get_items_per_page( 'eac_bills_per_page', 20 );
-		$paged    = $this->get_pagenum();
-		$search   = $this->get_request_search();
-		$order_by = $this->get_request_orderby();
-		$order    = $this->get_request_order();
-		$args     = array(
-			'limit'   => $per_page,
-			'page'    => $paged,
-			'search'  => $search,
-			'orderby' => $order_by,
-			'order'   => $order,
-			'status'  => $this->get_request_status(),
+		$per_page   = $this->get_items_per_page( 'eac_bills_per_page', 20 );
+		$paged      = $this->get_pagenum();
+		$search     = $this->get_request_search();
+		$order_by   = $this->get_request_orderby();
+		$order      = $this->get_request_order();
+		$contact_id = filter_input( INPUT_GET, 'vendor_id', FILTER_VALIDATE_INT );
+		$args       = array(
+			'limit'      => $per_page,
+			'page'       => $paged,
+			'search'     => $search,
+			'orderby'    => $order_by,
+			'order'      => $order,
+			'status'     => $this->get_request_status(),
+			'contact_id' => $contact_id,
 		);
 		/**
 		 * Filter the query arguments for the list table.
@@ -67,9 +69,8 @@ class Bills extends ListTable {
 		 */
 		$args = apply_filters( 'eac_bills_table_query_args', $args );
 
-		$args['no_found_rows'] = false;
-		$this->items           = Bill::results( $args );
-		$total                 = Bill::count( $args );
+		$this->items = Bill::results( $args );
+		$total       = Bill::count( $args );
 
 		$this->set_pagination_args(
 			array(
@@ -92,7 +93,7 @@ class Bills extends ListTable {
 		foreach ( $ids as $id ) {
 			$bill = EAC()->bills->get( $id );
 			if ( $bill && $bill->fill( array( 'status' => 'draft' ) )->save() ) {
-				++$performed;
+				++ $performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
@@ -114,7 +115,7 @@ class Bills extends ListTable {
 		foreach ( $ids as $id ) {
 			$bill = EAC()->bills->get( $id );
 			if ( $bill && $bill->fill( array( 'status' => 'received' ) )->save() ) {
-				++$performed;
+				++ $performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
@@ -136,7 +137,7 @@ class Bills extends ListTable {
 		foreach ( $ids as $id ) {
 			$bill = EAC()->bills->get( $id );
 			if ( $bill && $bill->fill( array( 'status' => 'overdue' ) )->save() ) {
-				++$performed;
+				++ $performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
@@ -158,7 +159,7 @@ class Bills extends ListTable {
 		foreach ( $ids as $id ) {
 			$bill = EAC()->bills->get( $id );
 			if ( $bill && $bill->fill( array( 'status' => 'cancelled' ) )->save() ) {
-				++$performed;
+				++ $performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
@@ -179,7 +180,7 @@ class Bills extends ListTable {
 		$performed = 0;
 		foreach ( $ids as $id ) {
 			if ( EAC()->bills->delete( $id ) ) {
-				++$performed;
+				++ $performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
@@ -264,6 +265,7 @@ class Bills extends ListTable {
 		echo '<div class="alignleft actions">';
 
 		if ( 'top' === $which ) {
+			$this->contact_filter( 'vendor' );
 			submit_button( __( 'Filter', 'wp-ever-accounting' ), '', 'filter_action', false );
 		}
 
@@ -367,7 +369,7 @@ class Bills extends ListTable {
 	 */
 	public function column_vendor_id( $item ) {
 		if ( $item->vendor ) {
-			return sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( 'vendor_id', $item->vendor->id, $this->base_url ) ), wp_kses_post( $item->vendor->name ) );
+			return sprintf( '<a href="%s">%s</a>', esc_url( $item->vendor->get_view_url() ), wp_kses_post( $item->vendor->name ) );
 		}
 
 		return '&mdash;';
@@ -446,6 +448,7 @@ class Bills extends ListTable {
 				__( 'Delete', 'wp-ever-accounting' )
 			),
 		);
+
 		return $this->row_actions( $actions );
 	}
 }

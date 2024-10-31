@@ -149,7 +149,10 @@ if ( ! $bill->is_taxed() ) {
 										}
 										break;
 									case 'quantity':
-										printf( '%s x%s', esc_html( $item->quantity ), esc_html( $item->unit ) );
+										echo esc_html( $item->quantity );
+										if ( $item->unit ) {
+											echo ' x ' . esc_html( $item->unit );
+										}
 										break;
 									case 'price':
 										echo esc_html( eac_format_amount( $item->price, $bill->currency ) );

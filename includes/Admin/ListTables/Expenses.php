@@ -52,7 +52,7 @@ class Expenses extends ListTable {
 		$order       = $this->get_request_order();
 		$account_id  = filter_input( INPUT_GET, 'account_id', FILTER_VALIDATE_INT );
 		$category_id = filter_input( INPUT_GET, 'category_id', FILTER_VALIDATE_INT );
-		$contact_id  = filter_input( INPUT_GET, 'customer_id', FILTER_VALIDATE_INT );
+		$contact_id  = filter_input( INPUT_GET, 'vendor_id', FILTER_VALIDATE_INT );
 		$args        = array(
 			'limit'       => $per_page,
 			'page'        => $paged,
@@ -73,9 +73,8 @@ class Expenses extends ListTable {
 		 */
 		$args = apply_filters( 'eac_expenses_table_query_args', $args );
 
-		$args['no_found_rows'] = false;
-		$this->items           = Expense::results( $args );
-		$total                 = Expense::count( $args );
+		$this->items = Expense::results( $args );
+		$total       = Expense::count( $args );
 
 		$this->set_pagination_args(
 			array(
@@ -97,7 +96,7 @@ class Expenses extends ListTable {
 		$performed = 0;
 		foreach ( $ids as $id ) {
 			if ( EAC()->expenses->delete( $id ) ) {
-				++$performed;
+				++ $performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
@@ -147,8 +146,9 @@ class Expenses extends ListTable {
 		if ( 'top' === $which ) {
 			$this->date_filter();
 			$this->year_filter();
-			$this->account_filter( 'active' );
+			$this->account_filter();
 			$this->category_filter( 'expense' );
+			$this->contact_filter( 'vendor' );
 			submit_button( __( 'Filter', 'wp-ever-accounting' ), '', 'filter_action', false );
 		}
 		echo '</div>';
@@ -163,14 +163,14 @@ class Expenses extends ListTable {
 	 */
 	public function get_columns() {
 		return array(
-			'cb'           => '<input type="checkbox" />',
-			'number'       => __( 'Expense #', 'wp-ever-accounting' ),
-			'payment_date' => __( 'Date', 'wp-ever-accounting' ),
-			'account_id'   => __( 'Account', 'wp-ever-accounting' ),
-			'customer_id'  => __( 'Customer', 'wp-ever-accounting' ),
-			'bill_id'      => __( 'Bill', 'wp-ever-accounting' ),
-			'reference'    => __( 'Reference', 'wp-ever-accounting' ),
-			'amount'       => __( 'Amount', 'wp-ever-accounting' ),
+			'cb'         => '<input type="checkbox" />',
+			'number'     => __( 'Expense #', 'wp-ever-accounting' ),
+			'date'       => __( 'Date', 'wp-ever-accounting' ),
+			'account_id' => __( 'Account', 'wp-ever-accounting' ),
+			'vendor_id'  => __( 'Vendor', 'wp-ever-accounting' ),
+			'bill_id'    => __( 'Bill', 'wp-ever-accounting' ),
+			'reference'  => __( 'Reference', 'wp-ever-accounting' ),
+			'amount'     => __( 'Amount', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -183,13 +183,13 @@ class Expenses extends ListTable {
 	 */
 	protected function get_sortable_columns() {
 		return array(
-			'payment_date' => array( 'payment_date', true ),
-			'number'       => array( 'number', false ),
-			'account_id'   => array( 'account_id', false ),
-			'bill_id'      => array( 'bill_id', false ),
-			'customer_id'  => array( 'customer_id', false ),
-			'reference'    => array( 'reference', false ),
-			'amount'       => array( 'amount', false ),
+			'date'       => array( 'payment_date', true ),
+			'number'     => array( 'number', false ),
+			'account_id' => array( 'account_id', false ),
+			'bill_id'    => array( 'bill_id', false ),
+			'vendor_id'  => array( 'vendor_id', false ),
+			'reference'  => array( 'reference', false ),
+			'amount'     => array( 'amount', false ),
 		);
 	}
 
@@ -239,7 +239,7 @@ class Expenses extends ListTable {
 	 * @since  1.0.0
 	 * @return string Displays the name.
 	 */
-	public function column_payment_date( $item ) {
+	public function column_date( $item ) {
 		return $item->payment_date ? wp_date( eac_date_format(), strtotime( $item->payment_date ) ) : '&mdash;';
 	}
 
@@ -252,7 +252,7 @@ class Expenses extends ListTable {
 	 * @return string Displays the account.
 	 */
 	public function column_account_id( $item ) {
-		$account  = $item->account ? sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( 'account_id', $item->account->id, $this->base_url ) ), wp_kses_post( $item->account->name ) ) : '&mdash;';
+		$account  = $item->account ? sprintf( '<a href="%s">%s</a>', esc_url( $item->account->get_view_url() ), wp_kses_post( $item->account->name ) ) : '&mdash;';
 		$metadata = $item->account && $item->account->number ? ucfirst( $item->account->number ) : '';
 
 		return sprintf( '%s%s', $account, $this->column_metadata( $metadata ) );
@@ -273,7 +273,7 @@ class Expenses extends ListTable {
 			$metadata = sprintf( '<a href="%s">%s</a>', esc_url( $item->bill->get_view_url() ), wp_kses_post( $item->bill->number ) );
 		}
 
-		return sprintf( '%s%s', $bill, $this->column_metadata( $metadata ) );
+		return sprintf( '%s', empty( $this->column_metadata( $metadata ) ) ? $bill : $this->column_metadata( $metadata ) );
 	}
 
 	/**
@@ -284,9 +284,9 @@ class Expenses extends ListTable {
 	 * @since  1.0.0
 	 * @return string Displays the customer.
 	 */
-	public function column_customer_id( $item ) {
-		$customer = $item->customer ? sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( 'customer_id', $item->customer->id, $this->base_url ) ), wp_kses_post( $item->customer->name ) ) : '&mdash;';
-		$metadata = $item->customer && $item->customer->company ? $item->customer->company : '';
+	public function column_vendor_id( $item ) {
+		$customer = $item->vendor ? sprintf( '<a href="%s">%s</a>', esc_url( $item->vendor->get_view_url() ), wp_kses_post( $item->vendor->name ) ) : '&mdash;';
+		$metadata = $item->vendor && $item->vendor->company ? $item->vendor->company : '';
 
 		return sprintf( '%s%s', $customer, $this->column_metadata( $metadata ) );
 	}

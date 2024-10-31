@@ -226,11 +226,11 @@ class DocumentItem extends Model {
 			if ( ! $tax ) {
 				continue;
 			}
-			$tax_data = wp_parse_args(
+			$tax_data                  = wp_parse_args(
 				$tax_data,
 				array(
-					'name'     => $tax->name,
-					'rate'     => $tax->rate,
+					'name' => $tax->name,
+					'rate' => $tax->rate,
 				)
 			);
 			$doc_tax                   = DocumentTax::make( $tax_data );
@@ -252,13 +252,13 @@ class DocumentItem extends Model {
 
 		foreach ( $this->taxes as $item_tax ) {
 			$item_tax->amount = $item_tax->compound ? 0 : ( $disc_subtotal * $item_tax->rate / 100 );
-			$simple_tax       += $item_tax->compound ? 0 : $item_tax->amount;
+			$simple_tax      += $item_tax->compound ? 0 : $item_tax->amount;
 		}
 
 		foreach ( $this->taxes as $item_tax ) {
 			if ( $item_tax->compound ) {
 				$item_tax->amount = ( $disc_subtotal + $simple_tax ) * $item_tax->rate / 100;
-				$compound_tax     += $item_tax->amount;
+				$compound_tax    += $item_tax->amount;
 			}
 		}
 

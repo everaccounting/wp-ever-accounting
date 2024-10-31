@@ -5,8 +5,8 @@
  * @package EverAccounting\Admin
  * @since 1.0.0
  *
- * @var string $rate Exchange rate.
- * @var string $code Currency code.
+ * @var string $rate    Exchange rate.
+ * @var string $code    Currency code.
  * @var array  $currencies List of currencies.
  */
 

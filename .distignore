@@ -81,6 +81,7 @@ Thumbs.db
 
 # Build related files
 *.config.js
+/_assets
 /client
 /packages
 /legacy

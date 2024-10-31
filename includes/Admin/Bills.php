@@ -122,8 +122,8 @@ class Bills {
 			wp_die( esc_html__( 'You do not have permission to perform this action.', 'wp-ever-accounting' ) );
 		}
 
-		$id     = isset( $posted['id'] ) ? absint( wp_unslash( $posted['id'] ) ) : 0;
-		$action = isset( $posted['bill_action'] ) ? sanitize_text_field( wp_unslash( $posted['bill_action'] ) ) : '';
+		$id      = isset( $posted['id'] ) ? absint( wp_unslash( $posted['id'] ) ) : 0;
+		$action  = isset( $posted['bill_action'] ) ? sanitize_text_field( wp_unslash( $posted['bill_action'] ) ) : '';
 		$referer = wp_get_referer();
 		// if any of the required fields are missing, bail.
 		if ( ! $id || ! $action ) {
@@ -136,12 +136,12 @@ class Bills {
 		}
 
 		switch ( $action ) {
-			case 'mark_sent':
+			case 'mark_received':
 				$bill->status = 'sent';
 				if ( $bill->save() ) {
-					EAC()->flash->success( __( 'Invoice marked as sent.', 'wp-ever-accounting' ) );
+					EAC()->flash->success( __( 'Invoice marked as received.', 'wp-ever-accounting' ) );
 				} else {
-					EAC()->flash->error( __( 'Failed to mark bill as sent.', 'wp-ever-accounting' ) );
+					EAC()->flash->error( __( 'Failed to mark bill as received.', 'wp-ever-accounting' ) );
 				}
 				break;
 			default:

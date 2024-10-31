@@ -45,19 +45,22 @@ class Invoices extends ListTable {
 	 */
 	public function prepare_items() {
 		$this->process_actions();
-		$per_page = $this->get_items_per_page( 'eac_invoices_per_page', 20 );
-		$paged    = $this->get_pagenum();
-		$search   = $this->get_request_search();
-		$order_by = $this->get_request_orderby();
-		$order    = $this->get_request_order();
-		$args     = array(
-			'limit'   => $per_page,
-			'page'    => $paged,
-			'search'  => $search,
-			'orderby' => $order_by,
-			'order'   => $order,
-			'status'  => $this->get_request_status(),
+		$per_page   = $this->get_items_per_page( 'eac_invoices_per_page', 20 );
+		$paged      = $this->get_pagenum();
+		$search     = $this->get_request_search();
+		$order_by   = $this->get_request_orderby();
+		$order      = $this->get_request_order();
+		$contact_id = filter_input( INPUT_GET, 'customer_id', FILTER_VALIDATE_INT );
+		$args       = array(
+			'limit'      => $per_page,
+			'page'       => $paged,
+			'search'     => $search,
+			'orderby'    => $order_by,
+			'order'      => $order,
+			'status'     => $this->get_request_status(),
+			'contact_id' => $contact_id,
 		);
+
 		/**
 		 * Filter the query arguments for the list table.
 		 *
@@ -67,9 +70,8 @@ class Invoices extends ListTable {
 		 */
 		$args = apply_filters( 'eac_invoices_table_query_args', $args );
 
-		$args['no_found_rows'] = false;
-		$this->items           = Invoice::results( $args );
-		$total                 = Invoice::count( $args );
+		$this->items = Invoice::results( $args );
+		$total       = Invoice::count( $args );
 
 		$this->set_pagination_args(
 			array(
@@ -115,7 +117,7 @@ class Invoices extends ListTable {
 			foreach ( $payments as $payment ) {
 				$payment->delete();
 			}
-			$invoice = EAC()->invoices->get( $id );
+			$invoice         = EAC()->invoices->get( $id );
 			$invoice->status = 'canceled';
 			if ( $invoice->save() ) {
 				++ $performed;
@@ -176,8 +178,8 @@ class Invoices extends ListTable {
 	 */
 	protected function get_bulk_actions() {
 		$actions = array(
-			'cancel'  => __( 'Cancel', 'wp-ever-accounting' ),
-			'delete'  => __( 'Delete', 'wp-ever-accounting' ),
+			'cancel' => __( 'Cancel', 'wp-ever-accounting' ),
+			'delete' => __( 'Delete', 'wp-ever-accounting' ),
 		);
 
 		return $actions;
@@ -201,6 +203,7 @@ class Invoices extends ListTable {
 		echo '<div class="alignleft actions">';
 
 		if ( 'top' === $which ) {
+			$this->contact_filter( 'customer' );
 			submit_button( __( 'Filter', 'wp-ever-accounting' ), '', 'filter_action', false );
 		}
 
@@ -215,14 +218,14 @@ class Invoices extends ListTable {
 	 */
 	public function get_columns() {
 		return array(
-			'cb'         => '<input type="checkbox" />',
-			'number'     => __( 'INV #', 'wp-ever-accounting' ),
-			'issue_date' => __( 'Issue Date', 'wp-ever-accounting' ),
-			'due_date'   => __( 'Due Date', 'wp-ever-accounting' ),
-			'customer'   => __( 'Customer', 'wp-ever-accounting' ),
-			'reference'  => __( 'Order #', 'wp-ever-accounting' ),
-			'status'     => __( 'Status', 'wp-ever-accounting' ),
-			'total'      => __( 'Total', 'wp-ever-accounting' ),
+			'cb'          => '<input type="checkbox" />',
+			'number'      => __( 'INV #', 'wp-ever-accounting' ),
+			'issue_date'  => __( 'Issue Date', 'wp-ever-accounting' ),
+			'due_date'    => __( 'Due Date', 'wp-ever-accounting' ),
+			'customer_id' => __( 'Customer', 'wp-ever-accounting' ),
+			'reference'   => __( 'Order #', 'wp-ever-accounting' ),
+			'status'      => __( 'Status', 'wp-ever-accounting' ),
+			'total'       => __( 'Total', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -234,13 +237,13 @@ class Invoices extends ListTable {
 	 */
 	protected function get_sortable_columns() {
 		return array(
-			'number'     => array( 'number', false ),
-			'reference'  => array( 'reference', false ),
-			'issue_date' => array( 'issue_date', false ),
-			'due_date'   => array( 'due_date', false ),
-			'customer'   => array( 'customer', false ),
-			'status'     => array( 'status', false ),
-			'total'      => array( 'total', false ),
+			'number'      => array( 'number', false ),
+			'reference'   => array( 'reference', false ),
+			'issue_date'  => array( 'issue_date', false ),
+			'due_date'    => array( 'due_date', false ),
+			'customer_id' => array( 'customer_id', false ),
+			'status'      => array( 'status', false ),
+			'total'       => array( 'total', false ),
 		);
 	}
 
@@ -334,9 +337,9 @@ class Invoices extends ListTable {
 	 * @since  1.0.0
 	 * @return string Displays the customer.
 	 */
-	public function column_customer( $item ) {
+	public function column_customer_id( $item ) {
 		if ( $item->customer ) {
-			return sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( 'customer_id', $item->customer->id, $this->base_url ) ), wp_kses_post( $item->customer->name ) );
+			return sprintf( '<a href="%s">%s</a>', esc_url( $item->customer->get_view_url() ), wp_kses_post( $item->customer->name ) );
 		}
 
 		return '&mdash;';

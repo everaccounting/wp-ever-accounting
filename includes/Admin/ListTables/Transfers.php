@@ -67,9 +67,8 @@ class Transfers extends ListTable {
 		 */
 		$args = apply_filters( 'eac_transfers_table_query_args', $args );
 
-		$args['no_found_rows'] = false;
-		$this->items           = Transfer::results( $args );
-		$total                 = Transfer::count( $args );
+		$this->items = Transfer::results( $args );
+		$total       = Transfer::count( $args );
 		$this->set_pagination_args(
 			array(
 				'total_items' => $total,
@@ -90,7 +89,7 @@ class Transfers extends ListTable {
 		$performed = 0;
 		foreach ( $ids as $id ) {
 			if ( EAC()->transfers->delete( $id ) ) {
-				++$performed;
+				++ $performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
@@ -202,11 +201,11 @@ class Transfers extends ListTable {
 	 * @return string Displays from account.
 	 */
 	public function column_from_account_id( $item ) {
-		if ( $item->payment && $item->payment->account ) {
+		if ( $item->expense && $item->expense->account ) {
 			return sprintf(
 				'<a href="%s">%s</a>',
-				esc_url( $item->payment->account->get_edit_url() ),
-				esc_html( $item->payment->account->name )
+				esc_url( $item->expense->account->get_view_url() ),
+				esc_html( $item->expense->account->name )
 			);
 		}
 
@@ -222,11 +221,11 @@ class Transfers extends ListTable {
 	 * @return string Displays to account.
 	 */
 	public function column_to_account_id( $item ) {
-		if ( $item->expense && $item->expense->account ) {
+		if ( $item->payment && $item->payment->account ) {
 			return sprintf(
 				'<a href="%s">%s</a>',
-				esc_url( $item->expense->account->get_edit_url() ),
-				esc_html( $item->expense->account->name )
+				esc_url( $item->payment->account->get_view_url() ),
+				esc_html( $item->payment->account->name )
 			);
 		}
 

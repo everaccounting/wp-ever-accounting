@@ -26,6 +26,8 @@ class Ajax {
 		add_action( 'wp_ajax_eac_get_recalculated_bill', array( $this, 'get_recalculated_bill' ) );
 		add_action( 'wp_ajax_eac_get_invoice_address', array( $this, 'get_invoice_address' ) );
 		add_action( 'wp_ajax_eac_get_recalculated_invoice', array( $this, 'get_recalculated_invoice' ) );
+		add_action( 'wp_ajax_eac_ajax_export', array( $this, 'ajax_export' ) );
+		add_action( 'wp_ajax_eac_ajax_import', array( $this, 'ajax_import' ) );
 	}
 
 	/**
@@ -565,5 +567,183 @@ class Ajax {
 		$x->send();
 
 		wp_die( 1 );
+	}
+
+	/**
+	 * Run the ajax export process
+	 *
+	 * @since 1.0.2
+	 */
+	public function ajax_export() {
+		check_ajax_referer( 'eac_ajax_export' );
+		$type     = isset( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '';
+		$step     = isset( $_POST['step'] ) ? absint( wp_unslash( $_POST['step'] ) ) : 1;
+		$exporter = Exporters::get_exporter( $type );
+
+		// if exporter is not found, or exporter class is not extended with Exporter class, return error.
+		if ( ! $exporter || ! is_subclass_of( $exporter, Exporters\Exporter::class ) ) {
+			wp_send_json_error( array( 'message' => esc_html__( 'Invalid export type.', 'wp-ever-accounting' ) ) );
+		}
+
+		$exporter = new $exporter();
+		if ( ! $exporter->can_export() ) {
+			wp_send_json_error( array( 'message' => esc_html__( 'You do not have enough privileges to export this.', 'wp-ever-accounting' ) ) );
+		}
+
+		$exporter->process_step( $step );
+
+		if ( 100 <= $exporter->get_percent_complete() ) {
+			$total      = $exporter->get_total_exported();
+			$query_args = apply_filters(
+				'eac_export_ajax_query_args',
+				array(
+					'_wpnonce'   => wp_create_nonce( 'eac_download_file' ),
+					'eac_action' => 'download_export_file',
+					'filename'   => $exporter->get_filename(),
+					'type'       => $type,
+				)
+			);
+			wp_send_json_success(
+				array(
+					'step'       => 'done',
+					'percentage' => 100,
+					'message'    => sprintf(
+					// translators: %d: total items.
+						esc_html__( 'Total %d items exported', 'wp-ever-accounting' ),
+						$total
+					),
+					'url'        => add_query_arg(
+						$query_args,
+						admin_url( 'admin.php' )
+					),
+				)
+			);
+		} else {
+			wp_send_json_success(
+				array(
+					'step'       => ++$step,
+					'percentage' => $exporter->get_percent_complete(),
+				)
+			);
+		}
+	}
+
+	/**
+	 * Run the ajax import process
+	 *
+	 * @since 1.0.2
+	 */
+	public function ajax_import() {
+		check_ajax_referer( 'eac_ajax_import' );
+		$type     = isset( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '';
+		$file     = isset( $_POST['file'] ) ? sanitize_text_field( wp_unslash( $_POST['file'] ) ) : '';
+		$position = isset( $_POST['position'] ) ? absint( wp_unslash( $_POST['position'] ) ) : 0;
+		$response = array(
+			'position'   => 0,
+			'percentage' => 0,
+		);
+
+		$importer = Importers::get_importer( $type );
+		if ( ! $importer || ! class_exists( $importer ) || ! is_subclass_of( $importer, Importers\Importer::class ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Invalid import type.', 'wp-ever-accounting' ),
+				)
+			);
+		}
+		$importer = new $importer();
+		if ( ! $importer->can_import() ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'You do not have permission to import.', 'wp-ever-accounting' ),
+				)
+			);
+		}
+
+		if ( empty( $file ) && empty( $_FILES['upload'] ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Missing import file. Please provide an import file.', 'wp-ever-accounting' ),
+				)
+			);
+		}
+
+		if ( ! empty( $_FILES['upload'] ) ) {
+			$tmp_name  = isset( $_FILES['upload']['tmp_name'] ) ? sanitize_text_field( wp_unslash( $_FILES['upload']['tmp_name'] ) ) : '';
+			$file_type = isset( $_FILES['upload']['type'] ) ? sanitize_text_field( wp_unslash( $_FILES['upload']['type'] ) ) : '';
+			if ( empty( $tmp_name ) ) {
+				wp_send_json_error(
+					array(
+						'message' => __( 'Something went wrong during the upload process, please try again.', 'wp-ever-accounting' ),
+					)
+				);
+			}
+
+			if ( empty( $file_type ) || ! in_array( strtolower( $file_type ), array( 'text/csv', 'text/comma-separated-values', 'text/plain', 'text/anytext', 'text/*', 'text/plain', 'text/anytext', 'text/*', 'application/csv', 'application/excel', 'application/vnd.ms-excel', 'application/vnd.msexcel' ), true ) ) {
+				wp_send_json_error(
+					array(
+						'message' => __( 'The file you uploaded does not appear to be a CSV file.', 'wp-ever-accounting' ),
+					)
+				);
+			}
+
+			// Let WordPress import the file. We will remove it after import is complete.
+			$upload      = map_deep( wp_unslash( $_FILES['upload'] ), 'sanitize_text_field' );
+			$import_file = wp_handle_upload( $upload, array( 'test_form' => false ) );
+			if ( ! empty( $import_file['error'] ) || empty( $import_file['file'] ) ) {
+				wp_send_json_error(
+					array(
+						'message' => __( 'Something went wrong during the upload process, please try again.', 'wp-ever-accounting' ),
+						'error'   => $import_file,
+					)
+				);
+			}
+
+			$response['file'] = $import_file['file'];
+			wp_send_json_success( $response );
+		}
+
+		$importer->set_file( $file );
+		$importer->set_position( $position );
+		if ( ! $importer->check_filetype() ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Invalid file format.', 'wp-ever-accounting' ),
+				)
+			);
+		}
+
+		$skipped  = (int) get_user_option( "{$type}_import_log_skipped" );
+		$imported = (int) get_user_option( "{$type}_import_log_imported" );
+
+		$results          = $importer->import();
+		$percent_complete = $importer->get_percent_complete();
+		$skipped         += (int) $results['skipped'];
+		$imported        += (int) $results['imported'];
+
+		update_user_option( get_current_user_id(), "{$type}_import_log_imported", $imported );
+		update_user_option( get_current_user_id(), "{$type}_import_log_skipped", $skipped );
+
+		if ( 100 <= $percent_complete ) {
+			delete_user_option( get_current_user_id(), "{$type}_import_log_imported" );
+			delete_user_option( get_current_user_id(), "{$type}_import_log_skipped" );
+			$response['position']   = 'done';
+			$response['percentage'] = 100;
+			$response['file']       = $file;
+			// translators: %1$d: imported items, %2$d: skipped items.
+			$response['message'] = sprintf( esc_html__( '%1$d items imported and %2$d items skipped.', 'wp-ever-accounting' ), $imported, $skipped );
+			$response['results'] = $results;
+
+			wp_send_json_success( $response );
+			return;
+		}
+
+		$response['position']   = $importer->get_position();
+		$response['percentage'] = $percent_complete;
+		$response['file']       = $file;
+		$response['results']    = $results;
+		wp_send_json_success( $response );
+
+		exit();
 	}
 }

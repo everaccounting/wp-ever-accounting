@@ -70,7 +70,7 @@ class Documents {
 		global $wpdb;
 		$invoices = $wpdb->get_col(
 			$wpdb->prepare(
-				"SELECT id FROM {$wpdb->prefix}eac_documents WHERE status NOT IN ('paid', 'cancelled', 'draft', 'overdue') AND due_date < %s",
+				"SELECT id FROM {$wpdb->prefix}ea_documents WHERE status NOT IN ('paid', 'cancelled', 'draft', 'overdue') AND due_date < %s",
 				current_time( 'mysql' )
 			)
 		);
@@ -136,7 +136,7 @@ class Documents {
 		global $wpdb;
 		$bills = $wpdb->get_col(
 			$wpdb->prepare(
-				"SELECT id FROM {$wpdb->prefix}eac_documents WHERE status NOT IN ('paid', 'cancelled', 'draft', 'overdue') AND due_date < %s",
+				"SELECT id FROM {$wpdb->prefix}ea_documents WHERE status NOT IN ('paid', 'cancelled', 'draft', 'overdue') AND due_date < %s",
 				current_time( 'mysql' )
 			)
 		);
@@ -168,5 +168,4 @@ class Documents {
 			)
 		);
 	}
-
 }

@@ -137,6 +137,7 @@ class Plugin extends \ByteKit\Plugin {
 		}
 
 		$handlers = array(
+			'EverAccounting\Actions',
 			'EverAccounting\Currencies',
 			'EverAccounting\Contacts',
 			'EverAccounting\Documents',
@@ -164,16 +165,18 @@ class Plugin extends \ByteKit\Plugin {
 				'EverAccounting\Admin\Invoices',
 				'EverAccounting\Admin\Customers',
 				'EverAccounting\Admin\Expenses',
+				'EverAccounting\Admin\Importers',
+				'EverAccounting\Admin\Exporters',
 				'EverAccounting\Admin\Bills',
 				'EverAccounting\Admin\Vendors',
 				'EverAccounting\Admin\Accounts',
 				'EverAccounting\Admin\Transfers',
-				'EverAccounting\Admin\Tools',
 				'EverAccounting\Admin\Reports',
 				'EverAccounting\Admin\Settings',
 				'EverAccounting\Admin\Currencies',
 				'EverAccounting\Admin\Taxes',
 				'EverAccounting\Admin\Categories',
+				'EverAccounting\Admin\Extensions',
 				'EverAccounting\Admin\Setup',
 			);
 			foreach ( $handles as $handle ) {

@@ -565,7 +565,7 @@ class ReportsUtil {
 			);
 
 			// month and year must be set.
-			if ( ! $datum['month'] || ! $datum['year'] || absint( $datum['year'] ) !==  absint( $year ) ) {
+			if ( ! $datum['month'] || ! $datum['year'] || absint( $datum['year'] ) !== absint( $year ) ) {
 				continue;
 			}
 			$months[ wp_date( 'M, y', mktime( 0, 0, 0, $datum['month'], 1, $datum['year'] ) ) ] = $datum['amount'];

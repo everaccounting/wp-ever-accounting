@@ -123,11 +123,13 @@ function eac_format_amount( $amount, $currency = null ) {
  */
 function eac_sanitize_amount( $amount, $currency = null ) {
 	if ( ! is_numeric( $amount ) ) {
+//		$amount     = sanitize_text_field( $amount );
 		$currencies = eac_get_currencies();
 		$data       = array_key_exists( $currency, $currencies ) ? $currencies[ $currency ] : $currencies[ eac_base_currency() ];
 
 		// Remove currency symbol.
 		$amount = str_replace( $data['symbol'], '', $amount );
+
 		// Remove any non-numeric characters except a thousand and decimal separators.
 		$amount = preg_replace( '/[^0-9\\' . $data['thousand'] . '\\' . $data['decimal'] . '\-\+]/', '', $amount );
 		// Replace a thousand and decimal separators with empty string and dot respectively.

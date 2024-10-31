@@ -42,6 +42,26 @@ class Bill extends Document {
 	);
 
 	/**
+	 * The attributes that are searchable.
+	 *
+	 * @since 2.0.0
+	 * @var array
+	 */
+	protected $searchable = array(
+		'number',
+		'contact_name',
+		'contact_company',
+		'contact_email',
+		'contact_phone',
+		'contact_address',
+		'contact_city',
+		'contact_state',
+		'contact_postcode',
+		'contact_country',
+		'contact_tax_number',
+	);
+
+	/**
 	 * Attributes that have transition effects when changed.
 	 *
 	 * This array lists attributes that should trigger transition effects when their values change.
@@ -73,7 +93,7 @@ class Bill extends Document {
 			)
 		);
 
-		$this->aliases['vendor_id']  = 'contact_id';
+		$this->aliases['vendor_id']    = 'contact_id';
 		$this->aliases['order_number'] = 'reference';
 		parent::__construct( $attributes );
 	}
@@ -93,7 +113,7 @@ class Bill extends Document {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	public function get_status_label_attr() {
+	protected function get_status_label_attribute() {
 		$statuses = EAC()->bills->get_statuses();
 
 		return array_key_exists( $this->status, $statuses ) ? $statuses[ $this->status ] : $this->status;
@@ -295,7 +315,7 @@ class Bill extends Document {
 	public function get_due_amount() {
 		$due = max( 0, $this->total - $this->get_paid_amount() );
 		// we will ignore any decimal places so that dealing with multiple currencies is easier.
-		return round( $due, 0 );
+		return round( $due, 2 );
 	}
 
 	/**
@@ -315,7 +335,7 @@ class Bill extends Document {
 		$due_amount  = $this->get_due_amount();
 		if ( $paid_amount > 0 && $due_amount > 0 ) {
 			$this->status = 'partial';
-		} elseif ( $due_amount <= 0 ) {
+		} elseif ( round( $due_amount, 1 ) <= 0 ) {
 			$this->status = 'paid';
 		} elseif ( in_array( $this->status, array( 'paid', 'partial' ), true ) && $this->$paid_amount <= 0 && 'overdue' !== $this->status ) {
 			$this->status = 'sent';

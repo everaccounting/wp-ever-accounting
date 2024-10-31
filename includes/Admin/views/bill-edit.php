@@ -11,8 +11,8 @@ use EverAccounting\Models\Bill;
 
 defined( 'ABSPATH' ) || exit;
 
-$id   = filter_input( INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT );
-$bill = Bill::make( $id );
+$id      = filter_input( INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT );
+$bill    = Bill::make( $id );
 $columns = EAC()->bills->get_columns();
 
 // if tax is not enabled and bill has no tax, remove the tax column.

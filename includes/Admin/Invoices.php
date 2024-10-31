@@ -120,8 +120,8 @@ class Invoices {
 			wp_die( esc_html__( 'You do not have permission to perform this action.', 'wp-ever-accounting' ) );
 		}
 
-		$id     = isset( $posted['id'] ) ? absint( wp_unslash( $posted['id'] ) ) : 0;
-		$action = isset( $posted['invoice_action'] ) ? sanitize_text_field( wp_unslash( $posted['invoice_action'] ) ) : '';
+		$id      = isset( $posted['id'] ) ? absint( wp_unslash( $posted['id'] ) ) : 0;
+		$action  = isset( $posted['invoice_action'] ) ? sanitize_text_field( wp_unslash( $posted['invoice_action'] ) ) : '';
 		$referer = wp_get_referer();
 		// if any of the required fields are missing, bail.
 		if ( ! $id || ! $action ) {

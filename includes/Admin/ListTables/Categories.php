@@ -68,9 +68,8 @@ class Categories extends ListTable {
 		 */
 		$args = apply_filters( 'eac_categories_table_query_args', $args );
 
-		$args['no_found_rows'] = false;
-		$this->items           = Category::results( $args );
-		$total                 = Category::count( $args );
+		$this->items = Category::results( $args );
+		$total       = Category::count( $args );
 		$this->set_pagination_args(
 			array(
 				'total_items' => $total,
@@ -91,7 +90,7 @@ class Categories extends ListTable {
 		$performed = 0;
 		foreach ( $ids as $id ) {
 			if ( EAC()->categories->delete( $id ) ) {
-				++$performed;
+				++ $performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
@@ -161,7 +160,8 @@ class Categories extends ListTable {
 	 * @since 1.0.0
 	 * @return void
 	 */
-	protected function extra_tablenav( $which ) {}
+	protected function extra_tablenav( $which ) {
+	}
 
 	/**
 	 * Gets a list of columns for the list table.
