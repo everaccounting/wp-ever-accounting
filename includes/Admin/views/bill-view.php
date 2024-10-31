@@ -90,11 +90,6 @@ $mark_received_url = wp_nonce_url(
 
 			<div class="eac-card__footer">
 				<a class="del del_confirm" href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'action', 'delete', $bill->get_edit_url() ), 'bulk-bills' ) ); ?>"><?php esc_html_e( 'Delete', 'wp-ever-accounting' ); ?></a>
-				<?php if ( 'draft' === $bill->status ) : ?>
-					<button class="button button-primary"><?php esc_html_e( 'Send Bill', 'wp-ever-accounting' ); ?></button>
-				<?php elseif ( 'sent' === $bill->status && ! $bill->is_paid() ) : ?>
-					<button class="button button-primary add-bill-payment" data-due="<?php echo esc_attr( $bill->total ); ?>"><?php esc_html_e( 'Add Payment', 'wp-ever-accounting' ); ?></button>
-				<?php endif; ?>
 			</div>
 		</div>
 

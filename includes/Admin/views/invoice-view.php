@@ -90,11 +90,6 @@ $mark_sent_url = wp_nonce_url(
 
 			<div class="eac-card__footer">
 				<a class="del del_confirm" href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'action', 'delete', $invoice->get_edit_url() ), 'bulk-invoices' ) ); ?>"><?php esc_html_e( 'Delete', 'wp-ever-accounting' ); ?></a>
-				<?php if ( 'draft' === $invoice->status ) : ?>
-					<button class="button button-primary"><?php esc_html_e( 'Send Invoice', 'wp-ever-accounting' ); ?></button>
-				<?php elseif ( 'sent' === $invoice->status && ! $invoice->is_paid() ) : ?>
-					<button class="button button-primary add-invoice-payment" data-due="<?php echo esc_attr( $invoice->total ); ?>"><?php esc_html_e( 'Add Payment', 'wp-ever-accounting' ); ?></button>
-				<?php endif; ?>
 			</div>
 		</div>
 
