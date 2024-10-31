@@ -23,10 +23,12 @@ global $list_table;
 		<?php endif; ?>
 	</h1>
 	<form method="get" action="<?php echo esc_url( admin_url( 'admin.php' ) ); ?>">
+		<?php $type = isset( $_GET['type'] ) ? sanitize_text_field( wp_unslash( $_GET['type'] ) ) : ''; ?>
 		<?php $list_table->views(); ?>
 		<?php $list_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'search' ); ?>
 		<?php $list_table->display(); ?>
 		<input type="hidden" name="page" value="eac-settings"/>
 		<input type="hidden" name="tab" value="categories"/>
+		<input type="hidden" name="type" value="<?php echo esc_attr( $type ); ?>"/>
 	</form>
 <?php

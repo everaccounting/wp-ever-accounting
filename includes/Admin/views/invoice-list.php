@@ -20,10 +20,12 @@ global $list_table;
 		<?php endif; ?>
 	</h1>
 	<form method="get" action="<?php echo esc_url( admin_url( 'admin.php' ) ); ?>">
+		<?php $status = isset( $_GET['status'] ) ? sanitize_text_field( wp_unslash( $_GET['status'] ) ) : ''; ?>
 		<?php $list_table->views(); ?>
 		<?php $list_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'search' ); ?>
 		<?php $list_table->display(); ?>
 		<input type="hidden" name="page" value="eac-sales"/>
 		<input type="hidden" name="tab" value="invoices"/>
+		<input type="hidden" name="status" value="<?php echo esc_attr( $status ); ?>"/>
 	</form>
 <?php
