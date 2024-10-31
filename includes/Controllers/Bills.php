@@ -108,11 +108,11 @@ class Bills {
 	 */
 	public function get_columns() {
 		$columns = array(
-			'item'     => esc_html__( 'Item', 'wp-ever-accounting' ),
-			'quantity' => esc_html__( 'Quantity', 'wp-ever-accounting' ),
-			'price'    => esc_html__( 'Price', 'wp-ever-accounting' ),
-			'tax'      => esc_html__( 'Tax', 'wp-ever-accounting' ),
-			'subtotal' => esc_html__( 'Subtotal', 'wp-ever-accounting' ),
+			'item'     => get_option( 'eac_bill_col_item_label', esc_html__( 'Item', 'wp-ever-accounting' ) ),
+			'quantity' => get_option( 'eac_bill_col_quantity_label', esc_html__( 'Quantity', 'wp-ever-accounting' ) ),
+			'price'    => get_option( 'eac_bill_col_price_label', esc_html__( 'Price', 'wp-ever-accounting' ) ),
+			'tax'      => get_option( 'eac_bill_col_tax_label', esc_html__( 'Tax', 'wp-ever-accounting' ) ),
+			'subtotal' => get_option( 'eac_bill_col_subtotal_label', esc_html__( 'Subtotal', 'wp-ever-accounting' ) ),
 		);
 
 		return apply_filters( 'eac_bill_columns', $columns );
