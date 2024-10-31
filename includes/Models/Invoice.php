@@ -261,6 +261,7 @@ class Invoice extends Document {
 			if ( array_key_exists( 'taxes', $item ) ) {
 				$line->set_taxes( $item['taxes'] );
 			}
+
 			if ( $this->is_taxed() ) {
 				$line->total = $line->subtotal - $line->discount + $line->tax;
 			} else {
