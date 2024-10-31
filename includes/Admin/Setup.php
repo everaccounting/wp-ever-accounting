@@ -124,11 +124,33 @@ class Setup {
 		$this->step  = ! empty( $step ) ? sanitize_key( $step ) : current( array_keys( $this->steps ) );
 
 		// TODO: Need to include the scripts and styles.
-		// Enqueue scripts and styles.
+		// Enqueue styles.
 		EAC()->scripts->enqueue_style( 'eac-admin', EAC()->get_assets_url( 'css/admin.css' ) );
 		EAC()->scripts->enqueue_style( 'eac-setup', EAC()->get_assets_url( 'css/setup.css' ), array( 'install', 'common' ) );
-		EAC()->scripts->register_script( 'eac-select2', EAC()->get_assets_url( 'js/select2.js' ) );
-		EAC()->scripts->enqueue_script( 'eac-setup', EAC()->get_assets_url( 'js/setup.js' ), array( 'jquery', 'eac-select2' ), true );
+
+		// Enqueue scripts.
+		// 3rd party scripts.
+		EAC()->scripts->register_script( 'eac-chartjs', EAC()->get_assets_url( 'js/chartjs.js' ), array( 'jquery' ), false );
+		EAC()->scripts->register_script( 'eac-inputmask', EAC()->get_assets_url( 'js/inputmask.js' ), array( 'jquery' ), false );
+		EAC()->scripts->register_script( 'eac-select2', EAC()->get_assets_url( 'js/select2.js' ), array( 'jquery' ), false );
+		EAC()->scripts->register_script( 'eac-tiptip', EAC()->get_assets_url( 'js/tiptip.js' ), array( 'jquery' ), false );
+		EAC()->scripts->register_script( 'eac-printthis', EAC()->get_assets_url( 'js/printthis.js' ), array( 'jquery' ), false );
+
+		// Packages.
+		EAC()->scripts->register_script( 'eac-money', EAC()->get_assets_url( 'client/money.js' ), array( 'jquery' ), false );
+
+		// Plugins.
+		EAC()->scripts->register_script( 'eac-modal', EAC()->get_assets_url( 'js/modal.js' ), array( 'jquery' ), false );
+		EAC()->scripts->register_script( 'eac-form', EAC()->get_assets_url( 'js/form.js' ), array( 'jquery' ), false );
+		EAC()->scripts->register_script( 'eac-api', EAC()->get_assets_url( 'js/api.js' ), array( 'wp-backbone' ), false );
+
+		// Plugin scripts.
+		EAC()->scripts->register_script( 'eac-admin', EAC()->get_assets_url( 'js/admin.js' ), array( 'jquery', 'eac-inputmask', 'eac-select2', 'eac-printthis', 'eac-tiptip', 'jquery-ui-datepicker', 'jquery-ui-tooltip', 'eac-money', 'wp-ajax-response' ), false );
+
+		// EAC()->scripts->register_script( 'eac-select2', EAC()->get_assets_url( 'js/select2.js' ) );
+		// EAC()->scripts->enqueue_script( 'eac-admin', EAC()->get_assets_url( 'js/admin.js' ), array( 'jquery', 'eac-select2' ), false );
+
+		EAC()->scripts->enqueue_script( 'eac-setup', EAC()->get_assets_url( 'js/setup.js' ), array( 'jquery', 'eac-admin' ), false );
 
 		if ( ! empty( $save_step ) && isset( $this->steps[ $this->step ]['handler'] ) ) {
 			call_user_func( $this->steps[ $this->step ]['handler'], $this );
@@ -285,7 +307,7 @@ class Setup {
 				array(
 					'label'       => __( 'Business Name', 'wp-ever-accounting' ),
 					'type'        => 'text',
-					'name'        => 'business_name',
+					'name'        => 'eac_business_name',
 					'placeholder' => __( 'Business Name', 'wp-ever-accounting' ),
 					'required'    => true,
 					'value'       => get_option( 'eac_business_name', '' ),
@@ -296,7 +318,7 @@ class Setup {
 			eac_form_field(
 				array(
 					'label'    => __( 'Business Email', 'wp-ever-accounting' ),
-					'name'     => 'business_email',
+					'name'     => 'eac_business_email',
 					'default'  => get_option( 'admin_email' ),
 					'required' => true,
 					'type'     => 'email',
@@ -308,7 +330,7 @@ class Setup {
 			eac_form_field(
 				array(
 					'label' => __( 'Business Address', 'wp-ever-accounting' ),
-					'name'  => 'business_address',
+					'name'  => 'eac_business_address',
 					'type'  => 'textarea',
 					'value' => get_option( 'eac_business_address', '' ),
 				)
@@ -318,7 +340,7 @@ class Setup {
 			eac_form_field(
 				array(
 					'label'       => __( 'City', 'wp-ever-accounting' ),
-					'name'        => 'business_city',
+					'name'        => 'eac_business_city',
 					'required'    => true,
 					'type'        => 'text',
 					'value'       => get_option( 'eac_business_city', '' ),
@@ -330,7 +352,7 @@ class Setup {
 			eac_form_field(
 				array(
 					'label'       => __( 'State', 'wp-ever-accounting' ),
-					'name'        => 'business_state',
+					'name'        => 'eac_business_state',
 					'required'    => true,
 					'type'        => 'text',
 					'value'       => get_option( 'eac_business_state', '' ),
@@ -342,7 +364,7 @@ class Setup {
 			eac_form_field(
 				array(
 					'label'       => __( 'ZIP', 'wp-ever-accounting' ),
-					'name'        => 'business_zip',
+					'name'        => 'eac_business_zip',
 					'required'    => true,
 					'type'        => 'text',
 					'value'       => get_option( 'eac_business_zip', '' ),
@@ -354,7 +376,7 @@ class Setup {
 			eac_form_field(
 				array(
 					'label'       => __( 'Country', 'wp-ever-accounting' ),
-					'name'        => 'business_country',
+					'name'        => 'eac_business_country',
 					'required'    => true,
 					'class'       => 'eac_select2',
 					'options'     => I18n::get_countries(),
@@ -384,13 +406,13 @@ class Setup {
 	 */
 	public function business_settings_save() {
 		check_admin_referer( 'eac_business_setup' );
-		$business_name    = filter_input( INPUT_POST, 'business_name', FILTER_SANITIZE_STRING );
-		$business_email   = filter_input( INPUT_POST, 'business_email', FILTER_SANITIZE_EMAIL );
-		$business_address = filter_input( INPUT_POST, 'business_address', FILTER_SANITIZE_STRING );
-		$business_city    = filter_input( INPUT_POST, 'business_city', FILTER_SANITIZE_STRING );
-		$business_state   = filter_input( INPUT_POST, 'business_state', FILTER_SANITIZE_STRING );
-		$business_zip     = filter_input( INPUT_POST, 'business_zip', FILTER_SANITIZE_STRING );
-		$business_country = filter_input( INPUT_POST, 'business_country', FILTER_SANITIZE_STRING );
+		$business_name    = filter_input( INPUT_POST, 'eac_business_name', FILTER_SANITIZE_STRING );
+		$business_email   = filter_input( INPUT_POST, 'eac_business_email', FILTER_SANITIZE_EMAIL );
+		$business_address = filter_input( INPUT_POST, 'eac_business_address', FILTER_SANITIZE_STRING );
+		$business_city    = filter_input( INPUT_POST, 'eac_business_city', FILTER_SANITIZE_STRING );
+		$business_state   = filter_input( INPUT_POST, 'eac_business_state', FILTER_SANITIZE_STRING );
+		$business_zip     = filter_input( INPUT_POST, 'eac_business_zip', FILTER_SANITIZE_STRING );
+		$business_country = filter_input( INPUT_POST, 'eac_business_country', FILTER_SANITIZE_STRING );
 
 		if ( ! empty( $business_name ) ) {
 			update_option( 'eac_business_name', sanitize_text_field( $business_name ) );
@@ -478,10 +500,17 @@ class Setup {
 	public function currency_settings_save() {
 		check_admin_referer( 'eac_currency_settings' );
 
+		// Update and save eac_base_currency.
 		$base_currency = filter_input( INPUT_POST, 'eac_base_currency', FILTER_SANITIZE_STRING );
 
 		if ( ! empty( $base_currency ) ) {
 			update_option( 'eac_base_currency', sanitize_text_field( $base_currency ) );
+		}
+
+		// Update and save eac_exchange_rates.
+		$exchange_rates = filter_input( INPUT_POST, 'eac_exchange_rates', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
+		if ( ! empty( $exchange_rates ) ) {
+			update_option( 'eac_exchange_rates', $exchange_rates );
 		}
 
 		update_option( 'eac_setup_wizard_completed', true );
