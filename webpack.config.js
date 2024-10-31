@@ -31,6 +31,8 @@ module.exports = [
 			// Admin scripts.
 			'js/admin': './_assets/js/admin/admin.js',
 			'css/admin': './_assets/css/admin/admin.scss',
+			'css/setup': './_assets/css/admin/setup.scss',
+			'js/setup': './_assets/js/admin/setup.js',
 
 			// Frontend scripts.
 			'css/frontend': './_assets/css/frontend/frontend.scss',
