@@ -160,12 +160,11 @@ class Purchases extends Page {
 				'type'  => 'title',
 				'id'    => 'columns_settings',
 			),
-
 			// item name.
 			array(
 				'title'       => __( 'Item Label', 'wp-ever-accounting' ),
 				'desc'        => __( 'The name of the item column.', 'wp-ever-accounting' ),
-				'id'          => 'eac_bill_item_label',
+				'id'          => 'eac_bill_col_item_label',
 				'type'        => 'text',
 				'placeholder' => 'e.g. Item',
 				'default'     => __( 'Items', 'wp-ever-accounting' ),
@@ -175,7 +174,7 @@ class Purchases extends Page {
 			array(
 				'title'       => __( 'Price Label', 'wp-ever-accounting' ),
 				'desc'        => __( 'The name of the price column.', 'wp-ever-accounting' ),
-				'id'          => 'eac_bill_price_label',
+				'id'          => 'eac_bill_col_price_label',
 				'type'        => 'text',
 				'placeholder' => 'e.g. Price',
 				'default'     => __( 'Price', 'wp-ever-accounting' ),
@@ -185,20 +184,30 @@ class Purchases extends Page {
 			array(
 				'title'       => __( 'Quantity Label', 'wp-ever-accounting' ),
 				'desc'        => __( 'The name of the quantity column.', 'wp-ever-accounting' ),
-				'id'          => 'eac_bill_quantity_label',
+				'id'          => 'eac_bill_col_quantity_label',
 				'type'        => 'text',
 				'placeholder' => 'e.g. Quantity',
 				'default'     => __( 'Quantity', 'wp-ever-accounting' ),
 				'desc_tip'    => true,
 			),
-			// discount label.
+			// tax label.
 			array(
-				'title'       => __( 'Discount Label', 'wp-ever-accounting' ),
-				'desc'        => __( 'The name of the discount column.', 'wp-ever-accounting' ),
-				'id'          => 'eac_bill_discount_label',
+				'title'       => __( 'Tax Label', 'wp-ever-accounting' ),
+				'desc'        => __( 'The name of the tax column.', 'wp-ever-accounting' ),
+				'id'          => 'eac_bill_col_tax_label',
 				'type'        => 'text',
-				'placeholder' => 'e.g. Discount',
-				'default'     => __( 'Discount', 'wp-ever-accounting' ),
+				'placeholder' => 'e.g. Tax',
+				'default'     => __( 'Tax', 'wp-ever-accounting' ),
+				'desc_tip'    => true,
+			),
+			// subtotal label.
+			array(
+				'title'       => __( 'Subtotal Label', 'wp-ever-accounting' ),
+				'desc'        => __( 'The name of the subtotal column.', 'wp-ever-accounting' ),
+				'id'          => 'eac_bill_col_subtotal_label',
+				'type'        => 'text',
+				'placeholder' => 'e.g. Subtotal',
+				'default'     => __( 'Subtotal', 'wp-ever-accounting' ),
 				'desc_tip'    => true,
 			),
 			// end section.

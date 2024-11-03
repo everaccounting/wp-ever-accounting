@@ -110,8 +110,8 @@ class ReportsUtil {
 
 		$year_start = get_option( 'eac_year_start_date', '01-01' );
 		$dates      = explode( '-', $year_start );
-		$day        = ! empty( $dates[0] ) ? $dates[0] : '01';
-		$month      = ! empty( $dates[1] ) ? $dates[1] : '01';
+		$month      = ! empty( $dates[0] ) ? $dates[0] : '01';
+		$day        = ! empty( $dates[1] ) ? $dates[1] : '01';
 		$year       = empty( $year ) ? (int) wp_date( 'Y' ) : absint( $year );
 
 		return wp_date( 'Y-m-d', mktime( 0, 0, 0, $month, $day, $year ) );
