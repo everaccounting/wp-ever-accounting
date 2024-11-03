@@ -1,10 +1,10 @@
 <?php
 /**
- * Handle vendors export.
+ * Handle vendors import.
  *
  * @since 1.0.2
  *
- * @package EverAccounting\Admin\Exporters
+ * @package EverAccounting\Admin\Importers
  */
 
 namespace EverAccounting\Admin\Importers;
@@ -31,6 +31,6 @@ class Vendors extends Importer {
 		);
 
 		$data = array_diff_key( $data, array_flip( $protected ) );
-		return EAC()->customers->insert( $data );
+		return EAC()->vendors->insert( $data );
 	}
 }
