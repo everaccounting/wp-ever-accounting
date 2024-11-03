@@ -145,26 +145,40 @@ class Dashboard {
 	public static function overview_stats( $stats ) {
 		global $wpdb;
 
+		/*
 		$documents = $wpdb->get_row(
 			"SELECT
-				SUM(CASE WHEN type = 'invoice' AND status IN ( 'sent', 'overdue' ) THEN total / exchange_rate ELSE 0 END) AS receivable,
-				SUM(CASE WHEN type = 'bill' AND status IN ( 'received', 'overdue' ) THEN total / exchange_rate ELSE 0 END) AS payable
+				SUM(CASE WHEN type = 'invoice' AND status IN ( 'sent', 'overdue', 'partial' ) THEN total / exchange_rate ELSE 0 END) AS receivable,
+				SUM(CASE WHEN type = 'bill' AND status IN ( 'sent', 'overdue', 'partial' ) THEN total / exchange_rate ELSE 0 END) AS payable
 		 		FROM {$wpdb->prefix}ea_documents"
 		);
+		*/
+
+		$documents = $wpdb->get_row(
+			"SELECT
+            SUM(CASE WHEN d.type = 'invoice' AND d.status IN ('sent', 'overdue', 'partial') THEN d.total / d.exchange_rate ELSE 0 END) AS receivable,
+            SUM(CASE WHEN d.type = 'bill' AND d.status IN ('sent', 'overdue', 'partial') THEN d.total / d.exchange_rate ELSE 0 END) AS payable,
+            SUM(CASE WHEN t.type = 'payment' AND t.document_id IS NOT NULL THEN t.amount / t.exchange_rate ELSE 0 END) AS total_payments,
+            SUM(CASE WHEN t.type = 'expense' AND t.document_id IS NOT NULL THEN t.amount / t.exchange_rate ELSE 0 END) AS total_expenses
+        	FROM {$wpdb->prefix}ea_documents d LEFT JOIN {$wpdb->prefix}ea_transactions t ON d.id = t.document_id"
+		);
+
+		$receivable = $documents->receivable - $documents->total_payments;
+		$payable    = $documents->payable - $documents->total_expenses;
 
 		$stats[] = array(
 			'label' => __( 'Receivable', 'wp-ever-accounting' ),
-			'value' => eac_format_amount( $documents->receivable ),
+			'value' => eac_format_amount( $receivable ),
 		);
 
 		$stats[] = array(
 			'label' => __( 'Payable', 'wp-ever-accounting' ),
-			'value' => eac_format_amount( $documents->payable ),
+			'value' => eac_format_amount( $payable ),
 		);
 
 		$stats[] = array(
 			'label' => __( 'Upcoming', 'wp-ever-accounting' ),
-			'value' => eac_format_amount( $documents->receivable - $documents->payable ),
+			'value' => eac_format_amount( $receivable - $payable ),
 		);
 
 		return $stats;
