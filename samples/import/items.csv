@@ -1,2 +1,1 @@
-Name,Category,Sale Price,Purchase Price,Sales Tax,Purchase Tax
-Apple Mac Book Pro,Items,25000, 50000, 5%, 3%
+﻿type,name,description,unit,price,cost,tax_ids,category_id,date_created,date_updated
