@@ -1,6 +1,6 @@
 jQuery( document ).ready( ( $ ) => {
 	'use strict';
-	var charts = $( '.eac-chart' );
+	const charts = $( '.eac-chart' );
 	// we will check if .eac-chart exists in the page and Chart is available in the window object.
 	// if class exists abut Chart is not available then we bail with a console warning.
 	if ( charts.length && 'undefined' === typeof window.Chart ) {
@@ -22,60 +22,79 @@ jQuery( document ).ready( ( $ ) => {
 		}
 
 		// create a new Chart instance.
-		var chart = new window.Chart( $this[ 0 ].getContext( '2d' ), {
-			type: type,
+		const chart = new window.Chart( $this[ 0 ].getContext( '2d' ), {
+			type,
 			data: datasets,
 			options: {
 				tooltips: {
 					displayColors: true,
 					YrPadding: 12,
-					backgroundColor: "#000000",
-					bodyFontColor: "#e5e5e5",
+					backgroundColor: '#000000',
+					bodyFontColor: '#e5e5e5',
 					bodySpacing: 4,
 					intersect: 0,
-					mode: "nearest",
-					position: "nearest",
-					titleFontColor: "#ffffff",
+					mode: 'nearest',
+					position: 'nearest',
+					titleFontColor: '#ffffff',
 					callbacks: {
-						label: function (tooltipItem, data) {
-							let value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
-							let datasetLabel = data.datasets[tooltipItem.datasetIndex].label || '';
-							if ( 'undefined' === typeof value || 'undefined' === typeof datasetLabel ) {
+						label( tooltipItem, data ) {
+							let value =
+								data.datasets[ tooltipItem.datasetIndex ].data[ tooltipItem.index ];
+							const datasetLabel =
+								data.datasets[ tooltipItem.datasetIndex ].label || '';
+							if (
+								'undefined' === typeof value ||
+								'undefined' === typeof datasetLabel
+							) {
 								value = 0;
 							}
 
-							return datasetLabel + ': ' + Number(value).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') + currency;
-						}
-					}
+							return (
+								datasetLabel +
+								': ' +
+								Number( value )
+									.toFixed( 2 )
+									.replace( /\d(?=(\d{3})+\.)/g, '$&,' ) +
+								currency
+							);
+						},
+					},
 				},
 				scales: {
-					xAxes: [{
-						stacked: false,
-						gridLines: {
-							display: true,
-						}
-					}],
-					yAxes: [{
-						stacked: false,
-						ticks: {
-							beginAtZero: true,
-							callback: function (value, index, ticks) {
-								return Number(value).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') + currency;
-							}
+					xAxes: [
+						{
+							stacked: false,
+							gridLines: {
+								display: true,
+							},
 						},
-						type: 'linear',
-						barPercentage: 0.4
-					}]
+					],
+					yAxes: [
+						{
+							stacked: false,
+							ticks: {
+								beginAtZero: true,
+								callback( value, index, ticks ) {
+									return (
+										Number( value )
+											.toFixed( 2 )
+											.replace( /\d(?=(\d{3})+\.)/g, '$&,' ) + currency
+									);
+								},
+							},
+							type: 'linear',
+							barPercentage: 0.4,
+						},
+					],
 				},
 				responsive: true,
 				maintainAspectRatio: false,
-				legend: {display: false},
-			}
+				legend: { display: false },
+			},
 		} );
 	} );
 } );
 
-
-document.addEventListener("alpine:init", () => {
-	console.log("Alpine.js initialized 2");
-});
+document.addEventListener( 'alpine:init', () => {
+	console.log( 'Alpine.js initialized 2' );
+} );

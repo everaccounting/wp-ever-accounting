@@ -6,18 +6,18 @@ jQuery( document ).ready( ( $ ) => {
 	 * This jQuery plugin handles the export functionality through AJAX request.
 	 * It manages form submission, progress indication, and error handling.
 	 *
-	 * @param {HTMLFormElement} form - The form element to be processed.
-	 * @param {Object} options - Custom options for the plugin.
+	 * @param {HTMLFormElement} form    - The form element to be processed.
+	 * @param {Object}          options - Custom options for the plugin.
 	 */
-	$.eac_exporter = function (form, options) {
+	$.eac_exporter = function ( form, options ) {
 		this.defaults = {};
 		this.form = form;
-		this.$form = $(form);
-		this.$submit = $('input[type="submit"]', this.$form);
-		this.options = $.extend(this.defaults, options);
+		this.$form = $( form );
+		this.$submit = $( 'input[type="submit"]', this.$form );
+		this.options = $.extend( this.defaults, options );
 		this.action = 'eac_ajax_export';
-		this.nonce = this.$form.data('nonce');
-		this.type = this.$form.data('type');
+		this.nonce = this.$form.data( 'nonce' );
+		this.type = this.$form.data( 'type' );
 		const plugin = this;
 
 		/**
@@ -29,26 +29,26 @@ jQuery( document ).ready( ( $ ) => {
 		 * @param {Event} e - The submit event.
 		 * @return {boolean} - Returns false if the button is disabled, otherwise undefined.
 		 */
-		this.submit = function (e) {
+		this.submit = function ( e ) {
 			e.preventDefault();
-			if (plugin.$submit.hasClass('disabled')) {
+			if ( plugin.$submit.hasClass( 'disabled' ) ) {
 				return false;
 			}
 
 			// Disable submit button
-			plugin.$submit.addClass('disabled');
+			plugin.$submit.addClass( 'disabled' );
 
 			// Reset previous states
 			plugin.reset();
 
 			// Add spinner to the submit button
-			plugin.$submit.parent('p').append('<span class="spinner is-active"></span>');
+			plugin.$submit.parent( 'p' ).append( '<span class="spinner is-active"></span>' );
 
 			// Add progress bar to the form
-			plugin.$form.append('<div class="eac-progress"><div></div></div>');
+			plugin.$form.append( '<div class="eac-progress"><div></div></div>' );
 
 			// Start processing the first step
-			plugin.process_step(1);
+			plugin.process_step( 1 );
 		};
 
 		/**
@@ -59,24 +59,26 @@ jQuery( document ).ready( ( $ ) => {
 		 *
 		 * @param {number} step - The current step number of the process.
 		 */
-		this.process_step = function (step) {
-			window.wp.ajax.send(plugin.action, {
+		this.process_step = function ( step ) {
+			window.wp.ajax.send( plugin.action, {
 				data: {
 					_wpnonce: plugin.nonce,
 					type: plugin.type,
 					step,
 				},
-				success(res) {
-					if (res.step === 'done') {
+				success( res ) {
+					if ( res.step === 'done' ) {
 						// Reset and handle completion
 						plugin.reset();
-						plugin.$form.append('<div class="notice updated"><p>' + res.message + '</p></div></div>');
+						plugin.$form.append(
+							'<div class="notice updated"><p>' + res.message + '</p></div></div>'
+						);
 						window.location = res.url;
 						return false;
 					}
 
 					// Update progress bar width
-					plugin.$form.find('.eac-progress div').animate(
+					plugin.$form.find( '.eac-progress div' ).animate(
 						{
 							width: res.percentage + '%',
 						},
@@ -85,19 +87,19 @@ jQuery( document ).ready( ( $ ) => {
 					);
 
 					// Continue processing the next step
-					plugin.process_step(parseInt(res.step, 10));
+					plugin.process_step( parseInt( res.step, 10 ) );
 				},
-				error(error) {
+				error( error ) {
 					// Reset and handle error response
 					plugin.reset();
-					if (error.message) {
+					if ( error.message ) {
 						plugin.$form.append(
 							'<div class="notice error"><p>' + error.message + '</p></div>'
 						);
 					}
-					console.warn(error);
+					console.warn( error );
 				},
-			});
+			} );
 		};
 
 		/**
@@ -108,13 +110,13 @@ jQuery( document ).ready( ( $ ) => {
 		 */
 		this.reset = function () {
 			// Remove old notice
-			$('.notice', plugin.$form).remove();
-			$('.eac-progress', plugin.$form).remove();
-			plugin.$submit.removeClass('disabled');
-			$('.spinner', plugin.$form).remove();
+			$( '.notice', plugin.$form ).remove();
+			$( '.eac-progress', plugin.$form ).remove();
+			plugin.$submit.removeClass( 'disabled' );
+			$( '.spinner', plugin.$form ).remove();
 		};
 
-		this.$form.on('submit', this.submit);
+		this.$form.on( 'submit', this.submit );
 		return this;
 	};
 

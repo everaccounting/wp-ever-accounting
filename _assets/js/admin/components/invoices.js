@@ -41,25 +41,8 @@ jQuery( document ).ready( ( $ ) => {
 			} );
 		},
 
-		onChangeCurrency( e ) {
-			const currency = $( e.target ).val();
-			// const $exchange = $( ':input[name="exchange_rate"]' );
-			// $exchange.inputmask('setvalue', money.getRate( currency ));
-			// $exchange.trigger('setvalue');
-			// $exchange.inputmask( 'option', {
-			// 	...money.getInputMaskOptions( currency ),
-			// 	placeholder: '',
-			// 	prefix: '',
-			// 	radixPoint: '.',
-			// 	groupSeparator: '',
-			// 	digits: 4,
-			// 	suffix: money.getSymbol( currency ),
-			// 	allowMinus: false,
-			// } );
-			// console.log(money.getRate( currency ));
-			// $exchange.inputmask( 'setvalue', money.getRate( currency ) );
-			// $exchange.attr( 'readonly', currency === eac_base_currency );
-			// this.updateTotals();
+		onChangeCurrency() {
+			this.updateTotals();
 		},
 
 		onAddItem( e ) {

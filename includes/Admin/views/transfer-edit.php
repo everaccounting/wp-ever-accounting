@@ -99,6 +99,7 @@ $transfer = Transfer::make( $id );
 							'attr-step'     => 'any',
 							'readonly'      => $transfer->expense && eac_base_currency() === $transfer->expense->currency,
 							'data-currency' => $transfer->expense ? $transfer->expense->currency : eac_base_currency(),
+							'data-source'   => ':input[name="from_account_id"]',
 						)
 					);
 
@@ -116,6 +117,7 @@ $transfer = Transfer::make( $id );
 							'attr-step'     => 'any',
 							'readonly'      => $transfer->payment && eac_base_currency() === $transfer->payment->currency,
 							'data-currency' => $transfer->payment ? $transfer->payment->currency : eac_base_currency(),
+							'data-source'   => ':input[name="to_account_id"]',
 						)
 					);
 
@@ -129,6 +131,7 @@ $transfer = Transfer::make( $id );
 							'required'      => true,
 							'data-currency' => $transfer->currency ? $transfer->currency : eac_base_currency(),
 							'class'         => 'eac_amount',
+							'data-source'   => ':input[name="from_account_id"]',
 						)
 					);
 

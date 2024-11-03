@@ -130,35 +130,6 @@ jQuery( document ).ready( ( $ ) => {
 						$this.attr( 'readonly', code === eac_base_currency );
 					} );
 				}
-
-				// const currency = $this.data( 'currency' );
-				// const $source = $this.closest( 'form' ).find( $this.data( 'source' ) );
-				// const options = {
-				// 	alias: 'decimal',
-				// 	rightAlign: false,
-				// 	allowMinus: false,
-				// 	digitsOptional: false,
-				// 	groupSeparator: '',
-				// 	digits: 4,
-				// 	suffix: money.getSymbol( currency ),
-				// 	removeMaskOnSubmit: true,
-				// };
-				// $this.inputmask( options ).addClass( 'enhanced' );
-				// if ( $source.length ) {
-				// 	$source.on( 'change', function () {
-				// 		const code =
-				// 			$( this ).attr( 'name' ) === 'currency'
-				// 				? $source.val()
-				// 				: $source.select2( 'data' )?.[ 0 ]?.currency;
-				// 		// update the value of exchange rate.
-				// 		$this.inputmask( 'option', {
-				// 			...options,
-				// 			suffix: money.getSymbol( code ).replace( /[.,]/g, '' ),
-				// 		} );
-				// 		$this.inputmask( 'setvalue', money.getRate( code ) );
-				// 		$this.attr( 'readonly', code === eac_base_currency );
-				// 	} );
-				// }
 			} );
 
 		// inputMask.

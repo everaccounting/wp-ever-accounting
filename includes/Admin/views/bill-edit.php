@@ -144,6 +144,7 @@ defined( 'ABSPATH' ) || exit;
 								'attr-step'     => 'any',
 								'readonly'      => eac_base_currency() === $bill->currency,
 								'data-currency' => $bill->currency,
+								'data-source'   => ':input[name="currency"]',
 							)
 						);
 						?>

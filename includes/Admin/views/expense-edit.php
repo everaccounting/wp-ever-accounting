@@ -100,6 +100,7 @@ $expense = Expense::make( $id );
 							'attr-step'     => 'any',
 							'readonly'      => $expense->currency === eac_base_currency(),
 							'data-currency' => $expense->currency,
+							'data-source'   => ':input[name="account_id"]',
 						)
 					);
 
@@ -117,6 +118,7 @@ $expense = Expense::make( $id );
 								get_option( 'eac_decimal_separator', '.' )
 							),
 							'data-currency' => $expense->currency,
+							'data-source'   => ':input[name="account_id"]',
 						)
 					);
 

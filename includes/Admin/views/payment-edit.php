@@ -118,6 +118,7 @@ $payment = Payment::make( $id );
 								get_option( 'eac_decimal_separator', '.' )
 							),
 							'data-currency' => $payment->currency,
+							'data-source'   => ':input[name="account_id"]',
 						)
 					);
 

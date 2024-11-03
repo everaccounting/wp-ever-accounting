@@ -231,11 +231,9 @@ class Bill extends Document {
 						unset( $itemdata['taxes'][ $j ] );
 						continue;
 					}
-
-					$taxdata['name']     = isset( $taxdata['name'] ) ? sanitize_text_field( $taxdata['name'] ) : $tax->name;
-					$taxdata['rate']     = isset( $taxdata['rate'] ) ? floatval( $taxdata['rate'] ) : $tax->rate;
-					$taxdata['compound'] = isset( $taxdata['compound'] ) ? (bool) $taxdata['compound'] : $tax->compound;
-					$taxdata['amount']   = 0;
+					$taxdata['name']   = isset( $taxdata['name'] ) ? sanitize_text_field( $taxdata['name'] ) : $tax->name;
+					$taxdata['rate']   = isset( $taxdata['rate'] ) ? floatval( $taxdata['rate'] ) : $tax->rate;
+					$taxdata['amount'] = 0;
 				}
 			}
 

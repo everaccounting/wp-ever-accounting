@@ -486,12 +486,6 @@ class Invoice extends Document {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	/**
-	 * Get the public URL.
-	 *
-	 * @since 1.0.0
-	 * @return string
-	 */
 	public function get_public_url() {
 		return site_url( 'eac/invoice/?uuid=' . $this->uuid );
 	}

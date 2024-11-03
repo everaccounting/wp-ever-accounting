@@ -66,6 +66,7 @@ $customer = Customer::make( $id );
 					eac_form_field(
 						array(
 							'id'          => 'email',
+							'type'        => 'email',
 							'label'       => __( 'Email', 'wp-ever-accounting' ),
 							'placeholder' => __( 'john@company.com', 'wp-ever-accounting' ),
 							'value'       => $customer->email,
@@ -101,6 +102,7 @@ $customer = Customer::make( $id );
 					eac_form_field(
 						array(
 							'id'          => 'website',
+							'type'        => 'url',
 							'label'       => __( 'Website', 'wp-ever-accounting' ),
 							'placeholder' => __( 'https://example.com', 'wp-ever-accounting' ),
 							'value'       => $customer->website,
