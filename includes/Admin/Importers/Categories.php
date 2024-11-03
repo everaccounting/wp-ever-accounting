@@ -26,7 +26,6 @@ class Categories extends Importer {
 	public function import_item( $data ) {
 		$protected = array(
 			'id',
-			'type',
 			'date_updated',
 		);
 
