@@ -1,6 +1,6 @@
 <?php
 /**
- * Handle customers export.
+ * Handle vendors export.
  *
  * @since 1.0.2
  *
@@ -14,7 +14,7 @@ namespace EverAccounting\Admin\Importers;
  *
  * @since 1.0.0
  */
-class Customers extends Importer {
+class Vendors extends Importer {
 	/**
 	 * Abstract method to import item.
 	 *
