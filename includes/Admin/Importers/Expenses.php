@@ -1,6 +1,6 @@
 <?php
 /**
- * Handle customers import.
+ * Handle expenses import.
  *
  * @since 1.0.2
  *
@@ -10,11 +10,11 @@
 namespace EverAccounting\Admin\Importers;
 
 /**
- * Customers class.
+ * Expenses class.
  *
  * @since 1.0.0
  */
-class Customers extends Importer {
+class Expenses extends Importer {
 	/**
 	 * Abstract method to import item.
 	 *
@@ -31,6 +31,6 @@ class Customers extends Importer {
 		);
 
 		$data = array_diff_key( $data, array_flip( $protected ) );
-		return EAC()->customers->insert( $data );
+		return EAC()->expenses->insert( $data );
 	}
 }

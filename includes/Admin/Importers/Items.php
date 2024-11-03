@@ -1,6 +1,6 @@
 <?php
 /**
- * Handle customers import.
+ * Handle items import.
  *
  * @since 1.0.2
  *
@@ -10,11 +10,11 @@
 namespace EverAccounting\Admin\Importers;
 
 /**
- * Customers class.
+ * Items class.
  *
  * @since 1.0.0
  */
-class Customers extends Importer {
+class Items extends Importer {
 	/**
 	 * Abstract method to import item.
 	 *
@@ -26,11 +26,10 @@ class Customers extends Importer {
 	public function import_item( $data ) {
 		$protected = array(
 			'id',
-			'type',
 			'date_updated',
 		);
 
 		$data = array_diff_key( $data, array_flip( $protected ) );
-		return EAC()->customers->insert( $data );
+		return EAC()->items->insert( $data );
 	}
 }

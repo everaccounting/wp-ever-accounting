@@ -1,13 +1,11 @@
-﻿Name,Type,Color
-Transfer,other,#dcee9b
-"Product sale",income,#a15f98
-"Garden & Sports",expense,#26a82f
-"Tools & Industrial",income,#b257a4
-Movies,income,#cfb1a6
-Grocery,expense,#71a23c
-"Automotive & Grocery",income,#ebdff8
-Health,expense,#84e641
-"Books & Grocery",other,#c06004
-"Outdoors & Computers",expense,#7c99cf
-Clothing,income,#12830a
-Jewelry,expense,#1fd5e5
+﻿name,description,type,taxonomy
+"Office Supplies","Purchase of pens, paper, and other office essentials",expense,category
+"Monthly Rent","Payment for office space",expense,category
+"Product Sales","Revenue from sales of items",item,category
+"Utility Bill","Electricity and water bill for the office",expense,category
+"Consulting Fee","Payment received for consulting services",payment,category
+"Laptop Purchase","Purchase of new laptops for the team",expense,category
+"Product A","Revenue generated from Product A sales",item,category
+"Annual Subscription","Expense for software subscription",expense,category
+"Tax Payment","Quarterly tax payment to the government",payment,category
+"Client Invoice","Invoice payment received from client ABC",payment,category
