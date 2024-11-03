@@ -309,7 +309,7 @@ class I18n {
 				'code'      => 'AMD',
 				'rate'      => 1.0000,
 				'precision' => 2,
-				'symbol'    => 'դր.',
+				'symbol'    => 'դր',
 				'position'  => 'after',
 				'decimal'   => '.',
 				'thousand'  => ',',

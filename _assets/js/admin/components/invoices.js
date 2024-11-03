@@ -1,4 +1,10 @@
+/**
+ * WordPress dependencies
+ */
 import apiFetch from '@wordpress/api-fetch';
+/**
+ * External dependencies
+ */
 import money from '@eac/money';
 
 jQuery( document ).ready( ( $ ) => {
@@ -36,16 +42,24 @@ jQuery( document ).ready( ( $ ) => {
 		},
 
 		onChangeCurrency( e ) {
-			var currency = $( e.target ).val();
-			var config = eac_currencies[ currency ] || eac_currencies[ eac_base_currency ];
-			var $exchange = $( ':input[name="exchange_rate"]' );
-			$exchange
-				.val( config?.rate || 1 )
-				.removeClass( 'enhanced' )
-				.data( 'currency', currency )
-				.attr( 'readonly', currency === eac_base_currency );
-			$( document.body ).trigger( 'eac_update_ui' );
-			this.updateTotals();
+			const currency = $( e.target ).val();
+			// const $exchange = $( ':input[name="exchange_rate"]' );
+			// $exchange.inputmask('setvalue', money.getRate( currency ));
+			// $exchange.trigger('setvalue');
+			// $exchange.inputmask( 'option', {
+			// 	...money.getInputMaskOptions( currency ),
+			// 	placeholder: '',
+			// 	prefix: '',
+			// 	radixPoint: '.',
+			// 	groupSeparator: '',
+			// 	digits: 4,
+			// 	suffix: money.getSymbol( currency ),
+			// 	allowMinus: false,
+			// } );
+			// console.log(money.getRate( currency ));
+			// $exchange.inputmask( 'setvalue', money.getRate( currency ) );
+			// $exchange.attr( 'readonly', currency === eac_base_currency );
+			// this.updateTotals();
 		},
 
 		onAddItem( e ) {
@@ -143,7 +157,7 @@ jQuery( document ).ready( ( $ ) => {
 		},
 
 		updateTotals( data ) {
-			var self = this;
+			const self = this;
 			data = {
 				...this.getValues(),
 				...( data || {} ),
@@ -171,62 +185,71 @@ jQuery( document ).ready( ( $ ) => {
 			id = $button.data( 'id' );
 
 		$button.prop( 'disabled', true );
-		apiFetch( { path: 'eac/v1/invoices/' + id } ).then( function ( invoice ) {
-			$button.eacmodal( {
-				template: 'eac-invoice-payment',
-				events: {
-					'change :input[name="account_id"]': 'onChangeAccount',
-					'change :input[name="exchange_rate"]': 'onChangeExchangeRate',
-					'submit': 'onSubmit',
-				},
-				onChangeAccount( e ) {
-					const $form = $( e.target ).closest( 'form' );
-					const account = $( e.target ).select2( 'data' )?.[ 0 ] || {};
-					const currency = account.currency || eac_base_currency;
-					$form
-						.find( ':input[name="exchange_rate"]' )
-						.val( money.getRate( currency ) )
-						.removeClass( 'enhanced' )
-						.data( 'currency', currency )
-						.attr( 'readonly', currency === eac_base_currency )
-						.trigger( 'change' );
+		apiFetch( { path: 'eac/v1/invoices/' + id } )
+			.then( function ( invoice ) {
+				$button.eacmodal( {
+					template: 'eac-invoice-payment',
+					events: {
+						'change :input[name="account_id"]': 'onChangeAccount',
+						'change :input[name="exchange_rate"]': 'onChangeExchangeRate',
+						submit: 'onSubmit',
+					},
+					onChangeAccount( e ) {
+						const $form = $( e.target ).closest( 'form' );
+						const account = $( e.target ).select2( 'data' )?.[ 0 ] || {};
+						const currency = account.currency || eac_base_currency;
+						$form
+							.find( ':input[name="exchange_rate"]' )
+							.val( money.getRate( currency ) )
+							.removeClass( 'enhanced' )
+							.data( 'currency', currency )
+							.attr( 'readonly', currency === eac_base_currency )
+							.trigger( 'change' );
 
-					$form.find(':input[name="amount"]').removeClass('enhanced').data('currency', currency);
-					$(document.body).trigger('eac_update_ui');
-				},
+						$form
+							.find( ':input[name="amount"]' )
+							.removeClass( 'enhanced' )
+							.data( 'currency', currency );
+						$( document.body ).trigger( 'eac_update_ui' );
+					},
 
-				onChangeExchangeRate( e ) {
-					const $form = $( e.target ).closest( 'form' );
-					const $amount = $form.find( ':input[name="amount"]' );
-					const exchange_rate = parseFloat( $( e.target ).val() );
-					$amount.val( money.convert( invoice.due_amount, invoice.currency, exchange_rate ) );
-				},
+					onChangeExchangeRate( e ) {
+						const $form = $( e.target ).closest( 'form' );
+						const $amount = $form.find( ':input[name="amount"]' );
+						const exchange_rate = parseFloat( $( e.target ).val() );
+						$amount.val(
+							money.convert( invoice.due_amount, invoice.currency, exchange_rate )
+						);
+					},
 
-				onSubmit(e) {
-					e.preventDefault();
-					const self = this;
-					const data = self.getValues();
-					apiFetch({
-						path: 'eac/v1/payments',
-						method: 'POST',
-						data: {
-							...data,
-							editable: false,
-						}
-					}).then(function () {
-						self.close();
-						location.reload();
-					}).catch(function (error) {
-						if (error.message) {
-							alert(error.message);
-						}else {
-							alert('Something went wrong. Please try again.');
-						}
-					});
-				}
+					onSubmit( e ) {
+						e.preventDefault();
+						const self = this;
+						const data = self.getValues();
+						apiFetch( {
+							path: 'eac/v1/payments',
+							method: 'POST',
+							data: {
+								...data,
+								editable: false,
+							},
+						} )
+							.then( function () {
+								self.close();
+								location.reload();
+							} )
+							.catch( function ( error ) {
+								if ( error.message ) {
+									alert( error.message );
+								} else {
+									alert( 'Something went wrong. Please try again.' );
+								}
+							} );
+					},
+				} );
+			} )
+			.finally( function () {
+				$button.prop( 'disabled', false );
 			} );
-		} ).finally( function () {
-			$button.prop( 'disabled', false );
-		} );
 	} );
 } );

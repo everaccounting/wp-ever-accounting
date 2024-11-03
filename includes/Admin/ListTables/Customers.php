@@ -248,7 +248,7 @@ class Customers extends ListTable {
 	 * @return string Displays the country.
 	 */
 	public function column_country( $item ) {
-		return $item->country ? esc_html( $item->country_name ) : '&mdash;';
+		return $item->country_name ? esc_html( $item->country_name ) : '&mdash;';
 	}
 
 	/**

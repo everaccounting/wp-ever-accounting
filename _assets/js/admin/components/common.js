@@ -1,7 +1,12 @@
+/**
+ * External dependencies
+ */
+import money from '@eac/money';
+
 jQuery( document ).ready( ( $ ) => {
 	'use strict';
 
-	var initializeUI = function () {
+	const initializeUI = function () {
 		// Select2.
 		$( '.eac_select2' )
 			.filter( ':not(.enhanced)' )
@@ -19,7 +24,7 @@ jQuery( document ).ready( ( $ ) => {
 						dataType: 'json',
 						delay: 250,
 						method: 'POST',
-						data: function ( params ) {
+						data( params ) {
 							return {
 								term: params.term,
 								action: $this.data( 'action' ),
@@ -31,7 +36,7 @@ jQuery( document ).ready( ( $ ) => {
 								limit: $this.data( 'limit' ),
 							};
 						},
-						processResults: function ( data ) {
+						processResults( data ) {
 							data.page = data.page || 1;
 							return data;
 						},
@@ -82,46 +87,78 @@ jQuery( document ).ready( ( $ ) => {
 			.filter( ':not(.enhanced)' )
 			.each( function () {
 				const $this = $( this );
-				const currency = $this.data( 'currency' ) || eac_admin_vars.base_currency;
-				const precision = eac_admin_vars.currencies[ currency ].precision || 2;
-				const symbol = eac_admin_vars.currencies[ currency ].symbol || '';
-				const position = eac_admin_vars.currencies[ currency ].position || 'before';
-				const thousand = eac_admin_vars.currencies[ currency ].thousand || ',';
-				const decimal = eac_admin_vars.currencies[ currency ].decimal || '.';
+				const $source = $this.closest( 'form' ).find( $this.data( 'source' ) );
 				$this
 					.inputmask( {
-						alias: 'currency',
-						placeholder: '0.00',
-						rightAlign: false,
-						allowMinus: true,
-						digits: precision,
-						radixPoint: decimal,
-						groupSeparator: thousand,
-						prefix: 'before' === position ? symbol : '',
-						suffix: 'after' === position ? symbol : '',
-						removeMaskOnSubmit: true,
+						...money.getCurrencyMaskOptions( $this.data( 'currency' ) ),
 					} )
 					.addClass( 'enhanced' );
-			} );
 
+				if ( $source.length ) {
+					$source.on( 'change', function () {
+						const code =
+							$( this ).attr( 'name' ) === 'currency'
+								? $source.val()
+								: $source.select2( 'data' )?.[ 0 ]?.currency;
+						$this.inputmask( 'option', money.getCurrencyMaskOptions( code ) );
+						$this.data( 'currency', code );
+					} );
+				}
+			} );
 		// exchange rate.
 		$( ':input.eac_exchange_rate' )
 			.filter( ':not(.enhanced)' )
 			.each( function () {
 				const $this = $( this );
-				const currency = $this.data( 'currency' ) || eac_admin_vars.base_currency;
-				const symbol = eac_admin_vars.currencies[ currency ].symbol || '';
+				const $source = $this.closest( 'form' ).find( $this.data( 'source' ) );
+
 				$this
 					.inputmask( {
-						alias: 'currency',
-						placeholder: '0.00',
-						rightAlign: false,
-						allowMinus: true,
-						digits: 4,
-						suffix: symbol,
-						removeMaskOnSubmit: true,
+						...money.getExchangeRateMaskOptions( $this.data( 'currency' ) ),
 					} )
-					.addClass( 'enhanced' );
+					.addClass( 'enhanced' )
+					.attr( 'readonly', $this.data( 'currency' ) === eac_base_currency );
+
+				if ( $source.length ) {
+					$source.on( 'change', function () {
+						const code =
+							$( this ).attr( 'name' ) === 'currency'
+								? $source.val()
+								: $source.select2( 'data' )?.[ 0 ]?.currency;
+						$this.inputmask( 'option', money.getExchangeRateMaskOptions( code ) );
+						$this.inputmask( 'setvalue', money.getRate( code ) );
+						$this.attr( 'readonly', code === eac_base_currency );
+					} );
+				}
+
+				// const currency = $this.data( 'currency' );
+				// const $source = $this.closest( 'form' ).find( $this.data( 'source' ) );
+				// const options = {
+				// 	alias: 'decimal',
+				// 	rightAlign: false,
+				// 	allowMinus: false,
+				// 	digitsOptional: false,
+				// 	groupSeparator: '',
+				// 	digits: 4,
+				// 	suffix: money.getSymbol( currency ),
+				// 	removeMaskOnSubmit: true,
+				// };
+				// $this.inputmask( options ).addClass( 'enhanced' );
+				// if ( $source.length ) {
+				// 	$source.on( 'change', function () {
+				// 		const code =
+				// 			$( this ).attr( 'name' ) === 'currency'
+				// 				? $source.val()
+				// 				: $source.select2( 'data' )?.[ 0 ]?.currency;
+				// 		// update the value of exchange rate.
+				// 		$this.inputmask( 'option', {
+				// 			...options,
+				// 			suffix: money.getSymbol( code ).replace( /[.,]/g, '' ),
+				// 		} );
+				// 		$this.inputmask( 'setvalue', money.getRate( code ) );
+				// 		$this.attr( 'readonly', code === eac_base_currency );
+				// 	} );
+				// }
 			} );
 
 		// inputMask.
@@ -230,11 +267,11 @@ jQuery( document ).ready( ( $ ) => {
 		} )
 		.on( 'click', '#eac-add-note', function ( e ) {
 			e.preventDefault();
-			var $button = $( this );
-			var $note = $( '#eac-note' );
-			var $notes = $( '.eac-notes' );
+			const $button = $( this );
+			const $note = $( '#eac-note' );
+			const $notes = $( '.eac-notes' );
 
-			var data = {
+			const data = {
 				action: 'eac_add_note',
 				nonce: $button.data( 'nonce' ),
 				parent_id: $button.data( 'parent_id' ),
@@ -248,8 +285,8 @@ jQuery( document ).ready( ( $ ) => {
 				$.ajax( {
 					type: 'POST',
 					url: eac_admin_vars.ajax_url,
-					data: data,
-					success: function ( response ) {
+					data,
+					success( response ) {
 						let res = wpAjax.parseAjaxResponse( response );
 						res = res.responses[ 0 ];
 						$notes.prepend( res.data );
@@ -264,10 +301,10 @@ jQuery( document ).ready( ( $ ) => {
 		} )
 		.on( 'click', '.eac-notes .note__delete', function ( e ) {
 			e.preventDefault();
-			var $button = $( this );
-			var $note = $button.closest( '.note' );
-			var $notes = $note.closest( '.eac-notes' );
-			var data = {
+			const $button = $( this );
+			const $note = $button.closest( '.note' );
+			const $notes = $note.closest( '.eac-notes' );
+			const data = {
 				action: 'eac_delete_note',
 				nonce: $button.data( 'nonce' ),
 				note_id: $button.data( 'note_id' ),
@@ -277,8 +314,8 @@ jQuery( document ).ready( ( $ ) => {
 				$.ajax( {
 					type: 'POST',
 					url: eac_admin_vars.ajax_url,
-					data: data,
-					success: function ( response ) {
+					data,
+					success( response ) {
 						if ( '1' === response ) {
 							console.log( response );
 							$note.remove();
@@ -295,7 +332,7 @@ jQuery( document ).ready( ( $ ) => {
 	// print.
 	$( '.eac_print_document' ).on( 'click', function ( e ) {
 		e.preventDefault();
-		var $target = $( $( this ).data( 'target' ) );
+		const $target = $( $( this ).data( 'target' ) );
 		console.log( $target );
 		if ( ! $target.length ) {
 			return;
@@ -312,11 +349,11 @@ jQuery( document ).ready( ( $ ) => {
 	// Share.
 	$( '.eac_share_document' ).on( 'click', function ( e ) {
 		e.preventDefault();
-		var url = $( this ).data( 'url' );
+		const url = $( this ).data( 'url' );
 		if ( ! url ) {
 			return;
 		}
-		var $temp = $( '<input>' );
+		const $temp = $( '<input>' );
 		$( 'body' ).append( $temp );
 		$temp.val( url ).select();
 		document.execCommand( 'copy' );
@@ -330,7 +367,7 @@ jQuery( document ).ready( ( $ ) => {
 	// Block UI
 	$.fn.block = function ( destroy ) {
 		return this.each( function () {
-			var $el = $( this );
+			const $el = $( this );
 			if ( destroy && $el.find( '.blockUI' ).length ) {
 				$el.find( '.blockUI' ).remove();
 				return;

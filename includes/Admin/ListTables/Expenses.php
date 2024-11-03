@@ -270,7 +270,7 @@ class Expenses extends ListTable {
 		$bill     = '&mdash;';
 		$metadata = '';
 		if ( $item->bill ) {
-			$metadata = sprintf( '<a href="%s">%s</a>', esc_url( $item->bill->get_view_url() ), wp_kses_post( $item->bill->number ) );
+			$bill = sprintf( '<a href="%s">%s</a>', esc_url( $item->bill->get_view_url() ), wp_kses_post( $item->bill->number ) );
 		}
 
 		return sprintf( '%s', empty( $this->column_metadata( $metadata ) ) ? $bill : $this->column_metadata( $metadata ) );

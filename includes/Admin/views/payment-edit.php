@@ -100,6 +100,7 @@ $payment = Payment::make( $id );
 							'attr-step'     => 'any',
 							'readonly'      => $payment->currency === eac_base_currency(),
 							'data-currency' => $payment->currency,
+							'data-source'   => ':input[name="account_id"]',
 						)
 					);
 

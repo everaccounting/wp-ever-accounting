@@ -204,6 +204,52 @@ const Money = ( () => {
 		absint( amount ) {
 			return Math.abs( Math.round( this.unformat( amount ) ) );
 		},
+
+		/**
+		 * Get currency mask options for a currency.
+		 *
+		 * @param {string} currency The currency code (e.g., 'USD').
+		 *
+		 * @return {Object} The input mask options.
+		 */
+		getCurrencyMaskOptions( currency ) {
+			const symbol = this.getSymbol( currency ).replace( /[.,]/g, '' );
+			const position = this.getPosition( currency );
+
+			return {
+				alias: 'currency',
+				placeholder: '0.00',
+				rightAlign: false,
+				allowMinus: true,
+				digits: this.getPrecision( currency ),
+				radixPoint: this.getDecimal( currency ),
+				groupSeparator: this.getThousand( currency ),
+				prefix: 'before' === position ? symbol : '',
+				suffix: 'after' === position ? symbol : '',
+				removeMaskOnSubmit: true,
+			};
+		},
+
+		/**
+		 * Get exchange rate mask options for a currency.
+		 *
+		 * @param {string} currency The currency code (e.g., 'USD').
+		 *
+		 * @return {Object} The input mask options.
+		 */
+		getExchangeRateMaskOptions( currency ) {
+			const symbol = this.getSymbol( currency ).replace( /[.,]/g, '' );
+			return {
+				alias: 'decimal',
+				rightAlign: false,
+				allowMinus: false,
+				digitsOptional: false,
+				groupSeparator: '',
+				digits: 4,
+				suffix: symbol,
+				removeMaskOnSubmit: true,
+			};
+		},
 	};
 } )();
 

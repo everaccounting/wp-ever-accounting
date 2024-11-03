@@ -223,7 +223,7 @@ class Vendors extends ListTable {
 	 * @return string Displays the country.
 	 */
 	public function column_country( $item ) {
-		return $item->country_name;
+		return $item->country_name ? esc_html( $item->country_name ) : '&mdash;';
 	}
 
 	/**
