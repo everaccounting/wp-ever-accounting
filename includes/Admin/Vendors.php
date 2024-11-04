@@ -204,6 +204,64 @@ class Vendors {
 				),
 			),
 		);
+		$attributes = array(
+			array(
+				'label' => __( 'Name', 'wp-ever-accounting' ),
+				'value' => $vendor->name,
+			),
+			array(
+				'label' => __( 'Company', 'wp-ever-accounting' ),
+				'value' => $vendor->company,
+			),
+			array(
+				'label' => __( 'Email', 'wp-ever-accounting' ),
+				'value' => $vendor->email,
+			),
+			array(
+				'label' => __( 'Phone', 'wp-ever-accounting' ),
+				'value' => $vendor->phone,
+			),
+			array(
+				'label' => __( 'Website', 'wp-ever-accounting' ),
+				'value' => $vendor->website,
+			),
+			array(
+				'label' => __( 'Address', 'wp-ever-accounting' ),
+				'value' => $vendor->address,
+			),
+			array(
+				'label' => __( 'City', 'wp-ever-accounting' ),
+				'value' => $vendor->city,
+			),
+			array(
+				'label' => __( 'State', 'wp-ever-accounting' ),
+				'value' => $vendor->state,
+			),
+			array(
+				'label' => __( 'Postcode', 'wp-ever-accounting' ),
+				'value' => $vendor->postcode,
+			),
+			array(
+				'label' => __( 'Country', 'wp-ever-accounting' ),
+				'value' => $vendor->country_name,
+			),
+			array(
+				'label' => __( 'Tax Number', 'wp-ever-accounting' ),
+				'value' => $vendor->tax_number,
+			),
+			array(
+				'label' => __( 'Currency', 'wp-ever-accounting' ),
+				'value' => $vendor->currency,
+			),
+			array(
+				'label' => __( 'Created', 'wp-ever-accounting' ),
+				'value' => wp_date( eac_date_format(), strtotime( $vendor->date_created ) ),
+			),
+			array(
+				'label' => __( 'Updated', 'wp-ever-accounting' ),
+				'value' => wp_date( eac_date_format(), strtotime( $vendor->date_updated ) ),
+			),
+		);
 		?>
 
 		<h2 class="has--border"><?php esc_html_e( 'Overview', 'wp-ever-accounting' ); ?></h2>
@@ -222,69 +280,17 @@ class Vendors {
 			</div>
 		</div>
 
-		<h3 class="tw-text-gray-500 tw-uppercase tw-text-base"><?php esc_html_e( 'Details', 'wp-ever-accounting' ); ?></h3>
-		<div class="tw-grid tw-gap-4 tw-mt-5 md:tw-grid-cols-2 lg:tw-grid-cols-3">
-			<?php
-			$attributes = array(
-				array(
-					'label' => __( 'Name', 'wp-ever-accounting' ),
-					'value' => $vendor->name,
-				),
-				array(
-					'label' => __( 'Company', 'wp-ever-accounting' ),
-					'value' => $vendor->company,
-				),
-				array(
-					'label' => __( 'Email', 'wp-ever-accounting' ),
-					'value' => $vendor->email,
-				),
-				array(
-					'label' => __( 'Phone', 'wp-ever-accounting' ),
-					'value' => $vendor->phone,
-				),
-				array(
-					'label' => __( 'Website', 'wp-ever-accounting' ),
-					'value' => $vendor->website,
-				),
-				array(
-					'label' => __( 'Address', 'wp-ever-accounting' ),
-					'value' => $vendor->address,
-				),
-				array(
-					'label' => __( 'City', 'wp-ever-accounting' ),
-					'value' => $vendor->city,
-				),
-				array(
-					'label' => __( 'State', 'wp-ever-accounting' ),
-					'value' => $vendor->state,
-				),
-				array(
-					'label' => __( 'Postcode', 'wp-ever-accounting' ),
-					'value' => $vendor->postcode,
-				),
-				array(
-					'label' => __( 'Country', 'wp-ever-accounting' ),
-					'value' => $vendor->country_name,
-				),
-				array(
-					'label' => __( 'Tax Number', 'wp-ever-accounting' ),
-					'value' => $vendor->tax_number,
-				),
-				array(
-					'label' => __( 'Currency', 'wp-ever-accounting' ),
-					'value' => $vendor->currency,
-				),
-			);
-			foreach ( $attributes as $attribute ) {
-				?>
-				<div>
-					<label class="tw-mb-1"><?php echo esc_html( $attribute['label'] ); ?></label>
-					<p class="tw-font-bold tw-mt-1"><?php echo esc_html( $attribute['value'] ); ?></p>
-				</div>
-				<?php
-			}
-			?>
-		</div>
+		<h2><?php esc_html_e( 'Details', 'wp-ever-accounting' ); ?></h2>
+		<table class="eac-table is--striped is--bordered">
+			<tbody>
+			<?php foreach ( $attributes as $attribute ) : ?>
+				<tr>
+					<th><?php echo esc_html( $attribute['label'] ); ?></th>
+					<td><?php echo esc_html( empty( $attribute['value'] ) ? '&mdash;' : $attribute['value'] ); ?></td>
+				</tr>
+			<?php endforeach; ?>
+			</tbody>
+		</table>
 		<?php
 	}
 
@@ -300,7 +306,7 @@ class Vendors {
 		$expenses = EAC()->expenses->query(
 			array(
 				'vendor_id' => $vendor->id,
-				'orderby'   => 'date_created',
+				'orderby'   => 'payment_date',
 				'order'     => 'DESC',
 				'limit'     => 20,
 			)
@@ -312,8 +318,8 @@ class Vendors {
 			<tr>
 				<th><?php esc_html_e( 'Number', 'wp-ever-accounting' ); ?></th>
 				<th><?php esc_html_e( 'Date', 'wp-ever-accounting' ); ?></th>
+				<th><?php esc_html_e( 'Reference', 'wp-ever-accounting' ); ?></th>
 				<th><?php esc_html_e( 'Amount', 'wp-ever-accounting' ); ?></th>
-				<th><?php esc_html_e( 'Status', 'wp-ever-accounting' ); ?></th>
 			</tr>
 			</thead>
 			<tbody>
@@ -325,9 +331,9 @@ class Vendors {
 								<?php echo esc_html( $expense->number ); ?>
 							</a>
 						</td>
-						<td><?php echo esc_html( wp_date( eac_date_format(), strtotime( $expense->date ) ) ); ?></td>
+						<td><?php echo esc_html( wp_date( eac_date_format(), strtotime( $expense->payment_date ) ) ); ?></td>
+						<td><?php echo esc_html( $expense->reference ? $expense->reference : '-' ); ?></td>
 						<td><?php echo esc_html( eac_format_amount( $expense->amount ) ); ?></td>
-						<td><?php echo esc_html( $expense->status ); ?></td>
 					</tr>
 				<?php endforeach; ?>
 			<?php else : ?>
@@ -377,8 +383,8 @@ class Vendors {
 							</a>
 						</td>
 						<td><?php echo esc_html( wp_date( eac_date_format(), strtotime( $bill->issue_date ) ) ); ?></td>
-						<td><?php echo esc_html( eac_format_amount( $bill->amount ) ); ?></td>
-						<td><?php echo esc_html( $bill->status ); ?></td>
+						<td><?php echo esc_html( $bill->formatted_total ); ?></td>
+						<td><?php echo esc_html( $bill->status_label ); ?></td>
 					</tr>
 				<?php endforeach; ?>
 			<?php else : ?>

@@ -43,11 +43,7 @@ abstract class ListTable extends \WP_List_Table {
 	 */
 	protected function get_request_orderby() {
 		wp_verify_nonce( '_wpnonce' );
-		$sortable_columns = $this->get_sortable_columns();
-		$orderby          = isset( $_GET['orderby'] ) ? sanitize_text_field( wp_unslash( $_GET['orderby'] ) ) : '';
-		if ( ! array_key_exists( $orderby, $sortable_columns ) ) {
-			$orderby = '';
-		}
+		$orderby = isset( $_GET['orderby'] ) ? sanitize_text_field( wp_unslash( $_GET['orderby'] ) ) : '';
 
 		return $orderby;
 	}

@@ -223,69 +223,77 @@ class Customers {
 			</div>
 		</div>
 
-		<h3 class="tw-text-gray-500 tw-uppercase tw-text-base"><?php esc_html_e( 'Details', 'wp-ever-accounting' ); ?></h3>
-		<div class="tw-grid tw-gap-4 tw-mt-5 md:tw-grid-cols-2 lg:tw-grid-cols-3">
-			<?php
-			$attributes = array(
-				array(
-					'label' => __( 'Name', 'wp-ever-accounting' ),
-					'value' => $customer->name,
-				),
-				array(
-					'label' => __( 'Company', 'wp-ever-accounting' ),
-					'value' => $customer->company,
-				),
-				array(
-					'label' => __( 'Email', 'wp-ever-accounting' ),
-					'value' => $customer->email,
-				),
-				array(
-					'label' => __( 'Phone', 'wp-ever-accounting' ),
-					'value' => $customer->phone,
-				),
-				array(
-					'label' => __( 'Website', 'wp-ever-accounting' ),
-					'value' => $customer->website,
-				),
-				array(
-					'label' => __( 'Address', 'wp-ever-accounting' ),
-					'value' => $customer->address,
-				),
-				array(
-					'label' => __( 'City', 'wp-ever-accounting' ),
-					'value' => $customer->city,
-				),
-				array(
-					'label' => __( 'State', 'wp-ever-accounting' ),
-					'value' => $customer->state,
-				),
-				array(
-					'label' => __( 'Postcode', 'wp-ever-accounting' ),
-					'value' => $customer->postcode,
-				),
-				array(
-					'label' => __( 'Country', 'wp-ever-accounting' ),
-					'value' => $customer->country_name,
-				),
-				array(
-					'label' => __( 'Tax Number', 'wp-ever-accounting' ),
-					'value' => $customer->tax_number,
-				),
-				array(
-					'label' => __( 'Currency', 'wp-ever-accounting' ),
-					'value' => $customer->currency,
-				),
-			);
-			foreach ( $attributes as $attribute ) {
-				?>
-				<div>
-					<label class="tw-mb-1"><?php echo esc_html( $attribute['label'] ); ?></label>
-					<p class="tw-font-bold tw-mt-1"><?php echo esc_html( $attribute['value'] ); ?></p>
-				</div>
-				<?php
-			}
-			?>
-		</div>
+		<?php
+		$attributes = array(
+			array(
+				'label' => __( 'Name', 'wp-ever-accounting' ),
+				'value' => $customer->name,
+			),
+			array(
+				'label' => __( 'Company', 'wp-ever-accounting' ),
+				'value' => $customer->company,
+			),
+			array(
+				'label' => __( 'Email', 'wp-ever-accounting' ),
+				'value' => $customer->email,
+			),
+			array(
+				'label' => __( 'Phone', 'wp-ever-accounting' ),
+				'value' => $customer->phone,
+			),
+			array(
+				'label' => __( 'Website', 'wp-ever-accounting' ),
+				'value' => $customer->website,
+			),
+			array(
+				'label' => __( 'Address', 'wp-ever-accounting' ),
+				'value' => $customer->address,
+			),
+			array(
+				'label' => __( 'City', 'wp-ever-accounting' ),
+				'value' => $customer->city,
+			),
+			array(
+				'label' => __( 'State', 'wp-ever-accounting' ),
+				'value' => $customer->state,
+			),
+			array(
+				'label' => __( 'Postcode', 'wp-ever-accounting' ),
+				'value' => $customer->postcode,
+			),
+			array(
+				'label' => __( 'Country', 'wp-ever-accounting' ),
+				'value' => $customer->country_name,
+			),
+			array(
+				'label' => __( 'Tax Number', 'wp-ever-accounting' ),
+				'value' => $customer->tax_number,
+			),
+			array(
+				'label' => __( 'Currency', 'wp-ever-accounting' ),
+				'value' => $customer->currency,
+			),
+			array(
+				'label' => __( 'Created', 'wp-ever-accounting' ),
+				'value' => wp_date( eac_date_format(), strtotime( $customer->date_created ) ),
+			),
+			array(
+				'label' => __( 'Updated', 'wp-ever-accounting' ),
+				'value' => wp_date( eac_date_format(), strtotime( $customer->date_updated ) ),
+			),
+		);
+		?>
+		<h2><?php esc_html_e( 'Details', 'wp-ever-accounting' ); ?></h2>
+		<table class="eac-table is--striped is--bordered">
+			<tbody>
+			<?php foreach ( $attributes as $attribute ) : ?>
+				<tr>
+					<th><?php echo esc_html( $attribute['label'] ); ?></th>
+					<td><?php echo esc_html( empty( $attribute['value'] ) ? '&mdash;' : $attribute['value'] ); ?></td>
+				</tr>
+			<?php endforeach; ?>
+			</tbody>
+		</table>
 		<?php
 	}
 
@@ -303,7 +311,7 @@ class Customers {
 				'contact_id'      => $customer->id,
 				'contact_id__not' => '',
 				'limit'           => 20,
-				'orderby'         => 'date',
+				'orderby'         => 'payment_date',
 				'order'           => 'DESC',
 			)
 		);

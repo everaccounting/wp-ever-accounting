@@ -180,10 +180,16 @@ class Accounts {
 		$stats[]      = array(
 			'label' => __( 'Incoming', 'wp-ever-accounting' ),
 			'value' => eac_format_amount( array_sum( wp_list_pluck( wp_list_filter( $transactions, array( 'type' => 'payment' ) ), 'amount' ) ), $account->currency ),
+			'meta'  => array(
+				wp_date( 'Y', strtotime( $start_date ) ),
+			),
 		);
 		$stats[]      = array(
 			'label' => __( 'Outgoing', 'wp-ever-accounting' ),
 			'value' => eac_format_amount( array_sum( wp_list_pluck( wp_list_filter( $transactions, array( 'type' => 'expense' ) ), 'amount' ) ), $account->currency ),
+			'meta'  => array(
+				wp_date( 'Y', strtotime( $start_date ) ),
+			),
 		);
 		$stats[]      = array(
 			'label' => __( 'Balance', 'wp-ever-accounting' ),
@@ -233,33 +239,41 @@ class Accounts {
 				</div>
 			<?php endforeach; ?>
 		</div>
-		<h4 class="tw-text-gray-500 tw-uppercase tw-text-base">Basic Info</h4>
-		<div class="tw-grid tw-gap-4 tw-mt-5 md:tw-grid-cols-2 lg:tw-grid-cols-3">
-			<div>
-				<label class="tw-mb-1">Display Name</label>
-				<p class="tw-font-bold">admin </p>
-			</div>
-			<div>
-				<label class="tw-mb-1">Primary Contact Name</label>
-				<p class="tw-font-bold">Primary Contact </p>
-			</div>
-			<div>
-				<label class="tw-mb-1">Email</label>
-				<p class="tw-font-bold">email@gmail.com </p>
-			</div>
-			<div>
-				<label class="tw-mb-1">Display Name</label>
-				<p class="tw-font-bold">admin </p>
-			</div>
-			<div>
-				<label class="tw-mb-1">Primary Contact Name</label>
-				<p class="tw-font-bold">Primary Contact </p>
-			</div>
-			<div>
-				<label class="tw-mb-1">Email</label>
-				<p class="tw-font-bold">email@gmail.com </p>
-			</div>
-		</div>
+		<h2><?php echo esc_html__( 'Account Details', 'wp-ever-accounting' ); ?></h2>
+		<?php
+		$attributes = array(
+			array(
+				'label' => __( 'Name', 'wp-ever-accounting' ),
+				'value' => $account->name,
+			),
+			'number'   => array(
+				'label' => __( 'Number', 'wp-ever-accounting' ),
+				'value' => $account->number,
+			),
+			'currency' => array(
+				'label' => __( 'Currency', 'wp-ever-accounting' ),
+				'value' => $account->currency,
+			),
+			'created'  => array(
+				'label' => __( 'Created', 'wp-ever-accounting' ),
+				'value' => wp_date( eac_date_format(), strtotime( $account->date_created ) ),
+			),
+			array(
+				'label' => __( 'Updated', 'wp-ever-accounting' ),
+				'value' => wp_date( eac_date_format(), strtotime( $account->date_updated ) ),
+			),
+		)
+		?>
+		<table class="eac-table is--striped is--bordered">
+			<tbody>
+			<?php foreach ( $attributes as $attribute ) : ?>
+				<tr>
+					<th><?php echo esc_html( $attribute['label'] ); ?></th>
+					<td><?php echo esc_html( empty( $attribute['value'] ) ? '&mdash;' : $attribute['value'] ); ?></td>
+				</tr>
+			<?php endforeach; ?>
+			</tbody>
+		</table>
 		<?php
 	}
 
@@ -337,6 +351,7 @@ class Accounts {
 			<tr>
 				<th><?php esc_html_e( 'Number', 'wp-ever-accounting' ); ?></th>
 				<th><?php esc_html_e( 'Date', 'wp-ever-accounting' ); ?></th>
+				<th><?php esc_html_e( 'Reference', 'wp-ever-accounting' ); ?></th>
 				<th><?php esc_html_e( 'Amount', 'wp-ever-accounting' ); ?></th>
 			</tr>
 			</thead>
@@ -350,6 +365,7 @@ class Accounts {
 							</a>
 						</td>
 						<td><?php echo esc_html( wp_date( eac_date_format(), strtotime( $expense->payment_date ) ) ); ?></td>
+						<td><?php echo esc_html( $expense->reference ? $expense->reference : '&mdash;' ); ?></td>
 						<td><?php echo esc_html( eac_format_amount( $expense->amount ) ); ?></td>
 					</tr>
 				<?php endforeach; ?>

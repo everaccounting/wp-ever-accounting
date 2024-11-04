@@ -19,6 +19,10 @@
 		vertical-align: top;
 	}
 
+	&.is-bold-headers th {
+		font-weight: 600;
+	}
+
 	&.is--striped {
 		tbody tr:nth-child(odd) {
 			background-color: #f9f9f9;
