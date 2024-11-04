@@ -705,34 +705,17 @@ class Ajax {
 
 		$importer->set_file( $file );
 		$importer->set_position( $position );
-		if ( ! $importer->check_filetype() ) {
-			wp_send_json_error(
-				array(
-					'message' => __( 'Invalid file format.', 'wp-ever-accounting' ),
-				)
-			);
-		}
 
-		$skipped  = (int) get_user_option( "{$type}_import_log_skipped" );
-		$imported = (int) get_user_option( "{$type}_import_log_imported" );
-
-		$results          = $importer->import();
+		$imported         = $importer->import();
 		$percent_complete = $importer->get_percent_complete();
-		$skipped         += (int) $results['skipped'];
-		$imported        += (int) $results['imported'];
-
-		update_user_option( get_current_user_id(), "{$type}_import_log_imported", $imported );
-		update_user_option( get_current_user_id(), "{$type}_import_log_skipped", $skipped );
 
 		if ( 100 <= $percent_complete ) {
 			delete_user_option( get_current_user_id(), "{$type}_import_log_imported" );
-			delete_user_option( get_current_user_id(), "{$type}_import_log_skipped" );
 			$response['position']   = 'done';
 			$response['percentage'] = 100;
 			$response['file']       = $file;
 			// translators: %1$d: imported items, %2$d: skipped items.
-			$response['message'] = sprintf( esc_html__( '%1$d items imported and %2$d items skipped.', 'wp-ever-accounting' ), $imported, $skipped );
-			$response['results'] = $results;
+			$response['message'] = sprintf( esc_html__( '%1$d items imported.', 'wp-ever-accounting' ), absint( $imported ) );
 
 			wp_send_json_success( $response );
 			return;
@@ -741,7 +724,6 @@ class Ajax {
 		$response['position']   = $importer->get_position();
 		$response['percentage'] = $percent_complete;
 		$response['file']       = $file;
-		$response['results']    = $results;
 		wp_send_json_success( $response );
 
 		exit();
