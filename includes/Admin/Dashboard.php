@@ -49,7 +49,7 @@ class Dashboard {
 	 * @return void
 	 */
 	public static function overview_widget() {
-		$report   = ReportsUtil::get_profits_report( wp_date( 'Y' ) );
+		$report   = ReportsUtil::get_profits_report( wp_date( 'Y' ), true );
 		$profits  = array_sum( $report['profits'] );
 		$payments = array_sum( $report['payments'] );
 		$delta    = $profits > 0 && $payments > 0 ? ( $profits / $payments ) * 100 : 0;
@@ -145,40 +145,34 @@ class Dashboard {
 	public static function overview_stats( $stats ) {
 		global $wpdb;
 
-		/*
 		$documents = $wpdb->get_row(
 			"SELECT
-				SUM(CASE WHEN type = 'invoice' AND status IN ( 'sent', 'overdue', 'partial' ) THEN total / exchange_rate ELSE 0 END) AS receivable,
-				SUM(CASE WHEN type = 'bill' AND status IN ( 'sent', 'overdue', 'partial' ) THEN total / exchange_rate ELSE 0 END) AS payable
-		 		FROM {$wpdb->prefix}ea_documents"
-		);
-		*/
+				SUM(CASE WHEN d.type = 'invoice' THEN (d.total / d.exchange_rate) ELSE 0 END) -
+				SUM(CASE WHEN d.type = 'invoice' THEN COALESCE(t.amount / t.exchange_rate, 0) ELSE 0 END) AS receivable,
 
-		$documents = $wpdb->get_row(
-			"SELECT
-            SUM(CASE WHEN d.type = 'invoice' AND d.status IN ('sent', 'overdue', 'partial') THEN d.total / d.exchange_rate ELSE 0 END) AS receivable,
-            SUM(CASE WHEN d.type = 'bill' AND d.status IN ('sent', 'overdue', 'partial') THEN d.total / d.exchange_rate ELSE 0 END) AS payable,
-            SUM(CASE WHEN t.type = 'payment' AND t.document_id IS NOT NULL THEN t.amount / t.exchange_rate ELSE 0 END) AS total_payments,
-            SUM(CASE WHEN t.type = 'expense' AND t.document_id IS NOT NULL THEN t.amount / t.exchange_rate ELSE 0 END) AS total_expenses
-        	FROM {$wpdb->prefix}ea_documents d LEFT JOIN {$wpdb->prefix}ea_transactions t ON d.id = t.document_id"
+				SUM(CASE WHEN d.type = 'bill' THEN (d.total / d.exchange_rate) ELSE 0 END) -
+				SUM(CASE WHEN d.type = 'bill' THEN COALESCE(t.amount / t.exchange_rate, 0) ELSE 0 END) AS payable
+			FROM
+        		{$wpdb->prefix}ea_documents d
+        	LEFT JOIN
+        		 {$wpdb->prefix}ea_transactions t ON d.id = t.document_id
+        	WHERE
+        	    d.status IN ( 'received', 'sent', 'overdue', 'partial');"
 		);
-
-		$receivable = $documents->receivable - $documents->total_payments;
-		$payable    = $documents->payable - $documents->total_expenses;
 
 		$stats[] = array(
 			'label' => __( 'Receivable', 'wp-ever-accounting' ),
-			'value' => eac_format_amount( $receivable ),
+			'value' => eac_format_amount( $documents->receivable ),
 		);
 
 		$stats[] = array(
 			'label' => __( 'Payable', 'wp-ever-accounting' ),
-			'value' => eac_format_amount( $payable ),
+			'value' => eac_format_amount( $documents->payable ),
 		);
 
 		$stats[] = array(
 			'label' => __( 'Upcoming', 'wp-ever-accounting' ),
-			'value' => eac_format_amount( $receivable - $payable ),
+			'value' => eac_format_amount( $documents->receivable - $documents->payable ),
 		);
 
 		return $stats;

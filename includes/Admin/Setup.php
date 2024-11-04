@@ -35,7 +35,7 @@ class Setup {
 	 */
 	public function __construct() {
 		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
-		add_action( 'admin_init', array( $this, 'redirect_to_setup' ) );
+//		add_action( 'admin_init', array( $this, 'redirect_to_setup' ) );
 		add_action( 'admin_init', array( $this, 'setup_wizard' ) );
 	}
 

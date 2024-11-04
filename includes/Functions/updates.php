@@ -53,7 +53,7 @@ function eac_update_120_settings() {
 		}
 	}
 
-	$currencies   = get_option( 'eac_currencies', array() );
+	$currencies   = get_option( 'eac_exchange_rates', array() );
 	$o_currencies = get_option( 'eaccounting_currencies', array() );
 	if ( is_array( $o_currencies ) && ! empty( $o_currencies ) ) {
 		$o_currencies = wp_list_pluck( $o_currencies, 'rate', 'code' );
@@ -65,7 +65,7 @@ function eac_update_120_settings() {
 			}
 		}
 	}
-	update_option( 'eac_currencies', $currencies );
+	update_option( 'eac_exchange_rates', $currencies );
 }
 
 /**

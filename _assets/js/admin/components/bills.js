@@ -154,8 +154,9 @@ jQuery( document ).ready( ( $ ) => {
 				}
 				self.$( '.eac-document-items__items' ).html( res.responses[ 0 ].data );
 				self.$( '.eac-document-items__totals' ).html( res.responses[ 1 ].data );
-				self.unblock();
 				$( document.body ).trigger( 'eac_update_ui' );
+			} ).always( function () {
+				self.unblock();
 				activeElement.focus();
 			} );
 		},

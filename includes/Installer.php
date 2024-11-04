@@ -138,7 +138,11 @@ class Installer {
 		}
 		delete_transient( 'eac_installed' );
 		flush_rewrite_rules();
-		wp_safe_redirect( add_query_arg( 'page', 'ever-accounting', admin_url( 'admin.php' ) ) );
+		if ( 'yes' !== get_option( 'eac_setup_wizard_completed', 'no' ) ) {
+			wp_safe_redirect( add_query_arg( 'page', 'eac-setup', admin_url( 'admin.php' ) ) );
+		} else {
+			wp_safe_redirect( add_query_arg( 'page', 'ever-accounting', admin_url( 'admin.php' ) ) );
+		}
 		exit;
 	}
 
