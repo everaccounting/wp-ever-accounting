@@ -30,6 +30,30 @@ class Items extends Importer {
 		);
 
 		$data = array_diff_key( $data, array_flip( $protected ) );
+
+		// if the item have category.
+		if ( ! empty( $data['category'] ) ) {
+			$category = EAC()->categories->get(
+				array(
+					'name' => $data['category'],
+					'type' => 'item',
+				)
+			);
+
+			if ( ! $category ) {
+				$category = EAC()->categories->insert(
+					array(
+						'name' => sanitize_text_field( $data['category'] ),
+						'type' => 'item',
+					)
+				);
+			}
+
+			if ( $category ) {
+				$data['category_id'] = $category->id;
+			}
+		}
+
 		return EAC()->items->insert( $data );
 	}
 }

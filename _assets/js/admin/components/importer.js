@@ -7,8 +7,8 @@ jQuery( document ).ready( ( $ ) => {
 	 * This jQuery plugin handles the import functionality through AJAX requests.
 	 * It manages file uploads, mapping of fields, and progress indication.
 	 *
-	 * @param {HTMLFormElement} form - The form element to be processed.
-	 * @param {Object} options - Custom options for the plugin.
+	 * @param {HTMLFormElement} form    - The form element to be processed.
+	 * @param {Object}          options - Custom options for the plugin.
 	 */
 	$.eac_importer = function ( form, options ) {
 		this.defaults = {};
@@ -22,121 +22,60 @@ jQuery( document ).ready( ( $ ) => {
 		const plugin = this;
 
 		/**
-		 * Submit form handler.
+		 * Make request to import data.
 		 *
-		 * Prevents default form submission, checks if the submit button is disabled,
-		 * and handles the file upload process including mapping.
-		 *
-		 * @param {Event} e - The submit event.
-		 * @return {boolean} - Returns false if the button is disabled, otherwise undefined.
+		 * @param {Object}   data     - The data to be sent to the server.
+		 * @param {Function} callback - The callback function to be executed after the request.
+		 * @return {void}
 		 */
-		this.submit = function ( e ) {
-			e.preventDefault();
-
-			if ( plugin.$submit.hasClass( 'disabled' ) ) {
-				return false;
-			}
-
-			plugin.$submit.attr( 'disabled', 'disabled' );
-
-			plugin.reset();
-
-			plugin.$submit.closest( 'p' ).append( '<span class="spinner is-active"></span>' );
-
-			plugin.$form.append( '<div class="eac-progress"><div></div></div>' );
-
-			// Prepare FormData for the file upload
-			const data = new FormData();
-			data.append( 'upload', $( 'input[type="file"]', plugin.$form )[ 0 ].files[ 0 ] );
-			data.append( 'action', plugin.action );
-			data.append( '_wpnonce', plugin.nonce );
-			data.append( 'type', plugin.type );
-
-			// Send AJAX request for file upload
-			window.wp.ajax.send( {
+		this.import = function ( data, callback ) {
+			$.ajax( {
+				url: ajaxurl,
 				type: 'POST',
 				data,
-				dataType: 'json',
-				cache: false,
-				contentType: false,
-				processData: false,
-				success( res ) {
-					plugin.file = res.file;
-					plugin.process_step( 1 );
-					$( 'input[type="file"]', plugin.$form ).val( '' );
+				success( response ) {
+					if ( response.success ) {
+						callback( response.data );
+					} else {
+						plugin.error( response.data );
+					}
 				},
-				error( error ) {
-					plugin.$submit.removeAttr( 'disabled' );
-					$( '.spinner', plugin.$form ).remove();
-					plugin.$form.append(
-						'<div class="updated error"><p>' + error.message + '</p></div>'
-					);
+				error( response ) {
+					plugin.error( response );
 				},
 			} );
 		};
 
 		/**
-		 * Process a specific step of the import operation.
+		 * Handle the file upload.
 		 *
-		 * Sends an AJAX request to process the given position and updates progress.
-		 *
-		 * @param {number} position - The current position in the import process.
+		 * @param {Event} event - The event object.
+		 * @return {void}
 		 */
-		this.process_step = function ( position ) {
-			window.wp.ajax.send( plugin.action, {
-				data: {
-					_wpnonce: plugin.nonce,
+		this.upload = function ( event ) {
+			event.preventDefault();
+			const formData = new FormData( plugin.$form[ 0 ] );
+			plugin.$submit.prop( 'disabled', true );
+			plugin.import(
+				{
+					action: plugin.action,
+					nonce: plugin.nonce,
 					type: plugin.type,
-					position: position,
-					file: plugin.file,
+					data: formData,
 				},
-				success( res ) {
-					if ( res.position === 'done' ) {
-						$( 'input[type="submit"]', plugin.$form ).remove();
-						plugin.$form.find( '.eac-progress' ).remove();
-
-						plugin.$form.append(
-							'<div class="notice updated"><p>' + res.message + '</p></div></div>'
-						);
-						return false;
-					}
-
-					// Update progress bar width
-					plugin.$form
-						.find( '.eac-progress div' )
-						.animate( { width: res.percentage + '%' }, 50 );
-
-					// Continue processing the next step
-					plugin.process_step( parseInt( res.position, 10 ) );
-				},
-				error( error ) {
-					plugin.reset();
-
-					if ( error.message ) {
-						plugin.$form.append(
-							'<div class="notice error"><p>' + error.message + '</p></div>'
-						);
-					}
-				},
-			} );
+				plugin.process
+			);
 		};
 
 		/**
-		 * Reset the form state to its initial condition.
+		 * Process the import response.
 		 *
-		 * Removes old notices, re-enables the submit button,
-		 * and removes any loading indicators.
+		 * @param {Object} response - The response data from the server.
+		 * @return {void}
 		 */
-		this.reset = function () {
-			// Remove old notice
-			$( '.notice', plugin.$form ).remove();
-			$( '.eac-progress', plugin.$form ).remove();
-			$( '.spinner', plugin.$form ).remove();
-			plugin.$submit.removeClass( 'disabled' );
-		};
+		this.process = function ( response ) {
 
-		this.$form.on( 'submit', this.submit );
-		return this;
+		}
 	};
 
 	/**

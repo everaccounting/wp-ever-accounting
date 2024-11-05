@@ -30,6 +30,9 @@ Session.vim
 Thumbs.db
 Desktop.ini
 
+# Libraries
+lib
+
 #Override
 !ui/legacy/js/vendor
 .env.testing

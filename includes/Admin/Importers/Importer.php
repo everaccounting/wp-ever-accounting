@@ -2,6 +2,7 @@
 
 namespace EverAccounting\Admin\Importers;
 
+use EverAccounting\ParseCsv\Csv;
 use EverAccounting\Utilities\FileUtil;
 
 defined( 'ABSPATH' ) || exit;
@@ -23,7 +24,7 @@ abstract class Importer {
 	protected $capability = 'manage_options';
 
 	/**
-	 * CSV file.
+	 * The file being imported.
 	 *
 	 * @since  1.0.0
 	 * @var string
@@ -31,24 +32,31 @@ abstract class Importer {
 	protected $file = '';
 
 	/**
-	 * CSV data being imported.
+	 * The parsed CSV data being imported.
 	 *
-	 * @since 1.0.0
-	 * @var array
+	 * @since  1.0.0
+	 * @var   array
 	 */
-	protected $data = array();
+	protected $rows = array();
 
 	/**
-	 * Current position.
+	 * Current step.
 	 *
 	 * @since  1.0.0
 	 * @var int
 	 */
-	protected $position = 0;
+	protected $step = 0;
+
+	/**
+	 * The number of items to process per step.
+	 *
+	 * @since 1.0.0
+	 * @var int
+	 */
+	protected $per_step = 10;
 
 	/**
 	 * Start time of current import.
-	 *
 	 * (default value: 0)
 	 *
 	 * @since 1.0.0
@@ -57,78 +65,19 @@ abstract class Importer {
 	protected $start_time = 0;
 
 	/**
-	 * Total items imported.
-	 *
-	 * @since 1.0.0
-	 * @var array
-	 */
-	protected $imported = 0;
-
-	/**
-	 * Abstract method to import item.
-	 *
-	 * @param array $data item data.
-	 *
-	 * @since 1.0.2
-	 * @return mixed
-	 */
-	abstract public function import_item( $data );
-
-	/**
-	 * Set file.
+	 * Constructor.
 	 *
 	 * @param string $file File path.
+	 * @param int    $step Step number.
 	 *
-	 * @since 1.0.2
+	 * @since 1.0.0
 	 */
-	public function set_file( $file ) {
-		$filetypes = apply_filters(
-			'eac_import_csv_filetypes',
-			array(
-				'csv' => 'text/csv',
-				'txt' => 'text/plain',
-			)
-		);
-
-		$filetype = wp_check_filetype( $file, $filetypes );
-
-		if ( in_array( $filetype['type'], $filetype, true ) ) {
-			$this->file = $file;
-			$data       = array_map( 'str_getcsv', FileUtil::file( $this->file ) );
-			array_walk(
-				$data,
-				function ( &$a ) use ( $data ) {
-					// Make sure the two arrays have the same lengths.
-					$min     = min( count( $data[0] ), count( $a ) );
-					$headers = array_slice( $data[0], 0, $min );
-					$values  = array_slice( $a, 0, $min );
-					$a       = array_combine( $headers, $values );
-				}
-			);
-			array_shift( $data );
-			$this->data = $data;
+	public function __construct( $file = '', $step = 1 ) {
+		$this->file = $file;
+		$this->step = $step;
+		if ( ! empty( $this->file ) && file_exists( $this->file ) ) {
+			$this->rows = $this->parse_csv( $this->file );
 		}
-	}
-
-	/**
-	 * Set position.
-	 *
-	 * @param int $position Position.
-	 *
-	 * @since 1.0.2
-	 */
-	public function set_position( $position ) {
-		$this->position = $position;
-	}
-
-	/**
-	 * Get position.
-	 *
-	 * @since 1.0.2
-	 * @return int
-	 */
-	public function get_position() {
-		return $this->position;
 	}
 
 	/**
@@ -148,38 +97,42 @@ abstract class Importer {
 	 * @return int
 	 */
 	public function import() {
+		if ( ! $this->can_import() ) {
+			return 0;
+		}
+
 		$this->start_time = time();
-		$data             = $this->data;
-		if ( 0 !== $this->position && $this->position < count( $data ) ) {
-			$data = array_slice( $data, $this->position );
+		$offset           = ( $this->step - 1 ) * $this->per_step;
+		$rows             = $this->rows;
+
+		if ( ! empty( $offset ) && $offset < count( $rows ) ) {
+			$rows = array_slice( $rows, $offset, $this->per_step, true );
 		}
 
-		foreach ( $data as $item ) {
-			if ( ! is_wp_error( $this->import_item( $item ) ) ) {
-				++$this->imported;
-			}
-			++$this->position;
-			if ( $this->time_exceeded() || $this->memory_exceeded() ) {
-				break;
+		$imported = 0;
+		foreach ( $rows as $row ) {
+			if ( ! is_wp_error( $this->import_item( $row ) ) ) {
+				++$imported;
 			}
 		}
 
-		return $this->imported;
+		return $imported;
 	}
 
 	/**
-	 * Get file pointer position as a percentage of file size.
+	 * Get the progress.
 	 *
+	 * @since 1.0.0
 	 * @return int
 	 */
 	public function get_percent_complete() {
 		$count = count( $this->data );
-		if ( ! $count || ! $this->position ) {
+		if ( ! $count || ! $this->step ) {
 			return 0;
 		}
 
-		$percent = absint( min( floor( ( $this->position / $count ) * 100 ), 100 ) );
-		if ( 100 === $percent ) {
+		$percent = absint( ( $this->step / $count ) * 100 );
+		if ( $percent >= 100 ) {
 			FileUtil::delete( $this->file );
 		}
 
@@ -187,60 +140,77 @@ abstract class Importer {
 	}
 
 	/**
-	 * Time exceeded.
+	 * Abstract method to import item.
 	 *
-	 * Ensures the batch never exceeds a sensible time limit.
-	 * A timeout limit of 30s is common on shared hosting.
+	 * @param array $data item data.
 	 *
-	 * @return bool
+	 * @since 1.0.2
+	 * @return mixed
 	 */
-	protected function time_exceeded() {
-		$finish = $this->start_time + 20; // 20 seconds
-		$return = false;
-		if ( time() >= $finish ) {
-			$return = true;
+	abstract protected function import_item( $data );
+
+	/**
+	 * Parse the CSV file.
+	 *
+	 * @param string $file File path.
+	 *
+	 * @since 1.0.0
+	 * @return array
+	 */
+	protected function parse_csv( $file ) {
+		if ( ! file_exists( $file ) ) {
+			return array();
 		}
 
-		return $return;
+		$rows = array_map( 'str_getcsv', FileUtil::file( $file ) );
+		array_walk(
+			$rows,
+			function ( &$a ) use ( $rows ) {
+				// Make sure the two arrays have the same lengths.
+				$min     = min( count( $rows[0] ), count( $a ) );
+				$headers = array_slice( $rows[0], 0, $min );
+				$values  = array_slice( $a, 0, $min );
+				$a       = array_combine( $headers, $values );
+			}
+		);
+		array_shift( $rows );
+
+		// Parse row.
+		foreach ( $rows as &$row ) {
+			$this->parse_row( $row );
+		}
+
+		return $rows;
 	}
 
 	/**
-	 * Memory exceeded
+	 * Parse row.
 	 *
-	 * Ensures the batch process never exceeds 90%
-	 * of the maximum WordPress memory.
+	 * @param array $row Row data.
 	 *
-	 * @return bool
+	 * @since 1.0.0
+	 * @return array
 	 */
-	protected function memory_exceeded() {
-		$memory_limit   = $this->get_memory_limit() * 0.9; // 90% of max memory
-		$current_memory = memory_get_usage( true );
-		$return         = false;
-		if ( $current_memory >= $memory_limit ) {
-			$return = true;
+	protected function parse_row( &$row ) {
+		$row = array_map( 'wp_unslash', $row );
+		$row = array_map( 'trim', $row );
+		foreach ( $row as &$value ) {
+			if ( function_exists( 'mb_convert_encoding' ) ) {
+				$encoding = mb_detect_encoding( $value, mb_detect_order(), true );
+				if ( $encoding ) {
+					$value = mb_convert_encoding( $value, 'UTF-8', $encoding );
+				} else {
+					$value = mb_convert_encoding( $value, 'UTF-8', 'UTF-8' );
+				}
+			} else {
+				$value = wp_check_invalid_utf8( $value, true );
+			}
+
+			if ( in_array( mb_substr( $value, 0, 2 ), array( "'=", "'+", "'-", "'@" ), true ) ) {
+				$value = mb_substr( $value, 1 );
+			}
 		}
 
-		return $return;
-	}
-
-	/**
-	 * Get memory limit
-	 *
-	 * @return int
-	 */
-	protected function get_memory_limit() {
-		if ( function_exists( 'ini_get' ) ) {
-			$memory_limit = ini_get( 'memory_limit' );
-		} else {
-			// Sensible default.
-			$memory_limit = '128M';
-		}
-
-		if ( ! $memory_limit || - 1 === intval( $memory_limit ) ) {
-			// Unlimited, set to 32GB.
-			$memory_limit = '32000M';
-		}
-
-		return intval( $memory_limit ) * 1024 * 1024;
+		return $row;
 	}
 }

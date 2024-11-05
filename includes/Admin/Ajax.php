@@ -4,6 +4,7 @@ namespace EverAccounting\Admin;
 
 use EverAccounting\Models\Bill;
 use EverAccounting\Models\Invoice;
+use EverAccounting\Utilities\FileUtil;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -634,6 +635,87 @@ class Ajax {
 	 * @since 1.0.2
 	 */
 	public function ajax_import() {
+		check_ajax_referer( 'eac_ajax_import' );
+		$type = isset( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '';
+		$file = isset( $_POST['file'] ) ? sanitize_text_field( wp_unslash( $_POST['file'] ) ) : '';
+		$step = isset( $_POST['step'] ) ? absint( wp_unslash( $_POST['step'] ) ) : 0;
+
+		if ( empty( $file ) && empty( $_FILES['upload'] ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Missing import file. Please provide an import file.', 'wp-ever-accounting' ),
+				)
+			);
+		}
+
+		if ( ! empty( $_FILES['upload'] ) ) {
+			$tmp_name  = isset( $_FILES['upload']['tmp_name'] ) ? sanitize_text_field( wp_unslash( $_FILES['upload']['tmp_name'] ) ) : '';
+			$file_type = isset( $_FILES['upload']['type'] ) ? sanitize_text_field( wp_unslash( $_FILES['upload']['type'] ) ) : '';
+			if ( empty( $tmp_name ) ) {
+				wp_send_json_error(
+					array(
+						'message' => __( 'Something went wrong during the upload process, please try again.', 'wp-ever-accounting' ),
+					)
+				);
+			}
+
+			if ( empty( $file_type ) || ! in_array( strtolower( $file_type ), array( 'text/csv', 'text/comma-separated-values', 'text/plain', 'text/anytext', 'text/*', 'text/plain', 'text/anytext', 'text/*', 'application/csv', 'application/excel', 'application/vnd.ms-excel', 'application/vnd.msexcel' ), true ) ) {
+				wp_send_json_error(
+					array(
+						'message' => __( 'The file you uploaded does not appear to be a CSV file.', 'wp-ever-accounting' ),
+					)
+				);
+			}
+
+			// Let WordPress import the file. We will remove it after import is complete.
+			$upload      = map_deep( wp_unslash( $_FILES['upload'] ), 'sanitize_text_field' );
+			$import_file = wp_handle_upload( $upload, array( 'test_form' => false ) );
+			if ( ! empty( $import_file['error'] ) || empty( $import_file['file'] ) ) {
+				wp_send_json_error(
+					array(
+						'message' => __( 'Something went wrong during the upload process, please try again.', 'wp-ever-accounting' ),
+						'error'   => $import_file,
+					)
+				);
+			}
+
+			$file = $import_file['file'];
+		}
+
+		$importer = Importers::get_importer( $type );
+		if ( ! $importer || ! class_exists( $importer ) || ! is_subclass_of( $importer, Importers\Importer::class ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Invalid import type.', 'wp-ever-accounting' ),
+				)
+			);
+		}
+
+		// validate file.
+		if ( ! FileUtil::file_exists( $file ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'The file does not exist.', 'wp-ever-accounting' ),
+				)
+			);
+		}
+
+		$importer = new $importer( $file, $step );
+		if ( ! $importer->can_import() ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'You do not have permission to import.', 'wp-ever-accounting' ),
+				)
+			);
+		}
+	}
+
+	/**
+	 * Run the ajax import process
+	 *
+	 * @since 1.0.2
+	 */
+	public function ajax_import_v1() {
 		check_ajax_referer( 'eac_ajax_import' );
 		$type     = isset( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '';
 		$file     = isset( $_POST['file'] ) ? sanitize_text_field( wp_unslash( $_POST['file'] ) ) : '';
