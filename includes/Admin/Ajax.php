@@ -660,8 +660,7 @@ class Ajax {
 			);
 		}
 
-		$upload      = map_deep( wp_unslash( $_FILES['upload'] ), 'sanitize_text_field' );
-		$import_file = wp_handle_upload( $upload, array( 'test_form' => false ) );
+		$import_file = wp_handle_upload( $_FILES['upload'], array( 'test_form' => false ) );
 		if ( ! empty( $import_file['error'] ) || empty( $import_file['file'] ) ) {
 			wp_send_json_error(
 				array(
