@@ -1,6 +1,6 @@
 <?php
 
-use EverAccounting\Utilities\I18n;
+use EverAccounting\Utilities\I18nUtil;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -90,7 +90,7 @@ function eac_get_formatted_address( $fields = array(), $separator = '<br/>' ) {
 	);
 	$format            = apply_filters( 'eac_address_format', "<strong>{name}</strong>\n{company}\n{address}\n{city} {state} {postcode}\n{country}" );
 	$fields            = array_map( 'trim', wp_parse_args( $fields, $defaults ) );
-	$countries         = I18n::get_countries();
+	$countries         = I18nUtil::get_countries();
 	$fields['country'] = isset( $countries[ $fields['country'] ] ) ? $countries[ $fields['country'] ] : $fields['country'];
 	$replacers         = array_map(
 		'esc_html',

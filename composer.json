@@ -22,19 +22,21 @@
       "type": "github"
     },
     {
+      "url": "git@github.com:byteever/bytekit-license.git",
+      "type": "github"
+    },
+    {
       "url": "git@github.com:byteever/bytekit-models.git",
       "type": "github"
     }
   ],
   "require": {
     "php": ">=7.0",
-    "byteever/bytekit-models": "dev-develop",
-    "byteever/bytekit-plugin": "dev-master",
     "woocommerce/action-scheduler": "^3.7"
   },
   "autoload": {
     "psr-4": {
-      "EverAccounting\\": "includes/"
+      "EverAccounting\\": ["includes/", "lib/"]
     }
   },
   "autoload-dev": {
@@ -44,6 +46,9 @@
   },
   "require-dev": {
     "byteever/byteever-sniffs": "^1.0",
+    "byteever/bytekit-models": "dev-develop",
+    "byteever/bytekit-plugin": "dev-master",
+    "byteever/bytekit-license": "dev-master",
     "codeception/module-asserts": "^1.0",
     "codeception/module-cli": "^1.0",
     "codeception/module-db": "^1.0",
@@ -94,7 +99,9 @@
       "classmap_prefix": "EAC_",
       "delete_vendor_directories": true,
       "packages": [
-        "parsecsv/php-parsecsv"
+        "byteever/bytekit-plugin",
+        "byteever/bytekit-models",
+        "byteever/bytekit-license"
       ]
     }
   }

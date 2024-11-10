@@ -2,7 +2,6 @@
 
 namespace EverAccounting\Admin\Importers;
 
-use EverAccounting\ParseCsv\Csv;
 use EverAccounting\Utilities\FileUtil;
 
 defined( 'ABSPATH' ) || exit;
@@ -40,20 +39,12 @@ abstract class Importer {
 	protected $rows = array();
 
 	/**
-	 * Current step.
-	 *
-	 * @since  1.0.0
-	 * @var int
-	 */
-	protected $step = 0;
-
-	/**
-	 * The number of items to process per step.
+	 * Current position in the import.
 	 *
 	 * @since 1.0.0
 	 * @var int
 	 */
-	protected $per_step = 10;
+	protected $position = 0;
 
 	/**
 	 * Start time of current import.
@@ -68,13 +59,13 @@ abstract class Importer {
 	 * Constructor.
 	 *
 	 * @param string $file File path.
-	 * @param int    $step Step number.
+	 * @param int    $position Position.
 	 *
 	 * @since 1.0.0
 	 */
-	public function __construct( $file = '', $step = 1 ) {
-		$this->file = $file;
-		$this->step = $step;
+	public function __construct( $file = '', $position = 0 ) {
+		$this->file     = $file;
+		$this->position = $position;
 		if ( ! empty( $this->file ) && file_exists( $this->file ) ) {
 			$this->rows = $this->parse_csv( $this->file );
 		}
@@ -102,17 +93,20 @@ abstract class Importer {
 		}
 
 		$this->start_time = time();
-		$offset           = ( $this->step - 1 ) * $this->per_step;
 		$rows             = $this->rows;
 
-		if ( ! empty( $offset ) && $offset < count( $rows ) ) {
-			$rows = array_slice( $rows, $offset, $this->per_step, true );
+		if ( ! empty( $this->position ) && $this->position < count( $rows ) ) {
+			$rows = array_slice( $rows, $this->position, $this->position );
 		}
 
 		$imported = 0;
 		foreach ( $rows as $row ) {
+			++$this->position;
 			if ( ! is_wp_error( $this->import_item( $row ) ) ) {
 				++$imported;
+			}
+			if ( $this->time_exceeded() || $this->memory_exceeded() ) {
+				break;
 			}
 		}
 
@@ -126,17 +120,28 @@ abstract class Importer {
 	 * @return int
 	 */
 	public function get_percent_complete() {
-		$count = count( $this->data );
-		if ( ! $count || ! $this->step ) {
+		$count = count( $this->rows );
+		if ( ! $count || ! $this->position ) {
 			return 0;
 		}
 
-		$percent = absint( ( $this->step / $count ) * 100 );
+		$percent = absint( ( $this->position / $count ) * 100 );
+
 		if ( $percent >= 100 ) {
 			FileUtil::delete( $this->file );
 		}
 
 		return $percent;
+	}
+
+	/**
+	 * Get position.
+	 *
+	 * @since 1.0.2
+	 * @return int
+	 */
+	public function get_position() {
+		return $this->position;
 	}
 
 	/**
@@ -169,8 +174,11 @@ abstract class Importer {
 				// Make sure the two arrays have the same lengths.
 				$min     = min( count( $rows[0] ), count( $a ) );
 				$headers = array_slice( $rows[0], 0, $min );
-				$values  = array_slice( $a, 0, $min );
-				$a       = array_combine( $headers, $values );
+				if ( 'efbbbf' === substr( bin2hex( $headers[0] ), 0, 6 ) ) {
+					$headers[0] = substr( $headers[0], 3 );
+				}
+				$values = array_slice( $a, 0, $min );
+				$a      = array_combine( $headers, $values );
 			}
 		);
 		array_shift( $rows );
@@ -212,5 +220,63 @@ abstract class Importer {
 		}
 
 		return $row;
+	}
+
+	/**
+	 * Time exceeded.
+	 *
+	 * Ensures the batch never exceeds a sensible time limit.
+	 * A timeout limit of 30s is common on shared hosting.
+	 *
+	 * @return bool
+	 */
+	protected function time_exceeded() {
+		$finish = $this->start_time + 20; // 20 seconds
+		$return = false;
+		if ( time() >= $finish ) {
+			$return = true;
+		}
+
+		return $return;
+	}
+
+	/**
+	 * Memory exceeded
+	 *
+	 * Ensures the batch process never exceeds 90%
+	 * of the maximum WordPress memory.
+	 *
+	 * @return bool
+	 */
+	protected function memory_exceeded() {
+		$memory_limit   = $this->get_memory_limit() * 0.9; // 90% of max memory
+		$current_memory = memory_get_usage( true );
+		$return         = false;
+		if ( $current_memory >= $memory_limit ) {
+			$return = true;
+		}
+
+		return $return;
+	}
+
+	/**
+	 * Get memory limit
+	 *
+	 * @return int
+	 */
+	protected function get_memory_limit() {
+		if ( function_exists( 'ini_get' ) ) {
+			$memory_limit = ini_get( 'memory_limit' );
+		} else {
+			// Sensible default.
+			$memory_limit = '128M';
+		}
+
+		if ( ! $memory_limit || - 1 === intval( $memory_limit ) ) {
+			// Unlimited, set to 32GB.
+			$memory_limit = '32000M';
+		}
+
+		return intval( $memory_limit ) * 1024 * 1024;
 	}
 }

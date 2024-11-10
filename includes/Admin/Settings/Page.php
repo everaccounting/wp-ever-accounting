@@ -73,7 +73,7 @@ abstract class Page {
 	 * @return void
 	 */
 	public function render_sections() {
-		$sections = apply_filters( 'eac_settings_sections_' . $this->id, $this->get_sections() );
+		$sections = $this->get_sections();
 
 		if ( empty( $sections ) || 1 === count( $sections ) ) {
 			return;
@@ -128,13 +128,34 @@ abstract class Page {
 	}
 
 	/**
+	 * Get own sections for this page.
+	 * Example:
+	 * return array(
+	 *   ''        => __( 'General', 'woocommerce' ),
+	 *   'foobars' => __( 'Foos & Bars', 'woocommerce' ),
+	 * );
+	 *
+	 * @return array An associative array where keys are section identifiers and the values are translated section names.
+	 */
+	protected function get_own_sections() {
+		return array( '' => __( 'Options', 'wp-ever-accounting' ) );
+	}
+
+	/**
 	 * Get settings tab sections.
 	 *
 	 * @since 3.0.0
 	 * @return array
 	 */
 	public function get_sections() {
-		return array( '' => __( 'Options', 'wp-ever-accounting' ) );
+		$sections = $this->get_own_sections();
+		/**
+		 * Filters the sections for this settings page.
+		 *
+		 * @since 2.0.0
+		 * @param array $sections The sections for this settings page.
+		 */
+		return (array) apply_filters( 'eac_get_settings_sections_' . $this->id, $sections );
 	}
 
 	/**

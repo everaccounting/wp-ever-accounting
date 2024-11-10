@@ -2,7 +2,7 @@
 
 namespace EverAccounting\Admin\Settings;
 
-use EverAccounting\Utilities\I18n;
+use EverAccounting\Utilities\I18nUtil;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -29,7 +29,7 @@ class General extends Page {
 	 * @since 3.0.0
 	 * @return array
 	 */
-	public function get_sections() {
+	protected function get_own_sections() {
 		return array(
 			''         => __( 'General', 'wp-ever-accounting' ),
 			'currency' => __( 'Currency', 'wp-ever-accounting' ),
@@ -155,7 +155,7 @@ class General extends Page {
 				'desc'        => __( 'The country in which your business is located.', 'wp-ever-accounting' ),
 				'id'          => 'eac_business_country',
 				'type'        => 'select',
-				'options'     => I18n::get_countries(),
+				'options'     => I18nUtil::get_countries(),
 				'class'       => 'eac_select2',
 				'default'     => 'US',
 				'placeholder' => __( 'Select a country&hellip;', 'wp-ever-accounting' ),

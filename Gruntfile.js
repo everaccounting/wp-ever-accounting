@@ -84,10 +84,6 @@ module.exports = function ( grunt ) {
 
 	grunt.registerTask( 'default', [ 'i18n' ] );
 	grunt.registerTask( 'build', [ 'i18n' ] );
-	grunt.registerTask( 'i18n', [
-		'addtextdomain',
-		'checktextdomain',
-		'makepot',
-	] );
+	grunt.registerTask( 'i18n', [ 'addtextdomain', 'checktextdomain', 'makepot' ] );
 	grunt.util.linefeed = '\n';
 };

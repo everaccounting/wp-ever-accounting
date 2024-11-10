@@ -2,7 +2,7 @@
 
 namespace EverAccounting\Models;
 
-use EverAccounting\Utilities\I18n;
+use EverAccounting\Utilities\I18nUtil;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -160,7 +160,7 @@ class Contact extends Model {
 	 * @return string
 	 */
 	protected function get_country_name_attribute() {
-		$countries = I18n::get_countries();
+		$countries = I18nUtil::get_countries();
 
 		return isset( $countries[ $this->country ] ) ? $countries[ $this->country ] : $this->country;
 	}

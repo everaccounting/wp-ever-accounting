@@ -2,7 +2,7 @@
 
 namespace EverAccounting\Admin;
 
-use EverAccounting\Utilities\I18n;
+use EverAccounting\Utilities\I18nUtil;
 
 defined( 'ABSPATH' ) || exit(); // Exit if accessed directly.
 
@@ -379,7 +379,7 @@ class Setup {
 					'name'        => 'eac_business_country',
 					'required'    => true,
 					'class'       => 'eac_select2',
-					'options'     => I18n::get_countries(),
+					'options'     => I18nUtil::get_countries(),
 					'default'     => 'US',
 					'type'        => 'select',
 					'value'       => get_option( 'eac_business_country', '' ),

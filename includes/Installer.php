@@ -323,7 +323,7 @@ KEY tax_id (tax_id)
 
 CREATE TABLE {$wpdb->prefix}ea_documentmeta (
 meta_id BIGINT(20) NOT NULL AUTO_INCREMENT,
-ea_document_id BIGINT(20) UNSIGNED NOT NULL DEFAULT '0',
+ea_document_id BIGINT(20) UNSIGNED NOT NULL DEFAULT 0,
 meta_key VARCHAR(191) DEFAULT NULL,
 meta_value LONGTEXT,
 PRIMARY KEY (meta_id),
@@ -392,6 +392,7 @@ price DOUBLE(15, 4) NOT NULL,
 cost DOUBLE(15, 4) NOT NULL,
 tax_ids VARCHAR(191) DEFAULT NULL,
 category_id INT(11) DEFAULT NULL,
+created_via VARCHAR(20) DEFAULT 'manual',
 date_created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 date_updated DATETIME DEFAULT NULL,
 PRIMARY KEY (id),
@@ -401,16 +402,64 @@ KEY price (price),
 KEY cost (cost)
 ) $collate;
 
+CREATE TABLE {$wpdb->prefix}ea_itemmeta (
+meta_id BIGINT(20) NOT NULL AUTO_INCREMENT,
+ea_item_id BIGINT(20) UNSIGNED NOT NULL DEFAULT 0,
+meta_key VARCHAR(191) DEFAULT NULL,
+meta_value LONGTEXT,
+PRIMARY KEY (meta_id),
+KEY ea_item_id (ea_item_id),
+KEY meta_key (meta_key(191))
+) $collate;
+
+CREATE TABLE {$wpdb->prefix}ea_notes (
+id BIGINT(20) NOT NULL AUTO_INCREMENT,
+parent_id BIGINT(20) UNSIGNED NOT NULL,
+parent_type VARCHAR(20) NOT NULL,
+content TEXT DEFAULT NULL,
+author_id BIGINT(20) UNSIGNED DEFAULT NULL,
+date_created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+date_updated DATETIME DEFAULT NULL,
+PRIMARY KEY (id),
+KEY parent_id (parent_id),
+KEY parent_type (parent_type)
+) $collate;
+
+CREATE TABLE {$wpdb->prefix}ea_terms (
+id BIGINT(20) NOT NULL AUTO_INCREMENT,
+taxonomy VARCHAR(20) NOT NULL DEFAULT 'category',
+name VARCHAR(191) NOT NULL,
+description TEXT DEFAULT NULL,
+type VARCHAR(20) DEFAULT NULL,
+parent_id BIGINT(20) UNSIGNED DEFAULT NULL,
+date_created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+date_updated DATETIME DEFAULT NULL,
+PRIMARY KEY (id),
+KEY name (name),
+KEY type (type),
+KEY taxonomy (taxonomy),
+KEY parent_id (parent_id)
+) $collate;
+
+CREATE TABLE {$wpdb->prefix}ea_termmeta (
+meta_id BIGINT(20) NOT NULL AUTO_INCREMENT,
+ea_term_id BIGINT(20) UNSIGNED NOT NULL DEFAULT 0,
+meta_key VARCHAR(191) DEFAULT NULL,
+meta_value LONGTEXT,
+PRIMARY KEY (meta_id),
+KEY ea_term_id (ea_term_id),
+KEY meta_key (meta_key(191))
+) $collate;
+
 CREATE TABLE {$wpdb->prefix}ea_transactionmeta (
 meta_id BIGINT(20) NOT NULL AUTO_INCREMENT,
-ea_transaction_id BIGINT(20) UNSIGNED NOT NULL DEFAULT '0',
+ea_transaction_id BIGINT(20) UNSIGNED NOT NULL DEFAULT 0,
 meta_key VARCHAR(191) DEFAULT NULL,
 meta_value LONGTEXT,
 PRIMARY KEY (meta_id),
 KEY ea_transaction_id (ea_transaction_id),
 KEY meta_key (meta_key(191))
 ) $collate;
-
 
 CREATE TABLE {$wpdb->prefix}ea_transactions (
 id BIGINT(20) NOT NULL AUTO_INCREMENT,
@@ -462,45 +511,6 @@ date_updated DATETIME DEFAULT NULL,
 PRIMARY KEY (id),
 KEY payment_id (payment_id),
 KEY expense_id (expense_id)
-) $collate;
-
-CREATE TABLE {$wpdb->prefix}ea_notes (
-id BIGINT(20) NOT NULL AUTO_INCREMENT,
-parent_id BIGINT(20) UNSIGNED NOT NULL,
-parent_type VARCHAR(20) NOT NULL,
-content TEXT DEFAULT NULL,
-author_id BIGINT(20) UNSIGNED DEFAULT NULL,
-date_created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-date_updated DATETIME DEFAULT NULL,
-PRIMARY KEY (id),
-KEY parent_id (parent_id),
-KEY parent_type (parent_type)
-) $collate;
-
-CREATE TABLE {$wpdb->prefix}ea_terms (
-id BIGINT(20) NOT NULL AUTO_INCREMENT,
-taxonomy VARCHAR(20) NOT NULL DEFAULT 'category',
-name VARCHAR(191) NOT NULL,
-description TEXT DEFAULT NULL,
-type VARCHAR(20) DEFAULT NULL,
-parent_id BIGINT(20) UNSIGNED DEFAULT NULL,
-date_created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-date_updated DATETIME DEFAULT NULL,
-PRIMARY KEY (id),
-KEY name (name),
-KEY type (type),
-KEY taxonomy (taxonomy),
-KEY parent_id (parent_id)
-) $collate;
-
-CREATE TABLE {$wpdb->prefix}ea_termmeta (
-meta_id BIGINT(20) NOT NULL AUTO_INCREMENT,
-ea_term_id BIGINT(20) UNSIGNED NOT NULL DEFAULT '0',
-meta_key VARCHAR(191) DEFAULT NULL,
-meta_value LONGTEXT,
-PRIMARY KEY (meta_id),
-KEY ea_term_id (ea_term_id),
-KEY meta_key (meta_key(191))
 ) $collate;
 ";
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';

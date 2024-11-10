@@ -89,6 +89,7 @@ class Scripts {
 				'base_currency' => eac_base_currency(),
 				'currencies'    => eac_get_currencies(),
 				'search_nonce'  => wp_create_nonce( 'eac_search_action' ),
+				'upload_nonce'  => wp_create_nonce( 'eac_upload_action' ),
 				'i18n'          => array(
 					'confirm_delete' => __( 'Are you sure you want to delete this?', 'wp-ever-accounting' ),
 					'close'          => __( 'Close', 'wp-ever-accounting' ),

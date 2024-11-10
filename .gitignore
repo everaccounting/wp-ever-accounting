@@ -1,4 +1,4 @@
-/assets
+# Build files
 node_modules
 bower_components
 release
@@ -34,5 +34,4 @@ Desktop.ini
 lib
 
 #Override
-!ui/legacy/js/vendor
 .env.testing

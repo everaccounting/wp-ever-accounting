@@ -2,7 +2,7 @@
 
 namespace EverAccounting\API;
 
-use EverAccounting\Utilities\I18n;
+use EverAccounting\Utilities\I18nUtil;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -60,7 +60,7 @@ class Utilities extends Controller {
 	 * @return \WP_REST_Response
 	 */
 	public function get_currencies( $request ) {
-		$currencies = I18n::get_currencies();
+		$currencies = I18nUtil::get_currencies();
 
 		return rest_ensure_response( $currencies );
 	}
@@ -73,7 +73,7 @@ class Utilities extends Controller {
 	 * @return \WP_REST_Response
 	 */
 	public function get_countries( $request ) {
-		$countries = I18n::get_countries();
+		$countries = I18nUtil::get_countries();
 
 		return rest_ensure_response( $countries );
 	}

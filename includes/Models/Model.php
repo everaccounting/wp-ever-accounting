@@ -9,7 +9,7 @@ namespace EverAccounting\Models;
  * @package EverAccounting
  * @subpackage Models
  */
-abstract class Model extends \ByteKit\Models\Model {
+abstract class Model extends \EverAccounting\ByteKit\Models\Model {
 	/**
 	 * Get hook prefix. Default is the object type.
 	 *

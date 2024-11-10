@@ -59,8 +59,9 @@ class Customers extends Exporter {
 
 		$args = apply_filters( 'eac_export_customers_args', $args );
 
-		$items = EAC()->customers->query( $args );
-		$rows  = array();
+		$items       = EAC()->customers->query( $args );
+		$this->total = EAC()->customers->query( $args, true );
+		$rows        = array();
 
 		foreach ( $items as $item ) {
 			$row = array();

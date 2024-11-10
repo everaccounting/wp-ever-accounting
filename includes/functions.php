@@ -7,7 +7,7 @@
  * @package  EverAccounting\Functions
  */
 
-use EverAccounting\Utilities\I18n;
+use EverAccounting\Utilities\I18nUtil;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -44,7 +44,7 @@ function eac_get_currencies() {
 
 				return $currency;
 			},
-			I18n::get_currencies()
+			I18nUtil::get_currencies()
 		)
 	);
 

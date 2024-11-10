@@ -36,7 +36,6 @@ class Reports {
 			$tabs['sales']    = __( 'Sales', 'wp-ever-accounting' );
 			$tabs['expenses'] = __( 'Expenses', 'wp-ever-accounting' );
 			$tabs['profits']  = __( 'Profits', 'wp-ever-accounting' );
-			$tabs['taxes']    = __( 'Taxes', 'wp-ever-accounting' );
 		}
 
 		return $tabs;

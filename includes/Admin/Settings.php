@@ -8,6 +8,7 @@ use EverAccounting\Admin\Settings\Page;
 use EverAccounting\Admin\Settings\Purchases;
 use EverAccounting\Admin\Settings\Sales;
 use EverAccounting\Admin\Settings\Taxes;
+use EverAccounting\Admin\Settings\Extensions;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -94,6 +95,11 @@ class Settings {
 			// new Emails(),
 			)
 		);
+
+		$extensions = new Extensions();
+		if ( $extensions->get_sections() ) {
+			$pages[] = $extensions;
+		}
 
 		return $pages;
 	}

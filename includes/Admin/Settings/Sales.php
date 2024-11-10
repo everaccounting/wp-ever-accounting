@@ -26,7 +26,7 @@ class Sales extends Page {
 	 * @since 3.0.0
 	 * @return array
 	 */
-	public function get_sections() {
+	protected function get_own_sections() {
 		return array(
 			''         => __( 'Options', 'wp-ever-accounting' ),
 			'invoices' => __( 'Invoices', 'wp-ever-accounting' ),

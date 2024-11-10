@@ -2,8 +2,8 @@
 
 namespace EverAccounting\Models;
 
-use ByteKit\Models\Relations\BelongsTo;
-use ByteKit\Models\Relations\BelongsToMany;
+use EverAccounting\ByteKit\Models\Relations\BelongsTo;
+use EverAccounting\ByteKit\Models\Relations\BelongsToMany;
 
 /**
  * Item model.
@@ -40,6 +40,14 @@ class Item extends Model {
 	 * @var string
 	 */
 	protected $table = 'ea_items';
+
+	/**
+	 * Meta type declaration for the object.
+	 *
+	 * @since 1.0.0
+	 * @var string
+	 */
+	protected $meta_type = 'ea_item';
 
 	/**
 	 * The table columns of the model.

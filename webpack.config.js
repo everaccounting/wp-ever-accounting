@@ -5,7 +5,7 @@ const glob = require( 'glob' );
 /**
  * Internal dependencies
  */
-const { config, NAMESPACE } = require( './.bin/webpack.config' );
+const { config, NAMESPACE } = require( '@eac/scripts/config/webpack.config' );
 const { dependencies } = require( './package.json' );
 const path = require( 'path' );
 
@@ -17,25 +17,25 @@ module.exports = [
 
 			// 3rd party libraries.
 			'js/chartjs': './node_modules/chart.js/dist/chart.js',
-			'js/select2': './_assets/js/vendor/select2.js',
-			'js/inputmask': './_assets/js/vendor/inputmask.js',
-			'js/tiptip': './_assets/js/vendor/tiptip.js',
-			'js/printthis': './_assets/js/vendor/printthis.js',
-			'css/jquery-ui': './_assets/css/vendor/jquery-ui.scss',
+			'js/select2': './assets/js/vendor/select2.js',
+			'js/inputmask': './assets/js/vendor/inputmask.js',
+			'js/tiptip': './assets/js/vendor/tiptip.js',
+			'js/printthis': './assets/js/vendor/printthis.js',
+			'css/jquery-ui': './assets/css/vendor/jquery-ui.scss',
 
 			// Core plugins.
-			'js/form': './_assets/js/admin/form.js',
-			'js/modal': './_assets/js/admin/modal.js',
-			'js/api': './_assets/js/admin/api.js',
+			'js/form': './assets/js/admin/form.js',
+			'js/modal': './assets/js/admin/modal.js',
+			'js/api': './assets/js/admin/api.js',
 
 			// Admin scripts.
-			'js/admin': './_assets/js/admin/admin.js',
-			'css/admin': './_assets/css/admin/admin.scss',
-			'css/setup': './_assets/css/admin/setup.scss',
-			'js/setup': './_assets/js/admin/setup.js',
+			'js/admin': './assets/js/admin/admin.js',
+			'css/admin': './assets/css/admin/admin.scss',
+			'css/setup': './assets/css/admin/setup.scss',
+			'js/setup': './assets/js/admin/setup.js',
 
 			// Frontend scripts.
-			'css/frontend': './_assets/css/frontend/frontend.scss',
+			'css/frontend': './assets/css/frontend/frontend.scss',
 
 			// Client scripts.
 			// ...glob.sync( './client/*/*/index.js' ).reduce( ( memo, file ) => {
@@ -72,7 +72,7 @@ module.exports = [
 			}, {} ),
 		output: {
 			...config.output,
-			path: path.resolve( __dirname, 'assets/client' ),
+			path: path.resolve( __dirname, 'assets/dist/client' ),
 		},
 	},
 ];

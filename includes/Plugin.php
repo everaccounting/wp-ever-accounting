@@ -2,10 +2,9 @@
 
 namespace EverAccounting;
 
-use EverAccounting\Controllers\Business;
-use EverAccounting\Controllers\Transfers;
 use EverAccounting\Controllers\Accounts;
 use EverAccounting\Controllers\Bills;
+use EverAccounting\Controllers\Business;
 use EverAccounting\Controllers\Categories;
 use EverAccounting\Controllers\Currencies;
 use EverAccounting\Controllers\Customers;
@@ -16,6 +15,7 @@ use EverAccounting\Controllers\Notes;
 use EverAccounting\Controllers\Payments;
 use EverAccounting\Controllers\Taxes;
 use EverAccounting\Controllers\Terms;
+use EverAccounting\Controllers\Transfers;
 use EverAccounting\Controllers\Vendors;
 
 /**
@@ -41,7 +41,7 @@ use EverAccounting\Controllers\Vendors;
  * @property Transfers  $transfers Transfers controller.
  * @property Vendors    $vendors Vendors controller.
  */
-class Plugin extends \ByteKit\Plugin {
+class Plugin extends ByteKit\Plugin {
 	/**
 	 * Plugin constructor.
 	 *
@@ -100,7 +100,7 @@ class Plugin extends \ByteKit\Plugin {
 	 */
 	public function init_hooks() {
 		register_activation_hook( $this->get_file(), array( Installer::class, 'install' ) );
-		add_action( 'plugins_loaded', array( $this, 'plugins_loaded' ), 0 );
+		add_action( 'plugins_loaded', array( $this, 'plugins_loaded' ), -1 );
 		add_action( 'rest_api_init', array( $this, 'register_routes' ) );
 	}
 
@@ -229,9 +229,33 @@ class Plugin extends \ByteKit\Plugin {
 	 * Get queue instance.
 	 *
 	 * @since 1.0.0
-	 * @return Utilities\Queue
+	 * @return \EverAccounting\Core\Queue
 	 */
 	public function queue() {
-		return Utilities\Queue::instance();
+		return Core\Queue::instance();
+	}
+
+	/**
+	 * Get assets path.
+	 *
+	 * @param string $file Optional. File name.
+	 *
+	 * @since 1.0.0
+	 * @return string
+	 */
+	public function get_assets_path( $file = '' ) {
+		return $this->get_dir_path( 'assets/dist/' . $file );
+	}
+
+	/**
+	 * Get assets url.
+	 *
+	 * @param string $file Optional. File name.
+	 *
+	 * @since 1.0.0
+	 * @return string
+	 */
+	public function get_assets_url( $file = '' ) {
+		return $this->get_dir_url( 'assets/dist/' . $file );
 	}
 }

@@ -70,13 +70,13 @@ class Utilities {
 				'menu_slug'  => 'eac-settings',
 				'position'   => 100,
 			),
-			array(
-				'page_title' => __( 'Extensions', 'wp-ever-accounting' ),
-				'menu_title' => __( 'Extensions', 'wp-ever-accounting' ),
-				'capability' => 'manage_options',
-				'menu_slug'  => 'eac-extensions',
-				'position'   => 110,
-			),
+		// array(
+		// 'page_title' => __( 'Extensions', 'wp-ever-accounting' ),
+		// 'menu_title' => __( 'Extensions', 'wp-ever-accounting' ),
+		// 'capability' => 'manage_options',
+		// 'menu_slug'  => 'eac-extensions',
+		// 'position'   => 110,
+		// ),
 		);
 
 		return apply_filters( 'eac_admin_menus', $menus );
