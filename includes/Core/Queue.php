@@ -201,4 +201,17 @@ class Queue {
 	public function search( $args = array(), $return_format = OBJECT ) {
 		return as_get_scheduled_actions( $args, $return_format );
 	}
+
+	/**
+	 * Clean up completed actions.
+	 *
+	 * Remove all the actions that have been completed.
+	 *
+	 * @return void
+	 */
+	public function cleanup() {
+		global $wpdb;
+		$wpdb->query( "DELETE FROM {$wpdb->prefix}actionscheduler_logs WHERE action_id IN ( SELECT action_id FROM {$wpdb->prefix}actionscheduler_actions WHERE status = 'complete' )" );
+		$wpdb->query( "DELETE FROM {$wpdb->prefix}actionscheduler_actions WHERE status = 'complete'" );
+	}
 }

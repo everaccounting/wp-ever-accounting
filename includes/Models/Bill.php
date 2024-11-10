@@ -2,8 +2,8 @@
 
 namespace EverAccounting\Models;
 
-use ByteKit\Models\Relations\BelongsTo;
-use ByteKit\Models\Relations\HasMany;
+use EverAccounting\ByteKit\Models\Relations\BelongsTo;
+use EverAccounting\ByteKit\Models\Relations\HasMany;
 
 /**
  * Invoice model.
@@ -179,6 +179,18 @@ class Bill extends Document {
 		}
 
 		return parent::save();
+	}
+
+	/**
+	 * Delete the object from the database.
+	 *
+	 * @since 1.0.0
+	 * @return true|\WP_Error True on success, WP_Error on failure.
+	 */
+	public function delete() {
+		$this->payments()->delete();
+
+		return parent::delete();
 	}
 
 	/*

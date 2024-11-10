@@ -2,8 +2,8 @@
 
 namespace EverAccounting\Models;
 
-use ByteKit\Models\Relations\BelongsTo;
-use ByteKit\Models\Relations\BelongsToMany;
+use EverAccounting\ByteKit\Models\Relations\BelongsTo;
+use EverAccounting\ByteKit\Models\Relations\BelongsToMany;
 
 defined( 'ABSPATH' ) || exit;
 

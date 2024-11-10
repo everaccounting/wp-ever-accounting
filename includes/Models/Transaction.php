@@ -2,7 +2,7 @@
 
 namespace EverAccounting\Models;
 
-use ByteKit\Models\Relations\BelongsTo;
+use EverAccounting\ByteKit\Models\Relations\BelongsTo;
 
 defined( 'ABSPATH' ) || exit;
 

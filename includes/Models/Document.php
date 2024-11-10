@@ -2,8 +2,8 @@
 
 namespace EverAccounting\Models;
 
-use ByteKit\Models\Relations\BelongsTo;
-use ByteKit\Models\Relations\HasMany;
+use EverAccounting\ByteKit\Models\Relations\BelongsTo;
+use EverAccounting\ByteKit\Models\Relations\HasMany;
 
 /**
  * Document model.

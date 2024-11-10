@@ -2,9 +2,9 @@
 
 namespace EverAccounting\Models;
 
-use ByteKit\Models\Relations\BelongsTo;
-use ByteKit\Models\Relations\BelongsToMany;
-use ByteKit\Models\Relations\HasMany;
+use EverAccounting\ByteKit\Models\Relations\BelongsTo;
+use EverAccounting\ByteKit\Models\Relations\BelongsToMany;
+use EverAccounting\ByteKit\Models\Relations\HasMany;
 
 /**
  * Invoice model.
@@ -125,7 +125,7 @@ class Invoice extends Document {
 	 * Customer relation.
 	 *
 	 * @since 1.0.0
-	 * @return BelongsTo
+	 * @return \EverAccounting\ByteKit\Models\Relations\BelongsTo
 	 */
 	public function customer() {
 		return $this->belongs_to( Customer::class, 'contact_id' );
@@ -180,7 +180,24 @@ class Invoice extends Document {
 			$this->payment_date = null;
 		}
 
+		// if status is not paid or partial, remove payments.
+		if ( ! in_array( $this->status, array( 'paid', 'partial' ), true ) ) {
+			$this->payments()->delete();
+		}
+
 		return parent::save();
+	}
+
+	/**
+	 * Delete the object from the database.
+	 *
+	 * @since 1.0.0
+	 * @return true|\WP_Error True on success, WP_Error on failure.
+	 */
+	public function delete() {
+		$this->payments()->delete();
+
+		return parent::delete();
 	}
 
 	/*

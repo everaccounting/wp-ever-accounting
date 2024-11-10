@@ -116,33 +116,5 @@ class License {
 		if ( empty( $this->file ) || empty( $this->item_id ) ) {
 			return;
 		}
-
-		add_action( 'admin_notices', array( $this, 'admin_notice' ), PHP_INT_MAX );
-//		add_action( 'plugin_action_links_' . $this->basename, array( $this, 'add_license_link' ) );
-//		add_action( 'after_plugin_row_' . $this->basename, array( $this, 'add_license_row' ), PHP_INT_MAX );
-//		add_action( 'wp_ajax_' . $this->basename . '_license_action', array( $this, 'handle_license_action' ) );
-//		add_filter( 'plugins_api', array( $this, 'plugins_api_filter' ), 10, 3 );
-//		add_filter( 'pre_set_site_transient_update_plugins', array( $this, 'check_for_update' ) );
-//		add_action( 'wp_version_check', array( $this, 'refresh_license_status' ) );
-	}
-
-	/**
-	 * Display admin notice.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	public function admin_notice() {
-		if ( ! current_user_can( 'manage_options' ) || $this->is_valid() ) {
-			return;
-		}
-		$notice = sprintf(
-		// translators: %1$s: <a> tag start, %2$s: <a> tag end, %3$s: plugin name.
-			__( 'Please %1$sactivate%2$s your copy of %3$s to receive automatic updates, access to support and & other resources!', 'wp-ever-accounting' ),
-			'<a href="' . admin_url( 'plugins.php' ) . '">',
-			'</a>',
-			'<strong>' . esc_html( $this->name ) . '</strong>'
-		);
-		echo '<div class="notice notice-warning is-dismissible"><p>' . wp_kses_post( $notice ) . '</p></div>';
 	}
 }

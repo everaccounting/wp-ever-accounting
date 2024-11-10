@@ -270,12 +270,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:byteever/bytekit-models.git",
-                "reference": "90443c058e38ac5ad1a46718f0f656613f5b2990"
+                "reference": "41af01b762e936c0f724101631a0cbb17d8d9aba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/byteever/bytekit-models/zipball/90443c058e38ac5ad1a46718f0f656613f5b2990",
-                "reference": "90443c058e38ac5ad1a46718f0f656613f5b2990",
+                "url": "https://api.github.com/repos/byteever/bytekit-models/zipball/41af01b762e936c0f724101631a0cbb17d8d9aba",
+                "reference": "41af01b762e936c0f724101631a0cbb17d8d9aba",
                 "shasum": ""
             },
             "require": {
@@ -357,7 +357,7 @@
                 "source": "https://github.com/byteever/bytekit-models/tree/develop",
                 "issues": "https://github.com/byteever/bytekit-models/issues"
             },
-            "time": "2024-10-29T18:43:37+00:00"
+            "time": "2024-11-10T13:14:53+00:00"
         },
         {
             "name": "byteever/bytekit-plugin",
@@ -365,12 +365,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:byteever/bytekit-plugin.git",
-                "reference": "839138d23323204cc823ee08de2453f8cdb70761"
+                "reference": "4de0b2ff30161f1733060fc32bfdf3101de0b7b3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/byteever/bytekit-plugin/zipball/839138d23323204cc823ee08de2453f8cdb70761",
-                "reference": "839138d23323204cc823ee08de2453f8cdb70761",
+                "url": "https://api.github.com/repos/byteever/bytekit-plugin/zipball/4de0b2ff30161f1733060fc32bfdf3101de0b7b3",
+                "reference": "4de0b2ff30161f1733060fc32bfdf3101de0b7b3",
                 "shasum": ""
             },
             "require": {
@@ -443,7 +443,7 @@
                 "source": "https://github.com/byteever/bytekit-plugin/tree/develop",
                 "issues": "https://github.com/byteever/bytekit-plugin/issues"
             },
-            "time": "2024-11-10T12:56:56+00:00"
+            "time": "2024-11-10T13:14:33+00:00"
         },
         {
             "name": "carbonphp/carbon-doctrine-types",

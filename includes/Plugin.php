@@ -140,6 +140,7 @@ class Plugin extends ByteKit\Plugin {
 			'EverAccounting\Actions',
 			'EverAccounting\Currencies',
 			'EverAccounting\Contacts',
+			'EverAccounting\Crons',
 			'EverAccounting\Documents',
 			'EverAccounting\Banking',
 			'EverAccounting\Shortcodes',
