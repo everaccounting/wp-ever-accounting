@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a9fdae9092c562ebb648418af8b7b6d8",
+    "content-hash": "9628e7b2796d82a647b124630ac7c231",
     "packages": [
         {
             "name": "woocommerce/action-scheduler",
@@ -265,57 +265,6 @@
             "time": "2024-06-28T06:59:58+00:00"
         },
         {
-            "name": "byteever/bytekit-license",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "git@github.com:byteever/bytekit-license.git",
-                "reference": "99576383e5bcda65d06e84e12600098bcd179084"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/byteever/bytekit-license/zipball/99576383e5bcda65d06e84e12600098bcd179084",
-                "reference": "99576383e5bcda65d06e84e12600098bcd179084",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=8.0"
-            },
-            "require-dev": {
-                "byteever/byteever-sniffs": "^1.0"
-            },
-            "default-branch": true,
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "ByteKit\\": "src/"
-                }
-            },
-            "scripts": {
-                "phpcs": [
-                    "@php ./vendor/bin/phpcs --standard=phpcs.xml -s -v"
-                ],
-                "phpcbf": [
-                    "@php ./vendor/bin/phpcbf --standard=phpcs.xml -v"
-                ]
-            },
-            "license": [
-                "GPL-3.0-or-later"
-            ],
-            "authors": [
-                {
-                    "name": "Sultan Nasir Uddin",
-                    "email": "manikdrmc@gmail.com"
-                }
-            ],
-            "description": "A package to manage license for ByteKit",
-            "support": {
-                "source": "https://github.com/byteever/bytekit-license/tree/master",
-                "issues": "https://github.com/byteever/bytekit-license/issues"
-            },
-            "time": "2024-07-30T10:00:51+00:00"
-        },
-        {
             "name": "byteever/bytekit-models",
             "version": "dev-develop",
             "source": {
@@ -412,16 +361,16 @@
         },
         {
             "name": "byteever/bytekit-plugin",
-            "version": "dev-master",
+            "version": "dev-develop",
             "source": {
                 "type": "git",
                 "url": "git@github.com:byteever/bytekit-plugin.git",
-                "reference": "bdc46de580976d5c14009be7c0fd259260e1b973"
+                "reference": "839138d23323204cc823ee08de2453f8cdb70761"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/byteever/bytekit-plugin/zipball/bdc46de580976d5c14009be7c0fd259260e1b973",
-                "reference": "bdc46de580976d5c14009be7c0fd259260e1b973",
+                "url": "https://api.github.com/repos/byteever/bytekit-plugin/zipball/839138d23323204cc823ee08de2453f8cdb70761",
+                "reference": "839138d23323204cc823ee08de2453f8cdb70761",
                 "shasum": ""
             },
             "require": {
@@ -439,7 +388,6 @@
                 "codeception/util-universalframework": "^1.0",
                 "lucatume/wp-browser": "<3.5"
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -492,10 +440,10 @@
             ],
             "description": "A set of related classes to kick start WordPress plugin development.",
             "support": {
-                "source": "https://github.com/byteever/bytekit-plugin/tree/master",
+                "source": "https://github.com/byteever/bytekit-plugin/tree/develop",
                 "issues": "https://github.com/byteever/bytekit-plugin/issues"
             },
-            "time": "2024-11-09T05:50:54+00:00"
+            "time": "2024-11-10T12:56:56+00:00"
         },
         {
             "name": "carbonphp/carbon-doctrine-types",
@@ -11712,7 +11660,6 @@
     "stability-flags": {
         "byteever/bytekit-models": 20,
         "byteever/bytekit-plugin": 20,
-        "byteever/bytekit-license": 20,
         "roave/security-advisories": 20
     },
     "prefer-stable": true,

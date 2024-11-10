@@ -21,7 +21,7 @@ const config = {
 	output: {
 		...defaults.output,
 		filename: '[name].js',
-		path: resolve( process.cwd(), './assets/dist/' ),
+		path: resolve( process.cwd(), './build/' ),
 		chunkFilename: 'chunks/[chunkhash].js',
 		// uniqueName: '__eac_webpackJsonp',
 	},

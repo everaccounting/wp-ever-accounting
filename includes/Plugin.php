@@ -234,28 +234,4 @@ class Plugin extends ByteKit\Plugin {
 	public function queue() {
 		return Core\Queue::instance();
 	}
-
-	/**
-	 * Get assets path.
-	 *
-	 * @param string $file Optional. File name.
-	 *
-	 * @since 1.0.0
-	 * @return string
-	 */
-	public function get_assets_path( $file = '' ) {
-		return $this->get_dir_path( 'assets/dist/' . $file );
-	}
-
-	/**
-	 * Get assets url.
-	 *
-	 * @param string $file Optional. File name.
-	 *
-	 * @since 1.0.0
-	 * @return string
-	 */
-	public function get_assets_url( $file = '' ) {
-		return $this->get_dir_url( 'assets/dist/' . $file );
-	}
 }

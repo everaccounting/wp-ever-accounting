@@ -72,7 +72,7 @@ module.exports = [
 			}, {} ),
 		output: {
 			...config.output,
-			path: path.resolve( __dirname, 'assets/dist/client' ),
+			path: path.resolve( __dirname, 'build/client' ),
 		},
 	},
 ];

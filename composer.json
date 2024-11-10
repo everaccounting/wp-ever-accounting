@@ -22,10 +22,6 @@
       "type": "github"
     },
     {
-      "url": "git@github.com:byteever/bytekit-license.git",
-      "type": "github"
-    },
-    {
       "url": "git@github.com:byteever/bytekit-models.git",
       "type": "github"
     }
@@ -47,8 +43,7 @@
   "require-dev": {
     "byteever/byteever-sniffs": "^1.0",
     "byteever/bytekit-models": "dev-develop",
-    "byteever/bytekit-plugin": "dev-master",
-    "byteever/bytekit-license": "dev-master",
+    "byteever/bytekit-plugin": "dev-develop",
     "codeception/module-asserts": "^1.0",
     "codeception/module-cli": "^1.0",
     "codeception/module-db": "^1.0",
@@ -100,8 +95,7 @@
       "delete_vendor_directories": true,
       "packages": [
         "byteever/bytekit-plugin",
-        "byteever/bytekit-models",
-        "byteever/bytekit-license"
+        "byteever/bytekit-models"
       ]
     }
   }
