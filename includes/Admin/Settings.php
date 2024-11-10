@@ -564,7 +564,7 @@ class Settings {
 								style="<?php echo esc_attr( $value['css'] ); ?>"
 								class="eac_select2 <?php echo esc_attr( $value['class'] ); ?>"
 								<?php echo wp_kses_post( implode( ' ', $attrs ) ); ?>
-								data-placeholder="<?php esc_attr_e( 'Search for a page&hellip;', 'woocommerce' ); ?>"
+								data-placeholder="<?php esc_attr_e( 'Search for a page&hellip;', 'wp-ever-accounting' ); ?>"
 								data-allow_clear="true"
 								data-action="eac_json_search"
 								data-type="page"

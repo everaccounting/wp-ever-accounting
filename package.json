@@ -25,7 +25,7 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "eac-scripts build",
+    "build": "eac-scripts build --webpack-src-dir=assets && grunt build",
     "check-engines": "eac-scripts check-engines",
     "check-licenses": "eac-scripts check-licenses",
     "format": "eac-scripts format",
@@ -35,7 +35,7 @@
     "lint:pkg-json": "eac-scripts lint-pkg-json",
     "packages-update": "eac-scripts packages-update",
     "plugin-zip": "eac-scripts plugin-zip",
-    "start": "eac-scripts start",
+    "start": "eac-scripts start --webpack-src-dir=assets",
     "test:e2e": "eac-scripts test-e2e",
     "test:unit": "eac-scripts test-unit-js"
   },
@@ -49,12 +49,17 @@
     "@eac/scripts": "file:packages/scripts",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
+    "@lodder/time-grunt": "^4.0.0",
     "@wordpress/icons": "^10.9.0",
     "autoprefixer": "^10.4.20",
     "classnames": "^2.5.1",
     "cssnano": "^7.0.6",
     "glob": "^11.0.0",
+    "grunt": "^1.6.1",
+    "grunt-checktextdomain": "^1.0.1",
+    "grunt-wp-i18n": "^1.0.3",
     "jquery-ui": "^1.14.0",
+    "load-grunt-tasks": "^5.1.0",
     "select2": "^4.1.0-rc.0",
     "tailwindcss": "^3.4.13"
   }

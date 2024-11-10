@@ -124,7 +124,7 @@ class Dashboard {
 					<?php endif; ?>
 					<?php if ( isset( $stat['delta'] ) ) : ?>
 						<?php $delta_class = $stat['delta'] > 0 ? 'is--positive' : 'is--negative'; ?>
-						<div class="eac-stat__delta <?php echo esc_attr( $delta_class ); ?>" title="<?php esc_html_e( 'Percentage of profit', 'wpe-ver-accounting' ); ?>">
+						<div class="eac-stat__delta <?php echo esc_attr( $delta_class ); ?>" title="<?php esc_html_e( 'Percentage of profit', 'wp-ever-accounting' ); ?>">
 							<?php echo esc_html( $stat['delta'] ); ?>%
 						</div>
 					<?php endif; ?>
