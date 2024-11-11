@@ -81,8 +81,6 @@ Thumbs.db
 
 # Build related files
 *.config.js
-/_assets
-/client
+/assets
 /packages
-/legacy
 lerna.json

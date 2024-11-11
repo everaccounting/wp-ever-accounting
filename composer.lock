@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9628e7b2796d82a647b124630ac7c231",
+    "content-hash": "a979a6a2f12cb7bdb1d21ad8299025e7",
     "packages": [
         {
             "name": "woocommerce/action-scheduler",
@@ -266,16 +266,16 @@
         },
         {
             "name": "byteever/bytekit-models",
-            "version": "dev-develop",
+            "version": "v1.0.0",
             "source": {
                 "type": "git",
                 "url": "git@github.com:byteever/bytekit-models.git",
-                "reference": "41af01b762e936c0f724101631a0cbb17d8d9aba"
+                "reference": "8d2a9cefa61beb1099e3fd45b1609c45fac15e99"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/byteever/bytekit-models/zipball/41af01b762e936c0f724101631a0cbb17d8d9aba",
-                "reference": "41af01b762e936c0f724101631a0cbb17d8d9aba",
+                "url": "https://api.github.com/repos/byteever/bytekit-models/zipball/8d2a9cefa61beb1099e3fd45b1609c45fac15e99",
+                "reference": "8d2a9cefa61beb1099e3fd45b1609c45fac15e99",
                 "shasum": ""
             },
             "require": {
@@ -300,13 +300,7 @@
                 }
             },
             "autoload-dev": {
-                "psr-4": {
-                    "ByteKit\\Models\\Tests\\Supports\\": "tests/_support",
-                    "ByteKit\\Models\\Tests\\Unit\\": "tests/unit",
-                    "ByteKit\\Models\\Tests\\Functional\\": "tests/functional",
-                    "ByteKit\\Models\\Tests\\Acceptance\\": "tests/acceptance",
-                    "ByteKit\\Models\\Tests\\WPUnit\\": "tests/wpunit"
-                }
+                "psr-4": []
             },
             "scripts": {
                 "phpcs": [
@@ -354,23 +348,23 @@
             ],
             "description": "A package to manage models in WordPress.",
             "support": {
-                "source": "https://github.com/byteever/bytekit-models/tree/develop",
+                "source": "https://github.com/byteever/bytekit-models/tree/v1.0.0",
                 "issues": "https://github.com/byteever/bytekit-models/issues"
             },
-            "time": "2024-11-10T13:14:53+00:00"
+            "time": "2024-11-10T15:46:59+00:00"
         },
         {
             "name": "byteever/bytekit-plugin",
-            "version": "dev-develop",
+            "version": "v1.0.0",
             "source": {
                 "type": "git",
                 "url": "git@github.com:byteever/bytekit-plugin.git",
-                "reference": "4de0b2ff30161f1733060fc32bfdf3101de0b7b3"
+                "reference": "251d268b3ec3b2388d991d540bc7dd1eb2e979fc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/byteever/bytekit-plugin/zipball/4de0b2ff30161f1733060fc32bfdf3101de0b7b3",
-                "reference": "4de0b2ff30161f1733060fc32bfdf3101de0b7b3",
+                "url": "https://api.github.com/repos/byteever/bytekit-plugin/zipball/251d268b3ec3b2388d991d540bc7dd1eb2e979fc",
+                "reference": "251d268b3ec3b2388d991d540bc7dd1eb2e979fc",
                 "shasum": ""
             },
             "require": {
@@ -440,10 +434,10 @@
             ],
             "description": "A set of related classes to kick start WordPress plugin development.",
             "support": {
-                "source": "https://github.com/byteever/bytekit-plugin/tree/develop",
+                "source": "https://github.com/byteever/bytekit-plugin/tree/v1.0.0",
                 "issues": "https://github.com/byteever/bytekit-plugin/issues"
             },
-            "time": "2024-11-10T13:14:33+00:00"
+            "time": "2024-11-10T15:50:54+00:00"
         },
         {
             "name": "carbonphp/carbon-doctrine-types",
@@ -11658,8 +11652,6 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "byteever/bytekit-models": 20,
-        "byteever/bytekit-plugin": 20,
         "roave/security-advisories": 20
     },
     "prefer-stable": true,

@@ -75,16 +75,18 @@ class Transfer extends Model {
 	);
 
 	/**
-	 * Default query variables passed to Query class.
+	 * The searchable attributes.
+	 *
+	 * This array lists the properties that can be searched when querying the model.
+	 * It is used to filter results based on user input or other criteria.
 	 *
 	 * @since 1.0.0
 	 * @var array
 	 */
-	protected $query_vars = array(
-		'search_columns' => array(
-			'amount',
-			'date',
-		),
+	protected $searchable = array(
+		'reference',
+		'amount',
+		'date',
 	);
 
 	/**

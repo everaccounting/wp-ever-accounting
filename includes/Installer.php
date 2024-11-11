@@ -649,4 +649,52 @@ KEY expense_id (expense_id)
 			wp_schedule_event( time(), 'hourly', 'eac_hourly_event' );
 		}
 	}
+
+	/**
+	 * Uninstall the plugin.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public static function uninstall() {
+		global $wpdb;
+		if ( ! is_blog_installed() ) {
+			return;
+		}
+
+		// Remove roles.
+		remove_role( 'eac_accountant' );
+		remove_role( 'eac_manager' );
+
+		// Remove options.
+		$wpdb->query( "DELETE FROM $wpdb->options WHERE option_name LIKE 'eac\_%';" );
+
+		// Clear cron jobs.
+		wp_clear_scheduled_hook( 'eac_hourly_event' );
+		wp_clear_scheduled_hook( 'eac_daily_event' );
+		wp_clear_scheduled_hook( 'eac_weekly_event' );
+
+		// Drop tables.
+		$tables = array(
+			'ea_accounts',
+			'ea_contactmeta',
+			'ea_contacts',
+			'ea_document_items',
+			'ea_document_taxes',
+			'ea_documentmeta',
+			'ea_documents',
+			'ea_items',
+			'ea_itemmeta',
+			'ea_notes',
+			'ea_terms',
+			'ea_termmeta',
+			'ea_transactionmeta',
+			'ea_transactions',
+			'ea_transfers',
+		);
+
+		foreach ( $tables as $table ) {
+			$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}{$table};" );
+		}
+	}
 }

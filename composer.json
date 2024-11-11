@@ -42,8 +42,8 @@
   },
   "require-dev": {
     "byteever/byteever-sniffs": "^1.0",
-    "byteever/bytekit-models": "dev-develop",
-    "byteever/bytekit-plugin": "dev-develop",
+    "byteever/bytekit-models": "^1.0",
+    "byteever/bytekit-plugin": "^1.0",
     "codeception/module-asserts": "^1.0",
     "codeception/module-cli": "^1.0",
     "codeception/module-db": "^1.0",
