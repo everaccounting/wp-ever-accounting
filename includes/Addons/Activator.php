@@ -2,47 +2,53 @@
 
 namespace EverAccounting\Addons;
 
-use EverAccounting\ByteKit\Plugin;
-
-defined( 'ABSPATH' ) || exit();
+defined( 'ABSPATH' ) || exit;
 
 /**
- * Addon class.
+ * Activator class.
  *
  * @since 1.0.0
  * @package EverAccounting
- *
- * @property License $license The license service.
  */
-abstract class Addon extends Plugin {
+class Activator {
 
 	/**
-	 * Plugin constructor.
-	 *
-	 * @param array $data The plugin data.
+	 * Plugin instance.
 	 *
 	 * @since 1.0.0
+	 * @var Addon
 	 */
-	protected function __construct( $data ) {
-		parent::__construct( $data );
+	protected $addon;
 
-		if ( $this->get_item_id() ) {
-			$this->services->add( 'license', new License( $this ) );
-			// add_action( 'admin_notices', array( $this, 'license_notices' ) );
-			// add_action( 'plugin_action_links_' . $this->get_basename(), array( $this, 'add_license_action' ) );
-			// add_action( 'after_plugin_row_' . $this->get_basename(), array( $this, 'add_license_row' ), 10, 3 );
-			// add_action( 'wp_ajax_' . $this->get_basename() . '_license_action', array( $this, 'handle_license_action' ) );
+	/**
+	 * Activator constructor.
+	 *
+	 * @param Addon $addon The addon.
+	 *
+	 * @throws \InvalidArgumentException If the addon is not an instance of Addon.
+	 * @since 1.0.0
+	 */
+	public function __construct( $addon ) {
+		// if the addon is not an extended class of Addon, throw an exception.
+		if ( ! is_subclass_of( $addon, Addon::class ) ) {
+			throw new \InvalidArgumentException( 'The addon must be an instance of Addon.' );
 		}
+
+		$this->addon = $addon;
+		$this->register_hooks();
 	}
 
 	/**
-	 * Get the item ID.
+	 * Register hooks.
 	 *
 	 * @since 1.0.0
-	 * @return string
+	 * @return void
 	 */
-	public function get_item_id() {
-		return array_key_exists( 'item_id', $this->data ) ? absint( $this->data['item_id'] ) : '';
+	protected function register_hooks() {
+		add_action( 'admin_notices', array( $this, 'admin_notices' ) );
+		add_action( 'plugin_action_links_' . $this->addon->get_basename(), array( $this, 'plugin_action_links' ) );
+		add_action( 'after_plugin_row_' . $this->addon->get_basename(), array( $this, 'add_license_row' ), 10, 3 );
+		add_action( 'wp_ajax_' . $this->addon->get_basename() . '_license_action', array( $this, 'handle_license_action' ) );
 	}
 
 	/**
@@ -50,14 +56,14 @@ abstract class Addon extends Plugin {
 	 *
 	 * @since 1.0.0
 	 */
-	public function license_notices() {
-		if ( ! current_user_can( 'manage_options' ) || $this->license->is_valid() ) {
+	public function admin_notices() {
+		if ( ! current_user_can( 'manage_options' ) || $this->addon->license->is_valid() ) {
 			return;
 		}
 		$notice = sprintf(
 		// translators: %1$s: <a> tag start, %2$s: <a> tag end, %3$s: plugin name.
 			__( '%1$s is not active. Please %2$sactivate%3$s to unlock access to updates, security enhancements, support, and more.', 'wp-ever-accounting' ),
-			'<strong>' . esc_html( $this->name ) . '</strong>',
+			'<strong>' . esc_html( $this->addon->name ) . '</strong>',
 			'<a href="' . admin_url( 'plugins.php' ) . '">',
 			'</a>'
 		);
@@ -73,8 +79,8 @@ abstract class Addon extends Plugin {
 	 *
 	 * @return array
 	 */
-	public function add_license_action( $links ) {
-		if ( ! current_user_can( 'manage_options' ) || ! $this->license->is_valid() ) {
+	public function plugin_action_links( $links ) {
+		if ( ! current_user_can( 'manage_options' ) || ! $this->addon->license->is_valid() ) {
 			return $links;
 		}
 		$links['license'] = sprintf(
@@ -95,26 +101,26 @@ abstract class Addon extends Plugin {
 		$screen   = get_current_screen();
 		$columns  = get_column_headers( $screen );
 		$colspan  = ! is_countable( $columns ) ? 3 : count( $columns );
-		$basename = $this->get_basename();
-		$visible  = $this->license->is_valid() ? 'hidden' : 'visible';
+		$basename = $this->addon->get_basename();
+		$visible  = $this->addon->license->is_valid() ? 'hidden' : 'visible';
 		$action   = $basename . '_license_action';
 		$nonce    = wp_create_nonce( $basename . '_license_action' );
 		?>
-		<tr class="license-row notice-warning notice-alt plugin-update-tr <?php echo esc_attr( $visible ); ?>" data-plugin="<?php echo esc_attr( $this->get_basename() ); ?>">
+		<tr class="license-row notice-warning notice-alt plugin-update-tr <?php echo esc_attr( $visible ); ?>" data-plugin="<?php echo esc_attr( $this->addon->get_basename() ); ?>">
 			<td colspan="<?php echo esc_attr( $colspan ); ?>" class="plugin-update colspanchange">
 				<div class="update-message" style="margin-top: 15px;display: flex;flex-direction: row;align-items: center;flex-wrap: wrap;gap: 10px;">
-					<?php if ( $this->license->is_valid() ) : ?>
+					<?php if ( $this->addon->license->is_valid() ) : ?>
 						<span class="dashicons dashicons-yes-alt" style="color: #46b450;"></span>
 						<span><?php esc_html_e( 'License is valid.', 'wp-ever-accounting' ); ?></span>
 					<?php else : ?>
 						<span class="dashicons dashicons-warning" style="color: #dc3232;"></span>
-						<span><?php echo wp_kses_post( $this->license->get_message() ); ?></span>
+						<span><?php echo wp_kses_post( $this->addon->license->get_message() ); ?></span>
 					<?php endif; ?>
 					<input
 						class="regular-text license-key"
 						type="text"
 						placeholder="<?php esc_attr_e( 'Enter your license key', 'wp-ever-accounting' ); ?>"
-						value="<?php echo esc_attr( $this->license->get_key() ); ?>"
+						value="<?php echo esc_attr( $this->addon->license->get_key() ); ?>"
 						style="width: 18em;margin-right:-10px; border-top-right-radius:0; border-bottom-right-radius:0; border-right:0;"
 					>
 					<button
@@ -126,7 +132,7 @@ abstract class Addon extends Plugin {
 						<span class="dashicons dashicons-admin-network"></span>
 						<?php esc_html_e( 'Activate', 'wp-ever-accounting' ); ?>
 					</button>
-					<?php if ( $this->license->is_valid() ) : ?>
+					<?php if ( $this->addon->license->is_valid() ) : ?>
 						<button
 							class="button license-button"
 							data-action="<?php echo esc_attr( $action ); ?>"
@@ -196,7 +202,7 @@ abstract class Addon extends Plugin {
 	 * @return void
 	 */
 	public function handle_license_action() {
-		check_ajax_referer( $this->get_basename() . '_license_action', 'nonce' );
+		check_ajax_referer( $this->addon->get_basename() . '_license_action', 'nonce' );
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_send_json_error( array( 'message' => __( 'You do not have permission to perform this action.', 'wp-ever-accounting' ) ) );
 		}
@@ -209,13 +215,13 @@ abstract class Addon extends Plugin {
 
 		switch ( $operation ) {
 			case 'activate':
-				$result = $this->license->activate( $license_key );
+				$result = $this->addon->license->activate( $license_key );
 				break;
 			case 'deactivate':
-				$result = $this->license->deactivate();
+				$result = $this->addon->license->deactivate();
 				break;
 			case 'check':
-				$result = $this->license->refresh();
+				$result = $this->addon->license->check();
 				break;
 			default:
 				$result = false;

@@ -1,6 +1,6 @@
 <?php
 
-namespace EverAccounting\Core;
+namespace EverAccounting\Licensing;
 
 define( 'ABSPATH', true );
 
@@ -108,7 +108,7 @@ class License {
 		$this->item_id        = absint( $item_id );
 		$this->slug           = basename( $file, '.php' );
 		$this->basename       = plugin_basename( $file );
-		$this->short_name     = sanitize_key( str_replace( '-', '_', $this->slug ) );
+		$this->short_name     = $this->get_shortname();
 		$this->license_key    = get_option( $this->short_name . '_license_key', '' );
 		$this->license_status = get_option( $this->short_name . '_license_status', '' );
 		$this->cache_key      = $this->short_name . '_license_cache';
@@ -116,5 +116,39 @@ class License {
 		if ( empty( $this->file ) || empty( $this->item_id ) ) {
 			return;
 		}
+	}
+
+	/**
+	 * Register hooks.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	private function register_hooks() {}
+
+	/**
+	 * Gets the extension shortname.
+	 *
+	 * @since 2.0.0
+	 * @return string
+	 */
+	private function get_shortname() {
+		$shortname = 'eac_' . preg_replace( '/[^a-zA-Z0-9_\s]/', '', str_replace( ' ', '_', strtolower( $this->slug ) ) );
+
+		if ( strpos( $shortname, 'eac_eac_' ) === 0 ) {
+			$shortname = substr( $shortname, strlen( 'eac_' ) );
+		}
+
+		return $shortname;
+	}
+
+	/**
+	 * Whether the license is valid.
+	 *
+	 * @since 2.0.0
+	 * @return bool
+	 */
+	private function is_license_valid() {
+		return ! empty( $this->license_key ) && 'valid' === $this->license_status;
 	}
 }
