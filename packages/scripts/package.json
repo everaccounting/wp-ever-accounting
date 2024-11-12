@@ -1,0 +1,17 @@
+{
+  "name": "@eac/scripts",
+  "version": "1.0.0",
+  "private": true,
+  "description": "EverAccounting Components Library",
+  "author": "EverAccounting",
+  "license": "GPL-3.0-or-later",
+  "main": "src/index.js",
+  "bin": {
+    "eac-scripts": "./bin/eac-scripts.js"
+  },
+  "dependencies": {
+    "@wordpress/scripts": "^27.9.0",
+    "moment-timezone-data-webpack-plugin": "^1.5.1",
+    "webpack-remove-empty-scripts": "^1.0.4"
+  }
+}

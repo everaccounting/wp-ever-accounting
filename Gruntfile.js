@@ -11,6 +11,7 @@ module.exports = function ( grunt ) {
 		addtextdomain: {
 			options: {
 				textdomain: 'wp-ever-accounting',
+				updateDomains: [ 'bytekit-textdomain' ],
 			},
 			update_all_domains: {
 				options: {
@@ -65,7 +66,7 @@ module.exports = function ( grunt ) {
 			target: {
 				options: {
 					domainPath: '/languages',
-					exclude: [ '.git/*', 'bin/*', 'node_modules/*', 'tests/*' ],
+					exclude: [ '.git/*', 'bin/*', 'node_modules/*', 'tests/*', 'vendor/*' ],
 					mainFile: 'wp-ever-accounting.php',
 					potFilename: 'wp-ever-accounting.pot',
 					potHeaders: {
@@ -79,15 +80,8 @@ module.exports = function ( grunt ) {
 		},
 	} );
 
-	// Saves having to declare each dependency
-	require( 'matchdep' ).filterDev( 'grunt-*' ).forEach( grunt.loadNpmTasks );
-
 	grunt.registerTask( 'default', [ 'i18n' ] );
 	grunt.registerTask( 'build', [ 'i18n' ] );
-	grunt.registerTask( 'i18n', [
-		'addtextdomain',
-		'checktextdomain',
-		'makepot',
-	] );
+	grunt.registerTask( 'i18n', [ 'addtextdomain', 'checktextdomain', 'makepot' ] );
 	grunt.util.linefeed = '\n';
 };

@@ -80,4 +80,7 @@ Thumbs.db
 .wordpress-org
 
 # Build related files
-/ui
+*.config.js
+/assets
+/packages
+lerna.json

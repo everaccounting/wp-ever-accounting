@@ -1,78 +1,66 @@
 {
   "name": "wp-ever-accounting",
-  "title": "WP Ever Accounting",
   "version": "1.2.0",
   "description": "The Best WordPress Accounting Plugin ever made!",
+  "keywords": [],
+  "homepage": "https://www.wpeveraccounting.com",
+  "bugs": {
+    "url": "https://github.com/everaccounting/wp-ever-accounting/issues"
+  },
+  "license": "GPL-2.0-or-later",
   "author": {
     "name": "Sultan Nasir Uddin",
     "email": "sultan@byteever.com",
     "url": "https://www.byteever.com"
   },
-  "license": "GPL-2.0-or-later",
-  "keywords": [],
-  "homepage": "https://www.wpeveraccounting.com",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/everaccounting/wp-ever-accounting.git"
-  },
-  "bugs": {
-    "url": "https://github.com/everaccounting/wp-ever-accounting/issues"
   },
   "engines": {
     "node": ">=12.0.0"
   },
   "main": "index.js",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "eac-scripts build --webpack-src-dir=assets && grunt build",
+    "check-engines": "eac-scripts check-engines",
+    "check-licenses": "eac-scripts check-licenses",
+    "format": "eac-scripts format",
+    "lint:css": "eac-scripts lint-style",
+    "lint:js": "eac-scripts lint-js",
+    "lint:md:docs": "eac-scripts lint-md-docs",
+    "lint:pkg-json": "eac-scripts lint-pkg-json",
+    "packages-update": "eac-scripts packages-update",
+    "plugin-zip": "eac-scripts plugin-zip",
+    "start": "eac-scripts start --webpack-src-dir=assets",
+    "test:e2e": "eac-scripts test-e2e",
+    "test:unit": "eac-scripts test-unit-js"
+  },
   "dependencies": {
+    "@eac/money": "file:packages/money",
     "chart.js": "^2.9.4",
-    "inputmask": "^5.0.5",
-    "moment": "^2.29.4",
-    "select2": "~4.0"
+    "lerna": "^8.1.8",
+    "select-woo": "^1.0.1"
   },
   "devDependencies": {
+    "@eac/scripts": "file:packages/scripts",
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
     "@lodder/time-grunt": "^4.0.0",
-    "@wordpress/interactivity": "^5.4.0",
-    "@wordpress/prettier-config": "^2.19.0",
-    "@wordpress/scripts": "^26.6.0",
-    "clean-webpack-plugin": "^4.0.0",
-    "copy-webpack-plugin": "^11.0.0",
+    "@wordpress/icons": "^10.9.0",
+    "autoprefixer": "^10.4.20",
+    "classnames": "^2.5.1",
+    "cssnano": "^7.0.6",
+    "glob": "^11.0.0",
     "grunt": "^1.6.1",
     "grunt-checktextdomain": "^1.0.1",
     "grunt-wp-i18n": "^1.0.3",
-    "grunt-wp-readme-to-markdown": "^2.1.0",
-    "lint-staged": "^12.5.0",
+    "jquery-ui": "^1.14.0",
     "load-grunt-tasks": "^5.1.0",
-    "matchdep": "^2.0.0",
-    "mini-css-extract-plugin": "^2.7.6",
-    "webpack-remove-empty-scripts": "^0.8.4",
-    "wp-prettier": "^2.8.5"
-  },
-  "scripts": {
-    "build": "wp-scripts build && grunt build",
-    "check-engines": "wp-scripts check-engines",
-    "check-licenses": "wp-scripts check-licenses",
-    "format": "wp-scripts format",
-    "lint:css": "wp-scripts lint-style",
-    "lint:js": "wp-scripts lint-js",
-    "lint:md:docs": "wp-scripts lint-md-docs",
-    "lint:pkg-json": "wp-scripts lint-pkg-json",
-    "packages-update": "wp-scripts packages-update",
-    "plugin-zip": "wp-scripts plugin-zip",
-    "start": "wp-scripts start --webpack-src-dir=ui && grunt watch",
-    "test:e2e": "wp-scripts test-e2e",
-    "test:unit": "wp-scripts test-unit-js"
-  },
-  "stylelint": {
-    "extends": "@wordpress/stylelint-config",
-    "defaultSeverity": "warning"
-  },
-  "lint-staged": {
-    "*.scss": [
-      "wp-scripts lint-style --fix --custom-syntax postcss-scss"
-    ]
-  },
-  "browserslist": [
-    "> 0.1%",
-    "ie 8",
-    "ie 9"
-  ]
+    "select2": "^4.1.0-rc.0",
+    "tailwindcss": "^3.4.13"
+  }
 }

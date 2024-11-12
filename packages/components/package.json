@@ -1,0 +1,21 @@
+{
+  "name": "@eac/components",
+  "version": "1.0.0",
+  "private": true,
+  "description": "EverAccounting Components Library",
+  "author": "EverAccounting",
+  "license": "GPL-3.0-or-later",
+  "main": "src/index.js",
+  "dependencies": {
+    "@emotion/styled": "^11.11.0",
+    "@react-input/number-format": "^1.0.32",
+    "@wordpress/icons": "^9.37.0",
+    "classnames": "^2.3.2",
+    "install": "^0.13.0",
+    "lodash": "^4.17.21",
+    "npm": "^10.9.0",
+    "prop-types": "^15.8.1",
+    "react-datepicker": "^7.4.0",
+    "react-select": "^5.8.1"
+  }
+}
