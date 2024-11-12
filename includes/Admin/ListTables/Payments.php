@@ -97,7 +97,7 @@ class Payments extends ListTable {
 		$performed = 0;
 		foreach ( $ids as $id ) {
 			if ( EAC()->payments->delete( $id ) ) {
-				++$performed;
+				++ $performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
@@ -340,6 +340,10 @@ class Payments extends ListTable {
 				__( 'Delete', 'wp-ever-accounting' )
 			),
 		);
+
+		if ( ! $item->editable ) {
+			unset( $actions['edit'] );
+		}
 
 		return $this->row_actions( $actions );
 	}

@@ -341,6 +341,10 @@ class Expenses extends ListTable {
 			),
 		);
 
+		if ( ! $item->editable ) {
+			unset( $actions['edit'] );
+		}
+
 		return $this->row_actions( $actions );
 	}
 }
