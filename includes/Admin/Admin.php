@@ -262,7 +262,7 @@ class Admin {
 			'eac_bills_per_page',
 			'eac_accounts_per_page',
 			'eac_transactions_per_page',
-			'eac_transfer_per_page',
+			'eac_transfers_per_page',
 			'eac_taxes_per_page',
 			'eac_categories_per_page',
 		);
