@@ -138,10 +138,10 @@ $transfer = Transfer::make( $id );
 					eac_form_field(
 						array(
 							'data_type'   => 'date',
-							'name'        => 'payment_date',
+							'name'        => 'transfer_date',
 							'label'       => __( 'Date', 'wp-ever-accounting' ),
 							'placeholder' => 'YYYY-MM-DD',
-							'value'       => $transfer->transfer_date ? $transfer->transfer_date : wp_date( 'Y-m-d' ),
+							'value'       => $transfer->transfer_date,
 							'default'     => wp_date( 'Y-m-d' ),
 							'required'    => true,
 							'class'       => 'eac_datepicker',

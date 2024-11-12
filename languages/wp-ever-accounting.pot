@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Ever Accounting 2.0.0\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/wp-ever-accounting\n"
-"POT-Creation-Date: 2024-11-12 07:39:31+00:00\n"
+"POT-Creation-Date: 2024-11-12 12:14:22+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1215,7 +1215,7 @@ msgstr ""
 msgid "The tax cannot be deleted."
 msgstr ""
 
-#: includes/API/Taxes.php:426 includes/Admin/Settings/Purchases.php:200
+#: includes/API/Taxes.php:426 includes/Admin/Settings/Purchases.php:198
 #: includes/Admin/Settings/Sales.php:197
 #: includes/Admin/views/bill-totals.php:58
 #: includes/Admin/views/invoice-totals.php:58
@@ -1707,7 +1707,7 @@ msgstr ""
 #: includes/Admin/Bills.php:190 includes/Admin/Customers.php:121
 #: includes/Admin/Expenses.php:183 includes/Admin/Invoices.php:188
 #: includes/Admin/Items.php:110 includes/Admin/Payments.php:187
-#: includes/Admin/Transfers.php:113 includes/Admin/Vendors.php:120
+#: includes/Admin/Transfers.php:115 includes/Admin/Vendors.php:120
 msgid "Number of items per page:"
 msgstr ""
 
@@ -1800,14 +1800,14 @@ msgid "Address"
 msgstr ""
 
 #: includes/Admin/Customers.php:253 includes/Admin/Settings/General.php:127
-#: includes/Admin/Setup.php:342 includes/Admin/Vendors.php:233
+#: includes/Admin/Setup.php:303 includes/Admin/Vendors.php:233
 #: includes/Admin/views/customer-edit.php:141
 #: includes/Admin/views/vendor-edit.php:140
 msgid "City"
 msgstr ""
 
 #: includes/Admin/Customers.php:257 includes/Admin/Settings/General.php:136
-#: includes/Admin/Setup.php:354 includes/Admin/Vendors.php:237
+#: includes/Admin/Setup.php:315 includes/Admin/Vendors.php:237
 #: includes/Admin/views/customer-edit.php:149
 #: includes/Admin/views/vendor-edit.php:148
 msgid "State"
@@ -1819,7 +1819,7 @@ msgstr ""
 
 #: includes/Admin/Customers.php:265 includes/Admin/ListTables/Customers.php:158
 #: includes/Admin/ListTables/Vendors.php:157
-#: includes/Admin/Settings/General.php:154 includes/Admin/Setup.php:378
+#: includes/Admin/Settings/General.php:154 includes/Admin/Setup.php:339
 #: includes/Admin/Vendors.php:245 includes/Admin/views/customer-edit.php:166
 #: includes/Admin/views/vendor-edit.php:165
 msgid "Country"
@@ -2236,7 +2236,7 @@ msgstr ""
 msgid "You attempted to edit an invoice that is not editable."
 msgstr ""
 
-#: includes/Admin/Items.php:38 includes/Admin/Settings/Purchases.php:170
+#: includes/Admin/Items.php:38 includes/Admin/Settings/Purchases.php:168
 #: includes/Admin/Settings/Sales.php:167 includes/Admin/Utilities.php:25
 #: includes/Admin/Utilities.php:26 includes/Admin/views/item-list.php:15
 msgid "Items"
@@ -2503,7 +2503,7 @@ msgid "Cost"
 msgstr ""
 
 #: includes/Admin/ListTables/Items.php:194
-#: includes/Admin/Settings/Purchases.php:180
+#: includes/Admin/Settings/Purchases.php:178
 #: includes/Admin/Settings/Sales.php:177
 #: includes/Admin/views/bill-items.php:136
 #: includes/Admin/views/invoice-items.php:136
@@ -2871,7 +2871,7 @@ msgstr ""
 msgid "The start date of your financial year."
 msgstr ""
 
-#: includes/Admin/Settings/General.php:113 includes/Admin/Setup.php:332
+#: includes/Admin/Settings/General.php:113 includes/Admin/Setup.php:293
 msgid "Business Address"
 msgstr ""
 
@@ -2889,7 +2889,7 @@ msgstr ""
 msgid "The state in which your business is located."
 msgstr ""
 
-#: includes/Admin/Settings/General.php:145 includes/Admin/Setup.php:366
+#: includes/Admin/Settings/General.php:145 includes/Admin/Setup.php:327
 msgid "ZIP"
 msgstr ""
 
@@ -2903,7 +2903,7 @@ msgstr ""
 msgid "The country in which your business is located."
 msgstr ""
 
-#: includes/Admin/Settings/General.php:161 includes/Admin/Setup.php:386
+#: includes/Admin/Settings/General.php:161 includes/Admin/Setup.php:347
 msgid "Select a country&hellip;"
 msgstr ""
 
@@ -2911,7 +2911,7 @@ msgstr ""
 msgid "Currency Settings"
 msgstr ""
 
-#: includes/Admin/Settings/General.php:187 includes/Admin/Setup.php:465
+#: includes/Admin/Settings/General.php:187 includes/Admin/Setup.php:426
 msgid "Base Currency"
 msgstr ""
 
@@ -2961,7 +2961,7 @@ msgstr ""
 msgid "The number of decimal places to display."
 msgstr ""
 
-#: includes/Admin/Settings/General.php:239 includes/Admin/Setup.php:475
+#: includes/Admin/Settings/General.php:239 includes/Admin/Setup.php:436
 msgid "Exchange Rates"
 msgstr ""
 
@@ -3067,45 +3067,45 @@ msgstr ""
 msgid "Payment is due within 30 days."
 msgstr ""
 
-#: includes/Admin/Settings/Purchases.php:158
+#: includes/Admin/Settings/Purchases.php:156
 msgid "Bill Columns"
 msgstr ""
 
-#: includes/Admin/Settings/Purchases.php:159
+#: includes/Admin/Settings/Purchases.php:157
 msgid "Customize the columns of your bills."
 msgstr ""
 
-#: includes/Admin/Settings/Purchases.php:165
+#: includes/Admin/Settings/Purchases.php:163
 #: includes/Admin/Settings/Sales.php:162
 msgid "Item Label"
 msgstr ""
 
-#: includes/Admin/Settings/Purchases.php:166
+#: includes/Admin/Settings/Purchases.php:164
 #: includes/Admin/Settings/Sales.php:163
 msgid "The name of the item column."
 msgstr ""
 
-#: includes/Admin/Settings/Purchases.php:175
+#: includes/Admin/Settings/Purchases.php:173
 #: includes/Admin/Settings/Sales.php:172
 msgid "Price Label"
 msgstr ""
 
-#: includes/Admin/Settings/Purchases.php:176
+#: includes/Admin/Settings/Purchases.php:174
 #: includes/Admin/Settings/Sales.php:173
 msgid "The name of the price column."
 msgstr ""
 
-#: includes/Admin/Settings/Purchases.php:185
+#: includes/Admin/Settings/Purchases.php:183
 #: includes/Admin/Settings/Sales.php:182
 msgid "Quantity Label"
 msgstr ""
 
-#: includes/Admin/Settings/Purchases.php:186
+#: includes/Admin/Settings/Purchases.php:184
 #: includes/Admin/Settings/Sales.php:183
 msgid "The name of the quantity column."
 msgstr ""
 
-#: includes/Admin/Settings/Purchases.php:190
+#: includes/Admin/Settings/Purchases.php:188
 #: includes/Admin/Settings/Sales.php:187
 #: includes/Admin/views/bill-items.php:127
 #: includes/Admin/views/invoice-items.php:127
@@ -3113,27 +3113,27 @@ msgstr ""
 msgid "Quantity"
 msgstr ""
 
-#: includes/Admin/Settings/Purchases.php:195
+#: includes/Admin/Settings/Purchases.php:193
 #: includes/Admin/Settings/Sales.php:192
 msgid "Tax Label"
 msgstr ""
 
-#: includes/Admin/Settings/Purchases.php:196
+#: includes/Admin/Settings/Purchases.php:194
 #: includes/Admin/Settings/Sales.php:193
 msgid "The name of the tax column."
 msgstr ""
 
-#: includes/Admin/Settings/Purchases.php:205
+#: includes/Admin/Settings/Purchases.php:203
 #: includes/Admin/Settings/Sales.php:202
 msgid "Subtotal Label"
 msgstr ""
 
-#: includes/Admin/Settings/Purchases.php:206
+#: includes/Admin/Settings/Purchases.php:204
 #: includes/Admin/Settings/Sales.php:203
 msgid "The name of the subtotal column."
 msgstr ""
 
-#: includes/Admin/Settings/Purchases.php:210
+#: includes/Admin/Settings/Purchases.php:208
 #: includes/Admin/Settings/Sales.php:207
 #: includes/Admin/views/bill-totals.php:41
 #: includes/Admin/views/invoice-totals.php:41
@@ -3272,84 +3272,84 @@ msgstr ""
 msgid "Search for a page&hellip;"
 msgstr ""
 
-#: includes/Admin/Setup.php:101
+#: includes/Admin/Setup.php:65
 msgid "Introduction"
 msgstr ""
 
-#: includes/Admin/Setup.php:106
+#: includes/Admin/Setup.php:70
 msgid "Business setup"
 msgstr ""
 
-#: includes/Admin/Setup.php:111
+#: includes/Admin/Setup.php:75
 msgid "Currency setup"
 msgstr ""
 
-#: includes/Admin/Setup.php:116 includes/Admin/Setup.php:528
+#: includes/Admin/Setup.php:80 includes/Admin/Setup.php:489
 msgid "Finish!"
 msgstr ""
 
-#: includes/Admin/Setup.php:212
+#: includes/Admin/Setup.php:173
 msgid "Ever Accounting &rsaquo; Setup Wizard"
 msgstr ""
 
-#: includes/Admin/Setup.php:287
+#: includes/Admin/Setup.php:248
 msgid "Welcome!"
 msgstr ""
 
-#: includes/Admin/Setup.php:288
+#: includes/Admin/Setup.php:249
 msgid ""
 "Thank you for choosing WP Ever Accounting to manage your accounting! This "
 "quick setup wizard will help you configure the basic settings."
 msgstr ""
 
-#: includes/Admin/Setup.php:290
+#: includes/Admin/Setup.php:251
 msgid "Let's Go!"
 msgstr ""
 
-#: includes/Admin/Setup.php:302
+#: includes/Admin/Setup.php:263
 msgid "Business Setup"
 msgstr ""
 
-#: includes/Admin/Setup.php:308 includes/Admin/Setup.php:311
+#: includes/Admin/Setup.php:269 includes/Admin/Setup.php:272
 msgid "Business Name"
 msgstr ""
 
-#: includes/Admin/Setup.php:320
+#: includes/Admin/Setup.php:281
 msgid "Business Email"
 msgstr ""
 
-#: includes/Admin/Setup.php:347
+#: includes/Admin/Setup.php:308
 msgid "e.g. Manhattan"
 msgstr ""
 
-#: includes/Admin/Setup.php:359
+#: includes/Admin/Setup.php:320
 msgid "e.g. New York"
 msgstr ""
 
-#: includes/Admin/Setup.php:371
+#: includes/Admin/Setup.php:332
 msgid "e.g. 10001"
 msgstr ""
 
-#: includes/Admin/Setup.php:394 includes/Admin/Setup.php:488
+#: includes/Admin/Setup.php:355 includes/Admin/Setup.php:449
 msgid "Continue"
 msgstr ""
 
-#: includes/Admin/Setup.php:459
+#: includes/Admin/Setup.php:420
 msgid "Currency Setup"
 msgstr ""
 
-#: includes/Admin/Setup.php:460
+#: includes/Admin/Setup.php:421
 msgid ""
 "Default currency rate should be always 1 & additional currency rates should "
 "be equivalent of default currency. e.g. If USD is your default currency "
 "then USD rate is 1 & GBP rate will be 0.77"
 msgstr ""
 
-#: includes/Admin/Setup.php:529
+#: includes/Admin/Setup.php:490
 msgid "You are done with the basic setup of the plugin and ready to use."
 msgstr ""
 
-#: includes/Admin/Setup.php:531
+#: includes/Admin/Setup.php:492
 msgid "View Dashboard"
 msgstr ""
 
@@ -3365,11 +3365,11 @@ msgstr ""
 msgid "You do not have permission to edit transfers."
 msgstr ""
 
-#: includes/Admin/Transfers.php:75
+#: includes/Admin/Transfers.php:77
 msgid "Transfer saved successfully."
 msgstr ""
 
-#: includes/Admin/Transfers.php:102
+#: includes/Admin/Transfers.php:104
 msgid ""
 "You attempted to retrieve a transfer that does not exist. Perhaps it was "
 "deleted?"
@@ -3536,7 +3536,7 @@ msgstr ""
 #: includes/Admin/views/customer-list.php:27
 #: includes/Admin/views/expense-list.php:29
 #: includes/Admin/views/invoice-list.php:24
-#: includes/Admin/views/item-list.php:30
+#: includes/Admin/views/item-list.php:29
 #: includes/Admin/views/payment-list.php:25
 #: includes/Admin/views/tax-list.php:28
 #: includes/Admin/views/transfer-list.php:29
@@ -4270,7 +4270,7 @@ msgstr ""
 msgid "No file uploaded"
 msgstr ""
 
-#: includes/Functions/updates.php:263
+#: includes/Functions/updates.php:232
 msgid "Opening Balance"
 msgstr ""
 
@@ -4438,31 +4438,31 @@ msgstr ""
 msgid "Custom"
 msgstr ""
 
-#: includes/functions.php:252
+#: includes/functions.php:250
 msgid "Cash"
 msgstr ""
 
-#: includes/functions.php:253
+#: includes/functions.php:251
 msgid "Cheque"
 msgstr ""
 
-#: includes/functions.php:254
+#: includes/functions.php:252
 msgid "Credit Card"
 msgstr ""
 
-#: includes/functions.php:255
+#: includes/functions.php:253
 msgid "Debit Card"
 msgstr ""
 
-#: includes/functions.php:256
+#: includes/functions.php:254
 msgid "Bank Transfer"
 msgstr ""
 
-#: includes/functions.php:257
+#: includes/functions.php:255
 msgid "PayPal"
 msgstr ""
 
-#: includes/functions.php:258
+#: includes/functions.php:256
 msgid "Other"
 msgstr ""
 
@@ -4546,12 +4546,12 @@ msgctxt "Delete"
 msgid "Delete"
 msgstr ""
 
-#: includes/Installer.php:538
+#: includes/Installer.php:534
 msgctxt "User role"
 msgid "Accounting Manager"
 msgstr ""
 
-#: includes/Installer.php:539
+#: includes/Installer.php:535
 msgctxt "User role"
 msgid "Accountant"
 msgstr ""

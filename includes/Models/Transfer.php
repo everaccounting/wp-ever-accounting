@@ -66,7 +66,7 @@ class Transfer extends Model {
 	protected $casts = array(
 		'payment_id'     => 'int',
 		'expense_id'     => 'int',
-		'transfer_date'  => 'datetime',
+		'transfer_date'  => 'date',
 		'amount'         => 'double',
 		'currency'       => 'string',
 		'payment_method' => 'string',
