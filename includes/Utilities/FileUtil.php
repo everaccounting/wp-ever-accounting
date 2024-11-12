@@ -60,7 +60,7 @@ class FileUtil {
 	public static function fopen( $file, $mode ) {
 		$file = self::sanitize_file_path( $file );
 
-		return @fopen( $file, $mode ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged, WordPress. WP. AlternativeFunctions. file_system_operations_fopen
+		return @fopen( $file, $mode ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.file_system_operations_fopen
 	}
 
 	/**

@@ -6,7 +6,6 @@
  * @var $item \EverAccounting\Models\Item
  */
 
-
 use EverAccounting\Models\Vendor;
 
 defined( 'ABSPATH' ) || exit;

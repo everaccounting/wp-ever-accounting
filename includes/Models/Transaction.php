@@ -307,7 +307,7 @@ class Transaction extends Model {
 		global $wpdb;
 		$max = $wpdb->get_var(
 			$wpdb->prepare(
-				"SELECT `number` FROM {$wpdb->prefix}{$this->table} WHERE `type` = %s ORDER BY `number` DESC",
+				"SELECT `number` FROM {$wpdb->prefix}{$this->table} WHERE `type` = %s ORDER BY `number` DESC", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Already prepared.
 				$this->type
 			)
 		);

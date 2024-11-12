@@ -5,6 +5,7 @@
  * @package EverAccounting
  * @version 1.0.0
  */
+
 defined( 'ABSPATH' ) || exit;
 
 global $list_table;

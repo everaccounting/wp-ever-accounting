@@ -19,7 +19,6 @@ class Scripts {
 	public function __construct() {
 		add_action( 'admin_enqueue_scripts', array( $this, 'register_scripts' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
-		// add_action( 'admin_enqueue_scripts', array( $this, 'client_scripts' ) );
 	}
 
 	/**
@@ -101,34 +100,5 @@ class Scripts {
 		if ( 'toplevel_page_ever-accounting' === $hook || 'ever-accounting_page_eac-reports' === $hook ) {
 			wp_enqueue_script( 'eac-chartjs' );
 		}
-	}
-
-	/**
-	 * Enqueue client scripts.
-	 *
-	 * @param string $hook The current admin page.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	public function client_scripts( $hook ) {
-		EAC()->scripts->register_script( 'eac-components', 'client/components.js' );
-		EAC()->scripts->register_style( 'eac-components', 'client/components.css' );
-
-		EAC()->scripts->register_script( 'eac-bill-editor', 'client/admin-bill.js' );
-		EAC()->scripts->register_style( 'eac-bill-editor', 'client/admin-bill.css', array( 'eac-components' ) );
-
-		// if sales page and new invoice.
-		wp_enqueue_script( 'eac-bill-editor' );
-		wp_enqueue_style( 'eac-bill-editor' );
-
-		wp_localize_script(
-			'eac-bill-editor',
-			'eac_bill_editor_vars',
-			array(
-				'columns' => EAC()->bills->get_columns(),
-				'bill'    => ( new Bill() )->to_array(),
-			)
-		);
 	}
 }

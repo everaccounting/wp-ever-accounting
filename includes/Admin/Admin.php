@@ -282,7 +282,7 @@ class Admin {
 	 */
 	public function print_scripts() {
 		// bail early if not in admin.
-		if ( ! current_user_can( 'manage_accounting' ) ) {
+		if ( ! current_user_can( 'manage_accounting' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability
 			return;
 		}
 

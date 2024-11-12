@@ -23,8 +23,7 @@ class RestApiUtil {
 	 */
 	public static function get_response( $path, $args = array(), $method = 'GET' ) {
 		$endpoint = get_rest_url( null, $path );
-		var_dump( $endpoint );
-		$request = new \WP_REST_Request( $method, $endpoint );
+		$request  = new \WP_REST_Request( $method, $endpoint );
 		if ( ! empty( $args ) ) {
 			if ( 'GET' === $method ) {
 				$request->set_query_params( $args );

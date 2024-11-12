@@ -10,18 +10,20 @@
 use EverAccounting\Models\Invoice;
 
 defined( 'ABSPATH' ) || exit;
-echo eac_get_formatted_address(
-	array(
-		'name'       => $invoice->contact_name,
-		'company'    => $invoice->contact_company,
-		'address'    => $invoice->contact_address,
-		'city'       => $invoice->contact_city,
-		'state'      => $invoice->contact_state,
-		'postcode'   => $invoice->contact_postcode,
-		'country'    => $invoice->contact_country,
-		'phone'      => $invoice->contact_phone,
-		'email'      => $invoice->contact_email,
-		'tax_number' => $invoice->contact_tax_number,
+echo wp_kses_post(
+	eac_get_formatted_address(
+		array(
+			'name'       => $invoice->contact_name,
+			'company'    => $invoice->contact_company,
+			'address'    => $invoice->contact_address,
+			'city'       => $invoice->contact_city,
+			'state'      => $invoice->contact_state,
+			'postcode'   => $invoice->contact_postcode,
+			'country'    => $invoice->contact_country,
+			'phone'      => $invoice->contact_phone,
+			'email'      => $invoice->contact_email,
+			'tax_number' => $invoice->contact_tax_number,
+		)
 	)
 );
 

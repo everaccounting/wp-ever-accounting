@@ -11,6 +11,7 @@ module.exports = function ( grunt ) {
 		addtextdomain: {
 			options: {
 				textdomain: 'wp-ever-accounting',
+				updateDomains: [ 'bytekit-textdomain' ],
 			},
 			update_all_domains: {
 				options: {

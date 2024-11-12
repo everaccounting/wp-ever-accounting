@@ -98,7 +98,7 @@ $expense = Expense::make( $id );
 							'required'      => true,
 							'prefix'        => '1 ' . eac_base_currency() . ' = ',
 							'attr-step'     => 'any',
-							'readonly'      => $expense->currency === eac_base_currency(),
+							'readonly'      => eac_base_currency() === $expense->currency,
 							'data-currency' => $expense->currency,
 							'data-source'   => ':input[name="account_id"]',
 						)

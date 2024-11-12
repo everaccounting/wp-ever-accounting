@@ -21,7 +21,7 @@ class NumberUtil {
 	 *
 	 * @return float The value rounded to the given precision as a float, or the supplied default value.
 	 */
-	public static function round( $val, int $precision = 0, int $mode = PHP_ROUND_HALF_UP ) {
+	public static function round( $val, $precision = 0, $mode = PHP_ROUND_HALF_UP ) {
 		if ( ! is_numeric( $val ) ) {
 			$val = floatval( $val );
 		}

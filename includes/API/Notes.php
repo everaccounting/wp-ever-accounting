@@ -93,7 +93,7 @@ class Notes extends Controller {
 	 * @return true|\WP_Error True if the request has read access, WP_Error object otherwise.
 	 */
 	public function get_items_permissions_check( $request ) {
-		if ( ! current_user_can( 'manage_accounting' ) ) {
+		if ( ! current_user_can( 'manage_accounting' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability
 			return new \WP_Error(
 				'rest_forbidden_context',
 				__( 'Sorry, you are not allowed to view notes.', 'wp-ever-accounting' ),
@@ -113,7 +113,7 @@ class Notes extends Controller {
 	 * @return true|\WP_Error True if the request has read access, WP_Error object otherwise.
 	 */
 	public function create_item_permissions_check( $request ) {
-		if ( ! current_user_can( 'manage_accounting' ) ) {
+		if ( ! current_user_can( 'manage_accounting' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability
 			return new \WP_Error(
 				'rest_forbidden_context',
 				__( 'Sorry, you are not allowed to create notes.', 'wp-ever-accounting' ),
@@ -135,7 +135,7 @@ class Notes extends Controller {
 	public function get_item_permissions_check( $request ) {
 		$note = EAC()->notes->get( $request['id'] );
 
-		if ( empty( $note ) || ! current_user_can( 'manage_accounting' ) ) {
+		if ( empty( $note ) || ! current_user_can( 'manage_accounting' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability
 			return new \WP_Error(
 				'rest_forbidden_context',
 				__( 'Sorry, you are not allowed to view this note.', 'wp-ever-accounting' ),
@@ -157,7 +157,7 @@ class Notes extends Controller {
 	public function update_item_permissions_check( $request ) {
 		$note = EAC()->notes->get( $request['id'] );
 
-		if ( empty( $note ) || ! current_user_can( 'manage_accounting' ) ) {
+		if ( empty( $note ) || ! current_user_can( 'manage_accounting' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability
 			return new \WP_Error(
 				'rest_forbidden_context',
 				__( 'Sorry, you are not allowed to update this note.', 'wp-ever-accounting' ),
@@ -179,7 +179,7 @@ class Notes extends Controller {
 	public function delete_item_permissions_check( $request ) {
 		$note = EAC()->notes->get( $request['id'] );
 
-		if ( empty( $note ) || ! current_user_can( 'manage_accounting' ) ) {
+		if ( empty( $note ) || ! current_user_can( 'manage_accounting' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability
 			return new \WP_Error(
 				'rest_forbidden_context',
 				__( 'Sorry, you are not allowed to delete this note.', 'wp-ever-accounting' ),

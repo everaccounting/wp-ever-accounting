@@ -272,7 +272,7 @@ class Bill extends Document {
 				$line->set_taxes( $item['taxes'] );
 			}
 
-			if( $this->is_taxed() ) {
+			if ( $this->is_taxed() ) {
 				$line->total = $line->subtotal - $line->discount + $line->tax;
 			} else {
 				$line->total = $line->subtotal - $line->discount;

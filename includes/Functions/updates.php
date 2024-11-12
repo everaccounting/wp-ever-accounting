@@ -75,45 +75,37 @@ function eac_update_120_settings() {
  */
 function eac_update_120_transactions() {
 	global $wpdb;
-	$table = $wpdb->prefix . 'ea_transactions';
-	$wpdb->query( "UPDATE $table SET type = 'payment' WHERE type = 'income'" );
-	$wpdb->query( "UPDATE $table SET currency = currency_code, note = description, exchange_rate = currency_rate, uuid = UUID(), author_id = creator_id" );
-	$wpdb->query( "UPDATE $table SET author_id = creator_id" );
-	$wpdb->query( "UPDATE $table JOIN (SELECT @rank := 0) r SET number=CONCAT('PAY-',LPAD(@rank:=@rank+1, 5, '0')) WHERE type='payment' AND number = ''" );
-	$wpdb->query( "UPDATE $table JOIN (SELECT @rank := 0) r SET number=CONCAT('EXP-',LPAD(@rank:=@rank+1, 5, '0')) WHERE type='expense' AND number = ''" );
+	$wpdb->ea_transactions = $wpdb->prefix . 'ea_transactions';
+	$wpdb->query( "UPDATE $wpdb->ea_transactions SET type = 'payment' WHERE type = 'income'" );
+	$wpdb->query( "UPDATE $wpdb->ea_transactions SET currency = currency_code, note = description, exchange_rate = currency_rate, uuid = UUID(), author_id = creator_id" );
+	$wpdb->query( "UPDATE $wpdb->ea_transactions SET author_id = creator_id" );
+	$wpdb->query( "UPDATE $wpdb->ea_transactions JOIN (SELECT @rank := 0) r SET number=CONCAT('PAY-',LPAD(@rank:=@rank+1, 5, '0')) WHERE type='payment' AND number = ''" );
+	$wpdb->query( "UPDATE $wpdb->ea_transactions JOIN (SELECT @rank := 0) r SET number=CONCAT('EXP-',LPAD(@rank:=@rank+1, 5, '0')) WHERE type='expense' AND number = ''" );
 
-	// $wpdb->query( "ALTER TABLE $table DROP currency_code" );
-	// $wpdb->query( "ALTER TABLE $table DROP currency_rate" );
-	// $wpdb->query( "ALTER TABLE $table DROP description" );
-	// $wpdb->query( "ALTER TABLE $table DROP reconciled" );
-	// $wpdb->query( "ALTER TABLE $table DROP creator_id" );
-
-	$wpdb->query( "ALTER TABLE $table MODIFY number VARCHAR(30) NOT NULL AFTER type" );
-	$wpdb->query( "ALTER TABLE $table MODIFY currency VARCHAR(3) NOT NULL DEFAULT 'USD' AFTER amount" );
-	$wpdb->query( "ALTER TABLE $table MODIFY exchange_rate DOUBLE(15, 8) NOT NULL DEFAULT 1.0 AFTER currency" );
-	$wpdb->query( "ALTER TABLE $table MODIFY reference VARCHAR(191) DEFAULT NULL AFTER exchange_rate" );
-	$wpdb->query( "ALTER TABLE $table MODIFY note TEXT DEFAULT NULL AFTER reference" );
-	$wpdb->query( "ALTER TABLE $table MODIFY payment_method VARCHAR(100) DEFAULT NULL AFTER note" );
-	$wpdb->query( "ALTER TABLE $table MODIFY date_created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER uuid" );
+	$wpdb->query( "ALTER TABLE $wpdb->ea_transactions MODIFY number VARCHAR(30) NOT NULL AFTER type" );
+	$wpdb->query( "ALTER TABLE $wpdb->ea_transactions MODIFY currency VARCHAR(3) NOT NULL DEFAULT 'USD' AFTER amount" );
+	$wpdb->query( "ALTER TABLE $wpdb->ea_transactions MODIFY exchange_rate DOUBLE(15, 8) NOT NULL DEFAULT 1.0 AFTER currency" );
+	$wpdb->query( "ALTER TABLE $wpdb->ea_transactions MODIFY reference VARCHAR(191) DEFAULT NULL AFTER exchange_rate" );
+	$wpdb->query( "ALTER TABLE $wpdb->ea_transactions MODIFY note TEXT DEFAULT NULL AFTER reference" );
+	$wpdb->query( "ALTER TABLE $wpdb->ea_transactions MODIFY payment_method VARCHAR(100) DEFAULT NULL AFTER note" );
+	$wpdb->query( "ALTER TABLE $wpdb->ea_transactions MODIFY date_created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER uuid" );
 
 	// Drop the old columns.
 	DatabaseUtil::drop_columns( 'ea_transactions', 'currency_code, currency_rate, description, reconciled, creator_id' );
 
-	$table = $wpdb->prefix . 'ea_transfers';
-	$wpdb->query( "UPDATE $table SET payment_id = income_id" );
-	// $wpdb->query( "ALTER TABLE $table DROP income_id" );
-	// $wpdb->query( "ALTER TABLE $table DROP creator_id" );
-	$wpdb->query( "ALTER TABLE $table MODIFY date_created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER note" );
+	$wpdb->ea_transfers = $wpdb->prefix . 'ea_transfers';
+	$wpdb->query( "UPDATE $wpdb->ea_transfers SET payment_id = income_id" );
+	$wpdb->query( "ALTER TABLE $wpdb->ea_transfers MODIFY date_created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER note" );
 	$wpdb->query(
-		"UPDATE $table
-	JOIN {$wpdb->prefix }ea_transactions AS payment ON payment.id = $table.payment_id
-	JOIN {$wpdb->prefix }ea_transactions AS expense ON expense.id = $table.expense_id
-	SET $table.transfer_date = expense.payment_date,
-	$table.amount = expense.amount,
-	$table.currency = expense.currency,
-	$table.payment_method = expense.payment_method,
-	$table.reference = expense.reference,
-	$table.note = expense.note"
+		"UPDATE $wpdb->ea_transfers
+	JOIN $wpdb->ea_transactions AS payment ON payment.id = $wpdb->ea_transfers.payment_id
+	JOIN $wpdb->ea_transactions AS expense ON expense.id = $wpdb->ea_transfers.expense_id
+	SET $wpdb->ea_transfers.transfer_date = expense.payment_date,
+		$wpdb->ea_transfers.amount = expense.amount,
+		$wpdb->ea_transfers.currency = expense.currency,
+		$wpdb->ea_transfers.payment_method = expense.payment_method,
+		$wpdb->ea_transfers.reference = expense.reference,
+		$wpdb->ea_transfers.note = expense.note"
 	);
 
 	// Drop the old columns.
@@ -131,43 +123,30 @@ function eac_update_120_transactions() {
  */
 function eac_update_120_documents() {
 	global $wpdb;
-	$table = $wpdb->prefix . 'ea_documents';
-	$wpdb->query( "UPDATE $table SET number = document_number" );
-	$wpdb->query( "UPDATE $table SET reference = order_number" );
-	$wpdb->query( "UPDATE $table SET currency = currency_code" );
-	$wpdb->query( "UPDATE $table SET exchange_rate = currency_rate" );
-	$wpdb->query( "UPDATE $table SET tax = total_tax" );
-	$wpdb->query( "UPDATE $table SET discount_value = discount" );
-	$wpdb->query( "UPDATE $table SET discount = total_discount" );
-	$wpdb->query( "UPDATE $table SET author_id = creator_id" );
-	$wpdb->query( "UPDATE $table SET uuid = UUID()" );
+	$wpdb->ea_documents = $wpdb->prefix . 'ea_documents';
+	$wpdb->query( "UPDATE $wpdb->ea_documents SET number = document_number" );
+	$wpdb->query( "UPDATE $wpdb->ea_documents SET reference = order_number" );
+	$wpdb->query( "UPDATE $wpdb->ea_documents SET currency = currency_code" );
+	$wpdb->query( "UPDATE $wpdb->ea_documents SET exchange_rate = currency_rate" );
+	$wpdb->query( "UPDATE $wpdb->ea_documents SET tax = total_tax" );
+	$wpdb->query( "UPDATE $wpdb->ea_documents SET discount_value = discount" );
+	$wpdb->query( "UPDATE $wpdb->ea_documents SET discount = total_discount" );
+	$wpdb->query( "UPDATE $wpdb->ea_documents SET author_id = creator_id" );
+	$wpdb->query( "UPDATE $wpdb->ea_documents SET uuid = UUID()" );
 
-	// $wpdb->query( "ALTER TABLE $table DROP COLUMN document_number" );
-	// $wpdb->query( "ALTER TABLE $table DROP COLUMN order_number" );
-	// $wpdb->query( "ALTER TABLE $table DROP COLUMN currency_code" );
-	// $wpdb->query( "ALTER TABLE $table DROP COLUMN currency_rate" );
-	// $wpdb->query( "ALTER TABLE $table DROP COLUMN total_tax" );
-	// $wpdb->query( "ALTER TABLE $table DROP COLUMN total_discount" );
-	// $wpdb->query( "ALTER TABLE $table DROP COLUMN total_shipping" );
-	// $wpdb->query( "ALTER TABLE $table DROP COLUMN total_fees" );
-	// $wpdb->query( "ALTER TABLE $table DROP COLUMN tax_inclusive" );
-	// $wpdb->query( "ALTER TABLE $table DROP COLUMN category_id" );
-	// $wpdb->query( "ALTER TABLE $table DROP COLUMN `key`" );
-	// $wpdb->query( "ALTER TABLE $table DROP COLUMN creator_id" );
+	$wpdb->query( "ALTER TABLE $wpdb->ea_documents MODIFY COLUMN `number` VARCHAR(30) NOT NULL AFTER status" );
+	$wpdb->query( "ALTER TABLE $wpdb->ea_documents MODIFY COLUMN reference VARCHAR(191) DEFAULT NULL AFTER `number`" );
+	$wpdb->query( "ALTER TABLE $wpdb->ea_documents MODIFY COLUMN sent_date DATETIME DEFAULT NULL AFTER due_date" );
+	$wpdb->query( "ALTER TABLE $wpdb->ea_documents MODIFY COLUMN discount DOUBLE(15, 4) DEFAULT 0 AFTER subtotal" );
+	$wpdb->query( "ALTER TABLE $wpdb->ea_documents MODIFY COLUMN tax DOUBLE(15, 4) DEFAULT 0 AFTER discount" );
+	$wpdb->query( "ALTER TABLE $wpdb->ea_documents MODIFY COLUMN discount_value DOUBLE(15, 4) DEFAULT 0 AFTER payment_date" );
+	$wpdb->query( "ALTER TABLE $wpdb->ea_documents MODIFY COLUMN date_created DATETIME  NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER uuid" );
+	$wpdb->query( "ALTER TABLE $wpdb->ea_documents MODIFY COLUMN note TEXT DEFAULT NULL AFTER contact_tax_number" );
+	$wpdb->query( "ALTER TABLE $wpdb->ea_documents MODIFY COLUMN terms TEXT DEFAULT NULL AFTER note" );
+	$wpdb->query( "ALTER TABLE $wpdb->ea_documents MODIFY COLUMN contact_id BIGINT(20) UNSIGNED NOT NULL AFTER attachment_id" );
+	$wpdb->query( "ALTER TABLE $wpdb->ea_documents MODIFY COLUMN  parent_id BIGINT(20) UNSIGNED DEFAULT NULL AFTER author_id" );
 
-	$wpdb->query( "ALTER TABLE $table MODIFY COLUMN `number` VARCHAR(30) NOT NULL AFTER status" );
-	$wpdb->query( "ALTER TABLE $table MODIFY COLUMN reference VARCHAR(191) DEFAULT NULL AFTER `number`" );
-	$wpdb->query( "ALTER TABLE $table MODIFY COLUMN sent_date DATETIME DEFAULT NULL AFTER due_date" );
-	$wpdb->query( "ALTER TABLE $table MODIFY COLUMN discount DOUBLE(15, 4) DEFAULT 0 AFTER subtotal" );
-	$wpdb->query( "ALTER TABLE $table MODIFY COLUMN tax DOUBLE(15, 4) DEFAULT 0 AFTER discount" );
-	$wpdb->query( "ALTER TABLE $table MODIFY COLUMN discount_value DOUBLE(15, 4) DEFAULT 0 AFTER payment_date" );
-	$wpdb->query( "ALTER TABLE $table MODIFY COLUMN date_created DATETIME  NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER uuid" );
-	$wpdb->query( "ALTER TABLE $table MODIFY COLUMN note TEXT DEFAULT NULL AFTER contact_tax_number" );
-	$wpdb->query( "ALTER TABLE $table MODIFY COLUMN terms TEXT DEFAULT NULL AFTER note" );
-	$wpdb->query( "ALTER TABLE $table MODIFY COLUMN contact_id BIGINT(20) UNSIGNED NOT NULL AFTER attachment_id" );
-	$wpdb->query( "ALTER TABLE $table MODIFY COLUMN  parent_id BIGINT(20) UNSIGNED DEFAULT NULL AFTER author_id" );
-
-	$documents = $wpdb->get_results( "SELECT id, address FROM $table WHERE address IS NOT NULL AND address != ''" );
+	$documents = $wpdb->get_results( "SELECT id, address FROM $wpdb->ea_documents WHERE address IS NOT NULL AND address != ''" );
 	foreach ( $documents as $document ) {
 		$address = maybe_unserialize( $document->address );
 		$address = wp_parse_args(
@@ -206,30 +185,27 @@ function eac_update_120_documents() {
 		if ( empty( $data ) ) {
 			continue;
 		}
-		$wpdb->update( $table, $data, array( 'id' => $document->id ) );
+		$wpdb->update( $wpdb->ea_documents, $data, array( 'id' => $document->id ) );
 	}
 
 	// Drop the old columns.
 	DatabaseUtil::drop_columns( 'ea_documents', 'document_number, order_number, currency_code, currency_rate, total_tax, total_discount, total_shipping, total_fees, tax_inclusive, category_id, key, creator_id, address' );
 
-	// drop the billing_address column.
-	// $wpdb->query( "ALTER TABLE $table DROP COLUMN address" );
-
 	// Documents Items.
-	$table = $wpdb->prefix . 'ea_document_items';
-	$wpdb->query( "UPDATE $table SET name = item_name" );
-	$wpdb->query( "UPDATE $table SET currency = currency_code" );
+	$wpdb->ea_document_items = $wpdb->prefix . 'ea_document_items';
+	$wpdb->query( "UPDATE $wpdb->ea_document_items SET name = item_name" );
+	$wpdb->query( "UPDATE $wpdb->ea_document_items SET currency = currency_code" );
 
-	$wpdb->query( "ALTER TABLE $table DROP COLUMN item_name" );
-	$wpdb->query( "ALTER TABLE $table DROP COLUMN extra" );
-	$wpdb->query( "ALTER TABLE $table DROP COLUMN tax_rate" );
-	$wpdb->query( "ALTER TABLE $table DROP COLUMN currency_code" );
-	$wpdb->query( "ALTER TABLE $table DROP COLUMN date_created" );
+	$wpdb->query( "ALTER TABLE $wpdb->ea_document_items DROP COLUMN item_name" );
+	$wpdb->query( "ALTER TABLE $wpdb->ea_document_items DROP COLUMN extra" );
+	$wpdb->query( "ALTER TABLE $wpdb->ea_document_items DROP COLUMN tax_rate" );
+	$wpdb->query( "ALTER TABLE $wpdb->ea_document_items DROP COLUMN currency_code" );
+	$wpdb->query( "ALTER TABLE $wpdb->ea_document_items DROP COLUMN date_created" );
 
-	$wpdb->query( "ALTER TABLE $table MODIFY COLUMN unit VARCHAR(20) DEFAULT NULL AFTER item_id" );
-	$wpdb->query( "ALTER TABLE $table MODIFY COLUMN description VARCHAR(160) DEFAULT NULL AFTER item_id" );
-	$wpdb->query( "ALTER TABLE $table MODIFY COLUMN name VARCHAR(191) NOT NULL AFTER item_id" );
-	$wpdb->query( "ALTER TABLE $table MODIFY COLUMN type VARCHAR(20) NOT NULL DEFAULT 'standard' AFTER item_id" );
+	$wpdb->query( "ALTER TABLE $wpdb->ea_document_items MODIFY COLUMN unit VARCHAR(20) DEFAULT NULL AFTER item_id" );
+	$wpdb->query( "ALTER TABLE $wpdb->ea_document_items MODIFY COLUMN description VARCHAR(160) DEFAULT NULL AFTER item_id" );
+	$wpdb->query( "ALTER TABLE $wpdb->ea_document_items MODIFY COLUMN name VARCHAR(191) NOT NULL AFTER item_id" );
+	$wpdb->query( "ALTER TABLE $wpdb->ea_document_items MODIFY COLUMN type VARCHAR(20) NOT NULL DEFAULT 'standard' AFTER item_id" );
 }
 
 /**
@@ -237,20 +213,13 @@ function eac_update_120_documents() {
  */
 function eac_update_120_accounts() {
 	global $wpdb;
-	$table = $wpdb->prefix . 'ea_accounts';
-	$wpdb->query( "UPDATE $table SET currency = currency_code" );
-	// $wpdb->query( "ALTER TABLE $table DROP COLUMN creator_id" );
-	// $wpdb->query( "ALTER TABLE $table DROP COLUMN currency_code" );
-	// $wpdb->query( "ALTER TABLE $table DROP COLUMN enabled" );
-	// $wpdb->query( "ALTER TABLE $table DROP COLUMN thumbnail_id" );
-	// $wpdb->query( "ALTER TABLE $table DROP COLUMN bank_name" );
-	// $wpdb->query( "ALTER TABLE $table DROP COLUMN bank_phone" );
-	// $wpdb->query( "ALTER TABLE $table DROP COLUMN bank_address" );
-	$wpdb->query( "ALTER TABLE $table MODIFY COLUMN type VARCHAR(50) NOT NULL DEFAULT 'account' AFTER id" );
-	$wpdb->query( "ALTER TABLE $table MODIFY COLUMN date_created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER currency" );
+	$wpdb->ea_accounts = $wpdb->prefix . 'ea_accounts';
+	$wpdb->query( "UPDATE $wpdb->ea_accounts SET currency = currency_code" );
+	$wpdb->query( "ALTER TABLE $wpdb->ea_accounts MODIFY COLUMN type VARCHAR(50) NOT NULL DEFAULT 'account' AFTER id" );
+	$wpdb->query( "ALTER TABLE $wpdb->ea_accounts MODIFY COLUMN date_created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER currency" );
 
 	// accounts having opening balance insert as payments.
-	$accounts = $wpdb->get_results( "SELECT id, opening_balance, currency, date_created FROM {$wpdb->prefix}ea_accounts WHERE opening_balance != ''" );
+	$accounts = $wpdb->get_results( "SELECT id, opening_balance, currency, date_created FROM $wpdb->ea_accounts WHERE opening_balance != ''" );
 	foreach ( $accounts as $account ) {
 		$payment = new \EverAccounting\Models\Payment();
 		$payment->fill(
@@ -267,7 +236,7 @@ function eac_update_120_accounts() {
 	}
 
 	// now drop the opening balance column.
-	$wpdb->query( "ALTER TABLE {$wpdb->prefix}ea_accounts DROP COLUMN opening_balance" );
+	$wpdb->query( "ALTER TABLE $wpdb->ea_accounts DROP COLUMN opening_balance" );
 
 	// now query all the accounts and update the balance.
 	$accounts = EAC()->accounts->query( array( 'limit' => - 1 ) );
@@ -286,11 +255,11 @@ function eac_update_120_accounts() {
  */
 function eac_update_120_categories() {
 	global $wpdb;
-	$table = $wpdb->prefix . 'ea_categories';
-	$terms = $wpdb->prefix . 'ea_terms';
-	$wpdb->query( "UPDATE $table SET type = 'payment' WHERE type = 'income'" );
-	$wpdb->query( "DELETE FROM $table WHERE type = 'other'" );
-	$wpdb->query( "INSERT INTO $terms (id, name, type, date_created) SELECT id, name, type, date_created FROM $table" );
+	$wpdb->ea_categories = $wpdb->prefix . 'ea_categories';
+	$wpdb->ea_terms      = $wpdb->prefix . 'ea_terms';
+	$wpdb->query( "UPDATE $wpdb->ea_categories SET type = 'payment' WHERE type = 'income'" );
+	$wpdb->query( "DELETE FROM $wpdb->ea_categories WHERE type = 'other'" );
+	$wpdb->query( "INSERT INTO $wpdb->ea_terms (id, name, type, date_created) SELECT id, name, type, date_created FROM $wpdb->ea_categories" );
 	DatabaseUtil::drop_tables( 'ea_categories' );
 }
 
@@ -299,31 +268,21 @@ function eac_update_120_categories() {
  */
 function eac_update_120_contacts() {
 	global $wpdb;
-	$table = $wpdb->prefix . 'ea_contacts';
-	$wpdb->query( "UPDATE $table SET tax_number = vat_number" );
-	$wpdb->query( "UPDATE $table SET currency = currency_code" );
-	$wpdb->query( "ALTER TABLE $table MODIFY COLUMN type VARCHAR(30) DEFAULT 'customer' AFTER id" );
-	$wpdb->query( "ALTER TABLE $table MODIFY COLUMN website VARCHAR(191) DEFAULT NULL AFTER phone" );
-	$wpdb->query( "ALTER TABLE $table MODIFY COLUMN country VARCHAR(3) DEFAULT NULL AFTER postcode" );
-	// $wpdb->query( "ALTER TABLE $table DROP COLUMN vat_number" );
-	// $wpdb->query( "ALTER TABLE $table DROP COLUMN currency_code" );
-	// $wpdb->query( "ALTER TABLE $table DROP COLUMN attachment" );
-	// $wpdb->query( "ALTER TABLE $table DROP COLUMN enabled" );
-	// $wpdb->query( "ALTER TABLE $table DROP COLUMN creator_id" );
-	// $wpdb->query( "ALTER TABLE $table DROP COLUMN thumbnail_id" );
-	// $wpdb->query( "ALTER TABLE $table DROP COLUMN user_id" );
-	// $wpdb->query( "ALTER TABLE $table DROP COLUMN street" );
-	// $wpdb->query( "ALTER TABLE $table DROP COLUMN birth_date" );
-	$wpdb->query( "ALTER TABLE $table MODIFY COLUMN date_created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER created_via" );
+	$wpdb->ea_contacts = $wpdb->prefix . 'ea_contacts';
+	$wpdb->query( "UPDATE $wpdb->ea_contacts SET tax_number = vat_number" );
+	$wpdb->query( "UPDATE $wpdb->ea_contacts SET currency = currency_code" );
+	$wpdb->query( "ALTER TABLE $wpdb->ea_contacts MODIFY COLUMN type VARCHAR(30) DEFAULT 'customer' AFTER id" );
+	$wpdb->query( "ALTER TABLE $wpdb->ea_contacts MODIFY COLUMN website VARCHAR(191) DEFAULT NULL AFTER phone" );
+	$wpdb->query( "ALTER TABLE $wpdb->ea_contacts MODIFY COLUMN country VARCHAR(3) DEFAULT NULL AFTER postcode" );
+	$wpdb->query( "ALTER TABLE $wpdb->ea_contacts MODIFY COLUMN date_created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER created_via" );
 
 	// Drop the old columns.
 	DatabaseUtil::drop_columns( 'ea_contacts', 'vat_number, currency_code, attachment, enabled, creator_id, thumbnail_id, user_id, street, birth_date' );
 
 	// Contacts.
-	$table = $wpdb->prefix . 'ea_contactmeta';
-	$wpdb->query( "UPDATE $table SET ea_contact_id = contact_id" );
-	// $wpdb->query( "ALTER TABLE $table DROP COLUMN contact_id" );
-	$wpdb->query( "ALTER TABLE $table MODIFY COLUMN ea_contact_id INT(11) NOT NULL AFTER meta_id" );
+	$wpdb->ea_contactmeta = $wpdb->prefix . 'ea_contactmeta';
+	$wpdb->query( "UPDATE $wpdb->ea_contactmeta SET ea_contact_id = contact_id" );
+	$wpdb->query( "ALTER TABLE $wpdb->ea_contactmeta MODIFY COLUMN ea_contact_id INT(11) NOT NULL AFTER meta_id" );
 
 	// Drop the old columns.
 	DatabaseUtil::drop_columns( 'ea_contactmeta', 'contact_id' );
@@ -335,23 +294,14 @@ function eac_update_120_contacts() {
  */
 function eac_update_120_items() {
 	global $wpdb;
-	$table = $wpdb->prefix . 'ea_items';
-	$wpdb->query( "UPDATE $table SET price = sale_price, cost = purchase_price" );
-	// $wpdb->query( "ALTER TABLE $table DROP COLUMN sale_price" );
-	// $wpdb->query( "ALTER TABLE $table DROP COLUMN purchase_price" );
-	// $wpdb->query( "ALTER TABLE $table DROP COLUMN sku" );
-	// $wpdb->query( "ALTER TABLE $table DROP COLUMN quantity" );
-	// $wpdb->query( "ALTER TABLE $table DROP COLUMN sales_tax" );
-	// $wpdb->query( "ALTER TABLE $table DROP COLUMN purchase_tax" );
-	// $wpdb->query( "ALTER TABLE $table DROP COLUMN enabled" );
-	// $wpdb->query( "ALTER TABLE $table DROP COLUMN creator_id" );
-	// $wpdb->query( "ALTER TABLE $table DROP COLUMN thumbnail_id" );
-
-	$wpdb->query( "ALTER TABLE $table MODIFY type VARCHAR(50) NOT NULL AFTER id" );
-	$wpdb->query( "ALTER TABLE $table MODIFY unit VARCHAR(50) DEFAULT NULL AFTER description" );
-	$wpdb->query( "ALTER TABLE $table MODIFY price DECIMAL(10,2) DEFAULT NULL AFTER unit" );
-	$wpdb->query( "ALTER TABLE $table MODIFY cost DOUBLE(15, 4) NOT NULL AFTER price" );
-	$wpdb->query( "ALTER TABLE $table MODIFY tax_ids VARCHAR(191) DEFAULT NULL AFTER cost" );
+	$wpdb->ea_items = $wpdb->prefix . 'ea_items';
+	$wpdb->query( "UPDATE $wpdb->ea_items SET price = sale_price, cost = purchase_price" );
+	$wpdb->query( "ALTER TABLE $wpdb->ea_items MODIFY type VARCHAR(50) NOT NULL AFTER id" );
+	$wpdb->query( "ALTER TABLE $wpdb->ea_items MODIFY unit VARCHAR(50) DEFAULT NULL AFTER description" );
+	$wpdb->query( "ALTER TABLE $wpdb->ea_items MODIFY price DECIMAL(10,2) DEFAULT NULL AFTER unit" );
+	$wpdb->query( "ALTER TABLE $wpdb->ea_items MODIFY cost DOUBLE(15, 4) NOT NULL AFTER price" );
+	$wpdb->query( "ALTER TABLE $wpdb->ea_items MODIFY tax_ids VARCHAR(191) DEFAULT NULL AFTER cost" );
+	$wpdb->query( "ALTER TABLE $wpdb->ea_items MODIFY created_via VARCHAR(20) DEFAULT 'manual' AFTER category_id" );
 
 	// Drop the old columns.
 	DatabaseUtil::drop_columns( 'ea_items', 'sale_price, purchase_price, sku, quantity, sales_tax, purchase_tax, enabled, creator_id, thumbnail_id' );
@@ -362,16 +312,11 @@ function eac_update_120_items() {
  */
 function eac_update_120_notes() {
 	global $wpdb;
-	$table = $wpdb->prefix . 'ea_notes';
-	$wpdb->query( "UPDATE $table SET author_id = creator_id" );
-	$wpdb->query( "UPDATE $table SET parent_type = type" );
-	$wpdb->query( "UPDATE $table SET content = note" );
-
-	// $wpdb->query( "ALTER TABLE $table DROP COLUMN `type`" );
-	// $wpdb->query( "ALTER TABLE $table DROP COLUMN note" );
-	// $wpdb->query( "ALTER TABLE $table DROP COLUMN extra" );
-	// $wpdb->query( "ALTER TABLE $table DROP COLUMN creator_id" );
-	$wpdb->query( "ALTER TABLE $table MODIFY date_created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER author_id" );
+	$wpdb->ea_notes = $wpdb->prefix . 'ea_notes';
+	$wpdb->query( "UPDATE $wpdb->ea_notes SET author_id = creator_id" );
+	$wpdb->query( "UPDATE $wpdb->ea_notes SET parent_type = type" );
+	$wpdb->query( "UPDATE $wpdb->ea_notes SET content = note" );
+	$wpdb->query( "ALTER TABLE $wpdb->ea_notes MODIFY date_created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER author_id" );
 
 	// Drop the old columns.
 	DatabaseUtil::drop_columns( 'ea_notes', 'type, note, extra, creator_id' );

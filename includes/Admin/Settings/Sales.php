@@ -80,7 +80,6 @@ class Sales extends Page {
 	 */
 	public function get_invoices_section_settings() {
 		return array(
-			// invoice settings section
 			array(
 				'title' => __( 'Invoice Settings', 'wp-ever-accounting' ),
 				'desc'  => __( 'Customize how your invoice number gets generated automatically when you create a new invoice.', 'wp-ever-accounting' ),

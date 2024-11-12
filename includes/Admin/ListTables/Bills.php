@@ -93,7 +93,7 @@ class Bills extends ListTable {
 		foreach ( $ids as $id ) {
 			$bill = EAC()->bills->get( $id );
 			if ( $bill && $bill->fill( array( 'status' => 'draft' ) )->save() ) {
-				++ $performed;
+				++$performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
@@ -115,7 +115,7 @@ class Bills extends ListTable {
 		foreach ( $ids as $id ) {
 			$bill = EAC()->bills->get( $id );
 			if ( $bill && $bill->fill( array( 'status' => 'received' ) )->save() ) {
-				++ $performed;
+				++$performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
@@ -137,7 +137,7 @@ class Bills extends ListTable {
 		foreach ( $ids as $id ) {
 			$bill = EAC()->bills->get( $id );
 			if ( $bill && $bill->fill( array( 'status' => 'overdue' ) )->save() ) {
-				++ $performed;
+				++$performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
@@ -159,7 +159,7 @@ class Bills extends ListTable {
 		foreach ( $ids as $id ) {
 			$bill = EAC()->bills->get( $id );
 			if ( $bill && $bill->fill( array( 'status' => 'cancelled' ) )->save() ) {
-				++ $performed;
+				++$performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {
@@ -180,7 +180,7 @@ class Bills extends ListTable {
 		$performed = 0;
 		foreach ( $ids as $id ) {
 			if ( EAC()->bills->delete( $id ) ) {
-				++ $performed;
+				++$performed;
 			}
 		}
 		if ( ! empty( $performed ) ) {

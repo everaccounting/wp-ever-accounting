@@ -98,7 +98,7 @@ $payment = Payment::make( $id );
 							'required'      => true,
 							'prefix'        => '1 ' . eac_base_currency() . ' = ',
 							'attr-step'     => 'any',
-							'readonly'      => $payment->currency === eac_base_currency(),
+							'readonly'      => eac_base_currency() === $payment->currency,
 							'data-currency' => $payment->currency,
 							'data-source'   => ':input[name="account_id"]',
 						)

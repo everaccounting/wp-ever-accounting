@@ -47,7 +47,7 @@ class Invoices {
 	 * @since 1.0.0
 	 * @return void
 	 */
-	public static function handle_edit( $posted ) {
+	public static function handle_edit() {
 		check_admin_referer( 'eac_edit_invoice' );
 
 		if ( ! current_user_can( 'eac_manage_invoice' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability.

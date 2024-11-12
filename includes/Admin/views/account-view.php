@@ -59,9 +59,9 @@ $current_section = ! array_key_exists( $section, $sections ) ? current( array_ke
 			<div class="eac-profile-header__title">
 				<?php echo esc_html( $account->name ); ?>
 			</div>
-			<p class="small"><?php printf( '%1$s %2$s', __( 'Balance:', 'wp-ever-accounting' ), esc_html( $account->formatted_balance ) ); ?></p>
+			<p class="small"><?php printf( '%1$s %2$s', esc_html__( 'Balance:', 'wp-ever-accounting' ), esc_html( $account->formatted_balance ) ); ?></p>
 			<?php if ( $account->number ) : ?>
-				<p class="small"><?php printf( '%1$s %2$s', __( 'Account #:', 'wp-ever-accounting' ), esc_html( $account->number ) ); ?></p>
+				<p class="small"><?php printf( '%1$s %2$s', esc_html__( 'Account #:', 'wp-ever-accounting' ), esc_html( $account->number ) ); ?></p>
 			<?php endif; ?>
 			<p class="small">
 				<?php // translators: %s: date. ?>

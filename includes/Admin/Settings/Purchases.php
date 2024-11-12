@@ -152,8 +152,6 @@ class Purchases extends Page {
 				'type' => 'sectionend',
 				'id'   => 'defaults_settings',
 			),
-
-			// Columns section start
 			array(
 				'title' => __( 'Bill Columns', 'wp-ever-accounting' ),
 				'desc'  => __( 'Customize the columns of your bills.', 'wp-ever-accounting' ),

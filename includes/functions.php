@@ -13,9 +13,7 @@ defined( 'ABSPATH' ) || exit;
 
 require_once __DIR__ . '/Functions/formatters.php';
 require_once __DIR__ . '/Functions/misc.php';
-require_once __DIR__ . '/Functions/reports.php';
 require_once __DIR__ . '/Functions/templates.php';
-require_once __DIR__ . '/Functions/updates.php';
 
 /**
  * Get the base currency.
@@ -60,12 +58,13 @@ function eac_get_currencies() {
 	uasort(
 		$currencies,
 		function ( $a, $b ) {
-			if ( $a['code'] === eac_base_currency() ) {
-				return -1;
+			if ( eac_base_currency() === $a['code'] ) {
+				return - 1;
 			}
-			if ( $b['code'] === eac_base_currency() ) {
+			if ( eac_base_currency() === $b['code'] ) {
 				return 1;
 			}
+
 			return strcasecmp( $a['formatted_name'], $b['formatted_name'] );
 		}
 	);
@@ -123,7 +122,7 @@ function eac_format_amount( $amount, $currency = null ) {
  */
 function eac_sanitize_amount( $amount, $currency = null ) {
 	if ( ! is_numeric( $amount ) ) {
-//		$amount     = sanitize_text_field( $amount );
+		$amount     = sanitize_text_field( $amount );
 		$currencies = eac_get_currencies();
 		$data       = array_key_exists( $currency, $currencies ) ? $currencies[ $currency ] : $currencies[ eac_base_currency() ];
 
@@ -182,12 +181,12 @@ function eac_convert_currency( $amount, $from = 1, $to = 1 ) {
 	}
 
 	// from amount is in base currency.
-	if ( $from !== 1 ) {
+	if ( 1 !== $from ) {
 		$amount = $amount / $from;
 	}
 
 	// to amount is in base currency.
-	if ( $to !== 1 ) {
+	if ( 1 !== $to ) {
 		$amount = $amount * $to;
 	}
 

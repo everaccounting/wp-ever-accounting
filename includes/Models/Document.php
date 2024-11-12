@@ -366,7 +366,7 @@ class Document extends Model {
 		global $wpdb;
 		$number = $wpdb->get_var(
 			$wpdb->prepare(
-				"SELECT number FROM {$wpdb->prefix}{$this->table} WHERE type = %s AND number IS NOT NULL AND number != '' ORDER BY number DESC",
+				"SELECT number FROM {$wpdb->prefix}{$this->table} WHERE type = %s AND number IS NOT NULL AND number != '' ORDER BY number DESC", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Already prepared.
 				esc_sql( $this->type )
 			)
 		);

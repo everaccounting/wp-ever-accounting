@@ -16,6 +16,7 @@
  *
  * @var \EverAccounting\Models\Payment $expense Payment object.
  */
+
 defined( 'ABSPATH' ) || exit;
 
 do_action( 'eac_page_header' );

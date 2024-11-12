@@ -202,7 +202,7 @@ function eac_form_field( $field ) {
 			wp_editor(
 				$field['value'],
 				$field['id'],
-				$settings,
+				$settings
 			);
 			$input = ob_get_clean();
 			break;
@@ -264,7 +264,7 @@ function eac_form_field( $field ) {
 				esc_url( $file['url'] ),
 				esc_html( $file['filename'] ),
 				esc_attr( $field['button_class'] ),
-				esc_html( $field['button_label'] ),
+				esc_html( $field['button_label'] )
 			);
 
 			break;

@@ -2,7 +2,6 @@
 
 namespace EverAccounting\Admin;
 
-use EverAccounting\Admin\Settings\Emails;
 use EverAccounting\Admin\Settings\General;
 use EverAccounting\Admin\Settings\Page;
 use EverAccounting\Admin\Settings\Purchases;
@@ -92,7 +91,6 @@ class Settings {
 				new Sales(),
 				new Purchases(),
 				new Taxes(),
-			// new Emails(),
 			)
 		);
 
@@ -570,7 +568,7 @@ class Settings {
 								data-type="page"
 							>
 								<?php if ( ! is_null( $page ) ) { ?>
-									<option value="<?php echo esc_attr( $option_value ); ?>" selected="selected"><?php echo wp_strip_all_tags( $option_display_name ); ?></option>
+									<option value="<?php echo esc_attr( $option_value ); ?>" selected="selected"><?php echo esc_html( wp_strip_all_tags( $option_display_name ) ); ?></option>
 								<?php } ?>
 							</select>
 							<?php echo wp_kses_post( $description ); ?>

@@ -21,12 +21,11 @@ global $list_table;
 		<?php endif; ?>
 	</h1>
 	<form method="get" action="<?php echo esc_url( admin_url( 'admin.php' ) ); ?>">
-		<?php $status = isset( $_GET['status'] ) ? sanitize_text_field( wp_unslash( $_GET['status'] ) ) : ''; ?>
 		<?php $list_table->views(); ?>
 		<?php $list_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'search' ); ?>
 		<?php $list_table->display(); ?>
 		<input type="hidden" name="page" value="eac-purchases"/>
 		<input type="hidden" name="tab" value="bills"/>
-		<input type="hidden" name="status" value="<?php echo esc_attr( $status ); ?>"/>
+		<input type="hidden" name="status" value="<?php echo esc_attr( filter_input( INPUT_GET, 'status', FILTER_SANITIZE_FULL_SPECIAL_CHARS ) ); ?>"/>
 	</form>
 <?php

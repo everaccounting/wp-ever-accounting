@@ -138,11 +138,7 @@ class Installer {
 		}
 		delete_transient( 'eac_installed' );
 		flush_rewrite_rules();
-		if ( ! get_option( 'eac_setup_wizard_completed' ) ) {
-			wp_safe_redirect( add_query_arg( 'page', 'eac-setup', admin_url( 'admin.php' ) ) );
-		} else {
-			wp_safe_redirect( add_query_arg( 'page', 'ever-accounting', admin_url( 'admin.php' ) ) );
-		}
+		wp_safe_redirect( add_query_arg( 'page', 'ever-accounting', admin_url( 'admin.php' ) ) );
 		exit;
 	}
 
@@ -694,7 +690,7 @@ KEY expense_id (expense_id)
 		);
 
 		foreach ( $tables as $table ) {
-			$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}{$table};" );
+			$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}{$table};" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		}
 	}
 }

@@ -159,7 +159,6 @@ class Accounts {
 	 */
 	public static function overview_section( $account ) {
 		global $wpdb;
-		// wp_enqueue_script('eac-chartjs');
 		$start_date   = ReportsUtil::get_year_start_date();
 		$end_date     = ReportsUtil::get_year_end_date();
 		$transactions = $wpdb->get_results(

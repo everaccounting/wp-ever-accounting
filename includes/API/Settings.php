@@ -160,7 +160,7 @@ class Settings extends Controller {
 	 * @since 2.0.0
 	 */
 	public function allowed_group_keys( $key ) {
-		return in_array( $key, array( 'id', 'label', 'description', 'parent_id', 'sub_groups' ) );
+		return in_array( $key, array( 'id', 'label', 'description', 'parent_id', 'sub_groups' ), true );
 	}
 
 	/**
@@ -188,7 +188,7 @@ class Settings extends Controller {
 	 * @since 2.0.0
 	 */
 	public function get_items_permissions_check( $request ) {
-		if ( ! current_user_can( 'settings', 'read' ) ) {
+		if ( ! current_user_can( 'settings', 'read' ) ) {  // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability
 			return new \WP_Error( 'eac_rest_cannot_view', __( 'Sorry, you cannot list resources.', 'wp-ever-accounting' ), array( 'status' => rest_authorization_required_code() ) );
 		}
 

@@ -35,7 +35,6 @@ class Setup {
 	 */
 	public function __construct() {
 		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
-//		add_action( 'admin_init', array( $this, 'redirect_to_setup' ) );
 		add_action( 'admin_init', array( $this, 'setup_wizard' ) );
 	}
 
@@ -47,41 +46,6 @@ class Setup {
 	 */
 	public function admin_menu() {
 		add_dashboard_page( '', '', 'manage_options', 'eac-setup', '' );
-	}
-
-	/**
-	 * Render the setup wizard if it hasn't been completed.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	public function redirect_to_setup() {
-		$do_redirect        = false;
-		$is_enable_setup    = apply_filters( 'eac_enable_setup_wizard', true );
-		$is_setup_completed = get_option( 'eac_setup_wizard_completed', false );
-
-		// Get the page query variable from the URL and sanitize it.
-		$page = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_STRING );
-
-		if ( ( $page && 'ever-accounting' === $page ) && ! $is_setup_completed && $is_enable_setup ) {
-			$do_redirect = true;
-		}
-
-		if ( get_transient( 'eac_activation_redirect' ) && ! $is_setup_completed && $is_enable_setup ) {
-			$do_redirect = true;
-		}
-
-		// On these pages, or during these events, postpone the redirect.
-		if ( wp_doing_ajax() || is_network_admin() || ! current_user_can( 'manage_options' ) ) {
-			$do_redirect = false;
-		}
-
-		// Redirect to setup wizard.
-		if ( $do_redirect ) {
-			delete_transient( 'eac_activation_redirect' );
-			wp_safe_redirect( admin_url( 'index.php?page=eac-setup' ) );
-			exit;
-		}
 	}
 
 	/**
@@ -146,9 +110,6 @@ class Setup {
 
 		// Plugin scripts.
 		EAC()->scripts->register_script( 'eac-admin', EAC()->get_assets_url( 'js/admin.js' ), array( 'jquery', 'eac-inputmask', 'eac-select2', 'eac-printthis', 'eac-tiptip', 'jquery-ui-datepicker', 'jquery-ui-tooltip', 'eac-money', 'wp-ajax-response' ), false );
-
-		// EAC()->scripts->register_script( 'eac-select2', EAC()->get_assets_url( 'js/select2.js' ) );
-		// EAC()->scripts->enqueue_script( 'eac-admin', EAC()->get_assets_url( 'js/admin.js' ), array( 'jquery', 'eac-select2' ), false );
 
 		EAC()->scripts->enqueue_script( 'eac-setup', EAC()->get_assets_url( 'js/setup.js' ), array( 'jquery', 'eac-admin' ), false );
 
