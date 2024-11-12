@@ -41,7 +41,7 @@ use EverAccounting\Controllers\Vendors;
  * @property Transfers  $transfers Transfers controller.
  * @property Vendors    $vendors Vendors controller.
  */
-class Plugin extends ByteKit\Plugin {
+class Plugin extends \EverAccounting\ByteKit\Plugin {
 	/**
 	 * Plugin constructor.
 	 *

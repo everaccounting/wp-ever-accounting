@@ -31,7 +31,7 @@ Thumbs.db
 Desktop.ini
 
 # Libraries
-lib
+bin/strauss.phar
 
 #Override
 .env.testing
