@@ -2,7 +2,7 @@
 Contributors: everaccounting, manikmist09
 Tags: accounting, invoice, CRM, business, finance
 Requires at least: 5.0
-Tested up to: 6.6
+Tested up to: 6.7
 Requires PHP: 8.0
 Stable tag: 2.0.0
 License: GPLv2 or later

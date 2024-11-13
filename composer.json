@@ -27,7 +27,7 @@
     }
   ],
   "require": {
-    "php": ">=7.0",
+    "php": ">=8.0",
     "byteever/bytekit-models": "^1.0",
     "byteever/bytekit-plugin": "^1.0",
     "woocommerce/action-scheduler": "^3.7"
@@ -78,9 +78,8 @@
     "test:gen:acceptance": "vendor/bin/codecept generate:cest acceptance",
     "test": "vendor/bin/codecept run functional --",
     "strauss": [
-      "test -f ./bin/strauss.phar || curl -o bin/strauss.phar -L -C - https://github.com/BrianHenryIE/strauss/releases/0.19.1/download/strauss.phar",
-      "@php bin/strauss.phar",
-      "composer dump-autoload"
+      "test -f ./bin/strauss.phar || curl -o bin/strauss.phar -L -C - https://github.com/BrianHenryIE/strauss/releases/latest/download/strauss.phar",
+      "@php bin/strauss.phar"
     ]
   },
   "extra": {
