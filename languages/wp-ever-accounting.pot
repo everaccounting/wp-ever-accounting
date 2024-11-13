@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Ever Accounting 2.0.0\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/wp-ever-accounting\n"
-"POT-Creation-Date: 2024-11-12 12:14:22+00:00\n"
+"POT-Creation-Date: 2024-11-12 17:39:40+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1590,7 +1590,7 @@ msgstr ""
 msgid "New"
 msgstr ""
 
-#: includes/Admin/Admin.php:198 lib/ByteKit/Traits/HasPlugin.php:223
+#: includes/Admin/Admin.php:198
 msgid "Support"
 msgstr ""
 
@@ -3384,7 +3384,6 @@ msgid "Reports"
 msgstr ""
 
 #: includes/Admin/Utilities.php:65 includes/Admin/Utilities.php:66
-#: lib/ByteKit/Traits/HasPlugin.php:255
 msgid "Settings"
 msgstr ""
 
@@ -4464,22 +4463,6 @@ msgstr ""
 
 #: includes/functions.php:256
 msgid "Other"
-msgstr ""
-
-#: legacy-tests/bootstrap.php:33
-msgid "HTTP Requests disabled for unit tests"
-msgstr ""
-
-#: lib/ByteKit/Admin/Notices.php:130
-msgid "Dismiss this notice"
-msgstr ""
-
-#: lib/ByteKit/Traits/HasPlugin.php:216
-msgid "Documentation"
-msgstr ""
-
-#: lib/ByteKit/Traits/HasPlugin.php:230
-msgid "Review"
 msgstr ""
 
 #: templates/content-bill.php:55
