@@ -251,26 +251,44 @@ Yes, WP Ever Accounting allows you to customize the plugin settings to suit your
 Yes, you can contribute to WP Ever Accounting. We welcome contributions from the community to enhance the plugin and make it better for everyone. If you have a bug report, feature request, or code contribution, please submit it, and we will review it for inclusion in the plugin.
 
 == Screenshots ==
-1. Transaction Overview
-2. Items Listing
-3. Invoice Management
-4. Revenue Records
-5. Customer Profiles
-6. Bill Management
-7. Payment Records
-8. Vendor Profiles
-9. Transactions Listing
-10. Account Balances
-11. Transfer Records
-12. Currency Management
-13. Category Management
-14. Data Import
-15. Data Export
-16. Sales Reports
-17. Expense Reports
-18. Profit Analysis
-19. Cash Flow Summary
-20. Settings
+1. Dashboard: Get a detailed summary of your accounting activities.
+2. Items: Manage your products and services with ease.
+3. Add/Edit Item: Create or edit items with detailed information.
+4. Payments: List of all payments.
+5. View Payment: View detailed information about a payment.
+6. Add/Edit Payment: Add or edit payments with ease.
+7. Invoices: List of all invoices.
+8. View Invoice: View detailed information about an invoice.
+9. Add/Edit Invoice: Create or edit invoices with ease.
+10. Customers: List of all customers.
+11. View Customer: View detailed information about a customer.
+12. Add/Edit Customer: Create or edit customers with ease.
+13. Expenses: List of all expenses.
+14. View Expense: View detailed information about an expense.
+15. Add/Edit Expense: Add or edit expenses with ease.
+16. Bills: List of all bills.
+17. View Bill: View detailed information about a bill.
+18. Add/Edit Bill: Add or edit bills with ease.
+19. Vendors: List of all vendors.
+20. View Vendor: View detailed information about a vendor.
+21. Add/Edit Vendor: Create or edit vendors with ease.
+22. Accounts: List of all accounts.
+23. Transfer: Transfer funds between accounts.
+24. Add/Edit Transfer: Add or edit transfers with ease.
+25. Import: Import data like customers, vendors, revenues, payments, accounts, and transactions.
+26. Export: Export data like customers, vendors, revenues, payments, accounts, and transactions.
+27. Sales Reports: View detailed sales reports.
+28. Expenses Reports: View detailed expenses reports.
+29. Profits Analysis: Analyze profits and losses.
+30. Settings: General settings.
+31. Settings: Currency settings.
+32. Settings: Sales and Invoices settings.
+33. Settings: Purchase and Bills settings.
+34. Settings: Taxes settings.
+35. Settings: List of Tax Rates.
+36. Settings: Add/Edit Tax Rate.
+37. Settings: List of Categories.
+38. Settings: Add/Edit Category.
 
 == Changelog ==
 = 2.0.0 = (11 November 2024)
