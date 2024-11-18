@@ -61,9 +61,7 @@ function eac_update_120_settings() {
 		$o_currencies = wp_list_pluck( $o_currencies, 'rate', 'code' );
 		foreach ( $o_currencies as $code => $rate ) {
 			if ( ! empty( $code ) && ! empty( $rate ) && eac_base_currency() !== $code ) {
-				$currencies[ $code ] = array(
-					'rate' => $rate,
-				);
+				$currencies[ $code ] = $rate;
 			}
 		}
 	}
