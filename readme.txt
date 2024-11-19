@@ -25,6 +25,8 @@ With the ability to create your income & expenses in multi-currencies, you will 
 
 The plugin is designed to be user-friendly and easy to use. It is suitable for small business owners, freelancers, startups, SMEs, accountants, entrepreneurs, WooCommerce store owners, service providers, consultants, agencies, nonprofits, bloggers, affiliate marketers, digital marketers, content creators, e-commerce store owners, and online business owners.
 
+[**💻 Live Demo Site**](https://demo.wpeveraccounting.com/) | [**📄 Plugin Documentation**](https://wpeveraccounting.com/docs/) | [**🚀 Extensions**](https://wpeveraccounting.com/extensions/)
+
 === 👨‍💻 This Plugin is Ideal for: ===
 
 * **Small Business Owners**: Manage your finances with ease and focus on growing your business.
@@ -45,10 +47,6 @@ The plugin is designed to be user-friendly and easy to use. It is suitable for s
 * **E-commerce Store Owners**: Track your store's income and expenses with ease.
 * **Online Business Owners**: Manage your finances, track expenses, and generate detailed reports.
 
-Keep track of your income, expense, send professional invoices in multi-currencies with the **WP Ever Accounting** plugin. WP Ever Accounting offers everything you need to run your business confidently.
-
-[**💻 Live Demo Site**](https://wpeveraccounting.com/demo/) | [**📄 Plugin Documentation**](https://wpeveraccounting.com/docs/) | [**🚀 Extensions**](https://wpeveraccounting.com/extensions/)
-
 == ✨ Key Features ==
 &#9989; **Multi-Currency Support**: Track income and expenses in multiple currencies.
 &#9989; **Detailed Cash Flow Insights**: Real-time cash flow monitoring for smarter financial decisions.
@@ -67,9 +65,9 @@ Keep track of your income, expense, send professional invoices in multi-currenci
 &#9989; **Custom User Roles**: Assign roles with tailored permissions for secure management.
 
 = Discover More =
-Learn more about the ** WP Ever Accounting** plugin from our website.
-- 🌐 [WPEverAccounting](https://wpeveraccounting.com/)
-- 💻 [Live Demo Site](https://wpeveraccounting.com/demo/)
+Learn more about the **WP Ever Accounting** plugin from our website.
+- 🌐 [EverAccounting](https://wpeveraccounting.com/)
+- 💻 [Live Demo Site](https://demo.wpeveraccounting.com/)
 - 📄 [Plugin Documentation](https://wpeveraccounting.com/docs)
 - 🚀 [Extensions](https://wpeveraccounting.com/extensions)
 
@@ -84,7 +82,7 @@ Get a realtime view of your Cash flow. Stay on top of your Cash flow and make sm
 **Easy Invoicing**
 Generate, print, and share professional invoices, including tax and discount options, in your clients' currency.
 
-** Billable Expenses **
+**Billable Expenses**
 Create and manage bills, so your finances are always accurate and healthy. Print and share the bill with your vendor. Bill also supports tax calculation & discount.
 
 **Expense Tracking**
@@ -120,7 +118,7 @@ Add deposits and make transfers across accounts to keep finances organized. The 
 **Bulk Import**
 Quickly import data like customers, vendors, revenues, payments, accounts, and transactions to/from other systems.
 
-** Bulk Export**
+**Bulk Export**
 Ever Accounting lets you export most of your accounting records like customers, vendors, revenues, payments, accounts in CSV format, which you can import later or analyze.
 
 **Custom User Roles**
