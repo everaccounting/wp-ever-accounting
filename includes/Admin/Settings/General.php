@@ -144,7 +144,7 @@ class General extends Page {
 			array(
 				'title'       => __( 'ZIP', 'wp-ever-accounting' ),
 				'desc'        => __( 'The postcode or ZIP code of your business (if any). This will be used in the invoice, bill, and other documents.', 'wp-ever-accounting' ),
-				'id'          => 'eac_business_zip',
+				'id'          => 'eac_business_postcode',
 				'type'        => 'text',
 				'placeholder' => 'e.g. 10001',
 				'default'     => '',

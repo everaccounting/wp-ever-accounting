@@ -71,37 +71,37 @@ class Business {
 	 * @return string Company state.
 	 */
 	public function get_state() {
-		return get_option( 'eac_company_state', '' );
+		return get_option( 'eac_business_state', '' );
 	}
 
 	/**
-	 * Get the zip code of the company.
+	 * Get the zip code of the business.
 	 *
 	 * @since 1.0.0
 	 * @return string Company postcode code.
 	 */
 	public function get_postcode() {
-		return get_option( 'eac_company_postcode', '' );
+		return get_option( 'eac_business_postcode', '' );
 	}
 
 	/**
-	 * Get the country of the company.
+	 * Get the country of the business.
 	 *
 	 * @since 1.0.0
 	 * @return string Company country.
 	 */
 	public function get_country() {
-		return get_option( 'eac_company_country', '' );
+		return get_option( 'eac_business_country', '' );
 	}
 
 	/**
-	 * Get the logo of the company.
+	 * Get the logo of the business.
 	 *
 	 * @since 1.0.0
 	 * @return string Company logo.
 	 */
 	public function get_logo() {
-		return get_option( 'eac_company_logo', '' );
+		return get_option( 'eac_business_logo', '' );
 	}
 
 	/**
@@ -117,13 +117,13 @@ class Business {
 	}
 
 	/**
-	 * Get the company's tax number.
+	 * Get the business's tax number.
 	 *
 	 * @since 1.0.0
 	 * @return string Company tax number.
 	 */
 	public function get_tax_number() {
-		return get_option( 'eac_company_tax_number', '' );
+		return get_option( 'eac_business_tax_number', '' );
 	}
 
 	/**

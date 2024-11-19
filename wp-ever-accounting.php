@@ -4,13 +4,15 @@
  * Plugin URI: https://wpeveraccounting.com/
  * Description: Manage your business finances right from your WordPress dashboard.
  * Version: 2.0.0
- * Author: EAccounting
- * Author URI: https://wpeveraccounting.com/
  * Requires at least: 4.7.0
  * Tested up to: 6.7
+ * Requires PHP: 7.4
+ * Author: EAccounting
+ * Author URI: https://wpeveraccounting.com/
+ * License: GPL v2 or later
+ * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: wp-ever-accounting
  * Domain Path: /languages/
- * License: GPL2+
  *
  * @package wp-ever-accounting
  */
