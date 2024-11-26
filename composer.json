@@ -27,7 +27,7 @@
     }
   ],
   "require": {
-    "php": ">=8.0",
+    "php": ">=7.4",
     "byteever/bytekit-models": "^1.0",
     "byteever/bytekit-plugin": "^1.0",
     "woocommerce/action-scheduler": "^3.7"
