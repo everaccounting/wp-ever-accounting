@@ -3,7 +3,7 @@ Contributors: everaccounting, manikmist09
 Tags: accounting, invoice, CRM, business, finance
 Requires at least: 5.0
 Tested up to: 6.7
-Requires PHP: 8.0
+Requires PHP: 7.4
 Stable tag: 2.0.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -234,7 +234,7 @@ Yes, you can use WP Ever Accounting for blogging. The plugin is suitable for blo
 You only need a fully functional WordPress site (minimum version 5.0). WP Ever Accounting is fully self-contained and requires no additional dependencies. The plugin is designed to work seamlessly with WordPress and provide a powerful accounting solution for small businesses.
 
 = What PHP version is required? =
-WP Ever Accounting requires PHP 8.0 or higher to function optimally. Please upgrade to avoid compatibility issues. If you are using an older version of PHP, you may experience performance problems or errors.
+WP Ever Accounting requires PHP 7.4 or higher to function optimally. Please upgrade to avoid compatibility issues. If you are using an older version of PHP, you may experience performance problems or errors.
 
 = Can I suggest new features for WP Ever Accounting? =
 Yes, you can suggest new features for WP Ever Accounting. We welcome user feedback and continuously improve the plugin based on your suggestions. If you have an idea for a new feature or improvement, please let us know, and we will consider it for future updates.
