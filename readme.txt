@@ -289,6 +289,9 @@ Yes, you can contribute to WP Ever Accounting. We welcome contributions from the
 38. Settings: Add/Edit Category.
 
 == Changelog ==
+= 2.0.1 = (26 November 2024)
+* Fix: Downgrade required PHP version to 7.4
+
 = 2.0.0 = (19 November 2024)
 * New: Completely redesigned and rewritten plugin.
 * Fix: Major code improvements and bug fixes.
