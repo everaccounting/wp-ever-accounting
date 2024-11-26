@@ -14,7 +14,7 @@
  * Text Domain:       wp-ever-accounting
  * Domain Path:       /languages/
  *
- * @package wp-ever-accounting
+ * @package EverAccounting
  */
 
 defined( 'ABSPATH' ) || exit();
