@@ -292,6 +292,7 @@ Yes, you can contribute to WP Ever Accounting. We welcome contributions from the
 = 2.0.2 = (30 November 2024)
 * New: Add filter by date for payments, invoices, expenses, transfers, and bills.
 * New: Add button for adding new items in the payment, invoice, expense, transfer, and bill view/edit page.
+* Fix: Remove legacy roles and capabilities.
 
 = 2.0.1 = (26 November 2024)
 * Fix: Downgrade required PHP version to 7.4
