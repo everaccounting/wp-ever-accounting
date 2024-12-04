@@ -133,7 +133,7 @@ class Installer {
 	 * @return void
 	 */
 	public function activation_redirect() {
-		if ( ! get_transient( 'eac_installed' ) || ! current_user_can( 'manage_options' ) ) {
+		if ( ! get_transient( 'eac_installed' ) || ! current_user_can( 'eac_manage_options' ) ) {  // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Reason: This is a custom capability.
 			return;
 		}
 		delete_transient( 'eac_installed' );
