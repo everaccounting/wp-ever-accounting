@@ -25,8 +25,12 @@ class Customer extends Contact {
 	 * @param string|array|object $attributes The model attributes.
 	 */
 	public function __construct( $attributes = array() ) {
+		$casts                    = array(
+			'lifetime_value' => 'float',
+		);
 		$this->attributes['type'] = $this->get_object_type();
 		$this->query_vars['type'] = $this->get_object_type();
+		$this->casts              = array_merge( $this->casts, $casts );
 		parent::__construct( $attributes );
 	}
 

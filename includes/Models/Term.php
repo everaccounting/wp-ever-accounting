@@ -105,10 +105,10 @@ class Term extends Model {
 	 * @return void
 	 */
 	public function __construct( $attributes = null ) {
-		$this->attributes['taxonomy'] = $this->get_object_type();
-		$this->query_vars['taxonomy'] = $this->get_object_type();
-		$this->hidden[]               = 'taxonomy';
-		parent::__construct( $attributes );
+//		$this->attributes['taxonomy'] = $this->get_object_type();
+//		$this->query_vars['taxonomy'] = $this->get_object_type();
+//		$this->hidden[]               = 'taxonomy';
+//		parent::__construct( $attributes );
 	}
 
 	/*
@@ -155,7 +155,7 @@ class Term extends Model {
 			return new \WP_Error( 'missing_required', __( 'Term name is required.', 'wp-ever-accounting' ) );
 		}
 		if ( empty( $this->taxonomy ) ) {
-			return new \WP_Error( 'missing_required', __( 'Term type is required.', 'wp-ever-accounting' ) );
+			return new \WP_Error( 'missing_required', __( 'Term taxonomy is required.', 'wp-ever-accounting' ) );
 		}
 
 		return parent::save();
