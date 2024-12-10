@@ -161,6 +161,6 @@ class Category extends Term {
 	 * @return string
 	 */
 	public function get_edit_url() {
-		return admin_url( 'admin.php?page=eac-settings&tab=categories&action=edit&id=' . $this->id );
+		return admin_url( 'admin.php?page=eac-settings&tab=taxonomies&action=edit&id=' . $this->id );
 	}
 }

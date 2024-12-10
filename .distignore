@@ -10,6 +10,7 @@
 .husky
 readme.md
 README.md
+development.md
 
 # Composer related files
 composer.*

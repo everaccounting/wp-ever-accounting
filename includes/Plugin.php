@@ -183,7 +183,7 @@ class Plugin extends \EverAccounting\ByteKit\Plugin {
 				'EverAccounting\Admin\Settings',
 				'EverAccounting\Admin\Currencies',
 				'EverAccounting\Admin\Taxes',
-				'EverAccounting\Admin\Categories',
+				'EverAccounting\Admin\Taxonomies',
 				'EverAccounting\Admin\Extensions',
 				// 'EverAccounting\Admin\Setup',
 			);
