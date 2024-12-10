@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Ever Accounting 2.0.4\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/wp-ever-accounting\n"
-"POT-Creation-Date: 2024-12-05 10:43:45+00:00\n"
+"POT-Creation-Date: 2024-12-10 06:38:49+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -714,7 +714,7 @@ msgid "Invalid vendor."
 msgstr ""
 
 #: includes/API/Expenses.php:543 includes/Admin/Admin.php:176
-#: includes/Controllers/Categories.php:88
+#: includes/Admin/Taxonomies.php:171 includes/Controllers/Categories.php:88
 #: includes/Controllers/Transactions.php:89
 msgid "Expense"
 msgstr ""
@@ -922,8 +922,9 @@ msgid "The item cannot be deleted."
 msgstr ""
 
 #: includes/API/Items.php:465 includes/Admin/Admin.php:168
-#: includes/Admin/Dashboard.php:380 includes/Controllers/Bills.php:111
-#: includes/Controllers/Categories.php:86 includes/Controllers/Invoices.php:106
+#: includes/Admin/Dashboard.php:380 includes/Admin/Taxonomies.php:169
+#: includes/Controllers/Bills.php:111 includes/Controllers/Categories.php:86
+#: includes/Controllers/Invoices.php:106
 msgid "Item"
 msgstr ""
 
@@ -1069,7 +1070,7 @@ msgid "Invalid customer."
 msgstr ""
 
 #: includes/API/Payments.php:544 includes/Admin/Admin.php:172
-#: includes/Controllers/Categories.php:87
+#: includes/Admin/Taxonomies.php:170 includes/Controllers/Categories.php:87
 #: includes/Controllers/Transactions.php:88
 msgid "Payment"
 msgstr ""
@@ -1404,18 +1405,18 @@ msgstr ""
 
 #: includes/Admin/Accounts.php:245 includes/Admin/Customers.php:229
 #: includes/Admin/ListTables/Accounts.php:190
-#: includes/Admin/ListTables/Categories.php:176
 #: includes/Admin/ListTables/Customers.php:155
 #: includes/Admin/ListTables/Items.php:190
 #: includes/Admin/ListTables/Taxes.php:135
+#: includes/Admin/ListTables/Taxonomies.php:147
 #: includes/Admin/ListTables/Vendors.php:154
 #: includes/Admin/Settings/General.php:53 includes/Admin/Vendors.php:209
 #: includes/Admin/views/account-edit.php:46
 #: includes/Admin/views/bill-items.php:48
-#: includes/Admin/views/category-edit.php:46
 #: includes/Admin/views/customer-edit.php:46
 #: includes/Admin/views/invoice-items.php:48
 #: includes/Admin/views/item-edit.php:43 includes/Admin/views/tax-edit.php:45
+#: includes/Admin/views/taxonomy-edit.php:47
 #: includes/Admin/views/vendor-edit.php:45
 msgid "Name"
 msgstr ""
@@ -1710,14 +1711,6 @@ msgstr ""
 #: includes/Admin/Items.php:110 includes/Admin/Payments.php:187
 #: includes/Admin/Transfers.php:115 includes/Admin/Vendors.php:120
 msgid "Number of items per page:"
-msgstr ""
-
-#: includes/Admin/Categories.php:36 includes/Admin/views/category-list.php:14
-msgid "Categories"
-msgstr ""
-
-#: includes/Admin/Categories.php:61 includes/Admin/Categories.php:90
-msgid "Category saved successfully."
 msgstr ""
 
 #: includes/Admin/Currencies.php:68 includes/Admin/ListTables/Taxes.php:136
@@ -2087,9 +2080,9 @@ msgstr ""
 #: includes/Admin/Importers.php:259 includes/Admin/Importers.php:295
 #: includes/Admin/Importers.php:331 includes/Admin/Importers.php:367
 #: includes/Admin/views/account-list.php:22
-#: includes/Admin/views/category-list.php:19
 #: includes/Admin/views/expense-list.php:19
 #: includes/Admin/views/item-list.php:20 includes/Admin/views/tax-list.php:20
+#: includes/Admin/views/taxonomy-list.php:21
 #: includes/Admin/views/transfer-list.php:21
 #: includes/Admin/views/vendor-list.php:19
 msgid "Import"
@@ -2273,7 +2266,6 @@ msgid "No accounts found."
 msgstr ""
 
 #: includes/Admin/ListTables/Accounts.php:146
-#: includes/Admin/ListTables/Categories.php:122
 #: includes/Admin/ListTables/Invoices.php:164
 #: includes/Admin/ListTables/Items.php:123
 msgid "All"
@@ -2287,8 +2279,6 @@ msgstr ""
 #: includes/Admin/ListTables/Accounts.php:309
 #: includes/Admin/ListTables/Bills.php:254
 #: includes/Admin/ListTables/Bills.php:468
-#: includes/Admin/ListTables/Categories.php:149
-#: includes/Admin/ListTables/Categories.php:300
 #: includes/Admin/ListTables/Customers.php:117
 #: includes/Admin/ListTables/Customers.php:300
 #: includes/Admin/ListTables/Expenses.php:136
@@ -2301,13 +2291,14 @@ msgstr ""
 #: includes/Admin/ListTables/Payments.php:359
 #: includes/Admin/ListTables/Taxes.php:120
 #: includes/Admin/ListTables/Taxes.php:269
+#: includes/Admin/ListTables/Taxonomies.php:120
+#: includes/Admin/ListTables/Taxonomies.php:258
 #: includes/Admin/ListTables/Transfers.php:157
 #: includes/Admin/ListTables/Transfers.php:333
 #: includes/Admin/ListTables/Vendors.php:116
 #: includes/Admin/ListTables/Vendors.php:263
 #: includes/Admin/views/account-edit.php:127
 #: includes/Admin/views/bill-edit.php:250 includes/Admin/views/bill-view.php:95
-#: includes/Admin/views/category-edit.php:97
 #: includes/Admin/views/customer-edit.php:215
 #: includes/Admin/views/expense-edit.php:256
 #: includes/Admin/views/expense-view.php:78
@@ -2317,6 +2308,7 @@ msgstr ""
 #: includes/Admin/views/payment-edit.php:256
 #: includes/Admin/views/payment-view.php:80
 #: includes/Admin/views/tax-edit.php:100
+#: includes/Admin/views/taxonomy-edit.php:102
 #: includes/Admin/views/transfer-edit.php:221
 #: includes/Admin/views/vendor-edit.php:214
 msgid "Delete"
@@ -2324,13 +2316,13 @@ msgstr ""
 
 #: includes/Admin/ListTables/Accounts.php:293
 #: includes/Admin/ListTables/Bills.php:452
-#: includes/Admin/ListTables/Categories.php:284
 #: includes/Admin/ListTables/Customers.php:284
 #: includes/Admin/ListTables/Expenses.php:344
 #: includes/Admin/ListTables/Invoices.php:401
 #: includes/Admin/ListTables/Items.php:340
 #: includes/Admin/ListTables/Payments.php:343
 #: includes/Admin/ListTables/Taxes.php:252
+#: includes/Admin/ListTables/Taxonomies.php:241
 #: includes/Admin/ListTables/Transfers.php:317
 #: includes/Admin/ListTables/Vendors.php:247
 #: includes/Admin/views/bill-view.php:60
@@ -2422,33 +2414,6 @@ msgstr ""
 msgid "Due: %s"
 msgstr ""
 
-#: includes/Admin/ListTables/Categories.php:98
-#. translators: %s: number of categories.
-msgid "%s category(s) deleted successfully."
-msgstr ""
-
-#: includes/Admin/ListTables/Categories.php:108
-msgid "No categories found."
-msgstr ""
-
-#: includes/Admin/ListTables/Categories.php:177
-#: includes/Admin/views/bill-items.php:53
-#: includes/Admin/views/bill-view.php:172
-#: includes/Admin/views/category-edit.php:67
-#: includes/Admin/views/invoice-items.php:53
-#: includes/Admin/views/invoice-view.php:172
-#: includes/Admin/views/item-edit.php:148
-msgid "Description"
-msgstr ""
-
-#: includes/Admin/ListTables/Categories.php:178
-#: includes/Admin/ListTables/Items.php:191
-#: includes/Admin/views/account-edit.php:68
-#: includes/Admin/views/category-edit.php:56
-#: includes/Admin/views/item-edit.php:57
-msgid "Type"
-msgstr ""
-
 #: includes/Admin/ListTables/Customers.php:95
 #. translators: %s: number of customers.
 msgid "%s customer(s) deleted successfully."
@@ -2498,6 +2463,12 @@ msgstr ""
 #: includes/Admin/ListTables/Items.php:109 templates/content-bill.php:175
 #: templates/content-invoice.php:175
 msgid "No items found."
+msgstr ""
+
+#: includes/Admin/ListTables/Items.php:191
+#: includes/Admin/views/account-edit.php:68
+#: includes/Admin/views/item-edit.php:57
+msgid "Type"
 msgstr ""
 
 #: includes/Admin/ListTables/Items.php:193
@@ -2568,6 +2539,25 @@ msgstr ""
 
 #: includes/Admin/ListTables/Taxes.php:222 includes/Admin/views/tax-edit.php:72
 msgid "No"
+msgstr ""
+
+#: includes/Admin/ListTables/Taxonomies.php:98
+#. translators: %s: number of categories.
+msgid "%s category(s) deleted successfully."
+msgstr ""
+
+#: includes/Admin/ListTables/Taxonomies.php:108
+msgid "No categories found."
+msgstr ""
+
+#: includes/Admin/ListTables/Taxonomies.php:148
+#: includes/Admin/views/bill-items.php:53
+#: includes/Admin/views/bill-view.php:172
+#: includes/Admin/views/invoice-items.php:53
+#: includes/Admin/views/invoice-view.php:172
+#: includes/Admin/views/item-edit.php:148
+#: includes/Admin/views/taxonomy-edit.php:57
+msgid "Description"
 msgstr ""
 
 #: includes/Admin/ListTables/Transfers.php:107
@@ -3361,6 +3351,14 @@ msgstr ""
 msgid "Tax saved successfully."
 msgstr ""
 
+#: includes/Admin/Taxonomies.php:43
+msgid "Taxonomies"
+msgstr ""
+
+#: includes/Admin/Taxonomies.php:68 includes/Admin/Taxonomies.php:97
+msgid "Category saved successfully."
+msgstr ""
+
 #: includes/Admin/Transfers.php:39 includes/Admin/views/transfer-list.php:16
 msgid "Transfers"
 msgstr ""
@@ -3421,8 +3419,6 @@ msgstr ""
 #: includes/Admin/views/account-edit.php:23
 #: includes/Admin/views/account-list.php:19
 #: includes/Admin/views/bill-list.php:16 includes/Admin/views/bill-view.php:30
-#: includes/Admin/views/category-edit.php:22
-#: includes/Admin/views/category-list.php:16
 #: includes/Admin/views/customer-edit.php:22
 #: includes/Admin/views/customer-list.php:18
 #: includes/Admin/views/expense-edit.php:22
@@ -3435,6 +3431,8 @@ msgstr ""
 #: includes/Admin/views/payment-list.php:16
 #: includes/Admin/views/payment-view.php:25
 #: includes/Admin/views/tax-edit.php:22 includes/Admin/views/tax-list.php:17
+#: includes/Admin/views/taxonomy-edit.php:23
+#: includes/Admin/views/taxonomy-list.php:18
 #: includes/Admin/views/transfer-edit.php:22
 #: includes/Admin/views/transfer-list.php:18
 #: includes/Admin/views/vendor-edit.php:21
@@ -3454,7 +3452,6 @@ msgstr ""
 #: includes/Admin/views/account-edit.php:28
 #: includes/Admin/views/account-view.php:45
 #: includes/Admin/views/bill-edit.php:31 includes/Admin/views/bill-view.php:32
-#: includes/Admin/views/category-edit.php:27
 #: includes/Admin/views/customer-edit.php:27
 #: includes/Admin/views/customer-view.php:45
 #: includes/Admin/views/expense-edit.php:27
@@ -3465,6 +3462,7 @@ msgstr ""
 #: includes/Admin/views/payment-edit.php:27
 #: includes/Admin/views/payment-view.php:27
 #: includes/Admin/views/tax-edit.php:27
+#: includes/Admin/views/taxonomy-edit.php:28
 #: includes/Admin/views/transfer-edit.php:27
 #: includes/Admin/views/vendor-edit.php:26
 #: includes/Admin/views/vendor-view.php:48
@@ -3490,7 +3488,6 @@ msgstr ""
 
 #: includes/Admin/views/account-edit.php:110
 #: includes/Admin/views/bill-edit.php:228 includes/Admin/views/bill-view.php:57
-#: includes/Admin/views/category-edit.php:93
 #: includes/Admin/views/customer-edit.php:192
 #: includes/Admin/views/expense-edit.php:234
 #: includes/Admin/views/expense-view.php:51
@@ -3500,6 +3497,7 @@ msgstr ""
 #: includes/Admin/views/payment-edit.php:234
 #: includes/Admin/views/payment-view.php:53
 #: includes/Admin/views/tax-edit.php:96
+#: includes/Admin/views/taxonomy-edit.php:83
 #: includes/Admin/views/vendor-edit.php:191
 msgid "Actions"
 msgstr ""
@@ -3514,23 +3512,23 @@ msgstr ""
 
 #: includes/Admin/views/account-list.php:25
 #: includes/Admin/views/bill-list.php:20
-#: includes/Admin/views/category-list.php:22
 #: includes/Admin/views/customer-list.php:22
 #: includes/Admin/views/expense-list.php:23
 #: includes/Admin/views/invoice-list.php:19
 #: includes/Admin/views/item-list.php:24
 #: includes/Admin/views/payment-list.php:20
 #: includes/Admin/views/tax-list.php:23
+#: includes/Admin/views/taxonomy-list.php:24
 #: includes/Admin/views/transfer-list.php:24
 #: includes/Admin/views/vendor-list.php:23
 #. translators: %s: Get requested search string
 #. translators: %s: search query.
-#. translators: %s: Get requested search string
 #. translators: %s: search query.
 #. translators: %s: search term.
 #. translators: %s: search query.
 #. translators: %s: search query.
 #. translators: %s: search query.
+#. translators: %s: Get requested search string
 #. translators: %s: Get requested search string
 #. translators: %s: Get requested search string
 #. translators: %s: search query.
@@ -3539,13 +3537,13 @@ msgstr ""
 
 #: includes/Admin/views/account-list.php:30
 #: includes/Admin/views/bill-list.php:25
-#: includes/Admin/views/category-list.php:27
 #: includes/Admin/views/customer-list.php:27
 #: includes/Admin/views/expense-list.php:29
 #: includes/Admin/views/invoice-list.php:24
 #: includes/Admin/views/item-list.php:29
 #: includes/Admin/views/payment-list.php:25
 #: includes/Admin/views/tax-list.php:28
+#: includes/Admin/views/taxonomy-list.php:29
 #: includes/Admin/views/transfer-list.php:29
 #: includes/Admin/views/vendor-list.php:28
 msgid "Search"
@@ -3721,38 +3719,6 @@ msgstr ""
 msgid "Select Payment Method"
 msgstr ""
 
-#: includes/Admin/views/category-edit.php:20
-msgid "Edit Category"
-msgstr ""
-
-#: includes/Admin/views/category-edit.php:25
-#: includes/Admin/views/category-edit.php:100
-#: includes/Admin/views/expense-edit.php:143
-#: includes/Admin/views/item-edit.php:106
-#: includes/Admin/views/payment-edit.php:143
-msgid "Add Category"
-msgstr ""
-
-#: includes/Admin/views/category-edit.php:38
-msgid "Category Attributes"
-msgstr ""
-
-#: includes/Admin/views/category-edit.php:47
-msgid "Enter category name"
-msgstr ""
-
-#: includes/Admin/views/category-edit.php:57
-msgid "Select category type"
-msgstr ""
-
-#: includes/Admin/views/category-edit.php:68
-msgid "Enter category description"
-msgstr ""
-
-#: includes/Admin/views/category-edit.php:98
-msgid "Update Category"
-msgstr ""
-
 #: includes/Admin/views/customer-edit.php:20
 msgid "Edit Customer"
 msgstr ""
@@ -3873,6 +3839,14 @@ msgstr ""
 #: includes/Admin/views/payment-edit.php:135
 #: includes/Admin/views/payment-edit.php:136
 msgid "Select category"
+msgstr ""
+
+#: includes/Admin/views/expense-edit.php:143
+#: includes/Admin/views/item-edit.php:106
+#: includes/Admin/views/payment-edit.php:143
+#: includes/Admin/views/taxonomy-edit.php:26
+#: includes/Admin/views/taxonomy-edit.php:105
+msgid "Add Category"
 msgstr ""
 
 #: includes/Admin/views/expense-edit.php:164
@@ -4057,6 +4031,30 @@ msgstr ""
 
 #: includes/Admin/views/tax-edit.php:101
 msgid "Update Tax"
+msgstr ""
+
+#: includes/Admin/views/taxonomy-edit.php:21
+msgid "Edit Category"
+msgstr ""
+
+#: includes/Admin/views/taxonomy-edit.php:39
+msgid "Category Attributes"
+msgstr ""
+
+#: includes/Admin/views/taxonomy-edit.php:48
+msgid "Enter category name"
+msgstr ""
+
+#: includes/Admin/views/taxonomy-edit.php:58
+msgid "Enter category description"
+msgstr ""
+
+#: includes/Admin/views/taxonomy-edit.php:103
+msgid "Update Category"
+msgstr ""
+
+#: includes/Admin/views/taxonomy-list.php:16
+msgid "Categories"
 msgstr ""
 
 #: includes/Admin/views/transfer-edit.php:20
