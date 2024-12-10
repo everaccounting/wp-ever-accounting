@@ -1,6 +1,6 @@
 <?php
 /**
- * Admin View: Taxonomy Edit
+ * Admin View: Taxonomy Add/Edit
  *
  * @since 1.0.0
  * @package EverAccounting

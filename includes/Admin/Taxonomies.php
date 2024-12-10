@@ -7,7 +7,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Taxonomies class.
  *
- * @since 3.0.0
+ * @since 2.0.0
  * @package EverAccounting\Admin
  */
 class Taxonomies {
@@ -18,11 +18,10 @@ class Taxonomies {
 	public function __construct() {
 		add_filter( 'eac_settings_page_tabs', array( __CLASS__, 'register_tabs' ) );
 		add_action( 'admin_post_eac_edit_taxonomy', array( __CLASS__, 'handle_edit' ) );
-
 		add_action( 'eac_settings_page_taxonomies_content', array( __CLASS__, 'render_sections' ) );
 		add_action( 'eac_settings_page_taxonomies_content', array( __CLASS__, 'render_content' ) );
 
-		// Item Taxonomy.
+		// Taxonomy actions to render content.
 		add_action( 'eac_settings_taxonomies_tab_item_content', array( __CLASS__, 'render_item_content' ) );
 		add_action( 'eac_settings_taxonomies_tab_payment_content', array( __CLASS__, 'render_item_content' ) );
 		add_action( 'eac_settings_taxonomies_tab_expense_content', array( __CLASS__, 'render_item_content' ) );
@@ -36,7 +35,7 @@ class Taxonomies {
 	 *
 	 * @param array $tabs Tabs.
 	 *
-	 * @since 3.0.0
+	 * @since 2.0.0
 	 * @return array
 	 */
 	public static function register_tabs( $tabs ) {
@@ -48,7 +47,7 @@ class Taxonomies {
 	/**
 	 * Edit taxonomy.
 	 *
-	 * @since 3.0.0
+	 * @since 2.0.0
 	 * @return void
 	 */
 	public static function handle_edit() {
@@ -77,7 +76,7 @@ class Taxonomies {
 	/**
 	 * Handle actions.
 	 *
-	 * @since 3.0.0
+	 * @since 2.0.0
 	 * @return void
 	 */
 	public static function handle_actions() {
@@ -106,7 +105,7 @@ class Taxonomies {
 	/**
 	 * Render Sections.
 	 *
-	 * @since 1.0.0
+	 * @since 2.0.0
 	 * @return void
 	 */
 	public static function render_sections() {
@@ -136,7 +135,7 @@ class Taxonomies {
 	/**
 	 * Render content.
 	 *
-	 * @since 3.0.0
+	 * @since 2.0.0
 	 * @return void
 	 */
 	public static function render_content() {
@@ -161,7 +160,7 @@ class Taxonomies {
 	/**
 	 * Get settings tab sections.
 	 *
-	 * @since 3.0.0
+	 * @since 2.0.0
 	 * @return array
 	 */
 	public static function get_sections() {
@@ -185,7 +184,7 @@ class Taxonomies {
 	 *
 	 * @param string $section Current section.
 	 *
-	 * @since 3.0.0
+	 * @since 2.0.0
 	 * @return void
 	 */
 	public static function render_item_content( $section ) {
@@ -215,7 +214,7 @@ class Taxonomies {
 	 *
 	 * @param array $args Query args.
 	 *
-	 * @since 3.0.0
+	 * @since 2.0.0
 	 * @return array
 	 */
 	public function query_args( $args ) {

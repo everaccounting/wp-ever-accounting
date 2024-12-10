@@ -7,7 +7,7 @@ use EverAccounting\Models\Category;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class CategoriesTable.
+ * Class Taxonomies Table.
  *
  * @since 1.0.0
  * @package EverAccounting\Admin\ListTables
