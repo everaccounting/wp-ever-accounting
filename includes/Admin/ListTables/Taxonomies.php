@@ -199,8 +199,9 @@ class Taxonomies extends ListTable {
 			esc_url(
 				add_query_arg(
 					array(
-						'action' => 'edit',
-						'id'     => $item->id,
+						'section' => $item->type,
+						'action'  => 'edit',
+						'id'      => $item->id,
 					),
 					$this->base_url
 				)
@@ -230,8 +231,9 @@ class Taxonomies extends ListTable {
 				esc_url(
 					add_query_arg(
 						array(
-							'action' => 'edit',
-							'id'     => $item->id,
+							'section' => $item->type,
+							'action'  => 'edit',
+							'id'      => $item->id,
 						),
 						$this->base_url
 					)
@@ -244,8 +246,9 @@ class Taxonomies extends ListTable {
 					wp_nonce_url(
 						add_query_arg(
 							array(
-								'action' => 'delete',
-								'id'     => $item->id,
+								'section' => $item->type,
+								'action'  => 'delete',
+								'id'      => $item->id,
 							),
 							$this->base_url
 						),

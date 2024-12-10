@@ -84,7 +84,22 @@ $category = Category::make( $id );
 				</div>
 				<div class="eac-card__footer">
 					<?php if ( $category->exists() ) : ?>
-						<a class="del del_confirm" href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'action', 'delete', $category->get_edit_url() ), 'bulk-taxonomies' ) ); ?>"><?php esc_html_e( 'Delete', 'wp-ever-accounting' ); ?></a>
+					<a class="del del_confirm" href="
+						<?php
+						echo esc_url(
+							wp_nonce_url(
+								add_query_arg(
+									array(
+										'action'  => 'delete',
+										'section' => $section,
+									),
+									$category->get_edit_url()
+								),
+								'bulk-taxonomies'
+							)
+						);
+						?>
+						"><?php esc_html_e( 'Delete', 'wp-ever-accounting' ); ?></a>
 						<button class="button button-primary"><?php esc_html_e( 'Update Category', 'wp-ever-accounting' ); ?></button>
 					<?php else : ?>
 						<button class="button button-primary button-block"><?php esc_html_e( 'Add Category', 'wp-ever-accounting' ); ?></button>
