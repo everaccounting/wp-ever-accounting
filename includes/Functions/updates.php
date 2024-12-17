@@ -373,3 +373,31 @@ function eac_update_204_roles() {
 		}
 	}
 }
+
+/**
+ * Update roles to 2.0.5
+ */
+function eac_update_205_roles() {
+	require_once ABSPATH . 'wp-admin/includes/user.php';
+	$caps = array(
+		'manage_accounting' => array(
+			'read_accounting',
+		),
+		'eac_manage_item'   => array(
+			'eac_read_items',
+			'eac_edit_items',
+			'eac_delete_items',
+		),
+	);
+
+	foreach ( wp_roles()->roles as $r => $details ) {
+		foreach ( $caps as $cap => $children ) {
+			if ( isset( $details['capabilities'][ $cap ] ) ) {
+				$role = get_role( $r );
+				foreach ( $children as $child ) {
+					$role->add_cap( $child );
+				}
+			}
+		}
+	}
+}

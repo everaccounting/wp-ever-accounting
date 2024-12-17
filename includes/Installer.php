@@ -95,14 +95,14 @@ class Installer {
 							'version'  => $version,
 						)
 					);
-					++$loop;
+					++ $loop;
 				}
 			}
-			++$loop;
+			++ $loop;
 		}
 
 		if ( version_compare( EAC()->get_db_version(), EAC()->get_version(), '<' ) &&
-			! EAC()->queue()->get_next( 'eac_update_db_version' ) ) {
+			 ! EAC()->queue()->get_next( 'eac_update_db_version' ) ) {
 			EAC()->queue()->schedule_single(
 				time() + $loop,
 				'eac_update_db_version',
@@ -542,6 +542,7 @@ KEY expense_id (expense_id)
 			'eac_accountant',
 			'Accountant',
 			array(
+				'read_accounting'     => true,
 				'manage_accounting'   => true,
 				'eac_manage_customer' => true,
 				'eac_manage_vendor'   => true,
@@ -551,7 +552,9 @@ KEY expense_id (expense_id)
 				'eac_manage_transfer' => true,
 				'eac_manage_category' => true,
 				'eac_manage_currency' => true,
-				'eac_manage_item'     => true,
+				'eac_read_items'      => true,
+				'eac_edit_items'      => true,
+				'eac_delete_items'    => true,
 				'eac_manage_invoice'  => true,
 				'eac_manage_bill'     => true,
 				'eac_manage_tax'      => true,
@@ -564,6 +567,7 @@ KEY expense_id (expense_id)
 			'eac_manager',
 			'Accounting Manager',
 			array(
+				'read_accounting'     => true,
 				'manage_accounting'   => true,
 				'eac_manage_report'   => true,
 				'eac_manage_options'  => true,
@@ -576,7 +580,9 @@ KEY expense_id (expense_id)
 				'eac_manage_transfer' => true,
 				'eac_manage_category' => true,
 				'eac_manage_currency' => true,
-				'eac_manage_item'     => true,
+				'eac_read_items'      => true,
+				'eac_edit_items'      => true,
+				'eac_delete_items'    => true,
 				'eac_manage_invoice'  => true,
 				'eac_manage_bill'     => true,
 				'eac_manage_tax'      => true,
@@ -590,6 +596,7 @@ KEY expense_id (expense_id)
 		global $wp_roles;
 
 		if ( is_object( $wp_roles ) ) {
+			$wp_roles->add_cap( 'administrator', 'read_accounting' );
 			$wp_roles->add_cap( 'administrator', 'manage_accounting' );
 			$wp_roles->add_cap( 'administrator', 'eac_manage_report' );
 			$wp_roles->add_cap( 'administrator', 'eac_manage_options' );
@@ -601,7 +608,9 @@ KEY expense_id (expense_id)
 			$wp_roles->add_cap( 'administrator', 'eac_manage_transfer' );
 			$wp_roles->add_cap( 'administrator', 'eac_manage_category' );
 			$wp_roles->add_cap( 'administrator', 'eac_manage_currency' );
-			$wp_roles->add_cap( 'administrator', 'eac_manage_item' );
+			$wp_roles->add_cap( 'administrator', 'eac_read_items' );
+			$wp_roles->add_cap( 'administrator', 'eac_edit_items' );
+			$wp_roles->add_cap( 'administrator', 'eac_delete_items' );
 			$wp_roles->add_cap( 'administrator', 'eac_manage_invoice' );
 			$wp_roles->add_cap( 'administrator', 'eac_manage_bill' );
 			$wp_roles->add_cap( 'administrator', 'eac_manage_tax' );
