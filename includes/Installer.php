@@ -34,6 +34,9 @@ class Installer {
 		'2.0.4' => array(
 			'eac_update_204_roles',
 		),
+		'2.0.6' => array(
+			'eac_update_206_roles',
+		),
 	);
 
 	/**
@@ -542,19 +545,42 @@ KEY expense_id (expense_id)
 			'eac_accountant',
 			'Accountant',
 			array(
+				'read_accounting'     => true,
 				'manage_accounting'   => true,
-				'eac_manage_customer' => true,
-				'eac_manage_vendor'   => true,
-				'eac_manage_account'  => true,
-				'eac_manage_payment'  => true,
-				'eac_manage_expense'  => true,
-				'eac_manage_transfer' => true,
-				'eac_manage_category' => true,
+				'eac_read_vendor'     => true,
+				'eac_edit_vendor'     => true,
+				'eac_delete_vendor'   => true,
+				'eac_read_account'    => true,
+				'eac_edit_account'    => true,
+				'eac_delete_account'  => true,
+				'eac_read_payment'    => true,
+				'eac_edit_payment'    => true,
+				'eac_delete_payment'  => true,
+				'eac_read_expense'    => true,
+				'eac_edit_expense'    => true,
+				'eac_delete_expense'  => true,
+				'eac_read_transfer'   => true,
+				'eac_edit_transfer'   => true,
+				'eac_delete_transfer' => true,
+				'eac_read_category'   => true,
+				'eac_edit_category'   => true,
+				'eac_delete_category' => true,
 				'eac_manage_currency' => true,
-				'eac_manage_item'     => true,
-				'eac_manage_invoice'  => true,
-				'eac_manage_bill'     => true,
-				'eac_manage_tax'      => true,
+				'eac_read_items'      => true,
+				'eac_edit_items'      => true,
+				'eac_delete_items'    => true,
+				'eac_read_customer'   => true,
+				'eac_edit_customer'   => true,
+				'eac_delete_customer' => true,
+				'eac_read_invoice'    => true,
+				'eac_edit_invoice'    => true,
+				'eac_delete_invoice'  => true,
+				'eac_read_bill'       => true,
+				'eac_edit_bill'       => true,
+				'eac_delete_bill'     => true,
+				'eac_read_tax'        => true,
+				'eac_edit_tax'        => true,
+				'eac_delete_tax'      => true,
 				'read'                => true,
 			)
 		);
@@ -564,22 +590,45 @@ KEY expense_id (expense_id)
 			'eac_manager',
 			'Accounting Manager',
 			array(
+				'read_accounting'     => true,
 				'manage_accounting'   => true,
 				'eac_manage_report'   => true,
 				'eac_manage_options'  => true,
 				'eac_manage_product'  => true,
-				'eac_manage_customer' => true,
-				'eac_manage_vendor'   => true,
-				'eac_manage_account'  => true,
-				'eac_manage_payment'  => true,
-				'eac_manage_expense'  => true,
-				'eac_manage_transfer' => true,
-				'eac_manage_category' => true,
+				'eac_read_vendor'     => true,
+				'eac_edit_vendor'     => true,
+				'eac_delete_vendor'   => true,
+				'eac_read_account'    => true,
+				'eac_edit_account'    => true,
+				'eac_delete_account'  => true,
+				'eac_read_payment'    => true,
+				'eac_edit_payment'    => true,
+				'eac_delete_payment'  => true,
+				'eac_read_expense'    => true,
+				'eac_edit_expense'    => true,
+				'eac_delete_expense'  => true,
+				'eac_read_transfer'   => true,
+				'eac_edit_transfer'   => true,
+				'eac_delete_transfer' => true,
+				'eac_read_category'   => true,
+				'eac_edit_category'   => true,
+				'eac_delete_category' => true,
 				'eac_manage_currency' => true,
-				'eac_manage_item'     => true,
-				'eac_manage_invoice'  => true,
-				'eac_manage_bill'     => true,
-				'eac_manage_tax'      => true,
+				'eac_read_items'      => true,
+				'eac_edit_items'      => true,
+				'eac_delete_items'    => true,
+				'eac_read_customer'   => true,
+				'eac_edit_customer'   => true,
+				'eac_delete_customer' => true,
+				'eac_read_invoice'    => true,
+				'eac_edit_invoice'    => true,
+				'eac_delete_invoice'  => true,
+				'eac_read_bill'       => true,
+				'eac_edit_bill'       => true,
+				'eac_delete_bill'     => true,
+				'eac_read_tax'        => true,
+				'eac_edit_tax'        => true,
+				'eac_delete_tax'      => true,
 				'eac_manage_import'   => true,
 				'eac_manage_export'   => true,
 				'read'                => true,
@@ -590,21 +639,44 @@ KEY expense_id (expense_id)
 		global $wp_roles;
 
 		if ( is_object( $wp_roles ) ) {
+			$wp_roles->add_cap( 'administrator', 'read_accounting' );
 			$wp_roles->add_cap( 'administrator', 'manage_accounting' );
 			$wp_roles->add_cap( 'administrator', 'eac_manage_report' );
 			$wp_roles->add_cap( 'administrator', 'eac_manage_options' );
-			$wp_roles->add_cap( 'administrator', 'eac_manage_customer' );
-			$wp_roles->add_cap( 'administrator', 'eac_manage_vendor' );
-			$wp_roles->add_cap( 'administrator', 'eac_manage_account' );
-			$wp_roles->add_cap( 'administrator', 'eac_manage_payment' );
-			$wp_roles->add_cap( 'administrator', 'eac_manage_expense' );
-			$wp_roles->add_cap( 'administrator', 'eac_manage_transfer' );
-			$wp_roles->add_cap( 'administrator', 'eac_manage_category' );
+			$wp_roles->add_cap( 'administrator', 'eac_read_customer' );
+			$wp_roles->add_cap( 'administrator', 'eac_edit_customer' );
+			$wp_roles->add_cap( 'administrator', 'eac_delete_customer' );
+			$wp_roles->add_cap( 'administrator', 'eac_read_vendor' );
+			$wp_roles->add_cap( 'administrator', 'eac_edit_vendor' );
+			$wp_roles->add_cap( 'administrator', 'eac_delete_vendor' );
+			$wp_roles->add_cap( 'administrator', 'eac_read_account' );
+			$wp_roles->add_cap( 'administrator', 'eac_edit_account' );
+			$wp_roles->add_cap( 'administrator', 'eac_delete_account' );
+			$wp_roles->add_cap( 'administrator', 'eac_read_payment' );
+			$wp_roles->add_cap( 'administrator', 'eac_edit_payment' );
+			$wp_roles->add_cap( 'administrator', 'eac_delete_payment' );
+			$wp_roles->add_cap( 'administrator', 'eac_read_expense' );
+			$wp_roles->add_cap( 'administrator', 'eac_edit_expense' );
+			$wp_roles->add_cap( 'administrator', 'eac_delete_expense' );
+			$wp_roles->add_cap( 'administrator', 'eac_read_transfer' );
+			$wp_roles->add_cap( 'administrator', 'eac_edit_transfer' );
+			$wp_roles->add_cap( 'administrator', 'eac_delete_transfer' );
+			$wp_roles->add_cap( 'administrator', 'eac_read_category' );
+			$wp_roles->add_cap( 'administrator', 'eac_edit_category' );
+			$wp_roles->add_cap( 'administrator', 'eac_delete_category' );
 			$wp_roles->add_cap( 'administrator', 'eac_manage_currency' );
-			$wp_roles->add_cap( 'administrator', 'eac_manage_item' );
-			$wp_roles->add_cap( 'administrator', 'eac_manage_invoice' );
-			$wp_roles->add_cap( 'administrator', 'eac_manage_bill' );
-			$wp_roles->add_cap( 'administrator', 'eac_manage_tax' );
+			$wp_roles->add_cap( 'administrator', 'eac_read_items' );
+			$wp_roles->add_cap( 'administrator', 'eac_edit_items' );
+			$wp_roles->add_cap( 'administrator', 'eac_delete_items' );
+			$wp_roles->add_cap( 'administrator', 'eac_read_invoice' );
+			$wp_roles->add_cap( 'administrator', 'eac_edit_invoice' );
+			$wp_roles->add_cap( 'administrator', 'eac_delete_invoice' );
+			$wp_roles->add_cap( 'administrator', 'eac_read_bill' );
+			$wp_roles->add_cap( 'administrator', 'eac_edit_bill' );
+			$wp_roles->add_cap( 'administrator', 'eac_delete_bill' );
+			$wp_roles->add_cap( 'administrator', 'eac_read_tax' );
+			$wp_roles->add_cap( 'administrator', 'eac_edit_tax' );
+			$wp_roles->add_cap( 'administrator', 'eac_delete_tax' );
 			$wp_roles->add_cap( 'administrator', 'eac_manage_import' );
 			$wp_roles->add_cap( 'administrator', 'eac_manage_export' );
 		}

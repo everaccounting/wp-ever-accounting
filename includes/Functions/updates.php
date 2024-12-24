@@ -373,3 +373,81 @@ function eac_update_204_roles() {
 		}
 	}
 }
+
+/**
+ * Update roles to 2.0.6
+ */
+function eac_update_206_roles() {
+	require_once ABSPATH . 'wp-admin/includes/user.php';
+	$caps = array(
+		'manage_accounting'   => array(
+			'read_accounting',
+		),
+		'eac_manage_item'     => array(
+			'eac_read_items',
+			'eac_edit_items',
+			'eac_delete_items',
+		),
+		'eac_manage_customer' => array(
+			'eac_read_customer',
+			'eac_edit_customer',
+			'eac_delete_customer',
+		),
+		'eac_manage_account'  => array(
+			'eac_read_account',
+			'eac_edit_account',
+			'eac_delete_account',
+		),
+		'eac_manage_bill'     => array(
+			'eac_read_bill',
+			'eac_edit_bill',
+			'eac_delete_bill',
+		),
+		'eac_manage_category' => array(
+			'eac_read_category',
+			'eac_edit_category',
+			'eac_delete_category',
+		),
+		'eac_manage_expense'  => array(
+			'eac_read_expense',
+			'eac_edit_expense',
+			'eac_delete_expense',
+		),
+		'eac_manage_invoice'  => array(
+			'eac_read_invoice',
+			'eac_edit_invoice',
+			'eac_delete_invoice',
+		),
+		'eac_manage_payment'  => array(
+			'eac_read_payment',
+			'eac_edit_payment',
+			'eac_delete_payment',
+		),
+		'eac_manage_tax'      => array(
+			'eac_read_tax',
+			'eac_edit_tax',
+			'eac_delete_tax',
+		),
+		'eac_manage_transfer' => array(
+			'eac_read_transfer',
+			'eac_edit_transfer',
+			'eac_delete_transfer',
+		),
+		'eac_manage_vendor'   => array(
+			'eac_read_vendor',
+			'eac_edit_vendor',
+			'eac_delete_vendor',
+		),
+	);
+
+	foreach ( wp_roles()->roles as $r => $details ) {
+		foreach ( $caps as $cap => $children ) {
+			if ( isset( $details['capabilities'][ $cap ] ) ) {
+				$role = get_role( $r );
+				foreach ( $children as $child ) {
+					$role->add_cap( $child );
+				}
+			}
+		}
+	}
+}
