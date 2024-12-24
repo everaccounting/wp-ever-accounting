@@ -52,7 +52,7 @@ class Customers {
 	 */
 	public static function handle_edit() {
 		check_admin_referer( 'eac_edit_customer' );
-		if ( ! current_user_can( 'eac_manage_customer' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability.
+		if ( ! current_user_can( 'eac_edit_customer' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability.
 			wp_die( esc_html__( 'You do not have permission to edit customers.', 'wp-ever-accounting' ) );
 		}
 

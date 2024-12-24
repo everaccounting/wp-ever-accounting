@@ -393,6 +393,11 @@ function eac_update_205_roles() {
 			'eac_edit_customer',
 			'eac_delete_customer',
 		),
+		'eac_manage_account'  => array(
+			'eac_read_account',
+			'eac_edit_account',
+			'eac_delete_account',
+		),
 	);
 
 	foreach ( wp_roles()->roles as $r => $details ) {
