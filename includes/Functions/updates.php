@@ -375,9 +375,9 @@ function eac_update_204_roles() {
 }
 
 /**
- * Update roles to 2.0.5
+ * Update roles to 2.0.6
  */
-function eac_update_205_roles() {
+function eac_update_206_roles() {
 	require_once ABSPATH . 'wp-admin/includes/user.php';
 	$caps = array(
 		'manage_accounting'   => array(

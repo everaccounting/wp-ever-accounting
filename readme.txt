@@ -289,6 +289,9 @@ Yes, you can contribute to WP Ever Accounting. We welcome contributions from the
 38. Settings: Add/Edit Category.
 
 == Changelog ==
+= 2.0.6 = (24th December 2024)
+* Enhance: Restructure roles management.
+
 = 2.0.4 = (5th December 2024)
 * Fix: User roles management issue.
 

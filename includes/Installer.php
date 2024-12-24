@@ -34,6 +34,9 @@ class Installer {
 		'2.0.4' => array(
 			'eac_update_204_roles',
 		),
+		'2.0.6' => array(
+			'eac_update_206_roles',
+		),
 	);
 
 	/**

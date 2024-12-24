@@ -2,10 +2,10 @@
 # This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Ever Accounting 2.0.4\n"
+"Project-Id-Version: Ever Accounting 2.0.6\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/wp-ever-accounting\n"
-"POT-Creation-Date: 2024-12-05 10:43:45+00:00\n"
+"POT-Creation-Date: 2024-12-24 08:15:44+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1712,11 +1712,15 @@ msgstr ""
 msgid "Number of items per page:"
 msgstr ""
 
-#: includes/Admin/Categories.php:36 includes/Admin/views/category-list.php:14
+#: includes/Admin/Categories.php:37 includes/Admin/views/category-list.php:14
 msgid "Categories"
 msgstr ""
 
-#: includes/Admin/Categories.php:61 includes/Admin/Categories.php:90
+#: includes/Admin/Categories.php:52
+msgid "You do not have permission to edit categories."
+msgstr ""
+
+#: includes/Admin/Categories.php:66 includes/Admin/Categories.php:95
 msgid "Category saved successfully."
 msgstr ""
 
@@ -3357,7 +3361,11 @@ msgstr ""
 msgid "View Dashboard"
 msgstr ""
 
-#: includes/Admin/Taxes.php:53
+#: includes/Admin/Taxes.php:34
+msgid "You do not have permission to edit taxes."
+msgstr ""
+
+#: includes/Admin/Taxes.php:56
 msgid "Tax saved successfully."
 msgstr ""
 
@@ -4281,7 +4289,7 @@ msgstr ""
 msgid "Opening Balance"
 msgstr ""
 
-#: includes/Installer.php:126
+#: includes/Installer.php:129
 msgid "Ever Accounting is updating the database in the background. Please wait."
 msgstr ""
 
@@ -4549,12 +4557,12 @@ msgctxt "Delete"
 msgid "Delete"
 msgstr ""
 
-#: includes/Installer.php:537
+#: includes/Installer.php:540
 msgctxt "User role"
 msgid "Accounting Manager"
 msgstr ""
 
-#: includes/Installer.php:538
+#: includes/Installer.php:541
 msgctxt "User role"
 msgid "Accountant"
 msgstr ""
