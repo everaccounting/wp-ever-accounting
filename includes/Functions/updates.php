@@ -413,6 +413,11 @@ function eac_update_205_roles() {
 			'eac_edit_expense',
 			'eac_delete_expense',
 		),
+		'eac_manage_invoice'  => array(
+			'eac_read_invoice',
+			'eac_edit_invoice',
+			'eac_delete_invoice',
+		),
 	);
 
 	foreach ( wp_roles()->roles as $r => $details ) {

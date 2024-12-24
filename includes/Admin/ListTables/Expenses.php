@@ -361,11 +361,11 @@ class Expenses extends ListTable {
 			),
 		);
 
-		if ( ! current_user_can( 'eac_delete_customer' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Reason: This is a custom capability.
+		if ( ! current_user_can( 'eac_delete_expense' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Reason: This is a custom capability.
 			unset( $actions['delete'] );
 		}
 
-		if ( ! $item->editable || ! current_user_can( 'eac_edit_customer' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Reason: This is a custom capability.
+		if ( ! $item->editable || ! current_user_can( 'eac_edit_expense' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Reason: This is a custom capability.
 			unset( $actions['edit'] );
 		}
 
