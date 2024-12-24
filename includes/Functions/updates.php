@@ -433,6 +433,11 @@ function eac_update_205_roles() {
 			'eac_edit_transfer',
 			'eac_delete_transfer',
 		),
+		'eac_manage_vendor'   => array(
+			'eac_read_vendor',
+			'eac_edit_vendor',
+			'eac_delete_vendor',
+		),
 	);
 
 	foreach ( wp_roles()->roles as $r => $details ) {
