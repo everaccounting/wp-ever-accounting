@@ -560,7 +560,9 @@ KEY expense_id (expense_id)
 				'eac_edit_customer'   => true,
 				'eac_delete_customer' => true,
 				'eac_manage_invoice'  => true,
-				'eac_manage_bill'     => true,
+				'eac_read_bill'       => true,
+				'eac_edit_bill'       => true,
+				'eac_delete_bill'     => true,
 				'eac_manage_tax'      => true,
 				'read'                => true,
 			)
@@ -592,7 +594,9 @@ KEY expense_id (expense_id)
 				'eac_edit_customer'   => true,
 				'eac_delete_customer' => true,
 				'eac_manage_invoice'  => true,
-				'eac_manage_bill'     => true,
+				'eac_read_bill'       => true,
+				'eac_edit_bill'       => true,
+				'eac_delete_bill'     => true,
 				'eac_manage_tax'      => true,
 				'eac_manage_import'   => true,
 				'eac_manage_export'   => true,
@@ -624,7 +628,9 @@ KEY expense_id (expense_id)
 			$wp_roles->add_cap( 'administrator', 'eac_edit_items' );
 			$wp_roles->add_cap( 'administrator', 'eac_delete_items' );
 			$wp_roles->add_cap( 'administrator', 'eac_manage_invoice' );
-			$wp_roles->add_cap( 'administrator', 'eac_manage_bill' );
+			$wp_roles->add_cap( 'administrator', 'eac_read_bill' );
+			$wp_roles->add_cap( 'administrator', 'eac_edit_bill' );
+			$wp_roles->add_cap( 'administrator', 'eac_delete_bill' );
 			$wp_roles->add_cap( 'administrator', 'eac_manage_tax' );
 			$wp_roles->add_cap( 'administrator', 'eac_manage_import' );
 			$wp_roles->add_cap( 'administrator', 'eac_manage_export' );
