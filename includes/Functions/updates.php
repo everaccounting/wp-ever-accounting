@@ -403,6 +403,11 @@ function eac_update_205_roles() {
 			'eac_edit_bill',
 			'eac_delete_bill',
 		),
+		'eac_manage_category' => array(
+			'eac_read_category',
+			'eac_edit_category',
+			'eac_delete_category',
+		),
 	);
 
 	foreach ( wp_roles()->roles as $r => $details ) {
