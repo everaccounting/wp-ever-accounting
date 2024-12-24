@@ -92,7 +92,7 @@ class Payments extends Transactions {
 	 * @return true|\WP_Error True if the request has read access, WP_Error object otherwise.
 	 */
 	public function get_items_permissions_check( $request ) {
-		if ( ! current_user_can( 'eac_manage_payment' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability
+		if ( ! current_user_can( 'eac_read_payment' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability
 			return new \WP_Error(
 				'rest_forbidden_context',
 				__( 'Sorry, you are not allowed to view payments.', 'wp-ever-accounting' ),
@@ -112,7 +112,7 @@ class Payments extends Transactions {
 	 * @return true|\WP_Error True if the request has read access, WP_Error object otherwise.
 	 */
 	public function create_item_permissions_check( $request ) {
-		if ( ! current_user_can( 'eac_manage_payment' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability
+		if ( ! current_user_can( 'eac_edit_payment' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability
 			return new \WP_Error(
 				'rest_forbidden_context',
 				__( 'Sorry, you are not allowed to create payments.', 'wp-ever-accounting' ),
@@ -134,7 +134,7 @@ class Payments extends Transactions {
 	public function get_item_permissions_check( $request ) {
 		$payment = EAC()->payments->get( $request['id'] );
 
-		if ( empty( $payment ) || ! current_user_can( 'eac_manage_payment' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability
+		if ( empty( $payment ) || ! current_user_can( 'eac_read_payment' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability
 			return new \WP_Error(
 				'rest_forbidden_context',
 				__( 'Sorry, you are not allowed to view this payment.', 'wp-ever-accounting' ),
@@ -156,7 +156,7 @@ class Payments extends Transactions {
 	public function update_item_permissions_check( $request ) {
 		$payment = EAC()->payments->get( $request['id'] );
 
-		if ( empty( $payment ) || ! current_user_can( 'eac_manage_payment' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability
+		if ( empty( $payment ) || ! current_user_can( 'eac_edit_payment' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability
 			return new \WP_Error(
 				'rest_forbidden_context',
 				__( 'Sorry, you are not allowed to update this payment.', 'wp-ever-accounting' ),
@@ -178,7 +178,7 @@ class Payments extends Transactions {
 	public function delete_item_permissions_check( $request ) {
 		$payment = EAC()->payments->get( $request['id'] );
 
-		if ( empty( $payment ) || ! current_user_can( 'eac_manage_payment' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability
+		if ( empty( $payment ) || ! current_user_can( 'eac_delete_payment' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Custom capability
 			return new \WP_Error(
 				'rest_forbidden_context',
 				__( 'Sorry, you are not allowed to delete this payment.', 'wp-ever-accounting' ),
