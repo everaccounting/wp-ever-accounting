@@ -549,7 +549,9 @@ KEY expense_id (expense_id)
 				'eac_edit_account'    => true,
 				'eac_delete_account'  => true,
 				'eac_manage_payment'  => true,
-				'eac_manage_expense'  => true,
+				'eac_read_expense'    => true,
+				'eac_edit_expense'    => true,
+				'eac_delete_expense'  => true,
 				'eac_manage_transfer' => true,
 				'eac_read_category'   => true,
 				'eac_edit_category'   => true,
@@ -585,7 +587,9 @@ KEY expense_id (expense_id)
 				'eac_edit_account'    => true,
 				'eac_delete_account'  => true,
 				'eac_manage_payment'  => true,
-				'eac_manage_expense'  => true,
+				'eac_read_expense'    => true,
+				'eac_edit_expense'    => true,
+				'eac_delete_expense'  => true,
 				'eac_manage_transfer' => true,
 				'eac_read_category'   => true,
 				'eac_edit_category'   => true,
@@ -624,7 +628,9 @@ KEY expense_id (expense_id)
 			$wp_roles->add_cap( 'administrator', 'eac_edit_account' );
 			$wp_roles->add_cap( 'administrator', 'eac_delete_account' );
 			$wp_roles->add_cap( 'administrator', 'eac_manage_payment' );
-			$wp_roles->add_cap( 'administrator', 'eac_manage_expense' );
+			$wp_roles->add_cap( 'administrator', 'eac_read_expense' );
+			$wp_roles->add_cap( 'administrator', 'eac_edit_expense' );
+			$wp_roles->add_cap( 'administrator', 'eac_delete_expense' );
 			$wp_roles->add_cap( 'administrator', 'eac_manage_transfer' );
 			$wp_roles->add_cap( 'administrator', 'eac_read_category' );
 			$wp_roles->add_cap( 'administrator', 'eac_edit_category' );

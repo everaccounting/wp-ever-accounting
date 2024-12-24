@@ -408,6 +408,11 @@ function eac_update_205_roles() {
 			'eac_edit_category',
 			'eac_delete_category',
 		),
+		'eac_manage_expense'  => array(
+			'eac_read_expense',
+			'eac_edit_expense',
+			'eac_delete_expense',
+		),
 	);
 
 	foreach ( wp_roles()->roles as $r => $details ) {
