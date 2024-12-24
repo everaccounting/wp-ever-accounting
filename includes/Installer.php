@@ -571,7 +571,9 @@ KEY expense_id (expense_id)
 				'eac_read_bill'       => true,
 				'eac_edit_bill'       => true,
 				'eac_delete_bill'     => true,
-				'eac_manage_tax'      => true,
+				'eac_read_tax'        => true,
+				'eac_edit_tax'        => true,
+				'eac_delete_tax'      => true,
 				'read'                => true,
 			)
 		);
@@ -613,7 +615,9 @@ KEY expense_id (expense_id)
 				'eac_read_bill'       => true,
 				'eac_edit_bill'       => true,
 				'eac_delete_bill'     => true,
-				'eac_manage_tax'      => true,
+				'eac_read_tax'        => true,
+				'eac_edit_tax'        => true,
+				'eac_delete_tax'      => true,
 				'eac_manage_import'   => true,
 				'eac_manage_export'   => true,
 				'read'                => true,
@@ -655,7 +659,9 @@ KEY expense_id (expense_id)
 			$wp_roles->add_cap( 'administrator', 'eac_read_bill' );
 			$wp_roles->add_cap( 'administrator', 'eac_edit_bill' );
 			$wp_roles->add_cap( 'administrator', 'eac_delete_bill' );
-			$wp_roles->add_cap( 'administrator', 'eac_manage_tax' );
+			$wp_roles->add_cap( 'administrator', 'eac_read_tax' );
+			$wp_roles->add_cap( 'administrator', 'eac_edit_tax' );
+			$wp_roles->add_cap( 'administrator', 'eac_delete_tax' );
 			$wp_roles->add_cap( 'administrator', 'eac_manage_import' );
 			$wp_roles->add_cap( 'administrator', 'eac_manage_export' );
 		}

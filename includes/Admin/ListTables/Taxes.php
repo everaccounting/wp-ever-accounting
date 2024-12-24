@@ -270,6 +270,14 @@ class Taxes extends ListTable {
 			),
 		);
 
+		if ( ! current_user_can( 'eac_delete_tax' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Reason: This is a custom capability.
+			unset( $actions['delete'] );
+		}
+
+		if ( ! current_user_can( 'eac_edit_tax' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- Reason: This is a custom capability.
+			unset( $actions['edit'] );
+		}
+
 		return $this->row_actions( $actions );
 	}
 }
