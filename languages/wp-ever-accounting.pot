@@ -1712,15 +1712,11 @@ msgstr ""
 msgid "Number of items per page:"
 msgstr ""
 
-#: includes/Admin/Categories.php:37 includes/Admin/views/category-list.php:14
+#: includes/Admin/Categories.php:36 includes/Admin/views/category-list.php:14
 msgid "Categories"
 msgstr ""
 
-#: includes/Admin/Categories.php:52
-msgid "You do not have permission to edit categories."
-msgstr ""
-
-#: includes/Admin/Categories.php:66 includes/Admin/Categories.php:95
+#: includes/Admin/Categories.php:61 includes/Admin/Categories.php:90
 msgid "Category saved successfully."
 msgstr ""
 
@@ -3361,11 +3357,7 @@ msgstr ""
 msgid "View Dashboard"
 msgstr ""
 
-#: includes/Admin/Taxes.php:34
-msgid "You do not have permission to edit taxes."
-msgstr ""
-
-#: includes/Admin/Taxes.php:56
+#: includes/Admin/Taxes.php:53
 msgid "Tax saved successfully."
 msgstr ""
 
@@ -4289,7 +4281,7 @@ msgstr ""
 msgid "Opening Balance"
 msgstr ""
 
-#: includes/Installer.php:129
+#: includes/Installer.php:126
 msgid "Ever Accounting is updating the database in the background. Please wait."
 msgstr ""
 
@@ -4557,12 +4549,12 @@ msgctxt "Delete"
 msgid "Delete"
 msgstr ""
 
-#: includes/Installer.php:540
+#: includes/Installer.php:537
 msgctxt "User role"
 msgid "Accounting Manager"
 msgstr ""
 
-#: includes/Installer.php:541
+#: includes/Installer.php:538
 msgctxt "User role"
 msgid "Accountant"
 msgstr ""
