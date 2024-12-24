@@ -95,14 +95,14 @@ class Installer {
 							'version'  => $version,
 						)
 					);
-					++ $loop;
+					++$loop;
 				}
 			}
-			++ $loop;
+			++$loop;
 		}
 
 		if ( version_compare( EAC()->get_db_version(), EAC()->get_version(), '<' ) &&
-			 ! EAC()->queue()->get_next( 'eac_update_db_version' ) ) {
+			! EAC()->queue()->get_next( 'eac_update_db_version' ) ) {
 			EAC()->queue()->schedule_single(
 				time() + $loop,
 				'eac_update_db_version',
@@ -555,6 +555,9 @@ KEY expense_id (expense_id)
 				'eac_read_items'      => true,
 				'eac_edit_items'      => true,
 				'eac_delete_items'    => true,
+				'eac_read_customer'   => true,
+				'eac_edit_customer'   => true,
+				'eac_delete_customer' => true,
 				'eac_manage_invoice'  => true,
 				'eac_manage_bill'     => true,
 				'eac_manage_tax'      => true,
@@ -583,6 +586,9 @@ KEY expense_id (expense_id)
 				'eac_read_items'      => true,
 				'eac_edit_items'      => true,
 				'eac_delete_items'    => true,
+				'eac_read_customer'   => true,
+				'eac_edit_customer'   => true,
+				'eac_delete_customer' => true,
 				'eac_manage_invoice'  => true,
 				'eac_manage_bill'     => true,
 				'eac_manage_tax'      => true,
@@ -600,7 +606,9 @@ KEY expense_id (expense_id)
 			$wp_roles->add_cap( 'administrator', 'manage_accounting' );
 			$wp_roles->add_cap( 'administrator', 'eac_manage_report' );
 			$wp_roles->add_cap( 'administrator', 'eac_manage_options' );
-			$wp_roles->add_cap( 'administrator', 'eac_manage_customer' );
+			$wp_roles->add_cap( 'administrator', 'eac_read_customer' );
+			$wp_roles->add_cap( 'administrator', 'eac_edit_customer' );
+			$wp_roles->add_cap( 'administrator', 'eac_delete_customer' );
 			$wp_roles->add_cap( 'administrator', 'eac_manage_vendor' );
 			$wp_roles->add_cap( 'administrator', 'eac_manage_account' );
 			$wp_roles->add_cap( 'administrator', 'eac_manage_payment' );

@@ -380,13 +380,18 @@ function eac_update_204_roles() {
 function eac_update_205_roles() {
 	require_once ABSPATH . 'wp-admin/includes/user.php';
 	$caps = array(
-		'manage_accounting' => array(
+		'manage_accounting'   => array(
 			'read_accounting',
 		),
-		'eac_manage_item'   => array(
+		'eac_manage_item'     => array(
 			'eac_read_items',
 			'eac_edit_items',
 			'eac_delete_items',
+		),
+		'eac_manage_customer' => array(
+			'eac_read_customer',
+			'eac_edit_customer',
+			'eac_delete_customer',
 		),
 	);
 
